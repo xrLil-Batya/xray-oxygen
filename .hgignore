@@ -5,3 +5,5 @@ code/SDK/OpenALwEAX.exe
 *.pdb
 *.ipch
 engine.VC.db
+intermediate/
+*.iobj

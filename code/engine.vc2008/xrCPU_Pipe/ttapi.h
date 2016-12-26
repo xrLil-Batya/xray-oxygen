@@ -1,6 +1,4 @@
-#ifndef _TTAPI_H_INCLUDED_
-#define _TTAPI_H_INCLUDED_
-
+#pragma once
 #include <windows.h>
 
 /*
@@ -43,5 +41,3 @@ extern "C"  {
 	VOID TTAPI ttapi_RunAllWorkers();
 
 }
-
-#endif // _TTAPI_H_INCLUDED_
