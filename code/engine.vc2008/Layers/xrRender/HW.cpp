@@ -88,20 +88,11 @@ void CHW::Reset		(HWND hwnd)
 #endif
 }
 
-//xr_token*				vid_mode_token = NULL;
-//extern xr_token*		vid_mode_token;
-#include "../../Include/xrAPI/xrAPI.h"
-//xr_token*				vid_quality_token = NULL;
-
+#include "../../xrCore/xrAPI.h"
 void CHW::CreateD3D	()
 {
-//#ifndef DEDICATED_SERVER
-//	LPCSTR		_name			= "d3d9.dll";
-//#else
-//	LPCSTR		_name			= "xrd3d9-null.dll";
-//#endif
 
-	LPCSTR		_name			= "xrd3d9-null.dll";
+	LPCSTR _name		= "xrd3d9-null.dll";
 
 #ifndef _EDITOR
 	if (!g_dedicated_server)

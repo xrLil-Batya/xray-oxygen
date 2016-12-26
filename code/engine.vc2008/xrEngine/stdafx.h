@@ -60,7 +60,10 @@ extern ENGINE_API CInifile *pGameIni;
 #pragma comment( lib, "dinput8.lib"		)
 #pragma comment( lib, "dxguid.lib"		)
 #pragma comment( lib, "sound_static.lib")
-#define LUABIND_NO_ERROR_CHECKING
+
+#ifndef DEBUG
+#	define LUABIND_NO_ERROR_CHECKING
+#endif
 
 #if	!defined(DEBUG) || defined(FORCE_NO_EXCEPTIONS)
 #	define LUABIND_NO_EXCEPTIONS
