@@ -1,0 +1,9 @@
+syntax: glob
+*.suo
+code/SDK/OpenALwEAX.exe
+*.html
+*.pdb
+*.ipch
+engine.VC.db
+intermediate/
+*.iobj
