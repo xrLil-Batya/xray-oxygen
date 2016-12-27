@@ -422,60 +422,6 @@ static BOOL CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
 	}
 	return TRUE;
 }
-/*
-void	test_rtc	()
-{
-	CStatTimer		tMc,tM,tC,tD;
-	u32				bytes=0;
-	tMc.FrameStart	();
-	tM.FrameStart	();
-	tC.FrameStart	();
-	tD.FrameStart	();
-	::Random.seed	(0x12071980);
-	for		(u32 test=0; test<10000; test++)
-	{
-		u32			in_size			= ::Random.randI(1024,256*1024);
-		u32			out_size_max	= rtc_csize		(in_size);
-		u8*			p_in			= xr_alloc<u8>	(in_size);
-		u8*			p_in_tst		= xr_alloc<u8>	(in_size);
-		u8*			p_out			= xr_alloc<u8>	(out_size_max);
-		for (u32 git=0; git<in_size; git++)			p_in[git] = (u8)::Random.randI	(8);	// garbage
-		bytes		+= in_size;
-
-		tMc.Begin	();
-		memcpy		(p_in_tst,p_in,in_size);
-		tMc.End		();
-
-		tM.Begin	();
-		CopyMemory(p_in_tst,p_in,in_size);
-		tM.End		();
-
-		tC.Begin	();
-		u32			out_size		= rtc_compress	(p_out,out_size_max,p_in,in_size);
-		tC.End		();
-
-		tD.Begin	();
-		u32			in_size_tst		= rtc_decompress(p_in_tst,in_size,p_out,out_size);
-		tD.End		();
-
-		// sanity check
-		R_ASSERT	(in_size == in_size_tst);
-		for (u32 tit=0; tit<in_size; tit++)			R_ASSERT(p_in[tit] == p_in_tst[tit]);	// garbage
-
-		xr_free		(p_out);
-		xr_free		(p_in_tst);
-		xr_free		(p_in);
-	}
-	tMc.FrameEnd	();	float rMc		= 1000.f*(float(bytes)/tMc.result)/(1024.f*1024.f);
-	tM.FrameEnd		(); float rM		= 1000.f*(float(bytes)/tM.result)/(1024.f*1024.f);
-	tC.FrameEnd		(); float rC		= 1000.f*(float(bytes)/tC.result)/(1024.f*1024.f);
-	tD.FrameEnd		(); float rD		= 1000.f*(float(bytes)/tD.result)/(1024.f*1024.f);
-	Msg				("* memcpy:        %5.2f M/s (%3.1f%%)",rMc,100.f*rMc/rMc);
-	Msg				("* mm-memcpy:     %5.2f M/s (%3.1f%%)",rM,100.f*rM/rMc);
-	Msg				("* compression:   %5.2f M/s (%3.1f%%)",rC,100.f*rC/rMc);
-	Msg				("* decompression: %5.2f M/s (%3.1f%%)",rD,100.f*rD/rMc);
-}
-*/
 extern void	testbed	(void);
 
 // video
@@ -679,6 +625,8 @@ void foo	()
 
 ENGINE_API	bool g_dedicated_server	= false;
 
+#include "../../xrLauncher/xrLauncher.h"
+
 #ifndef DEDICATED_SERVER
 	// forward declaration for Parental Control checks
 	BOOL IsPCAccessAllowed(); 
@@ -843,12 +791,8 @@ int APIENTRY WinMain_impl(HINSTANCE hInstance,
 			return 0;
 		}
 
-		if (strstr(lpCmdLine,"-launcher")) 
-		{
-			int l_res = doLauncher();
-			if (l_res != 0)
-				return 0;
-		};
+		if (strstr(Core.Params, "-launcher"))
+			RunXRLauncher();
 
 #ifndef DEDICATED_SERVER
 		if(strstr(Core.Params,"-r2a"))	
@@ -1215,7 +1159,6 @@ void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 	xr_strcpy					(ls_header, str1);
 	xr_strcpy					(ls_tip_number, str2);
 	xr_strcpy					(ls_tip, str3);
-//	LoadDraw					();
 }
 void CApplication::LoadStage()
 {
@@ -1224,7 +1167,8 @@ void CApplication::LoadStage()
 	Msg							("* phase time: %d ms",phase_timer.GetElapsed_ms());	phase_timer.Start();
 	Msg							("* phase cmem: %d K", Memory.mem_usage()/1024);
 	
-	if (g_pGamePersistent->GameType()==1 && strstr(Core.Params,"alife"))
+	//Fixed: sv3nk
+	if (g_pGamePersistent->GameType() == 1 || strstr(Core.Params,"alife"))
 		max_load_stage			= 17;
 	else
 		max_load_stage			= 14;
@@ -1373,14 +1317,13 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 	
 	string256		buffer;
 	strconcat		(sizeof(buffer),buffer,name,"\\");
+
 	for (u32 I=0; I<Levels.size(); ++I)
-	{
 		if (0==stricmp(buffer,Levels[I].folder))	
 		{
 			result = int(I);	
 			break;
 		}
-	}
 
 	if(bSet && result!=-1)
 		Level_Set(result);
@@ -1405,9 +1348,8 @@ CInifile*  CApplication::GetArchiveHeader(LPCSTR name, LPCSTR ver)
 		LPCSTR ln = A.header->r_string("header", "level_name");
 		LPCSTR lv = A.header->r_string("header", "level_ver");
 		if ( 0==_stricmp(ln,name) && 0==_stricmp(lv,ver) )
-		{
 			return A.header;
-		}
+
 	}
 	return nullptr;
 }
@@ -1427,102 +1369,49 @@ typedef BOOL (*PCCPROC)( CHAR* );
 
 BOOL IsPCAccessAllowed()
 {
-	CHAR szPCtrlChk[ MAX_PATH ] , szGDF[ MAX_PATH ] , *pszLastSlash;
+	CHAR szPCtrlChk[MAX_PATH], szGDF[MAX_PATH], *pszLastSlash;
 	HINSTANCE hPCtrlChk = NULL;
 	PCCPROC pctrlchk = NULL;
 	BOOL bAllowed = TRUE;
 
-	if ( ! GetModuleFileName( NULL , szPCtrlChk , MAX_PATH ) )
+	if (!GetModuleFileName(NULL, szPCtrlChk, MAX_PATH))
 		return TRUE;
 
-	if ( ( pszLastSlash = strrchr( szPCtrlChk , '\\' ) ) == NULL )
-		return TRUE;
-
-	*pszLastSlash = '\0';
-
-	strcpy_s( szGDF , szPCtrlChk );
-
-	strcat_s( szPCtrlChk , "\\pctrlchk.dll" );
-	if ( GetFileAttributes( szPCtrlChk ) == INVALID_FILE_ATTRIBUTES )
-		return TRUE;
-
-	if ( ( pszLastSlash = strrchr( szGDF , '\\' ) ) == NULL )
+	if ((pszLastSlash = strrchr(szPCtrlChk, '\\')) == NULL)
 		return TRUE;
 
 	*pszLastSlash = '\0';
 
-	strcat_s( szGDF , "\\Stalker-COP.exe" );
-	if ( GetFileAttributes( szGDF ) == INVALID_FILE_ATTRIBUTES )
+	strcpy_s(szGDF, szPCtrlChk);
+
+	strcat_s(szPCtrlChk, "\\pctrlchk.dll");
+	if (GetFileAttributes(szPCtrlChk) == INVALID_FILE_ATTRIBUTES)
 		return TRUE;
 
-	if ( ( hPCtrlChk = LoadLibrary( szPCtrlChk ) ) == NULL )
+	if ((pszLastSlash = strrchr(szGDF, '\\')) == NULL)
 		return TRUE;
 
-	if ( ( pctrlchk = (PCCPROC) GetProcAddress( hPCtrlChk , "pctrlchk" ) ) == NULL ) {
-		FreeLibrary( hPCtrlChk );
+	*pszLastSlash = '\0';
+
+	strcat_s(szGDF, "\\Stalker-COP.exe");
+	if (GetFileAttributes(szGDF) == INVALID_FILE_ATTRIBUTES)
+		return TRUE;
+
+	if ((hPCtrlChk = LoadLibrary(szPCtrlChk)) == NULL)
+		return TRUE;
+
+	if ((pctrlchk = (PCCPROC)GetProcAddress(hPCtrlChk, "pctrlchk")) == NULL) {
+		FreeLibrary(hPCtrlChk);
 		return TRUE;
 	}
 
-	bAllowed = pctrlchk( szGDF );
+	bAllowed = pctrlchk(szGDF);
 
-	FreeLibrary( hPCtrlChk );
+	FreeLibrary(hPCtrlChk);
 
 	return bAllowed;
 }
 #endif // DEDICATED_SERVER
-
-//launcher stuff----------------------------
-extern "C"{
-	typedef int	 __cdecl LauncherFunc	(int);
-}
-HMODULE			hLauncher		= NULL;
-LauncherFunc*	pLauncher		= NULL;
-
-void InitLauncher(){
-	if(hLauncher)
-		return;
-	hLauncher	= LoadLibrary	("xrLauncher.dll");
-	if (0==hLauncher)	R_CHK	(GetLastError());
-	R_ASSERT2		(hLauncher,"xrLauncher DLL raised exception during loading or there is no xrLauncher.dll at all");
-
-	pLauncher = (LauncherFunc*)GetProcAddress(hLauncher,"RunXRLauncher");
-	R_ASSERT2		(pLauncher,"Cannot obtain RunXRLauncher function from xrLauncher.dll");
-};
-
-void FreeLauncher(){
-	if (hLauncher)	{ 
-		FreeLibrary(hLauncher); 
-		hLauncher = NULL; pLauncher = NULL; };
-}
-
-int doLauncher()
-{
-/*
-	execUserScript();
-	InitLauncher();
-	int res = pLauncher(0);
-	FreeLauncher();
-	if(res == 1) // do benchmark
-		g_bBenchmark = true;
-
-	if(g_bBenchmark){ //perform benchmark cycle
-		doBenchmark();
-	
-		// InitLauncher	();
-		// pLauncher	(2);	//show results
-		// FreeLauncher	();
-
-		Core._destroy			();
-		return					(1);
-
-	};
-	if(res==8){//Quit
-		Core._destroy			();
-		return					(1);
-	}
-*/
-	return 0;
-}
 
 void doBenchmark(LPCSTR name)
 {

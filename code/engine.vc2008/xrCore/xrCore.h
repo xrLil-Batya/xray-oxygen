@@ -40,7 +40,7 @@
     #define XR_NOEXCEPT_OP(x) noexcept(x)
 #else
 	// "release"
-	#if defined(_CPPUNWIND) && !defined __BORLANDC__
+	#if defined(_CPPUNWIND) && !defined __BORLANDC__ && !defined(_XRLAUNCHER)
 		#error Please disable exceptions...
 	#endif
 	#define _HAS_EXCEPTIONS		1	// STL
