@@ -8,18 +8,30 @@
 #include <memory>
 
 /***
-*
 * int _cpuid (_p_info *pinfo)
-* 
 * Entry:
-*
 *   pinfo: pointer to _p_info, NULL is not allowed!
 *
 * Exit:
-*
 *   Returns int with capablity bit set.
-*
-****************************************************/
+***/
+
+static void CleanDups(char* s, char c = ' ')
+{
+	if (*s == 0)
+		return;
+	char* dst = s;
+	char* src = s + 1;
+	while (*src != 0)
+	{
+		if (*src == c && *dst == c)
+			++src;
+		else
+			*++dst = *src++;
+	}
+	*++dst = 0;
+}
+
 #ifdef _EDITOR
 unsgined int query_processor_info(processor_info* pinfo)
 {
@@ -54,9 +66,6 @@ unsigned int query_processor_info(processor_info* pinfo)
 
     std::bitset<32> f_1_ECX;
     std::bitset<32> f_1_EDX;
-    /*std::bitset<32> f_7_EBX;
-    std::bitset<32> f_7_ECX;
-    std::bitset<32> f_81_ECX;*/
     std::bitset<32> f_81_EDX;
 
     std::vector<std::array<int, 4>> data;
@@ -76,7 +85,6 @@ unsigned int query_processor_info(processor_info* pinfo)
     *reinterpret_cast<int*>(pinfo->vendor + 4) = data[0][3];
     *reinterpret_cast<int*>(pinfo->vendor + 8) = data[0][2];
 
-    //const bool isIntel = std::strncmp(pinfo->vendor, "GenuineIntel", 12);
     const bool isAmd = std::strncmp(pinfo->vendor, "AuthenticAMD", 12) != 0;
 
     // load bitset with flags for function 0x00000001
@@ -87,12 +95,6 @@ unsigned int query_processor_info(processor_info* pinfo)
     }
 
     // load bitset with flags for function 0x00000007
-    /*if (nIds >= 7)
-    {
-        f_7_EBX = data[7][1];
-        f_7_ECX = data[7][2];
-    }*/
-
     __cpuid(cpui.data(), 0x80000000);
     const int nExIds_ = cpui[0];
     data.clear();
@@ -105,10 +107,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 
     // load bitset with flags for function 0x80000001
     if (nExIds_ >= 0x80000001)
-    {
-        //f_81_ECX = data[1][2];
         f_81_EDX = data[1][3];
-    }
 
     memset(pinfo->modelName, 0, sizeof(pinfo->modelName));
 
@@ -120,11 +119,23 @@ unsigned int query_processor_info(processor_info* pinfo)
         memcpy(pinfo->modelName + 32, data[4].data(), sizeof(cpui));
     }
 
+	//Added sv3nk
+	CleanDups(pinfo->vendor);
+	CleanDups(pinfo->modelName);
+	//end
+
     if (f_1_EDX[23])           pinfo->features |= static_cast<u32>(CpuFeature::Mmx);
     if (f_1_EDX[25])           pinfo->features |= static_cast<u32>(CpuFeature::Sse);
     if (f_1_EDX[26])           pinfo->features |= static_cast<u32>(CpuFeature::Sse2);
-    if (isAmd && f_81_EDX[31]) pinfo->features |= static_cast<u32>(CpuFeature::_3dNow);
 
+	//Added sv3nk: 3DNow! EXT
+	if (isAmd)
+		if (f_81_EDX[30])
+			pinfo->features |= static_cast<u32>(CpuFeature::_3dNowExt);
+		else if (f_81_EDX[31])
+			pinfo->features |= static_cast<u32>(CpuFeature::_3dNow);
+	//End
+			
     if (f_1_ECX[0])            pinfo->features |= static_cast<u32>(CpuFeature::Sse3);
     if (f_1_ECX[9])            pinfo->features |= static_cast<u32>(CpuFeature::Ssse3);
     if (f_1_ECX[19])           pinfo->features |= static_cast<u32>(CpuFeature::Sse41);
@@ -132,8 +143,8 @@ unsigned int query_processor_info(processor_info* pinfo)
 
     __cpuid(cpui.data(), 1);
 
-    const bool hasMWait = (cpui[2] & 0x8) > 0;
-    if (hasMWait) pinfo->features |= static_cast<u32>(CpuFeature::MWait);
+	//Edit sv3nk
+    if ((cpui[2] & 0x8) > 0) pinfo->features |= static_cast<u32>(CpuFeature::MWait);
 
     pinfo->family   = (cpui[0] >> 8) & 0xf;
     pinfo->model    = (cpui[0] >> 4) & 0xf;

@@ -5,7 +5,8 @@ enum class CpuFeature : u32 {
     Mmx = 0x0001,
     Sse = 0x0002,
     Sse2 = 0x0004,
-    _3dNow = 0x0008,
+	_3dNow = 0x0008,
+	_3dNowExt = 0x0009,
 
     Sse3 = 0x0010,
     Ssse3 = 0x0020,
