@@ -27,16 +27,16 @@
 		inline_								baseclass() : mData(0)	{}									\
 		inline_								~baseclass()			{}									\
 		/* Leaf test */																					\
-		inline_			BOOL				IsLeaf()		const	{ return (BOOL)(mData&1);		}	\
+		inline_			BOOL				IsLeaf()		const	{ return mData&1;				}	\
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
-		inline_			udword				GetPrimitive()	const	{ return udword(mData>>1);		}	\
+		inline_			udword				GetPrimitive()	const	{ return (mData>>1);			}	\
 		/* Stats */																						\
-		inline_			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
+		inline_			udword				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
 						volume				mAABB;														\
-						uintptr_t			mData;
+						udword				mData;
 
 	//! Common interface for a node of a no-leaf tree
 	#define IMPLEMENT_NOLEAF_NODE(baseclass, volume)													\
@@ -45,19 +45,19 @@
 		inline_								baseclass() : mData(0), mData2(0)	{}						\
 		inline_								~baseclass()						{}						\
 		/* Leaf tests */																				\
-		inline_			BOOL				HasLeaf()		const	{ return (BOOL)(mData&1);		}	\
-		inline_			BOOL				HasLeaf2()		const	{ return (BOOL)(mData2&1);		}	\
+		inline_			BOOL				HasLeaf()		const	{ return mData&1;				}	\
+		inline_			BOOL				HasLeaf2()		const	{ return mData2&1;				}	\
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return (baseclass*)mData2;	}	\
-		inline_			udword				GetPrimitive()	const	{ return udword(mData>>1);		}	\
-		inline_			udword				GetPrimitive2()	const	{ return udword(mData2>>1);		}	\
+		inline_			udword				GetPrimitive()	const	{ return (mData>>1);			}	\
+		inline_			udword				GetPrimitive2()	const	{ return (mData2>>1);			}	\
 		/* Stats */																						\
-		inline_			size_t				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
+		inline_			udword				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
 						volume				mAABB;														\
-						uintptr_t			mData;														\
-						uintptr_t			mData2;
+						udword				mData;														\
+						udword				mData2;
 
 	class OPCODE_API AABBCollisionNode
 	{

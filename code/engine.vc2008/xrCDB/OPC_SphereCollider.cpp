@@ -19,7 +19,7 @@
 /**
  *	Contains a sphere-vs-tree collider.
  *	This class performs a collision test between a sphere and an AABB tree. You can use this to do a standard player vs world collision,
- *	in a Nettle/Telemachos way. It doesn't suffer from all reported bugs in those two classic codes - the "_new_" one by Paul Nettle is a
+ *	in a Nettle/Telemachos way. It doesn't suffer from all reported bugs in those two classic codes - the "new" one by Paul Nettle is a
  *	debuggued version I think. Collision response can be driven by reported collision data - it works extremely well for me. In sake of
  *	efficiency, all meshes (that is, all AABB trees) should of course also be kept in an extra hierarchical structure (octree, whatever).
  *
@@ -32,8 +32,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -150,7 +149,7 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, OPCODE_Mo
 BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds, const Matrix4x4* worldm)
 {
 	// 1) Call the base method
-	VolumeCollider::InitQueryEx();
+	VolumeCollider::InitQuery();
 
 	// 2) Compute sphere in model space:
 	// - Precompute R^2
@@ -198,8 +197,8 @@ BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const M
 		}
 		else
 		{
-			// We're interested in all contacts =>test the _new_ real sphere N(ew) against the previous fat sphere P(revious):
-			float r = _sqrt(cache.FatRadius2) - sphere.mRadius;
+			// We're interested in all contacts =>test the new real sphere N(ew) against the previous fat sphere P(revious):
+			float r = sqrtf(cache.FatRadius2) - sphere.mRadius;
 			if(cache.Center.SquareDistance(mCenter) < r*r)
 			{
 				// - if N is included in P, return previous list

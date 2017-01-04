@@ -29,8 +29,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -249,7 +248,7 @@ bool AABBTreeCollider::Collide(BVTCache& cache, const Matrix4x4* world0, const M
 void AABBTreeCollider::InitQuery(const Matrix4x4* world0, const Matrix4x4* world1)
 {
 	// Reset stats & contact status
-	Collider::InitQueryEx();
+	Collider::InitQuery();
 	mNbBVBVTests		= 0;
 	mNbPrimPrimTests	= 0;
 	mNbBVPrimTests		= 0;
@@ -275,7 +274,7 @@ void AABBTreeCollider::InitQuery(const Matrix4x4* world0, const Matrix4x4* world
 		for(udword j=0;j<3;j++)
 		{
 			// Epsilon value prevents floating-point inaccuracies (strategy borrowed from RAPID)
-			mAR.m[i][j] = 1e-6f + _abs(mR1to0.m[i][j]);
+			mAR.m[i][j] = 1e-6f + fabsf(mR1to0.m[i][j]);
 		}
 	}
 }
@@ -612,7 +611,7 @@ void AABBTreeCollider::PrimTest(udword id0, udword id1)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- *	Leaf-leaf test for a previously fetched triangle from tree A (in B's space) and a _new_ leaf from B.
+ *	Leaf-leaf test for a previously fetched triangle from tree A (in B's space) and a new leaf from B.
  *	\param		id1		[in] leaf-triangle index from tree B
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -640,7 +639,7 @@ inline_ void AABBTreeCollider::PrimTestTriIndex(udword id1)
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
- *	Leaf-leaf test for a previously fetched triangle from tree B (in A's space) and a _new_ leaf from A.
+ *	Leaf-leaf test for a previously fetched triangle from tree B (in A's space) and a new leaf from A.
  *	\param		id0		[in] leaf-triangle index from tree A
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

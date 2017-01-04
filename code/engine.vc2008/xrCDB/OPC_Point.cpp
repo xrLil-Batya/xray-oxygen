@@ -11,7 +11,7 @@
 /**
  *	3D point.
  *
- *	The name is "Point" instead of "Vector" since a vector3 is N-dimensional, whereas a point is an implicit "vector3 of dimension 3".
+ *	The name is "Point" instead of "Vector" since a vector is N-dimensional, whereas a point is an implicit "vector of dimension 3".
  *	So the choice was between "Point" and "Vector3", the first one looked better (IMHO).
  *
  *	Some people, then, use a typedef to handle both points & vectors using the same class: typedef Point Vector3;
@@ -46,8 +46,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace IceMaths;
 
@@ -60,8 +59,8 @@ Point& Point::Refract(const Point& eye, const Point& n, float refractindex, Poin
 	//	Point EyePt = eye position
 	//	Point p = current vertex
 	//	Point n = vertex normal
-	//	Point rv = refracted vector3
-	//	Eye vector3 - doesn't need to be normalized
+	//	Point rv = refracted vector
+	//	Eye vector - doesn't need to be normalized
 	Point Env;
 	Env.x = eye.x - x;
 	Env.y = eye.y - y;
@@ -71,7 +70,7 @@ Point& Point::Refract(const Point& eye, const Point& n, float refractindex, Poin
 	float NDotN = n|n;
 	NDotE /= refractindex;
 
-	// Refracted vector3
+	// Refracted vector
 	refracted = n*NDotE - Env*NDotN;
 
 	return *this;
@@ -134,7 +133,7 @@ Point& Point::Unfold(Plane& p, Point& a, Point& b)
 	p1t += a;
 	p2t += a;
 
-	// 6) Check _new_ plane
+	// 6) Check new plane
 	Plane pipo(p0t, p1t, p2t);
 	Angle = p.n|pipo.n;	// Must be 1
 

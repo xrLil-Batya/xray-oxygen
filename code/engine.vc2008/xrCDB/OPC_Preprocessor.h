@@ -34,11 +34,11 @@
 		#endif
 
 		#if defined(_CPPRTTI)
-			// #error Please disable RTTI...
+			//#error Please disable RTTI...
 		#endif
 
 		#if defined(_CPPUNWIND)
-			// #error Please disable exceptions...
+			//#error Please disable exceptions...
 		#endif
 
 		#if defined(_MT)
@@ -48,7 +48,6 @@
 
 	// Check debug mode
 	#ifdef	DEBUG			// May be defined instead of _DEBUG. Let's fix it.
-		#undef	_DEBUG
 		#define _DEBUG
 	#endif
 
@@ -74,7 +73,8 @@
 	// Our own inline keyword, so that:
 	// - we can switch to __forceinline to check it's really better or not
 	// - we can remove __forceinline if the compiler doesn't support it
-	#define inline_				inline
+	#define inline_				__forceinline
+//	#define inline_				inline
 
 	// Down the hatch
 	#pragma inline_depth( 255 )

@@ -13,9 +13,7 @@
 #define __ICETYPES_H__
 
 	// Constants
-    #ifndef PI
 	#define PI					3.1415926535897932384626433832795028841971693993751f	//!<	PI
-    #endif
 	#define HALFPI				1.57079632679489661923f									//!<	0.5 * PI
 	#define TWOPI				6.28318530717958647692f									//!<	2.0 * PI
 	#define INVPI				0.31830988618379067154f									//!<	1.0 / PI
@@ -114,6 +112,16 @@
 	#define IEEE_MIN_FLOAT		0xff7fffff						//!<	integer representation of MIN_FLOAT
 
 	#define ONE_OVER_RAND_MAX	(1.0f / float(RAND_MAX))		//!<	Inverse of the max possible value returned by rand()
+
+	typedef int					(__stdcall* PROC)();			//!<	A standard procedure call.
+	typedef bool				(*ENUMERATION)(udword value, udword param, udword context);	//!< ICE standard enumeration call
+	typedef	void**				VTABLE;							//!<	A V-Table.
+
+	#undef		MIN
+	#undef		MAX
+	#define		MIN(a, b)       ((a) < (b) ? (a) : (b))			//!<	Returns the min value between a and b
+	#define		MAX(a, b)       ((a) > (b) ? (a) : (b))			//!<	Returns the max value between a and b
+	#define		MAXMAX(a,b,c)   ((a) > (b) ? MAX (a,c) : MAX (b,c))	//!<	Returns the max value between a, b and c
 
 	template<class T>	inline_ const T&	TMin	(const T& a, const T& b)	{ return b < a ? b : a;	}
 	template<class T>	inline_ const T&	TMax	(const T& a, const T& b)	{ return a < b ? b : a;	}

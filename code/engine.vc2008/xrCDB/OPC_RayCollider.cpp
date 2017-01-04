@@ -25,7 +25,7 @@
  *		If P0 and P1 are two 3D points, let's define:
  *		- d = distance between P0 and P1
  *		- Origin	= P0
- *		- Direction	= (P1 - P0) / d = normalized direction vector3
+ *		- Direction	= (P1 - P0) / d = normalized direction vector
  *		- A parameter t such as a point P on the line (P0,P1) is P = Origin + t * Direction
  *		- t = 0  -->  P = P0
  *		- t = d  -->  P = P1
@@ -57,7 +57,7 @@
  *
  *		- You can setup "first contact" mode or "all contacts" mode with RayCollider::SetFirstContact().
  *		- In "first contact" mode we return as soon as the ray hits one face. If can be useful e.g. for shadow feelers, where
- *		you want to know whether the path to the light is _free or not (a boolean answer is enough).
+ *		you want to know whether the path to the light is free or not (a boolean answer is enough).
  *		- In "all contacts" mode we return all faces hit by the ray.
  *
  *	TEMPORAL COHERENCE:
@@ -89,8 +89,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -212,7 +211,7 @@ RayCollider::RayCollider()
 	mVerts				(null),
 #endif
 	mStabbedFaces		(null),
-	mMaxDist			(flt_max)
+	mMaxDist			(MAX_FLOAT)
 {
 }
 
@@ -293,7 +292,7 @@ bool RayCollider::Collide(const Ray& world_ray, OPCODE_Model* model, const Matri
 BOOL RayCollider::InitQuery(const Ray& world_ray, const Matrix4x4* world, udword* faceid)
 {
 	// Reset stats & contact status
-	Collider::InitQueryEx();
+	Collider::InitQuery();
 	mNbRayBVTests		= 0;
 	mNbRayPrimTests		= 0;
 	mNbIntersections	= 0;
@@ -324,9 +323,9 @@ BOOL RayCollider::InitQuery(const Ray& world_ray, const Matrix4x4* world, udword
 		mData2 = mOrigin + mData;
 
 		// Precompute mFDir;
-		mFDir.x = _abs(mData.x);
-		mFDir.y = _abs(mData.y);
-		mFDir.z = _abs(mData.z);
+		mFDir.x = fabsf(mData.x);
+		mFDir.y = fabsf(mData.y);
+		mFDir.z = fabsf(mData.z);
 	}
 	else
 	{
@@ -339,9 +338,9 @@ BOOL RayCollider::InitQuery(const Ray& world_ray, const Matrix4x4* world, udword
 //		mData.z = FR(z);
 
 		// Precompute mFDir;
-		mFDir.x = _abs(mDir.x);
-		mFDir.y = _abs(mDir.y);
-		mFDir.z = _abs(mDir.z);
+		mFDir.x = fabsf(mDir.x);
+		mFDir.y = fabsf(mDir.y);
+		mFDir.z = fabsf(mDir.z);
 	}
 
 	// Check temporal coherence :
