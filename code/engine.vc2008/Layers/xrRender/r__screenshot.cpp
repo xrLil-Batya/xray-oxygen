@@ -81,8 +81,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 #ifdef USE_DX11
 				HRESULT hr = D3DX11SaveTextureToMemory(HW.pContext, pSrcSmallTexture, D3DX11_IFF_DDS, &saved, 0);
 #else
-				HRESULT hr					= D3DX10SaveTextureToMemory( pSrcSmallTexture, D3DX10_IFF_DDS, &saved, 0);
-				//HRESULT hr					= D3DXSaveTextureToFileInMemory (&saved,D3DXIFF_DDS,texture,0);
+				HRESULT hr = D3DX10SaveTextureToMemory( pSrcSmallTexture, D3DX10_IFF_DDS, &saved, 0);
 #endif
 				if(hr==D3D_OK)
 				{
@@ -130,7 +129,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 #ifdef USE_DX11
 				HRESULT hr	= D3DX11SaveTextureToMemory(HW.pContext, pSrcSmallTexture, D3DX11_IFF_DDS, &saved, 0);
 #else
-				HRESULT hr					= D3DX10SaveTextureToMemory( pSrcSmallTexture, D3DX10_IFF_DDS, &saved, 0);
+				HRESULT hr	= D3DX10SaveTextureToMemory( pSrcSmallTexture, D3DX10_IFF_DDS, &saved, 0);
 				//HRESULT hr					= D3DXSaveTextureToFileInMemory (&saved,D3DXIFF_DDS,texture,0);
 #endif
 				if(hr==D3D_OK)
@@ -143,10 +142,10 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 							fs->w				(saved->GetBufferPointer(),(u32)saved->GetBufferSize());
 							FS.w_close			(fs);
 						}
-					} else
-					{
+					} 
+					else
 						memory_writer->w		(saved->GetBufferPointer(),(u32)saved->GetBufferSize());
-					}
+			
 				}
 				_RELEASE			(saved);
 
@@ -191,36 +190,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 		case IRender_interface::SM_FOR_LEVELMAP:
 		case IRender_interface::SM_FOR_CUBEMAP:
 			{
-				VERIFY(!"CRender::Screenshot. This screenshot type is not supported for DX10.");
-				/*
-				string64			t_stemp;
-				string_path			buf;
-				VERIFY				(name);
-				strconcat			(sizeof(buf),buf,"ss_",Core.UserName,"_",timestamp(t_stemp),"_#",name);
-				xr_strcat				(buf,".tga");
-				IWriter*		fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
-				TGAdesc				p;
-				p.format			= IMG_24B;
-
-				//	TODO: DX10: This is totally incorrect but mimics 
-				//	original behaviour. Fix later.
-				hr					= pFB->LockRect(&D,0,D3DLOCK_NOSYSLOCK);
-				if(hr!=D3D_OK)		return;
-				hr					= pFB->UnlockRect();
-				if(hr!=D3D_OK)		goto _end_;
-
-				// save
-				u32* data			= (u32*)xr_malloc(Device.dwHeight*Device.dwHeight*4);
-				imf_Process			(data,Device.dwHeight,Device.dwHeight,(u32*)D.pBits,Device.dwWidth,Device.dwHeight,imf_lanczos3);
-				p.scanlenght		= Device.dwHeight*4;
-				p.width				= Device.dwHeight;
-				p.height			= Device.dwHeight;
-				p.data				= data;
-				p.maketga			(*fs);
-				xr_free				(data);
-
-				FS.w_close			(fs);
-				*/
+				VERIFY(!"CRender::Screenshot. This screenshot type is not supported for DX10.")
 			}
 			break;
 	}
@@ -228,7 +198,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 	_RELEASE(pSrcTexture);
 }
 
-#else	//	USE_DX10
+#else	//	USE_DX9
 
 void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer)
 {
@@ -356,10 +326,10 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 						fs->w				(saved->GetBufferPointer(),saved->GetBufferSize());
 						FS.w_close			(fs);
 					}
-				} else
-				{
+				} 
+				else
 					memory_writer->w(saved->GetBufferPointer(),saved->GetBufferSize());
-				}
+				
 		
 				_RELEASE			(saved);
 

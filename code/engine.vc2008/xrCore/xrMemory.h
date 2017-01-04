@@ -102,7 +102,7 @@ extern XRCORE_API	xrMemory	Memory;
 #endif // DEBUG_MEMORY_NAME
 
 XRCORE_API	char* 	xr_strdup	(const char* string);
-
+#pragma warning( disable : 4595)  
 #ifdef DEBUG_MEMORY_NAME
 // Global new/delete override
 #	if !(defined(__BORLANDC__) || defined(NO_XRNEW))
@@ -119,6 +119,7 @@ XRCORE_API	char* 	xr_strdup	(const char* string);
 	IC void		operator delete[]	(void* p)			{	xr_free(p);											}
 #	endif
 #endif // DEBUG_MEMORY_MANAGER
+#pragma warning( default : 4595)  
 
 
 // POOL-ing

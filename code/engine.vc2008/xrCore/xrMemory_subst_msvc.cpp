@@ -253,14 +253,14 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 	} else if (2==p_mode)		{
 		// relocate into another mmgr(pooled) from real
 		void*	p_old			= P;
-		void*	p_new			= mem_alloc(size
+		void*	_p_new			= mem_alloc(size
 #	ifdef DEBUG_MEMORY_NAME
 			,_name
 #	endif // DEBUG_MEMORY_NAME
 		);
-        std::memcpy(p_new, p_old, size);
+        std::memcpy(_p_new, p_old, size);
 		mem_free				(p_old);
-		_ptr					= p_new;
+		_ptr					= _p_new;
 	}
 
 #ifdef DEBUG_MEMORY_MANAGER

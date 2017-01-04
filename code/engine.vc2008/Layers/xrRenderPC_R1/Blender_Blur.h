@@ -1,5 +1,3 @@
-#ifndef BLENDER_BLUR_H
-#define BLENDER_BLUR_H
 #pragma once
 
 class CBlender_Blur : public IBlender  
@@ -17,4 +15,3 @@ public:
 	virtual ~CBlender_Blur();
 };
 
-#endif //BLENDER_BLUR_H

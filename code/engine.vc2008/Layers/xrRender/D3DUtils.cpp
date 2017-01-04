@@ -350,13 +350,13 @@ void CDrawUtilities::DrawEntity(u32 clr, ref_shader s)
     if (s) DU_DRAW_SH(s);
     {
         // fill VB
-        FVF::LIT*	pv	 = (FVF::LIT*)Stream->Lock(6,vs_LIT->vb_stride,vBase);
-        pv->set		(0.f,1.f,0.f,clr,0.f,0.f);	pv++;
-        pv->set		(0.f,1.f,.5f,clr,1.f,0.f);	pv++;
-        pv->set		(0.f,.5f,.5f,clr,1.f,1.f);	pv++;
-        pv->set		(0.f,.5f,0.f,clr,0.f,1.f);	pv++;
-        pv->set		(0.f,.5f,.5f,clr,1.f,1.f);	pv++;
-        pv->set		(0.f,1.f,.5f,clr,1.f,0.f);	pv++;
+        FVF::LIT*	_pv	 = (FVF::LIT*)Stream->Lock(6,vs_LIT->vb_stride,vBase);
+        _pv->set		(0.f,1.f,0.f,clr,0.f,0.f);	_pv++;
+        _pv->set		(0.f,1.f,.5f,clr,1.f,0.f);	_pv++;
+		_pv->set		(0.f,.5f,.5f,clr,1.f,1.f);	_pv++;
+		_pv->set		(0.f,.5f,0.f,clr,0.f,1.f);	_pv++;
+		_pv->set		(0.f,.5f,.5f,clr,1.f,1.f);	_pv++;
+		_pv->set		(0.f,1.f,.5f,clr,1.f,0.f);	_pv++;
         Stream->Unlock	(6,vs_LIT->vb_stride);
         // and Render it as line list
         DU_DRAW_DP		(D3DPT_TRIANGLEFAN,vs_LIT,vBase,4);

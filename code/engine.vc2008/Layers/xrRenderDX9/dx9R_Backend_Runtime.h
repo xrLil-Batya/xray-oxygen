@@ -2,10 +2,10 @@
 #define	dx9R_Backend_Runtime_included
 #pragma once
 
-IC void		CBackend::set_xform			(u32 ID, const Fmatrix& M)
+IC void		CBackend::set_xform			(u32 ID, const Fmatrix& M_)
 {
 	stat.xforms			++;
-	CHK_DX				(HW.pDevice->SetTransform((D3DTRANSFORMSTATETYPE)ID,(D3DMATRIX*)&M));
+	CHK_DX				(HW.pDevice->SetTransform((D3DTRANSFORMSTATETYPE)ID,(D3DMATRIX*)&M_));
 }
 
 IC void CBackend::set_RT(ID3DRenderTargetView* RT, u32 ID)

@@ -1,5 +1,3 @@
-#ifndef r_backendH
-#define r_backendH
 #pragma once
 
 //#define RBackend_PGO
@@ -241,7 +239,7 @@ public:
 #endif	//	USE_DX10
 
 	// API
-	IC	void						set_xform			(u32 ID, const Fmatrix& M);
+	IC	void						set_xform			(u32 ID, const Fmatrix& M_);
 	IC	void						set_xform_world		(const Fmatrix& M);
 	IC	void						set_xform_view		(const Fmatrix& M);
 	IC	void						set_xform_project	(const Fmatrix& M);
@@ -255,10 +253,10 @@ public:
 	IC	ID3DDepthStencilView*		get_ZB				();
 
 	IC	void						set_Constants		(R_constant_table* C);
-	IC	void						set_Constants		(ref_ctable& C)						{ set_Constants(&*C);			}
+	IC	void						set_Constants		(ref_ctable& C_)					{ set_Constants(&*C_);			}
 
 		void						set_Textures		(STextureList* T);
-	IC	void						set_Textures		(ref_texture_list& T)				{ set_Textures(&*T);			}
+	IC	void						set_Textures		(ref_texture_list& T_)				{ set_Textures(&*T_);			}
 
 #ifdef _EDITOR
 	IC	void						set_Matrices		(SMatrixList* M);
@@ -437,6 +435,4 @@ extern  ECORE_API CBackend			RCache;
 
 #ifndef _EDITOR
 #	include "D3DUtils.h"
-#endif
-
 #endif

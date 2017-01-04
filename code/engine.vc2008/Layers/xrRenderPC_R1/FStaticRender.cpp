@@ -492,8 +492,8 @@ void CRender::Calculate				()
 							// rendering
 							if (o_it==uID_LTRACK && renderable->renderable_ROS())	{
 								// track lighting environment
-								CROS_impl*		T = (CROS_impl*)renderable->renderable_ROS();
-								T->update			(renderable);
+								CROS_impl*		__T = (CROS_impl*)renderable->renderable_ROS();
+								__T->update			(renderable);
 							}
 							set_Object						(renderable);
 							renderable->renderable_Render	();
@@ -701,7 +701,7 @@ static HRESULT create_shader				(
 		u32	const		buffer_size,
 		LPCSTR const	file_name,
 		void*&			result,
-		bool const		disasm
+		bool const		_disasm
 	)
 {
 	HRESULT		_result = E_FAIL;
@@ -750,7 +750,7 @@ static HRESULT create_shader				(
 		}
 	}
 
-	if (disasm)
+	if (_disasm)
 	{
 		ID3DXBuffer*	disasm	= 0;
 		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &disasm );
