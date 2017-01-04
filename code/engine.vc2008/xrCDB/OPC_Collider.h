@@ -118,10 +118,10 @@
 		 *	\return		null if everything is ok, else a string describing the problem
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		virtual				const char*		ValidateSettings()	= 0;
-//							{
-//								return "Collider::ValidateSettings: pure virtual function called!";
-//							}
+		virtual				const char*		ValidateSettings()	= 0
+							{
+								return "Collider::ValidateSettings: pure virtual function called!";
+							}
 		protected:
 
 							udword			mFlags;		//!< Bit flags
@@ -132,7 +132,7 @@
 		 *	Initializes a query
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		virtual inline_		void			InitQueryEx()		{ mFlags &= ~OPC_TEMPORAL_CONTACT;	}
+		virtual inline_		void			InitQuery()		{ mFlags &= ~OPC_TEMPORAL_CONTACT;	}
 	};
 
 #endif // __OPC_COLLIDER_H__

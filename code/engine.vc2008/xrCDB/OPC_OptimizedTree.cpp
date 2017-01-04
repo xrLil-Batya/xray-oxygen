@@ -61,8 +61,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -112,13 +111,13 @@ static void _BuildCollisionTree(AABBCollisionNode* linear, const udword boxid, u
 	else
 	{
 		// To make the negative one implicit, we must store P and N in successive order
-		udword PosID = curid++;	// Get a _new_ id for positive child
-		udword NegID = curid++;	// Get a _new_ id for negative child
-		// Setup box data as the forthcoming _new_ P pointer
-		linear[boxid].mData = (uintptr_t)&linear[PosID];
+		udword PosID = curid++;	// Get a new id for positive child
+		udword NegID = curid++;	// Get a new id for negative child
+		// Setup box data as the forthcoming new P pointer
+		linear[boxid].mData = (udword)&linear[PosID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[boxid].mData&1));
-		// Recurse with _new_ IDs
+		// Recurse with new IDs
 		_BuildCollisionTree(linear, PosID, curid, curnode->GetPos());
 		_BuildCollisionTree(linear, NegID, curid, curnode->GetNeg());
 	}
@@ -165,10 +164,10 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
 	}
 	else
 	{
-		// Get a _new_ id for positive child
+		// Get a new id for positive child
 		udword PosID = curid++;
 		// Setup box data
-		linear[boxid].mData = (uintptr_t)&linear[PosID];
+		linear[boxid].mData = (udword)&linear[PosID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[boxid].mData&1));
 		// Recurse
@@ -186,10 +185,10 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
 	}
 	else
 	{
-		// Get a _new_ id for positive child
+		// Get a new id for positive child
 		udword NegID = curid++;
 		// Setup box data
-		linear[boxid].mData2 = (uintptr_t)&linear[NegID];
+		linear[boxid].mData2 = (udword)&linear[NegID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[boxid].mData2&1));
 		// Recurse
@@ -213,7 +212,7 @@ AABBCollisionTree::AABBCollisionTree() : mNodes(null)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBCollisionTree::~AABBCollisionTree()
 {
-	CFREE(mNodes);
+	DELETEARRAY(mNodes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -233,10 +232,9 @@ bool AABBCollisionTree::Build(AABBTree* tree)
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
-	mNbNodes	= NbNodes;
-	mNodes		= CALLOC(AABBCollisionNode,mNbNodes);
-	CHECKALLOC	(mNodes);
-    std::memset(mNodes, 0, mNbNodes*sizeof(AABBCollisionNode));
+	mNbNodes = NbNodes;
+	mNodes = new AABBCollisionNode[mNbNodes];
+	CHECKALLOC(mNodes);
 
 	// Build the tree
 	udword CurID = 1;
@@ -267,7 +265,7 @@ AABBNoLeafTree::AABBNoLeafTree() : mNodes(null)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBNoLeafTree::~AABBNoLeafTree()
 {
-	CFREE(mNodes);
+	DELETEARRAY(mNodes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -287,10 +285,9 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
-	mNbNodes	= NbTriangles-1;
-	mNodes		= CALLOC(AABBNoLeafNode,mNbNodes);
-	CHECKALLOC	(mNodes);
-    std::memset(mNodes, 0, mNbNodes*sizeof(AABBNoLeafNode));
+	mNbNodes = NbTriangles-1;
+	mNodes = new AABBNoLeafNode[mNbNodes];
+	CHECKALLOC(mNodes);
 
 	// Build the tree
 	udword CurID = 1;
@@ -321,16 +318,16 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 // Find max values (could use the first node only with min/max boxes)
 #define FIND_MAX_VALUES																			\
 	/* Get max values */																		\
-	Point CMax(flt_min, flt_min, flt_min);												\
-	Point EMax(flt_min, flt_min, flt_min);												\
+	Point CMax(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);												\
+	Point EMax(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);												\
 	for(udword i=0;i<mNbNodes;i++)																\
 	{																							\
-		if(_abs(Nodes[i].mAABB.mCenter.x)>CMax.x)	CMax.x = _abs(Nodes[i].mAABB.mCenter.x);	\
-		if(_abs(Nodes[i].mAABB.mCenter.y)>CMax.y)	CMax.y = _abs(Nodes[i].mAABB.mCenter.y);	\
-		if(_abs(Nodes[i].mAABB.mCenter.z)>CMax.z)	CMax.z = _abs(Nodes[i].mAABB.mCenter.z);	\
-		if(_abs(Nodes[i].mAABB.mExtents.x)>EMax.x)	EMax.x = _abs(Nodes[i].mAABB.mExtents.x);	\
-		if(_abs(Nodes[i].mAABB.mExtents.y)>EMax.y)	EMax.y = _abs(Nodes[i].mAABB.mExtents.y);	\
-		if(_abs(Nodes[i].mAABB.mExtents.z)>EMax.z)	EMax.z = _abs(Nodes[i].mAABB.mExtents.z);	\
+		if(fabsf(Nodes[i].mAABB.mCenter.x)>CMax.x)	CMax.x = fabsf(Nodes[i].mAABB.mCenter.x);	\
+		if(fabsf(Nodes[i].mAABB.mCenter.y)>CMax.y)	CMax.y = fabsf(Nodes[i].mAABB.mCenter.y);	\
+		if(fabsf(Nodes[i].mAABB.mCenter.z)>CMax.z)	CMax.z = fabsf(Nodes[i].mAABB.mCenter.z);	\
+		if(fabsf(Nodes[i].mAABB.mExtents.x)>EMax.x)	EMax.x = fabsf(Nodes[i].mAABB.mExtents.x);	\
+		if(fabsf(Nodes[i].mAABB.mExtents.y)>EMax.y)	EMax.y = fabsf(Nodes[i].mAABB.mExtents.y);	\
+		if(fabsf(Nodes[i].mAABB.mExtents.z)>EMax.z)	EMax.z = fabsf(Nodes[i].mAABB.mExtents.z);	\
 	}
 
 #define INIT_QUANTIZATION							\
@@ -356,12 +353,12 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 
 #define PERFORM_QUANTIZATION														\
 	/* Quantize */																	\
-	((float*)mNodes[i].mAABB.mCenter)[0] = sword(Nodes[i].mAABB.mCenter.x * CQuantCoeff.x);	\
-	((float*)mNodes[i].mAABB.mCenter)[1] = sword(Nodes[i].mAABB.mCenter.y * CQuantCoeff.y);	\
-	((float*)mNodes[i].mAABB.mCenter)[2] = sword(Nodes[i].mAABB.mCenter.z * CQuantCoeff.z);	\
-	((float*)mNodes[i].mAABB.mExtents)[0] = uword(Nodes[i].mAABB.mExtents.x * EQuantCoeff.x);	\
-	((float*)mNodes[i].mAABB.mExtents)[1] = uword(Nodes[i].mAABB.mExtents.y * EQuantCoeff.y);	\
-	((float*)mNodes[i].mAABB.mExtents)[2] = uword(Nodes[i].mAABB.mExtents.z * EQuantCoeff.z);	\
+	mNodes[i].mAABB.mCenter[0] = sword(Nodes[i].mAABB.mCenter.x * CQuantCoeff.x);	\
+	mNodes[i].mAABB.mCenter[1] = sword(Nodes[i].mAABB.mCenter.y * CQuantCoeff.y);	\
+	mNodes[i].mAABB.mCenter[2] = sword(Nodes[i].mAABB.mCenter.z * CQuantCoeff.z);	\
+	mNodes[i].mAABB.mExtents[0] = uword(Nodes[i].mAABB.mExtents.x * EQuantCoeff.x);	\
+	mNodes[i].mAABB.mExtents[1] = uword(Nodes[i].mAABB.mExtents.y * EQuantCoeff.y);	\
+	mNodes[i].mAABB.mExtents[2] = uword(Nodes[i].mAABB.mExtents.z * EQuantCoeff.z);	\
 	/* Fix quantized boxes */														\
 	if(gFixQuantized)																\
 	{																				\
@@ -371,18 +368,18 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 		/* For each axis */															\
 		for(udword j=0;j<3;j++)														\
 		{	/* Dequantize the box center */											\
-			float qc = float(((float*)mNodes[i].mAABB.mCenter)[j]) * ((float*)mCenterCoeff)[j];			\
+			float qc = float(mNodes[i].mAABB.mCenter[j]) * mCenterCoeff[j];			\
 			bool FixMe=true;														\
 			do																		\
 			{	/* Dequantize the box extent */										\
-				float qe = float(((float*)mNodes[i].mAABB.mExtents)[j]) * ((float*)mExtentsCoeff)[j];	\
+				float qe = float(mNodes[i].mAABB.mExtents[j]) * mExtentsCoeff[j];	\
 				/* Compare real & dequantized values */								\
-				if(qc+qe<((float*)Max)[j] || qc-qe>((float*)Min)[j])	((float*)mNodes[i].mAABB.mExtents)[j]++;	\
+				if(qc+qe<Max[j] || qc-qe>Min[j])	mNodes[i].mAABB.mExtents[j]++;	\
 				else								FixMe=false;					\
 				/* Prevent wrapping */												\
-				if(!((float*)mNodes[i].mAABB.mExtents)[j])									\
+				if(!mNodes[i].mAABB.mExtents[j])									\
 				{																	\
-					((float*)mNodes[i].mAABB.mExtents)[j]=0xffff;								\
+					mNodes[i].mAABB.mExtents[j]=0xffff;								\
 					FixMe=false;													\
 				}																	\
 			}while(FixMe);															\
@@ -395,8 +392,8 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	if(!(Data&1))													\
 	{																\
 		/* Compute box number */									\
-		size_t Nb = (Data - uintptr_t(Nodes))/Nodes[i].GetNodeSize();	\
-		Data = uintptr_t(&mNodes[Nb]);									\
+		udword Nb = (Data - udword(Nodes))/Nodes[i].GetNodeSize();	\
+		Data = udword(&mNodes[Nb]);									\
 	}																\
 	/* ...remapped */												\
 	mNodes[i].member = Data;
@@ -417,7 +414,7 @@ AABBQuantizedTree::AABBQuantizedTree() : mNodes(null)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBQuantizedTree::~AABBQuantizedTree()
 {
-	CFREE(mNodes);
+	DELETEARRAY(mNodes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -437,10 +434,9 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
-	mNbNodes					= NbNodes;
-	AABBCollisionNode*	Nodes	= CALLOC(AABBCollisionNode,mNbNodes);
-	CHECKALLOC			(Nodes);
-    std::memset(Nodes, 0, mNbNodes*sizeof(AABBCollisionNode));
+	mNbNodes = NbNodes;
+	AABBCollisionNode* Nodes = new AABBCollisionNode[mNbNodes];
+	CHECKALLOC(Nodes);
 
 	// Build the tree
 	udword CurID = 1;
@@ -448,9 +444,8 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 
 	// Quantize
 	{
-		mNodes		= CALLOC(AABBQuantizedNode,mNbNodes);
-		CHECKALLOC	(mNodes);
-        std::memset(mNodes, 0, mNbNodes*sizeof(AABBQuantizedNode));
+		mNodes = new AABBQuantizedNode[mNbNodes];
+		CHECKALLOC(mNodes);
 
 		// Get max values
 		FIND_MAX_VALUES
@@ -459,14 +454,14 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 		INIT_QUANTIZATION
 
 		// Quantize
-		uintptr_t Data;
-		for(udword i=0;i<mNbNodes;i++)
+		udword Data;
+		for(int i=0;i<mNbNodes;i++)
 		{
 			PERFORM_QUANTIZATION
 			REMAP_DATA(mData)
 		}
 
-		CFREE(Nodes);
+		DELETEARRAY(Nodes);
 	}
 
 #ifdef __ICECORE_H__
@@ -494,7 +489,7 @@ AABBQuantizedNoLeafTree::AABBQuantizedNoLeafTree() : mNodes(null)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBQuantizedNoLeafTree::~AABBQuantizedNoLeafTree()
 {
-	CFREE(mNodes);
+	DELETEARRAY(mNodes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -514,10 +509,9 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
-	mNbNodes				= NbTriangles-1;
-	AABBNoLeafNode* Nodes	= CALLOC(AABBNoLeafNode,mNbNodes);
-	CHECKALLOC		(Nodes);
-    std::memset(Nodes,	0, mNbNodes*sizeof(AABBNoLeafNode));
+	mNbNodes = NbTriangles-1;
+	AABBNoLeafNode* Nodes = new AABBNoLeafNode[mNbNodes];
+	CHECKALLOC(Nodes);
 
 	// Build the tree
 	udword CurID = 1;
@@ -526,9 +520,8 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 
 	// Quantize
 	{
-		mNodes		= CALLOC(AABBQuantizedNoLeafNode,mNbNodes);
-		CHECKALLOC	(mNodes);
-        std::memset(mNodes, 0, mNbNodes*sizeof(AABBQuantizedNoLeafNode));
+		mNodes = new AABBQuantizedNoLeafNode[mNbNodes];
+		CHECKALLOC(mNodes);
 
 		// Get max values
 		FIND_MAX_VALUES
@@ -537,15 +530,15 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 		INIT_QUANTIZATION
 
 		// Quantize
-		uintptr_t Data;
-		for(udword i=0;i<mNbNodes;i++)
+		udword Data;
+		for(int i=0;i<mNbNodes;i++)
 		{
 			PERFORM_QUANTIZATION
 			REMAP_DATA(mData)
 			REMAP_DATA(mData2)
 		}
 
-		CFREE(Nodes);
+		DELETEARRAY(Nodes);
 	}
 
 #ifdef __ICECORE_H__

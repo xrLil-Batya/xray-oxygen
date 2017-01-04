@@ -40,7 +40,7 @@
 					// Resize if needed
 					if(mCurNbEntries==mMaxNbEntries)	Resize();
 
-					// Add _new_ entry
+					// Add new entry
 					mEntries[mCurNbEntries++]	= entry;
 					return *this;
 				}
@@ -50,8 +50,8 @@
 					// Resize if needed
 					if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
 
-					// Add _new_ entry
-                    std::memcpy(&mEntries[mCurNbEntries], entries, nb*sizeof(udword));
+					// Add new entry
+					CopyMemory(&mEntries[mCurNbEntries], entries, nb*sizeof(udword));
 					mCurNbEntries+=nb;
 					return *this;
 				}
@@ -74,7 +74,7 @@
 					// Resize if needed
 					if(mCurNbEntries==mMaxNbEntries)	Resize();
 
-					// Add _new_ entry
+					// Add new entry
 					mEntries[mCurNbEntries++]	= IR(entry);
 					return *this;
 				}
@@ -84,8 +84,8 @@
 					// Resize if needed
 					if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
 
-					// Add _new_ entry
-                    std::memcpy(&mEntries[mCurNbEntries], entries, nb*sizeof(float));
+					// Add new entry
+					CopyMemory(&mEntries[mCurNbEntries], entries, nb*sizeof(float));
 					mCurNbEntries+=nb;
 					return *this;
 				}
@@ -109,8 +109,8 @@
 					#ifdef CONTAINER_STATS
 					mUsedRam-=mMaxNbEntries*sizeof(udword);
 					#endif
-					CFREE(mEntries);
-					mCurNbEntries	= mMaxNbEntries = 0;
+					DELETEARRAY(mEntries);
+					mCurNbEntries = mMaxNbEntries = 0;
 					return *this;
 				}
 
@@ -178,7 +178,7 @@
 				void			operator = (const Container& object)
 				{
 					SetSize(object.GetNbEntries());
-                    std::memcpy(mEntries, object.GetEntries(), mMaxNbEntries*sizeof(udword));
+					CopyMemory(mEntries, object.GetEntries(), mMaxNbEntries*sizeof(udword));
 					mCurNbEntries = mMaxNbEntries;
 				}
 
@@ -197,7 +197,7 @@
 				udword			mMaxNbEntries;		//!< Maximum possible number of entries
 				udword			mCurNbEntries;		//!< Current number of entries
 				udword*			mEntries;			//!< List of entries
-				float			mGrowthFactor;		//!< Resize: _new_ number of entries = old number * mGrowthFactor
+				float			mGrowthFactor;		//!< Resize: new number of entries = old number * mGrowthFactor
 	};
 
 	class ICECORE_API Pairs : public Container

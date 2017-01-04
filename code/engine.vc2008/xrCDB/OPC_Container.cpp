@@ -22,8 +22,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace IceCore;
 
@@ -92,8 +91,8 @@ bool Container::Resize(udword needed)
 	mMaxNbEntries = mMaxNbEntries ? udword(float(mMaxNbEntries)*mGrowthFactor) : 2;	// Default nb Entries = 2
 	if(mMaxNbEntries<mCurNbEntries + needed)	mMaxNbEntries = mCurNbEntries + needed;
 
-	// Get some bytes for _new_ entries
-	udword*	NewEntries = CALLOC(udword,mMaxNbEntries);
+	// Get some bytes for new entries
+	udword*	NewEntries = new udword[mMaxNbEntries];
 	CHECKALLOC(NewEntries);
 
 #ifdef CONTAINER_STATS
@@ -102,12 +101,12 @@ bool Container::Resize(udword needed)
 #endif
 
 	// Copy old data if needed
-	if(mCurNbEntries)	std::memcpy(NewEntries, mEntries, mCurNbEntries*sizeof(udword));
+	if(mCurNbEntries)	CopyMemory(NewEntries, mEntries, mCurNbEntries*sizeof(udword));
 
 	// Delete old data
-	CFREE(mEntries);
+	DELETEARRAY(mEntries);
 
-	// Assign _new_ pointer
+	// Assign new pointer
 	mEntries = NewEntries;
 
 	return true;
@@ -131,8 +130,8 @@ bool Container::SetSize(udword nb)
 	// Initialize for nb entries
 	mMaxNbEntries = nb;
 
-	// Get some bytes for _new_ entries
-	mEntries = CALLOC(udword,mMaxNbEntries);
+	// Get some bytes for new entries
+	mEntries = new udword[mMaxNbEntries];
 	CHECKALLOC(mEntries);
 
 #ifdef CONTAINER_STATS
@@ -160,7 +159,7 @@ bool Container::Refit()
 	if(!mMaxNbEntries)	return false;
 
 	// Get just enough bytes
-	udword*	NewEntries = CALLOC(udword,mMaxNbEntries);
+	udword*	NewEntries = new udword[mMaxNbEntries];
 	CHECKALLOC(NewEntries);
 
 #ifdef CONTAINER_STATS
@@ -169,12 +168,12 @@ bool Container::Refit()
 #endif
 
 	// Copy old data
-    std::memcpy(NewEntries, mEntries, mCurNbEntries*sizeof(udword));
+	CopyMemory(NewEntries, mEntries, mCurNbEntries*sizeof(udword));
 
 	// Delete old data
-	CFREE(mEntries);
+	DELETEARRAY(mEntries);
 
-	// Assign _new_ pointer
+	// Assign new pointer
 	mEntries = NewEntries;
 
 	return true;
@@ -208,7 +207,7 @@ bool Container::Contains(udword entry, udword* location) const
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Deletes an entry. If the container contains such an entry, it's removed.
- *	\param		entry		[in] the value to _delete_.
+ *	\param		entry		[in] the value to delete.
  *	\return		true if the value has been found in the container, else false.
  *	\warning	This method is arbitrary slow (O(n)) and should be used carefully. Insertion order is not preserved.
  */
@@ -231,7 +230,7 @@ bool Container::Delete(udword entry)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Deletes an entry, preserving the insertion order. If the container contains such an entry, it's removed.
- *	\param		entry		[in] the value to _delete_.
+ *	\param		entry		[in] the value to delete.
  *	\return		true if the value has been found in the container, else false.
  *	\warning	This method is arbitrary slow (O(n)) and should be used carefully.
  */

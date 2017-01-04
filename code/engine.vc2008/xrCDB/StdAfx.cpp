@@ -1,17 +1,19 @@
-// stdafx.cpp : source file that includes just the standard includes
-//	xrCDB.pch will be the pre-compiled header
-//	stdafx.obj will contain the pre-compiled type information
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/*
+ *	OPCODE - Optimized Collision Detection
+ *	Copyright (C) 2001 Pierre Terdiman
+ *	Homepage: http://www.codercorner.com/Opcode.htm
+ */
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 #include "stdafx.h"
 #pragma hdrstop
 
 #ifdef __BORLANDC__
-	#pragma comment(lib,"xrCoreB.lib")
+#pragma comment(lib, "xrCoreB.lib")
 #else
-	#pragma comment(lib,"xrCore.lib")
+#pragma comment(lib, "xrCore.lib")
 #endif
 
-#pragma comment(lib,"winmm.lib")
-
-// TODO: reference any additional headers you need in STDAFX.H
-// and not in this file
+#pragma comment(lib, "winmm.lib")

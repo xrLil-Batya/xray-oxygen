@@ -127,12 +127,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
-
-namespace Opcode {
-#	include "OPC_TreeBuilders.h"
-} // namespace Opcode
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -170,10 +165,10 @@ OPCODE_Model::OPCODE_Model() : mSource(null), mTree(null), mNoLeaf(false), mQuan
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 OPCODE_Model::~OPCODE_Model()
 {
-	CDELETE		(mSource);
-	CDELETE		(mTree);
+	DELETESINGLE(mSource);
+	DELETESINGLE(mTree);
 #ifdef __MESHMERIZER_H__	// Collision hulls only supported within ICE !
-	CDELETE		(mHull);
+	DELETESINGLE(mHull);
 #endif // __MESHMERIZER_H__
 }
 
@@ -190,7 +185,7 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 	if(!create.NbTris || !create.Tris || !create.Verts)	return false;
 
 	// In this lib, we only support complete trees
-	if(!(create.Rules&SPLIT_COMPLETE))	return SetIceError;//("OPCODE WARNING: supports complete trees only! Use SPLIT_COMPLETE.\n");
+	if(!(create.Rules&SPLIT_COMPLETE))	return SetIceError("OPCODE WARNING: supports complete trees only! Use SPLIT_COMPLETE.\n");
 
 	// Check topology. If the model contains degenerate faces, collision report can be wrong in some cases.
 	// e.g. it happens with the standard MAX teapot. So clean your meshes first... If you don't have a mesh cleaner
@@ -205,7 +200,7 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 	// We continue nonetheless.... 
 
 	// 2) Build a generic AABB Tree.
-	mSource = CNEW(AABBTree)();
+	mSource = new AABBTree;
 	CHECKALLOC(mSource);
 
 	// 2-1) Setup a builder. Our primitives here are triangles from input mesh,
@@ -224,30 +219,28 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 
 	if(mNoLeaf)
 	{
-		if(mQuantized)	mTree = CNEW(AABBQuantizedNoLeafTree)();
-		else			mTree = CNEW(AABBNoLeafTree)();
+		if(mQuantized)	mTree = new AABBQuantizedNoLeafTree;
+		else			mTree = new AABBNoLeafTree;
 	}
 	else
 	{
-		if(mQuantized)	mTree = CNEW(AABBQuantizedTree)();
-		else			mTree = CNEW(AABBCollisionTree)();
+		if(mQuantized)	mTree = new AABBQuantizedTree;
+		else			mTree = new AABBCollisionTree;
 	}
+	CHECKALLOC(mTree);
 
 	// 3-2) Create optimized tree
 	if(!mTree->Build(mSource))	return false;
 
 	// 3-3) Delete generic tree if needed
-	if(!create.KeepOriginal)	{
-		mSource->destroy	(&TB)		;
-		CDELETE				(mSource)	;	
-	}
+	if(!create.KeepOriginal)	DELETESINGLE(mSource);
 
 #ifdef __MESHMERIZER_H__
 	// 4) Convex hull
 	if(create.CollisionHull)
 	{
 		// Create hull
-		mHull = CNEW(CollisionHull)();
+		mHull = new CollisionHull;
 		CHECKALLOC(mHull);
 
 		CONVEXHULLCREATE CHC;

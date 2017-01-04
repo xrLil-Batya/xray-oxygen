@@ -22,7 +22,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Preprocessor
-#define OPCODE_API 
+#define OPCODE_API XRCDB_API
 #ifndef __ICECORE_H__
 	#ifdef WIN32
 	#include <windows.h>
@@ -44,6 +44,8 @@
 	#define	Alignment
 
 	#include "OPC_Preprocessor.h"
+//	#undef ICECORE_API
+//	#define ICECORE_API	__declspec(dllimport)
 	#define ICECORE_API	OPCODE_API
 
 	#include "OPC_Types.h"
@@ -87,7 +89,7 @@
 		// Bulk-of-the-work
 		#include "OPC_Settings.h"
 		#include "OPC_Common.h"
-//		#include "OPC_TreeBuilders.h"
+		#include "OPC_TreeBuilders.h"
 		#include "OPC_AABBTree.h"
 		#include "OPC_OptimizedTree.h"
 		#include "OPC_Model.h"
@@ -95,7 +97,7 @@
 		#include "OPC_Collider.h"
 		#include "OPC_VolumeCollider.h"
 		#include "OPC_TreeCollider.h"
-		#include "OPC_RayCollider.h"    
+		#include "OPC_RayCollider.h"
 		#include "OPC_SphereCollider.h"
 		#include "OPC_OBBCollider.h"
 		#include "OPC_AABBCollider.h"

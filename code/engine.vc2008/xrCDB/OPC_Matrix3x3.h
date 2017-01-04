@@ -31,7 +31,7 @@
 									m[2][0] = m20;	m[2][1] = m21;	m[2][2] = m22;
 								}
 		//! Copy constructor
-		inline_					Matrix3x3(const Matrix3x3& mat)				{ std::memcpy(m, &mat.m, 9*sizeof(float));	}
+		inline_					Matrix3x3(const Matrix3x3& mat)				{ CopyMemory(m, &mat.m, 9*sizeof(float));	}
 		//! Destructor
 		inline_					~Matrix3x3()								{}
 
@@ -66,7 +66,7 @@
 				}
 
 		//! Copy from a Matrix3x3
-		inline_	void			Copy(const Matrix3x3& source)				{ std::memcpy(m, source.m, 9*sizeof(float));			}
+		inline_	void			Copy(const Matrix3x3& source)				{ CopyMemory(m, source.m, 9*sizeof(float));			}
 
 		// Row-column access
 		//! Returns a row.
@@ -81,7 +81,7 @@
 		//! Computes the trace. The trace is the sum of the 3 diagonal components.
 		inline_	float			Trace()					const				{ return m[0][0] + m[1][1] + m[2][2];				}
 		//! Clears the matrix.
-		inline_	void			Zero()										{ std::memset(&m, 0, sizeof(m));						}
+		inline_	void			Zero()										{ ZeroMemory(&m, sizeof(m));						}
 		//! Sets the identity matrix.
 		inline_	void			Identity()									{ Zero(); m[0][0] = m[1][1] = m[2][2] = 1.0f; 		}
 		//! Checks for identity
@@ -241,15 +241,15 @@
 					m[2][2] = a.m[2][0] * b.m[2][0] + a.m[2][1] * b.m[2][1] + a.m[2][2] * b.m[2][2];
 				}
 
-		//! Makes a rotation matrix mapping vector3 "from" to vector3 "to".
+		//! Makes a rotation matrix mapping vector "from" to vector "to".
 				Matrix3x3&		FromTo(const Point& from, const Point& to);
 
 		//! Set a rotation matrix around the X axis.
-				void			RotX(float angle)	{ float Cos = _cos(angle), Sin = _sin(angle); Identity(); m[1][1] = m[2][2] = Cos; m[2][1] = -Sin;	m[1][2] = Sin;	}
+				void			RotX(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[1][1] = m[2][2] = Cos; m[2][1] = -Sin;	m[1][2] = Sin;	}
 		//! Set a rotation matrix around the Y axis.
-				void			RotY(float angle)	{ float Cos = _cos(angle), Sin = _sin(angle); Identity(); m[0][0] = m[2][2] = Cos; m[2][0] = Sin;	m[0][2] = -Sin;	}
+				void			RotY(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[0][0] = m[2][2] = Cos; m[2][0] = Sin;	m[0][2] = -Sin;	}
 		//! Set a rotation matrix around the Z axis.
-				void			RotZ(float angle)	{ float Cos = _cos(angle), Sin = _sin(angle); Identity(); m[0][0] = m[1][1] = Cos; m[1][0] = -Sin;	m[0][1] = Sin;	}
+				void			RotZ(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[0][0] = m[1][1] = Cos; m[1][0] = -Sin;	m[0][1] = Sin;	}
 
 		//! Make a rotation matrix about an arbitrary angle
 				Matrix3x3&		Rot(float angle, const Point& axis);

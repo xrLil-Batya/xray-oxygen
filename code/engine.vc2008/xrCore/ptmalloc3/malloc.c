@@ -5250,7 +5250,7 @@ void** mspace_independent_comalloc(mspace msp, size_t n_elements,
   mstate ms = (mstate)msp;
   if (!ok_magic(ms)) {
     USAGE_ERROR_ACTION(ms,ms);
-    return 0;
+//    return 0; Как бы всё равно не достижим
   }
   return ialloc(ms, n_elements, sizes, 0, chunks);
 }

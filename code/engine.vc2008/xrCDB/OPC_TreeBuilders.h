@@ -20,11 +20,9 @@
 #ifndef __OPC_TREEBUILDERS_H__
 #define __OPC_TREEBUILDERS_H__
 
-#include "opc_aabbtree.h"
-#include "../xrCore/xrPool.h"
-
 	//! Tree splitting rules
-	enum SplittingRules			{
+	enum SplittingRules
+	{
 		// Tree
 		SPLIT_COMPLETE			= (1<<0),		//!< Build a complete tree (2*N-1 nodes)
 		// Primitive split
@@ -38,8 +36,6 @@
 		//
 		SPLIT_FORCE_DWORD		= 0x7fffffff
 	};
-
-
 
 	class OPCODE_API AABBTreeBuilder
 	{
@@ -85,7 +81,7 @@
 		 *	\return		splitting value
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		virtual						float		GetSplittingValueEx(const udword* primitives, udword nb_prims, const AABB& global_box, udword axis)	const
+		virtual						float		GetSplittingValue(const udword* primitives, udword nb_prims, const AABB& global_box, udword axis)	const
 									{
 										// Default split value = middle of the axis (using only the box)
 										return global_box.GetCenter(axis);
@@ -102,13 +98,9 @@
 		inline_						void		IncreaseNbInvalidSplits()		{ mNbInvalidSplits++;		}
 		inline_						udword		GetNbInvalidSplits()	const	{ return mNbInvalidSplits;	}
 
-		private:					
+		private:
 									udword		mCount;				//!< Stats: number of nodes created
 									udword		mNbInvalidSplits;	//!< Stats: number of invalid splits
-		public:
-				poolSS<AABBTreeNode,16*1024>	mPOOL		;
-		inline_					AABBTreeNode*	node_alloc	()					{return mPOOL.create();		}
-		inline_						void		node_destroy(AABBTreeNode* &n)	{return mPOOL.destroy(n);	}
 	};
 
 	class OPCODE_API AABBTreeOfAABBsBuilder : public AABBTreeBuilder
@@ -120,12 +112,11 @@
 		virtual									~AABBTreeOfAABBsBuilder()					{}
 
 		override(AABBTreeBuilder)	bool		ComputeGlobalBox(const udword* primitives, udword nb_prims, AABB& global_box)	const;
-		virtual	float		GetSplittingValue(udword index, udword axis)	const;
+		override(AABBTreeBuilder)	float		GetSplittingValue(udword index, udword axis)	const;
 
 		const						AABB*		mAABBList;			//!< Shortcut to an app-controlled list of AABBs.
 	};
 
-#pragma warning(disable:4512)
 	class OPCODE_API AABBTreeOfTrianglesBuilder : public AABBTreeBuilder
 	{
 		public:
@@ -142,6 +133,5 @@
 		const						Point*		mVerts;				//!< Shortcut to an app-controlled list of vertices.
 		const						udword		mNbTriangles;		//!< Total number of triangles.
 	};
-#pragma warning(default:4512)
 
 #endif // __OPC_TREEBUILDERS_H__
