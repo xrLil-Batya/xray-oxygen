@@ -53,9 +53,9 @@
 		inline_				~CollisionAABB()					{}
 
 		//! Get component of the box's min point along a given axis
-		inline_	float		GetMin(udword axis)		const		{ return ((const float*)mCenter)[axis] - ((const float*)mExtents)[axis];	}
+		inline_	float		GetMin(udword axis)		const		{ return mCenter[axis] - mExtents[axis];	}
 		//! Get component of the box's max point along a given axis
-		inline_	float		GetMax(udword axis)		const		{ return ((const float*)mCenter)[axis] + ((const float*)mExtents)[axis];	}
+		inline_	float		GetMax(udword axis)		const		{ return mCenter[axis] + mExtents[axis];	}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -120,7 +120,7 @@
 		inline_	void					AddFace(const CollisionFace& face)		{ Add(face.mFaceID).Add(face.mDistance).Add(face.mU).Add(face.mV);	}
 	};
 
-	//! Quickly rotates & translates a vector3
+	//! Quickly rotates & translates a vector
 	inline_ void TransformPoint(Point& dest, const Point& source, const Matrix3x3& rot, const Point& trans)
 	{
 		dest.x = trans.x + source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];

@@ -28,8 +28,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -133,7 +132,7 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, OPCODE_Mo
  *	Initializes a collision query :
  *	- reset stats & contact status
  *	- check temporal coherence
- *           
+ *
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] AABB in world space
  *	\return		contact status
@@ -142,7 +141,7 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, OPCODE_Mo
 BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 {
 	// 1) Call the base method
-	VolumeCollider::InitQueryEx();
+	VolumeCollider::InitQuery();
 
 	// 2) Keep track of the query box
 	mBox = box;
@@ -176,7 +175,7 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 		}
 		else
 		{
-			// We're interested in all contacts =>test the _new_ real box N(ew) against the previous fat box P(revious):
+			// We're interested in all contacts =>test the new real box N(ew) against the previous fat box P(revious):
 			if(mBox.IsInside(cache.FatBox))
 			{
 				// - if N is included in P, return previous list

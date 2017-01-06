@@ -39,12 +39,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
-
-namespace Opcode {
-#	include "OPC_TreeBuilders.h"
-} // namespace Opcode
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -105,8 +100,8 @@ bool AABBTreeOfTrianglesBuilder::ComputeGlobalBox(const udword* primitives, udwo
 	if(!primitives || !nb_prims)	return false;
 
 	// Initialize global box
-	Point Min(flt_max, flt_max, flt_max);
-	Point Max(flt_min, flt_min, flt_min);
+	Point Min(MAX_FLOAT, MAX_FLOAT, MAX_FLOAT);
+	Point Max(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);
 
 	// Loop through triangles
 	for(udword i=0;i<nb_prims;i++)
@@ -140,9 +135,9 @@ float AABBTreeOfTrianglesBuilder::GetSplittingValue(udword index, udword axis) c
 	return Center[axis];*/
 
 	// Compute correct component from center of triangle
-	return	(((const float*)mVerts[mTriList[index].mVRef[0]])[axis]
-			+((const float*)mVerts[mTriList[index].mVRef[1]])[axis]
-			+((const float*)mVerts[mTriList[index].mVRef[2]])[axis])*INV3;
+	return	(mVerts[mTriList[index].mVRef[0]][axis]
+			+mVerts[mTriList[index].mVRef[1]][axis]
+			+mVerts[mTriList[index].mVRef[2]][axis])*INV3;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -168,11 +163,11 @@ float AABBTreeOfTrianglesBuilder::GetSplittingValue(const udword* primitives, ud
 			const Point& p1 = mVerts[mTriList[primitives[i]].mVRef[1]];
 			const Point& p2 = mVerts[mTriList[primitives[i]].mVRef[2]];
 			// Update split value
-			SplitValue += ((const float*)p0)[axis];
-			SplitValue += ((const float*)p1)[axis];
-			SplitValue += ((const float*)p2)[axis];
+			SplitValue += p0[axis];
+			SplitValue += p1[axis];
+			SplitValue += p2[axis];
 		}
 		return SplitValue / float(nb_prims*3);
 	}
-	else return AABBTreeBuilder::GetSplittingValueEx(primitives, nb_prims, global_box, axis);
+	else return AABBTreeBuilder::GetSplittingValue(primitives, nb_prims, global_box, axis);
 }

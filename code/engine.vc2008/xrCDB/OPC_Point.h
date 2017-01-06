@@ -29,12 +29,9 @@
 
 	#define CROSS2D(a, b)	(a.x*b.y - b.x*a.y)
 
-	#define EPSILON2 1.0e-20f;
+	const float EPSILON2 = 1.0e-20f;
 
-    class ICEMATHS_API icePoint;
-    #define Point icePoint
-    
-	class ICEMATHS_API icePoint
+	class ICEMATHS_API Point
 	{
 		public:
 
@@ -51,17 +48,17 @@
 		//! Destructor
 		inline_					~Point()													{}
 
-		//! Clears the vector3
+		//! Clears the vector
 		inline_	Point&			Zero()									{ x =			y =			z = 0.0f;			return *this;	}
 
 		//! + infinity
-		inline_	Point&			SetPlusInfinity()						{ x =			y =			z = flt_max;		return *this;	}
+		inline_	Point&			SetPlusInfinity()						{ x =			y =			z = MAX_FLOAT;		return *this;	}
 		//! - infinity
-		inline_	Point&			SetMinusInfinity()						{ x =			y =			z = flt_min;		return *this;	}
+		inline_	Point&			SetMinusInfinity()						{ x =			y =			z = MIN_FLOAT;		return *this;	}
 
-		//! Sets positive unit random vector3
+		//! Sets positive unit random vector
 				Point&			PositiveUnitRandomVector();
-		//! Sets unit random vector3
+		//! Sets unit random vector
 				Point&			UnitRandomVector();
 
 		//! Assignment from values
@@ -71,20 +68,20 @@
 		//! Assignment from another point
 		inline_	Point&			Set(const Point& src)					{ x  = src.x;	y  = src.y;	z  = src.z;			return *this;	}
 
-		//! Adds a vector3
+		//! Adds a vector
 		inline_	Point&			Add(const Point& p)						{ x += p.x;		y += p.y;	z += p.z;			return *this;	}
-		//! Adds a vector3
+		//! Adds a vector
 		inline_	Point&			Add(float _x, float _y, float _z)		{ x += _x;		y += _y;	z += _z;			return *this;	}
-		//! Adds a vector3
+		//! Adds a vector
 		inline_	Point&			Add(float f[3])							{ x += f[_X];	y += f[_Y];	z += f[_Z];			return *this;	}
 		//! Adds vectors
 		inline_	Point&			Add(const Point& p, const Point& q)		{ x = p.x+q.x;	y = p.y+q.y;	z = p.z+q.z;	return *this;	}
 
-		//! Subtracts a vector3
+		//! Subtracts a vector
 		inline_	Point&			Sub(const Point& p)						{ x -= p.x;		y -= p.y;	z -= p.z;			return *this;	}
-		//! Subtracts a vector3
+		//! Subtracts a vector
 		inline_	Point&			Sub(float _x, float _y, float _z)		{ x -= _x;		y -= _y;	z -= _z;			return *this;	}
-		//! Subtracts a vector3
+		//! Subtracts a vector
 		inline_	Point&			Sub(float f[3])							{ x -= f[_X];	y -= f[_Y];	z -= f[_Z];			return *this;	}
 		//! Subtracts vectors
 		inline_	Point&			Sub(const Point& p, const Point& q)		{ x = p.x-q.x;	y = p.y-q.y;	z = p.z-q.z;	return *this;	}
@@ -206,14 +203,14 @@
 		//! this = trans(rotpos) * (r - linpos)
 		inline_	Point&			InvTransform(const Point& r, const Matrix3x3& rotpos, const Point& linpos);
 
-		//! Returns _min(x, y, z);
-		inline_	float			Min()				const		{ return std::min(x, std::min(y, z));												}
-		//! Returns _max(x, y, z);
-		inline_	float			Max()				const		{ return std::max(x, std::max(y, z));												}
+		//! Returns MIN(x, y, z);
+		inline_	float			Min()				const		{ return MIN(x, MIN(y, z));												}
+		//! Returns MAX(x, y, z);
+		inline_	float			Max()				const		{ return MAX(x, MAX(y, z));												}
 		//! Sets each element to be componentwise minimum
-		inline_	Point&			Min(const Point& p)				{ x = std::min(x, p.x); y = std::min(y, p.y); z = std::min(z, p.z);	return *this;	}
+		inline_	Point&			Min(const Point& p)				{ x = MIN(x, p.x); y = MIN(y, p.y); z = MIN(z, p.z);	return *this;	}
 		//! Sets each element to be componentwise maximum
-		inline_	Point&			Max(const Point& p)				{ x = std::max(x, p.x); y = std::max(y, p.y); z = std::max(z, p.z);	return *this;	}
+		inline_	Point&			Max(const Point& p)				{ x = MAX(x, p.x); y = MAX(y, p.y); z = MAX(z, p.z);	return *this;	}
 
 		//! Clamps each element
 		inline_	Point&			Clamp(float min, float max)
@@ -227,7 +224,7 @@
 		//! Computes square magnitude
 		inline_	float			SquareMagnitude()	const		{ return x*x + y*y + z*z;												}
 		//! Computes magnitude
-		inline_	float			Magnitude()			const		{ return _sqrt(x*x + y*y + z*z);										}
+		inline_	float			Magnitude()			const		{ return sqrtf(x*x + y*y + z*z);										}
 		//! Computes volume
 		inline_	float			Volume()			const		{ return x * y * z;														}
 
@@ -260,13 +257,13 @@
 											Dummy = (IR(z)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
 								}
 
-		//! Normalizes the vector3
+		//! Normalizes the vector
 		inline_	Point&			Normalize()
 								{
 									float M = x*x + y*y + z*z;
 									if(M)
 									{
-										M = 1.0f / _sqrt(M);
+										M = 1.0f / sqrtf(M);
 										x *= M;
 										y *= M;
 										z *= M;
@@ -274,7 +271,7 @@
 									return *this;
 								}
 
-		//! Sets vector3 length
+		//! Sets vector length
 		inline_	Point&			SetLength(float length)
 								{
 									float NewLength = length / Magnitude();
@@ -287,7 +284,7 @@
 		//! Computes distance to another point
 		inline_	float			Distance(const Point& b)			const
 								{
-									return _sqrt((x - b.x)*(x - b.x) + (y - b.y)*(y - b.y) + (z - b.z)*(z - b.z));
+									return sqrtf((x - b.x)*(x - b.x) + (y - b.y)*(y - b.y) + (z - b.z)*(z - b.z));
 								}
 
 		//! Computes square distance to another point
@@ -391,7 +388,7 @@
 		//! Operator for float DotProd = Point | Point.
 		inline_	float			operator|(const Point& p)			const		{ return x*p.x + y*p.y + z*p.z;						}
 		//! Operator for Point VecProd = Point ^ Point.
-		ICF		Point			operator^(const Point& p)			const
+		inline_	Point			operator^(const Point& p)			const
 								{
 									return Point(
 									y * p.z - z * p.y,

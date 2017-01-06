@@ -39,7 +39,7 @@
 										m[3][0] = m30;	m[3][1] = m31;	m[3][2] = m32;	m[3][3] = m33;
 									}
 		//! Copy constructor
-		inline_						Matrix4x4(const Matrix4x4& mat)				{ std::memcpy(m, &mat.m, 16*sizeof(float));	}
+		inline_						Matrix4x4(const Matrix4x4& mat)				{ CopyMemory(m, &mat.m, 16*sizeof(float));	}
 		//! Destructor.
 		inline_						~Matrix4x4()								{}
 
@@ -98,7 +98,7 @@
 				}
 
 		//! Copy from a Matrix4x4
-		inline_	void				Copy(const Matrix4x4& source)				{ std::memcpy(m, source.m, 16*sizeof(float));	}
+		inline_	void				Copy(const Matrix4x4& source)				{ CopyMemory(m, source.m, 16*sizeof(float));	}
 
 		// Row-column access
 		//! Returns a row.
@@ -166,7 +166,7 @@
 		//! Computes the trace of the upper 3x3 matrix.
 		inline_	float				Trace3x3()		const			{ return m[0][0] + m[1][1] + m[2][2];					}
 		//! Clears the matrix.
-		inline_	void				Zero()							{ std::memset(&m, 0,  sizeof(m));							}
+		inline_	void				Zero()							{ ZeroMemory(&m,  sizeof(m));							}
 		//! Sets the identity matrix.
 		inline_	void				Identity()						{ Zero(); m[0][0] = m[1][1] = m[2][2] = m[3][3] = 1.0f;	}
 		//! Checks for identity
@@ -207,11 +207,11 @@
 				Matrix4x4&			Rotozoom(float angle, float zoom, float posx, float posy);
 
 		//! Sets a rotation matrix around the X axis.
-				void				RotX(float angle)	{ float Cos = _cos(angle), Sin = _sin(angle); Identity(); m[1][1] = m[2][2] = Cos; m[2][1] = -Sin;	m[1][2] = Sin;	}
+				void				RotX(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[1][1] = m[2][2] = Cos; m[2][1] = -Sin;	m[1][2] = Sin;	}
 		//! Sets a rotation matrix around the Y axis.
-				void				RotY(float angle)	{ float Cos = _cos(angle), Sin = _sin(angle); Identity(); m[0][0] = m[2][2] = Cos; m[2][0] = Sin;	m[0][2] = -Sin;	}
+				void				RotY(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[0][0] = m[2][2] = Cos; m[2][0] = Sin;	m[0][2] = -Sin;	}
 		//! Sets a rotation matrix around the Z axis.
-				void				RotZ(float angle)	{ float Cos = _cos(angle), Sin = _sin(angle); Identity(); m[0][0] = m[1][1] = Cos; m[1][0] = -Sin;	m[0][1] = Sin;	}
+				void				RotZ(float angle)	{ float Cos = cosf(angle), Sin = sinf(angle); Identity(); m[0][0] = m[1][1] = Cos; m[1][0] = -Sin;	m[0][1] = Sin;	}
 
 		//! Makes a rotation matrix about an arbitrary angle
 				Matrix4x4&			Rot(float angle, Point& p1, Point& p2);
@@ -431,7 +431,7 @@
 				float			m[4][4];
 	};
 
-	//! Quickly rotates & translates a vector3, using the 4x3 part of a 4x4 matrix
+	//! Quickly rotates & translates a vector, using the 4x3 part of a 4x4 matrix
 	inline_ void TransformPoint4x3(Point& dest, const Point& source, const Matrix4x4& rot)
 	{
 		dest.x = rot.m[3][0] + source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];
@@ -439,7 +439,7 @@
 		dest.z = rot.m[3][2] + source.x * rot.m[0][2] + source.y * rot.m[1][2] + source.z * rot.m[2][2];
 	}
 
-	//! Quickly rotates a vector3, using the 3x3 part of a 4x4 matrix
+	//! Quickly rotates a vector, using the 3x3 part of a 4x4 matrix
 	inline_ void TransformPoint3x3(Point& dest, const Point& source, const Matrix4x4& rot)
 	{
 		dest.x = source.x * rot.m[0][0] + source.y * rot.m[1][0] + source.z * rot.m[2][0];

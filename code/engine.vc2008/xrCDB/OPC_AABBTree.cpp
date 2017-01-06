@@ -44,12 +44,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
-
-namespace Opcode {
-#	include "OPC_TreeBuilders.h"
-} // namespace Opcode
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -69,14 +64,10 @@ AABBTreeNode::AABBTreeNode() : mP(null), mN(null), mNbPrimitives(0), mNodePrimit
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBTreeNode::~AABBTreeNode()
 {
-}
-
-void  AABBTreeNode::destroy		(AABBTreeBuilder*	_tree)
-{
-	if (mP)	{ mP->destroy		(_tree); _tree->node_destroy	(mP); }
-	if (mN)	{ mN->destroy		(_tree); _tree->node_destroy	(mN); }
-	mNodePrimitives				= null;	// This was just a shortcut to the global list => no release
-	mNbPrimitives				= 0;
+	DELETESINGLE(mP);
+	DELETESINGLE(mN);
+	mNodePrimitives	= null;	// This was just a shortcut to the global list => no release
+	mNbPrimitives	= 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -92,7 +83,7 @@ void  AABBTreeNode::destroy		(AABBTreeBuilder*	_tree)
 udword AABBTreeNode::Split(udword axis, AABBTreeBuilder* builder)
 {
 	// Get node split value
-	float SplitValue = builder->GetSplittingValueEx(mNodePrimitives, mNbPrimitives, mBV, axis);
+	float SplitValue = builder->GetSplittingValue(mNodePrimitives, mNbPrimitives, mBV, axis);
 
 	udword NbPos = 0;
 	// Loop through all node-related primitives. Their indices range from mNodePrimitives[0] to mNodePrimitives[mNbPrimitives-1].
@@ -152,7 +143,7 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 	if(mNbPrimitives<=builder->mLimit)	return true;
 
 	bool ValidSplit = true;	// Optimism...
-	udword NbPos	= 0;
+	udword NbPos;
 	if(builder->mRules&SPLIT_LARGESTAXIS)
 	{
 		// Find the largest axis to split along
@@ -180,7 +171,7 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 
 		// Compute variances
 		Point Vars(0.0f, 0.0f, 0.0f);
-		for(udword i=0;i<mNbPrimitives;i++)
+		for (int i = 0;i<mNbPrimitives;i++)
 		{
 			udword Index = mNodePrimitives[i];
 			float Cx = builder->GetSplittingValue(Index, 0);
@@ -275,11 +266,11 @@ bool AABBTreeNode::Subdivide(AABBTreeBuilder* builder)
 	}
 
 	// Now create children and assign their pointers.
-	mP = builder->node_alloc();     CHECKALLOC(mP);
-	mN = builder->node_alloc();		CHECKALLOC(mN);
+	mP = new AABBTreeNode;	CHECKALLOC(mP);
+	mN = new AABBTreeNode;	CHECKALLOC(mN);
 
 	// Update stats
-	builder->IncreaseCount	(2);
+	builder->IncreaseCount(2);
 
 	// Assign children
 	mP->mNodePrimitives	= &mNodePrimitives[0];
@@ -327,7 +318,7 @@ AABBTree::AABBTree() : mIndices(null), mTotalNbNodes(0)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 AABBTree::~AABBTree()
 {
-	CFREE(mIndices);
+	DELETEARRAY(mIndices);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -347,8 +338,8 @@ bool AABBTree::Build(AABBTreeBuilder* builder)
 	builder->SetNbInvalidSplits(0);
 
 	// Initialize indices. This list will be modified during build.
-	CFREE(mIndices);
-	mIndices	= CALLOC(udword,builder->mNbPrimitives);
+	DELETEARRAY(mIndices);
+	mIndices	= new udword[builder->mNbPrimitives];
 	CHECKALLOC(mIndices);
 	for(udword i=0;i<builder->mNbPrimitives;i++)	mIndices[i] = i;
 
@@ -383,7 +374,7 @@ udword AABBTree::ComputeDepth() const
 		{
 			// Checkings
 			if(!curnode)	return;
-			// Entering a _new_ node => increase depth
+			// Entering a new node => increase depth
 			current++;
 			// Keep track of max depth
 			if(current>depth)	depth = current;

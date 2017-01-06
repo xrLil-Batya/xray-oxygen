@@ -239,17 +239,17 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 		u32		s_dest			= (u32)size;
 		void*	p_old			= P;
 
-		void*	p_new			= mem_alloc(size
+		void*	__p_new			= mem_alloc(size
 #ifdef DEBUG_MEMORY_NAME
 			,_name
 #endif // DEBUG_MEMORY_NAME
 		);
 		//	Igor: Reserve 1 byte for xrMemory header
 		//	Don't bother in this case?
-        std::memcpy(p_new,p_old,std::min(s_current-1,s_dest));
+        std::memcpy(__p_new,p_old,std::min(s_current-1,s_dest));
 		//mem_copy				(p_new,p_old,_min(s_current,s_dest));
 		mem_free				(p_old);
-		_ptr					= p_new;
+		_ptr					= __p_new;
 	} else if (2==p_mode)		{
 		// relocate into another mmgr(pooled) from real
 		void*	p_old			= P;

@@ -17,7 +17,7 @@
 //! Declarations of type-independent methods (implemented in the .cpp)
 #define AABB_COMMON_METHODS																							\
 	AABB&	Add(const AABB& aabb);																					\
-	float	CalculateBoxArea(const icePoint& eye, const Matrix4x4& mat, float width, float height, int& num)	const;	\
+	float	CalculateBoxArea(const Point& eye, const Matrix4x4& mat, float width, float height, int& num)	const;	\
 	bool	IsInside(const AABB& box)																		const;
 
 	enum AABBType
@@ -53,7 +53,7 @@
 		/**
 		 *	Setups an AABB from center & extents vectors.
 		 *	\param		c			[in] the center point
-		 *	\param		e			[in] the extents vector3
+		 *	\param		e			[in] the extents vector
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 						void		SetCenterExtents(const Point& c, const Point& e)	{ mMin = c - e;		mMax = c + e;								}
@@ -63,7 +63,7 @@
 		 *	Setups an empty AABB.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						void		SetEmpty()											{ Point p(flt_min, flt_min, flt_min);	mMin = -p; mMax = p;}
+						void		SetEmpty()											{ Point p(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);	mMin = -p; mMax = p;}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -106,9 +106,9 @@
 		inline_			void		GetMax(Point& max)						const		{ max = mMax;								}
 
 		//! Get component of the box's min point along a given axis
-		inline_			float		GetMin(udword axis)						const		{ return ((const float*)mMin)[axis];						}
+		inline_			float		GetMin(udword axis)						const		{ return mMin[axis];						}
 		//! Get component of the box's max point along a given axis
-		inline_			float		GetMax(udword axis)						const		{ return ((const float*)mMax)[axis];						}
+		inline_			float		GetMax(udword axis)						const		{ return mMax[axis];						}
 
 		//! Get box center
 		inline_			void		GetCenter(Point& center)				const		{ center = (mMax + mMin)*0.5f;				}
@@ -116,9 +116,9 @@
 		inline_			void		GetExtents(Point& extents)				const		{ extents = (mMax - mMin)*0.5f;				}
 
 		//! Get component of the box's center along a given axis
-		inline_			float		GetCenter(udword axis)					const		{ return (((const float*)mMax)[axis] + ((const float*)mMin)[axis])*0.5f;	}
+		inline_			float		GetCenter(udword axis)					const		{ return (mMax[axis] + mMin[axis])*0.5f;	}
 		//! Get component of the box's extents along a given axis
-		inline_			float		GetExtents(udword axis)					const		{ return (((const float*)mMax)[axis] - ((const float*)mMin)[axis])*0.5f;	}
+		inline_			float		GetExtents(udword axis)					const		{ return (mMax[axis] - mMin[axis])*0.5f;	}
 
 		//! Get box diagonal
 		inline_			void		GetDiagonal(Point& diagonal)			const		{ diagonal = mMax - mMin;					}
@@ -158,7 +158,7 @@
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		inline_			bool		Intersect(const AABB& a, udword axis)	const
 						{
-							if(((const float*)mMax)[axis] < ((const float*)a.mMin)[axis] || ((const float*)a.mMax)[axis] < ((const float*)mMin)[axis])	return false;
+							if(mMax[axis] < a.mMin[axis] || a.mMax[axis] < mMin[axis])	return false;
 							return true;
 						}
 
@@ -172,7 +172,7 @@
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		inline_			void		Rotate(const Matrix4x4& mtx, AABB& aabb)	const
 						{
-							// The three edges transformed: you can efficiently transform an X-only vector3
+							// The three edges transformed: you can efficiently transform an X-only vector
 							// by just getting the "X" column of the matrix
 							Point vx,vy,vz;
 							mtx.GetRow(0, vx);	vx *= (mMax.x - mMin.x);
@@ -182,7 +182,7 @@
 							// Transform the min point
 							aabb.mMin = aabb.mMax = mMin * mtx;
 
-							// Take the transformed min & axes and find _new_ extents
+							// Take the transformed min & axes and find new extents
 							// Using CPU code in the right place is faster...
 							if(IS_NEGATIVE_FLOAT(vx.x))	aabb.mMin.x += vx.x; else aabb.mMax.x += vx.x;
 							if(IS_NEGATIVE_FLOAT(vx.y))	aabb.mMin.y += vx.y; else aabb.mMax.y += vx.y;
@@ -267,7 +267,7 @@
 		/**
 		 *	Setups an AABB from center & extents vectors.
 		 *	\param		c			[in] the center point
-		 *	\param		e			[in] the extents vector3
+		 *	\param		e			[in] the extents vector
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 						void		SetCenterExtents(const Point& c, const Point& e)	{ mCenter = c;	 mExtents = e;									}
@@ -277,7 +277,7 @@
 		 *	Setups an empty AABB.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						void		SetEmpty()											{ mCenter.Zero(); mExtents.Set(flt_min, flt_min, flt_min);}
+						void		SetEmpty()											{ mCenter.Zero(); mExtents.Set(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);}
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -403,10 +403,10 @@
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		inline_			void		Rotate(const Matrix4x4& mtx, AABB& aabb)	const
 						{
-							// Compute _new_ center
+							// Compute new center
 							aabb.mCenter = mCenter * mtx;
 
-							// Compute _new_ extents. FPU code & CPU code have been interleaved for improved performance.
+							// Compute new extents. FPU code & CPU code have been interleaved for improved performance.
 							Point Ex(mtx.m[0][0] * mExtents.x, mtx.m[0][1] * mExtents.x, mtx.m[0][2] * mExtents.x);
 							IR(Ex.x)&=0x7fffffff;	IR(Ex.y)&=0x7fffffff;	IR(Ex.z)&=0x7fffffff;
 
@@ -472,8 +472,8 @@
 	{
 		if(list)
 		{
-			Point Maxi(flt_min, flt_min, flt_min);
-			Point Mini(flt_max, flt_max, flt_max);
+			Point Maxi(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);
+			Point Mini(MAX_FLOAT, MAX_FLOAT, MAX_FLOAT);
 			while(nbpts--)
 			{
 				ComputeMinMax(*list++, Mini, Maxi);

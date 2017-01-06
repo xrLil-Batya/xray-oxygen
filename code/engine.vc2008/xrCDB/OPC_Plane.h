@@ -38,7 +38,7 @@
 				Plane&	Set(const Point& p0, const Point& p1, const Point& p2);
 
 		inline_	float	Distance(const Point& p)			const						{ return (p | n) + d;								}
-		inline_	bool	Belongs(const Point& p)				const						{ return _abs(Distance(p)) < PLANE_EPSILON;		}
+		inline_	bool	Belongs(const Point& p)				const						{ return fabsf(Distance(p)) < PLANE_EPSILON;		}
 
 		inline_	void	Normalize()
 		{
@@ -93,7 +93,7 @@
 		// Rotate the normal
 		transformed.n = plane.n * Rot;
 
-		// Compute _new_ d
+		// Compute new d
 		Point Trans;
 		transform.GetTrans(Trans);
 		transformed.d = (plane.d * transformed.n - Trans)|transformed.n;
@@ -114,7 +114,7 @@
 		// Rotate the normal
 		plane.n *= Rot;
 
-		// Compute _new_ d
+		// Compute new d
 		Point Trans;
 		transform.GetTrans(Trans);
 		plane.d = (plane.d * plane.n - Trans)|plane.n;

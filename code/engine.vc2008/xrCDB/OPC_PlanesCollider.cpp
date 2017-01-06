@@ -17,8 +17,7 @@
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Precompiled Header
-#include "stdafx.h"
-#pragma hdrstop
+#include "Stdafx.h"
 
 using namespace Opcode;
 
@@ -71,7 +70,7 @@ PlanesCollider::PlanesCollider() :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PlanesCollider::~PlanesCollider()
 {
-	CFREE(mPlanes);
+	DELETEARRAY(mPlanes);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -139,13 +138,13 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
 BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword nb_planes, const Matrix4x4* worldm)
 {
 	// 1) Call the base method
-	VolumeCollider::InitQueryEx();
+	VolumeCollider::InitQuery();
 
 	// 2) Compute planes in model space
 	if(nb_planes>mNbPlanes)
 	{
-		CFREE(mPlanes);
-		mPlanes = CALLOC(Plane,nb_planes);
+		DELETEARRAY(mPlanes);
+		mPlanes = new Plane[nb_planes];
 	}
 	mNbPlanes = nb_planes;
 
@@ -157,7 +156,7 @@ BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword n
 //		for(udword i=0;i<nb_planes;i++)	mPlanes[i] = planes[i] * InvWorldM;
 		for(udword i=0;i<nb_planes;i++)	TransformPlane(mPlanes[i], planes[i], InvWorldM);
 	}
-	else std::memcpy(mPlanes, planes, nb_planes*sizeof(Plane));
+	else CopyMemory(mPlanes, planes, nb_planes*sizeof(Plane));
 
 	// 3) Setup destination pointer
 	mTouchedPrimitives = &cache.TouchedPrimitives;
