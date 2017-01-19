@@ -24,10 +24,19 @@ const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 
 CLocatorAPI*		xr_FS = NULL;
 
+#include "../FrayBuildConfig.hpp"
 #ifdef _EDITOR
-#	define FSLTX	"..\\fs.ltx"
+#	ifndef OLD_FS_ROOT
+#	  define FSLTX	"..\\fs.ltx"
+#	else
+#	  define FSLTX	"fs.ltx"
+#	endif
 #else
-#	define FSLTX	"..\\fsgame.ltx"
+#	ifndef OLD_FS_ROOT
+#	  define FSLTX	"..\\fsgame.ltx"
+#	else
+#	  define FSLTX	"fsgame.ltx"
+#	endif
 #endif
 
 struct _open_file
@@ -510,6 +519,10 @@ IC bool pred_str_ff(const _finddata_t& x, const _finddata_t& y)
 
 bool ignore_name(const char* _name)
 {
+	// ignore windows hidden thumbs.db
+	if (strcmp(_name, "Thumbs.db") == 0)
+		 return true;
+
 	// ignore processing ".svn" folders
 	return ( _name[0]=='.' && _name[1]=='s' && _name[2]=='v' && _name[3]=='n' && _name[4]==0);
 }

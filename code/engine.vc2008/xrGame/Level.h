@@ -60,94 +60,6 @@ namespace file_transfer
 class CLevel					: public IGame_Level, public IPureClient
 {
 	#include "Level_network_Demo.h"
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	void						ClearAllObjects			();
 private:
 #ifdef DEBUG
@@ -158,7 +70,7 @@ protected:
 	typedef IGame_Level			inherited;
 	
 	CLevelSoundManager			*m_level_sound_manager;
-
+	NET_Queue_Event*			spawn_events = nullptr;
 	// movement restriction manager
 	CSpaceRestrictionManager	*m_space_restriction_manager;
 	// seniority hierarchy holder
@@ -212,7 +124,7 @@ public:
 	virtual void				OnInvalidPassword		();
 	virtual void				OnSessionFull			();
 	virtual void				OnConnectRejected		();
-
+			bool				PostponedSpawn			(u16 id);
 private:
 			
 			void				OnSecureMessage			(NET_Packet & P);

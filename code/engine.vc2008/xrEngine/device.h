@@ -83,6 +83,7 @@ protected:
 	u32										Timer_MM_Delta;
 	CTimer_paused							Timer;
 	CTimer_paused							TimerGlobal;
+	CTimer									frame_timer;
 public:
 
 // Registrators
@@ -275,6 +276,10 @@ public:
 			seqParallel.erase	(I);
 	}
 
+	IC u32 frame_elapsed()
+	{
+		return frame_timer.GetElapsed_ms();
+	}
 public:
 			void xr_stdcall		on_idle				();
 			bool xr_stdcall		on_message			(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &result);

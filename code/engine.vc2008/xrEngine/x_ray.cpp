@@ -1140,17 +1140,21 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		xr_free						(demo_file);
 	}
 }
-
+#include "../FrayBuildConfig.hpp"
 static	CTimer	phase_timer		;
 extern	ENGINE_API BOOL			g_appLoaded = FALSE;
-
+#ifdef SPAWN_ANTIFREEZE
+extern	ENGINE_API bool			g_bootComplete = false;
+#endif
 void CApplication::LoadBegin	()
 {
 	ll_dwReference++;
 	if (1==ll_dwReference)	{
 
 		g_appLoaded			= FALSE;
-
+#ifdef SPAWN_ANTIFREEZE
+		g_bootComplete		= false;
+#endif
 #ifndef DEDICATED_SERVER
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
@@ -1178,12 +1182,11 @@ void CApplication::LoadEnd		()
 void CApplication::destroy_loading_shaders()
 {
 	m_pRender->destroy_loading_shaders();
-	//hLevelLogo.destroy		();
-	//sh_progress.destroy		();
-//.	::Sound->mute			(false);
-}
 
-//u32 calc_progress_color(u32, u32, int, int);
+#ifdef SPAWN_ANTIFREEZE
+	g_bootComplete = true;
+#endif
+}
 
 PROTECT_API void CApplication::LoadDraw		()
 {

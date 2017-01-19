@@ -98,13 +98,14 @@ void	CDestroyablePhysicsObject::Hit					(SHit* pHDS)
 void CDestroyablePhysicsObject::Destroy()
 {
 	VERIFY(!physics_world()->Processing());
+
 	const CGameObject *who_object = smart_cast<const CGameObject*>(FatalHit().initiator());
-	callback(GameObject::eDeath)(lua_game_object(),who_object  ? who_object : 0);
+	callback(GameObject::eDeath)(lua_game_object(), who_object ? who_object->lua_game_object() : 0);
 	CPHDestroyable::Destroy(ID(),"physic_destroyable_object");
+
 	if(m_destroy_sound._handle())
-	{
 		m_destroy_sound.play_at_pos(this,Position());
-	}
+
 	if(*m_destroy_particles)
 	{		
 			//Fvector dir;dir.set(0,1,0);
@@ -116,11 +117,10 @@ void CDestroyablePhysicsObject::Destroy()
 		Fvector hdir;hdir.set(CPHDestroyable::FatalHit().direction());
 
 		if(fsimilar(_abs(m.j.dotproduct(hdir)),1.f,EPS_L))
-		{
-			do {
+			do
 				hdir.random_dir();
-			} while(fsimilar(_abs(m.j.dotproduct(hdir)),1.f,EPS_L));
-		}
+			while(fsimilar(_abs(m.j.dotproduct(hdir)),1.f,EPS_L));
+		
 		m.i.crossproduct(m.j,hdir);m.i.normalize();
 		m.k.crossproduct(m.i,m.j);
 			StartParticles(m_destroy_particles,m,ID());

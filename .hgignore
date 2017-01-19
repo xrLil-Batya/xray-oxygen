@@ -7,3 +7,4 @@ code/SDK/OpenALwEAX.exe
 engine.VC.db
 intermediate/
 *.iobj
+binaries/

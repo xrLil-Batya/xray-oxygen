@@ -62,16 +62,54 @@
 // Lain:added
 #	include "debug_text_tree.h"
 #endif
+#include "../FrayBuildConfig.hpp"
 
 ENGINE_API bool g_dedicated_server;
-
-//extern BOOL	g_bDebugDumpPhysicsStep;
 extern CUISequencer * g_tutorial;
 extern CUISequencer * g_tutorial2;
 
 
 float		g_cl_lvInterp		= 0.1;
 u32			lvInterpSteps		= 0;
+
+#ifdef SPAWN_ANTIFREEZE
+extern bool	g_bootComplete;
+
+//get object ID from spawn data
+u16	GetSpawnInfo(NET_Packet &P, u16 &parent_id)
+{
+	u16 dummy16, id;
+	P.r_begin(dummy16);
+	shared_str	s_name;
+	P.r_stringZ(s_name);
+	CSE_Abstract*	E = F_entity_Create(*s_name);
+	E->Spawn_Read(P);
+
+	if (E->s_flags.is(M_SPAWN_UPDATE))
+		E->UPDATE_Read(P);
+
+	id = E->ID;
+	parent_id = E->ID_Parent;
+	F_entity_Destroy(E);
+	P.r_pos = 0;
+	return id;
+}
+
+bool CLevel::PostponedSpawn(u16 id)
+{
+	for (auto it = spawn_events->queue.begin(); it != spawn_events->queue.end(); ++it)
+	{
+		const NET_Event& E = *it;
+		NET_Packet P;
+		if (M_SPAWN != E.ID) continue;
+		E.implication(P);
+		u16 parent_id;
+		if (id == GetSpawnInfo(P, parent_id))
+			return true;
+	}
+	return false;
+}
+#endif
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -85,6 +123,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	game						= NULL;
 	game_events					= xr_new<NET_Queue_Event>();
 
+	spawn_events				= xr_new<NET_Queue_Event>();
 	game_configured				= FALSE;
 	m_bGameConfigStarted		= FALSE;
 	m_connect_server_err		= xrServer::ErrNoError;
@@ -457,23 +496,52 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	}
 };
 
-void CLevel::ProcessGameEvents		()
+void CLevel::ProcessGameEvents()
 {
 	// Game events
 	{
 		NET_Packet			P;
 		u32 svT				= timeServer()-NET_Latency;
+#ifdef   SPAWN_ANTIFREEZE
+		while (spawn_events->available(svT))
+		{
+			u16 ID, dest, type;
+			spawn_events->get(ID, dest, type, P);
+			game_events->insert(P);
+		}
+		u32 avail_time = 5;
+		u32 elps = Device.frame_elapsed();
+		if (elps < 30) 
+			avail_time = 33 - elps;
 
-		/*
-		if (!game_events->queue.empty())	
-			Msg("- d[%d],ts[%d] -- E[svT=%d],[evT=%d]",Device.dwTimeGlobal,timeServer(),svT,game_events->queue.begin()->timestamp);
-		*/
-
+		u32 work_limit = elps + avail_time;
+		
+#endif
 		while	(game_events->available(svT))
 		{
 			u16 ID,dest,type;
 			game_events->get	(ID,dest,type,P);
+#ifdef   SPAWN_ANTIFREEZE
 
+			if (g_bootComplete && M_EVENT == ID && PostponedSpawn(dest))
+			{
+				spawn_events->insert(P);
+				continue;
+			}
+			if (g_bootComplete && M_SPAWN == ID && Device.frame_elapsed() > work_limit)
+			{
+				u16 parent_id;
+				GetSpawnInfo(P, parent_id);
+				if (parent_id < 0xffff)
+				{
+					if (!spawn_events->available(svT))
+						Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());
+
+					spawn_events->insert(P);
+					continue;
+				}
+			}
+#endif
 			switch (ID)
 			{
 			case M_SPAWN:
