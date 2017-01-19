@@ -61,11 +61,11 @@ ENGINE_API bool is_enough_address_space_available	()
 void CEngineAPI::InitializeNotDedicated()
 {
 	SECUROM_MARKER_HIGH_SECURITY_ON(2)
-
 	LPCSTR			r2_name	= "xrRender_R2.dll";
 	LPCSTR			r3_name	= "xrRender_R3.dll";
 	LPCSTR			r4_name	= "xrRender_R4.dll";
 
+	Log("Render init");
 	if (psDeviceFlags.test(rsR4))
 	{
 		// try to initialize R4
@@ -110,6 +110,7 @@ void CEngineAPI::InitializeNotDedicated()
 			g_current_renderer	= 2;
 	}
 
+	Log("Render done");
 	SECUROM_MARKER_HIGH_SECURITY_OFF(2)
 }
 #endif // DEDICATED_SERVER
@@ -310,76 +311,10 @@ void CEngineAPI::CreateRendererList()
 	vid_quality_token[_cnt-1].id			= -1;
 	vid_quality_token[_cnt-1].name			= NULL;
 
-#ifdef DEBUG
-	Msg("Available render modes[%d]:",_tmp.size());
-#endif // DEBUG
-	for(u32 i=0; i<_tmp.size();++i)
+	for(u32 _i=0; i<_tmp.size();++_i)
 	{
-		vid_quality_token[i].id				= i;
-		vid_quality_token[i].name			= _tmp[i];
-#ifdef DEBUG
-		Msg							("[%s]",_tmp[i]);
-#endif // DEBUG
+		vid_quality_token[_i].id				= _i;
+		vid_quality_token[_i].name			= _tmp[_i];
 	}
-
-	/*
-	if(vid_quality_token != NULL)		return;
-
-	D3DCAPS9					caps;
-	CHW							_HW;
-	_HW.CreateD3D				();
-	_HW.pD3D->GetDeviceCaps		(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,&caps);
-	_HW.DestroyD3D				();
-	u16		ps_ver_major		= u16 ( u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul))>>8 );
-
-	xr_vector<LPCSTR>			_tmp;
-	u32 i						= 0;
-	for(; i<5; ++i)
-	{
-		bool bBreakLoop = false;
-		switch (i)
-		{
-		case 3:		//"renderer_r2.5"
-			if (ps_ver_major < 3)
-				bBreakLoop = true;
-			break;
-		case 4:		//"renderer_r_dx10"
-			bBreakLoop = true;
-			break;
-		default:	;
-		}
-
-		if (bBreakLoop) break;
-
-		_tmp.push_back				(NULL);
-		LPCSTR val					= NULL;
-		switch (i)
-		{
-		case 0: val ="renderer_r1";			break;
-		case 1: val ="renderer_r2a";		break;
-		case 2: val ="renderer_r2";			break;
-		case 3: val ="renderer_r2.5";		break;
-		case 4: val ="renderer_r_dx10";		break; //  -)
-		}
-		_tmp.back()					= xr_strdup(val);
-	}
-	u32 _cnt								= _tmp.size()+1;
-	vid_quality_token						= xr_alloc<xr_token>(_cnt);
-
-	vid_quality_token[_cnt-1].id			= -1;
-	vid_quality_token[_cnt-1].name			= NULL;
-
-#ifdef DEBUG
-	Msg("Available render modes[%d]:",_tmp.size());
-#endif // DEBUG
-	for(u32 i=0; i<_tmp.size();++i)
-	{
-		vid_quality_token[i].id				= i;
-		vid_quality_token[i].name			= _tmp[i];
-#ifdef DEBUG
-		Msg							("[%s]",_tmp[i]);
-#endif // DEBUG
-	}
-	*/
 #endif //#ifndef DEDICATED_SERVER
 }
