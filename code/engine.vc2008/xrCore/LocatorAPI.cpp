@@ -17,9 +17,6 @@
 
 const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 
-//typedef void DUMMY_STUFF (const void*,const u32&,void*);
-//XRCORE_API DUMMY_STUFF	*g_temporary_stuff = 0;
-
 #	pragma warning(push)
 #	pragma warning(disable:4995)
 #	include <malloc.h>
@@ -28,9 +25,9 @@ const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 CLocatorAPI*		xr_FS = NULL;
 
 #ifdef _EDITOR
-#	define FSLTX	"fs.ltx"
+#	define FSLTX	"..\\fs.ltx"
 #else
-#	define FSLTX	"fsgame.ltx"
+#	define FSLTX	"..\\fsgame.ltx"
 #endif
 
 struct _open_file
@@ -46,22 +43,22 @@ struct _open_file
 template <typename T>
 struct eq_pointer;
 
-template <>
-struct eq_pointer<IReader>{
+template <> struct eq_pointer<IReader>{
 	IReader* _val;
 	eq_pointer(IReader* p):_val(p){}
 	bool operator () (_open_file& itm){
 		return ( _val==itm._reader );
 	}
 };
-template <>
-struct eq_pointer<CStreamReader>{
+
+template <> struct eq_pointer<CStreamReader>{
 	CStreamReader* _val;
 	eq_pointer(CStreamReader* p):_val(p){}
 	bool operator () (_open_file& itm){
 		return ( _val==itm._stream_reader );
 	}
 };
+
 struct eq_fname_free{
 	shared_str _val;
 	eq_fname_free(shared_str s){_val = s;}
@@ -69,6 +66,7 @@ struct eq_fname_free{
 		return ( _val==itm._fn && itm._reader==NULL);
 	}
 };
+
 struct eq_fname_check{
 	shared_str _val;
 	eq_fname_check(shared_str s){_val = s;}
@@ -311,7 +309,8 @@ void CLocatorAPI::LoadArchive(archive& A, LPCSTR entrypoint)
 				xr_strcpy				(fs_entry_point, sizeof(fs_entry_point), root->m_Path);
 			}
 			xr_strcat					(fs_entry_point,"gamedata\\");
-		}else
+		}
+		else
 		{
 			string256			alias_name;
 			alias_name[0]		= 0;
@@ -325,7 +324,6 @@ void CLocatorAPI::LoadArchive(archive& A, LPCSTR entrypoint)
 			if(P!=pathes.end())
 			{
 				FS_Path* root		= P->second;
-	//			R_ASSERT3			(root, "path not found ", alias_name);
 				xr_strcpy			(fs_entry_point, sizeof(fs_entry_point), root->m_Path);
 			}
 			xr_strcat			(fs_entry_point, sizeof(fs_entry_point), read_path.c_str()+xr_strlen(alias_name)+1);
@@ -340,15 +338,6 @@ void CLocatorAPI::LoadArchive(archive& A, LPCSTR entrypoint)
 	}
 	if(entrypoint)
 		xr_strcpy				(fs_entry_point, sizeof(fs_entry_point), entrypoint);
-
-
-//	DUMMY_STUFF	*g_temporary_stuff_subst = NULL;
-//
-//	if(strstr(A.path.c_str(),".xdb"))
-//	{
-//		g_temporary_stuff_subst		= g_temporary_stuff;
-//		g_temporary_stuff			= NULL;
-//	}
 
 	// Read FileSystem
 	A.open				();
@@ -628,15 +617,12 @@ void CLocatorAPI::setup_fs_path		(LPCSTR fs_name)
 {
 	string_path			fs_path;
 	setup_fs_path		(fs_name, fs_path);
-
+#ifdef OLD_FS_ROOT
 
 	string_path			full_current_directory;
 	_fullpath			(full_current_directory, fs_path, sizeof(full_current_directory));
 
 	FS_Path				*path = xr_new<FS_Path>(full_current_directory,"","","",0);
-#ifdef DEBUG
-	Msg					("$fs_root$ = %s", full_current_directory);
-#endif // #ifdef DEBUG
 
 	pathes.insert		(
 		std::make_pair(
@@ -644,6 +630,7 @@ void CLocatorAPI::setup_fs_path		(LPCSTR fs_name)
 			path
 		)
 	);
+#endif
 }
 
 IReader *CLocatorAPI::setup_fs_ltx	(LPCSTR fs_name)
