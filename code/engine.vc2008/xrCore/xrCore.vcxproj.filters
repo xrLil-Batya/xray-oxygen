@@ -4,21 +4,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{b678e1cb-f2fc-4fad-8e20-f37ccdf87fa5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Math">
-      <UniqueIdentifier>{3d385d7c-ac52-4a06-8105-3fc0bffdb6ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\CPU">
-      <UniqueIdentifier>{43e61e50-6b82-48c9-9842-72591a05e3fe}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\STLext">
-      <UniqueIdentifier>{149f26f8-39cc-4437-92e6-7c722fc3aefa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Extensions">
-      <UniqueIdentifier>{19993e32-c824-4da2-8c8b-3ab1f97bd5f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\Extensions\buffer_vector">
-      <UniqueIdentifier>{824d7304-0196-4827-bf8d-c4eeec7552a8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="FS">
       <UniqueIdentifier>{b9fd0780-73b0-4440-9f29-57cf35ba1cbc}</UniqueIdentifier>
     </Filter>
@@ -84,6 +69,21 @@
     </Filter>
     <Filter Include="OS">
       <UniqueIdentifier>{1a002462-09b5-4139-923f-2f2083af69de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math">
+      <UniqueIdentifier>{3d385d7c-ac52-4a06-8105-3fc0bffdb6ec}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\CPU">
+      <UniqueIdentifier>{43e61e50-6b82-48c9-9842-72591a05e3fe}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\STLext">
+      <UniqueIdentifier>{149f26f8-39cc-4437-92e6-7c722fc3aefa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Extensions">
+      <UniqueIdentifier>{19993e32-c824-4da2-8c8b-3ab1f97bd5f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Math\Extensions\buffer_vector">
+      <UniqueIdentifier>{824d7304-0196-4827-bf8d-c4eeec7552a8}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

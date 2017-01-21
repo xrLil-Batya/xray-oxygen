@@ -44,21 +44,28 @@ XRCORE_API	xrDebug		Debug;
 
 static bool	error_after_dialog = false;
 
-extern void BuildStackTrace();
+extern const char* BuildStackTrace();
 extern char g_stackTrace[100][4096];
 extern int	g_stackTraceCount;
 
 void LogStackTrace	(LPCSTR header)
 {
-	if (!shared_str_initialized)
-		return;
+	bool ss_init = shared_str_initialized; // alpet: при некоторых сбоях это все-равно дает исключение в shared_str::doc
+	shared_str_initialized = false;
+	__try
+	{
+		Msg("%s", header);
+		BuildStackTrace();
 
-	BuildStackTrace	();		
+		for (int i = 1; i < g_stackTraceCount; ++i)
+			Msg(" %s", g_stackTrace[i]);
 
-	Msg				("%s",header);
-
-	for (int i=1; i<g_stackTraceCount; ++i)
-		Msg			("%s",g_stackTrace[i]);
+		FlushLog();
+	}
+	__finally
+	{
+		shared_str_initialized = ss_init;
+	}
 }
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, LPSTR assertion_info, u32 const assertion_info_size)
@@ -126,9 +133,6 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		for (int i = 2; i < g_stackTraceCount; ++i) {
 			if (shared_str_initialized)
 				Msg("%s", g_stackTrace[i]);
-
-			if (shared_str_initialized)
-				FlushLog();
 
 			os_clipboard::copy_to_clipboard(assertion_info);
 		}

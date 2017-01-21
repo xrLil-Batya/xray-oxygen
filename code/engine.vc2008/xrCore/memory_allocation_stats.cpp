@@ -6,7 +6,7 @@
 #	include <malloc.h>
 #	pragma warning(pop)
 
-	extern void BuildStackTrace		();
+	extern const char* BuildStackTrace		();
 
 	extern char			g_stackTrace[100][4096];
 	extern int			g_stackTraceCount;
@@ -109,8 +109,6 @@
 			*--J			= 0;
 		}
 
-		//boost::crc_32_type	temp;
-		//temp.process_block	(string,string + accumulator);
 		u32 crc = crc32(string, accumulator);
 
 		STATS::iterator		I = stats.find(crc);

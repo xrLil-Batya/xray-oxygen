@@ -90,8 +90,6 @@ void CWeapon::Hit					(SHit* pHDS)
 	inherited::Hit(pHDS);
 }
 
-
-
 void CWeapon::UpdateXForm	()
 {
 	if (Device.dwFrame == dwXF_Frame)
@@ -1929,15 +1927,15 @@ void CWeapon::ZoomDec()
 u32 CWeapon::Cost() const
 {
 	u32 res = CInventoryItem::Cost();
-	if(IsGrenadeLauncherAttached()&&GetGrenadeLauncherName().size()){
+
+	if(IsGrenadeLauncherAttached()&&GetGrenadeLauncherName().size())
 		res += pSettings->r_u32(GetGrenadeLauncherName(),"cost");
-	}
-	if(IsScopeAttached()&&m_scopes.size()){
+
+	if(IsScopeAttached()&&m_scopes.size())
 		res += pSettings->r_u32(GetScopeName(),"cost");
-	}
-	if(IsSilencerAttached()&&GetSilencerName().size()){
+
+	if(IsSilencerAttached()&&GetSilencerName().size())
 		res += pSettings->r_u32(GetSilencerName(),"cost");
-	}
 	
 	if(iAmmoElapsed)
 	{

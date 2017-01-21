@@ -322,7 +322,6 @@ void	CInifile::Load(IReader* F, LPCSTR path
 					xr_strcpy		(value_raw, sizeof(value_raw), t);
 					bInsideSTR		= _parse(str2, value_raw);
 					if(bInsideSTR)//multiline str value
-					{
 						while(bInsideSTR)
 						{
 							xr_strcat		(value_raw, sizeof(value_raw),"\r\n");
@@ -339,13 +338,11 @@ void	CInifile::Load(IReader* F, LPCSTR path
 							xr_strcat		(value_raw, sizeof(value_raw),str_add_raw);
 							bInsideSTR		= _parse(str2, value_raw);
                             if(bInsideSTR)
-                            {
                             	if( is_empty_line_now(F) )
 									xr_strcat		(value_raw, sizeof(value_raw),"\r\n");
-                            }
 						}
-					}
-				} else 
+				} 
+				else 
 				{
 					_Trim	(name);
 					str2[0]	= 0;
@@ -354,9 +351,6 @@ void	CInifile::Load(IReader* F, LPCSTR path
 				Item		I;
 				I.first		= (name[0]?name:NULL);
 				I.second	= (str2[0]?str2:NULL);
-//#ifdef DEBUG
-//				I.comment	= m_flags.test(eReadOnly)?0:comment;
-//#endif
 
 				if (m_flags.test(eReadOnly)) 
 				{
@@ -496,7 +490,7 @@ LPCSTR	CInifile::r_string(LPCSTR S, LPCSTR L)const
 	SectCIt	A = std::lower_bound(I.Data.begin(),I.Data.end(),L,item_pred);
 	if (A!=I.Data.end() && xr_strcmp(*A->first,L)==0)	return *A->second;
 	else
-		Debug.fatal(DEBUG_INFO,"Can't find variable %s in [%s]",L,S);
+		Debug.fatal(DEBUG_INFO,"Can't find variable %s in [%s], file %s",L,S, this->m_file_name);
 	return 0;
 }
 

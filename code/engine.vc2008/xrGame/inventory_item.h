@@ -133,7 +133,6 @@ public:
 
 			BOOL				IsQuestItem			()	const	{return m_flags.test(FIsQuestItem);}			
 	virtual	u32					Cost				()	const	{ return m_cost; }
-//			u32					Cost				()	const	{ return m_cost; }
 	virtual float				Weight				() 	const	{ return m_weight;}		
 
 public:

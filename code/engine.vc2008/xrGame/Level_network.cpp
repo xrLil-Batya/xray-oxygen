@@ -174,17 +174,11 @@ void CLevel::net_Stop		()
 
 void CLevel::ClientSend()
 {
-	if (GameID() == eGameIDSingle || OnClient())
-	{
-		if ( !net_HasBandwidth() ) return;
-	};
-
 	NET_Packet				P;
 	u32						start	= 0;
 	//----------- for E3 -----------------------------
-//	if () 
+
 	{
-//		if (!(Game().local_player) || Game().local_player->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD)) return;
 		if (CurrentControlEntity()) 
 		{
 			CObject* pObj = CurrentControlEntity();

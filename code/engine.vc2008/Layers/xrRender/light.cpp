@@ -69,12 +69,11 @@ void light::set_texture		(LPCSTR name)
 	string256				temp;
 	
 	strconcat(sizeof(temp),temp,"r2\\accum_spot_",name);
-	//strconcat(sizeof(temp),temp,"_nomsaa",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
 #if	(RENDER!=R_R3) && (RENDER!=R_R4)
 	s_volumetric.create		("accum_volumetric", name);
-#else	//	(RENDER!=R_R3) && (RENDER!=R_R4)
+#else
 	s_volumetric.create		("accum_volumetric_nomsaa", name);
 	if( RImplementation.o.dx10_msaa )
 	{

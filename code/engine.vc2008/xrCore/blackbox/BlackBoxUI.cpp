@@ -4,82 +4,81 @@
 #include <memory>
 
 #define MAX_STACK_TRACE	100
+#define LINE_STACK_TRACE 4096
 
-char g_stackTrace[MAX_STACK_TRACE][4096];
+char g_stackTrace[MAX_STACK_TRACE][LINE_STACK_TRACE];
 int g_stackTraceCount = 0;
 
-void BuildStackTrace	(struct _EXCEPTION_POINTERS *g_BlackBoxUIExPtrs)
+void BuildStackTrace(struct _EXCEPTION_POINTERS *g_BlackBoxUIExPtrs)
 {
-	std::memset(g_stackTrace[0], 0, MAX_STACK_TRACE * 256);
+	std::memset(g_stackTrace[0], 0, MAX_STACK_TRACE * LINE_STACK_TRACE);
 
-	const TCHAR* traceDump = 
-		GetFirstStackTraceString( GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE,
-									g_BlackBoxUIExPtrs );
+	const TCHAR* traceDump = GetFirstStackTraceString(GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE, g_BlackBoxUIExPtrs);
 	g_stackTraceCount = 0;
 
 	int incr = 85;
-	while ( NULL != traceDump ) {
+	while (NULL != traceDump) {
 		int				length = strlen(traceDump);
-		if (length < 4096)
-			lstrcpy		(g_stackTrace[g_stackTraceCount], traceDump);
+		if (length < LINE_STACK_TRACE)
+			lstrcpy(g_stackTrace[g_stackTraceCount], traceDump);
 		else {
-			memcpy		(g_stackTrace[g_stackTraceCount],traceDump,4092);
+			memcpy(g_stackTrace[g_stackTraceCount], traceDump, 4092);
 			char		*i = g_stackTrace[g_stackTraceCount] + 4092;
-			*i++		= '.';
-			*i++		= '.';
-			*i++		= '.';
-			*i			= 0;
+			*i++ = '.';
+			*i++ = '.';
+			*i++ = '.';
+			*i = 0;
 		}
-	
+
 		g_stackTraceCount++;
 
 		incr += 2;
-		traceDump = GetNextStackTraceString( GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE,
-			g_BlackBoxUIExPtrs );
+		traceDump = GetNextStackTraceString(GSTSO_MODULE | GSTSO_SYMBOL | GSTSO_SRCLINE,
+			g_BlackBoxUIExPtrs);
 	}
 }
 
 #ifdef _EDITOR
 #	pragma auto_inline(off)
-	DWORD_PTR program_counter()
-	{
-		DWORD_PTR programcounter;
+DWORD_PTR program_counter()
+{
+	DWORD_PTR programcounter;
 
-		// Get the return address out of the current stack frame
-		__asm mov eax, [ebp + 4]
+	// Get the return address out of the current stack frame
+	__asm mov eax, [ebp + 4]
 		// Put the return address into the variable we'll return
-		__asm mov [programcounter], eax
+		__asm mov[programcounter], eax
 
-		return programcounter;
-	}
+	return programcounter;
+}
 #	pragma auto_inline(on)
 #else // _EDITOR
-	extern "C" void * _ReturnAddress(void);
+extern "C" void * _ReturnAddress(void);
 
 #   pragma intrinsic(_ReturnAddress)
 
 #	pragma auto_inline(off)
-	DWORD_PTR program_counter()
-	{
-		return (DWORD_PTR)_ReturnAddress();
-	}
+DWORD_PTR program_counter()
+{
+	return (DWORD_PTR)_ReturnAddress();
+}
 #	pragma auto_inline(on)
 #endif // _EDITOR
 
-void BuildStackTrace	()
+const char* BuildStackTrace()
 {
-    CONTEXT					context;
-	context.ContextFlags	= CONTEXT_FULL;
+	CONTEXT					context;
+	context.ContextFlags = CONTEXT_FULL;
 
 #ifdef _EDITOR
-    DWORD                   *EBP = &context.Ebp;
-    DWORD                   *ESP = &context.Esp;
+	DWORD                   *EBP = &context.Ebp;
+	DWORD                   *ESP = &context.Esp;
 #endif // _EDITOR
 
-	if (!GetThreadContext(GetCurrentThread(),&context))
-		return;
+	if (!GetThreadContext(GetCurrentThread(), &context))
+		return NULL;
 
-	context.Eip				= program_counter();
+	context.Eip = program_counter();
 #ifndef _EDITOR
 	__asm					mov context.Ebp, ebp
 	__asm					mov context.Esp, esp
@@ -89,26 +88,27 @@ void BuildStackTrace	()
 #endif // _EDITOR
 
 	EXCEPTION_POINTERS		ex_ptrs;
-	ex_ptrs.ContextRecord	= &context;
-	ex_ptrs.ExceptionRecord	= 0;
+	ex_ptrs.ContextRecord = &context;
+	ex_ptrs.ExceptionRecord = 0;
 
-	BuildStackTrace			(&ex_ptrs);
+	BuildStackTrace(&ex_ptrs);
+	return g_stackTrace[0];
 }
 
 #ifndef _EDITOR
 __declspec(noinline)
 #endif // _EDITOR
-void OutputDebugStackTrace	(const char *header)
+void OutputDebugStackTrace(const char *header)
 {
-	BuildStackTrace			();		
+	BuildStackTrace();
 
 	if (header) {
-		OutputDebugString	(header);
-		OutputDebugString	(":\r\n");
+		OutputDebugString(header);
+		OutputDebugString(":\r\n");
 	}
 
-	for (int i=2; i<g_stackTraceCount; ++i) {
-		OutputDebugString	(g_stackTrace[i]);
-		OutputDebugString	("\r\n");
+	for (int i = 2; i<g_stackTraceCount; ++i) {
+		OutputDebugString(g_stackTrace[i]);
+		OutputDebugString("\r\n");
 	}
 }
