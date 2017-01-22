@@ -15,16 +15,7 @@ using namespace luabind;
 
 void LuaLog(LPCSTR caMessage)
 {
-#ifndef MASTER_GOLD
-	ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeMessage,"%s",caMessage);
-#endif // #ifndef MASTER_GOLD
-
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if( ai().script_engine().debugger() )
-			ai().script_engine().debugger()->Write(caMessage);
-#	endif // #ifndef USE_LUA_STUDIO
-#endif // #ifdef USE_DEBUGGER
+	Msg("%s", caMessage);
 }
 
 void ErrorLog(LPCSTR caMessage)

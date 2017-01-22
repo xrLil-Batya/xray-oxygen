@@ -3,8 +3,7 @@
 
 #include "ResourceManager.h"
 
-dxRenderDeviceRender::dxRenderDeviceRender()
-	:	Resources(0)
+dxRenderDeviceRender::dxRenderDeviceRender() : Resources(0)
 {
 	;
 }
@@ -86,8 +85,6 @@ void dxRenderDeviceRender::SetupStates()
 	HW.Caps.Update			();
 
 #if defined(USE_DX10) || defined(USE_DX11)
-	//	TODO: DX10: Implement Resetting of render states into default mode
-	//VERIFY(!"dxRenderDeviceRender::SetupStates not implemented.");
 #else	//	USE_DX10
 	for (u32 i=0; i<HW.Caps.raster.dwStages; i++)				{
 		float fBias = -.5f	;
@@ -340,7 +337,7 @@ void dxRenderDeviceRender::End()
 	DoAsyncScreenshot();
 
 #if defined(USE_DX10) || defined(USE_DX11)
-	HW.m_pSwapChain->Present( 0, 0 );
+	HW.m_pSwapChain->Present(psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
 #else	//	USE_DX10
 	CHK_DX				(HW.pDevice->EndScene());
 
