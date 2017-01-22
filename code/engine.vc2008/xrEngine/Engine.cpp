@@ -28,7 +28,6 @@ extern	void msCreate		(LPCSTR name);
 PROTECT_API void CEngine::Initialize	(void)
 {
 	// Bind PSGP
-	Log("loading CPU_Pipe...");
 	hPSGP		= LoadLibrary("xrCPU_Pipe.dll");
 	R_ASSERT	(hPSGP);
 	xrBinder*	bindCPU	= (xrBinder*)	GetProcAddress(hPSGP,"xrBind_PSGP");	R_ASSERT(bindCPU);
@@ -36,6 +35,7 @@ PROTECT_API void CEngine::Initialize	(void)
 
 	// Other stuff
 	Engine.Sheduler.Initialize			( );
+	// 
 #ifdef DEBUG
 	msCreate							("game");
 #endif
