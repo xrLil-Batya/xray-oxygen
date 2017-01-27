@@ -31,25 +31,30 @@ DWORD WINAPI ttapiThreadProc( LPVOID lpParameter )
 	DWORD i , dwFastIter = ttapi_dwFastIter , dwSlowIter = ttapi_dwSlowIter;
 
 	while( TRUE ) {		
-		// Wait. Fast.
+		// Wait
+
+		// Fast
 		for ( i = 0 ; i < dwFastIter ; ++i ) {
 			if ( pParams->vlFlag == 0 ) {
+				// Msg( "0x%8.8X Fast %u" , dwId , i );
 				goto process;
 			}
-			Sleep(0); // Edit: sv3nk
+			__asm pause;
 		}
 
 		// Moderate
 		for ( i = 0 ; i < dwSlowIter ; ++i ) {
 			if ( pParams->vlFlag == 0 ) {
+				// Msg( "0x%8.8X Moderate %u" , dwId , i );
 				goto process;
 			}
 			SwitchToThread();
 		}
 
 		// Slow
-		while (pParams->vlFlag) {
-			Sleep(100);
+		while ( pParams->vlFlag ) {
+			Sleep( 100 );
+			//Msg( "Shit" );
 		}
 
 		process:
@@ -116,7 +121,7 @@ DWORD ttapi_Init( processor_info* ID )
 	for ( i = 0 ; i < dwNumIter ; ++i ) {
 		if ( dwDummy == 0 )
 			goto process1;
-		Sleep(0);  // Edit: sv3nk
+		__asm pause;
 	}
 	process1:
 	QueryPerformanceCounter( &liEnd );
@@ -223,24 +228,29 @@ VOID ttapi_AddWorker( LPPTTAPI_WORKER_FUNC lpWorkerFunc , LPVOID lpvWorkerFuncPa
 VOID ttapi_RunAllWorkers()
 {	
 	DWORD ttapi_thread_workers = ( ttapi_assigned_workers - 1 );
+	//unsigned __int64 Start,Stop;
 
-	if (ttapi_thread_workers) {
+	if ( ttapi_thread_workers ) {
 		// Setting queue size
 		ttapi_queue_size.size = ttapi_thread_workers;
 
 		// Starting all workers except the last
-		for (DWORD i = 0; i < ttapi_thread_workers; ++i)
-			_InterlockedExchange(&ttapi_worker_params[i].vlFlag, 0);
+		for ( DWORD i = 0 ; i < ttapi_thread_workers ; ++i )
+			_InterlockedExchange( &ttapi_worker_params[ i ].vlFlag , 0 );
 
 		// Running last worker in current thread
-		ttapi_worker_params[ttapi_thread_workers].lpWorkerFunc(ttapi_worker_params[ttapi_thread_workers].lpvWorkerFuncParams);
+		ttapi_worker_params[ ttapi_thread_workers ].lpWorkerFunc( ttapi_worker_params[ ttapi_thread_workers ].lpvWorkerFuncParams );
 
 		// Waiting task queue to become empty
-		while (ttapi_queue_size.size)
-			Sleep(0);  // Edit: sv3nk
-	}
-	else
-	// Running the only worker in current thread
+		//Start = __rdtsc();
+		while( ttapi_queue_size.size )
+			__asm pause;
+		//Stop = __rdtsc();
+		//Msg( "Wait: %u ticks" , Stop - Start );
+
+
+	} else
+		// Running the only worker in current thread
 		ttapi_worker_params[ ttapi_thread_workers ].lpWorkerFunc( ttapi_worker_params[ ttapi_thread_workers ].lpvWorkerFuncParams );
 
 	// Cleaning active workers count
