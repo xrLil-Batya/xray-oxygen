@@ -21,10 +21,12 @@ using Microsoft::Win32::Registry;
 using Microsoft::Win32::RegistryKey;
 using Microsoft::Win32::RegistryValueKind;
 
-struct engine_pauser_guard : private boost::noncopyable {
+struct engine_pauser_guard{
 	engine&		m_engine;
 	bool		m_weather_paused;
-
+	engine_pauser_guard(const engine_pauser_guard& other) = delete;
+	engine_pauser_guard& operator=(const engine_pauser_guard& other) = delete;
+	
 	inline	engine_pauser_guard	(engine& engine, bool const& value) :
 		m_engine				(engine),
 		m_weather_paused		(engine.weather_paused())
