@@ -32,6 +32,7 @@ public:
 	virtual				~CUITalkWnd();
 
 	IC		bool		playing_sound			()		 { return !!m_sound._feedback(); }
+			bool		GetInitState			() const { return m_bInitState; }
 	IC	CInventoryOwner*OthersInvOwner			() const { return m_pOthersInvOwner;	 };
 
 			void		InitTalkWnd				();
@@ -49,6 +50,7 @@ public:
 
 	void				UpdateQuestions			();
 	void				NeedUpdateQuestions		();
+
 	//инициализации начального диалога собеседника
 	void				InitOthersStartDialog	();
 	virtual bool		OnKeyboardAction				(int dik, EUIMessages keyboard_action);
@@ -79,6 +81,7 @@ protected:
 	CPhraseDialogManager* m_pOthersDialogManager;
 
 	bool				m_bNeedToUpdateQuestions;
+	bool                m_bInitState;
 
 	//текущий диалог, если NULL, то переходим в режим выбора темы
 	DIALOG_SHARED_PTR	m_pCurrentDialog;

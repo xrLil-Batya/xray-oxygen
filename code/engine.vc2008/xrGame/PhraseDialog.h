@@ -28,6 +28,8 @@ struct SPhraseDialogData : CSharedResource
 	//произвольное число - приоритет диалога (0 по умолчанию), может быть отрицательным
 	//в окне выбора у актера диалоги будут сортироваться по этому значению от меньшего (снизу) к большему (сверху)
 	int	m_iPriority;
+	bool b_bForceReload;
+
 };
 
 using PHRASE_VECTOR = xr_vector<CPhrase*>;
@@ -51,7 +53,6 @@ public:
 
 							CPhraseDialog		(const CPhraseDialog& pharase_dialog) {*this = pharase_dialog;}
 							CPhraseDialog&		operator = (const CPhraseDialog& pharase_dialog) {*this = pharase_dialog; return *this;}
-
 	
 	virtual void			Load				(shared_str dialog_id);
 
@@ -78,6 +79,8 @@ public:
 		LPCSTR				GetPhraseText		(const shared_str& phrase_id, bool current_speaking = true);
 		LPCSTR				GetLastPhraseText	() {return GetPhraseText(m_SaidPhraseID, false);}
 		const shared_str&	GetDialogID			() const {return m_DialogId;}
+	// Перегрузчик диалога
+		bool				DialogForceReload	(bool value = false);
 
 	//заголовок, диалога, если не задан, то 0-я фраза
 		const shared_str&	GetLastPhraseID		() {return m_SaidPhraseID;}

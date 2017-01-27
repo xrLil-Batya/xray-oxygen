@@ -29,12 +29,12 @@ CUITalkWnd::CUITalkWnd()
 
 	m_pOurDialogManager		= NULL;
 	m_pOthersDialogManager	= NULL;
-
 	ToTopicMode				();
-
 	InitTalkWnd				();
+
 	m_bNeedToUpdateQuestions = false;
-	b_disable_break			= false;
+	b_disable_break = false;
+	m_bInitState = false;
 }
 
 CUITalkWnd::~CUITalkWnd()
@@ -55,8 +55,9 @@ void CUITalkWnd::InitTalkWnd()
 void CUITalkWnd::InitTalkDialog()
 {
 	m_pActor = Actor();
-	if (m_pActor && !m_pActor->IsTalking()) return;
-
+	if (m_pActor && !m_pActor->IsTalking()) 
+		return;
+	m_bInitState = true;
 	m_pOurInvOwner = smart_cast<CInventoryOwner*>(m_pActor);
 	m_pOthersInvOwner = m_pActor->GetTalkPartner();
 
@@ -67,9 +68,6 @@ void CUITalkWnd::InitTalkDialog()
 	UITalkDialogWnd->UICharacterInfoLeft.InitCharacter		(m_pOurInvOwner->object_id());
 	UITalkDialogWnd->UICharacterInfoRight.InitCharacter		(m_pOthersInvOwner->object_id());
 
-//.	UITalkDialogWnd->UIDialogFrame.UITitleText.SetText		(m_pOthersInvOwner->Name());
-//.	UITalkDialogWnd->UIOurPhrasesFrame.UITitleText.SetText	(m_pOurInvOwner->Name());
-	
 	//очистить лог сообщений
 	UITalkDialogWnd->ClearAll();
 
@@ -81,6 +79,8 @@ void CUITalkWnd::InitTalkDialog()
 	UITalkDialogWnd->SetOsoznanieMode		(m_pOthersInvOwner->NeedOsoznanieMode());
 	UITalkDialogWnd->Show					();
 	UITalkDialogWnd->UpdateButtonsLayout(b_disable_break, m_pOthersInvOwner->IsTradeEnabled());
+
+	m_bInitState = false;
 }
 
 void CUITalkWnd::InitOthersStartDialog()

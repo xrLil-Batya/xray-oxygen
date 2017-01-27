@@ -17,8 +17,6 @@ SPhraseDialogData::SPhraseDialogData ()
 SPhraseDialogData::~SPhraseDialogData ()
 {}
 
-
-
 CPhraseDialog::CPhraseDialog()
 {
 	m_SaidPhraseID		= "";
@@ -31,7 +29,6 @@ CPhraseDialog::CPhraseDialog()
 CPhraseDialog::~CPhraseDialog()
 {
 }
-
 
 void CPhraseDialog::Init(CPhraseDialogManager* speaker_first, 
 						 CPhraseDialogManager* speaker_second)
@@ -50,6 +47,12 @@ void CPhraseDialog::Init(CPhraseDialogManager* speaker_first,
 
 	m_bFinished			= false;
 	m_bFirstIsSpeaking	= true;
+}
+
+bool CPhraseDialog::DialogForceReload(bool value = false)
+{
+	data()->b_bForceReload = value;
+	return data()->b_bForceReload;
 }
 
 //обнуляем все связи
@@ -210,11 +213,27 @@ int	 CPhraseDialog::Priority()
 	return data()->m_iPriority;
 }
 
+#include "uigamesp.h"
 
 void CPhraseDialog::Load(shared_str dialog_id)
 {
 	m_DialogId = dialog_id;
-	inherited_shared::load_shared(m_DialogId, NULL);
+	// inherited_shared::load_shared(m_DialogId, NULL);
+	bool need_load = inherited_shared::start_load_shared(m_DialogId); //делаем инициализацию 	SPhraseDialogData* при первом вызове. если синглтон не был создан ранее - он создается, иначе возвращается созданный
+																	  //результат функции - это флаг, указывающий, требуется ли загрузка данных при первичной инициализации.
+	if (need_load) //структура создается первый раз, ее надо просто загрузить, также таким образом можно избежать двойного вызова метода загрузки
+		inherited_shared::load_shared(m_DialogId, nullptr);
+	else if (DialogForceReload()) //структура уже создавалась и загружалась ранее
+	{ //но установлен флаг для принудительной перезагрузки
+		CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
+		if (ui_sp && ui_sp->TalkMenu->GetInitState()) //перезагружаем данные только тогда, когда идет инициализация окна диалога
+		{
+			data()->SetLoad(false);//для структуры SPhraseDialogData устанавливаем флаг принудительной загрузки
+			inherited_shared::load_shared(m_DialogId, nullptr); //обновляем данные
+																//inherited_shared::finish_load_shared вызывать не обязательно, так как load_shared уже выполняет его функционал.
+
+		}
+	}
 }
 
 #include "script_engine.h"
@@ -232,13 +251,12 @@ void CPhraseDialog::load_shared	(LPCSTR)
 	THROW3(dialog_node, "dialog id=", *item_data.id);
 
 	pXML->SetLocalRoot(dialog_node);
-
-
-	SetPriority	( pXML->ReadAttribInt(dialog_node, "priority", 0) );
+	SetPriority(pXML->ReadAttribInt(dialog_node, "priority", 0));
 
 	//заголовок 
-	SetCaption	( pXML->Read(dialog_node, "caption", 0, NULL) );
-
+	SetCaption(pXML->Read(dialog_node, "caption", 0, NULL));
+	//проверка релоада диалога			(Winsor)
+	DialogForceReload(pXML->ReadAttribInt(dialog_node, "force_reload", 0) == 1 ? true : false);
 	//предикаты начала диалога
 	data()->m_ScriptDialogHelper.Load(pXML, dialog_node);
 
