@@ -16,7 +16,7 @@
 #	ifndef USE_LUA_STUDIO
 #		include "script_debugger.h"
 #	else // #ifndef USE_LUA_STUDIO
-#		include "lua_studio.h"
+#		include "../xrScripts/lua_studio/lua_studio.h"
 		typedef cs::lua_studio::create_world_function_type			create_world_function_type;
 		typedef cs::lua_studio::destroy_world_function_type			destroy_world_function_type;
 

@@ -293,13 +293,10 @@ KNOWN_INFO_VECTOR *registry						(const CALifeSimulator *self, const ALife::_OBJ
 bool has_info									(const CALifeSimulator *self, const ALife::_OBJECT_ID &id, LPCSTR info_id)
 {
 	const KNOWN_INFO_VECTOR				*known_info = registry(self,id);
-	if (!known_info)
-		return							(false);
-
-	if (std::find_if(known_info->begin(), known_info->end(), CFindByIDPred(info_id)) == known_info->end())
-		return							(false);
-
-	return								(true);
+	if (!known_info || std::find_if(known_info->begin(), known_info->end(), CFindByIDPred(info_id)) == known_info->end())
+		return false;
+	else
+		return true;
 }
 
 bool dont_has_info								(const CALifeSimulator *self, const ALife::_OBJECT_ID &id, LPCSTR info_id)
@@ -308,16 +305,6 @@ bool dont_has_info								(const CALifeSimulator *self, const ALife::_OBJECT_ID 
 	// absurdly, but only because of scriptwriters needs
 	return								(!has_info(self,id,info_id));
 }
-
-//void disable_info_portion						(const CALifeSimulator *self, const ALife::_OBJECT_ID &id)
-//{
-//	THROW								(self);
-//}
-
-//void give_info_portion							(const CALifeSimulator *self, const ALife::_OBJECT_ID &id)
-//{
-//	THROW								(self);
-//}
 
 #pragma optimize("s",on)
 void CALifeSimulator::script_register			(lua_State *L)
@@ -371,12 +358,10 @@ void CALifeSimulator::script_register			(lua_State *L)
 
 		luabind::class_<class_exporter<CALifeSimulator> >	instance("story_ids");
 
-		STORY_PAIRS::const_iterator	I = story_ids.begin();
-		STORY_PAIRS::const_iterator	E = story_ids.end();
-		for ( ; I != E; ++I)
-			instance.enum_		("_story_ids")[luabind::value(*(*I).first,(*I).second)];
+		for (const auto& pair : story_ids)
+			instance = std::move(instance).enum_("_story_ids")[luabind::value(*pair.first, pair.second)];
 
-		luabind::module			(L)[instance];
+		luabind::module			(L)[std::move(instance)];
 	}
 
 	{
@@ -393,46 +378,9 @@ void CALifeSimulator::script_register			(lua_State *L)
 
 		luabind::class_<class_exporter<class_exporter<CALifeSimulator> > >	instance("spawn_story_ids");
 
-		SPAWN_STORY_PAIRS::const_iterator	I = spawn_story_ids.begin();
-		SPAWN_STORY_PAIRS::const_iterator	E = spawn_story_ids.end();
-		for ( ; I != E; ++I)
-			instance.enum_		("_spawn_story_ids")[luabind::value(*(*I).first,(*I).second)];
+		for (const auto& pair : spawn_story_ids)
+			instance = std::move(instance).enum_("_spawn_story_ids")[luabind::value(*pair.first, pair.second)];
 
-		luabind::module			(L)[instance];
+		luabind::module(L)[std::move(instance)];
 	}
 }
-
-#if 0//def DEBUG
-struct dummy {
-    int count;
-    lua_State* state;
-    int ref;
-};
-
-void CALifeSimulator::validate			()
-{
-	typedef CALifeSpawnRegistry::SPAWN_GRAPH::const_vertex_iterator	const_vertex_iterator;
-	const_vertex_iterator		I = spawns().spawns().vertices().begin();
-	const_vertex_iterator		E = spawns().spawns().vertices().end();
-	for ( ; I != E; ++I) {
-		luabind::wrap_base		*base = smart_cast<luabind::wrap_base*>(&(*I).second->data()->object());
-		if (!base)
-			continue;
-
-		if (!base->m_self.m_impl)
-			continue;
-
-		dummy					*_dummy = (dummy*)((void*)base->m_self.m_impl);
-		lua_State				**_state = &_dummy->state;
-		VERIFY2					(
-			base->m_self.state(),
-			make_string(
-				"0x%08x name[%s] name_replace[%s]",
-				*(int*)&_state,
-				(*I).second->data()->object().name(),
-				(*I).second->data()->object().name_replace()
-			)
-		);
-	}
-}
-#endif //DEBUG

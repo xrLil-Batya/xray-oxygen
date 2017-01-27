@@ -1441,9 +1441,6 @@
     <Filter Include="AI\AScript\ScriptThread\ScriptStackTracker">
       <UniqueIdentifier>{81427c0a-554c-422d-b537-38f170281e7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\lua_studio">
-      <UniqueIdentifier>{d8badb92-aec4-4fc4-891d-8c9e03362fae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\ASound">
       <UniqueIdentifier>{5902e640-63ae-4bd4-a709-a76205014797}</UniqueIdentifier>
     </Filter>
@@ -5238,9 +5235,6 @@
     <ClInclude Include="..\xrServerEntities\script_stack_tracker_inline.h">
       <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\lua_studio.h">
-      <Filter>AI\AScript\lua_studio</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\ai_sounds.h">
       <Filter>AI\ASound</Filter>
     </ClInclude>
@@ -8800,9 +8794,6 @@
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_stack_tracker.cpp">
       <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\lua_studio.cpp">
-      <Filter>AI\AScript\lua_studio</Filter>
     </ClCompile>
     <ClCompile Include="ai_sounds.cpp">
       <Filter>AI\ASound</Filter>
