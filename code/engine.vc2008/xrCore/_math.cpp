@@ -217,12 +217,10 @@ bool g_initialize_cpu_called = false;
 //------------------------------------------------------------------------------------
 void _initialize_cpu	(void) 
 {
-    Msg("* Detected CPU: %s [%s], F%d/M%d/S%d, %.2f mhz, %d-clk 'rdtsc'",
-        CPU::ID.modelName, CPU::ID.vendor,
-        CPU::ID.family, CPU::ID.model, CPU::ID.stepping,
-        float(CPU::clk_per_second / u64(1000000)),
-        u32(CPU::clk_overhead)
-    );
+	Msg("* Vendor CPU: %s", CPU::ID.vendor);
+    Msg(CPU::ID.isIntel ? "* Detected CPU: %s %.2f mhz, %d-clk 'rdtsc'" : "* Detected CPU: %s%.2f mhz, %d-clk 'rdtsc'",
+        CPU::ID.modelName, float(CPU::clk_per_second / u64(1000000)), u32(CPU::clk_overhead));
+	Log("* Architecture CPU:", CPU::ID.WoW64 ? "AMD64" : "i386");
 
 //	DUMP_PHASE;
 
@@ -239,7 +237,8 @@ void _initialize_cpu	(void)
 
 	string256	features;	xr_strcpy(features,sizeof(features),"RDTSC");
     if (CPU::ID.hasFeature(CpuFeature::Mmx))    xr_strcat(features,", MMX");
-    if (CPU::ID.hasFeature(CpuFeature::_3dNow)) xr_strcat(features,", 3DNow!");
+	if (CPU::ID.hasFeature(CpuFeature::_3dNow)) xr_strcat(features, ", 3DNow!");
+	if (CPU::ID.hasFeature(CpuFeature::_3dNowExt)) xr_strcat(features, ", 3DNowExt!");
     if (CPU::ID.hasFeature(CpuFeature::Sse))    xr_strcat(features,", SSE");
     if (CPU::ID.hasFeature(CpuFeature::Sse2))   xr_strcat(features,", SSE2");
     if (CPU::ID.hasFeature(CpuFeature::Sse3))   xr_strcat(features,", SSE3");
@@ -250,7 +249,7 @@ void _initialize_cpu	(void)
     if (CPU::ID.hasFeature(CpuFeature::HT))     xr_strcat(features,", HTT");
 
 	Msg("* CPU features: %s" , features );
-	Msg("* CPU cores/threads: %d/%d\n" , CPU::ID.n_cores , CPU::ID.n_threads );
+	Msg("* CPU cores/threads: %d/%d \n", CPU::ID.n_cores, CPU::ID.n_threads);
 
 	Fidentity.identity		();	// Identity matrix
 	Didentity.identity		();	// Identity matrix

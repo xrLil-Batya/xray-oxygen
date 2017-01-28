@@ -60,6 +60,21 @@ DWORD countSetBits(ULONG_PTR bitMask)
     return bitSetCount;
 }
 
+#include <iostream>  
+#include <vector>  
+#include <bitset>  
+#include <array>  
+#include <string>  
+#include <intrin.h>
+#include <Windows.h>
+
+bool isWow64()
+{
+	SYSTEM_INFO SysInfo;
+	GetNativeSystemInfo(&SysInfo);
+	return (PROCESSOR_ARCHITECTURE_AMD64 == SysInfo.wProcessorArchitecture);
+}
+
 unsigned int query_processor_info(processor_info* pinfo)
 {	
     std::memset(pinfo,0,sizeof(processor_info));
@@ -83,9 +98,11 @@ unsigned int query_processor_info(processor_info* pinfo)
     memset(pinfo->vendor, 0, sizeof(pinfo->vendor));
     *reinterpret_cast<int*>(pinfo->vendor)     = data[0][1];
     *reinterpret_cast<int*>(pinfo->vendor + 4) = data[0][3];
-    *reinterpret_cast<int*>(pinfo->vendor + 8) = data[0][2];
+	*reinterpret_cast<int*>(pinfo->vendor + 8) = data[0][2];
 
-    const bool isAmd = std::strncmp(pinfo->vendor, "AuthenticAMD", 12) != 0;
+	pinfo->isAmd = std::strncmp(pinfo->vendor, "AuthenticAMD", 12) != 0;
+	pinfo->isIntel = !pinfo->isAmd;
+	pinfo->WoW64 = isWow64();
 
     // load bitset with flags for function 0x00000001
     if (nIds >= 1)
@@ -104,7 +121,6 @@ unsigned int query_processor_info(processor_info* pinfo)
         __cpuidex(cpui.data(), i, 0);
         data.push_back(cpui);
     }
-
     // load bitset with flags for function 0x80000001
     if (nExIds_ >= 0x80000001)
         f_81_EDX = data[1][3];
@@ -129,7 +145,7 @@ unsigned int query_processor_info(processor_info* pinfo)
     if (f_1_EDX[26])           pinfo->features |= static_cast<u32>(CpuFeature::Sse2);
 
 	//Added sv3nk: 3DNow! EXT
-	if (isAmd)
+	if (pinfo->isAmd)
 		if (f_81_EDX[30])
 			pinfo->features |= static_cast<u32>(CpuFeature::_3dNowExt);
 		else if (f_81_EDX[31])
@@ -144,7 +160,7 @@ unsigned int query_processor_info(processor_info* pinfo)
     __cpuid(cpui.data(), 1);
 
 	//Edit sv3nk
-    if ((cpui[2] & 0x8) > 0) pinfo->features |= static_cast<u32>(CpuFeature::MWait);
+    if ((cpui[2] & 0x8) > 0)   pinfo->features |= static_cast<u32>(CpuFeature::MWait);
 
     pinfo->family   = (cpui[0] >> 8) & 0xf;
     pinfo->model    = (cpui[0] >> 4) & 0xf;
@@ -190,7 +206,6 @@ unsigned int query_processor_info(processor_info* pinfo)
 	pinfo->n_threads = logicalProcessorCount;
     pinfo->affinity_mask = pa_mask_save;
     pinfo->n_cores = processorCoreCount;
-
     return pinfo->features;
 }
 #endif

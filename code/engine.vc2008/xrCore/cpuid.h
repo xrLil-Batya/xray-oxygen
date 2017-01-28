@@ -1,6 +1,4 @@
-#ifndef _INC_CPUID
-#define _INC_CPUID
-
+#pragma once
 enum class CpuFeature : u32 {
     Mmx = 0x0001,
     Sse = 0x0002,
@@ -35,6 +33,10 @@ struct processor_info {
     // except 2nd (and upper) logical threads
     // of the same physical core
 
+	bool isAmd,				// AMD flag
+		 isIntel,			// IntelCore flag
+		 WoW64;				// WoW64 flag
+
     bool hasFeature(const CpuFeature feature) const XR_NOEXCEPT
     {
         return (features & static_cast<u32>(feature)) != 0;
@@ -42,5 +44,3 @@ struct processor_info {
 };
 
 unsigned int query_processor_info(processor_info*);
-
-#endif
