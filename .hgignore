@@ -8,3 +8,4 @@ engine.VC.db
 intermediate/
 *.iobj
 binaries/
+libraries/

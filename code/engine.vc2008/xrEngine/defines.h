@@ -11,7 +11,7 @@
 #define _SHOW_REF(msg, x)   { if(x) { x->AddRef(); Log(msg,u32(x->Release()));}}
 
 // textures
-ENGINE_API extern	int		psTextureLOD		;
+ENGINE_API extern	int		psTextureLOD;
 
 // psDeviceFlags
 enum {
