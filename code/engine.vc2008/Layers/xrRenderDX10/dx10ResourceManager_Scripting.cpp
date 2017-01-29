@@ -9,11 +9,10 @@
 //	adopt_compiler don't have = operator And it can't have = operator
 #pragma warning( push )
 #pragma warning( disable : 4512)
-#include	"../../xrEngine/ai_script_space.h"
+#include	"../../xrScripts/lua_studio/ai_script_space.h"
 #pragma warning( pop )
-#include	"../../xrEngine/ai_script_lua_extension.h"
+#include	"../../xrScripts/lua_studio/ai_script_lua_extension.h"
 #include	"luabind/return_reference_to_policy.hpp"
-
 #include	"../xrRender/dxRenderDeviceRender.h"
 
 using namespace				luabind;
