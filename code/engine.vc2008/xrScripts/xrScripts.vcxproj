@@ -201,6 +201,8 @@
     <ClCompile Include="luabind\src\stack_content_by_name.cpp" />
     <ClCompile Include="luabind\src\weak_ref.cpp" />
     <ClCompile Include="luabind\src\wrapper_base.cpp" />
+    <ClCompile Include="lua_studio\ai_script_lua_debug.cpp" />
+    <ClCompile Include="lua_studio\ai_script_lua_extension.cpp" />
     <ClCompile Include="lua_studio\lua_studio.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -293,6 +295,9 @@
     <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\traits.hpp" />
     <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\typelist.hpp" />
     <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\utility.hpp" />
+    <ClInclude Include="lua_studio\ai_script_lua_extension.h" />
+    <ClInclude Include="lua_studio\ai_script_lua_space.h" />
+    <ClInclude Include="lua_studio\ai_script_space.h" />
     <ClInclude Include="lua_studio\lua_studio.h" />
     <ClInclude Include="xrScripts.h" />
   </ItemGroup>

@@ -31,8 +31,14 @@
     <Filter Include="Core\Imdexlib\include">
       <UniqueIdentifier>{7260b310-2efb-44d3-911f-b556e5d49dc0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Lua\LuaStudio">
+    <Filter Include="Lua\xrEngine">
+      <UniqueIdentifier>{737a768d-d593-445c-a5a8-f1e7938e0a49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\xrEngine\LuaStudio">
       <UniqueIdentifier>{846b4c0b-8df6-4d49-82c4-622406f3c414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Lua\xrEngine\ai_script">
+      <UniqueIdentifier>{3e3e15c0-cf8d-449e-9955-bae29f98dd74}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -97,10 +103,16 @@
       <Filter>Lua\LuaBind</Filter>
     </ClCompile>
     <ClCompile Include="lua_studio\lua_studio.cpp">
-      <Filter>Lua\LuaStudio</Filter>
+      <Filter>Lua\xrEngine\LuaStudio</Filter>
     </ClCompile>
     <ClCompile Include="linker.cpp">
       <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="lua_studio\ai_script_lua_debug.cpp">
+      <Filter>Lua\xrEngine\ai_script</Filter>
+    </ClCompile>
+    <ClCompile Include="lua_studio\ai_script_lua_extension.cpp">
+      <Filter>Lua\xrEngine\ai_script</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -375,7 +387,16 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="lua_studio\lua_studio.h">
-      <Filter>Lua\LuaStudio</Filter>
+      <Filter>Lua\xrEngine\LuaStudio</Filter>
+    </ClInclude>
+    <ClInclude Include="lua_studio\ai_script_lua_extension.h">
+      <Filter>Lua\xrEngine\ai_script</Filter>
+    </ClInclude>
+    <ClInclude Include="lua_studio\ai_script_lua_space.h">
+      <Filter>Lua\xrEngine\ai_script</Filter>
+    </ClInclude>
+    <ClInclude Include="lua_studio\ai_script_space.h">
+      <Filter>Lua\xrEngine\ai_script</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

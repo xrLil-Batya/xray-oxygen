@@ -9,8 +9,8 @@
 #include	"tss.h"
 #include	"blenders\blender.h"
 #include	"blenders\blender_recorder.h"
-#include	"../../xrEngine/ai_script_space.h"
-#include	"../../xrEngine/ai_script_lua_extension.h"
+#include	"../../xrScripts/lua_studio/ai_script_space.h"
+#include	"../../xrScripts/lua_studio/ai_script_lua_extension.h"
 #include	"luabind/return_reference_to_policy.hpp"
 
 #include	"dxRenderDeviceRender.h"

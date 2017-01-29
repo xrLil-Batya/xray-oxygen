@@ -523,8 +523,6 @@
     <ClCompile Include="..\xrRender\SH_Matrix.cpp" />
     <ClCompile Include="..\xrRender\Shader.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10r_constants_cache.cpp" />
-    <ClCompile Include="..\..\xrEngine\ai_script_lua_debug.cpp" />
-    <ClCompile Include="..\..\xrEngine\ai_script_lua_extension.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10ResourceManager_Resources.cpp" />
     <ClCompile Include="..\xrRenderDX10\dx10ResourceManager_Scripting.cpp" />
     <ClCompile Include="..\xrRender\ETextureParams.cpp" />

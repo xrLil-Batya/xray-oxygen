@@ -6,36 +6,22 @@
 //	Description : XRay Script extensions
 ////////////////////////////////////////////////////////////////////////////
 
+#ifndef XR_SCRIPTS
+#	include "stdafx.h"
+#	include "ai_space.h"
+#else
+#	include "../../xrCore/xrCore.h"
+#endif
+
 #include <stdarg.h>
-#include "stdafx.h"
 #include "ai_script_lua_extension.h"
 #include "ai_script_space.h"
 
-#ifdef XRRENDER_R4_EXPORTS
-#define ENGINE_BUILD
-#endif	//	XRRENDER_R4_EXPORTS
-
-#ifdef XRRENDER_R3_EXPORTS
-#define ENGINE_BUILD
-#endif	//	XRRENDER_R3_EXPORTS
-
-#ifdef XRRENDER_R2_EXPORTS
-#define ENGINE_BUILD
-#endif	//	XRRENDER_R2_EXPORTS
-
-#ifdef XRRENDER_R1_EXPORTS
-#define ENGINE_BUILD
-#endif	//	XRRENDER_R1_EXPORTS
-
-#ifndef ENGINE_BUILD
-	#include "ai_space.h"
-#endif
-
 using namespace Script;
 
-int __cdecl Lua::LuaOut(Lua::ELuaMessageType tLuaMessageType, LPCSTR caFormat, ...)
+SCRIPT_API int __cdecl Lua::LuaOut(ELuaMessageType tLuaMessageType, char* caFormat, ...)
 {
-#ifndef ENGINE_BUILD
+#ifndef XR_SCRIPTS
 	if (!psAI_Flags.test(aiLua))
 		return(0);
 #endif
@@ -100,9 +86,7 @@ int __cdecl Lua::LuaOut(Lua::ELuaMessageType tLuaMessageType, LPCSTR caFormat, .
 	S1		= S2 + xr_strlen(SS);
 	vsprintf(S1,caFormat,l_tMarker);
 
-#ifdef ENGINE_BUILD
-	// Msg("[LUA Output] : %s",S2);
-#else
+#ifndef XR_SCRIPTS
 	ai().lua_output().w_string(S2);
 #endif
 
@@ -111,7 +95,7 @@ int __cdecl Lua::LuaOut(Lua::ELuaMessageType tLuaMessageType, LPCSTR caFormat, .
 	return	(l_iResult);
 }
 
-#ifndef ENGINE_BUILD
+#ifndef XR_SCRIPTS
 void Script::vfLoadStandardScripts(CLuaVirtualMachine *tpLuaVM)
 {
 	string256		S,S1;
@@ -234,7 +218,7 @@ void vfCopyGlobals(CLuaVirtualMachine *tpLuaVM)
 	}
 }
 
-bool Script::bfLoadBuffer(CLuaVirtualMachine *tpLuaVM, LPCSTR caBuffer, size_t tSize, LPCSTR caScriptName, LPCSTR caNameSpaceName)
+SCRIPT_API bool Script::bfLoadBuffer(CLuaVirtualMachine *tpLuaVM, LPCSTR caBuffer, size_t tSize, LPCSTR caScriptName, LPCSTR caNameSpaceName)
 {
 	int				l_iErrorCode;
 	if (caNameSpaceName) {
@@ -328,7 +312,7 @@ void vfSetNamespace(CLuaVirtualMachine *tpLuaVM)
 	lua_pop			(tpLuaVM,3);
 }
 
-bool Script::bfLoadFileIntoNamespace(CLuaVirtualMachine *tpLuaVM, LPCSTR caScriptName, LPCSTR caNamespaceName, bool bCall)
+SCRIPT_API bool Script::bfLoadFileIntoNamespace(CLuaVirtualMachine *tpLuaVM, LPCSTR caScriptName, LPCSTR caNamespaceName, bool bCall)
 {
 	if (!bfCreateNamespaceTable(tpLuaVM,caNamespaceName))
 		return		(false);
@@ -339,7 +323,7 @@ bool Script::bfLoadFileIntoNamespace(CLuaVirtualMachine *tpLuaVM, LPCSTR caScrip
 	return			(true);
 }
 
-bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR N)
+SCRIPT_API bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR N)
 {
 	lua_pushstring 		(tpLuaVM,"_G"); 
 	lua_gettable 		(tpLuaVM,LUA_GLOBALSINDEX); 
@@ -368,7 +352,7 @@ bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR N)
 	return	(true); 
 }
 
-CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *tpLuaVM, LPCSTR N)
+SCRIPT_API CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *tpLuaVM, LPCSTR N)
 {
 	if (!xr_strlen(N))
 		return				(tpLuaVM);
@@ -406,7 +390,7 @@ CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *tpLuaVM, LPC
 	return					(tpLuaVM); 
 }
 
-bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR identifier, int type)
+SCRIPT_API bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR identifier, int type)
 {
 	lua_pushnil (tpLuaVM); 
 	while (lua_next(tpLuaVM, -2)) { 
@@ -420,14 +404,14 @@ bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR identifier, 
 	return	(false); 
 }
 
-bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR namespace_name, LPCSTR identifier, int type)
+SCRIPT_API bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR namespace_name, LPCSTR identifier, int type)
 {
 	if (xr_strlen(namespace_name) && !bfGetNamespaceTable(tpLuaVM,namespace_name))
 		return				(false); 
 	return					(bfIsObjectPresent(tpLuaVM,identifier,type)); 
 }
 
-luabind::object Script::lua_namespace_table(CLuaVirtualMachine *tpLuaVM, LPCSTR namespace_name)
+SCRIPT_API luabind::object Script::lua_namespace_table(CLuaVirtualMachine *tpLuaVM, LPCSTR namespace_name)
 {
 	string256			S1;
 	xr_strcpy				(S1,namespace_name);

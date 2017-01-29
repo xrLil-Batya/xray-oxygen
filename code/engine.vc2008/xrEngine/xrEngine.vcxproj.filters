@@ -112,9 +112,6 @@
     <Filter Include="Engine\Core">
       <UniqueIdentifier>{eff2fdef-e738-4789-bdd5-a258812b1e44}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Core\Scripting">
-      <UniqueIdentifier>{5c859e83-24fe-4f5d-8e3e-b4335b44bf2c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Noise">
       <UniqueIdentifier>{93a72d32-bf1d-4546-920d-1e2b226510b8}</UniqueIdentifier>
     </Filter>
@@ -477,15 +474,6 @@
     <ClInclude Include="EventAPI.h">
       <Filter>Engine\Core</Filter>
     </ClInclude>
-    <ClInclude Include="ai_script_lua_extension.h">
-      <Filter>Engine\Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_script_lua_space.h">
-      <Filter>Engine\Core\Scripting</Filter>
-    </ClInclude>
-    <ClInclude Include="ai_script_space.h">
-      <Filter>Engine\Core\Scripting</Filter>
-    </ClInclude>
     <ClInclude Include="perlin.h">
       <Filter>Engine\Noise</Filter>
     </ClInclude>
@@ -811,15 +799,6 @@
     </ClCompile>
     <ClCompile Include="mailSlot.cpp">
       <Filter>Engine\Core</Filter>
-    </ClCompile>
-    <ClCompile Include="_scripting.cpp">
-      <Filter>Engine\Core\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_script_lua_debug.cpp">
-      <Filter>Engine\Core\Scripting</Filter>
-    </ClCompile>
-    <ClCompile Include="ai_script_lua_extension.cpp">
-      <Filter>Engine\Core\Scripting</Filter>
     </ClCompile>
     <ClCompile Include="perlin.cpp">
       <Filter>Engine\Noise</Filter>

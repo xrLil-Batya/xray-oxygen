@@ -14,19 +14,16 @@
 #pragma warning(disable:4530)
 #pragma warning(disable:4267)
 
-//#define LUABIND_NO_EXCEPTIONS
-
 extern "C" {
 	#include <lua/lua.h>
 	#include <lua/lualib.h>
 	#include <lua/lauxlib.h>
-//	#include <lua/luajit.h>
 }
-
 // Lua-bind
 #include <luabind/luabind.hpp>
 #include <luabind/object.hpp>
-
+// xrScripts
+#include "../../xrCore/xrCore.h"
 #pragma warning(default:4244)
 #pragma warning(default:4995)
 #pragma warning(default:4267)

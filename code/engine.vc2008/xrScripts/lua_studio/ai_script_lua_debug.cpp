@@ -5,10 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script debugging system
 ////////////////////////////////////////////////////////////////////////////
-
-#include "stdafx.h"
 #include "ai_script_space.h"
 #include "ai_script_lua_extension.h"
+#include <Windows.h>
+#include "../../xrCore/xrCore.h"
 
 using namespace Script;
 
