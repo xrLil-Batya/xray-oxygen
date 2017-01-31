@@ -80,7 +80,7 @@ public:
 		LPCSTR				GetLastPhraseText	() {return GetPhraseText(m_SaidPhraseID, false);}
 		const shared_str&	GetDialogID			() const {return m_DialogId;}
 	// Перегрузчик диалога
-		bool				DialogForceReload	(bool value = false);
+		bool				DialogForceReload	(bool reload_flag = false);
 
 	//заголовок, диалога, если не задан, то 0-я фраза
 		const shared_str&	GetLastPhraseID		() {return m_SaidPhraseID;}

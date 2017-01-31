@@ -49,9 +49,9 @@ void CPhraseDialog::Init(CPhraseDialogManager* speaker_first,
 	m_bFirstIsSpeaking	= true;
 }
 
-bool CPhraseDialog::DialogForceReload(bool value = false)
+bool CPhraseDialog::DialogForceReload(bool reload_flag)
 {
-	data()->b_bForceReload = value;
+	data()->b_bForceReload = reload_flag;
 	return data()->b_bForceReload;
 }
 
@@ -111,9 +111,8 @@ bool CPhraseDialog::SayPhrase (DIALOG_SHARED_PTR& phrase_dialog, const shared_st
 	//больше нет фраз, чтоб говорить
 	phrase_dialog->m_PhraseVector.clear();
 	if(phrase_vertex->edges().empty())
-	{
 		phrase_dialog->m_bFinished = true;
-	}
+
 	else
 	{
 		//обновить список фраз, которые сейчас сможет говорить собеседник
@@ -218,14 +217,17 @@ int	 CPhraseDialog::Priority()
 void CPhraseDialog::Load(shared_str dialog_id)
 {
 	m_DialogId = dialog_id;
-	// inherited_shared::load_shared(m_DialogId, NULL);
+#ifndef DIALOG_RELOADER
+	inherited_shared::load_shared(m_DialogId, nullptr);
+#else
 	bool need_load = inherited_shared::start_load_shared(m_DialogId); //делаем инициализацию 	SPhraseDialogData* при первом вызове. если синглтон не был создан ранее - он создается, иначе возвращается созданный
 																	  //результат функции - это флаг, указывающий, требуется ли загрузка данных при первичной инициализации.
 	if (need_load) //структура создается первый раз, ее надо просто загрузить, также таким образом можно избежать двойного вызова метода загрузки
 		inherited_shared::load_shared(m_DialogId, nullptr);
 	else if (DialogForceReload()) //структура уже создавалась и загружалась ранее
 	{ //но установлен флаг для принудительной перезагрузки
-		CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(HUD().GetUI()->UIGame());
+
+		CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(HUD->IsLoaded);
 		if (ui_sp && ui_sp->TalkMenu->GetInitState()) //перезагружаем данные только тогда, когда идет инициализация окна диалога
 		{
 			data()->SetLoad(false);//для структуры SPhraseDialogData устанавливаем флаг принудительной загрузки
@@ -234,6 +236,7 @@ void CPhraseDialog::Load(shared_str dialog_id)
 
 		}
 	}
+#endif
 }
 
 #include "script_engine.h"
