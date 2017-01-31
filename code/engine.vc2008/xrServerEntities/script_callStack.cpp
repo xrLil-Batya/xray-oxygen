@@ -10,28 +10,6 @@ CScriptCallStack::CScriptCallStack(CScriptDebugger*d)
 CScriptCallStack::~CScriptCallStack()
 {}
 
-/*
-int CCallStack::OnSci(CScintillaView* pView, SCNotification* pNotify)
-{
-	CLuaEditor* pEditor = ((CScintillaView*)GetView(0))->GetEditor();
-
-	CPoint pt;
-	int nLine;
-	CString strLine;
-	switch (pNotify->nmhdr.code)
-	{
-	case SCN_DOUBLECLICK:
-		GetCursorPos(&pt);
-		pEditor->ScreenToClient(&pt);
-		nLine = pEditor->LineFromPoint(pt);
-		GotoStackTraceLevel(nLine-1);
-		break;
-	};
-
-	return 0;
-}
-*/
-
 void CScriptCallStack::Clear()
 {
 	m_nCurrentLevel = -1;

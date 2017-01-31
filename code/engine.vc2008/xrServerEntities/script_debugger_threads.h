@@ -1,5 +1,5 @@
 #pragma once
-#include "script_debugger_messages.h"
+#include "../xrScripts/lua_studio/script_debugger_messages.h"
 
 class CScriptProcess;
 class CScriptDebugger;

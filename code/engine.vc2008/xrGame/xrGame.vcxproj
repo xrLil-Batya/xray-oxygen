@@ -261,6 +261,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="..\xrServerEntities\script_callStack.h" />
+    <ClInclude Include="..\xrServerEntities\script_debugger.h" />
+    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h" />
+    <ClInclude Include="..\xrServerEntities\script_lua_helper.h" />
     <ClInclude Include="mt_config.h" />
     <ClInclude Include="damage_manager.h" />
     <ClInclude Include="damage_manager_inline.h" />
@@ -1165,12 +1169,6 @@
     <ClInclude Include="script_particles_inline.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
-    <ClInclude Include="..\xrServerEntities\mslotutils.h" />
-    <ClInclude Include="..\xrServerEntities\script_callStack.h" />
-    <ClInclude Include="..\xrServerEntities\script_debugger.h" />
-    <ClInclude Include="..\xrServerEntities\script_debugger_messages.h" />
-    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h" />
-    <ClInclude Include="..\xrServerEntities\script_lua_helper.h" />
     <ClInclude Include="..\xrServerEntities\script_engine.h" />
     <ClInclude Include="..\xrServerEntities\script_engine_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_engine_space.h" />
@@ -1903,6 +1901,10 @@
     <ClInclude Include="physics_world_scripted.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrServerEntities\script_callStack.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_debugger.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp" />
     <ClCompile Include="damage_manager.cpp" />
     <ClCompile Include="action_base_script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
@@ -3605,17 +3607,6 @@
     </ClCompile>
     <ClCompile Include="script_sound.cpp" />
     <ClCompile Include="script_sound_script.cpp">
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">pch_script.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
-      <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">pch_script.h</PrecompiledHeaderFile>
-      <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_callStack.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_debugger.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)$(ProjectName)_script.pch</PrecompiledHeaderOutputFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">pch_script.h</PrecompiledHeaderFile>
@@ -5594,10 +5585,6 @@
     </ProjectReference>
     <ProjectReference Include="..\3rd party\cximage\CxImage\cximage.vcxproj">
       <Project>{880cd250-ba77-4daf-a8d4-552f12dd3ae4}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\3rd party\luabind\luabind.beta7-devel.rc4.vcxproj">
-      <Project>{cc52e0b3-cc35-4934-9302-035b748f3f2c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\3rd party\ode\contrib\msvc7\ode_default\default.vcxproj">

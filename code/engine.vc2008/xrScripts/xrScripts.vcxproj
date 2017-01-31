@@ -204,6 +204,7 @@
     <ClCompile Include="lua_studio\ai_script_lua_debug.cpp" />
     <ClCompile Include="lua_studio\ai_script_lua_extension.cpp" />
     <ClCompile Include="lua_studio\lua_studio.cpp" />
+    <ClCompile Include="mslotutils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\adopt_policy.hpp" />
@@ -299,6 +300,8 @@
     <ClInclude Include="lua_studio\ai_script_lua_space.h" />
     <ClInclude Include="lua_studio\ai_script_space.h" />
     <ClInclude Include="lua_studio\lua_studio.h" />
+    <ClInclude Include="lua_studio\script_debugger_messages.h" />
+    <ClInclude Include="mslotutils.hpp" />
     <ClInclude Include="xrScripts.h" />
   </ItemGroup>
   <ItemGroup>
