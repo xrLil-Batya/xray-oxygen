@@ -3,9 +3,11 @@
 #ifdef _EDITOR
 	#include "..\editors\ECore\stdafx.h"
 #else
-#ifdef RELEASE
-#	define	INGAME_EDITOR
-#endif
+#ifndef NDEBUG
+#	ifndef INGAME_EDITOR
+#		define	INGAME_EDITOR
+#	endif // #ifndef INGAME_EDITOR
+#endif // #ifndef NDEBUG
 #define _WIN32_WINNT 0x0550
 
 #include "../xrCore/xrCore.h"
