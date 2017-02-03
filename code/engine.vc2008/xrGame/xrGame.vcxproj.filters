@@ -5181,24 +5181,6 @@
     <ClInclude Include="script_sound_inline.h">
       <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\mslotutils.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_callStack.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger_messages.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_lua_helper.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_engine.h">
       <Filter>AI\AScript\ScriptEngine</Filter>
     </ClInclude>
@@ -7365,6 +7347,18 @@
     <ClInclude Include="physics_world_scripted.h">
       <Filter>Core\Client\Objects\physics\scripts</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrServerEntities\script_callStack.h">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrServerEntities\script_lua_helper.h">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrServerEntities\script_debugger.h">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8758,18 +8752,6 @@
     </ClCompile>
     <ClCompile Include="script_sound_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_callStack.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_debugger.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_engine.cpp">
       <Filter>AI\AScript\ScriptEngine</Filter>
@@ -11008,6 +10990,18 @@
     </ClCompile>
     <ClCompile Include="physics_world_scripted.cpp">
       <Filter>Core\Client\Objects\physics\scripts</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\script_callStack.cpp">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\script_debugger.cpp">
+      <Filter>AI\AScript\ScriptDebugger</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

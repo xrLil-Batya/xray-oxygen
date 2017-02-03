@@ -1,6 +1,7 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "script_lua_helper.h"
 #include "script_debugger.h"
+#include "..\xrScripts\lua_studio\lua_studio.h"
 
 CDbgLuaHelper*	CDbgLuaHelper::m_pThis	= NULL;
 lua_State*		CDbgLuaHelper::L		= NULL;

@@ -1,4 +1,5 @@
 #pragma once
+#include "../../xrCore/xrCore.h"
 
 struct StackTrace{
 	char szDesc[255];
