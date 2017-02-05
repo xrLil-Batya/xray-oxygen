@@ -379,7 +379,6 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 		handler							= 0;
 		m_on_dialog						= 0;
         std::set_new_handler			(def_new_handler);	// exception-handler for 'out of memory' condition
-//		::SetUnhandledExceptionFilter	(UnhandledFilter);	// exception handler to all "unhandled" exceptions
     }
 #else
 typedef int(__cdecl * _PNH)(size_t);
@@ -405,13 +404,14 @@ static void invalid_parameter_handler(
 	uintptr_t reserved
 )
 {
-	bool							ignore_always = false;
+	bool		ignore_always = false;
 
-	string4096						expression_;
-	string4096						function_;
-	string4096						file_;
-	size_t							converted_chars = 0;
-	//		errno_t							err = 
+	string4096	expression_,
+				function_,
+				file_;
+
+	size_t		converted_chars = 0;
+
 	if (expression)
 		wcstombs_s(
 			&converted_chars,
@@ -424,39 +424,18 @@ static void invalid_parameter_handler(
 		xr_strcpy(expression_, "");
 
 	if (function)
-		wcstombs_s(
-			&converted_chars,
-			function_,
-			sizeof(function_),
-			function,
-			(wcslen(function) + 1) * 2 * sizeof(char)
-		);
+		wcstombs_s(&converted_chars, function_, sizeof(function_), function, (wcslen(function) + 1) * 2 * sizeof(char));
 	else
 		xr_strcpy(function_, __FUNCTION__);
 
 	if (file)
-		wcstombs_s(
-			&converted_chars,
-			file_,
-			sizeof(file_),
-			file,
-			(wcslen(file) + 1) * 2 * sizeof(char)
-		);
+		wcstombs_s(&converted_chars, file_, sizeof(file_), file, (wcslen(file) + 1) * 2 * sizeof(char));
 	else {
 		line = __LINE__;
 		xr_strcpy(file_, __FILE__);
 	}
 
-	Debug.backend(
-		"error handler is invoked!",
-		expression_,
-		0,
-		0,
-		file_,
-		line,
-		function_,
-		ignore_always
-	);
+	Debug.backend("error handler is invoked!", expression_, 0, 0, file_, line, function_, ignore_always);
 }
 
 static void pure_call_handler()
