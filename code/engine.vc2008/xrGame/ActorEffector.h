@@ -48,9 +48,9 @@ public:
 
 class CAnimatorCamEffector :public CEffectorCam
 {
-	typedef				CEffectorCam			inherited;
 	bool				m_bCyclic;
 protected:
+	typedef				CEffectorCam			inherited;
 	virtual bool		Cyclic					() const		{return m_bCyclic;}
 	CObjectAnimator*							m_objectAnimator;
 public:
