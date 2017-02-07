@@ -13,18 +13,18 @@
 // half box def
 static	Fvector3	hbox_verts[24]	=
 {
-	{-1.f,	-1.f,	-1.f}, {-1.f,	-1.01f,	-1.f},	// down
-	{ 1.f,	-1.f,	-1.f}, { 1.f,	-1.01f,	-1.f},	// down
-	{-1.f,	-1.f,	 1.f}, {-1.f,	-1.01f,	 1.f},	// down
-	{ 1.f,	-1.f,	 1.f}, { 1.f,	-1.01f,	 1.f},	// down
-	{-1.f,	 2.f,	-1.f}, {-1.f,	 1.f,	-1.f},
-	{ 1.f,	 2.f,	-1.f}, { 1.f,	 1.f,	-1.f},
-	{-1.f,	 2.f,	 1.f}, {-1.f,	 1.f,	 1.f},
-	{ 1.f,	 2.f,	 1.f}, { 1.f,	 1.f,	 1.f},
-	{-1.f,	 0.f,	-1.f}, {-1.f,	-1.f,	-1.f},	// half
-	{ 1.f,	 0.f,	-1.f}, { 1.f,	-1.f,	-1.f},	// half
-	{ 1.f,	 0.f,	 1.f}, { 1.f,	-1.f,	 1.f},	// half
-	{-1.f,	 0.f,	 1.f}, {-1.f,	-1.f,	 1.f}	// half
+	{ -1.f, -1.f, -1.f },	{ -1.f, -1.01f, -1.f }, // down
+	{ 1.f, -1.f, -1.f },	{ 1.f, -1.01f, -1.f }, // down
+	{ -1.f, -1.f, 1.f },	{ -1.f, -1.01f, 1.f }, // down
+	{ 1.f, -1.f, 1.f },		{ 1.f, -1.01f, 1.f }, // down
+	{ -1.f, 1.f, -1.f },	{ -1.f, 1.f, -1.f },
+	{ 1.f, 1.f, -1.f },		{ 1.f, 1.f, -1.f },
+	{ -1.f, 1.f, 1.f },		{ -1.f, 1.f, 1.f },
+	{ 1.f, 1.f, 1.f },		{ 1.f, 1.f, 1.f },
+	{ -1.f, 0.f, -1.f },	{ -1.f, -1.f, -1.f }, // half
+	{ 1.f, 0.f, -1.f },		{ 1.f, -1.f, -1.f }, // half
+	{ 1.f, 0.f, 1.f },		{ 1.f, -1.f, 1.f }, // half
+	{ -1.f, 0.f, 1.f },		{ -1.f, -1.f, 1.f } // half
 };
 static	u16			hbox_faces[20*3]	=
 {
@@ -197,10 +197,7 @@ void dxEnvironmentRender::OnFrame(CEnvironment &env)
 	tsky1->surface_set		(e1);	_RELEASE(e1);
 
 	// ******************** Environment params (setting)
-#if defined(USE_DX10) || defined(USE_DX11)
-	//	TODO: DX10: Implement environment parameters setting for DX10 (if necessary)
-#else	//	USE_DX10
-
+#if !defined(USE_DX10) && !defined(USE_DX11)
 #if		RENDER==R_R1
 	Fvector3	fog_color = env.CurrentEnv->fog_color;
 				fog_color.mul(ps_r1_fog_luminance);
