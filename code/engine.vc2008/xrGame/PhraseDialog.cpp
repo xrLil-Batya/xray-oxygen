@@ -217,26 +217,7 @@ int	 CPhraseDialog::Priority()
 void CPhraseDialog::Load(shared_str dialog_id)
 {
 	m_DialogId = dialog_id;
-	bool need_load = inherited_shared::start_load_shared(m_DialogId); //начинаем загрузку
-	if (need_load) //свеже созданное
-		inherited_shared::load_shared(m_DialogId, nullptr);
-	else if (DialogForceReload()) //уже создавалось раньше
-	{
-		CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(HUD().GetGameUI());
-		if (ui_sp && ui_sp->TalkMenu->GetInitState()) //читать только если идет инициализация окна диалога. в других Load - загружать наново не надо
-		{
-			ITEM_DATA item_data = *id_to_index::GetById(m_DialogId); //перечитаем xml часть диалога
-			std::string file_name = item_data._xml->m_xml_file_name;
-			const size_t sidx = file_name.rfind('\\');
-			if (std::string::npos != sidx)
-				file_name = file_name.substr(sidx + 1, file_name.length());
-			item_data._xml->ClearInternal(); //почистим внутреннюю структуру xml парсера
-
-			item_data._xml->Load(CONFIG_PATH, "gameplay", file_name.c_str());//заново запустим парсинг xml с диска
-			data()->SetLoad(false);
-			inherited_shared::load_shared(m_DialogId, nullptr); //перестроим граф диалогов на основании новой структуры xml
-		}
-	}
+	inherited_shared::load_shared(m_DialogId, nullptr); 
 }
 
 #include "script_engine.h"
