@@ -215,7 +215,9 @@ void InitLog()
 void CreateLog			(BOOL nl)
 {
     no_log				= nl;
-	strconcat			(sizeof(log_file_name),log_file_name,Core.ApplicationName,"_",Core.UserName,".log");
+	strconcat			(sizeof(log_file_name), log_file_name, Core.ApplicationName, "_", Core.UserName, Core.UserDate, Core.UserTime, ".log");
+
+	MessageBox(NULL, log_file_name, "", NULL);
 	if (FS.path_exist("$logs$"))
 		FS.update_path	(logFName,"$logs$",log_file_name);
 	if (!no_log){

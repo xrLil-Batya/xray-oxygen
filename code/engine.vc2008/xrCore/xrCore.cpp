@@ -23,11 +23,9 @@ namespace CPU
 };
 
 static u32	init_counter	= 0;
-
 extern char g_application_path[256];
 
-//. extern xr_vector<shared_str>*	LogFile;
-
+#include "DateTime.hpp"
 void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
 {
 	xr_strcpy					(ApplicationName,_ApplicationName);
@@ -66,11 +64,21 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
 
 		// User/Comp Name
-		DWORD	sz_user		= sizeof(UserName);
-		GetUserName			(UserName,&sz_user);
-
+		string64 _uname;
+		DWORD	sz_user		= sizeof(_uname);
+		GetUserName			(_uname, &sz_user);
+		strconcat(sizeof(UserName), UserName, _uname, "_");
+		MessageBox(NULL, UserName, "", NULL);
 		DWORD	sz_comp		= sizeof(CompName);
 		GetComputerName		(CompName,&sz_comp);
+		
+		//Date
+		auto *time = new Time();
+		strconcat(sizeof(UserDate), UserDate, time->GetYear().c_str(), ".", time->GetMonth().c_str(), ".", time->GetDay().c_str(), "_");
+		
+		//Time
+		strconcat(sizeof(UserTime), UserTime, time->GetHours().c_str(), ".", time->GetMinutes().c_str(), ".", time->GetSeconds().c_str());
+		xr_delete(time);
 
 		// Mathematics & PSI detection
 		CPU::Detect			();
