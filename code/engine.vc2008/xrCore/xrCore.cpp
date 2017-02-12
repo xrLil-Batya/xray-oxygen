@@ -68,7 +68,7 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		DWORD	sz_user		= sizeof(_uname);
 		GetUserName			(_uname, &sz_user);
 		strconcat(sizeof(UserName), UserName, _uname, "_");
-		MessageBox(NULL, UserName, "", NULL);
+		
 		DWORD	sz_comp		= sizeof(CompName);
 		GetComputerName		(CompName,&sz_comp);
 		
