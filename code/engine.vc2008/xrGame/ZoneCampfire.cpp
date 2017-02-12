@@ -2,18 +2,7 @@
 #include "ZoneCampfire.h"
 #include "ParticlesObject.h"
 #include "GamePersistent.h"
-#include "../xrEngine/LightAnimLibrary.h"
-/*
-CZoneCampfire* g_zone = NULL;
-void turn_zone()
-{
-	if(!g_zone) return;
-	if(g_zone->is_on())
-		g_zone->turn_off_script();
-	else
-		g_zone->turn_on_script();
-}
-*/
+
 CZoneCampfire::CZoneCampfire()
 :m_pDisabledParticles(NULL),m_pEnablingParticles(NULL),m_turned_on(true),m_turn_time(0)
 {
@@ -70,7 +59,7 @@ void CZoneCampfire::GoDisabledState()
 #define OVL_TIME 3000
 void CZoneCampfire::turn_on_script()
 {
-	if( psDeviceFlags.test(rsR2|rsR3) )
+	if (psDeviceFlags.test(rsR2 | rsR3 | rsR4))
 	{
 		m_turn_time				= Device.dwTimeGlobal+OVL_TIME;
 		m_turned_on				= true;
@@ -80,7 +69,7 @@ void CZoneCampfire::turn_on_script()
 
 void CZoneCampfire::turn_off_script()
 {
-	if( psDeviceFlags.test(rsR2|rsR3) )
+	if (psDeviceFlags.test(rsR2 | rsR3| rsR4))
 	{
 		m_turn_time				= Device.dwTimeGlobal+OVL_TIME;
 		m_turned_on				= false;
@@ -96,9 +85,7 @@ bool CZoneCampfire::is_on()
 void CZoneCampfire::shedule_Update(u32	dt)
 {
 	if (!IsEnabled() && m_turn_time)
-	{
 		UpdateWorkload	(dt);
-	}
 
 	if(m_pIdleParticles)
 	{
@@ -149,10 +136,9 @@ void CZoneCampfire::UpdateWorkload(u32 dt)
 			k = 1.0f-k;
 			PlayIdleParticles	(true);
 			StartIdleLight		();
-		}else
-		{
-			StopIdleParticles	(false);
 		}
+		else
+			StopIdleParticles	(false);
 
 		if(m_pIdleLight && m_pIdleLight->get_active())
 		{
@@ -171,18 +157,13 @@ void CZoneCampfire::UpdateWorkload(u32 dt)
 			m_pIdleLight->set_range	(range);
 			m_pIdleLight->set_color	(fclr);
 		}
-
-
-	}else
-	if(m_turn_time)
+	}
+	else if (m_turn_time)
 	{
 		m_turn_time = 0;
-		if(m_turned_on)
-		{
+		if (m_turned_on)
 			PlayIdleParticles(true);
-		}else
-		{
+		else
 			StopIdleParticles(true);
-		}
 	}
 }

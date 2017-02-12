@@ -308,7 +308,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
 	//добавить источники света
-	bool br1 = (0==psDeviceFlags.test(rsR2|rsR3));
+	bool br1 = (0==psDeviceFlags.test(rsR2|rsR3|rsR4));
 	
 	
 	bool render_ver_allowed = !br1 || (br1&&m_zone_flags.test(eIdleLightR1)) ;
@@ -319,10 +319,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 		m_pIdleLight->set_shadow(!!m_zone_flags.test(eIdleLightShadow));
 
 		if(m_zone_flags.test(eIdleLightVolumetric))
-		{
-			//m_pIdleLight->set_type				(IRender_Light::SPOT);
 			m_pIdleLight->set_volumetric		(true);
-		}
 	}
 	else
 		m_pIdleLight = NULL;
