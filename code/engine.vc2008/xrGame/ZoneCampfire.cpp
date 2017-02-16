@@ -2,6 +2,7 @@
 #include "ZoneCampfire.h"
 #include "ParticlesObject.h"
 #include "GamePersistent.h"
+#include "../xrEngine/LightAnimLibrary.h"
 
 CZoneCampfire::CZoneCampfire()
 :m_pDisabledParticles(NULL),m_pEnablingParticles(NULL),m_turned_on(true),m_turn_time(0)

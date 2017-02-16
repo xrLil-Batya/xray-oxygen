@@ -107,7 +107,7 @@ if exist luajit.dll.manifest^
 @copy %LJLIBNAME% ..\..\..\..\SDK\libraries\x86\
 @copy %LJDLLNAME% ..\..\..\..\SDK\binaries\x86\
 
-@del *.obj *.lib *.dll *.exe *exp
+@del *.obj *.lib *.dll *.exe *.exp
 @goto :END
 :BAD
 @echo.
