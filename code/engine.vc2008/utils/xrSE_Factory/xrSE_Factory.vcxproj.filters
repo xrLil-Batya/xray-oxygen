@@ -94,9 +94,6 @@
     <Filter Include="Scripts\ScriptDebugger">
       <UniqueIdentifier>{7c1d7a44-4fc5-498f-926d-73514fbe46b7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripts\lua_studio">
-      <UniqueIdentifier>{51c027ec-c1df-4bea-bdf9-abc87c402d29}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ServerStuff">
       <UniqueIdentifier>{287e5eef-dcf7-4b05-a8bb-2e6bac5aad86}</UniqueIdentifier>
     </Filter>
@@ -414,9 +411,6 @@
     <ClInclude Include="script_file.h">
       <Filter>Scripts\ScriptDebugger</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\lua_studio.h">
-      <Filter>Scripts\lua_studio</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\alife_space.h">
       <Filter>ServerStuff\Common\ALifeStuff</Filter>
     </ClInclude>
@@ -676,9 +670,6 @@
     </ClCompile>
     <ClCompile Include="script_file.cpp">
       <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\lua_studio.cpp">
-      <Filter>Scripts\lua_studio</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\alife_space.cpp">
       <Filter>ServerStuff\Common\ALifeStuff</Filter>

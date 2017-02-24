@@ -5,10 +5,7 @@
 //	Author		: Oles Shyshkovtsov, Alexander Maksimchuk, Victor Reutskiy and Dmitriy Iassenev
 //	Description : Server objects
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef xrServer_Objects_AbstractH
-#define xrServer_Objects_AbstractH
-
+#pragma once
 #pragma pack(push,4)
 #include "xrServer_Space.h"
 #	include "../xrCDB/xrCDB.h"
@@ -25,12 +22,7 @@ class CDUInterface;
 #endif
 
 #include "xrEProps.h"
-
-#ifndef XRGAME_EXPORTS
-	#include "..\..\Include\xrRender\DrawUtils.h"
-#else
-	#include "..\Include\xrRender\DrawUtils.h"
-#endif
+#include "..\Include\xrRender\DrawUtils.h"
 #pragma warning(push)
 #pragma warning(disable:4005)
 
@@ -142,4 +134,3 @@ public:
 #pragma warning(pop)
 
 #pragma pack(pop)
-#endif // xrServer_Objects_AbstractH

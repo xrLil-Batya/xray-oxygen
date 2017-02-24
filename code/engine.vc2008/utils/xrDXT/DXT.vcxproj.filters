@@ -50,6 +50,7 @@
     </ClInclude>
     <ClInclude Include="dds.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="ddsw.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="DXT.cpp">
@@ -77,6 +78,7 @@
       <Filter>NormalMap</Filter>
     </ClCompile>
     <ClCompile Include="StdAfx.cpp" />
+    <ClCompile Include="ddsw.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ReadMe.txt" />

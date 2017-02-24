@@ -188,10 +188,6 @@ extern "C"{
 		return D3DXGetFVFVertexSize(FVF);
 	}
 
-	ETOOLS_API const char*  WINAPI DX_GetErrorDescription(HRESULT hr)
-	{
-		return DXGetErrorDescription(hr);
-	}
 	ETOOLS_API D3DXMATRIX* WINAPI 
 		D3DX_MatrixInverse(          
 		D3DXMATRIX *pOut,

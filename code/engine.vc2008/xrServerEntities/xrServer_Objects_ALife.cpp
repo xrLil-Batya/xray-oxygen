@@ -16,9 +16,11 @@
 
 #ifndef AI_COMPILER
 #	include "character_info.h"
+#else 
+LPCSTR GAME_CONFIG = "game.ltx";
 #endif // AI_COMPILER
 
-#ifndef XRGAME_EXPORTS
+#if !defined(XRGAME_EXPORTS) && !defined(AI_COMPILER)
 #	include "bone.h"
 #	include "defines.h"
 	LPCSTR GAME_CONFIG = "game.ltx";

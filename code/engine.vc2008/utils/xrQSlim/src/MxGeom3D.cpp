@@ -100,7 +100,7 @@ void MxBounds::complete()
     Vec3 R1 = max-center;
     Vec3 R2 = min-center;
 
-    radius = _max(norm(R1), norm(R2));
+    radius = std::max(norm(R1), norm(R2));
 }
 
 void MxBounds::merge(const MxBounds& b)
@@ -112,13 +112,13 @@ void MxBounds::merge(const MxBounds& b)
     Vec3 dC = b.center - center;
     double dist = norm(dC);
 
-    if( dist + b.radius > radius )
-    {
-	// New sphere does not lie within old sphere
-	center += b.center;
-	center /= 2;
+	if (dist + b.radius > radius)
+	{
+		// New sphere does not lie within old sphere
+		center += b.center;
+		center /= 2;
 
-	dist /= 2;
-	radius = _max(dist+radius, dist+b.radius);
-    }
+		dist /= 2;
+		radius = std::max(dist + radius, dist + b.radius);
+	}
 }

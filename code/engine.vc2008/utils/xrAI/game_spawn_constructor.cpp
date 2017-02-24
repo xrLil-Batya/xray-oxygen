@@ -200,40 +200,41 @@ void CGameSpawnConstructor::save_spawn				(LPCSTR name, LPCSTR output)
 	stream.save_to					(*spawn_name(output));
 }
 
-shared_str CGameSpawnConstructor::spawn_name	(LPCSTR output)
+shared_str CGameSpawnConstructor::spawn_name(LPCSTR output)
 {
 	string_path					file_name;
 	if (!output)
-		FS.update_path			(file_name,"$game_spawn$",*actor_level_name());
-	else {
-		actor_level_name		();
+		FS.update_path(file_name, "$game_spawn$", *actor_level_name());
+	else
+	{
+		actor_level_name();
 		string_path				out;
-		strconcat				(sizeof(out),out,output,".spawn");
-		FS.update_path			(file_name,"$game_spawn$",out);
+		strconcat(sizeof(out), out, output, ".spawn");
+		FS.update_path(file_name, "$game_spawn$", out);
 	}
 	return						(file_name);
 }
 
-void CGameSpawnConstructor::add_story_object	(ALife::_STORY_ID id, CSE_ALifeDynamicObject *object, LPCSTR level_name)
+void CGameSpawnConstructor::add_story_object(ALife::_STORY_ID id, CSE_ALifeDynamicObject *object, LPCSTR level_name)
 {
 	if (id == INVALID_STORY_ID)
 		return;
 
-	ALife::STORY_P_PAIR_IT		I = m_story_objects.find(id);
+	auto I = m_story_objects.find(id);
 	if (I != m_story_objects.end()) {
-		Msg						("Object %s, story id %d",object->name_replace(),object->m_story_id);
-		Msg						("Object %s, story id %d",(*I).second->name_replace(),(*I).second->m_story_id);
-		VERIFY3					(I == m_story_objects.end(),"There are several objects which has the same unique story ID, level ",level_name);
+		Msg("Object %s, story id %d", object->name_replace(), object->m_story_id);
+		Msg("Object %s, story id %d", (*I).second->name_replace(), (*I).second->m_story_id);
+		VERIFY3(I == m_story_objects.end(), "There are several objects which has the same unique story ID, level ", level_name);
 	}
-	
-	m_story_objects.insert		(std::make_pair(id,object));
+
+	m_story_objects.insert(std::make_pair(id, object));
 }
 
-void CGameSpawnConstructor::add_object				(CSE_Abstract *object)
+void CGameSpawnConstructor::add_object(CSE_Abstract *object)
 {
-    std::lock_guard<decltype(m_critical_section)> lock(m_critical_section);
-	object->m_tSpawnID			= spawn_id();
-	spawn_graph().add_vertex	(xr_new<CServerEntityWrapper>(object),object->m_tSpawnID);
+	std::lock_guard<decltype(m_critical_section)> lock(m_critical_section);
+	object->m_tSpawnID = spawn_id();
+	spawn_graph().add_vertex(xr_new<CServerEntityWrapper>(object), object->m_tSpawnID);
 }
 
 void CGameSpawnConstructor::remove_object			(CSE_Abstract *object)

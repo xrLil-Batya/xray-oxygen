@@ -21,11 +21,12 @@ namespace lc_net
             std::lock_guard<decltype(lock)> locker(lock);
 			if( vec_cleanup[data] == id )
 			{
-				lock.Leave();
+				lock.unlock();
 				return;
 			}
 			++id_state;
 			vec_cleanup[data] = id;
+			lock.unlock();
 		};
 		template<e_net_globals data>
 		u32 	get_cleanup					(  ) const

@@ -29,26 +29,32 @@ void InternalRender()
     std::memset(texels,0,msize);
 
 	// rasterization
-	for (u32 i=0; i<g_nodes.size(); i++)
+	for (u32 i = 0; i < g_nodes.size(); i++)
 	{
-		vertex&	N	= g_nodes[i];
-		P.sub	(N.Pos, LevelBB.min);
-		int		nx	= iFloor(P.x/g_params.fPatchSize+0.5f);	clamp(nx,0,dimX-1);
-		int		nz	= iFloor(P.z/g_params.fPatchSize+0.5f);	clamp(nz,0,dimZ-1);
+		vertex&	N = g_nodes[i];
+		P.sub(N.Pos, LevelBB.min);
+		int		nx = iFloor(P.x / g_params.fPatchSize + 0.5f);	clamp(nx, 0, dimX - 1);
+		int		nz = iFloor(P.z / g_params.fPatchSize + 0.5f);	clamp(nz, 0, dimZ - 1);
 
-		Texel&	T	= texels[(dimZ-nz-1)*dimX+nx];
+		Texel&	T = texels[(dimZ - nz - 1)*dimX + nx];
 		T.depth++;
-		if (T.N)	{ if (N.Pos.y>T.N->Pos.y)	T.N = &N; }
-		else		T.N = &N;
+
+		if (T.N) 
+		{ 
+			if (N.Pos.y > T.N->Pos.y)	
+				T.N = &N; 
+		}
+		else		
+			T.N = &N;
 	}
 
 	// limits
-	for (int t=0; t<dimX*dimZ; t++)
+	for (int t = 0; t < dimX*dimZ; t++)
 	{
-		Texel& T	= texels[t];
-		if (T.N)	{
-			minH		= _min(minH,T.N->Pos.y);
-			maxH		= _max(maxH,T.N->Pos.y);
+		Texel& T = texels[t];
+		if (T.N) {
+			minH = std::min(minH, T.N->Pos.y);
+			maxH = std::max(maxH, T.N->Pos.y);
 		}
 	}
 }

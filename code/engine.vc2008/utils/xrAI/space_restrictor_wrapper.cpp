@@ -111,48 +111,48 @@ struct border_merge_predicate {
 	}
 };
 
-void CSpaceRestrictorWrapper::fill_shape			(const CShapeData::shape_def &shape)
+void CSpaceRestrictorWrapper::fill_shape(const CShapeData::shape_def &shape)
 {
-	Fvector							start,dest;
+	Fvector							start, dest;
 	switch (shape.type) {
-		case 0 : {
-			start.sub				(Fvector().set(shape.data.sphere.P),Fvector().set(shape.data.sphere.R,0.f,shape.data.sphere.R));
-			dest.add				(Fvector().set(shape.data.sphere.P),Fvector().set(shape.data.sphere.R,0.f,shape.data.sphere.R));
-			start.add				(object().o_Position);
-			dest.add				(object().o_Position);
-			break;
-		}
-		case 1 : {
-			Fvector					points[8] = {
-				Fvector().set(-.5f,-.5f,-.5f),
-				Fvector().set(-.5f,-.5f,+.5f),
-				Fvector().set(-.5f,+.5f,-.5f),
-				Fvector().set(-.5f,+.5f,+.5f),
-				Fvector().set(+.5f,-.5f,-.5f),
-				Fvector().set(+.5f,-.5f,+.5f),
-				Fvector().set(+.5f,+.5f,-.5f),
-				Fvector().set(+.5f,+.5f,+.5f)
-			};
-			start					= Fvector().set(flt_max,flt_max,flt_max);
-			dest					= Fvector().set(flt_min,flt_min,flt_min);
-			Fmatrix					Q;
-			Q.mul_43				(m_xform,shape.data.box);
-			Fvector					temp;
-			for (int i=0; i<8; ++i) {
-                Q.transform_tiny	(temp,points[i]);
-				start.x				= _min(start.x,temp.x);
-				start.y				= _min(start.y,temp.y);
-				start.z				= _min(start.z,temp.z);
-				dest.x				= _max(dest.x,temp.x);
-				dest.y				= _max(dest.y,temp.y);
-				dest.z				= _max(dest.z,temp.z);
-			}
-			break;
-		}
-		default : NODEFAULT;
+	case 0: {
+		start.sub(Fvector().set(shape.data.sphere.P), Fvector().set(shape.data.sphere.R, 0.f, shape.data.sphere.R));
+		dest.add(Fvector().set(shape.data.sphere.P), Fvector().set(shape.data.sphere.R, 0.f, shape.data.sphere.R));
+		start.add(object().o_Position);
+		dest.add(object().o_Position);
+		break;
 	}
-	
-	level_graph().iterate_vertices	(start,dest,border_merge_predicate(this,m_level_graph));
+	case 1: {
+		Fvector					points[8] = {
+			Fvector().set(-.5f,-.5f,-.5f),
+			Fvector().set(-.5f,-.5f,+.5f),
+			Fvector().set(-.5f,+.5f,-.5f),
+			Fvector().set(-.5f,+.5f,+.5f),
+			Fvector().set(+.5f,-.5f,-.5f),
+			Fvector().set(+.5f,-.5f,+.5f),
+			Fvector().set(+.5f,+.5f,-.5f),
+			Fvector().set(+.5f,+.5f,+.5f)
+		};
+		start = Fvector().set(flt_max, flt_max, flt_max);
+		dest = Fvector().set(flt_min, flt_min, flt_min);
+		Fmatrix					Q;
+		Q.mul_43(m_xform, shape.data.box);
+		Fvector					temp;
+		for (int i = 0; i < 8; ++i) {
+			Q.transform_tiny(temp, points[i]);
+			start.x = std::min(start.x, temp.x);
+			start.y = std::min(start.y, temp.y);
+			start.z = std::min(start.z, temp.z);
+			dest.x = std::max(dest.x, temp.x);
+			dest.y = std::max(dest.y, temp.y);
+			dest.z = std::max(dest.z, temp.z);
+		}
+		break;
+	}
+	default: NODEFAULT;
+	}
+
+	level_graph().iterate_vertices(start, dest, border_merge_predicate(this, m_level_graph));
 }
 
 bool CSpaceRestrictorWrapper::inside				(u32 level_vertex_id, bool partially_inside, float radius) const

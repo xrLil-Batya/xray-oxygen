@@ -287,7 +287,7 @@ void MxEdgeQSlim::apply_mesh_penalties(MxQSlimEdge *info)
 
 	// Check for excess over degree bounds.
 	//
-	unsigned int max_degree = _max(N1.length(), N2.length());
+	unsigned int max_degree = std::max(N1.length(), N2.length());
 	if( max_degree > vertex_degree_limit )
 		bias += (max_degree-vertex_degree_limit) * meshing_penalty * 0.001;
 
@@ -313,7 +313,7 @@ void MxEdgeQSlim::apply_mesh_penalties(MxQSlimEdge *info)
 	{
 		double Nmin1 = check_local_inversion(info->v1, info->v2, info->vnew);
 		double Nmin2 = check_local_inversion(info->v2, info->v1, info->vnew);
-		if( _min(Nmin1, Nmin2) < 0.0 )
+		if(std::min(Nmin1, Nmin2) < 0.0)
 			bias += meshing_penalty;
 	}
 
@@ -322,7 +322,7 @@ void MxEdgeQSlim::apply_mesh_penalties(MxQSlimEdge *info)
 	{
 		double c1_min=check_local_compactness(info->v1, info->v2, info->vnew);
 		double c2_min=check_local_compactness(info->v2, info->v1, info->vnew);
-		double c_min = _min(c1_min, c2_min);
+		double c_min = std::min(c1_min, c2_min);
 
 		// !!BUG: There's a small problem with this: it ignores the scale
 		//        of the errors when adding the bias.  For instance, enabling
@@ -511,15 +511,12 @@ void MxEdgeQSlim::apply_contraction(const MxPairContraction& conx)
 	quadrics(conx.v1)		+= quadrics(conx.v2);
 	
 	update_pre_contract		(conx);
-
 	m->apply_contraction	(conx);
-
 	update_post_contract	(conx);
 
 	// Must update edge info here so that the meshing penalties
 	// will be computed with respect to the new mesh rather than the old
-//.	for(unsigned int i=0; i<(unsigned int)edge_links(conx.v1).length(); i++)
-//.		compute_edge_info(edge_links(conx.v1)[i]);
+
 	star.reset				();
 	m->collect_vertex_star	(conx.v1, star);
 	star.add				(conx.v1);
@@ -529,13 +526,11 @@ void MxEdgeQSlim::apply_contraction(const MxPairContraction& conx)
 		for(unsigned int i=0; i<(unsigned int)edge_links(star(j)).length(); i++)
 			edges.push_back	(edge_links(star(j))[i]);
 
-//	u32 r=edges.size();
 	std::sort				(edges.begin(),edges.end());
-	EdgeVecIt new_end		= std::unique	(edges.begin(),edges.end());
+	auto new_end = std::unique(edges.begin(),edges.end());
 	edges.erase				(new_end,edges.end());
-//	u32 rr=edges.size();
-//	Msg	("%d: %d/%d - %d",(unsigned int)edge_links(conx.v1).length(),r,rr,r-rr);
-	for (EdgeVecIt it=edges.begin(); it!=edges.end(); it++)
+
+	for (auto it=edges.begin(); it!=edges.end(); it++)
 		compute_edge_info	(*it);
 }
 

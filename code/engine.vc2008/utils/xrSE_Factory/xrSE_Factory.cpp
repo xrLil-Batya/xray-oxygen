@@ -17,14 +17,9 @@
 
 #include "character_info.h"
 #include "specific_character.h"
-//#include "character_community.h"
-//#include "monster_community.h"
-//#include "character_rank.h"
-//#include "character_reputation.h"
 
-#include <lua/library_linkage.h>
-#include <luabind/library_linkage.h>
-
+#pragma comment(lib, "lua.JIT.2.0.4.lib")
+#pragma comment(lib, "xrScripts.lib")
 #pragma comment(lib,"xrCore.lib")
 
 extern CSE_Abstract *F_entity_Create	(LPCSTR section);

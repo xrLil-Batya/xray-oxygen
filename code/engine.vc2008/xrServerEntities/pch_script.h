@@ -8,9 +8,9 @@
 
 #ifndef PCH_SCRIPT_H
 #define PCH_SCRIPT_H
-
+#ifndef AI_COMPILER
 #include "stdafx.h"
-
+#endif
 extern "C" {
 	#include <lua/lua.h>
 	#include <lua/lualib.h>

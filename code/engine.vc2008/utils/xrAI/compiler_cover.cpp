@@ -222,7 +222,7 @@ public:
 
 	IC void		Clear	()
 	{
-		for (Nearest_it it=q_Clear.begin(); it!=q_Clear.end();  it++)
+		for (auto it=q_Clear.begin(); it!=q_Clear.end();  it++)
 			q_Marks[*it]	= false;
 	}
 };
@@ -257,7 +257,7 @@ public:
 		Q.Perform		(N);
 		
 		// main cycle: trace rays and compute counts
-		for (Nearest_it it=Q.q_List.begin(); it!=Q.q_List.end();  it++)
+		for (auto it=Q.q_List.begin(); it!=Q.q_List.end();  it++)
 		{
 			// calc dir & range
 			u32		ID	= *it;
@@ -279,16 +279,15 @@ public:
 		
 		// analyze probabilities
 		float	value	[8];
-		for (int dirs=0; dirs<8; dirs++)	{
-			R_ASSERT(c_passed[dirs]<=c_total[dirs]);
-			if (c_total[dirs]==0)	value[dirs] = 0;
-			else					value[dirs]	= float(c_passed[dirs])/float(c_total[dirs]);
-			clamp(value[dirs],0.f,1.f);
+		for (int dirs = 0; dirs < 8; dirs++) {
+			R_ASSERT(c_passed[dirs] <= c_total[dirs]);
+			if (c_total[dirs] == 0)	value[dirs] = 0;
+			else					value[dirs] = float(c_passed[dirs]) / float(c_total[dirs]);
+			clamp(value[dirs], 0.f, 1.f);
 		}
 
-		if (value[0] < .999f) {
-			value[0] = value[0];
-		}
+		//if (value[0] < .999f) //. WTF?!!!
+		//	value[0] = value[0];
 		
 		cover	[0]	= (value[2]+value[3]+value[4]+value[5])/4.f; clamp(cover[0],0.f,1.f);	// left
 		cover	[1]	= (value[0]+value[1]+value[2]+value[3])/4.f; clamp(cover[1],0.f,1.f);	// forward

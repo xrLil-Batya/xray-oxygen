@@ -29,7 +29,7 @@ namespace lc_net
 {
 
 
-	void	exec_pool::add_task( net_execution* e )
+	void	exec_pool::add_task(net_execution* e)
 	{
 		pool.push_back(e);
 		++_end;
@@ -37,47 +37,47 @@ namespace lc_net
 
 	bool	exec_pool::has(u32 id)
 	{
-		R_ASSERT( id != u32(-1) );
-		R_ASSERT( _start != u32(-1) );
-		R_ASSERT( _end != u32(-1) );
-		R_ASSERT( _start < _end );
+		R_ASSERT(id != u32(-1));
+		R_ASSERT(_start != u32(-1));
+		R_ASSERT(_end != u32(-1));
+		R_ASSERT(_start < _end);
 
 		return id >= _start &&  id < _end;
 	}
 
 
-	void		exec_pool::receive_result( IGenericStream* inStream  )
+	void		exec_pool::receive_result(IGenericStream* inStream)
 	{
 
-		u32 id =	 u32(-1), type = u32(-1);//r.r_u32();
-		read_task_caption( inStream, id, type );
+		u32 id = u32(-1), type = u32(-1);//r.r_u32();
+		read_task_caption(inStream, id, type);
 
 		//xr_vector<u32>::iterator it =std::find( pool.begin(), pool.end(), id );
 		const u32 size = pool.size();
 
-		R_ASSERT( _start != u32(-1)  );
-		R_ASSERT( _end != u32(-1)  );
+		R_ASSERT(_start != u32(-1));
+		R_ASSERT(_end != u32(-1));
 
-		R_ASSERT( _end > 0  );
-		R_ASSERT( _start < _end  );
+		R_ASSERT(_end > 0);
+		R_ASSERT(_start < _end);
 
-		R_ASSERT( id >= _start );
-		R_ASSERT( id < _end );
+		R_ASSERT(id >= _start);
+		R_ASSERT(id < _end);
 
-		R_ASSERT( _running );
-		R_ASSERT( size>0 );
-		R_ASSERT( id >=0 );
+		R_ASSERT(_running);
+		R_ASSERT(size > 0);
+		R_ASSERT(id >= 0);
 
 		u32 pos = id - _start;
 
-		R_ASSERT( pos >= 0 );
-		R_ASSERT( pos < size );
+		R_ASSERT(pos >= 0);
+		R_ASSERT(pos < size);
 
 		send_receive_lock.lock();
 
 		net_execution *e = pool[pos];
-		R_ASSERT( e->type() == type );
-		if( e == 0 )
+		R_ASSERT(e->type() == type);
+		if (e == 0)
 		{
 			send_receive_lock.unlock();
 			return;
@@ -86,122 +86,112 @@ namespace lc_net
 		++tasks_completed;
 		u32 l_completed = tasks_completed;
 		send_receive_lock.unlock();
-		e->receive_result( inStream );
+		e->receive_result(inStream);
 		//xr_delete( e );
-		execution_factory.destroy( e );
-		_task_manager.progress( id );
+		execution_factory.destroy(e);
+		_task_manager.progress(id);
 #ifdef	LOG_ALL_NET_TASKS
-		clMsg( "%s received task : %d", _name, id );
-		
+		clMsg("%s received task : %d", _name, id);
+
 		//Progress( float( tasks_completed )/float( size ) );
-		clMsg( "num task complited : %d , num task left %d  (task num %d)", l_completed, size - l_completed, size );
+		clMsg("num task complited : %d , num task left %d  (task num %d)", l_completed, size - l_completed, size);
 #endif		
-		R_ASSERT( l_completed <=  size );
-		if( l_completed == size )
+		R_ASSERT(l_completed <= size);
+		if (l_completed == size)
 		{
 			string64 buf;
-			clLog	( " %s, calculation complited", _name );
+			clLog(" %s, calculation complited", _name);
 			//clMsg	("%f %s calculation seconds",start_time.GetElapsed_sec(), _name );
 
-			clLog	("%s %s calculation time",make_time( buf,start_time.GetElapsed_sec() ), _name );
+			clLog("%s %s calculation time", make_time(buf, start_time.GetElapsed_sec()), _name);
 			//Status	("%s %s calculation time",make_time( buf,start_time.GetElapsed_sec() ), _name );
 
 			//xr_sprintf( buf, "%s %s calculation time",make_time( buf,start_time.GetElapsed_sec() ), _name ); 
 			//Phase( buf );
 //		}
-		
+
 //		if( l_completed == size )
 //		{
-			execution_factory.free_pool( type );
-            std::lock_guard<decltype(run_lock)> lock(run_lock);
+			execution_factory.free_pool(type);
+			std::lock_guard<decltype(run_lock)> lock(run_lock);
 			_running = false;
 		}
 	}
 
-	void	exec_pool::	wait()
+	void	exec_pool::wait()
 	{
-		
-		do{
-			Sleep( 1000 );
-		}
-		while( is_running() );
+
+		do {
+			Sleep(1000);
+		} while (is_running());
 
 	}
-	bool	exec_pool::is_running()	
+	bool	exec_pool::is_running()
 	{
 		bool running = true;
-        std::lock_guard<decltype(run_lock)> lock(run_lock);
-		running = _running ;
+		std::lock_guard<decltype(run_lock)> lock(run_lock);
+		running = _running;
 		return running;
 	}
-	exec_pool&	exec_pool::run( IGridUser &user, u8 pool_id )
+	exec_pool&	exec_pool::run(IGridUser &user, u8 pool_id)
 	{
 		start_time.Start();
-		R_ASSERT( !_running );
+		R_ASSERT(!_running);
 		_running = true;
 		u32 size = pool.size();
-	
+
 		//IGenericStream* stream  = CreateGenericStream();
-		for	(u32 dit = _start; dit<_end; dit++)
-			send_task( user, 0, pool_id, dit );
-		
+		for (u32 dit = _start; dit < _end; dit++)
+			send_task(user, 0, pool_id, dit);
+
 		return *this;
 	}
 	void __cdecl Finalize(IGenericStream* outStream);
 	std::recursive_mutex run_task_lock;
-	void	exec_pool::send_task( IGridUser& user, IGenericStream* Stream, u8 pool_id, u32 id  )
+	void	exec_pool::send_task(IGridUser& user, IGenericStream* Stream, u8 pool_id, u32 id)
 	{
-		
-		R_ASSERT( _running );
-		R_ASSERT( has( id ) );
-		IGenericStream* outStream  = CreateGenericStream();
-		//////////////////////////////////////////////////////
-		write_task_pool( outStream, pool_id );////////////////////
-		//////////////////////////////////////////////////////
-		cleanup().on_net_send( outStream );
 
-		u32 pos = id-_start;
-		VERIFY( pos < pool.size() );
+		R_ASSERT(_running);
+		R_ASSERT(has(id));
+		IGenericStream* outStream = CreateGenericStream();
+		//////////////////////////////////////////////////////
+		write_task_pool(outStream, pool_id);////////////////////
+		//////////////////////////////////////////////////////
+		cleanup().on_net_send(outStream);
+
+		u32 pos = id - _start;
+		VERIFY(pos < pool.size());
 		net_execution *e = pool[pos];
-		VERIFY( e != 0 );
-		write_task_caption( outStream, id, e->type() );
+		VERIFY(e != 0);
+		write_task_caption(outStream, id, e->type());
 #ifdef	LOG_ALL_NET_TASKS		
-		clMsg( " %s, send task : %d", _name, id );
+		clMsg(" %s, send task : %d", _name, id);
 		//
 #endif
 
 
-		e->send_task( user, outStream, id );
-		
+		e->send_task(user, outStream, id);
+
 		DWORD t_id = id;
 		string_path data;
 		string_path files;
-		strconcat( sizeof(data),data,libraries,e->data_files(files));
-        std::lock_guard<decltype(run_task_lock)> lock(run_task_lock);
+		strconcat(sizeof(data), data, libraries, e->data_files(files));
+		std::lock_guard<decltype(run_task_lock)> lock(run_task_lock);
 		bool ok = false;
-		run_task: ;
-
-		__try
+		run_task:;
+		if (ok)
 		{
-			
-			user.RunTask( data ,"RunTask",outStream,Finalize,&t_id,true);
-
+			user.RunTask(data, "RunTask", outStream, Finalize, &t_id, true);
 			ok = true;
 		}
-
-
-		
-		__except( EXCEPTION_EXECUTE_HANDLER )
+		else
 		{
-			if(!ok)
-			{
-				Msg("accept run task");
-				goto run_task;
-			}
+			Msg("accept run task");
+			goto run_task;
 		}
 
 		return;
-		
+
 	}
 	
 	struct exec_find

@@ -1,7 +1,5 @@
-#ifndef SHADER_XRLC_H
-#define SHADER_XRLC_H
 #pragma once
-
+#include "../../xrCore/xrCore.h"
 struct Shader_xrLC
 {
 public:
@@ -73,13 +71,13 @@ public:
 	bool					Save	(LPCSTR name)
 	{
 		IWriter* F			= FS.w_open(name);
-        if (F){
-			F->w			(&*library.begin(),(u32)library.size()*sizeof(Shader_xrLC));
-    	    FS.w_close		(F);
-            return 			true;
-        }else{
+		if (F) {
+			F->w(&*library.begin(), (u32)library.size() * sizeof(Shader_xrLC));
+			FS.w_close(F);
+			return 			true;
+		}
+		else
         	return 			false;
-        }
 	}
 	void					Unload	()
 	{
@@ -87,13 +85,13 @@ public:
 	}
 	u32						GetID	(LPCSTR name)
 	{
-		for (Shader_xrLCIt it=library.begin(); it!=library.end(); it++)
+		for (auto it=library.begin(); it!=library.end(); it++)
 			if (0==stricmp(name,it->Name)) return u32(it-library.begin());
 		return u32(-1);
 	}
 	Shader_xrLC*			Get		(LPCSTR name)
 	{
-		for (Shader_xrLCIt it=library.begin(); it!=library.end(); it++)
+		for (auto it=library.begin(); it!=library.end(); it++)
 			if (0==stricmp(name,it->Name)) return &(*it);
 		return NULL;
 	}
@@ -108,7 +106,7 @@ public:
 	}
 	void					Remove	(LPCSTR name)
 	{
-		for (Shader_xrLCIt it=library.begin(); it!=library.end(); it++)
+		for (auto it=library.begin(); it!=library.end(); it++)
 			if (0==stricmp(name,it->Name)){
             	library.erase(it);
                 break;
@@ -120,4 +118,3 @@ public:
 	}
 	Shader_xrLCVec&			Library	(){return library;}
 };
-#endif

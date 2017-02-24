@@ -6,8 +6,11 @@
 //	Description : lua studio engine class (copied from the lua studio SDK)
 ////////////////////////////////////////////////////////////////////////////
 
-#include "lua_studio.h"
+#ifndef XR_SCRIPTS
+#include "stdafx.h"
+#endif
 
+#include "lua_studio.h"
 #define pstr			LPSTR
 #define	pcstr			LPCSTR
 #define	pcvoid			void const*

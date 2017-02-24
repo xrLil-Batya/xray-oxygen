@@ -93,7 +93,7 @@ public:
 	}
 	Shader_xrLC*			Get		(LPCSTR name)
 	{
-		for (Shader_xrLCIt it=library.begin(); it!=library.end(); it++)
+		for (auto it=library.begin(); it!=library.end(); it++)
 			if (0==stricmp(name,it->Name)) return &(*it);
 		return NULL;
 	}
@@ -112,7 +112,7 @@ public:
 	}
 	void					Remove	(LPCSTR name)
 	{
-		for (Shader_xrLCIt it=library.begin(); it!=library.end(); it++)
+		for (auto it=library.begin(); it!=library.end(); it++)
 			if (0==stricmp(name,it->Name)){
             	library.erase(it);
                 break;

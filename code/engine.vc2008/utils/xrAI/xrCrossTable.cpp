@@ -116,14 +116,12 @@ CCrossTableBuilder::CCrossTableBuilder(LPCSTR caProjectName)
 
 	tDistances.resize	(iVertexCount);
 	{
-		FLOAT_VECTOR_IT		I = tDistances.begin();
-		FLOAT_VECTOR_IT		E = tDistances.end();
-		for ( ; I != E; I++) {
-			(*I).resize		(iNodeCount);
-			FLOAT_IT		i = (*I).begin();
-			FLOAT_IT		e = (*I).end();
-			for ( ; i != e; i++)
-				*i			= u32(-1);
+		for (auto I = tDistances.begin(); I != tDistances.end(); I++) {
+			(*I).resize(iNodeCount);
+			auto		i = (*I).begin();
+			auto		e = (*I).end();
+			for (; i != e; i++)
+				*i = u32(-1);
 		}
 	}
 	
@@ -158,8 +156,8 @@ CCrossTableBuilder::CCrossTableBuilder(LPCSTR caProjectName)
 	tMemoryStream.open_chunk			(CROSS_TABLE_CHUNK_DATA);
 	{
 		for (int i=0; i<iNodeCount; i++) {
-			FLOAT_VECTOR_IT		I = tDistances.begin(), B = I;
-			FLOAT_VECTOR_IT		E = tDistances.end();
+			auto				I = tDistances.begin(), B = I;
+			auto				E = tDistances.end();
 			CGameLevelCrossTable::CCell tCrossTableCell;
 			tCrossTableCell.fDistance = flt_max;
 			tCrossTableCell.tGraphIndex = u16(-1);

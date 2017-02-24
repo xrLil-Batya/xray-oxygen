@@ -12,7 +12,7 @@
 #include "clsid_game.h"
 #include "object_broker.h"
 
-#ifndef XRGAME_EXPORTS
+#if !defined(XRGAME_EXPORTS) && !defined(AI_COMPILER)
 #	include "bone.h"
 #else
 #	include "../xrEngine/bone.h"
@@ -20,7 +20,7 @@
 #		define PHPH_DEBUG
 #	endif
 #endif
-#ifdef PHPH_DEBUG
+#if defined(PHPH_DEBUG) && !defined(AI_COMPILER)
 #include "PHDebug.h"
 #endif
 ////////////////////////////////////////////////////////////////////////////
