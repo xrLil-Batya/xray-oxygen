@@ -21,7 +21,8 @@ namespace lc_net
             std::lock_guard<decltype(lock)> locker(lock);
 			if( vec_cleanup[data] == id )
 			{
-				lock.unlock();
+				//Leave.Leave(); commited 25.01.17
+				// Leave.Unlock(); commited 25.01.17
 				return;
 			}
 			++id_state;
