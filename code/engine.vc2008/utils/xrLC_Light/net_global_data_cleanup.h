@@ -27,7 +27,7 @@ namespace lc_net
 			}
 			++id_state;
 			vec_cleanup[data] = id;
-			lock.unlock();
+			//lock.unlock(); commited 25.01.17
 		};
 		template<e_net_globals data>
 		u32 	get_cleanup					(  ) const
