@@ -38,58 +38,55 @@ inline DWORD CMailSlotMsg::GetLen() const
 {
 	return m_len;
 };
-
 inline bool	CMailSlotMsg::r_string(char* dst) {
 	int sz;
 	r_int(sz);
 	Read(dst, sz + 1);
-	return TRUE;
+	return true;
 };
 
 inline bool	CMailSlotMsg::w_string(const char* dst) {
 	size_t sz = _strlen(dst);
 	w_int((int)sz);
-	Write(dst, (int)(sz + 1)); return TRUE;
+	Write(dst, (int)(sz + 1)); 
+	return true;
 };
 
 inline bool	CMailSlotMsg::r_float(float& dst) {
 	Read(&dst, sizeof(float));
-	return TRUE;
+	return true;
 };
 
 inline bool	CMailSlotMsg::w_float(const float src) {
 	Write(&src, sizeof(float));
-	return TRUE;
+	return true;
 };
 
 inline bool	CMailSlotMsg::r_int(int& dst) {
 	Read(&dst, sizeof(int));
-	return TRUE;
+	return true;
 };
 
 inline bool	CMailSlotMsg::w_int(const int src) {
 	Write(&src, sizeof(int));
-	return TRUE;
+	return true;
 };
 
 inline bool	CMailSlotMsg::r_buff(void* dst, int sz) {
 	Read(dst, sz);
-	return TRUE;
+	return true;
 };
 
 inline bool	CMailSlotMsg::w_buff(void* src, int sz) {
 	Write(src, sz);
-	return TRUE;
+	return true;
 };
 
 inline HANDLE CreateMailSlotByName(LPSTR slotName)
 {
-	HANDLE  hSlot = CreateMailslot(slotName,
-		0,                             // no maximum message size 
-		MAILSLOT_WAIT_FOREVER,         // no time-out for operations 
-		(LPSECURITY_ATTRIBUTES)NULL); // no security attributes 
-
-	return hSlot;
+	return hSlot = CreateMailslot(slotName, 0 /* no maximum message size */, 
+	MAILSLOT_WAIT_FOREVER/* no time-out for operations */, 
+		(LPSECURITY_ATTRIBUTES)NULL); /* no security attributes */
 }
 inline bool CheckExisting(LPSTR slotName)
 {
