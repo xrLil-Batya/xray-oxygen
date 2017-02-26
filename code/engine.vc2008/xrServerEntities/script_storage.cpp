@@ -301,7 +301,10 @@ void CScriptStorage::reinit	()
 	luajit::open_lib	(lua(),	LUA_OSLIBNAME,		luaopen_os);
 	luajit::open_lib	(lua(),	LUA_MATHLIBNAME,	luaopen_math);
 	luajit::open_lib	(lua(),	LUA_STRLIBNAME,		luaopen_string);
+	// Added sv3nk
 	luajit::open_lib	(lua(), LUA_BITLIBNAME,		luaopen_bit);
+	luajit::open_lib	(lua(), LUA_FFILIBNAME,		luaopen_ffi);
+	// end
 #ifdef DEBUG
 	luajit::open_lib	(lua(),	LUA_DBLIBNAME,		luaopen_debug);
 #endif // #ifdef DEBUG
