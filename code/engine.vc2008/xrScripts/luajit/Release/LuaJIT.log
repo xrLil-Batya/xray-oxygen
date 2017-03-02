@@ -1,0 +1,7 @@
+﻿  minilua.c
+c1 : fatal error C1083: Не удается открыть файл источник: host\minilua.c: No such file or directory
+  
+  *******************************************************
+  *** Build FAILED -- Please check the error messages ***
+  *******************************************************
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.MakeFile.Targets(41,5): error MSB3073: выход из команды "src/msvcbuild.bat" с кодом -1.
