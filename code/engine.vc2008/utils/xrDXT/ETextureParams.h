@@ -1,5 +1,4 @@
-#ifndef ETextureParamsH
-#define ETextureParamsH
+#pragma once 
 
 #pragma pack(push,1)
 struct ECORE_API STextureParams
@@ -111,8 +110,8 @@ struct ECORE_API STextureParams
 
     STextureParams()
     {
-        ZeroMemory(this, sizeof(STextureParams));
-        flags.set(flGenerateMipMaps | flDitherColor, TRUE);
+        std::memset(this, 0, sizeof(STextureParams));
+        flags.set(flGenerateMipMaps | flDitherColor, true);
         mip_filter = kMIPFilterBox;
         width = 0;
         height = 0;
@@ -173,5 +172,3 @@ extern xr_token	ttype_token[];
 #define THUMB_WIDTH 128
 #define THUMB_HEIGHT 128
 #define THUMB_SIZE THUMB_HEIGHT*THUMB_WIDTH
-
-#endif /*_INCDEF_TextureParams_H_*/
