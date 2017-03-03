@@ -105,8 +105,10 @@ void xrDebug::backend(const char* reason, const char* expression, const char *ar
 	{
 	case -1:
 	case IDC_STOP:
-		if (bException)		TerminateProcess(GetCurrentProcess(),3);
-		else				RaiseException	(0, 0, 0, nullptr);
+		if (bException)		
+			TerminateProcess(GetCurrentProcess(),3);
+		else				
+			RaiseException(0, 0, 0, nullptr);
 		break;
 	case IDC_DEBUG:
  		DEBUG_INVOKE;

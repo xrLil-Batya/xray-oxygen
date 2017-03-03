@@ -14,16 +14,7 @@
 #pragma warning(pop)
 
 extern bool shared_str_initialized;
-
-#ifdef __BORLANDC__
-    #	include "d3d9.h"
-    #	include "d3dx9.h"
-    #	include "D3DX_Wrapper.h"
-    #	pragma comment(lib,"EToolsB.lib")
-        static BOOL			bException	= TRUE;
-#else
-        static BOOL			bException	= FALSE;
-#endif
+static bool bException = false;
 
 #include <exception>
 #include <new.h>							// for _set_new_mode
@@ -142,7 +133,7 @@ void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
 	MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
-	TerminateProcess	(GetCurrentProcess(),1);
+	TerminateProcess	(GetCurrentProcess(),3);
 }
 
 void xrDebug::backend	(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)
@@ -158,19 +149,13 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
 
 	if (handler)
 		handler			();
+	
+	//if (get_on_dialog())
+	//	get_on_dialog()	(true);
 
-	if (get_on_dialog())
-		get_on_dialog()	(true);
-
-	FlushLog			();
-
-#ifdef XRCORE_STATIC
-	MessageBox			(NULL,assertion_info,"X-Ray error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
-#endif
+	//FlushLog			();
+	do_exit("Please, see log-file for details.");
 	DEBUG_INVOKE;
-
-	if (get_on_dialog())
-		get_on_dialog()	(false);
 }
 
 LPCSTR xrDebug::error2string	(long code)
