@@ -5,9 +5,6 @@
 #include "build.h"
 #include "../xrLC_Light/xrLC_GlobalData.h"
 
-//#pragma comment(linker,"/STACK:0x800000,0x400000")
-//#pragma comment(linker,"/HEAP:0x70000000,0x10000000")
-
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"d3dx9.lib")
 #pragma comment(lib,"IMAGEHLP.LIB")
@@ -33,12 +30,13 @@ u32		version		= 0;
 extern void logThread(void *dummy);
 extern volatile BOOL bClose;
 
-static const char* h_str = 
+static const char* h_str =
 	"The following keys are supported / required:\n"
-	"-? or -h	== this help\n"
-	"-o			== modify build options\n"
-	"-nosun		== disable sun-lighting\n"
-	"-f<NAME>	== compile level in GameData\\Levels\\<NAME>\\\n"
+	"-skipinvalid	== Skip the test invalid face\n"
+	"-? or -h		== this help\n"
+	"-o				== modify build options\n"
+	"-nosun			== disable sun-lighting\n"
+	"-f<NAME>		== compile level in GameData\\Levels\\<NAME>\\\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
 
@@ -58,15 +56,15 @@ void Startup(LPSTR     lpCmdLine)
 
 	xr_strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
-	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
-	if (strstr(cmd,"-f")==0)							{ Help(); return; }
-	if (strstr(cmd,"-o"))								bModifyOptions	= TRUE;
-	if (strstr(cmd,"-gi"))								g_build_options.b_radiosity		= TRUE;
-	if (strstr(cmd,"-noise"))							g_build_options.b_noise			= TRUE;
-	if (strstr(cmd,"-net"))								g_build_options.b_net_light		= TRUE;
+	if (strstr(cmd, "-?") || strstr(cmd, "-h"))			{ Help(); return; }
+	if (!strstr(cmd, "-f"))								{ Help(); return; }
+	if (strstr(cmd, "-o"))								bModifyOptions	= TRUE;
+	if (strstr(cmd, "-gi"))								g_build_options.b_radiosity		= true;
+	if (strstr(cmd, "-noise"))							g_build_options.b_noise			= true;
+	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
+	if (strstr(cmd, "-skipinvalid"))					g_build_options.b_skipinvalid	= true;
 	VERIFY( lc_global_data() );
 	lc_global_data()->b_nosun_set						( !!strstr(cmd,"-nosun") );
-	//if (strstr(cmd,"-nosun"))							b_nosun			= TRUE;
 	
 	// Give a LOG-thread a chance to startup
 	//_set_sbh_threshold(1920);
@@ -76,15 +74,6 @@ void Startup(LPSTR     lpCmdLine)
 	
 	// Faster FPU 
 	SetPriorityClass		(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
-
-	/*
-	u32	dwMin			= 1800*(1024*1024);
-	u32	dwMax			= 1900*(1024*1024);
-	if (0==SetProcessWorkingSetSize(GetCurrentProcess(),dwMin,dwMax))
-	{
-		clMsg("*** Failed to expand working set");
-	};
-	*/
 	
 	// Load project
 	name[0]=0;				sscanf(strstr(cmd,"-f")+2,"%s",name);

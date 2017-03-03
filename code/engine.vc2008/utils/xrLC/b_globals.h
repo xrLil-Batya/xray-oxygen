@@ -23,10 +23,11 @@ BOOL	exact_normalize					(float*		a);
 
 struct SBuildOptions
 {
-	BOOL						b_radiosity;
-	BOOL						b_noise;
-	BOOL						b_net_light;
-	SBuildOptions				():b_radiosity(FALSE), b_noise(FALSE), b_net_light(FALSE) 
+	bool b_radiosity;
+	bool b_noise;
+	bool b_net_light;
+	bool b_skipinvalid;
+	SBuildOptions() :b_radiosity(FALSE), b_noise(FALSE), b_net_light(FALSE)
 	{
 
 	}

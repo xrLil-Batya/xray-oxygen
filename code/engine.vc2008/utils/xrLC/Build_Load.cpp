@@ -46,6 +46,7 @@ struct R_Layer
 
 void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 {
+	is_surface_fatal = is_thm_fatal = false;
 	IReader&	fs	= const_cast<IReader&>(_in_FS);
 	// HANDLE		hLargeHeap	= HeapCreate(0,64*1024*1024,0);
 	// clMsg		("* <LargeHeap> handle: %X",hLargeHeap);
@@ -147,7 +148,10 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 		if (InvalideFaces())	
 		{
 			err_save		();
-			Debug.fatal		(DEBUG_INFO,"* FATAL: %d invalid faces. Compilation aborted",InvalideFaces());
+			if (!g_build_options.b_skipinvalid)
+				Debug.fatal(DEBUG_INFO, "* FATAL: %d invalid faces. Compilation aborted", InvalideFaces());
+			else
+				clMsg("%d is invalid faces.", InvalideFaces());
 		}
 	}
 
@@ -313,8 +317,15 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				string_path			th_name;
 				FS.update_path	(th_name,"$game_textures$",strconcat(sizeof(th_name),th_name,N,".thm"));
 				clMsg			("processing: %s",th_name);
-				IReader* THM	= FS.r_open(th_name);
-				R_ASSERT2		(THM,th_name);
+				IReader* THM	= FS.r_open(th_name); 
+				if (!THM)
+					{
+						clMsg("cannot find thm: %s", th_name);
+						is_thm_fatal = true;
+						continue;
+					}
+				else
+						clMsg("processing: %s", th_name);
 
 				// version
 				u32 version = 0;
@@ -346,7 +357,13 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 						u32			w=0, h=0;
 						BT.pSurface		=	Surface_Load(N,w,h);
 						BT.THM.SetHasSurface(TRUE);
-						R_ASSERT2	(BT.pSurface,"Can't load surface");
+						if (!BT.pSurface)
+						{
+							clMsg("Can't load surface %s", th_name);
+
+
+							continue;
+						}
 						if ((w != BT.dwWidth) || (h != BT.dwHeight))
 						{
 							Msg		("! THM doesn't correspond to the texture: %dx%d -> %dx%d", BT.dwWidth, BT.dwHeight, w, h);
@@ -354,8 +371,6 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 							BT.dwHeight	= BT.THM.height = h;
 						}
 						BT.Vflip	();
-					} else {
-						// Free surface memory
 					}
 				}
 			}
@@ -363,6 +378,8 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 			// save all the stuff we've created
 			textures().push_back	(BT);
 		}
+		R_ASSERT2(!is_thm_fatal, "Please, create the thm-files. See log for details.");
+		R_ASSERT2(!is_surface_fatal, "Please, create the tga-textures. See log for details.");
 	}
 
 	// post-process materials

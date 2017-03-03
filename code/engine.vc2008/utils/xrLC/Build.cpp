@@ -50,15 +50,6 @@ void	CBuild::TempSave( u32 stage )
 
 }
 
-	//Fbox								scene_bb;
-	//xr_vector<b_shader>				shader_render;
-	//xr_vector<b_shader>				shader_compile;
- //   xr_vector<b_light_dynamic>		L_dynamic;
-	//xr_vector<b_glow>					glows;
-	//xr_vector<b_portal>				portals;
-	//xr_vector<b_lod>					lods;
-	//string_path						path;
-	//xr_vector<LPCSTR>					g_Shaders;
 void	CBuild::read( INetReader &r )
 {
 	r_pod( r, g_build_options );
