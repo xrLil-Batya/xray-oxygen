@@ -179,7 +179,9 @@ void __cdecl xrDebug::fatal(const char *file, int line, const char *function, co
 void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
+#ifdef _COMPILERS_
     MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
+#endif
     TerminateProcess	(GetCurrentProcess(),1);
 }
 

@@ -132,7 +132,9 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
+#ifdef _COMPILERS_
 	MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
+#endif
 	TerminateProcess	(GetCurrentProcess(),3);
 }
 
@@ -349,23 +351,6 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 }
 
 //////////////////////////////////////////////////////////////////////
-#ifdef M_BORLAND
-	namespace std{
-		extern new_handler _RTLENTRY _EXPFUNC set_new_handler( new_handler new_p );
-	};
-
-	static void __cdecl def_new_handler() 
-    {
-		FATAL		("Out of memory.");
-    }
-
-    void	xrDebug::_initialize		(const bool &dedicated)
-    {
-		handler							= 0;
-		m_on_dialog						= 0;
-        std::set_new_handler			(def_new_handler);	// exception-handler for 'out of memory' condition
-    }
-#else
 typedef int(__cdecl * _PNH)(size_t);
 
 static void handler_base(LPCSTR reason_string)
@@ -485,6 +470,4 @@ void	xrDebug::_initialize(const bool &dedicated)
 	debug_on_thread_spawn();
 
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
-
 }
-#endif
