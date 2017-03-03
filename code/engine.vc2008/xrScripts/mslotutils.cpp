@@ -84,14 +84,14 @@ inline bool	CMailSlotMsg::w_buff(void* src, int sz) {
 
 inline HANDLE CreateMailSlotByName(LPSTR slotName)
 {
-	return hSlot = CreateMailslot(slotName, 0 /* no maximum message size */, 
+	return CreateMailslot(slotName, 0 /* no maximum message size */, 
 	MAILSLOT_WAIT_FOREVER/* no time-out for operations */, 
 		(LPSECURITY_ATTRIBUTES)NULL); /* no security attributes */
 }
 inline bool CheckExisting(LPSTR slotName)
 {
 	HANDLE hFile;
-	BOOL res;
+	bool res;
 	hFile = CreateFile(slotName,
 		GENERIC_WRITE,
 		FILE_SHARE_READ,  // required to write to a mailslot 
@@ -108,7 +108,7 @@ inline bool CheckExisting(LPSTR slotName)
 	return res;
 }
 inline bool SendMailslotMessage(LPSTR slotName, CMailSlotMsg& msg) {
-	BOOL fResult;
+	bool fResult;
 	HANDLE hFile;
 	DWORD cbWritten;
 
@@ -140,7 +140,7 @@ inline bool SendMailslotMessage(LPSTR slotName, CMailSlotMsg& msg) {
 
 inline bool CheckMailslotMessage(HANDLE hSlot, CMailSlotMsg& msg) {
 	DWORD cbMessage, cMessage, cbRead;
-	BOOL fResult;
+	bool fResult;
 	HANDLE hEvent;
 	OVERLAPPED ov;
 

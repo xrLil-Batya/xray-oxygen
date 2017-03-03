@@ -28,6 +28,7 @@ extern char g_application_path[256];
 #include "DateTime.hpp"
 void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
 {
+	std::set_terminate(abort);
 	xr_strcpy					(ApplicationName,_ApplicationName);
 	if (0==init_counter) {
 #ifdef XRCORE_STATIC	

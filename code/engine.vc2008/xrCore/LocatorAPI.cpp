@@ -25,18 +25,10 @@ const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 CLocatorAPI*		xr_FS = NULL;
 
 #include "../FrayBuildConfig.hpp"
-#ifdef _EDITOR
-#	ifndef OLD_FS_ROOT
-#	  define FSLTX	"..\\fs.ltx"
-#	else
-#	  define FSLTX	"fs.ltx"
-#	endif
-#else
-#	ifndef OLD_FS_ROOT
+#ifndef OLD_FS_ROOT
 #	  define FSLTX	"..\\fsgame.ltx"
-#	else
+#else
 #	  define FSLTX	"fsgame.ltx"
-#	endif
 #endif
 
 struct _open_file

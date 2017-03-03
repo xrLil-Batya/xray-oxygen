@@ -49,41 +49,37 @@ Fvector vunpack(Ivector src)
 
 Ivector	vpack(Fvector src)
 {
-    src.normalize();
-    Fvector _v;
-    int bx = fpack(src.x);
-    int by = fpack(src.y);
-    int bz = fpack(src.z);
-    // dumb test
-    float e_best = flt_max;
-    int r = bx, g = by, b = bz;
-    int d = 2;
-    for (int x = _max(bx - d, 0); x <= _min(bx + d, 255); x++)
-    {
-        for (int y = _max(by - d, 0); y <= _min(by + d, 255); y++)
-        {
-            for (int z = _max(bz - d, 0); z <= _min(bz + d, 255); z++)
-            {
-                _v = vunpack(x, y, z);
-                float m = _v.magnitude();
-                float me = _abs(m - 1.f);
-                if (me > 0.03f)
-                {
-                    continue;
-                }
-                _v.div(m);
-                float e = _abs(src.dotproduct(_v) - 1.f);
-                if (e<e_best)
-                {
-                    e_best = e;
-                    r = x, g = y, b = z;
-                }
-            }
-        }
-    }
-    Ivector ipck;
-    ipck.set(r, g, b);
-    return ipck;
+	src.normalize();
+	Fvector _v;
+	int bx = fpack(src.x);
+	int by = fpack(src.y);
+	int bz = fpack(src.z);
+	// dumb test
+	float e_best = flt_max;
+	int r = bx, g = by, b = bz;
+	int d = 2;
+	for (int x = std::max(bx - d, 0); x <= std::max(bx + d, 255); x++)
+		for (int y = std::max(by - d, 0); y <= std::min(by + d, 255); y++)
+			for (int z = std::max(bz - d, 0); z <= std::min(bz + d, 255); z++)
+			{
+				_v = vunpack(x, y, z);
+				float m = _v.magnitude();
+				float me = _abs(m - 1.f);
+				if (me > 0.03f)
+					continue;
+
+				_v.div(m);
+				float e = _abs(src.dotproduct(_v) - 1.f);
+				if (e < e_best)
+				{
+					e_best = e;
+					r = x, g = y, b = z;
+				}
+			}
+
+	Ivector ipck;
+	ipck.set(r, g, b);
+	return ipck;
 }
 
 void CalculateNormalMap(NVI_Image* pSrc, ConvolutionKernel* pKernels, int num_kernels, float scale, bool wrap)

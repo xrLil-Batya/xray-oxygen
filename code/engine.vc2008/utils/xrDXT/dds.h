@@ -4,9 +4,8 @@
 // such as DDSURFACEDESC2 and DDSCAPS2.  This file defines similar 
 // (compatible) constants and structures so that one can use DDS files 
 // without needing to include ddraw.h.
-
-#ifndef _DDS_H_
-#define _DDS_H_
+#pragma once
+#include "dds/ddsTypes.h"
 
 #define DDS_FOURCC 0x00000004 // DDPF_FOURCC
 #define DDS_RGB 0x00000040 // DDPF_RGB
@@ -92,5 +91,3 @@ enum DDS_HEADER_FLAGS
 	DDSD_LINEARSIZE = 1 << 19,
 	DDSD_DEPTH = 1 << 23,
 };
-
-#endif
