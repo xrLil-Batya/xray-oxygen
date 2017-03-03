@@ -360,8 +360,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 						if (!BT.pSurface)
 						{
 							clMsg("Can't load surface %s", th_name);
-
-
+							is_surface_fatal = true;
 							continue;
 						}
 						if ((w != BT.dwWidth) || (h != BT.dwHeight))
