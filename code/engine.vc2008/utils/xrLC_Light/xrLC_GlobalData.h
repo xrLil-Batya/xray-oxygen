@@ -48,6 +48,7 @@ class	XRLC_LIGHT_API xrLC_GlobalData
 
 
 		bool							_b_nosun;
+		bool							_b_slmap;
 		bool							_gl_linear;
 private:
 		bool							b_vert_not_register;
@@ -93,9 +94,11 @@ public:
 		void						close_models_write		()const ;
 
 
-		bool						b_nosun			()		{	return _b_nosun; }
-		bool						gl_linear		()		{	return _gl_linear; }
+IC		bool						b_skiplmap		()		{	return _b_slmap; }
+IC		bool						b_nosun			()		{	return _b_nosun; }
+IC		bool						gl_linear		()		{	return _gl_linear; }
 IC		void						b_nosun_set		(bool v){	_b_nosun = v; }
+IC		void						b_skiplmap_set	(bool v){	_b_nosun = v; }
 		void						initialize		()		;
 		void						destroy_rcmodel	()		;
 

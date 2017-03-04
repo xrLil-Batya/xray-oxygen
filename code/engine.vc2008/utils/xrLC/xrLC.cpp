@@ -62,9 +62,10 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd, "-gi"))								g_build_options.b_radiosity		= true;
 	if (strstr(cmd, "-noise"))							g_build_options.b_noise			= true;
 	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
-	if (strstr(cmd, "-skipinvalid"))					g_build_options.b_skipinvalid	= true;
+	if (strstr(cmd, "-skip"))							g_build_options.b_skipinvalid	= true;
 	VERIFY( lc_global_data() );
 	lc_global_data()->b_nosun_set						( !!strstr(cmd,"-nosun") );
+	lc_global_data()->b_skiplmap_set					( !!strstr(cmd,"-norgb") );
 	
 	// Give a LOG-thread a chance to startup
 	//_set_sbh_threshold(1920);

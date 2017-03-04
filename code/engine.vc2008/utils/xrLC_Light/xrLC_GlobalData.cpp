@@ -49,7 +49,7 @@ void	destroy_global_data()
 
 
 xrLC_GlobalData::xrLC_GlobalData	():
- _b_nosun(false),_gl_linear(false),
+ _b_nosun(false), _gl_linear(false), _b_slmap(false),
 	b_vert_not_register( false )
 {
 	
@@ -145,33 +145,6 @@ void		xrLC_GlobalData	::				initialize		()
 {
 	if (strstr(Core.Params,"-att"))	_gl_linear	= true;
 }
-
-
-/*
-		xr_vector<b_BuildTexture>		_textures;
-		xr_vector<b_material>			_materials;
-		Shader_xrLC_LIB					_shaders;				
-		CMemoryWriter					_err_invalid;
-		b_params						_g_params;
-		vecVertex						_g_vertices;
-		vecFace							_g_faces;
-		vecDefl							_g_deflectors;
-		base_lighting					_L_static;
-		CDB::MODEL*						_RCAST_Model;
-		bool							_b_nosun;
-		bool							_gl_linear;
-*/
-
-//void			xrLC_GlobalData	::				cdb_read_create	() 
-//{
-//	VERIFY(!_RCAST_Model);
-//	_RCAST_Model = xr_new<CDB::MODEL> ();
-//	_RCAST_Model->build( &*verts.begin(), (int)verts.size(), &*tris.begin(), (int)tris.size() );
-//}
-
-//base_Face* F		= (base_Face*)(*((void**)&T.dummy));
-
-//*((u32*)&F)
 
 base_Face* convert_nax( u32 dummy )
 {
@@ -284,6 +257,7 @@ void write( IWriter	&w, const  CDB::MODEL &m, const  xrLC_GlobalData  &lc_global
 void			xrLC_GlobalData	::read_base		( INetReader &r )
 {
 	_b_nosun = !!r.r_u8();
+	_b_slmap = !!r.r_u8();
 	_gl_linear = !!r.r_u8();
 	r_pod( r, _cl_globs._g_params );
 	
@@ -307,6 +281,7 @@ void			xrLC_GlobalData	::write_base		( IWriter	&w ) const
 {
 	/////////////////////////////////////////////////////////	
 	w.w_u8(_b_nosun);
+	w.w_u8(_b_slmap);
 	w.w_u8(_gl_linear);
 	w_pod( w, _cl_globs._g_params );
 

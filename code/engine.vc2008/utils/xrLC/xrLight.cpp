@@ -54,12 +54,6 @@ public:
 	}
 };
 
-
-
-
-
-
-
 void	CBuild::LMapsLocal				()
 {
 		FPU::m64r		();
