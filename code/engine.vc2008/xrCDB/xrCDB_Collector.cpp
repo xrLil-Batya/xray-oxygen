@@ -17,7 +17,7 @@ namespace CDB
 
 	void	Collector::add_face_D	(
 		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-		u32 dummy								// misc
+		u_ptr dummy								// misc
 		)
 	{
 		TRI T;
@@ -64,7 +64,7 @@ namespace CDB
 
 	void	Collector::add_face_packed_D	(
 		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-		u32		dummy,	float eps
+		u_ptr	dummy,	float eps
 		)
 	{
 		TRI T;
@@ -110,15 +110,9 @@ namespace CDB
 
 	void	Collector::calc_adjacency	(xr_vector<u32>& dest)
 	{
-#if 1
 		VERIFY							(faces.size() < 65536);
 		const u32						edge_count = faces.size()*3;
-#ifdef _EDITOR
-		xr_vector<edge> _edges			(edge_count);
-		edge 							*edges = &*_edges.begin();
-#else
 		edge							*edges = (edge*)_alloca(edge_count*sizeof(edge));
-#endif
 		edge							*i = edges;
 		xr_vector<TRI>::const_iterator	B = faces.begin(), I = B;
 		xr_vector<TRI>::const_iterator	E = faces.end();
@@ -173,81 +167,6 @@ namespace CDB
 				dest[(*J).face_id*3 + (*J).edge_id]	= (*I).face_id;
 			}
 		}
-#	if 0
-		xr_vector<u32>	test = dest;
-
-		dest.assign		(faces.size()*3,0xffffffff);
-		// Dumb algorithm O(N^2) :)
-		for (u32 f=0; f<faces.size(); f++)
-		{
-			for (u32 t=0; t<faces.size(); t++)
-			{
-				if (t==f)	continue;
-
-				for (u32 f_e=0; f_e<3; f_e++)
-				{
-					u32 f1	= faces[f].verts[(f_e+0)%3];
-					u32 f2	= faces[f].verts[(f_e+1)%3];
-					if (f1>f2)	std::swap(f1,f2);
-
-					for (u32 t_e=0; t_e<3; t_e++)
-					{
-						u32 t1	= faces[t].verts[(t_e+0)%3];
-						u32 t2	= faces[t].verts[(t_e+1)%3];
-						if (t1>t2)	std::swap(t1,t2);
-
-						if (f1==t1 && f2==t2)
-						{
-							// f.edge[f_e] linked to t.edge[t_e]
-							dest[f*3+f_e]	= t;
-							break;
-						}
-					}
-				}
-			}
-		}
-
-		{
-			xr_vector<u32>::const_iterator	I = test.begin();
-			xr_vector<u32>::const_iterator	E = test.end();
-			xr_vector<u32>::const_iterator	J = dest.begin();
-			for ( ; I != E; ++I, ++J) {
-				VERIFY	(*I == *J);
-			}
-		}
-#	endif
-#else
-		dest.assign		(faces.size()*3,0xffffffff);
-		// Dumb algorithm O(N^2) :)
-		for (u32 f=0; f<faces.size(); f++)
-		{
-			for (u32 t=0; t<faces.size(); t++)
-			{
-				if (t==f)	continue;
-
-				for (u32 f_e=0; f_e<3; f_e++)
-				{
-					u32 f1	= faces[f].verts[(f_e+0)%3];
-					u32 f2	= faces[f].verts[(f_e+1)%3];
-					if (f1>f2)	std::swap(f1,f2);
-
-					for (u32 t_e=0; t_e<3; t_e++)
-					{
-						u32 t1	= faces[t].verts[(t_e+0)%3];
-						u32 t2	= faces[t].verts[(t_e+1)%3];
-						if (t1>t2)	std::swap(t1,t2);
-
-						if (f1==t1 && f2==t2)
-						{
-							// f.edge[f_e] linked to t.edge[t_e]
-							dest[f*3+f_e]	= t;
-							break;
-						}
-					}
-				}
-			}
-		}
-#endif
 	}
     IC BOOL similar(TRI& T1, TRI& T2)
     {
@@ -302,7 +221,7 @@ namespace CDB
 
 	void	CollectorPacked::add_face(
 		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-		u16 material, u16 sector, u32 _flags									// misc
+		u16 material, u16 sector, u_ptr _flags									// misc
 		)
 	{
 		TRI T;
@@ -318,7 +237,7 @@ namespace CDB
 
 	void	CollectorPacked::add_face_D(
 		const Fvector& v0, const Fvector& v1, const Fvector& v2,	// vertices
-		u32 dummy, u32 _flags										// misc
+		u_ptr dummy, u_ptr _flags										// misc
 		)
 	{
 		TRI T;
