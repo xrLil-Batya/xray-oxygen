@@ -131,7 +131,7 @@ void CBuild::PreOptimize()
 		}
 		Progress	(float(it)/float(lc_global_data()->g_faces().size()));
 	}
-	if (InvalideFaces())	
+	if (InvalideFaces() && !g_build_options.b_skipinvalid)
 	{
 		err_save		();
 		Debug.fatal		(DEBUG_INFO,"* FATAL: %d invalid faces. Compilation aborted",InvalideFaces());

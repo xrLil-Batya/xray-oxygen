@@ -142,7 +142,7 @@ void	ImplicitExecute::	Execute	( net_task_callback *net_callback )
 					defl.Marker(U,V)	= 0;
 				}
 			}
-	//		thProgress	= float(V - y_start) / float(y_end-y_start);
+			Progress(float(V - y_start) / float(y_end-y_start));
 		}
 	}
 

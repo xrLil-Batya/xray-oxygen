@@ -179,32 +179,35 @@ void CBuild::Run	(LPCSTR P)
 
 	//****************************************** Optimizing + checking for T-junctions
 	FPU::m64r					();
-	Phase						("Optimizing...");
+	Msg("\n %s", "Optimizing");
 	mem_Compact					();
 	PreOptimize					();
 	CorrectTJunctions			();
+	Phase("Optimizing");
 
 	//****************************************** HEMI-Tesselate
 	FPU::m64r					();
-	Phase						("Adaptive HT...");
+	Msg("%s", "Adaptive HT...");
 	mem_Compact					();
 #ifndef CFORM_ONLY
 	xrPhase_AdaptiveHT			();
 #endif
+	Phase("Adaptive HT...");
 
 	//****************************************** Building normals
 	FPU::m64r					();
-	Phase						("Building normals...");
+	Msg("%s", "Building normals...");
 	mem_Compact					();
 	CalcNormals					();
-	//SmoothVertColors			(5);
+	Phase("Building normals...");
 
 	//****************************************** Collision DB
 	//should be after normals, so that double-sided faces gets separated
 	FPU::m64r					();
-	Phase						("Building collision database...");
+	Msg("%s", "Building collision database...");
 	mem_Compact					();
 	BuildCForm					();
+	Phase("Building collision database...");
 
 #ifdef CFORM_ONLY
 	return;
@@ -215,31 +218,33 @@ void CBuild::Run	(LPCSTR P)
 	//****************************************** T-Basis
 	{
 		FPU::m64r					();
-		Phase						("Building tangent-basis...");
+		Msg("%s", "Building tangent-basis...");
 		xrPhase_TangentBasis		();
 		mem_Compact					();
+		Phase("Building tangent-basis...");
 	}
 
 	//****************************************** GLOBAL-RayCast model
 	FPU::m64r					();
-	Phase						("Building rcast-CFORM model...");
+	Msg("%s", "Building rcast-CFORM model...");
 	mem_Compact					();
 	Light_prepare				();
 	BuildRapid					(TRUE);
+	Phase("Building rcast-CFORM model...");
 
 	//****************************************** GLOBAL-ILLUMINATION
 	if (g_build_options.b_radiosity)			
 	{
 		FPU::m64r					();
-		Phase						("Radiosity-Solver...");
+		Msg("%s", "Radiosity-Solver...");
 		mem_Compact					();
 		Light_prepare				();
 		xrPhase_Radiosity			();
+		Phase("Radiosity-Solver...");
 	}
 
 	//****************************************** Starting MU
 	FPU::m64r					();
-	Phase						("LIGHT: Starting MU...");
 	mem_Compact					();
 	Light_prepare				();
 	if(g_build_options.b_net_light)
@@ -248,29 +253,33 @@ void CBuild::Run	(LPCSTR P)
 		RunNetCompileDataPrepare( );
 	}
 	StartMu						();
+	Phase("LIGHT: Starting MU...");
 	//****************************************** Resolve materials
 	FPU::m64r					();
-	Phase						("Resolving materials...");
+	Msg("%s", "Resolving materials...");
 	mem_Compact					();
 	xrPhase_ResolveMaterials	();
 	IsolateVertices				(TRUE);
+	Phase("Resolving materials...");
 
 	//****************************************** UV mapping
 	{
 		FPU::m64r					();
-		Phase						("Build UV mapping...");
+		Msg("%s", "Build UV mapping...");
 		mem_Compact					();
 		xrPhase_UVmap				();
 		IsolateVertices				(TRUE);
+		Phase("Build UV mapping...");
 	}
 	
 	//****************************************** Subdivide geometry
 	FPU::m64r					();
-	Phase						("Subdividing geometry...");
+	Msg("%s", "Subdividing geometry...");
 	mem_Compact					();
 	xrPhase_Subdivide			();
 	//IsolateVertices				(TRUE);
 	lc_global_data()->vertices_isolate_and_pool_reload();
+	Phase("Subdividing geometry...");
 	//****************************************** All lighting + lmaps building and saving
 #ifdef NET_CMP
 	mu_base.wait				(500);
@@ -292,35 +301,30 @@ void CBuild::	RunAfterLight			( IWriter* fs	)
 {
  	//****************************************** Merge geometry
 	FPU::m64r					();
-	Phase						("Merging geometry...");
+	Msg("%s", "Merging geometry...");
 	mem_Compact					();
 	xrPhase_MergeGeometry		();
+	Phase("Merging geometry...");
 
 	//****************************************** Convert to OGF
 	FPU::m64r					();
-	Phase						("Converting to OGFs...");
+	Msg("%s", "Merging geometry...");
 	mem_Compact					();
 	Flex2OGF					();
+	Phase("Converting to OGFs...");
 
 	//****************************************** Wait for MU
 	FPU::m64r					();
-	Phase						("LIGHT: Waiting for MU-thread...");
+	Msg("%s", "LIGHT: Waiting for MU-thread...");
 	mem_Compact					();
 	wait_mu_base				();
 
 	if( !g_build_options.b_net_light )
 						wait_mu_secondary();
-	
-///
-//	lc_global_data()->clear_mesh	();
-////
-
-//	mu_base.wait				(500);
-//	mu_secondary.wait			(500);
-
+	Phase("LIGHT: Waiting for MU-thread...");
 	//****************************************** Export MU-models
 	FPU::m64r					();
-	Phase						("Converting MU-models to OGFs...");
+	Msg("%s", "Converting MU-models to OGFs...");
 	mem_Compact					();
 	{
 		u32 m;
@@ -334,24 +338,26 @@ void CBuild::	RunAfterLight			( IWriter* fs	)
 		for (m=0; m<mu_refs().size(); m++)
 			export_ogf(*mu_refs()[m]);
 
-//		lc_global_data()->clear_mu_models();
+		Phase("Converting MU-models to OGFs...");
 	}
 
 	//****************************************** Destroy RCast-model
 	FPU::m64r		();
-	Phase			("Destroying ray-trace model...");
+	Msg("%s", "Destroying ray-trace model...");
 	mem_Compact		();
 	lc_global_data()->destroy_rcmodel();
+	Phase("Destroying ray-trace model...");
 
 	//****************************************** Build sectors
 	FPU::m64r		();
-	Phase			("Building sectors...");
+	Msg("%s", "Building sectors...");
 	mem_Compact		();
 	BuildSectors	();
+	Phase("Building sectors...");
 
 	//****************************************** Saving MISC stuff
 	FPU::m64r		();
-	Phase			("Saving...");
+	Msg("%s", "Saving...");
 	mem_Compact		();
 	SaveLights		(*fs);
 
@@ -373,7 +379,7 @@ void CBuild::	RunAfterLight			( IWriter* fs	)
 
 	SaveTREE		(*fs);
 	SaveSectors		(*fs);
-
+	Phase("Saving...");
 	err_save		();
 }
 

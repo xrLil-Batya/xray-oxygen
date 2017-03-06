@@ -7,14 +7,14 @@
 //************************* Log-thread data
 static std::recursive_mutex	csLog;
 
-volatile BOOL				bClose				= FALSE;
+volatile bool				bClose				= false;
 
 static char					status	[1024	]	="";
 static char					phase	[1024	]	="";
-static float				progress			= 0.0f;
 static u32					phase_start_time	= 0;
-static BOOL					bStatusChange		= FALSE;
-static BOOL					bPhaseChange		= FALSE;
+static bool					bStatusChange		= false;
+static bool					bPhaseChange		= false;
+static bool					bStartPhase			= false;
 static u32					phase_total_time	= 0;
 
 static HWND hwLog		= 0;
@@ -57,62 +57,85 @@ static void _process_messages(void)
 	}
 }
 
-std::string make_time	(u32 sec)
-{
-	char		buf[64];
-	xr_sprintf		(buf,"%2.0d:%2.0d:%2.0d",sec/3600,(sec%3600)/60,sec%60);
-	int len		= int(xr_strlen(buf));
-	for (int i=0; i<len; i++) if (buf[i]==' ') buf[i]='0';
-	return std::string(buf);
-}
-
 void __cdecl Status	(const char *format, ...)
 {
     std::lock_guard<decltype(csLog)> lock(csLog);
 	va_list				mark;
 	va_start			( mark, format );
 	vsprintf			( status, format, mark );
-	bStatusChange		= TRUE;
+	bStatusChange		= true;
 	Msg					("    | %s",status);
 }
-
-
-
-void Progress		(const float F)
+//Old
+std::string make_time(u32 sec)
 {
-	// No critical section usage
-	progress		= F;
-	/*
-	LONG* target = (LONG *)(&progress);
-	LONG  src    = *( (LONG *)(&F)  );
-	InterlockedExchange(target, src);
-	*/
+	char		buf[64];
+	xr_sprintf(buf, "%2.0d:%2.0d:%2.0d", sec / 3600, (sec % 3600) / 60, sec % 60);
+	int len = int(xr_strlen(buf));
+	for (int i = 0; i<len; i++) if (buf[i] == ' ') buf[i] = '0';
+	return std::string(buf);
+}
+//New
+#include "../../xrCore/DateTime.hpp"
+auto MakeTime(u32 sec_, u32 min_, u32 hour_, bool isString = true)
+{
+	Time tm;
+	u32 sec = tm.GetSecond(),
+		min = tm.GetMin(),
+		hour = tm.GetHour();
+
+	auto GetTime = [](u32 a, u32 &b, int c) { (a > b) ? b = c - (a - b) : b -= a; };
+
+	GetTime(sec_, sec, 60);
+	GetTime(min_, min, 60);
+	GetTime(hour_, hour, 24);
+
+	return
+		((hour < 10) ? "0" : "") + std::to_string(hour) + ":" + ((min < 10) ? "0" : "") + std::to_string(min) + ":" + ((sec < 10) ? "0" : "") + std::to_string(sec);
+}
+u32 _sec = 0, _min = 0, _hour = 0;
+
+void SetTime()
+{
+	Time tm;
+	_sec = tm.GetSecond();
+	_min = tm.GetMin();
+	_hour = tm.GetHour();
 }
 
-void Phase			(const char *phase_name)
+void Phase(const char *phase_name)
 {
 	while (!(hwPhaseTime && hwStage)) Sleep(1);
 
     std::lock_guard<decltype(csLog)> lock(csLog);
-	// Replace phase name with TIME:Name 
-	char	tbuf		[512];
-	bPhaseChange		= TRUE;
-	phase_total_time	= timeGetTime()-phase_start_time;
-	xr_sprintf				( tbuf,"%s : %s",make_time(phase_total_time/1000).c_str(),	phase);
-	SendMessage			( hwPhaseTime, LB_DELETESTRING, SendMessage(hwPhaseTime,LB_GETCOUNT,0,0)-1,0);
-	SendMessage			( hwPhaseTime, LB_ADDSTRING, 0, (LPARAM) tbuf);
+	try
+	{
+		// Replace phase name with TIME:Name 
+		bPhaseChange = TRUE;
+		char	tbuf_[512];
+		//SendMessage(hwPhaseTime, LB_DELETESTRING, SendMessage(hwPhaseTime, LB_GETCOUNT, 0, 0) - 1, 0);
+		//SendMessage(hwPhaseTime, LB_ADDSTRING, 0, (LPARAM)tbuf_);
 
-	// Start _new phase
-	phase_start_time	= timeGetTime();
-	xr_strcpy				(phase,  phase_name);
-	SetWindowText		( hwStage,		phase_name );
-	xr_sprintf				( tbuf,"--:--:-- * %s",phase);
-	SendMessage			( hwPhaseTime,  LB_ADDSTRING, 0, (LPARAM) tbuf);
-	SendMessage			( hwPhaseTime,	LB_SETTOPINDEX, SendMessage(hwPhaseTime,LB_GETCOUNT,0,0)-1,0);
-	Progress			(0);
+		xr_sprintf(tbuf_, "%s", MakeTime(_sec, _min, _hour).c_str());
 
-	// Release focus
-	Msg("\n* New phase started: %s",phase_name);
+		// Start _new phase
+		SetTime();
+		xr_strcpy(phase, phase_name);
+		SetWindowText(hwStage, phase_name);
+		strconcat(sizeof(tbuf_), tbuf_, tbuf_, ": ", phase);
+		//xr_sprintf(tbuf, "--:--:--: %s", phase);
+		
+		SendMessage(hwPhaseTime, LB_ADDSTRING, 0, (LPARAM)tbuf_);
+		//SendMessage(hwPhaseTime, LB_SETTOPINDEX, SendMessage(hwPhaseTime, LB_GETCOUNT, 0, 0) - 1, 0);
+		Progress(0);
+
+		// Release focus
+		Msg(" %s Done...\n", phase_name);
+	}
+	catch (...) 
+	{
+		Debug.do_exit("The end...");
+	}
 }
 
 HWND logWindow=0;
@@ -139,25 +162,24 @@ void logThread(void *dummy)
 	SendMessage(hwProgress, PBM_SETRANGE,	0, MAKELPARAM(0, 1000)); 
 	SendMessage(hwProgress, PBM_SETPOS,		0, 0); 
 
-	Msg("\"LevelBuilder v4.1\" beta build\nCompilation date: %s\n",__DATE__);
+	Msg("\"LevelBuilderFX v1.1\"\n beta build\nCompilation date: %s\n",__DATE__);
 	{
 		char tmpbuf[128];
 		Msg("Startup time: %s",_strtime(tmpbuf));
 	}
 
-	BOOL		bHighPriority	= FALSE;
-	string256	u_name;
-	unsigned long		u_size	= sizeof(u_name)-1;
-	GetUserName	(u_name,&u_size);
-	_strlwr		(u_name);
-	if ((0==xr_strcmp(u_name,"oles"))||(0==xr_strcmp(u_name,"alexmx")))	bHighPriority	= TRUE;
-
 	// Main cycle
 	u32		LogSize = 0;
 	float	PrSave	= 0;
-	while (TRUE)
+	while (true)
 	{
-		SetPriorityClass	(GetCurrentProcess(),IDLE_PRIORITY_CLASS);	// bHighPriority?NORMAL_PRIORITY_CLASS:IDLE_PRIORITY_CLASS
+		switch (g_build_options.Priority)
+		{
+			case 1: SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS); break;
+			case 2: SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS); break;
+			case 3: SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS); break;
+			case 4: SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS); break;
+		}
 
 		// transfer data
 		while (!csLog.try_lock())	{
@@ -187,40 +209,42 @@ void logThread(void *dummy)
 		}
 		
 		if (_abs(PrSave-progress)>EPS_L) {
-			bWasChanges = TRUE;
+			bWasChanges = true;
 			PrSave = progress;
-			SendMessage		( hwProgress, PBM_SETPOS, u32(progress*1000.f), 0);
+			SendMessage(hwProgress, PBM_SETPOS, u32(progress*1000.f), 0);
 
 			// timing
-			if (progress>0.005f) {
-				u32 dwCurrentTime = timeGetTime();
-				u32 dwTimeDiff	= dwCurrentTime-phase_start_time;
-				u32 secElapsed	= dwTimeDiff/1000;
-				u32 secRemain		= u32(float(secElapsed)/progress)-secElapsed;
-				xr_sprintf(tbuf,
-					"Elapsed: %s\n"
-					"Remain:  %s",
-					make_time(secElapsed).c_str(),
-					make_time(secRemain).c_str()
-					);
-				SetWindowText	( hwTime, tbuf );
-			} else {
-				SetWindowText	( hwTime, "" );
+			if (progress>0.5f) {
+				//MakeTime(_sec, _min, _hour);
+				//u32 dwCurrentTime = timeGetTime();
+				//u32 dwTimeDiff	= time[0] + time[1] * 60 + time[2] * 60 *60;
+				//u32 secElapsed	= dwTimeDiff/1000;
+				//u32 secRemain		= u32((float(time[0] + time[1] * 60 + time[2] * 60 * 60)/1000)/progress)-secElapsed;
+				int next_time = 100 - (int)progress;
+				xr_sprintf(tbuf, "Elapsed: %s\n Remain: ~%s",
+					MakeTime(_sec, _min, _hour).c_str(),
+					MakeTime(_sec / next_time, _min / next_time, _hour / next_time).c_str());
+				SetWindowText(hwTime, tbuf);
+				
 			}
-
+			else
+			{
+				xr_sprintf(tbuf, "Elapsed: %s\n", MakeTime(_sec, _min, _hour).c_str());
+				SetWindowText(hwTime, tbuf);
+			}
 			// percentage text
 			xr_sprintf(tbuf,"%3.2f%%",progress*100.f);
-			SetWindowText	( hwPText, tbuf );
+			SetWindowText(hwPText, tbuf);
 		}
 
 		if (bStatusChange) {
-			bWasChanges		= TRUE;
-			bStatusChange	= FALSE;
-			SetWindowText	( hwInfo,	status);
+			bWasChanges		= true;
+			bStatusChange	= false;
+			SetWindowText(hwInfo, status);
 		}
 		if (bWasChanges) {
 			UpdateWindow	( logWindow);
-			bWasChanges		= FALSE;
+			bWasChanges		= false;
 		}
 		csLog.unlock			();
 

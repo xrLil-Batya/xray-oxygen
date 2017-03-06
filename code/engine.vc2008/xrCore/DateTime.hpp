@@ -2,22 +2,27 @@
 #include <ctime>
 #include <string>
 
-class Time
+class XRCORE_API Time
 {
 private:
 	time_t t;
 	tm* aTm;
+	using string = std::string;
 
 public:
 	Time();
 
 	// Convert time to string
-	std::string GetSeconds();
-	std::string GetMinutes();
-	std::string GetHours();
+	string GetSeconds();
+	string GetMinutes();
+	string GetHours();
 
 	// Convert date to string
-	std::string GetDay();
-	std::string GetMonth();
-	std::string GetYear();
+	string GetDay();
+	string GetMonth();
+	string GetYear();
+
+	int GetSecond();
+	int GetMin();
+	int GetHour();
 };

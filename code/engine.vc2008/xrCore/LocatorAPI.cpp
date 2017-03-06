@@ -26,9 +26,12 @@ CLocatorAPI*		xr_FS = NULL;
 
 #include "../FrayBuildConfig.hpp"
 #if !defined(OLD_FS_ROOT) && !defined(_COMPILERS_)
-#	  define FSLTX	"..\\fsgame.ltx"
+#	define FSLTX	"..\\fsgame.ltx"
 #else
-#	  define FSLTX	"fsgame.ltx"
+#	ifdef _COMPILERS_
+#		define	OLD_FS_ROOT
+#	endif
+#	define FSLTX	"fsgame.ltx"
 #endif
 
 struct _open_file

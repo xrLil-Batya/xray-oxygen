@@ -28,11 +28,11 @@ CBuild*	pBuild		= NULL;
 u32		version		= 0;
 
 extern void logThread(void *dummy);
-extern volatile BOOL bClose;
+extern volatile bool bClose;
 
 static const char* h_str =
 	"The following keys are supported / required:\n"
-	"-skipinvalid	== Skip the test invalid face\n"
+	"-skip	== Skip the test invalid face\n"
 	"-? or -h		== this help\n"
 	"-o				== modify build options\n"
 	"-nosun			== disable sun-lighting\n"
@@ -53,16 +53,22 @@ void Startup(LPSTR     lpCmdLine)
 	create_global_data();
 	char cmd[512],name[256];
 	BOOL bModifyOptions		= FALSE;
-
+	g_build_options.Priority = 1;
 	xr_strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
-	if (strstr(cmd, "-?") || strstr(cmd, "-h"))			{ Help(); return; }
-	if (!strstr(cmd, "-f"))								{ Help(); return; }
+	if (strstr(cmd, "-?") || strstr(cmd, "-h") || !strstr(cmd, "-f"))
+														{ Help(); return; }
 	if (strstr(cmd, "-o"))								bModifyOptions	= TRUE;
 	if (strstr(cmd, "-gi"))								g_build_options.b_radiosity		= true;
 	if (strstr(cmd, "-noise"))							g_build_options.b_noise			= true;
 	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
 	if (strstr(cmd, "-skip"))							g_build_options.b_skipinvalid	= true;
+	//Added priority setting
+	if (strstr(cmd, "-LowPriority"))					g_build_options.Priority = 1;
+	if (strstr(cmd, "-MidPriority"))					g_build_options.Priority = 2;
+	if (strstr(cmd, "-MaxPriority"))					g_build_options.Priority = 3;
+	if (strstr(cmd, "-RealTimePriority"))				g_build_options.Priority = 4;
+	//end
 	VERIFY( lc_global_data() );
 	lc_global_data()->b_nosun_set						( !!strstr(cmd,"-nosun") );
 	lc_global_data()->b_skiplmap_set					( !!strstr(cmd,"-norgb") );

@@ -86,8 +86,8 @@ for(u32 dit = 0; dit<lc_global_data()->g_deflectors().size(); dit++)
 
 void	CBuild::LMaps					()
 {
+	Msg("%s \n", "");
 		//****************************************** Lmaps
-	Phase			("LIGHT: LMaps...");
 	//DeflectorsStats ();
 #ifndef NET_CMP
 	if(g_build_options.b_net_light)
@@ -105,7 +105,7 @@ void	CBuild::LMaps					()
 	destroy_net_task_manager();
 	//net_light ();
 #endif
-
+	Phase("LIGHT: LMaps...");
 }
 void XRLC_LIGHT_API ImplicitNetWait();
 void CBuild::Light()
@@ -113,37 +113,36 @@ void CBuild::Light()
 	//****************************************** Implicit
 	{
 		FPU::m64r		();
-		Phase			("LIGHT: Implicit...");
+		Msg("%s \n", "LIGHT: Implicit...");
 		mem_Compact		();
 		ImplicitLighting();
 	}
-	
+	Phase("LIGHT: Implicit...");
 	LMaps		();
 
 
 	//****************************************** Vertex
 	FPU::m64r		();
-	Phase			("LIGHT: Vertex...");
+	Msg("%s \n", "LIGHT: Vertex...");
 	mem_Compact		();
 
 	LightVertex		();
-
-//
-	
 
 	ImplicitNetWait();
 	WaitMuModelsLocalCalcLightening();
 	lc_net::get_task_manager().wait_all();
 	//	get_task_manager().wait_all();
 	lc_net::get_task_manager().release();
+	Phase("LIGHT: Vertex...");
 //
 	//****************************************** Merge LMAPS
 	{
 		FPU::m64r		();
-		Phase			("LIGHT: Merging lightmaps...");
+		Msg("%s \n", "LIGHT: Merging lightmaps...");
 		mem_Compact		();
 
 		xrPhase_MergeLM	();
+		Phase("LIGHT: Merging lightmaps...");
 	}
 }
 
