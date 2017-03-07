@@ -112,11 +112,11 @@
 	#define IEEE_MIN_FLOAT		0xff7fffff						//!<	integer representation of MIN_FLOAT
 
 	#define ONE_OVER_RAND_MAX	(1.0f / float(RAND_MAX))		//!<	Inverse of the max possible value returned by rand()
-
-	typedef int					(__stdcall* PROC)();			//!<	A standard procedure call.
-	typedef bool				(*ENUMERATION)(udword value, udword param, udword context);	//!< ICE standard enumeration call
+#ifndef _M_X64
+	typedef int(__stdcall* PROC)();			//!<	A standard procedure call.
+	typedef bool(*ENUMERATION)(udword value, udword param, udword context);	//!< ICE standard enumeration call
 	typedef	void**				VTABLE;							//!<	A V-Table.
-
+#endif
 	#undef		MIN
 	#undef		MAX
 	#define		MIN(a, b)       ((a) < (b) ? (a) : (b))			//!<	Returns the min value between a and b

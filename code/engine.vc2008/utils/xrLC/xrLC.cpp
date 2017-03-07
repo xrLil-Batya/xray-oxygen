@@ -53,7 +53,7 @@ void Startup(LPSTR     lpCmdLine)
 	create_global_data();
 	char cmd[512],name[256];
 	BOOL bModifyOptions		= FALSE;
-	g_build_options.Priority = 1;
+
 	xr_strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
 	if (strstr(cmd, "-?") || strstr(cmd, "-h") || !strstr(cmd, "-f"))
@@ -64,10 +64,11 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
 	if (strstr(cmd, "-skip"))							g_build_options.b_skipinvalid	= true;
 	//Added priority setting
-	if (strstr(cmd, "-LowPriority"))					g_build_options.Priority = 1;
-	if (strstr(cmd, "-MidPriority"))					g_build_options.Priority = 2;
-	if (strstr(cmd, "-MaxPriority"))					g_build_options.Priority = 3;
-	if (strstr(cmd, "-RealTimePriority"))				g_build_options.Priority = 4;
+	if (strstr(cmd, "-sp1"))					g_build_options.Priority = 1;
+	else if (strstr(cmd, "-sp2"))				g_build_options.Priority = 2;
+	else if (strstr(cmd, "-sp3"))				g_build_options.Priority = 3;
+	else if (strstr(cmd, "-sp4"))				g_build_options.Priority = 4;
+	else												g_build_options.Priority = 1;
 	//end
 	VERIFY( lc_global_data() );
 	lc_global_data()->b_nosun_set						( !!strstr(cmd,"-nosun") );
@@ -80,7 +81,13 @@ void Startup(LPSTR     lpCmdLine)
 	Sleep					(150);
 	
 	// Faster FPU 
-	SetPriorityClass		(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
+	switch (g_build_options.Priority)
+	{
+	case 1: SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
+	case 2: SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS);
+	case 3: SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS);
+	case 4: SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS);
+	}
 	
 	// Load project
 	name[0]=0;				sscanf(strstr(cmd,"-f")+2,"%s",name);

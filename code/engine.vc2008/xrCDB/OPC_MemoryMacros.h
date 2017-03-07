@@ -45,6 +45,7 @@
 	//!	\see		CopyMemory
 	//!	\see		MoveMemory
 	//!	\warning	writes nb*4 bytes !
+#ifndef _M_X64
 	inline_ void StoreDwords(udword* dest, udword nb, udword value)
 	{
 		// The asm code below **SHOULD** be equivalent to one of those C versions
@@ -65,7 +66,7 @@
 		_asm pop ecx
 		_asm pop eax
 	}
-
+#endif
 	//!	Copies a buffer.
 	//!	\param		addr	[in] destination buffer address
 	//!	\param		addr	[in] source buffer address

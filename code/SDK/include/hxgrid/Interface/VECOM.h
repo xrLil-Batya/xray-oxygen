@@ -70,13 +70,13 @@ class TRefCountHolder
 #define IUNKNOWN_METHODS_IMPLEMENTATION_INSTANCE()    \
   VECOM::TRefCountHolder RefCountHolder; \
   virtual HRESULT __stdcall QueryInterface(REFIID riid, void** ppv) {*ppv=NULL; return E_NOINTERFACE;};  \
-  virtual ULONG __stdcall AddRef() {volatile ULONG* p = &RefCountHolder.RefCount; __asm {mov eax,p}; __asm{LOCK INC DWORD PTR [EAX]}; return RefCountHolder.RefCount;};  \
-  virtual ULONG __stdcall Release() {volatile ULONG* p = &RefCountHolder.RefCount; __asm {mov eax,p}; __asm{LOCK DEC DWORD PTR [EAX]}; ULONG r = RefCountHolder.RefCount; if (r==0) delete this; return r;};  
+  virtual ULONG __stdcall AddRef() {volatile ULONG* p = &RefCountHolder.RefCount/*;__asm {mov eax,p }; /*__asm{LOCK INC DWORD PTR [EAX]}*/; return RefCountHolder.RefCount;};  \
+  virtual ULONG __stdcall Release() {volatile ULONG* p = &RefCountHolder.RefCount/*; __asm {mov eax,p}; __asm{LOCK DEC DWORD PTR [EAX]}*/; ULONG r = RefCountHolder.RefCount; if (r==0) delete this; return r;};  
   
 #define IUNKNOWN_METHODS_IMPLEMENTATION_INSTANCE_EXCLUDEQUERYINTERFACE()    \
     VECOM::TRefCountHolder RefCountHolder; \
-    virtual ULONG __stdcall AddRef() {volatile ULONG* p = &RefCountHolder.RefCount; __asm {mov eax,p}; __asm{LOCK INC DWORD PTR [EAX]}; return RefCountHolder.RefCount;};  \
-    virtual ULONG __stdcall Release() {volatile ULONG* p = &RefCountHolder.RefCount; __asm {mov eax,p}; __asm{LOCK DEC DWORD PTR [EAX]}; ULONG r = RefCountHolder.RefCount; if (r==0) delete this; return r;};  
+    virtual ULONG __stdcall AddRef() {volatile ULONG* p = &RefCountHolder.RefCount;/* __asm {mov eax,p}; __asm{LOCK INC DWORD PTR [EAX]};*/ return RefCountHolder.RefCount;};  \
+    virtual ULONG __stdcall Release() {volatile ULONG* p = &RefCountHolder.RefCount;/* __asm {mov eax,p}; __asm{LOCK DEC DWORD PTR [EAX]};*/ ULONG r = RefCountHolder.RefCount; if (r==0) delete this; return r;};  
 
 #else
 

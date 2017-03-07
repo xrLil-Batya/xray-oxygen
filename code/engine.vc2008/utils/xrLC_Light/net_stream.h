@@ -1,6 +1,5 @@
 #pragma once
 #include "hxgrid/Interface/IAgent.h"
-//#include "hxgrid/Interface/IGenericStream.h"
 
 
 class XRLC_LIGHT_API byte_count
@@ -289,7 +288,7 @@ public:
 			~CGenStreamOnFile(  );
 private:
 	 //======== BEGIN COM INTERFACE =======
-  IUNKNOWN_METHODS_IMPLEMENTATION_INSTANCE()
+	IUNKNOWN_METHODS_IMPLEMENTATION_INSTANCE()
 
   virtual BYTE* __stdcall GetBasePointer(){ return (BYTE*) file->pointer() ;}
   virtual BYTE* __stdcall GetCurPointer(){R_ASSERT(false);return 0 ;}

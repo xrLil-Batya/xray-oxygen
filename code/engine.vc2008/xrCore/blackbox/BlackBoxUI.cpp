@@ -6,6 +6,7 @@
 #define MAX_STACK_TRACE	100
 #define LINE_STACK_TRACE 4096
 
+
 char g_stackTrace[MAX_STACK_TRACE][LINE_STACK_TRACE];
 int g_stackTraceCount = 0;
 
@@ -76,23 +77,20 @@ const char* BuildStackTrace()
 #endif // _EDITOR
 
 	if (!GetThreadContext(GetCurrentThread(), &context))
-		return NULL;
+		return nullptr;
 
+#ifndef _M_X64
 	context.Eip = program_counter();
-#ifndef _EDITOR
 	__asm					mov context.Ebp, ebp
 	__asm					mov context.Esp, esp
-#else // _EDITOR
-	__asm					mov EBP, ebp
-	__asm					mov ESP, esp
-#endif // _EDITOR
-
+#endif
 	EXCEPTION_POINTERS		ex_ptrs;
 	ex_ptrs.ContextRecord = &context;
 	ex_ptrs.ExceptionRecord = 0;
 
-	BuildStackTrace(&ex_ptrs);
+	BuildStackTrace(&ex_ptrs);	
 	return g_stackTrace[0];
+
 }
 
 #ifndef _EDITOR

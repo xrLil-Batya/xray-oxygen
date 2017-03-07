@@ -39,20 +39,22 @@
 	}
 
 	//! Fast square root for floating-point values.
+#ifndef _M_X64
+	//! Fast square root for floating-point values.
 	inline_ float FastSqrt(float square)
 	{
-			float retval;
+		float retval;
 
-			__asm {
-					mov             eax, square
-					sub             eax, 0x3F800000
-					sar             eax, 1
-					add             eax, 0x3F800000
-					mov             [retval], eax
-			}
-			return retval;
+		__asm {
+			mov             eax, square
+			sub             eax, 0x3F800000
+			sar             eax, 1
+			add             eax, 0x3F800000
+			mov[retval], eax
+		}
+		return retval;
 	}
-
+#endif
 	//! Saturates positive to zero.
 	inline_ float fsat(float f)
 	{
@@ -164,7 +166,7 @@
 	{
 		return x*x < epsilon;
 	}
-
+#ifndef _M_X64
 	#define FCOMI_ST0	_asm	_emit	0xdb	_asm	_emit	0xf0
 	#define FCOMIP_ST0	_asm	_emit	0xdf	_asm	_emit	0xf0
 	#define FCMOVB_ST0	_asm	_emit	0xda	_asm	_emit	0xc0
@@ -211,7 +213,7 @@
 		_asm	fcompp
 		return Res;
 	}
-
+#endif
 	inline_ int ConvertToSortable(float f)
 	{
 		int& Fi = (int&)f;

@@ -210,9 +210,8 @@ class MeshMender
 						  const NormalCalcOption computeNormals = CALCULATE_NORMALS,
 						  const ExistingSplitOption respectExistingSplits = DONT_RESPECT_SPLITS,
 						  const CylindricalFixOption fixCylindricalWrapping = DONT_FIX_CYLINDRICAL);	
-
+	public:
 		MeshMender();
-
 		~MeshMender();
 
 	protected:

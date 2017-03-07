@@ -1,13 +1,19 @@
 #pragma once
+#ifdef _M_X64
+using u_ptr = u64;
+#else
+using u_ptr = u32;
+#endif
 
 struct	cform_FailFace
 {
 	Fvector	P[3];
-	u32		props;
+	u_ptr		props;
 };
 union	cform_mergeprops	{
-	u32			props;			// 4b
+	u_ptr			props;			// 4b
 	struct {
+		u32		dumb;			// 4b
 		u16		material;		// 2b
 		u16		sector;			// 2b
 	};

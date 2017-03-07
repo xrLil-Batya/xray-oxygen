@@ -44,7 +44,7 @@ inline void SplitBlock(void* pv,int OldIndx,int NewIndx)
 }
 DWORD _STDCALL GetUsedMemory()
 {
-    DWORD i, k, RetVal=SubAllocatorSize-(HiUnit-LoUnit)-(UnitsStart-pText);
+    DWORD_PTR i, k, RetVal=SubAllocatorSize-(HiUnit-LoUnit)-(UnitsStart-pText);
     for (k=i=0;i < N_INDEXES;i++, k=0) {
         for (NODE* pn=FreeList+i;(pn=pn->next) != NULL;k++)
                 ;

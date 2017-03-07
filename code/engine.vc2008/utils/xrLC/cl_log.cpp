@@ -167,7 +167,6 @@ void logThread(void *dummy)
 		char tmpbuf[128];
 		Msg("Startup time: %s",_strtime(tmpbuf));
 	}
-
 	// Main cycle
 	u32		LogSize = 0;
 	float	PrSave	= 0;
@@ -175,12 +174,11 @@ void logThread(void *dummy)
 	{
 		switch (g_build_options.Priority)
 		{
-			case 1: SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS); break;
-			case 2: SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS); break;
-			case 3: SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS); break;
-			case 4: SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS); break;
+			case 1: SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS); 
+			case 2: SetPriorityClass(GetCurrentProcess(), NORMAL_PRIORITY_CLASS); 
+			case 3: SetPriorityClass(GetCurrentProcess(), HIGH_PRIORITY_CLASS); 
+			case 4: SetPriorityClass(GetCurrentProcess(), REALTIME_PRIORITY_CLASS); 
 		}
-
 		// transfer data
 		while (!csLog.try_lock())	{
 			_process_messages	( );

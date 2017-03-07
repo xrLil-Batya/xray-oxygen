@@ -8,8 +8,9 @@
 #		define	INGAME_EDITOR
 #	endif // #ifndef INGAME_EDITOR
 #endif // #ifndef NDEBUG
-#define _WIN32_WINNT 0x0550
-
+#ifndef _WIN32_WINNT
+#	define _WIN32_WINNT 0x0600
+#endif
 #include "../xrCore/xrCore.h"
 #include "../xrCore/xrAPI.h"
 

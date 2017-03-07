@@ -314,7 +314,11 @@ void	thread_name	(const char* name)
 	tn.dwFlags		= 0;
 	__try
 	{
-		RaiseException(0x406D1388,0,sizeof(tn)/sizeof(DWORD),(DWORD*)&tn);
+#ifndef _M_X64
+		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(DWORD), (DWORD*)&tn);
+#else
+		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(ULONG_PTR), (ULONG_PTR*)&tn);
+#endif
 	}
 	__except(EXCEPTION_CONTINUE_EXECUTION)
 	{
