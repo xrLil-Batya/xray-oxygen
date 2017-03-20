@@ -10,8 +10,6 @@
 #include "../xrServerEntities/object_broker.h"
 #include "../xrServerEntities/LevelGameDef.h"
 
-#include "securom_api.h"
-
 void CEnvModifier::load	(IReader* fs, u32 version)
 {
 	use_flags.one					();
@@ -313,26 +311,11 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 void CEnvDescriptor::on_device_create	()
 {
 	m_pDescriptor->OnDeviceCreate(*this);
-	/*
-	if (sky_texture_name.size())	
-		sky_texture.create		(sky_texture_name.c_str());
-
-	if (sky_texture_env_name.size())
-		sky_texture_env.create	(sky_texture_env_name.c_str());
-
-	if (clouds_texture_name.size())	
-		clouds_texture.create	(clouds_texture_name.c_str());
-		*/
 }
 
 void CEnvDescriptor::on_device_destroy	()
 {
 	m_pDescriptor->OnDeviceDestroy();
-	/*
-	sky_texture.destroy		();
-	sky_texture_env.destroy	();
-	clouds_texture.destroy	();
-	*/
 }
 
 //-----------------------------------------------------------------------------
@@ -346,41 +329,13 @@ CEnvDescriptorMixer::CEnvDescriptorMixer(shared_str const& identifier) :
 void CEnvDescriptorMixer::destroy()
 {
 	m_pDescriptorMixer->Destroy();
-	/*
-	sky_r_textures.clear		();
-	sky_r_textures_env.clear	();
-	clouds_r_textures.clear		();
-	*/
-
 	//	Reuse existing code
 	on_device_destroy();
-/*
-	sky_texture.destroy			();
-	sky_texture_env.destroy		();
-	clouds_texture.destroy		();
-	*/
 }
 
 void CEnvDescriptorMixer::clear	()
 {
 	m_pDescriptorMixer->Clear();
-	/*
-	std::pair<u32,ref_texture>	zero = std::make_pair(u32(0),ref_texture(0));
-	sky_r_textures.clear		();
-	sky_r_textures.push_back	(zero);
-	sky_r_textures.push_back	(zero);
-	sky_r_textures.push_back	(zero);
-
-	sky_r_textures_env.clear	();
-	sky_r_textures_env.push_back(zero);
-	sky_r_textures_env.push_back(zero);
-	sky_r_textures_env.push_back(zero);
-
-	clouds_r_textures.clear		();
-	clouds_r_textures.push_back	(zero);
-	clouds_r_textures.push_back	(zero);
-	clouds_r_textures.push_back	(zero);
-	*/
 }
 
 int get_ref_count(IUnknown* ii);
@@ -391,25 +346,9 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	float	fi				=	1-f;
 
 	m_pDescriptorMixer->lerp(&*A.m_pDescriptor, &*B.m_pDescriptor);
-	/*
-	sky_r_textures.clear		();
-	sky_r_textures.push_back	(std::make_pair(0,A.sky_texture));
-	sky_r_textures.push_back	(std::make_pair(1,B.sky_texture));
-
-	sky_r_textures_env.clear	();
-
-	sky_r_textures_env.push_back(std::make_pair(0,A.sky_texture_env));
-	sky_r_textures_env.push_back(std::make_pair(1,B.sky_texture_env));
-
-	clouds_r_textures.clear		();
-	clouds_r_textures.push_back	(std::make_pair(0,A.clouds_texture));
-	clouds_r_textures.push_back	(std::make_pair(1,B.clouds_texture));
-	*/
 
 	weight					=	f;
-
 	clouds_color.lerp		(A.clouds_color,B.clouds_color,f);
-
 	sky_rotation			=	(fi*A.sky_rotation + f*B.sky_rotation);
 
 //.	far_plane				=	(fi*A.far_plane + f*B.far_plane + Mdf.far_plane)*psVisDistance*modif_power;
@@ -534,8 +473,6 @@ void	CEnvironment::mods_unload		()
 
 void    CEnvironment::load_level_specific_ambients ()
 {
-	SECUROM_MARKER_PERFORMANCE_ON(13)
-
 	const shared_str level_name = g_pGameLevel->name();
 
 	string_path path;
@@ -568,8 +505,6 @@ void    CEnvironment::load_level_specific_ambients ()
 	}
 
 	xr_delete(level_ambients);
-
-	SECUROM_MARKER_PERFORMANCE_OFF(13)
 }
 
 CEnvDescriptor* CEnvironment::create_descriptor	(shared_str const& identifier, CInifile* config)
@@ -687,26 +622,6 @@ void CEnvironment::load_weather_effects	()
 	}
 
 	FS.file_list_close				(file_list);
-
-#if 0
-	int line_count	= pSettings->line_count("weather_effects");
-	for (int w_idx=0; w_idx<line_count; w_idx++){
-		LPCSTR weather, sect_w;
-		if (pSettings->r_line("weather_effects",w_idx,&weather,&sect_w)){
-			EnvVec& env		= WeatherFXs[weather];
-			env.push_back	(xr_new<CEnvDescriptor>("00:00:00")); env.back()->exec_time_loaded = 0;
-//. why?	env.push_back	(xr_new<CEnvDescriptor>("00:00:00")); env.back()->exec_time_loaded = 0;
-			int env_count	= pSettings->line_count(sect_w);
-			LPCSTR exec_tm, sect_e;
-			for (int env_idx=0; env_idx<env_count; env_idx++){
-				if (pSettings->r_line(sect_w,env_idx,&exec_tm,&sect_e))
-					env.push_back	(create_descriptor(sect_e));
-			}
-			env.push_back	(create_descriptor("23:59:59"));
-			env.back()->exec_time_loaded = DAY_LENGTH;
-		}
-	}
-#endif // #if 0
 
 	// sorting weather envs
 	auto _I=WeatherFXs.begin();

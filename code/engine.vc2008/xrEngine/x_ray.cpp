@@ -28,7 +28,6 @@
 
 #include "xrSash.h"
 
-#include "securom_api.h"
 
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= NULL;
@@ -69,55 +68,51 @@ static int start_year	= 1999;	// 1999
 #define DEFAULT_MODULE_HASH "3CAABCFCFF6F3A810019C6A72180F166"
 static char szEngineHash[33] = DEFAULT_MODULE_HASH;
 
-PROTECT_API char * ComputeModuleHash( char * pszHash )
+PROTECT_API char * ComputeModuleHash(char * pszHash)
 {
-	SECUROM_MARKER_HIGH_SECURITY_ON(3)
-
-	char szModuleFileName[ MAX_PATH ];
-	HANDLE hModuleHandle = NULL , hFileMapping = NULL;
+	char szModuleFileName[MAX_PATH];
+	HANDLE hModuleHandle = NULL, hFileMapping = NULL;
 	LPVOID lpvMapping = NULL;
 	MEMORY_BASIC_INFORMATION MemoryBasicInformation;
 
-	if ( ! GetModuleFileName( NULL , szModuleFileName , MAX_PATH ) )
+	if (!GetModuleFileName(NULL, szModuleFileName, MAX_PATH))
 		return pszHash;
 
-	hModuleHandle = CreateFile( szModuleFileName , GENERIC_READ , FILE_SHARE_READ , NULL , OPEN_EXISTING , 0 , NULL );
+	hModuleHandle = CreateFile(szModuleFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
 
-	if ( hModuleHandle == INVALID_HANDLE_VALUE )
+	if (hModuleHandle == INVALID_HANDLE_VALUE)
 		return pszHash;
 
-	hFileMapping = CreateFileMapping( hModuleHandle , NULL , PAGE_READONLY , 0 , 0 , NULL );
+	hFileMapping = CreateFileMapping(hModuleHandle, NULL, PAGE_READONLY, 0, 0, NULL);
 
-	if ( hFileMapping == NULL ) {
-		CloseHandle( hModuleHandle );
-		return pszHash;
-	}
-
-	lpvMapping = MapViewOfFile( hFileMapping , FILE_MAP_READ , 0 , 0 , 0 );
-
-	if ( lpvMapping == NULL ) {
-		CloseHandle( hFileMapping );
-		CloseHandle( hModuleHandle );
+	if (hFileMapping == NULL) {
+		CloseHandle(hModuleHandle);
 		return pszHash;
 	}
 
-    std::memset(&MemoryBasicInformation,0,sizeof( MEMORY_BASIC_INFORMATION ));
+	lpvMapping = MapViewOfFile(hFileMapping, FILE_MAP_READ, 0, 0, 0);
 
-	VirtualQuery( lpvMapping , &MemoryBasicInformation , sizeof( MEMORY_BASIC_INFORMATION ) );
+	if (lpvMapping == NULL) {
+		CloseHandle(hFileMapping);
+		CloseHandle(hModuleHandle);
+		return pszHash;
+	}
 
-	if ( MemoryBasicInformation.RegionSize ) {
+	std::memset(&MemoryBasicInformation, 0, sizeof(MEMORY_BASIC_INFORMATION));
+
+	VirtualQuery(lpvMapping, &MemoryBasicInformation, sizeof(MEMORY_BASIC_INFORMATION));
+
+	if (MemoryBasicInformation.RegionSize) {
 		char szHash[33];
-		MD5Digest( ( unsigned char *)lpvMapping , (unsigned int) MemoryBasicInformation.RegionSize , szHash );
-		MD5Digest( ( unsigned char *)szHash , 32 , pszHash );
-		for ( int i = 0 ; i < 32 ; ++i )
-			pszHash[ i ] = (char)toupper( pszHash[ i ] );
+		MD5Digest((unsigned char *)lpvMapping, (unsigned int)MemoryBasicInformation.RegionSize, szHash);
+		MD5Digest((unsigned char *)szHash, 32, pszHash);
+		for (int i = 0; i < 32; ++i)
+			pszHash[i] = (char)toupper(pszHash[i]);
 	}
 
-	UnmapViewOfFile( lpvMapping );
-	CloseHandle( hFileMapping );
-	CloseHandle( hModuleHandle );
-
-	SECUROM_MARKER_HIGH_SECURITY_OFF(3)
+	UnmapViewOfFile(lpvMapping);
+	CloseHandle(hFileMapping);
+	CloseHandle(hModuleHandle);
 
 	return pszHash;
 }
@@ -242,17 +237,11 @@ PROTECT_API void InitSettings	()
 }
 PROTECT_API void InitConsole	()
 {
-	SECUROM_MARKER_SECURITY_ON(5)
-
 #ifdef DEDICATED_SERVER
-	{
 		Console						= xr_new<CTextConsole>	();		
-	}
 #else
 	//	else
-	{
 		Console						= xr_new<CConsole>	();
-	}
 #endif
 	Console->Initialize			( );
 
@@ -262,8 +251,6 @@ PROTECT_API void InitConsole	()
 		sscanf					(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);
 		xr_strcpy					(Console->ConfigFile,c_name);
 	}
-
-	SECUROM_MARKER_SECURITY_OFF(5)
 }
 
 PROTECT_API void InitInput		()
@@ -532,8 +519,6 @@ BOOL IsOutOfVirtualMemory()
 #define VIRT_ERROR_SIZE 256
 #define VIRT_MESSAGE_SIZE 512
 
-	SECUROM_MARKER_HIGH_SECURITY_ON(1)
-
 	MEMORYSTATUSEX statex;
 	DWORD dwPageFileInMB = 0;
 	DWORD dwPhysMemInMB = 0;
@@ -543,8 +528,8 @@ BOOL IsOutOfVirtualMemory()
 
     std::memset(&statex,0,sizeof( MEMORYSTATUSEX ));
 	statex.dwLength = sizeof( MEMORYSTATUSEX );
-	
-	if ( ! GlobalMemoryStatusEx( &statex ) )
+
+	if (!GlobalMemoryStatusEx(&statex))
 		return 0;
 
 	dwPageFileInMB = ( DWORD ) ( statex.ullTotalPageFile / ( 1024 * 1024 ) ) ;
@@ -563,7 +548,6 @@ BOOL IsOutOfVirtualMemory()
 		return 0;
 
 	MessageBox( NULL , pszMessage , pszError , MB_OK | MB_ICONHAND );
-	SECUROM_MARKER_HIGH_SECURITY_OFF(1)
 
 	return 1;	
 }
@@ -1151,8 +1135,6 @@ void CApplication::Level_Append		(LPCSTR folder)
 
 void CApplication::Level_Scan()
 {
-	SECUROM_MARKER_PERFORMANCE_ON(8)
-
 	for (u32 i=0; i<Levels.size(); i++)
 	{
 		xr_free(Levels[i].folder);
@@ -1168,8 +1150,6 @@ void CApplication::Level_Scan()
 		Level_Append((*folder)[i]);
 	
 	FS.file_list_close		(folder);
-
-	SECUROM_MARKER_PERFORMANCE_OFF(8)
 }
 
 void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
@@ -1187,8 +1167,6 @@ void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
 
 void CApplication::Level_Set(u32 L)
 {
-	SECUROM_MARKER_PERFORMANCE_ON(9)
-
 	if (L>=Levels.size())	return;
 	FS.get_path	("$level$")->_set	(Levels[L].folder);
 
@@ -1223,20 +1201,14 @@ void CApplication::Level_Set(u32 L)
 
 	CheckCopyProtection			();
 
-	SECUROM_MARKER_PERFORMANCE_OFF(9)
 }
 
 int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 {
 	int result = -1;
-
-	SECUROM_MARKER_SECURITY_ON(7)
-
-	auto it		= FS.m_archives.begin();
-	auto it_e	= FS.m_archives.end();
 	bool arch_res					= false;
 
-	for(;it!=it_e;++it)
+	for(auto it = FS.m_archives.begin(); it != FS.m_archives.end(); ++it)
 	{
 		CLocatorAPI::archive& A		= *it;
 		if(A.hSrcFile==NULL)
@@ -1270,8 +1242,6 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 
 	if( arch_res )
 		g_pGamePersistent->OnAssetsChanged	();
-
-	SECUROM_MARKER_SECURITY_OFF(7)
 
 	return result;
 }
