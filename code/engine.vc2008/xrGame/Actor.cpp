@@ -290,44 +290,6 @@ void CActor::Load	(LPCSTR section )
 		self->spatial.type	&= ~STYPE_REACTTOSOUND;
 	}
 	//////////////////////////////////////////////////////////////////////////
-
-	// m_PhysicMovementControl: General
-	//m_PhysicMovementControl->SetParent		(this);
-
-
-	/*
-	Fbox	bb;Fvector	vBOX_center,vBOX_size;
-	// m_PhysicMovementControl: BOX
-	vBOX_center= pSettings->r_fvector3	(section,"ph_box2_center"	);
-	vBOX_size	= pSettings->r_fvector3	(section,"ph_box2_size"		);
-	bb.set	(vBOX_center,vBOX_center); bb.grow(vBOX_size);
-	character_physics_support()->movement()->SetBox		(2,bb);
-
-	// m_PhysicMovementControl: BOX
-	vBOX_center= pSettings->r_fvector3	(section,"ph_box1_center"	);
-	vBOX_size	= pSettings->r_fvector3	(section,"ph_box1_size"		);
-	bb.set	(vBOX_center,vBOX_center); bb.grow(vBOX_size);
-	character_physics_support()->movement()->SetBox		(1,bb);
-
-	// m_PhysicMovementControl: BOX
-	vBOX_center= pSettings->r_fvector3	(section,"ph_box0_center"	);
-	vBOX_size	= pSettings->r_fvector3	(section,"ph_box0_size"		);
-	bb.set	(vBOX_center,vBOX_center); bb.grow(vBOX_size);
-	character_physics_support()->movement()->SetBox		(0,bb);
-	*/
-	
-
-
-	
-	
-	
-	
-	//// m_PhysicMovementControl: Foots
-	//Fvector	vFOOT_center= pSettings->r_fvector3	(section,"ph_foot_center"	);
-	//Fvector	vFOOT_size	= pSettings->r_fvector3	(section,"ph_foot_size"		);
-	//bb.set	(vFOOT_center,vFOOT_center); bb.grow(vFOOT_size);
-	////m_PhysicMovementControl->SetFoots	(vFOOT_center,vFOOT_size);
-
 	// m_PhysicMovementControl: Crash speed and mass
 	float	cs_min		= pSettings->r_float	(section,"ph_crash_speed_min"	);
 	float	cs_max		= pSettings->r_float	(section,"ph_crash_speed_max"	);
@@ -460,19 +422,19 @@ void	CActor::Hit(SHit* pHDS)
 
 	pHDS->aim_bullet = false;
 
-	SHit& HDS	= *pHDS;
-	if( HDS.hit_type<ALife::eHitTypeBurn || HDS.hit_type >= ALife::eHitTypeMax )
+	SHit& HDS = *pHDS;
+	if (HDS.hit_type < ALife::eHitTypeBurn || HDS.hit_type >= ALife::eHitTypeMax)
 	{
 		string256	err;
-		xr_sprintf		(err, "Unknown/unregistered hit type [%d]", HDS.hit_type);
-		R_ASSERT2	(0, err );
-	
+		xr_sprintf(err, "Unknown/unregistered hit type [%d]", HDS.hit_type);
+		R_ASSERT2(0, err);
+
 	}
 #ifdef DEBUG
-	if(ph_dbg_draw_mask.test(phDbgCharacterControl)) {
+	if (ph_dbg_draw_mask.test(phDbgCharacterControl)) {
 		DBG_OpenCashedDraw();
-		Fvector to;to.add(Position(),Fvector().mul(HDS.dir,HDS.phys_impulse()));
-		DBG_DrawLine(Position(),to,D3DCOLOR_XRGB(124,124,0));
+		Fvector to; to.add(Position(), Fvector().mul(HDS.dir, HDS.phys_impulse()));
+		DBG_DrawLine(Position(), to, D3DCOLOR_XRGB(124, 124, 0));
 		DBG_ClosedCashedDraw(500);
 	}
 #endif // DEBUG
@@ -488,143 +450,100 @@ void	CActor::Hit(SHit* pHDS)
 			bPlaySound = false;
 			if (Device.dwFrame != last_hit_frame &&
 				HDS.bone() != BI_NONE)
-			{		
+			{
 				// ��������� ������� � �������������� ��������
-				Fmatrix pos; 
+				Fmatrix pos;
 
-				CParticlesPlayer::MakeXFORM(this,HDS.bone(),HDS.dir,HDS.p_in_bone_space,pos);
+				CParticlesPlayer::MakeXFORM(this, HDS.bone(), HDS.dir, HDS.p_in_bone_space, pos);
 
 				// ���������� particles
 				CParticlesObject* ps = NULL;
 
 				if (eacFirstEye == cam_active && this == Level().CurrentEntity())
-					ps = CParticlesObject::Create(invincibility_fire_shield_1st,TRUE);
+					ps = CParticlesObject::Create(invincibility_fire_shield_1st, TRUE);
 				else
-					ps = CParticlesObject::Create(invincibility_fire_shield_3rd,TRUE);
+					ps = CParticlesObject::Create(invincibility_fire_shield_3rd, TRUE);
 
-				ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
+				ps->UpdateParent(pos, Fvector().set(0.f, 0.f, 0.f));
 				GamePersistent().ps_needtoplay.push_back(ps);
 			};
 		};
-		 
+
 
 		last_hit_frame = Device.dwFrame;
 	};
 
-	if(	!g_dedicated_server				&& 
-		!sndHit[HDS.hit_type].empty()	&&
-		conditions().PlayHitSound(pHDS)	)
+	if (!g_dedicated_server &&
+		!sndHit[HDS.hit_type].empty() &&
+		conditions().PlayHitSound(pHDS))
 	{
-		ref_sound& S			= sndHit[HDS.hit_type][Random.randI(sndHit[HDS.hit_type].size())];
-		bool b_snd_hit_playing	= sndHit[HDS.hit_type].end() != std::find_if(sndHit[HDS.hit_type].begin(), sndHit[HDS.hit_type].end(), playing_pred());
+		ref_sound& S = sndHit[HDS.hit_type][Random.randI(sndHit[HDS.hit_type].size())];
+		bool b_snd_hit_playing = sndHit[HDS.hit_type].end() != std::find_if(sndHit[HDS.hit_type].begin(), sndHit[HDS.hit_type].end(), playing_pred());
 
-		if(ALife::eHitTypeExplosion == HDS.hit_type)
+		if (ALife::eHitTypeExplosion == HDS.hit_type)
 		{
 			if (this == Level().CurrentControlEntity())
 			{
 				S.set_volume(10.0f);
-				if(!m_sndShockEffector){
+				if (!m_sndShockEffector) {
 					m_sndShockEffector = xr_new<SndShockEffector>();
-					m_sndShockEffector->Start(this, float(S.get_length_sec()*1000.0f), HDS.damage() );
+					m_sndShockEffector->Start(this, float(S.get_length_sec()*1000.0f), HDS.damage());
 				}
 			}
 			else
 				bPlaySound = false;
 		}
-		if (bPlaySound && !b_snd_hit_playing) 
+		if (bPlaySound && !b_snd_hit_playing)
 		{
-			Fvector point		= Position();
-			point.y				+= CameraHeight();
-			S.play_at_pos		(this, point);
+			Fvector point = Position();
+			point.y += CameraHeight();
+			S.play_at_pos(this, point);
 		}
 	}
 
-	
+
 	//slow actor, only when he gets hit
 	m_hit_slowmo = conditions().HitSlowmo(pHDS);
 
 	//---------------------------------------------------------------
-	if(		(Level().CurrentViewEntity()==this) && 
-			!g_dedicated_server && 
-			(HDS.hit_type == ALife::eHitTypeFireWound) )
+	if ((Level().CurrentViewEntity() == this) &&
+		!g_dedicated_server &&
+		(HDS.hit_type == ALife::eHitTypeFireWound))
 	{
-		CObject* pLastHitter			= Level().Objects.net_Find(m_iLastHitterID);
-		CObject* pLastHittingWeapon		= Level().Objects.net_Find(m_iLastHittingWeaponID);
-		HitSector						(pLastHitter, pLastHittingWeapon);
+		CObject* pLastHitter = Level().Objects.net_Find(m_iLastHitterID);
+		CObject* pLastHittingWeapon = Level().Objects.net_Find(m_iLastHittingWeaponID);
+		HitSector(pLastHitter, pLastHittingWeapon);
 	}
 
-	if( (mstate_real&mcSprint) && Level().CurrentControlEntity() == this && conditions().DisableSprint(pHDS) )
+	if ((mstate_real&mcSprint) && Level().CurrentControlEntity() == this && conditions().DisableSprint(pHDS))
 	{
-		bool const is_special_burn_hit_2_self	=	(pHDS->who == this) && (pHDS->boneID == BI_NONE) && 
-													((pHDS->hit_type==ALife::eHitTypeBurn)||(pHDS->hit_type==ALife::eHitTypeLightBurn));
-		if ( !is_special_burn_hit_2_self )
-		{
-			mstate_wishful	&=~mcSprint;
-		}
+		bool const is_special_burn_hit_2_self = (pHDS->who == this) && (pHDS->boneID == BI_NONE) &&
+			((pHDS->hit_type == ALife::eHitTypeBurn) || (pHDS->hit_type == ALife::eHitTypeLightBurn));
+		if (!is_special_burn_hit_2_self)
+			mstate_wishful &= ~mcSprint;
 	}
-	if(!g_dedicated_server && !m_disabled_hitmarks)
+	if (!g_dedicated_server && !m_disabled_hitmarks)
 	{
-		bool b_fireWound = (pHDS->hit_type==ALife::eHitTypeFireWound || pHDS->hit_type==ALife::eHitTypeWound_2);
-		b_initiated		 = b_initiated && (pHDS->hit_type==ALife::eHitTypeStrike);
-	
-		if(b_fireWound || b_initiated)
-			HitMark			(HDS.damage(), HDS.dir, HDS.who, HDS.bone(), HDS.p_in_bone_space, HDS.impulse, HDS.hit_type);
+		bool b_fireWound = (pHDS->hit_type == ALife::eHitTypeFireWound || pHDS->hit_type == ALife::eHitTypeWound_2);
+		b_initiated = b_initiated && (pHDS->hit_type == ALife::eHitTypeStrike);
+
+		if (b_fireWound || b_initiated)
+			HitMark(HDS.damage(), HDS.dir, HDS.who, HDS.bone(), HDS.p_in_bone_space, HDS.impulse, HDS.hit_type);
 	}
 
-	if(IsGameTypeSingle())	
+	float hit_power = HitArtefactsOnBelt(HDS.damage(), HDS.hit_type);
+
+	if (GodMode())
 	{
-		float hit_power				= HitArtefactsOnBelt(HDS.damage(), HDS.hit_type);
-
-		if(GodMode())
-		{
-			HDS.power				= 0.0f;
-			inherited::Hit			(&HDS);
-			return;
-		}else 
-		{
-			HDS.power				= hit_power;
-			HDS.add_wound			= true;
-			inherited::Hit			(&HDS);
-		}
-	}else
+		HDS.power = 0.0f;
+		inherited::Hit(&HDS);
+		return;
+	}
+	else
 	{
-		m_bWasBackStabbed			= false;
-		if (HDS.hit_type == ALife::eHitTypeWound_2 && Check_for_BackStab_Bone(HDS.bone()))
-		{
-			// convert impulse into local coordinate system
-			Fmatrix					mInvXForm;
-			mInvXForm.invert		(XFORM());
-			Fvector					vLocalDir;
-			mInvXForm.transform_dir	(vLocalDir,HDS.dir);
-			vLocalDir.invert		();
-
-			Fvector a				= {0,0,1};
-			float res				= a.dotproduct(vLocalDir);
-			if (res < -0.707)
-			{
-				game_PlayerState* ps = Game().GetPlayerByGameID(ID());
-				
-				if (!ps || !ps->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))						
-					m_bWasBackStabbed = true;
-			}
-		};
-		
-		float hit_power				= 0.0f;
-
-		if (m_bWasBackStabbed) 
-			hit_power				= (HDS.damage() == 0) ? 0 : 100000.0f;
-		else 
-			hit_power				= HitArtefactsOnBelt(HDS.damage(), HDS.hit_type);
-
-		HDS.power					= hit_power;
-		HDS.add_wound				= true;
-		inherited::Hit				(&HDS);
-
-		if(OnServer() && !g_Alive() && HDS.hit_type==ALife::eHitTypeExplosion)
-		{
-			game_PlayerState* ps							= Game().GetPlayerByGameID(ID());
-			Game().m_WeaponUsageStatistic->OnExplosionKill	(ps, HDS);
-		}
+		HDS.power = hit_power;
+		HDS.add_wound = true;
+		inherited::Hit(&HDS);
 	}
 }
 
@@ -717,63 +636,54 @@ void CActor::HitSignal(float perc, Fvector& vLocalDir, CObject* who, s16 element
 		float power_factor = perc/100.f; clamp(power_factor,0.f,1.f);
 		VERIFY(motion_ID.valid());
 		tpKinematics->PlayFX(motion_ID,power_factor);
+
+		callback(GameObject::eHit)(lua_game_object(), perc, vLocalDir, smart_cast<const CGameObject*>(who)->lua_game_object(), element);
 	}
 }
 void start_tutorial(LPCSTR name);
-void CActor::Die	(CObject* who)
+void CActor::Die(CObject* who)
 {
 #ifdef DEBUG
 	Msg("--- Actor [%s] dies !", this->Name());
 #endif // #ifdef DEBUG
-	inherited::Die		(who);
+	inherited::Die(who);
 
 	if (OnServer())
-	{	
+	{
 		u16 I = inventory().FirstSlot();
 		u16 E = inventory().LastSlot();
 
 		for (; I <= E; ++I)
 		{
 			PIItem item_in_slot = inventory().ItemFromSlot(I);
-			if (I == inventory().GetActiveSlot()) 
+			if (I == inventory().GetActiveSlot())
 			{
-				if(item_in_slot)
+				if (item_in_slot && IsGameTypeSingle())
 				{
-					if (IsGameTypeSingle())
-					{
-						CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
-						if (grenade)
-							grenade->DropGrenade();
-						else
-							item_in_slot->SetDropManual(TRUE);
-					}else
-					{
-						//This logic we do on a server site
-						/*
-						if ((*I).m_pIItem->object().CLS_ID != CLSID_OBJECT_W_KNIFE)
-						{
-							(*I).m_pIItem->SetDropManual(TRUE);
-						}*/							
-					}
+					CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
+					if (grenade)
+						grenade->DropGrenade();
+					else
+						item_in_slot->SetDropManual(TRUE);
 				};
-			continue;
+				continue;
 			}
 			else
 			{
 				CCustomOutfit *pOutfit = smart_cast<CCustomOutfit *> (item_in_slot);
 				if (pOutfit) continue;
 			};
-			if(item_in_slot) 
+			if (item_in_slot)
 				inventory().Ruck(item_in_slot);
 		};
 
 
 		///!!! ������ �����
 		TIItemContainer &l_blist = inventory().m_belt;
-		while (!l_blist.empty())	
+		while (!l_blist.empty())
 			inventory().Ruck(l_blist.front());
-
-		if (!IsGameTypeSingle())
+		// FX: всё равно мультиплеер полетит... 
+		/* if (!IsGameTypeSingle())
 		{
 			//if we are on server and actor has PDA - destroy PDA
 			TIItemContainer &l_rlist	= inventory().m_ruck;
@@ -796,44 +706,36 @@ void CActor::Die	(CObject* who)
 				};
 			};
 		};
+		*/
 	};
 
-	if(!g_dedicated_server)
+	if (!g_dedicated_server)
 	{
-		::Sound->play_at_pos	(sndDie[Random.randI(SND_DIE_COUNT)],this,Position());
+		::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
 
-		m_HeavyBreathSnd.stop	();
-		m_BloodSnd.stop			();		
-		m_DangerSnd.stop		();		
+		m_HeavyBreathSnd.stop();
+		m_BloodSnd.stop();
+		m_DangerSnd.stop();
 	}
 
-	if	(IsGameTypeSingle())
-	{
-		cam_Set				(eacFreeLook);
-		CurrentGameUI()->HideShownDialogs();
-		start_tutorial		("game_over");
-	} else
-	{
-		cam_Set				(eacFixedLookAt);
-	}
-	
-	mstate_wishful	&=		~mcAnyMove;
-	mstate_real		&=		~mcAnyMove;
+	//cam_Set(eacFreeLook);
+	lua_State* l;
+	luaL_dofile(l, "sk_actor_death.script");
+	CurrentGameUI()->HideShownDialogs();
+	start_tutorial("game_over");
 
-	xr_delete				(m_sndShockEffector);
+	mstate_wishful &= ~mcAnyMove;
+	mstate_real &= ~mcAnyMove;
+
+	xr_delete(m_sndShockEffector);
 }
 
 void	CActor::SwitchOutBorder(bool new_border_state)
 {
 	if(new_border_state)
-	{
 		callback(GameObject::eExitLevelBorder)(lua_game_object());
-	}
-	else 
-	{
-//.		Msg("enter level border");
+	else
 		callback(GameObject::eEnterLevelBorder)(lua_game_object());
-	}
 	m_bOutBorder=new_border_state;
 }
 
@@ -846,9 +748,6 @@ void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
 	if(m_hit_slowmo<0)			m_hit_slowmo = 0.f;
 
 	accel.mul					(1.f-m_hit_slowmo);
-
-	
-	
 
 	if(g_Alive())
 	{

@@ -129,7 +129,7 @@
       <TypeLibraryName>.\Release/xrLC.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/Gs  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Gs  /openmp %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -166,7 +166,7 @@
       <Culture>0x0419</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/MACHINE:I386 /openmp %(AdditionalOptions)</AdditionalOptions>
       <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\x86;..\..\..\sdk\libraries;..\..\..\..\libraries\release\utils\;..\..\..\..\libraries\release\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -195,7 +195,7 @@
       <TypeLibraryName>.\Release/xrLC.tlb</TypeLibraryName>
     </Midl>
     <ClCompile>
-      <AdditionalOptions>/Gs  %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/Gs  /openmp %(AdditionalOptions)</AdditionalOptions>
       <Optimization>Full</Optimization>
       <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
       <IntrinsicFunctions>true</IntrinsicFunctions>
@@ -250,6 +250,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>..\..\..\libraries\$(ProjectName).lib</ImportLibrary>
+      <AdditionalOptions>/openmp %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
@@ -520,7 +521,7 @@
     <ClInclude Include="xrGameMaterials.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\common\NvMender2003\NVMeshMender.cpp" />
+    <ClCompile Include="..\common\NvMender2003\NVMeshMender3.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -534,7 +535,9 @@
     <ClCompile Include="NV_Library\NvTriStrip.cpp" />
     <ClCompile Include="NV_Library\NvTriStripObjects.cpp" />
     <ClCompile Include="NV_Library\VertexCache.cpp" />
-    <ClCompile Include="NvMender2002\NVMeshMender.cpp" />
+    <ClCompile Include="NvMender2002\NVMeshMender.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="NvMender2002\nv_algebra.cpp" />
     <ClCompile Include="Build.cpp" />
     <ClCompile Include="Build_Load.cpp" />

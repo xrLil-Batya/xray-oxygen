@@ -1080,69 +1080,20 @@ void CAI_Stalker::spawn_supplies	()
 	CObjectHandler::spawn_supplies	();
 }
 
-void CAI_Stalker::Think			()
+void CAI_Stalker::Think()
 {
 	START_PROFILE("stalker/schedule_update/think")
-	u32							update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
-	
-	START_PROFILE("stalker/schedule_update/think/brain")
-//	try {
-//		try {
-			brain().update			(update_delta);
-//		}
-#ifdef DEBUG
-//		catch (luabind::cast_failed &message) {
-//			Msg						("! Expression \"%s\" from luabind::object to %s",message.what(),message.info()->name());
-			//throw;
-//		}
-#endif
-//		catch (std::exception &message) {
-//			Msg						("! Expression \"%s\"",message.what());
-//			throw;
-//		}
-//		catch (...) {
-//			Msg						("! unknown exception occured");
-//			throw;
-//		}
-//	}
-//	catch(...) {
-#ifdef DEBUG
-//		Msg						("! Last action being executed : %s",brain().current_action().m_action_name);
-#endif
-//		brain().setup			(this);
-//		brain().update			(update_delta);
-//	}
-	STOP_PROFILE
+		u32							update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
 
-	START_PROFILE("stalker/schedule_update/think/movement")
-	if (!g_Alive())
-		return;
+		START_PROFILE("stalker/schedule_update/think/brain")
+			brain().update(update_delta);
+		STOP_PROFILE
 
-//	try {
-		movement().update		(update_delta);
-//	}
-#if 0//def DEBUG
-	catch (luabind::cast_failed &message) {
-		Msg						("! Expression \"%s\" from luabind::object to %s",message.what(),message.info()->name());
-		movement().initialize	();
-		movement().update		(update_delta);
-		throw;
-	}
-	catch (std::exception &message) {
-		Msg						("! Expression \"%s\"",message.what());
-		movement().initialize	();
-		movement().update		(update_delta);
-		throw;
-	}
-	catch (...) {
-		Msg						("! unknown exception occured");
-		movement().initialize	();
-		movement().update		(update_delta);
-		throw;
-	}
-#endif // DEBUG
+		START_PROFILE("stalker/schedule_update/think/movement")
+			if (!g_Alive()) return;
+		movement().update(update_delta);
 
-	STOP_PROFILE
+		STOP_PROFILE
 	STOP_PROFILE
 }
 
@@ -1226,15 +1177,13 @@ bool CAI_Stalker::use_center_to_aim		() const
 
 void CAI_Stalker::UpdateCamera			()
 {
-	float								new_range = eye_range, new_fov = eye_fov;
-	Fvector								temp = eye_matrix.k;
-	if (g_Alive()) {
-		update_range_fov				(new_range, new_fov, memory().visual().current_state().m_max_view_distance*eye_range, eye_fov);
-		if (weapon_shot_effector().IsActive())
-			temp						= weapon_shot_effector_direction(temp);
-	}
+	u16 bone_id = smart_cast<IKinematics*>(Visual())->LL_BoneID("bip01_head");
+	CBoneInstance &bone = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(bone_id);
 
-	g_pGameLevel->Cameras().Update		(eye_matrix.c,temp,eye_matrix.j,new_fov,.75f,new_range,0);
+	Fmatrix	global_transform;
+	global_transform.mul(XFORM(), bone.mTransform);
+
+	g_pGameLevel->Cameras().Update(global_transform.c, global_transform.k, eye_matrix.j, g_fov, .75f, eye_range);
 }
 
 bool CAI_Stalker::can_attach			(const CInventoryItem *inventory_item) const

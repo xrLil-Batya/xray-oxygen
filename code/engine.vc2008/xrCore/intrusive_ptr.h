@@ -11,7 +11,7 @@
 #pragma pack(push, 4) // TODO: (portability)
 
 struct intrusive_base {
-    intrusive_base() XR_NOEXCEPT
+    intrusive_base() noexcept
         : m_ref_count(0)
     {
     }
@@ -25,20 +25,9 @@ struct intrusive_base {
         }
     }
 
-    void acquire() XR_NOEXCEPT
-    {
-        ++m_ref_count;
-    }
-
-    bool release() XR_NOEXCEPT
-    {
-        return --m_ref_count == 0;
-    }
-
-    bool released() const XR_NOEXCEPT
-    {
-        return m_ref_count == 0;
-    }
+    IC void acquire()			noexcept { ++m_ref_count; }
+    IC bool release()			noexcept { return --m_ref_count == 0; }
+    IC bool released() const	noexcept { return m_ref_count == 0; }
 
 private:
     std::size_t m_ref_count;
@@ -65,7 +54,7 @@ protected:
     }
 
 public:
-    intrusive_ptr() XR_NOEXCEPT
+    intrusive_ptr() noexcept
         : m_object(nullptr)
     {
     }
@@ -124,13 +113,13 @@ public:
         return *this;
     }
 
-    object_type& operator*() const XR_NOEXCEPT
+    IC object_type& operator*() const XR_NOEXCEPT
     {
         VERIFY(m_object);
         return *m_object;
     }
 
-    object_type* operator->() const XR_NOEXCEPT
+	IC object_type* operator->() const XR_NOEXCEPT
     {
         VERIFY(m_object);
         return m_object;
@@ -168,7 +157,7 @@ public:
         rhs.m_object = tmp;
     }
 
-    const object_type* get() const XR_NOEXCEPT
+    IC const object_type* get() const noexcept
     {
         return m_object;
     }

@@ -41,9 +41,8 @@ struct R_Layer
 	R_Control				control;
 	xr_vector<R_Light>		lights;
 };
-
-
-
+#include <omp.h>
+//#include <vcclr.h>
 void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 {
 	is_surface_fatal = is_thm_fatal = false;
@@ -180,7 +179,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 
 	//*******
 	Status	("Other transfer...");
-	transfer("materials",	materials(),			fs,		EB_Materials);
+	transfer("materials",	materials(),		fs,		EB_Materials);
 	transfer("shaders",		shader_render,		fs,		EB_Shaders_Render);
 	transfer("shaders_xrlc",shader_compile,		fs,		EB_Shaders_Compile);
 	transfer("glows",		glows,				fs,		EB_Glows);
@@ -188,6 +187,9 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	transfer("LODs",		lods,				fs,		EB_LOD_models);
 
 	// Load lights
+	//VCCLCompilerTool::OpenMP
+	omp_set_num_threads(8);
+#pragma omp parallel
 	Status	("Loading lights...");
 	{
 		xr_vector<R_Layer>			L_layers;
