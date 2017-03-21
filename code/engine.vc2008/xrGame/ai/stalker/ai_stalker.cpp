@@ -1183,7 +1183,7 @@ void CAI_Stalker::UpdateCamera			()
 	Fmatrix	global_transform;
 	global_transform.mul(XFORM(), bone.mTransform);
 
-	g_pGameLevel->Cameras().Update(global_transform.c, global_transform.k, eye_matrix.j, g_fov, .75f, eye_range);
+	g_pGameLevel->Cameras().Update(global_transform.c, global_transform.k, eye_matrix.j, g_fov, .75f, eye_range, 0);
 }
 
 bool CAI_Stalker::can_attach			(const CInventoryItem *inventory_item) const

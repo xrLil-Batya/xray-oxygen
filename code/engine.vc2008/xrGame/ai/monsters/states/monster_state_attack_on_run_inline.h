@@ -1,11 +1,8 @@
-#ifndef MONSTER_STATE_ATTACK_ON_RUN_INLINE_H
-#define MONSTER_STATE_ATTACK_ON_RUN_INLINE_H
+#pragma once 
 
 #include "../monster_velocity_space.h"
-
 #include "../../../../xrCore/_vector3d_ext.h"
 #include "../../../level_graph.h"
-
 #define TEMPLATE_SIGNATURE template <typename _Object>
 
 #define ATTACK_ON_RUN_STATE CStateMonsterAttackOnRun<_Object>
@@ -657,5 +654,3 @@ bool ATTACK_ON_RUN_STATE::check_completion()
 
 #undef TEMPLATE_SIGNATURE
 #undef ATTACK_ON_RUN_STATE
-
-#endif // MONSTER_STATE_ATTACK_ON_RUN_INLINE_H

@@ -320,10 +320,6 @@ void CLevel::ClientReceive()
 			{
 				ClientSave			();
 			}break;
-		case M_GAMESPY_CDKEY_VALIDATION_CHALLENGE:
-			{
-				OnGameSpyChallenge(P);
-			}break;
 		case M_AUTH_CHALLENGE:
 			{
 				ClientSendProfileData		();
@@ -335,11 +331,6 @@ void CLevel::ClientReceive()
 			}break;
 		case M_CHAT_MESSAGE:
 			{
-				/*if (!game_configured)
-				{
-					Msg("! WARNING: ignoring game event [%d] - game not configured...", m_type);
-					break;
-				}*/
 				if (!game) break;
 				Game().OnChatMessage(P);
 			}break;

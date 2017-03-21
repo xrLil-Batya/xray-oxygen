@@ -11,7 +11,6 @@
 #include "UI/UIDialogWnd.h"
 #include "string_table.h"
 #include "game_cl_base_weapon_usage_statistic.h"
-#include "game_sv_mp_vote_flags.h"
 
 EGameIDs ParseStringToGameType	(LPCSTR str);
 LPCSTR GameTypeToString			(EGameIDs gt, bool bShort);
@@ -144,8 +143,8 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 			//-----------------------------------------------
 			IP->net_Import(P);
 			//-----------------------------------------------
-			if (OldFlags != IP->flags__)
-				if (Type() != eGameIDSingle) OnPlayerFlagsChanged(IP);
+			//if (OldFlags != IP->flags__)
+				//if (Type() != eGameIDSingle) OnPlayerFlagsChanged(IP);
 			if (OldVote != IP->m_bCurrentVoteAgreed)
 				OnPlayerVoted(IP);
 			//***********************************************
@@ -159,8 +158,8 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 			
 			IP = createPlayerState	(&P);
 			
-			if (Type() != eGameIDSingle)
-				OnPlayerFlagsChanged(IP);
+			//if (Type() != eGameIDSingle)
+			//	OnPlayerFlagsChanged(IP);
 
 			players.insert			(std::make_pair(ID,IP));
 			valid_players.push_back	(ID);
@@ -200,8 +199,8 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 		//-----------------------------------------------
 		IP->net_Import(P);
 		//-----------------------------------------------
-		if (OldFlags != IP->flags__)
-			if (Type() != eGameIDSingle) OnPlayerFlagsChanged(IP);
+		//if (OldFlags != IP->flags__)
+			//if (Type() != eGameIDSingle) OnPlayerFlagsChanged(IP);
 		if (OldVote != IP->m_bCurrentVoteAgreed)
 			OnPlayerVoted(IP);
 		//***********************************************
@@ -236,20 +235,12 @@ void game_cl_GameState::TranslateGameMessage	(u32 msg, NET_Packet& P)
 			ClientID newClientId;
 			P.r_clientID(newClientId);
 			game_PlayerState*	PS = NULL;
-			if (newClientId == local_svdpnid)
-			{
-				PS = local_player;
-			} else
-			{
-				PS = createPlayerState(&P);
-			}
+
+			if (newClientId == local_svdpnid) PS = local_player;
+			else PS = createPlayerState(&P);
+
 			VERIFY2(PS, "failed to create player state");
 			
-			if (Type() != eGameIDSingle)
-			{
-				players.insert(std::make_pair(newClientId, PS));
-				OnNewPlayerConnected(newClientId);
-			}
 			xr_sprintf(Text, "%s%s %s%s",Color_Teams[0],PS->getName(),Color_Main,*st.translate("mp_connected"));
 			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
 			//---------------------------------------
@@ -342,8 +333,6 @@ void game_cl_GameState::shedule_Update		(u32 dt)
 	{
 	case GAME_PHASE_INPROGRESS:
 		{
-			if (!IsGameTypeSingle())
-				m_WeaponUsageStatistic->Update();
 		}break;
 	default:
 		{

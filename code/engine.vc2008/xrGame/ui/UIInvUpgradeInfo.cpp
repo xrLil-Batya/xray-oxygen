@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "pch_script.h"
+#include "script_engine.h"
 #include "UIInvUpgradeInfo.h"
 #include "../string_table.h"
 #include "../Actor.h"

@@ -2,7 +2,7 @@
 #include "UIMoneyIndicator.h"
 #include "xrUIXmlParser.h"
 #include "UIXmlInit.h"
-#include "UIGameLog.h"
+#include "UIGameLog.hpp"
 
 CUIMoneyIndicator::CUIMoneyIndicator(){
 	AttachChild(&m_back);
@@ -43,11 +43,6 @@ void CUIMoneyIndicator::SetMoneyChange(LPCSTR money)
 {
 	m_money_change.SetText				(money);
 	m_money_change.ResetColorAnimation	();
-}
-
-void CUIMoneyIndicator::AddBonusMoney(KillMessageStruct& msg)
-{
-	m_pBonusMoney->AddLogMessage(msg);
 }
 
 void CUIMoneyIndicator::Update()

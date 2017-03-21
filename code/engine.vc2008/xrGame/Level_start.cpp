@@ -4,7 +4,6 @@
 #include "xrserver.h"
 #include "game_cl_base.h"
 #include "xrmessages.h"
-#include "xrGameSpyServer.h"
 #include "../xrEngine/x_ray.h"
 #include "../xrEngine/device.h"
 #include "../xrEngine/IGame_Persistent.h"
@@ -12,7 +11,6 @@
 #include "MainMenu.h"
 #include "string_table.h"
 #include "UIGameCustom.h"
-#include "ui/UICDkey.h"
 
 int		g_cl_save_demo = 0;
 extern XRCORE_API bool g_allow_heap_min;
@@ -34,12 +32,8 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	pApp->LoadBegin				();
 
 	string64	player_name;
-	GetPlayerName_FromRegistry( player_name, sizeof(player_name) );
-
-	if ( xr_strlen(player_name) == 0 )
-	{
-		xr_strcpy( player_name, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName );
-	}
+	xr_strcpy( player_name, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName );
+	
 	VERIFY( xr_strlen(player_name) );
 
 	//make Client Name if options doesn't have it
@@ -112,14 +106,8 @@ bool CLevel::net_start1				()
 		typedef IGame_Persistent::params params;
 		params							&p = g_pGamePersistent->m_game_params;
 		// Connect
-		if (!xr_strcmp(p.m_game_type,"single"))
-		{
-			Server					= xr_new<xrServer>();
-		} else
-		{
-			g_allow_heap_min		= false;
-			Server					= xr_new<xrGameSpyServer>();
-		}
+		Server							= xr_new<xrServer>();
+		
 
 		if (xr_strcmp(p.m_alife,"alife"))
 		{
@@ -138,10 +126,8 @@ bool CLevel::net_start1				()
 				return true;
 			}
 		}
-	} else
-	{
-		g_allow_heap_min = false;
-	}
+	} else g_allow_heap_min = false;
+	
 	return true;
 }
 
@@ -263,7 +249,6 @@ bool CLevel::net_start6				()
 			DEL_INSTANCE	(g_pGameLevel);
 			Console->Execute("main_menu on");
 
-			MainMenu()->SwitchToMultiplayerMenu();
 		}
 		else
 		if (!map_data.m_map_loaded && map_data.m_name.size() && m_bConnectResult)	//if (map_data.m_name == "") - level not loaded, see CLevel::net_start_client3
@@ -281,11 +266,6 @@ bool CLevel::net_start6				()
 			DEL_INSTANCE	(g_pGameLevel);
 			Console->Execute("main_menu on");
 
-			if	(!g_dedicated_server)
-			{
-				MainMenu()->SwitchToMultiplayerMenu();
-				MainMenu()->Show_DownloadMPMap(dialog_string, download_url);
-			}
 		}
 		else
 		if (map_data.IsInvalidClientChecksum())
@@ -303,11 +283,6 @@ bool CLevel::net_start6				()
 			g_pGameLevel->net_Stop();
 			DEL_INSTANCE	(g_pGameLevel);
 			Console->Execute("main_menu on");
-			if	(!g_dedicated_server)
-			{
-				MainMenu()->SwitchToMultiplayerMenu();
-				MainMenu()->Show_DownloadMPMap(dialog_string, download_url);
-			}
 		}
 		else 
 		{
@@ -343,11 +318,6 @@ void CLevel::InitializeClientGame	(NET_Packet& P)
 	game->set_type_name		(game_type_name);
 	game->Init				();
 	m_bGameConfigStarted	= TRUE;
-
-	if (!IsGameTypeSingle())
-	{
-		init_compression();
-	}
 	
 	R_ASSERT				(Load_GameSpecific_After ());
 }

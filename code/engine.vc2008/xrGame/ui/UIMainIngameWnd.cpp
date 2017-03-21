@@ -50,7 +50,6 @@
 #include "../game_news.h"
 
 #include "static_cast_checked.hpp"
-#include "game_cl_capture_the_artefact.h"
 #include "UIHudStatesWnd.h"
 #include "UIActorMenu.h"
 
@@ -320,81 +319,39 @@ void CUIMainIngameWnd::Update()
 	CUIWindow::Update();
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
 
-	if ( m_pMPChatWnd )
+	if (m_pMPChatWnd)
 		m_pMPChatWnd->Update();
 
-	if ( m_pMPLogWnd )
+	if (m_pMPLogWnd)
 		m_pMPLogWnd->Update();
 
-	if ( !pActor )
+	if (!pActor)
 		return;
 
 	UIZoneMap->Update();
-	
-//	UIHealthBar.SetProgressPos	(m_pActor->GetfHealth()*100.0f);
-//	UIMotionIcon->SetPower		(m_pActor->conditions().GetPower()*100.0f);
-	
-	UpdatePickUpItem			();
 
-	if( Device.dwFrame % 10 )
+	//	UIHealthBar.SetProgressPos	(m_pActor->GetfHealth()*100.0f);
+	//	UIMotionIcon->SetPower		(m_pActor->conditions().GetPower()*100.0f);
+
+	UpdatePickUpItem();
+
+	if (Device.dwFrame % 10)
 		return;
 
 	game_PlayerState* lookat_player = Game().local_player;
 	if (Level().IsDemoPlayStarted())
-	{
 		lookat_player = Game().lookat_player();
-	}
-	bool b_God = ( GodMode() || ( !lookat_player ) )? true : lookat_player->testFlag(GAME_PLAYER_FLAG_INVINCIBLE);
-	if ( b_God )
-	{
-		SetWarningIconColor( ewiInvincible, 0xffffffff );
-	}
-	else
-	{
-		SetWarningIconColor( ewiInvincible, 0x00ffffff );
-	}
-	
-	UpdateMainIndicators();
-	if (IsGameTypeSingle())
-		return;
 
-	// ewiArtefact
-	if ( GameID() == eGameIDArtefactHunt )
-	{
-		bool b_Artefact = !!( pActor->inventory().ItemFromSlot(ARTEFACT_SLOT) );
-		if ( b_Artefact )
-		{
-			SetWarningIconColor( ewiArtefact, 0xffffff00 );
-		}
-		else
-		{
-			SetWarningIconColor( ewiArtefact, 0x00ffffff );
-		}
-	}
-	else if ( GameID() == eGameIDCaptureTheArtefact )
-	{
-		//this is a bad style... It left for backward compatibility
-		//need to move this logic into UIGameCTA class
-		//bool b_Artefact = (NULL != m_pActor->inventory().ItemFromSlot(ARTEFACT_SLOT));
-		game_cl_CaptureTheArtefact* cta_game = static_cast_checked<game_cl_CaptureTheArtefact*>(&Game());
-		R_ASSERT(cta_game);
-		R_ASSERT(lookat_player);
-		
-		if ( ( pActor->ID() == cta_game->GetGreenArtefactOwnerID() ) ||
-			 ( pActor->ID() == cta_game->GetBlueArtefactOwnerID()  ) )
-		{
-			SetWarningIconColor( ewiArtefact, 0xffff0000 );
-		}
-		else if ( pActor->inventory().ItemFromSlot(ARTEFACT_SLOT) ) //own artefact
-		{
-			SetWarningIconColor( ewiArtefact, 0xff00ff00 );
-		}
-		else
-		{
-			SetWarningIconColor(ewiArtefact, 0x00ffffff );
-		}
-	}
-}//update
+	bool b_God = (GodMode() || (!lookat_player)) ? true : lookat_player->testFlag(GAME_PLAYER_FLAG_INVINCIBLE);
+	if (b_God)
+		SetWarningIconColor(ewiInvincible, 0xffffffff);
+	else
+		SetWarningIconColor(ewiInvincible, 0x00ffffff);
+
+	UpdateMainIndicators();
+	return;
+
+} //update
 
 
 void CUIMainIngameWnd::RenderQuickInfos()

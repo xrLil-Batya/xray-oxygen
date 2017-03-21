@@ -1,5 +1,5 @@
 #pragma once
-#include "UIGameLog.h"
+#include "UIWindow.h"
 
 #include "../hudsound.h"
 #include "../../xrServerEntities/alife_space.h"
@@ -14,6 +14,9 @@ class	CMissile;
 class	CInventoryItem;
 class	CUIHudStatesWnd;
 class	CUIMotionIcon;
+class	CUIStatic;
+class	CUITextWnd;
+class	CUIXml;
 
 class CUIMainIngameWnd: public CUIWindow  
 {

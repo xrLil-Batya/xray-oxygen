@@ -32,18 +32,9 @@ game_PlayerState::game_PlayerState(NET_Packet* account_info)
 	clear				();
 
 	if (account_info)
-	{
 		net_Import(*account_info);
-	} else
-	{
-		if (g_dedicated_server)
-		{
-			setFlag(GAME_PLAYER_FLAG_SKIP);
-		} else
-		{
-			m_account.load_account();
-		}
-	}
+	else if(g_dedicated_server)
+		setFlag(GAME_PLAYER_FLAG_SKIP);
 }
 
 void game_PlayerState::clear()
@@ -96,84 +87,14 @@ void game_PlayerState::resetFlag(u16 f)
 
 void	game_PlayerState::net_Export(NET_Packet& P, BOOL Full)
 {
-	P.w_u8			(Full ? 1 : 0);
-	
-	P.w_u8			(	team	);
-	P.w_s16			(	m_iRivalKills	);
-	P.w_s16			(	m_iSelfKills	);
-	P.w_s16			(	m_iTeamKills	);
-	P.w_s16			(	m_iDeaths		);
-	P.w_s32			(	money_for_round	);
-	P.w_u8			(	rank		);
-	P.w_u8			(	af_count	);
-	P.w_u16			(	flags__	);
-	P.w_u16			(	ping	);
-
-	P.w_u16			(	GameID	);
-	P.w_s8			(	skin	);
-	P.w_u8			(	m_bCurrentVoteAgreed	);
-
-	P.w_u32			(Device.dwTimeGlobal - DeathTime);
-	if (Full)
-	{
-		m_account.net_Export(P);
-	}
 };
 
 void	game_PlayerState::net_Import(NET_Packet& P)
 {
-	BOOL	bFullUpdate = !!P.r_u8();
-
-	P.r_u8			(	team	);
-	
-	P.r_s16			(	m_iRivalKills	);
-	P.r_s16			(	m_iSelfKills	);
-	P.r_s16			(	m_iTeamKills	);
-	P.r_s16			(	m_iDeaths		);
-
-	P.r_s32			(	money_for_round	);
-	P.r_u8			(	rank		);
-	P.r_u8			(	af_count	);
-	P.r_u16			(	flags__	);
-	P.r_u16			(	ping	);
-
-	P.r_u16			(	GameID	);
-	P.r_s8			(	skin	);
-	P.r_u8			(	m_bCurrentVoteAgreed	);
-
-	DeathTime = P.r_u32();
-	if (bFullUpdate)
-	{
-		m_account.net_Import(P);
-	}
 };
 
 void	game_PlayerState::skip_Import(NET_Packet& P)
 {
-	BOOL	bFullUpdate = !!P.r_u8();
-
-	P.r_u8			();//	team	);
-	
-	P.r_s16			();//	m_iRivalKills	);
-	P.r_s16			();//	m_iSelfKills	);
-	P.r_s16			();//	m_iTeamKills	);
-	P.r_s16			();//	m_iDeaths		);
-
-	P.r_s32			();//	money_for_round	);
-	P.r_u8			();//	rank		);
-	P.r_u8			();//	af_count	);
-	P.r_u16			();//	flags__	);
-	P.r_u16			();//	ping	);
-
-	P.r_u16			();//	GameID	);
-	P.r_s8			();//	skin	);
-	P.r_u8			();//	m_bCurrentVoteAgreed	);
-
-	P.r_u32(); //DeathTime
-	if (bFullUpdate)
-	{
-		player_account::skip_Import(P);
-	}
 }
 
 void	game_PlayerState::SetGameID				(u16 NewID)
@@ -243,27 +164,8 @@ CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 	{
 	case eGameIDSingle:
 		return			(isServer)?TEXT2CLSID("SV_SINGL"):TEXT2CLSID("CL_SINGL");
-		break;
-
-	case eGameIDDeathmatch:
-		return			(isServer)?TEXT2CLSID("SV_DM"):TEXT2CLSID("CL_DM");
-		break;
-
-	case eGameIDTeamDeathmatch:
-		return			(isServer)?TEXT2CLSID("SV_TDM"):TEXT2CLSID("CL_TDM");
-		break;
-
-	case eGameIDArtefactHunt:
-		return			(isServer)?TEXT2CLSID("SV_AHUNT"):TEXT2CLSID("CL_AHUNT");
-		break;
-
-	case eGameIDCaptureTheArtefact:
-		return			(isServer)?TEXT2CLSID("SV_CTA"):TEXT2CLSID("CL_CTA");
-		break;
-
 	default:
 		return			(TEXT2CLSID(""));
-		break;
 	}
 }
 

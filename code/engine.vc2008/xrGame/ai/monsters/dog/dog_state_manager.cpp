@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "dog.h"
 #include "dog_state_manager.h"
+#include "ai_space.h"
 #include "../control_animation_base.h"
 #include "../control_direction_base.h"
 #include "../control_movement_base.h"
@@ -49,32 +50,24 @@ void CStateManagerDog::execute()
 	const CEntityAlive* enemy = object->EnemyMan.get_enemy();
 
 	bool atack = false;
-	if ( enemy )
+	if (enemy)
 	{
 		const Fvector3& enemy_pos = enemy->Position();
 
-		if ( squad )
+		if (squad)
 		{
-			if ( object->Home->at_min_home(enemy_pos) )
-			{
+			if (object->Home->at_min_home(enemy_pos))
 				squad->set_home_in_danger();
-			}
 
-			if ( object->Position().distance_to(enemy_pos) < detail::dog::atack_decision_maxdist )
-			{
+			if (object->Position().distance_to(enemy_pos) < detail::dog::atack_decision_maxdist)
 				squad->set_home_in_danger();
-			}
 
-			if ( squad->home_in_danger() )
-			{
+			if (squad->home_in_danger())
 				atack = true;
-			}
 		}
 
-		if ( object->Home->at_mid_home(enemy_pos) )
-		{
+		if (object->Home->at_mid_home(enemy_pos))
 			atack = true;
-		}
 	}
 
 	if ( !object->is_under_control() )

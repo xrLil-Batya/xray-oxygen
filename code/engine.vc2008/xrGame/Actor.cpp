@@ -442,37 +442,6 @@ void	CActor::Hit(SHit* pHDS)
 	bool bPlaySound = true;
 	if (!g_Alive()) bPlaySound = false;
 
-	if (!IsGameTypeSingle() && !g_dedicated_server)
-	{
-		game_PlayerState* ps = Game().GetPlayerByGameID(ID());
-		if (ps && ps->testFlag(GAME_PLAYER_FLAG_INVINCIBLE))
-		{
-			bPlaySound = false;
-			if (Device.dwFrame != last_hit_frame &&
-				HDS.bone() != BI_NONE)
-			{
-				// ��������� ������� � �������������� ��������
-				Fmatrix pos;
-
-				CParticlesPlayer::MakeXFORM(this, HDS.bone(), HDS.dir, HDS.p_in_bone_space, pos);
-
-				// ���������� particles
-				CParticlesObject* ps = NULL;
-
-				if (eacFirstEye == cam_active && this == Level().CurrentEntity())
-					ps = CParticlesObject::Create(invincibility_fire_shield_1st, TRUE);
-				else
-					ps = CParticlesObject::Create(invincibility_fire_shield_3rd, TRUE);
-
-				ps->UpdateParent(pos, Fvector().set(0.f, 0.f, 0.f));
-				GamePersistent().ps_needtoplay.push_back(ps);
-			};
-		};
-
-
-		last_hit_frame = Device.dwFrame;
-	};
-
 	if (!g_dedicated_server &&
 		!sndHit[HDS.hit_type].empty() &&
 		conditions().PlayHitSound(pHDS))
@@ -1322,37 +1291,6 @@ void CActor::OnHUDDraw	(CCustomHUD*)
 	R_ASSERT						(IsFocused());
 	if(! ( (mstate_real & mcLookout) && !IsGameTypeSingle() ) )
 		g_player_hud->render_hud		();
-
-
-#if 0//ndef NDEBUG
-	if (Level().CurrentControlEntity() == this && g_ShowAnimationInfo)
-	{
-		string128 buf;
-		UI().Font().pFontStat->SetColor	(0xffffffff);
-		UI().Font().pFontStat->OutSet		(170,530);
-		UI().Font().pFontStat->OutNext	("Position:      [%3.2f, %3.2f, %3.2f]",VPUSH(Position()));
-		UI().Font().pFontStat->OutNext	("Velocity:      [%3.2f, %3.2f, %3.2f]",VPUSH(m_PhysicMovementControl->GetVelocity()));
-		UI().Font().pFontStat->OutNext	("Vel Magnitude: [%3.2f]",m_PhysicMovementControl->GetVelocityMagnitude());
-		UI().Font().pFontStat->OutNext	("Vel Actual:    [%3.2f]",m_PhysicMovementControl->GetVelocityActual());
-		switch (m_PhysicMovementControl->Environment())
-		{
-		case CPHMovementControl::peOnGround:	xr_strcpy(buf,"ground");			break;
-		case CPHMovementControl::peInAir:		xr_strcpy(buf,"air");				break;
-		case CPHMovementControl::peAtWall:		xr_strcpy(buf,"wall");				break;
-		}
-		UI().Font().pFontStat->OutNext	(buf);
-
-		if (IReceived != 0)
-		{
-			float Size = 0;
-			Size = UI().Font().pFontStat->GetSize();
-			UI().Font().pFontStat->SetSize(Size*2);
-			UI().Font().pFontStat->SetColor	(0xffff0000);
-			UI().Font().pFontStat->OutNext ("Input :		[%3.2f]", ICoincidenced/IReceived * 100.0f);
-			UI().Font().pFontStat->SetSize(Size);
-		};
-	};
-#endif
 }
 
 void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shader &IndShader)
@@ -1466,19 +1404,8 @@ void CActor::SetPhPosition(const Fmatrix &transform)
 
 void CActor::ForceTransform(const Fmatrix& m)
 {
-	//if( !g_Alive() )
-	//			return;
-	//VERIFY(_valid(m));
-	//XFORM().set( m );
-	//if( character_physics_support()->movement()->CharacterExist() )
-	//		character_physics_support()->movement()->EnableCharacter();
-	//character_physics_support()->set_movement_position( m.c );
-	//character_physics_support()->movement()->SetVelocity( 0, 0, 0 );
-
 	character_physics_support()->ForceTransform( m );
 	const float block_damage_time_seconds = 2.f;
-	if(!IsGameTypeSingle())
-		character_physics_support()->movement()->BlockDamageSet( u64( block_damage_time_seconds/fixed_step ) );
 }
 
 ENGINE_API extern float		psHUD_FOV;
@@ -1493,7 +1420,6 @@ float CActor::Radius()const
 
 bool		CActor::use_bolts				() const
 {
-	if (!IsGameTypeSingle()) return false;
 	return CInventoryOwner::use_bolts();
 };
 
@@ -1501,20 +1427,7 @@ int		g_iCorpseRemove = 1;
 
 bool  CActor::NeedToDestroyObject() const
 {
-	if(IsGameTypeSingle())
-	{
 		return false;
-	}
-	else 
-	{
-		if (g_Alive()) return false;
-		if (g_iCorpseRemove == -1) return false;
-		if (g_iCorpseRemove == 0 && m_bAllowDeathRemove) return true;
-		if(TimePassedAfterDeath()>m_dwBodyRemoveTime && m_bAllowDeathRemove)
-			return true;
-		else
-			return false;
-	}
 }
 
 ALife::_TIME_ID	 CActor::TimePassedAfterDeath()	const
