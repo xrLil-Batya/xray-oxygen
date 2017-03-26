@@ -1,5 +1,3 @@
-#if !defined(AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_)
-#define AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_
 #pragma once
 
 #include "../xrEngine/igame_level.h"
@@ -452,12 +450,11 @@ IC CPHCommander & CLevel::ph_commander_physics_worldstep()
 //by Mad Max 
 IC bool		OnServer()			{ return Level().IsServer();}
 IC bool		OnClient()			{ return Level().IsClient();}
-IC bool		IsGameTypeSingle()	{ return (g_pGamePersistent->GameType() == eGameIDSingle);};
+//FX: уже не нужно :)
+//IC bool		IsGameTypeSingle()	{ return (g_pGamePersistent->GameType() == eGameIDSingle);};
 
 //class  CPHWorld;
 //extern CPHWorld*				ph_world;
 extern BOOL						g_bDebugEvents;
 
 // -------------------------------------------------------------------------------------------------
-
-#endif // !defined(AFX_LEVEL_H__38F63863_DB0C_494B_AFAB_C495876EC671__INCLUDED_)

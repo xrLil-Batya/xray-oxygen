@@ -689,20 +689,16 @@ void CLevel::OnFrame	()
 
 	if (m_bNeed_CrPr)					make_NetCorrectionPrediction();
 
-	if(!g_dedicated_server )
+	if (!g_dedicated_server)
 	{
-		if (g_mt_config.test(mtMap)) 
-			Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(m_map_manager,&CMapManager::Update));
-		else								
-			MapManager().Update		();
+		if (g_mt_config.test(mtMap))
+			Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
+		else
+			MapManager().Update();
 
-		if( IsGameTypeSingle() && Device.dwPrecacheFrame==0 )
-		{
-			//if (g_mt_config.test(mtMap)) 
-			//	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(m_game_task_manager,&CGameTaskManager::UpdateTasks));
-			//else								
-				GameTaskManager().UpdateTasks();
-		}
+		if (Device.dwPrecacheFrame == 0)
+			GameTaskManager().UpdateTasks();
+
 	}
 	// Inherited update
 	inherited::OnFrame		();

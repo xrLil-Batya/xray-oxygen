@@ -130,16 +130,6 @@ enum E_COMMON_FLAGS{
 	flAiUseTorchDynamicLights = 1
 };
 
-#ifndef PURE_ALLOC
-//#	ifndef USE_MEMORY_MONITOR
-#		define SEVERAL_ALLOCATORS
-//#	endif // USE_MEMORY_MONITOR
-#endif // PURE_ALLOC
-
-#ifdef SEVERAL_ALLOCATORS
-	extern		u32 game_lua_memory_usage	();
-#endif // SEVERAL_ALLOCATORS
-
 typedef void (*full_memory_stats_callback_type) ( );
 XRCORE_API full_memory_stats_callback_type g_full_memory_stats_callback;
 

@@ -612,9 +612,6 @@ void CActor::HitSignal(float perc, Fvector& vLocalDir, CObject* who, s16 element
 void start_tutorial(LPCSTR name);
 void CActor::Die(CObject* who)
 {
-#ifdef DEBUG
-	Msg("--- Actor [%s] dies !", this->Name());
-#endif // #ifdef DEBUG
 	inherited::Die(who);
 
 	if (OnServer())
@@ -627,7 +624,7 @@ void CActor::Die(CObject* who)
 			PIItem item_in_slot = inventory().ItemFromSlot(I);
 			if (I == inventory().GetActiveSlot())
 			{
-				if (item_in_slot && IsGameTypeSingle())
+				if (item_in_slot)
 				{
 					CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
 					if (grenade)
@@ -688,8 +685,8 @@ void CActor::Die(CObject* who)
 	}
 
 	//cam_Set(eacFreeLook);
-	lua_State* l;
-	luaL_dofile(l, "sk_actor_death.script");
+	luabind::functor<LPCSTR> lua_function; 
+	R_ASSERT2(ai().script_engine().functor<LPCSTR>("sk_actor_death.is_killed", lua_function), "Can't call lua function!");
 	CurrentGameUI()->HideShownDialogs();
 	start_tutorial("game_over");
 
@@ -871,7 +868,7 @@ void CActor::UpdateCL	()
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
 			
-			BOOL B = ! ((mstate_real & mcLookout) && !IsGameTypeSingle());
+			BOOL B = ! ((mstate_real & mcLookout) && false);
 
 			psHUD_Flags.set( HUD_WEAPON_RT, B );
 
@@ -1286,11 +1283,11 @@ extern	BOOL	g_ShowAnimationInfo		;
 #endif // DEBUG
 // HUD
 
-void CActor::OnHUDDraw	(CCustomHUD*)
+void CActor::OnHUDDraw(CCustomHUD*)
 {
-	R_ASSERT						(IsFocused());
-	if(! ( (mstate_real & mcLookout) && !IsGameTypeSingle() ) )
-		g_player_hud->render_hud		();
+	R_ASSERT(IsFocused());
+	if (!((mstate_real & mcLookout) && false))
+		g_player_hud->render_hud();
 }
 
 void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shader &IndShader)

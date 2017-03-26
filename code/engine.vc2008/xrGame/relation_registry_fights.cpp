@@ -6,8 +6,6 @@
 #include "stdafx.h"
 #include "relation_registry.h"
 
-
-
 //////////////////////////////////////////////////////////////////////////
 
 RELATION_REGISTRY::FIGHT_DATA::FIGHT_DATA			()
@@ -21,7 +19,6 @@ RELATION_REGISTRY::FIGHT_DATA::FIGHT_DATA			()
 }
 
 //////////////////////////////////////////////////////////////////////////
-extern bool	IsGameTypeSingle();
 void RELATION_REGISTRY::FightRegister (u16 attacker, u16 defender, ALife::ERelationType defender_to_attacker, float hit_amount)
 {
 	UpdateFightRegister();
@@ -60,9 +57,8 @@ RELATION_REGISTRY::FIGHT_DATA* RELATION_REGISTRY::FindFight(u16 object_id, bool 
 		FIGHT_DATA& fight_data = *it;
 		u16 id_to_find = by_attacker?fight_data.attacker:fight_data.defender;
 		if(object_id == id_to_find)
-		{
 			return &fight_data;
-		}
+		
 	}
 
 	return nullptr;

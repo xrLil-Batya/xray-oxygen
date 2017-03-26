@@ -549,12 +549,6 @@ void CCustomZone::shedule_Update(u32 dt)
 	};
 
 	UpdateOnOffState	();
-
-	if( !IsGameTypeSingle() && Local() )
-	{
-		if(Device.dwTimeGlobal > m_ttl)
-			DestroyObject ();
-	}
 }
 
 void CCustomZone::CheckForAwaking()

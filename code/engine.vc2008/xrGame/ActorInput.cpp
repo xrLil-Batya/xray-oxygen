@@ -49,7 +49,8 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	{
 	case kWPN_FIRE:
 		{
-			if( (mstate_wishful & mcLookout) && !IsGameTypeSingle() ) return;
+			if(mstate_wishful & mcLookout) 
+				return;
 
 			u16 slot = inventory().GetActiveSlot();
 			if(inventory().ActiveItem() && (slot==INV_SLOT_3 || slot==INV_SLOT_2) )
@@ -171,13 +172,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 
 				if(itm)
 				{
-					if (IsGameTypeSingle())
-					{
-						inventory().Eat				(itm);
-					} else
-					{
-						inventory().ClientEat		(itm);
-					}
+					inventory().Eat				(itm);
 					
 					SDrawStaticStruct* _s		= CurrentGameUI()->AddCustomStatic("item_used", true);
 					string1024					str;
@@ -406,33 +401,24 @@ void CActor::ActorUse()
 
 	if(!m_pUsableObject||m_pUsableObject->nonscript_usable())
 	{
-		if(m_pPersonWeLookingAt)
+		if (m_pPersonWeLookingAt)
 		{
-			CEntityAlive* pEntityAliveWeLookingAt = 
+			CEntityAlive* pEntityAliveWeLookingAt =
 				smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
 
 			VERIFY(pEntityAliveWeLookingAt);
 
-			if (IsGameTypeSingle())
-			{			
-
-				if(pEntityAliveWeLookingAt->g_Alive())
+			if (pEntityAliveWeLookingAt->g_Alive())
+				TryToTalk();
+			else
+			{
+				//только если находимся в режиме single
+				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+				if (pGameSP)
 				{
-					TryToTalk();
-				}else
-				{
-					//только если находимся в режиме single
-					CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-					if ( pGameSP )
-					{
-						if ( !m_pPersonWeLookingAt->deadbody_closed_status() )
-						{
-							if(pEntityAliveWeLookingAt->AlreadyDie() && 
-								pEntityAliveWeLookingAt->GetLevelDeathTime()+3000 < Device.dwTimeGlobal)
-								// 99.9% dead
-								pGameSP->StartCarBody(this, m_pPersonWeLookingAt );
-						}
-					}
+					if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie() &&
+						pEntityAliveWeLookingAt->GetLevelDeathTime() + 3000 < Device.dwTimeGlobal)
+						pGameSP->StartCarBody(this, m_pPersonWeLookingAt);
 				}
 			}
 		}

@@ -501,40 +501,40 @@ void	CActor::net_Import_Physic_proceed	( )
 	CrPr_SetActivationStep(0);
 };
 
-BOOL CActor::net_Spawn		(CSE_Abstract* DC)
+BOOL CActor::net_Spawn(CSE_Abstract* DC)
 {
-	m_holder_id				= ALife::_OBJECT_ID(-1);
+	m_holder_id = ALife::_OBJECT_ID(-1);
 	m_feel_touch_characters = 0;
-	m_snd_noise			= 0.0f;
-	m_sndShockEffector	= NULL;
-/*	m_followers			= NULL;*/
+	m_snd_noise = 0.0f;
+	m_sndShockEffector = NULL;
+	/*	m_followers			= NULL;*/
 	if (m_pPhysicsShell)
 	{
 		m_pPhysicsShell->Deactivate();
 		xr_delete(m_pPhysicsShell);
 	};
 	//force actor to be local on server client
-	CSE_Abstract			*e	= (CSE_Abstract*)(DC);
-	CSE_ALifeCreatureActor	*E	= smart_cast<CSE_ALifeCreatureActor*>(e);	
+	CSE_Abstract			*e = (CSE_Abstract*)(DC);
+	CSE_ALifeCreatureActor	*E = smart_cast<CSE_ALifeCreatureActor*>(e);
 	if (OnServer())
 	{
 		E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
 	}
-	
-	if(	TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
+
+	if (TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 		g_actor = this;
 
 	VERIFY(m_pActorEffector == NULL);
 
-	m_pActorEffector			= xr_new<CActorCameraManager>();
+	m_pActorEffector = xr_new<CActorCameraManager>();
 
 	// motions
-	m_bAnimTorsoPlayed			= false;
-	m_current_legs_blend		= 0;
-	m_current_jump_blend		= 0;
-	m_current_legs.invalidate	();
-	m_current_torso.invalidate	();
-	m_current_head.invalidate	();
+	m_bAnimTorsoPlayed = false;
+	m_current_legs_blend = 0;
+	m_current_jump_blend = 0;
+	m_current_legs.invalidate();
+	m_current_torso.invalidate();
+	m_current_head.invalidate();
 	//-------------------------------------
 	//  ,  
 	game_news_registry->registry().init(ID());
@@ -543,78 +543,71 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 	if (!CInventoryOwner::net_Spawn(DC)) return FALSE;
 	if (!inherited::net_Spawn(DC))	return FALSE;
 
-	CSE_ALifeTraderAbstract	 *pTA	= smart_cast<CSE_ALifeTraderAbstract*>(e);
-	set_money				(pTA->m_dwMoney, false);
+	CSE_ALifeTraderAbstract	 *pTA = smart_cast<CSE_ALifeTraderAbstract*>(e);
+	set_money(pTA->m_dwMoney, false);
 
-//.	if(	TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
-//.		CurrentGameUI()->UIMainIngameWnd->m_artefactPanel->InitIcons(m_ArtefactsOnBelt);
-		
+	//.	if(	TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
+	//.		CurrentGameUI()->UIMainIngameWnd->m_artefactPanel->InitIcons(m_ArtefactsOnBelt);
 
-	ROS()->force_mode	(IRender_ObjectSpecific::TRACE_ALL);
+
+	ROS()->force_mode(IRender_ObjectSpecific::TRACE_ALL);
 
 	//mstate_wishful = E->mstate;
-	mstate_wishful=0;
-	mstate_wishful = E->mstate&(mcCrouch|mcAccel);
-	mstate_old=mstate_real = mstate_wishful;	 
-	set_state_box( mstate_real );
-	m_pPhysics_support->in_NetSpawn	(e);
+	mstate_wishful = 0;
+	mstate_wishful = E->mstate&(mcCrouch | mcAccel);
+	mstate_old = mstate_real = mstate_wishful;
+	set_state_box(mstate_real);
+	m_pPhysics_support->in_NetSpawn(e);
 
 	//set_state_box( mstate_real );
 	//character_physics_support()->movement()->ActivateBox	(0);
-	if(E->m_holderID!=u16(-1))
-	{ 
+	if (E->m_holderID != u16(-1))
+	{
 		character_physics_support()->movement()->DestroyCharacter();
 	}
-	if(m_bOutBorder)character_physics_support()->movement()->setOutBorder();
-	r_torso_tgt_roll		= 0;
+	if (m_bOutBorder)character_physics_support()->movement()->setOutBorder();
+	r_torso_tgt_roll = 0;
 
-	r_model_yaw				= E->o_torso.yaw;
-	r_torso.yaw				= E->o_torso.yaw;
-	r_torso.pitch			= E->o_torso.pitch;
-	r_torso.roll			= 0.0f;//E->o_Angle.z;
+	r_model_yaw = E->o_torso.yaw;
+	r_torso.yaw = E->o_torso.yaw;
+	r_torso.pitch = E->o_torso.pitch;
+	r_torso.roll = 0.0f;//E->o_Angle.z;
 
-	unaffected_r_torso.yaw	= r_torso.yaw;
-	unaffected_r_torso.pitch= r_torso.pitch;
-	unaffected_r_torso.roll	= r_torso.roll;
+	unaffected_r_torso.yaw = r_torso.yaw;
+	unaffected_r_torso.pitch = r_torso.pitch;
+	unaffected_r_torso.roll = r_torso.roll;
 
-	if( psActorFlags.test(AF_PSP) )
-		cam_Set					(eacLookAt);
+	if (psActorFlags.test(AF_PSP))
+		cam_Set(eacLookAt);
 	else
-		cam_Set					(eacFirstEye);
+		cam_Set(eacFirstEye);
 
-	cam_Active()->Set		(-E->o_torso.yaw,E->o_torso.pitch,0);//E->o_Angle.z);
+	cam_Active()->Set(-E->o_torso.yaw, E->o_torso.pitch, 0);//E->o_Angle.z);
 
 	// *** movement state - respawn
 	//mstate_wishful			= 0;
 	//mstate_real				= 0;
 	//mstate_old				= 0;
-	m_bJumpKeyPressed		= FALSE;
-//
-//	m_bJumpKeyPressed = ((mstate_wishful&mcJump)!=0);
-//		
-	NET_SavedAccel.set		(0,0,0);
-	NET_WasInterpolating	= TRUE;
+	m_bJumpKeyPressed = FALSE;
+	//
+	//	m_bJumpKeyPressed = ((mstate_wishful&mcJump)!=0);
+	//		
+	NET_SavedAccel.set(0, 0, 0);
+	NET_WasInterpolating = TRUE;
 
-	setEnabled				(E->s_flags.is(M_SPAWN_OBJECT_LOCAL));
-
-	Engine.Sheduler.Register	(this,TRUE);
-
-	if (!IsGameTypeSingle())
-	{
-		setEnabled(TRUE);
-	}
-
-	m_hit_slowmo				= 0.f;
+	setEnabled(E->s_flags.is(M_SPAWN_OBJECT_LOCAL));
+	Engine.Sheduler.Register(this, TRUE);
+	m_hit_slowmo = 0.f;
 
 	OnChangeVisual();
 	//----------------------------------
 	m_bAllowDeathRemove = false;
 
-//	m_bHasUpdate = false;
+	//	m_bHasUpdate = false;
 	m_bInInterpolation = false;
 	m_bInterpolate = false;
 
-//	if (GameID() != eGameIDSingle)
+	//	if (GameID() != eGameIDSingle)
 	{
 		processing_activate();
 	}
@@ -624,27 +617,27 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 	LastPosH.clear();
 	LastPosL.clear();
 #endif
-//*
-	
-//	if (OnServer())// && E->s_flags.is(M_SPAWN_OBJECT_LOCAL))
-/*	
-	if (OnClient())
-	{
-		if (!pStatGraph)
+	//*
+
+	//	if (OnServer())// && E->s_flags.is(M_SPAWN_OBJECT_LOCAL))
+	/*
+		if (OnClient())
 		{
-			static g_Y = 0;
-			pStatGraph = xr_new<CStatGraph>();
-			pStatGraph->SetRect(0, g_Y, Device.dwWidth, 100, 0xff000000, 0xff000000);
-			g_Y += 110;
-			if (g_Y > 700) g_Y = 100;
-			pStatGraph->SetGrid(0, 0.0f, 10, 1.0f, 0xff808080, 0xffffffff);
-			pStatGraph->SetMinMax(0, 10, 300);
-			pStatGraph->SetStyle(CStatGraph::stBar);
-			pStatGraph->AppendSubGraph(CStatGraph::stCurve);
-			pStatGraph->AppendSubGraph(CStatGraph::stCurve);
+			if (!pStatGraph)
+			{
+				static g_Y = 0;
+				pStatGraph = xr_new<CStatGraph>();
+				pStatGraph->SetRect(0, g_Y, Device.dwWidth, 100, 0xff000000, 0xff000000);
+				g_Y += 110;
+				if (g_Y > 700) g_Y = 100;
+				pStatGraph->SetGrid(0, 0.0f, 10, 1.0f, 0xff808080, 0xffffffff);
+				pStatGraph->SetMinMax(0, 10, 300);
+				pStatGraph->SetStyle(CStatGraph::stBar);
+				pStatGraph->AppendSubGraph(CStatGraph::stCurve);
+				pStatGraph->AppendSubGraph(CStatGraph::stCurve);
+			}
 		}
-	}
-*/	
+	*/
 	SetDefaultVisualOutfit(cNameVisual());
 
 	smart_cast<IKinematics*>(Visual())->CalculateBones();
@@ -658,49 +651,43 @@ BOOL CActor::net_Spawn		(CSE_Abstract* DC)
 	//-------------------------------------
 	if (!g_Alive())
 	{
-		mstate_wishful	&=		~mcAnyMove;
-		mstate_real		&=		~mcAnyMove;
-		IKinematicsAnimated* K= smart_cast<IKinematicsAnimated*>(Visual());
+		mstate_wishful &= ~mcAnyMove;
+		mstate_real &= ~mcAnyMove;
+		IKinematicsAnimated* K = smart_cast<IKinematicsAnimated*>(Visual());
 		K->PlayCycle("death_init");
 
-		
+
 		//   
 		m_HeavyBreathSnd.stop();
 	}
-	
+
 	typedef CClientSpawnManager::CALLBACK_TYPE	CALLBACK_TYPE;
 	CALLBACK_TYPE	callback;
-	callback.bind	(this,&CActor::on_requested_spawn);
-	m_holder_id				= E->m_holderID;
+	callback.bind(this, &CActor::on_requested_spawn);
+	m_holder_id = E->m_holderID;
 	if (E->m_holderID != ALife::_OBJECT_ID(-1))
-		if(!g_dedicated_server)
-			Level().client_spawn_manager().add(E->m_holderID,ID(),callback);
+		if (!g_dedicated_server)
+			Level().client_spawn_manager().add(E->m_holderID, ID(), callback);
 	//F
 	//-------------------------------------------------------------
 	m_iLastHitterID = u16(-1);
 	m_iLastHittingWeaponID = u16(-1);
 	m_s16LastHittedElement = -1;
 	m_bWasHitted = false;
-	m_dwILastUpdateTime		= 0;
+	m_dwILastUpdateTime = 0;
 
-	if (IsGameTypeSingle())
-	{
+	Level().MapManager().AddMapLocation("actor_location", ID());
+	Level().MapManager().AddMapLocation("actor_location_p", ID());
 
-		Level().MapManager().AddMapLocation("actor_location",ID());
-		Level().MapManager().AddMapLocation("actor_location_p",ID());
+	m_statistic_manager = xr_new<CActorStatisticMgr>();
 
-		m_statistic_manager = xr_new<CActorStatisticMgr>();
-	}
+	spatial.type |= STYPE_REACTTOSOUND;
+	psHUD_Flags.set(HUD_WEAPON_RT, TRUE);
+	psHUD_Flags.set(HUD_WEAPON_RT2, TRUE);
 
-
-	spatial.type |=STYPE_REACTTOSOUND;
-	psHUD_Flags.set(HUD_WEAPON_RT,TRUE);
-	psHUD_Flags.set(HUD_WEAPON_RT2,TRUE);
-	
 	if (Level().IsDemoPlay() && OnClient())
-	{
 		setLocal(FALSE);
-	};
+	
 	return					TRUE;
 }
 

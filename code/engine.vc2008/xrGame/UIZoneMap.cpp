@@ -88,8 +88,6 @@ void CUIZoneMap::Init()
 	rel_pos.mul				(m_background.GetWndSize());
 	m_clock_wnd->SetWndPos	(rel_pos);
 
-	if ( IsGameTypeSingle() )
-	{
 		xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
 		m_background.AttachChild	(&m_Counter);
 		xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
@@ -98,8 +96,6 @@ void CUIZoneMap::Init()
 		rel_pos						= m_Counter.GetWndPos();
 		rel_pos.mul					(m_background.GetWndSize());
 		m_Counter.SetWndPos			(rel_pos);
-	}
-
 }
 
 void CUIZoneMap::Render			()
@@ -116,21 +112,19 @@ void CUIZoneMap::Update()
 	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 	if ( !pActor ) return;
 
-	if ( !( Device.dwFrame % 20 ) && IsGameTypeSingle() )
+	if (!(Device.dwFrame % 20))
 	{
 		string16	text_str;
-		xr_strcpy( text_str, sizeof(text_str), "" );
+		xr_strcpy(text_str, sizeof(text_str), "");
 
 		CPda* pda = pActor->GetPDA();
-		if ( pda )
+		if (pda)
 		{
 			u32 cn = pda->ActiveContactsNum();
-			if ( cn > 0 )
-			{
-				xr_sprintf( text_str, sizeof(text_str), "%d", cn );
-			}
+			if (cn > 0)
+				xr_sprintf(text_str, sizeof(text_str), "%d", cn);
 		}
-		m_Counter_text.SetText( text_str );
+		m_Counter_text.SetText(text_str);
 	}
 
 	UpdateRadar( Device.vCameraPosition );

@@ -38,7 +38,10 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 
 using namespace luabind;
-
+bool single_game()
+{
+	return true;
+}
 LPCSTR command_line	()
 {
 	return		(Core.Params);
@@ -817,7 +820,7 @@ void CLevel::script_register(lua_State *L)
 	module(L)
 	[
 		def("command_line",						&command_line),
-		def("IsGameTypeSingle",					&IsGameTypeSingle),
+		def("IsGameTypeSingle",					&single_game),
 		def("IsDynamicMusic",					&IsDynamicMusic),
 		def("render_get_dx_level",				&render_get_dx_level),
 		def("IsImportantSave",					&IsImportantSave)

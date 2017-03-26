@@ -74,10 +74,7 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 {
 	CSE_ALifeItemWeapon* const weapon		= smart_cast<CSE_ALifeItemWeapon*>(DC);
 	R_ASSERT								(weapon);
-	if ( IsGameTypeSingle() )
-	{
-		inherited::net_Spawn_install_upgrades	(weapon->m_upgrades);
-	}
+	inherited::net_Spawn_install_upgrades	(weapon->m_upgrades);
 
 	BOOL l_res = inherited::net_Spawn(DC);
 	 
@@ -89,18 +86,6 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 
 	m_DefaultCartridge2.Load(m_ammoTypes2[m_ammoType2].c_str(), m_ammoType2);
 
-	if (!IsGameTypeSingle())
-	{
-		if (!m_bGrenadeMode && IsGrenadeLauncherAttached() && !getRocketCount() && iAmmoElapsed2)
-		{
-			m_magazine2.push_back(m_DefaultCartridge2);
-
-			shared_str grenade_name = m_DefaultCartridge2.m_ammoSect;
-			shared_str fake_grenade_name = pSettings->r_string(grenade_name, "fake_grenade_name");
-
-			CRocketLauncher::SpawnRocket(*fake_grenade_name, this);
-		}
-	}else
 	{
 		xr_vector<CCartridge>* pM = NULL;
 		bool b_if_grenade_mode	= (m_bGrenadeMode && iAmmoElapsed && !getRocketCount());
@@ -315,8 +300,7 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 			}
 			E->g_fireParams		(this, p1,d);
 		}
-		if (IsGameTypeSingle())
-			p1.set						(get_LastFP2());
+		p1.set						(get_LastFP2());
 		
 		Fmatrix							launch_matrix;
 		launch_matrix.identity			();
@@ -327,7 +311,7 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 
 		launch_matrix.c.set				(p1);
 
-		if(IsGameTypeSingle() && IsZoomed() && smart_cast<CActor*>(H_Parent()))
+		if(IsZoomed() && smart_cast<CActor*>(H_Parent()))
 		{
 			H_Parent()->setEnabled		(FALSE);
 			setEnabled					(FALSE);
@@ -343,24 +327,9 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 				Fvector					Transference;
 				Transference.mul		(d, RQ.range);
 				Fvector					res[2];
-#ifdef		DEBUG
-//.				DBG_OpenCashedDraw();
-//.				DBG_DrawLine(p1,Fvector().add(p1,d),D3DCOLOR_XRGB(255,0,0));
-#endif
-				u8 canfire0 = TransferenceAndThrowVelToThrowDir(Transference, 
-																CRocketLauncher::m_fLaunchSpeed, 
-																EffectiveGravity(), 
-																res);
-#ifdef DEBUG
-//.				if(canfire0>0)DBG_DrawLine(p1,Fvector().add(p1,res[0]),D3DCOLOR_XRGB(0,255,0));
-//.				if(canfire0>1)DBG_DrawLine(p1,Fvector().add(p1,res[1]),D3DCOLOR_XRGB(0,0,255));
-//.				DBG_ClosedCashedDraw(30000);
-#endif
-				
+				u8 canfire0 = TransferenceAndThrowVelToThrowDir(Transference, CRocketLauncher::m_fLaunchSpeed, EffectiveGravity(), res);
 				if (canfire0 != 0)
-				{
 					d = res[0];
-				};
 			}
 		};
 		

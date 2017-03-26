@@ -103,12 +103,8 @@ void CWeapon::UpdateXForm	()
 	// Get access to entity and its visual
 	CEntityAlive*			E = smart_cast<CEntityAlive*>(H_Parent());
 	
-	if (!E) {
-		if (!IsGameTypeSingle())
-			UpdatePosition	(H_Parent()->XFORM());
-
+	if (!E)
 		return;
-	}
 
 	const CInventoryOwner	*parent = smart_cast<const CInventoryOwner*>(E);
 	if (parent && parent->use_simplified_visual())
@@ -754,10 +750,7 @@ void CWeapon::OnHiddenItem ()
 {
 	m_BriefInfo_CalcFrame = 0;
 
-	if(IsGameTypeSingle())
 		SwitchState(eHiding);
-	else
-		SwitchState(eHidden);
 
 	OnZoomOut();
 	inherited::OnHiddenItem		();
@@ -809,10 +802,7 @@ void CWeapon::UpdateCL		()
 	UpdateFlameParticles	();
 	UpdateFlameParticles2	();
 
-	if(!IsGameTypeSingle())
-		make_Interpolation		();
-	
-	if( (GetNextState()==GetState()) && IsGameTypeSingle() && H_Parent()==Level().CurrentEntity())
+	if( (GetNextState()==GetState()) && H_Parent()==Level().CurrentEntity())
 	{
 		CActor* pActor	= smart_cast<CActor*>(H_Parent());
 		if(pActor && !pActor->AnyMove() && this==pActor->inventory().ActiveItem())
@@ -859,7 +849,7 @@ void CWeapon::UpdateCL		()
 void CWeapon::EnableActorNVisnAfterZoom()
 {
 	CActor *pA = smart_cast<CActor *>(H_Parent());
-	if(IsGameTypeSingle() && !pA)
+	if(!pA)
 		pA = g_actor;
 
 	if(pA)
@@ -1749,20 +1739,12 @@ void CWeapon::render_item_ui()
 	ZoomTexture()->Draw		();
 }
 
-bool CWeapon::unlimited_ammo() 
-{ 
-	if (IsGameTypeSingle())
-	{
-		if(m_pInventory)
-		{
-			return inventory_owner().unlimited_ammo() && m_DefaultCartridge.m_flags.test(CCartridge::cfCanBeUnlimited);
-		}else
-			return false;
-	}
-
-	return ((GameID() == eGameIDDeathmatch) && 
-			m_DefaultCartridge.m_flags.test(CCartridge::cfCanBeUnlimited)); 
-			
+bool CWeapon::unlimited_ammo()
+{
+	if (m_pInventory)
+		return inventory_owner().unlimited_ammo() && m_DefaultCartridge.m_flags.test(CCartridge::cfCanBeUnlimited);
+	else
+		return false;
 };
 
 float CWeapon::Weight() const

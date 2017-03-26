@@ -318,38 +318,30 @@ bool CUIActorMenu::CanMoveToPartner(PIItem pItem)
 
 void CUIActorMenu::UpdateActor()
 {
-	if ( IsGameTypeSingle() )
+	string64 buf;
+	xr_sprintf(buf, "%d RU", m_pActorInvOwner->get_money());
+	m_ActorMoney->SetText(buf);
+
+	CActor* actor = smart_cast<CActor*>(m_pActorInvOwner);
+	if (actor)
 	{
-		string64 buf;
-		xr_sprintf( buf, "%d RU", m_pActorInvOwner->get_money() );
-		m_ActorMoney->SetText( buf );
-	}
-	else
-	{
-		UpdateActorMP();
-	}
-	
-	CActor* actor = smart_cast<CActor*>( m_pActorInvOwner );
-	if ( actor )
-	{
-		CWeapon* wp = smart_cast<CWeapon*>( actor->inventory().ActiveItem() );
-		if ( wp ) 
-		{
+		CWeapon* wp = smart_cast<CWeapon*>(actor->inventory().ActiveItem());
+		if (wp)
 			wp->ForceUpdateAmmo();
-		}
+
 	}//actor
 
-	InventoryUtilities::UpdateWeightStr( *m_ActorWeight, *m_ActorWeightMax, m_pActorInvOwner );
-	
+	InventoryUtilities::UpdateWeightStr(*m_ActorWeight, *m_ActorWeightMax, m_pActorInvOwner);
+
 	m_ActorWeight->AdjustWidthToText();
 	m_ActorWeightMax->AdjustWidthToText();
 	m_ActorBottomInfo->AdjustWidthToText();
 
 	Fvector2 pos = m_ActorWeight->GetWndPos();
 	pos.x = m_ActorWeightMax->GetWndPos().x - m_ActorWeight->GetWndSize().x - 5.0f;
-	m_ActorWeight->SetWndPos( pos );
+	m_ActorWeight->SetWndPos(pos);
 	pos.x = pos.x - m_ActorBottomInfo->GetWndSize().x - 5.0f;
-	m_ActorBottomInfo->SetWndPos( pos );
+	m_ActorBottomInfo->SetWndPos(pos);
 }
 
 void CUIActorMenu::UpdatePartnerBag()

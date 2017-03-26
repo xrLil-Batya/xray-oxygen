@@ -182,89 +182,77 @@ void CUIItemInfo::InitItemInfo(Fvector2 pos, Fvector2 size, LPCSTR xml_name)
     InitItemInfo			(xml_name);
 }
 
-bool	IsGameTypeSingle();
-
 void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem, u32 item_price, LPCSTR trade_tip)
 {
-	if(!pCellItem)
+	if (!pCellItem)
 	{
-		m_pInvItem			= NULL;
-		Enable				(false);
+		m_pInvItem = NULL;
+		Enable(false);
 		return;
 	}
 
-	PIItem pInvItem			= (PIItem)pCellItem->m_pData;
-	m_pInvItem				= pInvItem;
-	Enable					(NULL != m_pInvItem);
-	if(!m_pInvItem)			return;
+	PIItem pInvItem = (PIItem)pCellItem->m_pData;
+	m_pInvItem = pInvItem;
+	Enable(NULL != m_pInvItem);
+	if (!m_pInvItem)			return;
 
-	Fvector2				pos;	pos.set( 0.0f, 0.0f );
+	Fvector2				pos;	pos.set(0.0f, 0.0f);
 	string256				str;
-	if ( UIName )
+	if (UIName)
 	{
-		UIName->SetText		(pInvItem->NameItem());
+		UIName->SetText(pInvItem->NameItem());
 		UIName->AdjustHeightToText();
 		pos.y = UIName->GetWndPos().y + UIName->GetHeight() + 4.0f;
 	}
-	if ( UIWeight )
+	if (UIWeight)
 	{
-		LPCSTR  kg_str = CStringTable().translate( "st_kg" ).c_str();
+		LPCSTR  kg_str = CStringTable().translate("st_kg").c_str();
 		float	weight = pInvItem->Weight();
-		
-		if ( !weight )
+
+		if (!weight)
 		{
-			if ( CWeaponAmmo* ammo = dynamic_cast<CWeaponAmmo*>(pInvItem) )
+			if (CWeaponAmmo* ammo = dynamic_cast<CWeaponAmmo*>(pInvItem))
 			{
 				// its helper item, m_boxCur is zero, so recalculate via CInventoryItem::Weight()
 				weight = pInvItem->CInventoryItem::Weight();
-				for( u32 j = 0; j < pCellItem->ChildsCount(); ++j )
+				for (u32 j = 0; j < pCellItem->ChildsCount(); ++j)
 				{
-					PIItem jitem	= (PIItem)pCellItem->Child(j)->m_pData;
-					weight			+= jitem->CInventoryItem::Weight();
+					PIItem jitem = (PIItem)pCellItem->Child(j)->m_pData;
+					weight += jitem->CInventoryItem::Weight();
 				}
 
 			}
 		}
 
-		xr_sprintf				(str, "%3.2f %s", weight, kg_str );
-		UIWeight->SetText	(str);
-		
+		xr_sprintf(str, "%3.2f %s", weight, kg_str);
+		UIWeight->SetText(str);
+
 		pos.x = UIWeight->GetWndPos().x;
-		if ( m_complex_desc )
-		{
-			UIWeight->SetWndPos	(pos);
-		}
+		if (m_complex_desc)
+			UIWeight->SetWndPos(pos);
 	}
-	if ( UICost && IsGameTypeSingle() && item_price!=u32(-1) )
+	if (UICost && item_price != u32(-1))
 	{
-		xr_sprintf				(str, "%d RU", item_price);// will be owerwritten in multiplayer
-		UICost->SetText		(str);
+		xr_sprintf(str, "%d RU", item_price);// will be owerwritten in multiplayer
+		UICost->SetText(str);
 		pos.x = UICost->GetWndPos().x;
-		if ( m_complex_desc )
-		{
-			UICost->SetWndPos	(pos);
-		}
+		if (m_complex_desc)
+			UICost->SetWndPos(pos);
+
 		UICost->Show(true);
 	}
 	else
 		UICost->Show(false);
-	
-//	CActor* actor = smart_cast<CActor*>( Level().CurrentViewEntity() );
-//	if ( g_pGameLevel && Level().game && actor )
-//	{
-//		game_cl_Deathmatch* gs_mp = smart_cast<game_cl_Deathmatch*>( Game() );
-//		IBuyWnd* buy_menu = gs_mp->pCurBuyMenu->GetItemPrice();
-//		GetItemPrice();
-//	}
-	if ( UITradeTip && IsGameTypeSingle())
+
+	if (UITradeTip)
 	{
 		pos.y = UITradeTip->GetWndPos().y;
-		if ( UIWeight && m_complex_desc )
+		if (UIWeight && m_complex_desc)
 		{
 			pos.y = UIWeight->GetWndPos().y + UIWeight->GetHeight() + 4.0f;
 		}
 
-		if(trade_tip==NULL)
+		if (trade_tip == NULL)
 			UITradeTip->Show(false);
 		else
 		{
@@ -274,74 +262,74 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			UITradeTip->Show(true);
 		}
 	}
-	
-	if ( UIDesc )
+
+	if (UIDesc)
 	{
 		pos = UIDesc->GetWndPos();
-		if ( UIWeight )
+		if (UIWeight)
 			pos.y = UIWeight->GetWndPos().y + UIWeight->GetHeight() + 4.0f;
 
-		if(UITradeTip && trade_tip!=NULL)
+		if (UITradeTip && trade_tip != NULL)
 			pos.y = UITradeTip->GetWndPos().y + UITradeTip->GetHeight() + 4.0f;
 
-		UIDesc->SetWndPos		(pos);
-		UIDesc->Clear			();
-		VERIFY					(0==UIDesc->GetSize());
-		if(m_desc_info.bShowDescrText)
+		UIDesc->SetWndPos(pos);
+		UIDesc->Clear();
+		VERIFY(0 == UIDesc->GetSize());
+		if (m_desc_info.bShowDescrText)
 		{
-			CUITextWnd* pItem					= xr_new<CUITextWnd>();
-			pItem->SetTextColor					(m_desc_info.uDescClr);
-			pItem->SetFont						(m_desc_info.pDescFont);
-			pItem->SetWidth						(UIDesc->GetDesiredChildWidth());
-			pItem->SetTextComplexMode			(true);
-			pItem->SetText						(*pInvItem->ItemDescription());
-			pItem->AdjustHeightToText			();
-			UIDesc->AddWindow					(pItem, true);
+			CUITextWnd* pItem = xr_new<CUITextWnd>();
+			pItem->SetTextColor(m_desc_info.uDescClr);
+			pItem->SetFont(m_desc_info.pDescFont);
+			pItem->SetWidth(UIDesc->GetDesiredChildWidth());
+			pItem->SetTextComplexMode(true);
+			pItem->SetText(*pInvItem->ItemDescription());
+			pItem->AdjustHeightToText();
+			UIDesc->AddWindow(pItem, true);
 		}
-		TryAddConditionInfo					(*pInvItem, pCompareItem);
-		TryAddWpnInfo						(*pInvItem, pCompareItem);
-		TryAddArtefactInfo					(pInvItem->object().cNameSect());
-		TryAddOutfitInfo					(*pInvItem, pCompareItem);
-		TryAddUpgradeInfo					(*pInvItem);
-		TryAddBoosterInfo					(*pInvItem);
+		TryAddConditionInfo(*pInvItem, pCompareItem);
+		TryAddWpnInfo(*pInvItem, pCompareItem);
+		TryAddArtefactInfo(pInvItem->object().cNameSect());
+		TryAddOutfitInfo(*pInvItem, pCompareItem);
+		TryAddUpgradeInfo(*pInvItem);
+		TryAddBoosterInfo(*pInvItem);
 
-		if(m_b_FitToHeight)
+		if (m_b_FitToHeight)
 		{
-			UIDesc->SetWndSize				(Fvector2().set(UIDesc->GetWndSize().x, UIDesc->GetPadSize().y) );
+			UIDesc->SetWndSize(Fvector2().set(UIDesc->GetWndSize().x, UIDesc->GetPadSize().y));
 			Fvector2 new_size;
-			new_size.x						= GetWndSize().x;
-			new_size.y						= UIDesc->GetWndPos().y+UIDesc->GetWndSize().y+20.0f;
-			new_size.x						= std::max(105.0f, new_size.x);
-			new_size.y						= std::max(105.0f, new_size.y);
-			
-			SetWndSize						(new_size);
-			if(UIBackground)
-				UIBackground->SetWndSize	(new_size);
+			new_size.x = GetWndSize().x;
+			new_size.y = UIDesc->GetWndPos().y + UIDesc->GetWndSize().y + 20.0f;
+			new_size.x = std::max(105.0f, new_size.x);
+			new_size.y = std::max(105.0f, new_size.y);
+
+			SetWndSize(new_size);
+			if (UIBackground)
+				UIBackground->SetWndSize(new_size);
 		}
 
-		UIDesc->ScrollToBegin				();
+		UIDesc->ScrollToBegin();
 	}
-	if(UIItemImage)
+	if (UIItemImage)
 	{
 		// Загружаем картинку
-		UIItemImage->SetShader				(InventoryUtilities::GetEquipmentIconsShader());
+		UIItemImage->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 
-		Irect item_grid_rect				= pInvItem->GetInvGridRect();
+		Irect item_grid_rect = pInvItem->GetInvGridRect();
 		Frect texture_rect;
-		texture_rect.lt.set					(item_grid_rect.x1*INV_GRID_WIDTH,	item_grid_rect.y1*INV_GRID_HEIGHT);
-		texture_rect.rb.set					(item_grid_rect.x2*INV_GRID_WIDTH,	item_grid_rect.y2*INV_GRID_HEIGHT);
-		texture_rect.rb.add					(texture_rect.lt);
+		texture_rect.lt.set(item_grid_rect.x1*INV_GRID_WIDTH, item_grid_rect.y1*INV_GRID_HEIGHT);
+		texture_rect.rb.set(item_grid_rect.x2*INV_GRID_WIDTH, item_grid_rect.y2*INV_GRID_HEIGHT);
+		texture_rect.rb.add(texture_rect.lt);
 		UIItemImage->GetUIStaticItem().SetTextureRect(texture_rect);
-		UIItemImage->TextureOn				();
-		UIItemImage->SetStretchTexture		(true);
-		Fvector2 v_r						= { item_grid_rect.x2*INV_GRID_WIDTH2,	
-												item_grid_rect.y2*INV_GRID_HEIGHT2};
-		
-		v_r.x								*= UI().get_current_kx();
+		UIItemImage->TextureOn();
+		UIItemImage->SetStretchTexture(true);
+		Fvector2 v_r = { item_grid_rect.x2*INV_GRID_WIDTH2,
+												item_grid_rect.y2*INV_GRID_HEIGHT2 };
 
-		UIItemImage->GetUIStaticItem().SetSize	(v_r);
-		UIItemImage->SetWidth					(v_r.x);
-		UIItemImage->SetHeight					(v_r.y);
+		v_r.x *= UI().get_current_kx();
+
+		UIItemImage->GetUIStaticItem().SetSize(v_r);
+		UIItemImage->SetWidth(v_r.x);
+		UIItemImage->SetHeight(v_r.y);
 	}
 }
 

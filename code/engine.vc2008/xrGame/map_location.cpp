@@ -61,8 +61,6 @@ CMapLocation::CMapLocation(LPCSTR type, u16 object_id)
 	m_cached.m_Position.set	(10000,10000);
 	m_cached.m_updatedFrame = u32(-1);
 	m_cached.m_graphID		= GameGraph::_GRAPH_ID(-1);
-	if(!IsGameTypeSingle())
-		m_cached.m_LevelName = Level().name();
 }
 
 CMapLocation::~CMapLocation()
@@ -314,14 +312,14 @@ bool CMapLocation::Update() //returns actual
 
 	CObject* pObject					= Level().Objects.net_Find(m_objectID);
 	
-	if (m_owner_se_object || (!IsGameTypeSingle() && pObject) )
+	if (m_owner_se_object || (false && pObject))
 	{
-		m_cached.m_Actuality			= true;
-		if(IsGameTypeSingle())
-			CalcLevelName				();
+		m_cached.m_Actuality = true;
+		CalcLevelName();
 
-		CalcPosition					();
-	}else
+		CalcPosition();
+	}
+	else
 		m_cached.m_Actuality			= false;
 
 	m_cached.m_updatedFrame				= Device.dwFrame;
@@ -337,35 +335,21 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp )
 	{
 		bool b_alife = !!ai().get_alife();
 
-		if ( b_alife && m_flags.test(eHideInOffline) && !m_owner_se_object->m_bOnline )
-		{
+		if ( b_alife && m_flags.test(eHideInOffline) && !m_owner_se_object->m_bOnline && m_owner_se_object->m_flags.test(CSE_ALifeObject::flVisibleForMap) == FALSE)
 			return;
-		}
 
-		if ( b_alife && m_owner_se_object->m_flags.test(CSE_ALifeObject::flVisibleForMap) == FALSE )
 		{
-			return;
-		}
-
-		if ( IsGameTypeSingle() )
-		{
-			CGameTask* ml_task = Level().GameTaskManager().HasGameTask( this, true );
-			if ( ml_task )
+			CGameTask* ml_task = Level().GameTaskManager().HasGameTask(this, true);
+			if (ml_task)
 			{
 				CGameTask* active_task = Level().GameTaskManager().ActiveTask();
-				bool border_show = ( ml_task == active_task );
-				if ( m_minimap_spot )
-				{
-					m_minimap_spot->show_static_border( border_show );
-				}
-				if ( m_level_spot )
-				{
-					m_level_spot->show_static_border( border_show );
-				}
-				if ( m_complex_spot )
-				{
-					m_complex_spot->show_static_border( border_show );
-				}
+				bool border_show = (ml_task == active_task);
+				if (m_minimap_spot)
+					m_minimap_spot->show_static_border(border_show);
+				if (m_level_spot)
+					m_level_spot->show_static_border(border_show);
+				if (m_complex_spot)
+					m_complex_spot->show_static_border(border_show);
 			}
 		}
 
@@ -391,16 +375,12 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp )
 			map->AttachChild	(sp);
 		}
 
-		if ( IsGameTypeSingle() )
-		{
 			CMapSpot* s = GetSpotBorder( sp );
-			if ( s )
+			if (s)
 			{
-				s->SetWndPos( sp->GetWndPos() );
-				map->AttachChild( s );
+				s->SetWndPos(sp->GetWndPos());
+				map->AttachChild(s);
 			}
-		}
-
 
 		bool b_pointer =( GetSpotPointer(sp) && map->NeedShowPointer(wnd_rect));
 
@@ -523,29 +503,26 @@ void CMapLocation::UpdateSpotPointer(CUICustomMap* map, CMapSpotPointer* sp )
 		Fvector ttt;
 		ttt.set		(tt.x, 0.0f, tt.y);
 
-		if (IsGameTypeSingle())
 		{
 			float dist_to_target = Level().CurrentEntity()->Position().distance_to(ttt);
 			CGameTask*	task = Level().GameTaskManager().HasGameTask(this, true);
-			if ( task )
-			{
-				map->SetPointerDistance	(dist_to_target);
-			}
+			if (task)
+				map->SetPointerDistance(dist_to_target);
 
 			u32 clr = sp->GetTextureColor();
-			u32 a	= 0xff;
-			if(dist_to_target>=0.0f && dist_to_target<10.0f)
-				a=255;
+			u32 a = 0xff;
+			if (dist_to_target >= 0.0f && dist_to_target < 10.0f)
+				a = 255;
 			else
-			if(dist_to_target>=10.0f && dist_to_target<50.0f)
-				a=200;
-			else
-			if(dist_to_target>=50.0f && dist_to_target<100.0f)
-				a=150;
-			else
-				a=100;
+				if (dist_to_target >= 10.0f && dist_to_target < 50.0f)
+					a = 200;
+				else
+					if (dist_to_target >= 50.0f && dist_to_target < 100.0f)
+						a = 150;
+					else
+						a = 100;
 
-			sp->SetTextureColor( subst_alpha(clr,a));
+			sp->SetTextureColor(subst_alpha(clr, a));
 		}
 	}
 }
@@ -616,23 +593,16 @@ LPCSTR CMapLocation::GetHint()
 
 CMapSpotPointer* CMapLocation::GetSpotPointer(CMapSpot* sp)
 {
-	R_ASSERT( sp );
-	if ( !PointerEnabled() )
-	{
+	R_ASSERT(sp);
+	if (!PointerEnabled())
 		return NULL;
-	}
-	if ( sp == m_level_spot)
-	{
+
+	if (sp == m_level_spot)
 		return m_level_spot_pointer;
-	}
-	else if ( sp == m_minimap_spot)
-	{
+	else if (sp == m_minimap_spot)
 		return m_minimap_spot_pointer;
-	}
-	else if ( sp == m_complex_spot)
-	{
+	else if (sp == m_complex_spot)
 		return m_complex_spot_pointer;
-	}
 
 	return NULL;
 }
@@ -640,62 +610,62 @@ CMapSpotPointer* CMapLocation::GetSpotPointer(CMapSpot* sp)
 CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 {
 	R_ASSERT(sp);
-	if ( PointerEnabled() )
+	if (PointerEnabled())
 	{
-		if( sp == m_level_spot )
+		if (sp == m_level_spot)
 		{
-			if ( NULL == m_level_map_spot_border )
+			if (NULL == m_level_map_spot_border)
 			{
-				m_level_map_spot_border			= xr_new<CMapSpot>(this);
-				m_level_map_spot_border->Load	(g_uiSpotXml,m_spot_border_names[0].c_str());
+				m_level_map_spot_border = xr_new<CMapSpot>(this);
+				m_level_map_spot_border->Load(g_uiSpotXml, m_spot_border_names[0].c_str());
 			}
 			return m_level_map_spot_border;
 		}
-		else if( sp == m_minimap_spot )
+		else if (sp == m_minimap_spot)
 		{
-			if ( NULL == m_mini_map_spot_border )
+			if (NULL == m_mini_map_spot_border)
 			{
-				m_mini_map_spot_border			= xr_new<CMapSpot>(this);
-				m_mini_map_spot_border->Load	(g_uiSpotXml,m_spot_border_names[2].c_str());
+				m_mini_map_spot_border = xr_new<CMapSpot>(this);
+				m_mini_map_spot_border->Load(g_uiSpotXml, m_spot_border_names[2].c_str());
 			}
 			return m_mini_map_spot_border;
 		}
-		else if( sp == m_complex_spot )
+		else if (sp == m_complex_spot)
 		{
-			if ( NULL == m_complex_spot_border )
+			if (NULL == m_complex_spot_border)
 			{
-				m_complex_spot_border			= xr_new<CMapSpot>(this);
-				m_complex_spot_border->Load		(g_uiSpotXml,m_spot_border_names[4].c_str());
+				m_complex_spot_border = xr_new<CMapSpot>(this);
+				m_complex_spot_border->Load(g_uiSpotXml, m_spot_border_names[4].c_str());
 			}
 			return m_complex_spot_border;
 		}
 	}
 	else
 	{// inactive state
-		if ( sp == m_level_spot )
+		if (sp == m_level_spot)
 		{
-			if ( NULL == m_level_map_spot_border_na && m_spot_border_names[1].size() )
+			if (NULL == m_level_map_spot_border_na && m_spot_border_names[1].size())
 			{
-				m_level_map_spot_border_na			= xr_new<CMapSpot>(this);
-				m_level_map_spot_border_na->Load	(g_uiSpotXml,m_spot_border_names[1].c_str());
+				m_level_map_spot_border_na = xr_new<CMapSpot>(this);
+				m_level_map_spot_border_na->Load(g_uiSpotXml, m_spot_border_names[1].c_str());
 			}
 			return m_level_map_spot_border_na;
 		}
-		else if ( sp == m_minimap_spot )
+		else if (sp == m_minimap_spot)
 		{
-			if ( NULL == m_mini_map_spot_border_na && m_spot_border_names[3].size() )
+			if (NULL == m_mini_map_spot_border_na && m_spot_border_names[3].size())
 			{
-				m_mini_map_spot_border_na			= xr_new<CMapSpot>(this);
-				m_mini_map_spot_border_na->Load		(g_uiSpotXml,m_spot_border_names[3].c_str());
+				m_mini_map_spot_border_na = xr_new<CMapSpot>(this);
+				m_mini_map_spot_border_na->Load(g_uiSpotXml, m_spot_border_names[3].c_str());
 			}
 			return m_mini_map_spot_border_na;
 		}
-		else if ( sp == m_complex_spot )
+		else if (sp == m_complex_spot)
 		{
-			if ( NULL == m_complex_spot_border_na && m_spot_border_names[5].size() )
+			if (NULL == m_complex_spot_border_na && m_spot_border_names[5].size())
 			{
-				m_complex_spot_border_na			= xr_new<CMapSpot>(this);
-				m_complex_spot_border_na->Load		(g_uiSpotXml,m_spot_border_names[5].c_str());
+				m_complex_spot_border_na = xr_new<CMapSpot>(this);
+				m_complex_spot_border_na->Load(g_uiSpotXml, m_spot_border_names[5].c_str());
 			}
 			return m_complex_spot_border_na;
 		}

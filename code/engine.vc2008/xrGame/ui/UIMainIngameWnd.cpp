@@ -280,17 +280,8 @@ void CUIMainIngameWnd::Draw()
 	}
 	FS.dwOpenCounter = 0;
 
-	if(!IsGameTypeSingle())
-	{
-		float		luminocity = smart_cast<CGameObject*>(Level().CurrentEntity())->ROS()->get_luminocity();
-		float		power = log(luminocity > .001f ? luminocity : .001f)*(1.f/*luminocity_factor*/);
-		luminocity	= exp(power);
-
-		static float cur_lum = luminocity;
-		cur_lum = luminocity*0.01f + cur_lum*0.99f;
-		UIMotionIcon->SetLuminosity((s16)iFloor(cur_lum*100.0f));
-	}
-	if ( !pActor || !pActor->g_Alive() ) return;
+	if(!pActor || !pActor->g_Alive()) 
+		return;
 
 	UIMotionIcon->SetNoise((s16)(0xffff&iFloor(pActor->m_snd_noise*100)));
 
@@ -620,8 +611,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		return;
 
 	UpdateQuickSlots();
-	if (IsGameTypeSingle())
-		CurrentGameUI()->PdaMenu().UpdateRankingWnd();
+	CurrentGameUI()->PdaMenu().UpdateRankingWnd();
 
 	u8 flags = 0;
 	flags |= LA_CYCLIC;
@@ -757,7 +747,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 	float cur_weight = pActor->inventory().TotalWeight();
 	float max_weight = pActor->MaxWalkWeight();
 	m_ind_overweight->Show(false);
-	if(cur_weight>=max_weight-10.0f && IsGameTypeSingle())
+	if(cur_weight>=max_weight-10.0f)
 	{
 		m_ind_overweight->Show(true);
 		if(cur_weight>max_weight)

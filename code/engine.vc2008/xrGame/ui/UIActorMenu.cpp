@@ -40,21 +40,14 @@
 
 void CUIActorMenu::SetActor(CInventoryOwner* io)
 {
-	R_ASSERT			(!IsShown());
-	m_last_time			= Device.dwTimeGlobal;
-	m_pActorInvOwner	= io;
-	
-	if ( IsGameTypeSingle() )
-	{
-		if ( io )
-			m_ActorCharacterInfo->InitCharacter	(m_pActorInvOwner->object_id());
-		else
-			m_ActorCharacterInfo->ClearInfo();
-	}
+	R_ASSERT(!IsShown());
+	m_last_time = Device.dwTimeGlobal;
+	m_pActorInvOwner = io;
+
+	if (io)
+		m_ActorCharacterInfo->InitCharacter(m_pActorInvOwner->object_id());
 	else
-	{
-		UpdateActorMP();
-	}
+		m_ActorCharacterInfo->ClearInfo();
 }
 
 void CUIActorMenu::SetPartner(CInventoryOwner* io)
@@ -837,21 +830,9 @@ void CUIActorMenu::ResetMode()
 
 void CUIActorMenu::UpdateActorMP()
 {
-	if ( !&Level() || !Level().game || !Game().local_player || !m_pActorInvOwner || IsGameTypeSingle() )
-	{
-		m_ActorCharacterInfo->ClearInfo();
-		m_ActorMoney->SetText( "" );
-		return;
-	}
-
-	int money = Game().local_player->money_for_round;
-
-	string64 buf;
-	xr_sprintf( buf, "%d RU", money );
-	m_ActorMoney->SetText( buf );
-
-	m_ActorCharacterInfo->InitCharacterMP( Game().local_player->getName(), "ui_npc_u_nebo_1" );
-
+	m_ActorCharacterInfo->ClearInfo();
+	m_ActorMoney->SetText("");
+	return;
 }
 
 bool CUIActorMenu::CanSetItemToList(PIItem item, CUIDragDropListEx* l, u16& ret_slot)
@@ -880,28 +861,28 @@ bool CUIActorMenu::CanSetItemToList(PIItem item, CUIDragDropListEx* l, u16& ret_
 void CUIActorMenu::UpdateConditionProgressBars()
 {
 	PIItem itm = m_pActorInvOwner->inventory().ItemFromSlot(INV_SLOT_2);
-	if(itm)
+	if (itm)
 	{
-		m_WeaponSlot1_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f)/15.0f);
+		m_WeaponSlot1_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f) / 15.0f);
 	}
 	else
 		m_WeaponSlot1_progress->SetProgressPos(0);
 
 	itm = m_pActorInvOwner->inventory().ItemFromSlot(INV_SLOT_3);
-	if(itm)
-		m_WeaponSlot2_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f)/15.0f);
+	if (itm)
+		m_WeaponSlot2_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f) / 15.0f);
 	else
 		m_WeaponSlot2_progress->SetProgressPos(0);
 
 	itm = m_pActorInvOwner->inventory().ItemFromSlot(OUTFIT_SLOT);
-	if(itm)
-		m_Outfit_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f)/15.0f);
+	if (itm)
+		m_Outfit_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f) / 15.0f);
 	else
 		m_Outfit_progress->SetProgressPos(0);
 
 	itm = m_pActorInvOwner->inventory().ItemFromSlot(HELMET_SLOT);
-	if(itm)
-		m_Helmet_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f)/15.0f);
+	if (itm)
+		m_Helmet_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f) / 15.0f);
 	else
 		m_Helmet_progress->SetProgressPos(0);
 }

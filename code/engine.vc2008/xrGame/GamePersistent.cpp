@@ -585,7 +585,7 @@ void CGamePersistent::OnFrame	()
 			}
 		}
 #ifndef MASTER_GOLD
-		if (Level().CurrentViewEntity() && IsGameTypeSingle()) {
+		if (Level().CurrentViewEntity()) {
 			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())) {
 				CCustomMonster	*custom_monster = smart_cast<CCustomMonster*>(Level().CurrentViewEntity());
 				if (custom_monster) // can be spectator in multiplayer
@@ -842,7 +842,7 @@ void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 
 bool CGamePersistent::CanBePaused()
 {
-	return IsGameTypeSingle	() || (g_pGameLevel && Level().IsDemoPlay());
+	return true;
 }
 void CGamePersistent::SetPickableEffectorDOF(bool bSet)
 {
