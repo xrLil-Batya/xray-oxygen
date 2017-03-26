@@ -684,9 +684,6 @@ void CActor::Die(CObject* who)
 		m_DangerSnd.stop();
 	}
 
-	//cam_Set(eacFreeLook);
-	luabind::functor<LPCSTR> lua_function; 
-	R_ASSERT2(ai().script_engine().functor<LPCSTR>("sk_actor_death.is_killed", lua_function), "Can't call lua function!");
 	CurrentGameUI()->HideShownDialogs();
 	start_tutorial("game_over");
 
@@ -694,6 +691,11 @@ void CActor::Die(CObject* who)
 	mstate_real &= ~mcAnyMove;
 
 	xr_delete(m_sndShockEffector);
+
+	luabind::functor<LPCSTR> lua_function;
+	R_ASSERT2(ai().script_engine().functor<LPCSTR>("sk_actor_death.is_killed", lua_function), "Can't call lua function!");
+
+	lua_function();
 }
 
 void	CActor::SwitchOutBorder(bool new_border_state)

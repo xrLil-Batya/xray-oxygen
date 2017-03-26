@@ -14,7 +14,7 @@ function is_killed()
 	if not db.actor:alive() then
 		if not flag_dead and not flad_circle then
 		local dir=device().cam_dir
-		db.actor:set_actor_direction(dir.x,dir.y,0) --'выравниваем направление взгляда, чтобы было падение более реалистичным
+		db.actor:set_actor_direction(dir.x) --'выравниваем направление взгляда, чтобы было падение более реалистичным
  		level.add_cam_effector("camera_effects\\surge_02.anm", 2532, false, "")
 		level.add_pp_effector("surge_fade.ppe", 2011, false)
 		level.disable_input()
