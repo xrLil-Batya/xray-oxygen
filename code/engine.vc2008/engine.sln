@@ -114,6 +114,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "3rd party\zlib\zlib
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ode", "3rd party\ode\default.vcxproj", "{1BF75FEB-87DD-486C-880B-227987D191C2}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLauncher", "xrLauncher\xrLauncher.vcxproj", "{C633815E-68C1-40EF-8641-7CECFB5091A2}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Multithreaded|Win32 = Debug Multithreaded|Win32
@@ -1092,6 +1094,34 @@ Global
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|Win32.ActiveCfg = Release|Win32
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|Win32.Build.0 = Release|Win32
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|x64.ActiveCfg = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug Multithreaded|Win32.ActiveCfg = Debug|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug Multithreaded|Win32.Build.0 = Debug|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug Multithreaded|x64.ActiveCfg = Debug|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug Multithreaded|x64.Build.0 = Debug|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug|Win32.ActiveCfg = Debug|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug|Win32.Build.0 = Debug|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug|x64.ActiveCfg = Debug|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Debug|x64.Build.0 = Debug|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed_Compilers|Win32.ActiveCfg = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed_Compilers|Win32.Build.0 = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed_Compilers|x64.ActiveCfg = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed_Compilers|x64.Build.0 = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed|Win32.ActiveCfg = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed|Win32.Build.0 = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed|x64.ActiveCfg = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Mixed|x64.Build.0 = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release Multithreaded|Win32.ActiveCfg = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release Multithreaded|Win32.Build.0 = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release Multithreaded|x64.ActiveCfg = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release Multithreaded|x64.Build.0 = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release_Compilers|Win32.ActiveCfg = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release_Compilers|Win32.Build.0 = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release_Compilers|x64.ActiveCfg = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release_Compilers|x64.Build.0 = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release|Win32.ActiveCfg = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release|Win32.Build.0 = Release|Win32
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release|x64.ActiveCfg = Release|x64
+		{C633815E-68C1-40EF-8641-7CECFB5091A2}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

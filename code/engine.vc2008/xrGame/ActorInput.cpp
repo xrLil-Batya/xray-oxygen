@@ -33,8 +33,10 @@
 #include "clsid_game.h"
 #include "hudmanager.h"
 #include "Weapon.h"
+#include "ZoneCampfire.h"
 
 extern u32 hud_adj_mode;
+extern bool isCampFireAt;
 
 void CActor::IR_OnKeyboardPress(int cmd)
 {
@@ -379,23 +381,14 @@ void CActor::ActorUse()
 	if(character_physics_support()->movement()->PHCapture())
 		character_physics_support()->movement()->PHReleaseObject();
 
-	
-
 	if(m_pUsableObject && NULL==m_pObjectWeLookingAt->cast_inventory_item())
-	{
 		m_pUsableObject->use(this);
-	}
 	
-	if ( m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable() )
+	if (m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable())
 	{
 		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-		if ( pGameSP ) //single
-		{
-			if ( !m_pInvBoxWeLookingAt->closed() )
-			{
-				pGameSP->StartCarBody( this, m_pInvBoxWeLookingAt );
-			}
-		}
+		if (pGameSP && !m_pInvBoxWeLookingAt->closed()) //single
+			pGameSP->StartCarBody(this, m_pInvBoxWeLookingAt);
 		return;
 	}
 
@@ -439,25 +432,28 @@ void CActor::ActorUse()
 			}
 
 		}
-		else
+		else if (object && smart_cast<CHolderCustom*>(object))
 		{
-			if (object && smart_cast<CHolderCustom*>(object))
-			{
-					NET_Packet		P;
-					CGameObject::u_EventGen		(P, GEG_PLAYER_ATTACH_HOLDER, ID());
-					P.w_u16						(object->ID());
-					CGameObject::u_EventSend	(P);
-					return;
-			}
-
+			NET_Packet		P;
+			CGameObject::u_EventGen(P, GEG_PLAYER_ATTACH_HOLDER, ID());
+			P.w_u16(object->ID());
+			CGameObject::u_EventSend(P);
+			return;
 		}
+
+		//m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(object); 
+		if(isCampFireAt)
+			m_CapmfireWeLookingAt->turn_off_script();
+		else
+			m_CapmfireWeLookingAt->turn_on_script();
+		
 	}
 }
 
-BOOL CActor::HUDview				( )const 
-{ 
-	return IsFocused() && (cam_active==eacFirstEye)&&
-		((!m_holder) || (m_holder && m_holder->allowWeapon() && m_holder->HUDView() ) ); 
+BOOL CActor::HUDview() const
+{
+	return IsFocused() && (cam_active == eacFirstEye) &&
+		((!m_holder) || (m_holder && m_holder->allowWeapon() && m_holder->HUDView()));
 }
 
 static	u16 SlotsToCheck [] = {

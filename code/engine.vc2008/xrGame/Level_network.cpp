@@ -176,28 +176,21 @@ void CLevel::ClientSend()
 	u32						start	= 0;
 	//----------- for E3 -----------------------------
 
+	if (CurrentControlEntity())
 	{
-		if (CurrentControlEntity()) 
+		CObject* pObj = CurrentControlEntity();
+		if (!pObj->getDestroy() && pObj->net_Relevant())
 		{
-			CObject* pObj = CurrentControlEntity();
-			if (!pObj->getDestroy() && pObj->net_Relevant())
-			{				
-				P.w_begin		(M_CL_UPDATE);
-				
+			P.w_begin(M_CL_UPDATE);
+			P.w_u16(u16(pObj->ID()));
+			P.w_u32(0);	//reserved place for client's ping
 
-				P.w_u16			(u16(pObj->ID()));
-				P.w_u32			(0);	//reserved place for client's ping
+			pObj->net_Export(P);
 
-				pObj->net_Export			(P);
-
-				if (P.B.count>9)				
-				{
-					if (!OnServer())
-						Send	(P, net_flags(FALSE));
-				}				
-			}			
-		}		
-	};
+			if (P.B.count > 9 && !OnServer())
+					Send(P, net_flags(FALSE));
+		}
+	}
 	if (m_file_transfer)
 	{
 		m_file_transfer->update_transfer();

@@ -73,6 +73,7 @@
 #include "ui/UIActorMenu.h"
 #include "ActorHelmet.h"
 #include "UI/UIDragDropReferenceList.h"
+#include "ZoneCampfire.h"
 
 const u32		patch_frames	= 50;
 const float		respawn_delay	= 1.f;
@@ -85,7 +86,7 @@ extern float cammera_into_collision_shift ;
 string32		ACTOR_DEFS::g_quick_use_slots[4]={NULL, NULL, NULL, NULL};
 //skeleton
 
-
+bool isCampFireAt;
 
 static Fbox		bbStandBox;
 static Fbox		bbCrouchBox;
@@ -158,7 +159,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_holder				=	NULL;
 	m_holderID				=	u16(-1);
 
-
+	m_CapmfireWeLookingAt	= nullptr;
 #ifdef DEBUG
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
@@ -399,6 +400,8 @@ if(!g_dedicated_server)
 	m_sCarCharacterUseAction		= "car_character_use";
 	m_sInventoryItemUseAction		= "inventory_item_use";
 	m_sInventoryBoxUseAction		= "inventory_box_use";
+	m_sCampfireIgniteAction			= "campfire_ignite";
+	m_sCampfireExtinguishAction = "campfire_extinguish";
 	//---------------------------------------------------------------------
 	m_sHeadShotParticle	= READ_IF_EXISTS(pSettings,r_string,section,"HeadShotParticle",0);
 }
@@ -1154,63 +1157,58 @@ void CActor::shedule_Update	(u32 DT)
 	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
 	
 
-	if(!input_external_handler_installed() && RQ.O && RQ.O->getVisible() &&  RQ.range<2.0f) 
+	if (!input_external_handler_installed() && RQ.O && RQ.O->getVisible() && RQ.range < 2.0f)
 	{
-		m_pObjectWeLookingAt			= smart_cast<CGameObject*>(RQ.O);
-		
+		m_pObjectWeLookingAt = smart_cast<CGameObject*>(RQ.O);
+
 		CGameObject						*game_object = smart_cast<CGameObject*>(RQ.O);
-		m_pUsableObject					= smart_cast<CUsableScriptObject*>(game_object);
-		m_pInvBoxWeLookingAt			= smart_cast<CInventoryBox*>(game_object);
-		m_pPersonWeLookingAt			= smart_cast<CInventoryOwner*>(game_object);
-		m_pVehicleWeLookingAt			= smart_cast<CHolderCustom*>(game_object);
-		CEntityAlive* pEntityAlive		= smart_cast<CEntityAlive*>(game_object);
-		
-		if ( GameID() == eGameIDSingle )
+		m_pUsableObject = smart_cast<CUsableScriptObject*>(game_object);
+		m_pInvBoxWeLookingAt = smart_cast<CInventoryBox*>(game_object);
+		m_pPersonWeLookingAt = smart_cast<CInventoryOwner*>(game_object);
+		m_pVehicleWeLookingAt = smart_cast<CHolderCustom*>(game_object);
+		m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(game_object);
+		CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(game_object);
+
+		if (m_pUsableObject && m_pUsableObject->tip_text())
 		{
-			if (m_pUsableObject && m_pUsableObject->tip_text())
+			m_sDefaultObjAction = CStringTable().translate(m_pUsableObject->tip_text());
+		}
+		else
+		{
+			if (m_pPersonWeLookingAt && pEntityAlive->g_Alive() && m_pPersonWeLookingAt->IsTalkEnabled())
+				m_sDefaultObjAction = m_sCharacterUseAction;
+			else if (pEntityAlive && !pEntityAlive->g_Alive())
 			{
-				m_sDefaultObjAction = CStringTable().translate( m_pUsableObject->tip_text() );
+				if (m_pPersonWeLookingAt && m_pPersonWeLookingAt->deadbody_closed_status())
+					m_sDefaultObjAction = m_sDeadCharacterDontUseAction;
+				else
+				{
+					bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals", pEntityAlive->cNameVisual());
+					if (b_allow_drag)
+						m_sDefaultObjAction = m_sDeadCharacterUseOrDragAction;
+					else if (pEntityAlive->cast_inventory_owner())
+						m_sDefaultObjAction = m_sDeadCharacterUseAction;
+				} // m_pPersonWeLookingAt
+			}
+			else if (m_pVehicleWeLookingAt)
+				m_sDefaultObjAction = m_sCarCharacterUseAction;
+			else if (m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() && m_pObjectWeLookingAt->cast_inventory_item()->CanTake())
+				m_sDefaultObjAction = m_sInventoryItemUseAction;
+			else if (m_CapmfireWeLookingAt)
+			{
+				if (m_CapmfireWeLookingAt->is_on())
+				{
+					isCampFireAt = true;
+					m_sDefaultObjAction = m_sCampfireExtinguishAction;
+				}
+				else
+				{
+					isCampFireAt = false;
+					m_sDefaultObjAction = m_sCampfireIgniteAction;
+				}
 			}
 			else
-			{
-				if (m_pPersonWeLookingAt && pEntityAlive->g_Alive() && m_pPersonWeLookingAt->IsTalkEnabled())
-				{
-					m_sDefaultObjAction = m_sCharacterUseAction;
-				}
-				else if ( pEntityAlive && !pEntityAlive->g_Alive() )
-				{
-					if ( m_pPersonWeLookingAt && m_pPersonWeLookingAt->deadbody_closed_status() )
-					{
-						m_sDefaultObjAction = m_sDeadCharacterDontUseAction;
-					}
-					else
-					{
-						bool b_allow_drag = !!pSettings->line_exist("ph_capture_visuals",pEntityAlive->cNameVisual());
-						if ( b_allow_drag )
-						{
-							m_sDefaultObjAction = m_sDeadCharacterUseOrDragAction;
-						}
-						else if ( pEntityAlive->cast_inventory_owner() )
-						{
-							m_sDefaultObjAction = m_sDeadCharacterUseAction;
-						}
-					} // m_pPersonWeLookingAt
-				}
-				else if (m_pVehicleWeLookingAt)
-				{
-					m_sDefaultObjAction = m_sCarCharacterUseAction;
-				}
-				else if (	m_pObjectWeLookingAt && 
-							m_pObjectWeLookingAt->cast_inventory_item() && 
-							m_pObjectWeLookingAt->cast_inventory_item()->CanTake() )
-				{
-					m_sDefaultObjAction = m_sInventoryItemUseAction;
-				}
-				else 
-				{
-					m_sDefaultObjAction = NULL;
-				}
-			}
+				m_sDefaultObjAction = NULL;
 		}
 	}
 	else 
@@ -1221,6 +1219,7 @@ void CActor::shedule_Update	(u32 DT)
 		m_pObjectWeLookingAt	= NULL;
 		m_pVehicleWeLookingAt	= NULL;
 		m_pInvBoxWeLookingAt	= NULL;
+		m_CapmfireWeLookingAt	= nullptr;
 	}
 
 //	UpdateSleep									();

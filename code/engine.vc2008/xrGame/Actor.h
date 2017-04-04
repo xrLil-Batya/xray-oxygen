@@ -36,7 +36,7 @@ class CWeaponList;
 class CEffectorBobbing;
 class CHolderCustom;
 class CUsableScriptObject;
-
+class CZoneCampfire;
 struct SShootingEffector;
 struct SSleepEffector;
 class  CSleepEffectorPP;
@@ -350,6 +350,7 @@ protected:
 	CHolderCustom*			m_pVehicleWeLookingAt;
 	CGameObject*			m_pObjectWeLookingAt;
 	CInventoryBox*			m_pInvBoxWeLookingAt;
+	CZoneCampfire*			m_CapmfireWeLookingAt;
 
 	// Tip for action for object we're looking at
 	shared_str				m_sDefaultObjAction;
@@ -360,7 +361,9 @@ protected:
 	shared_str				m_sCarCharacterUseAction;
 	shared_str				m_sInventoryItemUseAction;
 	shared_str				m_sInventoryBoxUseAction;
-	
+	shared_str				m_sCampfireIgniteAction;	// qweasdd
+	shared_str				m_sCampfireExtinguishAction; 
+
 //	shared_str				m_quick_use_slots[4];
 	//режим подбирания предметов
 	bool					m_bPickupMode;
