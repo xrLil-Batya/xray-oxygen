@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: script_storage.cpp
 //	Created 	: 01.04.2004
-//  Modified 	: 01.04.2004
+//  Modified 	: 06.04.2017
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script Storage
 ////////////////////////////////////////////////////////////////////////////
@@ -199,7 +199,6 @@ void CScriptStorage::reinit	()
 		lua_close			(m_virtual_machine);
 
 	m_virtual_machine		= luaL_newstate(); 
-	//FX: Не запустилась машинка -- двиг упал, так удобнее, имхо
 	R_ASSERT(m_virtual_machine, "Cannot initialize script virtual machine!");
 
 	// initialize lua standard library functions 
@@ -235,7 +234,22 @@ void CScriptStorage::reinit	()
 		dojitopt		(lua(), "2");
 #endif // #ifndef DEBUG
 	}
+	//LuaICP API
+#ifdef LUACP_API
+	HMODULE hLib = GetModuleHandle("luaicp.dll");
+	if (hLib)
+	{
+		Msg("Lua Interceptor found! Attaching :)");
 
+		typedef void(WINAPI *LUA_CAPTURE)(lua_State *L);
+
+		LUA_CAPTURE ExtCapture = (LUA_CAPTURE) GetProcAddress(hLib, "ExtCapture");
+		if (NULL != ExtCapture)
+			ExtCapture(m_virtual_machine);
+		else
+			Msg("ExtCapture proc not found in luaicp.dll");
+	}
+#endif
 	if (strstr(Core.Params,"-_g"))
 		file_header			= file_header_new;
 	else
