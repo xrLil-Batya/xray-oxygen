@@ -8,6 +8,7 @@
 //#include "fbasicvisual.h"
 #include "../Include/xrRender/RenderVisual.h"
 #include "../Include/xrRender/Kinematics.h"
+#include "../FrayBuildConfig.hpp"
 
 #include "x_ray.h"
 #include "GameFont.h"
@@ -139,11 +140,8 @@ void CObject::setVisible			(BOOL _visible)
 	}
 }
 
-//void	CObject::Center					(Fvector& C)	const	{ VERIFY2(renderable.visual,*cName()); renderable.xform.transform_tiny(C,renderable.visual->vis.sphere.P);	}
 void	CObject::Center					(Fvector& C)	const	{ VERIFY2(renderable.visual,*cName()); renderable.xform.transform_tiny(C,renderable.visual->getVisData().sphere.P);	}
-//float	CObject::Radius					()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->vis.sphere.R;								}
 float	CObject::Radius					()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->getVisData().sphere.R;								}
-//const	Fbox&	CObject::BoundingBox	()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->vis.box;									}
 const	Fbox&	CObject::BoundingBox	()				const	{ VERIFY2(renderable.visual,*cName()); return renderable.visual->getVisData().box;									}
 
 //----------------------------------------------------------------------
@@ -162,7 +160,18 @@ CObject::CObject		( )		:
 	NameObject					= NULL;
 	NameSection					= NULL;
 	NameVisual					= NULL;
-
+#ifdef LUACP_API
+	static bool _saved 			= false;
+	
+	if (!_saved)
+	{
+		_saved = true;
+		LogXrayOffset("GameObject.id",		this, &this->Props);
+		LogXrayOffset("GameObject.name",	this, &this->NameObject);
+		LogXrayOffset("GameObject.section", this, &this->NameSection);
+		LogXrayOffset("GameObject.visual",  this, &this->NameVisual);
+	}
+#endif
 #ifdef DEBUG
 	dbg_update_shedule			= u32(-1)/2;
 	dbg_update_cl				= u32(-1)/2;
