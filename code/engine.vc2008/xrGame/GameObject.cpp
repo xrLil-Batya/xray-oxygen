@@ -29,6 +29,7 @@
 #include "magic_box3.h"
 #include "animation_movement_controller.h"
 #include "../xrengine/xr_collide_form.h"
+#include "../FrayBuildConfig.hpp"
 extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);
 
 #pragma warning(push)
@@ -57,6 +58,19 @@ CGameObject::CGameObject		()
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
 	m_anim_mov_ctrl				= 0;
+	
+#ifdef LUACP_API
+	static bool _saved = true;
+	if (!_saved)
+	{
+		_saved = true;
+		
+		LogXrayOffset("GameObject.b_spawned", this, &this->m_spawned);
+		LogXrayOffset("GameObject.clsid", this, &this->m_script_clsid);
+		LogXrayOffset("GameObject.story_id", this, &this->m_story_id);
+		LogXrayOffset("GameObject.ai_location", this, &this->m_ai_location);		
+	}
+#endif
 }
 
 CGameObject::~CGameObject		()
@@ -808,7 +822,7 @@ void CGameObject::DestroyObject()
 
 void CGameObject::shedule_Update	(u32 dt)
 {
-	//уничтожить
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if(NeedToDestroyObject())
 	{
 #ifndef MASTER_GOLD
@@ -829,7 +843,7 @@ BOOL CGameObject::net_SaveRelevant	()
 	return	(CScriptBinder::net_SaveRelevant());
 }
 
-//игровое имя объекта
+//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 LPCSTR CGameObject::Name () const
 {
 	return	(*cName());
