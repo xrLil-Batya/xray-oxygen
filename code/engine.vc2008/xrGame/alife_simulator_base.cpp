@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: alife_simulator_base.cpp
 //	Created 	: 25.12.2002
-//  Modified 	: 12.05.2004
+//  Modified 	: 06.04.2017
 //	Author		: Dmitriy Iassenev
 //	Description : ALife Simulator base class
 ////////////////////////////////////////////////////////////////////////////
@@ -22,6 +22,7 @@
 #include "level_graph.h"
 #include "inventory_upgrade_manager.h"
 #include "level.h"
+#include "../FrayBuildConfig.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -48,6 +49,10 @@ CALifeSimulatorBase::CALifeSimulatorBase	(xrServer *server, LPCSTR section)
 
 	random().seed				(u32(CPU::QPC() & 0xffffffff));
 	m_can_register_objects		= true;
+#ifdef LUACP_API
+	LogXrayOffset("CALifeSpawnRegistry", this, &this->m_spawns);
+	LogXrayOffset("CALifeObjectRegistry", this, &this->m_objects);
+#endif
 }
 
 CALifeSimulatorBase::~CALifeSimulatorBase	()
@@ -93,6 +98,9 @@ void CALifeSimulatorBase::reload			(LPCSTR section)
 	m_registry_container		= xr_new<CALifeRegistryContainer>	();
 	m_upgrade_manager			= xr_new<inventory::upgrade::Manager>();
 	m_initialized				= true;
+#ifdef DEBUG
+	Msg("#SE_DBG: CALifeSimulatorBase '%s' ->m_objects = 0x%p ", section, (LPVOID)m_objects);
+#endif
 }
 
 CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, u16 parent_id, bool registration)
@@ -124,7 +132,7 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 	CSE_ALifeDynamicObject		*dynamic_object = smart_cast<CSE_ALifeDynamicObject*>(abstract);
 	VERIFY						(dynamic_object);
 
-	//оружие спавним с полным магазинои
+	//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	CSE_ALifeItemWeapon* weapon = smart_cast<CSE_ALifeItemWeapon*>(dynamic_object);
 	if(weapon)
 		weapon->a_elapsed		= weapon->get_ammo_magsize();

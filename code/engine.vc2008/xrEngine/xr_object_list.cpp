@@ -8,7 +8,7 @@
 
 #include "xr_object.h"
 #include "../xrCore/net_utils.h"
-
+#include "../FrayBuildConfig.hpp"
 #include "CustomHUD.h"
 
 class fClassEQ {
@@ -92,23 +92,8 @@ void	CObjectList::o_sleep		( CObject*		O		)
 
 void	CObjectList::SingleUpdate	(CObject* O)
 {
-	if ( Device.dwFrame == O->dwFrame_UpdateCL ) {
-#ifdef DEBUG
-//		if (O->getDestroy())
-//			Msg					("- !!!processing_enabled ->destroy_queue.push_back %s[%d] frame [%d]",O->cName().c_str(), O->ID(), Device.dwFrame);
-#endif // #ifdef DEBUG
-
+	if (Device.dwFrame == O->dwFrame_UpdateCL || !O->processing_enabled())
 		return;
-	}
-
-	if ( !O->processing_enabled() ) {
-#ifdef DEBUG
-//		if (O->getDestroy())
-//			Msg					("- !!!processing_enabled ->destroy_queue.push_back %s[%d] frame [%d]",O->cName().c_str(), O->ID(), Device.dwFrame);
-#endif // #ifdef DEBUG
-
-		return;
-	}
 
 	if (O->H_Parent())
 		SingleUpdate			(O->H_Parent());
@@ -116,72 +101,21 @@ void	CObjectList::SingleUpdate	(CObject* O)
 	Device.Statistic->UpdateClient_updated	++;
 	O->dwFrame_UpdateCL			= Device.dwFrame;
 
-//	Msg							("[%d][0x%08x]IAmNotACrowAnyMore (CObjectList::SingleUpdate)", Device.dwFrame, dynamic_cast<void*>(O));
-
 	O->UpdateCL					();
 
 	VERIFY3						(O->dbg_update_cl == Device.dwFrame, "Broken sequence of calls to 'UpdateCL'",*O->cName());
-#if 0//ndef DEBUG
-	__try
-	{
-#endif
-		if (O->H_Parent() && (O->H_Parent()->getDestroy() || O->H_Root()->getDestroy()) )	
-		{
-			// Push to destroy-queue if it isn't here already
-			Msg	("! ERROR: incorrect destroy sequence for object[%d:%s], section[%s], parent[%d:%s]",O->ID(),*O->cName(),*O->cNameSect(),O->H_Parent()->ID(),*O->H_Parent()->cName());
-		}
-#if 0//ndef DEBUG
-	}
-	__except (EXCEPTION_EXECUTE_HANDLER)
-	{
-		CObject* parent_obj = O->H_Parent();
-		CObject* root_obj	= O->H_Root();
-		Msg	("! ERROR: going to crush: [%d:%s], section[%s], parent_obj_addr[0x%08x], root_obj_addr[0x%08x]",O->ID(),*O->cName(),*O->cNameSect(), *((u32*)&parent_obj), *((u32*)&root_obj));
-		if (parent_obj)
-		{
-			__try
-			{
-				Msg("! Parent object: [%d:%s], section[%s]", 
-					parent_obj->ID(), 
-					parent_obj->cName().c_str(),
-					parent_obj->cNameSect().c_str());
 
-			}
-			__except (EXCEPTION_EXECUTE_HANDLER)
-			{
-				Msg("! Failed to get parent object info.");
-			}
-		}
-		if (root_obj)
-		{
-			__try
-			{
-				Msg("! Root object: [%d:%s], section[%s]", 
-					root_obj->ID(), 
-					root_obj->cName().c_str(),
-					root_obj->cNameSect().c_str());
-			}
-			__except (EXCEPTION_EXECUTE_HANDLER)
-			{
-				Msg("! Failed to get root object info.");
-			}
-		}
-		R_ASSERT(false);
-	} //end of __except
-#endif
+	// Push to destroy-queue if it isn't here already
+	if (O->H_Parent() && (O->H_Parent()->getDestroy() || O->H_Root()->getDestroy()))	
+		Msg	("! ERROR: incorrect destroy sequence for object[%d:%s], section[%s], parent[%d:%s]",O->ID(),*O->cName(),*O->cNameSect(),O->H_Parent()->ID(),*O->H_Parent()->cName());
 
-#ifdef DEBUG
-//	if (O->getDestroy())
-//		Msg						("- !!!processing_enabled ->destroy_queue.push_back %s[%d] frame [%d]",O->cName().c_str(), O->ID(), Device.dwFrame);
-#endif // #ifdef DEBUG
 }
 
 void CObjectList::clear_crow_vec(Objects& o)
 {
-	for (u32 _it=0; _it<o.size(); _it++) {
-//		Msg				("[%d][0x%08x]IAmNotACrowAnyMore (clear_crow_vec)", Device.dwFrame, dynamic_cast<void*>(o[_it]));
+	for (u32 _it=0; _it<o.size(); _it++)
 		o[_it]->IAmNotACrowAnyMore();
-	}
+	
 	o.clear_not_free();
 }
 
@@ -313,16 +247,8 @@ void CObjectList::net_Register		(CObject* O)
 
 void CObjectList::net_Unregister	(CObject* O)
 {
-	//R_ASSERT		(O->ID() < 0xffff);
 	if (O->ID() < 0xffff)				//demo_spectator can have 0xffff
 		map_NETID[O->ID()] = NULL;
-/*
-	xr_map<u32,CObject*>::iterator	it = map_NETID.find(O->ID());
-	if ((it!=map_NETID.end()) && (it->second == O))	{
-		// Msg			("-------------------------------- Unregster: %s",O->cName());
-		map_NETID.erase(it);
-	}
-*/
 }
 
 int	g_Dump_Export_Obj = 0;
@@ -384,17 +310,22 @@ void CObjectList::net_Import		(NET_Packet* Packet)
 	if (g_Dump_Import_Obj) Msg("------------------- ");
 }
 
-/*
-CObject* CObjectList::net_Find(u16 ID)
-{
-
-	xr_map<u32,CObject*>::iterator	it = map_NETID.find(ID);
-	return (it==map_NETID.end())?0:it->second;
-}
-*/
 void CObjectList::Load		()
 {
-	R_ASSERT				(/*map_NETID.empty() &&*/ objects_active.empty() && destroy_queue.empty() && objects_sleeping.empty());
+	R_ASSERT				(objects_active.empty() && destroy_queue.empty() && objects_sleeping.empty());
+#ifdef LUACP_API
+	LogXrayOffset("GameLevel.ObjectList",		g_pGameLevel, this);
+	LogXrayOffset("GameLevel.map_NETID",		g_pGameLevel, &this->map_NETID);
+	LogXrayOffset("GameLevel.destroy_queue",	g_pGameLevel, &this->destroy_queue);
+	LogXrayOffset("GameLevel.objects_active",	g_pGameLevel, &this->objects_active);
+	LogXrayOffset("GameLevel.objects_sleeping", g_pGameLevel, &this->objects_sleeping);
+	LogXrayOffset("GameLevel.crows_0",			g_pGameLevel, &this->crows_0);
+	LogXrayOffset("GameLevel.crows_1",			g_pGameLevel, &this->crows_1);
+	LogXrayOffset("GameLevel.crows",			g_pGameLevel, &this->crows);
+
+	LogXrayOffset("xr_vector.first",			&this->objects_active, &objects_active._Myfirst);
+	LogXrayOffset("xr_vector.last",				&this->objects_active, &objects_active._Mylast);
+#endif
 }
 
 void CObjectList::Unload	( )

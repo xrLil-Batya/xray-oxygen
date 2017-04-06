@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: alife_simulator.cpp
 //	Created 	: 25.12.2002
-//  Modified 	: 13.05.2004
+//  Modified 	: 06.04.2017
 //	Author		: Dmitriy Iassenev
 //	Description : ALife Simulator
 ////////////////////////////////////////////////////////////////////////////
@@ -16,7 +16,7 @@
 #include "object_factory.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/xr_ioconsole.h"
-
+#include "../FrayBuildConfig.hpp"
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG
@@ -46,7 +46,9 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	CALifeSimulatorBase			(server,alife_section)
 {
 	restart_all					();
-
+#ifdef LUACP_API
+	LogXrayOffset("CALifeSimulatorBase", this, this->get_base());
+#endif
 	ai().set_alife				(this);
 
 	setup_command_line			(command_line);

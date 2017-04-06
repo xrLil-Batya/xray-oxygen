@@ -240,3 +240,16 @@ void CloseLog(void)
  	LogFile->clear	();
 	xr_delete		(LogFile);
 }
+typedef void (WINAPI *OFFSET_UPDATER)(LPCSTR key, u32 ofs);
+//LuaICP_API only
+void LogXrayOffset(LPCSTR key, LPVOID base, LPVOID pval)
+{
+	u32 ofs = (u32)pval - (u32)base;
+	Msg("XRAY_OFFSET: %30s = 0x%x base = 0x%p, pval = 0x%p ", key, ofs, base, pval);
+	static OFFSET_UPDATER cbUpdater = nullptr;
+	HMODULE hDLL = GetModuleHandle("luaicp.dll");
+	if (!cbUpdater && hDLL)
+		cbUpdater = (OFFSET_UPDATER) GetProcAddress(hDLL, "UpdateXrayOffset");
+	if (cbUpdater)
+		cbUpdater(key, ofs);
+}

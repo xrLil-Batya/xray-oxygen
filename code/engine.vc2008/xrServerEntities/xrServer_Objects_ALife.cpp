@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: xrServer_Objects_ALife.cpp
 //	Created 	: 19.09.2002
-//  Modified 	: 04.06.2003
+//  Modified 	: 06.04.2017
 //	Author		: Oles Shyshkovtsov, Alexander Maksimchuk, Victor Reutskiy and Dmitriy Iassenev
 //	Description : Server objects for ALife simulator
 ////////////////////////////////////////////////////////////////////////////
@@ -357,7 +357,7 @@ static Fvector PT [5] = {
 }
 
 #endif // #ifndef XRGAME_EXPORTS
-
+#include "../FrayBuildConfig.hpp"
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeObject
 ////////////////////////////////////////////////////////////////////////////
@@ -376,6 +376,15 @@ CSE_ALifeObject::CSE_ALifeObject			(LPCSTR caSection) : CSE_Abstract(caSection)
 	m_spawn_story_id			= INVALID_SPAWN_STORY_ID;
 #ifdef XRGAME_EXPORTS
 	m_alife_simulator			= 0;
+#	ifdef LUACP_API
+		static bool _saved = false;
+		if (!_saved)
+		{
+			_saved = true;
+			LogXrayOffset("CSE_AlifeObject.story_id",	this, &this->m_story_id);
+			LogXrayOffset("CSE_AlifeObject.spawn_sid",  this, &this->m_spawn_story_id);
+		}
+#	endif
 #endif
 #ifdef XRSE_FACTORY_EXPORTS
     fp_data.inc					();

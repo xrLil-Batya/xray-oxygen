@@ -9,9 +9,12 @@
 #include "stdafx.h"
 #include "alife_object_registry.h"
 #include "ai_debug.h"
-
+#include "../FrayBuildConfig.hpp"
 CALifeObjectRegistry::CALifeObjectRegistry	(LPCSTR section)
 {
+#ifdef LUACP_API
+	LogXrayOffset("CALifeObjectRegistry.list", this, &this->m_objects);
+#endif
 }
 
 CALifeObjectRegistry::~CALifeObjectRegistry	()
