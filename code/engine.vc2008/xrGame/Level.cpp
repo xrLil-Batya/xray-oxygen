@@ -73,7 +73,7 @@ float		g_cl_lvInterp		= 0.1;
 u32			lvInterpSteps		= 0;
 
 #ifdef SPAWN_ANTIFREEZE
-extern bool	g_bootComplete;
+ENGINE_API bool	g_bootComplete;
 
 //get object ID from spawn data
 u16	GetSpawnInfo(NET_Packet &P, u16 &parent_id)
@@ -224,37 +224,8 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	g_player_hud->load_default();
 	
 	hud_zones_list = NULL;
-
-//	if ( !strstr( Core.Params, "-tdemo " ) && !strstr(Core.Params,"-tdemof "))
-//	{
-//		Demo_PrepareToStore();
-//	};
 	//---------------------------------------------------------
-//	m_bDemoPlayMode = FALSE;
-//	m_aDemoData.clear();
-//	m_bDemoStarted	= FALSE;
-
-	Msg("%s", Core.Params);
-	/*
-	if (strstr(Core.Params,"-tdemo ") || strstr(Core.Params,"-tdemof ")) {		
-		string1024				f_name;
-		if (strstr(Core.Params,"-tdemo "))
-		{
-			sscanf					(strstr(Core.Params,"-tdemo ")+7,"%[^ ] ",f_name);
-			m_bDemoPlayByFrame = FALSE;
-
-			Demo_Load	(f_name);	
-		}
-		else
-		{
-			sscanf					(strstr(Core.Params,"-tdemof ")+8,"%[^ ] ",f_name);
-			m_bDemoPlayByFrame = TRUE;
-
-			m_lDemoOfs = 0;
-			Demo_Load_toFrame(f_name, 100, m_lDemoOfs);
-		};		
-	}
-	*/
+//	Msg("%s", Core.Params);
 	//---------------------------------------------------------	
 	m_file_transfer					= NULL;
 	m_trained_stream				= NULL;
@@ -302,13 +273,9 @@ CLevel::~CLevel()
 	static_Sounds.clear			();
 
 	xr_delete					(m_level_sound_manager);
-
 	xr_delete					(m_space_restriction_manager);
-
 	xr_delete					(m_seniority_hierarchy_holder);
-	
 	xr_delete					(m_client_spawn_manager);
-
 	xr_delete					(m_autosave_manager);
 	
 #ifdef DEBUG
@@ -323,14 +290,11 @@ CLevel::~CLevel()
 
 
 	//by Dandy
-	//destroy fog of war
-//	xr_delete					(m_pFogOfWar);
 	//destroy bullet manager
 	xr_delete					(m_pBulletManager);
 	//-----------------------------------------------------------
 	xr_delete					(pStatGraphR);
 	xr_delete					(pStatGraphS);
-
 	//-----------------------------------------------------------
 	xr_delete					(m_ph_commander);
 	xr_delete					(m_ph_commander_scripts);
@@ -409,23 +373,8 @@ void CLevel::PrefetchSound		(LPCSTR name)
 }
 
 // Game interface ////////////////////////////////////////////////////
-int	CLevel::get_RPID(LPCSTR /**name/**/)
+int	CLevel::get_RPID(LPCSTR)
 {
-	/*
-	// Gain access to string
-	LPCSTR	params = pLevel->r_string("respawn_point",name);
-	if (0==params)	return -1;
-
-	// Read data
-	Fvector4	pos;
-	int			team;
-	sscanf		(params,"%f,%f,%f,%d,%f",&pos.x,&pos.y,&pos.z,&team,&pos.w); pos.y += 0.1f;
-
-	// Search respawn point
-	svector<Fvector4,maxRP>	&rp = Level().get_team(team).RespawnPoints;
-	for (int i=0; i<(int)(rp.size()); ++i)
-		if (pos.similar(rp[i],EPS_L))	return i;
-	*/
 	return -1;
 }
 
@@ -436,12 +385,8 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 {
 	//			Msg				("--- event[%d] for [%d]",type,dest);
 	CObject*	 O	= Objects.net_Find	(dest);
-	if (0==O)		{
-#ifdef DEBUG
-		Msg("* WARNING: c_EVENT[%d] to [%d]: unknown dest",type,dest);
-#endif // DEBUG
-		return;
-	}
+	if (!O)	return;
+	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
 	if (!GO)		{
 #ifndef MASTER_GOLD
@@ -452,19 +397,12 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	if (type != GE_DESTROY_REJECT)
 	{
 		if (type == GE_DESTROY)
-		{
 			Game().OnDestroy(GO);
-//			if ( GO->H_Parent() )
-//			{
-// = GameObject.cpp (210)
-//				Msg( "! ERROR (Level): GE_DESTROY arrived to object[%d][%s], that has parent[%d][%s], frame[%d]",
-//					GO->ID(), GO->cNameSect().c_str(),
-//					GO->H_Parent()->ID(), GO->H_Parent()->cName().c_str(), Device.dwFrame );
-//			}
-		}
+			
 		GO->OnEvent		(P,type);
 	}
-	else { // handle GE_DESTROY_REJECT here
+	else 
+	{ // handle GE_DESTROY_REJECT here
 		u32				pos = P.r_tell();
 		u16				id = P.r_u16();
 		P.r_seek		(pos);
@@ -1089,19 +1027,7 @@ void CLevel::make_NetCorrectionPrediction	()
 	if (!InterpolationDisabled())
 	{
 		for (u32 i =0; i<lvInterpSteps; i++)	//second prediction "real current" to "future" position
-		{
 			physics_world()->Step();
-#ifdef DEBUG
-/*
-			for	(OBJECTS_LIST_it OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
-			{
-				CGameObject* pObj = *OIt;
-				if (!pObj) continue;
-				pObj->PH_Ch_CrPr();
-			};
-*/
-#endif
-		}
 		//////////////////////////////////////////////////////////////////////////////////
 		for	(auto OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
 		{
@@ -1158,19 +1084,6 @@ void 		CLevel::PhisStepsCallback		( u32 Time0, u32 Time1 )
 {
 	if (!Level().game)				return;
 	if (GameID() == eGameIDSingle)	return;
-
-//#pragma todo("Oles to all: highly inefficient and slow!!!")
-//fixed (Andy)
-	/*
-	for (xr_vector<CObject*>::iterator O=Level().Objects.objects.begin(); O!=Level().Objects.objects.end(); ++O) 
-	{
-		if( smart_cast<CActor*>((*O)){
-			CActor* pActor = smart_cast<CActor*>(*O);
-			if (!pActor || pActor->Remote()) continue;
-				pActor->UpdatePosStack(Time0, Time1);
-		}
-	};
-	*/
 };
 
 void				CLevel::SetNumCrSteps		( u32 NumSteps )
@@ -1291,14 +1204,6 @@ u32	GameID()
 {
 	return Game().Type();
 }
-/*
-#include "../xrEngine/IGame_Persistent.h"
-
-IC bool	IsGameTypeSingle()
-{
-	return (g_pGamePersistent->GameType() == eGameIDSingle);
-}
-*/
 
 CZoneList* CLevel::create_hud_zones_list()
 {
