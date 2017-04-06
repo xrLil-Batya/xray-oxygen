@@ -30,6 +30,9 @@
 
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= nullptr;
+#ifdef SPAWN_ANTIFREEZE
+ENGINE_API bool g_bootComplete		= false;
+#endif
 BOOL	g_bIntroFinished			= FALSE;
 extern	void	Intro				( void* fn );
 extern	void	Intro_DSHOW			( void* fn );
@@ -959,7 +962,9 @@ void CApplication::LoadBegin	()
 	if (1==ll_dwReference)	{
 
 		g_appLoaded			= FALSE;
-
+#ifdef SPAWN_ANTIFREEZE
+		g_bootComplete		= false;
+#endif
 #ifndef DEDICATED_SERVER
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
@@ -986,6 +991,9 @@ void CApplication::LoadEnd		()
 void CApplication::destroy_loading_shaders()
 {
 	m_pRender->destroy_loading_shaders();
+#ifdef SPAWN_ANTIFREEZE
+	g_bootComplete = true;
+#endif
 }
 
 PROTECT_API void CApplication::LoadDraw		()
