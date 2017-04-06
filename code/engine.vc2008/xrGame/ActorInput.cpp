@@ -405,7 +405,7 @@ void CActor::ActorUse()
 				TryToTalk();
 			else
 			{
-				//только если находимся в режиме single
+				//пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ single
 				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
 				if (pGameSP)
 				{
@@ -442,11 +442,13 @@ void CActor::ActorUse()
 		}
 
 		//m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(object); 
-		if(isCampFireAt)
-			m_CapmfireWeLookingAt->turn_off_script();
-		else
-			m_CapmfireWeLookingAt->turn_on_script();
-		
+		if(m_CapmfireWeLookingAt) //Fixed
+		{
+			if(isCampFireAt)
+				m_CapmfireWeLookingAt->turn_off_script();
+			else
+				m_CapmfireWeLookingAt->turn_on_script();
+		}
 	}
 }
 
