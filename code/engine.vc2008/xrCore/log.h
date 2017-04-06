@@ -13,7 +13,7 @@ void 	XRCORE_API		Log			(LPCSTR msg, float			dop);
 void 	XRCORE_API		Log			(LPCSTR msg, const Fvector& dop);
 void 	XRCORE_API		Log			(LPCSTR msg, const Fmatrix& dop);
 void 	XRCORE_API		LogWinErr	(LPCSTR msg, long 			err_code);
-
+void	XRCORE_API		LogXrayOffset(LPCSTR key, LPVOID base, LPVOID pval); //luaicp only
 typedef void	( * LogCallback)	(LPCSTR string);
 LogCallback	XRCORE_API			SetLogCB	(LogCallback cb);
 void 	XRCORE_API				CreateLog	(BOOL no_log=FALSE);
