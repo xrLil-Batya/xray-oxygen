@@ -5,7 +5,7 @@
 #include "os_clipboard.h"
 
 #include <sal.h>
-//#include "dxerr.h"
+#include <intrin.h> // for __debugbreak
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -20,11 +20,8 @@ static bool bException = false;
 #include <new.h>							// for _set_new_mode
 #include <signal.h>							// for signals
 
-#ifndef _M_AMD64
-#	define DEBUG_INVOKE	__asm int 3
-#else
-#	define DEBUG_INVOKE	DebugBreak()
-#endif
+#define DEBUG_INVOKE	__debugbreak()
+
 
 #ifndef __BORLANDC__
 #	pragma comment(lib,"dxerr2015.lib")
