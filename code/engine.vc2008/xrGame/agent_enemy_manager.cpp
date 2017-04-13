@@ -8,9 +8,9 @@
 
 #include "pch_script.h"
 #include "agent_enemy_manager.h"
-#include "agent_manager.h"
-#include "agent_memory_manager.h"
 #include "agent_member_manager.h"
+#include "agent_memory_manager.h"
+#include "agent_manager.h"
 #include "ai_space.h"
 #include "ef_storage.h"
 #include "ef_pattern.h"
@@ -19,7 +19,6 @@
 
 #include "memory_manager.h"
 #include "visual_memory_manager.h"
-#include "sound_memory_manager.h"
 #include "hit_memory_manager.h"
 #include "enemy_manager.h"
 #include "memory_space_impl.h"
@@ -539,10 +538,6 @@ void CAgentEnemyManager::assign_wounded			()
 			}
 		}
 #endif
-
-//		VERIFY						(enemy);
-//		VERIFY						(processor);
-		
 		// this situation is possible
 		// for example
 		// 2 soldiers in group
@@ -563,8 +558,6 @@ void CAgentEnemyManager::assign_wounded			()
 		if (!enemy)
 			return;
 
-//		Msg							("wounded enemy [%s] is assigned to member [%s]",*enemy->m_object->cName(),*processor->cName());
-
 		if (wounded_processor(enemy->m_object) == ALife::_OBJECT_ID(-1))
 			wounded_processor		(enemy->m_object,processor->ID());
 
@@ -573,12 +566,6 @@ void CAgentEnemyManager::assign_wounded			()
 		VERIFY						((assigned | mask) != assigned);
 		assigned					|= mask;
 	}
-
-//	Msg								("[%6d] assigned = %x",Device.dwTimeGlobal,assigned);
-//	ENEMIES::iterator				I = m_enemies.begin();
-//	ENEMIES::iterator				E = m_enemies.end();
-//	for ( ; I != E; ++I)
-//		Msg							("[%6d] [%s] = %x",Device.dwTimeGlobal,*(*I).m_object->cName(),(*I).m_distribute_mask.get());
 }
 
 void CAgentEnemyManager::distribute_enemies		()

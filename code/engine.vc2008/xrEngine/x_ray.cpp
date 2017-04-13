@@ -27,7 +27,7 @@
 
 #include "xrSash.h"
 
-
+#include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= nullptr;
 #ifdef SPAWN_ANTIFREEZE

@@ -11,7 +11,7 @@
 extern BOOL					LogExecCB		= TRUE;
 static string_path			logFName		= "engine.log";
 static string_path			log_file_name	= "engine.log";
-static BOOL 				no_log			= TRUE;
+static bool 				no_log			= true;
 static std::recursive_mutex	logCS;
 
 bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true если лог все-же записывается плохо при вылете. 
@@ -69,10 +69,10 @@ void AddOne(const char *split)
 		}
 
 		char buf[64];
-		SYSTEMTIME lt;
-		GetLocalTime(&lt);
+		//SYSTEMTIME lt;
+		//GetLocalTime(&lt);
 
-		sprintf_s(buf, 64, "[%02d.%02d.%02d %02d:%02d:%02d.%03d] ", lt.wDay, lt.wMonth, lt.wYear % 100, lt.wHour, lt.wMinute, lt.wSecond, lt.wMilliseconds);
+		sprintf_s(buf, 64, "[%02d %03d] ", Core.UserDate, Core.UserTime);
 		LogWriter->w_printf("%s%s\r\n", buf, split);
 		cached_log += xr_strlen(buf);
 		cached_log += xr_strlen(split) + 2;

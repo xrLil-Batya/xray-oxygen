@@ -16,7 +16,7 @@
 #include "object_factory.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/xr_ioconsole.h"
-#include "../FrayBuildConfig.hpp"
+//#include "../FrayBuildConfig.hpp"
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG
@@ -46,9 +46,9 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	CALifeSimulatorBase			(server,alife_section)
 {
 	restart_all					();
-#ifdef LUACP_API
-	LogXrayOffset("CALifeSimulatorBase", this, this->get_base());
-#endif
+//#ifdef LUACP_API
+//	LogXrayOffset("CALifeSimulatorBase", this, &ai().get_alife());
+//#endif
 	ai().set_alife				(this);
 
 	setup_command_line			(command_line);

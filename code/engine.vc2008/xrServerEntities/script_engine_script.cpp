@@ -161,7 +161,30 @@ static bool is_enough_address_space_available_impl()
 	return is_enough_address_space_available( );
 }
 #endif // #ifdef XRGAME_EXPORTS
+/*
+void load_modules(const char* name, const char* address)
+{
+	string_path test = { (char)name };
 
+	Msg("%s dll scaning...");
+	FS.update_path("$modules$");
+	HMODULE hLib = GetModuleHandle(dll_name.c_str());
+	if (hLib)
+	{
+		Msg("%s found! Attaching :)", name);
+
+		typedef void(WINAPI *LUA_CAPTURE)(lua_State *L);
+
+		LUA_CAPTURE ExtCapture = (LUA_CAPTURE)GetProcAddress(hLib, address);
+		if (NULL != ExtCapture)
+			ExtCapture(ai().script_engine().lua());
+		else
+			Msg("%s proc not found in %s", address, name);
+	}
+	else
+		Msg("%s not found!", name);
+}
+*/
 #pragma optimize("s",on)
 void CScriptEngine::script_register(lua_State *L)
 {
@@ -186,8 +209,16 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L, "user_name",						import_ses::user_name);
 	function	(L, "time_global",						script_time_global);
 	function	(L, "time_global_async",				script_time_global_async);
+	//function	(L, "LoadModule", load_modules);
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",							get_device);
 	function	(L,	"is_enough_address_space_available",is_enough_address_space_available_impl);
+
+	//FX: подгрузка любых модулей
+	//{
+	//	luabind::functor<LPCSTR> module_init;
+	//	R_ASSERT2(ai().script_engine().functor<LPCSTR>("fray_config.modules_init", module_init), "Can't call lua function!");
+	//	module_init();
+	//}
 #endif // #ifdef XRGAME_EXPORTS
 }

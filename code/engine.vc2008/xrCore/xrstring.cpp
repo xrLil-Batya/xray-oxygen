@@ -90,7 +90,7 @@ struct str_container_impl
 			str_value* value = buffer[i];
 			while ( value )
 			{
-				fprintf	(f,"ref[%4d]-len[%3d]-crc[%8X] : %s\n",value->dwReference,value->dwLength,value->dwCRC,value->value);
+				fprintf	(f,"ref[%4u]-len[%3u]-crc[%8X] : %s\n",value->dwReference,value->dwLength,value->dwCRC,value->value);
 				value = value->next;
 			}
 		}

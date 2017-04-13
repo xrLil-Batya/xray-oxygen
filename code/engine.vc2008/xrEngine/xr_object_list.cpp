@@ -319,12 +319,10 @@ void CObjectList::Load		()
 	LogXrayOffset("GameLevel.destroy_queue",	g_pGameLevel, &this->destroy_queue);
 	LogXrayOffset("GameLevel.objects_active",	g_pGameLevel, &this->objects_active);
 	LogXrayOffset("GameLevel.objects_sleeping", g_pGameLevel, &this->objects_sleeping);
-	LogXrayOffset("GameLevel.crows_0",			g_pGameLevel, &this->crows_0);
-	LogXrayOffset("GameLevel.crows_1",			g_pGameLevel, &this->crows_1);
-	LogXrayOffset("GameLevel.crows",			g_pGameLevel, &this->crows);
+	//LogXrayOffset("GameLevel.crows",			g_pGameLevel, &this->crows);
 
-	LogXrayOffset("xr_vector.first",			&this->objects_active, &objects_active._Myfirst);
-	LogXrayOffset("xr_vector.last",				&this->objects_active, &objects_active._Mylast);
+	//LogXrayOffset("xr_vector.first",			&this->objects_active, &objects_active._Myfirst);
+	//LogXrayOffset("xr_vector.last",				&this->objects_active, &objects_active._Mylast);
 #endif
 }
 

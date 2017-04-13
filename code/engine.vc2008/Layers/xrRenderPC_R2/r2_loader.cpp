@@ -86,7 +86,6 @@ void CRender::level_Load(IReader* fs)
 	}
 
 	// Sectors
-//	g_pGamePersistent->LoadTitle("st_loading_sectors_portals");
 	g_pGamePersistent->LoadTitle();
 	LoadSectors					(fs);
 
@@ -94,7 +93,6 @@ void CRender::level_Load(IReader* fs)
 	HOM.Load					();
 
 	// Lights
-	// pApp->LoadTitle			("Loading lights...");
 	LoadLights					(fs);
 
 	// End
@@ -186,13 +184,6 @@ void CRender::level_Unload()
 	//*** Shaders
 	Shaders.clear_and_free		();
 	b_loaded					= FALSE;
-/*	
-	Models->ClearPool( true );
-	Visuals.clear_and_free();
-	dxRenderDeviceRender::Instance().Resources->Dump(false);
-	static int unload_counter = 0;
-	Msg("The Level Unloaded.======================== %d", ++unload_counter);
-*/
 }
 
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
@@ -213,12 +204,13 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 		u32 count				= fs->r_u32();
 		_DC.resize				(count);
 		_VB.resize				(count);
+
+		// decl
+		u32					buffer_size = (MAXD3DDECLLENGTH + 1) * sizeof(D3DVERTEXELEMENT9);
+		D3DVERTEXELEMENT9	*dcl = (D3DVERTEXELEMENT9*)_alloca(buffer_size);
+
 		for (u32 i=0; i<count; i++)
 		{
-			// decl
-//			D3DVERTEXELEMENT9*	dcl		= (D3DVERTEXELEMENT9*) fs().pointer();
-			u32					buffer_size = (MAXD3DDECLLENGTH+1)*sizeof(D3DVERTEXELEMENT9);
-			D3DVERTEXELEMENT9	*dcl = (D3DVERTEXELEMENT9*)_alloca(buffer_size);
 			fs->r				(dcl,buffer_size);
 			fs->advance			(-(int)buffer_size);
 

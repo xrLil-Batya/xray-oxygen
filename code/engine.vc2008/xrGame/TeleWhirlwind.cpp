@@ -3,12 +3,9 @@
 #include "../xrphysics/PhysicsShell.h"
 #include "PhysicsShellHolder.h"
 #include "level.h"
-#include "hit.h"
 #include "phdestroyable.h"
-#include "xrmessages.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "../Include/xrRender/KinematicsAnimated.h"
-//#include "PHWorld.h"
+
 CTeleWhirlwind ::CTeleWhirlwind () 
 {
 	m_owner_object=NULL;
@@ -22,7 +19,7 @@ CTelekineticObject* CTeleWhirlwind::activate(CPhysicsShellHolder *obj, float str
 {
 	if(inherited::activate(obj,strength,height,max_time_keep,rot))
 	{
-		CTeleWhirlwindObject*o=smart_cast<CTeleWhirlwindObject*>(objects.back());
+		CTeleWhirlwindObject* o = smart_cast<CTeleWhirlwindObject*>(objects.back());
 		VERIFY(o);
 		o->set_throw_power(m_throw_power);
 		return o;

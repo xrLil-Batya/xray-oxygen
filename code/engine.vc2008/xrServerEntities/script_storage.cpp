@@ -212,30 +212,30 @@ void CScriptStorage::reinit	()
 		}
 	}; // struct lua;
 
-	luajit::open_lib	(lua(),	"",					luaopen_base);
-	luajit::open_lib	(lua(),	LUA_LOADLIBNAME,	luaopen_package);
-	luajit::open_lib	(lua(),	LUA_TABLIBNAME,		luaopen_table);
-	luajit::open_lib	(lua(),	LUA_IOLIBNAME,		luaopen_io);
-	luajit::open_lib	(lua(),	LUA_OSLIBNAME,		luaopen_os);
-	luajit::open_lib	(lua(),	LUA_MATHLIBNAME,	luaopen_math);
-	luajit::open_lib	(lua(),	LUA_STRLIBNAME,		luaopen_string);
-	// Added sv3nk
-	luajit::open_lib	(lua(), LUA_BITLIBNAME,		luaopen_bit);
-	luajit::open_lib	(lua(), LUA_FFILIBNAME,		luaopen_ffi);
-	// end
+	luajit::open_lib(lua(),	"",					luaopen_base);
+	luajit::open_lib(lua(),	LUA_LOADLIBNAME,	luaopen_package);
+	luajit::open_lib(lua(),	LUA_TABLIBNAME,		luaopen_table);
+	luajit::open_lib(lua(),	LUA_IOLIBNAME,		luaopen_io);
+	luajit::open_lib(lua(),	LUA_OSLIBNAME,		luaopen_os);
+	luajit::open_lib(lua(),	LUA_MATHLIBNAME,	luaopen_math);
+	luajit::open_lib(lua(),	LUA_STRLIBNAME,		luaopen_string);
 #ifdef DEBUG
-	luajit::open_lib	(lua(),	LUA_DBLIBNAME,		luaopen_debug);
+	luajit::open_lib(lua(), LUA_DBLIBNAME,		luaopen_debug);
 #endif // #ifdef DEBUG
-
-	if (!strstr(Core.Params,"-nojit")) {
-		luajit::open_lib(lua(),	LUA_JITLIBNAME,		luaopen_jit);
+	if (!strstr(Core.Params, "-nojit")) {
+		luajit::open_lib(lua(), LUA_JITLIBNAME, luaopen_jit);
 #ifndef DEBUG
-		put_function	(lua(), opt_lua_binary, sizeof(opt_lua_binary), "jit.opt");
-		put_function	(lua(), opt_inline_lua_binary, sizeof(opt_lua_binary), "jit.opt_inline");
-		dojitopt		(lua(), "2");
+		put_function(lua(), opt_lua_binary, sizeof(opt_lua_binary), "jit.opt");
+		put_function(lua(), opt_inline_lua_binary, sizeof(opt_lua_binary), "jit.opt_inline");
+		dojitopt(lua(), "2");
 #endif // #ifndef DEBUG
 	}
-	//LuaICP API
+
+	// Added sv3nk
+	luajit::open_lib(lua(), LUA_BITLIBNAME,		luaopen_bit);
+	luajit::open_lib(lua(), LUA_FFILIBNAME,		luaopen_ffi);
+	
+	// End
 #ifdef LUACP_API
 	HMODULE hLib = GetModuleHandle("luaicp.dll");
 	if (hLib)
@@ -245,7 +245,7 @@ void CScriptStorage::reinit	()
 		typedef void(WINAPI *LUA_CAPTURE)(lua_State *L);
 
 		LUA_CAPTURE ExtCapture = (LUA_CAPTURE) GetProcAddress(hLib, "ExtCapture");
-		if (NULL != ExtCapture)
+		if (ExtCapture)
 			ExtCapture(m_virtual_machine);
 		else
 			Msg("ExtCapture proc not found in luaicp.dll");
