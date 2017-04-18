@@ -25,9 +25,6 @@
     <Filter Include="Debug core">
       <UniqueIdentifier>{b305bb8b-db4f-4663-948e-900d6550a2c6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug core\BlackBox">
-      <UniqueIdentifier>{a4239344-c678-4eec-9dd8-ba9b99add1f3}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shared memory/string library">
       <UniqueIdentifier>{223bc491-43ec-4937-8b8c-44436f2afaac}</UniqueIdentifier>
     </Filter>
@@ -198,30 +195,6 @@
     <ClCompile Include="xrDebugNew.cpp">
       <Filter>Debug core</Filter>
     </ClCompile>
-    <ClCompile Include="blackbox\BlackBoxUI.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\BSUFunctions.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\CrashHandler.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\GetLoadedModules.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\IsNT.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\NT4ProcessInfo.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\stdafx_.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\TLHELPProcessInfo.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
     <ClCompile Include="crc32.cpp">
       <Filter>shared memory/string library</Filter>
     </ClCompile>
@@ -279,6 +252,9 @@
     <ClCompile Include="xrAPI.cpp" />
     <ClCompile Include="DateTime.cpp">
       <Filter>Math</Filter>
+    </ClCompile>
+    <ClCompile Include="DebugCore\StackTrace.cpp">
+      <Filter>Debug core</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -474,27 +450,6 @@
     <ClInclude Include="xrDebug_macros.h">
       <Filter>Debug core</Filter>
     </ClInclude>
-    <ClInclude Include="blackbox\BugslayerUtil.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\CrashHandler.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\Internal.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\stdafx_.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\SymbolEngine.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\WarningsOff.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\WarningsOn.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
     <ClInclude Include="xr_resource.h">
       <Filter>shared memory/string library</Filter>
     </ClInclude>
@@ -576,6 +531,15 @@
     <ClInclude Include="xrAPI.h" />
     <ClInclude Include="DateTime.hpp">
       <Filter>Math</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugCore\SymbolEngine.h">
+      <Filter>Debug core</Filter>
+    </ClInclude>
+    <ClInclude Include="DebugCore\StackTrace.hpp">
+      <Filter>Debug core</Filter>
+    </ClInclude>
+    <ClInclude Include="BuildStackTraceInline.hpp">
+      <Filter>Debug core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -216,7 +216,7 @@ void InitLog()
 void CreateLog			(BOOL nl)
 {
     no_log				= !!nl;
-	strconcat(sizeof(log_file_name),	 log_file_name,		Core.ApplicationName, "_", Core.UserName, Core.UserDate, Core.UserTime, ".log");
+	strconcat(sizeof(log_file_name),	 log_file_name,	"[", Core.UserDate, Core.UserTime, "]", ".log");
 	strconcat(sizeof(lua_log_file_name), lua_log_file_name, Core.ApplicationName, "_", Core.UserName, "lua.log");
 
 	if (FS.path_exist("$logs$"))

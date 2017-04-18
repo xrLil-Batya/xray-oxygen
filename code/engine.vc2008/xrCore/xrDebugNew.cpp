@@ -3,9 +3,7 @@
 
 #include "xrdebug.h"
 #include "os_clipboard.h"
-
-#include <sal.h>
-#include <intrin.h> // for __debugbreak
+#include "DebugCore\StackTrace.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -13,47 +11,34 @@
 #include <direct.h>
 #pragma warning(pop)
 
-extern bool shared_str_initialized;
-static bool bException = false;
-
 #include <exception>
 #include <new.h>							// for _set_new_mode
 #include <signal.h>							// for signals
+#include <sal.h>
+#include <intrin.h> // for __debugbreak
 
 #define DEBUG_INVOKE	__debugbreak()
-
-
-#ifndef __BORLANDC__
-#	pragma comment(lib,"dxerr2015.lib")
-#endif
-
+#pragma comment(lib,"dxerr2015.lib")
 
 XRCORE_API	xrDebug		Debug;
 
 static bool	error_after_dialog = false;
-
-extern const char* BuildStackTrace();
-extern char g_stackTrace[100][4096];
+//extern char g_stackTrace[100][4096];
 extern int	g_stackTraceCount;
+extern bool shared_str_initialized;
+static bool bException = false;
+
+#include "BuildStackTraceInline.hpp"
 
 void LogStackTrace	(LPCSTR header)
 {
-	bool ss_init = shared_str_initialized; // alpet: при некоторых сбоях это все-равно дает исключение в shared_str::doc
-	shared_str_initialized = false;
-	__try
-	{
-		Msg("%s", header);
-		BuildStackTrace();
+	if (!shared_str_initialized)
+		return;
 
-		for (int i = 1; i < g_stackTraceCount; ++i)
-			Msg(" %s", g_stackTrace[i]);
-
-		FlushLog();
-	}
-	__finally
-	{
-		shared_str_initialized = ss_init;
-	}
+	StackTrace.Count = BuildStackTrace(StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
+	Msg("%s", header);
+	for (size_t i = 1; i < StackTrace.Count; i++)
+		Msg("%s", StackTrace[i]);
 }
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, LPSTR assertion_info, u32 const assertion_info_size)
@@ -112,20 +97,25 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	memory_monitor::flush_each_time(false);
 #endif // USE_MEMORY_MONITOR
 
-	if (!IsDebuggerPresent() && !strstr(GetCommandLine(), "-no_call_stack_assert")) {
+	if (IsDebuggerPresent() || !strstr(GetCommandLine(), "-no_call_stack_assert"))
+		return;
+	if (shared_str_initialized)
+		Log("stack trace:\n");
+
+	//BuildStackTrace();
+	BuildStackTrace(StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
+
+	for (size_t i = 2; i < StackTrace.Count; i++)
+	{
 		if (shared_str_initialized)
-			Msg("stack trace:\n");
-
-		BuildStackTrace();
-
-		for (int i = 2; i < g_stackTraceCount; ++i) {
-			if (shared_str_initialized)
-				Msg("%s", g_stackTrace[i]);
-
-			os_clipboard::copy_to_clipboard(assertion_info);
-		}
+			Log(StackTrace[i]);
 	}
+	if (shared_str_initialized)
+		FlushLog();
+
+		os_clipboard::copy_to_clipboard(assertion_info);
 }
+
 void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
@@ -297,22 +287,21 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 
 	if (!error_after_dialog && !strstr(GetCommandLine(),"-no_call_stack_assert")) {
 		CONTEXT				save = *pExceptionInfo->ContextRecord;
-		BuildStackTrace		(pExceptionInfo);
+		StackTrace.Count = BuildStackTrace(pExceptionInfo, StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
 		*pExceptionInfo->ContextRecord = save;
 
 		if (shared_str_initialized)
 			Msg				("stack trace:\n");
 
 		if (!IsDebuggerPresent())
-		{
 			os_clipboard::copy_to_clipboard	("stack trace:\r\n\r\n");
-		}
 
 		string4096			buffer;
-		for (int i=0; i<g_stackTraceCount; ++i) {
+		for (size_t i = 0; i < StackTrace.Count; i++)
+		{
 			if (shared_str_initialized)
-				Msg			("%s",g_stackTrace[i]);
-			xr_sprintf			(buffer, sizeof(buffer), "%s\r\n",g_stackTrace[i]);
+				Msg			("%s", StackTrace[i]);
+			xr_sprintf			(buffer, sizeof(buffer), "%s\r\n", StackTrace[i]);
 #ifdef DEBUG
 			if (!IsDebuggerPresent())
 				os_clipboard::update_clipboard(buffer);
@@ -334,15 +323,10 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 	if (shared_str_initialized)
 		FlushLog			();
 
-#ifndef _EDITOR
 	ReportFault				( pExceptionInfo, 0 );
-#endif
 
-	if (!previous_filter)
-		return EXCEPTION_CONTINUE_SEARCH;
-	
-
-	previous_filter			(pExceptionInfo);
+	if (previous_filter)
+		previous_filter(pExceptionInfo);
 
 	return					(EXCEPTION_CONTINUE_SEARCH) ;
 }

@@ -23,7 +23,7 @@ namespace CPU
 };
 
 static u32	init_counter	= 0;
-extern char g_application_path[256];
+//extern char g_application_path[256];
 
 #include "DateTime.hpp"
 void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
@@ -48,19 +48,6 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
         GetModuleFileName(GetModuleHandle(MODULE_NAME),fn,sizeof(fn));
         _splitpath		(fn,dr,di,0,0);
         strconcat		(sizeof(ApplicationPath),ApplicationPath,dr,di);
-#ifndef _EDITOR
-		xr_strcpy		(g_application_path,sizeof(g_application_path),ApplicationPath);
-#endif
-
-#ifdef _EDITOR
-		// working path
-        if( strstr(Params,"-wf") )
-        {
-            string_path				c_name;
-            sscanf					(strstr(Core.Params,"-wf ")+4,"%[^ ] ",c_name);
-            SetCurrentDirectory     (c_name);
-        }
-#endif
 
 		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
 
@@ -75,7 +62,7 @@ void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs,
 		
 		//Date
 		auto *time = new Time();
-		strconcat(sizeof(UserDate), UserDate, time->GetYear().c_str(), ".", time->GetMonth().c_str(), ".", time->GetDay().c_str(), "_");
+		strconcat(sizeof(UserDate), UserDate, time->GetDay().c_str(), ".", time->GetMonth().c_str(), ".", time->GetYear().c_str(), " ");
 		
 		//Time
 		strconcat(sizeof(UserTime), UserTime, time->GetHours().c_str(), ".", time->GetMinutes().c_str(), ".", time->GetSeconds().c_str());
