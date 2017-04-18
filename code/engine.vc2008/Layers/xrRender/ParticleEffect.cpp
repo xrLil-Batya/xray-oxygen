@@ -268,8 +268,8 @@ IC void FillSprite_fpu	(FVF::LIT*& pv, const Fvector& T, const Fvector& R, const
 
 __forceinline void fsincos( const float angle , float &sine , float &cosine )
 { 
-	sine = sin(angle);
-	cosine = sqrt(1.0 - sine * sine);
+	sine = std::sinf(angle);
+	cosine = std::cosf(angle);
 }
 
 

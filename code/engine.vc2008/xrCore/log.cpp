@@ -72,7 +72,7 @@ void AddOne(const char *split)
 		//SYSTEMTIME lt;
 		//GetLocalTime(&lt);
 
-		sprintf_s(buf, 64, "[%02d %03d] ", Core.UserDate, Core.UserTime);
+		sprintf_s(buf, 64, "[%s %s] ", Core.UserDate, Core.UserTime);
 		LogWriter->w_printf("%s%s\r\n", buf, split);
 		cached_log += xr_strlen(buf);
 		cached_log += xr_strlen(split) + 2;
@@ -215,7 +215,7 @@ void InitLog()
 
 void CreateLog			(BOOL nl)
 {
-    no_log				= nl;
+    no_log				= !!nl;
 	strconcat(sizeof(log_file_name),	 log_file_name,		Core.ApplicationName, "_", Core.UserName, Core.UserDate, Core.UserTime, ".log");
 	strconcat(sizeof(lua_log_file_name), lua_log_file_name, Core.ApplicationName, "_", Core.UserName, "lua.log");
 

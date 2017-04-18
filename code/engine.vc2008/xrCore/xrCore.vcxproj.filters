@@ -177,16 +177,10 @@
     <ClCompile Include="xrMemory_POOL.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
-    <ClCompile Include="xrMemory_pso_Copy.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
     <ClCompile Include="xrMemory_pso_Fill.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_pso_Fill32.cpp">
-      <Filter>Memory manager</Filter>
-    </ClCompile>
-    <ClCompile Include="xrMemory_subst_borland.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
     <ClCompile Include="xrMemory_subst_msvc.cpp">
@@ -201,9 +195,6 @@
     <ClCompile Include="doug_lea_allocator.cpp">
       <Filter>Memory manager\dlmalloc\wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="xrDebug.cpp">
-      <Filter>Debug core</Filter>
-    </ClCompile>
     <ClCompile Include="xrDebugNew.cpp">
       <Filter>Debug core</Filter>
     </ClCompile>
@@ -214,9 +205,6 @@
       <Filter>Debug core\BlackBox</Filter>
     </ClCompile>
     <ClCompile Include="blackbox\CrashHandler.cpp">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClCompile>
-    <ClCompile Include="blackbox\DiagAssert.cpp">
       <Filter>Debug core\BlackBox</Filter>
     </ClCompile>
     <ClCompile Include="blackbox\GetLoadedModules.cpp">
@@ -468,9 +456,6 @@
     <ClInclude Include="xrMemory_pure.h">
       <Filter>Memory manager</Filter>
     </ClInclude>
-    <ClInclude Include="xrMemory_subst_borland.h">
-      <Filter>Memory manager</Filter>
-    </ClInclude>
     <ClInclude Include="xrMemory_subst_msvc.h">
       <Filter>Memory manager</Filter>
     </ClInclude>
@@ -493,9 +478,6 @@
       <Filter>Debug core\BlackBox</Filter>
     </ClInclude>
     <ClInclude Include="blackbox\CrashHandler.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\DiagAssert.h">
       <Filter>Debug core\BlackBox</Filter>
     </ClInclude>
     <ClInclude Include="blackbox\Internal.h">

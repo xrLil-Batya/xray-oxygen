@@ -4,8 +4,6 @@
 #include "xrMemory_align.h"
 #include "xrMemory_pure.h"
 
-#ifndef	__BORLANDC__
-
 #ifndef DEBUG_MEMORY_MANAGER
 #	define	debug_mode 0
 #endif // DEBUG_MEMORY_MANAGER
@@ -109,13 +107,6 @@ void*	xrMemory::mem_alloc		(size_t size
 #ifdef DEBUG_MEMORY_MANAGER
 	if		(debug_mode)		dbg_register		(_ptr,size,_name);
 	if (mem_initialized)		debug_cs.Leave		();
-	//if(g_globalCheckAddr==_ptr){
-	//	__asm int 3;
-	//}
-	//if (_name && (0==strcmp(_name,"class ISpatial *")) && (size==376))
-	//{
-	//	__asm int 3;
-	//}
 #endif // DEBUG_MEMORY_MANAGER
 #ifdef USE_MEMORY_MONITOR
 	memory_monitor::monitor_alloc	(_ptr,size,_name);
@@ -139,7 +130,7 @@ void	xrMemory::mem_free		(void* P)
 
 #ifdef DEBUG_MEMORY_MANAGER
 	if(g_globalCheckAddr==P)
-		__asm int 3;
+		__debugbreak();
 #endif // DEBUG_MEMORY_MANAGER
 
 #ifdef DEBUG_MEMORY_MANAGER
@@ -191,7 +182,7 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 
 #ifdef DEBUG_MEMORY_MANAGER
 	if(g_globalCheckAddr==P)
-		__asm int 3;
+		__debugbreak();
 #endif // DEBUG_MEMORY_MANAGER
 
 #ifdef DEBUG_MEMORY_MANAGER
@@ -200,7 +191,6 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 	u32		p_current			= get_header(P);
 	//	Igor: Reserve 1 byte for xrMemory header
 	u32		p_new				= get_pool	(1+size+(debug_mode?4:0));
-	//u32		p_new				= get_pool	(size+(debug_mode?4:0));
 	u32		p_mode				;
 
 	if (mem_generic==p_current)	{
@@ -267,10 +257,8 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 	if (mem_initialized)		debug_cs.Leave	();
 
 	if(g_globalCheckAddr==_ptr)
-		__asm int 3;
+		__debugbreak();
 #endif // DEBUG_MEMORY_MANAGER
 
 	return	_ptr;
 }
-
-#endif // __BORLANDC__
