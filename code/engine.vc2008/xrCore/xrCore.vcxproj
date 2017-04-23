@@ -178,6 +178,10 @@
     <OutDir>$(SolutionDir)..\..\binaries\Release64\utils</OutDir>
     <IntDir>..\..\..\intermediate64\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <OutDir>$(SolutionDir)..\..\binaries64\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\..\intermediate64\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
@@ -554,7 +558,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>..\..\..\libraries\Mixed\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>..\..\..\libraries64\Mixed\$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed_Compilers|Win32'">

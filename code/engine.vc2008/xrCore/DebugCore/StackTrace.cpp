@@ -84,6 +84,15 @@ LPCTSTR __stdcall GetFirstStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* pEx
 	g_stFrame.AddrStack.Mode = AddrModeFlat;
 	g_stFrame.AddrFrame.Offset = pExPtrs->ContextRecord->Ebp;
 	g_stFrame.AddrFrame.Mode = AddrModeFlat;
+#elif _M_AMD64
+	g_stFrame.AddrPC.Offset = pExPtrs->ContextRecord->Rip;
+	g_stFrame.AddrPC.Mode = AddrModeFlat;
+	g_stFrame.AddrReturn.Offset = 0;
+	g_stFrame.AddrReturn.Mode = AddrModeFlat;
+	g_stFrame.AddrStack.Offset = pExPtrs->ContextRecord->Rsp;
+	g_stFrame.AddrStack.Mode = AddrModeFlat;
+	g_stFrame.AddrFrame.Offset = pExPtrs->ContextRecord->Rbp;
+	g_stFrame.AddrFrame.Mode = AddrModeFlat;
 #else
 	g_stFrame.AddrPC.Offset = (DWORD)pExPtrs->ContextRecord->Fir;
 	g_stFrame.AddrPC.Mode = AddrModeFlat;
@@ -106,8 +115,12 @@ LPCTSTR __stdcall GetNextStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* pExP
 	return InternalGetStackTraceString(dwOpts, pExPtrs);
 }
 
-BOOL __stdcall ReadCurrentProcessMemory(
-	HANDLE, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, LPDWORD lpNumberOfBytesRead)
+BOOL __stdcall ReadCurrentProcessMemory(HANDLE, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, 
+#ifndef _M_X64
+	LPDWORD lpNumberOfBytesRead)
+#else
+	SIZE_T* lpNumberOfBytesRead)
+#endif
 {
 	return ReadProcessMemory(GetCurrentProcess(), lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesRead);
 }
@@ -199,7 +212,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		}
 
 		// ASSERT(iCurr < (BUFF_SIZE - MAX_PATH));
-		DWORD dwDisp;
+		DWORD_PTR dwDisp;
 		// Output the symbol name?
 		if ((dwOpts & GSTSO_SYMBOL) == GSTSO_SYMBOL)
 		{
@@ -251,7 +264,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 			ZeroMemory(&g_stLine, sizeof(IMAGEHLP_LINE));
 			g_stLine.SizeOfStruct = sizeof(IMAGEHLP_LINE);
 
-			if (SymGetLineFromAddr(hProcess, g_stFrame.AddrPC.Offset, &dwDisp, &g_stLine) == TRUE)
+			if (SymGetLineFromAddr(hProcess, g_stFrame.AddrPC.Offset, (PDWORD)&dwDisp, &g_stLine) == TRUE)
 			{
 				iCurr += wsprintf(g_szBuff + iCurr, _T(", "));
 
@@ -293,6 +306,9 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 	return szRet;
 }
 
+#undef min
+#include <algorithm>
+
 BOOL __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
 {
 	// ASSERT(IsBadWritePtr(szBuff, uiSize) == FALSE);
@@ -323,17 +339,15 @@ BOOL __stdcall GetNextStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPt
 {
 	// ASSERT(IsBadWritePtr(szBuff, uiSize) == FALSE);
 	if (IsBadWritePtr(szBuff, uiSize) == TRUE)
-	{
 		return FALSE;
-	}
+
 	LPCTSTR szRet;
 	__try
 	{
 		szRet = GetNextStackTraceString(dwOpts, pExPtrs);
 		if (NULL == szRet)
-		{
 			__leave;
-		}
+		
 		lstrcpyn(szBuff, szRet, std::min((UINT)lstrlen(szRet) + 1, uiSize));
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER)
