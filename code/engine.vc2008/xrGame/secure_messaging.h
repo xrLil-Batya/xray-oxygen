@@ -1,5 +1,4 @@
-#ifndef SECRET_KEY_GENERATOR_INCLUDED
-#define SECRET_KEY_GENERATOR_INCLUDED
+#pragma once 
 
 #include "../xrCore/_random.h"
 
@@ -39,5 +38,3 @@ u32	const	decrypt			(void* buffer, u32 buffer_size, key_t const & sec_key);
 
 
 }//namespace secure_messaging
-
-#endif //#ifndef SECRET_KEY_GENERATOR_INCLUDED

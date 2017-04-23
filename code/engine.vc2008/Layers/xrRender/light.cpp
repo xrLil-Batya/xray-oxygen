@@ -41,21 +41,22 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 
 light::~light	()
 {
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#if RENDER != R_R1
 	for (int f=0; f<6; f++)	xr_delete(omnipart[f]);
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#endif
 	set_active		(false);
 
 	// remove from Lights_LastFrame
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#if RENDER != R_R1
 	for (u32 it=0; it<RImplementation.Lights_LastFrame.size(); it++)
-		if (this==RImplementation.Lights_LastFrame[it])	RImplementation.Lights_LastFrame[it]=0;
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+		if (this==RImplementation.Lights_LastFrame[it])	
+			RImplementation.Lights_LastFrame[it]=0;
+#endif
 }
 
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
 void light::set_texture		(LPCSTR name)
 {
+#if	RENDER != R_R1
 	if ((0==name) || (0==name[0]))
 	{
 		// default shaders
@@ -65,15 +66,15 @@ void light::set_texture		(LPCSTR name)
 		return;
 	}
 
-#pragma todo				("Only shadowed spot implements projective texture")
+//#pragma todo				("Only shadowed spot implements projective texture")
 	string256				temp;
 	
 	strconcat(sizeof(temp),temp,"r2\\accum_spot_",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
-#if	(RENDER!=R_R3) && (RENDER!=R_R4)
+#	if	(RENDER!=R_R3) && (RENDER!=R_R4)
 	s_volumetric.create		("accum_volumetric", name);
-#else
+#	else
 	s_volumetric.create		("accum_volumetric_nomsaa", name);
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -88,15 +89,9 @@ void light::set_texture		(LPCSTR name)
 			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i],strconcat(sizeof(temp),temp,"r2\\accum_volumetric_",name),name);
 		}
 	}
-#endif // (RENDER!=R_R3) || (RENDER!=R_R4)
-}
+#	endif // (RENDER!=R_R3) || (RENDER!=R_R4)
 #endif
-
-#if RENDER==R_R1
-void light::set_texture		(LPCSTR name)
-{
 }
-#endif
 
 void light::set_active		(bool a)
 {

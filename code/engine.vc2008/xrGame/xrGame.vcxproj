@@ -1458,8 +1458,6 @@
     <ClInclude Include="traffic_optimization.h" />
     <ClInclude Include="..\xrServerEntities\xrMessages.h" />
     <ClInclude Include="secure_messaging.h" />
-    <ClInclude Include="xr_dsa_signer.h" />
-    <ClInclude Include="xr_dsa_verifyer.h" />
     <ClInclude Include="..\xrServerEntities\object_broker.h" />
     <ClInclude Include="..\xrServerEntities\object_cloner.h" />
     <ClInclude Include="..\xrServerEntities\object_comparer.h" />
@@ -4440,8 +4438,6 @@
     </ClCompile>
     <ClCompile Include="traffic_optimization.cpp" />
     <ClCompile Include="secure_messaging.cpp" />
-    <ClCompile Include="xr_dsa_signer.cpp" />
-    <ClCompile Include="xr_dsa_verifyer.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory_register.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
@@ -5185,10 +5181,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\3rd party\crypto\crypto.vcxproj">
-      <Project>{fa169092-ea3e-40c1-8e5a-a2b575700fe8}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\3rd party\cximage\CxImage\cximage.vcxproj">
       <Project>{880cd250-ba77-4daf-a8d4-552f12dd3ae4}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
