@@ -75,7 +75,7 @@ engine::lua_Hook engine::lua_gethook			(lua_State *L)
 {
 	return	(::lua_gethook(L));
 }
-
+ 
 int	engine::lua_getinfo							(lua_State *L, const char *what, lua_Debug *ar)
 {
 	return	(::lua_getinfo(L, what, ar));

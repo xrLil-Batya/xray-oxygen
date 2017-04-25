@@ -251,7 +251,7 @@ bool CLevel::net_start6				()
 
 		}
 		else
-		if (!map_data.m_map_loaded && map_data.m_name.size() && m_bConnectResult)	//if (map_data.m_name == "") - level not loaded, see CLevel::net_start_client3
+		if (!map_data.m_map_loaded && map_data.m_name.size() && m_bConnectResult)
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;

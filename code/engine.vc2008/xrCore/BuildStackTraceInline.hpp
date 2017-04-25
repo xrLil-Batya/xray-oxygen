@@ -45,6 +45,7 @@ size_t BuildStackTrace(EXCEPTION_POINTERS* exPtrs, char* buffer, size_t capacity
 size_t BuildStackTrace(char* buffer, size_t capacity, size_t lineCapacity)
 {
 	// XXX: add support for x86_64
+	// FX: done
 	CONTEXT context;
 	EXCEPTION_POINTERS ex_ptrs;
 	void* ebp;

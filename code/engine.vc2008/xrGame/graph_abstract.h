@@ -15,7 +15,11 @@
 template <
 	typename _data_type = Loki::EmptyType,
 	typename _edge_weight_type = float,
+#ifdef _M_X64
+	typename _vertex_id_type = size_t,
+#else
 	typename _vertex_id_type = u32,
+#endif
 	typename _edge_data_type = Loki::EmptyType
 >
 class CGraphAbstract {
@@ -45,7 +49,11 @@ public:
 
 private:
 	VERTICES					m_vertices;
+#ifdef _M_X64
+	size_t						m_edge_count;
+#else
 	u32							m_edge_count;
+#endif
 
 public:
 	IC									CGraphAbstract	();

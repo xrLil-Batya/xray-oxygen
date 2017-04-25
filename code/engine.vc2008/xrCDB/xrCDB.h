@@ -24,7 +24,7 @@ namespace Opcode {
 	class AABBNoLeafNode;
 };
 
-#ifdef _M_X64
+#if defined(_M_X64)
 using u_ptr = u64;
 #else
 using u_ptr = u32;
@@ -44,6 +44,9 @@ namespace CDB
 				u_ptr		suppress_shadows:1;	// 
 				u_ptr		suppress_wm:1;		// 
 				u_ptr		sector:16;			// 
+#ifdef _M_X64
+				u64			dumb : 32;
+#endif
 			};
 		};
 	public:
@@ -105,12 +108,15 @@ namespace CDB
 	{
 		Fvector			verts	[3];
 		union	{
-			u32			dummy;				// 4b
+			u_ptr		dummy;				// 8b
 			struct {
-				u32		material:14;		// 
-				u32		suppress_shadows:1;	// 
-				u32		suppress_wm:1;		// 
-				u32		sector:16;			// 
+				u_ptr		material:14;		// 
+				u_ptr		suppress_shadows:1;	// 
+				u_ptr		suppress_wm:1;		// 
+				u_ptr		sector:16;			// 
+#ifdef _M_X64
+				u64			dumb : 32;
+#endif
 			};
 		};
 		int				id;
@@ -167,9 +173,9 @@ namespace CDB
 		u32				VPack				( const Fvector& V, float eps);
 	public:
 		void			add_face			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector	);
-		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy );
+		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy );
 		void			add_face_packed		( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, float eps = EPS );
-		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy, float eps = EPS );
+		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy, float eps = EPS );
         void			remove_duplicate_T	( );
 		void			calc_adjacency		( xr_vector<u32>& dest		);
 
@@ -211,8 +217,8 @@ namespace CDB
 		//			verts
 		//		}
 
-		void				add_face	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, u_ptr flags );
-		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy , u_ptr flags );
+		void				add_face	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, u32 flags );
+		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy , u32 flags );
 
 		xr_vector<Fvector>& getV_Vec()			{ return verts;				}
 		Fvector*			getV()				{ return &*verts.begin();	}

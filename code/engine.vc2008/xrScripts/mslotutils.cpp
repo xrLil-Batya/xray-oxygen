@@ -126,14 +126,14 @@ inline bool SendMailslotMessage(LPSTR slotName, CMailSlotMsg& msg) {
 		return false;
 
 
-	fResult = WriteFile(hFile,
+	fResult = !!WriteFile(hFile,
 		msg.GetBuffer(),
 		msg.GetLen(),
 		&cbWritten,
 		(LPOVERLAPPED)NULL);
 
 	R_ASSERT(fResult);
-	fResult = CloseHandle(hFile);
+	fResult = !!CloseHandle(hFile);
 	R_ASSERT(fResult);
 	return fResult;
 }

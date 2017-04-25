@@ -329,7 +329,7 @@ void Startup()
 	destroyEngine();
 }
 
-static BOOL CALLBACK logDlgProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp )
+static INT_PTR CALLBACK logDlgProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
 	switch( msg ){
 		case WM_DESTROY:
@@ -362,31 +362,29 @@ struct damn_keys_filter {
 	FILTERKEYS FilterKeysStruct;
 	TOGGLEKEYS ToggleKeysStruct;
 
-	DWORD dwStickyKeysFlags;
-	DWORD dwFilterKeysFlags;
-	DWORD dwToggleKeysFlags;
+	DWORD dwStickyKeysFlags,
+		dwFilterKeysFlags,
+		dwToggleKeysFlags;
 
 	damn_keys_filter	()
 	{
 		// Screen saver stuff
-
 		bScreenSaverState = FALSE;
 
 		// Saveing current state
 		SystemParametersInfo( SPI_GETSCREENSAVEACTIVE , 0 , ( PVOID ) &bScreenSaverState , 0 );
 
-		if ( bScreenSaverState )
+		if (bScreenSaverState)
 			// Disable screensaver
-			SystemParametersInfo( SPI_SETSCREENSAVEACTIVE , FALSE , NULL , 0 );
+			SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, 0);
 
 		dwStickyKeysFlags = 0;
 		dwFilterKeysFlags = 0;
 		dwToggleKeysFlags = 0;
 
-
-		std::memset( &StickyKeysStruct , 0, dwStickyKeysStructSize );
-		std::memset( &FilterKeysStruct , 0, dwFilterKeysStructSize );
-		std::memset( &ToggleKeysStruct , 0, dwToggleKeysStructSize );
+		std::memset(&StickyKeysStruct, 0, dwStickyKeysStructSize);
+		std::memset(&FilterKeysStruct, 0, dwFilterKeysStructSize);
+		std::memset(&ToggleKeysStruct, 0, dwToggleKeysStructSize);
 
 		StickyKeysStruct.cbSize = dwStickyKeysStructSize;
 		FilterKeysStruct.cbSize = dwFilterKeysStructSize;
