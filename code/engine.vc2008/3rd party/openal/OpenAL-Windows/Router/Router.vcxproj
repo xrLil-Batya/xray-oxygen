@@ -443,7 +443,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>$(SolutionDir)\..\..\libraries64\$(Configuration)\OpenAL32.lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\OpenAL32.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

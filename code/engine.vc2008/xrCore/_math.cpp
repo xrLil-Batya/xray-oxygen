@@ -157,6 +157,49 @@ namespace CPU
 	}
 #endif
 
+    u64 getProcessorFrequencyGeneral()
+    {
+        u64			start, end;
+        u32			dwStart, dwTest;
+
+        dwTest = timeGetTime();
+        do { dwStart = timeGetTime(); } while (dwTest == dwStart);
+        start = GetCLK();
+        while (timeGetTime() - dwStart < 1000);
+        end = GetCLK();
+        return end - start;
+    }
+
+#ifdef _WIN32
+#include <powerbase.h>
+#define NTSTATUS LONG
+#include <ntstatus.h>
+#pragma comment (lib, "PowrProf.lib")
+    typedef struct _PROCESSOR_POWER_INFORMATION {
+        ULONG Number;
+        ULONG MaxMhz;
+        ULONG CurrentMhz;
+        ULONG MhzLimit;
+        ULONG MaxIdleState;
+        ULONG CurrentIdleState;
+    } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+    u64 getProcessorFrequency(u32 logicalProcessorCount)
+    {
+        PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
+        LONG retCode = CallNtPowerInformation(ProcessorInformation, NULL, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
+        if (retCode != STATUS_SUCCESS)
+        {
+            return getProcessorFrequencyGeneral();
+        }
+        return pInfo->MhzLimit * u64(1000000);
+    }
+#else
+    u64 getProcessorFrequency(u32 logicalProcessorCount)
+    {
+        return getProcessorFrequencyGeneral();
+    }
+#endif
+
 	void Detect	()
 	{
 		// General CPU identification
@@ -167,18 +210,12 @@ namespace CPU
 		}
 
 		// Timers & frequency
-		u64			start,end;
-		u32			dwStart,dwTest;
+		u64			start;
 
 		SetPriorityClass		(GetCurrentProcess(),REALTIME_PRIORITY_CLASS);
 
 		// Detect Freq
-		dwTest	= timeGetTime();
-		do { dwStart = timeGetTime(); } while (dwTest==dwStart);
-		start	= GetCLK();
-		while (timeGetTime()-dwStart<1000) ;
-		end		= GetCLK();
-		clk_per_second = end-start;
+		clk_per_second = getProcessorFrequency(ID.n_threads);
 
 		// Detect RDTSC Overhead
 		clk_overhead	= 0;

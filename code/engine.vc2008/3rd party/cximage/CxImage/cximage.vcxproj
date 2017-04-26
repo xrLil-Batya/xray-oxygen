@@ -120,7 +120,7 @@
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
-    <OutDir>..\..\..\..\..\libraries\$(Configuration)\</OutDir>
+    <OutDir>$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\</OutDir>
     <IntDir>..\..\..\..\..\intermediate\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

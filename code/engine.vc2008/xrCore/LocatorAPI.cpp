@@ -15,6 +15,8 @@
 #include "stream_reader.h"
 #include "file_stream_reader.h"
 
+#include <filesystem>
+
 const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 
 #	pragma warning(push)
@@ -25,14 +27,19 @@ const u32 BIG_FILE_READER_WINDOW_SIZE	= 1024*1024;
 CLocatorAPI*		xr_FS = NULL;
 
 #include "../FrayBuildConfig.hpp"
-#if !defined(OLD_FS_ROOT) && !defined(_COMPILERS_)
-#	define FSLTX	"..\\fsgame.ltx"
-#else
-#	ifdef _COMPILERS_
-#		define	OLD_FS_ROOT
-#	endif
+// #if !defined(OLD_FS_ROOT) && !defined(_COMPILERS_)
+// #	define FSLTX	"..\\fsgame.ltx"
+// #else
+// #	ifdef _COMPILERS_
+// #		define	OLD_FS_ROOT
+// #	endif
+// #	define FSLTX	"fsgame.ltx"
+// #endif
+
 #	define FSLTX	"fsgame.ltx"
-#endif
+
+//#TODO: Make a part of CLocatorAPI class later
+std::experimental::filesystem::path fsRoot;
 
 struct _open_file
 {
@@ -597,20 +604,75 @@ bool CLocatorAPI::Recurse		(const char* path)
 bool file_handle_internal	(LPCSTR file_name, u32 &size, int &file_handle);
 void *FileDownload			(LPCSTR file_name, const int &file_handle, u32 &file_size);
 
-void CLocatorAPI::setup_fs_path		(LPCSTR fs_name, string_path &fs_path)
-{
-	xr_strcpy			(fs_path,fs_name ? fs_name : "");
-	LPSTR				slash = strrchr(fs_path,'\\');
-	if (!slash)
-		slash			= strrchr(fs_path,'/');
-	if (!slash) {
-		xr_strcpy		(fs_path,"");
-		return;
-	}
 
-	*(slash+1)			= 0;
+
+static void searchForFsltx(LPCSTR fs_name, string_path& fsltxPath)
+{
+    //#TODO: Update code, when std::filesystem is out (not much work, standards don't changing dramatically)
+    LPCSTR realFsltxName = NULL;
+    if (fs_name)
+    {
+        realFsltxName = fs_name;
+    }
+    else
+    {
+        realFsltxName = FSLTX;
+    }
+    
+    //try in working dir
+    if (std::experimental::filesystem::exists (realFsltxName))
+    {
+        xr_strcpy(fsltxPath, realFsltxName);
+        return;
+    }
+
+    auto tryPathFunc = [realFsltxName] (std::experimental::filesystem::path possibleLocationFsltx, string_path& fsltxPath) -> bool
+    {
+        possibleLocationFsltx.append(realFsltxName);
+        if (std::experimental::filesystem::exists(possibleLocationFsltx))
+        {
+            xr_strcpy(fsltxPath, possibleLocationFsltx.generic_string().c_str());
+            return true;
+        }
+        return false;
+    };
+
+    //don't give up, try one directory up
+    if (tryPathFunc("../", fsltxPath)) return;
+
+    //don't loose hope. Stand still!
+    if (tryPathFunc("../../", fsltxPath)) return;
+
+    //must... find... fs_name... file...
+    std::experimental::filesystem::path currentPath = std::experimental::filesystem::current_path();
+    std::experimental::filesystem::directory_iterator curPathIter (currentPath);
+    for (auto& dirEntry : curPathIter)
+    {
+        if (std::experimental::filesystem::is_directory(dirEntry))
+        {
+            if (tryPathFunc(dirEntry, fsltxPath)) return;
+        }
+    }
+    
+    //RIP
 }
 
+[[deprecated("Not used anywhere!")]]
+void CLocatorAPI::setup_fs_path(LPCSTR fs_name, string_path &fs_path)
+{
+    xr_strcpy(fs_path, fs_name ? fs_name : "");
+    LPSTR				slash = strrchr(fs_path, '\\');
+    if (!slash)
+        slash = strrchr(fs_path, '/');
+    if (!slash) {
+        xr_strcpy(fs_path, "");
+        return;
+    }
+
+    *(slash + 1) = 0;
+}
+
+[[deprecated("Not used anywhere!")]]
 void CLocatorAPI::setup_fs_path		(LPCSTR fs_name)
 {
 	string_path			fs_path;
@@ -633,32 +695,41 @@ void CLocatorAPI::setup_fs_path		(LPCSTR fs_name)
 
 IReader *CLocatorAPI::setup_fs_ltx	(LPCSTR fs_name)
 {
-	setup_fs_path	(fs_name);
+// 	setup_fs_path	(fs_name);
+// 
+// 	LPCSTR			fs_file_name = FSLTX;
+// 	if (fs_name && *fs_name)
+// 		fs_file_name= fs_name;
 
-	LPCSTR			fs_file_name = FSLTX;
-	if (fs_name && *fs_name)
-		fs_file_name= fs_name;
+    string_path			fs_path;
+    memset(fs_path, 0, sizeof(fs_path));
+    searchForFsltx(fs_name, fs_path);
+    CHECK_OR_EXIT(fs_path[0] != 0, make_string("Cannot find fsltx file: \"%s\"\nCheck your working directory", fs_path));
+    xr_strlwr(fs_path);
+    fsRoot = fs_path;
+    fsRoot = std::experimental::filesystem::absolute(fsRoot);
+    fsRoot = fsRoot.parent_path();
 				
-	Log				("using fs-ltx",fs_file_name);
+	Log				("using fs-ltx", fs_path);
 
 	int				file_handle;
 	u32				file_size;
 	IReader			*result = 0;
 	CHECK_OR_EXIT	(
-		file_handle_internal(fs_file_name, file_size, file_handle),
-		make_string("Cannot open file \"%s\".\nCheck your working folder.",fs_file_name)
+		file_handle_internal(fs_path, file_size, file_handle),
+		make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path)
 	);
 
-	void			*buffer = FileDownload(fs_file_name, file_handle, file_size);
+    void			*buffer = FileDownload(fs_path, file_handle, file_size);
 	result			= new CTempReader(buffer,file_size,0);
 
 #ifdef DEBUG
 	if (result && m_Flags.is(flBuildCopy|flReady))
-		copy_file_to_build	(result, fs_file_name);
+		copy_file_to_build	(result, fs_path);
 #endif // DEBUG
 
 	if (m_Flags.test(flDumpFileActivity))
-		_register_open_file	(result, fs_file_name);
+		_register_open_file	(result, fs_path);
 
 	return			(result);
 }
@@ -752,6 +823,12 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 			_GetItem			(temp,5,capt,_delimiter);
 			xr_strlwr			(id);			
 			
+            if (xr_strcmp(root, "$fs_root$") == 0)
+            {
+                //Old good fsltx
+                //replace root with predefined path
+                xr_strcpy(root, fsRoot.generic_string().c_str());
+            }
 
 			xr_strlwr			(root);
 			lp_add				=(cnt>=4)?xr_strlwr(add):0;
