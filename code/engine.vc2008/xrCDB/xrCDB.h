@@ -32,6 +32,25 @@ using u_ptr = u32;
 #pragma pack(push,8)
 namespace CDB
 {
+    // Triangle for x86
+#pragma pack(push,1)
+    class XRCDB_API TRI_DEPRECATED						//*** 16 bytes total (was 32 :)
+    {
+    public:
+        u32				verts[3];		// 3*4 = 12b
+        union {
+            u32			dummy;				// 4b
+            struct {
+                u32		material : 14;		// 
+                u32		suppress_shadows : 1;	// 
+                u32		suppress_wm : 1;		// 
+                u32		sector : 16;			// 
+            };
+        };
+    public:
+        IC u32			IDvert(u32 ID) { return verts[ID]; }
+    };
+#pragma pack (pop)
 	// Triangle
 	class XRCDB_API TRI						//*** 16 bytes total (was 32 :)
 	{
@@ -45,10 +64,37 @@ namespace CDB
 				u_ptr		suppress_wm:1;		// 
 				u_ptr		sector:16;			// 
 #ifdef _M_X64
-				u64			dumb : 32;
+                u_ptr			dumb : 32;
 #endif
 			};
 		};
+
+        TRI (TRI_DEPRECATED& oldTri)
+        {
+            verts[0] = oldTri.verts[0];
+            verts[1] = oldTri.verts[1];
+            verts[2] = oldTri.verts[2];
+            dummy = oldTri.dummy;
+            dumb = 0;
+        }
+
+        TRI()
+        {
+            verts[0] = 0.0f;
+            verts[1] = 0.0f;
+            verts[2] = 0.0f;
+            dummy = 0;
+        }
+
+        TRI& operator= (const TRI_DEPRECATED& oldTri)
+        {
+            verts[0] = oldTri.verts[0];
+            verts[1] = oldTri.verts[1];
+            verts[2] = oldTri.verts[2];
+            dummy = oldTri.dummy;
+            dumb = 0;
+            return *this;
+        }
 	public:
 		IC u32			IDvert	(u32 ID)		{ return verts[ID];	}
 	};

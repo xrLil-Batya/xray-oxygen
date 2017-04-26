@@ -106,9 +106,19 @@ void	MODEL::build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callba
     std::memcpy(verts,V,verts_count*sizeof(Fvector));
 	
 	// tris
-	tris_count	= Tcnt;
-	tris		= CALLOC(TRI,tris_count);
-    std::memcpy(tris,T,tris_count*sizeof(TRI));
+    tris_count = Tcnt;
+    tris = CALLOC(TRI, tris_count);
+    #ifdef _M_X64
+    TRI_DEPRECATED* realT = reinterpret_cast<TRI_DEPRECATED*> (T);
+    for (int triIter = 0; triIter < tris_count; ++triIter)
+    {
+        TRI_DEPRECATED& oldTri = realT[triIter];
+        TRI& newTri = tris[triIter];
+        newTri = oldTri;
+    }
+    #else
+    std::memcpy(tris, T, tris_count * sizeof(TRI));
+    #endif
 
 	// callback
 	if (bc)		bc	(verts,Vcnt,tris,Tcnt,bcp);
