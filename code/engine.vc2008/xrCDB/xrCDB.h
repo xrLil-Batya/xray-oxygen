@@ -52,7 +52,7 @@ namespace CDB
     };
 #pragma pack (pop)
 	// Triangle
-	class XRCDB_API TRI						//*** 16 bytes total (was 32 :)
+	class XRCDB_API TRI						//*** 24 bytes total
 	{
 	public:
 		u32				verts	[3];		// 3*4 = 12b
@@ -69,6 +69,7 @@ namespace CDB
 			};
 		};
 
+#ifdef _M_X64
         TRI (TRI_DEPRECATED& oldTri)
         {
             verts[0] = oldTri.verts[0];
@@ -95,6 +96,7 @@ namespace CDB
             dumb = 0;
             return *this;
         }
+#endif
 	public:
 		IC u32			IDvert	(u32 ID)		{ return verts[ID];	}
 	};
@@ -148,7 +150,20 @@ namespace CDB
 		void					build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=NULL, void* bcp=NULL);
 		u32						memory			();
 	};
-
+/*	struct XRCDB_API RESULT_DEPRECATED
+	{
+		Fvector			verts[3];
+		union {
+			u32		dummy;				// 8b
+			struct {
+				u32		material : 14;		// 
+				u32		suppress_shadows : 1;	// 
+				u32		suppress_wm : 1;		// 
+				u32		sector : 16;			// 
+			};
+		};
+	};
+	*/
 	// Collider result
 	struct XRCDB_API RESULT
 	{
