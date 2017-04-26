@@ -69,14 +69,16 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <NMakeBuildCommandLine>msvcbuild.bat</NMakeBuildCommandLine>
-    <NMakeOutput>LuaJIT.dll</NMakeOutput>
+    <NMakeOutput>
+    </NMakeOutput>
     <NMakePreprocessorDefinitions>LUA_BUILD_AS_DLL; LUA_CORE;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <IncludePath>./src/;$(VC_IncludePath);$(WindowsSDK_IncludePath);</IncludePath>
     <SourcePath>./src/;$(VC_SourcePath);</SourcePath>
-    <NMakeIncludeSearchPath>src/</NMakeIncludeSearchPath>
+    <NMakeIncludeSearchPath>
+    </NMakeIncludeSearchPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NMakePreprocessorDefinitions>x64;_M_X64;_M_AMD64;LUA_BUILD_AS_DLL; LUA_CORE;WIN64;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
+    <NMakePreprocessorDefinitions>LUA_BUILD_AS_DLL; LUA_CORE;WIN64;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>msvcbuild64.bat</NMakeBuildCommandLine>
   </PropertyGroup>
   <ItemDefinitionGroup>

@@ -555,4 +555,7 @@
       <Filter>FS</Filter>
     </CustomBuildStep>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\xrCore.natvis" />
+  </ItemGroup>
 </Project>

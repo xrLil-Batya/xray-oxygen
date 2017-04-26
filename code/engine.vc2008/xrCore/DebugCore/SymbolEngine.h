@@ -175,7 +175,7 @@ public:
 		return ::SymEnumerateSymbols(m_hProcess, BaseOfDll, EnumSymbolsCallback, UserContext);
 	}
 
-	BOOL SymGetSymFromAddr(IN DWORD dwAddr, OUT PDWORD pdwDisplacement, OUT PIMAGEHLP_SYMBOL Symbol)
+	BOOL SymGetSymFromAddr(IN DWORD dwAddr, OUT PDWORD_PTR pdwDisplacement, OUT PIMAGEHLP_SYMBOL Symbol)
 	{
 		return ::SymGetSymFromAddr(m_hProcess, dwAddr, pdwDisplacement, Symbol);
 	}
@@ -246,7 +246,11 @@ public:
 	}
 
 	BOOL SymSetSearchPath(IN LPSTR SearchPath) { return ::SymSetSearchPath(m_hProcess, SearchPath); }
+#ifdef _M_X64
+	BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN ULONG64 UserContext)
+#else
 	BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN PVOID UserContext)
+#endif
 	{
 		return ::SymRegisterCallback(m_hProcess, CallbackFunction, UserContext);
 	}

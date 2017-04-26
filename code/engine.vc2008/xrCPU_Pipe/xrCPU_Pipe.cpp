@@ -34,9 +34,11 @@ extern "C" {
 		T->skin4W	= xrSkin4W_x86;
 		skin4W_func = xrSkin4W_x86;
 		T->PLC_calc3 = PLC_calc3_x86;
-	
+
+#ifndef _M_X64
 		// SSE
-		if ( ID->hasFeature(CpuFeature::Sse)) {
+		if ( ID->hasFeature(CpuFeature::Sse)) 
+		{
 			T->skin1W	= xrSkin1W_SSE;
 			T->skin2W	= xrSkin2W_SSE;
 			T->skin3W	= xrSkin3W_SSE;
@@ -44,13 +46,12 @@ extern "C" {
 			skin4W_func = xrSkin4W_SSE;
 			T->PLC_calc3 = PLC_calc3_SSE;
 		}
-
+#endif
 		// Init helper threads
-		ttapi_Init( ID );
+		ttapi_Init(ID);
 
-		if ( ttapi_GetWorkersCount() > 1 ) {
-			// We can use threading
-			T->skin4W	= xrSkin4W_thread;
-		}
+		// We can use threading
+		if (ttapi_GetWorkersCount() > 1)
+			T->skin4W = xrSkin4W_thread;
 	}
 };

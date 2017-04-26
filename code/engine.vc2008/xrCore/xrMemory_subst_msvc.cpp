@@ -5,7 +5,7 @@
 #include "xrMemory_pure.h"
 
 #ifndef DEBUG_MEMORY_MANAGER
-#	define	debug_mode 0
+#	define	debug_mode 1
 #endif // DEBUG_MEMORY_MANAGER
 
 #ifdef DEBUG_MEMORY_MANAGER

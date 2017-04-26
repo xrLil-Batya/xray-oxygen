@@ -4,6 +4,11 @@ code/SDK/OpenALwEAX.exe
 *.html
 *.pdb
 *.ipch
+*.exp
+*.metagen
+*.ipdb
+*.tlog
+*.opendb
 engine.VC.db
 intermediate/
 *.iobj
@@ -16,3 +21,6 @@ code/engine.vc2008/utils/xrLC_Light/x64/
 code/engine.vc2008/3rd party/openal/OpenAL-Windows/Router/x64/
 code/engine.vc2008/3rd party/dxerr/x64/
 code/engine.vc2008/xrScripts/luajit/src/x64/
+libraries_x64/
+binaries64/
+*.user

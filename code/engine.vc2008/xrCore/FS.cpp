@@ -10,13 +10,6 @@
 #include <sys\stat.h>
 #pragma warning(default:4995)
 
-//typedef void DUMMY_STUFF (const void*,const u32&,void*);
-//XRCORE_API DUMMY_STUFF	*g_dummy_stuff = 0;
-
-#ifdef M_BORLAND
-#	define O_SEQUENTIAL 0
-#endif // M_BORLAND
-
 #ifdef FS_DEBUG
 	XRCORE_API	u32					g_file_mapped_memory = 0;
 	u32								g_file_mapped_count	= 0;
@@ -141,14 +134,10 @@ void *FileDownload		(LPCSTR file_name, const int &file_handle, u32 &file_size)
 
 	int					r_bytes	= _read(file_handle,buffer,file_size);
 	R_ASSERT3			(
-//		!file_size ||
-//		(r_bytes && (file_size >= (u32)r_bytes)),
 		file_size == (u32)r_bytes,
 		"can't read from file : ",
 		file_name
 	);
-
-//	file_size			= r_bytes;
 
 	R_ASSERT3			(
 		!_close(file_handle),
@@ -388,7 +377,9 @@ IReader*	IReader::open_chunk_iterator	(u32& ID, IReader* _prev)
 
 void	IReader::r	(void *p,int cnt)
 {
-	R_ASSERT(Pos+cnt<=Size);
+	//R_ASSERT(Pos+cnt<=Size);
+	R_ASSERT(Pos + cnt <= Size, make_string("Pos+cnt=[%d], Size=[%d]", (Pos + cnt), Size));
+
     std::memcpy(p,pointer(),cnt);
 	advance			(cnt);
 #ifdef DEBUG

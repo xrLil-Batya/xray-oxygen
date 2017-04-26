@@ -1,14 +1,12 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: script_engine_help.cpp
 //	Created 	: 01.04.2004
-//  Modified 	: 01.04.2004
+//  Modified 	: 23.04.2017
 //	Author		: Dmitriy Iassenev
 //	Description : Script Engine help
 ////////////////////////////////////////////////////////////////////////////
 
 #include "pch_script.h"
-
-#ifdef DEBUG
 
 xr_string to_string					(luabind::object const& o)
 {
@@ -47,7 +45,6 @@ xr_string &process_signature				(xr_string &str)
 
 xr_string member_to_string			(luabind::object const& e, LPCSTR function_signature)
 {
-#if 1 || !defined(LUABIND_NO_ERROR_CHECKING)
     using namespace luabind;
 	lua_State* L = e.lua_state();
 	LUABIND_CHECK_STACK(L);
@@ -63,11 +60,6 @@ xr_string member_to_string			(luabind::object const& e, LPCSTR function_signatur
 			if (lua_touserdata(L, -1) != reinterpret_cast<void*>(0x1337)) return to_string(e);
 		}
 
-// #ifdef BOOST_NO_STRINGSTREAM
-// 		std::strstream s;
-// #else
-// 		std::stringstream s;
-// #endif
 		xr_string s = "";
 
 		{
@@ -99,9 +91,7 @@ xr_string member_to_string			(luabind::object const& e, LPCSTR function_signatur
 	}
 
     return to_string(e);
-#else
-    return "";
-#endif
+
 }
 
 void print_class						(lua_State *L, luabind::detail::class_rep *crep)
@@ -207,12 +197,11 @@ void print_class						(lua_State *L, luabind::detail::class_rep *crep)
 void print_free_functions				(lua_State *L, const luabind::object &object, LPCSTR header, const xr_string &indent)
 {
 	u32							count = 0;
-	luabind::object::iterator	I = object.begin();
-	luabind::object::iterator	E = object.end();
-	for ( ; I != E; ++I) {
-		if ((*I).type() != LUA_TFUNCTION)
+
+	for (auto j = object.begin(); j != object.end(); ++j) {
+		if ((*j).type() != LUA_TFUNCTION)
 			continue;
-		(*I).pushvalue();
+		(*j).pushvalue();
 		luabind::detail::free_functions::function_rep* rep = 0;
 		if (lua_iscfunction(L, -1))
 		{
@@ -227,9 +216,8 @@ void print_free_functions				(lua_State *L, const luabind::object &object, LPCST
 							Msg("\n%snamespace %s {",indent.c_str(),header);
 						++count;
 						rep = static_cast<luabind::detail::free_functions::function_rep*>(lua_touserdata(L, -1));
-						std::vector<luabind::detail::free_functions::overload_rep>::const_iterator	i = rep->overloads().begin();
-						std::vector<luabind::detail::free_functions::overload_rep>::const_iterator	e = rep->overloads().end();
-						for ( ; i != e; ++i) {
+
+						for (auto i = rep->overloads().begin(); i != rep->overloads().end(); ++i) {
 							luabind::internal_string luaS;
 							(*i).get_signature(L,luaS);
 							xr_string	S(luaS.c_str());
@@ -282,12 +270,6 @@ void print_help							(lua_State *L)
 	print_free_functions(L,luabind::get_globals(L),"","");
 	Msg					("End of list of the namespaces exported to LUA\n");
 }
-#else
-void print_help							(lua_State *L)
-{
-	Msg					("! Release build doesn't support lua-help :(");
-}
-#endif
 
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////

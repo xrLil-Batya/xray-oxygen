@@ -24,7 +24,7 @@ namespace Opcode {
 	class AABBNoLeafNode;
 };
 
-#ifdef _M_X64
+#if defined(_M_X64)
 using u_ptr = u64;
 #else
 using u_ptr = u32;
@@ -32,8 +32,27 @@ using u_ptr = u32;
 #pragma pack(push,8)
 namespace CDB
 {
+    // Triangle for x86
+#pragma pack(push,1)
+    class XRCDB_API TRI_DEPRECATED						//*** 16 bytes total (was 32 :)
+    {
+    public:
+        u32				verts[3];		// 3*4 = 12b
+        union {
+            u32			dummy;				// 4b
+            struct {
+                u32		material : 14;		// 
+                u32		suppress_shadows : 1;	// 
+                u32		suppress_wm : 1;		// 
+                u32		sector : 16;			// 
+            };
+        };
+    public:
+        IC u32			IDvert(u32 ID) { return verts[ID]; }
+    };
+#pragma pack (pop)
 	// Triangle
-	class XRCDB_API TRI						//*** 16 bytes total (was 32 :)
+	class XRCDB_API TRI						//*** 24 bytes total
 	{
 	public:
 		u32				verts	[3];		// 3*4 = 12b
@@ -44,8 +63,40 @@ namespace CDB
 				u_ptr		suppress_shadows:1;	// 
 				u_ptr		suppress_wm:1;		// 
 				u_ptr		sector:16;			// 
+#ifdef _M_X64
+                u_ptr			dumb : 32;
+#endif
 			};
 		};
+
+#ifdef _M_X64
+        TRI (TRI_DEPRECATED& oldTri)
+        {
+            verts[0] = oldTri.verts[0];
+            verts[1] = oldTri.verts[1];
+            verts[2] = oldTri.verts[2];
+            dummy = oldTri.dummy;
+            dumb = 0;
+        }
+
+        TRI()
+        {
+            verts[0] = 0.0f;
+            verts[1] = 0.0f;
+            verts[2] = 0.0f;
+            dummy = 0;
+        }
+
+        TRI& operator= (const TRI_DEPRECATED& oldTri)
+        {
+            verts[0] = oldTri.verts[0];
+            verts[1] = oldTri.verts[1];
+            verts[2] = oldTri.verts[2];
+            dummy = oldTri.dummy;
+            dumb = 0;
+            return *this;
+        }
+#endif
 	public:
 		IC u32			IDvert	(u32 ID)		{ return verts[ID];	}
 	};
@@ -99,18 +150,34 @@ namespace CDB
 		void					build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=NULL, void* bcp=NULL);
 		u32						memory			();
 	};
-
+/*	struct XRCDB_API RESULT_DEPRECATED
+	{
+		Fvector			verts[3];
+		union {
+			u32		dummy;				// 8b
+			struct {
+				u32		material : 14;		// 
+				u32		suppress_shadows : 1;	// 
+				u32		suppress_wm : 1;		// 
+				u32		sector : 16;			// 
+			};
+		};
+	};
+	*/
 	// Collider result
 	struct XRCDB_API RESULT
 	{
 		Fvector			verts	[3];
 		union	{
-			u32			dummy;				// 4b
+			u_ptr		dummy;				// 8b
 			struct {
-				u32		material:14;		// 
-				u32		suppress_shadows:1;	// 
-				u32		suppress_wm:1;		// 
-				u32		sector:16;			// 
+				u_ptr		material:14;		// 
+				u_ptr		suppress_shadows:1;	// 
+				u_ptr		suppress_wm:1;		// 
+				u_ptr		sector:16;			// 
+#ifdef _M_X64
+				u64			dumb : 32;
+#endif
 			};
 		};
 		int				id;
@@ -167,9 +234,9 @@ namespace CDB
 		u32				VPack				( const Fvector& V, float eps);
 	public:
 		void			add_face			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector	);
-		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy );
+		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy );
 		void			add_face_packed		( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, float eps = EPS );
-		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy, float eps = EPS );
+		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy, float eps = EPS );
         void			remove_duplicate_T	( );
 		void			calc_adjacency		( xr_vector<u32>& dest		);
 
@@ -211,8 +278,8 @@ namespace CDB
 		//			verts
 		//		}
 
-		void				add_face	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, u_ptr flags );
-		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy , u_ptr flags );
+		void				add_face	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, u32 flags );
+		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy , u32 flags );
 
 		xr_vector<Fvector>& getV_Vec()			{ return verts;				}
 		Fvector*			getV()				{ return &*verts.begin();	}

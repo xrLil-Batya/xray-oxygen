@@ -55,4 +55,9 @@
       <Filter>Файлы ресурсов</Filter>
     </Image>
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LaunchWindow.resx">
+      <Filter>Файлы ресурсов</Filter>
+    </EmbeddedResource>
+  </ItemGroup>
 </Project>

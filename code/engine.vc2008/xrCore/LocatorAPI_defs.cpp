@@ -32,7 +32,14 @@ FS_Path::FS_Path	(LPCSTR _Root, LPCSTR _Add, LPCSTR _DefExt, LPCSTR _FilterCapti
 {
 //	VERIFY			(_Root&&_Root[0]);
 	string_path		temp;
-    xr_strcpy		(temp,sizeof(temp),_Root); 
+    xr_strcpy		(temp,sizeof(temp),_Root);
+    //Giperion: fs_root can goes without trailing slash, add one, if we miss that on root
+    if (temp[0])
+    {
+        char lastCharOfTemp = temp[xr_strlen(temp) - 1];
+        if (lastCharOfTemp != '\\' && lastCharOfTemp != '/') xr_strcat(temp, "\\");
+    }
+    //Giperion end
     if (_Add) 		xr_strcat(temp,_Add);
 	if (temp[0] && temp[xr_strlen(temp)-1]!='\\') xr_strcat(temp,"\\");
 	m_Path			= xr_strlwr(xr_strdup(temp));

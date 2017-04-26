@@ -1,14 +1,19 @@
 #pragma once
 
 namespace { 
-	void __declspec(naked, noinline) * __cdecl GetInstructionPtr()
-	{
-#ifdef _WIN64
-		_asm mov rax, [rsp] _asm retn
+	
+#ifdef _M_X64
+		extern "C" void * _ReturnAddress(void);
+		DWORD_PTR GetInstructionPtr()
+		{
+				return (DWORD_PTR)_ReturnAddress();
+		}
 #else
-		_asm mov eax, [esp] _asm retn
+		void __declspec(naked, noinline) * __cdecl GetInstructionPtr()
+		{
+			_asm mov eax, [esp] _asm retn
+		}
 #endif
-	}
 }
 
 struct StackTraceInfo
@@ -40,15 +45,22 @@ size_t BuildStackTrace(EXCEPTION_POINTERS* exPtrs, char* buffer, size_t capacity
 size_t BuildStackTrace(char* buffer, size_t capacity, size_t lineCapacity)
 {
 	// XXX: add support for x86_64
+	// FX: done
 	CONTEXT context;
 	EXCEPTION_POINTERS ex_ptrs;
 	void* ebp;
 	context.ContextFlags = CONTEXT_FULL;
 	if (GetThreadContext(GetCurrentThread(), &context))
 	{
+#ifndef _M_X64
 		context.Eip = (DWORD)GetInstructionPtr();
 		context.Ebp = (DWORD)&ebp;
 		context.Esp = (DWORD)&context;
+#else
+		context.Rip = GetInstructionPtr();
+		context.Rbp = (DWORD)&ebp;
+		context.Rsp = (DWORD)&context;
+#endif
 		ex_ptrs.ContextRecord = &context;
 		ex_ptrs.ExceptionRecord = 0;
 		return BuildStackTrace(&ex_ptrs, buffer, capacity, lineCapacity);
