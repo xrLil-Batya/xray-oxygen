@@ -821,14 +821,7 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 			_GetItem			(temp,3,add,_delimiter);
 			_GetItem			(temp,4,def,_delimiter);
 			_GetItem			(temp,5,capt,_delimiter);
-			xr_strlwr			(id);			
-			
-            if (xr_strcmp(root, "$fs_root$") == 0)
-            {
-                //Old good fsltx
-                //replace root with predefined path
-                xr_strcpy(root, fsRoot.generic_string().c_str());
-            }
+			xr_strlwr			(id);
 
 			xr_strlwr			(root);
 			lp_add				=(cnt>=4)?xr_strlwr(add):0;
@@ -836,6 +829,13 @@ void CLocatorAPI::_initialize	(u32 flags, LPCSTR target_folder, LPCSTR fs_name)
 			lp_capt				=(cnt>=6)?capt:0;
 			
 			auto p_it		= pathes.find(root);
+
+            if (p_it == pathes.end() && xr_strcmp(root, "$fs_root$") == 0)
+            {
+                //Old good fsltx
+                //replace root with predefined path
+                xr_strcpy(root, fsRoot.generic_string().c_str());
+            }
 
 			FS_Path* P			= new FS_Path((p_it!=pathes.end())?p_it->second->m_Path:root,lp_add,lp_def,lp_capt,fl);
 			bNoRecurse			= !(fl&FS_Path::flRecurse);
