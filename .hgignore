@@ -24,3 +24,4 @@ code/engine.vc2008/xrScripts/luajit/src/x64/
 libraries_x64/
 binaries64/
 *.user
+*.obj
