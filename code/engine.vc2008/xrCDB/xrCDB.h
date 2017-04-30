@@ -24,17 +24,28 @@ namespace Opcode {
 	class AABBNoLeafNode;
 };
 
-#if defined(_M_X64)
+#if defined(_M_X64)// && !defined(_COMPILERS_)
 using u_ptr = u64;
+using ur_ptr = u_ptr;
+//#elif defined(_COMPILERS_)
+//using u_ptr = u64;
+//using ur_ptr = u32;
 #else
 using u_ptr = u32;
+using ur_ptr = u_ptr;
 #endif
+
 #pragma pack(push,8)
 namespace CDB
 {
     // Triangle for x86
-#pragma pack(push,1)
+#pragma pack(push, 1)
+#if defined(_M_X64)// && !defined(_COMPILERS_)
+#ifndef _COMPILERS_
     class XRCDB_API TRI_DEPRECATED						//*** 16 bytes total (was 32 :)
+#else defined(_COMPILERS_)
+	class XRCDB_API TRI									//*** 16 bytes total (was 32 :)
+#endif
     {
     public:
         u32				verts[3];		// 3*4 = 12b
@@ -50,26 +61,40 @@ namespace CDB
     public:
         IC u32			IDvert(u32 ID) { return verts[ID]; }
     };
+#endif
 #pragma pack (pop)
 	// Triangle
+//#ifdef _COMPILERS_
+//	class XRCDB_API TRI_CP					//*** 24 bytes total
+//#else
 	class XRCDB_API TRI						//*** 24 bytes total
+//#endif
 	{
 	public:
 		u32				verts	[3];		// 3*4 = 12b
-		union	{
+		union	
+		{
 			u_ptr			dummy;				// 4b
-			struct {
+			struct 
+			{
 				u_ptr		material:14;		// 
 				u_ptr		suppress_shadows:1;	// 
 				u_ptr		suppress_wm:1;		// 
 				u_ptr		sector:16;			// 
 #ifdef _M_X64
-                u_ptr			dumb : 32;
+                u_ptr		dumb : 32;
+#	ifdef _COMPILERS_
+				struct 
+				{
+					u32 dummy_low;
+					u32 dummy_high;
+				};
+#	endif
 #endif
 			};
 		};
 
-#ifdef _M_X64
+#if defined(_M_X64)// && !defined(_COMPILERS_)
         TRI (TRI_DEPRECATED& oldTri)
         {
             verts[0] = oldTri.verts[0];
@@ -150,32 +175,19 @@ namespace CDB
 		void					build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=NULL, void* bcp=NULL);
 		u32						memory			();
 	};
-/*	struct XRCDB_API RESULT_DEPRECATED
-	{
-		Fvector			verts[3];
-		union {
-			u32		dummy;				// 8b
-			struct {
-				u32		material : 14;		// 
-				u32		suppress_shadows : 1;	// 
-				u32		suppress_wm : 1;		// 
-				u32		sector : 16;			// 
-			};
-		};
-	};
-	*/
+
 	// Collider result
 	struct XRCDB_API RESULT
 	{
 		Fvector			verts	[3];
 		union	{
-			u_ptr		dummy;				// 8b
+			ur_ptr		dummy;				// 8b
 			struct {
-				u_ptr		material:14;		// 
-				u_ptr		suppress_shadows:1;	// 
-				u_ptr		suppress_wm:1;		// 
-				u_ptr		sector:16;			// 
-#ifdef _M_X64
+				ur_ptr		material:14;		// 
+				ur_ptr		suppress_shadows:1;	// 
+				ur_ptr		suppress_wm:1;		// 
+				ur_ptr		sector:16;			// 
+#if defined(_M_X64)// && !defined(_COMPILERS_)
 				u64			dumb : 32;
 #endif
 			};
@@ -234,9 +246,9 @@ namespace CDB
 		u32				VPack				( const Fvector& V, float eps);
 	public:
 		void			add_face			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector	);
-		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy );
+		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy );
 		void			add_face_packed		( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, float eps = EPS );
-		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u32 dummy, float eps = EPS );
+		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy, float eps = EPS );
         void			remove_duplicate_T	( );
 		void			calc_adjacency		( xr_vector<u32>& dest		);
 
