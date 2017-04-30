@@ -150,6 +150,7 @@
     <ClCompile Include="lj_vmevent.c" />
     <ClCompile Include="lj_vmmath.c" />
     <ClCompile Include="luajit.c" />
+    <ClCompile Include="xr_pool.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="lauxlib.h" />
@@ -223,6 +224,11 @@
     <ClInclude Include="luaconf.h" />
     <ClInclude Include="luajit.h" />
     <ClInclude Include="lualib.h" />
+    <ClInclude Include="xr_pool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="msvcbuild.bat" />
+    <None Include="msvcbuild64.bat" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

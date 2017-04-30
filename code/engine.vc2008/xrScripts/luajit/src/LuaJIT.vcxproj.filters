@@ -201,6 +201,7 @@
     <ClCompile Include="lj_vmmath.c">
       <Filter>src</Filter>
     </ClCompile>
+    <ClCompile Include="xr_pool.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="luajit.h">
@@ -416,5 +417,10 @@
     <ClInclude Include="luaconf.h">
       <Filter>include</Filter>
     </ClInclude>
+    <ClInclude Include="xr_pool.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="msvcbuild64.bat" />
+    <None Include="msvcbuild.bat" />
   </ItemGroup>
 </Project>
