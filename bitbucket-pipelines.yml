@@ -1,0 +1,9 @@
+pipelines:
+  default:
+    - step:
+        script:
+          - echo "old default bruch"
+  import:
+    - step:
+        script:
+          - echo "new default bruch"
