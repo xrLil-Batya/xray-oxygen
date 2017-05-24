@@ -1,5 +1,4 @@
-#ifndef __Q__
-#define __Q__
+#pragma once
 
 /***************************************************************************
 	The quatern module contains basic support for a quaternion object.
@@ -366,7 +365,7 @@ public:
     // returns TRUE if there is an axis.
     // returns FALSE if there is no axis (and Axis is set to 0,0,0, and Theta is 0)
 
-    bool get_axis_angle(Fvector& axis, T& angle) const 
+    bool get_axis_angle(_vector3<T>& axis, T& angle) const
     {
         T s = _sqrt(x * x + y * y + z * z);
         if (s > EPS_S) {
@@ -374,7 +373,7 @@ public:
             axis.x = OneOverSinTheta * x;
             axis.y = OneOverSinTheta * y;
             axis.z = OneOverSinTheta * z;
-            angle = 2.0f * atan2(s, w);
+            angle = 2.0f * std::atan2(s, w);
             return true;
         } else {
             axis.x = axis.y = axis.z = 0.0f;
@@ -399,19 +398,18 @@ public:
 
         T cosom = (Q0.w * Q1.w) + (Q0.x * Q1.x) + (Q0.y * Q1.y) + (Q0.z * Q1.z);
 
-        if (cosom < 0) {
+        if (cosom < 0) 
+		{
             cosom = -cosom;
             sign = -1.f;
-        } else {
-            sign = 1.f;
-        }
+        } else  sign = 1.f;
 
         if ((1.0f - cosom) > EPS) {
             T omega = _acos_(cosom);
-            T i_sinom = 1.f / _sin(omega);
+            T i_sinom = 1.f / std::sin(omega);
             T t_omega = tm * omega;
-            Scale0 = _sin(omega - t_omega) * i_sinom;
-            Scale1 = _sin(t_omega) * i_sinom;
+            Scale0 = std::sin(omega - t_omega) * i_sinom;
+            Scale1 = std::sin(t_omega) * i_sinom;
         } else {
             // has numerical difficulties around cosom == 0
             // in this case degenerate to linear interpolation
@@ -449,7 +447,7 @@ public:
     {
         T n = Q.x * Q.x + Q.y * Q.y + Q.z * Q.z;
         T r = _sqrt(n);
-        T t = (r > EPS_S) ? atan2f(r, Q.w) / r : 0.f;
+        T t = (r > EPS_S) ? std::atan2f(r, Q.w) / r : T(0);
         x = t * Q.x;
         y = t * Q.y;
         z = t * Q.z;
@@ -460,8 +458,8 @@ public:
     SelfRef exp(SelfCRef Q)
     {
         T r = _sqrt(Q.x * Q.x + Q.y * Q.y + Q.z * Q.z);
-        T et = expf(Q.w);
-        T s = (r >= EPS_S) ? et * _sin(r) / r : 0.f;
+        T et = std::exp(Q.w);
+        T s = (r >= EPS_S) ? et * std::sin(r) / r : 0.f;
         x = s * Q.x;
         y = s * Q.y;
         z = s * Q.z;
@@ -484,5 +482,3 @@ BOOL _valid(const _quaternion<T>& s) { return _valid(s.x) && _valid(s.y) && _val
 #undef TRACE_QZERO_TOLERANCE
 #undef AA_QZERO_TOLERANCE
 #undef QEPSILON
-
-#endif

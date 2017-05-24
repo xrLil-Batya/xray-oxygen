@@ -1,6 +1,4 @@
-#ifndef XRSERVER_UPDATES_COMPRESSOR_INCLUDED
-#define XRSERVER_UPDATES_COMPRESSOR_INCLUDED
-
+#pragma once
 #include "traffic_optimization.h"
 
 class last_updates_cache
@@ -59,7 +57,6 @@ private:
 	send_ready_updates_t			m_ready_for_send;
 	send_ready_updates_t::size_type m_current_update;
 
-	compression::ppmd_trained_stream*			m_trained_stream;
 	compression::lzo_dictionary_buffer			m_lzo_dictionary;
 	//alligned to 16 bytes m_lzo_working_buffer
 	u8*											m_lzo_working_memory;
@@ -75,6 +72,3 @@ private:
 	IWriter*		dbg_update_bins_writer;
 	void			create_update_bin_writer	();	
 };//class server_updates_compressor
-
-
-#endif//#ifndef XRSERVER_UPDATES_COMPRESSOR_INCLUDED
