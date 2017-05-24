@@ -212,23 +212,19 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_DemoPlayStoped	= FALSE;
 	m_DemoSave = FALSE;
 	m_DemoSaveStarted = FALSE;
-	m_current_spectator = NULL;
-	m_msg_filter = NULL;
-	m_demoplay_control = NULL;
-	m_demo_info	= NULL;
+	m_current_spectator = nullptr;
+	m_msg_filter = nullptr;
+	m_demoplay_control = nullptr;
+	m_demo_info	= nullptr;
 
-	R_ASSERT				(NULL==g_player_hud);
+	R_ASSERT				(!g_player_hud);
 	g_player_hud			= xr_new<player_hud>();
 	g_player_hud->load_default();
 	
-	hud_zones_list = NULL;
-	//---------------------------------------------------------
-//	Msg("%s", Core.Params);
-	//---------------------------------------------------------	
-	m_file_transfer					= NULL;
-	m_trained_stream				= NULL;
-	m_lzo_working_memory			= NULL;
-	m_lzo_working_buffer			= NULL;
+	hud_zones_list			= nullptr;
+	m_file_transfer			= nullptr;
+	m_lzo_working_memory	= nullptr;
+	m_lzo_working_buffer	= nullptr;
 }
 
 extern CAI_Space *g_ai_space;

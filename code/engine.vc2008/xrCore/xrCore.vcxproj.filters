@@ -37,21 +37,6 @@
     <Filter Include="Compression">
       <UniqueIdentifier>{f5537ea7-0833-4792-882a-eda4ae27e7da}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Compression\ppmd">
-      <UniqueIdentifier>{1a61538b-3888-449d-b474-355f6458a386}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Compression\ppmd\common">
-      <UniqueIdentifier>{1c34d5b5-be37-4a9f-bf78-09d2db5e8456}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Compression\ppmd\core">
-      <UniqueIdentifier>{ddd76de6-c8c5-4386-af8f-dbe126ce969f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Compression\ppmd\core\allocator">
-      <UniqueIdentifier>{ba68f9f7-9fe2-4de5-a324-df17c277ca92}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Compression\ppmd\stream">
-      <UniqueIdentifier>{053fbda8-86a6-4d9c-8b5e-432d1f69879e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compression\rt">
       <UniqueIdentifier>{c1e6c1a3-9ec8-4271-9817-87ebf9641280}</UniqueIdentifier>
     </Filter>
@@ -210,12 +195,6 @@
     <ClCompile Include="memory_monitor.cpp">
       <Filter>memory_monitor</Filter>
     </ClCompile>
-    <ClCompile Include="ppmd_compressor.cpp">
-      <Filter>Compression\ppmd</Filter>
-    </ClCompile>
-    <ClCompile Include="Model.cpp">
-      <Filter>Compression\ppmd\core</Filter>
-    </ClCompile>
     <ClCompile Include="rt_compressor.cpp">
       <Filter>Compression\rt</Filter>
     </ClCompile>
@@ -224,9 +203,6 @@
     </ClCompile>
     <ClCompile Include="LzHuf.cpp">
       <Filter>Compression\lz</Filter>
-    </ClCompile>
-    <ClCompile Include="lzo_compressor.cpp">
-      <Filter>Compression\lzo</Filter>
     </ClCompile>
     <ClCompile Include="rt_lzo1x_1.cpp">
       <Filter>Compression\lzo</Filter>
@@ -255,6 +231,9 @@
     </ClCompile>
     <ClCompile Include="DebugCore\StackTrace.cpp">
       <Filter>Debug core</Filter>
+    </ClCompile>
+    <ClCompile Include="lzo_compressor.cpp">
+      <Filter>Compression\lzo</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -468,35 +447,11 @@
     <ClInclude Include="memory_monitor.h">
       <Filter>memory_monitor</Filter>
     </ClInclude>
-    <ClInclude Include="ppmd_compressor.h">
-      <Filter>Compression\ppmd</Filter>
-    </ClInclude>
-    <ClInclude Include="PPMd.h">
-      <Filter>Compression\ppmd\common</Filter>
-    </ClInclude>
-    <ClInclude Include="PPMdType.h">
-      <Filter>Compression\ppmd\common</Filter>
-    </ClInclude>
-    <ClInclude Include="Coder.hpp">
-      <Filter>Compression\ppmd\core</Filter>
-    </ClInclude>
-    <ClInclude Include="SubAlloc.hpp">
-      <Filter>Compression\ppmd\core\allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="compression_ppmd_stream.h">
-      <Filter>Compression\ppmd\stream</Filter>
-    </ClInclude>
-    <ClInclude Include="compression_ppmd_stream_inline.h">
-      <Filter>Compression\ppmd\stream</Filter>
-    </ClInclude>
     <ClInclude Include="rt_compressor.h">
       <Filter>Compression\rt</Filter>
     </ClInclude>
     <ClInclude Include="lzhuf.h">
       <Filter>Compression\lz</Filter>
-    </ClInclude>
-    <ClInclude Include="lzo_compressor.h">
-      <Filter>Compression\lzo</Filter>
     </ClInclude>
     <ClInclude Include="rt_config1x.h">
       <Filter>Compression\lzo</Filter>
@@ -540,6 +495,9 @@
     </ClInclude>
     <ClInclude Include="BuildStackTraceInline.hpp">
       <Filter>Debug core</Filter>
+    </ClInclude>
+    <ClInclude Include="lzo_compressor.h">
+      <Filter>Compression\lzo</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

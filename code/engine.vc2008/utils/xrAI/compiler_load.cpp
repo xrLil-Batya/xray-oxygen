@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "compiler.h"
-//.#include "communicate.h"
 #include "levelgamedef.h"
 #include "level_graph.h"
 #include "AIMapExport.h"
+#include <memory>
 
 IC	const Fvector vertex_position(const CLevelGraph::CPosition &Psrc, const Fbox &bb, const SAIParams &params)
 {
@@ -72,8 +72,19 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			R_ASSERT			(CFORM_CURRENT_VERSION==H.version);
 
 			Fvector*	verts	= (Fvector*)fs->pointer();
+#ifdef _M_X64
+			CDB::TRI_CP*	build_tris = (CDB::TRI_CP*)(verts + H.vertcount);
+			auto tris = std::make_unique<CDB::TRI[]>(H.facecount);
+			for (u32 i = 0; i != H.facecount; i++)
+			{
+				memcpy(tris[i].verts, build_tris[i].verts, sizeof(tris[i].verts));
+				tris[i].dummy = build_tris[i].dummy_low;
+			}
+			Level.build(verts, H.vertcount, tris.get(), H.facecount);
+#else
 			CDB::TRI*	tris	= (CDB::TRI*)(verts+H.vertcount);
 			Level.build			( verts, H.vertcount, tris, H.facecount );
+#endif
 			Level.syncronize	();
 			Msg("* Level CFORM: %dK",Level.memory()/1024);
 
@@ -110,17 +121,28 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			{
 				Surface_Init		();
 				F = fs->open_chunk	(EB_Textures);
-				u32 tex_count		= F->length()/sizeof(b_texture);
+#ifdef _M_X64
+				u32 tex_count		= F->length() / sizeof(help_b_texture);
+#else
+				u32 tex_count		= F->length() / sizeof(b_texture);
+#endif
 				for (u32 t=0; t<tex_count; t++)
 				{
 					Progress		(float(t)/float(tex_count));
-
+#ifdef _WIN64
+					// workaround for ptr size mismatching
+					help_b_texture	TEX;
+					F->r(&TEX, sizeof(TEX));
+					b_BuildTexture	BT;
+					std::memcpy(&BT, &TEX, sizeof(TEX) - 4);	// ptr should be copied separately
+					BT.pSurface = (u32*)TEX.pSurface;
+#else
 					b_texture		TEX;
 					F->r			(&TEX,sizeof(TEX));
 
 					b_BuildTexture	BT;
                     std::memcpy(&BT,&TEX,sizeof(TEX));
-
+#endif
 					// load thumbnail
 					string128		&N = BT.name;
 					LPSTR			extension = strext(N);
