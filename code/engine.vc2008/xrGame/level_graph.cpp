@@ -207,14 +207,11 @@ u32 CLevelGraph::vertex		(u32 current_node_id, const Fvector& position) const
 
 u32	CLevelGraph::vertex_id				(const Fvector &position) const
 {
-	VERIFY2				(
-		valid_vertex_position(position),
-		make_string(
-			"invalid position for CLevelGraph::vertex_id specified: [%f][%f][%f]",
-			VPUSH(position)
-		)
-	);
-
+#ifdef _M_X64
+#	pragma todo("FX to XXX: fixed graph_vertex position!!!")
+#else
+	VERIFY2(valid_vertex_position(position), make_string("invalid position for CLevelGraph::vertex_id specified: [%f][%f][%f]", VPUSH(position)));
+#endif
 	CPosition			_vertex_position = vertex_position(position);
 	CVertex				*B = m_nodes;
 	CVertex				*E = m_nodes + header().vertex_count();
