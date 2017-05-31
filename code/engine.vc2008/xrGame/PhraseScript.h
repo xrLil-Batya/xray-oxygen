@@ -7,13 +7,12 @@
 #include "InfoPortionDefs.h"
 
 #pragma once
-
+namespace tinyxml2 { class XMLNode; }
 class CGameObject;
 class CInventoryOwner;
-class TiXmlNode;
 class CUIXml;
 
-typedef TiXmlNode		XML_NODE;
+using XML_NODE = tinyxml2::XMLNode;
 
 class CDialogScriptHelper
 {

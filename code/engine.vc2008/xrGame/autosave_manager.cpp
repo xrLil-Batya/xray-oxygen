@@ -50,38 +50,6 @@ float CAutosaveManager::shedule_Scale		()
 void CAutosaveManager::shedule_Update		(u32 dt)
 {
 	inherited::shedule_Update	(dt);
-	#pragma todo("Plecha to Plecha : AUTOSAVE (do not forgive to enable it in release version:-))))!!!!")
-	if (true) return;
-	if (!ai().get_alife())
-		return;
-
-	if (last_autosave_time() + autosave_interval() >= Device.dwTimeGlobal)
-		return;
-
-	if (Device.dwPrecacheFrame || !g_actor || !ready_for_autosave() || !Actor()->g_Alive()) {
-		delay_autosave			();
-		return;
-	}
-		
-	update_autosave_time		();
-
-	string_path					temp;
-	strconcat					(sizeof(temp), temp, "(auto)", Core.UserName, " - ", Core.UserDate, " ", Core.UserTime);
-	NET_Packet					net_packet;
-	net_packet.w_begin			(M_SAVE_GAME);
-	net_packet.w_stringZ		(temp);
-	net_packet.w_u8				(0);
-	Level().Send				(net_packet,net_flags(TRUE));
-
-	string_path					S1;
-	xr_strcat					(temp,sizeof(temp),".dds");
-	FS.update_path				(S1,"$game_saves$",temp);
-
-	MainMenu()->Screenshot		(IRender_interface::SM_FOR_GAMESAVE,S1);
-
-	SetFileAttributes			( S1, FILE_ATTRIBUTE_HIDDEN );
-	
-	CurrentGameUI()->AddCustomStatic("autosave", true);
 }
 
 void CAutosaveManager::on_game_loaded	()

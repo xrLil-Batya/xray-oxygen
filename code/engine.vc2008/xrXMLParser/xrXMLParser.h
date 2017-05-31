@@ -1,23 +1,13 @@
-#ifndef xrXMLParserH
-#define xrXMLParserH
 #pragma once
-
-
-#ifdef XRXMLPARSER_EXPORTS
-	#define XRXMLPARSER_API __declspec(dllexport)
-#else
-	#define XRXMLPARSER_API __declspec(dllimport)
-	#pragma comment			(lib,"xrXMLParser.lib")
-#endif
+#include "exporter.inl"
 
 const LPCSTR CONFIG_PATH			= "$game_config$";
 const LPCSTR UI_PATH				= "ui";
 
-
 #include "tinyxml.h"
 
-typedef TiXmlNode		XML_NODE;
-typedef TiXmlAttribute	XML_ATTRIBUTE;
+using XML_NODE		= tinyxml2::XMLNode;
+using XML_ATTRIBUTE = tinyxml2::XMLAttribute;
 
 class XRXMLPARSER_API	CXml  
 {
@@ -98,8 +88,6 @@ private:
 						CXml					(const CXml& copy);
 	void				operator=				( const CXml& copy );
 
-	typedef TiXmlElement						XML_ELEM;
-	TiXmlDocument								m_Doc;
+	typedef tinyxml2::XMLElement						XML_ELEM;
+	tinyxml2::XMLDocument								m_Doc;
 };
-
-#endif //xrXMLParserH

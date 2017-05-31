@@ -616,8 +616,9 @@ void CUIXmlInit::InitAutoStaticGroup(CUIXml& xml_doc, LPCSTR path, int index, CU
 	XML_NODE* curr_root					= xml_doc.GetLocalRoot();
 	if(!curr_root)
 			curr_root					= xml_doc.GetRoot();
-	
-	XML_NODE* node						= curr_root->IterateChildren(NULL);
+
+	XML_NODE* node = curr_root->FirstChildElement(); // = curr_root->IterateChildren(NULL);
+
 	int cnt_static						= 0;
 	int cnt_frameline					= 0;
 	int cnt_text						= 0;
@@ -626,7 +627,7 @@ void CUIXmlInit::InitAutoStaticGroup(CUIXml& xml_doc, LPCSTR path, int index, CU
 	while(node)
 	{
 		LPCSTR node_name			= node->Value();
-		if(0==stricmp(node_name,"auto_static"))
+		if(!stricmp(node_name,"auto_static"))
 		{
 			CUIStatic* pUIStatic		= xr_new<CUIStatic>();
 			InitStatic					(xml_doc, "auto_static", cnt_static, pUIStatic);
@@ -636,8 +637,8 @@ void CUIXmlInit::InitAutoStaticGroup(CUIXml& xml_doc, LPCSTR path, int index, CU
 			pParentWnd->AttachChild		(pUIStatic);
 
 			++cnt_static;
-		}else
-		if(0==stricmp(node_name,"auto_frameline"))
+		}
+		else if(!stricmp(node_name,"auto_frameline"))
 		{
 			CUIFrameLineWnd* pUIFrameline = xr_new<CUIFrameLineWnd>();
 			InitFrameLine				(xml_doc, "auto_frameline", cnt_frameline, pUIFrameline);
@@ -647,27 +648,20 @@ void CUIXmlInit::InitAutoStaticGroup(CUIXml& xml_doc, LPCSTR path, int index, CU
 			pParentWnd->AttachChild	(pUIFrameline);
 
 			++cnt_frameline;
-		}else
-		if(0==stricmp(node_name,"auto_text"))
-		{
+		} 
+		else if(!stricmp(node_name,"auto_text"))
 			++cnt_text;
+
+		//FX: tinyxml::IterateChildren code:
+		if (!node)
+			node = curr_root->FirstChildElement();
+		else
+		{
+			R_ASSERT(node->Parent() == curr_root);
+			node = node->NextSiblingElement();
 		}
-		node						= curr_root->IterateChildren(node);
+		// end
 	}
-/*
-	CUIStatic* pUIStatic				= NULL;
-	string64							sname;
-	for(int i=0; i<items_num; i++)
-	{
-		pUIStatic						= xr_new<CUIStatic>();
-		InitStatic						(xml_doc, "auto_static", i, pUIStatic);
-		xr_sprintf						(sname,"auto_static_%d", i);
-		pUIStatic->SetWindowName		(sname);
-		pUIStatic->SetAutoDelete		(true);
-		pParentWnd->AttachChild			(pUIStatic);
-		pUIStatic						= NULL;
-	}
-*/
 	xml_doc.SetLocalRoot				(_stored_root);
 }
 
@@ -813,7 +807,7 @@ bool CUIXmlInit::InitFrameLine(CUIXml& xml_doc, LPCSTR path, int index, CUIFrame
 	bool vertical	= !!xml_doc.ReadAttribInt(path, index, "vertical");
 	
 	strconcat		(sizeof(buf),buf,path,":texture");
-	shared_str base_name = xml_doc.Read(buf, index, NULL);
+	shared_str base_name = xml_doc.Read(buf, index, nullptr);
 
 	VERIFY			(base_name);
 
