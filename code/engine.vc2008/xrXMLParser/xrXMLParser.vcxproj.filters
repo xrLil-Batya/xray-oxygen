@@ -27,6 +27,9 @@
     <ClCompile Include="tinyxmlparser.cpp">
       <Filter>Parser\TinyXML</Filter>
     </ClCompile>
+    <ClCompile Include="tinystr.cpp">
+      <Filter>Parser\TinyXML</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -36,6 +39,9 @@
       <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="tinyxml.h">
+      <Filter>Parser\TinyXML</Filter>
+    </ClInclude>
+    <ClInclude Include="tinystr.h">
       <Filter>Parser\TinyXML</Filter>
     </ClInclude>
   </ItemGroup>

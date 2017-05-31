@@ -280,18 +280,11 @@ void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue* sender)
 
 shared_str CSE_ALifeTraderAbstract::specific_character()
 {
-#ifdef XRGAME_EXPORTS
-#pragma todo("Dima to Yura, MadMax : Remove that hacks, please!")
-	if (g_pGameLevel && Level().game && (GameID() != eGameIDSingle)) return m_SpecificCharacter;
-#endif
-
 	if(m_SpecificCharacter.size())
 		return m_SpecificCharacter;
 
-
 	CCharacterInfo char_info;
 	char_info.Load(character_profile());
-
 
 	//профиль задан индексом
 	if(char_info.data()->m_CharacterId.size() )
@@ -351,13 +344,11 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 			"no default specific character set for class", *char_info.data()->m_Class);
 
 #ifdef XRGAME_EXPORTS
-		if(m_CheckedCharacters.empty())
-			char_info.m_SpecificCharacterId = m_DefaultCharacters[Random.randI(m_DefaultCharacters.size())];
-		else
+		if(!m_CheckedCharacters.empty())
 			char_info.m_SpecificCharacterId = m_CheckedCharacters[Random.randI(m_CheckedCharacters.size())];
-#else
-			char_info.m_SpecificCharacterId = m_DefaultCharacters[Random.randI(m_DefaultCharacters.size())];
+		else
 #endif
+			char_info.m_SpecificCharacterId = m_DefaultCharacters[Random.randI(m_DefaultCharacters.size())];
 
 		set_specific_character(char_info.m_SpecificCharacterId);
 		return m_SpecificCharacter;
@@ -370,14 +361,10 @@ void CSE_ALifeTraderAbstract::set_specific_character	(shared_str new_spec_char)
 
 #ifdef XRGAME_EXPORTS
 	//убрать предыдущий номер из реестра
-	if ( m_SpecificCharacter.size() ) 
-	{
-		if(ai().get_alife())
+	if (m_SpecificCharacter.size() && ai().get_alife())
 			ai().alife().registry(specific_characters).remove(m_SpecificCharacter, true);
-	}
 #endif
 	m_SpecificCharacter = new_spec_char;
-
 
 #ifdef XRGAME_EXPORTS
 	if(ai().get_alife())

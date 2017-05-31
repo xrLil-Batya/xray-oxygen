@@ -18,7 +18,7 @@
 #include "alife_simulator.h"
 #include "alife_time_manager.h"
 
-#define BODY_REMOVE_TIME		600000
+const u32 BODY_REMOVE_TIME = 600000;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
