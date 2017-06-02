@@ -1,7 +1,7 @@
 ### Fray 1.6.02 ###
 
 * Fray 1.6.02 Project основан на [наработках Im-Dex](https://github.com/Im-dex/xray-162). 
-* Использовались наработки: SkyLoader, Stalker_Monolit, RayTwitty, Tron, Abramcumner, Shoker, Полтергейст, KD, Alundaio, Карлан, Armada651, nitrocaster, Charsi82, RvP. 
+* Использовались наработки: SkyLoader, Stalker_Monolit, RayTwitty, Tron, Abramcumner, Shoker, Полтергейст, KD, Alundaio, Карлан, Armada651, nitrocaster, Charsi82, RvP, alpet.
 * Участники Репозитория: ForserX, xWolfx, Real Giperion, JHunt41.  
 
 Допускается использование **в любых** проектах.
