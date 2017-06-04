@@ -1,7 +1,5 @@
 // ModelPool.h: interface for the CModelPool class.
 //////////////////////////////////////////////////////////////////////
-#ifndef ModelPoolH
-#define ModelPoolH
 #pragma once
 
 // refs
@@ -44,19 +42,18 @@ private:
 
 	void						Destroy	();
 public:
-                            CModelPool			();
-	virtual 				~CModelPool			();
+								 CModelPool			();
+	virtual 					~CModelPool			();
 	dxRender_Visual*			Instance_Create		(u32 Type);
 	dxRender_Visual*			Instance_Duplicate	(dxRender_Visual* V);
-	dxRender_Visual*			Instance_Load		(LPCSTR N, BOOL allow_register);
-	dxRender_Visual*			Instance_Load		(LPCSTR N, IReader* data, BOOL allow_register);
-	void					Instance_Register	(LPCSTR N, dxRender_Visual* V);
-	dxRender_Visual*			Instance_Find		(LPCSTR N);
-
+	dxRender_Visual*			Instance_Load		(const char* N, BOOL allow_register);
+	dxRender_Visual*			Instance_Load		(const char* N, IReader* data, BOOL allow_register);
+	void						Instance_Register	(const char* N, dxRender_Visual* V);
+	dxRender_Visual*			Instance_Find		(const char* N);
 	dxRender_Visual*			CreatePE			(PS::CPEDef* source);
 	dxRender_Visual*			CreatePG			(PS::CPGDef* source);
-	dxRender_Visual*			Create				(LPCSTR name, IReader* data=0);
-	dxRender_Visual*			CreateChild			(LPCSTR name, IReader* data);
+	dxRender_Visual*			Create				(const char* name, IReader* data=0);
+	dxRender_Visual*			CreateChild			(const char* name, IReader* data);
 	void					Delete				(dxRender_Visual* &V, BOOL bDiscard=FALSE);
 	void					Discard				(dxRender_Visual* &V, BOOL b_complete);
 	void					DeleteInternal		(dxRender_Visual* &V, BOOL bDiscard=FALSE);
@@ -75,5 +72,7 @@ public:
 	void 					Render				(dxRender_Visual* m_pVisual, const Fmatrix& mTransform, int priority, bool strictB2F, float m_fLOD);
 	void 					RenderSingle		(dxRender_Visual* m_pVisual, const Fmatrix& mTransform, float m_fLOD);
 #endif
+private:
+	dxRender_Visual*		TryLoadObject		(const char* N);
+	dxRender_Visual*		TryLoadOgf			(const char* N);
 };
-#endif //ModelPoolH

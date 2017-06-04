@@ -178,6 +178,9 @@
     <Filter Include="Utils">
       <UniqueIdentifier>{25d26a1f-0c63-40a7-999a-2f80a831f1fe}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{2b8ee698-8298-45d3-bb63-f88d514d295f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -734,6 +737,39 @@
     </ClInclude>
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
       <Filter>Interfase implementations\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\common\NvMender2003\convert.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\ArbitraryList.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\EditMesh.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\EditObject.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\ExportObjectOGF.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\ExportSkeleton.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\itterate_adjacents_dynamic.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Editor\PropSlimTools.h">
+      <Filter>Editor</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1333,6 +1369,45 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\Debug\dxPixEventWrapper.cpp">
       <Filter>Interfase implementations\Debug</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender3.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditMesh.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditMeshIO.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditMeshModify.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditObject.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditObjectEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditObjectIO.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\EditObjectMotions.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\ExportObjectOGF.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\ExportObjectOGFCalculateTB.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\ExportSkeleton.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\ExportSkeletonCalculateTB.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Editor\RAPIDMinBox.cpp">
+      <Filter>Editor</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

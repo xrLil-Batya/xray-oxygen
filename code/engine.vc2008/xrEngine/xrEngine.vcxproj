@@ -649,6 +649,7 @@
     <ClInclude Include="xrSASH.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -302,7 +302,7 @@ class 	IBoneData
 class CBone;
 using BoneVec = xr_vector<CBone*>;
 
-class ECORE_API CBone:
+class ENGINE_API CBone:
 	public CBoneInstance,
 	public IBoneData
 {
@@ -412,8 +412,8 @@ IC	float	_BCL		editor_hi_limit ( u8 k ) const	{ return IK_data.limits[k].limit.y
 
     void			    ClampByLimits	();
 
-    bool 			    ExportOGF		(IWriter& F);
 #endif
+	bool 			    ExportOGF(IWriter& F);
 private:
 				IBoneData&		_BCL	GetChild			( u16 id )			{return *children[id];}
 		const	IBoneData&		_BCL	GetChild			( u16 id )	const	{return *children[id];}
