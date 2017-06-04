@@ -299,12 +299,13 @@ public:
 	    GameMtlIt it=GetMaterialItByID(ID);
     	return materials.end() != it?*it:0;
     }
-	IC SGameMtl*		GetMaterial		(LPCSTR name)
-    {
-	    GameMtlIt it=GetMaterialIt(name);
-    	return materials.end() != it?*it:0;
-	}
 #else
+	// For .object
+	IC SGameMtl*		GetMaterial(const char* name)
+	{
+		GameMtlIt it = GetMaterialIt(name);
+		return materials.end() != it ? *it : 0;
+	}
 	// game
 	IC SGameMtl*		GetMaterialByID (s32 id)		{return GetMaterialByIdx(GetMaterialIdx(id));}
 #endif
