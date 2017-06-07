@@ -16,14 +16,11 @@ IC	bool	pred_sp_sort	(ISpatial*	_1, ISpatial* _2)
 void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 {
 	PIX_EVENT(render_main);
-//	Msg						("---begin");
 	marker					++;
 
 	// Calculate sector(s) and their objects
 	if (pLastSector)		{
-		//!!!
 		//!!! BECAUSE OF PARALLEL HOM RENDERING TRY TO DELAY ACCESS TO HOM AS MUCH AS POSSIBLE
-		//!!!
 		{
 			// Traverse object database
 			g_SpatialSpace->q_frustum
@@ -120,7 +117,7 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 					vis_data&		v_orig			= ((dxRender_Visual*)renderable->renderable.visual)->vis;
 					vis_data		v_copy			= v_orig;
 					v_copy.box.xform				(renderable->renderable.xform);
-					BOOL			bVisible		= HOM.visible(v_copy);
+					bool			bVisible		= HOM.visible(v_copy);
 					v_orig.marker					= v_copy.marker;
 					v_orig.accept_frame				= v_copy.accept_frame;
 					v_orig.hom_frame				= v_copy.hom_frame;
@@ -135,13 +132,12 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 				break;	// exit loop on frustums
 			}
 		}
-		if (g_pGameLevel && (phase==PHASE_NORMAL))	g_hud->Render_Last();		// HUD
 	}
 	else
-	{
 		set_Object									(0);
-		if (g_pGameLevel && (phase==PHASE_NORMAL))	g_hud->Render_Last();		// HUD
-	}
+	// HUD
+	if (g_pGameLevel && (phase == PHASE_NORMAL))	
+		g_hud->Render_Last();		
 }
 
 void CRender::render_menu	()
@@ -227,8 +223,8 @@ void CRender::Render		()
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
-	BOOL					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
-	if (o.sunstatic)		bSUN				= FALSE;
+	bool					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
+	if (o.sunstatic)		bSUN				= false;
 	// Msg						("sstatic: %s, sun: %s",o.sunstatic?;"true":"false", bSUN?"true":"false");
 
 	// HOM
@@ -304,8 +300,8 @@ void CRender::Render		()
 	r_pmask										(true,false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End			();
 
-	BOOL	split_the_scene_to_minimize_wait		= FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
+	bool	split_the_scene_to_minimize_wait	= false;
+	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait = true;
 
 	//******* Main render :: PART-0	-- first
 	if (!split_the_scene_to_minimize_wait)
@@ -315,7 +311,7 @@ void CRender::Render		()
 		Target->phase_scene_begin				();
 		r_dsgraph_render_hud					();
 		r_dsgraph_render_graph					(0);
-		r_dsgraph_render_lods					(true,true);
+		r_dsgraph_render_lods					(true, true);
 		if(Details)	Details->Render				();
 		Target->phase_scene_end					();
 	} 
