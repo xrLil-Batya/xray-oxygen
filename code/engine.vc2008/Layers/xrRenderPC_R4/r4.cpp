@@ -119,97 +119,34 @@ extern ENGINE_API BOOL r2_advanced_pp;	//	advanced post process and effects
 // Just two static storage
 void					CRender::create					()
 {
-	Device.seqFrame.Add	(this,REG_PRIORITY_HIGH+0x12345678);
+	Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 0x12345678);
 
 	m_skinning			= -1;
 	m_MSAASample		= -1;
 
 	// hardware
-	o.smapsize			= 2048;
+	o.smapsize			= 4096;
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
 	// Check for NULL render target support
 	//	DX10 disabled
-	//D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
-	//o.nullrt			= HW.support	(nullrt,			D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
 	o.nullrt = false;
-	/*
-	if (o.nullrt)		{
-	Msg				("* NULLRT supported and used");
-	};
-	*/
-	if (o.nullrt)		{
-		Msg				("* NULLRT supported");
-
-		//.	    _tzset			();
-		//.		??? _strdate	( date, 128 );	???
-		//.		??? if (date < 22-march-07)		
-		if (0)
-		{
-			u32 device_id	= HW.Caps.id_device;
-			bool disable_nullrt = false;
-			switch (device_id)	
-			{
-			case 0x190:
-			case 0x191:
-			case 0x192:
-			case 0x193:
-			case 0x194:
-			case 0x197:
-			case 0x19D:
-			case 0x19E:{
-				disable_nullrt = true;	//G80
-				break;
-					   }
-			case 0x400:
-			case 0x401:
-			case 0x402:
-			case 0x403:
-			case 0x404:
-			case 0x405:
-			case 0x40E:
-			case 0x40F:{
-				disable_nullrt = true;	//G84
-				break;
-					   }
-			case 0x420:
-			case 0x421:
-			case 0x422:
-			case 0x423:
-			case 0x424:
-			case 0x42D:
-			case 0x42E:
-			case 0x42F:{
-				disable_nullrt = true;	// G86
-				break;
-					   }
-			}
-			if (disable_nullrt)	o.nullrt=false;
-		};
-		if (o.nullrt)	Msg				("* ...and used");
-	};
-
 
 	// SMAP / DST
 	o.HW_smap_FETCH4	= FALSE;
 	//	DX10 disabled
-	//o.HW_smap			= HW.support	(D3DFMT_D24X8,			D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
 	o.HW_smap			= true;
-	o.HW_smap_PCF		= o.HW_smap		;
-	if (o.HW_smap)		
-	{
-		//	For ATI it's much faster on DX10 to use D32F format
-		if (HW.Caps.id_vendor==0x1002)
-			o.HW_smap_FORMAT	= D3DFMT_D32F_LOCKABLE;
-		else
-			o.HW_smap_FORMAT	= D3DFMT_D24X8;
-		Msg				("* HWDST/PCF supported and used");
-	}
+	o.HW_smap_PCF = o.HW_smap;
+
+	//	For ATI it's much faster on DX10 to use D32F format
+	if (HW.Caps.id_vendor == 0x1002)
+		o.HW_smap_FORMAT = D3DFMT_D32F_LOCKABLE;
+	else
+		o.HW_smap_FORMAT = D3DFMT_D24X8;
+	Msg("* HWDST/PCF supported and used");
 
 	//	DX10 disabled
-	//o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
-	//o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 	o.fp16_filter		= true;
 	o.fp16_blend		= true;
 
@@ -255,13 +192,15 @@ void					CRender::create					()
 	if (strstr(Core.Params,"-smap2560"))	o.smapsize	= 2560;
 	if (strstr(Core.Params,"-smap3072"))	o.smapsize	= 3072;
 	if (strstr(Core.Params,"-smap4096"))	o.smapsize	= 4096;
+	// !!! Not for all videocards !!!
+	if (strstr(Core.Params, "-smap3072"))	o.smapsize = 8192;
+	if (strstr(Core.Params, "-smap4096"))	o.smapsize = 16384;
 
 	// gloss
-	char*	g			= strstr(Core.Params,"-gloss ");
-	o.forcegloss		= g?	TRUE	:FALSE	;
-	if (g)				{
-		o.forcegloss_v		= float	(atoi	(g+xr_strlen("-gloss ")))/255.f;
-	}
+	char*	g = strstr(Core.Params, "-gloss ");
+	o.forcegloss = g ? TRUE : FALSE;
+	if (g)
+		o.forcegloss_v = float(atoi(g + xr_strlen("-gloss "))) / 255.f;
 
 	// options
 	o.bug				= (strstr(Core.Params,"-bug"))?			TRUE	:FALSE	;
@@ -696,13 +635,6 @@ void	CRender::Statistics	(CGameFont* _F)
 
 /////////
 #pragma comment(lib,"d3dx9.lib")
-/*
-extern "C"
-{
-LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
-LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
-};
-*/
 
 void CRender::addShaderOption(const char* name, const char* value)
 {
@@ -733,21 +665,12 @@ static HRESULT create_shader				(
 		_RELEASE		(pReflection);
 	}
 	else
-	{
 		Msg("! D3DReflectShader %s hr == 0x%08x", file_name, _hr);
-	}
 
 	return				_hr;
 }
 
-static HRESULT create_shader				(
-		LPCSTR const	pTarget,
-		DWORD const*	buffer,
-		u32	const		buffer_size,
-		LPCSTR const	file_name,
-		void*&			result,
-		bool const		disasm
-	)
+static HRESULT create_shader(const char* const pTarget, DWORD const* buffer, u32 const buffer_size, const char* const file_name, void*& result, bool const disasm)
 {
 	HRESULT		_result = E_FAIL;
 	if (pTarget[0] == 'p') {
@@ -814,7 +737,6 @@ static HRESULT create_shader				(
 			//	TODO: DX10: share the same input signatures
 
 			//	Store input signature (need only for VS)
-			//CHK_DX( D3DxxGetInputSignatureBlob(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), &_vs->signature) );
 			ID3DBlob*	pSignatureBlob;
 			CHK_DX		( D3DGetInputSignatureBlob(buffer, buffer_size, &pSignatureBlob) );
 			VERIFY		(pSignatureBlob);
@@ -838,9 +760,9 @@ static HRESULT create_shader				(
 		SGS* sgs_result = (SGS*)result;
 #ifdef USE_DX11
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, 0, &sgs_result->gs);
-#else // #ifdef USE_DX11
+#else // USE_DX10
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
-#endif // #ifdef USE_DX11
+#endif
 		if ( !SUCCEEDED(_result) ) {
 			Log			("! GS: ", file_name);
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
@@ -870,54 +792,14 @@ static HRESULT create_shader				(
 			Msg	("! D3DReflectShader hr == 0x%08x", _result);
 		}
 	}
-//	else if (pTarget[0] == 'c') {
-//		SCS* scs_result = (SCS*)result;
-//#ifdef USE_DX11
-//		_result			= HW.pDevice->CreateComputeShader(buffer, buffer_size, 0, &scs_result->sh);
-//#else // #ifdef USE_DX11
-//		_result			= HW.pDevice->CreateComputeShader(buffer, buffer_size, &scs_result->sh);
-//#endif // #ifdef USE_DX11
-//		if ( !SUCCEEDED(_result) ) {
-//			Log			("! CS: ", file_name);
-//			Msg			("! CreateComputeShaderhr == 0x%08x", _result);
-//			return		E_FAIL;
-//		}
-//
-//		ID3DShaderReflection *pReflection = 0;
-//
-//#ifdef USE_DX11
-//		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
-//#else
-//		_result			= D3D10ReflectShader( buffer, buffer_size, &pReflection);
-//#endif
-//
-//		//	Parse constant, texture, sampler binding
-//		//	Store input signature blob
-//		if (SUCCEEDED(_result) && pReflection)
-//		{
-//			//	Let constant table parse it's data
-//			scs_result->constants.parse(pReflection,RC_dest_pixel);
-//
-//			_RELEASE(pReflection);
-//		}
-//		else
-//		{
-//			Log	("! PS: ", file_name);
-//			Msg	("! D3DReflectShader hr == 0x%08x", _result);
-//		}
-//	}
-	else if (pTarget[0] == 'c') {
+	else if (pTarget[0] == 'c')
 		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SCS*&)result, disasm );
-	}
-	else if (pTarget[0] == 'h') {
+	else if (pTarget[0] == 'h') 
 		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SHS*&)result, disasm );
-	}
-	else if (pTarget[0] == 'd') {
+	else if (pTarget[0] == 'd') 
 		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SDS*&)result, disasm );
-	}
-	else {
+	else 
 		NODEFAULT;
-	}
 
 	if ( disasm )
 	{
@@ -970,14 +852,7 @@ public:
 
 static inline bool match_shader_id		( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result );
 
-HRESULT	CRender::shader_compile			(
-	LPCSTR							name,
-	DWORD const*                    pSrcData,
-	UINT                            SrcDataLen,
-	LPCSTR                          pFunctionName,
-	LPCSTR                          pTarget,
-	DWORD                           Flags,
-	void*&							result)
+HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 SrcDataLen, const char* pFunctionName, const char* pTarget, DWORD Flags, void*& result)
 {
 	D3D_SHADER_MACRO				defines			[128];
 	int								def_it			= 0;
@@ -987,11 +862,9 @@ HRESULT	CRender::shader_compile			(
 	char							c_sun_quality	[32];
 
 	char	sh_name[MAX_PATH] = "";
-	
-	for (u32 i=0; i<m_ShaderOptions.size(); ++i)
-	{
-			defines[def_it++]			= m_ShaderOptions[i];
-	}
+
+	for (u32 i = 0; i<m_ShaderOptions.size(); ++i)
+		defines[def_it++] = m_ShaderOptions[i];
 
 	u32		len = xr_strlen(sh_name);
 	// options
@@ -1119,13 +992,10 @@ HRESULT	CRender::shader_compile			(
 		if (o.ssao_hbao) {
 			defines[def_it].Name		=	"SSAO_OPT_DATA";
 			if (o.ssao_half_data)
-			{
 				defines[def_it].Definition	=	"2";
-			}
 			else
-			{
 				defines[def_it].Definition	=	"1";
-			}
+
 			def_it						++;
 
 			if (o.hbao_vectorized)
@@ -1141,29 +1011,18 @@ HRESULT	CRender::shader_compile			(
 		}
 	}
 
-    if( o.dx10_msaa )
+	if (o.dx10_msaa)
 	{
-		static char def[ 256 ];
-		//if( m_MSAASample < 0 )
-		//{
-			def[0]= '0';
-		//	sh_name[len]='0'; ++len;
-		//}
-		//else
-		//{
-		//	def[0]= '0' + char(m_MSAASample);
-		//	sh_name[len]='0' + char(m_MSAASample); ++len;
-		//}
+		static char def[256];
+		def[0] = '0';
 		def[1] = 0;
-		defines[def_it].Name		=	"ISAMPLE";
-		defines[def_it].Definition	=	def;
-		def_it						++	;
-		sh_name[len]='0'; ++len;
+		defines[def_it].Name = "ISAMPLE";
+		defines[def_it].Definition = def;
+		def_it++;
+		sh_name[len] = '0'; ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	// skinning
 	if (m_skinning<0)		{
@@ -1220,9 +1079,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='1'; ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES))
 	{
@@ -1232,9 +1089,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='1'; ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
 	{
@@ -1244,9 +1099,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='1'; ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	if (RImplementation.o.advancedpp && ps_r_sun_shafts)
 	{
@@ -1257,9 +1110,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'+char(ps_r_sun_shafts); ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	if (RImplementation.o.advancedpp && ps_r_ssao)
 	{
@@ -1270,9 +1121,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'+char(ps_r_ssao); ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	if (RImplementation.o.advancedpp && ps_r_sun_quality)
 	{
@@ -1283,9 +1132,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'+char(ps_r_sun_quality); ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
 	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_STEEP_PARALLAX))
 	{
@@ -1295,9 +1142,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='1'; ++len;
 	}
 	else
-	{
 		sh_name[len]='0'; ++len;
-	}
 
    if( o.dx10_gbuffer_opt )
 	{
