@@ -118,7 +118,7 @@ void CStepManager::on_animation_start(MotionID motion_id, CBlend *blend)
 
 	m_time_anim_started = Device.dwTimeGlobal; 
 	
-	// искать текущую анимацию в STEPS_MAP
+	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ STEPS_MAP
 	STEPS_MAP_IT it = m_steps_map.find(motion_id);
 	if (it == m_steps_map.end()) {
 #ifdef	DEBUG
@@ -158,25 +158,25 @@ void CStepManager::update(bool b_hud_view)
 	float dist_sqr = m_object->Position().distance_to_sqr(Device.vCameraPosition);
 	bool b_play = dist_sqr < 400.0f; //20m
 
-	// получить параметры шага
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	SStepParam	&step		= m_step_info.params;
 	u32		cur_time		= Device.dwTimeGlobal;
 
-	// время одного цикла анимации
+	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	float cycle_anim_time	= get_blend_time() / step.cycles;
 	
-	// пройти по всем ногам и проверить время
+	// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ
 	SGameMtlPair* mtl_pair = 0;
 	bool	material_picked = false;
 
 	for (u32 i=0; i<m_legs_count; i++) 
 	{
 
-		// если событие уже обработано для этой ноги, то skip
+		// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ, пїЅпїЅ skip
 		if (m_step_info.activity[i].handled && (m_step_info.activity[i].cycle == m_step_info.cur_cycle)) 
 			continue;
 
-		// вычислить смещённое время шага в соответствии с параметрами анимации ходьбы
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ
 		u32 offset_time = m_time_anim_started + u32(1000 * (cycle_anim_time * (m_step_info.cur_cycle-1) + cycle_anim_time * step.step[i].time));
 		if (offset_time <= cur_time)
 		{
@@ -191,26 +191,26 @@ void CStepManager::update(bool b_hud_view)
 			if ( !mtl_pair )
 							break;
 
-			// Играть звук
+			// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 			if(b_play && is_on_ground() )
 				m_step_sound.play_next(mtl_pair, m_object, m_step_info.params.step[i].power, b_hud_view);
 
-			// Играть партиклы
+			// пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 			if(b_play && !mtl_pair->CollideParticles.empty())	
 			{
 				LPCSTR ps_name = *mtl_pair->CollideParticles[::Random.randI(0,mtl_pair->CollideParticles.size())];
 
-				//отыграть партиклы столкновения материалов
+				//пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				CParticlesObject* ps = CParticlesObject::Create(ps_name,TRUE);
 
-				// вычислить позицию и направленность партикла
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				Fmatrix pos; 
 
-				// установить направление
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				pos.k.set(Fvector().set(0.0f,1.0f,0.0f));
 				Fvector::generate_orthonormal_basis(pos.k, pos.j, pos.i);
 
-				// установить позицию
+				// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 				pos.c.set(get_foot_position(ELegType(i)));
 
 				ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
@@ -220,18 +220,18 @@ void CStepManager::update(bool b_hud_view)
 			// Play Camera FXs
 			event_on_step();
 
-			// обновить поле handle
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ handle
 			m_step_info.activity[i].handled	= true;
 			m_step_info.activity[i].cycle	= m_step_info.cur_cycle;
 		}
 	}
 
-	// определить текущий цикл
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	if (m_step_info.cur_cycle < step.cycles)
 		m_step_info.cur_cycle = 1 + u8(float(cur_time - m_time_anim_started) / (1000.f * cycle_anim_time));
 
-	// если анимация циклическая...
-	u32 time_anim_end = m_time_anim_started + u32(get_blend_time() * 1000);		// время завершения работы анимации
+	// пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ...
+	u32 time_anim_end = m_time_anim_started + u32(get_blend_time() * 1000);		// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	if (!m_blend->stop_at_end && (time_anim_end < cur_time)) {
 		
 		m_time_anim_started		= time_anim_end;
@@ -250,7 +250,7 @@ void CStepManager::update(bool b_hud_view)
 //////////////////////////////////////////////////////////////////////////
 Fvector	CStepManager::get_foot_position(ELegType leg_type)
 {
-	R_ASSERT2(m_foot_bones[leg_type] != BI_NONE, "foot bone had not been set");
+	R_ASSERT2(m_foot_bones[leg_type] != BI_NONE, make_string("[%s] foot bone had not been set", m_object->Name()));
 
 	IKinematics *pK					= smart_cast<IKinematics*>(m_object->Visual());
 	const Fmatrix& bone_transform = pK->LL_GetBoneInstance(m_foot_bones[leg_type]).mTransform;	
@@ -288,7 +288,7 @@ void CStepManager::reload_foot_bones()
 		load_foot_bones(pSettings->r_section(pSettings->r_string(*m_object->cNameSect(),"foot_bones")));
 	}
 
-	// проверка на соответсвие
+	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 	int count = 0;
 	for (u32 i = 0; i < MAX_LEGS_COUNT; i++) 
 		if (m_foot_bones[i] != BI_NONE) count++;
