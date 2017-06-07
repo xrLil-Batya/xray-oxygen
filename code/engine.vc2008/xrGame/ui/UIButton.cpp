@@ -9,8 +9,6 @@
 #define PUSH_OFFSET_RIGHT 1
 #define PUSH_OFFSET_DOWN  1
 
-
-
 CUIButton:: CUIButton()
 {
 	m_eButtonState				= BUTTON_NORMAL;
@@ -65,8 +63,9 @@ bool  CUIButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 			
 				if (!m_bIsSwitch)
 					SetButtonState(BUTTON_NORMAL);
-			}else 
-			if(mouse_action == WINDOW_MOUSE_MOVE)
+			return true; // fixed OnMouseAction (by kolmogor)
+			}
+			else if(mouse_action == WINDOW_MOUSE_MOVE)
 			{
 				if(!m_bCursorOverWindow && !m_bIsSwitch)
 					SetButtonState(BUTTON_UP);
