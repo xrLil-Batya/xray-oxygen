@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="adler32.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="compress.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="crc32.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="deflate.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="gzio.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="infback.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="inffast.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="inflate.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="inftrees.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="minigzip.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="trees.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="uncompr.c">
+      <Filter>source</Filter>
+    </ClCompile>
+    <ClCompile Include="zutil.c">
+      <Filter>source</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="crc32.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="deflate.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="inffast.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="inffixed.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="inflate.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="inftrees.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="trees.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zconf.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zconf.in.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zlib.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+    <ClInclude Include="zutil.h">
+      <Filter>headers</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="headers">
+      <UniqueIdentifier>{aafbaf2e-97d3-46f5-87ed-c908cc741e14}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="source">
+      <UniqueIdentifier>{1d3517e7-87b0-4ad1-8faf-6fa0213007e2}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
