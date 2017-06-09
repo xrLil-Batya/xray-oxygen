@@ -96,11 +96,11 @@
 #include "../../../engine.vc2008/xrScripts/xrScripts.h"
 #include <luabind/luabind_memory.h>
 
-#define string_class			luabind::internal_string
-#define vector_class			luabind::internal_vector
-#define list_class				luabind::internal_list
+using	string_class =	luabind::internal_string;
+#define vector_class	luabind::internal_vector
+#define list_class		luabind::internal_list
 #define map_class				luabind::internal_map
 #define set_class				luabind::internal_set
 #define multimap_class			luabind::internal_multimap
 #define multiset_class			luabind::internal_multiset
-#define stringstream_class		luabind::internal_stringstream
+//#define stringstream_class		luabind::internal_stringstream

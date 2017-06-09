@@ -39,8 +39,7 @@ namespace luabind { namespace detail
 		lua_remove(L, -2); // remove the crep table
 
 		{
-			if (!lua_iscfunction(L, -1)) return;
-			if (lua_getupvalue(L, -1, 3) == 0) return;
+			if (!lua_iscfunction(L, -1) || !lua_getupvalue(L, -1, 3)) return;
 			detail::stack_pop p(L, 1);
 			if (lua_touserdata(L, -1) != reinterpret_cast<void*>(0x1337)) return;
 		}
