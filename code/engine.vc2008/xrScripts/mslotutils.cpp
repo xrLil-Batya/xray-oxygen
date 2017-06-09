@@ -1,11 +1,11 @@
 #include "mslotutils.hpp"
 
 inline void CMailSlotMsg::Read(void* dst, int sz) {
-	_memcpy(dst, (void*)(&m_buff[0] + m_pos), sz);
+	std::memcpy(dst, (void*)(&m_buff[0] + m_pos), sz);
 	m_pos += sz;
 };
 inline void CMailSlotMsg::Write(const void* src, int sz) {
-	_memcpy((void*)(&m_buff[0] + m_pos), src, sz);
+	std::memcpy((void*)(&m_buff[0] + m_pos), src, sz);
 	m_pos += sz; m_len = m_pos;
 };
 
@@ -17,12 +17,12 @@ inline void  CMailSlotMsg::Reset()
 {
 	m_len = 0;
 	m_pos = 0;
-	_memset(m_buff, 0, 2048);
+	std::memset(m_buff, 0, 2048);
 };
 inline void  CMailSlotMsg::SetBuffer(const char* b, int sz)
 {
 	Reset();
-	_memcpy(m_buff, b, sz);
+	std::memcpy(m_buff, b, sz);
 	m_len = sz;
 	m_pos = 0;
 };
@@ -46,7 +46,7 @@ inline bool	CMailSlotMsg::r_string(char* dst) {
 };
 
 inline bool	CMailSlotMsg::w_string(const char* dst) {
-	size_t sz = _strlen(dst);
+	size_t sz = xr_strlen(dst);
 	w_int((int)sz);
 	Write(dst, (int)(sz + 1)); 
 	return true;
@@ -82,23 +82,23 @@ inline bool	CMailSlotMsg::w_buff(void* src, int sz) {
 	return true;
 };
 
-inline HANDLE CreateMailSlotByName(LPSTR slotName)
+inline void* CreateMailSlotByName(char* slotName)
 {
-	return CreateMailslot(slotName, 0 /* no maximum message size */, 
+	return CreateMailslotA(slotName, 0 /* no maximum message size */, 
 	MAILSLOT_WAIT_FOREVER/* no time-out for operations */, 
-		(LPSECURITY_ATTRIBUTES)NULL); /* no security attributes */
+		(LPSECURITY_ATTRIBUTES)nullptr); /* no security attributes */
 }
-inline bool CheckExisting(LPSTR slotName)
+inline bool CheckExisting(char* slotName)
 {
-	HANDLE hFile;
+	void* hFile;
 	bool res;
-	hFile = CreateFile(slotName,
+	hFile = CreateFileA(slotName,
 		GENERIC_WRITE,
 		FILE_SHARE_READ,  // required to write to a mailslot 
-		(LPSECURITY_ATTRIBUTES)NULL,
+		(LPSECURITY_ATTRIBUTES)nullptr,
 		OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL,
-		(HANDLE)NULL);
+		(void*)nullptr);
 
 	res = (hFile != INVALID_HANDLE_VALUE);
 
@@ -107,18 +107,18 @@ inline bool CheckExisting(LPSTR slotName)
 
 	return res;
 }
-inline bool SendMailslotMessage(LPSTR slotName, CMailSlotMsg& msg) {
+inline bool SendMailslotMessage(char* slotName, CMailSlotMsg& msg) {
 	bool fResult;
-	HANDLE hFile;
+	void* hFile;
 	DWORD cbWritten;
 
 	hFile = CreateFile(slotName,
 		GENERIC_WRITE,
 		FILE_SHARE_READ,  // required to write to a mailslot 
-		(LPSECURITY_ATTRIBUTES)NULL,
+		(LPSECURITY_ATTRIBUTES)nullptr,
 		OPEN_EXISTING,
 		FILE_ATTRIBUTE_NORMAL,
-		(HANDLE)NULL);
+		(void*)nullptr);
 
 	R_ASSERT(hFile != INVALID_HANDLE_VALUE);
 
@@ -130,7 +130,7 @@ inline bool SendMailslotMessage(LPSTR slotName, CMailSlotMsg& msg) {
 		msg.GetBuffer(),
 		msg.GetLen(),
 		&cbWritten,
-		(LPOVERLAPPED)NULL);
+		(LPOVERLAPPED)nullptr);
 
 	R_ASSERT(fResult);
 	fResult = !!CloseHandle(hFile);
@@ -138,27 +138,27 @@ inline bool SendMailslotMessage(LPSTR slotName, CMailSlotMsg& msg) {
 	return fResult;
 }
 
-inline bool CheckMailslotMessage(HANDLE hSlot, CMailSlotMsg& msg) {
+inline bool CheckMailslotMessage(void* hSlot, CMailSlotMsg& msg) {
 	DWORD cbMessage, cMessage, cbRead;
 	bool fResult;
-	HANDLE hEvent;
+	void* hEvent;
 	OVERLAPPED ov;
 
 	cbMessage = cMessage = cbRead = 0;
 
-	hEvent = CreateEvent(NULL, FALSE, FALSE, "__Slot");
-	if (NULL == hEvent)
-		return FALSE;
+	hEvent = CreateEventA(nullptr, false, false, "__Slot");
+	if (!hEvent)
+		return false;
 	ov.Offset = 0;
 	ov.OffsetHigh = 0;
 	ov.hEvent = hEvent;
 
 
-	fResult = GetMailslotInfo(hSlot, // mailslot handle 
-		(LPDWORD)NULL,               // no maximum message size 
+	fResult = GetMailslotInfo(hSlot, // mailslot void* 
+		(LPDWORD)nullptr,               // no maximum message size 
 		&cbMessage,                   // size of next message 
 		&cMessage,                    // number of messages 
-		(LPDWORD)NULL);              // no read time-out 
+		(LPDWORD)nullptr);              // no read time-out 
 
 	R_ASSERT(fResult);
 
