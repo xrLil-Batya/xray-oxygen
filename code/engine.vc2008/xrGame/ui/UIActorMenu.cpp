@@ -4,14 +4,14 @@
 #include "../actor.h"
 #include "../uigamesp.h"
 #include "../inventory.h"
-#include "../inventory_item.h"
+//#include "../inventory_item.h"
 #include "../InventoryBox.h"
 #include "object_broker.h"
 #include "../ai/monsters/BaseMonster/base_monster.h"
 #include "UIInventoryUtilities.h"
 #include "game_cl_base.h"
 
-#include "../Weapon.h"
+//#include "../Weapon.h"
 #include "../WeaponMagazinedWGrenade.h"
 #include "../WeaponAmmo.h"
 #include "../Silencer.h"
@@ -462,14 +462,14 @@ void CUIActorMenu::clear_highlight_lists()
 	m_HelmetSlotHighlight->Show(false);
 	m_OutfitSlotHighlight->Show(false);
 	m_DetectorSlotHighlight->Show(false);
-	for(u8 i=0; i<4; i++)
+	for (u8 i = 0; i < 4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
-	for(u8 i=0; i<e_af_count; i++)
+	for (u8 i = 0; i < e_af_count; i++)
 		m_ArtefactSlotsHighlight[i]->Show(false);
 
 	m_pInventoryBagList->clear_select_armament();
 
-	switch ( m_currMenuMode )
+	switch (m_currMenuMode)
 	{
 	case mmUndefined:
 		break;
@@ -546,38 +546,38 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		return;
 	}
 }
-void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
+
+void CUIActorMenu::set_highlight_item(CUICellItem* cell_item)
 {
 	PIItem item = (PIItem)cell_item->m_pData;
-	if ( !item )
-	{
+	if (!item)
 		return;
-	}
+
 	highlight_item_slot(cell_item);
 
-	switch ( m_currMenuMode )
+	switch (m_currMenuMode)
 	{
 	case mmUndefined:
 	case mmInventory:
 	case mmUpgrade:
-		{
-			highlight_armament( item, m_pInventoryBagList );
-			break;
-		}
+	{
+		highlight_armament(item, m_pInventoryBagList);
+		break;
+	}
 	case mmTrade:
-		{
-			highlight_armament( item, m_pTradeActorBagList );
-			highlight_armament( item, m_pTradeActorList );
-			highlight_armament( item, m_pTradePartnerBagList );
-			highlight_armament( item, m_pTradePartnerList );
-			break;
-		}
+	{
+		highlight_armament(item, m_pTradeActorBagList);
+		highlight_armament(item, m_pTradeActorList);
+		highlight_armament(item, m_pTradePartnerBagList);
+		highlight_armament(item, m_pTradePartnerList);
+		break;
+	}
 	case mmDeadBodySearch:
-		{
-			highlight_armament( item, m_pInventoryBagList );
-			highlight_armament( item, m_pDeadBodyBagList );
-			break;
-		}
+	{
+		highlight_armament(item, m_pInventoryBagList);
+		highlight_armament(item, m_pDeadBodyBagList);
+		break;
+	}
 	}
 	m_highlight_clear = false;
 }
@@ -590,64 +590,57 @@ void CUIActorMenu::highlight_armament( PIItem item, CUIDragDropListEx* ddlist )
 	highlight_weapons_for_addon( item, ddlist );
 }
 
-void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropListEx* ddlist )
+void CUIActorMenu::highlight_ammo_for_weapon(PIItem weapon_item, CUIDragDropListEx* ddlist)
 {
-	VERIFY( weapon_item );
-	VERIFY( ddlist );
+	VERIFY(weapon_item);
+	VERIFY(ddlist);
 	static xr_vector<shared_str>	ammo_types;
 	ammo_types.clear_not_free();
 
 	CWeapon* weapon = smart_cast<CWeapon*>(weapon_item);
-	if ( !weapon )
-	{
+	if (!weapon)
 		return;
-	}
-	ammo_types.assign( weapon->m_ammoTypes.begin(), weapon->m_ammoTypes.end() );
+
+	ammo_types.assign(weapon->m_ammoTypes.begin(), weapon->m_ammoTypes.end());
 
 	CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>(weapon_item);
-	if ( wg )
-	{
-		if ( wg->IsGrenadeLauncherAttached() && wg->m_ammoTypes2.size() )
-		{
-			ammo_types.insert( ammo_types.end(), wg->m_ammoTypes2.begin(), wg->m_ammoTypes2.end() );
-		}
-	}
-	
-	if ( ammo_types.size() == 0 )
-	{
+	if (wg)
+		if (wg->IsGrenadeLauncherAttached() && wg->m_ammoTypes2.size())
+			ammo_types.insert(ammo_types.end(), wg->m_ammoTypes2.begin(), wg->m_ammoTypes2.end());
+
+	if (!ammo_types.size())
 		return;
-	}
+
 	xr_vector<shared_str>::iterator ite = ammo_types.end();
-	
+
 	u32 const cnt = ddlist->ItemsCount();
-	for ( u32 i = 0; i < cnt; ++i )
+	for (u32 i = 0; i < cnt; ++i)
 	{
 		CUICellItem* ci = ddlist->GetItemIdx(i);
 		PIItem item = (PIItem)ci->m_pData;
-		if ( !item )
-		{
+		if (!item)
 			continue;
-		}
+
 		CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(item);
-		if ( !ammo )
+		if (!ammo)
 		{
-			highlight_addons_for_weapon( weapon_item, ci );
+			highlight_addons_for_weapon(weapon_item, ci);
 			continue; // for i
 		}
 		shared_str const& ammo_name = item->object().cNameSect();
 
 		xr_vector<shared_str>::iterator itb = ammo_types.begin();
-		for ( ; itb != ite; ++itb )
+		for (; itb != ite; ++itb)
 		{
-			if ( ammo_name._get() == (*itb)._get() )
+			if (ammo_name._get() == (*itb)._get())
 			{
 				ci->m_select_armament = true;
 				break; // itb
 			}
 		}
 	}//for i
-
 }
+
 
 void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropListEx* ddlist )
 {
@@ -823,9 +816,9 @@ void CUIActorMenu::CallMessageBoxOK( LPCSTR text )
 void CUIActorMenu::ResetMode()
 {
 	ClearAllLists				();
-	m_pMouseCapturer			= NULL;
+	m_pMouseCapturer			= nullptr;
 	m_UIPropertiesBox->Hide		();
-	SetCurrentItem				(NULL);
+	SetCurrentItem				(nullptr);
 }
 
 void CUIActorMenu::UpdateActorMP()
@@ -862,9 +855,7 @@ void CUIActorMenu::UpdateConditionProgressBars()
 {
 	PIItem itm = m_pActorInvOwner->inventory().ItemFromSlot(INV_SLOT_2);
 	if (itm)
-	{
 		m_WeaponSlot1_progress->SetProgressPos(iCeil(itm->GetCondition()*15.0f) / 15.0f);
-	}
 	else
 		m_WeaponSlot1_progress->SetProgressPos(0);
 

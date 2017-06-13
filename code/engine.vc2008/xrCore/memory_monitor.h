@@ -11,7 +11,7 @@
 
 namespace memory_monitor {
 	XRCORE_API void flush_each_time	(const bool &value);
-	XRCORE_API void monitor_alloc	(const void *pointer, const u32 &size, LPCSTR description);
+	XRCORE_API void monitor_alloc	(const void *pointer, const size_t &size, const char* description);
 	XRCORE_API void	monitor_free	(const void *pointer);
 	XRCORE_API void	make_checkpoint	(LPCSTR name);
 	extern XRCORE_API int counter;

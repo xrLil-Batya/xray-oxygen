@@ -73,41 +73,18 @@ XRCORE_API void dump_file_mappings	()
 void VerifyPath(LPCSTR path)
 {
 	string1024 tmp;
-	for(int i=0;path[i];i++){
-		if( path[i]!='\\' || i==0 )
+	for (int i = 0; path[i]; i++) {
+		if (path[i] != '\\' || i == 0)
 			continue;
-        std::memcpy( tmp, path, i );
+		std::memcpy(tmp, path, i);
 		tmp[i] = 0;
-        _mkdir(tmp);
+		_mkdir(tmp);
 	}
 }
 
-#ifdef _EDITOR
-bool file_handle_internal	(LPCSTR file_name, u32 &size, int &hFile)
-{
-	hFile				= _open(file_name,O_RDONLY|O_BINARY|O_SEQUENTIAL);
-	if (hFile <= 0)	{
-		Sleep			(1);
-		hFile			= _open(file_name,O_RDONLY|O_BINARY|O_SEQUENTIAL);
-		if (hFile <= 0)
-			return		(false);
-	}
-	
-	size				= filelength(hFile);
-	return				(true);
-}
-#else // EDITOR
 static errno_t open_internal(LPCSTR fn, int &handle)
 {
-	return				(
-		_sopen_s(
-			&handle,
-			fn,
-			_O_RDONLY | _O_BINARY,
-			_SH_DENYNO, 
-            _S_IREAD
-		)
-	);
+	return(_sopen_s(&handle, fn, _O_RDONLY | _O_BINARY, _SH_DENYNO, _S_IREAD));
 }
 
 bool file_handle_internal	(LPCSTR file_name, u32 &size, int &file_handle)
@@ -121,7 +98,6 @@ bool file_handle_internal	(LPCSTR file_name, u32 &size, int &file_handle)
 	size				= _filelength(file_handle);
 	return				(true);
 }
-#endif // EDITOR
 
 void *FileDownload		(LPCSTR file_name, const int &file_handle, u32 &file_size)
 {
@@ -160,7 +136,7 @@ void *FileDownload		(LPCSTR file_name, u32 *buffer_size)
 	return				(FileDownload(file_name, file_handle, *buffer_size));
 }
 
-typedef char MARK[9];
+using MARK = char[9];
 IC void mk_mark(MARK& M, const char* S)
 {	strncpy_s(M,sizeof(M),S,8); }
 
@@ -182,10 +158,12 @@ void*  FileDecompress	(const char *fn, const char* sign, u32* size)
 	int	H = open	(fn,O_BINARY|O_RDONLY);
 	R_ASSERT2(H>0,fn);
 	_read	(H,&F,8);
-	if (strncmp(M,F,8)!=0)		{
-		F[8]=0;		Msg("FATAL: signatures doesn't match, file(%s) / requested(%s)",F,sign);
+	if (strncmp(M, F, 8))
+	{
+		F[8]=0;
+		Msg("FATAL: signatures doesn't match, file(%s) / requested(%s)",F,sign);
 	}
-    R_ASSERT(strncmp(M,F,8)==0);
+    R_ASSERT(!strncmp(M,F,8));
 
 	void* ptr = 0; u32 SZ;
 	SZ = _readLZ (H, ptr, filelength(H)-8);
@@ -313,10 +291,10 @@ void	IWriter::w_printf(const char* format, ...)
 // base stream
 IReader*	IReader::open_chunk(u32 ID)
 {
-	BOOL	bCompressed;
+	int bCompressed;
 
 	u32	dwSize = find_chunk(ID,&bCompressed);
-	if (dwSize!=0) {
+	if (dwSize) {
 		if (bCompressed) {
 			BYTE*		dest;
 			unsigned	dest_sz;
@@ -375,32 +353,35 @@ IReader*	IReader::open_chunk_iterator	(u32& ID, IReader* _prev)
 		return new IReader(pointer(), _size, tell()+_size);
 }
 
-void	IReader::r	(void *p,int cnt)
+void	IReader::r(void *p, int cnt)
 {
 	//R_ASSERT(Pos+cnt<=Size);
 	R_ASSERT(Pos + cnt <= Size, make_string("Pos+cnt=[%d], Size=[%d]", (Pos + cnt), Size));
 
-    std::memcpy(p,pointer(),cnt);
-	advance			(cnt);
+	std::memcpy(p, pointer(), cnt);
+	advance(cnt);
 #ifdef DEBUG
-	BOOL	bShow		= FALSE		;
-	if (dynamic_cast<CFileReader*>(this))			bShow = TRUE;
-	if (dynamic_cast<CVirtualFileReader*>(this))	bShow = TRUE;
-	if (bShow)			{
-  		FS.dwOpenCounter	++		;
-	}
+	bool	bShow = false;
+	if (dynamic_cast<CFileReader*>(this))			bShow = true;
+	if (dynamic_cast<CVirtualFileReader*>(this))	bShow = true;
+	if (bShow)
+		FS.dwOpenCounter++;
+
 #endif
 };
 
-IC BOOL			is_term		(char a) { return (a==13)||(a==10); };
+//IC BOOL			is_term		(char a) { return (a==13)||(a==10); };
 IC u32	IReader::advance_term_string()
 {
 	u32 sz		= 0;
 	char *src 	= (char *) data;
+	
+	auto is_term = [](char a)->bool { return (a == 13) || (a == 10); } ;
+
 	while (!eof()) {
         Pos++;
         sz++;
-		if (!eof()&&is_term(src[Pos])) 
+		if (!eof() && is_term(src[Pos]))
 		{
         	while(!eof() && is_term(src[Pos])) 
 				Pos++;
@@ -416,11 +397,8 @@ void	IReader::r_string	(char *dest, u32 tgt_sz)
     R_ASSERT2(sz<(tgt_sz-1),"Dest string less than needed.");
 	R_ASSERT	(!IsBadReadPtr((void*)src,sz));
 
-#ifdef _EDITOR
-    std::memcpy(dest,src,sz);
-#else
     strncpy_s	(dest,tgt_sz, src,sz);
-#endif
+
     dest[sz]	= 0;
 }
 void	IReader::r_string	(xr_string& dest)
