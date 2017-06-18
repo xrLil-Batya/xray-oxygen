@@ -15,13 +15,9 @@ intermediate/
 binaries/
 libraries/
 intermediate64/
-code/engine.vc2008/xrXMLParser/x64/
-code/engine.vc2008/xrCore/x64/
-code/engine.vc2008/utils/xrLC_Light/x64/
-code/engine.vc2008/3rd party/openal/OpenAL-Windows/Router/x64/
-code/engine.vc2008/3rd party/dxerr/x64/
-code/engine.vc2008/xrScripts/luajit/src/x64/
 libraries_x64/
 binaries64/
 *.user
 *.obj
+*.log
+*.pch
