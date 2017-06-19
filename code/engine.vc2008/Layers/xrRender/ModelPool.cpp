@@ -121,12 +121,17 @@ dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 	string_path		name;
 
 	// Add default ext if no ext at all
-	if (!strext(N))	strconcat(sizeof(name), name, N, ".ogf");
-	else				strcpy_s(name, sizeof(name), N);
+	if (!strext(N))	
+		strconcat(sizeof(name), name, N, ".ogf");
+	else				
+		strcpy_s(name, sizeof(name), N);
+
 
 	// Load data from MESHES or LEVEL
-	if (!FS.exist(N) && !FS.exist(fn, "$level$", name) && !FS.exist(fn, "$game_meshes$", name))
-		return nullptr;
+	if (!FS.exist(N)) {
+		if (!FS.exist(fn, "$level$", name) && !FS.exist(fn, "$game_meshes$", name))
+				return nullptr;
+	}
 	else 
 		strcpy_s(fn, N);
 
@@ -147,9 +152,9 @@ dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 dxRender_Visual*	CModelPool::Instance_Load		(const char* N, BOOL allow_register)
 {
 	dxRender_Visual* V = TryLoadOgf(N);
-	if (V == nullptr)
+	if (!V)
 		V = TryLoadObject(N);
-	if (V == nullptr) 
+	if (!V) 
 		Debug.fatal(DEBUG_INFO, "Can't find model file '%s'.", N);
 
 	g_pGamePersistent->RegisterModel(V);
