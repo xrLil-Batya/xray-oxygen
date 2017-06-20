@@ -1516,9 +1516,6 @@
     <Filter Include="Core\Client\Level\LevelMapSync">
       <UniqueIdentifier>{c89035a2-847f-4cb3-b855-8de19ffa3a56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Level\ClientDigestComputer">
-      <UniqueIdentifier>{da8eeca8-96c6-4cb7-9b67-51f4802d4b00}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Level\LevelNetworkDemo">
       <UniqueIdentifier>{2ae1f46b-294b-4a00-8ff6-7110eda60a6d}</UniqueIdentifier>
     </Filter>
@@ -1977,9 +1974,6 @@
     </Filter>
     <Filter Include="Core\Common\NET Shared">
       <UniqueIdentifier>{cef153a1-0496-4eab-bcd0-10ad57c15c94}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Common\NET Shared\SecureMessages">
-      <UniqueIdentifier>{6af90da7-098c-4f8d-abb2-15a73eeba033}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Common\ObjectBroker">
       <UniqueIdentifier>{d84a07af-99e2-458c-83ac-4f04a67bdf5b}</UniqueIdentifier>
@@ -5832,9 +5826,6 @@
     <ClInclude Include="..\xrServerEntities\xrMessages.h">
       <Filter>Core\Common\NET Shared</Filter>
     </ClInclude>
-    <ClInclude Include="secure_messaging.h">
-      <Filter>Core\Common\NET Shared\SecureMessages</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\object_broker.h">
       <Filter>Core\Common\ObjectBroker</Filter>
     </ClInclude>
@@ -8159,9 +8150,6 @@
     <ClCompile Include="level_script.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
-    <ClCompile Include="Level_secure_messaging.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Level_SLS_Default.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
@@ -8218,9 +8206,6 @@
     </ClCompile>
     <ClCompile Include="Level_network_map_sync.cpp">
       <Filter>Core\Client\Level\LevelMapSync</Filter>
-    </ClCompile>
-    <ClCompile Include="Level_network_digest_computer.cpp">
-      <Filter>Core\Client\Level\ClientDigestComputer</Filter>
     </ClCompile>
     <ClCompile Include="DemoInfo.cpp">
       <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
@@ -8888,9 +8873,6 @@
     <ClCompile Include="traffic_optimization.cpp">
       <Filter>Core\Common\NET Shared</Filter>
     </ClCompile>
-    <ClCompile Include="secure_messaging.cpp">
-      <Filter>Core\Common\NET Shared\SecureMessages</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\object_factory.cpp">
       <Filter>Core\Common\ObjectFactory</Filter>
     </ClCompile>
@@ -9063,9 +9045,6 @@
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_perform_transfer.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_secure_messaging.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_sls_clear.cpp">

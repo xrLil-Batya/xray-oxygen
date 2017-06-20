@@ -482,8 +482,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="ip_filter.cpp" />
-    <ClCompile Include="NET_AuthCheck.cpp" />
     <ClCompile Include="NET_Client.cpp" />
     <ClCompile Include="NET_Common.cpp" />
     <ClCompile Include="NET_Compressor.cpp" />
@@ -499,8 +497,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ip_filter.h" />
-    <ClInclude Include="NET_AuthCheck.h" />
     <ClInclude Include="NET_Client.h" />
     <ClInclude Include="NET_Common.h" />
     <ClInclude Include="NET_Compressor.h" />

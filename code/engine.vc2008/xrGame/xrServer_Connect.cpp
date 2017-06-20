@@ -7,7 +7,6 @@
 #include "../xrEngine/x_ray.h"
 #include "file_transfer.h"
 #include "screenshot_server.h"
-#include "../xrNetServer/NET_AuthCheck.h"
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
@@ -54,20 +53,6 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionDa
 	
 	// Options
 	if (0==game)			return ErrConnect;
-//	game->type				= type_id;
-	if (game->Type() != eGameIDSingle)
-	{
-		m_file_transfers	= xr_new<file_transfer::server_site>();
-		initialize_screenshot_proxies();
-		LoadServerInfo();
-		xr_auth_strings_t	tmp_ignore;
-		xr_auth_strings_t	tmp_check;
-		fill_auth_check_params	(tmp_ignore, tmp_check);
-		FS.auth_generate		(tmp_ignore, tmp_check);
-	}
-#ifdef DEBUG
-	Msg("* Created server_game %s",game->type_name());
-#endif
 	
     std::memset(&game_descr, 0, sizeof(game_descr));
 	xr_strcpy(game_descr.map_name, game->level_name(session_name.c_str()).c_str());
@@ -87,7 +72,7 @@ IClient* xrServer::new_client( SClientConnectData* cl_data )
 	
 	// copy entity
 	CL->ID			= cl_data->clientID;
-	CL->process_id	= cl_data->process_id;
+	//CL->process_id	= cl_data->process_id;
 	CL->name		= cl_data->name;	//only for offline mode
 	CL->pass._set	( cl_data->pass );
 
@@ -119,10 +104,8 @@ void xrServer::AttachNewClient			(IClient* CL)
 
 	// gen message
 	if (!NeedToCheckClient_GameSpy_CDKey(CL))
-	{
-		//-------------------------------------------------------------
 		Check_GameSpy_CDKey_Success(CL);
-	}
+	
 
 	//xrClientData * CL_D=(xrClientData*)(CL); 
 	//ip_address				ClAddress;
@@ -132,14 +115,14 @@ void xrServer::AttachNewClient			(IClient* CL)
 
 void xrServer::RequestClientDigest(IClient* CL)
 {
-	if ((CL == GetServerClient()))
+	if (CL == GetServerClient())
 	{
 		Check_BuildVersion_Success(CL);	
 		return;
 	}
-	xrClientData* tmp_client	= smart_cast<xrClientData*>(CL);
-	VERIFY						(tmp_client);
-	PerformSecretKeysSync		(tmp_client);
+	//xrClientData* tmp_client	= smart_cast<xrClientData*>(CL);
+	//VERIFY						(tmp_client);
+	//PerformSecretKeysSync		(tmp_client);
 
 	NET_Packet P;
 	P.w_begin					(M_SV_DIGEST);
