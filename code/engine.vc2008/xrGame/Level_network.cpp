@@ -18,7 +18,6 @@
 #include "file_transfer.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
-#include "../xrNetServer/NET_AuthCheck.h"
 
 #include "../xrphysics/physicscommon.h"
 ENGINE_API bool g_dedicated_server;
@@ -321,21 +320,14 @@ pureFrame*	g_pNetProcessor	= &NET_processor;
 
 const int ConnectionTimeOut = 60000; //1 min
 
-BOOL			CLevel::Connect2Server				(LPCSTR options)
+bool CLevel::Connect2Server(const char* options)
 {
 	NET_Packet					P;
 	m_bConnectResultReceived	= false	;
 	m_bConnectResult			= true	;
 
-	if(!psNET_direct_connect)
-	{
-		xr_auth_strings_t	tmp_ignore;
-		xr_auth_strings_t	tmp_check;
-		fill_auth_check_params	(tmp_ignore, tmp_check);
-		FS.auth_generate		(tmp_ignore, tmp_check);
-	}
-
-	if (!Connect(options))		return	FALSE;
+	if (!Connect(options))		
+		return false;
 	//---------------------------------------------------------------------------
 	if(psNET_direct_connect) m_bConnectResultReceived = true;
 	u32 EndTime = GetTickCount() + ConnectionTimeOut;
@@ -362,7 +354,7 @@ BOOL			CLevel::Connect2Server				(LPCSTR options)
 		{
 			OnConnectRejected	();	
 			Disconnect		()	;
-			return	FALSE;
+			return	false;
 		}
 		//-----------------------------------------
 	}
@@ -376,7 +368,7 @@ BOOL			CLevel::Connect2Server				(LPCSTR options)
 		}
 		OnConnectRejected			();	
 		Disconnect					();
-		return FALSE		;
+		return false;
 	};
 
 	
@@ -391,7 +383,7 @@ BOOL			CLevel::Connect2Server				(LPCSTR options)
 		{
 			OnConnectRejected	();	
 			Disconnect			();
-			return FALSE;
+			return false;
 		}
 	};
 
@@ -399,21 +391,7 @@ BOOL			CLevel::Connect2Server				(LPCSTR options)
 	//P.w_begin	(M_CLIENT_REQUEST_CONNECTION_DATA);
 	//Send		(P, net_flags(TRUE, TRUE, TRUE, TRUE));
 	//---------------------------------------------------------------------------
-	return TRUE;
-};
-
-void			CLevel::OnBuildVersionChallenge		()
-{
-	NET_Packet P;
-	P.w_begin				(M_CL_AUTH);
-#ifdef USE_DEBUG_AUTH
-	u64 auth = MP_DEBUG_AUTH;
-	Msg("* Sending auth value ...");
-#else
-	u64 auth = FS.auth_get();
-#endif //#ifdef DEBUG
-	P.w_u64					(auth);
-	SecureSend				(P, net_flags(TRUE, TRUE, TRUE, TRUE));
+	return true;
 };
 
 void CLevel::OnConnectResult(NET_Packet*	P)

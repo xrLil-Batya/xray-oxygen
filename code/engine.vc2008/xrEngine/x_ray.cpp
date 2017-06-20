@@ -11,7 +11,6 @@
 
 #include "dedicated_server_only.h"
 #include "no_single.h"
-#include "../xrNetServer/NET_AuthCheck.h"
 
 #include "xr_input.h"
 #include "xr_ioconsole.h"
@@ -33,7 +32,7 @@ ENGINE_API CInifile* pGameIni		= nullptr;
 #ifdef SPAWN_ANTIFREEZE
 ENGINE_API bool g_bootComplete		= false;
 #endif
-BOOL	g_bIntroFinished			= FALSE;
+bool	g_bIntroFinished			= false;
 extern	void	Intro				( void* fn );
 extern	void	Intro_DSHOW			( void* fn );
 extern	int PASCAL IntroDSHOW_wnd	(HINSTANCE hInstC, HINSTANCE hInstP, LPSTR lpCmdLine, int nCmdShow);
@@ -127,22 +126,6 @@ void InitEngine()
 	Device.Initialize();
 }
 
-struct path_excluder_predicate
-{
-	explicit path_excluder_predicate(xr_auth_strings_t const * ignore) :
-		m_ignore(ignore)
-	{
-	}
-	bool xr_stdcall is_allow_include(LPCSTR path)
-	{
-		if (!m_ignore)
-			return true;
-		
-		return allow_to_include_path(*m_ignore, path);
-	}
-	xr_auth_strings_t const *	m_ignore;
-};
-
 PROTECT_API void InitSettings	()
 {
 	string_path					fname; 
@@ -153,13 +136,8 @@ PROTECT_API void InitSettings	()
 	pSettings					= xr_new<CInifile>	(fname,TRUE);
 	CHECK_OR_EXIT				(0!=pSettings->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 
-	xr_auth_strings_t			tmp_ignore_pathes;
-	xr_auth_strings_t			tmp_check_pathes;
-	fill_auth_check_params		(tmp_ignore_pathes, tmp_check_pathes);
-	
-	path_excluder_predicate			tmp_excluder(&tmp_ignore_pathes);
 	CInifile::allow_include_func_t	tmp_functor;
-	tmp_functor.bind(&tmp_excluder, &path_excluder_predicate::is_allow_include);
+	tmp_functor.bind([](LPCSTR) { return true; });
 	pSettingsAuth					= xr_new<CInifile>(
 		fname,
 		TRUE,
@@ -584,10 +562,10 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 	UpdateWindow(logoWindow);
 
 	// AVI
-	g_bIntroFinished			= TRUE;
+	g_bIntroFinished			= true;
 
-	g_sLaunchOnExit_app[0]		= NULL;
-	g_sLaunchOnExit_params[0]	= NULL;
+	g_sLaunchOnExit_app[0]		= 0;
+	g_sLaunchOnExit_params[0]	= 0;
 
 	LPCSTR						fsgame_ltx_name = "-fsltx ";
 	string_path					fsgame = "";
@@ -598,7 +576,7 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 	}
 
 	compute_build_id			();
-	Core._initialize			("xray",NULL, TRUE, fsgame[0] ? fsgame : NULL);
+	Core._initialize			("xray", nullptr, TRUE, fsgame[0] ? fsgame : nullptr);
 
 	InitSettings				();
 
