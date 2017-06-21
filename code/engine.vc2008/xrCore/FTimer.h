@@ -135,18 +135,20 @@ class XRCORE_API CTimer_paused_ex : public CTimer		{
 public:
 	CTimer_paused_ex			()		{ }
 	virtual ~CTimer_paused_ex	()		{ }
-	IC BOOL		Paused			()const	{ return bPause;				}
-	IC void		Pause			(BOOL b){
-		if(bPause==b)			return	;
-
-		u64		_current		=		CPU::QPC()-CPU::qpc_overhead	;
-		if( b )	{
-			save_clock			= _current				;
-			qwPausedTime		= CTimerBase::GetElapsed_ticks()	;
-		}else	{
-			qwPauseAccum		+=		_current - save_clock;
+	IC bool		Paused			()const	{ return bPause; }
+	IC void		Pause			(bool b){
+		if(bPause != b)	
+		{
+			u64		_current		=		CPU::QPC()-CPU::qpc_overhead	;
+			if(b)
+			{
+				save_clock			= _current;
+				qwPausedTime		= CTimerBase::GetElapsed_ticks();
+			} 
+			else qwPauseAccum += _current - save_clock;
+			
+			bPause = b;
 		}
-		bPause = b;
 	}
 };
 
