@@ -1,7 +1,4 @@
-#ifndef XRENGINE_ISPATIAL_H_INCLUDED
-#define XRENGINE_ISPATIAL_H_INCLUDED
-
-//#pragma once
+#pragma once
 #include "../xrCore/xrPool.h"
 
 #include "xr_collide_defs.h"
@@ -96,25 +93,22 @@ public:
 	virtual		void			spatial_move		()	;
 	virtual		Fvector			spatial_sector_point()	{ return spatial.sphere.P; }
 	ICF			void			spatial_updatesector()	{
-		if (0== (spatial.type&STYPEFLAG_INVALIDSECTOR))	return;
-		spatial_updatesector_internal				()	;
+		if (!(spatial.type&STYPEFLAG_INVALIDSECTOR))	return;
+		spatial_updatesector_internal()	;
 	};
 
-	virtual		CObject*		dcast_CObject		()	{ return 0;	}
-	virtual		Feel::Sound*	dcast_FeelSound		()	{ return 0;	}
-	virtual		IRenderable*	dcast_Renderable	()	{ return 0;	}
-	virtual		IRender_Light*	dcast_Light			()	{ return 0; }
+	virtual		CObject*		dcast_CObject		()	{ return nullptr;	}
+	virtual		Feel::Sound*	dcast_FeelSound		()	{ return nullptr;	}
+	virtual		IRenderable*	dcast_Renderable	()	{ return nullptr;	}
+	virtual		IRender_Light*	dcast_Light			()	{ return nullptr;	}
 
 				ISpatial		(ISpatial_DB* space	);
 	virtual		~ISpatial		();
 };
 
 //////////////////////////////////////////////////////////////////////////
-//class ISpatial_NODE;
-class 	ISpatial_NODE
+class ISpatial_NODE
 {
-public:
-	typedef	_W64 unsigned		ptrt;
 public:
 	ISpatial_NODE*				parent;					// parent node for "empty-members" optimization
 	ISpatial_NODE*				children		[8];	// children nodes
@@ -123,30 +117,19 @@ public:
 	void						_init			(ISpatial_NODE* _parent);
 	void						_remove			(ISpatial*		_S);
 	void						_insert			(ISpatial*		_S);
-	BOOL						_empty			()						
+ICF bool						_empty			()						
 	{
-		return items.empty() && (
-			0==(
-				ptrt(children[0])|ptrt(children[1])|
-				ptrt(children[2])|ptrt(children[3])|
-				ptrt(children[4])|ptrt(children[5])|
-				ptrt(children[6])|ptrt(children[7])
-				)
-			);	
+		return items.empty() && !(
+				intptr_t(children[0])|intptr_t(children[1])|
+				intptr_t(children[2])|intptr_t(children[3])|
+				intptr_t(children[4])|intptr_t(children[5])|
+				intptr_t(children[6])|intptr_t(children[7]));	
 	}
 };
 ////////////
-
-
-
-
-
-
-//template <class T, int granularity>
-//class	poolSS;
 #ifndef	DLL_API
 #	define DLL_API					__declspec(dllimport)
-#endif // #ifndef	DLL_API
+#endif
 
 //////////////////////////////////////////////////////////////////////////
 class XRCDB_API	ISpatial_DB
@@ -215,5 +198,3 @@ XRCDB_API extern ISpatial_DB*		g_SpatialSpace			;
 XRCDB_API extern ISpatial_DB*		g_SpatialSpacePhysic	;
 
 #pragma pack(pop)
-
-#endif // #ifndef XRENGINE_ISPATIAL_H_INCLUDED
