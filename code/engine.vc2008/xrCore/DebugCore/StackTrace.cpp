@@ -26,10 +26,10 @@ File Scope Global Variables
 //////////////////////////////////////////////////////////////////////*/
 
 // The original unhandled exception filter
-static LPTOP_LEVEL_EXCEPTION_FILTER g_pfnOrigFilt = NULL;
+static LPTOP_LEVEL_EXCEPTION_FILTER g_pfnOrigFilt = nullptr;
 
 // The array of modules to limit crash handler to
-static HMODULE* g_ahMod = NULL;
+static HMODULE* g_ahMod = nullptr;
 // The size, in items, of g_ahMod
 static UINT g_uiModCount = 0;
 
@@ -47,10 +47,7 @@ static IMAGEHLP_LINE g_stLine;
 static STACKFRAME g_stFrame;
 
 // The flag indicating that the symbol engine has been initialized
-static BOOL g_bSymEngInit = FALSE;
-
-// The flag indicating that microsoft symbol server will be used
-// static BOOL g_SymServerLookup = TRUE;
+static bool g_bSymEngInit = false;
 
 /*//////////////////////////////////////////////////////////////////////
 File Scope Function Declarations
@@ -129,11 +126,10 @@ BOOL __stdcall ReadCurrentProcessMemory(HANDLE, LPCVOID lpBaseAddress, LPVOID lp
 LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs)
 {
 	// ASSERT(IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS)) == FALSE);
-	if (IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS)) == TRUE)
+	if (IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS)))
 	{
 		SetLastError(ERROR_INVALID_ADDRESS);
-		// TRACE0("GetStackTraceString - invalid pExPtrs!\n");
-		return NULL;
+		return nullptr;
 	}
 
 	// The value that is returned
@@ -152,15 +148,15 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		// Initialize the symbol engine in case it isn't initialized.
 		InitializeSymbolEngine();
 
-#ifdef _WIN64
-#define CH_MACHINE IMAGE_FILE_MACHINE_IA64
+#ifdef _M_X64
+#define CH_MACHINE IMAGE_FILE_MACHINE_AMD64
 #else
 #define CH_MACHINE IMAGE_FILE_MACHINE_I386
 #endif
 		// Note:  If the source file and line number functions are used,
 		//        StackWalk can cause an access violation.
 		BOOL bSWRet = StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
-			(PREAD_PROCESS_MEMORY_ROUTINE)ReadCurrentProcessMemory, SymFunctionTableAccess, SymGetModuleBase, NULL);
+			(PREAD_PROCESS_MEMORY_ROUTINE)ReadCurrentProcessMemory, SymFunctionTableAccess, SymGetModuleBase, nullptr);
 
 		if ((bSWRet == FALSE) || (g_stFrame.AddrFrame.Offset == 0))
 		{
@@ -174,9 +170,9 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		// StackWalk returns TRUE but the address doesn't belong to
 		// a module in the process.
 		dwModBase = SymGetModuleBase(hProcess, g_stFrame.AddrPC.Offset);
-		if (dwModBase == 0)
+		if (!dwModBase)
 		{
-			szRet = NULL;
+			szRet = nullptr;
 			__leave;
 		}
 
@@ -237,14 +233,9 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 				else
 				{
 					if (dwDisp > 0)
-					{
-						// iCurr += wsprintf(g_szBuff + iCurr, _T("%s() + %I64d byte(s)"), pSym->Name, dwDisp);
 						iCurr += wsprintf(g_szBuff + iCurr, _T("%s() + %d byte(s)"), pSym->Name, dwDisp);
-					}
 					else
-					{
 						iCurr += wsprintf(g_szBuff + iCurr, _T("%s"), pSym->Name);
-					}
 				}
 			}
 			else
@@ -286,9 +277,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 							g_stLine.LineNumber, dwDisp);
 					}
 					else
-					{
 						iCurr += wsprintf(g_szBuff + iCurr, _T("%s, line %d"), g_stLine.FileName, g_stLine.LineNumber);
-					}
 				}
 			}
 		}
@@ -301,7 +290,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		// sprintf(buf, "error %d", err);
 		// MessageBoxA(0, buf, "Flux Engine", 0);
 		// ASSERT(!"Crashed in InternalGetStackTraceString");
-		szRet = NULL;
+		szRet = nullptr;
 	}
 	return szRet;
 }
@@ -312,17 +301,15 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 BOOL __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
 {
 	// ASSERT(IsBadWritePtr(szBuff, uiSize) == FALSE);
-	if (IsBadWritePtr(szBuff, uiSize) == TRUE)
-	{
+	if (IsBadWritePtr(szBuff, uiSize))
 		return FALSE;
-	}
 
 	LPCTSTR szRet;
 
 	__try
 	{
 		szRet = GetFirstStackTraceString(dwOpts, pExPtrs);
-		if (NULL == szRet)
+		if (!szRet)
 		{
 			__leave;
 		}
@@ -330,31 +317,31 @@ BOOL __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExP
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER)
 	{
-		szRet = NULL;
+		szRet = nullptr;
 	}
-	return szRet != NULL;
+	return szRet != nullptr;
 }
 
 BOOL __stdcall GetNextStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
 {
 	// ASSERT(IsBadWritePtr(szBuff, uiSize) == FALSE);
-	if (IsBadWritePtr(szBuff, uiSize) == TRUE)
+	if (IsBadWritePtr(szBuff, uiSize))
 		return FALSE;
 
 	LPCTSTR szRet;
 	__try
 	{
 		szRet = GetNextStackTraceString(dwOpts, pExPtrs);
-		if (NULL == szRet)
+		if (!szRet)
 			__leave;
 		
 		lstrcpyn(szBuff, szRet, std::min((UINT)lstrlen(szRet) + 1, uiSize));
 	}
 	__except (EXCEPTION_EXECUTE_HANDLER)
 	{
-		szRet = NULL;
+		szRet = nullptr;
 	}
-	return szRet != NULL;
+	return szRet != nullptr;
 }
 
 // Initializes the symbol engine if needed
@@ -369,13 +356,13 @@ void InitializeSymbolEngine(void)
 		SymSetOptions(dwOpts | SYMOPT_DEFERRED_LOADS | SYMOPT_LOAD_LINES);
 
 		HANDLE hProcess = (HANDLE)GetCurrentProcessId();
-		SymInitialize(hProcess, NULL, TRUE);
+		SymInitialize(hProcess, nullptr, TRUE);
 		// if (g_SymServerLookup)
 		//{
 		//    SymSetSearchPath(hProcess, ms_symsrv);
 		//}
 
-		g_bSymEngInit = TRUE;
+		g_bSymEngInit = true;
 	}
 }
 
@@ -385,6 +372,6 @@ void DeinitializeSymbolEngine(void)
 	if (g_bSymEngInit)
 	{
 		SymCleanup((HANDLE)GetCurrentProcessId());
-		g_bSymEngInit = FALSE;
+		g_bSymEngInit = false;
 	}
 }
