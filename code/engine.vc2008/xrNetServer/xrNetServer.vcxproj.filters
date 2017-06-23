@@ -1,0 +1,50 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="stdafx.cpp" />
+    <ClCompile Include="NET_Client.cpp">
+      <Filter>Client</Filter>
+    </ClCompile>
+    <ClCompile Include="NET_Common.cpp">
+      <Filter>Common</Filter>
+    </ClCompile>
+    <ClCompile Include="NET_Log.cpp">
+      <Filter>Log</Filter>
+    </ClCompile>
+    <ClCompile Include="NET_Server.cpp">
+      <Filter>Server</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="NET_Messages.h" />
+    <ClInclude Include="NET_PlayersMonitor.h" />
+    <ClInclude Include="NET_Shared.h" />
+    <ClInclude Include="stdafx.h" />
+    <ClInclude Include="NET_Client.h">
+      <Filter>Client</Filter>
+    </ClInclude>
+    <ClInclude Include="NET_Common.h">
+      <Filter>Common</Filter>
+    </ClInclude>
+    <ClInclude Include="NET_Log.h">
+      <Filter>Log</Filter>
+    </ClInclude>
+    <ClInclude Include="NET_Server.h">
+      <Filter>Server</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Client">
+      <UniqueIdentifier>{0f68613e-44d2-4d49-b69f-81b17a8da414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Common">
+      <UniqueIdentifier>{9cc11fcb-fad9-405a-b40b-ab66bf6ec603}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Log">
+      <UniqueIdentifier>{ebc4e809-3a0b-4f77-9c0c-6ea4d30dd51c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Server">
+      <UniqueIdentifier>{6a2e468e-04b1-4d74-8a1e-50b531a7130f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>
