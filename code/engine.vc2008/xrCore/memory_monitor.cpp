@@ -82,7 +82,7 @@ STATIC void initialize					()
 XRCORE_API int memory_monitor::counter = 0;
 XRCORE_API int memory_monitor::counter_alloc = 0;
 XRCORE_API int memory_monitor::counter_free = 0;
-void memory_monitor::monitor_alloc		(const void *allocation_address, const u32 &allocation_size, LPCSTR allocation_description)
+void memory_monitor::monitor_alloc		(const void *allocation_address, const size_t &allocation_size, LPCSTR allocation_description)
 {
 	counter++;
 	counter_alloc++;

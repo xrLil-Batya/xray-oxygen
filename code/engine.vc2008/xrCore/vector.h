@@ -367,7 +367,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 			}
 			break;
 		case I:
-			s = _sqrt( M._33 - (M._11 + M._22) + 1.0f);
+			s = std::sqrtf( M._33 - (M._11 + M._22) + 1.0f);
 			if (s > TRACE_QZERO_TOLERANCE){
 				z = s * 0.5f;
 				s = 0.5f / s;
@@ -377,7 +377,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// A
-			s = _sqrt( M._11 - (M._22 + M._33) + 1.0f);
+			s = std::sqrtf( M._11 - (M._22 + M._33) + 1.0f);
 			if (s > TRACE_QZERO_TOLERANCE){
 				x = s * 0.5f;
 				s = 0.5f / s;
@@ -387,7 +387,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// E
-			s = _sqrt( M._22 - (M._33 + M._11) + 1.0f);
+			s = std::sqrtf( M._22 - (M._33 + M._11) + 1.0f);
 			if (s > TRACE_QZERO_TOLERANCE){
 				y = s * 0.5f;
 				s = 0.5f / s;

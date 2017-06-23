@@ -49,7 +49,7 @@ IC	void	xr_delete(T* &ptr)
 	if (ptr)
 	{
 		xr_special_free<std::is_polymorphic_v<T>, T>()(ptr);
-		ptr = NULL;
+		ptr = nullptr;
 	}
 }
 template <class T>
@@ -58,7 +58,7 @@ IC	void	xr_delete(T* const &ptr)
 	if (ptr)
 	{
 		xr_special_free<std::is_polymorphic_v<T>, T>(ptr);
-		const_cast<T*&>(ptr) = NULL;
+		const_cast<T*&>(ptr) = nullptr;
 	}
 }
 
