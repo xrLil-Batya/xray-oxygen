@@ -1,4 +1,6 @@
-#pragma once
+#ifndef FS_IMPL_H_INCLUDED
+#define FS_IMPL_H_INCLUDED
+
 // 1: default
 // 1.5: check next chunk first heuristics
 // 2: vector population heuristics
@@ -70,7 +72,7 @@ struct IReaderBase_Test {
 };
 
 template <typename T>
-IC	u32 IReaderBase<T>::find_chunk	(u32 ID, bool* bCompressed)	
+IC	u32 IReaderBase<T>::find_chunk	(u32 ID, BOOL* bCompressed)	
 {
 #ifdef FIND_CHUNK_BENCHMARK_ENABLE
 	find_chunk_auto_timer timer;
@@ -102,7 +104,7 @@ struct IReaderBase_Test {};
 #pragma warning (disable:4701)
 
 template <typename T>
-IC	u32 IReaderBase<T>::find_chunk	(u32 ID, bool* bCompressed)	
+IC	u32 IReaderBase<T>::find_chunk	(u32 ID, BOOL* bCompressed)	
 {
 #ifdef FIND_CHUNK_BENCHMARK_ENABLE
 	find_chunk_auto_timer timer;
@@ -154,9 +156,13 @@ IC	u32 IReaderBase<T>::find_chunk	(u32 ID, bool* bCompressed)
 
 	const int dwPos = impl().tell();
 	if ( dwPos + dwSize < (u32)impl().length() )
+	{
 		m_last_pos = dwPos + dwSize;
+	}
 	else
+	{
 		m_last_pos = 0;
+	}
 
 	return dwSize;
 }
@@ -176,7 +182,7 @@ struct IReaderBase_Test {
 };
 
 template <typename T>
-IC	u32 IReaderBase<T>::find_chunk	(u32 ID, bool* bCompressed)	
+IC	u32 IReaderBase<T>::find_chunk	(u32 ID, BOOL* bCompressed)	
 {
 #ifdef FIND_CHUNK_BENCHMARK_ENABLE
 	find_chunk_auto_timer timer;
@@ -247,7 +253,7 @@ struct IReaderBase_Test {
 };
 
 template <typename T>
-IC	u32 IReaderBase<T>::find_chunk	(u32 ID, bool* bCompressed)	
+IC	u32 IReaderBase<T>::find_chunk	(u32 ID, BOOL* bCompressed)	
 {
 #ifdef FIND_CHUNK_BENCHMARK_ENABLE
 	find_chunk_auto_timer timer;
@@ -306,3 +312,5 @@ IC	u32 IReaderBase<T>::find_chunk	(u32 ID, bool* bCompressed)
 }
 
 #endif // #ifdef FIND_CHUNK_MAP
+
+#endif // #ifndef FS_IMPL_H_INCLUDED

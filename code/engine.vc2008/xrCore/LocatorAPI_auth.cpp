@@ -53,10 +53,10 @@ void	CLocatorAPI::auth_runtime		(void*	params)
 			const file&	f	=	*it;
 
 			// test for skip
-			bool	bSkip	=	false;
+			BOOL	bSkip	=	FALSE;
 			for (u32 s=0; s<_o->ignore.size(); s++) {
 				if (strstr(f.name,_o->ignore[s].c_str()))	
-					bSkip	=	true;
+					bSkip	=	TRUE;
 			}
 
 			if (bSkip)

@@ -15,7 +15,7 @@ void CFileStreamReader::construct	(const char* file_name, const u32 &window_size
 		);
 
 	VERIFY					(m_file_handle != INVALID_HANDLE_VALUE);
-	u32						file_size = (u32)GetFileSize(m_file_handle,nullptr);
+	u32						file_size = (u32)GetFileSize(m_file_handle,NULL);
 
 	HANDLE					file_mapping_handle =
 		CreateFileMapping(

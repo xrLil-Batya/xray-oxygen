@@ -19,16 +19,16 @@ public:
     IC	SelfRef	invert	(const T mask)								{ flags ^=	mask;		return *this;	}
 	IC	SelfRef	assign	(const Self& f)								{ flags =	f.flags;	return *this;	}
 	IC	SelfRef	assign	(const T mask)								{ flags	=	mask;		return *this;	}
-	IC	SelfRef	set		(const T mask,	bool value)					{ if (value) flags|=mask; else flags&=~mask; return *this; }
-	IC 	bool	is		(const T mask)						const	{ return mask==(flags&mask);			}
-	IC 	bool	is_any	(const T mask)						const	{ return bool(!!(flags&mask));			}
-	IC 	bool	test	(const T mask)						const	{ return bool(!!(flags&mask));			}
+	IC	SelfRef	set		(const T mask,	BOOL value)					{ if (value) flags|=mask; else flags&=~mask; return *this; }
+	IC 	BOOL	is		(const T mask)						const	{ return mask==(flags&mask);			}
+	IC 	BOOL	is_any	(const T mask)						const	{ return BOOL(!!(flags&mask));			}
+	IC 	BOOL	test	(const T mask)						const	{ return BOOL(!!(flags&mask));			}
 	IC 	SelfRef	or		(const T mask)								{ flags|=mask;			return *this;	}
 	IC 	SelfRef	or		(const Self& f, const T mask) 				{ flags=f.flags|mask;	return *this;	}
 	IC 	SelfRef	and		(const T mask)								{ flags&=mask;			return *this;	}
 	IC 	SelfRef	and		(const Self& f, const T mask) 				{ flags=f.flags&mask;	return *this;	}
-	IC 	bool	equal	(const Self& f) 			  		const	{ return flags==f.flags;}
-	IC 	bool	equal	(const Self& f, const T mask) 		const	{ return (flags&mask)==(f.flags&mask);}
+	IC 	BOOL	equal	(const Self& f) 			  		const	{ return flags==f.flags;}
+	IC 	BOOL	equal	(const Self& f, const T mask) 		const	{ return (flags&mask)==(f.flags&mask);}
 };
 
 typedef _flags<u8>	Flags8;		typedef _flags<u8>	flags8;		

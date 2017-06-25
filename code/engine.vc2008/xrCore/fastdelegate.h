@@ -530,7 +530,7 @@ struct SimplifyMemFunc<SINGLE_MEMFUNCPTR_SIZE + 3*sizeof(int) >
 // It knows nothing about the calling convention or number of arguments used by
 // the function pointed to.
 // It supplies comparison operators so that it can be stored in STL collections.
-// It cannot be set to anything other than nullptr, nor invoked directly: 
+// It cannot be set to anything other than null, nor invoked directly: 
 //   it must be converted to a specific delegate.
 
 // Implementation:
@@ -853,7 +853,7 @@ public:
 // Implicit conversion to "bool" is achieved using the safe_bool idiom,
 // using member data pointers (MDP). This allows "if (dg)..." syntax
 // Because some compilers (eg codeplay) don't have a unique value for a zero
-// MDP, an extra padding member is added to the Safebool struct.
+// MDP, an extra padding member is added to the SafeBool struct.
 // Some compilers (eg VC6) won't implicitly convert from 0 to an MDP, so
 // in that case the static function constructor is not made explicit; this
 // allows "if (dg==0) ..." to compile.
@@ -915,14 +915,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1000,14 +1000,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1087,14 +1087,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1172,14 +1172,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2, p3); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1257,14 +1257,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2, p3, p4); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1342,14 +1342,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2, p3, p4, p5); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1427,14 +1427,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2, p3, p4, p5, p6); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1512,14 +1512,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2, p3, p4, p5, p6, p7); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {
@@ -1597,14 +1597,14 @@ public:
 						return (m_Closure.GetClosureThis()->*(m_Closure.GetClosureMemPtr()))(p1, p2, p3, p4, p5, p6, p7, p8); }
 					// Implicit conversion to "bool" using the safe_bool idiom
 private:
-	typedef struct SafeboolStruct {
+	typedef struct SafeBoolStruct {
 		int a_data_pointer_to_this_is_0_on_buggy_compilers;
 		StaticFunctionPtr m_nonzero;
 	} UselessTypedef;
-	typedef StaticFunctionPtr SafeboolStruct::*unspecified_bool_type;
+	typedef StaticFunctionPtr SafeBoolStruct::*unspecified_bool_type;
 public:
 	operator unspecified_bool_type() const {
-		return empty()? 0: &SafeboolStruct::m_nonzero;
+		return empty()? 0: &SafeBoolStruct::m_nonzero;
 	}
 	// necessary to allow ==0 to work despite the safe_bool idiom
 	inline bool operator==(StaticFunctionPtr funcptr) {

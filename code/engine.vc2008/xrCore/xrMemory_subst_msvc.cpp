@@ -9,7 +9,7 @@
 #endif // DEBUG_MEMORY_MANAGER
 
 #ifdef DEBUG_MEMORY_MANAGER
-	XRCORE_API void*	g_globalCheckAddr = nullptr;
+	XRCORE_API void*	g_globalCheckAddr = NULL;
 #endif // DEBUG_MEMORY_MANAGER
 
 #ifdef DEBUG_MEMORY_MANAGER
@@ -153,7 +153,7 @@ void	xrMemory::mem_free		(void* P)
 #endif // DEBUG_MEMORY_MANAGER
 }
 
-extern bool	g_bDbgFillMemory	;
+extern BOOL	g_bDbgFillMemory	;
 
 void*	xrMemory::mem_realloc	(void* P, size_t size
 #ifdef DEBUG_MEMORY_NAME
@@ -199,7 +199,7 @@ void*	xrMemory::mem_realloc	(void* P, size_t size
 	} else 							p_mode	= 1	;
 
 	void*	_real				= (void*)(((u8*)P)-1);
-	void*	_ptr				= nullptr;
+	void*	_ptr				= NULL;
 	if		(0==p_mode)
 	{
 		u32		_footer			=	debug_mode?4:0;

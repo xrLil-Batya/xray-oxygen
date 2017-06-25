@@ -166,22 +166,22 @@ typedef struct _region_list_entry {
 static int region_list_append (region_list_entry **last, void *base_reserved, INTERNAL_INTPTR_T reserve_size) {
     region_list_entry *next = (region_list_entry *) HeapAlloc (GetProcessHeap (), 0, sizeof (region_list_entry));
     if (! next)
-        return false;
+        return FALSE;
     next->top_allocated = (char *) base_reserved;
     next->top_committed = (char *) base_reserved;
     next->top_reserved = (char *) base_reserved + reserve_size;
     next->reserve_size = reserve_size;
     next->previous = *last;
     *last = next;
-    return true;
+    return TRUE;
 }
 /* Free and unlink the last region entry from the region list */
 static int region_list_remove (region_list_entry **last) {
     region_list_entry *previous = (*last)->previous;
     if (! HeapFree (GetProcessHeap (), sizeof (region_list_entry), *last))
-        return false;
+        return FALSE;
     *last = previous;
-    return true;
+    return TRUE;
 }
 
 #define CEIL(size,to)	(((size)+(to)-1)&~((to)-1))
@@ -262,13 +262,13 @@ static void *sbrk (INTERNAL_INTPTR_T size) {
                 } {
                     /* Now we are going to search and reserve. */
                     int contiguous = -1;
-                    int found = false;
+                    int found = FALSE;
                     MEMORY_BASIC_INFORMATION memory_info;
                     void *base_reserved;
                     INTERNAL_INTPTR_T reserve_size;
                     do {
                         /* Assume contiguous memory */
-                        contiguous = true;
+                        contiguous = TRUE;
                         /* Round size to reserve */
                         reserve_size = CEIL (to_reserve, g_my_regionsize);
                         /* Start with the current region's top */
@@ -289,11 +289,11 @@ static void *sbrk (INTERNAL_INTPTR_T size) {
                             if (memory_info.State == MEM_FREE &&
                                 (unsigned) memory_info.BaseAddress % g_regionsize == 0 &&
                                 memory_info.RegionSize >= (unsigned) reserve_size) {
-                                found = true;
+                                found = TRUE;
                                 break;
                             }
                             /* From now on we can't get contiguous memory! */
-                            contiguous = false;
+                            contiguous = FALSE;
                             /* Recompute size to reserve */
                             reserve_size = CEIL (allocate_size, g_my_regionsize);
                             memory_info.BaseAddress = (char *) memory_info.BaseAddress + memory_info.RegionSize;
@@ -315,7 +315,7 @@ static void *sbrk (INTERNAL_INTPTR_T size) {
                             if (rc != ERROR_INVALID_ADDRESS) 
                                 goto sbrk_exit;
                         }
-                        /* A nullptr pointer signals (hopefully) a race condition with another thread. */
+                        /* A null pointer signals (hopefully) a race condition with another thread. */
                         /* In this case, we try again. */
                     } while (! base_reserved);
                     /* Check returned pointer for consistency */
@@ -703,11 +703,11 @@ static int cpuinfo (int whole, INTERNAL_SIZE_T  *kernel, INTERNAL_SIZE_T  *user)
         if (! rc) {
             *kernel = 0;
             *user = 0;
-            return false;
+            return FALSE;
         } 
         *kernel = (INTERNAL_SIZE_T) (kernel64 / 10000);
         *user = (INTERNAL_SIZE_T) (user64 / 10000);
-        return true;
+        return TRUE;
     } else {
         __int64 creation64, exit64, kernel64, user64;
         int rc = GetThreadTimes (GetCurrentThread (), 
@@ -718,11 +718,11 @@ static int cpuinfo (int whole, INTERNAL_SIZE_T  *kernel, INTERNAL_SIZE_T  *user)
         if (! rc) {
             *kernel = 0;
             *user = 0;
-            return false;
+            return FALSE;
         } 
         *kernel = (INTERNAL_SIZE_T) (kernel64 / 10000);
         *user = (INTERNAL_SIZE_T) (user64 / 10000);
-        return true;
+        return TRUE;
     }
 }
 #endif // #if 0

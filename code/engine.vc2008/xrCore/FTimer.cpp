@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-XRCORE_API bool			g_bEnableStatGather	= false;
+XRCORE_API BOOL			g_bEnableStatGather	= FALSE;
 
 CStatTimer::CStatTimer()
 {
@@ -25,12 +25,12 @@ void	CStatTimer::FrameEnd	()
 XRCORE_API pauseMngr	g_pauseMngr;
 
 
-pauseMngr::pauseMngr	():m_paused(false)
+pauseMngr::pauseMngr	():m_paused(FALSE)
 {
 	m_timers.reserve	(3);
 }
 
-void pauseMngr::Pause(bool b)
+void pauseMngr::Pause(BOOL b)
 {
 	if(m_paused == b)return;
 

@@ -22,8 +22,8 @@
 	IC void set_negative(float &f)		{ f = -fabsf(f); }
 	IC void set_positive(float &f)		{ f = fabsf(f);	}
 #else
-	IC bool negative(const float &f)	{ return (*((unsigned*)(&f))&fdSGN);	}
-	IC bool positive(const float &f)	{ return (*((unsigned*)(&f))&fdSGN)==0;	}
+	IC BOOL negative(const float &f)	{ return (*((unsigned*)(&f))&fdSGN);	}
+	IC BOOL positive(const float &f)	{ return (*((unsigned*)(&f))&fdSGN)==0;	}
 	IC void set_negative(float &f)		{ (*(unsigned*)(&f)) |= fdSGN;			}
 	IC void set_positive(float &f)		{ (*(unsigned*)(&f)) &= ~fdSGN;			}
 #endif

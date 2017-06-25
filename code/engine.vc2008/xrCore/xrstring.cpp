@@ -4,7 +4,7 @@
 #include "xrstring.h"
 #include "FS_impl.h"
 
-XRCORE_API	extern		str_container*	g_pStringContainer = nullptr;
+XRCORE_API	extern		str_container*	g_pStringContainer = NULL;
 
 struct str_container_impl
 {

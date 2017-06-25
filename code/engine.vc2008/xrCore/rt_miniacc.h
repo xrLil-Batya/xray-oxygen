@@ -3015,11 +3015,11 @@ typedef unsigned short wchar_t;
 #define _WCHAR_T_DEFINED 1
 #endif
 #endif
-#ifndef nullptr
+#ifndef NULL
 #if defined(__cplusplus)
-#define nullptr    0
+#define NULL    0
 #else
-#define nullptr    ((void*)0)
+#define NULL    ((void*)0)
 #endif
 #endif
 #ifndef offsetof

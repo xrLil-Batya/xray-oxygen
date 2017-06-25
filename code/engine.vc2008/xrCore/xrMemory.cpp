@@ -37,7 +37,7 @@ xrMemory::xrMemory()
 }
 
 #ifdef DEBUG_MEMORY_MANAGER
-	bool	g_bMEMO		= false;
+	BOOL	g_bMEMO		= FALSE;
 #endif // DEBUG_MEMORY_MANAGER
 
 void	xrMemory::_initialize	(bool bDebug)
@@ -65,7 +65,7 @@ void	xrMemory::_initialize	(bool bDebug)
 
 #ifdef DEBUG_MEMORY_MANAGER
 	if (0==strstr(Core.Params,"-memo"))	mem_initialized				= true;
-	else								g_bMEMO						= true;
+	else								g_bMEMO						= TRUE;
 #else // DEBUG_MEMORY_MANAGER
 	mem_initialized				= true;
 #endif // DEBUG_MEMORY_MANAGER
@@ -198,7 +198,7 @@ void	xrMemory::mem_statistic	(const char* fn)
 		F->w_u32			(0);
 		_HEAPINFO			hinfo;
 		int					heapstatus;
-		hinfo._pentry		= nullptr;
+		hinfo._pentry		= NULL;
 		while( ( heapstatus = _heapwalk( &hinfo ) ) == _HEAPOK )
 			if (hinfo._useflag == _USEDENTRY)	F->w_u32	(u32(hinfo._size));
 		FS.w_close			(F);

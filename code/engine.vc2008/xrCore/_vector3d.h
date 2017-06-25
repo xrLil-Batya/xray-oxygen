@@ -55,7 +55,7 @@ public:
 	IC	SelfRef	max(const Self &v)						{ x = std::max(x,v.x);	y = std::max(y,v.y);	z = std::max(z,v.z);			return *this;	}
 
 	IC	SelfRef	abs(const Self &v)						{ x = _abs(v.x); y=_abs(v.y); z=_abs(v.z);							return *this;	}
-	ICF bool	similar(const Self &v, T E=EPS_L) const	{ return _abs(x-v.x)<E && _abs(y-v.y)<E && _abs(z-v.z)<E;};
+	ICF BOOL	similar(const Self &v, T E=EPS_L) const	{ return _abs(x-v.x)<E && _abs(y-v.y)<E && _abs(z-v.z)<E;};
 
 	IC	SelfRef	set_length(T l)
 	{
@@ -439,13 +439,13 @@ typedef _vector3<s32>		Ivector;
 typedef _vector3<s32>		Ivector3;
 
 template <class T>
-bool	_valid			(const _vector3<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y) && _valid((T)v.z);	}
+BOOL	_valid			(const _vector3<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y) && _valid((T)v.z);	}
 
 //////////////////////////////////////////////////////////////////////////
 #pragma warning(push)
 #pragma warning(disable:4244)
 ICF		double	rsqrt			(double v)		{	return 1.0/_sqrt(v);			}
-IC		bool	exact_normalize (float* a)
+IC		BOOL	exact_normalize (float* a)
 {
 	double	sqr_magnitude	= a[0]*a[0] + a[1]*a[1] + a[2]*a[2];
 	double	epsilon			= 1.192092896e-05F;
@@ -455,7 +455,7 @@ IC		bool	exact_normalize (float* a)
 		a[0]		*=	l;
 		a[1]		*=	l;
 		a[2]		*=	l;
-		return		true;
+		return		TRUE;
 	}
 	double a0,a1,a2,aa0,aa1,aa2,l;
 	a0 = a[0];
@@ -493,7 +493,7 @@ aa2_largest:	// aa2 is largest
 				a[0] = 0;	// if all a's are zero, this is where we'll end up.
 				a[1] = 1;	// return a default unit length vector.
 				a[2] = 0;
-				return	false;
+				return	FALSE;
 			}
 			a1 /= aa0;
 			a2 /= aa0;
@@ -503,9 +503,9 @@ aa2_largest:	// aa2 is largest
 			a[2] = a2*l;
 		}
 	}
-	return	true;
+	return	TRUE;
 }
-IC bool	exact_normalize	(Fvector3& a)	{	return exact_normalize(&a.x);	}
+IC BOOL	exact_normalize	(Fvector3& a)	{	return exact_normalize(&a.x);	}
 #pragma warning(pop)
 
 #endif

@@ -47,7 +47,7 @@ int heap_walk (
         Entry.wFlags = 0;
         Entry.iRegionIndex = 0;
 		Entry.cbData = 0;
-        if ( (Entry.lpData = _entry->_pentry) == nullptr ) {
+        if ( (Entry.lpData = _entry->_pentry) == NULL ) {
             if ( !HeapWalk( heap_handle, &Entry ) ) {
                 if ( GetLastError() == ERROR_CALL_NOT_IMPLEMENTED ) {
                     _doserrno = ERROR_CALL_NOT_IMPLEMENTED;
@@ -128,7 +128,7 @@ u32	mem_usage_impl	(HANDLE heap_handle, u32* pBlocksUsed, u32* pBlocksFree)
 
 	_HEAPINFO		hinfo;
 	int				heapstatus;
-	hinfo._pentry = nullptr;
+	hinfo._pentry = NULL;
 	size_t	total	= 0;
 	u32	blocks_free	= 0;
 	u32	blocks_used	= 0;

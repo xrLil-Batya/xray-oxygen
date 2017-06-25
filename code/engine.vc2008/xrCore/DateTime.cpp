@@ -3,7 +3,7 @@
 
 Time::Time()
 {
-	t = time(nullptr);
+	t = time(NULL);
 	aTm = localtime(&t);
 }
 

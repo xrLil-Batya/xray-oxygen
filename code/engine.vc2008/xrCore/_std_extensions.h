@@ -109,7 +109,7 @@ IC float	_sqrt	(float x)		{ return sqrtf(x); }
 IC float	_sin	(float x)		{ return sinf(x);  }
 IC float	_cos	(float x)		{ return cosf(x);  }
 IC float    _log    (float x)		{ return logf(x);  }
-IC bool		_valid	(const float x)
+IC BOOL		_valid	(const float x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
 	int			cls			= _fpclass		(double(x));
@@ -132,7 +132,7 @@ IC double	_sqrt	(double x)		{ return sqrt(x); }
 IC double	_sin	(double x)		{ return sin(x); }
 IC double	_cos	(double x)		{ return cos(x); }
 IC double    _log	(double x)		{ return log(x); }
-IC bool		_valid	(const double x)
+IC BOOL		_valid	(const double x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
 	int			cls			= _fpclass		(x);

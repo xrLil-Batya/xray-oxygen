@@ -143,7 +143,7 @@ struct IReaderBase_Test;
 struct XRCORE_API IReaderTestPolicy
 {
 	IReaderBase_Test*	m_test;
-	IReaderTestPolicy() { m_test = nullptr; }
+	IReaderTestPolicy() { m_test = NULL; }
 	~IReaderTestPolicy(); // defined in FS.cpp
 };
 #endif // TESTING_IREADER
@@ -163,7 +163,7 @@ public:
 	IC implementation_type&impl	()				{return *(implementation_type*)this;}
 	IC const implementation_type&impl() const	{return *(implementation_type*)this;}
 
-	IC bool			eof			()	const		{return impl().elapsed()<=0;	};
+	IC BOOL			eof			()	const		{return impl().elapsed()<=0;	};
 	
 	IC void			r			(void *p,int cnt) {impl().r(p,cnt);}
 
@@ -213,25 +213,25 @@ public:
 	// Set file pointer to start of chunk data (0 for root chunk)
 	IC	void		rewind		()			{	impl().seek(0); }
 
-	u32 			find_chunk  (u32 ID, bool* bCompressed);
+	u32 			find_chunk  (u32 ID, BOOL* bCompressed);
 	
-	IC	bool		r_chunk		(u32 ID, void *dest)	// чтение XR Chunk'ов (4b-ID,4b-size,??b-data)
+	IC	BOOL		r_chunk		(u32 ID, void *dest)	// чтение XR Chunk'ов (4b-ID,4b-size,??b-data)
 	{
 		u32	dwSize = ((implementation_type*)this)->find_chunk(ID);
 		if (dwSize!=0) {
 			r(dest,dwSize);
-			return true;
-		} else return false;
+			return TRUE;
+		} else return FALSE;
 	}
 	
-	IC	bool		r_chunk_safe(u32 ID, void *dest, u32 dest_size)	// чтение XR Chunk'ов (4b-ID,4b-size,??b-data)
+	IC	BOOL		r_chunk_safe(u32 ID, void *dest, u32 dest_size)	// чтение XR Chunk'ов (4b-ID,4b-size,??b-data)
 	{
 		u32	dwSize = ((implementation_type*)this)->find_chunk(ID);
 		if (dwSize!=0) {
 			R_ASSERT(dwSize==dest_size);
 			r(dest,dwSize);
-			return true;
-		} else return false;
+			return TRUE;
+		} else return FALSE;
 	}
 
 private:
@@ -299,9 +299,9 @@ public:
 	IReader*		open_chunk	(u32 ID);
 
 	// iterators
-	IReader*		open_chunk_iterator		(u32& ID, IReader* previous=nullptr);	// nullptr=first
+	IReader*		open_chunk_iterator		(u32& ID, IReader* previous=NULL);	// NULL=first
 
-	u32 			find_chunk	(u32 ID, bool* bCompressed = 0);
+	u32 			find_chunk	(u32 ID, BOOL* bCompressed = 0);
 
 private:
 	typedef IReaderBase<IReader>	inherited;

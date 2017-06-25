@@ -16,7 +16,7 @@ void 	XRCORE_API		LogWinErr	(const char* msg, long 			err_code);
 void	XRCORE_API		LogXrayOffset(const char* key, LPVOID base, LPVOID pval); //luaicp only
 typedef void	( * LogCallback)	(const char* string);
 LogCallback	XRCORE_API			SetLogCB	(LogCallback cb);
-void 	XRCORE_API				CreateLog	(bool no_log=false);
+void 	XRCORE_API				CreateLog	(BOOL no_log=FALSE);
 void 							InitLog		();
 void 							CloseLog	();
 void	XRCORE_API				FlushLog	();
@@ -24,7 +24,7 @@ void	XRCORE_API				FlushLog	();
 static string_path				lua_log_file_name;
 
 extern 	XRCORE_API	xr_vector<shared_str>*		LogFile;
-extern 	XRCORE_API	bool						LogExecCB;
+extern 	XRCORE_API	BOOL						LogExecCB;
 
 #endif
 

@@ -23,7 +23,7 @@ private:
 			T*		E			= list+it;
 			*access(E)			= E+1;
 		}
-		*access(list+granularity-1)	= nullptr;
+		*access(list+granularity-1)	= NULL;
 	}
 public:
 	poolSS()
@@ -48,7 +48,7 @@ public:
 		P->~T			();
 		*access(P)		= list;
 		list			= P;
-		P				= nullptr;
+		P				= NULL;
 	}
     void				clear			()
     {

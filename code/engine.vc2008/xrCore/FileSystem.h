@@ -26,10 +26,10 @@ public:
 
 	void 		MarkFile		(const char* fn, bool bDeleteSource);
 
-	xr_string 	AppendFolderToName(xr_string& tex_name, int depth, bool full_name);
+	xr_string 	AppendFolderToName(xr_string& tex_name, int depth, BOOL full_name);
 
-	const char*		AppendFolderToName(char* tex_name, u32 const tex_name_size, int depth, bool full_name);
-	const char*		AppendFolderToName(const char* src_name, char* dest_name, u32 const dest_name_size, int depth, bool full_name);
+	const char*		AppendFolderToName(char* tex_name, u32 const tex_name_size, int depth, BOOL full_name);
+	const char*		AppendFolderToName(const char* src_name, char* dest_name, u32 const dest_name_size, int depth, BOOL full_name);
 
     xr_string	ChangeFileExt	(const char* src, const char* ext);
     xr_string	ChangeFileExt	(const xr_string& src, const char* ext);

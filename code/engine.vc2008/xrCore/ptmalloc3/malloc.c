@@ -271,7 +271,7 @@ ABORT                    default: defined as abort()
   message, because the underlying print routines in turn call malloc,
   which will fail again.  Generally, the best policy is to simply call
   abort(). It's not very useful to do more than this because many
-  errors due to overwriting will show up as address faults (nullptr, odd
+  errors due to overwriting will show up as address faults (null, odd
   addresses etc) rather than malloc-triggered checks, so will also
   abort.  Also, most compilers know that abort() does not return, so
   can better optimize code conditionally calling it.
@@ -310,7 +310,7 @@ MALLOC_FAILURE_ACTION     default: sets errno to ENOMEM, or no-op on win32
   return memory because there is none available.
 
 HAVE_MORECORE             default: 1 (true) unless win32 or ONLY_MSPACES
-  true if this system supports sbrk or an emulation of it.
+  True if this system supports sbrk or an emulation of it.
 
 MORECORE                  default: sbrk
   The name of the sbrk-style system routine to call to obtain more
@@ -334,7 +334,7 @@ MORECORE_CONTIGUOUS       default: 1 (true) if HAVE_MORECORE
   and possibly wasted space it would take to discover this though.
 
 MORECORE_CANNOT_TRIM      default: NOT defined
-  true if MORECORE cannot release space back to the system when given
+  True if MORECORE cannot release space back to the system when given
   negative arguments. This is generally necessary only if you are
   using a hand-crafted MORECORE function that cannot handle negative
   arguments.
@@ -346,7 +346,7 @@ NO_SEGMENT_TRAVERSAL       default: 0
   releasing them to the OS if unused, but bounds execution times.
 
 HAVE_MMAP                 default: 1 (true)
-  true if this system supports mmap or an emulation of it.  If so, and
+  True if this system supports mmap or an emulation of it.  If so, and
   HAVE_MORECORE is not true, MMAP is used for all system
   allocation. If set and HAVE_MORECORE is true as well, MMAP is
   primarily used to directly allocate very large blocks. It is also
@@ -360,7 +360,7 @@ HAVE_MREMAP               default: 1 on linux, else 0
   extend or shrink allocation spaces.
 
 MMAP_CLEARS               default: 1 except on WINCE.
-  true if mmap clears memory so calloc doesn't need to. This is true
+  True if mmap clears memory so calloc doesn't need to. This is true
   for standard unix mmap using /dev/zero and on WIN32 except for WINCE.
 
 USE_BUILTIN_FFS            default: 0 (i.e., not used)
@@ -773,7 +773,7 @@ extern "C" {
 /*
   malloc(size_t n)
   Returns a pointer to a newly allocated chunk of at least n bytes, or
-  nullptr if no space is available, in which case errno is set to ENOMEM
+  null if no space is available, in which case errno is set to ENOMEM
   on ANSI C systems.
 
   If n is zero, malloc returns a minimum-sized chunk. (The minimum
@@ -790,7 +790,7 @@ void* dlmalloc(size_t);
   free(void* p)
   Releases the chunk of memory pointed to by p, that had been previously
   allocated using malloc or a related routine such as realloc.
-  It has no effect if p is nullptr. If p was not malloced or already
+  It has no effect if p is null. If p was not malloced or already
   freed, free(p) will by default cause the current program to abort.
 */
 void  dlfree(void*);
@@ -805,16 +805,16 @@ void* dlcalloc(size_t, size_t);
 /*
   realloc(void* p, size_t n)
   Returns a pointer to a chunk of size n that contains the same data
-  as does chunk p up to the minimum of (n, p's size) bytes, or nullptr
+  as does chunk p up to the minimum of (n, p's size) bytes, or null
   if no space is available.
 
   The returned pointer may or may not be the same as p. The algorithm
   prefers extending p in most cases when possible, otherwise it
   employs the equivalent of a malloc-copy-free sequence.
 
-  If p is nullptr, realloc is equivalent to malloc.
+  If p is null, realloc is equivalent to malloc.
 
-  If space is not available, realloc returns nullptr, errno is set (if on
+  If space is not available, realloc returns null, errno is set (if on
   ANSI) and p is NOT freed.
 
   if n is for fewer bytes than already held by p, the newly unused
@@ -930,16 +930,16 @@ struct mallinfo dlmallinfo(void);
   mallocs), which may also improve cache locality in some
   applications.
 
-  The "chunks" argument is optional (i.e., may be nullptr, which is
-  probably the most typical usage). If it is nullptr, the returned array
+  The "chunks" argument is optional (i.e., may be null, which is
+  probably the most typical usage). If it is null, the returned array
   is itself dynamically allocated and should also be freed when it is
   no longer needed. Otherwise, the chunks array must be of at least
   n_elements in length. It is filled in with the pointers to the
   chunks.
 
   In either case, independent_calloc returns this pointer array, or
-  nullptr if the allocation failed.  If n_elements is zero and "chunks"
-  is nullptr, it returns a chunk representing an array with zero elements
+  null if the allocation failed.  If n_elements is zero and "chunks"
+  is null, it returns a chunk representing an array with zero elements
   (which should be freed if not wanted).
 
   Each element must be individually freed when it is no longer
@@ -983,15 +983,15 @@ void** dlindependent_calloc(size_t, size_t, void**);
   multiple callocs or mallocs), which may also improve cache locality
   in some applications.
 
-  The "chunks" argument is optional (i.e., may be nullptr). If it is nullptr
+  The "chunks" argument is optional (i.e., may be null). If it is null
   the returned array is itself dynamically allocated and should also
   be freed when it is no longer needed. Otherwise, the chunks array
   must be of at least n_elements in length. It is filled in with the
   pointers to the chunks.
 
   In either case, independent_comalloc returns this pointer array, or
-  nullptr if the allocation failed.  If n_elements is zero and chunks is
-  nullptr, it returns a chunk representing an array with zero elements
+  null if the allocation failed.  If n_elements is zero and chunks is
+  null, it returns a chunk representing an array with zero elements
   (which should be freed if not wanted).
 
   Each element must be individually freed when it is no longer
@@ -1114,7 +1114,7 @@ typedef void* mspace;
 /*
   create_mspace creates and returns a new independent space with the
   given initial capacity, or, if 0, the default granularity size.  It
-  returns nullptr if there is no system memory available to create the
+  returns null if there is no system memory available to create the
   space.  If argument locked is non-zero, the space uses a separate
   lock to control access. The capacity of the space will grow
   dynamically as needed to service mspace_malloc requests.  You can
@@ -1430,7 +1430,7 @@ unsigned char _BitScanReverse(unsigned long *index, unsigned long mask);
 /* The bit mask value corresponding to MALLOC_ALIGNMENT */
 #define CHUNK_ALIGN_MASK    (MALLOC_ALIGNMENT - SIZE_T_ONE)
 
-/* true if address a has acceptable alignment */
+/* True if address a has acceptable alignment */
 #define is_aligned(A)       (((size_t)((A)) & (CHUNK_ALIGN_MASK)) == 0)
 
 /* the number of bytes to offset an address to align it */
@@ -1578,7 +1578,7 @@ static FORCEINLINE int win32munmap(void* ptr, size_t size) {
    If USE_LOCKS is > 1, the definitions of lock routines here are
    bypassed, in which case you will need to define at least
    INITIAL_LOCK, ACQUIRE_LOCK, RELEASE_LOCK, and
-   nullptr_LOCK_INITIALIZER, and possibly TRY_LOCK and IS_LOCKED
+   NULL_LOCK_INITIALIZER, and possibly TRY_LOCK and IS_LOCKED
    (The latter two are not used in this malloc, but are
    commonly needed in extensions.)
 */
@@ -1685,7 +1685,7 @@ static FORCEINLINE int win32_acquire_lock (MLOCK_T *sl) {
         break;
       }
       if ((++spins & SPINS_PER_YIELD) == 0)
-        SleepEx(0, false);
+        SleepEx(0, FALSE);
     }
   }
   return 0;
@@ -1792,7 +1792,7 @@ static MLOCK_T morecore_mutex = {0, PTHREAD_MUTEX_INITIALIZER };
 #define RELEASE_LOCK(s) ( LeaveCriticalSection((s)), 0 )
 #define TRY_LOCK(s)     ( TryEnterCriticalSection((s)) )
 #define IS_LOCKED(s)    ( (s)->LockCount >= 0 )
-#define nullptr_LOCK_INITIALIZER
+#define NULL_LOCK_INITIALIZER
 static MLOCK_T magic_init_mutex;
 #if HAVE_MORECORE
 static MLOCK_T morecore_mutex;
@@ -1810,11 +1810,11 @@ static MLOCK_T morecore_mutex;
 /* #define RELEASE_LOCK(sl)  ... */
 /* #define TRY_LOCK(sl) ... */
 /* #define IS_LOCKED(sl) ... */
-/* #define nullptr_LOCK_INITIALIZER ... */
+/* #define NULL_LOCK_INITIALIZER ... */
 
-static MLOCK_T magic_init_mutex = nullptr_LOCK_INITIALIZER;
+static MLOCK_T magic_init_mutex = NULL_LOCK_INITIALIZER;
 #if HAVE_MORECORE
-static MLOCK_T morecore_mutex = nullptr_LOCK_INITIALIZER;
+static MLOCK_T morecore_mutex = NULL_LOCK_INITIALIZER;
 #endif /* HAVE_MORECORE */
 #endif /* USE_LOCKS > 1 */
 
@@ -2156,7 +2156,7 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   Each tree holding treenodes is a tree of unique chunk sizes.  Chunks
   of the same size are arranged in a circularly-linked list, with only
   the oldest chunk (the next to be used, in our FIFO ordering)
-  actually in the tree.  (Tree members are distinguished by a non-nullptr
+  actually in the tree.  (Tree members are distinguished by a non-null
   parent pointer.)  If a chunk with the same size an an existing node
   is inserted, it is linked off the existing node using pointers that
   work in the same way as fd/bk pointers of small chunks.
@@ -2179,9 +2179,9 @@ nextchunk-> +-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
   The smallest chunk in a tree (a common operation in a best-fit
   allocator) can be found by walking a path to the leftmost leaf in
   the tree.  Unlike a usual binary tree, where we follow left child
-  pointers until we reach a nullptr, here we follow the right child
-  pointer any time the left one is nullptr, until we reach a leaf with
-  both child pointers nullptr. The smallest chunk in the tree will be
+  pointers until we reach a null, here we follow the right child
+  pointer any time the left one is null, until we reach a leaf with
+  both child pointers null. The smallest chunk in the tree will be
   somewhere along that path.
 
   The worst case number of steps to add, find, or remove a node is
@@ -2476,7 +2476,7 @@ static struct malloc_state _gm_;
 #define is_granularity_aligned(S)\
    (((size_t)(S) & (mparams.granularity - SIZE_T_ONE)) == 0)
 
-/*  true if segment S holds address A */
+/*  True if segment S holds address A */
 #define segment_holds(S, A)\
   ((char*)(A) >= S->base && (char*)(A) < S->base + S->size)
 
@@ -3445,7 +3445,7 @@ static void internal_malloc_stats(mstate m) {
      paths shorter than minimally guaranteed.  This doesn't loop much
      because on average a node in a tree is near the bottom.
   3. If x is the base of a chain (i.e., has parent links) relink
-     x's parent and children to x's replacement (or nullptr if none).
+     x's parent and children to x's replacement (or null if none).
 */
 
 #define unlink_large_chunk(M, X) {\
@@ -5511,7 +5511,7 @@ History:
       * Include errno.h to support default failure action.
 
     V2.6.6 Sun Dec  5 07:42:19 1999  Doug Lea  (dl at gee)
-      * return nullptr for negative arguments
+      * return null for negative arguments
       * Added Several WIN32 cleanups from Martin C. Fong <mcfong at yahoo.com>
          * Add 'LACKS_SYS_PARAM_H' for those systems without 'sys/param.h'
           (e.g. WIN32 platforms)
