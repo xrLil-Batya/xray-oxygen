@@ -25,7 +25,7 @@ struct ALDeviceDesc{
 		u16 storage;
 	};
 	ESndProps				props;
-						ALDeviceDesc			(LPCSTR nm, int mn, int mj){xr_strcpy(name,nm);minor_ver=mn;major_ver=mj;props.storage=0;props.eax_unwanted=true;}
+						ALDeviceDesc			(const char* nm, int mn, int mj){xr_strcpy(name,nm);minor_ver=mn;major_ver=mj;props.storage=0;props.eax_unwanted=true;}
 };
 
 class ALDeviceList
@@ -40,7 +40,7 @@ public:
 
 	u32					GetNumDevices			()				{return m_devices.size();}
 	const ALDeviceDesc&	GetDeviceDesc			(u32 index)		{return m_devices[index];}
-	LPCSTR				GetDeviceName			(u32 index);
+	const char*				GetDeviceName			(u32 index);
 	void				GetDeviceVersion		(u32 index, int *major, int *minor);
 	void				SelectBestDevice		();
 };

@@ -118,9 +118,7 @@ public:
 		FPU::m64r		();
 #endif        
 		float			result = float(double(GetElapsed_ticks())/double(CPU::qpc_freq )	)	;
-#ifndef _EDITOR
 		FPU::m24r		();
-#endif
 		return			(result);
 	}
 

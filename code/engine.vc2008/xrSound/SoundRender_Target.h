@@ -8,7 +8,7 @@ class CSoundRender_Target
 {
 protected:
 	CSoundRender_Emitter*		m_pEmitter;
-	BOOL						rendering;
+	bool						rendering;
 public:
 	float						priority;
 protected:
@@ -26,9 +26,9 @@ public:
 	virtual 					~CSoundRender_Target();
 
 	CSoundRender_Emitter*		get_emitter			()	{ return m_pEmitter;	}
-	BOOL						get_Rendering		()	{ return rendering;	}
+	bool						get_Rendering		()	{ return rendering;	}
 
-	virtual BOOL				_initialize			()=0;
+	virtual bool				_initialize			()=0;
 	virtual void				_destroy			()=0;
 	virtual void				_restart			()=0;
 

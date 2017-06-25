@@ -54,7 +54,7 @@ void CSoundRender_Source::decompress(u32 line, OggVorbis_File* ovf)
 	i_decompress_fr(ovf,dest,left);
 }
 
-void CSoundRender_Source::LoadWave	(LPCSTR pName)
+void CSoundRender_Source::LoadWave	(const char* pName)
 {
 	pname					= pName;
 
@@ -63,7 +63,7 @@ void CSoundRender_Source::LoadWave	(LPCSTR pName)
 	ov_callbacks ovc		= {ov_read_func,ov_seek_func,ov_close_func,ov_tell_func};
 	IReader* wave			= FS.r_open		(pname.c_str()); 
 	R_ASSERT3				(wave&&wave->length(),"Can't open wave file:",pname.c_str());
-	ov_open_callbacks		(wave,&ovf,NULL,0,ovc);
+	ov_open_callbacks		(wave,&ovf,nullptr,0,ovc);
 
 	vorbis_info* ovi		= ov_info(&ovf,-1);
 	// verify
@@ -126,7 +126,7 @@ void CSoundRender_Source::LoadWave	(LPCSTR pName)
 	FS.r_close				(wave);
 }
 
-void CSoundRender_Source::load(LPCSTR name)
+void CSoundRender_Source::load(const char* name)
 {
 	string_path			fn,N;
 	xr_strcpy				(N,name);

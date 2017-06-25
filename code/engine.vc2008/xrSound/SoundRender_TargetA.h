@@ -22,7 +22,7 @@ public:
 								CSoundRender_TargetA	();
 	virtual 					~CSoundRender_TargetA	();
 
-	virtual BOOL				_initialize				();
+	virtual bool				_initialize				();
 	virtual void				_destroy				();
 	virtual void				_restart				();
 

@@ -7,10 +7,10 @@
 #include "SoundRender_Target.h"
 #include "SoundRender_Source.h"
 
-CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, BOOL _loop, float delay)
+CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float delay)
 {
-	VERIFY					(S->_p->feedback==0);
-	CSoundRender_Emitter* E	=	xr_new<CSoundRender_Emitter>();
+	VERIFY					(!S->_p->feedback);
+	CSoundRender_Emitter* E	=	new CSoundRender_Emitter();
 	S->_p->feedback			=	E;
 	E->start				(S,_loop,delay);
 	s_emitters.push_back	(E);
@@ -22,7 +22,7 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	u32 it;
 
 	if (0==bReady)				return;
-    bLocked						= TRUE;
+    bLocked						= true;
 	float new_tm				= Timer.GetElapsed_sec();
 	fTimer_Delta				= new_tm-fTimer_Value;
 //.	float dt					= float(Timer_Delta)/1000.f;
@@ -102,7 +102,7 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	{
         if (bListenerMoved)
 		{
-            bListenerMoved			= FALSE;
+            bListenerMoved			= false;
             e_target				= *get_environment	(P);
         }
 
@@ -126,7 +126,7 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	// Events
 	update_events					();
 
-    bLocked							= FALSE;
+    bLocked							= false;
 }
 
 static	u32	g_saved_event_count		= 0;

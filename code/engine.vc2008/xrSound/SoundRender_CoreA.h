@@ -8,8 +8,8 @@
 
 
 #ifdef DEBUG
-#	define A_CHK(expr)		{ alGetError(); 		expr; ALenum error=alGetError(); 			VERIFY2(error==AL_NO_ERROR, (LPCSTR)alGetString(error)); }
-#	define AC_CHK(expr)		{ alcGetError(pDevice); expr; ALCenum error=alcGetError(pDevice); 	VERIFY2(error==ALC_NO_ERROR,(LPCSTR)alcGetString(pDevice,error)); }
+#	define A_CHK(expr)		{ alGetError(); 		expr; ALenum error=alGetError(); 			VERIFY2(error==AL_NO_ERROR, (const char*)alGetString(error)); }
+#	define AC_CHK(expr)		{ alcGetError(pDevice); expr; ALCenum error=alcGetError(pDevice); 	VERIFY2(error==ALC_NO_ERROR,(const char*)alcGetString(pDevice,error)); }
 #else
 #	define A_CHK(expr)		{ expr; }
 #	define AC_CHK(expr)		{ expr; }
@@ -30,8 +30,8 @@ class CSoundRender_CoreA: public CSoundRender_Core
 	};
 	SListener				Listener;
 
-    BOOL 					EAXQuerySupport			(BOOL bDeferred, const GUID* guid, u32 prop, void* val, u32 sz);
-	BOOL 					EAXTestSupport			(BOOL bDeferred);
+    bool 					EAXQuerySupport			(bool bDeferred, const GUID* guid, u32 prop, void* val, u32 sz);
+	bool 					EAXTestSupport			(bool bDeferred);
 protected:
 	virtual void			i_eax_set				(const GUID* guid, u32 prop, void* val, u32 sz);
 	virtual void			i_eax_get				(const GUID* guid, u32 prop, void* val, u32 sz);
