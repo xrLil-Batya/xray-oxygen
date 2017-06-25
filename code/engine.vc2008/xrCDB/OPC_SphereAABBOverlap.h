@@ -3,10 +3,10 @@
  *	Sphere-AABB overlap test, based on Jim Arvo's code.
  *	\param		center		[in] box center
  *	\param		extents		[in] box extents
- *	\return		TRUE on overlap
+ *	\return		true on overlap
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point& extents)
+inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point& extents)
 { 
 	// Stats
 	mNbVolumeBVTests++;
@@ -43,7 +43,7 @@ inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	if(s<0.0f)
 	{
 		d += s*s;
-		if(d>mRadius2)	return FALSE;
+		if(d>mRadius2)	return false;
 	}
 	else
 	{
@@ -51,7 +51,7 @@ inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 		if(s>0.0f)
 		{
 			d += s*s;
-			if(d>mRadius2)	return FALSE;
+			if(d>mRadius2)	return false;
 		}
 	}
 
@@ -61,7 +61,7 @@ inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	if(s<0.0f)
 	{
 		d += s*s;
-		if(d>mRadius2)	return FALSE;
+		if(d>mRadius2)	return false;
 	}
 	else
 	{
@@ -69,7 +69,7 @@ inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 		if(s>0.0f)
 		{
 			d += s*s;
-			if(d>mRadius2)	return FALSE;
+			if(d>mRadius2)	return false;
 		}
 	}
 
@@ -79,7 +79,7 @@ inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	if(s<0.0f)
 	{
 		d += s*s;
-		if(d>mRadius2)	return FALSE;
+		if(d>mRadius2)	return false;
 	}
 	else
 	{
@@ -87,7 +87,7 @@ inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 		if(s>0.0f)
 		{
 			d += s*s;
-			if(d>mRadius2)	return FALSE;
+			if(d>mRadius2)	return false;
 		}
 	}
 //#endif

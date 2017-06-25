@@ -2,11 +2,11 @@
 /**
  *	Planes-triangle overlap test.
  *	\param		in_clip_mask	[in] bitmask for active planes
- *	\return		TRUE if triangle overlap planes
+ *	\return		true if triangle overlap planes
  *	\warning	THIS IS A CONSERVATIVE TEST !! Some triangles will be returned as intersecting, while they're not!
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ BOOL PlanesCollider::PlanesTriOverlap(udword in_clip_mask)
+inline_ bool PlanesCollider::PlanesTriOverlap(udword in_clip_mask)
 {
 	// Stats
 	mNbVolumePrimTests++;
@@ -21,8 +21,8 @@ inline_ BOOL PlanesCollider::PlanesTriOverlap(udword in_clip_mask)
 			float d0 = p->Distance(*mVP.Vertex[0]);
 			float d1 = p->Distance(*mVP.Vertex[1]);
 			float d2 = p->Distance(*mVP.Vertex[2]);
-			if(d0>0.0f && d1>0.0f && d2>0.0f)	return FALSE;
-//			if(!(IR(d0)&SIGN_BITMASK) && !(IR(d1)&SIGN_BITMASK) && !(IR(d2)&SIGN_BITMASK))	return FALSE;
+			if(d0>0.0f && d1>0.0f && d2>0.0f)	return false;
+//			if(!(IR(d0)&SIGN_BITMASK) && !(IR(d1)&SIGN_BITMASK) && !(IR(d2)&SIGN_BITMASK))	return false;
 		}
 		Mask+=Mask;
 		p++;
@@ -36,5 +36,5 @@ inline_ BOOL PlanesCollider::PlanesTriOverlap(udword in_clip_mask)
 		if(d0>0.0f && d1>0.0f && d2>0.0f)	return false;
 	}
 */
-	return TRUE;
+	return true;
 }

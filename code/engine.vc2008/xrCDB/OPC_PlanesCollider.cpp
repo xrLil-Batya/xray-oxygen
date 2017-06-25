@@ -58,7 +58,7 @@ using namespace Opcode;
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 PlanesCollider::PlanesCollider() :
-	mPlanes		(null),
+	mPlanes		(nullptr),
 	mNbPlanes	(0)
 {
 }
@@ -76,7 +76,7 @@ PlanesCollider::~PlanesCollider()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Validates current settings. You should call this method after all the settings and callbacks have been defined.
- *	\return		null if everything is ok, else a string describing the problem
+ *	\return		nullptr if everything is ok, else a string describing the problem
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* PlanesCollider::ValidateSettings()
@@ -97,7 +97,7 @@ const char* PlanesCollider::ValidateSettings()
  *	\param		planes		[in] list of planes in world space
  *	\param		nb_planes	[in] number of planes
  *	\param		model		[in] Opcode model to collide with
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -130,12 +130,12 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\param		cache		[in/out] a planes cache
  *	\param		planes		[in] list of planes
  *	\param		nb_planes	[in] number of planes
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		contact status
  *	\warning	SCALE NOT SUPPORTED. The matrix must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword nb_planes, const Matrix4x4* worldm)
+bool PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword nb_planes, const Matrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -205,7 +205,7 @@ BOOL PlanesCollider::InitQuery(PlanesCache& cache, const Plane* planes, udword n
  *	\param		planes		[in] list of planes
  *	\param		nb_planes	[in] number of planes
  *	\param		tree		[in] model's AABB tree
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -236,7 +236,7 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\param		planes		[in] list of planes
  *	\param		nb_planes	[in] number of planes
  *	\param		tree		[in] model's AABB tree
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -267,7 +267,7 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\param		planes		[in] list of planes
  *	\param		nb_planes	[in] number of planes
  *	\param		tree		[in] model's AABB tree
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -302,7 +302,7 @@ bool PlanesCollider::Collide(PlanesCache& cache, const Plane* planes, udword nb_
  *	\param		planes		[in] list of planes
  *	\param		nb_planes	[in] number of planes
  *	\param		tree		[in] model's AABB tree
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */

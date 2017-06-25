@@ -27,7 +27,7 @@
 		inline_								baseclass() : mData(0)	{}									\
 		inline_								~baseclass()			{}									\
 		/* Leaf test */																					\
-		inline_			BOOL				IsLeaf()		const	{ return mData&1;				}	\
+		inline_			bool				IsLeaf()		const	{ return mData&1;				}	\
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
@@ -45,8 +45,8 @@
 		inline_								baseclass() : mData(0), mData2(0)	{}						\
 		inline_								~baseclass()						{}						\
 		/* Leaf tests */																				\
-		inline_			BOOL				HasLeaf()		const	{ return mData&1;				}	\
-		inline_			BOOL				HasLeaf2()		const	{ return mData2&1;				}	\
+		inline_			bool				HasLeaf()		const	{ return mData&1;				}	\
+		inline_			bool				HasLeaf2()		const	{ return mData2&1;				}	\
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return (baseclass*)mData2;	}	\

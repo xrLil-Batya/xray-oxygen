@@ -107,7 +107,7 @@
 	{
 		public:
 		//! Constructor
-												AABBTreeOfAABBsBuilder() : mAABBList(null)	{}
+												AABBTreeOfAABBsBuilder() : mAABBList(nullptr)	{}
 		//! Destructor
 		virtual									~AABBTreeOfAABBsBuilder()					{}
 
@@ -121,7 +121,7 @@
 	{
 		public:
 		//! Constructor
-												AABBTreeOfTrianglesBuilder() : mTriList(null), mVerts(null), mNbTriangles(0)	{}
+												AABBTreeOfTrianglesBuilder() : mTriList(nullptr), mVerts(nullptr), mNbTriangles(0)	{}
 		//! Destructor
 		virtual									~AABBTreeOfTrianglesBuilder()													{}
 

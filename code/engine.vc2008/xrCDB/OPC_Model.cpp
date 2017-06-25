@@ -102,7 +102,7 @@
  *		bool IsOk = TC.Collide(ColCache, World0, World1);
  *
  *		// Get collision status => if true, objects overlap
- *		BOOL Status = TC.GetContactStatus();
+ *		bool Status = TC.GetContactStatus();
  *
  *		// Number of colliding pairs and list of pairs
  *		udword NbPairs = TC.GetNbPairs();
@@ -135,8 +135,8 @@ OPCODECREATE::OPCODECREATE()
 {
 	NbTris			= 0;
 	NbVerts			= 0;
-	Tris			= null;
-	Verts			= null;
+	Tris			= nullptr;
+	Verts			= nullptr;
 	Rules			= SPLIT_COMPLETE | SPLIT_LARGESTAXIS;
 	NoLeaf			= true;
 	Quantized		= true;
@@ -151,10 +151,10 @@ OPCODECREATE::OPCODECREATE()
  *	Constructor.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-OPCODE_Model::OPCODE_Model() : mSource(null), mTree(null), mNoLeaf(false), mQuantized(false)
+OPCODE_Model::OPCODE_Model() : mSource(nullptr), mTree(nullptr), mNoLeaf(false), mQuantized(false)
 {
 #ifdef __MESHMERIZER_H__	// Collision hulls only supported within ICE !
-	mHull	= null;
+	mHull	= nullptr;
 #endif // __MESHMERIZER_H__
 }
 

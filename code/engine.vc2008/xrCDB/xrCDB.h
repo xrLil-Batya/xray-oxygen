@@ -106,9 +106,9 @@ namespace CDB
 
         TRI()
         {
-            verts[0] = 0.0f;
-            verts[1] = 0.0f;
-            verts[2] = 0.0f;
+            verts[0] = 0;
+            verts[1] = 0;
+            verts[2] = 0;
             dummy = 0;
         }
 
@@ -171,8 +171,8 @@ namespace CDB
 		}
 
 		static	void			build_thread	(void*);
-		void					build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=NULL, void* bcp=NULL);
-		void					build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=NULL, void* bcp=NULL);
+		void					build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr);
+		void					build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr);
 		u32						memory			();
 	};
 

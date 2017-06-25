@@ -50,26 +50,26 @@
 		 *	\param		cache			[in/out] a sphere cache
 		 *	\param		sphere			[in] collision sphere in local space
 		 *	\param		model			[in] Opcode model to collide with
-		 *	\param		worlds			[in] sphere's world matrix, or null
-		 *	\param		worldm			[in] model's world matrix, or null
+		 *	\param		worlds			[in] sphere's world matrix, or nullptr
+		 *	\param		worldm			[in] model's world matrix, or nullptr
 		 *	\return		true if success
 		 *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							bool			Collide(SphereCache& cache, const Sphere& sphere, OPCODE_Model* model, const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, OPCODE_Model* model, const Matrix4x4* worlds=nullptr, const Matrix4x4* worldm=nullptr);
 
 		// Collision queries
-							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBCollisionTree* tree,		const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
-							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBNoLeafTree* tree,			const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
-							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBQuantizedTree* tree,		const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
-							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBQuantizedNoLeafTree* tree,	const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBCollisionTree* tree,		const Matrix4x4* worlds=nullptr, const Matrix4x4* worldm=nullptr);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBNoLeafTree* tree,			const Matrix4x4* worlds=nullptr, const Matrix4x4* worldm=nullptr);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBQuantizedTree* tree,		const Matrix4x4* worlds=nullptr, const Matrix4x4* worldm=nullptr);
+							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBQuantizedNoLeafTree* tree,	const Matrix4x4* worlds=nullptr, const Matrix4x4* worldm=nullptr);
 							bool			Collide(SphereCache& cache, const Sphere& sphere, const AABBTree* tree);
 		// Settings
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 *	Validates current settings. You should call this method after all the settings and callbacks have been defined for a collider.
-		 *	\return		null if everything is ok, else a string describing the problem
+		 *	\return		nullptr if everything is ok, else a string describing the problem
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		override(Collider)	const char*		ValidateSettings();
@@ -85,11 +85,11 @@
 							void			_Collide(const AABBQuantizedNoLeafNode* node);
 							void			_Collide(const AABBTreeNode* node);
 			// Overlap tests
-		inline_				BOOL			SphereContainsBox(const Point& bc, const Point& be);
-		inline_				BOOL			SphereAABBOverlap(const Point& center, const Point& extents);
-							BOOL			SphereTriOverlap(const Point& vert0, const Point& vert1, const Point& vert2);
+		inline_				bool			SphereContainsBox(const Point& bc, const Point& be);
+		inline_				bool			SphereAABBOverlap(const Point& center, const Point& extents);
+							bool			SphereTriOverlap(const Point& vert0, const Point& vert1, const Point& vert2);
 			// Init methods
-							BOOL			InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds=null, const Matrix4x4* worldm=null);
+							bool			InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds=nullptr, const Matrix4x4* worldm=nullptr);
 	};
 
 #endif // __OPC_SPHERECOLLIDER_H__

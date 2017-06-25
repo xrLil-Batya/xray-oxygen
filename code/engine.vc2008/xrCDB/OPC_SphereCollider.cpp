@@ -89,7 +89,7 @@ SphereCollider::~SphereCollider()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Validates current settings. You should call this method after all the settings and callbacks have been defined.
- *	\return		null if everything is ok, else a string describing the problem
+ *	\return		nullptr if everything is ok, else a string describing the problem
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* SphereCollider::ValidateSettings()
@@ -107,8 +107,8 @@ const char* SphereCollider::ValidateSettings()
  *	\param		cache		[in/out] a sphere cache
  *	\param		sphere		[in] collision sphere in local space
  *	\param		model		[in] Opcode model to collide with
- *	\param		worlds		[in] sphere's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worlds		[in] sphere's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -140,13 +140,13 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, OPCODE_Mo
  *
  *	\param		cache		[in/out] a sphere cache
  *	\param		sphere		[in] sphere in local space
- *	\param		worlds		[in] sphere's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worlds		[in] sphere's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		contact status
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds, const Matrix4x4* worldm)
+bool SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const Matrix4x4* worlds, const Matrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -238,8 +238,8 @@ BOOL SphereCollider::InitQuery(SphereCache& cache, const Sphere& sphere, const M
  *	\param		cache		[in/out] a sphere cache
  *	\param		sphere		[in] collision sphere in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worlds		[in] sphere's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worlds		[in] sphere's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -269,8 +269,8 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const AAB
  *	\param		cache		[in/out] a sphere cache
  *	\param		sphere		[in] collision sphere in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worlds		[in] sphere's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worlds		[in] sphere's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -300,8 +300,8 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const AAB
  *	\param		cache		[in/out] a sphere cache
  *	\param		sphere		[in] collision sphere in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worlds		[in] sphere's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worlds		[in] sphere's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -335,8 +335,8 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const AAB
  *	\param		cache		[in/out] a sphere cache
  *	\param		sphere		[in] collision sphere in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worlds		[in] sphere's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worlds		[in] sphere's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -400,21 +400,21 @@ bool SphereCollider::Collide(SphereCache& cache, const Sphere& sphere, const AAB
  *	\return		true if the sphere contains the whole box
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ BOOL SphereCollider::SphereContainsBox(const Point& bc, const Point& be)
+inline_ bool SphereCollider::SphereContainsBox(const Point& bc, const Point& be)
 {
 	// I assume if all 8 box vertices are inside the sphere, so does the whole box.
 	// Sounds ok but maybe there's a better way?
 	Point p;
-	p.x=bc.x+be.x; p.y=bc.y+be.y; p.z=bc.z+be.z;	if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x+be.x; p.y=bc.y-be.y;					if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x+be.x; p.y=bc.y+be.y; p.z=bc.z-be.z;	if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x+be.x; p.y=bc.y-be.y;					if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
-	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return FALSE;
+	p.x=bc.x+be.x; p.y=bc.y+be.y; p.z=bc.z+be.z;	if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x+be.x; p.y=bc.y-be.y;					if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x+be.x; p.y=bc.y+be.y; p.z=bc.z-be.z;	if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x+be.x; p.y=bc.y-be.y;					if(mCenter.SquareDistance(p)>=mRadius2)	return false;
+	p.x=bc.x-be.x;									if(mCenter.SquareDistance(p)>=mRadius2)	return false;
 
-	return TRUE;
+	return true;
 }
 
 #define TEST_SPHERE_IN_BOX(center, extents)	\

@@ -25,7 +25,7 @@ namespace collide
 		Fvector				start;
 		Fvector				dir;
 		float				range;
-		BOOL				result;
+		bool				result;
 
 		// cached vertices
 		Fvector				verts[3];
@@ -34,24 +34,24 @@ namespace collide
 			start.set	(0,0,0);
 			dir.set		(0,0,0);
 			range		= 0;
-			result		= FALSE;
+			result		= false;
 			verts[0].set(0,0,0);
 			verts[1].set(0,0,0);
 			verts[2].set(0,0,0);
 		}
-		void				set		(const Fvector& _start, const Fvector& _dir, const float _range,const BOOL _result)
+		void				set		(const Fvector& _start, const Fvector& _dir, const float _range,const bool _result)
 		{
 			start	= _start;
 			dir		= _dir;
 			range	= _range;
 			result	= _result;
 		}
-		BOOL				similar	(const Fvector& _start, const Fvector& _dir, const float _range)
+		bool				similar	(const Fvector& _start, const Fvector& _dir, const float _range)
 		{
-			if (!_start.similar(start))					return FALSE;
-			if (!fsimilar(1.f,dir.dotproduct(_dir)))	return FALSE;
-			if (!fsimilar(_range,range))				return FALSE;
-			return			TRUE;
+			if (!_start.similar(start))					return false;
+			if (!fsimilar(1.f,dir.dotproduct(_dir)))	return false;
+			if (!fsimilar(_range,range))				return false;
+			return			true;
 		}
 	};
 	enum rq_target	{
@@ -81,7 +81,7 @@ namespace collide
 	};
 	struct			rq_result 
 	{
-		CObject*	O;				// if NULL - static
+		CObject*	O;				// if nullptr - static
 		float		range;			// range to intersection
 		int			element;		// номер кости/номер треугольника
 		IC rq_result& set		(CObject* _O, float _range, int _element)
@@ -91,10 +91,10 @@ namespace collide
 			element	= _element;
 			return	*this;
 		}
-		IC BOOL		set_if_less	(CDB::RESULT*	I){if (I->range<range){ set(0,I->range,I->id);			return TRUE;}else return FALSE;}
-		IC BOOL		set_if_less	(rq_result*		R){if (R->range<range){ set(R->O,R->range,R->element);	return TRUE;}else return FALSE;}
-		IC BOOL		set_if_less	(CObject* _who, float _range, int _element)	{ if (_range<range) { set(_who,_range,_element); return TRUE;}else return FALSE;}
-		IC BOOL		valid		() {return (element>=0);}
+		IC bool		set_if_less	(CDB::RESULT*	I){if (I->range<range){ set(0,I->range,I->id);			return true;}else return false;}
+		IC bool		set_if_less	(rq_result*		R){if (R->range<range){ set(R->O,R->range,R->element);	return true;}else return false;}
+		IC bool		set_if_less	(CObject* _who, float _range, int _element)	{ if (_range<range) { set(_who,_range,_element); return true;}else return false;}
+		IC bool		valid		() {return (element>=0);}
 	};
 	using rqVec = xr_vector<rq_result>;
 	
@@ -104,7 +104,7 @@ namespace collide
 		rqVec		results;
 		static bool	r_sort_pred		(const rq_result& a, const rq_result& b)	{	return a.range<b.range;}
 	public:
-		IC BOOL		append_result	(CObject* _who, float _range, int _element, BOOL bNearest)
+		IC bool		append_result	(CObject* _who, float _range, int _element, bool bNearest)
 		{
 			if (bNearest&&!results.empty()){
 				rq_result& R		= results.back();
@@ -112,16 +112,16 @@ namespace collide
 					R.O				=_who;
 					R.range			=_range;
 					R.element		=_element;
-					return			TRUE;
+					return			true;
 				}
-				return				FALSE;
+				return				false;
 			}
 			results.push_back		(rq_result());
 			rq_result& rq			= results.back();
 			rq.range	=_range;
 			rq.element	=_element;
 			rq.O		=_who;
-			return TRUE	;
+			return true	;
 		}
 		IC void		append_result	(rq_result& res)
 		{
@@ -136,7 +136,7 @@ namespace collide
 		IC rqVec		&r_results		()	{ return results; }
 
 	};
-	typedef  BOOL		rq_callback 	(rq_result& result, LPVOID user_data);
-	typedef  BOOL		test_callback 	(const ray_defs& rd, CObject* object, LPVOID user_data);
+	typedef  bool		rq_callback 	(rq_result& result, LPVOID user_data);
+	typedef  bool		test_callback 	(const ray_defs& rd, CObject* object, LPVOID user_data);
 };
 #endif

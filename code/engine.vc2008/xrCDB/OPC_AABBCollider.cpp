@@ -87,7 +87,7 @@ AABBCollider::~AABBCollider()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Validates current settings. You should call this method after all the settings and callbacks have been defined.
- *	\return		null if everything is ok, else a string describing the problem
+ *	\return		nullptr if everything is ok, else a string describing the problem
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* AABBCollider::ValidateSettings()
@@ -138,7 +138,7 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, OPCODE_Mo
  *	\return		contact status
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
+bool AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -371,17 +371,17 @@ bool AABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, const AAB
  *	\return		true if the AABB contains the whole box
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ BOOL AABBCollider::AABBContainsBox(const Point& bc, const Point& be)
+inline_ bool AABBCollider::AABBContainsBox(const Point& bc, const Point& be)
 {
-	if(mMin.x > bc.x - be.x)	return FALSE;
-	if(mMin.y > bc.y - be.y)	return FALSE;
-	if(mMin.z > bc.z - be.z)	return FALSE;
+	if(mMin.x > bc.x - be.x)	return false;
+	if(mMin.y > bc.y - be.y)	return false;
+	if(mMin.z > bc.z - be.z)	return false;
 
-	if(mMax.x < bc.x + be.x)	return FALSE;
-	if(mMax.y < bc.y + be.y)	return FALSE;
-	if(mMax.z < bc.z + be.z)	return FALSE;
+	if(mMax.x < bc.x + be.x)	return false;
+	if(mMax.y < bc.y + be.y)	return false;
+	if(mMax.z < bc.z + be.z)	return false;
 
-	return TRUE;
+	return true;
 }
 
 #define TEST_AABB_IN_BOX(center, extents)	\

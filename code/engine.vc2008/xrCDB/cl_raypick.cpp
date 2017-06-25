@@ -28,43 +28,43 @@ namespace RAPID {
 	
 	//----------------------------------------------------------------------------
 	IC DWORD& IR(float &x) { return (DWORD&)x; }
-	IC BOOL TestAABB(const Fvector& bMax, const Fvector& rP, const Fvector& rD, Fvector& coord)
+	IC bool TestAABB(const Fvector& bMax, const Fvector& rP, const Fvector& rD, Fvector& coord)
 	{
     #ifdef _EDITOR
     	Fbox		BB;
         BB.set		(-bMax.x,-bMax.y,-bMax.z,bMax.x,bMax.y,bMax.z);
         return 		BB.Pick2(rP,rD,coord);
     #else
-		BOOL		Inside = TRUE;
+		bool		Inside = true;
 		Fvector		MaxT,bMin;
 		MaxT.set	(-1.f,-1.f,-1.f);
 		bMin.set	(-bMax.x,-bMax.y,-bMax.z);
 
 		// Find candidate planes.
 		if(rP[0] < bMin[0]) {
-			Inside		= FALSE;
+			Inside		= false;
 			coord[0]	= bMin[0];
 			MaxT[0]		= (bMin[0] - rP[0]) / rD[0];	// Calculate T distances to candidate planes
 		} else if(rP[0] > bMax[0]) {
-			Inside		= FALSE;
+			Inside		= false;
 			coord[0]	= bMax[0];
 			MaxT[0]		= (bMax[0] - rP[0]) / rD[0];	// Calculate T distances to candidate planes
 		}
 		if(rP[1] < bMin[1]) {
-			Inside		= FALSE;
+			Inside		= false;
 			coord[1]	= bMin[1];
 			MaxT[1]		= (bMin[1] - rP[1]) / rD[1];	// Calculate T distances to candidate planes
 		} else if(rP[1] > bMax[1]) {
-			Inside		= FALSE;
+			Inside		= false;
 			coord[1]	= bMax[1];
 			MaxT[1]		= (bMax[1] - rP[1]) / rD[1];	// Calculate T distances to candidate planes
 		}
 		if(rP[2] < bMin[2]) {
-			Inside		= FALSE;
+			Inside		= false;
 			coord[2]	= bMin[2];
 			MaxT[2]		= (bMin[2] - rP[2]) / rD[2];	// Calculate T distances to candidate planes
 		} else if(rP[2] > bMax[2]) {
-			Inside		= FALSE;
+			Inside		= false;
 			coord[2]	= bMax[2];
 			MaxT[2]		= (bMax[2] - rP[2]) / rD[2];	// Calculate T distances to candidate planes
 		}

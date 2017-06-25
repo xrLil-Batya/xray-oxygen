@@ -84,7 +84,7 @@ public:
 		_spatial() : type(0)	{}				// safe way to enhure type is zero before any contstructors takes place
 	}							spatial;
 public:
-	BOOL						spatial_inside		()			;
+	bool						spatial_inside		()			;
 				void			spatial_updatesector_internal()	;
 public:
 	virtual		void			spatial_register	()	;
@@ -176,7 +176,7 @@ public:
 	void							insert			(ISpatial* S);
 	void							remove			(ISpatial* S);
 	void							update			(u32 nodes=8);
-	BOOL							verify			();
+	bool							verify			();
 
 public:
 	enum

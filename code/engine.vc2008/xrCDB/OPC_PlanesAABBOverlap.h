@@ -8,10 +8,10 @@
  *	\param		extents			[in] box extents
  *	\param		out_clip_mask	[out] bitmask for active planes
  *	\param		in_clip_mask	[in] bitmask for active planes
- *	\return		TRUE if boxes overlap planes
+ *	\return		true if boxes overlap planes
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ BOOL PlanesCollider::PlanesAABBOverlap(const Point& center, const Point& extents, udword& out_clip_mask, udword in_clip_mask)
+inline_ bool PlanesCollider::PlanesAABBOverlap(const Point& center, const Point& extents, udword& out_clip_mask, udword in_clip_mask)
 {
 	// Stats
 	mNbVolumeBVTests++;
@@ -37,7 +37,7 @@ inline_ BOOL PlanesCollider::PlanesAABBOverlap(const Point& center, const Point&
 			float MP = center.x*p->n.x + center.y*p->n.y + center.z*p->n.z + p->d;
 
 			if(NP < MP)						// near vertex behind the clip plane... 
-				return FALSE;				// .. so there is no intersection..
+				return false;				// .. so there is no intersection..
 			if((-NP) < MP)					// near and far vertices on different sides of plane..
 				TmpOutClipMask |= Mask;		// .. so update the clip mask...
 		}
@@ -46,5 +46,5 @@ inline_ BOOL PlanesCollider::PlanesAABBOverlap(const Point& center, const Point&
 	}
 
 	out_clip_mask = TmpOutClipMask;			// copy output value (temp used to resolve aliasing!)
-	return TRUE;							// indicate that AABB intersects frustum
+	return true;							// indicate that AABB intersects frustum
 }

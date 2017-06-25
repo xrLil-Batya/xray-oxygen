@@ -10,8 +10,8 @@
 #endif
 
 
-ISpatial_DB*		g_SpatialSpace			= NULL;
-ISpatial_DB*		g_SpatialSpacePhysic	= NULL;
+ISpatial_DB*		g_SpatialSpace			= nullptr;
+ISpatial_DB*		g_SpatialSpacePhysic	= nullptr;
 
 Fvector	c_spatial_offset	[8]	= 
 {
@@ -32,36 +32,36 @@ ISpatial::ISpatial			(ISpatial_DB* space)
 	spatial.sphere.R		= 0;
 	spatial.node_center.set	(0,0,0);
 	spatial.node_radius		= 0;
-	spatial.node_ptr		= NULL;
-	spatial.sector			= NULL;
+	spatial.node_ptr		= nullptr;
+	spatial.sector			= nullptr;
 	spatial.space			= space;
 }
 ISpatial::~ISpatial			(void)
 {
 	spatial_unregister		();
 }
-BOOL	ISpatial::spatial_inside()
+bool	ISpatial::spatial_inside()
 {
 	float	dr	= -(- spatial.node_radius + spatial.sphere.R);
-	if (spatial.sphere.P.x < spatial.node_center.x - dr)	return FALSE;
-	if (spatial.sphere.P.x > spatial.node_center.x + dr)	return FALSE;
-	if (spatial.sphere.P.y < spatial.node_center.y - dr)	return FALSE;
-	if (spatial.sphere.P.y > spatial.node_center.y + dr)	return FALSE;
-	if (spatial.sphere.P.z < spatial.node_center.z - dr)	return FALSE;
-	if (spatial.sphere.P.z > spatial.node_center.z + dr)	return FALSE;
-	return TRUE;
+	if (spatial.sphere.P.x < spatial.node_center.x - dr)	return false;
+	if (spatial.sphere.P.x > spatial.node_center.x + dr)	return false;
+	if (spatial.sphere.P.y < spatial.node_center.y - dr)	return false;
+	if (spatial.sphere.P.y > spatial.node_center.y + dr)	return false;
+	if (spatial.sphere.P.z < spatial.node_center.z - dr)	return false;
+	if (spatial.sphere.P.z > spatial.node_center.z + dr)	return false;
+	return true;
 }
 
-BOOL	verify_sp	(ISpatial* sp, Fvector& node_center, float node_radius)
+bool	verify_sp	(ISpatial* sp, Fvector& node_center, float node_radius)
 {
 	float	dr	= -(- node_radius + sp->spatial.sphere.R);
-	if (sp->spatial.sphere.P.x < node_center.x - dr)	return FALSE;
-	if (sp->spatial.sphere.P.x > node_center.x + dr)	return FALSE;
-	if (sp->spatial.sphere.P.y < node_center.y - dr)	return FALSE;
-	if (sp->spatial.sphere.P.y > node_center.y + dr)	return FALSE;
-	if (sp->spatial.sphere.P.z < node_center.z - dr)	return FALSE;
-	if (sp->spatial.sphere.P.z > node_center.z + dr)	return FALSE;
-	return TRUE;
+	if (sp->spatial.sphere.P.x < node_center.x - dr)	return false;
+	if (sp->spatial.sphere.P.x > node_center.x + dr)	return false;
+	if (sp->spatial.sphere.P.y < node_center.y - dr)	return false;
+	if (sp->spatial.sphere.P.y > node_center.y + dr)	return false;
+	if (sp->spatial.sphere.P.z < node_center.z - dr)	return false;
+	if (sp->spatial.sphere.P.z > node_center.z + dr)	return false;
+	return true;
 }
 
 void	ISpatial::spatial_register	()
@@ -84,8 +84,8 @@ void	ISpatial::spatial_unregister()
 	{
 		// remove
 		spatial.space->remove	(this);
-		spatial.node_ptr		= NULL;
-		spatial.sector			= NULL;
+		spatial.node_ptr		= nullptr;
+		spatial.sector			= nullptr;
 	} else {
 		// already unregistered
 	}
@@ -120,7 +120,7 @@ void			ISpatial_NODE::_init			(ISpatial_NODE* _parent)
 {
 	parent		=	_parent;
 	children[0]	=	children[1]	=	children[2]	=	children[3]	=
-	children[4]	=	children[5]	=	children[6]	=	children[7]	=	NULL;
+	children[4]	=	children[5]	=	children[6]	=	children[7]	=	nullptr;
 	items.clear();
 }
 
@@ -133,8 +133,8 @@ void			ISpatial_NODE::_insert			(ISpatial* S)
 
 void			ISpatial_NODE::_remove			(ISpatial* S)			
 {	
-	S->spatial.node_ptr			=	NULL;
-	xr_vector<ISpatial*>::iterator	it = std::find(items.begin(),items.end(),S);
+	S->spatial.node_ptr			=	nullptr;
+	auto it = std::find(items.begin(),items.end(),S);
 	VERIFY				(it!=items.end());
 	items.erase			(it);
 	S->spatial.space->stat_objects	--;
@@ -144,7 +144,7 @@ void			ISpatial_NODE::_remove			(ISpatial* S)
 
 ISpatial_DB::ISpatial_DB()
 {
-	m_root					= NULL;
+	m_root					= nullptr;
 	stat_nodes				= 0;
 	stat_objects			= 0;
 }
@@ -176,9 +176,9 @@ void			ISpatial_DB::initialize(Fbox& BB)
 		allocator_pool.reserve	(128);
 		m_center.set			(bbc);
 		m_bounds				= std::max(std::max(bbd.x,bbd.y),bbd.z);
-		rt_insert_object		= NULL;
+		rt_insert_object		= nullptr;
 		if (0==m_root)	m_root	= _node_create();
-		m_root->_init			(NULL);
+		m_root->_init			(nullptr);
 	}
 }
 ISpatial_NODE*	ISpatial_DB::_node_create		()
@@ -197,7 +197,7 @@ void			ISpatial_DB::_node_destroy(ISpatial_NODE* &P)
 	VERIFY						(P->_empty());
 	stat_nodes					--;
 	allocator_pool.push_back	(P);
-	P							= NULL;
+	P							= nullptr;
 }
 
 void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
@@ -254,7 +254,7 @@ void			ISpatial_DB::insert		(ISpatial* S)
 #ifdef DEBUG
 	stat_insert.Begin	();
 
-	BOOL		bValid	= _valid(S->spatial.sphere.R) && _valid(S->spatial.sphere.P);
+	bool		bValid	= _valid(S->spatial.sphere.R) && _valid(S->spatial.sphere.P);
 	if (!bValid)	
 	{
 		CObject*	O	= dynamic_cast<CObject*>(S);
@@ -327,7 +327,7 @@ void			ISpatial_DB::remove		(ISpatial* S)
 void			ISpatial_DB::update		(u32 nodes/* =8 */)
 {
 #ifdef DEBUG
-	if (0==m_root)	return;
+	if (!m_root)	return;
     std::lock_guard<decltype(cs)> lock(cs);
 	VERIFY			(verify());
 #endif

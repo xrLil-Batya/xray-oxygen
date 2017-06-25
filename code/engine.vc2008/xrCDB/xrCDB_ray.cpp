@@ -34,38 +34,38 @@ struct ray_segment_t {
 };
 
 ICF u32&	uf			(float &x)	{ return (u32&)x; }
-ICF BOOL	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fvector& coord)
+ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fvector& coord)
 {
 	Fvector				MaxT;
 	MaxT.x=MaxT.y=MaxT.z=-1.0f;
-	BOOL Inside			= TRUE;
+	bool Inside			= true;
 
 	// Find candidate planes.
 	if(ray.pos[0] < min[0]) {
 		coord[0]	= min[0];
-		Inside		= FALSE;
+		Inside		= false;
 		if(uf(ray.inv_dir[0]))	MaxT[0] = (min[0] - ray.pos[0]) * ray.inv_dir[0]; // Calculate T distances to candidate planes
 	} else if(ray.pos[0] > max[0]) {
 		coord[0]	= max[0];
-		Inside		= FALSE;
+		Inside		= false;
 		if(uf(ray.inv_dir[0]))	MaxT[0] = (max[0] - ray.pos[0]) * ray.inv_dir[0]; // Calculate T distances to candidate planes
 	}
 	if(ray.pos[1] < min[1]) {
 		coord[1]	= min[1];
-		Inside		= FALSE;
+		Inside		= false;
 		if(uf(ray.inv_dir[1]))	MaxT[1] = (min[1] - ray.pos[1]) * ray.inv_dir[1]; // Calculate T distances to candidate planes
 	} else if(ray.pos[1] > max[1]) {
 		coord[1]	= max[1];
-		Inside		= FALSE;
+		Inside		= false;
 		if(uf(ray.inv_dir[1]))	MaxT[1] = (max[1] - ray.pos[1]) * ray.inv_dir[1]; // Calculate T distances to candidate planes
 	}
 	if(ray.pos[2] < min[2]) {
 		coord[2]	= min[2];
-		Inside		= FALSE;
+		Inside		= false;
 		if(uf(ray.inv_dir[2]))	MaxT[2] = (min[2] - ray.pos[2]) * ray.inv_dir[2]; // Calculate T distances to candidate planes
 	} else if(ray.pos[2] > max[2]) {
 		coord[2]	= max[2];
-		Inside		= FALSE;
+		Inside		= false;
 		if(uf(ray.inv_dir[2]))	MaxT[2] = (max[2] - ray.pos[2]) * ray.inv_dir[2]; // Calculate T distances to candidate planes
 	}
 
@@ -125,7 +125,7 @@ static const float _MM_ALIGN16
 	ps_cst_plus_inf	[4]	=	{  flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
-ICF BOOL isect_sse			(const aabb_t &box, const ray_t &ray, float &dist)	{
+ICF bool isect_sse			(const aabb_t &box, const ray_t &ray, float &dist)	{
 	// you may already have those values hanging around somewhere
 	const __m128
 		plus_inf	= loadps(ps_cst_plus_inf),
@@ -166,7 +166,7 @@ ICF BOOL isect_sse			(const aabb_t &box, const ray_t &ray, float &dist)	{
 	lmax = minss(lmax, lmax1);
 	lmin = maxss(lmin, lmin1);
 
-	const BOOL ret = _mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax,lmin);
+	const bool ret = !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax,lmin));
 
 	storess		(lmin, &dist);
 	//storess	(lmax, &rs.t_far);
@@ -205,7 +205,7 @@ public:
 	}
 
 	// fpu
-	ICF BOOL		_box_fpu	(const Fvector& bCenter, const Fvector& bExtents, Fvector& coord)
+	ICF bool		_box_fpu	(const Fvector& bCenter, const Fvector& bExtents, Fvector& coord)
 	{
 		Fbox		BB;
 		BB.min.sub	(bCenter,bExtents);
@@ -213,7 +213,7 @@ public:
         return 		isect_fpu	(BB.min,BB.max,ray,coord);
 	}
 	// sse
-	ICF BOOL		_box_sse	(const Fvector& bCenter, const Fvector& bExtents, float&  dist )
+	ICF bool		_box_sse	(const Fvector& bCenter, const Fvector& bExtents, float&  dist )
 	{
 		aabb_t		box;
 	/*

@@ -131,7 +131,7 @@
 		// control word is set to single precision/round to nearest/
 		// exceptions disabled. If these conditions don't hold, the
 		// function changes the control word to set them and returns
-		// TRUE, putting the old control word value in the passback
+		// true, putting the old control word value in the passback
 		// location pointed to by pwOldCW.
 		{
 			uword wTemp, wSave;

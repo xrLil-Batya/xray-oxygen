@@ -51,13 +51,13 @@ AABBTreeCollider::AABBTreeCollider() :
 #ifdef OPC_USE_CALLBACKS
 	mUserData0			(0),
 	mUserData1			(0),
-	mObjCallback0		(null),
-	mObjCallback1		(null)
+	mObjCallback0		(nullptr),
+	mObjCallback1		(nullptr)
 #else
-	mFaces0				(null),
-	mFaces1				(null),
-	mVerts0				(null),
-	mVerts1				(null)
+	mFaces0				(nullptr),
+	mFaces1				(nullptr),
+	mVerts0				(nullptr),
+	mVerts1				(nullptr)
 #endif
 {
 }
@@ -74,7 +74,7 @@ AABBTreeCollider::~AABBTreeCollider()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Validates current settings. You should call this method after all the settings and callbacks have been defined.
- *	\return		null if everything is ok, else a string describing the problem
+ *	\return		nullptr if everything is ok, else a string describing the problem
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* AABBTreeCollider::ValidateSettings()
@@ -87,7 +87,7 @@ const char* AABBTreeCollider::ValidateSettings()
 	if(!mFaces1 || !mVerts1)									return "Object1 pointers must be defined! Call: SetPointers1().";
 #endif
 	if(TemporalCoherenceEnabled() && !FirstContactEnabled())	return "Temporal coherence only works with ""First contact"" mode!";
-	return null;
+	return nullptr;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -744,8 +744,8 @@ void AABBTreeCollider::_Collide(const AABBNoLeafNode* a, const AABBNoLeafNode* b
 	if(!BoxBoxOverlap(a->mAABB.mExtents, a->mAABB.mCenter, b->mAABB.mExtents, b->mAABB.mCenter))	return;
 
 	// Catch leaf status
-	BOOL BHasLeaf	= b->HasLeaf();
-	BOOL BHasLeaf2	= b->HasLeaf2();
+	bool BHasLeaf	= b->HasLeaf();
+	bool BHasLeaf2	= b->HasLeaf2();
 
 	if(a->HasLeaf())
 	{
@@ -970,8 +970,8 @@ void AABBTreeCollider::_Collide(const AABBQuantizedNoLeafNode* a, const AABBQuan
 	if(!BoxBoxOverlap(ea, Pa, eb, Pb))	return;
 
 	// Catch leaf status
-	BOOL BHasLeaf	= b->HasLeaf();
-	BOOL BHasLeaf2	= b->HasLeaf2();
+	bool BHasLeaf	= b->HasLeaf();
+	bool BHasLeaf2	= b->HasLeaf2();
 
 	if(a->HasLeaf())
 	{

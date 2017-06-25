@@ -69,7 +69,7 @@
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 *	Validates current settings. You should call this method after all the settings and callbacks have been defined for a collider.
-		 *	\return		null if everything is ok, else a string describing the problem
+		 *	\return		nullptr if everything is ok, else a string describing the problem
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		override(Collider)	const char*		ValidateSettings();
@@ -87,11 +87,11 @@
 							void			_Collide(const AABBQuantizedNoLeafNode* node);
 							void			_Collide(const AABBTreeNode* node);
 			// Overlap tests
-		inline_				BOOL			AABBContainsBox(const Point& bc, const Point& be);
-		inline_				BOOL			AABBAABBOverlap(const Point& b, const Point& Pb);
-		inline_				BOOL			TriBoxOverlap();
+		inline_				bool			AABBContainsBox(const Point& bc, const Point& be);
+		inline_				bool			AABBAABBOverlap(const Point& b, const Point& Pb);
+		inline_				bool			TriBoxOverlap();
 			// Init methods
-							BOOL			InitQuery(AABBCache& cache, const CollisionAABB& box);
+							bool			InitQuery(AABBCache& cache, const CollisionAABB& box);
 	};
 
 #endif // __OPC_AABBCOLLIDER_H__

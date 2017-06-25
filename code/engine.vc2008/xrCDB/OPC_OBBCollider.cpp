@@ -89,7 +89,7 @@ OBBCollider::~OBBCollider()
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Validates current settings. You should call this method after all the settings and callbacks have been defined.
- *	\return		null if everything is ok, else a string describing the problem
+ *	\return		nullptr if everything is ok, else a string describing the problem
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* OBBCollider::ValidateSettings()
@@ -109,8 +109,8 @@ const char* OBBCollider::ValidateSettings()
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] collision OBB in local space
  *	\param		model		[in] Opcode model to collide with
- *	\param		worldb		[in] OBB's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldb		[in] OBB's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -142,13 +142,13 @@ bool OBBCollider::Collide(OBBCache& cache, const OBB& box, OPCODE_Model* model, 
  *
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] obb in local space
- *	\param		worldb		[in] obb's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldb		[in] obb's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		contact status
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-BOOL OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* worldb, const Matrix4x4* worldm)
+bool OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* worldb, const Matrix4x4* worldm)
 {
 	// 1) Call the base method
 	VolumeCollider::InitQuery();
@@ -264,8 +264,8 @@ BOOL OBBCollider::InitQuery(OBBCache& cache, const OBB& box, const Matrix4x4* wo
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] collision OBB in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worldb		[in] OBB's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldb		[in] OBB's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -295,8 +295,8 @@ bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const AABBCollisionTr
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] collision OBB in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worldb		[in] OBB's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldb		[in] OBB's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -326,8 +326,8 @@ bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const AABBNoLeafTree*
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] collision OBB in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worldb		[in] OBB's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldb		[in] OBB's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -361,8 +361,8 @@ bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const AABBQuantizedTr
  *	\param		cache		[in/out] a box cache
  *	\param		box			[in] collision OBB in local space
  *	\param		tree		[in] model's AABB tree
- *	\param		worldb		[in] OBB's world matrix, or null
- *	\param		worldm		[in] model's world matrix, or null
+ *	\param		worldb		[in] OBB's world matrix, or nullptr
+ *	\param		worldm		[in] model's world matrix, or nullptr
  *	\return		true if success
  *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
  */
@@ -398,16 +398,16 @@ bool OBBCollider::Collide(OBBCache& cache, const OBB& box, const AABBQuantizedNo
  *	\return		true if the OBB contains the whole box
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ BOOL OBBCollider::OBBContainsBox(const Point& bc, const Point& be)
+inline_ bool OBBCollider::OBBContainsBox(const Point& bc, const Point& be)
 {
 	// I assume if all 8 box vertices are inside the OBB, so does the whole box.
 	// Sounds ok but maybe there's a better way?
 /*
 #define TEST_PT(a,b,c)																												\
 	p.x=a;	p.y=b;	p.z=c;		p+=bc;																								\
-	f = p.x * mRModelToBox.m[0][0] + p.y * mRModelToBox.m[1][0] + p.z * mRModelToBox.m[2][0];	if(f>mB0.x || f<mB1.x) return FALSE;\
-	f = p.x * mRModelToBox.m[0][1] + p.y * mRModelToBox.m[1][1] + p.z * mRModelToBox.m[2][1];	if(f>mB0.y || f<mB1.y) return FALSE;\
-	f = p.x * mRModelToBox.m[0][2] + p.y * mRModelToBox.m[1][2] + p.z * mRModelToBox.m[2][2];	if(f>mB0.z || f<mB1.z) return FALSE;
+	f = p.x * mRModelToBox.m[0][0] + p.y * mRModelToBox.m[1][0] + p.z * mRModelToBox.m[2][0];	if(f>mB0.x || f<mB1.x) return false;\
+	f = p.x * mRModelToBox.m[0][1] + p.y * mRModelToBox.m[1][1] + p.z * mRModelToBox.m[2][1];	if(f>mB0.y || f<mB1.y) return false;\
+	f = p.x * mRModelToBox.m[0][2] + p.y * mRModelToBox.m[1][2] + p.z * mRModelToBox.m[2][2];	if(f>mB0.z || f<mB1.z) return false;
 
 	Point p;
 	float f;
@@ -421,7 +421,7 @@ inline_ BOOL OBBCollider::OBBContainsBox(const Point& bc, const Point& be)
 	TEST_PT(be.x, -be.y, -be.z)
 	TEST_PT(-be.x, -be.y, -be.z)
 
-	return TRUE;
+	return true;
 */
 
 	// Yes there is:
@@ -430,22 +430,22 @@ inline_ BOOL OBBCollider::OBBContainsBox(const Point& bc, const Point& be)
 	float NCx = bc.x * mRModelToBox.m[0][0] + bc.y * mRModelToBox.m[1][0] + bc.z * mRModelToBox.m[2][0];
 	float NEx = fabsf(mRModelToBox.m[0][0] * be.x) + fabsf(mRModelToBox.m[1][0] * be.y) + fabsf(mRModelToBox.m[2][0] * be.z);
 
-	if(mB0.x < NCx+NEx)	return FALSE;
-	if(mB1.x > NCx-NEx)	return FALSE;
+	if(mB0.x < NCx+NEx)	return false;
+	if(mB1.x > NCx-NEx)	return false;
 
 	float NCy = bc.x * mRModelToBox.m[0][1] + bc.y * mRModelToBox.m[1][1] + bc.z * mRModelToBox.m[2][1];
 	float NEy = fabsf(mRModelToBox.m[0][1] * be.x) + fabsf(mRModelToBox.m[1][1] * be.y) + fabsf(mRModelToBox.m[2][1] * be.z);
 
-	if(mB0.y < NCy+NEy)	return FALSE;
-	if(mB1.y > NCy-NEy)	return FALSE;
+	if(mB0.y < NCy+NEy)	return false;
+	if(mB1.y > NCy-NEy)	return false;
 
 	float NCz = bc.x * mRModelToBox.m[0][2] + bc.y * mRModelToBox.m[1][2] + bc.z * mRModelToBox.m[2][2];
 	float NEz = fabsf(mRModelToBox.m[0][2] * be.x) + fabsf(mRModelToBox.m[1][2] * be.y) + fabsf(mRModelToBox.m[2][2] * be.z);
 
-	if(mB0.z < NCz+NEz)	return FALSE;
-	if(mB1.z > NCz-NEz)	return FALSE;
+	if(mB0.z < NCz+NEz)	return false;
+	if(mB1.z > NCz-NEz)	return false;
 
-	return TRUE;
+	return true;
 }
 
 #define TEST_OBB_IN_BOX(center, extents)	\

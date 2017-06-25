@@ -46,21 +46,21 @@
 		 *	\param		planes			[in] list of planes in world space
 		 *	\param		nb_planes		[in] number of planes
 		 *	\param		model			[in] Opcode model to collide with
-		 *	\param		worldm			[in] model's world matrix, or null
+		 *	\param		worldm			[in] model's world matrix, or nullptr
 		 *	\return		true if success
 		 *	\warning	SCALE NOT SUPPORTED. The matrices must contain rotation & translation parts only.
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, OPCODE_Model* model, const Matrix4x4* worldm=null);
+							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, OPCODE_Model* model, const Matrix4x4* worldm=nullptr);
 
 		// Collision queries
-							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBCollisionTree* tree,		const Matrix4x4* worldm=null);
-							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBNoLeafTree* tree,			const Matrix4x4* worldm=null);
-							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedTree* tree,		const Matrix4x4* worldm=null);
-							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedNoLeafTree* tree,	const Matrix4x4* worldm=null);
+							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBCollisionTree* tree,		const Matrix4x4* worldm=nullptr);
+							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBNoLeafTree* tree,			const Matrix4x4* worldm=nullptr);
+							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedTree* tree,		const Matrix4x4* worldm=nullptr);
+							bool			Collide(PlanesCache& cache, const Plane* planes, udword nb_planes, const AABBQuantizedNoLeafTree* tree,	const Matrix4x4* worldm=nullptr);
 
 		// Mutant box-with-planes collision queries
-		inline_				bool			Collide(PlanesCache& cache, const OBB& box, OPCODE_Model* model, const Matrix4x4* worldb=null, const Matrix4x4* worldm=null)
+		inline_				bool			Collide(PlanesCache& cache, const OBB& box, OPCODE_Model* model, const Matrix4x4* worldb=nullptr, const Matrix4x4* worldm=nullptr)
 							{
 								Plane PL[6];
 
@@ -86,7 +86,7 @@
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 *	Validates current settings. You should call this method after all the settings and callbacks have been defined for a collider.
-		 *	\return		null if everything is ok, else a string describing the problem
+		 *	\return		nullptr if everything is ok, else a string describing the problem
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		override(Collider)	const char*		ValidateSettings();
@@ -103,10 +103,10 @@
 							void			_Collide(const AABBQuantizedNode* node, udword clipmask);
 							void			_Collide(const AABBQuantizedNoLeafNode* node, udword clipmask);
 			// Overlap tests
-		inline_				BOOL			PlanesAABBOverlap(const Point& center, const Point& extents, udword& out_clip_mask, udword in_clip_mask);
-		inline_				BOOL			PlanesTriOverlap(udword in_clip_mask);
+		inline_				bool			PlanesAABBOverlap(const Point& center, const Point& extents, udword& out_clip_mask, udword in_clip_mask);
+		inline_				bool			PlanesTriOverlap(udword in_clip_mask);
 			// Init methods
-							BOOL			InitQuery(PlanesCache& cache, const Plane* planes, udword nb_planes, const Matrix4x4* worldm=null);
+							bool			InitQuery(PlanesCache& cache, const Plane* planes, udword nb_planes, const Matrix4x4* worldm=nullptr);
 	};
 
 #endif // __OPC_PLANESCOLLIDER_H__

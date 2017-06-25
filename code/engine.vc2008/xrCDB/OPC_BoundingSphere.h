@@ -72,7 +72,7 @@
 		 *	\return		true if inside the sphere
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_ BOOL			Contains(const AABB& aabb)	const
+		inline_ bool			Contains(const AABB& aabb)	const
 								{
 									// I assume if all 8 box vertices are inside the sphere, so does the whole box.
 									// Sounds ok but maybe there's a better way?
@@ -81,16 +81,16 @@
 									Point Min; aabb.GetMin(Min);
 
 									Point p;
-									p.x=Max.x; p.y=Max.y; p.z=Max.z;	if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Max.x; p.y=Min.y;				if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Max.x; p.y=Max.y; p.z=Min.z;	if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Max.x; p.y=Min.y;				if(mCenter.SquareDistance(p)>=R2)	return FALSE;
-									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return FALSE;
+									p.x=Max.x; p.y=Max.y; p.z=Max.z;	if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Max.x; p.y=Min.y;				if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Max.x; p.y=Max.y; p.z=Min.z;	if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Max.x; p.y=Min.y;				if(mCenter.SquareDistance(p)>=R2)	return false;
+									p.x=Min.x;							if(mCenter.SquareDistance(p)>=R2)	return false;
 
-									return TRUE;
+									return true;
 								}
 
 		public:

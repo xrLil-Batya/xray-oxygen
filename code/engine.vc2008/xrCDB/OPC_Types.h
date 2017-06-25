@@ -32,7 +32,7 @@
 	#define INV9				0.11111111111111111111f									//!<	1/9
 	#define INV255				0.00392156862745098039f									//!<	1/255
 
-	#define null				0														//!<	our own NULL pointer
+	#define nullptr				0														//!<	our own nullptr pointer
 
 	// New types
 	typedef signed char			sbyte;		//!<	sizeof(sbyte)	must be 1
@@ -63,13 +63,13 @@
 	typedef udword				DynID;		//!<	Dynamic identifier
 	typedef uword				KID;		//!<	Kernel ID
 	typedef udword				RTYPE;		//!<	Relationship-type (!) between owners and references
-	#define	INVALID_ID			0xffffffff	//!<	Invalid dword ID (counterpart of null pointers)
+	#define	INVALID_ID			0xffffffff	//!<	Invalid dword ID (counterpart of nullptr pointers)
 	#define	INVALID_KID			0xffff		//!<	Invalid Kernel ID
 	#define	INVALID_NUMBER		0xDEADBEEF	//!<	Standard junk value
 
-	// Define BOOL if needed
-	#ifndef BOOL
-	typedef int	BOOL;						//!<	Another boolean type.
+	// Define bool if needed
+	#ifndef bool
+//	typedef int	bool;						//!<	Another boolean type.
 	#endif
 
 	//! Union of a float and a sdword
