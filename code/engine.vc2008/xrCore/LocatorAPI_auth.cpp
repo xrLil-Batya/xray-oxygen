@@ -6,11 +6,6 @@ struct	auth_options	{
 	xr_vector<shared_str>				important;
 };
 
-void	auth_entry		(void* p)
-{
-	FS.auth_runtime		(p);
-}
-
 void	CLocatorAPI::auth_generate		(xr_vector<shared_str>&	ignore, xr_vector<shared_str>&	important)
 {
 	auto* _o	= new auth_options();
