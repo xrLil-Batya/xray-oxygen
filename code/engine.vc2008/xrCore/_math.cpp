@@ -342,7 +342,7 @@ void _initialize_cpu_thread	()
 #pragma pack(push,8)
 struct THREAD_NAME	{
 	DWORD	dwType;
-	LPCSTR	szName;
+	const char*	szName;
 	DWORD	dwThreadID;
 	DWORD	dwFlags;
 };

@@ -122,7 +122,7 @@ void	xrMemory::mem_compact	()
 #ifdef DEBUG_MEMORY_MANAGER
 ICF	u8*		acc_header			(void* P)	{	u8*		_P		= (u8*)P;	return	_P-1;	}
 ICF	u32		get_header			(void* P)	{	return	(u32)*acc_header(P);				}
-void	xrMemory::mem_statistic	(LPCSTR fn)
+void	xrMemory::mem_statistic	(const char* fn)
 {
 	if (!debug_mode)	return	;
 	mem_compact				()	;
@@ -186,7 +186,7 @@ void	xrMemory::mem_statistic	(LPCSTR fn)
 
 	/*
 	mem_compact				();
-	LPCSTR					fn	= "$memstat$.tmp";
+	const char*					fn	= "$memstat$.tmp";
 	xr_map<u32,u32>			stats;
 
 	if (g_pStringContainer)			Msg	("memstat: shared_str: economy: %d bytes",g_pStringContainer->stat_economy());

@@ -9,8 +9,8 @@
 
 // constants
 STATIC const u32				buffer_size = 512*1024;
-STATIC LPCSTR					output_folder = "d:/memory_monitor_stats/";
-STATIC LPCSTR					output_extension = ".bin";
+STATIC const char*					output_folder = "d:/memory_monitor_stats/";
+STATIC const char*					output_extension = ".bin";
 
 // for internal use only
 STATIC bool						detaching = false;
@@ -18,7 +18,7 @@ STATIC CRITICAL_SECTION			critical_section;
 
 namespace memory_monitor {
 
-LPCSTR inline file_name()
+inline const char*  file_name()
 {
 	static string_path			file = " ";
 	if(file[0]==' '){
@@ -82,7 +82,7 @@ STATIC void initialize					()
 XRCORE_API int memory_monitor::counter = 0;
 XRCORE_API int memory_monitor::counter_alloc = 0;
 XRCORE_API int memory_monitor::counter_free = 0;
-void memory_monitor::monitor_alloc		(const void *allocation_address, const size_t &allocation_size, LPCSTR allocation_description)
+void memory_monitor::monitor_alloc		(const void *allocation_address, const size_t &allocation_size, const char* allocation_description)
 {
 	counter++;
 	counter_alloc++;
@@ -141,14 +141,14 @@ void memory_monitor::monitor_free		(const void *deallocation_address)
 	LeaveCriticalSection		(&critical_section);
 }
 
-void memory_monitor::make_checkpoint	(LPCSTR checkpoint_name)
+void memory_monitor::make_checkpoint	(const char* checkpoint_name)
 {
 	fflush					(file());
 	string_path				fn;
 	strconcat				(sizeof(fn),fn,output_folder,checkpoint_name,output_extension);
 
 	Msg						("Creating memory checkpoint file[%s]...", fn);
-	CopyFile				(file_name(),fn,FALSE);
+	CopyFile				(file_name(),fn, false);
 	Msg						("Done");
 }
 

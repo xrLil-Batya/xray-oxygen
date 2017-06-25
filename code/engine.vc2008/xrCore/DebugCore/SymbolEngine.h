@@ -133,7 +133,7 @@ public:
 	Public Initialization and Cleanup
 	----------------------------------------------------------------------*/
 public:
-	BOOL SymInitialize(IN HANDLE hProcess, IN LPSTR UserSearchPath, IN BOOL fInvadeProcess)
+	BOOL SymInitialize(IN HANDLE hProcess, IN char* UserSearchPath, IN BOOL fInvadeProcess)
 	{
 		m_hProcess = hProcess;
 		return ::SymInitialize(hProcess, UserSearchPath, fInvadeProcess);
@@ -180,7 +180,7 @@ public:
 		return ::SymGetSymFromAddr(m_hProcess, dwAddr, pdwDisplacement, Symbol);
 	}
 
-	BOOL SymGetSymFromName(IN LPSTR Name, OUT PIMAGEHLP_SYMBOL Symbol)
+	BOOL SymGetSymFromName(IN char* Name, OUT PIMAGEHLP_SYMBOL Symbol)
 	{
 		return ::SymGetSymFromName(m_hProcess, Name, Symbol);
 	}
@@ -222,7 +222,7 @@ public:
 #endif // DO_NOT_WORK_AROUND_SRCLINE_BUG
 	}
 
-	BOOL SymGetLineFromName(IN LPSTR ModuleName, IN LPSTR FileName, IN DWORD dwLineNumber, OUT PLONG plDisplacement,
+	BOOL SymGetLineFromName(IN char* ModuleName, IN char* FileName, IN DWORD dwLineNumber, OUT PLONG plDisplacement,
 		IN OUT PIMAGEHLP_LINE Line)
 	{
 		return ::SymGetLineFromName(m_hProcess, ModuleName, FileName, dwLineNumber, plDisplacement, Line);
@@ -230,7 +230,7 @@ public:
 
 	BOOL SymGetLineNext(IN OUT PIMAGEHLP_LINE Line) { return ::SymGetLineNext(m_hProcess, Line); }
 	BOOL SymGetLinePrev(IN OUT PIMAGEHLP_LINE Line) { return ::SymGetLinePrev(m_hProcess, Line); }
-	BOOL SymMatchFileName(IN LPSTR FileName, IN LPSTR Match, OUT LPSTR* FileNameStop, OUT LPSTR* MatchStop)
+	BOOL SymMatchFileName(IN char* FileName, IN char* Match, OUT char** FileNameStop, OUT char** MatchStop)
 	{
 		return ::SymMatchFileName(FileName, Match, FileNameStop, MatchStop);
 	}
@@ -240,12 +240,12 @@ public:
 	----------------------------------------------------------------------*/
 public:
 	LPVOID SymFunctionTableAccess(DWORD AddrBase) { return ::SymFunctionTableAccess(m_hProcess, AddrBase); }
-	BOOL SymGetSearchPath(OUT LPSTR SearchPath, IN DWORD SearchPathLength)
+	BOOL SymGetSearchPath(OUT char* SearchPath, IN DWORD SearchPathLength)
 	{
 		return ::SymGetSearchPath(m_hProcess, SearchPath, SearchPathLength);
 	}
 
-	BOOL SymSetSearchPath(IN LPSTR SearchPath) { return ::SymSetSearchPath(m_hProcess, SearchPath); }
+	BOOL SymSetSearchPath(IN char* SearchPath) { return ::SymSetSearchPath(m_hProcess, SearchPath); }
 #ifdef _M_X64
 	BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN ULONG64 UserContext)
 #else

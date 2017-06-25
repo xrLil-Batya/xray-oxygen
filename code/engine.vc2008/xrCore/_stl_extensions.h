@@ -229,7 +229,7 @@ struct pred_stri : public std::binary_function<char*, char*, bool> {
 
 // auxilary definition
 using FvectorVec = xr_vector<Fvector>;
-using LPSTRVec = xr_vector<LPSTR>;
+using LPSTRVec = xr_vector<char*>;
 using SStringVec = xr_vector<xr_string>;
 using U16Vec = xr_vector<u16>;
 using U32Vec = xr_vector<u32>;

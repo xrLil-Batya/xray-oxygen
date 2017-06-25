@@ -8,7 +8,7 @@
 #define CFS_CompressMark	(1ul << 31ul)
 #define CFS_HeaderChunkID	(666)
 
-XRCORE_API void VerifyPath	(LPCSTR path);
+XRCORE_API void VerifyPath	(const char* path);
 
 //#define FS_DEBUG
 
@@ -16,7 +16,7 @@ XRCORE_API void VerifyPath	(LPCSTR path);
 	XRCORE_API	extern	u32		g_file_mapped_memory;
 	XRCORE_API	extern	u32		g_file_mapped_count;
 	XRCORE_API			void	dump_file_mappings		();
-				extern	void	register_file_mapping	(void *address, const u32 &size, LPCSTR file_name);
+				extern	void	register_file_mapping	(void *address, const u32 &size, const char* file_name);
 				extern	void	unregister_file_mapping	(void *address, const u32 &size);
 #endif // DEBUG
 
@@ -126,7 +126,7 @@ public:
 #pragma warning(disable:4995)
 	IC void			free		()			{	file_size=0; position=0; mem_size=0; xr_free(data);	}
 #pragma warning(pop)
-	bool			save_to		(LPCSTR fn);
+	bool			save_to		(const char* fn);
 	virtual	void	flush		()			{ };
 };
 

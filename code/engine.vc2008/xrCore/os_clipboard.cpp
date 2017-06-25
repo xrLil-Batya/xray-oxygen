@@ -9,7 +9,7 @@
 #pragma hdrstop
 #include "os_clipboard.h"
 
-void os_clipboard::copy_to_clipboard	( LPCSTR buf )
+void os_clipboard::copy_to_clipboard	( const char* buf )
 {
 	if ( !OpenClipboard(0) )
 		return;
@@ -29,7 +29,7 @@ void os_clipboard::copy_to_clipboard	( LPCSTR buf )
 	CloseClipboard			();
 }
 
-void os_clipboard::paste_from_clipboard	( LPSTR buffer, u32 const& buffer_size )
+void os_clipboard::paste_from_clipboard	( char* buffer, u32 const& buffer_size )
 {
 	VERIFY					(buffer);
 	VERIFY					(buffer_size > 0);
@@ -41,7 +41,7 @@ void os_clipboard::paste_from_clipboard	( LPSTR buffer, u32 const& buffer_size )
 	if ( !hmem )
 		return;
 
-	LPCSTR clipdata			= (LPCSTR)GlobalLock( hmem );
+	const char* clipdata			= (const char*)GlobalLock( hmem );
 	strncpy_s				( buffer, buffer_size, clipdata, buffer_size - 1 );
 	buffer[buffer_size - 1]	= 0;
 	for ( u32 i = 0; i < strlen( buffer ); ++i )
@@ -57,7 +57,7 @@ void os_clipboard::paste_from_clipboard	( LPSTR buffer, u32 const& buffer_size )
 	CloseClipboard			();
 }
 
-void os_clipboard::update_clipboard		( LPCSTR string )
+void os_clipboard::update_clipboard		( const char* string )
 {
 	if ( !OpenClipboard(0) )
 		return;
@@ -69,14 +69,14 @@ void os_clipboard::update_clipboard		( LPCSTR string )
 		return;
 	}
 
-	LPSTR	memory			= (LPSTR)GlobalLock(handle);
+	char*	memory			= (char*)GlobalLock(handle);
 	int		memory_length	= (int)strlen(memory);
 	int		string_length	= (int)strlen(string);
 	int		buffer_size		= (memory_length + string_length + 1) * sizeof(char);
 #ifndef _EDITOR
-	LPSTR	buffer			= (LPSTR)_alloca( buffer_size );
+	char*	buffer			= (char*)_alloca( buffer_size );
 #else // #ifndef _EDITOR
-	LPSTR	buffer			= (LPSTR)xr_alloc<char>( buffer_size );
+	char*	buffer			= (char*)xr_alloc<char>( buffer_size );
 #endif // #ifndef _EDITOR
 	xr_strcpy				(buffer, buffer_size, memory);
 	GlobalUnlock			(handle);

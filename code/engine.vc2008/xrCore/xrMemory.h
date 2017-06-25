@@ -54,7 +54,7 @@ public:
 	u32					mem_counter_get	()			{ return stat_counter;	}
 
 #ifdef DEBUG_MEMORY_NAME
-	void				mem_statistic	(LPCSTR fn);
+	void				mem_statistic	(const char* fn);
 	void*				mem_alloc		(size_t	size				, const char* _name);
 	void*				mem_realloc		(void*	p, size_t size		, const char* _name);
 #else // DEBUG_MEMORY_NAME

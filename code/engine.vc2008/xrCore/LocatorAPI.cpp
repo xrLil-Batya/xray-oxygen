@@ -443,7 +443,7 @@ void CLocatorAPI::unload_archive(CLocatorAPI::archive& A)
 #ifndef MASTER_GOLD
 			Msg("unregistering file [%s]", I->name);
 #endif // #ifndef MASTER_GOLD
-			char* str		= LPSTR(I->name);
+			char* str		= const_cast<char*>(I->name);
 			xr_free			(str);
 			m_files.erase	(I);
 			break;
@@ -649,7 +649,7 @@ static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
 void CLocatorAPI::setup_fs_path(const char* fs_name, string_path &fs_path)
 {
     xr_strcpy(fs_path, fs_name ? fs_name : "");
-    LPSTR				slash = strrchr(fs_path, '\\');
+    char*				slash = strrchr(fs_path, '\\');
     if (!slash)
         slash = strrchr(fs_path, '/');
     if (!slash) {
@@ -830,13 +830,13 @@ void CLocatorAPI::_destroy		()
 
 	for				(files_it I=m_files.begin(); I!=m_files.end(); I++)
 	{
-		char* str	= LPSTR(I->name);
+		char* str	= const_cast<char*>(I->name);
 		xr_free		(str);
 	}
 	m_files.clear		();
     for (auto& it : pathes)
     {
-		char* str	= LPSTR(it.first);
+		char* str	= const_cast<char*>(it.first);
 		xr_free		(str);
 		xr_delete	(it.second);
     }
@@ -918,7 +918,7 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 			const char* entry_begin = entry.name+base_len;
 			if ((flags&FS_RootOnly)&&strstr(entry_begin,"\\"))	continue;	// folder in folder
 			dest->push_back			(xr_strdup(entry_begin));
-            LPSTR fname 			= dest->back();
+            char* fname 			= dest->back();
             if (flags&FS_ClampExt)	if (0!=strext(fname)) *strext(fname)=0;
 		} else {
 			// folder
@@ -1015,7 +1015,7 @@ int CLocatorAPI::file_list(FS_FileSet& dest, const char* path, u32 flags, const 
 	return dest.size();
 }
 
-void CLocatorAPI::check_cached_files	(LPSTR fname, const u32 &fname_size, const file &desc, const char* &source_name)
+void CLocatorAPI::check_cached_files	(char* fname, const u32 &fname_size, const file &desc, const char* &source_name)
 {
 	string_path		fname_copy;
 	if (pathes.size() <= 1)
@@ -1079,7 +1079,7 @@ void CLocatorAPI::check_cached_files	(LPSTR fname, const u32 &fname_size, const 
 	xr_strcpy		(fname,fname_size,fname_in_cache);
 }
 
-void CLocatorAPI::file_from_cache_impl	(IReader *&R, LPSTR fname, const file &desc)
+void CLocatorAPI::file_from_cache_impl	(IReader *&R, char* fname, const file &desc)
 {
 	if (desc.size_real < 16*1024)
 		R = new CFileReader(fname);
@@ -1087,7 +1087,7 @@ void CLocatorAPI::file_from_cache_impl	(IReader *&R, LPSTR fname, const file &de
 		R = new CVirtualFileReader(fname);
 }
 
-void CLocatorAPI::file_from_cache_impl	(CStreamReader *&R, LPSTR fname, const file &desc)
+void CLocatorAPI::file_from_cache_impl	(CStreamReader *&R, char* fname, const file &desc)
 {
 	CFileStreamReader			*r = new CFileStreamReader();
 	r->construct				(fname,BIG_FILE_READER_WINDOW_SIZE);
@@ -1095,7 +1095,7 @@ void CLocatorAPI::file_from_cache_impl	(CStreamReader *&R, LPSTR fname, const fi
 }
 
 template <typename T>
-void CLocatorAPI::file_from_cache	(T *&R, LPSTR fname, const u32 &fname_size, const file &desc, const char* &source_name)
+void CLocatorAPI::file_from_cache	(T *&R, char* fname, const u32 &fname_size, const file &desc, const char* &source_name)
 {
 #ifdef DEBUG
 	if (m_Flags.is(flCacheFiles))
@@ -1425,7 +1425,7 @@ void CLocatorAPI::file_delete(const char* path, const char* nm)
     if (I!=m_files.end()){
 	    // remove file
     	unlink			(I->name);
-		char* str		= LPSTR(I->name);
+		char* str		= const_cast<char*>(I->name);
 		xr_free			(str);
 	    m_files.erase		(I);
     }
@@ -1454,14 +1454,14 @@ void CLocatorAPI::file_rename(const char* src, const char* dest, bool bOwerwrite
 		if (D!=m_files.end()){ 
 	        if (!bOwerwrite) return;
             unlink		(D->name);
-			char* str	= LPSTR(D->name);
+			char* str	= const_cast<char*>(D->name);
 			xr_free		(str);
 			m_files.erase	(D);
         }
 
         file new_desc	= *S;
 		// remove existing item
-		char* str		= LPSTR(S->name);
+		char* str		= const_cast<char*>(S->name);
 		xr_free			(str);
 		m_files.erase		(S);
 		// insert updated item
@@ -1546,27 +1546,27 @@ void CLocatorAPI::set_file_age(const char* nm, u32 age)
 
 void CLocatorAPI::rescan_path(const char* full_path, BOOL bRecurse)
 {
-	file desc; 
-    desc.name		= full_path;
-	files_it	I 	= m_files.lower_bound(desc);
-	if (I==m_files.end())	return;
-	
-	size_t base_len			= xr_strlen(full_path);
-	for (; I!=m_files.end(); ){
-    	files_it cur_item	= I;
-		const file& entry 	= *cur_item;
-    	I					= cur_item; I++;
-		if (0!=strncmp(entry.name,full_path,base_len))	break;	// end of list
-		if (entry.vfs!=0xFFFFFFFF)						continue;
-		const char* entry_begin = entry.name+base_len;
-        if (!bRecurse&&strstr(entry_begin,"\\"))		continue;
-        // erase item
-		char* str		= LPSTR(cur_item->name);
-		xr_free			(str);
-		m_files.erase		(cur_item);
+	file desc;
+	desc.name = full_path;
+	files_it	I = m_files.lower_bound(desc);
+	if (I == m_files.end())	return;
+
+	size_t base_len = xr_strlen(full_path);
+	for (; I != m_files.end(); ) {
+		files_it cur_item = I;
+		const file& entry = *cur_item;
+		I = cur_item; I++;
+		if (0 != strncmp(entry.name, full_path, base_len))	break;	// end of list
+		if (entry.vfs != 0xFFFFFFFF)						continue;
+		const char* entry_begin = entry.name + base_len;
+		if (!bRecurse&&strstr(entry_begin, "\\"))		continue;
+		// erase item
+		char* str = const_cast<char*>(cur_item->name);
+		xr_free(str);
+		m_files.erase(cur_item);
 	}
-    bNoRecurse	= !bRecurse;
-    Recurse		(full_path);
+	bNoRecurse = !bRecurse;
+	Recurse(full_path);
 }
 
 void  CLocatorAPI::rescan_pathes()

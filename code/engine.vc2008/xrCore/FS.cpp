@@ -16,7 +16,7 @@
 	typedef xr_map<u32,std::pair<u32,shared_str> >	FILE_MAPPINGS;
 	FILE_MAPPINGS					g_file_mappings;
 
-void register_file_mapping			(void *address, const u32 &size, LPCSTR file_name)
+void register_file_mapping			(void *address, const u32 &size, const char* file_name)
 {
 	FILE_MAPPINGS::const_iterator	I = g_file_mappings.find(*(u32*)&address);
 	VERIFY							(I == g_file_mappings.end());
@@ -70,7 +70,7 @@ XRCORE_API void dump_file_mappings	()
 // Tools
 //////////////////////////////////////////////////////////////////////
 //---------------------------------------------------
-void VerifyPath(LPCSTR path)
+void VerifyPath(const char* path)
 {
 	string1024 tmp;
 	for(int i=0;path[i];i++){
@@ -83,7 +83,7 @@ void VerifyPath(LPCSTR path)
 }
 
 #ifdef _EDITOR
-bool file_handle_internal	(LPCSTR file_name, u32 &size, int &hFile)
+bool file_handle_internal	(const char* file_name, u32 &size, int &hFile)
 {
 	hFile				= _open(file_name,O_RDONLY|O_BINARY|O_SEQUENTIAL);
 	if (hFile <= 0)	{
@@ -97,7 +97,7 @@ bool file_handle_internal	(LPCSTR file_name, u32 &size, int &hFile)
 	return				(true);
 }
 #else // EDITOR
-static errno_t open_internal(LPCSTR fn, int &handle)
+static errno_t open_internal(const char* fn, int &handle)
 {
 	return				(
 		_sopen_s(
@@ -110,7 +110,7 @@ static errno_t open_internal(LPCSTR fn, int &handle)
 	);
 }
 
-bool file_handle_internal	(LPCSTR file_name, u32 &size, int &file_handle)
+bool file_handle_internal	(const char* file_name, u32 &size, int &file_handle)
 {
 	if (open_internal(file_name, file_handle)) {
 		Sleep			(1);
@@ -123,7 +123,7 @@ bool file_handle_internal	(LPCSTR file_name, u32 &size, int &file_handle)
 }
 #endif // EDITOR
 
-void *FileDownload		(LPCSTR file_name, const int &file_handle, u32 &file_size)
+void *FileDownload		(const char* file_name, const int &file_handle, u32 &file_size)
 {
 	void				*buffer = Memory.mem_alloc	(
 		file_size
@@ -148,7 +148,7 @@ void *FileDownload		(LPCSTR file_name, const int &file_handle, u32 &file_size)
 	return				(buffer);
 }
 
-void *FileDownload		(LPCSTR file_name, u32 *buffer_size)
+void *FileDownload		(const char* file_name, u32 *buffer_size)
 {
 	int					file_handle;
 	R_ASSERT3			(
@@ -225,7 +225,7 @@ void CMemoryWriter::w	(const void* ptr, u32 count)
 }
 
 //static const u32 mb_sz = 0x1000000;
-bool CMemoryWriter::save_to	(LPCSTR fn)
+bool CMemoryWriter::save_to	(const char* fn)
 {
 	IWriter* F 		= FS.w_open(fn);
     if (F){

@@ -22,7 +22,7 @@ static void __stdcall out_of_memory		( mspace const space, void const* const par
 	Debug.fatal		( DEBUG_INFO, "not enough memory for arena [%s]", allocator->get_arena_id( ) );
 }
 
-doug_lea_allocator::doug_lea_allocator	( void* arena, u32 arena_size, LPCSTR arena_id ) :
+doug_lea_allocator::doug_lea_allocator	( void* arena, u32 arena_size, const char* arena_id ) :
 	m_arena_id		( arena_id )
 {
 	VERIFY			( m_arena_id );

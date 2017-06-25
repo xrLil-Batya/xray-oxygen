@@ -84,11 +84,11 @@ public:
 		return			((result + 1)*sizeof(*m_strings[0].first));
 	}
 
- 	inline	void	concat			(LPCSTR const result) const
+ 	inline	void	concat			(const char* const result) const
  	{
  		VERIFY			(m_count > 0);
  
- 		LPSTR			i = const_cast<LPSTR>(result);
+ 		char*			i = const_cast<char*>(result);
         std::memcpy(i, m_strings[0].first, m_strings[0].second*sizeof(*m_strings[0].first));
 		i				+= m_strings[0].second;
 
@@ -110,12 +110,12 @@ private:
 	template <u32 index>
 	struct helper {
 
-		static inline	u32		length  (LPCSTR string)
+		static inline	u32		length  (const char* string)
 		{
 			return		(string ? (unsigned int)xr_strlen(string) : 0);
 		}
 
-		static inline	LPCSTR	string  (LPCSTR string)
+		static inline	const char*	string  (const char* string)
 		{
 			return		(string);
 		}
@@ -125,7 +125,7 @@ private:
 			return		(string.size());
 		}
 
-		static inline	LPCSTR	string	(shared_str const& string)
+		static inline	const char*	string	(shared_str const& string)
 		{
 			return		(string.c_str());
 		}
@@ -135,7 +135,7 @@ private:
 			return		(string.size());
 		}
 
-		static inline	LPCSTR	string	(xr_string const& string)
+		static inline	const char*	string	(xr_string const& string)
 		{
 			return		(string.c_str());
 		}
@@ -145,14 +145,14 @@ private:
 		{
 			static_assert			(index < max_item_count, "invalid string index specified");
 
-			LPCSTR cstr				= string(p);
+			const char* cstr				= string(p);
 			VERIFY					(cstr);
 			self.m_strings[index]	= std::make_pair(cstr, length(p));
 		}
 	}; // struct helper
 
 private:
-	typedef std::pair<LPCSTR, u32>	StringPair;
+	typedef std::pair<const char*, u32>	StringPair;
 
 private:
 	StringPair			m_strings[max_item_count];

@@ -15,7 +15,7 @@
 
 XRCORE_API		xrCore	Core;
 XRCORE_API		u32		build_id;
-XRCORE_API		LPCSTR	build_date;
+XRCORE_API		const char*	build_date;
 
 namespace CPU
 {
@@ -26,7 +26,7 @@ static u32	init_counter	= 0;
 //extern char g_application_path[256];
 
 #include "DateTime.hpp"
-void xrCore::_initialize	(LPCSTR _ApplicationName, LogCallback cb, BOOL init_fs, LPCSTR fs_fname)
+void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
 	std::set_terminate(abort);
 	xr_strcpy					(ApplicationName,_ApplicationName);

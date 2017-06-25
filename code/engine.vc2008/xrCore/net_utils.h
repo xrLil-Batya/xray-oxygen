@@ -23,7 +23,7 @@ struct XRCORE_API IIniFileStream
 	virtual void 	__stdcall	w_s16			( s16 a)					= 0;
 	virtual void	__stdcall	w_u8			( u8 a)						= 0;
 	virtual void	__stdcall	w_s8			( s8 a)						= 0;
-	virtual void	__stdcall	w_stringZ		( LPCSTR S)					= 0;
+	virtual void	__stdcall	w_stringZ		( const char* S)					= 0;
 					
 	virtual void	__stdcall	r_vec3			(Fvector&)					= 0;
 	virtual void	__stdcall	r_vec4			(Fvector4&)					= 0;
@@ -37,7 +37,7 @@ struct XRCORE_API IIniFileStream
 	virtual void	__stdcall	r_s32			(s32&)						= 0;
 	virtual void	__stdcall	r_s64			(s64&)						= 0;
 
-	virtual void	__stdcall	r_string		(LPSTR dest, u32 dest_size)	= 0;
+	virtual void	__stdcall	r_string		(char* dest, u32 dest_size)	= 0;
 //	virtual void	__stdcall	r_tell			()							= 0;
 //	virtual void	__stdcall	r_seek			(u32 pos)					= 0;
 	virtual void	__stdcall	skip_stringZ	()							= 0;
@@ -140,7 +140,7 @@ public:
 		w_dir	(C);
 		w_float (mag);
 	}
-	IC void w_stringZ			( LPCSTR S )	{ W_guard g(&w_allow); w(S,(u32)xr_strlen(S)+1);	INI_W(w_stringZ(S));		}
+	IC void w_stringZ			( const char* S )	{ W_guard g(&w_allow); w(S,(u32)xr_strlen(S)+1);	INI_W(w_stringZ(S));		}
 	IC void w_stringZ			( const shared_str& p)
 	{
 		W_guard g(&w_allow); 
@@ -250,13 +250,13 @@ public:
 	void		r_dir			(Fvector& A);
 
 	void		r_sdir			(Fvector& A);
-	void		r_stringZ		(LPSTR S );
+	void		r_stringZ		(char* S );
 	void		r_stringZ		(xr_string& dest );
 	void 		r_stringZ		(shared_str& dest);
 	
 	void		skip_stringZ	();
 	
-	void		r_stringZ_s		(LPSTR string, u32 size);
+	void		r_stringZ_s		(char* string, u32 size);
 
 	template <u32 size>
 	inline void	r_stringZ_s		(char (&string)[size])

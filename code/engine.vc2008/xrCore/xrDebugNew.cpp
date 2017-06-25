@@ -30,7 +30,7 @@ static bool bException = false;
 
 #include "BuildStackTraceInline.hpp"
 
-void LogStackTrace	(LPCSTR header)
+void LogStackTrace	(const char* header)
 {
 	if (!shared_str_initialized)
 		return;
@@ -41,13 +41,13 @@ void LogStackTrace	(LPCSTR header)
 		Msg("%s", StackTrace[i]);
 }
 
-void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, LPSTR assertion_info, u32 const assertion_info_size)
+void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
-	LPSTR				buffer_base = assertion_info;
-	LPSTR				buffer = assertion_info;
+	char*				buffer_base = assertion_info;
+	char*				buffer = assertion_info;
 	int assertion_size = (int)assertion_info_size;
-	LPCSTR				endline = "\n";
-	LPCSTR				prefix = "[error]";
+	const char*				endline = "\n";
+	const char*				prefix = "[error]";
 	bool				extended_description = (description && !argument0 && strchr(description, '\n'));
 	for (int i = 0; i < 2; ++i) {
 		if (!i)
@@ -153,9 +153,9 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
 	DEBUG_INVOKE;
 }
 
-LPCSTR xrDebug::error2string	(long code)
+const char* xrDebug::error2string	(long code)
 {
-	LPCSTR				result	= 0;
+	const char*				result	= 0;
 	static	string1024	desc_storage;
 
 	if (0==result)
@@ -240,7 +240,7 @@ int out_of_memory_handler	(size_t size)
 	return					1;
 }
 
-extern LPCSTR log_name();
+extern const char* log_name();
 
 XRCORE_API string_path g_bug_report_file;
 
@@ -256,7 +256,7 @@ extern "C" BOOL __stdcall SetCrashHandlerFilter ( PFNCHFILTFN pFn );
 
 static UnhandledExceptionFilterType	*previous_filter = 0;
 
-void format_message	(LPSTR buffer, const u32 &buffer_size)
+void format_message	(char* buffer, const u32 &buffer_size)
 {
     LPVOID		message;
     DWORD		error_code = GetLastError(); 
@@ -272,7 +272,7 @@ void format_message	(LPSTR buffer, const u32 &buffer_size)
         NULL,
         error_code,
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (LPSTR)&message,
+        (char*)&message,
         0,
 		NULL
 	);
@@ -340,7 +340,7 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 //////////////////////////////////////////////////////////////////////
 typedef int(__cdecl * _PNH)(size_t);
 
-static void handler_base(LPCSTR reason_string)
+static void handler_base(const char* reason_string)
 {
 	bool							ignore_always = false;
 	Debug.backend(

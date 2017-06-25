@@ -29,7 +29,7 @@ void FlushLog			()
 		IWriter *f = FS.w_open(logFName);
 		if (f) {
 			for (u32 it = 0; it<LogFile->size(); it++) {
-				LPCSTR		s = *((*LogFile)[it]);
+				const char*		s = *((*LogFile)[it]);
 				f->w_string(s ? s : "");
 			}
 			FS.w_close(f);
@@ -201,7 +201,7 @@ LogCallback SetLogCB	(LogCallback cb)
 	return				(result);
 }
 
-LPCSTR log_name			()
+const char* log_name			()
 {
 	return				(log_file_name);
 }
@@ -240,9 +240,9 @@ void CloseLog(void)
  	LogFile->clear	();
 	xr_delete		(LogFile);
 }
-typedef void (WINAPI *OFFSET_UPDATER)(LPCSTR key, u32 ofs);
+typedef void (WINAPI *OFFSET_UPDATER)(const char* key, u32 ofs);
 //LuaICP_API only
-void LogXrayOffset(LPCSTR key, LPVOID base, LPVOID pval)
+void LogXrayOffset(const char* key, LPVOID base, LPVOID pval)
 {
 	u32 ofs = (u32)pval - (u32)base;
 	Msg("XRAY_OFFSET: %30s = 0x%x base = 0x%p, pval = 0x%p ", key, ofs, base, pval);

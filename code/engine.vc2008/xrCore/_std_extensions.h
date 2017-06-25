@@ -74,18 +74,18 @@ IC int xr_sprintf(char* dest, size_t sizeOfBuffer, const char* format, ...)
 // token type definition
 struct XRCORE_API xr_token
 {
-	LPCSTR	name;
+	const char*	name;
 	int 	id;
 };
 
-IC LPCSTR get_token_name(xr_token* tokens, int key)
+IC const char* get_token_name(xr_token* tokens, int key)
 {
     for (int k=0; tokens[k].name; k++)
     	if (key==tokens[k].id) return tokens[k].name;
     return "";
 }
 
-IC int get_token_id(xr_token* tokens, LPCSTR key)
+IC int get_token_id(xr_token* tokens, const char* key)
 {
     for (int k=0; tokens[k].name; k++)
     	if ( stricmp(tokens[k].name,key)==0 ) 
@@ -95,8 +95,8 @@ IC int get_token_id(xr_token* tokens, LPCSTR key)
 
 struct XRCORE_API xr_token2
 {
-	LPCSTR	name;
-	LPCSTR	info;
+	const char*	name;
+	const char*	info;
 	int 	id;
 };
 
@@ -190,17 +190,17 @@ IC int							xr_strcmp				( const char* S1, const char* S2 )
 #ifndef  _EDITOR
 #ifndef MASTER_GOLD
 
-inline errno_t xr_strcpy		( LPSTR destination, size_t const destination_size, LPCSTR source )
+inline errno_t xr_strcpy		( char* destination, size_t const destination_size, const char* source )
 {
 	return						strcpy_s( destination, destination_size, source );
 }
 
-inline errno_t xr_strcat		( LPSTR destination, size_t const buffer_size, LPCSTR source )
+inline errno_t xr_strcat		( char* destination, size_t const buffer_size, const char* source )
 {
 	return						strcat_s( destination, buffer_size, source );
 }
 
-inline int __cdecl xr_sprintf	( LPSTR destination, size_t const buffer_size, LPCSTR format_string, ... )
+inline int __cdecl xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
@@ -208,7 +208,7 @@ inline int __cdecl xr_sprintf	( LPSTR destination, size_t const buffer_size, LPC
 }
 
 template <int count>
-inline int __cdecl xr_sprintf	( char (&destination)[count], LPCSTR format_string, ... )
+inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
@@ -216,27 +216,27 @@ inline int __cdecl xr_sprintf	( char (&destination)[count], LPCSTR format_string
 }
 #else // #ifndef MASTER_GOLD
 
-inline errno_t xr_strcpy	( LPSTR destination, size_t const destination_size, LPCSTR source )
+inline errno_t xr_strcpy	( char* destination, size_t const destination_size, const char* source )
 {
 	return						strncpy_s( destination, destination_size, source, destination_size );
 }
 
-inline errno_t xr_strcat		( LPSTR destination, size_t const buffer_size, LPCSTR source )
+inline errno_t xr_strcat		( char* destination, size_t const buffer_size, const char* source )
 {
 	size_t const destination_length	= xr_strlen(destination);
-	LPSTR i						= destination + destination_length;
-	LPSTR const e				= destination + buffer_size - 1;
+	char* i						= destination + destination_length;
+	char* const e				= destination + buffer_size - 1;
 	if ( i > e )
 		return					0;
 
-	for ( LPCSTR j = source; *j && (i != e); ++i, ++j )
+	for ( const char* j = source; *j && (i != e); ++i, ++j )
 		*i						= *j;
 
 	*i							= 0;
 	return						0;
 }
 
-inline int __cdecl xr_sprintf	( LPSTR destination, size_t const buffer_size, LPCSTR format_string, ... )
+inline int __cdecl xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
@@ -244,7 +244,7 @@ inline int __cdecl xr_sprintf	( LPSTR destination, size_t const buffer_size, LPC
 }
 
 template <int count>
-inline int __cdecl xr_sprintf	( char (&destination)[count], LPCSTR format_string, ... )
+inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
@@ -255,13 +255,13 @@ inline int __cdecl xr_sprintf	( char (&destination)[count], LPCSTR format_string
 #	pragma deprecated( strcpy, strcpy_s, sprintf, sprintf_s, strcat, strcat_s )
 
 template <int count>
-inline errno_t xr_strcpy	( char (&destination)[count], LPCSTR source )
+inline errno_t xr_strcpy	( char (&destination)[count], const char* source )
 {
 	return						xr_strcpy( destination, count, source );
 }
 
 template <int count>
-inline errno_t xr_strcat	( char (&destination)[count], LPCSTR source )
+inline errno_t xr_strcat	( char (&destination)[count], const char* source )
 {
 	return						xr_strcat( destination, count, source );
 }

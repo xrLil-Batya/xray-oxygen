@@ -22,9 +22,9 @@ public:
 	on_dialog*		get_on_dialog		()							{ return m_on_dialog;	}
 	void			set_on_dialog		(on_dialog* on_dialog)		{ m_on_dialog = on_dialog;	}
 
-	LPCSTR			error2string		(long  code	);
+	const char*			error2string		(long  code	);
 
-	void			gather_info			(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, LPSTR assertion_info, unsigned int assertion_info_size);
+	void			gather_info			(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, unsigned int assertion_info_size);
 	template <size_t count>
 	inline void		gather_info			(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char (&assertion_info)[count])
 	{
@@ -45,7 +45,7 @@ public:
 
 // warning
 // this function can be used for debug purposes only
-IC	std::string __cdecl	make_string		(LPCSTR format,...)
+IC	std::string __cdecl	make_string		(const char* format,...)
 {
 	va_list		args;
 	va_start	(args,format);
@@ -58,7 +58,7 @@ IC	std::string __cdecl	make_string		(LPCSTR format,...)
 
 extern XRCORE_API	xrDebug		Debug;
 
-XRCORE_API void LogStackTrace	(LPCSTR header);
+XRCORE_API void LogStackTrace	(const char* header);
 
 #include "xrDebug_macros.h"
 

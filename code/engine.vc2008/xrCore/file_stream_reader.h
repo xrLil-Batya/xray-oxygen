@@ -11,7 +11,7 @@ private:
 	HANDLE					m_file_handle;
 
 public:
-	virtual void			construct		(LPCSTR file_name, const u32 &window_size);
+	virtual void			construct		(const char* file_name, const u32 &window_size);
 	virtual	void			destroy			();
 };
 
