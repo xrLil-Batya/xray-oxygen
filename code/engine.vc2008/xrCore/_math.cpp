@@ -186,7 +186,7 @@ namespace CPU
     u64 getProcessorFrequency(u32 logicalProcessorCount)
     {
         PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
-        LONG retCode = CallNtPowerInformation(ProcessorInformation, NULL, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
+        LONG retCode = CallNtPowerInformation(ProcessorInformation, nullptr, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
         if (retCode != STATUS_SUCCESS)
         {
             return getProcessorFrequencyGeneral();
@@ -314,7 +314,7 @@ void _initialize_cpu_thread	()
 #define _MM_FLUSH_ZERO_ON 0x8000
 #define _MM_SET_FLUSH_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_FLUSH_ZERO_MASK) | (mode))
 #define _MM_SET_DENORMALS_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_DENORMALS_ZERO_MASK) | (mode))
-static	BOOL	_denormals_are_zero_supported	= TRUE;
+static	bool	_denormals_are_zero_supported	= true;
 extern void __cdecl _terminate		();
 void debug_on_thread_spawn	();
 
@@ -332,7 +332,7 @@ void _initialize_cpu_thread	()
 			__try	{
 				_MM_SET_DENORMALS_ZERO_MODE	(_MM_DENORMALS_ZERO_ON);
 			} __except(EXCEPTION_EXECUTE_HANDLER) {
-				_denormals_are_zero_supported	= FALSE;
+				_denormals_are_zero_supported	= false;
 			}
 		}
 	}

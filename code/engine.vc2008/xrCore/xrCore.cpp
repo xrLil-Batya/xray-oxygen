@@ -26,7 +26,7 @@ static u32	init_counter	= 0;
 //extern char g_application_path[256];
 
 #include "DateTime.hpp"
-void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
+void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, bool init_fs, const char* fs_fname)
 {
 	std::set_terminate(abort);
 	xr_strcpy					(ApplicationName,_ApplicationName);
@@ -71,7 +71,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 		// Mathematics & PSI detection
 		CPU::Detect			();
 		
-		Memory._initialize	(strstr(Params,"-mem_debug") ? TRUE : FALSE);
+		Memory._initialize	(strstr(Params,"-mem_debug") ? true : false);
 
 		DUMP_PHASE;
 
@@ -131,9 +131,9 @@ void xrCore::_destroy		()
 
 //. why ??? 
 #ifdef _EDITOR
-	BOOL WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
+	bool WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
 #else
-	BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
+	bool WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
 #endif
 {
 	switch (ul_reason_for_call)
@@ -159,6 +159,6 @@ void xrCore::_destroy		()
 #endif // USE_MEMORY_MONITOR
 		break;
 	}
-    return TRUE;
+    return true;
 }
 #endif // XRCORE_STATIC

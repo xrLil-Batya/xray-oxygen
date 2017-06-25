@@ -74,7 +74,7 @@ extern "C" {
 /*
   malloc(size_t n)
   Returns a pointer to a newly allocated chunk of at least n bytes, or
-  null if no space is available, in which case errno is set to ENOMEM
+  nullptr if no space is available, in which case errno is set to ENOMEM
   on ANSI C systems.
 
   If n is zero, malloc returns a minimum-sized chunk. (The minimum
@@ -91,7 +91,7 @@ void* dlmalloc( size_t);
   free(void* p)
   Releases the chunk of memory pointed to by p, that had been previously
   allocated using malloc or a related routine such as realloc.
-  It has no effect if p is null. If p was not malloced or already
+  It has no effect if p is nullptr. If p was not malloced or already
   freed, free(p) will by default cuase the current program to abort.
 */
 void  dlfree( void*);
@@ -106,16 +106,16 @@ void* dlcalloc( size_t, size_t);
 /*
   realloc(void* p, size_t n)
   Returns a pointer to a chunk of size n that contains the same data
-  as does chunk p up to the minimum of (n, p's size) bytes, or null
+  as does chunk p up to the minimum of (n, p's size) bytes, or nullptr
   if no space is available.
 
   The returned pointer may or may not be the same as p. The algorithm
   prefers extending p in most cases when possible, otherwise it
   employs the equivalent of a malloc-copy-free sequence.
 
-  If p is null, realloc is equivalent to malloc.
+  If p is nullptr, realloc is equivalent to malloc.
 
-  If space is not available, realloc returns null, errno is set (if on
+  If space is not available, realloc returns nullptr, errno is set (if on
   ANSI) and p is NOT freed.
 
   if n is for fewer bytes than already held by p, the newly unused
@@ -241,16 +241,16 @@ struct mallinfo pt3mallinfo( );
   mallocs), which may also improve cache locality in some
   applications.
 
-  The "chunks" argument is optional (i.e., may be null, which is
-  probably the most typical usage). If it is null, the returned array
+  The "chunks" argument is optional (i.e., may be nullptr, which is
+  probably the most typical usage). If it is nullptr, the returned array
   is itself dynamically allocated and should also be freed when it is
   no longer needed. Otherwise, the chunks array must be of at least
   n_elements in length. It is filled in with the pointers to the
   chunks.
 
   In either case, independent_calloc returns this pointer array, or
-  null if the allocation failed.  If n_elements is zero and "chunks"
-  is null, it returns a chunk representing an array with zero elements
+  nullptr if the allocation failed.  If n_elements is zero and "chunks"
+  is nullptr, it returns a chunk representing an array with zero elements
   (which should be freed if not wanted).
 
   Each element must be individually freed when it is no longer
@@ -294,15 +294,15 @@ void** dlindependent_calloc( size_t, size_t, void**);
   multiple callocs or mallocs), which may also improve cache locality
   in some applications.
 
-  The "chunks" argument is optional (i.e., may be null). If it is null
+  The "chunks" argument is optional (i.e., may be nullptr). If it is nullptr
   the returned array is itself dynamically allocated and should also
   be freed when it is no longer needed. Otherwise, the chunks array
   must be of at least n_elements in length. It is filled in with the
   pointers to the chunks.
 
   In either case, independent_comalloc returns this pointer array, or
-  null if the allocation failed.  If n_elements is zero and chunks is
-  null, it returns a chunk representing an array with zero elements
+  nullptr if the allocation failed.  If n_elements is zero and chunks is
+  nullptr, it returns a chunk representing an array with zero elements
   (which should be freed if not wanted).
 
   Each element must be individually freed when it is no longer
@@ -425,7 +425,7 @@ typedef void* mspace;
 /*
   create_mspace creates and returns a new independent space with the
   given initial capacity, or, if 0, the default granularity size.  It
-  returns null if there is no system memory available to create the
+  returns nullptr if there is no system memory available to create the
   space.  If argument locked is non-zero, the space uses a separate
   lock to control access. The capacity of the space will grow
   dynamically as needed to service mspace_malloc requests.  You can

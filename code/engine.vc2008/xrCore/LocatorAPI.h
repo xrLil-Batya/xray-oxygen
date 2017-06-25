@@ -36,13 +36,13 @@ public:
 		u32						size;
 		CInifile*				header;
 		u32						vfs_idx;
-		archive():hSrcFile(NULL),hSrcMap(NULL),header(NULL),size(0),vfs_idx(u32(-1)){}
+		archive():hSrcFile(nullptr),hSrcMap(nullptr),header(nullptr),size(0),vfs_idx(u32(-1)){}
 		void					open();
 		void					close();
 	};
     using archives_vec = xr_vector<archive>;
     archives_vec				m_archives;
-	void						LoadArchive		(archive& A, const char* entrypoint=NULL);
+	void						LoadArchive		(archive& A, const char* entrypoint=nullptr);
 
 private:
 	struct	file_pred: public 	std::binary_function<file&, file&, bool> 
@@ -63,7 +63,7 @@ private:
     void						check_pathes	();
 
 	files_set					m_files			;
-	BOOL						bNoRecurse		;
+	bool						bNoRecurse		;
 
     std::recursive_mutex m_auth_lock;
 	u64							m_auth_code		;
@@ -139,13 +139,13 @@ public:
 	const file*					exist				(string_path& fn, const char* path, const char* name);
 	const file*					exist				(string_path& fn, const char* path, const char* name, const char* ext);
 
-    BOOL 						can_write_to_folder	(const char* path); 
-    BOOL 						can_write_to_alias	(const char* path); 
-    BOOL						can_modify_file		(const char* fname);
-    BOOL						can_modify_file		(const char* path, const char* name);
+    bool 						can_write_to_folder	(const char* path); 
+    bool 						can_write_to_alias	(const char* path); 
+    bool						can_modify_file		(const char* fname);
+    bool						can_modify_file		(const char* path, const char* name);
 
-    BOOL 						dir_delete			(const char* path,const char* nm,BOOL remove_files);
-    BOOL 						dir_delete			(const char* full_path,BOOL remove_files){return dir_delete(0,full_path,remove_files);}
+    bool 						dir_delete			(const char* path,const char* nm,bool remove_files);
+    bool 						dir_delete			(const char* full_path,bool remove_files){return dir_delete(0,full_path,remove_files);}
     void 						file_delete			(const char* path,const char* nm);
     void 						file_delete			(const char* full_path){file_delete(0,full_path);}
 	void 						file_copy			(const char* src, const char* dest);
@@ -161,7 +161,7 @@ public:
                                                      
     bool						path_exist			(const char* path);
     FS_Path*					get_path			(const char* path);
-    FS_Path*					append_path			(const char* path_alias, const char* root, const char* add, BOOL recursive);
+    FS_Path*					append_path			(const char* path_alias, const char* root, const char* add, bool recursive);
     const char*						update_path			(string_path& dest, const char* initial, const char* src);
 
 	int							file_list			(FS_FileSet& dest, const char* path, u32 flags=FS_ListFiles, const char* mask=0);
@@ -173,7 +173,7 @@ public:
 	u64							auth_get			();
 	void						auth_runtime		(void*);
 
-	void						rescan_path			(const char* full_path, BOOL bRecurse);
+	void						rescan_path			(const char* full_path, bool bRecurse);
 	// editor functions
 	void						rescan_pathes		();
 	void						lock_rescan			();

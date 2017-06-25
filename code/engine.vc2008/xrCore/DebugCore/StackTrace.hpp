@@ -39,8 +39,8 @@ stack address.
 pExtPtrs - The exception pointers passed to the crash handler
 function.
 RETURNS         :
-!NULL - The requested stack trace string.
-NULL  - There was a problem.
+!nullptr - The requested stack trace string.
+nullptr  - There was a problem.
 ----------------------------------------------------------------------*/
 #define GSTSO_PARAMS 0x01
 #define GSTSO_MODULE 0x02
@@ -70,8 +70,8 @@ function.
 szBuff   - The output buffer.
 uiSize   - The size of the output buffer.
 RETURNS         :
-TRUE  - The string was copied into szBuff.
-FALSE - There was a problem.
+true  - The string was copied into szBuff.
+false - There was a problem.
 ----------------------------------------------------------------------*/
-BOOL __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize);
-BOOL __stdcall GetNextStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize);
+bool __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize);
+bool __stdcall GetNextStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize);

@@ -120,7 +120,7 @@ void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
 #ifdef _COMPILERS_
-	MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
+	MessageBox			(nullptr,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
 #endif
 #ifdef DEBUG
     if (IsDebuggerPresent())
@@ -252,7 +252,7 @@ void CALLBACK PreErrorHandler	(INT_PTR)
 extern void BuildStackTrace(struct _EXCEPTION_POINTERS *pExceptionInfo);
 typedef LONG WINAPI UnhandledExceptionFilterType(struct _EXCEPTION_POINTERS *pExceptionInfo);
 typedef LONG ( __stdcall *PFNCHFILTFN ) ( EXCEPTION_POINTERS * pExPtrs ) ;
-extern "C" BOOL __stdcall SetCrashHandlerFilter ( PFNCHFILTFN pFn );
+extern "C" bool __stdcall SetCrashHandlerFilter ( PFNCHFILTFN pFn );
 
 static UnhandledExceptionFilterType	*previous_filter = 0;
 
@@ -269,12 +269,12 @@ void format_message	(char* buffer, const u32 &buffer_size)
     FormatMessage(
         FORMAT_MESSAGE_ALLOCATE_BUFFER | 
         FORMAT_MESSAGE_FROM_SYSTEM,
-        NULL,
+        nullptr,
         error_code,
         MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
         (char*)&message,
         0,
-		NULL
+		nullptr
 	);
 
 	xr_sprintf	(buffer,buffer_size,"[error][%8d]    : %s",error_code,message);

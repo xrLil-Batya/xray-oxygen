@@ -112,20 +112,20 @@ LPCTSTR __stdcall GetNextStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* pExP
 	return InternalGetStackTraceString(dwOpts, pExPtrs);
 }
 
-BOOL __stdcall ReadCurrentProcessMemory(HANDLE, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, 
+bool __stdcall ReadCurrentProcessMemory(HANDLE, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, 
 #ifndef _M_X64
 	LPDWORD lpNumberOfBytesRead)
 #else
 	SIZE_T* lpNumberOfBytesRead)
 #endif
 {
-	return ReadProcessMemory(GetCurrentProcess(), lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesRead);
+	return !!ReadProcessMemory(GetCurrentProcess(), lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesRead);
 }
 
 // The internal function that does all the stack walking
 LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs)
 {
-	// ASSERT(IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS)) == FALSE);
+	// ASSERT(IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS)) == false);
 	if (IsBadReadPtr(pExPtrs, sizeof(EXCEPTION_POINTERS)))
 	{
 		SetLastError(ERROR_INVALID_ADDRESS);
@@ -155,19 +155,19 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 #endif
 		// Note:  If the source file and line number functions are used,
 		//        StackWalk can cause an access violation.
-		BOOL bSWRet = StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
+		bool bSWRet = !!StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
 			(PREAD_PROCESS_MEMORY_ROUTINE)ReadCurrentProcessMemory, SymFunctionTableAccess, SymGetModuleBase, nullptr);
 
-		if ((bSWRet == FALSE) || (g_stFrame.AddrFrame.Offset == 0))
+		if ((bSWRet == false) || (g_stFrame.AddrFrame.Offset == 0))
 		{
-			szRet = NULL;
+			szRet = 0;
 			__leave;
 		}
 
 		// Before I get too carried away and start calculating
 		// everything, I need to double-check that the address returned
 		// by StackWalk really exists. I've seen cases in which
-		// StackWalk returns TRUE but the address doesn't belong to
+		// StackWalk returns true but the address doesn't belong to
 		// a module in the process.
 		dwModBase = SymGetModuleBase(hProcess, g_stFrame.AddrPC.Offset);
 		if (!dwModBase)
@@ -179,7 +179,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		int iCurr = 0;
 
 		// At a minimum, put in the address.
-#ifdef _WIN64
+#ifdef _M_X64
 		iCurr += wsprintf(g_szBuff + iCurr, _T("0x%016I64X"), g_stFrame.AddrPC.Offset);
 #else
 		// iCurr += wsprintf(g_szBuff + iCurr, _T("%04X:%08I64X"), pExPtrs->ContextRecord->SegCs,
@@ -191,7 +191,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		if ((dwOpts & GSTSO_PARAMS) == GSTSO_PARAMS)
 		{
 			iCurr += wsprintf(g_szBuff + iCurr,
-#ifdef _WIN64
+#ifdef _M_X64
 				_T(" (0x%016I64X 0x%016I64X 0x%016I64X 0x%016I64X)"),
 #else
 				//_T(" (0x%08I64X 0x%08I64X 0x%08I64X 0x%08I64X)"),
@@ -218,7 +218,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 			pSym->SizeOfStruct = sizeof(IMAGEHLP_SYMBOL);
 			pSym->MaxNameLength = SYM_BUFF_SIZE - sizeof(IMAGEHLP_SYMBOL);
 
-			if (SymGetSymFromAddr(hProcess, g_stFrame.AddrPC.Offset, &dwDisp, pSym) == TRUE)
+			if (SymGetSymFromAddr(hProcess, g_stFrame.AddrPC.Offset, &dwDisp, pSym) == true)
 			{
 				iCurr += wsprintf(g_szBuff + iCurr, _T(", "));
 				// Copy no more symbol information than there's room for.
@@ -255,7 +255,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 			ZeroMemory(&g_stLine, sizeof(IMAGEHLP_LINE));
 			g_stLine.SizeOfStruct = sizeof(IMAGEHLP_LINE);
 
-			if (SymGetLineFromAddr(hProcess, g_stFrame.AddrPC.Offset, (PDWORD)&dwDisp, &g_stLine) == TRUE)
+			if (SymGetLineFromAddr(hProcess, g_stFrame.AddrPC.Offset, (PDWORD)&dwDisp, &g_stLine) == true)
 			{
 				iCurr += wsprintf(g_szBuff + iCurr, _T(", "));
 
@@ -298,11 +298,11 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 #undef min
 #include <algorithm>
 
-BOOL __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
+bool __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
 {
-	// ASSERT(IsBadWritePtr(szBuff, uiSize) == FALSE);
+	// ASSERT(IsBadWritePtr(szBuff, uiSize) == false);
 	if (IsBadWritePtr(szBuff, uiSize))
-		return FALSE;
+		return false;
 
 	LPCTSTR szRet;
 
@@ -322,11 +322,11 @@ BOOL __stdcall GetFirstStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExP
 	return szRet != nullptr;
 }
 
-BOOL __stdcall GetNextStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
+bool __stdcall GetNextStackTraceStringVB(DWORD dwOpts, EXCEPTION_POINTERS* pExPtrs, LPTSTR szBuff, UINT uiSize)
 {
-	// ASSERT(IsBadWritePtr(szBuff, uiSize) == FALSE);
+	// ASSERT(IsBadWritePtr(szBuff, uiSize) == false);
 	if (IsBadWritePtr(szBuff, uiSize))
-		return FALSE;
+		return false;
 
 	LPCTSTR szRet;
 	__try
@@ -356,7 +356,7 @@ void InitializeSymbolEngine(void)
 		SymSetOptions(dwOpts | SYMOPT_DEFERRED_LOADS | SYMOPT_LOAD_LINES);
 
 		HANDLE hProcess = (HANDLE)GetCurrentProcessId();
-		SymInitialize(hProcess, nullptr, TRUE);
+		SymInitialize(hProcess, nullptr, true);
 		// if (g_SymServerLookup)
 		//{
 		//    SymSetSearchPath(hProcess, ms_symsrv);

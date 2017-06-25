@@ -8,7 +8,7 @@
 	#include "malloc.h"
 #endif
 #include "../FrayBuildConfig.hpp"
-extern BOOL					LogExecCB		= TRUE;
+extern bool					LogExecCB		= true;
 static string_path			logFName		= "engine.log";
 static string_path			log_file_name	= "engine.log";
 static bool 				no_log			= true;
@@ -19,7 +19,7 @@ bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true е
 IWriter *LogWriter;
 size_t cached_log = 0;
 
-xr_vector<shared_str>*		LogFile			= NULL;
+xr_vector<shared_str>*		LogFile			= nullptr;
 static LogCallback			LogCB			= 0;
 
 void FlushLog			()
@@ -77,7 +77,7 @@ void AddOne(const char *split)
 		cached_log += xr_strlen(buf);
 		cached_log += xr_strlen(split) + 2;
 #else
-		time_t t = time(NULL);
+		time_t t = time(nullptr);
 		tm* ti = localtime(&t);
 
 		strftime(buf, 64, "[%x %X]\t", ti);
@@ -208,12 +208,12 @@ const char* log_name			()
 
 void InitLog()
 {
-	R_ASSERT			(LogFile==NULL);
+	R_ASSERT			(LogFile==nullptr);
 	LogFile				= new xr_vector<shared_str>();
 	LogFile->reserve	(1000);
 }
 
-void CreateLog			(BOOL nl)
+void CreateLog			(bool nl)
 {
     no_log				= !!nl;
 	strconcat(sizeof(log_file_name),	 log_file_name,	"[", Core.UserDate, Core.UserTime, "]", ".log");
@@ -226,8 +226,8 @@ void CreateLog			(BOOL nl)
 	}
 	if (!no_log){
         IWriter *f		= FS.w_open	(logFName);
-        if (f==NULL){
-        	MessageBox	(NULL,"Can't create log file.","Error",MB_ICONERROR);
+        if (f==nullptr){
+        	MessageBox	(nullptr,"Can't create log file.","Error",MB_ICONERROR);
         	abort();
         }
         FS.w_close		(f);

@@ -1,5 +1,4 @@
-#ifndef __FBOX2
-#define __FBOX2
+#pragma once
 
 template <class T>
 class _box2 {
@@ -38,11 +37,11 @@ public:
 	IC	SelfRef	offset		(const Tvector &p)			{ min.add(p); max.add(p);				return *this;	};
 	IC	SelfRef	add			(SelfCRef b, const Tvector &p)	{ min.add(b.min, p); max.add(b.max, p);	return *this;	};
 
-	IC	BOOL	contains	(T x, T y)					{ return (x>=x1) && (x<=x2) && (y>=y1) && (y<=y2); };
-	IC	BOOL	contains	(const Tvector &p)			{ return contains(p.x,p.y);	};
-	IC	BOOL	contains	(SelfCRef b)				{ return contains(b.min) && contains(b.max); };
+	IC	bool	contains	(T x, T y)					{ return (x>=x1) && (x<=x2) && (y>=y1) && (y<=y2); };
+	IC	bool	contains	(const Tvector &p)			{ return contains(p.x,p.y);	};
+	IC	bool	contains	(SelfCRef b)				{ return contains(b.min) && contains(b.max); };
 
-	IC	BOOL	similar		(SelfCRef b)				{ return min.similar(b.min) && max.similar(b.max); };
+	IC	bool	similar		(SelfCRef b)				{ return min.similar(b.min) && max.similar(b.max); };
 
 	IC	SelfRef	modify		(const Tvector &p)			{ min.min(p); max.max(p);				return *this;	}
 	IC	SelfRef	merge		(SelfCRef b)				{ modify(b.min); modify(b.max);			return *this;	};
@@ -64,13 +63,13 @@ public:
 	};
 
 	// Detects if this box intersect other
-	IC	BOOL	intersect(SelfCRef box )
+	IC	bool	intersect(SelfCRef box )
 	{
-		if( max.x < box.min.x )	return FALSE;
-		if( max.y < box.min.y )	return FALSE;
-		if( min.x > box.max.x )	return FALSE;
-		if( min.y > box.max.y )	return FALSE;
-		return TRUE;
+		if( max.x < box.min.x )	return false;
+		if( max.y < box.min.y )	return false;
+		if( min.x > box.max.x )	return false;
+		if( min.y > box.max.y )	return false;
+		return true;
 	};
 
 	// Make's this box valid AABB
@@ -83,7 +82,7 @@ public:
 	};
 
 	// Does the vector3 intersects box
-	IC BOOL Pick( const Tvector& start, const Tvector& dir ){
+	IC bool Pick( const Tvector& start, const Tvector& dir ){
 		T		alpha,xt,yt;
 		Tvector rvmin,rvmax;
 
@@ -113,7 +112,7 @@ public:
 		}
 		return false;
 	};
-	ICF BOOL pick_exact	( const Tvector& start, const Tvector& dir ){
+	ICF bool pick_exact	( const Tvector& start, const Tvector& dir ){
 		T		alpha,xt,yt;
 		Tvector rvmin,rvmax;
 
@@ -140,8 +139,8 @@ public:
 	};
 
 	IC u32& IR(T &x) { return (u32&)x; }
-	IC BOOL Pick2(const Tvector& origin, const Tvector& dir, Tvector& coord){
-		BOOL Inside = TRUE;
+	IC bool Pick2(const Tvector& origin, const Tvector& dir, Tvector& coord){
+		bool Inside = true;
 		Tvector	MaxT;
 		MaxT.x=MaxT.y=-1.0f;
 		
@@ -149,22 +148,22 @@ public:
 		{
 			if(origin[0] < min[0]) {
 				coord[0]	= min[0];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[0]))	MaxT[0] = (min[0] - origin[0]) / dir[0]; // Calculate T distances to candidate planes
 			} else if(origin[0] > max[0]) {
 				coord[0]	= max[0];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[0]))	MaxT[0] = (max[0] - origin[0]) / dir[0]; // Calculate T distances to candidate planes
 			}
 		}
 		{
 			if(origin[1] < min[1]) {
 				coord[1]	= min[1];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[1]))	MaxT[1] = (min[1] - origin[1]) / dir[1]; // Calculate T distances to candidate planes
 			} else if(origin[1] > max[1]) {
 				coord[1]	= max[1];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[1]))	MaxT[1] = (max[1] - origin[1]) / dir[1]; // Calculate T distances to candidate planes
 			}
 		}
@@ -217,6 +216,4 @@ typedef _box2<float>	Fbox2;
 typedef _box2<double>	Dbox2;
 
 template <class T>
-BOOL	_valid			(const _box2<T>& c)	{ return _valid(c.min) && _valid(c.max); }
-
-#endif
+bool	_valid			(const _box2<T>& c)	{ return _valid(c.min) && _valid(c.max); }

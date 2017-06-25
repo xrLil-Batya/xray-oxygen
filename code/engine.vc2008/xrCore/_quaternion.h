@@ -239,8 +239,8 @@ public:
     }
 
     // gets an axis and angle of rotation around the axis from a quaternion
-    // returns TRUE if there is an axis.
-    // returns FALSE if there is no axis (and Axis is set to 0,0,0, and Theta is 0)
+    // returns true if there is an axis.
+    // returns false if there is no axis (and Axis is set to 0,0,0, and Theta is 0)
 
     bool get_axis_angle(_vector3<T>& axis, T& angle) const
     {
@@ -302,7 +302,7 @@ public:
         return *this;
     }
 
-    // return TRUE if quaternions differ elementwise by less than Tolerance.
+    // return true if quaternions differ elementwise by less than Tolerance.
     ICF bool cmp(SelfCRef Q, T Tolerance = 0.0001f)
     {
 		return (((_abs(x + Q.x) <= Tolerance) && (_abs(y + Q.y) <= Tolerance) && (_abs(z + Q.z) <= Tolerance) && (_abs(w + Q.w) <= Tolerance))
@@ -315,7 +315,7 @@ public:
     {
         T n = Q.x * Q.x + Q.y * Q.y + Q.z * Q.z;
         T r = _sqrt(n);
-        T t = (r > EPS_S) ? std::atan2f(r, Q.w) / r : T(0);
+        T t = (r > EPS_S) ? std::atan2(r, Q.w) / r : T(0);
         x = t * Q.x;
         y = t * Q.y;
         z = t * Q.z;
@@ -343,7 +343,7 @@ template struct XRCORE_API _quaternion<float>;
 template struct XRCORE_API _quaternion<double>;
 
 template <class T>
-BOOL _valid(const _quaternion<T>& s) { return _valid(s.x) && _valid(s.y) && _valid(s.z) && _valid(s.w); }
+bool _valid(const _quaternion<T>& s) { return _valid(s.x) && _valid(s.y) && _valid(s.z) && _valid(s.w); }
 
 #undef UNIT_TOLERANCE
 #undef QZERO_TOLERANCE

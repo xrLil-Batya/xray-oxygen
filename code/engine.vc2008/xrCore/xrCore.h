@@ -256,7 +256,7 @@ struct XRCORE_API xr_shortcut{
         };
         u16		hotkey;
     };
-                xr_shortcut		(u8 k, BOOL a, BOOL c, BOOL s):key(k){ext.assign(u8((a?flAlt:0)|(c?flCtrl:0)|(s?flShift:0)));}
+                xr_shortcut		(u8 k, bool a, bool c, bool s):key(k){ext.assign(u8((a?flAlt:0)|(c?flCtrl:0)|(s?flShift:0)));}
                 xr_shortcut		(){ext.zero();key=0;}
     bool		similar			(const xr_shortcut& v)const{return ext.equal(v.ext)&&(key==v.key);}
 };
@@ -311,7 +311,7 @@ public:
 	DWORD		dwFrame;
 
 public:
-	void		_initialize	(const char* ApplicationName, LogCallback cb=0, BOOL init_fs=TRUE, const char* fs_fname=0);
+	void		_initialize	(const char* ApplicationName, LogCallback cb=0, bool init_fs=true, const char* fs_fname=0);
 	void		_destroy	();
 };
 

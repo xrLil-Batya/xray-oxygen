@@ -111,8 +111,8 @@ void FS_Path::_update(xr_string& dest, const char* src)const
 }*/
 void FS_Path::rescan_path_cb	()
 {
-	m_Flags.set(flNeedRescan,TRUE);
-    FS.m_Flags.set(CLocatorAPI::flNeedRescan,TRUE);
+	m_Flags.set(flNeedRescan,true);
+    FS.m_Flags.set(CLocatorAPI::flNeedRescan,true);
 }
 
 bool XRCORE_API PatternMatch(const char* s, const char* mask)

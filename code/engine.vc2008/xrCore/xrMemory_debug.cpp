@@ -21,7 +21,7 @@ bool	pred_mdbg	(const xrMemory::mdbg& A)	{
 }
 extern	u32		get_header		(void*	P);
 extern	u32		get_pool		(size_t size);
-BOOL	g_bDbgFillMemory		= true;
+bool	g_bDbgFillMemory		= true;
 
 void	dbg_header			(xrMemory::mdbg& dbg, bool _debug)
 {
@@ -44,7 +44,7 @@ void	xrMemory::dbg_register		(void* _p, size_t _size, const char* _name)
 
 	VERIFY					(debug_mode);
 	debug_cs.Enter			();
-	debug_mode				= FALSE;
+	debug_mode				= false;
 
 	// register + mark
 	mdbg	dbg				=  { _p,_size,_name, 0 };
@@ -55,14 +55,14 @@ void	xrMemory::dbg_register		(void* _p, size_t _size, const char* _name)
 	*_shred					= u32	(-1);
 	dbg_header				(dbg,true);
 
-	debug_mode				= TRUE;
+	debug_mode				= true;
 	debug_cs.Leave			();
 }
 void	xrMemory::dbg_unregister	(void* _p)
 {
 	VERIFY					(debug_mode);
 	debug_cs.Enter			();
-	debug_mode				= FALSE;
+	debug_mode				= false;
 
 	// search entry
 	u32	_found				= u32(-1);
@@ -107,7 +107,7 @@ void	xrMemory::dbg_unregister	(void* _p)
 		dbg_check			();
 	}
 
-	debug_mode				= TRUE;
+	debug_mode				= true;
 	debug_cs.Leave			();
 }
 
@@ -120,7 +120,7 @@ void	xrMemory::dbg_check		()
 
 	// Check overrun
 	debug_cs.Enter			();
-	debug_mode				= FALSE;
+	debug_mode				= false;
 	for (int it=0; it<int(debug_info.size()); it++)
 	{
 		if (0==debug_info[it]._p)	
@@ -140,7 +140,7 @@ void	xrMemory::dbg_check		()
 	R_ASSERT2(HeapValidate(GetProcessHeap(),0,0),	"CorePanic: Win32 heap corruption");
 
 	// leave
-	debug_mode				= TRUE;
+	debug_mode				= true;
 	debug_cs.Leave			();
 }
 
@@ -149,7 +149,7 @@ XRCORE_API void	dbg_dump_leaks_prepare	()
 	Memory.mem_compact		()	;
 
 	Memory.debug_cs.Enter	()	;
-	Memory.debug_mode		= FALSE;
+	Memory.debug_mode		= false;
 
 	for (u32 it=0; it<Memory.debug_info.size(); it++)
 	{
@@ -159,7 +159,7 @@ XRCORE_API void	dbg_dump_leaks_prepare	()
 	}
 
 	// leave
-	Memory.debug_mode		= TRUE;
+	Memory.debug_mode		= true;
 	Memory.debug_cs.Leave	();
 }
 

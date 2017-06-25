@@ -20,7 +20,7 @@ int CALLBACK BrowseCallbackProc( HWND hWnd, UINT uMsg, LPARAM lParam,
   LPARAM lpData )
 {
   if (uMsg == BFFM_INITIALIZED)
-    SendMessage(hWnd, BFFM_SETSELECTION,TRUE, lpData);
+    SendMessage(hWnd, BFFM_SETSELECTION,true, lpData);
   return 0;
 }
 
@@ -32,7 +32,7 @@ bool EFS_Utils::GetOpenName(const char* initial, xr_string& buffer, bool bMulti,
 /*
 char* g_SHBF_Folder =("C:\\Program Files");
 TCHAR path[_MAX_PATH];
-BROWSEINFO info={NULL,NULL,path,"title",BIF_USENEWUI,BrowseCallbackProc, (LPARAM)g_SHBF_Folder };
+BROWSEINFO info={nullptr,nullptr,path,"title",BIF_USENEWUI,BrowseCallbackProc, (LPARAM)g_SHBF_Folder };
 SHBrowseForFolder       (&info);
 */
 /*
@@ -80,7 +80,7 @@ void EFS_Utils::MarkFile(const char* fn, bool bDeleteSource)
 	}
 }
 
-xr_string	EFS_Utils::AppendFolderToName(xr_string& tex_name, int depth, BOOL full_name)
+xr_string	EFS_Utils::AppendFolderToName(xr_string& tex_name, int depth, bool full_name)
 {
 	string1024 nm;
 	xr_strcpy(nm,tex_name.c_str());

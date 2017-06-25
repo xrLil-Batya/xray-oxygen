@@ -23,7 +23,7 @@ public:
 		};
 	};
 
-	IC	BOOL	is_valid	()											{return (x2>=x1)&&(y2>=y1)&&(z2>=z1);}
+	IC	bool	is_valid	()											{return (x2>=x1)&&(y2>=y1)&&(z2>=z1);}
 
 	IC	const T* data		()	const									{ return &min.x;	}	
 
@@ -46,11 +46,11 @@ public:
 	IC	SelfRef	offset		(const Tvector &p)				{ min.add(p); max.add(p);	return *this;	};
 	IC	SelfRef	add			(SelfCRef b, const Tvector &p)	{ min.add(b.min, p); max.add(b.max, p);				return *this;	};
 	
-	ICF	BOOL	contains	(T x, T y, T z)		const		{ return (x>=x1) && (x<=x2) && (y>=y1) && (y<=y2) && (z>=z1) && (z<=z2); };
-	ICF	BOOL	contains	(const Tvector &p)	const		{ return contains(p.x,p.y,p.z);	};
-	ICF	BOOL	contains	(SelfCRef b)		const		{ return contains(b.min) && contains(b.max); };
+	ICF	bool	contains	(T x, T y, T z)		const		{ return (x>=x1) && (x<=x2) && (y>=y1) && (y<=y2) && (z>=z1) && (z<=z2); };
+	ICF	bool	contains	(const Tvector &p)	const		{ return contains(p.x,p.y,p.z);	};
+	ICF	bool	contains	(SelfCRef b)		const		{ return contains(b.min) && contains(b.max); };
 	
-	IC	BOOL	similar		(SelfCRef b)		const		{ return min.similar(b.min) && max.similar(b.max); };
+	IC	bool	similar		(SelfCRef b)		const		{ return min.similar(b.min) && max.similar(b.max); };
 	
 	ICF	SelfRef	modify		(const Tvector &p)				{ min.min(p); max.max(p);				return *this;	}
 	ICF	SelfRef	modify		(T x, T y, T z)					{ _vector3<T> tmp = {x,y,z}; return		modify(tmp);	}
@@ -118,19 +118,19 @@ public:
 	};
 	
 	// Detects if this box intersect other
-	ICF	BOOL	intersect	(SelfCRef box )
+	ICF	bool	intersect	(SelfCRef box )
 	{
-		if( max.x < box.min.x )	return FALSE;
-		if( max.y < box.min.y )	return FALSE;
-		if( max.z < box.min.z )	return FALSE;
-		if( min.x > box.max.x )	return FALSE;
-		if( min.y > box.max.y )	return FALSE;
-		if( min.z > box.max.z )	return FALSE;
-		return TRUE;
+		if( max.x < box.min.x )	return false;
+		if( max.y < box.min.y )	return false;
+		if( max.z < box.min.z )	return false;
+		if( min.x > box.max.x )	return false;
+		if( min.y > box.max.y )	return false;
+		if( min.z > box.max.z )	return false;
+		return true;
 	};
 
 	// Does the vector3 intersects box
-	IC BOOL Pick			(const Tvector& start, const Tvector& dir)
+	IC bool Pick			(const Tvector& start, const Tvector& dir)
 	{
 		T	alpha,xt,yt,zt;
 		Tvector rvmin,rvmax;
@@ -200,7 +200,7 @@ public:
 	};
 	IC ERP_Result Pick2(const Tvector& origin, const Tvector& dir, Tvector& coord)
 	{
-		BOOL Inside = TRUE;
+		bool Inside = true;
 		Tvector		MaxT;
 		MaxT.x=MaxT.y=MaxT.z=-1.0f;
 		
@@ -208,33 +208,33 @@ public:
 		{
 			if(origin[0] < min[0]) {
 				coord[0]	= min[0];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[0]))	MaxT[0] = (min[0] - origin[0]) / dir[0]; // Calculate T distances to candidate planes
 			} else if(origin[0] > max[0]) {
 				coord[0]	= max[0];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[0]))	MaxT[0] = (max[0] - origin[0]) / dir[0]; // Calculate T distances to candidate planes
 			}
 		}
 		{
 			if(origin[1] < min[1]) {
 				coord[1]	= min[1];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[1]))	MaxT[1] = (min[1] - origin[1]) / dir[1]; // Calculate T distances to candidate planes
 			} else if(origin[1] > max[1]) {
 				coord[1]	= max[1];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[1]))	MaxT[1] = (max[1] - origin[1]) / dir[1]; // Calculate T distances to candidate planes
 			}
 		}
 		{
 			if(origin[2] < min[2]) {
 				coord[2]	= min[2];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[2]))	MaxT[2] = (min[2] - origin[2]) / dir[2]; // Calculate T distances to candidate planes
 			} else if(origin[2] > max[2]) {
 				coord[2]	= max[2];
-				Inside		= FALSE;
+				Inside		= false;
 				if(IR(dir[2]))	MaxT[2] = (max[2] - origin[2]) / dir[2]; // Calculate T distances to candidate planes
 			}
 		}
@@ -327,6 +327,6 @@ typedef _box3<double>	Dbox;
 typedef _box3<double>	Dbox3;
 
 template <class T>
-BOOL	_valid			(const _box3<T>& c)	{ return _valid(min) && _valid(max); }
+bool	_valid			(const _box3<T>& c)	{ return _valid(min) && _valid(max); }
 
 #endif

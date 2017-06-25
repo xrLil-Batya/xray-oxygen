@@ -38,7 +38,7 @@ u32 NET_Packet::r_tell()
 	return			r_pos; 
 }
 
-BOOL NET_Packet::r_eof()
+bool NET_Packet::r_eof()
 {
 	INI_ASSERT		(r_eof)
 	return			(r_pos>=B.count);

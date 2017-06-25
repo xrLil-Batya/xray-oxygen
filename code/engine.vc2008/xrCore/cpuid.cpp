@@ -10,7 +10,7 @@
 /***
 * int _cpuid (_p_info *pinfo)
 * Entry:
-*   pinfo: pointer to _p_info, NULL is not allowed!
+*   pinfo: pointer to _p_info, nullptr is not allowed!
 *
 * Exit:
 *   Returns int with capablity bit set.

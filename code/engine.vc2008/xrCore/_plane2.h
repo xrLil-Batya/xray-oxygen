@@ -18,7 +18,7 @@ public:
 		d		= P.d;
 		return *this;
 	}
-	IC	 BOOL 	similar (Self &P, T eps_n=EPS, T eps_d=EPS)
+	IC	 bool 	similar (Self &P, T eps_n=EPS, T eps_d=EPS)
 	{
 		return (n.similar(P.n,eps_n)&&(_abs(d-P.d)<eps_d));
 	}
@@ -47,30 +47,30 @@ public:
 	{
 		return _abs(classify(v));
 	}
-	IC BOOL intersectRayDist(const _vector2<T>& P, const _vector2<T>& D, T& dist)
+	IC bool intersectRayDist(const _vector2<T>& P, const _vector2<T>& D, T& dist)
 	{
 		T numer = classify(P);
 		T denom = n.dotproduct(D);
 
 		if (_abs(denom)<EPS_S)  // normal is orthogonal to vector3, cant intersect
-			return FALSE;
+			return false;
 
 		dist = -(numer / denom);
 		return ((dist>0.f)||fis_zero(dist));
 	}
-	IC BOOL intersectRayPoint(const _vector2<T>& P, const _vector2<T>& D, _vector2<T>& dest) 
+	IC bool intersectRayPoint(const _vector2<T>& P, const _vector2<T>& D, _vector2<T>& dest) 
 	{
 		T numer = classify(P);
 		T denom = n.dotproduct(D);
 
-		if (_abs(denom)<EPS_S) return FALSE; // normal is orthogonal to vector3, cant intersect
+		if (_abs(denom)<EPS_S) return false; // normal is orthogonal to vector3, cant intersect
 		else {
 			float dist	= -(numer / denom);
 			dest.mad	(P,D,dist);
 			return 		((dist>0.f)||fis_zero(dist));
 		}
 	}
-	IC	BOOL	intersect (
+	IC	bool	intersect (
 		const _vector2<T>& u, const _vector2<T>& v,	// segment
 		_vector2<T>&	isect)                  // intersection point
 	{
@@ -87,7 +87,7 @@ public:
 		return true;
 	}
 
-	IC	BOOL	intersect_2 (
+	IC	bool	intersect_2 (
 		const _vector2<T>& u, const _vector2<T>& v,				// segment
 		_vector2<T>& isect)						// intersection point
 	{
@@ -111,6 +111,6 @@ typedef _plane2<float>	Fplane2;
 typedef _plane2<double>	Dplane2;
 
 template <class T>
-BOOL	_valid			(const _plane2<T>& s)		{ return _valid(s.n) && _valid(s.d);	}
+bool	_valid			(const _plane2<T>& s)		{ return _valid(s.n) && _valid(s.d);	}
 
 #endif

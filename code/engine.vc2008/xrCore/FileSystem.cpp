@@ -9,7 +9,7 @@
 #include "commdlg.h"
 #include "vfw.h"
 
-EFS_Utils*	xr_EFS	= NULL;
+EFS_Utils*	xr_EFS	= nullptr;
 //----------------------------------------------------
 EFS_Utils::EFS_Utils( )
 {
@@ -265,14 +265,14 @@ bool EFS_Utils::GetSaveName(const char* initial, string_path& buffer, const char
 	return bRes;
 }
 //----------------------------------------------------
-const char* EFS_Utils::AppendFolderToName(char* tex_name, u32 const tex_name_size, int depth, BOOL full_name)
+const char* EFS_Utils::AppendFolderToName(char* tex_name, u32 const tex_name_size, int depth, bool full_name)
 {
 	string256 _fn;
 	xr_strcpy(tex_name,tex_name_size,AppendFolderToName(tex_name, _fn, sizeof(_fn), depth, full_name));
 	return tex_name;
 }
 
-const char* EFS_Utils::AppendFolderToName(const char* src_name, char* dest_name, u32 const dest_name_size, int depth, BOOL full_name)
+const char* EFS_Utils::AppendFolderToName(const char* src_name, char* dest_name, u32 const dest_name_size, int depth, bool full_name)
 {
 	shared_str tmp = src_name;
     const char* s 	= src_name;
