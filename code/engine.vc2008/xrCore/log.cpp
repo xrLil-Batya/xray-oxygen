@@ -4,9 +4,6 @@
 #include <time.h>
 #include "resource.h"
 #include "log.h"
-#ifdef _EDITOR
-	#include "malloc.h"
-#endif
 #include "../FrayBuildConfig.hpp"
 extern BOOL					LogExecCB		= TRUE;
 static string_path			logFName		= "engine.log";
@@ -226,8 +223,8 @@ void CreateLog			(BOOL nl)
 	}
 	if (!no_log){
         IWriter *f		= FS.w_open	(logFName);
-        if (f==NULL){
-        	MessageBox	(NULL,"Can't create log file.","Error",MB_ICONERROR);
+        if (!f){
+        	MessageBox	(nullptr,"Can't create log file.","Error",MB_ICONERROR);
         	abort();
         }
         FS.w_close		(f);

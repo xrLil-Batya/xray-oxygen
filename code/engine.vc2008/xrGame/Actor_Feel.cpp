@@ -109,7 +109,7 @@ BOOL CActor::CanPickItem(const CFrustum& frustum, const Fvector& from, CObject* 
 			collide::ray_defs			RD(from, dir, range, CDB::OPT_CULL, collide::rqtBoth);
 			VERIFY						(!fis_zero(RD.dir.square_magnitude()));
 			RQR.r_clear					();
-			Level().ObjectSpace.RayQuery(RQR, RD, info_trace_callback, &bOverlaped, NULL, item);
+			Level().ObjectSpace.RayQuery(RQR, RD, (collide::rq_callback*)info_trace_callback, &bOverlaped, nullptr, item);
 		}
 	}
 	return !bOverlaped;

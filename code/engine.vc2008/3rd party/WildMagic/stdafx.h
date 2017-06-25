@@ -15,7 +15,7 @@
 #ifdef MIXED
 #define	USE_MEMORY_MONITOR
 #endif
-#ifdef REL
+#ifdef RELEASE
 #	undef _CPPUNWIND
 #endif
 #include "..\..\xrCore\xrCore.h"

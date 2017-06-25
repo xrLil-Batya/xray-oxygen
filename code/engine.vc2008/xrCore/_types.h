@@ -19,10 +19,10 @@ using f64 = double;
 
 using pstr = char*;
 using pcstr = const char*;
-#ifdef _M_X64
+
 #	undef max
 #	undef min
-#endif
+
 // Type limits
 template <typename T>
 constexpr auto type_max = std::numeric_limits<T>::max();

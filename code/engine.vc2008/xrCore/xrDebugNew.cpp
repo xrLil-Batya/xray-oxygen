@@ -122,13 +122,7 @@ void xrDebug::do_exit	(const std::string &message)
 #ifdef _COMPILERS_
 	MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
 #endif
-#ifdef DEBUG
-    if (IsDebuggerPresent())
-    {
-        DebugBreak();
-    }
-#endif
-	TerminateProcess	(GetCurrentProcess(),3);
+	TerminateProcess	(GetCurrentProcess(),5);
 }
 
 void xrDebug::backend	(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)

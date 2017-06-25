@@ -159,7 +159,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies />
-      <ImportLibrary>$(SolutionDir)..\..\libraries\Mixed\xrLauncher.lib</ImportLibrary>
+      <ImportLibrary>$(SolutionDir)..\..\libraries\Release\xrLauncher.lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">

@@ -193,7 +193,7 @@ namespace Feel {
 						// cache outdated. real query.
 						VERIFY(!fis_zero(RD.dir.magnitude()));
 
-						if (g_pGameLevel->ObjectSpace.RayQuery	(RQR, RD, feel_vision_callback, &feel_params, NULL, NULL))	{
+						if (g_pGameLevel->ObjectSpace.RayQuery	(RQR, RD, (collide::rq_callback*)feel_vision_callback, &feel_params, NULL, NULL))	{
 							I->Cache_vis	= feel_params.vis	;
 							I->Cache.set	(P,D,f,TRUE	)		;
 						}

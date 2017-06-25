@@ -2,7 +2,7 @@
 #define DefinesH
 
 #ifdef	DEBUG
-	ENGINE_API	extern BOOL			bDebug;
+	ENGINE_API	extern bool			bDebug;
 #else
 	#define bDebug 0
 #endif

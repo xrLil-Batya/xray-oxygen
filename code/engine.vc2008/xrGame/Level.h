@@ -12,7 +12,6 @@
 #include "GlobalFeelTouch.hpp"
 
 #include "Level_network_map_sync.h"
-#include "secure_messaging.h"
 #include "traffic_optimization.h"
 
 

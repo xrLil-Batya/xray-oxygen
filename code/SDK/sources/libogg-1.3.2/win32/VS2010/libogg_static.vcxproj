@@ -163,7 +163,7 @@
       <CallingConvention>Cdecl</CallingConvention>
     </ClCompile>
     <Lib>
-      <OutputFile>$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\$(ProjectName).lib</OutputFile>
+      <OutputFile>$(SolutionDir)..\..\libraries\$(Configuration)\$(ProjectName).lib</OutputFile>
     </Lib>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
