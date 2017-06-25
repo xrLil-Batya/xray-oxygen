@@ -388,35 +388,35 @@ int __cdecl CScriptStorage::script_log	(ScriptStorage::ELuaMessageType tLuaMessa
 	return			(result);
 }
 
-bool CScriptStorage::parse_namespace(LPCSTR caNamespaceName, LPSTR b, u32 const b_size, LPSTR c, u32 const c_size)
+bool CScriptStorage::parse_namespace(const char* caNamespaceName, char* b, u32 const b_size, char* c, u32 const c_size)
 {
-	*b				= 0;
-	*c				= 0;
-	LPSTR			S2;
-	STRCONCAT		(S2,caNamespaceName);
-	LPSTR			S	= S2;
-	for (int i=0;;++i) {
-		if (!xr_strlen(S)) {
-			script_log	(ScriptStorage::eLuaMessageTypeError,"the namespace name %s is incorrect!",caNamespaceName);
+	*b = 0;
+	*c = 0;
+	char* S = const_cast<char*>(caNamespaceName);
+	for (int i = 0;; ++i)
+	{
+		if (!xr_strlen(S))
+		{
+			script_log(ScriptStorage::eLuaMessageTypeError, "the namespace name %s is incorrect!", caNamespaceName);
 			return		(false);
 		}
-		LPSTR			S1 = strchr(S,'.');
+		char*			S1 = strchr(S, '.');
 		if (S1)
-			*S1				= 0;
+			*S1 = 0;
 
 		if (i)
-			xr_strcat		(b,b_size,"{");
-		xr_strcat			(b,b_size,S);
-		xr_strcat			(b,b_size,"=");
+			xr_strcat(b, b_size, "{");
+		xr_strcat(b, b_size, S);
+		xr_strcat(b, b_size, "=");
 		if (i)
-			xr_strcat		(c,c_size,"}");
+			xr_strcat(c, c_size, "}");
 		if (S1)
-			S			= ++S1;
+			S = ++S1;
 		else
 			break;
 	}
 
-	return			(true);
+	return (true);
 }
 
 bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, LPCSTR caScriptName, LPCSTR caNameSpaceName)
@@ -468,17 +468,10 @@ bool CScriptStorage::load_buffer	(lua_State *L, LPCSTR caBuffer, size_t tSize, L
 		if ( dynamic_allocation )
 			xr_free		(script);
 	}
-	else {
-//		try
-		{
-			l_iErrorCode= luaL_loadbuffer(L,caBuffer,tSize,caScriptName);
-		}
-//		catch(...) {
-//			l_iErrorCode= LUA_ERRSYNTAX;
-//		}
-	}
+	else l_iErrorCode= luaL_loadbuffer(L,caBuffer,tSize,caScriptName);
 
-	if (l_iErrorCode) {
+	if (l_iErrorCode) 
+	{
 #ifdef DEBUG
 		print_output	(L,caScriptName,l_iErrorCode);
 #endif
@@ -556,28 +549,27 @@ bool CScriptStorage::load_file_into_namespace(LPCSTR caScriptName, LPCSTR caName
 	return			(true);
 }
 
-bool CScriptStorage::namespace_loaded(LPCSTR N, bool remove_from_stack)
+bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 {
 	int						start = lua_gettop(lua());
 	lua_pushstring 			(lua(),"_G"); 
 	lua_rawget 				(lua(),LUA_GLOBALSINDEX); 
-	string256				S2;
-	xr_strcpy					(S2,N);
-	LPSTR					S = S2;
+
+	char*					S = const_cast<char*>(N);
 	for (;;) { 
-		if (!xr_strlen(S)) {
+		if (!xr_strlen(S)) 
+		{
 			VERIFY			(lua_gettop(lua()) >= 1);
 			lua_pop			(lua(), 1); 
 			VERIFY			(start == lua_gettop(lua()));
 			return			(false); 
 		}
-		LPSTR				S1 = strchr(S,'.'); 
+		LPSTR				S1 = strchr(S,'.');
 		if (S1)
 			*S1				= 0; 
 		lua_pushstring 		(lua(),S); 
 		lua_rawget 			(lua(),-2); 
 		if (lua_isnil(lua(),-1)) { 
-//			lua_settop		(lua(),0);
 			VERIFY			(lua_gettop(lua()) >= 2);
 			lua_pop			(lua(),2); 
 			VERIFY			(start == lua_gettop(lua()));
@@ -585,7 +577,6 @@ bool CScriptStorage::namespace_loaded(LPCSTR N, bool remove_from_stack)
 		}
 		else 
 			if (!lua_istable(lua(),-1)) { 
-//				lua_settop	(lua(),0);
 				VERIFY		(lua_gettop(lua()) >= 1);
 				lua_pop		(lua(),1); 
 				VERIFY		(start == lua_gettop(lua()));
@@ -609,7 +600,7 @@ bool CScriptStorage::namespace_loaded(LPCSTR N, bool remove_from_stack)
 	return					(true); 
 }
 
-bool CScriptStorage::object	(LPCSTR identifier, int type)
+bool CScriptStorage::object	(const char* identifier, int type)
 {
 	int						start = lua_gettop(lua());
 	lua_pushnil				(lua()); 
@@ -629,7 +620,7 @@ bool CScriptStorage::object	(LPCSTR identifier, int type)
 	return					(false); 
 }
 
-bool CScriptStorage::object	(LPCSTR namespace_name, LPCSTR identifier, int type)
+bool CScriptStorage::object	(const char* namespace_name, const char* identifier, int type)
 {
 	int						start = lua_gettop(lua());
 	if (xr_strlen(namespace_name) && !namespace_loaded(namespace_name,false)) {
@@ -641,16 +632,14 @@ bool CScriptStorage::object	(LPCSTR namespace_name, LPCSTR identifier, int type)
 	return					(result); 
 }
 
-luabind::object CScriptStorage::name_space(LPCSTR namespace_name)
+luabind::object CScriptStorage::name_space(const char* namespace_name)
 {
-	string256			S1;
-	xr_strcpy				(S1,namespace_name);
-	LPSTR				S = S1;
+	char* S = const_cast<char*>(namespace_name);
 	luabind::object		lua_namespace = luabind::get_globals(lua());
 	for (;;) {
 		if (!xr_strlen(S))
 			return		(lua_namespace);
-		LPSTR			I = strchr(S,'.');
+		LPSTR			I = strchr(const_cast<char*>(S),'.');
 		if (!I)
 			return		(lua_namespace[S]);
 		*I				= 0;
@@ -661,11 +650,11 @@ luabind::object CScriptStorage::name_space(LPCSTR namespace_name)
 
 struct raii_guard {
 	int m_error_code;
-	LPCSTR const& m_error_description;
-	raii_guard	(int error_code, LPCSTR const& m_description) : m_error_code(error_code), m_error_description(m_description) {}
-    raii_guard(const raii_guard& other) = delete;
-    raii_guard& operator=(const raii_guard& other) = delete;
-	~raii_guard	()
+	const char* const& m_error_description;
+	raii_guard(int error_code, const char* const& m_description) : m_error_code(error_code), m_error_description(m_description) {}
+	raii_guard(const raii_guard& other) = delete;
+	raii_guard& operator=(const raii_guard& other) = delete;
+	~raii_guard()
 	{
 #ifdef DEBUG
 		bool lua_studio_connected = !!ai().script_engine().debugger();
@@ -673,56 +662,54 @@ struct raii_guard {
 #endif //#ifdef DEBUG
 		{
 #ifdef DEBUG
-			static bool const break_on_assert	= !!strstr(Core.Params,"-break_on_assert");
+			static bool const break_on_assert = !!strstr(Core.Params, "-break_on_assert");
 #else // #ifdef DEBUG
-			static bool const break_on_assert	= true;
+			static bool const break_on_assert = true;
 #endif // #ifdef DEBUG
-			if ( !m_error_code  )
+			if (!m_error_code)
 				return;
 
-			if ( break_on_assert )
-				R_ASSERT2		( !m_error_code, m_error_description );
+			if (break_on_assert)
+				R_ASSERT2(!m_error_code, m_error_description);
 			else
-				Msg				( "! SCRIPT ERROR: %s", m_error_description );
+				Msg("! SCRIPT ERROR: %s", m_error_description);
 		}
 	}
 }; // struct raii_guard
 
-bool CScriptStorage::print_output(lua_State *L, LPCSTR caScriptFileName, int iErorCode)
+// FX: Added Error text to raii_guard
+bool CScriptStorage::print_output(lua_State *L, const char* caScriptFileName, int iErorCode, const char* caErrorText)
 {	
 	if (iErorCode)
 		print_error		(L,iErorCode);
 
-	LPCSTR				S = "see call_stack for details!";
-
-	raii_guard			guard(iErorCode, S);
+	raii_guard			guard(iErorCode, caErrorText);
 
 	if (!lua_isstring(L,-1))		
 		return				(false);
 	
-	S = lua_tostring(L,-1);
-	if (!xr_strcmp(S,"cannot resume dead coroutine")) {
-		VERIFY2	("Please do not return any values from main!!!",caScriptFileName);
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if(ai().script_engine().debugger() && ai().script_engine().debugger()->Active() ){
-			ai().script_engine().debugger()->Write(S);
+	caErrorText = lua_tostring(L,-1);
+	if (!xr_strcmp(caErrorText,"cannot resume dead coroutine")) 
+	{
+		VERIFY2	("Please do not return any values from main!!!" , caScriptFileName);
+#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
+		if(ai().script_engine().debugger() && ai().script_engine().debugger()->Active() )
+		{
+			ai().script_engine().debugger()->Write(caErrorText);
 			ai().script_engine().debugger()->ErrorBreak();
 		}
-#	endif // #ifndef USE_LUA_STUDIO
 #endif // #ifdef USE_DEBUGGER
 	}
 	else {
 		if (!iErorCode)
 			script_log	(ScriptStorage::eLuaMessageTypeInfo,"Output from %s",caScriptFileName);
-		script_log		(iErorCode ? ScriptStorage::eLuaMessageTypeError : ScriptStorage::eLuaMessageTypeMessage,"%s",S);
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if (ai().script_engine().debugger() && ai().script_engine().debugger()->Active()) {
-			ai().script_engine().debugger()->Write		(S);
+		script_log		(iErorCode ? ScriptStorage::eLuaMessageTypeError : ScriptStorage::eLuaMessageTypeMessage,"%s", caErrorText);
+#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
+		if (ai().script_engine().debugger() && ai().script_engine().debugger()->Active()) 
+		{
+			ai().script_engine().debugger()->Write		(caErrorText);
 			ai().script_engine().debugger()->ErrorBreak	();
 		}
-#	endif // #ifndef USE_LUA_STUDIO
 #endif // #ifdef USE_DEBUGGER
 	}
 	return				(true);

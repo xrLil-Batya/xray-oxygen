@@ -72,7 +72,7 @@ public:
 			luabind::object		name_space					(LPCSTR	namespace_name);
 			int					error_log					(LPCSTR	caFormat, ...);
 	static	int		__cdecl		script_log					(ELuaMessageType message,	LPCSTR	caFormat, ...);
-	static	bool				print_output				(lua_State *L,		LPCSTR	caScriptName,		int		iErorCode = 0);
+	static	bool				print_output				(lua_State *L, LPCSTR	caScriptName, int iErorCode = 0, const char* caErrorText = "see call_stack for details!");
 	static	void				print_error					(lua_State *L,		int		iErrorCode);
 	virtual	void				on_error					(lua_State *L) = 0;
 
