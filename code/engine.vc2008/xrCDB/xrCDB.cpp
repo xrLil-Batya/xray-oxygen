@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma comment(lib, "opc.lib")
 #include "xrCDB.h"
 
 #ifdef USE_ARENA_ALLOCATOR
@@ -13,7 +13,7 @@ doug_lea_allocator	g_collision_allocator(s_fake_array, s_arena_size, "collision"
 #endif // #ifdef USE_ARENA_ALLOCATOR
 
 namespace Opcode {
-#	include "OPC_TreeBuilders.h"
+#	include "../3rd party/OpenCode/OPC_TreeBuilders.h"
 } // namespace Opcode
 
 using namespace CDB;

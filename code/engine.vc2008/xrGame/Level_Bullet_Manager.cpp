@@ -794,24 +794,6 @@ bool CBulletManager::process_bullet			(collide::rq_results & storage, SBullet& b
 	float const	air_resistance	= (GameID() == eGameIDSingle) ? m_fAirResistanceK : bullet.air_resistance;
 	bullet.tracer_start_position= bullet.bullet_pos;
 
-#if 0//def DEBUG
-	extern BOOL g_bDrawBulletHit;
-	if (g_bDrawBulletHit)
-	{
-		Msg	(
-			"free fly velocity: %f",
-			trajectory_velocity(
-				bullet.start_velocity,
-				gravity,
-				air_resistance,
-				fis_zero(air_resistance) ?
-				0.f :
-				(1.f/air_resistance - air_resistance_epsilon)
-			).magnitude()
-		);
-	}
-#endif
-
 	Fvector const&start_position= bullet.bullet_pos;
 	Fvector	previous_position	= start_position;
 	float low					= bullet.life_time;
@@ -1023,14 +1005,6 @@ void CBulletManager::CommitEvents			()	// @ the start of frame
 
 void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bullet, const Fvector& end_point, collide::rq_result& R, u16 tgt_material)
 {
-#if 0//def DEBUG
-	if (m_Events.size() > 1000) {
-		static bool breakpoint = true;
-		if (breakpoint)
-			__asm int 3;
-	}
-#endif // #ifdef DEBUG
-
 	m_Events.push_back	(_event())		;
 	_event&	E		= m_Events.back()	;
 	E.Type			= Type				;
@@ -1054,18 +1028,13 @@ void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bu
 
 				E.Repeated = (R.O->ID() == E.bullet.targetID);
 				if (GameID() == eGameIDSingle)
-				{
 					bullet->targetID = R.O->ID();
-				}
-				else
-				{
-					if (bullet->targetID != R.O->ID())
+				else if (bullet->targetID != R.O->ID())
 					{
 						CGameObject* pGO = smart_cast<CGameObject*>(R.O);
 						if (!pGO || !pGO->BonePassBullet(R.element))
 							bullet->targetID = R.O->ID();						
 					}
-				}
 			};
 		}break;
 	case EVENT_REMOVE:

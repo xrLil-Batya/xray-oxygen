@@ -61,5 +61,5 @@ IC	void cdelete(T* &ptr)
 
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define ENGINE_API
-#include "Opcode.h"
+#include "../3rd party/OpenCode/Opcode.h"
 

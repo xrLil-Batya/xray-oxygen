@@ -639,7 +639,7 @@ void CGamePersistent::OnFrame	()
 			}
 		}
 #else // MASTER_GOLD
-		if (g_actor && IsGameTypeSingle())
+		if (g_actor)
 		{
 			CCameraBase* C = NULL;
 			if(!Actor()->Holder())
