@@ -33,7 +33,7 @@ void ErrorLog(LPCSTR caMessage)
 		bool lua_studio_connected = !!ai().script_engine().debugger();
 		if (!lua_studio_connected)
 #endif //#ifdef DEBUG
-	R_ASSERT2(0, caMessage);
+	R_ASSERT2(false, caMessage);
 }
 
 void FlushLogs()
@@ -77,7 +77,7 @@ struct profile_timer_script {
 	u64							m_count;
 	int							m_recurse_mark;
 	
-	IC								profile_timer_script	()
+	IC							profile_timer_script()
 	{
 		m_start_cpu_tick_count	= 0;
 		m_accumulator			= 0;
@@ -85,7 +85,7 @@ struct profile_timer_script {
 		m_recurse_mark			= 0;
 	}
 
-	IC								profile_timer_script	(const profile_timer_script &profile_timer)
+	IC							profile_timer_script	(const profile_timer_script &profile_timer)
 	{
 		*this					= profile_timer;
 	}
@@ -99,7 +99,7 @@ struct profile_timer_script {
 		return					(*this);
 	}
 
-	IC		bool					operator<				(const profile_timer_script &profile_timer) const
+	ICF		bool				operator<				(const profile_timer_script &profile_timer) const
 	{
 		return					(m_accumulator < profile_timer.m_accumulator);
 	}
@@ -129,7 +129,7 @@ struct profile_timer_script {
 			m_accumulator		+= finish - m_start_cpu_tick_count;
 	}
 
-	IC		float					time					() const
+	IC		float				time					() const
 	{
 		FPU::m64r				();
 		float					result = (float(double(m_accumulator)/double(CPU::clk_per_second))*1000000.f);
@@ -150,9 +150,9 @@ IC	profile_timer_script	operator+	(const profile_timer_script &portion0, const p
 ICF	u32	script_time_global	()	{ return Device.dwTimeGlobal; }
 ICF	u32	script_time_global_async	()	{ return Device.TimerAsync_MMT(); }
 #else
-ICF	u32	script_time_global	()	{ return 0; }
-ICF	u32	script_time_global_async	()	{ return 0; }
-#endif
+ICF	u32	script_time_global	()	{ return nullptr; }
+ICF	u32	script_time_global_async	()	{ return nullptr; }
+#endif+
 
 #ifdef XRGAME_EXPORTS
 static bool is_enough_address_space_available_impl()
@@ -161,30 +161,7 @@ static bool is_enough_address_space_available_impl()
 	return is_enough_address_space_available( );
 }
 #endif // #ifdef XRGAME_EXPORTS
-/*
-void load_modules(const char* name, const char* address)
-{
-	string_path test = { (char)name };
 
-	Msg("%s dll scaning...");
-	FS.update_path("$modules$");
-	HMODULE hLib = GetModuleHandle(dll_name.c_str());
-	if (hLib)
-	{
-		Msg("%s found! Attaching :)", name);
-
-		typedef void(WINAPI *LUA_CAPTURE)(lua_State *L);
-
-		LUA_CAPTURE ExtCapture = (LUA_CAPTURE)GetProcAddress(hLib, address);
-		if (NULL != ExtCapture)
-			ExtCapture(ai().script_engine().lua());
-		else
-			Msg("%s proc not found in %s", address, name);
-	}
-	else
-		Msg("%s not found!", name);
-}
-*/
 #pragma optimize("s",on)
 void CScriptEngine::script_register(lua_State *L)
 {
@@ -215,10 +192,12 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L,	"is_enough_address_space_available",is_enough_address_space_available_impl);
 
 	//FX: подгрузка любых модулей
-	//{
-	//	luabind::functor<LPCSTR> module_init;
-	//	R_ASSERT2(ai().script_engine().functor<LPCSTR>("fray_config.modules_init", module_init), "Can't call lua function!");
-	//	module_init();
-	//}
+#pragma todo("FX to FX: update load modules code...")
+/*	{
+		luabind::functor<LPCSTR> module_init;
+		R_ASSERT2(ai().script_engine().functor<LPCSTR>("fray_config.modules_init", module_init), "Can't call lua function!");
+		module_init();
+	} 
+*/
 #endif // #ifdef XRGAME_EXPORTS
 }

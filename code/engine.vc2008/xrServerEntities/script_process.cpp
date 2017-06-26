@@ -85,12 +85,7 @@ void CScriptProcess::update()
 	}
 
 #if defined(DEBUG)
-	try {
-#pragma todo ("Dima cant find this function 'lua_setgcthreshold' ")
-		lua_gc				(ai().script_engine().lua(), LUA_GCSTEP, 0);
-	}
-	catch(...) {
-	}
+	lua_gc				(ai().script_engine().lua(), LUA_GCSTEP, 0);
 #endif
 }
 

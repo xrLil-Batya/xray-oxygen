@@ -20,8 +20,8 @@ public:
 
 	virtual void	UpdateCL			();
 
-	virtual bool	CanExecRotationJump	() {return true;}
-	virtual void	CheckSpecParams		(u32 spec_params);
+IC	virtual bool	CanExecRotationJump	() {return true;}
+	virtual void	CheckSpecParams(u32 spec_params) override {};
 
 	// look at enemy
 	static void	_BCL	BoneCallback	(CBoneInstance *B);
@@ -30,7 +30,7 @@ public:
 			float	_cur_delta, _target_delta;
 			bool	look_at_enemy;
 	
-	virtual bool	ability_can_drag	() {return true;}
+IC	virtual bool	ability_can_drag	() {return true;}
 
 	virtual	char*	get_monster_class_name () { return "boar"; }
 	

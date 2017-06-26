@@ -62,21 +62,21 @@ xr_string member_to_string			(luabind::object const& e, LPCSTR function_signatur
 
 		xr_string s = "";
 
-		{
-			lua_getupvalue(L, -1, 2);
-			detail::stack_pop p2(L, 1);
-		}
+		lua_getupvalue(L, -1, 2);
+		detail::stack_pop p2(L, 1);
 
 		{
 			lua_getupvalue(L, -1, 1);
 			detail::stack_pop p2(L, 1);
 			detail::method_rep* m = static_cast<detail::method_rep*>(lua_touserdata(L, -1));
 
-			for (std::vector<detail::overload_rep>::const_iterator i = m->overloads().begin();
+			for (auto i = m->overloads().begin();
 				i != m->overloads().end(); ++i)
 			{
 				luabind::internal_string str;
+#ifndef NDEBUG
 				i->get_signature(L, str);
+#endif
 				if (i != m->overloads().begin())
 					s += "\n";
 
@@ -84,9 +84,6 @@ xr_string member_to_string			(luabind::object const& e, LPCSTR function_signatur
 				s += function_signature + process_signature(xr_str) + ";";
 			}
 		}
-#ifdef BOOST_NO_STRINGSTREAM
-		s += "\n";// std::ends;
-#endif
 		return s;
 	}
 
@@ -117,9 +114,8 @@ void print_class						(lua_State *L, luabind::detail::class_rep *crep)
 	// print class constants
 	{
 		const luabind::detail::class_rep::STATIC_CONSTANTS	&constants = crep->static_constants();
-		luabind::detail::class_rep::STATIC_CONSTANTS::const_iterator	I = constants.begin();
-		luabind::detail::class_rep::STATIC_CONSTANTS::const_iterator	E = constants.end();
-		for ( ; I != E; ++I)
+		
+		for (auto I = constants.begin(); I != constants.end(); ++I)
 #ifndef USE_NATIVE_LUA_STRINGS
 			Msg		("    const %s = %d;",(*I).first,(*I).second);
 #else
@@ -136,9 +132,8 @@ void print_class						(lua_State *L, luabind::detail::class_rep *crep)
 		typedef luabind::detail::class_rep::callback_map PROPERTIES;
 #endif
 		const PROPERTIES &properties = crep->properties();
-		PROPERTIES::const_iterator	I = properties.begin();
-		PROPERTIES::const_iterator	E = properties.end();
-		for ( ; I != E; ++I)
+		
+		for (auto I = properties.begin(); I != properties.end(); ++I)
 #ifndef USE_NATIVE_LUA_STRINGS
 			Msg	("    property %s;",(*I).first);
 #else
@@ -151,11 +146,12 @@ void print_class						(lua_State *L, luabind::detail::class_rep *crep)
 	{
 		typedef luabind::internal_vector<luabind::detail::construct_rep::overload_t> Constructors;
 		const Constructors &constructors = crep->constructors().overloads;
-		Constructors::const_iterator	I = constructors.begin();
-		Constructors::const_iterator	E = constructors.end();
-		for ( ; I != E; ++I) {
+		
+		for (auto I = constructors.begin(); I != constructors.end(); ++I) {
 			luabind::internal_string luaS;
+#ifndef NDEBUG
 			(*I).get_signature(L,luaS);
+#endif
 			xr_string S(luaS.c_str());
 			strreplaceall	(S,"custom [","");
 			strreplaceall	(S,"]","");
@@ -219,7 +215,9 @@ void print_free_functions				(lua_State *L, const luabind::object &object, LPCST
 
 						for (auto i = rep->overloads().begin(); i != rep->overloads().end(); ++i) {
 							luabind::internal_string luaS;
+#ifndef NDEBUG
 							(*i).get_signature(L,luaS);
+#endif
 							xr_string	S(luaS.c_str());
 							Msg("    %sfunction %s%s;",indent.c_str(),rep->name(),process_signature(S).c_str());
 						}

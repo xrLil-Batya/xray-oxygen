@@ -77,9 +77,8 @@ void CAI_Bloodsucker::Load(LPCSTR section)
 {
 	inherited::Load(section);
 
-	if(pSettings->line_exist(section,"collision_hit_off")){
-		collision_hit_off = true;
-	}else collision_hit_off = false;
+	collision_hit_off = (pSettings->line_exist(section, "collision_hit_off")) ? true : false;
+
 	if(!pSettings->line_exist(section,"is_friendly"))
 		com_man().add_ability			(ControlCom::eControlRunAttack);	
 	com_man().add_ability			(ControlCom::eControlRotationJump);

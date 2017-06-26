@@ -43,41 +43,12 @@ CAI_Dog::~CAI_Dog()
 void CAI_Dog::Load(LPCSTR section)
 {
 	inherited::Load	(section);
-	if(pSettings->line_exist(section,"anim_factor"))
-	{
-		m_anim_factor			= pSettings->r_u32(section,"anim_factor");
-	} else {
-		m_anim_factor			= 50;
-	}
 
-	if(pSettings->line_exist(section,"corpse_use_timeout"))
-	{
-		m_corpse_use_timeout	= 1000 * pSettings->r_u32(section,"corpse_use_timeout");
-	} else {
-		m_corpse_use_timeout	= 5000;
-	}
-	
-	if(pSettings->line_exist(section,"min_sleep_time"))
-	{
-		m_min_sleep_time	= 1000 * pSettings->r_u32(section,"min_sleep_time");
-	} else {
-		m_min_sleep_time	= 5000;
-	}
-
-	if(pSettings->line_exist(section,"min_life_time"))
-	{
-		m_min_life_time	= 1000 * pSettings->r_u32(section,"min_life_time");
-	} else {
-		m_min_life_time	= 10000;
-	}
-
-	if(pSettings->line_exist(section,"drive_out_time"))
-	{
-		m_drive_out_time	= 1000 * pSettings->r_u32(section,"drive_out_time");
-	} else {
-		m_drive_out_time	= 10000;
-	}
-
+	m_anim_factor			= (pSettings->line_exist(section, "anim_factor"))		? pSettings->r_u32(section,"anim_factor") : 50;
+	m_corpse_use_timeout	= (pSettings->line_exist(section, "corpse_use_timeout"))? 1000 * pSettings->r_u32(section,"corpse_use_timeout") : 5000;
+	m_min_sleep_time		= (pSettings->line_exist(section, "min_sleep_time"))	? 1000 * pSettings->r_u32(section,"min_sleep_time") : 5000;
+	m_min_life_time			= (pSettings->line_exist(section, "min_life_time"))		? 1000 * pSettings->r_u32(section,"min_life_time") : 10000;
+	m_drive_out_time		= (pSettings->line_exist(section, "drive_out_time"))	? 1000 * pSettings->r_u32(section,"drive_out_time") : 10000;
 
 	if (pSettings->line_exist(section,"min_move_dist")) {
 		min_move_dist	= pSettings->r_u32(section,"min_move_dist");;
@@ -224,9 +195,7 @@ void CAI_Dog::UpdateCL()
 	inherited::UpdateCL();
 
 	if ( !detail::object_exists_in_alife_registry (ID()) )
-	{
 		return;
-	}
 
 	if ( b_anim_end )
 	{
@@ -240,25 +209,21 @@ bool CAI_Dog::is_night()
 	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
 	split_time(Level().GetGameTime(), year, month, day, hours, mins, secs, milisecs);
 	if (hours <= 6 || hours >=21 )
-	{
 		return true;
-	}
+
 	return false;
 }
 
 void CAI_Dog::CheckSpecParams(u32 spec_params)
 {
-	if ((spec_params & ASP_CHECK_CORPSE) == ASP_CHECK_CORPSE) {
+	if ((spec_params & ASP_CHECK_CORPSE) == ASP_CHECK_CORPSE)
 		com_man().seq_run(anim().get_motion_id(eAnimCheckCorpse));
-	}
 	
-	if ((spec_params & ASP_THREATEN) == ASP_THREATEN) {
+	if ((spec_params & ASP_THREATEN) == ASP_THREATEN)
 		anim().SetCurAnim(eAnimThreaten);
-	}
+
 	if ((spec_params & ASP_MOVE_SMELLING) == ASP_MOVE_SMELLING)
-	{
 		anim().SetCurAnim(eAnimHomeWalkGrowl);
-	}
 }
 
 u32 CAI_Dog::get_number_animation()
@@ -289,21 +254,13 @@ bool CAI_Dog::check_start_conditions (ControlCom::EControlType type)
 	{
 		// Lain: if leader or enemy is higher - can jump
 		if ( const CEntityAlive* enemy = EnemyMan.get_enemy() )
-		{	
 			if ( can_use_agressive_jump(enemy) )
-			{
 				// true, probably...
 				return inherited::check_start_conditions(type);
-			}			
-		}
 
 		if ( CMonsterSquad* squad = monster_squad().get_squad(this) )
-		{
 			if ( squad->GetLeader() != this )
-			{
 				return false;
-			}
-		}
 	}
 	return inherited::check_start_conditions(type);
 }
@@ -312,10 +269,8 @@ void CAI_Dog::start_animation()
 {
 	// Lain: check if animation is captured
 	CControl_Com* capturer = control().get_capturer(ControlCom::eControlAnimation);
-	if ( capturer && capturer->ced() != NULL )
-	{
+	if ( capturer && capturer->ced() != 0 )
 		return;
-	}
 
 	b_state_anim = true;
 	com_man().script_capture(ControlCom::eControlAnimation);
@@ -394,18 +349,13 @@ u32 CAI_Dog::get_attack_rebuild_time ()
 	return 100 + u32(25*dist);
 }
 
-bool  CAI_Dog::can_use_agressive_jump (const CObject* enemy) 
+bool  CAI_Dog::can_use_agressive_jump(const CObject* enemy)
 {
 	float delta_y = 0.8f;
-	if ( enemy == Actor() )
-	{
-		if ( Actor()->is_jump() )
-		{
-			delta_y += 0.8f;
-		}
-	}
+	if (enemy == Actor() && Actor()->is_jump())
+		delta_y += 0.8f;
 
-	return enemy->Position().y - Position().y > delta_y; 
+	return enemy->Position().y - Position().y > delta_y;
 }
 
 

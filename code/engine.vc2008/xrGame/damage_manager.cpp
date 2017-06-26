@@ -88,15 +88,9 @@ void CDamageManager::load_section(LPCSTR section, CInifile const * ini)
 			bone_instance.set_param	(0,(float)atof(_GetItem(*(*i).second,0,buffer)));
 			bone_instance.set_param	(1,(float)atoi(_GetItem(*(*i).second,1,buffer)));
 			bone_instance.set_param	(2,(float)atof(_GetItem(*(*i).second,2,buffer)));
-			if (_GetItemCount(*(*i).second) < 4)
-			{
-				bone_instance.set_param	(3,(float)atof(_GetItem(*(*i).second,0,buffer)));
-			}
-			else
-			{
-				bone_instance.set_param	(3,(float)atof(_GetItem(*(*i).second,3,buffer)));
-			}
-			if(0==bone && (fis_zero(bone_instance.get_param(0)) || fis_zero(bone_instance.get_param(2)) ) ){
+			bone_instance.set_param(3, (float)atof(_GetItem(*(*i).second, (_GetItemCount(*(*i).second) < 4) ? 0 : 3, buffer)));
+
+			if(!bone && (fis_zero(bone_instance.get_param(0)) || fis_zero(bone_instance.get_param(2)) ) ){
 				string256 error_str;
 				xr_sprintf(error_str,"hit_scale and wound_scale for root bone cannot be zero. see section [%s]",section);
 				R_ASSERT2(0,error_str);
@@ -121,15 +115,11 @@ void  CDamageManager::HitScale			(const int element, float& hit_scale, float& wo
 	float scale = 0.f;	
 
 	if ( aim_bullet )
-	{
 		scale			= V->LL_GetBoneInstance(u16(element)).get_param(3);
-	}
 
 	// in case when not 1st bullet or 1st bullet has scale unset (== 0)
 	if ( !aim_bullet || !scale )
-	{
 		scale			= V->LL_GetBoneInstance(u16(element)).get_param(0);
-	}
 
 	hit_scale			= scale;
 	

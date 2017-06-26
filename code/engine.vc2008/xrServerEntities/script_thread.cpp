@@ -64,18 +64,6 @@ CScriptThread::CScriptThread(LPCSTR caNamespaceName, bool do_string, bool reload
 		if ( ai().script_engine().debugger() )
 			ai().script_engine().debugger()->add	( m_virtual_machine );
 #endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-//		print_stack_		(ai().script_engine().lua());
-//		m_thread_reference	= luaL_ref(ai().script_engine().lua(),LUA_REGISTRYINDEX);
-//		print_stack_		(ai().script_engine().lua());
-		
-//		if (g_ca_stdout[0]) {
-//			fputc							(0,stderr);
-//			ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeInfo,"%s",g_ca_stdout);
-//			fflush							(stderr);
-//		}
-//		Msg					("lua get top %d",lua_gettop(ai().script_engine().lua()));
-//		print_stack_		(ai().script_engine().lua());
-		
 #ifndef USE_LUA_STUDIO
 #	ifdef DEBUG
 #		ifdef USE_DEBUGGER
@@ -152,9 +140,8 @@ bool CScriptThread::update()
 				ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeInfo,"Script %s is finished!",*m_script_name);
 #endif // DEBUG
 			}
-			else {
+			else
 				VERIFY2		(!lua_gettop(lua()),"Do not pass any value to coroutine.yield()!");
-			}
 		}
 		
 		ai().script_engine().current_thread	(0);

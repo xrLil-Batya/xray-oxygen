@@ -115,9 +115,7 @@ void CCoverManager::compute_static_cover	()
 
 void CCoverManager::clear_covers			(PointVector &covers)
 {
-	PointVector::iterator	I = covers.begin();
-	PointVector::iterator	E = covers.end();
-	for ( ; I != E; ++I) {
+	for (auto I = covers.begin(); I != covers.end(); ++I) {
 		if (!(*I)->m_is_smart_cover) {
 			xr_delete		(*I);
 			continue;
@@ -146,10 +144,7 @@ namespace smart_cover {
 	struct predicate {
 		object const	*m_object;
 	
-		IC				predicate	(object const &object) :
-			m_object	(&object)
-		{
-		}
+		IC	predicate	(object const &object) : m_object(&object) { }
 
 		IC	bool		operator()	(CCoverPoint * const &cover) const
 		{
@@ -164,10 +159,9 @@ namespace smart_cover {
 void CCoverManager::remove_nearby_covers	(smart_cover::cover const &cover, smart_cover::object const &object) const
 {
 	m_nearest.clear			();
-	typedef smart_cover::description::Loopholes::const_iterator const_iterator;
-	const_iterator			I = cover.loopholes().begin();
-	const_iterator			E = cover.loopholes().end();
-	for ( ; I != E; ++I ) {
+	using const_iterator = smart_cover::description::Loopholes::const_iterator;
+
+	for (auto I = cover.loopholes().begin(); I != cover.loopholes().end(); ++I ) {
 		Fvector				position = cover.fov_position(**I);
 		m_covers->nearest	(position, object.Radius() + 1.f, m_nearest);
 
@@ -180,10 +174,9 @@ void CCoverManager::remove_nearby_covers	(smart_cover::cover const &cover, smart
 			m_nearest.end()
 		);
 
-		typedef PointVector::const_iterator const_iterator;
-		const_iterator		i = m_nearest.begin();
-		const_iterator		e = m_nearest.end();
-		for ( ; i != e; ++i)
+		using const_iterator = PointVector::const_iterator;
+		
+		for (auto i = m_nearest.begin(); i != m_nearest.end(); ++i)
 			m_covers->remove(*i);
 
 		clear_covers		(m_nearest);
