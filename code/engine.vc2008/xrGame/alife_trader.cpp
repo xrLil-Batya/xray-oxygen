@@ -28,9 +28,8 @@ u32	CSE_ALifeTrader::dwfGetItemCost		(CSE_ALifeInventoryItem *tpALifeInventoryIt
 	u32							l_dwPurchasedCount = 0;
 #pragma todo("Dima to Dima : optimize this cycle by keeping additional data structure with bought items")
 	{
-		ALife::OBJECT_IT		i = children.begin();
-		ALife::OBJECT_IT		e = children.end();
-		for ( ; i != e; ++i)
+		
+		for (auto i = children.begin(); i != children.end(); ++i)
 			if (!xr_strcmp(ai().alife().objects().object(*i)->s_name,l_tpALifeItemArtefact->s_name))
 				++l_dwPurchasedCount;
 	}

@@ -727,14 +727,12 @@ bool CBulletManager::trajectory_check_error	(
 	
 	bullet_test_callback_data	data;
 	data.pBullet			= &bullet;
-#if 1//def DEBUG
 	data.high_time			= high;
-#endif // #ifdef DEBUG
 	bullet.flags.ricochet_was = 0;
 	bullet.dir				= start_to_target;
 
 	collide::ray_defs RD	(start, start_to_target, distance, CDB::OPT_FULL_TEST, collide::rqtBoth);
-	BOOL const result		= Level().ObjectSpace.RayQuery(storage, RD, CBulletManager::firetrace_callback, &data, CBulletManager::test_callback, NULL);
+	bool const result		= Level().ObjectSpace.RayQuery(storage, RD, (collide::rq_callback*)CBulletManager::firetrace_callback, &data, (collide::test_callback*)CBulletManager::test_callback, 0);
 	if ( !result || (data.collide_time == 0.f) ) {
 		add_bullet_point	(bullet.start_position, previous_position, bullet.start_velocity, gravity, air_resistance, high);
 		return				(true);

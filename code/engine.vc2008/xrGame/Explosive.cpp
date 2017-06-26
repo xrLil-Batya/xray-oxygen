@@ -305,7 +305,7 @@ float CExplosive::TestPassEffect(const	Fvector	&source_p,	const	Fvector	&dir,flo
 #else
 		SExpQParams			ep;
 #endif
-		g_pGameLevel->ObjectSpace.RayQuery(storage,RD,grenade_hit_callback,&ep,NULL,blasted_obj);
+		g_pGameLevel->ObjectSpace.RayQuery(storage,RD, (collide::rq_callback*)grenade_hit_callback,&ep,NULL,blasted_obj);
 		shoot_factor=ep.shoot_factor;
 	}
 	else return dist_factor;

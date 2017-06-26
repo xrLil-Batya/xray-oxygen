@@ -827,17 +827,10 @@ CObject* CWeaponKnife::TryPick(Fvector const & start_pos, Fvector const & dir, f
 {
 	collide::ray_defs		tmp_rdefs(start_pos, dir, dist, CDB::OPT_FULL_TEST, collide::rqtObject);
 	m_ray_query_results.r_clear();
-	m_last_picked_obj	= NULL;
+	m_last_picked_obj	= nullptr;
 	VERIFY(H_Parent());
 	m_except_id			= H_Parent()->ID();
-	Level().ObjectSpace.RayQuery(
-		m_ray_query_results,
-		tmp_rdefs,
-		&CWeaponKnife::RayQueryCallback,
-		static_cast<LPVOID>(this),
-		NULL,
-		NULL
-	);
+	Level().ObjectSpace.RayQuery(m_ray_query_results, tmp_rdefs, (collide::rq_callback*)&CWeaponKnife::RayQueryCallback, static_cast<LPVOID>(this), nullptr, nullptr);
 	return m_last_picked_obj;
 }
 

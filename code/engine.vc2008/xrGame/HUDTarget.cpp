@@ -126,7 +126,7 @@ void CHUDTarget::CursorOnFrame ()
 		PP.power			= 1.0f;
 		PP.pass				= 0;
 
-		if(Level().ObjectSpace.RayQuery(RQR,RD, pick_trace_callback, &PP, NULL, Level().CurrentEntity()))
+		if(Level().ObjectSpace.RayQuery(RQR,RD, (collide::rq_callback*)pick_trace_callback, &PP, NULL, Level().CurrentEntity()))
 			clamp			(PP.RQ.range, NEAR_LIM, PP.RQ.range);
 	}
 

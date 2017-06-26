@@ -1025,7 +1025,7 @@ void fill_points			(CCustomMonster *self, const Fvector &position, const Fvector
 	
 	ray_query_param					params(self,self->memory().visual().transparency_threshold(),distance,position,direction,points);
 
-	Level().ObjectSpace.RayQuery	(rq_storage,ray_defs,_ray_query_callback,&params,NULL,self);
+	Level().ObjectSpace.RayQuery	(rq_storage, ray_defs, (collide::rq_callback*)_ray_query_callback, &params, nullptr, self);
 
 	pick_distance					= params.m_pick_distance;
 }
@@ -1036,16 +1036,14 @@ void draw_visiblity_rays	(CCustomMonster *self, const CObject *object, collide::
 	typedef xr_vector<feel_visible_Item>		VISIBLE_ITEMS;
 
 	feel_visible_Item		*item = 0;
-	{
-		VISIBLE_ITEMS::iterator	I = self->feel_visible.begin();
-		VISIBLE_ITEMS::iterator	E = self->feel_visible.end();
-		for ( ; I!=E; ++I) {
-			if ((*I).O == object) {
-				item		= &*I;
+		for (auto I = self->feel_visible.begin(); I != self->feel_visible.end(); ++I) 
+		{
+			if ((*I).O == object) 
+			{
+				item = &*I;
 				break;
 			}
 		}
-	}
 	
 	if (!item)
 		return;
@@ -1059,15 +1057,7 @@ void draw_visiblity_rays	(CCustomMonster *self, const CObject *object, collide::
 	rq_storage.r_clear		();
 	COLLIDE_POINTS			points;
 	points.push_back		(start_position);
-	fill_points				(
-		self,
-		start_position,
-		direction,
-		distance,
-		rq_storage,
-		points,
-		pick_distance
-	);
+	fill_points				(self, start_position, direction, distance, rq_storage, points, pick_distance);
 
 	if (fsimilar(pick_distance,distance) && !dest_position.similar(points.back()))
 		points.push_back	(dest_position);
@@ -1078,9 +1068,8 @@ void draw_visiblity_rays	(CCustomMonster *self, const CObject *object, collide::
 	Level().debug_renderer().draw_aabb	(points.front(),size.x,size.y,size.z,D3DCOLOR_XRGB(0,0,255));
 
 	{
-		COLLIDE_POINTS::const_iterator	I = points.begin() + 1;
-		COLLIDE_POINTS::const_iterator	E = points.end();
-		for ( ; I != E; ++I) {
+		for (auto I = points.begin() + 1; I != points.end(); ++I) 
+		{
 			Level().debug_renderer().draw_line	(Fidentity,*(I-1),*I,D3DCOLOR_XRGB(0,255,0));
 			Level().debug_renderer().draw_aabb	(*I,size.x,size.y,size.z,D3DCOLOR_XRGB(0,255,0));
 		}
