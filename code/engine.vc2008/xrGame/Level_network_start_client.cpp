@@ -1,6 +1,4 @@
 #include "stdafx.h"
-//#include "PHdynamicdata.h"
-//#include "Physics.h"
 #include "level.h"
 #include "../xrEngine/x_ray.h"
 #include "../xrEngine/igame_persistent.h"
@@ -12,7 +10,6 @@
 #include "hudmanager.h"
 
 #include "../xrphysics/iphworld.h"
-
 
 #include "phcommander.h"
 #include "physics_game.h"
@@ -35,59 +32,39 @@ bool	CLevel::net_start_client1				()
 	if (strchr(name_of_server,'/'))	*strchr(name_of_server,'/') = 0;
 
 	// Startup client
-/*
-	string256					temp;
-	xr_sprintf						(temp,"%s %s",
-								CStringTable().translate("st_client_connecting_to").c_str(), name_of_server);
-
-	g_pGamePersistent->LoadTitle				(temp);
-*/
 	g_pGamePersistent->LoadTitle();
 	return true;
 }
 
 #include "xrServer.h"
 
-bool	CLevel::net_start_client2				()
+bool	CLevel::net_start_client2()
 {
-	if(psNET_direct_connect)
+	Server->create_direct_client();
+	//offline account creation
+	m_bConnectResultReceived = false;
+	while (!m_bConnectResultReceived)
 	{
-		Server->create_direct_client();
-		//offline account creation
-		m_bConnectResultReceived = false;
-		while (!m_bConnectResultReceived)
-		{ 
-			ClientReceive	();
-			Server->Update	();
-		}
+		ClientReceive();
+		Server->Update();
 	}
 
 	connected_to_server = Connect2Server(*m_caClientOptions);
 
 	return true;
 }
-void rescan_mp_archives()
-{
-	FS_Path* mp_archs_path = FS.get_path("$game_arch_mp$");
-	FS.rescan_path(mp_archs_path->m_Path,
-		mp_archs_path->m_Flags.is(FS_Path::flRecurse)
-	);
-}
 
 bool	CLevel::net_start_client3				()
 {
 	if(connected_to_server)
 	{
-		LPCSTR					level_name = NULL;
-		LPCSTR					level_ver = NULL;
+		shared_str const & server_options = Server->GetConnectOptions();
+
+		LPCSTR					level_name = name().c_str();
+		LPCSTR					level_ver = Server->level_version(server_options).c_str();
 		LPCSTR					download_url = NULL;
 
-		if (psNET_direct_connect)	//single
-		{
-			shared_str const & server_options = Server->GetConnectOptions();
-			level_name	= name().c_str();//Server->level_name		(server_options).c_str();
-			level_ver	= Server->level_version		(server_options).c_str(); //1.0
-		} 
+
 		// Determine internal level-ID
 		int						level_id = pApp->Level_ID(level_name, level_ver, true);
 		
@@ -109,62 +86,36 @@ bool	CLevel::net_start_client3				()
 
 bool	CLevel::net_start_client4				()
 {
-	if(connected_to_server){
+	if (connected_to_server) {
 		// Begin spawn
 //		g_pGamePersistent->LoadTitle		("st_client_spawning");
-		g_pGamePersistent->LoadTitle		();
+		g_pGamePersistent->LoadTitle();
 
 		// Send physics to single or multithreaded mode
-		
-		create_physics_world				(!!psDeviceFlags.test(mtPhysics),&ObjectSpace,&Objects,&Device);
+
+		create_physics_world(!!psDeviceFlags.test(mtPhysics), &ObjectSpace, &Objects, &Device);
 
 
 
-		R_ASSERT							(physics_world());
+		R_ASSERT(physics_world());
 
-		m_ph_commander_physics_worldstep	= xr_new<CPHCommander>();
-		physics_world()->set_update_callback( m_ph_commander_physics_worldstep );
+		m_ph_commander_physics_worldstep = xr_new<CPHCommander>();
+		physics_world()->set_update_callback(m_ph_commander_physics_worldstep);
 
-		physics_world()->set_default_contact_shotmark( ContactShotMark );
-		physics_world()->set_default_character_contact_shotmark( CharacterContactShotMark );
+		physics_world()->set_default_contact_shotmark(ContactShotMark);
+		physics_world()->set_default_character_contact_shotmark(CharacterContactShotMark);
 
-		VERIFY						( physics_world() );
-		physics_world()->set_step_time_callback( (PhysicsStepTimeCallback*) &PhisStepsCallback );
+		VERIFY(physics_world());
+		physics_world()->set_step_time_callback((PhysicsStepTimeCallback*)&PhisStepsCallback);
 
 
 		// Send network to single or multithreaded mode
 		// *note: release version always has "mt_*" enabled
-		Device.seqFrameMT.Remove			(g_pNetProcessor);
-		Device.seqFrame.Remove				(g_pNetProcessor);
-		if (psDeviceFlags.test(mtNetwork))	Device.seqFrameMT.Add	(g_pNetProcessor,REG_PRIORITY_HIGH	+ 2);
-		else								Device.seqFrame.Add		(g_pNetProcessor,REG_PRIORITY_LOW	- 2);
-
-		if(!psNET_direct_connect)
-		{
-			// Waiting for connection/configuration completition
-			CTimer	timer_sync	;	timer_sync.Start	();
-			while	(!net_isCompleted_Connect())	Sleep	(5);
-			Msg		("* connection sync: %d ms", timer_sync.GetElapsed_ms());
-			while	(!net_isCompleted_Sync())	{ ClientReceive(); Sleep(5); }
-		}
-/*
-		if(psNET_direct_connect)
-		{
-			ClientReceive(); 
-			if(Server)
-					Server->Update()	;
-			Sleep(5);
-		}else
-
-			while(!game_configured)			
-			{ 
-				ClientReceive(); 
-				if(Server)
-					Server->Update()	;
-				Sleep(5); 
-			}
-*/
-		}
+		Device.seqFrameMT.Remove(g_pNetProcessor);
+		Device.seqFrame.Remove(g_pNetProcessor);
+		if (psDeviceFlags.test(mtNetwork))	Device.seqFrameMT.Add(g_pNetProcessor, REG_PRIORITY_HIGH + 2);
+		else								Device.seqFrame.Add(g_pNetProcessor, REG_PRIORITY_LOW - 2);
+	}
 	return true;
 }
 
