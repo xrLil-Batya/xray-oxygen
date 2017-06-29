@@ -423,7 +423,7 @@ void CInput::MouseUpdate()
 		}
 	}
 
-	for (int i; i < 3; i++)
+	for (u32 i = 0; i < 3; i++)
 		if (mouseState[i] && mouse_prev[i])
 			cbStack.back()->IR_OnMouseHold(i);
 

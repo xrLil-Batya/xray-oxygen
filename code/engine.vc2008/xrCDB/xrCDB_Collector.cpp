@@ -146,22 +146,22 @@ namespace CDB
 		dest.assign(edge_count, u32(-1));
 
 		{
-			edge						*I_ = edges, *J;
-			edge						*E_ = edges + edge_count;
-			for (; I_ != E_; ++I) {
-				if (I_ + 1 == E_)
+			
+			edge *E_ = edges + edge_count, *J; // Вот это я вроде не правил
+			for (edge *edge_iterator = edges; edge_iterator != E_; ++edge_iterator) {
+				if (edge_iterator + 1 == E_)
 					continue;
 
-				J = I_ + 1;
-
-				if ((*I_).vertex_id0 != (*J).vertex_id0)
+				J = edge_iterator + 1;
+				
+				if ((*edge_iterator).vertex_id0 != (*J).vertex_id0)
 					continue;
 
-				if ((*I_).vertex_id1 != (*J).vertex_id1)
+				if ((*edge_iterator).vertex_id1 != (*J).vertex_id1)
 					continue;
 
-				dest[(*I_).face_id * 3 + (*I_).edge_id] = (*J).face_id;
-				dest[(*J).face_id * 3 + (*J).edge_id] = (*I_).face_id;
+				dest[(*edge_iterator).face_id * 3 + (*edge_iterator).edge_id] = (*J).face_id;
+				dest[(*J).face_id * 3 + (*J).edge_id] = (*edge_iterator).face_id;
 			}
 		}
 	}

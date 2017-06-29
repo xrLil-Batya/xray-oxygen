@@ -119,10 +119,13 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
-#ifdef _COMPILERS_
+// _COMPILERS_
 	MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
+//#endif
+#ifdef DEBUG
+	DEBUG_INVOKE;
 #endif
-	TerminateProcess	(GetCurrentProcess(),5);
+	TerminateProcess(GetCurrentProcess(), 5);
 }
 
 void xrDebug::backend	(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)

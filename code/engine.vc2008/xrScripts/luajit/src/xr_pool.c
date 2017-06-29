@@ -48,6 +48,8 @@ void XR_DESTROY(void* ptr, size_t size)
 	sprintf(buf, "XR_DESTROY(ptr=%p, size=%Iu) ", ptr, size);
 	OutputDebugString(buf);
 #endif
+	if (ptr == 0)
+		return;
 	while (1) {
 		size_t blockSize = HeapSize(heap, 0, ptr);
 		HeapFree(heap, 0, ptr);

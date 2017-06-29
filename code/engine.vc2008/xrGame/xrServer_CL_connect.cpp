@@ -31,7 +31,7 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 	Flags16			save = E->s_flags;
 	//-------------------------------------------------
 	E->s_flags.set	(M_SPAWN_UPDATE,TRUE);
-	if (0==E->owner)	
+	if (!E->owner)	
 	{
 		// PROCESS NAME; Name this entity
 		if (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))

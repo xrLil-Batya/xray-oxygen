@@ -642,7 +642,7 @@ static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
         }
     }
     
-    //RIP
+    //
 }
 
 [[deprecated("Not used anywhere!")]]
@@ -719,9 +719,8 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 	// append application data path
 	// target folder 
 	if (m_Flags.is(flTargetFolderOnly))
-	{
 		append_path		("$target_folder$",target_folder,0,TRUE);
-	}else
+	else
 	{
 	IReader			*pFSltx = setup_fs_ltx(fs_name);
 		// append all pathes    

@@ -35,7 +35,7 @@
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
-    <ConfigurationType>Application</ConfigurationType>
+    <ConfigurationType>Makefile</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
     <PlatformToolset>v140</PlatformToolset>
   </PropertyGroup>
@@ -80,6 +80,10 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <NMakePreprocessorDefinitions>LUA_BUILD_AS_DLL; LUA_CORE;WIN64;WIN32;NDEBUG;$(NMakePreprocessorDefinitions)</NMakePreprocessorDefinitions>
     <NMakeBuildCommandLine>msvcbuild64.bat</NMakeBuildCommandLine>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <NMakeBuildCommandLine>msvcbuild64_debug.bat</NMakeBuildCommandLine>
+    <NMakePreprocessorDefinitions>LUA_BUILD_AS_DLL; LUA_CORE;</NMakePreprocessorDefinitions>
   </PropertyGroup>
   <ItemDefinitionGroup>
   </ItemDefinitionGroup>
