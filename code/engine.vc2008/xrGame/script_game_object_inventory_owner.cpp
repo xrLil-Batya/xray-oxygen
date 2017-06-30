@@ -411,10 +411,21 @@ void CScriptGameObject::TransferMoney(int money, CScriptGameObject* pForWho)
 
 void CScriptGameObject::GiveMoney(int money)
 {
-	CInventoryOwner* pOurOwner		= smart_cast<CInventoryOwner*>(&object()); VERIFY(pOurOwner);
+	CInventoryOwner* pOurOwner = smart_cast<CInventoryOwner*>(&object());// VERIFY(pOurOwner);
 
-
-	pOurOwner->set_money		(pOurOwner->get_money() + money, true );
+	if (pOurOwner)
+	{
+		u32 act_money = pOurOwner->get_money();
+		int desired_money = act_money + money;
+		if (desired_money < 0)
+		{
+			Msg("! Negative ammount [%d]+[%d]=[%d] of money for [%s]", act_money, money, desired_money, object().Name());
+			return;
+		}
+		pOurOwner->set_money(desired_money, true);
+	}
+	else ai().script_engine().script_log(ScriptStorage::eLuaMessageTypeError, "void GiveMoney available only for InventoryOwner");
+	//	pOurOwner->set_money		(pOurOwner->get_money() + money, true );
 }
 //////////////////////////////////////////////////////////////////////////
 

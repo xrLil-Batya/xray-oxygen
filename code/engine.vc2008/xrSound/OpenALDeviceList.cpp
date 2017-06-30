@@ -30,10 +30,6 @@
 #include <objbase.h>
 #pragma warning(pop)
 
-#ifdef _EDITOR
-	log_fn_ptr_type*	pLog = nullptr;
-#endif
-
 void __cdecl al_log(char* msg)
 {
 	Log(msg);

@@ -9,19 +9,15 @@
 void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P)
 {
 	P.B.count = 0;
-	xr_vector<u16>::iterator it = std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID);
-	if(it != conn_spawned_ids.end())
-	{
-//.		Msg("Rejecting redundant SPAWN data [%d]", E->ID);
+	//xr_vector<u16>::iterator it = std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID);
+	if(std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID) != conn_spawned_ids.end())
 		return;
-	}
 	
 	conn_spawned_ids.push_back(E->ID);
 	
 	if (E->net_Processed)						return;
 	if (E->s_flags.is(M_SPAWN_OBJECT_PHANTOM))	return;
 
-//.	Msg("Perform connect spawn [%d][%s]", E->ID, E->s_name.c_str());
 
 	// Connectivity order
 	CSE_Abstract* Parent = ID_to_entity	(E->ID_Parent);
@@ -37,7 +33,6 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 		if (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 		{
 			CL->owner			= E;
-//			VERIFY				(CL->ps);
 			E->set_name_replace	(CL->ps->getName());
 		}
 
@@ -185,24 +180,17 @@ void xrServer::OnBuildVersionRespond				( IClient* CL, NET_Packet& P )
 #endif // USE_DEBUG_AUTH
 
 	if ( _our != _him )
-	{
 		SendConnectResult( CL, 0, ecr_data_verification_failed, "Data verification failed. Cheater?" );
-	}
 	else
 	{				
 		bool bAccessUser = false;
 		string512 res_check;
 		
 		if ( !CL->flags.bLocal )
-		{
 			bAccessUser	= Check_ServerAccess( CL, res_check );
-		}
 				
 		if( CL->flags.bLocal || bAccessUser )
-		{
-			//Check_BuildVersion_Success( CL );
 			RequestClientDigest(CL);
-		}
 		else
 		{
 			Msg("* Client 0x%08x has an incorrect password", CL->ID.value());
