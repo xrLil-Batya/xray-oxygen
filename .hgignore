@@ -21,3 +21,5 @@ binaries64/
 *.obj
 *.log
 *.pch
+*.ilk
+*.idb
