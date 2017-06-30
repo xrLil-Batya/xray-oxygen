@@ -560,12 +560,8 @@ bool CMissile::Action(u16 cmd, u32 flags)
 				m_throw = false;
 				if(GetState()==eIdle) 
 					SwitchState(eThrowStart);
-				else 
-				if(GetState()==eReady)
-				{
+				else if(GetState()==eReady)
 					m_throw = true; 
-				}
-
 			} 
 			else 
 			if(GetState()==eReady || GetState()==eThrowStart || GetState()==eIdle) 
@@ -582,7 +578,7 @@ bool CMissile::Action(u16 cmd, u32 flags)
 
 void  CMissile::UpdateFireDependencies_internal	()
 {
-	if (0==H_Parent())		return;
+	if (!H_Parent())		return;
 
     if (Device.dwFrame!=dwFP_Frame){
 		dwFP_Frame = Device.dwFrame;
@@ -592,16 +588,6 @@ void  CMissile::UpdateFireDependencies_internal	()
 		if (GetHUDmode() && !IsHidden())
 		{
 			R_ASSERT(0);  //implement this!!!
-/*
-			// 1st person view - skeletoned
-			CKinematics* V			= smart_cast<CKinematics*>(GetHUD()->Visual());
-			VERIFY					(V);
-			V->CalculateBones		();
-
-			// fire point&direction
-			Fmatrix& parent			= GetHUD()->Transform	();
-			m_throw_direction.set	(parent.k);
-*/
 		}else{
 			// 3rd person
 			Fmatrix& parent			= H_Parent()->XFORM();
@@ -718,7 +704,7 @@ void CMissile::render_item_ui()
 
 void	 CMissile::ExitContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMtl * /*material_1*/,SGameMtl * /*material_2*/)
 {
-	dxGeomUserData	*gd1=NULL,	*gd2=NULL;
+	dxGeomUserData	*gd1,	*gd2;
 	if(bo1)
 	{
 		gd1 =PHRetrieveGeomUserData(c.geom.g1);
@@ -730,7 +716,7 @@ void	 CMissile::ExitContactCallback(bool& do_colide,bool bo1,dContact& c,SGameMt
 		gd1 =PHRetrieveGeomUserData(c.geom.g2);
 	}
 	if(gd1&&gd2&&(CPhysicsShellHolder*)gd1->callback_data==gd2->ph_ref_object)	
-																				do_colide=false;
+		do_colide=false;
 }
 
 bool CMissile::GetBriefInfo( II_BriefInfo& info )

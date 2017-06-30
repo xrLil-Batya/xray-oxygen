@@ -62,7 +62,7 @@ bool	CLevel::net_start_client3				()
 
 		LPCSTR					level_name = name().c_str();
 		LPCSTR					level_ver = Server->level_version(server_options).c_str();
-		LPCSTR					download_url = NULL;
+//		LPCSTR					download_url = NULL;
 
 
 		// Determine internal level-ID
@@ -73,7 +73,7 @@ bool	CLevel::net_start_client3				()
 #endif // #ifdef DEBUG
 		map_data.m_name					= level_name;
 		map_data.m_map_version			= level_ver;
-		map_data.m_map_download_url		= download_url;
+//		map_data.m_map_download_url		= download_url;
 		map_data.m_map_loaded			= true;
 		
 		deny_m_spawn			= FALSE;

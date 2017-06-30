@@ -578,7 +578,7 @@ bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 				VERIFY(lua_gettop(lua()) >= 1);
 				lua_pop(lua(), 1);
 				VERIFY(start == lua_gettop(lua()));
-				FATAL(" Error : the namespace name is already being used by the non-table object!\n");
+				Debug.fatal(DEBUG_INFO, " Error : the namespace name %s is already being used by the non-table object!\n", S);
 				return		(false);
 			}
 		lua_remove(lua(), -2);

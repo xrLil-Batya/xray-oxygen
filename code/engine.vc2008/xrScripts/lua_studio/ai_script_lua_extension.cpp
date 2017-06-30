@@ -327,11 +327,10 @@ SCRIPT_API bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR 
 {
 	lua_pushstring 		(tpLuaVM,"_G"); 
 	lua_gettable 		(tpLuaVM,LUA_GLOBALSINDEX); 
-	string256			S2;	xr_strcpy	(S2,N);
-	LPSTR				S	= S2;
+	char*				S	= const_cast<char*>(N);
 	for (;;) { 
 		if (!xr_strlen(S)) return	(false); 
-		LPSTR S1 		= strchr(S,'.'); 
+		char* S1 		= strchr(S,'.'); 
 		if (S1) 	*S1 = 0; 
 		lua_pushstring 	(tpLuaVM,S); 
 		lua_gettable 	(tpLuaVM,-2); 
@@ -342,7 +341,7 @@ SCRIPT_API bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR 
 		else 
 			if (!lua_istable(tpLuaVM,-1)) { 
 				lua_pop		(tpLuaVM,2); 
-				FATAL		(" Error : the namespace name is already being used by the non-table object!\n");
+				Debug.fatal(DEBUG_INFO, " Error : the namespace name %s is already being used by the non-table object!\n", S);
 				return		(false); 
 			} 
 			lua_remove	(tpLuaVM,-2); 
@@ -358,9 +357,8 @@ SCRIPT_API CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *t
 		return				(tpLuaVM);
 	lua_pushstring 			(tpLuaVM,"_G"); 
 	lua_gettable 			(tpLuaVM,LUA_GLOBALSINDEX); 
-	string256				S2;
-	xr_strcpy					(S2,N);
-	LPSTR					S	= S2;
+
+	LPSTR					S	= const_cast<char*>(N);;
 	for (;;) { 
 		if (!xr_strlen(S))
 			return			(0); 
@@ -384,8 +382,7 @@ SCRIPT_API CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *t
 
 			if (S1)
 				S			= ++S1; 
-			else
-				break; 
+			else break; 
 	} 
 	return					(tpLuaVM); 
 }
@@ -413,9 +410,7 @@ SCRIPT_API bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR n
 
 SCRIPT_API luabind::object Script::lua_namespace_table(CLuaVirtualMachine *tpLuaVM, LPCSTR namespace_name)
 {
-	string256			S1;
-	xr_strcpy				(S1,namespace_name);
-	LPSTR				S = S1;
+	LPSTR				S = const_cast<char*>(namespace_name);
 	luabind::object		lua_namespace = luabind::get_globals(tpLuaVM);
 	for (;;) {
 		if (!xr_strlen(S))
