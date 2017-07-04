@@ -9,7 +9,7 @@
 #include "commdlg.h"
 #include "vfw.h"
 
-EFS_Utils*	xr_EFS	= nullptr;
+EFS_Utils*	xr_EFS	= NULL;
 //----------------------------------------------------
 EFS_Utils::EFS_Utils( )
 {
@@ -19,55 +19,55 @@ EFS_Utils::~EFS_Utils()
 {
 }
 
-xr_string	EFS_Utils::ExtractFileName(const char* src)
+xr_string	EFS_Utils::ExtractFileName(LPCSTR src)
 {
 	string_path name;
 	_splitpath	(src,0,0,name,0);
     return xr_string(name);
 }
 
-xr_string	EFS_Utils::ExtractFileExt(const char* src)
+xr_string	EFS_Utils::ExtractFileExt(LPCSTR src)
 {
 	string_path ext;
 	_splitpath	(src,0,0,0,ext);
     return xr_string(ext);
 }
 
-xr_string	EFS_Utils::ExtractFilePath(const char* src)
+xr_string	EFS_Utils::ExtractFilePath(LPCSTR src)
 {
 	string_path drive,dir;
 	_splitpath	(src,drive,dir,0,0);
     return xr_string(drive)+dir;
 }
 
-xr_string	EFS_Utils::ExcludeBasePath(const char* full_path, const char* excl_path)
+xr_string	EFS_Utils::ExcludeBasePath(LPCSTR full_path, LPCSTR excl_path)
 {
-    const char* sub		= strstr(full_path,excl_path);
+    LPCSTR sub		= strstr(full_path,excl_path);
 	if (0!=sub) 	return xr_string(sub+xr_strlen(excl_path));
 	else	   		return xr_string(full_path);
 }
 
-xr_string	EFS_Utils::ChangeFileExt(const char* src, const char* ext)
+xr_string	EFS_Utils::ChangeFileExt(LPCSTR src, LPCSTR ext)
 {
 	xr_string	tmp;
-	char* src_ext	= strext(src);
+	LPSTR src_ext	= strext(src);
     if (src_ext){
 	    size_t		ext_pos	= src_ext-src;
         tmp.assign	(src,0,ext_pos);
-    }else
+    }else{
         tmp			= src;
-    
+    }
     tmp				+= ext;
     return tmp;
 }
 
-xr_string	EFS_Utils::ChangeFileExt(const xr_string& src, const char* ext)
+xr_string	EFS_Utils::ChangeFileExt(const xr_string& src, LPCSTR ext)
 {
 	return ChangeFileExt(src.c_str(),ext);
 }
 
 //----------------------------------------------------
-void MakeFilter(string1024& dest, const char* info, const char* ext)
+void MakeFilter(string1024& dest, LPCSTR info, LPCSTR ext)
 {
     std::string res;
 
@@ -80,25 +80,26 @@ void MakeFilter(string1024& dest, const char* info, const char* ext)
 		res	+= ext;
 		res	+= "|";
         int icnt		= _GetItemCount(ext,';');
-		if (icnt > 1)
-		{
-			for (int idx = 0; idx < icnt; ++idx)
-			{
-				string64		buf;
-				_GetItem(ext, idx, buf, ';');
-
-				res += info;
-				res += "(";
-				res += buf;
-				res += ")|";
-				res += buf;
-				res += "|";
-			}
-		}
-    	res += "|";
-	}
-	else res = "All files(*.*)|*.*||";
+        if(icnt>1)
+        {
+        for(int idx=0; idx<icnt; ++idx)
+        {
+          string64		buf;
+          _GetItem		(ext, idx, buf, ';');
     
+          res += info;
+          res += "(";
+          res += buf;
+          res += ")|";
+          res += buf;
+          res += "|";
+        }
+      }
+    	res += "|";
+	}else
+    {
+    	res = "All files(*.*)|*.*||";
+    }
     xr_strcpy(dest, res.c_str());
     
     for(u32 i=0; i<res.size(); ++i)           
@@ -121,7 +122,7 @@ UINT_PTR CALLBACK OFNHookProcOldStyle(HWND , UINT , WPARAM , LPARAM )
 	return 0;
 }
 
-bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_buf, bool bMulti, const char* offset, int start_flt_ext ) const
+bool EFS_Utils::GetOpenNameInternal( LPCSTR initial,  LPSTR buffer, int sz_buf, bool bMulti, LPCSTR offset, int start_flt_ext ) const
 {
 	VERIFY				(buffer&&(sz_buf>0));
 	FS_Path& P			= *FS.get_path(initial);
@@ -137,7 +138,7 @@ bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_
         if (!(buffer[0]=='\\' && buffer[1]=='\\')){ // if !network
             _splitpath		(buffer,dr,0,0,0);
 
-            if (!dr[0])
+            if (0==dr[0])
             {
                 string_path		bb;
             	P._update		(bb, buffer);
@@ -152,7 +153,7 @@ bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_
 	ofn.nMaxFile 		= sz_buf;
 	ofn.lpstrFilter 	= flt;
 	ofn.nFilterIndex 	= start_flt_ext+2;
-    ofn.lpstrTitle      = "Open a File";
+    ofn.lpstrTitle              = "Open a File";
     string512 path; 
 	xr_strcpy				(path,(offset&&offset[0])?offset:P.m_Path);
 	ofn.lpstrInitialDir = path;
@@ -215,7 +216,7 @@ bool EFS_Utils::GetOpenNameInternal( const char* initial,  char* buffer, int sz_
     return 				bRes;
 }
 
-bool EFS_Utils::GetSaveName( const char* initial, string_path& buffer, const char* offset, int start_flt_ext )
+bool EFS_Utils::GetSaveName( LPCSTR initial, string_path& buffer, LPCSTR offset, int start_flt_ext )
 {
 //	unsigned int	dwVersion = GetVersion();
 //	unsigned int	dwWindowsMajorVersion =  (DWORD)(LOBYTE(LOWORD(dwVersion)));
@@ -223,7 +224,12 @@ bool EFS_Utils::GetSaveName( const char* initial, string_path& buffer, const cha
 	FS_Path& P			= *FS.get_path(initial);
 	string1024 			flt;
 
-    const char* def_ext 		= P.m_DefExt;
+    LPCSTR def_ext 		= P.m_DefExt;
+    if ( false )//&& dwWindowsMajorVersion == 6 )
+    {
+        if(strstr(P.m_DefExt, "*."))
+            def_ext = strstr(P.m_DefExt, "*.")+2;
+    }
 
     
 	MakeFilter(flt,P.m_FilterCaption?P.m_FilterCaption:"",def_ext);
@@ -231,11 +237,9 @@ bool EFS_Utils::GetSaveName( const char* initial, string_path& buffer, const cha
     std::memset( &ofn, 0, sizeof(ofn) );
     if (xr_strlen(buffer)){ 
         string_path		dr;
-        if (!(buffer[0]=='\\' && buffer[1]=='\\'))
-		{ // if !network
+        if (!(buffer[0]=='\\' && buffer[1]=='\\')){ // if !network
             _splitpath		(buffer,dr,0,0,0);
-            if (!dr[0])	
-				P._update(buffer,buffer); 
+            if (0==dr[0])	P._update(buffer,buffer); 
         }
     }
 	ofn.hwndOwner 		= GetForegroundWindow();
@@ -270,23 +274,22 @@ bool EFS_Utils::GetSaveName( const char* initial, string_path& buffer, const cha
 	return bRes;
 }
 //----------------------------------------------------
-const char* EFS_Utils::AppendFolderToName(char* tex_name, u32 const tex_name_size, int depth, BOOL full_name)
+LPCSTR EFS_Utils::AppendFolderToName(LPSTR tex_name, u32 const tex_name_size, int depth, BOOL full_name)
 {
 	string256 _fn;
 	xr_strcpy(tex_name,tex_name_size,AppendFolderToName(tex_name, _fn, sizeof(_fn), depth, full_name));
 	return tex_name;
 }
 
-const char* EFS_Utils::AppendFolderToName(const char* src_name, char* dest_name, u32 const dest_name_size, int depth, BOOL full_name)
+LPCSTR EFS_Utils::AppendFolderToName(LPCSTR src_name, LPSTR dest_name, u32 const dest_name_size, int depth, BOOL full_name)
 {
 	shared_str tmp = src_name;
-    const char* s 	= src_name;
-    char* d 	= dest_name;
+    LPCSTR s 	= src_name;
+    LPSTR d 	= dest_name;
     int sv_depth= depth;
-
-	for (; *s&&depth; s++, d++)
+	for (; *s&&depth; s++, d++){
 		if (*s=='_'){depth--; *d='\\';}else{*d=*s;}
-	
+	}
 	if (full_name){
 		*d			= 0;
 		if (depth<sv_depth)	xr_strcat(dest_name,dest_name_size,*tmp);
@@ -297,7 +300,7 @@ const char* EFS_Utils::AppendFolderToName(const char* src_name, char* dest_name,
     return dest_name;
 }
 
-const char* EFS_Utils::GenerateName(const char* base_path, const char* base_name, const char* def_ext, char* out_name, u32 const out_name_size)
+LPCSTR EFS_Utils::GenerateName(LPCSTR base_path, LPCSTR base_name, LPCSTR def_ext, LPSTR out_name, u32 const out_name_size)
 {
     int cnt = 0;
 	string_path fn;

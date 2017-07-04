@@ -52,10 +52,13 @@ struct str_container_impl
 			while (*current != nullptr)
 			{
 				str_value* value = *current;
-				*current = value->next;
-
 				if (!value->dwReference)
+				{
+					*current = value->next;
 					xr_free(value);
+				}
+				else
+					current = &value->next;
 			}
 		}
 	}

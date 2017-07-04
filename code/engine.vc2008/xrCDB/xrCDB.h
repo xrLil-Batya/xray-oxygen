@@ -23,11 +23,13 @@ namespace Opcode {
 	class OPCODE_Model;
 	class AABBNoLeafNode;
 };
-#include "../xrCore/xrCore.h"
 
-#if defined(_M_X64)
+#if defined(_M_X64)// && !defined(_COMPILERS_)
 using u_ptr = u64;
 using ur_ptr = u_ptr;
+//#elif defined(_COMPILERS_)
+//using u_ptr = u64;
+//using ur_ptr = u32;
 #else
 using u_ptr = u32;
 using ur_ptr = u_ptr;
@@ -104,9 +106,9 @@ namespace CDB
 
         TRI()
         {
-            verts[0] = 0;
-            verts[1] = 0;
-            verts[2] = 0;
+            verts[0] = 0.0f;
+            verts[1] = 0.0f;
+            verts[2] = 0.0f;
             dummy = 0;
         }
 

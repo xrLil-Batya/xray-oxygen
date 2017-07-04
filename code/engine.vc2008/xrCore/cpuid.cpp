@@ -6,7 +6,6 @@
 #include <array>
 #include <bitset>
 #include <memory>
-#include <intrin.h>
 
 /***
 * int _cpuid (_p_info *pinfo)

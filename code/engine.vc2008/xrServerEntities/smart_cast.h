@@ -5,13 +5,18 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Smart dynamic cast
 ////////////////////////////////////////////////////////////////////////////
-#pragma once
+
+#ifndef SMART_CAST_H
+#define SMART_CAST_H
+
+#ifdef DEBUG
+#	define PURE_DYNAMIC_CAST
+#endif // DEBUG
 
 #define  TL_FAST_COMPILATION
 #include <loki/typelist.h>
 
-#ifdef DEBUG
-#	define PURE_DYNAMIC_CAST
+#ifdef PURE_DYNAMIC_CAST
 #	define smart_cast dynamic_cast
 #else
 #	define PURE_DYNAMIC_CAST_COMPATIBILITY_CHECK
@@ -323,3 +328,4 @@
 #	endif
 #endif
 
+#endif //SMART_CAST_H

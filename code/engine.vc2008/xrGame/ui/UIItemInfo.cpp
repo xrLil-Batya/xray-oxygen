@@ -19,9 +19,7 @@
 #include "UIInvUpgradeProperty.h"
 #include "UIOutfitInfo.h"
 #include "UIBoosterInfo.h"
-//#include "../Weapon.h"
-#include "../WeaponKnife.h"
-#include "../WeaponBinoculars.h"
+#include "../Weapon.h"
 #include "../CustomOutfit.h"
 #include "../ActorHelmet.h"
 #include "../eatable_item.h"
@@ -276,7 +274,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 
 		UIDesc->SetWndPos(pos);
 		UIDesc->Clear();
-		VERIFY(!UIDesc->GetSize());
+		VERIFY(0 == UIDesc->GetSize());
 		if (m_desc_info.bShowDescrText)
 		{
 			CUITextWnd* pItem = xr_new<CUITextWnd>();
@@ -288,11 +286,8 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			pItem->AdjustHeightToText();
 			UIDesc->AddWindow(pItem, true);
 		}
-		// Specifically for (knife && binocular) slots
-		if (!(smart_cast<CWeaponKnife*>(pInvItem) || smart_cast<CWeaponBinoculars*>(pInvItem)))
-			TryAddWpnInfo(*pInvItem, pCompareItem);
-
 		TryAddConditionInfo(*pInvItem, pCompareItem);
+		TryAddWpnInfo(*pInvItem, pCompareItem);
 		TryAddArtefactInfo(pInvItem->object().cNameSect());
 		TryAddOutfitInfo(*pInvItem, pCompareItem);
 		TryAddUpgradeInfo(*pInvItem);

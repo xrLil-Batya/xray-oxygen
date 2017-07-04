@@ -270,14 +270,14 @@ typedef struct oc_theora_state          oc_theora_state;
 
 
 
-#pragma warning ( disable : 6011 4214)
+#pragma warning ( disable : 6011 )
 /*Super block information.*/
 struct oc_sb_flags{
   unsigned char coded_fully:1;
   unsigned char coded_partially:1;
   unsigned char quad_valid:4;
 };
-#pragma warning ( default : 6001 4214)
+#pragma warning ( default : 6001 )
 
 
 
