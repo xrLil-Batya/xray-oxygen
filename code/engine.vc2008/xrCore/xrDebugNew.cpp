@@ -119,13 +119,11 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 void xrDebug::do_exit	(const std::string &message)
 {
 	FlushLog			();
-// _COMPILERS_
-	MessageBox			(NULL,message.c_str(),"Error",MB_OK|MB_ICONERROR|MB_SYSTEMMODAL);
-//#endif
+	MessageBox			(nullptr, message.c_str(), "Error", MB_OK|MB_ICONERROR | MB_SYSTEMMODAL);
 #ifdef DEBUG
 	DEBUG_INVOKE;
 #endif
-	TerminateProcess(GetCurrentProcess(), 5);
+	TerminateProcess(GetCurrentProcess(), 1);
 }
 
 void xrDebug::backend	(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)
@@ -142,12 +140,13 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
 	if (handler)
 		handler			();
 	
-	//if (get_on_dialog())
-	//	get_on_dialog()	(true);
-
-	//FlushLog			();
+	HWND wnd = GetActiveWindow();
+ 	if (!wnd) wnd = GetForegroundWindow();
+	
+ 	ShowWindow(wnd, SW_MINIMIZE);
+ 	while (ShowCursor(TRUE) < 0);
+ 
 	do_exit("Please, see log-file for details.");
-	DEBUG_INVOKE;
 }
 
 const char* xrDebug::error2string	(long code)

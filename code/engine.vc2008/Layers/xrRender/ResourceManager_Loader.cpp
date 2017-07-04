@@ -91,10 +91,8 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 			CBlender_DESC	desc;
 			chunk->r		(&desc,sizeof(desc));
 			IBlender*		B = IBlender::Create(desc.CLS);
-			if	(0==B)
-			{
+			if	(!B)
 				Msg				("! Renderer doesn't support blender '%s'",desc.cName);
-			}
 			else
 			{
 				if	(B->getDescription().version != desc.version)

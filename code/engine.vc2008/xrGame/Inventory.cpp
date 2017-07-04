@@ -311,9 +311,6 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
 				pIItem->object().ID(),
 				pIItem);
 #endif
-//.		if(m_slots[pIItem->GetSlot()].m_pIItem == pIItem && !bNotActivate )
-//.			Activate(pIItem->GetSlot());
-
 		return false;
 	}
 
@@ -340,16 +337,12 @@ bool CInventory::Slot(u16 slot_id, PIItem pIItem, bool bNotActivate, bool strict
 	}
 
 	if (((m_iActiveSlot==slot_id) ||(m_iActiveSlot==NO_ACTIVE_SLOT) && m_iNextActiveSlot==NO_ACTIVE_SLOT) && (!bNotActivate))
-	{
-#ifdef DEBUG
-		Msg("---To Slot: activating slot [%d], Frame[%d]", slot_id, Device.dwFrame);
-#endif // #ifdef DEBUG
 		Activate				(slot_id);
-	}
+	
 	SInvItemPlace p					= pIItem->m_ItemCurrPlace;
-	m_pOwner->OnItemSlot			(pIItem, pIItem->m_ItemCurrPlace);
 	pIItem->m_ItemCurrPlace.type	= eItemPlaceSlot;
 	pIItem->m_ItemCurrPlace.slot_id = slot_id;
+	m_pOwner->OnItemSlot			(pIItem, p); //Abramcumner fixed
 	pIItem->OnMoveToSlot			(p);
 	
 	pIItem->object().processing_activate();

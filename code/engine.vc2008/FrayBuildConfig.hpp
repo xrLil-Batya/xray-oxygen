@@ -1,7 +1,6 @@
 #pragma once
 
 /* xrCore */
-//#define OLD_FS_ROOT /* oldschool $fs_root$ */	
 #define	LOG_TIME_PRECISE // (by alpet & RvP)
 
 /* Scripts */
