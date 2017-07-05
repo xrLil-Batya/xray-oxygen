@@ -45,7 +45,7 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 	snd.create(buf_str, st_Effect,type);
 
 
-	if(volume != NULL)
+	if(volume)
 	{
 		*volume = 1.f;
 		if(count>1)
@@ -56,7 +56,7 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 		}
 	}
 
-	if(delay != NULL)
+	if(delay)
 	{
 		*delay = 0;
 		if(count>2)
@@ -70,11 +70,10 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 
 void HUD_SOUND_ITEM::DestroySound(HUD_SOUND_ITEM& hud_snd)
 {
-	xr_vector<SSnd>::iterator it = hud_snd.sounds.begin();
-	for(;it!=hud_snd.sounds.end();++it)
+	for(xr_vector<SSnd>::iterator it : hud_snd.sounds.begin())
 		(*it).snd.destroy();
+		
 	hud_snd.sounds.clear	();
-	
 	hud_snd.m_activeSnd		= NULL;
 }
 
@@ -104,8 +103,8 @@ void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
 											flags&sm_2D?Fvector().set(0,0,0):position,
 											flags,
 											hud_snd.m_activeSnd->delay);
-
-	hud_snd.m_activeSnd->snd.set_volume		(hud_snd.m_activeSnd->volume * b_hud_mode?psHUDSoundVolume:1.0f);
+											// FX: The '?:' operator has a lower priority than the '*' operator.
+	hud_snd.m_activeSnd->snd.set_volume		(hud_snd.m_activeSnd->volume * (b_hud_mode? psHUDSoundVolume : 1.0f));
 }
 
 void HUD_SOUND_ITEM::StopSound(HUD_SOUND_ITEM& hud_snd)
@@ -119,10 +118,7 @@ void HUD_SOUND_ITEM::StopSound(HUD_SOUND_ITEM& hud_snd)
 //----------------------------------------------------------
 HUD_SOUND_COLLECTION::~HUD_SOUND_COLLECTION()
 {
-	xr_vector<HUD_SOUND_ITEM>::iterator it		= m_sound_items.begin();
-	xr_vector<HUD_SOUND_ITEM>::iterator it_e	= m_sound_items.end();
-
-	for(;it!=it_e;++it)
+	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items.begin())
 	{
 		HUD_SOUND_ITEM::StopSound		(*it);
 		HUD_SOUND_ITEM::DestroySound	(*it);
@@ -138,7 +134,7 @@ HUD_SOUND_ITEM* HUD_SOUND_COLLECTION::FindSoundItem(LPCSTR alias, bool b_assert)
 	if(it!=m_sound_items.end())
 		return &*it;
 	else{
-		R_ASSERT3(!b_assert,"sound item not found in collection", alias);
+		R_ASSERT3(!b_assert," sound item not found in collection ", alias);
 		return NULL;
 	}
 }
@@ -150,9 +146,7 @@ void HUD_SOUND_COLLECTION::PlaySound(	LPCSTR alias,
 										bool looped,
 										u8 index)
 {
-	xr_vector<HUD_SOUND_ITEM>::iterator it		= m_sound_items.begin();
-	xr_vector<HUD_SOUND_ITEM>::iterator it_e	= m_sound_items.end();
-	for(;it!=it_e;++it)
+	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items.begin())
 	{
 		if(it->m_b_exclusive)
 			HUD_SOUND_ITEM::StopSound	(*it);
@@ -178,10 +172,7 @@ void HUD_SOUND_COLLECTION::SetPosition(LPCSTR alias, const Fvector& pos)
 
 void HUD_SOUND_COLLECTION::StopAllSounds()
 {
-	xr_vector<HUD_SOUND_ITEM>::iterator it		= m_sound_items.begin();
-	xr_vector<HUD_SOUND_ITEM>::iterator it_e	= m_sound_items.end();
-
-	for(;it!=it_e;++it)
+	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items.begin())
 	{
 		HUD_SOUND_ITEM::StopSound	(*it);
 	}
