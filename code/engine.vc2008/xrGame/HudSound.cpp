@@ -70,7 +70,7 @@ void  HUD_SOUND_ITEM::LoadSound(LPCSTR section,
 
 void HUD_SOUND_ITEM::DestroySound(HUD_SOUND_ITEM& hud_snd)
 {
-	for(xr_vector<SSnd>::iterator it : hud_snd.sounds.begin())
+	for(xr_vector<SSnd>::iterator it : hud_snd.sounds)
 		(*it).snd.destroy();
 		
 	hud_snd.sounds.clear	();
@@ -109,8 +109,7 @@ void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
 
 void HUD_SOUND_ITEM::StopSound(HUD_SOUND_ITEM& hud_snd)
 {
-	xr_vector<SSnd>::iterator it = hud_snd.sounds.begin();
-	for(;it!=hud_snd.sounds.end();++it)
+	for(xr_vector<SSnd>::iterator it : hud_snd.sounds)
 		(*it).snd.stop		();
 	hud_snd.m_activeSnd		= NULL;
 }
@@ -118,7 +117,7 @@ void HUD_SOUND_ITEM::StopSound(HUD_SOUND_ITEM& hud_snd)
 //----------------------------------------------------------
 HUD_SOUND_COLLECTION::~HUD_SOUND_COLLECTION()
 {
-	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items.begin())
+	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items)
 	{
 		HUD_SOUND_ITEM::StopSound		(*it);
 		HUD_SOUND_ITEM::DestroySound	(*it);
@@ -146,11 +145,8 @@ void HUD_SOUND_COLLECTION::PlaySound(	LPCSTR alias,
 										bool looped,
 										u8 index)
 {
-	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items.begin())
-	{
-		if(it->m_b_exclusive)
-			HUD_SOUND_ITEM::StopSound	(*it);
-	}
+	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items)
+		if(it->m_b_exclusive) HUD_SOUND_ITEM::StopSound	(*it);
 
 
 	HUD_SOUND_ITEM* snd_item		= FindSoundItem(alias, true);
@@ -172,10 +168,8 @@ void HUD_SOUND_COLLECTION::SetPosition(LPCSTR alias, const Fvector& pos)
 
 void HUD_SOUND_COLLECTION::StopAllSounds()
 {
-	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items.begin())
-	{
+	for(xr_vector<HUD_SOUND_ITEM>::iterator it : m_sound_items)
 		HUD_SOUND_ITEM::StopSound	(*it);
-	}
 }
 
 void HUD_SOUND_COLLECTION::LoadSound(	LPCSTR section, 
@@ -184,7 +178,7 @@ void HUD_SOUND_COLLECTION::LoadSound(	LPCSTR section,
 										bool exclusive,
 										int type)
 {
-	R_ASSERT					(NULL==FindSoundItem(alias, false));
+	R_ASSERT					(!FindSoundItem(alias, false));
 	m_sound_items.resize		(m_sound_items.size()+1);
 	HUD_SOUND_ITEM& snd_item	= m_sound_items.back();
 	HUD_SOUND_ITEM::LoadSound	(section, line, snd_item, type);
