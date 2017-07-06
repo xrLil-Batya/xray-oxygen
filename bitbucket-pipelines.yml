@@ -1,9 +1,12 @@
+image: python:2.7.11
+
 pipelines:
-  default:
-    - step:
-        script:
-          - echo "old default bruch"
-  import:
-    - step:
-        script:
-          - echo "new default bruch"
+  branches:
+    master:
+      - step:
+          script:
+            - echo: "def branch"
+    _M_X64:
+      - step:
+          script:
+            - echo: "x64 porting branch"
