@@ -1,5 +1,3 @@
-#ifndef xrDebugH
-#define xrDebugH
 #pragma once
 
 typedef	void		crashhandler		(void);
@@ -61,5 +59,3 @@ extern XRCORE_API	xrDebug		Debug;
 XRCORE_API void LogStackTrace	(const char* header);
 
 #include "xrDebug_macros.h"
-
-#endif // xrDebugH
