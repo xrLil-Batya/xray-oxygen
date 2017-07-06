@@ -1,0 +1,427 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|Win32">
+      <Configuration>Mixed</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Mixed|x64">
+      <Configuration>Mixed</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{15CBFEFF-7965-41F5-B4E2-21E8795C9159}</ProjectGuid>
+    <RootNamespace>libogg</RootNamespace>
+    <Keyword>Win32Proj</Keyword>
+    <ProjectName>sound_static</ProjectName>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <CharacterSet>Unicode</CharacterSet>
+    <PlatformToolset>v140</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\engine.vc2008\F-Ray.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\engine.vc2008\F-Ray.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\engine.vc2008\F-Ray.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\engine.vc2008\F-Ray.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\engine.vc2008\F-Ray.props" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="..\..\..\..\..\engine.vc2008\F-Ray.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <_ProjectFileVersion>10.0.30319.1</_ProjectFileVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <OutDir>$(xrLib)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>$(xrLib)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>$(xrLib)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <OutDir>$(xrLib)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>$(xrLib)</OutDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>$(xrLib)</OutDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBOGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_WINDOWS;_USRDLL;LIBOGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MinimalRebuild>true</MinimalRebuild>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBOGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>MIXED;WIN32;DEBUG;_WINDOWS;_USRDLL;LIBOGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>true</BufferSecurityCheck>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBOGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+    <Lib>
+      <OutputFile>$(OutDir)$(TargetName)$(TargetExt)</OutputFile>
+    </Lib>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
+    <Midl>
+      <TargetEnvironment>X64</TargetEnvironment>
+    </Midl>
+    <ClCompile>
+      <Optimization>MaxSpeed</Optimization>
+      <InlineFunctionExpansion>AnySuitable</InlineFunctionExpansion>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
+      <AdditionalIncludeDirectories>..\..\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;LIBOGG_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <StringPooling>true</StringPooling>
+      <ExceptionHandling>
+      </ExceptionHandling>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <BufferSecurityCheck>false</BufferSecurityCheck>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level4</WarningLevel>
+      <DebugInformationFormat>
+      </DebugInformationFormat>
+      <CompileAs>CompileAsC</CompileAs>
+      <DisableSpecificWarnings>4244;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <CallingConvention>Cdecl</CallingConvention>
+    </ClCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\..\libtheora\lib\analyze.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\apiwrapper.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\bitpack.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\decapiwrapper.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\decinfo.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\decode.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libtheora\lib\dequant.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\encapiwrapper.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\encfrag.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\encinfo.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\encode.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\enquant.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\fdct.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\fragment.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\huffdec.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\huffenc.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\idct.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libtheora\lib\info.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\internal.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\mathops.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\mcenc.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\quant.c">
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
+    </ClCompile>
+    <ClCompile Include="..\..\..\libtheora\lib\rate.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\state.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\tokenize.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\mmxencfrag.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\mmxfdct.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\mmxfrag.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\mmxidct.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\mmxstate.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\x86cpu.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\x86enc.c" />
+    <ClCompile Include="..\..\..\libtheora\lib\x86_vc\x86state.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\analysis.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\bitrate.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\block.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\codebook.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\envelope.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\floor0.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\floor1.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\info.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\lookup.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\lpc.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\lsp.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\mapping0.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\mdct.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\psy.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\registry.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\res0.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\sharedbook.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\smallft.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\synthesis.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\vorbisenc.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\vorbisfile.c" />
+    <ClCompile Include="..\..\..\libvorbis-1.3.5\lib\window.c" />
+    <ClCompile Include="..\..\src\bitwise.c" />
+    <ClCompile Include="..\..\src\framing.c" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\..\..\libvorbis-1.3.5\win32\vorbis.def" />
+    <None Include="..\ogg.def" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\..\libtheora\include\theora\codec.h" />
+    <ClInclude Include="..\..\..\libtheora\include\theora\theora.h" />
+    <ClInclude Include="..\..\..\libtheora\include\theora\theoradec.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\apiwrapper.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\bitpack.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\dct.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\decint.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\dequant.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\encint.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\enquant.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\huffdec.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\huffenc.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\huffman.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\idct.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\internal.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\mathops.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\modedec.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\ocintrin.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\quant.h" />
+    <ClInclude Include="..\..\..\libtheora\lib\x86_vc\x86cpu.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\include\vorbis\codec.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\include\vorbis\vorbisenc.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\include\vorbis\vorbisfile.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\backends.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\bitrate.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\books\coupled\res_books_stereo.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\books\floor\floor_books.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\books\uncoupled\res_books_uncoupled.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\codebook.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\codec_internal.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\envelope.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\highlevel.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\lookup.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\lookup_data.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\lpc.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\lsp.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\masking.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\mdct.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\misc.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\floor_all.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\psych_11.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\psych_16.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\psych_44.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\psych_8.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\residue_16.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\residue_44.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\residue_44u.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\residue_8.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_11.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_16.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_22.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_32.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_44.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_44u.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_8.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\modes\setup_X.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\os.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\psy.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\registry.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\scales.h" />
+    <ClInclude Include="..\..\..\libvorbis-1.3.5\lib\smallft.h" />
+    <ClInclude Include="..\..\include\ogg\ogg.h" />
+    <ClInclude Include="..\..\include\ogg\os_types.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
