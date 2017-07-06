@@ -1,5 +1,3 @@
-#ifndef xrCoreH
-#define xrCoreH
 #pragma once
 
 #ifndef DEBUG
@@ -323,6 +321,3 @@ public:
 
 
 extern XRCORE_API xrCore Core;
-
-#endif
-
