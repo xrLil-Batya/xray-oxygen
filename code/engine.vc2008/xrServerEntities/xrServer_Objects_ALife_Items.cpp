@@ -28,7 +28,7 @@
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeInventoryItem::CSE_ALifeInventoryItem(LPCSTR caSection)
 {
-	//текущее состояние вещи
+	//пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
 	m_fCondition				= 1.0f;
 
 	m_fMass						= pSettings->r_float(caSection, "inv_weight");
@@ -983,19 +983,18 @@ CSE_ALifeItemPDA::~CSE_ALifeItemPDA		()
 void CSE_ALifeItemPDA::STATE_Read		(NET_Packet	&tNetPacket, u16 size)
 {
 	inherited::STATE_Read		(tNetPacket,size);
+	
 	if (m_wVersion > 58)
 		tNetPacket.r_u16		(m_original_owner);
-
-	if (m_wVersion > 89)
 
 	if ( (m_wVersion > 89)&&(m_wVersion < 98)  )
 	{
 		int tmp,tmp2;
 		tNetPacket.r			(&tmp,		sizeof(int));
 		tNetPacket.r			(&tmp2,		sizeof(int));
-		m_info_portion			=	NULL;
+		m_info_portion			= NULL;
 		m_specific_character	= NULL;
-	}else{
+	} else {
 		tNetPacket.r_stringZ	(m_specific_character);
 		tNetPacket.r_stringZ	(m_info_portion);
 	
@@ -1052,12 +1051,12 @@ void CSE_ALifeItemDocument::STATE_Read		(NET_Packet	&tNetPacket, u16 size)
 {
 	inherited::STATE_Read		(tNetPacket,size);
 
-	if ( m_wVersion < 98  ){
+	if ( m_wVersion < 98  )
+	{
 		u16 tmp;
 		tNetPacket.r_u16			(tmp);
 		m_wDoc = NULL;
-	}else
-		tNetPacket.r_stringZ		(m_wDoc);
+	} else tNetPacket.r_stringZ		(m_wDoc);
 }
 
 void CSE_ALifeItemDocument::STATE_Write		(NET_Packet	&tNetPacket)
@@ -1080,7 +1079,6 @@ void CSE_ALifeItemDocument::UPDATE_Write	(NET_Packet	&tNetPacket)
 void CSE_ALifeItemDocument::FillProps		(LPCSTR pref, PropItemVec& items)
 {
 	inherited::FillProps			(pref,items);
-//	PHelper().CreateU16			(items, PrepareKey(pref, *s_name, "Document index :"), &m_wDocIndex, 0, 65535);
 	PHelper().CreateRText		(items, PrepareKey(pref, *s_name, "Info portion :"), &m_wDoc);
 }
 #endif // #ifndef XRGAME_EXPORTS

@@ -44,22 +44,11 @@ CUIInventoryCellItem::CUIInventoryCellItem(CInventoryItem* itm)
 bool CUIInventoryCellItem::EqualTo(CUICellItem* itm)
 {
 	CUIInventoryCellItem* ci = smart_cast<CUIInventoryCellItem*>( itm );
-	if ( !itm )
-	{
-		return false;
-	}
-	if ( object()->object().cNameSect() != ci->object()->object().cNameSect() )
-	{
-		return false;
-	}
-	if ( !fsimilar( object()->GetCondition(), ci->object()->GetCondition(), 0.01f ) )
-	{
-		return false;
-	}
-	if ( !object()->equal_upgrades( ci->object()->upgardes() ) )
-	{
-		return false;
-	}
+	if (!itm ||
+		object()->object().cNameSect() != ci->object()->object().cNameSect() ||
+		!fsimilar( object()->GetCondition(), ci->object()->GetCondition(), 0.01f) ||
+		!object()->equal_upgrades( ci->object()->upgardes()) return false;
+
 	return true;
 }
 
@@ -70,7 +59,7 @@ bool CUIInventoryCellItem::IsHelperOrHasHelperChild()
 
 CUIDragItem* CUIInventoryCellItem::CreateDragItem()
 {
-	return IsHelperOrHasHelperChild() ? NULL : inherited::CreateDragItem();
+	return IsHelperOrHasHelperChild() ? 0 : inherited::CreateDragItem();
 }
 
 bool CUIInventoryCellItem::IsHelper ()
@@ -90,13 +79,9 @@ void CUIInventoryCellItem::Update()
 
 	u32 color = GetTextureColor();
 	if ( IsHelper() && !ChildsCount() )
-	{
 		color = 0xbbbbbbbb;
-	}
 	else if ( IsHelperOrHasHelperChild() )
-	{
 		color = 0xffffffff;
-	}
 
 	SetTextureColor(color);
 }
@@ -104,7 +89,7 @@ void CUIInventoryCellItem::Update()
 void CUIInventoryCellItem::UpdateItemText()
 {
 	const u32	helper_count	=  	(u32)std::count_if(m_childs.begin(), m_childs.end(), detail::is_helper_pred()) 
-									+ IsHelper() ? 1 : 0;
+									+ (IsHelper() ? 1 : 0);
 
 	const u32	count			=	ChildsCount() + 1 - helper_count;
 
