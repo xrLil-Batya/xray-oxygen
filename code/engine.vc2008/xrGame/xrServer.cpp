@@ -735,10 +735,9 @@ void			xrServer::Server_Client_Check(IClient* CL)
 	Msg("New SV client 0x%08x", SV_Client->ID.value());
 };
 
-bool		xrServer::OnCL_QueryHost		() 
+bool xrServer::OnCL_QueryHost() 
 {
-	if (game->Type() == eGameIDSingle) return false;
-	return (GetClientsCount() != 0); 
+	return false;
 };
 
 CSE_Abstract*	xrServer::GetEntity			(u32 Num)
@@ -752,7 +751,7 @@ CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 };
 
 
-void		xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
+void xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
 {
 	if (!CL->net_Ready)
 		return;

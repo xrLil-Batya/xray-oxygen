@@ -100,19 +100,16 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 #endif
 
 	// Optimization for single-player only	- minimize traffic between client and server
-	if	(GameID()	== eGameIDSingle)		psNET_Flags.set	(NETFLAG_MINIMIZEUPDATES,TRUE);
-	else								psNET_Flags.set	(NETFLAG_MINIMIZEUPDATES,FALSE);
+	psNET_Flags.set	(NETFLAG_MINIMIZEUPDATES,TRUE);
 
 	// Client spawn
-//	T.Start		();
-	CObject*	O		= Objects.Create	(*E->s_name);
-	// Msg				("--spawn--CREATE: %f ms",1000.f*T.GetAsync());
+	CObject* O = Objects.Create	(*E->s_name);
 
 //	T.Start		();
 #ifdef DEBUG_MEMORY_MANAGER
 	mem_alloc_gather_stats		(false);
 #endif // DEBUG_MEMORY_MANAGER
-	if (0==O || (!O->net_Spawn	(E))) 
+	if (!O || (!O->net_Spawn	(E))) 
 	{
 		O->net_Destroy			( );
 		if(!g_dedicated_server)
@@ -155,16 +152,6 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 
 		if (0xffff != E->ID_Parent)	
 		{
-			/*
-			// Generate ownership-event
-			NET_Packet			GEN;
-			GEN.w_begin			(M_EVENT);
-			GEN.w_u32			(E->m_dwSpawnTime);//-NET_Latency);
-			GEN.w_u16			(GE_OWNERSHIP_TAKE);
-			GEN.w_u16			(E->ID_Parent);
-			GEN.w_u16			(u16(O->ID()));
-			game_events->insert	(GEN);
-			/*/
 			NET_Packet	GEN;
 			GEN.write_start();
 			GEN.read_start();
@@ -173,17 +160,6 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 			//*/
 		}
 	}
-
-	/*if (E->s_flags.is(M_SPAWN_UPDATE)) {
-		NET_Packet				temp;
-		temp.B.count			= 0;
-		E->UPDATE_Write			(temp);
-		if (temp.B.count > 0)
-		{
-			temp.r_seek				(0);
-			O->net_Import			(temp);
-		}
-		}*/ //:(
 
 	//---------------------------------------------------------
 	Game().OnSpawn				(O);
@@ -216,7 +192,6 @@ CSE_Abstract *CLevel::spawn_item		(LPCSTR section, const Fvector &position, u32 
 	// Fill
 	abstract->s_name		= section;
 	abstract->set_name_replace	(section);
-//.	abstract->s_gameid		= u8(GameID());
 	abstract->o_Position	= position;
 	abstract->s_RP			= 0xff;
 	abstract->ID			= 0xffff;
@@ -241,11 +216,8 @@ void	CLevel::ProcessGameSpawns	()
 	while (!game_spawn_queue.empty())
 	{
 		CSE_Abstract*	E			= game_spawn_queue.front();
-
 		g_sv_Spawn					(E);
-
 		F_entity_Destroy			(E);
-
 		game_spawn_queue.pop_front	();
 	}
 }

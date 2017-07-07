@@ -143,14 +143,12 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 			//-----------------------------------------------
 			IP->net_Import(P);
 			//-----------------------------------------------
-			//if (OldFlags != IP->flags__)
-				//if (Type() != eGameIDSingle) OnPlayerFlagsChanged(IP);
 			if (OldVote != IP->m_bCurrentVoteAgreed)
 				OnPlayerVoted(IP);
 			//***********************************************
 			valid_players.push_back(ID);
 		}else{
-			if (ID == local_svdpnid)//Level().GetClientID())
+			if (ID == local_svdpnid)
 			{
 				game_PlayerState::skip_Import(P);	//this mean that local_player not created yet ..
 				continue;
@@ -158,9 +156,6 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 			
 			IP = createPlayerState	(&P);
 			
-			//if (Type() != eGameIDSingle)
-			//	OnPlayerFlagsChanged(IP);
-
 			players.insert			(std::make_pair(ID,IP));
 			valid_players.push_back	(ID);
 		}
@@ -199,8 +194,6 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 		//-----------------------------------------------
 		IP->net_Import(P);
 		//-----------------------------------------------
-		//if (OldFlags != IP->flags__)
-			//if (Type() != eGameIDSingle) OnPlayerFlagsChanged(IP);
 		if (OldVote != IP->m_bCurrentVoteAgreed)
 			OnPlayerVoted(IP);
 		//***********************************************

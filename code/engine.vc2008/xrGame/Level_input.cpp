@@ -39,7 +39,7 @@
 bool g_bDisableAllInput = false;
 extern	float	g_fTimeFactor;
 
-#define CURRENT_ENTITY()	(game?((GameID() == eGameIDSingle) ? CurrentEntity() : CurrentControlEntity()):NULL)
+#define CURRENT_ENTITY()	(game ? CurrentEntity() : 0)
 
 void CLevel::IR_OnMouseWheel( int direction )
 {
@@ -191,7 +191,6 @@ void CLevel::IR_OnKeyboardPress	(int key)
 #ifndef MASTER_GOLD
 	switch (key) {
 	case DIK_F7: {
-		if (GameID() != eGameIDSingle) return;
 		FS.get_path					("$game_config$")->m_Flags.set(FS_Path::flNeedRescan, TRUE);
 		FS.get_path					("$game_scripts$")->m_Flags.set(FS_Path::flNeedRescan, TRUE);
 		FS.rescan_pathes			();
@@ -244,11 +243,6 @@ void CLevel::IR_OnKeyboardPress	(int key)
 #endif //DEBUG
 	case DIK_NUMPAD5: 
 		{
-			if (GameID()!=eGameIDSingle) 
-			{
-				Msg("For this game type Demo Record is disabled.");
-///				return;
-			};
 			if(!pInput->iGetAsyncKeyState(DIK_LSHIFT))
 			{
 				Console->Hide	();
@@ -294,9 +288,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		return;
 	}
 	case DIK_BACK:
-		if (GameID() == eGameIDSingle)
-			DRender->NextSceneMode();
-			//HW.Caps.SceneMode			= (HW.Caps.SceneMode+1)%3;
+		DRender->NextSceneMode();
 		return;
 
 	case DIK_F4: {
@@ -375,10 +367,8 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		break;
 	}
 
-	case MOUSE_1: {
-		if (GameID() != eGameIDSingle)
-			break;
-
+	case MOUSE_1: 
+	{
 		if (pInput->iGetAsyncKeyState(DIK_LALT)) {
 			if (smart_cast<CActor*>(CurrentEntity()))
 				try_change_current_entity	();
@@ -392,38 +382,9 @@ void CLevel::IR_OnKeyboardPress	(int key)
 #endif
 #ifdef DEBUG
 	case DIK_F9:{
-//		if (!ai().get_alife())
-//			break;
-//		const_cast<CALifeSimulatorHeader&>(ai().alife().header()).set_state(ALife::eZoneStateSurge);
 		break;
 	}
 		return;
-//	case DIK_F10:{
-//		ai().level_graph().set_dest_point();
-//		ai().level_graph().build_detail_path();
-//		if (!Objects.FindObjectByName("m_stalker_e0000") || !Objects.FindObjectByName("localhost/dima"))
-//			return;
-//		if (!m_bSynchronization) {
-//			m_bSynchronization	= true;
-//			ai().level_graph().set_start_point();
-//			m_bSynchronization	= false;
-//		}
-//		luabind::functor<void>	functor;
-//		ai().script_engine().functor("alife_test.set_switch_online",functor);
-//		functor(0,false);
-//	}
-//		return;
-//	case DIK_F11:
-//		ai().level_graph().build_detail_path();
-//		if (!Objects.FindObjectByName("m_stalker_e0000") || !Objects.FindObjectByName("localhost/dima"))
-//			return;
-//		if (!m_bSynchronization) {
-//			m_bSynchronization	= true;
-//			ai().level_graph().set_dest_point();
-//			ai().level_graph().select_cover_point();
-//			m_bSynchronization	= false;
-//		}
-//		return;
 #endif // DEBUG
 	}
 #endif // MASTER_GOLD
@@ -438,14 +399,14 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	}
 
 
-	#ifdef _DEBUG
+#ifdef _DEBUG
 		CObject *obj = Level().Objects.FindObjectByName("monster");
 		if (obj) {
 			CBaseMonster *monster = smart_cast<CBaseMonster *>(obj);
 			if (monster) 
 				monster->debug_on_key(key);
 		}
-	#endif
+#endif
 }
 
 void CLevel::IR_OnKeyboardRelease(int key)

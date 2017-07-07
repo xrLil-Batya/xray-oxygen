@@ -456,63 +456,20 @@ void CShootingObject::FireBullet(const Fvector& pos,
 	{
 		if (ParentMayHaveAimBullet())
 		{
-			if (m_fPredBulletTime==0.0)
-			{
-				aim_bullet=true;
-			}
-			else
-			{
-				if ((Device.fTimeGlobal-m_fPredBulletTime)>=m_fTimeToAim)
-				{
-					aim_bullet=true;
-				}
-				else
-				{
-					aim_bullet=false;
-				}
-			}
+			if (m_fPredBulletTime == 0.0) aim_bullet=true;
+			else aim_bullet = ((Device.fTimeGlobal-m_fPredBulletTime)>=m_fTimeToAim) ? true : false;
 		}
-		else
-		{
-			aim_bullet=false;
-		}
+		else aim_bullet=false;
 	}
-	else
-	{
-		aim_bullet=false;
-	}
+	else aim_bullet = false;
+	
 	m_fPredBulletTime = Device.fTimeGlobal;
 
 	float l_fHitPower = 0.0f;
-	if (ParentIsActor())//если из оружия стреляет актёр(игрок)
-	{
-		if (GameID() == eGameIDSingle)
-		{
-			l_fHitPower			= fvHitPower[g_SingleGameDifficulty];
-		}
-		else
-		{
-			l_fHitPower			= fvHitPower[egdMaster];
-		}
-	}
-	else
-	{
-		l_fHitPower			= fvHitPower[egdMaster];
-	}
+	//если из оружия стреляет актёр(игрок)
+	l_fHitPower	= (ParentIsActor()) ? fvHitPower[g_SingleGameDifficulty] : fvHitPower[egdMaster];
 
-	Level().BulletManager().AddBullet( pos, 
-										dir,
-										m_fStartBulletSpeed * cur_silencer_koef.bullet_speed,
-										l_fHitPower * cur_silencer_koef.hit_power,
-										fHitImpulse * cur_silencer_koef.hit_impulse,
-										parent_id, 
-										weapon_id,
-										ALife::eHitTypeFireWound, 
-										fireDistance, 
-										cartridge, 
-										m_air_resistance_factor,
-										send_hit, 
-										aim_bullet);
+	Level().BulletManager().AddBullet(pos, dir, m_fStartBulletSpeed * cur_silencer_koef.bullet_speed, l_fHitPower * cur_silencer_koef.hit_power, fHitImpulse * cur_silencer_koef.hit_impulse, parent_id, weapon_id, ALife::eHitTypeFireWound, fireDistance, cartridge, m_air_resistance_factor, send_hit, aim_bullet);
 }
 void CShootingObject::FireStart	()
 {

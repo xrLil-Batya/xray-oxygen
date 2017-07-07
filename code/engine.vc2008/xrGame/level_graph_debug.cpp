@@ -513,10 +513,6 @@ void CLevelGraph::draw_game_graph	()
 	xform.transform_tiny	(vertices[2], Fvector().set(center.x - bounds.x, center.y - bounds.y, center.z - bounds.z));
 	xform.transform_tiny	(vertices[3], Fvector().set(center.x + bounds.x, center.y - bounds.y, center.z - bounds.z));
 
-//	u32						back_color = D3DCOLOR_XRGB(0,0,0);
-//	RCache.dbg_DrawTRI		(Fidentity,vertices[0],vertices[2],vertices[1],back_color);
-//	RCache.dbg_DrawTRI		(Fidentity,vertices[1],vertices[2],vertices[3],back_color);
-
 	// draw vertices
 	CGameGraph				&graph = ai().game_graph();
 	update_current_info		();
@@ -543,8 +539,6 @@ void CLevelGraph::draw_game_graph	()
 		if (psAI_Flags.test(aiDrawGameGraphObjects))
 			draw_objects	(i);
 	}
-
-	/**
 	for (int i=0; i<(int)ai().game_graph().header().vertex_count(); ++i) {
 		Fvector t1 = ai().game_graph().vertex(i)->game_point();
 		t1.y += .6f;

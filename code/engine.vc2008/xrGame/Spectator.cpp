@@ -99,51 +99,30 @@ void CSpectator::UpdateCL()
 		}
 	}
 
-	if (GameID() != eGameIDSingle)
+	if (g_pGameLevel->CurrentViewEntity()==this)
 	{
-		if (Game().local_player && (
-					(Game().local_player->GameID == ID()) ||
-					Level().IsDemoPlay()
-				)
-			)
-		{
-			if (cam_active != eacFreeFly)
-			{
-				if (m_pActorToLookAt && !m_pActorToLookAt->g_Alive())
-					cam_Set(eacFreeLook);
-				if (!m_pActorToLookAt)
-				{
-					SelectNextPlayerToLook(false);
-					if (m_pActorToLookAt)
-						cam_Set(m_last_camera);
-				};
-			}
-			if (Level().CurrentViewEntity() == this) 
-			{
-				cam_Update(m_pActorToLookAt);
-			}
-			return;
-		}		
-		
-	};
-	
-	if (g_pGameLevel->CurrentViewEntity()==this){
 		if (eacFreeFly!=cam_active){
 			//-------------------------------------
 		
 			//-------------------------------------
 			int idx			= 0;
 			game_PlayerState* P = Game().local_player;
-			if (P&&(P->team>=0)&&(P->team<(int)Level().seniority_holder().teams().size())){
+			if (P&&(P->team>=0)&&(P->team<(int)Level().seniority_holder().teams().size()))
+			{
 				const CTeamHierarchyHolder& T		= Level().seniority_holder().team(P->team);
-				for (u32 i=0; i<T.squads().size(); ++i){
+				for (u32 i=0; i<T.squads().size(); ++i)
+				{
 					const CSquadHierarchyHolder& S = T.squad(i);
-					for (u32 j=0; j<S.groups().size(); ++j){
+					for (u32 j=0; j<S.groups().size(); ++j)
+					{
 						const CGroupHierarchyHolder& G = S.group(j);
-						for (u32 k=0; k<G.members().size(); ++k){
+						for (u32 k=0; k<G.members().size(); ++k)
+						{
 							CActor* A = smart_cast<CActor*>(G.members()[k]);
-							if (A/*&&A->g_Alive()*/){
-								if(idx==look_idx){
+							if (A)
+							{
+								if(idx==look_idx)
+								{
 									cam_Update	(A);
 									return;
 								}
@@ -166,7 +145,6 @@ void CSpectator::UpdateCL()
 void CSpectator::shedule_Update		(u32 DT)
 {
 	inherited::shedule_Update	(DT);
-//	if (!getEnabled())	return;
 	if (!Ready())		return;
 }
 
@@ -186,7 +164,6 @@ void CSpectator::IR_OnKeyboardPress(int cmd)
 	case kCAM_1:	if (cam_active == eacFreeFly && SelectNextPlayerToLook(false))	cam_Set			(eacFirstEye);		break;
 	case kCAM_2:	if (cam_active == eacFreeFly && SelectNextPlayerToLook(false))	cam_Set			(eacLookAt);		break;
 	case kCAM_3:	if (cam_active == eacFreeFly && SelectNextPlayerToLook(false))	cam_Set			(eacFreeLook);		break;
-	//case kCAM_4:	cam_Set			(eacFreeFly);	m_pActorToLookAt = NULL;	break;
 	case kWPN_FIRE:	
 		{
 			if ((cam_active != eacFreeFly) || (!m_pActorToLookAt))
@@ -220,7 +197,6 @@ void CSpectator::IR_OnKeyboardHold(int cmd)
 {
 	if (Remote())		return;
 
-	//game_cl_mp* pMPGame = smart_cast<game_cl_mp*> (&Game());
 	game_PlayerState* PS = Game().local_player;
 
 	if ((cam_active==eacFreeFly)||(cam_active==eacFreeLook)){
@@ -454,53 +430,6 @@ void			CSpectator::net_Destroy	()
 
 bool			CSpectator::SelectNextPlayerToLook(bool const search_next)
 {
-	if (GameID() == eGameIDSingle) return false;
-
-	game_PlayerState* PS = Game().local_player;
-	if (!PS) return false;
-	m_pActorToLookAt = NULL;
-
-
-	game_cl_GameState::PLAYERS_MAP_IT it = Game().players.begin(),
-		ite = Game().players.end();
-	u16 PPCount = 0;
-	CActor*	PossiblePlayers[32];
-	int last_player_idx = -1;
-	for (; it != ite; ++it)
-	{
-		game_PlayerState* ps = it->second;
-		if (!ps || ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) /*|| (ps==PS)*/) continue;
-
-		u16 id = ps->GameID;
-		CObject* pObject = Level().Objects.net_Find(id);
-		if (!pObject) continue;
-		CActor* A = smart_cast<CActor*>(pObject);
-		if (!A) continue;
-		if (m_last_player_name.size() && (m_last_player_name == ps->getName()))
-		{
-			last_player_idx = PPCount;
-		}
-		PossiblePlayers[PPCount++] = A;
-	};
-	if (!search_next)
-	{
-		if (last_player_idx != -1)
-		{
-			m_pActorToLookAt = PossiblePlayers[last_player_idx];
-			return true;
-		}
-		else return false;
-	}
-
-	if (PPCount > 0)
-	{
-		look_idx %= PPCount;
-		m_pActorToLookAt = PossiblePlayers[look_idx];
-		game_PlayerState* tmp_state = Game().GetPlayerByGameID(m_pActorToLookAt->ID());
-		if (tmp_state)
-			m_last_player_name = tmp_state->getName();
-		return true;
-	};
 	return false;
 };
 
@@ -511,67 +440,22 @@ void			CSpectator::net_Relcase				(CObject *O)
 	
 	if (m_pActorToLookAt != Level().CurrentEntity()) //new spectator was spawned
 	{
-		m_pActorToLookAt = NULL;
+		m_pActorToLookAt = 0;
 		return;
 	}
 
-	m_pActorToLookAt = NULL;
+	m_pActorToLookAt = 0;
 	if (cam_active != eacFreeFly)
 	{
 		SelectNextPlayerToLook(false);
 		if (m_pActorToLookAt == O)	//selected to look at player that will be destroyed
-		{
-			m_pActorToLookAt = NULL;
-		}
+			m_pActorToLookAt = 0;
 	}
 	if (!m_pActorToLookAt) cam_Set(eacFreeFly);
 };
 
 void CSpectator::GetSpectatorString		(string1024& pStr)
 {
-	if (!pStr) return;
-	if (GameID() == eGameIDSingle) return;
-	
-	xr_string	SpectatorMsg;
-	CStringTable st;
-	switch (cam_active)
-	{
-	case eacFreeFly:
-		{
-			SpectatorMsg = *st.translate("mp_spectator");
-			SpectatorMsg += " ";
-			SpectatorMsg += *st.translate("mp_free_fly");
-		}break;
-	case eacFirstEye:
-		{
-			SpectatorMsg = *st.translate("mp_spectator");
-			SpectatorMsg += " ";
-			SpectatorMsg += *st.translate("mp_first_eye");
-			SpectatorMsg += " ";
-//			SpectatorMsg = "SPECTATOR (First-Eye): ";
-			SpectatorMsg += m_pActorToLookAt ? m_pActorToLookAt->Name() : "";
-
-		}break;
-	case eacFreeLook:
-		{
-			SpectatorMsg = *st.translate("mp_spectator");
-			SpectatorMsg += " ";
-			SpectatorMsg += *st.translate("mp_free_look");
-			SpectatorMsg += " ";
-//			SpectatorMsg = "SPECTATOR (Free-Look):";
-			SpectatorMsg += m_pActorToLookAt ? m_pActorToLookAt->Name() : "";
-		}break;
-	case eacLookAt:
-		{
-			SpectatorMsg = *st.translate("mp_spectator");
-			SpectatorMsg += " ";
-			SpectatorMsg += *st.translate("mp_look_at");
-			SpectatorMsg += " ";
-//			SpectatorMsg = "SPECTATOR (Look-At):";
-			SpectatorMsg += m_pActorToLookAt ? m_pActorToLookAt->Name() : "";
-		}break;
-	};
-	xr_strcpy(pStr, SpectatorMsg.c_str());
 };
 
 

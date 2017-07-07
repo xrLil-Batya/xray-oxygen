@@ -108,16 +108,9 @@ CPHMovementControl::~CPHMovementControl(void)
 
 static ALife::EHitType	 DefineCollisionHitType	( u16 material_idx )	
 {
-	if(GMLib.GetMaterialByIdx( material_idx )->Flags.test(SGameMtl::flInjurious))
-		return ALife::eHitTypeRadiation;
-	else									
-		return ALife::eHitTypeStrike;
-//	return (GameID() == eGameIDSingle) ? ALife::eHitTypeStrike : ALife::eHitTypePhysicStrike;
-}//
+	return (GMLib.GetMaterialByIdx( material_idx )->Flags.test(SGameMtl::flInjurious)) ? ALife::eHitTypeRadiation : ALife::eHitTypeStrike;
+}
 
-
-//static Fvector old_pos={0,0,0};
-//static bool bFirst=true;
 void CPHMovementControl::AddControlVel	(const Fvector& vel)
 {
 	vExternalImpulse.add(vel);

@@ -75,12 +75,11 @@ void CHUDTarget::ShowCrosshair(bool b)
 {
 	m_bShowCrosshair = b;
 }
-//. fVisTransparencyFactor
+
 float fCurrentPickPower;
 ICF static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 {
 	SPickParam*	pp			= (SPickParam*)params;
-//	collide::rq_result* RQ	= pp->RQ;
 	++pp->pass;
 
 	if(result.O)
@@ -95,11 +94,7 @@ ICF static BOOL pick_trace_callback(collide::rq_result& result, LPVOID params)
 		SGameMtl* mtl = GMLib.GetMaterialByIdx(T->material);
 		pp->power		*= mtl->fVisTransparencyFactor;
 		if(pp->power>0.34f)
-		{
 			return TRUE;
-		}
-//.		if (mtl->Flags.is(SGameMtl::flPassable)) 
-//.			return TRUE;
 	}
 	pp->RQ					= result;
 	return					FALSE;
@@ -135,18 +130,15 @@ void CHUDTarget::CursorOnFrame ()
 extern ENGINE_API BOOL g_bRendering; 
 void CHUDTarget::Render()
 {
-
-	BOOL  b_do_rendering = ( psHUD_Flags.is(HUD_CROSSHAIR|HUD_CROSSHAIR_RT|HUD_CROSSHAIR_RT2) );
-	
-	if(!b_do_rendering)
+	if(!psHUD_Flags.is(HUD_CROSSHAIR|HUD_CROSSHAIR_RT|HUD_CROSSHAIR_RT2))
 		return;
 
 	VERIFY				(g_bRendering);
 
 	CObject*	O		= Level().CurrentEntity();
-	if (0==O)			return;
+	if (!O)			return;
 	CEntity*	E		= smart_cast<CEntity*>(O);
-	if (0==E)			return;
+	if (!E)			return;
 
 	Fvector p1			= Device.vCameraPosition;
 	Fvector dir			= Device.vCameraDirection;

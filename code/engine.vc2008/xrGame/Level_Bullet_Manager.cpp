@@ -134,15 +134,12 @@ void CBulletManager::Load		()
 	m_fHPMaxDist			= pSettings->r_float(bullet_manager_sect, "hit_probability_max_dist");
 
 	if (pSettings->line_exist(bullet_manager_sect, "bullet_velocity_time_factor"))
-	{
 		g_bullet_time_factor	= pSettings->r_float(bullet_manager_sect, "bullet_velocity_time_factor");
-	}
 
-
-	LPCSTR whine_sounds		= pSettings->r_string(bullet_manager_sect, "whine_sounds");
+	const char* whine_sounds = pSettings->r_string(bullet_manager_sect, "whine_sounds");
 	int cnt					= _GetItemCount(whine_sounds);
 	xr_string tmp;
-	for (int k=0; k<cnt; ++k)
+	for (u32 k=0; k<cnt; ++k)
 	{
 		m_WhineSounds.push_back	(ref_sound());
 		m_WhineSounds.back().create(_GetItem(whine_sounds,k,tmp),st_Effect,sg_SourceType);
@@ -150,7 +147,7 @@ void CBulletManager::Load		()
 
 	LPCSTR explode_particles= pSettings->r_string(bullet_manager_sect, "explode_particles");
 	cnt						= _GetItemCount(explode_particles);
-	for (int k=0; k<cnt; ++k)
+	for (u32 k=0; k<cnt; ++k)
 		m_ExplodeParticles.push_back	(_GetItem(explode_particles,k,tmp));
 }
 
@@ -675,7 +672,7 @@ BOOL CBulletManager::firetrace_callback	(collide::rq_result& result, LPVOID para
 	Fvector& collide_position		= data.collide_position;
 	collide_position				= Fvector().mad(bullet.bullet_pos, bullet.dir, result.range);
 	
-	float const	air_resistance		= (GameID() == eGameIDSingle) ? Level().BulletManager().m_fAirResistanceK : bullet.air_resistance;
+	float const	air_resistance		= Level().BulletManager().m_fAirResistanceK;
 
 	CBulletManager& bullet_manager	= Level().BulletManager();
 	Fvector const gravity			= { 0.f, -bullet_manager.m_fGravityConst, 0.f };
@@ -791,14 +788,13 @@ bool CBulletManager::process_bullet			(collide::rq_results & storage, SBullet& b
 	float const time_delta		= float(delta_time)/1000.f;
 	Fvector const gravity		= Fvector().set( 0.f, -m_fGravityConst, 0.f);
 
-	float const	air_resistance	= (GameID() == eGameIDSingle) ? m_fAirResistanceK : bullet.air_resistance;
+	float const	air_resistance	= m_fAirResistanceK;
 	bullet.tracer_start_position= bullet.bullet_pos;
 
 	Fvector const&start_position= bullet.bullet_pos;
 	Fvector	previous_position	= start_position;
 	float low					= bullet.life_time;
 	float high					= bullet.life_time + time_delta;
-//	Msg							("process_bullet0: low[%f], high[%f]", low, high);
 
 	bullet.change_rajectory_count	= 0;
 
@@ -993,8 +989,6 @@ void CBulletManager::CommitEvents			()	// @ the start of frame
 			}break;
 		case EVENT_REMOVE:
 			{
-				if (E.bullet.flags.allow_sendhit && GameID() != eGameIDSingle)
-					Game().m_WeaponUsageStatistic->OnBullet_Remove(&E.bullet);
 				m_Bullets[E.tgt_material] = m_Bullets.back();
 				m_Bullets.pop_back();
 			}break;
@@ -1023,18 +1017,8 @@ void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bu
 			
 			if (_dynamic)	
 			{
-				//	E.Repeated = (R.O->ID() == E.bullet.targetID);
-				//	bullet->targetID = R.O->ID();
-
 				E.Repeated = (R.O->ID() == E.bullet.targetID);
-				if (GameID() == eGameIDSingle)
-					bullet->targetID = R.O->ID();
-				else if (bullet->targetID != R.O->ID())
-					{
-						CGameObject* pGO = smart_cast<CGameObject*>(R.O);
-						if (!pGO || !pGO->BonePassBullet(R.element))
-							bullet->targetID = R.O->ID();						
-					}
+				bullet->targetID = R.O->ID();
 			};
 		}break;
 	case EVENT_REMOVE:

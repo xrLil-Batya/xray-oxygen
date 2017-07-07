@@ -199,14 +199,8 @@ public:
 	CCC_GameDifficulty(LPCSTR N) : CCC_Token(N,(u32*)&g_SingleGameDifficulty,difficulty_type_token)  {};
 	virtual void Execute(LPCSTR args) {
 		CCC_Token::Execute(args);
-		if (g_pGameLevel && Level().game){
-//#ifndef	DEBUG
-			if (GameID() != eGameIDSingle){
-				Msg("For this game type difficulty level is disabled.");
-				return;
-			};
-//#endif
-
+		if (g_pGameLevel && Level().game)
+		{
 			game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
 			game->OnDifficultyChanged	();
 		}
@@ -216,10 +210,6 @@ public:
 		xr_strcpy(I,"game difficulty"); 
 	}
 };
-
-
-
-
 
 #ifdef DEBUG
 class CCC_ALifePath : public IConsole_Command {
@@ -234,16 +224,8 @@ public:
 			if ((-1 != id1) && (-1 != id2))
 				if (std::max(id1,id2) > (int)ai().game_graph().header().vertex_count() - 1)
 					Msg("! there are only %d vertexes!",ai().game_graph().header().vertex_count());
-				else
-					if (std::min(id1,id2) < 0)
+				else if (std::min(id1,id2) < 0)
 						Msg("! invalid vertex number (%d)!", std::min(id1,id2));
-					else {
-//						Sleep				(1);
-//						CTimer				timer;
-//						timer.Start			();
-//						float				fValue = ai().m_tpAStar->ffFindMinimalPath(id1,id2);
-//						Msg					("* %7.2f[%d] : %11I64u cycles (%.3f microseconds)",fValue,ai().m_tpAStar->m_tpaNodes.size(),timer.GetElapsed_ticks(),timer.GetElapsed_ms()*1000.f);
-					}
 			else
 				Msg("! not enough parameters!");
 		}
@@ -298,7 +280,8 @@ class CCC_ALifeSwitchDistance : public IConsole_Command {
 public:
 	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
+		if (ai().get_alife()) 
+		{
 			float id1 = 0.0f;
 			sscanf(args ,"%f",&id1);
 			if (id1 < 2.0f)
@@ -319,7 +302,8 @@ class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
+		if (ai().get_alife())
+		{
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
@@ -340,7 +324,8 @@ class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
+		if (ai().get_alife())
+		{
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			int id1 = 0;
@@ -356,7 +341,8 @@ class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
 	virtual void Execute(LPCSTR args) {
-		if ((GameID() == eGameIDSingle)  &&ai().get_alife()) {
+		if (ai().get_alife())
+		{
 			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
 			VERIFY			(tpGame);
 			float id1 = 0;
@@ -375,14 +361,8 @@ class CCC_DemoRecord : public IConsole_Command
 public:
 
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
-	virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
-		//if (GameID() != eGameIDSingle) 
-		//{
-		//	Msg("For this game type Demo Record is disabled.");
-		//	return;
-		//};
-		#endif
+	virtual void Execute(LPCSTR args) 
+	{
 		Console->Hide	();
 
 		LPSTR			fn_; 
@@ -400,14 +380,8 @@ class CCC_DemoRecordSetPos : public CCC_Vector3
 public:
 
 	CCC_DemoRecordSetPos(LPCSTR N) : CCC_Vector3( N, &p, Fvector().set( -FLT_MAX, -FLT_MAX, -FLT_MAX ),Fvector().set( FLT_MAX, FLT_MAX, FLT_MAX ) ) {};
-	virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
-		//if (GameID() != eGameIDSingle) 
-		//{
-		//	Msg("For this game type Demo Record is disabled.");
-		//	return;
-		//};
-		#endif
+	virtual void Execute(LPCSTR args) 
+	{
 		CDemoRecord::GetGlobalPosition( p );
 		CCC_Vector3::Execute(args);
 		CDemoRecord::SetGlobalPosition( p );
@@ -423,30 +397,24 @@ public:
 	CCC_DemoPlay(LPCSTR N) : 
 	  IConsole_Command(N) 
 	  { bEmptyArgsHandled = TRUE; };
-	  virtual void Execute(LPCSTR args) {
-		#ifndef	DEBUG
-		//if (GameID() != eGameIDSingle) 
-		//{
-		//	Msg("For this game type Demo Play is disabled.");
-		//	return;
-		//};
-		#endif
-		  if (0==g_pGameLevel)
-		  {
-			  Msg	("! There are no level(s) started");
-		  } else {
-			  Console->Hide			();
-			  string_path			fn;
-			  u32		loops	=	0;
-			  LPSTR		comma	=	strchr(const_cast<LPSTR>(args),',');
-			  if (comma)	{
-				  loops			=	atoi	(comma+1);
-				  *comma		=	0;	//. :)
-			  }
-			  strconcat			(sizeof(fn),fn, args, ".xrdemo");
-			  FS.update_path	(fn, "$game_saves$", fn);
-			  g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
-		  }
+	  virtual void Execute(LPCSTR args) 
+	  {
+		if (g_pGameLevel)
+		{
+			Console->Hide			();
+			string_path			fn;
+			u32		loops	=	0;
+			LPSTR		comma	=	strchr(const_cast<LPSTR>(args),',');
+			if (comma)
+			{
+				loops			=	atoi	(comma+1);
+				*comma		=	0;	//. :)
+			}
+			strconcat			(sizeof(fn),fn, args, ".xrdemo");
+			FS.update_path	(fn, "$game_saves$", fn);
+			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
+		}
+		else Msg("! There are no level(s) started");
 	  }
 };
 
@@ -731,12 +699,8 @@ public:
 #ifdef _DEBUG
 		  CCC_Float::Execute(args);
 #else
-		  if (!g_pGameLevel || GameID() == eGameIDSingle)
-			  CCC_Float::Execute(args);
-		  else
-		  {
-			  Msg ("! Command disabled for this type of game");
-		  }
+		  if (!g_pGameLevel)	CCC_Float::Execute(args);
+		  else 					Msg ("! Command disabled for this type of game");
 #endif
 	  }
 };
@@ -1066,13 +1030,7 @@ public:
 	  {
 		  if( !physics_world() )	
 			  return;
-#ifndef DEBUG
-		  if (g_pGameLevel && Level().game && GameID() != eGameIDSingle)
-		  {
-			  Msg("Command is not available in Multiplayer");
-			  return;
-		  }
-#endif
+		  
 		  physics_world()->SetGravity(float(atof(args)));
 	  }
 	  virtual void	Status	(TStatus& S)

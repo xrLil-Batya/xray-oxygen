@@ -193,24 +193,6 @@ LPCSTR GameTypeToString(EGameIDs gt, bool bShort)
 	case eGameIDSingle:
 		return "single";
 		break;
-	case eGameIDDeathmatch:
-		return (bShort)?"dm":"deathmatch";
-		break;
-	case eGameIDTeamDeathmatch:
-		return (bShort)?"tdm":"teamdeathmatch";
-		break;
-	case eGameIDArtefactHunt:
-		return (bShort)?"ah":"artefacthunt";
-		break;
-	case eGameIDCaptureTheArtefact:
-		return (bShort)?"cta":"capturetheartefact";
-		break;
-	case eGameIDDominationZone:
-		return (bShort)?"dz":"dominationzone";
-		break;
-	case eGameIDTeamDominationZone:
-		return (bShort)?"tdz":"teamdominationzone";
-		break;
 	default :
 		return		"---";
 	}
@@ -218,28 +200,7 @@ LPCSTR GameTypeToString(EGameIDs gt, bool bShort)
 
 EGameIDs ParseStringToGameType(LPCSTR str)
 {
-	if (!xr_strcmp(str, "single")) 
-		return eGameIDSingle;
-	else
-		if (!xr_strcmp(str, "deathmatch") || !xr_strcmp(str, "dm")) 
-			return eGameIDDeathmatch;
-		else
-			if (!xr_strcmp(str, "teamdeathmatch") || !xr_strcmp(str, "tdm")) 
-				return eGameIDTeamDeathmatch;
-			else
-				if (!xr_strcmp(str, "artefacthunt") || !xr_strcmp(str, "ah")) 
-					return eGameIDArtefactHunt;
-				else
-					if (!xr_strcmp(str, "capturetheartefact") || !xr_strcmp(str, "cta")) 
-						return eGameIDCaptureTheArtefact;
-					else
-						if (!xr_strcmp(str, "dominationzone")) 
-							return eGameIDDominationZone;
-						else
-							if (!xr_strcmp(str, "teamdominationzone")) 
-								return eGameIDTeamDominationZone;
-							else 
-								return eGameIDNoGame; //EGameIDs
+	return (!xr_strcmp(str, "single")) ? eGameIDSingle : eGameIDNoGame;
 }
 
 void CGamePersistent::UpdateGameType			()
@@ -754,16 +715,7 @@ static BOOL bEntryFlag		= TRUE;
 
 void CGamePersistent::OnAppActivate		()
 {
-	bool bIsMP = (g_pGameLevel && Level().game && GameID() != eGameIDSingle);
-	bIsMP		&= !Device.Paused();
-
-	if( !bIsMP )
-	{
-		Device.Pause			(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
-	}else
-	{
-		Device.Pause			(FALSE, TRUE, TRUE, "CGP::OnAppActivate MP");
-	}
+	Device.Pause(FALSE, !bRestorePause, TRUE, "CGP::OnAppActivate");
 
 	bEntryFlag = TRUE;
 }
@@ -772,18 +724,10 @@ void CGamePersistent::OnAppDeactivate	()
 {
 	if(!bEntryFlag) return;
 
-	bool bIsMP = (g_pGameLevel && Level().game && GameID() != eGameIDSingle);
-
 	bRestorePause = FALSE;
 
-	if ( !bIsMP )
-	{
-		bRestorePause			= Device.Paused();
-		Device.Pause			(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
-	}else
-	{
-		Device.Pause			(TRUE, FALSE, TRUE, "CGP::OnAppDeactivate MP");
-	}
+	bRestorePause = Device.Paused();
+	Device.Pause(TRUE, TRUE, TRUE, "CGP::OnAppDeactivate");
 	bEntryFlag = FALSE;
 }
 

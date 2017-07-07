@@ -35,10 +35,8 @@ CFontManager::CFontManager()
 	m_all_fonts.push_back(&pFontLetterica25			);
 	m_all_fonts.push_back(&pFontStat				);
 
-	FONTS_VEC_IT it		= m_all_fonts.begin();
-	FONTS_VEC_IT it_e	= m_all_fonts.end();
-	for(;it!=it_e;++it)
-		(**it) = NULL;
+	for(FONTS_VEC_IT it : m_all_fonts)
+		(**it) = 0;
 
 	InitializeFonts();
 
@@ -67,19 +65,12 @@ LPCSTR CFontManager::GetFontTexName (LPCSTR section)
 	static char* tex_names[]={"texture800","texture","texture1600"};
 	int def_idx		= 1;//default 1024x768
 	int idx			= def_idx;
-#if 0
-	u32 w = Device.dwWidth;
 
-	if(w<=800)		idx = 0;
-	else if(w<=1280)idx = 1;
-	else 			idx = 2;
-#else
 	u32 h = Device.dwHeight;
 
 	if(h<=600)		idx = 0;
 	else if(h<1024)	idx = 1;
 	else 			idx = 2;
-#endif
 
 	while(idx>=0){
 		if( pSettings->line_exist(section,tex_names[idx]) )
@@ -163,9 +154,9 @@ ENGINE_API extern float psHUD_FOV;
 void CHUDManager::Render_First()
 {
 	if (!psHUD_Flags.is(HUD_WEAPON|HUD_WEAPON_RT|HUD_WEAPON_RT2|HUD_DRAW_RT2))return;
-	if (0==pUIGame)					return;
+	if (!pUIGame)					return;
 	CObject*	O					= g_pGameLevel->CurrentViewEntity();
-	if (0==O)						return;
+	if (!O)						return;
 	CActor*		A					= smart_cast<CActor*> (O);
 	if (!A)							return;
 	if (A && !A->HUDview())			return;
@@ -180,7 +171,7 @@ void CHUDManager::Render_First()
 bool need_render_hud()
 {
 	CObject*	O					= g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : NULL;
-	if (0==O)						
+	if (!O)						
 		return false;
 
 	CActor*		A					= smart_cast<CActor*> (O);
@@ -196,7 +187,7 @@ bool need_render_hud()
 void CHUDManager::Render_Last()
 {
 	if (!psHUD_Flags.is(HUD_WEAPON|HUD_WEAPON_RT|HUD_WEAPON_RT2|HUD_DRAW_RT2))return;
-	if (0==pUIGame)					return;
+	if (!pUIGame)					return;
 
 	if(!need_render_hud())			return;
 
@@ -233,21 +224,15 @@ extern ENGINE_API BOOL bShowPauseString;
 //отрисовка элементов интерфейса
 void  CHUDManager::RenderUI()
 {
-	if (!psHUD_Flags.is(HUD_DRAW_RT2))	
-		return;
+	if (!psHUD_Flags.is(HUD_DRAW_RT2)) return;
 
-	if(!b_online)					return;
+	if(!b_online) return;
 
-	if (true /*|| psHUD_Flags.is(HUD_DRAW | HUD_DRAW_RT)*/)
-	{
-		HitMarker.Render			();
-		if(pUIGame)
-			pUIGame->Render			();
+	HitMarker.Render();
+	if(pUIGame) pUIGame->Render();
 
-		UI().RenderFont				();
-	}
-
-		m_pHUDTarget->Render();
+	UI().RenderFont();
+	m_pHUDTarget->Render();
 
 
 	if( Device.Paused() && bShowPauseString){
@@ -325,13 +310,9 @@ extern CUIXml*			pWpnScopeXml;
 
 void CHUDManager::Load()
 {
-	if (!pUIGame)
-	{
-		pUIGame				= Game().createGameUI();
-	} else
-	{
-		pUIGame->SetClGame	(&Game());
-	}
+	if (!pUIGame) 	pUIGame = Game().createGameUI();
+	else 			pUIGame->SetClGame(&Game());
+
 }
 
 void CHUDManager::OnScreenResolutionChanged()
@@ -374,8 +355,5 @@ void CHUDManager::net_Relcase( CObject* obj )
 
 CDialogHolder* CurrentDialogHolder()
 {
-	if(MainMenu()->IsActive())
-		return MainMenu();
-	else
-		return HUD().GetGameUI();
+	return MainMenu()->IsActive() ? MainMenu() : HUD().GetGameUI()
 }

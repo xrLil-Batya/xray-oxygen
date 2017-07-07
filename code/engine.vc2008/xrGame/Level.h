@@ -440,11 +440,7 @@ IC CPHCommander & CLevel::ph_commander_physics_worldstep()
 //by Mad Max 
 IC bool		OnServer()			{ return Level().IsServer();}
 IC bool		OnClient()			{ return Level().IsClient();}
-//FX: уже не нужно :)
-//IC bool		IsGameTypeSingle()	{ return (g_pGamePersistent->GameType() == eGameIDSingle);};
 
-//class  CPHWorld;
-//extern CPHWorld*				ph_world;
 extern BOOL						g_bDebugEvents;
 
 // -------------------------------------------------------------------------------------------------

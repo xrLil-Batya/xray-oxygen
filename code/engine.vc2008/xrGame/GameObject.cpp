@@ -280,23 +280,16 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	{
 		Msg("* Spawning demo spectator ...");
 		demo_spectator = true;
-	} else {
-		R_ASSERT(Level().Objects.net_Find(E->ID) == NULL);
-	}
-
-
-	setID							(E->ID);
-//	if (GameID() != eGameIDSingle)
-//		Msg ("CGameObject::net_Spawn -- object %s[%x] setID [%d]", *(E->s_name), this, E->ID);
+	} 
+	else R_ASSERT(Level().Objects.net_Find(E->ID) == NULL);
 	
+	setID							(E->ID);
 	// XForm
 	XFORM().setXYZ					(E->o_Angle);
 	Position().set					(E->o_Position);
 #ifdef DEBUG
 	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-	{
 		Msg("CGameObject::net_Spawn obj %s Position set from CSE_Abstract %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-	}
 #endif
 	VERIFY							(_valid(renderable.xform));
 	VERIFY							(!fis_zero(DET(renderable.xform)));

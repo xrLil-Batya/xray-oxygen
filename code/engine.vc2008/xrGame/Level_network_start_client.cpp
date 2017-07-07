@@ -149,7 +149,8 @@ bool	CLevel::net_start_client5				()
 
 bool	CLevel::net_start_client6				()
 {
-	if (connected_to_server) {
+	if (connected_to_server) 
+	{
 		// Sync
 		if (!synchronize_map_data				())
 			return false;
@@ -165,27 +166,14 @@ bool	CLevel::net_start_client6				()
 			g_hud->OnConnected				();
 		}
 
-#ifdef DEBUG
-		Msg("--- net_start_client6");
-#endif // #ifdef DEBUG
-
 		if (game)
-		{
-			game->OnConnected				();
-			if (game->Type() != eGameIDSingle)
-			{
-				m_file_transfer = xr_new<file_transfer::client_site>();
-			}
-		}
+			game->OnConnected();
 
-//		g_pGamePersistent->LoadTitle		("st_client_synchronising");
 		g_pGamePersistent->LoadTitle		();
 		Device.PreCache						(60, true, true);
 		net_start_result_total				= TRUE;
-
-	}else{
-		net_start_result_total				= FALSE;
 	}
+	else net_start_result_total				= FALSE;
 
 	pApp->LoadEnd							(); 
 	return true;

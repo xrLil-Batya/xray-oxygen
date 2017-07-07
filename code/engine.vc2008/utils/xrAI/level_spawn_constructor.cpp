@@ -199,17 +199,6 @@ void CLevelSpawnConstructor::load_objects						()
 			continue;
 		}
 
-//		if (abstract->m_tClassID == CLSID_AI_SPAWN_GROUP) {
-//			add_spawn_group		(abstract);
-//			continue;
-//		}
-
-		if (!abstract->m_gameType.MatchType(eGameIDSingle)) 
-		{
-			F_entity_Destroy	(abstract);
-			continue;
-		}
-
 		CSE_ALifeObject			*alife_object = smart_cast<CSE_ALifeObject*>(abstract);
 		if (!alife_object) {
 			F_entity_Destroy	(abstract);
@@ -233,9 +222,6 @@ void CLevelSpawnConstructor::load_objects						()
 		if (smart_cast<CSE_ALifeLevelChanger*>(abstract))
 			add_level_changer	(abstract);
 
-//		if (xr_strlen(alife_object->m_spawn_control))
-//			add_group_object	(alife_object,alife_object->m_spawn_control);
-
 		add_free_object			(alife_object);
 	}
 	
@@ -243,52 +229,6 @@ void CLevelSpawnConstructor::load_objects						()
 
 	R_ASSERT2					(!m_spawns.empty(),"There are no spawn-points!");
 }
-
-//IC	void CLevelSpawnConstructor::normalize_probability			(CSE_ALifeAnomalousZone *zone)
-//{
-//	float						accumulator = 0.f;
-//	for (int ii=0; ii<zone->m_wItemCount; ii++)
-//		accumulator				+= zone->m_faWeights[ii];
-//
-//	accumulator					*= zone->m_fBirthProbability;
-//
-//	for (int ii=0; ii<zone->m_wItemCount; ii++)
-//		zone->m_faWeights[ii]	/= accumulator;
-//}
-
-//IC	void CLevelSpawnConstructor::free_group_objects					()
-//{
-//	SPAWN_GRPOUP_OBJECTS::iterator	I = m_spawn_objects.begin();
-//	SPAWN_GRPOUP_OBJECTS::iterator	E = m_spawn_objects.end();
-//	for ( ; I != E; I++)
-//		xr_delete					((*I).second);
-//}
-
-//void CLevelSpawnConstructor::fill_spawn_groups					()
-//{
-//	SPAWN_GRPOUP_OBJECTS::iterator				I = m_spawn_objects.begin();
-//	SPAWN_GRPOUP_OBJECTS::iterator				E = m_spawn_objects.end();
-//	
-//	for ( ; I != E; I++) {
-//		R_ASSERT								(xr_strlen(*(*I).first));
-//		R_ASSERT								((*I).second);
-//		SPAWN_GROUPS::iterator					J = m_spawn_groups.find((*I).first);
-//		if (J == m_spawn_groups.end())
-//			clMsg								("! ERROR (spawn group not found!) : %s",*(*I).first);
-//		R_ASSERT3								(J != m_spawn_groups.end(),"Specified group control not found!",(*(*I).second)[0]->name_replace());
-//		
-//		GROUP_OBJECTS::iterator					i = (*I).second->begin();
-//		GROUP_OBJECTS::iterator					e = (*I).second->end();
-//		for ( ; i != e; i++) {
-//			m_game_spawn_constructor->add_edge	((*J).second->m_tSpawnID,(*i)->m_tSpawnID,(*i)->m_spawn_probability);
-//			CSE_ALifeAnomalousZone				*zone = smart_cast<CSE_ALifeAnomalousZone*>(*i);
-//			if (zone)
-//				normalize_probability			(zone);
-//		}
-//	}
-//	
-//	free_group_objects							();
-//}
 
 void CLevelSpawnConstructor::correct_objects					()
 {
@@ -449,12 +389,6 @@ void CLevelSpawnConstructor::generate_artefact_spawn_positions	()
 		if (!zone)
 			continue;
 
-//		if (!level_graph().valid_vertex_position(zone->o_Position)) {
-//			zone->m_artefact_spawn_count	= 0;
-//			zone->m_artefact_position_offset		= m_level_points.size();
-//			continue;
-//		}
-
 		zone->m_tNodeID						= level_graph().vertex(zone->m_tNodeID,zone->o_Position);
 		if (!level_graph().valid_vertex_position(zone->o_Position) || !level_graph().inside(zone->m_tNodeID,zone->o_Position))
 			zone->m_tNodeID					= level_graph().vertex(u32(-1),zone->o_Position);
@@ -490,7 +424,7 @@ void CLevelSpawnConstructor::generate_artefact_spawn_positions	()
 			),
 			l_tpaStack.end()
 		);
-/*
+		
 		if (zone->m_artefact_spawn_count >= l_tpaStack.size()) 
 		{
 			zone->m_artefact_spawn_count	= (u16)l_tpaStack.size();
@@ -580,17 +514,12 @@ void CLevelSpawnConstructor::update_artefact_spawn_positions	()
 	for ( ; I != E; ++I) {
 		CSE_Abstract					*abstract = *I;
 		CSE_ALifeObject					*alife_object = smart_cast<CSE_ALifeObject*>(abstract);
-//		R_ASSERT3						(level_graph().valid_vertex_id(alife_object->m_tNodeID),"Invalid node for object ",alife_object->name_replace());
 		R_ASSERT2						(alife_object,"Non-ALife object!");
 		VERIFY							(game_graph().vertex(alife_object->m_tGraphID)->level_id() == m_level.id());
-//		alife_object->m_spawn_control	= "";
 		CSE_ALifeAnomalousZone			*zone = smart_cast<CSE_ALifeAnomalousZone*>(abstract);
 		if (zone) {
 			zone->m_artefact_position_offset		= level_point_count;
 			level_point_count			+= zone->m_artefact_spawn_count;
-//			Msg							("%s  %f [%f][%f][%f] : artefact spawn positions",zone->name_replace(),zone->m_fRadius,VPUSH(zone->o_Position));
-//			for (u32 i=zone->m_artefact_position_offset; i<level_point_count; ++i)
-//				Msg						("    [%f][%f][%f] : %f",VPUSH(m_level_points[i].tPoint),zone->o_Position.distance_to(m_level_points[i].tPoint));
 		}
 	}
 

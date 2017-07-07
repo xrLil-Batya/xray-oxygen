@@ -38,8 +38,7 @@ void CHUDCrosshair::SetDispersion	(float disp)
 
 	Fvector2		scr_size;
 	scr_size.set	(float(::Render->getTarget()->get_width()), float(::Render->getTarget()->get_height()));
-	float radius_pixels		= _abs(r.x)*scr_size.x/2.0f;
-	target_radius		= radius_pixels; 
+	target_radius		= _abs(r.x)*scr_size.x/2.0f;
 }
 
 #ifdef DEBUG
@@ -126,15 +125,12 @@ void CHUDCrosshair::OnRender ()
 	float x_min							= min_radius + radius;
 	float x_max							= x_min + cross_length;
 
-	float y_min							= x_min;
-	float y_max							= x_max;
-
 	// 0
-	UIRender->PushPoint(center.x,			center.y + y_min,	0, cross_color, 0,0);
-	UIRender->PushPoint(center.x,			center.y + y_max,	0, cross_color, 0,0);
+	UIRender->PushPoint(center.x,			center.y + x_min,	0, cross_color, 0,0);
+	UIRender->PushPoint(center.x,			center.y + x_max,	0, cross_color, 0,0);
 	// 1
-	UIRender->PushPoint(center.x,			center.y - y_min,	0, cross_color, 0,0);
-	UIRender->PushPoint(center.x,			center.y - y_max,	0, cross_color, 0,0);
+	UIRender->PushPoint(center.x,			center.y - x_min,	0, cross_color, 0,0);
+	UIRender->PushPoint(center.x,			center.y - x_max,	0, cross_color, 0,0);
 	// 2
 	UIRender->PushPoint(center.x + x_min,	center.y,			0, cross_color, 0,0);
 	UIRender->PushPoint(center.x + x_max,	center.y,			0, cross_color, 0,0);
@@ -152,11 +148,10 @@ void CHUDCrosshair::OnRender ()
 	UIRender->FlushPrimitive		();
 
 
+	//here was crosshair innertion emulation
 	if(!fsimilar(target_radius,radius))
-	{
-		//here was crosshair innertion emulation
 		radius = target_radius;
-	};
+	
 #ifdef DEBUG
 	if (g_bDrawFirstBulletCrosshair)
 		OnRenderFirstBulletDispertion();

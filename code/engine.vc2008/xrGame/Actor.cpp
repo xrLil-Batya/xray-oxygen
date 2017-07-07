@@ -282,8 +282,7 @@ void CActor::Load	(LPCSTR section )
 	CInventoryOwner::Load		(section);
 	m_location_manager->Load	(section);
 
-	if (GameID() == eGameIDSingle)
-		OnDifficultyChanged		();
+	OnDifficultyChanged		();
 	//////////////////////////////////////////////////////////////////////////
 	ISpatial*		self			=	smart_cast<ISpatial*> (this);
 	if (self)	{

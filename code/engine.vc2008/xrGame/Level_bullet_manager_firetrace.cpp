@@ -257,7 +257,7 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	}
 
 	if (g_clear) E.Repeated = false;
-	if (GameID() == eGameIDSingle) E.Repeated = false;
+	E.Repeated = false;
 	bool NeedShootmark = true;//!E.Repeated;
 	
 	if (smart_cast<CActor*>(E.R.O))
@@ -310,26 +310,8 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	{
 		//-------------------------------------------------
 		bool AddStatistic = false;
-		if (GameID() != eGameIDSingle && E.bullet.flags.allow_sendhit && smart_cast<CActor*>(E.R.O)
-			&& Game().m_WeaponUsageStatistic->CollectData())
-		{
-			CActor* pActor = smart_cast<CActor*>(E.R.O);
-			if (pActor)// && pActor->g_Alive())
-			{
-				Game().m_WeaponUsageStatistic->OnBullet_Hit(&E.bullet, E.R.O->ID(), (s16)E.R.element, E.point);
-				AddStatistic = true;
-			};
-		};
-
-		SHit	Hit = SHit(	hit_param.power,
-							original_dir,
-							NULL,
-							u16(E.R.element),
-							position_in_bone_space,
-							hit_param.impulse,
-							E.bullet.hit_type,
-							E.bullet.armor_piercing,
-							E.bullet.flags.aim_bullet);
+		
+		SHit Hit = SHit(hit_param.power, original_dir, 0, u16(E.R.element), position_in_bone_space, hit_param.impulse, E.bullet.hit_type, E.bullet.armor_piercing, E.bullet.flags.aim_bullet);
 
 		Hit.GenHeader(u16((AddStatistic)? GE_HIT_STATISTIC : GE_HIT)&0xffff, E.R.O->ID());
 		Hit.whoID			= E.bullet.parent_id;
@@ -339,7 +321,6 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 		NET_Packet			np;
 		Hit.Write_Packet	(np);
 		
-//		Msg("Hit sended: %d[%d,%d]", Hit.whoID, Hit.weaponID, Hit.BulletID);
 		CGameObject::u_EventSend(np);
 	}
 }

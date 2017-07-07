@@ -29,21 +29,23 @@ BOOL weapon_hud_value::load(const shared_str& section, CHudItem* owner)
 	IKinematics *pK				= smart_cast<IKinematics*>(pV);
 
 	// fire bone	
-	if(smart_cast<CWeapon*>(owner)){
+	if(smart_cast<CWeapon*>(owner))
+	{
 		LPCSTR fire_bone		= pSettings->r_string					(section,"fire_bone");
 		m_fire_bone				= pK->LL_BoneID	(fire_bone);
+		
 		if (m_fire_bone>=pK->LL_BoneCount())	
 			Debug.fatal	(DEBUG_INFO,"There is no '%s' bone for weapon '%s'.",fire_bone, *section);
+		
 		m_fp_offset				= pSettings->r_fvector3					(section,"fire_point");
 		if(pSettings->line_exist(section,"fire_point2")) 
 			m_fp2_offset		= pSettings->r_fvector3					(section,"fire_point2");
-		else 
-			m_fp2_offset		= m_fp_offset;
+		else m_fp2_offset		= m_fp_offset;
+		
 		if(pSettings->line_exist(owner->object().cNameSect(), "shell_particles")) 
 			m_sp_offset			= pSettings->r_fvector3	(section,"shell_point");
-		else 
-			m_sp_offset.set		(0,0,0);
-	}else{
+		else m_sp_offset.set		(0,0,0);
+	} else {
 		m_fire_bone				= -1;
 		m_fp_offset.set			(0,0,0);
 		m_fp2_offset.set		(0,0,0);
@@ -137,21 +139,16 @@ void CWeaponHUD::animDisplay(MotionID M, BOOL bMixIn)
 }
 void CWeaponHUD::animPlay			(MotionID M,	BOOL bMixIn, CHudItem* W, u32 state)
 {
-//.	if(m_bStopAtEndAnimIsRunning)	
-//.		StopCurrentAnim				();
-
-
 	m_startedAnimState				= state;
 	Show							();
 	animDisplay						(M, bMixIn);
 	u32 anim_time					= m_shared_data.motion_length(M);
-	if (anim_time>0){
+	if (anim_time > 0)
+	{
 		m_bStopAtEndAnimIsRunning	= true;
 		m_pCallbackItem				= W;
 		m_dwAnimEndTime				= Device.dwTimeGlobal + anim_time;
-	}else{
-		m_pCallbackItem				= NULL;
-	}
+	} else m_pCallbackItem				= NULL;
 }
 
 void CWeaponHUD::Update				()
@@ -180,7 +177,7 @@ void CWeaponHUD::StopCurrentAnimWithoutCallback		()
 
 void CWeaponHUD::CreateSharedContainer	()
 {
-	VERIFY(0==g_pWeaponHUDContainer);
+	VERIFY(!g_pWeaponHUDContainer);
 	g_pWeaponHUDContainer	= xr_new<weapon_hud_container>();
 }
 void CWeaponHUD::DestroySharedContainer	()
