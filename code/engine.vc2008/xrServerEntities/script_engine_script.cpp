@@ -116,17 +116,19 @@ struct profile_timer_script {
 		m_start_cpu_tick_count	= CPU::GetCLK();
 	}
 
-	IC		void					stop					()
+	IC void stop()
 	{
-		THROW					(m_recurse_mark);
-		--m_recurse_mark;
+		if (!m_recurse_mark)
+		{
+			--m_recurse_mark;
 		
-		if (m_recurse_mark)
-			return;
+			if (m_recurse_mark)
+				return;
 		
-		u64						finish = CPU::GetCLK();
-		if (finish > m_start_cpu_tick_count)
-			m_accumulator		+= finish - m_start_cpu_tick_count;
+			u64 finish = CPU::GetCLK();
+			if (finish > m_start_cpu_tick_count)
+				m_accumulator += finish - m_start_cpu_tick_count;
+		}
 	}
 
 	IC		float				time					() const

@@ -150,7 +150,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		m_vs.insert					(std::make_pair(_vs->set_name(name),_vs));
 		//_vs->vs				= NULL;
 		//_vs->signature		= NULL;
-		if (0==stricmp(_name,"null"))	{
+		if (!stricmp(_name,"null"))	{
 			return _vs;
 		}
 
