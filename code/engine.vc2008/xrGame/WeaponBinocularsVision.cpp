@@ -106,7 +106,8 @@ void SBinocVisibleObj::Update()
 	if(mx.y-mn.y<RECT_SIZE)
 		mx.y = mn.y+RECT_SIZE;
 
-	if (m_flags.is(flTargetLocked)){
+	if (m_flags.is(flTargetLocked))
+	{
 		cur_rect.lt.set	(mn);
 		cur_rect.rb.set	(mx);
 	}else{
@@ -182,13 +183,10 @@ void CBinocularsVision::Update()
 	//-----------------------------------------------------
 	const CVisualMemoryManager::VISIBLES& vVisibles = pActor->memory().visual().objects();
 
-	VIS_OBJECTS_IT	it = m_active_objects.begin();
-	for(;it!=m_active_objects.end();++it)
+	for(VIS_OBJECTS_IT it : m_active_objects)
 		(*it)->m_flags.set					(flVisObjNotValid, TRUE) ;
 
-
-	CVisualMemoryManager::VISIBLES::const_iterator v_it = vVisibles.begin();
-	for (; v_it!=vVisibles.end(); ++v_it)
+	for (CVisualMemoryManager::VISIBLES::const_iterator v_it : vVisibles)
 	{
 		const CObject*	_object_			= (*v_it).m_object;
 		if (!pActor->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
@@ -205,9 +203,9 @@ void CBinocularsVision::Update()
 		VIS_OBJECTS_IT found;
 		found = std::find_if				(m_active_objects.begin(),m_active_objects.end(),f);
 
-		if( found != m_active_objects.end() ){
+		if( found != m_active_objects.end())
 			(*found)->m_flags.set			(flVisObjNotValid,FALSE);
-		}else{
+		else{
 			m_active_objects.push_back		(xr_new<SBinocVisibleObj>() );
 			SBinocVisibleObj* new_vis_obj	= m_active_objects.back();
 			new_vis_obj->m_flags.set		(flVisObjNotValid,FALSE);
@@ -230,7 +228,7 @@ void CBinocularsVision::Update()
 	{
 		SBinocVisibleObj* visObj			= (*it);
 		
-		BOOL bLocked = visObj->m_flags.test(flTargetLocked);
+		const bool bLocked = visObj->m_flags.test(flTargetLocked);
 		
 		(*it)->Update						();
 		
@@ -242,9 +240,8 @@ void CBinocularsVision::Update()
 
 void CBinocularsVision::Draw()
 {
-	VIS_OBJECTS_IT	it = m_active_objects.begin();
-	for(;it!=m_active_objects.end();++it)
-		(*it)->Draw							();
+	for(VIS_OBJECTS_IT it : m_active_objects)
+		(*it)->Draw();
 }
 
 void CBinocularsVision::Load(const shared_str& section)

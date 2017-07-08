@@ -62,8 +62,6 @@ bool	CLevel::net_start_client3				()
 
 		LPCSTR					level_name = name().c_str();
 		LPCSTR					level_ver = Server->level_version(server_options).c_str();
-//		LPCSTR					download_url = NULL;
-
 
 		// Determine internal level-ID
 		int						level_id = pApp->Level_ID(level_name, level_ver, true);
@@ -88,14 +86,11 @@ bool	CLevel::net_start_client4				()
 {
 	if (connected_to_server) {
 		// Begin spawn
-//		g_pGamePersistent->LoadTitle		("st_client_spawning");
 		g_pGamePersistent->LoadTitle();
 
 		// Send physics to single or multithreaded mode
 
 		create_physics_world(!!psDeviceFlags.test(mtPhysics), &ObjectSpace, &Objects, &Device);
-
-
 
 		R_ASSERT(physics_world());
 
@@ -119,25 +114,16 @@ bool	CLevel::net_start_client4				()
 	return true;
 }
 
-void CLevel::ClientSendProfileData	()
+bool CLevel::net_start_client5()
 {
-#pragma todo("Remove me!!!")
-}
-
-
-bool	CLevel::net_start_client5				()
-{
-	if(connected_to_server){
+	if(connected_to_server)
+	{
 		// HUD
-
 		// Textures
 		if	(!g_dedicated_server)
 		{
-//			g_pGamePersistent->LoadTitle		("st_loading_textures");
 			g_pGamePersistent->LoadTitle		();
-			//Device.Resources->DeferredLoad	(FALSE);
 			Device.m_pRender->DeferredLoad		(FALSE);
-			//Device.Resources->DeferredUpload	();
 			Device.m_pRender->ResourcesDeferredUpload();
 			LL_CheckTextures					();
 		}
@@ -147,17 +133,17 @@ bool	CLevel::net_start_client5				()
 	return true;
 }
 
-bool	CLevel::net_start_client6				()
+bool CLevel::net_start_client6()
 {
 	if (connected_to_server) 
 	{
 		// Sync
-		if (!synchronize_map_data				())
+		if (!synchronize_map_data())
 			return false;
 
 		if (!game_configured)
 		{
-			pApp->LoadEnd						(); 
+			pApp->LoadEnd(); 
 			return true;
 		}
 		if (!g_dedicated_server)

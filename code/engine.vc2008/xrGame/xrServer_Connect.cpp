@@ -96,8 +96,7 @@ void xrServer::AttachNewClient			(IClient* CL)
 	SendTo_LL( SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE,TRUE,TRUE,TRUE) );
 
 	// gen message
-	if (!NeedToCheckClient_GameSpy_CDKey(CL))
-		Check_GameSpy_CDKey_Success(CL);
+	RequestClientDigest(CL);
 	
 	CL->m_guid[0]=0;
 }
@@ -109,10 +108,6 @@ void xrServer::RequestClientDigest(IClient* CL)
 		Check_BuildVersion_Success(CL);	
 		return;
 	}
-	//xrClientData* tmp_client	= smart_cast<xrClientData*>(CL);
-	//VERIFY						(tmp_client);
-	//PerformSecretKeysSync		(tmp_client);
-
 	NET_Packet P;
 	P.w_begin					(M_SV_DIGEST);
 	SendTo						(CL->ID, P);

@@ -220,23 +220,18 @@ u32	CLevel::Objects_net_Save	(NET_Packet* _Packet, u32 start, u32 max_object_siz
 	for (; start<Objects.o_count(); start++)	{
 		CObject		*_P = Objects.o_get_by_iterator(start);
 		CGameObject *P = smart_cast<CGameObject*>(_P);
-//		Msg			("save:iterating:%d:%s, size[%d]",P->ID(),*P->cName(), Packet.w_tell() );
 		if (P && !P->getDestroy() && P->net_SaveRelevant())	{
 			Packet.w_u16			(u16(P->ID())	);
 			Packet.w_chunk_open16	(position);
-//			Msg						("save:saving:%d:%s",P->ID(),*P->cName());
 			P->net_Save				(Packet);
 #ifdef DEBUG
 			u32 size				= u32		(Packet.w_tell()-position)-sizeof(u16);
-//			Msg						("save:saved:%d bytes:%d:%s",size,P->ID(),*P->cName());
 			if				(size>=65536)			{
 				Debug.fatal	(DEBUG_INFO,"Object [%s][%d] exceed network-data limit\n size=%d, Pend=%d, Pstart=%d",
 					*P->cName(), P->ID(), size, Packet.w_tell(), position);
 			}
 #endif
 			Packet.w_chunk_close16	(position);
-//			if (0==(--count))		
-//				break;
 			if (max_object_size >= (NET_PacketSizeLimit - Packet.w_tell()))
 				break;
 		}
@@ -244,7 +239,7 @@ u32	CLevel::Objects_net_Save	(NET_Packet* _Packet, u32 start, u32 max_object_siz
 	return	++start;
 }
 
-void CLevel::ClientSave	()
+void CLevel::ClientSave()
 {
 	NET_Packet		P;
 	u32				start	= 0;
@@ -273,7 +268,7 @@ void CLevel::Send(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 	}
 }
 
-void CLevel::net_Update	()
+void CLevel::net_Update()
 {
 	if(game_configured){
 		// If we have enought bandwidth - replicate client data on to server
@@ -289,7 +284,7 @@ void CLevel::net_Update	()
 	}
 }
 
-struct _NetworkProcessor	: public pureFrame
+struct _NetworkProcessor : public pureFrame
 {
 	virtual void	_BCL OnFrame	( )
 	{
@@ -318,9 +313,7 @@ bool CLevel::Connect2Server(const char* options)
 		Disconnect();
 		return false;
 	}
-
 	//---------------------------------------------------------------------------
-	//P.w_begin	(M_CLIENT_REQUEST_CONNECTION_DATA);
 
 	return true;
 };
@@ -336,59 +329,10 @@ void CLevel::OnConnectResult(NET_Packet*	P)
 	ClientID tmp_client_id;
 	P->r_clientID				(tmp_client_id);
 	SetClientID					(tmp_client_id);
-	if (!result)				
-	{
-		m_bConnectResult	= false			;	
-		switch (res1)
-		{
-		case ecr_data_verification_failed:		//Standart error
-			{
-				if (strstr(ResultStr, "Data verification failed. Cheater?"))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrDifferentVersion);
-			}break;
-		case ecr_cdkey_validation_failed:		//GameSpy CDKey
-			{
-				if (!xr_strcmp(ResultStr, "Invalid CD Key"))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrCDKeyInvalid);//, ResultStr);
-				if (!xr_strcmp(ResultStr, "CD Key in use"))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrCDKeyInUse);//, ResultStr);
-				if (!xr_strcmp(ResultStr, "Your CD Key is disabled. Contact customer service."))
-					MainMenu()->SetErrorDialog(CMainMenu::ErrCDKeyDisabled);//, ResultStr);
-			}break;		
-		case ecr_password_verification_failed:		//login+password
-			{
-				MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidPassword);
-			}break;
-		case ecr_have_been_banned:
-			{
-				if (!xr_strlen(ResultStr))
-				{
-					MainMenu()->OnSessionTerminate(
-						CStringTable().translate("st_you_have_been_banned").c_str()
-					);
-				} else
-				{
-					MainMenu()->OnSessionTerminate(
-						CStringTable().translate(ResultStr).c_str()
-					);
-				}
-			}break;
-		case ecr_profile_error:
-			{
-				if (!xr_strlen(ResultStr))
-				{
-					MainMenu()->OnSessionTerminate(
-						CStringTable().translate("st_profile_error").c_str()
-					);
-				} else
-				{
-					MainMenu()->OnSessionTerminate(
-						CStringTable().translate(ResultStr).c_str()
-					);
-				}
-			}
-		}
-	};	
+	
+	if (!result)
+		m_bConnectResult = false;
+	
 	m_sConnectResult			= ResultStr;
 	if (IsDemoSave() && result)
 	{
@@ -399,7 +343,7 @@ void CLevel::OnConnectResult(NET_Packet*	P)
 	}
 };
 
-void			CLevel::ClearAllObjects				()
+void CLevel::ClearAllObjects()
 {
 	u32 CLObjNum = Level().Objects.o_count();
 
@@ -425,9 +369,6 @@ void			CLevel::ClearAllObjects				()
 			//-------------------------------------------------------------
 			ParentFound = true;
 			//-------------------------------------------------------------
-#ifdef DEBUG
-			Msg ("Rejection of %s[%d] from %s[%d]", *(pObj->cNameSect()), pObj->ID(), *(pObj->H_Parent()->cNameSect()), pObj->H_Parent()->ID());
-#endif
 		};
 		ProcessGameEvents();
 	};
@@ -459,35 +400,26 @@ void			CLevel::ClearAllObjects				()
 	ProcessGameEvents();
 };
 
-void				CLevel::OnInvalidHost			()
+void CLevel::OnInvalidHost()
 {
 	IPureClient::OnInvalidHost();
 	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
 		MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidHost);
 };
 
-void				CLevel::OnInvalidPassword		()
-{
-	IPureClient::OnInvalidPassword();
-	MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidPassword);
-};
-
-void				CLevel::OnSessionFull			()
+void CLevel::OnSessionFull()
 {
 	IPureClient::OnSessionFull();
 	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
 		MainMenu()->SetErrorDialog(CMainMenu::ErrSessionFull);
 }
 
-void				CLevel::OnConnectRejected		()
+void CLevel::OnConnectRejected()
 {
 	IPureClient::OnConnectRejected();
-
-//	if (MainMenu()->GetErrorDialogType() != CMainMenu::ErrNoError)
-//		MainMenu()->SetErrorDialog(CMainMenu::ErrServerReject);
 };
 
-void				CLevel::net_OnChangeSelfName			(NET_Packet* P)
+void CLevel::net_OnChangeSelfName(NET_Packet* P)
 {
 	if (!P) return;
 	string64 NewName			;
