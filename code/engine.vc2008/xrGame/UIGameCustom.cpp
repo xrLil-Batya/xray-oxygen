@@ -20,11 +20,6 @@
 
 EGameIDs ParseStringToGameType(LPCSTR str);
 
-bool predicate_sort_stat(const SDrawStaticStruct* s1, const SDrawStaticStruct* s2) 
-{
-	return ( s1->IsActual() > s2->IsActual() );
-}
-
 struct predicate_find_stat 
 {
 	LPCSTR	m_id;
@@ -54,14 +49,16 @@ CUIGameCustom::~CUIGameCustom()
 void CUIGameCustom::OnFrame() 
 {
 	CDialogHolder::OnFrame();
-	st_vec_it it = m_custom_statics.begin();
-	st_vec_it it_e = m_custom_statics.end();
-	for(;it!=it_e;++it)
-		(*it)->Update();
-
-	std::sort(	it, it_e, predicate_sort_stat );
-
 	
+	for (auto item : CustomStatics)
+		item->Update();
+	
+	auto comparer = [](const SDrawStaticStruct* s1, const SDrawStaticStruct* s2)
+	{
+		return s1->IsActual() > s2->IsActual();
+	};
+	std::sort(CustomStatics.begin(), CustomStatics.end(), comparer);
+ 
 	while(!m_custom_statics.empty() && !m_custom_statics.back()->IsActual())
 	{
 		delete_data					(m_custom_statics.back());
