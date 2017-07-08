@@ -696,17 +696,13 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		int l_res = RunXRLauncher();
 		switch (l_res)
 		{
-		case 1: break;
-			//case 2: MessageBox(0, "Код инициализации переписал, \n так что, кнопка не нужна!", "А вот!", 0); break;
 		case 0: return 0;
 		}
-		params = std::to_string(0) + "@start xrEngine.exe " + GetParams(); //+ GetParams());
+		params = std::to_string(0) + "@start xrEngine.exe " + GetParams();
 		params[0] = ' ';
-		//MessageBox(0, params.c_str(), "", 0);
 		system(params.c_str());
 	}
-	else
-		WinMain_impl(lpCmdLine, sizeof(params));
+	else WinMain_impl(lpCmdLine, sizeof(params));
 
 	return					(0);
 }
