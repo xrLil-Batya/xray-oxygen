@@ -650,31 +650,6 @@ void CActor::Die(CObject* who)
 		TIItemContainer &l_blist = inventory().m_belt;
 		while (!l_blist.empty())
 			inventory().Ruck(l_blist.front());
-		// FX: всё равно мультиплеер полетит... 
-		/* if (!IsGameTypeSingle())
-		{
-			//if we are on server and actor has PDA - destroy PDA
-			TIItemContainer &l_rlist	= inventory().m_ruck;
-			for(TIItemContainer::iterator l_it = l_rlist.begin(); l_rlist.end() != l_it; ++l_it)
-			{
-				if (GameID() == eGameIDArtefactHunt)
-				{
-					CArtefact* pArtefact = smart_cast<CArtefact*> (*l_it);
-					if (pArtefact)
-					{
-						(*l_it)->SetDropManual(TRUE);
-						continue;
-					};
-				};
-
-				if ((*l_it)->object().CLS_ID == CLSID_OBJECT_PLAYERS_BAG)
-				{
-					(*l_it)->SetDropManual(TRUE);
-					continue;
-				};
-			};
-		};
-		*/
 	};
 
 	if (!g_dedicated_server)

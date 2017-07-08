@@ -425,12 +425,6 @@ Flags16&	CSE_Abstract::flags			()
 xr_token game_types[]={
 	{ "any_game",				eGameIDNoGame				},
 	{ "single",					eGameIDSingle				},
-	{ "deathmatch",				eGameIDDeathmatch			},
-	{ "team_deathmatch",		eGameIDTeamDeathmatch		},
-	{ "artefacthunt",			eGameIDArtefactHunt			},
-	{ "capture_the_artefact",	eGameIDCaptureTheArtefact	},
-	//eGameIDDominationZone
-	//eGameIDTeamDominationZone
 	{ 0,				0				}
 };
 
@@ -440,13 +434,6 @@ void CSE_Abstract::FillProps(LPCSTR pref, PropItemVec& items)
 #ifdef XRSE_FACTORY_EXPORTS
     m_gameType.FillProp(pref, items);
 #endif // #ifdef XRSE_FACTORY_EXPORTS
-/*
-#ifdef XRGAME_EXPORTS
-#	ifdef DEBUG
-	PHelper().CreateToken8		(items,	PrepareKey(pref,"Game Type"),			&s_gameid,		game_types);
-    PHelper().CreateU16			(items,	PrepareKey(pref, "Respawn Time (s)"),	&RespawnTime,	0,43200);
-
-*/
 }
 
 void CSE_Abstract::FillProp					(LPCSTR pref, PropItemVec &items)

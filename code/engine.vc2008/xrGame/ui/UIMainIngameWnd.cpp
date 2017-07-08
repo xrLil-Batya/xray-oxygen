@@ -164,35 +164,12 @@ void CUIMainIngameWnd::Init()
 	m_ind_boost_health		->Show(false);
 	m_ind_boost_power		->Show(false);
 	m_ind_boost_rad			->Show(false);
-	
-	// Загружаем иконки 
-/*	if ( IsGameTypeSingle() )
-	{
-		xml_init.InitStatic		(uiXml, "starvation_static", 0, &UIStarvationIcon);
-		UIStarvationIcon.Show	(false);
 
-//		xml_init.InitStatic		(uiXml, "psy_health_static", 0, &UIPsyHealthIcon);
-//		UIPsyHealthIcon.Show	(false);
-	}
-*/
 	UIWeaponJammedIcon			= UIHelper::CreateStatic(uiXml, "weapon_jammed_static", NULL);
 	UIWeaponJammedIcon->Show	(false);
 
-//	xml_init.InitStatic			(uiXml, "radiation_static", 0, &UIRadiaitionIcon);
-//	UIRadiaitionIcon.Show		(false);
-
-//	xml_init.InitStatic			(uiXml, "wound_static", 0, &UIWoundIcon);
-//	UIWoundIcon.Show			(false);
-
 	UIInvincibleIcon			= UIHelper::CreateStatic(uiXml, "invincible_static", NULL);
 	UIInvincibleIcon->Show		(false);
-
-
-	if ( (GameID() == eGameIDArtefactHunt) || (GameID() == eGameIDCaptureTheArtefact) )
-	{
-		UIArtefactIcon			= UIHelper::CreateStatic(uiXml, "artefact_static", NULL);
-		UIArtefactIcon->Show		(false);
-	}
 	
 	shared_str warningStrings[7] = 
 	{	

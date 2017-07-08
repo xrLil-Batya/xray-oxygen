@@ -231,133 +231,13 @@ void __stdcall	demoplay_control::on_die_impl(u32 message, u32 subtype, NET_Packe
 }
 void __stdcall	demoplay_control::on_artefactdelivering_impl(u32 message, u32 subtype, NET_Packet & packet)
 {
-	u16 msg_type;
-	packet.r_begin(msg_type);	
-	R_ASSERT(msg_type == M_GAMEMESSAGE);
-	u32 game_msg_type;
-	packet.r_u32(game_msg_type);
-	R_ASSERT(game_msg_type == GAME_EVENT_ARTEFACT_ONBASE);
-	
-	if (!m_action_param_str.size())
-	{
-		process_action();
-		return;
-	}
-	EGameIDs current_game_type = static_cast<EGameIDs>(GameID());
-	u16 deliverer_id = 0;	//who deliver the artefact
-	if (current_game_type == eGameIDCaptureTheArtefact)
-	{
-		u8 delivererTeam;
-		packet.r_u8(delivererTeam);
-		packet.r_u16(deliverer_id);
-	} else if (current_game_type == eGameIDArtefactHunt)
-	{
-		packet.r_u16(deliverer_id);
-	} else
-	{
-		FATAL("incorect event for current game type");
-	}
-	game_PlayerState* delivererps = Game().GetPlayerByGameID(deliverer_id);
-
-	if (!delivererps)
-		return;
-
-	if (strstr(delivererps->getName(), m_action_param_str.c_str()))
-	{
-		process_action();
-		return;
-	}
 }
 
 void __stdcall	demoplay_control::on_artefactcapturing_impl(u32 message, u32 subtype, NET_Packet & packet)
 {
-	u16 msg_type;
-	packet.r_begin(msg_type);	
-	R_ASSERT(msg_type == M_GAMEMESSAGE);
-	u32 game_msg_type;
-	packet.r_u32(game_msg_type);
-	R_ASSERT(game_msg_type == GAME_EVENT_ARTEFACT_TAKEN);
-	
-	if (!m_action_param_str.size())
-	{
-		process_action();
-		return;
-	}
-	EGameIDs current_game_type		= static_cast<EGameIDs>(GameID());
-	game_PlayerState* capturerps	= NULL;
-	if (current_game_type == eGameIDCaptureTheArtefact)
-	{
-		u8 capturer_team;
-		packet.r_u8(capturer_team);
-		ClientID clientId;
-		packet.r_clientID(clientId);
-		game_cl_GameState::PLAYERS_MAP_CIT playerIt = Game().players.find(clientId);
-		if (playerIt != Game().players.end())
-		{
-			capturerps = playerIt->second;
-		}
-	} else if (current_game_type == eGameIDArtefactHunt)
-	{
-		u16 capturer_id;
-		packet.r_u16(capturer_id);
-		capturerps = Game().GetPlayerByGameID(capturer_id);
-	} else
-	{
-		FATAL("incorect message for current game type");
-	}
 
-	if (!capturerps)
-		return;
-
-	if (strstr(capturerps->getName(), m_action_param_str.c_str()))
-	{
-		process_action();
-		return;
-	}
 }
 void __stdcall	demoplay_control::on_artefactloosing_impl(u32 message, u32 subtype, NET_Packet & packet)
 {
-	u16 msg_type;
-	packet.r_begin(msg_type);	
-	R_ASSERT(msg_type == M_GAMEMESSAGE);
-	u32 game_msg_type;
-	packet.r_u32(game_msg_type);
-	R_ASSERT(game_msg_type == GAME_EVENT_ARTEFACT_DROPPED);
-	
-	if (!m_action_param_str.size())
-	{
-		process_action();
-		return;
-	}
-	EGameIDs current_game_type		= static_cast<EGameIDs>(GameID());
-	game_PlayerState* looserps	= NULL;
-	if (current_game_type == eGameIDCaptureTheArtefact)
-	{
-		u8 capturer_team;
-		packet.r_u8(capturer_team);
-		ClientID clientId;
-		packet.r_clientID(clientId);
-		game_cl_GameState::PLAYERS_MAP_CIT playerIt = Game().players.find(clientId);
-		if (playerIt != Game().players.end())
-		{
-			looserps = playerIt->second;
-		}
-	} else if (current_game_type == eGameIDArtefactHunt)
-	{
-		u16 looser_id;
-		packet.r_u16(looser_id);
-		looserps = Game().GetPlayerByGameID(looser_id);
-	} else
-	{
-		FATAL("incorect message for current game type");
-	}
 
-	if (!looserps)
-		return;
-
-	if (strstr(looserps->getName(), m_action_param_str.c_str()))
-	{
-		process_action();
-		return;
-	}
 }

@@ -209,11 +209,7 @@ void CGamePersistent::UpdateGameType			()
 
 	m_game_params.m_e_game_type = ParseStringToGameType(m_game_params.m_game_type);
 
-
-	if (m_game_params.m_e_game_type == eGameIDSingle)
-		g_current_keygroup = _sp;
-	else
-		g_current_keygroup = _mp;
+	g_current_keygroup = _sp;
 }
 
 void CGamePersistent::OnGameEnd	()
@@ -442,8 +438,7 @@ void CGamePersistent::game_loaded()
 		if(	g_pGameLevel							&&
 			g_pGameLevel->bReady					&&
 			(allow_intro() && g_keypress_on_start)	&&
-			load_screen_renderer.b_need_user_input	&& 
-			m_game_params.m_e_game_type == eGameIDSingle)
+			load_screen_renderer.b_need_user_input	&&)
 		{
 			VERIFY				(NULL==m_intro);
 			m_intro				= xr_new<CUISequencer>();
