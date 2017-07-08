@@ -67,7 +67,7 @@ private:
 
 	void						Register		(const char* name, u32 vfs, u32 crc, u32 ptr, u32 size_real, u32 size_compressed, u32 modif);
 	void						ProcessArchive	(const char* path);
-	void						ProcessOne		(const char* path, void* F);
+	void						ProcessOne		(const char* path, const _finddata_t& entry);
 	bool						Recurse			(const char* path);	
 
 	files_it					file_find_it	(const char* n);
