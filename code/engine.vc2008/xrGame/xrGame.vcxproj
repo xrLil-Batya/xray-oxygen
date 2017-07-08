@@ -1979,6 +1979,7 @@
     <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />
     <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp" />
     <ClCompile Include="damage_manager.cpp" />
+	<ClCompile Include="raypick.cpp" />
     <ClCompile Include="action_base_script.cpp">
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">pch_script.h</PrecompiledHeaderFile>
       <PrecompiledHeaderFile Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">pch_script.h</PrecompiledHeaderFile>

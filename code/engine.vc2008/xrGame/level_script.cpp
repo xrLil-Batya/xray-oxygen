@@ -36,9 +36,10 @@
 #include "ui/UIInventoryUtilities.h"
 #include "alife_object_registry.h"
 #include "xrServer_Objects_ALife_Monsters.h"
+#include "raypick.h"
 
 using namespace luabind;
-bool single_game()
+ bool single_game()
 {
 	return true;
 }
@@ -310,15 +311,6 @@ CClientSpawnManager	&get_client_spawn_manager()
 {
 	return		(Level().client_spawn_manager());
 }
-/*
-void start_stop_menu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
-{
-	if(pDialog->IsShown())
-		pDialog->HideDialog();
-	else
-		pDialog->ShowDialog(bDoHideIndicators);
-}
-*/
 
 void add_dialog_to_render(CUIDialogWnd* pDialog)
 {
@@ -391,19 +383,11 @@ void remove_call(const luabind::functor<bool> &condition,const luabind::functor<
 
 void add_call(const luabind::object &lua_object, LPCSTR condition,LPCSTR action)
 {
-//	try{	
-//		CPHScriptObjectCondition	*c=xr_new<CPHScriptObjectCondition>(lua_object,condition);
-//		CPHScriptObjectAction		*a=xr_new<CPHScriptObjectAction>(lua_object,action);
 		luabind::functor<bool>		_condition = object_cast<luabind::functor<bool> >(lua_object[condition]);
 		luabind::functor<void>		_action = object_cast<luabind::functor<void> >(lua_object[action]);
 		CPHScriptObjectConditionN	*c=xr_new<CPHScriptObjectConditionN>(lua_object,_condition);
 		CPHScriptObjectActionN		*a=xr_new<CPHScriptObjectActionN>(lua_object,_action);
 		Level().ph_commander_scripts().add_call_unique(c,c,a,a);
-//	}
-//	catch(...)
-//	{
-//		Msg("add_call excepted!!");
-//	}
 }
 
 void remove_call(const luabind::object &lua_object, LPCSTR condition,LPCSTR action)
@@ -559,8 +543,6 @@ int get_actor_points(LPCSTR sect)
 {
 	return Actor()->StatisticMgr().GetSectionPoints(sect);
 }
-
-
 
 #include "ActorEffector.h"
 void add_complex_effector(LPCSTR section, int id)
@@ -816,11 +798,43 @@ void CLevel::script_register(lua_State *L)
 		def("add_points_str",					&add_actor_points_str),
 		def("get_points",						&get_actor_points)
 	];
-
+	
 	module(L)
 	[
+		class_<CRayPick>("ray_pick")
+ 		.def(constructor<>())
+
+		.def("set_position",					&CRayPick::set_position)
+		.def("set_direction",					&CRayPick::set_direction)
+		.def("set_range",						&CRayPick::set_range)
+		.def("set_flags",						&CRayPick::set_flags)
+		.def("set_ignore_object",				&CRayPick::set_ignore_object)
+		.def("query",							&CRayPick::query)
+		.def("get_result",						&CRayPick::get_result)
+		.def("get_object",						&CRayPick::get_object)
+		.def("get_distance",					&CRayPick::get_distance)
+		.def("get_element",						&CRayPick::get_element),
+
+		class_<script_rq_result>("rq_result")
+		.def_readonly("object",					&script_rq_result::O)
+		.def_readonly("range",					&script_rq_result::range)
+		.def_readonly("element",				&script_rq_result::element)
+		.def(constructor<>()),
+
+		class_<enum_exporter<collide::rq_target> >("rq_target")
+		.enum_("targets")
+		[
+			value("rqtNone",					int(collide::rqtNone)),
+			value("rqtObject",					int(collide::rqtObject)),
+			value("rqtStatic",					int(collide::rqtStatic)),
+			value("rqtShape",					int(collide::rqtShape)),
+			value("rqtObstacle",				int(collide::rqtObstacle)),
+			value("rqtBoth",					int(collide::rqtBoth)),
+			value("rqtDyn",						int(collide::rqtDyn))
+		],
+
 		def("command_line",						&command_line),
-		def("IsGameTypeSingle",					&single_game),
+		def("IsGameTypeSingle",					&IsGameTypeSingle),
 		def("IsDynamicMusic",					&IsDynamicMusic),
 		def("render_get_dx_level",				&render_get_dx_level),
 		def("IsImportantSave",					&IsImportantSave)
