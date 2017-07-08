@@ -381,15 +381,9 @@ void CConsole::DrawBackgrounds( bool bGame )
 	}
 
 	LPCSTR max_str = "xxxxx";
-	vecTipsEx::iterator itb = m_tips.begin();
-	vecTipsEx::iterator ite = m_tips.end();
-	for ( ; itb != ite; ++itb )
-	{
-		if ( pFont->SizeOf_( (*itb).text.c_str() ) > pFont->SizeOf_( max_str ) )
-		{
+	for (vecTipsEx::iterator itb : m_tips)
+		if (pFont->SizeOf_((*itb).text.c_str()) > pFont->SizeOf_(max_str))
 			max_str = (*itb).text.c_str();
-		}
-	}
 
 	float w1        = pFont->SizeOf_( "_" );
 	float ioc_w     = pFont->SizeOf_( ioc_prompt ) - w1;
@@ -436,39 +430,33 @@ void CConsole::DrawBackgrounds( bool bGame )
 	if ( m_select_tip < (int)m_tips.size() )
 	{
 		Frect r;
-
+		xr_string tmp;
 		vecTipsEx::iterator itb = m_tips.begin() + m_start_tip;
 		vecTipsEx::iterator ite = m_tips.end();
-		for ( u32 i = 0; itb != ite; ++itb, ++i ) // tips
+		for (u32 i = 0; itb != ite; ++itb, ++i) // tips
 		{
 			TipString const& ts = (*itb);
 			if ( (ts.HL_start < 0) || (ts.HL_finish < 0) || (ts.HL_start > ts.HL_finish) )
-			{
 				continue;
-			}
-			int    str_size = (int)ts.text.size();
+
+			int str_size = (int)ts.text.size();
 			if ( (ts.HL_start >= str_size) || (ts.HL_finish > str_size) )
-			{
 				continue;
-			}
 
 			r.null();
-			LPSTR  tmp      = (PSTR)_alloca( (str_size + 1) * sizeof(char) );
-
-			strncpy_s( tmp, str_size+1, ts.text.c_str(), ts.HL_start );
-			r.x1 = pr.x1 + w1 + pFont->SizeOf_( tmp );
+//		Fix potential stack overflow
+			tmp.assign(ts.text.c_str(), ts.HL_start);
+			r.x1 = pr.x1 + w1 + pFont->SizeOf_(tmp.c_str());
 			r.y1 = pr.y1 + i * font_h;
 
-			strncpy_s( tmp, str_size+1, ts.text.c_str(), ts.HL_finish );
-			r.x2 = pr.x1 + w1 + pFont->SizeOf_( tmp );
+			tmp.assign(ts.text.c_str(), ts.HL_finish);
+			r.x2 = pr.x1 + w1 + pFont->SizeOf_(tmp.c_str());
 			r.y2 = r.y1 + font_h;
-
+//		END
 			DrawRect( r, tips_word_color );
 
-			if ( i >= VIEW_TIPS_COUNT-1 )
-			{
+			if (i >= VIEW_TIPS_COUNT-1)
 				break; // for itb
-			}
 		}// for itb
 	} // if
 
@@ -761,20 +749,17 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 	
 	bool res = false;
 	// word in begin
-	vecCMD_IT itb = Commands.begin();
-	vecCMD_IT ite = Commands.end();
-	for ( ; itb != ite; ++itb )
+	xr_string name2;
+	for (vecCMD_IT itb : Commands)
 	{
 		LPCSTR name = itb->first;
 		u32 name_sz = xr_strlen(name);
-		PSTR  name2 = (PSTR)_alloca( (name_sz+1) * sizeof(char) );
-		
+// 	Fix potential stack overflow
 		if ( name_sz >= in_sz )
 		{
-			strncpy_s( name2, name_sz+1, name, in_sz );
-			name2[in_sz] = 0;
-
-			if ( !stricmp( name2, in_str ) )
+			name2.assign(name, in_sz);
+			if ( !stricmp( name2.c_str(), in_str ) )
+//	END
 			{
 				shared_str temp;
 				temp._set( name );
@@ -794,9 +779,7 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 	} // for
 
 	// word in internal
-	itb = Commands.begin();
-	ite = Commands.end();
-	for ( ; itb != ite; ++itb )
+	for (vecCMD_IT itb : Commands)
 	{
 		LPCSTR name = itb->first;
 		LPCSTR fd_str = strstr( name, in_str );

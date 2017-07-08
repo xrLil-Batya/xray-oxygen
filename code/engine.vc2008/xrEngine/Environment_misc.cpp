@@ -581,9 +581,8 @@ void CEnvironment::load_weather_effects	()
 	file_list_type*					file_list = FS.file_list_open("$game_weather_effects$","");
 	VERIFY							(file_list);
 
-	file_list_type::const_iterator	i = file_list->begin();
-	file_list_type::const_iterator	e = file_list->end();
-	for ( ; i != e; ++i) {
+	for (file_list_type::const_iterator	i : file_list) 
+	{
 		u32							length = xr_strlen(*i);
 		VERIFY						(length >= 4);
 		VERIFY						((*i)[length - 4] == '.');
@@ -607,9 +606,8 @@ void CEnvironment::load_weather_effects	()
 		env.reserve					(sections.size() + 2);
 		env.push_back				(create_descriptor("00:00:00", false));
 
-		sections_type::const_iterator	i = sections.begin();
-		sections_type::const_iterator	e = sections.end();
-		for ( ; i != e; ++i) {
+		for (sections_type::const_iterator i : sections) 
+		{
 			CEnvDescriptor*			object = create_descriptor((*i)->Name, config);
 			env.push_back			(object);
 		}
