@@ -641,7 +641,8 @@ void CWeapon::load(IReader &input_packet)
 	load_data		(iAmmoElapsed,					input_packet);
 	load_data		(m_cur_scope,					input_packet);
 	load_data		(m_flagsAddOnState,				input_packet);
-	UpdateAddonsVisibility			();
+	///duplicate in net_Spawn! 
+	//UpdateAddonsVisibility			();
 	load_data		(m_ammoType,					input_packet);
 	load_data		(m_zoom_params.m_bIsZoomModeNow,input_packet);
 
@@ -674,10 +675,8 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 				P.r_u8();
 			u8 AmmoElapsed = P.r_u8();
 			u8 NextAmmo = P.r_u8();
-			if (NextAmmo == undefined_ammo_type)
-				m_set_next_ammoType_on_reload = undefined_ammo_type;
-			else
-				m_set_next_ammoType_on_reload = NextAmmo;
+			
+			m_set_next_ammoType_on_reload = (NextAmmo == undefined_ammo_type) ? undefined_ammo_type : NextAmmo;
 
 			if (OnClient()) SetAmmoElapsed(int(AmmoElapsed));			
 			OnStateSwitch	(u32(state));
@@ -692,9 +691,7 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 
 void CWeapon::shedule_Update	(u32 dT)
 {
-	// Queue shrink
-//	u32	dwTimeCL		= Level().timeServer()-NET_Latency;
-//	while ((NET.size()>2) && (NET[1].dwTimeStamp<dwTimeCL)) NET.pop_front();	
+	// Queue shrink	
 
 	// Inherited
 	inherited::shedule_Update	(dT);

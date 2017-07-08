@@ -52,13 +52,26 @@ ShaderElement*			CRender::rimp_select_sh_static	(dxRender_Visual	*pVisual, float
 	}
 	return pVisual->shader->E[id]._get();
 }
-static class cl_parallax		: public R_constant_setup		{	virtual void setup	(R_constant* C)
+static class cl_parallax		: public R_constant_setup
 {
-	float			h			=	ps_r2_df_parallax_h;
-	RCache.set_c	(C,h,-h/2.f,1.f/r_dtex_range,1.f/r_dtex_range);
-}}	binder_parallax;
+	virtual void setup	(R_constant* C)
+	{
+		float h			=	ps_r2_df_parallax_h;
+		RCache.set_c	(C,h,-h/2.f,1.f/r_dtex_range,1.f/r_dtex_range);
+	}
+}	binder_parallax;
 
-static class cl_pos_decompress_params		: public R_constant_setup		{	virtual void setup	(R_constant* C)
+static class cl_tree_amplitude_intensity : public R_constant_setup
+{
+ 	virtual void setup(R_constant* C)
+ 	{
+ 		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
+ 		float fValue = E.m_fTreeAmplitudeIntensity;
+ 		RCache.set_c(C, fValue, fValue, fValue, 0);
+ 	}
+} binder_tree_amplitude_intensity;
+
+static class cl_pos_decompress_params	: public R_constant_setup		{	virtual void setup	(R_constant* C)
 {
 	float VertTan =  -1.0f * tanf( deg2rad(Device.fFOV/2.0f ) );
 	float HorzTan =  - VertTan / Device.fASPECT;
