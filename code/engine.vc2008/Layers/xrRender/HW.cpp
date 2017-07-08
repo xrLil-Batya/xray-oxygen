@@ -92,13 +92,7 @@ void CHW::Reset		(HWND hwnd)
 void CHW::CreateD3D	()
 {
 
-	LPCSTR _name		= "xrd3d9-null.dll";
-
-#ifndef _EDITOR
-	if (!g_dedicated_server)
-#endif    
-		_name			= "d3d9.dll";
-
+	LPCSTR _name		=  "d3d9.dll";
 
 	hD3D            			= LoadLibrary(_name);
 	R_ASSERT2	           	 	(hD3D,"Can't find 'd3d9.dll'\nPlease install latest version of DirectX before running this program");
