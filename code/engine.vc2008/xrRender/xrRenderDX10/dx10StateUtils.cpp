@@ -481,10 +481,12 @@ void ValidateState(D3D_DEPTH_STENCIL_DESC &desc)
 {
 	VERIFY( (desc.DepthEnable==0) || (desc.DepthEnable==1));
 	VERIFY( (desc.StencilEnable==0) || (desc.StencilEnable==1));
-
+	
+//	Fix incorrect depth stencil initialization
 	if (!desc.DepthEnable)
 	{
-		desc.DepthFunc = D3D_COMPARISON_NEVER;
+		desc.DepthWriteMask = D3D_DEPTH_WRITE_MASK_ALL;
+		desc.DepthFunc = D3D_COMPARISON_LESS;
 	}
 
 	if (!desc.StencilEnable)
