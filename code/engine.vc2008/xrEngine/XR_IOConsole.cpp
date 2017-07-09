@@ -381,9 +381,9 @@ void CConsole::DrawBackgrounds( bool bGame )
 	}
 
 	LPCSTR max_str = "xxxxx";
-	for (vecTipsEx::iterator itb : m_tips)
-		if (pFont->SizeOf_((*itb).text.c_str()) > pFont->SizeOf_(max_str))
-			max_str = (*itb).text.c_str();
+	for (TipString itb : m_tips)
+		if (pFont->SizeOf_(itb.text.c_str()) > pFont->SizeOf_(max_str))
+			max_str = itb.text.c_str();
 
 	float w1        = pFont->SizeOf_( "_" );
 	float ioc_w     = pFont->SizeOf_( ioc_prompt ) - w1;
@@ -750,9 +750,9 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 	bool res = false;
 	// word in begin
 	xr_string name2;
-	for (vecCMD_IT itb : Commands)
+	for (auto commandEntry : Commands)
 	{
-		LPCSTR name = itb->first;
+		LPCSTR name = commandEntry.first;
 		u32 name_sz = xr_strlen(name);
 // 	Fix potential stack overflow
 		if ( name_sz >= in_sz )
@@ -779,9 +779,9 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 	} // for
 
 	// word in internal
-	for (vecCMD_IT itb : Commands)
+	for (auto commandEntry : Commands)
 	{
-		LPCSTR name = itb->first;
+		LPCSTR name = commandEntry.first;
 		LPCSTR fd_str = strstr( name, in_str );
 		if ( fd_str )
 		{

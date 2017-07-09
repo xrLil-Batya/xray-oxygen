@@ -152,6 +152,7 @@ LPCSTR CInventoryItem::NameShort()
 	return m_nameShort.c_str();
 }
 
+/*
 LPCSTR CInventoryItem::NameComplex() 
 {
 	const char *l_name = Name();
@@ -352,106 +353,43 @@ void CInventoryItem::save(NET_Packet &packet)
 
 void CInventoryItem::net_Import			(NET_Packet& P) 
 {	
-	//copy from CPhysicObject
-	u8							NumItems = 0;
-	NumItems					= P.r_u8();
-	if (!NumItems)
-		return;
+    u8							NumItems = 0;
+    NumItems = P.r_u8();
+    if (!NumItems)
+        return;
 
-	mask_inv_num_items			num_items;
-	num_items.common			= NumItems;
-	NumItems					= num_items.num_items;
+    mask_inv_num_items			num_items;
+    num_items.common = NumItems;
+    NumItems = num_items.num_items;
 
-	net_update_IItem			N;
-	N.dwTimeStamp				= Device.dwTimeGlobal;
+    net_update_IItem			N;
+    N.dwTimeStamp = Device.dwTimeGlobal;
 
-	net_Import_PH_Params(P,N,num_items);
-	////////////////////////////////////////////
-	P.r_u8();	//active (not freezed ot not)
+    net_Import_PH_Params(P, N, num_items);
+    ////////////////////////////////////////////
+    P.r_u8();	//active (not freezed ot not)
 
-	if (this->cast_game_object()->Local())
-	{
-		return;
-	}
+    if (this->cast_game_object()->Local())
+    {
+        return;
+    }
 
-	net_updateInvData				*p = NetSync();
-	Level().AddObject_To_Objects4CrPr		(m_object);
+    net_updateInvData				*p = NetSync();
+    Level().AddObject_To_Objects4CrPr(m_object);
+    p->NET_IItem.push_back(N);
 
-	p->NET_IItem.push_back					(N);
-	
-	while (p->NET_IItem.size() > 2)
-		p->NET_IItem.pop_front();
-	
-	if (!m_activated)
-	{
+    while (p->NET_IItem.size() > 2)
+    {
+        p->NET_IItem.pop_front();
+    }
+    if (!m_activated)
+    {
 #ifdef DEBUG
-		Msg("Activating object [%d] before interpolation starts", object().ID());		
+        Msg("Activating object [%d] before interpolation starts", object().ID());
 #endif // #ifdef DEBUG
-		object().processing_activate();
-		m_activated = true;
-	}
-	NumItems					= P.r_u8();
-	if (!NumItems)
-		return;
-
-	net_update_IItem			N;
-	N.State.force.set			(0.f,0.f,0.f);
-	N.State.torque.set			(0.f,0.f,0.f);
-	
-	P.r_vec3					(N.State.position);
-
-	N.State.quaternion.x		= P.r_float_q8(-1.f, 1.f);
-	N.State.quaternion.y		= P.r_float_q8(-1.f, 1.f);
-	N.State.quaternion.z		= P.r_float_q8(-1.f, 1.f);
-	N.State.quaternion.w		= P.r_float_q8(-1.f, 1.f);
-
-	mask_num_items				num_items;
-	num_items.common			= NumItems;
-	NumItems					= num_items.num_items;
-
-	N.State.enabled				= num_items.mask & CSE_ALifeInventoryItem::inventory_item_state_enabled;
-	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_angular_null)) {
-		N.State.angular_vel.x	= P.r_float_q8(0.f,10.f*PI_MUL_2);
-		N.State.angular_vel.y	= P.r_float_q8(0.f,10.f*PI_MUL_2);
-		N.State.angular_vel.z	= P.r_float_q8(0.f,10.f*PI_MUL_2);
-	}
-	else
-		N.State.angular_vel.set	(0.f,0.f,0.f);
-
-	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_linear_null)) {
-		N.State.linear_vel.x	= P.r_float_q8(-32.f,32.f);
-		N.State.linear_vel.y	= P.r_float_q8(-32.f,32.f);
-		N.State.linear_vel.z	= P.r_float_q8(-32.f,32.f);
-	}
-	else
-		N.State.linear_vel.set	(0.f,0.f,0.f);
-	////////////////////////////////////////////
-
-	N.State.previous_position	= N.State.position;
-	N.State.previous_quaternion	= N.State.quaternion;
-
-	net_updateData				*p = NetSync();
-
-	if (!p->NET_IItem.empty())
-	{
-		//if (p->NET_IItem.back().dwTimeStamp>=N.dwTimeStamp)
-		//{
-		//	return;
-		//}
-		//m_flags.set				(FInInterpolate, TRUE);
-	}
-	
-	Level().AddObject_To_Objects4CrPr		(m_object);
-	object().CrPr_SetActivated				(false);
-	object().CrPr_SetActivationStep			(0);
-
-	p->NET_IItem.push_back					(N);
-	while (p->NET_IItem.size() > 2)
-	{
-		p->NET_IItem.pop_front				();
-	};
-
-	P.r_u8();	//enabled or not*/
+        object().processing_activate();
+        m_activated = true;
+    }
 };
 
 void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, mask_inv_num_items& num_items)

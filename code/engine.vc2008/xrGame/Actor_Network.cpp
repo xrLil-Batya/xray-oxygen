@@ -1771,17 +1771,6 @@ void				CActor::OnCriticalRadiationHealthLoss	()
 {
 };
 
-bool				CActor::Check_for_BackStab_Bone			(u16 element)
-{
-	switch(element)
-	{
-		case m_head: case m_neck: case m_spine: case m_spine1: case m_spine2: case m_l_clavicle: case m_r_clavicle:
-					return true; 
-		
-		default: 	return false;
-	}
-}
-
 bool CActor::InventoryAllowSprint()
 {
 	PIItem pActiveItem = inventory().ActiveItem();

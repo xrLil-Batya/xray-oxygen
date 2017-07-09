@@ -663,7 +663,6 @@ protected:
 	bool						m_bWasHitted;
 	bool						m_bWasBackStabbed;
 
-	virtual		bool			Check_for_BackStab_Bone			(u16 element);
 public:
 	virtual void				SetHitInfo						(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir);
 

@@ -103,10 +103,11 @@ struct	FTreeVisual_setup
 
 		// Calc wind-vector3, scale
 		float	tm_rot			= PI_MUL_2*Device.fTimeGlobal/ps_r__Tree_w_rot;
-//		wind.set				(_sin(tm_rot),0,_cos(tm_rot),0);	wind.normalize	();	wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
+		wind.set				(_sin(tm_rot),0,_cos(tm_rot),0);	wind.normalize	();	wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
 
- 		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fTreeAmplitudeIntensity;
+#if 0
+  		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
+ 		float fValue = E.ps_r__Tree_w_amp;
  		wind.set(_sin(tm_rot), 0, _cos(tm_rot), 0);
  		wind.normalize();
  #if RENDER == R_R1
@@ -114,9 +115,9 @@ struct	FTreeVisual_setup
  #else // > R1
  		wind.mul(fValue);	// dir1*amplitude
  #endif //-RENDER!=R_R1
-
+#endif
 		scale					= 1.f/float(FTreeVisual_quant);
-
+        
 		// setup constants
 		wave.set				(ps_r__Tree_Wave.x,	ps_r__Tree_Wave.y,	ps_r__Tree_Wave.z,	Device.fTimeGlobal*ps_r__Tree_w_speed);			// wave
 		wave.div				(PI_MUL_2);

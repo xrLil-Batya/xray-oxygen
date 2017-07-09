@@ -121,9 +121,6 @@
     <ClCompile Include="..\..\..\libtheora\lib\idct.c">
       <Filter>theora</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\libtheora\lib\info.c">
-      <Filter>theora</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\libtheora\lib\internal.c">
       <Filter>theora</Filter>
     </ClCompile>

@@ -35,8 +35,8 @@ CFontManager::CFontManager()
 	m_all_fonts.push_back(&pFontLetterica25			);
 	m_all_fonts.push_back(&pFontStat				);
 
-	for(FONTS_VEC_IT it : m_all_fonts)
-		(**it) = 0;
+	for(CGameFont** it : m_all_fonts)
+		*it = 0;
 
 	InitializeFonts();
 
@@ -355,5 +355,5 @@ void CHUDManager::net_Relcase( CObject* obj )
 
 CDialogHolder* CurrentDialogHolder()
 {
-	return MainMenu()->IsActive() ? MainMenu() : HUD().GetGameUI()
+	return MainMenu()->IsActive() ? MainMenu() : dynamic_cast <CDialogHolder*> (HUD().GetGameUI());
 }

@@ -18,8 +18,7 @@
 #include "character_info.h"
 #include "specific_character.h"
 
-#pragma comment(lib, "lua.JIT.2.0.4.lib")
-#pragma comment(lib, "xrScripts.lib")
+#pragma comment(lib,"xrScripts.lib")
 #pragma comment(lib,"xrCore.lib")
 
 extern CSE_Abstract *F_entity_Create	(LPCSTR section);

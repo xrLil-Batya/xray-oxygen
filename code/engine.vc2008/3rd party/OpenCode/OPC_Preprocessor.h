@@ -14,7 +14,6 @@
 
 // Check platform
 #if defined( _WIN32 ) || defined( WIN32 )
-#pragma message("Compiling on Windows...")
 #define PLATFORM_WINDOWS
 #else
 #pragma message("Compiling on unknown platform...")
@@ -22,7 +21,6 @@
 
 // Check compiler
 #if defined(_MSC_VER)
-#pragma message("Compiling with VC++...")
 #define COMPILER_VISUAL_CPP
 #else
 #pragma message("Compiling with unknown compiler...")

@@ -163,7 +163,7 @@
       <PreprocessorDefinitions>ATIMGPUD_DLL;WIN32;DEBUG;_WINDOWS;_USRDLL;XRRENDER_R1_EXPORTS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
-      <SmallerTypeCheck>true</SmallerTypeCheck>
+      <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <FloatingPointModel>Fast</FloatingPointModel>
@@ -179,9 +179,9 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Configuration);..\..\..\..\libraries\$(Configuration);..\..\..\sdk\libraries\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
       <MapFileName>
@@ -193,7 +193,8 @@
       </DataExecutionPrevention>
       <SupportUnloadOfDelayLoadedDLL>false</SupportUnloadOfDelayLoadedDLL>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <IgnoreSpecificDefaultLibraries>luabind.beta7-devel.rc4.lib;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -281,7 +282,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Configuration);..\..\..\..\libraries\$(Configuration);..\..\..\sdk\libraries\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -298,7 +299,8 @@
       </DataExecutionPrevention>
       <SupportUnloadOfDelayLoadedDLL>false</SupportUnloadOfDelayLoadedDLL>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <IgnoreSpecificDefaultLibraries>luabind.beta7-devel.rc4.lib;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">
@@ -375,7 +377,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;xrParticles.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>
@@ -387,7 +389,8 @@
       </DataExecutionPrevention>
       <SupportUnloadOfDelayLoadedDLL>false</SupportUnloadOfDelayLoadedDLL>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <IgnoreSpecificDefaultLibraries>luabind.beta7-devel.rc4.lib;</IgnoreSpecificDefaultLibraries>
+      <IgnoreSpecificDefaultLibraries>
+      </IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

@@ -2,7 +2,6 @@
 #pragma hdrstop
 
 #pragma comment( lib, "xrScripts.lib")
-#pragma comment( lib, "lua.JIT.2.0.4.lib")
 
 #include	"../../xrEngine/Render.h"
 #include	"ResourceManager.h"

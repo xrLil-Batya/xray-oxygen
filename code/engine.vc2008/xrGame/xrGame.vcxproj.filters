@@ -9728,6 +9728,7 @@
     <ClCompile Include="fire_disp_controller.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
+    <ClCompile Include="raypick.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

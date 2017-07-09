@@ -261,7 +261,7 @@ void	CCustomOutfit::OnMoveToRuck		(const SInvItemPlace& prev)
 	if(m_pInventory && prev.type==eItemPlaceSlot)
 	{
 		CActor* pActor = smart_cast<CActor*> (H_Parent());
-		if (pActor && prev == eItemPlaceSlot)
+		if (pActor && prev.type == eItemPlaceSlot)
 		{
 			ApplySkinModel(pActor, false, false);
 			CTorch* pTorch = smart_cast<CTorch*>(pActor->inventory().ItemFromSlot(TORCH_SLOT));

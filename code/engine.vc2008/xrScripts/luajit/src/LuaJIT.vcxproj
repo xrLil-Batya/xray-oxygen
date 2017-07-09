@@ -96,12 +96,20 @@
       <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>LUA_CORE;LUA_DLL;LUA_BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
       <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
+    <ClCompile>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>LUA_CORE;LUA_DLL;LUA_BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <Link>

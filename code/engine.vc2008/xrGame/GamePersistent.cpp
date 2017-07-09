@@ -438,7 +438,7 @@ void CGamePersistent::game_loaded()
 		if(	g_pGameLevel							&&
 			g_pGameLevel->bReady					&&
 			(allow_intro() && g_keypress_on_start)	&&
-			load_screen_renderer.b_need_user_input	&&)
+			load_screen_renderer.b_need_user_input  )
 		{
 			VERIFY				(NULL==m_intro);
 			m_intro				= xr_new<CUISequencer>();

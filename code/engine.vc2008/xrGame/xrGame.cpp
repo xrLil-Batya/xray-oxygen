@@ -12,7 +12,6 @@
 #include "xr_level_controller.h"
 #include "profiler.h"
 #pragma comment (lib, "xrCore.lib")
-#pragma comment (lib, "lua.JIT.2.0.4.lib")
 #pragma comment (lib,"xrEngine.lib")
 
 extern "C" {

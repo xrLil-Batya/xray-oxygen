@@ -22,12 +22,12 @@
 #	include "skeletoncustom.h"
 #else // _EDITOR
 	#include "../xrCore/xrCore.h"
-	#include "../Layers/xrRender/SkeletonXVertRender.h"
+	#include "../xrRender/xrRender/SkeletonXVertRender.h"
 	#include "../xrEngine/bone.h"
 	#define RENDER 1
 	#include "../xrEngine/Render.h"
 	#include "../xrEngine/Device.h"
-	#include "../Layers/xrRender/light.h"
+	#include "../xrRender/xrRender/light.h"
 #endif // _EDITOR
 
 #include "xrCPU_Pipe.h"

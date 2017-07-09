@@ -107,7 +107,7 @@ IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
 		return;
 	}
 
-    NET_Packet packet(data, data_size)
+    NET_Packet packet(data, data_size);
     ClientID    id(param);
 
 	csMessage.lock();

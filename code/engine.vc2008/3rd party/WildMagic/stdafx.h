@@ -12,7 +12,7 @@
 
 // DirectX headers
 #include <d3d9.h>
-#ifdef MIXED
+#if defined (MIXED) || defined(DEBUG)
 #define	USE_MEMORY_MONITOR
 #endif
 #ifdef RELEASE

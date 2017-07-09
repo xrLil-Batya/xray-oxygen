@@ -578,20 +578,21 @@ void CEnvironment::load_weather_effects	()
 		return;
 
 	typedef xr_vector<LPSTR>		file_list_type;
-	file_list_type*					file_list = FS.file_list_open("$game_weather_effects$","");
-	VERIFY							(file_list);
+    file_list_type*					pfile_list = FS.file_list_open("$game_weather_effects$", "");
+	VERIFY							(pfile_list);
+	file_list_type&					file_list = *pfile_list;
 
-	for (file_list_type::const_iterator	i : file_list) 
+	for (LPSTR weatherEffectFileName : file_list)
 	{
-		u32							length = xr_strlen(*i);
+		u32							length = xr_strlen(weatherEffectFileName);
 		VERIFY						(length >= 4);
-		VERIFY						((*i)[length - 4] == '.');
-		VERIFY						((*i)[length - 3] == 'l');
-		VERIFY						((*i)[length - 2] == 't');
-		VERIFY						((*i)[length - 1] == 'x');
+		VERIFY						((weatherEffectFileName)[length - 4] == '.');
+		VERIFY						((weatherEffectFileName)[length - 3] == 'l');
+		VERIFY						((weatherEffectFileName)[length - 2] == 't');
+		VERIFY						((weatherEffectFileName)[length - 1] == 'x');
 		u32							new_length = length - 4;
 		LPSTR						identifier = (LPSTR)_alloca((new_length + 1)*sizeof(char));
-        std::memcpy(identifier, *i, new_length*sizeof(char));
+        std::memcpy(identifier, weatherEffectFileName, new_length*sizeof(char));
 		identifier[new_length]		= 0;
 		EnvVec& env					= WeatherFXs[identifier];
 
@@ -606,9 +607,9 @@ void CEnvironment::load_weather_effects	()
 		env.reserve					(sections.size() + 2);
 		env.push_back				(create_descriptor("00:00:00", false));
 
-		for (sections_type::const_iterator i : sections) 
+		for (CInifile::Sect* section : sections) 
 		{
-			CEnvDescriptor*			object = create_descriptor((*i)->Name, config);
+			CEnvDescriptor*			object = create_descriptor(section->Name, config);
 			env.push_back			(object);
 		}
 
@@ -619,7 +620,7 @@ void CEnvironment::load_weather_effects	()
 
 	}
 
-	FS.file_list_close				(file_list);
+	FS.file_list_close				(pfile_list);
 
 	// sorting weather envs
 	auto _I=WeatherFXs.begin();

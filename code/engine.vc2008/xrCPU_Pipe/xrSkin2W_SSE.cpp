@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifndef _M_X64
+
 #define transform_dir(idx,res,SX,SY,SZ,T1)									\
 __asm	movzx		eax, WORD PTR [esi][idx*(TYPE u16)]S.m					\
 __asm	movaps		res, SX													\
@@ -38,6 +40,7 @@ __asm	shufps		SW1, SW1, _MM_SHUFFLE(1,0,0,0)							\
 __asm	subss		SW3, SW2												\
 __asm	shufps		SW2, SW2, _MM_SHUFFLE(1,0,0,0)							\
 __asm	shufps		SW3, SW3, _MM_SHUFFLE(1,0,0,0)							
+
 
 // ==================================================================
 void __stdcall xrSkin4W_SSE(vertRender*		D,
@@ -354,3 +357,5 @@ void __stdcall xrSkin1W_SSE(vertRender*		D,
 	sfence										;	write back cache
 // ------------------------------------------------------------------
 }}
+
+#endif

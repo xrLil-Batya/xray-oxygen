@@ -183,12 +183,12 @@ void CBinocularsVision::Update()
 	//-----------------------------------------------------
 	const CVisualMemoryManager::VISIBLES& vVisibles = pActor->memory().visual().objects();
 
-	for(VIS_OBJECTS_IT it : m_active_objects)
-		(*it)->m_flags.set					(flVisObjNotValid, TRUE) ;
+	for(SBinocVisibleObj* it : m_active_objects)
+		it->m_flags.set					(flVisObjNotValid, TRUE) ;
 
-	for (CVisualMemoryManager::VISIBLES::const_iterator v_it : vVisibles)
+	for (CVisibleObject v_it : vVisibles)
 	{
-		const CObject*	_object_			= (*v_it).m_object;
+		const CObject*	_object_			= v_it.m_object;
 		if (!pActor->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
 			continue;
 
@@ -223,14 +223,11 @@ void CBinocularsVision::Update()
 		m_active_objects.pop_back			();
 	}
 
-	it = m_active_objects.begin();
-	for(;it!=m_active_objects.end();++it)
+    for (SBinocVisibleObj* visObj : m_active_objects)
 	{
-		SBinocVisibleObj* visObj			= (*it);
-		
 		const bool bLocked = visObj->m_flags.test(flTargetLocked);
 		
-		(*it)->Update						();
+        visObj->Update						();
 		
 		if(bLocked != visObj->m_flags.test(flTargetLocked))
 			m_sounds.PlaySound	("catch_snd", Fvector().set(0,0,0), NULL, true);
@@ -240,8 +237,8 @@ void CBinocularsVision::Update()
 
 void CBinocularsVision::Draw()
 {
-	for(VIS_OBJECTS_IT it : m_active_objects)
-		(*it)->Draw();
+	for(SBinocVisibleObj* it : m_active_objects)
+		it->Draw();
 }
 
 void CBinocularsVision::Load(const shared_str& section)

@@ -57,7 +57,6 @@ extern ENGINE_API CInifile *pGameIni;
 #pragma comment( lib, "xrCDB.lib"	)
 #pragma comment( lib, "xrSound.lib"	)
 #pragma comment( lib, "xrScripts.lib")
-#pragma comment( lib, "lua.JIT.2.0.4.lib")
 #pragma comment( lib, "winmm.lib"		)
 #pragma comment( lib, "d3d9.lib"		)
 #pragma comment( lib, "dinput8.lib"		)

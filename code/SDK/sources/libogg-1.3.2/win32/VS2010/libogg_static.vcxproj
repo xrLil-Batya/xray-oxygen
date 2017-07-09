@@ -298,7 +298,6 @@
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
     </ClCompile>
-    <ClCompile Include="..\..\..\libtheora\lib\info.c" />
     <ClCompile Include="..\..\..\libtheora\lib\internal.c" />
     <ClCompile Include="..\..\..\libtheora\lib\mathops.c" />
     <ClCompile Include="..\..\..\libtheora\lib\mcenc.c" />
