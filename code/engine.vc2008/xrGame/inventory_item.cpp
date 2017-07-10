@@ -152,27 +152,6 @@ LPCSTR CInventoryItem::NameShort()
 	return m_nameShort.c_str();
 }
 
-/*
-LPCSTR CInventoryItem::NameComplex() 
-{
-	const char *l_name = Name();
-	if(l_name) 	m_nameComplex = l_name; 
-	else 		m_nameComplex = 0;
-
-	if( m_flags.test(FUsingCondition) ){
-		string32		cond;
-		if(GetCondition()<0.33)		xr_strcpy		(cond,	"[poor]");
-		else if(GetCondition()<0.66)xr_strcpy		(cond,	"[bad]"	);
-		else						xr_strcpy		(cond,	"[good]");
-		string256		temp;
-		strconcat		(temp,*m_nameComplex," ",cond)	;
-		// xr_sprintf			(temp,"%s %s",*m_nameComplex,cond);
-		m_nameComplex	= temp;
-	}
-
-	return *m_nameComplex;
-}
-*/
 bool CInventoryItem::Useful() const
 {
 	return CanTake();
@@ -493,54 +472,12 @@ void CInventoryItem::PH_B_CrPr		()
 
 void CInventoryItem::PH_I_CrPr		()		// actions & operations between two phisic prediction steps
 {
-	//store recalculated data, then we able to restore it after small future prediction
-	if (!object().CrPr_IsActivated())	return;
-	////////////////////////////////////
-	CPHSynchronize* pSyncObj			= NULL;
-	pSyncObj = object().PHGetSyncItem	(0);
-	if (!pSyncObj)						return;
-	////////////////////////////////////
-	pSyncObj->get_State					(p->RecalculatedState);
-	///////////////////////////////////////////////
-	Fmatrix xformX;
-	pSyncObj->cv2obj_Xfrom(p->RecalculatedState.quaternion, p->RecalculatedState.position, xformX);
 
-	VERIFY2								(_valid(xformX),*object().cName());
-	pSyncObj->cv2obj_Xfrom				(p->RecalculatedState.quaternion, p->RecalculatedState.position, xformX);
-
-	p->IRecRot.set(xformX);
-	p->IRecPos.set(xformX.c);
-	VERIFY2								(_valid(p->IRecPos),*object().cName());*/
 }; 
 
 #ifdef DEBUG
 void CInventoryItem::PH_Ch_CrPr			()
 {
-	//restore recalculated data and get data for interpolation	
-	if (!object().CrPr_IsActivated())	return;
-	////////////////////////////////////
-	CPHSynchronize* pSyncObj			= NULL;
-	pSyncObj = object().PHGetSyncItem	(0);
-	if (!pSyncObj)						return;
-	////////////////////////////////////
-	pSyncObj->get_State					(p->CheckState);
-
-	if (!object().H_Parent() && object().getVisible())
-	{
-		if (p->CheckState.enabled == false && p->RecalculatedState.enabled == true)
-		{
-			///////////////////////////////////////////////////////////////////
-			pSyncObj->set_State			(p->LastState);
-			pSyncObj->set_State			(p->RecalculatedState);//, N_A.State.enabled);
-
-			object().PHUnFreeze			();
-			///////////////////////////////////////////////////////////////////
-			ph_world->Step				();
-			///////////////////////////////////////////////////////////////////
-			PH_Ch_CrPr					();
-			////////////////////////////////////
-		};
-	};*/	
 };
 #endif
 
@@ -565,19 +502,6 @@ void CInventoryItem::PH_A_CrPr		()
 		object().PPhysicsShell()->GetGlobalTransformDynamic(&object().XFORM());
 		K->CalculateBones_Invalidate();
 		K->CalculateBones(TRUE);
-		Fbox bb= BoundingBox	();
-		DBG_OpenCashedDraw		();
-		Fvector c,r,p;
-		bb.get_CD(c,r );
-		XFORM().transform_tiny(p,c);
-		DBG_DrawAABB( p, r,D3DCOLOR_XRGB(255, 0, 0));
-		//PPhysicsShell()->XFORM().transform_tiny(c);
-		Fmatrix mm;
-		PPhysicsShell()->GetGlobalTransformDynamic(&mm);
-		mm.transform_tiny(p,c);
-		DBG_DrawAABB( p, r,D3DCOLOR_XRGB(0, 255, 0));
-		DBG_ClosedCashedDraw	(50000);
-#endif
 		object().spatial_move();
 		m_just_after_spawn = false;
 		
@@ -586,32 +510,6 @@ void CInventoryItem::PH_A_CrPr		()
 		object().PPhysicsShell()->get_ElementByStoreOrder(0)->Fix();
 		object().PPhysicsShell()->SetIgnoreStatic	();	
 	}
-	//restore recalculated data and get data for interpolation	
-	if (!object().CrPr_IsActivated())	return;
-	////////////////////////////////////
-	CPHSynchronize* pSyncObj			= NULL;
-	pSyncObj = object().PHGetSyncItem	(0);
-	if (!pSyncObj)						return;
-	////////////////////////////////////
-	pSyncObj->get_State					(p->PredictedState);
-	////////////////////////////////////
-	pSyncObj->set_State					(p->RecalculatedState);
-	////////////////////////////////////
-
-	if (!m_flags.test(FInInterpolate)) return;
-	////////////////////////////////////
-	Fmatrix xformX;
-	pSyncObj->cv2obj_Xfrom(p->PredictedState.quaternion, p->PredictedState.position, xformX);
-
-	VERIFY2								(_valid(xformX),*object().cName());
-	pSyncObj->cv2obj_Xfrom				(p->PredictedState.quaternion, p->PredictedState.position, xformX);
-	
-	p->IEndRot.set						(xformX);
-	p->IEndPos.set						(xformX.c);
-	VERIFY2								(_valid(p->IEndPos),*object().cName());
-	/////////////////////////////////////////////////////////////////////////
-	CalculateInterpolationParams		();
-	///////////////////////////////////////////////////*/
 };
 
 void CInventoryItem::Interpolate()
@@ -788,69 +686,6 @@ void CInventoryItem::OnRender()
 		Fmatrix	M = object().XFORM();
 		M.c.add (bc);
 		Level().debug_renderer().draw_obb			(M,bd,color_rgba(0,0,255,255));
-		u32 Color;
-		if (processing_enabled())
-		{
-			if (m_bInInterpolation)
-				Color = color_rgba(0,255,255, 255);
-			else
-				Color = color_rgba(0,255,0, 255);
-		}
-		else
-		{
-			if (m_bInInterpolation)
-				Color = color_rgba(255,0,255, 255);
-			else
-				Color = color_rgba(255, 0, 0, 255);
-		};
-
-//		Level().debug_renderer().draw_obb			(M,bd,Color);
-		float size = 0.01f;
-		if (!H_Parent())
-		{
-			Level().debug_renderer().draw_aabb			(Position(), size, size, size, color_rgba(0, 255, 0, 255));
-
-			Fvector Pos1, Pos2;
-			VIS_POSITION_it It = LastVisPos.begin();
-			Pos1 = *It;
-			for (; It != LastVisPos.end(); It++)
-			{
-				Pos2 = *It;
-				Level().debug_renderer().draw_line(Fidentity, Pos1, Pos2, color_rgba(255, 255, 0, 255));
-				Pos1 = Pos2;
-			};
-
-		}
-		//---------------------------------------------------------
-		if (OnClient() && !H_Parent() && m_bInInterpolation)
-		{
-
-			Fmatrix xformI;
-
-			xformI.rotation(IRecRot);
-			xformI.c.set(IRecPos);
-			Level().debug_renderer().draw_aabb			(IRecPos, size, size, size, color_rgba(255, 0, 255, 255));
-
-			xformI.rotation(IEndRot);
-			xformI.c.set(IEndPos);
-			Level().debug_renderer().draw_obb			(xformI,bd,color_rgba(0, 255, 0, 255));
-
-			///////////////////////////////////////////////////////////////////////////
-			Fvector point0 = IStartPos, point1;			
-			
-			float c = 0;
-			for (float i=0.1f; i<1.1f; i+= 0.1f)
-			{
-				c = i;// * 0.1f;
-				for (u32 k=0; k<3; k++)
-				{
-					point1[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
-				};
-				Level().debug_renderer().draw_line(Fidentity, point0, point1, color_rgba(0, 0, 255, 255));
-				point0.set(point1);
-			};
-		};
-		*/
 	};
 }
 #endif
@@ -866,10 +701,6 @@ void CInventoryItem::modify_holder_params	(float &range, float &fov) const
 {
 	range		*= m_holder_range_modifier;
 	fov			*= m_holder_fov_modifier;
-}
-
-bool CInventoryItem::NeedToDestroyObject()	const
-{
 }
 
 ALife::_TIME_ID	 CInventoryItem::TimePassedAfterIndependant()	const

@@ -203,7 +203,7 @@ public:
 	virtual void				activate_physic_shell		();
 	virtual bool				has_network_synchronization	() const;
 
-	virtual bool				NeedToDestroyObject			() const;
+	IC virtual bool				NeedToDestroyObject			() const { return false; };
 	virtual ALife::_TIME_ID		TimePassedAfterIndependant	() const;
 
 	virtual	bool				IsSprintAllowed				() const		{return !!m_flags.test(FAllowSprint);} ;
