@@ -349,18 +349,15 @@ void CInventoryItem::net_Import			(NET_Packet& P)
     P.r_u8();	//active (not freezed ot not)
 
     if (this->cast_game_object()->Local())
-    {
         return;
-    }
 
     net_updateInvData				*p = NetSync();
     Level().AddObject_To_Objects4CrPr(m_object);
     p->NET_IItem.push_back(N);
 
     while (p->NET_IItem.size() > 2)
-    {
         p->NET_IItem.pop_front();
-    }
+	
     if (!m_activated)
     {
 #ifdef DEBUG
@@ -464,22 +461,6 @@ void CInventoryItem::load(IReader &packet)
 	object().PHLoadState(packet);
 	object().PPhysicsShell()->Disable();
 }
-
-///////////////////////////////////////////////
-void CInventoryItem::PH_B_CrPr		()
-{
-};	
-
-void CInventoryItem::PH_I_CrPr		()		// actions & operations between two phisic prediction steps
-{
-
-}; 
-
-#ifdef DEBUG
-void CInventoryItem::PH_Ch_CrPr			()
-{
-};
-#endif
 
 void CInventoryItem::PH_A_CrPr		()
 {

@@ -1051,14 +1051,11 @@ void	CActor::CalculateInterpolationParams()
 	}	
 	else
 	{
-		if (LastState.linear_vel.x == 0 && LastState.linear_vel.y == 0 && LastState.linear_vel.z == 0)
-		{
+		if (!LastState.linear_vel.x && !LastState.linear_vel.y && !LastState.linear_vel.z)
 			HP1.sub(RecalculatedState.position, RecalculatedState.previous_position);
-		}
 		else
-		{
 			HP1.sub(LastState.position, LastState.previous_position);
-		};
+		
 		HP1.mul(1.0f/fixed_step);
 		SP1.add(HP1, SP0);
 	}
@@ -1068,20 +1065,7 @@ void	CActor::CalculateInterpolationParams()
 
 	SP3.set(PredictedState.position);
 	HP3.set(PredictedState.position);
-	/*
-	{
-	Fvector d0, d1;
-	d0.sub(SP1, SP0);
-	d1.sub(SP3, SP0);
-	float res = d0.dotproduct(d1);
-	if (res < 0)
-	{
-	Msg ("! %f", res);
-	}
-	else
-	Msg ("%f", res);
-	}
-	*/
+
 	/////////////////////////////////////////////////////////////////////////////
 	Fvector TotalPath;
 	TotalPath.sub(SP3, SP0);
@@ -1096,14 +1080,7 @@ void	CActor::CalculateInterpolationParams()
 	u32		ConstTime = u32((fixed_step - physics_world()->FrameTime())*1000)+ Level().GetInterpolationSteps()*u32(fixed_step*1000);
 
 	m_dwIStartTime = m_dwILastUpdateTime;
-	
-//	if (( lV0 + lV1) > 0.000001 && g_cl_lvInterp == 0)
-	{
-//		u32		CulcTime = iCeil(TotalLen*2000/( lV0 + lV1));
-//		m_dwIEndTime = m_dwIStartTime + min(CulcTime, ConstTime);
-	}
-//	else
-		m_dwIEndTime = m_dwIStartTime + ConstTime;
+	m_dwIEndTime = m_dwIStartTime + ConstTime;
 	/////////////////////////////////////////////////////////////////////////////
 	Fvector V0, V1;
 	//	V0.sub(SP1, SP0);
@@ -1115,29 +1092,19 @@ void	CActor::CalculateInterpolationParams()
 
 	if (TotalLen != 0)
 	{
-		if (V0.x != 0 || V0.y != 0 || V0.z != 0)
+		if ((V0.x || V0.y || V0.z) && lV0 > TotalLen / 3)
 		{
-			if (lV0 > TotalLen/3)
-			{
-				HP1.normalize();
-				//				V0.normalize();
-				//				V0.mul(TotalLen/3);
-				HP1.normalize();
-				HP1.mul(TotalLen/3);
-				SP1.add(HP1, SP0);
-			}
+			HP1.normalize();
+			HP1.normalize();
+			HP1.mul(TotalLen/3);
+			SP1.add(HP1, SP0);
 		}
 
-		if (V1.x != 0 || V1.y != 0 || V1.z != 0)
+		if ((V1.x || V1.y || V1.z) && lV1 > TotalLen / 3)
 		{
-			if (lV1 > TotalLen/3)
-			{
-				//				V1.normalize();
-				//				V1.mul(TotalLen/3);
-				HP2.normalize();
-				HP2.mul(TotalLen/3);
-				SP2.sub(SP3, HP2);
-			};
+			HP2.normalize();
+			HP2.mul(TotalLen/3);
+			SP2.sub(SP3, HP2);
 		}
 	};
 	/////////////////////////////////////////////////////////////////////////////
@@ -1251,50 +1218,6 @@ void CActor::make_Interpolation	()
 	};
 #endif
 };
-/*
-void		CActor::UpdatePosStack	( u32 Time0, u32 Time1 )
-{
-		//******** Storing Last Position in stack ********
-	CPHSynchronize* pSyncObj = NULL;
-	pSyncObj = PHGetSyncItem(0);
-	if (!pSyncObj) return;
-
-	SPHNetState		State;
-	pSyncObj->get_State(State);
-
-	if (!SMemoryPosStack.empty() && SMemoryPosStack.back().u64WorldStep >= ph_world->m_steps_num)
-	{
-		xr_deque<SMemoryPos>::iterator B = SMemoryPosStack.begin();
-		xr_deque<SMemoryPos>::iterator E = SMemoryPosStack.end();
-		xr_deque<SMemoryPos>::iterator I = std::lower_bound(B,E,u64(ph_world->m_steps_num-1));
-		if (I != E) 
-		{
-			I->SState = State;
-			I->u64WorldStep = ph_world->m_steps_num;
-		};
-	}
-	else		
-	{
-		SMemoryPosStack.push_back(SMemoryPos(Time0, Time1, ph_world->m_steps_num, State));
-		if (SMemoryPosStack.front().dwTime0 < (Level().timeServer() - 2000)) SMemoryPosStack.pop_front();
-	};
-};
-
-ACTOR_DEFS::SMemoryPos*				CActor::FindMemoryPos (u32 Time)
-{
-	if (SMemoryPosStack.empty()) return NULL;
-
-	if (Time > SMemoryPosStack.back().dwTime1) return NULL;
-	
-	xr_deque<SMemoryPos>::iterator B = SMemoryPosStack.begin();
-	xr_deque<SMemoryPos>::iterator E = SMemoryPosStack.end();
-	xr_deque<SMemoryPos>::iterator I = std::lower_bound(B,E,Time);
-
-	if (I==E) return NULL;
-
-	return &(*I);
-};
-*/
 
 void CActor::save(NET_Packet &output_packet)
 {
@@ -1358,34 +1281,15 @@ void dbg_draw_piramid (Fvector pos, Fvector dir, float size, float xdir, u32 col
 	}
 	t.c.set(pos);
 
-//	Level().debug_renderer().draw_line(t, p0, p1, color);
-//	Level().debug_renderer().draw_line(t, p1, p2, color);
-//	Level().debug_renderer().draw_line(t, p2, p3, color);
-//	Level().debug_renderer().draw_line(t, p3, p0, color);
-
-//	Level().debug_renderer().draw_line(t, p0, p4, color);
-//	Level().debug_renderer().draw_line(t, p1, p4, color);
-//	Level().debug_renderer().draw_line(t, p2, p4, color);
-//	Level().debug_renderer().draw_line(t, p3, p4, color);
-	
 	if (!Double)
 	{
 		DRender->dbg_DrawTRI(t, p0, p1, p4, color);
 		DRender->dbg_DrawTRI(t, p1, p2, p4, color);
 		DRender->dbg_DrawTRI(t, p2, p3, p4, color);
 		DRender->dbg_DrawTRI(t, p3, p0, p4, color);
-		//RCache.dbg_DrawTRI(t, p0, p1, p4, color);
-		//RCache.dbg_DrawTRI(t, p1, p2, p4, color);
-		//RCache.dbg_DrawTRI(t, p2, p3, p4, color);
-		//RCache.dbg_DrawTRI(t, p3, p0, p4, color);
 	}
 	else
 	{
-//		Fmatrix scale;
-//		scale.scale(0.8f, 0.8f, 0.8f);
-//		t.mulA_44(scale);
-//		t.c.set(pos);
-
 		Level().debug_renderer().draw_line(t, p0, p1, color);
 		Level().debug_renderer().draw_line(t, p1, p2, color);
 		Level().debug_renderer().draw_line(t, p2, p3, color);
@@ -1423,17 +1327,6 @@ void	CActor::OnRender_Network()
 		{
 			if (this != Level().CurrentViewEntity() || cam_active != eacFirstEye)
 			{
-				/*
-				u16 BoneCount = V->LL_BoneCount();
-				for (u16 i=0; i<BoneCount; i++)
-				{
-					Fobb BoneOBB = V->LL_GetBox(i);
-					Fmatrix BoneMatrix; BoneOBB.xform_get(BoneMatrix);
-					Fmatrix BoneMatrixRes; BoneMatrixRes.mul(V->LL_GetTransform(i), BoneMatrix);
-					BoneMatrix.mul(XFORM(), BoneMatrixRes);
-					Level().debug_renderer().draw_obb(BoneMatrix, BoneOBB.m_halfsize, color_rgba(0, 255, 0, 255));
-				};
-				*/
 				CCF_Skeleton* Skeleton = smart_cast<CCF_Skeleton*>(collidable.model);
 				if (Skeleton){
 					Skeleton->_dbg_refresh();
@@ -1473,12 +1366,8 @@ void	CActor::OnRender_Network()
 		
 		dbg_draw_piramid(Position(), character_physics_support()->movement()->GetVelocity(), size, -r_model_yaw, color_rgba(128, 255, 128, 255));
 		dbg_draw_piramid(IStart.Pos, IStart.Vel, size, -IStart.o_model, color_rgba(255, 0, 0, 255));
-//		Fvector tmp, tmp1; tmp1.set(0, .1f, 0);
-//		dbg_draw_piramid(tmp.add(IStartT.Pos, tmp1), IStartT.Vel, size, -IStartT.o_model, color_rgba(155, 0, 0, 155));
 		dbg_draw_piramid(IRec.Pos, IRec.Vel, size, -IRec.o_model, color_rgba(0, 0, 255, 255));
-//		dbg_draw_piramid(tmp.add(IRecT.Pos, tmp1), IRecT.Vel, size, -IRecT.o_model, color_rgba(0, 0, 155, 155));
 		dbg_draw_piramid(IEnd.Pos, IEnd.Vel, size, -IEnd.o_model, color_rgba(0, 255, 0, 255));
-//		dbg_draw_piramid(tmp.add(IEndT.Pos, tmp1), IEndT.Vel, size, -IEndT.o_model, color_rgba(0, 155, 0, 155));
 		dbg_draw_piramid(NET_Last.p_pos, NET_Last.p_velocity, size*3/4, -NET_Last.o_model, color_rgba(255, 255, 255, 255));
 		
 		Fmatrix MS, MH, ML, *pM = NULL;
@@ -1486,7 +1375,7 @@ void	CActor::OnRender_Network()
 		MS.translate(0, 0.2f, 0);
 		MH.translate(0, 0.2f, 0);
 
-		Fvector point0S, point1S, point0H, point1H, point0L, point1L, *ppoint0 = NULL, *ppoint1 = NULL;
+		Fvector point0S, point1S, point0H, point1H, point0L, point1L, *ppoint0 = nullptr, *ppoint1 = nullptr;
 		Fvector tS, tH;
 		u32	cColor = 0, sColor = 0;
 		VIS_POSITION*	pLastPos = NULL;
@@ -1500,7 +1389,7 @@ void	CActor::OnRender_Network()
 
 		//drawing path trajectory
 		float c = 0;
-		for (int i=0; i<11; i++)
+		for (int i = 0; i<11; i++)
 		{
 			c = float(i) * 0.1f;
 			for (u32 k=0; k<3; k++)
@@ -1510,9 +1399,8 @@ void	CActor::OnRender_Network()
 				point1L[k] = IStart.Pos[k] + c*(IEnd.Pos[k]-IStart.Pos[k]);
 			};
 			if (i!=0)
-			{
 				Level().debug_renderer().draw_line(*pM, *ppoint0, *ppoint1, cColor);
-			};
+
 			point0S.set(point1S);
 			point0H.set(point1H);
 			point0L.set(point1L);
