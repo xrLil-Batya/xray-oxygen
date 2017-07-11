@@ -598,6 +598,11 @@ char* XMLDocument::Identify( char* p, XMLNode** node )
         TIXMLASSERT( p );
         return p;
     }
+    //#GIPERION: very, very special case for files, that have very strange '-' sign. I don't clearly understand wtf, but... ohh...
+    while (*p == '-')
+    {
+        p = XMLUtil::SkipWhiteSpace(++p);
+    }
 
     // These strings define the matching patterns:
     static const char* xmlHeader		= { "<?" };
@@ -1032,9 +1037,9 @@ char* XMLText::ParseDeep( char* p, StrPair* )
             flags |= StrPair::NEEDS_WHITESPACE_COLLAPSING;
         }
 
-        p = _value.ParseText( p, "<", flags );
+        p = _value.ParseText( p, "</", flags );
         if ( p && *p ) {
-            return p-1;
+            return p-2;
         }
         if ( !p ) {
             _document->SetError( XML_ERROR_PARSING_TEXT, start, 0 );

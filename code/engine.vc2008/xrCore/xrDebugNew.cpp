@@ -146,7 +146,14 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
  	ShowWindow(wnd, SW_MINIMIZE);
  	while (ShowCursor(TRUE) < 0);
  
+#ifndef DEBUG
 	do_exit("Please, see log-file for details.");
+#else
+    //#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
+
+    //THIS IS FINE!
+    DebugBreak();
+#endif
 }
 
 const char* xrDebug::error2string	(long code)

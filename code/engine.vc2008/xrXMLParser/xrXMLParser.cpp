@@ -3,7 +3,6 @@
 
 #include "xrXMLParser.h"
 
-
 XRXMLPARSER_API CXml::CXml()
 	:	m_root			(NULL),
 		m_pLocalRoot	(NULL)
@@ -19,6 +18,16 @@ void CXml::ClearInternal()
 	m_Doc.Clear();
 }
 
+inline char* ClearFromWhitespace(char* str)
+{
+    while (*str == ' ')
+    {
+        ++str;
+    }
+
+    return str;
+}
+
 void ParseFile(const char* path, CMemoryWriter& W, IReader *F, CXml* xml )
 {
 	string4096	str;
@@ -27,7 +36,9 @@ void ParseFile(const char* path, CMemoryWriter& W, IReader *F, CXml* xml )
 	{
 		F->r_string		(str,sizeof(str));
 
-		if (str[0] == '#' && strstr(str,"#include"))
+        char* ClearStr = ClearFromWhitespace(str);
+
+		if (ClearStr[0] == '#' && strstr(ClearStr,"#include"))
 		{
 			string256	inc_name;	
 			if (_GetItem	(str,1,inc_name,'"'))

@@ -315,7 +315,7 @@ void CInput::MouseUpdate()
 		return;
 #endif
 	BOOL				mouse_prev[COUNT_MOUSE_BUTTONS];
-	for(u16 i; i < 8; i++)
+	for(u16 i = 0; i < 8; i++)
 		mouse_prev[i] = mouseState[i];
 
 	offs[0] = offs[1] = offs[2] = 0;

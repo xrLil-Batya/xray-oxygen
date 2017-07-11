@@ -102,6 +102,12 @@ void CStringTable::ReparseKeyBindings()
 STRING_VALUE CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
 {
 //	LPCSTR str = "1 $$action_left$$ 2 $$action_right$$ 3 $$action_left$$ 4";
+    if (str == nullptr)
+    {
+        //doesn't have localization info, display as key
+        return STRING_VALUE(skey);
+    }
+
 	xr_string			res;
 	int k = 0;
 	const char*			b;
