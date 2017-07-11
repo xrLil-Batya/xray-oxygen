@@ -747,7 +747,10 @@ void CScriptStorage::print_error(lua_State *L, int iErrorCode)
 #ifdef DEBUG
 void CScriptStorage::flush_log()
 {
-	m_output.save_to(lua_log_file_name);
+    if (xr_strlen(lua_log_file_name) > 0)
+    {
+	    m_output.save_to(lua_log_file_name);
+    }
 }
 #endif // DEBUG
 
