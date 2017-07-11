@@ -50,14 +50,14 @@ void CUIGameCustom::OnFrame()
 {
 	CDialogHolder::OnFrame();
 	
-	for (auto item : CustomStatics)
+	for (SDrawStaticStruct* item : m_custom_statics)
 		item->Update();
 	
 	auto comparer = [](const SDrawStaticStruct* s1, const SDrawStaticStruct* s2)
 	{
 		return s1->IsActual() > s2->IsActual();
 	};
-	std::sort(CustomStatics.begin(), CustomStatics.end(), comparer);
+	std::sort(m_custom_statics.begin(), m_custom_statics.end(), comparer);
  
 	while(!m_custom_statics.empty() && !m_custom_statics.back()->IsActual())
 	{

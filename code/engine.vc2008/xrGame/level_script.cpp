@@ -834,7 +834,8 @@ void CLevel::script_register(lua_State *L)
 		],
 
 		def("command_line",						&command_line),
-		def("IsGameTypeSingle",					&IsGameTypeSingle),
+#pragma todo("Giperion to all : Possibly earlier IsGameTypeSingle be a variable, but now it's a function, which can't be exposed to lua so easily")
+		//def("IsGameTypeSingle",					&IsGameTypeSingle()),
 		def("IsDynamicMusic",					&IsDynamicMusic),
 		def("render_get_dx_level",				&render_get_dx_level),
 		def("IsImportantSave",					&IsImportantSave)
