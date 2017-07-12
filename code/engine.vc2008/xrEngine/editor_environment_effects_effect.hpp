@@ -5,12 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment effects effect class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_EFFECTS_EFFECT_HPP_INCLUDED
-#define EDITOR_WEATHER_EFFECTS_EFFECT_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
-
 #include "../include/editor/property_holder.hpp"
 #include "environment.h"
 
@@ -69,5 +66,3 @@ public:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_EFFECTS_EFFECT_HPP_INCLUDED

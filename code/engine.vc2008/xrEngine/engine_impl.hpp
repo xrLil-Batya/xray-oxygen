@@ -5,9 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : engine implementation class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef ENGINE_IMPL_HPP_INCLUDED
-#define ENGINE_IMPL_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
 
@@ -84,5 +82,3 @@ private:
 }; // class engine_impl
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef ENGINE_IMPL_HPP_INCLUDED

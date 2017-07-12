@@ -1,7 +1,4 @@
 //----------------------------------------------------
-#ifndef BoneH
-#define BoneH
-
 // refs
 class CBone;
 
@@ -234,15 +231,11 @@ struct ECORE_API SJointIKData
         	// Kostya Slipchenko say:
             // направление вращения в ОДЕ отличается от направления вращение в X-Ray 
             // поэтому меняем знак у лимитов
-            //F.w_float	(_min(-limits[k].limit.x,-limits[k].limit.y)); // min (swap special for ODE) 
-            //F.w_float	(_max(-limits[k].limit.x,-limits[k].limit.y)); // max (swap special for ODE)
-
 			VERIFY(std::min(-limits[k].limit.x,-limits[k].limit.y) == -limits[k].limit.y );
 			VERIFY(std::max(-limits[k].limit.x,-limits[k].limit.y) == -limits[k].limit.x );
 			
 			F.w_float	(-limits[k].limit.y); // min (swap special for ODE) 
             F.w_float	(-limits[k].limit.x); // max (swap special for ODE)
-
 
             F.w_float	(limits[k].spring_factor);
             F.w_float	(limits[k].damping_factor);
@@ -277,8 +270,7 @@ struct ECORE_API SJointIKData
 
 class 	IBoneData
 {
-	public:
-
+public:
 	virtual			IBoneData&	_BCL	GetChild		( u16 id )			= 0;
 	virtual const	IBoneData&	_BCL	GetChild		( u16 id )	const	= 0;
 	virtual			u16			_BCL	GetSelfID		( )			const	= 0;
@@ -322,10 +314,6 @@ class ENGINE_API CBone:
 	Fmatrix				local_rest_transform;
     Fmatrix			    rest_transform;
     Fmatrix			    rest_i_transform;
-
-    //Fmatrix			    last_transform;
-
-    //Fmatrix				render_transform;
 public:
 	int				    SelfID;
     CBone*			    parent;
@@ -387,9 +375,6 @@ IC	float	_BCL		engine_hi_limit ( u8 k ) const	{ return -IK_data.limits[k].limit.
 
 IC	float	_BCL		editor_lo_limit ( u8 k ) const	{ return IK_data.limits[k].limit.x; }
 IC	float	_BCL		editor_hi_limit ( u8 k ) const	{ return IK_data.limits[k].limit.y; }
-
-
-
 
 	void			    SaveData		(IWriter& F);
 	void			    LoadData		(IReader& F);
@@ -453,7 +438,6 @@ protected:
 public:
 	shared_str			name;
 
-
 	Fobb				obb;			
 
 	Fmatrix				bind_transform;
@@ -464,7 +448,6 @@ public:
 	SJointIKData		IK_data;
 	float				mass;
 	Fvector				center_of_mass;
-
 
 	vecBones			children;		// bones which are slaves to this
 
@@ -532,6 +515,3 @@ IC void		CBoneInstance::construct	()
 	mRenderTransform.identity	();
 	Callback_overwrite			= FALSE;
 }
-
-
-#endif

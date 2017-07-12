@@ -1,14 +1,5 @@
-#ifndef	xrSASH_included
-#define	xrSASH_included
 #pragma once
-
 #include "OpenAutomate/OpenAutomate.h"
-
-//struct oaOptionDependencyStruct;
-//typedef struct oaOptionDependencyStruct oaOptionDependency;
-
-//struct oaNamedOptionStruct;
-//typedef struct oaNamedOptionStruct oaNamedOption;
 
 class ENGINE_API xrSASH
 {
@@ -77,5 +68,3 @@ private:
 };
 
 extern xrSASH ENGINE_API g_SASH;
-
-#endif	//	xrSASH_included

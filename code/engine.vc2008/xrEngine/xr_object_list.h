@@ -1,6 +1,4 @@
-#ifndef __XR_OBJECT_LIST_H__
-#define __XR_OBJECT_LIST_H__
-
+#pragma once
 // refs
 class	ENGINE_API	CObject;
 class	NET_Packet	;
@@ -97,5 +95,3 @@ private:
 	static	void				clear_crow_vec		(Objects& o);
 	static	void				dump_list			(Objects& v, LPCSTR reason);
 };
-
-#endif //__XR_OBJECT_LIST_H__

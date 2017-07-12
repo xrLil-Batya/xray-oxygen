@@ -1,5 +1,4 @@
-#ifndef __X_RAY_H__
-#define __X_RAY_H__
+#pragma once
 
 // refs
 class ENGINE_API CGameFont;
@@ -73,5 +72,3 @@ public:
 };
 
 extern ENGINE_API	CApplication*	pApp;
-
-#endif //__XR_BASE_H__

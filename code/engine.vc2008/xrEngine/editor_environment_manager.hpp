@@ -5,12 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment manager class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_ENVIRONMENT_MANAGER_HPP_INCLUDED
-#define EDITOR_ENVIRONMENT_MANAGER_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
-
 #include "environment.h"
 
 namespace editor {
@@ -114,7 +111,4 @@ private:
 }; // class manager
 } // namespace environment
 } // namespace editor
-
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_ENVIRONMENT_MANAGER_HPP_INCLUDED

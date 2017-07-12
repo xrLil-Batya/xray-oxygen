@@ -5,12 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment ambients manager class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_AMBIENTS_MANAGER_HPP_INCLUDED
-#define EDITOR_WEATHER_AMBIENTS_MANAGER_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
-
 #include "property_collection_forward.hpp"
 
 namespace editor {
@@ -76,5 +73,3 @@ private:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_AMBIENTS_MANAGER_HPP_INCLUDED

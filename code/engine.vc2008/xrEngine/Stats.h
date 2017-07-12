@@ -1,9 +1,6 @@
 // Stats.h: interface for the CStats class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_STATS_H__4C8D1860_0EE2_11D4_B4E3_4854E82A090D__INCLUDED_)
-#define AFX_STATS_H__4C8D1860_0EE2_11D4_B4E3_4854E82A090D__INCLUDED_
 #pragma once
 
 class ENGINE_API CGameFont;
@@ -44,9 +41,6 @@ public:
 	u32			Particles_starting;	// starting
 	u32			Particles_active;	// active
 	u32			Particles_destroy;	// destroying
-//	CStatTimer	Physics;			// movement+collision
-//	CStatTimer	ph_collision;		// collision
-//	CStatTimer	ph_core;			// collision
 	CStatTimer	AI_Think;			// thinking
 	CStatTimer	AI_Range;			// query: range
 	CStatTimer	AI_Path;			// query: path
@@ -130,5 +124,3 @@ enum{
 };
 
 extern Flags32 g_stats_flags;
-
-#endif // !defined(AFX_STATS_H__4C8D1860_0EE2_11D4_B4E3_4854E82A090D__INCLUDED_)

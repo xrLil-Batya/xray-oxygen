@@ -5,12 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment ambients sound identifier class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_AMBIENTS_SOUND_HPP_INCLUDED
-#define EDITOR_WEATHER_AMBIENTS_SOUND_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
-
 #include "../include/editor/property_holder.hpp"
 
 namespace editor {
@@ -54,5 +51,3 @@ private:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_AMBIENTS_SOUND_HPP_INCLUDED

@@ -9,44 +9,26 @@
 
 void SJointIKData::clamp_by_limits(Fvector& dest_xyz)
 {
-	switch (type){
-    case jtRigid:
-		dest_xyz.set(0.f,0.f,0.f);
-    break;
-    case jtJoint:
-		clamp(dest_xyz.x,limits[0].limit.x,limits[0].limit.y);
-		clamp(dest_xyz.y,limits[1].limit.x,limits[1].limit.y);
-		clamp(dest_xyz.z,limits[2].limit.x,limits[2].limit.y);
-    break;
-    case jtWheel:
-		clamp(dest_xyz.x,limits[0].limit.x,limits[0].limit.y);		dest_xyz.y=0;
-    break;
-    case jtSlider:
-    	dest_xyz.x = 0.f;
-    	dest_xyz.y = 0.f;
-		clamp(dest_xyz.z,limits[1].limit.x,limits[1].limit.y);
-    break;
-/*
-    case jtWheelXZ:
-		clamp(dest_xyz.x,limits[0].limit.x,limits[0].limit.y);		dest_xyz.y=0;
-    break;
-    case jtWheelXY:
-		clamp(dest_xyz.x,limits[0].limit.x,limits[0].limit.y);		dest_xyz.z=0;
-    break;
-    case jtWheelYX:
-		clamp(dest_xyz.y,limits[1].limit.x,limits[1].limit.y);		dest_xyz.z=0;
-    break;
-    case jtWheelYZ:
-		clamp(dest_xyz.y,limits[1].limit.x,limits[1].limit.y);		dest_xyz.x=0;
-    break;
-    case jtWheelZX:
-		clamp(dest_xyz.z,limits[2].limit.x,limits[2].limit.y);		dest_xyz.y=0;
-    break;
-    case jtWheelZY:
-		clamp(dest_xyz.z,limits[2].limit.x,limits[2].limit.y);		dest_xyz.x=0;
-    break;
-*/
-    }
+	switch (type)
+	{
+		case jtRigid:
+			dest_xyz.set(0.f,0.f,0.f);
+			break;
+		case jtJoint:
+			clamp(dest_xyz.x,limits[0].limit.x,limits[0].limit.y);
+			clamp(dest_xyz.y,limits[1].limit.x,limits[1].limit.y);
+			clamp(dest_xyz.z,limits[2].limit.x,limits[2].limit.y);
+			break;
+		case jtWheel:
+			clamp(dest_xyz.x,limits[0].limit.x,limits[0].limit.y);		
+			dest_xyz.y=0;
+			break;
+		case jtSlider:
+			dest_xyz.x = 0.f;
+			dest_xyz.y = 0.f;
+			clamp(dest_xyz.z,limits[1].limit.x,limits[1].limit.y);
+			break;
+	}
 }
 
 void CBone::ShapeScale(const Fvector& _amount)
@@ -54,9 +36,6 @@ void CBone::ShapeScale(const Fvector& _amount)
 	switch (shape.type){
     case SBoneShape::stBox:{
         Fvector amount=_amount;
-//		Fmatrix _IT;_IT.invert(_LTransform());
-//		_IT.transform_dir(amount,_amount);
-//		if (Tools->GetSettings(etfCSParent)) _IT.transform_dir(amount);
     	shape.box.m_halfsize.add(amount);		
         if (shape.box.m_halfsize.x<EPS) shape.box.m_halfsize.x=EPS;
         if (shape.box.m_halfsize.y<EPS) shape.box.m_halfsize.y=EPS;
@@ -149,26 +128,6 @@ void CBone::BoneRotate(const Fvector& _axis, float angle)
             mot_rotate.z += _axis.z*angle;
         	
         	ClampByLimits		();
-/*            
-			Fmatrix mBind,mBindI,mLocal,mRotate,mLocalBP;
-            mBind.setXYZi		(rest_rotate);
-            mBindI.invert		(mBind);
-            mLocal.setXYZi		(mot_rotate);
-            Fvector axis;
-            mBind.transform		(axis,_axis);
-            mRotate.rotation	(axis,angle);
-            mLocal.mulA			(mRotate);
-
-            mLocalBP.mul		(mBindI,mLocal);
-			Fvector mot;
-            mLocalBP.getXYZi	(mot);
-
-            IK_data.clamp_by_limits(mot);
-
-            mLocalBP.setXYZi	(mot);
-            mLocal.mul			(mBind,mLocalBP);
-            mLocal.getXYZi		(mot_rotate);
-*/
         }else{
         // local CS
 			Fmatrix mBind,mBindI,mRotate,mLocal,mLocalBP;
@@ -253,10 +212,6 @@ bool CBone::ExportOGF(IWriter& F)
     F.w			(&shape,sizeof(SBoneShape));
 
     IK_data.Export(F);
-
-//	Fvector xyz;
-//	Fmatrix& R	= _RTransform();
-//	R.getXYZi	(xyz);
 
     F.w_fvector3(rest_rotate);
     F.w_fvector3(rest_offset);

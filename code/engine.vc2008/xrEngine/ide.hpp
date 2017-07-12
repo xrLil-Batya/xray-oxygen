@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor ide function
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef IDE_HPP_INCLUDED
-#define IDE_HPP_INCLUDED
-
+#pragma once
 #ifdef INGAME_EDITOR
 
 #include "../include/editor/ide.hpp"
@@ -24,5 +21,3 @@ inline editor::ide&	ide	()
 }
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef IDE_HPP_INCLUDED

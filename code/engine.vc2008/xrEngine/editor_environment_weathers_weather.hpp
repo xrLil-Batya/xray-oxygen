@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment weathers weather class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_ENVIRONMENT_WEATHERS_WEATHER_HPP_INCLUDED
-#define EDITOR_ENVIRONMENT_WEATHERS_WEATHER_HPP_INCLUDED
-
+#pragma once
 #ifdef INGAME_EDITOR
 
 #include "../include/editor/property_holder.hpp"
@@ -88,5 +85,3 @@ public:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_ENVIRONMENT_WEATHERS_WEATHER_HPP_INCLUDED

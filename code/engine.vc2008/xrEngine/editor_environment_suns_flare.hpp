@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment suns flare class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_FLARE_HPP_INCLUDED
-#define EDITOR_WEATHER_FLARE_HPP_INCLUDED
-
+#pragma once
 #ifdef INGAME_EDITOR
 
 #include "../include/editor/property_holder.hpp"
@@ -48,5 +45,3 @@ public:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_FLARE_HPP_INCLUDED

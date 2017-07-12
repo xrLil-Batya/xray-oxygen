@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment suns blend class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_SUNS_BLEND_HPP_INCLUDED
-#define EDITOR_WEATHER_SUNS_BLEND_HPP_INCLUDED
-
+#pragma once
 #ifdef INGAME_EDITOR
 
 namespace editor {
@@ -41,5 +38,3 @@ private:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_SUNS_BLEND_HPP_INCLUDED

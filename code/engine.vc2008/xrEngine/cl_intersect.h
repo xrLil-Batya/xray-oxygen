@@ -1,6 +1,6 @@
 //---------------------------------------------------------------------------
-#ifndef intersectH
-#define intersectH
+#pragma once
+#pragma todo("FX to all: move this file into xrCDB")
 
 namespace CDB
 {
@@ -742,6 +742,3 @@ namespace CDB
 	}
 //----------------------------------------------------------------------------
 };
-
-
-#endif

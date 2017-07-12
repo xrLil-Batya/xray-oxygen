@@ -5,12 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment levels manager class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_LEVELS_MANAGER_HPP_INCLUDED
-#define EDITOR_WEATHER_LEVELS_MANAGER_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
-
 #include "../xrserverentities/associative_vector.h"
 
 namespace editor {
@@ -65,5 +62,3 @@ private:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_LEVELS_MANAGER_HPP_INCLUDED

@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment sound channels manager class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_WEATHER_SOUND_CHANNELS_MANAGER_HPP_INCLUDED
-#define EDITOR_WEATHER_SOUND_CHANNELS_MANAGER_HPP_INCLUDED
-
+#pragma once
 #ifdef INGAME_EDITOR
 
 #include "property_collection_forward.hpp"
@@ -59,5 +56,3 @@ private:
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_WEATHER_SOUND_CHANNELS_MANAGER_HPP_INCLUDED

@@ -5,12 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : editor environment detail namespace
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef EDITOR_ENVIRONMENT_DETAIL_HPP_INCLUDED
-#define EDITOR_ENVIRONMENT_DETAIL_HPP_INCLUDED
+#pragma once
 
 #ifdef INGAME_EDITOR
-
 namespace editor {
 namespace environment {
 namespace detail {
@@ -27,5 +24,3 @@ struct logical_string_predicate {
 } // namespace editor
 
 #endif // #ifdef INGAME_EDITOR
-
-#endif // ifndef EDITOR_ENVIRONMENT_DETAIL_HPP_INCLUDED

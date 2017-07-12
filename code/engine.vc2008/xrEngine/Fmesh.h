@@ -1,9 +1,4 @@
-#ifndef fmeshH
-#define fmeshH
 #pragma once
-
-//BOOL ValidateIndices		(u32 vCount, u32 iCount, u16* pIndices);
-
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 // MESH as it is represented in file
 enum MT {
@@ -150,4 +145,3 @@ struct ENGINE_API	FSlideWindowItem	{
 // scale : vec4
 // bias  : vec4
 
-#endif // fmeshH

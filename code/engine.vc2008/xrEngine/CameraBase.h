@@ -1,9 +1,5 @@
 // CameraBase.h: interface for the CCameraBase class.
-//
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_CAMERABASE_H__B11F8AE1_1213_11D4_B4E3_4854E82A090D__INCLUDED_)
-#define AFX_CAMERABASE_H__B11F8AE1_1213_11D4_B4E3_4854E82A090D__INCLUDED_
 #pragma once
 
 #include "CameraDefs.h"
@@ -66,7 +62,6 @@ public:
 	virtual float	CheckLimRoll	( );
 };
 
-
 template<typename T>
 IC void tviewport_size( CRenderDeviceBase& D, float _viewport_near, const T &cam_info, float& h_w, float& h_h)
 {
@@ -82,5 +77,3 @@ IC void viewport_size(  float _viewport_near, const T &cam_info, float& h_w, flo
 {
 	tviewport_size<T>( Device, _viewport_near, cam_info, h_w, h_h );
 }
-
-#endif // !defined(AFX_CAMERABASE_H__B11F8AE1_1213_11D4_B4E3_4854E82A090D__INCLUDED_)

@@ -1,5 +1,4 @@
-#ifndef _PURE_H_AAA_
-#define _PURE_H_AAA_
+#pragma once
 
 // messages
 #define REG_PRIORITY_LOW		0x11111111ul
@@ -31,8 +30,6 @@ struct _REG_INFO {
 	int		Prio;
 	u32		Flags;
 };
-
-//ENGINE_API extern int	__cdecl	_REG_Compare(const void *, const void *);
 
 template <class T> class CRegistrator		// the registrator itself
 {
@@ -99,5 +96,3 @@ public:
 		changed				= false;
 	};
 };
-
-#endif

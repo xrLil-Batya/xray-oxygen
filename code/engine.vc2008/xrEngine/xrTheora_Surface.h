@@ -1,5 +1,3 @@
-#ifndef xrTheora_SurfaceH
-#define xrTheora_SurfaceH
 #pragma once
 
 #ifdef SDL_OUTPUT
@@ -54,5 +52,3 @@ public:
 	u32					Width				(bool bRealSize);
 	u32					Height				(bool bRealSize);
 };
-
-#endif //xrTheora_SurfaceH
