@@ -392,7 +392,9 @@ bool CScriptStorage::parse_namespace(const char* caNamespaceName, char* b, u32 c
 {
 	*b = 0;
 	*c = 0;
-	char* S = const_cast<char*>(caNamespaceName);
+    LPSTR			S2;
+    STRCONCAT(S2, caNamespaceName);
+    LPSTR			S = S2;
 	for (int i = 0;; ++i)
 	{
 		if (!xr_strlen(S))
@@ -553,7 +555,9 @@ bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 	lua_pushstring(lua(), "_G");
 	lua_rawget(lua(), LUA_GLOBALSINDEX);
 
-	char*					S = const_cast<char*>(N);
+    string256				S2;
+    xr_strcpy(S2, N);
+    LPSTR					S = S2;
 	for (;;) {
 		if (!xr_strlen(S))
 		{
@@ -632,12 +636,14 @@ bool CScriptStorage::object(const char* namespace_name, const char* identifier, 
 
 luabind::object CScriptStorage::name_space(const char* namespace_name)
 {
-	char* S = const_cast<char*>(namespace_name);
+    string256			S1;
+    xr_strcpy(S1, namespace_name);
+    LPSTR				S = S1;
 	luabind::object		lua_namespace = luabind::get_globals(lua());
 	for (;;) {
 		if (!xr_strlen(S))
 			return		(lua_namespace);
-		LPSTR			I = strchr(const_cast<char*>(S), '.');
+		LPSTR			I = strchr(S, '.');
 		if (!I)
 			return		(lua_namespace[S]);
 		*I = 0;
