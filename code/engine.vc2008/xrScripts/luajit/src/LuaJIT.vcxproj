@@ -100,6 +100,12 @@
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>LUA_CORE;LUA_DLL;LUA_BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
+    <PreBuildEvent>
+      <Command>buildvm -m peobj -o lj_vm.obj</Command>
+    </PreBuildEvent>
+    <PreBuildEvent>
+      <Message>Create lj_vm.obj</Message>
+    </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <Link>
