@@ -34,9 +34,7 @@
 #include "stdlib.h"
 
 #include <algorithm>
-
-
-
+#include <random>
 #define ALLOCA dALLOCA16
 
 typedef const dReal *dRealPtr;
@@ -153,22 +151,6 @@ static void multiply_J (int m, dRealMutablePtr J, int *jb,
 		out[i] = sum;
 	}
 }
-
-
-// compute out = (J*inv(M)*J' + cfm)*in.
-// use z as an nb*6 temporary.
-/*
-static void multiply_J_invM_JT (int m, int nb, dRealMutablePtr J, dRealMutablePtr iMJ, int *jb,
-	dRealPtr cfm, dRealMutablePtr z, dRealMutablePtr in, dRealMutablePtr out)
-{
-	multiply_invM_JT (m,nb,iMJ,jb,in,z);
-	multiply_J (m,J,jb,z,out);
-
-	// add cfm
-	for (int i=0; i<m; i++) out[i] += cfm[i] * in[i];
-}
-*/
-
 //***************************************************************************
 // conjugate gradient method with jacobi preconditioner
 // THIS IS EXPERIMENTAL CODE that doesn't work too well, so it is ifdefed out.
@@ -247,7 +229,7 @@ static void CG_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *b
 			break;
 		}
 		
-		if (iteration==0) {
+		if (!iteration) {
 			memcpy (p,z,m*sizeof(dReal));	// p = z
 		}
 		else {
@@ -265,14 +247,6 @@ static void CG_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *b
 
 	// compute fc = inv(M)*J'*lambda
 	multiply_invM_JT (m,nb,iMJ,jb,lambda,fc);
-
-#if 0
-	// measure solution error
-	multiply_J_invM_JT (m,nb,J,iMJ,jb,cfm,fc,lambda,r);
-	dReal error = 0;
-	for (i=0; i<m; i++) error += dFabs(r[i] - b[i]);
-	printf ("lambda error = %10.6e\n",error);
-#endif
 }
 
 #endif
@@ -312,6 +286,8 @@ static  __cdecl  int compare_index_error (const void *a, const void *b)
 }
 
 #endif
+
+static thread_local auto rng = std::mt19937(std::random_device()());
 
 static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *body,
 					 dRealPtr invI, dRealMutablePtr lambda, dRealMutablePtr fc, dRealMutablePtr b,
@@ -424,19 +400,9 @@ static void SOR_LCP (int m, int nb, dRealMutablePtr J, int *jb, dxBody * const *
 		qsort (order,m,sizeof(IndexError),&compare_index_error);
 #endif
 #ifdef RANDOMLY_REORDER_CONSTRAINTS
-		if ((iteration & 3) == 0) {
-			std::random_shuffle	(order,order+m);
-			/*
-			for (i=1; i<m; ++i) {
-				IndexError tmp = order[i];
-				int swapi = dRandInt(i+1);
-				order[i] = order[swapi];
-				order[swapi] = tmp;
-			}
-			*/
-		}
+		if (!(iteration & 3)) 
+			std::shuffle(order,order+m, rng);
 #endif
-
 		//@@@ potential optimization: swap lambda and last_lambda pointers rather
 		//    than copying the data. we must make sure lambda is properly
 		//    returned to the caller
