@@ -1,9 +1,11 @@
 ////////////////////////////////////////////////////////////////////////////
 //	Module 		: lua_tools.h
 //	Created 	: 29.07.2014
-//  Modified 	: 12.07.2017
 //	Author		: Alexander Petrov
-//	Modifer		: ForserX
+////////////////////////////////////////////////////////////////////////////
+//	Module 		: lua_traceback.h
+//  Created 	: 12.07.2017
+//	Author		: ForserX
 //	Description : Lua functionality extension
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
@@ -18,7 +20,7 @@ extern "C" {
 class SCRIPT_API CLua_Traceback
 {
 public:
-	CLua_Traceback(lua_State *L, int depth) { get_traceback(L, depth) ;};
+	CLua_Traceback(lua_State *LVM, int depth) { get_traceback(LVM, depth) ;};
 	
 private:
 	void get_traceback(lua_State *L, int depth);
