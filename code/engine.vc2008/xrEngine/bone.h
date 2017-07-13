@@ -1,5 +1,6 @@
 //----------------------------------------------------
 // refs
+#pragma once
 class CBone;
 
 #define	BI_NONE				(u16(-1))
@@ -8,17 +9,14 @@ class CBone;
 
 #define	MAX_BONE_PARAMS		4
 
-class ENGINE_API CBoneInstance;
-// callback
-typedef void  _BCL BoneCallbackFunction	(CBoneInstance* P);
-typedef		BoneCallbackFunction*		BoneCallback;
-//typedef void  (* BoneCallback)		(CBoneInstance* P);
-
 //*** Bone Instance *******************************************************************************
 #pragma pack(push,8)
 class ENGINE_API		CBoneInstance
 {
 public:
+    typedef void  __stdcall BoneCallbackFunction(CBoneInstance* P);
+    typedef		BoneCallbackFunction*		BoneCallback;
+
 	// data
 	Fmatrix				mTransform;							// final x-form matrix (local to model)
 	Fmatrix				mRenderTransform;					// final x-form matrix (model_base -> bone -> model)
@@ -32,12 +30,12 @@ public:
 	//
 	// methods
 public:
-	IC	BoneCallback	_BCL	callback()					{ return  Callback; }
-	IC	void*			_BCL	callback_param()			{ return Callback_Param;	}
-	IC	BOOL			_BCL	callback_overwrite()		{ return Callback_overwrite; }					// performance hint - don't calc anims
-	IC	u32				_BCL	callback_type()				{ return Callback_type; }	
+	IC	BoneCallback	__stdcall	callback()					{ return  Callback; }
+	IC	void*			__stdcall	callback_param()			{ return Callback_Param;	}
+	IC	BOOL			__stdcall	callback_overwrite()		{ return Callback_overwrite; }					// performance hint - don't calc anims
+	IC	u32				__stdcall	callback_type()				{ return Callback_type; }
 public:
-	IC void				_BCL	construct();
+	IC void				__stdcall	construct();
 
 	void	_BCL set_callback	(u32 Type, BoneCallback C, void* Param,  BOOL overwrite=FALSE)
 	{	

@@ -266,7 +266,7 @@ void CIKLimbsController::Calculate( )
 	CBoneInstance &root_bi = K->LL_GetBoneInstance(root);
 
 	BOOL sv_root_cb_ovwr = root_bi.callback_overwrite();
-	BoneCallback sv_root_cb =		root_bi.callback();
+    CBoneInstance::BoneCallback sv_root_cb =		root_bi.callback();
 
 	root_bi.set_callback( root_bi.callback_type(), 0, root_bi.callback_param(), TRUE );
 

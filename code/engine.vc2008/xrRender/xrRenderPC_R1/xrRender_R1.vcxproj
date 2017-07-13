@@ -283,7 +283,7 @@
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>$(DXSDK_DIR)Lib\x86;..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Configuration);..\..\..\..\libraries\$(Configuration);..\..\..\sdk\libraries\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>

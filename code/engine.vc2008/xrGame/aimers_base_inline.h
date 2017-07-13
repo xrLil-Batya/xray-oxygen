@@ -21,7 +21,7 @@ inline void aimers::base::fill_bones	(
 
 	u16 const root_bone_id				= m_kinematics.LL_GetBoneRoot();
 	CBoneInstance& root_bone			= m_kinematics.LL_GetBoneInstance(root_bone_id);
-	BoneCallback callback				= root_bone.callback();
+    CBoneInstance::BoneCallback callback				= root_bone.callback();
 	void* callback_params				= root_bone.callback_param();
 
 	if (!m_animation_start || !m_object.animation_movement() || !m_object.animation_movement()->IsBlending())

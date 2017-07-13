@@ -31,12 +31,12 @@
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return ((baseclass*)mData)+1;	}	\
-		inline_			udword				GetPrimitive()	const	{ return (mData>>1);			}	\
+		inline_			udword				GetPrimitive()	const	{ return ((udword)(mData>>1));	}	\
 		/* Stats */																						\
 		inline_			udword				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
 						volume				mAABB;														\
-						udword				mData;
+						uqword				mData;
 
 	//! Common interface for a node of a no-leaf tree
 	#define IMPLEMENT_NOLEAF_NODE(baseclass, volume)													\
@@ -50,14 +50,14 @@
 		/* Data access */																				\
 		inline_			const baseclass*	GetPos()		const	{ return (baseclass*)mData;		}	\
 		inline_			const baseclass*	GetNeg()		const	{ return (baseclass*)mData2;	}	\
-		inline_			udword				GetPrimitive()	const	{ return (mData>>1);			}	\
-		inline_			udword				GetPrimitive2()	const	{ return (mData2>>1);			}	\
+		inline_			udword				GetPrimitive()	const	{ return (((udword)mData)>>1);	}	\
+		inline_			udword				GetPrimitive2()	const	{ return (((udword)mData2)>>1);	}	\
 		/* Stats */																						\
 		inline_			udword				GetNodeSize()	const	{ return SIZEOFOBJECT;			}	\
 																										\
 						volume				mAABB;														\
-						udword				mData;														\
-						udword				mData2;
+						uqword				mData;														\
+						uqword				mData2;
 
 	class OPCODE_API AABBCollisionNode
 	{

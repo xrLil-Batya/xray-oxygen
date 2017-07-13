@@ -114,7 +114,7 @@ static void _BuildCollisionTree(AABBCollisionNode* linear, const udword boxid, u
 		udword PosID = curid++;	// Get a new id for positive child
 		udword NegID = curid++;	// Get a new id for negative child
 		// Setup box data as the forthcoming new P pointer
-		linear[boxid].mData = (udword)&linear[PosID];
+		linear[boxid].mData = (uqword)&linear[PosID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[boxid].mData&1));
 		// Recurse with new IDs
@@ -167,7 +167,7 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
 		// Get a new id for positive child
 		udword PosID = curid++;
 		// Setup box data
-		linear[boxid].mData = (udword)&linear[PosID];
+		linear[boxid].mData = (uqword)&linear[PosID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[boxid].mData&1));
 		// Recurse
@@ -188,7 +188,7 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword boxid, udword&
 		// Get a new id for positive child
 		udword NegID = curid++;
 		// Setup box data
-		linear[boxid].mData2 = (udword)&linear[NegID];
+		linear[boxid].mData2 = (uqword)&linear[NegID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[boxid].mData2&1));
 		// Recurse
@@ -392,8 +392,8 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	if(!(Data&1))													\
 	{																\
 		/* Compute box number */									\
-		udword Nb = (Data - udword(Nodes))/Nodes[i].GetNodeSize();	\
-		Data = udword(&mNodes[Nb]);									\
+		uqword Nb = (Data - uqword(Nodes))/Nodes[i].GetNodeSize();	\
+		Data = uqword(&mNodes[Nb]);									\
 	}																\
 	/* ...remapped */												\
 	mNodes[i].member = Data;
@@ -455,7 +455,7 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 
 		// Quantize
 		udword Data;
-		for(int i=0;i<mNbNodes;i++)
+		for(udword i=0;i<mNbNodes;i++)
 		{
 			PERFORM_QUANTIZATION
 			REMAP_DATA(mData)
@@ -531,7 +531,7 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 
 		// Quantize
 		udword Data;
-		for(int i=0;i<mNbNodes;i++)
+		for(udword i=0;i<mNbNodes;i++)
 		{
 			PERFORM_QUANTIZATION
 			REMAP_DATA(mData)

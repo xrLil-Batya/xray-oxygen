@@ -177,7 +177,7 @@ void	CKinematics::BoneChain_Calculate		(const CBoneData* bd, CBoneInstance &bi, 
 	//CBlendInstance& BLEND_INST	= LL_GetBlendInstance(SelfID);
 	//CBlendInstance::BlendSVec &Blend = BLEND_INST.blend_vector();
 //ignore callbacks
-	BoneCallback bc = bi.callback();
+    CBoneInstance::BoneCallback bc = bi.callback();
 	BOOL		 ow = bi.callback_overwrite();
 	if(ignore_callbacks)
 	{

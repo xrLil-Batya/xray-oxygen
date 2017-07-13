@@ -26,7 +26,7 @@ public:
 
     void set(const void* data, const size_t size) {
         memcpy(B.data, data, size);
-        B.count = size;
+        B.count = (u32)size;
     }
 
     // writing - main
@@ -49,7 +49,7 @@ public:
         VERIFY(p && count);
         VERIFY(B.count + count < NET_PacketSizeLimit);
         std::memcpy(&B.data[B.count], p, count);
-        B.count += count;
+        B.count += (u32)count;
         VERIFY(B.count < NET_PacketSizeLimit);
     }
 
@@ -188,7 +188,7 @@ public:
     void r(void* p, const size_t count) {
         VERIFY(p && count);
         std::memcpy(p, &B.data[r_pos], count);
-        r_pos += count;
+        r_pos += (u32)count;
         VERIFY(r_pos <= B.count);
     }
 

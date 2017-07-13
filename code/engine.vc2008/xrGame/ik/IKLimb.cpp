@@ -1025,7 +1025,7 @@ struct ssaved_callback
 	{
 		_bi.set_callback( callback_type, callback, callback_param, callback_overwrite );
 	}
-	const BoneCallback		callback;					
+	const CBoneInstance::BoneCallback		callback;
 	void					*callback_param;		
 	const BOOL				callback_overwrite;	
 	const u32				callback_type;

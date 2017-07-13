@@ -347,8 +347,6 @@ void CScriptStorage::print_stack()
 #ifdef DEBUG
 	if (!m_stack_is_ready)
 		return;
-
-	m_stack_is_ready = false;
 #endif // #ifdef DEBUG
 
 	lua_State				*L = lua();

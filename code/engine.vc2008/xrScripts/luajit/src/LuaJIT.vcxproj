@@ -90,6 +90,9 @@
       <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
+    <ClCompile>
+      <PreprocessorDefinitions>LUA_DLL;LUA_BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Link>
@@ -98,7 +101,7 @@
     </Link>
     <ClCompile>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>LUA_CORE;LUA_DLL;LUA_BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>LUA_DLL;LUA_BUILD_AS_DLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <PreBuildEvent>
       <Command>buildvm -m peobj -o lj_vm.obj</Command>
@@ -188,7 +191,6 @@
     <ClCompile Include="lj_udata.c" />
     <ClCompile Include="lj_vmevent.c" />
     <ClCompile Include="lj_vmmath.c" />
-    <ClCompile Include="luajit.c" />
     <ClCompile Include="xr_pool.c" />
   </ItemGroup>
   <ItemGroup>

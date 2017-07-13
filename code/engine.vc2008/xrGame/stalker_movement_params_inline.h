@@ -46,7 +46,7 @@ IC	void stalker_movement_params::desired_direction						(Fvector const* directio
 	cover_id							("");
 
 	m_desired_direction_impl			= *direction;
-	VERIFY								(fsimilar(m_desired_direction_impl.magnitude(), 1.f));
+	//VERIFY								(fsimilar(m_desired_direction_impl.magnitude(), 1.f));
 	m_desired_direction					= &m_desired_direction_impl;
 }
 

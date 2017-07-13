@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="luajit.c">
-      <Filter>src</Filter>
-    </ClCompile>
     <ClCompile Include="lib_aux.c">
       <Filter>src</Filter>
     </ClCompile>

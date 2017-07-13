@@ -52,7 +52,7 @@ weapon::weapon				(
 	VERIFY				( _valid(bone_0) );
 
 	CBoneInstance&			bone = m_kinematics.LL_GetBoneInstance( m_bones_ids[bone_id0] );
-	BoneCallback const&		old_callback = bone.callback();
+    CBoneInstance::BoneCallback const&		old_callback = bone.callback();
 	void*					old_callback_param = bone.callback_param();
 	bone.set_callback		( bctCustom, &callback, &bone_0 );
 

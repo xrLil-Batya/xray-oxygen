@@ -165,11 +165,11 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	//	Additional set up
 	UINT createDeviceFlags = 0;
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-#ifdef USE_DX10
-	createDeviceFlags |= D3D10_CREATE_DEVICE_SINGLETHREADED;
-#else
-	createDeviceFlags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
-#endif
+// #ifdef USE_DX10
+// 	createDeviceFlags |= D3D10_CREATE_DEVICE_SINGLETHREADED;
+// #else
+// 	createDeviceFlags |= D3D11_CREATE_DEVICE_SINGLETHREADED;
+// #endif
 	HRESULT R;
 #ifdef USE_DX11
     D3D_FEATURE_LEVEL pFeatureLevels[] =
