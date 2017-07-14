@@ -114,7 +114,7 @@ public:
 	virtual		void			set_ApplyByGravity						(bool flag)																												= 0;
 	virtual		bool			get_ApplyByGravity						()																														= 0;
 
-	virtual		void			SetMaterial								(u16 m)																													= 0;
+	virtual		void			SetMaterial								(size_t m)																													= 0;
 	virtual		void			SetMaterial								(LPCSTR m)																												= 0;
 	virtual		void			set_DisableParams						(const SAllDDOParams& params)																							= 0;
 	virtual		void			SetTransform							(const Fmatrix& m0, motion_history_state history_state )																= 0;

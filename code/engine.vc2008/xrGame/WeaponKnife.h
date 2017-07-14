@@ -4,7 +4,8 @@
 #include "script_export_space.h"
 #include "../xrEngine/xr_collide_form.h"
 
-class CWeaponKnife: public CWeapon {
+class CWeaponKnife: public CWeapon 
+{
 private:
 	typedef CWeapon inherited;
 
@@ -25,7 +26,7 @@ protected:
 	virtual void		KnifeStrike					(const Fvector& pos, const Fvector& dir);
 
 	float				fWallmarkSize;
-	u16					knife_material_idx;
+	size_t				knife_material_idx;
 
 protected:
 	ALife::EHitType		m_eHitType;

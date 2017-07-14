@@ -106,7 +106,7 @@ CPHMovementControl::~CPHMovementControl(void)
 
 
 
-static ALife::EHitType	 DefineCollisionHitType	( u16 material_idx )	
+static ALife::EHitType	 DefineCollisionHitType	( size_t material_idx )	
 {
 	return (GMLib.GetMaterialByIdx( material_idx )->Flags.test(SGameMtl::flInjurious)) ? ALife::eHitTypeRadiation : ALife::eHitTypeStrike;
 }
@@ -1178,7 +1178,7 @@ void CPHMovementControl::GetJumpParam(Fvector &velocity, JumpType &type,const Fv
 
 }
 
-void CPHMovementControl::SetMaterial(u16 material)
+void CPHMovementControl::SetMaterial(size_t material)
 {
 	m_material=material;
 	if(m_character)
@@ -1314,8 +1314,8 @@ struct STraceBorderQParams
 BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID params)
 {
 	STraceBorderQParams& p	= *(STraceBorderQParams*)params;
-	u16 mtl_idx			=	GAMEMTL_NONE_IDX;
-	CDB::TRI* T			=	NULL;
+	size_t mtl_idx			=	GAMEMTL_NONE_IDX;
+	CDB::TRI* T			=	nullptr;
 	if(result.O){
 		return true;
 	}else{
@@ -1615,7 +1615,7 @@ void		CPHMovementControl::		GetCharacterVelocity		(Fvector& velocity )
 		VERIFY(m_character);
 		m_character->update_last_material	();  
 	}
-	u16	CPHMovementControl::injurious_material_idx	()
+	size_t	CPHMovementControl::injurious_material_idx	()
 	{ 
 		VERIFY(m_character);
 		return m_character->InjuriousMaterialIDX(); 
@@ -1697,7 +1697,7 @@ void		CPHMovementControl::		GetCharacterVelocity		(Fvector& velocity )
 			v.set(0,0,0);
 	}
 
-	void		CPHMovementControl::SetPLastMaterialIDX	(u16* p)
+	void		CPHMovementControl::SetPLastMaterialIDX	(size_t* p)
 	{
 		VERIFY(m_character);
 		m_character->SetPLastMaterialIDX(p);

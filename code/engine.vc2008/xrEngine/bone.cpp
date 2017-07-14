@@ -5,7 +5,7 @@
 #include "gamemtllib.h"
 #include "envelope.h"
 
-u16	CBone::get_game_mtl_idx	( )			const	
+size_t CBone::get_game_mtl_idx() const	
 {
 	return GMLib.GetMaterialIdx(game_mtl.c_str());
 }

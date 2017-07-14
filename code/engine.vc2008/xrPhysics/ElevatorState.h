@@ -28,7 +28,7 @@ Fvector			m_start_position;//for depart state
 u32				m_start_time;
 public: 
 						CElevatorState					();
-			void		PhTune							(float step)																			;
+			void		PhTune							(float step);
 			void		SetCharacter					(CPHCharacter *character);
 			void		SetElevator						(IClimableObject* climable);
 			void		EvaluateState					();
@@ -42,13 +42,13 @@ public:
 			void		Depart							();
 			float		ClimbDirection					();
 			void		Deactivate						();
-			bool		UpdateMaterial					( u16 &materil_idx );
+			bool		UpdateMaterial					(size_t &materil_idx );
 IC			Estate		State							(){return m_state;}
 private:
 			void		NewState						();
 
-			void		PhDataUpdate					(float step)																			;
-			void		InitContact						(dContact* c,bool &do_collide,u16 /*material_idx_1*/,u16 /*material_2*/)		;
+			void		PhDataUpdate					(float step);
+			void		InitContact						(dContact* c,bool &do_collide, size_t /*material_idx_1*/, size_t /*material_2*/);
 			void		SwitchState						(Estate new_state);
 			bool		StateSwitchInertion				(Estate new_state);
 			void		UpdateStNone					();

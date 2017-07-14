@@ -377,7 +377,7 @@ void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 #include "characterphysicssupport.h"
 float CActorCondition::GetInjuriousMaterialDamage()
 {
-	u16 mat_injurios = m_object->character_physics_support()->movement()->injurious_material_idx();
+	size_t mat_injurios = m_object->character_physics_support()->movement()->injurious_material_idx();
 
 	if(mat_injurios!=GAMEMTL_NONE_IDX)
 	{

@@ -24,7 +24,7 @@ struct SPHCharacterRestrictor
 				dGeomID					m_restrictor_transform;
 				float					m_restrictor_radius;
 				void					SetObjectContactCallback			(ObjectContactCallbackFun* callback);
-				void					SetMaterial							(u16 material);
+				void					SetMaterial							(size_t material);
 				void					Create								(CPHCharacter* ch,dVector3 sizes);
 				void					Destroy								(void);
 				void					SetPhysicsRefObject					(IPhysicsShellHolder* ref_object);
@@ -100,14 +100,14 @@ public:
 public:
 	virtual CPHActorCharacter	*CastActorCharacter			(){return this;}
 	virtual	void		SetObjectContactCallback			(ObjectContactCallbackFun* callback);
-	virtual void		SetMaterial							(u16 material);
+	virtual void		SetMaterial							(size_t material);
 	virtual void		Create								(dVector3 sizes);
 	virtual void		Destroy								(void);
 	virtual void		SetPhysicsRefObject					(IPhysicsShellHolder* ref_object);
 	virtual void		SetAcceleration						(Fvector accel);
 	virtual	void		Disable								();
 	virtual	void		Jump								(const Fvector& jump_velocity);
-	virtual void		InitContact							(dContact* c,bool &do_collide,u16	material_idx_1 ,u16 material_idx_2);
+	virtual void		InitContact							(dContact* c, bool &do_collide, size_t material_idx_1 , size_t material_idx_2);
 	virtual	void		SetRestrictorRadius					(ERestrictionType rtype,float r);
 virtual		void		ChooseRestrictionType				(ERestrictionType my_type,float my_depth,CPHCharacter *ch);
 						CPHActorCharacter					( bool single_game );

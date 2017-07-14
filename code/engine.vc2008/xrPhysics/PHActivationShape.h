@@ -1,7 +1,4 @@
-#ifndef PH_ACTIVATION_SHAPE
-#define PH_ACTIVATION_SHAPE
-#endif
-
+#praga once
 #include "phvalidevalues.h"
 #include "PHObject.h"
 class IPhysicsShellHolder;
@@ -43,7 +40,7 @@ private:
 virtual		void			PhDataUpdate						(dReal step)																												;
 virtual		void			PhTune								(dReal step)																												;
 virtual		void			CutVelocity							(float l_limit,float a_limit)																								;						
-virtual		void			InitContact							(dContact* c,bool& do_collide,u16 ,u16 )																		;
+virtual		void			InitContact							(dContact* c, bool& do_collide, size_t, size_t) {};
 virtual		dGeomID			dSpacedGeom							()																															;
 virtual		void			get_spatial_params					()																															;
 virtual		u16				get_elements_number					()																															{return 0;}

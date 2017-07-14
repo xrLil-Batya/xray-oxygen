@@ -1031,7 +1031,7 @@ void CPHElement::set_ContactCallback(ContactCallbackFun* callback)
 	CPHGeometryOwner::set_ContactCallback(callback);
 }
 
-void CPHElement::SetMaterial(u16 m)
+void CPHElement::SetMaterial(size_t m)
 {
 	CPHGeometryOwner::SetMaterial(m);
 }

@@ -34,19 +34,7 @@
 #	include "custommonster.h"
 #endif // MASTER_GOLD
 
-#ifndef _EDITOR
-#	include "ai_debug.h"
-#endif // _EDITOR
-
-//#ifdef DEBUG_MEMORY_MANAGER
-//	static	void *	ode_alloc	(size_t size)								{ return Memory.mem_alloc(size,"ODE");			}
-//	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return Memory.mem_realloc(ptr,newsize,"ODE");	}
-//	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);							}
-//#else // DEBUG_MEMORY_MANAGER
-//	static	void *	ode_alloc	(size_t size)								{ return xr_malloc(size);			}
-//	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return xr_realloc(ptr,newsize);	}
-//	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);				}
-//#endif // DEBUG_MEMORY_MANAGER
+#include "ai_debug.h"
 
 CGamePersistent::CGamePersistent(void)
 {
@@ -73,13 +61,8 @@ CGamePersistent::CGamePersistent(void)
 	m_frame_counter				= 0;
 	m_last_stats_frame			= u32(-2);
 #endif
-	// 
-	//dSetAllocHandler			(ode_alloc		);
-	//dSetReallocHandler			(ode_realloc	);
-	//dSetFreeHandler				(ode_free		);
 
-	// 
-	BOOL	bDemoMode	= (0!=strstr(Core.Params,"-demomode "));
+	bool bDemoMode	= (strstr(Core.Params,"-demomode "));
 	if (bDemoMode)
 	{
 		string256	fname;
@@ -115,7 +98,7 @@ void CGamePersistent::RegisterModel(IRenderVisual* V)
 	switch (V->getType()){
 	case MT_SKELETON_ANIM:
 	case MT_SKELETON_RIGID:{
-		u16 def_idx		= GMLib.GetMaterialIdx("default_object");
+		size_t def_idx		= GMLib.GetMaterialIdx("default_object");
 		R_ASSERT2		(GMLib.GetMaterialByIdx(def_idx)->Flags.is(SGameMtl::flDynamic),"'default_object' - must be dynamic");
 		IKinematics* K	= smart_cast<IKinematics*>(V); VERIFY(K);
 		int cnt = K->LL_BoneCount();

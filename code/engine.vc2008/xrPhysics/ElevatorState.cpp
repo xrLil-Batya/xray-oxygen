@@ -57,7 +57,7 @@ void CElevatorState::PhDataUpdate(float step)
 
 }
 
-void CElevatorState::InitContact(dContact* c,bool &do_collide,u16 ,u16 )
+void CElevatorState::InitContact(dContact* c, bool &do_collide, size_t , size_t)
 {
 
 }
@@ -390,7 +390,7 @@ bool CElevatorState::StateSwitchInertion(Estate new_state)
 	else return false;
 }
 
-bool	CElevatorState::UpdateMaterial					( u16 &materil_idx )
+bool	CElevatorState::UpdateMaterial(size_t &materil_idx)
 {
 	if( !ClimbingState() )
 		return false;

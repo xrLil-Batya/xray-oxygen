@@ -1,6 +1,4 @@
 #pragma once
-#ifndef CPHOBJECT
-#define CPHOBJECT
 #include "../xrcdb/ispatial.h"
 #include "PHItemList.h"
 #include "PHIsland.h"
@@ -85,7 +83,7 @@ public:
 	virtual 	void 			PhDataUpdate					(dReal	step)					=0;
 	virtual 	void 			PhTune							(dReal	step)					=0;
 	virtual		void 			spatial_move					()								;
-	virtual 	void 			InitContact						(dContact* c,bool& do_collide,u16 /*material_idx_1*/,u16 /*material_idx_2*/)	=0;
+	virtual 	void 			InitContact						(dContact* c,bool& do_collide,size_t /*material_idx_1*/,size_t /*material_idx_2*/)	=0;
 	virtual		void			CutVelocity						(float l_limit,float a_limit)	{};						
 
 				void 			Freeze							()								;
@@ -128,9 +126,4 @@ IC			const _flags<CLClassBits>&	collide_class_bits 	()const 								{return m_co
 			void			CollideDynamics					()										;
 };
 
-
-
-
 DEFINE_PHITEM_LIST(CPHObject,PH_OBJECT_STORAGE,PH_OBJECT_I)
-
-#endif//CPHOBJECT

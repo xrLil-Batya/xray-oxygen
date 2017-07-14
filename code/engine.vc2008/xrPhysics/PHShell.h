@@ -175,7 +175,7 @@ public:
 	virtual		void				SetGlTransformDynamic			(const Fmatrix &form);
 	virtual		void				set_ApplyByGravity				(bool flag);
 	virtual		bool				get_ApplyByGravity				();
-	virtual		void				SetMaterial						(u16 m);
+	virtual		void				SetMaterial						(size_t m);
 	virtual		void				SetMaterial						(LPCSTR m);
 	virtual		ELEMENT_STORAGE		&Elements						(){return elements;}
 	virtual		CPhysicsElement		*get_Element					(u16 bone_id);
@@ -214,7 +214,7 @@ public:
 	virtual		void				CollideAll						();
 	virtual		void				PhDataUpdate					(dReal step);
 	virtual		void				PhTune							(dReal step);
-	virtual		void				InitContact						(dContact* c,bool &do_collide,u16 /*material_idx_1*/,u16 /*material_idx_2*/){};
+	virtual		void				InitContact						(dContact* c,bool &do_collide,size_t /*material_idx_1*/,size_t /*material_idx_2*/){};
 	virtual		void				FreezeContent					();
 	virtual		void				UnFreezeContent					();
 	virtual		void				Freeze							();

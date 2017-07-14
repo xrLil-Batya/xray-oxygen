@@ -58,9 +58,9 @@ bool					was_enabled_before_freeze;
 /////////////////////////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////
-u16* p_lastMaterialIDX;
-u16 lastMaterialIDX;
-u16 injuriousMaterialIDX;
+size_t* p_lastMaterialIDX;
+size_t lastMaterialIDX;
+size_t injuriousMaterialIDX;
 ///////////////////////////////////////////////////////////////////////////
 dVector3 m_safe_velocity;
 dVector3 m_safe_position;
@@ -107,14 +107,14 @@ public:
 virtual		const ICollisionDamageInfo	*CollisionDamageInfo()const														=0;
 virtual			  ICollisionDamageInfo	*CollisionDamageInfo()															=0;
 virtual		void		Reinit								()															=0;
-void					SetPLastMaterialIDX					(u16* p)													{p_lastMaterialIDX=p;}													
-const		u16			&LastMaterialIDX					()const														{return *p_lastMaterialIDX;}
-			u16			InjuriousMaterialIDX				()const														{return injuriousMaterialIDX;}
+void					SetPLastMaterialIDX					(size_t* p)													{p_lastMaterialIDX=p;}													
+const		size_t			&LastMaterialIDX					()const														{return *p_lastMaterialIDX;}
+			size_t			InjuriousMaterialIDX				()const														{return injuriousMaterialIDX;}
 
 virtual		void		SetHitType							(ALife::EHitType type)										=0;
 virtual bool			TouchRestrictor						(ERestrictionType rttype)									=0;
 virtual void			SetElevator							(IClimableObject* climable)									{};
-virtual void			SetMaterial							(u16 material)												=0 ;
+virtual void			SetMaterial							(size_t material)											=0 ;
 virtual void			SetMaximumVelocity					(dReal /**vel/**/)											{}																			//!!
 virtual		dReal		GetMaximumVelocity					()															{return 0;}
 virtual	void			SetJupmUpVelocity					(dReal /**velocity/**/)										{}																			//!!

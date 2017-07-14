@@ -1482,7 +1482,7 @@ u16 CPHSimpleCharacter::RetriveContactBone()
 ///////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////
-void CPHSimpleCharacter::InitContact(dContact* c,bool	&do_collide,u16 material_idx_1,u16 material_idx_2){
+void CPHSimpleCharacter::InitContact(dContact* c,bool	&do_collide,size_t material_idx_1,size_t material_idx_2){
 
 	const dReal* normal=c->geom.normal;
 	const dReal* pos=c->geom.pos;
@@ -1681,7 +1681,7 @@ u16 CPHSimpleCharacter::ContactBone()
 {
 	return RetriveContactBone();
 }
-void CPHSimpleCharacter::SetMaterial	(u16 material)
+void CPHSimpleCharacter::SetMaterial	(size_t material)
 {
 	if(!b_exist) return;
 	dGeomGetUserData(m_geom_shell)->material=material;

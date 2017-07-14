@@ -26,13 +26,12 @@ struct SBullet
 			u16			allow_tracer	: 1	;
 			u16			allow_ricochet	: 1	;			//разрешить рикошет
 			u16			allow_sendhit	: 1	;			//statistics
-//.			u16			skipped_frame	: 1	;			//пропуск первой отрисовки
 			u16			aim_bullet		: 1 ;			//прицеленная пуля( вылетевшая первой после длительного молчания оружия (1-3 сек.))
 			u16			magnetic_beam	: 1 ;			//магнитный луч (нет отклонения после пробивания, не падает скорость после пробивания)
 		};
 		u16				_storage			;
 	}				flags				;
-	u16				bullet_material_idx	;
+	size_t			bullet_material_idx	;
 
 	Fvector			bullet_pos			;			//текущая позиция
 	Fvector			dir					;			

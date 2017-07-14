@@ -21,7 +21,7 @@ public IClimableObject
 	Fvector				m_side;
 	Fvector				m_norm;
 	float				m_radius;
-	u16					m_material;
+	size_t				m_material;
 public:
 					CClimableObject		();
 					~CClimableObject	();
@@ -67,7 +67,7 @@ public:
 	virtual float			DDToPlain			(CPHCharacter	*actor,Fvector	&dir)const;
 			bool			InRange				(CPHCharacter	*actor)const;
 	virtual bool			InTouch				(CPHCharacter	*actor)const;
-	virtual u16				Material			()const		{return m_material; }
+	virtual size_t			Material			()const		{return m_material; }
 			void			LowerPoint			(Fvector	&P)const;
 			void			UpperPoint			(Fvector	&P)const;
 			void			DefineClimbState	(CPHCharacter	*actor)const;
