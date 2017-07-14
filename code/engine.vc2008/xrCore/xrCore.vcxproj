@@ -665,9 +665,11 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Compilers|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_Compilers|x64'">Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="xrAPI.cpp" />
+	<ClCompile Include="xrAPI.cpp" />
+	<ClCompile Include="XMLCore\tinyxml.cpp" />
+	<ClCompile Include="XMLCore\xrXMLParser.cpp" />
     <ClCompile Include="xrCore.cpp" />
-    <ClCompile Include="_compressed_normal.cpp" />
+	<ClCompile Include="_compressed_normal.cpp" />
     <ClCompile Include="_math.cpp" />
     <ClCompile Include="_sphere.cpp" />
     <ClCompile Include="dump_string.cpp" />
@@ -811,6 +813,8 @@
     <ClInclude Include="_vector4.h" />
     <ClInclude Include="dump_string.h" />
     <ClInclude Include="vector.h" />
+	<ClInclude Include="XMLCore\tinyxml.h" />
+	<ClInclude Include="XMLCore\xrXMLParser.h" />
     <ClInclude Include="cpuid.h" />
     <ClInclude Include="FixedMap.h" />
     <ClInclude Include="FixedSet.h" />

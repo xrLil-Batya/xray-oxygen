@@ -67,6 +67,12 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{b678e1cb-f2fc-4fad-8e20-f37ccdf87fa5}</UniqueIdentifier>
     </Filter>
+    <Filter Include="xrAPI">
+      <UniqueIdentifier>{eb0bfab5-c514-4df4-a747-d14beb72f57b}</UniqueIdentifier>
+    </Filter>
+	<Filter Include="Xml">
+      <UniqueIdentifier>{f365c098-99bb-41a7-858d-12ba18a1311e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -222,7 +228,9 @@
     <ClCompile Include="os_clipboard.cpp">
       <Filter>OS</Filter>
     </ClCompile>
-    <ClCompile Include="xrAPI.cpp" />
+    <ClCompile Include="xrAPI.cpp">
+      <Filter>xrAPI</Filter>
+    </ClCompile>
     <ClCompile Include="DateTime.cpp">
       <Filter>Math</Filter>
     </ClCompile>
@@ -231,6 +239,12 @@
     </ClCompile>
     <ClCompile Include="lzo_compressor.cpp">
       <Filter>Compression\lzo</Filter>
+    </ClCompile>
+	<ClCompile Include="XMLCore\tinyxml.cpp">
+      <Filter>Xml</Filter>
+    </ClCompile>
+    <ClCompile Include="XMLCore\xrXMLParser.cpp">
+      <Filter>Xml</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -480,7 +494,15 @@
     <ClInclude Include="os_clipboard.h">
       <Filter>OS</Filter>
     </ClInclude>
-    <ClInclude Include="xrAPI.h" />
+    <ClInclude Include="xrAPI.h">
+      <Filter>xrAPI</Filter>
+    </ClInclude>
+	<ClInclude Include="Xml\tinyxml.h">
+      <Filter>Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="Xml\xrXMLParser.h">
+      <Filter>Xml</Filter>
+    </ClInclude>
     <ClInclude Include="DateTime.hpp">
       <Filter>Math</Filter>
     </ClInclude>
