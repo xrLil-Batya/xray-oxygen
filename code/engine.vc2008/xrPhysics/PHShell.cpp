@@ -534,13 +534,17 @@ void CPHShell::SetPhObjectInElements()
 void CPHShell::SetMaterial(LPCSTR m)
 {
 	for(auto i=elements.begin();elements.end() != i;++i)
+	{
 		(*i)->SetMaterial(m);
+	}
 }
 
-void CPHShell::SetMaterial(size_t m)
+void CPHShell::SetMaterial(u16 m)
 {
 	for(auto i=elements.begin();elements.end() != i;++i)
+	{
 		(*i)->SetMaterial(m);
+	}
 }
 
 void CPHShell::get_LinearVel(Fvector& velocity) const

@@ -151,7 +151,7 @@ void CPHGeometryOwner::			calc_volume_data	()
 	}
 }
 
-void CPHGeometryOwner::SetMaterial(size_t m)
+void CPHGeometryOwner::SetMaterial(u16 m)
 {
 	ul_material=m;
 	if(!b_builded) return;

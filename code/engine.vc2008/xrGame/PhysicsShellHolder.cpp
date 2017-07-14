@@ -11,8 +11,10 @@
 #include "CustomRocket.h"
 #include "Grenade.h"
 
+//#include "phactivationshape.h"
 #include "../xrphysics/iphworld.h"
 #include "../xrphysics/iActivationShape.h"
+//#include "../xrphysics/phvalide.h"
 #include "characterphysicssupport.h"
 #include "phmovementcontrol.h"
 #include "physics_shell_animated.h"
@@ -272,7 +274,7 @@ void CPhysicsShellHolder::deactivate_physics_shell()
 {
 	destroy_physics_shell( m_pPhysicsShell );
 }
-void CPhysicsShellHolder::PHSetMaterial(size_t m)
+void CPhysicsShellHolder::PHSetMaterial(u16 m)
 {
 	if(m_pPhysicsShell)
 		m_pPhysicsShell->SetMaterial(m);

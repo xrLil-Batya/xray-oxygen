@@ -280,7 +280,7 @@ public:
 	virtual const	Fobb&		_BCL	get_obb				( )const	= 0;
 	virtual const	Fvector&	_BCL	get_center_of_mass	( )const	= 0;
 	virtual			float		_BCL	get_mass			( )const	= 0;
-	virtual			size_t			_BCL	get_game_mtl_idx	( )const	= 0;
+	virtual			u16			_BCL	get_game_mtl_idx	( )const	= 0;
 	virtual			u16			_BCL	GetParentID			( ) const	= 0;
 	virtual			float		_BCL	lo_limit			( u8 k )	const	= 0;
 	virtual			float		_BCL	hi_limit			( u8 k )	const	= 0;
@@ -414,7 +414,7 @@ private:
 		const	Fobb&			_BCL	get_obb				( )			const	;
 		const	Fvector&		_BCL	get_center_of_mass	( )			const	{return center_of_mass;}
 				float			_BCL	get_mass			( )			const	{return mass;}
-				size_t				_BCL	get_game_mtl_idx	( )			const	;
+				u16				_BCL	get_game_mtl_idx	( )			const	;
 				u16				_BCL	GetParentID			( )			const	{if(parent) return u16(parent->SelfID); else return u16(-1);};
 				float			_BCL	lo_limit			( u8 k )	const	{ return engine_lo_limit(k); }
 				float			_BCL	hi_limit			( u8 k )	const	{ return engine_hi_limit(k); }
@@ -481,7 +481,7 @@ private:
 		const	Fobb&			_BCL	get_obb				( )			const	{return obb;}
 		const	Fvector&		_BCL	get_center_of_mass	( )			const	{return center_of_mass;}
 				float			_BCL	get_mass			( )			const	{return mass;}
-				size_t				_BCL	get_game_mtl_idx	( )			const	{return game_mtl_idx;}
+				u16				_BCL	get_game_mtl_idx	( )			const	{return game_mtl_idx;}
 				float			_BCL	lo_limit			( u8 k )	const	{return IK_data.limits[k].limit.x;}
 				float			_BCL	hi_limit			( u8 k )	const	{return IK_data.limits[k].limit.y;}
 public:

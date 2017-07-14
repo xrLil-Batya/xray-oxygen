@@ -167,7 +167,7 @@ void	CPHAICharacter::	ValidateWalkOn						()
 //	 b_clamb_jump=true;
 	inherited::ValidateWalkOn();
 }
-void CPHAICharacter::InitContact(dContact* c, bool &do_collide, size_t material_idx_1, size_t material_idx_2)
+void CPHAICharacter::InitContact(dContact* c,bool	&do_collide,u16 material_idx_1,u16 material_idx_2 )
 {
 	SGameMtl*	material_1=GMLibrary().GetMaterialByIdx(material_idx_1);
 	SGameMtl*	material_2=GMLibrary().GetMaterialByIdx(material_idx_2);

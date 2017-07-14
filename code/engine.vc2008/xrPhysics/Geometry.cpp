@@ -235,7 +235,7 @@ void CODEGeom::clear_cashed_tries()
 		dGeomUserDataClearCashedTries(m_geom_transform);
 	}
 }
-void CODEGeom::set_material(size_t ul_material)
+void CODEGeom::set_material(u16 ul_material)
 {
 	if(!m_geom_transform) return;
 	if(geom())

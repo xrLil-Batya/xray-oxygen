@@ -39,6 +39,7 @@ SBullet::~SBullet()
 {
 }
 
+
 void SBullet::Init(const Fvector& position,
 				   const Fvector& direction,
 				   float starting_speed,
@@ -84,12 +85,13 @@ void SBullet::Init(const Fvector& position,
 	m_u8ColorID				= cartridge.param_s.u8ColorID;
 
 	bullet_material_idx		= cartridge.bullet_material_idx;
-	VERIFY					( size_t(-1) != bullet_material_idx);
+	VERIFY					( u16(-1) != bullet_material_idx );
 
 	flags.allow_tracer		= !!cartridge.m_flags.test(CCartridge::cfTracer);
 	flags.allow_ricochet	= !!cartridge.m_flags.test(CCartridge::cfRicochet);
 	flags.explosive			= !!cartridge.m_flags.test(CCartridge::cfExplosive);
 	flags.magnetic_beam		= !!cartridge.m_flags.test(CCartridge::cfMagneticBeam);
+//	flags.skipped_frame		= 0;
 
 	init_frame_num			= Device.dwFrame;
 

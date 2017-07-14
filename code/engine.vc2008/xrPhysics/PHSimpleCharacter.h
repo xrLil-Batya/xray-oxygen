@@ -135,7 +135,7 @@ public:
 	/////////////////CPHObject//////////////////////////////////////////////
 	virtual		void		PhDataUpdate						(dReal step)						;
 	virtual		void		PhTune								(dReal step)						;
-	virtual		void		InitContact							(dContact* c,bool &do_collide,size_t /*material_idx_1*/,size_t /*material_idx_2*/)		;
+	virtual		void		InitContact							(dContact* c,bool &do_collide,u16 /*material_idx_1*/,u16 /*material_idx_2*/)		;
 	virtual		dSpaceID	dSpace								()									{return m_space;}
 	virtual		dGeomID		dSpacedGeom							()									{return (dGeomID)m_space;}
 	virtual		void		get_spatial_params					()									;
@@ -189,7 +189,7 @@ public:
 	virtual		Fvector		GetAcceleration						()					{ return m_acceleration; };
 	virtual     void		SetCamDir							(const Fvector& cam_dir);
 	virtual	const Fvector&	CamDir								()const				{return m_cam_dir;}
-	virtual		void		SetMaterial							(size_t material)		;
+	virtual		void		SetMaterial							(u16 material)		;
 	virtual		void		SetPosition							(const Fvector &pos);
 	virtual		void		GetVelocity							(Fvector& vvel)const;
 	virtual		void		GetSmothedVelocity					(Fvector& vvel)		;

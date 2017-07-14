@@ -1,8 +1,11 @@
-#pragma once
+#ifndef EXTENDED_GEOM
+#define EXTENDED_GEOM
+
 #ifndef	dSINGLE
  #define dSINGLE
 #endif
 #include "PHObject.h"
+//#include "ode_include.h"
 #include "../3rd party/ode/include/ode/common.h"
 #include "../3rd party/ode/include/ode/collision.h"
 #include "physicscommon.h"
@@ -11,7 +14,15 @@
 #include "debug_output.h"
 #endif
 
+
+#ifdef DEBUG
+//extern	u32				dbg_total_saved_tries					;
+#endif
 class IPhysicsShellHolder;
+
+
+
+
 
 class CObjectContactCallback
 {
@@ -22,7 +33,7 @@ class CObjectContactCallback
 		CObjectContactCallback		(ObjectContactCallbackFun			*c)
 			:callback(c)
 		{
-			next = nullptr; VERIFY(c);
+			next=NULL; VERIFY(c);
 		}
 		~CObjectContactCallback()
 		{
@@ -34,9 +45,13 @@ class CObjectContactCallback
 		VERIFY(callback!=c);
 	
 		if(next)
+		{
 			next->Add(c);
+		}
 		else
+		{
 			next=xr_new<CObjectContactCallback>(c);
+		}
 	}
 	bool	HasCallback(ObjectContactCallbackFun		*c)
 	{
@@ -101,22 +116,36 @@ struct dxGeomUserData
 	CDB::TRI					*neg_tri,*b_neg_tri								;
 	CPHObject					*ph_object										;
 	IPhysicsShellHolder			*ph_ref_object									;
-	size_t						material										;
-	size_t						tri_material									;
+	u16							material										;
+	u16							tri_material									;
 	ContactCallbackFun			*callback										;
 	void						*callback_data									;
+//	ObjectContactCallbackFun	*object_callback								;
 	CObjectContactCallback		*object_callbacks								;
 	u16							element_position								;
 	u16							bone_id											;
 	xr_vector<int>				cashed_tries									;
 	Fvector						last_aabb_size									;
 	Fvector						last_aabb_pos									;
+
+//	struct ContactsParameters
+//	{
+//	dReal damping;
+//	dReal spring;
+//	dReal bonce;
+//	dReal bonce_vel;
+//	dReal mu;
+//	unsigned int maxc;
+//	};
 };
 
 IC dxGeomUserData* dGeomGetUserData(dxGeom* geom)
 {
 	return (dxGeomUserData*) dGeomGetData(geom);
 }
+
+//XRPHYSICS_API dxGeomUserData* PHGeomGetUserData( dxGeom* geom );
+
 
 IC dGeomID retrieveGeom(dGeomID geom)
 {
@@ -129,9 +158,14 @@ XRPHYSICS_API dxGeomUserData* PHRetrieveGeomUserData(dGeomID geom);
 IC dxGeomUserData* retrieveGeomUserData(dGeomID geom)
 {
 			return dGeomGetUserData(retrieveGeom(geom));
+			//if(dGeomGetClass(geom)==dGeomTransformClass)
+			//	return dGeomGetUserData(dGeomTransformGetGeom(geom));
+			//else
+			//	return dGeomGetUserData(geom);
 }
 
 XRPHYSICS_API void	get_user_data( dxGeomUserData* &gd1, dxGeomUserData* &gd2, bool bo1, const dContactGeom &geom );
+
 
 IC IPhysicsShellHolder* retrieveRefObject(dGeomID geom)
 {
@@ -139,7 +173,6 @@ IC IPhysicsShellHolder* retrieveRefObject(dGeomID geom)
 	if(ud)return ud->ph_ref_object;
 	else return NULL;
 }
-
 IC void dGeomCreateUserData(dxGeom* geom)
 {
 	if(!geom) return;
@@ -164,6 +197,11 @@ IC void dGeomCreateUserData(dxGeom* geom)
 	(dGeomGetUserData(geom))->callback_data=NULL;
 
 	(dGeomGetUserData(geom))->last_aabb_size.set(0,0,0);
+	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::mu=1.f;
+	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::damping=1.f;
+	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::spring=1.f;
+	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::bonce=0.f;
+	//((dxGeomUserData*)dGeomGetData(geom))->ContactsParameters::bonce_vel=0.f;
 }
 
 
@@ -257,4 +295,6 @@ IC void dGeomUserDataClearCashedTries(dxGeom* geom)
 }
 #ifdef DEBUG
 XRPHYSICS_API	bool	IsCyliderContact(const dContact& c);
+#endif
+
 #endif

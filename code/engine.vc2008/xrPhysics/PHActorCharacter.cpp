@@ -18,6 +18,11 @@ const float JUMP_INCREASE_VELOCITY_RATE=1.2f;
 CPHActorCharacter::CPHActorCharacter( bool single_game ): b_single_game(single_game)
 {
 	SetRestrictionType(rtActor);
+
+	//std::fill(m_restrictors_index,m_restrictors_index+CPHCharacter::rtNone,end(m_restrictors));
+	//m_restrictors_index[CPHCharacter::rtStalker]		=begin(m_restrictors)+0;
+	//m_restrictors_index[CPHCharacter::rtMonsterMedium]	=begin(m_restrictors)+1;
+	
 	{
 		m_restrictors.resize(3);
 		m_restrictors[0]=(xr_new<stalker_restrictor>());
@@ -30,20 +35,20 @@ CPHActorCharacter::~CPHActorCharacter(void)
 {
 	ClearRestrictors();
 }
-
-static size_t slide_material_index = GAMEMTL_NONE_IDX;
-
+static u16 slide_material_index = GAMEMTL_NONE_IDX;
 void CPHActorCharacter::Create(dVector3 sizes)
 {
 	if(b_exist) return;
 	inherited::Create(sizes);
-	
-	if(!b_single_game
+	if(!b_single_game)
+	{
 		ClearRestrictors();
-	
+	}
 	RESTRICTOR_I i=begin(m_restrictors),e=end(m_restrictors);
 	for(;e!=i;++i)
+	{
 		(*i)->Create(this,sizes);
+	}
 
 	if(m_phys_ref_object)
 	{
@@ -53,7 +58,8 @@ void CPHActorCharacter::Create(dVector3 sizes)
 	{
 		GameMtlIt mi = GMLibrary().GetMaterialIt("materials\\earth_slide");
 		if( mi != GMLibrary().LastMaterial	())
-			slide_material_index = size_t(mi - GMLibrary().FirstMaterial());
+			slide_material_index =u16( mi - GMLibrary().FirstMaterial() );
+		//slide_material_index = GMLibrary().GetMaterialIdx("earth_slide");
 	}
 }
 void	CPHActorCharacter::	ValidateWalkOn						()
@@ -161,7 +167,7 @@ void SPHCharacterRestrictor::SetPhysicsRefObject(IPhysicsShellHolder* ref_object
 	if(m_character)
 		dGeomUserDataSetPhysicsRefObject(m_restrictor,ref_object);
 }
-void CPHActorCharacter::SetMaterial(size_t material)
+void CPHActorCharacter::SetMaterial							(u16 material)
 {
 	inherited::SetMaterial(material);
 	if(!b_exist) return;
@@ -171,7 +177,7 @@ void CPHActorCharacter::SetMaterial(size_t material)
 		(*i)->SetMaterial(material);
 	}
 }
-void SPHCharacterRestrictor::SetMaterial(size_t material)
+void SPHCharacterRestrictor::SetMaterial(u16 material)
 {
 	dGeomGetUserData(m_restrictor)->material=material;
 }
@@ -299,7 +305,7 @@ static void BigVelSeparate(dContact* c,bool &do_collide)
 		
 }
 
-void CPHActorCharacter::InitContact(dContact* c, bool &do_collide, size_t material_idx_1, size_t material_idx_2 )
+void CPHActorCharacter::InitContact(dContact* c,bool &do_collide,u16 material_idx_1,u16	material_idx_2 )
 {
 
 	bool b1;

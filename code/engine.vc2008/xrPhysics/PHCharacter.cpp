@@ -38,26 +38,27 @@ CPHCharacter::CPHCharacter(void) :
 
 CPHCharacter::~CPHCharacter(void)
 {
+
 }
 
-void CPHCharacter::FreezeContent()
+void	CPHCharacter::FreezeContent()
 {
 	
 	dBodyDisable(m_body);
 	CPHObject::FreezeContent();
 }
-void CPHCharacter::UnFreezeContent()
+void	CPHCharacter::UnFreezeContent()
 {
 
 	dBodyEnable(m_body);
 	CPHObject::UnFreezeContent();
 }
-void CPHCharacter::getForce(Fvector& force)
+void	CPHCharacter::getForce(Fvector& force)
 {
 	if(!b_exist)return;
 	force.set(*(Fvector*)dBodyGetForce(m_body));
 }
-void CPHCharacter::setForce(const Fvector &force)
+void	CPHCharacter::setForce(const Fvector &force)
 {
 	if(!b_exist)return;
 	dBodySetForce(m_body,force.x,force.y,force.z);
@@ -75,13 +76,15 @@ void CPHCharacter::get_State(SPHNetState& state)
 	state.quaternion.identity();
 	state.previous_quaternion.identity();
 	state.torque.set(0.f,0.f,0.f);
+//	state.accel = GetAcceleration();
+//	state.max_velocity = GetMaximumVelocity();
 
 	if(!b_exist) 
 	{
 		state.enabled=false;
 		return;
 	}
-	state.enabled=CPHObject::is_active();
+	state.enabled=CPHObject::is_active();//!!dBodyIsEnabled(m_body);
 }
 void CPHCharacter::set_State(const SPHNetState& state)
 {
@@ -91,15 +94,18 @@ void CPHCharacter::set_State(const SPHNetState& state)
 	SetVelocity(state.linear_vel);
 	setForce(state.force);
 	
+//	SetAcceleration(state.accel);
+//	SetMaximumVelocity(state.max_velocity);
 
 	if(!b_exist) return;
-	
 	if(state.enabled) 
+	{
 		Enable();
-	
-	if(!state.enabled )
+	};
+	if(!state.enabled ) 
+	{
 		Disable();
-	
+	};
 	VERIFY2(dBodyStateValide(m_body),"WRONG BODYSTATE WAS SET");
 }
 
@@ -118,6 +124,12 @@ void CPHCharacter::Enable()
 	dBodyEnable(m_body);
 
 }
+
+
+
+
+
+
 
 void  CarHitCallback(bool& /**do_colide/**/,dContact& /**c/**/)
 {
@@ -186,6 +198,11 @@ void	virtual_move_collide_callback( bool& do_collide, bool bo1, dContact& c, SGa
 	if( oposite_data && oposite_data->ph_ref_object == my_data->ph_ref_object )
 		return;
 
+	//if( c.geom.depth > camera_collision_sckin_depth/2.f )
+	//cam_collided = true;
+	//if( !cam_step )
+		//return;
+
 	c.surface.mu = 0;
 	c.surface.soft_cfm =0.01f;
 	dJointID contact_joint	= dJointCreateContact(0, ContactGroup, &c);//dJointCreateContactSpecial(0, ContactGroup, &c);
@@ -201,17 +218,19 @@ void	virtual_move_collide_callback( bool& do_collide, bool bo1, dContact& c, SGa
 	
 }
 
-void CPHCharacter::fix_body_rotation()
+void	CPHCharacter::	fix_body_rotation					()
 {
-	dBodyID b = get_body();
-	if(b)
-	{
-		dMatrix3 R;
-		dRSetIdentity (R);
-		dBodySetAngularVel(b,0.f,0.f,0.f);
-		dBodySetRotation(b,R);
-	}
+		dBodyID b= get_body();//GetBody();
+		if(b)
+		{
+			dMatrix3 R;
+			dRSetIdentity (R);
+			dBodySetAngularVel(b,0.f,0.f,0.f);
+			dBodySetRotation(b,R);
+		}
 }
+
+
 
 CPHCharacter	*create_ai_character()
 {

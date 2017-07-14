@@ -40,7 +40,7 @@ public:
 
 	u8		m_LocalAmmoType;
 
-	size_t	bullet_material_idx;
+	u16		bullet_material_idx;
 	Flags8	m_flags;
 
 	shared_str	m_InvShortName;

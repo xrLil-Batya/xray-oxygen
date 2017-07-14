@@ -120,7 +120,7 @@ virtual			void		set_local_form		(const Fmatrix& form)												=0;
 				void		set_shape_flags		( const Flags16 &_flags )						{ m_flags = _flags	;}
 				void		add_to_space		(dSpaceID space)													;
 				void		remove_from_space	(dSpaceID space)													;
-				void		set_material		(size_t ul_material)													;
+				void		set_material		(u16 ul_material)													;
 				void		set_contact_cb		(ContactCallbackFun* ccb)											;
 				void		set_obj_contact_cb	(ObjectContactCallbackFun* occb)									;
 				void		add_obj_contact_cb	(ObjectContactCallbackFun* occb)									;

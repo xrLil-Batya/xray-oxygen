@@ -1,5 +1,5 @@
-#pragma once
-
+#ifndef DISABLING_PARAMS_H
+#define DISABLING_PARAMS_H
 struct	SOneDDOParams
 {
 	void				Mul					(float v)	;

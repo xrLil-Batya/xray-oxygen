@@ -338,6 +338,11 @@ void	CPHActivationShape::	get_spatial_params					()
 	spatialParsFromDGeom(m_geom,spatial.sphere.P,AABB,spatial.sphere.R);
 }
 
+void	CPHActivationShape::	InitContact							(dContact* c,bool& do_collide,u16 ,u16 )
+{
+
+}
+
 void CPHActivationShape::CutVelocity(float l_limit,float /*a_limit*/)
 {
 	dVector3 limitedl,diffl;
