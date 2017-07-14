@@ -1,10 +1,7 @@
 // FS.h: interface for the CFS class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef fsH
-#define fsH
-
+#pragma once
 #define CFS_CompressMark	(1ul << 31ul)
 #define CFS_HeaderChunkID	(666)
 
@@ -53,6 +50,8 @@ public:
 	IC void			w_s32	(s32 d)					{	w(&d,sizeof(s32));	}
 	IC void			w_s16	(s16 d)					{	w(&d,sizeof(s16));	}
 	IC void			w_s8	(s8 d)					{	w(&d,sizeof(s8));	}
+	IC void			w_bool	(bool b)				{	w(&b,sizeof(bool)); }
+	IC void			w_double(double d)				{	w(&d,sizeof(double));}
 	IC void			w_float	(float d)				{	w(&d,sizeof(float));}
 	IC void			w_string(const char *p)			{	w(p,(u32)xr_strlen(p));w_u8(13);w_u8(10);	}
 	IC void			w_stringZ(const char *p)		{	w(p,(u32)xr_strlen(p)+1);					}
@@ -177,7 +176,9 @@ public:
 	IC s32			r_s32		()			{	s32 tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC s16			r_s16		()			{	s16 tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC s8			r_s8		()			{	s8 tmp;		r(&tmp,sizeof(tmp)); return tmp;	};
+	IC bool			r_bool		()			{	bool tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC float		r_float		()			{	float tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
+	IC double		r_double	()			{	double tmp;	r(&tmp,sizeof(tmp)); return tmp;	};
 	IC void			r_fvector4	(Fvector4 &v){	r(&v,sizeof(Fvector4));	}
 	IC void			r_fvector3	(Fvector3 &v){	r(&v,sizeof(Fvector3));	}
 	IC void			r_fvector2	(Fvector2 &v){	r(&v,sizeof(Fvector2));	}
@@ -315,5 +316,3 @@ public:
 			CVirtualFileRW		(const char *cFileName);
 	virtual ~CVirtualFileRW		();
 };
-
-#endif // fsH
