@@ -1,11 +1,8 @@
-#ifndef SoundRender_CoreH
-#define SoundRender_CoreH
 #pragma once
                                           
 #include "SoundRender.h"
 #include "SoundRender_Environment.h"
 #include "SoundRender_Cache.h"
-#include "soundrender_environment.h"
 
 class CSoundRender_Core					: public CSound_manager_interface
 {
@@ -128,4 +125,3 @@ public:
 	void								env_apply				();
 };
 extern CSoundRender_Core* SoundRender;
-#endif
