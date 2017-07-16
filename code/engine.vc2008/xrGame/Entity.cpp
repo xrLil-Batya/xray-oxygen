@@ -72,14 +72,15 @@ void CEntity::Die(CObject* who)
 
 	set_ready_to_save();
 	SetfHealth(-1.f);
-
-	VERIFY(m_registered_member);
-
-	m_registered_member = false;
-	Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).unregister_member(this);
+	// Fixed: crash occurring when scripting the murder of invulnerable objects consisting of group.
+	if (m_registered_member) 
+	{
+		m_registered_member = false;
+		Level().seniority_holder().team(g_Team()).squad(g_Squad()).group(g_Group()).unregister_member(this);
+	}
+	// End
 }
 
-//обновление состояния
 float CEntity::CalcCondition(float hit)
 {
 
@@ -91,15 +92,8 @@ float CEntity::CalcCondition(float hit)
 	return hit;
 }
 
-
-
-
-//void CEntity::Hit			(float perc, Fvector &dir, CObject* who, s16 element,Fvector position_in_object_space, float impulse, ALife::EHitType hit_type) 
-void	CEntity::Hit		(SHit* pHDS)
+void CEntity::Hit(SHit* pHDS)
 {
-
-//	if (bDebug)				Log("Process HIT: ", *cName());
-
 	// *** process hit calculations
 	// Calc impulse
 	Fvector					vLocalDir;
@@ -107,7 +101,7 @@ void	CEntity::Hit		(SHit* pHDS)
 	VERIFY					(m>EPS);
 	
 	// convert impulse into local coordinate system
-	Fmatrix					mInvXForm;
+	Fmatrix				mInvXForm;
 	mInvXForm.invert		(XFORM());
 	mInvXForm.transform_dir	(vLocalDir,pHDS->dir);
 	vLocalDir.invert		();
@@ -129,7 +123,7 @@ void	CEntity::Hit		(SHit* pHDS)
 	inherited::Hit(pHDS);
 }
 
-void CEntity::Load		(LPCSTR section)
+void CEntity::Load(const char* section)
 {
 	inherited::Load		(section);
 
@@ -142,7 +136,7 @@ void CEntity::Load		(LPCSTR section)
 	
 	m_fMorale			= READ_IF_EXISTS(pSettings, r_s32, section, "morale", 66.f);;
 
-	//время убирания тела с уровня
+	//ГўГ°ГҐГ¬Гї ГіГЎГЁГ°Г Г­ГЁГї ГІГҐГ«Г  Г± ГіГ°Г®ГўГ­Гї
 	m_dwBodyRemoveTime	= READ_IF_EXISTS(pSettings,r_u32,section,"body_remove_time",BODY_REMOVE_TIME);
 	//////////////////////////////////////
 }
