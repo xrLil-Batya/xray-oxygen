@@ -949,11 +949,8 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	si->AddItem( "Uptime", time, RGB(255,228,0) );
 
 	xr_strcpy( tmp256, GameTypeToString( game->Type(), true ) );
-
-	//if ( g_sv_dm_dwTimeLimit > 0 )
 	{
 		xr_strcat( tmp256, " time limit [" );
-	//	xr_strcat( tmp256, itoa( g_sv_dm_dwTimeLimit, tmp, 10 ) );
 		xr_strcat( tmp256, "] " );
 	}
 	si->AddItem( "Game type", tmp256, RGB(128,255,255) );

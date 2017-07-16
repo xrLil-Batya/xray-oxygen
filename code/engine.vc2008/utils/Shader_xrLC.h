@@ -1,7 +1,4 @@
-#ifndef SHADER_XRLC_H
-#define SHADER_XRLC_H
 #pragma once
-struct Shader_xrLC;
 struct Shader_xrLC
 {
 public:
@@ -154,5 +151,3 @@ IC const Shader_xrLC& shader( u16 dwMaterial, const Shader_xrLC_LIB &shaders, co
  	u32 shader_id = materials[dwMaterial].reserved;
 	return *( shaders.Get( shader_id ) );
 }
-
-#endif
