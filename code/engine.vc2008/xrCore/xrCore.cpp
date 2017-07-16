@@ -30,7 +30,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 {
 	std::set_terminate(abort);
 	xr_strcpy					(ApplicationName,_ApplicationName);
-	if (0==init_counter) {
+	if (!init_counter) {
 #ifdef XRCORE_STATIC	
 		_clear87	();
 		_control87	( _PC_53,   MCW_PC );
@@ -40,14 +40,13 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 #endif
 		// Init COM so we can use CoCreateInstance
 		xr_strcpy			(Params,sizeof(Params),GetCommandLine());
-		_strlwr_s			(Params,sizeof(Params));
-
+//		_strlwr_s			(Params,sizeof(Params));
 		string_path		fn,dr,di;
 
 		// application path
-        GetModuleFileName(GetModuleHandle(MODULE_NAME),fn,sizeof(fn));
-        _splitpath		(fn,dr,di,0,0);
-        strconcat		(sizeof(ApplicationPath),ApplicationPath,dr,di);
+		 GetModuleFileName(GetModuleHandle(MODULE_NAME),fn,sizeof(fn));
+		_splitpath(fn,dr,di,0,0);
+		strconcat(sizeof(ApplicationPath),ApplicationPath,dr,di);
 
 		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
 
@@ -90,24 +89,18 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 		if (strstr(Params,"-cache"))  flags |= CLocatorAPI::flCacheFiles;
 		else flags &= ~CLocatorAPI::flCacheFiles;
 #endif // DEBUG
-#ifdef _EDITOR // for EDITORS - no cache
-		flags 				&=~ CLocatorAPI::flCacheFiles;
-#endif // _EDITOR
 		flags |= CLocatorAPI::flScanAppRoot;
 
-#ifndef	_EDITOR
-	#ifndef ELocatorAPIH
-		if (0!=strstr(Params,"-file_activity"))	 flags |= CLocatorAPI::flDumpFileActivity;
-	#endif
+#ifndef ELocatorAPIH
+		if (strstr(Params,"-file_activity"))	 
+			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
 		FS._initialize		(flags,0,fs_fname);
 		Msg					("'%s' build %d, %s\n","xrCore",build_id, build_date);
 		EFS._initialize		();
 #ifdef DEBUG
-    #ifndef	_EDITOR
 		Msg					("CRT heap 0x%08x",_get_heap_handle());
 		Msg					("Process heap 0x%08x",GetProcessHeap());
-    #endif
 #endif // DEBUG
 	}
 	SetLogCB				(cb);
@@ -117,7 +110,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 void xrCore::_destroy		()
 {
 	--init_counter;
-	if (0==init_counter){
+	if (!init_counter){
 		FS._destroy			();
 		EFS._destroy		();
 		xr_delete			(xr_FS);
@@ -127,14 +120,8 @@ void xrCore::_destroy		()
 	}
 }
 
-#ifndef XRCORE_STATIC
-
 //. why ??? 
-#ifdef _EDITOR
-	BOOL WINAPI DllEntryPoint(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#else
-	BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
-#endif
+BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
 {
 	switch (ul_reason_for_call)
 	{
@@ -146,7 +133,6 @@ void xrCore::_destroy		()
 			_control87		( _RC_NEAR, MCW_RC );
 			_control87		( _MCW_EM,  MCW_EM );
 		}
-//.		LogFile.reserve		(256);
 		break;
 	case DLL_THREAD_ATTACH:
 		timeBeginPeriod	(1);
@@ -161,4 +147,3 @@ void xrCore::_destroy		()
 	}
     return TRUE;
 }
-#endif // XRCORE_STATIC
