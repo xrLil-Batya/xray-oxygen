@@ -48,7 +48,7 @@ public:
 	void				dbg_unregister	(void* _p);
 	void				dbg_check		();
 
-	u32					mem_usage		(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
+	IC u32				mem_usage		(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr) { return mem_usage_impl(pBlocksUsed, pBlocksFree); }
 	void				mem_compact		();
 	void				mem_counter_set	(u32 _val)	{ stat_counter = _val;	}
 	u32					mem_counter_get	()			{ return stat_counter;	}
@@ -63,6 +63,8 @@ public:
 #endif // DEBUG_MEMORY_NAME
 	void				mem_free		(void*	p					);
 };
+
+XRCORE_API u32	mem_usage_impl	(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
 
 extern XRCORE_API	xrMemory	Memory;
 
@@ -118,4 +120,3 @@ extern		bool		mem_initialized;
 
 XRCORE_API void vminfo			(size_t *_free, size_t *reserved, size_t *committed);
 XRCORE_API void log_vminfo		();
-XRCORE_API u32	mem_usage_impl	(HANDLE heap_handle, u32* pBlocksUsed, u32* pBlocksFree);
