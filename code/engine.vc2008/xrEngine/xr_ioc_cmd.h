@@ -46,14 +46,14 @@ public		:
 
 	BENCH_SEC_SCRAMBLEVTBL3
 
-	LPCSTR			Name()			{ return cName;	}
+	IC const char*			Name()		{ return cName;	}
 	void			InvalidSyntax() {
 		TInfo I; Info(I);
 		Msg("~ Invalid syntax in call to '%s'",cName);
 		Msg("~ Valid arguments: %s", I);
 
-		g_SASH.OnConsoleInvalidSyntax("~ Invalid syntax in call to '%s'",cName, false);
-		g_SASH.OnConsoleInvalidSyntax("~ Valid arguments: %s", I, true);
+		g_SASH.OnConsoleInvalidSyntax(false, "~ Invalid syntax in call to '%s'", cName);
+		g_SASH.OnConsoleInvalidSyntax(true, "~ Valid arguments: %s", I);
 	}
 	virtual void	Execute	(LPCSTR args)	= 0;
 	virtual void	Status	(TStatus& S)	{ S[0]=0; }
