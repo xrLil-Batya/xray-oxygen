@@ -34,7 +34,7 @@
 #	endif
 #endif
 
-void jit_command(lua_State*, LPCSTR);
+int dojitcmd(lua_State *L, const char *cmd) 
 
 #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 static void log_callback			(LPCSTR message)
@@ -83,8 +83,8 @@ static void initialize_lua_studio	( lua_State* state, cs::lua_studio::world*& wo
 
 	s_old_log_callback				= SetLogCB(&log_callback);
 
-	jit_command						(state, "debug=2");
-	jit_command						(state, "off");
+	dojitcmd						(state, "debug=2");
+	dojitcmd						(state, "off");
 
 	world->add						(state);
 }
@@ -286,9 +286,10 @@ void CScriptEngine::init				()
 	if (m_lua_studio_world || strstr(Core.Params, "-lua_studio")) {
 		if (!lua_studio_connected)
 			try_connect_to_debugger		();
-		else {
-			jit_command					(lua(), "debug=2");
-			jit_command					(lua(), "off");
+		else 
+		{
+			dojitcmd					(lua(), "debug=2");
+			dojitcmd					(lua(), "off");
 			m_lua_studio_world->add		(lua());
 		}
 	}

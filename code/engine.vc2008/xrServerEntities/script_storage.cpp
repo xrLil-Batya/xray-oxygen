@@ -52,19 +52,17 @@ LPCSTR	file_header = 0;
 #	include "script_debugger.h"
 #endif
 
-static LPVOID __cdecl luabind_allocator(
-	luabind::memory_allocation_function_parameter const,
-	void const * const pointer,
-	size_t const size
-)
+static LPVOID __cdecl luabind_allocator(luabind::memory_allocation_function_parameter const, void const * const pointer, size_t const size)
 {
-	if (!size) {
+	if (!size)
+	{
 		LPVOID	non_const_pointer = const_cast<LPVOID>(pointer);
 		xr_free(non_const_pointer);
-		return	(0);
+		return 0;
 	}
 
-	if (!pointer) {
+	if (!pointer) 
+	{
 #ifdef DEBUG
 		return	(Memory.mem_alloc(size, "luabind"));
 #else // #ifdef DEBUG
@@ -87,7 +85,8 @@ void setup_luabind_allocator()
 }
 
 /* ---- start of LuaJIT extensions */
-static void l_message(lua_State* state, const char *msg) {
+IC void l_message(lua_State* state, const char *msg) 
+{
 	Msg("! [LUA_JIT] %s", msg);
 }
 
@@ -121,7 +120,8 @@ static int loadjitmodule(lua_State *L, const char *notfound) {
 }
 
 /* JIT engine control command: try jit library first or load add-on module */
-static int dojitcmd(lua_State *L, const char *cmd) {
+int dojitcmd(lua_State *L, const char *cmd) 
+{
 	const char *val = strchr(cmd, '=');
 	lua_pushlstring(L, cmd, val ? val - cmd : xr_strlen(cmd));
 	lua_getglobal(L, "jit");  /* get jit.* table */
@@ -138,11 +138,6 @@ static int dojitcmd(lua_State *L, const char *cmd) {
 	lua_remove(L, -2);  /* drop module name */
 	if (val) lua_pushstring(L, val + 1);
 	return report(L, lua_pcall(L, val ? 1 : 0, 0, 0));
-}
-
-void jit_command(lua_State* state, LPCSTR command)
-{
-	dojitcmd(state, command);
 }
 
 #ifndef DEBUG
@@ -222,7 +217,8 @@ void CScriptStorage::reinit()
 #ifdef DEBUG
 	luajit::open_lib(lua(), LUA_DBLIBNAME, luaopen_debug);
 #endif // #ifdef DEBUG
-	if (!strstr(Core.Params, "-nojit")) {
+	if (!strstr(Core.Params, "-nojit")) 
+	{
 		luajit::open_lib(lua(), LUA_JITLIBNAME, luaopen_jit);
 #ifndef DEBUG
 		put_function(lua(), opt_lua_binary, sizeof(opt_lua_binary), "jit.opt");
@@ -347,6 +343,8 @@ void CScriptStorage::print_stack()
 #ifdef DEBUG
 	if (!m_stack_is_ready)
 		return;
+
+	m_stack_is_ready = false;
 #endif // #ifdef DEBUG
 
 	lua_State				*L = lua();
@@ -390,9 +388,11 @@ bool CScriptStorage::parse_namespace(const char* caNamespaceName, char* b, u32 c
 {
 	*b = 0;
 	*c = 0;
-    LPSTR			S2;
-    STRCONCAT(S2, caNamespaceName);
-    LPSTR			S = S2;
+	
+	char*			S2;
+ 	STRCONCAT		(S2,caNamespaceName);
+ 	char*			S	= S2;
+	
 	for (int i = 0;; ++i)
 	{
 		if (!xr_strlen(S))
@@ -553,9 +553,9 @@ bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 	lua_pushstring(lua(), "_G");
 	lua_rawget(lua(), LUA_GLOBALSINDEX);
 
-    string256				S2;
-    xr_strcpy(S2, N);
-    LPSTR					S = S2;
+	string256				S2;
+ 	xr_strcpy				(S2,N);
+ 	char*					S = S2;
 	for (;;) {
 		if (!xr_strlen(S))
 		{
@@ -634,9 +634,9 @@ bool CScriptStorage::object(const char* namespace_name, const char* identifier, 
 
 luabind::object CScriptStorage::name_space(const char* namespace_name)
 {
-    string256			S1;
-    xr_strcpy(S1, namespace_name);
-    LPSTR				S = S1;
+	string256 S1;
+ 	xr_strcpy (S1,namespace_name);
+	char* S = S1;
 	luabind::object		lua_namespace = luabind::get_globals(lua());
 	for (;;) {
 		if (!xr_strlen(S))

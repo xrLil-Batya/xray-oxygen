@@ -1,15 +1,12 @@
 #include "stdafx.h"
-
 #include "interactive_motion.h"
-
-#include "../xrphysics/physicsshell.h"
 #include "PhysicsShellHolder.h"
-
-#include "../Include/xrRender/Kinematics.h"
-
 #include "game_object_space.h"
 
-void interactive_motion_diagnostic( LPCSTR message, const MotionID &m, CPhysicsShell *s )
+#include "../Include/xrRender/Kinematics.h"
+#include "../xrphysics/physicsshell.h"
+
+void interactive_motion_diagnostic(LPCSTR message, const MotionID &m, CPhysicsShell *s )
 {
 #ifdef	DEBUG
 	if(!death_anim_debug)
