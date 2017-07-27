@@ -327,7 +327,9 @@ SCRIPT_API bool Script::bfGetNamespaceTable(CLuaVirtualMachine *tpLuaVM, LPCSTR 
 {
 	lua_pushstring 		(tpLuaVM,"_G"); 
 	lua_gettable 		(tpLuaVM,LUA_GLOBALSINDEX); 
-	char*				S	= const_cast<char*>(N);
+	string256			S2;	
+	xr_strcpy			(S2,N);
+	char*				S	= S2;
 	for (;;) { 
 		if (!xr_strlen(S)) return	(false); 
 		char* S1 		= strchr(S,'.'); 
@@ -356,9 +358,11 @@ SCRIPT_API CLuaVirtualMachine *Script::get_namespace_table(CLuaVirtualMachine *t
 	if (!xr_strlen(N))
 		return				(tpLuaVM);
 	lua_pushstring 			(tpLuaVM,"_G"); 
-	lua_gettable 			(tpLuaVM,LUA_GLOBALSINDEX); 
-
-	LPSTR					S	= const_cast<char*>(N);;
+	lua_gettable 			(tpLuaVM,LUA_GLOBALSINDEX);
+	
+	string256				S2;
+	xr_strcpy					(S2,N);
+	char*					S	= S2;
 	for (;;) { 
 		if (!xr_strlen(S))
 			return			(0); 
@@ -410,7 +414,9 @@ SCRIPT_API bool	Script::bfIsObjectPresent	(CLuaVirtualMachine *tpLuaVM, LPCSTR n
 
 SCRIPT_API luabind::object Script::lua_namespace_table(CLuaVirtualMachine *tpLuaVM, LPCSTR namespace_name)
 {
-	LPSTR				S = const_cast<char*>(namespace_name);
+	string256			S1;
+	xr_strcpy				(S1,namespace_name);
+	char*				S = S1;
 	luabind::object		lua_namespace = luabind::get_globals(tpLuaVM);
 	for (;;) {
 		if (!xr_strlen(S))
