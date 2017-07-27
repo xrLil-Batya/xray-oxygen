@@ -1,7 +1,6 @@
 #pragma once
-
-const const char* CONFIG_PATH			= "$game_config$";
-const const char* UI_PATH				= "ui";
+#define CONFIG_PATH "$game_config$"
+#define UI_PATH	 ui"
 
 #include "tinyxml.h"
 
@@ -20,7 +19,7 @@ public:
 	void 				Load					(const char* path_alias, const char* path, const char*  xml_filename);
 
 
-	//чтение элементов
+	//Г·ГІГҐГ­ГЁГҐ ГЅГ«ГҐГ¬ГҐГ­ГІГ®Гў
 	const char* 		Read					(const char* path, int index,  const char*   default_str_val);
 	const char* 		Read					(XML_NODE* start_node, const char* path, int index,  const char*   default_str_val );
 	const char* 		Read					(XML_NODE* node,  const char*   default_str_val);
@@ -49,21 +48,21 @@ public:
 	XML_NODE*			SearchForAttribute		(const char* path, int index, const char* tag_name, const char* attrib, const char* attrib_value_pattern);
 	XML_NODE*			SearchForAttribute		(XML_NODE* start_node, const char* tag_name, const char* attrib, const char* attrib_value_pattern);
 
-	//возвращает количество узлов с заданым именем
+	//ГўГ®Г§ГўГ°Г Г№Г ГҐГІ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГіГ§Г«Г®Гў Г± Г§Г Г¤Г Г­Г»Г¬ ГЁГ¬ГҐГ­ГҐГ¬
 	int					GetNodesNum				(const char* path, int index, const char* tag_name);
 	int					GetNodesNum				(XML_NODE* node, const char*  tag_name);
 
 
 #ifdef DEBUG // debug & mixed
-	//проверка того, что аттрибуты у тегов уникальны
-	//(если не NULL, то уникальность нарушена и возврашается имя 
-	//повторяющегося атрибута)
+	//ГЇГ°Г®ГўГҐГ°ГЄГ  ГІГ®ГЈГ®, Г·ГІГ® Г ГІГІГ°ГЁГЎГіГІГ» Гі ГІГҐГЈГ®Гў ГіГ­ГЁГЄГ Г«ГјГ­Г»
+	//(ГҐГ±Г«ГЁ Г­ГҐ NULL, ГІГ® ГіГ­ГЁГЄГ Г«ГјГ­Г®Г±ГІГј Г­Г Г°ГіГёГҐГ­Г  ГЁ ГўГ®Г§ГўГ°Г ГёГ ГҐГІГ±Гї ГЁГ¬Гї 
+	//ГЇГ®ГўГІГ®Г°ГїГѕГ№ГҐГЈГ®Г±Гї Г ГІГ°ГЁГЎГіГІГ )
 	const char*			CheckUniqueAttrib		(XML_NODE* start_node, const char* tag_name, const char* attrib_name);
 #endif
 
-	//переместиться по XML дереву 
-	//путь задается в форме PARENT:CHILD:CHIDLS_CHILD
-	//node_index - номер, если узлов с одним именем несколько
+	//ГЇГҐГ°ГҐГ¬ГҐГ±ГІГЁГІГјГ±Гї ГЇГ® XML Г¤ГҐГ°ГҐГўГі 
+	//ГЇГіГІГј Г§Г Г¤Г ГҐГІГ±Гї Гў ГґГ®Г°Г¬ГҐ PARENT:CHILD:CHIDLS_CHILD
+	//node_index - Г­Г®Г¬ГҐГ°, ГҐГ±Г«ГЁ ГіГ§Г«Г®Гў Г± Г®Г¤Г­ГЁГ¬ ГЁГ¬ГҐГ­ГҐГ¬ Г­ГҐГ±ГЄГ®Г«ГјГЄГ®
 	XML_NODE*			NavigateToNode			(const char*  path, int node_index = 0);
 	XML_NODE*			NavigateToNode			(XML_NODE* start_node, const char*  path, int node_index = 0);
 	XML_NODE*			NavigateToNodeWithAttribute(const char* tag_name, const char* attrib_name, const char* attrib_value);
@@ -78,7 +77,7 @@ protected:
 	XML_NODE*			m_pLocalRoot;
 
 #ifdef DEBUG // debug & mixed
-	//буфферный вектор для проверки уникальность аттрибутов
+	//ГЎГіГґГґГҐГ°Г­Г»Г© ГўГҐГЄГІГ®Г° Г¤Г«Гї ГЇГ°Г®ГўГҐГ°ГЄГЁ ГіГ­ГЁГЄГ Г«ГјГ­Г®Г±ГІГј Г ГІГІГ°ГЁГЎГіГІГ®Гў
 	xr_vector<shared_str> m_AttribValues;
 #endif
 public:
