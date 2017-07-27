@@ -105,7 +105,7 @@ IC float apx_InvSqrt( const float& n )
 // Only for [0..1] (positive) range 
 IC float apx_asin	(const float x)
 {
-	return asin(x)
+	return asin(x);
 }
 // Only for [0..1] (positive) range 
 IC float apx_acos	(const float x)
