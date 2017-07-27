@@ -266,8 +266,9 @@ void CWeaponKnife::FireStart()
 void CWeaponKnife::Fire2Start () 
 {
 	SwitchState(eFire2);
-	if (ParentIsActor())
-		g_actor->set_state_wishful(g_actor->get_state_wishful() & (~mcSprint));
+    #pragma todo ("Giperion to ForserX: wtf is set_state_wishful")
+	//if (ParentIsActor())
+	//	g_actor->set_state_wishful(g_actor->get_state_wishful() & (~mcSprint));
 }
 
 

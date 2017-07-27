@@ -472,9 +472,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <Library Include="ColorPicker.lib" />
-  </ItemGroup>
-  <ItemGroup>
     <ClCompile Include="CreateDX.cpp" />
     <ClCompile Include="ETools.cpp" />
     <ClCompile Include="ETools_cm.cpp" />

@@ -10,3 +10,9 @@ void import_ses::LuaLog(const char* caMessage)
 {
 	Msg("Script mess: %s", caMessage);
 }
+
+void import_ses::Log(const char* Message)
+{
+    volatile int DontOptimizeMePlz = 2;
+    ++DontOptimizeMePlz;
+}
