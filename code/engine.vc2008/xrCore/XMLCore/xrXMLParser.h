@@ -1,6 +1,6 @@
 #pragma once
 #define CONFIG_PATH "$game_config$"
-#define UI_PATH	 ui"
+#define UI_PATH	 "ui"
 
 #include "tinyxml.h"
 

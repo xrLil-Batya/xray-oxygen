@@ -18,6 +18,9 @@
 
 #include "xrMemory_POOL.h"
 
+XRCORE_API u32	mem_usage_impl(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
+
+
 class XRCORE_API		xrMemory
 {
 public:
@@ -64,7 +67,6 @@ public:
 	void				mem_free		(void*	p					);
 };
 
-XRCORE_API u32	mem_usage_impl	(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
 
 extern XRCORE_API	xrMemory	Memory;
 
