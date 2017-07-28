@@ -364,7 +364,6 @@ protected:
 	shared_str				m_sCampfireIgniteAction;	// qweasdd
 	shared_str				m_sCampfireExtinguishAction; 
 
-//	shared_str				m_quick_use_slots[4];
 	//режим подбирани€ предметов
 	bool					m_bPickupMode;
 	//рассто€ние (в метрах) на котором актер чувствует гранату (любую)
@@ -483,8 +482,6 @@ protected:
 	int									m_spine;
 	int									m_neck;
 
-
-
 	//////////////////////////////////////////////////////////////////////////
 	// Network
 	//////////////////////////////////////////////////////////////////////////
@@ -515,17 +512,14 @@ protected:
 	void					net_Import_Base_proceed		( );
 	void					net_Import_Physic_proceed	( );
 	//---------------------------------------------
-	
 
-
-////////////////////////////////////////////////////////////////////////////
-virtual	bool				can_validate_position_on_spawn	(){return false;}
+	////////////////////////////////////////////////////////////////////////////
+	virtual	bool			can_validate_position_on_spawn	(){return false;}
 	///////////////////////////////////////////////////////
 	// апдайт с данными физики
 	xr_deque<net_update_A>	NET_A;
 	
 	//---------------------------------------------
-//	bool					m_bHasUpdate;	
 	/// spline coeff /////////////////////
 	float			SCoeff[3][4];			//коэффициэнты дл€ сплайна Ѕизье
 	float			HCoeff[3][4];			//коэффициэнты дл€ сплайна Ёрмита
@@ -563,13 +557,12 @@ virtual	bool				can_validate_position_on_spawn	(){return false;}
 	void					CalculateInterpolationParams();
 	//---------------------------------------------
 	virtual void			make_Interpolation ();
+	//---------------------------------------------
 #ifdef DEBUG
-	//---------------------------------------------
 	virtual void			OnRender_Network();
-	//---------------------------------------------
 #endif
+	//---------------------------------------------
 
-// Igor	ref_geom 				hFriendlyIndicator;
 	//////////////////////////////////////////////////////////////////////////
 	// Actor physics
 	//////////////////////////////////////////////////////////////////////////
@@ -580,18 +573,14 @@ public:
 	virtual void			PH_B_CrPr		(); // actions & operations before physic correction-prediction steps
 	virtual void			PH_I_CrPr		(); // actions & operations after correction before prediction steps
 	virtual void			PH_A_CrPr		(); // actions & operations after phisic correction-prediction steps
-//	virtual void			UpdatePosStack	( u32 Time0, u32 Time1 );
 	virtual void			MoveActor		(Fvector NewPos, Fvector NewDir);
 
 	virtual void			SpawnAmmoForWeapon		(CInventoryItem *pIItem);
 	virtual void			RemoveAmmoForWeapon		(CInventoryItem *pIItem);
 	virtual	void			spawn_supplies			();
-	virtual bool			human_being				() const
-	{
-		return				(true);
-	}
+	virtual bool			human_being				() const { return true; }
 
-	virtual	shared_str			GetDefaultVisualOutfit	() const	{return m_DefaultVisualOutfit;};
+	virtual	shared_str		GetDefaultVisualOutfit	() const {return m_DefaultVisualOutfit;};
 	virtual	void			SetDefaultVisualOutfit	(shared_str DefaultOutfit) {m_DefaultVisualOutfit = DefaultOutfit;};
 	virtual void			UpdateAnimation			() 	{ g_SetAnimation(mstate_real); };
 
@@ -635,9 +624,8 @@ protected:
 		void							SelectBestWeapon				(CObject* O);
 public:
 		void							SetWeaponHideState				(u16 State, bool bSet);
-private://IPhysicsShellHolder
-
-virtual	 void	_BCL	HideAllWeapons					( bool v ){ SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
+private:
+virtual void	_BCL					HideAllWeapons					( bool v ){ SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
 
 public:
 		void							SetCantRunState					(bool bSet);
@@ -717,11 +705,7 @@ private:
 	CLocationManager				*m_location_manager;
 
 public:
-	IC		const CLocationManager	&locations					() const
-	{
-		VERIFY						(m_location_manager);
-		return						(*m_location_manager);
-	}
+	IC		const CLocationManager	&locations					() const { VERIFY (m_location_manager); return (*m_location_manager); }
 
 private:
 	ALife::_OBJECT_ID	m_holder_id;
@@ -746,7 +730,9 @@ private:
 private:
 	bool					m_disabled_hitmarks;
 	bool					m_inventory_disabled;
-//static CPhysicsShell		*actor_camera_shell;
+public: // -- New
+	IC 		void 			set_state_wishful(u32 state) { mstate_wishful = state; }
+	IC 		u32 			get_state_wishful() const { return mstate_wishful; }
 
 DECLARE_SCRIPT_REGISTER_FUNCTION
 };
