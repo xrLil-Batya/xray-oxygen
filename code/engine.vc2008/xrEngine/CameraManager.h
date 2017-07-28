@@ -2,16 +2,13 @@
 
 #include "CameraDefs.h"
 
-struct ENGINE_API SPPInfo {
-    struct SColor {
+struct ENGINE_API SPPInfo 
+{
+    struct SColor 
+	{
         float r, g, b;
         SColor() {}
-        SColor(float _r, float _g, float _b)
-            : r(_r)
-            , g(_g)
-            , b(_b)
-        {
-        }
+        SColor(float _r, float _g, float _b) : r(_r) , g(_g) , b(_b) { }
         IC operator u32()
         {
             int _r = clampr(iFloor(r * 255.f + .5f), 0, 255);
@@ -51,11 +48,7 @@ struct ENGINE_API SPPInfo {
     struct SDuality {
         float h, v;
         SDuality() {}
-        SDuality(float _h, float _v)
-            : h(_h)
-            , v(_v)
-        {
-        }
+        SDuality(float _h, float _v) : h(_h), v(_v) { }
         IC SDuality& set(float _h, float _v)
         {
             h = _h;
@@ -98,8 +91,8 @@ struct ENGINE_API SPPInfo {
     void validate(LPCSTR str);
 };
 
-using EffectorCamVec = xr_list<CEffectorCam*>;
-using EffectorPPVec = xr_vector<CEffectorPP*>;
+using EffectorCamVec = xr_vector<CEffectorCam*>;
+using EffectorPPVec  = xr_vector<CEffectorPP*>;
 
 #define effCustomEffectorStartID 10000
 
