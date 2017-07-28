@@ -60,6 +60,11 @@ function log(mess, ...)
 end
 --// Use to_log for print log
 ----------------------------------------------------------------------
+function has_alife_info(info)
+ local sim = alife()
+  return sim and sim:has_info(0, info)
+end
+----------------------------------------------------------------------
 
 function printf(fmt,...)
 	if (Script_Debug_flag == true) then

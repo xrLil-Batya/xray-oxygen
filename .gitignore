@@ -22,3 +22,4 @@ librarieswin32/
 intermediatex64/
 intermediatewin32/
 librariesx64/
+*.lnk
