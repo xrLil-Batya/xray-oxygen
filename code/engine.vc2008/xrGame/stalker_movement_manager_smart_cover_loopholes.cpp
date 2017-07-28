@@ -138,22 +138,23 @@ bool stalker_movement_manager_smart_cover::test_pick	(Fvector source, Fvector de
 	}; // struct parameters
 
 	struct test_pick {
-		static BOOL callback	(collide::rq_result& result, LPVOID user_data)
+		static bool callback	(collide::rq_result& result, LPVOID user_data)
 		{
 			parameters* const	param = (parameters*)user_data;
-			if (param->m_object->feel_vision_mtl_transp(result.O,result.element) < 1.f) {
+			if (param->m_object->feel_vision_mtl_transp(result.O,result.element) < 1.f) 
+			{
 				*param->m_range	= result.range;
-				return			(FALSE);
+				return			(true);
 			}
 
-			return				(TRUE);
+			return				(false);
 		}
 	};
 
 	float range					= distance;
 	parameters					params(range, object());
 	collide::ray_defs	ray_defs(source, direction, distance, CDB::OPT_CULL, collide::rqtStatic);
-	Level().ObjectSpace.RayQuery(m_ray_query_storage, ray_defs, (collide::rq_callback*)&test_pick::callback, &params, NULL, NULL);
+	Level().ObjectSpace.RayQuery(m_ray_query_storage, ray_defs, &test_pick::callback, &params, NULL, NULL);
 	return						(range == distance);
 }
 

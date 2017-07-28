@@ -659,15 +659,15 @@ bool CWeaponKnife::SelectBestHitVictim(Fvector const & f_pos, Fmatrix & parent_x
 	return !m_spartial_query_res.empty();
 }
 
-BOOL CWeaponKnife::RayQueryCallback(collide::rq_result& result, LPVOID this_ptr)
+bool CWeaponKnife::RayQueryCallback(collide::rq_result& result, LPVOID this_ptr)
 {
 	CWeaponKnife*	me = static_cast<CWeaponKnife*>(this_ptr);
 	if (result.O && (result.O->ID() != me->m_except_id))
 	{
 		me->m_last_picked_obj = result.O;
-		return FALSE;	//first hit
+		return false;	//first hit
 	}
-	return TRUE;
+	return true;
 }
 
 CObject* CWeaponKnife::TryPick(Fvector const & start_pos, Fvector const & dir, float const dist)
@@ -677,7 +677,7 @@ CObject* CWeaponKnife::TryPick(Fvector const & start_pos, Fvector const & dir, f
 	m_last_picked_obj	= nullptr;
 	VERIFY(H_Parent());
 	m_except_id			= H_Parent()->ID();
-	Level().ObjectSpace.RayQuery(m_ray_query_results, tmp_rdefs, (collide::rq_callback*)&CWeaponKnife::RayQueryCallback, static_cast<LPVOID>(this), nullptr, nullptr);
+	Level().ObjectSpace.RayQuery(m_ray_query_results, tmp_rdefs, &CWeaponKnife::RayQueryCallback, static_cast<LPVOID>(this), nullptr, nullptr);
 	return m_last_picked_obj;
 }
 
