@@ -15,6 +15,8 @@ private:
 	float			cross_length_perc;
 	float			min_radius_perc;
 	float			max_radius_perc;
+	
+	bool 			is_enabled;
 
 	//текущий радиус прицела
 	float			radius;
@@ -30,12 +32,12 @@ public:
 					CHUDCrosshair	();
 					~CHUDCrosshair	();
 
-			void	OnRender		();
-			void	SetDispersion	(float disp);
+	void			OnRender		();
+	void			SetDispersion	(float disp);
 #ifdef DEBUG
-			void	SetFirstBulletDispertion(float fbdisp);
-			void	OnRenderFirstBulletDispertion();
+	void			SetFirstBulletDispertion(float fbdisp);
+	void			OnRenderFirstBulletDispertion();
 #endif
-
-			void	Load			();
+	void			Load();
+IC	bool			isEnabled() { return is_enabled; }
 };

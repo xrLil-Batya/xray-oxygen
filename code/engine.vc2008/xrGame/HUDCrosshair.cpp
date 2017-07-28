@@ -27,6 +27,7 @@ void CHUDCrosshair::Load		()
 	min_radius_perc = pSettings->r_float (HUD_CURSOR_SECTION, "min_radius");
 	max_radius_perc = pSettings->r_float (HUD_CURSOR_SECTION, "max_radius");
 	cross_color = pSettings->r_fcolor (HUD_CURSOR_SECTION, "cross_color").get();
+	is_enabled = READ_IF_EXISTS(pSettings, r_bool, HUD_CURSOR_SECTION, "cross_enabled", true);
 }
 
 //выставляет radius от min_radius до max_radius

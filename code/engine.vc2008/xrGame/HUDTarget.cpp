@@ -235,9 +235,8 @@ void CHUDTarget::Render()
 	}
 
 	//отрендерить кружочек или крестик
-	if(!m_bShowCrosshair)
+	if(!m_bShowCrosshair && !HUDCrosshair.IsEnabled())
 	{
-		
 		UIRender->StartPrimitive	(6, IUIRender::ptTriList, UI().m_currentPointType);
 		
 		Fvector2		scr_size;
