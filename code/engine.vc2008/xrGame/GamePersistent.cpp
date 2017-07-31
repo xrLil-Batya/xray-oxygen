@@ -38,16 +38,6 @@
 #	include "ai_debug.h"
 #endif // _EDITOR
 
-//#ifdef DEBUG_MEMORY_MANAGER
-//	static	void *	ode_alloc	(size_t size)								{ return Memory.mem_alloc(size,"ODE");			}
-//	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return Memory.mem_realloc(ptr,newsize,"ODE");	}
-//	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);							}
-//#else // DEBUG_MEMORY_MANAGER
-//	static	void *	ode_alloc	(size_t size)								{ return xr_malloc(size);			}
-//	static	void *	ode_realloc	(void *ptr, size_t oldsize, size_t newsize)	{ return xr_realloc(ptr,newsize);	}
-//	static	void	ode_free	(void *ptr, size_t size)					{ return xr_free(ptr);				}
-//#endif // DEBUG_MEMORY_MANAGER
-
 CGamePersistent::CGamePersistent(void)
 {
 	m_bPickableDOF				= false;
@@ -186,16 +176,9 @@ void CGamePersistent::OnGameStart()
 	UpdateGameType				();
 }
 
-LPCSTR GameTypeToString(EGameIDs gt, bool bShort)
+const char* GameTypeToString(EGameIDs gt, bool bShort)
 {
-	switch(gt)
-	{
-	case eGameIDSingle:
-		return "single";
-		break;
-	default :
-		return		"---";
-	}
+	return (gt == eGameIDSingle) ? "single" : "---";
 }
 
 EGameIDs ParseStringToGameType(LPCSTR str)
@@ -386,17 +369,10 @@ void CGamePersistent::WeathersUpdate()
 	}
 }
 
-bool allow_intro ()
+IC bool allow_intro ()
 {
-#ifdef MASTER_GOLD
-	if (g_SASH.IsRunning())
-#else	// #ifdef MASTER_GOLD
-	if ((0!=strstr(Core.Params, "-nointro")) || g_SASH.IsRunning())
-#endif	// #ifdef MASTER_GOLD
-	{
-		return false;
-	}else
-		return true;
+	if(strstr(Core.Params, "-nointro") || g_SASH.IsRunning()) return false;
+	else return true;
 }
 
 void CGamePersistent::start_logo_intro()
@@ -404,7 +380,7 @@ void CGamePersistent::start_logo_intro()
 	if(Device.dwPrecacheFrame==0)
 	{
 		m_intro_event.bind		(this, &CGamePersistent::update_logo_intro);
-		if (!g_dedicated_server && 0==xr_strlen(m_game_params.m_game_or_spawn) && NULL==g_pGameLevel)
+		if (!g_dedicated_server && !xr_strlen(m_game_params.m_game_or_spawn) && !g_pGameLevel && allow_intro())
 		{
 			VERIFY				(NULL==m_intro);
 			m_intro				= xr_new<CUISequencer>();
