@@ -26,13 +26,13 @@ void CDialogScriptHelper::Load		(CUIXml* uiXml, XML_NODE* phrase_node)
 
 template<class T> 
 void  CDialogScriptHelper::LoadSequence (CUIXml* uiXml, XML_NODE* phrase_node, 
-								  LPCSTR tag, T&  str_vector)
+								  const char* tag, T&  str_vector)
 {
 	int tag_num = uiXml->GetNodesNum(phrase_node, tag);
 	str_vector.clear();
 	for(int i=0; i<tag_num; ++i)
 	{
-		LPCSTR tag_text = uiXml->Read(phrase_node, tag, i, NULL);
+		const char* tag_text = uiXml->Read(phrase_node, tag, i, NULL);
 		str_vector.push_back(tag_text);
 	}
 }
@@ -76,25 +76,22 @@ void  CDialogScriptHelper::TransferInfo	(const CInventoryOwner* pOwner) const
 		Actor()->TransferInfo(m_DisableInfo[i], false);
 }
 
-LPCSTR CDialogScriptHelper::GetScriptText(LPCSTR str_to_translate, const CGameObject* pSpeakerGO1, const CGameObject* pSpeakerGO2, LPCSTR dialog_id, LPCSTR phrase_id)
+const char* CDialogScriptHelper::GetScriptText(const char* str_to_translate, const CGameObject* pSpeakerGO1, const CGameObject* pSpeakerGO2, const char* dialog_id, const char* phrase_id)
 {
 	if(!m_sScriptTextFunc.size())
 		return str_to_translate;
 
-	luabind::functor<LPCSTR>		lua_function;
-	bool functor_exists				= ai().script_engine().functor(m_sScriptTextFunc.c_str() ,lua_function);
-	THROW3							(functor_exists, "Cannot find phrase script text ", m_sScriptTextFunc.c_str());
+	luabind::functor<const char*> lua_function;
+	bool functor_exists = ai().script_engine().functor(m_sScriptTextFunc.c_str() ,lua_function);
+	THROW3(functor_exists, "Cannot find phrase script text ", m_sScriptTextFunc.c_str());
 
-	LPCSTR res						= lua_function(	pSpeakerGO1->lua_game_object(), 
-													pSpeakerGO2->lua_game_object(), 
-													dialog_id,
-													phrase_id);
+	const char* res = functor_exists ? lua_function(pSpeakerGO1->lua_game_object(), pSpeakerGO2->lua_game_object(), dialog_id, phrase_id) : "";
 
 	return res;
 
 }
 
-bool CDialogScriptHelper::Precondition	(const CGameObject* pSpeakerGO, LPCSTR dialog_id, LPCSTR phrase_id) const 
+bool CDialogScriptHelper::Precondition	(const CGameObject* pSpeakerGO, const char* dialog_id, const char* phrase_id) const 
 {
 	bool predicate_result = true;
 
@@ -125,7 +122,7 @@ bool CDialogScriptHelper::Precondition	(const CGameObject* pSpeakerGO, LPCSTR di
 	return predicate_result;
 }
 
-void CDialogScriptHelper::Action			(const CGameObject* pSpeakerGO, LPCSTR dialog_id, LPCSTR phrase_id) const 
+void CDialogScriptHelper::Action			(const CGameObject* pSpeakerGO, const char* dialog_id, const char* phrase_id) const 
 {
 
 	for(u32 i = 0; i<Actions().size(); ++i)
@@ -139,11 +136,7 @@ void CDialogScriptHelper::Action			(const CGameObject* pSpeakerGO, LPCSTR dialog
 	TransferInfo(smart_cast<const CInventoryOwner*>(pSpeakerGO));
 }
 
-bool CDialogScriptHelper::Precondition	(	const CGameObject* pSpeakerGO1, 
-										const CGameObject* pSpeakerGO2, 
-										LPCSTR dialog_id, 
-										LPCSTR phrase_id,
-										LPCSTR next_phrase_id) const 
+bool CDialogScriptHelper::Precondition(const CGameObject* pSpeakerGO1, const CGameObject* pSpeakerGO2, const char* dialog_id, const char* phrase_id, const char* next_phrase_id) const 
 {
 	bool predicate_result = true;
 
@@ -160,7 +153,9 @@ bool CDialogScriptHelper::Precondition	(	const CGameObject* pSpeakerGO1,
 		THROW(*Preconditions()[i]);
 		bool functor_exists = ai().script_engine().functor(*Preconditions()[i] ,lua_function);
 		THROW3(functor_exists, "Cannot find phrase precondition", *Preconditions()[i]);
-		predicate_result = lua_function	(pSpeakerGO1->lua_game_object(), pSpeakerGO2->lua_game_object(), dialog_id, phrase_id, next_phrase_id);
+		if(functor_exists)
+			predicate_result = lua_function	(pSpeakerGO1->lua_game_object(), pSpeakerGO2->lua_game_object(), dialog_id, phrase_id, next_phrase_id);
+		
 		if(!predicate_result)
 		{
 		#ifdef DEBUG
@@ -173,7 +168,7 @@ bool CDialogScriptHelper::Precondition	(	const CGameObject* pSpeakerGO1,
 	return predicate_result;
 }
 
-void CDialogScriptHelper::Action			(const CGameObject* pSpeakerGO1, const CGameObject* pSpeakerGO2, LPCSTR dialog_id, LPCSTR phrase_id) const 
+void CDialogScriptHelper::Action(const CGameObject* pSpeakerGO1, const CGameObject* pSpeakerGO2, const char* dialog_id, const char* phrase_id) const 
 {
 	TransferInfo(smart_cast<const CInventoryOwner*>(pSpeakerGO1));
 
@@ -183,9 +178,8 @@ void CDialogScriptHelper::Action			(const CGameObject* pSpeakerGO1, const CGameO
 		THROW(*Actions()[i]);
 		bool functor_exists = ai().script_engine().functor(*Actions()[i] ,lua_function);
 		THROW3(functor_exists, "Cannot find phrase dialog script function", *Actions()[i]);
-		try {
+		if(functor_exists)
 			lua_function		(pSpeakerGO1->lua_game_object(), pSpeakerGO2->lua_game_object(), dialog_id, phrase_id);
-		} catch (...) {
-		}
+		
 	}
 }
