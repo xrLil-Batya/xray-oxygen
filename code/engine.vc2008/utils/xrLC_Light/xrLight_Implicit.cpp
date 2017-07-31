@@ -264,7 +264,7 @@ void ImplicitLightingExec(BOOL b_net)
 			strconcat				(sizeof(out_name),out_name,name,"\\",TEX.name,".dds");
 			FS.update_path			(out_name,"$game_levels$",out_name);
 			clMsg					("Saving texture '%s'...",out_name);
-			VerifyPath				(out_name);
+			createPath				(out_name);
 			BYTE* raw_data			=	LPBYTE(TEX.pSurface);
 			u32	w					=	TEX.dwWidth;
 			u32	h					=	TEX.dwHeight;
@@ -289,7 +289,7 @@ void ImplicitLightingExec(BOOL b_net)
 			strconcat				(sizeof(out_name),out_name,name,"\\",TEX.name,"_lm.dds");
 			FS.update_path			(out_name,"$game_levels$",out_name);
 			clMsg					("Saving texture '%s'...",out_name);
-			VerifyPath				(out_name);
+			createPath				(out_name);
 			BYTE* raw_data			= LPBYTE(&*packed.begin());
 			u32	w					= TEX.dwWidth;
 			u32	h					= TEX.dwHeight;
