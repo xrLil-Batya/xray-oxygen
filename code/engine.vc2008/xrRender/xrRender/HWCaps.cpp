@@ -4,15 +4,14 @@
 #include "hwcaps.h"
 #include "hw.h"
 
-#ifndef _EDITOR
-	#include "NVAPI/nvapi.h"
-	#include "ATI/atimgpud.h"
-#endif
+#include "NVAPI/nvapi.h"
+#include "amd/atimgpud.h"
+#include "amd/amd_ags.h"
+
+#pragma comment(lib, "amd_ags.lib")
 
 namespace
 {
-
-#ifndef _EDITOR
 u32 GetNVGpuNum()
 {
 	NvLogicalGpuHandle  logicalGPUs[NVAPI_MAX_LOGICAL_GPUS];
@@ -71,26 +70,34 @@ u32 GetNVGpuNum()
 
 u32 GetATIGpuNum()
 {
-	int iGpuNum = AtiMultiGPUAdapters();
-	//int iGpuNum = 1;
-
-	if (iGpuNum>1)
+	AGSContext *ags = nullptr;
+	AGSGPUInfo gpuInfo = {};
+	AGSReturnCode status = agsInit(&ags, &gpuInfo);
+	if (status!=AGS_SUCCESS)
 	{
-		Msg	("* ATI MGPU: %d-Way CrossFire detected.", iGpuNum);
+		Msg("! AGS: Initialization failed (%d)", status);
+		return 1;
 	}
-
-	return iGpuNum;
+	int crossfireGpuCount = 1;
+	status = agsGetCrossfireGPUCount(ags, &crossfireGpuCount);
+	if (status!=AGS_SUCCESS)
+	{
+		Msg("! AGS: Unable to get CrossFire GPU count (%d)", status);
+		agsDeInit(ags);
+		return 1;
+	}
+	Msg("* AGS: CrossFire GPU count: %d", crossfireGpuCount);
+	agsDeInit(ags);
+	return crossfireGpuCount;
 }
 
 u32 GetGpuNum()
 {
 	u32 res = GetNVGpuNum();
 
-	res = std::max( res, GetATIGpuNum() );
-
-	res = std::max( res, (u32)2 );
-
-	res = std::min( res, (u32)CHWCaps::MAX_GPUS );
+	res = std::max(res, GetATIGpuNum());
+	res = std::max(res, (u32)2);
+	res = std::min(res, (u32)CHWCaps::MAX_GPUS);
 
 	//	It's vital to have at least one GPU, else
 	//	code will fail.
@@ -100,12 +107,6 @@ u32 GetGpuNum()
 	
 	return res;
 }
-#else
-u32 GetGpuNum()
-{
-	return 1;
-}
-#endif
 }
 
 #if !defined(USE_DX10) && !defined(USE_DX11)
