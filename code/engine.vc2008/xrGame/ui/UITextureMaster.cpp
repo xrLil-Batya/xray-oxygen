@@ -57,7 +57,9 @@ void CUITextureMaster::ParseShTexInfo(LPCSTR xml_file)
 			info.rect.y1 = xml.ReadAttribFlt(node, "texture",i,"y");
 			info.rect.y2 = xml.ReadAttribFlt(node, "texture",i,"height") + info.rect.y1;
 			shared_str id = xml.ReadAttrib	(node, "texture",i,"id");
-			m_textures.insert(std::make_pair(id,info));
+			
+			if (m_textures.find(id) == m_textures.end()) m_textures.emplace(id, info);
+   			else m_textures[id] = info;
 		}
 
 		xml.SetLocalRoot		(root_node);
