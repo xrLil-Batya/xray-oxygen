@@ -5,7 +5,6 @@
 #include "hw.h"
 
 #include "NVAPI/nvapi.h"
-#include "amd/atimgpud.h"
 #include "amd/amd_ags.h"
 
 #pragma comment(lib, "amd_ags.lib")
