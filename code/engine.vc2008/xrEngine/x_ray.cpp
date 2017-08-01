@@ -36,7 +36,6 @@ bool	g_bIntroFinished			= false;
 extern	void	Intro				( void* fn );
 extern	void	Intro_DSHOW			( void* fn );
 extern	int PASCAL IntroDSHOW_wnd	(HINSTANCE hInstC, HINSTANCE hInstP, LPSTR lpCmdLine, int nCmdShow);
-//int		max_load_stage = 0;
 
 // computing build id
 XRCORE_API	LPCSTR	build_date;
@@ -97,7 +96,6 @@ struct _SoundProcessor	: public pureFrame
 {
 	virtual void	_BCL	OnFrame	( )
 	{
-		//Msg							("------------- sound: %d [%3.2f,%3.2f,%3.2f]",u32(Device.dwFrame),VPUSH(Device.vCameraPosition));
 		Device.Statistic->Sound.Begin();
 		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
 		Device.Statistic->Sound.End	();
@@ -432,11 +430,6 @@ ENGINE_API	bool g_dedicated_server	= false;
 DLL_API int RunXRLauncher();
 DLL_API const char* GetParams();
 
-#ifndef DEDICATED_SERVER
-	// forward declaration for Parental Control checks
-	BOOL IsPCAccessAllowed(); 
-#endif // DEDICATED_SERVER
-
 int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 {
 	Debug._initialize			(false);
@@ -466,12 +459,6 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 
 //	foo();
 #ifndef DEDICATED_SERVER
-
-	// Parental Control for Vista and upper
-	if ( ! IsPCAccessAllowed() ) {
-		MessageBox( NULL , "Access restricted" , "Parental Control" , MB_OK | MB_ICONERROR );
-		return 1;
-	}
 
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
@@ -631,20 +618,6 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 	return						0;
 }
 
-int stack_overflow_exception_filter	(int exception_code)
-{
-   if (exception_code == EXCEPTION_STACK_OVERFLOW)
-   {
-       // Do not call _resetstkoflw here, because
-       // at this point, the stack is not yet unwound.
-       // Instead, signal that the handler (the __except block)
-       // is to be executed.
-       return EXCEPTION_EXECUTE_HANDLER;
-   }
-   else
-       return EXCEPTION_CONTINUE_SEARCH;
-}
-
 int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
 	//FX: дичайший костыль, но: "Работает -- не трогай!"
@@ -671,22 +644,15 @@ LPCSTR _GetFontTexName (LPCSTR section)
 	int def_idx		= 1;//default 1024x768
 	int idx			= def_idx;
 
-#if 0
-	u32 w = Device.dwWidth;
-
-	if(w<=800)		idx = 0;
-	else if(w<=1280)idx = 1;
-	else 			idx = 2;
-#else
 	u32 h = Device.dwHeight;
 
 	if(h<=600)		idx = 0;
 	else if(h<1024)	idx = 1;
 	else 			idx = 2;
-#endif
-
-	while(idx>=0){
-		if( pSettings->line_exist(section,tex_names[idx]) )
+	
+	while(idx>=0)
+	{
+		if( pSettings->line_exist(section,tex_names[idx]))
 			return pSettings->r_string(section,tex_names[idx]);
 		--idx;
 	}
@@ -793,8 +759,8 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		LPSTR		op_server		= LPSTR	(P1);
 		LPSTR		op_client		= LPSTR	(P2);
 		Level_Current				= u32(-1);
-		R_ASSERT	(0==g_pGameLevel);
-		R_ASSERT	(0!=g_pGamePersistent);
+		R_ASSERT	(!g_pGameLevel);
+		R_ASSERT	(g_pGamePersistent);
 
 #ifdef NO_SINGLE
 		Console->Execute("main_menu on");
@@ -1007,9 +973,7 @@ void CApplication::Level_Scan()
 	}
 	Levels.clear	();
 
-
 	xr_vector<char*>* folder			= FS.file_list_open		("$game_levels$",FS_ListFolders|FS_RootOnly);
-//.	R_ASSERT							(folder&&folder->size());
 	
 	for (u32 i=0; i<folder->size(); ++i)	
 		Level_Append((*folder)[i]);
@@ -1111,16 +1075,13 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 
 CInifile*  CApplication::GetArchiveHeader(LPCSTR name, LPCSTR ver)
 {
-	auto it		= FS.m_archives.begin();
-	auto it_e	= FS.m_archives.end();
-
-	for(;it!=it_e;++it)
+	for(auto it = FS.m_archives.begin();; it!=FS.m_archives.end(); ++it)
 	{
 		CLocatorAPI::archive& A		= *it;
 
 		LPCSTR ln = A.header->r_string("header", "level_name");
 		LPCSTR lv = A.header->r_string("header", "level_ver");
-		if ( 0==_stricmp(ln,name) && 0==_stricmp(lv,ver) )
+		if(!_stricmp(ln,name) && 0==_stricmp(lv, ver))
 		{
 			return A.header;
 		}
@@ -1136,56 +1097,6 @@ void CApplication::LoadAllArchives()
 		g_pGamePersistent->OnAssetsChanged	();
 	}
 }
-
-#ifndef DEDICATED_SERVER
-// Parential control for Vista and upper
-typedef BOOL (*PCCPROC)( CHAR* ); 
-
-BOOL IsPCAccessAllowed()
-{
-	CHAR szPCtrlChk[ MAX_PATH ] , szGDF[ MAX_PATH ] , *pszLastSlash;
-	HINSTANCE hPCtrlChk = NULL;
-	PCCPROC pctrlchk = NULL;
-	BOOL bAllowed = TRUE;
-
-	if ( ! GetModuleFileName( NULL , szPCtrlChk , MAX_PATH ) )
-		return TRUE;
-
-	if ( ( pszLastSlash = strrchr( szPCtrlChk , '\\' ) ) == NULL )
-		return TRUE;
-
-	*pszLastSlash = '\0';
-
-	strcpy_s( szGDF , szPCtrlChk );
-
-	strcat_s( szPCtrlChk , "\\pctrlchk.dll" );
-	if ( GetFileAttributes( szPCtrlChk ) == INVALID_FILE_ATTRIBUTES )
-		return TRUE;
-
-	if ( ( pszLastSlash = strrchr( szGDF , '\\' ) ) == NULL )
-		return TRUE;
-
-	*pszLastSlash = '\0';
-
-	strcat_s( szGDF , "\\Stalker-COP.exe" );
-	if ( GetFileAttributes( szGDF ) == INVALID_FILE_ATTRIBUTES )
-		return TRUE;
-
-	if ( ( hPCtrlChk = LoadLibrary( szPCtrlChk ) ) == NULL )
-		return TRUE;
-
-	if ( ( pctrlchk = (PCCPROC) GetProcAddress( hPCtrlChk , "pctrlchk" ) ) == NULL ) {
-		FreeLibrary( hPCtrlChk );
-		return TRUE;
-	}
-
-	bAllowed = pctrlchk( szGDF );
-
-	FreeLibrary( hPCtrlChk );
-
-	return bAllowed;
-}
-#endif // DEDICATED_SERVER
 
 void doBenchmark(LPCSTR name)
 {
@@ -1205,13 +1116,7 @@ void doBenchmark(LPCSTR name)
 		_strlwr_s				(Core.Params);
 		
 		InitInput					();
-		if(i){
-			//ZeroMemory(&HW,sizeof(CHW));
-			//	TODO: KILL HW here!
-			//  pApp->m_pRender->KillHW();
-			InitEngine();
-		}
-
+		if(i) InitEngine();
 
 		Engine.External.Initialize	( );
 

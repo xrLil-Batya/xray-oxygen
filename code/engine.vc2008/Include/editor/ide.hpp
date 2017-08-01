@@ -5,11 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : IDE interface class
 ////////////////////////////////////////////////////////////////////////////
+#pragma once
 
-#ifndef EDITOR_IDE_HPP_INCLUDED
-#define EDITOR_IDE_HPP_INCLUDED
-
-namespace editor {
+namespace editor 
+{
 
 class property_holder;
 class property_holder_collection;
@@ -30,18 +29,11 @@ public:
 	virtual	void				environment_weathers	(property_holder *property_holder) = 0;
 
 public:
-	typedef fastdelegate::FastDelegate0<LPCSTR const*>			weathers_getter_type;
-	typedef fastdelegate::FastDelegate0<u32>					weathers_size_getter_type;
-	typedef fastdelegate::FastDelegate1<LPCSTR, LPCSTR const*>	frames_getter_type;
-	typedef fastdelegate::FastDelegate1<LPCSTR, u32>			frames_size_getter_type;
-	virtual	void				weather_editor_setup	(
-									weathers_getter_type const& weathers_getter,
-									weathers_size_getter_type const& weathers_size_getter,
-									frames_getter_type const& frames_getter,
-									frames_size_getter_type const& frames_size_getter
-								) = 0;
+	using weathers_getter_type = fastdelegate::FastDelegate0<LPCSTR const*>;
+	using weathers_size_getter_type = fastdelegate::FastDelegate0<u32>;
+	using frames_getter_type = fastdelegate::FastDelegate1<LPCSTR, LPCSTR const*>;
+	using frames_size_getter_type = fastdelegate::FastDelegate1<LPCSTR, u32>;
+	virtual	void weather_editor_setup(weathers_getter_type const& weathers_getter, weathers_size_getter_type const& weathers_size_getter, frames_getter_type const& frames_getter, frames_size_getter_type const& frames_size_getter) = 0;
 }; // class ide
 
 } // namespace editor
-
-#endif // ifndef EDITOR_IDE_HPP_INCLUDED
