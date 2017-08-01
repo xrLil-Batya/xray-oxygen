@@ -371,20 +371,19 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 		CEffectorCam* ec		= current_actor->Cameras().GetCamEffector(eCEWeaponAction);
 
 	
-		if(NULL==ec)
+		if(ec) current_actor->Cameras().RemoveCamEffector(eCEWeaponAction);
+		
+		string_path			ce_path;
+		string_path			anm_name;
+		strconcat			(sizeof(anm_name),anm_name,"camera_effects\\weapon\\", M.name.c_str(),".anm");
+		if (FS.exist( ce_path, "$game_anims$", anm_name))
 		{
-			string_path			ce_path;
-			string_path			anm_name;
-			strconcat			(sizeof(anm_name),anm_name,"camera_effects\\weapon\\", M.name.c_str(),".anm");
-			if (FS.exist( ce_path, "$game_anims$", anm_name))
-			{
-				CAnimatorCamEffector* e		= xr_new<CAnimatorCamEffector>();
-				e->SetType					(eCEWeaponAction);
-				e->SetHudAffect				(false);
-				e->SetCyclic				(false);
-				e->Start					(anm_name);
-				current_actor->Cameras().AddCamEffector(e);
-			}
+			CAnimatorCamEffector* e		= xr_new<CAnimatorCamEffector>();
+			e->SetType					(eCEWeaponAction);
+			e->SetHudAffect				(false);
+			e->SetCyclic				(false);
+			e->Start					(anm_name);
+			current_actor->Cameras().AddCamEffector(e);
 		}
 	}
 	return ret;
@@ -431,13 +430,12 @@ void player_hud::load(const shared_str& player_hud_sect)
 	m_model						= smart_cast<IKinematicsAnimated*>(::Render->model_Create(model_name.c_str()));
 
 	CInifile::Sect& _sect		= pSettings->r_section(player_hud_sect);
-	CInifile::SectCIt _b		= _sect.Data.begin();
-	CInifile::SectCIt _e		= _sect.Data.end();
-	for(;_b!=_e;++_b)
+	
+	for(auto it = _sect.Data.begin(); it != _sect.Data.end(); ++it)
 	{
-		if(strstr(_b->first.c_str(), "ancor_")==_b->first.c_str())
+		if(strstr(it->first.c_str(), "ancor_")==it->first.c_str())
 		{
-			const shared_str& _bone	= _b->second;
+			const shared_str& _bone	= it->second;
 			m_ancors.push_back		(m_model->dcast_PKinematics()->LL_BoneID(_bone));
 		}
 	}
@@ -482,12 +480,9 @@ void player_hud::render_item_ui()
 
 void player_hud::render_hud()
 {
-	if(!m_attached_items[0] && !m_attached_items[1])	return;
+	if(!m_attached_items[0] && !m_attached_items[1]) return;
 
-	bool b_r0 = (m_attached_items[0] && m_attached_items[0]->need_renderable());
-	bool b_r1 = (m_attached_items[1] && m_attached_items[1]->need_renderable());
-
-	if(!b_r0 && !b_r1)									return;
+	if(!m_attached_items[0]->need_renderable() && !m_attached_items[1]->need_renderable()) return;
 
 	::Render->set_Transform		(&m_transform);
 	::Render->add_Visual		(m_model->dcast_RenderVisual());
@@ -507,11 +502,10 @@ u32 player_hud::motion_length(const shared_str& anim_name, const shared_str& hud
 	float speed						= CalcMotionSpeed(anim_name);
 	attachable_hud_item* pi			= create_hud_item(hud_name);
 	player_hud_motion*	pm			= pi->m_hand_motions.find_motion(anim_name);
-	if(!pm)
-		return						100; // ms TEMPORARY
-	R_ASSERT2						(pm, 
-		make_string	("hudItem model [%s] has no motion with alias [%s]", hud_name.c_str(), anim_name.c_str() ).c_str() 
-		);
+	
+	if(!pm) return 100; // ms TEMPORARY
+	
+	R_ASSERT2(pm, make_string("hudItem model [%s] has no motion with alias [%s]", hud_name.c_str(), anim_name.c_str() ).c_str());
 	return motion_length			(pm->m_animations[0].mid, md, speed);
 }
 

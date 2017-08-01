@@ -489,7 +489,7 @@ void CGamePersistent::OnFrame	()
 	{
 		xr_delete(g_tutorial);
 	}
-	if(0==Device.dwFrame%200)
+	if(!Device.dwFrame % 200)
 		CUITextureMaster::FreeCachedShaders();
 
 #ifdef DEBUG
@@ -519,9 +519,9 @@ void CGamePersistent::OnFrame	()
 #ifndef MASTER_GOLD
 		if (Level().CurrentViewEntity()) {
 			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())) {
-				CCustomMonster	*custom_monster = smart_cast<CCustomMonster*>(Level().CurrentViewEntity());
-				if (custom_monster) // can be spectator in multiplayer
-					custom_monster->UpdateCamera();
+			//	CCustomMonster	*custom_monster = smart_cast<CCustomMonster*>(Level().CurrentViewEntity());
+			//	if (custom_monster) // can be spectator in multiplayer
+			//		custom_monster->UpdateCamera();
 			}
 			else 
 			{

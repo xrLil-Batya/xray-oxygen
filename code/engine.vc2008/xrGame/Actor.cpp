@@ -966,7 +966,6 @@ void CActor::shedule_Update	(u32 DT)
 	// Check controls, create accel, prelimitary setup "mstate_real"
 	
 	//----------- for E3 -----------------------------
-//	if (Local() && (OnClient() || Level().CurrentEntity()==this))
 	if (Level().CurrentControlEntity() == this && !Level().IsDemoPlay())
 	//------------------------------------------------
 	{
@@ -1413,7 +1412,6 @@ ALife::_TIME_ID	 CActor::TimePassedAfterDeath()	const
 void CActor::OnItemTake(CInventoryItem *inventory_item)
 {
 	CInventoryOwner::OnItemTake(inventory_item);
-	if (OnClient()) return;
 }
 
 void CActor::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy)
