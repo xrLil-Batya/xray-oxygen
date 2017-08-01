@@ -33,13 +33,8 @@ bool GreaterRoomInRuck	(PIItem item1, PIItem item2);
 //для проверки свободного места
 bool FreeRoom_inBelt	(TIItemContainer& item_list, PIItem item, int width, int height);
 
-
-// get shader for BuyWeaponWnd
-const ui_shader&	GetBuyMenuShader();
 //получить shader на иконки инвенторя
 const ui_shader& GetEquipmentIconsShader();
-// shader на иконки персонажей в мультиплеере
-const ui_shader&	GetMPCharIconsShader();
 //get shader for outfit icons in upgrade menu
 const ui_shader& GetOutfitUpgradeIconsShader();
 //get shader for weapon icons in upgrade menu

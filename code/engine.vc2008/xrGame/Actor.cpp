@@ -922,8 +922,7 @@ void CActor::shedule_Update	(u32 DT)
 
 	if(IsFocused())
 	{
-		BOOL bHudView				= HUDview();
-		if(bHudView)
+		if(HUDview())
 		{
 			CInventoryItem* pInvItem	= inventory().ActiveItem();	
 			if( pInvItem )

@@ -208,13 +208,6 @@ void CLevel::ClientReceive()
 		case M_SV_CONFIG_FINISHED:
 			{
 				game_configured			= TRUE;
-	#ifdef DEBUG
-				Msg("- Game configuring : Finished ");
-	#endif // #ifdef DEBUG
-				if (IsDemoPlayStarted() && !m_current_spectator)
-				{
-					SpawnDemoSpectator();
-				}
 			}break;
 		case M_MIGRATE_DEACTIVATE:	// TO:   Changing server, just deactivate
 			{

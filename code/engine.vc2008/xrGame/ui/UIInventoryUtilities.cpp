@@ -23,7 +23,6 @@
 #define BUY_MENU_TEXTURE "ui\\ui_mp_buy_menu"
 #define CHAR_ICONS		 "ui\\ui_icons_npc"
 #define MAP_ICONS		 "ui\\ui_icons_map"
-#define MP_CHAR_ICONS	 "ui\\ui_models_multiplayer"
 
 const LPCSTR relationsLtxSection	= "game_relations";
 const LPCSTR ratingField			= "rating_names";
@@ -46,20 +45,20 @@ const LPCSTR st_months[12]= // StringTable for GetDateAsString()
 	"month_december"
 };
 
-ui_shader	*g_BuyMenuShader			= NULL;
-ui_shader	*g_EquipmentIconsShader		= NULL;
-ui_shader	*g_MPCharIconsShader		= NULL;
-ui_shader	*g_OutfitUpgradeIconsShader	= NULL;
-ui_shader	*g_WeaponUpgradeIconsShader	= NULL;
-ui_shader	*g_tmpWMShader				= NULL;
+ui_shader	*g_BuyMenuShader			= nullptr;
+ui_shader	*g_EquipmentIconsShader		= nullptr;
+ui_shader	*g_MPCharIconsShader		= nullptr;
+ui_shader	*g_OutfitUpgradeIconsShader	= nullptr;
+ui_shader	*g_WeaponUpgradeIconsShader	= nullptr;
+ui_shader	*g_tmpWMShader				= nullptr;
 static CUIStatic*	GetUIStatic				();
 
-typedef				std::pair<CHARACTER_RANK_VALUE, shared_str>	CharInfoStringID;
+using CharInfoStringID = std::pair<CHARACTER_RANK_VALUE, shared_str>;
 using CharInfoStrings = xr_map<CHARACTER_RANK_VALUE, shared_str>;
 
-CharInfoStrings		*charInfoReputationStrings	= NULL;
-CharInfoStrings		*charInfoRankStrings		= NULL;
-CharInfoStrings		*charInfoGoodwillStrings	= NULL;
+CharInfoStrings		*charInfoReputationStrings	= nullptr;
+CharInfoStrings		*charInfoRankStrings		= nullptr;
+CharInfoStrings		*charInfoGoodwillStrings	= nullptr;
 
 void InventoryUtilities::CreateShaders()
 {
@@ -114,9 +113,9 @@ bool InventoryUtilities::GreaterRoomInRuck(PIItem item1, PIItem item2)
    	return					false;
 }
 
-bool InventoryUtilities::FreeRoom_inBelt	(TIItemContainer& item_list, PIItem _item, int width, int height)
+bool InventoryUtilities::FreeRoom_inBelt(TIItemContainer& item_list, PIItem _item, int width, int height)
 {
-	bool*				ruck_room	= (bool*)alloca(width*height);
+	bool*	ruck_room	= (bool*)alloca(width*height);
 
 	int		i,j,k,m;
 	int		place_row = 0,  place_col = 0;
@@ -188,17 +187,6 @@ bool InventoryUtilities::FreeRoom_inBelt	(TIItemContainer& item_list, PIItem _it
 	return true;
 }
 
-const ui_shader& InventoryUtilities::GetBuyMenuShader()
-{	
-	if(!g_BuyMenuShader)
-	{
-		g_BuyMenuShader = xr_new<ui_shader>();
-		(*g_BuyMenuShader)->create("hud\\default", BUY_MENU_TEXTURE);
-	}
-
-	return *g_BuyMenuShader;
-}
-
 const ui_shader& InventoryUtilities::GetEquipmentIconsShader()
 {	
 	if(!g_EquipmentIconsShader)
@@ -208,17 +196,6 @@ const ui_shader& InventoryUtilities::GetEquipmentIconsShader()
 	}
 
 	return *g_EquipmentIconsShader;
-}
-
-const ui_shader&	InventoryUtilities::GetMPCharIconsShader()
-{
-	if(!g_MPCharIconsShader)
-	{
-		g_MPCharIconsShader = xr_new<ui_shader>();
-		(*g_MPCharIconsShader)->create("hud\\default",  MP_CHAR_ICONS);
-	}
-
-	return *g_MPCharIconsShader;
 }
 
 const ui_shader& InventoryUtilities::GetOutfitUpgradeIconsShader()

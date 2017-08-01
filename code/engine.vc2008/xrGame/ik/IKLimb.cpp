@@ -415,76 +415,11 @@ void CIKLimb::Destroy()
 bool	dbg_always_valide	= false;
 #endif
 
-
-/*
-
-IC float clamp_rotation( Fquaternion &q, float v )
-{
-	float angl;Fvector ax;
-	q.get_axis_angle( ax, angl );
-	float abs_angl = _abs( angl );
-	if( abs_angl > v )
-	{
-		if( angl <  0.f ) v = -v;
-		q.rotation( ax, v );
-		q.normalize( );
-	}
-	return abs_angl;
-}
-
-IC float  clamp_rotation( Fmatrix &m, float v )
-{
-	Fquaternion q;
-	q.set(m);
-	float r = clamp_rotation( q, v );
-	Fvector c = m.c;
-	m.rotation( q );
-	m.c = c;
-	return r;
-}
-
-IC bool get_axis_angle( const Fmatrix &m, Fvector &ax, float &angl )
-{
-	Fquaternion q;
-	q.set( m );
-	return !!q.get_axis_angle( ax, angl );
-}
-
-IC bool clamp_change( Fmatrix& m, const Fmatrix &start, float ml, float ma, float tl, float ta )
-{
-	Fmatrix diff; diff.mul_43( Fmatrix( ).invert( start ), m );
-	float linear_ch	 = diff.c.magnitude( );
-	bool ret = linear_ch < tl;
-
-	if( linear_ch > ml )
-		diff.c.mul( ml/linear_ch );
-
-	if( clamp_rotation( diff, ma ) > ta )
-		ret = false;
-
-	if(!ret)
-		m.mul_43( start, diff );
-	return ret;
-}
-
-void get_diff_value( const Fmatrix & m0, const Fmatrix &m1, float &l, float &a )
-{
-	Fmatrix diff; diff.mul_43( Fmatrix( ).invert( m1 ), m0 );
-	l = diff.c.magnitude( );
-	Fvector ax; 
-	get_axis_angle( diff, ax, a );
-	a = _abs( a );
-}
-*/
 IC void get_blend_speed_limits(float& l,float& a, const SCalculateData& cd, const ik_limb_state	&sv_state )
 {
 	Fmatrix m;
 	get_diff_value( sv_state.anim_pos( m ), cd.state.anim_pos, l, a );
-	l*=1.5f;//a*=1.5;
-	//l*=0.3f;a*=0.3f;
-	//clamp(l,0.f,0.1f);
-	//clamp(a,0.f,0.03f);
-	//l = 0.01f; a = 0.01f;
+	l*=1.5f;
 }
 
 #ifdef DEBUG
@@ -527,8 +462,6 @@ IC void blend_speed_accel( SCalculateData& cd )
 		cd.l = cd.state.speed_blend_l * Device.fTimeDelta;
 		cd.a = cd.state.speed_blend_a * Device.fTimeDelta;
 }
-
-
 
 void	CIKLimb::SetNewGoal	( const SIKCollideData &cld, SCalculateData& cd )
 {

@@ -59,8 +59,6 @@ private:
 	void						StartSaveDemo			(shared_str const & server_options);
 	void						StopSaveDemo			();
 
-	void						SpawnDemoSpectator		();
-
 	//saving
 	void						SaveDemoHeader	(shared_str const & server_options);
 	inline	bool				IsDemoInfoSaved	() { return m_demo_info != NULL; }

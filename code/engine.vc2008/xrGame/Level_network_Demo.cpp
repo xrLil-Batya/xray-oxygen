@@ -215,11 +215,6 @@ void CLevel::SimulateServerUpdate()
 	}
 }
 
-void CLevel::SpawnDemoSpectator()
-{
-	R_ASSERT2(false, "Multiplayer is unsupported");
-}
-
 void CLevel::SetDemoSpectator(CObject* spectator)
 {
 	R_ASSERT2	(smart_cast<CSpectator*>(spectator),

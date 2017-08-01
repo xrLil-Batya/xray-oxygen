@@ -255,6 +255,15 @@ const char *lj_str_pushvf(lua_State *L, const char *fmt, va_list argp)
     addstr(L, sb, fmt, (MSize)(e-fmt));
     /* This function only handles %s, %c, %d, %f and %p formats. */
     switch (e[1]) {
+		/* add pattern %b in string.format for boolean type support
+	case 'b': {
+			int res = 0;
+			luaL_checktype(L, arg, LUA_TBOOLEAN);
+			res = lua_toboolean(L, arg);
+			addstr(L, sb, buff, (MSize)strlen(buff));
+			break;
+	}
+	*/
     case 's': {
       const char *s = va_arg(argp, char *);
       if (s == NULL) s = "(null)";
