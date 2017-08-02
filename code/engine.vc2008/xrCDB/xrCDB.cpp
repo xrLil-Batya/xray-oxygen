@@ -107,7 +107,7 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	tris_count = Tcnt;
 	tris = CALLOC(TRI, tris_count);
 
-#ifdef _M_X64
+#if defined(_M_X64) && defined(OLD_M_X64)
     if (rebuildTrisRequired)
     {
 

@@ -10,7 +10,7 @@
 #else
 #	define XRCDB_API __declspec(dllimport)
 #endif
-
+//#define OLD_M_X64
 #ifdef M_VISUAL
 #define ALIGN(a) __declspec(align(a))
 #else
@@ -24,12 +24,9 @@ namespace Opcode {
 	class AABBNoLeafNode;
 };
 
-#if defined(_M_X64)// && !defined(_COMPILERS_)
+#if defined(_M_X64) && defined(OLD_M_X64)
 using u_ptr = u64;
 using ur_ptr = u_ptr;
-//#elif defined(_COMPILERS_)
-//using u_ptr = u64;
-//using ur_ptr = u32;
 #else
 using u_ptr = u32;
 using ur_ptr = u_ptr;
@@ -40,12 +37,8 @@ namespace CDB
 {
     // Triangle for x86
 #pragma pack(push, 1)
-#if defined(_M_X64)// && !defined(_COMPILERS_)
-#ifndef _COMPILERS_
+#if defined(_M_X64) && defined(OLD_M_X64)
     class XRCDB_API TRI_DEPRECATED						//*** 16 bytes total (was 32 :)
-#else defined(_COMPILERS_)
-	class XRCDB_API TRI									//*** 16 bytes total (was 32 :)
-#endif
     {
     public:
         u32				verts[3];		// 3*4 = 12b
@@ -64,11 +57,7 @@ namespace CDB
 #endif
 #pragma pack (pop)
 	// Triangle
-//#ifdef _COMPILERS_
-//	class XRCDB_API TRI_CP					//*** 24 bytes total
-//#else
 	class XRCDB_API TRI						//*** 24 bytes total
-//#endif
 	{
 	public:
 		u32				verts	[3];		// 3*4 = 12b
@@ -81,20 +70,18 @@ namespace CDB
 				u_ptr		suppress_shadows:1;	// 
 				u_ptr		suppress_wm:1;		// 
 				u_ptr		sector:16;			// 
-#ifdef _M_X64
+#if define(_M_X64) && defined(OLD_M_X64)
                 u_ptr		dumb : 32;
-#	ifdef _COMPILERS_
 				struct 
 				{
 					u32 dummy_low;
 					u32 dummy_high;
 				};
-#	endif
 #endif
 			};
 		};
 
-#if defined(_M_X64)// && !defined(_COMPILERS_)
+#if defined(_M_X64) && defined(OLD_M_X64)
         TRI (TRI_DEPRECATED& oldTri)
         {
             verts[0] = oldTri.verts[0];
@@ -187,7 +174,7 @@ namespace CDB
 				ur_ptr		suppress_shadows:1;	// 
 				ur_ptr		suppress_wm:1;		// 
 				ur_ptr		sector:16;			// 
-#if defined(_M_X64)// && !defined(_COMPILERS_)
+#if defined(_M_X64) && defined(OLD_M_X64)
 				u64			dumb : 32;
 #endif
 			};

@@ -18,13 +18,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		// create entity
 		E = entity_Create	(s_name); R_ASSERT3(E,"Can't create entity.",s_name);
 		E->Spawn_Read		(P);
-		if	(
-//.				!( (game->Type()==E->s_gameid) || (GAME_ANY==E->s_gameid) ) ||
-				
-				!E->m_gameType.MatchType((u16)game->Type())		||
-				!E->match_configuration() || 
-				!game->OnPreCreate(E)
-			)
+		if(!E->m_gameType.MatchType((u16)game->Type() || !E->match_configuration() || !game->OnPreCreate(E))
 		{
 #ifndef MASTER_GOLD
 			Msg			("- SERVER: Entity [%s] incompatible with current game type.",*E->s_name);
@@ -32,33 +26,22 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 			F_entity_Destroy(E);
 			return			NULL;
 		}
-
-//		E->m_bALifeControl = false;
 	}
-	else {
-		VERIFY				(E->m_bALifeControl);
-//		E->owner			= CL;
-//		if (CL != NULL)
-//		{
-//			int x=0;
-//			x=x;
-//		};
-//		E->m_bALifeControl = true;
-	}
+	else VERIFY(E->m_bALifeControl);
+	
 
 	CSE_Abstract			*e_parent = 0;
 	if (E->ID_Parent != 0xffff) {
 		e_parent			= ID_to_entity(E->ID_Parent);
 		if (!e_parent) {
 			R_ASSERT		(!tpExistedEntity);
-//			VERIFY3			(smart_cast<CSE_ALifeItemBolt*>(E) || smart_cast<CSE_ALifeItemGrenade*>(E),*E->s_name,E->name_replace());
 			F_entity_Destroy(E);
 			return			NULL;
 		}
 	}
 
 	// check if we can assign entity to some client
-	if (0==CL)
+	if (!CL)
 	{
 		CL	= SelectBestClientToMigrateTo	(E);
 	}
@@ -159,9 +142,3 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	//Msg		("- SERVER: Spawning '%s'(%d,%d,%d) as #%d, on '%s'", E->s_name_replace, E->g_team(), E->g_squad(), E->g_group(), E->ID, CL?CL->Name:"*SERVER*");
 	return E;
 }
-
-/*
-void spawn_WithPhantom
-void spawn_FromPhantom
-void spawn_Simple
-*/

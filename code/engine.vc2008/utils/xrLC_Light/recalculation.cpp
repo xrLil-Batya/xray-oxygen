@@ -33,15 +33,14 @@ void recalculation::load_calculation_params()
 
 void recalculation::setup_recalculationflags_file( u32 check_sum ) const
 {
-
+	static std::vector<BYTE> buff;
 
 	IWriter	*W	= FS.w_open	(		"$level$", "recalculation_data_slots.details" );
 	W->w_chunk( 0, &check_sum, sizeof( check_sum ) );
-	//u32 buff_size = dtH.slot_index( dtH.x_size(), dtH.z_size() ) * sizeof( slots_flags[0] );
+	
 	u32 buff_size = dtH.slots_count( ) * sizeof( slots_flags[0] );
-	void* buff = _alloca( buff_size );
-    std::memset( buff, 0, buff_size );
-	W->w_chunk( 1, buff, buff_size );
+	buff.resize(buff_size);
+	W->w_chunk( 1, &buff[0], buff_size );
 	FS.w_close( W );
 }
 
@@ -100,15 +99,7 @@ void	recalculation::close	()
 		xr_delete( dtFS );
 }
 
-	//const DetailHeader				&dtH;
-	//u8								*slots_flags;
-	//CVirtualFileRW					*dtFS;
-
-	//Frect	calculation_rect;
-	//bool	recalculate;
-	//bool	partial_calculate;
-	//bool	force_recalculate;
-void	recalculation::read( INetReader &r )
+void recalculation::read( INetReader &r )
 {
 	R_ASSERT(!slots_flags);
 	R_ASSERT(dtH.version()!=u32(-1));
@@ -125,7 +116,8 @@ void	recalculation::read( INetReader &r )
 	r_pod( r, partial_calculate );
 	r_pod( r, force_recalculate );
 }
-void	recalculation::write( IWriter	&w ) const 
+
+void recalculation::write( IWriter	&w ) const 
 {
 	u32 buff_size = dtH.slots_count( ) * sizeof( slots_flags[0] );
 	w.w( slots_flags, buff_size );

@@ -1,14 +1,9 @@
 #include "stdafx.h"
-
 #include "global_calculation_data.h"
-
-#include "../shader_xrlc.h"
 #include "serialize.h"
+#include "../shader_xrlc.h"
 
 global_claculation_data	gl_data;
-
-
-
 
 template <class T>
 void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
@@ -30,7 +25,7 @@ extern void		Surface_Init	();
 // 
 
 
-
+#include <memory>
 void global_claculation_data::xrLoad()
 {
 	string_path					N;
@@ -49,7 +44,8 @@ void global_claculation_data::xrLoad()
 		R_ASSERT			(CFORM_CURRENT_VERSION==H.version);
 		
 		Fvector*	verts	= (Fvector*)fs->pointer();
-		CDB::TRI*	tris	= (CDB::TRI*)(verts+H.vertcount);
+		CDB::TRI*	tris = (CDB::TRI*)(verts + H.vertcount);
+ 		Level.build(verts, H.vertcount, tris.get(), H.facecount, false);
 		RCAST_Model.build	( verts, H.vertcount, tris, H.facecount );
 		Msg("* Level CFORM: %dK",RCAST_Model.memory()/1024);
 

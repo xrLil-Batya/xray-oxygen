@@ -179,13 +179,9 @@ void CObjectFactory::register_classes	()
 	add<CHUDManager>											(CLSID_HUDMANAGER				,"hud_manager");
 	//Server Game type
 	
-#ifndef NO_SINGLE
 	add<game_sv_Single>											(CLSID_SV_GAME_SINGLE			,"game_sv_single");
-#endif // #ifndef NO_SINGLE
 	//Client Game type
-#ifndef NO_SINGLE
 	add<game_cl_Single>											(CLSID_CL_GAME_SINGLE			,"game_cl_single");
-#endif // #ifndef NO_SINGLE
 	add<CUIGameSP>												(CLSID_GAME_UI_SINGLE			,"game_ui_single");
 #else // NO_XR_GAME
 	ADD(CActor					,CSE_ALifeCreatureActor			,CLSID_OBJECT_ACTOR				,"actor");

@@ -145,7 +145,7 @@ static bool _saved = false;
 			m_ini_string		= temp;
 
 #ifdef XRGAME_EXPORTS
-		if ( NULL==ai().get_alife() )
+		if (!ai().get_alife())
 #endif // #ifdef XRGAME_EXPORTS
 		{
 			IReader* _r	= (IReader*)config;
@@ -228,20 +228,13 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 
 
 	//client object custom data serialization SAVE
-	u16 client_data_size		= (u16)client_data.size(); //�� ����� ���� ������ 256 ����
+	u16 client_data_size		= (u16)client_data.size();
 	tNetPacket.w_u16			(client_data_size);
-//	Msg							("SERVER:saving:save:%d bytes:%d:%s",client_data_size,ID,s_name_replace ? s_name_replace : "");
 	if (client_data_size > 0) {
 		tNetPacket.w			(&*client_data.begin(),client_data_size);
 	}
 
 	tNetPacket.w_u16			(m_tSpawnID);
-//	tNetPacket.w_float			(m_spawn_probability);
-//	tNetPacket.w_u32			(m_spawn_flags.get());
-//	tNetPacket.w_stringZ		(m_spawn_control);
-//	tNetPacket.w_u32			(m_max_spawn_count);
-//	tNetPacket.w_u64			(m_min_spawn_interval);
-//	tNetPacket.w_u64			(m_max_spawn_interval);
 
 #ifdef XRSE_FACTORY_EXPORTS
 	CScriptValueContainer::assign();
@@ -259,17 +252,10 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 	tNetPacket.w_seek			(position,&size,sizeof(u16));
 }
 
-static enum EGameTypes {
+enum EGameTypes 
+{
 	GAME_ANY							= 0,
 	GAME_SINGLE							= 1,
-	GAME_DEATHMATCH						= 2,
-//	GAME_CTF							= 3,
-//	GAME_ASSAULT						= 4,	// Team1 - assaulting, Team0 - Defending
-	GAME_CS								= 5,
-	GAME_TEAMDEATHMATCH					= 6,
-	GAME_ARTEFACTHUNT					= 7,
-	GAME_CAPTURETHEARTEFACT				= 8,
-
 	//identifiers in range [100...254] are registered for script game type
 	GAME_DUMMY							= 255	// temporary game type
 };
