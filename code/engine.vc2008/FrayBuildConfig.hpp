@@ -6,3 +6,6 @@
 /* Scripts */
 #define SPAWN_ANTIFREEZE /* spread spawn of game objects thoughout multiple frames to prevent lags (by alpet) */
 //#define LUACP_API		// attaching luaicp.dll
+
+/* xrRender */
+#define R34_USE_FIRSTMIPLEVEL //activate: LoadInfo.FirstMipLevel = img_loaded_lod;

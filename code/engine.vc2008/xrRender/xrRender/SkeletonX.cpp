@@ -440,49 +440,7 @@ BOOL CSkeletonX::_PickBoneSoft4W	(IKinematics::pick_result &r, float dist, const
 {
 		return pick_bone<vertBoned4W>( Vertices4W, Parent, r, dist, S, D, indices, faces);
 }
-/*
-BOOL	CSkeletonX::_PickBoneSoft1W	(Fvector& normal, float& dist, const Fvector& S, const Fvector& D, u16* indices, CBoneData::FacesVec& faces)
-{
-	VERIFY				(*Vertices1W);
-	bool intersect		= FALSE;
-	for (CBoneData::FacesVecIt it=faces.begin(); it!=faces.end(); it++){
-		Fvector			p[3];
-		u32 idx			= (*it)*3;
-		for (u32 k=0; k<3; k++){
-			vertBoned1W& vert		= Vertices1W[indices[idx+k]];
-			get_pos_bones(vert, p[k], Parent);
-		}
-		float u,v,range	= flt_max;
-		if (CDB::TestRayTri(S,D,p,u,v,range,true)&&(range<dist)){
-			normal.mknormal(p[0],p[1],p[2]);
-			dist		= range;
-			intersect	= TRUE;
-		}
-	}
-	return intersect;
-}
 
-BOOL CSkeletonX::_PickBoneSoft2W	(Fvector& normal, float& dist, const Fvector& S, const Fvector& D, u16* indices, CBoneData::FacesVec& faces)
-{
-	VERIFY				(*Vertices2W);
-	bool intersect		= FALSE;
-	for (CBoneData::FacesVecIt it=faces.begin(); it!=faces.end(); it++){
-		Fvector			p[3];
-		u32 idx			= (*it)*3;
-		for (u32 k=0; k<3; k++){
-			vertBoned2W& vert		= Vertices2W[indices[idx+k]];
-			get_pos_bones(vert, p[k], Parent);
-		}
-		float u,v,range	= flt_max;
-		if (CDB::TestRayTri(S,D,p,u,v,range,true)&&(range<dist)){
-			normal.mknormal(p[0],p[1],p[2]);
-			dist		= range;
-			intersect	= TRUE;
-		}
-	}
-	return intersect;
-}
-*/
 // Fill Vertices
 void CSkeletonX::_FillVerticesSoft1W(const Fmatrix& view, CSkeletonWallmark& wm, const Fvector& normal, float size, u16* indices, CBoneData::FacesVec& faces)
 {
