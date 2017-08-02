@@ -354,7 +354,7 @@ void COLLIDER::ray_query(const MODEL *m_def, const Fvector& r_start,  const Fvec
 	
 	// SSE or FPU
 	// Binary dispatcher
-	ray_collider<(CPU::ID.hasFeature(CpuFeature::Sse)) ? true : false, (ray_mode&OPT_CULL) ? true : false,(ray_mode&OPT_ONLYFIRST) ? true : false,(ray_mode&OPT_ONLYNEAREST) ? true : false> RC;
+	ray_collider<(CPU::ID.hasFeature(CpuFeature::Sse)), (ray_mode&OPT_CULL), (ray_mode&OPT_ONLYFIRST), (ray_mode&OPT_ONLYNEAREST)> RC;
 	RC._init(this,m_def->verts,m_def->tris,r_start,r_dir,r_range);
 	RC._stab(N);
 }
