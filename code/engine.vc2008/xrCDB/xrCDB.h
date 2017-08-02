@@ -70,7 +70,7 @@ namespace CDB
 				u_ptr		suppress_shadows:1;	// 
 				u_ptr		suppress_wm:1;		// 
 				u_ptr		sector:16;			// 
-#if define(_M_X64) && defined(OLD_M_X64)
+#if defined(_M_X64) && defined(OLD_M_X64)
                 u_ptr		dumb : 32;
 				struct 
 				{

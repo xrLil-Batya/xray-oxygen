@@ -69,9 +69,9 @@ XRCORE_API void dump_file_mappings	()
 // Tools
 //////////////////////////////////////////////////////////////////////
 //---------------------------------------------------
-void createPath(const stdfs::path& path) {
+void createPath(const std::experimental::filesystem::path& path) {
     std::error_code e;
-    stdfs::create_directories(path, e);
+	std::experimental::filesystem::create_directories(path, e);
     (void)e;
 }
 

@@ -3,11 +3,12 @@
 //////////////////////////////////////////////////////////////////////
 #pragma once
 #include <filesystem>
-using stdfs = std::experemantal::filesystem;
+#include <array>
+#define stdfs std::experimental::filesystem;
 static constexpr auto CFS_CompressMark = 1ul << 31ul;
 static constexpr auto CFS_HeaderChunkID = 666;
 
-XRCORE_API void createPath(const stdfs::path& path);
+XRCORE_API void createPath(const std::experimental::filesystem::path& path);
 
 //#define FS_DEBUG
 

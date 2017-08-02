@@ -45,7 +45,7 @@ void global_claculation_data::xrLoad()
 		
 		Fvector*	verts	= (Fvector*)fs->pointer();
 		CDB::TRI*	tris = (CDB::TRI*)(verts + H.vertcount);
- 		Level.build(verts, H.vertcount, tris.get(), H.facecount, false);
+// 		Level.build(verts, H.vertcount, tris.get(), H.facecount, false);
 		RCAST_Model.build	( verts, H.vertcount, tris, H.facecount );
 		Msg("* Level CFORM: %dK",RCAST_Model.memory()/1024);
 

@@ -23,3 +23,5 @@ intermediatex64/
 intermediatewin32/
 librariesx64/
 *.lnk
+*.db
+code/engine.vc2008/.vs/

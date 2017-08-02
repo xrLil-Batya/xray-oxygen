@@ -152,8 +152,8 @@ IC	profile_timer_script	operator+	(const profile_timer_script &portion0, const p
 ICF	u32	script_time_global	()	{ return Device.dwTimeGlobal; }
 ICF	u32	script_time_global_async	()	{ return Device.TimerAsync_MMT(); }
 #else
-ICF	u32	script_time_global	()	{ return nullptr; }
-ICF	u32	script_time_global_async	()	{ return nullptr; }
+ICF	u32	script_time_global	()	{ return NULL; }
+ICF	u32	script_time_global_async	()	{ return NULL; }
 #endif+
 
 #ifdef XRGAME_EXPORTS

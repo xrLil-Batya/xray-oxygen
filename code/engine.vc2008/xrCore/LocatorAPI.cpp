@@ -31,6 +31,10 @@ CLocatorAPI*		xr_FS = nullptr;
 //#TODO: Make a part of CLocatorAPI class later
 std::experimental::filesystem::path fsRoot;
 
+bool file_handle_internal(const char* file_name, size_t& size, int& file_handle);
+void* FileDownload(const char* file_name, size_t* buffer_size);
+
+
 struct _open_file
 {
 	union {
@@ -654,10 +658,10 @@ IReader *CLocatorAPI::setup_fs_ltx	(const char* fs_name)
 				
 	Log				("using fs-ltx", fs_path);
 
-	size_t			file_handle;
-	u32				file_size;
+	int			file_handle;
+	size_t				file_size;
 	IReader			*result = nullptr;
-	CHECK_OR_EXIT( file_handle_internal(fs_path, (int)file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path));
+	CHECK_OR_EXIT( file_handle_internal(fs_path, file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path));
 
     void			*buffer = FileDownload(fs_path, file_handle, file_size);
 	result			= new CTempReader(buffer,file_size,0);

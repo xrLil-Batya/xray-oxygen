@@ -689,9 +689,6 @@
     <ClCompile Include="CameraManager.cpp">
       <Filter>Game API\Cameras</Filter>
     </ClCompile>
-    <ClCompile Include="Effector.cpp">
-      <Filter>Game API\Cameras</Filter>
-    </ClCompile>
     <ClCompile Include="EffectorPP.cpp">
       <Filter>Game API\Cameras</Filter>
     </ClCompile>
