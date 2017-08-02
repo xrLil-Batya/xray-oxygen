@@ -22,10 +22,14 @@ u32		rtc_csize		(u32 in)
 	VERIFY			(in);
 	return			in + in/64 + 16 + 3;
 }
-
+#pragma todo("FX to Giperion: Don't forget about the x32")
 u32		rtc_compress	(void *dst, u32 dst_len, const void* src, u32 src_len)
 {
+#ifdef _M_X64
 	u64		out_size	= dst_len;
+#else
+	u32		out_size	= dst_len;
+#endif
 	int r = lzo1x_1_compress	( 
 		(const lzo_byte *) src, (lzo_uint)	src_len, 
 		(lzo_byte *) dst,		(lzo_uintp) &out_size, 
@@ -33,9 +37,14 @@ u32		rtc_compress	(void *dst, u32 dst_len, const void* src, u32 src_len)
 	VERIFY	(r==LZO_E_OK);
 	return	out_size;
 }
+
 u32		rtc_decompress	(void *dst, u32 dst_len, const void* src, u32 src_len)
 {
-    u64		out_size	= dst_len;
+#ifdef _M_X64
+	u64		out_size	= dst_len;
+#else
+	u32		out_size	= dst_len;
+#endif
 	int r = lzo1x_decompress	( 
 		(const lzo_byte *) src, (lzo_uint)	src_len,
 		(lzo_byte *) dst,		(lzo_uintp) &out_size,
