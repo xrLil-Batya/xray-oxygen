@@ -482,15 +482,13 @@ void player_hud::render_hud()
 {
 	if(!m_attached_items[0] && !m_attached_items[1]) return;
 
-	if(!m_attached_items[0]->need_renderable() && !m_attached_items[1]->need_renderable()) return;
-
 	::Render->set_Transform		(&m_transform);
 	::Render->add_Visual		(m_model->dcast_RenderVisual());
 	
-	if(m_attached_items[0])
+	if(m_attached_items[0] && m_attached_items[0]->need_renderable())
 		m_attached_items[0]->render();
 	
-	if(m_attached_items[1])
+	if(m_attached_items[1] && m_attached_items[1]->need_renderable())
 		m_attached_items[1]->render();
 }
 
