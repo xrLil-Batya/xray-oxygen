@@ -71,7 +71,8 @@ u32 GetATIGpuNum()
 {
 	AGSContext *ags = nullptr;
 	AGSGPUInfo gpuInfo = {};
-	AGSReturnCode status = agsInit(&ags, &gpuInfo);
+	AGSConfiguration *config = nullptr;
+	AGSReturnCode status = agsInit(&ags, config ,&gpuInfo);
 	if (status!=AGS_SUCCESS)
 	{
 		Msg("! AGS: Initialization failed (%d)", status);

@@ -30,7 +30,7 @@
     <ProjectGuid>{CC52E0B3-CC35-4934-9302-035B748F3F2C}</ProjectGuid>
     <RootNamespace>luabind</RootNamespace>
     <Keyword>Win32Proj</Keyword>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -462,9 +462,6 @@
     <ClInclude Include="lua_studio\script_debugger_messages.h" />
     <ClInclude Include="mslotutils.hpp" />
     <ClInclude Include="xrScripts.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\..\SDK\libraries\x86\lua.JIT.2.0.4.lib" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

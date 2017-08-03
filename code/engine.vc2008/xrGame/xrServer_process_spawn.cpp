@@ -18,7 +18,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		// create entity
 		E = entity_Create	(s_name); R_ASSERT3(E,"Can't create entity.",s_name);
 		E->Spawn_Read		(P);
-		if(!E->m_gameType.MatchType((u16)game->Type() || !E->match_configuration() || !game->OnPreCreate(E))
+		if(!E->m_gameType.MatchType((u16)game->Type() || !E->match_configuration() || !game->OnPreCreate(E)))
 		{
 #ifndef MASTER_GOLD
 			Msg			("- SERVER: Entity [%s] incompatible with current game type.",*E->s_name);
@@ -31,7 +31,8 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	
 
 	CSE_Abstract			*e_parent = 0;
-	if (E->ID_Parent != 0xffff) {
+	if (E->ID_Parent != 0xffff)
+	{
 		e_parent			= ID_to_entity(E->ID_Parent);
 		if (!e_parent) {
 			R_ASSERT		(!tpExistedEntity);

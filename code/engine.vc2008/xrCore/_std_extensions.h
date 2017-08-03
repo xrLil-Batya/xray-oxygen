@@ -252,7 +252,7 @@ inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_s
 }
 #endif // #ifndef MASTER_GOLD
 
-#	pragma deprecated( strcpy, strcpy_s, sprintf, sprintf_s, strcat, strcat_s )
+//#	pragma deprecated( strcpy, strcpy_s, sprintf, sprintf_s, strcat, strcat_s )
 
 template <int count>
 inline errno_t xr_strcpy	( char (&destination)[count], const char* source )

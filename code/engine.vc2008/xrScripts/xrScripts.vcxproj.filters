@@ -49,6 +49,9 @@
     <Filter Include="Import\xrEngine\LuaStudio">
       <UniqueIdentifier>{7112c23b-e166-4e17-8b7f-4a0805e497f1}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua\LuaJIT\src">
+      <UniqueIdentifier>{e37f6e73-df9e-42c7-95f3-4637a9d4a223}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="luabind\src\class.cpp">
@@ -422,10 +425,5 @@
     <ClInclude Include="import_ses.hpp">
       <Filter>Import\LuaCore</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <Library Include="..\..\SDK\libraries\x86\lua.JIT.2.0.4.lib">
-      <Filter>Lua\LuaJIT</Filter>
-    </Library>
   </ItemGroup>
 </Project>

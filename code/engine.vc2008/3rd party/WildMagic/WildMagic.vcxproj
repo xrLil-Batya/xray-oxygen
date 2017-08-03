@@ -88,7 +88,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{35448F1E-E96F-40A2-8F46-6FB1D8DFF1F1}</ProjectGuid>
     <RootNamespace>WildMagic</RootNamespace>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">

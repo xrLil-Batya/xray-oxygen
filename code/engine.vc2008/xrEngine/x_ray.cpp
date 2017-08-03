@@ -1075,7 +1075,7 @@ int CApplication::Level_ID(LPCSTR name, LPCSTR ver, bool bSet)
 
 CInifile*  CApplication::GetArchiveHeader(LPCSTR name, LPCSTR ver)
 {
-	for(auto it = FS.m_archives.begin();; it!=FS.m_archives.end(); ++it)
+	for(auto it = FS.m_archives.begin(); it!=FS.m_archives.end(); ++it)
 	{
 		CLocatorAPI::archive& A		= *it;
 
