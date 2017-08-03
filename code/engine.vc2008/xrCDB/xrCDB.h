@@ -72,11 +72,6 @@ namespace CDB
 				u_ptr		sector:16;			// 
 #if defined(_M_X64) && defined(OLD_M_X64)
                 u_ptr		dumb : 32;
-				struct 
-				{
-					u32 dummy_low;
-					u32 dummy_high;
-				};
 #endif
 			};
 		};
