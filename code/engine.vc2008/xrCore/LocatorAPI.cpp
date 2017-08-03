@@ -31,10 +31,6 @@ CLocatorAPI*		xr_FS = nullptr;
 //#TODO: Make a part of CLocatorAPI class later
 std::experimental::filesystem::path fsRoot;
 
-bool file_handle_internal(const char* file_name, size_t& size, int& file_handle);
-void* FileDownload(const char* file_name, size_t* buffer_size);
-
-
 struct _open_file
 {
 	union {
@@ -576,8 +572,8 @@ bool CLocatorAPI::Recurse		(const char* path)
     return true;
 }
 
- bool file_handle_internal(const char* file_name, size_t& size, int& file_handle);
- void* FileDownload(const char* file_name, const int& file_handle, size_t& file_size);
+bool file_handle_internal	(const char* file_name, u32 &size, int &file_handle);
+void *FileDownload			(const char* file_name, const int &file_handle, u32 &file_size);
 
 static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
 {
@@ -658,10 +654,13 @@ IReader *CLocatorAPI::setup_fs_ltx	(const char* fs_name)
 				
 	Log				("using fs-ltx", fs_path);
 
-	int			file_handle;
-	size_t				file_size;
-	IReader			*result = nullptr;
-	CHECK_OR_EXIT( file_handle_internal(fs_path, file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path));
+	int				file_handle;
+	u32				file_size;
+	IReader			*result = 0;
+	CHECK_OR_EXIT	(
+		file_handle_internal(fs_path, file_size, file_handle),
+		make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path)
+	);
 
     void			*buffer = FileDownload(fs_path, file_handle, file_size);
 	result			= new CTempReader(buffer,file_size,0);
@@ -1434,7 +1433,7 @@ void CLocatorAPI::file_rename(const char* src, const char* dest, bool bOwerwrite
 		files_it D		= file_find_it(dest);
 		if (D!=m_files.end()){ 
 	        if (!bOwerwrite) return;
-            _unlink		(D->name);
+            unlink		(D->name);
 			char* str	= const_cast<char*>(D->name);
 			xr_free		(str);
 			m_files.erase	(D);
@@ -1450,7 +1449,7 @@ void CLocatorAPI::file_rename(const char* src, const char* dest, bool bOwerwrite
 		m_files.insert	(new_desc); 
         
         // physically rename file
-        createPath		(dest);
+        VerifyPath		(dest);
         rename			(src,dest);
 	}
 }
