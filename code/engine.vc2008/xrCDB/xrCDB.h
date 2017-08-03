@@ -10,7 +10,7 @@
 #else
 #	define XRCDB_API __declspec(dllimport)
 #endif
-//#define OLD_M_X64
+#define OLD_M_X64
 #ifdef M_VISUAL
 #define ALIGN(a) __declspec(align(a))
 #else

@@ -67,8 +67,10 @@ bool	verify_sp	(ISpatial* sp, Fvector& node_center, float node_radius)
 void	ISpatial::spatial_register	()
 {
 	spatial.type			|=	STYPEFLAG_INVALIDSECTOR;
-	if (!spatial.node_ptr)
+	if (spatial.node_ptr)
 	{
+		// already registered - nothing to do
+	} else {
 		// register
 		R_ASSERT				(spatial.space);
 		spatial.space->insert	(this);
@@ -84,6 +86,8 @@ void	ISpatial::spatial_unregister()
 		spatial.space->remove	(this);
 		spatial.node_ptr		= nullptr;
 		spatial.sector			= nullptr;
+	} else {
+		// already unregistered
 	}
 }
 
@@ -98,6 +102,9 @@ void	ISpatial::spatial_move	()
 		if						(spatial_inside())	return;		// ???
 		spatial.space->remove	(this);
 		spatial.space->insert	(this);
+	} else {
+		//*** we are not registered yet, or already unregistered
+		//*** ignore request
 	}
 }
 
@@ -109,21 +116,22 @@ void	ISpatial::spatial_updatesector_internal()
 }
 
 //////////////////////////////////////////////////////////////////////////
-void ISpatial_NODE::_init(ISpatial_NODE* _parent)
+void			ISpatial_NODE::_init			(ISpatial_NODE* _parent)
 {
 	parent		=	_parent;
-	for(int it = 0; it < 8; it++, children[it] = 0);
+	children[0]	=	children[1]	=	children[2]	=	children[3]	=
+	children[4]	=	children[5]	=	children[6]	=	children[7]	=	nullptr;
 	items.clear();
 }
 
-void ISpatial_NODE::_insert(ISpatial* S)			
+void			ISpatial_NODE::_insert			(ISpatial* S)			
 {	
 	S->spatial.node_ptr			=	this;
 	items.push_back					(S);
 	S->spatial.space->stat_objects	++;
 }
 
-void ISpatial_NODE::_remove(ISpatial* S)			
+void			ISpatial_NODE::_remove			(ISpatial* S)			
 {	
 	S->spatial.node_ptr			=	nullptr;
 	auto it = std::find(items.begin(),items.end(),S);
@@ -143,18 +151,20 @@ ISpatial_DB::ISpatial_DB()
 
 ISpatial_DB::~ISpatial_DB()
 {
-	if (m_root) _node_destroy(m_root);
-
-	while (!allocator_pool.empty())
+	if ( m_root )
 	{
+		_node_destroy(m_root);
+	}
+
+	while (!allocator_pool.empty()){
 		allocator.destroy		(allocator_pool.back());
 		allocator_pool.pop_back	();
 	}
 }
 
-void ISpatial_DB::initialize(Fbox& BB)
+void			ISpatial_DB::initialize(Fbox& BB)
 {
-	if (!m_root)			
+	if (0==m_root)			
 	{
 		// initialize
 		Fvector bbc,bbd;
@@ -171,7 +181,7 @@ void ISpatial_DB::initialize(Fbox& BB)
 		m_root->_init			(nullptr);
 	}
 }
-ISpatial_NODE* ISpatial_DB::_node_create()
+ISpatial_NODE*	ISpatial_DB::_node_create		()
 {
 	stat_nodes	++;
 	if (allocator_pool.empty())			return allocator.create();
@@ -182,7 +192,7 @@ ISpatial_NODE* ISpatial_DB::_node_create()
 		return			N;
 	}
 }
-void ISpatial_DB::_node_destroy(ISpatial_NODE* &P)
+void			ISpatial_DB::_node_destroy(ISpatial_NODE* &P)
 {
 	VERIFY						(P->_empty());
 	stat_nodes					--;
@@ -190,7 +200,7 @@ void ISpatial_DB::_node_destroy(ISpatial_NODE* &P)
 	P							= nullptr;
 }
 
-void ISpatial_DB::_insert(ISpatial_NODE* N, Fvector& n_C, float n_R)
+void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
 {
 	//*** we are assured that object lives inside our node
 	float	n_vR	= 2*n_R;

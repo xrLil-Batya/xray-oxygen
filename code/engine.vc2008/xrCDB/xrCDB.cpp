@@ -124,7 +124,9 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
         std::memcpy(tris, T, tris_count * sizeof(TRI));
     }
 #else
+
 	std::memcpy(tris, T, tris_count * sizeof(TRI));
+
 #endif
 
 	// callback
