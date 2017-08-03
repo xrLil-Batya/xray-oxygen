@@ -92,7 +92,8 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		if (!bAlready) 
 		{
 			F->flags.bProcessed	= true;
-			CL.add_face_D		( F->v[0]->P,F->v[1]->P,F->v[2]->P, *((u32*)&F), F->sm_group );
+
+			CL.add_face_D		( F->v[0]->P,F->v[1]->P,F->v[2]->P, *((size_t*)&F), F->sm_group );
 		}
 	}
 
