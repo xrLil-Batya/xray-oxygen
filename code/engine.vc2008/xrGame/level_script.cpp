@@ -37,6 +37,7 @@
 #include "alife_object_registry.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "raypick.h"
+#include "script_game_object_impl.h"
 
 using namespace luabind;
  bool single_game()
