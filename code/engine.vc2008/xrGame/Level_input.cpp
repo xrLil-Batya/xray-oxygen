@@ -166,28 +166,6 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 	if ( game && game->OnKeyboardPress(get_binded_action(key)) )	return;
 
-/*	if(_curr == kQUICK_SAVE)
-	{
-		Console->Execute			("save");
-		return;
-	}
-	if(_curr == kQUICK_LOAD)
-	{
-#ifdef DEBUG
-		FS.get_path					("$game_config$")->m_Flags.set(FS_Path::flNeedRescan, TRUE);
-		FS.get_path					("$game_scripts$")->m_Flags.set(FS_Path::flNeedRescan, TRUE);
-		FS.rescan_pathes			();
-#endif // DEBUG
-		string_path					saved_game,command;
-		strconcat					(sizeof(saved_game),saved_game,Core.UserName," - ","quicksave");
-		if (!CSavedGameWrapper::valid_saved_game(saved_game))
-			return;
-
-		strconcat					(sizeof(command),command,"load ",saved_game);
-		Console->Execute			(command);
-		return;
-	}
-	*/
 #ifndef MASTER_GOLD
 	switch (key) {
 	case DIK_F7: {

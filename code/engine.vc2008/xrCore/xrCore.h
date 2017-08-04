@@ -86,7 +86,8 @@
 #include <math.h>
 #include <string.h>
 #include <typeinfo.h>
-//#include <process.h>
+#include <cinttypes>
+#include <chrono>
 
 #ifndef DEBUG
 	#ifdef _DEBUG

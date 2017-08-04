@@ -20,7 +20,7 @@ XRCORE_API		const char*	build_date;
 namespace CPU
 {
 	extern	void			Detect	();
-};
+}
 
 static u32	init_counter	= 0;
 //extern char g_application_path[256];
