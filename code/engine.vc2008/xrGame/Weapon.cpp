@@ -1748,8 +1748,9 @@ float CWeapon::Weight() const
 	if(IsSilencerAttached()&&GetSilencerName().size()){
 		res += pSettings->r_float(GetSilencerName(),"inv_weight");
 	}
-	
-	if(iAmmoElapsed)
+	const char* last_type = nullptr; 
+	float w = 0, bs = 0;
+	for (auto& c : m_magazine)
 	{
 		float w		= pSettings->r_float(m_ammoTypes[m_ammoType].c_str(),"inv_weight");
 		float bs	= pSettings->r_float(m_ammoTypes[m_ammoType].c_str(),"box_size");
