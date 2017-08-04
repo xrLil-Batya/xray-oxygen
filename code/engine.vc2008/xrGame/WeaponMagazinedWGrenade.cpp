@@ -497,11 +497,10 @@ bool CWeaponMagazinedWGrenade::Detach(LPCSTR item_section_name, bool b_spawn_ite
 	   !xr_strcmp(*m_sGrenadeLauncherName, item_section_name))
 	{
 		m_flagsAddOnState &= ~CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher;
-		if(m_bGrenadeMode)
-		{
+		
+		if(!m_bGrenadeMode) PerformSwitchGL(); // Fix disappearing grenade
 			UnloadMagazine();
 			PerformSwitchGL();
-		}
 
 		UpdateAddonsVisibility();
 
