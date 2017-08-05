@@ -137,17 +137,7 @@ void CObjectList::Update		(bool bForce)
 				crows1.clear_not_free	();
 			}
 
-#if 0
-			std::sort					(crows.begin(), crows.end());
-			crows.erase					(
-				std::unique(
-					crows.begin(),
-					crows.end()
-				),
-				crows.end()
-			);
-#else
-#	ifdef DEBUG
+#ifdef DEBUG
 			std::sort					(crows.begin(), crows.end());
 			VERIFY						(
 				std::unique(
@@ -155,8 +145,7 @@ void CObjectList::Update		(bool bForce)
 					crows.end()
 				) == crows.end()
 			);
-#	endif // ifdef DEBUG
-#endif
+#endif // ifdef DEBUG
 
 			Device.Statistic->UpdateClient_crows	= crows.size	();
 			Objects* workload			= 0;

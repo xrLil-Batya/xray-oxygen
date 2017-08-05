@@ -620,7 +620,6 @@
     <ClCompile Include="r3_loader.cpp" />
     <ClCompile Include="r3_R_rain.cpp" />
     <ClCompile Include="r3_R_render.cpp" />
-    <ClCompile Include="r3_R_sun_support.cpp" />
     <ClCompile Include="..\xrRender\r__dsgraph_build.cpp" />
     <ClCompile Include="..\xrRender\r__dsgraph_render.cpp" />
     <ClCompile Include="..\xrRender\r__dsgraph_render_lods.cpp" />
@@ -643,7 +642,6 @@
     <ClCompile Include="..\xrRender\Light_DB.cpp" />
     <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="..\xrRender\Light_Package.cpp" />
-    <ClCompile Include="Light_Render_Direct.cpp" />
     <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="light_smapvis.cpp" />
     <ClCompile Include="light_vis.cpp" />
@@ -767,7 +765,6 @@
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
       <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
     </ClCompile>
-    <ClCompile Include="..\xrRender\dxParticleCustom.cpp" />
     <ClCompile Include="..\xrRender\FBasicVisual.cpp" />
     <ClCompile Include="..\xrRender\FHierrarhyVisual.cpp" />
     <ClCompile Include="..\xrRender\Animation.cpp" />
@@ -811,7 +808,6 @@
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidManager.cpp" />
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidObstacles.cpp" />
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidRenderer.cpp" />
-    <ClCompile Include="..\xrRender\Debug\dxPixEventWrapper.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
