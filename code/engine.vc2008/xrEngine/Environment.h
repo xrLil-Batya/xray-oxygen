@@ -160,7 +160,7 @@ public:
 	Fvector3			sun_dir		;
 	float				m_fSunShaftsIntensity;
 	float				m_fWaterIntensity;
-
+	float 				m_fTreeAmplitudeIntensity;
 
 //	int					lens_flare_id;
 //	int					tb_id;
