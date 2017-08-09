@@ -249,11 +249,10 @@ CEffectorPP* CCameraManager::AddPPEffector(CEffectorPP* ef)
 void CCameraManager::RemovePPEffector(EEffectorPPType type)
 {
     for (auto it = m_EffectorsPP.begin(); it != m_EffectorsPP.end(); it++)
-        if ((*it)->Type() == type) {
-            if ((*it)->FreeOnRemove()) {
+        if ((*it)->Type() == type) 
+		{
+            if((*it)->FreeOnRemove())
                 OnEffectorReleased(*it);
-                //				xr_delete				(*it);
-            }
             m_EffectorsPP.erase(it);
             return;
         }
@@ -320,19 +319,14 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 
 bool CCameraManager::ProcessCameraEffector(CEffectorCam* eff)
 {
-    	bool res = false;
-    	if (eff->Valid() && eff->ProcessCam(m_cam_info)) {
-        	res = true;
-	} 
-	else if (eff->AllowProcessingIfInvalid())
-	{
-            eff->ProcessIfInvalid(m_cam_info);
-        }
-
-        EffectorCamVec::iterator it = std::find(m_EffectorsCam.begin(), m_EffectorsCam.end(), eff);
-
-        m_EffectorsCam.erase(it);
-        OnEffectorReleased(eff);
+    bool res = false;
+    if (eff->Valid() && eff->ProcessCam(m_cam_info))
+    {
+        res = true;
+    }
+    else if (eff->AllowProcessingIfInvalid())
+    {
+        eff->ProcessIfInvalid(m_cam_info);
     }
     return res;
 }

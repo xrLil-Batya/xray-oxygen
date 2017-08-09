@@ -409,7 +409,7 @@ void CWeaponMagazined::OnStateSwitch	(u32 S)
 	case eHiding:// [fixed] quick changing of target slot restarts animation of hiding
 			if(owner)
 				m_sounds_enabled = owner->CanPlayShHdRldSounds();
-			if(oldState != eHiding)
+			if(old_state != eHiding)
 				switch2_Hiding	();
 		break;
 	case eHidden:

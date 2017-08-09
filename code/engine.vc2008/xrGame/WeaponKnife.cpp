@@ -86,7 +86,7 @@ void CWeaponKnife::OnStateSwitch	(u32 S)
 		break;
 	case eHidden:
 	// [fixed] quick changing of target slot restarts animation of hiding
-			if (oldState != eHiding)
+			if (old_state != eHiding)
 				switch2_Hidden	();
 		break;
 	case eFire:

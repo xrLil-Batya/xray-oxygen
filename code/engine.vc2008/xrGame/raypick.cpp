@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "raypick.h"
 #include "level.h"
+#include "script_game_object_impl.h"
 
 CRayPick::CRayPick() 
 {
