@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 #include "ai_sounds.h"
 
 class CScriptGameObject;

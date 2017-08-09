@@ -2,7 +2,7 @@
 
 #include "UIDialogWnd.h"
 #include "../../xrServerEntities/script_space_forward.h"
-#include "../../xrServerEntities/script_export_space.h"
+#include "../../xrScripts/export/script_export_space.h"
 
 struct SCallbackInfo;
 

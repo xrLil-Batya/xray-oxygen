@@ -9,7 +9,7 @@
 #pragma once
 
 #include "script_abstract_action.h"
-#include "script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 
 namespace DetailPathManager {
 	enum EDetailPathType;

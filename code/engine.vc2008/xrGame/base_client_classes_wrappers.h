@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 #include "base_client_classes.h"
 #include "../xrEngine/engineapi.h"
 #include "../xrcdb/ispatial.h"

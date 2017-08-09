@@ -3,7 +3,7 @@
 #pragma once
 
 #include "WeaponMagazined.h"
-#include "script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 
 class CWeaponLR300: public CWeaponMagazined
 {
