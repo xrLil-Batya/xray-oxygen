@@ -106,8 +106,8 @@ struct	FTreeVisual_setup
 		//wind.set				(_sin(tm_rot),0,_cos(tm_rot),0);	wind.normalize	();	wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
 
   		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
- 		float fValue = E.ps_r__Tree_w_amp;
- 		wind.set(_sin(tm_rot), 0, _cos(tm_rot), 0);
+ 		float fValue = E.m_fTreeAmplitudeIntensity;
+ 		wind.set(std::sin(tm_rot),0, std::cos(tm_rot),0);
  		wind.normalize();
 #if RENDER == R_R1
  		wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
