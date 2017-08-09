@@ -189,7 +189,7 @@ struct Bullet_Check_Array
 	bool			operator	==		(u32 ID){return	ID == SenderID;}
 	bool			operator	!=		(u32 ID){return	ID != SenderID;}
 	Bullet_Check_Array(u32 ID) : SenderID(ID) {Requests.clear(); NumTrue = 0; NumFalse = 0;};
-	~Bullet_Check_Array () {Requests.clear_and_free();};
+	~Bullet_Check_Array () {Requests.clear();};
 };	
 
 using BChA = xr_vector<Bullet_Check_Array>;

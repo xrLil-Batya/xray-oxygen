@@ -119,7 +119,7 @@ void STextureList::clear()
 	erase(begin(),end());
 }
 
-void STextureList::clear_not_free()
+void STextureList::clear()
 {
 	iterator it			= begin();
 	iterator it_e		= end();

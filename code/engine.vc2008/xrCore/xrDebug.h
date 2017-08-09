@@ -43,15 +43,13 @@ public:
 
 // warning
 // this function can be used for debug purposes only
-IC	std::string __cdecl	make_string		(const char* format,...)
+template <typename... Args>
+std::string make_string(const char* format, const Args&... args)
 {
-	va_list		args;
-	va_start	(args,format);
-
-	char		temp[4096];
-	vsprintf	(temp,format,args);
-
-	return		std::string(temp);
+	static constexpr size_t bufferSize = 4096;
+	char temp[bufferSize];
+	snprintf(temp, bufferSize, format, args...);
+	return std::string(temp);
 }
 
 extern XRCORE_API	xrDebug		Debug;

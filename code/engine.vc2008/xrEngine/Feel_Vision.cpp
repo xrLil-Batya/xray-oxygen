@@ -89,7 +89,7 @@ namespace Feel {
 		Frustum.CreateFromMatrix				(mFull,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
 		// Traverse object database
-		r_spatial.clear_not_free				();
+		r_spatial.clear				();
 		g_SpatialSpace->q_frustum
 			(
 			r_spatial,
@@ -206,7 +206,7 @@ namespace Feel {
 					}
 				}
 //				Log("Vis",feel_params.vis);
-				r_spatial.clear_not_free();
+				r_spatial.clear();
 				g_SpatialSpace->q_ray( r_spatial, 0, STYPE_VISIBLEFORAI, P, D, f );
 
 				RD.flags				= CDB::OPT_ONLYFIRST;
