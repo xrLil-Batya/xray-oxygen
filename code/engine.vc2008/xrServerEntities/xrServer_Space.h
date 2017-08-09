@@ -5,11 +5,8 @@
 //	Author		: Oles Shyshkovtsov, Alexander Maksimchuk, Victor Reutskiy and Dmitriy Iassenev
 //	Description : Server objects space
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef xrServer_SpaceH
-#define xrServer_SpaceH
-
-#include "script_export_space.h"
+#pragma once
+#include "../xrScripts/export/script_export_space.h"
 
 #ifndef XRGAME_EXPORTS
 #	define SERVER_ENTITY_EDITOR_METHODS					virtual void FillProps(LPCSTR pref, PropItemVec& values);
@@ -39,7 +36,8 @@ struct	SRotation
 	SRotation(float y, float p, float r) { yaw=y;pitch=p;roll=r; }
 };
 
-enum EPOType {
+enum EPOType 
+{
 	epotBox,
 	epotFixedChain,
     epotFreeChain,
@@ -65,6 +63,4 @@ template <class T> void	F_entity_Destroy	(T *&P)
 {
 	xr_delete	(P);
 };
-#endif
-
 #endif

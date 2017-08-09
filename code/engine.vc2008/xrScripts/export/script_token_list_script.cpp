@@ -5,8 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script token list class export
 ////////////////////////////////////////////////////////////////////////////
-
-#include "pch_script.h"
+#include "luabind.inl"
 #include "script_token_list.h"
 
 using namespace luabind;

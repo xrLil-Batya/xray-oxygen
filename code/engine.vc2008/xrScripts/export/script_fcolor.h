@@ -1,16 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////
-//	Module 		: script_fvector.h
+//	Module 		: script_fcolor.h
 //	Created 	: 28.06.2004
 //  Modified 	: 28.06.2004
 //	Author		: Dmitriy Iassenev
-//	Description : Script float vector
+//	Description : Script float color
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "script_export_space.h"
 
-typedef class_exporter<Fvector> CScriptFvector;
-add_to_type_list(CScriptFvector)
+using CScriptFcolor = class_exporter<Fcolor>;
+add_to_type_list(CScriptFcolor)
 #undef script_type_list
-#define script_type_list save_type_list(CScriptFvector)
+#define script_type_list save_type_list(CScriptFcolor)

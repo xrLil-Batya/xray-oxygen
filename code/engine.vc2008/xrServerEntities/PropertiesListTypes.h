@@ -1,7 +1,5 @@
 //---------------------------------------------------------------------------
-#ifndef PropertiesListTypesH
-#define PropertiesListTypesH
-
+#pragma once
 
 #include "WaveForm.H"
 #include "gametype_chooser.h"
@@ -684,10 +682,4 @@ public:
     }
 };
 //------------------------------------------------------------------------------
-#pragma pack( pop )
-
-#endif
-
-
-
-
+#pragma pack(pop)

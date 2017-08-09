@@ -5,21 +5,20 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script rtoken list class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "script_export_space.h"
 
-class CScriptRTokenList {
+class CScriptRTokenList 
+{
 public:
-	typedef xr_vector<shared_str> RTOKEN_LIST;
+	using RTOKEN_LIST = xr_vector<shared_str>;
 protected:
 	RTOKEN_LIST			m_values;
 
 public:
-	IC		void		add		(LPCSTR value);
+	IC		void		add		(const char* value);
 	IC		void		remove	(u32 index);
-	IC		LPCSTR		get		(u32 index);
+	IC		const char*	get		(u32 index);
 	IC		u32			size	();
 	IC		void		clear	();
 	IC		RTOKEN_LIST	&tokens	();

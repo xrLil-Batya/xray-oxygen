@@ -363,6 +363,16 @@
     <ClCompile Include="lua_studio\ai_script_lua_extension.cpp" />
     <ClCompile Include="lua_studio\lua_studio.cpp" />
     <ClCompile Include="mslotutils.cpp" />
+	<ClCompile Include="script_fcolor_script.cpp"/>
+	<ClCompile Include="script_flags_script.cpp"/>
+	<ClCompile Include="script_fmatrix_script.cpp"/>
+	<ClCompile Include="script_fvector_script.cpp"/>
+	<ClCompile Include="script_net_packet_script.cpp"/>
+	<ClCompile Include="script_reader_script.cpp"/>
+	<ClCompile Include="script_rtoken_list_script.cpp"/>
+	<ClCompile Include="script_rtoken_list.cpp"/>
+	<ClCompile Include="script_token_list_script.cpp"/>
+	<ClCompile Include="script_sound_type_script.cpp"/>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\adopt_policy.hpp" />
@@ -447,13 +457,13 @@
     <ClInclude Include="..\..\SDK\include\lua\lua.h" />
     <ClInclude Include="..\..\SDK\include\lua\luaconf.h" />
     <ClInclude Include="..\..\SDK\include\lua\lualib.h" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\identity.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\is_reference_wrapper.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\mpl.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\option.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\traits.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\typelist.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\utility.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\identity.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\is_reference_wrapper.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\mpl.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\option.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\traits.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\typelist.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\utility.hpp" />
     <ClInclude Include="import_ses.hpp" />
     <ClInclude Include="lua_studio\ai_script_lua_extension.h" />
     <ClInclude Include="lua_studio\ai_script_lua_space.h" />

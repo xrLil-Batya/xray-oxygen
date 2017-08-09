@@ -5,11 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Sounds for AI personalities
 ////////////////////////////////////////////////////////////////////////////
+#pragma once
 
-#ifndef ai_soundsH
-#define ai_soundsH
-
-enum ESoundTypes {
+enum ESoundTypes
+{
 	SOUND_TYPE_NO_SOUND					= 0x00000000ui32,
 
 	SOUND_TYPE_WEAPON					= 0x80000000ui32,
@@ -81,5 +80,3 @@ enum ESoundTypes {
 #define ACCELERATED_SOUND_FACTOR			.5f
 
 extern xr_token anomaly_type_token[];
-
-#endif

@@ -6,7 +6,7 @@
 //	Description : XRay Script net packet class script export
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "luabind.inl"
 #include "script_net_packet.h"
 
 using namespace luabind;
@@ -58,8 +58,6 @@ void CScriptNetPacket::script_register(lua_State *L)
 		class_<NET_Packet>("net_packet")
 			.def(					constructor<>()				)
 			.def("w_begin",			&NET_Packet::w_begin		)
-//			.def("w",				&NET_Packet::w				)
-//			.def("w_seek",			&NET_Packet::w_seek			)
 			.def("w_tell",			&NET_Packet::w_tell			)
 			.def("w_vec3",			&NET_Packet::w_vec3			)
 			.def("w_float",			&NET_Packet::w_float		)
@@ -70,7 +68,6 @@ void CScriptNetPacket::script_register(lua_State *L)
 			.def("w_u16",			&NET_Packet::w_u16			)
 			.def("w_s16",			&NET_Packet::w_s16			)
 			.def("w_u8",			&NET_Packet::w_u8			)
-//			.def("w_s8",			&NET_Packet::w_s8			)
 			.def("w_bool",			&w_bool						)
 			.def("w_float_q16",		&NET_Packet::w_float_q16	)
 			.def("w_float_q8",		&NET_Packet::w_float_q8		)
@@ -86,7 +83,6 @@ void CScriptNetPacket::script_register(lua_State *L)
 			.def("w_chunk_open16",	&NET_Packet::w_chunk_open16	)
 			.def("w_chunk_close16",	&NET_Packet::w_chunk_close16)
 			.def("r_begin",			&NET_Packet::r_begin		)
-//			.def("r",				&NET_Packet::r				)
 			.def("r_seek",			&NET_Packet::r_seek			)
 			.def("r_tell",			&NET_Packet::r_tell			)
 			.def("r_vec3",			(void (NET_Packet::*)(Fvector&))(&NET_Packet::r_vec3)			,pure_out_value<2>())

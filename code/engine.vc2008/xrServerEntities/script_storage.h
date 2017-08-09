@@ -42,23 +42,19 @@ public:
 	bool						m_stack_is_ready	;
 #endif // #ifdef DEBUG
 
-#ifdef PRINT_CALL_STACK
-protected:
-	CMemoryWriter				m_output;
-#endif // #ifdef PRINT_CALL_STACK
-
 protected:
 	static	int					vscript_log					(ScriptStorage::ELuaMessageType tLuaMessageType, LPCSTR caFormat, va_list marker);
 			bool				parse_namespace				(LPCSTR caNamespaceName, LPSTR b, u32 const b_size, LPSTR c, u32 const c_size);
 			bool				do_file						(LPCSTR	caScriptName, LPCSTR caNameSpaceName);
 			void				reinit						();
+#ifdef PRINT_CALL_STACK
+	CMemoryWriter				m_output;
+#endif // #ifdef PRINT_CALL_STACK
 
 public:
 #ifdef PRINT_CALL_STACK
 			void				print_stack					();
 #endif // #ifdef PRINT_CALL_STACK
-
-public:
 								CScriptStorage				();
 	virtual						~CScriptStorage				();
 	IC		lua_State			*lua						();
@@ -77,7 +73,6 @@ public:
 	virtual	void				on_error					(lua_State *L) = 0;
 
 #ifdef DEBUG
-public:
 			void				flush_log					();
 #endif // DEBUG
 };

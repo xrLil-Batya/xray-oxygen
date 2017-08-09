@@ -5,12 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script export space 
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef script_export_spaceH
-#define script_export_spaceH
-
 #pragma once
-
+#include "../../../SDK/include/loki/Typelist.h"
 struct lua_State;
 
 #ifdef SCRIPT_REGISTRATOR
@@ -29,4 +25,3 @@ struct lua_State;
 template <typename T> struct enum_exporter{DECLARE_SCRIPT_REGISTER_FUNCTION};
 template <typename T> struct class_exporter{DECLARE_SCRIPT_REGISTER_FUNCTION};
 
-#endif

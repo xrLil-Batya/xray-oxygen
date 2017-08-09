@@ -6,7 +6,7 @@
 //	Description : Script reader
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "luabind.inl"
 #include "script_reader.h"
 
 using namespace luabind;

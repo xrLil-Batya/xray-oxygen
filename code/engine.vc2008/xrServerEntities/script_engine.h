@@ -5,11 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script Engine
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
 
+#include "../xrScripts/export/script_export_space.h"
 #include "script_storage.h"
-#include "script_export_space.h"
 #include "script_space_forward.h"
 #include "associative_vector.h"
 

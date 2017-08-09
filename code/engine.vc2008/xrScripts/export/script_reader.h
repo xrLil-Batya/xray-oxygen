@@ -1,16 +1,16 @@
 ////////////////////////////////////////////////////////////////////////////
-//	Module 		: script_fcolor.h
-//	Created 	: 28.06.2004
-//  Modified 	: 28.06.2004
+//	Module 		: script_reader.h
+//	Created 	: 05.10.2004
+//  Modified 	: 05.10.2004
 //	Author		: Dmitriy Iassenev
-//	Description : Script float color
+//	Description : Script reader
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #include "script_export_space.h"
 
-typedef class_exporter<Fcolor> CScriptFcolor;
-add_to_type_list(CScriptFcolor)
+using CScriptReader = class_exporter<IReader>;
+add_to_type_list(CScriptReader)
 #undef script_type_list
-#define script_type_list save_type_list(CScriptFcolor)
+#define script_type_list save_type_list(CScriptReader)
