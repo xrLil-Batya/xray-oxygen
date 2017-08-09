@@ -132,6 +132,17 @@
     <ClCompile Include="import_ses.cpp">
       <Filter>Import\LuaCore</Filter>
     </ClCompile>
+    <ClCompile Include="Export\script_fcolor_script.cpp" />
+    <ClCompile Include="Export\script_flags_script.cpp" />
+    <ClCompile Include="Export\script_fmatrix_script.cpp" />
+    <ClCompile Include="Export\script_fvector_script.cpp" />
+    <ClCompile Include="Export\script_net_packet_script.cpp" />
+    <ClCompile Include="Export\script_reader_script.cpp" />
+    <ClCompile Include="Export\script_rtoken_list_script.cpp" />
+    <ClCompile Include="Export\script_sound_type_script.cpp" />
+    <ClCompile Include="Export\script_token_list.cpp" />
+    <ClCompile Include="Export\script_token_list_script.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\config.hpp">
@@ -380,27 +391,6 @@
     <ClInclude Include="..\..\SDK\include\lua\lua.h">
       <Filter>Lua\LuaJIT\include</Filter>
     </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\option.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\traits.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\typelist.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\utility.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\identity.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\is_reference_wrapper.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\mpl.hpp">
-      <Filter>Core\Imdexlib\include</Filter>
-    </ClInclude>
     <ClInclude Include="xrScripts.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -425,5 +415,29 @@
     <ClInclude Include="import_ses.hpp">
       <Filter>Import\LuaCore</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\SDK\include\imdexlib\identity.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\is_reference_wrapper.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\mpl.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\option.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\traits.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\typelist.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\utility.hpp" />
+    <ClInclude Include="Export\ai_sounds.h" />
+    <ClInclude Include="Export\script_export_space.h" />
+    <ClInclude Include="Export\script_fcolor.h" />
+    <ClInclude Include="Export\script_flags.h" />
+    <ClInclude Include="Export\script_fmatrix.h" />
+    <ClInclude Include="Export\script_fvector.h" />
+    <ClInclude Include="Export\script_net_packet.h" />
+    <ClInclude Include="Export\script_reader.h" />
+    <ClInclude Include="Export\script_rtoken_list.h" />
+    <ClInclude Include="Export\script_rtoken_list_inline.h" />
+    <ClInclude Include="Export\script_sound_type.h" />
+    <ClInclude Include="Export\script_token_list.h" />
+    <ClInclude Include="Export\script_token_list_inline.h" />
+    <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Export\luabind.inl" />
   </ItemGroup>
 </Project>

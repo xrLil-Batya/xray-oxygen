@@ -125,7 +125,7 @@
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions</EnableEnhancedInstructionSet>
       <FloatingPointModel>Fast</FloatingPointModel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
-      <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>None</DebugInformationFormat>
       <DisableSpecificWarnings>4530;4100;4714;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -337,6 +337,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Export\script_fcolor_script.cpp" />
+    <ClCompile Include="Export\script_flags_script.cpp" />
+    <ClCompile Include="Export\script_fmatrix_script.cpp" />
+    <ClCompile Include="Export\script_fvector_script.cpp" />
+    <ClCompile Include="Export\script_net_packet_script.cpp" />
+    <ClCompile Include="Export\script_reader_script.cpp" />
+    <ClCompile Include="Export\script_rtoken_list_script.cpp" />
+    <ClCompile Include="Export\script_sound_type_script.cpp" />
+    <ClCompile Include="Export\script_token_list.cpp" />
+    <ClCompile Include="Export\script_token_list_script.cpp" />
     <ClCompile Include="import_ses.cpp" />
     <ClCompile Include="library_set.cpp" />
     <ClCompile Include="linker.cpp" />
@@ -363,6 +373,7 @@
     <ClCompile Include="lua_studio\ai_script_lua_extension.cpp" />
     <ClCompile Include="lua_studio\lua_studio.cpp" />
     <ClCompile Include="mslotutils.cpp" />
+    <ClCompile Include="stdafx.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\adopt_policy.hpp" />
@@ -447,13 +458,26 @@
     <ClInclude Include="..\..\SDK\include\lua\lua.h" />
     <ClInclude Include="..\..\SDK\include\lua\luaconf.h" />
     <ClInclude Include="..\..\SDK\include\lua\lualib.h" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\identity.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\is_reference_wrapper.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\mpl.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\option.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\traits.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\typelist.hpp" />
-    <ClInclude Include="E:\X-Ray\xray-162-master\code\SDK\include\imdexlib\utility.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\identity.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\is_reference_wrapper.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\mpl.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\option.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\traits.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\typelist.hpp" />
+    <ClInclude Include="..\..\SDK\include\imdexlib\utility.hpp" />
+    <ClInclude Include="Export\ai_sounds.h" />
+    <ClInclude Include="Export\script_export_space.h" />
+    <ClInclude Include="Export\script_fcolor.h" />
+    <ClInclude Include="Export\script_flags.h" />
+    <ClInclude Include="Export\script_fmatrix.h" />
+    <ClInclude Include="Export\script_fvector.h" />
+    <ClInclude Include="Export\script_net_packet.h" />
+    <ClInclude Include="Export\script_reader.h" />
+    <ClInclude Include="Export\script_rtoken_list.h" />
+    <ClInclude Include="Export\script_rtoken_list_inline.h" />
+    <ClInclude Include="Export\script_sound_type.h" />
+    <ClInclude Include="Export\script_token_list.h" />
+    <ClInclude Include="Export\script_token_list_inline.h" />
     <ClInclude Include="import_ses.hpp" />
     <ClInclude Include="lua_studio\ai_script_lua_extension.h" />
     <ClInclude Include="lua_studio\ai_script_lua_space.h" />
@@ -461,7 +485,11 @@
     <ClInclude Include="lua_studio\lua_studio.h" />
     <ClInclude Include="lua_studio\script_debugger_messages.h" />
     <ClInclude Include="mslotutils.hpp" />
+    <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrScripts.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Export\luabind.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -5,13 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Object factory
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef object_factoryH
-#define object_factoryH
-
 #pragma once
 
-#include "script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 #include "object_item_abstract.h"
 #include "xrServer_Objects.h"
 
@@ -103,4 +99,3 @@ extern CObjectFactory *g_object_factory;
 IC	const CObjectFactory &object_factory();
 
 #include "object_factory_inline.h"
-#endif

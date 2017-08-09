@@ -9,7 +9,7 @@
 #include "pch_script.h"
 
 #define SCRIPT_REGISTRATOR
-#include "script_export_space.h"
+#include "../xrScripts/export/script_export_space.h"
 #include "script_engine_export.h"
 
 #pragma optimize("s",on)

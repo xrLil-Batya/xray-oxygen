@@ -182,7 +182,7 @@ void CRender::level_Unload()
 	xr_delete					(Wallmarks);
 
 	//*** Shaders
-	Shaders.clear_and_free		();
+	Shaders.clear		();
 	b_loaded					= FALSE;
 }
 
@@ -350,15 +350,8 @@ void CRender::LoadSectors(IReader* fs)
 
 		// build portal model
 		rmPortals = xr_new<CDB::MODEL> ();
-		rmPortals->build	(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()));
-	} else {
-		rmPortals = 0;
-	}
-
-	// debug
-	//	for (int d=0; d<Sectors.size(); d++)
-	//		Sectors[d]->DebugDump	();
-
+		rmPortals->build	(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), nullptr, nullptr, false);
+	} else rmPortals = 0;
 	pLastSector = 0;
 }
 
@@ -375,7 +368,7 @@ void CRender::LoadSWIs(CStreamReader* base_fs)
 		for(;it!=it_e;++it)
 			xr_free( (*it).sw );
 
-		SWIs.clear_not_free();
+		SWIs.clear();
 
 		SWIs.resize			(item_count);
 		for (u32 c=0; c<item_count; c++){

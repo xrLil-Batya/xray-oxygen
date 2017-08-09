@@ -524,28 +524,6 @@ void CSE_SmartCover::load_draw_data () {
 		H.fov					= parse_float(table, "fov", 0.f, 360.f);
 		H.range					= parse_float(table, "range", 0.f);
 
-/*		luabind::object	transitions;
-		parse_table		(table, "transitions", transitions);
-		luabind::object::iterator I = transitions.begin();
-		luabind::object::iterator E = transitions.end();
-		for ( ; I != E; ++I) {
-			luabind::object transition = *I;
-			VERIFY2				(transition.type() == LUA_TTABLE, "invalid loophole description passed");
-			shared_str			action_from = smart_cover::parse_vertex(transition, "action_from", true);
-			if (action_from != "idle")
-				continue;
-			shared_str			action_to = smart_cover::parse_vertex(transition, "action_to", false);
-			if (action_to != "fire")
-				continue;
-
-			luabind::object		result;
-			parse_table			(transition, "animations", result);
-
-			H.animation_id		= animation_id(result);
-			break;
-		}
-*/
-
 	H.animation_id	= make_string("loophole_%s_visual", H.string_identifier.c_str()).c_str();
 	}
 

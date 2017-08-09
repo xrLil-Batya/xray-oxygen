@@ -195,7 +195,7 @@ void CCameraManager::UpdateDeffered()
         RemoveCamEffector((*it)->eType);
 
         if ((*it)->AbsolutePositioning())
-            m_EffectorsCam.insert(m_EffectorsCam.begin(), *it);
+            m_EffectorsCam.push_front(*it);
         else
             m_EffectorsCam.push_back(*it);
     }
@@ -249,11 +249,10 @@ CEffectorPP* CCameraManager::AddPPEffector(CEffectorPP* ef)
 void CCameraManager::RemovePPEffector(EEffectorPPType type)
 {
     for (auto it = m_EffectorsPP.begin(); it != m_EffectorsPP.end(); it++)
-        if ((*it)->Type() == type) {
-            if ((*it)->FreeOnRemove()) {
+        if ((*it)->Type() == type) 
+		{
+            if((*it)->FreeOnRemove())
                 OnEffectorReleased(*it);
-                //				xr_delete				(*it);
-            }
             m_EffectorsPP.erase(it);
             return;
         }
@@ -321,30 +320,39 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
 bool CCameraManager::ProcessCameraEffector(CEffectorCam* eff)
 {
     bool res = false;
-    if (eff->Valid() && eff->ProcessCam(m_cam_info)) {
+    if (eff->Valid() && eff->ProcessCam(m_cam_info))
+    {
         res = true;
-    } else {
-        if (eff->AllowProcessingIfInvalid()) {
-            eff->ProcessIfInvalid(m_cam_info);
-            res = true;
-        }
-
-        EffectorCamVec::iterator it = std::find(m_EffectorsCam.begin(), m_EffectorsCam.end(), eff);
-
-        m_EffectorsCam.erase(it);
-        OnEffectorReleased(eff);
+    }
+    else if (eff->AllowProcessingIfInvalid())
+    {
+        eff->ProcessIfInvalid(m_cam_info);
     }
     return res;
 }
 
 void CCameraManager::UpdateCamEffectors()
 {
-    if (m_EffectorsCam.empty())
-        return;
+    	if (m_EffectorsCam.empty())
+        	return;
 	
-    for (int i = m_EffectorsCam.size() - 1; i >= 0; --i)
-        ProcessCameraEffector(m_EffectorsCam[i]);
-
+   	auto r_it = m_EffectorsCam.rbegin();    
+   	while (r_it != m_EffectorsCam.rend())
+ 	{
+       		if (ProcessCameraEffector(*r_it))
+      		{
+			++r_it;
+ 		}
+ 		else
+ 		{
+ 		// Dereferencing reverse iterator returns previous element of the list, r_it.base() returns current element
+  		// So, we should use base()-1 iterator to delete just processed element. 'Previous' element would be 
+ 		// automatically changed after deletion, so r_it would dereferencing to another value, no need to change it
+ 		OnEffectorReleased(*r_it);
+ 		auto r_to_del = r_it.base();
+ 		m_EffectorsCam.erase(--r_to_del);
+ 		}
+ 	}
     m_cam_info.d.normalize();
     m_cam_info.n.normalize();
     m_cam_info.r.crossproduct(m_cam_info.n, m_cam_info.d);

@@ -62,7 +62,6 @@ static class cl_parallax		: public R_constant_setup
 }	binder_parallax;
 
 //#TODO: FIX THAT SHIT!
-#if 0
 static class cl_tree_amplitude_intensity : public R_constant_setup
 {
  	virtual void setup(R_constant* C)
@@ -72,7 +71,6 @@ static class cl_tree_amplitude_intensity : public R_constant_setup
  		RCache.set_c(C, fValue, fValue, fValue, 0);
  	}
 } binder_tree_amplitude_intensity;
-#endif
 
 static class cl_pos_decompress_params	: public R_constant_setup		{	virtual void setup	(R_constant* C)
 {

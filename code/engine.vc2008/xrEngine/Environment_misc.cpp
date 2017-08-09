@@ -231,7 +231,8 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 
 	m_fSunShaftsIntensity = 0;
 	m_fWaterIntensity = 1;
-
+	m_fTreeAmplitudeIntensity = 0.01;
+	
     lens_flare_id		= "";
 	tb_id				= "";
     
@@ -297,6 +298,9 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 
 	if (config.line_exist(m_identifier.c_str(),"water_intensity"))
 		m_fWaterIntensity = config.r_float(m_identifier.c_str(),"water_intensity");
+	
+	if (config.line_exist(m_identifier.c_str(), "tree_amplitude_intensity"))
+		m_fTreeAmplitudeIntensity = config.r_float(m_identifier.c_str(), "tree_amplitude_intensity");
 
 	C_CHECK					(clouds_color);
 	C_CHECK					(sky_color	);
@@ -351,18 +355,15 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	clouds_color.lerp		(A.clouds_color,B.clouds_color,f);
 	sky_rotation			=	(fi*A.sky_rotation + f*B.sky_rotation);
 
-//.	far_plane				=	(fi*A.far_plane + f*B.far_plane + Mdf.far_plane)*psVisDistance*modif_power;
 	if(Mdf.use_flags.test(eViewDist))
 		far_plane				=	(fi*A.far_plane + f*B.far_plane + Mdf.far_plane)*psVisDistance*modif_power;
 	else
 		far_plane				=	(fi*A.far_plane + f*B.far_plane)*psVisDistance;
 	
-//.	fog_color.lerp			(A.fog_color,B.fog_color,f).add(Mdf.fog_color).mul(modif_power);
 	fog_color.lerp			(A.fog_color,B.fog_color,f);
 	if(Mdf.use_flags.test(eFogColor))
 		fog_color.add(Mdf.fog_color).mul(modif_power);
 
-//.	fog_density				=	(fi*A.fog_density + f*B.fog_density + Mdf.fog_density)*modif_power;
 	fog_density				=	(fi*A.fog_density + f*B.fog_density);
 	if(Mdf.use_flags.test(eFogDensity))
 	{
@@ -384,7 +385,7 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 
 	m_fSunShaftsIntensity	=	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
 	m_fWaterIntensity		=	fi*A.m_fWaterIntensity + f*B.m_fWaterIntensity;
-
+	m_fTreeAmplitudeIntensity = fi*A.m_fTreeAmplitudeIntensity + f*B.m_fTreeAmplitudeIntensity;
 	// colors
 //.	sky_color.lerp			(A.sky_color,B.sky_color,f).add(Mdf.sky_color).mul(modif_power);
 	sky_color.lerp			(A.sky_color,B.sky_color,f);
@@ -438,7 +439,7 @@ CEnvAmbient* CEnvironment::AppendEnvAmb		(const shared_str& sect)
 
 void	CEnvironment::mods_load			()
 {
-	Modifiers.clear_and_free			();
+	Modifiers.clear			();
 	string_path							path;
 	if (FS.exist(path,"$level$","level.env_mod"))	
 	{
@@ -468,7 +469,7 @@ void	CEnvironment::mods_load			()
 
 void	CEnvironment::mods_unload		()
 {
-	Modifiers.clear_and_free			();
+	Modifiers.clear			();
 }
 
 void    CEnvironment::load_level_specific_ambients ()

@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include <process.h>
-
+#include <powerbase.h>
 // mmsystem.h
 #define MMNOSOUND
 #define MMNOMIDI
@@ -16,6 +16,16 @@ XRCORE_API	Fmatrix			Fidentity;
 XRCORE_API	Dmatrix			Didentity;
 XRCORE_API	CRandom			Random;
 
+typedef struct _PROCESSOR_POWER_INFORMATION 
+{
+    ULONG Number;
+    ULONG MaxMhz;
+    ULONG CurrentMhz;
+    ULONG MhzLimit;
+    ULONG MaxIdleState;
+    ULONG CurrentIdleState;
+} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+ 
 #ifdef _M_AMD64
 namespace	FPU 
 {
@@ -129,22 +139,21 @@ namespace FPU
 
 namespace CPU 
 {
-	XRCORE_API u64				clk_per_second	;
-	XRCORE_API u64				clk_per_milisec	;
-	XRCORE_API u64				clk_per_microsec;
-	XRCORE_API u64				clk_overhead	;
-	XRCORE_API float			clk_to_seconds	;
-	XRCORE_API float			clk_to_milisec	;
-	XRCORE_API float			clk_to_microsec	;
-	XRCORE_API u64				qpc_freq		= 0	;
-	XRCORE_API u64				qpc_overhead	= 0	;
+	XRCORE_API u64 qpc_freq = []
+	{ 
+		u64 result;
+		QueryPerformanceCounter(PLARGE_INTEGER(&result));
+		return result; 
+	}();
+	
 	XRCORE_API u32				qpc_counter		= 0	;
 	
 	XRCORE_API processor_info	ID;
 
-	XRCORE_API u64				QPC	()			{
+	XRCORE_API u64 QPC()
+	{
 		u64		_dest	;
-		QueryPerformanceCounter			((PLARGE_INTEGER)&_dest);
+		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
 		qpc_counter	++	;
 		return	_dest	;
 	}
@@ -208,48 +217,6 @@ namespace CPU
 			// Core.Fatal		("Fatal error: can't detect CPU/FPU.");
 			abort				();
 		}
-
-		// Timers & frequency
-		u64			start;
-
-		SetPriorityClass		(GetCurrentProcess(),REALTIME_PRIORITY_CLASS);
-
-		// Detect Freq
-		clk_per_second = getProcessorFrequency(ID.n_threads);
-
-		// Detect RDTSC Overhead
-		clk_overhead	= 0;
-		u64 dummy		= 0;
-		for (int i=0; i<256; i++)	{
-			start			=	GetCLK();
-			clk_overhead	+=	GetCLK()-start-dummy;
-		}
-		clk_overhead		/=	256;
-
-		// Detect QPC Overhead
-		QueryPerformanceFrequency	((PLARGE_INTEGER)&qpc_freq)	;
-		qpc_overhead	= 0;
-		for (unsigned i=0; i<256; i++)	{
-			start			=	QPC();
-			qpc_overhead	+=	QPC()-start-dummy;
-		}
-		qpc_overhead		/=	256;
-
-		SetPriorityClass	(GetCurrentProcess(),NORMAL_PRIORITY_CLASS);
-
-		clk_per_second	-=	clk_overhead;
-		clk_per_milisec	=	clk_per_second/1000;
-		clk_per_microsec	=	clk_per_milisec/1000;
-
-		_control87	( _PC_64,   MCW_PC );
-//		_control87	( _RC_CHOP, MCW_RC );
-		double a,b;
-		a = 1;		b = double(clk_per_second);
-		clk_to_seconds = float(double(a/b));
-		a = 1000;	b = double(clk_per_second);
-		clk_to_milisec = float(double(a/b));
-		a = 1000000;b = double(clk_per_second);
-		clk_to_microsec = float(double(a/b));
 	}
 };
 
@@ -259,8 +226,7 @@ bool g_initialize_cpu_called = false;
 void _initialize_cpu	(void) 
 {
 	Msg("* Vendor CPU: %s", CPU::ID.vendor);
-    Msg(CPU::ID.isIntel ? "* Detected CPU: %s %.2f mhz, %d-clk 'rdtsc'" : "* Detected CPU: %s%.2f mhz, %d-clk 'rdtsc'",
-        CPU::ID.modelName, float(CPU::clk_per_second / u64(1000000)), u32(CPU::clk_overhead));
+    Msg("* Detected CPU: %s", CPU::ID.modelName);
 	Log("* Architecture CPU:", CPU::ID.WoW64 ? "AMD64" : "i386");
 
 //	DUMP_PHASE;

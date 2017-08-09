@@ -151,7 +151,7 @@ bool CObjectSpace::RayQuery(collide::rq_results& dest, const collide::ray_defs& 
 {
 	std::lock_guard<decltype(Lock)> lock(Lock);
 	bool						_res = _RayQuery2(dest, R, CB, user_data, tb, ignore_object);
-	r_spatial.clear_not_free();
+	r_spatial.clear();
 	return						(_res);
 }
 bool CObjectSpace::_RayQuery2(collide::rq_results& r_dest, const collide::ray_defs& R, collide::rq_callback* CB, LPVOID user_data, collide::test_callback* tb, CObject* ignore_object)

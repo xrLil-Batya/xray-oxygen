@@ -12,10 +12,11 @@ class CScriptThread;
 
 class CScriptProcess {
 public:
-	typedef xr_vector<CScriptThread*> SCRIPT_REGISTRY;
+	using SCRIPT_REGISTRY = xr_vector<CScriptThread*>;
 
 private:
-	struct CScriptToRun {
+	struct CScriptToRun 
+	{
 		LPSTR						m_script_name;
 		bool						m_do_string;
 		bool						m_reload;
@@ -41,7 +42,7 @@ private:
 	};
 
 public:
-	typedef xr_vector<CScriptToRun> SCRIPTS_TO_RUN;
+	using SCRIPTS_TO_RUN =  xr_vector<CScriptToRun>;
 
 protected:
 	SCRIPT_REGISTRY					m_scripts;

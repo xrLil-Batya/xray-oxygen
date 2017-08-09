@@ -4884,15 +4884,6 @@
     <ClInclude Include="script_effector_wrapper_inline.h">
       <Filter>AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_flags.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptFlags</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_fmatrix.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptFmatrix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_fvector.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptFvector</Filter>
-    </ClInclude>
     <ClInclude Include="script_game_object.h">
       <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
     </ClInclude>
@@ -4911,23 +4902,8 @@
     <ClInclude Include="..\xrServerEntities\script_ini_file_inline.h">
       <Filter>AI\AScript\ScriptClasses\ScriptIniFile</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_token_list.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_token_list_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_rtoken_list.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_rtoken_list_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClInclude>
     <ClInclude Include="script_monster_hit_info.h">
       <Filter>AI\AScript\ScriptClasses\ScriptMonsterHitInfo</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_net_packet.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptNetPacket</Filter>
     </ClInclude>
     <ClInclude Include="script_render_device.h">
       <Filter>AI\AScript\ScriptClasses\ScriptRenderDevice</Filter>
@@ -4946,9 +4922,6 @@
     </ClInclude>
     <ClInclude Include="key_binding_registrator.h">
       <Filter>AI\AScript\ScriptClasses\KeyBindings</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_reader.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptReader</Filter>
     </ClInclude>
     <ClInclude Include="fs_registrator.h">
       <Filter>AI\AScript\ScriptClasses\ScriptFS</Filter>
@@ -5030,9 +5003,6 @@
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_stack_tracker_inline.h">
       <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\ai_sounds.h">
-      <Filter>AI\ASound</Filter>
     </ClInclude>
     <ClInclude Include="ai_space.h">
       <Filter>AI\ASpace</Filter>
@@ -7910,15 +7880,6 @@
     <ClCompile Include="script_effector_wrapper.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_flags_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptFlags</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_fmatrix_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptFmatrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_fvector_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptFvector</Filter>
-    </ClCompile>
     <ClCompile Include="script_game_object.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
@@ -7958,9 +7919,6 @@
     <ClCompile Include="script_game_object_use2.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
-    <ClCompile Include="script_hit.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptHit</Filter>
-    </ClCompile>
     <ClCompile Include="script_hit_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptHit</Filter>
     </ClCompile>
@@ -7970,29 +7928,14 @@
     <ClCompile Include="..\xrServerEntities\script_ini_file_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptIniFile</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_token_list.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_token_list_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_rtoken_list_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClCompile>
     <ClCompile Include="script_monster_hit_info_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptMonsterHitInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_net_packet_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptNetPacket</Filter>
     </ClCompile>
     <ClCompile Include="script_render_device_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptRenderDevice</Filter>
     </ClCompile>
     <ClCompile Include="script_sound_info_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptSoundInfo</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_sound_type_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptSoundType</Filter>
     </ClCompile>
     <ClCompile Include="ScriptXMLInit.cpp">
       <Filter>AI\AScript\ScriptClasses\UI</Filter>
@@ -8002,9 +7945,6 @@
     </ClCompile>
     <ClCompile Include="key_binding_registrator_script.cpp">
       <Filter>AI\AScript\ScriptClasses\KeyBindings</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_reader_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptReader</Filter>
     </ClCompile>
     <ClCompile Include="fs_registrator_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptFS</Filter>
@@ -8017,9 +7957,6 @@
     </ClCompile>
     <ClCompile Include="script_lanim.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptLAnim</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_fcolor_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptFcolor</Filter>
     </ClCompile>
     <ClCompile Include="script_particles.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptParticles</Filter>
@@ -8081,9 +8018,6 @@
     <ClCompile Include="ActorEffector_script.cpp">
       <Filter>Core\Client\Effectors\Actor</Filter>
     </ClCompile>
-    <ClCompile Include="CameraEffector.cpp">
-      <Filter>Core\Client\Effectors\Actor</Filter>
-    </ClCompile>
     <ClCompile Include="EffectorBobbing.cpp">
       <Filter>Core\Client\Effectors\Actor</Filter>
     </ClCompile>
@@ -8127,9 +8061,6 @@
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
     <ClCompile Include="Level_load.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="level_map_locations.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
     <ClCompile Include="Level_network.cpp">
@@ -9699,9 +9630,6 @@
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
     <ClCompile Include="actor_script.cpp">
-      <Filter>Core\Client\Objects\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="Actor_Sleep.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
     <ClCompile Include="Actor_Weapon.cpp">

@@ -1,9 +1,6 @@
-#ifndef	dxPixEventWrapper_included
-#define	dxPixEventWrapper_included
 #pragma once
 
 #ifdef	DEBUG
-
 #define PIX_EVENT(Name)	dxPixEventWrapper	pixEvent##Name(L#Name)
 
 class dxPixEventWrapper
@@ -15,7 +12,4 @@ public:
 #else	//	DEBUG
 
 #define PIX_EVENT(Name)	{;}
-
 #endif	//	DEBUG
-
-#endif	//	dxPixEventWrapper_included

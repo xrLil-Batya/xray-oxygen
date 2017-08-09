@@ -13,7 +13,6 @@ struct lua_State;
 #define DMOD_STEP_OVER				2
 #define DMOD_STEP_OUT				3
 #define DMOD_RUN_TO_CURSOR			4
-//#define DMOD_SHOW_STACK_LEVEL		5
 
 #define DMOD_BREAK					10
 #define DMOD_STOP					11

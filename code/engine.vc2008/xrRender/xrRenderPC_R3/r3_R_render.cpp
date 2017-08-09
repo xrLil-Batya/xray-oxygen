@@ -273,7 +273,6 @@ void CRender::Render		()
 		CTimer	T;							T.Start	();
 		BOOL	result						= FALSE;
 		HRESULT	hr							= S_FALSE;
-		//while	((hr=q_sync_point[q_sync_count]->GetData	(&result,sizeof(result),D3DGETDATA_FLUSH))==S_FALSE) {
 		while	((hr=GetData (q_sync_point[q_sync_count], &result,sizeof(result)))==S_FALSE) 
 		{
 			if (!SwitchToThread())			Sleep(ps_r2_wait_sleep);
@@ -333,7 +332,7 @@ void CRender::Render		()
 	{
 		PIX_EVENT(DEFER_TEST_LIGHT_VIS);
 		// perform tests
-		u32	count			= 0;
+		size_t	count			= 0;
 		light_Package&	LP	= Lights.package;
 
 		// stats
@@ -373,26 +372,6 @@ void CRender::Render		()
 	if (split_the_scene_to_minimize_wait)	
 	{
 		PIX_EVENT(DEFER_PART1_SPLIT);
-		// skybox can be drawn here
-		if (0)
-		{
-
-			if( !RImplementation.o.dx10_msaa )
-				Target->u_setrt		( Target->rt_Generic_0,	Target->rt_Generic_1,0,HW.pBaseZB );
-			else
-				Target->u_setrt		( Target->rt_Generic_0_r,	Target->rt_Generic_1,0,RImplementation.Target->rt_MSAADepth->pZRT );
-			RCache.set_CullMode	( CULL_NONE );
-			RCache.set_Stencil	( FALSE		);
-
-			// draw skybox
-			RCache.set_ColorWriteEnable					();
-			//CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	FALSE				));
-			RCache.set_Z(FALSE);
-			g_pGamePersistent->Environment().RenderSky	();
-			//CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	TRUE				));
-			RCache.set_Z(TRUE);
-		}
-
 		// level
 		Target->phase_scene_begin				();
 		r_dsgraph_render_hud					();
