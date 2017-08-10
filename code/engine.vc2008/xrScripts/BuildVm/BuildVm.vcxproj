@@ -155,15 +155,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\luajit\src\host\buildvm.c" />
-    <ClCompile Include="..\luajit\src\host\buildvm_asm.c" />
-    <ClCompile Include="..\luajit\src\host\buildvm_fold.c" />
-    <ClCompile Include="..\luajit\src\host\buildvm_lib.c" />
-    <ClCompile Include="..\luajit\src\host\buildvm_peobj.c" />
+    <ClCompile Include=".\host\buildvm.c" />
+    <ClCompile Include=".\host\buildvm_asm.c" />
+    <ClCompile Include=".\buildvm_fold.c" />
+    <ClCompile Include=".\host\buildvm_lib.c" />
+    <ClCompile Include=".\host\buildvm_peobj.c" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\luajit\src\host\buildvm.h" />
-    <ClInclude Include="..\luajit\src\host\buildvm_arch.h" />
+    <ClInclude Include=".\host\buildvm.h" />
+    <ClInclude Include=".\host\buildvm_arch.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -178,7 +178,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -281,7 +281,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -374,7 +374,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>

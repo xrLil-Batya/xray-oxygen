@@ -179,7 +179,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -282,7 +282,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -377,7 +377,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib;LuaJIT.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(SolutionDir)..\..\libraries_$(Platform)\$(Configuration)\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <GenerateMapFile>false</GenerateMapFile>

@@ -1,17 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////
-//	Module 		: lua_tools.h
-//	Created 	: 29.07.2014
-//	Author		: Alexander Petrov
-////////////////////////////////////////////////////////////////////////////
 //	Module 		: lua_traceback.h
-//  Created 	: 12.07.2017
+//  	Created 	: 12.07.2017
 //	Author		: ForserX
 //	Description : Lua functionality extension
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
-
 #include "xrScripts.h"
-extern "C" {
+
+extern "C" 
+{
 #include <lua.h>
 #include <luajit.h>
 #include <lcoco.h>

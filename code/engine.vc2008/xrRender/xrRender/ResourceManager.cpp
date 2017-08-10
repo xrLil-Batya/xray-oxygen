@@ -16,18 +16,6 @@
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
-/*
-void fix_texture_name(LPSTR fn)
-{
-	LPSTR _ext = strext(fn);
-	if(  _ext					&&
-	  (0==stricmp(_ext,".tga")	||
-		0==stricmp(_ext,".dds")	||
-		0==stricmp(_ext,".bmp")	||
-		0==stricmp(_ext,".ogm")	) )
-		*_ext = 0;
-}
-*/
 //--------------------------------------------------------------------------------------------------------------
 template <class T>
 BOOL	reclaim		(xr_vector<T*>& vec, const T* ptr)
@@ -46,9 +34,7 @@ IBlender* CResourceManager::_GetBlender		(LPCSTR Name)
 
 	LPSTR N = LPSTR(Name);
 	map_Blender::iterator I = m_blenders.find	(N);
-#ifdef _EDITOR
-	if (I==m_blenders.end())	return 0;
-#else
+
 //	TODO: DX10: When all shaders are ready switch to common path
 #if defined(USE_DX10) || defined(USE_DX11)
 	if (I==m_blenders.end())	
@@ -58,7 +44,6 @@ IBlender* CResourceManager::_GetBlender		(LPCSTR Name)
 	}
 #endif
 	if (I==m_blenders.end())	{ Debug.fatal(DEBUG_INFO,"Shader '%s' not found in library.",Name); return 0; }
-#endif
 	else					return I->second;
 }
 
@@ -283,10 +268,7 @@ Shader*		CResourceManager::Create	(IBlender*	B,		LPCSTR s_shader,	LPCSTR s_textu
 
 Shader*		CResourceManager::Create	(LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_constants,	LPCSTR s_matrices)
 {
-//#ifndef DEDICATED_SERVER
-#ifndef _EDITOR
 	if (!g_dedicated_server)
-#endif
 	{
 		//	TODO: DX10: When all shaders are ready switch to common path
 #if defined(USE_DX10) || defined(USE_DX11)
@@ -309,12 +291,8 @@ Shader*		CResourceManager::Create	(LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_
 			}
 		}
 #else	//	USE_DX10
-#ifndef _EDITOR
-		if	(_lua_HasShader(s_shader))		
-			return	_lua_Create	(s_shader,s_textures);
-		else								
-#endif
-			return	_cpp_Create	(s_shader,s_textures,s_constants,s_matrices);
+		if(_lua_HasShader(s_shader)) return	_lua_Create(s_shader,s_textures);
+		else return	_cpp_Create(s_shader,s_textures,s_constants,s_matrices);
 #endif	//	USE_DX10
 	}
 //#else
@@ -342,35 +320,8 @@ void CResourceManager::DeferredUpload()
 		t->second->Load();
 	}
 }
-/*
-void	CResourceManager::DeferredUnload	()
-{
-	if (!RDEVICE.b_is_Ready)				return;
-	for (map_TextureIt t=m_textures.begin(); t!=m_textures.end(); t++)
-		t->second->Unload();
-}
-*/
-#ifdef _EDITOR
-void	CResourceManager::ED_UpdateTextures(AStringVec* names)
-{
-	// 1. Unload
-	if (names){
-		for (u32 nid=0; nid<names->size(); nid++)
-		{
-			map_TextureIt I = m_textures.find	((*names)[nid].c_str());
-			if (I!=m_textures.end())	I->second->Unload();
-		}
-	}else{
-		for (map_TextureIt t=m_textures.begin(); t!=m_textures.end(); t++)
-			t->second->Unload();
-	}
 
-	// 2. Load
-	// DeferredUpload	();
-}
-#endif
-
-void	CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
+void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
 {
 	m_base=c_base=m_lmaps=c_lmaps=0;
 
@@ -389,28 +340,24 @@ void	CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u
 		}
 	}
 }
-void	CResourceManager::_DumpMemoryUsage		()
+void CResourceManager::_DumpMemoryUsage()
 {
-	xr_multimap<u32,std::pair<u32,shared_str> >		mtex	;
+	xr_multimap<u32,std::pair<u32,shared_str>> mtex;
 
 	// sort
 	{
-		map_Texture::iterator I = m_textures.begin	();
-		map_Texture::iterator E = m_textures.end	();
-		for (; I!=E; I++)
+		for (auto it : m_textures)
 		{
-			u32			m = I->second->flags.MemoryUsage;
-			shared_str	n = I->second->cName;
-			mtex.insert (std::make_pair(m, std::make_pair(I->second->dwReference,n) ));
+			u32			m = it.second->flags.MemoryUsage;
+			shared_str	n = it.second->cName;
+			mtex.insert (std::make_pair(m, std::make_pair(it.second->dwReference,n) ));
 		}
 	}
 
 	// dump
 	{
-		xr_multimap<u32,std::pair<u32,shared_str> >::iterator I = mtex.begin	();
-		xr_multimap<u32,std::pair<u32,shared_str> >::iterator E = mtex.end		();
-		for (; I!=E; I++)
-			Msg			("* %4.1f : [%4d] %s",float(I->first)/1024.f, I->second.first, I->second.second.c_str());
+		for (auto it : mtex)
+			Msg("* %4.1f : [%4d] %s",float(it.first)/1024.f, it.second->first, it.second->second.c_str());
 	}
 }
 
@@ -421,17 +368,3 @@ void	CResourceManager::Evict()
 	CHK_DX	(HW.pDevice->EvictManagedResources());
 #endif	//	USE_DX10
 }
-/*
-BOOL	CResourceManager::_GetDetailTexture(LPCSTR Name,LPCSTR& T, R_constant_setup* &CS)
-{
-	LPSTR N = LPSTR(Name);
-	map_TD::iterator I = m_td.find	(N);
-	if (I!=m_td.end())
-	{
-		T	= I->second.T;
-		CS	= I->second.cs;
-		return TRUE;
-	} else {
-		return FALSE;
-	}
-}*/

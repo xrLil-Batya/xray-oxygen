@@ -1,5 +1,5 @@
 #include "../../xrCore/xrCore.h"
-#include "../luajit/src/lua.hpp"
+#include "../luajit/lua.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4995)

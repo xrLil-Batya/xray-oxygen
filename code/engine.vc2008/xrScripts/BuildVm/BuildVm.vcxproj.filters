@@ -9,27 +9,27 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\luajit\src\host\buildvm_fold.c">
+    <ClCompile Include=".\host\buildvm_fold.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\luajit\src\host\buildvm_lib.c">
+    <ClCompile Include=".\host\buildvm_lib.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\luajit\src\host\buildvm_peobj.c">
+    <ClCompile Include=".\host\buildvm_peobj.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\luajit\src\host\buildvm.c">
+    <ClCompile Include=".\host\buildvm.c">
       <Filter>Source</Filter>
     </ClCompile>
-    <ClCompile Include="..\luajit\src\host\buildvm_asm.c">
+    <ClCompile Include=".\host\buildvm_asm.c">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\luajit\src\host\buildvm.h">
+    <ClInclude Include=".\host\buildvm.h">
       <Filter>Include</Filter>
     </ClInclude>
-    <ClInclude Include="..\luajit\src\host\buildvm_arch.h">
+    <ClInclude Include=".\host\buildvm_arch.h">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

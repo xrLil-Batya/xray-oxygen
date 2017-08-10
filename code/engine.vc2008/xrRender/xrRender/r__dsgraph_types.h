@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../../xrCore/fixedmap.h"
 
 //#ifndef USE_MEMORY_MONITOR

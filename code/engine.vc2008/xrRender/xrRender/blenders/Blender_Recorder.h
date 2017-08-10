@@ -1,9 +1,5 @@
 // Blender_Recorder.h: interface for the CBlender_Recorder class.
-//
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_BLENDER_RECORDER_H__1F549674_8674_4EB2_95E6_E6BC19218A6C__INCLUDED_)
-#define AFX_BLENDER_RECORDER_H__1F549674_8674_4EB2_95E6_E6BC19218A6C__INCLUDED_
 #pragma once
 
 #include "..\tss.h"
@@ -159,5 +155,3 @@ public:
 	ShaderElement* 		_lua_Compile		(LPCSTR namesp, LPCSTR name);
 };
 #pragma pack(pop)
-
-#endif // !defined(AFX_BLENDER_RECORDER_H__1F549674_8674_4EB2_95E6_E6BC19218A6C__INCLUDED_)

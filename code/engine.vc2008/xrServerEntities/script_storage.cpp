@@ -18,7 +18,7 @@
 #	include "opt_inline.lua.h"
 #endif // #ifndef DEBUG
 
-LPCSTR	file_header_old = "\
+const char*	file_header_old = "\
 local function script_name() \
 return \"%s\" \
 end \
@@ -28,7 +28,7 @@ setmetatable(this, {__index = _G}) \
 setfenv(1, this) \
 		";
 
-LPCSTR	file_header_new = "\
+const char*	file_header_new = "\
 local function script_name() \
 return \"%s\" \
 end \
@@ -38,7 +38,7 @@ this._G = _G \
 setfenv(1, this) \
 		";
 
-LPCSTR	file_header = 0;
+const char*	file_header = 0;
 
 #if !defined(ENGINE_BUILD) && defined(XRGAME_EXPORTS)
 #	include "script_engine.h"
@@ -177,7 +177,7 @@ CScriptStorage::~CScriptStorage()
 }
 
 #ifndef DEBUG
-static void put_function(lua_State* state, u8 const* buffer, u32 const buffer_size, LPCSTR package_id)
+static void put_function(lua_State* state, u8 const* buffer, u32 const buffer_size, const char* package_id)
 {
 	lua_getglobal(state, "package");
 	lua_pushstring(state, "preload");
@@ -195,7 +195,7 @@ void CScriptStorage::reinit()
 		lua_close(m_virtual_machine);
 
 	m_virtual_machine = luaL_newstate();
-	R_ASSERT(m_virtual_machine, "Cannot initialize script virtual machine!");
+	R_ASSERT2(m_virtual_machine, "Cannot initialize script virtual machine!");
 
 	// initialize lua standard library functions 
 	struct luajit {
@@ -253,7 +253,7 @@ void CScriptStorage::reinit()
 		file_header = file_header_old;
 }
 
-int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, LPCSTR caFormat, va_list marker)
+int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, va_list marker)
 {
 #ifndef NO_XRGAME_SCRIPT_ENGINE
 #	ifdef DEBUG
@@ -270,7 +270,7 @@ int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, 
 		return(0);
 #	endif // #ifndef NO_XRGAME_SCRIPT_ENGINE
 
-	LPCSTR		S = "", SS = "";
+	const char*		S = "", SS = "";
 	LPSTR		S1;
 	string4096	S2;
 	switch (tLuaMessageType) {
@@ -362,7 +362,7 @@ void CScriptStorage::print_stack()
 }
 #endif // #ifdef PRINT_CALL_STACK
 
-int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, LPCSTR caFormat, ...)
+int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
 	va_list			marker;
 	va_start(marker, caFormat);
@@ -419,7 +419,7 @@ bool CScriptStorage::parse_namespace(const char* caNamespaceName, char* b, u32 c
 	return (true);
 }
 
-bool CScriptStorage::load_buffer(lua_State *L, LPCSTR caBuffer, size_t tSize, LPCSTR caScriptName, LPCSTR caNameSpaceName)
+bool CScriptStorage::load_buffer(lua_State *L, const char* caBuffer, size_t tSize, const char* caScriptName, const char* caNameSpaceName)
 {
 	int					l_iErrorCode;
 	if (caNameSpaceName && xr_strcmp("_G", caNameSpaceName)) {
@@ -479,7 +479,7 @@ bool CScriptStorage::load_buffer(lua_State *L, LPCSTR caBuffer, size_t tSize, LP
 	return				(true);
 }
 
-bool CScriptStorage::do_file(LPCSTR caScriptName, LPCSTR caNameSpaceName)
+bool CScriptStorage::do_file(const char* caScriptName, const char* caNameSpaceName)
 {
 	int				start = lua_gettop(lua());
 	string_path		l_caLuaFileName;
@@ -490,7 +490,7 @@ bool CScriptStorage::do_file(LPCSTR caScriptName, LPCSTR caNameSpaceName)
 	}
 	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName, "@", caScriptName);
 
-	if (!load_buffer(lua(), static_cast<LPCSTR>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName)) {
+	if (!load_buffer(lua(), static_cast<const char*>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName)) {
 		//		VERIFY		(lua_gettop(lua()) >= 4);
 		//		lua_pop		(lua(),4);
 		//		VERIFY		(lua_gettop(lua()) == start - 3);
@@ -536,7 +536,7 @@ bool CScriptStorage::do_file(LPCSTR caScriptName, LPCSTR caNameSpaceName)
 	return			(true);
 }
 
-bool CScriptStorage::load_file_into_namespace(LPCSTR caScriptName, LPCSTR caNamespaceName)
+bool CScriptStorage::load_file_into_namespace(const char* caScriptName, const char* caNamespaceName)
 {
 	int				start = lua_gettop(lua());
 	if (!do_file(caScriptName, caNamespaceName)) {
@@ -758,12 +758,12 @@ void CScriptStorage::flush_log()
 }
 #endif // DEBUG
 
-int CScriptStorage::error_log(LPCSTR	format, ...)
+int CScriptStorage::error_log(const char*	format, ...)
 {
 	va_list			marker;
 	va_start(marker, format);
 
-	LPCSTR			S = "! [LUA][ERROR] ";
+	const char*			S = "! [LUA][ERROR] ";
 	LPSTR			S1;
 	string4096		S2;
 	xr_strcpy(S2, S);
