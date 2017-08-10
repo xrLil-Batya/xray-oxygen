@@ -76,25 +76,25 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\luajit\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\luajit\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\luajit\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\luajit\src;$(IncludePath)</IncludePath>
+    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
@@ -157,7 +157,7 @@
   <ItemGroup>
     <ClCompile Include=".\host\buildvm.c" />
     <ClCompile Include=".\host\buildvm_asm.c" />
-    <ClCompile Include=".\buildvm_fold.c" />
+    <ClCompile Include=".\host\buildvm_fold.c" />
     <ClCompile Include=".\host\buildvm_lib.c" />
     <ClCompile Include=".\host\buildvm_peobj.c" />
   </ItemGroup>

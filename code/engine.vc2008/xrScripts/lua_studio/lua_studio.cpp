@@ -11,8 +11,8 @@
 #endif
 
 #include "lua_studio.h"
-#define pstr			LPSTR
-#define	pcstr			LPCSTR
+#define pstr			char*
+#define	pcstr			const char*
 #define	pcvoid			void const*
 #define	sz_cmp			xr_strcmp
 #define	vector_class	luabind::internal_vector

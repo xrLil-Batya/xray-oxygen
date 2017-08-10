@@ -5,8 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script token list class
 ////////////////////////////////////////////////////////////////////////////
-
-#include "../stdafx.h"
+#	include "../../xrCore/xrCore.h"
 #include "script_token_list.h"
 
 CScriptTokenList::~CScriptTokenList	()
