@@ -357,7 +357,7 @@ void CResourceManager::_DumpMemoryUsage()
 	// dump
 	{
 		for (auto it : mtex)
-			Msg("* %4.1f : [%4d] %s",float(it.first)/1024.f, it.second->first, it.second->second.c_str());
+			Msg("* %4.1f : [%4d] %s",float(it.first)/1024.f, it.second.first, it.second.second.c_str());
 	}
 }
 
