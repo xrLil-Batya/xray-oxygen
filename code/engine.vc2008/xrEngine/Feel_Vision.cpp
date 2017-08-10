@@ -99,7 +99,7 @@ namespace Feel {
 			);
 
 		// Determine visibility for dynamic part of scene
-		seen.clear_and_reserve					()	;
+		seen.clear					()	;
 		for (u32 o_it=0; o_it<r_spatial.size(); o_it++)
 		{
 			ISpatial*	spatial								= r_spatial					[o_it];

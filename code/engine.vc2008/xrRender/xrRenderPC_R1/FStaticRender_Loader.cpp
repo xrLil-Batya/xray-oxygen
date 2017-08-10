@@ -335,14 +335,9 @@ void CRender::LoadSectors(IReader* fs)
 
 		// build portal model
 		rmPortals = xr_new	<CDB::MODEL> ();
-<<<<<<< HEAD
-		rmPortals->build	(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()),nullptr,nullptr,false);
-=======
 		rmPortals->build	(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()), nullptr, nullptr, false);
->>>>>>> 8a86510aec1afab4c877c335053f3013574360cd
-	} else {
-		rmPortals = 0;
-	}
+	} 
+	else rmPortals = 0;
 
 	// debug
 	//	for (int d=0; d<Sectors.size(); d++)

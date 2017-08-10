@@ -8,7 +8,7 @@
 #pragma once
 #include "script_export_space.h"
 
-using CScriptFcolor = class_exporter<Fcolor>;
+using CScriptFcolor = class_exporter_api<Fcolor>;
 add_to_type_list(CScriptFcolor)
 #undef script_type_list
 #define script_type_list save_type_list(CScriptFcolor)

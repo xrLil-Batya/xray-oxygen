@@ -37,7 +37,7 @@ class	adopt_dx10sampler
 public:
 	adopt_dx10sampler	(CBlender_Compile*	C, u32 SamplerIndex)	: m_pC(C), m_SI(SamplerIndex)	{ if (u32(-1)==m_SI) m_pC=0;}
 	adopt_dx10sampler	(const adopt_dx10sampler&	_C)				: m_pC(_C.m_pC), m_SI(_C.m_SI)	{ if (u32(-1)==m_SI) m_pC=0;}
-
+};
 #pragma warning( push )
 #pragma warning( disable : 4512)
 // wrapper																																					

@@ -7,8 +7,9 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "script_export_space.h"
+#include "../xrScripts.h"
 
-class CScriptRTokenList 
+class SCRIPT_API CScriptRTokenList 
 {
 public:
 	using RTOKEN_LIST = xr_vector<shared_str>;

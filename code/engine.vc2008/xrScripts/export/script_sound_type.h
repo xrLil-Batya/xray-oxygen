@@ -10,7 +10,7 @@
 
 enum ESoundTypes;
 
-using CScriptSoundType = enum_exporter<ESoundTypes>;
+using CScriptSoundType = enum_exporter_api<ESoundTypes>;
 add_to_type_list(CScriptSoundType)
 #undef script_type_list
 #define script_type_list save_type_list(CScriptSoundType)

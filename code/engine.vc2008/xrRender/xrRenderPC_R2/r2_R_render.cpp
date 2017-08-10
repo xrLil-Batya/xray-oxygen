@@ -308,7 +308,7 @@ void CRender::Render		()
 	LP_pending.clear							();
 	{
 		// perform tests
-		u32	count			= 0;
+		size_t	count		= 0;
 		light_Package&	LP	= Lights.package;
 
 		// stats

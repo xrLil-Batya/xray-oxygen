@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "../../../SDK/include/loki/Typelist.h"
+#include "../xrScripts.h"
 struct lua_State;
 
 #ifdef SCRIPT_REGISTRATOR
@@ -22,6 +23,10 @@ struct lua_State;
 #define DECLARE_SCRIPT_REGISTER_FUNCTION public: static void script_register(lua_State *);
 #define DECLARE_SCRIPT_REGISTER_FUNCTION_STRUCT static void script_register(lua_State *);
 
-template <typename T> struct enum_exporter{DECLARE_SCRIPT_REGISTER_FUNCTION};
-template <typename T> struct class_exporter{DECLARE_SCRIPT_REGISTER_FUNCTION};
+template <typename T> struct enum_exporter					{DECLARE_SCRIPT_REGISTER_FUNCTION};
+template <typename T> struct class_exporter					{DECLARE_SCRIPT_REGISTER_FUNCTION};
+
+// FX: Added
+template <typename T> struct SCRIPT_API enum_exporter_api	{DECLARE_SCRIPT_REGISTER_FUNCTION_API};
+template <typename T> struct SCRIPT_API class_exporter_api	{DECLARE_SCRIPT_REGISTER_FUNCTION_API};
 
