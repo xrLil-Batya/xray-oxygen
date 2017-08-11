@@ -2828,7 +2828,8 @@ static uint32_t asm_x86_inslen(const uint8_t* p)
   uint32_t prefixes = 0;
   uint32_t x = map_op1[*p];
   for (;;) {
-    switch (x >> 4) {
+    switch (x >> 4) 
+	{
     case 0: return result + x + (prefixes & 4);
     case 1: prefixes |= x; x = map_op1[*++p]; result++; break;
     case 2: x = map_op2[*++p]; break;
@@ -2836,9 +2837,9 @@ static uint32_t asm_x86_inslen(const uint8_t* p)
     case 4: result -= (prefixes & 2);  /* fallthrough */
     case 5: return result + (x & 15);
     case 6:  /* Group 3. */
-      if (p[1] & 0x38) return result + 2;
-      if ((prefixes & 2) && (x == 0x66)) return result + 4;
-      return result + (x & 15);
+		if (p[1] & 0x38) x = 2;
+		else if ((prefixes & 2) && (x == 0x66)) x = 4;
+		goto mrm;
     case 7: /* VEX c4/c5. */
       if (LJ_32 && p[1] < 0xc0) {
         x = 2;
