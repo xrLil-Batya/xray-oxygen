@@ -323,10 +323,15 @@ static int llex(LexState *ls, TValue *tv)
       if (ls->current != '=') return '='; else { next(ls); return TK_eq; }
     case '<':
       next(ls);
-      if (ls->current != '=') return '<'; else { next(ls); return TK_le; }
+	  if (ls->current == '=') { lex_next(ls); return TK_le; } else
+	  if (ls->current == '<') { lex_next(ls); return TK_shl; } else return '<';
     case '>':
       next(ls);
-      if (ls->current != '=') return '>'; else { next(ls); return TK_ge; }
+	  if (ls->current == '=') { lex_next(ls); return TK_ge; } else
+	  if (ls->current == '>') { lex_next(ls); return TK_shr; } else return '>';
+	case '/':
+	  lex_next(ls);
+	  if (ls->current != '/') return '/'; else { lex_next(ls); return TK_idiv; }
     case '~':
       next(ls);
       if (ls->current != '=') return '~'; else { next(ls); return TK_ne; }
