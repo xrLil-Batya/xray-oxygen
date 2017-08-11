@@ -1267,25 +1267,33 @@ static void fscope_begin(FuncState *fs, FuncScope *bl, int flags)
 /* End a scope. */
 static void fscope_end(FuncState *fs)
 {
-  FuncScope *bl = fs->bl;
-  LexState *ls = fs->ls;
-  fs->bl = bl->prev;
-  var_remove(ls, bl->nactvar);
-  fs->freereg = fs->nactvar;
-  lua_assert(bl->nactvar == fs->nactvar);
-  if ((bl->flags & (FSCOPE_UPVAL|FSCOPE_NOCLOSE)) == FSCOPE_UPVAL)
-    bcemit_AJ(fs, BC_UCLO, bl->nactvar, 0);
-  if ((bl->flags & FSCOPE_BREAK)) {
-    if ((bl->flags & FSCOPE_LOOP)) {
-      MSize idx = gola_new(ls, NAME_BREAK, VSTACK_LABEL, fs->pc);
-      ls->vtop = idx;  /* Drop break label immediately. */
-      gola_resolve(ls, bl, idx);
-      return;
-    }  /* else: need the fixup step to propagate the breaks. */
-  } else if (!(bl->flags & FSCOPE_GOLA)) {
-    return;
-  }
-  gola_fixup(ls, bl);
+	FuncScope *bl = fs->bl;
+	LexState *ls = fs->ls;
+	fs->bl = bl->prev;
+	var_remove(ls, bl->nactvar);
+	fs->freereg = fs->nactvar;
+	lua_assert(bl->nactvar == fs->nactvar);
+	if ((bl->flags & (FSCOPE_UPVAL|FSCOPE_NOCLOSE)) == FSCOPE_UPVAL)
+	bcemit_AJ(fs, BC_UCLO, bl->nactvar, 0);
+	if ((bl->flags & FSCOPE_BREAK)) 
+	{
+		if ((bl->flags & FSCOPE_LOOP)) 
+		{
+		  MSize idx = gola_new(ls, NAME_BREAK, VSTACK_LABEL, fs->pc);
+		  ls->vtop = idx;  /* Drop break label immediately. */
+		  gola_resolve(ls, bl, idx);
+		} 
+		else /* Need the fixup step to propagate the breaks. */
+		{  
+			gola_fixup(ls, bl);
+			return;
+		}
+	}
+	if ((bl->flags & FSCOPE_GOLA)) 
+	{
+		gola_fixup(ls, bl);
+	}
+	gola_fixup(ls, bl);
 }
 
 /* Mark scope as having an upvalue. */
