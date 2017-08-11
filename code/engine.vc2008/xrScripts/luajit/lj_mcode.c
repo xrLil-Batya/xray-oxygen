@@ -230,7 +230,7 @@ static void *mcode_alloc(jit_State *J, size_t sz)
   /* First try a contiguous area below the last one. */
   uintptr_t hint = J->mcarea ? (uintptr_t)J->mcarea - sz : 0;
   int i;
-  for (i = 0; i < 32; i++) {  /* 32 attempts ought to be enough ... */
+  for (i = 0; i < LJ_TARGET_JUMPRANGE; i++) {  /* 32 attempts ought to be enough ... */
     if (mcode_validptr(hint)) {
       void *p = mcode_alloc_at(J, hint, sz, MCPROT_GEN);
 
