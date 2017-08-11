@@ -372,7 +372,7 @@ static void LJ_FASTCALL recff_ipairs(jit_State *J, RecordFFData *rd)
 		if (tref_istab(tr))
 		{
 			J->base[0] = lj_ir_kfunc(J, funcV(&J->fn->c.upvalue[0]));
-			J->base[1] = tab;
+			J->base[1] = tr;
 			J->base[2] = lj_ir_kint(J, 0);
 			rd->nres = 3;
 		}  /* else: Interpreter will throw. */
