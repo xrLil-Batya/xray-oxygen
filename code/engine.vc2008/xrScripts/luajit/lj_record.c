@@ -1342,25 +1342,36 @@ static TRef rec_upvalue(jit_State *J, uint32_t uv, TRef val)
 noconstify:
   /* Note: this effectively limits LJ_MAX_UPVAL to 127. */
   uv = (uv << 8) | (hashrot(uvp->dhash, uvp->dhash + HASH_BIAS) & 0xff);
-  if (!uvp->closed) {
+  if (!uvp->closed) 
+  {
+	uref = tref_ref(emitir(IRTG(IR_UREFO, IRT_P32), fn, uv));
     /* In current stack? */
-    if (uvval(uvp) >= tvref(J->L->stack) &&
-	uvval(uvp) < tvref(J->L->maxstack)) {
+    if (uvval(uvp) >= tvref(J->L->stack) && uvval(uvp) < tvref(J->L->maxstack)) 
+	{
       int32_t slot = (int32_t)(uvval(uvp) - (J->L->base - J->baseslot));
-      if (slot >= 0) {  /* Aliases an SSA slot? */
-	slot -= (int32_t)J->baseslot;  /* Note: slot number may be negative! */
-	/* NYI: add IR to guard that it's still aliasing the same slot. */
-	if (val == 0) {
-	  return getslot(J, slot);
-	} else {
-	  J->base[slot] = val;
-	  if (slot >= (int32_t)J->maxslot) J->maxslot = (BCReg)(slot+1);
-	  return 0;
-	}
+      if (slot >= 0) /* Aliases an SSA slot? */
+	  {  
+	    emitir(IRTG(IR_EQ, IRT_P32),
+		REF_BASE,
+		emitir(IRT(IR_ADD, IRT_P32), uref, lj_ir_kint(J, (slot - 1) * -8)));
+		slot -= (int32_t)J->baseslot;  /* Note: slot number may be negative! */
+		/* NYI: add IR to guard that it's still aliasing the same slot. */
+		if (val == 0) 
+		{
+			return getslot(J, slot);
+		} 
+		else 
+		{
+			J->base[slot] = val;
+			if (slot >= (int32_t)J->maxslot) J->maxslot = (BCReg)(slot+1);
+			return 0;
+		}
       }
     }
-    uref = tref_ref(emitir(IRTG(IR_UREFO, IRT_P32), fn, uv));
-  } else {
+    emitir(IRTG(IR_UGT, IRT_P32), emitir(IRT(IR_SUB, IRT_P32), uref, REF_BASE), lj_ir_kint(J, (J->baseslot + J->maxslot) * 8));
+  } 
+  else 
+  {
     needbarrier = 1;
     uref = tref_ref(emitir(IRTG(IR_UREFC, IRT_P32), fn, uv));
   }
