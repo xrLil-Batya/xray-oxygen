@@ -366,7 +366,8 @@ void engine::fill_class_info	(cs::lua_studio::backend& backend, char* const buff
 	typedef luabind::detail::class_rep::property_map	property_map;
 	property_map::const_iterator	I = class_rep->properties().begin();
 	property_map::const_iterator	E = class_rep->properties().end();
-	for (u32 i=0; I != E; ++I) {
+	for (u32 i=0; I != E; ++I, ++i) 
+	{
 		if (i == 3) {
 			stream				+= xr_sprintf(stream, size - (stream - buffer), "...");
 			break;
@@ -393,8 +394,6 @@ void engine::fill_class_info	(cs::lua_studio::backend& backend, char* const buff
 			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s[%s]=%s ", (*I).first, type, value);
 		else
 			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s=%s ", (*I).first, value);
-
-		++i;
 	}
 
 	stream						+= xr_sprintf(stream, size - (stream - buffer), "}%c",0);
@@ -441,7 +440,8 @@ bool engine::value_convert_instance	(cs::lua_studio::backend& backend, char* buf
 	tbl.get					(state);
 	int						i;
 	lua_pushnil				(state);
-	for (i=0; lua_next(state,-2); ++i) {
+	for (i=0; lua_next(state,-2); ++i) 
+	{
 		if (i == 3) {
 			lua_pop_value	(state, 2);
 			stream			+= xr_sprintf(stream, size - (stream - buffer), "...");
@@ -555,25 +555,26 @@ void engine::push_class_base					(lua_State* const state, char const* const id)
 	typedef luabind::detail::class_rep::base_info	base_info;
 	typedef vector_class<base_info>	Bases;
 	Bases const					&bases = class_rep->bases();
-	Bases::const_iterator		I = bases.begin();
-	Bases::const_iterator		E = bases.end();
-	for ( ; I != E; ++I) {
-		pcstr					name = (*I).base->name();
+	
+	for (auto it : bases) 
+	{
+		pcstr					name = it.base->name();
 		if (sz_cmp(id,name))
 			continue;
 
 		lua_pop_value			(state, 1);
-		lua_pushlightuserdata	(state, (*I).base);
+		lua_pushlightuserdata	(state, it.base);
 		return;
 	}
 
 	NODEFAULT;
 }
 
-void engine::push_class_instance				(lua_State* const state, char const* const id)
+void engine::push_class_instance(lua_State* const state, char const* const id)
 {
 	luabind::detail::object_rep	*object = luabind::detail::is_class_object(state, -1);
-	if (!object) {
+	if (!object)
+	{
 		lua_pop_value			(state, 1);
 		object					= luabind::detail::is_class_object(state, -1);
 		VERIFY					(object);
@@ -591,20 +592,23 @@ void engine::push_class_instance				(lua_State* const state, char const* const i
 	lua_remove					(state, -2);
 }
 
-void engine::push_user_data						(lua_State* const state, char const* const id, cs::lua_studio::icon_type const icon_type)
+void engine::push_user_data(lua_State* const state, char const* const id, cs::lua_studio::icon_type const icon_type)
 {
 	switch (icon_type) {
-		case cs::lua_studio::icon_type_class : {
+		case cs::lua_studio::icon_type_class : 
+		{
 			push_class			(state, id);
 			break;
 		}
-		case cs::lua_studio::icon_type_class_base : {
+		case cs::lua_studio::icon_type_class_base : 
+		{
 			push_class_base		(state, id);
 			break;
 		}
 		case cs::lua_studio::icon_type_unknown :
 		case cs::lua_studio::icon_type_table :
-		case cs::lua_studio::icon_type_class_instance : {
+		case cs::lua_studio::icon_type_class_instance : 
+		{
 			push_class_instance	(state, id);
 			break;
 		}
@@ -612,7 +616,7 @@ void engine::push_user_data						(lua_State* const state, char const* const id, 
 	}
 }
 
-bool engine::push_value							(lua_State* const state, char const* const id, cs::lua_studio::icon_type const icon_type)
+bool engine::push_value(lua_State* const state, char const* const id, cs::lua_studio::icon_type const icon_type)
 {
 	switch ( lua_type( state, -1 ) ) {
 		case engine::lua_type_table :
@@ -629,11 +633,7 @@ bool engine::push_value							(lua_State* const state, char const* const id, cs:
 #endif // #ifdef DEBUG
 }
 
-void engine::fill_class_data					(
-		cs::lua_studio::backend& backend,
-		cs::lua_studio::value_to_expand& value_to_expand,
-		lua_State* const state
-	)
+void engine::fill_class_data(cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value_to_expand, lua_State* const state)
 {
 	luabind::detail::object_rep		*object = static_cast<luabind::detail::object_rep*>(lua_touserdata(state,-2));
 	luabind::detail::class_rep		*_class = static_cast<luabind::detail::class_rep*>(lua_touserdata(state,-1));
@@ -653,46 +653,34 @@ void engine::fill_class_data					(
 			);
 	}
 
-	if (!object)
-		return;
+	if (object)
+	{
+		for (auto it : _class->properties()) 
+		{
+			lua_pushstring			(state, it.first);
+			lua_insert				(state, 1);
+			lua_pushlightuserdata	(state, object);
+			lua_insert				(state, 1);
+			it.second.func			(state, it.second.pointer_offset);
 
-	typedef luabind::detail::class_rep::property_map	property_map;
-	property_map::const_iterator	i = _class->properties().begin();
-	property_map::const_iterator	e = _class->properties().end();
-	for ( ; i != e; ++i) {
-		lua_pushstring			(state,(*i).first);
-		lua_insert				(state,1);
-		lua_pushlightuserdata	(state,object);
-		lua_insert				(state,1);
-		(*i).second.func		(state, (*i).second.pointer_offset);
+			bool use_in_description;
+			
+			string4096 type, value;
+			backend.type_to_string(type, sizeof(type), state, -1, use_in_description);
+			
+			cs::lua_studio::icon_type icon_type;
+			backend.value_to_string(value, sizeof(value), state, -1, icon_type, true);
 
-		bool					use_in_description;
-		
-		string4096				type;
-		backend.type_to_string	(type, sizeof(type), state, -1, use_in_description);
-		
-		cs::lua_studio::icon_type	icon_type;
-		string4096				value;
-		backend.value_to_string	(value, sizeof(value), state, -1, icon_type, true);
+			lua_pop_value			(state, 1);
+			lua_remove				(state, 1);
+			lua_remove				(state, 1);
 
-		lua_pop_value			(state,1);
-		lua_remove				(state,1);
-		lua_remove				(state,1);
-
-		value_to_expand.add_value	(
-			(*i).first,
-			type,
-			value,
-			icon_type
-		);
+			value_to_expand.add_value(it.first, type, value, icon_type);
+		}
 	}
 }
 
-void engine::expand_class						(
-		cs::lua_studio::backend& backend,
-		cs::lua_studio::value_to_expand& value,
-		lua_State* const state
-	)
+void engine::expand_class(cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value, lua_State* const state)
 {
 	int							start = lua_gettop(state);
 
@@ -703,25 +691,20 @@ void engine::expand_class						(
 
 	luabind::detail::object_rep	*object = luabind::detail::is_class_object(state,-2);
 	if (!object)
-		lua_pushnil				(state);
+		lua_pushnil(state);
 
-	if (lua_gettop(state) <= start + 1)
-		return;
-
-	lua_pop_value				(state,1);
+	if (lua_gettop(state) > start + 1)
+		lua_pop_value(state, 1);
 }
 
-void engine::expand_class_instance				(
-		cs::lua_studio::backend& backend,
-		cs::lua_studio::value_to_expand& value_to_expand,
-		lua_State* const state
-	)
+void engine::expand_class_instance( cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value_to_expand, lua_State* const state)
 {
 	typedef luabind::detail::object_rep	object_rep;
 	object_rep					*object = luabind::detail::is_class_object(state,-1);
 	VERIFY2						(object, "invalid object userdata");
 
-	if (object->crep()) {
+	if (object->crep())
+	{
 		luabind::detail::class_rep	*class_rep = object->crep();
 		
 		string4096					type;
@@ -730,12 +713,7 @@ void engine::expand_class_instance				(
 		cs::lua_studio::icon_type	icon_type;
 		string4096					value;
 		backend.value_to_string		(value, sizeof(value), state, -1, icon_type, true);
-		value_to_expand.add_value	(
-			class_rep->name(),
-			type,
-			value,
-			cs::lua_studio::icon_type_class
-		);
+		value_to_expand.add_value	(class_rep->name(), type, value, cs::lua_studio::icon_type_class);
 	}
 
 	typedef luabind::detail::lua_reference	lua_reference;
@@ -746,34 +724,23 @@ void engine::expand_class_instance				(
 	tbl.get						(state);
 	int							i;
 	lua_pushnil					(state);
-	for (i=0; lua_next(state,-2); ++i) {
+	
+	for (i=0; lua_next(state,-2); ++i) 
+	{
 		cs::lua_studio::icon_type	icon_type;
 		bool					use_in_description;
 		pcstr					name = lua_to_string(state,-2);
 
-		string4096				type;
+		string4096 type, value;
 		backend.type_to_string	(type, sizeof(type), state, -1, use_in_description);
-
-		string4096				value;
 		backend.value_to_string	(value, sizeof(value), state, -1, icon_type, true);
-		value_to_expand.add_value	(
-			name,
-			type,
-			value,
-			icon_type
-		);
-
+		value_to_expand.add_value(name, type, value, icon_type);
 		lua_pop_value			(state, 1);
 	}
-
 	lua_pop_value				(state, 1);
 }
 
-void engine::expand_user_data					(
-		cs::lua_studio::backend& backend,
-		cs::lua_studio::value_to_expand& value,
-		lua_State* const state
-	)
+void engine::expand_user_data(cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value, lua_State* const state)
 {
 	luabind::detail::object_rep	*object = luabind::detail::is_class_object(state,-1);
 	if (object) {
@@ -786,13 +753,10 @@ void engine::expand_user_data					(
 	lua_pop_value				(state, 2);
 }
 
-bool engine::expand_value						(
-		cs::lua_studio::backend& backend,
-		cs::lua_studio::value_to_expand& value,
-		lua_State* const state
-	)
+bool engine::expand_value(cs::lua_studio::backend& backend, cs::lua_studio::value_to_expand& value, lua_State* const state)
 {
-	switch (lua_type(state, -1)) {
+	switch (lua_type(state, -1)) 
+	{
 		case engine::lua_type_nil :
 		case engine::lua_type_table :
 			return			(false);
@@ -809,7 +773,6 @@ bool engine::expand_value						(
 #endif // #ifdef DEBUG
 }
 
-engine::engine() :
-	m_instance_count(0)
+engine::engine() : m_instance_count(0)
 {
 }

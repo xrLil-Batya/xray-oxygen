@@ -6,7 +6,7 @@
 #include "SoundRender_Target.h"
 #include "SoundRender_Source.h"
 
-void	CSoundRender_Core::i_start		(CSoundRender_Emitter* E)
+void CSoundRender_Core::i_start(CSoundRender_Emitter* E)
 {
 	R_ASSERT	(E);
 
@@ -34,27 +34,25 @@ void	CSoundRender_Core::i_start		(CSoundRender_Emitter* E)
 	T->priority			= Ptest;
 }
 
-void	CSoundRender_Core::i_stop		(CSoundRender_Emitter* E)
+void CSoundRender_Core::i_stop(CSoundRender_Emitter* E)
 {
-	// Msg					("- %10s : %3d[%1.4f] : %s","i_stop",E->dbg_ID,E->priority(),E->source->fname);
 	R_ASSERT			(E);
 	R_ASSERT			(E == E->target->get_emitter());
 	E->target->stop		();
 	E->target			= nullptr;
 }
 
-void	CSoundRender_Core::i_rewind		(CSoundRender_Emitter* E)
+void CSoundRender_Core::i_rewind(CSoundRender_Emitter* E)
 {
-	// Msg					("- %10s : %3d[%1.4f] : %s","i_rewind",E->dbg_ID,E->priority(),E->source->fname);
 	R_ASSERT			(E);
 	R_ASSERT			(E == E->target->get_emitter());
 	E->target->rewind	();
 }
 
-bool	CSoundRender_Core::i_allow_play	(CSoundRender_Emitter* E)
+bool CSoundRender_Core::i_allow_play(CSoundRender_Emitter* E)
 {
 	// Search available target
-	float	Ptest	= E->priority	();
+	float Ptest	= E->priority	();
 	for (u32 it=0; it<s_targets.size(); it++)
 	{
 		CSoundRender_Target*	T		= s_targets	[it];
