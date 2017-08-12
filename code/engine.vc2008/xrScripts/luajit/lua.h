@@ -344,9 +344,13 @@ LUA_API int lua_gethookcount (lua_State *L);
 /* From Lua 5.2. */
 LUA_API void *lua_upvalueid (lua_State *L, int idx, int n);
 LUA_API void lua_upvaluejoin (lua_State *L, int idx1, int n1, int idx2, int n2);
-LUA_API int lua_loadx (lua_State *L, lua_Reader reader, void *dt,
-		       const char *chunkname, const char *mode);
-
+LUA_API int  lua_loadx (lua_State *L, lua_Reader reader, void *dt, const char *chunkname, const char *mode);
+// Add: FX
+LUA_API void lua_copy (lua_State *L, int fromidx, int toidx);
+LUA_API const lua_Number *lua_version (lua_State *L);
+/* From Lua 5.3. */
+LUA_API int lua_isyieldable (lua_State *L);
+// End (FX) 
 
 struct lua_Debug {
   int event;
