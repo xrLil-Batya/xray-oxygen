@@ -51,7 +51,7 @@ protected:
 	inventory::upgrade::Manager					*m_upgrade_manager;
 	CRandom32									m_random;
 	bool										m_initialized;
-	mutable shared_str									m_server_command_line;
+	shared_str									*m_server_command_line;
 	bool										m_can_register_objects;
 	// temp
 	ALife::SCHEDULE_P_VECTOR					m_tpaCombatGroups[2];
