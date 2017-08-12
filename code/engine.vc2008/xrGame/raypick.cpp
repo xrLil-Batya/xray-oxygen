@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "raypick.h"
 #include "level.h"
-#include "script_game_object_impl.h"
+#include "script_game_object.h"
 
 CRayPick::CRayPick() 
 {
@@ -22,6 +22,14 @@ CRayPick::CRayPick(Fvector& P, Fvector& D, float R, collide::rq_target F, CScrip
 	if (I)
 		ignore = smart_cast<CObject*>(&(I->object()));
 };
+
+void CRayPick::set_ignore_object(CScriptGameObject* I)
+{
+    if (I)
+    {
+        ignore = smart_cast<CObject*>(&(I->object()));
+    }
+}
 
 bool	CRayPick::query		()
 {

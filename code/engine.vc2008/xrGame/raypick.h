@@ -1,6 +1,5 @@
 #include "pch_script.h"
 #include "gameobject.h"
-#include "script_game_object.h"
 //#include ".\xrEngine\xr_collide_defs.h"
 
 struct script_rq_result
@@ -23,6 +22,8 @@ struct script_rq_result
 	};
 };
 
+class CScriptGameObject;
+
 // class for performing ray pick
 struct CRayPick
 {
@@ -40,7 +41,7 @@ struct CRayPick
 	IC void		set_direction		(Fvector& D)			{direction = D;};
 	IC void		set_range			(float R)				{range = R;};
 	IC void		set_flags			(collide::rq_target F)	{flags = F;};
-	void		set_ignore_object	(CScriptGameObject* I)	{if (I) ignore = smart_cast<CObject*>(&(I->object()));};
+	void		set_ignore_object	(CScriptGameObject* I);
 
 	bool		query				();
 	

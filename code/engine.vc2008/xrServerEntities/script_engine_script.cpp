@@ -65,6 +65,10 @@ CRenderDevice *get_device()
 }
 #endif
 
+void Lua_DebugBreak()
+{
+    DebugBreak();
+}
 
 void prefetch_module(LPCSTR file_name)
 {
@@ -104,7 +108,6 @@ struct profile_timer_script
 
 	IC void stop()
 	{
-		THROW(m_recurse_mark);
 		--recurse_mark;
 		
 		if (recurse_mark)
@@ -170,6 +173,7 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L, "user_name",						import_ses::user_name);
 	function	(L, "time_global",						script_time_global);
 	function	(L, "time_global_async",				script_time_global_async);
+    function    (L, "debuggerTrigger",                  Lua_DebugBreak);
 	//function	(L, "LoadModule", load_modules);
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",							get_device);

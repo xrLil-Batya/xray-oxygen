@@ -160,7 +160,7 @@ IC	CRandom32							&CALifeSimulatorBase::random				()
 
 IC	void								CALifeSimulatorBase::setup_command_line		(shared_str *command_line)
 {
-	m_server_command_line		= command_line;
+	m_server_command_line		= *command_line;
 }
 
 IC	xrServer							&CALifeSimulatorBase::server				() const
@@ -185,8 +185,8 @@ IC	const CALifeTimeManager				&CALifeSimulatorBase::time_manager			() const
 
 IC	shared_str							*CALifeSimulatorBase::server_command_line	() const
 {
-	VERIFY						(m_server_command_line);
-	return						(m_server_command_line);
+	//VERIFY						(m_server_command_line);
+	return						(&m_server_command_line);
 }
 
 template <typename T>

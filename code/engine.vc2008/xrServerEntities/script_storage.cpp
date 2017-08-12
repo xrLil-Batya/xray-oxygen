@@ -270,7 +270,8 @@ int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, 
 		return(0);
 #	endif // #ifndef NO_XRGAME_SCRIPT_ENGINE
 
-	const char*		S = "", SS = "";
+    const char*		S = "";
+    const char*     SS = "";
 	LPSTR		S1;
 	string4096	S2;
 	switch (tLuaMessageType) {

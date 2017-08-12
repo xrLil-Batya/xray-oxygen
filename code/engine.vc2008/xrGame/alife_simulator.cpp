@@ -51,8 +51,6 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 //#endif
 	ai().set_alife				(this);
 
-	setup_command_line			(command_line);
-
 	typedef IGame_Persistent::params params;
 	params						&p = g_pGamePersistent->m_game_params;
 	
@@ -70,6 +68,7 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	xr_strcat						(temp,"/");
 	xr_strcat						(temp,p.m_alife);
 	*command_line				= temp;
+    setup_command_line(command_line);
 	
 	LPCSTR						start_game_callback = pSettings->r_string(alife_section,"start_game_callback");
 	luabind::functor<void>		functor;

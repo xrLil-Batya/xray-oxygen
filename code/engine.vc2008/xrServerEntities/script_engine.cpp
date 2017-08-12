@@ -317,6 +317,7 @@ void CScriptEngine::init				()
 	bool								save = m_reload_modules;
 	m_reload_modules					= true;
 	process_file_if_exists				("_G",false);
+
 	m_reload_modules					= save;
 
 	register_script_classes				();

@@ -113,6 +113,10 @@ class CArtefact;
 		CActionBase<CScriptGameObject>*,
 		CPropertyEvaluator<CScriptGameObject>*
 	>								script_planner;
+
+#include "ai_space.h"
+#include "script_engine.h"
+#include "GameObject.h"
 #endif // DEBUG
 
 class CScriptGameObject;
@@ -144,7 +148,21 @@ public:
 	virtual					~CScriptGameObject		();
 							operator CObject*		();
 
-	IC		CGameObject			&object				() const;
+    IC		CGameObject			&object() const
+    {
+        #ifdef DEBUG
+        __try {
+            if (m_game_object && m_game_object->lua_game_object() == this)
+                return	(*m_game_object);
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER) {
+        }
+
+        ai().script_engine().script_log(eLuaMessageTypeError, "you are trying to use a destroyed object [%x]", m_game_object);
+        THROW2(m_game_object && m_game_object->lua_game_object() == this, "Probably, you are trying to use a destroyed object!");
+        #endif // #ifdef DEBUG
+        return			(*m_game_object);
+    }
 			CScriptGameObject	*Parent				() const;
 			void				Hit					(CScriptHit *tLuaHit);
 			int					clsid				() const;

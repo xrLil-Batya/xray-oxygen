@@ -20,11 +20,40 @@ public:
 	ICF	T&			operator[] (int i)					{ return *((T*)this + i); }
 	ICF	T&			operator[] (int i)	const			{ return *((T*)this + i); }
 
-	ICF	SelfRef	set(T _x, T _y, T _z)					{ x = _x;		y = _y;		z = _z;		return *this;	};
-	ICF SelfRef	set(const _vector3<float> &v)			{ x = T(v.x);	y = T(v.y);	z = T(v.z);	return *this;	};
-	ICF SelfRef	set(const _vector3<double> &v)			{ x = T(v.x);	y = T(v.y);	z = T(v.z);	return *this;	};
-	ICF	SelfRef	set(float* p)							{ x = p[0];	y = p[1];	z = p[2];		return *this;	};
-	ICF	SelfRef	set(double* p)							{ x = p[0];	y = p[1];	z = p[2];		return *this;	};
+	ICF	SelfRef	set(T _x, T _y, T _z)					
+    { 
+        x = _x;		
+        y = _y;		
+        z = _z;		
+        return *this;	
+    };
+	ICF SelfRef	set(const _vector3<float> &v)			
+    { 
+        x = T(v.x);	
+        y = T(v.y);	
+        z = T(v.z);	
+        return *this;	};
+	ICF SelfRef	set(const _vector3<double> &v)			
+    { 
+        x = T(v.x);	
+        y = T(v.y);	
+        z = T(v.z);	
+        return *this;	
+    };
+	ICF	SelfRef	set(float* p)							
+    { 
+        x = p[0];	
+        y = p[1];	
+        z = p[2];		
+        return *this;	
+    };
+	ICF	SelfRef	set(double* p)							
+    { 
+        x = p[0];	
+        y = p[1];	
+        z = p[2];		
+        return *this;	
+    };
 
 	ICF	SelfRef	add(const Self &v)						{ x+=v.x;	y+=v.y;		z+=v.z;			return *this;	};
 	ICF SelfRef	add(T s)								{ x+=s;		y+=s;		z+=s;			return *this;	};

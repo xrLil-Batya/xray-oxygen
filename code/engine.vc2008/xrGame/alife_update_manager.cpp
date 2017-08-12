@@ -203,10 +203,10 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 
 	string256						autoave_name;
 	strconcat						(sizeof(autoave_name),autoave_name,Core.UserName," - ","autosave");
-	LPCSTR							temp0 = strstr(**m_server_command_line,"/");
+	LPCSTR							temp0 = strstr(*m_server_command_line,"/");
 	VERIFY							(temp0);
 	string256						temp;
-	*m_server_command_line			= strconcat(sizeof(temp),temp,autoave_name,temp0);
+	m_server_command_line			= strconcat(sizeof(temp),temp,autoave_name,temp0);
 	
 	save							(autoave_name);
 
@@ -304,11 +304,11 @@ bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 		}
 	}
 	string512					S,S1;
-	xr_strcpy						(S,**m_server_command_line);
+	xr_strcpy						(S,*m_server_command_line);
 	LPSTR						temp = strchr(S,'/');
 	R_ASSERT2					(temp,"Invalid server options!");
 	strconcat					(sizeof(S1),S1,game_name,temp);
-	*m_server_command_line		= S1;
+	m_server_command_line		= S1;
 	return						(true);
 }
 

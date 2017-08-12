@@ -18,7 +18,6 @@
 #include "item_manager.h"
 #include "danger_manager.h"
 //#include "ai_object_location.h"
-#include "ai_object_location_impl.h"
 #include "level_graph.h"
 #include "game_graph.h"
 #include "movement_manager.h"
@@ -41,15 +40,13 @@
 #include "client_spawn_manager.h"
 #include "moving_object.h"
 #include "level_path_manager.h"
+#include "ai_object_location.h"
 
 // Lain: added
 #include "../xrEngine/IGame_Level.h"
 #include "../xrCore/_vector3d_ext.h"
 #include "debug_text_tree.h"
 #include "../xrPhysics/IPHWorld.h"
-
-// FX: added
-#include "ai_object_location_impl.h"
 
 #ifdef DEBUG
 #	include "debug_renderer.h"

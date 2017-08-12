@@ -155,18 +155,16 @@ IPureServer::~IPureServer	()
 
 IPureServer::EConnect IPureServer::Connect(LPCSTR options, GameDescriptionData & game_descr)
 {
-	connect_options = options;
-
 	// Parse options
-	char*				session_name = const_cast<char*>(options);
+    string1024 session_name;
+    xr_strcpy(session_name, options);
+    //sertanly we can use game_descr structure for determinig level_name, but for backward compatibility we save next line...
+    //xr_strcpy(session_name, options);
+    if (strchr(session_name, '/'))	*strchr(session_name, '/') = 0;
+    connect_options = options;
 
 	string64				password_str = "";
 	u32						dwMaxPlayers = 0;
-
-
-	//sertanly we can use game_descr structure for determinig level_name, but for backward compatibility we save next line...
-	//xr_strcpy(session_name, options);
-	if (strchr(session_name, '/'))	*strchr(session_name, '/') = 0;
 
 	if (strstr(options, "psw="))
 	{

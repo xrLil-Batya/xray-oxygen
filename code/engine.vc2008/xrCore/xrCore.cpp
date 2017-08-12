@@ -54,7 +54,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 		string64 _uname;
 		DWORD	sz_user		= sizeof(_uname);
 		GetUserName			(_uname, &sz_user);
-		strconcat(sizeof(UserName), UserName, _uname, "_");
+        xr_strcpy(UserName, _uname);
 		
 		DWORD	sz_comp		= sizeof(CompName);
 		GetComputerName		(CompName,&sz_comp);

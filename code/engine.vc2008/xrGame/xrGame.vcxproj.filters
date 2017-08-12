@@ -4593,9 +4593,6 @@
     <ClInclude Include="ai_object_location.h">
       <Filter>AI\ANavigation\ObjectLocation</Filter>
     </ClInclude>
-    <ClInclude Include="ai_object_location_impl.h">
-      <Filter>AI\ANavigation\ObjectLocation</Filter>
-    </ClInclude>
     <ClInclude Include="ai_object_location_inline.h">
       <Filter>AI\ANavigation\ObjectLocation</Filter>
     </ClInclude>
@@ -4885,9 +4882,6 @@
       <Filter>AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
     </ClInclude>
     <ClInclude Include="script_game_object.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
-    </ClInclude>
-    <ClInclude Include="script_game_object_impl.h">
       <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
     </ClInclude>
     <ClInclude Include="script_hit.h">
