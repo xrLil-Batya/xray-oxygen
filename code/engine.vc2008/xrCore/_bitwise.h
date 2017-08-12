@@ -78,12 +78,12 @@ IC	u64	btwCount1(u64 v)
 
 ICF int iFloor (float x)
 {
-    return floor(x);
+    return (int)floor(x);
 }
 
 ICF int iCeil (float x)
 {
-    return ceil(x);	
+    return (int)ceil(x);	
 }
 
 // Validity checks

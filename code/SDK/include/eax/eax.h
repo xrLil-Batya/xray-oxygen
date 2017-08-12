@@ -6,6 +6,8 @@
 *******************************************************************
 */
 
+#include "stdafx.h"
+
 #ifndef EAX_H_INCLUDED
 #define EAX_H_INCLUDED
 

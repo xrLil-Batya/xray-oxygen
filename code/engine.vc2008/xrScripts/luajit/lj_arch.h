@@ -434,4 +434,13 @@
 #define LJ_52			0
 #endif
 
+#if LJ_GC64
+#define LJ_FR2   1
+#else
+#define LJ_FR2   0
 #endif
+
+
+#endif
+
+

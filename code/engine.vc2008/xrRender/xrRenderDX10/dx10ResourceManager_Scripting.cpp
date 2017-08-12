@@ -126,7 +126,7 @@ void	CResourceManager::LS_Load			()
 		class_<adopt_dx10options>("_dx10options")
 		.def("dx10_msaa_alphatest_atoc",		&adopt_dx10options::_dx10_msaa_alphatest_atoc),
 
-		class_<adopt_dx10sampler>("_dx10sampler")
+		class_<adopt_dx10sampler>("_dx10sampler"),
 
 		class_<adopt_compiler>("_compiler")
 			.def(								constructor<const adopt_compiler&>())

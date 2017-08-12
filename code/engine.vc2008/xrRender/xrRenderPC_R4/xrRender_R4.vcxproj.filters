@@ -818,9 +818,6 @@
     <ClCompile Include="r4_R_render.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="r4_R_sun_support.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\r__dsgraph_build.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -885,9 +882,6 @@
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Light_Package.cpp">
-      <Filter>Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="Light_Render_Direct.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp">
@@ -1235,9 +1229,6 @@
     <ClCompile Include="..\xrRender\du_sphere_part.cpp">
       <Filter>Refactored\Execution &amp; 3D\DebugDraw</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\dxParticleCustom.cpp">
-      <Filter>Refactored\Execution &amp; 3D\Visuals</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\FBasicVisual.cpp">
       <Filter>Refactored\Execution &amp; 3D\Visuals</Filter>
     </ClCompile>
@@ -1366,9 +1357,6 @@
     </ClCompile>
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidRenderer.cpp">
       <Filter>Shading templates\3dFluid</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrRender\Debug\dxPixEventWrapper.cpp">
-      <Filter>Interfase implementations\Debug</Filter>
     </ClCompile>
     <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender3.cpp">
       <Filter>Editor</Filter>
