@@ -57,7 +57,7 @@ void FTreeVisual::Load		(const char* N, IReader *data, u32 dwFlags)
 		iCount				= data->r_u32				();
 		dwPrimitives		= iCount/3;
 		
-		VERIFY				(NULL==p_rm_Indices);
+		VERIFY				(!p_rm_Indices);
 		p_rm_Indices			= RImplementation.getIB		(ID);
 		p_rm_Indices->AddRef	();
 	}
@@ -103,7 +103,7 @@ struct	FTreeVisual_setup
 
 		// Calc wind-vector3, scale
 		float	tm_rot			= PI_MUL_2*Device.fTimeGlobal/ps_r__Tree_w_rot;
-		wind.set				(_sin(tm_rot),0,_cos(tm_rot),0);	wind.normalize	();	wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
+		//wind.set				(_sin(tm_rot),0,_cos(tm_rot),0);	wind.normalize	();	wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
 
   		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
  		float fValue = E.m_fTreeAmplitudeIntensity;
@@ -116,9 +116,9 @@ struct	FTreeVisual_setup
 #endif //-RENDER!=R_R1
 		scale					= 1.f/float(FTreeVisual_quant);
         
-		//// setup constants
-		//wave.set				(ps_r__Tree_Wave.x,	ps_r__Tree_Wave.y,	ps_r__Tree_Wave.z,	Device.fTimeGlobal*ps_r__Tree_w_speed);			// wave
-		//wave.div				(PI_MUL_2);
+		// setup constants
+		wave.set				(ps_r__Tree_Wave.x,	ps_r__Tree_Wave.y,	ps_r__Tree_Wave.z,	Device.fTimeGlobal*ps_r__Tree_w_speed);			// wave
+		wave.div				(PI_MUL_2);
 	}
 };
 
@@ -128,11 +128,11 @@ void FTreeVisual::Render	(float LOD)
 	if (tvs.dwFrame!=Device.dwFrame)	tvs.calculate();
 	// setup constants
 #if RENDER!=R_R1
-	Fmatrix					xform_v			;
-							xform_v.mul_43	(RCache.get_xform_view(),xform);
-							RCache.tree.set_m_xform_v	(xform_v);									// matrix
+	Fmatrix xform_v;
+	xform_v.mul_43(RCache.get_xform_view(),xform);
+	RCache.tree.set_m_xform_v(xform_v); // matrix
 #endif
-	float	s				= ps_r__Tree_SBC;
+	float s = ps_r__Tree_SBC;
 	RCache.tree.set_m_xform	(xform);														// matrix
 	RCache.tree.set_consts	(tvs.scale,tvs.scale,0,0);									// consts/scale
 	RCache.tree.set_wave	(tvs.wave);													// wave
