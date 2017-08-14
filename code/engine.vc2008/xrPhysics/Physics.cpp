@@ -256,9 +256,10 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2,dJointGroupID jointGroup,C
 			}
 		}
 
+        //#INFO: (Giperion): dInfinity works incorrectly (probably because all working with full 32 bit precision), so instead push a large number
+        if (pushing_neg)
+            surface.mu = FLT_MAX;
 
-		if	(pushing_neg)
-			surface.mu=dInfinity;
 		if	(do_collide && collided_contacts<MAX_CONTACTS)
 		{
 			++collided_contacts;

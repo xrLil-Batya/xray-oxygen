@@ -106,8 +106,11 @@ void CPhysicItem::UpdateCL()
 {
 //	if (!xr_strcmp("bolt",cName()))
 //		Log					("--- B - CBolt",renderable.xform);
-	if (!H_Parent() && m_pPhysicsShell && m_pPhysicsShell->isActive())
-		m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
+
+    //That is a visual position update from physics proxy object
+    if (!H_Parent() && m_pPhysicsShell && m_pPhysicsShell->isActive())
+        m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
+
 //	if (!xr_strcmp("bolt",cName()))
 //		Log						("--- C - CBolt",renderable.xform);
 	inherited::UpdateCL		();

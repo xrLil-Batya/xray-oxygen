@@ -494,11 +494,11 @@ void DBG_PHAbstructRender()
 	
 	for(;e!=i;++i)
 	{
-		if(!(*i))
-		{
-		}
-		else
-			(*i)->render();
+        SPHDBGDrawAbsract* DebugRenderElement = *i;
+        if (DebugRenderElement != nullptr)
+        {
+            DebugRenderElement->render();
+        }
 	}
 	if(dbg_ph_draw_mode!=dmCashed)
 	{

@@ -31,8 +31,14 @@ CObjectList::~CObjectList	( )
 {
 	R_ASSERT				( objects_active.empty()	);
 	R_ASSERT				( objects_sleeping.empty()	);
+
+    //#HOTFIX
+    if (!destroy_queue.empty())
+    {
+        Update(false);
+    }
+
 	R_ASSERT				( destroy_queue.empty()		);
-//.	R_ASSERT				( map_NETID.empty()			);
 }
 
 CObject*	CObjectList::FindObjectByName	( shared_str name )
