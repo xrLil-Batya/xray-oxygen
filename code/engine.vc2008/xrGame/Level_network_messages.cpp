@@ -16,6 +16,7 @@
 #include "file_transfer.h"
 #include "message_filter.h"
 #include "../xrphysics/iphworld.h"
+#include "GamePersistent.h"
 
 extern LPCSTR map_ver_string;
 LPSTR remove_version_option(LPCSTR opt_str, LPSTR new_opt_str, u32 new_opt_str_size)
@@ -296,8 +297,8 @@ void CLevel::ClientReceive()
 				}
 				else
 				{
-					const char* m_SO = m_caServerOptions.c_str();
-
+                    shared_str serverOption = GamePersistent().GetServerOption();
+					const char* m_SO = serverOption.c_str();
 					m_SO = strchr(m_SO, '/'); if (m_SO) m_SO++;
 					m_SO = strchr(m_SO, '/'); 
 
@@ -324,7 +325,7 @@ void CLevel::ClientReceive()
 							remove_version_option(m_SO, additional_options, sizeof(additional_options))
 						);
 					}
-					m_caServerOptions = NewServerOptions;
+                    GamePersistent().SetServerOption(NewServerOptions);
 					MakeReconnect();
 				};
 			}break;

@@ -18,6 +18,7 @@
 #include "file_transfer.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
+#include "GamePersistent.h"
 
 #include "../xrphysics/physicscommon.h"
 ENGINE_API bool g_dedicated_server;
@@ -424,23 +425,24 @@ void CLevel::net_OnChangeSelfName(NET_Packet* P)
 	if (!P) return;
 	string64 NewName			;
 	P->r_stringZ(NewName)		;
-	if (!strstr(*m_caClientOptions, "/name="))
+    shared_str clientOption = GamePersistent().GetClientOption();
+	if (!strstr(*clientOption, "/name="))
 	{
 		string1024 tmpstr;
-		xr_strcpy(tmpstr, *m_caClientOptions);
+		xr_strcpy(tmpstr, *clientOption);
 		xr_strcat(tmpstr, "/name=");
 		xr_strcat(tmpstr, NewName);
-		m_caClientOptions = tmpstr;
+        GamePersistent().SetClientOption(tmpstr);
 	}
 	else
 	{
 		string1024 tmpstr;
-		xr_strcpy(tmpstr, *m_caClientOptions);
+		xr_strcpy(tmpstr, *clientOption);
 		*(strstr(tmpstr, "name=")+5) = 0;
 		xr_strcat(tmpstr, NewName);
-		const char* ptmp = strstr(strstr(*m_caClientOptions, "name="), "/");
+		const char* ptmp = strstr(strstr(*clientOption, "name="), "/");
 		if (ptmp)
 			xr_strcat(tmpstr, ptmp);
-		m_caClientOptions = tmpstr;
+        GamePersistent().SetClientOption(tmpstr);
 	}
 }

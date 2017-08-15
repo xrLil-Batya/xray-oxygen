@@ -4,6 +4,7 @@
 #include "xrserver_objects.h"
 #include "xrServer_Objects_Alife_Monsters.h"
 #include "Level.h"
+#include "GamePersistent.h"
 
 
 void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P)
@@ -114,7 +115,7 @@ void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
 		P.w_u8(1);
 	else
 		P.w_u8(0);
-	P.w_stringZ(Level().m_caServerOptions);
+	P.w_stringZ(GamePersistent().GetServerOption());
 	
 	SendTo		(CL->ID, P);
 

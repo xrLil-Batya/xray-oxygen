@@ -35,10 +35,12 @@ CObjectList::~CObjectList	( )
     //#HOTFIX
     if (!destroy_queue.empty())
     {
-        Update(false);
+        //Update(false);
+        Msg("! Memory leaked!!!!, objects not destroyed on exit! Number of objects: %zu", destroy_queue.size());
+        destroy_queue.clear();
     }
 
-	R_ASSERT				( destroy_queue.empty()		);
+	//R_ASSERT				( destroy_queue.empty()		);
 }
 
 CObject*	CObjectList::FindObjectByName	( shared_str name )

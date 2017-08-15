@@ -22,6 +22,7 @@
 #include "restriction_space.h"
 #include "profiler.h"
 #include "mt_config.h"
+#include "GamePersistent.h"
 
 using namespace ALife;
 
@@ -203,10 +204,11 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 
 	string256						autoave_name;
 	strconcat						(sizeof(autoave_name),autoave_name,Core.UserName," - ","autosave");
-	LPCSTR							temp0 = strstr(**m_server_command_line,"/");
+    shared_str                      serverOption = GamePersistent().GetServerOption();
+	LPCSTR							temp0 = strstr(*serverOption,"/");
 	VERIFY							(temp0);
 	string256						temp;
-	*m_server_command_line			= strconcat(sizeof(temp),temp,autoave_name,temp0);
+    GamePersistent().SetServerOption(strconcat(sizeof(temp), temp, autoave_name, temp0));
 	
 	save							(autoave_name);
 
@@ -304,11 +306,12 @@ bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 		}
 	}
 	string512					S,S1;
-	xr_strcpy					(S,**m_server_command_line);
+    shared_str serverOption = GamePersistent().GetServerOption();
+	xr_strcpy					(S,*serverOption);
 	LPSTR						temp = strchr(S,'/');
 	R_ASSERT2					(temp,"Invalid server options!");
 	strconcat					(sizeof(S1),S1,game_name,temp);
-	*m_server_command_line		= S1;
+    GamePersistent().SetServerOption(S1);
 	return						(true);
 }
 

@@ -222,10 +222,6 @@ public:
 	// sounds
 	xr_vector<ref_sound*>		static_Sounds;
 
-	// startup options
-	shared_str					m_caServerOptions;
-	shared_str					m_caClientOptions;
-
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
 	virtual void				net_Load				( LPCSTR name );

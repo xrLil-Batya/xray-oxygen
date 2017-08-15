@@ -337,7 +337,7 @@ void game_sv_Single::on_death					(CSE_Abstract *e_dest, CSE_Abstract *e_src)
 
 void game_sv_Single::restart_simulator			(LPCSTR saved_game_name)
 {
-	shared_str				options = *alife().server_command_line();
+	shared_str				options = GamePersistent().GetServerOption();
 
 	delete_data				(m_alife_simulator);
 	server().clear_ids		();

@@ -47,6 +47,7 @@
 #include "demoplay_control.h"
 #include "demoinfo.h"
 #include "CustomDetector.h"
+#include "GamePersistent.h"
 
 #include "../xrphysics/iphworld.h"
 #include "../xrphysics/console_vars.h"
@@ -549,16 +550,18 @@ void CLevel::MakeReconnect()
 		Engine.Event.Defer	("KERNEL:disconnect");
 		char const * server_options = NULL;
 		char const * client_options = NULL;
-		if (m_caServerOptions.c_str())
+        shared_str serverOption = GamePersistent().GetServerOption();
+        shared_str clientOption = GamePersistent().GetClientOption();
+		if (serverOption.c_str())
 		{
-			server_options = xr_strdup(*m_caServerOptions);
+			server_options = xr_strdup(*serverOption);
 		} else
 		{
 			server_options = xr_strdup("");
 		}
-		if (m_caClientOptions.c_str())
+		if (clientOption.c_str())
 		{
-			client_options = xr_strdup(*m_caClientOptions);
+			client_options = xr_strdup(*clientOption);
 		} else
 		{
 			client_options = xr_strdup("");

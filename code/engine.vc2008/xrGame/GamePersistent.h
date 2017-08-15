@@ -31,6 +31,10 @@ class CGamePersistent:
 	EVENT				eQuickLoad;
 	Fvector				m_dof		[4];	// 0-dest 1-current 2-from 3-original
 
+    // startup options, originaly was in CLevel
+    shared_str					m_ServerOptions;
+    shared_str					m_ClientOptions;
+
 	fastdelegate::FastDelegate0<> m_intro_event;
 
 	void xr_stdcall		start_logo_intro		();
@@ -94,6 +98,11 @@ public:
 	virtual void		SetBaseDof				(const Fvector3& dof);
 	virtual void		OnSectorChanged			(int sector);
 	virtual void		OnAssetsChanged			();
+
+    shared_str          GetServerOption() const;
+    shared_str          GetClientOption() const;
+    void                SetServerOption(const char* str);
+    void                SetClientOption(const char* str);
 };
 
 IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent);			}

@@ -829,3 +829,27 @@ void CGamePersistent::OnAssetsChanged()
 	IGame_Persistent::OnAssetsChanged	();
 	CStringTable().rescan				();
 }
+
+shared_str CGamePersistent::GetServerOption() const
+{
+    return m_ServerOptions;
+}
+
+shared_str CGamePersistent::GetClientOption() const
+{
+    return m_ClientOptions;
+}
+
+void CGamePersistent::SetServerOption(const char* str)
+{
+    VERIFY(str);
+    Msg("New server option: %s", str);
+    m_ServerOptions = str;
+}
+
+void CGamePersistent::SetClientOption(const char* str)
+{
+    VERIFY(str);
+    Msg("New client option: %s", str);
+    m_ClientOptions = str;
+}
