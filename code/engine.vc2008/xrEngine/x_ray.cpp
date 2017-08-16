@@ -629,7 +629,7 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		{
 		case 0: return 0;
 		}
-		params = std::to_string(lpCmdLine) + " " + GetParams();
+		params = GetParams(); // Fixed
 	}
 	
 	WinMain_impl(params.c_str(), sizeof(params));
