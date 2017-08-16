@@ -238,8 +238,10 @@ void ai_obstacle::compute_impl		()
 
 	m_area.clear				();
 	merge_predicate				predicate(this,m_area);
-	for (u32 x=x_min; x<=x_max; ++x) {
-		for (u32 z=z_min; z<=z_max; ++z) {
+	for (u32 x = x_min; x <= x_max; ++x)
+	{
+		for (u32 z=z_min; z<=z_max; ++z)
+		{
 			u32					xz = x*row_length + z;
 			const_iterator		I = std::lower_bound(B,E,xz);
 			if ((I == E) || ((*I).position().xz() != xz))
@@ -247,7 +249,8 @@ void ai_obstacle::compute_impl		()
 
 			predicate			(*I);
 
-			for (++I; I != E; ++I) {
+			for (++I; I != E; ++I)
+			{
 				if ((*I).position().xz() != xz)
 					break;
 				
@@ -261,7 +264,7 @@ void ai_obstacle::compute_impl		()
 		return;
 	}
 
-	m_crc = crc32(m_area.data(), m_area.size());;
+	m_crc = crc32(m_area.data(), m_area.data() + m_area.size());
 }
 
 void ai_obstacle::on_move			()
