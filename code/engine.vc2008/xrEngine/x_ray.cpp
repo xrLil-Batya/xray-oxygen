@@ -629,13 +629,12 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		{
 		case 0: return 0;
 		}
-		params = std::to_string(0) + "@start xrEngine.exe " + GetParams();
-		params[0] = ' ';
-		system(params.c_str());
+		params = std::to_string(lpCmdLine) + " " + GetParams();
 	}
-	else WinMain_impl(lpCmdLine, sizeof(params));
+	
+	WinMain_impl(params.c_str(), sizeof(params));
 
-	return					(0);
+	return 0;
 }
 
 LPCSTR _GetFontTexName (LPCSTR section)
