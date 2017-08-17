@@ -1,18 +1,11 @@
-#ifndef FILE_STREAM_READER_H
-#define FILE_STREAM_READER_H
+#pragma once
 
 #include "stream_reader.h"
 
-class CFileStreamReader : public CStreamReader {
-private:
-	typedef CStreamReader	inherited;
-
-private:
-	HANDLE					m_file_handle;
-
+class CFileStreamReader : public CStreamReader 
+{
+    HANDLE m_file_handle;
 public:
-	virtual void			construct		(const char* file_name, const u32 &window_size);
-	virtual	void			destroy			();
+    virtual void construct(const char* file_name, const size_t window_size);
+    void destroy() override;
 };
-
-#endif // FILE_STREAM_READER_H
