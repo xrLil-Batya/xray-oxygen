@@ -147,7 +147,6 @@ static LJ_AINLINE int CALL_MUNMAP(void *_ptr, size_t size)
 	DWORD olderr = GetLastError();
 	XR_DESTROY(_ptr, size);
 	SetLastError(olderr);
-	return st == 0 ? ptr : MFAIL;
 	return 0;
 }
 #endif
