@@ -145,9 +145,6 @@ static LJ_AINLINE void *DIRECT_MMAP(size_t size)
 static LJ_AINLINE int CALL_MUNMAP(void *_ptr, size_t size)
 {
 	DWORD olderr = GetLastError();
-	void *ptr = NULL;
-	long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size,
-		-MEM_RESERVE | MEM_COMMIT | MEM_TOP_DOWN, PAGE_READWRITE);
 	XR_DESTROY(_ptr, size);
 	SetLastError(olderr);
 	return st == 0 ? ptr : MFAIL;
