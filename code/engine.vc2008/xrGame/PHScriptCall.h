@@ -4,55 +4,41 @@
 #include "script_engine.h"
 #include "script_space_forward.h"
 #include "script_callback_ex.h"
-//template<>
-//IC bool compare_safe(const functor<>& f1,const functor<>& f2)
-//{
-//	f1.typ
-//}
 
-class CPHScriptCondition:
-	public CPHCondition,
-	public CPHReqComparerV
+class CPHScriptCondition: public CPHCondition, public CPHReqComparerV
 {
-	luabind::functor<bool>			*m_lua_function;
-
+	luabind::functor<bool>	*m_lua_function;
 							CPHScriptCondition				(const CPHScriptCondition &func);
 
 public:
-							CPHScriptCondition				(const luabind::functor<bool> &func)	;
-	virtual					~CPHScriptCondition				()										;
-	virtual bool 			is_true							()										;
-	virtual bool 			obsolete						()								const	;
-	virtual bool			compare							(const	CPHReqComparerV* v)		const	{return v->compare(this);}
-	virtual bool			compare							(const	CPHScriptCondition*v)	const	{return v->m_lua_function==m_lua_function;}
-	///virtual bool			is_equal						(CPHReqBase* v)							;
-	//virtual bool			is_relative						(CPHReqBase* v)							;
+							CPHScriptCondition				(const luabind::functor<bool> &func);
+	virtual					~CPHScriptCondition				();
+	virtual bool 			is_true							();
+	virtual bool 			obsolete						()								const { return false; }
+	virtual bool			compare							(const	CPHReqComparerV* v)		const { return v->compare(this);}
+	virtual bool			compare							(const	CPHScriptCondition*v)	const { return *m_lua_function == *(v->m_lua_function); }
 
 };
 
-class CPHScriptAction :
-	public CPHAction,
-	public CPHReqComparerV
+class CPHScriptAction: public CPHAction, public CPHReqComparerV
 {
-	bool	b_obsolete							   ;
-	luabind::functor<void>			*m_lua_function;
+	bool	b_obsolete;
+	luabind::functor<void>	*m_lua_function;
 public:
-							CPHScriptAction					(const luabind::functor<void> &func)	;
-							CPHScriptAction					(const CPHScriptAction &action)			;
-	virtual					~CPHScriptAction				()										;
-	virtual void 			run								()										;
-	virtual bool 			obsolete						()								const	;
-	virtual bool			compare							(const	CPHReqComparerV* v)		const	{return v->compare(this);}
-	virtual bool			compare							(const	CPHScriptAction* v)		const	{return *m_lua_function==*(v->m_lua_function);}
+							CPHScriptAction					(const luabind::functor<void> &func);
+							CPHScriptAction					(const CPHScriptAction &action);
+	virtual					~CPHScriptAction				();
+	virtual void 			run								();
+	virtual bool 			obsolete						()								const;
+	virtual bool			compare							(const	CPHReqComparerV* v)		const {return v->compare(this);}
+	virtual bool			compare							(const	CPHScriptAction* v)		const {return *m_lua_function==*(v->m_lua_function);}
 };
 
 
-class CPHScriptObjectCondition:
-	public CPHCondition,
-	public CPHReqComparerV
+class CPHScriptObjectCondition: public CPHCondition, public CPHReqComparerV
 {
-	luabind::object					*m_lua_object;
-	shared_str						m_method_name;
+	luabind::object			*m_lua_object;
+	shared_str				m_method_name;
 public:
 							CPHScriptObjectCondition		(const luabind::object &lua_object, LPCSTR method)	;
 							CPHScriptObjectCondition		(const CPHScriptObjectCondition &object)			;
@@ -64,9 +50,7 @@ public:
 	virtual bool			compare							(const	CPHScriptObjectCondition* v)	const		;
 };
 
-class CPHScriptObjectAction :
-	public CPHAction,
-	public CPHReqComparerV
+class CPHScriptObjectAction: public CPHAction, public CPHReqComparerV
 {
 	bool	b_obsolete							   ;
 	luabind::object					*m_lua_object;

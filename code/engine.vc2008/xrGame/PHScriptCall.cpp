@@ -1,33 +1,22 @@
 #include "pch_script.h"
-
-
 #include "PHScriptCall.h"
 #include "PHCommander.h"
-
-
 #include "../xrEngine/xr_object.h"
 
 
-/*
-IC bool compare_safe(const luabind::object &o1 , const luabind::object &o2)
-{
-	return (o1.type()==LUA_TNIL && o2.type()==LUA_TNIL) || o1==o2;
-}
-/**/
-
 CPHScriptCondition::CPHScriptCondition(const luabind::functor<bool> &func)
 {
-	m_lua_function		= xr_new<luabind::functor<bool> >(func);
+	m_lua_function	= xr_new<luabind::functor<bool> >(func);
 }
 
 CPHScriptCondition::CPHScriptCondition(const CPHScriptCondition &func)
 {
-	m_lua_function		= xr_new<luabind::functor<bool> >(*func.m_lua_function);
+	m_lua_function	= xr_new<luabind::functor<bool> >(*func.m_lua_function);
 }
 
 CPHScriptCondition::~CPHScriptCondition()
 {
-	xr_delete			(m_lua_function);
+	xr_delete(m_lua_function);
 }
 
 bool CPHScriptCondition::is_true()
@@ -35,12 +24,6 @@ bool CPHScriptCondition::is_true()
 	return (*m_lua_function)();
 }
 
-bool CPHScriptCondition::obsolete()const
-{
-	return false;
-}
-
-//
 CPHScriptAction::CPHScriptAction(const luabind::functor<void> &func)
 {
 	b_obsolete		= false;

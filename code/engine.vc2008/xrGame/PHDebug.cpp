@@ -1,19 +1,13 @@
 #include "stdafx.h"
 #ifdef DEBUG
-//#include "physics.h"
-//#include "MathUtils.h"
 #include "../xrEngine/StatGraph.h"
 #include "PHDebug.h"
-//#include "physics.h"
 #include "../xrphysics/MathUtils.h"
-//#include "PHObject.h"
 #include "../xrphysics/ExtendedGeom.h"
 #include "../xrphysics/iphworld.h"
 #include "../xrphysics/physicsshell.h"
 
-
 #include "Level.h"
-
 #include "debug_renderer.h"
 #include "physicsshellholder.h"
 
@@ -21,29 +15,27 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../xrEngine/bone.h"
 #include "../xrEngine/iphdebug.h"
-//#include "phelement.h"
 #include "ui_base.h"
 
 Flags32		ph_dbg_draw_mask						;
 Flags32		ph_dbg_draw_mask1						;
 bool		draw_frame=0;
 
-//LPCSTR	dbg_trace_object_name					=NULL;
 string64 s_dbg_trace_obj_name					="none";
 CObject	 *trace_object							= NULL;
-u32	 	dbg_bodies_num							=0;
-u32	 	dbg_joints_num							=0;
-u32	 	dbg_islands_num							=0;
-u32	 	dbg_contacts_num						=0;
-u32	 	dbg_tries_num							=0;
-u32	 	dbg_saved_tries_for_active_objects		=0;
-u32	 	dbg_total_saved_tries					=0;
-u32	 	dbg_reused_queries_per_step				=0;
-u32	 	dbg_new_queries_per_step				=0;
-float	dbg_vel_collid_damage_to_display		=7.f;
-
-float	dbg_text_height_scale					=1.f;
-float	dbg_text_current_height_scale			=1.f;
+u32 dbg_bodies_num = 0;
+u32 dbg_joints_num = 0;
+u32 dbg_islands_num = 0;
+u32 dbg_contacts_num = 0;
+u32 dbg_tries_num = 0;
+u32 dbg_saved_tries_for_active_objects = 0;
+u32 dbg_total_saved_tries = 0;
+u32 dbg_reused_queries_per_step = 0;
+u32 dbg_new_queries_per_step = 0;
+float dbg_vel_collid_damage_to_display = 7.f;
+                                     
+float dbg_text_height_scale = 1.f;
+float dbg_text_current_height_scale = 1.f;
 
 
 PHABS_DBG_V	dbg_draw_abstruct0;
@@ -53,14 +45,14 @@ PHABS_DBG_V	dbg_draw_cashed;
 PHABS_DBG_V	dbg_draw_cashed_secondary;
 PHABS_DBG_V	dbg_draw_simple;
 
-enum		EDBGPHDrawMode
+enum EDBGPHDrawMode
 {
 	dmSecondaryThread,
 	dmCashed,
 	dmCashedSecondary,
 	dmSimple
 } dbg_ph_draw_mode=dmSecondaryThread;
-u32			cash_draw_remove_time=u32(-1);
+u32 cash_draw_remove_time=u32(-1);
 
 struct SPHObjDBGDraw:public SPHDBGDrawAbsract
 {
@@ -83,24 +75,12 @@ void DBG_DrawPHObject(const CPHObject* obj)
 }
 struct SPHContactDBGDraw :public SPHDBGDrawAbsract
 {
-	//int geomClass;
 	bool is_cyl;
 	Fvector norm;
 	Fvector pos;
 	float depth;
 	SPHContactDBGDraw(const dContact& c)
 	{
-		
-		//if(dGeomGetBody(c.geom.g1))
-		//{
-		//	geomClass =dGeomGetClass(retrieveGeom(c.geom.g1));
-		//}
-		//else
-		//{
-		//	geomClass=dGeomGetClass(retrieveGeom(c.geom.g2));
-		//}
-
-		//is_cyl= (geomClass==dCylinderClassUser);
 		is_cyl = IsCyliderContact(c);
 		norm.set(cast_fv(c.geom.normal));
 		pos.set(cast_fv(c.geom.pos));
@@ -108,8 +88,7 @@ struct SPHContactDBGDraw :public SPHDBGDrawAbsract
 	}
 	void render		( )
 	{
-			//bool is_cyl= (geomClass==dCylinderClassUser);
-			Level().debug_renderer().draw_aabb			(pos,.01f,.01f,.01f,D3DCOLOR_XRGB(255*is_cyl,0,255*!is_cyl));
+			Level().debug_renderer().draw_aabb(pos,.01f,.01f,.01f,D3DCOLOR_XRGB(255*is_cyl,0,255*!is_cyl));
 			Fvector dir;
 			dir.set(norm);
 			dir.mul(depth*100.f);
@@ -130,24 +109,28 @@ struct SPHDBGDrawTri :public SPHDBGDrawAbsract
 	bool solid;
 	SPHDBGDrawTri(CDB::RESULT* T,u32 ac)
 	{
-		v[0].set(T->verts[0]);
-		v[1].set(T->verts[1]);
-		v[2].set(T->verts[2]);
-		c=ac;
+		for(u32 it = 0; it < 3; it++)
+			v[it].set(T->verts[it]);
+		
+		c = ac;
 		solid = false;
 	}
 	SPHDBGDrawTri(CDB::TRI* T,const Fvector*	V_array,u32 ac)
 	{
 		
-		v[0].set(V_array[T->verts[0]]);
-		v[1].set(V_array[T->verts[1]]);
-		v[2].set(V_array[T->verts[2]]);
-		c=ac;
+		for(u32 it = 0; it < 3; it++)
+		{
+			v[it].set(V_array[T->verts[it]]);
+		};
+		c = ac;
 		solid = false;
 	}
 	SPHDBGDrawTri(const Fvector &v0, const Fvector &v1, const Fvector &v2, u32 ac, bool solid_)
 	{
-		v[0].set(v0);v[1].set(v1);v[2].set(v2);
+		v[0].set(v0);
+		v[1].set(v1);
+		v[2].set(v2);
+		
 		c = ac;
 		solid = solid_;
 	}
@@ -157,7 +140,9 @@ struct SPHDBGDrawTri :public SPHDBGDrawAbsract
 		{
 			DRender->dbg_DrawTRI	(Fidentity, v[0], v[1], v[2], c );
 			DRender->dbg_DrawTRI	(Fidentity, v[2], v[1], v[0], c );
-		} else {
+		} 
+		else 
+		{
 			Level().debug_renderer().draw_line(Fidentity,v[0],v[1],c);
 			Level().debug_renderer().draw_line(Fidentity,v[1],v[2],c);
 			Level().debug_renderer().draw_line(Fidentity,v[2],v[0],c);
@@ -167,12 +152,7 @@ struct SPHDBGDrawTri :public SPHDBGDrawAbsract
 
 static void clear_vector(PHABS_DBG_V& v)
 {
-	auto i=v.begin();
-    auto e=v.end();
-	for(;e!=i;++i)
-	{
-		xr_delete(*i);
-	}
+	for(auto it : v) xr_delete(it);
 	v.clear();
 }
 
@@ -434,64 +414,39 @@ void DBG_DrawPHAbstruct(SPHDBGDrawAbsract* a)
 	}
 	switch (dbg_ph_draw_mode)
 	{
-		case dmSecondaryThread:
-			if(draw_frame)
-			{
-				push( dbg_draw_abstruct0, a );
-			}else
-			{
-				push( dbg_draw_abstruct1, a );
-			};											break;	
-		case dmCashed:			push( dbg_draw_cashed, a );				break;
-		case dmCashedSecondary: push( dbg_draw_cashed_secondary, a );	break;
-		case dmSimple:			push( dbg_draw_simple, a );				break;
+		case dmSecondaryThread: push(draw_frame ? dbg_draw_abstruct0 : dbg_draw_abstruct1, a ); break;	
+		case dmCashed:			push( dbg_draw_cashed, a ); break;
+		case dmCashedSecondary: push( dbg_draw_cashed_secondary, a ); break;
+		case dmSimple:			push( dbg_draw_simple, a );	break;
 	}
 
 }
 
 void DBG_PHAbstruactStartFrame(bool dr_frame)
 {
-    auto i = dbg_draw_abstruct0.end();
-    auto e = dbg_draw_abstruct0.end();
-
 	if(dr_frame)
 	{
-		i=dbg_draw_abstruct0.begin();
-		e=dbg_draw_abstruct0.end();
-	}else
-	{
-		i=dbg_draw_abstruct1.begin();
-		e=dbg_draw_abstruct1.end();
-	}
-	for(;e!=i;++i)
-	{
-		xr_delete(*i);
-	}
-	if(dr_frame)
-	{
+		for(auto it : dbg_draw_abstruct0)
+		{
+			xr_delete(it);
+		}
 		dbg_draw_abstruct0.clear();
 	}
 	else
 	{
+		for(auto it : dbg_draw_abstruct1)
+		{
+			xr_delete(it);
+		}
 		dbg_draw_abstruct1.clear();
 	}
 }
 void capped_cylinder_ray_collision_test();
 void DBG_PHAbstructRender()
 {
-    auto i = dbg_draw_abstruct0.end();
-    auto e = dbg_draw_abstruct0.end();
+    auto i = draw_frame ? dbg_draw_abstruct1.begin() : dbg_draw_abstruct0.begin();
+    auto e = draw_frame ? dbg_draw_abstruct1.end()   : dbg_draw_abstruct0.end();
 
-	if(!draw_frame)
-	{
-		i=dbg_draw_abstruct0.begin();
-		e=dbg_draw_abstruct0.end();
-	}else
-	{
-		i=dbg_draw_abstruct1.begin();
-		e=dbg_draw_abstruct1.end();
-	}
-	
 	for(;e!=i;++i)
 	{
         SPHDBGDrawAbsract* DebugRenderElement = *i;
@@ -502,11 +457,9 @@ void DBG_PHAbstructRender()
 	}
 	if(dbg_ph_draw_mode!=dmCashed)
 	{
-		auto i=dbg_draw_cashed.begin();
-	    auto e=dbg_draw_cashed.end();
-		for(;e!=i;++i)
+		for(auto it : dbg_draw_cashed)
 		{
-			(*i)->render();
+			it->render();
 		}
 		if(cash_draw_remove_time<Device.dwTimeGlobal)
 		{
@@ -514,13 +467,10 @@ void DBG_PHAbstructRender()
 		}
 	}
 	{
-		auto i=dbg_draw_simple.begin();
-	    auto e=dbg_draw_simple.end();
-		for(;e!=i;++i)
+		for(auto it : dbg_draw_simple)
 		{
-			(*i)->render();
+			it->render();
 		}
-		//clear_vector(dbg_draw_simple);
 	}
 	//capped_cylinder_ray_collision_test();
 }
