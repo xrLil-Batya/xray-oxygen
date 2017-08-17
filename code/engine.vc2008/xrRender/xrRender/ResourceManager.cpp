@@ -307,17 +307,63 @@ Shader*		CResourceManager::Create	(LPCSTR s_shader,	LPCSTR s_textures,	LPCSTR s_
 
 void CResourceManager::Delete(const Shader* S)
 {
-	if (0==(S->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
+	if (!(S->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
 	if (reclaim(v_shaders,S))						return;
 	Msg	("! ERROR: Failed to find complete shader");
 }
 
+#include <thread>
+xr_vector<CTexture*> tex_to_load;
+void TextureLoading(u16 thread_num)
+{
+	Msg("TextureLoading -> thread %d started!", thread_num);
+
+	const u16 upperbound = thread_num * 100;
+	const u32 lowerbound = upperbound - 100;
+
+	for (size_t i = lowerbound; i < upperbound; i++)
+	{
+		if (i < tex_to_load.size()) tex_to_load[i]->Load();
+		else break;
+	}
+
+	Msg("TextureLoading -> thread %d finished!", thread_num);
+}
+
 void CResourceManager::DeferredUpload()
 {
-	if (!RDEVICE.b_is_Ready) return;
-	for (auto t=m_textures.begin(); t!=m_textures.end(); t++)
+	if (RDEVICE.b_is_Ready)
 	{
-		t->second->Load();
+		tex_to_load.clear();
+	
+		Msg("CResourceManager::DeferredUpload -> START, size = %d", m_textures.size());
+	
+		CTimer timer;
+		timer.Start();
+	
+		if (m_textures.size() <= 100)
+		{
+			Msg("CResourceManager::DeferredUpload -> one thread");
+			for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
+				t->second->Load();
+		}
+		else
+		{
+			u32 th_count = (m_textures.size() / 100) + 1;
+			std::thread* th_arr = new std::thread[th_count];
+			for (auto tex : m_textures)
+				tex_to_load.push_back(tex.second);
+	
+			for (u16 i = 0; i < th_count; i++)
+				th_arr[i] = std::thread(TextureLoading, i + 1);
+	
+			for (size_t i = 0; i < th_count; i++)
+				th_arr[i].join();
+	
+			tex_to_load.clear();
+		}
+	
+		Msg("texture loading time: %d", timer.GetElapsed_ms());
 	}
 }
 
