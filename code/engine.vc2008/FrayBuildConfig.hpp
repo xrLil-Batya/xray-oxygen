@@ -9,3 +9,6 @@
 
 /* xrRender */
 #define R34_USE_FIRSTMIPLEVEL //activate: LoadInfo.FirstMipLevel = img_loaded_lod;
+
+/* xrGame */
+//#define WPN_AUTORELOAD // Enable autoreload

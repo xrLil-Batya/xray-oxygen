@@ -1,5 +1,4 @@
 #include "pch_script.h"
-
 #include "WeaponMagazined.h"
 #include "actor.h"
 #include "ParticlesObject.h"
@@ -156,9 +155,12 @@ void CWeaponMagazined::FireEnd()
 {
 	inherited::FireEnd();
 
+#ifdef WPN_AUTORELOAD
 	CActor	*actor = smart_cast<CActor*>(H_Parent());
 	if(m_pInventory && !iAmmoElapsed && actor && GetState()!=eReload) 
 		Reload();
+#endif
+	
 }
 
 void CWeaponMagazined::Reload() 
@@ -731,6 +733,7 @@ void CWeaponMagazined::switch2_Hidden()
 }
 void CWeaponMagazined::switch2_Showing()
 {
+	
 	if(m_sounds_enabled)
 		PlaySound			("sndShow",get_LastFP());
 
