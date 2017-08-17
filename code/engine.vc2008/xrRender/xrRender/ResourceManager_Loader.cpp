@@ -4,18 +4,18 @@
 #include "ResourceManager.h"
 #include "blenders\blender.h"
 
-
-void	CResourceManager::OnDeviceDestroy(BOOL )
+void CResourceManager::OnDeviceDestroy(BOOL)
 {
 	if (RDEVICE.b_is_Ready)				return;
 	m_textures_description.UnLoad		();
 
 	// Matrices
-	for (map_Matrix::iterator m=m_matrices.begin(); m!=m_matrices.end(); m++)	{
+	for (map_Matrix::iterator m=m_matrices.begin(); m!=m_matrices.end(); m++)
+	{
 		R_ASSERT		(1==m->second->dwReference);
 		xr_delete		(m->second);
 	}
-	m_matrices.clear	();
+	m_matrices.clear();
     
 	// Constants
 	for (map_Constant::iterator c=m_constants.begin(); c!=m_constants.end(); c++)
@@ -26,42 +26,39 @@ void	CResourceManager::OnDeviceDestroy(BOOL )
 	m_constants.clear	();
 
    	// Release blenders
-	for (auto b=m_blenders.begin(); b!=m_blenders.end(); b++)
+	for (auto it : m_blenders)
 	{
-		xr_free				((char*&)b->first);
-		IBlender::Destroy	(b->second);
+		xr_free				((char*&)b.first);
+		IBlender::Destroy	(b.second);
 	}
 	m_blenders.clear	();
 
 	// destroy TD
-	for (auto _t=m_td.begin(); _t!=m_td.end(); _t++)
+	for (auto it : m_td)
 	{
-		xr_free		((char*&)_t->first);
-		xr_free		((char*&)_t->second.T);
-		xr_delete	(_t->second.cs);
+		xr_free		((char*&)m_td.first);
+		xr_free		((char*&)m_td.second.T);
+		xr_delete	(m_td.second.cs);
 	}
 	m_td.clear		();
 
 	// scripting
-#ifndef _EDITOR
 	LS_Unload				();
-#endif
 }
 
-void	CResourceManager::OnDeviceCreate	(IReader* F)
+void CResourceManager::OnDeviceCreate(IReader* F)
 {
 	if (!RDEVICE.b_is_Ready) return;
 
-	string256	name;
+	string256 name;
 
-#ifndef _EDITOR
 	// scripting
-	LS_Load					();
-#endif
+	LS_Load();
 	IReader*	fs			= 0;
 	// Load constants
  	fs	 		  			= F->open_chunk	(0);
-	if (fs){
+	if (fs)
+	{
 		while (!fs->eof())	{
 			fs->r_stringZ	(name,sizeof(name));
 			CConstant*	C	= _CreateConstant	(name);
@@ -72,8 +69,10 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 
 	// Load matrices
     fs						= F->open_chunk(1);
-	if (fs){
-		while (!fs->eof())	{
+	if (fs)
+	{
+		while (!fs->eof())
+		{
 			fs->r_stringZ	(name,sizeof(name));
 			CMatrix*	M	= _CreateMatrix	(name);
 			M->Load			(fs);
@@ -87,7 +86,8 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 		IReader*	chunk	= NULL;
 		int			chunk_id= 0;
 
-		while ((chunk=fs->open_chunk(chunk_id))!=NULL){
+		while ((chunk=fs->open_chunk(chunk_id))!=NULL)
+		{
 			CBlender_DESC	desc;
 			chunk->r		(&desc,sizeof(desc));
 			IBlender*		B = IBlender::Create(desc.CLS);
@@ -115,19 +115,15 @@ void	CResourceManager::OnDeviceCreate	(IReader* F)
 	m_textures_description.Load				();
 }
 
-void	CResourceManager::OnDeviceCreate	(LPCSTR shName)
+void CResourceManager::OnDeviceCreate(LPCSTR shName)
 {
-#ifdef _EDITOR
-	if (!FS.exist(shName)) return;
-#endif
-
 	// Check if file is compressed already
 	string32	ID			= "shENGINE";
 	string32	id;
 	IReader*	F			= FS.r_open(shName);
 	R_ASSERT2	(F,shName);
 	F->r		(&id,8);
-	if (0==strncmp(id,ID,8))
+	if (!strncmp(id,ID,8))
 	{
 		FATAL				("Unsupported blender library. Compressed?");
 	}
