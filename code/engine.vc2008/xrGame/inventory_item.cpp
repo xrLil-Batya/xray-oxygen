@@ -113,8 +113,8 @@ void CInventoryItem::Load(LPCSTR section)
 	m_flags.set(FCanTake,		m_can_trade);
 	m_flags.set(FCanTrade,		READ_IF_EXISTS(pSettings, r_bool, section, "can_trade",	TRUE));
 	m_flags.set(FIsQuestItem,	READ_IF_EXISTS(pSettings, r_bool, section, "quest_item",FALSE));
-
-
+    m_highlight_equipped = !!READ_IF_EXISTS(pSettings, r_bool, section, "highlight_equipped", FALSE);
+	
 	if ( BaseSlot() != NO_ACTIVE_SLOT || Belt())
 	{
 		m_flags.set					(FRuckDefault, pSettings->r_bool(section, "default_to_ruck" ));

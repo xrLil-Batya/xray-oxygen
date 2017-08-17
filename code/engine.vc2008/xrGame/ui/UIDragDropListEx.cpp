@@ -925,6 +925,10 @@ void CUICellContainer::Draw()
 				{
 					select_mode = 3;
 				}
+				else if (ui_cell.m_item->m_select_equipped)
+				{
+					select_mode = 2;
+				}				
 			}
 			
 			Fvector2			tp;
