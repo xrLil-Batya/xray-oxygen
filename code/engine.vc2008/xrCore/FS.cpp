@@ -70,7 +70,7 @@ XRCORE_API void dump_file_mappings	()
 // Tools
 //////////////////////////////////////////////////////////////////////
 //---------------------------------------------------
-void createPath(const std::string_view path path)
+void createPath(const std::string_view path)
 {
 	const auto lastSepPos = path.find_last_of('\\');
     // TODO [imdex]: remove in 15.3

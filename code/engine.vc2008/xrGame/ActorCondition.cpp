@@ -22,8 +22,8 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIStatic.h"
 
-#define MAX_SATIETY					1.0f
-#define START_SATIETY				0.5f
+//#define MAX_SATIETY					1.0f
+//#define START_SATIETY				0.5f
 
 BOOL	GodMode	()	
 {  
@@ -90,6 +90,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fOverweightJumpK			= pSettings->r_float(section,"overweight_jump_k");
 	m_fAccelK					= pSettings->r_float(section,"accel_k");
 	m_fSprintK					= pSettings->r_float(section,"sprint_k");
+	
 
 	//порог силы и здоровья меньше которого актер начинает хромать
 	m_fLimpingHealthBegin		= pSettings->r_float(section,	"limping_health_begin");
@@ -117,6 +118,13 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fV_Satiety				= pSettings->r_float(section,"satiety_v");		
 	m_fV_SatietyPower			= pSettings->r_float(section,"satiety_power_v");
 	m_fV_SatietyHealth			= pSettings->r_float(section,"satiety_health_v");
+
+	m_fThristCritical			= pSettings->r_float(section, "thrist_critical");
+	clamp(m_fThristCritical, 0.0f, 1.0f);
+	m_fV_Thirst = pSettings->r_float(section, "thirst_v");
+	m_fV_ThirstPower = pSettings->r_float(section, "thirst_power_v");
+	m_fV_ThirstHealth = pSettings->r_float(section, "thirst_health_v");
+
 	
 	m_MaxWalkWeight				= pSettings->r_float(section,"max_walk_weight");
 
@@ -180,6 +188,7 @@ void CActorCondition::UpdateCondition()
 	{
 		UpdateSatiety();
 		UpdateBoosters();
+		UpdateThrist();
 
 		m_fAlcohol += m_fV_Alcohol*m_fDeltaTime;
 		clamp(m_fAlcohol, 0.0f, 1.0f);
@@ -255,6 +264,7 @@ void CActorCondition::UpdateCondition()
 
 	UpdateSatiety();
 	UpdateBoosters();
+	UpdateThrist();
 
 	inherited::UpdateCondition();
 
@@ -426,6 +436,21 @@ void CActorCondition::UpdateSatiety()
 		m_fDeltaPower += m_fV_SatietyPower*m_fSatiety*m_fDeltaTime;
 	}
 }
+void CActorCondition::UpdateThrist()
+{
+	if (m_fThirst>0)
+	{
+		m_fThirst -= m_fThirst*m_fDeltaTime;
+		clamp(m_fThirst, 0.0f, 1.0f);
+	}
+
+	float thirst_health_koef = (m_fThirst - m_fThristCritical) / (m_fThirst >= m_fThristCritical ? 1 - m_fThristCritical : m_fThristCritical);
+	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
+	{
+		m_fDeltaHealth += m_fV_ThirstHealth*thirst_health_koef*m_fDeltaTime;
+		m_fDeltaPower += m_fV_ThirstPower*m_fThirst*m_fDeltaTime;
+	}
+}
 
 CWound* CActorCondition::ConditionHit(SHit* pHDS)
 {
@@ -516,6 +541,7 @@ void CActorCondition::save(NET_Packet &output_packet)
 	save_data			(m_curr_medicine_influence.fHealth, output_packet);
 	save_data			(m_curr_medicine_influence.fPower, output_packet);
 	save_data			(m_curr_medicine_influence.fSatiety, output_packet);
+	save_data			(m_curr_medicine_influence.fThirst, output_packet);
 	save_data			(m_curr_medicine_influence.fRadiation, output_packet);
 	save_data			(m_curr_medicine_influence.fWoundsHeal, output_packet);
 	save_data			(m_curr_medicine_influence.fMaxPowerUp, output_packet);
@@ -543,6 +569,7 @@ void CActorCondition::load(IReader &input_packet)
 	load_data			(m_curr_medicine_influence.fHealth, input_packet);
 	load_data			(m_curr_medicine_influence.fPower, input_packet);
 	load_data			(m_curr_medicine_influence.fSatiety, input_packet);
+	load_data			(m_curr_medicine_influence.fThirst, input_packet);
 	load_data			(m_curr_medicine_influence.fRadiation, input_packet);
 	load_data			(m_curr_medicine_influence.fWoundsHeal, input_packet);
 	load_data			(m_curr_medicine_influence.fMaxPowerUp, input_packet);
@@ -567,6 +594,7 @@ void CActorCondition::reinit	()
 	inherited::reinit	();
 	m_bLimping					= false;
 	m_fSatiety					= 1.f;
+	m_fThirst					= 1.f;
 }
 
 void CActorCondition::ChangeAlcohol	(float value)
@@ -578,6 +606,14 @@ void CActorCondition::ChangeSatiety(float value)
 	m_fSatiety += value;
 	clamp		(m_fSatiety, 0.0f, 1.0f);
 }
+
+void CActorCondition::ChangeThrist(float value)
+{
+	m_fThirst += value;
+	clamp(m_fThirst, 0.0f, 1.0f);
+}
+
+
 
 void CActorCondition::BoostParameters(const SBooster& B)
 {

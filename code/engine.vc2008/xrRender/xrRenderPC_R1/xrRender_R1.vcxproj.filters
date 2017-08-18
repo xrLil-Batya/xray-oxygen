@@ -974,9 +974,6 @@
     <ClCompile Include="..\xrRender\du_sphere_part.cpp">
       <Filter>Refactored\Execution &amp; 3D\DebugDraw</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrRender\dxParticleCustom.cpp">
-      <Filter>Refactored\Execution &amp; 3D\Visuals</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\FBasicVisual.cpp">
       <Filter>Refactored\Execution &amp; 3D\Visuals</Filter>
     </ClCompile>
