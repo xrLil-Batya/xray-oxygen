@@ -23,6 +23,7 @@ private:
 			ePhyHealthMinReached			=(1<<6),
 			eCantWalkWeight					=(1<<7),
 			eCantWalkWeightReached			=(1<<8),
+			eCriticalThirstReached			=(1<<9),
 			};
 	Flags16											m_condition_flags;
 private:
@@ -30,7 +31,7 @@ private:
 	CActorDeathEffector*							m_death_effector;
 	void				UpdateTutorialThresholds	();
 			void 		UpdateSatiety				();
-			void		UpdateThrist				();
+			void		UpdateThirst				();
 	virtual void		UpdateRadiation				();
 public:
 						CActorCondition				(CActor *object);
@@ -104,11 +105,11 @@ public:
 	virtual void			load					(IReader &input_packet);
 //	IC		float const&	Satiety					()	{ return m_fSatiety; }
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
-	IC		float const&    Thrist					()	{ return m_fThirst; }
+	IC		float const&    V_Thrist				()	{ return m_fV_Thirst; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }
 	IC		float const&	SatietyCritical			()	{ return m_fSatietyCritical; }
-	IC		float const&	ThristCritical			()	{ return m_fThristCritical; }
+	IC		float const&	ThirstCritical			()	{ return m_fThirstCritical; }
 	IC		float const&	V_ThristPower			()  { return m_fV_ThirstPower; }
 	IC		float const&	V_ThristHealth			()  { return m_fV_ThirstHealth; }
 	
@@ -138,8 +139,9 @@ protected:
 	float m_fV_Thirst;
 	float m_fV_ThirstPower;	
 	float m_fV_ThirstHealth;
-	float m_fThristCritical;
+	float m_fThirstCritical;
 	
+	bool bUseThirst;
 //--
 	float m_fPowerLeakSpeed;
 

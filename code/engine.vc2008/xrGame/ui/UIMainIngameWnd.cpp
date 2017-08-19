@@ -651,6 +651,22 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		else
 			m_ind_starvation->InitTexture("ui_inGame2_circle_hunger_red");
 	}
+// Thrist icon
+	float thirst = pActor->conditions().GetThirst();
+	float thirst_critical = pActor->conditions().ThirstCritical();
+	float thirst_koef = (thirst - thirst_critical) / (thirst >= thirst_critical ? 1 - thirst_critical : thirst_critical);
+	if (thirst_koef>0.5)
+		m_ind_thirst->Show(false);
+	else
+	{
+		m_ind_thirst->Show(true);
+		if (thirst_koef>0.0f)
+			m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_green");
+		else if (thirst_koef>-0.5f)
+			m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_yellow");
+		else
+			m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_red");
+	}
 // Armor broken icon
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 	m_ind_outfit_broken->Show(false);

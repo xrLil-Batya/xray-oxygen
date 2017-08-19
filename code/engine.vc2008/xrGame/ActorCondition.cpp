@@ -44,6 +44,7 @@ CActorCondition::CActorCondition(CActor *object) :
 	m_fSprintK					= 0.f;
 	m_fAlcohol					= 0.f;
 	m_fSatiety					= 1.0f;
+	m_fThirst					= 1.0f;
 
 //	m_vecBoosts.clear();
 
@@ -119,8 +120,8 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fV_SatietyPower			= pSettings->r_float(section,"satiety_power_v");
 	m_fV_SatietyHealth			= pSettings->r_float(section,"satiety_health_v");
 
-	m_fThristCritical			= pSettings->r_float(section, "thrist_critical");
-	clamp(m_fThristCritical, 0.0f, 1.0f);
+	m_fThirstCritical			= pSettings->r_float(section, "thrist_critical");
+	clamp(m_fThirstCritical, 0.0f, 1.0f);
 	m_fV_Thirst = pSettings->r_float(section, "thirst_v");
 	m_fV_ThirstPower = pSettings->r_float(section, "thirst_power_v");
 	m_fV_ThirstHealth = pSettings->r_float(section, "thirst_health_v");
@@ -188,7 +189,7 @@ void CActorCondition::UpdateCondition()
 	{
 		UpdateSatiety();
 		UpdateBoosters();
-		UpdateThrist();
+		UpdateThirst();
 
 		m_fAlcohol += m_fV_Alcohol*m_fDeltaTime;
 		clamp(m_fAlcohol, 0.0f, 1.0f);
@@ -264,7 +265,10 @@ void CActorCondition::UpdateCondition()
 
 	UpdateSatiety();
 	UpdateBoosters();
-	UpdateThrist();
+	if (bUseThirst)
+	{
+		UpdateThirst();
+	}
 
 	inherited::UpdateCondition();
 
@@ -436,15 +440,15 @@ void CActorCondition::UpdateSatiety()
 		m_fDeltaPower += m_fV_SatietyPower*m_fSatiety*m_fDeltaTime;
 	}
 }
-void CActorCondition::UpdateThrist()
+void CActorCondition::UpdateThirst()
 {
 	if (m_fThirst>0)
 	{
-		m_fThirst -= m_fThirst*m_fDeltaTime;
+		m_fThirst -= m_fV_Thirst*m_fDeltaTime;
 		clamp(m_fThirst, 0.0f, 1.0f);
 	}
 
-	float thirst_health_koef = (m_fThirst - m_fThristCritical) / (m_fThirst >= m_fThristCritical ? 1 - m_fThristCritical : m_fThristCritical);
+	float thirst_health_koef = (m_fThirst - m_fThirstCritical) / (m_fThirst >= m_fThirstCritical ? 1 - m_fThirstCritical : m_fThirstCritical);
 	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
 	{
 		m_fDeltaHealth += m_fV_ThirstHealth*thirst_health_koef*m_fDeltaTime;
@@ -537,6 +541,7 @@ void CActorCondition::save(NET_Packet &output_packet)
 	save_data			(m_fAlcohol, output_packet);
 	save_data			(m_condition_flags, output_packet);
 	save_data			(m_fSatiety, output_packet);
+	save_data			(m_fThirst, output_packet);
 
 	save_data			(m_curr_medicine_influence.fHealth, output_packet);
 	save_data			(m_curr_medicine_influence.fPower, output_packet);
@@ -565,6 +570,7 @@ void CActorCondition::load(IReader &input_packet)
 	load_data			(m_fAlcohol, input_packet);
 	load_data			(m_condition_flags, input_packet);
 	load_data			(m_fSatiety, input_packet);
+	load_data			(m_fThirst, input_packet);
 
 	load_data			(m_curr_medicine_influence.fHealth, input_packet);
 	load_data			(m_curr_medicine_influence.fPower, input_packet);
@@ -742,10 +748,16 @@ void CActorCondition::BoostChemicalBurnProtection(const float value)
 void CActorCondition::UpdateTutorialThresholds()
 {
 	string256						cb_name;
+	
 	static float _cPowerThr			= pSettings->r_float("tutorial_conditions_thresholds","power");
 	static float _cPowerMaxThr		= pSettings->r_float("tutorial_conditions_thresholds","max_power");
 	static float _cBleeding			= pSettings->r_float("tutorial_conditions_thresholds","bleeding");
 	static float _cSatiety			= pSettings->r_float("tutorial_conditions_thresholds","satiety");
+
+	bUseThirst						= pSettings->r_bool("actor_condition", "use_thirst");
+	static float _cThirst			= pSettings->r_float("tutorial_conditions_thresholds", "thirst");
+	
+
 	static float _cRadiation		= pSettings->r_float("tutorial_conditions_thresholds","radiation");
 	static float _cWpnCondition		= pSettings->r_float("tutorial_conditions_thresholds","weapon_jammed");
 	static float _cPsyHealthThr		= pSettings->r_float("tutorial_conditions_thresholds","psy_health");
@@ -776,6 +788,16 @@ void CActorCondition::UpdateTutorialThresholds()
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_satiety");
 	}
+	if(bUseThirst)
+	{
+		if (b && !m_condition_flags.test(eCriticalThirstReached) && GetThirst()<_cThirst) {
+			m_condition_flags.set(eCriticalThirstReached, TRUE);
+			b = false;
+			xr_strcpy(cb_name, "_G.on_actor_thirst");
+		}
+	}
+	
+	
 
 	if(b && !m_condition_flags.test(eCriticalRadiationReached) && GetRadiation()>_cRadiation){
 		m_condition_flags.set			(eCriticalRadiationReached, TRUE);

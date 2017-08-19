@@ -80,6 +80,7 @@ BIND_FUNCTION01	(&object(),	CScriptGameObject::SetHealth,			CEntityAlive,	condit
 BIND_FUNCTION01	(&object(),	CScriptGameObject::SetPsyHealth,		CEntityAlive,	conditions().ChangePsyHealth,	float,							float);
 BIND_FUNCTION01	(&object(),	CScriptGameObject::SetPower,			CEntityAlive,	conditions().ChangePower,		float,							float);
 BIND_FUNCTION01	(&object(),	CScriptGameObject::ChangeSatiety,		CEntityAlive,	conditions().ChangeSatiety,		float,							float);
+BIND_FUNCTION01	(&object(), CScriptGameObject::ChangeThirst,		CEntityAlive,	conditions().ChangeThirst,		float,							float);
 BIND_FUNCTION01	(&object(),	CScriptGameObject::SetRadiation,		CEntityAlive,	conditions().ChangeRadiation,	float,							float);
 BIND_FUNCTION01	(&object(),	CScriptGameObject::SetBleeding,			CEntityAlive,	conditions().ChangeBleeding,	float,							float);
 BIND_FUNCTION01	(&object(),	CScriptGameObject::SetCircumspection,	CEntityAlive,	conditions().ChangeCircumspection,float,							float);
