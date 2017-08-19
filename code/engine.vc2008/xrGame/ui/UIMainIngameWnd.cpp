@@ -166,7 +166,7 @@ void CUIMainIngameWnd::Init()
 		"starvation",
 		"thirst",
 		"fatigue",
-		"invincible"
+		"invincible",
 		"artefact"
 	};
 
@@ -377,21 +377,6 @@ void CUIMainIngameWnd::SetWarningIconColor(EWarningIcons icon, const u32 cl)
 	case ewiWeaponJammed:
 		SetWarningIconColorUI	(UIWeaponJammedIcon, cl);
 		if (bMagicFlag) break;
-
-/*	case ewiRadiation:
-		SetWarningIconColorUI	(&UIRadiaitionIcon, cl);
-		if (bMagicFlag) break;
-	case ewiWound:
-		SetWarningIconColorUI	(&UIWoundIcon, cl);
-		if (bMagicFlag) break;
-
-	case ewiStarvation:
-		SetWarningIconColorUI	(&UIStarvationIcon, cl);
-		if (bMagicFlag) break;	
-	case ewiPsyHealth:
-		SetWarningIconColorUI	(&UIPsyHealthIcon, cl);
-		if (bMagicFlag) break;
-*/
 	case ewiInvincible:
 		SetWarningIconColorUI	(UIInvincibleIcon, cl);
 		if (bMagicFlag) break;

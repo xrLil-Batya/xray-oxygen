@@ -10,18 +10,11 @@
 #include "HW.h"
 #include "../../xrEngine/XR_IOConsole.h"
 
-#ifndef _EDITOR
-	void	fill_vid_mode_list			(CHW* _hw);
-	void	free_vid_mode_list			();
+void	fill_vid_mode_list			(CHW* _hw);
+void	free_vid_mode_list			();
 
-	void	fill_render_mode_list		();
-	void	free_render_mode_list		();
-#else
-	void	fill_vid_mode_list			(CHW* _hw)	{}
-	void	free_vid_mode_list			()			{}
-	void	fill_render_mode_list		()			{}
-	void	free_render_mode_list		()			{}
-#endif
+void	fill_render_mode_list		();
+void	free_render_mode_list		();
 
  CHW			HW;
 
@@ -29,20 +22,12 @@
 IDirect3DStateBlock9*	dwDebugSB = 0;
 #endif
 
-CHW::CHW() : 
-	hD3D(NULL),
-	pD3D(NULL),
-	pDevice(NULL),
-	pBaseRT(NULL),
-	pBaseZB(NULL),
-	m_move_window(true)
+CHW::CHW(): hD3D(NULL), pD3D(NULL), pDevice(NULL), pBaseRT(NULL), pBaseZB(NULL), m_move_window(true)
 {
-	;
 }
 
 CHW::~CHW()
 {
-	;
 }
 
 void CHW::Reset		(HWND hwnd)
@@ -53,13 +38,7 @@ void CHW::Reset		(HWND hwnd)
 	_RELEASE			(pBaseZB);
 	_RELEASE			(pBaseRT);
 
-#ifndef _EDITOR
-//#ifndef DEDICATED_SERVER
-//	BOOL	bWindowed		= !psDeviceFlags.is	(rsFullscreen);
-//#else
-//	BOOL	bWindowed		= TRUE;
-//#endif
-	BOOL	bWindowed		= TRUE;
+	bool	bWindowed		= TRUE;
 	if (!g_dedicated_server)
 		bWindowed		= !psDeviceFlags.is	(rsFullscreen);
 
@@ -68,11 +47,13 @@ void CHW::Reset		(HWND hwnd)
 	DevPP.SwapEffect			= bWindowed ? D3DSWAPEFFECT_COPY:D3DSWAPEFFECT_DISCARD;
 	DevPP.Windowed				= bWindowed;
 	DevPP.PresentationInterval	= selectPresentInterval();
-	if( !bWindowed )		DevPP.FullScreen_RefreshRateInHz	= selectRefresh	(DevPP.BackBufferWidth,DevPP.BackBufferHeight,Caps.fTarget);
-	else					DevPP.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
-#endif
+	
+	if(!bWindowed)		DevPP.FullScreen_RefreshRateInHz	= selectRefresh	(DevPP.BackBufferWidth,DevPP.BackBufferHeight,Caps.fTarget);
+	else				DevPP.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
 
-	while	(TRUE)	{
+
+	while(TRUE)
+	{
 		HRESULT _hr							= HW.pDevice->Reset	(&DevPP);
 		if (SUCCEEDED(_hr))					break;
 		Msg		("! ERROR: [%dx%d]: %s",DevPP.BackBufferWidth,DevPP.BackBufferHeight,Debug.error2string(_hr));
@@ -83,9 +64,7 @@ void CHW::Reset		(HWND hwnd)
 #ifdef DEBUG
 	R_CHK				(pDevice->CreateStateBlock			(D3DSBT_ALL,&dwDebugSB));
 #endif
-#ifndef _EDITOR
 	updateWindowProps	(hwnd);
-#endif
 }
 
 #include "../../xrCore/xrAPI.h"
