@@ -142,193 +142,68 @@
     <ClCompile Include="Export\script_sound_type_script.cpp" />
     <ClCompile Include="Export\script_token_list.cpp" />
     <ClCompile Include="Export\script_token_list_script.cpp" />
-    <ClCompile Include="stdafx.cpp" />
-    <ClCompile Include="luajit\src\lib_base.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_bit.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\xr_pool.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_vmmath.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_udata.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_vmevent.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_trace.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_strscan.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_tab.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_str.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_state.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_snap.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_parse.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_record.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_sink.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_split.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_fold.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_loop.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_mem.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_narrow.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_opt_dce.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_mcode.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_meta.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_obj.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_lib.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_load.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_lex.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_gdbjit.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_ir.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_func.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_gc.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_ffrecord.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_err.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_dispatch.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_debug.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_ctype.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_crecord.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_cparse.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_clib.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_char.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_cconv.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_cdata.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_ccallback.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_ccall.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_bcwrite.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_carith.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_bcread.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_bc.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_asm.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_api.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_table.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lj_alloc.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_string.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_jit.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_math.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_os.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_package.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_debug.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_ffi.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_init.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_io.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
-    <ClCompile Include="luajit\src\lib_aux.c">
-      <Filter>Lua\LuaJIT\source</Filter>
-    </ClCompile>
+    <ClCompile Include="luajit\lib_aux.c" />
+    <ClCompile Include="luajit\lib_base.c" />
+    <ClCompile Include="luajit\lib_bit.c" />
+    <ClCompile Include="luajit\lib_debug.c" />
+    <ClCompile Include="luajit\lib_ffi.c" />
+    <ClCompile Include="luajit\lib_init.c" />
+    <ClCompile Include="luajit\lib_io.c" />
+    <ClCompile Include="luajit\lib_jit.c" />
+    <ClCompile Include="luajit\lib_math.c" />
+    <ClCompile Include="luajit\lib_os.c" />
+    <ClCompile Include="luajit\lib_package.c" />
+    <ClCompile Include="luajit\lib_string.c" />
+    <ClCompile Include="luajit\lib_table.c" />
+    <ClCompile Include="luajit\lj_alloc.c" />
+    <ClCompile Include="luajit\lj_api.c" />
+    <ClCompile Include="luajit\lj_asm.c" />
+    <ClCompile Include="luajit\lj_bc.c" />
+    <ClCompile Include="luajit\lj_bcread.c" />
+    <ClCompile Include="luajit\lj_bcwrite.c" />
+    <ClCompile Include="luajit\lj_carith.c" />
+    <ClCompile Include="luajit\lj_ccall.c" />
+    <ClCompile Include="luajit\lj_ccallback.c" />
+    <ClCompile Include="luajit\lj_cconv.c" />
+    <ClCompile Include="luajit\lj_cdata.c" />
+    <ClCompile Include="luajit\lj_char.c" />
+    <ClCompile Include="luajit\lj_clib.c" />
+    <ClCompile Include="luajit\lj_cparse.c" />
+    <ClCompile Include="luajit\lj_crecord.c" />
+    <ClCompile Include="luajit\lj_ctype.c" />
+    <ClCompile Include="luajit\lj_debug.c" />
+    <ClCompile Include="luajit\lj_dispatch.c" />
+    <ClCompile Include="luajit\lj_err.c" />
+    <ClCompile Include="luajit\lj_ffrecord.c" />
+    <ClCompile Include="luajit\lj_func.c" />
+    <ClCompile Include="luajit\lj_gc.c" />
+    <ClCompile Include="luajit\lj_gdbjit.c" />
+    <ClCompile Include="luajit\lj_ir.c" />
+    <ClCompile Include="luajit\lj_lex.c" />
+    <ClCompile Include="luajit\lj_lib.c" />
+    <ClCompile Include="luajit\lj_load.c" />
+    <ClCompile Include="luajit\lj_mcode.c" />
+    <ClCompile Include="luajit\lj_meta.c" />
+    <ClCompile Include="luajit\lj_obj.c" />
+    <ClCompile Include="luajit\lj_opt_dce.c" />
+    <ClCompile Include="luajit\lj_opt_fold.c" />
+    <ClCompile Include="luajit\lj_opt_loop.c" />
+    <ClCompile Include="luajit\lj_opt_mem.c" />
+    <ClCompile Include="luajit\lj_opt_narrow.c" />
+    <ClCompile Include="luajit\lj_opt_sink.c" />
+    <ClCompile Include="luajit\lj_opt_split.c" />
+    <ClCompile Include="luajit\lj_parse.c" />
+    <ClCompile Include="luajit\lj_record.c" />
+    <ClCompile Include="luajit\lj_snap.c" />
+    <ClCompile Include="luajit\lj_state.c" />
+    <ClCompile Include="luajit\lj_str.c" />
+    <ClCompile Include="luajit\lj_strscan.c" />
+    <ClCompile Include="luajit\lj_tab.c" />
+    <ClCompile Include="luajit\lj_trace.c" />
+    <ClCompile Include="luajit\lj_udata.c" />
+    <ClCompile Include="luajit\lj_vmevent.c" />
+    <ClCompile Include="luajit\lj_vmmath.c" />
+    <ClCompile Include="luajit\xr_pool.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\config.hpp">
@@ -609,228 +484,80 @@
     <ClInclude Include="Export\script_sound_type.h" />
     <ClInclude Include="Export\script_token_list.h" />
     <ClInclude Include="Export\script_token_list_inline.h" />
-    <ClInclude Include="stdafx.h" />
-    <ClInclude Include="luajit\src\lj_asm_mips.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_asm.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_arch.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_alloc.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\xr_pool.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\luaconf.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\luajit.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lualib.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_vmevent.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lua.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lua.hpp">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_traceerr.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_udata.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_target_ppc.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_target_x86.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_trace.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_tab.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_target.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_target_arm.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_target_mips.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_str.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_strscan.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_state.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_record.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_snap.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_parse.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_recdef.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_obj.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_mcode.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_meta.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_lib.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_libdef.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ircall.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_iropt.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_jit.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_lex.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_gdbjit.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ir.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_func.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_gc.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ffrecord.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_folddef.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_frame.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_errmsg.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ff.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ffdef.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_err.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_emit_mips.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_emit_ppc.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_emit_x86.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_dispatch.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_emit_arm.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_def.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_debug.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ctype.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_crecord.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_cparse.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_clib.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_char.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_cdata.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_cconv.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ccallback.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_ccall.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_carith.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_bcdump.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_asm_x86.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_bc.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_bcdef.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_asm_ppc.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_asm_arm.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lauxlib.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
-    <ClInclude Include="luajit\src\lj_vm.h">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </ClInclude>
+    <ClInclude Include="luajit\lauxlib.h" />
+    <ClInclude Include="luajit\lj_alloc.h" />
+    <ClInclude Include="luajit\lj_arch.h" />
+    <ClInclude Include="luajit\lj_asm.h" />
+    <ClInclude Include="luajit\lj_asm_arm.h" />
+    <ClInclude Include="luajit\lj_asm_mips.h" />
+    <ClInclude Include="luajit\lj_asm_ppc.h" />
+    <ClInclude Include="luajit\lj_asm_x86.h" />
+    <ClInclude Include="luajit\lj_bc.h" />
+    <ClInclude Include="luajit\lj_bcdef.h" />
+    <ClInclude Include="luajit\lj_bcdump.h" />
+    <ClInclude Include="luajit\lj_carith.h" />
+    <ClInclude Include="luajit\lj_ccall.h" />
+    <ClInclude Include="luajit\lj_ccallback.h" />
+    <ClInclude Include="luajit\lj_cconv.h" />
+    <ClInclude Include="luajit\lj_cdata.h" />
+    <ClInclude Include="luajit\lj_char.h" />
+    <ClInclude Include="luajit\lj_clib.h" />
+    <ClInclude Include="luajit\lj_cparse.h" />
+    <ClInclude Include="luajit\lj_crecord.h" />
+    <ClInclude Include="luajit\lj_ctype.h" />
+    <ClInclude Include="luajit\lj_debug.h" />
+    <ClInclude Include="luajit\lj_def.h" />
+    <ClInclude Include="luajit\lj_dispatch.h" />
+    <ClInclude Include="luajit\lj_emit_arm.h" />
+    <ClInclude Include="luajit\lj_emit_mips.h" />
+    <ClInclude Include="luajit\lj_emit_ppc.h" />
+    <ClInclude Include="luajit\lj_emit_x86.h" />
+    <ClInclude Include="luajit\lj_err.h" />
+    <ClInclude Include="luajit\lj_errmsg.h" />
+    <ClInclude Include="luajit\lj_ff.h" />
+    <ClInclude Include="luajit\lj_ffdef.h" />
+    <ClInclude Include="luajit\lj_ffrecord.h" />
+    <ClInclude Include="luajit\lj_folddef.h" />
+    <ClInclude Include="luajit\lj_frame.h" />
+    <ClInclude Include="luajit\lj_func.h" />
+    <ClInclude Include="luajit\lj_gc.h" />
+    <ClInclude Include="luajit\lj_gdbjit.h" />
+    <ClInclude Include="luajit\lj_ir.h" />
+    <ClInclude Include="luajit\lj_ircall.h" />
+    <ClInclude Include="luajit\lj_iropt.h" />
+    <ClInclude Include="luajit\lj_jit.h" />
+    <ClInclude Include="luajit\lj_lex.h" />
+    <ClInclude Include="luajit\lj_lib.h" />
+    <ClInclude Include="luajit\lj_libdef.h" />
+    <ClInclude Include="luajit\lj_mcode.h" />
+    <ClInclude Include="luajit\lj_meta.h" />
+    <ClInclude Include="luajit\lj_obj.h" />
+    <ClInclude Include="luajit\lj_parse.h" />
+    <ClInclude Include="luajit\lj_recdef.h" />
+    <ClInclude Include="luajit\lj_record.h" />
+    <ClInclude Include="luajit\lj_snap.h" />
+    <ClInclude Include="luajit\lj_state.h" />
+    <ClInclude Include="luajit\lj_str.h" />
+    <ClInclude Include="luajit\lj_strscan.h" />
+    <ClInclude Include="luajit\lj_tab.h" />
+    <ClInclude Include="luajit\lj_target.h" />
+    <ClInclude Include="luajit\lj_target_arm.h" />
+    <ClInclude Include="luajit\lj_target_mips.h" />
+    <ClInclude Include="luajit\lj_target_ppc.h" />
+    <ClInclude Include="luajit\lj_target_x86.h" />
+    <ClInclude Include="luajit\lj_trace.h" />
+    <ClInclude Include="luajit\lj_traceerr.h" />
+    <ClInclude Include="luajit\lj_udata.h" />
+    <ClInclude Include="luajit\lj_vm.h" />
+    <ClInclude Include="luajit\lj_vmevent.h" />
+    <ClInclude Include="luajit\lua.h" />
+    <ClInclude Include="luajit\lua.hpp" />
+    <ClInclude Include="luajit\luaconf.h" />
+    <ClInclude Include="luajit\luajit.h" />
+    <ClInclude Include="luajit\lualib.h" />
+    <ClInclude Include="luajit\xr_pool.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Export\luabind.inl" />
-    <None Include="luajit\src\jit\vmdef.lua">
-      <Filter>Lua\LuaJIT\include</Filter>
-    </None>
   </ItemGroup>
 </Project>

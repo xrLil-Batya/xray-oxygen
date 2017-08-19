@@ -620,7 +620,7 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 
 int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
-	//FX: дичайший костыль, но: "Работает -- не трогай!"
+	
 	std::string params = lpCmdLine;
 	if (strstr(lpCmdLine, "-launcher"))
 	{
@@ -632,7 +632,8 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		params = GetParams(); // Fixed
 	}
 
-	WinMain_impl(const_cast<char*>(params.c_str()), sizeof(params));
+	WinMain_impl(params.data(),sizeof(params));
+	//WinMain_impl(const_cast<char*>(params.c_str()), sizeof(params));
 
 	return 0;
 }

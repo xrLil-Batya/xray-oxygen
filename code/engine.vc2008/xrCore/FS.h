@@ -4,6 +4,7 @@
 #pragma once
 #include <filesystem>
 #include <array>
+#include <string_view>
 #define stdfs std::experimental::filesystem;
 static constexpr auto CFS_CompressMark = 1ul << 31ul;
 static constexpr auto CFS_HeaderChunkID = 666;

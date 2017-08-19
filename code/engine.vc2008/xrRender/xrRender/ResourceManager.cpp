@@ -344,7 +344,7 @@ void CResourceManager::DeferredUpload()
 		if (m_textures.size() <= 100)
 		{
 			Msg("CResourceManager::DeferredUpload -> one thread");
-			for (map_TextureIt t = m_textures.begin(); t != m_textures.end(); t++)
+			for (auto t = m_textures.begin(); t != m_textures.end(); t++)
 				t->second->Load();
 		}
 		else

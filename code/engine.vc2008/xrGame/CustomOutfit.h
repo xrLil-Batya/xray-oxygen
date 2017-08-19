@@ -52,6 +52,7 @@ public:
 
 	shared_str				m_BonesProtectionSect;
 	shared_str				m_NightVisionSect;
+	shared_str				m_TargetIndicatorFrame; // Borshig // as in binocular
 
 	bool					bIsHelmetAvaliable;
 

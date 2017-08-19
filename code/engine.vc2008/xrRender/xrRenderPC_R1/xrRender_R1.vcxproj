@@ -135,6 +135,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -177,6 +178,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -227,6 +229,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -280,6 +283,7 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -330,6 +334,7 @@
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -375,6 +380,7 @@
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib;xrParticles.lib; %(AdditionalDependencies)</AdditionalDependencies>

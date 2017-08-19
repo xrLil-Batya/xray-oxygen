@@ -30,6 +30,7 @@ private:
 	CActorDeathEffector*							m_death_effector;
 	void				UpdateTutorialThresholds	();
 			void 		UpdateSatiety				();
+			void		UpdateThrist				();
 	virtual void		UpdateRadiation				();
 public:
 						CActorCondition				(CActor *object);
@@ -44,6 +45,7 @@ public:
 
 	virtual void 		ChangeAlcohol				(const float value);
 	virtual void 		ChangeSatiety				(const float value);
+	virtual void		ChangeThrist				(const float value);
 
 	void 				BoostParameters				(const SBooster& B);
 	void 				DisableBoostParameters		(const SBooster& B);
@@ -83,6 +85,7 @@ public:
 			float	xr_stdcall	GetAlcohol			()	{return m_fAlcohol;}
 			float	xr_stdcall	GetPsy				()	{return 1.0f-GetPsyHealth();}
 			float				GetSatiety			()  {return m_fSatiety;}
+			float				GetThirst			()  {return m_fThirst; }
 	IC		float				GetSatietyPower		() const {return m_fV_SatietyPower*m_fSatiety;};
 
 			void		AffectDamage_InjuriousMaterialAndMonstersInfluence();
@@ -101,9 +104,13 @@ public:
 	virtual void			load					(IReader &input_packet);
 //	IC		float const&	Satiety					()	{ return m_fSatiety; }
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
+	IC		float const&    Thrist					()	{ return m_fThirst; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }
 	IC		float const&	SatietyCritical			()	{ return m_fSatietyCritical; }
+	IC		float const&	ThristCritical			()	{ return m_fThristCritical; }
+	IC		float const&	V_ThristPower			()  { return m_fV_ThirstPower; }
+	IC		float const&	V_ThristHealth			()  { return m_fV_ThirstHealth; }
 	
 	float	GetZoneMaxPower							(ALife::EInfluenceType type) const;
 	float	GetZoneMaxPower							(ALife::EHitType hit_type) const;
@@ -122,11 +129,17 @@ protected:
 	float m_fAlcohol;
 	float m_fV_Alcohol;
 //--
-	float m_fSatiety;
+	float m_fSatiety;	
 	float m_fV_Satiety;
 	float m_fV_SatietyPower;
 	float m_fV_SatietyHealth;
 	float m_fSatietyCritical;
+	float m_fThirst;
+	float m_fV_Thirst;
+	float m_fV_ThirstPower;	
+	float m_fV_ThirstHealth;
+	float m_fThristCritical;
+	
 //--
 	float m_fPowerLeakSpeed;
 

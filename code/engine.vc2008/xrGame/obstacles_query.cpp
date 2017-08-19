@@ -12,6 +12,7 @@
 #include "ai_obstacle.h"
 #include "ai_space.h"
 #include "level_graph.h"
+#include <algorithm> 
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -47,7 +48,7 @@ void obstacles_query::merge				(const AREA &object_area)
 	u32 area_size = temp.size();
 	u32 destination_size = area_size + object_area.size();
 	m_area.resize(destination_size);
-	m_area.erase(std::set_union(temp, temp.begin(), temp.end(), object_area.begin(), object_area.end(), m_area.begin()), m_area.end());
+	m_area.erase(std::set_union(temp.begin(), temp.end(), object_area.begin(), object_area.end(), m_area.begin()), m_area.end());
 }
 
 void obstacles_query::compute_area		()
