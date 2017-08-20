@@ -46,7 +46,7 @@ public:
 
 	virtual void 		ChangeAlcohol				(const float value);
 	virtual void 		ChangeSatiety				(const float value);
-	virtual void		ChangeThrist				(const float value);
+	virtual void		ChangeThirst				(const float value);
 
 	void 				BoostParameters				(const SBooster& B);
 	void 				DisableBoostParameters		(const SBooster& B);

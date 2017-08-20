@@ -613,7 +613,7 @@ void CActorCondition::ChangeSatiety(float value)
 	clamp		(m_fSatiety, 0.0f, 1.0f);
 }
 
-void CActorCondition::ChangeThrist(float value)
+void CActorCondition::ChangeThirst(float value)
 {
 	m_fThirst += value;
 	clamp(m_fThirst, 0.0f, 1.0f);
