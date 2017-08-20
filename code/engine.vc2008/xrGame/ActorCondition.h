@@ -18,7 +18,6 @@ private:
 			eCriticalMaxPowerReached		=(1<<1),
 			eCriticalBleedingSpeed			=(1<<2),
 			eCriticalSatietyReached			=(1<<3),
-			eCriticalThirstReached			=(1<<3),
 			eCriticalRadiationReached		=(1<<4),
 			eWeaponJammedReached			=(1<<5),
 			ePhyHealthMinReached			=(1<<6),
