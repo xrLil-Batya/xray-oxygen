@@ -177,7 +177,9 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -282,7 +284,9 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
@@ -377,7 +381,9 @@
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions> /std:c++laters /std:c++latest</AdditionalOptions>
+      <AdditionalOptions>
+      </AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
