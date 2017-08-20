@@ -116,10 +116,10 @@
 	    <texture id="ui_inGame2_PDA_icon_actorbackpack" x="962" y="932" width="27" height="27" />
 	    <texture id="ui_inGame2_PDA_icon_secret_found"  x="932" y="962" width="27" height="27" />
 		
-	    <texture id="ui_inGame2_circle_thirst_green" x="11" y="843" width="35" height="40" />
-	    <texture id="ui_inGame2_circle_thirst_yellow" x="49" y="843" width="35" height="40" />
-	    <texture id="ui_inGame2_circle_thirst_orange" x="87" y="843" width="35" height="40" />
-	    <texture id="ui_inGame2_circle_thirst_red" x="124" y="843" width="35" height="40" />		
+	    <texture id="ui_inGame2_circle_thirst_green" x="788" y="186" width="38" height="38" />
+	    <texture id="ui_inGame2_circle_thirst_yellow" x="49" y="186" width="38" height="38" />
+	    <texture id="ui_inGame2_circle_thirst_orange" x="87" y="186" width="38" height="38" />
+	    <texture id="ui_inGame2_circle_thirst_red" x="124" y="186" width="38" height="38" />		
 	</file>
     <file name="ui\bytil_wnd">
 	    <texture id="ui_inGame2_circle_drink_empty"		x="0"	y="0"	width="0"	height="0" />
