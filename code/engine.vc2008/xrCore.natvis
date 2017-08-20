@@ -2,7 +2,9 @@
 <AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
 
   <Type Name="shared_str">
+    <DisplayString Condition="p_ == 0">""</DisplayString>
     <DisplayString>{p_->value, s}</DisplayString>
+    <StringView>p_->value, s</StringView>
   </Type>
 
   <Type Name="CInifile::Item">

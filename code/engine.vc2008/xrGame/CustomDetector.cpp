@@ -81,8 +81,21 @@ bool  CCustomDetector::CheckCompatibility(CHudItem* itm)
 
 void CCustomDetector::HideDetector(bool bFastMode)
 {
-	if(GetState()==eIdle)
+    if (GetState() == eIdle)
+    {
 		ToggleDetector(bFastMode);
+        return;
+    }
+
+    bool bClimb = ((Actor()->MovingState()&mcClimb) != 0);
+
+    if (bClimb && GetState() == eShowing)
+    {
+        StopCurrentAnimWithoutCallback();
+        SetState(eIdle);
+        ToggleDetector(bFastMode);
+    }
+
 }
 
 void CCustomDetector::ShowDetector(bool bFastMode)

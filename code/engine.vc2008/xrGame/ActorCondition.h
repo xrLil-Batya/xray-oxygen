@@ -18,7 +18,6 @@ private:
 			eCriticalMaxPowerReached		=(1<<1),
 			eCriticalBleedingSpeed			=(1<<2),
 			eCriticalSatietyReached			=(1<<3),
-			eCriticalThirstReached			=(1<<3),
 			eCriticalRadiationReached		=(1<<4),
 			eWeaponJammedReached			=(1<<5),
 			ePhyHealthMinReached			=(1<<6),
@@ -47,7 +46,7 @@ public:
 
 	virtual void 		ChangeAlcohol				(const float value);
 	virtual void 		ChangeSatiety				(const float value);
-	virtual void		ChangeThrist				(const float value);
+	virtual void		ChangeThirst				(const float value);
 
 	void 				BoostParameters				(const SBooster& B);
 	void 				DisableBoostParameters		(const SBooster& B);
