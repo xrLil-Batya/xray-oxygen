@@ -86,6 +86,8 @@ CGamePersistent::CGamePersistent(void)
 		eDemoStart			=	NULL;
 	}
 
+    m_useThirst = (0 != strstr(Core.Params, "-thrist"));
+
 	eQuickLoad				= Engine.Event.Handler_Attach("Game:QuickLoad",this);
 	Fvector3* DofValue		= Console->GetFVectorPtr("r2_dof");
 	SetBaseDof				(*DofValue);
