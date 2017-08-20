@@ -122,9 +122,9 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 
 	m_fThirstCritical			= pSettings->r_float(section, "thrist_critical");
 	clamp(m_fThirstCritical, 0.0f, 1.0f);
-	m_fV_Thirst = pSettings->r_float(section, "thirst_v");
-	m_fV_ThirstPower = pSettings->r_float(section, "thirst_power_v");
-	m_fV_ThirstHealth = pSettings->r_float(section, "thirst_health_v");
+	m_fV_Thirst 				= pSettings->r_float(section, "thirst_v");
+	m_fV_ThirstPower 			= pSettings->r_float(section, "thirst_power_v");
+	m_fV_ThirstHealth 			= pSettings->r_float(section, "thirst_health_v");
 
 	
 	m_MaxWalkWeight				= pSettings->r_float(section,"max_walk_weight");

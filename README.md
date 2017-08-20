@@ -2,9 +2,9 @@
 * Use at your own risk
 
 ### Fray 1.6.02 
-* Fray 1.6.02 Project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
+* X-Ray 1.6.02.f Project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
 * Used code: SkyLoader, RayTwitty, Tron, Abramcumner, Shoker, Полтергейст, KD, Alundaio, Kolmogor, RvP, alpet, OpenXRay.
-* Contributors: ForserX, xWolfx, Real Giperion, JHunt41, mrmnwar, Borshig, Sin!
+* Contributors: ForserX, xWolfx, Giperion, mrmnwar, Borshig, Sin!, LtPetrov
 
 Allowed to use **any** projects.
 
