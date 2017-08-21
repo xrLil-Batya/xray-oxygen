@@ -7,7 +7,7 @@
 class CUIPropertiesBox: public CUIFrameWindow, public CUIWndCallback
 {
 private:
-	using inherited CUIFrameWindow; 
+	using inherited = CUIFrameWindow; 
 public:
 						CUIPropertiesBox					(CUIPropertiesBox* sub_property_box = NULL);
 	virtual				~CUIPropertiesBox					();

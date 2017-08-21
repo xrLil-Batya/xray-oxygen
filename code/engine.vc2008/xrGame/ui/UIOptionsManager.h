@@ -29,7 +29,7 @@ protected:
 	using group_name = shared_str;
 	using items_list xr_vector<CUIOptionsItem*>;
     using groups = xr_map<group_name, items_list>;
-	using groups_it= xr_map<group_name, items_list>::iterator;
+	using groups_it= groups::iterator;
 
 	groups	m_groups;
 	
