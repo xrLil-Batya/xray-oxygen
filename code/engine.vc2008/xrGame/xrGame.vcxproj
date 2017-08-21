@@ -622,7 +622,6 @@
     <ClInclude Include="operator_condition.h" />
     <ClInclude Include="operator_condition_inline.h" />
     <ClInclude Include="script_world_property.h" />
-    <ClInclude Include="script_world_property_inline.h" />
     <ClInclude Include="setup_manager.h" />
     <ClInclude Include="setup_manager_inline.h" />
     <ClInclude Include="sight_manager.h" />
@@ -1190,7 +1189,6 @@
     <ClInclude Include="stalker_animation_script.h" />
     <ClInclude Include="stalker_animation_script_inline.h" />
     <ClInclude Include="stalker_animation_state.h" />
-    <ClInclude Include="stalker_animation_state_inline.h" />
     <ClInclude Include="cover_evaluators.h" />
     <ClInclude Include="cover_evaluators_inline.h" />
     <ClInclude Include="stalker_decision_space.h" />
@@ -1214,7 +1212,6 @@
     <ClInclude Include="stalker_search_planner.h" />
     <ClInclude Include="stalker_search_actions.h" />
     <ClInclude Include="stalker_danger_planner.h" />
-    <ClInclude Include="stalker_danger_planner_inline.h" />
     <ClInclude Include="stalker_danger_unknown_planner.h" />
     <ClInclude Include="stalker_danger_unknown_actions.h" />
     <ClInclude Include="stalker_danger_in_direction_planner.h" />
@@ -1243,11 +1240,9 @@
     <ClInclude Include="smart_cover_animation_selector.h" />
     <ClInclude Include="smart_cover_animation_selector_inline.h" />
     <ClInclude Include="smart_cover_animation_planner.h" />
-    <ClInclude Include="smart_cover_animation_planner_inline.h" />
     <ClInclude Include="smart_cover_planner_actions.h" />
     <ClInclude Include="smart_cover_planner_actions_inline.h" />
     <ClInclude Include="smart_cover_loophole_planner_actions.h" />
-    <ClInclude Include="smart_cover_loophole_planner_actions_inline.h" />
     <ClInclude Include="smart_cover_planner_target_selector.h" />
     <ClInclude Include="smart_cover_planner_target_selector_inline.h" />
     <ClInclude Include="smart_cover_planner_target_provider.h" />
@@ -1404,7 +1399,6 @@
     <ClInclude Include="script_lanim.h" />
     <ClInclude Include="..\xrServerEntities\script_fcolor.h" />
     <ClInclude Include="script_particles.h" />
-    <ClInclude Include="script_particles_inline.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_engine.h" />

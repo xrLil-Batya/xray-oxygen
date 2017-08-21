@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../xrScripts/export/script_export_space.h"
 #include "ui\xrUIXmlParser.h"
 
@@ -12,19 +11,11 @@ class CUISpinNum;
 class CUISpinText;
 class CUISpinFlt;
 class CUIComboBox;
-class CUIButton;
 class CUI3tButton;
-class CUICheckButton;
 class CUITabControl;
 class CUIFrameLineWnd;
 class CUIEditBox;
-class CUIMultiTextStatic;
-class CUIAnimatedStatic;
-class CUISleepStatic;
-class CServerList;
-class CUIMapList;
 class CUITrackBar;
-class CUIMapInfo;
 class CUIMMShniaga;
 class CUIScrollView;
 class CUIListBox;
@@ -50,7 +41,6 @@ public:
 	CUI3tButton*		Init3tButton(LPCSTR path, CUIWindow* parent);
 
 	CUITabControl*		InitTab(LPCSTR path, CUIWindow* parent);
-	//CUIMapInfo*			InitMapInfo(LPCSTR path, CUIWindow* parent);
 	CUITrackBar*		InitTrackBar(LPCSTR path, CUIWindow* parent);
 	CUIMMShniaga*		InitMMShniaga(LPCSTR path, CUIWindow* parent);
 	CUIWindow*			InitKeyBinding(LPCSTR path, CUIWindow* parent);

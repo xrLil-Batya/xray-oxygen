@@ -3,9 +3,7 @@
 //					 (оружие и осколочные гранаты) 	
 //					 обеспечивает набор хитов, звуков рикошетп
 //////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "alife_space.h"
 #include "../xrEngine/render.h"
 
@@ -44,13 +42,7 @@ protected:
 protected:
 	virtual void			LoadFireParams		(LPCSTR section); 		//сила выстрела
 	virtual bool			SendHitAllowed		(CObject* pUser);
-	virtual void			FireBullet			(const Fvector& pos, 
-        										const Fvector& dir, 
-												float fire_disp,
-												const CCartridge& cartridge,
-												u16 parent_id,
-												u16 weapon_id,
-												bool send_hit);
+	virtual void			FireBullet			(const Fvector& pos, const Fvector& dir, float fire_disp, const CCartridge& cartridge, u16 parent_id, u16 weapon_id, bool send_hit);
 	void					SetBulletSpeed(float new_speed) {m_fStartBulletSpeed = new_speed;}
 	float					GetBulletSpeed()				{return m_fStartBulletSpeed;}
 
