@@ -129,7 +129,10 @@ void CUIMainIngameWnd::Init()
 	m_ind_bleeding			= UIHelper::CreateStatic(uiXml, "indicator_bleeding", this);
 	m_ind_radiation			= UIHelper::CreateStatic(uiXml, "indicator_radiation", this);
 	m_ind_starvation		= UIHelper::CreateStatic(uiXml, "indicator_starvation", this);
-	m_ind_thirst			= UIHelper::CreateStatic(uiXml, "indicator_thirst", this);
+    if (GamePersistent().m_useThirst)
+    {
+	    m_ind_thirst			= UIHelper::CreateStatic(uiXml, "indicator_thirst", this);
+    }
 	m_ind_weapon_broken		= UIHelper::CreateStatic(uiXml, "indicator_weapon_broken", this);
 	m_ind_helmet_broken		= UIHelper::CreateStatic(uiXml, "indicator_helmet_broken", this);
 	m_ind_outfit_broken		= UIHelper::CreateStatic(uiXml, "indicator_outfit_broken", this);
@@ -158,6 +161,8 @@ void CUIMainIngameWnd::Init()
 	UIInvincibleIcon			= UIHelper::CreateStatic(uiXml, "invincible_static", NULL);
 	UIInvincibleIcon->Show		(false);
 	
+    //#TODO: [Giperion] WTF IS THIS SHIT????????????
+
 	shared_str warningStrings[8] = 
 	{	
 		"jammed",
@@ -170,12 +175,25 @@ void CUIMainIngameWnd::Init()
 		"artefact"
 	};
 
+    shared_str classicWarningStrings[7] =
+    {
+        "jammed",
+        "radiation",
+        "wounds",
+        "starvation",
+        "fatigue",
+        "invincible",
+        "artefact"
+    };
+
+    shared_str* pUsedWarningStrings = GamePersistent().m_useThirst ? &warningStrings[0] : &classicWarningStrings[0];
+
 	// «агружаем пороговые значени€ дл€ индикаторов
 	EWarningIcons j = ewiWeaponJammed;
 	while (j < ewiInvincible)
 	{
 		// „итаем данные порогов дл€ каждого индикатора
-		shared_str cfgRecord = pSettings->r_string("main_ingame_indicators_thresholds", *warningStrings[static_cast<int>(j) - 1]);
+		shared_str cfgRecord = pSettings->r_string("main_ingame_indicators_thresholds", *pUsedWarningStrings[static_cast<int>(j) - 1]);
 		u32 count = _GetItemCount(*cfgRecord);
 
 		char	singleThreshold[8];
@@ -637,21 +655,25 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 			m_ind_starvation->InitTexture("ui_inGame2_circle_hunger_red");
 	}
 // Thrist icon
-	float thirst = pActor->conditions().GetThirst();
-	float thirst_critical = pActor->conditions().ThirstCritical();
-	float thirst_koef = (thirst - thirst_critical) / (thirst >= thirst_critical ? 1 - thirst_critical : thirst_critical);
-	if (thirst_koef>0.5)
-		m_ind_thirst->Show(false);
-	else
-	{
-		m_ind_thirst->Show(true);
-		if (thirst_koef>0.0f)
-			m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_green");
-		else if (thirst_koef>-0.5f)
-			m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_yellow");
-		else
-			m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_red");
-	}
+    if (GamePersistent().m_useThirst)
+    {
+        float thirst = pActor->conditions().GetThirst();
+        float thirst_critical = pActor->conditions().ThirstCritical();
+        float thirst_koef = (thirst - thirst_critical) / (thirst >= thirst_critical ? 1 - thirst_critical : thirst_critical);
+        if (thirst_koef > 0.5)
+            m_ind_thirst->Show(false);
+        else
+        {
+            m_ind_thirst->Show(true);
+            if (thirst_koef > 0.0f)
+                m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_green");
+            else if (thirst_koef > -0.5f)
+                m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_yellow");
+            else
+                m_ind_thirst->InitTexture("ui_inGame2_circle_thirst_red");
+        }
+    }
+
 // Armor broken icon
 	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 	m_ind_outfit_broken->Show(false);

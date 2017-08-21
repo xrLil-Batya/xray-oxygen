@@ -60,6 +60,10 @@ public:
 	u32					uTime2Change;
 	EVENT				eDemoStart;
 
+    //#REFACTOR: [Giperion] enable thirst only if we want to
+    bool                m_useThirst;
+
+
 						CGamePersistent			();
 	virtual				~CGamePersistent		();
 
