@@ -3,7 +3,6 @@
 #include "net_client.h"
 #include "net_server.h"
 #include "net_messages.h"
-#include "NET_Log.h"
 
 //#include "../xrGameSpy/xrGameSpy_MainDefs.h"
 
@@ -109,9 +108,7 @@ const GUID CLSID_DirectPlay8Address =
 const GUID IID_IDirectPlay8Address =
 { 0x83783300, 0x4063, 0x4c8a, { 0x9d, 0xb3, 0x82, 0x83, 0x0a, 0x7f, 0xeb, 0x31 } };
 
-static	INetLog* pClNetLog = NULL; 
-
-void	dump_URL	(LPCSTR p, IDirectPlay8Address* A)
+void dump_URL(LPCSTR p, IDirectPlay8Address* A)
 {
 	string256	aaaa;
 	DWORD		aaaa_s			= sizeof(aaaa);
@@ -286,13 +283,10 @@ IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
     MSYS_PING*    cfg = (MSYS_PING*)data;
 	net_Statistic.dwBytesReceived += data_size;
 
-	if(     (data_size>=2*sizeof(u32)) 
-	    &&  (cfg->sign1==0x12071980) 
-	    &&  (cfg->sign2==0x26111975)
-	  )
+	if((data_size>=2*sizeof(u32)) && (cfg->sign1==0x12071980) && (cfg->sign2==0x26111975))
 	{
 		// Internal system message
-		if( (data_size == sizeof(MSYS_PING)) )
+		if((data_size == sizeof(MSYS_PING)))
 		{
 			// It is reverted(server) ping
 			u32		    time	= TimerAsync( device_timer );
@@ -304,7 +298,7 @@ IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
 			return;
 		}
 		
-		if ( data_size == sizeof(MSYS_CONFIG) )
+		if (data_size == sizeof(MSYS_CONFIG))
 		{
 			net_Connected = EnmConnectionCompleted;
 			return;
@@ -312,26 +306,16 @@ IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
 		Msg( "! Unknown system message" );
 		return;
 	} 
-	else if( net_Connected == EnmConnectionCompleted )
+	else if(net_Connected == EnmConnectionCompleted)
 	{
 		// one of the messages - decompress it
-
-		if( psNET_Flags.test( NETFLAG_LOG_CL_PACKETS ) ) 
-		{
-			if( !pClNetLog ) 
-				pClNetLog = xr_new<INetLog>("logs\\net_cl_log.log", timeServer());
-			    
-			if( pClNetLog ) 
-				pClNetLog->LogData( timeServer(), const_cast<void*>(data), data_size, TRUE );
-		}
-
-		OnMessage( const_cast<void*>(data), data_size );
+		OnMessage(const_cast<void*>(data), data_size);
 	}
 }
 
 //==============================================================================
 
-IPureClient::IPureClient	(CTimer* timer): net_Statistic(timer)
+IPureClient::IPureClient(CTimer* timer): net_Statistic(timer)
 {
 	NET						= NULL;
 	net_Address_server		= NULL;
@@ -341,14 +325,10 @@ IPureClient::IPureClient	(CTimer* timer): net_Statistic(timer)
 	net_Time_LastUpdate		= 0;
 	net_TimeDelta			= 0;
 	net_TimeDelta_Calculated = 0;
-
-	pClNetLog = NULL;//xr_new<INetLog>("logs\\net_cl_log.log", timeServer());
-
 }
 
-IPureClient::~IPureClient	()
+IPureClient::~IPureClient()
 {
-	xr_delete(pClNetLog); pClNetLog = nullptr;
 }
 
 BOOL IPureClient::Connect(LPCSTR)
@@ -563,16 +543,8 @@ void	IPureClient::timeServer_Correct(u32 sv_time, u32 cl_time)
 
 void	IPureClient::SendTo_LL(void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
-	if( net_Disconnected )	
-	    return;
+	if(net_Disconnected) return;
 
-	if( psNET_Flags.test(NETFLAG_LOG_CL_PACKETS) ) 
-	{
-		if( !pClNetLog) 
-		    pClNetLog = xr_new<INetLog>( "logs\\net_cl_log.log", timeServer() );
-		if( pClNetLog ) 
-		    pClNetLog->LogData( timeServer(), data, size );
-	}
 	DPN_BUFFER_DESC				desc;
 
 	desc.dwBufferSize   = size;
@@ -588,32 +560,28 @@ void	IPureClient::SendTo_LL(void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 
     DPNHANDLE	hAsync  = 0;
 	HRESULT		hr      = NET->Send( &desc, 1, dwTimeout, 0, &hAsync, dwFlags | DPNSEND_COALESCE );
-		
-//	Msg("- Client::SendTo_LL [%d]", size);
-	if( FAILED(hr) )	
+	
+	if(FAILED(hr))	
 	{
 		Msg	("! ERROR: Failed to send net-packet, reason: %s",::Debug.error2string(hr));
-//		const char* x = DXGetErrorString9(hr);
 		DXTRACE_ERR(L"", hr);
 	}
-
-//	UpdateStatistic();
 }
 
-void	IPureClient::Send( NET_Packet& packet, u32 dwFlags, u32 dwTimeout )
+void IPureClient::Send( NET_Packet& packet, u32 dwFlags, u32 dwTimeout )
 {
     MultipacketSender::SendPacket( packet.B.data, packet.B.count, dwFlags, dwTimeout );
 }
 
-void	IPureClient::Flush_Send_Buffer		()
+void IPureClient::Flush_Send_Buffer		()
 {
     MultipacketSender::FlushSendBuffer( 0 );
 }
 
-BOOL	IPureClient::net_HasBandwidth()
+BOOL IPureClient::net_HasBandwidth()
 {
-	u32		dwTime = TimeGlobal(device_timer);
-	u32		dwInterval = 0;
+	u32 dwTime = TimeGlobal(device_timer);
+	u32 dwInterval = 0;
 	if (net_Disconnected) return FALSE;
 
 	if (psNET_ClientUpdate) 
