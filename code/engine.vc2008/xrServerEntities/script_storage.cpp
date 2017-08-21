@@ -63,7 +63,7 @@ static LPVOID __cdecl luabind_allocator(luabind::memory_allocation_function_para
 
 	if (!pointer) 
 	{
-#ifdef DEBUG
+#ifdef DEBUG_MEMORY_NAME
 		return	(Memory.mem_alloc(size, "luabind"));
 #else // #ifdef DEBUG
 		return	(Memory.mem_alloc(size));
@@ -71,7 +71,7 @@ static LPVOID __cdecl luabind_allocator(luabind::memory_allocation_function_para
 	}
 
 	LPVOID		non_const_pointer = const_cast<LPVOID>(pointer);
-#ifdef DEBUG
+#ifdef DEBUG_MEMORY_NAME
 	return		(Memory.mem_realloc(non_const_pointer, size, "luabind"));
 #else // #ifdef DEBUG
 	return		(Memory.mem_realloc(non_const_pointer, size));
@@ -439,7 +439,7 @@ bool CScriptStorage::load_buffer(lua_State *L, const char* caBuffer, size_t tSiz
 			if (total_size < 768 * 1024)
 				script = (LPSTR)_alloca(total_size);
 			else {
-#ifdef DEBUG
+#ifdef DEBUG_MEMORY_NAME
 				script = (LPSTR)Memory.mem_alloc(total_size, "lua script file");
 #else //#ifdef DEBUG
 				script = (LPSTR)Memory.mem_alloc(total_size);
@@ -451,7 +451,7 @@ bool CScriptStorage::load_buffer(lua_State *L, const char* caBuffer, size_t tSiz
 		{
 			int							errcode = _resetstkoflw();
 			R_ASSERT2(errcode, "Could not reset the stack after \"Stack overflow\" exception!");
-#ifdef DEBUG
+#ifdef DEBUG_MEMORY_NAME
 			script = (LPSTR)Memory.mem_alloc(total_size, "lua script file (after exception)");
 #else //#ifdef DEBUG
 			script = (LPSTR)Memory.mem_alloc(total_size);
