@@ -2,10 +2,9 @@
 #include "uiwindow.h"
 
 
-class CUIFrameWindow: public CUIWindow,
-					  public ITextureOwner
+class CUIFrameWindow: public CUIWindow, public ITextureOwner
 {
-	typedef CUIWindow inherited;
+	using inherited = CUIWindow;
 public:
 					CUIFrameWindow				();
 

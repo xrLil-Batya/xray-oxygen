@@ -15,13 +15,8 @@
 #include "../../xrServerEntities/alife_space.h"
 #include "xrUIXmlParser.h"
 
-class CUIStatic;
 class CUITextWnd;
-class CUIXml;
-class CUIProgressBar;
-class CUIFrameLineWnd;
 class CUIFrameWindow;
-class CUICharacterInfo;
 class CUIScrollView;
 class CUI3tButton;
 class CUICheckButton;
@@ -37,14 +32,9 @@ private:
 	CUIFrameWindow*		m_center_background;
 
 	CUITextWnd*			m_center_caption;
-//	CUICharacterInfo*	m_actor_ch_info;
-
 	CUICheckButton*		m_filter_news;
 	CUICheckButton*		m_filter_talk;
 	
-//	CUITextWnd*			m_date_caption;
-//	CUITextWnd*			m_date;
-
 	CUITextWnd*			m_period_caption;
 	CUITextWnd*			m_period;
 
@@ -64,7 +54,6 @@ private:
 
 	CUIWindow*			CreateItem			();
 	CUIWindow*			ItemFromCache		();
-//	void				ItemToCache			(CUIWindow* w);
 	CUIXml				m_uiXml;
 
 public:
@@ -93,13 +82,6 @@ protected:
 			void xr_stdcall	NextPeriod		( CUIWindow* w, void* d);
 	
 			void 		on_scroll_keys		( int dik );
-
-/*
-protected:
-	void		add_faction			( CUIXml& xml, shared_str const& faction_id );
-	void		clear_all_factions		();
-	bool	__stdcall	SortingLessFunction		( CUIWindow* left, CUIWindow* right );
-*/
 }; // class CUILogsWnd
 
 #endif // UI_PDA_LOGS_WND_H_INCLUDED

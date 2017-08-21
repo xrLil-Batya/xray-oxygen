@@ -38,7 +38,6 @@ u64 const day2ms			= u64( 24 * 60 * 60 * 1000 );
 
 CUILogsWnd::CUILogsWnd()
 {
-//	m_actor_ch_info			= NULL;
 	m_previous_time			= Device.dwTimeGlobal;
 	m_selected_period		= 0;
 }
@@ -55,14 +54,10 @@ void CUILogsWnd::Show( bool status )
 	m_ctrl_press = false;
 	if ( status )
 	{
-		//ALife::_TIME_ID	current_period = m_selected_period;
-//		m_actor_ch_info->InitCharacter( Actor()->object_id() );
-		m_selected_period = GetShiftPeriod( Level().GetGameTime(), 0 );
-//		if(current_period != m_selected_period)
+		m_selected_period = GetShiftPeriod(Level().GetGameTime(), 0);
 		m_need_reload = true;
 		Update();
 	}
-	//InventoryUtilities::SendInfoToActor("ui_pda_news_hide");
 	inherited::Show( status );
 }
 
@@ -96,16 +91,9 @@ void CUILogsWnd::Init()
 
 	CUIXmlInit::InitWindow( m_uiXml, "main_wnd", 0, this );
 
-//	m_background		= UIHelper::CreateFrameLine( m_uiXml, "background", this );
 	m_background				= UIHelper::CreateFrameWindow(m_uiXml, "background", this);
 	m_center_background			= UIHelper::CreateFrameWindow(m_uiXml, "center_background", this);
 	
-	//m_actor_ch_info = xr_new<CUICharacterInfo>();
-	//m_actor_ch_info->SetAutoDelete( true );
-	//AttachChild( m_actor_ch_info );
-	//m_actor_ch_info->InitCharacterInfo( &m_uiXml, "actor_ch_info" );
-
-//	m_center_background	= UIHelper::CreateStatic( m_uiXml, "center_background", this );
 	m_center_caption	= UIHelper::CreateTextWnd( m_uiXml, "center_caption", this );
 
 	string256 buf;
@@ -118,16 +106,10 @@ void CUILogsWnd::Init()
 	m_list->SetAutoDelete( true );
 	AttachChild( m_list );
 	CUIXmlInit::InitScrollView( m_uiXml, "logs_list", 0, m_list);
-//	m_list->SetWindowName("---logs_list");
-//	m_logs_list->m_sort_function = fastdelegate::MakeDelegate( this, &CUIRankingWnd::SortingLessFunction );
-
 	m_filter_news = UIHelper::CreateCheck( m_uiXml, "filter_news", this );
 	m_filter_talk = UIHelper::CreateCheck( m_uiXml, "filter_talk", this );
 	m_filter_news->SetCheck( true );
 	m_filter_talk->SetCheck( true );
-
-//	m_date_caption = UIHelper::CreateTextWnd( m_uiXml, "date_caption", this );
-//	m_date         = UIHelper::CreateTextWnd( m_uiXml, "date", this );
 
 	m_period_caption = UIHelper::CreateTextWnd( m_uiXml, "period_caption", this );
 	m_period         = UIHelper::CreateTextWnd( m_uiXml, "period", this );
@@ -183,27 +165,26 @@ void CUILogsWnd::ReLoadNews()
 	
 	GAME_NEWS_VECTOR::iterator ib = news_vector.begin();
 	GAME_NEWS_VECTOR::iterator ie =	news_vector.end();
-	for ( u32 idx=0; ib != ie; ++ib,++idx )
+	for (u32 idx=0; ib != ie; ++ib,++idx )
 	{
 		bool add = false;
 		GAME_NEWS_DATA& gn = (*ib);
-		if ( gn.m_type == GAME_NEWS_DATA::eNews && filter_news )
+		if (gn.m_type == GAME_NEWS_DATA::eNews && filter_news)
 		{
 			add = true;
 		}
-		else if ( gn.m_type == GAME_NEWS_DATA::eTalk && filter_talk )
+		else if (gn.m_type == GAME_NEWS_DATA::eTalk && filter_talk)
 		{
 			add = true;
 		}
-		if ( gn.receive_time < m_selected_period || end_period < gn.receive_time )
+		if (gn.receive_time < m_selected_period || end_period < gn.receive_time)
 		{
 			add = false;
 		}
 
-		if ( add )
+		if (add)
 		{
 			m_news_in_queue.push_back(idx);
-//			++currentNews;
 		}
 	}
 	m_need_reload = false;
@@ -242,13 +223,6 @@ CUIWindow*	CUILogsWnd::CreateItem()
 	itm_res->Init(m_uiXml, "logs_item");
 	return itm_res;
 }
-
-//void CUILogsWnd::ItemToCache(CUIWindow* w)
-//{
-//	CUINewsItemWnd* itm = smart_cast<CUINewsItemWnd*>(w);
-//	VERIFY				(w);
-//	m_items_cache.push_back(itm);
-//}
 
 CUIWindow* CUILogsWnd::ItemFromCache()
 {

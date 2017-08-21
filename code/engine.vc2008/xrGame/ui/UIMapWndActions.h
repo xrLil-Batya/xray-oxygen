@@ -3,13 +3,10 @@
 #include "../property_evaluator_const.h"
 
 class CUIMapWnd;
-class CUICustomMap;
-class CUILevelMap;
-
-
-class CMapActionPlanner :public CActionPlanner<CUIMapWnd,true> {
+class CMapActionPlanner :public CActionPlanner<CUIMapWnd,true>
+{
 private:
-	typedef CActionPlanner<CUIMapWnd,true> inherited;
+	using inherited = CActionPlanner<CUIMapWnd,true>;
 
 public:
 					CMapActionPlanner	();

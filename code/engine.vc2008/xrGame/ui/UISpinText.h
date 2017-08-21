@@ -23,13 +23,17 @@ protected:
 	virtual void	IncVal			(){};
 	virtual void	DecVal			(){};
 			void	SetItem			(int v);
-			struct SInfo{
-				shared_str	_orig;
-				shared_str	_transl;
-				int			_id;
-			};
-	typedef xr_vector< SInfo >		Items;
-	typedef Items::iterator			Items_it;
+			
+	struct SInfo
+	{
+		shared_str	_orig;
+		shared_str	_transl;
+		int			_id;
+	};
+			
+protected:
+	using Items = xr_vector<SInfo>;
+	using Items_it = Items::iterator;
 
     Items	m_list;
 	int		m_curItem;

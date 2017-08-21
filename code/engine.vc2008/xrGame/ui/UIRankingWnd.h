@@ -8,13 +8,10 @@
 #pragma once
 #include "UIWindow.h"
 #include "UIWndCallback.h"
-//#include "UIRankFaction.h"
 #include "UIAchievements.h"
 
 class CUIStatic;
 class CUIXml;
-class CUIProgressBar;
-class CUIFrameLineWnd;
 class CUIFrameWindow;
 class CUICharacterInfo;
 class CUIScrollView;
@@ -22,7 +19,7 @@ class CUIScrollView;
 class CUIRankingWnd : public CUIWindow, public CUIWndCallback
 {
 private:
-	typedef CUIWindow	inherited;
+	using inherited = CUIWindow;
 
 	CUIFrameWindow*		m_background;
 	CUIFrameWindow*		m_down_background;

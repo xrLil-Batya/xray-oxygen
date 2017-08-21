@@ -5,8 +5,6 @@
 #include "../../xrServerEntities/alife_space.h"
 #include "../EntityCondition.h"
 
-class	CUIPdaMsgListItem;
-class	CLAItem;
 class	CUIZoneMap;
 class	CUIScrollView;
 struct	GAME_NEWS_DATA;
@@ -74,20 +72,16 @@ public:
 	CUITextWnd*			m_QuickSlotText4;
 
 protected:
-
-	// 5 статиков для отображения иконок:
+	///#TODO: [FX] Check this code
+	// 3 статиков для отображения иконок:
 	// - сломанного оружия(only mp)
 	// - радиации
 	// - ранения
 	// - голода
 	// - усталости
 	CUIStatic*			UIWeaponJammedIcon;
-//	CUIStatic			UIRadiaitionIcon;
-//	CUIStatic			UIWoundIcon;
-//	CUIStatic			UIStarvationIcon;
-//	CUIStatic			UIPsyHealthIcon;
+	
 	CUIStatic*			UIInvincibleIcon;
-//	CUIStatic			UISleepIcon;
 	CUIStatic*			UIArtefactIcon;
 
 	CUIScrollView*		m_UIIcons;
@@ -101,11 +95,6 @@ public:
 	{
 		ewiAll				= 0,
 		ewiWeaponJammed,
-//		ewiRadiation,
-//		ewiWound,
-//		ewiStarvation,
-//		ewiPsyHealth,
-//		ewiSleep,
 		ewiInvincible,
 		ewiArtefact,
 	};
@@ -117,8 +106,8 @@ public:
 	void				TurnOffWarningIcon				(EWarningIcons icon);
 
 	// Пороги изменения цвета индикаторов, загружаемые из system.ltx
-	typedef				xr_map<EWarningIcons, xr_vector<float> >	Thresholds;
-	typedef				Thresholds::iterator						Thresholds_it;
+	using Thresholds = xr_map<EWarningIcons, xr_vector<float>>;
+	using Thresholds_it = Thresholds::iterator;
 	Thresholds			m_Thresholds;
 
 	// Енум перечисления возможных мигающих иконок
@@ -143,16 +132,10 @@ protected:
 	void				InitFlashingIcons				(CUIXml* node);
 	void				DestroyFlashingIcons			();
 	void				UpdateFlashingIcons				();
-//	void				UpdateActiveItemInfo			();
-
-//	void				SetAmmoIcon						(const shared_str& seсt_name);
-
+	
 	// first - иконка, second - анимация
 	using FlashingIcons = xr_map<EFlashingIcons, CUIStatic*>;
 	FlashingIcons		m_FlashingIcons;
-
-//	CMissile*			m_pGrenade;
-//	CInventoryItem*		m_pItem;
 
 	// Отображение подсказок при наведении прицела на объект
 	void				RenderQuickInfos();

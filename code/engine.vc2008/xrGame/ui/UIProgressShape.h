@@ -1,10 +1,8 @@
 #pragma once
-
 #include "UIStatic.h"
 
-class CUIStatic;
-
-class CUIProgressShape : public CUIStatic {
+class CUIProgressShape : public CUIStatic 
+{
 friend class CUIXmlInit;
 public:
 						CUIProgressShape		();

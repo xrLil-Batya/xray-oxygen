@@ -1,6 +1,4 @@
-#ifndef	UI_ARROW_H_INCLUDED
-#define UI_ARROW_H_INCLUDED
-
+#pragma once
 #include "UIStatic.h"
 
 class UI_Arrow: public CUIStatic
@@ -27,5 +25,3 @@ private:
 	float		m_pos;
 
 }; // class UI_Arrow
-
-#endif // UI_ARROW_H_INCLUDED

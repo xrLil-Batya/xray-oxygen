@@ -4,10 +4,7 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI Secondary Task Wnd class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_SECOND_TASK_WND_H_INCLUDED
-#define UI_SECOND_TASK_WND_H_INCLUDED
-
+#pragma once
 #include "UIWindow.h"
 #include "UIWndCallback.h"
 
@@ -48,7 +45,6 @@ protected:
 	void xr_stdcall	OnBtnClose			( CUIWindow* w, void* d);
 	bool xr_stdcall	SortingLessFunction	( CUIWindow* left, CUIWindow* right );
 
-//			void	UpdateCounter		();
 public:
 	UIHint*				hint_wnd;
 
@@ -57,10 +53,8 @@ private: // m_
 	CUIScrollView*		m_list;
 	
 	CUIStatic*			m_caption;
-//	CUIStatic*			m_counter;
 	CUI3tButton*		m_bt_close;
 
-//	u32					m_activ_task_count;
 	float				m_orig_h;
 
 }; // class UITaskListWnd
@@ -111,5 +105,3 @@ private: // m_
 	u32				m_color_states[stt_count];
 
 }; // class UITaskListWndItem
-
-#endif // UI_SECOND_TASK_WND_H_INCLUDED

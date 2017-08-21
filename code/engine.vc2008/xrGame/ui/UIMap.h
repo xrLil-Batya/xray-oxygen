@@ -59,7 +59,7 @@ protected:
 
 class CUIGlobalMap: public CUICustomMap
 {
-	typedef  CUICustomMap inherited;
+	using inherited = CUICustomMap;
 
 	shared_str		m_prev_active_map;
 	CUIMapWnd*		m_mapWnd;

@@ -1,5 +1,4 @@
 #pragma once
-
 #include "UIDialogWnd.h"
 #include "../../xrServerEntities/script_space_forward.h"
 #include "../../xrScripts/export/script_export_space.h"
@@ -8,9 +7,8 @@ struct SCallbackInfo;
 
 class CUIDialogWndEx :public CUIDialogWnd, public DLL_Pure
 {
-typedef CUIDialogWnd				inherited;
-typedef xr_vector<SCallbackInfo*>	CALLBACKS;
-typedef CALLBACKS::iterator			CALLBACK_IT;
+	using inherited = CUIDialogWnd;
+	using CALLBACKS = xr_vector<SCallbackInfo*>;
 
 private:
 			CALLBACKS			m_callbacks;
@@ -29,9 +27,6 @@ public:
 	virtual void				Update				();
 	virtual bool				OnKeyboardAction			(int dik, EUIMessages keyboard_action);
 	virtual bool				Dispatch			(int cmd, int param)				{return true;}
-/*
-template<typename T>
-IC	T*	GetControl(LPCSTR name);
-*/
+	
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

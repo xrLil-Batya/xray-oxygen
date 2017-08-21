@@ -4,12 +4,11 @@
 #include "uibutton.h"
 #include "../../xrScripts/export/script_export_space.h"
 
-class CUIProgressBar : public CUIWindow
+class CUIProgressBar: public CUIWindow
 {
-	friend class		CUIXmlInit;
-	typedef CUIWindow	inherited;
+	friend class CUIXmlInit;
+	using inherited = CUIWindow;
 protected:
-//	bool				m_bIsHorizontal;
 	enum EOrientMode
 	{
 		om_horz = 0,
@@ -40,10 +39,8 @@ public:
 	CUIStatic			m_UIProgressItem;
 	CUIStatic			m_UIBackgroundItem;
 
-
 						CUIProgressBar				();
 	virtual				~CUIProgressBar				();
-
 
 			void		InitProgressBar				(Fvector2 pos, Fvector2 size, EOrientMode mode);
 
