@@ -1,5 +1,5 @@
 #pragma once
-#include "UILanimController.h.h"
+#include "UILanimController.h"
 
 class CUIPdaMsgListItem : public CUIColorAnimConrollerContainer
 {
