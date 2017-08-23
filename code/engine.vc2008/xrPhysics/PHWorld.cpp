@@ -10,9 +10,7 @@
 #include "../xrEngine/gamemtllib.h"
 //#include "PhysicsGamePars.h"
 #include "params.h"
-#ifdef    DEBUG
-#	include "debug_output.h"
-#endif
+#include "debug_output.h"
 //#include "PHCommander.h"
 //#include "PHSimpleCalls.h"
 #include "../xrserverentities/PHSynchronize.h"
@@ -23,16 +21,6 @@
 #include "../xrengine/defines.h"
 #include "../xrcdb/xr_area.h"
 #include "../xrcore/fs_internal.h"
-#ifdef	DEBUG
-//				void DBG_ObjAfterPhDataUpdate	( CPHObject *obj );
-//				void DBG_ObjBeforePhDataUpdate	( CPHObject *obj );
-//				void DBG_ObjAfterStep			( CPHObject *obj );
-//				void DBG_ObjBeforeStep			( CPHObject *obj );
-//				void DBG_ObjeAfterPhTune		( CPHObject *obj );
-//				void DBG_ObjBeforePhTune		( CPHObject *obj );
-//				void DBG_ObjAfterCollision		( CPHObject *obj );
-//				void DBG_ObjBeforeCollision		( CPHObject *obj );
-#endif
 //////////////////////////////////////////////////////////////
 //////////////CPHMesh///////////////////////////////////////////
 ///////////////////////////////////////////////////////////
@@ -112,14 +100,12 @@ void CPHMesh ::Destroy(){
 dGeomID plane;
 #endif
 
-#ifdef DEBUG 
 
 void CPHWorld::OnRender()
 {
 
 	debug_output().PH_DBG_Render();
 }
-#endif
 
 static struct sempty_update_callback:
 public IPHWorldUpdateCallbck

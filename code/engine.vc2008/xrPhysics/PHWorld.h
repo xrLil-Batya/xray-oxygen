@@ -30,9 +30,7 @@ class	CObjectList;
 class CPHWorld	:	public	pureFrame,
 					public	IPHWorld,
 					public	cphysics_scripted
-					#ifdef DEBUG
 					, public pureRender
-					#endif
 {
 	double						m_start_time												;
 	u32							m_delay														;
@@ -127,9 +125,7 @@ ContactCallbackFun				*default_character_contact_shotmark()						{ return m_defa
 	CRenderDeviceBase			&Device							()							{ VERIFY( m_device ); return *m_device;	}
 	
 //	void						AddCall							(CPHCondition*c,CPHAction*a);
-#ifdef DEBUG
 	virtual void 				OnRender						()							;
-#endif
 	virtual void	_BCL		OnFrame							()							;
 private:
 	void						StepNumIterations				( int num_it )				;

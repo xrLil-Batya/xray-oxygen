@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 //#include "stdafx.h"
-#include "pch_script.h"
+#include "stdafx.h"
 #include "inventory_item_object.h"
 
 

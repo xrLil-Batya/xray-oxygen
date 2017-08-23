@@ -2619,9 +2619,6 @@
     <ClInclude Include="script_world_property.h">
       <Filter>AI\AComponents\ProblemSolver\operator_condition\ScriptWorldProperty</Filter>
     </ClInclude>
-    <ClInclude Include="script_world_property_inline.h">
-      <Filter>AI\AComponents\ProblemSolver\operator_condition\ScriptWorldProperty</Filter>
-    </ClInclude>
     <ClInclude Include="setup_manager.h">
       <Filter>AI\AComponents\SetupManager</Filter>
     </ClInclude>
@@ -4317,9 +4314,6 @@
     <ClInclude Include="stalker_animation_state.h">
       <Filter>AI\AMonsters\humans\stalker\AnimationManager\state</Filter>
     </ClInclude>
-    <ClInclude Include="stalker_animation_state_inline.h">
-      <Filter>AI\AMonsters\humans\stalker\AnimationManager\state</Filter>
-    </ClInclude>
     <ClInclude Include="cover_evaluators.h">
       <Filter>AI\AMonsters\humans\stalker\CoverEvaluators</Filter>
     </ClInclude>
@@ -4387,9 +4381,6 @@
       <Filter>AI\AMonsters\humans\stalker\DecisionMaker\actions\combat\search_planner\actions</Filter>
     </ClInclude>
     <ClInclude Include="stalker_danger_planner.h">
-      <Filter>AI\AMonsters\humans\stalker\DecisionMaker\actions\danger</Filter>
-    </ClInclude>
-    <ClInclude Include="stalker_danger_planner_inline.h">
       <Filter>AI\AMonsters\humans\stalker\DecisionMaker\actions\danger</Filter>
     </ClInclude>
     <ClInclude Include="stalker_danger_unknown_planner.h">
@@ -4476,9 +4467,6 @@
     <ClInclude Include="smart_cover_animation_planner.h">
       <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner</Filter>
     </ClInclude>
-    <ClInclude Include="smart_cover_animation_planner_inline.h">
-      <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner</Filter>
-    </ClInclude>
     <ClInclude Include="smart_cover_planner_actions.h">
       <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\cover_actions</Filter>
     </ClInclude>
@@ -4486,9 +4474,6 @@
       <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\cover_actions</Filter>
     </ClInclude>
     <ClInclude Include="smart_cover_loophole_planner_actions.h">
-      <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\loophole_actions</Filter>
-    </ClInclude>
-    <ClInclude Include="smart_cover_loophole_planner_actions_inline.h">
       <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\loophole_actions</Filter>
     </ClInclude>
     <ClInclude Include="smart_cover_planner_target_selector.h">
@@ -4953,9 +4938,6 @@
     <ClInclude Include="script_particles.h">
       <Filter>AI\AScript\ScriptClasses\ScriptParticles</Filter>
     </ClInclude>
-    <ClInclude Include="script_particles_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptParticles</Filter>
-    </ClInclude>
     <ClInclude Include="script_sound.h">
       <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
     </ClInclude>
@@ -5005,12 +4987,6 @@
       <Filter>AI\ASpace</Filter>
     </ClInclude>
     <ClInclude Include="bone_utils.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\pch_script.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="StdAfx.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="CameraFirstEye.h">
@@ -6093,18 +6069,6 @@
     <ClInclude Include="ui\UITaskWnd.h">
       <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClInclude>
-    <ClInclude Include="ui\FactionState.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\FactionState_inline.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIFactionWarWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIWarState.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UILogsWnd.h">
       <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\logs</Filter>
     </ClInclude>
@@ -6134,9 +6098,6 @@
     </ClInclude>
     <ClInclude Include="ui\UITalkWnd.h">
       <Filter>AI\AScript\ScriptClasses\UI\Common\TALK</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UICarPanel.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIHudStatesWnd.h">
       <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
@@ -6307,9 +6268,6 @@
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITrackBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UITrackButton.h">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollView.h">
@@ -6599,6 +6557,9 @@
     </ClInclude>
     <ClInclude Include="fire_disp_controller.h">
       <Filter>Core\Client\Objects\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="stdafx.h">
+      <Filter>Core</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7991,12 +7952,6 @@
     <ClCompile Include="ai_space.cpp">
       <Filter>AI\ASpace</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\pch_script.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="StdAfx.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="CameraFirstEye.cpp">
       <Filter>Core\Client\Cameras</Filter>
     </ClCompile>
@@ -9074,15 +9029,6 @@
     <ClCompile Include="ui\UITaskWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClCompile>
-    <ClCompile Include="ui\FactionState.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIFactionWarWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIWarState.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UILogsWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\logs</Filter>
     </ClCompile>
@@ -9112,9 +9058,6 @@
     </ClCompile>
     <ClCompile Include="ui\UITalkWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\TALK</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UICarPanel.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIHudStatesWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
@@ -9324,9 +9267,6 @@
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITrackBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UITrackButton.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollView.cpp">
@@ -9645,6 +9585,9 @@
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
     <ClCompile Include="raypick.cpp" />
+    <ClCompile Include="stdafx.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">
@@ -9661,9 +9604,6 @@
     </CustomBuildStep>
     <CustomBuildStep Include="Explosive.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Explosives</Filter>
-    </CustomBuildStep>
-    <CustomBuildStep Include="ui\UIRankFaction.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </CustomBuildStep>
   </ItemGroup>
 </Project>

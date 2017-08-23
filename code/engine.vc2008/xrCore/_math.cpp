@@ -139,12 +139,7 @@ namespace FPU
 
 namespace CPU 
 {
-	XRCORE_API u64 qpc_freq = []
-	{ 
-		u64 result;
-		QueryPerformanceCounter(PLARGE_INTEGER(&result));
-		return result; 
-	}();
+    XRCORE_API u64 qpc_freq;
 	
 	XRCORE_API u32				qpc_counter		= 0	;
 	
@@ -257,6 +252,10 @@ void _initialize_cpu	(void)
 
 	Msg("* CPU features: %s" , features );
 	Msg("* CPU cores/threads: %d/%d \n", CPU::ID.n_cores, CPU::ID.n_threads);
+
+    LARGE_INTEGER Freq;
+    QueryPerformanceFrequency(&Freq);
+    CPU::qpc_freq = Freq.QuadPart;
 
 	Fidentity.identity		();	// Identity matrix
 	Didentity.identity		();	// Identity matrix

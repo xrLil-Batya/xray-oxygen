@@ -6,7 +6,7 @@
 //	Description : XRay Script Engine
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "script_engine.h"
 #include "ai_space.h"
 #include "object_factory.h"
@@ -218,18 +218,18 @@ void CScriptEngine::setup_callbacks		()
 #	endif // #ifndef USE_LUA_STUDIO
 #endif
 	{
-#if !XRAY_EXCEPTIONS
-		luabind::set_error_callback		(CScriptEngine::lua_error);
-#endif
+// #if !XRAY_EXCEPTIONS
+// 		luabind::set_error_callback		(CScriptEngine::lua_error);
+// #endif
 
 #ifndef MASTER_GOLD
 		luabind::set_pcall_callback		(CScriptEngine::lua_pcall_failed);
 #endif // MASTER_GOLD
 	}
 
-#if !XRAY_EXCEPTIONS
-	luabind::set_cast_failed_callback	(lua_cast_failed);
-#endif
+// #if !XRAY_EXCEPTIONS
+// 	luabind::set_cast_failed_callback	(lua_cast_failed);
+// #endif
 	lua_atpanic							(lua(),CScriptEngine::lua_panic);
 }
 

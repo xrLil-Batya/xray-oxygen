@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#ifdef	DEBUG
+#include "dump_string.h"
 std::string get_string( const Fvector& v )
 {
 	return make_string	("( %f, %f, %f )", v.x, v.y, v.z );
@@ -51,5 +51,3 @@ void dump( const char* name, const Fmatrix &form )
 	//Msg( "%s, _34_=%f ", dump_string( make_string( "%s.k, ", name ).c_str(), form.k ).c_str( ) , form._34_  );  
 	//Msg( "%s, _44_=%f ", dump_string( make_string( "%s.c, ", name ).c_str(), form.c ).c_str( ) , form._44_ );  
 }
-
-#endif

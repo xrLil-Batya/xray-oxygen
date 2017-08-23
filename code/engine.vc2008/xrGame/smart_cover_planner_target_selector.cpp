@@ -5,7 +5,7 @@
 //	Description : Target selector for smart covers animation planner
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "smart_cover_planner_target_selector.h"
 #include "smart_cover_animation_planner.h"
 #include "script_game_object.h"

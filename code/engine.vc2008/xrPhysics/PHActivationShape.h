@@ -12,9 +12,7 @@ dGeomID					m_geom																																							;
 Flags16					m_flags																																							;
 CSafeFixedRotationState m_safe_state																																					;			
 
-#ifdef		DEBUG
 virtual		IPhysicsShellHolder	*ref_object					();
-#endif
 
 public:
 enum					EType

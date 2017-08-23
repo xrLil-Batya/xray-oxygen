@@ -1,7 +1,4 @@
 #include "stdafx.h"
-
-#ifdef DEBUG
-
 #include "dxObjectSpaceRender.h"
 
 dxObjectSpaceRender::dxObjectSpaceRender()
@@ -58,4 +55,3 @@ void dxObjectSpaceRender::SetShader()
 	RCache.set_Shader(m_shDebug);
 }
 
-#endif // DEBUG

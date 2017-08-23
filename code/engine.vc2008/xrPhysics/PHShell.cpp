@@ -1707,7 +1707,6 @@ void		CPHShell::	AnimatorOnFrame		()
 
 
 
-#ifdef DEBUG
 
 void		CPHShell::		dbg_draw_velocity				( float scale, u32 color )
 {
@@ -1733,4 +1732,3 @@ void CPHShell::dbg_draw_geometry	( float scale, u32 color, Flags32 flags /*= Fla
 		(*i)->dbg_draw_geometry( scale, color, flags );
 }
 
-#endif

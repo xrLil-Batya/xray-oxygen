@@ -5,7 +5,7 @@
 //	Description : Smart cover class
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "smart_cover.h"
 #include "smart_cover_storage.h"
 #include "smart_cover_object.h"

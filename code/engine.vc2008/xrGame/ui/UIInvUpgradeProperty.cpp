@@ -6,7 +6,7 @@
 //	Description : inventory upgrade property UIWindow class implementation
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "UIInvUpgradeProperty.h"
 #include "UIInvUpgradeInfo.h"
 

@@ -63,7 +63,6 @@ public:
 
 	void on_dbg_render();
 
-	#if DEBUG 
 	struct pixel_box
 	{
 		Fvector center;
@@ -71,8 +70,6 @@ public:
 		float	z;
 	}  dbg_pixel_boxes [occ_dim_0*occ_dim_0];
 	bool dbg_HOM_draw_initialized;
-	
-	#endif
 	
 	occRasterizer	();
 	~occRasterizer	();

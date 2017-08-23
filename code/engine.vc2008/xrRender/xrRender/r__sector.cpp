@@ -15,19 +15,14 @@
 //////////////////////////////////////////////////////////////////////
 CPortal::CPortal		()
 {
-#ifdef DEBUG
 	Device.seqRender.Add(this,REG_PRIORITY_LOW-1000);
-#endif
 }
 
 CPortal::~CPortal		()
 {
-#ifdef DEBUG
 	Device.seqRender.Remove(this);
-#endif
 }
 
-#ifdef DEBUG
 void CPortal::OnRender	()
 {
 	if (psDeviceFlags.is(rsOcclusionDraw)){
@@ -61,7 +56,6 @@ void CPortal::OnRender	()
 		}
 	}
 }
-#endif
 //
 void	CPortal::Setup	(Fvector* V, int vcnt, CSector* face, CSector* back)
 {

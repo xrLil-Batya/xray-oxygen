@@ -222,9 +222,7 @@ public:
 	void 				FillProp		(PropItemVec& values);
     void				TransferFromParent(SGameMtlPair* parent);
 #endif
-#ifdef DEBUG
 	LPCSTR				dbg_Name		();
-#endif
 };
 
 using GameMtlPairVec = xr_vector<SGameMtlPair*>;

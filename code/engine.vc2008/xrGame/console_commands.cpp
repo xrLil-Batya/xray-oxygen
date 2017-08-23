@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "../xrEngine/xr_ioconsole.h"
 #include "../xrEngine/xr_ioc_cmd.h"
 #include "../xrEngine/customhud.h"
@@ -178,7 +178,7 @@ public:
 		full_memory_stats( );
 	}
 };
-#ifdef DEBUG
+#ifdef DEBUG_MEMORY_NAME
 class CCC_MemCheckpoint : public IConsole_Command
 {
 public:
@@ -1697,7 +1697,7 @@ void CCC_RegisterCommands()
 	// options
 
 	CMD1(CCC_MemStats,			"stat_memory"			);
-#ifdef DEBUG
+#ifdef DEBUG_MEMORY_NAME
 	CMD1(CCC_MemCheckpoint,		"stat_memory_checkpoint");
 #endif //#ifdef DEBUG	
 	// game

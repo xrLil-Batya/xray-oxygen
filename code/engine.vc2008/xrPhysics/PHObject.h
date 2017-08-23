@@ -14,15 +14,12 @@ class CPHMoveStorage;
 class CPHSynchronize;
 
 typedef void CollideCallback(CPHObject* obj1,CPHObject* obj2, dGeomID o1, dGeomID o2);
-#ifdef		DEBUG
 class IPhysicsShellHolder;
-#endif
+
 class CPHObject :
 	public ISpatial 
 {
-#ifdef DEBUG
 	friend struct SPHObjDBGDraw;
-#endif
 	DECLARE_PHLIST_ITEM(CPHObject)
 
 			Flags8	m_flags;
@@ -117,9 +114,7 @@ virtual		ECastType		CastType						(){return tpNotDefinite;}
 virtual		void			vis_update_activate				()										{}
 virtual		void			vis_update_deactivate			()										{}
 
-#ifdef		DEBUG
 virtual		IPhysicsShellHolder	*ref_object					()										=0;
-#endif
 
 IC			CLBits&						collide_bits		()										{return m_collide_bits;}
 IC			_flags<CLClassBits>&		collide_class_bits	()										{return m_collide_class_bits;}

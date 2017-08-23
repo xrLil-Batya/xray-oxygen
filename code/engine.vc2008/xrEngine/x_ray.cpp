@@ -491,13 +491,15 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 	RECT logoRect;
 	GetWindowRect(logoPicture, &logoRect);
 
+    HWND logoInsertPos = HWND_TOPMOST;
+    if (IsDebuggerPresent())
+    {
+        logoInsertPos = HWND_NOTOPMOST;
+    }
+
 	SetWindowPos				(
 		logoWindow,
-#ifndef DEBUG
-		HWND_TOPMOST,
-#else
-		HWND_NOTOPMOST,
-#endif // NDEBUG
+        logoInsertPos,
 		0,
 		0,
 		logoRect.right - logoRect.left,

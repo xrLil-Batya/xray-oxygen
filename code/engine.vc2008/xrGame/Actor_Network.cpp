@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "actor.h"
 #include "hudmanager.h"
 #include "Actor_Flags.h"

@@ -867,9 +867,9 @@ namespace luabind
 
 		class_(const char* name): class_base(name)
 		{
-#ifndef NDEBUG
-			detail::check_link_compatibility();
-#endif
+// #ifndef NDEBUG
+// 			detail::check_link_compatibility();
+// #endif
 		   	init(); 
 		}
 

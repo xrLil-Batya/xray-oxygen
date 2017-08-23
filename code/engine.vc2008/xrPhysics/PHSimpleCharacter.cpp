@@ -1161,7 +1161,8 @@ void CPHSimpleCharacter::SetMas(dReal mass){
 	dMassAdjust(&m,mass);
 	dBodySetMass(m_body,&m);
 }
-#ifdef DEBUG
+
+//#TODO: Remove this?
 void CPHSimpleCharacter::OnRender(){
 #if 0
 	if(!b_exist) return;
@@ -1195,7 +1196,6 @@ void CPHSimpleCharacter::OnRender(){
 	//Level().debug_renderer().draw_ellipse(M, 0xffffffff);
 #endif
 }
-#endif
 
 
 EEnvironment	 CPHSimpleCharacter::CheckInvironment()

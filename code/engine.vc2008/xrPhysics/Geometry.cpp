@@ -7,9 +7,7 @@
 #include "../xrEngine/bone.h"
 
 //global
-#ifdef DEBUG
-#	include	"debug_output.h"
-#endif // #ifdef DEBUG
+#include "debug_output.h"
 
 static void computeFinalTx(dGeomID geom_transform,dReal* final_pos,dReal* final_R)
 {
@@ -746,8 +744,6 @@ void CCylinderGeom::set_build_position(const Fvector& ref_point)
 }
 
 
-
-#ifdef	DEBUG
 void	CODEGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
 {
 	Fmatrix m;
@@ -758,7 +754,7 @@ void	CODEGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
 
 
 
-void	CBoxGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
+void	CBoxGeom::dbg_draw			( float scale, u32 color, Flags32 flags )const
 {
 	inherited::dbg_draw( scale, color, flags );
 	
@@ -774,7 +770,7 @@ void	CBoxGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
 	debug_output().DBG_DrawOBB( m, cast_fv( l ).mul( 0.5f ), color );
 }
 
-void	CSphereGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
+void	CSphereGeom::dbg_draw			( float scale, u32 color, Flags32 flags )const
 {
 	inherited::dbg_draw( scale, color, flags );
 	
@@ -789,7 +785,7 @@ void	CSphereGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
 
 }
 
-void	CCylinderGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
+void	CCylinderGeom::dbg_draw			( float scale, u32 color, Flags32 flags )const
 {
 	inherited::dbg_draw( scale, color, flags );
 	
@@ -804,4 +800,3 @@ void	CCylinderGeom::	dbg_draw			( float scale, u32 color, Flags32 flags )const
 	Fvector ext( Fvector().set( r, h*0.5f, r ) );
 	debug_output().DBG_DrawOBB( m, ext, color );
 }
-#endif

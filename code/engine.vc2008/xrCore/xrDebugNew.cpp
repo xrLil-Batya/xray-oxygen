@@ -123,6 +123,7 @@ void xrDebug::do_exit	(const std::string &message)
 #ifdef DEBUG
 	DEBUG_INVOKE;
 #endif
+
 	TerminateProcess(GetCurrentProcess(), 1);
 }
 
@@ -146,7 +147,7 @@ void xrDebug::backend	(const char *expression, const char *description, const ch
  	ShowWindow(wnd, SW_MINIMIZE);
  	while (ShowCursor(TRUE) < 0);
  
-#ifndef DEBUG
+#if !defined(DEBUG) && !defined(MIXED_NEW)
 	do_exit("Please, see log-file for details.");
 #else
     //#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical

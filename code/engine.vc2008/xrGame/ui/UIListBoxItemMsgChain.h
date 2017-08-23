@@ -10,4 +10,3 @@ public:
 	virtual bool	OnMouseDown				(int mouse_btn);
 };
 
-#endif //#ifndef UILISTBOXITEMMSGCHAIN_H_INCLUDED

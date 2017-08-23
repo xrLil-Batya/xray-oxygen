@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "gameobject.h"
 //#include ".\xrEngine\xr_collide_defs.h"
 

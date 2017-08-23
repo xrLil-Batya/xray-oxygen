@@ -194,7 +194,6 @@ EEnvironment CPHAICharacter::CheckInvironment()
 	return inherited::CheckInvironment();
 }
 */
-#ifdef DEBUG
 void	CPHAICharacter::OnRender()	
 {
 	inherited::OnRender();
@@ -217,4 +216,3 @@ void	CPHAICharacter::OnRender()
 	Level().debug_renderer().draw_ellipse(M, 0xffffffff);
 #endif
 }
-#endif

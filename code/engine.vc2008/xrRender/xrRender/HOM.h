@@ -8,9 +8,7 @@
 class occTri;
 
 class CHOM  
-#ifdef DEBUG
 	: public pureRender
-#endif
 {
 private:
 	xrXRC					xrc;
@@ -19,10 +17,8 @@ private:
 	BOOL					bEnabled;
 	Fmatrix					m_xform;
 	Fmatrix					m_xform_01;
-#ifdef DEBUG
 	u32						tris_in_frame_visible	;
 	u32						tris_in_frame			;
-#endif
 
 	std::recursive_mutex		MT;
 	volatile u32			MT_frame_rendered;
@@ -55,8 +51,6 @@ public:
 	CHOM	();
 	~CHOM	();
 
-#ifdef DEBUG
 	virtual void			OnRender	();
 			void			stats		();
-#endif
 };

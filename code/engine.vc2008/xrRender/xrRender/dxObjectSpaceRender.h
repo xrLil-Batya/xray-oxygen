@@ -1,9 +1,4 @@
-#ifndef dxObjectSpaceRender_included
-#define dxObjectSpaceRender_included
 #pragma once
-
-#ifdef DEBUG
-
 #include "..\..\Include\xrRender\ObjectSpaceRender.h"
 #include "..\..\xrengine\xr_collide_form.h"
 class dxObjectSpaceRender : public IObjectSpaceRender
@@ -22,7 +17,3 @@ private:
 	clQueryCollision					q_debug;			// MT: dangerous
 	xr_vector<std::pair<Fsphere,u32> >	dbg_S;				// MT: dangerous
 };
-
-#endif // DEBUG
-
-#endif	//	ObjectSpaceRender_included

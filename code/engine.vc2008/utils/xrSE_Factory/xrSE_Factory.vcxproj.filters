@@ -171,9 +171,6 @@
     <ClInclude Include="..\..\xrServerEntities\DrawUtils.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\pch_script.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -563,12 +560,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\xrServerEntities\pch_script.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="stdafx.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="xr_LuaAllocator.c">
       <Filter>Core</Filter>
     </ClCompile>

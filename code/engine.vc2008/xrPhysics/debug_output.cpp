@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "debug_output.h"
-#ifdef	DEBUG
 
 static class DebugOutputEmptyImpl:
 	public	IDebugOutput
@@ -166,13 +165,4 @@ virtual		void DBG_ObjBeforeCollision		( CPHObject *obj ){}
 
 } dbg_output_empty;
 
-
-
-
-
-
-
-
-
 IDebugOutput	*ph_debug_output	= &dbg_output_empty; 
-#endif

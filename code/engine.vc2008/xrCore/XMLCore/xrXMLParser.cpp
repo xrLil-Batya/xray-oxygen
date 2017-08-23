@@ -434,7 +434,6 @@ XML_NODE* CXml::SearchForAttribute(XML_NODE* start_node, const char* tag_name, c
 	return nullptr;
 }
 
-#ifdef DEBUG // debug & mixed
 
 const char* CXml::CheckUniqueAttrib (XML_NODE* start_node, const char* tag_name, const char* attrib_name)
 {
@@ -455,4 +454,3 @@ const char* CXml::CheckUniqueAttrib (XML_NODE* start_node, const char* tag_name,
 	}
 	return nullptr;
 }
-#endif

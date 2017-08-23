@@ -12,9 +12,7 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../3rd party/ode/src/util.h"
 
-#ifdef DEBUG
-#	include "debug_output.h"
-#endif // DEBUG
+#include "debug_output.h"
 
 ///////////////////////////////////////////////////////////////
 #pragma warning(disable:4995)
@@ -1631,7 +1629,6 @@ void CPHElement::GetPointVel( Fvector	 &res_vel, const Fvector & point ) const
     std::memcpy(&res_vel,res,sizeof(Fvector));
 }
 
-#ifdef DEBUG
 
 void CPHElement::dbg_draw_velocity	( float scale, u32 color )
 {
@@ -1677,11 +1674,10 @@ void CPHElement::dbg_draw_force	( float scale, u32 color )
 	debug_output().DBG_DrawLine( bone.c,  Fvector().add( bone.c, cast_fv( res ).mul( scale ) ) , color );
 }
 
-void	CPHElement::	dbg_draw_geometry( float scale, u32 color, Flags32 flags /*= Flags32().assign( 0 )*/ ) const
+void	CPHElement::dbg_draw_geometry( float scale, u32 color, Flags32 flags /*= Flags32().assign( 0 )*/ ) const
 {
 	CPHGeometryOwner::dbg_draw( scale, color, flags );
 }
-#endif
 //bool CPHElement::CheckBreakConsistent()
 //{
 //	if(!m_fratures_holder) return true;

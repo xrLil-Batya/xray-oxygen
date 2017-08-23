@@ -104,10 +104,10 @@ namespace luabind { namespace detail
 	{
 		static void apply(void* ptr)
 		{
-#ifndef NDEBUG
-			int completeness_check[sizeof(T)];
-			(void)completeness_check;
-#endif
+// #ifndef NDEBUG
+// 			int completeness_check[sizeof(T)];
+// 			(void)completeness_check;
+// #endif
 			static_cast<T*>(ptr)->~T();
 		}
 	};

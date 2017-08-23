@@ -6,7 +6,7 @@
 //	Description : Object factory script export
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 
 #ifndef DEDICATED_SERVER_ONLY
 

@@ -212,9 +212,7 @@ public:
 
 
 private:
-#ifdef DEBUG
 	bool					sender_functor_invoked;
-#endif
 
     virtual void    _Recieve( const void* data, u32 data_size, u32 param );
 };

@@ -21,9 +21,7 @@ private:
 		xr_vector<NODE>		nodes;
 	};
 	struct	shadow			{
-#ifdef	DEBUG
 		float				dbg_HAT;
-#endif
 		IRenderable*		O;
 		int					slot;
 		Fvector				C;

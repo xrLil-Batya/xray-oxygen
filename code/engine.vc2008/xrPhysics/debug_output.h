@@ -1,5 +1,4 @@
 #pragma once
-#ifdef	DEBUG
 
 	enum
 {
@@ -134,5 +133,3 @@ IC	IDebugOutput	&debug_output()
 	VERIFY(ph_debug_output);
 	return *ph_debug_output;
 }
- 
-#endif

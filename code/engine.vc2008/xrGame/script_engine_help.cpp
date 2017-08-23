@@ -6,7 +6,7 @@
 //	Description : Script Engine help
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 
 xr_string to_string					(luabind::object const& o)
 {
@@ -74,9 +74,9 @@ xr_string member_to_string			(luabind::object const& e, LPCSTR function_signatur
 				i != m->overloads().end(); ++i)
 			{
 				luabind::internal_string str;
-#ifndef NDEBUG
-				i->get_signature(L, str);
-#endif
+//#ifndef NDEBUG
+//				i->get_signature(L, str);
+//#endif
 				if (i != m->overloads().begin())
 					s += "\n";
 
@@ -149,9 +149,9 @@ void print_class						(lua_State *L, luabind::detail::class_rep *crep)
 		
 		for (auto I = constructors.begin(); I != constructors.end(); ++I) {
 			luabind::internal_string luaS;
-#ifndef NDEBUG
-			(*I).get_signature(L,luaS);
-#endif
+//#ifndef NDEBUG
+//			(*I).get_signature(L,luaS);
+//#endif
 			xr_string S(luaS.c_str());
 			strreplaceall	(S,"custom [","");
 			strreplaceall	(S,"]","");
@@ -215,9 +215,9 @@ void print_free_functions				(lua_State *L, const luabind::object &object, LPCST
 
 						for (auto i = rep->overloads().begin(); i != rep->overloads().end(); ++i) {
 							luabind::internal_string luaS;
-#ifndef NDEBUG
-							(*i).get_signature(L,luaS);
-#endif
+//#ifndef NDEBUG
+//							(*i).get_signature(L,luaS);
+//#endif
 							xr_string	S(luaS.c_str());
 							Msg("    %sfunction %s%s;",indent.c_str(),rep->name(),process_signature(S).c_str());
 						}

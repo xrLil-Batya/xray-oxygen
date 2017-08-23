@@ -5,7 +5,7 @@
 //	Description : UI Ranking window class implementation
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "UIRankingWnd.h"
 
 #include "UIFixedScrollBar.h"

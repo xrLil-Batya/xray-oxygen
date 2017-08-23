@@ -342,9 +342,9 @@ void CHOM::Enable		()
 	bEnabled			= m_pModel?TRUE:FALSE;
 }
 
-#ifdef DEBUG
 void CHOM::OnRender	()
 {
+    if (!bDebug) return;
 	Raster.on_dbg_render();
 
 	if (psDeviceFlags.is(rsOcclusionDraw)){
@@ -389,6 +389,8 @@ void CHOM::OnRender	()
 }
 void CHOM::stats()
 {
+    if (!bDebug) return;
+
 	if (m_pModel){
 		CGameFont& F		= *Device.Statistic->Font();
 		F.OutNext			(" **** HOM-occ ****");
@@ -397,4 +399,3 @@ void CHOM::stats()
 		F.OutNext			("    total:  %2d", m_pModel->get_tris_count());
 	}
 }
-#endif

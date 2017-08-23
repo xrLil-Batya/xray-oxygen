@@ -6,7 +6,6 @@
 //	Description : Precompiled header creatore
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
 #include "xrSE_Factory.h"
 #include "ai_space.h"
 #include "script_engine.h"

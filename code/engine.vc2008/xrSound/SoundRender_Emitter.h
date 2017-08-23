@@ -28,9 +28,7 @@ public:
 		stFORCEDWORD	= u32(-1)
 	};
 public:
-#ifdef DEBUG
 	u32							dbg_ID;
-#endif
 
 	CSoundRender_Target*		target;
 	IC CSoundRender_Source*		source	()	{return(CSoundRender_Source*)owner_data->handle;};

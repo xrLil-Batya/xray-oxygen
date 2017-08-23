@@ -16,17 +16,13 @@ private:
 	players_collection_t		net_Players_disconnected;
 	bool						now_iterating_in_net_players;
 	bool						now_iterating_in_net_players_disconn;
-#ifdef DEBUG
 	DWORD						iterator_thread_id;
-#endif
 public:
 	PlayersMonitor()
 	{
 	  now_iterating_in_net_players			= false;
 	  now_iterating_in_net_players_disconn	= false;
-#ifdef DEBUG
 	  iterator_thread_id					= 0;
-#endif
 	}
 #ifdef DEBUG
 	bool IsCurrentThreadIteratingOnClients() const

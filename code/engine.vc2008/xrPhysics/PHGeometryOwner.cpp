@@ -471,7 +471,6 @@ void	CPHGeometryOwner::remove_geom( CODEGeom* g )
 	m_geoms.erase( gi );
 }
 
-#ifdef	DEBUG
 void CPHGeometryOwner::dbg_draw( float scale, u32 color, Flags32 flags )const
 {
 	VERIFY( b_builded );
@@ -481,4 +480,3 @@ void CPHGeometryOwner::dbg_draw( float scale, u32 color, Flags32 flags )const
 		(*i)->dbg_draw( scale, color, flags );
 	}
 }
-#endif

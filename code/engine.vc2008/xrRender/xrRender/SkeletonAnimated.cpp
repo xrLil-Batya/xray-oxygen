@@ -59,7 +59,6 @@ void	CKinematicsAnimated::Bone_Motion_Stop_IM	(CBoneData* bd, CBlend* handle)
 	LL_GetBlendInstance	(bd->GetSelfID()).blend_remove	(handle);
 }
 
-#if (defined DEBUG || defined _EDITOR)
 
 std::pair<LPCSTR,LPCSTR> CKinematicsAnimated::LL_MotionDefName_dbg	(MotionID ID)
 {
@@ -118,7 +117,6 @@ void	CKinematicsAnimated::LL_DumpBlends_dbg	( )
 		dump_blend( this, *I, u32(I - blend_pool.begin()) );
 }
 
-#endif
 
 u32	CKinematicsAnimated::LL_PartBlendsCount	( u32 bone_part_id )
 {

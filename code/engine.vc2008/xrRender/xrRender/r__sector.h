@@ -16,9 +16,7 @@ struct	_scissor					: public Fbox2
 
 // Connector
 class	CPortal						: public IRender_Portal
-#ifdef DEBUG
 	, public pureRender
-#endif
 {
 private:
 	svector<Fvector,8>				poly;
@@ -42,9 +40,7 @@ public:
 									CPortal			();
 	virtual							~CPortal		();
 
-#ifdef DEBUG
 	virtual void					OnRender		();
-#endif
 };
 
 class dxRender_Visual;

@@ -2,7 +2,7 @@
 // script_game_object_trader.сpp :	функции для торговли и торговцев
 //////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "script_game_object.h"
 #include "ai_space.h"
 #include "script_engine.h"

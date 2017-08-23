@@ -41,9 +41,7 @@ class CPHShell:
 
 private:
 
-#ifdef	DEBUG
 	virtual		IPhysicsShellHolder	*ref_object					() { return PhysicsRefObject() ;}
-#endif
 
 protected:
 	dSpaceID			    m_space;
@@ -293,11 +291,9 @@ IC				CPHElement			&root_element					() { VERIFY( !elements.empty() ); return *(
 	private:
 		virtual	iphysics_scripted	&get_scripted					() { return *this ;}
 	public:
-#ifdef		DEBUG
 	virtual		void				dbg_draw_velocity				( float scale, u32 color );
 	virtual		void				dbg_draw_force					( float scale, u32 color );
 	virtual		void				dbg_draw_geometry				( float scale, u32 color, Flags32 flags = Flags32().assign( 0 ) ) const			;
-#endif
 };
 
 
