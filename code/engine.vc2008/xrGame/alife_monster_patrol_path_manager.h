@@ -10,14 +10,10 @@
 
 #include "game_graph_space.h"
 #include "../xrScripts/export/script_export_space.h"
+#include "patrol_path_manager_space.h"
 
 class CMovementManagerHolder;
 class CPatrolPath;
-
-namespace PatrolPathManager {
-	enum EPatrolStartType;
-	enum EPatrolRouteType;
-};
 
 class CALifeMonsterPatrolPathManager {
 public:
