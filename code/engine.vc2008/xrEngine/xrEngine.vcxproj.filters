@@ -10,9 +10,6 @@
     <Filter Include="Interfaces">
       <UniqueIdentifier>{2ced8cad-5920-4b1f-8b61-ca138c6b31c1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interfaces\Sound">
-      <UniqueIdentifier>{60c3c0b1-8271-4f4a-8bb5-b3e8c84f31ff}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interfaces\Input">
       <UniqueIdentifier>{5697d6c1-81ec-42ad-9579-a5c7d27970ae}</UniqueIdentifier>
     </Filter>
@@ -21,9 +18,6 @@
     </Filter>
     <Filter Include="Interfaces\Render">
       <UniqueIdentifier>{e96e144f-95d2-4407-a78f-7b20aad1d8c6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Interfaces\SPATIAL">
-      <UniqueIdentifier>{66873324-a792-4df6-8fa6-291e80d8a9bb}</UniqueIdentifier>
     </Filter>
     <Filter Include="Interfaces\Collidable">
       <UniqueIdentifier>{829d4c8e-68b9-4783-a7cb-1a5d969a655a}</UniqueIdentifier>
@@ -275,9 +269,6 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>General\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="psystem.h">
-      <Filter>Interfaces</Filter>
     </ClInclude>
     <ClInclude Include="IInputReceiver.h">
       <Filter>Interfaces\Input</Filter>

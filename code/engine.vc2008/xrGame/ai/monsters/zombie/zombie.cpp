@@ -208,7 +208,7 @@ void CZombie::fake_death_stand_up()
 }
 
 
-#ifdef _DEBUG
+#ifdef DEBUG
 void CZombie::debug_on_key(int key)
 {
 	switch (key){

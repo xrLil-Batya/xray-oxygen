@@ -231,36 +231,6 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 #ifdef DEBUG
 
-	// Lain: added TEMP!!!
-	case DIK_UP:
-	{
-		g_separate_factor /= 0.9f;
-		break;
-	}
-	case DIK_DOWN:
-	{
-		g_separate_factor *= 0.9f;
-		if ( g_separate_factor < 0.1f )
-		{
-			g_separate_factor = 0.1f;
-		}
-		break;
-	}
-	case DIK_LEFT:
-	{
-		g_separate_radius *= 0.9f;
-		if ( g_separate_radius < 0 )
-		{
-			g_separate_radius = 0;
-		}
-		break;
-	}
-	case DIK_RIGHT:
-	{
-		g_separate_radius /= 0.9f;
-		break;
-	}
-
 	case DIK_RETURN: {
 		bDebug	= !bDebug;
 		return;
@@ -377,8 +347,8 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	}
 
 
-#ifdef _DEBUG
-		CObject *obj = Level().Objects.FindObjectByName("monster");
+#ifdef DEBUG
+		CObject *obj = CurrentEntity();
 		if (obj) {
 			CBaseMonster *monster = smart_cast<CBaseMonster *>(obj);
 			if (monster) 

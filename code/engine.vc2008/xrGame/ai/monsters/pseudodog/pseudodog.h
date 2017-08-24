@@ -42,7 +42,7 @@ public:
 	virtual	char*	get_monster_class_name () { return "pseudodog"; }
 
 private:
-#ifdef _DEBUG	
+#ifdef DEBUG	
 	virtual void	debug_on_key		(int key);
 #endif
 
