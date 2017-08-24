@@ -44,7 +44,7 @@ struct xr_special_free<false, T>
 };
 
 template <class T>
-IC	void	xr_delete(T* &ptr)
+IC void xr_delete(T* &ptr)
 {
 	if (ptr)
 	{
@@ -53,11 +53,11 @@ IC	void	xr_delete(T* &ptr)
 	}
 }
 template <class T>
-IC	void	xr_delete(T* const &ptr)
+IC void xr_delete(T* const &ptr)
 {
 	if (ptr)
 	{
-		xr_special_free<std::is_polymorphic_v<T>, T>(ptr);
+		xr_special_free<std::is_polymorphic_v<T>, T>()(ptr); // [FX] port to VS 15.3.2
 		const_cast<T*&>(ptr) = nullptr;
 	}
 }
