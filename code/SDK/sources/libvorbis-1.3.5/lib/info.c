@@ -52,6 +52,7 @@ void vorbis_comment_init(vorbis_comment *vc){
   memset(vc,0,sizeof(*vc));
 }
 
+#pragma warning(disable: 4267)
 void vorbis_comment_add(vorbis_comment *vc,const char *comment){
   vc->user_comments=_ogg_realloc(vc->user_comments,
                             (vc->comments+2)*sizeof(*vc->user_comments));

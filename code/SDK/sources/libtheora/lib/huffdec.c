@@ -20,6 +20,7 @@
 #include <ogg/ogg.h>
 #include "huffdec.h"
 #include "decint.h"
+#pragma warning (disable: 4267)
 
 
 

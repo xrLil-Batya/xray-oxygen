@@ -674,28 +674,30 @@ int ogg_sync_wrote(ogg_sync_state *oy, long bytes){
 
 */
 
-long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
+long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og)
+{
   unsigned char *page=oy->data+oy->returned;
   unsigned char *next;
   long bytes=oy->fill-oy->returned;
 
   if(ogg_sync_check(oy))return 0;
 
-  if(oy->headerbytes==0){
-    int headerbytes,i;
-    if(bytes<27)return(0); /* not enough for a header */
+  if (!oy->headerbytes)
+  {
+	  int headerbytes, i;
+	  if (bytes < 27)return(0); /* not enough for a header */
 
-    /* verify capture pattern */
-    if(memcmp(page,"OggS",4))goto sync_fail;
+	  /* verify capture pattern */
+	  if (memcmp(page, "OggS", 4))goto sync_fail;
 
-    headerbytes=page[26]+27;
-    if(bytes<headerbytes)return(0); /* not enough for header + seg table */
+	  headerbytes = page[26] + 27;
+	  if (bytes < headerbytes)return(0); /* not enough for header + seg table */
 
-    /* count up body length in the segment table */
+	  /* count up body length in the segment table */
 
-    for(i=0;i<page[26];i++)
-      oy->bodybytes+=page[27+i];
-    oy->headerbytes=headerbytes;
+	  for (i = 0; i < page[26]; i++)
+		  oy->bodybytes += page[27 + i];
+	  oy->headerbytes = headerbytes;
   }
 
   if(oy->bodybytes+oy->headerbytes>bytes)return(0);
@@ -730,21 +732,21 @@ long ogg_sync_pageseek(ogg_sync_state *oy,ogg_page *og){
 
   /* yes, have a whole page all ready to go */
   {
-    unsigned char *page=oy->data+oy->returned;
-    long bytes;
+	  unsigned char *_page = oy->data + oy->returned;
+	  long _bytes;
 
-    if(og){
-      og->header=page;
-      og->header_len=oy->headerbytes;
-      og->body=page+oy->headerbytes;
-      og->body_len=oy->bodybytes;
-    }
+	  if (og) {
+		  og->header = _page;
+		  og->header_len = oy->headerbytes;
+		  og->body = _page + oy->headerbytes;
+		  og->body_len = oy->bodybytes;
+	  }
 
-    oy->unsynced=0;
-    oy->returned+=(bytes=oy->headerbytes+oy->bodybytes);
-    oy->headerbytes=0;
-    oy->bodybytes=0;
-    return(bytes);
+	  oy->unsynced = 0;
+	  oy->returned += (_bytes = oy->headerbytes + oy->bodybytes);
+	  oy->headerbytes = 0;
+	  oy->bodybytes = 0;
+	  return(_bytes);
   }
 
  sync_fail:

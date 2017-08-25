@@ -452,13 +452,13 @@ struct oc_quant_token{
   int           qc;
 };
 
+#define DontWarnMe(var) int DontWarnMe = var; DontWarnMe++;
 /*Tokenizes the AC coefficients, possibly adjusting the quantization, and then
    dequantizes and de-zig-zags the result.
   The AC coefficients of _idct must be pre-initialized to zero.*/
-int oc_enc_tokenize_ac(oc_enc_ctx *_enc,int _pli,ptrdiff_t _fragi,
- ogg_int16_t *_idct,const ogg_int16_t *_qdct,
- const ogg_uint16_t *_dequant,const ogg_int16_t *_dct,
- int _zzi,oc_token_checkpoint **_stack,int _lambda,int _acmin){
+int oc_enc_tokenize_ac(oc_enc_ctx *_enc,int _pli,ptrdiff_t _fragi, ogg_int16_t *_idct,const ogg_int16_t *_qdct, const ogg_uint16_t *_dequant,const ogg_int16_t *_dct, int _zzi,oc_token_checkpoint **_stack,int _lambda,int _acmin)
+{
+	DontWarnMe(_fragi);
   oc_token_checkpoint *stack;
   ogg_int64_t          zflags;
   ogg_int64_t          nzflags;
@@ -754,6 +754,7 @@ int oc_enc_tokenize_ac_fast(oc_enc_ctx *_enc,int _pli,ptrdiff_t _fragi,
  ogg_int16_t *_idct,const ogg_int16_t *_qdct,
  const ogg_uint16_t *_dequant,const ogg_int16_t *_dct,
  int _zzi,oc_token_checkpoint **_stack,int _lambda,int _acmin){
+	DontWarnMe(_fragi);
   const unsigned char *dct_fzig_zag;
   ogg_uint16_t        *eob_run;
   oc_token_checkpoint *stack;

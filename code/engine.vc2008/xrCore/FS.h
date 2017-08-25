@@ -330,11 +330,12 @@ private:
     size_t m_last_pos;
 };
 
-class XRCORE_API IReader : public IReaderBase<IReader> {
+class XRCORE_API IReader : public IReaderBase<IReader> 
+{
 protected:
     char* data;
     int Pos;
-    int Size;
+    size_t Size;
     int iterpos;
 
 public:
@@ -358,13 +359,13 @@ protected:
     size_t advance_term_string();
 
 public:
-    int elapsed() const { return Size - Pos; }
+    size_t elapsed() const { return Size - Pos; }
     int tell() const { return Pos; }
     void seek(const int ptr) {
         Pos = ptr;
         VERIFY((Pos <= Size) && (Pos >= 0));
     }
-    int length() const { return Size; }
+    size_t length() const { return Size; }
     void* pointer() const { return &(data[Pos]); }
     void advance(const int cnt) {
         Pos += cnt;

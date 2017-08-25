@@ -4,7 +4,6 @@
 */
 
 #define lj_opt_sink_c
-#define LUA_CORE
 
 #include "lj_obj.h"
 

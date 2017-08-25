@@ -1,5 +1,7 @@
 #include "stdafx.h"
+#pragma warning(disable: 4005)
 #include "dump_string.h"
+
 std::string get_string( const Fvector& v )
 {
 	return make_string	("( %f, %f, %f )", v.x, v.y, v.z );

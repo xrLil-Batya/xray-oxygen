@@ -357,12 +357,12 @@ static int oc_block_run_unpack(oc_pack_buf *_opb){
 }
 
 
-
-void oc_dec_accel_init_c(oc_dec_ctx *_dec){
+#pragma warning(disable: 4100)
+void oc_dec_accel_init_c(oc_dec_ctx *_dec) 
+{
 # if defined(OC_DEC_USE_VTABLE)
-  _dec->opt_vtable.dc_unpredict_mcu_plane=
-   oc_dec_dc_unpredict_mcu_plane_c;
-# endif
+	_dec->opt_vtable.dc_unpredict_mcu_plane = oc_dec_dc_unpredict_mcu_plane_c;
+#endif
 }
 
 static int oc_dec_init(oc_dec_ctx *_dec,const th_info *_info,

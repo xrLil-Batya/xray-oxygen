@@ -6,8 +6,6 @@
 */
 
 #define lj_opt_fold_c
-#define LUA_CORE
-
 #include <math.h>
 
 #include "lj_obj.h"

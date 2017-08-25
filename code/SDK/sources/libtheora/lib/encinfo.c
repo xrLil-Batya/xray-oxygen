@@ -3,7 +3,7 @@
 #include "state.h"
 #include "enquant.h"
 #include "huffenc.h"
-
+#pragma warning (disable: 4267)
 
 
 /*Packs a series of octets from a given byte array into the pack buffer.

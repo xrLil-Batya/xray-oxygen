@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
+#pragma warning(disable: 4005)
 
 #include <process.h>
 #include <powerbase.h>

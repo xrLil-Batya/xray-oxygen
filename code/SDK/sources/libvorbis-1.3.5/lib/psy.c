@@ -28,6 +28,7 @@
 #include "smallft.h"
 #include "scales.h"
 #include "misc.h"
+#pragma warning(disable:4456)
 
 #define NEGINF -9999.f
 static const double stereo_threshholds[]={0.0, .5, 1.0, 1.5, 2.5, 4.5, 8.5, 16.5, 9e10};
@@ -235,18 +236,16 @@ static float ***setup_tone_curves(float curveatt_dB[P_BANDS],float binHz,int n,
       }
 
 
-      for(j=0;j<EHMER_MAX;j++){
-        int bin=fromOC(j*.125+i*.5-2.)/binHz;
-        if(bin<0){
-          ret[i][m][j+2]=-999.;
-        }else{
-          if(bin>=n){
-            ret[i][m][j+2]=-999.;
-          }else{
-            ret[i][m][j+2]=brute_buffer[bin];
-          }
-        }
-      }
+	  for (j = 0; j < EHMER_MAX; j++)
+	  {
+		  int bin = fromOC(j*.125 + i*.5 - 2.) / binHz;
+		  if (bin < 0)
+			  ret[i][m][j + 2] = -999.f;
+		  else if (bin >= n)
+			  ret[i][m][j + 2] = -999.f;
+		  else
+			  ret[i][m][j + 2] = brute_buffer[bin];
+	  }
 
       /* add fenceposts */
       for(j=0;j<EHMER_OFFSET;j++)
@@ -287,8 +286,8 @@ void _vp_psy_init(vorbis_look_psy *p,vorbis_info_psy *vi,
   /* AoTuV HF weighting */
   p->m_val = 1.;
   if(rate < 26000) p->m_val = 0;
-  else if(rate < 38000) p->m_val = .94;   /* 32kHz */
-  else if(rate > 46000) p->m_val = 1.275; /* 48kHz */
+  else if(rate < 38000) p->m_val = .94f;   /* 32kHz */
+  else if(rate > 46000) p->m_val = 1.275f; /* 48kHz */
 
   /* set up the lookups for a given blocksize and sample rate */
 
@@ -798,24 +797,24 @@ void _vp_offset_and_mix(vorbis_look_psy *p,
     */
 
     if(offset_select == 1) {
-      coeffi = -17.2;       /* coeffi is a -17.2dB threshold */
+      coeffi = -17.2f;       /* coeffi is a -17.2dB threshold */
       val = val - logmdct[i];  /* val == mdct line value relative to floor in dB */
 
       if(val > coeffi){
         /* mdct value is > -17.2 dB below floor */
 
-        de = 1.0-((val-coeffi)*0.005*cx);
+        de = 1.0f-((val-coeffi)*0.005f*cx);
         /* pro-rated attenuation:
            -0.00 dB boost if mdct value is -17.2dB (relative to floor)
            -0.77 dB boost if mdct value is 0dB (relative to floor)
            -1.64 dB boost if mdct value is +17.2dB (relative to floor)
            etc... */
 
-        if(de < 0) de = 0.0001;
+        if(de < 0) de = 0.0001f;
       }else
         /* mdct value is <= -17.2 dB below floor */
 
-        de = 1.0-((val-coeffi)*0.0003*cx);
+        de = 1.0f-((val-coeffi)*0.0003f*cx);
       /* pro-rated attenuation:
          +0.00 dB atten if mdct value is -17.2dB (relative to floor)
          +0.45 dB atten if mdct value is -34.4dB (relative to floor)

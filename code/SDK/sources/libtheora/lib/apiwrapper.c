@@ -21,9 +21,7 @@
 #include <ctype.h>
 #include "apiwrapper.h"
 #include "internal.h"
-
-
-
+#pragma warning(disable: 4267)
  /*This is more or less the same as strncasecmp, but that doesn't exist
  everywhere, and this is a fairly trivial function, so we include it.
  Note: We take advantage of the fact that we know _n is less than or equal to
