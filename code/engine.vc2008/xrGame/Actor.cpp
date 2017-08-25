@@ -167,32 +167,21 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	//��������� ������������� ����� � inventory
 	inventory().SetBeltUseful(true);
 
-	m_pPersonWeLookingAt	= NULL;
-	m_pVehicleWeLookingAt	= NULL;
-	m_pObjectWeLookingAt	= NULL;
-	m_bPickupMode			= false;
-
-	pStatGraph				= NULL;
-
-	m_pActorEffector		= NULL;
-
+	m_pPersonWeLookingAt	= 0;
+	m_pVehicleWeLookingAt	= 0;
+	m_pObjectWeLookingAt	= 0;
+	pStatGraph				= 0;
+	m_pActorEffector		= 0;
+	m_entity_condition		= 0;
+	m_statistic_manager		= 0;
+	m_sDefaultObjAction		= 0;
+	m_pUsableObject			= 0;
 	SetZoomAimingMode		(false);
-
-	m_sDefaultObjAction		= NULL;
-
 	m_fSprintFactor			= 4.f;
-
-	//hFriendlyIndicator.create(FVF::F_LIT,RCache.Vertex.Buffer(),RCache.QuadIB);
-
-	m_pUsableObject			= NULL;
-
-
 	m_anims					= xr_new<SActorMotions>();
-//.	m_vehicle_anims			= xr_new<SActorVehicleAnims>();
-	m_entity_condition		= NULL;
 	m_iLastHitterID			= u16(-1);
 	m_iLastHittingWeaponID	= u16(-1);
-	m_statistic_manager		= NULL;
+	m_bPickupMode			= false;
 	//-----------------------------------------------------------------------------------
 	m_memory				= g_dedicated_server ? 0 : xr_new<CActorMemory>(this);
 	m_bOutBorder			= false;
@@ -226,11 +215,8 @@ CActor::~CActor()
 	m_DangerSnd.destroy		();
 
 	xr_delete				(m_pActorEffector);
-
 	xr_delete				(m_pPhysics_support);
-
 	xr_delete				(m_anims);
-//.	xr_delete				(m_vehicle_anims);
 }
 
 void CActor::reinit	()
@@ -518,17 +504,9 @@ void	CActor::Hit(SHit* pHDS)
 	}
 }
 
-void CActor::HitMark	(float P, 
-						 Fvector dir,			
-						 CObject* who_object, 
-						 s16 element, 
-						 Fvector position_in_bone_space, 
-						 float impulse,  
-						 ALife::EHitType hit_type_)
+void CActor::HitMark(float P, Fvector dir, CObject* who_object, s16 element, Fvector position_in_bone_space, float impulse, ALife::EHitType hit_type_)
 {
-	// hit marker
-	if ( /*(hit_type==ALife::eHitTypeFireWound||hit_type==ALife::eHitTypeWound_2) && */
-			g_Alive() && Local() && (Level().CurrentEntity()==this) )	
+	if (g_Alive() && Local() && (Level().CurrentEntity() == this))
 	{
 		HUD().HitMarked				(0, P, dir);
 
@@ -970,23 +948,9 @@ void CActor::shedule_Update	(u32 DT)
 	//------------------------------------------------
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
-		{
-			/*
-			if (mstate_real & mcJump)
-			{
-				NET_Packet	P;
-				u_EventGen(P, GE_ACTOR_JUMPING, ID());
-				P.w_sdir(NET_SavedAccel);
-				P.w_float(NET_Jump);
-				u_EventSend(P);
-			}
-			*/
-		}
 		g_cl_Orientate			(mstate_real,dt);
 		g_Orientate				(mstate_real,dt);
-
 		g_Physics				(NET_SavedAccel,NET_Jump,dt);
-		
 		g_cl_ValidateMState		(dt,mstate_wishful);
 		g_SetAnimation			(mstate_real);
 		
@@ -1000,12 +964,12 @@ void CActor::shedule_Update	(u32 DT)
 		Feel_Grenade_Update( m_fFeelGrenadeRadius );
 
 		// Dropping
-		if (b_DropActivated)	{
+		if (b_DropActivated)
+		{
 			f_DropPower			+= dt*0.1f;
 			clamp				(f_DropPower,0.f,1.f);
-		} else {
-			f_DropPower			= 0.f;
-		}
+		} else f_DropPower			= 0.f;
+
 		if (!Level().IsDemoPlay())
 		{		
 		mstate_wishful &=~mcAccel;
@@ -1022,13 +986,8 @@ void CActor::shedule_Update	(u32 DT)
 	else 
 	{
 		make_Interpolation();
-	
 		if (NET.size())
 		{
-			
-//			NET_SavedAccel = NET_Last.p_accel;
-//			mstate_real = mstate_wishful = NET_Last.mstate;
-
 			g_sv_Orientate				(mstate_real,dt			);
 			g_Orientate					(mstate_real,dt			);
 			g_Physics					(NET_SavedAccel,NET_Jump,dt	);			
@@ -1042,18 +1001,9 @@ void CActor::shedule_Update	(u32 DT)
 		}	
 		mstate_old = mstate_real;
 	}
-/*
-	if (this == Level().CurrentViewEntity())
-	{
-		UpdateMotionIcon		(mstate_real);
-	};
-*/
 	NET_Jump = 0;
 
-
-	inherited::shedule_Update	(DT);
-
-	//�������� ���������� ��� ������
+	inherited::shedule_Update(DT);
 	if (!pCamBobbing)
 	{
 		pCamBobbing = xr_new<CEffectorBobbing>	();
@@ -1061,19 +1011,14 @@ void CActor::shedule_Update	(u32 DT)
 	}
 	pCamBobbing->SetState						(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
-	//���� �������� ������� ��� �������� � ��������
 	if(this==Level().CurrentControlEntity() && !g_dedicated_server )
 	{
-		if(conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT)){
-			if(!m_HeavyBreathSnd._feedback()){
-				m_HeavyBreathSnd.play_at_pos(this, Fvector().set(0,ACTOR_HEIGHT,0), sm_Looped | sm_2D);
-			}else{
-				m_HeavyBreathSnd.set_position(Fvector().set(0,ACTOR_HEIGHT,0));
-			}
-		}else if(m_HeavyBreathSnd._feedback()){
-			m_HeavyBreathSnd.stop		();
+		if(conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT))
+		{
+			if(!m_HeavyBreathSnd._feedback())	m_HeavyBreathSnd.play_at_pos(this, Fvector().set(0,ACTOR_HEIGHT,0), sm_Looped | sm_2D);
+			else								m_HeavyBreathSnd.set_position(Fvector().set(0,ACTOR_HEIGHT,0));
 		}
-
+		else if(m_HeavyBreathSnd._feedback())	m_HeavyBreathSnd.stop();
 		// -------------------------------
 		float bs = conditions().BleedingSpeed();
 		if(bs>0.6f)
@@ -1221,21 +1166,19 @@ BOOL CActor::renderable_ShadowGenerate	()
 	return inherited::renderable_ShadowGenerate();
 }
 
-
-
-void CActor::g_PerformDrop	( )
+void CActor::g_PerformDrop()
 {
-	b_DropActivated			= FALSE;
+	b_DropActivated = FALSE;
 
-	PIItem pItem			= inventory().ActiveItem();
-	if (0==pItem)			return;
+	PIItem pItem = inventory().ActiveItem();
+	if (0 == pItem)			return;
 
-	if(pItem->IsQuestItem()) return;
+	if (pItem->IsQuestItem()) return;
 
-	u16 s					= inventory().GetActiveSlot();
-	if(inventory().SlotIsPersistent(s))	return;
+	u16 s = inventory().GetActiveSlot();
+	if (inventory().SlotIsPersistent(s))	return;
 
-	pItem->SetDropManual	(TRUE);
+	pItem->SetDropManual(TRUE);
 }
 
 bool CActor::use_default_throw_force()
@@ -1296,20 +1239,8 @@ void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shade
 	UIRender->PushPoint(a.x+pos.x,a.y+pos.y,a.z+pos.z, 0xffffffff, 0.f,0.f);
 	UIRender->PushPoint(c.x+pos.x,c.y+pos.y,c.z+pos.z, 0xffffffff, 1.f,1.f);
 	UIRender->PushPoint(b.x+pos.x,b.y+pos.y,b.z+pos.z, 0xffffffff, 1.f,0.f);
-	//pv->set         (d.x+pos.x,d.y+pos.y,d.z+pos.z, 0xffffffff, 0.f,1.f);        pv++;
-	//pv->set         (a.x+pos.x,a.y+pos.y,a.z+pos.z, 0xffffffff, 0.f,0.f);        pv++;
-	//pv->set         (c.x+pos.x,c.y+pos.y,c.z+pos.z, 0xffffffff, 1.f,1.f);        pv++;
-	//pv->set         (b.x+pos.x,b.y+pos.y,b.z+pos.z, 0xffffffff, 1.f,0.f);        pv++;
-	// render	
-	//dwCount 				= u32(pv-pv_start);
-	//RCache.Vertex.Unlock	(dwCount,hFriendlyIndicator->vb_stride);
-
 	UIRender->CacheSetXformWorld(Fidentity);
-	//RCache.set_xform_world		(Fidentity);
 	UIRender->SetShader(*IndShader);
-	//RCache.set_Shader			(IndShader);
-	//RCache.set_Geometry			(hFriendlyIndicator);
-	//RCache.Render	   			(D3DPT_TRIANGLESTRIP,dwOffset,0, dwCount, 0, 2);
 	UIRender->FlushPrimitive();
 };
 
@@ -1418,42 +1349,39 @@ void CActor::OnItemDrop(CInventoryItem *inventory_item, bool just_before_destroy
 {
 	CInventoryOwner::OnItemDrop(inventory_item, just_before_destroy);
 
-	CCustomOutfit* outfit		= smart_cast<CCustomOutfit*>(inventory_item);
-	if(outfit && inventory_item->m_ItemCurrPlace.type==eItemPlaceSlot)
+	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(inventory_item);
+	if (outfit && inventory_item->m_ItemCurrPlace.type == eItemPlaceSlot)
 	{
-		outfit->ApplySkinModel	(this, false, false);
+		outfit->ApplySkinModel(this, false, false);
 	}
 
-	CWeapon* weapon	= smart_cast<CWeapon*>(inventory_item);
-	if(weapon && inventory_item->m_ItemCurrPlace.type==eItemPlaceSlot)
+	CWeapon* weapon = smart_cast<CWeapon*>(inventory_item);
+	if (weapon && inventory_item->m_ItemCurrPlace.type == eItemPlaceSlot)
 	{
 		weapon->OnZoomOut();
-		if(weapon->GetRememberActorNVisnStatus())
+		if (weapon->GetRememberActorNVisnStatus())
 			weapon->EnableActorNVisnAfterZoom();
 	}
 
-	if(		!just_before_destroy && 
-			inventory_item->BaseSlot()==GRENADE_SLOT && 
-			NULL==inventory().ItemFromSlot(GRENADE_SLOT) )
+	if (!just_before_destroy && inventory_item->BaseSlot() == GRENADE_SLOT && !inventory().ItemFromSlot(GRENADE_SLOT))
 	{
-		PIItem grenade =  inventory().SameSlot(GRENADE_SLOT, inventory_item, true);
-		
-		if(grenade)
+		PIItem grenade = inventory().SameSlot(GRENADE_SLOT, inventory_item, true);
+
+		if (grenade)
 			inventory().Slot(GRENADE_SLOT, grenade, true, true);
 	}
 }
 
 
-void CActor::OnItemDropUpdate ()
+void CActor::OnItemDropUpdate()
 {
-	CInventoryOwner::OnItemDropUpdate		();
+	CInventoryOwner::OnItemDropUpdate();
 
-	TIItemContainer::iterator				I = inventory().m_all.begin();
-	TIItemContainer::iterator				E = inventory().m_all.end();
-	
-	for ( ; I != E; ++I)
-		if( !(*I)->IsInvalid() && !attached(*I))
-			attach(*I);
+	for (auto it : inventory().m_all)
+	{
+		if (!it->IsInvalid() && !attached(it))
+			attach(it);
+	}
 }
 
 
@@ -1472,31 +1400,29 @@ void CActor::OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& p
 void CActor::UpdateArtefactsOnBeltAndOutfit()
 {
 	static float update_time = 0;
-
 	float f_update_time = 0;
 
-	if(update_time<ARTEFACTS_UPDATE_TIME)
+	if (update_time < ARTEFACTS_UPDATE_TIME)
 	{
 		update_time += conditions().fdelta_time();
 		return;
 	}
 	else
 	{
-		f_update_time	= update_time;
-		update_time		= 0.0f;
+		f_update_time = update_time;
+		update_time = 0.0f;
 	}
 
-	for(TIItemContainer::iterator it = inventory().m_belt.begin(); 
-		inventory().m_belt.end() != it; ++it) 
+	for (auto it : inventory().m_belt)
 	{
-		CArtefact*	artefact = smart_cast<CArtefact*>(*it);
-		if(artefact)
+		CArtefact*	artefact = smart_cast<CArtefact*>(it);
+		if (artefact)
 		{
-			conditions().ChangeBleeding		(artefact->m_fBleedingRestoreSpeed  * f_update_time);
-			conditions().ChangeHealth		(artefact->m_fHealthRestoreSpeed    * f_update_time);
-			conditions().ChangePower		(artefact->m_fPowerRestoreSpeed     * f_update_time);
-			conditions().ChangeSatiety		(artefact->m_fSatietyRestoreSpeed   * f_update_time);
-			if(artefact->m_fRadiationRestoreSpeed>0.0f) 
+			conditions().ChangeBleeding(artefact->m_fBleedingRestoreSpeed  * f_update_time);
+			conditions().ChangeHealth(artefact->m_fHealthRestoreSpeed    * f_update_time);
+			conditions().ChangePower(artefact->m_fPowerRestoreSpeed     * f_update_time);
+			conditions().ChangeSatiety(artefact->m_fSatietyRestoreSpeed   * f_update_time);
+			if (artefact->m_fRadiationRestoreSpeed > 0.0f)
 			{
 				float val = artefact->m_fRadiationRestoreSpeed - conditions().GetBoostRadiationImmunity();
 				clamp(val, 0.0f, val);
@@ -1507,21 +1433,21 @@ void CActor::UpdateArtefactsOnBeltAndOutfit()
 		}
 	}
 	CCustomOutfit* outfit = GetOutfit();
-	if ( outfit )
+	if (outfit)
 	{
-		conditions().ChangeBleeding		(outfit->m_fBleedingRestoreSpeed  * f_update_time);
-		conditions().ChangeHealth		(outfit->m_fHealthRestoreSpeed    * f_update_time);
-		conditions().ChangePower		(outfit->m_fPowerRestoreSpeed     * f_update_time);
-		conditions().ChangeSatiety		(outfit->m_fSatietyRestoreSpeed   * f_update_time);
-		conditions().ChangeRadiation	(outfit->m_fRadiationRestoreSpeed * f_update_time);
+		conditions().ChangeBleeding(outfit->m_fBleedingRestoreSpeed  * f_update_time);
+		conditions().ChangeHealth(outfit->m_fHealthRestoreSpeed    * f_update_time);
+		conditions().ChangePower(outfit->m_fPowerRestoreSpeed     * f_update_time);
+		conditions().ChangeSatiety(outfit->m_fSatietyRestoreSpeed   * f_update_time);
+		conditions().ChangeRadiation(outfit->m_fRadiationRestoreSpeed * f_update_time);
 	}
 	else
 	{
-		CHelmet* pHelmet				= smart_cast<CHelmet*>(inventory().ItemFromSlot(HELMET_SLOT));
-		if(!pHelmet)
+		CHelmet* pHelmet = smart_cast<CHelmet*>(inventory().ItemFromSlot(HELMET_SLOT));
+		if (!pHelmet)
 		{
-			CTorch* pTorch = smart_cast<CTorch*>( inventory().ItemFromSlot(TORCH_SLOT) );
-			if ( pTorch && pTorch->GetNightVisionStatus() )
+			CTorch* pTorch = smart_cast<CTorch*>(inventory().ItemFromSlot(TORCH_SLOT));
+			if (pTorch && pTorch->GetNightVisionStatus())
 			{
 				pTorch->SwitchNightVision(false);
 			}
@@ -1531,14 +1457,12 @@ void CActor::UpdateArtefactsOnBeltAndOutfit()
 
 float	CActor::HitArtefactsOnBelt(float hit_power, ALife::EHitType hit_type)
 {
-	TIItemContainer::iterator it  = inventory().m_belt.begin(); 
-	TIItemContainer::iterator ite = inventory().m_belt.end() ;
-	for( ; it != ite; ++it )
+	for(auto it : inventory().m_belt)
 	{
-		CArtefact*	artefact = smart_cast<CArtefact*>(*it);
-		if ( artefact )
+		CArtefact*	artefact = smart_cast<CArtefact*>(it);
+		if (artefact)
 		{
-			hit_power -= artefact->m_ArtefactHitImmunities.AffectHit( 1.0f, hit_type );
+			hit_power -= artefact->m_ArtefactHitImmunities.AffectHit(1.0f, hit_type);
 		}
 	}
 	clamp(hit_power, 0.0f, flt_max);
@@ -1546,17 +1470,15 @@ float	CActor::HitArtefactsOnBelt(float hit_power, ALife::EHitType hit_type)
 	return hit_power;
 }
 
-float CActor::GetProtection_ArtefactsOnBelt( ALife::EHitType hit_type )
+float CActor::GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type)
 {
 	float sum = 0.0f;
-	TIItemContainer::iterator it  = inventory().m_belt.begin(); 
-	TIItemContainer::iterator ite = inventory().m_belt.end() ;
-	for( ; it != ite; ++it )
+	for (auto it : inventory().m_belt)
 	{
-		CArtefact*	artefact = smart_cast<CArtefact*>(*it);
-		if ( artefact )
+		CArtefact*	artefact = smart_cast<CArtefact*>(it);
+		if (artefact)
 		{
-			sum += artefact->m_ArtefactHitImmunities.AffectHit( 1.0f, hit_type );
+			sum += artefact->m_ArtefactHitImmunities.AffectHit(1.0f, hit_type);
 		}
 	}
 	return sum;
@@ -1587,37 +1509,6 @@ void CActor::AnimTorsoPlayCallBack(CBlend* B)
 	actor->m_bAnimTorsoPlayed = FALSE;
 }
 
-
-/*
-void CActor::UpdateMotionIcon(u32 mstate_rl)
-{
-	CUIMotionIcon*	motion_icon=CurrentGameUI()->UIMainIngameWnd->MotionIcon();
-	if(mstate_rl&mcClimb)
-	{
-		motion_icon->ShowState(CUIMotionIcon::stClimb);
-	}
-	else
-	{
-		if(mstate_rl&mcCrouch)
-		{
-			if (!isActorAccelerated(mstate_rl, IsZoomAimingMode()))
-				motion_icon->ShowState(CUIMotionIcon::stCreep);
-			else
-				motion_icon->ShowState(CUIMotionIcon::stCrouch);
-		}
-		else
-		if(mstate_rl&mcSprint)
-				motion_icon->ShowState(CUIMotionIcon::stSprint);
-		else
-		if(mstate_rl&mcAnyMove && isActorAccelerated(mstate_rl, IsZoomAimingMode()))
-			motion_icon->ShowState(CUIMotionIcon::stRun);
-		else
-			motion_icon->ShowState(CUIMotionIcon::stNormal);
-	}
-}
-*/
-
-
 CPHDestroyable*	CActor::ph_destroyable	()
 {
 	return smart_cast<CPHDestroyable*>(character_physics_support());
@@ -1625,40 +1516,33 @@ CPHDestroyable*	CActor::ph_destroyable	()
 
 CEntityConditionSimple *CActor::create_entity_condition	(CEntityConditionSimple* ec)
 {
-	if(!ec)
-		m_entity_condition		= xr_new<CActorCondition>(this);
-	else
-		m_entity_condition		= smart_cast<CActorCondition*>(ec);
-	
-	return		(inherited::create_entity_condition(m_entity_condition));
+	return (inherited::create_entity_condition((!ec) ? xr_new<CActorCondition>(this) : smart_cast<CActorCondition*>(ec)));
 }
 
-DLL_Pure *CActor::_construct			()
+DLL_Pure *CActor::_construct()
 {
-	m_pPhysics_support				=	xr_new<CCharacterPhysicsSupport>(CCharacterPhysicsSupport::etActor,this);
-	CEntityAlive::_construct		();
-	CInventoryOwner::_construct		();
-	CStepManager::_construct		();
-	
+	m_pPhysics_support = xr_new<CCharacterPhysicsSupport>(CCharacterPhysicsSupport::etActor, this);
+	CEntityAlive::_construct();
+	CInventoryOwner::_construct();
+	CStepManager::_construct();
+
 	return							(this);
 }
 
-bool CActor::use_center_to_aim			() const
+bool CActor::use_center_to_aim() const
 {
-	return							(!!(mstate_real&mcCrouch));
+	return !!(mstate_real&mcCrouch);
 }
 
-bool CActor::can_attach			(const CInventoryItem *inventory_item) const
+bool CActor::can_attach(const CInventoryItem *inventory_item) const
 {
 	const CAttachableItem	*item = smart_cast<const CAttachableItem*>(inventory_item);
-	if (!item || /*!item->enabled() ||*/ !item->can_be_attached())
+	if (!item ||  !item->can_be_attached())
 		return			(false);
 
-	//����� �� ������������ ������� ������ ����
 	if( m_attach_item_sections.end() == std::find(m_attach_item_sections.begin(),m_attach_item_sections.end(),inventory_item->object().cNameSect()) )
 		return false;
 
-	//���� ��� ���� �������������� ����� ������ ���� 
 	if(attached(inventory_item->object().cNameSect()))
 		return false;
 
@@ -1702,47 +1586,42 @@ bool CActor::is_ai_obstacle				() const
 	return							(false);//true);
 }
 
-float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
+float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 {
 	float res = 0.0f;
-	switch ( type )
+	switch (type)
 	{
 	case ALife::eHealthRestoreSpeed:
 	{
 		res = conditions().change_v().m_fV_HealthRestore;
-		res += conditions().V_SatietyHealth() * ( (conditions().GetSatiety() > 0.0f) ? 1.0f : -1.0f );
-
-		TIItemContainer::iterator itb = inventory().m_belt.begin();
-		TIItemContainer::iterator ite = inventory().m_belt.end();
-		for( ; itb != ite; ++itb ) 
+		res += conditions().V_SatietyHealth() * ((conditions().GetSatiety() > 0.0f) ? 1.0f : -1.0f);
+		for (auto it : inventory().m_belt)
 		{
-			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
-			if ( artefact )
+			CArtefact*	artefact = smart_cast<CArtefact*>(it);
+			if (artefact)
 			{
 				res += artefact->m_fHealthRestoreSpeed;
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
-		if ( outfit )
+		if (outfit)
 		{
 			res += outfit->m_fHealthRestoreSpeed;
 		}
 		break;
 	}
 	case ALife::eRadiationRestoreSpeed:
-	{	
-		TIItemContainer::iterator itb = inventory().m_belt.begin();
-		TIItemContainer::iterator ite = inventory().m_belt.end();
-		for( ; itb != ite; ++itb ) 
+	{
+		for (auto it : inventory().m_belt)
 		{
-			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
-			if ( artefact )
+			CArtefact*	artefact = smart_cast<CArtefact*>(it);
+			if (artefact)
 			{
 				res += artefact->m_fRadiationRestoreSpeed;
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
-		if ( outfit )
+		if (outfit)
 		{
 			res += outfit->m_fRadiationRestoreSpeed;
 		}
@@ -1752,18 +1631,16 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 	{
 		res = conditions().V_Satiety();
 
-		TIItemContainer::iterator itb = inventory().m_belt.begin();
-		TIItemContainer::iterator ite = inventory().m_belt.end();
-		for( ; itb != ite; ++itb ) 
+		for (auto it : inventory().m_belt)
 		{
-			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
-			if ( artefact )
+			CArtefact*	artefact = smart_cast<CArtefact*>(it);
+			if (artefact)
 			{
 				res += artefact->m_fSatietyRestoreSpeed;
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
-		if ( outfit )
+		if (outfit)
 		{
 			res += outfit->m_fSatietyRestoreSpeed;
 		}
@@ -1773,21 +1650,19 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 	{
 		res = conditions().GetSatietyPower();
 
-		TIItemContainer::iterator itb = inventory().m_belt.begin();
-		TIItemContainer::iterator ite = inventory().m_belt.end();
-		for( ; itb != ite; ++itb ) 
+		for (auto it : inventory().m_belt)
 		{
-			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
-			if ( artefact )
+			CArtefact*	artefact = smart_cast<CArtefact*>(it);
+			if (artefact)
 			{
 				res += artefact->m_fPowerRestoreSpeed;
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
-		if ( outfit )
+		if (outfit)
 		{
 			res += outfit->m_fPowerRestoreSpeed;
-			VERIFY(outfit->m_fPowerLoss!=0.0f);
+			VERIFY(outfit->m_fPowerLoss != 0.0f);
 			res /= outfit->m_fPowerLoss;
 		}
 		else
@@ -1797,19 +1672,17 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 	case ALife::eBleedingRestoreSpeed:
 	{
 		res = conditions().change_v().m_fV_WoundIncarnation;
-	
-		TIItemContainer::iterator itb = inventory().m_belt.begin();
-		TIItemContainer::iterator ite = inventory().m_belt.end();
-		for( ; itb != ite; ++itb ) 
+
+		for (auto it : inventory().m_belt)
 		{
-			CArtefact*	artefact = smart_cast<CArtefact*>( *itb );
-			if ( artefact )
+			CArtefact*	artefact = smart_cast<CArtefact*>(it);
+			if (artefact)
 			{
 				res += artefact->m_fBleedingRestoreSpeed;
 			}
 		}
 		CCustomOutfit* outfit = GetOutfit();
-		if ( outfit )
+		if (outfit)
 		{
 			res += outfit->m_fBleedingRestoreSpeed;
 		}
@@ -1819,7 +1692,6 @@ float CActor::GetRestoreSpeed( ALife::EConditionRestoreType const& type )
 
 	return res;
 }
-
 
 void CActor::On_SetEntity()
 {

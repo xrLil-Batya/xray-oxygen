@@ -41,7 +41,7 @@ CObjectSpace::~CObjectSpace()
 #endif
 }
 //----------------------------------------------------------------------
-
+#pragma warning(disable: 4267)
 //----------------------------------------------------------------------
 int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*>&	q_nearest, const Fvector &point, float range, CObject* ignore_object)
 {

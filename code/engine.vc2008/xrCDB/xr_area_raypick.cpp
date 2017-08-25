@@ -13,6 +13,7 @@ bool bDebug()
 	return !!(*cdb_bDebug);
 }
 #endif
+#pragma warning(disable: 4267)
 using namespace	collide;
 
 //--------------------------------------------------------------------------------

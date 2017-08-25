@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-inline u32 extra_day_count(u32 years) const { return ((years % 400 == 0) || ((years % 4 == 0) && (years % 100 != 0))) ? 1 : 0; }
+inline u32 extra_day_count(u32 years) { return ((years % 400 == 0) || ((years % 4 == 0) && (years % 100 != 0))) ? 1 : 0; }
 static int days_in_month[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
 
 inline u64 generate_time_impl(u32 years, u32 months, u32 days, u32 hours, u32 minutes, u32 seconds, u32 milliseconds)

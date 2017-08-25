@@ -2,10 +2,10 @@
 #include "dog.h"
 #include "dog_state_manager.h"
 #include "ai_space.h"
-#include "../control_animation_base.h"
-#include "../control_direction_base.h"
-#include "../control_movement_base.h"
-#include "../control_path_builder_base.h"
+//#include "../control_animation_base.h"
+//#include "../control_direction_base.h"
+//#include "../control_movement_base.h"
+//#include "../control_path_builder_base.h"
 #include "../states/monster_state_hear_int_sound.h"
 #include "../states/monster_state_hitted.h"
 #include "../states/monster_state_controlled.h"
@@ -18,13 +18,10 @@
 
 namespace detail
 {
-
-namespace dog
-{
-	const float atack_decision_maxdist = 6.f;
-
-} // dog
-
+	namespace dog
+	{
+		const float atack_decision_maxdist = 6.f;
+	} // dog
 } // detail
 
 CStateManagerDog::CStateManagerDog(CAI_Dog *monster) : inherited(monster)
@@ -43,10 +40,8 @@ CStateManagerDog::CStateManagerDog(CAI_Dog *monster) : inherited(monster)
 
 void CStateManagerDog::execute()
 {
-	u32   state_id = u32(-1);
-
+	u32 state_id = u32(-1);
 	CMonsterSquad* squad = monster_squad().get_squad(object);
-
 	const CEntityAlive* enemy = object->EnemyMan.get_enemy();
 
 	bool atack = false;
@@ -70,56 +65,47 @@ void CStateManagerDog::execute()
 			atack = true;
 	}
 
-	if ( !object->is_under_control() )
+	if (!object->is_under_control())
 	{
-		if ( atack )
+		if (atack)
 		{
 			CMonsterSquad* squad = monster_squad().get_squad(object);
-			switch ( object->EnemyMan.get_danger_type() ) 
+			switch (object->EnemyMan.get_danger_type())
 			{
-				case eStrong: state_id = eStatePanic;  break;
-				case eWeak:   state_id = eStateAttack; break;
+			case eStrong: state_id = eStatePanic;  break;
+			case eWeak:   state_id = eStateAttack; break;
 			}
-			if ( state_id == eStatePanic && squad->squad_alife_count() > 2 )
+			if (state_id == eStatePanic && squad->squad_alife_count() > 2)
 			{
 				state_id = eStateAttack;
 			}
-		} 
-		else if ( object->HitMemory.is_hit() )
+		}
+		else if (object->HitMemory.is_hit())
 		{
 			// only inform squad of new hit (made not later then after 1 sec)
-			if ( current_substate != eStateHitted && 
-				 time() < object->HitMemory.get_last_hit_time()+1000 )
+			if (current_substate != eStateHitted && time() < object->HitMemory.get_last_hit_time() + 1000 && squad)
 			{
-				if ( squad )
-				{
-					squad->set_home_in_danger();
-				}				
+				squad->set_home_in_danger();
 			}
 
-			state_id = eStateHitted;			
-		} 
-		else if ( check_state(eStateHearHelpSound) )
+			state_id = eStateHitted;
+		}
+		else if (check_state(eStateHearHelpSound))
 		{
 			state_id = eStateHearHelpSound;
-		} 
-		else if ( object->hear_interesting_sound )
+		}
+		else if (object->hear_interesting_sound)
 		{
 			state_id = eStateHearInterestingSound;
 		}
-		else if ( object->hear_dangerous_sound )
+		else if (object->hear_dangerous_sound)
 		{
 			//comment by Lain: || monster_squad().get_squad(object)->GetCommand(object).type == SC_REST) {
-			state_id = eStateHearDangerousSound;	
-		} 
-		else
+			state_id = eStateHearDangerousSound;
+		}
+		else if (!object->get_custom_anim_state())
 		{
-			if ( object->get_custom_anim_state() ) 
-			{
-				return; 
-			}
-
-			if ( check_eat() )	
+			if (check_eat())
 			{
 				state_id = eStateEat;
 				if (!object->EatedCorpse)
@@ -128,30 +114,21 @@ void CStateManagerDog::execute()
 					const_cast<CEntityAlive *>(object->EatedCorpse)->set_lock_corpse(true);
 				}
 			}
-			else 
-			{
-				state_id = eStateRest;
-			}
+			else state_id = eStateRest;
 		}
 	}
-	else 
-	{
-		state_id = eStateControlled;
-	}
+	else state_id = eStateControlled;
 
-	select_state(state_id); 
+	select_state(state_id);
 
-	if ( prev_substate != current_substate && object->get_custom_anim_state() )
+	if (prev_substate != current_substate && object->get_custom_anim_state())
 	{
 		object->anim_end_reinit();
 	}
 
-	if ( prev_substate == eStateEat && current_substate != eStateEat )
+	if (prev_substate == eStateEat && current_substate != eStateEat && object->character_physics_support()->movement()->PHCapture())
 	{
-		if ( object->character_physics_support()->movement()->PHCapture() )
-		{
-			object->character_physics_support()->movement()->PHReleaseObject();
-		}
+		object->character_physics_support()->movement()->PHReleaseObject();
 	}
 
 	// выполнить текущее состояние
@@ -160,15 +137,7 @@ void CStateManagerDog::execute()
 	prev_substate = current_substate;
 }
 
-bool CStateManagerDog::check_eat ()
+bool CStateManagerDog::check_eat()
 {
-	if ( !object->CorpseMan.get_corpse() )
-	{
-		if ( !object->EatedCorpse )
-		{
-			return false;
-		}
-	}
-
-	return inherited::check_state(eStateEat);
+	return (!object->CorpseMan.get_corpse() && !object->EatedCorpse) ? false :inherited::check_state(eStateEat);
 }

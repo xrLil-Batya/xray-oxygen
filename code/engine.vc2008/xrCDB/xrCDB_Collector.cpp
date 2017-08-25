@@ -1,7 +1,7 @@
 #include "stdafx.h"
 //.#include "../xrCore/xrCore.h"
 #pragma hdrstop
-
+#pragma warning(disable: 4267)
 #include "xrCDB.h"
 
 namespace CDB

@@ -33,8 +33,9 @@ public:
     xalloc& operator=(const xalloc<Other>&) {
         return *this;
     }
-
+#pragma warning(disable: 4267)
     pointer allocate(const size_type n, const void* p = nullptr) const { return xr_alloc<T>(n); }
+#pragma warning(default: 4267)
 
     void deallocate(pointer p, const size_type) const { xr_free(p); }
 
