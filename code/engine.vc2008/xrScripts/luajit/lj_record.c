@@ -4,7 +4,6 @@
 */
 
 #define lj_record_c
-#define LUA_CORE
 
 #include "lj_obj.h"
 
