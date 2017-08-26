@@ -168,6 +168,8 @@
   <ItemGroup>
     <ClInclude Include=".\host\buildvm.h" />
     <ClInclude Include=".\host\buildvm_arch.h" />
+    <ClInclude Include="host\arch_x64.hpp" />
+    <ClInclude Include="host\arch_x86.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

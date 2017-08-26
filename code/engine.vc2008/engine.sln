@@ -1,6 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26430.16
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "utils", "utils", "{89F6A7EE-3BBE-45D3-A8A8-5D9366CD987B}"
 EndProject
@@ -135,6 +135,8 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCode", "3rd party\OpenCode\OpenCode.vcxproj", "{AE0574E2-BE4C-49B0-98A6-739176D69277}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BuildVm", "xrScripts\BuildVm\BuildVm.vcxproj", "{9E14D7B5-9D0E-4373-B076-33DD4BECDBA0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52DA02F0-640F-4EEA-AB9B-E090571248DC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -1493,6 +1495,9 @@ Global
 		{9D8D7555-3AA2-47AD-9499-AC0FF5EFF5D0} = {2BFC806B-CE92-4EA4-8FE8-5F2EA54BA348}
 		{35448F1E-E96F-40A2-8F46-6FB1D8DFF1F1} = {2BFC806B-CE92-4EA4-8FE8-5F2EA54BA348}
 		{AE0574E2-BE4C-49B0-98A6-739176D69277} = {2BFC806B-CE92-4EA4-8FE8-5F2EA54BA348}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {DC8D3737-61A4-4A70-AE4C-C66D5F07767A}
 	EndGlobalSection
 	GlobalSection(DPCodeReviewSolutionGUID) = preSolution
 		DPCodeReviewSolutionGUID = {00000000-0000-0000-0000-000000000000}

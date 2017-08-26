@@ -32,5 +32,11 @@
     <ClInclude Include=".\host\buildvm_arch.h">
       <Filter>Include</Filter>
     </ClInclude>
+    <ClInclude Include="host\arch_x86.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="host\arch_x64.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
