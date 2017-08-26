@@ -1514,9 +1514,19 @@ CPHDestroyable*	CActor::ph_destroyable	()
 	return smart_cast<CPHDestroyable*>(character_physics_support());
 }
 
-CEntityConditionSimple *CActor::create_entity_condition	(CEntityConditionSimple* ec)
+CEntityConditionSimple *CActor::create_entity_condition	(CEntityConditionSimple* parentEntCond)
 {
-	return (inherited::create_entity_condition((!ec) ? xr_new<CActorCondition>(this) : smart_cast<CActorCondition*>(ec)));
+	//return (inherited::create_entity_condition((!ec) ? xr_new<CActorCondition>(this) : smart_cast<CActorCondition*>(ec)));
+    if (!parentEntCond)
+    {
+        m_entity_condition = xr_new<CActorCondition>(this);
+    }
+    else
+    {
+        m_entity_condition = smart_cast<CActorCondition*>(parentEntCond);
+    }
+
+    return		(inherited::create_entity_condition(m_entity_condition));
 }
 
 DLL_Pure *CActor::_construct()
