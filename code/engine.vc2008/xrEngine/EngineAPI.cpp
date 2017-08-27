@@ -147,7 +147,9 @@ void CEngineAPI::Initialize(void)
 
 	//////////////////////////////////////////////////////////////////////////
 	// vTune
+
 	tune_enabled		= FALSE;
+#ifdef _M_X86 // #DEPRECATED anyway [FX]
 	if (strstr(Core.Params,"-tune"))	{
 		LPCSTR			g_name	= "vTuneAPI.dll";
 		Log				("Loading DLL:",g_name);
@@ -158,6 +160,7 @@ void CEngineAPI::Initialize(void)
 		tune_pause		= (VTPause*)	GetProcAddress(hTuner,"VTPause"		);	R_ASSERT(tune_pause);
 		tune_resume		= (VTResume*)	GetProcAddress(hTuner,"VTResume"	);	R_ASSERT(tune_resume);
 	}
+#endif
 }
 
 void CEngineAPI::Destroy	(void)
