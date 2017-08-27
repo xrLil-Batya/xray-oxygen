@@ -136,8 +136,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCode", "3rd party\OpenC
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BuildVm", "xrScripts\BuildVm\BuildVm.vcxproj", "{9E14D7B5-9D0E-4373-B076-33DD4BECDBA0}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{52DA02F0-640F-4EEA-AB9B-E090571248DC}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug Multithreaded|ARM = Debug Multithreaded|ARM
