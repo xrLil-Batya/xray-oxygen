@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 
 #include "uiiteminfo.h"
 #include "uistatic.h"

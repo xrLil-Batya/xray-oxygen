@@ -59,7 +59,7 @@ private:
 
 			LPCSTR			get_current_animation();
 	static	void			animation_end(CBlend* B);
-#ifdef _DEBUG	
+#ifdef DEBUG	
 	virtual void	debug_on_key		(int key);
 #endif
 

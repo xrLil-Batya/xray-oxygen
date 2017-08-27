@@ -31,12 +31,10 @@ private:
 	xr_vector<ISpatial*>				r_spatial;			// MT: dangerous
 public:
 
-#ifdef DEBUG
 	FactoryPtr<IObjectSpaceRender>		*m_pRender;
 	//ref_shader							sh_debug;
 	//clQueryCollision					q_debug;			// MT: dangerous
 	//xr_vector<std::pair<Fsphere,u32> >	dbg_S;				// MT: dangerous
-#endif
 
 private:
 	bool								_RayTest			( const Fvector &start, const Fvector &dir, float range, collide::rq_target tgt, collide::ray_cache* cache, CObject* ignore_object);
@@ -79,10 +77,8 @@ public:
 	const Fbox&							GetBoundingVolume	() { return m_BoundingVolume;}
 
 	// Debugging
-#ifdef DEBUG
 	void								dbgRender			();
 	//ref_shader							dbgGetShader		()	{ return sh_debug;	}
-#endif
 };
 
 

@@ -42,7 +42,7 @@ typename luabind::memory_allocator<T>::const_pointer luabind::memory_allocator<T
 {
 	return			(&value);
 }
-
+#pragma warning(disable: 5037)
 template <typename T>
 typename luabind::memory_allocator<T>::pointer luabind::memory_allocator<T>::allocate			(size_type const n, void const* const p=0) const
 {
@@ -52,7 +52,7 @@ typename luabind::memory_allocator<T>::pointer luabind::memory_allocator<T>::all
 
 	return			(result);
 }
-
+#pragma warning(default: 5037)
 template <typename T>
 char *luabind::memory_allocator<T>::__charalloc										(size_type const n)
 {

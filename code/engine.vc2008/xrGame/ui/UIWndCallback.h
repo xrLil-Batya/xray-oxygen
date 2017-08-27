@@ -6,10 +6,9 @@ class CUIWindow;
 class CUIWndCallback
 {
 public:
-	typedef fastdelegate::FastDelegate2<CUIWindow*,void*,void>				void_function;
+	using void_function = fastdelegate::FastDelegate2<CUIWindow*,void*,void>;
 private:
-	typedef xr_vector<SCallbackInfo*>	CALLBACKS;
-	typedef CALLBACKS::iterator			CALLBACK_IT;
+	using CALLBACKS = xr_vector<SCallbackInfo*>;
 private:
 			CALLBACKS			m_callbacks;
 			SCallbackInfo*		NewCallback			();

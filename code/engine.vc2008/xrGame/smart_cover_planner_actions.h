@@ -4,18 +4,15 @@
 //	Author		: Alexander Dudin
 //	Description : Smart cover planner action classes
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef SMART_COVER_PLANNER_ACTIONS_H_INCLUDED
-#define SMART_COVER_PLANNER_ACTIONS_H_INCLUDED
-
+#pragma once
 #include "smart_cover_detail.h"
 #include "stalker_combat_action_base.h"
 #include "debug_make_final.hpp"
 
 class CAI_Stalker;
 
-namespace smart_cover {
-
+namespace smart_cover
+{
 class animation_planner;
 
 ////////////////////////////////////////////////////////////////////////////
@@ -104,7 +101,3 @@ public:
 };
 
 } // namespace smart_cover
-
-#include "smart_cover_planner_actions_inline.h"
-
-#endif // SMART_COVER_PLANNER_ACTIONS_H_INCLUDED

@@ -137,14 +137,8 @@ private:
 	int		m_iTextureDepth;
 
 //	Allow real-time config reload
-#ifdef	DEBUG
 	xr_vector<xr_string>		m_lstSectionNames;
 	xr_vector<dx103DFluidData*>	m_lstFluidData;
-#endif	//	DEBUG
-
-//	Allow real-time config reload
-#ifdef	DEBUG
-#endif	//	DEBUG
 };
 
 extern dx103DFluidManager	FluidManager;

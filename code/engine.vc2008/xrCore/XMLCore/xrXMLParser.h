@@ -53,12 +53,10 @@ public:
 	int					GetNodesNum				(XML_NODE* node, const char*  tag_name);
 
 
-#ifdef DEBUG // debug & mixed
 	//ïðîâåðêà òîãî, ÷òî àòòðèáóòû ó òåãîâ óíèêàëüíû
 	//(åñëè íå NULL, òî óíèêàëüíîñòü íàðóøåíà è âîçâðàøàåòñÿ èìÿ 
 	//ïîâòîðÿþùåãîñÿ àòðèáóòà)
 	const char*			CheckUniqueAttrib		(XML_NODE* start_node, const char* tag_name, const char* attrib_name);
-#endif
 
 	//ïåðåìåñòèòüñÿ ïî XML äåðåâó 
 	//ïóòü çàäàåòñÿ â ôîðìå PARENT:CHILD:CHIDLS_CHILD
@@ -76,10 +74,8 @@ protected:
 	XML_NODE*			m_root;
 	XML_NODE*			m_pLocalRoot;
 
-#ifdef DEBUG // debug & mixed
 	//áóôôåðíûé âåêòîð äëÿ ïðîâåðêè óíèêàëüíîñòü àòòðèáóòîâ
 	xr_vector<shared_str> m_AttribValues;
-#endif
 public:
 	virtual shared_str correct_file_name		(const char* path, const char* fn) {return fn;}
 private:

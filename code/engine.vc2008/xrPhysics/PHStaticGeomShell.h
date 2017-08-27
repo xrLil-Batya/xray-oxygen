@@ -11,9 +11,7 @@ class CPHStaticGeomShell:
 	public IPHStaticGeomShell
 {
 
-#ifdef	DEBUG
 	virtual		IPhysicsShellHolder	*ref_object					() { return CPHGeometryOwner::PhysicsRefObject() ;}
-#endif
 
 			void			get_spatial_params	();	
 virtual		void			EnableObject		(CPHObject* obj){CPHUpdateObject::Activate();}

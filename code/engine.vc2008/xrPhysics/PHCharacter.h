@@ -33,11 +33,6 @@ class CPHCharacter :
 	public CPHSynchronize,
 	public CPHDisablingTranslational,
 	public IPhysicsElement
-#if 0
-#ifdef DEBUG
-	,public pureRender
-#endif
-#endif
 {
 public:
 
@@ -69,9 +64,7 @@ public:
 
 private:
 
-#ifdef		DEBUG
 	virtual		IPhysicsShellHolder	*ref_object					() { return PhysicsRefObject			() ;}
-#endif
 
 protected:
 ERestrictionType		m_new_restriction_type;

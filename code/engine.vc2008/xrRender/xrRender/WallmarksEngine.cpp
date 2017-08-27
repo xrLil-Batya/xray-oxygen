@@ -304,9 +304,7 @@ void CWallmarksEngine::AddSkeletonWallmark(intrusive_ptr<CSkeletonWallmark> wm)
 		if (0==slot) slot	= AppendSlot(wm->Shader());
 		// no similar - register _new_
 		slot->skeleton_items.push_back(wm);
-#ifdef	DEBUG
 		wm->used_in_render	= Device.dwFrame;
-#endif
 	}
 }
 
@@ -428,9 +426,7 @@ void CWallmarksEngine::Render()
 					w_verts = w_save;
 				}
 			}
-			#ifdef	DEBUG
 			 W->used_in_render	= u32(-1);
-			#endif
 		}
 		slot->skeleton_items.clear();
 		// Flush stream

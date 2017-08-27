@@ -68,16 +68,12 @@ protected:
 	// Geometric (transformation)
 	svector<SavedPosition,4>			PositionStack;
 public:
-#ifdef DEBUG
 	u32									dbg_update_cl;
-#endif
 	u32									dwFrame_UpdateCL;
 	u32									dwFrame_AsCrow;
 
 	// Crow-MODE
-#ifdef	DEBUG
-		void							DBGGetProps			(ObjectProperties &p ) const { p = Props; }
-#endif
+    ICF	void							DBGGetProps			(ObjectProperties &p ) const { p = Props; }
 		void							MakeMeCrow			();
 
 	ICF	void							IAmNotACrowAnyMore	()					{ Props.crow = false;		}

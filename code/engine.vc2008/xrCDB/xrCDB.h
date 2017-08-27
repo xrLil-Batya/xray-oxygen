@@ -5,6 +5,7 @@
 // that uses this DLL. This way any other project whose source files include this file see
 // XRCDB_API functions as being imported from a DLL, wheras this DLL sees symbols
 // defined with this macro as being exported.
+#include "../xrCore/xrCore.h"
 #ifdef XRCDB_EXPORTS
 #	define XRCDB_API __declspec(dllexport)
 #else
@@ -210,13 +211,13 @@ namespace CDB
 		ICF void		frustum_options	(u32 f)	{	frustum_mode = f;	}
 		void			frustum_query	(const MODEL *m_def, const CFrustum& F);
 
-		ICF RESULT*		r_begin			()	{	return &*rd.begin();		};
-		ICF RESULT*		r_end			()	{	return &*rd.end();			};
+		ICF RESULT*		r_begin			()	{	return &*rd.begin(); };
+		ICF RESULT*		r_end			()	{	return &*rd.end(); };
 		RESULT&			r_add			()	;
 		void			r_free			()	;
-		ICF int			r_count			()	{	return rd.size();			};
-		ICF void		r_clear			()	{	rd.clear();		};
-		ICF void		r_clear_compact	()	{	rd.clear();		};
+		ICF size_t		r_count			()	{	return rd.size(); };
+		ICF void		r_clear			()	{	rd.clear(); };
+		ICF void		r_clear_compact	()	{	rd.clear(); };
 	};
 
 	//

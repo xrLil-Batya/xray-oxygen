@@ -19,20 +19,17 @@
 #include <string.h>
 #include "encint.h"
 
-
-
-typedef struct oc_mcenc_ctx           oc_mcenc_ctx;
-
-
-
+#pragma warning(disable : 4018 4100)
+typedef struct oc_mcenc_ctx oc_mcenc_ctx;
 /*Temporary state used for motion estimation.*/
-struct oc_mcenc_ctx{
+struct oc_mcenc_ctx
+{
   /*The candidate motion vectors.*/
-  int                candidates[13][2];
+  int candidates[13][2];
   /*The start of the Set B candidates.*/
-  int                setb0;
+  int setb0;
   /*The total number of candidates.*/
-  int                ncandidates;
+  int ncandidates;
 };
 
 

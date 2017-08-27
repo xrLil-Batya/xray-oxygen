@@ -4,10 +4,7 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI actor state window class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef	UI_ACTOR_STATE_INFO_H_INCLUDED
-#define UI_ACTOR_STATE_INFO_H_INCLUDED
-
+#pragma once
 #include "alife_space.h"
 #include "UIHint.h"
 
@@ -29,12 +26,9 @@ private:
 
 	enum EStateType
 	{
-//		stt_stamina = 0,
 		stt_health = 0,
 		stt_bleeding,
 		stt_radiation,
-//		stt_armor,
-//		stt_main,
 		stt_fire,
 		stt_radia,
 		stt_acid,
@@ -89,5 +83,3 @@ public:
 			void	show_static				( bool status, u8 number=1 );
 
 }; // class ui_actor_state_item
-
-#endif // UI_ACTOR_STATE_INFO_H_INCLUDED

@@ -1,6 +1,6 @@
 #pragma once
 
-#ifdef DEBUG
+#if !defined(MIXED) && defined(DEBUG)
 #	define	USE_MEMORY_MONITOR
 #endif // DEBUG
 

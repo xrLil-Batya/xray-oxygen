@@ -24,18 +24,17 @@
 
 #define LUABIND_DONT_COPY_STRINGS
 
-#ifdef NDEBUG
+#ifndef LUA_DEBUG
 
 #	ifndef LUABIND_NO_ERROR_CHECKING
 #		define LUABIND_NO_ERROR_CHECKING
 #	endif // LUABIND_NO_ERROR_CHECKING
 
-#	define LUABIND_NO_EXCEPTIONS
 #	pragma warning(disable: 4251 577)
 #   define LUABIND_DTOR_NOEXCEPT noexcept
 #else
 #   define LUABIND_DTOR_NOEXCEPT
-#endif // NDEBUG
+#endif // LUA_DEBUG
 // LUABIND_NO_ERROR_CHECKING
 // define this to remove all error checks
 // this will improve performance and memory

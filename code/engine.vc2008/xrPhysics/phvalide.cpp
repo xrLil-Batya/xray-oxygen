@@ -4,7 +4,13 @@
 #include "mathutils.h"
 #include "iphysicsshellholder.h"
 //#include "objectdump.h"
+#include "..\xrCore\dump_string.h"
 
+#ifdef DEBUG
+XRPHYSICS_API bool bDebugVerifyBoundaries = true;
+#else
+XRPHYSICS_API bool bDebugVerifyBoundaries = false;
+#endif
 
 extern Fbox	phBoundaries;
 
@@ -25,7 +31,6 @@ const Fbox	&ph_boundaries()
 */
 
 
-#ifdef	DEBUG
 std::string dbg_valide_pos_string( const Fvector &pos,const Fbox &bounds, const IPhysicsShellHolder *obj, LPCSTR msg )
 {
 	return	std::string( msg ) +
@@ -38,4 +43,3 @@ std::string dbg_valide_pos_string( const Fvector &pos, const IPhysicsShellHolder
 {
 	return dbg_valide_pos_string( pos, phBoundaries, obj, msg );
 }
-#endif

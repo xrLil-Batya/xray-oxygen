@@ -1,9 +1,6 @@
 #include "stdafx.h"
 
-#ifdef DEBUG
-	ECORE_API bool bDebug	= FALSE;
-	
-#endif
+ENGINE_API bool bDebug	= FALSE;
 
 // Video
 //. u32			psCurrentMode		= 1024;

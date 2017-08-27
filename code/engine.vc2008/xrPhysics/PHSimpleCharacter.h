@@ -259,9 +259,7 @@ virtual	void	get_Box								( Fvector&	sz, Fvector& c )const;
 	protected:
 virtual	void	update_last_material						();
 public:	
-#ifdef DEBUG
 	virtual		void		OnRender						();
-#endif
 };
 
 const dReal def_spring_rate=0.5f;

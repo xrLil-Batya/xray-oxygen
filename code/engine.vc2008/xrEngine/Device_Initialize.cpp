@@ -66,8 +66,15 @@ PROTECT_API void CRenderDevice::Initialize			()
         SetRect			( &rc, 0, 0, 640, 480 );
         AdjustWindowRect( &rc, m_dwWindowStyle, FALSE );
 
+        DWORD wndStyle = WS_EX_TOPMOST;
+
+        if (IsDebuggerPresent())
+        {
+            wndStyle = 0;
+        }
+
         // Create the render window
-		m_hWnd = CreateWindowEx( WS_EX_TOPMOST, 
+		m_hWnd = CreateWindowEx(wndStyle,
 								wndclass, "S.T.A.L.K.E.R.: Call of Pripyat", m_dwWindowStyle,
                                /*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
                                (rc.right-rc.left), (rc.bottom-rc.top), 0L,

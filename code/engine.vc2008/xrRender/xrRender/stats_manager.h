@@ -32,7 +32,6 @@ private:
 	void increment_stats( u32 size, enum_stats_buffer_type type, _D3DPOOL location, void* buff_ptr );
 	void decrement_stats( u32 size, enum_stats_buffer_type type, _D3DPOOL location, void* buff_ptr );
 
-#ifdef DEBUG
 	struct stats_item
 	{
 		void*					buff_ptr;
@@ -42,7 +41,6 @@ private:
 	}; // stats_item
 
 	xr_vector<stats_item>		m_buffers_list;
-#endif
 }; // class stats_manager
 
 u32 get_format_pixel_size ( D3DFORMAT format );

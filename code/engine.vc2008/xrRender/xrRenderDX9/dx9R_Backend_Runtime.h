@@ -65,9 +65,7 @@ ICF void CBackend::set_VS(ID3DVertexShader* _vs, LPCSTR _n)
 		stat.vs			++;
 		vs				= _vs;
 		CHK_DX			(HW.pDevice->SetVertexShader(vs));
-#ifdef DEBUG
 		vs_name			= _n;
-#endif
 	}
 }
 

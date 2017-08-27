@@ -50,9 +50,7 @@ public:
 		void						set_PhysicsRefObject					(IPhysicsShellHolder* ref_object);												//aux
 		IPhysicsShellHolder*		PhysicsRefObject						(){return m_phys_ref_object;}													//aux
 		void						SetPhObjectInGeomData					(CPHObject* O);		
-#ifdef	DEBUG
 		void						dbg_draw								( float scale, u32 color, Flags32 flags )const;
-#endif
 		void						SetMaterial								(u16 m)		  ;
 		void						SetMaterial								(LPCSTR m){SetMaterial(GMLibrary().GetMaterialIdx(m));}								//aux
 	IC	CODEGeom*					Geom									(u16 num)		{R_ASSERT2 (num<m_geoms.size(),"out of range"); return m_geoms[num]; }

@@ -13,7 +13,7 @@
 #include "alife_simulator.h"
 #include "ef_storage.h"
 #include "ai_space.h"
-#include "game_graph.h"
+//#include "game_graph.h"
 #include "inventory.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "ef_primary.h"
@@ -24,74 +24,79 @@
 
 IC	CLASS_ID CBaseFunction::clsid_member_item() const
 {
-	CLASS_ID					result;
+	CLASS_ID result;
 	if (ef_storage().non_alife().member_item())
-		result					= ef_storage().non_alife().member_item()->CLS_ID;
-	else {
-		VERIFY2					(ef_storage().alife().member_item(),"No object specified for evaluation function");
-		result					= ef_storage().alife().member_item()->m_tClassID;
+		result = ef_storage().non_alife().member_item()->CLS_ID;
+	else 
+	{
+		VERIFY2 (ef_storage().alife().member_item(),"No object specified for evaluation function");
+		result = ef_storage().alife().member_item()->m_tClassID;
 	}
-	return						(result);
+	return (result);
 }
 
 IC	CLASS_ID CBaseFunction::clsid_enemy_item() const
 {
-	CLASS_ID					result;
+	CLASS_ID result;
 	if (ef_storage().non_alife().enemy_item())
-		result					= ef_storage().non_alife().enemy_item()->CLS_ID;
-	else {
-		VERIFY2					(ef_storage().alife().enemy_item(),"No object specified for evaluation function");
-		result					= ef_storage().alife().enemy_item()->m_tClassID;
+		result = ef_storage().non_alife().enemy_item()->CLS_ID;
+	else 
+	{
+		VERIFY2 (ef_storage().alife().enemy_item(),"No object specified for evaluation function");
+		result = ef_storage().alife().enemy_item()->m_tClassID;
 	}
-	return						(result);
+	return (result);
 }
 
 IC	CLASS_ID CBaseFunction::clsid_member() const
 {
-	CLASS_ID							result;
+	CLASS_ID result;
 	if (ef_storage().non_alife().member())
-		result							= ef_storage().non_alife().member()->CLS_ID;
-	else {
-		VERIFY2							(ef_storage().alife().member(),"No object specified for evaluation function");
-		const CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = smart_cast<const CSE_ALifeDynamicObject*>(ef_storage().alife().member());
-		VERIFY2							(l_tpALifeDynamicObject,"Invalid object passed to the evaluation function");
-		result							= l_tpALifeDynamicObject->m_tClassID;
+		result = ef_storage().non_alife().member()->CLS_ID;
+	else 
+	{
+		VERIFY2(ef_storage().alife().member(),"No object specified for evaluation function");
+		const CSE_ALifeDynamicObject *l_tpALifeDynamicObject = smart_cast<const CSE_ALifeDynamicObject*>(ef_storage().alife().member());
+		VERIFY2(l_tpALifeDynamicObject,"Invalid object passed to the evaluation function");
+		result = l_tpALifeDynamicObject->m_tClassID;
 	}
-	return								(result);
+	return (result);
 }
 
 IC	CLASS_ID CBaseFunction::clsid_enemy() const
 {
-	CLASS_ID							result;
+	CLASS_ID result;
 	if (ef_storage().non_alife().enemy())
-		result							= ef_storage().non_alife().enemy()->CLS_ID;
-	else {
-		VERIFY2							(ef_storage().alife().enemy(),"No object specified for evaluation function");
+		result = ef_storage().non_alife().enemy()->CLS_ID;
+	else
+	{
+		VERIFY2(ef_storage().alife().enemy(),"No object specified for evaluation function");
 		const CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = smart_cast<const CSE_ALifeDynamicObject*>(ef_storage().alife().enemy());
-		VERIFY2							(l_tpALifeDynamicObject,"Invalid object passed to the evaluation function");
-		result							= l_tpALifeDynamicObject->m_tClassID;
+		VERIFY2(l_tpALifeDynamicObject,"Invalid object passed to the evaluation function");
+		result = l_tpALifeDynamicObject->m_tClassID;
 	}
-	return								(result);
+	return (result);
 }
 
 float CDistanceFunction::ffGetValue()
 {
-	if (ef_storage().non_alife().member())
-		return(ef_storage().non_alife().member()->Position().distance_to(ef_storage().non_alife().enemy()->Position()));
-	else
-		return(ef_storage().alife().member()->base()->Position().distance_to(ef_storage().alife().enemy()->base()->Position()));
+	return (ef_storage().non_alife().member()) 
+		? (ef_storage().non_alife().member()->Position().distance_to(ef_storage().non_alife().enemy()->Position()))
+		: (ef_storage().alife().member()->base()->Position().distance_to(ef_storage().alife().enemy()->base()->Position()));
 }
 
 float CPersonalHealthFunction::ffGetValue()
 {
-	if (ef_storage().non_alife().member()) {
+	if (ef_storage().non_alife().member()) 
+	{
 		m_fMaxResultValue = ef_storage().non_alife().member()->GetMaxHealth();
 		return(ef_storage().non_alife().member()->GetfHealth());
 	}
-	else {
+	else 
+	{
 		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3			(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
-		m_fMaxResultValue	= l_tpALifeMonsterAbstract->g_MaxHealth();
+		VERIFY3(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
+		m_fMaxResultValue = l_tpALifeMonsterAbstract->g_MaxHealth();
 		return(l_tpALifeMonsterAbstract->get_health());
 	}
 }
@@ -100,25 +105,27 @@ float CPersonalMoraleFunction::ffGetValue()
 {
 	if (ef_storage().non_alife().member())
 		return(ef_storage().non_alife().member()->m_fMorale);
-	else {
+	else 
+	{
 		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3			(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
+		VERIFY3(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
 		return(l_tpALifeMonsterAbstract->m_fMorale);
 	}
 }
 
 float CPersonalCreatureTypeFunction::ffGetValue()
 {
-	u32			result;
+	u32 result;
 	if (ef_storage().non_alife().member())
 		result	= ef_storage().non_alife().member()->ef_creature_type();
-	else {
+	else 
+	{
 		VERIFY2	(ef_storage().alife().member(),"No object specified for evaluation function");
 		result	= ef_storage().alife().member()->ef_creature_type();
 	}
 
-	VERIFY		(float(result) < m_fMaxResultValue + 1);
-	return		(float(result));
+	VERIFY(float(result) < m_fMaxResultValue + 1);
+	return (float(result));
 }
 
 u32 CPersonalWeaponTypeFunction::dwfGetWeaponType()
@@ -142,25 +149,28 @@ float CPersonalWeaponTypeFunction::ffGetTheBestWeapon()
 
 	if (ef_storage().non_alife().member()) {
 		const CInventoryOwner *tpInventoryOwner = smart_cast<const CInventoryOwner*>(ef_storage().non_alife().member());
-		if (tpInventoryOwner) {
-			u16 I = tpInventoryOwner->inventory().FirstSlot();
-			u16 E = tpInventoryOwner->inventory().LastSlot();
-			for ( ; I <= E; ++I) {
-				PIItem iitem = tpInventoryOwner->inventory().ItemFromSlot(I);
-				if (iitem) {
+		if (tpInventoryOwner) 
+		{
+			for (u16 it = tpInventoryOwner->inventory().FirstSlot(); it <= tpInventoryOwner->inventory().LastSlot(); ++it)
+			{
+				PIItem iitem = tpInventoryOwner->inventory().ItemFromSlot(it);
+				if (iitem) 
+				{
 					CWeapon *tpCustomWeapon = smart_cast<CWeapon*>(iitem);
-					if (tpCustomWeapon && (tpCustomWeapon->GetSuitableAmmoTotal(true) > tpCustomWeapon->GetAmmoMagSize()/10)) {
-						ef_storage().non_alife().member_item()	= tpCustomWeapon;
+					if (tpCustomWeapon && (tpCustomWeapon->GetSuitableAmmoTotal(true) > tpCustomWeapon->GetAmmoMagSize() / 10)) 
+					{
+						ef_storage().non_alife().member_item() = tpCustomWeapon;
 						u32 dwCurrentBestWeapon = dwfGetWeaponType();
 						if (dwCurrentBestWeapon > dwBestWeapon)
 							dwBestWeapon = dwCurrentBestWeapon;
-						ef_storage().non_alife().member_item()	= 0;
+						ef_storage().non_alife().member_item() = 0;
 					}
 				}
 			}
-		}	
+		}
 	}
-	else {
+	else 
+	{
 		if (!ef_storage().alife().member() || !ef_storage().alife().member()->m_tpCurrentBestWeapon)
 			return(0);
 		ef_storage().alife().member_item()	= ef_storage().alife().member()->m_tpCurrentBestWeapon;
@@ -174,17 +184,18 @@ float CPersonalWeaponTypeFunction::ffGetValue()
 	float			result;
 	if (ef_storage().non_alife().member())
 		if (ef_storage().non_alife().member()->natural_weapon())
-			result	= (float)ef_storage().non_alife().member()->ef_weapon_type();
+			result = (float)ef_storage().non_alife().member()->ef_weapon_type();
 		else
-			result	= ffGetTheBestWeapon();
-	else {
-		VERIFY2	(ef_storage().alife().member(),"No object specified for evaluation function");
+			result = ffGetTheBestWeapon();
+	else 
+	{
+		VERIFY2(ef_storage().alife().member(), "No object specified for evaluation function");
 		if (ef_storage().alife().member()->natural_weapon())
-			result	= (float)ef_storage().alife().member()->ef_weapon_type();
+			result = (float)ef_storage().alife().member()->ef_weapon_type();
 		else
-			result	= ffGetTheBestWeapon();
+			result = ffGetTheBestWeapon();
 	}
-	VERIFY		(result < m_fMaxResultValue + 1.f);
+	VERIFY(result < m_fMaxResultValue + 1.f);
 	return		(result);
 }
 
@@ -192,9 +203,10 @@ float CPersonalAccuracyFunction::ffGetValue()
 {
 	if (ef_storage().non_alife().member())
 		return(ef_storage().non_alife().member()->m_fAccuracy);
-	else {
+	else 
+	{
 		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3						(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
+		VERIFY3(l_tpALifeMonsterAbstract, "Invalid object passed to the evaluation function ", m_caName);
 		return(l_tpALifeMonsterAbstract->m_fAccuracy);
 	}
 }
@@ -203,9 +215,10 @@ float CPersonalIntelligenceFunction::ffGetValue()
 {
 	if (ef_storage().non_alife().member())
 		return(ef_storage().non_alife().member()->m_fIntelligence);
-	else {
+	else 
+	{
 		const CSE_ALifeMonsterAbstract	*l_tpALifeMonsterAbstract = smart_cast<const CSE_ALifeMonsterAbstract*>(ef_storage().alife().member());
-		VERIFY3						(l_tpALifeMonsterAbstract,"Invalid object passed to the evaluation function ",m_caName);
+		VERIFY3(l_tpALifeMonsterAbstract, "Invalid object passed to the evaluation function ", m_caName);
 		return(l_tpALifeMonsterAbstract->m_fIntelligence);
 	}
 }
@@ -237,20 +250,15 @@ float CEnemyEquipmentCostFunction::ffGetValue()
 float CEnemyRukzakWeightFunction::ffGetValue()
 {
 	float m_fLastValue;
-	if (ef_storage().non_alife().member()) {
+	if (ef_storage().non_alife().member())
+	{
 		const CInventoryOwner	*tpInventoryOwner = smart_cast<const CInventoryOwner*>(ef_storage().non_alife().member());
 		if (tpInventoryOwner)
-			m_fLastValue	= tpInventoryOwner->inventory().TotalWeight();
+			m_fLastValue = tpInventoryOwner->inventory().TotalWeight();
 		else
-			m_fLastValue	= 0;
+			m_fLastValue = 0;
 	}
-	else {
-//		CSE_ALifeHumanAbstract *l_tpALifeHumanAbstract = smart_cast<CSE_ALifeHumanAbstract*>(ef_storage().alife().member());
-//		if (l_tpALifeHumanAbstract)
-//			m_fLastValue	= l_tpALifeHumanAbstract->m_fCumulativeItemMass;
-//		else
-			m_fLastValue	= 0;
-	}
+	else m_fLastValue = 0;
 	return					(m_fLastValue);
 }
 
@@ -289,27 +297,31 @@ u32 CPersonalMaxHealth::dwfGetDiscreteValue(u32 dwDiscretizationValue)
 	if (fTemp <= m_fMinResultValue)
 		return(0);
 	else
+	{
 		if (fTemp >= m_fMaxResultValue)
 			return(dwDiscretizationValue - 1);
-		else {
+		else
+		{
+			float const_dw = const_dw;
 			if (fTemp <= 30)
-				return(iFloor(1*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(1 * const_dw));
 			if (fTemp <= 50)
-				return(iFloor(2*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(2 * const_dw));
 			if (fTemp <= 80)
-				return(iFloor(3*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(3 * const_dw));
 			if (fTemp <= 100)
-				return(iFloor(4*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(4 * const_dw));
 			if (fTemp <= 150)
-				return(iFloor(5*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(5 * const_dw));
 			if (fTemp <= 250)
-				return(iFloor(6*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(6 * const_dw));
 			if (fTemp <= 500)
-				return(iFloor(7*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(7 * const_dw));
 			if (fTemp <= 750)
-				return(iFloor(8*float(dwDiscretizationValue)/10 + .5f));
-			return(iFloor(9*float(dwDiscretizationValue)/10 + .5f));
+				return(iFloor(8 * const_dw));
+			return(iFloor(9 * const_dw));
 		}
+	}
 }
 
 float CEquipmentType::ffGetValue()

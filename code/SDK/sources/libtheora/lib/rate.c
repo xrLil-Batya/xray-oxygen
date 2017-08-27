@@ -18,6 +18,7 @@
 #include <string.h>
 #include "encint.h"
 
+#pragma warning(disable : 4018)
 /*A rough lookup table for tan(x), 0<=x<pi/2.
   The values are Q12 fixed-point and spaced at 5 degree intervals.
   These decisions are somewhat arbitrary, but sufficient for the 2nd order
@@ -728,141 +729,143 @@ int oc_enc_select_qi(oc_enc_ctx *_enc,int _qti,int _clamp){
   _enc->rc.log_qtarget=log_qtarget;
   return qi;
 }
+#define DontWarnMe(var) int DontWarnMe = var; DontWarnMe++;
 
-int oc_enc_update_rc_state(oc_enc_ctx *_enc,
- long _bits,int _qti,int _qi,int _trial,int _droppable){
-  ogg_int64_t buf_delta;
-  ogg_int64_t log_scale;
-  int         dropped;
-  dropped=0;
-  /* Drop frames also disabled for now in the case of infinite-buffer
-     two-pass mode */
-  if(!_enc->rc.drop_frames||_enc->rc.twopass&&_enc->rc.frame_metrics==NULL){
-    _droppable=0;
-  }
-  buf_delta=_enc->rc.bits_per_frame*(1+_enc->dup_count);
-  if(_bits<=0){
-    /*We didn't code any blocks in this frame.*/
-    log_scale=OC_Q57(-64);
-    _bits=0;
-  }
-  else{
-    ogg_int64_t log_bits;
-    ogg_int64_t log_qexp;
-    /*Compute the estimated scale factor for this frame type.*/
-    log_bits=oc_blog64(_bits);
-    log_qexp=_enc->rc.log_qtarget-OC_Q57(2);
-    log_qexp=(log_qexp>>6)*(_enc->rc.exp[_qti]);
-    log_scale=OC_MINI(log_bits-_enc->rc.log_npixels+log_qexp,OC_Q57(16));
-  }
-  /*Special two-pass processing.*/
-  switch(_enc->rc.twopass){
-    case 1:{
-      /*Pass 1 mode: save the metrics for this frame.*/
-      _enc->rc.cur_metrics.log_scale=oc_q57_to_q24(log_scale);
-      _enc->rc.cur_metrics.dup_count=_enc->dup_count;
-      _enc->rc.cur_metrics.frame_type=_enc->state.frame_type;
-      _enc->rc.cur_metrics.activity_avg=_enc->activity_avg;
-      _enc->rc.twopass_buffer_bytes=0;
-    }break;
-    case 2:{
-      /*Pass 2 mode:*/
-      if(!_trial){
-        ogg_int64_t next_frame_num;
-        int         qti;
-        /*Move the current metrics back one frame.*/
-        *&_enc->rc.prev_metrics=*&_enc->rc.cur_metrics;
-        next_frame_num=_enc->state.curframe_num+_enc->dup_count+1;
-        /*Back out the last frame's statistics from the sliding window.*/
-        qti=_enc->rc.prev_metrics.frame_type;
-        _enc->rc.frames_left[qti]--;
-        _enc->rc.frames_left[2]-=_enc->rc.prev_metrics.dup_count;
-        _enc->rc.nframes[qti]--;
-        _enc->rc.nframes[2]-=_enc->rc.prev_metrics.dup_count;
-        _enc->rc.scale_sum[qti]-=oc_bexp_q24(_enc->rc.prev_metrics.log_scale);
-        _enc->rc.scale_window0=(int)next_frame_num;
-        /*Free the corresponding entry in the circular buffer.*/
-        if(_enc->rc.frame_metrics!=NULL){
-          _enc->rc.nframe_metrics--;
-          _enc->rc.frame_metrics_head++;
-          if(_enc->rc.frame_metrics_head>=_enc->rc.cframe_metrics){
-            _enc->rc.frame_metrics_head=0;
-          }
-        }
-        /*Mark us ready for the next 2-pass packet.*/
-        _enc->rc.twopass_buffer_bytes=0;
-        /*Update state, so the user doesn't have to keep calling 2pass_in after
-           they've fed in all the data when we're using a finite buffer.*/
-        _enc->prev_dup_count=_enc->dup_count;
-        oc_enc_rc_2pass_in(_enc,NULL,0);
-      }
-    }break;
-  }
-  /*Common to all passes:*/
-  if(_bits>0){
-    if(_trial){
-      oc_iir_filter *f;
-      /*Use the estimated scale factor directly if this was a trial.*/
-      f=_enc->rc.scalefilter+_qti;
-      f->y[1]=f->y[0]=f->x[1]=f->x[0]=oc_q57_to_q24(log_scale);
-      _enc->rc.log_scale[_qti]=log_scale;
-    }
-    else{
-      /*Lengthen the time constant for the INTER filter as we collect more
-         frame statistics, until we reach our target.*/
-      if(_enc->rc.inter_delay<_enc->rc.inter_delay_target&&
-       _enc->rc.inter_count>=_enc->rc.inter_delay&&_qti==OC_INTER_FRAME){
-        oc_iir_filter_reinit(&_enc->rc.scalefilter[1],++_enc->rc.inter_delay);
-      }
-      /*Otherwise update the low-pass scale filter for this frame type,
-         regardless of whether or not we dropped this frame.*/
-      _enc->rc.log_scale[_qti]=oc_iir_filter_update(
-       _enc->rc.scalefilter+_qti,oc_q57_to_q24(log_scale))<<33;
-      /*If this frame busts our budget, it must be dropped.*/
-      if(_droppable&&_enc->rc.fullness+buf_delta<_bits){
-        _enc->rc.prev_drop_count+=1+_enc->dup_count;
-        _bits=0;
-        dropped=1;
-      }
-      else{
-        ogg_uint32_t drop_count;
-        /*Update a low-pass filter to estimate the "real" frame rate taking
-           drops and duplicates into account.
-          This is only done if the frame is coded, as it needs the final
-           count of dropped frames.*/
-        drop_count=_enc->rc.prev_drop_count+1;
-        if(drop_count>0x7F)drop_count=0x7FFFFFFF;
-        else drop_count<<=24;
-        _enc->rc.log_drop_scale=oc_blog64(oc_iir_filter_update(
-         &_enc->rc.vfrfilter,drop_count))-OC_Q57(24);
-        /*Initialize the drop count for this frame to the user-requested dup
-           count.
-          It will be increased if we drop more frames.*/
-        _enc->rc.prev_drop_count=_enc->dup_count;
-      }
-    }
-    /*Increment the INTER frame count, for filter adaptation purposes.*/
-    if(_enc->rc.inter_count<INT_MAX)_enc->rc.inter_count+=_qti;
-  }
-  /*Increase the drop count.*/
-  else _enc->rc.prev_drop_count+=1+_enc->dup_count;
-  /*And update the buffer fullness level.*/
-  if(!_trial){
-    _enc->rc.fullness+=buf_delta-_bits;
-    /*If we're too quick filling the buffer and overflow is capped,
-      that rate is lost forever.*/
-    if(_enc->rc.cap_overflow&&_enc->rc.fullness>_enc->rc.max){
-      _enc->rc.fullness=_enc->rc.max;
-    }
-    /*If we're too quick draining the buffer and underflow is capped,
-      don't try to make up that rate later.*/
-    if(_enc->rc.cap_underflow&&_enc->rc.fullness<0){
-      _enc->rc.fullness=0;
-    }
-    /*Adjust the bias for the real bits we've used.*/
-    _enc->rc.rate_bias-=_bits;
-  }
-  return dropped;
+int oc_enc_update_rc_state(oc_enc_ctx *_enc, long _bits, int _qti, int _qi, int _trial, int _droppable)
+{
+	DontWarnMe(_qi)
+	ogg_int64_t buf_delta;
+	ogg_int64_t log_scale;
+	int         dropped;
+	dropped = 0;
+	/* Drop frames also disabled for now in the case of infinite-buffer
+	   two-pass mode */
+	if (!_enc->rc.drop_frames || _enc->rc.twopass&&_enc->rc.frame_metrics == NULL) {
+		_droppable = 0;
+	}
+	buf_delta = _enc->rc.bits_per_frame*(1 + _enc->dup_count);
+	if (_bits <= 0) {
+		/*We didn't code any blocks in this frame.*/
+		log_scale = OC_Q57(-64);
+		_bits = 0;
+	}
+	else {
+		ogg_int64_t log_bits;
+		ogg_int64_t log_qexp;
+		/*Compute the estimated scale factor for this frame type.*/
+		log_bits = oc_blog64(_bits);
+		log_qexp = _enc->rc.log_qtarget - OC_Q57(2);
+		log_qexp = (log_qexp >> 6)*(_enc->rc.exp[_qti]);
+		log_scale = OC_MINI(log_bits - _enc->rc.log_npixels + log_qexp, OC_Q57(16));
+	}
+	/*Special two-pass processing.*/
+	switch (_enc->rc.twopass) {
+	case 1: {
+		/*Pass 1 mode: save the metrics for this frame.*/
+		_enc->rc.cur_metrics.log_scale = oc_q57_to_q24(log_scale);
+		_enc->rc.cur_metrics.dup_count = _enc->dup_count;
+		_enc->rc.cur_metrics.frame_type = _enc->state.frame_type;
+		_enc->rc.cur_metrics.activity_avg = _enc->activity_avg;
+		_enc->rc.twopass_buffer_bytes = 0;
+	}break;
+	case 2: {
+		/*Pass 2 mode:*/
+		if (!_trial) {
+			ogg_int64_t next_frame_num;
+			int         qti;
+			/*Move the current metrics back one frame.*/
+			*&_enc->rc.prev_metrics = *&_enc->rc.cur_metrics;
+			next_frame_num = _enc->state.curframe_num + _enc->dup_count + 1;
+			/*Back out the last frame's statistics from the sliding window.*/
+			qti = _enc->rc.prev_metrics.frame_type;
+			_enc->rc.frames_left[qti]--;
+			_enc->rc.frames_left[2] -= _enc->rc.prev_metrics.dup_count;
+			_enc->rc.nframes[qti]--;
+			_enc->rc.nframes[2] -= _enc->rc.prev_metrics.dup_count;
+			_enc->rc.scale_sum[qti] -= oc_bexp_q24(_enc->rc.prev_metrics.log_scale);
+			_enc->rc.scale_window0 = (int)next_frame_num;
+			/*Free the corresponding entry in the circular buffer.*/
+			if (_enc->rc.frame_metrics != NULL) {
+				_enc->rc.nframe_metrics--;
+				_enc->rc.frame_metrics_head++;
+				if (_enc->rc.frame_metrics_head >= _enc->rc.cframe_metrics) {
+					_enc->rc.frame_metrics_head = 0;
+				}
+			}
+			/*Mark us ready for the next 2-pass packet.*/
+			_enc->rc.twopass_buffer_bytes = 0;
+			/*Update state, so the user doesn't have to keep calling 2pass_in after
+			   they've fed in all the data when we're using a finite buffer.*/
+			_enc->prev_dup_count = _enc->dup_count;
+			oc_enc_rc_2pass_in(_enc, NULL, 0);
+		}
+	}break;
+	}
+	/*Common to all passes:*/
+	if (_bits > 0) {
+		if (_trial) {
+			oc_iir_filter *f;
+			/*Use the estimated scale factor directly if this was a trial.*/
+			f = _enc->rc.scalefilter + _qti;
+			f->y[1] = f->y[0] = f->x[1] = f->x[0] = oc_q57_to_q24(log_scale);
+			_enc->rc.log_scale[_qti] = log_scale;
+		}
+		else {
+			/*Lengthen the time constant for the INTER filter as we collect more
+			   frame statistics, until we reach our target.*/
+			if (_enc->rc.inter_delay < _enc->rc.inter_delay_target&&
+				_enc->rc.inter_count >= _enc->rc.inter_delay&&_qti == OC_INTER_FRAME) {
+				oc_iir_filter_reinit(&_enc->rc.scalefilter[1], ++_enc->rc.inter_delay);
+			}
+			/*Otherwise update the low-pass scale filter for this frame type,
+			   regardless of whether or not we dropped this frame.*/
+			_enc->rc.log_scale[_qti] = oc_iir_filter_update(
+				_enc->rc.scalefilter + _qti, oc_q57_to_q24(log_scale)) << 33;
+			/*If this frame busts our budget, it must be dropped.*/
+			if (_droppable&&_enc->rc.fullness + buf_delta < _bits) {
+				_enc->rc.prev_drop_count += 1 + _enc->dup_count;
+				_bits = 0;
+				dropped = 1;
+			}
+			else {
+				ogg_uint32_t drop_count;
+				/*Update a low-pass filter to estimate the "real" frame rate taking
+				   drops and duplicates into account.
+				  This is only done if the frame is coded, as it needs the final
+				   count of dropped frames.*/
+				drop_count = _enc->rc.prev_drop_count + 1;
+				if (drop_count > 0x7F)drop_count = 0x7FFFFFFF;
+				else drop_count <<= 24;
+				_enc->rc.log_drop_scale = oc_blog64(oc_iir_filter_update(
+					&_enc->rc.vfrfilter, drop_count)) - OC_Q57(24);
+				/*Initialize the drop count for this frame to the user-requested dup
+				   count.
+				  It will be increased if we drop more frames.*/
+				_enc->rc.prev_drop_count = _enc->dup_count;
+			}
+		}
+		/*Increment the INTER frame count, for filter adaptation purposes.*/
+		if (_enc->rc.inter_count < INT_MAX)_enc->rc.inter_count += _qti;
+	}
+	/*Increase the drop count.*/
+	else _enc->rc.prev_drop_count += 1 + _enc->dup_count;
+	/*And update the buffer fullness level.*/
+	if (!_trial) {
+		_enc->rc.fullness += buf_delta - _bits;
+		/*If we're too quick filling the buffer and overflow is capped,
+		  that rate is lost forever.*/
+		if (_enc->rc.cap_overflow&&_enc->rc.fullness > _enc->rc.max) {
+			_enc->rc.fullness = _enc->rc.max;
+		}
+		/*If we're too quick draining the buffer and underflow is capped,
+		  don't try to make up that rate later.*/
+		if (_enc->rc.cap_underflow&&_enc->rc.fullness < 0) {
+			_enc->rc.fullness = 0;
+		}
+		/*Adjust the bias for the real bits we've used.*/
+		_enc->rc.rate_bias -= _bits;
+	}
+	return dropped;
 }
 
 #define OC_RC_2PASS_VERSION   (2)

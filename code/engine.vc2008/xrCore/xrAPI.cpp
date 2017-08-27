@@ -14,6 +14,4 @@ XRCORE_API IUIRender* UIRender = NULL;
 XRCORE_API CGameMtlLibrary*	PGMLib = NULL;
 #endif
 
-#ifdef DEBUG
 XRCORE_API IDebugRender*	DRender = NULL;
-#endif // DEBUG

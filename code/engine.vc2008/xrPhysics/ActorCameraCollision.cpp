@@ -19,9 +19,7 @@
 #	include	"debug_output.h"
 #endif
 CPhysicsShell*	actor_camera_shell = NULL;
-#ifdef	DEBUG
 BOOL dbg_draw_camera_collision = FALSE;
-#endif
 static bool cam_collided = false;
 static bool cam_step	= false;
 extern dJointGroupID ContactGroup;

@@ -48,7 +48,6 @@ LPCSTR CKinematics::LL_BoneName_dbg	(u16 ID)
 	return 0;
 }
 
-#ifdef DEBUG
 void CKinematics::DebugRender(Fmatrix& XFORM)
 {
 	CalculateBones	();
@@ -84,7 +83,6 @@ void CKinematics::DebugRender(Fmatrix& XFORM)
 		RCache.dbg_DrawOBB(W,obb.m_halfsize,D3DCOLOR_XRGB(0,0,255));
 	}
 }
-#endif
 
 CKinematics::CKinematics()
 {
@@ -739,7 +737,6 @@ int CKinematics::LL_GetBoneGroups(xr_vector<xr_vector<u16> >& groups)
     return groups.size();
 }
 
-#ifdef DEBUG
 CSkeletonWallmark::~CSkeletonWallmark()
 {
 		if(used_in_render!=u32(-1))
@@ -748,4 +745,3 @@ CSkeletonWallmark::~CSkeletonWallmark()
 			VERIFY	(used_in_render==u32(-1));
 		}
 }
-#endif

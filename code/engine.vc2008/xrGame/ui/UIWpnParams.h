@@ -1,6 +1,5 @@
 #pragma once
 #include "UIWindow.h"
-
 #include "UIDoubleProgressBar.h"
 
 class CUIXml;

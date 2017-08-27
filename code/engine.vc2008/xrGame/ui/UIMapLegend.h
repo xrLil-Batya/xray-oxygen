@@ -4,10 +4,7 @@
 //	Author		: Evgeniy Sokolov
 //	Description : UI Map Legend Wnd (PDA : Task) class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef UI_MAP_LEGEND_WND_H_INCLUDED
-#define UI_MAP_LEGEND_WND_H_INCLUDED
-
+#pragma once
 #include "UIWindow.h"
 
 class CUIXml;
@@ -15,14 +12,11 @@ class CUIFrameWindow;
 class CUIScrollView;
 class CUIStatic;
 class CUI3tButton;
-class CUICheckButton;
-class CUIFrameLineWnd;
-class UIHint;
 
 class UIMapLegend : public CUIWindow
 {
 private:
-	typedef CUIWindow	inherited;
+	using inherited = CUIWindow;
 
 public:
 					UIMapLegend			();
@@ -47,19 +41,16 @@ private: // m_
 class UIMapLegendItem : public CUIWindow
 {
 private:
-	typedef CUIWindow	inherited;
+	using inherited = CUIWindow;
 
 public:
 					UIMapLegendItem		();
 	virtual			~UIMapLegendItem	();
 
 			void	init_from_xml		( CUIXml& xml, int index );
-//	virtual void	Update				();
 
 private: // m_
 	CUIStatic*		m_image[4];
 	CUIStatic*		m_text;
 
 }; // class UIMapLegendItem
-
-#endif // UI_MAP_LEGEND_WND_H_INCLUDED

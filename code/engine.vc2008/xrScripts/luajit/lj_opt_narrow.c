@@ -5,7 +5,6 @@
 */
 
 #define lj_opt_narrow_c
-#define LUA_CORE
 
 #include "lj_obj.h"
 

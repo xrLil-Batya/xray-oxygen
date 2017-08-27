@@ -4,7 +4,7 @@
  *
  * Thanks to Rodney Brown <rbrown64@csc.com.au> for his contribution of faster
  * CRC methods: exclusive-oring 32 bits of data at a time, and pre-computing
- * tables for updating the shift register in one step with three exclusive-ors
+ * tables for updating the shift  in one step with three exclusive-ors
  * instead of four steps with four exclusive-ors.  This results in about a
  * factor of two increase in speed on a Power PC G4 (PPC7455) using gcc -O3.
  */
@@ -27,8 +27,6 @@
 #endif /* MAKECRCH */
 
 #include "zutil.h"      /* for STDC and FAR definitions */
-
-#define local static
 
 /* Find a four-byte integer type for crc32_little() and crc32_big(). */
 #ifndef NOBYFOUR
@@ -55,27 +53,27 @@
 #ifdef BYFOUR
 #  define REV(w) (((w)>>24)+(((w)>>8)&0xff00)+ \
                 (((w)&0xff00)<<8)+(((w)&0xff)<<24))
-   local unsigned long crc32_little OF((unsigned long,
+   static unsigned long crc32_little OF((unsigned long,
                         const unsigned char FAR *, unsigned));
-   local unsigned long crc32_big OF((unsigned long,
+   static unsigned long crc32_big OF((unsigned long,
                         const unsigned char FAR *, unsigned));
 #  define TBLS 8
 #else
 #  define TBLS 1
 #endif /* BYFOUR */
 
-/* Local functions for crc concatenation */
-local unsigned long gf2_matrix_times OF((unsigned long *mat,
+/* static functions for crc concatenation */
+static unsigned long gf2_matrix_times OF((unsigned long *mat,
                                          unsigned long vec));
-local void gf2_matrix_square OF((unsigned long *square, unsigned long *mat));
+static void gf2_matrix_square OF((unsigned long *square, unsigned long *mat));
 
 #ifdef DYNAMIC_CRC_TABLE
 
-local volatile int crc_table_empty = 1;
-local unsigned long FAR crc_table[TBLS][256];
-local void make_crc_table OF((void));
+static volatile int crc_table_empty = 1;
+static unsigned long FAR crc_table[TBLS][256];
+static void make_crc_table OF((void));
 #ifdef MAKECRCH
-   local void write_table OF((FILE *, const unsigned long FAR *));
+   static void write_table OF((FILE *, const unsigned long FAR *));
 #endif /* MAKECRCH */
 /*
   Generate tables for a byte-wise 32-bit CRC calculation on the polynomial:
@@ -89,21 +87,21 @@ local void make_crc_table OF((void));
   byte 0xb1 is the polynomial x^7+x^3+x+1), then the CRC is (q*x^32) mod p,
   where a mod b means the remainder after dividing a by b.
 
-  This calculation is done using the shift-register method of multiplying and
-  taking the remainder.  The register is initialized to zero, and for each
-  incoming bit, x^32 is added mod p to the register if the bit is a one (where
-  x^32 mod p is p+x^32 = x^26+...+1), and the register is multiplied mod p by
+  This calculation is done using the shift- method of multiplying and
+  taking the remainder.  The  is initialized to zero, and for each
+  incoming bit, x^32 is added mod p to the  if the bit is a one (where
+  x^32 mod p is p+x^32 = x^26+...+1), and the  is multiplied mod p by
   x (which is shifting right by one and adding x^32 mod p if the bit shifted
   out is a one).  We start with the highest power (least significant bit) of
   q and repeat for all eight bits of q.
 
   The first table is simply the CRC of all possible eight bit values.  This is
   all the information needed to generate CRCs on data a byte at a time for all
-  combinations of CRC register values and incoming bytes.  The remaining tables
+  combinations of CRC  values and incoming bytes.  The remaining tables
   allow for word-at-a-time CRC calculation for both big-endian and little-
   endian machines, where a word is four bytes.
 */
-local void make_crc_table()
+static void make_crc_table()
 {
     unsigned long c;
     int n, k;
@@ -162,7 +160,7 @@ local void make_crc_table()
         if (out == NULL) return;
         fprintf(out, "/* crc32.h -- tables for rapid CRC calculation\n");
         fprintf(out, " * Generated automatically by crc32.c\n */\n\n");
-        fprintf(out, "local const unsigned long FAR ");
+        fprintf(out, "static const unsigned long FAR ");
         fprintf(out, "crc_table[TBLS][256] =\n{\n  {\n");
         write_table(out, crc_table[0]);
 #  ifdef BYFOUR
@@ -180,7 +178,7 @@ local void make_crc_table()
 }
 
 #ifdef MAKECRCH
-local void write_table(out, table)
+static void write_table(out, table)
     FILE *out;
     const unsigned long FAR *table;
 {
@@ -259,13 +257,13 @@ unsigned long ZEXPORT crc32(crc, buf, len)
 #define DOLIT32 DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4; DOLIT4
 
 /* ========================================================================= */
-local unsigned long crc32_little(crc, buf, len)
+static unsigned long crc32_little(crc, buf, len)
     unsigned long crc;
     const unsigned char FAR *buf;
     unsigned len;
 {
-    register u4 c;
-    register const u4 FAR *buf4;
+    u4 c;
+     const u4 FAR *buf4;
 
     c = (u4)crc;
     c = ~c;
@@ -299,13 +297,13 @@ local unsigned long crc32_little(crc, buf, len)
 #define DOBIG32 DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4; DOBIG4
 
 /* ========================================================================= */
-local unsigned long crc32_big(crc, buf, len)
+static unsigned long crc32_big(crc, buf, len)
     unsigned long crc;
     const unsigned char FAR *buf;
     unsigned len;
 {
-    register u4 c;
-    register const u4 FAR *buf4;
+     u4 c;
+     const u4 FAR *buf4;
 
     c = REV((u4)crc);
     c = ~c;
@@ -339,7 +337,7 @@ local unsigned long crc32_big(crc, buf, len)
 #define GF2_DIM 32      /* dimension of GF(2) vectors (length of CRC) */
 
 /* ========================================================================= */
-local unsigned long gf2_matrix_times(mat, vec)
+static unsigned long gf2_matrix_times(mat, vec)
     unsigned long *mat;
     unsigned long vec;
 {
@@ -356,7 +354,7 @@ local unsigned long gf2_matrix_times(mat, vec)
 }
 
 /* ========================================================================= */
-local void gf2_matrix_square(square, mat)
+static void gf2_matrix_square(square, mat)
     unsigned long *square;
     unsigned long *mat;
 {

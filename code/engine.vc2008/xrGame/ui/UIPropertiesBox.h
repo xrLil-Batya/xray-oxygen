@@ -1,17 +1,13 @@
 #pragma once
-
-
 #include "uiframewindow.h"
 #include "uilistbox.h"
 
 #include "../../xrScripts/export/script_export_space.h"
 
-class CUIPropertiesBox:
-	public CUIFrameWindow,
-	public CUIWndCallback
+class CUIPropertiesBox: public CUIFrameWindow, public CUIWndCallback
 {
 private:
-	typedef CUIFrameWindow inherited; 
+	using inherited = CUIFrameWindow; 
 public:
 						CUIPropertiesBox					(CUIPropertiesBox* sub_property_box = NULL);
 	virtual				~CUIPropertiesBox					();

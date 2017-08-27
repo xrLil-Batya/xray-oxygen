@@ -45,7 +45,7 @@
 #include "mdct.h"
 #include "os.h"
 #include "misc.h"
-
+#pragma warning(disable:4456)
 /* build lookups for trig functions; also pre-figure scaling and
    some window function algebra. */
 
@@ -76,16 +76,16 @@ void mdct_init(mdct_lookup *lookup,int n){
   /* bitreverse lookup... */
 
   {
-    int mask=(1<<(log2n-1))-1,i,j;
-    int msb=1<<(log2n-2);
-    for(i=0;i<n/8;i++){
-      int acc=0;
-      for(j=0;msb>>j;j++)
-        if((msb>>j)&i)acc|=1<<j;
-      bitrev[i*2]=((~acc)&mask)-1;
-      bitrev[i*2+1]=acc;
+	  int mask = (1 << (log2n - 1)) - 1, i, j;
+	  int msb = 1 << (log2n - 2);
+	  for (i = 0; i < n / 8; i++) {
+		  int acc = 0;
+		  for (j = 0; msb >> j; j++)
+			  if ((msb >> j)&i)acc |= 1 << j;
+		  bitrev[i * 2] = ((~acc)&mask) - 1;
+		  bitrev[i * 2 + 1] = acc;
 
-    }
+	  }
   }
   lookup->scale=FLOAT_CONV(4.f/n);
 }

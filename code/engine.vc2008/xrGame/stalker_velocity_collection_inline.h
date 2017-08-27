@@ -8,14 +8,10 @@
 
 #pragma once
 
-inline float CStalkerVelocityCollection::velocity	(
-		const MonsterSpace::EMentalState		&mental_state,
-		const MonsterSpace::EBodyState			&body_state,
-		const MonsterSpace::EMovementType		&movement_type,
-		const MonsterSpace::EMovementDirection	&movement_direction
-	) const
+inline float CStalkerVelocityCollection::velocity(const MonsterSpace::EMentalState &mental_state, const MonsterSpace::EBodyState &body_state, 
+							const MonsterSpace::EMovementType &movement_type, const MonsterSpace::EMovementDirection &movement_direction) const
 {
-	VERIFY				(movement_type != MonsterSpace::eMovementTypeStand);
+	VERIFY (movement_type != MonsterSpace::eMovementTypeStand);
 
 	switch (mental_state) {
 		case MonsterSpace::eMentalStateDanger : {
@@ -60,9 +56,4 @@ inline float CStalkerVelocityCollection::velocity	(
 		};
 		default			: NODEFAULT;
 	};
-#ifdef DEBUG
-	volatile float		a = 0.f;
-	volatile float		b = 0.f;
-	return				(a/b);
-#endif
 }

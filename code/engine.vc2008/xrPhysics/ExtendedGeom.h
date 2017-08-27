@@ -13,16 +13,7 @@
 #ifdef	DEBUG
 #include "debug_output.h"
 #endif
-
-
-#ifdef DEBUG
-//extern	u32				dbg_total_saved_tries					;
-#endif
 class IPhysicsShellHolder;
-
-
-
-
 
 class CObjectContactCallback
 {
@@ -293,8 +284,7 @@ IC void dGeomUserDataClearCashedTries(dxGeom* geom)
 	P->cashed_tries.clear();
 	P->last_aabb_size.set(0.f,0.f,0.f);
 }
-#ifdef DEBUG
+
 XRPHYSICS_API	bool	IsCyliderContact(const dContact& c);
-#endif
 
 #endif

@@ -9,14 +9,11 @@
 #pragma once
 
 #include "../xrScripts/export/script_export_space.h"
+#include "movement_manager_space.h"
 
 class CMovementManagerHolder;
 class CALifeMonsterDetailPathManager;
 class CALifeMonsterPatrolPathManager;
-
-namespace MovementManager {
-	enum EPathType;
-};
 
 class CALifeMonsterMovementManager {
 public:

@@ -7,8 +7,6 @@
 */
 
 #define lj_opt_mem_c
-#define LUA_CORE
-
 #include "lj_obj.h"
 
 #if LJ_HASJIT

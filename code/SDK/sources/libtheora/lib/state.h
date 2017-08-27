@@ -268,16 +268,15 @@ typedef struct oc_theora_state          oc_theora_state;
   These "extra" macro blocks are just an artifact of our internal data layout,
    and not part of the coded stream; they are flagged with a negative MB mode.*/
 
-
-
-#pragma warning ( disable : 6011 )
+#pragma warning(disable : 6011 4214)
 /*Super block information.*/
-struct oc_sb_flags{
+struct oc_sb_flags
+{
   unsigned char coded_fully:1;
   unsigned char coded_partially:1;
   unsigned char quad_valid:4;
 };
-#pragma warning ( default : 6001 )
+#pragma warning(default : 6011 4214)
 
 
 

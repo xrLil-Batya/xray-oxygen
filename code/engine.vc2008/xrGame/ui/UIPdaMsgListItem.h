@@ -1,9 +1,10 @@
 #pragma once
+#include "UILanimController.h"
 #include "UIStatic.h"
 
 class CUIPdaMsgListItem : public CUIColorAnimConrollerContainer
 {
-	typedef	CUIColorAnimConrollerContainer	inherited;
+	using inherited = CUIColorAnimConrollerContainer;
 public:
 			void		InitPdaMsgListItem				(const Fvector2& size);
 	virtual void		SetFont							(CGameFont* pFont);

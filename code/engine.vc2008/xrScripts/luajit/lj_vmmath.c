@@ -4,7 +4,6 @@
 */
 
 #define lj_vmmath_c
-#define LUA_CORE
 
 #include <errno.h>
 #include <math.h>

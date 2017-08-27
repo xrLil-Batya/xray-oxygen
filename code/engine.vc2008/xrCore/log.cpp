@@ -251,6 +251,7 @@ void CloseLog(void)
 }
 typedef void (WINAPI *OFFSET_UPDATER)(const char* key, u32 ofs);
 //LuaICP_API only
+#pragma warning(disable: 4311 4302)
 void LogXrayOffset(const char* key, LPVOID base, LPVOID pval)
 {
 	u32 ofs = (u32)pval - (u32)base;

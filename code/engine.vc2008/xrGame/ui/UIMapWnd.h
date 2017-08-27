@@ -3,17 +3,13 @@
 #include "UIWindow.h"
 #include "UIWndCallback.h"
 
-
 class CUICustomMap;
 class CUIGlobalMap;
 class CUIFrameWindow;
 class CUIFixedScrollBar;
-class CUIFrameLineWnd;
 class CMapActionPlanner;
-class CUITabControl;
 class CUIStatic;
 class CUI3tButton;
-class CUILevelMap;
 class CUIMapLocationHint;
 class CMapLocation;
 class CMapSpot;
@@ -23,10 +19,9 @@ class UIHint;
 
 using GameMaps = xr_map<shared_str, CUICustomMap*>;
 
-
 class CUIMapWnd: public CUIWindow, public CUIWndCallback
 {
-	typedef CUIWindow inherited;
+	using inherited = CUIWindow;
 private:
 	bool						m_view_actor;
 	Fvector2					m_prev_actor_pos;
@@ -44,13 +39,7 @@ private:
 	CUIFixedScrollBar*				m_UIMainScrollH;
 	CUIWindow*					m_UILevelFrame;
 	CMapActionPlanner*			m_ActionPlanner;
-//	CUIFrameLineWnd*			UIMainMapHeader;
 	CUIMapLocationHint*			m_map_location_hint;
-
-#ifdef DEBUG
-//	CUIStatic*					m_dbg_text_hint;
-//	CUIStatic*					m_dbg_info;
-#endif // DEBUG
 
 	enum EBtnPos
 	{

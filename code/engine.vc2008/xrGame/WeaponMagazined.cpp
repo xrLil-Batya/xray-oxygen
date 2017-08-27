@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "WeaponMagazined.h"
 #include "actor.h"
 #include "ParticlesObject.h"

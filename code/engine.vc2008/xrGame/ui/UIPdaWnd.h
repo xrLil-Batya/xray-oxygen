@@ -1,29 +1,19 @@
 #pragma once
-
 #include "UIDialogWnd.h"
 #include "../encyclopedia_article_defs.h"
 
-class CInventoryOwner;
-class CUIFrameLineWnd;
 class CUI3tButton;
 class CUITabControl;
 class CUIStatic;
 class CUITextWnd;
-class CUIXml;
-class CUIFrameWindow;
 class UIHint;
-
 class CUITaskWnd;
-//-class CUIFactionWarWnd;
 class CUIRankingWnd;
 class CUILogsWnd;
-class CUIAnimatedStatic;
-class UIHint;
-
 
 class CUIPdaWnd: public CUIDialogWnd
 {
-	typedef CUIDialogWnd	inherited;
+	using inherited = CUIDialogWnd;
 protected:
 	CUITabControl*			UITabControl;
 	CUI3tButton*			m_btn_close;
@@ -33,7 +23,6 @@ protected:
 	
 	CUITextWnd*				m_caption;
 	shared_str				m_caption_const;
-//	CUIAnimatedStatic*		m_anim_static;
 	CUITextWnd*				m_clock;
 
 	// Текущий активный диалог
@@ -44,7 +33,6 @@ protected:
 
 public:
 	CUITaskWnd*				pUITaskWnd;
-//-	CUIFactionWarWnd*		pUIFactionWarWnd;
 	CUIRankingWnd*			pUIRankingWnd;
 	CUILogsWnd*				pUILogsWnd;
 

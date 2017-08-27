@@ -3,6 +3,7 @@
 #pragma warning(disable:4995)
 #include "../xrEngine/stdafx.h"
 #include "DPlay/dplay8.h"
+#include "dx/dinput.h"
 #pragma warning(default:4995)
 #pragma warning( 4 : 4018 )
 #pragma warning( 4 : 4244 )
@@ -24,3 +25,26 @@
 #include "../xrphysics/xrphysics.h"
 #include "smart_cast.h"
 #include "GamePersistent.h"
+
+#ifndef AI_COMPILER
+#include "stdafx.h"
+#endif
+
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+};
+
+#pragma warning(push)
+#pragma warning(disable:4995)
+#include <luabind/luabind.hpp>
+#pragma warning(pop)
+
+#include <luabind/object.hpp>
+#include <luabind/functor.hpp>
+#include <luabind/operator.hpp>
+#include <luabind/adopt_policy.hpp>
+#include <luabind/return_reference_to_policy.hpp>
+#include <luabind/out_value_policy.hpp>
+#include <luabind/iterator_policy.hpp>

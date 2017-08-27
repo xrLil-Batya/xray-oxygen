@@ -18,16 +18,15 @@
 #include <string.h>
 #include "encint.h"
 #include "modedec.h"
+
 #if defined(OC_COLLECT_METRICS)
 # include "collect.c"
 #endif
 
-
-
 typedef struct oc_rd_metric          oc_rd_metric;
 typedef struct oc_mode_choice        oc_mode_choice;
 
-
+#pragma warning(disable : 4018 4100 4267 4456)
 
 /*There are 8 possible schemes used to encode macro block modes.
   Schemes 0-6 use a maximally-skewed Huffman code to code each of the modes.
@@ -106,7 +105,8 @@ static int oc_mode_scheme_chooser_scheme_mb_cost(
     /*We don't actually reorder the list; this is for computing opportunity
        cost, not an update.*/
     mc=_chooser->mode_counts[_mb_mode];
-    while(ri>0&&mc>=_chooser->mode_counts[_chooser->scheme0_list[ri-1]])ri--;
+    while(ri > 0 && mc >= (int)_chooser->mode_counts[_chooser->scheme0_list[ri-1]])
+		ri--;
   }
   return OC_MODE_BITS[codebook][ri];
 }
@@ -578,15 +578,15 @@ static void oc_enc_pipeline_init(oc_enc_ctx *_enc,oc_enc_pipeline_state *_pipe){
 
 /*Sets the current MCU stripe to super block row _sby.
   Return: A non-zero value if this was the last MCU.*/
-static int oc_enc_pipeline_set_stripe(oc_enc_ctx *_enc,
- oc_enc_pipeline_state *_pipe,int _sby){
+static int oc_enc_pipeline_set_stripe(oc_enc_ctx *_enc, oc_enc_pipeline_state *_pipe,int _sby)
+{
   const oc_fragment_plane *fplane;
-  unsigned                 mcu_nvsbs;
-  int                      sby_end;
-  int                      notdone;
-  int                      vdec;
-  int                      pli;
-  mcu_nvsbs=_enc->mcu_nvsbs;
+  unsigned int mcu_nvsbs;
+  int sby_end;
+  int notdone;
+  int vdec;
+  int pli;
+  mcu_nvsbs = (unsigned)_enc->mcu_nvsbs;
   sby_end=_enc->state.fplanes[0].nvsbs;
   notdone=_sby+mcu_nvsbs<sby_end;
   if(notdone)sby_end=_sby+mcu_nvsbs;

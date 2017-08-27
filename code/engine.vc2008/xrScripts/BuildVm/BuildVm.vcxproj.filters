@@ -9,19 +9,10 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include=".\host\buildvm_fold.c">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include=".\host\buildvm_lib.c">
-      <Filter>Source</Filter>
-    </ClCompile>
     <ClCompile Include=".\host\buildvm_peobj.c">
       <Filter>Source</Filter>
     </ClCompile>
     <ClCompile Include=".\host\buildvm.c">
-      <Filter>Source</Filter>
-    </ClCompile>
-    <ClCompile Include=".\host\buildvm_asm.c">
       <Filter>Source</Filter>
     </ClCompile>
   </ItemGroup>
@@ -30,6 +21,12 @@
       <Filter>Include</Filter>
     </ClInclude>
     <ClInclude Include=".\host\buildvm_arch.h">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="host\arch_x86.hpp">
+      <Filter>Include</Filter>
+    </ClInclude>
+    <ClInclude Include="host\arch_x64.hpp">
       <Filter>Include</Filter>
     </ClInclude>
   </ItemGroup>

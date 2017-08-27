@@ -330,7 +330,8 @@ private:
     size_t m_last_pos;
 };
 
-class XRCORE_API IReader : public IReaderBase<IReader> {
+class XRCORE_API IReader : public IReaderBase<IReader> 
+{
 protected:
     char* data;
     int Pos;

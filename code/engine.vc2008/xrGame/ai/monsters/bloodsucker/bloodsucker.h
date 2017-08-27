@@ -185,7 +185,7 @@ public:
 	// Lain: added 
 	virtual void add_debug_info  (debug::text_tree& root_s);
 
-#ifdef _DEBUG
+#ifdef DEBUG
 			void debug_on_key						(int key);
 #endif
 

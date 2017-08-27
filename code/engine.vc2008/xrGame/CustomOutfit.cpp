@@ -12,6 +12,7 @@
 #include "player_hud.h"
 #include "ActorHelmet.h"
 
+#include "WeaponBinocularsVision.h"
 
 CCustomOutfit::CCustomOutfit()
 {
@@ -29,6 +30,7 @@ CCustomOutfit::CCustomOutfit()
 CCustomOutfit::~CCustomOutfit() 
 {
 	xr_delete(m_boneProtection);
+	
 }
 
 BOOL CCustomOutfit::net_Spawn(CSE_Abstract* DC)
@@ -80,12 +82,10 @@ void CCustomOutfit::Load(LPCSTR section)
 		m_NightVisionSect = pSettings->r_string(section, "nightvision_sect");
 	else
 		m_NightVisionSect = "";
-	///// Borshig begin 
-	if (pSettings->line_exist(section, "target_indicator_frame"))
-		m_TargetIndicatorFrame = pSettings->r_string(section, "target_indicator_frame");
-	else
-		m_TargetIndicatorFrame = "";
-	////  Borshig end
+
+	
+	
+	
 
 
 	if (pSettings->line_exist(section, "actor_visual"))
@@ -304,7 +304,6 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 		m_NightVisionSect._set( str );
 	}
 	result |= result2;
-
 
 
 	result2 = process_if_exists_set( section, "bones_koeff_protection", &CInifile::r_string, str, test );

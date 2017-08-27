@@ -455,10 +455,8 @@ public:
 public:    
 	CBoneData		(u16 ID):SelfID(ID)	{VERIFY(SelfID!=BI_NONE);}
 	virtual				~CBoneData		()					{}
-#ifdef DEBUG
 	typedef svector<int,128>	BoneDebug;
 	void						DebugQuery		(BoneDebug& L);
-#endif
 	IC void				SetParentID		(u16 id){ParentID=id;}
 
 	IC u16		_BCL	GetSelfID		() const {return SelfID;}

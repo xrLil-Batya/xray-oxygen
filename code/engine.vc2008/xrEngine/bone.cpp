@@ -31,7 +31,6 @@ float	ENGINE_API	CBoneInstance::get_param	(u32 idx)
 	return		param[idx];
 }
 
-#ifdef	DEBUG
 void ENGINE_API	CBoneData::DebugQuery		(BoneDebug& L)
 {
 	for (u32 i=0; i<children.size(); i++)
@@ -41,7 +40,6 @@ void ENGINE_API	CBoneData::DebugQuery		(BoneDebug& L)
 		children[i]->DebugQuery(L);
 	}
 }
-#endif
 
 void ENGINE_API	CBoneData::CalculateM2B(const Fmatrix& parent)
 {

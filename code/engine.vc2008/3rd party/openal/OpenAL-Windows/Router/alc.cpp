@@ -1933,22 +1933,22 @@ void getDefaultPlaybackDeviceNames(char *longName, char *shortName, unsigned int
 		DWORD dwFlags=1;
 		WAVEOUTCAPS outputInfo;
 
-		#if !defined(_WIN64)
-		#ifdef __GNUC__
+#ifndef _M_X64
+#	ifdef __GNUC__
 		  __asm__ ("pusha;");
-        #else
-		__asm pusha; // workaround for register destruction caused by these wavOutMessage calls (weird but true)
-		#endif
-		#endif // !defined(_WIN64)
+#	else
+		__asm pusha; // workaround for destruction caused by these wavOutMessage calls (weird but true)
+#	endif
+#endif // !defined(_WIN64)
 		waveOutMessage((HWAVEOUT)(UINT_PTR)WAVE_MAPPER,0x2000+0x0015,(LPARAM)&uDeviceID,(WPARAM)&dwFlags);
 		waveOutGetDevCaps(uDeviceID,&outputInfo,sizeof(outputInfo));
-		#if !defined(_WIN64)
-		#ifdef __GNUC__
+#ifndef _M_X64
+#	ifdef __GNUC__
 		  __asm__ ("popa;");
-        #else
+#	else
 		__asm popa;
-		#endif
-		#endif // !defined(_WIN64)
+#	endif
+#endif // !defined(_WIN64)
 		if ((shortName != NULL) && (strlen(outputInfo.szPname) <= len)) {
 			strcpy_s(shortName, MAX_DEVICE_STRINGS, T2A(outputInfo.szPname));
 		}
@@ -2009,7 +2009,7 @@ void getDefaultCaptureDeviceNames(char *longName, char *shortName, unsigned int 
 		#ifdef __GNUC__
 		  __asm__ ("pusha;");
         #else
-		__asm pusha; // workaround for register destruction caused by these wavOutMessage calls (weird but true)
+		__asm pusha; // workaround for destruction caused by these wavOutMessage calls (weird but true)
 		#endif
 		#endif // !defined(_WIN64)
 		waveOutMessage((HWAVEOUT)(UINT_PTR)WAVE_MAPPER,0x2000+0x0015,(LPARAM)&uDeviceID,(WPARAM)&dwFlags);

@@ -48,7 +48,6 @@ public:
 	IBlender*					b_accum_reflected_msaa[8];
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
-#ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
 		u32		color;
@@ -56,7 +55,6 @@ public:
 	xr_vector<std::pair<Fsphere,Fcolor> >		dbg_spheres;
 	xr_vector<dbg_line_t>										dbg_lines;
 	xr_vector<Fplane>												dbg_planes;
-#endif
 
 	// MRT-path
 	ref_rt						rt_Depth;			// Z-buffer like - initial depth

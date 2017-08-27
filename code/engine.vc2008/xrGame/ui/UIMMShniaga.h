@@ -8,11 +8,9 @@ class CUIXml;
 class CUIScrollView;
 class CMMSound;
 
-class CUIMMShniaga :	public CUIWindow,
-						public CDeviceResetNotifier
+class CUIMMShniaga: public CUIWindow, public CDeviceResetNotifier
 {
 public:
-
 						CUIMMShniaga			();
 	virtual				~CUIMMShniaga			();
 
@@ -75,7 +73,6 @@ protected:
 	enum_page_id			m_page;
     CUIWindow*				m_selected;
 	CMMSound*				m_sound;
-//	Fvector2				m_wheel_size[2];
 	enum {fl_SoundFinalized	= 1, fl_MovingStoped = 2	};
 
 	Flags32				m_flags;	

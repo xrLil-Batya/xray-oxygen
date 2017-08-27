@@ -45,9 +45,7 @@ public:
 				void		get_global_center_bt( Fvector& center )													 ;		//for built
 				void		get_local_form_bt	( Fmatrix& form )													 ;	    //for built
 	virtual		void		get_xform			( Fmatrix& form ) const												 ;
-#ifdef	DEBUG
 	virtual		void		dbg_draw			( float scale, u32 color, Flags32 flags ) const;
-#endif
 	virtual		void		get_Box				( Fmatrix& form, Fvector&	sz )const									 ;
 	virtual		bool		collide_fluids		() const															 ;
 				void		set_static_ref_form	(const Fmatrix& form)												 ;		//for built
@@ -166,9 +164,7 @@ virtual			void		set_local_form		(const Fmatrix& form)												;
 				void		set_size			(const Fvector&	half_size )											;
 				void		get_size			(Fvector&	half_size )	const											;
 private:
-#ifdef	DEBUG
 	virtual		void		dbg_draw			( float scale, u32 color, Flags32 flags ) const						;
-#endif
 };
 
 class CSphereGeom : public CODEGeom
@@ -189,9 +185,7 @@ virtual const	Fvector&	local_center		()																	;
 	virtual		void		set_build_position	(const Fvector& ref_point)											;
 
 private:
-#ifdef	DEBUG
 	virtual		void		dbg_draw			( float scale, u32 color, Flags32 flags ) const;
-#endif
 };
 class CCylinderGeom : public CODEGeom
 {
@@ -211,8 +205,6 @@ virtual const	Fvector&	local_center		()																	;
 	virtual		void		set_build_position	(const Fvector& ref_point)											;
 				void		set_radius			( float r )															;
 	private:
-#ifdef	DEBUG
 	virtual		void		dbg_draw			( float scale, u32 color, Flags32 flags ) const;
-#endif
 };
 #endif //GEOMETRY_H

@@ -4,10 +4,7 @@
 //	Author		: Alexander Dudin
 //	Description	: Smart cover loophole planner action classes
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef SMART_COVER_LOOPHOLE_PLANNER_ACTIONS_H_INCLUDED
-#define SMART_COVER_LOOPHOLE_PLANNER_ACTIONS_H_INCLUDED
-
+#pragma once
 #include "smart_cover_detail.h"
 #include "smart_cover_planner_actions.h"
 #include "xrServer_Space.h"
@@ -185,7 +182,3 @@ public:
 }; // class lookout_2_idle_transition
 
 } // namespace smart_cover
-
-#include "smart_cover_loophole_planner_actions_inline.h"
-
-#endif // SMART_COVER_LOOPHOLE_PLANNER_ACTIONS_H_INCLUDED

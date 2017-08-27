@@ -4,32 +4,21 @@
 #include "net_server.h"
 #include <functional>
 
-#include "NET_Log.h"
-//#include "../xrGameSpy/xrGameSpy_MainDefs.h"
-
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
 #pragma warning(pop)
 
-static	INetLog* pSvNetLog = NULL; 
+#define NET_NOTFOR_SUBNET_STR "Your IP does not present in server's subnet"
 
-#define NET_BANNED_STR                "Player banned by server!"
-#define NET_PROTECTED_SERVER_STR      "Access denied by protected server for this player!"
-#define NET_NOTFOR_SUBNET_STR		  "Your IP does not present in server's subnet"
-
-void	dump_URL	(const char* p, IDirectPlay8Address* A);
-
-const char* nameTraffic	= "traffic.net";
+void dump_URL(const char* p, IDirectPlay8Address* A);
 
 XRNETSERVER_API int		psNET_ServerUpdate	= 30;		// FPS
 XRNETSERVER_API int		psNET_ServerPending	= 3;
 
 XRNETSERVER_API ClientID BroadcastCID(0xffffffff);
 
-IClient::IClient( CTimer* timer )
-  : stats(timer),
-    server(NULL)
+IClient::IClient(CTimer* timer): stats(timer), server(NULL)
 {
 	dwTime_LastUpdate	= 0;
 	flags.bLocal = FALSE;
@@ -70,33 +59,22 @@ static const GUID NET_GUID =
 // {8D3F9E5E-A3BD-475b-9E49-B0E77139143C}
 static const GUID CLSID_NETWORKSIMULATOR_DP8SP_TCPIP =
 { 0x8d3f9e5e, 0xa3bd, 0x475b, { 0x9e, 0x49, 0xb0, 0xe7, 0x71, 0x39, 0x14, 0x3c } };
-
-/* static HRESULT WINAPI Handler (PVOID pvUserContext, DWORD dwMessageType, PVOID pMessage)
-{
-	IPureServer* C			= (IPureServer*)pvUserContext;
-	return C->net_Handler	(dwMessageType,pMessage);
-}
-*/
-
 //------------------------------------------------------------------------------
-
-void    
-IClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
+void IClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
 {
     R_ASSERT(server);
     server->IPureServer::SendTo_LL( ID, const_cast<void*>(data), size, flags, timeout );
 }
-
-
 //------------------------------------------------------------------------------
-IClient*	IPureServer::ID_to_client		(ClientID ID, bool ScanAll)
+IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 {
-	if ( 0 == ID.value() )			return NULL;
-	IClient* ret_client = GetClientByID(ID);
-	if (ret_client || !ScanAll)
-		return ret_client;
-	
-	return NULL;
+	if(ID.value())
+	{
+		IClient* ret_client = GetClientByID(ID);
+		if (ret_client || !ScanAll)
+			return ret_client;
+	}
+	return nullptr;
 }
 
 void
@@ -112,15 +90,6 @@ IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
 
 	csMessage.lock();
 	//---------------------------------------
-	if( psNET_Flags.test(NETFLAG_LOG_SV_PACKETS) ) 
-	{
-		if( !pSvNetLog) 
-			pSvNetLog = xr_new<INetLog>("logs\\net_sv_log.log", TimeGlobal(device_timer));
-		    
-		if( pSvNetLog ) 
-		    pSvNetLog->LogPacket( TimeGlobal(device_timer), &packet, TRUE );
-	}
-	//---------------------------------------
 	u32	result = OnMessage( packet, id );
 	//Msg("-S- Leaving from csMessages [%d]", currentThreadId);
 	csMessage.unlock();
@@ -131,8 +100,7 @@ IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
 
 //==============================================================================
 
-IPureServer::IPureServer	(CTimer* timer, BOOL	Dedicated)
-	:	m_bDedicated(Dedicated)
+IPureServer::IPureServer	(CTimer* timer, BOOL Dedicated): m_bDedicated(Dedicated)
 {
 	device_timer			= timer;
 	stats.clear				();
@@ -140,7 +108,6 @@ IPureServer::IPureServer	(CTimer* timer, BOOL	Dedicated)
 	SV_Client				= NULL;
 	NET						= NULL;
 	net_Address_device		= NULL;
-	pSvNetLog				= NULL;//xr_new<INetLog>("logs\\net_sv_log.log", TimeGlobal(device_timer));
 #ifdef DEBUG
 	sender_functor_invoked = false;
 #endif
@@ -148,9 +115,7 @@ IPureServer::IPureServer	(CTimer* timer, BOOL	Dedicated)
 
 IPureServer::~IPureServer	()
 {
-	SV_Client					= nullptr;
-
-	xr_delete					(pSvNetLog); 
+	SV_Client = nullptr;
 }
 
 IPureServer::EConnect IPureServer::Connect(LPCSTR options, GameDescriptionData & game_descr)
@@ -329,12 +294,8 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
     return S_OK;
 }
 
-void	IPureServer::Flush_Clients_Buffers	()
+void IPureServer::Flush_Clients_Buffers()
 {
-    #if NET_LOG_PACKETS
-    Msg( "#flush server send-buf" );
-    #endif
-	
 	struct LocalSenderFunctor
 	{
 		static void FlushBuffer(IClient* client)
@@ -343,12 +304,10 @@ void	IPureServer::Flush_Clients_Buffers	()
 		}
 	};
 	
-	net_players.ForEachClientDo(
-		LocalSenderFunctor::FlushBuffer
-	);
+	net_players.ForEachClientDo(LocalSenderFunctor::FlushBuffer);
 }
 
-void	IPureServer::SendTo_Buf(ClientID id, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
+void IPureServer::SendTo_Buf(ClientID id, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
 	IClient* tmp_client = net_players.GetFoundClient(
 		ClientIdSearchPredicate(id));
@@ -357,15 +316,8 @@ void	IPureServer::SendTo_Buf(ClientID id, void* data, u32 size, u32 dwFlags, u32
 }
 
 
-void	IPureServer::SendTo_LL(ClientID ID/*DPNID ID*/, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
+void IPureServer::SendTo_LL(ClientID ID/*DPNID ID*/, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
-	//	if (psNET_Flags.test(NETFLAG_LOG_SV_PACKETS)) pSvNetLog->LogData(TimeGlobal(device_timer), data, size);
-	if (psNET_Flags.test(NETFLAG_LOG_SV_PACKETS)) 
-	{
-		if (!pSvNetLog) pSvNetLog = xr_new<INetLog>("logs\\net_sv_log.log", TimeGlobal(device_timer));
-		if (pSvNetLog) pSvNetLog->LogData(TimeGlobal(device_timer), data, size);
-	}
-
 	// send it
 	DPN_BUFFER_DESC		desc;
 	desc.dwBufferSize	= size;

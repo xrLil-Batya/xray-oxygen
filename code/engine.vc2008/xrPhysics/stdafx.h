@@ -16,9 +16,7 @@
 #include "xrPhysics.h"
 #include "../xrCore/xrapi.h"
 
-#ifdef	DEBUG
 #include "d3d9types.h"
-#endif
 
 class CGameMtlLibrary;
 IC CGameMtlLibrary &GMLibrary()

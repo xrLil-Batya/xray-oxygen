@@ -52,14 +52,18 @@ IC	void	xr_delete(T* &ptr)
 		ptr = nullptr;
 	}
 }
+
 template <class T>
 IC	void	xr_delete(T* const &ptr)
 {
-	if (ptr)
-	{
-		xr_special_free<std::is_polymorphic_v<T>, T>(ptr);
-		const_cast<T*&>(ptr) = nullptr;
-	}
+    if (ptr)
+    {
+        T*& hacked_ptr = const_cast<T*&>(ptr);
+        xr_special_free<std::is_polymorphic_v<T>, T> spec;
+        spec(hacked_ptr);
+
+        //const_cast<T*&>(ptr) = nullptr;
+    }
 }
 
 #ifdef DEBUG_MEMORY_MANAGER

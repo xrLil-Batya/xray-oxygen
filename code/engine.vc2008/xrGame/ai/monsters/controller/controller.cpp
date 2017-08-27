@@ -765,7 +765,7 @@ CBaseMonster::SDebugInfo CController::show_debug_info()
 }
 #endif
 
-#ifdef _DEBUG
+#ifdef DEBUG
 void CController::debug_on_key(int key)
 {
 	switch (key){

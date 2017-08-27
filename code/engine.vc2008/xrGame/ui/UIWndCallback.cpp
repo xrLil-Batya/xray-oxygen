@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "UIWndCallback.h"
 #include "UIWindow.h"
 #include "object_broker.h"
@@ -28,7 +28,7 @@ void CUIWndCallback::OnEvent(CUIWindow* pWnd, s16 msg, void* pData)
 	if(!pWnd) return;
 	event_comparer ec(pWnd, msg);
 
-	CALLBACK_IT it = std::find_if(m_callbacks.begin(),m_callbacks.end(),ec);
+	CALLBACKS::iterator it = std::find_if(m_callbacks.begin(),m_callbacks.end(),ec);
 	if(it==m_callbacks.end())
 		return ;
 

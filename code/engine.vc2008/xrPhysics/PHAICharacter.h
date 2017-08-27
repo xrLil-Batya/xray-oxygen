@@ -24,8 +24,6 @@ public:
 private:
 	virtual		void		UpdateStaticDamage					(dContact* c,SGameMtl* tri_material,bool bo1){}
 	//virtual		EEnvironment CheckInvironment					();
-#ifdef DEBUG
 	virtual		void		OnRender							()																													;
-#endif
 
 };

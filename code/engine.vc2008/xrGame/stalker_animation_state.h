@@ -5,9 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Stalker state animations
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "ai/ai_monsters_anims.h"
 #include "stalker_animation_names.h"
 
@@ -32,5 +30,3 @@ public:
 	virtual			~CStalkerAnimationState	();
 			void	Load					(IKinematicsAnimated *kinematics, LPCSTR base_name);
 };
-
-#include "stalker_animation_state_inline.h"

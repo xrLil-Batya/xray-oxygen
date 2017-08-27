@@ -327,13 +327,8 @@ void   squad_grouping_behaviour::next_nearest (Fvector& v)
 	}
 }
 
-float g_separate_factor = 1.f;
-float g_separate_radius = 1.f;
-
 bool   squad_grouping_behaviour::update ()
 {
- 	//separation_factor = cr_fvector3(0, g_separate_factor, 0);
- 	//max_separate_range = g_separate_radius;
 	pos = self->Position();
 
 	return true;

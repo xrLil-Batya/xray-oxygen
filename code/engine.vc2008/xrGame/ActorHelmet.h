@@ -1,6 +1,8 @@
 #pragma once
 
 #include "inventory_item_object.h"
+#include "WeaponBinoculars.h"
+#include "WeaponBinocularsVision.h"
 
 struct SBoneProtections;
 
@@ -17,6 +19,7 @@ public:
 
 	shared_str				m_BonesProtectionSect;
 	shared_str				m_NightVisionSect;
+	shared_str				m_TargetIndicatorFrame; // Borshig // as in binocular
 
 	virtual void			OnMoveToSlot			(const SInvItemPlace& previous_place);
 	virtual void			OnMoveToRuck			(const SInvItemPlace& previous_place);
@@ -44,7 +47,8 @@ public:
 	void					AddBonesProtection		(LPCSTR bones_section);
 protected:
 	HitImmunity::HitTypeSVec	m_HitTypeProtection;
-	SBoneProtections*		m_boneProtection;	
+	SBoneProtections*		m_boneProtection;
+	CBinocularsVision*		m_binocularVision;
 
 protected:
 	virtual bool			install_upgrade_impl	( LPCSTR section, bool test );

@@ -20,6 +20,11 @@ CHelmet::CHelmet()
 CHelmet::~CHelmet()
 {
 	xr_delete(m_boneProtection);
+	if (m_binocularVision)
+	{		
+		xr_delete(m_binocularVision);
+	}
+
 }
 
 void CHelmet::Load(LPCSTR section) 
@@ -43,6 +48,11 @@ void CHelmet::Load(LPCSTR section)
 		m_NightVisionSect = pSettings->r_string(section, "nightvision_sect");
 	else
 		m_NightVisionSect = "";
+
+	if (pSettings->line_exist(section, "target_indicator_frame"))
+		m_TargetIndicatorFrame = pSettings->r_string(section, "target_indicator_frame");
+	else
+		m_TargetIndicatorFrame = "";
 
 	m_fHealthRestoreSpeed			= READ_IF_EXISTS(pSettings, r_float, section, "health_restore_speed",    0.0f );
 	m_fRadiationRestoreSpeed		= READ_IF_EXISTS(pSettings, r_float, section, "radiation_restore_speed", 0.0f );
@@ -104,7 +114,7 @@ void CHelmet::OnMoveToSlot(const SInvItemPlace& previous_place)
 		{
 			CTorch* pTorch = smart_cast<CTorch*>(pActor->inventory().ItemFromSlot(TORCH_SLOT));
 			if(pTorch && pTorch->GetNightVisionStatus())
-				pTorch->SwitchNightVision(true, false);
+				pTorch->SwitchNightVision(true, false);			
 		}
 	}
 }
@@ -168,6 +178,14 @@ bool CHelmet::install_upgrade_impl( LPCSTR section, bool test )
 		m_NightVisionSect._set( str );
 	}
 	result |= result2;
+
+	bool result3 = process_if_exists_set(section, "target_indicator_frame", &CInifile::r_string, str, test);
+	if (result3 && !test)
+	{
+		m_TargetIndicatorFrame._set(str);
+	}
+
+	result |= result3;
 
 	result |= process_if_exists( section, "health_restore_speed",    &CInifile::r_float, m_fHealthRestoreSpeed,    test );
 	result |= process_if_exists( section, "radiation_restore_speed", &CInifile::r_float, m_fRadiationRestoreSpeed, test );

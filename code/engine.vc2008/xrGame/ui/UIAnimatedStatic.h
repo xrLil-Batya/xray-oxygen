@@ -1,9 +1,4 @@
-
-#ifndef UI_ANIMATED_STATIC_H_
-#define UI_ANIMATED_STATIC_H_
-
 #pragma once
-
 #include "UIStatic.h"
 
 class CUIAnimatedStatic: public CUIStatic
@@ -66,4 +61,3 @@ public:
 	virtual	void	Update				();
 	virtual void	InitTextureEx		(LPCSTR tex_name, LPCSTR sh_name="hud\\default");
 };
-#endif	//UI_ANIMATED_STATIC_H_

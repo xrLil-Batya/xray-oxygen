@@ -103,10 +103,11 @@ void	CResourceManager::LS_Load			()
 	luaopen_jit		(LSVM);
 
 	luabind::open						(LSVM);
-#if !XRAY_EXCEPTIONS
-	if (0==luabind::get_error_callback())
-		luabind::set_error_callback		(LuaError);
-#endif
+    //#TODO: make new error handling through exceptions, not error callbacks
+// #if !XRAY_EXCEPTIONS
+// 	if (0==luabind::get_error_callback())
+// 		luabind::set_error_callback		(LuaError);
+// #endif
 
 	function		(LSVM, "log",	LuaLog);
 

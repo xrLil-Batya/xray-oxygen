@@ -19,7 +19,7 @@
 #include "encint.h"
 #include "dequant.h"
 
-
+#pragma warning(disable: 4389 4267 4018)
 
 /*The default quantization parameters used by VP3.1.*/
 static const int OC_VP31_RANGE_SIZES[1]={63};

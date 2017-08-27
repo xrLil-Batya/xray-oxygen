@@ -11,7 +11,7 @@
 #include "graph_engine_space.h"
 #include "../xrScripts/export/script_export_space.h"
 
-typedef GraphEngineSpace::CWorldState CScriptWorldState;
+using CScriptWorldState = GraphEngineSpace::CWorldState;
 
 class CScriptWorldStateWrapper {
 public:

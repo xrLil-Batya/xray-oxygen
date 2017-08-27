@@ -95,7 +95,6 @@ protected:
     LensFlareDescVec	m_Palette;
 	CLensFlareDescriptor* m_Current;
 
-//. #ifdef DEBUG
 public:
     enum LFState{
         lfsNone,
@@ -103,7 +102,6 @@ public:
     	lfsHide,
         lfsShow,
     };
-//. #endif // DEBUG
 
 protected:
     LFState				m_State;

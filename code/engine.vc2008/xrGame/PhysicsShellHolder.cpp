@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "PhysicsShellHolder.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "xrMessages.h"
@@ -20,9 +20,7 @@
 #include "physics_shell_animated.h"
 #include "phcollisiondamagereceiver.h"
 #include "../xrEngine/iphysicsshell.h"
-#ifdef	DEBUG
 #include "../xrengine/objectdump.h"
-#endif
 CPhysicsShellHolder::CPhysicsShellHolder()
 {
 	init();
@@ -597,7 +595,6 @@ void	CPhysicsShellHolder::BonceDamagerCallback(float &damage_factor)
 			damage_factor=phs->BonceDamageFactor();
 }
 
-#ifdef	DEBUG
 std::string	CPhysicsShellHolder::dump(EDumpType type) const
 {
 	switch(type)
@@ -612,4 +609,3 @@ std::string	CPhysicsShellHolder::dump(EDumpType type) const
 	}
 
 }
-#endif

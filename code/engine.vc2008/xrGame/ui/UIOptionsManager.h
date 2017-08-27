@@ -1,7 +1,6 @@
 #pragma once
 
 class CUIOptionsItem;
-
 class CUIOptionsManager
 {
 
@@ -27,10 +26,10 @@ public:
 
 protected:	
 
-	typedef	shared_str									group_name;
-	typedef xr_vector<CUIOptionsItem*>					items_list;
-    typedef xr_map<group_name, items_list>				groups;
-	typedef xr_map<group_name, items_list>::iterator	groups_it;
+	using group_name = shared_str;
+	using items_list = xr_vector<CUIOptionsItem*>;
+    using groups = xr_map<group_name, items_list>;
+	using groups_it= groups::iterator;
 
 	groups	m_groups;
 	

@@ -8,10 +8,10 @@ Copyright (c) 1997-2000 John Robbins -- All rights reserved.
 #pragma warning(disable : 4091) // 'typedef ': ignored on left of '' when no variable is declared
 #include "StackTrace.hpp"
 #include "SymbolEngine.h"
-//#include "MiniDump.h"
 #pragma warning(pop)
 #include <psapi.h>
 #pragma comment(lib, "psapi.lib")
+#pragma warning(disable : 4312)
 
 /*//////////////////////////////////////////////////////////////////////
 File Scope Defines
@@ -155,12 +155,12 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 #endif
 		// Note:  If the source file and line number functions are used,
 		//        StackWalk can cause an access violation.
-		BOOL bSWRet = StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
+		bool bSWRet = !!StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
 			(PREAD_PROCESS_MEMORY_ROUTINE)ReadCurrentProcessMemory, SymFunctionTableAccess, SymGetModuleBase, nullptr);
 
-		if ((bSWRet == FALSE) || (g_stFrame.AddrFrame.Offset == 0))
+		if (!bSWRet || !g_stFrame.AddrFrame.Offset)
 		{
-			szRet = NULL;
+			szRet = 0;
 			__leave;
 		}
 

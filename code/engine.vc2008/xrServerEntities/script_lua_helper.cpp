@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "stdafx.h"
 #include "script_lua_helper.h"
 #include "script_debugger.h"
@@ -42,9 +42,9 @@ int CDbgLuaHelper::PrepareLua(lua_State* l)
 void CDbgLuaHelper::PrepareLuaBind()
 {
 	luabind::set_pcall_callback	(hookLuaBind);
-#if !XRAY_EXCEPTIONS
-	luabind::set_error_callback (errormessageLuaBind);
-#endif
+// #if !XRAY_EXCEPTIONS
+// 	luabind::set_error_callback (errormessageLuaBind);
+// #endif
 }
 
 

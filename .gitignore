@@ -25,3 +25,4 @@ librariesx64/
 *.lnk
 *.db
 code/engine.vc2008/.vs/
+code/engine.vc2008/xrScripts/BuildVm.exe

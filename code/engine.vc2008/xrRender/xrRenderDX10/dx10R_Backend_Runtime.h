@@ -71,9 +71,7 @@ ICF void CBackend::set_PS(ID3DPixelShader* _ps, LPCSTR _n)
 		HW.pContext->PSSetShader(ps);
 #endif
 
-#ifdef DEBUG
 		ps_name			= _n;
-#endif
 	}
 }
 

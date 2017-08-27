@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "base_monster.h"
 #include "../../../level.h"
 #include "../../../level_debug.h"

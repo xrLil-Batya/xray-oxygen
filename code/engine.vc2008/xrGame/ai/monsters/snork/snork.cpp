@@ -288,10 +288,12 @@ void CSnork::on_activate_control(ControlCom::EControlType type)
 //////////////////////////////////////////////////////////////////////////
 
 
-#ifdef _DEBUG
+#ifdef DEBUG
+#include "Actor.h"
+#include "ai_object_location.h"
 void CSnork::debug_on_key(int key)
 {
-	CActor *actor = smart_cast<CActor *>(Level().CurrentEntity());
+	CActor *actor = Actor();
 	if (!actor) return;
 
 	switch (key){

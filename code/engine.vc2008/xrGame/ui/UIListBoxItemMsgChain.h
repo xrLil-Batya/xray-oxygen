@@ -1,16 +1,12 @@
-#ifndef UILISTBOXITEMMSGCHAIN_H_INCLUDED
-#define UILISTBOXITEMMSGCHAIN_H_INCLUDED
-
+#pragma once
 #include "UIListBoxItem.h"
 
 class CUIListBoxItemMsgChain : public CUIListBoxItem
 {
-	typedef CUIListBoxItem inherited;
+	using inherited = CUIListBoxItem;
 public:
 					CUIListBoxItemMsgChain	(float height) : CUIListBoxItem(height) {};
 	virtual			~CUIListBoxItemMsgChain	() {};
-
 	virtual bool	OnMouseDown				(int mouse_btn);
 };
 
-#endif //#ifndef UILISTBOXITEMMSGCHAIN_H_INCLUDED

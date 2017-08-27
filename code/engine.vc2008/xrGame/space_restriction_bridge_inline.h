@@ -21,17 +21,18 @@ IC	CSpaceRestrictionBase &CSpaceRestrictionBridge::object	() const
 }
 
 template <typename T>
-IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T &restriction, const Fvector &position, Fvector &result, bool out_restriction)
+IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T const& restriction, const Fvector &position, Fvector &result, bool out_restriction)
 {
+    T& hack_ref = const_cast<T&> (restriction);
 #pragma todo("Dima to Dima : _Warning : this place can be optimized in case of a slowdown")
 	VERIFY							(initialized());
-	VERIFY							(!restriction->border().empty());
-	VERIFY							(!restriction->accessible_neighbour_border(restriction,out_restriction).empty());
+	VERIFY							(!hack_ref->border().empty());
+	VERIFY							(!hack_ref->accessible_neighbour_border(hack_ref,out_restriction).empty());
 
 	float							min_dist_sqr = flt_max;
 	u32								selected = u32(-1);
-	xr_vector<u32>::const_iterator	I = restriction->accessible_neighbour_border(restriction,out_restriction).begin();
-	xr_vector<u32>::const_iterator	E = restriction->accessible_neighbour_border(restriction,out_restriction).end();
+	xr_vector<u32>::const_iterator	I = hack_ref->accessible_neighbour_border(hack_ref,out_restriction).begin();
+	xr_vector<u32>::const_iterator	E = hack_ref->accessible_neighbour_border(hack_ref,out_restriction).end();
 	for ( ; I != E; ++I) {
 		VERIFY2						(
 			ai().level_graph().valid_vertex_id(*I),
@@ -69,7 +70,7 @@ IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T &restriction, const Fvecto
 			//		check if node is completely inside
 			// else
 			//		check if node is completely outside
-			if (restriction->inside(current,!out_restriction) != out_restriction)
+			if (hack_ref->inside(current,!out_restriction) != out_restriction)
 				continue;
 			
 			float	distance_sqr = ai().level_graph().vertex_position(current).distance_to_sqr(position);
@@ -105,8 +106,8 @@ IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T &restriction, const Fvecto
 				current.P.y = ai().level_graph().vertex_plane_y(selected,current.P.x,current.P.z);
 
 			VERIFY	(ai().level_graph().inside(selected,current.P));
-			VERIFY	(restriction->inside(selected,!out_restriction) == out_restriction);
-			VERIFY	(restriction->inside(current) == out_restriction);
+			VERIFY	(hack_ref->inside(selected,!out_restriction) == out_restriction);
+			VERIFY	(hack_ref->inside(current) == out_restriction);
 			float	distance_sqr = current.P.distance_to(position);
 			if (distance_sqr < min_dist_sqr) {
 				min_dist_sqr = distance_sqr;

@@ -17,17 +17,15 @@ public:
 	virtual	~ICollisionHitCallback() 	{}
 };
 
-#ifdef	DEBUG
-	enum	EDumpType
-	{
-		base,
-		poses,
-		vis_geom,
-		props,
-		full,
-		full_capped
-	};
-#endif
+enum	EDumpType
+{
+	base,
+	poses,
+	vis_geom,
+	props,
+	full,
+	full_capped
+};
 
 class IPhysicsShellHolder
 {
@@ -62,8 +60,6 @@ class IPhysicsShellHolder
 	virtual CPHSoundPlayer*				_BCL	ObjectPhSoundPlayer				()  					=0;
 	virtual	ICollisionDamageReceiver*	_BCL	ObjectPhCollisionDamageReceiver	()						=0;
 	virtual	void						_BCL BonceDamagerCallback				( float &damage_factor )=0;
-#ifdef	DEBUG
 	virtual	std::string					_BCL	dump(EDumpType type) const =0;
-#endif
 };
 

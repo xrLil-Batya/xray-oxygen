@@ -30,7 +30,7 @@ namespace luabind { namespace detail
 	// this class represents a specific overload of a member-function.
 	struct LUABIND_API overload_rep_base
 	{
-#if !defined(NDEBUG) && !defined(LUABIND_NO_ERROR_CHECKING)
+#if !defined(LUABIND_NO_ERROR_CHECKING)
 		overload_rep_base(): m_get_signature_fun(nullptr), allocator(), m_match_fun(std::allocator_arg_t(), allocator), m_arity(-1) {}
 #else
         overload_rep_base(): allocator(), m_match_fun(std::allocator_arg_t(), allocator), m_arity(-1) {}

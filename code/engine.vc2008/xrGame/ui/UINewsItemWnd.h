@@ -8,7 +8,7 @@ struct GAME_NEWS_DATA;
 
 class CUINewsItemWnd :public CUIWindow
 {
-	typedef	CUIWindow		inherited;
+	using inherited = CUIWindow;
 
 	CUITextWnd*				m_UIDate;
 	CUITextWnd*				m_UICaption;

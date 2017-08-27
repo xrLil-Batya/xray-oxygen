@@ -69,6 +69,7 @@ void oc_pack_adv1(oc_pack_buf *_b){
   _b->bits--;
 }
 
+#pragma warning(disable: 4267)
 /*Here we assume that 0<=_bits&&_bits<=32.*/
 long oc_pack_read_c(oc_pack_buf *_b,int _bits){
   oc_pb_window window;

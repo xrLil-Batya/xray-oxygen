@@ -64,6 +64,7 @@
 #define CHUNKSIZE 65536 /* greater-than-page-size granularity seeking */
 #define READSIZE 2048 /* a smaller read size is needed for low-rate streaming. */
 
+#pragma warning(disable:4457 4267 4101)
 static long _get_data(OggVorbis_File *vf){
   errno=0;
   if(!(vf->callbacks.read_func))return(-1);
@@ -1105,19 +1106,21 @@ long ov_bitrate(OggVorbis_File *vf,int i){
   if(vf->ready_state<OPENED)return(OV_EINVAL);
   if(i>=vf->links)return(OV_EINVAL);
   if(!vf->seekable && i!=0)return(ov_bitrate(vf,0));
-  if(i<0){
-    ogg_int64_t bits=0;
-    int i;
-    float br;
-    for(i=0;i<vf->links;i++)
-      bits+=(vf->offsets[i+1]-vf->dataoffsets[i])*8;
-    /* This once read: return(rint(bits/ov_time_total(vf,-1)));
-     * gcc 3.x on x86 miscompiled this at optimisation level 2 and above,
-     * so this is slightly transformed to make it work.
-     */
-    br = bits/ov_time_total(vf,-1);
-    return(rint(br));
-  }else{
+  if (i < 0)
+  {
+	  ogg_int64_t bits = 0;
+	  float br;
+	  for (int it = 0; it < vf->links; it++)
+		  bits += (vf->offsets[it + 1] - vf->dataoffsets[it]) * 8;
+	  /* This once read: return(rint(bits/ov_time_total(vf,-1)));
+	   * gcc 3.x on x86 miscompiled this at optimisation level 2 and above,
+	   * so this is slightly transformed to make it work.
+	   */
+	  br = bits / ov_time_total(vf, -1);
+	  return(rint(br));
+  }
+  else
+  {
     if(vf->seekable){
       /* return the actual bitrate */
       return(rint((vf->offsets[i+1]-vf->dataoffsets[i])*8/ov_time_total(vf,i)));
@@ -1170,18 +1173,17 @@ long ov_serialnumber(OggVorbis_File *vf,int i){
             OV_EINVAL if the stream is not seekable (we can't know the length)
             or if stream is only partially open
 */
-ogg_int64_t ov_raw_total(OggVorbis_File *vf,int i){
-  if(vf->ready_state<OPENED)return(OV_EINVAL);
-  if(!vf->seekable || i>=vf->links)return(OV_EINVAL);
-  if(i<0){
-    ogg_int64_t acc=0;
-    int i;
-    for(i=0;i<vf->links;i++)
-      acc+=ov_raw_total(vf,i);
-    return(acc);
-  }else{
-    return(vf->offsets[i+1]-vf->offsets[i]);
-  }
+ogg_int64_t ov_raw_total(OggVorbis_File *vf, int i)
+{
+	if (vf->ready_state < OPENED)return(OV_EINVAL);
+	if (!vf->seekable || i >= vf->links)return(OV_EINVAL);
+	if (i < 0) {
+		ogg_int64_t acc = 0;
+		for (int it = 0; it < vf->links; it++)
+			acc += ov_raw_total(vf, it);
+		return(acc);
+	}
+	else return(vf->offsets[i + 1] - vf->offsets[i]);
 }
 
 /* returns: total PCM length (samples) of content if i==-1 PCM length
@@ -1189,18 +1191,17 @@ ogg_int64_t ov_raw_total(OggVorbis_File *vf,int i){
             OV_EINVAL if the stream is not seekable (we can't know the
             length) or only partially open
 */
-ogg_int64_t ov_pcm_total(OggVorbis_File *vf,int i){
-  if(vf->ready_state<OPENED)return(OV_EINVAL);
-  if(!vf->seekable || i>=vf->links)return(OV_EINVAL);
-  if(i<0){
-    ogg_int64_t acc=0;
-    int i;
-    for(i=0;i<vf->links;i++)
-      acc+=ov_pcm_total(vf,i);
-    return(acc);
-  }else{
-    return(vf->pcmlengths[i*2+1]);
-  }
+ogg_int64_t ov_pcm_total(OggVorbis_File *vf, int i) {
+	if (vf->ready_state < OPENED)return(OV_EINVAL);
+	if (!vf->seekable || i >= vf->links)return(OV_EINVAL);
+	if (i < 0)
+	{
+		ogg_int64_t acc = 0;
+		for (int it = 0; it < vf->links; it++)
+			acc += ov_pcm_total(vf, it);
+		return(acc);
+	}
+	else return(vf->pcmlengths[i * 2 + 1]);
 }
 
 /* returns: total seconds of content if i==-1
@@ -1208,18 +1209,18 @@ ogg_int64_t ov_pcm_total(OggVorbis_File *vf,int i){
             OV_EINVAL if the stream is not seekable (we can't know the
             length) or only partially open
 */
-double ov_time_total(OggVorbis_File *vf,int i){
-  if(vf->ready_state<OPENED)return(OV_EINVAL);
-  if(!vf->seekable || i>=vf->links)return(OV_EINVAL);
-  if(i<0){
-    double acc=0;
-    int i;
-    for(i=0;i<vf->links;i++)
-      acc+=ov_time_total(vf,i);
-    return(acc);
-  }else{
-    return((double)(vf->pcmlengths[i*2+1])/vf->vi[i].rate);
-  }
+double ov_time_total(OggVorbis_File *vf, int i) {
+	if (vf->ready_state < OPENED)return(OV_EINVAL);
+	if (!vf->seekable || i >= vf->links)return(OV_EINVAL);
+	if (i < 0)
+	{
+		double acc = 0;
+		int i;
+		for (int it = 0; it < vf->links; it++)
+			acc += ov_time_total(vf, it);
+		return(acc);
+	}
+	else return((double)(vf->pcmlengths[i * 2 + 1]) / vf->vi[i].rate);
 }
 
 /* seek to an offset relative to the *compressed* data. This also
@@ -1397,7 +1398,7 @@ int ov_raw_seek(OggVorbis_File *vf,ogg_int64_t pos){
   _decode_clear(vf);
   return OV_EBADLINK;
 }
-
+#pragma warning(disable: 4456)
 /* Page granularity seek (faster than sample granularity because we
    don't do the last bit of decode to find a specific sample).
 
@@ -1433,227 +1434,232 @@ int ov_pcm_seek_page(OggVorbis_File *vf,ogg_int64_t pos){
   /* new search algorithm originally by HB (Nicholas Vinen) */
 
   {
-    ogg_int64_t end=vf->offsets[link+1];
-    ogg_int64_t begin=vf->dataoffsets[link];
-    ogg_int64_t begintime = vf->pcmlengths[link*2];
-    ogg_int64_t endtime = vf->pcmlengths[link*2+1]+begintime;
-    ogg_int64_t target=pos-total+begintime;
-    ogg_int64_t best=-1;
-    int         got_page=0;
+	  ogg_int64_t end = vf->offsets[link + 1];
+	  ogg_int64_t begin = vf->dataoffsets[link];
+	  ogg_int64_t begintime = vf->pcmlengths[link * 2];
+	  ogg_int64_t endtime = vf->pcmlengths[link * 2 + 1] + begintime;
+	  ogg_int64_t target = pos - total + begintime;
+	  ogg_int64_t best = -1;
+	  int         got_page = 0;
 
-    ogg_page og;
+	  ogg_page og;
 
-    /* if we have only one page, there will be no bisection.  Grab the page here */
-    if(begin==end){
-      result=_seek_helper(vf,begin);
-      if(result) goto seek_error;
+	  /* if we have only one page, there will be no bisection.  Grab the page here */
+	  if (begin == end) {
+		  result = _seek_helper(vf, begin);
+		  if (result) goto seek_error;
 
-      result=_get_next_page(vf,&og,1);
-      if(result<0) goto seek_error;
+		  result = _get_next_page(vf, &og, 1);
+		  if (result < 0) goto seek_error;
 
-      got_page=1;
-    }
+		  got_page = 1;
+	  }
 
-    /* bisection loop */
-    while(begin<end){
-      ogg_int64_t bisect;
+	  /* bisection loop */
+	  while (begin < end) {
+		  ogg_int64_t bisect;
 
-      if(end-begin<CHUNKSIZE){
-        bisect=begin;
-      }else{
-        /* take a (pretty decent) guess. */
-        bisect=begin +
-          (ogg_int64_t)((double)(target-begintime)*(end-begin)/(endtime-begintime))
-          - CHUNKSIZE;
-        if(bisect<begin+CHUNKSIZE)
-          bisect=begin;
-      }
+		  if (end - begin < CHUNKSIZE) {
+			  bisect = begin;
+		  }
+		  else {
+			  /* take a (pretty decent) guess. */
+			  bisect = begin +
+				  (ogg_int64_t)((double)(target - begintime)*(end - begin) / (endtime - begintime))
+				  - CHUNKSIZE;
+			  if (bisect < begin + CHUNKSIZE)
+				  bisect = begin;
+		  }
 
-      result=_seek_helper(vf,bisect);
-      if(result) goto seek_error;
+		  result = _seek_helper(vf, bisect);
+		  if (result) goto seek_error;
 
-      /* read loop within the bisection loop */
-      while(begin<end){
-        result=_get_next_page(vf,&og,end-vf->offset);
-        if(result==OV_EREAD) goto seek_error;
-        if(result<0){
-          /* there is no next page! */
-          if(bisect<=begin+1)
-              /* No bisection left to perform.  We've either found the
-                 best candidate already or failed. Exit loop. */
-            end=begin;
-          else{
-            /* We tried to load a fraction of the last page; back up a
-               bit and try to get the whole last page */
-            if(bisect==0) goto seek_error;
-            bisect-=CHUNKSIZE;
+		  /* read loop within the bisection loop */
+		  while (begin < end) {
+			  result = _get_next_page(vf, &og, end - vf->offset);
+			  if (result == OV_EREAD) goto seek_error;
+			  if (result < 0) {
+				  /* there is no next page! */
+				  if (bisect <= begin + 1)
+					  /* No bisection left to perform.  We've either found the
+						 best candidate already or failed. Exit loop. */
+					  end = begin;
+				  else {
+					  /* We tried to load a fraction of the last page; back up a
+						 bit and try to get the whole last page */
+					  if (bisect == 0) goto seek_error;
+					  bisect -= CHUNKSIZE;
 
-            /* don't repeat/loop on a read we've already performed */
-            if(bisect<=begin)bisect=begin+1;
+					  /* don't repeat/loop on a read we've already performed */
+					  if (bisect <= begin)bisect = begin + 1;
 
-            /* seek and cntinue bisection */
-            result=_seek_helper(vf,bisect);
-            if(result) goto seek_error;
-          }
-        }else{
-          ogg_int64_t granulepos;
-          got_page=1;
+					  /* seek and cntinue bisection */
+					  result = _seek_helper(vf, bisect);
+					  if (result) goto seek_error;
+				  }
+			  }
+			  else {
+				  ogg_int64_t granulepos;
+				  got_page = 1;
 
-          /* got a page. analyze it */
-          /* only consider pages from primary vorbis stream */
-          if(ogg_page_serialno(&og)!=vf->serialnos[link])
-            continue;
+				  /* got a page. analyze it */
+				  /* only consider pages from primary vorbis stream */
+				  if (ogg_page_serialno(&og) != vf->serialnos[link])
+					  continue;
 
-          /* only consider pages with the granulepos set */
-          granulepos=ogg_page_granulepos(&og);
-          if(granulepos==-1)continue;
+				  /* only consider pages with the granulepos set */
+				  granulepos = ogg_page_granulepos(&og);
+				  if (granulepos == -1)continue;
 
-          if(granulepos<target){
-            /* this page is a successful candidate! Set state */
+				  if (granulepos < target) {
+					  /* this page is a successful candidate! Set state */
 
-            best=result;  /* raw offset of packet with granulepos */
-            begin=vf->offset; /* raw offset of next page */
-            begintime=granulepos;
+					  best = result;  /* raw offset of packet with granulepos */
+					  begin = vf->offset; /* raw offset of next page */
+					  begintime = granulepos;
 
-            /* if we're before our target but within a short distance,
-               don't bisect; read forward */
-            if(target-begintime>44100)break;
+					  /* if we're before our target but within a short distance,
+						 don't bisect; read forward */
+					  if (target - begintime > 44100)break;
 
-            bisect=begin; /* *not* begin + 1 as above */
-          }else{
+					  bisect = begin; /* *not* begin + 1 as above */
+				  }
+				  else {
 
-            /* This is one of our pages, but the granpos is
-               post-target; it is not a bisection return
-               candidate. (The only way we'd use it is if it's the
-               first page in the stream; we handle that case later
-               outside the bisection) */
-            if(bisect<=begin+1){
-              /* No bisection left to perform.  We've either found the
-                 best candidate already or failed. Exit loop. */
-              end=begin;
-            }else{
-              if(end==vf->offset){
-                /* bisection read to the end; use the known page
-                   boundary (result) to update bisection, back up a
-                   little bit, and try again */
-                end=result;
-                bisect-=CHUNKSIZE;
-                if(bisect<=begin)bisect=begin+1;
-                result=_seek_helper(vf,bisect);
-                if(result) goto seek_error;
-              }else{
-                /* Normal bisection */
-                end=bisect;
-                endtime=granulepos;
-                break;
-              }
-            }
-          }
-        }
-      }
-    }
+					  /* This is one of our pages, but the granpos is
+						 post-target; it is not a bisection return
+						 candidate. (The only way we'd use it is if it's the
+						 first page in the stream; we handle that case later
+						 outside the bisection) */
+					  if (bisect <= begin + 1) {
+						  /* No bisection left to perform.  We've either found the
+							 best candidate already or failed. Exit loop. */
+						  end = begin;
+					  }
+					  else {
+						  if (end == vf->offset) {
+							  /* bisection read to the end; use the known page
+								 boundary (result) to update bisection, back up a
+								 little bit, and try again */
+							  end = result;
+							  bisect -= CHUNKSIZE;
+							  if (bisect <= begin)bisect = begin + 1;
+							  result = _seek_helper(vf, bisect);
+							  if (result) goto seek_error;
+						  }
+						  else {
+							  /* Normal bisection */
+							  end = bisect;
+							  endtime = granulepos;
+							  break;
+						  }
+					  }
+				  }
+			  }
+		  }
+	  }
 
-    /* Out of bisection: did it 'fail?' */
-    if(best == -1){
+	  /* Out of bisection: did it 'fail?' */
+	  if (best == -1) {
 
-      /* Check the 'looking for data in first page' special case;
-         bisection would 'fail' because our search target was before the
-         first PCM granule position fencepost. */
+		  /* Check the 'looking for data in first page' special case;
+			 bisection would 'fail' because our search target was before the
+			 first PCM granule position fencepost. */
 
-      if(got_page &&
-         begin == vf->dataoffsets[link] &&
-         ogg_page_serialno(&og)==vf->serialnos[link]){
+		  if (got_page &&
+			  begin == vf->dataoffsets[link] &&
+			  ogg_page_serialno(&og) == vf->serialnos[link]) {
 
-        /* Yes, this is the beginning-of-stream case. We already have
-           our page, right at the beginning of PCM data.  Set state
-           and return. */
+			  /* Yes, this is the beginning-of-stream case. We already have
+				 our page, right at the beginning of PCM data.  Set state
+				 and return. */
 
-        vf->pcm_offset=total;
+			  vf->pcm_offset = total;
 
-        if(link!=vf->current_link){
-          /* Different link; dump entire decode machine */
-          _decode_clear(vf);
+			  if (link != vf->current_link) {
+				  /* Different link; dump entire decode machine */
+				  _decode_clear(vf);
 
-          vf->current_link=link;
-          vf->current_serialno=vf->serialnos[link];
-          vf->ready_state=STREAMSET;
+				  vf->current_link = link;
+				  vf->current_serialno = vf->serialnos[link];
+				  vf->ready_state = STREAMSET;
 
-        }else{
-          vorbis_synthesis_restart(&vf->vd);
-        }
+			  }
+			  else {
+				  vorbis_synthesis_restart(&vf->vd);
+			  }
 
-        ogg_stream_reset_serialno(&vf->os,vf->current_serialno);
-        ogg_stream_pagein(&vf->os,&og);
+			  ogg_stream_reset_serialno(&vf->os, vf->current_serialno);
+			  ogg_stream_pagein(&vf->os, &og);
 
-      }else
-        goto seek_error;
+		  }
+		  else  goto seek_error;
+	  }
+	  else 
+	  {
+		  /* Bisection found our page. seek to it, update pcm offset. Easier case than
+			 raw_seek, don't keep packets preceding granulepos. */
 
-    }else{
+		  ogg_page og;
+		  ogg_packet op;
 
-      /* Bisection found our page. seek to it, update pcm offset. Easier case than
-         raw_seek, don't keep packets preceding granulepos. */
+		  /* seek */
+		  result = _seek_helper(vf, best);
+		  vf->pcm_offset = -1;
+		  if (result) goto seek_error;
+		  result = _get_next_page(vf, &og, -1);
+		  if (result < 0) goto seek_error;
 
-      ogg_page og;
-      ogg_packet op;
+		  if (link != vf->current_link) {
+			  /* Different link; dump entire decode machine */
+			  _decode_clear(vf);
 
-      /* seek */
-      result=_seek_helper(vf,best);
-      vf->pcm_offset=-1;
-      if(result) goto seek_error;
-      result=_get_next_page(vf,&og,-1);
-      if(result<0) goto seek_error;
+			  vf->current_link = link;
+			  vf->current_serialno = vf->serialnos[link];
+			  vf->ready_state = STREAMSET;
+		  }
+		  else vorbis_synthesis_restart(&vf->vd);
 
-      if(link!=vf->current_link){
-        /* Different link; dump entire decode machine */
-        _decode_clear(vf);
+		  ogg_stream_reset_serialno(&vf->os, vf->current_serialno);
+		  ogg_stream_pagein(&vf->os, &og);
 
-        vf->current_link=link;
-        vf->current_serialno=vf->serialnos[link];
-        vf->ready_state=STREAMSET;
-
-      }else{
-        vorbis_synthesis_restart(&vf->vd);
-      }
-
-      ogg_stream_reset_serialno(&vf->os,vf->current_serialno);
-      ogg_stream_pagein(&vf->os,&og);
-
-      /* pull out all but last packet; the one with granulepos */
-      while(1){
-        result=ogg_stream_packetpeek(&vf->os,&op);
-        if(result==0){
-          /* No packet returned; we exited the bisection with 'best'
-             pointing to a page with a granule position, so the packet
-             finishing this page ('best') originated on a preceding
-             page. Keep fetching previous pages until we get one with
-             a granulepos or without the 'continued' flag set.  Then
-             just use raw_seek for simplicity. */
-          /* Do not rewind past the beginning of link data; if we do,
-             it's either a bug or a broken stream */
-          result=best;
-          while(result>vf->dataoffsets[link]){
-            result=_get_prev_page(vf,result,&og);
-            if(result<0) goto seek_error;
-            if(ogg_page_serialno(&og)==vf->current_serialno &&
-               (ogg_page_granulepos(&og)>-1 ||
-                !ogg_page_continued(&og))){
-              return ov_raw_seek(vf,result);
-            }
-          }
-        }
-        if(result<0){
-          result = OV_EBADPACKET;
-          goto seek_error;
-        }
-        if(op.granulepos!=-1){
-          vf->pcm_offset=op.granulepos-vf->pcmlengths[vf->current_link*2];
-          if(vf->pcm_offset<0)vf->pcm_offset=0;
-          vf->pcm_offset+=total;
-          break;
-        }else
-          result=ogg_stream_packetout(&vf->os,NULL);
-      }
-    }
+		  /* pull out all but last packet; the one with granulepos */
+		  while (1) {
+			  result = ogg_stream_packetpeek(&vf->os, &op);
+			  if (!result) 
+			  {
+				  /* No packet returned; we exited the bisection with 'best'
+					 pointing to a page with a granule position, so the packet
+					 finishing this page ('best') originated on a preceding
+					 page. Keep fetching previous pages until we get one with
+					 a granulepos or without the 'continued' flag set.  Then
+					 just use raw_seek for simplicity. */
+					 /* Do not rewind past the beginning of link data; if we do,
+						it's either a bug or a broken stream */
+				  result = best;
+				  while (result > vf->dataoffsets[link]) {
+					  result = _get_prev_page(vf, result, &og);
+					  if (result < 0) goto seek_error;
+					  if (ogg_page_serialno(&og) == vf->current_serialno &&
+						  (ogg_page_granulepos(&og) > -1 ||
+							  !ogg_page_continued(&og))) {
+						  return ov_raw_seek(vf, result);
+					  }
+				  }
+			  }
+			  if (result < 0) {
+				  result = OV_EBADPACKET;
+				  goto seek_error;
+			  }
+			  if (op.granulepos != -1) {
+				  vf->pcm_offset = op.granulepos - vf->pcmlengths[vf->current_link * 2];
+				  if (vf->pcm_offset < 0)vf->pcm_offset = 0;
+				  vf->pcm_offset += total;
+				  break;
+			  }
+			  else result = ogg_stream_packetout(&vf->os, 0);
+		  }
+	  }
   }
 
   /* verify result */

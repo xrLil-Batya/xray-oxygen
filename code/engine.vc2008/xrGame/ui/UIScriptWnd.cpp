@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "UIScriptWnd.h"
 #include "object_broker.h"
 #include "../callback_info.h"
@@ -27,14 +27,11 @@ void CUIDialogWndEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	event_comparer ec(pWnd,msg);
 
-	CALLBACK_IT it = std::find_if(m_callbacks.begin(),m_callbacks.end(),ec);
+	CALLBACKS::iterator it = std::find_if(m_callbacks.begin(),m_callbacks.end(),ec);
 	if(it==m_callbacks.end())
 		return inherited::SendMessage(pWnd, msg, pData);
 
 	((*it)->m_callback)();
-
-//	if ( (*it)->m_cpp_callback )	
-//		(*it)->m_cpp_callback(pData);
 }
 
 bool CUIDialogWndEx::Load(LPCSTR xml_name)

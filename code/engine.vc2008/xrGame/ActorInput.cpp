@@ -565,6 +565,11 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 	m_input_external_handler	= handler;
 }
 
+
+#include "WeaponBinoculars.h"
+#include "WeaponBinocularsVision.h"
+#include "ActorHelmet.h"
+#include "TargetFrame.h"
 void CActor::SwitchNightVision()
 {
 	CWeapon* wpn1 = NULL;
@@ -578,9 +583,11 @@ void CActor::SwitchNightVision()
 	xr_vector<CAttachableItem*> const& all = CAttachmentOwner::attached_objects();
 	xr_vector<CAttachableItem*>::const_iterator it = all.begin();
 	xr_vector<CAttachableItem*>::const_iterator it_e = all.end();
+
 	for ( ; it != it_e; ++it )
 	{
 		CTorch* torch = smart_cast<CTorch*>(*it);
+		
 		if ( torch )
 		{	
 			if(wpn1 && wpn1->IsZoomed())
@@ -590,9 +597,11 @@ void CActor::SwitchNightVision()
 				return;
 
 			torch->SwitchNightVision();
-			return;
+			
 		}
+		
 	}
+	
 }
 
 void CActor::SwitchTorch()

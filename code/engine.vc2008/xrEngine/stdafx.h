@@ -3,11 +3,9 @@
 #ifdef _EDITOR
 	#include "..\editors\ECore\stdafx.h"
 #else
-#ifndef NDEBUG
-#	ifndef INGAME_EDITOR
-#		define	INGAME_EDITOR
-#	endif // #ifndef INGAME_EDITOR
-#endif // #ifndef NDEBUG
+#ifndef INGAME_EDITOR
+#	define	INGAME_EDITOR
+#endif // #ifndef INGAME_EDITOR
 #ifndef _WIN32_WINNT
 #	define _WIN32_WINNT 0x0600
 #endif
@@ -65,11 +63,6 @@ extern ENGINE_API CInifile *pGameIni;
 
 #ifndef DEBUG
 #	define LUABIND_NO_ERROR_CHECKING
-#endif
-
-#if	!defined(DEBUG) || defined(FORCE_NO_EXCEPTIONS)
-#	define LUABIND_NO_EXCEPTIONS
-#	define BOOST_NO_EXCEPTIONS
 #endif
 
 #define LUABIND_DONT_COPY_STRINGS

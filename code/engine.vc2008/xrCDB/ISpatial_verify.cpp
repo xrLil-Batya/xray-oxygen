@@ -2,7 +2,7 @@
 #include "ISpatial.h"
 
 extern Fvector	c_spatial_offset[8];
-
+#pragma warning(disable: 4267)
 class	walker
 {
 public:

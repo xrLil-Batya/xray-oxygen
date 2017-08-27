@@ -164,11 +164,9 @@ public:																																				//
 	IC		void						ActivatingPos							(const Fmatrix &BoneTransform);
 	IC		void						CalculateBoneTransform					( Fmatrix &bone_transform )const;
 			
-#ifdef		DEBUG
 	virtual void						dbg_draw_velocity						( float scale, u32 color );
 	virtual void						dbg_draw_force							( float scale, u32 color );
 	virtual void						dbg_draw_geometry						( float scale, u32 color, Flags32 flags = Flags32().assign( 0 ) ) const;
-#endif
 			void						SetBoneCallbackOverwrite				(bool v);
 			void		_BCL			BonesCallBack							(CBoneInstance* B);																//called from updateCL visual influent
 			void						StataticRootBonesCallBack				(CBoneInstance* B);
@@ -239,9 +237,7 @@ IC			void						MulB43InverceLocalForm			(Fmatrix&) const;
 	virtual CPhysicsShell*				PhysicsShell					();																				//aux
 			CPHShell*					PHShell							();
 	virtual void						set_ParentElement				(CPhysicsElement* p){ m_parent_element=(CPHElement*)p; }							//aux
-#ifdef	DEBUG
 	CPhysicsElement*					parent_element					(){ return m_parent_element; }
-#endif
 	void								SetShell						(CPHShell* p);																	//aux
 	virtual	dBodyID						get_body				()		{return m_body;}																//aux
 	virtual	const dBodyID				get_bodyConst			()const	{return m_body;}																//aux

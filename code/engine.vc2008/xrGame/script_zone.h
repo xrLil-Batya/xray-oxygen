@@ -5,17 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script zone object
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "space_restrictor.h"
 #include "../xrEngine/feel_touch.h"
 #include "script_space_forward.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class CScriptGameObject;
-
-class CScriptZone : public CSpaceRestrictor, public Feel::Touch {
+class CScriptZone : public CSpaceRestrictor, public Feel::Touch 
+{
 public:
 	typedef	CSpaceRestrictor inherited;
 

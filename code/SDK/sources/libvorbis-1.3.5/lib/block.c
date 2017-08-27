@@ -31,6 +31,7 @@
 #include "registry.h"
 #include "misc.h"
 
+#pragma warning(disable: 4456)
 /* pcm accumulator examples (not exhaustive):
 
  <-------------- lW ---------------->

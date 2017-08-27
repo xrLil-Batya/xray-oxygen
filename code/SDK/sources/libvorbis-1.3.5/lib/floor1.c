@@ -494,10 +494,10 @@ static int fit_line(lsfit_acc *a,int fits,int *y0,int *y1,
     double denom=(bn*x2b-xb*xb);
 
     if(denom>0.){
-      double a=(yb*x2b-xyb*xb)/denom;
+      double _a=(yb*x2b-xyb*xb)/denom;
       double b=(bn*xyb-xb*yb)/denom;
-      *y0=rint(a+b*x0);
-      *y1=rint(a+b*x1);
+      *y0=rint(_a+b*x0);
+      *y1=rint(_a+b*x1);
 
       /* limit to our range! */
       if(*y0>1023)*y0=1023;
@@ -711,10 +711,10 @@ int *floor1_fit(vorbis_block *vb,vorbis_look_floor1 *look,
       int hn=look->hineighbor[i-2];
       int x0=info->postlist[ln];
       int x1=info->postlist[hn];
-      int y0=output[ln];
-      int y1=output[hn];
+      int _y0=output[ln];
+      int _y1=output[hn];
 
-      int predicted=render_point(x0,x1,y0,y1,info->postlist[i]);
+      int predicted=render_point(x0,x1,_y0,_y1,info->postlist[i]);
       int vx=post_Y(fit_valueA,fit_valueB,i);
 
       if(vx>=0 && predicted!=vx){

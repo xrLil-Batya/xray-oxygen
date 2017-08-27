@@ -11,7 +11,7 @@
 #include "graph_engine_space.h"
 #include "../xrScripts/export/script_export_space.h"
 
-typedef GraphEngineSpace::CWorldProperty CScriptWorldProperty;
+using CScriptWorldProperty = GraphEngineSpace::CWorldProperty;
 
 class CScriptWorldPropertyWrapper {
 public:
@@ -20,5 +20,3 @@ public:
 add_to_type_list(CScriptWorldPropertyWrapper)
 #undef script_type_list
 #define script_type_list save_type_list(CScriptWorldPropertyWrapper)
-
-#include "script_world_property_inline.h"

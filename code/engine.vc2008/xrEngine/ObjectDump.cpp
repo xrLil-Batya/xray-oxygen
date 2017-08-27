@@ -1,7 +1,7 @@
 #include "stdafx.h"
-#include "../xrengine/xr_object.h"
-#ifdef DEBUG
+#include "xr_object.h"
 #include "ObjectDump.h"
+#include "../xrCore/dump_string.h"
 
 ENGINE_API std::string dbg_object_base_dump_string( const CObject *obj )
 {
@@ -88,4 +88,3 @@ ENGINE_API std::string dbg_object_full_capped_dump_string( const CObject *obj )
 	return	std::string("\n object dump: \n" ) +
 			dbg_object_full_dump_string( obj );
 }
-#endif

@@ -24,10 +24,8 @@ class CGameMtlLibrary;
 extern XRCORE_API CGameMtlLibrary *			PGMLib;
 #endif
 
-#ifdef DEBUG
-	class IDebugRender;
-	extern XRCORE_API IDebugRender*	DRender;
-#endif // DEBUG
+class IDebugRender;
+extern XRCORE_API IDebugRender*	DRender;
 
 #else
 	class	CRender;

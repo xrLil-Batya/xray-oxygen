@@ -6,7 +6,7 @@
 //	Description : Stalker animation manager update cycle
 ////////////////////////////////////////////////////////////////////////////
 
-#include "pch_script.h"
+#include "stdafx.h"
 #include "stalker_animation_manager.h"
 #include "ai/stalker/ai_stalker.h"
 #include "game_object_space.h"
@@ -14,7 +14,7 @@
 #include "profiler.h"
 #include "stalker_movement_manager_smart_cover.h"
 
-IC	void CStalkerAnimationManager::play_delayed_callbacks	()
+void CStalkerAnimationManager::play_delayed_callbacks	()
 {
 	if (m_call_script_callback) {
 		m_call_script_callback	= false;

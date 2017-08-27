@@ -25,9 +25,7 @@ class  CSkeletonWallmark : public intrusive_base // 4+4+4+12+4+16+16 = 60 + 4 = 
 	Fvector3			m_ContactPoint;	// 12		model space
 	float				m_fTimeStart;	// 4
 public:
-#ifdef DEBUG
 	u32					used_in_render;	
-#endif
 	Fsphere				m_LocalBounds;	// 16		model space
 	struct WMFace{
 		Fvector3		vert	[3];
@@ -43,17 +41,11 @@ public:
 						CSkeletonWallmark	(CKinematics* p,const Fmatrix* m, ref_shader s, const Fvector& cp, float ts):
 						m_Parent(p),m_XForm(m),m_Shader(s),m_fTimeStart(ts),m_ContactPoint(cp)
 						{
-#ifdef DEBUG
 						used_in_render = u32(-1);
-#endif
 						
 						}
-						~CSkeletonWallmark	()
-#ifdef DEBUG
-							;
-#else
-							{}
-#endif
+
+                        ~CSkeletonWallmark();
 
 	IC CKinematics*		Parent				(){return m_Parent;}
 	IC u32				VCount				(){return m_Faces.size()*3;}
@@ -83,9 +75,7 @@ class 	CKinematics: public FHierrarhyVisual, public IKinematics
 	friend class				CBoneData;
 	friend class				CSkeletonX;
 public: 
-#ifdef DEBUG
 	BOOL						dbg_single_use_marker;
-#endif
 			void				Bone_Calculate		(CBoneData* bd, Fmatrix* parent);
 			void				CLBone				(const CBoneData* bd, CBoneInstance &bi, const Fmatrix *parent, u8 mask_channel = (1<<0));
 
@@ -214,12 +204,10 @@ public:
 	virtual void*					GetUpdateCallbackParam() { return Update_Callback_Param;}
 
 	// debug
-#ifdef DEBUG
 	void							DebugRender			(Fmatrix& XFORM);
 protected:
 	virtual shared_str		_BCL	getDebugName()	{ return dbg_name; }
 public:
-#endif
 
 	// General "Visual" stuff
     virtual void					Copy				(dxRender_Visual *pFrom);

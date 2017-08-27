@@ -20,16 +20,12 @@ using namespace	collide;
 //----------------------------------------------------------------------
 CObjectSpace::CObjectSpace() :
 	xrc()
-#ifdef DEBUG
 	, m_pRender(0)
-#endif
 {
-#ifdef DEBUG
 	if (RenderFactory)
 		m_pRender = CNEW(FactoryPtr<IObjectSpaceRender>)();
 
 	//sh_debug.create				("debug\\wireframe","$nullptr");
-#endif
 	m_BoundingVolume.invalidate();
 }
 //----------------------------------------------------------------------
@@ -45,7 +41,7 @@ CObjectSpace::~CObjectSpace()
 #endif
 }
 //----------------------------------------------------------------------
-
+#pragma warning(disable: 4267)
 //----------------------------------------------------------------------
 int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*>&	q_nearest, const Fvector &point, float range, CObject* ignore_object)
 {
@@ -121,9 +117,7 @@ void			CObjectSpace::Create(Fvector*	verts, CDB::TRI* tris, const hdrCFORM &H, C
 }
 
 //----------------------------------------------------------------------
-#ifdef DEBUG
 void CObjectSpace::dbgRender()
 {
 	(*m_pRender)->dbgRender();
 }
-#endif

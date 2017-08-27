@@ -853,7 +853,7 @@ void   CAI_Bloodsucker::add_debug_info (debug::text_tree& root_s)
 	CBaseMonster::add_debug_info(root_s);
 }
 
-#ifdef _DEBUG
+#ifdef DEBUG
 void CAI_Bloodsucker::debug_on_key(int key)
 {
 	switch (key){

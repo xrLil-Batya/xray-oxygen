@@ -111,6 +111,8 @@ CDemoRecord::CDemoRecord(const char *name,float life_time) : CEffectorCam(cefDem
 		m_fAngSpeed1	= pSettings->r_float("demo_record","ang_speed1");
 		m_fAngSpeed2	= pSettings->r_float("demo_record","ang_speed2");
 		m_fAngSpeed3	= pSettings->r_float("demo_record","ang_speed3");
+
+        Device.seqRender.Add(this, REG_PRIORITY_LOW - 1000);
 	} else {
 		fLifeTime = -1;
 	}
@@ -474,12 +476,13 @@ void CDemoRecord::IR_OnMouseMove		(int dx, int dy)
 
 	Fvector		vR_delta = Fvector().set(0,0,0);
 
-	float scale			= .5f;//psMouseSens;
+	float scale			= psMouseSens;
 	if (dx||dy){
 		vR_delta.y			+= float(dx)*scale; // heading
 		vR_delta.x			+= ((psMouseInvert.test(1))?-1:1)*float(dy)*scale*(3.f/4.f); // pitch
 	}
-	update_whith_timescale( m_vR, vR_delta );
+    m_vR.add(vR_delta);
+	//update_whith_timescale( m_vR, vR_delta );
 }
 
 void CDemoRecord::IR_OnMouseHold		(int btn)

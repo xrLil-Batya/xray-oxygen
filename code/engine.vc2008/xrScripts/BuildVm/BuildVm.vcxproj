@@ -76,39 +76,35 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
-    <IncludePath>..\luajit\;$(IncludePath)</IncludePath>
     <IntDir>$(xrIntermediate)</IntDir>
     <OutDir>$(SolutionDir)\xrScripts\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
-      <PrecompiledHeader>
-      </PrecompiledHeader>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
-      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions />
+      <AdditionalIncludeDirectories>..\luajit\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -123,6 +119,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\luajit\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -137,6 +134,7 @@
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <AdditionalOptions />
+      <AdditionalIncludeDirectories>..\luajit\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,6 +149,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\luajit\;</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -160,14 +159,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include=".\host\buildvm.c" />
-    <ClCompile Include=".\host\buildvm_asm.c" />
-    <ClCompile Include=".\host\buildvm_fold.c" />
-    <ClCompile Include=".\host\buildvm_lib.c" />
     <ClCompile Include=".\host\buildvm_peobj.c" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include=".\host\buildvm.h" />
     <ClInclude Include=".\host\buildvm_arch.h" />
+    <ClInclude Include="host\arch_x64.hpp" />
+    <ClInclude Include="host\arch_x86.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
