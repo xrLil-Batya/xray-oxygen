@@ -254,31 +254,13 @@ XRNETSERVER_API BOOL	psNET_direct_connect = FALSE;
  * DirectPlay8 Service Provider GUIDs
  *
  ****************************************************************************/
-
-
-
-
-static HRESULT WINAPI Handler (PVOID pvUserContext, DWORD dwMessageType, PVOID pMessage)
-{
-	IPureClient* C = (IPureClient*)pvUserContext;
-	return C->net_Handler(dwMessageType,pMessage);
-}
-
-
-
 //------------------------------------------------------------------------------
-
-void    
-IPureClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
+void IPureClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
 {
     IPureClient::SendTo_LL( const_cast<void*>(data), size, flags, timeout );
 }
-
-
 //------------------------------------------------------------------------------
-
-void    
-IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
+void IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
 {
     MSYS_PING*    cfg = (MSYS_PING*)data;
 	net_Statistic.dwBytesReceived += data_size;
@@ -331,13 +313,11 @@ IPureClient::~IPureClient()
 {
 }
 
-BOOL IPureClient::Connect(LPCSTR)
+bool IPureClient::Connect(LPCSTR)
 {
-//	R_ASSERT(options);
-	net_Disconnected = FALSE;
-
+	net_Disconnected = false;
 	net_TimeDelta = 0;
-	return			TRUE;
+	return true;
 }
 
 void IPureClient::Disconnect()
@@ -364,7 +344,8 @@ void IPureClient::Disconnect()
 	net_Connected = EnmConnectionWait;
 	net_Syncronised = FALSE;
 }
-
+/// #TODO: [FX] Deleted it
+/* 
 HRESULT	IPureClient::net_Handler(u32 dwMessageType, PVOID pMessage)
 {
 	// HRESULT     hr = S_OK;
@@ -518,8 +499,8 @@ HRESULT	IPureClient::net_Handler(u32 dwMessageType, PVOID pMessage)
 
 	return S_OK;
 }
-
-void	IPureClient::OnMessage(void* data, u32 size)
+*/
+void IPureClient::OnMessage(void* data, u32 size)
 {
 	// One of the messages - decompress it
 	net_Queue.Lock();
@@ -611,11 +592,6 @@ void	IPureClient::UpdateStatistic()
 	net_Statistic.Update(CI);
 }
 
-void IPureClient::Sync_Thread() 
-{
-#pragma todo("Remove me!!!")
-}
-
 void	IPureClient::Sync_Average	()
 {
 	//***** Analyze results
@@ -632,11 +608,6 @@ void	IPureClient::Sync_Average	()
 	net_TimeDelta_Calculated=	s32(summary_delta);
 	net_TimeDelta			=	(net_TimeDelta*5+net_TimeDelta_Calculated)/6;
 //	Msg("* CLIENT: d(%d), dc(%d), s(%d)",net_TimeDelta,net_TimeDelta_Calculated,size);
-}
-
-void	IPureClient::net_Syncronize	()
-{
-#pragma todo("Remove me!!!")
 }
 
 void	IPureClient::ClearStatistic()

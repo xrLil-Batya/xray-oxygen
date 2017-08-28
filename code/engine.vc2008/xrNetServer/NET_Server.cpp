@@ -60,10 +60,10 @@ static const GUID NET_GUID =
 static const GUID CLSID_NETWORKSIMULATOR_DP8SP_TCPIP =
 { 0x8d3f9e5e, 0xa3bd, 0x475b, { 0x9e, 0x49, 0xb0, 0xe7, 0x71, 0x39, 0x14, 0x3c } };
 //------------------------------------------------------------------------------
-void IClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
+void IClient::_SendTo_LL( const void* data, u32 size, u32 uflags, u32 timeout )
 {
     R_ASSERT(server);
-    server->IPureServer::SendTo_LL( ID, const_cast<void*>(data), size, flags, timeout );
+    server->IPureServer::SendTo_LL( ID, const_cast<void*>(data), size, uflags, timeout );
 }
 //------------------------------------------------------------------------------
 IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
@@ -183,6 +183,18 @@ void IPureServer::Disconnect	()
     _RELEASE	(NET);
 }
 
+void IServerStatistic::clear()
+{
+	bytes_out = bytes_out_real = 0;
+	bytes_in = bytes_in_real = 0;
+
+	dwBytesSended = 0;
+	dwSendTime = 0;
+	dwBytesPerSec = 0;
+}
+
+/// #TODO: [FX] Deleted it
+/*
 HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
 {
     // HRESULT     hr = S_OK;
@@ -293,7 +305,7 @@ HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
     }
     return S_OK;
 }
-
+*/
 void IPureServer::Flush_Clients_Buffers()
 {
 	struct LocalSenderFunctor

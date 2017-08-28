@@ -60,15 +60,7 @@ IC bool operator== (IClient const* pClient, ClientID const& ID) { return pClient
 class XRNETSERVER_API IServerStatistic
 {
 public:
-	void    clear()
-            {
-                bytes_out = bytes_out_real = 0;
-                bytes_in = bytes_in_real = 0;
-
-                dwBytesSended   = 0;
-                dwSendTime      = 0;
-                dwBytesPerSec   = 0;
-            }
+	void	clear();
 
 	u32		bytes_out,bytes_out_real;
 	u32		bytes_in, bytes_in_real;
@@ -96,9 +88,7 @@ struct ClientIdSearchPredicate
 
 class CServerInfo;
 
-class XRNETSERVER_API 
-IPureServer
-  : private MultipacketReciever
+class XRNETSERVER_API IPureServer: private MultipacketReciever
 {
 public:
 	enum EConnect
@@ -137,7 +127,7 @@ protected:
 public:
 							IPureServer			(CTimer* timer, BOOL Dedicated = FALSE);
 	virtual					~IPureServer		();
-	HRESULT					net_Handler			(u32 dwMessageType, PVOID pMessage);
+//	HRESULT					net_Handler			(u32 dwMessageType, PVOID pMessage);
 	
 	virtual EConnect		Connect				(LPCSTR session_name, GameDescriptionData & game_descr);
 	virtual void			Disconnect			();

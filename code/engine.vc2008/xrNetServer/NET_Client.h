@@ -2,7 +2,7 @@
 
 #include "net_shared.h"
 #include "NET_Common.h"
-
+//==============================================================================
 class XRNETSERVER_API INetQueue
 {
 	std::recursive_mutex cs;
@@ -19,14 +19,8 @@ public:
 	inline void			Lock	() { cs.lock(); };
 	inline void			Unlock	() { cs.unlock(); };
 };
-
-
 //==============================================================================
-
-class XRNETSERVER_API 
-IPureClient
-  : private MultipacketReciever,
-    private MultipacketSender
+class XRNETSERVER_API IPureClient: private MultipacketReciever, private MultipacketSender
 {
 	enum ConnectionState
 	{
@@ -53,8 +47,8 @@ protected:
 	xr_vector<HOST_NODE>	net_Hosts;
 
 	ConnectionState			net_Connected;
-	BOOL					net_Syncronised;
-	BOOL					net_Disconnected;
+	bool					net_Syncronised;
+	bool					net_Disconnected;
 
 	INetQueue				net_Queue;
 	IClientStatistic		net_Statistic;
@@ -63,8 +57,7 @@ protected:
 	s32						net_TimeDelta;
 	s32						net_TimeDelta_Calculated;
 	s32						net_TimeDelta_User;
-	
-	void					Sync_Thread		();
+
 	void					Sync_Average	();
 
 	void					SetClientID		(ClientID const & local_client) { net_ClientID = local_client; };
@@ -75,16 +68,15 @@ protected:
 public:
 	IPureClient				(CTimer* tm);
 	virtual ~IPureClient	();
-	HRESULT					net_Handler				(u32 dwMessageType, PVOID pMessage);
+//	HRESULT					net_Handler				(u32 dwMessageType, PVOID pMessage);
 	
-	BOOL					Connect					(LPCSTR server_name);
+	bool					Connect					(LPCSTR server_name);
 	void					Disconnect				();
 
-	void					net_Syncronize			();
-	BOOL					net_isCompleted_Connect	()	{ return net_Connected==EnmConnectionCompleted;}
-	BOOL					net_isFails_Connect		()	{ return net_Connected==EnmConnectionFails;}
-	BOOL					net_isCompleted_Sync	()	{ return net_Syncronised;	}
-	BOOL					net_isDisconnected		()	{ return net_Disconnected;	}
+	IC bool					net_isCompleted_Connect	()	{ return net_Connected==EnmConnectionCompleted;}
+	IC bool					net_isFails_Connect		()	{ return net_Connected==EnmConnectionFails;}
+	IC bool					net_isCompleted_Sync	()	{ return net_Syncronised;	}
+	IC bool					net_isDisconnected		()	{ return net_Disconnected;	}
 	IC GameDescriptionData const & get_net_DescriptionData() const { return m_game_description; }
 	LPCSTR					net_SessionName			()	{ return *(net_Hosts.front().dpSessionName); }
 

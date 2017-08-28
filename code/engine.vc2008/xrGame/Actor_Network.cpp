@@ -844,20 +844,7 @@ void	CActor::ChangeVisual			( shared_str NewVisual )
 
 void ACTOR_DEFS::net_update::lerp(ACTOR_DEFS::net_update& A, ACTOR_DEFS::net_update& B, float f)
 {
-//	float invf		= 1.f-f;
-//	// 
-//	o_model			= angle_lerp	(A.o_model,B.o_model,		f);
-//	o_torso.yaw		= angle_lerp	(A.o_torso.yaw,B.o_torso.yaw,f);
-//	o_torso.pitch	= angle_lerp	(A.o_torso.pitch,B.o_torso.pitch,f);
-//	o_torso.roll	= angle_lerp	(A.o_torso.roll,B.o_torso.roll,f);
-//	p_pos.lerp		(A.p_pos,B.p_pos,f);
-//	p_accel			= (f<0.5f)?A.p_accel:B.p_accel;
-//	p_velocity.lerp	(A.p_velocity,B.p_velocity,f);
-//	mstate			= (f<0.5f)?A.mstate:B.mstate;
-//	weapon			= (f<0.5f)?A.weapon:B.weapon;
-//	fHealth			= invf*A.fHealth+f*B.fHealth;
-//	fArmor			= invf*A.fArmor+f*B.fArmor;
-//	weapon			= (f<0.5f)?A.weapon:B.weapon;
+#pragma todo("[FX]: Remove me!")
 }
 
 InterpData				IStartT;
@@ -1000,16 +987,6 @@ void	CActor::CalculateInterpolationParams()
 	InterpData* pIStart = &IStart;
 	InterpData* pIRec = &IRec;
 	InterpData* pIEnd = &IEnd;
-
-	///////////////////////////////////////////////
-	/*
-	pIStart->Pos				= Position();
-	pIStart->Vel				= m_PhysicMovementControl->GetVelocity();
-	pIStart->o_model			= r_model_yaw;
-	pIStart->o_torso.yaw		= unaffected_r_torso.yaw;
-	pIStart->o_torso.pitch		= unaffected_r_torso.pitch;
-	pIStart->o_torso.roll		= unaffected_r_torso.roll;
-	*/
 	/////////////////////////////////////////////////////////////////////
 	pIRec->Pos				= RecalculatedState.position;
 	pIRec->Vel				= RecalculatedState.linear_vel;
@@ -1020,10 +997,8 @@ void	CActor::CalculateInterpolationParams()
 	pIEnd->Vel				= PredictedState.linear_vel;
 	pIEnd->o_model			= pIRec->o_model		;
 	pIEnd->o_torso.yaw		= pIRec->o_torso.yaw	;
-	pIEnd->o_torso.pitch	= pIRec->o_torso.pitch	;	
-	pIEnd->o_torso.roll		= pIRec->o_torso.roll	;	
-	/////////////////////////////////////////////////////////////////////
-//	Msg("from %f, to %f", IStart.o_torso.yaw/PI*180.0f, IEnd.o_torso.yaw/PI*180.0f);
+	pIEnd->o_torso.pitch	= pIRec->o_torso.pitch	;
+	pIEnd->o_torso.roll		= pIRec->o_torso.roll	;
 	/////////////////////////////////////////////////////////////////////
 	Fvector SP0, SP1, SP2, SP3;
 	Fvector HP0, HP1, HP2, HP3;
@@ -1304,13 +1279,10 @@ void dbg_draw_piramid (Fvector pos, Fvector dir, float size, float xdir, u32 col
 
 void	CActor::OnRender_Network()
 {
-	//RCache.OnFrameEnd();
 	DRender->OnFrameEnd();
 
 	//-----------------------------------------------------------------------------------------------------
 	float size = 0.2f;
-	
-//	dbg_draw_piramid(Position(), m_PhysicMovementControl->GetVelocity(), size/2, -r_model_yaw, color_rgba(255, 255, 255, 255));
 	//-----------------------------------------------------------------------------------------------------
 	if (g_Alive())
 	{
@@ -1447,8 +1419,6 @@ void	CActor::OnRender_Network()
 		Fvector PH, PS;
 		PH.set(IPosH); PH.y += 1;
 		PS.set(IPosS); PS.y += 1;
-//		Level().debug_renderer().draw_aabb			(PS, size, size, size, color_rgba(128, 128, 255, 255));
-//		Level().debug_renderer().draw_aabb			(PH, size, size, size, color_rgba(255, 128, 128, 255));
 		/////////////////////////////////////////////////////////////////////////////////
 	}
 	else
