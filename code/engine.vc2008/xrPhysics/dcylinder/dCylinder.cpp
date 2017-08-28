@@ -1,5 +1,5 @@
 #include "stdafx.h"
-
+#include "tri-colliderknoopc/dTriColliderCommon.h"
 #include "dCylinder.h"
 
 #include "../ode_include.h"
@@ -18,7 +18,7 @@ int dCylinderClassUser = -1;
 
 #define NUMC_MASK (0xffff)
 
-#define CONTACT(p,skip) ((dContactGeom*) (((char*)p) + (skip)))
+//#define CONTACT(p,skip) ((dContactGeom*) (((char*)p) + (skip)))
 
 /////////////////////////////////////////////////////////////////////////////////////////////////
 /////////////////////////////circleIntersection//////////////////////////////////////////////////

@@ -24,6 +24,7 @@
 #include "ui/UIWindow.h"
 #include "ui/UIXmlInit.h"
 #include "Torch.h"
+#include "Magazine.h"
 
 #define WEAPON_REMOVE_TIME		60000
 #define ROTATION_TIME			0.25f
@@ -210,6 +211,7 @@ void CWeapon::Load		(LPCSTR section)
 {
 	inherited::Load					(section);
 	CShootingObject::Load			(section);
+	
 
 	
 	if(pSettings->line_exist(section, "flame_particles_2"))

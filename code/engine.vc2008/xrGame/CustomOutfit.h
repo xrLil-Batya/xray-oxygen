@@ -3,6 +3,7 @@
 #include "inventory_item_object.h"
 
 struct SBoneProtections;
+struct CBinocularsVision;
 
 class CCustomOutfit: public CInventoryItemObject {
 private:
@@ -35,6 +36,7 @@ protected:
 	shared_str				m_ActorVisual;
 	shared_str				m_full_icon_name;
 	SBoneProtections*		m_boneProtection;	
+	
 protected:
 	u32						m_ef_equipment_type;
 	u32						m_artefact_count;
@@ -52,7 +54,7 @@ public:
 
 	shared_str				m_BonesProtectionSect;
 	shared_str				m_NightVisionSect;
-	shared_str				m_TargetIndicatorFrame; // Borshig // as in binocular
+	
 
 	bool					bIsHelmetAvaliable;
 

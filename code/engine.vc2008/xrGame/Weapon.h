@@ -23,6 +23,7 @@ class CParticlesObject;
 class CUIWindow;
 class CBinocularsVision;
 class CNightVisionEffector;
+class Magazine;
 
 class CWeapon : public CHudItemObject,
 				public CShootingObject
