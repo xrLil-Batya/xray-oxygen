@@ -48,8 +48,6 @@ ENGINE_API bool is_enough_address_space_available	()
 	return			(*(u32*)&system_info.lpMaximumApplicationAddress) > 0x90000000;	
 }
 
-#ifndef DEDICATED_SERVER
-
 void CEngineAPI::InitializeNotDedicated()
 {
 	LPCSTR			r2_name	= "xrRender_R2.dll",
@@ -100,8 +98,7 @@ void CEngineAPI::InitializeNotDedicated()
 			g_current_renderer	= 2;
 	}
 }
-#endif // DEDICATED_SERVER
-
+#include <thread>
 
 void CEngineAPI::Initialize(void)
 {
@@ -109,11 +106,9 @@ void CEngineAPI::Initialize(void)
 	// render
 	LPCSTR			r1_name	= "xrRender_R1.dll";
 
-	#ifndef DEDICATED_SERVER
 		InitializeNotDedicated();
-	#endif // DEDICATED_SERVER
 
-	if (0==hRender)		
+	if (!hRender)		
 	{
 		// try to load R1
 		psDeviceFlags.set	(rsR4,FALSE);
@@ -139,10 +134,10 @@ void CEngineAPI::Initialize(void)
         }
 		Log				("Loading DLL:",g_name);
 		hGame			= LoadLibrary	(g_name);
-		if (0==hGame)	R_CHK			(GetLastError());
+		if (!hGame)	R_CHK(GetLastError());
 		R_ASSERT3		(hGame,"Game DLL raised exception during loading or there is no game DLL at all", g_name);
-		pCreate			= (Factory_Create*)		GetProcAddress(hGame,"xrFactory_Create"		);	R_ASSERT(pCreate);
-		pDestroy		= (Factory_Destroy*)	GetProcAddress(hGame,"xrFactory_Destroy"	);	R_ASSERT(pDestroy);
+		pCreate			= (Factory_Create*)GetProcAddress(hGame,"xrFactory_Create");	R_ASSERT(pCreate);
+		pDestroy		= (Factory_Destroy*)GetProcAddress(hGame,"xrFactory_Destroy");	R_ASSERT(pDestroy);
 	}
 
 	//////////////////////////////////////////////////////////////////////////

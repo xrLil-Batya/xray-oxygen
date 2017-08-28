@@ -763,27 +763,11 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 		Level_Current				= u32(-1);
 		R_ASSERT	(!g_pGameLevel);
 		R_ASSERT	(g_pGamePersistent);
-
-#ifdef NO_SINGLE
-		Console->Execute("main_menu on");
-		if (	(op_server == NULL)			||
-				(!xr_strlen(op_server))		||
-				(
-					(	strstr(op_server, "/dm")	|| strstr(op_server, "/deathmatch") ||
-						strstr(op_server, "/tdm")	|| strstr(op_server, "/teamdeathmatch") ||
-						strstr(op_server, "/ah")	|| strstr(op_server, "/artefacthunt") ||
-						strstr(op_server, "/cta")	|| strstr(op_server, "/capturetheartefact")
-					) && 
-					!strstr(op_server, "/alife")
-				)
-			)
-#endif // #ifdef NO_SINGLE
 		{		
 			Console->Execute("main_menu off");
 			Console->Hide();
 //!			this line is commented by Dima
 //!			because I don't see any reason to reset device here
-//!			Device.Reset					(false);
 			//-----------------------------------------------------------
 			g_pGamePersistent->PreStart		(op_server);
 			//-----------------------------------------------------------
