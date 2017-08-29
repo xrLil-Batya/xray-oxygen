@@ -107,8 +107,8 @@ public:
     IC OGFVertVec& 	getV_Verts	()	{return m_Verts;}
    	IC OGFFaceVec& 	getV_Faces	()	{return m_Faces;}
     IC SOGFVert*	getVert		() 	{return m_Verts.data();}
-    IC int			getVS		() 	{return m_Verts.size();}
-    IC int			getTS		() 	{return m_Faces.size();}
+    IC int			getVS		() 	{return int(m_Verts.size());}
+    IC int			getTS		() 	{return int(m_Faces.size());}
 };
 //----------------------------------------------------
 using COGFCPVec = xr_vector<CObjectOGFCollectorPacked*>;

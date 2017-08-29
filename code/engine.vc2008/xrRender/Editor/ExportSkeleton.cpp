@@ -377,11 +377,10 @@ void ComputeOBB_WML(Fobb &B, FvectorVec& V)
 int CExportSkeletonCustom::FindSplit(shared_str shader, shared_str texture, u16 part_id)
 {
 	for (auto it = m_Splits.begin(); it != m_Splits.end(); it++)
-		if (it->m_Shader.equal(shader) &&
-			it->m_Texture.equal(texture) &&
-			(it->m_PartID == part_id))
-
-			return it - m_Splits.begin();
+	{
+		if (it->m_Shader.equal(shader) && it->m_Texture.equal(texture) && (it->m_PartID == part_id))
+			return int(it - m_Splits.begin());
+	}
 	return -1;
 }
 

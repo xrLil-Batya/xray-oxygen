@@ -740,7 +740,7 @@ CRenderTarget::CRenderTarget		()
 						float	ld	=	float(x)	/ float	(TEX_material_LdotN-1);
 						float	ls	=	float(y)	/ float	(TEX_material_LdotH-1) + EPS_S;
 						ls			*=	powf(ld,1/32.f);
-						float	fd,fs;
+						float	fd,fs = 1.f; // (ls * 1.01f)^0
 
 						switch	(slice)
 						{
@@ -752,11 +752,17 @@ CRenderTarget::CRenderTarget		()
 							fd	= powf(ld,0.90f);		// 0.90
 							fs	= powf(ls,24.f);
 								}	break;
-						case 2:	{ // looks like Phong
-							fd	= ld;					// 1.0
-                            //#TODO: COMPILER BUG, can't set 128.f as original, set to 125
-                            fs = powf(ls*1.01f, 121.0f); //powf(ls*1.01f,128.f	)
-								}	break;
+						case 2: 
+						{	// looks like Phong
+							fd = ld;					// 1.0
+							//#TODO: COMPILER BUG, can't set 128.f as original, set to 125
+							//fs	= powf(ls*1.01f,128.f)
+							// [FX] This is unlimited powf for 15.3.2
+							for (unsigned it = 0; it < 128; it++)
+							{
+								fs *= ls * 1.01f;
+							}
+						}	break;
 						case 3:	{ // looks like Metal
 							float	s0	=	_abs	(1-_abs	(0.05f*_sin(33.f*ld)+ld-ls));
 							float	s1	=	_abs	(1-_abs	(0.05f*_cos(33.f*ld*ls)+ld-ls));
