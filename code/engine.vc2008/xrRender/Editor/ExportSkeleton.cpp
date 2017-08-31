@@ -49,7 +49,7 @@ u16 CSkeletonCollectorPacked::VPack(SSkelVert& V)
 	if (0xffffffff == P)
 	{
 		if (similar_pos >= 0) V.offs.set(m_Verts[similar_pos].offs);
-		P = m_Verts.size();
+		P = s32(m_Verts.size());
 		m_Verts.push_back(V);
 
 		m_VM[ix][iy][iz].push_back(P);

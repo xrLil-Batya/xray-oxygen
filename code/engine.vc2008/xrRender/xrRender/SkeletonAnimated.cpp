@@ -585,7 +585,7 @@ CKinematicsAnimated::CKinematicsAnimated():
 void	CKinematicsAnimated::IBoneInstances_Create()
 {
     inherited::IBoneInstances_Create();
-	u32				size	= bones->size();
+	u32				size	= u32(bones->size());
 	blend_instances			= xr_alloc<CBlendInstance>(size);
 	for (u32 i=0; i<size; i++)
 		blend_instances[i].construct();

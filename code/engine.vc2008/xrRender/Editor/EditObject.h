@@ -254,15 +254,11 @@ public:
 
     void			Optimize				();
 
- //   IC EditMeshIt	FirstMesh				()	{return m_Meshes.begin();}
-//    IC EditMeshIt	LastMesh				()	{return m_Meshes.end();}
     IC EditMeshVec& Meshes					()	{return m_Meshes; }
-    IC int			MeshCount				()	{return m_Meshes.size();}
+    IC int			MeshCount				()	{return int(m_Meshes.size());}
 	IC void			AppendMesh				(CEditableMesh* M){m_Meshes.push_back(M);}
     IC SurfaceVec&	Surfaces				()	{return m_Surfaces;}
-//    IC SurfaceIt	FirstSurface			()	{return m_Surfaces.begin();}
-//    IC SurfaceIt	LastSurface				()	{return m_Surfaces.end();}
-    IC int			SurfaceCount			()	{return m_Surfaces.size();}
+    IC int			SurfaceCount			()	{return int(m_Surfaces.size());}
     IC int 			Version 				() 	{return m_ObjectVersion;}
 
     // LOD
@@ -271,32 +267,22 @@ public:
     void			GetLODFrame				(int frame, Fvector p[4], Fvector2 t[4], const Fmatrix* parent=0);
 
     // skeleton
-//    IC BPIt			FirstBonePart			()	{return m_BoneParts.begin();}
-//    IC BPIt			LastBonePart			()	{return m_BoneParts.end();}
 	IC BPVec&		BoneParts				()	{return m_BoneParts;}
     IC int			BonePartCount			()	{return m_BoneParts.size();}
-//    IC BPIt			BonePart				(CBone* B);
-
-//    IC BoneIt		FirstBone				()	{return m_Bones.begin();}
- //   IC BoneIt		LastBone				()	{return m_Bones.end();}
 	IC BoneVec&		Bones					()	{return m_Bones;}
-    IC int			BoneCount				()	{return m_Bones.size();}
+    IC int			BoneCount				()	{return int(m_Bones.size());}
     shared_str		BoneNameByID			(int id);
     int				GetRootBoneID			();
     int				PartIDByName			(const char* name);
-    IC CBone*		GetBone					(u32 idx){VERIFY(idx<m_Bones.size()); return m_Bones[idx];}
+    IC CBone*		GetBone					(u32 idx){VERIFY(idx<u32(m_Bones.size())); return m_Bones[idx];}
     void			GetBoneWorldTransform	(u32 bone_idx, float t, CSMotion* motion, Fmatrix& matrix);
-//    IC SMotionIt	FirstSMotion			()	{return m_SMotions.begin();}
-//    IC SMotionIt	LastSMotion				()	{return m_SMotions.end();}
 	SMotionVec&		SMotions				()	{return m_SMotions;}
     IC int			SMotionCount 			()	{return m_SMotions.size();}
     IC bool			IsAnimated	 			()	{return SMotionCount() || m_SMotionRefs.size();}
-//.    IC const char*		SMotionRefs				()	{return *m_SMotionRefs; }
     IC void			SkeletonPlay 			()	{m_SMParam.Play();}
     IC void			SkeletonStop 			()	{m_SMParam.Stop();}
     IC void			SkeletonPause 			(bool val)	{m_SMParam.Pause(val);}
 
-///    IC bool			CheckVersion			()  {if(m_LibRef) return (m_ObjVer==m_LibRef->m_ObjVer); return true;}
     // get object properties methods
 
 	IC xr_string&	GetClassScript			()	{return m_ClassScript;}

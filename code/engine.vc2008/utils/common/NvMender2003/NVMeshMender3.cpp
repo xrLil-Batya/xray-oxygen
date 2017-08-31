@@ -1083,7 +1083,7 @@ void MeshMender::FixCylindricalWrapping(	xr_vector< Vertex >& theVerts ,
 						Vertex theDupe = theVerts[ oldIndex ];
 						alreadyDuped.insert(theOneToDupe);
 						theDupe.s += 1.0f;
-						theIndices[index + theOneToDupe] = theVerts.size();
+						theIndices[index + theOneToDupe] = u32(theVerts.size());
 						theVerts.push_back(theDupe);
 						AppendToMapping( oldIndex , m_originalNumVerts , mappingNewToOldVert);
 					}
@@ -1115,7 +1115,7 @@ void MeshMender::FixCylindricalWrapping(	xr_vector< Vertex >& theVerts ,
 						Vertex theDupe = theVerts[ oldIndex ];
 						alreadyDuped.insert(theOneToDupe);
 						theDupe.t += 1.0f;
-						theIndices[index + theOneToDupe] = theVerts.size();
+						theIndices[index + theOneToDupe] = u32(theVerts.size());
 						theVerts.push_back(theDupe);
 						AppendToMapping( oldIndex , m_originalNumVerts , mappingNewToOldVert);
 					}
