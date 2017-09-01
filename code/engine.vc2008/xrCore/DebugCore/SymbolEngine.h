@@ -151,7 +151,7 @@ public:
 
 	BOOL SymLoadModule(IN HANDLE hFile, IN PSTR ImageName, IN PSTR ModuleName, IN DWORD BaseOfDll, IN DWORD SizeOfDll)
 	{
-		return ::SymLoadModule(m_hProcess, hFile, ImageName, ModuleName, BaseOfDll, SizeOfDll);
+		return !!::SymLoadModule(m_hProcess, hFile, ImageName, ModuleName, BaseOfDll, SizeOfDll);
 	}
 
 	BOOL EnumerateLoadedModules(IN PENUMLOADED_MODULES_CALLBACK EnumLoadedModulesCallback, IN PVOID UserContext)
@@ -165,7 +165,7 @@ public:
 		return ::SymGetModuleInfo(m_hProcess, dwAddr, ModuleInfo);
 	}
 
-	DWORD SymGetModuleBase(IN DWORD dwAddr) { return ::SymGetModuleBase(m_hProcess, dwAddr); }
+	DWORD_PTR SymGetModuleBase(IN DWORD_PTR dwAddr) { return ::SymGetModuleBase(m_hProcess, dwAddr); }
 	/*----------------------------------------------------------------------
 	Public Symbol Manipulation
 	----------------------------------------------------------------------*/

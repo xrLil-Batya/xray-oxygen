@@ -277,8 +277,8 @@ template <class T>
 IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 {
 	float trace,s;
-
-	trace = M._11 + M._22 + M._33;
+	
+	trace = float(M._11 + M._22 + M._33);
 	if (trace > 0.0f){
 		s = _sqrt(trace + 1.0f);
 		w = s * 0.5f;

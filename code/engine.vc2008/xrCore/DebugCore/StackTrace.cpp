@@ -139,7 +139,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 	DWORD dwTemp;
 	// The module base address. I look this up right after the stack
 	// walk to ensure that the module is valid.
-	DWORD dwModBase;
+	DWORD_PTR dwModBase;
 
 	HANDLE hProcess = (HANDLE)GetCurrentProcessId();
 
