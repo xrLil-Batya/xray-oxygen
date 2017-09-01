@@ -158,7 +158,8 @@ void Log(const char *msg, int dop)
 	xr_sprintf	(buf, buffer_size, "%s %i", msg, dop);
 	Log			(buf);
 }
-void Log(const char* msg, const size_t dop)
+
+void Log(const char* msg, const unsigned long long dop)
 {
     const auto buffer_size = (std::strlen(msg) + 1 + 10 + 1) * sizeof(char);
     char* buf = static_cast<char*>(_alloca(buffer_size));
