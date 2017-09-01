@@ -29,8 +29,14 @@ public:
 protected:
 	virtual void	WndProc				(Message %m) override
 	{
-		LRESULT							result;
-		if (m_engine && m_engine->on_message((HWND)m.HWnd.ToInt32(), m.Msg, m.WParam.ToInt32(), m.LParam.ToInt32(), result))
+		LONG_PTR result;
+		
+		if (m_engine && 
+#ifdef _M_X64 // [FX]: Однако, m.LParam слишком большой, чтоб пихать его в int и вызывать исключение. Long long для него само-то
+			m_engine->on_message((HWND)m.HWnd.ToInt32(), m.Msg, m.WParam.ToInt64(), m.LParam.ToInt64(), result))
+#else
+			m_engine->on_message((HWND)m.HWnd.ToInt32(), m.Msg, m.WParam.ToInt32(), m.LParam.ToInt32(), result))
+#endif
 			return;
 
 		editor::window_ide::WndProc		(m);
