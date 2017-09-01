@@ -26,11 +26,8 @@
 // Preprocessor
 #define OPCODE_API
 #ifndef __ICECORE_H__
-#ifdef WIN32
+//using BYTE = unsigned char*;
 #include <Windows.h>
-//	#include <windowsx.h>
-#endif // WIN32
-
 #include <stdio.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -46,8 +43,6 @@
 #define	Alignment
 
 #include "OPC_Preprocessor.h"
-//	#undef ICECORE_API
-//	#define ICECORE_API	__declspec(dllimport)
 #define ICECORE_API	OPCODE_API
 
 #include "OPC_Types.h"
