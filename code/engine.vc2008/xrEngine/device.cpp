@@ -124,13 +124,7 @@ void CRenderDevice::End		(void)
 	if (g_SASH.IsBenchmarkRunning())
 		g_SASH.DisplayFrame(Device.fTimeGlobal);
 	m_pRender->End();
-	//RCache.OnFrameEnd	();
-	//Memory.dbg_check		();
-    //CHK_DX				(HW.pDevice->EndScene());
 
-	//HRESULT _hr		= HW.pDevice->Present( NULL, NULL, NULL, NULL );
-	//if				(D3DERR_DEVICELOST==_hr)	return;			// we will handle this later
-	//R_ASSERT2		(SUCCEEDED(_hr),	"Presentation failed. Driver upgrade needed?");
 #	ifdef INGAME_EDITOR
 		if (load_finished && m_editor)
 			m_editor->on_load_finished	();
@@ -324,7 +318,7 @@ void CRenderDevice::on_idle		()
 #ifdef INGAME_EDITOR
 void CRenderDevice::message_loop_editor	()
 {
-	m_editor->run			();
+	m_editor->run();
 	m_editor_finalize		(m_editor);
 	xr_delete				(m_engine);
 }

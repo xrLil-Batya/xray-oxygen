@@ -236,32 +236,21 @@ class MTL_EXPORT_API CGameMtlLibrary{
 	GameMtlVec			materials;
     GameMtlPairVec		material_pairs;
 
-#ifndef _EDITOR
     // game part
     u32					material_count;
     GameMtlPairVec		material_pairs_rt;
-#endif
 public:
 	CGameMtlLibrary		();
-	~CGameMtlLibrary	()
-	{
-		/*
-    	R_ASSERT		(0==material_pairs_rt.size());
-    	R_ASSERT		(0==material_pairs.size());
-    	R_ASSERT		(0==materials.size());
-		*/
-    }
+	~CGameMtlLibrary	() { }
 	IC void				Unload			()
 	{
-#ifndef _EDITOR
 		material_count	= 0;
 		material_pairs_rt.clear();
-#endif
-		for (auto m_it=materials.begin(); materials.end() != m_it; ++m_it)
-			xr_delete	(*m_it);
+		for (auto m_it : materials)
+			xr_delete(m_it);
 		materials.clear();
-		for (auto p_it=material_pairs.begin(); material_pairs.end() != p_it; ++p_it)
-			xr_delete	(*p_it);
+		for (auto p_it : material_pairs)
+			xr_delete	(p_it);
 		material_pairs.clear();
 	}
     // material routine
@@ -301,7 +290,7 @@ public:
 	// For .object
 	IC SGameMtl*		GetMaterial(const char* name)
 	{
-		GameMtlIt it = GetMaterialIt(name);
+		const GameMtlIt it = GetMaterialIt(name);
 		return materials.end() != it ? *it : 0;
 	}
 	// game
@@ -314,31 +303,11 @@ public:
 
 	IC GameMtlIt		FirstMaterial	(){return materials.begin();}
 	IC GameMtlIt		LastMaterial	(){return materials.end();}
-	IC u32				CountMaterial	(){return materials.size();}
+	IC u32				CountMaterial	(){return u32(materials.size());}
 
-// material pair routine
-#ifdef _EDITOR
-	void 				CopyMtlPairs		(SGameMtl* from, SGameMtl* to);
-	BOOL				UpdateMtlPairs		(SGameMtl* src);
-	BOOL				UpdateMtlPairs		();
-	LPCSTR				MtlPairToName		(int mtl0, int mtl1);
-	void				NameToMtlPair		(LPCSTR name, int& mtl0, int& mtl1);
-	void				MtlNameToMtlPair	(LPCSTR name, int& mtl0, int& mtl1);
-	SGameMtlPair*		CreateMaterialPair	(int m0, int m1, SGameMtlPair* parent=0);
-	SGameMtlPair*		AppendMaterialPair	(int m0, int m1, SGameMtlPair* parent=0);
-	void				RemoveMaterialPair	(LPCSTR name);
-	void				RemoveMaterialPair	(GameMtlPairIt rem_it);
-	void				RemoveMaterialPair	(int mtl);
-	void				RemoveMaterialPair	(int mtl0, int mtl1);
-	GameMtlPairIt		GetMaterialPairIt	(int id);
-	SGameMtlPair*		GetMaterialPair		(int id);
-	GameMtlPairIt		GetMaterialPairIt	(int mtl0, int mtl1);
-	SGameMtlPair*		GetMaterialPair		(int mtl0, int mtl1);
-	SGameMtlPair*		GetMaterialPair		(LPCSTR name);
-#else
 	// game
 	IC SGameMtlPair*	GetMaterialPair		(u16 idx0, u16 idx1){R_ASSERT((idx0<material_count)&&(idx1<material_count)); return material_pairs_rt[idx1*material_count+idx0];}
-#endif
+
 	IC GameMtlPairIt	FirstMaterialPair	(){return material_pairs.begin();}
 	IC GameMtlPairIt	LastMaterialPair	(){return material_pairs.end();}
 

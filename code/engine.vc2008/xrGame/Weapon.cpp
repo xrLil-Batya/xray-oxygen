@@ -24,10 +24,9 @@
 #include "ui/UIWindow.h"
 #include "ui/UIXmlInit.h"
 #include "Torch.h"
-#include "Magazine.h"
 
-#define WEAPON_REMOVE_TIME		60000
-#define ROTATION_TIME			0.25f
+static const int WEAPON_REMOVE_TIME = 60000;
+static const float ROTATION_TIME = 0.25f;
 
 BOOL	b_toggle_weapon_aim		= FALSE;
 extern CUIXml*	pWpnScopeXml;
@@ -674,7 +673,7 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 			P.r_u8			(state);
 			P.r_u8			(m_sub_state);		
 //			u8 NewAmmoType = 
-				P.r_u8();
+				P.r_u8(); //Объясните дяде, зачем это нужно, когда можно просто не записывать в буффер?
 			u8 AmmoElapsed = P.r_u8();
 			u8 NextAmmo = P.r_u8();
 			
@@ -766,7 +765,7 @@ void CWeapon::SendHiddenItem()
 		CHudItem::object().u_EventGen		(P,GE_WPN_STATE_CHANGE,CHudItem::object().ID());
 		P.w_u8			(u8(eHiding));
 		P.w_u8			(u8(m_sub_state));
-		P.w_u8			(m_ammoType);
+		P.w_u8			(m_ammoType); // И вот зачем это записывать?...
 		P.w_u8			(u8(iAmmoElapsed & 0xff));
 		P.w_u8			(m_set_next_ammoType_on_reload);
 		CHudItem::object().u_EventSend		(P, net_flags(TRUE, TRUE, FALSE, TRUE));
@@ -1434,7 +1433,7 @@ void CWeapon::SwitchState(u32 S)
 		CHudItem::object().u_EventGen		(P,GE_WPN_STATE_CHANGE,CHudItem::object().ID());
 		P.w_u8			(u8(S));
 		P.w_u8			(u8(m_sub_state));
-		P.w_u8			(m_ammoType);
+		P.w_u8			(m_ammoType); // Пишем, но не читаем, класс
 		P.w_u8			(u8(iAmmoElapsed & 0xff));
 		P.w_u8			(m_set_next_ammoType_on_reload);
 		CHudItem::object().u_EventSend		(P, net_flags(TRUE, TRUE, FALSE, TRUE));
@@ -1443,7 +1442,7 @@ void CWeapon::SwitchState(u32 S)
 
 void CWeapon::OnMagazineEmpty	()
 {
-	VERIFY((u32)iAmmoElapsed == m_magazine.size());
+	VERIFY(iAmmoElapsed == m_magazine.size());
 }
 
 

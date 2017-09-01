@@ -155,7 +155,7 @@ void CObjectList::Update		(bool bForce)
 			);
 #endif // ifdef DEBUG
 
-			Device.Statistic->UpdateClient_crows	= crows.size	();
+			Device.Statistic->UpdateClient_crows	= u32(crows.size());
 			Objects* workload			= 0;
 			if (!psDeviceFlags.test(rsDisableObjectsAsCrows))	
 				workload				= &crows;

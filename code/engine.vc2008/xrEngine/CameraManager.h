@@ -123,7 +123,7 @@ public:
     BENCH_SEC_SCRAMBLEMEMBER2
 
     void Dump();
-    u32 Count() const { return m_EffectorsCam.size() + m_EffectorsCam_added_deffered.size(); }
+    u32 Count() const { return u32(m_EffectorsCam.size() + m_EffectorsCam_added_deffered.size()); }
     CEffectorCam* AddCamEffector(CEffectorCam* ef);
     CEffectorCam* GetCamEffector(ECamEffectorType type);
     void RemoveCamEffector(ECamEffectorType type);

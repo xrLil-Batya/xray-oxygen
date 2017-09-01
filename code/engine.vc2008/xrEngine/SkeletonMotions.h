@@ -149,7 +149,7 @@ public:
 	xr_vector<u32>		bones;
 	CPartDef()			: Name(0) {};
 
-	u32					mem_usage			(){ return sizeof(*this)+bones.size()*sizeof(u32)+sizeof(Name);}
+	u32					mem_usage			(){ return u32(sizeof(*this)+bones.size()*sizeof(u32)+sizeof(Name));}
 };
 class 	ENGINE_API	CPartition
 {
@@ -181,12 +181,14 @@ struct 	ENGINE_API	motions_value
 	MotionVec*			bone_motions		(shared_str bone_name);
 
 	u32					mem_usage			(){ 
-		u32 sz			=	sizeof(*this)+m_motion_map.size()*6+m_partition.mem_usage();
-        for (auto it=m_mdefs.begin(); it!=m_mdefs.end(); it++)
-			sz			+=	it->mem_usage();
-		for (auto bm_it=m_motions.begin(); bm_it!=m_motions.end(); bm_it++)
-			for (auto m_it=bm_it->second.begin(); m_it!=bm_it->second.end(); m_it++)
-				sz		+=	m_it->mem_usage();
+		u32 sz			=	u32(sizeof(*this)+m_motion_map.size()*6+m_partition.mem_usage());
+        for (auto it : m_mdefs)
+			sz += it.mem_usage();
+		for (auto bm_it : m_motions)
+		{
+			for (auto m_it : bm_it.second)
+				sz += m_it.mem_usage();
+		}
 		return sz;
 	}
 };

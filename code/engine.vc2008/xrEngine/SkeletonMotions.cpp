@@ -453,7 +453,7 @@ void ENGINE_API motion_marks::Load(IReader* R)
 void motion_marks::Save(IWriter* W)
 {
 	W->w_string			(name.c_str());
-	u32 cnt				= intervals.size();
+	u32 cnt				= u32(intervals.size());
     W->w_u32			(cnt);
 	for(u32 i=0; i<cnt; ++i)
 	{
