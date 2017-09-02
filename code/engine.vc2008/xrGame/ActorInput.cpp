@@ -569,7 +569,6 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 #include "WeaponBinoculars.h"
 #include "WeaponBinocularsVision.h"
 #include "ActorHelmet.h"
-#include "TargetFrame.h"
 void CActor::SwitchNightVision()
 {
 	CWeapon* wpn1 = NULL;
