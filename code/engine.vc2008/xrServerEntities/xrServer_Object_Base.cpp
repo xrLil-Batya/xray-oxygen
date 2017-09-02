@@ -41,7 +41,7 @@
 #	endif // #ifdef XRGAME_EXPORTS
 #endif
 
-__declspec(dllimport) u16 script_server_object_version();
+__declspec(dllimport) unsigned short script_server_object_version();
 
 
 ////////////////////////////////////////////////////////////////////////////

@@ -53,7 +53,7 @@ public:
 		}
 	}
 };
-
+#include <random>
 void	CBuild::LMapsLocal				()
 {
 		FPU::m64r		();
@@ -62,7 +62,7 @@ void	CBuild::LMapsLocal				()
 
 		// Randomize deflectors
 #ifndef NET_CMP
-		std::random_shuffle	(lc_global_data()->g_deflectors().begin(),lc_global_data()->g_deflectors().end());
+		std::shuffle(lc_global_data()->g_deflectors().begin(),lc_global_data()->g_deflectors().end(), std::mt19937(std::random_device()()));
 #endif
 
 #ifndef NET_CMP	

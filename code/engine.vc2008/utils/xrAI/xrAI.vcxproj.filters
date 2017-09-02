@@ -352,9 +352,6 @@
     <ClCompile Include="..\..\xrServerEntities\PHNetState.cpp">
       <Filter>ALife\Shared\Server</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\PHSynchronize.cpp">
-      <Filter>ALife\Shared\Server</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\smart_cast.cpp">
       <Filter>ALife\Shared\Common</Filter>
     </ClCompile>

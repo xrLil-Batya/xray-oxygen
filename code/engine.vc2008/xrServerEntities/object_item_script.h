@@ -10,10 +10,12 @@
 
 #include "object_factory_space.h"
 #include "object_item_abstract.h"
+#include <luabind\luabind.hpp>
 
-class CObjectItemScript : public CObjectItemAbstract {
+class CObjectItemScript : public CObjectItemAbstract 
+{
 protected:
-	typedef CObjectItemAbstract inherited;
+	using inherited = CObjectItemAbstract;
 
 protected:
 	luabind::object								m_client_creator;

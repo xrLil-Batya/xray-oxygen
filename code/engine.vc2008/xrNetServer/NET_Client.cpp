@@ -185,7 +185,7 @@ NET_Packet*		INetQueue::Retreive	()
 	else
 	{
 		u32 tmp_time = GetTickCount()-60000;
-		u32 size = unused.size();
+		size_t size = unused.size();
 		if ((LastTimeCreate < tmp_time) &&  (size > 32))
 		{
 			xr_delete(unused.back());

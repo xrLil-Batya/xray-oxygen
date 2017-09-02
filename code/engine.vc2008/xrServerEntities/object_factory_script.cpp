@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-
+#include <luabind\luabind.hpp>
 #ifndef DEDICATED_SERVER_ONLY
 
 #include "object_factory.h"

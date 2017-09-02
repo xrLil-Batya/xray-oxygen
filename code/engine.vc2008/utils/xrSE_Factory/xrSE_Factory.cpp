@@ -6,7 +6,7 @@
 //	Description : Precompiled header creatore
 ////////////////////////////////////////////////////////////////////////////
 
-#include "xrSE_Factory.h"
+#include "stdafx.h"
 #include "ai_space.h"
 #include "script_engine.h"
 #include "object_factory.h"
@@ -38,23 +38,16 @@ extern "C" {
 		abstract				= 0;
 	}
 };
-
-//typedef void DUMMY_STUFF (const void*,const u32&,void*);
-//XRCORE_API DUMMY_STUFF	*g_temporary_stuff;
-
 void setup_luabind_allocator		();
 
-//#define TRIVIAL_ENCRYPTOR_DECODER
-//#include UP(xrEngine/trivial_encryptor.h)
-
-BOOL APIENTRY DllMain		(HANDLE module_handle, DWORD call_reason, LPVOID reserved)
+int APIENTRY DllMain (HANDLE module_handle, DWORD call_reason, LPVOID reserved)
 {
 	switch (call_reason) {
 		case DLL_PROCESS_ATTACH: {
 //			g_temporary_stuff			= &trivial_encryptor::decode;
 
 			Debug._initialize			(false);
- 			Core._initialize			("xrSE_Factory",NULL,TRUE,"fsfactory.ltx");
+ 			Core._initialize			("xrSE_Factory", 0, TRUE,"fsfactory.ltx");
 			string_path					SYSTEM_LTX;
 			FS.update_path				(SYSTEM_LTX,"$game_config$","system.ltx");
 			pSettings					= xr_new<CInifile>(SYSTEM_LTX);
@@ -90,15 +83,12 @@ BOOL APIENTRY DllMain		(HANDLE module_handle, DWORD call_reason, LPVOID reserved
 
 void _destroy_item_data_vector_cont(T_VECTOR* vec)
 {
-	T_VECTOR::iterator it		= vec->begin();
-	T_VECTOR::iterator it_e		= vec->end();
-
 	xr_vector<CUIXml*>			_tmp;	
-	for(;it!=it_e;++it)
+	for(auto it: *vec)
 	{
-		xr_vector<CUIXml*>::iterator it_f = std::find(_tmp.begin(), _tmp.end(), (*it)._xml);
+		xr_vector<CUIXml*>::iterator it_f = std::find(_tmp.begin(), _tmp.end(), it._xml);
 		if(it_f==_tmp.end())
-			_tmp.push_back	((*it)._xml);
+			_tmp.push_back(it._xml);
 	}
 	delete_data	(_tmp);
 }

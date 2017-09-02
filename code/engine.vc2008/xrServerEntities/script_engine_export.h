@@ -8,18 +8,18 @@
 
 #pragma once
 
-#include "script_fvector.h"
-#include "script_fcolor.h"
-#include "script_fmatrix.h"
-#include "script_flags.h"
+#include "../xrScripts/export/script_fvector.h"
+#include "../xrScripts/export/script_fcolor.h"
+#include "../xrScripts/export/script_fmatrix.h"
+#include "../xrScripts/export/script_flags.h"
 #include "script_engine.h"
-#include "script_token_list.h"
-#include "script_rtoken_list.h"
+#include "../xrScripts/export/script_token_list.h"
+#include "../xrScripts/export/script_rtoken_list.h"
 #include "script_ini_file.h"
-#include "script_reader.h"
-#include "script_net_packet.h"
+#include "../xrScripts/export/script_reader.h"
+#include "../xrScripts/export/script_net_packet.h"
 #include "object_factory.h"
-#include "script_sound_type.h"
+#include "../xrScripts/export/script_sound_type.h"
 #include "xrServer_Objects_ALife_All.h"
 #include "xrServer_Objects_ALife_Smartcovers.h"
 

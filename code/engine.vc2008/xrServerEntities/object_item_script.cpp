@@ -11,7 +11,7 @@
 #include "object_factory.h"
 
 #ifndef NO_XR_GAME
-#	include "attachable_item.h"
+#include "attachable_item.h"
 
 ObjectFactory::CLIENT_BASE_CLASS *CObjectItemScript::client_object	() const
 {
@@ -25,6 +25,16 @@ ObjectFactory::CLIENT_BASE_CLASS *CObjectItemScript::client_object	() const
 	R_ASSERT	(object);
 	return		(object->_construct());
 }
+#else
+#include <luabind\luabind.hpp>
+
+#include <luabind/object.hpp>
+#include <luabind/functor.hpp>
+#include <luabind/operator.hpp>
+#include <luabind/adopt_policy.hpp>
+#include <luabind/return_reference_to_policy.hpp>
+#include <luabind/out_value_policy.hpp>
+#include <luabind/iterator_policy.hpp>
 
 #endif
 

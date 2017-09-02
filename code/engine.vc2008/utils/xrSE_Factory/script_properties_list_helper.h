@@ -13,24 +13,22 @@
 #	include "../xrSound/Sound.h"
 #endif
 #include "xrEProps.h"
-#include "script_export_space.h"
+#include "../../xrScripts/export/script_export_space.h"
 #include "script_space.h"
-#include "script_rtoken_list.h"
+#include "../../xrScripts/export/script_rtoken_list.h"
 
 class CScriptTokenList;
 
-struct CScriptPropertiesListHelper {
+struct CScriptPropertiesListHelper 
+{
 public:
 			bool 				FvectorRDOnAfterEdit(PropValue* sender,  Fvector& edit_val);
 			void 				FvectorRDOnBeforeEdit(PropValue* sender, Fvector& edit_val);
-//			void 				FvectorRDOnDraw		(PropValue* sender,  LPCSTR& draw_val);
 			bool 				floatRDOnAfterEdit	(PropValue* sender,  float&	 edit_val);
 			void 				floatRDOnBeforeEdit	(PropValue* sender,  float&	 edit_val);
-//			void 				floatRDOnDraw		(PropValue* sender,  LPCSTR& draw_val);
 // name edit
 			bool 				NameAfterEdit		(PropValue* sender,  LPCSTR& edit_val);
 			void				NameBeforeEdit		(PropValue* sender,  LPCSTR& edit_val);
-//			void 				NameDraw			(PropValue* sender,  LPCSTR& draw_val);
 public:
 			CaptionValue*  		CreateCaption	    (PropItemVec* items, LPCSTR key, LPCSTR val);
 			CanvasValue*		CreateCanvas	    (PropItemVec* items, LPCSTR key, LPCSTR val, int height);
@@ -41,11 +39,6 @@ public:
 			ChooseValue*		CreateChoose	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, u32 mode, LPCSTR path, LPCSTR fill_param);
 			ChooseValue*		CreateChoose	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, u32 mode, LPCSTR path, LPCSTR fill_param, u32 sub_item_cnt);
 			
-//			S8Value* 			CreateS8		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
-//			S8Value* 			CreateS8		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, s8 mn);
-//			S8Value* 			CreateS8		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, s8 mn, s8 mx);
-//			S8Value* 			CreateS8		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, s8 mn, s8 mx, s8 inc);
-
 			S16Value* 			CreateS16		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
 			S16Value* 			CreateS16		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, s16 mn);
 			S16Value* 			CreateS16		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, s16 mn, s16 mx);
@@ -103,16 +96,11 @@ public:
 			Token8Value*		CreateToken8	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, CScriptTokenList* token);
 			Token16Value*		CreateToken16	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, CScriptTokenList* token);
 			Token32Value*		CreateToken32	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, CScriptTokenList* token);
-//			RToken8Value* 		CreateRToken8	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, RTokenVec* token);
-//			RToken16Value* 		CreateRToken16	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, RTokenVec* token);
-//			RToken32Value* 		CreateRToken32	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, RTokenVec* token);
-//			TokenValueSH*   	CreateTokenSH	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, u32 cnt, const TokenValueSH::Item* lst);
 			RListValue* 	 	CreateRList		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, CScriptRTokenList *tokens);
 			U32Value*  			CreateColor		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
 			ColorValue*			CreateFColor	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
 			VectorValue*		CreateVColor	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
 			RTextValue* 		CreateRText		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
-//			WaveValue* 			CreateWave		    (PropItemVec* items, LPCSTR key, WaveForm* val);
 			FloatValue* 		CreateTime		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name);
 			FloatValue* 		CreateTime		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, float mn);
 			FloatValue* 		CreateTime		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, float mn, float mx);
@@ -128,8 +116,6 @@ public:
 			VectorValue* 		CreateAngle3	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, float mn, float mx);
 			VectorValue* 		CreateAngle3	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, float mn, float mx, float inc);
 			VectorValue* 		CreateAngle3	    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, float mn, float mx, float inc, int decim);
-//			RTextValue* 		CreateName		    (PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, ListItem* owner);
-//			RTextValue* 		CreateNameCB		(PropItemVec* items, LPCSTR key, luabind::object object, LPCSTR name, TOnDrawTextEvent=0, RTextValue::TOnBeforeEditEvent=0, RTextValue::TOnAfterEditEvent=0);
 			DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 add_to_type_list(CScriptPropertiesListHelper)

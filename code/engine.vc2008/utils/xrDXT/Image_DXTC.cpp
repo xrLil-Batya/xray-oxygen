@@ -988,9 +988,10 @@ inline void GetColorBlockColors_m1(DXTColBlock* pBlock, Color8888* col_0, Color8
 // Desc: Returns the number of bits set in a DWORD mask
 //	from microsoft mssdk d3dim sample "Compress"
 //-----------------------------------------------------------------------------
-WORD GetNumberOfBits(DWORD dwMask)
+unsigned short GetNumberOfBits(DWORD dwMask)
 {
-    for (WORD wBits = 0; dwMask; wBits++)
+	unsigned short wBits;
+    for (wBits = 0; dwMask; wBits++)
     {
         dwMask = dwMask & (dwMask - 1);
     }

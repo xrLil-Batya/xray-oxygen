@@ -46,36 +46,6 @@
     <Filter Include="Scripts">
       <UniqueIdentifier>{6636cc8d-c9e9-4507-82f6-3beb92f284d1}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Scripts\ScriptClasses">
-      <UniqueIdentifier>{ecf129fc-cc9d-458c-b498-bf02f5e77642}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptFmatrix">
-      <UniqueIdentifier>{b935d02c-7b8a-4511-827f-29913b57d5eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptFvector">
-      <UniqueIdentifier>{f382f3f9-aaa6-44bf-8911-3da6251bbe84}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptIniFile">
-      <UniqueIdentifier>{600806e7-c9ca-4aca-a513-e0f69d360f3e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptIniFile\ScriptTokenList">
-      <UniqueIdentifier>{972c48e8-9318-47db-8407-8eafb5134aeb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptIniFile\ScriptRTokenList">
-      <UniqueIdentifier>{4cf5f0f2-c56e-4cf4-873e-f7936b63823c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptNetPacket">
-      <UniqueIdentifier>{abc2d29d-8f72-4b85-9117-c51763c814ba}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptSoundType">
-      <UniqueIdentifier>{f8367c31-35f1-49b4-8ba8-19724bda3c36}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptFlags">
-      <UniqueIdentifier>{2703e58d-b2f6-463b-a6ca-eb631ef01050}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Scripts\ScriptClasses\ScriptReader">
-      <UniqueIdentifier>{0eafb529-cfcf-40c8-a6d7-23aa22b366ed}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Scripts\ScriptEngine">
       <UniqueIdentifier>{8ef2f230-0b57-452e-9da8-d7c8c80d0d8f}</UniqueIdentifier>
     </Filter>
@@ -166,6 +136,15 @@
     <Filter Include="ServerStuff\ServerEntities\movement_manager_holder">
       <UniqueIdentifier>{3b035c68-6e1c-4a9d-a223-18065327b261}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts\ScriptIniFile">
+      <UniqueIdentifier>{600806e7-c9ca-4aca-a513-e0f69d360f3e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\ScriptIniFile\ScriptTokenList">
+      <UniqueIdentifier>{972c48e8-9318-47db-8407-8eafb5134aeb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Scripts\ScriptIniFile\ScriptRTokenList">
+      <UniqueIdentifier>{4cf5f0f2-c56e-4cf4-873e-f7936b63823c}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\xrServerEntities\DrawUtils.h">
@@ -175,9 +154,6 @@
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="xr_LuaAllocator.h">
-      <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="xrSE_Factory.h">
       <Filter>Core</Filter>
     </ClInclude>
     <ClInclude Include="xrSE_Factory_import_export.h">
@@ -300,44 +276,23 @@
     <ClInclude Include="script_space.h">
       <Filter>Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_fmatrix.h">
-      <Filter>Scripts\ScriptClasses\ScriptFmatrix</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_fcolor.h">
-      <Filter>Scripts\ScriptClasses\ScriptFvector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_fvector.h">
-      <Filter>Scripts\ScriptClasses\ScriptFvector</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_ini_file.h">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>Scripts\ScriptIniFile</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_ini_file_inline.h">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>Scripts\ScriptIniFile</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_token_list.h">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_token_list_inline.h">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_rtoken_list.h">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptRTokenList</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptRTokenList</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_rtoken_list_inline.h">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_net_packet.h">
-      <Filter>Scripts\ScriptClasses\ScriptNetPacket</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_sound_type.h">
-      <Filter>Scripts\ScriptClasses\ScriptSoundType</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_flags.h">
-      <Filter>Scripts\ScriptClasses\ScriptFlags</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_reader.h">
-      <Filter>Scripts\ScriptClasses\ScriptReader</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptRTokenList</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\script_engine.h">
       <Filter>Scripts\ScriptEngine</Filter>
@@ -587,41 +542,20 @@
     <ClCompile Include="..\..\xrServerEntities\smart_cast_stats.cpp">
       <Filter>Common\SmartCast</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_fmatrix_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptFmatrix</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_fcolor_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptFvector</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_fvector_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptFvector</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_ini_file.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>Scripts\ScriptIniFile</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_ini_file_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>Scripts\ScriptIniFile</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_token_list.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_token_list_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptTokenList</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_rtoken_list_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_net_packet_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptNetPacket</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_sound_type_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptSoundType</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_flags_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptFlags</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_reader_script.cpp">
-      <Filter>Scripts\ScriptClasses\ScriptReader</Filter>
+      <Filter>Scripts\ScriptIniFile\ScriptRTokenList</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_engine.cpp">
       <Filter>Scripts\ScriptEngine</Filter>
@@ -675,9 +609,6 @@
       <Filter>ServerStuff\Common\ALifeStuff\monster_brain</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\PHNetState.cpp">
-      <Filter>ServerStuff\Common\PhysicsStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\PHSynchronize.cpp">
       <Filter>ServerStuff\Common\PhysicsStuff</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\character_info.cpp">

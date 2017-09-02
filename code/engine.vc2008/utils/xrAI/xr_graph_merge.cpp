@@ -20,6 +20,7 @@
 #include "guid_generator.h"
 #include "game_graph_builder.h"
 #include <direct.h>
+#include <random>
 
 extern LPCSTR GAME_CONFIG;
 extern LPCSTR LEVEL_GRAPH_NAME;
@@ -188,6 +189,7 @@ public:
 				m_cross_table.w(&(tCrossTableUpdate[i]),sizeof(tCrossTableUpdate[i]));
 		}
 
+		int i;
 		// fill vertex map
 		{
 			string_path								fName;
@@ -195,7 +197,7 @@ public:
 			IReader									*F = FS.r_open(fName);
 			u32										id;
 			IReader									*O = F->open_chunk_iterator(id);
-			for (int i=0; O; O = F->open_chunk_iterator(id,O))	{
+			for (i=0; O; O = F->open_chunk_iterator(id,O))	{
 				NET_Packet							P;
 				P.B.count							= O->length();
 				O->r								(P.B.data,P.B.count);
@@ -216,9 +218,8 @@ public:
 					float							fMinDistance = 1000000.f;
 					{
 						auto					B = m_tpVertices.begin();
-						auto					I = B;
-						auto					E = m_tpVertices.end();
-						for ( ; I != E; I++) {
+
+						for (auto I = B; I != m_tpVertices.end(); I++) {
 							float fDistance = (*I).tLocalPoint.distance_to(tVector);
 							if (fDistance < fMinDistance) {
 								fMinDistance	= fDistance;
@@ -234,8 +235,6 @@ public:
 						S								= xr_strdup(tpGraphPoint->name_replace());
 						T.caConnectName					= xr_strdup(*tpGraphPoint->m_caConnectionPointName);
 						T.dwLevelID						= dwfGetIDByLevelName(Ini,*tpGraphPoint->m_caConnectionLevelName);
-//						T.tGraphID						= (GameGraph::_GRAPH_ID)i;
-//						T.tOldGraphID					= tGraphID;
 						T.tOldGraphID					= (GameGraph::_GRAPH_ID)i;
 						T.tGraphID						= tGraphID;
 
@@ -366,7 +365,7 @@ public:
 
 		R_ASSERT2				(!l_dwaNodes.empty(),"Can't create at least one death point for specified graph point");
 
-		std::random_shuffle		(l_dwaNodes.begin(),l_dwaNodes.end());
+		std::shuffle		(l_dwaNodes.begin(),l_dwaNodes.end(), std::mt19937(std::random_device()()));
 
 		u32						m = l_dwaNodes.size() > 10 ? std::min(iFloor(.1f*l_dwaNodes.size()),255) : l_dwaNodes.size(), l_dwStartIndex = m_tpLevelPoints.size();
 		m_tpLevelPoints.resize	(l_dwStartIndex + m);

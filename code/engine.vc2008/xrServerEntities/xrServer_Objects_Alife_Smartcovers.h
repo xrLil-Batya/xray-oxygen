@@ -5,12 +5,8 @@
 //	Author		: Alexander Plichko
 //	Description : Server objects smartcovers for ALife simulator
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef xrServer_Objects_ALife_SmartcoversH
-#define xrServer_Objects_ALife_SmartcoversH
-
 #include "xrServer_Objects_ALife.h"
-
+#include <luabind\luabind.hpp>
 #pragma warning(push)
 #pragma warning(disable:4005)
 
@@ -82,4 +78,3 @@ private:
 		add_to_type_list(CSE_SmartCover)
 #define script_type_list save_type_list(CSE_SmartCover)
 #pragma warning(pop)
-#endif
