@@ -6,7 +6,7 @@
 #include <math.h>
 
 #define lj_strscan_c
-#define LUA_CORE
+
 
 #include "lj_obj.h"
 #include "lj_char.h"

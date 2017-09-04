@@ -7,7 +7,7 @@
 #include <stdio.h>
 
 #define lj_load_c
-#define LUA_CORE
+
 
 #include "lua.h"
 #include "lauxlib.h"

@@ -4,7 +4,7 @@
 */
 
 #define lj_lib_c
-#define LUA_CORE
+
 
 #include "lauxlib.h"
 

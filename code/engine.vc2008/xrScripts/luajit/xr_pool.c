@@ -57,7 +57,7 @@ void* XR_MMAP(size_t size)
 	sprintf(buf, "XR_MMAP(%Iu)", size);
 	OutputDebugString(buf);
 #endif
-	int chunks = size / CHUNK_SIZE;
+	int chunks = (int)size / CHUNK_SIZE;
 	char* s = find_free(chunks);
 	void* ptr = MFAIL;
 	if (s != NULL) {
@@ -84,7 +84,7 @@ void XR_DESTROY(void* ptr, size_t size)
 		OutputDebugString(buf);
 #endif
 		char* s = g_heapMap + ((char*)ptr - (char*)g_heap) / CHUNK_SIZE;
-		int count = size / CHUNK_SIZE;
+		int count = (int)size / CHUNK_SIZE;
 		for (int i = 0; i < count; i++)
 			s[i] = 'x';
 		if (s < g_firstFreeChunk)

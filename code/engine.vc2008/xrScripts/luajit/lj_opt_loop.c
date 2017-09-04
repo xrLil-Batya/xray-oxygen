@@ -4,7 +4,7 @@
 */
 
 #define lj_opt_loop_c
-#define LUA_CORE
+
 
 #include "lj_obj.h"
 

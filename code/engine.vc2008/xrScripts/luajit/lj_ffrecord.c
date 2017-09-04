@@ -4,7 +4,7 @@
 */
 
 #define lj_ffrecord_c
-#define LUA_CORE
+
 
 #include "lj_obj.h"
 

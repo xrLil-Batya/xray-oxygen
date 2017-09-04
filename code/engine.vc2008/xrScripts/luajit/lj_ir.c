@@ -4,7 +4,7 @@
 */
 
 #define lj_ir_c
-#define LUA_CORE
+
 
 /* For pointers to libc/libm functions. */
 #include <stdio.h>

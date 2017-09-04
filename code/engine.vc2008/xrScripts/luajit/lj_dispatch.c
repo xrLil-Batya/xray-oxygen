@@ -4,7 +4,7 @@
 */
 
 #define lj_dispatch_c
-#define LUA_CORE
+
 
 #include "lj_obj.h"
 #include "lj_err.h"

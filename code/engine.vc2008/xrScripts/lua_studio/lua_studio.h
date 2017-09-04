@@ -35,7 +35,8 @@ namespace luabind {
 		class class_rep;
 	} // namespace detail
 } // namespace luabind
-
+#pragma todo("FX to FX: Replace cs::lua_studio::engine by class")
+#pragma warning(disable: 4275)
 class LUASTUDIO_API lua_studio_engine :
 	public cs::lua_studio::engine
 {
@@ -152,3 +153,5 @@ private:
 	lua_Debug				m_instances[2];
 	u32						m_instance_count;
 };
+
+#pragma warning(default: 4275)

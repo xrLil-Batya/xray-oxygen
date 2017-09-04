@@ -4,7 +4,7 @@
 */
 
 #define lj_mcode_c
-#define LUA_CORE
+
 
 #include "lj_obj.h"
 #if LJ_HASJIT
