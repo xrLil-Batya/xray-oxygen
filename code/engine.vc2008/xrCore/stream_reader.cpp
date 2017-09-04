@@ -34,7 +34,7 @@ void CStreamReader::map(const size_t new_offset)
 
     m_current_window_size = end_offset - start_offset;
     m_current_map_view_of_file = static_cast<u8*>(MapViewOfFile(m_file_mapping_handle, FILE_MAP_READ, 0,
-                                                                start_offset, m_current_window_size));
+                                                                (DWORD)start_offset, m_current_window_size));
     m_current_pointer = m_current_map_view_of_file;
 
     const size_t difference = pure_start_offset - start_offset;
@@ -83,18 +83,18 @@ void CStreamReader::r(void* _buffer, size_t buffer_size)
         std::memcpy(buffer, m_current_pointer, elapsed_in_window);
         buffer += elapsed_in_window;
         buffer_size -= elapsed_in_window;
-        advance(elapsed_in_window);
+        advance(int(elapsed_in_window));
 
         elapsed_in_window = m_current_window_size;
     } while (m_current_window_size < buffer_size);
 
     std::memcpy(buffer, m_current_pointer, buffer_size);
-    advance(buffer_size);
+    advance(int(buffer_size));
 }
 
 CStreamReader* CStreamReader::open_chunk(const size_t chunk_id) {
     bool compressed;
-    const auto size = find_chunk(chunk_id, &compressed);
+    const auto size = find_chunk(u32(chunk_id), &compressed);
     if (!size)
         return nullptr;
 

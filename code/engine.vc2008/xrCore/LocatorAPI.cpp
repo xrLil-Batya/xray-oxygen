@@ -414,7 +414,7 @@ void CLocatorAPI::ProcessArchive(const char* _path)
 
 	m_archives.push_back		(archive());
 	archive& A					= m_archives.back();
-	A.vfs_idx					= m_archives.size()-1;
+	A.vfs_idx					= (u32)m_archives.size()-1;
 	A.path						= path;
 
 	A.open						();
@@ -664,7 +664,7 @@ IReader *CLocatorAPI::setup_fs_ltx	(const char* fs_name)
 	CHECK_OR_EXIT( file_handle_internal(fs_path, file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path));
 
     void			*buffer = FileDownload(fs_path, file_handle, file_size);
-	result			= new CTempReader(buffer,file_size,0);
+	result			= new CTempReader(buffer,(int)file_size,0);
 
 #ifdef DEBUG
 	if (result && m_Flags.is(flBuildCopy|flReady))
@@ -993,7 +993,7 @@ int CLocatorAPI::file_list(FS_FileSet& dest, const char* path, u32 flags, const 
 			dest.insert(FS_File(entry_begin,entry.size_real,entry.modif,fl));
 		}
 	}
-	return dest.size();
+	return int(dest.size());
 }
 
 void CLocatorAPI::check_cached_files	(char* fname, const u32 &fname_size, const file &desc, const char* &source_name)
@@ -1140,7 +1140,7 @@ void CLocatorAPI::copy_file_to_build	(IWriter *W, IReader *r)
 
 void CLocatorAPI::copy_file_to_build	(IWriter *W, CStreamReader *r)
 {
-	u32					buffer_size = r->length();
+	size_t				buffer_size = r->length();
 	u8					*buffer = xr_alloc<u8>(buffer_size);
 	r->r				(buffer,buffer_size);
     W->w				(buffer,buffer_size);

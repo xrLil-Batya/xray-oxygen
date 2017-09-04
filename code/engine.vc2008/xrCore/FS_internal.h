@@ -60,8 +60,14 @@ public:
 
     void seek(const size_t pos) override 
 	{
-        if (hf)
-            fseek(hf, pos, SEEK_SET);
+		if (hf)
+		{
+#ifdef _M_X64
+			_fseeki64(hf, pos, SEEK_SET);
+#else
+			fseek(hf, pos, SEEK_SET);
+#endif
+		}
     }
 
     IC size_t tell() override { return hf ? ftell(hf) : 0; }

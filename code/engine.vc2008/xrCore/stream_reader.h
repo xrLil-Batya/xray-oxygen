@@ -52,7 +52,7 @@ public:
     }
 
     void seek(const int offset) {
-        advance(offset - tell());
+        advance(offset - int(tell()));
     }
 
     size_t tell() const {

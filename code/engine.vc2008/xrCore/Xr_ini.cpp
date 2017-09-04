@@ -231,9 +231,9 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
                 VERIFY2(m_flags.test(eReadOnly), "Allow for readonly mode only.");
                 inherited_names += 2;
                 u32 cnt = _GetItemCount(inherited_names);
-                u32 total_count = 0;
-                u32 k = 0;
-                for (k = 0; k < cnt; ++k) {
+                size_t total_count = 0;
+                for (u32 k = 0; k < cnt; ++k)
+				{
                     string512 tmp;
                     _GetItem(inherited_names, k, tmp);
                     Sect& inherited_section = r_section(tmp);
@@ -242,7 +242,8 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
 
                 Current->Data.reserve(Current->Data.size() + total_count);
 
-                for (k = 0; k < cnt; ++k) {
+                for (u32 k = 0; k < cnt; ++k)
+				{
                     string512 tmp;
                     _GetItem(inherited_names, k, tmp);
                     Sect& inherited_section = r_section(tmp);
@@ -380,17 +381,19 @@ BOOL CInifile::line_exist(LPCSTR S, LPCSTR L) const {
     return (A != I.Data.end() && xr_strcmp(*A->first, L) == 0);
 }
 
-u32 CInifile::line_count(LPCSTR Sname) const {
+u32 CInifile::line_count(LPCSTR Sname) const 
+{
     Sect& S = r_section(Sname);
-    auto I = S.Data.cbegin();
     u32 C = 0;
-    for (; I != S.Data.cend(); I++)
-        if (*I->first)
-            C++;
+	for (auto I = S.Data.cbegin(); I != S.Data.cend(); I++)
+	{
+		if (*I->first)
+			C++;
+	}
     return C;
 }
 
-u32 CInifile::section_count() const { return DATA.size(); }
+u32 CInifile::section_count() const { return u32(DATA.size()); }
 
 //--------------------------------------------------------------------------------------
 CInifile::Sect& CInifile::r_section(const shared_str& S) const { return r_section(*S); }

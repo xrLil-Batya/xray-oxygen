@@ -3,7 +3,7 @@
 
 #include "fs_internal.h"
 
-#pragma warning(disable:4995)
+#pragma warning(disable:4995 4267)
 #include <io.h>
 #include <direct.h>
 #include <fcntl.h>
@@ -103,7 +103,7 @@ void* FileDownload(const char* file_name, const int& file_handle, size_t& file_s
 #endif // DEBUG_MEMORY_NAME
     );
 
-    const auto r_bytes = _read(file_handle, buffer, file_size);
+    const int r_bytes = _read(file_handle, buffer, file_size);
     R_ASSERT3(file_size == static_cast<size_t>(r_bytes), "can't read from file : ", file_name);
 
     R_ASSERT3(!_close(file_handle), "can't close file : ", file_name);
@@ -131,7 +131,7 @@ void FileCompress(const char* fn, const char* sign, void* data, const size_t siz
     const auto H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
     R_ASSERT2(H > 0, fn);
     _write(H, &M, 8);
-    _writeLZ(H, data, size);
+    _writeLZ(H, data, (u32)size);
     _close(H);
 }
 

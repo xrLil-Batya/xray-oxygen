@@ -164,7 +164,7 @@ u32 manager::frames_size_getter			(LPCSTR weather_id) const
 		return						(0);
 
 #pragma todo("Dima to Dima: dangerous scheme: it depends on the call sequence (frames_getter should be called berfore frames_size_getter to get correct results)")
-	return							(m_times_ids.size());
+	return							int(m_times_ids.size());
 }
 
 void manager::fill					(property_holder_type* holder)

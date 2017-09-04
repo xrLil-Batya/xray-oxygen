@@ -44,12 +44,8 @@ std::string dump_string( const char* name, const Fmatrix &form )
 	make_string( "%s, _34_=%f \n", dump_string( make_string( "%s.k, ", name ).c_str(), form.k ).c_str( ) , form._34_  ) +  
 	make_string( "%s, _44_=%f \n", dump_string( make_string( "%s.c, ", name ).c_str(), form.c ).c_str( ) , form._44_ );  
 }
-
-void dump( const char* name, const Fmatrix &form )
+#pragma warning(disable: 4840)
+void dump(const char* name, const Fmatrix &form)
 {
-	Msg( "%s", dump_string( name, form ) );
-	//Msg( "%s, _14_=%f ", dump_string( make_string( "%s.i, ", name ).c_str(), form.i ).c_str( ) , form._14_ );  
-	//Msg( "%s, _24_=%f ", dump_string( make_string( "%s.j, ", name ).c_str(), form.j ).c_str( ) , form._24_ );  
-	//Msg( "%s, _34_=%f ", dump_string( make_string( "%s.k, ", name ).c_str(), form.k ).c_str( ) , form._34_  );  
-	//Msg( "%s, _44_=%f ", dump_string( make_string( "%s.c, ", name ).c_str(), form.c ).c_str( ) , form._44_ );  
+	Msg("%s", dump_string(name, form));
 }

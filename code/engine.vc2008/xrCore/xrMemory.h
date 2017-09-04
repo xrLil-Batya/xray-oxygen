@@ -84,8 +84,10 @@ extern XRCORE_API	xrMemory	Memory;
 	IC void*	xr_malloc	(size_t size)			{	return	Memory.mem_alloc(size,"xr_malloc");				}
 	IC void*	xr_realloc	(void* P, size_t size)	{	return Memory.mem_realloc(P,size,"xr_realloc");			}
 #else // DEBUG_MEMORY_NAME
+//	template <class T>
+//	IC T*		xr_alloc	(u32 count)				{	return  (T*)Memory.mem_alloc(count*sizeof(T));	}
 	template <class T>
-	IC T*		xr_alloc	(u32 count)				{	return  (T*)Memory.mem_alloc(count*sizeof(T));	}
+	IC T*		xr_alloc	(size_t count)			{	return  (T*)Memory.mem_alloc(count*sizeof(T));	}
 	template <class T>
 	IC void		xr_free		(T* &P)					{	if (P) { Memory.mem_free((void*)P); P=NULL;	};	}
 	IC void*	xr_malloc	(size_t size)			{	return	Memory.mem_alloc(size);					}

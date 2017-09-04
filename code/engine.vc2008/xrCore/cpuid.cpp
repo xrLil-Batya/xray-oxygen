@@ -204,7 +204,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 
 	// All logical processors
 	pinfo->n_threads = logicalProcessorCount;
-    pinfo->affinity_mask = pa_mask_save;
+    pinfo->affinity_mask = u32(pa_mask_save);
     pinfo->n_cores = processorCoreCount;
     return pinfo->features;
 }

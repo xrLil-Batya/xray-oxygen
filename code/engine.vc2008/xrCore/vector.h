@@ -276,7 +276,8 @@ IC _matrix<T>& _matrix<T>::mk_xform	(const _quaternion<T> &Q, const Tvector &V)
 template <class T>
 IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 {
-	float trace,s;
+
+	float trace, s;
 	
 	trace = float(M._11 + M._22 + M._33);
 	if (trace > 0.0f){
@@ -305,7 +306,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 		// in the unusual case the original trace fails to produce a good sqrt, try others...
 		switch (biggest){
 		case A:
-			s = std::sqrtf( M._11 - (M._22 + M._33) + 1.0f);
+			s = float(std::sqrt( M._11 - (M._22 + M._33) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				x = s * 0.5f;
 				s = 0.5f / s;
@@ -315,7 +316,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// I
-			s = std::sqrtf( M._33 - (M._11 + M._22) + 1.0f);
+			s = float(std::sqrt( M._33 - (M._11 + M._22) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				z = s * 0.5f;
 				s = 0.5f / s;
@@ -325,7 +326,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// E
-			s = std::sqrtf( M._22 - (M._33 + M._11) + 1.0f);
+			s = float(std::sqrt( M._22 - (M._33 + M._11) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				y = s * 0.5f;
 				s = 0.5f / s;
@@ -336,7 +337,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 			}
 			break;
 		case E:
-			s = std::sqrtf( M._22 - (M._33 + M._11) + 1.0f);
+			s = float(std::sqrt( M._22 - (M._33 + M._11) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				y = s * 0.5f;
 				s = 0.5f / s;
@@ -346,7 +347,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// I
-			s = std::sqrtf( M._33 - (M._11 + M._22) + 1.0f);
+			s = float(std::sqrt( M._33 - (M._11 + M._22) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				z = s * 0.5f;
 				s = 0.5f / s;
@@ -356,7 +357,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// A
-			s = std::sqrtf( M._11 - (M._22 + M._33) + 1.0f);
+			s = float(std::sqrt( M._11 - (M._22 + M._33) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				x = s * 0.5f;
 				s = 0.5f / s;
@@ -367,7 +368,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 			}
 			break;
 		case I:
-			s = std::sqrtf( M._33 - (M._11 + M._22) + 1.0f);
+			s = float(std::sqrt( M._33 - (M._11 + M._22) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				z = s * 0.5f;
 				s = 0.5f / s;
@@ -377,7 +378,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// A
-			s = std::sqrtf( M._11 - (M._22 + M._33) + 1.0f);
+			s = float(std::sqrt( M._11 - (M._22 + M._33) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				x = s * 0.5f;
 				s = 0.5f / s;
@@ -387,7 +388,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				break;
 			}
 			// E
-			s = std::sqrtf( M._22 - (M._33 + M._11) + 1.0f);
+			s = float(std::sqrt( M._22 - (M._33 + M._11) + 1.0));
 			if (s > TRACE_QZERO_TOLERANCE){
 				y = s * 0.5f;
 				s = 0.5f / s;

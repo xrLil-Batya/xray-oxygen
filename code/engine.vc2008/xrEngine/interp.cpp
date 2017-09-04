@@ -261,7 +261,7 @@ float evalEnvelope( CEnvelope *env, float time ){
       	return env->keys[0]->value;
 
    // find the first and last keys
-	int sz = env->keys.size();
+	int sz = (int)env->keys.size();
    	skey = env->keys[0];
    	ekey = env->keys[sz-1];
    	skey_n=env->keys[1];
@@ -273,7 +273,7 @@ float evalEnvelope( CEnvelope *env, float time ){
          	case BEH_RESET:            return 0.0f;
          	case BEH_CONSTANT:			return skey->value;
          	case BEH_REPEAT:
-            	time = range( time, skey->time, ekey->time, NULL );
+            	time = range( time, skey->time, ekey->time, 0 );
             break;
          	case BEH_OSCILLATE:
             	time = range( time, skey->time, ekey->time, &noff );

@@ -376,7 +376,7 @@ void CCameraManager::UpdatePPEffectors()
     if (m_EffectorsPP.size()) {
         bool b = false;
         pp_affected = pp_identity;
-        for (int i = m_EffectorsPP.size() - 1; i >= 0; --i) {
+        for (int i = int(m_EffectorsPP.size()) - 1; i >= 0; --i) {
             auto* eff = m_EffectorsPP[i];
             SPPInfo l_PPInf = pp_zero;
             if (eff->Valid() && eff->Process(l_PPInf)) {

@@ -205,7 +205,7 @@ void			INetQueue::Release	()
 	VERIFY			(!ready.empty());
 	//---------------------------------------------
 	u32 tmp_time = GetTickCount()-60000;
-	u32 size = unused.size();
+	size_t size = unused.size();
 	ready.front()->B.count = 0;
 	if ((LastTimeCreate < tmp_time) &&  (size > 32))
 	{
