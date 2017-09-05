@@ -26,16 +26,13 @@ void Skin4W_Stream( LPVOID lpvParams )
 	skin4W_func( D , S , vCount, Bones );
 }
 
-void __stdcall xrSkin4W_thread(	vertRender*		D,
-								vertBoned4W*	S,
-								u32				vCount,
-								CBoneInstance*	Bones)
+void __stdcall xrSkin4W_thread(vertRender* D, vertBoned4W* S, u32 vCount, CBoneInstance* Bones)
 {
 	#ifdef _GPA_ENABLED	
 		TAL_SCOPED_TASK_NAMED( "xrSkin4W()" );
 	#endif // _GPA_ENABLED
 
-	u32 nWorkers = ttapi_GetWorkersCount();
+	u32 nWorkers = (u32)ttapi_GetWorkersCount();
 
 	if ( vCount < ( nWorkers * 64 ) ) {
 		skin4W_func( D , S , vCount, Bones );

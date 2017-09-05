@@ -14,13 +14,13 @@ extern "C" {
 
 	// Initializes subsystem
 	// Returns zero for error, and number of workers on success
-	DWORD TTAPI ttapi_Init(processor_info* ID);
+	size_t TTAPI ttapi_Init(processor_info* ID);
 
 	// Destroys subsystem
 	void TTAPI ttapi_Done();
 
 	// Return number of workers
-	DWORD TTAPI ttapi_GetWorkersCount();
+	size_t TTAPI ttapi_GetWorkersCount();
 
 	// Adds new task
 	// No more than TTAPI_HARDCODED_THREADS should be added

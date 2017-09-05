@@ -62,7 +62,7 @@ u16 CObjectOGFCollectorPacked::VPack(SOGFVert& V)
 	{
 		if (similar_pos >= 0) V.P.set(m_Verts[similar_pos].P);
 		P = m_Verts.size();
-		if (P >= 0xFFFF) return 0xffffffff;
+		if (P >= 0xFFFF) return u16(0xffffffff);
 		m_Verts.push_back(V);
 
 		m_VM[ix][iy][iz].push_back(P);

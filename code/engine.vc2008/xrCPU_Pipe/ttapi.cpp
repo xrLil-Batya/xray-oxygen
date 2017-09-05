@@ -12,13 +12,13 @@ typedef PTTAPI_WORKER_PARAMS LPTTAPI_WORKER_PARAMS;
 
 static LPHANDLE ttapi_threads_handles = nullptr;
 static bool ttapi_initialized = false;
-static auto ttapi_workers_count = 0;
-static auto ttapi_threads_count = 0;
-static auto ttapi_assigned_workers = 0;
+static size_t ttapi_workers_count = 0;
+static size_t ttapi_threads_count = 0;
+static size_t ttapi_assigned_workers = 0;
 static LPTTAPI_WORKER_PARAMS ttapi_worker_params = nullptr;
 
-static DWORD ttapi_dwFastIter = 0;
-static DWORD ttapi_dwSlowIter = 0;
+static size_t ttapi_dwFastIter = 0;
+static size_t ttapi_dwSlowIter = 0;
 
 struct {
 	volatile long size;
@@ -28,7 +28,7 @@ struct {
 DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 {
 	LPTTAPI_WORKER_PARAMS pParams = (LPTTAPI_WORKER_PARAMS)lpParameter;
-	DWORD i, dwFastIter = ttapi_dwFastIter, dwSlowIter = ttapi_dwSlowIter;
+	size_t i, dwFastIter = ttapi_dwFastIter, dwSlowIter = ttapi_dwSlowIter;
 
 	while (true) {
 		// Wait. Fast
@@ -96,7 +96,7 @@ void SetThreadName(DWORD dwThreadID, LPCSTR szThreadName)
 	}
 }
 
-DWORD ttapi_Init(processor_info* ID)
+size_t ttapi_Init(processor_info* ID)
 {
 	if (ttapi_initialized)
 		return ttapi_workers_count;
@@ -150,8 +150,12 @@ process2:
 	// Check for override from command line
 	char szSearchFor[] = "-max-threads";
 	char* pszTemp = strstr(GetCommandLine(), szSearchFor);
-	DWORD dwOverride = 0;
+	size_t dwOverride = 0;
+#ifdef _M_X64
+	if (pszTemp && sscanf_s(pszTemp + strlen(szSearchFor), "%zu", &dwOverride) &&
+#else
 	if (pszTemp && sscanf_s(pszTemp + strlen(szSearchFor), "%u", &dwOverride) && 
+#endif
 		(dwOverride >= 1) && (dwOverride < ttapi_workers_count))
 				ttapi_workers_count = dwOverride;
 
@@ -179,23 +183,22 @@ process2:
 	SetThreadAffinityMask(GetCurrentThread(), dwCurrentMask);
 
 	// Creating threads
-	for (auto i = 0; i < ttapi_threads_count; i++) 
+	for (u32 it = 0; it < ttapi_threads_count; it++)
 	{
 		// Initializing "enter" "critical section"
-		ttapi_worker_params[i].vlFlag = 1;
-		ttapi_threads_handles[i] = CreateThread(nullptr, 0, &ttapiThreadProc, &ttapi_worker_params[i], 0, &dwThreadId);
-		if (!ttapi_threads_handles[i])
+		ttapi_worker_params[it].vlFlag = 1;
+		ttapi_threads_handles[it] = CreateThread(nullptr, 0, &ttapiThreadProc, &ttapi_worker_params[it], 0, &dwThreadId);
+		if (!ttapi_threads_handles[it])
 			return 0;
 
 		// Setting affinity
-		do
-			dwCurrentMask <<= 1;
+		do dwCurrentMask <<= 1;
 		while (!(dwAffinitiMask & dwCurrentMask));
 
-		SetThreadAffinityMask(ttapi_threads_handles[i], dwCurrentMask);
+		SetThreadAffinityMask(ttapi_threads_handles[it], dwCurrentMask);
 
 		// Setting thread name
-		sprintf_s(szThreadName, "Helper Thread #%u", i);
+		sprintf_s(szThreadName, "Helper Thread #%u", it);
 		SetThreadName(dwThreadId, szThreadName);
 	}
 	ttapi_initialized = true;
@@ -203,7 +206,7 @@ process2:
 	return ttapi_workers_count;
 }
 
-DWORD ttapi_GetWorkersCount()
+size_t ttapi_GetWorkersCount()
 {
 	return ttapi_workers_count;
 }
@@ -221,12 +224,12 @@ void ttapi_AddWorker(LPPTTAPI_WORKER_FUNC lpWorkerFunc, LPVOID lpvWorkerFuncPara
 
 void ttapi_RunAllWorkers()
 {
-	DWORD ttapi_thread_workers = (ttapi_assigned_workers - 1);
+	size_t ttapi_thread_workers = (ttapi_assigned_workers - 1);
 
 	if (ttapi_thread_workers) 
 	{
 		// Setting queue size
-		ttapi_queue_size.size = ttapi_thread_workers;
+		ttapi_queue_size.size = (long)ttapi_thread_workers;
 		// Starting all workers except the last
 		for (auto i = 0; i < ttapi_thread_workers; ++i)
 			_InterlockedExchange(&ttapi_worker_params[i].vlFlag, 0);
@@ -256,8 +259,9 @@ void ttapi_Done()
 	}
 
 	// Waiting threads for completion
-	WaitForMultipleObjects(ttapi_threads_count, ttapi_threads_handles, true, INFINITE);
-
+	
+	WaitForMultipleObjects((DWORD)ttapi_threads_count, ttapi_threads_handles, true, INFINITE);
+	
 	// Freeing resources
 	free(ttapi_threads_handles);		
 	ttapi_threads_handles = nullptr;

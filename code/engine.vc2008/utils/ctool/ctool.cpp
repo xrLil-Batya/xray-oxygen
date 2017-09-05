@@ -1,17 +1,15 @@
+#include <stdlib.h>
+#include "../../xrcore/_types.h"
+#undef FLT_MAX
+#undef FLT_MIN
+#include <stdio.h>
+#include <vector>
+#include <algorithm>
+#include <string>
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
 
-
-	#include <stdlib.h>
-    #include "../../xrcore/_types.h"
-	#undef FLT_MAX
-	#undef FLT_MIN
-	#include <stdio.h>
-    #include <vector>
-    #include <algorithm>
-    #include <string>
-    #define WIN32_LEAN_AND_MEAN
-    #include <windows.h>
-
-    using namespace std;
+using namespace std;
 
 
 #define MAKE_FOUR_CC(ch0,ch1,ch2,ch3)   \
@@ -36,8 +34,7 @@ int	_PPM_ModelSize	= 64;
 
 //------------------------------------------------------------------------------
 
-static void
-_UnpackPackets( const char* src_bin, const char* dst_name="" )
+static void _UnpackPackets( const char* src_bin, const char* dst_name="" )
 {
     FILE*   src_file = fopen( src_bin, "rb" );
 
@@ -326,8 +323,6 @@ _BuildDictionary( const char* bins_file, const char* dst_name="" )
 
     if( dic )
     {
-//        unsigned    min_sz  = 200;
-//        unsigned    max_sz  = 350;
         unsigned    min_sz  = _LZO_MinPacketSize;
         unsigned    max_sz  = _LZO_MaxPacketSize;
     
@@ -337,11 +332,6 @@ _BuildDictionary( const char* bins_file, const char* dst_name="" )
 
             if( info.size < min_sz  ||  info.size > max_sz )
                 continue;
-
-            
-            /*unsigned    cnt = (info.size < 32) 
-                              ? unsigned((10000.0f/float(info.size)) * info.weight)
-                              : 1;*/
             
 			unsigned int n   = 0;
 			unsigned int cnt = unsigned int((lzo_dict_max_size*info.weight) / info.size);
@@ -362,12 +352,9 @@ _BuildDictionary( const char* bins_file, const char* dst_name="" )
 		printf("ERROR: failed to create LZO dic file");
     }
 }
-
-
 //==============================================================================
 
-int
-main( int argc, char* argv[] )
+int main( int argc, char* argv[] )
 {
     if( argc < 2 )
     {

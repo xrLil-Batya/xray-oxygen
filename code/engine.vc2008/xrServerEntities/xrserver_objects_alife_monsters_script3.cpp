@@ -15,49 +15,33 @@ using namespace luabind;
 #pragma optimize("s",on)
 void CSE_ALifeCreatureActor::script_register(lua_State *L)
 {
-	module(L)[
-		luabind_class_creature3(
-			CSE_ALifeCreatureActor,
-			"cse_alife_creature_actor",
-			CSE_ALifeCreatureAbstract,
-			CSE_ALifeTraderAbstract,
-			CSE_PHSkeleton
-		)
+	module(L)
+	[
+		luabind_class_creature3(CSE_ALifeCreatureActor, "cse_alife_creature_actor", CSE_ALifeCreatureAbstract, CSE_ALifeTraderAbstract, CSE_PHSkeleton)
 	];
 }
 
 void CSE_ALifeTorridZone::script_register(lua_State *L)
 {
-	module(L)[
-		luabind_class_dynamic_alife2(
-			CSE_ALifeTorridZone,
-			"cse_torrid_zone",
-			CSE_ALifeCustomZone,
-			CSE_Motion
-			)
+	module(L)
+	[
+		luabind_class_dynamic_alife2(CSE_ALifeTorridZone, "cse_torrid_zone", CSE_ALifeCustomZone, CSE_Motion)
 	];
 }
 
 void CSE_ALifeZoneVisual::script_register(lua_State *L)
 {
-	module(L)[
-		luabind_class_dynamic_alife2(
-			CSE_ALifeZoneVisual,
-			"cse_zone_visual",
-			CSE_ALifeAnomalousZone,
-			CSE_Visual
-			)
+	module(L)
+	[
+		luabind_class_dynamic_alife2(CSE_ALifeZoneVisual, "cse_zone_visual", CSE_ALifeAnomalousZone, CSE_Visual)
 	];
 }
 
 void CSE_ALifeCreaturePhantom::script_register(lua_State *L)
 {
-	module(L)[
-		luabind_class_creature1(
-			CSE_ALifeCreaturePhantom,
-			"cse_alife_creature_phantom",
-			CSE_ALifeCreatureAbstract
-			)
+	module(L)
+	[
+		luabind_class_creature1(CSE_ALifeCreaturePhantom, "cse_alife_creature_phantom", CSE_ALifeCreatureAbstract)
 	];
 }
 
@@ -68,13 +52,10 @@ static SRotation* CSE_ALifeCreatureAbstract__o_torso	(CSE_ALifeCreatureAbstract*
 
 void CSE_ALifeCreatureAbstract::script_register(lua_State *L)
 {
-	module(L)[
-		luabind_class_creature1(
-			CSE_ALifeCreatureAbstract,
-			"cse_alife_creature_abstract",
-			CSE_ALifeDynamicObjectVisual
-		)
-		.def("health",&CSE_ALifeCreatureAbstract::get_health)
+	module(L)
+	[
+		luabind_class_creature1(CSE_ALifeCreatureAbstract, "cse_alife_creature_abstract", CSE_ALifeDynamicObjectVisual)
+		.property("health", &CSE_ALifeCreatureAbstract::get_health, &CSE_ALifeCreatureAbstract::set_health)
 		.def("alive",&CSE_ALifeCreatureAbstract::g_Alive)
 		.def_readwrite("team",&CSE_ALifeCreatureAbstract::s_team)
 		.def_readwrite("squad",&CSE_ALifeCreatureAbstract::s_squad)
@@ -85,17 +66,13 @@ void CSE_ALifeCreatureAbstract::script_register(lua_State *L)
 
 void CSE_ALifeOnlineOfflineGroup::script_register(lua_State *L)
 {
-	module(L)[
+	module(L)
+	[
 		class_< MEMBERS::value_type >( "MEMBERS__value_type" )
 			.def_readonly("id", 	&MEMBERS::value_type::first )
 			.def_readonly("object",	&MEMBERS::value_type::second ),
 
-		luabind_class_online_offline_group2(
-			CSE_ALifeOnlineOfflineGroup,
-			"cse_alife_online_offline_group",
-			CSE_ALifeDynamicObject,
-			CSE_ALifeSchedulable
-		)
+		luabind_class_online_offline_group2(CSE_ALifeOnlineOfflineGroup, "cse_alife_online_offline_group", CSE_ALifeDynamicObject, CSE_ALifeSchedulable)
 #ifdef XRGAME_EXPORTS
 		.def("register_member",		&CSE_ALifeOnlineOfflineGroup::register_member)
 		.def("unregister_member",	&CSE_ALifeOnlineOfflineGroup::unregister_member)

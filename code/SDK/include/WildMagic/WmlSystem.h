@@ -11,8 +11,6 @@
 #ifndef WMLSYSTEMH
 #define WMLSYSTEMH
 
-#define WIN32
-
 // Microsoft Windows
 #if defined(WIN32)
 #include "WmlWinSystem.h"
