@@ -25,10 +25,9 @@
 
 #include "OpenALDeviceList.h"
 
-#pragma warning(push)
-#pragma warning(disable:4995)
+#pragma warning(disable: 4995 4805)
 #include <objbase.h>
-#pragma warning(pop)
+#pragma warning(default: 4995)
 
 void __cdecl al_log(char* msg)
 {
