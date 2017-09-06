@@ -50,10 +50,10 @@ void CLAItem::Save(IWriter& F)
 	F.close_chunk	();
 
     F.open_chunk	(CHUNK_ITEM_KEYS);
-    F.w_u32		(Keys.size());
-    for (auto it=Keys.begin(); it!=Keys.end(); it++){
-		F.w_u32	(it->first);
-		F.w_u32	(it->second);
+    F.w_u32		((int)Keys.size());
+    for (auto it: Keys){
+		F.w_u32	(it.first);
+		F.w_u32	(it.second);
     }
 	F.close_chunk	();
 }

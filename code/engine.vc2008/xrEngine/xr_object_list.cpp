@@ -165,10 +165,10 @@ void CObjectList::Update		(bool bForce)
 			}
 
 			Device.Statistic->UpdateClient.Begin	();
-			Device.Statistic->UpdateClient_active	= objects_active.size();
-			Device.Statistic->UpdateClient_total	= objects_active.size() + objects_sleeping.size();
+			Device.Statistic->UpdateClient_active	= (u32)objects_active.size();
+			Device.Statistic->UpdateClient_total	= (u32)objects_active.size() + (u32)objects_sleeping.size();
 
-			u32 const objects_count		= workload->size();
+			size_t const objects_count	= workload->size();
 			CObject** objects			= (CObject**)_alloca(objects_count*sizeof(CObject*));
 			std::copy					( workload->begin(), workload->end(), objects );
 
@@ -192,36 +192,31 @@ void CObjectList::Update		(bool bForce)
 	if (!destroy_queue.empty()) 
 	{
 		// Info
-		for (Objects::iterator oit=objects_active.begin(); oit!=objects_active.end(); oit++)
-			for (int it = destroy_queue.size()-1; it>=0; it--){	
-				(*oit)->net_Relcase		(destroy_queue[it]);
+		for (auto oit : objects_active)
+			for (size_t it = destroy_queue.size()-1; it>=0; it--){	
+				oit->net_Relcase(destroy_queue[it]);
 			}
-		for (Objects::iterator oit=objects_sleeping.begin(); oit!=objects_sleeping.end(); oit++)
-			for (int it = destroy_queue.size()-1; it>=0; it--)	(*oit)->net_Relcase	(destroy_queue[it]);
+		for (auto oit : objects_sleeping)
+			for (size_t it = destroy_queue.size()-1; it>=0; it--)	
+				oit->net_Relcase(destroy_queue[it]);
 
-		for (int it = destroy_queue.size()-1; it>=0; it--)	Sound->object_relcase	(destroy_queue[it]);
+		for (size_t it = destroy_queue.size()-1; it>=0; it--)	
+			Sound->object_relcase	(destroy_queue[it]);
 		
-		RELCASE_CALLBACK_VEC::iterator It	= m_relcase_callbacks.begin();
-		RELCASE_CALLBACK_VEC::iterator Ite	= m_relcase_callbacks.end();
-		for(;It!=Ite; ++It)	{
-			VERIFY			(*(*It).m_ID==(It-m_relcase_callbacks.begin()));
-			Objects::iterator dIt	= destroy_queue.begin();
-			Objects::iterator dIte	= destroy_queue.end();
-			for (;dIt!=dIte; ++dIt) {
-				(*It).m_Callback(*dIt);
-				g_hud->net_Relcase	(*dIt);
+		for(auto It: m_relcase_callbacks)
+		{
+			VERIFY			(*It.m_ID==(It-m_relcase_callbacks.begin()));
+			for (auto dIt: destroy_queue)
+			{
+				It.m_Callback(dIt);
+				g_hud->net_Relcase(dIt);
 			}
 		}
 
 		// Destroy
-		for (int it = destroy_queue.size()-1; it>=0; it--)
+		for (size_t it = destroy_queue.size()-1; it>=0; it--)
 		{
 			CObject*		O	= destroy_queue[it];
-//			Msg				("Object [%x]", O);
-#ifdef DEBUG
-			if( debug_destroy )
-				Msg			("Destroying object[%x][%x] [%d][%s] frame[%d]",dynamic_cast<void*>(O), O, O->ID(),*O->cName(), Device.dwFrame);
-#endif // DEBUG
 			O->net_Destroy	( );
 			Destroy			(O);
 		}
@@ -235,11 +230,6 @@ void CObjectList::net_Register		(CObject* O)
 	R_ASSERT		(O->ID() < 0xffff);
 
 	map_NETID[O->ID()] = O;
-	
-	
-
-//.	map_NETID.insert(std::make_pair(O->ID(),O));
-	//Msg			("-------------------------------- Register: %s",O->cName());
 }
 
 void CObjectList::net_Unregister	(CObject* O)
@@ -430,7 +420,7 @@ void CObjectList::relcase_register		(RELCASE_CALLBACK cb, int *ID)
 													cb);
 	VERIFY(It==m_relcase_callbacks.end());
 #endif
-	*ID								= m_relcase_callbacks.size();
+	*ID								= (int)m_relcase_callbacks.size();
 	m_relcase_callbacks.push_back	(SRelcasePair(ID,cb));
 }
 

@@ -7,7 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-
+#pragma warning(push)
+#pragma warning(disable: 5037)
 #define TEMPLATE_SPECIALIZATION	\
 	template <\
 		typename _key_type,\
@@ -381,3 +382,4 @@ IC	bool _associative_vector::operator!=													(const self_type &right) con
 
 #undef TEMPLATE_SPECIALIZATION
 #undef _associative_vector
+#pragma warning(pop)

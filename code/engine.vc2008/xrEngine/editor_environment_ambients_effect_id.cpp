@@ -39,9 +39,9 @@ LPCSTR const* effect_id::collection					()
 	return							(&*m_manager.effects_ids().begin());
 }
 
-u32 effect_id::collection_size						()
+u32 effect_id::collection_size()
 {
-	return							(m_manager.effects_ids().size());
+	return u32(m_manager.effects_ids().size());
 }
 
 void effect_id::fill								(editor::property_holder_collection* collection)

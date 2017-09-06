@@ -92,12 +92,10 @@ void manager::load			()
 	FS.file_list_close				(file_list);
 }
 
-void manager::save					()
+void manager::save()
 {
-	weather_container_type::iterator	i =m_weathers.begin();
-	weather_container_type::iterator	e =m_weathers.end();
-	for ( ; i != e; ++i)
-		(*i)->save					();
+	for (auto it : m_weathers)
+		it->save();
 }
 
 LPCSTR const* manager::weathers_getter	() const
@@ -105,9 +103,9 @@ LPCSTR const* manager::weathers_getter	() const
 	return							(&*weather_ids().begin());
 }
 
-u32 manager::weathers_size_getter		() const
+u32 manager::weathers_size_getter() const
 {
-	return							(weather_ids().size());
+	return u32(weather_ids().size());
 }
 
 struct predicate {

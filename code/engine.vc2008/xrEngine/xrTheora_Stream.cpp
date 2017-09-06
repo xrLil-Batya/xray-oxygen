@@ -47,11 +47,11 @@ void CTheoraStream::Reset()
 
 int	CTheoraStream::ReadData()
 {
-	char *buffer		= ogg_sync_buffer(&o_sync_state,4096);
-	long bytes			= 4096>(size_t)source->elapsed()?source->elapsed():4096;
-	source->r			(buffer, bytes);	
-	ogg_sync_wrote		(&o_sync_state,bytes);
-	return bytes;
+	char *buffer = ogg_sync_buffer(&o_sync_state, 4096);
+	size_t bytes = 4096 > source->elapsed() ? source->elapsed() : 4096;
+	source->r(buffer, bytes);
+	ogg_sync_wrote(&o_sync_state, (long)bytes);
+	return (int)bytes;
 }
 
 BOOL CTheoraStream::ParseHeaders		()
@@ -115,11 +115,13 @@ BOOL CTheoraStream::ParseHeaders		()
 
 		// The header pages/packets will arrive before anything else we
 		// care about, or the stream is not obeying spec
-		if(ogg_sync_pageout(&o_sync_state,&o_page)>0){
-			ogg_stream_pagein	(&o_stream_state,&o_page);
-		}else{
-			int ret=ReadData(); // someone needs more data
-			if(ret==0) FATAL	("End of file while searching for codec headers.");
+		if (ogg_sync_pageout(&o_sync_state, &o_page) > 0)
+		{
+			ogg_stream_pagein(&o_stream_state, &o_page);
+		}
+		else
+		{
+			if (!ReadData()) FATAL("End of file while searching for codec headers.");
 		}
 	}
 

@@ -178,7 +178,7 @@ void CEnvelope::Load_2(IReader& F)
 
 void CEnvelope::SaveA(IWriter&){
 }
-
+#pragma warning(disable: 4477)
 void CEnvelope::LoadA(IReader& F)
 {
 	Clear		();
@@ -205,8 +205,8 @@ void CEnvelope::LoadA(IReader& F)
          		K.bias       = f[ 5 ];
       		}
 			if (K.shape == SHAPE_BEZ2)
-				for(int i = 0; i < 4; i++)
-         			K.param[i] = f[i + 3];
+				for(int it = 0; it < 4; it++)
+         			K.param[it] = f[it + 3];
       		else {
          		K.param[ 0 ] = f[ 6 ];
                 K.param[ 1 ] = f[ 7 ];
@@ -214,8 +214,7 @@ void CEnvelope::LoadA(IReader& F)
 	    }
         // behavior <pre> <post>
 		F.r_string(buf,sizeof(buf));
-		int cnt = sscanf(buf, "Behaviors %d %d", behavior[0], behavior[1]);
-        R_ASSERT(cnt==2);
+        R_ASSERT(sscanf(buf, "Behaviors %d %d", behavior[0], behavior[1]) == 2);
     }
 }
 

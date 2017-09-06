@@ -119,8 +119,8 @@ namespace Feel {
 		// B-A = objects, that become visible
 		if (!seen.empty()) 
 		{
-			xr_vector<CObject*>::iterator E		= std::remove(seen.begin(),seen.end(),parent);
-			seen.resize			(E-seen.begin());
+			xr_vector<CObject*>::iterator it = std::remove(seen.begin(),seen.end(),parent);
+			seen.resize			(it - seen.begin());
 
 			{
 				diff.resize	(std::max(seen.size(),query.size()));

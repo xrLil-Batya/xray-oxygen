@@ -437,34 +437,35 @@ CEnvAmbient* CEnvironment::AppendEnvAmb		(const shared_str& sect)
 	return					(Ambients.back());
 }
 
-void	CEnvironment::mods_load			()
+void	CEnvironment::mods_load()
 {
-	Modifiers.clear			();
+	Modifiers.clear();
 	string_path							path;
-	if (FS.exist(path,"$level$","level.env_mod"))	
+	if (FS.exist(path, "$level$", "level.env_mod"))
 	{
-		IReader*	fs	= FS.r_open		(path);
-		u32			id	= 0;
-		u32 ver		= 0x0015;
-		u32 sz;
+		IReader*	fs = FS.r_open(path);
+		u32			id = 0;
+		u32 ver = 0x0015;
+		size_t sz;
 
-		while( 0!=(sz=fs->find_chunk(id)) )	
+		while (0 != (sz = fs->find_chunk(id)))
 		{
-			if(id==0 && sz==sizeof(u32))
+			if (id == 0 && sz == sizeof(size_t))
 			{
-				ver				= fs->r_u32();
-			}else
+				ver = fs->r_u32();
+			}
+			else
 			{
 				CEnvModifier		E;
-				E.load				(fs, ver);
-				Modifiers.push_back	(E);
+				E.load(fs, ver);
+				Modifiers.push_back(E);
 			}
-			id					++;
+			id++;
 		}
-		FS.r_close	(fs);
+		FS.r_close(fs);
 	}
 
-	load_level_specific_ambients ();
+	load_level_specific_ambients();
 }
 
 void	CEnvironment::mods_unload		()
@@ -550,10 +551,8 @@ void CEnvironment::load_weathers		()
 
 		env.reserve					(sections.size());
 
-		sections_type::const_iterator	i = sections.begin();
-		sections_type::const_iterator	e = sections.end();
-		for ( ; i != e; ++i) {
-			CEnvDescriptor*			object = create_descriptor((*i)->Name, config);
+		for (CInifile::Sect* it: sections) {
+			CEnvDescriptor*			object = create_descriptor(it->Name, config);
 			env.push_back			(object);
 		}
 
@@ -563,11 +562,10 @@ void CEnvironment::load_weathers		()
 	FS.file_list_close				(file_list);
 
 	// sorting weather envs
-	auto _I=WeatherCycles.begin();
-	auto _E=WeatherCycles.end();
-	for (; _I!=_E; _I++){
-		R_ASSERT3	(_I->second.size()>1,"Environment in weather must >=2",*_I->first);
-		std::sort(_I->second.begin(),_I->second.end(),sort_env_etl_pred);
+	for (auto _I: WeatherCycles)
+	{
+		R_ASSERT3(_I.second.size()>1,"Environment in weather must >=2",_I.first.c_str());
+		std::sort(_I.second.begin(),_I.second.end(),sort_env_etl_pred);
 	}
 	R_ASSERT2	(!WeatherCycles.empty(),"Empty weathers.");
 	SetWeather	((*WeatherCycles.begin()).first.c_str());

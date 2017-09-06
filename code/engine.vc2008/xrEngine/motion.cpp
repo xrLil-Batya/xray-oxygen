@@ -267,23 +267,28 @@ CSMotion::CSMotion(CSMotion* source):CCustomMotion(source){
     }
 }
 
-CSMotion::~CSMotion(){
+CSMotion::~CSMotion()
+{
 	Clear();
 }
 
 void CSMotion::Clear()
 {
-	for(auto bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++)
-		for (int ch=0; ch<ctMaxChannel; ch++) 
-			xr_delete(bm_it->envs[ch]);
- 
+	for (auto bm_it : bone_mots)
+	{
+		for (int ch = 0; ch < ctMaxChannel; ch++)
+			xr_delete(bm_it.envs[ch]);
+	}
 	bone_mots.clear();
 }
 
-st_BoneMotion* CSMotion::FindBoneMotion(shared_str name)
+st_BoneMotion* CSMotion::FindBoneMotion(shared_str name_str)
 {
-	for(auto bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++)
-    	if (bm_it->name.equal(name)) return &*bm_it;
+	for (auto bm_it : bone_mots)
+	{
+		if (bm_it.name.equal(name_str)) 
+			return &bm_it;
+	}
     return 0;
 }
 
@@ -372,16 +377,17 @@ void CSMotion::Save(IWriter& F)
     F.w_float	(fFalloff);
     F.w_float	(fPower);
 	F.w_u16		((u16)bone_mots.size());
-	for(auto bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
-    	xr_strlwr	(bm_it->name);
-    	F.w_stringZ	(bm_it->name);
-		F.w_u8		(bm_it->m_Flags.get());
+	for(auto bm_it: bone_mots)
+	{
+    	xr_strlwr	(bm_it.name);
+    	F.w_stringZ	(bm_it.name);
+		F.w_u8		(bm_it.m_Flags.get());
 		for (int ch=0; ch<ctMaxChannel; ch++)
-			bm_it->envs[ch]->Save(F);
+			bm_it.envs[ch]->Save(F);
 	}
 
-    u32 sz			= marks.size();
-    F.w_u32			(sz);
+    u32 sz			= (u32)marks.size();
+    F.w_u32		(sz);
     for(u32 i=0; i<sz; ++i)
       marks[i].Save(&F);
 

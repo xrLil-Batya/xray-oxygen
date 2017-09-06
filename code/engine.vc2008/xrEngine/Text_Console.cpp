@@ -264,7 +264,7 @@ void CTextConsole::DrawLog( HDC hDC, RECT* pRect )
 	TextOut( hDC, xb, Height-tm.tmHeight-3, s_edt, xr_strlen(s_edt) );
 
 	SetTextColor( hDC, RGB(205, 205, 225) );
-	u32 log_line = LogFile->size()-1;
+	u32 log_line = (u32)LogFile->size()-1;
 	string16 q, q2;
 	itoa( log_line, q, 10 );
 	xr_strcpy( q2, sizeof(q2), "[" );
@@ -275,29 +275,29 @@ void CTextConsole::DrawLog( HDC hDC, RECT* pRect )
 	TextOut( hDC, Width - 8 * qn, Height-tm.tmHeight-tm.tmHeight, q2, qn );
 
 	int ypos = Height - tm.tmHeight - tm.tmHeight;
-	for( int i = LogFile->size()-1-scroll_delta; i >= 0; --i ) 
+	for (size_t i = LogFile->size() - 1 - scroll_delta; i >= 0; --i)
 	{
 		ypos -= tm.tmHeight;
-		if ( ypos < y_top_max )
+		if (ypos < y_top_max)
 		{
 			break;
 		}
 		LPCSTR ls = ((*LogFile)[i]).c_str();
 
-		if ( !ls )
+		if (!ls)
 		{
 			continue;
 		}
 		Console_mark cm = (Console_mark)ls[0];
-		COLORREF     c2 = (COLORREF)bgr2rgb( get_mark_color( cm ) );
-		SetTextColor( hDC, c2 );
-		u8 b = (is_mark( cm ))? 2 : 0;
+		COLORREF     c2 = (COLORREF)bgr2rgb(get_mark_color(cm));
+		SetTextColor(hDC, c2);
+		u8 b = (is_mark(cm)) ? 2 : 0;
 		LPCSTR pOut = ls + b;
 
-		BOOL res = TextOut( hDC, 10, ypos, pOut, xr_strlen(pOut) );
-		if ( !res )
+		BOOL res = TextOut(hDC, 10, ypos, pOut, xr_strlen(pOut));
+		if (!res)
 		{
-			R_ASSERT2( 0, "TextOut(..) return NULL" );
+			R_ASSERT2(0, "TextOut(..) return NULL");
 		}
 	}
 
@@ -322,21 +322,10 @@ void CTextConsole::DrawLog( HDC hDC, RECT* pRect )
 		}
 	}
 }
-/*
-void CTextConsole::IR_OnKeyboardPress( int dik ) !!!!!!!!!!!!!!!!!!!!!
-{
-	m_bNeedUpdate = true;
-	inherited::IR_OnKeyboardPress( dik );
-}
-*/
+
 void CTextConsole::OnFrame()
 {
 	inherited::OnFrame();
-/*	if ( !m_bNeedUpdate && m_dwLastUpdateTime + 1000/g_svTextConsoleUpdateRate > Device.dwTimeGlobal )
-	{
-		return;
-	}
-*/	InvalidateRect( m_hConsoleWnd, NULL, FALSE );
-	SetCursor( LoadCursor( NULL, IDC_ARROW ) );	
-//	m_bNeedUpdate = true;
+	InvalidateRect(m_hConsoleWnd, NULL, FALSE);
+	SetCursor(LoadCursor(NULL, IDC_ARROW));
 }

@@ -237,7 +237,7 @@ void CInput::KeyUpdate()
 			}
 		}
 
-		for (std::size_t i = 0; i < COUNT_KB_BUTTONS; i++)
+		for (u32 i = 0; i < COUNT_KB_BUTTONS; i++)
 			if (KBState[i])
 				cbStack.back()->IR_OnKeyboardHold(i);
 	}
@@ -259,14 +259,10 @@ bool CInput::get_dik_name(int dik, LPSTR dest_str, int dest_sz)
 		return false;
 
 	const wchar_t* wct = keyname.wsz;
-	if (0 == wcslen(wct))
+	if (!wcslen(wct))
 		return false;
 
-	int cnt = WideCharToMultiByte(CP_ACP, 0, keyname.wsz, -1, dest_str, dest_sz, NULL, NULL);
-	if (cnt == -1)
-		return false;
-
-	return						(cnt != -1);
+	return (WideCharToMultiByte(CP_ACP, 0, keyname.wsz, -1, dest_str, dest_sz, 0, 0) != -1);
 }
 
 #define MOUSE_1		(0xED + 100)
@@ -465,12 +461,14 @@ void CInput::iRelease(IInputReceiver *p)
 		IInputReceiver * ir = cbStack.back();
 		ir->IR_OnActivate();
 	}
-	else {// we are not topmost receiver, so remove the nearest one
-		u32 cnt = cbStack.size();
-		for (;cnt>0;--cnt)
-			if (cbStack[cnt - 1] == p) {
+	else
+	{// we are not topmost receiver, so remove the nearest one
+		size_t cnt = cbStack.size();
+		for (; cnt > 0; --cnt)
+			if (cbStack[cnt - 1] == p) 
+			{
 				xr_vector<IInputReceiver*>::iterator it = cbStack.begin();
-				std::advance(it, cnt - 1);
+				std::advance(it, (u32)cnt - 1);
 				cbStack.erase(it);
 				break;
 			}

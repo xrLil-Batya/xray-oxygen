@@ -260,7 +260,7 @@ void	imf_Process	(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, 
 			{
 				contrib[i].n	= 0;
 				contrib[i].p	= (CONTRIB *)xr_malloc((int) (width * 2 + 1)*sizeof(CONTRIB));
-                std::memset(contrib[i].p,0, (width * 2 + 1)*sizeof(CONTRIB));
+                std::memset(contrib[i].p, 0, size_t((width * 2 + 1)*sizeof(CONTRIB)));
 				center			= float(i) / xscale;
 				left			= ceil	(center - width);
 				right			= floor	(center + width);
@@ -289,7 +289,7 @@ void	imf_Process	(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, 
 			{
 				contrib[i].n	= 0;
 				contrib[i].p	= (CONTRIB *)xr_malloc((int) (fwidth * 2 + 1)*sizeof(CONTRIB));
-                std::memset(contrib[i].p,0,(fwidth * 2 + 1)*sizeof(CONTRIB));
+                std::memset(contrib[i].p,0,size_t((fwidth * 2 + 1)*sizeof(CONTRIB)));
 				center			= float(i) / xscale;
 				left			= ceil	(center - fwidth);
 				right			= floor	(center + fwidth);
@@ -361,7 +361,7 @@ void	imf_Process	(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, 
 			{
 				contrib[i].n	= 0;
 				contrib[i].p	= (CONTRIB *)xr_malloc((int) (width * 2 + 1)*sizeof(CONTRIB));
-                std::memset(contrib[i].p,0, (width * 2 + 1)*sizeof(CONTRIB));
+                std::memset(contrib[i].p,0, size_t((width * 2 + 1)*sizeof(CONTRIB)));
 				center			= (float) i / yscale;
 				left			= ceil	(center - width);
 				right			= floor	(center + width);
@@ -388,7 +388,7 @@ void	imf_Process	(u32* dstI, u32 dstW, u32 dstH, u32* srcI, u32 srcW, u32 srcH, 
 			{
 				contrib[i].n	= 0;
 				contrib[i].p	= (CONTRIB *)xr_malloc((int) (fwidth * 2 + 1)*sizeof(CONTRIB));
-                std::memset(contrib[i].p,0, (fwidth * 2 + 1)*sizeof(CONTRIB));
+                std::memset(contrib[i].p,0, size_t((fwidth * 2 + 1)*sizeof(CONTRIB)));
 				center			= (float) i / yscale;
 				left			= ceil	(center - fwidth);
 				right			= floor	(center + fwidth);

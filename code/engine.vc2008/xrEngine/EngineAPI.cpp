@@ -149,7 +149,7 @@ void CEngineAPI::Initialize(void)
 		LPCSTR			g_name	= "vTuneAPI.dll";
 		Log				("Loading DLL:",g_name);
 		hTuner			= LoadLibrary	(g_name);
-		if (0==hTuner)	R_CHK			(GetLastError());
+		if (!hTuner)	R_CHK			(GetLastError());
 		R_ASSERT2		(hTuner,"Intel vTune is not installed");
 		tune_enabled	= TRUE;
 		tune_pause		= (VTPause*)	GetProcAddress(hTuner,"VTPause"		);	R_ASSERT(tune_pause);
@@ -176,17 +176,6 @@ extern "C" {
 
 void CEngineAPI::CreateRendererList()
 {
-#ifdef DEDICATED_SERVER
-
-	vid_quality_token						= xr_alloc<xr_token>(2);
-
-	vid_quality_token[0].id			= 0;
-	vid_quality_token[0].name		= xr_strdup("renderer_r1");
-
-	vid_quality_token[1].id			= -1;
-	vid_quality_token[1].name		= NULL;
-
-#else
 	//	TODO: ask renderers if they are supported!
 	if(vid_quality_token != NULL)		return;
 	bool bSupports_r2 = false;
@@ -253,9 +242,9 @@ void CEngineAPI::CreateRendererList()
 	hRender = 0;
 
 	xr_vector<LPCSTR>			_tmp;
-	u32 i						= 0;
+	
 	bool bBreakLoop = false;
-	for(; i<6; ++i)
+	for(u32 i = 0; i<6; ++i)
 	{
 		switch (i)
 		{
@@ -294,82 +283,15 @@ void CEngineAPI::CreateRendererList()
 		if (bBreakLoop) break;
 		_tmp.back()					= xr_strdup(val);
 	}
-	u32 _cnt								= _tmp.size()+1;
+	size_t _cnt								= _tmp.size()+1;
 	vid_quality_token						= xr_alloc<xr_token>(_cnt);
 
 	vid_quality_token[_cnt-1].id			= -1;
 	vid_quality_token[_cnt-1].name			= NULL;
 
-#ifdef DEBUG
-	Msg("Available render modes[%d]:",_tmp.size());
-#endif // DEBUG
-	for(u32 i=0; i<_tmp.size();++i)
+	for (u32 it = 0; it < _tmp.size(); ++it)
 	{
-		vid_quality_token[i].id				= i;
-		vid_quality_token[i].name			= _tmp[i];
-#ifdef DEBUG
-		Msg							("[%s]",_tmp[i]);
-#endif // DEBUG
+		vid_quality_token[it].id = it;
+		vid_quality_token[it].name = _tmp[it];
 	}
-
-	/*
-	if(vid_quality_token != NULL)		return;
-
-	D3DCAPS9					caps;
-	CHW							_HW;
-	_HW.CreateD3D				();
-	_HW.pD3D->GetDeviceCaps		(D3DADAPTER_DEFAULT,D3DDEVTYPE_HAL,&caps);
-	_HW.DestroyD3D				();
-	u16		ps_ver_major		= u16 ( u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul))>>8 );
-
-	xr_vector<LPCSTR>			_tmp;
-	u32 i						= 0;
-	for(; i<5; ++i)
-	{
-		bool bBreakLoop = false;
-		switch (i)
-		{
-		case 3:		//"renderer_r2.5"
-			if (ps_ver_major < 3)
-				bBreakLoop = true;
-			break;
-		case 4:		//"renderer_r_dx10"
-			bBreakLoop = true;
-			break;
-		default:	;
-		}
-
-		if (bBreakLoop) break;
-
-		_tmp.push_back				(NULL);
-		LPCSTR val					= NULL;
-		switch (i)
-		{
-		case 0: val ="renderer_r1";			break;
-		case 1: val ="renderer_r2a";		break;
-		case 2: val ="renderer_r2";			break;
-		case 3: val ="renderer_r2.5";		break;
-		case 4: val ="renderer_r_dx10";		break; //  -)
-		}
-		_tmp.back()					= xr_strdup(val);
-	}
-	u32 _cnt								= _tmp.size()+1;
-	vid_quality_token						= xr_alloc<xr_token>(_cnt);
-
-	vid_quality_token[_cnt-1].id			= -1;
-	vid_quality_token[_cnt-1].name			= NULL;
-
-#ifdef DEBUG
-	Msg("Available render modes[%d]:",_tmp.size());
-#endif // DEBUG
-	for(u32 i=0; i<_tmp.size();++i)
-	{
-		vid_quality_token[i].id				= i;
-		vid_quality_token[i].name			= _tmp[i];
-#ifdef DEBUG
-		Msg							("[%s]",_tmp[i]);
-#endif // DEBUG
-	}
-	*/
-#endif //#ifndef DEDICATED_SERVER
 }

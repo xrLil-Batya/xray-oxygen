@@ -329,7 +329,7 @@ void CConsole::OnRender()
 	}
 	
 	// ---------------------
-	u32 log_line = LogFile->size()-1;
+	u32 log_line = (u32)LogFile->size()-1;
 	ypos -= LDIST;
 	for( int i = log_line - scroll_delta; i >= 0; --i ) 
 	{
@@ -429,7 +429,7 @@ void CConsole::DrawBackgrounds( bool bGame )
 
 	if ( m_select_tip < (int)m_tips.size() )
 	{
-		Frect r;
+		Frect fr;
 		xr_string tmp;
 		vecTipsEx::iterator itb = m_tips.begin() + m_start_tip;
 		vecTipsEx::iterator ite = m_tips.end();
@@ -443,17 +443,17 @@ void CConsole::DrawBackgrounds( bool bGame )
 			if ( (ts.HL_start >= str_size) || (ts.HL_finish > str_size) )
 				continue;
 
-			r.null();
+			fr.null();
 //		Fix potential stack overflow
 			tmp.assign(ts.text.c_str(), ts.HL_start);
-			r.x1 = pr.x1 + w1 + pFont->SizeOf_(tmp.c_str());
-			r.y1 = pr.y1 + i * font_h;
+			fr.x1 = pr.x1 + w1 + pFont->SizeOf_(tmp.c_str());
+			fr.y1 = pr.y1 + i * font_h;
 
 			tmp.assign(ts.text.c_str(), ts.HL_finish);
-			r.x2 = pr.x1 + w1 + pFont->SizeOf_(tmp.c_str());
-			r.y2 = r.y1 + font_h;
+			fr.x2 = pr.x1 + w1 + pFont->SizeOf_(tmp.c_str());
+			fr.y2 = fr.y1 + font_h;
 //		END
-			DrawRect( r, tips_word_color );
+			DrawRect(fr, tips_word_color );
 
 			if (i >= VIEW_TIPS_COUNT-1)
 				break; // for itb
@@ -462,7 +462,7 @@ void CConsole::DrawBackgrounds( bool bGame )
 
 	// --------------------------- scroll bar --------------------
 
-	u32 tips_sz = m_tips.size();
+	size_t tips_sz = m_tips.size();
 	if ( tips_sz > VIEW_TIPS_COUNT )
 	{
 		Frect rb, rs;
@@ -690,43 +690,43 @@ IConsole_Command* CConsole::find_next_cmd( LPCSTR in_str, shared_str& out_str )
 	return NULL;
 }
 
-bool CConsole::add_next_cmds( LPCSTR in_str, vecTipsEx& out_v )
+bool CConsole::add_next_cmds(LPCSTR in_str, vecTipsEx& out_v)
 {
-	u32 cur_count = out_v.size();
-	if ( cur_count >= MAX_TIPS_COUNT )
+	u32 cur_count = (u32)out_v.size();
+	if (cur_count >= MAX_TIPS_COUNT)
 	{
 		return false;
 	}
 
 	LPSTR t2;
-	STRCONCAT( t2, in_str, " " );
+	STRCONCAT(t2, in_str, " ");
 
 	shared_str temp;
-	IConsole_Command* cc = find_next_cmd( t2, temp );
-	if ( !cc || temp.size() == 0 )
+	IConsole_Command* cc = find_next_cmd(t2, temp);
+	if (!cc || temp.size() == 0)
 	{
 		return false;
 	}
 
 	bool res = false;
-	for ( u32 i = cur_count; i < MAX_TIPS_COUNT*2; ++i ) //fake=protect
+	for (u32 i = cur_count; i < MAX_TIPS_COUNT * 2; ++i) //fake=protect
 	{
-		temp._set( cc->Name() );
-		bool dup = ( std::find( out_v.begin(), out_v.end(), temp ) != out_v.end() );
-		if ( !dup )
+		temp._set(cc->Name());
+		bool dup = (std::find(out_v.begin(), out_v.end(), temp) != out_v.end());
+		if (!dup)
 		{
-			TipString ts( temp );
-			out_v.push_back( ts );
+			TipString ts(temp);
+			out_v.push_back(ts);
 			res = true;
 		}
-		if ( out_v.size() >= MAX_TIPS_COUNT )
+		if (out_v.size() >= MAX_TIPS_COUNT)
 		{
 			break; // for
 		}
 		LPSTR t3;
-		STRCONCAT( t3, out_v.back().text.c_str(), " " );
-		cc = find_next_cmd( t3, temp );
-		if ( !cc )
+		STRCONCAT(t3, out_v.back().text.c_str(), " ");
+		cc = find_next_cmd(t3, temp);
+		if (!cc)
 		{
 			break; // for
 		}
@@ -736,7 +736,7 @@ bool CConsole::add_next_cmds( LPCSTR in_str, vecTipsEx& out_v )
 
 bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 {
-	u32 cur_count = out_v.size();
+	u32 cur_count = (u32)out_v.size();
 	if ( cur_count >= MAX_TIPS_COUNT )
 	{
 		return false;
@@ -894,8 +894,8 @@ void CConsole::update_tips()
 void CConsole::select_for_filter( LPCSTR filter_str, vecTips& in_v, vecTipsEx& out_v )
 {
 	out_v.clear();
-	u32 in_count = in_v.size();
-	if ( in_count == 0 || !filter_str )
+	u32 in_count = (u32)in_v.size();
+	if (!in_count || !filter_str)
 	{
 		return;
 	}
