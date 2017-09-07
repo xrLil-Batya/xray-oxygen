@@ -40,7 +40,7 @@ namespace PAPI{
 		bool			empty			()						{return	actions.empty();}
 		PAVecIt		begin			()						{return	actions.begin();}
 		PAVecIt		end				()						{return actions.end();	}
-        int			size			()						{return actions.size();	}
+        int			size			()						{return int(actions.size());	}
         void			resize			(int cnt)        		{R_ASSERT(!m_bLocked);actions.resize(cnt);	}
         void			copy			(ParticleActions* src);
 		void			lock			()						{R_ASSERT(!m_bLocked);m_bLocked=true;}

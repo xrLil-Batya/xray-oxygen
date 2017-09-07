@@ -1772,7 +1772,7 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 
 	u32 p_cnt = effect->p_count;
 	if (!p_cnt) return;
-	u32 nWorkers = ttapi_GetWorkersCount();
+	u32 nWorkers = (u32)ttapi_GetWorkersCount();
 	//Is how it is in Shadow of Chernobyl and Clear Sky source and does seem to run better then * 20. Only 20% CPU usage.
 	if (p_cnt < nWorkers * 64)
 		nWorkers = 1;

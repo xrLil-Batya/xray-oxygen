@@ -1,6 +1,7 @@
 //---------------------------------------------------------------------------
 #pragma once
-
+#pragma warning(push)
+#pragma warning(disable: 4311 4302 4312)
 namespace PAPI
 {
 	// A effect of particles - Info and an array of Particles
@@ -28,7 +29,7 @@ namespace PAPI
 			particles_allocated		= max_particles;
 
 			real_ptr				= xr_malloc( sizeof( Particle ) * ( max_particles + 1 ) );
-			particles				= (Particle*) ( (DWORD) real_ptr + ( 64 - ( (DWORD) real_ptr & 63 ) ) );
+			particles				= (Particle*)((DWORD)real_ptr + (64 - ((DWORD)real_ptr & 63)));
 			//Msg( "Allocated %u bytes (%u particles) with base address 0x%p" , max_particles * sizeof( Particle ) , max_particles , particles );
 		}
 					~ParticleEffect	()
@@ -104,4 +105,4 @@ namespace PAPI
 		}
 	};
 };
-//---------------------------------------------------------------------------
+#pragma warning(pop)

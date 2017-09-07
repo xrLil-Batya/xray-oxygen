@@ -36,18 +36,23 @@ ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
 // create
 int CParticleManager::CreateEffect(u32 max_particles)
 {
-	int eff_id 		= -1;
+	int eff_id = -1;
 	for (auto i = 0; i < effect_vec.size(); i++)
-		if (!effect_vec[i]) { eff_id = i; break; }
-
-	if (eff_id<0) 
 	{
-        // Couldn't find a big enough gap. Reallocate.
-        eff_id 		= effect_vec.size();
-        effect_vec.push_back	(0);
-    }
-    effect_vec[eff_id]	= new ParticleEffect(max_particles);
-	
+		if (!effect_vec[i])
+		{
+			eff_id = i;
+			break;
+		}
+	}
+	if (eff_id < 0)
+	{
+		// Couldn't find a big enough gap. Reallocate.
+		eff_id = (int)effect_vec.size();
+		effect_vec.push_back(0);
+	}
+	effect_vec[eff_id] = new ParticleEffect(max_particles);
+
 	return eff_id;
 }
 void CParticleManager::DestroyEffect(int effect_id)
@@ -57,23 +62,24 @@ void CParticleManager::DestroyEffect(int effect_id)
 }
 int	CParticleManager::CreateActionList()
 {
-	int list_id 		= -1;
-	for(u32 i=0; i<m_alist_vec.size(); ++i)
-		if(!m_alist_vec[i])
-		{ 
-			list_id=i; 
+	int list_id = -1;
+	for (u32 i = 0; i < m_alist_vec.size(); ++i)
+	{
+		if (!m_alist_vec[i])
+		{
+			list_id = i;
 			break;
 		}
-	
-    if (list_id<0)
+	}
+	if (list_id < 0)
 	{
-        // Couldn't find a big enough gap. Reallocate.
-        list_id		= m_alist_vec.size();
-        m_alist_vec.push_back	(0);
-    }
+		// Couldn't find a big enough gap. Reallocate.
+		list_id = (int)m_alist_vec.size();
+		m_alist_vec.push_back(0);
+	}
 
-    m_alist_vec[list_id]	= new ParticleActions();
-	
+	m_alist_vec[list_id] = new ParticleActions();
+
 	return list_id;
 }
 void CParticleManager::DestroyActionList(int alist_id)
