@@ -12,7 +12,8 @@ enum class CpuFeature : u32 {
     Sse42 = 0x0080,
 
     MWait = 0x1000,
-    HT = 0x0200
+    HT = 0x0200,
+	AVX = 0x0300
 };
 
 struct processor_info {

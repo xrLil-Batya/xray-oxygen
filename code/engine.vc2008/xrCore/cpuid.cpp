@@ -157,6 +157,9 @@ unsigned int query_processor_info(processor_info* pinfo)
     if (f_1_ECX[19])           pinfo->features |= static_cast<u32>(CpuFeature::Sse41);
     if (f_1_ECX[20])           pinfo->features |= static_cast<u32>(CpuFeature::Sse42);
 
+	//Added sv3nk: AVX
+	if (f_1_ECX[28])           pinfo->features |= static_cast<u32>(CpuFeature::AVX);
+	//End
     __cpuid(cpui.data(), 1);
 
 	//Edit sv3nk
