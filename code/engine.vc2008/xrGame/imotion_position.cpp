@@ -40,7 +40,7 @@ shell_motion_has_history( false )
 
 };
 
-static void interactive_motion_diag( LPCSTR message, const CBlend &b, CPhysicsShell *s, float time_left )
+static void interactive_motion_diag( LPCSTR message, const CBlend &b, IPhysicsShellEx *s, float time_left )
 {
 #ifdef	DEBUG
 	if(!death_anim_debug)
@@ -203,7 +203,7 @@ void imotion_position::state_start( )
 }
 
 #ifdef DEBUG
-static void dbg_draw_state_end( CPhysicsShell *shell )
+static void dbg_draw_state_end( IPhysicsShellEx *shell )
 {
 	VERIFY( shell );
 	if( dbg_imotion_draw_velocity )
@@ -380,7 +380,7 @@ float imotion_position::advance_animation( float dt, IKinematicsAnimated& KA )
 #ifdef	DEBUG
 void DBG_DrawBones( CObject &O );
 void DBG_PhysBones( CObject &O );
-void collide_anim_dbg_draw( CPhysicsShell	*shell, float dt )
+void collide_anim_dbg_draw( IPhysicsShellEx	*shell, float dt )
 {
 	VERIFY( shell );
 	if( dbg_imotion_draw_velocity )

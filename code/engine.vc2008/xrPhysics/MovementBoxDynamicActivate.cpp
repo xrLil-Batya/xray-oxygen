@@ -79,13 +79,13 @@ void TTestDepthCallback (bool& do_colide,bool bo1,dContact& c,SGameMtl* material
 
 			if(ud1)
 			{
-				CPhysicsShell* phsl=ud1->ph_ref_object->ObjectPPhysicsShell();
+				IPhysicsShellEx* phsl=ud1->ph_ref_object->ObjectPPhysicsShell();
 				if(phsl) phsl->Enable();
 			}
 
 			if(ud2)
 			{
-				CPhysicsShell* phsl=ud2->ph_ref_object->ObjectPPhysicsShell();
+				IPhysicsShellEx* phsl=ud2->ph_ref_object->ObjectPPhysicsShell();
 				if(phsl) phsl->Enable();
 			}
 

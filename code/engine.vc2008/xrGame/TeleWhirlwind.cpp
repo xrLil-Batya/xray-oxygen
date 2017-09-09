@@ -193,7 +193,7 @@ bool	CTeleWhirlwindObject::destroy_object		(const Fvector dir,float val)
 void		CTeleWhirlwindObject::		raise					(float step)
 {
 
-		CPhysicsShell*	p					=	get_object()	->PPhysicsShell();
+		IPhysicsShellEx*	p					=	get_object()	->PPhysicsShell();
 	
 		if(!p||!p->isActive())	
 			return;
@@ -204,14 +204,14 @@ void		CTeleWhirlwindObject::		raise					(float step)
 			}
 		u16				element_number		=	p				->get_ElementsNumber();
 		Fvector			center				=	m_telekinesis	->Center();
-		CPhysicsElement* maxE=p->get_ElementByStoreOrder(0);
+		IPhysicsElementEx* maxE=p->get_ElementByStoreOrder(0);
 		for(u16 element=0;element<element_number;++element)
 		{
 			float k=strength;//600.f;
 			float predict_v_eps=0.1f;
 			float mag_eps	   =.01f;
 
-			CPhysicsElement* E=	p->get_ElementByStoreOrder(element);
+			IPhysicsElementEx* E=	p->get_ElementByStoreOrder(element);
 			if(maxE->getMass()<E->getMass())	maxE=E;
 			if (!E->isActive()) continue;
 			Fvector pos=E->mass_Center();
@@ -285,7 +285,7 @@ void		CTeleWhirlwindObject::		raise					(float step)
 
 void		CTeleWhirlwindObject::		keep					()
 {
-	CPhysicsShell*	p					=	get_object()	->PPhysicsShell();
+	IPhysicsShellEx*	p					=	get_object()	->PPhysicsShell();
 	if(!p||!p->isActive())	
 		return;
 	else
@@ -297,11 +297,11 @@ void		CTeleWhirlwindObject::		keep					()
 	u16				element_number		=	p				->get_ElementsNumber();
 	Fvector			center				=	m_telekinesis	->Center();
 
-	CPhysicsElement* maxE=p->get_ElementByStoreOrder(0);
+	IPhysicsElementEx* maxE=p->get_ElementByStoreOrder(0);
 	for(u16 element=0;element<element_number;++element)
 	{
 		
-		CPhysicsElement* E=	p->get_ElementByStoreOrder(element);
+		IPhysicsElementEx* E=	p->get_ElementByStoreOrder(element);
 		if(maxE->getMass()<E->getMass())maxE=E;
 		Fvector			dir;dir.sub(center,E->mass_Center());
 		dir.normalize_safe();

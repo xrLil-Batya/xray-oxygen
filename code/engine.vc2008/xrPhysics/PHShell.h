@@ -17,7 +17,7 @@ class CPhysicsShellAnimator;
 
 
 class CPHShell: 
-	public CPhysicsShell,
+	public IPhysicsShellEx,
 	public CPHObject,
 	public cphysics_scripted
 {
@@ -56,7 +56,7 @@ public:
 	static void 	_BCL	StataticRootBonesCallBack	(CBoneInstance* B);
 	virtual	BoneCallbackFun* GetBonesCallback		()	{return BonesCallback ;}
 	virtual BoneCallbackFun* GetStaticObjectBonesCallback()	{ VERIFY( false ); return StataticRootBonesCallBack; }
-	virtual	void			add_Element				(CPhysicsElement* E);
+	virtual	void			add_Element				(IPhysicsElementEx* E);
 	virtual	void			ToAnimBonesPositions	( motion_history_state history_state );
 	virtual bool			AnimToVelocityState		(float dt, float l_limit, float a_limit );
 	virtual void			SetBonesCallbacksOverwrite(bool v);
@@ -73,7 +73,7 @@ public:
 	{
 		(*elements.begin())->GetAirResistance(linear,angular);
 	}
-	virtual	void			add_Joint				(CPhysicsJoint* J);
+	virtual	void			add_Joint				(IPhysicsJoint* J);
 
 	virtual CPHIsland*		PIsland					(){return &Island();};
 	virtual void			applyImpulseTrace		(const Fvector& pos, const Fvector& dir, float val)	;
@@ -176,21 +176,21 @@ public:
 	virtual		void				SetMaterial						(u16 m);
 	virtual		void				SetMaterial						(LPCSTR m);
 	virtual		ELEMENT_STORAGE		&Elements						(){return elements;}
-	virtual		CPhysicsElement		*get_Element					(u16 bone_id);
-	virtual		CPhysicsElement		*get_Element					(const shared_str & bone_name);
-	virtual		CPhysicsElement		*get_Element					(LPCSTR bone_name);
-	virtual	const CPhysicsElement	*get_ElementByStoreOrder		(u16 num) const;
-	virtual		CPhysicsElement		*get_ElementByStoreOrder		(u16 num);
-				CPhysicsElement		*get_PhysicsParrentElement		( u16 bone_id );
+	virtual		IPhysicsElementEx		*get_Element					(u16 bone_id);
+	virtual		IPhysicsElementEx		*get_Element					(const shared_str & bone_name);
+	virtual		IPhysicsElementEx		*get_Element					(LPCSTR bone_name);
+	virtual	const IPhysicsElementEx	*get_ElementByStoreOrder		(u16 num) const;
+	virtual		IPhysicsElementEx		*get_ElementByStoreOrder		(u16 num);
+				IPhysicsElementEx		*get_PhysicsParrentElement		( u16 bone_id );
 	virtual		u16					get_ElementsNumber				()const{return (u16)elements.size();}
 	virtual		CPHSynchronize		*get_ElementSync				(u16 element);
 	virtual		u16					get_elements_number				(){return get_ElementsNumber();}
 	virtual		CPHSynchronize		*get_element_sync				(u16 element){return get_ElementSync(element);}
-	virtual		CPhysicsElement		*NearestToPoint					(const Fvector& point, NearestToPointCallback *cb = 0 );
-	virtual		CPhysicsJoint		*get_Joint						(u16 bone_id);
-	virtual		CPhysicsJoint		*get_Joint						(const shared_str & bone_name);
-	virtual		CPhysicsJoint		*get_Joint						(LPCSTR bone_name);
-	virtual		CPhysicsJoint		*get_JointByStoreOrder			(u16 num);
+	virtual		IPhysicsElementEx		*NearestToPoint					(const Fvector& point, NearestToPointCallback *cb = 0 );
+	virtual		IPhysicsJoint		*get_Joint						(u16 bone_id);
+	virtual		IPhysicsJoint		*get_Joint						(const shared_str & bone_name);
+	virtual		IPhysicsJoint		*get_Joint						(LPCSTR bone_name);
+	virtual		IPhysicsJoint		*get_JointByStoreOrder			(u16 num);
 	virtual		u16					get_JointsNumber				();
 	virtual		CODEGeom			*get_GeomByID					(u16 bone_id);
 
@@ -274,14 +274,14 @@ private:
 				void				AddSplitter			  			(CPHShellSplitter::EType type,u16 element,u16 joint)							;
 				void				AddSplitter			  			(CPHShellSplitter::EType type,u16 element,u16 joint,u16 position)				;
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				void				AddElementRecursive				(CPhysicsElement* root_e, u16 id,Fmatrix global_parent,u16 element_number,bool *vis_check)		;
+				void				AddElementRecursive				(IPhysicsElementEx* root_e, u16 id,Fmatrix global_parent,u16 element_number,bool *vis_check)		;
 				void				PlaceBindToElFormsRecursive		(Fmatrix parent,u16 id,u16 element,Flags64 &mask);
 				void				BonesBindCalculate				(u16 id_from=0);
 				void				BonesBindCalculateRecursive		(Fmatrix parent,u16 id);
 				void				ZeroCallbacksRecursive			(u16 id)																		;
 				void				SetCallbacksRecursive			(u16 id,u16 element)															;
 				void				ResetCallbacksRecursive			(u16 id,u16 element,Flags64 &mask)												;
-				void				SetJointRootGeom				(CPhysicsElement* root_e,CPhysicsJoint* J)										;
+				void				SetJointRootGeom				(IPhysicsElementEx* root_e,IPhysicsJoint* J)										;
 				void				ReanableObject					()																				;
 				void				ExplosionHit					(const Fvector& pos, const Fvector& dir, float val,const u16 id)				;
 				void				ClearBreakInfo					();

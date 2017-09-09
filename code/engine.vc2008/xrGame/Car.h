@@ -155,7 +155,7 @@ public:
 		u16									bone_id				;
 		bool								inited				;
 		float								radius				;
-		CPhysicsJoint						*joint				;
+		IPhysicsJoint						*joint				;
 		CCar								*car				;
 		struct			SWheelCollisionParams
 		{
@@ -239,7 +239,7 @@ virtual void ApplyDamage			(u16 level);
 		Fmatrix				transform;
 		//Fvector				velocity;
 		CParticlesObject*	p_pgobject;
-		CPhysicsElement*	pelement;
+		IPhysicsElementEx*	pelement;
 		CCar*				pcar;
 		void Init();
 		void Play();
@@ -264,7 +264,7 @@ virtual void ApplyDamage			(u16 level);
 		u16 bone_id;
 		CCar* pcar;
 		bool  update;
-		CPhysicsJoint*  joint;
+		IPhysicsJoint*  joint;
 		float			torque;
 		float			a_vel;
 		float			pos_open;

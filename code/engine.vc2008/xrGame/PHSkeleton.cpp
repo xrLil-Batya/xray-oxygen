@@ -145,7 +145,7 @@ void CPHSkeleton::Load(LPCSTR section)
 void CPHSkeleton::Update(u32 dt)
 {
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	CPhysicsShell* pPhysicsShell=obj->PPhysicsShell();
+	IPhysicsShellEx* pPhysicsShell=obj->PPhysicsShell();
 	if ( pPhysicsShell && pPhysicsShell->isFractured()) //!ai().get_alife() &&
 	{
 		PHSplit();
@@ -173,7 +173,7 @@ void CPHSkeleton::SaveNetState(NET_Packet& P)
 {
 
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
-	CPhysicsShell* pPhysicsShell=obj->PPhysicsShell();
+	IPhysicsShellEx* pPhysicsShell=obj->PPhysicsShell();
 	IKinematics* K	=smart_cast<IKinematics*>(obj->Visual());
 	if(pPhysicsShell&&pPhysicsShell->isActive())			m_flags.set(CSE_PHSkeleton::flActive,pPhysicsShell->isEnabled());
 
@@ -328,7 +328,7 @@ void CPHSkeleton::UnsplitSingle(CPHSkeleton* SO)
 	CPhysicsShellHolder* O =SO->PPhysicsShellHolder();
 	VERIFY2(m_unsplited_shels.size(),"NO_SHELLS !!");
 	VERIFY2(!O->m_pPhysicsShell,"this has shell already!!!");
-	CPhysicsShell* newPhysicsShell=m_unsplited_shels.front().first;
+	IPhysicsShellEx* newPhysicsShell=m_unsplited_shels.front().first;
 	O->m_pPhysicsShell=newPhysicsShell;
 	VERIFY(_valid(newPhysicsShell->mXFORM));
 	IKinematics *newKinematics=smart_cast<IKinematics*>(O->Visual());

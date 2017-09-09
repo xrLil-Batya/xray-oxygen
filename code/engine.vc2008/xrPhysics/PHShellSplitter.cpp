@@ -27,7 +27,7 @@ shell_root CPHShellSplitterHolder::SplitJoint(u16 aspl)
 {
 	//create _new physics shell 
 
-	CPhysicsShell *new_shell=P_create_Shell();
+	IPhysicsShellEx *new_shell=P_create_Shell();
 	CPHShell	  *new_shell_desc=smart_cast<CPHShell*>(new_shell);
 	new_shell_desc->mXFORM.set(m_pShell->mXFORM);
 	new_shell_desc->m_object_in_root.set(m_pShell->m_object_in_root);
@@ -274,7 +274,7 @@ shell_root CPHShellSplitterHolder::ElementSingleSplit(const element_fracture &sp
 
 	//const CPHShellSplitter& splitter=m_splitters[aspl];
 	//CPHElement* element=m_pShell->elements[splitter.m_element];
-	CPhysicsShell *new_shell_last=P_create_Shell();
+	IPhysicsShellEx *new_shell_last=P_create_Shell();
 	CPHShell	  *new_shell_last_desc=smart_cast<CPHShell*>(new_shell_last);
 	new_shell_last->mXFORM.set(m_pShell->mXFORM);	const u16 start_joint=split_elem.second.m_start_jt_num;
 	R_ASSERT(_valid(new_shell_last->mXFORM));
@@ -391,7 +391,7 @@ void CPHShellSplitterHolder::SplitElement(u16 aspl,PHSHELL_PAIR_VECTOR &out_shel
 	for(;i!=e;++i)
 	{
 		out_shels.push_back(ElementSingleSplit(*i,E));
-		CPhysicsElement* ee = out_shels.back().first->get_ElementByStoreOrder(0);
+		IPhysicsElementEx* ee = out_shels.back().first->get_ElementByStoreOrder(0);
 		VERIFY( ee );
 		VERIFY( smart_cast<CPHElement *>(ee) );
 		CPHElement * e = static_cast<CPHElement *> (ee);

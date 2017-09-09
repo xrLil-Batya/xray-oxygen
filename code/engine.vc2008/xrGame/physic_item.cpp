@@ -154,7 +154,7 @@ void CPhysicItem::create_box_physic_shell	()
 	obb.m_rotate.identity();
 	
 	// Physics (Elements)
-	CPhysicsElement* E = P_create_Element(); 
+	IPhysicsElementEx* E = P_create_Element(); 
 	R_ASSERT(E); 
 	E->add_Box(obb);
 	// Physics (Shell)
@@ -174,7 +174,7 @@ void CPhysicItem::create_box2sphere_physic_shell()
 	obb.m_rotate.identity				();
 
 	// Physics (Elements)
-	CPhysicsElement						*E = P_create_Element	();
+	IPhysicsElementEx						*E = P_create_Element	();
 	R_ASSERT							(E);
 
 	Fvector								ax;

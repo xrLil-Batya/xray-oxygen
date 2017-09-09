@@ -4,7 +4,7 @@
 #include "PHReqComparer.h"
 #include "alife_space.h"
 #include "../xrScripts/export/script_export_space.h"
-class CPhysicsShell;
+class IPhysicsShellEx;
 class CPHCallOnStepCondition:
 	public CPHCondition
 {
@@ -49,12 +49,12 @@ class CPHShellBasedAction:
 	public	CPHAction
 {
 protected:
-				CPhysicsShell				*m_shell;
+				IPhysicsShellEx				*m_shell;
 public:
-											CPHShellBasedAction		(CPhysicsShell	*shell)							;
+											CPHShellBasedAction		(IPhysicsShellEx	*shell)							;
 
 
-	virtual				bool				compare					(const	CPhysicsShell	* shl)			const	{return shl==m_shell;}
+	virtual				bool				compare					(const	IPhysicsShellEx	* shl)			const	{return shl==m_shell;}
 	virtual				bool				obsolete				()										const	;
 };
 
@@ -64,11 +64,11 @@ class CPHConstForceAction:
 
 						Fvector				m_force;
 public:
-											CPHConstForceAction		(CPhysicsShell	*shell,const Fvector &force)	;
+											CPHConstForceAction		(IPhysicsShellEx	*shell,const Fvector &force)	;
 	virtual				void				run						()												;
 
 	virtual				bool				compare					(const CPHReqComparerV	* v)		const		{return v->compare(this);}
-	virtual				bool				compare					(const	CPhysicsShell	* shl)		const		{return CPHShellBasedAction::compare(shl);}
+	virtual				bool				compare					(const	IPhysicsShellEx	* shl)		const		{return CPHShellBasedAction::compare(shl);}
 #ifdef	DEBUG
 		const			Fvector				&force					()const  { return	m_force;	}
 #endif
@@ -81,8 +81,8 @@ add_to_type_list( CPHConstForceAction)
 class CPHReqComparerHasShell	:
 	public CPHReqComparerV
 {
-											CPhysicsShell			*m_shell																		;
+											IPhysicsShellEx			*m_shell																		;
 public:
-											CPHReqComparerHasShell	(CPhysicsShell		*shl)														;
+											CPHReqComparerHasShell	(IPhysicsShellEx		*shl)														;
 	virtual				bool				compare					(const	CPHConstForceAction* v)			const		{return v->compare(m_shell);}
 };

@@ -1,6 +1,6 @@
 #pragma once
 #include "../Include/xrRender/KinematicsAnimated.h"
-class CPhysicsShell;
+class IPhysicsShellEx;
 class interactive_motion
 {
 	MotionID motion;
@@ -8,7 +8,7 @@ class interactive_motion
 protected:
 
 	Flags8			flags;
-	CPhysicsShell	*shell;
+	IPhysicsShellEx	*shell;
 	float			angle;
 	enum Flag
 	{
@@ -23,8 +23,8 @@ public:
 	virtual	~interactive_motion	( );
 	void	init				( );
 	void	destroy				( );
-	void	setup				( LPCSTR m, CPhysicsShell *s, float angle );
-	void	setup				( const MotionID &m, CPhysicsShell *s, float angle );
+	void	setup				( LPCSTR m, IPhysicsShellEx *s, float angle );
+	void	setup				( const MotionID &m, IPhysicsShellEx *s, float angle );
 	
 	void	update				( );
 IC	bool	is_enabled			( )	{ return !!flags.test( fl_use_death_motion ); }
@@ -61,7 +61,7 @@ IC void destroy( interactive_motion* & im )
 	xr_delete( im );
 }
 
-void interactive_motion_diagnostic( LPCSTR message, const MotionID &m, CPhysicsShell *s );
+void interactive_motion_diagnostic( LPCSTR message, const MotionID &m, IPhysicsShellEx *s );
 #ifdef	DEBUG
 extern BOOL		death_anim_debug;
 #endif

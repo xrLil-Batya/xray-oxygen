@@ -1,8 +1,8 @@
 #pragma once 
-class CPhysicsShell;
+class IPhysicsShellEx;
 class CCameraBase;
 class IPhysicsShellHolder;
-extern XRPHYSICS_API CPhysicsShell*	actor_camera_shell;
+extern XRPHYSICS_API IPhysicsShellEx*	actor_camera_shell;
 extern XRPHYSICS_API BOOL dbg_draw_camera_collision;
 extern XRPHYSICS_API float	camera_collision_character_skin_depth ;
 extern XRPHYSICS_API float	camera_collision_character_shift_z ;

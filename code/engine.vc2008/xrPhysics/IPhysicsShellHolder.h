@@ -4,7 +4,7 @@ class IDamageSource;
 //class IKinematics;
 //class IRenderVisual;
 class IKinematics;
-class CPhysicsShell;
+class IPhysicsShellEx;
 class IPHCapture;
 class IPhysicsShellHolder;
 class CPHSoundPlayer;
@@ -46,7 +46,7 @@ class IPhysicsShellHolder
 	virtual	void						_BCL	ObjectProcessingDeactivate			()						=0;
 	virtual	void						_BCL	ObjectProcessingActivate			()						=0;				
 	virtual	void						_BCL	ObjectSpatialMove					()						=0;
-	virtual	CPhysicsShell*&				_BCL	ObjectPPhysicsShell				()						=0;
+	virtual	IPhysicsShellEx*&				_BCL	ObjectPPhysicsShell				()						=0;
 	virtual	void						_BCL	enable_notificate					()						=0;
 	virtual bool						_BCL	has_parent_object					()						=0;
 	virtual	void						_BCL	on_physics_disable					()						=0;

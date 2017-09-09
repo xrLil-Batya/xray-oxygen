@@ -1346,9 +1346,9 @@ const Fvector& CPHElement::mass_Center()const
 	return *((const Fvector*)dBodyGetPosition(m_body));
 }
 
-CPhysicsShell* CPHElement::PhysicsShell()
+IPhysicsShellEx* CPHElement::PhysicsShell()
 {
-	return smart_cast<CPhysicsShell*>(m_shell);
+	return smart_cast<IPhysicsShellEx*>(m_shell);
 }
 
 CPHShell* CPHElement::PHShell()

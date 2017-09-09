@@ -6,7 +6,7 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "../xrphysics/physicsshell.h"
 
-void interactive_motion_diagnostic(LPCSTR message, const MotionID &m, CPhysicsShell *s )
+void interactive_motion_diagnostic(LPCSTR message, const MotionID &m, IPhysicsShellEx *s )
 {
 #ifdef	DEBUG
 	if(!death_anim_debug)
@@ -44,7 +44,7 @@ void	interactive_motion::destroy	( )
 	
 	flags.assign( 0 );
 }
-void interactive_motion::setup( LPCSTR m, CPhysicsShell *s, float angle )
+void interactive_motion::setup( LPCSTR m, IPhysicsShellEx *s, float angle )
 {
 	VERIFY( m );
 	VERIFY( s );
@@ -53,7 +53,7 @@ void interactive_motion::setup( LPCSTR m, CPhysicsShell *s, float angle )
 	setup( K->LL_MotionID(m), s, angle );
 }
 
-void interactive_motion::setup( const MotionID &m, CPhysicsShell *s, float _angle )
+void interactive_motion::setup( const MotionID &m, IPhysicsShellEx *s, float _angle )
 {
 	
 	VERIFY( s );

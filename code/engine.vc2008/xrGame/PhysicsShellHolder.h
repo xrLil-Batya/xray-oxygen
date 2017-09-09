@@ -33,7 +33,7 @@ public:
 	typedef CGameObject inherited;
 	
 
-	CPhysicsShell			*m_pPhysicsShell;
+	IPhysicsShellEx			*m_pPhysicsShell;
 
 
 			CPhysicsShellHolder							();
@@ -41,7 +41,7 @@ public:
 
 	virtual bool		ActivationSpeedOverriden (Fvector& dest, bool clear_override) { return false; }
 
-	IC CPhysicsShell	*&PPhysicsShell				()		
+	IC IPhysicsShellEx	*&PPhysicsShell				()		
 	{
 		return m_pPhysicsShell;
 	}
@@ -124,7 +124,7 @@ private://IPhysicsShellHolder
 	virtual	void					_BCL					ObjectProcessingDeactivate			()						;
 	virtual	void					_BCL					ObjectProcessingActivate			()						;				
 	virtual	void					_BCL					ObjectSpatialMove					()						;
-	virtual	CPhysicsShell*&			_BCL					ObjectPPhysicsShell					()						;
+	virtual	IPhysicsShellEx*&			_BCL					ObjectPPhysicsShell					()						;
 //	virtual	void						enable_notificate					()						;
 	virtual bool					_BCL					has_parent_object					()						;
 //	virtual	void						on_physics_disable					()						;

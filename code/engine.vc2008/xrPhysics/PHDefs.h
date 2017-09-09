@@ -2,12 +2,12 @@
 #define PHDEFS_H
 class CPHElement;
 class CPHJoint;
-class CPhysicsShell;
+class IPhysicsShellEx;
 
 //class CPHFracture;
 class CShellSplitInfo;
 
-typedef std::pair<CPhysicsShell*,u16>	shell_root;
+typedef std::pair<IPhysicsShellEx*,u16>	shell_root;
 
 using ELEMENT_STORAGE = xr_vector<CPHElement*>;
 typedef		xr_vector<CPHElement*>::const_iterator	ELEMENT_CI;

@@ -37,7 +37,7 @@ void CPHConstForceAction::script_register(lua_State *L)
 	module(L)
 		[
 			class_<CPHConstForceAction>("phaction_constforce")
-			.def(constructor<CPhysicsShell*,const Fvector&>())
+			.def(constructor<IPhysicsShellEx*,const Fvector&>())
 		];
 }
 //(CPhysicsJoint*(CPhysicsShell::*)(u16))(&CPhysicsShell::get_Joint))

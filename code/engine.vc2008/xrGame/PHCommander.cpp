@@ -200,7 +200,7 @@ void CPHCommander::remove_calls(CPHReqComparerV* cmp_object)
 	m_calls.erase(std::remove_if(m_calls.begin(), m_calls.end(), SRemoveRped(cmp_object)), m_calls.end());
 }
 
-void	CPHCommander::		phys_shell_relcase	( CPhysicsShell* sh )
+void	CPHCommander::		phys_shell_relcase	( IPhysicsShellEx* sh )
 {
 	CPHReqComparerHasShell c(sh);
 	remove_calls_threadsafety(&c);

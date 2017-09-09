@@ -21,7 +21,7 @@ struct SPHImpact;
 class CPHFracturesHolder;
 
 class CPHElement	:  
-	public	CPhysicsElement ,
+	public	IPhysicsElementEx ,
 	public	CPHSynchronize,
 	public	CPHDisablingFull,
 	public	CPHGeometryOwner,
@@ -234,10 +234,10 @@ IC			void						MulB43InverceLocalForm			(Fmatrix&) const;
 
 ////////////////////////////////////////////////////Structure/////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	virtual CPhysicsShell*				PhysicsShell					();																				//aux
+	virtual IPhysicsShellEx*				PhysicsShell					();																				//aux
 			CPHShell*					PHShell							();
-	virtual void						set_ParentElement				(CPhysicsElement* p){ m_parent_element=(CPHElement*)p; }							//aux
-	CPhysicsElement*					parent_element					(){ return m_parent_element; }
+	virtual void						set_ParentElement				(IPhysicsElementEx* p){ m_parent_element=(CPHElement*)p; }							//aux
+	IPhysicsElementEx*					parent_element					(){ return m_parent_element; }
 	void								SetShell						(CPHShell* p);																	//aux
 	virtual	dBodyID						get_body				()		{return m_body;}																//aux
 	virtual	const dBodyID				get_bodyConst			()const	{return m_body;}																//aux
@@ -284,7 +284,7 @@ public:
 
 
 
-IC CPHElement* cast_PHElement(CPhysicsElement* e){return static_cast<CPHElement*>(static_cast<CPhysicsElement*>(e));}
-IC CPHElement* cast_PHElement(void* e){return static_cast<CPHElement*>(static_cast<CPhysicsElement*>(e));}
-IC CPhysicsElement* cast_PhysicsElement(CPHElement* e){return static_cast<CPhysicsElement*>(static_cast<CPHElement*>(e));}
+IC CPHElement* cast_PHElement(IPhysicsElementEx* e){return static_cast<CPHElement*>(static_cast<IPhysicsElementEx*>(e));}
+IC CPHElement* cast_PHElement(void* e){return static_cast<CPHElement*>(static_cast<IPhysicsElementEx*>(e));}
+IC IPhysicsElementEx* cast_PhysicsElement(CPHElement* e){return static_cast<IPhysicsElementEx*>(static_cast<CPHElement*>(e));}
 #endif

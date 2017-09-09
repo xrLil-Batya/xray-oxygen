@@ -80,7 +80,7 @@ void  OnCharacterContactInDeath(bool& do_colide,bool bo1,dContact& c,SGameMtl * 
 
 	surface.mu=l_character_physic_support->curr_skin_friction_in_death();
 }
-void	character_shell_control::	set_start_shell_params		(CPhysicsShell	* sh) const
+void	character_shell_control::	set_start_shell_params		(IPhysicsShellEx	* sh) const
 {
 	
 	sh->SetAirResistance(skel_airr_lin_factor,skel_airr_ang_factor);
@@ -144,7 +144,7 @@ void character_shell_control::CalculateTimeDelta()
 	m_Pred_Time=Device.fTimeGlobal;
 };
 
-void character_shell_control::UpdateFrictionAndJointResistanse( CPhysicsShell	* sh )
+void character_shell_control::UpdateFrictionAndJointResistanse( IPhysicsShellEx	* sh )
 {
 	//ѕреобразование skel_ddelay из кадров в секунды и линейное нарастание сопротивлени€ в джоинтах со временем от момента смерти 
 

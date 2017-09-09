@@ -1360,7 +1360,7 @@ void CCar::PhTune(float step)
 
 	for(u16 i=PPhysicsShell()->get_ElementsNumber();i!=0;i--)	
 	{
-		CPhysicsElement* e=PPhysicsShell()->get_ElementByStoreOrder(i-1);
+		IPhysicsElementEx* e=PPhysicsShell()->get_ElementByStoreOrder(i-1);
 		if(e->isActive()&&e->isEnabled())
 			e->applyForce( 0, e->getMass()*AntiGravityAccel(), 0 );
 			//dBodyAddForce(e->get_body(),0,e->getMass()*AntiGravityAccel(),0);
@@ -2027,9 +2027,9 @@ void	CCar::		Die					(CObject* who)
 
 Fvector	CCar::		ExitVelocity				()
 {
-	CPhysicsShell		*P=PPhysicsShell();
+	IPhysicsShellEx		*P=PPhysicsShell();
 	if(!P||!P->isActive())return Fvector().set(0,0,0);
-	CPhysicsElement *E=P->get_ElementByStoreOrder(0);
+	IPhysicsElementEx *E=P->get_ElementByStoreOrder(0);
 	Fvector v=ExitPosition();
 	E->GetPointVel( v, v );
 	//dBodyGetPointVel(E->get_body(),v.x,v.y,v.z,cast_fp(v));

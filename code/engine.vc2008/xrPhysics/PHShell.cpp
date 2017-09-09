@@ -325,25 +325,25 @@ void	CPHShell::	applyImpulseTrace		(const Fvector& pos, const Fvector& dir, floa
 	CBoneInstance& instance=m_pKinematics->LL_GetBoneInstance				(id);
 	if(instance.callback_type()!=bctPhysics || !instance.callback_param()) return;
 
-	((CPhysicsElement*)instance.callback_param())->applyImpulseTrace		( pos,  dir,  val, id);
+	((IPhysicsElementEx*)instance.callback_param())->applyImpulseTrace		( pos,  dir,  val, id);
 	EnableObject(0);
 }
 
-CPhysicsElement* CPHShell::get_Element		(const shared_str & bone_name)
+IPhysicsElementEx* CPHShell::get_Element		(const shared_str & bone_name)
 {
 	VERIFY(m_pKinematics);
 	return get_Element(m_pKinematics->LL_BoneID(bone_name));
 }
-CPhysicsElement* CPHShell::get_Element		(LPCSTR bone_name)
+IPhysicsElementEx* CPHShell::get_Element		(LPCSTR bone_name)
 {
 		return get_Element((const shared_str&)(bone_name));
 }
-CPhysicsElement* CPHShell::get_ElementByStoreOrder(u16 num)
+IPhysicsElementEx* CPHShell::get_ElementByStoreOrder(u16 num)
 {
 	R_ASSERT2(num<elements.size(),"argument is out of range");
 	return cast_PhysicsElement(elements[num]);
 }
-const CPhysicsElement *CPHShell::get_ElementByStoreOrder(u16 num) const
+const IPhysicsElementEx *CPHShell::get_ElementByStoreOrder(u16 num) const
 {
 	R_ASSERT2(num<elements.size(),"argument is out of range");
 	return cast_PhysicsElement(elements[num]);
@@ -353,10 +353,10 @@ CPHSynchronize*	CPHShell::get_ElementSync			  ( u16 element )
 	return smart_cast<CPHSynchronize*>(elements[element]);
 }
 
-CPhysicsElement* CPHShell::get_PhysicsParrentElement( u16 bone_id )
+IPhysicsElementEx* CPHShell::get_PhysicsParrentElement( u16 bone_id )
 {
 	VERIFY( PKinematics() );
-	CPhysicsElement* E		= get_Element( bone_id );
+	IPhysicsElementEx* E		= get_Element( bone_id );
 	u16 bid					= bone_id;
 	while( !E && bid !=  PKinematics()->LL_GetBoneRoot() )
 	{
@@ -367,47 +367,47 @@ CPhysicsElement* CPHShell::get_PhysicsParrentElement( u16 bone_id )
 	return E;
 }
 
-CPhysicsElement* CPHShell::get_Element( u16 bone_id )
+IPhysicsElementEx* CPHShell::get_Element( u16 bone_id )
 {
 	if(m_pKinematics&& isActive())
 	{
 		CBoneInstance& instance=m_pKinematics->LL_GetBoneInstance				(bone_id);
 		if(instance.callback()==BonesCallback||instance.callback()==StataticRootBonesCallBack)
 		{
-			return (instance.callback_type()==bctPhysics)?static_cast<CPhysicsElement*>(instance.callback_param()):nullptr;
+			return (instance.callback_type()==bctPhysics)?static_cast<IPhysicsElementEx*>(instance.callback_param()):nullptr;
 		}
 	}
 
     auto i=elements.begin(),e=elements.end();
 	for(; e!=i ;++i)
 		if((*i)->m_SelfID==bone_id)
-			return static_cast<CPhysicsElement*>(*i);
+			return static_cast<IPhysicsElementEx*>(*i);
 	return nullptr;
 }
 
-CPhysicsJoint* CPHShell::get_Joint(u16 bone_id)
+IPhysicsJoint* CPHShell::get_Joint(u16 bone_id)
 {
     auto i= joints.begin(),e=joints.end();
 	for(;e!=i;i++)
 		if((*i)->BoneID()==bone_id)
-			return static_cast<CPhysicsJoint*>(*i);
+			return static_cast<IPhysicsJoint*>(*i);
 	return NULL;
 }
-CPhysicsJoint* CPHShell::get_Joint(const shared_str &bone_name)
+IPhysicsJoint* CPHShell::get_Joint(const shared_str &bone_name)
 {
 	VERIFY(m_pKinematics);
 	return get_Joint(m_pKinematics->LL_BoneID(bone_name));
 }
 
-CPhysicsJoint* CPHShell::get_Joint(LPCSTR bone_name)
+IPhysicsJoint* CPHShell::get_Joint(LPCSTR bone_name)
 {
 	return get_Joint((const shared_str&)bone_name);
 }
 
-CPhysicsJoint* CPHShell::get_JointByStoreOrder		(u16 num)
+IPhysicsJoint* CPHShell::get_JointByStoreOrder		(u16 num)
 {
 	R_ASSERT( num < joints.size() );
-	return (CPhysicsJoint*) joints[num];
+	return (IPhysicsJoint*) joints[num];
 }
 
 u16			CPHShell::get_JointsNumber				()
@@ -690,7 +690,7 @@ bool shape_is_physic( const SBoneShape& shape )
 	return !no_physics_shape( shape );
 }
 
-void CPHShell::AddElementRecursive(CPhysicsElement* root_e, u16 id,Fmatrix global_parent,u16 element_number,bool* vis_check)
+void CPHShell::AddElementRecursive(IPhysicsElementEx* root_e, u16 id,Fmatrix global_parent,u16 element_number,bool* vis_check)
 {
 
 	//CBoneInstance& B	= m_pKinematics->LL_GetBoneInstance(u16(id));
@@ -721,8 +721,8 @@ void CPHShell::AddElementRecursive(CPhysicsElement* root_e, u16 id,Fmatrix globa
 		return;
 	}
 	
-	CPhysicsElement* E  = 0;
-	CPhysicsJoint*   J	= 0;
+	IPhysicsElementEx* E  = 0;
+	IPhysicsJoint*   J	= 0;
 	bool	breakable=joint_data.ik_flags.test(SJointIKData::flBreakable)	&& 
 		root_e																&&
 		!(
@@ -1209,7 +1209,7 @@ void CPHShell::ObjectToRootForm(const Fmatrix& form)
 
 
 
-CPhysicsElement* CPHShell::NearestToPoint(const Fvector& point, NearestToPointCallback *cb /*=0*/)
+IPhysicsElementEx* CPHShell::NearestToPoint(const Fvector& point, NearestToPointCallback *cb /*=0*/)
 {
     auto i=elements.begin();
     auto e=elements.end();
@@ -1354,7 +1354,7 @@ u16 CPHShell::BoneIdToRootGeom(u16 id)
 	return m_spliter_holder->FindRootGeom(id);
 }
 
-void CPHShell::SetJointRootGeom(CPhysicsElement* root_e,CPhysicsJoint* J)
+void CPHShell::SetJointRootGeom(IPhysicsElementEx* root_e,IPhysicsJoint* J)
 {
 	R_ASSERT(root_e);
 	R_ASSERT( J );
@@ -1513,14 +1513,14 @@ void CPHShell::SetPrefereExactIntegration()
 	CPHObject::SetPrefereExactIntegration();
 }
 
-void CPHShell::add_Element					(CPhysicsElement* E)		  {
+void CPHShell::add_Element					(IPhysicsElementEx* E)		  {
 	CPHElement* ph_element=cast_PHElement(E);
 	ph_element->SetShell(this);
 	elements.push_back(ph_element);
 
 }
 
-void CPHShell::add_Joint					(CPhysicsJoint* J)					{
+void CPHShell::add_Joint					(IPhysicsJoint* J)					{
 	if(!J)return;
 	joints.push_back(static_cast<CPHJoint*>(J));
 	joints.back()->SetShell(this);

@@ -11,14 +11,14 @@
 #include "death_anims.h"
 #include "character_shell_control.h"
 #include "animation_utils.h"
-class CPhysicsShell;
+class IPhysicsShellEx;
 class CPHMovementControl;
 class CIKLimbsController;
 class interactive_motion;
 class interactive_animation;
 class physics_shell_animated;
 class CODEGeom;
-class CPhysicsElement;
+class IPhysicsElementEx;
 class activating_character_delay;
 
 class CCharacterPhysicsSupport :
@@ -62,8 +62,8 @@ private:
 
 	CEntityAlive						&m_EntityAlife																																		;
 	Fmatrix								&mXFORM																																				;
-	CPhysicsShell						*&m_pPhysicsShell																																	;
-	CPhysicsShell						*m_physics_skeleton																																	;
+	IPhysicsShellEx						*&m_pPhysicsShell																																	;
+	IPhysicsShellEx						*m_physics_skeleton																																	;
 	CPHMovementControl					*m_PhysicMovementControl																															;
 	CPHSoundPlayer						m_ph_sound_player																																	;
 	CIKLimbsController					*m_ik_controller																																	;
@@ -78,7 +78,7 @@ private:
 	activating_character_delay			*m_collision_activating_delay;
 	xr_vector<CODEGeom*>				m_weapon_geoms;
 	xr_vector<anim_bone_fix*>			m_weapon_bone_fixes;
-	CPhysicsElement						*m_weapon_attach_bone;
+	IPhysicsElementEx						*m_weapon_attach_bone;
 	CPhysicsShellHolder					*m_active_item_obj;
 	SHit								m_sv_hit;
 	u32									m_hit_valide_time;
@@ -165,7 +165,7 @@ public:
 										CCharacterPhysicsSupport		( EType atype, CEntityAlive* aentity )																				;
 virtual									~CCharacterPhysicsSupport		( )																													;
 private:
-		void 							CreateSkeleton					( CPhysicsShell* &pShell )																							;
+		void 							CreateSkeleton					( IPhysicsShellEx* &pShell )																							;
 
 		void 							ActivateShell					( CObject* who )																									;
 		void							CreateShell						( CObject* who, Fvector& dp, Fvector & velocity  )																	;

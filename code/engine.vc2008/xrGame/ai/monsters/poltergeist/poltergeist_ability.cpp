@@ -121,7 +121,7 @@ void CPoltergeist::PhysicalImpulse	(const Fvector &position)
 	dir.sub(obj->Position(), position);
 	dir.normalize();
 	
-	CPhysicsElement* E=obj->m_pPhysicsShell->get_ElementByStoreOrder(u16(Random.randI(obj->m_pPhysicsShell->get_ElementsNumber())));
+	IPhysicsElementEx* E=obj->m_pPhysicsShell->get_ElementByStoreOrder(u16(Random.randI(obj->m_pPhysicsShell->get_ElementsNumber())));
 	//E->applyImpulse(dir,IMPULSE * obj->m_pPhysicsShell->getMass());
 	E->applyImpulse(dir,IMPULSE * E->getMass());
 }

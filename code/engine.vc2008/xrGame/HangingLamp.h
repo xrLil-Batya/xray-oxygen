@@ -12,7 +12,7 @@
 #include "../xrScripts/export/script_export_space.h"
 // refs
 class CLAItem;
-class CPhysicsElement;
+class IPhysicsElementEx;
 class CSE_ALifeObjectHangingLamp;
 class CPHElement;
 class CHangingLamp: 

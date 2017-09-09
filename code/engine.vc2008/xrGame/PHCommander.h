@@ -1,7 +1,7 @@
 #pragma once
 class CPHReqComparerV;
 #include "../xrphysics/iphworld.h"
-class CPhysicsShell;
+class IPhysicsShellEx;
 
 class CPHReqBase
 {
@@ -84,5 +84,5 @@ public:
 
 private:
 	virtual	void		update_step					() { update_threadsafety(); }
-	virtual	void		phys_shell_relcase			(CPhysicsShell* sh);
+	virtual	void		phys_shell_relcase			(IPhysicsShellEx* sh);
 };

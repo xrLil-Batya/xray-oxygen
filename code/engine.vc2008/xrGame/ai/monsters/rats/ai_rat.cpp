@@ -405,7 +405,7 @@ void CAI_Rat::CreateSkeleton(){
 
 	if (!Visual())
 		return;
-	CPhysicsElement* element=P_create_Element();
+	IPhysicsElementEx* element=P_create_Element();
 	Fobb box;
 	box.m_rotate.identity();
 	box.m_translate.set(0,0.1f,-0.15f);

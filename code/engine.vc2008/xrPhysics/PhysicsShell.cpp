@@ -20,38 +20,38 @@
 #include "../xrengine/bone.h"
 
 extern CPHWorld			*ph_world;
-CPhysicsShell::~CPhysicsShell()
+IPhysicsShellEx::~IPhysicsShellEx()
 {
 	
 	//if(ph_world)ph_world->NetRelcase(this);
 }
 
-CPhysicsElement*			P_create_Element		()
+IPhysicsElementEx*			P_create_Element		()
 {
 	CPHElement* element=xr_new<CPHElement>	();
 	return element;
 }
 
-CPhysicsShell*				P_create_Shell			()
+IPhysicsShellEx*				P_create_Shell			()
 {
-	CPhysicsShell* shell=xr_new<CPHShell>	();
+	IPhysicsShellEx* shell=xr_new<CPHShell>	();
 	return shell;
 }
 
-CPhysicsShell*				P_create_splited_Shell	()
+IPhysicsShellEx*				P_create_splited_Shell	()
 {
-	CPhysicsShell* shell=xr_new<CPHSplitedShell>	();
+	IPhysicsShellEx* shell=xr_new<CPHSplitedShell>	();
 	return shell;
 }
 
-CPhysicsJoint*				P_create_Joint			( CPhysicsJoint::enumType type, CPhysicsElement* first, CPhysicsElement* second )
+IPhysicsJoint*				P_create_Joint			( IPhysicsJoint::enumType type, IPhysicsElementEx* first, IPhysicsElementEx* second )
 {
-	CPhysicsJoint* joint=xr_new<CPHJoint>	( type , first, second );
+	IPhysicsJoint* joint=xr_new<CPHJoint>	( type , first, second );
 	return joint;
 }
 
 
-CPhysicsShell*	__stdcall P_build_Shell			( IPhysicsShellHolder* obj, bool not_active_state, BONE_P_MAP* bone_map, bool not_set_bone_callbacks )
+IPhysicsShellEx*	__stdcall P_build_Shell			( IPhysicsShellHolder* obj, bool not_active_state, BONE_P_MAP* bone_map, bool not_set_bone_callbacks )
 {
 	VERIFY( obj );
 	phys_shell_verify_object_model( *obj );
@@ -60,7 +60,7 @@ CPhysicsShell*	__stdcall P_build_Shell			( IPhysicsShellHolder* obj, bool not_ac
 	//IKinematics* pKinematics	=  V->dcast_PKinematics			();
 	IKinematics* pKinematics	= obj->ObjectKinematics();
 
-	CPhysicsShell* pPhysicsShell		= P_create_Shell();
+	IPhysicsShellEx* pPhysicsShell		= P_create_Shell();
 #ifdef DEBUG
 	pPhysicsShell->dbg_obj=obj;
 #endif
@@ -75,7 +75,7 @@ CPhysicsShell*	__stdcall P_build_Shell			( IPhysicsShellHolder* obj, bool not_ac
 	return pPhysicsShell;
 }
 
-void	fix_bones( LPCSTR	fixed_bones, CPhysicsShell* shell )
+void	fix_bones( LPCSTR	fixed_bones, IPhysicsShellEx* shell )
 {
 		VERIFY(fixed_bones);
 		VERIFY(shell);
@@ -88,14 +88,14 @@ void	fix_bones( LPCSTR	fixed_bones, CPhysicsShell* shell )
 			_GetItem					(fixed_bones,i,fixed_bone)			;
 			u16 fixed_bone_id=pKinematics->LL_BoneID(fixed_bone)			;
 			R_ASSERT2(BI_NONE!=fixed_bone_id,"wrong fixed bone")			;
-			CPhysicsElement* E = shell->get_Element(fixed_bone_id)			;
+			IPhysicsElementEx* E = shell->get_Element(fixed_bone_id)			;
 			if(E)
 				E->Fix();
 		}
 }
-CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state,BONE_P_MAP* p_bone_map, LPCSTR	fixed_bones )
+IPhysicsShellEx*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state,BONE_P_MAP* p_bone_map, LPCSTR	fixed_bones )
 {
-	CPhysicsShell* pPhysicsShell = 0;
+	IPhysicsShellEx* pPhysicsShell = 0;
 	//IKinematics* pKinematics=smart_cast<IKinematics*>(obj->ObjectVisual());
 	IKinematics* pKinematics=obj->ObjectKinematics();
 	if(fixed_bones)
@@ -124,7 +124,7 @@ CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state,BO
 	if(i!=e) pPhysicsShell->SetPrefereExactIntegration();
 	for(;i!=e;i++)
 	{
-		CPhysicsElement* fixed_element=i->second.element;
+		IPhysicsElementEx* fixed_element=i->second.element;
 		R_ASSERT2(fixed_element,"fixed bone has no physics");
 		//if(!fixed_element) continue;
 		fixed_element->Fix();
@@ -132,7 +132,7 @@ CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state,BO
 	return pPhysicsShell;
 }
 
-CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state, LPCSTR	fixed_bones )
+IPhysicsShellEx*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state, LPCSTR	fixed_bones )
 {
 	U16Vec f_bones;
 	if(fixed_bones){
@@ -151,10 +151,10 @@ CPhysicsShell*	P_build_Shell( IPhysicsShellHolder* obj, bool not_active_state, L
 }
 
 static BONE_P_MAP bone_map=BONE_P_MAP();
-CPhysicsShell*	P_build_Shell	( IPhysicsShellHolder* obj, bool not_active_state, U16Vec& fixed_bones )
+IPhysicsShellEx*	P_build_Shell	( IPhysicsShellHolder* obj, bool not_active_state, U16Vec& fixed_bones )
 {
 	bone_map.clear			();
-	CPhysicsShell*			pPhysicsShell = 0;
+	IPhysicsShellEx*			pPhysicsShell = 0;
 	if(!fixed_bones.empty())
 		for ( auto it=fixed_bones.begin(); it!=fixed_bones.end(); it++ )
 			bone_map.insert(std::make_pair( *it, physicsBone() ) );
@@ -166,7 +166,7 @@ CPhysicsShell*	P_build_Shell	( IPhysicsShellHolder* obj, bool not_active_state, 
 		pPhysicsShell->SetPrefereExactIntegration();
 	for(;i!=e;i++)
 	{
-		CPhysicsElement* fixed_element=i->second.element;
+		IPhysicsElementEx* fixed_element=i->second.element;
 		//R_ASSERT2(fixed_element,"fixed bone has no physics");
 		if(!fixed_element) continue;
 		fixed_element->Fix();
@@ -174,9 +174,9 @@ CPhysicsShell*	P_build_Shell	( IPhysicsShellHolder* obj, bool not_active_state, 
 	return pPhysicsShell;
 }
 
-CPhysicsShell*	P_build_SimpleShell( IPhysicsShellHolder* obj, float mass, bool not_active_state )
+IPhysicsShellEx*	P_build_SimpleShell( IPhysicsShellHolder* obj, float mass, bool not_active_state )
 {
-	CPhysicsShell* pPhysicsShell		= P_create_Shell();
+	IPhysicsShellEx* pPhysicsShell		= P_create_Shell();
 #ifdef DEBUG
 	pPhysicsShell->dbg_obj=(obj);
 #endif
@@ -186,7 +186,7 @@ CPhysicsShell*	P_build_SimpleShell( IPhysicsShellHolder* obj, float mass, bool n
 
 	Fobb obb; obj->ObjectKinematics()->GetBox().get_CD( obb.m_translate, obb.m_halfsize );
 	obb.m_rotate.identity();
-	CPhysicsElement* E = P_create_Element(); R_ASSERT( E ); E->add_Box( obb );
+	IPhysicsElementEx* E = P_create_Element(); R_ASSERT( E ); E->add_Box( obb );
 	pPhysicsShell->add_Element( E );
 	pPhysicsShell->setMass( mass );
 	pPhysicsShell->set_PhysicsRefObject( obj );
@@ -195,7 +195,7 @@ CPhysicsShell*	P_build_SimpleShell( IPhysicsShellHolder* obj, float mass, bool n
 	return pPhysicsShell;
 }
 
-void ApplySpawnIniToPhysicShell( CInifile const * ini, CPhysicsShell* physics_shell, bool fixed )
+void ApplySpawnIniToPhysicShell( CInifile const * ini, IPhysicsShellEx* physics_shell, bool fixed )
 {
 		if(!ini)
 			return;
@@ -246,7 +246,7 @@ void ApplySpawnIniToPhysicShell( CInifile const * ini, CPhysicsShell* physics_sh
 
 
 
-void	get_box( const CPhysicsBase*	shell, const	Fmatrix& form,	Fvector&	sz, Fvector&	c )
+void	get_box( const IPhysicsBase*	shell, const	Fmatrix& form,	Fvector&	sz, Fvector&	c )
 {
 	t_get_box( shell, form, sz, c );
 }
@@ -254,7 +254,7 @@ void	get_box( const CPhysicsBase*	shell, const	Fmatrix& form,	Fvector&	sz, Fvect
 
 
 
-void __stdcall	destroy_physics_shell( CPhysicsShell* &p )
+void __stdcall	destroy_physics_shell( IPhysicsShellEx* &p )
 {
 	if (p)
 		p->Deactivate();
@@ -345,7 +345,7 @@ bool __stdcall	can_create_phys_shell( string1024 &reason, IPhysicsShellHolder& O
 
 
 
-float NonElasticCollisionEnergy( CPhysicsElement *e1, CPhysicsElement *e2, const Fvector &norm)// norm - from 2 to 1
+float NonElasticCollisionEnergy( IPhysicsElementEx *e1, IPhysicsElementEx *e2, const Fvector &norm)// norm - from 2 to 1
 {
 	VERIFY( e1 );
 	VERIFY( e2 );

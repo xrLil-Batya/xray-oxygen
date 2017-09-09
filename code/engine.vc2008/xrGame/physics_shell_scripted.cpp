@@ -10,14 +10,14 @@ using namespace luabind;
 
 cphysics_element_scripted*	cphysics_shell_scripted::get_Element( LPCSTR bone_name )				
 { 
-	CPhysicsElement* E = 	physics_impl().get_Element( bone_name );
+	IPhysicsElementEx* E = 	physics_impl().get_Element( bone_name );
 	if( !E )
 		return 0;
 	return get_script_wrapper<cphysics_element_scripted>( *E ) ;
 }
 cphysics_element_scripted*	cphysics_shell_scripted::get_Element( u16 bone_id )
 {
-	CPhysicsElement* E = 	physics_impl().get_Element( bone_id );
+	IPhysicsElementEx* E = 	physics_impl().get_Element( bone_id );
 	if( !E )
 		return 0;
 	return get_script_wrapper<cphysics_element_scripted>( *E ) ;
@@ -25,7 +25,7 @@ cphysics_element_scripted*	cphysics_shell_scripted::get_Element( u16 bone_id )
 
 cphysics_element_scripted*	cphysics_shell_scripted::get_ElementByStoreOrder		( u16 idx )
 {
-	CPhysicsElement* E = 	physics_impl().get_ElementByStoreOrder( idx );
+	IPhysicsElementEx* E = 	physics_impl().get_ElementByStoreOrder( idx );
 	R_ASSERT( E );
 	return get_script_wrapper<cphysics_element_scripted>( *E ) ;
 }
@@ -33,7 +33,7 @@ cphysics_element_scripted*	cphysics_shell_scripted::get_ElementByStoreOrder		( u
 
 cphysics_joint_scripted	*cphysics_shell_scripted::get_Joint( LPCSTR bone_name )
 {
-	CPhysicsJoint* J = 	physics_impl().get_Joint( bone_name );
+	IPhysicsJoint* J = 	physics_impl().get_Joint( bone_name );
 	if(!J)
 		return 0;
 	return get_script_wrapper<cphysics_joint_scripted>( *J ) ;
@@ -41,14 +41,14 @@ cphysics_joint_scripted	*cphysics_shell_scripted::get_Joint( LPCSTR bone_name )
 
 cphysics_joint_scripted	*cphysics_shell_scripted::get_Joint(  u16 bone_id  )
 {
-	CPhysicsJoint* J = 	physics_impl().get_Joint( bone_id );
+	IPhysicsJoint* J = 	physics_impl().get_Joint( bone_id );
 	if(!J)
 		return 0;
 	return get_script_wrapper<cphysics_joint_scripted>( *J ) ;
 }
 cphysics_joint_scripted	*cphysics_shell_scripted::get_JointByStoreOrder( u16 idx )	
 {
-	CPhysicsJoint* J = 	physics_impl().get_JointByStoreOrder( idx );
+	IPhysicsJoint* J = 	physics_impl().get_JointByStoreOrder( idx );
 	R_ASSERT( J );
 	return get_script_wrapper<cphysics_joint_scripted>( *J ) ;
 }

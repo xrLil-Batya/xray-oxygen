@@ -1,6 +1,6 @@
 #pragma	once
 struct	SHit;
-class	CPhysicsShell;
+class	IPhysicsShellEx;
 class	character_shell_control
 {
 	
@@ -9,11 +9,11 @@ public:
 	float 								curr_skin_friction_in_death	()					{ return m_curr_skin_friction_in_death; }
 	void								set_kill_hit				( SHit &H ) const;
 	void								set_fatal_impulse			( SHit &H ) const;
-	void								set_start_shell_params		( CPhysicsShell	* sh ) const;
+	void								set_start_shell_params		( IPhysicsShellEx	* sh ) const;
 	void								apply_start_velocity_factor	(CObject* who, Fvector &velocity ) const;
 	void								Load						( LPCSTR section );
 	void								TestForWounded				( const Fmatrix& xform, IKinematics* CKA );
-	void								UpdateFrictionAndJointResistanse( CPhysicsShell	* sh );
+	void								UpdateFrictionAndJointResistanse( IPhysicsShellEx	* sh );
 	void								CalculateTimeDelta			();
 private:
 	//skeleton modell(!share?)

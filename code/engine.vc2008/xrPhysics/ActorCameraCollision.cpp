@@ -18,7 +18,7 @@
 #ifdef DEBUG
 #	include	"debug_output.h"
 #endif
-CPhysicsShell*	actor_camera_shell = NULL;
+IPhysicsShellEx*	actor_camera_shell = NULL;
 BOOL dbg_draw_camera_collision = FALSE;
 static bool cam_collided = false;
 static bool cam_step	= false;
@@ -120,13 +120,13 @@ static void get_viewport_geom(Fvector &box, Fmatrix &form, const CCameraBase &ca
 
 static const float actor_camera_hudge_mass = 10.f;
 static const float actor_camera_hudge_mass_size = 10000000.f;
-CPhysicsShell	* create_camera_shell( IPhysicsShellHolder *actor )
+IPhysicsShellEx	* create_camera_shell( IPhysicsShellHolder *actor )
 {
 	VERIFY(actor);
 	//CGameObject	*actor = smart_cast<CGameObject	*>( Level().CurrentEntity() );
 	//VERIFY( Level().CurrentEntity() );
-	CPhysicsShell	*shell = P_build_SimpleShell( actor, actor_camera_hudge_mass , true );
-	CPhysicsElement* roote = shell->get_ElementByStoreOrder( 0 );
+	IPhysicsShellEx	*shell = P_build_SimpleShell( actor, actor_camera_hudge_mass , true );
+	IPhysicsElementEx* roote = shell->get_ElementByStoreOrder( 0 );
 	//Fobb obb; obb.m_halfsize.set(0.5f,0.5f,0.5f); obb.m_rotate.identity();obb.m_translate.set(0,0,0);
 	Fcylinder cyl;cyl.m_center.set(0,-0.8f,0);cyl.m_direction.set(0,1,0);cyl.m_height = 1.8f; cyl.m_radius = 0.5f;
 	//roote->add_Box(obb);
@@ -182,13 +182,13 @@ void get_camera_box( Fvector &box_size, Fmatrix &xform, const CCameraBase & came
 	get_viewport_geom ( box_size, xform, camera, _viewport_near );
 	box_size.add(Fvector().set(camera_collision_sckin_depth,camera_collision_sckin_depth,camera_collision_sckin_depth));
 }
-void get_old_camera_box( Fvector &old_box_size, Fmatrix &old_form, const CPhysicsElement *roote, const CBoxGeom* box )
+void get_old_camera_box( Fvector &old_box_size, Fmatrix &old_form, const IPhysicsElementEx *roote, const CBoxGeom* box )
 {
 	roote->GetGlobalTransformDynamic( &old_form );
 	box->get_size( old_box_size );
 }
 
-void set_camera_collision( const Fvector &box_size, const Fmatrix &xform, CPhysicsElement *roote, CBoxGeom* box )
+void set_camera_collision( const Fvector &box_size, const Fmatrix &xform, IPhysicsElementEx *roote, CBoxGeom* box )
 {
 	Fvector bs = box_size;
 	bs.z=box_size.z*2.f;
@@ -228,7 +228,7 @@ void set_camera_collision( const Fvector &box_size, const Fmatrix &xform, CPhysi
 	roote->SetTransform( xform, mh_clear );
 }
 
-void	do_collide_and_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, CPhysicsShell	*shell, CPhysicsElement *roote )
+void	do_collide_and_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPhysicsShellEx	*shell, IPhysicsElementEx *roote )
 {
 	///////////////////////////////////////////////////////////////////
 	VERIFY( ph_world );
@@ -272,7 +272,7 @@ void	do_collide_and_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, CPh
 	shell->Disable();
 }
 
-bool do_collide_not_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, CPhysicsShell	*shell, CPhysicsElement *roote)
+bool do_collide_not_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPhysicsShellEx	*shell, IPhysicsElementEx *roote)
 {
 		///////////////////////////////////////////////////////////////////
 	VERIFY( ph_world );
@@ -299,9 +299,9 @@ bool test_camera_box( const Fvector &box_size, const Fmatrix &xform, IPhysicsShe
 	VERIFY( l_actor );
 	update_current_entity_camera_collision( l_actor );
 
-	CPhysicsShell	*shell =  actor_camera_shell;
+	IPhysicsShellEx	*shell =  actor_camera_shell;
 	VERIFY( shell );
-	CPhysicsElement *roote = shell->get_ElementByStoreOrder( 0 );
+	IPhysicsElementEx *roote = shell->get_ElementByStoreOrder( 0 );
 	VERIFY( roote );
 	CODEGeom	*root_geom = roote->geometry( 0 );
 	VERIFY( root_geom );
@@ -324,9 +324,9 @@ void	collide_camera( CCameraBase & camera, float _viewport_near, IPhysicsShellHo
 	update_current_entity_camera_collision( l_actor );
 	Fvector box_size; Fmatrix xform;
 	get_camera_box( box_size, xform , camera, _viewport_near );
-	CPhysicsShell	*shell =  actor_camera_shell;
+	IPhysicsShellEx	*shell =  actor_camera_shell;
 	VERIFY( shell );
-	CPhysicsElement *roote = shell->get_ElementByStoreOrder( 0 );
+	IPhysicsElementEx *roote = shell->get_ElementByStoreOrder( 0 );
 	VERIFY( roote );
 	CODEGeom	*root_geom = roote->geometry( 0 );
 	VERIFY( root_geom );

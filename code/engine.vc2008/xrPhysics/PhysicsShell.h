@@ -9,9 +9,9 @@
 //#include "script_export_space.h"
 #include "../xrEngine/iphysicsshell.h"
 #include "iphysics_scripted.h"
-class CPhysicsJoint;
-class CPhysicsElement;
-class CPhysicsShell;
+class IPhysicsJoint;
+class IPhysicsElementEx;
+class IPhysicsShellEx;
 class CPHFracture;
 class CPHJointDestroyInfo;
 class CODEGeom;
@@ -38,22 +38,22 @@ enum motion_history_state
 
 struct physicsBone
 {
-	CPhysicsJoint* joint;
-	CPhysicsElement* element;
-	physicsBone()
-	{
-		joint=NULL;
-		element=NULL;
-	}
+    IPhysicsJoint* joint;
+    IPhysicsElementEx* element;
+    physicsBone()
+    {
+        joint = NULL;
+        element = NULL;
+    }
 };
 
 using BONE_P_MAP = xr_map<u16, physicsBone>;
 typedef const  BONE_P_MAP :: iterator			BONE_P_PAIR_CIT;
 // ABSTRACT:
-class	CPhysicsBase	;
-extern	XRPHYSICS_API void	get_box( const CPhysicsBase*	shell, const	Fmatrix& form,	Fvector&	sz, Fvector&	c );
+class	IPhysicsBase	;
+extern	XRPHYSICS_API void	get_box( const IPhysicsBase*	shell, const	Fmatrix& form,	Fvector&	sz, Fvector&	c );
 
-class	XRPHYSICS_API	CPhysicsBase:
+class	XRPHYSICS_API	IPhysicsBase:
 	public iphysics_scripted_class
 {
 
@@ -121,19 +121,19 @@ public:
 	virtual		void			dbg_draw_velocity						( float scale, u32 color )																								= 0;
 	virtual		void			dbg_draw_force							( float scale, u32 color )																								= 0;
 	virtual		void			dbg_draw_geometry						( float scale, u32 color, Flags32 flags = Flags32().assign( 0 ) ) const													= 0;
-	virtual						~CPhysicsBase							()																														{};
+	virtual						~IPhysicsBase							()																														{};
 };
 
 // ABSTRACT:
 // Element is fully Rigid and consists of one or more forms, such as sphere, box, cylinder, etc.
-class	XRPHYSICS_API	CPhysicsElement	: 
-	public CPhysicsBase,
+class	XRPHYSICS_API	IPhysicsElementEx	: 
+	public IPhysicsBase,
 	public IPhysicsElement
 {
 
 public:
 				u16								m_SelfID																						;
-	virtual		CPhysicsShell					*PhysicsShell							()																													= 0;		
+	virtual		IPhysicsShellEx					*PhysicsShell							()																													= 0;		
 	virtual		void							set_ContactCallback						(ContactCallbackFun	*callback)																						= 0;
 	virtual		IPhysicsShellHolder				*PhysicsRefObject						()																													= 0;
 	virtual		void							add_Sphere								(const Fsphere&		V)																								= 0;
@@ -146,10 +146,10 @@ public:
 	virtual		void							add_geom								( CODEGeom* g )																										= 0;
 	virtual		void							remove_geom								( CODEGeom* g )																										= 0;
 	virtual	const IPhysicsGeometry*				geometry								( u16 i )const																										= 0;
-	virtual		CPhysicsElement*				parent_element							()																													= 0;
+	virtual		IPhysicsElementEx*				parent_element							()																													= 0;
 	virtual		bool							has_geoms								()																													= 0;
 	virtual		void							add_Mass								(const SBoneShape& shape,const Fmatrix& offset,const Fvector& mass_center,float mass,CPHFracture* fracture=NULL)	= 0;
-	virtual		void							set_ParentElement						(CPhysicsElement* p)																								= 0;
+	virtual		void							set_ParentElement						(IPhysicsElementEx* p)																								= 0;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual		void							set_BoxMass								(const Fobb& box, float mass)																						= 0;	
 	virtual		void							setInertia								(const dMass& M)																									= 0;																
@@ -178,14 +178,14 @@ public:
 	virtual		void							ReleaseFixed							()																													= 0;
 	virtual		bool							isFixed									()																													= 0;
 ////////////////////////////////////////////////////////////////IPhysicsElement////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	virtual	const	Fmatrix						&XFORM									()							const																					{ return CPhysicsBase::XFORM(); }
+	virtual	const	Fmatrix						&XFORM									()							const																					{ return IPhysicsBase::XFORM(); }
 	//virtual		void		_BCL				CalculateBoneTransform					( Fmatrix &bone_transform )const																= 0;
 	virtual		void							GetPointVel								( Fvector	 &res_vel, const Fvector & point ) const																= 0;
 //	virtual			void						get_LinearVel							( Fvector& velocity )		const																					{ get_LinearVel( velocity ); }
 //	virtual			void						get_AngularVel							( Fvector& velocity )		const																					{ get_AngularVel( velocity ); }
-	virtual			void						get_Box									( Fvector&	sz, Fvector& c )const																					{ return	CPhysicsBase::get_Box( sz, c ); }
+	virtual			void						get_Box									( Fvector&	sz, Fvector& c )const																					{ return	IPhysicsBase::get_Box( sz, c ); }
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	virtual										~CPhysicsElement						()																													{};
+	virtual										~IPhysicsElementEx						()																													{};
 //	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
 
@@ -194,12 +194,12 @@ public:
 //#define script_type_list save_type_list(CPhysicsElement)
 
 
-XRPHYSICS_API float NonElasticCollisionEnergy( CPhysicsElement *e1, CPhysicsElement *e2, const Fvector &norm);// norm - from 2 to 1
+XRPHYSICS_API float NonElasticCollisionEnergy( IPhysicsElementEx *e1, IPhysicsElementEx *e2, const Fvector &norm);// norm - from 2 to 1
 
 //ABSTRACT:
 // Joint between two elements 
 
-class	XRPHYSICS_API CPhysicsJoint:
+class	XRPHYSICS_API IPhysicsJoint:
 	public	iphysics_scripted_class
 {
 
@@ -220,17 +220,17 @@ public:
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 				enumType				eType																										;          //type of the joint
 public:
-	virtual		~CPhysicsJoint										()																				{};
+	virtual		~IPhysicsJoint										()																				{};
 	virtual		u16					 	BoneID						()																				=0;
 	virtual		void					SetBoneID					(u16 bone_id)																	=0;
-	virtual		CPhysicsElement*		PFirst_element				()																				=0;
-	virtual		CPhysicsElement*		PSecond_element				()																				=0;
+	virtual		IPhysicsElementEx*		PFirst_element				()																				=0;
+	virtual		IPhysicsElementEx*		PSecond_element				()																				=0;
 	virtual		u16						GetAxesNumber				()																				=0;
 	virtual		void 					Activate					()																				=0;
 	virtual		void 					Create						()																				=0;
 	virtual		void 					RunSimulation				()																				=0;
 	virtual		void 					Deactivate					()																				=0;
-	virtual		void 					SetBackRef					(CPhysicsJoint** j)																=0;
+	virtual		void 					SetBackRef					(IPhysicsJoint** j)																=0;
 	virtual		void 					SetAnchor					(const Fvector& position)														=0;
 	virtual		void 					SetAxisSDfactors			(float spring_factor,float damping_factor,int axis_num)							=0;
 	virtual		void 					SetJointSDfactors			(float spring_factor,float damping_factor)										=0;
@@ -285,8 +285,8 @@ public:
 class CPHIsland;
 class CPhysicsShellAnimator;
 
-class	XRPHYSICS_API CPhysicsShell			:
-	public CPhysicsBase,
+class	XRPHYSICS_API IPhysicsShellEx			:
+	public IPhysicsBase,
 	public IPhysicsShell
 {
 protected:
@@ -296,7 +296,7 @@ public:
 public:
 IC					IKinematics					*PKinematics								()																{return m_pKinematics		;}
 ////////////////////////////////////////////////////IPhysicsShell///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-virtual	const		Fmatrix						&XFORM										()const															{ return CPhysicsBase::XFORM(); }
+virtual	const		Fmatrix						&XFORM										()const															{ return IPhysicsBase::XFORM(); }
 virtual	const		IPhysicsElement				&Element									( u16 index ) const												{ return *get_ElementByStoreOrder( index );	};
 virtual				void						GetGlobalTransformDynamic					(Fmatrix* m) 																				= 0;
 //virtual			u16							get_ElementsNumber							( )																const	= 0;
@@ -305,8 +305,8 @@ virtual				void						GetGlobalTransformDynamic					(Fmatrix* m) 																
 	virtual			CPhysicsShellAnimator*		PPhysicsShellAnimator						()																							= 0;
 					void						set_Kinematics								(IKinematics* p)														{m_pKinematics=p	;}
 	virtual			void						set_JointResistance							(float force)																				= 0;
-	virtual			void						add_Element									(CPhysicsElement* E)																		= 0;
-	virtual			void						add_Joint									(CPhysicsJoint* E)																			= 0;
+	virtual			void						add_Element									(IPhysicsElementEx* E)																		= 0;
+	virtual			void						add_Joint									(IPhysicsJoint* E)																			= 0;
 	virtual			CPHIsland					*PIsland									()																							= 0;
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////	///////////
 	virtual	const	CGID						&GetCLGroup								()const																							= 0;
@@ -348,18 +348,18 @@ virtual				void						GetGlobalTransformDynamic					(Fmatrix* m) 																
 	virtual			void						addEquelInertiaToEls						(const dMass& M)																			= 0;
 	virtual			void						MassAddBox									( float mass, const Fvector &full_size )													= 0;
 	virtual			ELEMENT_STORAGE				&Elements									()																							= 0;
-	virtual			CPhysicsElement				*get_Element								(u16 bone_id)																				= 0;
-	virtual			CPhysicsElement				*get_Element								(const shared_str & bone_name)																= 0;
-	virtual			CPhysicsElement				*get_Element								(LPCSTR bone_name)																			= 0;
-	virtual			CPhysicsElement				*get_ElementByStoreOrder					(u16 num)																					= 0;
-	virtual	const CPhysicsElement				*get_ElementByStoreOrder					(u16 num) const																				= 0;
-	virtual			CPhysicsElement				*get_PhysicsParrentElement					( u16 bone_id )																				= 0;
+	virtual			IPhysicsElementEx				*get_Element								(u16 bone_id)																				= 0;
+	virtual			IPhysicsElementEx				*get_Element								(const shared_str & bone_name)																= 0;
+	virtual			IPhysicsElementEx				*get_Element								(LPCSTR bone_name)																			= 0;
+	virtual			IPhysicsElementEx				*get_ElementByStoreOrder					(u16 num)																					= 0;
+	virtual	const IPhysicsElementEx				*get_ElementByStoreOrder					(u16 num) const																				= 0;
+	virtual			IPhysicsElementEx				*get_PhysicsParrentElement					( u16 bone_id )																				= 0;
 	virtual			u16							get_ElementsNumber							()const																						= 0;
 	virtual			CPHSynchronize				*get_ElementSync							(u16 element)																				= 0;
-	virtual			CPhysicsJoint				*get_Joint									(u16 bone_id)																				= 0;
-	virtual			CPhysicsJoint				*get_Joint									(const shared_str & bone_name)																= 0;
-	virtual			CPhysicsJoint				*get_Joint									(LPCSTR bone_name)																			= 0;
-	virtual			CPhysicsJoint				*get_JointByStoreOrder						(u16 num)																					= 0;
+	virtual			IPhysicsJoint				*get_Joint									(u16 bone_id)																				= 0;
+	virtual			IPhysicsJoint				*get_Joint									(const shared_str & bone_name)																= 0;
+	virtual			IPhysicsJoint				*get_Joint									(LPCSTR bone_name)																			= 0;
+	virtual			IPhysicsJoint				*get_JointByStoreOrder						(u16 num)																					= 0;
 	virtual			u16							get_JointsNumber							()																							= 0;
 	virtual			CODEGeom					*get_GeomByID								(u16 bone_id)																				= 0;
 	virtual			void						Freeze										()																							= 0;
@@ -374,7 +374,7 @@ virtual				void						GetGlobalTransformDynamic					(Fmatrix* m) 																
 	virtual			void						PureStep									(float step = fixed_step)																	= 0;
 	virtual			void						SetGlTransformDynamic						(const Fmatrix &form)																		= 0;
 	virtual			void						CollideAll									()																							= 0;
-	virtual			CPhysicsElement				*NearestToPoint								(const Fvector& point, NearestToPointCallback *cb = 0 )										= 0;
+	virtual			IPhysicsElementEx				*NearestToPoint								(const Fvector& point, NearestToPointCallback *cb = 0 )										= 0;
 	virtual			void						build_FromKinematics						(IKinematics* K,BONE_P_MAP* p_geting_map=NULL)												= 0;
 	virtual			void						preBuild_FromKinematics						(IKinematics* K,BONE_P_MAP* p_geting_map=NULL)												= 0;
 	virtual			void						Build										(bool disable=false)																		= 0;
@@ -400,7 +400,7 @@ virtual				void						GetGlobalTransformDynamic					(Fmatrix* m) 																
 	virtual			Fmatrix						&ObjectInRoot								()																							= 0;
 	virtual			void						ObjectToRootForm							(const Fmatrix& form)							    										= 0;
 	virtual			void						SetPrefereExactIntegration					()																							= 0;
-	virtual										~CPhysicsShell								()																							;
+	virtual										~IPhysicsShellEx								()																							;
 	//build_FromKinematics		in returns elements  & joint pointers according bone IDs;
 //	DECLARE_SCRIPT_REGISTER_FUNCTION
 	};
@@ -413,27 +413,27 @@ struct SGameMtl;
 XRPHYSICS_API void	StaticEnvironmentCB ( bool& do_colide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2 );
 
 // Implementation creator
-XRPHYSICS_API	CPhysicsJoint*				P_create_Joint				(CPhysicsJoint::enumType type ,CPhysicsElement* first,CPhysicsElement* second)								;
-XRPHYSICS_API	CPhysicsElement*			P_create_Element			()																											;
-XRPHYSICS_API	CPhysicsShell*				P_create_Shell				()																											;
-XRPHYSICS_API	CPhysicsShell*				P_create_splited_Shell		()																											;
-XRPHYSICS_API	CPhysicsShell*				P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,LPCSTR	fixed_bones)												;
-XRPHYSICS_API	CPhysicsShell*				P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,U16Vec& fixed_bones)												;
-XRPHYSICS_API	CPhysicsShell*				P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,BONE_P_MAP* bone_map, LPCSTR fixed_bones)							;
+XRPHYSICS_API	IPhysicsJoint*				P_create_Joint				(IPhysicsJoint::enumType type ,IPhysicsElementEx* first,IPhysicsElementEx* second)								;
+XRPHYSICS_API	IPhysicsElementEx*			P_create_Element			()																											;
+XRPHYSICS_API	IPhysicsShellEx*				P_create_Shell				()																											;
+XRPHYSICS_API	IPhysicsShellEx*				P_create_splited_Shell		()																											;
+XRPHYSICS_API	IPhysicsShellEx*				P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,LPCSTR	fixed_bones)												;
+XRPHYSICS_API	IPhysicsShellEx*				P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,U16Vec& fixed_bones)												;
+XRPHYSICS_API	IPhysicsShellEx*				P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,BONE_P_MAP* bone_map, LPCSTR fixed_bones)							;
 
-extern "C" XRPHYSICS_API	CPhysicsShell*		__stdcall		P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,BONE_P_MAP* bone_map = 0, bool not_set_bone_callbacks = false)		;
+extern "C" XRPHYSICS_API	IPhysicsShellEx*		__stdcall		P_build_Shell				(IPhysicsShellHolder* obj,bool not_active_state,BONE_P_MAP* bone_map = 0, bool not_set_bone_callbacks = false)		;
 
-XRPHYSICS_API	CPhysicsShell*				P_build_SimpleShell			(IPhysicsShellHolder* obj,float mass,bool not_active_state)															;
-XRPHYSICS_API	void						ApplySpawnIniToPhysicShell	(CInifile const * ini,CPhysicsShell* physics_shell,bool fixed)														;
-				void						fix_bones					(LPCSTR	fixed_bones,CPhysicsShell* shell )																	;
+XRPHYSICS_API	IPhysicsShellEx*				P_build_SimpleShell			(IPhysicsShellHolder* obj,float mass,bool not_active_state)															;
+XRPHYSICS_API	void						ApplySpawnIniToPhysicShell	(CInifile const * ini,IPhysicsShellEx* physics_shell,bool fixed)														;
+				void						fix_bones					(LPCSTR	fixed_bones,IPhysicsShellEx* shell )																	;
 
-extern "C" XRPHYSICS_API	void	__stdcall			destroy_physics_shell		(CPhysicsShell* &p)																							;
+extern "C" XRPHYSICS_API	void	__stdcall			destroy_physics_shell		(IPhysicsShellEx* &p)																							;
 
 extern "C" XRPHYSICS_API	bool	__stdcall			can_create_phys_shell( string1024 &reason, IPhysicsShellHolder& O );				
 
 struct	NearestToPointCallback
 {
-	virtual	bool operator() ( CPhysicsElement* e )	=	0;
+	virtual	bool operator() ( IPhysicsElementEx* e )	=	0;
 };
 					bool				shape_is_physic					( const SBoneShape& shape );
 					bool				has_physics_collision_shapes	( IKinematics& K );

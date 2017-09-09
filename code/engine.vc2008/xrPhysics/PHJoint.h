@@ -7,7 +7,7 @@
 #include "physics_scripted.h"
 class CPHJointDestroyInfo;
 class CPHJoint:
-	public CPhysicsJoint,
+	public IPhysicsJoint,
 	public cphysics_scripted
 {
 ///////////////////////////////////////////////////////
@@ -19,7 +19,7 @@ class CPHJoint:
 				CPHShell							*pShell																									;
 				dJointID							m_joint																									;
 				dJointID							m_joint1																								;
-				CPhysicsJoint						**m_back_ref																							;					
+				IPhysicsJoint						**m_back_ref																							;					
 				CPHJointDestroyInfo					*m_destroy_info																							;
 				float								m_erp																									;			//joint erp
 				float								m_cfm																									;			//joint cfm
@@ -89,8 +89,8 @@ class CPHJoint:
 	virtual		void 					SetAxisDirVsFirstElement	(const float x,const float y,const float z,const int axis_num)																																							;
 	virtual		void 					SetAxisDirVsSecondElement	(const float x,const float y,const float z,const int axis_num)																																							;
 public:
-	virtual		CPhysicsElement			*PFirst_element 			()																																																						;
-	virtual		CPhysicsElement			*PSecond_element			()																																																						;
+	virtual		IPhysicsElementEx			*PFirst_element 			()																																																						;
+	virtual		IPhysicsElementEx			*PSecond_element			()																																																						;
 	virtual		u16					 	BoneID						()																																																	{return m_bone_id	;}
 	virtual		void					SetBoneID					(u16 bone_id)																																														{m_bone_id=bone_id	;}
 IC				CPHElement				*PFirstElement  			()																																																{return pFirst_element	;}
@@ -98,7 +98,7 @@ IC				CPHElement				*PSecondElement 			()																																							
 	virtual		void 					Activate					()																																																						;
 	virtual		void 					Create						()																																																						;
 	virtual		void 					RunSimulation				()																																																						;
-	virtual		void 					SetBackRef					(CPhysicsJoint	**j)																																																	;
+	virtual		void 					SetBackRef					(IPhysicsJoint	**j)																																																	;
 	virtual		void 					SetForceAndVelocity			(const float force,const float velocity=0.f,const int axis_num=-1)																																						;
 	virtual		void 					SetForce					(const float force,const int axis_num=-1)																																												;
 	virtual		void 					SetVelocity					(const float velocity=0.f,const int axis_num=-1)																																										;
@@ -121,7 +121,7 @@ IC				CPHElement				*PSecondElement 			()																																							
 				void 					ReattachFirstElement		(CPHElement* new_element)																																																;
 				CODEGeom				*&RootGeom					()																																																	{return pFirstGeom	;}
 	virtual		CPHJointDestroyInfo		*JointDestroyInfo			()																																																{return m_destroy_info	;}
-										CPHJoint					(CPhysicsJoint::enumType type ,CPhysicsElement* first,CPhysicsElement* second)																																			;
+										CPHJoint					(IPhysicsJoint::enumType type ,IPhysicsElementEx* first,IPhysicsElementEx* second)																																			;
 	virtual								~CPHJoint					()																																																						;
 				void					SetShell					(CPHShell* p)																																																			;			
 

@@ -21,7 +21,7 @@
 const float hinge2_spring=20000.f;
 const float hinge2_damping=1000.f;
 
-IC dBodyID body_for_joint(CPhysicsElement* ee)
+IC dBodyID body_for_joint(IPhysicsElementEx* ee)
 {
 	VERIFY(smart_cast<CPHElement *>(ee));
 	CPHElement * e = static_cast<CPHElement *> (ee);
@@ -40,9 +40,9 @@ CPHJoint::~CPHJoint(){
 	if(m_back_ref)*m_back_ref=NULL;
 };
 
-void CPHJoint::SetBackRef(CPhysicsJoint** j)
+void CPHJoint::SetBackRef(IPhysicsJoint** j)
 {
-	R_ASSERT2(*j==static_cast<CPhysicsJoint*>(this),"wronng reference");
+	R_ASSERT2(*j==static_cast<IPhysicsJoint*>(this),"wronng reference");
 	m_back_ref=j;
 }
 void CPHJoint::CreateBall()
@@ -544,7 +544,7 @@ void CPHJoint::SetLimits(const float low, const float high, const int axis_num)
 }
 
 
-CPHJoint::CPHJoint(CPhysicsJoint::enumType type ,CPhysicsElement* first,CPhysicsElement* second)
+CPHJoint::CPHJoint(IPhysicsJoint::enumType type ,IPhysicsElementEx* first,IPhysicsElementEx* second)
 {
 
 	pShell=NULL;
@@ -1503,11 +1503,11 @@ void CPHJoint::SPHAxis::set_sd_factors(float sf,float df,enumType jt)
 			break;
 	}
 }
-CPhysicsElement* CPHJoint::PFirst_element()
+IPhysicsElementEx* CPHJoint::PFirst_element()
 {
 	return cast_PhysicsElement(pFirst_element);
 }
-CPhysicsElement* CPHJoint::PSecond_element()
+IPhysicsElementEx* CPHJoint::PSecond_element()
 {
 	return cast_PhysicsElement(pSecond_element);
 }

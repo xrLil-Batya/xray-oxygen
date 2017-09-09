@@ -11,7 +11,7 @@
 #include "iphcapture.h"
 class	IPhysicsShellHolder;
 class	CPHCharacter;
-class	CPhysicsElement;
+class	IPhysicsElementEx;
 struct	NearestToPointCallback;
 class CPHCapture : 
 	public CPHUpdateObject,
@@ -29,7 +29,7 @@ void				RemoveConnection(IPhysicsShellHolder* O);
 
 protected:
 CPHCharacter		*m_character;
-CPhysicsElement*	m_taget_element;
+IPhysicsElementEx*	m_taget_element;
 IPhysicsShellHolder*	m_taget_object;
 dJointID			m_joint;
 dJointID			m_ajoint;
@@ -74,7 +74,7 @@ static void object_contactCallbackFun(bool& do_colide,bool bo1,dContact& c,SGame
 ///////////CPHObject/////////////////////////////
 	virtual void PhDataUpdate(dReal step);
 	virtual void PhTune(dReal step);
-	virtual void NetRelcase		(CPhysicsShell *s);
+	virtual void NetRelcase		(IPhysicsShellEx *s);
 
 };
 #endif

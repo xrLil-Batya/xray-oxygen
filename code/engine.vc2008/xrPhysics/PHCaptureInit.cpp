@@ -180,7 +180,7 @@ CPHCapture::CPHCapture	( CPHCharacter   *a_character, IPhysicsShellHolder	*a_tag
 	CBoneInstance& tag_bone=K->LL_GetBoneInstance( a_taget_element );
 	VERIFY( tag_bone.callback_param( ) );
 
-	m_taget_element					=(CPhysicsElement*)tag_bone.callback_param();
+	m_taget_element					=(IPhysicsElementEx*)tag_bone.callback_param();
 	VERIFY( m_taget_element );
 
 	Init( );

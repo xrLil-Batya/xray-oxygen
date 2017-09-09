@@ -14,7 +14,7 @@
 #include "Hit.h"
 #include "game_object_space.h"
 
-class CPhysicsShell;
+class IPhysicsShellEx;
 class CSE_Abstract;
 class CPHSynchronize;
 class CScriptGameObject;

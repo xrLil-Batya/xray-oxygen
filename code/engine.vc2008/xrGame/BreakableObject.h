@@ -30,7 +30,7 @@ static	float				m_immunity_factor;
 
 		float				fHealth;
 		IPHStaticGeomShell	*m_pUnbrokenObject;
-		CPhysicsShell		*m_Shell;
+		IPhysicsShellEx		*m_Shell;
 static	u32					m_remove_time;
 		u32					m_break_time;
 		bool				bRemoved;

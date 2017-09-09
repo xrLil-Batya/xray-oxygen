@@ -4,15 +4,15 @@
 #include "../xrphysics/physicsshell.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class CPhysicsShell;
+class IPhysicsShellEx;
 class cphysics_element_scripted;
 class cphysics_joint_scripted;
 
 class cphysics_shell_scripted:
-public cphysics_game_scripted<CPhysicsShell>
+public cphysics_game_scripted<IPhysicsShellEx>
 {
 public:
-	cphysics_shell_scripted(CPhysicsShell* imp ):cphysics_game_scripted<CPhysicsShell>(imp){}
+	cphysics_shell_scripted(IPhysicsShellEx* imp ):cphysics_game_scripted<IPhysicsShellEx>(imp){}
 	
 
 	void						applyForce					( float x, float y, float z )	{ physics_impl().applyForce( x, y, z ); }

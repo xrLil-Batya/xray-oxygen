@@ -1,12 +1,12 @@
 #pragma once
 #include "physicsexternalcommon.h"
 #include "iphysics_scripted.h"
-class CPhysicsShell;
+class IPhysicsShellEx;
 class IPHWorldUpdateCallbck
 {
 public:
 	virtual	void		update_step			()					= 0;
-	virtual	void		phys_shell_relcase	(CPhysicsShell* sh)	= 0;
+	virtual	void		phys_shell_relcase	(IPhysicsShellEx* sh)	= 0;
 protected:
 	virtual ~IPHWorldUpdateCallbck() {}
 };

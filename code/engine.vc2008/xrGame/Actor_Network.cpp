@@ -680,7 +680,7 @@ void CActor::net_Destroy	()
 	character_physics_support()->movement()->DestroyCharacter();
 	if(m_pPhysicsShell)			{
 		m_pPhysicsShell->Deactivate();
-		xr_delete<CPhysicsShell>(m_pPhysicsShell);
+		xr_delete<IPhysicsShellEx>(m_pPhysicsShell);
 	};
 	m_pPhysics_support->in_NetDestroy	();
 
@@ -783,7 +783,7 @@ void	CActor::ResetCallbacks()
 void	CActor::OnChangeVisual()
 {
 	{
-		CPhysicsShell* tmp_shell=PPhysicsShell();
+		IPhysicsShellEx* tmp_shell=PPhysicsShell();
 		PPhysicsShell()=NULL;
 		inherited::OnChangeVisual();
 		PPhysicsShell()=tmp_shell;

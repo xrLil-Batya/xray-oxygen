@@ -391,7 +391,7 @@ void CPHCapture::RemoveConnection(IPhysicsShellHolder* O)
 	}
 }
 
-void	CPHCapture::NetRelcase		(CPhysicsShell *s)
+void	CPHCapture::NetRelcase		(IPhysicsShellEx *s)
 {
 	VERIFY( s );
 	VERIFY( s->get_ElementByStoreOrder(0) );

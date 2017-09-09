@@ -111,7 +111,7 @@ static struct sempty_update_callback:
 public IPHWorldUpdateCallbck
 {
 	void		update_step			(){};
-	void		phys_shell_relcase	(CPhysicsShell* sh){};
+	void		phys_shell_relcase	(IPhysicsShellEx* sh){};
 } empty_update_callback;
 
 
@@ -622,7 +622,7 @@ void CPHWorld::CutVelocity(float l_limit,float a_limit)
 		++i_object;
 	}
 }
-void CPHWorld::NetRelcase(CPhysicsShell *s)
+void CPHWorld::NetRelcase(IPhysicsShellEx *s)
 {
 /*
 	CPHReqComparerHasShell c(s);

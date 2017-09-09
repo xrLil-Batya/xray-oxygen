@@ -52,7 +52,7 @@ void CPHCallOnStepCondition::set_global_time(u32 time)
 	set_global_time(float(time)/1000.f);
 }
 
-CPHShellBasedAction::CPHShellBasedAction(CPhysicsShell	*shell)
+CPHShellBasedAction::CPHShellBasedAction(IPhysicsShellEx	*shell)
 {
 	VERIFY(shell&&shell->isActive());
 	m_shell=shell;
@@ -62,7 +62,7 @@ bool CPHShellBasedAction::obsolete() const
 	return !m_shell||!m_shell->isActive();
 }
 
-CPHConstForceAction::CPHConstForceAction(CPhysicsShell	*shell, const Fvector &force)
+CPHConstForceAction::CPHConstForceAction(IPhysicsShellEx	*shell, const Fvector &force)
 :CPHShellBasedAction(shell)
 {
 	m_force.set(force);
@@ -74,7 +74,7 @@ void CPHConstForceAction::run()
 	m_shell->applyForce(m_force.x,m_force.y,m_force.z);
 }
 
-CPHReqComparerHasShell::CPHReqComparerHasShell(CPhysicsShell	*shell)
+CPHReqComparerHasShell::CPHReqComparerHasShell(IPhysicsShellEx	*shell)
 {
 	VERIFY(shell);
 	m_shell=shell;

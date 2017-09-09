@@ -544,7 +544,7 @@ void CExplosive::HideExplosive()
 	CGameObject	*GO=cast_game_object();
 	GO->setVisible(FALSE);
 	GO->setEnabled(FALSE);
-	CPhysicsShell* phshell=(smart_cast<CPhysicsShellHolder*>(GO))->PPhysicsShell();
+	IPhysicsShellEx* phshell=(smart_cast<CPhysicsShellHolder*>(GO))->PPhysicsShell();
 	if(phshell)
 	{
 		phshell->Disable();
@@ -747,7 +747,7 @@ void CExplosive::SetExplosionSize(const Fvector	&new_size)
 void CExplosive::ActivateExplosionBox(const Fvector &size,Fvector &in_out_pos)
 {
 	CPhysicsShellHolder		*self_obj=smart_cast<CPhysicsShellHolder*>(cast_game_object());
-	CPhysicsShell* self_shell=self_obj->PPhysicsShell();
+	IPhysicsShellEx* self_shell=self_obj->PPhysicsShell();
 	if(self_shell&&self_shell->isActive())self_shell->DisableCollision();
 	ActivateShapeExplosive( self_obj, size, m_vExplodeSize, in_out_pos );
 	if(self_shell&&self_shell->isActive())self_shell->EnableCollision();

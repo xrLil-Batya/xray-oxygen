@@ -309,7 +309,7 @@ void CBreakableObject::ApplyExplosion(const Fvector &dir,float impulse)
 	{	
 		
 		Fvector max_area_dir;
-		CPhysicsElement* element=m_pPhysicsShell->get_ElementByStoreOrder(i);
+		IPhysicsElementEx* element=m_pPhysicsShell->get_ElementByStoreOrder(i);
 		element->get_MaxAreaDir(max_area_dir);
 		float	sign=max_area_dir.dotproduct(dir)>0.f ? 1.f : -1.f;
 		max_area_dir.mul(sign);

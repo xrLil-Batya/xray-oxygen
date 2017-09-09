@@ -676,7 +676,7 @@ void CCharacterPhysicsSupport::in_UpdateCL( )
 #endif
 }
 
-void CCharacterPhysicsSupport::CreateSkeleton(CPhysicsShell* &pShell)
+void CCharacterPhysicsSupport::CreateSkeleton(IPhysicsShellEx* &pShell)
 {
 
 	R_ASSERT2(!pShell,"pShell already initialized!!");
@@ -913,7 +913,7 @@ void	CCharacterPhysicsSupport::	RemoveActiveWeaponCollision		()
 	xr_vector<CODEGeom*>::iterator ii =m_weapon_geoms.begin(), ee = m_weapon_geoms.end();
 	Fmatrix m0;
 	(*ii)->get_xform( m0 );
-	CPhysicsElement* root = m_active_item_obj->PPhysicsShell()->get_ElementByStoreOrder( 0 );
+	IPhysicsElementEx* root = m_active_item_obj->PPhysicsShell()->get_ElementByStoreOrder( 0 );
 	CODEGeom *rg = root->geometry( 0 );
 	VERIFY( rg );
 	Fmatrix m1;
@@ -1013,26 +1013,26 @@ void	CCharacterPhysicsSupport::	AddActiveWeaponCollision		()
 
 	active_weapon_item->UpdateXForm();
 
-	CPhysicsShell *weapon_shell = P_build_Shell( &active_weapon_item->object(), true, (BONE_P_MAP*) (0), true );
+	IPhysicsShellEx *weapon_shell = P_build_Shell( &active_weapon_item->object(), true, (BONE_P_MAP*) (0), true );
 
 	VERIFY( m_pPhysicsShell );
-	CPhysicsElement* weapon_attach_bone = m_pPhysicsShell->get_PhysicsParrentElement( (u16)br );
+	IPhysicsElementEx* weapon_attach_bone = m_pPhysicsShell->get_PhysicsParrentElement( (u16)br );
 
 	bone_chain_disable( (u16)br, weapon_attach_bone->m_SelfID, *m_pPhysicsShell->PKinematics() );
 	if(bl != br && bl!=-1 )
 	{
-		CPhysicsElement* p = m_pPhysicsShell->get_PhysicsParrentElement( (u16) bl );
+		IPhysicsElementEx* p = m_pPhysicsShell->get_PhysicsParrentElement( (u16) bl );
 		VERIFY( p );
 		bone_chain_disable( (u16)bl, p->m_SelfID, *m_pPhysicsShell->PKinematics() );
 	}
 	if(br2!=bl && br2 != br && br2!=-1 )
 	{
-		CPhysicsElement* p = m_pPhysicsShell->get_PhysicsParrentElement( (u16) br2 );
+		IPhysicsElementEx* p = m_pPhysicsShell->get_PhysicsParrentElement( (u16) br2 );
 		VERIFY( p );
 		bone_chain_disable( (u16)br2, weapon_attach_bone->m_SelfID, *m_pPhysicsShell->PKinematics() );
 	}
 
-	CPhysicsElement* weapon_element		= weapon_shell->get_ElementByStoreOrder( 0 );
+	IPhysicsElementEx* weapon_element		= weapon_shell->get_ElementByStoreOrder( 0 );
 
 	u16 geom_num = weapon_element->numberOfGeoms();
 	for( u16 i = 0; i< geom_num; ++i )

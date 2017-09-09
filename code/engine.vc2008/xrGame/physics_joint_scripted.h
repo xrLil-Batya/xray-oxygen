@@ -4,12 +4,12 @@
 #include "../xrphysics/physicsshell.h"
 #include "../xrScripts/export/script_export_space.h"
 class cphysics_element_scripted;
-class CPhysicsJoint;
+class IPhysicsJoint;
 class cphysics_joint_scripted:
-public cphysics_game_scripted<CPhysicsJoint>
+public cphysics_game_scripted<IPhysicsJoint>
 {
 public:
-	cphysics_joint_scripted(CPhysicsJoint* imp ):cphysics_game_scripted<CPhysicsJoint>(imp){}
+	cphysics_joint_scripted(IPhysicsJoint* imp ):cphysics_game_scripted<IPhysicsJoint>(imp){}
 	
 
 

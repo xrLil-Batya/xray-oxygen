@@ -128,7 +128,7 @@ void CPHDestroyable::PhysicallyRemoveSelf()
 void CPHDestroyable::PhysicallyRemovePart(CPHDestroyableNotificate *dn)
 {
 	CPhysicsShellHolder		*sh		=	dn		->PPhysicsShellHolder		()		;	
-	CPhysicsShell			*s		=	sh		->PPhysicsShell				()		;
+	IPhysicsShellEx			*s		=	sh		->PPhysicsShell				()		;
 							sh					->setVisible				(FALSE)	;
 							sh					->setEnabled				(FALSE)	;
 							s					->Disable					()		;
@@ -208,8 +208,8 @@ void CPHDestroyable::SheduleUpdate(u32 dt)
 
 void CPHDestroyable::NotificatePart(CPHDestroyableNotificate *dn)
 {
-	CPhysicsShell	*own_shell=PPhysicsShellHolder()->PPhysicsShell()			;
-	CPhysicsShell	*new_shell=dn->PPhysicsShellHolder()->PPhysicsShell()		;
+	IPhysicsShellEx	*own_shell=PPhysicsShellHolder()->PPhysicsShell()			;
+	IPhysicsShellEx	*new_shell=dn->PPhysicsShellHolder()->PPhysicsShell()		;
 	IKinematics		*own_K =smart_cast<IKinematics*>(PPhysicsShellHolder()->Visual());
 	IKinematics		*new_K =smart_cast<IKinematics*>(dn->PPhysicsShellHolder()->Visual())	;
 	VERIFY			(own_K&&new_K&&own_shell&&new_shell)						;
@@ -270,12 +270,12 @@ void CPHDestroyable::NotificatePart(CPHDestroyableNotificate *dn)
 
 
 		//dBodyID own_body=own_shell->get_Element(ref_bone)->get_body()			;
-		CPhysicsElement * own_element = own_shell->get_Element(ref_bone);
+		IPhysicsElementEx * own_element = own_shell->get_Element(ref_bone);
 		u16 new_el_number = new_shell->get_ElementsNumber()									;
 
 		for(u16 i=0;i<new_el_number;++i)
 		{
-			CPhysicsElement* e=new_shell->get_ElementByStoreOrder(i);
+			IPhysicsElementEx* e=new_shell->get_ElementByStoreOrder(i);
 			float random_hit=random_min*e->getMass();
 			if(m_fatal_hit.is_valide() && m_fatal_hit.bone()!=BI_NONE )
 			{

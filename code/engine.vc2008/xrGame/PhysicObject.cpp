@@ -163,7 +163,7 @@ static void  door_ignore( bool& do_collide, bool bo1, dContact& c, SGameMtl * /*
 	if( !collide_obj || collide_obj->cast_actor()  )
 		return;
 
-	CPhysicsShell *ph_shell = collide_obj->PPhysicsShell();
+	IPhysicsShellEx *ph_shell = collide_obj->PPhysicsShell();
 	if( !ph_shell )
 	{
 		do_collide = false;//? must be AI
@@ -388,11 +388,11 @@ void CPhysicObject::PHObjectPositionUpdate	()
 
 }
 
-void CPhysicObject::AddElement(CPhysicsElement* root_e, int id)
+void CPhysicObject::AddElement(IPhysicsElementEx* root_e, int id)
 {
 	IKinematics* K		= smart_cast<IKinematics*>(Visual());
 
-	CPhysicsElement* E	= P_create_Element();
+	IPhysicsElementEx* E	= P_create_Element();
 	CBoneInstance& B	= K->LL_GetBoneInstance(u16(id));
 	E->mXFORM.set		(K->LL_GetTransform(u16(id)));
 	Fobb bb			= K->LL_GetBox(u16(id));
@@ -410,7 +410,7 @@ void CPhysicObject::AddElement(CPhysicsElement* root_e, int id)
 	m_pPhysicsShell->add_Element	(E);
 	if( !(m_type==epotFreeChain && root_e==0) )
 	{		
-		CPhysicsJoint* J= P_create_Joint(CPhysicsJoint::full_control,root_e,E);
+		IPhysicsJoint* J= P_create_Joint(IPhysicsJoint::full_control,root_e,E);
 		J->SetAnchorVsSecondElement	(0,0,0);
 		J->SetAxisDirVsSecondElement	(1,0,0,0);
 		J->SetAxisDirVsSecondElement	(0,1,0,2);
