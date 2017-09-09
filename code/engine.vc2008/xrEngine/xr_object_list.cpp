@@ -193,17 +193,19 @@ void CObjectList::Update		(bool bForce)
 	{
 		// Info
 		for (auto oit : objects_active)
-			for (size_t it = destroy_queue.size()-1; it>=0; it--){	
-				oit->net_Relcase(destroy_queue[it]);
+			for (size_t it = destroy_queue.size(); it > 0; it--)
+            {	
+				oit->net_Relcase(destroy_queue[it - 1]);
 			}
-		for (auto oit : objects_sleeping)
-			for (size_t it = destroy_queue.size()-1; it>=0; it--)	
-				oit->net_Relcase(destroy_queue[it]);
 
-		for (size_t it = destroy_queue.size()-1; it>=0; it--)	
-			Sound->object_relcase	(destroy_queue[it]);
+		for (auto oit : objects_sleeping)
+			for (size_t it = destroy_queue.size(); it > 0; it--)	
+				oit->net_Relcase(destroy_queue[it - 1]);
+
+		for (size_t it = destroy_queue.size(); it > 0; it--)
+			Sound->object_relcase	(destroy_queue[it - 1]);
 		
-		for(auto It: m_relcase_callbacks)
+		for(auto It : m_relcase_callbacks)
 		{
 			VERIFY			(*It.m_ID==(It-m_relcase_callbacks.begin()));
 			for (auto dIt: destroy_queue)
@@ -214,9 +216,9 @@ void CObjectList::Update		(bool bForce)
 		}
 
 		// Destroy
-		for (size_t it = destroy_queue.size()-1; it>=0; it--)
+		for (size_t it = destroy_queue.size(); it > 0; it--)
 		{
-			CObject*		O	= destroy_queue[it];
+			CObject*		O	= destroy_queue[it - 1];
 			O->net_Destroy	( );
 			Destroy			(O);
 		}

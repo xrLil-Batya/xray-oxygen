@@ -8,6 +8,7 @@
 //#include "CustomOutfit.h"
 
 CHelmet::CHelmet()
+    : m_binocularVision(nullptr)
 {
 	m_flags.set(FUsingCondition, TRUE);
 	m_HitTypeProtection.resize(ALife::eHitTypeMax);
