@@ -251,7 +251,9 @@ void _initialize_cpu	(void)
     if (CPU::ID.hasFeature(CpuFeature::Sse42))  xr_strcat(features,", SSE4.2");
 	if (CPU::ID.hasFeature(CpuFeature::HT))     xr_strcat(features, ", HTT");
 	if (CPU::ID.hasFeature(CpuFeature::AVX))     xr_strcat(features, ", AVX");
-
+#ifdef _M_X64
+	else Debug.do_exit("X-Ray x64 using AVX anyway!");
+#endif
 	Msg("* CPU features: %s" , features );
 	Msg("* CPU cores/threads: %d/%d \n", CPU::ID.n_cores, CPU::ID.n_threads);
 
