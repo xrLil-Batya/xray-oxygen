@@ -12,6 +12,7 @@
 #include <stdarg.h>
 #include "../xrCore/doug_lea_allocator.h"
 #include "../FrayBuildConfig.hpp"
+#include "../xrScripts/luaopen.hpp"
 
 #ifndef DEBUG
 #	include "opt.lua.h"
@@ -217,6 +218,11 @@ void CScriptStorage::reinit()
 #ifdef DEBUG
 	luajit::open_lib(lua(), LUA_DBLIBNAME, luaopen_debug);
 #endif // #ifdef DEBUG
+	// Added sv3nk //---------------------------------------
+	luajit::open_lib(lua(), LUA_BITLIBNAME, luaopen_bit);
+	luajit::open_lib(lua(), LUA_FFILIBNAME, luaopen_ffi);
+	lopen::marshal(lua());
+	// End //-----------------------------------------------
 	if (!strstr(Core.Params, "-nojit")) 
 	{
 		luajit::open_lib(lua(), LUA_JITLIBNAME, luaopen_jit);
@@ -227,11 +233,6 @@ void CScriptStorage::reinit()
 #endif // #ifndef DEBUG
 	}
 
-	// Added sv3nk
-	luajit::open_lib(lua(), LUA_BITLIBNAME, luaopen_bit);
-	luajit::open_lib(lua(), LUA_FFILIBNAME, luaopen_ffi);
-
-	// End
 #ifdef LUACP_API
 	HMODULE hLib = GetModuleHandle("luaicp.dll");
 	if (hLib)
@@ -491,10 +492,8 @@ bool CScriptStorage::do_file(const char* caScriptName, const char* caNameSpaceNa
 	}
 	strconcat(sizeof(l_caLuaFileName), l_caLuaFileName, "@", caScriptName);
 
-	if (!load_buffer(lua(), static_cast<const char*>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName)) {
-		//		VERIFY		(lua_gettop(lua()) >= 4);
-		//		lua_pop		(lua(),4);
-		//		VERIFY		(lua_gettop(lua()) == start - 3);
+	if (!load_buffer(lua(), static_cast<const char*>(l_tpFileReader->pointer()), (size_t)l_tpFileReader->length(), l_caLuaFileName, caNameSpaceName))
+	{
 		lua_settop(lua(), start);
 		FS.r_close(l_tpFileReader);
 		return		(false);
@@ -515,9 +514,7 @@ bool CScriptStorage::do_file(const char* caScriptName, const char* caNameSpaceNa
 	}
 
 	// because that's the first and the only call of the main chunk - there is no point to compile it
-	//	luaJIT_setmode	(lua(),0,LUAJIT_MODE_ENGINE|LUAJIT_MODE_OFF);						// Oles
-	int	l_iErrorCode = lua_pcall(lua(), 0, 0, (-1 == errFuncId) ? 0 : errFuncId);				// new_Andy
-																								//	luaJIT_setmode	(lua(),0,LUAJIT_MODE_ENGINE|LUAJIT_MODE_ON);						// Oles
+	int	l_iErrorCode = lua_pcall(lua(), 0, 0, (-1 == errFuncId) ? 0 : errFuncId);
 
 #ifdef USE_DEBUGGER
 #	ifndef USE_LUA_STUDIO

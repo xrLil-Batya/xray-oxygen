@@ -387,6 +387,8 @@
     <ClCompile Include="import_ses.cpp" />
     <ClCompile Include="library_set.cpp" />
     <ClCompile Include="linker.cpp" />
+    <ClCompile Include="lmodule\marshal.c" />
+    <ClCompile Include="lopen.cpp" />
     <ClCompile Include="luabind\src\class.cpp" />
     <ClCompile Include="luabind\src\class_info.cpp" />
     <ClCompile Include="luabind\src\class_registry.cpp" />
@@ -645,6 +647,7 @@
     <ClInclude Include="luajit\luajit.h" />
     <ClInclude Include="luajit\lualib.h" />
     <ClInclude Include="luajit\xr_pool.h" />
+    <ClInclude Include="luaopen.hpp" />
     <ClInclude Include="lua_studio\ai_script_lua_extension.h" />
     <ClInclude Include="lua_studio\ai_script_lua_space.h" />
     <ClInclude Include="lua_studio\ai_script_space.h" />
