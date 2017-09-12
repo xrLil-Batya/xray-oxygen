@@ -64,6 +64,9 @@
     <Filter Include="Lua\LuaEtc\LuaXML">
       <UniqueIdentifier>{52ec6702-f7a8-45f0-b25d-c55a20935bce}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua\LuaEtc\LFS">
+      <UniqueIdentifier>{3be3ceef-8688-4518-9e92-6a9f1a2a990a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="luabind\src\class.cpp">
@@ -366,6 +369,9 @@
     </ClCompile>
     <ClCompile Include="lmodule\LuaXML.c">
       <Filter>Lua\LuaEtc\LuaXML</Filter>
+    </ClCompile>
+    <ClCompile Include="lmodule\lfs.c">
+      <Filter>Lua\LuaEtc\LFS</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -903,6 +909,9 @@
     </ClInclude>
     <ClInclude Include="luaopen.hpp">
       <Filter>Lua\LuaEtc</Filter>
+    </ClInclude>
+    <ClInclude Include="lmodule\lfs.h">
+      <Filter>Lua\LuaEtc\LFS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

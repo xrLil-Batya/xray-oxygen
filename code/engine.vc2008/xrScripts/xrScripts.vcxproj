@@ -387,6 +387,7 @@
     <ClCompile Include="import_ses.cpp" />
     <ClCompile Include="library_set.cpp" />
     <ClCompile Include="linker.cpp" />
+    <ClCompile Include="lmodule\lfs.c" />
     <ClCompile Include="lmodule\LuaXML.c" />
     <ClCompile Include="lmodule\marshal.c" />
     <ClCompile Include="lopen.cpp" />
@@ -576,6 +577,7 @@
     <ClInclude Include="Export\script_token_list.h" />
     <ClInclude Include="Export\script_token_list_inline.h" />
     <ClInclude Include="import_ses.hpp" />
+    <ClInclude Include="lmodule\lfs.h" />
     <ClInclude Include="luajit\lauxlib.h" />
     <ClInclude Include="luajit\lj_alloc.h" />
     <ClInclude Include="luajit\lj_arch.h" />
