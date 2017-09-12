@@ -34,7 +34,7 @@
 #	endif
 #endif
 
-int dojitcmd(lua_State *L, const char *cmd);
+#include "../xrScripts/luaopen.hpp"
 
 #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 static void log_callback			(LPCSTR message)
