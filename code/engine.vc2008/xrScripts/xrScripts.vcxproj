@@ -387,6 +387,7 @@
     <ClCompile Include="import_ses.cpp" />
     <ClCompile Include="library_set.cpp" />
     <ClCompile Include="linker.cpp" />
+    <ClCompile Include="lmodule\LuaXML.c" />
     <ClCompile Include="lmodule\marshal.c" />
     <ClCompile Include="lopen.cpp" />
     <ClCompile Include="luabind\src\class.cpp" />

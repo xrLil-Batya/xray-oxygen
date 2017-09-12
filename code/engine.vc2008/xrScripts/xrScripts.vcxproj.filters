@@ -61,6 +61,9 @@
     <Filter Include="Lua\LuaEtc\Marshal">
       <UniqueIdentifier>{b39a7005-a3ad-48e6-bc11-5b5be0b2e50d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua\LuaEtc\LuaXML">
+      <UniqueIdentifier>{52ec6702-f7a8-45f0-b25d-c55a20935bce}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="luabind\src\class.cpp">
@@ -360,6 +363,9 @@
     </ClCompile>
     <ClCompile Include="lmodule\marshal.c">
       <Filter>Lua\LuaEtc\Marshal</Filter>
+    </ClCompile>
+    <ClCompile Include="lmodule\LuaXML.c">
+      <Filter>Lua\LuaEtc\LuaXML</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

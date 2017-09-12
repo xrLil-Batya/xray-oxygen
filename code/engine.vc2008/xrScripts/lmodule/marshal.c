@@ -522,3 +522,11 @@ int mar_clone(lua_State* L)
 	mar_decode(L);
 	return 1;
 }
+
+const struct luaL_Reg funcs[] =
+{
+	{ "encode", mar_encode },
+	{ "decode", mar_decode },
+	{ "clone",  mar_clone },
+	{ 0,	    0 }
+};
