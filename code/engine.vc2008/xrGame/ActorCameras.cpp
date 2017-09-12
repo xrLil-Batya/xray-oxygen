@@ -295,7 +295,15 @@ void CActor::cam_Update(float dt, float fFOV)
 	float y_shift =0;
 	current_ik_cam_shift = 0;
 
-	Fvector point		= {0,CameraHeight() + current_ik_cam_shift,0}; 
+	// Alex ADD: smooth crouch fix
+	float HeightInterpolationSpeed = 4.f;
+
+	if (CurrentHeight != CameraHeight())
+	{
+		CurrentHeight = (CurrentHeight * (1.0f - HeightInterpolationSpeed*dt)) + (CameraHeight() * HeightInterpolationSpeed*dt);
+	}
+
+	Fvector point = { 0, CurrentHeight + current_ik_cam_shift, 0 };
 	Fvector dangle		= {0,0,0};
 	Fmatrix				xform;
 	xform.setXYZ		(0,r_torso.yaw,0);
@@ -337,22 +345,12 @@ void CActor::cam_Update(float dt, float fFOV)
 	C->Update						(point,dangle);
 	C->f_fov						= fFOV;
 
-	if(eacFirstEye != cam_active)
-	{
-		cameras[eacFirstEye]->Update	(point,dangle);
-		cameras[eacFirstEye]->f_fov		= fFOV;
-	} 
 	if (Level().CurrentEntity() == this)
 	{
 		collide_camera( *cameras[eacFirstEye], _viewport_near, this );
 	}
-	if( psActorFlags.test(AF_PSP) )
-	{
-		Cameras().UpdateFromCamera			(C);
-	}else
-	{
-		Cameras().UpdateFromCamera			(cameras[eacFirstEye]);
-	}
+
+	Cameras().UpdateFromCamera			(C);	
 
 	fCurAVelocity			= vPrevCamDir.sub(cameras[eacFirstEye]->vDirection).magnitude()/Device.fTimeDelta;
 	vPrevCamDir				= cameras[eacFirstEye]->vDirection;
