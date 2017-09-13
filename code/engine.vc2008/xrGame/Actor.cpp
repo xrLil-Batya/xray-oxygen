@@ -102,29 +102,18 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 {
 	game_news_registry		= xr_new<CGameNewsRegistryWrapper		>();
 	// Cameras
-	cameras[eacFirstEye]	= xr_new<CCameraFirstEye>				(this);
-	cameras[eacFirstEye]->Load("actor_firsteye_cam");
+	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
+    cameras[eacFirstEye]->Load("actor_firsteye_cam");
 
-	if(strstr(Core.Params,"-psp"))
-		psActorFlags.set(AF_PSP, TRUE);
-	else
-		psActorFlags.set(AF_PSP, FALSE);
+	cameras[eacLookAt] = xr_new<CCameraLook2>(this);
+    cameras[eacLookAt]->Load("actor_look_cam_psp");
+ 
+    cameras[eacFreeLook] = xr_new<CCameraLook>(this);
+    cameras[eacFreeLook]->Load("actor_free_cam");
+    cameras[eacFixedLookAt] = xr_new<CCameraFixedLook>(this);
+    cameras[eacFixedLookAt]->Load("actor_look_cam");
 
-	if( psActorFlags.test(AF_PSP) )
-	{
-		cameras[eacLookAt]		= xr_new<CCameraLook2>				(this);
-		cameras[eacLookAt]->Load("actor_look_cam_psp");
-	}else
-	{
-		cameras[eacLookAt]		= xr_new<CCameraLook>				(this);
-		cameras[eacLookAt]->Load("actor_look_cam");
-	}
-	cameras[eacFreeLook]	= xr_new<CCameraLook>					(this);
-	cameras[eacFreeLook]->Load("actor_free_cam");
-	cameras[eacFixedLookAt]	= xr_new<CCameraFixedLook>				(this);
-	cameras[eacFixedLookAt]->Load("actor_look_cam");
-
-	cam_active				= eacFirstEye;
+    cam_active = eacFirstEye;
 	fPrevCamPos				= 0.0f;
 	vPrevCamDir.set			(0.f,0.f,1.f);
 	fCurAVelocity			= 0.0f;
@@ -195,7 +184,9 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 
 	m_disabled_hitmarks		= false;
 	m_inventory_disabled	= false;
-
+	
+	// Alex ADD: for smooth crouch fix
+	CurrentHeight = 0.f;
 }
 
 
@@ -389,6 +380,9 @@ if(!g_dedicated_server)
 	m_sCampfireExtinguishAction = "campfire_extinguish";
 	//---------------------------------------------------------------------
 	m_sHeadShotParticle	= READ_IF_EXISTS(pSettings,r_string,section,"HeadShotParticle",0);
+	
+	// Alex ADD: for smooth crouch fix
+	CurrentHeight = CameraHeight();	
 }
 
 void CActor::PHHit(SHit &H)
@@ -753,6 +747,8 @@ float CActor::currentFOV()
 	}
 }
 
+static bool bLook_cam_fp_zoom = false;
+
 void CActor::UpdateCL	()
 {
 	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver())
@@ -810,7 +806,22 @@ void CActor::UpdateCL	()
 				S->SetParams(full_fire_disp);
 
 			SetZoomAimingMode		(true);
+			//Alun: Force switch to first-person for zooming
+			if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+			{
+				cam_Set(eacFirstEye);
+				bLook_cam_fp_zoom = true;
+			}			
 		}
+		else
+		{
+			//Alun: Switch back to third-person if was forced
+			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+			{
+				cam_Set(eacLookAt);
+				bLook_cam_fp_zoom = false;
+			}
+		}			
 
 		if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
 		{
@@ -839,14 +850,21 @@ void CActor::UpdateCL	()
 		}
 
 	}
-	else
-	{
-		if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
-		{
-			HUD().SetCrosshairDisp(0.f);
-			HUD().ShowCrosshair(false);
-		}
-	}
+   else
+    {
+        if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
+        {
+            HUD().SetCrosshairDisp(0.f);
+            HUD().ShowCrosshair(false);
+			
+			//Alun: Switch back to third-person if was forced
+			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+			{
+				cam_Set(eacLookAt);
+				bLook_cam_fp_zoom = false;
+			}
+        }
+    }
 
 	UpdateDefferedMessages();
 
@@ -1074,7 +1092,8 @@ void CActor::shedule_Update	(u32 DT)
 	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
 	
 
-	if (!input_external_handler_installed() && RQ.O && RQ.O->getVisible() && RQ.range < 2.0f)
+	float fAcquistionRange = cam_active == eacFirstEye ? 2.0f : 3.0f;
+	if (!input_external_handler_installed() && RQ.O && RQ.O->getVisible() && RQ.range < fAcquistionRange)
 	{
 		m_pObjectWeLookingAt = smart_cast<CGameObject*>(RQ.O);
 

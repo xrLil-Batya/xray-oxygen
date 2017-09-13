@@ -24,6 +24,7 @@
 #include "ui/UIWindow.h"
 #include "ui/UIXmlInit.h"
 #include "Torch.h"
+#include "cameralook.h"
 
 static const int WEAPON_REMOVE_TIME = 60000;
 static const float ROTATION_TIME = 0.25f;
@@ -1369,18 +1370,15 @@ void CWeapon::OnZoomIn()
 
 	if(m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && NULL==m_zoom_params.m_pVision) 
 		m_zoom_params.m_pVision	= xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision/*"wpn_binoc"*/);
-
-	if(m_zoom_params.m_sUseZoomPostprocess.size() && IsScopeAttached()) 
-	{
+	
+    if (m_zoom_params.m_sUseZoomPostprocess.size() && IsScopeAttached())
+    {
 		CActor *pA = smart_cast<CActor *>(H_Parent());
-		if(pA)
-		{
-			if(NULL==m_zoom_params.m_pNight_vision)
-			{
-				m_zoom_params.m_pNight_vision	= xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess/*"device_torch"*/);
-			}
-		}
-	}
+        if (pA && NULL == m_zoom_params.m_pNight_vision)
+        {
+            m_zoom_params.m_pNight_vision = xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess/*"device_torch"*/);
+        }
+    }	
 }
 
 void CWeapon::OnZoomOut()

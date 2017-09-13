@@ -28,9 +28,12 @@ void 	CWeaponStatMgun::BoneCallbackY		(CBoneInstance *B)
 
 CWeaponStatMgun::CWeaponStatMgun()
 {
+	m_firing_disabled = false; 
 	m_Ammo		= xr_new<CCartridge>();
 	camera		= xr_new<CCameraFirstEye>	(this, CCameraBase::flRelativeLink|CCameraBase::flPositionRigid|CCameraBase::flDirectionRigid); 
 	camera->Load("mounted_weapon_cam");
+	
+	p_overheat = NULL;
 }
 
 CWeaponStatMgun::~CWeaponStatMgun()
@@ -70,6 +73,15 @@ void CWeaponStatMgun::Load(LPCSTR section)
 	camMaxAngle			= _abs( deg2rad				(camMaxAngle) );
 	camRelaxSpeed		= pSettings->r_float		(section,"cam_relax_speed"	); 
 	camRelaxSpeed		= _abs( deg2rad				(camRelaxSpeed) );
+
+	m_overheat_enabled = pSettings->line_exist(section, "overheat_enabled") ? !!pSettings->r_bool(section, "overheat_enabled") : false;
+	m_overheat_time_quant = READ_IF_EXISTS(pSettings, r_float, section, "overheat_time_quant", 0.025f);
+	m_overheat_decr_quant = READ_IF_EXISTS(pSettings, r_float, section, "overheat_decr_quant", 0.002f);
+	m_overheat_threshold = READ_IF_EXISTS(pSettings, r_float, section, "overheat_threshold", 110.f);
+	m_overheat_particles = READ_IF_EXISTS(pSettings, r_string, section, "overheat_particles", "damage_fx\\burn_creatures00");
+	
+	m_bEnterLocked = !!READ_IF_EXISTS(pSettings, r_bool, section, "lock_enter", false);
+	m_bExitLocked = !!READ_IF_EXISTS(pSettings, r_bool, section, "lock_exit", false);
 
 	VERIFY( !fis_zero(camMaxAngle) );
 	VERIFY( !fis_zero(camRelaxSpeed) );
@@ -125,6 +137,12 @@ BOOL CWeaponStatMgun::net_Spawn(CSE_Abstract* DC)
 
 void CWeaponStatMgun::net_Destroy()
 {
+	if (p_overheat)
+	{
+		if (p_overheat->IsPlaying())
+			p_overheat->Stop(FALSE);
+		CParticlesObject::Destroy(p_overheat);
+	}
 	inheritedPH::net_Destroy	();
 	processing_deactivate		();
 }
@@ -159,7 +177,6 @@ void CWeaponStatMgun::UpdateCL()
 		OwnerActor()->Cameras().UpdateFromCamera(Camera());
 		OwnerActor()->Cameras().ApplyDevice(VIEWPORT_NEAR);
 	}
-
 }
 
 //void CWeaponStatMgun::Hit(	float P, Fvector &dir,	CObject* who, 
@@ -210,39 +227,36 @@ void CWeaponStatMgun::UpdateBarrelDir()
 
 void CWeaponStatMgun::cam_Update			(float dt, float fov)
 {
-	Fvector							P,Da;
-	Da.set							(0,0,0);
+	camera->f_fov = 90.f;// g_fov;
 
-	IKinematics* K					= smart_cast<IKinematics*>(Visual());
-	K->CalculateBones_Invalidate	();
-	K->CalculateBones				(TRUE);
-	const Fmatrix& C				= K->LL_GetTransform(m_camera_bone);
-	XFORM().transform_tiny			(P,C.c);
+	Fvector P,Da;
+	Da.set(0,0,0);
+
+	IKinematics* K = smart_cast<IKinematics*>(Visual());
+	K->CalculateBones_Invalidate();
+	K->CalculateBones(TRUE);
+	const Fmatrix& C = K->LL_GetTransform(m_camera_bone);
+	XFORM().transform_tiny(P,C.c);
 
 	Fvector d = C.k;
-	XFORM().transform_dir			(d);
+	XFORM().transform_dir(d);
 	Fvector2 des_cam_dir;
 
 	d.getHP(des_cam_dir.x, des_cam_dir.y);
 	des_cam_dir.mul(-1.0f);
 
 
-	Camera()->yaw		= angle_inertion_var(Camera()->yaw,		des_cam_dir.x,	0.5f,	7.5f,	PI_DIV_6,	Device.fTimeDelta);
-	Camera()->pitch		= angle_inertion_var(Camera()->pitch,	des_cam_dir.y,	0.5f,	7.5f,	PI_DIV_6,	Device.fTimeDelta);
-
-
-
+	Camera()->yaw = angle_inertion_var(Camera()->yaw,		des_cam_dir.x,	0.5f,	7.5f,	PI_DIV_6,	Device.fTimeDelta);
+	Camera()->pitch = angle_inertion_var(Camera()->pitch,	des_cam_dir.y,	0.5f,	7.5f,	PI_DIV_6,	Device.fTimeDelta);
 
 	if(OwnerActor()){
 		// rotate head
 		OwnerActor()->Orientation().yaw			= -Camera()->yaw;
 		OwnerActor()->Orientation().pitch		= -Camera()->pitch;
 	}
-	
 
 	Camera()->Update							(P,Da);
 	Level().Cameras().UpdateFromCamera			(Camera());
-
 }
 
 void CWeaponStatMgun::renderable_Render	()
@@ -268,7 +282,7 @@ void CWeaponStatMgun::Action				(u16 id, u32 flags)
 	}
 }
 
-void CWeaponStatMgun::SetParam			(int id, Fvector2 val)
+void CWeaponStatMgun::SetParam(int id, Fvector2 val)
 {
 	inheritedHolder::SetParam(id, val);
 	switch (id){
@@ -278,17 +292,31 @@ void CWeaponStatMgun::SetParam			(int id, Fvector2 val)
 	}
 }
 
-bool CWeaponStatMgun::attach_Actor		(CGameObject* actor)
+bool CWeaponStatMgun::attach_Actor(CGameObject* actor)
 {
-	inheritedHolder::attach_Actor	(actor);
-	SetBoneCallbacks				();
-	FireEnd							();
+	if (Owner())
+		return false;
+
+	actor->setVisible(0);
+
+	inheritedHolder::attach_Actor(actor);
+	SetBoneCallbacks();
+	FireEnd();
 	return true;
 }
 
-void CWeaponStatMgun::detach_Actor		()
+void CWeaponStatMgun::detach_Actor()
 {
-	inheritedHolder::detach_Actor	();
-	ResetBoneCallbacks				();
-	FireEnd							();
+	Owner()->setVisible(1);
+	inheritedHolder::detach_Actor();
+	ResetBoneCallbacks();
+	FireEnd();
+}
+
+Fvector CWeaponStatMgun::ExitPosition()
+{ 
+	Fvector pos; pos.set(0.f, 0.f, 0.f);
+	pos.sub(camera->Direction()).normalize();
+	pos.y = 0.f;
+	return Fvector(XFORM().c).add(pos);
 }
