@@ -30,7 +30,7 @@ static bool bException = false;
 
 #include "BuildStackTraceInline.hpp"
 
-void LogStackTrace	(const char* header)
+void LogStackTrace(const char* header)
 {
 	if (!shared_str_initialized)
 		return;
@@ -113,13 +113,13 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	if (shared_str_initialized)
 		FlushLog();
 
-		os_clipboard::copy_to_clipboard(assertion_info);
+	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
-void xrDebug::do_exit	(const std::string &message)
+void xrDebug::do_exit(const std::string &message)
 {
-	FlushLog			();
-	MessageBox			(nullptr, message.c_str(), "Error", MB_OK|MB_ICONERROR | MB_SYSTEMMODAL);
+	FlushLog();
+	MessageBox(nullptr, message.c_str(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 #ifdef DEBUG
 	DEBUG_INVOKE;
 #endif
@@ -127,117 +127,117 @@ void xrDebug::do_exit	(const std::string &message)
 	TerminateProcess(GetCurrentProcess(), 1);
 }
 
-void xrDebug::backend	(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::backend(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)
 {
 	static std::recursive_mutex CS;
-    std::lock_guard<decltype(CS)> lock(CS);
+	std::lock_guard<decltype(CS)> lock(CS);
 
-	error_after_dialog	= true;
+	error_after_dialog = true;
 
 	string4096			assertion_info;
 
-	gather_info			(expression, description, argument0, argument1, file, line, function, assertion_info, sizeof(assertion_info) );
+	gather_info(expression, description, argument0, argument1, file, line, function, assertion_info, sizeof(assertion_info));
 
 	if (handler)
-		handler			();
-	
+		handler();
+
 	HWND wnd = GetActiveWindow();
- 	if (!wnd) wnd = GetForegroundWindow();
-	
- 	ShowWindow(wnd, SW_MINIMIZE);
- 	while (ShowCursor(TRUE) < 0);
- 
+	if (!wnd) wnd = GetForegroundWindow();
+
+	ShowWindow(wnd, SW_MINIMIZE);
+	while (ShowCursor(TRUE) < 0);
+
 #if !defined(DEBUG) && !defined(MIXED_NEW)
 	do_exit("Please, see log-file for details.");
 #else
-    //#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
+	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
 
-    //THIS IS FINE!
-    DebugBreak();
+	//THIS IS FINE!
+	DebugBreak();
 #endif
 }
 
-const char* xrDebug::error2string	(long code)
+const char* xrDebug::error2string(long code)
 {
-	const char*				result	= 0;
+	const char*				result = 0;
 	static	string1024	desc_storage;
 
-	if (0==result)
+	if (!result)
 	{
-		FormatMessage	(FORMAT_MESSAGE_FROM_SYSTEM,0,code,0,desc_storage,sizeof(desc_storage)-1,0);
-		result			= desc_storage;
+		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
+		result = desc_storage;
 	}
-	return		result	;
+	return result;
 }
 
-void xrDebug::error		(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		(error2string(hr),expr,0,0,file,line,function,ignore_always);
+	backend(error2string(hr), expr, 0, 0, file, line, function, ignore_always);
 }
 
-void xrDebug::error		(long hr, const char* expr, const char* e2, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::error(long hr, const char* expr, const char* e2, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		(error2string(hr),expr,e2,0,file,line,function,ignore_always);
+	backend(error2string(hr), expr, e2, 0, file, line, function, ignore_always);
 }
 
-void xrDebug::fail		(const char *e1, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		("assertion failed",e1,0,0,file,line,function,ignore_always);
+	backend("assertion failed", e1, 0, 0, file, line, function, ignore_always);
 }
 
-void xrDebug::fail		(const char *e1, const std::string &e2, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const std::string &e2, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		(e1,e2.c_str(),0,0,file,line,function,ignore_always);
+	backend(e1, e2.c_str(), 0, 0, file, line, function, ignore_always);
 }
 
-void xrDebug::fail		(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		(e1,e2,0,0,file,line,function,ignore_always);
+	backend(e1, e2, 0, 0, file, line, function, ignore_always);
 }
 
-void xrDebug::fail		(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		(e1,e2,e3,0,file,line,function,ignore_always);
+	backend(e1, e2, e3, 0, file, line, function, ignore_always);
 }
 
-void xrDebug::fail		(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend		(e1,e2,e3,e4,file,line,function,ignore_always);
+	backend(e1, e2, e3, e4, file, line, function, ignore_always);
 }
 
-void __cdecl xrDebug::fatal(const char *file, int line, const char *function, const char* F,...)
+void __cdecl xrDebug::fatal(const char *file, int line, const char *function, const char* F, ...)
 {
 	string1024	buffer;
 
 	va_list		p;
-	va_start	(p,F);
-	vsprintf	(buffer,F,p);
-	va_end		(p);
+	va_start(p, F);
+	vsprintf(buffer, F, p);
+	va_end(p);
 
 	bool		ignore_always = true;
 
-	backend		("fatal error","<no expression>",buffer,0,file,line,function,ignore_always);
+	backend("fatal error", "<no expression>", buffer, 0, file, line, function, ignore_always);
 }
 
-typedef void (*full_memory_stats_callback_type) ( );
+typedef void(*full_memory_stats_callback_type) ();
 XRCORE_API full_memory_stats_callback_type g_full_memory_stats_callback = 0;
 
-int out_of_memory_handler	(size_t size)
+int out_of_memory_handler(size_t size)
 {
 	if (g_full_memory_stats_callback)
 		g_full_memory_stats_callback();
-	else 
+	else
 	{
-		Memory.mem_compact	();
+		Memory.mem_compact();
 
-		u32					process_heap	= mem_usage_impl();
-		int					eco_strings		= (int)g_pStringContainer->stat_economy			();
-		int					eco_smem		= (int)g_pSharedMemoryContainer->stat_economy	();
-		Msg					("* [x-ray]: process heap[%d K]", process_heap / 1024);
-		Msg					("* [x-ray]: economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);
+		u32					process_heap = mem_usage_impl();
+		int					eco_strings = g_pStringContainer->stat_economy();
+		int					eco_smem = g_pSharedMemoryContainer->stat_economy();
+		Msg("* [x-ray]: process heap[%d K]", process_heap / 1024);
+		Msg("* [x-ray]: economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);
 	}
 
-	Debug.fatal				(DEBUG_INFO,"Out of memory. Memory request: %d K", size / 1024);
+	Debug.fatal(DEBUG_INFO, "Out of memory. Memory request: %d K", size / 1024);
 	return					1;
 }
 
@@ -245,70 +245,60 @@ extern const char* log_name();
 
 XRCORE_API string_path g_bug_report_file;
 
-void CALLBACK PreErrorHandler	(INT_PTR)
+void CALLBACK PreErrorHandler(INT_PTR)
 {
 }
 
 
 extern void BuildStackTrace(struct _EXCEPTION_POINTERS *pExceptionInfo);
 typedef LONG WINAPI UnhandledExceptionFilterType(struct _EXCEPTION_POINTERS *pExceptionInfo);
-typedef LONG ( __stdcall *PFNCHFILTFN ) ( EXCEPTION_POINTERS * pExPtrs ) ;
-extern "C" BOOL __stdcall SetCrashHandlerFilter ( PFNCHFILTFN pFn );
+typedef LONG(__stdcall *PFNCHFILTFN) (EXCEPTION_POINTERS * pExPtrs);
 
 static UnhandledExceptionFilterType	*previous_filter = 0;
 
-void format_message	(char* buffer, const u32 &buffer_size)
+void format_message(char* buffer, const u32 &buffer_size)
 {
-    LPVOID		message;
-    DWORD		error_code = GetLastError(); 
+	char*		message;
+	DWORD		error_code = GetLastError();
 
 	if (!error_code) {
-		*buffer	= 0;
+		*buffer = 0;
 		return;
 	}
 
-    FormatMessage(
-        FORMAT_MESSAGE_ALLOCATE_BUFFER | 
-        FORMAT_MESSAGE_FROM_SYSTEM,
-        NULL,
-        error_code,
-        MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-        (char*)&message,
-        0,
-		NULL
-	);
+	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 0, 0);
 
-	xr_sprintf	(buffer,buffer_size,"[error][%8d]    : %s",error_code,message);
-    LocalFree	(message);
+	xr_sprintf(buffer, buffer_size, "[error][%8d]    : %s", error_code, message);
+	LocalFree(message);
 }
 
 #ifndef _EDITOR
-    #include <errorrep.h>
-    #pragma comment( lib, "faultrep.lib" )
+#include <errorrep.h>
+#pragma comment( lib, "faultrep.lib" )
 #endif
 
-LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
+LONG WINAPI UnhandledFilter(_EXCEPTION_POINTERS *pExceptionInfo)
 {
 	string256				error_message;
-	format_message			(error_message,sizeof(error_message));
+	format_message(error_message, sizeof(error_message));
 
-	if (!error_after_dialog && !strstr(GetCommandLine(),"-no_call_stack_assert")) {
+	if (!error_after_dialog && !strstr(GetCommandLine(), "-no_call_stack_assert")) {
 		CONTEXT				save = *pExceptionInfo->ContextRecord;
 		StackTrace.Count = BuildStackTrace(pExceptionInfo, StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
 		*pExceptionInfo->ContextRecord = save;
 
 		if (shared_str_initialized)
-			Msg				("stack trace:\n");
+			Msg("stack trace:\n");
 
 		if (!IsDebuggerPresent())
-			os_clipboard::copy_to_clipboard	("stack trace:\r\n\r\n");
+			os_clipboard::copy_to_clipboard("stack trace:\r\n\r\n");
 
 		string4096			buffer;
 		for (size_t i = 0; i < StackTrace.Count; i++)
 		{
 			if (shared_str_initialized)
-				Msg			("%s", StackTrace[i]);
-			xr_sprintf			(buffer, sizeof(buffer), "%s\r\n", StackTrace[i]);
+				Msg("%s", StackTrace[i]);
+			xr_sprintf(buffer, sizeof(buffer), "%s\r\n", StackTrace[i]);
 #ifdef DEBUG
 			if (!IsDebuggerPresent())
 				os_clipboard::update_clipboard(buffer);
@@ -317,9 +307,9 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 
 		if (*error_message) {
 			if (shared_str_initialized)
-				Msg			("\n%s",error_message);
+				Msg("\n%s", error_message);
 
-			xr_strcat			(error_message,sizeof(error_message),"\r\n");
+			xr_strcat(error_message, sizeof(error_message), "\r\n");
 #ifdef DEBUG
 			if (!IsDebuggerPresent())
 				os_clipboard::update_clipboard(buffer);
@@ -328,52 +318,38 @@ LONG WINAPI UnhandledFilter	(_EXCEPTION_POINTERS *pExceptionInfo)
 	}
 
 	if (shared_str_initialized)
-		FlushLog			();
+		FlushLog();
 
-	ReportFault				( pExceptionInfo, 0 );
+	ReportFault(pExceptionInfo, 0);
 
 	if (previous_filter)
 		previous_filter(pExceptionInfo);
 
-	return					(EXCEPTION_CONTINUE_SEARCH) ;
+	return					(EXCEPTION_CONTINUE_SEARCH);
 }
 
 //////////////////////////////////////////////////////////////////////
 typedef int(__cdecl * _PNH)(size_t);
 
-static void handler_base(const char* reason_string)
+IC void handler_base(const char* reason_string)
 {
-	bool							ignore_always = false;
-	Debug.backend(
-		"error handler is invoked!",
-		reason_string,
-		0,
-		0,
-		DEBUG_INFO,
-		ignore_always
-	);
+	bool alw_ignored = false;
+	Debug.backend("error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
 }
 
-static void invalid_parameter_handler(
-	const wchar_t *expression,
-	const wchar_t *function,
-	const wchar_t *file,
-	unsigned int line,
-	uintptr_t reserved
+static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *function, const wchar_t *file, unsigned int line, uintptr_t reserved
 )
 {
 	bool		ignore_always = false;
 
 	string4096	expression_,
-				function_,
-				file_;
+		function_,
+		file_;
 
 	size_t		converted_chars = 0;
 
 	if (expression)
-		wcstombs_s(
-			&converted_chars,
-			expression_,
+		wcstombs_s(&converted_chars, expression_,
 			sizeof(expression_),
 			expression,
 			(wcslen(expression) + 1) * 2 * sizeof(char)
@@ -396,35 +372,35 @@ static void invalid_parameter_handler(
 	Debug.backend("error handler is invoked!", expression_, 0, 0, file_, line, function_, ignore_always);
 }
 
-static void pure_call_handler()
+IC void pure_call_handler()
 {
 	handler_base("pure virtual function call");
 }
 
 #ifdef XRAY_USE_EXCEPTIONS
-static void unexpected_handler()
+IC void unexpected_handler()
 {
 	handler_base("unexpected program termination");
 }
 #endif // XRAY_USE_EXCEPTIONS
 
-static void abort_handler(int signal)
+IC void abort_handler(int signal)
 {
 	handler_base("application is aborting");
 }
 
-static void floating_point_handler(int signal)
+IC void floating_point_handler(int signal)
 {
 	handler_base("floating point error");
 }
 
-static void illegal_instruction_handler(int signal)
+IC void illegal_instruction_handler(int signal)
 {
 	handler_base("illegal instruction");
 }
 
 
-static void termination_handler(int signal)
+IC void termination_handler(int signal)
 {
 	handler_base("termination with exit code 3");
 }
@@ -449,13 +425,10 @@ void debug_on_thread_spawn()
 	_set_purecall_handler(&pure_call_handler);
 }
 
-void	xrDebug::_initialize(const bool &dedicated)
+void xrDebug::_initialize(const bool &dedicated)
 {
-	static bool is_dedicated = dedicated;
-
+	//static bool is_dedicated = dedicated;
 	*g_bug_report_file = 0;
-
 	debug_on_thread_spawn();
-
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
 }
