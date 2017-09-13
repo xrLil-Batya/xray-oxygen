@@ -1444,9 +1444,6 @@
     <Filter Include="AI\ASound">
       <UniqueIdentifier>{5902e640-63ae-4bd4-a709-a76205014797}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\ASpace">
-      <UniqueIdentifier>{565496b0-a712-4f97-84b5-a7394f45b248}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core">
       <UniqueIdentifier>{fa47fbc0-131a-4e59-8dd5-44ad6d597178}</UniqueIdentifier>
     </Filter>
@@ -2292,6 +2289,9 @@
     </Filter>
     <Filter Include="Core\Client\Objects\actor\memory">
       <UniqueIdentifier>{6abdee0d-6c56-49e2-b5e8-a42c04c6ec7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="AI\ASpace">
+      <UniqueIdentifier>{565496b0-a712-4f97-84b5-a7394f45b248}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

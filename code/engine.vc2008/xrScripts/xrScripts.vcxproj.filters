@@ -67,6 +67,9 @@
     <Filter Include="Lua\LuaEtc\LFS">
       <UniqueIdentifier>{3be3ceef-8688-4518-9e92-6a9f1a2a990a}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Lua\LuaEtc\Traceback">
+      <UniqueIdentifier>{503e50f6-8088-4894-9204-4662ba5ead85}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="luabind\src\class.cpp">
@@ -147,7 +150,6 @@
     <ClCompile Include="import_ses.cpp">
       <Filter>Import\LuaCore</Filter>
     </ClCompile>
-    <ClCompile Include="luajit\xr_pool.c" />
     <ClCompile Include="luajit\lib_aux.c">
       <Filter>Lua\LuaJIT\source</Filter>
     </ClCompile>
@@ -372,6 +374,12 @@
     </ClCompile>
     <ClCompile Include="lmodule\lfs.c">
       <Filter>Lua\LuaEtc\LFS</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\xr_pool.c">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClCompile>
+    <ClCompile Include="lua_traceback.cpp">
+      <Filter>Lua\LuaEtc\Traceback</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -633,7 +641,6 @@
     <ClInclude Include="import_ses.hpp">
       <Filter>Import\LuaCore</Filter>
     </ClInclude>
-    <ClInclude Include="luajit\xr_pool.h" />
     <ClInclude Include="luajit\lj_alloc.h">
       <Filter>Lua\LuaJIT\include</Filter>
     </ClInclude>
@@ -912,6 +919,12 @@
     </ClInclude>
     <ClInclude Include="lmodule\lfs.h">
       <Filter>Lua\LuaEtc\LFS</Filter>
+    </ClInclude>
+    <ClInclude Include="luajit\xr_pool.h">
+      <Filter>Lua\LuaJIT</Filter>
+    </ClInclude>
+    <ClInclude Include="lua_traceback.hpp">
+      <Filter>Lua\LuaEtc\Traceback</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

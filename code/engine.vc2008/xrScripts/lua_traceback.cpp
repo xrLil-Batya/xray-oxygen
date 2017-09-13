@@ -8,20 +8,24 @@
 //	Author		: ForserX
 //	Description : Lua functionality extension
 ////////////////////////////////////////////////////////////////////////////
-
-#include "lua_tools.h"
-
-void CLua_Traceback::get_lua_traceback(lua_State *L, int depth)
+extern "C"
 {
-	static char  buffer[32768]; // global buffer
-	int top = lua_gettop(L);
+#include <lua.h>
+#include <luajit.h>
+};
+#include "lua_traceback.hpp"
+
+
+SCRIPT_API const char* get_traceback(lua_State *L, int depth)
+{
 	// alpet: Lua traceback added
+	int top = lua_gettop(L);
 	lua_getfield(L, LUA_GLOBALSINDEX, "debug");
 	lua_getfield(L, -1, "traceback");
 	lua_pushstring(L, "\t");
 	lua_pushinteger(L, 1);
 
-	m_traceback = "cannot get Lua traceback ";
+	const char* m_traceback = "cannot get Lua traceback ";
 
 	if (!lua_pcall(L, 2, 1, 0))
 	{
@@ -30,4 +34,6 @@ void CLua_Traceback::get_lua_traceback(lua_State *L, int depth)
 	}
 
 	lua_settop (L, top);
+
+	return m_traceback;
 }

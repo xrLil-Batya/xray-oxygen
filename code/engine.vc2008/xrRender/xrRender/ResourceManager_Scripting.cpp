@@ -11,8 +11,8 @@
 #include	"../../xrScripts/lua_studio/ai_script_space.h"
 #include	"../../xrScripts/lua_studio/ai_script_lua_extension.h"
 #include	"luabind/return_reference_to_policy.hpp"
-
 #include	"dxRenderDeviceRender.h"
+#include "../../xrScripts/lua_traceback.hpp"
 
 using namespace				luabind;
 
@@ -86,7 +86,8 @@ void LuaLog(LPCSTR caMessage)
 }
 void LuaError(lua_State* L)
 {
-	Debug.fatal(DEBUG_INFO,"LUA error: %s",lua_tostring(L,-1));
+	const char *error = lua_tostring(L, -1);
+	Debug.fatal(DEBUG_INFO, "LUA error: %s", error ? error : get_traceback(L, 1));
 }
 
 // export

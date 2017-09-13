@@ -114,10 +114,11 @@ void Script::vfLoadStandardScripts(CLuaVirtualMachine *tpLuaVM)
 	}
 	xr_delete		(l_tpIniFile);
 }
-
+#include "..\lua_traceback.hpp"
 void LuaError(lua_State* L)
 {
-	Debug.fatal(DEBUG_INFO,"LUA error: %s",lua_tostring(L,-1));
+	const char *error = lua_tostring(L, -1);
+	Debug.fatal(DEBUG_INFO, "LUA error: %s", error ? error : get_traceback(L, 1));
 }
 
 void Script::vfExportToLua(CLuaVirtualMachine *tpLuaVM)
