@@ -106,7 +106,7 @@ void * __stdcall xr_aligned_offset_malloc(
 	/* gap = number of bytes needed to round up offset to align with PTR_SZ*/
 	gap = (0 - offset)&(PTR_SZ -1);
 
-	if ( (ptr =(uintptr_t)malloc(PTR_SZ +gap +align +size)) == (uintptr_t)NULL)
+	if (!(ptr =(uintptr_t)malloc(PTR_SZ +gap +align +size)))
 		return NULL;
 
 	retptr =((ptr +PTR_SZ +gap +align +offset)&~align)- offset;

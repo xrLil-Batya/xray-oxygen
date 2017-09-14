@@ -42,6 +42,9 @@
     <ClCompile Include="PLC.cpp">
       <Filter>PLC</Filter>
     </ClCompile>
+    <ClCompile Include="xrSkin2W_3DNow!.cpp">
+      <Filter>Skinning</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">

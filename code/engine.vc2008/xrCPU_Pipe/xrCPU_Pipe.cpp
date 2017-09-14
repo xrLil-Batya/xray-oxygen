@@ -15,6 +15,8 @@ extern xrSkin1W			xrSkin1W_SSE;
 extern xrSkin2W			xrSkin2W_SSE;
 extern xrSkin3W			xrSkin3W_SSE;
 extern xrSkin4W			xrSkin4W_SSE;
+extern xrSkin2W			xrSkin2W_3DNow;
+extern xrSkin1W			xrSkin1W_3DNow;
 
 extern xrSkin4W			xrSkin4W_thread;
 
@@ -35,18 +37,23 @@ extern "C" {
 		skin4W_func = xrSkin4W_x86;
 		T->PLC_calc3 = PLC_calc3_x86;
 
-#ifndef _M_X64
 		// SSE
-		if ( ID->hasFeature(CpuFeature::Sse)) 
+		if (ID->hasFeature(CpuFeature::Sse))
 		{
-			T->skin1W	= xrSkin1W_SSE;
-			T->skin2W	= xrSkin2W_SSE;
-			T->skin3W	= xrSkin3W_SSE;
-			T->skin4W	= xrSkin4W_SSE;
-			skin4W_func = xrSkin4W_SSE;
 			T->PLC_calc3 = PLC_calc3_SSE;
+#ifndef _M_X64
+			T->skin1W = xrSkin1W_SSE;
+			T->skin2W = xrSkin2W_SSE;
+			T->skin3W = xrSkin3W_SSE;
+			T->skin4W = xrSkin4W_SSE;
+			skin4W_func = xrSkin4W_SSE;
 		}
+		else if (ID->hasFeature(CpuFeature::_3dNow))
+		{
+			T->skin1W = xrSkin1W_3DNow;
+			T->skin2W = xrSkin2W_3DNow;
 #endif
+		}
 		// Init helper threads
 		ttapi_Init(ID);
 
