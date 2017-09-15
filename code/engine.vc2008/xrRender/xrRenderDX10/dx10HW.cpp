@@ -119,7 +119,7 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 
 	//	TODO: DX10: implement dynamic format selection
 	//sd.BufferDesc.Format		= fTarget;
-	sd.BufferDesc.Format = DXGI_FORMAT_R10G10B10A2_UNORM; //Prep for HDR10; breaks nothing
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //Prep for HDR10; breaks nothing
 	sd.BufferCount = 1;
 
 	// Multisample
@@ -480,7 +480,7 @@ void fill_vid_mode_list(CHW* _hw)
 	VERIFY(pOutput);
 
 	UINT num = 0;
-	DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;
+	DXGI_FORMAT format = DXGI_FORMAT_R10G10B10A2_UNORM;// [FX to Swartz27]: D3DX11SaveTextureToMemory don't give the value 'saved'
 	UINT flags         = 0;
 
 	// Get the number of display modes available
