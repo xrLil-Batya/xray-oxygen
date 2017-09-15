@@ -109,7 +109,6 @@ void CMainMenu::ReadTextureInfo()
 }
 
 extern ENGINE_API BOOL	bShowPauseString;
-extern bool				IsGameTypeSingle();
 
 void CMainMenu::Activate(bool bActivate)
 {

@@ -38,7 +38,7 @@ server_info_uploader& xrServer::GetServerInfoUploader()
 
 void xrServer::SendServerInfoToClient(ClientID const & new_client) //WARNING ! this function is thread unsafe !!!
 {
-		SendConfigFinished(new_client);
+	SendConfigFinished(new_client);
 }
 
 void xrServer::LoadServerInfo()

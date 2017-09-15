@@ -138,35 +138,7 @@ game_GameState::game_GameState()
 
 CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 {
-/*	if (!g_dedicated_server)
-	{
-		string_path		S;
-		FS.update_path	(S,"$game_config$","script.ltx");
-		CInifile		*l_tpIniFile = xr_new<CInifile>(S);
-		R_ASSERT		(l_tpIniFile);
-
-		string256				I;
-		xr_strcpy(I,l_tpIniFile->r_string("common","game_type_clsid_factory"));
-
-		luabind::functor<LPCSTR>	result;
-		R_ASSERT					(ai().script_engine().functor(I,result));
-		shared_str clsid = result		(game_type_name, isServer);
-
-		xr_delete			(l_tpIniFile);
-		if(clsid.size()==0)
-			Debug.fatal		(DEBUG_INFO,"Unknown game type: %s",game_type_name);
-
-		return				(TEXT2CLSID(*clsid));
-	}*/
-	
-	EGameIDs gameID = ParseStringToGameType(game_type_name);
-	switch(gameID)
-	{
-	case eGameIDSingle:
-		return			(isServer)?TEXT2CLSID("SV_SINGL"):TEXT2CLSID("CL_SINGL");
-	default:
-		return			(TEXT2CLSID(""));
-	}
+	return(isServer)?TEXT2CLSID("SV_SINGL"):TEXT2CLSID("CL_SINGL");
 }
 
 void game_GameState::switch_Phase		(u32 new_phase)

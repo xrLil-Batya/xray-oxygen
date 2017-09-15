@@ -192,8 +192,7 @@ void CGamePersistent::UpdateGameType			()
 {
 	__super::UpdateGameType		();
 
-	m_game_params.m_e_game_type = ParseStringToGameType(m_game_params.m_game_type);
-
+	m_game_params.m_e_game_type = eGameIDSingle;
 	g_current_keygroup = _sp;
 }
 

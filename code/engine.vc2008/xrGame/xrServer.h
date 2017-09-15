@@ -123,7 +123,6 @@ private:
 	void						AddDelayedPacket		(NET_Packet& Packet, ClientID Sender);
 	u32							OnDelayedMessage		(NET_Packet& P, ClientID sender);			// Non-Zero means broadcasting with "flags" as returned
 
-	void						SendUpdatesToAll		();
 	void	_stdcall			SendGameUpdateTo		(IClient* client);
 private:
 	typedef 
@@ -210,7 +209,7 @@ public:
 			u32				OnMessageSync		(NET_Packet& P, ClientID sender);
 	virtual void			OnCL_Connected		(IClient* CL);
 	virtual void			OnCL_Disconnected	(IClient* CL);
-	virtual bool			OnCL_QueryHost		();
+	virtual bool            OnCL_QueryHost () { return false; }
 	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
 			void			GetPooledState			(xrClientData* xrCL);

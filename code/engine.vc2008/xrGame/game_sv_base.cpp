@@ -735,7 +735,7 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 			u16     id_src				= tNetPacket.r_u16();
 			CSE_Abstract*	e_src		= get_entity_from_eid	(id_src	);
 
-			if(!e_src)  // && !IsGameTypeSingle() added by andy because of Phantom does not have server entity
+			if(!e_src)
 				break;
 
 			OnHit(id_src, id_dest, tNetPacket);
@@ -787,6 +787,7 @@ void game_sv_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
 void game_sv_GameState::AddDelayedEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
 	m_event_queue->Create(tNetPacket, type, time, sender);
+	return;
 }
 
 void game_sv_GameState::ProcessDelayedEvent		()

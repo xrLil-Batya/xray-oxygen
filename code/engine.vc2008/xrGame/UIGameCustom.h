@@ -58,24 +58,6 @@ typedef xr_vector<SGameWeathers>					GAME_WEATHERS;
 typedef xr_vector<SGameWeathers>::iterator			GAME_WEATHERS_IT;
 typedef xr_vector<SGameWeathers>::const_iterator	GAME_WEATHERS_CIT;
 
-class CMapListHelper
-{
-	typedef xr_vector<SGameTypeMaps>	TSTORAGE;
-	typedef TSTORAGE::iterator			TSTORAGE_IT;
-	typedef TSTORAGE::iterator			TSTORAGE_CIT;
-	TSTORAGE							m_storage;
-	GAME_WEATHERS						m_weathers;
-	void						Load			();
-	void						LoadMapInfo		(LPCSTR file_name, const xr_string& map_name, LPCSTR map_ver="1.0");
-	SGameTypeMaps*				GetMapListInt	(const shared_str& game_type);
-public:
-	const SGameTypeMaps&		GetMapListFor	(const shared_str& game_type);
-	const SGameTypeMaps&		GetMapListFor	(const EGameIDs game_id);
-	const GAME_WEATHERS&		GetGameWeathers	();
-};
-
-extern CMapListHelper	gMapListHelper;
-
 class CUIGameCustom :public DLL_Pure, public CDialogHolder
 {
 protected:

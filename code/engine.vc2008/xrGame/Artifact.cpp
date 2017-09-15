@@ -155,20 +155,9 @@ void CArtefact::OnH_A_Chield()
 	inherited::OnH_A_Chield		();
 
 	StopLights();
-	if (IsGameTypeSingle())
-	{
-		if (m_sParticlesName.c_str()) 
-		{	
-			CParticlesPlayer::StopParticles(m_sParticlesName, BI_NONE, true);
-		}
-	}
-	else
-	{
-		IKinematics* K	= smart_cast<IKinematics*>(H_Parent()->Visual());
-		if (K)
-			m_CarringBoneID			= K->LL_BoneID("bip01_head");
-		else
-			m_CarringBoneID = u16(-1);
+	if (m_sParticlesName.c_str()) 
+	{	
+		CParticlesPlayer::StopParticles(m_sParticlesName, BI_NONE, true);
 	}
 	if(m_detectorObj)
 	{

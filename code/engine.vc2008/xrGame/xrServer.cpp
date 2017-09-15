@@ -225,10 +225,6 @@ void xrServer::Update	()
 		Process_spawn		(Packet,clientID);
 	}
 
-
-	SendUpdatesToAll();
-
-
 	if (game->sv_force_sync)	Perform_game_export();
 
 	VERIFY						(verify_entities());
@@ -316,10 +312,6 @@ void xrServer::SendUpdatePacketsToAll()
 			}
 		}
 	}
-}
-
-void xrServer::SendUpdatesToAll()
-{
 }
 
 xr_vector<shared_str>	_tmp_log;
@@ -733,11 +725,6 @@ void			xrServer::Server_Client_Check(IClient* CL)
 	Msg("New SV client 0x%08x", SV_Client->ID.value());
 };
 
-bool xrServer::OnCL_QueryHost() 
-{
-	return false;
-};
-
 CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 {
 	xrS_entities::iterator	I=entities.begin(),E=entities.end();
@@ -946,7 +933,7 @@ void xrServer::GetServerInfo( CServerInfo* si )
 	LPCSTR time = InventoryUtilities::GetTimeAsString( Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay ).c_str();
 	si->AddItem( "Uptime", time, RGB(255,228,0) );
 
-	xr_strcpy( tmp256, GameTypeToString( game->Type(), true ) );
+	xr_strcpy(tmp256, "single");
 	{
 		xr_strcat( tmp256, " time limit [" );
 		xr_strcat( tmp256, "] " );

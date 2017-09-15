@@ -12,15 +12,10 @@
 #include "string_table.h"
 #include "game_cl_base_weapon_usage_statistic.h"
 
-EGameIDs ParseStringToGameType	(LPCSTR str);
-LPCSTR GameTypeToString			(EGameIDs gt, bool bShort);
-
 game_cl_GameState::game_cl_GameState()
 {
 	local_player				= createPlayerState(NULL);	//initializing account info
 	m_WeaponUsageStatistic		= NULL;
-
-	m_game_type_name			= 0;
 
 	shedule.t_min				= 5;
 	shedule.t_max				= 20;
@@ -412,11 +407,9 @@ void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)
 
 void game_cl_GameState::set_type_name(LPCSTR s)	
 { 
-	EGameIDs gid =			ParseStringToGameType	(s);
-	m_game_type_name		= GameTypeToString		(gid, false); 
 	if(OnClient())
 	{
-		xr_strcpy					(g_pGamePersistent->m_game_params.m_game_type, m_game_type_name.c_str());
+		xr_strcpy(g_pGamePersistent->m_game_params.m_game_type, "single");
 		g_pGamePersistent->OnGameStart();
 	}
 };

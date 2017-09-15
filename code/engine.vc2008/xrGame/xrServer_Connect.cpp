@@ -103,14 +103,8 @@ void xrServer::AttachNewClient			(IClient* CL)
 
 void xrServer::RequestClientDigest(IClient* CL)
 {
-	if (CL == GetServerClient())
-	{
-		Check_BuildVersion_Success(CL);	
-		return;
-	}
-	NET_Packet P;
-	P.w_begin					(M_SV_DIGEST);
-	SendTo						(CL->ID, P);
+	Check_BuildVersion_Success(CL);
+	return;
 }
 
 void xrServer::ProcessClientDigest(xrClientData*, NET_Packet*)

@@ -95,40 +95,6 @@ BOOL CRadioactiveZone::feel_touch_contact(CObject* O)
 
 void CRadioactiveZone::UpdateWorkload					(u32	dt)
 {
-	if (IsEnabled() && GameID() != eGameIDSingle)
-	{	
-		Fvector pos; 
-		XFORM().transform_tiny(pos,CFORM()->getSphere().P);
-		for(auto it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it)
-		{
-			if( !(*it).object->getDestroy() && smart_cast<CActor*>((*it).object))
-			{
-				//=====================================
-				NET_Packet	l_P;
-				l_P.write_start();
-				l_P.read_start();
-
-				float dist			= (*it).object->Position().distance_to(pos);
-				float power			= Power(dist,nearest_shape_radius(&(*it)))*dt/1000;
-
-				SHit				HS;
-				HS.GenHeader		(GE_HIT, (*it).object->ID());
-				HS.whoID			= ID();
-				HS.weaponID			= ID();
-				HS.dir				= Fvector().set(0,0,0);
-				HS.power			= power;
-				HS.boneID			= BI_NONE;
-				HS.p_in_bone_space	= Fvector().set(0, 0, 0);
-				HS.impulse			= 0.0f;
-				HS.hit_type			= m_eHitTypeBlowout;
-				
-				HS.Write_Packet_Cont(l_P);
-
-				(*it).object->OnEvent(l_P, HS.PACKET_TYPE);
-				//=====================================
-			};
-		}
-	}
 	inherited::UpdateWorkload(dt);
 }
 
