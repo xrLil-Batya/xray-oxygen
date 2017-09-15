@@ -1,8 +1,8 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "soundrender_coreA.h"
-#include "soundrender_targetA.h"
+#include "SoundRender_CoreA.h"
+#include "SoundRender_TargetA.h"
 
 CSoundRender_CoreA*	SoundRenderA= 0; 
 
@@ -127,7 +127,7 @@ void CSoundRender_CoreA::_initialize(int stage)
     A_CHK				        (alListenerf		(AL_GAIN,1.f));
 
     // Check for EAX extension
-    bEAX 				        = deviceDesc.props.eax && !deviceDesc.props.eax_unwanted;
+    bEAX 				        = deviceDesc.props.eax;
 
     eaxSet 				        = (EAXSet)alGetProcAddress	((const ALchar*)"EAXSet");
     if (eaxSet==nullptr) bEAX 		= false;
