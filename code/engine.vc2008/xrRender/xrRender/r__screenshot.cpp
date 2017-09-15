@@ -1,13 +1,18 @@
 #include "stdafx.h"
-//#include "../../xrEngine/xr_effgamma.h"
 #include "xr_effgamma.h"
 #include "dxRenderDeviceRender.h"
 #include "../xrRender/tga.h"
 #include "../../xrEngine/xrImage_Resampler.h"
 
-#if defined(USE_DX10) || defined(USE_DX11)
+#ifdef USE_DX10
 #include "d3dx10tex.h"
 #endif	//	USE_DX10
+#ifdef USE_DX11
+#include "..\xrRenderDX10\DXCommonTypes.h"
+#include "../../xrCore/xrCore.h"
+#include <D3DX11.h>
+#include "d3dx10tex.h"
+#endif
 
 #define	GAMESAVE_SIZE	128
 
@@ -166,7 +171,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				CHK_DX				(D3DX10SaveTextureToMemory( pSrcTexture, D3DX10_IFF_PNG, &saved, 0));
 #endif
 				IWriter*		fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
-				fs->w				(saved->GetBufferPointer(),(u32)saved->GetBufferSize());
+				fs->w				(saved->GetBufferPointer(), saved->GetBufferSize());
 				FS.w_close			(fs);
 				_RELEASE			(saved);
 
