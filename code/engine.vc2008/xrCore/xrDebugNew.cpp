@@ -258,7 +258,7 @@ static UnhandledExceptionFilterType	*previous_filter = 0;
 
 void format_message(char* buffer, const u32 &buffer_size)
 {
-	char*		message;
+	char*		message = nullptr;
 	DWORD		error_code = GetLastError();
 
 	if (!error_code) {
