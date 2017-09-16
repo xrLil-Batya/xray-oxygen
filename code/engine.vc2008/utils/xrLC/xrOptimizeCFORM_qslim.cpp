@@ -72,10 +72,10 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	u32 base_faces_cnt		= u32(CL.getTS());
 
 	// save source SMF
-	bool					keep_temp_files = !!strstr(Core.Params,"-keep_temp_files");
-	if (keep_temp_files) {
+	if (strstr(Core.Params, "-keep_temp_files"))
+	{
 		string_path			fn;
-		SaveAsSMF			(strconcat(sizeof(fn),fn,pBuild->path,"cform_source.smf"),CL);
+		SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_source.smf"), CL);
 	}
 
 	// prepare model
@@ -106,41 +106,47 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 
 	// constraint material&sector vertex
 	Ivector2 f_rm[3]={{0,1}, {1,2}, {2,0}};
-	for (u32 f_idx=0; f_idx<slim->valid_faces; f_idx++){
-		if (mdl->face_is_valid(f_idx)){
-			MxFace& base_f				= mdl->face(f_idx);
-			for (u32 edge_idx=0; edge_idx<3; edge_idx++){
-				int K;
-				u32 I					= f_rm[edge_idx].x;
-				u32 J					= f_rm[edge_idx].y;
-				const MxFaceList& N0	= mdl->neighbors(base_f[I]);
-				const MxFaceList& N1	= mdl->neighbors(base_f[J]);
-				for(K=0; K<N1.length(); K++) mdl->face_mark(N1[K], 0);
-				for(K=0; K<N0.length(); K++) mdl->face_mark(N0[K], 1);
-				for(K=0; K<N1.length(); K++) mdl->face_mark(N1[K], mdl->face_mark(N1[K])+1);
-				const MxFaceList& N		= (N0.size()<N1.size())?N0:N1;
-				face_props& base_t		= FPs[f_idx];
-				if (N.size()){
-					u32 cnt_pos=0, cnt_neg=0;
-					bool need_constraint= false;
-					for(K=0; K<N.length(); K++){
-						u32 fff			= N[K];
-						MxFace& cur_f	= mdl->face(fff);
-						unsigned char mk= mdl->face_mark(fff);
-						if((f_idx!=N[K])&&(mdl->face_mark(N[K])==2)){
-							face_props& cur_t	= FPs[N[K]];
-							u32 cur_edge_idx = common_edge_idx( base_f, edge_idx, cur_f );
-							if (do_constrain(edge_idx,cur_edge_idx,base_t,cur_t)){
-								need_constraint	= true;
+	for (u32 f_idx = 0; f_idx < slim->valid_faces; f_idx++) 
+	{
+		if (mdl->face_is_valid(f_idx)) 
+		{
+			MxFace& base_f = mdl->face(f_idx);
+			for (u32 edge_idx = 0; edge_idx < 3; edge_idx++) 
+			{
+				const u32 I = f_rm[edge_idx].x;
+				const u32 J = f_rm[edge_idx].y;
+				const MxFaceList& N0 = mdl->neighbors(base_f[I]);
+				const MxFaceList& N1 = mdl->neighbors(base_f[J]);
+				for (u32 K = 0; K < N1.length(); K++) mdl->face_mark(N1[K], 0);
+				for (u32 K = 0; K < N0.length(); K++) mdl->face_mark(N0[K], 1);
+				for (u32 K = 0; K < N1.length(); K++) mdl->face_mark(N1[K], mdl->face_mark(N1[K]) + 1);
+				const MxFaceList& N = (N0.size() < N1.size()) ? N0 : N1;
+				face_props& base_t = FPs[f_idx];
+				if (N.size()) 
+				{
+					u32 cnt_pos = 0, cnt_neg = 0;
+					bool need_constraint = false;
+					for (u32 K = 0; K < N.length(); K++) 
+					{
+						const u32 fff = N[K];
+						MxFace& cur_f = mdl->face(fff);
+						//unsigned char mk = mdl->face_mark(fff);
+						if ((f_idx != N[K]) && (mdl->face_mark(N[K]) == 2)) 
+						{
+							face_props& cur_t = FPs[N[K]];
+							const u32 cur_edge_idx = common_edge_idx(base_f, edge_idx, cur_f);
+							if (do_constrain(edge_idx, cur_edge_idx, base_t, cur_t))
+							{
+								need_constraint = true;
 								break;
 							}
-							float dot=base_t.norm.dotproduct(cur_t.norm);
-							if		(fsimilar(dot,-1.f,EPS))	cnt_neg++;
-							else if (fsimilar(dot,1.f,EPS))		cnt_pos++;
+							float dot = base_t.norm.dotproduct(cur_t.norm);
+							if (fsimilar(dot, -1.f, EPS))	cnt_neg++;
+							else if (fsimilar(dot, 1.f, EPS))		cnt_pos++;
 						}
 					}
-					if (need_constraint||((0==cnt_pos)&&(1==cnt_neg))){
-						slim->constraint_manual	(base_f[I],base_f[J],f_idx);
+					if (need_constraint || ((0 == cnt_pos) && (1 == cnt_neg))) {
+						slim->constraint_manual(base_f[I], base_f[J], f_idx);
 					}
 				}
 			}
@@ -154,22 +160,22 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 	mdl->compact_vertices	();
 
 	// rebuild CDB
-	for (u32 f_idx=0; f_idx<mdl->face_count(); f_idx++){
-		if (mdl->face_is_valid(f_idx)){
-			MxFace& F		= mdl->face(f_idx);
-			face_props& FP	= FPs[f_idx];
-			CL.add_face		(*((Fvector*)&mdl->vertex(F[0])),
-							*((Fvector*)&mdl->vertex(F[1])),
-							*((Fvector*)&mdl->vertex(F[2])),
-							FP.material, FP.sector,FP.flags);
+	for (u32 f_idx = 0; f_idx < mdl->face_count(); f_idx++) 
+	{
+		if (mdl->face_is_valid(f_idx)) 
+		{
+			MxFace& F = mdl->face(f_idx);
+			face_props& FP = FPs[f_idx];
+			CL.add_face(*((Fvector*)&mdl->vertex(F[0])), *((Fvector*)&mdl->vertex(F[1])), *((Fvector*)&mdl->vertex(F[2])), FP.material, FP.sector, FP.flags);
 		}
 	}
 
 
 	// save source CDB
-	if (keep_temp_files) {
+	if (strstr(Core.Params, "-keep_temp_files"))
+	{
 		string_path			fn;
-		SaveAsSMF			(strconcat(sizeof(fn),fn,pBuild->path,"cform_optimized.smf"),CL);
+		SaveAsSMF(strconcat(sizeof(fn), fn, pBuild->path, "cform_optimized.smf"), CL);
 	}
 
  	xr_delete				(slim);

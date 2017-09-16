@@ -1,14 +1,9 @@
 #include "stdafx.h"
 #include "elight_def.h"
-
-
-
 #include "build.h"
 
 #include "../xrLC_Light/xrLC_GlobalData.h"
 #include "../xrLC_Light/xrface.h"
-
-
 #include "../xrLC_Light/xrMU_Model.h"
 #include "../xrLC_Light/xrMU_Model_Reference.h"
 
@@ -97,7 +92,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				F->r				(&B,sizeof(B));
 				R_ASSERT			(B.dwMaterialGame<65536);
 
-				_F->dwMaterial		= u16(B.dwMaterial);
+				_F->dwMaterial		= B.dwMaterial;
 				_F->dwMaterialGame	= B.dwMaterialGame;
 
 				// Vertices and adjacement info

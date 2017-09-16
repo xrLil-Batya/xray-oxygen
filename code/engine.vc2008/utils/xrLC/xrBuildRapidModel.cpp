@@ -8,8 +8,6 @@
 #include "../../xrcdb/xrcdb.h"
 #include "../xrLC_Light/xrface.h"
 
-//.#include "communicate.h"
-
 CDB::MODEL*	RCAST_Model	= 0;
 
 IC bool				FaceEqual(Face& F1, Face& F2)
@@ -92,15 +90,9 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		if (!bAlready) 
 		{
 			F->flags.bProcessed	= true;
-
-			CL.add_face_D		( F->v[0]->P,F->v[1]->P,F->v[2]->P, *((u64*)&F), F->sm_group );
+			CL.add_face_D(F->v[0]->P, F->v[1]->P, F->v[2]->P, *((u64*)&F), F->sm_group);
 		}
 	}
-
-	/*
-	clMsg					("Faces: original(%d), model(%d), ratio(%f)",
-		g_faces.size(),CL.getTS(),float(CL.getTS())/float(g_faces.size()));
-	*/
 
 	// Export references
 	if (bSaveForOtherCompilers)		Phase	("Building rcast-CFORM-mu model...");

@@ -213,7 +213,8 @@ void xrMU_Model::calc_lighting	()
 	export_cform_rcast		(CL,Fidentity);
 
 	CDB::MODEL*				M	= xr_new<CDB::MODEL>	();
-	M->build				(CL.getV(),(u32)CL.getVS(),CL.getT(),(u32)CL.getTS());
+	// [FX] I h8 tris builder on x64!!!
+	M->build				(CL.getV(),(u32)CL.getVS(),CL.getT(),(u32)CL.getTS(), nullptr, nullptr, false);
 
 	calc_lighting			(color,Fidentity,M,inlc_global_data()->L_static(),LP_dont_rgb+LP_dont_sun);
 

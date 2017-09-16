@@ -107,27 +107,30 @@ void global_claculation_data::xrLoad()
 		transfer("shaders_xrlc",g_shader_compile,		*fs,		EB_Shaders_Compile);
 		post_process_materials( *g_shaders_xrlc, g_shader_compile, g_materials );
 		// process textures
-#ifdef	DEBUG
-		xr_vector<b_texture> dbg_textures;
-#endif
 		Status			("Processing textures...");
 		{
 			Surface_Init		();
 			F = fs->open_chunk	(EB_Textures);
-			u32 tex_count	= F->length()/sizeof(b_texture);
+#ifdef _M_X64
+			u32 tex_count = F->length() / sizeof(help_b_texture);
+#else
+			u32 tex_count = F->length() / sizeof(b_texture);
+#endif
 			for (u32 t=0; t<tex_count; t++)
 			{
 				Progress		(float(t)/float(tex_count));
-
+#ifdef _M_X64
+				help_b_texture	TEX;
+				F->r(&TEX, sizeof(TEX));
+				b_BuildTexture	BT;
+				std::memcpy(&BT, &TEX, sizeof(TEX) - 4);
+				BT.pSurface = (u32*)TEX.pSurface;
+#else
 				b_texture		TEX;
 				F->r			(&TEX,sizeof(TEX));
-#ifdef	DEBUG
-				dbg_textures.push_back( TEX );
-#endif
-
 				b_BuildTexture	BT;
                 std::memcpy(&BT,&TEX,sizeof(TEX));
-
+#endif
 				// load thumbnail
 				LPSTR N			= BT.name;
 				if (strchr(N,'.')) *(strchr(N,'.')) = 0;
