@@ -8,9 +8,6 @@
     <ClCompile Include="NET_Common.cpp">
       <Filter>Common</Filter>
     </ClCompile>
-    <ClCompile Include="NET_Log.cpp">
-      <Filter>Log</Filter>
-    </ClCompile>
     <ClCompile Include="NET_Server.cpp">
       <Filter>Server</Filter>
     </ClCompile>
@@ -25,9 +22,6 @@
     </ClInclude>
     <ClInclude Include="NET_Common.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="NET_Log.h">
-      <Filter>Log</Filter>
     </ClInclude>
     <ClInclude Include="NET_Server.h">
       <Filter>Server</Filter>

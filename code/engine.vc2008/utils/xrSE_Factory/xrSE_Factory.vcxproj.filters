@@ -548,15 +548,6 @@
     <ClCompile Include="..\..\xrServerEntities\script_ini_file_script.cpp">
       <Filter>Scripts\ScriptIniFile</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_token_list.cpp">
-      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_token_list_script.cpp">
-      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_rtoken_list_script.cpp">
-      <Filter>Scripts\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\script_engine.cpp">
       <Filter>Scripts\ScriptEngine</Filter>
     </ClCompile>
