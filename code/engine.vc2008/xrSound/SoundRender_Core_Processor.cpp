@@ -25,14 +25,12 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
     bLocked						= true;
 	float new_tm				= Timer.GetElapsed_sec();
 	fTimer_Delta				= new_tm-fTimer_Value;
-//.	float dt					= float(Timer_Delta)/1000.f;
 	float dt_sec				= fTimer_Delta;
 	fTimer_Value				= new_tm;
 
 	s_emitters_u	++	;
 
 	// Firstly update emitters, which are now being rendered
-	//Msg	("! update: r-emitters");
 	for (it=0; it<s_targets.size(); it++)
 	{
 		CSoundRender_Target*	T	= s_targets	[it];
@@ -49,7 +47,6 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	}
 
 	// Update emmitters
-	//Msg	("! update: emitters");
 	for (it=0; it<s_emitters.size(); it++)
 	{
 		CSoundRender_Emitter*	pEmitter = s_emitters[it];
@@ -68,10 +65,8 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	}
 
 	// Get currently rendering emitters
-	//Msg	("! update: targets");
 	s_targets_defer.clear	();
 	s_targets_pu			++;
-	// u32 PU				= s_targets_pu%s_targets.size();
 	for (it=0; it<s_targets.size(); it++)
 	{
 		CSoundRender_Target*	T	= s_targets	[it];
@@ -80,7 +75,7 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 			// Has emmitter, maybe just not started rendering
 			if		(T->get_Rendering())	
 			{
-				/*if	(PU == it)*/	T->fill_parameters	();
+				T->fill_parameters	();
 				T->update		();
 			}
 			else 	
@@ -91,7 +86,6 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	// Commit parameters from pending targets
 	if (!s_targets_defer.empty())
 	{
-		//Msg	("! update: start render - commit");
 		s_targets_defer.erase	(std::unique(s_targets_defer.begin(),s_targets_defer.end()),s_targets_defer.end());
 		for (it=0; it<s_targets_defer.size(); it++)
 			s_targets_defer[it]->fill_parameters();
@@ -118,7 +112,6 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 	// Start rendering of pending targets
 	if (!s_targets_defer.empty())
 	{
-		//Msg	("! update: start render");
 		for (it=0; it<s_targets_defer.size(); it++)
 			s_targets_defer[it]->render	();
 	}
@@ -261,17 +254,4 @@ float CSoundRender_Core::get_occlusion(Fvector& P, float R, Fvector* occ)
 		}
 	}
 	return occ_value;
-	}
-
-
-
-
-
-
-
-
-
-
-
-
-
+}

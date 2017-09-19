@@ -47,30 +47,6 @@ bool CSoundRender_CoreA::EAXTestSupport	(bool bDeferred)
 void  CSoundRender_CoreA::_restart()
 {
 	inherited::_restart();
-/*
-	CSoundRender_Target*	T	= 0;
-	for (u32 tit=0; tit<s_targets.size(); tit++)
-	{
-		T						= s_targets[tit];
-		T->_destroy				();
-	}
-
-	// Reset the current context to nullptr.
-    alcMakeContextCurrent		(nullptr);         
-    // Release the context and the device.
-    alcDestroyContext			(pContext);		
-	pContext					= nullptr;
-    alcCloseDevice				(pDevice);		
-	pDevice						= nullptr;
-
-	_initialize					(2);
-
-	for (u32 tit=0; tit<s_targets.size(); tit++)
-	{
-		T						= s_targets[tit];
-		T->_initialize				();
-	}
-*/
 }
 
 void CSoundRender_CoreA::_initialize(int stage)

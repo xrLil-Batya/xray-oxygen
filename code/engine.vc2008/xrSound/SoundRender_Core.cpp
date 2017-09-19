@@ -349,7 +349,6 @@ void CSoundRender_Core::_destroy_data(ref_sound_data& S)
 		E->stop(false);
 	}
 	R_ASSERT(!S.feedback);
-//	SoundRender->i_destroy_source((CSoundRender_Source*)S.handle);
 
 	S.handle = nullptr;
 }
