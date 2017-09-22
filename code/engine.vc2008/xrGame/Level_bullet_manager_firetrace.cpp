@@ -157,7 +157,6 @@ void CBulletManager::FireShotmark (SBullet* bullet, const Fvector& vDir, const F
 
 	if (R.O)
 	{
-/*  add_SkeletonWallmark not implemented now...
 		particle_dir		 = vDir;
 		particle_dir.invert	();
 
@@ -177,7 +176,6 @@ void CBulletManager::FireShotmark (SBullet* bullet, const Fvector& vDir, const F
 													bullet->dir, 
 													bullet->wallmark_size);
 		}
-*/
 	} 
 	else 
 	{
