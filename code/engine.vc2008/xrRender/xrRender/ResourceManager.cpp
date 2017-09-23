@@ -105,7 +105,6 @@ void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 		strlwr		(N.begin());
 
 		fix_texture_name( N.begin() );
-//. andy		if (strext(N.begin())) *strext(N.begin())=0;
 		dest.push_back(N.begin());
 	}
 }
@@ -137,9 +136,6 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 	CBlender_Compile	C;
 	Shader				S;
 
-	//.
-	// if (strstr(s_shader,"transparent"))	__asm int 3;
-
 	// Access to template
 	C.BT				= B;
 	C.bEditor			= FALSE;
@@ -158,7 +154,6 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 	{
 		C.iElement			= 0;
 		C.bDetail			= m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
-//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		ShaderElement		E;
 		C._cpp_Compile		(&E);
 		S.E[0]				= _CreateElement	(E);
@@ -167,7 +162,6 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 	// Compile element	(LOD1)
 	{
 		C.iElement			= 1;
-//.		C.bDetail			= _GetDetailTexture(*C.L_textures[0],C.detail_texture,C.detail_scaler);
 		C.bDetail			= m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
 		ShaderElement		E;
 		C._cpp_Compile		(&E);

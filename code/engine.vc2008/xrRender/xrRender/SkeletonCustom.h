@@ -30,8 +30,8 @@ public:
 	struct WMFace{
 		Fvector3		vert	[3];
 		Fvector2		uv		[3];
-		u16				bone_id	[3][2];
-		float			weight	[3];
+		u16				bone_id[3][4];
+		float			weight[3][3];
 	};
 	using WMFacesVec = xr_vector<WMFace>;
 	WMFacesVec			m_Faces;		// 16 
@@ -219,14 +219,12 @@ public:
 	virtual	IKinematicsAnimated*dcast_PKinematicsAnimated() { return 0;	}
 	virtual IRenderVisual*	_BCL dcast_RenderVisual() { return this; }
 	virtual IKinematics*	_BCL dcast_PKinematics()  { return this; }
-//	virtual	CKinematics*		dcast_PKinematics	()				{ return this;	}
 
 	virtual u32					mem_usage			(bool bInstance)
 	{
 		u32 sz					= sizeof(*this);
 		sz						+= bone_instances?bone_instances->mem_usage():0;
 		if (!bInstance){
-//			sz					+= pUserData?pUserData->mem_usage():0;
 			for (vecBonesIt b_it=bones->begin(); b_it!=bones->end(); b_it++)
 				sz				+= sizeof(vecBones::value_type)+(*b_it)->mem_usage();
 		}

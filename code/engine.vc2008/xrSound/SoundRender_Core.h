@@ -89,7 +89,6 @@ public:
 	virtual void						statistic				( CSound_stats*  dest, CSound_stats_ext*  ext );
 
 	// listener
-//	virtual const Fvector&				listener_position		( )=0;
 	virtual void						update_listener			(const Fvector& P, const Fvector& D, const Fvector& N, float dt)=0;
 	// eax listener
 	void								i_eax_commit_setting	();
@@ -106,7 +105,6 @@ public:
 #endif
 public:
 	CSoundRender_Source*				i_create_source			( const char* name				);
-//	void								i_destroy_source		( CSoundRender_Source*  S	);
 	CSoundRender_Emitter*				i_play					( ref_sound* S, bool _loop, float delay	);
 	void								i_start					( CSoundRender_Emitter* E	);
 	void								i_stop					( CSoundRender_Emitter* E	);
