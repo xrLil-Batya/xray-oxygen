@@ -6,12 +6,8 @@
 
 xrSASH	ENGINE_API g_SASH;
 
-xrSASH::xrSASH() : m_bInited(false), 
-	m_bOpenAutomate(false), m_bBenchmarkRunning(false),
-	m_bRunning(false), m_bReinitEngine(false),
-	m_bExecutingConsoleCommand(false)
+xrSASH::xrSASH() : m_bInited(false), m_bOpenAutomate(false), m_bBenchmarkRunning(false), m_bRunning(false), m_bReinitEngine(false), m_bExecutingConsoleCommand(false)
 {
-	;
 }
 
 xrSASH::~xrSASH()
@@ -81,8 +77,6 @@ void xrSASH::LoopOA()
 
 			/* Run as normal */
 		case OA_CMD_RUN: 
-			//RunApp();
-			//Msg("SASH:: GetCurrentOptions.");
 			bExit = true;
 			break;
 
@@ -178,20 +172,13 @@ void xrSASH::ReportNative( LPCSTR pszTestName )
 			if ( fFps>fMaxFps ) fMaxFps = fFps;
 		}
 	}
-	else
+	else for (u32 it=0; it<m_aFrimeTimes.size(); it++)
 	{
-		for (u32	it=0; it<m_aFrimeTimes.size(); it++)
-		{
-			float fFps	= 1.f / m_aFrimeTimes[it];
-			if (fFps<fMinFps) fMinFps = fFps;
-			if (fFps>fMaxFps) fMaxFps = fFps;
-		}
+		float fFps	= 1.f / m_aFrimeTimes[it];
+		if (fFps<fMinFps) fMinFps = fFps;
+		if (fFps>fMaxFps) fMaxFps = fFps;
 	}
 
-	//res.w_float			("general","test float",	float(1.0f)/10.f,	"dx-level required"		);
-	//res.w_float			("general","renderer",	float(::Render->get_generation())/10.f,	"dx-level required"		);
-	//res.w_float			("general","average",	rfps_average,							"average for this run"	);
-	//res.w_float			("general","middle",	rfps_middlepoint,						"per-frame middle-point");
 	float fTotal = 0;
 	float fNumFrames = 0;
 	for (u32	it=0; it<m_aFrimeTimes.size(); it++)
@@ -289,11 +276,6 @@ void xrSASH::GetAllOptions()
 
 	//	>=r2
 	oaInitOption(&Option);	//	Reset dependency info
-	//	Currently only equal/not equal works
-	//Option.Dependency.ParentName = TEXT("renderer");
-	//Option.Dependency.ComparisonOp = OA_COMP_OP_GREATER_OR_EQUAL;
-	//Option.Dependency.ComparisonVal.Enum = TEXT("renderer_r2");
-	//Option.Dependency.ComparisonValType = GetOptionType("renderer");
 	{
 		DescribeOption("r2_sun", Option.Dependency);
 		DescribeOption("r2_sun_quality", Option.Dependency);
@@ -303,10 +285,6 @@ void xrSASH::GetAllOptions()
 	}
 
 	//	>=r2.5
-	//Option.Dependency.ParentName = TEXT("renderer");
-	//Option.Dependency.ComparisonOp = OA_COMP_OP_GREATER_OR_EQUAL;
-	//Option.Dependency.ComparisonVal.Enum = TEXT("renderer_r2.5");
-	//Option.Dependency.ComparisonValType = GetOptionType("renderer");
 	{
 		DescribeOption("r2_sun_shafts",			Option.Dependency);
 		DescribeOption("r2_ssao",				Option.Dependency);
@@ -321,10 +299,6 @@ void xrSASH::GetAllOptions()
 	}
 
 	//	>=r3
-	//Option.Dependency.ParentName = TEXT("renderer");
-	//Option.Dependency.ComparisonOp = OA_COMP_OP_GREATER_OR_EQUAL;
-	//Option.Dependency.ComparisonVal.Enum = TEXT("renderer_r3");
-	//Option.Dependency.ComparisonValType = GetOptionType("renderer");
 	{
 		DescribeOption("r3_dynamic_wet_surfaces",Option.Dependency);
 		DescribeOption("r3_volumetric_smoke",	Option.Dependency);
@@ -333,10 +307,6 @@ void xrSASH::GetAllOptions()
 		DescribeOption("r3_minmax_sm",			Option.Dependency);
 		DescribeOption("r3_msaa",				Option.Dependency);
 		//	>= 2x
-		//Option.Dependency.ParentName = TEXT("r3_msaa");
-		//Option.Dependency.ComparisonOp = OA_COMP_OP_GREATER_OR_EQUAL;
-		//Option.Dependency.ComparisonVal.Enum = TEXT("2x");
-		//Option.Dependency.ComparisonValType = GetOptionType("r3_msaa");
 		{
 			DescribeOption("r3_msaa_opt",			Option.Dependency);
 			DescribeOption("r3_msaa_alphatest",		Option.Dependency);

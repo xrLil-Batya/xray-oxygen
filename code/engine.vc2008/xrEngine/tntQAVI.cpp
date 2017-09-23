@@ -1,29 +1,27 @@
 #include "stdafx.h"
 #pragma hdrstop
-
-//#include <crtdbg.h>
-
 #include "tntQAVI.h"
 
-CAviPlayerCustom::CAviPlayerCustom( )
+CAviPlayerCustom::CAviPlayerCustom()
 {
-    std::memset( this, 0, sizeof(*this) );
+    std::memset(this, 0, sizeof(*this));
 	m_dwFrameCurrent	= 0xfffffffd;	// страхуемся от 0xffffffff + 1 == 0
-	m_dwFirstFrameOffset=0;
+	m_dwFirstFrameOffset= 0;
 }
 
-CAviPlayerCustom::~CAviPlayerCustom( )
+CAviPlayerCustom::~CAviPlayerCustom()
 {
-	if( m_aviIC ) {
+	if(m_aviIC)
+	{
 
-		ICDecompressEnd( m_aviIC );
-		ICClose( m_aviIC );
+		ICDecompressEnd(m_aviIC);
+		ICClose(m_aviIC);
 	}
 
-	if( m_pDecompressedBuf )	xr_free( m_pDecompressedBuf );
+	if(m_pDecompressedBuf)	xr_free(m_pDecompressedBuf);
 
-	if( m_pMovieData )	xr_free( m_pMovieData );
-	if( m_pMovieIndex ) xr_free( m_pMovieIndex );
+	if(m_pMovieData )	xr_free(m_pMovieData);
+	if(m_pMovieIndex ) xr_free(m_pMovieIndex);
 
 	xr_delete(alpha);
 }
@@ -415,23 +413,21 @@ VOID CAviPlayerCustom::PreRoll( DWORD dwFrameNum )
 
 }
 
-VOID CAviPlayerCustom::GetSize(DWORD *dwWidth, DWORD *dwHeight)
+void CAviPlayerCustom::GetSize(DWORD *dwWidth, DWORD *dwHeight)
 {
 	if( dwWidth )	*dwWidth = m_dwWidth;
 	if( dwHeight )	*dwHeight = m_dwHeight;
 }
 
-INT CAviPlayerCustom::SetSpeed( INT nPercent )
+int CAviPlayerCustom::SetSpeed( INT nPercent )
 {
-	INT		res = INT( m_fCurrentRate / m_fRate * 100 );
-
 	m_fCurrentRate	= m_fRate * FLOAT( nPercent / 100.0f );
-
-	return	res;
+	return int(m_fCurrentRate / m_fRate * 100);
 }
+
 DWORD CAviPlayerCustom::CalcFrame()
 	{	
-		if(0==m_dwFirstFrameOffset)
+		if(!m_dwFirstFrameOffset)
 			m_dwFirstFrameOffset = RDEVICE.dwTimeContinual-1;
 
 	return DWORD( floor( (RDEVICE.dwTimeContinual-m_dwFirstFrameOffset) * m_fCurrentRate / 1000.0f) ) % m_dwFrameTotal;

@@ -34,9 +34,6 @@
     <Filter Include="Common">
       <UniqueIdentifier>{9cc11fcb-fad9-405a-b40b-ab66bf6ec603}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Log">
-      <UniqueIdentifier>{ebc4e809-3a0b-4f77-9c0c-6ea4d30dd51c}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Server">
       <UniqueIdentifier>{6a2e468e-04b1-4d74-8a1e-50b531a7130f}</UniqueIdentifier>
     </Filter>

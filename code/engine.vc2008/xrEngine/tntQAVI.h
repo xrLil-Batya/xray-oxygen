@@ -1,26 +1,10 @@
-#ifndef tntQAVIH
-#define tntQAVIH
-
+#pragma once
 #include <math.h>
-
-//#include "tntTimer.h"
 #include "vfw.h"
 #include "mmsystem.h"
 
-// replaced with standard AVIIF_KEYFRAME
-//rr #define	AVIINDEX_ISKEYFRAME		0x10	// ключевой кадр
-
-// reverse enginered AVI index v.1 format
-/*struct AviIndex {
-
-	DWORD	dwChunkType;	// chunk type, i.e. '##dc' - DIB compressed
-	DWORD	dwFlags;		// key-frame etc.
-	DWORD	dwOffset;		// sub-chunk offset from the begining of the LIST chunk
-	DWORD	dwLenght;		// chunk lenght
-
-};
-
-typedef struct {
+typedef struct 
+{
 	FOURCC fccType;
 	FOURCC fccHandler;
 	DWORD  dwFlags;
@@ -33,23 +17,8 @@ typedef struct {
 	DWORD  dwSuggestedBufferSize;
 	DWORD  dwQuality;
 	DWORD  dwSampleSize;
-	RECT   rcFrame;
-} AVIStreamHeader;
-*/
-typedef struct {
-	FOURCC fccType;
-	FOURCC fccHandler;
-	DWORD  dwFlags;
-	DWORD  dwPriority;
-	DWORD  dwInitialFrames;
-	DWORD  dwScale;
-	DWORD  dwRate;
-	DWORD  dwStart;
-	DWORD  dwLength;
-	DWORD  dwSuggestedBufferSize;
-	DWORD  dwQuality;
-	DWORD  dwSampleSize;
-	struct {
+	struct
+	{
 
 		WORD	left;
 		WORD	top;
@@ -72,8 +41,8 @@ protected:
 	BITMAPINFOHEADER	m_biOutFormat;
 	BITMAPINFOHEADER	m_biInFormat;
 
-	float				m_fRate;		// стандартна€ скорость, fps
-	float				m_fCurrentRate;	// текуща€ скорость, fps
+	float				m_fRate;		// стандартная скорость, fps
+	float				m_fCurrentRate;	// текущая скорость, fps
 
 	DWORD				m_dwFrameTotal;
 	DWORD				m_dwFrameCurrent;
@@ -99,4 +68,3 @@ public:
 	BOOL				NeedUpdate			( ) { return CalcFrame( ) != m_dwFrameCurrent; }
 	INT					SetSpeed			( INT nPercent );
 };
-#endif

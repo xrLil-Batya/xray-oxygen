@@ -267,7 +267,7 @@ public:
 	// Game
 	void						InitializeClientGame	(NET_Packet& P);
 	void						ClientReceive			();
-	void						ClientSend				();
+	void						ClientSend				(bool bForce = false);
 	void						ClientSave				();
 			u32					Objects_net_Save		(NET_Packet* _Packet, u32 start, u32 count);
 	virtual	void				Send					(NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);

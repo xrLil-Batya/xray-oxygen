@@ -166,51 +166,38 @@ void CLevel::net_Stop		()
 #endif // DEBUG
 }
 
-
-void CLevel::ClientSend()
+void CLevel::ClientSend(bool bForce)
 {
-	NET_Packet				P;
-	u32						start	= 0;
-	//----------- for E3 -----------------------------
+	static u32 cur_index = 0;
 
-	if (CurrentControlEntity())
+	if (bForce)
+		cur_index = 0;
+
+	u32 object_count = Objects.o_count();
+	u32 position;
+	for (u32 start = cur_index; start < (bForce ? object_count : cur_index + 20); start++)
 	{
-		CObject* pObj = CurrentControlEntity();
-		if (!pObj->getDestroy() && pObj->net_Relevant())
+		CObject	*pO = Objects.o_get_by_iterator(cur_index);
+
+		cur_index++;
+		if (cur_index >= object_count)
+			cur_index = 0;
+
+		if (pO && !pO->getDestroy() && pO->net_Relevant())
 		{
-			P.w_begin(M_CL_UPDATE);
-			P.w_u16(u16(pObj->ID()));
-			P.w_u32(0);	//reserved place for client's ping
+			NET_Packet P;
+			P.w_begin(M_UPDATE);
 
-			pObj->net_Export(P);
+			P.w_u16(u16(pO->ID()));
+			P.w_chunk_open8(position);
 
-			if (P.B.count > 9 && !OnServer())
-					Send(P, net_flags(FALSE));
+			pO->net_Export(P);
+
+			P.w_chunk_close8(position);
+			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
+				continue;
+			Send(P, net_flags(FALSE));
 		}
-	}
-	if (m_file_transfer)
-	{
-		m_file_transfer->update_transfer();
-		m_file_transfer->stop_obsolete_receivers();
-	}
-	if (OnClient()) 
-	{
-		Flush_Send_Buffer();
-		return;
-	}
-	//-------------------------------------------------
-	while (1)
-	{
-		P.w_begin						(M_UPDATE);
-		start	= Objects.net_Export	(&P, start, max_objects_size);
-
-		if (P.B.count>2)
-		{
-			Device.Statistic->TEST3.Begin();
-				Send	(P, net_flags(FALSE));
-			Device.Statistic->TEST3.End();
-		}else
-			break;
 	}
 }
 
@@ -242,18 +229,26 @@ u32	CLevel::Objects_net_Save	(NET_Packet* _Packet, u32 start, u32 max_object_siz
 
 void CLevel::ClientSave()
 {
-	NET_Packet		P;
-	u32				start	= 0;
+	u32 position;
+	for (u32 start = 0; start < Objects.o_count(); start++)
+	{
+		CObject	*pO = Objects.o_get_by_iterator(start);
+		CGameObject *pGO = smart_cast<CGameObject*>(pO);
 
-	for (;;) {
-		P.w_begin	(M_SAVE_PACKET);
-		
-		start		= Objects_net_Save(&P, start, max_objects_size_in_save);
+		if (pGO && !pGO->getDestroy() && pGO->net_SaveRelevant())
+		{
+			NET_Packet P;
+			P.w_begin(M_SAVE_PACKET);
 
-		if (P.B.count>2)
-			Send	(P, net_flags(FALSE));
-		else
-			break;
+			P.w_u16(pGO->ID());
+			P.w_chunk_open16(position);
+
+			pGO->net_Save(P);
+			P.w_chunk_close16(position);
+			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
+				continue;
+			Send(P, net_flags(FALSE));
+		}
 	}
 }
 

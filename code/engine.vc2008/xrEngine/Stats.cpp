@@ -21,8 +21,6 @@ class	optimizer	{
 public:
 	optimizer	()		{
 		average_	= 30.f;
-//		enabled_	= TRUE;
-//		disable		();
 		// because Engine is not exist
 		enabled_	= FALSE;
 	}
@@ -201,9 +199,6 @@ void CStats::Show()
 		F.OutNext	("FPS/RFPS:    %3.1f/%3.1f",fFPS,fRFPS);
 		F.OutNext	("TPS:         %2.2f M",	fTPS);
 		m_pRender->OutData1(F);
-		//F.OutNext	("VERT:        %d/%d",		RCache.stat.verts,RCache.stat.calls?RCache.stat.verts/RCache.stat.calls:0);
-		//F.OutNext	("POLY:        %d/%d",		RCache.stat.polys,RCache.stat.calls?RCache.stat.polys/RCache.stat.calls:0);
-		//F.OutNext	("DIP/DP:      %d",			RCache.stat.calls);
 #ifdef DEBUG
 		F.OutSkip	();
 #ifdef FS_DEBUG
@@ -211,12 +206,8 @@ void CStats::Show()
 		F.OutSkip	();
 #endif
 		m_pRender->OutData2(F);
-		//F.OutNext	("SH/T/M/C:    %d/%d/%d/%d",RCache.stat.states,RCache.stat.textures,RCache.stat.matrices,RCache.stat.constants);
-		//F.OutNext	("RT/PS/VS:    %d/%d/%d",	RCache.stat.target_rt,RCache.stat.ps,RCache.stat.vs);
-		//F.OutNext	("DCL/VB/IB:   %d/%d/%d",   RCache.stat.decl,RCache.stat.vb,RCache.stat.ib);
 #endif
 		m_pRender->OutData3(F);
-		//F.OutNext	("xforms:      %d",			RCache.stat.xforms);
 		F.OutSkip	();
 
 #define PPP(a) (100.f*float(a)/float(EngineTOTAL.result))
@@ -295,20 +286,8 @@ void CStats::Show()
 		F.OutNext	("qpc[%3d]",CPU::qpc_counter);
 		CPU::qpc_counter	=	0		;
 #endif // DEBUG_MEMORY_MANAGER
-//		F.OutSet	(640,0);
 		F.OutSkip	();
 		m_pRender->OutData4(F);
-		/*
-		F.OutNext	("static:        %3.1f/%d",	RCache.stat.r.s_static.verts/1024.f,		RCache.stat.r.s_static.dips );
-		F.OutNext	("flora:         %3.1f/%d",	RCache.stat.r.s_flora.verts/1024.f,			RCache.stat.r.s_flora.dips );
-		F.OutNext	("  flora_lods:  %3.1f/%d",	RCache.stat.r.s_flora_lods.verts/1024.f,	RCache.stat.r.s_flora_lods.dips );
-		F.OutNext	("dynamic:       %3.1f/%d",	RCache.stat.r.s_dynamic.verts/1024.f,		RCache.stat.r.s_dynamic.dips );
-		F.OutNext	("  dynamic_sw:  %3.1f/%d",	RCache.stat.r.s_dynamic_sw.verts/1024.f,	RCache.stat.r.s_dynamic_sw.dips );
-		F.OutNext	("  dynamic_inst:%3.1f/%d",	RCache.stat.r.s_dynamic_inst.verts/1024.f,	RCache.stat.r.s_dynamic_inst.dips );
-		F.OutNext	("  dynamic_1B:  %3.1f/%d",	RCache.stat.r.s_dynamic_1B.verts/1024.f,	RCache.stat.r.s_dynamic_1B.dips );
-		F.OutNext	("  dynamic_2B:  %3.1f/%d",	RCache.stat.r.s_dynamic_2B.verts/1024.f,	RCache.stat.r.s_dynamic_2B.dips );
-		F.OutNext	("details:       %3.1f/%d",	RCache.stat.r.s_details.verts/1024.f,		RCache.stat.r.s_details.dips );
-*/
 		//////////////////////////////////////////////////////////////////////////
 		// Renderer specific
 		F.SetHeightI						(f_base_size);
@@ -342,17 +321,12 @@ void CStats::Show()
 		F.OutSet						(300,300);
 		F.SetHeightI						(f_base_size*2);
 		if (fFPS<30)					F.OutNext	("FPS       < 30:   %3.1f",	fFPS);
-		//if (RCache.stat.verts>500000)	F.OutNext	("Verts     > 500k: %d",	RCache.stat.verts);
 		m_pRender->GuardVerts(F);
-		////if (RCache.stat.polys>500000)	F.OutNext	("Polys     > 500k: %d",	RCache.stat.polys);
 		if (psDeviceFlags.test(rsStatistic))
 		{
 			m_pRender->GuardDrawCalls(F);
-			//if (RCache.stat.calls>1000)		F.OutNext	("DIP/DP    > 1k:   %d",	RCache.stat.calls);
-			////if (RCache.stat.textures>1000)F.OutNext	("T_change  > 500:  %d",	RCache.stat.textures);
 			if (RenderDUMP_DT_Count>1000)	F.OutNext	("DT_count  > 1000: %u",	RenderDUMP_DT_Count);
 			F.OutSkip						();
-			//if (fMem_calls>1500)			F.OutNext	("MMGR calls > 1500:%3.1f",	fMem_calls);
 			if (Sheduler.result>3.f)		F.OutNext	("Update     > 3ms:	%3.1f",	Sheduler.result);
 			if (UpdateClient.result>3.f)	F.OutNext	("UpdateCL   > 3ms: %3.1f",	UpdateClient.result);
 			if (Physics.result>5.f)			F.OutNext	("Physics    > 5ms: %3.1f",	Physics.result);	
@@ -367,13 +341,8 @@ void CStats::Show()
 		F.SetColor	(color_rgba(255,16,16,191));
 		F.OutSet	(200,0);
 		F.SetHeightI	(f_base_size);
-#if 0
-		for (u32 it=0; it<errors.size(); it++)
-			F.OutNext("%s",errors[it].c_str());
-#else
 		for (u32 it=(u32) std::max(int(0),(int)errors.size() - g_ErrorLineCount); it<errors.size(); it++)
 			F.OutNext("%s",errors[it].c_str());
-#endif
 		F.OnRender	();
 	}
 #endif
@@ -450,7 +419,6 @@ void CStats::OnDeviceCreate			()
 {
 	g_bDisableRedText				= strstr(Core.Params,"-xclsx")?TRUE:FALSE;
 
-//	if (!strstr(Core.Params, "-dedicated"))
 #ifndef DEDICATED_SERVER
 	pFont	= xr_new<CGameFont>		("stat_font", CGameFont::fsDeviceIndependent);
 #endif
@@ -490,9 +458,6 @@ void CStats::OnRender				()
 			if (item._3D)
 			{
 				m_pRender->SetDrawParams(&*Device.m_pRender);
-				//RCache.set_xform_world(Fidentity);
-				//RCache.set_Shader		(Device.m_SelectionShader);
-				//RCache.set_c			("tfactor",1,1,1,1);
 				DU->DrawCross			(item.params.position, 0.5f, 0xFF0000FF, true );
 				if (g_stats_flags.is(st_sound_min_dist))
 					DU->DrawSphere		(Fidentity, item.params.position, item.params.min_distance, 0x400000FF,	0xFF0000FF, true, true);
