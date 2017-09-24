@@ -28,6 +28,7 @@ enum	EGameActions
 	kTORCH,
 	kNIGHT_VISION,
 	kDETECTOR,
+    kKICK,	
 	kWPN_1,
 	kWPN_2,
 	kWPN_3,
@@ -80,7 +81,7 @@ enum	EGameActions
 	kQUICK_SAVE,
 	kQUICK_LOAD,
 	kALIFE_CMD,
-
+	
 	kLASTACTION,
 	kNOTBINDED,
 	kFORCEDWORD		= u32(-1)

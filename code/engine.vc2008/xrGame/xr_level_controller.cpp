@@ -37,6 +37,7 @@ _action  actions[]		= {
 	{ "night_vision",		kNIGHT_VISION			,_both},	
 	{ "show_detector",		kDETECTOR				,_sp},		
 
+	{ "kick",               kKICK                   ,_both},		
 	{ "wpn_1",				kWPN_1					,_both},	
 	{ "wpn_2",				kWPN_2					,_both},	
 	{ "wpn_3",				kWPN_3					,_both},	
@@ -88,7 +89,7 @@ _action  actions[]		= {
 
 	{ "quick_save",			kQUICK_SAVE				,_sp},		
 	{ "quick_load",			kQUICK_LOAD				,_sp},		
-//	{ "alife_command",		kALIFE_CMD				,_sp},		
+//	{ "alife_command",		kALIFE_CMD				,_sp},
 	
 																
 	{ NULL, 				kLASTACTION				,_both}		

@@ -256,6 +256,7 @@ protected:
 	bool					use_Vehicle				(CHolderCustom* object);
 	bool					use_MountedWeapon		(CHolderCustom* object);
 	void					ActorUse				();
+	void					Actor_kick              ();	
 
 protected:
 	BOOL					m_bAnimTorsoPlayed;
