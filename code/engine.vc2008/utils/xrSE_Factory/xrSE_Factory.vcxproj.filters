@@ -369,9 +369,6 @@
     <ClInclude Include="..\..\xrServerEntities\game_graph_space.h">
       <Filter>ServerStuff\Common\ALifeStuff</Filter>
     </ClInclude>
-    <ClInclude Include="alife_artefact_order.h">
-      <Filter>ServerStuff\Common\ALifeStuff\artefact_order</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\alife_human_brain.h">
       <Filter>ServerStuff\Common\ALifeStuff\human_brain</Filter>
     </ClInclude>
@@ -589,9 +586,6 @@
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\alife_space.cpp">
       <Filter>ServerStuff\Common\ALifeStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="alife_artefact_order.cpp">
-      <Filter>ServerStuff\Common\ALifeStuff\artefact_order</Filter>
     </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\alife_human_brain.cpp">
       <Filter>ServerStuff\Common\ALifeStuff\human_brain</Filter>

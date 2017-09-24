@@ -319,9 +319,6 @@
     <ClCompile Include="xr_graph_merge.cpp">
       <Filter>ALife\Merge</Filter>
     </ClCompile>
-    <ClCompile Include="alife_artefact_order.cpp">
-      <Filter>ALife\Shared\ALife\alife_artefact_order</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\xrServerEntities\alife_human_brain.cpp">
       <Filter>ALife\Shared\ALife\alife_human_brain</Filter>
     </ClCompile>
@@ -695,9 +692,6 @@
     </ClInclude>
     <ClInclude Include="Sound.h">
       <Filter>ALife\Shared</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_artefact_order.h">
-      <Filter>ALife\Shared\ALife\alife_artefact_order</Filter>
     </ClInclude>
     <ClInclude Include="..\..\xrServerEntities\alife_human_brain.h">
       <Filter>ALife\Shared\ALife\alife_human_brain</Filter>

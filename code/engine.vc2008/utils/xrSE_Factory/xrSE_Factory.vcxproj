@@ -338,7 +338,6 @@
     <ClInclude Include="script_file.h" />
     <ClInclude Include="..\..\xrServerEntities\alife_space.h" />
     <ClInclude Include="..\..\xrServerEntities\game_graph_space.h" />
-    <ClInclude Include="alife_artefact_order.h" />
     <ClInclude Include="..\..\xrServerEntities\alife_human_brain.h" />
     <ClInclude Include="..\..\xrServerEntities\alife_human_brain_inline.h" />
     <ClInclude Include="..\..\xrServerEntities\alife_monster_brain.h" />
@@ -428,7 +427,6 @@
     <ClCompile Include="script_debugger_utils.cpp" />
     <ClCompile Include="script_file.cpp" />
     <ClCompile Include="..\..\xrServerEntities\alife_space.cpp" />
-    <ClCompile Include="alife_artefact_order.cpp" />
     <ClCompile Include="..\..\xrServerEntities\alife_human_brain.cpp" />
     <ClCompile Include="..\..\xrServerEntities\alife_monster_brain.cpp" />
     <ClCompile Include="..\..\xrServerEntities\PHNetState.cpp" />

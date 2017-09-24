@@ -201,7 +201,7 @@
     <ClInclude Include="..\xrRender\r_sun_cascades.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="DetailFormat.h">
+    <ClInclude Include="..\xrRender\DetailFormat.h">
       <Filter>Details</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\DetailManager.h">

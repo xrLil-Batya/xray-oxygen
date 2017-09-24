@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "actor.h"
-#include "customdetector.h"
 #include "weapon.h"
 #include "artefact.h"
 #include "scope.h"
@@ -16,7 +15,6 @@
 #include "CameraLook.h"
 #include "CameraFirstEye.h"
 #include "holder_custom.h"
-//.#include "ui/uiinventoryWnd.h"
 #include "game_base_space.h"
 #ifdef DEBUG
 #include "PHDebug.h"
