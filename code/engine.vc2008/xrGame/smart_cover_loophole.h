@@ -4,10 +4,7 @@
 //	Author		: Alexander Dudin
 //	Description : Loophole class for smart cover
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef SMART_COVER_LOOPHOLE_H_INCLUDED
-#define SMART_COVER_LOOPHOLE_H_INCLUDED
-
+#pragma once
 #include "smart_cover_detail.h"
 #include "script_space_forward.h"
 #include "associative_vector.h"
@@ -18,8 +15,7 @@ namespace smart_cover {
 
 class object;
 
-class loophole : 
-	private debug::make_final<loophole>
+class loophole final
 {
 private:
 	class action_predicate {
@@ -89,5 +85,3 @@ private:
 } // namespace smart_cover
 
 #include "smart_cover_loophole_inline.h"
-
-#endif // SMART_COVER_LOOPHOLE_H_INCLUDED

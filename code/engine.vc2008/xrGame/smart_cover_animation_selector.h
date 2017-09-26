@@ -4,9 +4,7 @@
 //	Author		: Alexander Dudin
 //	Description : Animation selector for smart covers
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef SMART_COVER_ANIMATION_SELECTOR_H_INCLUDED
-#define SMART_COVER_ANIMATION_SELECTOR_H_INCLUDED
+#pragma once
 
 #include "smart_cover_detail.h"
 #include "../include/xrRender/KinematicsAnimated.h"
@@ -23,8 +21,7 @@ namespace smart_cover {
 class action_base;
 class wait_after_exit;
 
-class animation_selector : 
-	private debug::make_final<animation_selector>
+class animation_selector final
 {
 private:
 	CPropertyStorage		*m_storage;
@@ -61,5 +58,3 @@ public:
 } // namespace smart_cover
 
 #include "smart_cover_animation_selector_inline.h"
-
-#endif // SMART_COVER_ANIMATION_SELECTOR_H_INCLUDED

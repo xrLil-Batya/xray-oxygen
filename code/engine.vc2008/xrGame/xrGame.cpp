@@ -33,7 +33,7 @@ extern "C" {
 };
 
 void CCC_RegisterCommands	();
-void setup_luabind_allocator();
+extern void setup_luabind_allocator();
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {

@@ -5,10 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : checked static_cast implementation for debug purposes
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef STATIC_CAST_CHECKED_HPP_INCLUDED
-#define STATIC_CAST_CHECKED_HPP_INCLUDED
-
+#pragma once
 #ifdef DEBUG
 
 namespace debug {
@@ -90,5 +87,3 @@ inline destination_type static_cast_checked	(source_type & source)
 #else // #ifdef DEBUG
 #	define static_cast_checked	static_cast
 #endif // #ifdef DEBUG
-
-#endif // STATIC_CAST_CHECKED_HPP_INCLUDED

@@ -4,19 +4,14 @@
 //	Author		: Alexander Dudin
 //	Description : Animation transition class for smart_cover
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef SMART_COVER_TRANSITION_ANIMATION_HPP_INCLUDED
-#define SMART_COVER_TRANSITION_ANIMATION_HPP_INCLUDED
-
-#include "debug_make_final.hpp"
+#pragma once
 #include "ai_monster_space.h"
 
 namespace smart_cover {
 
 namespace transitions {
 
-class animation_action :
-	private debug::make_final<animation_action>
+class animation_action final
 {
 private:
 	Fvector									m_position;
@@ -25,12 +20,7 @@ private:
 	MonsterSpace::EMovementType				m_movement_type;
 
 public:
-											animation_action(
-												Fvector const& position,
-												shared_str const& animation_id,
-												MonsterSpace::EBodyState const& body_state,
-												MonsterSpace::EMovementType const& movement_type
-											);
+	animation_action(Fvector const& position, shared_str const& animation_id, MonsterSpace::EBodyState const& body_state, MonsterSpace::EMovementType const& movement_type);
 
     animation_action(const animation_action& other) = delete;
     animation_action& operator=(const animation_action& other) = delete;
@@ -42,9 +32,6 @@ public:
 };
 
 } // namespace transitions
-
 } // namespace smart_cover
 
 #include "smart_cover_transition_animation_inline.hpp"
-
-#endif // SMART_COVER_TRANSITION_ANIMATION_HPP_INCLUDED

@@ -38,8 +38,7 @@ extern "C" {
 		abstract				= 0;
 	}
 };
-void setup_luabind_allocator		();
-
+extern void setup_luabind_allocator();
 int APIENTRY DllMain (HANDLE module_handle, DWORD call_reason, LPVOID reserved)
 {
 	switch (call_reason) {

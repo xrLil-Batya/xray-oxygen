@@ -1,21 +1,14 @@
 #include "stdafx.h"
 #include "igame_level.h"
-
-//#include "xr_effgamma.h"
-#include "x_ray.h"
 #include "xr_ioconsole.h"
 #include "xr_ioc_cmd.h"
-//#include "fbasicvisual.h"
 #include "cameramanager.h"
 #include "environment.h"
 #include "xr_input.h"
-#include "CustomHUD.h"
 
 #include "../Include/xrRender/RenderDeviceRender.h"
 
-#include "xr_object.h"
-
-xr_token*							vid_quality_token = NULL;
+xr_token*							vid_quality_token = nullptr;
 
 xr_token							vid_bpp_token							[ ]={
 	{ "16",							16											},

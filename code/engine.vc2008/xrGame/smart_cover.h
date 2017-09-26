@@ -4,10 +4,7 @@
 //	Author		: Alexander Dudin
 //	Description : Smart cover class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef SMART_COVER_H_INCLUDED
-#define SMART_COVER_H_INCLUDED
-
+#pragma once
 #include "smart_cover_description.h"
 #include "cover_point.h"
 #include "smart_cover_loophole.h"
@@ -17,7 +14,8 @@ namespace smart_cover {
 
 class storage;
 
-struct loophole_data {
+struct loophole_data
+{
 	typedef std::pair<shared_str, u32>					Action;
 	typedef xr_vector<Action>							ActionVertices;
 
@@ -25,9 +23,7 @@ struct loophole_data {
 	u32							m_level_vertex_id;
 };
 
-class cover : 
-	public  CCoverPoint,
-	private debug::make_final<cover>
+class cover final: public  CCoverPoint
 {
 public:
 	typedef intrusive_ptr<
@@ -93,5 +89,3 @@ private:
 } // namespace smart_cover
 
 #include "smart_cover_inline.h"
-
-#endif // SMART_COVER_H_INCLUDED

@@ -833,9 +833,6 @@
     <ClCompile Include="SkeletonMotions.cpp">
       <Filter>RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
     </ClCompile>
-    <ClCompile Include="doug_lea_memory_allocator.c">
-      <Filter>RenderRef\doug_lea_memory_allocator</Filter>
-    </ClCompile>
     <ClCompile Include="engine_impl.cpp">
       <Filter>editor\engine_impl</Filter>
     </ClCompile>
