@@ -9014,9 +9014,6 @@
     <ClCompile Include="ui\UIAchievements.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIRankFraction.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIRankingWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </ClCompile>

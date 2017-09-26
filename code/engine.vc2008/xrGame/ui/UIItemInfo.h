@@ -55,11 +55,9 @@ public:
 	CUITextWnd*			UIWeight;
 	CUITextWnd*			UICost;
 	CUITextWnd*			UITradeTip;
-//	CUIStatic*			UIDesc_line;
 	CUIScrollView*		UIDesc;
 	bool				m_complex_desc;
 
-//	CUIConditionParams*		UIConditionWnd;
 	CUIWpnParams*			UIWpnParams;
 	CUIArtefactParams*		UIArtefactParams;
 	UIInvUpgPropertiesWnd*	UIProperties;

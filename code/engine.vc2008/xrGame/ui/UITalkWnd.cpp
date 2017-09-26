@@ -334,10 +334,6 @@ void CUITalkWnd::SwitchToTrade()
 		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>( CurrentGameUI() );
 		if ( pGameSP )
 		{
-/*			if ( pGameSP->MainInputReceiver() )
-			{
-				pGameSP->MainInputReceiver()->HideDialog();
-			}*/
 			pGameSP->StartTrade	(m_pOurInvOwner, m_pOthersInvOwner);
 		} // pGameSP
 	}
@@ -345,17 +341,10 @@ void CUITalkWnd::SwitchToTrade()
 
 void CUITalkWnd::SwitchToUpgrade()
 {
-	//if ( m_pOurInvOwner->IsInvUpgradeEnabled() && m_pOthersInvOwner->IsInvUpgradeEnabled() )
+	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
+	if ( pGameSP )
 	{
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-		if ( pGameSP )
-		{
-/*			if ( pGameSP->MainInputReceiver() )
-			{
-				pGameSP->MainInputReceiver()->HideDialog();
-			}*/
-			pGameSP->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
-		}
+		pGameSP->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
 	}
 }
 
@@ -405,8 +394,6 @@ void CUITalkWnd::PlaySnd(LPCSTR text)
 	strncpy_s( fn, sizeof(fn), path, xr_strlen(path) );
 	strncat_s( fn, sizeof(fn), text, text_len );
 	strncat_s( fn, sizeof(fn), ext,  xr_strlen(ext) );
-
-	//	strconcat( sizeof(fn), fn, "characters_voice\\dialogs\\", text2, ".ogg" );
 
 	StopSnd();
 	if ( FS.exist( "$game_sounds$", fn ) )

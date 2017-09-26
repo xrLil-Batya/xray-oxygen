@@ -91,7 +91,6 @@ public:
 private: // m_
 	CGameTask*		m_task;
 	CUI3tButton*	m_name;
-//	CUICheckButton*	m_bt_view;
 	CUIStatic*		m_st_story;
 	CUI3tButton*	m_bt_focus;
 

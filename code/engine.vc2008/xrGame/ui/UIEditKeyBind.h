@@ -41,7 +41,4 @@ protected:
 	void			BindAction2Key			();
 
 	bool			m_bIsEditMode;
-	
-
-//.	CUIColorAnimatorWrapper*				m_pAnimation;
 };

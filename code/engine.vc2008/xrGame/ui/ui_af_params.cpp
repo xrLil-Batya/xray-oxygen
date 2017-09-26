@@ -118,8 +118,6 @@ void CUIArtefactParams::InitFromXml( CUIXml& xml )
 
 		LPCSTR name = CStringTable().translate( "ui_inv_weight" ).c_str();
 		m_additional_weight->SetCaption( name );
-
-		//xml.SetLocalRoot( base_node );
 	}
 
 	xml.SetLocalRoot( stored_root );

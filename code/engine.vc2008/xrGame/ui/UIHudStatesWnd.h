@@ -19,14 +19,9 @@ class CUIHudStatesWnd : public CUIWindow
 {
 private:
 	typedef CUIWindow						inherited;
-//-	typedef ALife::EInfluenceType	EIndicatorType;
 
 	CUIStatic*			m_back;
-//	CUIStatic*			m_back_v;
-//	CUIStatic*			m_back_over_arrow;
-//	CUIStatic*			m_static_armor;
 
-//	CUIStatic*			m_resist_back[it_max];
 	CUIStatic*			m_indik[it_max];
 
 	CUITextWnd*			m_ui_weapon_cur_ammo;
@@ -40,32 +35,18 @@ private:
 	Frect				m_ui_weapon_icon_rect;
 
 	CUIProgressBar*		m_ui_health_bar;
-//	CUIProgressBar*		m_ui_armor_bar;
 	CUIProgressBar*		m_ui_stamina_bar;
 
-//	CUIProgressShape*	m_progress_self;
 	CUIStatic*			m_radia_damage;
-//	UI_Arrow*			m_arrow;
-//	UI_Arrow*			m_arrow_shadow;
-/*	
-	CUIStatic*			m_bleeding_lev1;
-	CUIStatic*			m_bleeding_lev2;
-	CUIStatic*			m_bleeding_lev3;
-	
-	CUIStatic*			m_radiation_lev1;
-	CUIStatic*			m_radiation_lev2;
-	CUIStatic*			m_radiation_lev3;
-*/
+
 	float				m_last_health;
 	float				m_health_blink;
 
 	float				m_radia_self;
-//	float				m_actor_radia_factor;
 	float				m_radia_hit;
 	shared_str			m_lanim_name;
 	
 	float				m_zone_cur_power[ALife::infl_max_count];
-//--	float				m_zone_max_power[hud_it_max];//<-- CActorCondition
 	float				m_zone_feel_radius[ALife::infl_max_count ];
 	ALife::EHitType		m_zone_hit_type[ALife::infl_max_count ];
 	float				m_zone_threshold[ALife::infl_max_count ];
@@ -74,7 +55,6 @@ private:
 	u32					m_timer_1sec;
 	
 	bool				m_fake_indicators_update;
-//	bool				m_cur_state_LA[it_max];
 	bool				m_b_force_update;
 public:
 					CUIHudStatesWnd		();
@@ -83,7 +63,6 @@ public:
 			void	InitFromXml			( CUIXml& xml, LPCSTR path );
 			void	Load_section		();
 	virtual void	Update				();
-//	virtual void	Draw				();
 
 			void	on_connected		();
 			void	reset_ui			();
@@ -105,6 +84,5 @@ protected:
 
 			void	Load_section_type	( ALife::EInfluenceType type, LPCSTR section );
 			void	UpdateIndicatorType	( CActor* actor, ALife::EInfluenceType type );
-//			void	SwitchLA			( bool state, ALife::EInfluenceType type );
 
 }; // class CUIHudStatesWnd

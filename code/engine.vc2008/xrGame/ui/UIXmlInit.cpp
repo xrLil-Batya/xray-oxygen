@@ -93,7 +93,6 @@ bool CUIXmlInit::InitWindow(CUIXml& xml_doc, LPCSTR path,
 		pWnd->SetWindowName		( xml_doc.Read(buf, index, NULL) );
 
 	InitAutoStaticGroup			(xml_doc, path, index, pWnd);
-//.	InitAutoFrameLineGroup		(xml_doc, path, index, pWnd);
 
 	return true;
 }
@@ -595,7 +594,6 @@ bool CUIXmlInit::InitProgressShape(CUIXml& xml_doc, LPCSTR path, int index, CUIP
 
 	if (xml_doc.NavigateToNode(strconcat(sizeof(_path),_path, path, ":front"),index))
 		{R_ASSERT2(0,"unused <front> node in progress shape ");}
-//    InitStatic(xml_doc, strconcat(sizeof(_path),_path, path, ":front"), index, pWnd->m_pTexture);
 
 	pWnd->m_sectorCount	= xml_doc.ReadAttribInt(path, index, "sector_count", 8);
 	pWnd->m_bClockwise	= xml_doc.ReadAttribInt(path, index, "clockwise") ? true : false;
@@ -793,7 +791,6 @@ bool CUIXmlInit::InitFrameLine(CUIXml& xml_doc, LPCSTR path, int index, CUIFrame
 
 	bool stretch_flag = xml_doc.ReadAttribInt(path, index, "stretch") ? true : false;
 	R_ASSERT(stretch_flag==false);
-//.	pWnd->SetStretchTexture( stretch_flag );
 
 	Fvector2 pos, size;
 	pos.x			= xml_doc.ReadAttribFlt(path, index, "x");
@@ -1224,7 +1221,6 @@ bool CUIXmlInit::InitComboBox(CUIXml& xml_doc, LPCSTR path, int index, CUIComboB
 	string512					_path;
 	strconcat					(sizeof(_path),_path, path, ":list_font");
 	InitFont					(xml_doc, _path, index, color, pFont);
-//.	pWnd->SetFont				(pFont);
 	pWnd->m_list_box.SetFont		(pFont);
 	pWnd->m_list_box.SetTextColor	(color);
 	

@@ -121,7 +121,3 @@ void CUIOptionsManager::DoSystemRestart()
 {
 	m_restart_flags	|= e_system_restart;
 }
-
-
-
-

@@ -144,16 +144,13 @@ protected:
 	CUIStatic*					m_PartnerBottomInfo;
 	CUITextWnd*					m_PartnerWeight;
 	float						m_PartnerWeight_end_x;
-//*	CUIStatic*					m_PartnerWeightMax;
 
 	// delimiter ------------------------------
 	CUIStatic*					m_LeftDelimiter;
-//	CUITextWnd*					m_PartnerTradeCaption;
 	CUITextWnd*					m_PartnerTradePrice;
 	CUITextWnd*					m_PartnerTradeWeightMax;
 
 	CUIStatic*					m_RightDelimiter;
-//	CUITextWnd*					m_ActorTradeCaption;
 	CUITextWnd*					m_ActorTradePrice;
 	CUITextWnd*					m_ActorTradeWeightMax;
 

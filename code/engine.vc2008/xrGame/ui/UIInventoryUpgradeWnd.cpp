@@ -53,10 +53,6 @@ CUIInventoryUpgradeWnd::Scheme::~Scheme()
 
 CUIInventoryUpgradeWnd::CUIInventoryUpgradeWnd()
 {
-	//m_WeaponIconsShader = xr_new<ui_shader>();
-	//(*m_WeaponIconsShader)->create("hud\\default", "ui\\ui_actor_weapons");
-	//m_OutfitIconsShader = xr_new<ui_shader>();
-	//(*m_OutfitIconsShader)->create("hud\\default", "ui\\ui_actor_armor");
 	m_inv_item       = NULL;
 	m_cur_upgrade_id = NULL;
 	m_current_scheme = NULL;
@@ -66,10 +62,6 @@ CUIInventoryUpgradeWnd::CUIInventoryUpgradeWnd()
 CUIInventoryUpgradeWnd::~CUIInventoryUpgradeWnd()
 {
 	delete_data( m_schemes );
-	//xr_delete(m_WeaponIconsShader);
-	//xr_delete(m_OutfitIconsShader);
-	//m_WeaponIconsShader = 0;
-	//m_OutfitIconsShader = 0;
 }
 
 void CUIInventoryUpgradeWnd::Init()
@@ -251,7 +243,6 @@ bool CUIInventoryUpgradeWnd::install_item( CInventoryItem& inv_item, bool can_up
 	{
 		UIUpgrade* ui_item = (*ib);
 		m_scheme_wnd->AttachChild( ui_item );
-//		m_item->AttachChild( ui_item->m_point );
 		m_back->AttachChild( ui_item->m_point );
 		
 		LPCSTR upgrade_name = get_manager().get_upgrade_by_index( inv_item, ui_item->get_scheme_index() );

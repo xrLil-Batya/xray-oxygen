@@ -52,7 +52,6 @@ void UITaskListWnd::init_from_xml( CUIXml& xml, LPCSTR path )
 	
 	m_background = UIHelper::CreateFrameWindow( xml, "background_frame", this );
 	m_caption    = UIHelper::CreateStatic( xml, "t_caption", this );
-//	m_counter    = UIHelper::CreateStatic( xml, "t_counter", this );
 	m_bt_close   = UIHelper::Create3tButton( xml, "btn_close", this );
 
 	Register( m_bt_close );
@@ -109,7 +108,6 @@ void UITaskListWnd::OnFocusLost()
 void UITaskListWnd::Update()
 {
 	inherited::Update();
-//	UpdateCounter();
 }
 
 void UITaskListWnd::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
@@ -124,7 +122,6 @@ void UITaskListWnd::OnBtnClose( CUIWindow* w, void* d )
 	CUITaskWnd* wnd = smart_cast<CUITaskWnd*>(GetParent()->GetParent());
 	if(wnd)
 		wnd->Show_TaskListWnd(false);
-//	Show( false );
 	m_bt_close->SetButtonState(CUIButton::BUTTON_NORMAL);
 }
 
@@ -162,18 +159,6 @@ bool UITaskListWnd::SortingLessFunction( CUIWindow* left, CUIWindow* right )
 	return ( lpi->get_priority_task() > rpi->get_priority_task() );
 }
 
-/*
-void UITaskListWnd::UpdateCounter()
-{
-	u32  m_progress_task_count = Level().GameTaskManager().GetTaskCount( eTaskStateInProgress );
-	CGameTask* act_task = Level().GameTaskManager().ActiveTask();
-	u32 task2_index     = Level().GameTaskManager().GetTaskIndex( act_task, eTaskStateInProgress );
-
-	string32 buf;
-	xr_sprintf( buf, sizeof(buf), "%d / %d", task2_index, m_progress_task_count );
-	m_counter->SetText( buf );
-}
-*/
 // - -----------------------------------------------------------------------------------------------
 
 UITaskListWndItem::UITaskListWndItem()
@@ -211,7 +196,6 @@ bool UITaskListWndItem::init_task( CGameTask* task, UITaskListWnd* parent )
 	CUIXmlInit::InitWindow( xml, "second_task_wnd:task_item", 0, this );
 	
 	m_name     = UIHelper::Create3tButton( xml, "second_task_wnd:task_item:name", this );
-//	m_bt_view  = UIHelper::CreateCheck(      xml, "second_task_wnd:task_item:btn_view", this );
 	m_st_story = UIHelper::CreateStatic( xml, "second_task_wnd:task_item:st_story", this );
 	m_bt_focus = UIHelper::Create3tButton( xml, "second_task_wnd:task_item:btn_focus", this );
 	
@@ -291,23 +275,6 @@ void UITaskListWndItem::SendMessage( CUIWindow* pWnd, s16 msg, void* pData )
 			GetMessageTarget()->SendMessage( this, PDA_TASK_SET_TARGET_MAP, (void*)m_task );
 		}
 	}
-/*	
-	if ( pWnd == m_bt_view )
-	{
-		if ( m_bt_view->GetCheck() && msg == BUTTON_CLICKED )
-		{
-			GetMessageTarget()->SendMessage( this, PDA_TASK_HIDE_MAP_SPOT, (void*)m_task );
-//			Msg( " HIDE task  id = %d", m_task->m_ID );
-			return;
-		}
-		if ( !m_bt_view->GetCheck() && msg == BUTTON_CLICKED )
-		{
-			GetMessageTarget()->SendMessage( this, PDA_TASK_SHOW_MAP_SPOT, (void*)m_task );
-//			Msg( " show task  id = %d", m_task->m_ID );
-			return;
-		}
-	}
-*/
 	if ( pWnd == m_name )
 	{
 		if ( msg == BUTTON_DOWN )
@@ -329,7 +296,6 @@ bool UITaskListWndItem::OnMouseAction( float x, float y, EUIMessages mouse_actio
 {
 	if ( inherited::OnMouseAction( x, y, mouse_action ) )
 	{
-		//return true;
 	}
 
 	switch ( mouse_action )

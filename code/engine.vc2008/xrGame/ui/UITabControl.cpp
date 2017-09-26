@@ -192,23 +192,6 @@ CUITabButton* CUITabControl::GetButtonById(const shared_str& id)
 	else
 		return NULL;
 }
-/*
-const shared_str CUITabControl::GetCommandName(const shared_str& id)
-{ 
-	CUITabButton* tb			= GetButtonById(id);
-	R_ASSERT2					(tb, id.c_str());
-
-	return (GetButtonByIndex(i))->WindowName();
-};
-
-CUIButton* CUITabControl::GetButtonByCommand(const shared_str& n)
-{
-	for(u32 i = 0; i<m_TabsArr.size(); ++i)
-		if(m_TabsArr[i]->WindowName() == n)
-			return m_TabsArr[i];
-
-	return NULL;
-}*/
 
 void CUITabControl::ResetTab()
 {
@@ -231,7 +214,5 @@ void CUITabControl::Enable(bool status)
 	for(u32 i=0; i<m_TabsArr.size(); ++i)
 		m_TabsArr[i]->Enable(status);
 
-//	m_sPushedId		= "";
-//	m_sPrevPushedId	= "";
 	inherited::Enable(status);
 }

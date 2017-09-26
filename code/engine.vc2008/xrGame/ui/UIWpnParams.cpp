@@ -252,7 +252,7 @@ void CUIConditionParams::SetInfo( CInventoryItem const* slot_item, CInventoryIte
 	float cur_value  = cur_item.GetConditionToShow() * 100.0f + 1.0f - EPS;
 	float slot_value = cur_value;
 
-	if ( slot_item && (slot_item != &cur_item) /*&& (cur_item.object().cNameSect()._get() == slot_item->object().cNameSect()._get())*/ )
+	if (slot_item && (slot_item != &cur_item))
 	{
 		slot_value = slot_item->GetConditionToShow() * 100.0f + 1.0f - EPS;
 	}

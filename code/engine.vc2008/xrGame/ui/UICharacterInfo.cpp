@@ -54,15 +54,6 @@ void CUICharacterInfo::InitCharacterInfo(Fvector2 pos, Fvector2 size, CUIXml* xm
 	Init_IconInfoItem( *xml_doc, "icon",                eIcon         );
 	Init_IconInfoItem( *xml_doc, "icon_over",           eIconOver     );
 
-/*	Init_IconInfoItem( *xml_doc, "rank_icon",           eRankIcon     );
-	Init_IconInfoItem( *xml_doc, "rank_icon_over",      eRankIconOver );
-
-	Init_IconInfoItem( *xml_doc, "commumity_icon",      eCommunityIcon     );
-	Init_IconInfoItem( *xml_doc, "commumity_icon_over", eCommunityIconOver );
-
-	Init_IconInfoItem( *xml_doc, "commumity_big_icon",      eCommunityBigIcon     );
-	Init_IconInfoItem( *xml_doc, "commumity_big_icon_over", eCommunityBigIconOver );
-*/
 	VERIFY( m_icons[eIcon] );
 	m_deadbody_color = color_argb(160,160,160,160);
 	if ( xml_doc->NavigateToNode( "icon:deadbody", 0 ) )
@@ -113,7 +104,6 @@ void CUICharacterInfo::Init_IconInfoItem( CUIXml& xml_doc, LPCSTR item_str, UIIt
 		CUIStatic*	pItem = m_icons[type] = xr_new<CUIStatic>();
 		CUIXmlInit::InitStatic( xml_doc, item_str, 0, pItem );
 		
-//.		pItem->ClipperOn();
 		pItem->Show( true );
 		pItem->Enable( true );
 		AttachChild( pItem );
@@ -191,38 +181,6 @@ void CUICharacterInfo::InitCharacter(u16 id)
 
 	m_texture_name				= chInfo.IconName();
 	if ( m_icons[eIcon            ] ) { m_icons[eIcon            ]->InitTexture( m_texture_name.c_str()     ); }
-//	if ( m_icons[eRankIcon        ] ) { m_icons[eRankIcon        ]->InitTexture( chInfo.Rank().id().c_str() ); }
-	
-/*
-	if ( Actor()->ID() != m_ownerID && !ignore_community( comm_id ) )
-	{
-		if ( m_icons[eCommunityIcon   ] ) { m_icons[eCommunityIcon   ]->InitTexture( community1 ); }
-		if ( m_icons[eCommunityBigIcon] ) { m_icons[eCommunityBigIcon]->InitTexture( community2 ); }
-		return;
-	}
-
-	shared_str our_comm, enemy;
-	if ( CUICharacterInfo::get_actor_community( &our_comm, &enemy ) )
-	{
-		if ( xr_strcmp( our_comm, "actor" ) ) // !=
-		{
-			xr_strcpy( community1, sizeof(community1), our_comm.c_str() );
-			xr_strcat( community1, sizeof(community1), "_icon" );
-
-			xr_strcpy( community2, sizeof(community2), our_comm.c_str() );
-			xr_strcat( community2, sizeof(community2), "_wide" );
-
-			if ( m_icons[eCommunityIcon   ] ) { m_icons[eCommunityIcon   ]->InitTexture( community1 ); }
-			if ( m_icons[eCommunityBigIcon] ) { m_icons[eCommunityBigIcon]->InitTexture( community2 ); }
-			return;
-		}
-	}
-
-	if ( m_icons[eCommunityIcon   ]     ) { m_icons[eCommunityIcon]->Show( false ); }
-	if ( m_icons[eCommunityBigIcon]     ) { m_icons[eCommunityBigIcon]->Show( false ); }
-	if ( m_icons[eCommunityIconOver   ] ) { m_icons[eCommunityIconOver]->Show( false ); }
-	if ( m_icons[eCommunityBigIconOver] ) { m_icons[eCommunityBigIconOver]->Show( false ); }
-*/
 }
 
 void CUICharacterInfo::InitCharacterMP( LPCSTR player_name, LPCSTR player_icon )

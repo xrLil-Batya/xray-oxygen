@@ -292,8 +292,7 @@ void CUIGlobalMap::Initialize()
 void CUIGlobalMap::Init_internal(const shared_str& name, CInifile& pLtx, const shared_str& sect_name, LPCSTR sh_name)
 {
 	inherited::Init_internal(name, pLtx, sect_name, sh_name);
-//	Fvector2 size = CUIStatic::GetWndSize();
-	SetMaxZoom				(pLtx.r_float(m_name,"max_zoom"));
+	SetMaxZoom(pLtx.r_float(m_name,"max_zoom"));
 }
 
 void CUIGlobalMap::Update()
@@ -445,8 +444,6 @@ void CUILevelMap::Init_internal	(const shared_str& name, CInifile& pLtx, const s
 void CUILevelMap::UpdateSpots()
 {
 	DetachAll			();
-
-//.	if( fsimilar(MapWnd()->GlobalMap()->GetCurrentZoom(),MapWnd()->GlobalMap()->GetMinZoom(),EPS_L ) ) return;
 	
 	Frect				_r;
 	GetAbsoluteRect		(_r);

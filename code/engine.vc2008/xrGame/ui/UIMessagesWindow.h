@@ -25,7 +25,6 @@ public:
 	void				AddLogMessage					(const shared_str& msg);
 	void				AddLogMessage					(KillMessageStruct& msg);
 	void				AddChatMessage					(shared_str msg, shared_str author);
-//.	void				SetChatOwner					(game_cl_GameState* owner);
 	void				PendingMode						(bool const is_in_pending_mode);
 	virtual void		Show							(bool show);
 

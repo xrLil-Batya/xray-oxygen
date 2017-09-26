@@ -8,7 +8,6 @@
 
 poolSS< _12b, 128>	ui_allocator;
 
-// #define LOG_ALL_WNDS
 #ifdef LOG_ALL_WNDS
 	int ListWndCount = 0;
 	struct DBGList{
@@ -47,7 +46,6 @@ void draw_rect(Frect& r, u32 color)
 
 	DRender->SetDebugShader(IDebugRender::dbgShaderWindow);
 
-//.	UIRender->StartLineStrip	(5);
 	UIRender->StartPrimitive	(5, IUIRender::ptLineStrip, UI().m_currentPointType);
 
 	UIRender->PushPoint(r.lt.x, r.lt.y, 0, color, 0,0);
@@ -56,7 +54,6 @@ void draw_rect(Frect& r, u32 color)
 	UIRender->PushPoint(r.lt.x, r.rb.y, 0, color, 0,0);
 	UIRender->PushPoint(r.lt.x, r.lt.y, 0, color, 0,0);
 
-//.	UIRender->FlushLineStrip();
 	UIRender->FlushPrimitive();
 	
 #endif // DEBUG
@@ -219,7 +216,6 @@ void CUIWindow::DetachChild(CUIWindow* pChild)
 	if(m_pMouseCapturer == pChild)
 		SetCapture(pChild, false);
 
-//.	SafeRemoveChild			(pChild);
 	WINDOW_LIST_it it		= std::find(m_ChildWndList.begin(),m_ChildWndList.end(),pChild); 
 	R_ASSERT				(it!=m_ChildWndList.end());
 	m_ChildWndList.erase	(it);

@@ -91,7 +91,6 @@ void CUIAchievements::SetIcon(LPCSTR icon)
 
 void CUIAchievements::SetFunctor(LPCSTR func)
 {
-//	string128 str = "xr_statistic.";
 	xr_sprintf(m_functor_str, sizeof(m_functor_str), "%s", func);
 }
 

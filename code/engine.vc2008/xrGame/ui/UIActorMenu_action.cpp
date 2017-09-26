@@ -45,7 +45,6 @@ public:
 	{
 		m_icon.SetWndSize		(Fvector2().set(29.0f*UI().get_current_kx(), 36.0f));
 		m_icon.SetStretchTexture(true);
-//		m_icon.SetAlignment		(waCenter);
 		m_icon.InitTexture		("ui_inGame2_inv_trash");
 	}
 	virtual void		OnDraw		(CUIDragItem* drag_item)
@@ -58,7 +57,6 @@ public:
 		pos.y			+= drag_sz.y;
 
 		m_icon.SetWndPos(pos);
-//		m_icon.SetWndSize(sz);
 		m_icon.Draw		();
 	}
 
@@ -105,7 +103,6 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 		}break;
 	case iActorSlot:
 		{
-			//.			if(GetSlotList(CurrentIItem()->GetSlot())==new_owner)
 			u16 slot_to_place;
 			if( CanSetItemToList(CurrentIItem(), new_owner, slot_to_place) )
 				ToSlot	(itm, true, slot_to_place);
@@ -366,8 +363,7 @@ void CUIActorMenu::OnPressUserKey()
 	{
 	case mmUndefined:		break;
 	case mmInventory:		break;
-	case mmTrade:			
-//		OnBtnPerformTrade( this, 0 );
+	case mmTrade:
 		break;
 	case mmUpgrade:			
 		TrySetCurUpgrade();

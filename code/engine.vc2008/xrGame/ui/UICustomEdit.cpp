@@ -112,13 +112,10 @@ void CUICustomEdit::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 bool CUICustomEdit::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
-//	if (m_bFocusByDbClick)
+	if(mouse_action == WINDOW_LBUTTON_DB_CLICK && !m_bInputFocus)
 	{
-		if(mouse_action == WINDOW_LBUTTON_DB_CLICK && !m_bInputFocus)
-		{
-			GetParent()->SetKeyboardCapture(this, true);
-			m_bInputFocus = true;
-		}
+		GetParent()->SetKeyboardCapture(this, true);
+		m_bInputFocus = true;
 	}
 
 	if(mouse_action == WINDOW_LBUTTON_DOWN && !m_bInputFocus)

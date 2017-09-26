@@ -18,7 +18,6 @@ shared_str CUIXml::correct_file_name	(LPCSTR path, LPCSTR fn)
 #endif
 }
 
-//#define LOG_ALL_XMLS
 #ifdef LOG_ALL_XMLS
 int ListXmlCount = 0;
 struct DBGList_{

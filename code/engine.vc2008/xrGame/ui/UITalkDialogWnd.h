@@ -44,9 +44,7 @@ public:
 
 	//список вопросов, которые мы можем задавать персонажу
 
-//	Fvector2			m_btn_pos[3];
 	CUI3tButton			UIToTradeButton;
-//	CUI3tButton			UIToExitButton;
 
 	CUICharacterInfo	UICharacterInfoLeft;
 	CUICharacterInfo	UICharacterInfoRight;
@@ -65,10 +63,10 @@ private:
 	CUIScrollView*			UIQuestionsList;
 	CUIScrollView*			UIAnswersList;
 
-	// Ўрифт и цвет текста с именем персонажа
+	// шрифт и цвет текста с именем персонажа
 	CGameFont			*m_pNameTextFont;
 	u32					m_iNameTextColor;
-	// ÷вет тeкста и шрифт наших реплик
+	// цвет тeкста и шрифт наших реплик
 	u32					m_uOurReplicsColor;
 
 	void __stdcall		OnTradeClicked			(CUIWindow* w, void*);

@@ -158,8 +158,6 @@ void CUILogsWnd::ReLoadNews()
 	VERIFY( m_filter_news && m_filter_talk );
 	GAME_NEWS_VECTOR& news_vector = Actor()->game_news_registry->registry().objects();
 
-//	u32 currentNews = 0;
-
 	bool filter_news = m_filter_news->GetCheck();
 	bool filter_talk = m_filter_talk->GetCheck();
 	

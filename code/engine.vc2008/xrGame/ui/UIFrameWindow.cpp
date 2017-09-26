@@ -56,7 +56,6 @@ void  CUIFrameWindow::InitTextureEx(LPCSTR texture, LPCSTR  sh_name)
 
 	R_ASSERT2(fsimilar(m_tex_rect[fmLT].height(), m_tex_rect[fmT].height()),texture );
 	R_ASSERT2(fsimilar(m_tex_rect[fmLT].height(), m_tex_rect[fmRT].height()),texture );
-//	R_ASSERT2(fsimilar(m_tex_rect[fmL].height(), m_tex_rect[fmBK].height()),texture );
 	R_ASSERT2(fsimilar(m_tex_rect[fmL].height(), m_tex_rect[fmR].height()),texture );
 	R_ASSERT2(fsimilar(m_tex_rect[fmLB].height(), m_tex_rect[fmB].height()),texture );
 	R_ASSERT2(fsimilar(m_tex_rect[fmLB].height(), m_tex_rect[fmRB].height()),texture );
@@ -64,7 +63,6 @@ void  CUIFrameWindow::InitTextureEx(LPCSTR texture, LPCSTR  sh_name)
 	R_ASSERT2(fsimilar(m_tex_rect[fmLT].width(), m_tex_rect[fmL].width()),texture );
 	R_ASSERT2(fsimilar(m_tex_rect[fmLT].width(), m_tex_rect[fmLB].width()),texture );
 
-//	R_ASSERT2(fsimilar(m_tex_rect[fmT].width(), m_tex_rect[fmBK].width()),texture );
 	R_ASSERT2(fsimilar(m_tex_rect[fmT].width(), m_tex_rect[fmB].width()),texture );
 
 	R_ASSERT2(fsimilar(m_tex_rect[fmRT].width(), m_tex_rect[fmR].width()),texture );

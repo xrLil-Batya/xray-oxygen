@@ -106,7 +106,6 @@ void CUIMapLocationHint::SetInfoTask(CGameTask* task)
 	S								= m_info["t_caption"];
 	S->TextItemControl()->SetTextST					(task->m_Title.c_str());
 	S->AdjustHeightToText			();
-	//float new_w						= S->GetWndPos().x + S->GetWndSize().x + 20.0f;
 
 	S					= m_info["t_time"];
 	S->TextItemControl()->SetText		( InventoryUtilities::GetTimeAndDateAsString( task->m_ReceiveTime ).c_str() );

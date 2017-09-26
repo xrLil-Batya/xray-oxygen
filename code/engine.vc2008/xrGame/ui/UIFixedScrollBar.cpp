@@ -176,11 +176,6 @@ bool CUIFixedScrollBar::OnMouseAction(float x, float y, EUIMessages mouse_action
 				if(box_rect.in(cursor_pos))
 					cursor_over = true;
 
-				//bool over_x = ( x >= -512.0f && x < (m_ScrollBox->GetWidth()  + 512.0f) );
-				//bool over_y = ( y >= -512.0f && y < (m_ScrollBox->GetHeight() + 512.0f) );
-				//if ( over_x && over_y )
-				//	cursor_over = true;
-
 				if(im_capturer && cursor_over)
 				{
 					Fvector2 pos = m_ScrollBox->GetWndPos();
@@ -245,13 +240,11 @@ bool CUIFixedScrollBar::OnMouseDownEx()
 	if(dec2_rect.in(cursor_pos) && (m_mouse_state != 2))
 	{
 		TryScrollDec(false);
-//		m_mouse_state = 1;
 		return true;
 	}
 	if(inc2_rect.in(cursor_pos) && (m_mouse_state != 1))
 	{
 		TryScrollInc(false);
-//		m_mouse_state = 2;
 		return true;
 	}
 	return false;

@@ -12,8 +12,6 @@ CUIButtonHint*		g_statHint = NULL;
 CUIButtonHint::CUIButtonHint	()
 :m_ownerWnd(NULL),m_enabledOnFrame(false)
 {
-//	Device.seqRender.Add		(this, REG_PRIORITY_LOW-1000);
-
 	CUIXmlInit					xml_init;
 	CUIXml						uiXml;
 	uiXml.Load					(CONFIG_PATH, UI_PATH, "hint_item.xml");
@@ -27,7 +25,6 @@ CUIButtonHint::CUIButtonHint	()
 
 CUIButtonHint::~CUIButtonHint	()
 {
-//	Device.seqRender.Remove		(this);
 }
 
 void CUIButtonHint::OnRender	()

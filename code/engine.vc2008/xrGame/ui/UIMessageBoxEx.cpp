@@ -8,7 +8,6 @@
 CUIMessageBoxEx::CUIMessageBoxEx(){
 	m_pMessageBox = xr_new<CUIMessageBox>();
 	m_pMessageBox->SetWindowName("msg_box");
-//	m_pMessageBox->SetAutoDelete(true);
 	AttachChild(m_pMessageBox);
 }
 
@@ -18,7 +17,6 @@ CUIMessageBoxEx::~CUIMessageBoxEx(){
 
 void CUIMessageBoxEx::InitMessageBox(LPCSTR xml_template)
 {
-	//CUIDialogWnd::SetWndRect(Frect().set(0.0f,0.0f,1024.0f,768.0f));
 	m_pMessageBox->InitMessageBox(xml_template);
 	
 	SetWndPos( m_pMessageBox->GetWndPos() );
@@ -98,16 +96,8 @@ bool CUIMessageBoxEx::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 		{
 			m_pMessageBox->OnYesOk();
 			return true;
-/*
-		}else
-			if ( dik == DIK_ESCAPE )
-		{
-			CUIMessageBox::E_MESSAGEBOX_STYLE style = m_pMessageBox->GetBoxStyle();
-			if(style != CUIMessageBox::MESSAGEBOX_INFO)
-				HideDialog();
-			return true;
-*/
-		}else
+		}
+		else
 			return CUIDialogWnd::OnKeyboardAction(dik, keyboard_action);
 	}
 	return CUIDialogWnd::OnKeyboardAction(dik, keyboard_action);

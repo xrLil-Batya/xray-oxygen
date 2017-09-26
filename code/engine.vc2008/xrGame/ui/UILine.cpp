@@ -12,7 +12,6 @@
 #include "uilinestd.h"
 #include "ui_base.h"
 
-//#define LOG_ALL_LINES
 #ifdef LOG_ALL_LINES
 	int ListLinesCount = 0;
 	struct DBGList{
@@ -101,8 +100,6 @@ void CUILine::ProcessNewLines()
 {
 	for (u32 i=0; i < m_subLines.size(); i++){
 		StrSize pos = m_subLines[i].m_text.find("\\n");
-//		if (pos != npos)
-//			pos = m_subLines[i].m_text.find('\r');
 
 		if (pos != npos)
 		{

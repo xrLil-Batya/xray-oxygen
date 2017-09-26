@@ -21,7 +21,6 @@ UI_Arrow::~UI_Arrow()
 
 void UI_Arrow::init_from_xml( CUIXml& xml, LPCSTR path, CUIWindow* parent )
 {
-	//m_arrow             = UIHelper::CreateStatic( xml, "arrow", this );
 	parent->AttachChild( this );
 	SetAutoDelete( true );
 	CUIXmlInit::InitStatic( xml, path, 0, this );

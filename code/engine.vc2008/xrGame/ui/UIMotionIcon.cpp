@@ -45,9 +45,6 @@ void CUIMotionIcon::Init(Frect const& zonemap_rect)
 	float k = UI().get_current_kx();
 	sz.mul						(rel_sz*k);
 
-
-	//float h = Device.dwHeight;
-	//float w = Device.dwWidth;
 	AttachChild					(&m_luminosity_progress);
 	xml_init.InitProgressShape	(uiXml, "luminosity_progress", 0, &m_luminosity_progress);	
 	m_luminosity_progress.SetWndSize(sz);

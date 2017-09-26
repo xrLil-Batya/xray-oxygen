@@ -188,7 +188,7 @@ void CUITaskWnd::ReloadTaskInfo()
 		else if(spot=="primary_object")
 			m_bPrimaryObjectsEnabled?b->location->EnableSpot():b->location->DisableSpot();
 		else if(spot=="secondary_task_location" || spot=="secondary_task_location_complex_timer")
-			(/*b->location->SpotEnabled() && */m_bSecondaryTasksEnabled)?b->location->EnableSpot():b->location->DisableSpot();
+			(m_bSecondaryTasksEnabled)?b->location->EnableSpot():b->location->DisableSpot();
 		else if(spot=="ui_pda2_trader_location" || spot=="ui_pda2_mechanic_location" ||
 		   spot=="ui_pda2_scout_location" || spot=="ui_pda2_quest_npc_location" || 
 		   spot=="ui_pda2_medic_location" || spot=="ui_pda2_actor_box_location" ||
@@ -226,7 +226,6 @@ void CUITaskWnd::Show(bool status)
 	}
 	else
 	{
-//		m_task_wnd_show = false;
 		m_task_wnd->Show(false);
 	}
 }
@@ -434,7 +433,6 @@ bool CUITaskItem::OnMouseAction( float x, float y, EUIMessages mouse_action )
 {
 	if ( inherited::OnMouseAction( x, y, mouse_action ) )
 	{
-		//return true;
 	}
 
 	switch ( mouse_action )

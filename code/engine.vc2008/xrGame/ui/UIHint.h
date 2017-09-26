@@ -35,7 +35,6 @@ public:
 			void	set_text	( LPCSTR text );
 			LPCSTR	get_text	() const;
 	
-//	virtual void	Update		();
 	virtual void	Draw		();
 
 protected:

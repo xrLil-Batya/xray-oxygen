@@ -39,7 +39,6 @@ CUIItemInfo::CUIItemInfo()
 	UIWeight					= NULL;
 	UIItemImage					= NULL;
 	UIDesc						= NULL;
-//	UIConditionWnd				= NULL;
 	UIWpnParams					= NULL;
 	UIProperties				= NULL;
 	UIOutfitInfo				= NULL;
@@ -54,7 +53,6 @@ CUIItemInfo::CUIItemInfo()
 
 CUIItemInfo::~CUIItemInfo()
 {
-//	xr_delete	(UIConditionWnd);
 	xr_delete	(UIWpnParams);
 	xr_delete	(UIArtefactParams);
 	xr_delete	(UIProperties);
@@ -124,8 +122,6 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 
 	if(uiXml.NavigateToNode("descr_list",0))
 	{
-//		UIConditionWnd					= xr_new<CUIConditionParams>();
-//		UIConditionWnd->InitFromXml		(uiXml);
 		UIWpnParams						= xr_new<CUIWpnParams>();
 		UIWpnParams->InitFromXml		(uiXml);
 
@@ -134,11 +130,6 @@ void CUIItemInfo::InitItemInfo(LPCSTR xml_name)
 
 		UIBoosterInfo					= xr_new<CUIBoosterInfo>();
 		UIBoosterInfo->InitFromXml		(uiXml);
-
-		//UIDesc_line						= xr_new<CUIStatic>();
-		//AttachChild						(UIDesc_line);	
-		//UIDesc_line->SetAutoDelete		(true);
-		//xml_init.InitStatic				(uiXml, "description_line", 0, UIDesc_line);
 
 		if ( ai().get_alife() ) // (-designer)
 		{
@@ -335,13 +326,6 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 
 void CUIItemInfo::TryAddConditionInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )
 {
-	CWeapon*		weapon = smart_cast<CWeapon*>( &pInvItem );
-	CCustomOutfit*	outfit = smart_cast<CCustomOutfit*>( &pInvItem );
-	if ( weapon || outfit )
-	{
-//		UIConditionWnd->SetInfo( pCompareItem, pInvItem );
-//		UIDesc->AddWindow( UIConditionWnd, false );
-	}
 }
 
 void CUIItemInfo::TryAddWpnInfo( CInventoryItem& pInvItem, CInventoryItem* pCompareItem )

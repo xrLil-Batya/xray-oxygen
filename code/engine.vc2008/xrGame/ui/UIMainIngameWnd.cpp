@@ -60,7 +60,6 @@ void test_key	(int dik);
 
 
 using namespace InventoryUtilities;
-//BOOL		g_old_style_ui_hud			= FALSE;
 const u32	g_clWhite					= 0xffffffff;
 
 #define		DEFAULT_MAP_SCALE			1.f
@@ -76,7 +75,7 @@ const u32	g_clWhite					= 0xffffffff;
 #define				MAININGAME_XML				"maingame.xml"
 
 CUIMainIngameWnd::CUIMainIngameWnd()
-:/*m_pGrenade(NULL),m_pItem(NULL),*/m_pPickUpItem(NULL),m_pMPChatWnd(NULL),UIArtefactIcon(NULL),m_pMPLogWnd(NULL)
+:m_pPickUpItem(NULL),m_pMPChatWnd(NULL),UIArtefactIcon(NULL),m_pMPLogWnd(NULL)
 {
 	UIZoneMap					= xr_new<CUIZoneMap>();
 }
@@ -303,9 +302,6 @@ void CUIMainIngameWnd::Update()
 		return;
 
 	UIZoneMap->Update();
-
-	//	UIHealthBar.SetProgressPos	(m_pActor->GetfHealth()*100.0f);
-	//	UIMotionIcon->SetPower		(m_pActor->conditions().GetPower()*100.0f);
 
 	UpdatePickUpItem();
 

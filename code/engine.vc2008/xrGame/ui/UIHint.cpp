@@ -79,7 +79,6 @@ void UIHintWindow::disable_hint()
 {
 	if ( !m_hint_wnd )
 	{
-//		Msg( "! class <UIHintWindow> has not <hint_wnd>!" );
 		return;
 	}		
 	m_hint_wnd->set_text( NULL );

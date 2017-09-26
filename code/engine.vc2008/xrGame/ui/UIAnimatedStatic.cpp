@@ -25,7 +25,6 @@ CUIAnimatedStatic::CUIAnimatedStatic()
 		m_prevTime				(0)
 {
 	m_pos.set(0,0);
-//.	ClipperOn();
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -73,7 +72,6 @@ void CUIAnimatedStatic::Update()
 
 void CUIAnimatedStatic::SetFrame(const u32 frameNum)
 {
-	//static u32 currRow = 0xffffffff, currCol = 0xffffffff;
 	int currRow = frameNum / m_uAnimCols;
 	int currCol = frameNum % m_uAnimCols;
 	Frect texture_rect;
@@ -108,7 +106,6 @@ CUISleepStatic::CUISleepStatic():m_cur_time(0)
 
 void CUISleepStatic::Draw()
 {
-//	inherited::Draw();
 	m_UIStaticItem.Render();
 	m_UIStaticItem2.Render();
 }

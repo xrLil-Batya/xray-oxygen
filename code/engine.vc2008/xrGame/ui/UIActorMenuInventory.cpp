@@ -55,13 +55,11 @@ void CUIActorMenu::InitInventoryMode()
 
 	VERIFY( CurrentGameUI() );
 	CurrentGameUI()->UIMainIngameWnd->ShowZoneMap(true);
-//	m_clock_value->Show					(true);
 }
 
 void CUIActorMenu::DeInitInventoryMode()
 {
 	m_pTrashList->Show				(false);
-//	m_clock_value->Show					(false);
 }
 
 void CUIActorMenu::SendEvent_ActivateSlot(u16 slot, u16 recipient)
@@ -197,7 +195,6 @@ bool FindItemInList(CUIDragDropListEx* lst, PIItem pItem, CUICellItem*& ci_res)
 			if(ici->object()==pItem)
 			{
 				ci_res = ici;
-				//lst->RemoveItem(ci,false);
 				return true;
 			}
 		}
@@ -206,7 +203,6 @@ bool FindItemInList(CUIDragDropListEx* lst, PIItem pItem, CUICellItem*& ci_res)
 		if(ici->object()==pItem)
 		{
 			ci_res = ci;
-			//lst->RemoveItem(ci,false);
 			return true;
 		}
 	}
@@ -267,7 +263,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					lst_to_add						= GetSlotList(pl.slot_id);
 				else if(pl.type==eItemPlaceBelt)
 					lst_to_add						= GetListByType(iActorBelt);
-				else/* if(pl.type==eItemPlaceRuck)*/
+				else
 				{
 					if(pItem->parent_id()==m_pActorInvOwner->object_id())
 						lst_to_add						= GetListByType(iActorBag);
@@ -396,14 +392,6 @@ void CUIActorMenu::InitCellForSlot( u16 slot_idx )
 	curr_list->SetItem( cell_item );
 	if ( m_currMenuMode == mmTrade && m_pPartnerInvOwner )
 		ColorizeItem( cell_item, !CanMoveToPartner( item ) );
-
-	//CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(item);
-	//if(outfit)
-	//	outfit->ReloadBonesProtection();
-
-	//CHelmet* helmet = smart_cast<CHelmet*>(item);
-	//if(helmet)
-	//	helmet->ReloadBonesProtection();
 }
 
 void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
@@ -447,14 +435,6 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 		curr_list->SetItem(itm);
 		if ( m_currMenuMode == mmTrade && m_pPartnerInvOwner )
 			ColorizeItem( itm, !CanMoveToPartner( *itb ) );
-
-		//CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(*itb);
-		//if(outfit)
-		//	outfit->ReloadBonesProtection();
-
-		//CHelmet* helmet = smart_cast<CHelmet*>(*itb);
-		//if(helmet)
-		//	helmet->ReloadBonesProtection();
 	}
 	m_pQuickSlot->ReloadReferences(m_pActorInvOwner);
 }
@@ -660,10 +640,7 @@ bool CUIActorMenu::ToBelt(CUICellItem* itm, bool b_use_cursor_pos)
 		if(belt_cell_pos.x==-1 && belt_cell_pos.y==-1)
 			return false;
 
-//		PIItem	_iitem						= m_pActorInvOwner->inventory().ItemFromSlot(slot_id);
-
 		CUICellItem* slot_cell				= belt_list->GetCellAt(belt_cell_pos).m_item;
-//		VERIFY								(slot_cell && ((PIItem)slot_cell->m_pData)==_iitem);
 
 		bool result							= ToBag(slot_cell, false);
 		VERIFY								(result);
@@ -735,7 +712,6 @@ bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
 	u16 recipient = m_pActorInvOwner->object_id();
 	if ( item->parent_id() != recipient )
 	{
-		//move_item_from_to	(itm->parent_id(), recipient, itm->object_id());
 		cell_itm->OwnerList()->RemoveItem( cell_itm, false );
 	}
 
@@ -813,10 +789,6 @@ void CUIActorMenu::ActivatePropertiesBox()
 		if ( m_currMenuMode == mmInventory )
 			PropertiesBoxForDrop( cell_item, item, b_show );
 	}
-	//else if ( m_currMenuMode == mmDeadBodySearch )
-	//{
-	//	PropertiesBoxForUsing( item, b_show );
-	//}
 	else if ( m_currMenuMode == mmUpgrade )
 	{
 		PropertiesBoxForRepair( item, b_show );
@@ -978,7 +950,6 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_attach_scope_to_pistol");
 			str.printf("%s %s", str.c_str(), item_in_slot_2->m_name.c_str());
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON );
-//			m_UIPropertiesBox->AddItem( "st_attach_scope_to_pistol",  (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
 		if ( item_in_slot_3 && item_in_slot_3->CanAttach(pScope) )
@@ -986,7 +957,6 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_attach_scope_to_pistol");
 			str.printf("%s %s", str.c_str(), item_in_slot_3->m_name.c_str());
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
-//			m_UIPropertiesBox->AddItem( "st_attach_scope_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
 		return;
@@ -999,7 +969,6 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_attach_silencer_to_pistol");
 			str.printf("%s %s", str.c_str(), item_in_slot_2->m_name.c_str());
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON );
-//			m_UIPropertiesBox->AddItem( "st_attach_silencer_to_pistol",  (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
 		if ( item_in_slot_3 && item_in_slot_3->CanAttach(pSilencer) )
@@ -1007,7 +976,6 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_attach_silencer_to_pistol");
 			str.printf("%s %s", str.c_str(), item_in_slot_3->m_name.c_str());
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
-//			m_UIPropertiesBox->AddItem( "st_attach_silencer_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
 		return;
@@ -1020,7 +988,6 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_attach_gl_to_rifle");
 			str.printf("%s %s", str.c_str(), item_in_slot_2->m_name.c_str());
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON );
-//			m_UIPropertiesBox->AddItem( "st_attach_gl_to_pistol",  (void*)item_in_slot_2, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
 		if ( item_in_slot_3 && item_in_slot_3->CanAttach(pGrenadeLauncher) )
@@ -1028,7 +995,6 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 			shared_str str = CStringTable().translate("st_attach_gl_to_rifle");
 			str.printf("%s %s", str.c_str(), item_in_slot_3->m_name.c_str());
 			m_UIPropertiesBox->AddItem( str.c_str(),  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
-//			m_UIPropertiesBox->AddItem( "st_attach_gl_to_rifle",  (void*)item_in_slot_3, INVENTORY_ATTACH_ADDON );
 			b_show			= true;
 		}
 	}

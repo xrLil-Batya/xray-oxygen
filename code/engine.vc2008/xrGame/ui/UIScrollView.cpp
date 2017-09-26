@@ -142,7 +142,6 @@ void CUIScrollView::RecalcSize			()
 
 	if(m_sort_function)
 	{
-		//. m_pad->GetChildWndList().sort(m_sort_function);
 		std::sort(m_pad->GetChildWndList().begin(), m_pad->GetChildWndList().end(), m_sort_function);
 	}
 
@@ -214,7 +213,6 @@ void CUIScrollView::Draw				()
 	UI().PushScissor					(visible_rect);
 
 	WINDOW_LIST_it it					= m_pad->GetChildWndList().begin();
-//	WINDOW_LIST_it it_e					= m_pad->GetChildWndList().end();
 	
 	if(!Empty() && m_visible_rgn.x!=-1)
 	{

@@ -59,13 +59,9 @@ void ui_actor_state_wnd::init_from_xml( CUIXml& xml, LPCSTR path )
 		AttachChild( m_state[i] );
 		m_state[i]->set_hint_wnd( m_hint_wnd );
 	}
-//	m_state[stt_stamina]->init_from_xml( xml, "stamina_state" );
 	m_state[stt_health]->init_from_xml( xml, "health_state");
 	m_state[stt_bleeding]->init_from_xml( xml, "bleeding_state");
 	m_state[stt_radiation]->init_from_xml( xml, "radiation_state");
-//	m_state[stt_armor]->init_from_xml( xml, "armor_state");
-
-//	m_state[stt_main]->init_from_xml( xml, "main_sensor");
 	m_state[stt_fire]->init_from_xml( xml, "fire_sensor");
 	m_state[stt_radia]->init_from_xml( xml, "radia_sensor");
 	m_state[stt_acid ]->init_from_xml( xml, "acid_sensor");
@@ -257,10 +253,9 @@ void ui_actor_state_wnd::update_round_states( CActor* actor, ALife::EHitType hit
 	value += helmet?helmet->GetDefHitTypeProtection(ALife::eHitTypeShock):0.0f;
 	
 	float max_power = actor->conditions().GetZoneMaxPower( hit_type );
-	value = value / max_power; //  = 0..1
-	//	m_state[stt_type]->set_progress_shape( value );
-	m_state[stt_type]->set_arrow( value );//0..1
-	m_state[stt_type]->set_text( value );//0..1
+	value = value / max_power;
+	m_state[stt_type]->set_arrow( value );
+	m_state[stt_type]->set_text( value );
 }
 
 void ui_actor_state_wnd::UpdateHitZone()
@@ -340,7 +335,6 @@ void ui_actor_state_item::init_from_xml( CUIXml& xml, LPCSTR path )
 	if ( xml.NavigateToNode( "icon", 0 ) )	
 	{
 		m_static = UIHelper::CreateStatic( xml, "icon", this );
-//		m_magnitude = xml.ReadAttribFlt( "icon", 0, "magnitude", 1.0f );
 		m_static->TextItemControl()->SetText("");
 	}
 	if ( xml.NavigateToNode( "icon2", 0 ) )	
@@ -364,7 +358,7 @@ void ui_actor_state_item::set_text( float value )
 	{
 		return;
 	}
-	int v = (int)( value * m_magnitude + 0.49f );// m_magnitude=100
+	int v = (int)( value * m_magnitude + 0.49f );
 	clamp( v, 0, 99 );
 	string32 text_res;
 	xr_sprintf( text_res, sizeof(text_res), "%d", v );

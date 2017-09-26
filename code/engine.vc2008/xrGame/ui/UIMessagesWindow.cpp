@@ -7,7 +7,6 @@
 // Copyright 2005 GSC Game World
 
 #include "StdAfx.h"
-//bool		IsGameTypeSingle();
 #include "UIMessagesWindow.h"
 #include "xrUIXmlParser.h"
 #include "UIXmlInit.h"
@@ -85,14 +84,9 @@ void CUIMessagesWindow::AddIconedPdaMessage(GAME_NEWS_DATA* news)
 
 void CUIMessagesWindow::AddChatMessage(shared_str msg, shared_str author)
 {
-//	 m_pChatLog->AddChatMessage(*msg, *author);
 }
 void CUIMessagesWindow::Show(bool show)
 {
-	//if (m_pChatWnd)
-	//	m_pChatWnd->Show(show);
 	if (m_pGameLog)
 		m_pGameLog->Show(show);
-//	if (m_pChatLog)
-	//	m_pChatLog->Show(show);
 }
