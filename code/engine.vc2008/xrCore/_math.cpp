@@ -4,18 +4,13 @@
 
 #include <process.h>
 #include <powerbase.h>
-// mmsystem.h
-#define MMNOSOUND
-#define MMNOMIDI
-#define MMNOAUX
-#define MMNOMIXER
-#define MMNOJOY
+#pragma comment (lib, "PowrProf.lib")
 #include <mmsystem.h>
 
 // Initialized on startup
-XRCORE_API	Fmatrix			Fidentity;
-XRCORE_API	Dmatrix			Didentity;
-XRCORE_API	CRandom			Random;
+XRCORE_API Fmatrix Fidentity;
+XRCORE_API Dmatrix Didentity;
+XRCORE_API CRandom Random;
 
 typedef struct _PROCESSOR_POWER_INFORMATION 
 {
@@ -27,7 +22,7 @@ typedef struct _PROCESSOR_POWER_INFORMATION
     ULONG CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
  
-#ifdef _M_AMD64
+#ifdef _M_X64
 namespace	FPU 
 {
 	XRCORE_API void 	m24		(void)	{
@@ -57,9 +52,7 @@ namespace	FPU
 
 	void initialize()				
 	{
-#ifndef XRCORE_STATIC
 		 m24r();
-#endif	//XRCORE_STATIC
 		::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
 	}
 };
@@ -127,12 +120,7 @@ namespace FPU
 		_control87	( _RC_NEAR, MCW_RC );
 		_64r		= getFPUsw();	// 64, rounding
 
-#ifndef XRCORE_STATIC
-
 		m24r		();
-
-#endif	//XRCORE_STATIC
-
 		::Random.seed	( u32(CPU::GetCLK()%(1i64<<32i64)) );
 	}
 };
@@ -141,31 +129,21 @@ namespace FPU
 namespace CPU 
 {
     XRCORE_API u64 qpc_freq;
-	
-	XRCORE_API u32				qpc_counter		= 0	;
-	
-	XRCORE_API processor_info	ID;
+	XRCORE_API u32 qpc_counter = 0;
+	XRCORE_API processor_info ID;
 
 	XRCORE_API u64 QPC()
 	{
-		u64		_dest	;
+		u64 _dest;
 		QueryPerformanceCounter(PLARGE_INTEGER(&_dest));
-		qpc_counter	++	;
-		return	_dest	;
+		qpc_counter++;
+		return _dest;
 	}
-
-#ifdef M_BORLAND
-	u64	__fastcall GetCLK		(void)
-	{
-		_asm    db 0x0F;
-		_asm    db 0x31;
-	}
-#endif
 
     u64 getProcessorFrequencyGeneral()
     {
-        u64			start, end;
-        u32			dwStart, dwTest;
+        u64 start, end;
+        u32 dwStart, dwTest;
 
         dwTest = timeGetTime();
         do { dwStart = timeGetTime(); } while (dwTest == dwStart);
@@ -175,43 +153,32 @@ namespace CPU
         return end - start;
     }
 
-#ifdef _WIN32
-#include <powerbase.h>
-#define NTSTATUS LONG
-#include <ntstatus.h>
-#pragma comment (lib, "PowrProf.lib")
-    typedef struct _PROCESSOR_POWER_INFORMATION {
-        ULONG Number;
-        ULONG MaxMhz;
-        ULONG CurrentMhz;
-        ULONG MhzLimit;
-        ULONG MaxIdleState;
-        ULONG CurrentIdleState;
+    typedef struct _PROCESSOR_POWER_INFORMATION 
+	{
+		unsigned long Number;
+        unsigned long MaxMhz;
+        unsigned long CurrentMhz;
+        unsigned long MhzLimit;
+        unsigned long MaxIdleState;
+        unsigned long CurrentIdleState;
     } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
     u64 getProcessorFrequency(u32 logicalProcessorCount)
     {
         PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
-        LONG retCode = CallNtPowerInformation(ProcessorInformation, NULL, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
-        if (retCode != STATUS_SUCCESS)
+        LONG retCode = CallNtPowerInformation(ProcessorInformation, nullptr, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
+        if (retCode != 0x0l)
         {
             return getProcessorFrequencyGeneral();
         }
         return pInfo->MhzLimit * u64(1000000);
     }
-#else
-    u64 getProcessorFrequency(u32 logicalProcessorCount)
-    {
-        return getProcessorFrequencyGeneral();
-    }
-#endif
 
 	void Detect	()
 	{
 		// General CPU identification
 		if (!query_processor_info(&ID))	
 		{
-			// Core.Fatal		("Fatal error: can't detect CPU/FPU.");
-			abort				();
+			abort();
 		}
 	}
 };
@@ -226,17 +193,6 @@ void _initialize_cpu	(void)
 	Log("* Architecture CPU:", CPU::ID.WoW64 ? "AMD64" : "i386");
 
 //	DUMP_PHASE;
-
-	if (strstr(Core.Params,"-x86"))		{
-        CPU::ID.hasFeature(CpuFeature::Mmx);
-		CPU::ID.hasFeature(CpuFeature::_3dNow);
-		CPU::ID.hasFeature(CpuFeature::Sse);
-		CPU::ID.hasFeature(CpuFeature::Sse2);
-		CPU::ID.hasFeature(CpuFeature::Sse3);
-		CPU::ID.hasFeature(CpuFeature::Ssse3);
-		CPU::ID.hasFeature(CpuFeature::Sse41);
-		CPU::ID.hasFeature(CpuFeature::Sse42);
-	};
 
 	string256	features;	xr_strcpy(features,sizeof(features),"RDTSC");
     if (CPU::ID.hasFeature(CpuFeature::Mmx))    xr_strcat(features,", MMX");
@@ -270,43 +226,42 @@ void _initialize_cpu	(void)
 	g_initialize_cpu_called = true;
 }
 
-#ifdef M_BORLAND
-void _initialize_cpu_thread	()
-{
-}
-#else
 // per-thread initialization
 #include <xmmintrin.h>
-#define _MM_DENORMALS_ZERO_MASK 0x0040
-#define _MM_DENORMALS_ZERO_ON 0x0040
-#define _MM_FLUSH_ZERO_MASK 0x8000
-#define _MM_FLUSH_ZERO_ON 0x8000
-#define _MM_SET_FLUSH_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_FLUSH_ZERO_MASK) | (mode))
-#define _MM_SET_DENORMALS_ZERO_MODE(mode) _mm_setcsr((_mm_getcsr() & ~_MM_DENORMALS_ZERO_MASK) | (mode))
-static	BOOL	_denormals_are_zero_supported	= TRUE;
-extern void __cdecl _terminate		();
+const int _MM_DENORMALS_ZERO = 0x0040;
+const int _MM_FLUSH_ZERO = 0x8000;
+
+IC void _mm_set_flush_zero_mode(u32 mode)
+{
+	_mm_setcsr((_mm_getcsr() & ~_MM_FLUSH_ZERO) | (mode));
+}
+
+IC void _mm_set_denormals_zero_mode(u32 mode)
+{
+	_mm_setcsr((_mm_getcsr() & ~_MM_DENORMALS_ZERO) | (mode));
+}
+
+static	bool _denormals_are_zero_supported	= true;
 void debug_on_thread_spawn	();
 
 void _initialize_cpu_thread	()
 {
 	debug_on_thread_spawn	();
-#ifndef XRCORE_STATIC
 	// fpu & sse 
 	FPU::m24r	();
-#endif  // XRCORE_STATIC
-	if (CPU::ID.hasFeature(CpuFeature::Sse))	{
-		//_mm_setcsr ( _mm_getcsr() | (_MM_FLUSH_ZERO_ON+_MM_DENORMALS_ZERO_ON) );
-		_MM_SET_FLUSH_ZERO_MODE			(_MM_FLUSH_ZERO_ON);
+	if (CPU::ID.hasFeature(CpuFeature::Sse))
+	{
+		_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
 		if (_denormals_are_zero_supported)	{
 			__try	{
-				_MM_SET_DENORMALS_ZERO_MODE	(_MM_DENORMALS_ZERO_ON);
+				_mm_set_denormals_zero_mode(_MM_DENORMALS_ZERO);
 			} __except(EXCEPTION_EXECUTE_HANDLER) {
-				_denormals_are_zero_supported	= FALSE;
+				_denormals_are_zero_supported	= false;
 			}
 		}
 	}
 }
-#endif
+
 // threading API 
 #pragma pack(push,8)
 struct THREAD_NAME	{
@@ -325,9 +280,9 @@ void	thread_name	(const char* name)
 	__try
 	{
 #ifndef _M_X64
-		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(DWORD), (DWORD*)&tn);
+		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(unsigned long), (unsigned long*)&tn);
 #else
-		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(ULONG_PTR), (ULONG_PTR*)&tn);
+		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(size_t), (size_t*)&tn);
 #endif
 	}
 	__except(EXCEPTION_CONTINUE_EXECUTION)
@@ -338,24 +293,25 @@ void	thread_name	(const char* name)
 
 struct	THREAD_STARTUP
 {
-	thread_t*	entry	;
-	char*		name	;
-	void*		args	;
+	thread_t*	entry;
+	char*		name;
+	void*		args;
 };
-void	__cdecl			thread_entry	(void*	_params )	{
+void __cdecl thread_entry(void*	_params)
+{
 	// initialize
-	THREAD_STARTUP*		startup	= (THREAD_STARTUP*)_params	;
+	THREAD_STARTUP*		startup	= (THREAD_STARTUP*)_params;
 	thread_name			(startup->name);
-	thread_t*			entry	= startup->entry;
+	thread_t*			entry = startup->entry;
 	void*				arglist	= startup->args;
 	xr_delete			(startup);
 	_initialize_cpu_thread		();
 
 	// call
-	entry				(arglist);
+	entry(arglist);
 }
 
-void	thread_spawn	(thread_t*	entry, const char*	name, unsigned	stack, void* arglist )
+void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist )
 {
 	Debug._initialize	(false);
 
@@ -366,21 +322,21 @@ void	thread_spawn	(thread_t*	entry, const char*	name, unsigned	stack, void* argl
 	_beginthread		(thread_entry,stack,startup);
 }
 
-void spline1	( float t, Fvector *p, Fvector *ret )
+void spline1(float t, Fvector *p, Fvector *ret)
 {
-	float     t2  = t * t;
-	float     t3  = t2 * t;
-	float     m[4];
+	const float t2 = t * t;
+	const float t3 = t2 * t;
+	float m[4];
 
-	ret->x=0.0f;
-	ret->y=0.0f;
-	ret->z=0.0f;
-	m[0] = ( 0.5f * ( (-1.0f * t3) + ( 2.0f * t2) + (-1.0f * t) ) );
-	m[1] = ( 0.5f * ( ( 3.0f * t3) + (-5.0f * t2) + ( 0.0f * t) + 2.0f ) );
-	m[2] = ( 0.5f * ( (-3.0f * t3) + ( 4.0f * t2) + ( 1.0f * t) ) );
-	m[3] = ( 0.5f * ( ( 1.0f * t3) + (-1.0f * t2) + ( 0.0f * t) ) );
+	ret->x = 0.0f;
+	ret->y = 0.0f;
+	ret->z = 0.0f;
+	m[0] = (0.5f * ((-1.0f * t3) + (2.0f * t2) + (-1.0f * t)));
+	m[1] = (0.5f * ((3.0f * t3) + (-5.0f * t2) + (0.0f * t) + 2.0f));
+	m[2] = (0.5f * ((-3.0f * t3) + (4.0f * t2) + (1.0f * t)));
+	m[3] = (0.5f * ((1.0f * t3) + (-1.0f * t2) + (0.0f * t)));
 
-	for( int i=0; i<4; i++ )
+	for (u32 i = 0; i < 4; i++)
 	{
 		ret->x += p[i].x * m[i];
 		ret->y += p[i].y * m[i];
@@ -388,25 +344,25 @@ void spline1	( float t, Fvector *p, Fvector *ret )
 	}
 }
 
-void spline2( float t, Fvector *p, Fvector *ret )
+void spline2(float t, Fvector *p, Fvector *ret)
 {
-	float	s= 1.0f - t;
-	float   t2 = t * t;
-	float   t3 = t2 * t;
-	float   m[4];
+	const float s = 1.0f - t;
+	const float t2 = t * t;
+	const float t3 = t2 * t;
+	float m[4];
 
 	m[0] = s*s*s;
 	m[1] = 3.0f*t3 - 6.0f*t2 + 4.0f;
-	m[2] = -3.0f*t3 + 3.0f*t2 + 3.0f*t +1;
+	m[2] = -3.0f*t3 + 3.0f*t2 + 3.0f*t + 1;
 	m[3] = t3;
 
-	ret->x = (p[0].x*m[0]+p[1].x*m[1]+p[2].x*m[2]+p[3].x*m[3])/6.0f;
-	ret->y = (p[0].y*m[0]+p[1].y*m[1]+p[2].y*m[2]+p[3].y*m[3])/6.0f;
-	ret->z = (p[0].z*m[0]+p[1].z*m[1]+p[2].z*m[2]+p[3].z*m[3])/6.0f;
+	ret->x = (p[0].x*m[0] + p[1].x*m[1] + p[2].x*m[2] + p[3].x*m[3]) / 6.0f;
+	ret->y = (p[0].y*m[0] + p[1].y*m[1] + p[2].y*m[2] + p[3].y*m[3]) / 6.0f;
+	ret->z = (p[0].z*m[0] + p[1].z*m[1] + p[2].z*m[2] + p[3].z*m[3]) / 6.0f;
 }
 
-#define beta1 1.0f
-#define beta2 0.8f
+const float beta1 = 1.0f;
+const float beta2 = 0.8f;
 
 void spline3( float t, Fvector *p, Fvector *ret )
 {
