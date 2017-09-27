@@ -7928,9 +7928,6 @@
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp">
       <Filter>AI\AScript\ScriptEngine</Filter>
     </ClCompile>
-    <ClCompile Include="script_engine_help.cpp">
-      <Filter>AI\AScript\ScriptEngine</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_engine_script.cpp">
       <Filter>AI\AScript\ScriptEngine</Filter>
     </ClCompile>
