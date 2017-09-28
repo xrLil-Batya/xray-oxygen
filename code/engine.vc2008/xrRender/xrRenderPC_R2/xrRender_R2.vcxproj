@@ -433,6 +433,7 @@
     <ClInclude Include="..\Editor\ExportSkeleton.h" />
     <ClInclude Include="..\Editor\itterate_adjacents_dynamic.h" />
     <ClInclude Include="..\Editor\PropSlimTools.h" />
+    <ClInclude Include="Blender_ss.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="..\xrRender\xrD3DDefs.h" />
@@ -606,6 +607,8 @@
     <ClCompile Include="..\Editor\ExportSkeleton.cpp" />
     <ClCompile Include="..\Editor\ExportSkeletonCalculateTB.cpp" />
     <ClCompile Include="..\Editor\RAPIDMinBox.cpp" />
+    <ClCompile Include="Blender_ss.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

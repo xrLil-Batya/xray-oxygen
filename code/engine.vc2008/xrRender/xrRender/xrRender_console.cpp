@@ -178,9 +178,9 @@ float		ps_r2_ls_dsm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_psm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_ssm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_bloom_threshold	= .00001f;				// r2-only
-Fvector		ps_r2_aa_barier				= { .8f, .1f, 0};	// r2-only
-Fvector		ps_r2_aa_weight				= { .25f,.25f,0};	// r2-only
-float		ps_r2_aa_kernel				= .5f;				// r2-only
+
+
+
 float		ps_r2_mblur					= .0f;				// .5f
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64
@@ -223,6 +223,13 @@ float		ps_r2_dof_kernel_size		= 5.0f;						//	7.0f
 float		ps_r3_dyn_wet_surf_near		= 10.f;				// 10.0f
 float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
 int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
+
+float		ps_prop_ss_radius				=	1.56f;
+float		ps_prop_ss_sample_step_phase0	=	.09f;
+float		ps_prop_ss_sample_step_phase1	=	.03f;
+//float		ps_prop_ss_sample_step_phase2	=	.33f;
+float		ps_prop_ss_blend				=	.066f;
+float		ps_prop_ss_intensity			=	1.f;
 
 
 //- Mad Max
@@ -785,8 +792,8 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
 
-	CMD3(CCC_Mask,		"r2_aa",				&ps_r2_ls_flags,			R2FLAG_AA);
-	CMD4(CCC_Float,		"r2_aa_kernel",			&ps_r2_aa_kernel,			0.3f,	0.7f	);
+	
+	
 	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
 
 	CMD3(CCC_Mask,		"r2_gi",				&ps_r2_ls_flags,			R2FLAG_GI);
@@ -818,11 +825,11 @@ void		xrRender_initconsole	()
 
 	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			.2f,	1.f		);
 
-	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
-	CMD4(CCC_Vector3,	"r2_aa_break",			&ps_r2_aa_barier,			tw_min, tw_max	);
+	//tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
+	
 
-	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
-	CMD4(CCC_Vector3,	"r2_aa_weight",			&ps_r2_aa_weight,			tw_min, tw_max	);
+	//tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
+	
 
 	//	Igor: Depth of field
 	tw_min.set			(-10000,-10000,0);	tw_max.set	(10000,10000,10000);
@@ -854,6 +861,13 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_detail_bump",				&ps_r2_ls_flags,			R2FLAG_DETAIL_BUMP);
 
 	CMD3(CCC_Token,		"r2_sun_quality",				&ps_r_sun_quality,			qsun_quality_token);
+	
+	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase1",	&ps_prop_ss_sample_step_phase0,	.01f,	.2f);
+	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase2",	&ps_prop_ss_sample_step_phase1,	.01f,	.2f);
+	//CMD4(CCC_Float,		"r2_sunshafts_sample_step2",	&ps_prop_ss_sample_step_phase2,	.01f,	.2f);
+	CMD4(CCC_Float,		"r2_SunShafts_Radius",			&ps_prop_ss_radius,				.5f,	2.f);
+	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
+	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
 
 	//	Igor: need restart
 	CMD3(CCC_Mask,		"r2_soft_water",				&ps_r2_ls_flags,			R2FLAG_SOFT_WATER);

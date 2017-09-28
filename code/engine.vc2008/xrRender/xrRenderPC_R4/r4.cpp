@@ -1306,7 +1306,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	HRESULT		_result = E_FAIL;
 
 	string_path	folder_name, folder;
-	xr_strcpy		( folder, "objects\\r4\\" );
+	//xr_strcpy		( folder, "objects\\r4\\" );
+	xr_strcpy		( folder, "mrProper\\objects\\r4" );
 	xr_strcat		( folder, name );
 	xr_strcat		( folder, "." );
 

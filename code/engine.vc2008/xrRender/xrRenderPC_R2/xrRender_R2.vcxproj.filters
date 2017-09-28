@@ -672,6 +672,9 @@
     <ClInclude Include="..\Editor\PropSlimTools.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="Blender_ss.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1198,6 +1201,12 @@
     </ClCompile>
     <ClCompile Include="..\Editor\RAPIDMinBox.cpp">
       <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_ss.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="Blender_ss.cpp">
+      <Filter>Shading templates</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

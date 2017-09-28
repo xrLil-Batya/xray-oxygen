@@ -31,6 +31,7 @@ public:
 	IBlender*					b_ssao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
+	IBlender*					b_sunshafts;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -50,6 +51,12 @@ public:
 	// 
 	ref_rt						rt_Accumulator;		// 64bit		(r,g,b,specular)
 	ref_rt						rt_Accumulator_temp;// only for HW which doesn't feature fp16 blend
+	ref_rt						rt_SunShaftsMask;
+	ref_rt						rt_SunShaftsMaskSmoothed;
+	ref_rt						rt_SunShaftsPass0;
+	//ref_rt						rt_SunShaftsPass2;
+	//ref_rt						rt_SunShaftsPass1;
+	
 	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	//	Igor: for volumetric lights
@@ -84,6 +91,7 @@ public:
 private:
 	// OCCq
 	ref_shader					s_occq;
+	ref_shader					s_SunShafts;
 
 	// Accum
 	ref_shader					s_accum_mask	;
@@ -196,6 +204,8 @@ public:
 	BOOL						u_DBT_enable			(float zMin, float zMax);
 	void						u_DBT_disable			();
 
+	void						phase_clear_position	();
+	void						phase_SunShafts			();
 	void						phase_ssao				();
 	void						phase_downsamp			();
 	void						phase_scene_prepare		();

@@ -11,6 +11,7 @@
 #include "blender_bloom_build.h"
 #include "blender_luminance.h"
 #include "blender_ssao.h"
+#include "blender_ss.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -210,6 +211,7 @@ CRenderTarget::CRenderTarget		()
 	b_ssao							= xr_new<CBlender_SSAO>					();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
+	b_sunshafts						= xr_new<CBlender_ss>					();
 
 	//	NORMAL
 	{
@@ -240,6 +242,11 @@ CRenderTarget::CRenderTarget		()
 			}
 		}
 
+		rt_SunShaftsMask.create					(r2_RT_SunShaftsMask,w,h,D3DFMT_A8R8G8B8		);
+		rt_SunShaftsMaskSmoothed.create			(r2_RT_SunShaftsMaskSmoothed,w,h,D3DFMT_A8R8G8B8);
+		rt_SunShaftsPass0.create				(r2_RT_SunShaftsPass0,w,h,D3DFMT_A8R8G8B8		);
+		//rt_SunShaftsPass1.create				(r2_RT_SunShaftsPass1,w,h,D3DFMT_A8R8G8B8		);
+		//rt_SunShaftsPass2.create				(r2_RT_SunShaftsPass2,w,h,D3DFMT_A8R8G8B8		);
 		// generic(LDR) RTs
 		rt_Generic_0.create			(r2_RT_generic0,w,h,D3DFMT_A8R8G8B8		);
 		rt_Generic_1.create			(r2_RT_generic1,w,h,D3DFMT_A8R8G8B8		);
@@ -249,6 +256,8 @@ CRenderTarget::CRenderTarget		()
 		if (RImplementation.o.advancedpp)
 			rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A16B16G16R16F);
 	}
+	
+	s_SunShafts.create				(b_sunshafts,	"r2\\SunShafts");
 
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
@@ -639,6 +648,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_accum_direct_cascade	);
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
+	xr_delete					(b_sunshafts			);
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)
