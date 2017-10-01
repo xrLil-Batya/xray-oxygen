@@ -5,11 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : ALife space
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef XRAY_ALIFE_SPACE
-#define XRAY_ALIFE_SPACE
-//#include "../xrcore/_std_extensions.h"
-
+#pragma once
 // ALife objects, events and tasks
 #define ALIFE_VERSION				0x0006
 #define ALIFE_CHUNK_DATA			0x0000
@@ -145,46 +141,13 @@ namespace ALife {
 		eAddonPermanent				= 1,	//постоянно подключено по умолчанию
 		eAddonAttachable			= 2		//можно присоединять
 	};
-
-	IC EHitType	g_tfString2HitType(LPCSTR caHitType)
-	{
-		if (!_stricmp(caHitType,"burn"))
-			return(eHitTypeBurn);
-		else if (!_stricmp(caHitType,"light_burn"))
-			return(eHitTypeLightBurn);
-		else if (!_stricmp(caHitType,"shock"))
-				return(eHitTypeShock);
-		else if (!_stricmp(caHitType,"strike"))
-            	return(eHitTypeStrike);
-		else if (!_stricmp(caHitType,"wound"))
-				return(eHitTypeWound);
-		else if (!_stricmp(caHitType,"radiation"))
-				return(eHitTypeRadiation);
-		else if (!_stricmp(caHitType,"telepatic"))
-				return(eHitTypeTelepatic);
-		else if (!_stricmp(caHitType,"fire_wound"))
-				return(eHitTypeFireWound);
-		else if (!_stricmp(caHitType,"chemical_burn"))
-				return(eHitTypeChemicalBurn);
-		else if (!_stricmp(caHitType,"explosion"))
-				return(eHitTypeExplosion);
-		else if (!_stricmp(caHitType,"wound_2"))
-				return(eHitTypeWound_2);
-		else
-				FATAL	("Unsupported hit type!");
-		NODEFAULT;
-#ifdef DEBUG
-		return(eHitTypeMax);
-#endif
-	}
-#ifndef	_EDITOR
-xr_token							hit_types_token							[ ];
+	EHitType g_tfString2HitType(LPCSTR caHitType);
+	xr_token hit_types_token[];
 
 	IC LPCSTR g_cafHitType2String(EHitType tHitType)
 	{
 		return get_token_name(hit_types_token, tHitType);
 	}
-#endif
 	using INT_VECTOR = xr_vector<int>;
 	using OBJECT_VECTOR = xr_vector<_OBJECT_ID>;
     using OBJECT_IT = OBJECT_VECTOR::iterator;
@@ -195,5 +158,3 @@ xr_token							hit_types_token							[ ];
 	using D_OBJECT_P_MAP = xr_map<_OBJECT_ID , CSE_ALifeDynamicObject*>;
 	using STORY_P_MAP = xr_map<_STORY_ID , CSE_ALifeDynamicObject*>;
 };
-
-#endif //XRAY_ALIFE_SPACE
