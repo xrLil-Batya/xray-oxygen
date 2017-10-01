@@ -1,16 +1,4 @@
-#ifndef PH_ITEM_LIST_H
-#define PH_ITEM_LIST_H
-/*
-#define DECLARE_PHLIST_ITEM(class_name)			public:\
-												class CPHListItem\
-												{\
-													friend class CPHItemList<class_name>;\
-													friend class CPHItemList<class_name>::iterator;\
-													class_name* next;\
-													class_name** tome;\
-												};\
-												private:
-*/
+#pragma once
 #define DECLARE_PHLIST_ITEM(class_name)			friend class CPHItemList<class_name>;\
 												friend class CPHItemList<class_name>::iterator;\
 												class_name* next;\
@@ -30,8 +18,6 @@ template<class T>
 			u16				size								;
 	
 		public:
-		
-		class iterator;
 		class iterator
 			{
 				
@@ -100,4 +86,3 @@ template<class T>
 	};
 #define DEFINE_PHITEM_LIST(T,N,I)		typedef CPHItemList<T>	N; typedef CPHItemList<T>::iterator I;
 #define DEFINE_PHITEM_STACK(T,N,I)		typedef CPHItemStack<T>	N; typedef CPHItemStack<T>::iterator I;
-#endif
