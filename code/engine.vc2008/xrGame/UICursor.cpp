@@ -1,14 +1,12 @@
 #include "stdafx.h"
 #include "uicursor.h"
-
 #include "ui/UIStatic.h"
 #include "ui/UIBtnHint.h"
+#include "xrEngine/xr_input.h"
 
+//#define C_DEFAULT	D3DCOLOR_XRGB(0xff,0xff,0xff)
 
-#define C_DEFAULT	D3DCOLOR_XRGB(0xff,0xff,0xff)
-
-CUICursor::CUICursor()
-:m_static(NULL),m_b_use_win_cursor(false)
+CUICursor::CUICursor(): m_static(NULL), m_b_use_win_cursor(false)
 {    
 	bVisible				= false;
 	vPrevPos.set			(0.0f, 0.0f);
@@ -114,6 +112,12 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 	}
 	clamp		(vPos.x, 0.f, UI_BASE_WIDTH);
 	clamp		(vPos.y, 0.f, UI_BASE_HEIGHT);
+	
+	// Fix clip cursor in windowed mode with enabled input capture.
+	if (m_b_use_win_cursor && pInput->get_exclusive_mode())
+	{
+		SetUICursorPosition(vPos);
+	}
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)

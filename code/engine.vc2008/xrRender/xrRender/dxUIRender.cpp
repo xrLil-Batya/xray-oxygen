@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "dxUIRender.h"
-
 #include "dxUIShader.h"
 
 dxUIRender	UIRenderImpl;
@@ -158,32 +157,13 @@ LPCSTR dxUIRender::UpdateShaderName(LPCSTR tex_name, LPCSTR sh_name)
 	string_path buff;
 	u32		v_dev	= CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
 	u32		v_need	= CAP_VERSION(2,0);
-	//strstr(Core.Params,"-ps_movie") &&
 	if ( (v_dev >= v_need) && FS.exist(buff,"$game_textures$", tex_name, ".ogm") )
 		return "hud\\movie";
 	else
 		return sh_name;
 }
-/*
-void dxUIRender::PushPoint(float x, float y, u32 c, float u, float v)
-{
-	VERIFY(m_PointType==pttNone);
-	pv->set(x, y, 0.0f, c, u, v);
-	++pv;
-}
-*/
-/*
-void dxUIRender::PushPoint(int x, int y, u32 c, float u, float v)
-{
-	VERIFY(m_PointType==pttNone);
-	pv->set(x, y, 0, c, u, v);
-	++pv;
-}
-*/
-
 void dxUIRender::PushPoint(float x, float y, float z, u32 C, float u, float v)
 {
-//.	VERIFY(m_PointType==pttLIT);
 	switch(m_PointType)
 	{
 	case pttLIT:
@@ -201,7 +181,6 @@ void dxUIRender::StartPrimitive(u32 iMaxVerts, ePrimitiveType primType, ePointTy
 {
 	VERIFY(PrimitiveType==ptNone);
 	VERIFY(m_PointType==ptNone);
-//.	R_ASSERT(pointType==pttLIT);
 
 	m_iMaxVerts = iMaxVerts;
 	PrimitiveType = primType;
