@@ -321,11 +321,8 @@ LONG WINAPI UnhandledFilter(_EXCEPTION_POINTERS *pExceptionInfo)
 		FlushLog();
 
 	ReportFault(pExceptionInfo, 0);
-
-	if (previous_filter)
-		previous_filter(pExceptionInfo);
-
-	return					(EXCEPTION_CONTINUE_SEARCH);
+	
+	return EXCEPTION_EXECUTE_HANDLER;
 }
 
 //////////////////////////////////////////////////////////////////////
