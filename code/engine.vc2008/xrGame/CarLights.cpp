@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "CarLights.h"
 #ifdef DEBUG
-
 #include "PHDebug.h"
 #endif
 #include "alife_space.h"
@@ -9,16 +8,14 @@
 #include "PHDestroyable.h"
 #include "Car.h"
 #include "../Include/xrRender/Kinematics.h"
-//#include "PHWorld.h"
-//extern CPHWorld*	ph_world;
 #include "../xrphysics/IPHWorld.h"
 
 SCarLight::SCarLight()
 {
-	light_render	=NULL;
-	glow_render		=NULL;
-	bone_id			=BI_NONE;
-	m_holder		=NULL;
+	light_render	= nullptr;
+	glow_render		= nullptr;
+	m_holder		= nullptr;
+	bone_id			= BI_NONE;
 }
 
 SCarLight::~SCarLight()
@@ -41,17 +38,12 @@ void SCarLight::ParseDefinitions(LPCSTR section)
 	light_render->set_type	(IRender_Light::SPOT);
 	light_render->set_shadow(true);
 	glow_render				= ::Render->glow_create();
-	//	lanim					= 0;
-	//	time2hide				= 0;
-
 	// set bone id
 	IKinematics*			pKinematics=smart_cast<IKinematics*>(m_holder->PCar()->Visual());
 	CInifile* ini		=	pKinematics->LL_UserData();
 	
 	Fcolor					clr;
 	clr.set					(ini->r_fcolor(section,"color"));
-	//clr.mul_rgb				(torch->spot_brightness);
-	//fBrightness				= torch->spot_brightness;
 	light_render->set_range	(ini->r_float(section,"range"));
 	light_render->set_color	(clr);
 	light_render->set_cone	(deg2rad(ini->r_float(section,"cone_angle")));
@@ -65,9 +57,6 @@ void SCarLight::ParseDefinitions(LPCSTR section)
 	glow_render ->set_active(false);
 	light_render->set_active(false);
 	pKinematics->LL_SetBoneVisible(bone_id,FALSE,TRUE);
-
-	//lanim					= LALib.FindItem(ini->r_string(section,"animator"));
-	
 }
 
 void SCarLight::Switch()
@@ -117,13 +106,12 @@ void SCarLight::Update()
 	glow_render->set_direction(M.k);
 	glow_render->set_position	(M.c);
 	light_render->set_position	(M.c);
-
 }
 
 
 CCarLights::CCarLights()
 {
-	m_pcar=NULL;
+	m_pcar = nullptr;
 }
 
 void CCarLights::Init(CCar* pcar)
@@ -136,10 +124,9 @@ void CCarLights::ParseDefinitions()
 {
 	CInifile* ini= smart_cast<IKinematics*>(m_pcar->Visual())->LL_UserData();
 	if(!ini->section_exist("lights")) return;
-	LPCSTR S=  ini->r_string("lights","headlights");
-	string64					S1;
-	int count =					_GetItemCount(S);
-	for (int i=0 ;i<count; ++i) 
+	const LPCSTR S = ini->r_string("lights","headlights");
+	string64 S1;
+	for (u32 i=0 ;i < _GetItemCount(S); ++i)
 	{
 		_GetItem					(S,i,S1);
 		m_lights.push_back(xr_new<SCarLight>());
@@ -152,30 +139,29 @@ void CCarLights::ParseDefinitions()
 void CCarLights::Update()
 {
 	VERIFY(!physics_world()->Processing());
-    auto i =m_lights.begin(),e=m_lights.end();
-	for(;i!=e;++i) (*i)->Update();
+	for (SCarLight* it : m_lights)
+	{
+		it->Update();
+	}
 }
 
 void CCarLights::SwitchHeadLights()
 {
 	
 	VERIFY(!physics_world()->Processing());
-    auto i =m_lights.begin(),e=m_lights.end();
-	for(;i!=e;++i) (*i)->Switch();
+	for (SCarLight* it : m_lights) it->Switch();
 }
 
 void CCarLights::TurnOnHeadLights()
 {
 
 	VERIFY(!physics_world()->Processing());
-    auto i =m_lights.begin(),e=m_lights.end();
-	for(;i!=e;++i) (*i)->TurnOn();
+	for (SCarLight* it : m_lights) it->TurnOn();
 }
 void CCarLights::TurnOffHeadLights()
 {
 	VERIFY(!physics_world()->Processing());
-    auto i =m_lights.begin(),e=m_lights.end();
-	for(;i!=e;++i) (*i)->TurnOff();
+	for (SCarLight* it : m_lights) it->TurnOff();
 }
 
 bool CCarLights::IsLight(u16 bone_id)
@@ -194,7 +180,9 @@ bool CCarLights::findLight(u16 bone_id,SCarLight* &light)
 }
 CCarLights::~CCarLights()
 {
-    auto i =m_lights.begin(),e=m_lights.end();
-	for(;i!=e;++i) xr_delete(*i);
+	for (SCarLight* it : m_lights)
+	{
+		xr_delete(it);
+	}
 	m_lights.clear();
 }

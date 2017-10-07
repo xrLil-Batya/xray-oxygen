@@ -233,12 +233,19 @@ void CStalkerAnimationManager::update_impl					()
 void CStalkerAnimationManager::update						()
 {
 	START_PROFILE("stalker/client_update/animations")
-	try {
-		update_impl			();
+	try 
+	{
+		update_impl();
 	}
-	catch(...) {
-		Msg					("! error in stalker with visual %s",*object().cNameVisual());
-		throw;
+	// The infamous 'error in stalker with visual' related issues can be averted by resetting
+	catch(...) 
+	{
+		Msg("! error in stalker with visual %s and ID %s",*object().cNameVisual(),object().ID());
+		head().reset();
+		torso().reset();
+		legs().reset();
+		global().reset();
+		return;
 	}
 	STOP_PROFILE
 }

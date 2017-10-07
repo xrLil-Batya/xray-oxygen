@@ -207,18 +207,31 @@ void SArtefactActivation::SpawnAnomaly()
 }
 shared_str clear_brackets(LPCSTR src)
 {
-	if	(0==src)					return	shared_str(0);
-	
-	if( NULL == strchr(src,'"') )	return	shared_str(src);
+	if (!src)
+	{
+		return shared_str(0);
+	}
+	if (!strchr(src, '"'))
+	{
+		return	shared_str(src);
+	}
 
-	string512						_original;	
-	xr_strcpy						(_original,src);
-	u32			_len				= xr_strlen(_original);
-	if	(0==_len)					return	shared_str("");
-	if	('"'==_original[_len-1])	_original[_len-1]=0;					// skip end
-	if	('"'==_original[0])			return	shared_str(&_original[0] + 1);	// skip begin
-	return									shared_str(_original);
-
+	string512 _original;
+	xr_strcpy(_original, src);
+	u32			_len = xr_strlen(_original);
+	if (!_len)
+	{
+		return shared_str("");
+	}
+	if ('"' == _original[_len - 1])
+	{
+		_original[_len - 1] = 0; // skip end
+	}
+	if ('"' == _original[0])
+	{
+		return shared_str(&_original[0] + 1); // skip begin
+	}
+	return shared_str(_original);
 }
 
 void SArtefactActivation::SStateDef::Load(LPCSTR section, LPCSTR name)

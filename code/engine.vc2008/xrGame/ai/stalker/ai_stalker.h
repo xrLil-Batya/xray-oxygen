@@ -342,7 +342,7 @@ private:
 public:
 	bool								can_select_weapon				() {return m_can_select_weapon;};
 	void								can_select_weapon				(bool can) {m_can_select_weapon = can;};
-			bool						can_take						(CInventoryItem const * item);
+IC	bool								can_take						(CInventoryItem const*) { return true; }
 
 protected:
 			u32							fill_items						(CInventory &inventory, CGameObject *old_owner, ALife::_OBJECT_ID new_owner_id);
@@ -364,7 +364,6 @@ protected:
 
 			bool						non_conflicted					(const CInventoryItem *item, const CWeapon *new_weapon) const;
 			bool						enough_ammo						(const CWeapon *new_weapon) const;
-			bool						conflicted						(const CInventoryItem *item, const CWeapon *new_weapon, bool new_wepon_enough_ammo, int new_weapon_rank) const;
 			void						update_conflicted				(CInventoryItem *item, const CWeapon *new_weapon);
 			void						remove_personal_only_ammo		(const CInventoryItem *item);
 			void						on_after_take					(const CGameObject *object);

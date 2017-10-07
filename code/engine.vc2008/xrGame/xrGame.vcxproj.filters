@@ -8036,9 +8036,6 @@
     <ClCompile Include="Tracer.cpp">
       <Filter>Core\Client\Level\Bullet Manager</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\LevelGameDef.cpp">
-      <Filter>Core\Client\Level\SeniorityHierarchyHolder</Filter>
-    </ClCompile>
     <ClCompile Include="seniority_hierarchy_holder.cpp">
       <Filter>Core\Client\Level\SeniorityHierarchyHolder</Filter>
     </ClCompile>

@@ -2866,7 +2866,6 @@
     <ClCompile Include="Level_Bullet_Manager.cpp" />
     <ClCompile Include="Level_bullet_manager_firetrace.cpp" />
     <ClCompile Include="Tracer.cpp" />
-    <ClCompile Include="..\xrServerEntities\LevelGameDef.cpp" />
     <ClCompile Include="seniority_hierarchy_holder.cpp" />
     <ClCompile Include="team_hierarchy_holder.cpp" />
     <ClCompile Include="squad_hierarchy_holder.cpp" />
