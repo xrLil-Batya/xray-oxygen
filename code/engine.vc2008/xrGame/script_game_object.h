@@ -358,6 +358,7 @@ public:
 
 			void				ActorLookAtPoint	(Fvector point);
 			void				IterateInventory	(luabind::functor<void> functor, luabind::object object);
+			void				IterateBelt			(luabind::functor<void> functor, luabind::object object);			
 			void				IterateInventoryBox	(luabind::functor<void> functor, luabind::object object);
 			void				MarkItemDropped		(CScriptGameObject *item);
 			bool				MarkedDropped		(CScriptGameObject *item);

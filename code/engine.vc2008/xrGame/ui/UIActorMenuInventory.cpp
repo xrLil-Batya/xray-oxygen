@@ -732,6 +732,13 @@ bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 	if(slot_idx==255)
 		return false;
 
+	CObject*	pObj			= smart_cast<CObject*>		(iitem);
+	shared_str	section_name	= pObj->cNameSect();	
+	
+	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
+	if (!CanSwitchToFastSlot)
+		return false;	
+	
 	m_pQuickSlot->SetItem(create_cell_item(iitem), GetUICursor().GetCursorPosition());
 	xr_strcpy(ACTOR_DEFS::g_quick_use_slots[slot_idx], iitem->m_section_id.c_str());
 	return true;

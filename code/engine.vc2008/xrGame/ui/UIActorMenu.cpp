@@ -518,8 +518,14 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		m_DetectorSlotHighlight->Show(true);
 		return;
 	}
+	CObject*	pObj = smart_cast<CObject*>		(item);
+	shared_str	section_name = pObj->cNameSect();
 	if(eatable)
 	{
+	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
+	    if (!CanSwitchToFastSlot)
+		    return;
+		
 		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iQuickSlot)
 			return;
 

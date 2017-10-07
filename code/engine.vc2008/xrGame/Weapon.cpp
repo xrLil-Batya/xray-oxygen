@@ -1354,8 +1354,12 @@ void GetZoomData(const float scope_factor, float& delta, float& min_zoom_factor)
 void CWeapon::OnZoomIn()
 {
 	m_zoom_params.m_bIsZoomModeNow		= true;
-	if(m_zoom_params.m_bUseDynamicZoom)
+	if (m_zoom_params.m_bUseDynamicZoom)
+	{
+		if (m_fRTZoomFactor == 0)
+			m_fRTZoomFactor = CurrentZoomFactor();
 		SetZoomFactor(m_fRTZoomFactor);
+	}
 	else
 		m_zoom_params.m_fCurrentZoomFactor	= CurrentZoomFactor();
 

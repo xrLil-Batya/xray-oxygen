@@ -2,7 +2,7 @@
 #include "uicursor.h"
 #include "ui/UIStatic.h"
 #include "ui/UIBtnHint.h"
-#include "xrEngine/xr_input.h"
+#include "../xrEngine/xr_input.h"
 
 //#define C_DEFAULT	D3DCOLOR_XRGB(0xff,0xff,0xff)
 
