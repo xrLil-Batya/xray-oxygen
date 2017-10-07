@@ -238,6 +238,20 @@ void CScriptGameObject::IterateInventory	(luabind::functor<void> functor, luabin
 		functor				(object,(*I)->object().lua_game_object());
 }
 
+void CScriptGameObject::IterateBelt	(luabind::functor<void> functor, luabind::object object)
+{
+	CInventoryOwner			*inventory_owner = smart_cast<CInventoryOwner*>(&this->object());
+	if (!inventory_owner) {
+		ai().script_engine().script_log		(ScriptStorage::eLuaMessageTypeError,"CScriptGameObject::IterateInventory non-CInventoryOwner object !!!");
+		return;
+	}
+
+	TIItemContainer::iterator	I = inventory_owner->inventory().m_belt.begin();
+	TIItemContainer::iterator	E = inventory_owner->inventory().m_belt.end();
+	for ( ; I != E; ++I)
+		functor				(object,(*I)->object().lua_game_object());
+}
+
 #include "InventoryBox.h"
 void CScriptGameObject::IterateInventoryBox	(luabind::functor<void> functor, luabind::object object)
 {

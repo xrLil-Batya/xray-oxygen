@@ -34,7 +34,7 @@ protected:
 	HitImmunity::HitTypeSVec		m_HitTypeProtection;
 
 	shared_str				m_ActorVisual;
-	shared_str				m_full_icon_name;
+	shared_str				m_PlayerHudSection;
 	SBoneProtections*		m_boneProtection;	
 	
 protected:
@@ -54,13 +54,12 @@ public:
 
 	shared_str				m_BonesProtectionSect;
 	shared_str				m_NightVisionSect;
-	
+	float					m_fShowNearestEnemiesDistance;
 
 	bool					bIsHelmetAvaliable;
 
 	virtual u32				ef_equipment_type		() const;
 	virtual	BOOL			BonePassBullet			(int boneID);
-	const shared_str&		GetFullIconName			() const	{ return m_full_icon_name; }
 	u32						get_artefact_count		() const	{ return m_artefact_count; }
 
 	virtual BOOL			net_Spawn				(CSE_Abstract* DC);

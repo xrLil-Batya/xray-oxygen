@@ -74,7 +74,6 @@ void CCustomOutfit::Load(LPCSTR section)
 	m_HitTypeProtection[ALife::eHitTypeChemicalBurn]= pSettings->r_float(section,"chemical_burn_protection");
 	m_HitTypeProtection[ALife::eHitTypeExplosion]	= pSettings->r_float(section,"explosion_protection");
 	m_HitTypeProtection[ALife::eHitTypeFireWound]	= 0.f;//pSettings->r_float(section,"fire_wound_protection");
-//	m_HitTypeProtection[ALife::eHitTypePhysicStrike]= pSettings->r_float(section,"physic_strike_protection");
 	m_HitTypeProtection[ALife::eHitTypeLightBurn]	= m_HitTypeProtection[ALife::eHitTypeBurn];
 	m_boneProtection->m_fHitFracActor = pSettings->r_float(section, "hit_fraction_actor");
 
@@ -83,16 +82,13 @@ void CCustomOutfit::Load(LPCSTR section)
 	else
 		m_NightVisionSect = "";
 
-	
-	
-	
-
-
 	if (pSettings->line_exist(section, "actor_visual"))
 		m_ActorVisual = pSettings->r_string(section, "actor_visual");
 	else
 		m_ActorVisual = NULL;
 
+	
+	m_PlayerHudSection		= pSettings->r_string(section, "player_hud_section");
 	m_ef_equipment_type		= pSettings->r_u32(section,"ef_equipment_type");
 	m_fPowerLoss			= READ_IF_EXISTS(pSettings, r_float, section, "power_loss",    1.0f );
 	clamp					( m_fPowerLoss, 0.0f, 1.0f );
@@ -100,14 +96,13 @@ void CCustomOutfit::Load(LPCSTR section)
 	m_additional_weight		= pSettings->r_float(section,"additional_inventory_weight");
 	m_additional_weight2	= pSettings->r_float(section,"additional_inventory_weight2");
 
-	m_fHealthRestoreSpeed		= READ_IF_EXISTS(pSettings, r_float, section, "health_restore_speed",    0.0f );
-	m_fRadiationRestoreSpeed	= READ_IF_EXISTS(pSettings, r_float, section, "radiation_restore_speed", 0.0f );
-	m_fSatietyRestoreSpeed		= READ_IF_EXISTS(pSettings, r_float, section, "satiety_restore_speed",   0.0f );
-	m_fPowerRestoreSpeed		= READ_IF_EXISTS(pSettings, r_float, section, "power_restore_speed",     0.0f );
-	m_fBleedingRestoreSpeed		= READ_IF_EXISTS(pSettings, r_float, section, "bleeding_restore_speed",  0.0f );
+	m_fHealthRestoreSpeed		    = READ_IF_EXISTS(pSettings, r_float, section, "health_restore_speed",       0.0f );
+	m_fRadiationRestoreSpeed	    = READ_IF_EXISTS(pSettings, r_float, section, "radiation_restore_speed",    0.0f );
+	m_fSatietyRestoreSpeed		    = READ_IF_EXISTS(pSettings, r_float, section, "satiety_restore_speed",      0.0f );
+	m_fPowerRestoreSpeed		    = READ_IF_EXISTS(pSettings, r_float, section, "power_restore_speed",        0.0f );
+	m_fBleedingRestoreSpeed		    = READ_IF_EXISTS(pSettings, r_float, section, "bleeding_restore_speed",     0.0f );
+	m_fShowNearestEnemiesDistance	= READ_IF_EXISTS(pSettings, r_float, section, "nearest_enemies_show_dist",  0.0f );		
 
-
-	m_full_icon_name		= pSettings->r_string( section, "full_icon_name" );
 	m_artefact_count 		= READ_IF_EXISTS( pSettings, r_u32, section, "artefact_count", 0 );
 	clamp( m_artefact_count, (u32)0, (u32)5 );
 
@@ -244,8 +239,8 @@ void CCustomOutfit::ApplySkinModel(CActor* pActor, bool bDress, bool bHUDOnly)
 		}
 
 
-		if (pActor == Level().CurrentViewEntity())	
-			g_player_hud->load(pSettings->r_string(cNameSect(),"player_hud_section"));
+		if (pActor == Level().CurrentViewEntity())
+			g_player_hud->load(m_PlayerHudSection);
 	}else
 	{
 		if (!bHUDOnly && m_ActorVisual.size())
@@ -296,7 +291,6 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	result |= process_if_exists( section, "chemical_burn_protection", &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypeChemicalBurn], test );
 	result |= process_if_exists( section, "explosion_protection",     &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypeExplosion]   , test );
 	result |= process_if_exists( section, "fire_wound_protection",    &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypeFireWound]   , test );
-//	result |= process_if_exists( section, "physic_strike_protection", &CInifile::r_float, m_HitTypeProtection[ALife::eHitTypePhysicStrike], test );
 	LPCSTR str;
 	bool result2 = process_if_exists_set( section, "nightvision_sect", &CInifile::r_string, str, test );
 	if ( result2 && !test )
@@ -304,6 +298,62 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 		m_NightVisionSect._set( str );
 	}
 	result |= result2;
+
+	CActor* pActor = smart_cast<CActor*>(H_Parent());
+	PIItem pOutfit = NULL;
+	PIItem iitem = NULL;
+	if (pActor)
+	{
+		pOutfit = pActor->inventory().ItemFromSlot(OUTFIT_SLOT);
+		iitem = smart_cast<CInventoryItem*>(this);
+	}
+	bool need_change_skin = false;
+	result2 = process_if_exists_set(section, "actor_visual", &CInifile::r_string, str, test);
+	if (result2 && !test)
+	{
+		m_ActorVisual._set(str);
+		need_change_skin = true;
+	}
+	result |= result2;
+	
+	result2 = process_if_exists_set(section, "player_hud_section", &CInifile::r_string, str, test);
+	if (result2 && !test)
+	{
+		m_PlayerHudSection._set(str);
+		need_change_skin = true;
+	}
+	result |= result2;
+	
+	if (need_change_skin)
+	{
+		if (pActor)
+			if (pOutfit == iitem)
+				ApplySkinModel(pActor, true, false);
+	}
+	
+	BOOL value;
+	result2 = process_if_exists_set( section, "helmet_avaliable", &CInifile::r_bool, value, test);
+	if (result2 && !test)
+	{
+		bIsHelmetAvaliable = value;
+		if (!bIsHelmetAvaliable && pActor)
+		{
+			if (pOutfit == iitem)
+			{
+				CTorch* pTorch = smart_cast<CTorch*>(pActor->inventory().ItemFromSlot(TORCH_SLOT));
+				if (pTorch && pTorch->GetNightVisionStatus())
+					pTorch->SwitchNightVision(true, false);
+				PIItem pHelmet = pActor->inventory().ItemFromSlot(HELMET_SLOT);
+				if (pHelmet)
+					// Внимание! Корректно настроить алгоритм блокировки слота шлема не удалось;
+					// при блокировке слота шлем переносится в рюкзак, однако визуально это будет видно только после перезапуска инвентаря;
+					// принудительные апдейты и другие методы не помогли; явление, по сути, безобидное, но глаз режет;
+					// для избежания нежелательных косяков рекомендуется после установки данного типа апгрейдов закрывать инвентарь скриптом;
+					pActor->inventory().Ruck(pHelmet, false);
+			}
+		}
+	}
+	result |= result2;	
 
 
 	result2 = process_if_exists_set( section, "bones_koeff_protection", &CInifile::r_string, str, test );
@@ -330,6 +380,8 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 
 	result |= process_if_exists( section, "power_loss", &CInifile::r_float, m_fPowerLoss, test );
 	clamp( m_fPowerLoss, 0.0f, 1.0f );
+	
+	result |= process_if_exists( section, "nearest_enemies_show_dist",  &CInifile::r_float, m_fShowNearestEnemiesDistance,  test );	
 
 	result |= process_if_exists( section, "artefact_count", &CInifile::r_u32, m_artefact_count, test );
 	clamp( m_artefact_count, (u32)0, (u32)5 );
