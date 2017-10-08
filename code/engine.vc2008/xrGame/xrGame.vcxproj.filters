@@ -5040,9 +5040,6 @@
     <ClInclude Include="Tracer.h">
       <Filter>Core\Client\Level\Bullet Manager</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\LevelGameDef.h">
-      <Filter>Core\Client\Level\SeniorityHierarchyHolder</Filter>
-    </ClInclude>
     <ClInclude Include="seniority_hierarchy_holder.h">
       <Filter>Core\Client\Level\SeniorityHierarchyHolder</Filter>
     </ClInclude>

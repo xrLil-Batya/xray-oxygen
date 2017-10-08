@@ -1628,7 +1628,6 @@
     <ClInclude Include="Level.h" />
     <ClInclude Include="Level_Bullet_Manager.h" />
     <ClInclude Include="Tracer.h" />
-    <ClInclude Include="..\xrServerEntities\LevelGameDef.h" />
     <ClInclude Include="seniority_hierarchy_holder.h" />
     <ClInclude Include="seniority_hierarchy_holder_inline.h" />
     <ClInclude Include="seniority_hierarchy_space.h" />
