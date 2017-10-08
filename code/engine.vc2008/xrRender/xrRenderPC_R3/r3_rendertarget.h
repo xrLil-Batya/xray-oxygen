@@ -48,6 +48,8 @@ public:
 	IBlender*					b_accum_reflected_msaa[8];
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
+	IBlender*					b_fxaa;
+	
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
 		u32		color;
@@ -125,6 +127,9 @@ private:
 	ref_shader					s_accum_reflected;
 	ref_shader					s_accum_volume;
 
+    ref_shader s_fxaa;
+    ref_geom					g_fxaa;	
+	
 	//	generate min/max
 	ref_shader					s_create_minmax_sm;
 
@@ -238,7 +243,8 @@ public:
 	bool						u_need_CM				();
 	BOOL						u_DBT_enable			(float zMin, float zMax);
 	void						u_DBT_disable			();
-
+	
+    void						phase_fxaa              ();	
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();
 	void						phase_scene_end			();

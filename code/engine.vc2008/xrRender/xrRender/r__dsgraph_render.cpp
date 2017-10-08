@@ -714,7 +714,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 
 				renderable->renderable_Render	();
 			}
-		}
+		}	
 	}
 
 	// Restore

@@ -11,6 +11,7 @@
 #include "blender_bloom_build.h"
 #include "blender_luminance.h"
 #include "blender_ssao.h"
+#include "blender_fxaa.h"
 #include "blender_ss.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
@@ -211,6 +212,7 @@ CRenderTarget::CRenderTarget		()
 	b_ssao							= xr_new<CBlender_SSAO>					();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
+	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
 	b_sunshafts						= xr_new<CBlender_ss>					();
 
 	//	NORMAL
@@ -343,6 +345,9 @@ CRenderTarget::CRenderTarget		()
 		f_bloom_factor				= 0.5f;
 	}
 
+    s_fxaa.create(b_fxaa, "r3\\fxaa");
+    g_fxaa.create(FVF::F_V, RCache.Vertex.Buffer(), RCache.QuadIB);	
+	
 	//HBAO
 	if (RImplementation.o.ssao_opt_data)
 	{
@@ -646,6 +651,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_accum_point			);
 	xr_delete					(b_accum_direct			);
 	xr_delete					(b_accum_direct_cascade	);
+	xr_delete                   (b_fxaa                 );
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
 	xr_delete					(b_sunshafts			);

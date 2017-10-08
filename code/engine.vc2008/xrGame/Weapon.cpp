@@ -1356,7 +1356,7 @@ void CWeapon::OnZoomIn()
 	m_zoom_params.m_bIsZoomModeNow		= true;
 	if (m_zoom_params.m_bUseDynamicZoom)
 	{
-		if (m_fRTZoomFactor == 0)
+		if (!m_fRTZoomFactor)
 			m_fRTZoomFactor = CurrentZoomFactor();
 		SetZoomFactor(m_fRTZoomFactor);
 	}

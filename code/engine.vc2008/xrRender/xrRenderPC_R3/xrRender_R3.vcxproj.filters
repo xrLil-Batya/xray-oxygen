@@ -720,6 +720,9 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
       <Filter>Interfase implementations\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="blender_fxaa.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>	
     <ClInclude Include="..\..\utils\common\NvMender2003\convert.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -1364,6 +1367,12 @@
     <ClCompile Include="..\Editor\RAPIDMinBox.cpp">
       <Filter>Editor</Filter>
     </ClCompile>
+    <ClCompile Include="r3_rendertarget_phase_FXAA.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_fxaa.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>	
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
