@@ -871,7 +871,6 @@ void		xrRender_initconsole	()
 	
 	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase1",	&ps_prop_ss_sample_step_phase0,	.01f,	.2f);
 	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase2",	&ps_prop_ss_sample_step_phase1,	.01f,	.2f);
-	//CMD4(CCC_Float,		"r2_sunshafts_sample_step2",	&ps_prop_ss_sample_step_phase2,	.01f,	.2f);
 	CMD4(CCC_Float,		"r2_SunShafts_Radius",			&ps_prop_ss_radius,				.5f,	2.f);
 	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
 	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
