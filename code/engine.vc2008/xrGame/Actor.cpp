@@ -172,7 +172,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_iLastHittingWeaponID	= u16(-1);
 	m_bPickupMode			= false;
 	//-----------------------------------------------------------------------------------
-	m_memory				= g_dedicated_server ? 0 : xr_new<CActorMemory>(this);
+	m_memory				= xr_new<CActorMemory>(this);
 	m_bOutBorder			= false;
 	m_hit_probability		= 1.f;
 	m_feel_touch_characters = 0;
@@ -221,8 +221,7 @@ void CActor::reinit	()
 	material().reinit							();
 
 	m_pUsableObject								= NULL;
-	if (!g_dedicated_server)
-		memory().reinit							();
+	memory().reinit							();
 	
 	set_input_external_handler					(0);
 	m_time_lock_accel							= 0;
@@ -234,8 +233,7 @@ void CActor::reload	(LPCSTR section)
 	CInventoryOwner::reload		(section);
 	material().reload			(section);
 	CStepManager::reload		(section);
-	if (!g_dedicated_server)
-		memory().reload			(section);
+	memory().reload			(section);
 	m_location_manager->reload	(section);
 }
 void set_box(LPCSTR section, CPHMovementControl &mc, u32 box_num )
@@ -310,10 +308,7 @@ void CActor::Load	(LPCSTR section )
 	m_fFeelGrenadeTime			*= 1000.0f;
 	
 	character_physics_support()->in_Load		(section);
-	
 
-if(!g_dedicated_server)
-{
 	LPCSTR hit_snd_sect = pSettings->r_string(section,"hit_sounds");
 	for(int hit_type=0; hit_type<(int)ALife::eHitTypeMax; ++hit_type)
 	{
@@ -338,7 +333,7 @@ if(!g_dedicated_server)
 		m_BloodSnd.create		(pSettings->r_string(section,"heavy_blood_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 		m_DangerSnd.create		(pSettings->r_string(section,"heavy_danger_snd"), st_Effect,SOUND_TYPE_MONSTER_INJURING);
 	}
-}
+
 	if( psActorFlags.test(AF_PSP) )
 		cam_Set					(eacLookAt);
 	else
@@ -424,8 +419,7 @@ void	CActor::Hit(SHit* pHDS)
 	bool bPlaySound = true;
 	if (!g_Alive()) bPlaySound = false;
 
-	if (!g_dedicated_server &&
-		!sndHit[HDS.hit_type].empty() &&
+	if (!sndHit[HDS.hit_type].empty() &&
 		conditions().PlayHitSound(pHDS))
 	{
 		ref_sound& S = sndHit[HDS.hit_type][Random.randI(sndHit[HDS.hit_type].size())];
@@ -458,7 +452,6 @@ void	CActor::Hit(SHit* pHDS)
 
 	//---------------------------------------------------------------
 	if ((Level().CurrentViewEntity() == this) &&
-		!g_dedicated_server &&
 		(HDS.hit_type == ALife::eHitTypeFireWound))
 	{
 		CObject* pLastHitter = Level().Objects.net_Find(m_iLastHitterID);
@@ -473,7 +466,7 @@ void	CActor::Hit(SHit* pHDS)
 		if (!is_special_burn_hit_2_self)
 			mstate_wishful &= ~mcSprint;
 	}
-	if (!g_dedicated_server && !m_disabled_hitmarks)
+	if (!m_disabled_hitmarks)
 	{
 		bool b_fireWound = (pHDS->hit_type == ALife::eHitTypeFireWound || pHDS->hit_type == ALife::eHitTypeWound_2);
 		b_initiated = b_initiated && (pHDS->hit_type == ALife::eHitTypeStrike);
@@ -622,16 +615,12 @@ void CActor::Die(CObject* who)
 		TIItemContainer &l_blist = inventory().m_belt;
 		while (!l_blist.empty())
 			inventory().Ruck(l_blist.front());
-	};
-
-	if (!g_dedicated_server)
-	{
-		::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
-
-		m_HeavyBreathSnd.stop();
-		m_BloodSnd.stop();
-		m_DangerSnd.stop();
 	}
+
+	::Sound->play_at_pos(sndDie[Random.randI(SND_DIE_COUNT)], this, Position());
+	m_HeavyBreathSnd.stop();
+	m_BloodSnd.stop();
+	m_DangerSnd.stop();
 
 	CurrentGameUI()->HideShownDialogs();
 	start_tutorial("game_over");
@@ -1029,7 +1018,7 @@ void CActor::shedule_Update	(u32 DT)
 	}
 	pCamBobbing->SetState						(mstate_real, conditions().IsLimping(), IsZoomAimingMode());
 
-	if(this==Level().CurrentControlEntity() && !g_dedicated_server )
+	if(this==Level().CurrentControlEntity())
 	{
 		if(conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT))
 		{
