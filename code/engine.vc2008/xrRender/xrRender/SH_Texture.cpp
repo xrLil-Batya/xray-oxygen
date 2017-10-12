@@ -162,11 +162,8 @@ void CTexture::Load		()
 	}
 
 	Preload							();
-//#ifndef		DEDICATED_SERVER
-#ifndef _EDITOR
-	if (!g_dedicated_server)
-#endif
-	{
+
+    {
 		// Check for OGM
 		string_path			fn;
 		if (FS.exist(fn,"$game_textures$",*cName,".ogm"))
@@ -284,7 +281,6 @@ void CTexture::Load		()
 				flags.MemoryUsage		=	mem;
 			}
 		}
-//#endif
 	}
 	PostLoad	()		;
 }

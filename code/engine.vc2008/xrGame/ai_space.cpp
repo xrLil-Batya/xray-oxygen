@@ -24,8 +24,6 @@
 #include "../xrEngine/no_single.h"
 #include "../FrayBuildConfig.hpp"
 
-ENGINE_API	bool g_dedicated_server;
-
 CAI_Space *g_ai_space = 0;
 
 CAI_Space::CAI_Space				()
@@ -122,9 +120,6 @@ void CAI_Space::load				(LPCSTR level_name)
 
 void CAI_Space::unload				(bool reload)
 {
-	if (g_dedicated_server)
-		return;
-
 	script_engine().unload	();
 
 	xr_delete				(m_doors_manager);
@@ -169,8 +164,6 @@ void CAI_Space::validate			(const u32 level_id) const
 
 void CAI_Space::patrol_path_storage_raw	(IReader &stream)
 {
-	if (g_dedicated_server)
-		return;
 
 	xr_delete						(m_patrol_path_storage);
 	m_patrol_path_storage			= xr_new<CPatrolPathStorage>();
@@ -179,9 +172,6 @@ void CAI_Space::patrol_path_storage_raw	(IReader &stream)
 
 void CAI_Space::patrol_path_storage		(IReader &stream)
 {
-	if (g_dedicated_server)
-		return;
-
 	xr_delete						(m_patrol_path_storage);
 	m_patrol_path_storage			= xr_new<CPatrolPathStorage>();
 	m_patrol_path_storage->load		(stream);

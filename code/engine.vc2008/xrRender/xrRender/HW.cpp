@@ -39,8 +39,7 @@ void CHW::Reset		(HWND hwnd)
 	_RELEASE			(pBaseRT);
 
 	bool	bWindowed		= TRUE;
-	if (!g_dedicated_server)
-		bWindowed		= !psDeviceFlags.is	(rsFullscreen);
+	bWindowed		= !psDeviceFlags.is	(rsFullscreen);
 
 	selectResolution		(DevPP.BackBufferWidth, DevPP.BackBufferHeight, bWindowed);
 	// Windoze
@@ -144,35 +143,27 @@ void	CHW::DestroyDevice	()
 void	CHW::selectResolution	(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed)
 {
 	fill_vid_mode_list			(this);
-#ifndef _EDITOR
-	if (g_dedicated_server)
+
+	if(bWindowed)
 	{
-		dwWidth		= 640;
-		dwHeight	= 480;
+		dwWidth		= psCurrentVidMode[0];
+		dwHeight	= psCurrentVidMode[1];
 	}
-	else
-#endif
+	else //check
 	{
-		if(bWindowed)
-		{
-			dwWidth		= psCurrentVidMode[0];
-			dwHeight	= psCurrentVidMode[1];
-		}else //check
-		{
 #ifndef _EDITOR
-			string64					buff;
-			xr_sprintf					(buff,sizeof(buff),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]);
+		string64					buff;
+		xr_sprintf					(buff,sizeof(buff),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]);
 
-			if(_ParseItem(buff,vid_mode_token)==u32(-1)) //not found
-			{ //select safe
-				xr_sprintf				(buff,sizeof(buff),"vid_mode %s",vid_mode_token[0].name);
-				Console->Execute		(buff);
-			}
-
-			dwWidth						= psCurrentVidMode[0];
-			dwHeight					= psCurrentVidMode[1];
-#endif
+		if(_ParseItem(buff,vid_mode_token)==u32(-1)) //not found
+		{ //select safe
+			xr_sprintf				(buff,sizeof(buff),"vid_mode %s",vid_mode_token[0].name);
+			Console->Execute		(buff);
 		}
+
+		dwWidth						= psCurrentVidMode[0];
+		dwHeight					= psCurrentVidMode[1];
+#endif
 	}
 //#endif
 
@@ -193,8 +184,7 @@ void		CHW::CreateDevice		(HWND m_hWnd, bool move_window)
 	BOOL  bWindowed			= TRUE;
 	
 #ifndef _EDITOR
-	if (!g_dedicated_server)
-		bWindowed			= !psDeviceFlags.is(rsFullscreen);
+	bWindowed			= !psDeviceFlags.is(rsFullscreen);
 #else
 	bWindowed				= 1;
 #endif        
@@ -494,8 +484,7 @@ void	CHW::updateWindowProps	(HWND m_hWnd)
 
 	BOOL	bWindowed				= TRUE;
 #ifndef _EDITOR
-	if (!g_dedicated_server)
-		bWindowed			= !psDeviceFlags.is(rsFullscreen);
+	bWindowed			= !psDeviceFlags.is(rsFullscreen);
 #endif	
 
 	u32		dwWindowStyle			= 0;
@@ -555,11 +544,8 @@ void	CHW::updateWindowProps	(HWND m_hWnd)
 	}
 
 #ifndef _EDITOR
-	if (!g_dedicated_server)
-	{
-		ShowCursor	(FALSE);
-		SetForegroundWindow( m_hWnd );
-	}
+	ShowCursor	(FALSE);
+	SetForegroundWindow( m_hWnd );
 #endif
 }
 

@@ -173,9 +173,6 @@ CBinocularsVision::~CBinocularsVision()
 
 void CBinocularsVision::Update()
 {
-	if (g_dedicated_server)
-		return;
-	//-----------------------------------------------------
 	const CActor* pActor = Actor();
 
 	if (!pActor) 
