@@ -13,7 +13,7 @@ doug_lea_allocator	g_collision_allocator(s_fake_array, s_arena_size, "collision"
 #endif // #ifdef USE_ARENA_ALLOCATOR
 
 namespace Opcode {
-#	include "../3rd party/OpenCode/OPC_TreeBuilders.h"
+#	include "../3rd party/OPCODE/OPC_TreeBuilders.h"
 } // namespace Opcode
 
 using namespace CDB;
