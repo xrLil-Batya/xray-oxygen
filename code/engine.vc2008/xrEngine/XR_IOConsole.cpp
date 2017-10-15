@@ -606,7 +606,7 @@ extern CInput* pInput;
 
 void CConsole::Hide()
 {
-	if ( !bVisible || g_pGamePersistent)
+	if (!bVisible)
 		return;
 
 //	if  ( g_pGameLevel || 
