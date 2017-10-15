@@ -137,7 +137,8 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/Zm110 %(AdditionalOptions) /std:c++laters /std:c++latest</AdditionalOptions>
+      <AdditionalOptions>/Zm110 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;dxguid.lib;d3dcompiler.lib;d3d10.lib;d3dx10.lib;dxgi.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -179,8 +180,6 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>
-      </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -231,7 +230,8 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/Zm110 %(AdditionalOptions) /std:c++laters /std:c++latest</AdditionalOptions>
+      <AdditionalOptions>/Zm110 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;dxguid.lib;d3dcompiler.lib;d3d10.lib;d3dx10.lib;dxgi.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -285,7 +285,8 @@
       <WarningLevel>Level4</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>/Zm110 %(AdditionalOptions) /std:c++laters /std:c++latest</AdditionalOptions>
+      <AdditionalOptions>/Zm110 %(AdditionalOptions)</AdditionalOptions>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
       <AdditionalDependencies>WildMagic.lib;ETools.lib;dxguid.lib;d3dcompiler.lib;d3d10.lib;d3dx10.lib;dxgi.lib;nvapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
@@ -339,8 +340,6 @@
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>
-      </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -394,8 +393,6 @@
       <WarningLevel>Level2</WarningLevel>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <AdditionalOptions>
-      </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
@@ -466,7 +463,7 @@
     <ClInclude Include="blender_deffer_aref.h" />
     <ClInclude Include="blender_deffer_flat.h" />
     <ClInclude Include="blender_deffer_model.h" />
-	<ClInclude Include="blender_fxaa.h" />
+    <ClInclude Include="blender_fxaa.h" />
     <ClInclude Include="..\xrRender\Blender_Editor_Selection.h" />
     <ClInclude Include="..\xrRender\Blender_Editor_Wire.h" />
     <ClInclude Include="blender_light_direct.h" />
@@ -680,7 +677,7 @@
     <ClCompile Include="blender_deffer_aref.cpp" />
     <ClCompile Include="blender_deffer_flat.cpp" />
     <ClCompile Include="blender_deffer_model.cpp" />
-	<ClCompile Include="blender_fxaa.cpp" />
+    <ClCompile Include="blender_fxaa.cpp" />
     <ClCompile Include="..\xrRender\Blender_Editor_Selection.cpp" />
     <ClCompile Include="..\xrRender\Blender_Editor_Wire.cpp" />
     <ClCompile Include="blender_light_direct.cpp" />
@@ -732,7 +729,7 @@
     <ClCompile Include="r3_rendertarget_phase_accumulator.cpp" />
     <ClCompile Include="r3_rendertarget_phase_bloom.cpp" />
     <ClCompile Include="r3_rendertarget_phase_combine.cpp" />
-	<ClCompile Include="r3_rendertarget_phase_FXAA.cpp" />
+    <ClCompile Include="r3_rendertarget_phase_FXAA.cpp" />
     <ClCompile Include="r3_rendertarget_phase_luminance.cpp" />
     <ClCompile Include="r3_rendertarget_phase_occq.cpp" />
     <ClCompile Include="r3_rendertarget_phase_PP.cpp" />

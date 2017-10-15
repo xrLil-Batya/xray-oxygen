@@ -135,7 +135,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxerr2015", "3rd party\dxer
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WildMagic", "3rd party\WildMagic\WildMagic.vcxproj", "{35448F1E-E96F-40A2-8F46-6FB1D8DFF1F1}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OpenCode", "3rd party\OpenCode\OpenCode.vcxproj", "{AE0574E2-BE4C-49B0-98A6-739176D69277}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OPCODE", "3rd party\OPCODE\OPCODE.vcxproj", "{AE0574E2-BE4C-49B0-98A6-739176D69277}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BuildVm", "xrScripts\BuildVm\BuildVm.vcxproj", "{9E14D7B5-9D0E-4373-B076-33DD4BECDBA0}"
 EndProject
