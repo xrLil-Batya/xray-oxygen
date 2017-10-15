@@ -24,8 +24,6 @@
 #include <process.h>
 #include <locale.h>
 
-#include "xrSash.h"
-
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= nullptr;
@@ -286,12 +284,12 @@ void Startup()
 //.	destroySound();
 	destroyInput();
 
-	if( !g_bBenchmark && !g_SASH.IsRunning())
+	if( !g_bBenchmark)
 		destroySettings();
 
 	LALib.OnDestroy				( );
 	
-	if( !g_bBenchmark && !g_SASH.IsRunning())
+	if( !g_bBenchmark)
 		destroyConsole();
 	else
 		Console->Destroy();
@@ -545,19 +543,6 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 			return 0;
 		}
 
-		Msg("command line %s", lpCmdLine);
-		LPCSTR sashName = "-openautomate ";
-		if(strstr(lpCmdLine, sashName))
-		{
-			int sz = xr_strlen(sashName);
-			string512				sash_arg;
-			sscanf					(strstr(Core.Params,sashName)+sz,"%[^ ] ",sash_arg);
-			//doBenchmark				(sash_arg);
-			g_SASH.Init(sash_arg);
-			g_SASH.MainLoop();
-			return 0;
-		}
-
 		if(strstr(Core.Params,"-r2a"))	
 			Console->Execute			("renderer renderer_r2a");
 		else
@@ -570,7 +555,6 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 			xr_delete					(pTmp);
 		}
 
-//.		InitInput					( );
 		Engine.External.Initialize	( );
 		Console->Execute			("stat_memory");
 
@@ -728,8 +712,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 {
 	if (E==eQuit)
 	{
-		g_SASH.EndBenchmark();
-
 		PostQuitMessage	(0);
 		
 		for (u32 i=0; i<Levels.size(); i++)

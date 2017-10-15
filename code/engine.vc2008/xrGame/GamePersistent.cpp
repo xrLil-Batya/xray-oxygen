@@ -19,8 +19,6 @@
 #include "spectator.h"
 
 #include "UI/UItextureMaster.h"
-
-#include "../xrEngine/xrSASH.h"
 #include "ai_space.h"
 #include "../xrServerEntities/script_engine.h"
 
@@ -63,11 +61,6 @@ CGamePersistent::CGamePersistent(void)
 	m_frame_counter				= 0;
 	m_last_stats_frame			= u32(-2);
 #endif
-	// 
-	//dSetAllocHandler			(ode_alloc		);
-	//dSetReallocHandler			(ode_realloc	);
-	//dSetFreeHandler				(ode_free		);
-
 	// 
 	BOOL	bDemoMode	= (0!=strstr(Core.Params,"-demomode "));
 	if (bDemoMode)
@@ -372,8 +365,7 @@ void CGamePersistent::WeathersUpdate()
 
 IC bool allow_intro ()
 {
-	if(strstr(Core.Params, "-nointro") || g_SASH.IsRunning()) return false;
-	else return true;
+	return !strstr(Core.Params, "-nointro");
 }
 
 void CGamePersistent::start_logo_intro()
@@ -394,14 +386,14 @@ void CGamePersistent::start_logo_intro()
 
 void CGamePersistent::update_logo_intro()
 {
-	if(m_intro && (false==m_intro->IsActive()))
+	if(m_intro && (!m_intro->IsActive()))
 	{
 		m_intro_event			= 0;
 		xr_delete				(m_intro);
 		Msg("intro_delete ::update_logo_intro");
 		Console->Execute		("main_menu on");
-	}else
-	if(!m_intro)
+	}
+	else if(!m_intro)
 	{
 		m_intro_event			= 0;
 	}

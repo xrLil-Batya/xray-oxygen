@@ -20,11 +20,9 @@
 #	include "../include/editor/ide.hpp"
 #	include "engine_impl.hpp"
 #endif // #ifdef INGAME_EDITOR
-
-#include "xrSash.h"
 #include "igame_persistent.h"
 
-#pragma comment( lib, "d3dx9.lib"		)
+#pragma comment(lib, "d3dx9.lib")
 
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
@@ -117,8 +115,6 @@ void CRenderDevice::End		(void)
 	g_bRendering		= FALSE;
 	// end scene
 	//	Present goes here, so call OA Frame end.
-	if (g_SASH.IsBenchmarkRunning())
-		g_SASH.DisplayFrame(Device.fTimeGlobal);
 	m_pRender->End();
 
 #	ifdef INGAME_EDITOR
@@ -192,19 +188,16 @@ void CRenderDevice::on_idle		()
 
 	if (psDeviceFlags.test(rsStatistic))	g_bEnableStatGather	= TRUE;
 	else									g_bEnableStatGather	= FALSE;
-	if(g_loading_events.size())
+	if (g_loading_events.size())
 	{
-		if( g_loading_events.front()() )
+		if (g_loading_events.front()())
 			g_loading_events.pop_front();
-		pApp->LoadDraw				();
+		pApp->LoadDraw();
 		return;
-	}else 
+	}
+	else
 	{
-		if ( (!Device.dwPrecacheFrame) && (!g_SASH.IsBenchmarkRunning())
-			&& g_bLoaded)
-			g_SASH.StartBenchmark();
-
-		FrameMove						( );
+		FrameMove();
 	}
 
 	// Precache
@@ -222,8 +215,6 @@ void CRenderDevice::on_idle		()
 	// Matrices
 	mFullTransform.mul			( mProject,mView	);
 	m_pRender->SetCacheXform(mView, mProject);
-	//RCache.set_xform_view		( mView				);
-	//RCache.set_xform_project	( mProject			);
 	D3DXMatrixInverse			( (D3DXMATRIX*)&mInvFullTransform, 0, (D3DXMATRIX*)&mFullTransform);
 
 	vCameraPosition_saved	= vCameraPosition;
