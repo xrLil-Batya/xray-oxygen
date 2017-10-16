@@ -138,7 +138,7 @@ void					CRender::create					()
 	m_MSAASample		= -1;
 
 	// hardware
-	o.smapsize			= 4096;
+	o.smapsize			= ps_r2_smapsize;
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
@@ -198,16 +198,6 @@ void					CRender::create					()
 	//o.nvdbt				= HW.support	((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
 	o.nvdbt				= false;
 	if (o.nvdbt)		Msg	("* NV-DBT supported and used");
-
-	// options (smap-pool-size)
-	if (strstr(Core.Params,"-smap1536"))	o.smapsize	= 1536;
-	if (strstr(Core.Params,"-smap2048"))	o.smapsize	= 2048;
-	if (strstr(Core.Params,"-smap2560"))	o.smapsize	= 2560;
-	if (strstr(Core.Params,"-smap3072"))	o.smapsize	= 3072;
-	if (strstr(Core.Params,"-smap4096"))	o.smapsize	= 4096;
-	// !!! Not for all videocards !!!
-	if (strstr(Core.Params, "-smap3072"))	o.smapsize = 8192;
-	if (strstr(Core.Params, "-smap4096"))	o.smapsize = 16384;
 
 	// gloss
 	char*	g = strstr(Core.Params, "-gloss ");
@@ -406,6 +396,13 @@ void CRender::reset_begin()
 		Lights_LastFrame.clear	();
 	}
 
+	// KD: let's reload details while changed details options on vid_restart
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	{
+		Details->Unload();
+		xr_delete(Details);
+	}	
+	
 	xr_delete					(Target);
 	HWOCC.occq_destroy			();
 	//_RELEASE					(q_sync_point[1]);
@@ -432,6 +429,13 @@ void CRender::reset_end()
 
 	Target						=	xr_new<CRenderTarget>	();
 
+	// KD: let's reload details while changed details options on vid_restart
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	{
+		Details = xr_new<CDetailManager>();
+		Details->Load();
+	}	
+	
 	xrRender_apply_tf			();
 	FluidManager.SetScreenSize(Device.dwWidth, Device.dwHeight);
 

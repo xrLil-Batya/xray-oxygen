@@ -3,6 +3,9 @@
 #pragma once
 
 // Common
+extern ECORE_API	u32			ps_r2_smapsize;	//=	2048;
+extern ECORE_API	xr_token	q_smapsize_token[];
+
 extern ECORE_API	u32			ps_r_sun_shafts;	//=	0;
 extern ECORE_API	xr_token	qsun_shafts_token[];
 
@@ -206,7 +209,8 @@ enum
 extern void						xrRender_initconsole	();
 extern BOOL						xrRender_test_hw		();
 extern void						xrRender_apply_tf		();
-extern ECORE_API Flags32 ps_actor_shadow_flags; 
+extern ECORE_API int			ps_r__detail_radius;
+extern ECORE_API Flags32        ps_actor_shadow_flags; 
 
 enum
 {

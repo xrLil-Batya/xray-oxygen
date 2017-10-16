@@ -1400,6 +1400,7 @@ struct CCC_DbgBullets : public CCC_Integer {
 		CCC_Integer::Execute	(args);
 	}
 };
+#endif
 
 #include "attachable_item.h"
 #include "attachment_owner.h"
@@ -1445,6 +1446,7 @@ public		:
 	}
 };
 
+#ifdef DEBUG
 class CCC_Crash : public IConsole_Command {
 public:
 	CCC_Crash(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -1723,7 +1725,7 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask,				"hud_crosshair_dist",	&psHUD_Flags,	HUD_CROSSHAIR_DIST);
 
 	CMD4(CCC_Float,				"hud_fov",				&psHUD_FOV,		0.1f,	1.0f);
-	CMD4(CCC_Float,				"fov",					&g_fov,			5.0f,	180.0f);
+	CMD4(CCC_Float,				"fov",					&g_fov,			5.0f,	120.0f);
 
 	// Demo
 #if 1
@@ -1836,11 +1838,11 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 	
 	CMD1(CCC_ShowMonsterInfo,	"ai_monster_info");
 	CMD1(CCC_DebugFonts,		"debug_fonts");
-	CMD1(CCC_TuneAttachableItem,"dbg_adjust_attachable_item");
-
 
 	CMD1(CCC_ShowAnimationStats,"ai_show_animation_stats");
 #endif // DEBUG
+
+	CMD1(CCC_TuneAttachableItem,"dbg_adjust_attachable_item");
 	
 #ifndef MASTER_GOLD
 	CMD3(CCC_Mask,				"ai_ignore_actor",		&psAI_Flags,	aiIgnoreActor);
