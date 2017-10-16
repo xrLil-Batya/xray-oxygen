@@ -19,10 +19,7 @@ namespace Opcode {
 using namespace CDB;
 using namespace Opcode;
 
-bool APIENTRY DllMain(HANDLE hModule,
-	u32  ul_reason_for_call,
-	LPVOID lpReserved
-)
+bool APIENTRY DllMain(HANDLE hModule, u32  ul_reason_for_call, LPVOID lpReserved)
 {
 	switch (ul_reason_for_call)
 	{
@@ -49,9 +46,9 @@ MODEL::~MODEL()
 {
 	syncronize();		// maybe model still in building
 	status = S_INIT;
-	CDELETE(tree);
-	CFREE(tris);		tris_count = 0;
-	CFREE(verts);	verts_count = 0;
+	xr_delete(tree);
+	xr_free(tris);		tris_count = 0;
+	xr_free(verts);	verts_count = 0;
 }
 
 struct	BTHREAD_params
@@ -74,25 +71,30 @@ void	MODEL::build_thread(void *params)
 	std::lock_guard<std::recursive_mutex> lock(P.M->cs);
 	P.M->build_internal(P.V, P.Vcnt, P.T, P.Tcnt, P.BC, P.BCP, P.rebuildTrisRequired);
 	P.M->status = S_READY;
-	//Msg						("* xrCDB: cform build completed, memory usage: %d K",P.M->memory()/1024);
 }
 
 void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
 {
 	R_ASSERT(S_INIT == status);
 	R_ASSERT((Vcnt >= 4) && (Tcnt >= 2));
-
 	_initialize_cpu_thread();
-	if (!strstr(Core.Params, "-mt_cdb"))
+
+	const unsigned cpu_thrd = CPU::ID.n_threads;
+
+	if (cpu_thrd > 1)
 	{
-		build_internal(V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired);
-		status = S_READY;
+		BTHREAD_params P = { this, V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired };
+		thread_spawn(build_thread, "CDB-construction", 0, &P);
+		while (S_INIT == status)
+		{
+			Sleep(5);
+		}
+		Msg("[CDB::build] multithread (%d)", cpu_thrd);
 	}
 	else
 	{
-		BTHREAD_params				P = { this, V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired };
-		thread_spawn(build_thread, "CDB-construction", 0, &P);
-		while (S_INIT == status)	Sleep(5);
+		build_internal(V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired);
+		status = S_READY;
 	}
 }
 
@@ -120,14 +122,10 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
         }
     }
     else
+#endif
     {
         std::memcpy(tris, T, tris_count * sizeof(TRI));
     }
-#else
-
-	std::memcpy(tris, T, tris_count * sizeof(TRI));
-
-#endif
 
 	// callback
 	if (bc)		bc(verts, Vcnt, tris, Tcnt, bcp);
@@ -138,8 +136,8 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	// Allocate temporary "OPCODE" tris + convert tris to 'pointer' form
 	u32*		temp_tris = CALLOC(u32, tris_count * 3);
 	if (!temp_tris) {
-		CFREE(verts);
-		CFREE(tris);
+		xr_free(verts);
+		xr_free(tris);
 		return;
 	}
 	u32*		temp_ptr = temp_tris;
@@ -154,7 +152,7 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	OPCODECREATE	OPCC;
 	OPCC.NbTris = tris_count;
 	OPCC.NbVerts = verts_count;
-	OPCC.Tris = (unsigned*)temp_tris;
+	OPCC.Tris = temp_tris;
 	OPCC.Verts = (Point*)verts;
 	OPCC.Rules = SPLIT_COMPLETE | SPLIT_SPLATTERPOINTS | SPLIT_GEOMCENTER;
 	OPCC.NoLeaf = true;
@@ -162,23 +160,28 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	// if (Memory.debug_mode) OPCC.KeepOriginal = true;
 
 	tree = CNEW(OPCODE_Model) ();
-	if (!tree->Build(OPCC)) {
-		CFREE(verts);
-		CFREE(tris);
-		CFREE(temp_tris);
+	if (!tree->Build(OPCC)) 
+	{
+		xr_free(verts);
+		xr_free(tris);
+		xr_free(temp_tris);
 		return;
 	};
 
 	// Free temporary tris
-	CFREE(temp_tris);
+	xr_free(temp_tris);
 	return;
 }
 
 u32 MODEL::memory()
 {
-	if (S_BUILD == status) { Msg("! xrCDB: model still isn't ready"); return 0; }
-	u32 V = verts_count * sizeof(Fvector);
-	u32 T = tris_count * sizeof(TRI);
+	if (S_BUILD == status)
+	{
+		Msg("! xrCDB: model still isn't ready"); 
+		return 0;
+	}
+	const u32 V = verts_count * sizeof(Fvector);
+	const u32 T = tris_count * sizeof(TRI);
 	return tree->GetUsedBytes() + V + T + sizeof(*this) + sizeof(*tree);
 }
 

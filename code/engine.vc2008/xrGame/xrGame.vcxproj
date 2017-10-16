@@ -3252,7 +3252,6 @@
     <ClCompile Include="game_sv_event_queue.cpp" />
     <ClCompile Include="xr_time.cpp" />
     <ClCompile Include="game_sv_single.cpp" />
-    <ClCompile Include="..\xrServerEntities\gametype_chooser.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Abstract.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Object_Base.cpp" />

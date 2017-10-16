@@ -8816,9 +8816,6 @@
     <ClCompile Include="game_sv_single.cpp">
       <Filter>Core\Server\Games\server\single</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\gametype_chooser.cpp">
-      <Filter>Core\Server\ServerEntities</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp">
       <Filter>Core\Server\ServerEntities</Filter>
     </ClCompile>
