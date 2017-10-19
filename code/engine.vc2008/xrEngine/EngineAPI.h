@@ -42,8 +42,10 @@ public:
 	VTPause*			tune_pause	;
 	VTResume*			tune_resume	;
 	void				Initialize	();
-
-	void				InitializeNotDedicated();
+	
+	#ifndef DEDICATED_SERVER
+		void				InitializeNotDedicated();
+	#endif // DEDICATED_SERVER
 	
 	void				Destroy		();
 

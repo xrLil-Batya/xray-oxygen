@@ -83,7 +83,9 @@ void CRenderDevice::Reset		(bool precache)
 	//	TODO: Remove this! It may hide crash
 	Memory.mem_compact();
 
+#ifndef DEDICATED_SERVER
 	ShowCursor	(FALSE);
+#endif
 		
 	seqDeviceReset.Process(rp_DeviceReset);
 

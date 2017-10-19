@@ -20,6 +20,8 @@
 #include "script_callback_ex.h"
 #include "script_game_object.h"
 
+ENGINE_API	bool	g_dedicated_server;
+
 CUIXml*				pWpnScopeXml = NULL;
 
 void createWpnScopeXML()
@@ -985,9 +987,12 @@ void CWeaponMagazined::InitAddons()
 				xr_delete( m_UIScope );
 			}
 
-			m_UIScope				= xr_new<CUIWindow>();
-			createWpnScopeXML		();
-			CUIXmlInit::InitWindow	(*pWpnScopeXml, scope_tex_name.c_str(), 0, m_UIScope);
+			if ( !g_dedicated_server )
+			{
+				m_UIScope				= xr_new<CUIWindow>();
+				createWpnScopeXML		();
+				CUIXmlInit::InitWindow	(*pWpnScopeXml, scope_tex_name.c_str(), 0, m_UIScope);
+			}
 		}
 	}
 	else
