@@ -243,10 +243,13 @@ void CSector::load		(IReader& fs)
 		u16 ID		= fs.r_u16();
 		CPortal* P	= (CPortal*)RImplementation.getPortal	(ID);
 		m_portals.push_back(P);
-        count--;
-    }
+		count--;
+	}
 
-	// Assign visual
-	size	= fs.find_chunk(fsP_Root);	R_ASSERT(size==4);
-	m_root	= (dxRender_Visual*)RImplementation.getVisual	(fs.r_u32());
+	if	(g_dedicated_server)	m_root	= 0;
+	else {
+		// Assign visual
+		size	= fs.find_chunk(fsP_Root);	R_ASSERT(size==4);
+		m_root	= (dxRender_Visual*)RImplementation.getVisual	(fs.r_u32());
+	}
 }

@@ -125,7 +125,6 @@ protected:
 	
 	virtual IClient*		new_client			(SClientConnectData* cl_data) = 0;
 public:
-    // XXX: Xottab_DUTY: do we need second argument?
 							IPureServer			(CTimer* timer, BOOL Dedicated = FALSE);
 	virtual					~IPureServer		();
 //	HRESULT					net_Handler			(u32 dwMessageType, PVOID pMessage);

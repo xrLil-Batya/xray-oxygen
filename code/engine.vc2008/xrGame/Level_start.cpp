@@ -119,7 +119,8 @@ bool CLevel::net_start1				()
 			
 			map_data.m_name				= game_sv_GameState::parse_level_name(serverOption);
 			
-			g_pGamePersistent->LoadTitle(true, map_data.m_name);
+			if (!g_dedicated_server)
+				g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
 			int							id = pApp->Level_ID(map_data.m_name.c_str(), l_ver.c_str(), true);
 
@@ -148,7 +149,8 @@ bool CLevel::net_start2				()
 		}
 		Server->SLS_Default		();
 		map_data.m_name			= Server->level_name(serverOption);
-		g_pGamePersistent->LoadTitle(true, map_data.m_name);
+		if (!g_dedicated_server)
+			g_pGamePersistent->LoadTitle(true, map_data.m_name);
 	}
 	return true;
 }
@@ -291,8 +293,11 @@ bool CLevel::net_start6				()
 		return true;
 	}
 
-	if (CurrentGameUI())
-		CurrentGameUI()->OnConnected();
+	if	(!g_dedicated_server)
+	{
+		if (CurrentGameUI())
+			CurrentGameUI()->OnConnected();
+	}
 
 	return true;
 }

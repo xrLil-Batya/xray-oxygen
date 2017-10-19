@@ -164,6 +164,7 @@
 #endif // NO_XR_GAME
 
 #ifndef NO_XR_GAME
+	ENGINE_API					bool g_dedicated_server;
 #	define ADD(a,b,c,d)			add<a,b>(c,d)
 #else
 #	define ADD(a,b,c,d)			add<b>(c,d)
@@ -368,8 +369,10 @@ void CObjectFactory::register_classes	()
 	// because we do not have scripts
 	// and script functionality is not
 	// needed here
+	if (!g_dedicated_server)
+		return;
 
-    ADD(CElectricBall			,CSE_ALifeItemArtefact			,TEXT2CLSID("SCRPTART")			,"artefact_s");
+	ADD(CElectricBall			,CSE_ALifeItemArtefact			,TEXT2CLSID("SCRPTART")			,"artefact_s");
 //	ADD(CtaGameArtefact			,CSE_ALifeItemArtefact			,TEXT2CLSID("AF_CTA")			,"ctaartefact_s");
 	ADD(CTorch					,CSE_ALifeItemTorch				,TEXT2CLSID("TORCH_S")			,"device_torch_s");
 	ADD(CStalkerOutfit			,CSE_ALifeItemCustomOutfit		,TEXT2CLSID("E_STLK")			,"equ_stalker_s");

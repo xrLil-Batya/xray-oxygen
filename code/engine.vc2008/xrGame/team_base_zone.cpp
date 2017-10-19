@@ -85,7 +85,8 @@ BOOL CTeamBaseZone::net_Spawn	(CSE_Abstract* DC)
 
 void CTeamBaseZone::net_Destroy			()
 {
-	Level().MapManager().OnObjectDestroyNotify(ID());
+	if(!g_dedicated_server)
+		Level().MapManager().OnObjectDestroyNotify(ID());
 
 	inherited::net_Destroy();
 };

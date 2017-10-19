@@ -168,12 +168,13 @@ void CBulletManager::FireShotmark (SBullet* bullet, const Fvector& vDir, const F
 			//добавить отметку на материале
 			Fvector p;
 			p.mad(bullet->bullet_pos,bullet->dir,R.range-0.01f);
-			::Render->add_SkeletonWallmark	(	&R.O->renderable.xform, 
-												PKinematics(R.O->Visual()), 
-												&*mtl_pair->m_pCollideMarks,
-												p, 
-												bullet->dir, 
-												bullet->wallmark_size);
+			if(!g_dedicated_server)
+				::Render->add_SkeletonWallmark	(	&R.O->renderable.xform, 
+													PKinematics(R.O->Visual()), 
+													&*mtl_pair->m_pCollideMarks,
+													p, 
+													bullet->dir, 
+													bullet->wallmark_size);
 		}
 	} 
 	else 

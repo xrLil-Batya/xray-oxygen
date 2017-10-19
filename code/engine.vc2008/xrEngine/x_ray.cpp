@@ -24,6 +24,8 @@
 #include <process.h>
 #include <locale.h>
 
+#include "xrSash.h"
+
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= nullptr;
@@ -150,7 +152,6 @@ PROTECT_API void InitSettings	()
 PROTECT_API void InitConsole	()
 {
 	Console						= xr_new<CConsole>	();
-
 	Console->Initialize			( );
 
 	xr_strcpy						(Console->ConfigFile,"user.ltx");
@@ -255,10 +256,10 @@ void Startup()
 	}
 
 	// Initialize APP
-
+//#ifndef DEDICATED_SERVER
 	ShowWindow( Device.m_hWnd , SW_SHOWNORMAL );
 	Device.Create				( );
-
+//#endif
 	LALib.OnCreate				( );
 	pApp						= xr_new<CApplication>	();
 	g_pGamePersistent			= (IGame_Persistent*)	NEW_INSTANCE (CLSID_GAME_PERSISTANT);
@@ -284,12 +285,12 @@ void Startup()
 //.	destroySound();
 	destroyInput();
 
-	if( !g_bBenchmark)
+	if(!g_bBenchmark)
 		destroySettings();
 
 	LALib.OnDestroy				( );
 	
-	if( !g_bBenchmark)
+	if(!g_bBenchmark)
 		destroyConsole();
 	else
 		Console->Destroy();
@@ -420,6 +421,7 @@ struct damn_keys_filter {
 
 #include "xr_ioc_cmd.h"
 
+ENGINE_API	bool g_dedicated_server	= false;
 DLL_API int RunXRLauncher();
 DLL_API const char* GetParams();
 
@@ -450,6 +452,9 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 		}
 	}
 
+//	foo();
+#ifndef DEDICATED_SERVER
+
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
 	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
@@ -468,6 +473,9 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 		return 1;
 	}
 #endif
+#else // DEDICATED_SERVER
+	g_dedicated_server			= true;
+#endif // DEDICATED_SERVER
 
 	SetThreadAffinityMask		(GetCurrentThread(),1);
 
@@ -520,9 +528,11 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 			xr_strcpy( Core.CompName , sizeof( Core.CompName ) , "Computer" );
 	}
 
+#ifndef DEDICATED_SERVER
 	{
 		damn_keys_filter		filter;
 		(void)filter;
+#endif // DEDICATED_SERVER
 
 		FPU::m24r				();
 		InitEngine				();
@@ -543,6 +553,7 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 			return 0;
 		}
 
+#ifndef DEDICATED_SERVER
 		if(strstr(Core.Params,"-r2a"))	
 			Console->Execute			("renderer renderer_r2a");
 		else
@@ -554,7 +565,10 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 			pTmp->Execute				(Console->ConfigFile);
 			xr_delete					(pTmp);
 		}
-
+#else
+			Console->Execute			("renderer renderer_r1");
+#endif
+//.		InitInput					( );
 		Engine.External.Initialize	( );
 		Console->Execute			("stat_memory");
 
@@ -576,12 +590,14 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 				temp_wf, &si, &pi);
 
 		}
+#ifndef DEDICATED_SERVER
 #ifdef NO_MULTI_INSTANCES		
 		// Delete application presence mutex
 		CloseHandle( hCheckPresenceMutex );
 #endif
 	}
-	// here damn_keys_filter class instance will be destroyed
+	// here damn_keys_filter class instanse will be destroyed
+#endif // DEDICATED_SERVER
 
 	return						0;
 }
@@ -811,9 +827,11 @@ void CApplication::LoadBegin	()
 #ifdef SPAWN_ANTIFREEZE
 		g_bootComplete		= false;
 #endif
+#ifndef DEDICATED_SERVER
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
 		m_pRender->LoadBegin();
+#endif
 		phase_timer.Start	();
 		load_stage			= 0;
 
@@ -848,7 +866,10 @@ PROTECT_API void CApplication::LoadDraw		()
 
 	if(!Device.Begin () )		return;
 
-	load_draw_internal			();
+	if	(g_dedicated_server)
+		Console->OnRender			();
+	else
+		load_draw_internal			();
 
 	Device.End					();
 }

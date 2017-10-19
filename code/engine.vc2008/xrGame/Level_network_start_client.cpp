@@ -123,12 +123,13 @@ bool CLevel::net_start_client5()
 	{
 		// HUD
 		// Textures
-
-		g_pGamePersistent->LoadTitle		();
-		Device.m_pRender->DeferredLoad		(FALSE);
-		Device.m_pRender->ResourcesDeferredUpload();
-		LL_CheckTextures					();
-
+		if	(!g_dedicated_server)
+		{
+			g_pGamePersistent->LoadTitle		();
+			Device.m_pRender->DeferredLoad		(FALSE);
+			Device.m_pRender->ResourcesDeferredUpload();
+			LL_CheckTextures					();
+		}
 		sended_request_connection_data	= FALSE;
 		deny_m_spawn					= TRUE;
 	}
@@ -148,9 +149,11 @@ bool CLevel::net_start_client6()
 			pApp->LoadEnd(); 
 			return true;
 		}
-
-		g_hud->Load						();
-		g_hud->OnConnected				();
+		if (!g_dedicated_server)
+		{
+			g_hud->Load						();
+			g_hud->OnConnected				();
+		}
 
 		if (game)
 			game->OnConnected();
