@@ -24,8 +24,6 @@
 #include <process.h>
 #include <locale.h>
 
-#include "xrSash.h"
-
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni		= nullptr;
