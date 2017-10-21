@@ -94,6 +94,9 @@ extern float g_separate_radius;
 #include <luabind/functor.hpp>
 #include "script_engine.h"
 #include "ai_space.h"
+#include "script_callback_ex.h"
+#include "script_game_object.h"
+#include "game_object_space.h"
 
 void CLevel::IR_OnKeyboardPress	(int key)
 {
@@ -111,24 +114,23 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 	if(_curr==kPAUSE)
 	{
-		#ifdef INGAME_EDITOR
-			if (Device.editor())	return;
-		#endif // INGAME_EDITOR
+#ifdef INGAME_EDITOR
+			if (Device.editor())	
+				return;
+#endif // INGAME_EDITOR
 
 		if (!g_block_pause && IsDemoPlay())
 		{
-#ifdef DEBUG
-			if(psActorFlags.test(AF_NO_CLIP))
-				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key_no_clip");
-			else
-#endif //DEBUG
 				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key");
 		}
 		return;
 	}
 
-	if(	g_bDisableAllInput )	return;
-
+	if (g_bDisableAllInput)
+	{
+		return;
+	}
+	if (g_actor) Actor()->callback(GameObject::eOnKeyPress)(key, _curr);//+
 	switch ( _curr ) 
 	{
 	case kSCREENSHOT:
@@ -368,6 +370,7 @@ void CLevel::IR_OnKeyboardRelease(int key)
 #endif //DEBUG
 		)				return;
 
+	if (g_actor) Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));//+
 	if (CURRENT_ENTITY())		
 	{
 		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
@@ -407,6 +410,8 @@ void CLevel::IR_OnKeyboardHold(int key)
 	}
 
 #endif // DEBUG
+
+	if (g_actor) Actor()->callback(GameObject::eOnKeyHold)(key, get_binded_action(key));//+
 
 	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardHold(key)) return;
 	if (Device.Paused() && !Level().IsDemoPlay() 
