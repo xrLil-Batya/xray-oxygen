@@ -549,15 +549,17 @@ function actor_binder:check_mutant_hunter_achievement()
 end
 ----------------------------------------------------------------------------------------------------------------------
 -- [[ Key Actions ]] --
-function key_press(key, act)
+local emun_on_console = 0.5 -- mrnmwar
+
+function actor_binder:key_press(key, act)
 -- your code
 end
 
-function key_release(key, act)
+function actor_binder:key_release(key, act)
 -- your code
 end
 
-function key_hold(key, act)
+function actor_binder:key_hold(key, act)
 -- your code
 end
 ----------------------------------------------------------------------------------------------------------------------
