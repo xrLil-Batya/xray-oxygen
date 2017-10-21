@@ -431,32 +431,33 @@ void CLevel::IR_OnMouseStop( int /**axis/**/, int /**value/**/)
 
 void CLevel::IR_OnActivate()
 {
-	if(!pInput) return;
-	int i;
-	for (i = 0; i < CInput::COUNT_KB_BUTTONS; i++ )
+	if (pInput)
 	{
-		if(IR_GetKeyState(i))
+		for (u32 i = 0; i < CInput::COUNT_KB_BUTTONS; i++)
 		{
+			if (IR_GetKeyState(i))
+			{
 
-			EGameActions action = get_binded_action(i);
-			switch (action){
-			case kFWD			:
-			case kBACK			:
-			case kL_STRAFE		:
-			case kR_STRAFE		:
-			case kLEFT			:
-			case kRIGHT			:
-			case kUP			:
-			case kDOWN			:
-			case kCROUCH		:
-			case kACCEL			:
-			case kL_LOOKOUT		:
-			case kR_LOOKOUT		:	
-			case kWPN_FIRE		:
+				EGameActions action = get_binded_action(i);
+				switch (action) {
+				case kFWD:
+				case kBACK:
+				case kL_STRAFE:
+				case kR_STRAFE:
+				case kLEFT:
+				case kRIGHT:
+				case kUP:
+				case kDOWN:
+				case kCROUCH:
+				case kACCEL:
+				case kL_LOOKOUT:
+				case kR_LOOKOUT:
+				case kWPN_FIRE:
 				{
-					IR_OnKeyboardPress	(i);
+					IR_OnKeyboardPress(i);
 				}break;
+				};
 			};
-		};
+		}
 	}
 }

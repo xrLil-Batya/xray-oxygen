@@ -93,7 +93,7 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("take_item_from_box",			int(GameObject::eInvBoxItemTake)),
 				value("weapon_no_ammo",				int(GameObject::eWeaponNoAmmoAvailable)),
 				// Key Actions
-				value("key_holf",					int(GameObject::eOnKeyHold)),
+				value("key_hold",					int(GameObject::eOnKeyHold)),
 				value("key_release",				int(GameObject::eOnKeyRelease)),
 				value("key_press",					int(GameObject::eOnKeyPress)),
 				// End
