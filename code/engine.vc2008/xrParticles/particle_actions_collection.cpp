@@ -624,7 +624,7 @@ void PABounce::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 				if(position.Within(pnext))
 				{
 					// See if we were inside on previous timestep.
-					BOOL pinside = position.Within(m.pos);
+					bool pinside = position.Within(m.pos);
 					
 					// Normal to surface. This works for a sphere. Isn't
 					// computed quite right, should extrapolate particle
@@ -635,7 +635,7 @@ void PABounce::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 					// Compute tangential and normal components of velocity
 					float nmag = m.vel * n;
 					
-					pVector vn(n * nmag); // Normal Vn = (V.N)N
+					const pVector vn(n * nmag); // Normal Vn = (V.N)N
 					pVector vt = m.vel - vn; // Tangent Vt = V - Vn
 					
 					if(pinside)
@@ -649,16 +649,14 @@ void PABounce::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 					}
 					else
 					{
+						const pVector isTempVect = vn * resilience;
 						// Previous position was outside -> particle will cross
 						// surface boundary. Reverse normal component of velocity,
 						// and apply friction (if Vt >= cutoff) and resilience.
 						
 						// Compute new velocity heading out:
 						// Don't apply friction if tangential velocity < cutoff
-						if(vt.length2() <= cutoffSqr)
-							m.vel = vt - vn * resilience;
-						else
-							m.vel = vt * oneMinusFriction - vn * resilience;
+						m.vel = ((vt.length2() <= cutoffSqr) ? vt : (vt * oneMinusFriction)) - isTempVect;
 					}
 				}
 			}
@@ -670,30 +668,17 @@ void PABounce::Transform(const Fmatrix& m)
 	position.transform(positionL,m);
 }
 //-------------------------------------------------------------------------------------------------
-
 // Set the secondary position of each particle to be its position.
 void PACopyVertexB::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
-	u32 i;
-	
 	if(copy_pos)
 	{
-		for(i = 0; i < effect->p_count; i++)
+		for(u32 i = 0; i < effect->p_count; i++)
 		{
 			Particle &m = effect->particles[i];
 			m.posB = m.pos;
 		}
 	}
-/*	
-	if(copy_vel)
-	{
-		for(i = 0; i < effect->p_count; i++)
-		{
-			Particle &m = effect->particles[i];
-			m.velB = m.vel;
-		}
-	}
-*/
 }
 void PACopyVertexB::Transform(const Fmatrix&){;}
 //-------------------------------------------------------------------------------------------------
@@ -945,9 +930,6 @@ void PAScatter::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 			{
 				pVector accel;
                 accel = dir/_sqrt(rSqr);
-                
-//				acc.Generate(accel);
-				
 				// Step velocity with acceleration
 				m.vel += accel * (magdt / (rSqr + epsilon));
 			}
@@ -1199,7 +1181,6 @@ void PARandomAccel::Transform(const Fmatrix& m)
 	gen_acc.transform_dir(gen_accL,m);
 }
 //-------------------------------------------------------------------------------------------------
-
 // Immediately displace position randomly
 void PARandomDisplace::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
@@ -1237,25 +1218,12 @@ void PARandomVelocity::Execute(ParticleEffect *effect, const float dt, float& tm
 		m.vel = velocity;
 	}
 }
+
 void PARandomVelocity::Transform(const Fmatrix& m)
 {
 	gen_vel.transform_dir(gen_velL,m);
 }
 //-------------------------------------------------------------------------------------------------
-
-#if 0
-// Produce coefficients of a velocity function v(t)=at^2 + bt + c
-// satisfying initial x(0)=x0,v(0)=v0 and desired x(t)=xf,v(t)=vf,
-// where x = x(0) + integrate(v(T),0,t)
-static inline void _pconstrain(float x0, float v0, float xf, float vf,
-							   float t, float *a, float *b, float *c)
-{
-	*c = v0;
-	*b = 2 * (-t*vf - 2*t*v0 + 3*xf - 3*x0) / (t * t);
-	*a = 3 * (t*vf + t*v0 - 2*xf + 2*x0) / (t * t * t);
-}
-#endif
-
 // Over time, restore particles to initial positions
 // Put all particles on the surface of a statue, explode the statue,
 // and then suck the particles back to the original position. Cool!
@@ -1281,7 +1249,6 @@ void PARestore::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 		
 		for(u32 i = 0; i < effect->p_count; i++)
 		{
-#if 1
 			Particle &m = effect->particles[i];
 			
 			// Solve for a desired-behavior velocity function in each axis
@@ -1307,32 +1274,6 @@ void PARestore::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 			
 			// Figure new velocity at next timestep
 			m.vel.z += a + b;
-#else
-			Particle &m = effect->particles[i];
-			
-			// XXX Optimize this.
-			// Solve for a desired-behavior velocity function in each axis
-			float a, b, c; // Coefficients of velocity function needed
-			
-			_pconstrain(m.pos.x, m.vel.x, m.posB.x, 0.,
-				timeLeft, &a, &b, &c);
-			
-			// Figure new velocity at next timestep
-			m.vel.x = a * dtSqr + b * dt + c;
-			
-			_pconstrain(m.pos.y, m.vel.y, m.posB.y, 0.,
-				timeLeft, &a, &b, &c);
-			
-			// Figure new velocity at next timestep
-			m.vel.y = a * dtSqr + b * dt + c;
-			
-			_pconstrain(m.pos.z, m.vel.z, m.posB.z, 0.,
-				timeLeft, &a, &b, &c);
-			
-			// Figure new velocity at next timestep
-			m.vel.z = a * dtSqr + b * dt + c;
-			
-#endif
 		}
 	}
 	
@@ -1354,12 +1295,12 @@ void PASink::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 			effect->Remove(i);
 	}
 }
+
 void PASink::Transform(const Fmatrix& m)
 {
 	position.transform(positionL,m);
 }
 //-------------------------------------------------------------------------------------------------
-
 // Kill particles with velocities on wrong side of the specified domain
 void PASinkVelocity::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
@@ -1373,60 +1314,63 @@ void PASinkVelocity::Execute(ParticleEffect *effect, const float dt, float& tm_m
 			effect->Remove(i);
 	}
 }
+
 void PASinkVelocity::Transform(const Fmatrix& m)
 {
 	velocity.transform_dir(velocityL,m);
 }
 //-------------------------------------------------------------------------------------------------
-
 // Randomly add particles to the system
 void PASource::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
 	if (m_Flags.is(flSilent)) return;
 
 	int rate = int(floor(particle_rate * dt));
-	
+
 	// Dither the fraction particle in time.
-	if(drand48() < particle_rate * dt - float(rate))
+	if (drand48() < particle_rate * dt - float(rate))
 		rate++;
-	
+
 	// Don't emit more than it can hold.
-	if(effect->p_count + rate > effect->max_particles)
+	if (effect->p_count + rate > effect->max_particles)
 		rate = effect->max_particles - effect->p_count;
-	
+
 	pVector pos, posB, vel, col, siz, rt;
-	
-	if(m_Flags.is(u32(flVertexB_tracks))){
-		for(int i = 0; i < rate; i++){
-			position.Generate	(pos);
-			size.Generate		(siz); 	if (m_Flags.is(flSingleSize)) siz.set(siz.x,siz.x,siz.x);
-			rot.Generate		(rt);
-			velocity.Generate	(vel);	vel += parent_vel;
-			color.Generate		(col);
-			float ag 			= age + NRand(age_sigma);
 
-			effect->Add			(pos, pos, siz, rt, vel, color_argb_f(alpha, col.x, col.y, col.z), ag);
+	if (m_Flags.is(u32(flVertexB_tracks))) {
+		for (int i = 0; i < rate; i++) {
+			position.Generate(pos);
+			size.Generate(siz); 	if (m_Flags.is(flSingleSize)) siz.set(siz.x, siz.x, siz.x);
+			rot.Generate(rt);
+			velocity.Generate(vel);	vel += parent_vel;
+			color.Generate(col);
+			float ag = age + NRand(age_sigma);
+
+			effect->Add(pos, pos, siz, rt, vel, color_argb_f(alpha, col.x, col.y, col.z), ag);
 		}
-	}else{
-		for(int i = 0; i < rate; i++){
-			position.Generate	(pos);
-			size.Generate		(siz); 	if (m_Flags.is(flSingleSize)) siz.set(siz.x,siz.x,siz.x);
-			rot.Generate		(rt);
-			velocity.Generate	(vel);	vel += parent_vel;
-			color.Generate		(col);
-			float ag 			= age + NRand(age_sigma);
+	}
+	else 
+	{
+		for (int i = 0; i < rate; i++) 
+		{
+			position.Generate(pos);
+			size.Generate(siz); 	if (m_Flags.is(flSingleSize)) siz.set(siz.x, siz.x, siz.x);
+			rot.Generate(rt);
+			velocity.Generate(vel);	vel += parent_vel;
+			color.Generate(col);
+			float ag = age + NRand(age_sigma);
 
-			effect->Add			(pos, posB, siz, rt, vel, color_argb_f(alpha, col.x, col.y, col.z), ag);
+			effect->Add(pos, posB, siz, rt, vel, color_argb_f(alpha, col.x, col.y, col.z), ag);
 		}
 	}
 }
+
 void PASource::Transform(const Fmatrix& m)
 {
 	position.transform(positionL,m);
 	velocity.transform_dir(velocityL,m);
 }
 //-------------------------------------------------------------------------------------------------
-
 void PASpeedLimit::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
 	float min_sqr = min_speed*min_speed;
@@ -1448,9 +1392,9 @@ void PASpeedLimit::Execute(ParticleEffect *effect, const float dt, float& tm_max
 		}
 	}
 }
+
 void PASpeedLimit::Transform(const Fmatrix&){;}
 //-------------------------------------------------------------------------------------------------
-
 // Change color of all particles toward the specified color
 void PATargetColor::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
@@ -1467,9 +1411,9 @@ void PATargetColor::Execute(ParticleEffect *effect, const float dt, float& tm_ma
         m.color = c_t.get();
 	}
 }
+
 void PATargetColor::Transform(const Fmatrix&){;}
 //-------------------------------------------------------------------------------------------------
-
 // Change sizes of all particles toward the specified size
 void PATargetSize::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
@@ -1487,9 +1431,9 @@ void PATargetSize::Execute(ParticleEffect *effect, const float dt, float& tm_max
 		m.size += dif;
 	}
 }
+
 void PATargetSize::Transform(const Fmatrix&){;}
 //-------------------------------------------------------------------------------------------------
-
 // Change rotation of all particles toward the specified velocity
 void PATargetRotate::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
@@ -1505,9 +1449,9 @@ void PATargetRotate::Execute(ParticleEffect *effect, const float dt, float& tm_m
 		m.rot.x	+= dif;
 	}
 }
+
 void PATargetRotate::Transform(const Fmatrix&){;}
 //-------------------------------------------------------------------------------------------------
-
 // Change velocity of all particles toward the specified velocity
 void PATargetVelocity::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
@@ -1519,6 +1463,7 @@ void PATargetVelocity::Execute(ParticleEffect *effect, const float dt, float& tm
 		m.vel += (velocity - m.vel) * scaleFac;
 	}
 }
+
 void PATargetVelocity::Transform(const Fmatrix& m)
 {
 	m.transform_dir(velocity,velocityL);
@@ -1618,21 +1563,20 @@ void PAVortex::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 		}
 	}
 }
+
 void PAVortex::Transform(const Fmatrix& m)
 {
 	m.transform_tiny(center,centerL);
 	m.transform_dir(axis,axisL);
 }
 //-------------------------------------------------------------------------------------------------
-
 // Turbulence
 #include "noise.h"
 
 static int	noise_start = 1;
 extern void	noise3Init();
 
-#ifndef _EDITOR
-
+#ifndef DEBUG
 #include <xmmintrin.h>
 #include "../xrCPU_Pipe/ttapi.h"
 #pragma comment(lib,"xrCPU_Pipe.lib")
@@ -1678,13 +1622,12 @@ struct TES_PARAMS {
 
 void PATurbulenceExecuteStream( LPVOID lpvParams )
 {
-	#ifdef _GPA_ENABLED	
-		TAL_SCOPED_TASK_NAMED( "PATurbulenceExecuteStream()" );
+#ifdef _GPA_ENABLED	
+	TAL_SCOPED_TASK_NAMED( "PATurbulenceExecuteStream()");
 
-		TAL_ID rtID = TAL_MakeID( 1 , Core.dwFrame , 0);	
-		TAL_AddRelationThis(TAL_RELATION_IS_CHILD_OF, rtID);
-	#endif // _GPA_ENABLED
-
+	TAL_ID rtID = TAL_MakeID( 1 , Core.dwFrame , 0);	
+	TAL_AddRelationThis(TAL_RELATION_IS_CHILD_OF, rtID);
+#endif // _GPA_ENABLED
 
 	pVector pV;
     pVector vX;
@@ -1758,41 +1701,38 @@ void PATurbulenceExecuteStream( LPVOID lpvParams )
 
 void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
-	#ifdef _GPA_ENABLED	
-		TAL_SCOPED_TASK_NAMED( "PATurbulence::Execute()" );
-	#endif // _GPA_ENABLED
+#ifdef _GPA_ENABLED	
+	TAL_SCOPED_TASK_NAMED("PATurbulence::Execute()");
+#endif // _GPA_ENABLED
 
-	if ( noise_start ) {
+	if (noise_start) {
 		noise_start = 0;
 		noise3Init();
 	};
 
-    age		+= dt;
+	age += dt;
 
 	u32 p_cnt = effect->p_count;
 
-	if ( ! p_cnt )
+	if (!p_cnt)
 		return;
 
 	u32 nWorkers = (u32)ttapi_GetWorkersCount();
 
-	if ( p_cnt < nWorkers * 20 )
+	if (p_cnt < nWorkers * 20)
 		nWorkers = 1;
 
-	TES_PARAMS* tesParams = (TES_PARAMS*) _alloca( sizeof(TES_PARAMS) * nWorkers );
+	TES_PARAMS* tesParams = (TES_PARAMS*)_alloca(sizeof(TES_PARAMS) * nWorkers);
 
 	// Give ~1% more for the last worker
 	// to minimize wait in final spin
-	u32 nSlice = p_cnt / 128; 
+	u32 nSlice = p_cnt / 128;
 
-	u32 nStep = ( ( p_cnt - nSlice ) / nWorkers );
-	//u32 nStep = ( p_cnt / nWorkers );
+	u32 nStep = ((p_cnt - nSlice) / nWorkers);
 
-	//Msg( "Trb: %u" , nStep );
-
-	for ( u32 i = 0 ; i < nWorkers ; ++i ) {
+	for (u32 i = 0; i < nWorkers; ++i) {
 		tesParams[i].p_from = i * nStep;
-		tesParams[i].p_to = ( i == ( nWorkers - 1 ) ) ? p_cnt : ( tesParams[i].p_from + nStep );
+		tesParams[i].p_to = (i == (nWorkers - 1)) ? p_cnt : (tesParams[i].p_from + nStep);
 
 		tesParams[i].effect = effect;
 		tesParams[i].offset = offset;
@@ -1802,11 +1742,9 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 		tesParams[i].octaves = octaves;
 		tesParams[i].magnitude = magnitude;
 
-		ttapi_AddWorker( PATurbulenceExecuteStream , (LPVOID) &tesParams[i] );
+		ttapi_AddWorker(PATurbulenceExecuteStream, (LPVOID)&tesParams[i]);
 	}
-
 	ttapi_RunAllWorkers();
-
 }
 
 #else
@@ -1846,7 +1784,6 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 	}
 }
 #endif
-
 
 void PATurbulence::Transform(const Fmatrix& m){}
 //-------------------------------------------------------------------------------------------------

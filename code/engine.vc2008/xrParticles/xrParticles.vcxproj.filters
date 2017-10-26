@@ -53,5 +53,6 @@
     <ClCompile Include="particle_manager.cpp">
       <Filter>PAPI</Filter>
     </ClCompile>
+    <ClCompile Include="peffects.cpp" />
   </ItemGroup>
 </Project>
