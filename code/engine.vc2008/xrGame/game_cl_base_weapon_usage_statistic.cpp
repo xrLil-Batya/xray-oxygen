@@ -21,12 +21,11 @@ BulletData::BulletData(shared_str FName, shared_str WName, SBullet* pBullet)
 };
 
 u32 const HitData::net_packet_size = (3*2*sizeof(float) + 1 + 2 + 1 + 1);
-void			HitData::net_save	(NET_Packet* P, victims_table const & vt, bone_table const & bt)
+void HitData::net_save(NET_Packet* P, victims_table const & vt, bone_table const & bt)
 {
 	P->w_vec3(Pos0);
 	P->w_vec3(Pos1);
 	P->w_u8(vt.get_id_by_name(TargetName)); //P->w_stringZ(TargetName);
-	//P->w_stringZ(BoneName);
 	P->w_s16(BoneID);
 	P->w_u8(Deadly ? 1 : 0);
 	P->w_u8(count);
@@ -592,7 +591,7 @@ void WeaponUsageStatistic::OnBullet_Remove(SBullet* pBullet)
 
 void WeaponUsageStatistic::OnBullet_Check_Request(SHit* pHDS)
 {
-	if (!pHDS || OnClient()) return;
+	if (!pHDS) return;
 	s16 BoneID = pHDS->bone();
 	u32 BulletID = pHDS->BulletID;
 	u32 SenderID = pHDS->SenderID;
@@ -612,7 +611,6 @@ void WeaponUsageStatistic::OnBullet_Check_Request(SHit* pHDS)
 
 void WeaponUsageStatistic::OnBullet_Check_Result(bool Result)
 {
-	if (OnClient()) return;
 	if (m_dwLastRequestSenderID)
 	{
         auto pSenderI	= std::find(m_Requests.begin(), m_Requests.end(), m_dwLastRequestSenderID);
@@ -625,8 +623,7 @@ void WeaponUsageStatistic::OnBullet_Check_Result(bool Result)
 		}
 		else
 		{
-			Msg ("! Warning can't Find Check!");
-			R_ASSERT(0);
+			R_ASSERT2(false, "! Warning can't Find Check!");
 		}
 		m_dwLastRequestSenderID = 0;
 	}
@@ -634,7 +631,6 @@ void WeaponUsageStatistic::OnBullet_Check_Result(bool Result)
 
 void WeaponUsageStatistic::Send_Check_Respond()
 {
-	if (!OnServer()) return;
 	NET_Packet P;
 	string1024 STrue, SFalse;
 	for (u32 i=0; i<m_Requests.size(); i++)
@@ -797,10 +793,8 @@ void WeaponUsageStatistic::OnPlayerKillPlayer(game_PlayerState* ps, KILL_TYPE Ki
 
 void WeaponUsageStatistic::OnExplosionKill(game_PlayerState* ps, const SHit& hit)
 {
-	
 	if (!CollectData())							return;
 	if (!ps)									return;
-	if (!OnServer())							return;
 	
     std::lock_guard<decltype(m_mutex)> syncg(m_mutex);
 
@@ -884,9 +878,6 @@ void WeaponUsageStatistic::OnPlayerKilled(game_PlayerState* ps)
 
 void WeaponUsageStatistic::SVUpdateAliveTimes()
 {
-	if (!OnServer())
-		return;
-
 	class alive_time_updator
 	{
 		WeaponUsageStatistic & owner;
@@ -935,7 +926,6 @@ void WeaponUsageStatistic::Update()
 {
 	if (!CollectData())							return;
 	SVUpdateAliveTimes();		//update client alive time and servers total alive times
-	if (!OnServer())							return;
 	if (Level().timeServer() > (m_dwLastUpdateTime + m_dwUpdateTimeDelta))
 	{
 		//---------------------------------------------

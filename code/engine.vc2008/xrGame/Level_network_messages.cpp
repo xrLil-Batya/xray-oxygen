@@ -5,7 +5,6 @@
 #include "xrmessages.h"
 #include "game_cl_base.h"
 #include "net_queue.h"
-//#include "Physics.h"
 #include "xrServer.h"
 #include "Actor.h"
 #include "Artefact.h"
@@ -124,7 +123,6 @@ void CLevel::ClientReceive()
 			{
 				Objects.net_Import		(P);
 
-				if (OnClient()) UpdateDeltaUpd(timeServer());
 				IClientStatistic pStat = Level().GetStatistic();
 				u32 dTime = 0;
 				
@@ -145,12 +143,6 @@ void CLevel::ClientReceive()
 			}break;
 		case M_CL_UPDATE:
 			{
-				/*if (!game_configured)
-				{
-					Msg("! WARNING: ignoring game event [%d] - game not configured...", m_type);
-					break;
-				}*/
-				if (OnClient()) break;
 				P->r_u16		(ID);
 				u32 Ping = P->r_u32();
 				CGameObject*	O	= smart_cast<CGameObject*>(Objects.net_Find		(ID));
@@ -290,44 +282,33 @@ void CLevel::ClientReceive()
 		case M_CHANGE_LEVEL_GAME:
 			{
 				Msg("- M_CHANGE_LEVEL_GAME Received");
+				
+                shared_str serverOption = GamePersistent().GetServerOption();
+				const char* m_SO = serverOption.c_str();
+				m_SO = strchr(m_SO, '/'); if (m_SO) m_SO++;
+				m_SO = strchr(m_SO, '/'); 
 
-				if (OnClient())
+				shared_str LevelName;
+				shared_str LevelVersion;
+				shared_str GameType;
+
+				P->r_stringZ(LevelName);
+				P->r_stringZ(LevelVersion);
+				P->r_stringZ(GameType);
+
+				string4096 NewServerOptions = "";
+				xr_sprintf(NewServerOptions, "%s/%s/%s%s", LevelName.c_str(), GameType.c_str(), map_ver_string, LevelVersion.c_str());
+
+				if (m_SO)
 				{
-					MakeReconnect();
-				}
-				else
-				{
-                    shared_str serverOption = GamePersistent().GetServerOption();
-					const char* m_SO = serverOption.c_str();
-					m_SO = strchr(m_SO, '/'); if (m_SO) m_SO++;
-					m_SO = strchr(m_SO, '/'); 
-
-					shared_str LevelName;
-					shared_str LevelVersion;
-					shared_str GameType;
-
-					P->r_stringZ(LevelName);
-					P->r_stringZ(LevelVersion);
-					P->r_stringZ(GameType);
-
-					string4096 NewServerOptions = "";
-					xr_sprintf(NewServerOptions, "%s/%s/%s%s",
-						LevelName.c_str(),
-						GameType.c_str(),
-						map_ver_string,
-						LevelVersion.c_str()
+					string4096 additional_options;
+					xr_strcat(NewServerOptions, sizeof(NewServerOptions),
+						remove_version_option(m_SO, additional_options, sizeof(additional_options))
 					);
-
-					if (m_SO)
-					{
-						string4096 additional_options;
-						xr_strcat(NewServerOptions, sizeof(NewServerOptions),
-							remove_version_option(m_SO, additional_options, sizeof(additional_options))
-						);
-					}
-                    GamePersistent().SetServerOption(NewServerOptions);
-					MakeReconnect();
-				};
+				}
+                GamePersistent().SetServerOption(NewServerOptions);
+				MakeReconnect();
+			
 			}break;
 		case M_CHANGE_SELF_NAME:
 			{

@@ -225,11 +225,6 @@ bool CLevel::net_start5				()
 		NP.w_begin		(M_CLIENTREADY);
 		Game().local_player->net_Export(NP, TRUE);
 		Send			(NP,net_flags(TRUE,TRUE));
-
-		if (OnClient() && Server)
-		{
-			Server->SLS_Clear();
-		};
 	};
 	return true;
 }
@@ -293,11 +288,8 @@ bool CLevel::net_start6				()
 		return true;
 	}
 
-	if	(!g_dedicated_server)
-	{
-		if (CurrentGameUI())
-			CurrentGameUI()->OnConnected();
-	}
+	if (CurrentGameUI())
+		CurrentGameUI()->OnConnected();
 
 	return true;
 }
@@ -310,9 +302,6 @@ void CLevel::InitializeClientGame	(NET_Packet& P)
 		return;
 	
 	xr_delete(game);
-#ifdef DEBUG
-	Msg("- Game configuring : Started ");
-#endif // #ifdef DEBUG
 	CLASS_ID clsid			= game_GameState::getCLASS_ID(game_type_name,false);
 	game					= smart_cast<game_cl_GameState*> ( NEW_INSTANCE ( clsid ) );
 	game->set_type_name		(game_type_name);

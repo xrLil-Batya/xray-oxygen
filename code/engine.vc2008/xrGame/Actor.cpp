@@ -588,41 +588,36 @@ void CActor::Die(CObject* who)
 {
 	inherited::Die(who);
 
-	if (OnServer())
+	u16 I = inventory().FirstSlot();
+	u16 E = inventory().LastSlot();
+
+	for (; I <= E; ++I)
 	{
-		u16 I = inventory().FirstSlot();
-		u16 E = inventory().LastSlot();
-
-		for (; I <= E; ++I)
+		PIItem item_in_slot = inventory().ItemFromSlot(I);
+		if (I == inventory().GetActiveSlot())
 		{
-			PIItem item_in_slot = inventory().ItemFromSlot(I);
-			if (I == inventory().GetActiveSlot())
-			{
-				if (item_in_slot)
-				{
-					CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
-					if (grenade)
-						grenade->DropGrenade();
-					else
-						item_in_slot->SetDropManual(TRUE);
-				};
-				continue;
-			}
-			else
-			{
-				CCustomOutfit *pOutfit = smart_cast<CCustomOutfit *> (item_in_slot);
-				if (pOutfit) continue;
-			};
 			if (item_in_slot)
-				inventory().Ruck(item_in_slot);
+			{
+				CGrenade* grenade = smart_cast<CGrenade*>(item_in_slot);
+				if (grenade)
+					grenade->DropGrenade();
+				else
+					item_in_slot->SetDropManual(TRUE);
+			};
+			continue;
+		}
+		else
+		{
+			CCustomOutfit *pOutfit = smart_cast<CCustomOutfit *> (item_in_slot);
+			if (pOutfit) continue;
 		};
-
-
-		///!!! ������ �����
-		TIItemContainer &l_blist = inventory().m_belt;
-		while (!l_blist.empty())
-			inventory().Ruck(l_blist.front());
+		if (item_in_slot)
+			inventory().Ruck(item_in_slot);
 	};
+
+	TIItemContainer &l_blist = inventory().m_belt;
+	while (!l_blist.empty())
+		inventory().Ruck(l_blist.front());
 
 	if (!g_dedicated_server)
 	{
@@ -913,8 +908,7 @@ void CActor::set_state_box(u32	mstate)
 }
 void CActor::shedule_Update	(u32 DT)
 {
-	setSVU							(OnServer());
-//.	UpdateInventoryOwner			(DT);
+	setSVU							(true);
 
 	if(IsFocused())
 	{

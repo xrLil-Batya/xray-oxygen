@@ -275,9 +275,6 @@ public:
 		if (id1 < EPS_L)
 			Msg("Invalid time factor! (%.4f)",id1);
 		else {
-			if (!OnServer())
-				return;
-
 			Level().SetGameTimeFactor(id1);
 		}
 	}
@@ -293,13 +290,11 @@ public:
 	}
 	virtual void	Info	(TInfo& I)
 	{	
-		if (!OnServer())	return;
 		float v = Level().GetGameTimeFactor();
 		xr_sprintf(I,sizeof(I)," value = %3.5f", v);
 	}
 	virtual void	fill_tips(vecTips& tips, u32 mode)
 	{
-		if (!OnServer())	return;
 		float v = Level().GetGameTimeFactor();
 
 		TStatus  str;

@@ -14,12 +14,12 @@
 
 game_cl_GameState::game_cl_GameState()
 {
-	local_player				= createPlayerState(NULL);	//initializing account info
-	m_WeaponUsageStatistic		= NULL;
+	local_player				= createPlayerState(0);	//initializing account info
+	m_WeaponUsageStatistic		= nullptr;
 
 	shedule.t_min				= 5;
 	shedule.t_max				= 20;
-	m_game_ui_custom			= NULL;
+	m_game_ui_custom			= nullptr;
 	shedule_register			();
 
 	m_u16VotingEnabled			= 0;
@@ -85,9 +85,6 @@ struct not_exsiting_clients_deleter
 
 		if ( *local_player == value.second )
 			return false;
-// 			*local_player	=	NULL;
-// 			*client_id		=	0;
-// 		}
 
 		xr_delete(value.second);
 		return true;
@@ -405,14 +402,9 @@ void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)
 	u_EventSend		(P);
 };
 
-void game_cl_GameState::set_type_name(LPCSTR s)	
-{ 
-	if(OnClient())
-	{
-		xr_strcpy(g_pGamePersistent->m_game_params.m_game_type, "single");
-		g_pGamePersistent->OnGameStart();
-	}
-};
+void game_cl_GameState::set_type_name(LPCSTR)	
+{
+}
 
 void game_cl_GameState::OnConnected()
 {

@@ -36,22 +36,14 @@ bool CLevel::IsChecksumsEqual(u32 check_sum) const
 
 bool CLevel::synchronize_map_data()
 {
-	if (!OnClient() && !IsDemoSave())
+	if (!IsDemoSave())
 	{
 		deny_m_spawn		= FALSE;
 		map_data.m_map_sync_received	= true;
 		return synchronize_client();
 	}
-
-#ifndef MASTER_GOLD
-	Msg					("* synchronizing map data...");
-#endif // #ifndef MASTER_GOLD
-
 	map_data.CheckToSendMapSync	();
 
-#ifdef DEBUG
-	Msg("--- Waiting for server map name...");
-#endif // #ifdef DEBUG
 	ClientReceive(); 
 
 	if ((map_data.m_wait_map_time >= 1000) && (!map_data.m_map_sync_received) && !IsDemoPlay())//about 5 seconds
@@ -101,9 +93,7 @@ bool	CLevel::synchronize_client()
 		deny_m_spawn = FALSE;
 		return true;
 	}
-#ifdef DEBUG
-	Msg("--- Waiting for server configuration...");
-#endif // #ifdef DEBUG
+
 	if(Server)
 	{
 		ClientReceive();

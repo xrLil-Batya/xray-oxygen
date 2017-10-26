@@ -30,19 +30,15 @@ extern bool	g_b_ClearGameCaptions;
 
 void CLevel::remove_objects	()
 {
-	BOOL						b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
+	bool b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
 	
 	int loop = 5;
 	while(loop)
 	{
-		if (OnServer()) 
-		{
-			R_ASSERT				(Server);
-			Server->SLS_Clear		();
-		}
+		R_ASSERT				(Server);
+		Server->SLS_Clear		();
 
-		if (OnClient())
-			ClearAllObjects			();
+		ClearAllObjects			();
 
 		for (int i=0; i<20; ++i) 
 		{
@@ -55,19 +51,15 @@ void CLevel::remove_objects	()
 			ClientReceive			();
 			ProcessGameEvents		();
 			Objects.Update			(false);
-			#ifdef DEBUG
-			Msg						("Update objects list...");
-			#endif // #ifdef DEBUG
 			Objects.dump_all_objects();
 		}
 
-		if(Objects.o_count()==0)
-			break;
-		else
+		if(Objects.o_count())
 		{
 			--loop;
 			Msg						("Objects removal next loop. Active objects count=%d", Objects.o_count());
 		}
+		else break;
 
 	}
 
@@ -273,7 +265,7 @@ void CLevel::net_Update()
 		Device.Statistic->netClient2.End		();
 	}
 	// If server - perform server-update
-	if (Server && OnServer())	{
+	if (Server)	{
 		Device.Statistic->netServer.Begin();
 		Server->Update					();
 		Device.Statistic->netServer.End	();

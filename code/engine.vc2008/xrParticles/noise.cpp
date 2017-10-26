@@ -21,7 +21,6 @@ __forceinline int iFloor_SSE( float const x )
 #define S_CURVE(t)		( t*t*(3.f-2.f*t) )
 #define LERP(t, a, b)	( a + t*(b-a) )
 
-#ifndef _EDITOR
   #define PN_SETUP(i,b0,b1,r0,r1) \
       t = vec[i] + 10000.f;\
       tt = iFloor_SSE(t); \
@@ -29,16 +28,6 @@ __forceinline int iFloor_SSE( float const x )
       b1 = (b0+1) & (B-1);\
       r0 = t - float(tt);\
       r1 = r0 - 1.f;
-#else
-
-  #define PN_SETUP(i,b0,b1,r0,r1) \
-      t = vec[i] + 10000.f;\
-      b0 = iFloor(t) & (B-1);\
-      b1 = (b0+1) & (B-1);\
-      r0 = t - iFloor(t);\
-      r1 = r0 - 1.f;
-
-#endif
 
 static int 		p[B+B+2];
 static float	g[B+B+2][3];

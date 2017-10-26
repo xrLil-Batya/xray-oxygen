@@ -47,32 +47,29 @@ CPHDestroyable::CPHDestroyable()
 	m_depended_objects=0;
 }
 /////////spawn object representing destroyed item//////////////////////////////////////////////////////////////////////////////////
-void CPHDestroyable::GenSpawnReplace(u16 ref_id,LPCSTR section,shared_str visual_name)
+void CPHDestroyable::GenSpawnReplace(u16 ref_id, LPCSTR section, shared_str visual_name)
 {
 
-	CSE_Abstract				*D	= F_entity_Create(section);//*cNameSect()
-	VERIFY						(D);
-	CSE_Visual					*V  =smart_cast<CSE_Visual*>(D);
-	V->set_visual				(*visual_name);
+	CSE_Abstract				*D = F_entity_Create(section);//*cNameSect()
+	VERIFY(D);
+	CSE_Visual					*V = smart_cast<CSE_Visual*>(D);
+	V->set_visual(*visual_name);
 	CSE_PHSkeleton				*l_tpPHSkeleton = smart_cast<CSE_PHSkeleton*>(D);
-	VERIFY						(l_tpPHSkeleton);
-	l_tpPHSkeleton->source_id	= ref_id;
+	VERIFY(l_tpPHSkeleton);
+	l_tpPHSkeleton->source_id = ref_id;
 	//init
 
 	// Send
-	D->s_name			= section;//*cNameSect()
-	D->ID_Parent		= u16(-1);
-	InitServerObject	(D);
-	if (OnServer())
-	{
-		NET_Packet			P;
-		D->Spawn_Write		(P,TRUE);
-		Level().Send		(P,net_flags(TRUE));
-		// Destroy
-		F_entity_Destroy	(D);
-		m_depended_objects++;
-	};
-};
+	D->s_name = section;//*cNameSect()
+	D->ID_Parent = u16(-1);
+	InitServerObject(D);
+	NET_Packet			P;
+	D->Spawn_Write(P, TRUE);
+	Level().Send(P, net_flags(TRUE));
+	// Destroy
+	F_entity_Destroy(D);
+	m_depended_objects++;
+}
 
 void CPHDestroyable::InitServerObject(CSE_Abstract* D)
 {

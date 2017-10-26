@@ -344,35 +344,16 @@ void CUIActorMenu::AttachAddon(PIItem item_to_upgrade)
 {
 	PlaySnd										(eAttachAddon);
 	R_ASSERT									(item_to_upgrade);
-	if (OnClient())
-	{
-		NET_Packet								P;
-		CGameObject::u_EventGen					(P, GE_ADDON_ATTACH, item_to_upgrade->object().ID());
-		P.w_u16									(CurrentIItem()->object().ID());
-		CGameObject::u_EventSend				(P);
-	};
-
 	item_to_upgrade->Attach						(CurrentIItem(), true);
 
-	SetCurrentItem								(NULL);
+	SetCurrentItem								(0);
 }
 
 void CUIActorMenu::DetachAddon(LPCSTR addon_name, PIItem itm)
 {
 	PlaySnd										(eDetachAddon);
-	if (OnClient())
-	{
-		NET_Packet								P;
-		if(itm==NULL)
-			CGameObject::u_EventGen				(P, GE_ADDON_DETACH, CurrentIItem()->object().ID());
-		else
-			CGameObject::u_EventGen				(P, GE_ADDON_DETACH, itm->object().ID());
 
-		P.w_stringZ								(addon_name);
-		CGameObject::u_EventSend				(P);
-		return;
-	}
-	if(itm==NULL)
+	if(!itm)
 		CurrentIItem()->Detach					(addon_name, true);
 	else
 		itm->Detach								(addon_name, true);
@@ -1007,31 +988,31 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 	}
 }
 
-void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
+void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
-	CMedkit*		pMedkit			= smart_cast<CMedkit*>		(item);
-	CAntirad*		pAntirad		= smart_cast<CAntirad*>		(item);
-	CEatableItem*	pEatableItem	= smart_cast<CEatableItem*>	(item);
-	CBottleItem*	pBottleItem		= smart_cast<CBottleItem*>	(item);
+	CMedkit*		pMedkit = smart_cast<CMedkit*>		(item);
+	CAntirad*		pAntirad = smart_cast<CAntirad*>		(item);
+	CEatableItem*	pEatableItem = smart_cast<CEatableItem*>	(item);
+	CBottleItem*	pBottleItem = smart_cast<CBottleItem*>	(item);
 
-	LPCSTR act_str = NULL;
-	if ( pMedkit || pAntirad )
+	const char* act_str = nullptr;
+	if (pMedkit || pAntirad)
 	{
 		act_str = "st_use";
 	}
-	else if ( pBottleItem )
+	else if (pBottleItem)
 	{
 		act_str = "st_drink";
 	}
-	else if ( pEatableItem )
+	else if (pEatableItem)
 	{
-		CObject*	pObj			= smart_cast<CObject*>		(item);
-		shared_str	section_name	= pObj->cNameSect();
-		if ( !xr_strcmp(section_name,"vodka") || !(xr_strcmp(section_name,"energy_drink")) )
+		CObject*	pObj = smart_cast<CObject*>		(item);
+		shared_str	section_name = pObj->cNameSect();
+		if (!xr_strcmp(section_name, "vodka") || !(xr_strcmp(section_name, "energy_drink")))
 		{
 			act_str = "st_drink";
 		}
-		else if( !xr_strcmp(section_name,"bread") || !xr_strcmp(section_name,"kolbasa") || !xr_strcmp(section_name,"conserva"))
+		else if (!xr_strcmp(section_name, "bread") || !xr_strcmp(section_name, "kolbasa") || !xr_strcmp(section_name, "conserva"))
 		{
 			act_str = "st_eat";
 		}
@@ -1040,10 +1021,10 @@ void CUIActorMenu::PropertiesBoxForUsing( PIItem item, bool& b_show )
 			act_str = "st_use";
 		}
 	}
-	if ( act_str )
+	if (act_str)
 	{
-		m_UIPropertiesBox->AddItem( act_str,  NULL, INVENTORY_EAT_ACTION );
-		b_show			= true;
+		m_UIPropertiesBox->AddItem(act_str, NULL, INVENTORY_EAT_ACTION);
+		b_show = true;
 	}
 }
 

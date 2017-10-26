@@ -11,7 +11,6 @@
 #include "inventory_item.h"
 #include "inventory_item_impl.h"
 #include "inventory.h"
-//#include "Physics.h"
 #include "physicsshellholder.h"
 #include "entity_alive.h"
 #include "Level.h"
@@ -247,7 +246,6 @@ void CInventoryItem::OnEvent (NET_Packet& P, u16 type)
 //объекте, поэтому функция должна быть переопределена
 bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item) 
 {
-	if (OnClient()) return true;
 	if(b_spawn_item)
 	{
 		CSE_Abstract*		D	= F_entity_Create(item_section_name);
@@ -486,8 +484,6 @@ void CInventoryItem::PH_A_CrPr		()
 		object().spatial_move();
 		m_just_after_spawn = false;
 		
-		VERIFY(!OnServer());
-		
 		object().PPhysicsShell()->get_ElementByStoreOrder(0)->Fix();
 		object().PPhysicsShell()->SetIgnoreStatic	();	
 	}
@@ -495,35 +491,8 @@ void CInventoryItem::PH_A_CrPr		()
 
 void CInventoryItem::Interpolate()
 {
-	net_updateInvData* p = NetSync();
-	CPHSynchronize* pSyncObj = object().PHGetSyncItem(0);
-
-	//simple linear interpolation...
-	if (!object().H_Parent() &&
-		object().getVisible() &&
-		object().m_pPhysicsShell &&
-		!OnServer() &&
-		p->NET_IItem.size())
-	{
-		SPHNetState newState = p->NET_IItem.front().State;
-				
-		if (p->NET_IItem.size() >= 2)
-		{
-
-			float ret_interpolate = interpolate_states(p->NET_IItem.front(), p->NET_IItem.back(), newState);
-			if (ret_interpolate >= 1.f)
-			{
-				p->NET_IItem.pop_front();
-				if (m_activated)
-				{
-					object().processing_deactivate();
-					m_activated = false;
-				}
-			}
-		}
-		pSyncObj->set_State(newState);
-	}
 }
+
 float CInventoryItem::interpolate_states(net_update_IItem const & first, net_update_IItem const & last, SPHNetState & current)
 {
 	float ret_val = 0.f;

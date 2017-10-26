@@ -341,9 +341,7 @@ public:
 	IC CBulletManager&	BulletManager() {return	*m_pBulletManager;}
 
 	//by Mad Max 
-			bool			IsServer					();
-			bool			IsClient					();
-			CSE_Abstract	*spawn_item					(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
+	CSE_Abstract	*spawn_item							(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
 			
 protected:
 	u32		m_dwCL_PingDeltaSend;
@@ -431,9 +429,6 @@ IC CPHCommander & CLevel::ph_commander_physics_worldstep()
 	VERIFY(m_ph_commander_scripts);
 	return *m_ph_commander_physics_worldstep;
 }
-//by Mad Max 
-IC bool		OnServer()			{ return Level().IsServer();}
-IC bool		OnClient()			{ return Level().IsClient();}
 
 extern BOOL						g_bDebugEvents;
 

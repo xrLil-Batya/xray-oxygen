@@ -103,7 +103,7 @@ void CTeamBaseZone::shedule_Update(u32 dt)
 
 void CTeamBaseZone::feel_touch_new	(CObject *tpObject)
 {
-	if(OnServer() && smart_cast<CActor*>(tpObject))
+	if(smart_cast<CActor*>(tpObject))
 	{
 		NET_Packet			P_;
 
@@ -117,7 +117,7 @@ void CTeamBaseZone::feel_touch_new	(CObject *tpObject)
 
 void CTeamBaseZone::feel_touch_delete	(CObject *tpObject)
 {
-	if(OnServer() && smart_cast<CActor*>(tpObject))
+	if(smart_cast<CActor*>(tpObject))
 	{
 		NET_Packet			P_;
 		u_EventGen			(P_,GE_GAME_EVENT,ID()	);
