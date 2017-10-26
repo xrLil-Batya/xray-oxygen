@@ -37,7 +37,6 @@ IC float getLastRP_Scale(CDB::COLLIDER* DB, RayCache& C)
 		{
 			CDB::RESULT& rpinf = DB->r_begin()[I];
 			// Access to texture
-//			CDB::TRI& clT								= 
 				Level.get_tris()	[rpinf.id];
 			b_rc_face& F								= g_rc_faces		[rpinf.id];
 
@@ -80,15 +79,10 @@ IC float getLastRP_Scale(CDB::COLLIDER* DB, RayCache& C)
 			scale			*= opac;
 		}
 	} 
-	//	X_CATCH
-	//	{
-	//		clMsg("* ERROR: getLastRP_Scale");
-	//	}
 
 	return scale;
 }
 
-// IC bool RayPick(CDB::COLLIDER* DB, Fvector& P, Fvector& D, float r, RayCache& C)	//, Face* skip)
 IC float rayTrace	(CDB::COLLIDER* DB, Fvector& P, Fvector& D, float R, RayCache& C)
 {
 	R_ASSERT	(DB);
@@ -230,11 +224,11 @@ public:
 		Q.Perform		(N);
 		
 		// main cycle: trace rays and compute counts
-		for (auto it=Q.q_List.begin(); it!=Q.q_List.end();  it++)
+		for (auto it: Q.q_List)
 		{
 			// calc dir & range
-			u32		ID	= *it;
-			R_ASSERT	(ID<g_nodes.size());
+			u32	ID	= it;
+			R_ASSERT	(ID < g_nodes.size());
 			if			(N==ID)		continue;
 			vertex&		N			= g_nodes[ID];
 			Fvector&	Pos			= N.Pos;
@@ -259,9 +253,6 @@ public:
 			clamp(value[dirs], 0.f, 1.f);
 		}
 
-		//if (value[0] < .999f) //. WTF?!!!
-		//	value[0] = value[0];
-		
 		cover	[0]	= (value[2]+value[3]+value[4]+value[5])/4.f; clamp(cover[0],0.f,1.f);	// left
 		cover	[1]	= (value[0]+value[1]+value[2]+value[3])/4.f; clamp(cover[1],0.f,1.f);	// forward
 		cover	[2]	= (value[6]+value[7]+value[0]+value[1])/4.f; clamp(cover[2],0.f,1.f);	// right
@@ -457,7 +448,8 @@ void compute_non_covers		()
 	Nodes::iterator			B = g_nodes.begin(), I = B;
 	Nodes::iterator			E = g_nodes.end();
 	COVER_NODES::iterator	J = g_cover_nodes.begin();
-	for ( ; I != E; ++I, ++J) {
+	for ( ; I != E; ++I, ++J) 
+	{
 		if (*J)
 			continue;
 
@@ -477,27 +469,22 @@ void compute_non_covers		()
 		cover_pairs.reserve				(nearest.size());
 
 		float				cumulative_weight = 0.f;
+		
+		for (CCoverPoint* it: nearest) 
 		{
-			COVERS::const_iterator		i = nearest.begin();
-			COVERS::const_iterator		e = nearest.end();
-			for ( ; i != e; ++i) {
-				if (!vertex_in_direction(u32(I - B),(*i)->level_vertex_id()))
-					continue;
+			if (!vertex_in_direction(u32(I - B), it->level_vertex_id()))
+				continue;
 
-				float					weight = 1.f/(*i)->position().distance_to((*I).Pos);
-				cumulative_weight		+= weight;
-				cover_pairs.push_back	(
-					std::make_pair(
-						weight,
-						*i
-					)
-				);
-			}
+			float					weight = 1.f/ it->position().distance_to((*I).Pos);
+			cumulative_weight		+= weight;
+			cover_pairs.push_back	(std::make_pair(weight, it));
 		}
+	
 
 		// this is incorrect
 		if (cover_pairs.empty()) {
-			for (int i=0; i<4; ++i) {
+			for (u32 i=0; i<4; ++i) 
+			{
 				VERIFY		((*I).high_cover[i] == flt_max);
 				(*I).high_cover[i]	= 1.f;
 
@@ -507,7 +494,8 @@ void compute_non_covers		()
 			continue;
 		}
 		
-		for (int j=0; j<4; ++j) {
+		for (u32 j=0; j<4; ++j)
+		{
 			VERIFY						((*I).high_cover[j] == flt_max);
 			(*I).high_cover[j]			= 0.f;
 
@@ -515,18 +503,18 @@ void compute_non_covers		()
 			(*I).low_cover[j]			= 0.f;
 		}
 
-		COVER_PAIRS::const_iterator		i = cover_pairs.begin();
-		COVER_PAIRS::const_iterator		e = cover_pairs.end();
-		for ( ; i != e; ++i) {
-			vertex						&current = g_nodes[(*i).second->level_vertex_id()];
-			float						factor = (*i).first/cumulative_weight;
-			for (int j=0; j<4; ++j) {
+		for (auto it: cover_pairs) 
+		{
+			vertex						&current = g_nodes[it.second->level_vertex_id()];
+			float						factor = it.first/cumulative_weight;
+			for (u32 j=0; j<4; ++j) {
 				(*I).high_cover[j]		+= factor*current.high_cover[j];
 				(*I).low_cover[j]		+= factor*current.low_cover[j];
 			}
 		}
 
-		for (int i=0; i<4; ++i) {
+		for (u32 i=0; i<4; ++i)
+		{
 			clamp						((*I).high_cover[i], 0.f, 1.f);
 			clamp						((*I).low_cover[i], 0.f, 1.f);
 		}
@@ -574,7 +562,7 @@ void	xrCover	(bool pure_covers)
 		vertex&	Base		= Old[N];
 		vertex&	Dest		= g_nodes[N];
 		
-		for (int dir=0; dir<4; dir++)
+		for (u32 dir=0; dir<4; dir++)
 		{
 			float val		= 2*Base.high_cover[dir];
 			float val2		= 2*Base.low_cover[dir];
