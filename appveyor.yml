@@ -1,0 +1,40 @@
+version: 1.6.02.{build}
+pull_requests:
+  do_not_increment_build_number: true
+shallow_clone: true
+image: Visual Studio 2017
+configuration: Release
+platform: x64
+shallow_clone: true
+build:
+  project: code/engine.vc2008/engine.sln
+  publish_wap: true
+  parallel: true
+  verbosity: quiet
+after_build:
+- cmd: >-
+    md dist
+    md dist\bins
+    md dist\gamedata
+   
+    copy binaries\ dist\bins
+    copy game\gamedata dist\gamedata
+    
+    7z a xrOxygen.7z
+    echo appveyor PushArtifact xrOxygen.7z Release
+    appveyor PushArtifact xrOxygen.7z
+    
+artifacts:
+- path: .\xrOxygen.7z
+  name: Release
+deploy:
+- provider: GitHub
+  auth_token:
+    secure: 1OAwfSrwEQtGa28QEVVJhqs4SQH/9nfoiUnL04rBkGCjuP+3mJIWTg1Usmle6mP/
+  repository: ForserX/xray-oxygen
+  artifact: Release
+  prerelease: true
+  force_update: true
+  on:
+    appveyor_repo_tag: true
+    Dep: Test
