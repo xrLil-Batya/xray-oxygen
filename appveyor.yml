@@ -5,7 +5,6 @@ shallow_clone: true
 image: Visual Studio 2017
 configuration: Release
 platform: x64
-shallow_clone: true
 build:
   project: code/engine.vc2008/engine.sln
   publish_wap: true
