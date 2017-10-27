@@ -19,7 +19,7 @@ after_build:
     copy binaries\ dist\bins
     copy game\gamedata dist\gamedata
     
-    7z a xrOxygen.7z
+    7z a xrOxygen.7z .\dist
     echo appveyor PushArtifact xrOxygen.7z Release
     appveyor PushArtifact xrOxygen.7z
     
