@@ -13,9 +13,7 @@ build:
 after_build:
 - cmd: >-
     md dist
-    md dist\bins
-    md dist\gamedata
-   
+    
     copy binaries\ dist\bins
     copy game\gamedata dist\gamedata
     

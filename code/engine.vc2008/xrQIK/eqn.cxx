@@ -1,37 +1,5 @@
-/*
-  This source code is a part of IKAN.
-  Copyright (c) 2000 University of Pennsylvania
-  Center for Human Modeling and Simulation
-  All Rights Reserved.
-
-  IN NO EVENT SHALL THE UNIVERSITY OF PENNSYLVANIA BE LIABLE TO ANY
-  PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-  DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS
-  SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF PENNSYLVANIA
-  HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-  Permission to use, copy, modify and distribute this software and its
-  documentation for educational, research and non-profit purposes,
-  without fee, and without a written agreement is hereby granted,
-  provided that the above copyright notice and the following three
-  paragraphs appear in all copies. For for-profit purposes, please
-  contact University of Pennsylvania
- (http://hms.upenn.edu/software/ik/ik.html) for the software license
-  agreement.
-
-
-  THE UNIVERSITY OF PENNSYLVANIA SPECIFICALLY DISCLAIM ANY
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-  PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS"
-  BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
-  TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
-  MODIFICATIONS.
-
- */
-#include "stdafx.h"
+#include "../xrCore/xrCore.h"
 #include "eqn.h"
-
 
 /*
  * Put angle in range 0 .. 2*M_PI. Bounds on range of Psi 
@@ -52,11 +20,7 @@ static double angle_normalize(double theta)
     return theta;
 }
 */
-
-static int solve_trig1_aux(float c, 
-			   float a2b2,
-			   float atan2ba,
-			   float theta[2])
+static int solve_trig1_aux(float c, float a2b2, float atan2ba, float theta[2])
 {
     float temp  = a2b2-c*c;
     int num;

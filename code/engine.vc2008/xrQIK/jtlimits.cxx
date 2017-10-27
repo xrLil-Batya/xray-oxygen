@@ -1,38 +1,4 @@
-/*
-  This source code is a part of IKAN.
-  Copyright (c) 2000 University of Pennsylvania
-  Center for Human Modeling and Simulation
-  All Rights Reserved.
-
-  IN NO EVENT SHALL THE UNIVERSITY OF PENNSYLVANIA BE LIABLE TO ANY
-  PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-  DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS
-  SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF PENNSYLVANIA
-  HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-  Permission to use, copy, modify and distribute this software and its
-  documentation for educational, research and non-profit purposes,
-  without fee, and without a written agreement is hereby granted,
-  provided that the above copyright notice and the following three
-  paragraphs appear in all copies. For for-profit purposes, please
-  contact University of Pennsylvania
- (http://hms.upenn.edu/software/ik/ik.html) for the software license
-  agreement.
-
-
-  THE UNIVERSITY OF PENNSYLVANIA SPECIFICALLY DISCLAIM ANY
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-  PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS"
-  BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
-  TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
-  MODIFICATIONS.
-
- */
-
-
-
-#include "stdafx.h"
+#include "../xrCore/xrCore.h"
 #include "aint.h"
 #include "jtlimits.h"
 
@@ -41,40 +7,6 @@
 // Since it is dangerous to compare floating point numbers 
 // we compare them within an epsilon of tolerance
 //
-
-#if 0
-int inline equal(float x, float y, float eps = 1e-6)
-{
-    return (fabs(x-y) < eps); 
-} 
-
-int inline iszero(float x, float eps = 1e-6) 
-{
-    return fabs(x) < eps;
-}
-
-int inline greater_equal(float x, float y)
-{
-    return (x > y) || equal(x,y);
-}
-
-int inline less_equal(float x, float y)
-{
-    return (x < y) || equal(x,y);
-}
-
-int inline greater(float x, float y)
-{
-    return x > y && !equal(x,y);
-}
-
-int inline less(float x, float y)
-{
-    return x < y && !equal(x,y);
-}
-#endif
-
-
 void SimpleJtLimit::init(int jt_type, 
 	 float a, float b, float c, 
 	 float low, float high)

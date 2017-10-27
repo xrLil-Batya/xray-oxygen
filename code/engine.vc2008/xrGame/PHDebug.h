@@ -1,5 +1,4 @@
-#ifndef PH_DEBUG_H
-#define PH_DEBUG_H
+#pragma once
 #ifdef DEBUG
 struct dContact;
 #include "../xrEngine/StatGraph.h"
@@ -108,5 +107,4 @@ IC	float	ScaleX						( float x )																												{ VERIFY( IsActive( 
 	void	ScaleMarkerPos				( CStatGraph::EStyle Style, float &p )																															;
 IC	float	ResolutionX					( ){ VERIFY( IsActive( ) ); return s; } 
 };
-#endif
 #endif

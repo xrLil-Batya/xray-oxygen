@@ -1,39 +1,4 @@
-/*
-  This source code is a part of IKAN.
-  Copyright (c) 2000 University of Pennsylvania
-  Center for Human Modeling and Simulation
-  All Rights Reserved.
-
-  IN NO EVENT SHALL THE UNIVERSITY OF PENNSYLVANIA BE LIABLE TO ANY
-  PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
-  DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS
-  SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF PENNSYLVANIA
-  HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
-
-  Permission to use, copy, modify and distribute this software and its
-  documentation for educational, research and non-profit purposes,
-  without fee, and without a written agreement is hereby granted,
-  provided that the above copyright notice and the following three
-  paragraphs appear in all copies. For for-profit purposes, please
-  contact University of Pennsylvania
- (http://hms.upenn.edu/software/ik/ik.html) for the software license
-  agreement.
-
-
-  THE UNIVERSITY OF PENNSYLVANIA SPECIFICALLY DISCLAIM ANY
-  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
-  WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
-  PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS"
-  BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
-  TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
-  MODIFICATIONS.
-
- */
-
-//#include <stdio.h>
-//#include <stdlib.h>
-//#include <string.h>
-#include "stdafx.h"
+#include "../xrCore/xrCore.h"
 #include "limb.h"
 //#include "../ode_include.h"
 enum { SolvePosOnly = 1, SolvePosAndOrientation = 2 }; 
@@ -43,14 +8,7 @@ enum { SolvePosOnly = 1, SolvePosAndOrientation = 2 };
 // the Euler extraction routines for the two spherical joints,
 // the projection axis, and the min and max joint limits
 //
-void Limb::init(const Matrix  T,
-		const Matrix  S,
-		int s1,
-		int s2,
-		const float *proj_axis,
-		const float *pos_axis,
-		const float *mmin,
-		const float *mmax) 
+void Limb::init(const Matrix T, const Matrix S, int s1, int s2, const float *proj_axis, const float *pos_axis, const float *mmin, const float *mmax) 
 {
     euler1 = short(s1);
     euler2 = short(s2);
@@ -798,11 +756,10 @@ int Limb::try_singularities(int solves, float &swivel_angle, float x[])
 //
 // Assumes that either SetGoal or SetGoalPos has been called first
 //
-extern XRPHYSICS_API	const float	phInfinity;
 int Limb::Solve(float x[], float *new_swivel, float *new_pos)
 {
     int success; 
-    float swivel_angle=-phInfinity; 
+    float swivel_angle= -FLT_MAX; 
 
     x[3] = x3;
 
@@ -851,18 +808,13 @@ int Limb::Solve(float x[], float *new_swivel, float *new_pos)
 
     return success;
 }
-
-
-
 //
 // First try solving using the swivel angle. If this fails
 // then see if the desired swivel angle is close to a singularity. 
 // If so then try evaluating the singularity since the PSI
 // intervals are not computed reliably near a singularity.
 //
-int Limb::try_closeby_singularity(int solves, 
-				  float &swivel_angle, 
-				  float x[])
+int Limb::try_closeby_singularity(int solves, float &swivel_angle, float x[])
 {
     // First try the swivel angle
 
