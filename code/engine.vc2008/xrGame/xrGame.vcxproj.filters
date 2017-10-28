@@ -6647,9 +6647,6 @@
     <ClCompile Include="script_world_state_script.cpp">
       <Filter>AI\AComponents\ProblemSolver\condition_state\ScriptWorldState</Filter>
     </ClCompile>
-    <ClCompile Include="script_world_property_script.cpp">
-      <Filter>AI\AComponents\ProblemSolver\operator_condition\ScriptWorldProperty</Filter>
-    </ClCompile>
     <ClCompile Include="sight_manager.cpp">
       <Filter>AI\AComponents\SightManager</Filter>
     </ClCompile>
@@ -6753,9 +6750,6 @@
       <Filter>AI\ACover\smart_cover\detail</Filter>
     </ClCompile>
     <ClCompile Include="smart_cover_object.cpp">
-      <Filter>AI\ACover\smart_cover\object</Filter>
-    </ClCompile>
-    <ClCompile Include="smart_cover_object_script.cpp">
       <Filter>AI\ACover\smart_cover\object</Filter>
     </ClCompile>
     <ClCompile Include="ai_debug_variables.cpp">
@@ -7730,9 +7724,6 @@
     <ClCompile Include="script_watch_action.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClCompile>
-    <ClCompile Include="script_watch_action_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
-    </ClCompile>
     <ClCompile Include="script_animation_action.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\acript_animation_action</Filter>
     </ClCompile>
@@ -7752,9 +7743,6 @@
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClCompile>
     <ClCompile Include="particle_params.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action\particle_params</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_params_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action\particle_params</Filter>
     </ClCompile>
     <ClCompile Include="script_object_action.cpp">
@@ -7857,9 +7845,6 @@
       <Filter>AI\AScript\ScriptClasses\ScriptSoundInfo</Filter>
     </ClCompile>
     <ClCompile Include="ScriptXMLInit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="ui_export_script.cpp">
       <Filter>AI\AScript\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="key_binding_registrator_script.cpp">
@@ -8327,9 +8312,6 @@
     <ClCompile Include="WeaponKnife.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Knife</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponKnife_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Knife</Filter>
-    </ClCompile>
     <ClCompile Include="WeaponGroza.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Weapon Groza</Filter>
     </ClCompile>
@@ -8351,9 +8333,6 @@
     <ClCompile Include="WeaponRPG7.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\RPG7</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponRPG7_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\RPG7</Filter>
-    </ClCompile>
     <ClCompile Include="F1.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Grenade F1</Filter>
     </ClCompile>
@@ -8372,16 +8351,10 @@
     <ClCompile Include="WeaponHPSA.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\HPSA</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponHPSA_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\HPSA</Filter>
-    </ClCompile>
     <ClCompile Include="WeaponPM.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\PM</Filter>
     </ClCompile>
     <ClCompile Include="WeaponBinoculars.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Binocular</Filter>
-    </ClCompile>
-    <ClCompile Include="WeaponBinoculars_script.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Binocular</Filter>
     </ClCompile>
     <ClCompile Include="WeaponBinocularsVision.cpp">
@@ -8390,22 +8363,13 @@
     <ClCompile Include="WeaponShotgun.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Weapon Shotgun</Filter>
     </ClCompile>
-    <ClCompile Include="weaponshotgun_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Weapon Shotgun</Filter>
-    </ClCompile>
     <ClCompile Include="WeaponFORT.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\FORT</Filter>
     </ClCompile>
     <ClCompile Include="WeaponRG6.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Weapon RG6</Filter>
     </ClCompile>
-    <ClCompile Include="WeaponRG6_script.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\Weapon RG6</Filter>
-    </ClCompile>
     <ClCompile Include="weaponBM16.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\BM-16</Filter>
-    </ClCompile>
-    <ClCompile Include="weaponBM16_script.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Various weapons\BM-16</Filter>
     </ClCompile>
     <ClCompile Include="WeaponAutomaticShotgun.cpp">
@@ -8484,9 +8448,6 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\EliteDetector</Filter>
     </ClCompile>
     <ClCompile Include="Torch.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Torch</Filter>
-    </ClCompile>
-    <ClCompile Include="torch_script.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Torch</Filter>
     </ClCompile>
     <ClCompile Include="flare.cpp">
@@ -8597,9 +8558,6 @@
     <ClCompile Include="script_zone.cpp">
       <Filter>Core\Client\Objects\zones\ScriptZone</Filter>
     </ClCompile>
-    <ClCompile Include="script_zone_script.cpp">
-      <Filter>Core\Client\Objects\zones\ScriptZone</Filter>
-    </ClCompile>
     <ClCompile Include="team_base_zone.cpp">
       <Filter>Core\Client\Objects\zones\TeamBaseZone</Filter>
     </ClCompile>
@@ -8607,9 +8565,6 @@
       <Filter>Core\Client\Objects\zones\TorridZone</Filter>
     </ClCompile>
     <ClCompile Include="space_restrictor.cpp">
-      <Filter>Core\Client\Objects\zones\SpaceRestrictor</Filter>
-    </ClCompile>
-    <ClCompile Include="space_restrictor_script.cpp">
       <Filter>Core\Client\Objects\zones\SpaceRestrictor</Filter>
     </ClCompile>
     <ClCompile Include="HairsZone.cpp">
@@ -9291,9 +9246,6 @@
       <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
     <ClCompile Include="UIGameCustom.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClCompile>
-    <ClCompile Include="UIGameCustom_script.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
     </ClCompile>
     <ClCompile Include="UIGameSP.cpp">

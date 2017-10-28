@@ -130,10 +130,32 @@ void CScriptZone::OnRender()
 
 bool CScriptZone::active_contact(u16 id) const
 {
-	xr_vector<CObject*>::const_iterator	I = feel_touch.begin();
-	xr_vector<CObject*>::const_iterator	E = feel_touch.end();
-	for ( ; I != E; ++I)
-		if ((*I)->ID() == id)
-			return						(true);
-	return								(false);
+	for (CObject* it : feel_touch)
+	{
+		if (it->ID() == id)
+			return true;
+	}
+	return false;
+}
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CScriptZone::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CScriptZone, DLL_Pure>("ce_script_zone")
+			.def(constructor<>())
+		];
+}
+
+#include "smart_zone.h"
+void CSmartZone::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CSmartZone, DLL_Pure>("ce_smart_zone")
+			.def(constructor<>())
+		];
 }

@@ -12,19 +12,19 @@ build:
   verbosity: quiet
 after_build:
 - cmd: >-
-    md dist
+    cd game\
     
-    cd binaries\x64\release 
+    md bins\
     
-    copy *.dll ..\..\..\dist\bins
+    cd ..\
     
-    copy *.exe ..\..\..\dist\bins
+    copy *.dll ..\..\..\game\bins
+    
+    copy *.exe ..\..\..\game\bins
     
     cd ..\..\..\
     
-    xcopy game\gamedata dist\gamedata
-    
-    7z a xrOxygen.7z .\dist
+    7z a xrOxygen.7z .\game
     
     echo appveyor PushArtifact xrOxygen.7z Release
     

@@ -2207,8 +2207,6 @@
     <ClCompile Include="object_property_evaluators.cpp" />
     <ClCompile Include="script_world_state_script.cpp">
     </ClCompile>
-    <ClCompile Include="script_world_property_script.cpp">
-    </ClCompile>
     <ClCompile Include="sight_manager.cpp" />
     <ClCompile Include="sight_manager_target.cpp" />
     <ClCompile Include="sight_action.cpp" />
@@ -2254,8 +2252,6 @@
     <ClCompile Include="smart_cover_detail.cpp">
     </ClCompile>
     <ClCompile Include="smart_cover_object.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_object_script.cpp">
     </ClCompile>
     <ClCompile Include="ai_debug_variables.cpp">
     </ClCompile>
@@ -2697,8 +2693,6 @@
     <ClCompile Include="patrol_path_params_script.cpp">
     </ClCompile>
     <ClCompile Include="script_watch_action.cpp" />
-    <ClCompile Include="script_watch_action_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_animation_action.cpp" />
     <ClCompile Include="script_animation_action_script.cpp">
     </ClCompile>
@@ -2709,8 +2703,6 @@
     <ClCompile Include="script_particle_action_script.cpp">
     </ClCompile>
     <ClCompile Include="particle_params.cpp" />
-    <ClCompile Include="particle_params_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_object_action.cpp" />
     <ClCompile Include="script_object_action_script.cpp">
     </ClCompile>
@@ -2771,8 +2763,6 @@
     <ClCompile Include="script_sound_info_script.cpp">
     </ClCompile>
     <ClCompile Include="ScriptXMLInit.cpp">
-    </ClCompile>
-    <ClCompile Include="ui_export_script.cpp">
     </ClCompile>
     <ClCompile Include="key_binding_registrator_script.cpp">
     </ClCompile>
@@ -3022,8 +3012,6 @@
     <ClCompile Include="WeaponVintorez.cpp">
     </ClCompile>
     <ClCompile Include="WeaponKnife.cpp" />
-    <ClCompile Include="WeaponKnife_script.cpp">
-    </ClCompile>
     <ClCompile Include="WeaponGroza.cpp">
     </ClCompile>
     <ClCompile Include="RGD5.cpp">
@@ -3036,8 +3024,6 @@
     <ClCompile Include="WeaponSVU.cpp">
     </ClCompile>
     <ClCompile Include="WeaponRPG7.cpp" />
-    <ClCompile Include="WeaponRPG7_script.cpp">
-    </ClCompile>
     <ClCompile Include="F1.cpp">
     </ClCompile>
     <ClCompile Include="WeaponSVD.cpp">
@@ -3050,26 +3036,16 @@
     </ClCompile>
     <ClCompile Include="WeaponHPSA.cpp">
     </ClCompile>
-    <ClCompile Include="WeaponHPSA_script.cpp">
-    </ClCompile>
     <ClCompile Include="WeaponPM.cpp">
     </ClCompile>
     <ClCompile Include="WeaponBinoculars.cpp">
     </ClCompile>
-    <ClCompile Include="WeaponBinoculars_script.cpp">
-    </ClCompile>
     <ClCompile Include="WeaponBinocularsVision.cpp" />
     <ClCompile Include="WeaponShotgun.cpp" />
-    <ClCompile Include="weaponshotgun_script.cpp">
-    </ClCompile>
     <ClCompile Include="WeaponFORT.cpp">
     </ClCompile>
     <ClCompile Include="WeaponRG6.cpp" />
-    <ClCompile Include="WeaponRG6_script.cpp">
-    </ClCompile>
     <ClCompile Include="weaponBM16.cpp" />
-    <ClCompile Include="weaponBM16_script.cpp">
-    </ClCompile>
     <ClCompile Include="WeaponAutomaticShotgun.cpp">
     </ClCompile>
     <ClCompile Include="WeaponStatMgun.cpp" />
@@ -3098,8 +3074,6 @@
     <ClCompile Include="AdvancedDetector.cpp" />
     <ClCompile Include="EliteDetector.cpp" />
     <ClCompile Include="Torch.cpp" />
-    <ClCompile Include="torch_script.cpp">
-    </ClCompile>
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="PDA.cpp">
     </ClCompile>
@@ -3144,13 +3118,9 @@
     <ClCompile Include="RadioactiveZone.cpp" />
     <ClCompile Include="script_zone.cpp">
     </ClCompile>
-    <ClCompile Include="script_zone_script.cpp">
-    </ClCompile>
     <ClCompile Include="team_base_zone.cpp" />
     <ClCompile Include="TorridZone.cpp" />
     <ClCompile Include="space_restrictor.cpp">
-    </ClCompile>
-    <ClCompile Include="space_restrictor_script.cpp">
     </ClCompile>
     <ClCompile Include="HairsZone.cpp">
     </ClCompile>
@@ -3474,8 +3444,6 @@
     <ClCompile Include="HitMarker.cpp" />
     <ClCompile Include="HUDManager.cpp" />
     <ClCompile Include="UIGameCustom.cpp">
-    </ClCompile>
-    <ClCompile Include="UIGameCustom_script.cpp">
     </ClCompile>
     <ClCompile Include="UIGameSP.cpp">
     </ClCompile>

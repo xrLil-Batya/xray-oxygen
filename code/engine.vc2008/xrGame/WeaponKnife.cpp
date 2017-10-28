@@ -769,3 +769,15 @@ void CWeaponKnife::best_victim_selector::operator()(spartial_base_t::value_type 
 		return;
 	}
 }
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CWeaponKnife::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CWeaponKnife, CGameObject>("CWeaponKnife")
+			.def(constructor<>())
+		];
+}

@@ -258,9 +258,22 @@ void	CWeaponShotgun::net_Import	(NET_Packet& P)
 		if (i>=m_magazine.size()) continue;
 		CCartridge& l_cartridge = *(m_magazine.begin()+i);
 		if (LocalAmmoType == l_cartridge.m_LocalAmmoType) continue;
-#ifdef DEBUG
-		Msg("! %s reload to %s", *l_cartridge.m_ammoSect, m_ammoTypes[LocalAmmoType].c_str());
-#endif
 		l_cartridge.Load( m_ammoTypes[LocalAmmoType].c_str(), LocalAmmoType );
 	}
 }
+
+using namespace luabind;
+#include "WeaponAutomaticShotgun.h"
+
+#pragma optimize("s",on)
+void CWeaponShotgun::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CWeaponShotgun, CGameObject>("CWeaponShotgun")
+			.def(constructor<>()),
+		class_<CWeaponAutomaticShotgun, CGameObject>("CWeaponAutomaticShotgun")
+		.def(constructor<>())
+		];
+}
+ 
