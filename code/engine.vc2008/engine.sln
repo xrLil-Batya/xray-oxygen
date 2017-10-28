@@ -137,7 +137,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OPCODE", "3rd party\OPCODE\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BuildVm", "xrScripts\BuildVm\BuildVm.vcxproj", "{9E14D7B5-9D0E-4373-B076-33DD4BECDBA0}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrQIK", "xrQIK\xrIKinematic.vcxproj", "{471C6E53-3038-4AB2-B913-6DE27C79DD16}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrQIK", "xrQIK\xrQIK.vcxproj", "{471C6E53-3038-4AB2-B913-6DE27C79DD16}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

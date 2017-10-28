@@ -15,13 +15,19 @@ after_build:
     md dist
     
     cd binaries\x64\release 
+    
     copy *.dll ..\..\..\dist\bins
+    
     copy *.exe ..\..\..\dist\bins
+    
     cd ..\..\..\
+    
     xcopy game\gamedata dist\gamedata
     
     7z a xrOxygen.7z .\dist
+    
     echo appveyor PushArtifact xrOxygen.7z Release
+    
     appveyor PushArtifact xrOxygen.7z
     
 artifacts:
