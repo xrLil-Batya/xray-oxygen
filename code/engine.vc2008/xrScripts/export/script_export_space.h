@@ -11,8 +11,8 @@
 struct lua_State;
 
 #ifdef SCRIPT_REGISTRATOR
-#	define	script_type_list		imdex::typelist<>
-#	define	add_to_type_list(type)	using TypeList_##type = imdex::ts_prepend_t<type, script_type_list>;
+#	define	script_type_list		imdexlib::typelist<>
+#	define	add_to_type_list(type)	using TypeList_##type = imdexlib::ts_prepend_t<type, script_type_list>;
 #	define	save_type_list(type)	TypeList_##type
 #else
 #	define	script_type_list		

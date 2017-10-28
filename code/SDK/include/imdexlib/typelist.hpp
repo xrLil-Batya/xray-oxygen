@@ -1,7 +1,7 @@
 #pragma once
 #include "identity.hpp"
 
-namespace imdex {
+namespace imdexlib {
 
 	template <typename... Ts>
 	struct typelist {

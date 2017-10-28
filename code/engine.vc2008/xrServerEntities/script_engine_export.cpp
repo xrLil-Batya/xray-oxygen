@@ -16,11 +16,11 @@ template <typename TList> struct Register
 {
 	static void _Register(lua_State *L)
 	{
-		imdex::ts_apply<imdex::ts_reverse_t<TList>>([&](const auto type) { registerOne(L, type); });
+		imdex::ts_apply<imdexlib::ts_reverse_t<TList>>([&](const auto type) { registerOne(L, type); });
 	}
 private:
 	template <typename T>
-	static void registerOne(lua_State* L, imdex::identity<T>) {
+	static void registerOne(lua_State* L, imdexlib::identity<T>) {
 		T::script_register(L);
 	}
 };

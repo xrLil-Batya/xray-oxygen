@@ -86,13 +86,9 @@ namespace luabind { namespace detail
 		bool has_static() const { return static_cast<bool>(call_fun_static); }
 
 	private:
-
         template <int ResInit, typename... Args, typename... Policies>
         overload_rep(const bool isConst, const imdexlib::typelist<Args...>, const std::integral_constant<int, ResInit>, const policy_cons<Policies...>)
-            : allocator(),
-              call_fun(std::allocator_arg_t(), allocator),
-              call_fun_static(std::allocator_arg_t(), allocator),
-              m_const(isConst)
+         : allocator(), call_fun(std::allocator_arg_t(), allocator), call_fun_static(std::allocator_arg_t(), allocator), m_const(isConst)
         {
             m_params_.reserve(sizeof...(Args));
 
