@@ -29,3 +29,22 @@ void CScriptWorldStateWrapper::script_register(lua_State *L)
 			.def(const_self == CScriptWorldState())
 	];
 }
+
+#include "script_world_property.h"
+#include "operator_abstract.h"
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CScriptWorldPropertyWrapper::script_register(lua_State *L)
+{
+	module(L)
+	[
+		class_<CScriptWorldProperty>("world_property")
+			.def(								constructor<CScriptWorldProperty::_condition_type, CScriptWorldProperty::_value_type>())
+			.def("condition",					&CScriptWorldProperty::condition)
+			.def("value",						&CScriptWorldProperty::value)
+			.def(const_self < other<CScriptWorldProperty>())
+			.def(const_self == other<CScriptWorldProperty>())
+	];
+}
