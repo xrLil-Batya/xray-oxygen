@@ -585,8 +585,6 @@
     <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="..\..\xrServerEntities\PHNetState.cpp" />
-    <ClCompile Include="..\..\xrServerEntities\smart_cast.cpp" />
-    <ClCompile Include="..\..\xrServerEntities\smart_cast_stats.cpp" />
     <ClCompile Include="buffer_vector.cpp" />
     <ClCompile Include="game_spawn_constructor.cpp" />
     <ClCompile Include="level_spawn_constructor.cpp" />
@@ -753,9 +751,6 @@
     <ClInclude Include="..\..\xrServerEntities\object_type_traits.h" />
     <ClInclude Include="..\..\xrServerEntities\clsid_game.h" />
     <ClInclude Include="..\..\xrServerEntities\smart_cast.h" />
-    <ClInclude Include="..\..\xrServerEntities\smart_cast_impl0.h" />
-    <ClInclude Include="..\..\xrServerEntities\smart_cast_impl1.h" />
-    <ClInclude Include="..\..\xrServerEntities\smart_cast_impl2.h" />
     <ClInclude Include="profiler.h" />
     <ClInclude Include="intrusive_ptr.h" />
     <ClInclude Include="intrusive_ptr_inline.h" />

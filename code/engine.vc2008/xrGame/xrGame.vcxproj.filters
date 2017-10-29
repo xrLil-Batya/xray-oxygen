@@ -5841,15 +5841,6 @@
     <ClInclude Include="..\xrServerEntities\smart_cast.h">
       <Filter>Core\Common\SmartCast</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\smart_cast_impl0.h">
-      <Filter>Core\Common\SmartCast</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\smart_cast_impl1.h">
-      <Filter>Core\Common\SmartCast</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\smart_cast_impl2.h">
-      <Filter>Core\Common\SmartCast</Filter>
-    </ClInclude>
     <ClInclude Include="string_table.h">
       <Filter>Core\Common\StringTable</Filter>
     </ClInclude>
@@ -8684,12 +8675,6 @@
     <ClCompile Include="random32.cpp">
       <Filter>Core\Common\Random\32bit</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\smart_cast.cpp">
-      <Filter>Core\Common\SmartCast</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\smart_cast_stats.cpp">
-      <Filter>Core\Common\SmartCast</Filter>
-    </ClCompile>
     <ClCompile Include="string_table.cpp">
       <Filter>Core\Common\StringTable</Filter>
     </ClCompile>
@@ -8886,9 +8871,6 @@
       <Filter>AI\AScript\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIInventoryUpgradeWnd_add.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgrade.cpp">
@@ -9122,9 +9104,6 @@
     <ClCompile Include="ui\UIProgressBar.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIProgressBar_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIProgressShape.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
@@ -9155,9 +9134,6 @@
     <ClCompile Include="ui\UIButton.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIButton_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UICheckButton.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
@@ -9165,9 +9141,6 @@
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIComboBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIComboBox_script.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UI_IB_Static.cpp">

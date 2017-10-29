@@ -1916,9 +1916,6 @@
     <ClInclude Include="random32.h" />
     <ClInclude Include="..\xrServerEntities\shared_data.h" />
     <ClInclude Include="..\xrServerEntities\smart_cast.h" />
-    <ClInclude Include="..\xrServerEntities\smart_cast_impl0.h" />
-    <ClInclude Include="..\xrServerEntities\smart_cast_impl1.h" />
-    <ClInclude Include="..\xrServerEntities\smart_cast_impl2.h" />
     <ClInclude Include="string_table.h" />
     <ClInclude Include="string_table_defs.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector.h" />
@@ -3179,9 +3176,6 @@
     </ClCompile>
     <ClCompile Include="ai\weighted_random.cpp" />
     <ClCompile Include="random32.cpp" />
-    <ClCompile Include="..\xrServerEntities\smart_cast.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\smart_cast_stats.cpp" />
     <ClCompile Include="string_table.cpp" />
     <ClCompile Include="static_cast_checked_test.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
@@ -3275,8 +3269,6 @@
     <ClCompile Include="ui_base.cpp" />
     <ClCompile Include="UIDialogHolder.cpp" />
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIInventoryUpgradeWnd_add.cpp">
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgrade.cpp">
     </ClCompile>
@@ -3378,8 +3370,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIDoubleProgressBar.cpp" />
     <ClCompile Include="ui\UIProgressBar.cpp" />
-    <ClCompile Include="ui\UIProgressBar_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIProgressShape.cpp" />
     <ClCompile Include="ui\UITabButton.cpp" />
     <ClCompile Include="ui\UITabControl.cpp" />
@@ -3410,13 +3400,9 @@
     <ClCompile Include="ui\UI3tButton.cpp" />
     <ClCompile Include="ui\UIBtnHint.cpp" />
     <ClCompile Include="ui\UIButton.cpp" />
-    <ClCompile Include="ui\UIButton_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UICheckButton.cpp" />
     <ClCompile Include="ui\UIRadioButton.cpp" />
     <ClCompile Include="ui\UIComboBox.cpp" />
-    <ClCompile Include="ui\UIComboBox_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UI_IB_Static.cpp" />
     <ClCompile Include="ui\UITrackBar.cpp" />
     <ClCompile Include="ui\UIScrollView.cpp" />

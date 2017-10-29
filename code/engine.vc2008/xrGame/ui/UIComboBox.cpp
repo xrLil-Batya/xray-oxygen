@@ -2,7 +2,7 @@
 #include "UIComboBox.h"
 #include "UITextureMaster.h"
 #include "UIScrollBar.h"
-#include "uilistboxitem.h"
+#include "UIListBoxItem.h"
 #include "../string_table.h"
 
 #define CB_HEIGHT 20.0f
@@ -337,4 +337,27 @@ void CUIComboBox::ClearList()
 	m_itoken_id = 0;
 	ShowList(false);
 	m_disabled.clear();
+}
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CUIComboBox::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CUIComboBox, CUIWindow>("CUIComboBox")
+				.def(constructor<>())
+				.def("SetVertScroll", &CUIComboBox::SetVertScroll)
+				.def("SetListLength", &CUIComboBox::SetListLength)
+				.def("CurrentID", &CUIComboBox::CurrentID)
+				.def("disable_id", &CUIComboBox::disable_id)
+				.def("enable_id", &CUIComboBox::enable_id)
+				.def("AddItem", &CUIComboBox::AddItem_)
+				.def("GetText", &CUIComboBox::GetText)
+				.def("GetTextOf", &CUIComboBox::GetTextOf)
+				.def("SetText", &CUIComboBox::SetText)
+				.def("ClearList", &CUIComboBox::ClearList)
+				.def("SetCurrentOptValue", &CUIComboBox::SetCurrentOptValue)
+		];
 }
