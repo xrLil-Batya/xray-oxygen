@@ -7,18 +7,17 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 #pragma pack(push,4)
+
 #include "xrServer_Space.h"
-#	include "../xrCDB/xrCDB.h"
+#include "../xrCDB/xrCDB.h"
 #include "ShapeData.h"
 #include "gametype_chooser.h"
 
 class NET_Packet;
 class CDUInterface;
 
-#ifndef _EDITOR
-    #ifndef XRGAME_EXPORTS
-		#include "../xrSound/Sound.h"
-    #endif
+#ifndef XRGAME_EXPORTS
+#	include "../xrSound/Sound.h"
 #endif
 
 #include "xrEProps.h"
@@ -27,9 +26,9 @@ class CDUInterface;
 #pragma warning(disable:4005)
 
 
-
 class ISE_Shape{
 public:
+	virtual							~ISE_Shape()			= default;
 	virtual void __stdcall			assign_shapes			(CShapeData::shape_def* shapes, u32 cnt)=0;
 };
 
@@ -86,6 +85,7 @@ add_to_type_list(CSE_Motion)
 #define script_type_list save_type_list(CSE_Motion)
 
 struct ISE_AbstractLEOwner{
+	virtual							~ISE_AbstractLEOwner() = default;
 	virtual void		__stdcall	get_bone_xform			(LPCSTR name, Fmatrix& xform) = 0;
 };
 
