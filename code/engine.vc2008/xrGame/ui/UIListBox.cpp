@@ -341,6 +341,7 @@ void CUIListBox::SetImmediateSelection(bool f)
 }
 
 #include "UIListBoxItem.h"
+#include "UIListBoxItemMsgChain.h"
 #include "UISpinText.h"
 #include "UIComboBox.h"
 

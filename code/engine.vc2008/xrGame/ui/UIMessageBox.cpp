@@ -13,7 +13,7 @@ CUIMessageBox::CUIMessageBox()
 	m_UIButtonCopy		= nullptr;
 	m_UIStaticPicture	= nullptr;
 	m_UIStaticText		= nullptr;
-						  nullptr
+
 	m_UIEditPass		= nullptr;
 	m_UIEditUserPass	= nullptr;
 	m_UIEditURL			= nullptr;
