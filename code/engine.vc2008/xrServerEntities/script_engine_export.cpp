@@ -16,7 +16,7 @@ template <typename TList> struct Register
 {
 	static void _Register(lua_State *L)
 	{
-		imdex::ts_apply<imdexlib::ts_reverse_t<TList>>([&](const auto type) { registerOne(L, type); });
+		imdexlib::ts_apply<imdexlib::ts_reverse_t<TList>>([&](const auto type) { registerOne(L, type); });
 	}
 private:
 	template <typename T>
