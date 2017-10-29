@@ -16,7 +16,7 @@ after_build:
     
     md bins\
     
-    cd ..\
+    cd ..\binaries\x64\Release
     
     copy *.dll ..\..\..\game\bins
     
