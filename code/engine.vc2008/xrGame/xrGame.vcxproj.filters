@@ -9044,16 +9044,10 @@
     <ClCompile Include="ui\UIMessageBox.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIMessageBox_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIMessageBoxEx.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPropertiesBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIPropertiesBox_script.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIAnimatedStatic.cpp">
@@ -9080,9 +9074,6 @@
     <ClCompile Include="ui\UICustomEdit.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIEditBox_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIDialogWnd.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
@@ -9093,9 +9084,6 @@
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIWindow_script.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDoubleProgressBar.cpp">
@@ -9113,16 +9101,7 @@
     <ClCompile Include="ui\UITabControl.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UITabControl_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIScriptWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIScriptWnd_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\uiscriptwnd_script2.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UI3tButton.cpp">
@@ -9201,9 +9180,6 @@
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Hint</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIListBox_script.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBoxItem.cpp">

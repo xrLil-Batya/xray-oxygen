@@ -7,20 +7,20 @@
 
 CUIMessageBox::CUIMessageBox()
 {
-	m_UIButtonYesOk		= NULL;
-	m_UIButtonNo		= NULL;
-	m_UIButtonCancel	= NULL;
-	m_UIButtonCopy		= NULL;
-	m_UIStaticPicture	= NULL;
-	m_UIStaticText		= NULL;
-
-	m_UIEditPass		= NULL;
-	m_UIEditUserPass	= NULL;
-	m_UIEditURL			= NULL;
-	m_UIEditHost		= NULL;
-	m_UIStaticPass		= NULL;
-	m_UIStaticUserPass	= NULL;
-	m_UIStaticHost		= NULL;
+	m_UIButtonYesOk		= nullptr;
+	m_UIButtonNo		= nullptr;
+	m_UIButtonCancel	= nullptr;
+	m_UIButtonCopy		= nullptr;
+	m_UIStaticPicture	= nullptr;
+	m_UIStaticText		= nullptr;
+						  nullptr
+	m_UIEditPass		= nullptr;
+	m_UIEditUserPass	= nullptr;
+	m_UIEditURL			= nullptr;
+	m_UIEditHost		= nullptr;
+	m_UIStaticPass		= nullptr;
+	m_UIStaticUserPass	= nullptr;
+	m_UIStaticHost		= nullptr;
 }
 
 CUIMessageBox::~CUIMessageBox()
@@ -448,4 +448,29 @@ void CUIMessageBox::SetPasswordMode(bool b)
 		m_UIEditPass->Show(b);
 	if(m_UIStaticPass)
 		m_UIStaticPass->Show(b);
+}
+
+#include "UIMessageBoxEx.h"
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CUIMessageBox::script_register(lua_State *L)
+{
+	module(L)
+		[
+		class_<CUIMessageBox, CUIStatic>("CUIMessageBox")
+			.def(constructor<>())
+			.def("InitMessageBox", &CUIMessageBox::InitMessageBox)
+			.def("SetText", &CUIMessageBox::SetText)
+			.def("GetHost", &CUIMessageBox::GetHost)
+			.def("GetPassword", &CUIMessageBox::GetPassword),
+			
+		class_<CUIMessageBoxEx, CUIDialogWnd>("CUIMessageBoxEx")
+			.def(constructor<>())
+			.def("InitMessageBox", &CUIMessageBoxEx::InitMessageBox)
+			.def("SetText", &CUIMessageBoxEx::SetText)
+			.def("GetHost", &CUIMessageBoxEx::GetHost)
+			.def("GetPassword", &CUIMessageBoxEx::GetPassword)
+		];
+
 }

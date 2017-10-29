@@ -53,13 +53,61 @@ void CUIDialogWndEx::AddCallback (LPCSTR control_id, s16 evt, const luabind::fun
 	c->m_event			= evt;
 }
 
-
-
 bool CUIDialogWndEx::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
 	return inherited::OnKeyboardAction(dik,keyboard_action);
 }
+
 void CUIDialogWndEx::Update()
 {
 	inherited::Update();
+}
+
+
+//UI-controls
+#include "UIButton.h"
+#include "UIMessageBox.h"
+#include "UIPropertiesBox.h"
+#include "UICheckButton.h"
+#include "UIRadioButton.h"
+#include "UIStatic.h"
+#include "UIEditBox.h"
+#include "UIFrameWindow.h"
+#include "UIFrameLineWnd.h"
+#include "UIProgressBar.h"
+#include "UITabControl.h"
+#include "uiscriptwnd_script.h"
+
+using namespace luabind;
+
+extern export_class script_register_ui_window1(export_class &&);
+extern export_class script_register_ui_window2(export_class &&);
+
+#pragma optimize("s",on)
+void CUIDialogWndEx::script_register(lua_State *L)
+{
+	export_class				instance("CUIScriptWnd");
+
+	module(L)
+		[
+			std::move(script_register_ui_window2(script_register_ui_window1((std::move(instance)))))
+			.def("Load", &BaseType::Load)
+		];
+}
+
+export_class script_register_ui_window1(export_class &&instance)
+{
+	return std::move(instance)
+		.def(constructor<>())
+		.def("AddCallback", (void(BaseType::*)(LPCSTR, s16, const luabind::functor<void>&, const luabind::object&))&BaseType::AddCallback)
+		.def("Register", (void (BaseType::*)(CUIWindow*, LPCSTR))&BaseType::Register);
+}
+
+#pragma optimize("s",on)
+export_class script_register_ui_window2(export_class &&instance)
+{
+	return std::move(instance)
+		.def("OnKeyboard", &BaseType::OnKeyboardAction, &WrapType::OnKeyboard_static)
+		.def("Update", &BaseType::Update, &WrapType::Update_static)
+		.def("Dispatch", &BaseType::Dispatch, &WrapType::Dispatch_static);
 }

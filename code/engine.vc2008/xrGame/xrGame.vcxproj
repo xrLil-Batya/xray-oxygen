@@ -3345,12 +3345,8 @@
     <ClCompile Include="ui\UIXmlInit.cpp" />
     <ClCompile Include="ui\xrUIXmlParser.cpp" />
     <ClCompile Include="ui\UIMessageBox.cpp" />
-    <ClCompile Include="ui\UIMessageBox_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIMessageBoxEx.cpp" />
     <ClCompile Include="ui\UIPropertiesBox.cpp" />
-    <ClCompile Include="ui\UIPropertiesBox_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIAnimatedStatic.cpp" />
     <ClCompile Include="ui\UILanimController.cpp" />
     <ClCompile Include="ui\UIStatic.cpp" />
@@ -3360,42 +3356,16 @@
     <ClCompile Include="ui\UIEditBox.cpp" />
     <ClCompile Include="ui\UIEditBoxEx.cpp" />
     <ClCompile Include="ui\UICustomEdit.cpp" />
-    <ClCompile Include="ui\UIEditBox_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIDialogWnd.cpp" />
     <ClCompile Include="ui\UIFrameLineWnd.cpp" />
     <ClCompile Include="ui\UIFrameWindow.cpp" />
     <ClCompile Include="ui\UIWindow.cpp" />
-    <ClCompile Include="ui\UIWindow_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIDoubleProgressBar.cpp" />
     <ClCompile Include="ui\UIProgressBar.cpp" />
     <ClCompile Include="ui\UIProgressShape.cpp" />
     <ClCompile Include="ui\UITabButton.cpp" />
     <ClCompile Include="ui\UITabControl.cpp" />
-    <ClCompile Include="ui\UITabControl_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIScriptWnd.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIScriptWnd_script.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_AI32|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-    </ClCompile>
-    <ClCompile Include="ui\uiscriptwnd_script2.cpp">
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_AI32|Win32'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
-      <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="ui\UI3tButton.cpp" />
     <ClCompile Include="ui\UIBtnHint.cpp" />
@@ -3423,8 +3393,6 @@
     <ClCompile Include="ui\ui_arrow.cpp" />
     <ClCompile Include="ui\UIHint.cpp" />
     <ClCompile Include="ui\UIListBox.cpp" />
-    <ClCompile Include="ui\UIListBox_script.cpp">
-    </ClCompile>
     <ClCompile Include="ui\UIListBoxItem.cpp" />
     <ClCompile Include="ui\UIListBoxItemMsgChain.cpp" />
     <ClCompile Include="HitMarker.cpp" />
