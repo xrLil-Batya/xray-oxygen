@@ -124,6 +124,7 @@ void CLightProjector::OnAppActivate()
 }
 
 //
+#pragma warning(disable: 4838)
 #include "../xrRender/SkeletonCustom.h"
 void CLightProjector::calculate	()
 {

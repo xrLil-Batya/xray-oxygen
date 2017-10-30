@@ -14,6 +14,7 @@ void dxConsoleRender::Copy(IConsoleRender &_in)
 	*this = * (dxConsoleRender*)&_in;
 }
 
+#pragma warning(disable: 4838)
 void dxConsoleRender::OnRender(bool bGame)
 {
 	VERIFY	(HW.pDevice);

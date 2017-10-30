@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma warning(disable: 4297)
 #pragma comment( lib, "xrScripts.lib")
 
 #include	"../../xrEngine/Render.h"

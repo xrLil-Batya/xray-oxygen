@@ -8,10 +8,7 @@
 #include "../../xrEngine/xr_object.h"
 #include "../xrRender/fbasicvisual.h"
 #include "../../xrEngine/CustomHUD.h"
-
-#ifndef _EDITOR
 #include "../../xrCPU_Pipe/ttapi.h"
-#endif
 
 const	float		S_distance		= 48;
 const	float		S_distance2		= S_distance*S_distance;
@@ -34,7 +31,7 @@ const	u32			cache_old		= 30*1000;	// 30 secs
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
+#pragma warning(disable: 4838)
 CLightShadows::CLightShadows()
 {
 	current	= 0;
