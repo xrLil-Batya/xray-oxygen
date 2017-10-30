@@ -275,7 +275,7 @@ int Xml_eval(lua_State *L) {
 	int firstStatement = 1;
 	while((token=Tokenizer_next(tok))!=0) if(token[0]==OPN) { // new tag found
 		if(lua_gettop(L)) {
-			int newIndex=lua_objlen(L,-1)+1;
+			int newIndex=(int)lua_objlen(L,-1)+1;
 			lua_pushnumber(L,newIndex);
 			lua_newtable(L);
 			lua_settable(L, -3);
@@ -329,7 +329,7 @@ int Xml_eval(lua_State *L) {
 		else break;
 	}
 	else { // read elements
-		lua_pushnumber(L,lua_objlen(L,-1)+1);
+		lua_pushnumber(L, (lua_Number)lua_objlen(L,-1)+1);
 		Xml_pushDecode(L, token, 0);
 		lua_settable(L, -3);
 	}

@@ -185,8 +185,9 @@ bool OPCODE_Model::Build(const OPCODECREATE& create)
 	if(!create.NbTris || !create.Tris || !create.Verts)	return false;
 
 	// In this lib, we only support complete trees
-	if(!(create.Rules&SPLIT_COMPLETE))	return SetIceError("OPCODE WARNING: supports complete trees only! Use SPLIT_COMPLETE.\n");
-
+#pragma warning(disable: 4353)
+	if(!(create.Rules&SPLIT_COMPLETE))	return (SetIceError("OPCODE WARNING: supports complete trees only! Use SPLIT_COMPLETE.\n"));
+#pragma warning(default: 4353)
 	// Check topology. If the model contains degenerate faces, collision report can be wrong in some cases.
 	// e.g. it happens with the standard MAX teapot. So clean your meshes first... If you don't have a mesh cleaner
 	// you can try this: www.codercorner.com/Consolidation.zip
