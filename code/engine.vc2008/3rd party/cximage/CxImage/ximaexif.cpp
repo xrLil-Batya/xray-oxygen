@@ -50,7 +50,8 @@ bool CxImageJPG::CxExifInfo::DecodeExif(CxFile * hFile, int nReadMode)
     for(;;){
         int itemlen;
         int marker = 0;
-        int ll,lh, got;
+		int ll, lh;
+		INT_PTR got;
         BYTE * Data;
 
         if (SectionsRead >= MAX_SECTIONS){
@@ -379,7 +380,7 @@ static const int BytesPerFormat[] = {0,1,1,2,4,8,1,1,2,4,8,4,8};
    Process one of the nested EXIF directories.
 --------------------------------------------------------------------------*/
 bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned char * OffsetBase, unsigned ExifLength,
-                           EXIFINFO * const m_exifinfo, unsigned char ** const LastExifRefdP, int NestingLevel)
+                           EXIFINFO * const pm_exifinfo, unsigned char ** const LastExifRefdP, int NestingLevel)
 {
     int de;
     int a;
@@ -449,19 +450,19 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
         switch(Tag){
 
             case TAG_MAKE:
-                strncpy(m_exifinfo->CameraMake, (char*)ValuePtr, 31);
+                strncpy(pm_exifinfo->CameraMake, (char*)ValuePtr, 31);
                 break;
 
             case TAG_MODEL:
-                strncpy(m_exifinfo->CameraModel, (char*)ValuePtr, 39);
+                strncpy(pm_exifinfo->CameraModel, (char*)ValuePtr, 39);
                 break;
 
 			case TAG_EXIF_VERSION:
-				strncpy(m_exifinfo->Version,(char*)ValuePtr, 4);
+				strncpy(pm_exifinfo->Version,(char*)ValuePtr, 4);
 				break;
 
             case TAG_DATETIME_ORIGINAL:
-                strncpy(m_exifinfo->DateTime, (char*)ValuePtr, 19);
+                strncpy(pm_exifinfo->DateTime, (char*)ValuePtr, 19);
                 break;
 
             case TAG_USERCOMMENT:
@@ -482,13 +483,13 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                         char c;
                         c = ((char*)ValuePtr)[a];
                         if (c != '\0' && c != ' '){
-                            strncpy(m_exifinfo->Comments, (char*)ValuePtr+a, 199);
+                            strncpy(pm_exifinfo->Comments, (char*)ValuePtr+a, 199);
                             break;
                         }
                     }
                     
                 }else{
-                    strncpy(m_exifinfo->Comments, (char*)ValuePtr, 199);
+                    strncpy(pm_exifinfo->Comments, (char*)ValuePtr, 199);
                 }
                 break;
 
@@ -496,7 +497,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                 /* Simplest way of expressing aperture, so I trust it the most.
                    (overwrite previously computd value if there is one)
                    */
-                m_exifinfo->ApertureFNumber = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->ApertureFNumber = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_APERTURE:
@@ -505,13 +506,13 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                  use this field if we don't have appropriate aperture
                  information yet. 
                 */
-                if (m_exifinfo->ApertureFNumber == 0){
-                    m_exifinfo->ApertureFNumber = (float)exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0f)*0.5);
+                if (pm_exifinfo->ApertureFNumber == 0){
+                    pm_exifinfo->ApertureFNumber = (float)exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0f)*0.5);
                 }
                 break;
 
 			case TAG_BRIGHTNESS:
-				m_exifinfo->Brightness = (float)ConvertAnyFormat(ValuePtr, Format);
+				pm_exifinfo->Brightness = (float)ConvertAnyFormat(ValuePtr, Format);
 				break;
 
             case TAG_FOCALLENGTH:
@@ -519,14 +520,14 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                    as a function of how farthey are zoomed in. 
                 */
 
-                m_exifinfo->FocalLength = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->FocalLength = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_SUBJECT_DISTANCE:
                 /* Inidcates the distacne the autofocus camera is focused to.
                    Tends to be less accurate as distance increases.
                 */
-                m_exifinfo->Distance = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->Distance = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_EXPOSURETIME:
@@ -534,7 +535,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                    trust it most.  (overwrite previously computd value
                    if there is one) 
                 */
-                m_exifinfo->ExposureTime = 
+                pm_exifinfo->ExposureTime = 
                     (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
@@ -543,25 +544,25 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                    so only use this value if we don't already have it
                    from somewhere else.  
                 */
-                if (m_exifinfo->ExposureTime == 0){
-                    m_exifinfo->ExposureTime = (float)
+                if (pm_exifinfo->ExposureTime == 0){
+                    pm_exifinfo->ExposureTime = (float)
                         (1/exp(ConvertAnyFormat(ValuePtr, Format)*log(2.0f)));
                 }
                 break;
 
             case TAG_FLASH:
                 if ((int)ConvertAnyFormat(ValuePtr, Format) & 7){
-                    m_exifinfo->FlashUsed = 1;
+                    pm_exifinfo->FlashUsed = 1;
                 }else{
-                    m_exifinfo->FlashUsed = 0;
+                    pm_exifinfo->FlashUsed = 0;
                 }
                 break;
 
             case TAG_ORIENTATION:
-                m_exifinfo->Orientation = (int)ConvertAnyFormat(ValuePtr, Format);
-                if (m_exifinfo->Orientation < 1 || m_exifinfo->Orientation > 8){
+                pm_exifinfo->Orientation = (int)ConvertAnyFormat(ValuePtr, Format);
+                if (pm_exifinfo->Orientation < 1 || pm_exifinfo->Orientation > 8){
                     strcpy(m_szLastError,"Undefined rotation value");
-                    m_exifinfo->Orientation = 0;
+                    pm_exifinfo->Orientation = 0;
                 }
                 break;
 
@@ -575,65 +576,65 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                 break;
 
             case TAG_FOCALPLANEXRES:
-                m_exifinfo->FocalplaneXRes = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->FocalplaneXRes = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_FOCALPLANEYRES:
-                m_exifinfo->FocalplaneYRes = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->FocalplaneYRes = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
 			case TAG_RESOLUTIONUNIT:
                 switch((int)ConvertAnyFormat(ValuePtr, Format)){
-                    case 1: m_exifinfo->ResolutionUnit = 1.0f; break; /* 1 inch */
-                    case 2:	m_exifinfo->ResolutionUnit = 1.0f; break;
-                    case 3: m_exifinfo->ResolutionUnit = 0.3937007874f;    break;  /* 1 centimeter*/
-                    case 4: m_exifinfo->ResolutionUnit = 0.03937007874f;   break;  /* 1 millimeter*/
-                    case 5: m_exifinfo->ResolutionUnit = 0.00003937007874f;  /* 1 micrometer*/
+                    case 1: pm_exifinfo->ResolutionUnit = 1.0f; break; /* 1 inch */
+                    case 2:	pm_exifinfo->ResolutionUnit = 1.0f; break;
+                    case 3: pm_exifinfo->ResolutionUnit = 0.3937007874f;    break;  /* 1 centimeter*/
+                    case 4: pm_exifinfo->ResolutionUnit = 0.03937007874f;   break;  /* 1 millimeter*/
+                    case 5: pm_exifinfo->ResolutionUnit = 0.00003937007874f;  /* 1 micrometer*/
                 }
                 break;
 
             case TAG_FOCALPLANEUNITS:
                 switch((int)ConvertAnyFormat(ValuePtr, Format)){
-                    case 1: m_exifinfo->FocalplaneUnits = 1.0f; break; /* 1 inch */
-                    case 2:	m_exifinfo->FocalplaneUnits = 1.0f; break;
-                    case 3: m_exifinfo->FocalplaneUnits = 0.3937007874f;    break;  /* 1 centimeter*/
-                    case 4: m_exifinfo->FocalplaneUnits = 0.03937007874f;   break;  /* 1 millimeter*/
-                    case 5: m_exifinfo->FocalplaneUnits = 0.00003937007874f;  /* 1 micrometer*/
+                    case 1: pm_exifinfo->FocalplaneUnits = 1.0f; break; /* 1 inch */
+                    case 2:	pm_exifinfo->FocalplaneUnits = 1.0f; break;
+                    case 3: pm_exifinfo->FocalplaneUnits = 0.3937007874f;    break;  /* 1 centimeter*/
+                    case 4: pm_exifinfo->FocalplaneUnits = 0.03937007874f;   break;  /* 1 millimeter*/
+                    case 5: pm_exifinfo->FocalplaneUnits = 0.00003937007874f;  /* 1 micrometer*/
                 }
                 break;
 
                 // Remaining cases contributed by: Volker C. Schoech <schoech(at)gmx(dot)de>
 
             case TAG_EXPOSURE_BIAS:
-                m_exifinfo->ExposureBias = (float) ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->ExposureBias = (float) ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_WHITEBALANCE:
-                m_exifinfo->Whitebalance = (int)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->Whitebalance = (int)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_METERING_MODE:
-                m_exifinfo->MeteringMode = (int)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->MeteringMode = (int)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_EXPOSURE_PROGRAM:
-                m_exifinfo->ExposureProgram = (int)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->ExposureProgram = (int)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_ISO_EQUIVALENT:
-                m_exifinfo->ISOequivalent = (int)ConvertAnyFormat(ValuePtr, Format);
-                if ( m_exifinfo->ISOequivalent < 50 ) m_exifinfo->ISOequivalent *= 200;
+                pm_exifinfo->ISOequivalent = (int)ConvertAnyFormat(ValuePtr, Format);
+                if ( pm_exifinfo->ISOequivalent < 50 ) pm_exifinfo->ISOequivalent *= 200;
                 break;
 
             case TAG_COMPRESSION_LEVEL:
-                m_exifinfo->CompressionLevel = (int)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->CompressionLevel = (int)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_XRESOLUTION:
-                m_exifinfo->Xresolution = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->Xresolution = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
             case TAG_YRESOLUTION:
-                m_exifinfo->Yresolution = (float)ConvertAnyFormat(ValuePtr, Format);
+                pm_exifinfo->Yresolution = (float)ConvertAnyFormat(ValuePtr, Format);
                 break;
 
             case TAG_THUMBNAIL_OFFSET:
@@ -656,7 +657,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
 					strcpy(m_szLastError,"Illegal subdirectory link");
 					return false;
 				}
-				ProcessExifDir(SubdirStart, OffsetBase, ExifLength, m_exifinfo, LastExifRefdP, NestingLevel+1);
+				ProcessExifDir(SubdirStart, OffsetBase, ExifLength, pm_exifinfo, LastExifRefdP, NestingLevel+1);
 			}
             continue;
         }
@@ -679,7 +680,7 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
                 strcpy(m_szLastError,"Illegal subdirectory link");
 				return false;
             }
-            ProcessExifDir(SubdirStart, OffsetBase, ExifLength, m_exifinfo, LastExifRefdP, NestingLevel+1);
+            ProcessExifDir(SubdirStart, OffsetBase, ExifLength, pm_exifinfo, LastExifRefdP, NestingLevel+1);
         }
     }
 
@@ -687,8 +688,8 @@ bool CxImageJPG::CxExifInfo::ProcessExifDir(unsigned char * DirStart, unsigned c
     if (ThumbnailSize && ThumbnailOffset){
         if (ThumbnailSize + ThumbnailOffset <= ExifLength){
             /* The thumbnail pointer appears to be valid.  Store it. */
-            m_exifinfo->ThumbnailPointer = OffsetBase + ThumbnailOffset;
-            m_exifinfo->ThumbnailSize = ThumbnailSize;
+            pm_exifinfo->ThumbnailPointer = OffsetBase + ThumbnailOffset;
+            pm_exifinfo->ThumbnailSize = ThumbnailSize;
         }
     }
 
@@ -746,22 +747,23 @@ void CxImageJPG::CxExifInfo::process_COM (const BYTE * Data, int length)
 
     if (length > MAX_COMMENT) length = MAX_COMMENT; // Truncate if it won't fit in our structure.
 
-    for (a=2;a<length;a++){
-        ch = Data[a];
+	for (a = 2; a < length; a++) 
+	{
+		ch = Data[a];
 
-        if (ch == '\r' && Data[a+1] == '\n') continue; // Remove cr followed by lf.
+		if (ch == '\r' && Data[a + 1] == '\n') continue; // Remove cr followed by lf.
 
-        if (isprint(ch) || ch == '\n' || ch == '\t'){
-            Comment[nch++] = (char)ch;
-        }else{
-            Comment[nch++] = '?';
-        }
-    }
+		if (isprint(ch) || ch == '\n' || ch == '\t')
+		{
+			Comment[nch++] = (char)ch;
+		}
+		else
+		{
+			Comment[nch++] = '?';
+		}
+	}
 
     Comment[nch] = '\0'; // Null terminate
-
-    //if (ShowTags) printf("COM marker comment: %s\n",Comment);
-
     strcpy(m_exifinfo->Comments,Comment);
 }
 ////////////////////////////////////////////////////////////////////////////////
