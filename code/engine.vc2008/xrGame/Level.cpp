@@ -621,66 +621,21 @@ void CLevel::OnFrame	()
 	// Inherited update
 	inherited::OnFrame		();
 
-	// Draw client/server stats
-	if ( !g_dedicated_server && psDeviceFlags.test(rsStatistic))
-	{
-		CGameFont* F = UI().Font().pFontDI;
-		if (!psNET_direct_connect)
-		{
-			const IServerStatistic* S = Server->GetStatistic();
-			F->SetHeightI(0.015f);
-			F->OutSetI(0.0f, 0.5f);
-			F->SetColor(D3DCOLOR_XRGB(0, 255, 0));
-			F->OutNext("IN:  %4d/%4d (%2.1f%%)", S->bytes_in_real, S->bytes_in, 100.f*float(S->bytes_in_real) / float(S->bytes_in));
-			F->OutNext("OUT: %4d/%4d (%2.1f%%)", S->bytes_out_real, S->bytes_out, 100.f*float(S->bytes_out_real) / float(S->bytes_out));
-			F->OutNext("client_2_sever ping: %d", net_Statistic.getPing());
-			F->OutNext("SPS/Sended : %4d/%4d", S->dwBytesPerSec, S->dwBytesSended);
-			F->OutNext("sv_urate/cl_urate : %4d/%4d", psNET_ServerUpdate, psNET_ClientUpdate);
-
-			F->SetColor(D3DCOLOR_XRGB(255, 255, 255));
-
-			struct net_stats_functor
-			{
-				xrServer* m_server;
-				CGameFont* F;
-				void operator()(IClient* C)
-				{
-					m_server->UpdateClientStatistic(C);
-					F->OutNext("0x%08x: P(%d), BPS(%2.1fK), MRR(%2d), MSR(%2d), Retried(%2d), Blocked(%2d)",
-						C->ID.value(),
-						C->stats.getPing(),
-						float(C->stats.getBPS()),
-						C->stats.getMPS_Receive(),
-						C->stats.getMPS_Send(),
-						C->stats.getRetriedCount(),
-						C->stats.dwTimesBlocked
-					);
-				}
-			};
-			net_stats_functor tmp_functor;
-			tmp_functor.m_server = Server;
-			tmp_functor.F = F;
-			Server->ForEachClientDo(tmp_functor);
-		}
-	} else
-	{
 #ifdef DEBUG
+	// Draw client/server stats
+	if (!psDeviceFlags.test(rsStatistic))
+	{
 		if (pStatGraphR)
 			xr_delete(pStatGraphR);
-#endif
 	}
-#ifdef DEBUG
 	g_pGamePersistent->Environment().m_paused		= m_bEnvPaused;
 #endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
-	//Device.Statistic->cripting.Begin	();
 	if (!g_dedicated_server)
 		ai().script_engine().script_process	(ScriptEngine::eScriptProcessorLevel)->update();
-	//Device.Statistic->Scripting.End	();
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
-//	autosave_manager().update			();
 
 	//  
 	Device.Statistic->TEST0.Begin		();

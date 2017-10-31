@@ -18,10 +18,11 @@
 class CServerEntityWrapper;
 class CGameGraph;
 
-class CALifeSpawnRegistry : CRandom {
+class CALifeSpawnRegistry : CRandom 
+{
 public:
-	typedef CGameGraph::LEVEL_POINT_VECTOR											ARTEFACT_SPAWNS;
-	typedef CGraphAbstractSerialize<CServerEntityWrapper*,float,ALife::_SPAWN_ID>	SPAWN_GRAPH;
+	using ARTEFACT_SPAWNS = CGameGraph::LEVEL_POINT_VECTOR;
+	using SPAWN_GRAPH = CGraphAbstractSerialize<CServerEntityWrapper*,float,ALife::_SPAWN_ID>;
 
 public:
 	typedef xr_vector<ALife::_SPAWN_ID>												SPAWN_IDS;
@@ -76,4 +77,35 @@ public:
 	IReader*								get_spawn_file				() const {return m_file;}
 };
 
-#include "alife_spawn_registry_inline.h"
+IC const CALifeSpawnHeader &CALifeSpawnRegistry::header() const
+{
+	return (m_header);
+}
+
+IC void CALifeSpawnRegistry::assign_artefact_position(CSE_ALifeAnomalousZone	*anomaly, CSE_ALifeDynamicObject *object) const
+{
+	object->m_tGraphID = anomaly->m_tGraphID;
+	VERIFY3(anomaly->m_artefact_spawn_count, "Anomaly is outside of the AI-map but is used for artefact generation : ", anomaly->name_replace());
+	u32 index = anomaly->m_artefact_position_offset + anomaly->randI(anomaly->m_artefact_spawn_count);
+	object->o_Position = m_artefact_spawn_positions[index].level_point();
+	object->m_tNodeID = m_artefact_spawn_positions[index].level_vertex_id();
+	object->m_fDistance = m_artefact_spawn_positions[index].distance();
+}
+
+IC const CALifeSpawnRegistry::SPAWN_GRAPH &CALifeSpawnRegistry::spawns() const
+{
+	return (m_spawns);
+}
+
+IC void CALifeSpawnRegistry::process_spawns(SPAWN_IDS &spawns)
+{
+	std::sort(spawns.begin(), spawns.end());
+	spawns.erase(std::unique(spawns.begin(), spawns.end()), spawns.end());
+}
+
+IC const ALife::_SPAWN_ID &CALifeSpawnRegistry::spawn_id(const ALife::_SPAWN_STORY_ID &spawn_story_id) const
+{
+	auto spawn_find = m_spawn_story_ids.find(spawn_story_id);
+	VERIFY2(spawn_find != m_spawn_story_ids.end(), "Spawn story id cannot be found");
+	return (*spawn_find).second;
+}

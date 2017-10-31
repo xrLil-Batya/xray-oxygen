@@ -11,10 +11,6 @@
 #include "alife_space.h"
 #include "../xrEngine/xrlevel.h"
 
-CALifeSpawnHeader::~CALifeSpawnHeader	()
-{
-}
-
 void CALifeSpawnHeader::load			(IReader	&file_stream)
 {
 	m_version				= file_stream.r_u32();

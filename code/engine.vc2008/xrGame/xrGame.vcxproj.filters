@@ -2955,9 +2955,6 @@
     <ClInclude Include="alife_simulator.h">
       <Filter>AI\ALife</Filter>
     </ClInclude>
-    <ClInclude Include="alife_simulator_inline.h">
-      <Filter>AI\ALife</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\alife_space.h">
       <Filter>AI\ALife</Filter>
     </ClInclude>
@@ -3048,13 +3045,7 @@
     <ClInclude Include="alife_spawn_registry.h">
       <Filter>AI\ALife\simulator_base\registries\spawn_registry</Filter>
     </ClInclude>
-    <ClInclude Include="alife_spawn_registry_inline.h">
-      <Filter>AI\ALife\simulator_base\registries\spawn_registry</Filter>
-    </ClInclude>
     <ClInclude Include="alife_spawn_registry_header.h">
-      <Filter>AI\ALife\simulator_base\registries\spawn_registry\header</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_spawn_registry_header_inline.h">
       <Filter>AI\ALife\simulator_base\registries\spawn_registry\header</Filter>
     </ClInclude>
     <ClInclude Include="server_entity_wrapper.h">
@@ -4596,9 +4587,6 @@
     <ClInclude Include="builder_allocator_constructor.h">
       <Filter>AI\ANavigation\Pathfinding\DataStorages\constructors\builder_allocator</Filter>
     </ClInclude>
-    <ClInclude Include="builder_allocator_constructor_inline.h">
-      <Filter>AI\ANavigation\Pathfinding\DataStorages\constructors\builder_allocator</Filter>
-    </ClInclude>
     <ClInclude Include="manager_builder_allocator_constructor.h">
       <Filter>AI\ANavigation\Pathfinding\DataStorages\constructors\manager_builder_allocator</Filter>
     </ClInclude>
@@ -5068,9 +5056,6 @@
       <Filter>Core\Client\Level\SeniorityHierarchyHolder\GroupHierarchyHolder</Filter>
     </ClInclude>
     <ClInclude Include="client_spawn_manager.h">
-      <Filter>Core\Client\Level\ClientSpawnManager</Filter>
-    </ClInclude>
-    <ClInclude Include="client_spawn_manager_inline.h">
       <Filter>Core\Client\Level\ClientSpawnManager</Filter>
     </ClInclude>
     <ClInclude Include="autosave_manager.h">
@@ -6809,9 +6794,6 @@
     <ClCompile Include="alife_simulator.cpp">
       <Filter>AI\ALife</Filter>
     </ClCompile>
-    <ClCompile Include="alife_simulator_script.cpp">
-      <Filter>AI\ALife</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\alife_space.cpp">
       <Filter>AI\ALife</Filter>
     </ClCompile>
@@ -6869,9 +6851,6 @@
     <ClCompile Include="alife_smart_terrain_task.cpp">
       <Filter>AI\ALife\simulator_base\smart_terrain_task</Filter>
     </ClCompile>
-    <ClCompile Include="alife_smart_terrain_task_script.cpp">
-      <Filter>AI\ALife\simulator_base\smart_terrain_task</Filter>
-    </ClCompile>
     <ClCompile Include="alife_time_manager.cpp">
       <Filter>AI\ALife\simulator_base\time_manager</Filter>
     </ClCompile>
@@ -6924,9 +6903,6 @@
       <Filter>AI\ALife\server_entities\human</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\alife_human_brain.cpp">
-      <Filter>AI\ALife\server_entities\human\brain</Filter>
-    </ClCompile>
-    <ClCompile Include="alife_human_brain_script.cpp">
       <Filter>AI\ALife\server_entities\human\brain</Filter>
     </ClCompile>
     <ClCompile Include="alife_human_object_handler.cpp">
@@ -8000,9 +7976,6 @@
     <ClCompile Include="client_spawn_manager.cpp">
       <Filter>Core\Client\Level\ClientSpawnManager</Filter>
     </ClCompile>
-    <ClCompile Include="client_spawn_manager_script.cpp">
-      <Filter>Core\Client\Level\ClientSpawnManager</Filter>
-    </ClCompile>
     <ClCompile Include="autosave_manager.cpp">
       <Filter>Core\Client\Level\AutosaveManager</Filter>
     </ClCompile>
@@ -8534,13 +8507,7 @@
     <ClCompile Include="Mincer.cpp">
       <Filter>Core\Client\Objects\zones\Mincer</Filter>
     </ClCompile>
-    <ClCompile Include="mincer_script.cpp">
-      <Filter>Core\Client\Objects\zones\Mincer</Filter>
-    </ClCompile>
     <ClCompile Include="MosquitoBald.cpp">
-      <Filter>Core\Client\Objects\zones\MosquitoBald</Filter>
-    </ClCompile>
-    <ClCompile Include="MosquitoBald_script.cpp">
       <Filter>Core\Client\Objects\zones\MosquitoBald</Filter>
     </ClCompile>
     <ClCompile Include="RadioactiveZone.cpp">
@@ -9276,9 +9243,6 @@
       <Filter>Core\Client\Objects\physics\PHCommander</Filter>
     </ClCompile>
     <ClCompile Include="PHSimpleCalls.cpp">
-      <Filter>Core\Client\Objects\physics\PHCommander</Filter>
-    </ClCompile>
-    <ClCompile Include="PHSimpleCallsScript.cpp">
       <Filter>Core\Client\Objects\physics\PHCommander</Filter>
     </ClCompile>
     <ClCompile Include="DamagableItem.cpp">

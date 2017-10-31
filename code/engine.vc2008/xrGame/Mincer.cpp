@@ -87,18 +87,7 @@ bool CMincer::BlowoutState	()
 {
 	bool ret=inherited::BlowoutState	();
 
-	//xr_set<CObject*>::iterator it=m_inZone.begin(),e=m_inZone.end();
-	//for(;e!=it;++it)
-	//{
-	//	CEntityAlive * EA = smart_cast<CEntityAlive *>(*it);
-	//	if(!EA)continue;
-	//	CPhysicsShellHolder * GO = smart_cast<CPhysicsShellHolder *>(*it);
-	//	Telekinesis().activate(GO,m_fThrowInImpulse, m_fTeleHeight, 100000);
-
-	//}
-
-	if(m_dwBlowoutExplosionTime<(u32)m_iPreviousStateTime ||
-		m_dwBlowoutExplosionTime>=(u32)m_iStateTime) return ret;
+	if(m_dwBlowoutExplosionTime<(u32)m_iPreviousStateTime || m_dwBlowoutExplosionTime>=(u32)m_iStateTime) return ret;
 	Telekinesis().deactivate();
 	return ret;
 }
@@ -140,8 +129,6 @@ void CMincer::NotificateDestroy			(CPHDestroyableNotificate *dn)
 void CMincer::AffectPullAlife(CEntityAlive* EA,const Fvector& throw_in_dir,float dist)
 {
 	float power = Power(dist, Radius());
-	//Fvector dir;
-	//dir.random_dir(throw_in_dir,2.f*M_PI);
 	if(!smart_cast<CActor*>(EA))
 	{
 		Fvector pos_in_bone_space;
@@ -155,4 +142,20 @@ void CMincer::AffectPullAlife(CEntityAlive* EA,const Fvector& throw_in_dir,float
 float CMincer::BlowoutRadiusPercent	(CPhysicsShellHolder* GO)
 {
 	return	(!smart_cast<CActor*>(GO)? m_fBlowoutRadiusPercent:m_fActorBlowoutRadiusPercent);
+}
+
+#include "RadioactiveZone.h"
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CMincer::script_register(lua_State *L)
+{
+	module(L)
+		[
+		class_<CMincer, CGameObject>("CMincer")
+			.def(constructor<>()),
+		class_<CRadioactiveZone, CGameObject>("CRadioactiveZone")
+			.def(constructor<>())
+		];
 }

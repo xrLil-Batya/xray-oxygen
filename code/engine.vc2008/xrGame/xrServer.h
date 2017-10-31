@@ -57,13 +57,6 @@ struct	svs_respawn
 };
 IC bool operator < (const svs_respawn& A, const svs_respawn& B)	{ return A.timestamp<B.timestamp; }
 
-struct CheaterToKick
-{
-	shared_str	reason;
-	ClientID	cheater_id;
-};
-typedef xr_vector<CheaterToKick> cheaters_t;
-
 namespace file_transfer
 {
 	class server_site;
@@ -78,8 +71,7 @@ private:
 	xrS_entities				entities;
 	xr_multiset<svs_respawn>	q_respawn;
 	xr_vector<u16>				conn_spawned_ids;
-	cheaters_t					m_cheaters;
-	
+
 	file_transfer::server_site*	m_file_transfers;
 	clientdata_proxy*			m_screenshot_proxies[MAX_PLAYERS_COUNT*2];
 	void	initialize_screenshot_proxies();
@@ -191,8 +183,7 @@ protected:
 
 			void			RequestClientDigest					(IClient* CL);
 			void			ProcessClientDigest					(xrClientData* xrCL, NET_Packet* P);
-			void			KickCheaters						();
-	
+
 	virtual void			Check_BuildVersion_Success			(IClient* CL);
 
 	void					SendConnectionData		(IClient* CL);
@@ -248,10 +239,7 @@ public:
 	virtual void			Assign_ServerType	( string512& res ) {};
 	virtual bool			HasPassword			()	{ return false; }
 	virtual bool			HasProtected		()	{ return false; }
-			void			AddCheater			(shared_str const & reason, ClientID const & cheaterID);
-			void			MakeScreenshot		(ClientID const & admin_id, ClientID const & cheater_id);
-			void			MakeConfigDump		(ClientID const & admin_id, ClientID const & cheater_id);
-
+	
 	virtual void			GetServerInfo		( CServerInfo* si );
 public:
 	xr_string				ent_name_safe		(u16 eid);

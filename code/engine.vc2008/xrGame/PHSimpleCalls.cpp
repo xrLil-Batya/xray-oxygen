@@ -1,9 +1,6 @@
-#include	"stdafx.h"
-#include	"../xrphysics/physicsshell.h"
-#include	"phsimplecalls.h"
-//#include	"phobject.h"
-//#include	"PHWorld.h"
-//extern		CPHWorld			*ph_world;
+#include "stdafx.h"
+#include "phsimplecalls.h"
+#include "../xrphysics/physicsshell.h"
 #include "../xrphysics/IPHWorld.h"
 
 CPHCallOnStepCondition::CPHCallOnStepCondition()
@@ -27,7 +24,6 @@ bool	CPHCallOnStepCondition::obsolete() const
 {
 	return time_out();
 }
-
 
 void CPHCallOnStepCondition::set_steps_interval(u64 steps)
 {
@@ -79,15 +75,39 @@ CPHReqComparerHasShell::CPHReqComparerHasShell(IPhysicsShellEx	*shell)
 	VERIFY(shell);
 	m_shell=shell;
 }
-//CPHTimeCondition::CPHTimeCondition(u32 time)
-//{
-//	//m_step=u64(ph_world->CalcNumSteps(time))+ph_world->m_steps_num;
-//}
-//
-//CPHTimeCondition::CPHTimeCondition(float time)
-//{
-//	///if (dTime < m_frame_time*1000) return 0;
-//	u32 res = iCeil((float(dTime) - m_frame_time*1000) / (fixed_step*1000));
-//	m_step=
-//}
 
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CPHCallOnStepCondition::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CPHCallOnStepCondition>("phcondition_callonstep")
+			.def("set_step",				&CPHCallOnStepCondition::set_step)
+			.def("set_steps_interval",		&CPHCallOnStepCondition::set_steps_interval)
+			.def("set_global_time_ms",		(void(CPHCallOnStepCondition::*)(u32))(&CPHCallOnStepCondition::set_global_time))
+			.def("set_global_time_s",		(void(CPHCallOnStepCondition::*)(float))(&CPHCallOnStepCondition::set_global_time))
+			.def("set_time_interval_ms",	(void(CPHCallOnStepCondition::*)(u32))(&CPHCallOnStepCondition::set_time_interval))
+			.def("set_time_interval_s",		(void(CPHCallOnStepCondition::*)(float))(&CPHCallOnStepCondition::set_time_interval))
+			.def(constructor<>())
+		];
+}
+
+void CPHExpireOnStepCondition::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CPHExpireOnStepCondition,CPHCallOnStepCondition>("phcondition_expireonstep")
+			.def(constructor<>())
+		];
+}
+
+void CPHConstForceAction::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CPHConstForceAction>("phaction_constforce")
+			.def(constructor<IPhysicsShellEx*,const Fvector&>())
+		];
+}

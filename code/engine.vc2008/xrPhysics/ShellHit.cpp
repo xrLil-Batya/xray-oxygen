@@ -39,9 +39,6 @@ void CPHShell::ExplosionHit(const Fvector& pos, const Fvector& dir, float val,co
 	{	
 		//Fvector max_area_dir;	
 		CPHElement* element=(*i);
-		//element->get_MaxAreaDir(max_area_dir);
-		//float	sign=max_area_dir.dotproduct(dir)>0.f ? 1.f : -1.f;
-		//max_area_dir.mul(sign);
 		u16 gn=element->CPHGeometryOwner::numberOfGeoms();
 		float g_impulse=impulse/gn;
 		for(u16 j=0;j<gn;++j)

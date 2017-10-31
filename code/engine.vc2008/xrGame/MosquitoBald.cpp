@@ -20,7 +20,6 @@ void CMosquitoBald::Load(LPCSTR section)
 	inherited::Load(section);
 }
 
-
 bool CMosquitoBald::BlowoutState()
 {
 	bool result = inherited::BlowoutState();
@@ -37,14 +36,6 @@ bool CMosquitoBald::BlowoutState()
 
 	return result;
 }
-//bool CMosquitoBald::SecondaryHitState()
-//{
-//	bool result = inherited::SecondaryHitState();
-//	if(!result)
-//		UpdateBlowout();
-//
-//	return result;
-//}
 
 void CMosquitoBald::Affect(SZoneObjectInfo* O) 
 {
@@ -87,21 +78,19 @@ void CMosquitoBald::UpdateSecondaryHit()
 	if(Device.dwPrecacheFrame)					
 		return;
 
-	for(auto it = m_ObjectInfoMap.begin(); m_ObjectInfoMap.end() != it; ++it)
+	for(auto it: m_ObjectInfoMap)
 	{
-		if(!(*it).object->getDestroy())
+		if(!it.object->getDestroy())
 		{
-			CPhysicsShellHolder *pGameObject = smart_cast<CPhysicsShellHolder*>((&(*it))->object);
+			CPhysicsShellHolder *pGameObject = smart_cast<CPhysicsShellHolder*>((&it)->object);
 			if(!pGameObject) return;
 
-			if((&(*it))->zone_ignore) return;
+			if((&it)->zone_ignore) return;
 			Fvector P; 
 			XFORM().transform_tiny(P,CFORM()->getSphere().P);
 
 			Fvector hit_dir; 
-			hit_dir.set(	::Random.randF(-.5f,.5f), 
-							::Random.randF(.0f,1.f), 
-							::Random.randF(-.5f,.5f)); 
+			hit_dir.set(::Random.randF(-.5f,.5f), ::Random.randF(.0f,1.f), ::Random.randF(-.5f,.5f)); 
 			hit_dir.normalize();
 
 			Fvector position_in_bone_space;
@@ -118,4 +107,26 @@ void CMosquitoBald::UpdateSecondaryHit()
 			CreateHit(pGameObject->ID(),ID(),hit_dir,power,0,position_in_bone_space,impulse,m_eHitTypeBlowout);
 		}
 	}
+}
+
+#include "ZoneCampfire.h"
+#include "TorridZone.h"
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CMosquitoBald::script_register	(lua_State *L)
+{
+	module(L)
+	[	
+		class_<CTorridZone,CGameObject>("CTorridZone")
+			.def(constructor<>()),
+		class_<CMosquitoBald,CGameObject>("CMosquitoBald")
+			.def(constructor<>()),
+		class_<CZoneCampfire,CGameObject>("CZoneCampfire")
+			.def(constructor<>())
+			.def("turn_on",				&CZoneCampfire::turn_on_script)
+			.def("turn_off",			&CZoneCampfire::turn_off_script)
+			.def("is_on",				&CZoneCampfire::is_on)
+	];
 }

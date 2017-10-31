@@ -935,7 +935,6 @@
     <ClInclude Include="agent_manager_properties.h" />
     <ClInclude Include="agent_manager_properties_inline.h" />
     <ClInclude Include="alife_simulator.h" />
-    <ClInclude Include="alife_simulator_inline.h" />
     <ClInclude Include="..\xrServerEntities\alife_space.h" />
     <ClInclude Include="alife_interaction_manager.h" />
     <ClInclude Include="alife_interaction_manager_inline.h" />
@@ -966,9 +965,7 @@
     <ClInclude Include="alife_smart_terrain_registry.h" />
     <ClInclude Include="alife_smart_terrain_registry_inline.h" />
     <ClInclude Include="alife_spawn_registry.h" />
-    <ClInclude Include="alife_spawn_registry_inline.h" />
     <ClInclude Include="alife_spawn_registry_header.h" />
-    <ClInclude Include="alife_spawn_registry_header_inline.h" />
     <ClInclude Include="server_entity_wrapper.h" />
     <ClInclude Include="server_entity_wrapper_inline.h" />
     <ClInclude Include="alife_story_registry.h" />
@@ -1486,7 +1483,6 @@
     <ClInclude Include="dijkstra_inline.h" />
     <ClInclude Include="data_storage_constructor.h" />
     <ClInclude Include="builder_allocator_constructor.h" />
-    <ClInclude Include="builder_allocator_constructor_inline.h" />
     <ClInclude Include="manager_builder_allocator_constructor.h" />
     <ClInclude Include="manager_builder_allocator_constructor_inline.h" />
     <ClInclude Include="edge_path.h" />
@@ -1645,7 +1641,6 @@
     <ClInclude Include="group_hierarchy_holder.h" />
     <ClInclude Include="group_hierarchy_holder_inline.h" />
     <ClInclude Include="client_spawn_manager.h" />
-    <ClInclude Include="client_spawn_manager_inline.h" />
     <ClInclude Include="autosave_manager.h" />
     <ClInclude Include="autosave_manager_inline.h" />
     <ClInclude Include="level_sounds.h" />
@@ -2277,8 +2272,6 @@
     </ClCompile>
     <ClCompile Include="alife_simulator.cpp">
     </ClCompile>
-    <ClCompile Include="alife_simulator_script.cpp">
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="alife_interaction_manager.cpp" />
     <ClCompile Include="alife_communication_manager.cpp" />
@@ -2299,8 +2292,6 @@
     <ClCompile Include="alife_story_registry.cpp" />
     <ClCompile Include="alife_registry_container.cpp" />
     <ClCompile Include="alife_smart_terrain_task.cpp" />
-    <ClCompile Include="alife_smart_terrain_task_script.cpp">
-    </ClCompile>
     <ClCompile Include="alife_time_manager.cpp" />
     <ClCompile Include="alife_update_manager.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">4121;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -2331,8 +2322,6 @@
     <ClCompile Include="alife_dynamic_object.cpp" />
     <ClCompile Include="alife_human_abstract.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_human_brain.cpp" />
-    <ClCompile Include="alife_human_brain_script.cpp">
-    </ClCompile>
     <ClCompile Include="alife_human_object_handler.cpp" />
     <ClCompile Include="alife_group_abstract.cpp" />
     <ClCompile Include="alife_monster_abstract.cpp" />
@@ -2857,8 +2846,6 @@
     <ClCompile Include="group_hierarchy_holder.cpp" />
     <ClCompile Include="client_spawn_manager.cpp">
     </ClCompile>
-    <ClCompile Include="client_spawn_manager_script.cpp">
-    </ClCompile>
     <ClCompile Include="autosave_manager.cpp" />
     <ClCompile Include="level_sounds.cpp" />
     <ClCompile Include="debug_renderer.cpp" />
@@ -3107,11 +3094,7 @@
     <ClCompile Include="GraviZone.cpp" />
     <ClCompile Include="level_changer.cpp" />
     <ClCompile Include="Mincer.cpp" />
-    <ClCompile Include="mincer_script.cpp">
-    </ClCompile>
     <ClCompile Include="MosquitoBald.cpp" />
-    <ClCompile Include="MosquitoBald_script.cpp">
-    </ClCompile>
     <ClCompile Include="RadioactiveZone.cpp" />
     <ClCompile Include="script_zone.cpp">
     </ClCompile>
@@ -3444,8 +3427,6 @@
     <ClCompile Include="PHScriptCall.cpp">
     </ClCompile>
     <ClCompile Include="PHSimpleCalls.cpp" />
-    <ClCompile Include="PHSimpleCallsScript.cpp">
-    </ClCompile>
     <ClCompile Include="DamagableItem.cpp" />
     <ClCompile Include="moving_bones_snd_player.cpp" />
     <ClCompile Include="PHSoundPlayer.cpp" />

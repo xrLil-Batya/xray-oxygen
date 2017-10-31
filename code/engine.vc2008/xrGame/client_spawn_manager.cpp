@@ -121,17 +121,16 @@ void CClientSpawnManager::callback			(CSpawnCallback &spawn_callback, CObject *o
 
 void CClientSpawnManager::callback			(CObject *object)
 {
-	REQUEST_REGISTRY::iterator		I = m_registry.find(object->ID());
-	if (I == m_registry.end())
-		return;
+	auto m_reg = m_registry.find(object->ID());
+	if (m_reg != m_registry.end())
+	{
 
-	REQUESTED_REGISTRY::iterator	i = (*I).second.begin();
-	REQUESTED_REGISTRY::iterator	e = (*I).second.end();
-	for ( ; i != e; ++i)
-		callback					((*i).second,object);
+		for (auto it : (*m_reg).second)
+			callback(it.second, object);
 
-	(*I).second.clear				();
-	m_registry.erase				(I);
+		(*m_reg).second.clear();
+		m_registry.erase(m_reg);
+	}
 }
 
 void CClientSpawnManager::merge_spawn_callbacks	(CSpawnCallback &new_callback, CSpawnCallback &old_callback)
@@ -190,4 +189,18 @@ void CClientSpawnManager::dump		(ALife::_OBJECT_ID	requesting_id) const
 void CClientSpawnManager::clear		()
 {
 	m_registry.clear				();
+}
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CClientSpawnManager::script_register(lua_State *L)
+{
+	module(L)
+		[
+		class_<CClientSpawnManager>("client_spawn_manager")
+		.def("add", (void (CClientSpawnManager::*)(ALife::_OBJECT_ID, ALife::_OBJECT_ID, const luabind::functor<void> &, const luabind::object &))(&CClientSpawnManager::add))
+		.def("add", (void (CClientSpawnManager::*)(ALife::_OBJECT_ID, ALife::_OBJECT_ID, const luabind::functor<void> &))(&CClientSpawnManager::add))
+		.def("remove", (void (CClientSpawnManager::*)(ALife::_OBJECT_ID, ALife::_OBJECT_ID))(&CClientSpawnManager::remove))
+		];
 }

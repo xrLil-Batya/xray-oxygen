@@ -53,16 +53,37 @@ u32	CALifeSmartTerrainTask::level_vertex_id						() const
 	}
 }
 
-Fvector CALifeSmartTerrainTask::position						() const
+Fvector CALifeSmartTerrainTask::position () const
 {
-	if (m_level_vertex_id == u32(-1))	{
-		return					(patrol_point().position());
+	if (m_level_vertex_id == u32(-1))
+	{
+		return (patrol_point().position());
 	}
-	else {
-		if (ai().game_graph().vertex(m_game_vertex_id)->level_id() == ai().level_graph().level_id())
-			return (ai().level_graph().vertex_position(m_level_vertex_id));
-		else
-			return ai().game_graph().vertex(m_game_vertex_id)->level_point();
+	else if (ai().game_graph().vertex(m_game_vertex_id)->level_id() == ai().level_graph().level_id())
+	{
+		return (ai().level_graph().vertex_position(m_level_vertex_id));
+	}
+	else
+	{
+		return ai().game_graph().vertex(m_game_vertex_id)->level_point();
 	}
 	
+	
+}
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CALifeSmartTerrainTask::script_register(lua_State *L)
+{
+	module(L)
+		[
+		class_<CALifeSmartTerrainTask>("CALifeSmartTerrainTask")
+		.def(constructor<LPCSTR>())
+		.def(constructor<LPCSTR, u32>())
+		.def(constructor<GameGraph::_GRAPH_ID, u32>())
+		.def("game_vertex_id", &CALifeSmartTerrainTask::game_vertex_id)
+		.def("level_vertex_id", &CALifeSmartTerrainTask::level_vertex_id)
+		.def("position", &CALifeSmartTerrainTask::position)
+		];
 }

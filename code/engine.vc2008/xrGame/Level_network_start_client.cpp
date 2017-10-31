@@ -44,12 +44,11 @@ bool	CLevel::net_start_client2()
 {
 	Server->create_direct_client();
 	//offline account creation
+
 	m_bConnectResultReceived = false;
-	while (!m_bConnectResultReceived)
-	{
-		ClientReceive();
-		Server->Update();
-	}
+	ClientReceive();
+	Server->Update();
+	m_bConnectResultReceived = true;
 
     shared_str clientOption = GamePersistent().GetClientOption();
 	connected_to_server = Connect2Server(*clientOption);
