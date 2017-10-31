@@ -685,11 +685,15 @@ FxaaFloat4 FxaaPixelShader(
     FxaaBool earlyExit = range < rangeMaxClamped;
 /*--------------------------------------------------------------------------*/
     if(earlyExit)
+	{
         #if (FXAA_DISCARD == 1)
             FxaaDiscard;
         #else
             return rgbyM;
         #endif
+	}
+	else
+	{
 /*--------------------------------------------------------------------------*/
     #if (FXAA_GATHER4_ALPHA == 0)
         FxaaFloat lumaNW = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2(-1,-1), fxaaQualityRcpFrame.xy));
@@ -988,6 +992,7 @@ FxaaFloat4 FxaaPixelShader(
     #else
         return FxaaFloat4(FxaaTexTop(tex, posM).xyz, lumaM);
     #endif
+	}
 }
 /*==========================================================================*/
 #endif
