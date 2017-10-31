@@ -1,6 +1,6 @@
 #include "common.h"
 
-uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
+//uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
 
 struct	v
 {
@@ -11,7 +11,7 @@ struct	v
 struct	v2p 
 {
 	float2 	tc0	: TEXCOORD0;
-	float4 	HPos	: SV_Position;	 
+	float4 	HPos	: POSITION;	 
 };
 
 //////////////////////////////////////////////////////////////////////////////////////////
