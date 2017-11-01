@@ -1324,9 +1324,6 @@
     <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_particle_action">
       <UniqueIdentifier>{7c9cb8fe-913e-46e8-b1ca-55b19589ea7d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_particle_action\particle_params">
-      <UniqueIdentifier>{76358fc3-aec8-468c-accc-8a8e8cd62c9e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_object_action">
       <UniqueIdentifier>{f5eeabdc-5c0b-4721-af35-59a604284097}</UniqueIdentifier>
     </Filter>
@@ -4803,12 +4800,6 @@
     <ClInclude Include="script_particle_action_inline.h">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClInclude>
-    <ClInclude Include="particle_params.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action\particle_params</Filter>
-    </ClInclude>
-    <ClInclude Include="particle_params_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action\particle_params</Filter>
-    </ClInclude>
     <ClInclude Include="script_object_action.h">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_object_action</Filter>
     </ClInclude>
@@ -7708,9 +7699,6 @@
     </ClCompile>
     <ClCompile Include="script_particle_action_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action</Filter>
-    </ClCompile>
-    <ClCompile Include="particle_params.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action\particle_params</Filter>
     </ClCompile>
     <ClCompile Include="script_object_action.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_object_action</Filter>

@@ -51,7 +51,7 @@
 #	include "script_game_object.h"
 #	include "cover_point.h"
 #	include "patrol_path_params.h"
-#	include "particle_params.h"
+#	include "..\xrParticles\particle_params.h"
 #	include "script_movement_action.h"
 #	include "script_watch_action.h"
 #	include "script_animation_action.h"

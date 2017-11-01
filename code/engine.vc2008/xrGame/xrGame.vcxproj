@@ -1555,8 +1555,6 @@
     <ClInclude Include="script_sound_action_inline.h" />
     <ClInclude Include="script_particle_action.h" />
     <ClInclude Include="script_particle_action_inline.h" />
-    <ClInclude Include="particle_params.h" />
-    <ClInclude Include="particle_params_inline.h" />
     <ClInclude Include="script_object_action.h" />
     <ClInclude Include="script_object_action_inline.h" />
     <ClInclude Include="script_action_condition.h" />
@@ -2688,7 +2686,6 @@
     <ClCompile Include="script_particle_action.cpp" />
     <ClCompile Include="script_particle_action_script.cpp">
     </ClCompile>
-    <ClCompile Include="particle_params.cpp" />
     <ClCompile Include="script_object_action.cpp" />
     <ClCompile Include="script_object_action_script.cpp">
     </ClCompile>

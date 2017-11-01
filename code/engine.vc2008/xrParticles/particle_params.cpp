@@ -9,9 +9,14 @@
 #include "stdafx.h"
 #include "particle_params.h"
 
-CParticleParams::~CParticleParams	()
+CParticleParams::CParticleParams(const Fvector &tPositionOffset, const Fvector &tAnglesOffset, const Fvector &tVelocity )
 {
+	m_tParticlePosition = tPositionOffset;
+	m_tParticleAngles = tAnglesOffset;
+	m_tParticleVelocity = tVelocity;
 }
+#pragma warning(disable: 4459)
+#include <luabind\luabind.hpp>
 
 using namespace luabind;
 #pragma optimize("s",on)

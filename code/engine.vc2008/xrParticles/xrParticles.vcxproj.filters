@@ -7,6 +7,9 @@
     <Filter Include="PAPI">
       <UniqueIdentifier>{52e19f19-abfb-4183-a8ac-746e0f42416e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Scripts">
+      <UniqueIdentifier>{cdbae204-8cc5-4cd5-bc3f-26bb4576b3bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="psystem.h">
@@ -33,6 +36,9 @@
     <ClInclude Include="particle_manager.h">
       <Filter>PAPI</Filter>
     </ClInclude>
+    <ClInclude Include="particle_params.h">
+      <Filter>Scripts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -54,5 +60,8 @@
       <Filter>PAPI</Filter>
     </ClCompile>
     <ClCompile Include="peffects.cpp" />
+    <ClCompile Include="particle_params.cpp">
+      <Filter>Scripts</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
