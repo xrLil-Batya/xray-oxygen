@@ -352,26 +352,30 @@ void CSE_SmartCover::fill_visuals()
 {
 	delete_data(m_visuals);
 
-	xr_vector<SSCDrawHelper>::iterator I = m_draw_data.begin();
-	xr_vector<SSCDrawHelper>::iterator E = m_draw_data.end();
-	for ( ; I != E; ++I) {
-		if (!I->is_enterable)
+	char* preview = pSettings->line_exist(name(), "preview_visual")
+		 ? pSettings->r_string(name(), "preview_visual")
+		 : "actors\\stalker_neutral\\stalker_neutral_1";
+
+	for (auto it: m_draw_data) 
+	{
+		if (it.is_enterable)
 			return;
 
 		CSE_Visual *visual			= xr_new<CSE_SmartVisual>();
-		visual->set_visual			("actors\\stalker_neutral\\stalker_neutral_1");
+		visual->set_visual			(preview);
 
-		if (I->animation_id.size() == 0) {
-			Msg						("cover [%s] doesn't have idle_2_fire animation", I->string_identifier.c_str());
+		if (!it.animation_id.size()) 
+		{
+			Msg						("cover [%s] doesn't have idle_2_fire animation", it.string_identifier.c_str());
 			return;
 		}
 
-		visual->startup_animation	= I->animation_id;
+		visual->startup_animation	= it.animation_id;
 
 		visual_data					tmp;
 		tmp.visual					= visual;
-		tmp.matrix.rotation			(I->enter_direction, Fvector().set(0.f, 1.f, 0.f));
-		tmp.matrix.c				= I->point_position;
+		tmp.matrix.rotation			(it.enter_direction, Fvector().set(0.f, 1.f, 0.f));
+		tmp.matrix.c				= it.point_position;
 
 		m_visuals.push_back			(tmp);
 	}
@@ -434,19 +438,19 @@ void draw_frustum	(CDUInterface* du, float FOV, float _FAR, float A, Fvector &P,
 
 shared_str animation_id(luabind::object table)
 {
-	luabind::object::iterator i = table.begin();
-	luabind::object::iterator e = table.end();
-	for ( ; i != e; ++i ) {
-		luabind::object	string = *i;
-		if (string.type() != LUA_TSTRING) {
-			VERIFY	(string.type() != LUA_TNIL);
+	for (auto it : table)
+	{
+		luabind::object	string = it;
+		if (string.type() != LUA_TSTRING) 
+		{
+			VERIFY(string.type() != LUA_TNIL);
 			continue;
 		}
 
-		return		(luabind::object_cast<LPCSTR>(string));
+		return (luabind::object_cast<const char*>(string));
 	}
 
-	return			("");
+	return ("");
 }
 
 void CSE_SmartCover::load_draw_data () {
@@ -468,23 +472,21 @@ void CSE_SmartCover::load_draw_data () {
 	if (!result) {
 		Msg						("no or invalid smart cover description (bad or missing loopholes table in smart_cover [%s])", temp);
 		return;
-		//		VERIFY2					(result, make_string("bad or missing loopholes table in smart_cover [%s]", temp));
 	}
 
-	luabind::object::iterator	I = loopholes.begin();
-	luabind::object::iterator	E = loopholes.end();
-	for ( ; I != E; ++I) {
-
+	for (auto it: loopholes) 
+	{
 		bool loophole_exist = true;
-		if (m_available_loopholes.is_valid()) {
-			luabind::object::iterator	i = m_available_loopholes.begin( );
-			luabind::object::iterator	e = m_available_loopholes.end( );			
-			for ( ; i != e; ++i ) {
-				LPCSTR const loophole_id= luabind::object_cast< LPCSTR >( i.key( ) );
-				shared_str descr_loophole_id = parse_string(*I,"id");
-				if ( xr_strcmp( loophole_id, descr_loophole_id ) )
+		if (m_available_loopholes.is_valid())
+		{
+			luabind::object::iterator	i = m_available_loopholes.begin();
+			luabind::object::iterator	e = m_available_loopholes.end();
+			for (; i != e; ++i) {
+				LPCSTR const loophole_id = luabind::object_cast<LPCSTR>(i.key());
+				shared_str descr_loophole_id = parse_string(it, "id");
+				if (xr_strcmp(loophole_id, descr_loophole_id))
 					continue;
-				if ( !luabind::object_cast< bool >( *i ) )
+				if (!luabind::object_cast<bool>(*i))
 					loophole_exist = false;
 				break;
 			}
@@ -492,7 +494,7 @@ void CSE_SmartCover::load_draw_data () {
 		if (!loophole_exist)
 			continue;
 
-		luabind::object			table = *I;
+		luabind::object			table = it;
 		if (table.type() != LUA_TTABLE) {
 			VERIFY	(table.type() != LUA_TNIL);
 			continue;
@@ -546,19 +548,12 @@ void CSE_SmartCover::on_render	(CDUInterface* du, ISE_AbstractLEOwner* owner, bo
 	if (!bSelected)
 		return;
 
-	xr_vector<SSCDrawHelper>::iterator it = m_draw_data.begin();
-	xr_vector<SSCDrawHelper>::iterator it_e = m_draw_data.end();
-
-	for( ; it!=it_e; ++it){
-		SSCDrawHelper& H = *it;
+	for(auto it: m_draw_data){
+		SSCDrawHelper& H = it;
 		Fvector pos = H.point_position;
 		parent.transform_tiny	(pos);
 
 		du->OutText(pos, H.string_identifier.c_str(), color_rgba(255,255,255,255));
-
-		//du->DrawBox(H.point_position,Fvector().set(0.2f,0.2f,0.2f),TRUE,TRUE,color_rgba(255,0,0,80),color_rgba(0,255,0,255));
-		//du->DrawFlag(H.point_position, 0, 1.0f, 1, 1, color_rgba(0,255,0,255), FALSE);
-		//du->DrawCylinder(Fidentity, pos, Fvector().set(0.f, 1.f, 0.f), 1.f, .05f, color_rgba(0,255,0,255), color_rgba(0,255,0,255), TRUE, FALSE);
 
 		Fvector dir = H.fov_direction;
 		parent.transform_dir(dir);
