@@ -582,7 +582,7 @@ bool CLocatorAPI::Recurse		(const char* path)
 static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
 {
     //#TODO: Update code, when std::filesystem is out (not much work, standards don't changing dramatically)
-    const char* realFsltxName = NULL;
+    const char* realFsltxName = nullptr;
     if (fs_name)
     {
         realFsltxName = fs_name;
@@ -591,7 +591,7 @@ static void searchForFsltx(const char* fs_name, string_path& fsltxPath)
     {
         realFsltxName = FSLTX;
     }
-    
+
     //try in working dir
     if (std::experimental::filesystem::exists (realFsltxName))
     {
@@ -765,7 +765,7 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 			m_Flags.set			(flCacheFiles,FALSE);
 #endif // DEBUG
 
-			CHECK_OR_EXIT		(I.second,"The file 'fsgame.ltx' is corrupted (it contains duplicated lines).\nPlease reinstall the game or fix the problem manually.");
+			//CHECK_OR_EXIT		(I.second,"The file 'fsgame.ltx' is corrupted (it contains duplicated lines).\nPlease reinstall the game or fix the problem manually.");
 		}
 		r_close			(pFSltx);
 		R_ASSERT		(path_exist("$app_data_root$"));
@@ -793,9 +793,6 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 			pAppdataPath->_set_root(c_newAppPathRoot);
 			rescan_path(pAppdataPath->m_Path, pAppdataPath->m_Flags.is(FS_Path::flRecurse));
 		}
-		//FX: WTF?!
-		//int x=0;
-		//x=x;
 	}
 
 	rec_files.clear	();
