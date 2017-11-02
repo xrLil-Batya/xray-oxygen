@@ -30,7 +30,6 @@ void FS_File::set(xr_string nm, long sz, time_t modif,unsigned attr)
 //////////////////////////////////////////////////////////////////////
 FS_Path::FS_Path	(const char* _Root, const char* _Add, const char* _DefExt, const char* _FilterCaption, u32 flags)
 {
-//	VERIFY			(_Root&&_Root[0]);
 	string_path		temp;
     xr_strcpy		(temp,sizeof(temp),_Root);
     //Giperion: fs_root can goes without trailing slash, add one, if we miss that on root
@@ -98,13 +97,7 @@ const char* FS_Path::_update(string_path& dest, const char* src)const
 	strconcat			(sizeof(dest), dest, m_Path, temp);
 	return xr_strlwr	(dest);
 }
-/*
-void FS_Path::_update(xr_string& dest, const char* src)const
-{
-    R_ASSERT(src);
-    dest			= xr_string(m_Path)+src;
-    xr_strlwr		(dest);
-}*/
+
 void FS_Path::rescan_path_cb	()
 {
 	m_Flags.set(flNeedRescan,TRUE);

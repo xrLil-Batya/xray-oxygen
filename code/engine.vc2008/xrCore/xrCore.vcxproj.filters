@@ -506,8 +506,12 @@
     <ClInclude Include="lzo_compressor.h">
       <Filter>Compression\lzo</Filter>
     </ClInclude>
-    <ClInclude Include="XMLCore\tinyxml.h" />
-    <ClInclude Include="XMLCore\xrXMLParser.h" />
+    <ClInclude Include="XMLCore\tinyxml.h">
+      <Filter>Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLCore\xrXMLParser.h">
+      <Filter>Xml</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

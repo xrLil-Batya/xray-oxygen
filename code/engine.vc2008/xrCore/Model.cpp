@@ -203,50 +203,7 @@ void PPM_CONTEXT::read(_PPMD_FILE* fp,UINT PrevSym)
                 SummFreq += (p->Freq -= (3*p->Freq) >> 2);
     }
 }
-/*
-void
-PPM_CONTEXT::write( int o, FILE* fp )
-{
-    int EscFreq = EscCount; //(Stats)  ? Stats->Freq & ~0x80  : 0;
-    int nc      = 0;
 
-    STATE* p;
-    int f, a, b, c;
-    if (nc < o)                             
-        nc=o;
-        
-    putc(NumStats,fp);
-    if ( !NumStats ) {
-        f=(p=&oneState())->Freq;
-        if ( EscFreq )                      f=(2*f)/EscFreq;
-        f=CLAMP(f,1,127) | 0x80*(p->Successor != NULL);
-        putc(f,fp);                         putc(p->Symbol,fp);
-        if ( p->Successor )                 p->Successor->write(o+1,fp);
-        return;
-    }
-    for (p=Stats+1;p <= Stats+NumStats;p++) {
-        if (p[0].Freq > p[-1].Freq) {
-            STATE* p1=p;
-            do { SWAP(p1[0],p1[-1]); } while (--p1 != Stats && p1[0].Freq > p1[-1].Freq);
-        }
-        if (p[0].Freq == p[-1].Freq && p[0].Successor && !p[-1].Successor) {
-            STATE* p1=p;
-            do { SWAP(p1[0],p1[-1]); } while (--p1 != Stats && p1[0].Freq == p1[-1].Freq && !p1[-1].Successor);
-        }
-    }
-    a=Stats->Freq+!Stats->Freq;             f=(64*EscFreq+(b=a >> 1))/a;
-    f=CLAMP(f,1,127) | 0x80*(Stats->Successor != NULL);
-    putc(f,fp);                             c=64;
-    for (p=Stats;p <= Stats+NumStats;p++) {
-        f=(64*p->Freq+b)/a;                 f += !f;
-        if (p != Stats)
-            putc((c-f) | 0x80*(p->Successor != NULL),fp);
-        c=f;                                putc(p->Symbol,fp);
-    }
-    for (p=Stats;p <= Stats+NumStats;p++)
-            if ( p->Successor )             p->Successor->write(o+1,fp);
-}
-*/
 void PPM_CONTEXT::refresh(int OldNU,BOOL Scale)
 {
     int i=NumStats, EscFreq;
@@ -983,31 +940,10 @@ static void _STDCALL StartModelRare(int MaxOrder,MR_METHOD MRMethod)
         ::OrderFall = ::MaxOrder = MaxOrder;          
         ::MRMethod  = MRMethod;
         
-///        InitSubAllocator();
         RunLength = InitRL = -((MaxOrder < 12) ? MaxOrder : 12) - 1;
-///        MaxContext = (PPM_CONTEXT*) AllocContext();
-///        MaxContext->Suffix = NULL;
 
         MaxContext  = context;
         FoundState  = 0;
-
-/*
-        if( !trained_model || _PPMD_E_GETC(trained_model) > MaxOrder ) 
-        {
-            MaxContext->SummFreq=(MaxContext->NumStats=255)+2;
-            MaxContext->Stats = (PPM_CONTEXT::STATE*) AllocUnits(256/2);
-            for( PrevSuccess=i=0;i < 256;i++) 
-            {
-                MaxContext->Stats[i].Symbol=i;  MaxContext->Stats[i].Freq=1;
-                MaxContext->Stats[i].Successor=NULL;
-            }
-        } 
-        else 
-        {
-            MaxContext->read(trained_model,0xFF);
-            MaxContext->makeSuffix();
-        }
-*/
     }
 }
 
