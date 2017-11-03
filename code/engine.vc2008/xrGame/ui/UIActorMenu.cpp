@@ -185,12 +185,14 @@ void CUIActorMenu::Show(bool status)
 
 void CUIActorMenu::Draw()
 {
-	CurrentGameUI()->UIMainIngameWnd->DrawZoneMap();
-	CurrentGameUI()->UIMainIngameWnd->DrawMainIndicatorsForInventory();
+	if (psHUD_Flags.is(HUD_DRAW)) {
+	    CurrentGameUI()->UIMainIngameWnd->DrawZoneMap();
+	    m_hint_wnd->Draw();
+		CurrentGameUI()->UIMainIngameWnd->DrawMainIndicatorsForInventory();
+	}
 
 	inherited::Draw	();
 	m_ItemInfo->Draw();
-	m_hint_wnd->Draw();
 }
 
 void CUIActorMenu::Update()
@@ -279,23 +281,28 @@ void CUIActorMenu::CheckDistance()
 
 EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 {
-	if(l==m_pInventoryBagList)			return iActorBag;
-	if(l==m_pInventoryBeltList)			return iActorBelt;
+	if (l == m_pInventoryBagList)			return iActorBag;
+	if (l == m_pInventoryBeltList)			return iActorBelt;
 
-	if(l==m_pInventoryAutomaticList)	return iActorSlot;
-	if(l==m_pInventoryPistolList)		return iActorSlot;
-	if(l==m_pInventoryOutfitList)		return iActorSlot;
-	if(l==m_pInventoryHelmetList)		return iActorSlot;
-	if(l==m_pInventoryDetectorList)		return iActorSlot;
+	if (l == m_pInventoryAutomaticList)	    return iActorSlot;
+	if (l == m_pInventoryPistolList)		return iActorSlot;
+	if (l == m_pInventoryOutfitList)		return iActorSlot;
+	if (l == m_pInventoryHelmetList)		return iActorSlot;
+	if (l == m_pInventoryDetectorList)		return iActorSlot;
+
+	#ifdef NEW_SLOTS
+	    if (l == m_pInventoryKnifeList)         return iActorSlot;
+        if (l == m_pInventoryBinocularList)     return iActorSlot;
+	#endif
 	
-	if(l==m_pTradeActorBagList)			return iActorBag;
-	if(l==m_pTradeActorList)			return iActorTrade;
-	if(l==m_pTradePartnerBagList)		return iPartnerTradeBag;
-	if(l==m_pTradePartnerList)			return iPartnerTrade;
-	if(l==m_pDeadBodyBagList)			return iDeadBodyBag;
+	if (l == m_pTradeActorBagList)			return iActorBag;
+	if (l == m_pTradeActorList)			    return iActorTrade;
+	if (l == m_pTradePartnerBagList)		return iPartnerTradeBag;
+	if (l == m_pTradePartnerList)			return iPartnerTrade;
+	if (l == m_pDeadBodyBagList)			return iDeadBodyBag;
 
-	if(l==m_pQuickSlot)					return iQuickSlot;
-	if(l==m_pTrashList)					return iTrashSlot;
+	if(l == m_pQuickSlot)					return iQuickSlot;
+	if(l == m_pTrashList)					return iTrashSlot;
 
 	R_ASSERT(0);
 	
@@ -454,6 +461,12 @@ void CUIActorMenu::clear_highlight_lists()
 	m_HelmetSlotHighlight->Show(false);
 	m_OutfitSlotHighlight->Show(false);
 	m_DetectorSlotHighlight->Show(false);
+	
+	#ifdef NEW_SLOTS
+	    m_KnifeSlotHighlight->Show(false);
+	    m_BinocularSlotHighlight->Show(false);
+	#endif
+	
 	for(u8 i=0; i<4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
 	for(u8 i=0; i<e_af_count; i++)
@@ -496,24 +509,38 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	CCustomDetector* detector = smart_cast<CCustomDetector*>(item);
 	CEatableItem* eatable = smart_cast<CEatableItem*>(item);
 	CArtefact* artefact = smart_cast<CArtefact*>(item);
-
-	if(weapon)
+    u32 item_slot = item->BaseSlot();
+	
+	#ifdef NEW_SLOTS
+        if (item_slot == BINOCULAR_SLOT)
+        {
+            m_BinocularSlotHighlight->Show(true);
+            return;
+        }
+        if (item_slot == KNIFE_SLOT)
+        {
+            m_KnifeSlotHighlight->Show(true);
+            return;
+        }
+	#endif
+	
+	if (item_slot == INV_SLOT_2 || item_slot == INV_SLOT_3)
 	{
 		m_InvSlot2Highlight->Show(true);
 		m_InvSlot3Highlight->Show(true);
 		return;
 	}
-	if(helmet)
+	if (item_slot == HELMET_SLOT)
 	{
 		m_HelmetSlotHighlight->Show(true);
 		return;
 	}
-	if(outfit)
+	if (item_slot == OUTFIT_SLOT)
 	{
 		m_OutfitSlotHighlight->Show(true);
 		return;
 	}
-	if(detector)
+	if (item_slot == DETECTOR_SLOT)
 	{
 		m_DetectorSlotHighlight->Show(true);
 		return;
@@ -795,6 +822,12 @@ void CUIActorMenu::ClearAllLists()
 	m_pInventoryDetectorList->ClearAll			(true);
 	m_pInventoryPistolList->ClearAll			(true);
 	m_pInventoryAutomaticList->ClearAll			(true);
+	
+	#ifdef NEW_SLOTS
+	    m_pInventoryKnifeList->ClearAll             (true);
+	    m_pInventoryBinocularList->ClearAll         (true);
+	#endif
+	
 	m_pQuickSlot->ClearAll						(true);
 
 	m_pTradeActorBagList->ClearAll				(true);

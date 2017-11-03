@@ -13,3 +13,4 @@
 /* xrGame */
 //#define WPN_AUTORELOAD // Enable autoreload
 //#define DYNAMIC_SUN_MOVEMENT // Use dynamic sun movement
+//#define NEW_SLOTS // Add knife slot and binocular slot in inventory

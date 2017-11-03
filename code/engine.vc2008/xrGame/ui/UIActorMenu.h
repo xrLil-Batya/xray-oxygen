@@ -91,6 +91,12 @@ protected:
 	CUIDragDropListEx*			m_pInventoryAutomaticList;
 	CUIDragDropListEx*			m_pInventoryOutfitList;
 	CUIDragDropListEx*			m_pInventoryHelmetList;
+	
+	#ifdef NEW_SLOTS
+	    CUIDragDropListEx*          m_pInventoryKnifeList;
+	    CUIDragDropListEx*          m_pInventoryBinocularList;
+	#endif
+	
 	CUIDragDropListEx*			m_pInventoryDetectorList;
 	CUIDragDropListEx*			m_pInventoryBagList;
 
@@ -109,6 +115,12 @@ protected:
 	CUIStatic*					m_InvSlot3Highlight;
 	CUIStatic*					m_HelmetSlotHighlight;
 	CUIStatic*					m_OutfitSlotHighlight;
+	
+	#ifdef NEW_SLOTS
+	    CUIStatic*                  m_KnifeSlotHighlight;
+	    CUIStatic*                  m_BinocularSlotHighlight;
+	#endif
+	
 	CUIStatic*					m_DetectorSlotHighlight;
 	CUIStatic*					m_QuickSlotsHighlight[4];
 	CUIStatic*					m_ArtefactSlotsHighlight[e_af_count];

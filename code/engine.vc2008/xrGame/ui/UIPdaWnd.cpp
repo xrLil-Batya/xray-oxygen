@@ -241,7 +241,9 @@ void CUIPdaWnd::DrawHint()
 	{
 
 	}
-	m_hint_wnd->Draw();
+	
+	if (psHUD_Flags.is(HUD_DRAW))
+	    m_hint_wnd->Draw();
 }
 
 void CUIPdaWnd::UpdatePda()
