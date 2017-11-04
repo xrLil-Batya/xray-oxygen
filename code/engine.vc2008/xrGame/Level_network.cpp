@@ -21,80 +21,70 @@
 #include "GamePersistent.h"
 
 #include "../xrphysics/physicscommon.h"
-ENGINE_API bool g_dedicated_server;
 
-const int max_objects_size			= 2*1024;
+const int max_objects_size			= 2048;
 const int max_objects_size_in_save	= 8*1024;
 
 extern bool	g_b_ClearGameCaptions;
 
-void CLevel::remove_objects	()
+void CLevel::remove_objects()
 {
 	bool b_stored = psDeviceFlags.test(rsDisableObjectsAsCrows);
-	
+
 	int loop = 5;
-	while(loop)
+	while (loop)
 	{
-		R_ASSERT				(Server);
-		Server->SLS_Clear		();
+		Server->SLS_Clear();
 
-		ClearAllObjects			();
-
-		for (int i=0; i<20; ++i) 
+		for (u32 i = 0; i < 20; ++i)
 		{
-			snd_Events.clear		();
-			psNET_Flags.set			(NETFLAG_MINIMIZEUPDATES,FALSE);
+			snd_Events.clear();
+			psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, FALSE);
 			// ugly hack for checks that update is twice on frame
 			// we need it since we do updates for checking network messages
 			++(Device.dwFrame);
-			psDeviceFlags.set		(rsDisableObjectsAsCrows,TRUE);
-			ClientReceive			();
-			ProcessGameEvents		();
-			Objects.Update			(false);
+			psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
+			ClientReceive();
+			ProcessGameEvents();
+			Objects.Update(false);
 			Objects.dump_all_objects();
 		}
 
-		if(Objects.o_count())
+		if (Objects.o_count())
 		{
 			--loop;
-			Msg						("Objects removal next loop. Active objects count=%d", Objects.o_count());
+			Msg("Objects removal next loop. Active objects count=%d", Objects.o_count());
 		}
 		else break;
 
 	}
 
-	BulletManager().Clear		();
-	ph_commander().clear		();
+	BulletManager().Clear();
+	ph_commander().clear();
 	ph_commander_scripts().clear();
 
-	if(!g_dedicated_server)
-		space_restriction_manager().clear	();
+	space_restriction_manager().clear();
 
-	psDeviceFlags.set			(rsDisableObjectsAsCrows, b_stored);
-	g_b_ClearGameCaptions		= true;
+	psDeviceFlags.set(rsDisableObjectsAsCrows, b_stored);
+	g_b_ClearGameCaptions = true;
 
-	if (!g_dedicated_server)
-		ai().script_engine().collect_all_garbage	();
+	ai().script_engine().collect_all_garbage();
 
-	stalker_animation_data_storage().clear		();
-	
-	VERIFY										(Render);
-	Render->models_Clear						(FALSE);
-	
-	Render->clear_static_wallmarks				();
+	stalker_animation_data_storage().clear();
+
+	VERIFY(Render);
+	Render->models_Clear(FALSE);
+
+	Render->clear_static_wallmarks();
 
 #ifdef DEBUG
-	if(!g_dedicated_server)
-		if (!client_spawn_manager().registry().empty())
-			client_spawn_manager().dump				();
+	if (!client_spawn_manager().registry().empty())
+		client_spawn_manager().dump();
 #endif // DEBUG
-	if(!g_dedicated_server)
-	{
-		VERIFY										(client_spawn_manager().registry().empty());
-		client_spawn_manager().clear			();
-	}
+	VERIFY(client_spawn_manager().registry().empty());
+	client_spawn_manager().clear();
 
-	g_pGamePersistent->destroy_particles		(false);
+	g_pGamePersistent->destroy_particles(false);
 }
 
 #ifdef DEBUG
@@ -150,8 +140,7 @@ void CLevel::net_Stop		()
 		xr_delete				(Server);
 	}
 
-	if (!g_dedicated_server)
-		ai().script_engine().collect_all_garbage	();
+	ai().script_engine().collect_all_garbage	();
 
 #ifdef DEBUG
 	show_animation_stats		();
