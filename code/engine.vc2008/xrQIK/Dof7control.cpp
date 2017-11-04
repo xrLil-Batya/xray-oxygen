@@ -173,14 +173,6 @@ float get_circle_equation(const float ee[3],
     unitize(u);
 
     crossproduct(v, n, u);
-#if 0
-    printf("Circle equation\n");
-    printf("c = [%lf,%lf,%lf]\n", c[0], c[1], c[2]);
-    printf("u = [%lf,%lf,%lf]\n", u[0], u[1], u[2]);
-    printf("v = [%lf,%lf,%lf]\n", v[0], v[1], v[2]);
-    printf("n = [%lf,%lf,%lf]\n", n[0], n[1], n[2]);
-    printf("r = %lf\n", radius);
-#endif
     return radius;
 }
 
