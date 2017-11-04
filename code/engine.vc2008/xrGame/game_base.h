@@ -53,8 +53,6 @@ struct game_PlayerState
 	u8			af_count;			
 	u16			flags__;
 
-	u16			ping;
-
 	u16			GameID;
 
 	u16			lasthitter;
@@ -136,7 +134,6 @@ class	game_GameState : public DLL_Pure
 protected:
 	EGameIDs						m_type;
 	u16								m_phase;
-	s32								m_round;
 	u32								m_start_time;
 
 	u32								m_round_start_time;
@@ -150,7 +147,6 @@ public:
 	virtual							~game_GameState			()								{}
 	IC			EGameIDs const&		Type					() const						{return m_type;};
 				u16					Phase					() const						{return m_phase;};
-				s32					Round					() const						{return m_round;};
 				u32					StartTime				() const						{return m_start_time;};
 	virtual		void				Create					(shared_str& options)				{};
 	virtual		LPCSTR				type_name				() const						{return "base game";};

@@ -12,21 +12,6 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-LPCSTR xrServer::get_map_download_url(LPCSTR level_name, LPCSTR level_version)
-{
-	R_ASSERT(level_name && level_version);
-	LPCSTR ret_url = "";
-	CInifile* level_ini = pApp->GetArchiveHeader(level_name, level_version);
-	if (!level_ini)
-		return ret_url;
-
-	ret_url = level_ini->r_string_wb("header", "link").c_str();
-	if (!ret_url)
-		ret_url = "";
-	
-	return ret_url;
-}
-
 xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionData & game_descr)
 {
 #ifdef DEBUG
@@ -34,7 +19,7 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionDa
 #endif
 
 	// Parse options and create game
-	if (0==strchr(*session_name,'/'))
+	if (!strchr(*session_name,'/'))
 		return				ErrConnect;
 
 	string1024				options;
@@ -57,7 +42,6 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionDa
     std::memset(&game_descr, 0, sizeof(game_descr));
 	xr_strcpy(game_descr.map_name, game->level_name(session_name.c_str()).c_str());
 	xr_strcpy(game_descr.map_version, game_sv_GameState::parse_level_version(session_name.c_str()).c_str());
-	xr_strcpy(game_descr.download_url, get_map_download_url(game_descr.map_name, game_descr.map_version));
 
 	game->Create			(session_name);
 

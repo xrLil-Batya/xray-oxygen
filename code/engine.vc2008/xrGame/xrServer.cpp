@@ -41,9 +41,6 @@ void	xrClientData::Clear()
 	net_Ready								= FALSE;
 	net_Accepted							= FALSE;
 	net_PassUpdates							= TRUE;
-	m_ping_warn.m_maxPingWarnings			= 0;
-	m_ping_warn.m_dwLastMaxPingWarningTime	= 0;
-	m_admin_rights.m_has_admin_rights		= FALSE;
 };
 
 
@@ -58,7 +55,6 @@ xrServer::xrServer() : IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
 	m_file_transfers	= NULL;
 	m_aDelayedPackets.clear();
 	m_server_logo		= NULL;
-	m_server_rules		= NULL;
 	m_last_updates_size	= 0;
 	m_last_update_time	= 0;
 }
@@ -82,7 +78,6 @@ xrServer::~xrServer()
 	entities.clear();
 	delete_data(m_info_uploaders);
 	xr_delete(m_server_logo);
-	xr_delete(m_server_rules);
 }
 
 //--------------------------------------------------------------------
@@ -230,7 +225,6 @@ void xrServer::Update	()
 	VERIFY						(verify_entities());
 	//-----------------------------------------------------
 	
-	PerformCheckClientsForMaxPing	();
 	Flush_Clients_Buffers			();
 }
 
@@ -343,28 +337,6 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 		}break;
 		case M_REMOTE_CONTROL_CMD:
 		{
-			if(CL->m_admin_rights.m_has_admin_rights)
-			{
-				string1024			buff;
-				P.r_stringZ			(buff);
-				Msg("* Radmin [%s] is running command: %s", CL->ps->getName(), buff);
-				SetLogCB			(console_log_cb);
-				_tmp_log.clear		();
-				LPSTR		result_command;
-				string64	tmp_number_str;
-				xr_sprintf(tmp_number_str, " raid:%u", CL->ID.value());
-				STRCONCAT(result_command, buff, tmp_number_str);
-				Console->Execute	(result_command);
-				SetLogCB			(NULL);
-
-				NET_Packet			P_answ;			
-				for(u32 i=0; i<_tmp_log.size(); ++i)
-				{
-					P_answ.w_begin		(M_REMOTE_CONTROL_CMD);
-					P_answ.w_stringZ	(_tmp_log[i]);
-					SendTo				(sender,P_answ,net_flags(TRUE,TRUE));
-				}
-			}else
 			{
 				NET_Packet			P_answ;			
 				P_answ.w_begin		(M_REMOTE_CONTROL_CMD);
@@ -553,33 +525,8 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 		{
 			string512				reason;
 			shared_str				user;
-			shared_str				pass;
 			P.r_stringZ				(user);
-			if(0==stricmp(user.c_str(),"logoff"))
-			{
-				CL->m_admin_rights.m_has_admin_rights	= FALSE;
-				if (CL->ps)
-				{
-					CL->ps->resetFlag(GAME_PLAYER_HAS_ADMIN_RIGHTS);
-				}
-				xr_strcpy				(reason,"logged off");
-				Msg("# Remote administrator logged off.");
-			}else
-			{
-				P.r_stringZ				(pass);
-				bool res = CheckAdminRights(user, pass, reason);
-				if(res){
-					CL->m_admin_rights.m_has_admin_rights	= TRUE;
-					CL->m_admin_rights.m_dwLoginTime		= Device.dwTimeGlobal;
-					if (CL->ps)
-					{
-						CL->ps->setFlag(GAME_PLAYER_HAS_ADMIN_RIGHTS);
-					}
-					Msg("# User [%s] logged as remote administrator.", user.c_str());
-				}else
-					Msg("# User [%s] tried to login as remote administrator. Access denied.", user.c_str());
 
-			}
 			NET_Packet			P_answ;			
 			P_answ.w_begin		(M_REMOTE_CONTROL_AUTH);
 			P_answ.w_stringZ	(reason);
@@ -608,32 +555,6 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 	VERIFY							(verify_entities());
 
 	return							IPureServer::OnMessage(P, sender);
-}
-
-bool xrServer::CheckAdminRights(const shared_str& user, const shared_str& pass, string512& reason)
-{
-	bool res			= false;
-	string_path			fn;
-	FS.update_path		(fn,"$app_data_root$","radmins.ltx");
-	if(FS.exist(fn))
-	{
-		CInifile			ini(fn);
-		if(ini.line_exist("radmins",user.c_str()))
-		{
-			if (ini.r_string ("radmins",user.c_str()) == pass)
-			{
-				xr_strcpy			(reason, sizeof(reason),"Access permitted.");
-				res				= true;
-			}else
-			{
-				xr_strcpy			(reason, sizeof(reason),"Access denied. Wrong password.");
-			}
-		}else
-			xr_strcpy			(reason, sizeof(reason),"Access denied. No such user.");
-	}else
-		xr_strcpy				(reason, sizeof(reason),"Access denied.");
-
-	return				res;
 }
 
 void xrServer::SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
@@ -868,99 +789,30 @@ void xrServer::AddDelayedPacket	(NET_Packet& Packet, ClientID Sender)
     std::memcpy(&(NewPacket->Packet),&Packet,sizeof(NET_Packet));
 }
 
-u32 g_sv_dwMaxClientPing		= 2000;
-u32 g_sv_time_for_ping_check	= 15000;// 15 sec
-u8	g_sv_maxPingWarningsCount	= 5;
-
-void xrServer::PerformCheckClientsForMaxPing()
-{
-	struct MaxPingClientDisconnector
-	{
-		xrServer* m_owner;
-		MaxPingClientDisconnector(xrServer* owner) :
-			m_owner(owner)
-		{}
-		void operator()(IClient* client)
-		{
-			xrClientData*		Client = static_cast<xrClientData*>(client);
-			game_PlayerState*	ps = Client->ps;
-			if (!ps)
-				return;
-			
-			if (client == m_owner->GetServerClient())
-				return;
-
-			if(	ps->ping > g_sv_dwMaxClientPing && 
-				Client->m_ping_warn.m_dwLastMaxPingWarningTime+g_sv_time_for_ping_check < Device.dwTimeGlobal )
-			{
-				++Client->m_ping_warn.m_maxPingWarnings;
-				Client->m_ping_warn.m_dwLastMaxPingWarningTime	= Device.dwTimeGlobal;
-				
-				if(Client->m_ping_warn.m_maxPingWarnings >= g_sv_maxPingWarningsCount)
-				{  //kick
-					LPSTR	reason;
-					STRCONCAT( reason, CStringTable().translate("st_kicked_by_server").c_str() );
-					Level().Server->DisconnectClient( Client, reason );
-				}
-				else
-				{ //send warning
-					NET_Packet		P;	
-					P.w_begin		(M_CLIENT_WARN);
-					P.w_u8			(1); // 1 means max-ping-warning
-					P.w_u16			(ps->ping);
-					P.w_u8			(Client->m_ping_warn.m_maxPingWarnings);
-					P.w_u8			(g_sv_maxPingWarningsCount);
-					m_owner->SendTo	(Client->ID,P,net_flags(FALSE,TRUE));
-				}
-			}
-		}
-	};
-	MaxPingClientDisconnector temp_functor(this);
-	ForEachClientDoSender(temp_functor);
-}
-
 extern	BOOL	g_bCollectStatisticData;
 
-//xr_token game_types[];
-LPCSTR GameTypeToString(EGameIDs gt, bool bShort);
-
-void xrServer::GetServerInfo( CServerInfo* si )
+void xrServer::GetServerInfo(CServerInfo* si)
 {
 	string32  tmp;
 	string256 tmp256;
 
-	si->AddItem( "Server port", itoa( GetPort(), tmp, 10 ), RGB(128,128,255) );
-	LPCSTR time = InventoryUtilities::GetTimeAsString( Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay ).c_str();
-	si->AddItem( "Uptime", time, RGB(255,228,0) );
+	si->AddItem("Server port", itoa(GetPort(), tmp, 10), RGB(128, 128, 255));
+	LPCSTR time = InventoryUtilities::GetTimeAsString(Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay).c_str();
+	si->AddItem("Uptime", time, RGB(255, 228, 0));
 
 	xr_strcpy(tmp256, "single");
 	{
-		xr_strcat( tmp256, " time limit [" );
-		xr_strcat( tmp256, "] " );
+		xr_strcat(tmp256, " time limit [");
+		xr_strcat(tmp256, "] ");
 	}
-	si->AddItem( "Game type", tmp256, RGB(128,255,255) );
+	si->AddItem("Game type", tmp256, RGB(128, 255, 255));
 
-	if ( g_pGameLevel )
+	if (g_pGameLevel)
 	{
-		time = InventoryUtilities::GetGameTimeAsString( InventoryUtilities::etpTimeToMinutes ).c_str();
-		
-		xr_strcpy( tmp256, time );
-		
-		si->AddItem( "Game time", tmp256, RGB(205,228,178) );
-	}
-}
+		time = InventoryUtilities::GetGameTimeAsString(InventoryUtilities::etpTimeToMinutes).c_str();
 
-void xrServer::initialize_screenshot_proxies()
-{
-	for (int i = 0; i < sizeof(m_screenshot_proxies)/sizeof(clientdata_proxy*); ++i)
-	{
-		m_screenshot_proxies[i] = xr_new<clientdata_proxy>(m_file_transfers);
-	}
-}
-void xrServer::deinitialize_screenshot_proxies()
-{
-	for (int i = 0; i < sizeof(m_screenshot_proxies)/sizeof(clientdata_proxy*); ++i)
-	{
-		xr_delete(m_screenshot_proxies[i]);
+		xr_strcpy(tmp256, time);
+
+		si->AddItem("Game time", tmp256, RGB(205, 228, 178));
 	}
 }

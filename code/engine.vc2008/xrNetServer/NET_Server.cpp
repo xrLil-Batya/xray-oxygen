@@ -9,10 +9,6 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-#define NET_NOTFOR_SUBNET_STR "Your IP does not present in server's subnet"
-
-void dump_URL(const char* p, IDirectPlay8Address* A);
-
 XRNETSERVER_API int		psNET_ServerUpdate	= 30;		// FPS
 XRNETSERVER_API int		psNET_ServerPending	= 3;
 
@@ -100,7 +96,7 @@ IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
 
 //==============================================================================
 
-IPureServer::IPureServer	(CTimer* timer, BOOL Dedicated): m_bDedicated(Dedicated)
+IPureServer::IPureServer	(CTimer* timer, BOOL Dedicated)
 {
 	device_timer			= timer;
 	stats.clear				();
@@ -193,119 +189,6 @@ void IServerStatistic::clear()
 	dwBytesPerSec = 0;
 }
 
-/// #TODO: [FX] Deleted it
-/*
-HRESULT	IPureServer::net_Handler(u32 dwMessageType, PVOID pMessage)
-{
-    // HRESULT     hr = S_OK;
-	
-    switch (dwMessageType)
-    {
-	case DPN_MSGID_ENUM_HOSTS_QUERY :
-		{
-			PDPNMSG_ENUM_HOSTS_QUERY	msg = PDPNMSG_ENUM_HOSTS_QUERY(pMessage);
-			if (0 == msg->dwReceivedDataSize) return S_FALSE;
-			if (!stricmp((const char*)msg->pvReceivedData, "ToConnect")) return S_OK;
-			if (*((const GUID*) msg->pvReceivedData) != NET_GUID) return S_FALSE;
-			if (!OnCL_QueryHost()) return S_FALSE;
-			return S_OK;
-		}break;
-	case DPN_MSGID_CREATE_PLAYER :
-        {
-			PDPNMSG_CREATE_PLAYER	msg = PDPNMSG_CREATE_PLAYER(pMessage);
-			const	u32				max_size = 1024;
-			char	bufferData		[max_size];
-            DWORD	bufferSize		= max_size;
-            std::memset(bufferData,0,bufferSize);
-			string512				res;
-
-			// retreive info
-			DPN_PLAYER_INFO*		Pinfo = (DPN_PLAYER_INFO*) bufferData;
-			Pinfo->dwSize			= sizeof(DPN_PLAYER_INFO);
-			HRESULT _hr				= NET->GetClientInfo( msg->dpnidPlayer, Pinfo, &bufferSize, 0 );
-			if( _hr == DPNERR_INVALIDPLAYER )
-			{
-				Assign_ServerType( res ); //once
-				break;	// server player
-			}
-
-			CHK_DX					(_hr);
-			
-			//string64			cname;
-			//CHK_DX( WideCharToMultiByte( CP_ACP, 0, Pinfo->pwszName, -1, cname, sizeof(cname) , 0, 0 ) );
-
-			SClientConnectData	cl_data;
-			//xr_strcpy( cl_data.name, cname );
-
-			if( Pinfo->pvData && Pinfo->dwDataSize == sizeof(cl_data) )
-			{
-				cl_data		= *((SClientConnectData*)Pinfo->pvData);
-			}
-			cl_data.clientID.set( msg->dpnidPlayer );
-
-			new_client( &cl_data );
-        }
-		break;
-	case DPN_MSGID_DESTROY_PLAYER:
-		{
-			PDPNMSG_DESTROY_PLAYER	msg = PDPNMSG_DESTROY_PLAYER(pMessage);
-			IClient* tmp_client = net_players.GetFoundClient(
-				ClientIdSearchPredicate(static_cast<ClientID>(msg->dpnidPlayer))
-			);
-			if (tmp_client)
-			{
-				tmp_client->flags.bConnected	= FALSE;
-				tmp_client->flags.bReconnect	= FALSE;
-				OnCL_Disconnected	(tmp_client);
-				// real destroy
-				client_Destroy		(tmp_client);
-			}
-		}
-		break;
-	case DPN_MSGID_RECEIVE:
-        {
-
-            PDPNMSG_RECEIVE	pMsg = PDPNMSG_RECEIVE(pMessage);
-			void*	m_data		= pMsg->pReceiveData;
-			u32		m_size		= pMsg->dwReceiveDataSize;
-			DPNID   m_sender	= pMsg->dpnidSender;
-
-			MSYS_PING*	m_ping	= (MSYS_PING*)m_data;
-			
-			if ((m_size>2*sizeof(u32)) && (m_ping->sign1==0x12071980) && (m_ping->sign2==0x26111975))
-			{
-				// this is system message
-				if (m_size==sizeof(MSYS_PING))
-				{
-					// ping - save server time and reply
-					m_ping->dwTime_Server	= TimerAsync(device_timer);
-					ClientID ID; ID.set(m_sender);
-					//						IPureServer::SendTo_LL	(ID,m_data,m_size,net_flags(FALSE,FALSE,TRUE));
-					IPureServer::SendTo_Buf	(ID,m_data,m_size,net_flags(FALSE,FALSE,TRUE, TRUE));
-				}
-			} 
-			else 
-			{
-                MultipacketReciever::RecievePacket( pMsg->pReceiveData, pMsg->dwReceiveDataSize, m_sender );
-			}
-        } break;
-        
-	case DPN_MSGID_INDICATE_CONNECT :
-		{
-			PDPNMSG_INDICATE_CONNECT msg = (PDPNMSG_INDICATE_CONNECT)pMessage;
-
-			//first connected client is SV_Client so if it is NULL then this server client tries to connect ;)
-			if (SV_Client)
-			{
-				msg->dwReplyDataSize	= sizeof(NET_NOTFOR_SUBNET_STR);
-				msg->pvReplyData		= NET_NOTFOR_SUBNET_STR;
-				return					S_FALSE;
-			}
-		}break;
-    }
-    return S_OK;
-}
-*/
 void IPureServer::Flush_Clients_Buffers()
 {
 	struct LocalSenderFunctor

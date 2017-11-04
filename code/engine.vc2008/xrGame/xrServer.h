@@ -11,11 +11,6 @@
 #include "xrServer_updates_compressor.h"
 #include "xrClientsPool.h"
 
-#ifdef DEBUG
-//. #define SLOW_VERIFY_ENTITIES
-#endif
-
-
 class CSE_Abstract;
 
 const u32	NET_Latency		= 50;		// time in (ms)
@@ -34,15 +29,6 @@ public:
 	u32						net_LastMoveUpdateTime;
 	
 	game_PlayerState*		ps;
-	struct{
-		u8						m_maxPingWarnings;
-		u32						m_dwLastMaxPingWarningTime;
-	}m_ping_warn;
-	struct{
-		BOOL					m_has_admin_rights;
-		u32						m_dwLoginTime;
-	}m_admin_rights;
-
 							xrClientData			();
 	virtual					~xrClientData			();
 	virtual void			Clear					();
@@ -62,7 +48,6 @@ namespace file_transfer
 	class server_site;
 };//namespace file_transfer
 
-class clientdata_proxy;
 class server_info_uploader;
 
 class xrServer	: public IPureServer  
@@ -73,9 +58,6 @@ private:
 	xr_vector<u16>				conn_spawned_ids;
 
 	file_transfer::server_site*	m_file_transfers;
-	clientdata_proxy*			m_screenshot_proxies[MAX_PLAYERS_COUNT*2];
-	void	initialize_screenshot_proxies();
-	void	deinitialize_screenshot_proxies();
 	
 	typedef server_updates_compressor::send_ready_updates_t::const_iterator update_iterator_t;
 	update_iterator_t			m_update_begin;
@@ -90,14 +72,11 @@ private:
 	
 	void						SendServerInfoToClient		(ClientID const & new_client);
 	server_info_uploader&		GetServerInfoUploader		();
-
-	void						LoadServerInfo				();
 	
 	typedef xr_vector<server_info_uploader*>	info_uploaders_t;
 
 	info_uploaders_t			m_info_uploaders;
 	IReader*					m_server_logo;
-	IReader*					m_server_rules;
 
 	struct DelayedPacket
 	{
@@ -109,7 +88,7 @@ private:
 		}
 	};
 
-	std::recursive_mutex			DelayedPackestCS;
+	std::recursive_mutex		DelayedPackestCS;
 	xr_deque<DelayedPacket>		m_aDelayedPackets;
 	void						ProceedDelayedPackets	();
 	void						AddDelayedPacket		(NET_Packet& Packet, ClientID Sender);
@@ -135,7 +114,6 @@ private:
 
 protected:
 	void					Server_Client_Check				(IClient* CL);
-	void					PerformCheckClientsForMaxPing	();
 public:
 	game_sv_GameState*		game;
 
@@ -178,7 +156,6 @@ public:
 	virtual void			OnBuildVersionRespond				(IClient* CL, NET_Packet& P);
 protected:
 	xrClientsPool			m_disconnected_clients;
-	bool					CheckAdminRights		(const shared_str& user, const shared_str& pass, string512& reason);
 	virtual IClient*		new_client				( SClientConnectData* cl_data );
 
 			void			RequestClientDigest					(IClient* CL);
@@ -231,10 +208,8 @@ public:
 	void					SLS_Load			(IReader&	fs);	
 			shared_str		level_name			(const shared_str &server_options) const;
 			shared_str		level_version		(const shared_str &server_options) const;
-	static	LPCSTR			get_map_download_url(LPCSTR level_name, LPCSTR level_version);
 
 	void					create_direct_client();
-	BOOL					IsDedicated			() const	{return m_bDedicated;};
 
 	virtual void			Assign_ServerType	( string512& res ) {};
 	virtual bool			HasPassword			()	{ return false; }
@@ -248,7 +223,6 @@ public:
 			void			verify_entity		(const CSE_Abstract *entity) const;
 #endif
 };
-
 
 #ifdef DEBUG
 		enum e_dbg_net_Draw_Flags

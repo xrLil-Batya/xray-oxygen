@@ -36,37 +36,12 @@ xr_token	round_end_result_str[]=
 	{ 0,						0							}
 };
 
-// Main
-/*game_PlayerState*	game_sv_GameState::get_it					(u32 it)
-{
-	xrClientData*	C	= (xrClientData*)m_server->client_Get			(it);
-	if (0==C)			return 0;
-	else				return C->ps;
-}*/
-
 game_PlayerState*	game_sv_GameState::get_id					(ClientID id)							
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
 	if (0==C)			return NULL;
 	else				return C->ps;
 }
-
-/*ClientID				game_sv_GameState::get_it_2_id				(u32 it)
-{
-	xrClientData*	C	= (xrClientData*)m_server->client_Get		(it);
-	if (0==C){
-		ClientID clientID;clientID.set(0);
-		return clientID;
-	}
-	else				return C->ID;
-}
-
-LPCSTR				game_sv_GameState::get_name_it				(u32 it)
-{
-	xrClientData*	C	= (xrClientData*)m_server->client_Get		(it);
-	if (0==C)			return 0;
-	else				return *C->name;
-}*/
 
 LPCSTR				game_sv_GameState::get_name_id				(ClientID id)							
 {
@@ -293,7 +268,6 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 	P.w_clientID	(to);
 	P.w_s32			(m_type);
 	P.w_u16			(m_phase);
-	P.w_s32			(m_round);
 	P.w_u32			(m_start_time);
 	P.w_u8			(u8(g_sv_base_iVotingEnabled&0xff));
 	P.w_u8			(u8(net_sv_control_hit));
@@ -619,7 +593,6 @@ void game_sv_GameState::Update		()
 			xrClientData*	C			= static_cast<xrClientData*>(client);
 			if (!C->ps)
 				return;
-			C->ps->ping					= u16(C->stats.getPing());
 		}
 	};
 	ping_filler tmp_functor;

@@ -119,7 +119,6 @@ protected:
 	// Statistic
 	IServerStatistic		stats;
 	CTimer*					device_timer;
-	BOOL					m_bDedicated;
 
 	IClient*				ID_to_client		(ClientID ID, bool ScanAll = false);
 	
@@ -127,7 +126,6 @@ protected:
 public:
 							IPureServer			(CTimer* timer, BOOL Dedicated = FALSE);
 	virtual					~IPureServer		();
-//	HRESULT					net_Handler			(u32 dwMessageType, PVOID pMessage);
 	
 	virtual EConnect		Connect				(LPCSTR session_name, GameDescriptionData & game_descr);
 	virtual void			Disconnect			();
@@ -156,18 +154,11 @@ public:
 	virtual void			client_Replicate	()				= 0;			// replicate current state to client
 	virtual void			client_Destroy		(IClient* C)	= 0;			// destroy client info
 
-	//IC u32					client_Count		()			{ return net_Players.size(); }
-	//IC IClient*				client_Get			(u32 num)	{ return net_Players[num]; }
-
-	//IC u32					disconnected_client_Count		()			{ return net_Players_disconnected.size(); }
-	//IC IClient*				disconnected_client_Get			(u32 num)	{ return net_Players_disconnected[num]; }
-	
 	BOOL					HasBandwidth			(IClient* C);
 
 	IC int					GetPort					()				{ return psNET_Port; };
 	virtual bool			DisconnectClient		(IClient* C, LPCSTR Reason);
 
-	virtual void			Assign_ServerType( string512& res ) {};
 	virtual void			GetServerInfo( CServerInfo* si ) {};
 
 	u32						GetClientsCount		()			{ return net_players.ClientsCount(); };
@@ -187,15 +178,11 @@ public:
 																					sender_functor_invoked = false;
 #endif //#ifdef DEBUG
 																				}
-	//template<typename ActionFunctor>
-	//void					ForEachDisconnectedClientDo(ActionFunctor & action) { net_players.ForEachDisconnectedClientDo(action); };
 #ifdef DEBUG
 	bool					IsPlayersMonitorLockedByMe()	const				{ return net_players.IsCurrentThreadIteratingOnClients() && !sender_functor_invoked; };
 #endif
 	//WARNING! very bad method :(
-	//IClient*				client_Get		(u32 index)							{return net_players.GetClientByIndex(index);};
 	IClient*				GetClientByID	(ClientID clientId)					{return net_players.GetFoundClient(ClientIdSearchPredicate(clientId));};
-	//IClient*				GetDisconnectedClientByID(ClientID clientId)		{return net_players.GetFoundDisconnectedClient(ClientIdSearchPredicate(clientId));}
 
 
 	const shared_str&		GetConnectOptions	() const {return connect_options;}

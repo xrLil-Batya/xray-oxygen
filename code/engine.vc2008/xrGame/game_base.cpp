@@ -124,7 +124,6 @@ game_GameState::game_GameState()
 {
 	m_type						= EGameIDs(u32(0));
 	m_phase						= GAME_PHASE_NONE;
-	m_round						= -1;
 	m_round_start_time_str[0]	= 0;
 
 	VERIFY						(g_pGameLevel);

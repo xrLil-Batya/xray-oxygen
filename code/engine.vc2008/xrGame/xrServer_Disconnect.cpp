@@ -7,7 +7,6 @@ void xrServer::Disconnect()
 {
 	if (m_file_transfers)
 	{
-		deinitialize_screenshot_proxies();
 		xr_delete(m_file_transfers);
 	}
 

@@ -103,7 +103,6 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 	if(Phase()!=ph)
 		switch_Phase(ph);
 
-	P.r_s32			(m_round);
 	P.r_u32			(m_start_time);
 	m_u16VotingEnabled = u16(P.r_u8());
 	m_bServerControlHits = !!P.r_u8();	

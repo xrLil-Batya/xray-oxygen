@@ -107,22 +107,28 @@ void CStateAbstract::reset()
 TEMPLATE_SPECIALIZATION
 void CStateAbstract::select_state(u32 new_state_id) 
 {
-	if (current_substate == new_state_id) return;	
-	CSState *state;
+	try {
+		if (current_substate == new_state_id) return;
+		CSState *state;
 
-	// если предыдущее состояние активно, завершить его
-	if (current_substate != u32(-1)) {
-		state = get_state(current_substate);
-		state->critical_finalize();
+		// если предыдущее состояние активно, завершить его
+		if (current_substate != u32(-1)) {
+			state = get_state(current_substate);
+			state->critical_finalize();
+		}
+
+		// установить новое состояние
+		state = get_state(current_substate = new_state_id);
+
+		// инициализировать новое состояние
+		setup_substates();
+
+		state->initialize();
 	}
-
-	// установить новое состояние
-	state = get_state(current_substate = new_state_id);
-	
-	// инициализировать новое состояние
-	setup_substates();
-
-	state->initialize();
+	catch (...)
+	{
+		return;
+	}
 }
 
 TEMPLATE_SPECIALIZATION
