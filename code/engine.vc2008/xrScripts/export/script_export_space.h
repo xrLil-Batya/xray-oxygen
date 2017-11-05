@@ -6,7 +6,6 @@
 //	Description : XRay Script export space 
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
-#include "../../../SDK/include/loki/Typelist.h"
 #include "../xrScripts.h"
 struct lua_State;
 

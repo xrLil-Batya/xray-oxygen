@@ -12,12 +12,9 @@
 #include "graph_edge.h"
 #include "object_broker.h"
 
-template <
-	typename _data_type = Loki::EmptyType,
-	typename _edge_weight_type = float,
-	typename _vertex_id_type = u32,
-	typename _edge_data_type = Loki::EmptyType
->
+template <typename _data_type = imdexlib::empty, typename _edge_weight_type = float, 
+	typename _vertex_id_type = u32, typename _edge_data_type = imdexlib::empty>
+
 class CGraphAbstract {
 public:
 	typedef CVertex<
@@ -75,7 +72,7 @@ public:
 };
 
 template <
-	typename _data_type = Loki::EmptyType,
+	typename _data_type = imdexlib::empty,
 	typename _edge_weight_type = float,
 	typename _vertex_id_type = u32
 >

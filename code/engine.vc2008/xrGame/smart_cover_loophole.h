@@ -31,7 +31,7 @@ public:
 	typedef xr_vector<shared_str>										TransitionData;
 	typedef smart_cover::action::Animations								Animations;
 	typedef CGraphAbstract<
-				Loki::EmptyType,
+				imdexlib::empty,
 				float,
 				shared_str,
 				TransitionData
