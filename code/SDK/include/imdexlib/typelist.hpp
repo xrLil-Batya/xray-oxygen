@@ -2,11 +2,33 @@
 #include "identity.hpp"
 
 namespace imdexlib {
-
 	template <typename... Ts>
 	struct typelist {
 		static constexpr size_t size() noexcept {
 			return sizeof...(Ts);
+		}
+
+		template <typename T>
+		static constexpr size_t index_of(identity<T>) noexcept {
+			return index_of_impl<T>(0, typelist<Ts...>());
+		}
+
+		template <typename T>
+		static constexpr bool contains(identity<T> type) noexcept {
+			return index_of(type) != npos;
+		}
+
+		static constexpr size_t npos = size_t(-1);
+
+	private:
+		template <typename T, typename H, typename... Hs>
+		static constexpr size_t index_of_impl(const size_t index, typelist<H, Hs...>) noexcept {
+			return std::is_same_v<T, H> ? index : index_of_impl<T>(index + 1, typelist<Hs...>());
+		}
+
+		template <typename T>
+		static constexpr size_t index_of_impl(const size_t, typelist<>) noexcept {
+			return npos;
 		}
 	};
 
@@ -84,6 +106,27 @@ namespace imdexlib {
 	template <typename List>
 	using ts_reverse_t = typename ts_reverse<List>::type;
 
+	template <typename List, typename T>
+	struct ts_erase;
+
+	template <typename T, typename H, typename... Hs>
+	struct ts_erase<typelist<H, Hs...>, T> {
+		using next = typename ts_erase<typelist<Hs...>, T>::type;
+		using type = std::conditional_t<
+			std::is_same_v<T, H>,
+			next,
+			ts_prepend_t<H, next>
+		>;
+	};
+
+	template <typename T>
+	struct ts_erase<typelist<>, T> {
+		using type = typelist<>;
+	};
+
+	template <typename List, typename T>
+	using ts_erase_t = typename ts_erase<List, T>::type;
+
 	namespace detail {
 
 		template <typename List>
@@ -104,5 +147,4 @@ namespace imdexlib {
 	void ts_apply(Handler&& handler) {
 		detail::ts_applier<List>::apply(std::forward<Handler>(handler));
 	}
-
 } // imdex namespace
