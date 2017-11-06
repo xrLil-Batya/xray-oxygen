@@ -2,6 +2,6 @@
 * text=auto
 
 # Custom
-*.script=lua 
-*.ltx=ini
-*.ps=cpp
+*.script diff=lua 
+*.ltx diff=ini
+*.ps diff=cpp
