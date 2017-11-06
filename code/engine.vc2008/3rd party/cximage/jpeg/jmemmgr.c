@@ -392,8 +392,7 @@ alloc_large (j_common_ptr cinfo, int pool_id, size_t sizeofobject)
  */
 
 METHODDEF(JSAMPARRAY)
-alloc_sarray (j_common_ptr cinfo, int pool_id,
-	      JDIMENSION samplesperrow, JDIMENSION numrows)
+alloc_sarray (j_common_ptr cinfo, int pool_id, JDIMENSION samplesperrow, JDIMENSION numrows)
 /* Allocate a 2-D sample array */
 {
   my_mem_ptr mem = (my_mem_ptr) cinfo->mem;
