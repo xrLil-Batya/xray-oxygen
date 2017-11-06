@@ -121,7 +121,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRender_R4", "xrRender\xrR
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33} = {65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}
 	EndProjectSection
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound_static", "..\SDK\sources\libogg-1.3.2\win32\VS2010\libogg_static.vcxproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound_static", "..\SDK\sources\libogg-1.3.2\libogg_static.vcxproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "3rd party\zlib\zlib.vcxproj", "{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}"
 EndProject

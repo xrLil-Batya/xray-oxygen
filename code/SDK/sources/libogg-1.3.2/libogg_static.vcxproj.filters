@@ -1,0 +1,386 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\analysis.c">
+      <Filter>vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\analyze.c">
+      <Filter>vorbis</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\apiwrapper.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\vorbisenc.c">
+      <Filter>vorbis_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\vorbisfile.c">
+      <Filter>vorbis_core</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\bitpack.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\bitrate.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\block.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\codebook.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\decapiwrapper.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\decinfo.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\decode.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\dequant.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\encapiwrapper.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\encfrag.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\encinfo.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\encode.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\enquant.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\envelope.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\fdct.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\floor0.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\floor1.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\fragment.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\huffdec.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\huffenc.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\idct.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\info.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\internal.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\lookup.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\lpc.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\lsp.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\mapping0.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\mathops.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\mcenc.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\mdct.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\mmxencfrag.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\mmxfdct.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\mmxfrag.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\mmxidct.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\mmxstate.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\psy.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\quant.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\rate.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\registry.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\res0.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\sharedbook.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\smallft.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\state.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\synthesis.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\tokenize.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libvorbis-1.3.5\lib\window.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\x86cpu.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\x86enc.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="..\libtheora\lib\x86_vc\x86state.c">
+      <Filter>theora</Filter>
+    </ClCompile>
+    <ClCompile Include="src\bitwise.c">
+      <Filter>ogg</Filter>
+    </ClCompile>
+    <ClCompile Include="src\framing.c">
+      <Filter>ogg</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\libtheora\lib\apiwrapper.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\vorbisenc.h">
+      <Filter>vorbis_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\vorbisfile.h">
+      <Filter>vorbis_core</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\backends.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\bitpack.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\bitrate.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\codebook.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\include\theora\codec.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\include\vorbis\codec.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\codec_internal.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\dct.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\decint.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\dequant.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\encint.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\enquant.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\envelope.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\floor_all.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\books\floor\floor_books.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\highlevel.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\huffdec.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\huffenc.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\huffman.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\idct.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\internal.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\lookup.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\lookup_data.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\lpc.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\lsp.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\masking.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\mathops.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\mdct.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\misc.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\modedec.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\ocintrin.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\os.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\psy.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_8.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_11.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_16.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\psych_44.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\quant.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\registry.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\books\coupled\res_books_stereo.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\books\uncoupled\res_books_uncoupled.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_8.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_16.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_44.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\residue_44u.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\scales.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_8.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_11.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_16.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_22.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_32.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_44.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_44u.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\modes\setup_X.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libvorbis-1.3.5\lib\smallft.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\include\theora\theora.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\include\theora\theoradec.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="..\libtheora\lib\x86_vc\x86cpu.h">
+      <Filter>theora</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ogg\os_types.h">
+      <Filter>ogg</Filter>
+    </ClInclude>
+    <ClInclude Include="include\ogg\ogg.h">
+      <Filter>ogg</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="ogg">
+      <UniqueIdentifier>{7814ecee-6393-4708-8a64-c7f6337b8498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vorbis">
+      <UniqueIdentifier>{70fc88f6-7f7c-49e2-b1f6-9dbab7a12155}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="vorbis_core">
+      <UniqueIdentifier>{4d3a2868-2bd8-4283-be65-428f0a5ee76b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="theora">
+      <UniqueIdentifier>{eb07d620-4965-4049-ac1e-5ea0165b8538}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\ogg.def">
+      <Filter>ogg</Filter>
+    </None>
+    <None Include="..\libvorbis-1.3.5\win32\vorbis.def">
+      <Filter>theora</Filter>
+    </None>
+  </ItemGroup>
+</Project>

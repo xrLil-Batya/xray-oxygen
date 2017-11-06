@@ -20,10 +20,10 @@
 
 
 /*14 cycles.*/
-void oc_frag_copy_c64x(unsigned char *restrict _dst,
- const unsigned char *restrict _src,int _ystride){
-  unsigned char *restrict       d2;
-  const unsigned char *restrict s2;
+void oc_frag_copy_c64x(unsigned char * _dst,
+ const unsigned char * _src,int _ystride){
+  unsigned char *       d2;
+  const unsigned char * s2;
   d2=_dst+_ystride;
   s2=_src+_ystride;
 #define OC_ITER() \
