@@ -19,9 +19,6 @@
 #include "game_object_space.h"
 #include "script_game_object.h"
 #include "hit.h"
-#ifdef	DEBUG
-//#include "../xrphysics/phvalide.h"
-#endif
 
 void CAI_Crow::SAnim::Load	(IKinematicsAnimated* visual, LPCSTR prefix)
 {
@@ -43,7 +40,7 @@ void CAI_Crow::SSound::Load	(LPCSTR prefix)
 		m_Sounds.push_back	(ref_sound());
 		::Sound->create		(m_Sounds.back(),prefix,st_Effect,sg_SourceType);
 	}
-	for (int i=0; (i<MAX_SND_COUNT)&&(m_Sounds.size()<MAX_SND_COUNT); ++i){
+	for (u32 i=0; (i<MAX_SND_COUNT)&&(m_Sounds.size()<MAX_SND_COUNT); ++i){
 		string64		name;
 		xr_sprintf			(name,"%s_%d",prefix,i);
 		if (FS.exist(fn,"$game_sounds$",name,".ogg")){
@@ -57,14 +54,14 @@ void CAI_Crow::SSound::Load	(LPCSTR prefix)
 
 void CAI_Crow::SSound::SetPosition	(const Fvector& pos)
 {
-	for (int i=0; i<(int)m_Sounds.size(); ++i)
+	for (u32 i=0; i<(int)m_Sounds.size(); ++i)
 		if (m_Sounds[i]._feedback())
 			m_Sounds[i].set_position(pos);
 }
 
 void CAI_Crow::SSound::Unload		()
 {
-	for (int i=0; i<(int)m_Sounds.size(); ++i)
+	for (u32 i=0; i<(int)m_Sounds.size(); ++i)
 		::Sound->destroy	(m_Sounds[i]);
 }
 
@@ -135,15 +132,16 @@ void CAI_Crow::Load( LPCSTR section )
 	VERIFY2( valid_pos( Position() ), dbg_valide_pos_string(Position(),this,"CAI_Crow::Load( LPCSTR section )") );
 
 }
-
-BOOL CAI_Crow::net_Spawn		(CSE_Abstract* DC)
+#include "../FrayBuildConfig.hpp"
+BOOL CAI_Crow::net_Spawn(CSE_Abstract* DC)
 {
-	BOOL R		= inherited::net_Spawn	(DC);
+	bool inh = inherited::net_Spawn(DC);
 	setVisible	(TRUE);
 	setEnabled	(TRUE);
 
 	// animations
-	IKinematicsAnimated*	M		= smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(M);
+	IKinematicsAnimated* M		= smart_cast<IKinematicsAnimated*>(Visual()); R_ASSERT(M);
+
 	m_Anims.m_death.Load		(M,"death");
 	m_Anims.m_death_dead.Load	(M,"death_drop");
 	m_Anims.m_death_idle.Load	(M,"death_idle");
@@ -168,14 +166,22 @@ BOOL CAI_Crow::net_Spawn		(CSE_Abstract* DC)
 		processing_activate();
 		CreateSkeleton();
 	}
+#ifdef ASPAWN_CROW
+	Fvector new_pos = Actor()->Position();
+	new_pos.x += ::Random.randF(-50.0f, 50.0f);
+	new_pos.y += ::Random.randF(20.0f, 50.0f);
+	new_pos.z += ::Random.randF(-50.0f, 50.0f);
+
+	Position().set(new_pos);
+#endif
+
 	VERIFY2( valid_pos( Position() ), dbg_valide_pos_string(Position(),this,"CAI_Crow::net_Spawn") );
-	return		R;
+	return inh;
 }
 
 void CAI_Crow::net_Destroy		()
 {
 	inherited::net_Destroy					();
-
 	m_Anims.m_death.m_Animations.clear		();
 	m_Anims.m_death_dead.m_Animations.clear	();
 	m_Anims.m_death_idle.m_Animations.clear	();
