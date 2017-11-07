@@ -22,16 +22,16 @@ public:
 	virtual	void FireTrace		(const Fvector& P, const Fvector& D);
 	virtual void on_a_hud_attach();
 
-	virtual void FireStart		();
-	virtual void SwitchState	(u32 S);
-
 			void UpdateMissileVisibility	();
 	virtual void UnloadMagazine				(bool spawn_ammo = true);
 
 	virtual void net_Import			( NET_Packet& P);				// import from server
 protected:
-	virtual bool	AllowBore		();
-	virtual void	PlayAnimReload	();
+	virtual void LaunchGrenade	(const Fvector& P, const Fvector& D);
+	virtual bool AllowBore		();
+	virtual void PlayAnimReload	();
+	
+			bool install_upgrade_impl(LPCSTR section, bool test) override;
 
 	shared_str	m_sRocketSection;
 

@@ -25,6 +25,23 @@ void CWeaponRPG7::Load	(LPCSTR section)
 	m_sRocketSection					= pSettings->r_string	(section,"rocket_class");
 }
 
+bool CWeaponRPG7::install_upgrade_impl(LPCSTR section, bool test)
+{
+	bool result = inherited::install_upgrade_impl( section, test );
+
+	result |= process_if_exists( section, "launch_speed", &CInifile::r_float, m_fLaunchSpeed, test );
+
+	LPCSTR str = nullptr;
+	bool result2;
+	result2 = process_if_exists_set( section, "rocket_class", &CInifile::r_string, str, test );
+	if (result2 && !test)
+	{
+		m_sRocketSection = str;
+	}
+	result |= result2;
+	return result;
+}
+
 bool CWeaponRPG7::AllowBore()
 {
 	return inherited::AllowBore() && 0!=iAmmoElapsed;
@@ -33,6 +50,10 @@ bool CWeaponRPG7::AllowBore()
 void CWeaponRPG7::FireTrace(const Fvector& P, const Fvector& D)
 {
 	inherited::FireTrace	(P, D);
+	if (!IsMisfire())
+	{
+		LaunchGrenade(P, D);
+	}
 	UpdateMissileVisibility	();
 }
 
@@ -89,16 +110,6 @@ void CWeaponRPG7::ReloadMagazine()
 		CRocketLauncher::SpawnRocket(m_sRocketSection.c_str(), this);
 }
 
-void CWeaponRPG7::SwitchState(u32 S) 
-{
-	inherited::SwitchState(S);
-}
-
-void CWeaponRPG7::FireStart()
-{
-	inherited::FireStart();
-}
-
 #include "inventory.h"
 #include "inventoryOwner.h"
 void CWeaponRPG7::switch2_Fire()
@@ -106,33 +117,15 @@ void CWeaponRPG7::switch2_Fire()
 	m_iShotNum			= 0;
 	m_bFireSingleShot	= true;
 	bWorking			= false;
+}
 
-	if (GetState() == eFire && getRocketCount())
+void CWeaponRPG7::LaunchGrenade(const Fvector& p1, const Fvector& d1)
+{
+	if (getRocketCount()) 
 	{
-		Fvector p1, d1, p;
-		Fvector p2, d2, d;
-		p1.set(get_LastFP());
-		d1.set(get_LastFD());
+		Fvector p, d;
 		p = p1;
 		d = d1;
-		CEntity* E = smart_cast<CEntity*>	(H_Parent());
-		if (E)
-		{
-			E->g_fireParams(this, p2, d2);
-			p = p2;
-			d = d2;
-
-			if (IsHudModeNow())
-			{
-				Fvector		p0;
-				float dist = HUD().GetCurrentRayQuery().range;
-				p0.mul(d2, dist);
-				p0.add(p1);
-				p = p1;
-				d.sub(p0, p1);
-				d.normalize_safe();
-			}
-		}
 
 		Fmatrix								launch_matrix;
 		launch_matrix.identity();

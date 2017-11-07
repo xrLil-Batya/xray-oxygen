@@ -49,44 +49,37 @@ void CWeaponRG6::Load(LPCSTR section)
 }
 #include "inventory.h"
 #include "inventoryOwner.h"
-void CWeaponRG6::FireStart ()
+
+bool CWeaponRG6::install_upgrade_impl(LPCSTR section, bool test)
 {
+	bool result = inheritedSG::install_upgrade_impl( section, test );
 
-	if (GetState() == eIdle	&& getRocketCount())
+	result |= process_if_exists( section, "launch_speed", &CInifile::r_float, m_fLaunchSpeed, test );
+	return result;
+}
+
+void CWeaponRG6::LaunchGrenade(const Fvector& p1, const Fvector& d1)
+{
+	if (getRocketCount())
 	{
-		inheritedSG::FireStart();
-
-		Fvector p1, d;
-		p1.set(get_LastFP());
-		d.set(get_LastFD());
-
-		CEntity* E = smart_cast<CEntity*>(H_Parent());
-		if (E) {
-			CInventoryOwner* io = smart_cast<CInventoryOwner*>(H_Parent());
-			if (NULL == io->inventory().ActiveItem())
-			{
-				Log("current_state", GetState());
-				Log("next_state", GetNextState());
-				Log("item_sect", cNameSect().c_str());
-				Log("H_Parent", H_Parent()->cNameSect().c_str());
-			}
-			E->g_fireParams(this, p1, d);
-		}
+		Fvector p, d;
+		p = p1;
+		d = d1;
 
 		Fmatrix launch_matrix;
 		launch_matrix.identity();
 		launch_matrix.k.set(d);
 		Fvector::generate_orthonormal_basis(launch_matrix.k,
-			launch_matrix.j, launch_matrix.i);
-		launch_matrix.c.set(p1);
+											launch_matrix.j, launch_matrix.i);
+		launch_matrix.c.set(p);
 
 		if (IsZoomed() && smart_cast<CActor*>(H_Parent()))
 		{
 			H_Parent()->setEnabled(FALSE);
 			setEnabled(FALSE);
-
+		
 			collide::rq_result RQ;
-			BOOL HasPick = Level().ObjectSpace.RayPick(p1, d, 300.0f, collide::rqtStatic, RQ, this);
+			BOOL HasPick = Level().ObjectSpace.RayPick(p, d, 300.0f, collide::rqtStatic, RQ, this);
 
 			setEnabled(TRUE);
 			H_Parent()->setEnabled(TRUE);
@@ -117,7 +110,7 @@ void CWeaponRG6::FireStart ()
 
 		d.normalize();
 		d.mul(m_fLaunchSpeed);
-		VERIFY2(_valid(launch_matrix), "CWeaponRG6::FireStart. Invalid launch_matrix");
+		VERIFY2(_valid(launch_matrix),"CWeaponRG6::LaunchGrenade. Invalid launch_matrix");
 		CRocketLauncher::LaunchRocket(launch_matrix, d, zero_vel);
 
 		CExplosiveRocket* pGrenade = smart_cast<CExplosiveRocket*>(getCurrentRocket());
@@ -130,6 +123,15 @@ void CWeaponRG6::FireStart ()
 		u_EventSend(P);
 
 		dropCurrentRocket();
+	}
+}
+
+void CWeaponRG6::FireTrace(const Fvector& P, const Fvector& D)
+{
+	inheritedSG::FireTrace(P, D);
+	if (!IsMisfire())
+	{
+		LaunchGrenade(P, D);
 	}
 }
 
