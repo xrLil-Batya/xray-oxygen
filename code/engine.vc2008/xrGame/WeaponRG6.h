@@ -16,8 +16,11 @@ public:
 	virtual void	Load					(LPCSTR section);
 	virtual void	OnEvent					(NET_Packet& P, u16 type);
 protected:
-	virtual void	FireStart				();
 	virtual u8		AddCartridge			(u8 cnt);
+	virtual	void	FireTrace				(const Fvector& P, const Fvector& D);
+	virtual void	LaunchGrenade			(const Fvector& P, const Fvector& D);
+
+			bool install_upgrade_impl(LPCSTR section, bool test) override;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
