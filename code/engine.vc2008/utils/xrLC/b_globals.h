@@ -27,6 +27,7 @@ struct SBuildOptions
 	bool b_noise;
 	bool b_net_light;
 	bool b_skipinvalid;
+	bool b_notessellation;
 	u32	 Priority;
 	SBuildOptions() :b_radiosity(FALSE), b_noise(FALSE), b_net_light(FALSE)
 	{
