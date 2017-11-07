@@ -63,6 +63,7 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd, "-noise"))							g_build_options.b_noise			= true;
 	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
 	if (strstr(cmd, "-skip"))							g_build_options.b_skipinvalid	= true;
+	if (strstr(cmd, "-notessellation"))                 g_build_options.b_notessellation = true;
 	//Added priority setting
 	if (strstr(cmd, "-sp1"))					g_build_options.Priority = 1;
 	else if (strstr(cmd, "-sp2"))				g_build_options.Priority = 2;
