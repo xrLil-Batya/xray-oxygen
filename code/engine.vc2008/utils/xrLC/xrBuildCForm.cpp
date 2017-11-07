@@ -25,38 +25,7 @@ int getCFormVID(vecVertex& V,Vertex *F)
 	return int(it-V.begin());
 }
 int bCriticalErrCnt = 0;
-/*
 
-int getTriByEdge(Vertex *V1, Vertex *V2, Face* parent, vecFace &ids)
-{
-	Face*	found	= 0;
-	int		f_count = 0;
-
-	for (vecFaceIt I=V1->m_adjacents.begin(); I!=V1->m_adjacents.end(); ++I)
-	{
-		Face* test = *I;
-		if (test == parent) continue;
-		if (test->VContains(V2)) 
-		{
-			++f_count;
-			found = test;
-		}
-	}
-	if (f_count>1) 
-	{
-		bCriticalErrCnt	++;
-		pBuild->err_multiedge.w_fvector3(V1->P);
-		pBuild->err_multiedge.w_fvector3(V2->P);
-	}
-	if (found) {
-		vecFaceIt F = std::lower_bound(ids.begin(),ids.end(),found);
-		if (found == *F) return int(F-ids.begin());
-		else return -1;
-	} else {
-		return -1;
-	}
-}
-*/
 void TestEdge			(Vertex *V1, Vertex *V2, Face* parent)
 {
 	Face*	found	= 0;
@@ -184,8 +153,16 @@ void CBuild::BuildCForm	()
 
 	// Data
 	MFS->w			(CL.getV(),(u32)CL.getVS()*sizeof(Fvector));
+#ifdef _M_X64
+	for (size_t i = 0; i < CL.getTS(); ++i)
+	{
+		CDB::TRI *tri = reinterpret_cast<CDB::TRI*>(&CL.getT()[i]);
+		MFS->w(&(tri->verts[0]), 12);
+		MFS->w_u32(tri->dummy_low);
+	}
+#else
 	MFS->w			(CL.getT(),(u32)CL.getTS()*sizeof(CDB::TRI));
-
+#endif
 	// Clear pDeflector (it is stored in the same memory space with dwMaterialGame)
 	for (vecFaceIt I=lc_global_data()->g_faces().begin(); I!=lc_global_data()->g_faces().end(); I++)
 	{

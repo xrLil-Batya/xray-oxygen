@@ -11,7 +11,6 @@
 #else
 #	define XRCDB_API __declspec(dllimport)
 #endif
-#define OLD_M_X64
 #ifdef M_VISUAL
 #define ALIGN(a) __declspec(align(a))
 #else
@@ -25,20 +24,12 @@ namespace Opcode {
 	class AABBNoLeafNode;
 };
 
-#if defined(_M_X64) && defined(OLD_M_X64)
-using u_ptr = u64;
-using ur_ptr = u_ptr;
-#else
-using u_ptr = u32;
-using ur_ptr = u_ptr;
-#endif
-
 #pragma pack(push,8)
 namespace CDB
 {
     // Triangle for x86
 #pragma pack(push, 1)
-#if defined(_M_X64) && defined(OLD_M_X64)
+#if defined(_M_X64)
     class XRCDB_API TRI_DEPRECATED						//*** 16 bytes total (was 32 :)
     {
     public:
@@ -64,20 +55,25 @@ namespace CDB
 		u32				verts	[3];		// 3*4 = 12b
 		union	
 		{
-			u_ptr			dummy;				// 4b
+			size_t			dummy;				// 4b
 			struct 
 			{
-				u_ptr		material:14;		// 
-				u_ptr		suppress_shadows:1;	// 
-				u_ptr		suppress_wm:1;		// 
-				u_ptr		sector:16;			// 
-#if defined(_M_X64) && defined(OLD_M_X64)
-                u_ptr		dumb : 32;
+				size_t		material:14;		// 
+				size_t		suppress_shadows:1;	// 
+				size_t		suppress_wm:1;		// 
+				size_t		sector:16;			// 
+#if defined(_M_X64)
+                size_t		dumb : 32;
 #endif
+			};
+			struct
+			{
+				u32 dummy_low;
+				u32 dummy_high;
 			};
 		};
 
-#if defined(_M_X64) && defined(OLD_M_X64)
+#if defined(_M_X64)
         TRI (TRI_DEPRECATED& oldTri)
         {
             verts[0] = oldTri.verts[0];
@@ -163,16 +159,23 @@ namespace CDB
 	struct XRCDB_API RESULT
 	{
 		Fvector			verts	[3];
-		union	{
-			ur_ptr		dummy;				// 8b
+		union
+		{
+			size_t		dummy;				// 8b
 			struct {
-				ur_ptr		material:14;		// 
-				ur_ptr		suppress_shadows:1;	// 
-				ur_ptr		suppress_wm:1;		// 
-				ur_ptr		sector:16;			// 
-#if defined(_M_X64) && defined(OLD_M_X64)
+				size_t		material:14;		// 
+				size_t		suppress_shadows:1;	// 
+				size_t		suppress_wm:1;		// 
+				size_t		sector:16;			// 
+#if defined(_M_X64)
 				u64			dumb : 32;
 #endif
+			};
+
+			struct 
+			{
+				u32 dummy_low;
+				u32 dummy_high;
 			};
 		};
 		int				id;
@@ -229,9 +232,9 @@ namespace CDB
 		u32				VPack				( const Fvector& V, float eps);
 	public:
 		void			add_face			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector	);
-		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy );
+		void			add_face_D			( const Fvector& v0, const Fvector& v1, const Fvector& v2, size_t dummy );
 		void			add_face_packed		( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, float eps = EPS );
-		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy, float eps = EPS );
+		void			add_face_packed_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, size_t dummy, float eps = EPS );
         void			remove_duplicate_T	( );
 		void			calc_adjacency		( xr_vector<u32>& dest		);
 
@@ -274,7 +277,7 @@ namespace CDB
 		//		}
 
 		void				add_face	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, u32 flags );
-		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u_ptr dummy , u32 flags );
+		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, size_t dummy , u32 flags );
 
 		xr_vector<Fvector>& getV_Vec()			{ return verts;				}
 		Fvector*			getV()				{ return &*verts.begin();	}

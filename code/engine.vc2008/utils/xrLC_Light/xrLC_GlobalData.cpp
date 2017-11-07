@@ -58,51 +58,6 @@ xrLC_GlobalData::xrLC_GlobalData	():
 	read_faces = xr_new< tread_faces	>( &_g_faces );
 }
 
-//void xrLC_GlobalData	::create_write_faces() const
-//{
-//	VERIFY(!write_faces);
-//	//write_faces = xr_new< twrite_faces	>( &_g_faces );
-//}
-//void xrLC_GlobalData::destroy_write_faces() const
-//{
-//	
-//	//xr_delete(write_faces);
-//}
-
-
-//twrite_faces*	xrLC_GlobalData::get_write_faces()	
-//{
-//	return write_faces;
-//}
-
-//void xrLC_GlobalData	::create_read_faces()
-//{
-//	//VERIFY(!read_faces);
-//	//read_faces = xr_new< tread_faces	>( &_g_faces );
-//}
-//void xrLC_GlobalData::destroy_read_faces()
-//{
-//	
-//	//xr_delete(read_faces);
-//}
-//tread_faces	*	xrLC_GlobalData::get_read_faces()	
-//{
-//	return read_faces;
-//}
-/*
-poolVertices &xrLC_GlobalData	::VertexPool	()		
-{
-	return	_VertexPool; 
-}
-poolFaces &xrLC_GlobalData	::FacePool			()		
-{
-	return	_FacePool;
-}
-*/
-
-
-
-
 void	xrLC_GlobalData	::destroy_rcmodel	()
 {
 	xr_delete		(_cl_globs._RCAST_Model);
@@ -208,25 +163,19 @@ void read( INetReader	&r, CDB::MODEL* &m, xrLC_GlobalData  &lc_global_data )
 	tris.clear();
 }
 
-void read( INetReader	&r, CDB::MODEL &m )
+void read(INetReader	&r, CDB::MODEL &m)
 {
 	verts.clear();
 	tris.clear();
-	r_pod_vector( r, verts );
+	r_pod_vector(r, verts);
 	u32 tris_count = r.r_u32();
-	tris.resize( tris_count );
-	for( u32 i = 0; i < tris_count; ++i)
-		::read( r, tris[i] );
-	m.build( &*verts.begin(), (int)verts.size(), &*tris.begin(), (int)tris.size() );
+	tris.resize(tris_count);
+	for (u32 i = 0; i < tris_count; ++i)
+		::read(r, tris[i]);
+	m.build(&*verts.begin(), (int)verts.size(), &*tris.begin(), (int)tris.size(), nullptr, nullptr, false);
 	verts.clear();
 	tris.clear();
 }
-
-
-
-
-
-
 
 void write( IWriter	&w, const  CDB::MODEL &m )
 {
@@ -299,49 +248,30 @@ void			xrLC_GlobalData	::write_base		( IWriter	&w ) const
 }
 
 
-void		xrLC_GlobalData	::read			( INetReader	&r )
+void xrLC_GlobalData::read(INetReader	&r)
 {
-	
+	read_faces->read(r);
+	::read(r, _cl_globs._RCAST_Model, *this);
 
-
-
-	//read_faces = xr_new< tread_faces	>( &_g_faces );
-	read_faces->read( r );
-
-
-	
-	::read( r, _cl_globs._RCAST_Model, *this );
-
-	close_models_read( );
-	xr_delete( read_lightmaps );
-	//xr_delete( read_faces );
-
-	//read_lm_data( r );
+	close_models_read();
+	xr_delete(read_lightmaps);
 }
 
-void	xrLC_GlobalData::write( IWriter	&w ) const
+void xrLC_GlobalData::write(IWriter &w) const
 {
-
-	//write_faces = xr_new< twrite_faces	>( &_g_faces );
 	write_faces->write( w );
-
-
 	//write_models
 	::write( w, *_cl_globs._RCAST_Model, *this );
 	close_models_write( );
 	xr_delete( write_lightmaps );
-	//xr_delete( write_faces );
-
-	//write_lm_data ( w );
 }
 
-void	xrLC_GlobalData::mu_models_calc_materials()
+void xrLC_GlobalData::mu_models_calc_materials()
 {
-	for (u32 m=0; m<mu_models().size(); m++)
-			mu_models()[m]->calc_materials();
+	for (u32 m = 0; m < mu_models().size(); m++)
+		mu_models()[m]->calc_materials();
 
 }
-
 
 void	xrLC_GlobalData::read_lm_data	( INetReader	&r )
 {
@@ -489,15 +419,6 @@ std::pair<u32,u32>	get_id( const xr_vector<xrMU_Model*>& mu_models, const T * v 
 	return std::pair<u32,u32>(u32(ii-mu_models.begin()), face_id );
 }
 
-//std::pair<u32,u32>			xrLC_GlobalData	::		get_id		( const _face * v ) const
-//{
-//	return ::get_id( _mu_models, v );
-//}
-//
-//std::pair<u32,u32>			xrLC_GlobalData	::		get_id		( const _vertex * v ) const
-//{
-//	return ::get_id( _mu_models, v );
-//}
 enum serialize_mesh_item_type
 {
 	smit_plain = u8(0),
@@ -505,11 +426,7 @@ enum serialize_mesh_item_type
 	smit_null  = u8(-1)
 };
 
-
-
-
-
-void			xrLC_GlobalData	::	read			( INetReader &r, base_Face* &f )
+void xrLC_GlobalData::read( INetReader &r, base_Face* &f )
 {
 	VERIFY(!f);
 	u8 type  = r.r_u8( );

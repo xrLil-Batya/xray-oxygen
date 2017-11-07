@@ -11,7 +11,7 @@ public:
 	base_basis				basis_binormal		[3];
 
 	u16						dwMaterial;			// index of material
-	u16						dwMaterialGame;		// unique-id of game material (must persist up to game-CForm saving)
+	u32						dwMaterialGame;		// unique-id of game material (must persist up to game-CForm saving)
 
 	struct					{
 		u16					bSplitted			:		1;

@@ -153,7 +153,16 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 
 		// Data
 		MFS->w					(CL.getV(),(u32)CL.getVS()*sizeof(Fvector));
+//#ifdef _M_X64
+//		for (size_t i = 0; i < CL.getTS(); ++i)
+//		{
+//			CDB::TRI_DEPRECATED *tri = reinterpret_cast<CDB::TRI_DEPRECATED*>(&CL.getT()[i]);
+//			MFS->w(&(tri->verts[0]), 12);
+//			MFS->w_u32(tri->dummy);
+//		}
+//#else
 		MFS->w					(CL.getT(),(u32)CL.getTS()*sizeof(CDB::TRI));
+//#endif
 		MFS->close_chunk		();
 
 		MFS->open_chunk			(1);
