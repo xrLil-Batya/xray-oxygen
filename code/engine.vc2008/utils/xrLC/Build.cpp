@@ -186,8 +186,6 @@ void CBuild::Run	(LPCSTR P)
 	Phase("Optimizing");
 
 	//****************************************** HEMI-Tesselate
-	if (!g_build_options.b_notessellation)
-	{
 		FPU::m64r();
 		Msg("%s", "Adaptive HT...");
 		mem_Compact();
@@ -195,7 +193,6 @@ void CBuild::Run	(LPCSTR P)
 		xrPhase_AdaptiveHT();
 #endif
 		Phase("Adaptive HT...");
-	}
 
 	//****************************************** Building normals
 	FPU::m64r					();

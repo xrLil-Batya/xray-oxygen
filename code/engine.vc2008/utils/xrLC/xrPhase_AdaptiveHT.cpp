@@ -162,6 +162,9 @@ void CBuild::xrPhase_AdaptiveHT	()
 	CDB::COLLIDER	DB;
 	DB.ray_options	(0);
 
+	if (!g_build_options.b_notessellation)
+	{
+
 	Status			("Tesselating...");
 	if (1)
 	{
@@ -171,6 +174,8 @@ void CBuild::xrPhase_AdaptiveHT	()
 			lc_global_data()->g_faces()[fit]->CalcNormal			();
 		}
 		u_Tesselate		(callback_edge_longest,0,0);		// tesselate
+	}
+
 	}
 
 	// Tesselate + calculate
