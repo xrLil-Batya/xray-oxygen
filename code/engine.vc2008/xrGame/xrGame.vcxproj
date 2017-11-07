@@ -1682,17 +1682,6 @@
     <ClInclude Include="magic_minimize_1d.h" />
     <ClInclude Include="magic_minimize_1d_inline.h" />
     <ClInclude Include="UsableScriptObject.h" />
-    <ClInclude Include="PHSkeleton.h" />
-    <ClInclude Include="PHDestroyable.h" />
-    <ClInclude Include="PHDestroyableNotificate.h" />
-    <ClInclude Include="PhysicsSkeletonObject.h" />
-    <ClInclude Include="PhysicsShellHolder.h" />
-    <ClInclude Include="ClimableObject.h" />
-    <ClInclude Include="BreakableObject.h" />
-    <ClInclude Include="PHCollisionDamageReceiver.h" />
-    <ClInclude Include="DestroyablePhysicsObject.h" />
-    <ClInclude Include="animation_script_callback.h" />
-    <ClInclude Include="PhysicObject.h" />
     <ClInclude Include="HangingLamp.h" />
     <ClInclude Include="InfoPortion.h" />
     <ClInclude Include="..\xrServerEntities\InfoPortionDefs.h" />
@@ -2075,53 +2064,6 @@
     <ClInclude Include="HUDTarget.h" />
     <ClInclude Include="UICursor.h" />
     <ClInclude Include="ui\UIGameTutorial.h" />
-    <ClInclude Include="..\xrServerEntities\PHNetState.h" />
-    <ClInclude Include="PHShellCreator.h" />
-    <ClInclude Include="physics_game.h" />
-    <ClInclude Include="PhysicsGamePars.h" />
-    <ClInclude Include="PHDebug.h" />
-    <ClInclude Include="ActivatingCharCollisionDelay.h" />
-    <ClInclude Include="animation_utils.h" />
-    <ClInclude Include="character_shell_control.h" />
-    <ClInclude Include="CharacterPhysicsSupport.h" />
-    <ClInclude Include="imotion_position.h" />
-    <ClInclude Include="imotion_velocity.h" />
-    <ClInclude Include="interactive_motion.h" />
-    <ClInclude Include="death_anims.h" />
-    <ClInclude Include="character_hit_animations.h" />
-    <ClInclude Include="character_hit_animations_params.h" />
-    <ClInclude Include="interactive_animation.h" />
-    <ClInclude Include="physics_shell_animated.h" />
-    <ClInclude Include="PHCommander.h" />
-    <ClInclude Include="PHReqComparer.h" />
-    <ClInclude Include="PHScriptCall.h" />
-    <ClInclude Include="PHSimpleCalls.h" />
-    <ClInclude Include="DamagableItem.h" />
-    <ClInclude Include="moving_bones_snd_player.h" />
-    <ClInclude Include="PHSoundPlayer.h" />
-    <ClInclude Include="Hit.h" />
-    <ClInclude Include="ik_anim_state.h" />
-    <ClInclude Include="ik_calculate_data.h" />
-    <ClInclude Include="ik_calculate_state.h" />
-    <ClInclude Include="ik_collide_data.h" />
-    <ClInclude Include="ik_dbg_matrix.h" />
-    <ClInclude Include="ik_foot_collider.h" />
-    <ClInclude Include="ik_limb_state.h" />
-    <ClInclude Include="ik_limb_state_predict.h" />
-    <ClInclude Include="ik_object_shift.h" />
-    <ClInclude Include="IKFoot.h" />
-    <ClInclude Include="IKFoot_inl.h" />
-    <ClInclude Include="Ik\IKLimb.h" />
-    <ClInclude Include="IKLimbsController.h" />
-    <ClInclude Include="pose_extrapolation.h" />
-    <ClInclude Include="animation_movement_controller.h" />
-    <ClInclude Include="poses_blending.h" />
-    <ClInclude Include="CaptureBoneCallback.h" />
-    <ClInclude Include="PHMovementControl.h" />
-    <ClInclude Include="physics_element_scripted.h" />
-    <ClInclude Include="physics_joint_scripted.h" />
-    <ClInclude Include="physics_shell_scripted.h" />
-    <ClInclude Include="physics_world_scripted.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\xrServerEntities\script_callStack.cpp" />
@@ -2895,23 +2837,6 @@
     <ClCompile Include="magic_minimize_1d.cpp" />
     <ClCompile Include="UsableScriptObject.cpp">
     </ClCompile>
-    <ClCompile Include="PHSkeleton.cpp" />
-    <ClCompile Include="PHDestroyable.cpp" />
-    <ClCompile Include="PHDestroyableNotificate.cpp" />
-    <ClCompile Include="PhysicsSkeletonObject.cpp" />
-    <ClCompile Include="PhysicsShellHolder.cpp">
-    </ClCompile>
-    <ClCompile Include="ClimableObject.cpp" />
-    <ClCompile Include="BreakableObject.cpp" />
-    <ClCompile Include="PHCollisionDamageReceiver.cpp" />
-    <ClCompile Include="DestroyablePhysicsObject.cpp">
-    </ClCompile>
-    <ClCompile Include="animation_script_callback.cpp">
-    </ClCompile>
-    <ClCompile Include="PhysicObject.cpp">
-    </ClCompile>
-    <ClCompile Include="PhysicObject_script.cpp">
-    </ClCompile>
     <ClCompile Include="HangingLamp.cpp">
     </ClCompile>
     <ClCompile Include="InfoPortion.cpp">
@@ -3389,66 +3314,6 @@
     <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp">
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\PHNetState.cpp" />
-    <ClCompile Include="PHShellCreator.cpp" />
-    <ClCompile Include="physics_game.cpp" />
-    <ClCompile Include="PhysicsGamePars.cpp" />
-    <ClCompile Include="PHDebug.cpp">
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <ObjectFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.obj</ObjectFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <XMLDocumentationFileName Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">$(IntDir)%(Filename)1.xdc</XMLDocumentationFileName>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
-    <ClCompile Include="animation_utils.cpp" />
-    <ClCompile Include="character_shell_control.cpp" />
-    <ClCompile Include="CharacterPhysicsSupport.cpp" />
-    <ClCompile Include="imotion_position.cpp" />
-    <ClCompile Include="imotion_velocity.cpp" />
-    <ClCompile Include="interactive_motion.cpp" />
-    <ClCompile Include="death_anims.cpp" />
-    <ClCompile Include="death_anims_predicates.cpp" />
-    <ClCompile Include="character_hit_animations.cpp" />
-    <ClCompile Include="interactive_animation.cpp" />
-    <ClCompile Include="physics_shell_animated.cpp" />
-    <ClCompile Include="PHCommander.cpp" />
-    <ClCompile Include="PHScriptCall.cpp">
-    </ClCompile>
-    <ClCompile Include="PHSimpleCalls.cpp" />
-    <ClCompile Include="DamagableItem.cpp" />
-    <ClCompile Include="moving_bones_snd_player.cpp" />
-    <ClCompile Include="PHSoundPlayer.cpp" />
-    <ClCompile Include="Hit.cpp" />
-    <ClCompile Include="ik_anim_state.cpp" />
-    <ClCompile Include="ik_calculate_data.cpp" />
-    <ClCompile Include="ik_dbg_matrix.cpp" />
-    <ClCompile Include="ik_foot_collider.cpp" />
-    <ClCompile Include="ik_limb_state.cpp" />
-    <ClCompile Include="ik_object_shift.cpp" />
-    <ClCompile Include="IKFoot.cpp" />
-    <ClCompile Include="Ik\IKLimb.cpp" />
-    <ClCompile Include="IKLimbsController.cpp" />
-    <ClCompile Include="pose_extrapolation.cpp" />
-    <ClCompile Include="animation_movement_controller.cpp" />
-    <ClCompile Include="poses_blending.cpp" />
-    <ClCompile Include="PHMovementControl.cpp" />
-    <ClCompile Include="PHMovementDynamicActivate.cpp" />
-    <ClCompile Include="physics_element_scripted.cpp">
-    </ClCompile>
-    <ClCompile Include="physics_joint_scripted.cpp">
-    </ClCompile>
-    <ClCompile Include="physics_shell_scripted.cpp">
-    </ClCompile>
-    <ClCompile Include="physics_world_scripted.cpp">
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
