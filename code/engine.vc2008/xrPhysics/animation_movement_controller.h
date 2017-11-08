@@ -3,7 +3,6 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "poses_blending.h"
 
-//class IKinematicsAnimated;
 class poses_blending;
 class CBlend;
 
@@ -16,10 +15,6 @@ class animation_movement_controller :
 public:
 	void				DBG_verify_position_not_chaged() const;
 private:
-#ifdef					DEBUG
-	Fmatrix				DBG_previous_position;
-#endif	
-	//Fmatrix			m_startAnimPose;
 	IKinematics			*m_pKinematicsC;
 	IKinematicsAnimated *m_pKinematicsA;
 	CBlend*				m_control_blend;

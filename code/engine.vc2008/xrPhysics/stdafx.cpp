@@ -6,3 +6,5 @@
 #pragma comment( lib, "sound_static.lib")
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
+#pragma comment(lib, "xrCore.lib")
+#pragma comment(lib, "xrParticles.lib")

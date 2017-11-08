@@ -1,6 +1,6 @@
 #pragma once
 namespace extrapolation{class points;}
-class object_shift
+class XRPHYSICS_API object_shift
 {
 	float	current;
 	float	taget;

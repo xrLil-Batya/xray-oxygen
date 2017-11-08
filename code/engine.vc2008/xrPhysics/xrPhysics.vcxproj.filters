@@ -139,77 +139,29 @@
     <Filter Include="Client">
       <UniqueIdentifier>{51a2f891-b7cd-4670-bf20-a101d960a318}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Client\physics">
-      <UniqueIdentifier>{3c3d6279-f466-4c59-8177-c1fb29b95f90}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\animation_movement_controller">
+    <Filter Include="Client\animation_movement_controller">
       <UniqueIdentifier>{55f904df-18dc-4ddc-a5e0-01107bf1ee39}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Client\physics\Breakable">
-      <UniqueIdentifier>{210e639a-7108-4961-91b6-0bd260b3aab8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\CharacterSupport">
+    <Filter Include="Client\CharacterSupport">
       <UniqueIdentifier>{69d3b92e-5587-431d-a3f4-0582f4b3c8a3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Client\physics\Climable">
-      <UniqueIdentifier>{ed86a67d-607d-4a85-a022-36040102f628}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\CollisionDamageReceiver">
-      <UniqueIdentifier>{45ed63aa-2b35-4f38-9387-5b18f6da53d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\DamageableItem">
-      <UniqueIdentifier>{ca0354a9-ab64-49a4-a616-d9fc04ba4c4a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\Debug">
-      <UniqueIdentifier>{f522210c-c4fd-4d1b-a00e-b2a2b5520043}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\DestroyablePhysicsObject">
-      <UniqueIdentifier>{3bff0ef6-5de5-422f-992a-a012353a56fa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\Hit">
-      <UniqueIdentifier>{442b6208-365d-432a-9cd9-216f40ecb520}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\IK">
-      <UniqueIdentifier>{6454438f-86a0-484d-aee8-b08c29280e0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\MovementControl">
-      <UniqueIdentifier>{25eae772-c466-4fe7-8166-fef338690c2f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PHCommander">
-      <UniqueIdentifier>{f267e196-4227-4b73-94b4-9cee7daf620f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PHDestroyable">
-      <UniqueIdentifier>{348b4bc6-7b25-45dd-bc81-a1520b2efae7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PHSkeleton">
-      <UniqueIdentifier>{7955837f-22a7-412d-8d7e-1e4ebb125499}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PhysicObject">
-      <UniqueIdentifier>{91e1d1e4-fc7e-4307-937d-ba9e2e8978a3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PhysicsShellHolder">
-      <UniqueIdentifier>{dfa0d8d9-303a-4633-9865-477c9539e5d2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PhysicsSkeletonObject">
-      <UniqueIdentifier>{02cd5418-a226-4cdc-9f15-fc6612ba6eaa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\PhysicsSoundPlayer">
-      <UniqueIdentifier>{745ad218-fe86-42a8-9861-edc1d0409102}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\scripts">
-      <UniqueIdentifier>{498b89f0-32f6-4960-be16-f1f2952dbe0f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\CharacterSupport\death_anims">
+    <Filter Include="Client\CharacterSupport\death_anims">
       <UniqueIdentifier>{90746504-c73a-441c-8de3-5e68706830d9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Client\physics\CharacterSupport\hit_anims">
-      <UniqueIdentifier>{253d753e-719b-42ee-93f7-31c1c1462915}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Client\physics\CharacterSupport\interactive_anims">
+    <Filter Include="Client\CharacterSupport\interactive_anims">
       <UniqueIdentifier>{9cc948c8-44e2-4875-a099-fedfb89aa38f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Client\physics\CharacterSupport\interactive_motion">
-      <UniqueIdentifier>{e5ed919f-5716-4d61-917b-89e22912fd50}</UniqueIdentifier>
+    <Filter Include="Client\DamageableItem">
+      <UniqueIdentifier>{ca0354a9-ab64-49a4-a616-d9fc04ba4c4a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client\IK">
+      <UniqueIdentifier>{6454438f-86a0-484d-aee8-b08c29280e0d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client\MovementControl">
+      <UniqueIdentifier>{25eae772-c466-4fe7-8166-fef338690c2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Client\scripts">
+      <UniqueIdentifier>{498b89f0-32f6-4960-be16-f1f2952dbe0f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -387,170 +339,50 @@
     <ClCompile Include="debug_output.cpp">
       <Filter>physics\Base\Debug</Filter>
     </ClCompile>
-    <ClCompile Include="ActorCameraCollision.cpp">
-      <Filter>physics\camera_collision</Filter>
-    </ClCompile>
     <ClCompile Include="collisiondamagereceiver.cpp">
       <Filter>physics\damage_receiver</Filter>
     </ClCompile>
     <ClCompile Include="animation_movement_controller.cpp">
-      <Filter>Client\physics\animation_movement_controller</Filter>
+      <Filter>Client\animation_movement_controller</Filter>
     </ClCompile>
     <ClCompile Include="poses_blending.cpp">
-      <Filter>Client\physics\animation_movement_controller</Filter>
-    </ClCompile>
-    <ClCompile Include="BreakableObject.cpp">
-      <Filter>Client\physics\Breakable</Filter>
-    </ClCompile>
-    <ClCompile Include="character_shell_control.cpp">
-      <Filter>Client\physics\CharacterSupport</Filter>
-    </ClCompile>
-    <ClCompile Include="CharacterPhysicsSupport.cpp">
-      <Filter>Client\physics\CharacterSupport</Filter>
+      <Filter>Client\animation_movement_controller</Filter>
     </ClCompile>
     <ClCompile Include="animation_utils.cpp">
-      <Filter>Client\physics\CharacterSupport</Filter>
-    </ClCompile>
-    <ClCompile Include="ActivatingCharCollisionDelay.cpp">
-      <Filter>Client\physics\CharacterSupport</Filter>
+      <Filter>Client\CharacterSupport</Filter>
     </ClCompile>
     <ClCompile Include="death_anims.cpp">
-      <Filter>Client\physics\CharacterSupport\death_anims</Filter>
-    </ClCompile>
-    <ClCompile Include="death_anims_predicates.cpp">
-      <Filter>Client\physics\CharacterSupport\death_anims</Filter>
-    </ClCompile>
-    <ClCompile Include="character_hit_animations.cpp">
-      <Filter>Client\physics\CharacterSupport\hit_anims</Filter>
+      <Filter>Client\CharacterSupport\death_anims</Filter>
     </ClCompile>
     <ClCompile Include="interactive_animation.cpp">
-      <Filter>Client\physics\CharacterSupport\interactive_anims</Filter>
+      <Filter>Client\CharacterSupport\interactive_anims</Filter>
     </ClCompile>
     <ClCompile Include="physics_shell_animated.cpp">
-      <Filter>Client\physics\CharacterSupport\interactive_anims</Filter>
-    </ClCompile>
-    <ClCompile Include="imotion_position.cpp">
-      <Filter>Client\physics\CharacterSupport\interactive_motion</Filter>
-    </ClCompile>
-    <ClCompile Include="imotion_velocity.cpp">
-      <Filter>Client\physics\CharacterSupport\interactive_motion</Filter>
-    </ClCompile>
-    <ClCompile Include="interactive_motion.cpp">
-      <Filter>Client\physics\CharacterSupport\interactive_motion</Filter>
-    </ClCompile>
-    <ClCompile Include="ClimableObject.cpp">
-      <Filter>Client\physics\Climable</Filter>
-    </ClCompile>
-    <ClCompile Include="PHCollisionDamageReceiver.cpp">
-      <Filter>Client\physics\CollisionDamageReceiver</Filter>
+      <Filter>Client\CharacterSupport\interactive_anims</Filter>
     </ClCompile>
     <ClCompile Include="DamagableItem.cpp">
-      <Filter>Client\physics\DamageableItem</Filter>
-    </ClCompile>
-    <ClCompile Include="PHDebug.cpp">
-      <Filter>Client\physics\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="Hit.cpp">
-      <Filter>Client\physics\Hit</Filter>
-    </ClCompile>
-    <ClCompile Include="DestroyablePhysicsObject.cpp">
-      <Filter>Client\physics\DestroyablePhysicsObject</Filter>
+      <Filter>Client\DamageableItem</Filter>
     </ClCompile>
     <ClCompile Include="ik_anim_state.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="ik_calculate_data.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="ik_dbg_matrix.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="ik_foot_collider.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="ik_limb_state.cpp">
-      <Filter>Client\physics\IK</Filter>
+      <Filter>Client\IK</Filter>
     </ClCompile>
     <ClCompile Include="ik_object_shift.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="IKFoot.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="IKLimb.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="IKLimbsController.cpp">
-      <Filter>Client\physics\IK</Filter>
+      <Filter>Client\IK</Filter>
     </ClCompile>
     <ClCompile Include="pose_extrapolation.cpp">
-      <Filter>Client\physics\IK</Filter>
-    </ClCompile>
-    <ClCompile Include="PHMovementControl.cpp">
-      <Filter>Client\physics\MovementControl</Filter>
-    </ClCompile>
-    <ClCompile Include="PHMovementDynamicActivate.cpp">
-      <Filter>Client\physics\MovementControl</Filter>
-    </ClCompile>
-    <ClCompile Include="PHCommander.cpp">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClCompile>
-    <ClCompile Include="PHScriptCall.cpp">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClCompile>
-    <ClCompile Include="PHSimpleCalls.cpp">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClCompile>
-    <ClCompile Include="PHDestroyable.cpp">
-      <Filter>Client\physics\PHDestroyable</Filter>
-    </ClCompile>
-    <ClCompile Include="PHSkeleton.cpp">
-      <Filter>Client\physics\PHSkeleton</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicObject.cpp">
-      <Filter>Client\physics\PhysicObject</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicObject_script.cpp">
-      <Filter>Client\physics\PhysicObject</Filter>
-    </ClCompile>
-    <ClCompile Include="animation_script_callback.cpp">
-      <Filter>Client\physics\PhysicObject</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsShellHolder.cpp">
-      <Filter>Client\physics\PhysicsShellHolder</Filter>
-    </ClCompile>
-    <ClCompile Include="PHDestroyableNotificate.cpp">
-      <Filter>Client\physics\PhysicsSkeletonObject</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicsSkeletonObject.cpp">
-      <Filter>Client\physics\PhysicsSkeletonObject</Filter>
-    </ClCompile>
-    <ClCompile Include="moving_bones_snd_player.cpp">
-      <Filter>Client\physics\PhysicsSoundPlayer</Filter>
-    </ClCompile>
-    <ClCompile Include="PHSoundPlayer.cpp">
-      <Filter>Client\physics\PhysicsSoundPlayer</Filter>
+      <Filter>Client\IK</Filter>
     </ClCompile>
     <ClCompile Include="physics_element_scripted.cpp">
-      <Filter>Client\physics\scripts</Filter>
+      <Filter>Client\scripts</Filter>
     </ClCompile>
     <ClCompile Include="physics_joint_scripted.cpp">
-      <Filter>Client\physics\scripts</Filter>
+      <Filter>Client\scripts</Filter>
     </ClCompile>
     <ClCompile Include="physics_shell_scripted.cpp">
-      <Filter>Client\physics\scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_world_scripted.cpp">
-      <Filter>Client\physics\scripts</Filter>
-    </ClCompile>
-    <ClCompile Include="physics_game.cpp">
-      <Filter>Client\physics</Filter>
+      <Filter>Client\scripts</Filter>
     </ClCompile>
     <ClCompile Include="PhysicsGamePars.cpp">
-      <Filter>Client\physics</Filter>
-    </ClCompile>
-    <ClCompile Include="PHShellCreator.cpp">
-      <Filter>Client\physics</Filter>
+      <Filter>Client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -821,182 +653,59 @@
     <ClInclude Include="debug_output.h">
       <Filter>physics\Base\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="ActorCameraCollision.h">
-      <Filter>physics\camera_collision</Filter>
-    </ClInclude>
     <ClInclude Include="icollisiondamagereceiver.h">
       <Filter>physics\damage_receiver</Filter>
     </ClInclude>
     <ClInclude Include="animation_movement_controller.h">
-      <Filter>Client\physics\animation_movement_controller</Filter>
+      <Filter>Client\animation_movement_controller</Filter>
     </ClInclude>
     <ClInclude Include="poses_blending.h">
-      <Filter>Client\physics\animation_movement_controller</Filter>
-    </ClInclude>
-    <ClInclude Include="BreakableObject.h">
-      <Filter>Client\physics\Breakable</Filter>
-    </ClInclude>
-    <ClInclude Include="character_shell_control.h">
-      <Filter>Client\physics\CharacterSupport</Filter>
-    </ClInclude>
-    <ClInclude Include="CharacterPhysicsSupport.h">
-      <Filter>Client\physics\CharacterSupport</Filter>
+      <Filter>Client\animation_movement_controller</Filter>
     </ClInclude>
     <ClInclude Include="animation_utils.h">
-      <Filter>Client\physics\CharacterSupport</Filter>
-    </ClInclude>
-    <ClInclude Include="ActivatingCharCollisionDelay.h">
-      <Filter>Client\physics\CharacterSupport</Filter>
+      <Filter>Client\CharacterSupport</Filter>
     </ClInclude>
     <ClInclude Include="death_anims.h">
-      <Filter>Client\physics\CharacterSupport\death_anims</Filter>
-    </ClInclude>
-    <ClInclude Include="character_hit_animations.h">
-      <Filter>Client\physics\CharacterSupport\hit_anims</Filter>
-    </ClInclude>
-    <ClInclude Include="character_hit_animations_params.h">
-      <Filter>Client\physics\CharacterSupport\hit_anims</Filter>
+      <Filter>Client\CharacterSupport\death_anims</Filter>
     </ClInclude>
     <ClInclude Include="interactive_animation.h">
-      <Filter>Client\physics\CharacterSupport\interactive_anims</Filter>
+      <Filter>Client\CharacterSupport\interactive_anims</Filter>
     </ClInclude>
     <ClInclude Include="physics_shell_animated.h">
-      <Filter>Client\physics\CharacterSupport\interactive_anims</Filter>
-    </ClInclude>
-    <ClInclude Include="imotion_position.h">
-      <Filter>Client\physics\CharacterSupport\interactive_motion</Filter>
-    </ClInclude>
-    <ClInclude Include="imotion_velocity.h">
-      <Filter>Client\physics\CharacterSupport\interactive_motion</Filter>
-    </ClInclude>
-    <ClInclude Include="interactive_motion.h">
-      <Filter>Client\physics\CharacterSupport\interactive_motion</Filter>
-    </ClInclude>
-    <ClInclude Include="ClimableObject.h">
-      <Filter>Client\physics\Climable</Filter>
-    </ClInclude>
-    <ClInclude Include="PHCollisionDamageReceiver.h">
-      <Filter>Client\physics\CollisionDamageReceiver</Filter>
+      <Filter>Client\CharacterSupport\interactive_anims</Filter>
     </ClInclude>
     <ClInclude Include="DamagableItem.h">
-      <Filter>Client\physics\DamageableItem</Filter>
-    </ClInclude>
-    <ClInclude Include="PHDebug.h">
-      <Filter>Client\physics\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="Hit.h">
-      <Filter>Client\physics\Hit</Filter>
-    </ClInclude>
-    <ClInclude Include="DestroyablePhysicsObject.h">
-      <Filter>Client\physics\DestroyablePhysicsObject</Filter>
+      <Filter>Client\DamageableItem</Filter>
     </ClInclude>
     <ClInclude Include="ik_anim_state.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="ik_calculate_data.h">
-      <Filter>Client\physics\IK</Filter>
+      <Filter>Client\IK</Filter>
     </ClInclude>
     <ClInclude Include="ik_calculate_state.h">
-      <Filter>Client\physics\IK</Filter>
+      <Filter>Client\IK</Filter>
     </ClInclude>
     <ClInclude Include="ik_collide_data.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="ik_dbg_matrix.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="ik_foot_collider.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="ik_limb_state.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="ik_limb_state_predict.h">
-      <Filter>Client\physics\IK</Filter>
+      <Filter>Client\IK</Filter>
     </ClInclude>
     <ClInclude Include="ik_object_shift.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="IKFoot.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="IKFoot_inl.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="IKLimb.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="IKLimbsController.h">
-      <Filter>Client\physics\IK</Filter>
+      <Filter>Client\IK</Filter>
     </ClInclude>
     <ClInclude Include="pose_extrapolation.h">
-      <Filter>Client\physics\IK</Filter>
-    </ClInclude>
-    <ClInclude Include="PHMovementControl.h">
-      <Filter>Client\physics\MovementControl</Filter>
+      <Filter>Client\IK</Filter>
     </ClInclude>
     <ClInclude Include="CaptureBoneCallback.h">
-      <Filter>Client\physics\MovementControl</Filter>
-    </ClInclude>
-    <ClInclude Include="PHCommander.h">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClInclude>
-    <ClInclude Include="PHScriptCall.h">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClInclude>
-    <ClInclude Include="PHSimpleCalls.h">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClInclude>
-    <ClInclude Include="PHReqComparer.h">
-      <Filter>Client\physics\PHCommander</Filter>
-    </ClInclude>
-    <ClInclude Include="PHDestroyable.h">
-      <Filter>Client\physics\PHDestroyable</Filter>
-    </ClInclude>
-    <ClInclude Include="PHSkeleton.h">
-      <Filter>Client\physics\PHSkeleton</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicObject.h">
-      <Filter>Client\physics\PhysicObject</Filter>
-    </ClInclude>
-    <ClInclude Include="animation_script_callback.h">
-      <Filter>Client\physics\PhysicObject</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsShellHolder.h">
-      <Filter>Client\physics\PhysicsShellHolder</Filter>
-    </ClInclude>
-    <ClInclude Include="PHDestroyableNotificate.h">
-      <Filter>Client\physics\PhysicsSkeletonObject</Filter>
-    </ClInclude>
-    <ClInclude Include="PhysicsSkeletonObject.h">
-      <Filter>Client\physics\PhysicsSkeletonObject</Filter>
-    </ClInclude>
-    <ClInclude Include="moving_bones_snd_player.h">
-      <Filter>Client\physics\PhysicsSoundPlayer</Filter>
-    </ClInclude>
-    <ClInclude Include="PHSoundPlayer.h">
-      <Filter>Client\physics\PhysicsSoundPlayer</Filter>
+      <Filter>Client\MovementControl</Filter>
     </ClInclude>
     <ClInclude Include="physics_element_scripted.h">
-      <Filter>Client\physics\scripts</Filter>
+      <Filter>Client\scripts</Filter>
     </ClInclude>
     <ClInclude Include="physics_joint_scripted.h">
-      <Filter>Client\physics\scripts</Filter>
+      <Filter>Client\scripts</Filter>
     </ClInclude>
     <ClInclude Include="physics_shell_scripted.h">
-      <Filter>Client\physics\scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_world_scripted.h">
-      <Filter>Client\physics\scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="physics_game.h">
-      <Filter>Client\physics</Filter>
+      <Filter>Client\scripts</Filter>
     </ClInclude>
     <ClInclude Include="PhysicsGamePars.h">
-      <Filter>Client\physics</Filter>
-    </ClInclude>
-    <ClInclude Include="PHShellCreator.h">
-      <Filter>Client\physics</Filter>
+      <Filter>Client</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

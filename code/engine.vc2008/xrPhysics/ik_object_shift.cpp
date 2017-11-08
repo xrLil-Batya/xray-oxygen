@@ -4,8 +4,6 @@
 #include "../xrphysics/mathutils.h"
 #ifdef	DEBUG
 #include "phdebug.h"
-#endif
-#ifdef	DEBUG
 
 void object_shift::	dbg_draw			( const Fmatrix	&current_pos, const extrapolation::points &predict , const Fvector& start ) const
 {
@@ -88,39 +86,6 @@ bool square_equation(float a, float b, float c, float &x0, float &x1 )// returns
 	return true;
 }
 
-//static const float max_possible_shift_speed_up = 4.5f; //
-//static const float max_shift_avr_accel_up = 3.5f; //
-//static const float max_possible_shift_speed_down = 4.5f; //
-//static const float max_shift_avr_accel_down= 3.5f; //
-//float clamp_taget_to_max_possible_shift_speed_return_shift_taget(float &taget, float current, float speed, float time )
-//{
-//	float x			= taget - current ;
-//	return x;
-//	float taget_speed = x/time;
-//	
-//		//clamp(taget_speed,-max_possible_shift_speed, max_possible_shift_speed );
-//	save_min( taget_speed, max_possible_shift_speed_up );
-//	save_max( taget_speed, -max_possible_shift_speed_down ); 
-//
-//	float change_speed = taget_speed - speed;
-//	float avr_accel = change_speed/time;
-//
-//	//clamp( avr_accel,-max_shift_avr_accel, max_shift_avr_accel );
-//	save_min( avr_accel, max_shift_avr_accel_up );
-//	save_max( avr_accel, -max_shift_avr_accel_down );
-//	taget_speed = speed + avr_accel * time;
-//
-//	//clamp(taget_speed,-max_possible_shift_speed, max_possible_shift_speed );
-//	save_min( taget_speed, max_possible_shift_speed_up );
-//	save_max( taget_speed, -max_possible_shift_speed_down ); 
-//	x = taget_speed * time;
-//	
-//	taget = x + current; 
-//
-//	return x;
-//
-//
-//}
 float half_shift_restrict_up = 0.1f;
 float half_shift_restrict_down = 0.15f;
 

@@ -1,6 +1,6 @@
 #pragma once
 
-class ik_foot_geom
+class XRPHYSICS_API ik_foot_geom
 {
 public:
 	enum e_collide_point
@@ -36,7 +36,7 @@ private:
 	Fvector _side;
 };
 
-struct SIKCollideData
+struct XRPHYSICS_API SIKCollideData
 {
 				
 	ik_foot_geom::e_collide_point	m_collide_point;

@@ -10,8 +10,7 @@
 #include "../xrServerEntities/smart_cast.h"
 #include "../xrcdb/xrcdb.h"
 #include "../xrsound/sound.h"
-
-#pragma comment( lib, "xrCore.lib"	)
+#include "../xrParticles/stdafx.h"
 
 #include "xrPhysics.h"
 #include "../xrCore/xrapi.h"

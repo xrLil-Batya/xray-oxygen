@@ -1,7 +1,7 @@
 #pragma once
 class IPhysicsShellHolder;
 class CPHCharacter;
-class IClimableObject
+class XRPHYSICS_API IClimableObject
 {
 public:
 //virtual	const Fvector&	Axis				()const		=0;

@@ -1,6 +1,5 @@
-class CDamagableItem
+class XRPHYSICS_API CDamagableItem
 {
-
 protected:
 	u16								m_levels_num										;
 	float							m_max_health										;

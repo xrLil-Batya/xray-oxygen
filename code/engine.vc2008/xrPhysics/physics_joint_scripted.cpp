@@ -1,5 +1,6 @@
 #include "stdafx.h"
-
+#include <luabind\luabind.hpp>
+#include <luabind\out_value_policy.hpp>
 #include "physics_joint_scripted.h"
 #include "physics_element_scripted.h"
 using namespace luabind;

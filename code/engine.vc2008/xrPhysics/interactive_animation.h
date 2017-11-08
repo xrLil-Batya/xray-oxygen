@@ -7,7 +7,7 @@ class	CBlend;
 struct	dContact;
 struct	SGameMtl;
 
-class interactive_animation:
+class XRPHYSICS_API interactive_animation:
 	public physics_shell_animated
 {
 typedef	physics_shell_animated inherited;

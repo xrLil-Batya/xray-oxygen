@@ -3,9 +3,7 @@
 #include "../xrphysics/CycleConstStorage.h"
 namespace extrapolation
 {
-
-
-	class pose
+	class XRPHYSICS_API pose
 	{
 		
 			Fvector			p;
@@ -20,8 +18,7 @@ namespace extrapolation
 			pose					();
 	};
 
-	class point;
-	class point
+	class XRPHYSICS_API point
 	{
 		public:
 					point		(): m_time( -FLT_MAX )			{ }
@@ -33,7 +30,7 @@ namespace extrapolation
 			float		m_time;
 	};
 
-	class points
+	class XRPHYSICS_API points
 	{
 	public:
 				points			(): last_update( u32(-1) ){}

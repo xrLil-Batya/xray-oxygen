@@ -493,6 +493,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ParticlesObject.h" />
+    <ClInclude Include="ParticlesPlayer.h" />
     <ClInclude Include="particle_params.h" />
     <ClInclude Include="psystem.h" />
     <ClInclude Include="stdafx.h" />
@@ -504,6 +506,8 @@
     <ClInclude Include="particle_manager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ParticlesObject.cpp" />
+    <ClCompile Include="ParticlesPlayer.cpp" />
     <ClCompile Include="particle_params.cpp" />
     <ClCompile Include="peffects.cpp" />
     <ClCompile Include="stdafx.cpp">

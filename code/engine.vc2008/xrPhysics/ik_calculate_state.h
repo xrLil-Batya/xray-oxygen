@@ -1,7 +1,8 @@
 #pragma once
+#include "../xrCore/xrCore.h"
+#include "xrPhysics.h"
 
-
-class ik_goal_matrix
+class XRPHYSICS_API ik_goal_matrix
 {
 	public:
 	enum e_collide_state
@@ -24,7 +25,7 @@ class ik_goal_matrix
 	IC	e_collide_state collide_state	()const										{ return cl_state; }
 };
 
-struct calculate_state
+struct XRPHYSICS_API calculate_state
 {
 	u32				calc_time;
 	u32				unstuck_time;

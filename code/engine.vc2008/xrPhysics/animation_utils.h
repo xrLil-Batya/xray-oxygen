@@ -1,7 +1,7 @@
 #pragma once
 class CBoneInstance;
 class IKinematics;
-struct anim_bone_fix
+struct XRPHYSICS_API anim_bone_fix
 {
 	CBoneInstance *bone;
 	CBoneInstance *parent;
@@ -16,4 +16,4 @@ static	void	_BCL	callback	( CBoneInstance *BI );
 		void			deinit		();
 };
 
-bool find_in_parents( const u16 bone_to_find, const u16 from_bone, IKinematics &ca );
+bool XRPHYSICS_API find_in_parents( const u16 bone_to_find, const u16 from_bone, IKinematics &ca );

@@ -8,8 +8,6 @@ class  CInifile;
 class  IKinematicsAnimated;
 class  CEntityAlive;
 
-
-
 template<typename T>
 void	vec_clear ( T* &p)
 {
@@ -28,7 +26,7 @@ rnd_motion*	setup		( IKinematicsAnimated* k, LPCSTR s );
 MotionID	motion		( )	const;
 };
 
-class	type_motion
+class XRPHYSICS_API type_motion
 {
 
 public:
@@ -57,7 +55,7 @@ private:
 	xr_vector<rnd_motion*>		anims;
 };
 
-class death_anims
+class XRPHYSICS_API death_anims
 {
 
 public:

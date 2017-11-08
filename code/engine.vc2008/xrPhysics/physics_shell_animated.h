@@ -1,7 +1,7 @@
 #pragma once
-class	IPhysicsShellEx;
-class	CPhysicsShellHolder;
-class physics_shell_animated
+class IPhysicsShellEx;
+class CPhysicsShellHolder;
+class XRPHYSICS_API physics_shell_animated
 {
 protected:
 	IPhysicsShellEx			*physics_shell;

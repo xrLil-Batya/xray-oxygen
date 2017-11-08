@@ -1,23 +1,21 @@
-#ifndef PHYSICS_GAME_PARS_H
-#define PHYSICS_GAME_PARS_H
+#pragma once
 //extern float object_damage_factor;
-extern float collide_volume_max;
-extern float collide_volume_min;
+extern XRPHYSICS_API float collide_volume_max;
+extern XRPHYSICS_API float collide_volume_min;
 
 
-struct EffectPars
+struct XRPHYSICS_API EffectPars
 {
 	const static  float vel_cret_sound;
 	const static float vel_cret_particles;
 	const static float vel_cret_wallmark;
 };
 
-struct CharacterEffectPars
+struct XRPHYSICS_API CharacterEffectPars
 {
 	const static  float vel_cret_sound;
 	const static float vel_cret_particles;
 	const static float vel_cret_wallmark;
 };
 
-void	LoadPhysicsGameParams	()	;
-#endif
+void XRPHYSICS_API LoadPhysicsGameParams();

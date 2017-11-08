@@ -9,7 +9,7 @@
 #pragma once
 
 #include "ai_space.h"
-#include "script_engine.h"
+#include "../xrServerEntities/script_engine.h"
 
 IC bool compare_safe(const luabind::object& o1, const luabind::object& o2) {
     if ((o1.type() == LUA_TNIL) && (o2.type() == LUA_TNIL))

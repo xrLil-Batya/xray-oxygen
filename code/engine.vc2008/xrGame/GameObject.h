@@ -11,7 +11,7 @@
 #include "alife_space.h"
 #include "UsableScriptObject.h"
 #include "script_binder.h"
-#include "Hit.h"
+#include "../xrPhysics/Hit.h"
 #include "game_object_space.h"
 
 class IPhysicsShellEx;

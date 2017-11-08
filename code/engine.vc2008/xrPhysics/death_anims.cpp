@@ -1,10 +1,6 @@
-#include	"stdafx.h"
-
-#include	"death_anims.h"
-
+#include "stdafx.h"
+#include "death_anims.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
-
-#include "entity_alive.h"
 
 #ifdef	DEBUG
 	BOOL death_anim_debug	 = FALSE;

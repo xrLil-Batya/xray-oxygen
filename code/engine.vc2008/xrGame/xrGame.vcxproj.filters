@@ -1543,9 +1543,6 @@
     <Filter Include="Core\Client\Objects\base\GameObject\Holder">
       <UniqueIdentifier>{ffa00863-b7f7-4904-a24e-59831e0419dd}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Objects\base\GameObject\Holder\ParticlesPlayer">
-      <UniqueIdentifier>{229b845a-7a93-43b5-8ffb-3f4a2d19083a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\base\GameObject\ai_obstacle">
       <UniqueIdentifier>{92c7e47d-973a-4b37-8dea-4af469aa1add}</UniqueIdentifier>
     </Filter>
@@ -1915,9 +1912,6 @@
     <Filter Include="Core\Client\Objects\inventory_box">
       <UniqueIdentifier>{43ba2006-4f4a-4102-b09f-7873a299832d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Particles">
-      <UniqueIdentifier>{7d1180f4-b084-4be0-abc4-727f076a852f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Spectator">
       <UniqueIdentifier>{3216ff3b-52df-4fc4-b146-9a93c1f772bf}</UniqueIdentifier>
     </Filter>
@@ -2214,6 +2208,12 @@
     </Filter>
     <Filter Include="AI\ASpace">
       <UniqueIdentifier>{565496b0-a712-4f97-84b5-a7394f45b248}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="GamePhysics">
+      <UniqueIdentifier>{8deeaf39-59f3-42a4-9f14-1e4ab209206e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="IK">
+      <UniqueIdentifier>{39acfd1d-c932-4f71-83ff-de59da57c6a5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -5052,9 +5052,6 @@
     <ClInclude Include="holder_custom.h">
       <Filter>Core\Client\Objects\base\GameObject\Holder</Filter>
     </ClInclude>
-    <ClInclude Include="ParticlesPlayer.h">
-      <Filter>Core\Client\Objects\base\GameObject\Holder\ParticlesPlayer</Filter>
-    </ClInclude>
     <ClInclude Include="ai_obstacle.h">
       <Filter>Core\Client\Objects\base\GameObject\ai_obstacle</Filter>
     </ClInclude>
@@ -5606,9 +5603,6 @@
     </ClInclude>
     <ClInclude Include="InventoryBox.h">
       <Filter>Core\Client\Objects\inventory_box</Filter>
-    </ClInclude>
-    <ClInclude Include="ParticlesObject.h">
-      <Filter>Core\Client\Particles</Filter>
     </ClInclude>
     <ClInclude Include="Spectator.h">
       <Filter>Core\Client\Spectator</Filter>
@@ -6249,6 +6243,118 @@
     <ClInclude Include="stdafx.h">
       <Filter>Core</Filter>
     </ClInclude>
+    <ClInclude Include="CharacterPhysicsSupport.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="character_hit_animations.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="character_hit_animations_params.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="character_shell_control.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicObject.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="ActivatingCharCollisionDelay.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHMovementControl.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="DestroyablePhysicsObject.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="BreakableObject.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="ClimableObject.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHDebug.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="animation_script_callback.h">
+      <Filter>AI</Filter>
+    </ClInclude>
+    <ClInclude Include="moving_bones_snd_player.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="IKLimbsController.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="ik_calculate_data.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="ik_dbg_matrix.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="ik_foot_collider.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="ik_limb_state.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="ik_limb_state_predict.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="IKFoot.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="IKFoot_inl.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="IKLimb.h">
+      <Filter>IK</Filter>
+    </ClInclude>
+    <ClInclude Include="PHCommander.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHScriptCall.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSimpleCalls.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSkeleton.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHDestroyable.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsShellHolder.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHDestroyableNotificate.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PhysicsSkeletonObject.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHSoundPlayer.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHShellCreator.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_game.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="imotion_position.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="physics_world_scripted.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="interactive_motion.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="Hit.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="PHCollisionDamageReceiver.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -7781,9 +7887,6 @@
     <ClCompile Include="holder_custom_script.cpp">
       <Filter>Core\Client\Objects\base\GameObject\Holder</Filter>
     </ClCompile>
-    <ClCompile Include="ParticlesPlayer.cpp">
-      <Filter>Core\Client\Objects\base\GameObject\Holder\ParticlesPlayer</Filter>
-    </ClCompile>
     <ClCompile Include="ai_obstacle.cpp">
       <Filter>Core\Client\Objects\base\GameObject\ai_obstacle</Filter>
     </ClCompile>
@@ -8305,9 +8408,6 @@
     </ClCompile>
     <ClCompile Include="InventoryBox.cpp">
       <Filter>Core\Client\Objects\inventory_box</Filter>
-    </ClCompile>
-    <ClCompile Include="ParticlesObject.cpp">
-      <Filter>Core\Client\Particles</Filter>
     </ClCompile>
     <ClCompile Include="Spectator.cpp">
       <Filter>Core\Client\Spectator</Filter>
@@ -8957,10 +9057,127 @@
     <ClCompile Include="fire_disp_controller.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
-    <ClCompile Include="raypick.cpp" />
     <ClCompile Include="stdafx.cpp">
       <Filter>Core</Filter>
     </ClCompile>
+    <ClCompile Include="character_hit_animations.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="character_shell_control.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="CharacterPhysicsSupport.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicObject_script.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicObject.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="raypick.cpp">
+      <Filter>Core</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorCameraCollision.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="ActivatingCharCollisionDelay.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHMovementControl.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="DestroyablePhysicsObject.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="BreakableObject.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="ClimableObject.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHDebug.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="death_anims_predicates.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="animation_script_callback.cpp">
+      <Filter>AI</Filter>
+    </ClCompile>
+    <ClCompile Include="moving_bones_snd_player.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHMovementDynamicActivate.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="IKLimbsController.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="ik_calculate_data.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="ik_dbg_matrix.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="ik_foot_collider.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="ik_limb_state.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="IKFoot.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="IKLimb.cpp">
+      <Filter>IK</Filter>
+    </ClCompile>
+    <ClCompile Include="PHCommander.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHScriptCall.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSimpleCalls.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSkeleton.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHDestroyable.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsShellHolder.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHDestroyableNotificate.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PhysicsSkeletonObject.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHSoundPlayer.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHShellCreator.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_game.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="imotion_position.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="physics_world_scripted.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="interactive_motion.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="Hit.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="PHCollisionDamageReceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

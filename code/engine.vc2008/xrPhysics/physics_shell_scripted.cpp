@@ -1,9 +1,8 @@
 #include "stdafx.h"
-
 #include "physics_shell_scripted.h"
-
 #include "physics_element_scripted.h"
 #include "physics_joint_scripted.h"
+#include <luabind\luabind.hpp>
 
 using namespace luabind;
 

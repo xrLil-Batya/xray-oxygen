@@ -2,8 +2,7 @@
 
 #include "interactive_motion.h"
 
-class imotion_velocity:
-	public interactive_motion
+class XRPHYSICS_API imotion_velocity: public interactive_motion
 {
 	typedef			interactive_motion inherited;
 	virtual	void	move_update	(  );

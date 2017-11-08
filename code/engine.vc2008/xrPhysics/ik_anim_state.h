@@ -2,7 +2,7 @@
 class	CBlend;
 class	ENGINE_API	motion_marks;
 class	IKinematicsAnimated;
-class	ik_anim_state
+class	XRPHYSICS_API ik_anim_state
 {
 
 			bool			is_step;

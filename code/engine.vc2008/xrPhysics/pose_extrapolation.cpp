@@ -1,5 +1,4 @@
 #include "stdafx.h"
-
 #include "pose_extrapolation.h"
 
 using namespace extrapolation;
