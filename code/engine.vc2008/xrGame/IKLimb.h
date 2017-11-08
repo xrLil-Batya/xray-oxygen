@@ -3,13 +3,14 @@
 
 #include "../xrQIK/limb.h"
 
+#include "ikfoot.h"
+#include "ik_calculate_data.h"
+#include "ik_limb_state.h"
+#include "ik_limb_state_predict.h"
 #include "../include/xrrender/KinematicsAnimated.h"
-#include "../xrPhysics/ikfoot.h"
+#include "../xrEngine/bone.h"
 #include "../xrPhysics/ik_anim_state.h"
-#include "../xrPhysics/ik_calculate_data.h"
-#include "../xrPhysics/ik_limb_state.h"
 #include "../xrPhysics/ik_collide_data.h"
-#include "../xrPhysics/ik_limb_state_predict.h"
 
 class	IKinematics	;
 namespace CDB { class TRI; }

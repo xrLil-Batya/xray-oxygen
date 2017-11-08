@@ -436,6 +436,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="ActorCameraCollision.cpp" />
     <ClCompile Include="animation_movement_controller.cpp" />
     <ClCompile Include="animation_utils.cpp" />
     <ClCompile Include="DamagableItem.cpp" />
@@ -525,6 +526,7 @@
     <ClCompile Include="collisiondamagereceiver.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="ActorCameraCollision.h" />
     <ClInclude Include="animation_movement_controller.h" />
     <ClInclude Include="animation_utils.h" />
     <ClInclude Include="CaptureBoneCallback.h" />

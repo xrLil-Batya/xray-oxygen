@@ -384,6 +384,7 @@
     <ClCompile Include="PhysicsGamePars.cpp">
       <Filter>Client</Filter>
     </ClCompile>
+    <ClCompile Include="ActorCameraCollision.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -707,5 +708,6 @@
     <ClInclude Include="PhysicsGamePars.h">
       <Filter>Client</Filter>
     </ClInclude>
+    <ClInclude Include="ActorCameraCollision.h" />
   </ItemGroup>
 </Project>

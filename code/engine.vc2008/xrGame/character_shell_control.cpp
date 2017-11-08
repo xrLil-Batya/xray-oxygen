@@ -6,7 +6,7 @@
 #include "../xrphysics/PhysicsShell.h"
 #include "level.h"
 #include "CustomZone.h"
-#include "../xrPhysics/Hit.h"
+#include "Hit.h"
 
 #ifdef DEBUG
 extern	BOOL death_anim_debug;

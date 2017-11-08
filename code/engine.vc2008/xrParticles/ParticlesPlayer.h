@@ -4,7 +4,7 @@
 ///////////////////////////////////////////////////////////////
 
 #pragma once
-
+#include "stdafx.h"
 #include "ParticlesObject.h"
 #include "../xrEngine/bone.h"
 

@@ -32,7 +32,7 @@ void CBreakableObject::Load		(LPCSTR section)
 	this->shedule.t_min	= 1000;
 	this->shedule.t_max	= 1000;
 }
-
+#include "xrServer_Objects_ALife.h"
 BOOL CBreakableObject::net_Spawn(CSE_Abstract* DC)
 {
 

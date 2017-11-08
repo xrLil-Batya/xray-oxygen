@@ -16,7 +16,7 @@
 #include "detail_path_manager.h"
 #include "../xrEngine/gamemtllib.h"
 #include "../xrEngine/xr_object.h"
-#include "CaptureBoneCallback.h"
+#include "../xrphysics/CaptureBoneCallback.h"
 #include "Level.h"
 #include "physicsshellholder.h"
 #ifdef DEBUG

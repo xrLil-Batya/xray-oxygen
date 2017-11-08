@@ -9,7 +9,7 @@
 #pragma once
 
 #include "../xrScripts/export/script_export_space.h"
-#include "particlesobject.h"
+#include "../xrParticles/ParticlesObject.h"
 
 // refs
 class CObjectAnimator;

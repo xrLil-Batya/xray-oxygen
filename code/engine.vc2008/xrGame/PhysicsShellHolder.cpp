@@ -2,7 +2,7 @@
 #include "PhysicsShellHolder.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "xrMessages.h"
-#include "ph_shell_interface.h"
+#include "../xrphysics/ph_shell_interface.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "script_callback_ex.h"
 #include "Level.h"
@@ -17,7 +17,7 @@
 //#include "../xrphysics/phvalide.h"
 #include "characterphysicssupport.h"
 #include "phmovementcontrol.h"
-#include "physics_shell_animated.h"
+#include "../xrphysics/physics_shell_animated.h"
 #include "phcollisiondamagereceiver.h"
 #include "../xrEngine/iphysicsshell.h"
 #include "../xrengine/objectdump.h"
@@ -28,9 +28,6 @@ CPhysicsShellHolder::CPhysicsShellHolder()
 CPhysicsShellHolder::	~CPhysicsShellHolder						()
 {
 	VERIFY ( !m_pPhysicsShell );
-//#ifndef MASTER_GOLD
-	//R_ASSERT( !m_pPhysicsShell );
-//#endif
 	destroy_physics_shell( m_pPhysicsShell );
 }
 const IObjectPhysicsCollision*CPhysicsShellHolder::physics_collision	()

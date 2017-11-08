@@ -1,5 +1,5 @@
 #pragma once
-
+#include "../xrPhysics/xrPhysics.h"
 class XRPHYSICS_API ik_foot_geom
 {
 public:

@@ -1,5 +1,6 @@
 #pragma once
 class	CGameObject;
+#include "../xrPhysics/ik_collide_data.h"
 
 class ik_pick_query
 {

@@ -1,6 +1,6 @@
 #include	"stdafx.h"
 
-#include	"death_anims.h"
+#include	"../xrPhysics/death_anims.h"
 
 #include	"actor.h"
 #include	"ai/stalker/ai_stalker.h"
@@ -9,7 +9,7 @@
 #include	"explosive.h"
 #include	"weaponmagazined.h"
 #include	"CharacterPhysicsSupport.h"
-#include	"animation_utils.h"
+#include	"../xrPhysics/animation_utils.h"
 #ifdef	DEBUG
 extern xr_token motion_dirs[];
 #endif

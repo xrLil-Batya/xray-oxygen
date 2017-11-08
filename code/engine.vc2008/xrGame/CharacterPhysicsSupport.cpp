@@ -3,38 +3,31 @@
 #include "CharacterPhysicsSupport.h"
 #include "alife_space.h"
 #include "CustomMonster.h"
-
-
-
 #include "../Include/xrRender/KinematicsAnimated.h"
-
-
-
 #include "../xrphysics/PhysicsShell.h"
 #include "../xrphysics/iActivationShape.h"
 #include "../xrphysics/geometry.h"
 #include "../xrphysics/IPHCapture.h"
 #include "../xrphysics/IPHWorld.h"
-#include "../xrphysics/hit.h"
-#include "../xrphysics/PHDestroyable.h"
-#include "../xrphysics/PHMovementControl.h"
+#include "hit.h"
+#include "PHDestroyable.h"
+#include "PHMovementControl.h"
 
 
-#include "../xrphysics/IKLimbsController.h"
+#include "IKLimbsController.h"
 #include "Actor.h"
 #include "ai/stalker/ai_stalker.h"
-#include "../xrphysics/imotion_position.h"
-#include "../xrphysics/imotion_velocity.h"
+#include "imotion_position.h"
+#include "imotion_velocity.h"
 #include "../xrphysics/animation_movement_controller.h"
 #include "xrServer_Object_Base.h"
 #include "../xrphysics/interactive_animation.h"
 #include "stalker_animation_manager.h"
 #include "inventoryowner.h"
 #include "inventory.h"
-#include "../xrphysics/activatingcharcollisiondelay.h"
+#include "activatingcharcollisiondelay.h"
 #include "stalker_movement_manager_smart_cover.h"
 
-//const float default_hinge_friction = 5.f;//gray_wolf comment
 #ifdef DEBUG
 #	include "PHDebug.h"
 extern	BOOL death_anim_debug;

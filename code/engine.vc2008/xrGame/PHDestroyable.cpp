@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "alife_space.h"
 #include "phdestroyable.h"
-#include "../xrPhysics/physicsshellholder.h"
+#include "physicsshellholder.h"
 #include "xrMessages.h"
 #include "object_factory.h"
 #include "xrServer_Objects_ALife.h"

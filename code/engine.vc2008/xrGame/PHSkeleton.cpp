@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "PHSkeleton.h"
-#include "../xrPhysics/PhysicsShellHolder.h"
+#include "PhysicsShellHolder.h"
 #include "xrServer_Objects_ALife.h"
 #include "Level.h"
 #include "../xrphysics/PHDefs.h"
@@ -11,7 +11,7 @@
 #include "ai_object_location.h"
 #include "ai_space.h"
 #include "game_graph.h"
-#include "../xrPhysics/PHDestroyable.h"
+#include "PHDestroyable.h"
 
 #define F_MAX         3.402823466e+38F
 

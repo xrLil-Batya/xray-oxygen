@@ -1,17 +1,15 @@
 // GameObject.h: interface for the CGameObject class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_GAMEOBJECT_H__3DA72D03_C759_4688_AEBB_89FA812AA873__INCLUDED_)
-#define AFX_GAMEOBJECT_H__3DA72D03_C759_4688_AEBB_89FA812AA873__INCLUDED_
 #pragma once
 
 #include "../xrEngine/xr_object.h"
+#include "../xrParticles/ParticlesPlayer.h"
 #include "xrServer_Space.h"
 #include "alife_space.h"
 #include "UsableScriptObject.h"
 #include "script_binder.h"
-#include "../xrPhysics/Hit.h"
+#include "Hit.h"
 #include "game_object_space.h"
 
 class IPhysicsShellEx;
@@ -308,5 +306,3 @@ public:
 
 	virtual void			on_matrix_change	(const Fmatrix &previous);
 };
-
-#endif // !defined(AFX_GAMEOBJECT_H__3DA72D03_C759_4688_AEBB_89FA812AA873__INCLUDED_)

@@ -2,11 +2,11 @@
 #pragma once
 #include "alife_space.h"
 #include "Entity_Alive.h"
-#include "../xrPhysics/PHSoundPlayer.h"
-#include "../xrPhysics/Phdestroyable.h"
+#include "PHSoundPlayer.h"
+#include "Phdestroyable.h"
 #include "../xrPhysics/death_anims.h"
 #include "../xrPhysics/animation_utils.h"
-#include "../xrPhysics/PHSkeleton.h"
+#include "PHSkeleton.h"
 #include "character_hit_animations.h"
 #include "character_shell_control.h"
 class IPhysicsShellEx;

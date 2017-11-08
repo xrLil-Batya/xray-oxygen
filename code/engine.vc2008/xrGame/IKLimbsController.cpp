@@ -4,7 +4,7 @@
 #include "ik_calculate_data.h"
 #include "physicsshellholder.h"
 
-#include "ik_anim_state.h"
+#include "../xrphysics/ik_anim_state.h"
 #include "../xrphysics/mathutils.h"
 #include "../Include/xrRender/RenderVisual.h"
 #include "../Include/xrRender/Kinematics.h"

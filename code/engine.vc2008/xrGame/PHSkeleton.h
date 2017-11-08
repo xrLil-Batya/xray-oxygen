@@ -1,6 +1,6 @@
 #pragma once
 #include "../xrphysics/PHDefs.h"
-#include "../xrPhysics/PHDestroyableNotificate.h"
+#include "PHDestroyableNotificate.h"
 class CPhysicsShellHolder;
 class CSE_ALifePHSkeletonObject;
 class CSE_Abstract;

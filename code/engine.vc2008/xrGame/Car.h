@@ -1,17 +1,13 @@
 #pragma once
 
-//#if 0
-
 #include "entity.h"
-//#include "../xrphysics/PHDynamicData.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "../xrphysics/phupdateobject.h"
+#include "../xrphysics/DamagableItem.h"
 #include "script_entity.h"
 #include "CarLights.h"
-//#include "phobject.h"
 #include "holder_custom.h"
 #include "PHSkeleton.h"
-#include "DamagableItem.h"
 #include "phcollisiondamagereceiver.h"
 #include "CarDamageParticles.h"
 #include "xrserver_objects_alife.h"

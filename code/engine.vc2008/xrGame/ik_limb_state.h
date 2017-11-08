@@ -1,5 +1,5 @@
 #pragma	once
-#include "../xrPhysics/ik_calculate_data.h"
+#include "ik_calculate_data.h"
 #include "../include/xrrender/Kinematics.h"
 
 class CIKLimb;

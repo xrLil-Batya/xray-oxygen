@@ -6354,7 +6354,12 @@
     <ClInclude Include="Hit.h">
       <Filter>GamePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="PHCollisionDamageReceiver.h" />
+    <ClInclude Include="PHCollisionDamageReceiver.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
+    <ClInclude Include="imotion_velocity.h">
+      <Filter>GamePhysics</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -9078,9 +9083,6 @@
     <ClCompile Include="raypick.cpp">
       <Filter>Core</Filter>
     </ClCompile>
-    <ClCompile Include="ActorCameraCollision.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
     <ClCompile Include="ActivatingCharCollisionDelay.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
@@ -9177,7 +9179,12 @@
     <ClCompile Include="Hit.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="PHCollisionDamageReceiver.cpp" />
+    <ClCompile Include="PHCollisionDamageReceiver.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
+    <ClCompile Include="imotion_velocity.cpp">
+      <Filter>GamePhysics</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

@@ -1,5 +1,5 @@
 #pragma once
-#include "../xrPhysics/hit.h"
+#include "hit.h"
 
 class CPhysicsShellHolder;
 class CSE_Abstract;

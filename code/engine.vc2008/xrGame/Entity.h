@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../xrPhysics/physicsshellholder.h"
+#include "physicsshellholder.h"
 #include "damage_manager.h"
 #include "entitycondition.h"
 // refs
