@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "stdafx.h"
 #include "script_lua_helper.h"
 #include "script_debugger.h"
 #include "..\xrScripts\lua_studio\lua_studio.h"
