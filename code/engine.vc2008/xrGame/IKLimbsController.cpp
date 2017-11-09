@@ -8,7 +8,6 @@
 #include "../xrphysics/mathutils.h"
 #include "../Include/xrRender/RenderVisual.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "../xrRender/xrRender/SkeletonAnimated.h"
 
 #include "../xrEngine/motion.h"
 
@@ -127,9 +126,9 @@ float	CIKLimbsController::StaticObjectShift(const SCalculateData cd[max_size])
 }
 static float doun_shift_to_correct = 0.3f;
 static float doun_shift_correct = 0.1f;
+
 bool	CIKLimbsController::PredictObjectShift(const SCalculateData cd[max_size])
 {
-
 	float predict_time_shift_down = FLT_MAX;
 	float predict_time_shift_up = FLT_MAX;
 	float predict_shift_down = 0.f;
@@ -177,11 +176,6 @@ bool	CIKLimbsController::PredictObjectShift(const SCalculateData cd[max_size])
 	}
 	else
 		return false;
-	//{
-	//	predict_shift = 0;
-	//	predict_time_shift = Device.fTimeDelta;
-	//}
-
 
 	if (predict_time_shift < EPS_S)
 		predict_time_shift = Device.fTimeDelta;
@@ -201,10 +195,9 @@ void	CIKLimbsController::ObjectShift(float static_shift, const SCalculateData cd
 
 	CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder*>(m_object);
 	VERIFY(sh);
-	//CCharacterPhysicsSupport *ch = sh->character_physics_support();	
-	_object_shift.freeze(!!Device.Paused());//ch->interactive_motion() ||
+	_object_shift.freeze(!!Device.Paused());
 
-	if (cnt_in_step != sz && PredictObjectShift(cd))//cnt_in_step > 0 &&
+	if (cnt_in_step != sz && PredictObjectShift(cd))
 		return;
 	StaticObjectShift(cd);
 }
@@ -213,9 +206,6 @@ void	CIKLimbsController::ShiftObject(const SCalculateData cd[max_size])
 {
 	IKinematics *skeleton_animated = m_object->Visual()->dcast_PKinematics();
 	VERIFY(skeleton_animated);
-	//	u16 root = skeleton_animated->LL_GetBoneRoot( ) ;
-
-	//CBoneData &BD=skeleton_animated->LL_GetData(root);
 
 	const float y_shift = _object_shift.shift();
 	const u16 bones_count = skeleton_animated->LL_BoneCount();
@@ -256,7 +246,7 @@ void CIKLimbsController::Calculate()
 	root_bi.set_callback(root_bi.callback_type(), 0, root_bi.callback_param(), TRUE);
 
 
-	if (ik_shift_object)//&& ! m_object->animation_movement_controlled( )
+	if (ik_shift_object)
 	{
 
 		ShiftObject(cd);
@@ -289,9 +279,6 @@ void CIKLimbsController::Destroy(CGameObject* O)
 
 void _stdcall CIKLimbsController::IKVisualCallback(IKinematics* K)
 {
-	//if (Device.Paused())
-	//	return;
-
 	CGameObject* O = ((CGameObject*)K->GetUpdateCallbackParam());
 	CPhysicsShellHolder*	Sh = smart_cast<CPhysicsShellHolder*>(O);
 	VERIFY(Sh);

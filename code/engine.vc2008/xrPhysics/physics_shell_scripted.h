@@ -8,8 +8,7 @@ class IPhysicsShellEx;
 class cphysics_element_scripted;
 class cphysics_joint_scripted;
 
-class cphysics_shell_scripted:
-public cphysics_game_scripted<IPhysicsShellEx>
+class XRPHYSICS_API cphysics_shell_scripted: public cphysics_game_scripted<IPhysicsShellEx>
 {
 public:
 	cphysics_shell_scripted(IPhysicsShellEx* imp ):cphysics_game_scripted<IPhysicsShellEx>(imp){}

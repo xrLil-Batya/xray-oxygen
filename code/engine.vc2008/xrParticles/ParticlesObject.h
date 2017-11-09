@@ -2,7 +2,7 @@
 #include "../xrEngine/PS_instance.h"
 #include "../xrEngine/Render.h"
 
-extern const Fvector zero_vel;
+PARTICLES_API extern const Fvector zero_vel;
 
 class PARTICLES_API CParticlesObject: public CPS_Instance
 {

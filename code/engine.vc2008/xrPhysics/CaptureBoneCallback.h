@@ -3,7 +3,7 @@
 #include "../xrphysics/physicsshell.h"
 #include "../xrCore/xrCore.h"
 
-struct XRPHYSICS_API CPHCaptureBoneCallback : public NearestToPointCallback
+struct CPHCaptureBoneCallback : public NearestToPointCallback
 {
 	virtual	bool operator() ( u16 bid )	= 0;
 	virtual	bool operator() ( IPhysicsElementEx* e )	

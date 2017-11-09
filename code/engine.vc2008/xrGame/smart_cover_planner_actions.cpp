@@ -29,7 +29,7 @@
 #include "smart_cover_animation_planner.h"
 #include "smart_cover_transition.hpp"
 #include "smart_cover_transition_animation.hpp"
-#include "animation_movement_controller.h"
+#include "../xrphysics/animation_movement_controller.h"
 
 using smart_cover::action_base;
 using smart_cover::change_loophole;

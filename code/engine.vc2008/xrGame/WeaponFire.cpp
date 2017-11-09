@@ -4,7 +4,8 @@
 
 #include "stdafx.h"
 #include "Weapon.h"
-#include "ParticlesObject.h"
+#include "../xrParticles/psystem.h"
+#include "../xrParticles/ParticlesObject.h"
 #include "entity.h"
 #include "actor.h"
 

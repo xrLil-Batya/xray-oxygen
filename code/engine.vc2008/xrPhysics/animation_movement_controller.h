@@ -6,8 +6,7 @@
 class poses_blending;
 class CBlend;
 
-class animation_movement_controller : 
-	public  IBlendDestroyCallback
+class XRPHYSICS_API animation_movement_controller: public  IBlendDestroyCallback
 {
 	Fmatrix&			m_pObjXForm;
 	Fmatrix				m_startObjXForm;

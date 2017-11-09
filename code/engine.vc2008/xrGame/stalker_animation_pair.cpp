@@ -13,7 +13,7 @@
 #include "ai_debug.h"
 #include "ai/stalker/ai_stalker.h"
 #include "ai/ai_monsters_anims.h"
-#include "animation_movement_controller.h"
+#include "../xrphysics/animation_movement_controller.h"
 #ifdef	DEBUG
 #include "phdebug.h"
 #endif

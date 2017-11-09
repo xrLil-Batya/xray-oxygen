@@ -6,8 +6,8 @@
 #include "stdafx.h"
 
 #include "ShootingObject.h"
-
-#include "ParticlesObject.h"
+#include "../xrParticles/psystem.h"
+#include "../xrParticles/ParticlesObject.h"
 #include "WeaponAmmo.h"
 
 #include "actor.h"

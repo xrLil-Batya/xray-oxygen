@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "bolt.h"
-#include "ParticlesObject.h"
+#include "../xrParticles/psystem.h"
+#include "../xrParticles/ParticlesObject.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "xr_level_controller.h"
 

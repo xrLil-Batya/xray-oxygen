@@ -9,6 +9,7 @@
 #pragma once
 
 #include "../xrScripts/export/script_export_space.h"
+#include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
 
 // refs

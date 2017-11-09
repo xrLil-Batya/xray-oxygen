@@ -9,27 +9,15 @@
 #include "stdafx.h"
 #include "aimers_weapon.h"
 #include "../include/xrrender/kinematics.h"
-#include "animation_movement_controller.h"
+#include "../xrPhysics/animation_movement_controller.h"
 #include "game_object_space.h"
 #include "gameobject.h"
-#include "animation_movement_controller.h"
 #include "weapon.h"
 
 using aimers::weapon;
 
-weapon::weapon				(
-		CGameObject* object,
-		LPCSTR animation_id,
-		bool animation_start,
-		Fvector const& target,
-		LPCSTR bone0,
-		LPCSTR bone1,
-		LPCSTR weapon_bone0,
-		LPCSTR weapon_bone1,
-		CWeapon const& weapon
-	) :
-	inherited				( object, animation_id, animation_start, target ),
-	m_weapon				( weapon )
+weapon::weapon(CGameObject* object, LPCSTR animation_id, bool animation_start, Fvector const& target, LPCSTR bone0, LPCSTR bone1, LPCSTR weapon_bone0, LPCSTR weapon_bone1, CWeapon const& weapon
+) :inherited( object, animation_id, animation_start, target ), m_weapon( weapon )
 {
 	LPCSTR bones[4]			= { bone0, bone1, weapon_bone0, weapon_bone1 };
 	for (u32 i=0; i<4; ++i)
@@ -41,7 +29,6 @@ weapon::weapon				(
 
 	compute_bone			( bone_id0 );
 
-#if 1
 	Fmatrix&				bone_0 = m_result[bone_id0];
 	VERIFY				( _valid(bone_0) );
 	Fvector					angles;
@@ -59,9 +46,6 @@ weapon::weapon				(
 	compute_bone			( bone_id1 );
 
 	bone.set_callback		( bctCustom, old_callback, old_callback_param );
-#else // #if 0
-	m_result[bone_id1]		= Fidentity;
-#endif // #if 0
 }
 
 void weapon::compute_bone	(u32 const bone_id)

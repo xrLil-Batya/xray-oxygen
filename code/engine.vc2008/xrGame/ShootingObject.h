@@ -6,12 +6,11 @@
 #pragma once
 #include "alife_space.h"
 #include "../xrEngine/render.h"
-
+#include "../xrParticles/psystem.h"
+#include "../xrParticles/particlesobject.h"
 class CCartridge;
 class CParticlesObject;
 class IRender_Sector;
-
-extern const Fvector zero_vel;
 
 #define WEAPON_MATERIAL_NAME "objects\\bullet"
 

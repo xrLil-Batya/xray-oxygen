@@ -2,12 +2,10 @@
 
 //#include "../../../PHCharacter.h"
 #include "../../../../xrphysics/IPHCapture.h"
-#include "../../../CaptureBoneCallback.h"
+#include "../../../../xrphysics/CaptureBoneCallback.h"
 #include "../../../../include/xrrender/Kinematics.h"
 
-#define TEMPLATE_SPECIALIZATION template <\
-	typename _Object\
->
+#define TEMPLATE_SPECIALIZATION template <typename _Object>
 
 #define CStateGroupDragAbstract CStateGroupDrag<_Object>
 

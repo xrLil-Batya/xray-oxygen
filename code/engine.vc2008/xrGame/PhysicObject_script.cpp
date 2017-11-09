@@ -2,6 +2,9 @@
 #include "PhysicObject.h"
 #include "hit_immunity.h"
 #include "damage_manager.h"
+
+#include "PHDestroyable.h"
+#include "PHCollisionDamageReceiver.h"
 #include "DestroyablePhysicsObject.h"
 
 using namespace luabind;

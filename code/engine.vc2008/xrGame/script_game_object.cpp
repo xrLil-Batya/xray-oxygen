@@ -8,7 +8,6 @@
 
 #include "stdafx.h"
 #include "script_game_object.h"
-
 #include "script_entity_action.h"
 #include "ai_space.h"
 #include "script_engine.h"
@@ -38,7 +37,7 @@
 #include "smart_cover_object.h"
 #include "smart_cover.h"
 #include "smart_cover_description.h"
-#include "physics_shell_scripted.h"
+#include "../xrPhysics/physics_shell_scripted.h"
 
 class CScriptBinderObject;
 

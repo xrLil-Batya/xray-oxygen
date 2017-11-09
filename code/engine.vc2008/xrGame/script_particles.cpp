@@ -12,25 +12,13 @@
 
 CScriptParticlesCustom::CScriptParticlesCustom(CScriptParticles* owner, LPCSTR caParticlesName):CParticlesObject(caParticlesName,FALSE,true)
 {
-//	CScriptParticlesCustom* self = this;
-//	Msg							("CScriptParticlesCustom: 0x%08x",*(int*)&self);
 	m_owner						= owner;
 	m_animator					= 0;
 }
 
-//XRCORE_API		fastdelegate::FastDelegate< void () >	g_verify_stalkers;
-
 CScriptParticlesCustom::~CScriptParticlesCustom()
 {
-//	CScriptParticlesCustom* self = this;
-//	Msg							("~CScriptParticlesCustom: 0x%08x",*(int*)&self);
-//	if ( g_verify_stalkers )
-//		g_verify_stalkers		();
-
 	xr_delete					(m_animator);
-
-//	if ( g_verify_stalkers )
-//		g_verify_stalkers		();
 }
 
 void CScriptParticlesCustom::PSI_internal_delete()

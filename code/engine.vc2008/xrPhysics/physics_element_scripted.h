@@ -4,8 +4,7 @@
 #include "../xrScripts/export/script_export_space.h"
 
 class IPhysicsElementEx;
-class cphysics_element_scripted:
-public cphysics_game_scripted<IPhysicsElementEx>
+class XRPHYSICS_API cphysics_element_scripted: public cphysics_game_scripted<IPhysicsElementEx>
 {
 public:
 	cphysics_element_scripted(IPhysicsElementEx* imp ):cphysics_game_scripted<IPhysicsElementEx>(imp){}

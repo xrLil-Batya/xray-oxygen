@@ -6,11 +6,11 @@
 #include "gameobject.h"
 
 #include "game_object_space.h"
-#include "ik_anim_state.h"
+#include "../xrphysics/ik_anim_state.h"
 
-#include "MathUtils.h"
-#include "matrix_utils.h"
-#include "pose_extrapolation.h"
+#include "..\xrPhysics\MathUtils.h"
+#include "..\xrPhysics\matrix_utils.h"
+#include "..\xrPhysics\pose_extrapolation.h"
 #ifdef DEBUG
 #include "../PHDebug.h"
 #endif

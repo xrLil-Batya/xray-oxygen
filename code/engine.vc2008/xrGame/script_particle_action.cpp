@@ -8,11 +8,11 @@
 
 #include "stdafx.h"
 #include "script_particle_action.h"
-#include "particlesobject.h"
+#include "../xrParticles/psystem.h"
+#include "../xrParticles/particlesobject.h"
 
-CScriptParticleAction::~CScriptParticleAction	()
+CScriptParticleAction::~CScriptParticleAction()
 {
-	//xr_delete			(m_tpParticleSystem);
 }
 
 void CScriptParticleAction::SetParticle			(LPCSTR caParticleToRun, bool bAutoRemove)

@@ -32,7 +32,7 @@
 #include "stalker_animation_data.h"
 #include "inventory_item.h"
 #include "Weapon.h"
-#include "animation_movement_controller.h"
+#include "../xrphysics/animation_movement_controller.h"
 #include "visual_memory_manager.h"
 
 using smart_cover::loophole_action_base;

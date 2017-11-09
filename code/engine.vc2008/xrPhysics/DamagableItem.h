@@ -16,7 +16,7 @@ protected:
 	virtual		void				ApplyDamage			(u16 level)							;
 };
 
-class CDamagableHealthItem : 
+class XRPHYSICS_API CDamagableHealthItem :
 	public CDamagableItem
 {
 	typedef		CDamagableItem		inherited											;

@@ -10,7 +10,7 @@
 #include "aimers_base.h"
 #include "gameobject.h"
 #include "../include/xrrender/kinematics.h"
-#include "animation_movement_controller.h"
+#include "../xrPhysics/animation_movement_controller.h"
 
 using aimers::base;
 

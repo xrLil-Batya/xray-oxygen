@@ -3,7 +3,7 @@
 
 class NET_Packet;
 
-struct SPHNetState
+struct XRPHYSICS_API SPHNetState
 {
 	Fvector		linear_vel;
 	Fvector		angular_vel;
@@ -38,7 +38,7 @@ template<typename src>
 
 using PHNETSTATE_VECTOR = xr_vector<SPHNetState>;
 
-struct SPHBonesData 
+struct XRPHYSICS_API SPHBonesData
 {
 	u64				  bones_mask;
 	u16				  root_bone;

@@ -14,7 +14,7 @@ void	vec_clear ( T* &p)
 	xr_delete( p );
 }
 
-class rnd_motion
+class XRPHYSICS_API rnd_motion
 {
 private:
 	xr_vector<MotionID>		motions;

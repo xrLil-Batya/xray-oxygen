@@ -1,7 +1,7 @@
 #pragma once
 #include "../Include/xrRender/KinematicsAnimated.h"
 class IPhysicsShellEx;
-class XRPHYSICS_API interactive_motion
+class interactive_motion
 {
 	MotionID motion;
 
@@ -27,7 +27,7 @@ public:
 	void	setup				( const MotionID &m, IPhysicsShellEx *s, float angle );
 	
 	void	update				( );
-IC	bool	is_enabled			( )	{ return !!flags.test( fl_use_death_motion ); }
+inline bool	is_enabled			( )	{ return !!flags.test( fl_use_death_motion ); }
 
 	void	play( );
 

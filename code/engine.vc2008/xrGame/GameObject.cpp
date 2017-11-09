@@ -9,7 +9,7 @@
 #include "../xrphysics/PhysicsShell.h"
 #include "game_sv_single.h"
 #include "level_graph.h"
-#include "ph_shell_interface.h"
+#include "../xrPhysics/ph_shell_interface.h"
 #include "script_game_object.h"
 #include "xrserver_objects_alife.h"
 #include "xrServer_Objects_ALife_Items.h"
@@ -27,7 +27,7 @@
 #include "game_level_cross_table.h"
 #include "ai_obstacle.h"
 #include "magic_box3.h"
-#include "animation_movement_controller.h"
+#include "../xrphysics/animation_movement_controller.h"
 #include "../xrengine/xr_collide_form.h"
 #include "../FrayBuildConfig.hpp"
 extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);

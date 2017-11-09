@@ -5,13 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : bone aimer class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef AIMERS_BONE_H_INCLUDED
-#define AIMERS_BONE_H_INCLUDED
-
+#pragma once
 #include "aimers_base.h"
 #include "../include/xrrender/kinematics.h"
-#include "animation_movement_controller.h"
+#include "../xrPhysics/animation_movement_controller.h"
 #include "game_object_space.h"
 
 namespace aimers {
@@ -45,5 +42,3 @@ private:
 } // namespace aimers
 
 #include "aimers_bone_inline.h"
-
-#endif // #ifndef AIMERS_BONE_H_INCLUDED
