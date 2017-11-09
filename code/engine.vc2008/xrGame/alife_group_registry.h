@@ -5,9 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : ALife group registry
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "alife_space.h"
 
 class CSE_ALifeOnlineOfflineGroup;
@@ -26,8 +24,6 @@ public:
 			void			add						(CSE_ALifeDynamicObject *object);
 			void			remove					(CSE_ALifeDynamicObject *object);
 			OBJECT			&object					(const ALife::_OBJECT_ID &id) const;
-	IC		const OBJECTS	&objects				() const;
+	IC		const OBJECTS	&objects				() const { return(m_objects); };
 			void			on_after_game_load		();
 };
-
-#include "alife_group_registry_inline.h"

@@ -36,11 +36,8 @@ public:
 	SInventoryOwner			pPartner;
 
 public:
-	
 							CTrade					(CInventoryOwner	*p_io);
-							~CTrade					();
-
-	
+							~CTrade					() = default;
 
 	bool					CanTrade				();
 	

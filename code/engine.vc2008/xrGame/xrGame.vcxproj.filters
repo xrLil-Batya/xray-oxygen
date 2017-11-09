@@ -373,9 +373,6 @@
     <Filter Include="AI\ALife\interaction_manager">
       <UniqueIdentifier>{840054a2-e9cb-4e5c-8240-738318d41d7a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\ALife\interaction_manager\communication_manager">
-      <UniqueIdentifier>{00ac0fa1-1f3d-40ef-8ff1-d7feaa5d8396}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\ALife\interaction_manager\combat_manager">
       <UniqueIdentifier>{c5f74147-7732-4e9c-bab6-2fe1e3ef6870}</UniqueIdentifier>
     </Filter>
@@ -2886,22 +2883,7 @@
     <ClInclude Include="alife_interaction_manager.h">
       <Filter>AI\ALife\interaction_manager</Filter>
     </ClInclude>
-    <ClInclude Include="alife_interaction_manager_inline.h">
-      <Filter>AI\ALife\interaction_manager</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_communication_manager.h">
-      <Filter>AI\ALife\interaction_manager\communication_manager</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_communication_manager_inline.h">
-      <Filter>AI\ALife\interaction_manager\communication_manager</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_communication_space.h">
-      <Filter>AI\ALife\interaction_manager\communication_manager</Filter>
-    </ClInclude>
     <ClInclude Include="alife_combat_manager.h">
-      <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_combat_manager_inline.h">
       <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
     </ClInclude>
     <ClInclude Include="alife_simulator_base.h">
@@ -2938,9 +2920,6 @@
       <Filter>AI\ALife\simulator_base\registries\graph_registry\level_registry</Filter>
     </ClInclude>
     <ClInclude Include="alife_group_registry.h">
-      <Filter>AI\ALife\simulator_base\registries\group_registry</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_group_registry_inline.h">
       <Filter>AI\ALife\simulator_base\registries\group_registry</Filter>
     </ClInclude>
     <ClInclude Include="alife_object_registry.h">
@@ -6653,12 +6632,6 @@
     <ClCompile Include="..\xrServerEntities\alife_space.cpp">
       <Filter>AI\ALife</Filter>
     </ClCompile>
-    <ClCompile Include="alife_interaction_manager.cpp">
-      <Filter>AI\ALife\interaction_manager</Filter>
-    </ClCompile>
-    <ClCompile Include="alife_communication_manager.cpp">
-      <Filter>AI\ALife\interaction_manager\communication_manager</Filter>
-    </ClCompile>
     <ClCompile Include="alife_combat_manager.cpp">
       <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
     </ClCompile>
@@ -6776,19 +6749,10 @@
     <ClCompile Include="..\xrServerEntities\alife_monster_brain.cpp">
       <Filter>AI\ALife\server_entities\monster_abstract\brain</Filter>
     </ClCompile>
-    <ClCompile Include="alife_monster_brain_script.cpp">
-      <Filter>AI\ALife\server_entities\monster_abstract\brain</Filter>
-    </ClCompile>
     <ClCompile Include="alife_monster_movement_manager.cpp">
       <Filter>AI\ALife\server_entities\monster_abstract\movement_manager</Filter>
     </ClCompile>
-    <ClCompile Include="alife_monster_movement_manager_script.cpp">
-      <Filter>AI\ALife\server_entities\monster_abstract\movement_manager</Filter>
-    </ClCompile>
     <ClCompile Include="alife_monster_detail_path_manager.cpp">
-      <Filter>AI\ALife\server_entities\monster_abstract\movement_manager\detail_path_manager</Filter>
-    </ClCompile>
-    <ClCompile Include="alife_monster_detail_path_manager_script.cpp">
       <Filter>AI\ALife\server_entities\monster_abstract\movement_manager\detail_path_manager</Filter>
     </ClCompile>
     <ClCompile Include="alife_monster_patrol_path_manager.cpp">
@@ -8301,9 +8265,6 @@
       <Filter>Core\Client\Objects\searchlight</Filter>
     </ClCompile>
     <ClCompile Include="trade.cpp">
-      <Filter>Core\Client\Objects\searchlight\Trade</Filter>
-    </ClCompile>
-    <ClCompile Include="trade2.cpp">
       <Filter>Core\Client\Objects\searchlight\Trade</Filter>
     </ClCompile>
     <ClCompile Include="CustomZone.cpp">

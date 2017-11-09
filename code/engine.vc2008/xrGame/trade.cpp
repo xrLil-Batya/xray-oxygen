@@ -47,31 +47,11 @@ CTrade::CTrade(CInventoryOwner *p_io)
 	}
 }
 
-CTrade::~CTrade()
-{
-	
-}
-
 void CTrade::RemovePartner()
 {
 	pPartner.Set(TT_NONE,0,0);
 }
-//// предложение торговли
-//void CTrade::Communicate() 
-//{
-//	// Вывести приветствие
-////	Msg("--TRADE::----------------------------------------------");
-////	Msg("--TRADE::          TRADE ACIVATED                      ");
-////	Msg("--TRADE::----------------------------------------------");
-////	Msg("--TRADE:: - Hello, my name is [%s]", *pThis.base->cName());
-////	Msg("--TRADE::   Wanna trade with me?" );
-//
-//	if (pPartner.inv_owner->GetTrade()->OfferTrade(pThis)) { 
-//		StartTrade();
-//	}
-//
-//}
-//
+
 bool CTrade::SetPartner(CEntity *p)
 {
 	CAI_Trader *pTrader;
@@ -97,45 +77,11 @@ bool CTrade::SetPartner(CEntity *p)
 	return true;
 }
 
-
-//// Man предлагает торговать 
-//// возвращает true, если данный trader готов торговать с man
-//// т.е. принятие торговли
-//bool CTrade::OfferTrade(SInventoryOwner man)
-//{
-//	StartTrade();
-//	pPartner.Set(man.type,man.base,man.inv_owner); 
-//	
-//	string64	s;
-//	switch (pPartner.type) 
-//	{
-//		case TT_TRADER: xr_strcpy(s, "trader"); break;
-//		case TT_STALKER: 
-//		case TT_ACTOR: xr_strcpy(s, "stalker"); break;
-//	}
-//	
-//	
-//	switch (pPartner.inv_owner->m_tRank) 
-//	{
-//		case ALife::eStalkerRankNone: xr_strcpy(s,"NO_RANK"); break;
-//		case ALife::eStalkerRankNovice: xr_strcpy(s,"NOVICE"); break;
-//		case ALife::eStalkerRankExperienced: xr_strcpy(s,"EXPERIENCED"); break;
-//		case ALife::eStalkerRankVeteran: xr_strcpy(s,"VETERAN"); break;
-//		case ALife::eStalkerRankMaster: xr_strcpy(s,"MASTER"); break;
-//		case ALife::eStalkerRankDummy: xr_strcpy(s,"DUMMY"); break;
-//	}
-//
-//	return true;
-//}
-//
-
 void CTrade::StartTrade()
 {
 	TradeState = true;
 	m_dwLastTradeTime =  Level().timeServer();
 	m_bNeedToUpdateArtefactTasks = false;
-
-//	if (pThis.type == TT_TRADER) smart_cast<CAI_Trader*>(pThis.base)->OnStartTrade();
 }
 
 void CTrade::StartTradeEx(CInventoryOwner* pInvOwner)
@@ -163,15 +109,9 @@ void CTrade::StopTrade()
 {
 	TradeState = false;
 	m_dwLastTradeTime = 0;
-//	Msg("--TRADE:: [%s]: Trade stopped...",*pThis.base->cName());
 
 	CAI_Trader* pTrader = NULL;
-	if (pThis.type == TT_TRADER)
-	{
-		//pTrader = smart_cast<CAI_Trader*>(pThis.base);
-		//pTrader->OnStopTrade();
-	}
-	else if (pPartner.type == TT_TRADER)
+	if (pPartner.type == TT_TRADER)
 	{
 		pTrader = smart_cast<CAI_Trader*>(pPartner.base);
 	}
@@ -181,4 +121,236 @@ void CTrade::StopTrade()
 
 void CTrade::UpdateTrade()
 {
+}
+
+#include "trade_parameters.h"
+
+bool CTrade::CanTrade()
+{
+	CEntity *pEntity;
+
+	m_nearest.clear();
+	Level().ObjectSpace.GetNearest(m_nearest, pThis.base->Position(), 2.f, NULL);
+	if (!m_nearest.empty())
+	{
+		for (u32 i = 0, n = m_nearest.size(); i<n; ++i)
+		{
+			// Может ли объект торговать
+			pEntity = smart_cast<CEntity *>(m_nearest[i]);
+			if (pEntity && !pEntity->g_Alive()) return false;
+			if (SetPartner(pEntity)) break;
+		}
+	}
+
+	if (!pPartner.base) return false;
+
+	// Объект рядом
+	float dist = pPartner.base->Position().distance_to(pThis.base->Position());
+	if (dist < 0.5f || dist > 4.5f)
+	{
+		RemovePartner();
+		return false;
+	}
+
+	// Объект смотрит на меня
+	float yaw, pitch;
+	float yaw2, pitch2;
+
+	pThis.base->Direction().getHP(yaw, pitch);
+	pPartner.base->Direction().getHP(yaw2, pitch2);
+	yaw = angle_normalize(yaw);
+	yaw2 = angle_normalize(yaw2);
+
+	float Res = rad2deg(_abs(yaw - yaw2) < PI ? _abs(yaw - yaw2) :
+		PI_MUL_2 - _abs(yaw - yaw2));
+	if (Res < 165.f || Res > 195.f)
+	{
+		RemovePartner();
+		return false;
+	}
+
+	return true;
+}
+
+void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
+{
+	// сумма сделки учитывая ценовой коэффициент
+	// актер цену не говорит никогда, все делают за него
+	u32 dwTransferMoney = GetItemPrice(pItem, bBuying);
+
+	if (bBuying)
+	{
+		pPartner.inv_owner->on_before_sell(pItem);
+		pThis.inv_owner->on_before_buy(pItem);
+	}
+	else
+	{
+		pThis.inv_owner->on_before_sell(pItem);
+		pPartner.inv_owner->on_before_buy(pItem);
+	}
+
+	CGameObject* O1 = smart_cast<CGameObject *>(pPartner.inv_owner);
+	CGameObject* O2 = smart_cast<CGameObject *>(pThis.inv_owner);
+
+	if (!bBuying)
+		swap(O1, O2);
+
+	NET_Packet P;
+	O1->u_EventGen(P, GE_TRADE_SELL, O1->ID());
+	P.w_u16(pItem->object().ID());
+	O1->u_EventSend(P);
+
+	if (bBuying)
+		pPartner.inv_owner->set_money(pPartner.inv_owner->get_money() + dwTransferMoney, false);
+	else
+		pThis.inv_owner->set_money(pThis.inv_owner->get_money() + dwTransferMoney, false);
+
+	// взять у партнера
+	O2->u_EventGen(P, GE_TRADE_BUY, O2->ID());
+	P.w_u16(pItem->object().ID());
+	O2->u_EventSend(P);
+
+	if (bBuying)
+		pThis.inv_owner->set_money(pThis.inv_owner->get_money() - dwTransferMoney, false);
+	else
+		pPartner.inv_owner->set_money(pPartner.inv_owner->get_money() - dwTransferMoney, false);
+
+
+	CAI_Trader* pTrader = nullptr;
+
+	if (pThis.type == TT_TRADER && bBuying)
+	{
+		CArtefact* pArtefact = smart_cast<CArtefact*>(pItem);
+		if (pArtefact)
+		{
+			pTrader = smart_cast<CAI_Trader*>(pThis.base);
+			m_bNeedToUpdateArtefactTasks |= pTrader->BuyArtefact(pArtefact);
+		}
+	}
+
+	if ((pPartner.type == TT_ACTOR) || (pThis.type == TT_ACTOR))
+	{
+		bool bDir = (pThis.type != TT_ACTOR) && bBuying;
+		Actor()->callback(GameObject::eTradeSellBuyItem)(pItem->object().lua_game_object(), bDir, dwTransferMoney);
+	}
+}
+
+
+CInventory& CTrade::GetTradeInv(SInventoryOwner owner)
+{
+	R_ASSERT(TT_NONE != owner.type);
+	return owner.inv_owner->inventory();
+}
+
+CTrade*	CTrade::GetPartnerTrade()
+{
+	return pPartner.inv_owner->GetTrade();
+}
+CInventory*	CTrade::GetPartnerInventory()
+{
+	return &GetTradeInv(pPartner);
+}
+
+CInventoryOwner* CTrade::GetPartner()
+{
+	return pPartner.inv_owner;
+}
+
+u32	CTrade::GetItemPrice(PIItem pItem, bool b_buying)
+{
+	CArtefact				*pArtefact = smart_cast<CArtefact*>(pItem);
+
+	// computing base_cost
+	float					base_cost;
+	if (pArtefact && (pThis.type == TT_ACTOR) && (pPartner.type == TT_TRADER)) {
+		CAI_Trader			*pTrader = smart_cast<CAI_Trader*>(pPartner.inv_owner);
+		VERIFY(pTrader);
+		base_cost = (float)pTrader->ArtefactPrice(pArtefact);
+	}
+	else
+		base_cost = (float)pItem->Cost();
+
+	// computing condition factor
+	// for "dead" weapon we use 10% from base cost, for "good" weapon we use full base cost
+	float					condition_factor = powf(pItem->GetCondition()*0.9f + .1f, 0.75f);
+
+	// computing relation factor
+	float					relation_factor;
+
+	CHARACTER_GOODWILL		attitude = RELATION_REGISTRY().GetAttitude(pThis.inv_owner, pPartner.inv_owner);
+
+	if (NO_GOODWILL == attitude)
+		relation_factor = 0.f;
+	else
+		relation_factor = float(attitude + 1000.f) / 2000.f;
+
+	clamp(relation_factor, 0.f, 1.f);
+
+	const SInventoryOwner	*_partner = 0;
+	bool					buying = true;
+	bool					is_actor = (pThis.type == TT_ACTOR) || (pPartner.type == TT_ACTOR);
+	if (is_actor) 
+	{
+		buying = b_buying;
+		_partner = &(buying ? pThis : pPartner);
+	}
+	else {
+		// rare case
+		_partner = &pPartner;
+	}
+	const CTradeFactors		*p_trade_factors;
+
+
+	if (buying) {
+		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_buy(0), pItem->object().cNameSect())) return 0;
+		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_buy(0), pItem->object().cNameSect());
+	}
+	else {
+		if (!pThis.inv_owner->trade_parameters().enabled(CTradeParameters::action_sell(0), pItem->object().cNameSect())) return 0;
+		p_trade_factors = &pThis.inv_owner->trade_parameters().factors(CTradeParameters::action_sell(0), pItem->object().cNameSect());
+	}
+	const CTradeFactors		&trade_factors = *p_trade_factors;
+
+	float					action_factor;
+	if (trade_factors.friend_factor() <= trade_factors.enemy_factor())
+		action_factor =
+		trade_factors.friend_factor() +
+		(
+			trade_factors.enemy_factor() -
+			trade_factors.friend_factor()
+			)*
+			(1.f - relation_factor);
+	else
+		action_factor =
+		trade_factors.enemy_factor() +
+		(
+			trade_factors.friend_factor() -
+			trade_factors.enemy_factor()
+			)*
+		relation_factor;
+
+	clamp(action_factor, std::min(trade_factors.enemy_factor(), trade_factors.friend_factor()), std::max(trade_factors.enemy_factor(), trade_factors.friend_factor()));
+
+	// computing deficit_factor
+	float					deficit_factor = 1.f;
+
+	// total price calculation
+	u32						result =
+		iFloor(
+			base_cost*
+			condition_factor*
+			action_factor*
+			deficit_factor
+		);
+	// use some script discounts
+	luabind::functor<float>	func;
+	if (b_buying)
+		R_ASSERT(ai().script_engine().functor("trade_manager.get_buy_discount", func));
+	else
+		R_ASSERT(ai().script_engine().functor("trade_manager.get_sell_discount", func));
+
+	result = iFloor(result * func(smart_cast<const CGameObject*>(pThis.inv_owner)->ID()));
+
+	clamp<u32>(result, 1, 1000000);
+	return					(result);
 }
