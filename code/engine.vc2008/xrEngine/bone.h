@@ -1,6 +1,9 @@
 //----------------------------------------------------
 // refs
 #pragma once
+
+#include "../xrCore/_matrix.h"
+
 class CBone;
 
 #define	BI_NONE				(u16(-1))

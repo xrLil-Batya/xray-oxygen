@@ -118,7 +118,7 @@ void CPHDestroyable::PhysicallyRemoveSelf()
 	obj->setVisible(FALSE);
 	obj->setEnabled(FALSE);
 }
-#include "../xrphysics/PHDestroyableNotificate.h"
+#include "PHDestroyableNotificate.h"
 void CPHDestroyable::PhysicallyRemovePart(CPHDestroyableNotificate *dn)
 {
 	CPhysicsShellHolder		*sh		=	dn		->PPhysicsShellHolder		()		;	
