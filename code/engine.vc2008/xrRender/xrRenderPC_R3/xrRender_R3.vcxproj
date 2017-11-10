@@ -609,7 +609,7 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
+    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
     <ClCompile Include="..\Editor\EditMesh.cpp" />
     <ClCompile Include="..\Editor\EditMeshIO.cpp" />
     <ClCompile Include="..\Editor\EditMeshModify.cpp" />
