@@ -27,6 +27,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLC_LightStab", "xrLC_Ligh
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrSE_Factory", "xrSE_Factory\xrSE_Factory.vcxproj", "{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd-party", "3rd-party", "{CF77F12B-3C45-4EAF-9708-0E372676745F}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\engine.vc2008\3rd party\zlib\zlib.vcxproj", "{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -189,9 +193,28 @@ Global
 		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Release|x64.Build.0 = Release|x64
 		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Release|x86.ActiveCfg = Release|Win32
 		{3AD26FD3-4F52-4E22-A4CF-AD4C49E74C61}.Release|x86.Build.0 = Release|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Debug|x64.ActiveCfg = Debug|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Debug|x64.Build.0 = Debug|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Debug|x86.ActiveCfg = Debug|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Debug|x86.Build.0 = Debug|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Mixed|x64.ActiveCfg = Release|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Mixed|x64.Build.0 = Release|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Mixed|x86.ActiveCfg = Release|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Mixed|x86.Build.0 = Release|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release_AI32|x64.ActiveCfg = Release_AI32|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release_AI32|x64.Build.0 = Release_AI32|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release_AI32|x86.ActiveCfg = Release_AI32|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release_AI32|x86.Build.0 = Release_AI32|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release|x64.ActiveCfg = Release|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release|x64.Build.0 = Release|x64
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release|x86.ActiveCfg = Release|Win32
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{CA2604CA-A2AC-49A1-A468-8AB5A2E6CBC9} = {CF77F12B-3C45-4EAF-9708-0E372676745F}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {918449FC-4178-48DF-BB24-0A33C2DA2AE2}
