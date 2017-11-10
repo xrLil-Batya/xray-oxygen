@@ -212,17 +212,8 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	geom->r(&H, sizeof(hdrCFORM));
 	Fvector*	verts = (Fvector*)geom->pointer();
 	CDB::TRI*	tris = (CDB::TRI*)(verts + H.vertcount);
-	for (u32 it = 0; it<H.facecount; it++)
-	{
-		CDB::TRI*	T = tris + it;
-		u16		id_front = (u16)((T->dummy & 0x0000ffff) >> 0);		//	front face
-		u16		id_back = (u16)((T->dummy & 0xffff0000) >> 16);		//	back face
-		R_ASSERT(id_front<(u16)ids.size());
-		R_ASSERT(id_back<(u16)ids.size());
-		T->dummy = u32(ids[id_back] << 16) | u32(ids[id_front]);
-	}
 	geom_ENV = new CDB::MODEL();
-	geom_ENV->build(verts, H.vertcount, tris, H.facecount);
+	geom_ENV->build(verts, H.vertcount, tris, H.facecount, nullptr, nullptr, true); // x64 using tris converter
 	geom_ch->close();
 	geom->close();
 	xr_free(_data);
