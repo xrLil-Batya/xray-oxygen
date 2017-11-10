@@ -169,6 +169,7 @@ Flags32		ps_r2_ls_flags				= { R2FLAG_SUN
 	|R2FLAG_SUN_FOCUS
 	|R2FLAG_SUN_TSM
 	|R2FLAG_TONEMAP
+	|R2FLAG_MBLUR
 	|R2FLAG_VOLUMETRIC_LIGHTS
 	};	// r2-only
 
@@ -194,7 +195,7 @@ float		ps_r2_ls_bloom_threshold	= .00001f;				// r2-only
 
 
 
-float		ps_r2_mblur					= .0f;				// .5f
+float		ps_r2_mblur					= .3f;				// .5f
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64
 float		ps_r2_GI_clip				= EPS_L;			// EPS
@@ -852,6 +853,7 @@ void		xrRender_initconsole	()
 	
 	
 	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
+	CMD3(CCC_Mask,		"r2_mblur_enabled",		&ps_r2_ls_flags,			R2FLAG_MBLUR	);
 
 	CMD3(CCC_Mask,		"r2_gi",				&ps_r2_ls_flags,			R2FLAG_GI);
 	CMD4(CCC_Float,		"r2_gi_clip",			&ps_r2_GI_clip,				EPS,	0.1f	);

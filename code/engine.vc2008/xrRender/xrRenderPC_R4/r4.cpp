@@ -216,7 +216,6 @@ void					CRender::create					()
 	o.depth16			= (strstr(Core.Params,"-depth16"))?		TRUE	:FALSE	;
 	o.noshadows			= (strstr(Core.Params,"-noshadows"))?	TRUE	:FALSE	;
 	o.Tshadows			= (strstr(Core.Params,"-tsh"))?			TRUE	:FALSE	;
-	o.mblur				= (strstr(Core.Params,"-mblur"))?		TRUE	:FALSE	;
 	o.distortion_enabled= (strstr(Core.Params,"-nodistort"))?	FALSE	:TRUE	;
 	o.distortion		= o.distortion_enabled;
 	o.disasm			= (strstr(Core.Params,"-disasm"))?		TRUE	:FALSE	;
@@ -957,12 +956,12 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	}
 	sh_name[len]='0'+char(o.Tshadows); ++len;
 
-	if (o.mblur)			{
+	if (ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
 		defines[def_it].Name		=	"USE_MBLUR";
 		defines[def_it].Definition	=	"1";
 		def_it						++	;
 	}
-	sh_name[len]='0'+char(o.mblur); ++len;
+	sh_name[len]='0'+char(ps_r2_ls_flags.test(R2FLAG_MBLUR)); ++len;
 
 	if (o.sunfilter)		{
 		defines[def_it].Name		=	"USE_SUNFILTER";
