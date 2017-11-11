@@ -7,8 +7,8 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-
-#include "../../xrCore/xrCore.h"
+#include "../xrPhysics/xrPhysics.h"
+#include "../xrCore.h"
 
 #define STRINGIZE(a)			#a
 #define UP(a)					STRINGIZE(../../##a)

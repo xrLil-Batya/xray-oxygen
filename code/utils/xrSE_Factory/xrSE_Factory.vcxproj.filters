@@ -147,9 +147,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\xrServerEntities\DrawUtils.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="stdafx.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -159,17 +156,8 @@
     <ClInclude Include="xrSE_Factory_import_export.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\FastDelegate.h">
-      <Filter>Common</Filter>
-    </ClInclude>
     <ClInclude Include="defines.h">
       <Filter>Common</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\restriction_space.h">
-      <Filter>Common\AComponents\SpaceRestrictionManager</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\ai_sounds.h">
-      <Filter>Common\ASound</Filter>
     </ClInclude>
     <ClInclude Include="ai_space.h">
       <Filter>Common\ASpace</Filter>
@@ -177,206 +165,14 @@
     <ClInclude Include="ai_space_inline.h">
       <Filter>Common\ASpace</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_broker.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_cloner.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_comparer.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_destroyer.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_interfaces.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_loader.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_saver.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_type_traits.h">
-      <Filter>Common\ObjectBroker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\clsid_game.h">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_factory.h">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_factory_impl.h">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_factory_inline.h">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_factory_space.h">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_abstract.h">
-      <Filter>Common\ObjectFactory\object_item_abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_abstract_inline.h">
-      <Filter>Common\ObjectFactory\object_item_abstract</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_client_server.h">
-      <Filter>Common\ObjectFactory\object_item_client_server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_client_server_inline.h">
-      <Filter>Common\ObjectFactory\object_item_client_server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_script.h">
-      <Filter>Common\ObjectFactory\object_item_script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_script_inline.h">
-      <Filter>Common\ObjectFactory\object_item_script</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_single.h">
-      <Filter>Common\ObjectFactory\object_item_single</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\object_item_single_inline.h">
-      <Filter>Common\ObjectFactory\object_item_single</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\smart_cast.h">
-      <Filter>Common\SmartCast</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\associative_vector.h">
-      <Filter>Common\associative_vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\associative_vector_compare_predicate.h">
-      <Filter>Common\associative_vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\associative_vector_compare_predicate_inline.h">
-      <Filter>Common\associative_vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\associative_vector_inline.h">
-      <Filter>Common\associative_vector</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_export_macroses.h">
-      <Filter>Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_export_space.h">
-      <Filter>Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_space_forward.h">
-      <Filter>Scripts</Filter>
-    </ClInclude>
     <ClInclude Include="script_space.h">
       <Filter>Scripts</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_ini_file.h">
-      <Filter>Scripts\ScriptIniFile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_ini_file_inline.h">
-      <Filter>Scripts\ScriptIniFile</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_token_list.h">
-      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_token_list_inline.h">
-      <Filter>Scripts\ScriptIniFile\ScriptTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_rtoken_list.h">
-      <Filter>Scripts\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_rtoken_list_inline.h">
-      <Filter>Scripts\ScriptIniFile\ScriptRTokenList</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_engine.h">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_engine_export.h">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_engine_inline.h">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_engine_space.h">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_storage.h">
-      <Filter>Scripts\ScriptStorage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_storage_inline.h">
-      <Filter>Scripts\ScriptStorage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_storage_space.h">
-      <Filter>Scripts\ScriptStorage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\opt.lua.h">
-      <Filter>Scripts\ScriptStorage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\opt_inline.lua.h">
-      <Filter>Scripts\ScriptStorage</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_process.h">
-      <Filter>Scripts\ScriptProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_process_inline.h">
-      <Filter>Scripts\ScriptProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_thread.h">
-      <Filter>Scripts\ScriptThread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_thread_inline.h">
-      <Filter>Scripts\ScriptThread</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_stack_tracker.h">
-      <Filter>Scripts\ScriptThread\ScriptStackTracker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_stack_tracker_inline.h">
-      <Filter>Scripts\ScriptThread\ScriptStackTracker</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\mslotutils.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_callStack.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_debugger.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_debugger_messages.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_debugger_threads.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_lua_helper.h">
-      <Filter>Scripts\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="script_debugger_utils.h">
       <Filter>Scripts\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="script_file.h">
       <Filter>Scripts\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\alife_space.h">
-      <Filter>ServerStuff\Common\ALifeStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\game_graph_space.h">
-      <Filter>ServerStuff\Common\ALifeStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\alife_human_brain.h">
-      <Filter>ServerStuff\Common\ALifeStuff\human_brain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\alife_human_brain_inline.h">
-      <Filter>ServerStuff\Common\ALifeStuff\human_brain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\alife_monster_brain.h">
-      <Filter>ServerStuff\Common\ALifeStuff\monster_brain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\alife_monster_brain_inline.h">
-      <Filter>ServerStuff\Common\ALifeStuff\monster_brain</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\game_base_space.h">
-      <Filter>ServerStuff\Common\GameStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\inventory_space.h">
-      <Filter>ServerStuff\Common\GameStuff</Filter>
     </ClInclude>
     <ClInclude Include="bone.h">
       <Filter>ServerStuff\Common\GameStuff</Filter>
@@ -390,80 +186,8 @@
     <ClInclude Include="NET_utils.h">
       <Filter>ServerStuff\Common\NetworkStuff</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\PHNetState.h">
-      <Filter>ServerStuff\Common\PhysicsStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\PHSynchronize.h">
-      <Filter>ServerStuff\Common\PhysicsStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\character_info.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\character_info_defs.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\shared_data.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\specific_character.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xml_str_id_loader.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrMessages.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Space.h">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
     <ClInclude Include="xrUIXmlParser.h">
       <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\InfoPortionDefs.h">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\ShapeData.h">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects_Abstract.h">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects_ALife_All.h">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_script_macroses.h">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\gametype_chooser.h">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Object_Base.h">
-      <Filter>ServerStuff\ServerEntities\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects.h">
-      <Filter>ServerStuff\ServerEntities\objects</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects_ALife.h">
-      <Filter>ServerStuff\ServerEntities\objects_alife</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects_ALife_Items.h">
-      <Filter>ServerStuff\ServerEntities\objects_alife_items</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects_ALife_Monsters.h">
-      <Filter>ServerStuff\ServerEntities\objects_alife_monsters</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\ItemListTypes.h">
-      <Filter>ServerStuff\ServerEntities\editor_properties</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\PropertiesListTypes.h">
-      <Filter>ServerStuff\ServerEntities\editor_properties</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\WaveForm.h">
-      <Filter>ServerStuff\ServerEntities\editor_properties</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrEProps.h">
-      <Filter>ServerStuff\ServerEntities\editor_properties</Filter>
     </ClInclude>
     <ClInclude Include="ChooseTypes.h">
       <Filter>ServerStuff\ServerEntities\editor_properties</Filter>
@@ -486,21 +210,105 @@
     <ClInclude Include="script_value_wrapper_inline.h">
       <Filter>ServerStuff\ServerEntities\scripts\script_value_wrapper</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_value_container.h">
-      <Filter>ServerStuff\ServerEntities\scripts\script_value_container</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\script_value_container_impl.h">
-      <Filter>ServerStuff\ServerEntities\scripts\script_value_container</Filter>
-    </ClInclude>
     <ClInclude Include="script_properties_list_helper.h">
       <Filter>ServerStuff\ServerEntities\scripts\script_properties_list_helper</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h">
-      <Filter>ServerStuff\ServerEntities\objects_alife_smartcover</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\xrServerEntities\alife_movement_manager_holder.h">
-      <Filter>ServerStuff\ServerEntities\movement_manager_holder</Filter>
-    </ClInclude>
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\DrawUtils.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\FastDelegate.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\restriction_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\ai_sounds.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_broker.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_cloner.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_comparer.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_destroyer.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_interfaces.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_loader.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_saver.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_type_traits.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\clsid_game.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_factory.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_factory_impl.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_factory_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_factory_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_abstract.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_abstract_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_client_server.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_client_server_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_script.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_script_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_single.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_item_single_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\smart_cast.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\associative_vector.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\associative_vector_compare_predicate.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\associative_vector_compare_predicate_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\associative_vector_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_export_macroses.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_export_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_space_forward.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_ini_file.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_ini_file_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_token_list.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_token_list_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_rtoken_list.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_rtoken_list_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_engine.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_engine_export.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_engine_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_engine_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_storage.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_storage_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_storage_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\opt.lua.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\opt_inline.lua.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_process.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_process_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_thread.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_thread_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_stack_tracker.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_stack_tracker_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\mslotutils.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_callStack.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger_messages.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_debugger_threads.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_lua_helper.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\game_graph_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_human_brain.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_human_brain_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_monster_brain.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_monster_brain_inline.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\game_base_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\inventory_space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHNetState.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHSynchronize.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\character_info.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\character_info_defs.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\shared_data.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\specific_character.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xml_str_id_loader.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrMessages.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Space.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\InfoPortionDefs.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\ShapeData.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_Abstract.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_All.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_script_macroses.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\gametype_chooser.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Object_Base.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\ItemListTypes.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PropertiesListTypes.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\WaveForm.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrEProps.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_value_container.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\script_value_container_impl.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
+    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_movement_manager_holder.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="xr_LuaAllocator.c">
@@ -512,143 +320,14 @@
     <ClCompile Include="ai_space.cpp">
       <Filter>Common\ASpace</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\object_factory.cpp">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\object_factory_register.cpp">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\object_factory_script.cpp">
-      <Filter>Common\ObjectFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\object_item_script.cpp">
-      <Filter>Common\ObjectFactory\object_item_script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_ini_file.cpp">
-      <Filter>Scripts\ScriptIniFile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_ini_file_script.cpp">
-      <Filter>Scripts\ScriptIniFile</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_engine.cpp">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_engine_export.cpp">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_engine_script.cpp">
-      <Filter>Scripts\ScriptEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_storage.cpp">
-      <Filter>Scripts\ScriptStorage</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_process.cpp">
-      <Filter>Scripts\ScriptProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_thread.cpp">
-      <Filter>Scripts\ScriptThread</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_stack_tracker.cpp">
-      <Filter>Scripts\ScriptThread\ScriptStackTracker</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_callStack.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_debugger.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_debugger_threads.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\script_lua_helper.cpp">
-      <Filter>Scripts\ScriptDebugger</Filter>
-    </ClCompile>
     <ClCompile Include="script_debugger_utils.cpp">
       <Filter>Scripts\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="script_file.cpp">
       <Filter>Scripts\ScriptDebugger</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\alife_space.cpp">
-      <Filter>ServerStuff\Common\ALifeStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\alife_human_brain.cpp">
-      <Filter>ServerStuff\Common\ALifeStuff\human_brain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\alife_monster_brain.cpp">
-      <Filter>ServerStuff\Common\ALifeStuff\monster_brain</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\PHNetState.cpp">
-      <Filter>ServerStuff\Common\PhysicsStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\character_info.cpp">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\specific_character.cpp">
-      <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClCompile>
     <ClCompile Include="xrUIXmlParser.cpp">
       <Filter>ServerStuff\Common\ServerStuff</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Factory.cpp">
-      <Filter>ServerStuff\ServerFactory</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_Abstract.cpp">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\gametype_chooser.cpp">
-      <Filter>ServerStuff\ServerEntities</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Object_Base.cpp">
-      <Filter>ServerStuff\ServerEntities\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects.cpp">
-      <Filter>ServerStuff\ServerEntities\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_script.cpp">
-      <Filter>ServerStuff\ServerEntities\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_script2.cpp">
-      <Filter>ServerStuff\ServerEntities\objects</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_script.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_script2.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_script3.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Items.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_items</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_items</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_items</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_items</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_monsters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_monsters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_monsters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrserver_objects_alife_monsters_script3.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_monsters</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_ALife_Monsters_script4.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_monsters</Filter>
     </ClCompile>
     <ClCompile Include="properties_list_helper_script.cpp">
       <Filter>ServerStuff\ServerEntities\scripts\script_properties_list_helper</Filter>
@@ -656,11 +335,50 @@
     <ClCompile Include="script_properties_list_helper.cpp">
       <Filter>ServerStuff\ServerEntities\scripts\script_properties_list_helper</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_smartcover</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
-      <Filter>ServerStuff\ServerEntities\objects_alife_smartcover</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\object_factory.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\object_factory_register.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\object_factory_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\object_item_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_ini_file.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_ini_file_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_engine.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_engine_export.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_engine_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_storage.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_process.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_thread.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_stack_tracker.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_callStack.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_debugger.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_debugger_threads.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\script_lua_helper.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_space.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_human_brain.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_monster_brain.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\PHNetState.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\character_info.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\specific_character.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Factory.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_Abstract.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\gametype_chooser.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Object_Base.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_script2.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_script2.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_script3.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrserver_objects_alife_monsters_script3.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_ALife_Monsters_script4.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_Alife_Smartcovers.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp" />
   </ItemGroup>
 </Project>

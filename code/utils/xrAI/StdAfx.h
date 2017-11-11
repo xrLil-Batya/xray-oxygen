@@ -23,7 +23,7 @@
 #include "cl_log.h"
 #include "../../xrcdb/xrCDB.h"
 #include "_d3d_extensions.h"
-
+#include "../../xrPhysics/xrPhysics.h"
 #include <fcntl.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -31,7 +31,7 @@
 #include <stdio.h>
 
 #ifdef AI_COMPILER
-#	include "../../xrServerEntities/smart_cast.h"
+#	include "smart_cast.h"
 #endif
 // TODO: reference additional headers your program requires here
 

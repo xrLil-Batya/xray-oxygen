@@ -1,6 +1,4 @@
-#ifndef  PHNETSTATE_H
-#define  PHNETSTATE_H
-
+#pragma once
 class NET_Packet;
 
 struct XRPHYSICS_API SPHNetState
@@ -38,6 +36,11 @@ template<typename src>
 
 using PHNETSTATE_VECTOR = xr_vector<SPHNetState>;
 
+#ifdef AI_COMPILER
+#undef XRPHYSICS_API
+#define XRPHYSICS_API
+#endif
+
 struct XRPHYSICS_API SPHBonesData
 {
 	u64				  bones_mask;
@@ -54,4 +57,3 @@ public:
 	const Fvector&						get_min				()	const	{return m_min;}
 	const Fvector&						get_max				()	const	{return m_max;}
 };
-#endif

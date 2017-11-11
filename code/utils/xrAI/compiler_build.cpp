@@ -41,16 +41,18 @@ BOOL	CreateNode(Fvector& vAt, vertex& N)
 	Fbox	B2;				B2.set	(PointDown,PointDown);	B2.grow(g_params.fPatchSize/2);	// box 2
 	BB.merge(B2			);
 	BoxQuery(BB,false	);
-	u32	dwCount = XRC.r_count();
-	if (dwCount==0)	{
-//		Log("chasm1");
+	size_t dwCount = XRC.r_count();
+	if (!dwCount)	
+	{
 		return FALSE;			// chasm?
 	}
 
 	// *** Transfer triangles and compute sector
 	R_ASSERT(dwCount<RCAST_MaxTris);
-	static svector<tri,RCAST_MaxTris> tris;		tris.clear();
-	for (u32 i=0; i<dwCount; i++)
+	static svector<tri,RCAST_MaxTris> tris;	
+	tris.clear();
+
+	for (size_t i = 0; i<dwCount; i++)
 	{
 		tri&		D = tris.last();
 		CDB::RESULT	&rp = XRC.r_begin()[i];
@@ -66,7 +68,6 @@ BOOL	CreateNode(Fvector& vAt, vertex& N)
 		tris.inc	();
 	}
 	if (tris.size()==0)	{
-//		Log("chasm2");
 		return FALSE;			// chasm?
 	}
 
@@ -89,7 +90,7 @@ BOOL	CreateNode(Fvector& vAt, vertex& N)
 			float	tri_min_range	= flt_max;
 			int		tri_selected	= -1;
 			float	range,u,v;
-			for (int i = 0; i<u32(tris.size()); i++)
+			for (u32 i = 0; i<u32(tris.size()); i++)
 			{
 				if (CDB::TestRayTri(P,D,tris[i].v,u,v,range,false)) 
 				{
@@ -125,25 +126,7 @@ BOOL	CreateNode(Fvector& vAt, vertex& N)
 		vNorm.add(normals[n]);
 	vNorm.div(float(normals.size()));
 	vNorm.normalize();
-	/*
-	{
-		// second algorithm (Magic)
-		Fvector N,O;
-		N.set(vNorm);
-		O.set(points[0]);
-		Mgc::OrthogonalPlaneFit(
-			points.size(),(Mgc::Vector3*)points.begin(),
-			*((Mgc::Vector3*)&O),
-			*((Mgc::Vector3*)&N)
-		);
-		if (N.y<0) N.invert();
-		N.normalize();
-		vNorm.lerp(vNorm,N,.3f);
-		vNorm.normalize();
-	}
-	*/
 
- 
 	// *** Align plane
 	Fvector vOffs;
 	vOffs.set(0,-1000,0);
@@ -275,7 +258,7 @@ vecDW&	HashMap	(Fvector& V)
 
 void	RegisterNode(vertex& N)
 {
-	u32 ID = g_nodes.size();
+	u32 ID = (u32)g_nodes.size();
 	g_nodes.push_back(N);
 
 	HashMap(N.Pos).push_back(ID);
@@ -329,7 +312,7 @@ u32 BuildNode(Fvector& vFrom, Fvector& vAt)	// return node's index
 		{
 			// register xr_new<node
 			RegisterNode(N);
-			return g_nodes.size()-1;
+			return u32(g_nodes.size())-1;
 		} else {
 			// where already was node - return it
 			return old;
