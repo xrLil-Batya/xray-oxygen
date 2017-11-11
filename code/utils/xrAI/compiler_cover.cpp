@@ -525,7 +525,10 @@ extern	void mem_Optimize();
 void	xrCover	(bool pure_covers)
 {
 	Status("Calculating...");
+
 	processor_info CPU;
+	query_processor_info(&CPU);
+
 	if (!pure_covers)
 		compute_cover_nodes	();
 	else
