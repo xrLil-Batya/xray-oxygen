@@ -403,11 +403,13 @@ public:
 
 	bool					is_jump					();
 	u32						MovingState				() const {return mstate_real;}
-protected:
+
+public:
 	u32						mstate_wishful;
 	u32						mstate_old;
 	u32						mstate_real;
-
+	
+protected:
 	BOOL					m_bJumpKeyPressed;
 
 	float					m_fWalkAccel;

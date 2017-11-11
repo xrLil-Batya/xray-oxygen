@@ -20,6 +20,8 @@
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 #include "script_game_object.h"
+#include "CustomOutfit.h"
+#include "InventoryOwner.h"
 
 ENGINE_API	bool	g_dedicated_server;
 
@@ -742,11 +744,17 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	switch(cmd) 
 	{
 	case kWPN_RELOAD:
+	{
+		CActor* pActor = smart_cast<CActor*>(H_Parent());
+		CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
+
+		if (!pActor->mstate_real&mcAnyMove || pActor->mstate_real&mcAnyMove && pOutfit && pOutfit->m_reload_on_sprint)
 		{
 			if(flags&CMD_START) 
 				if(iAmmoElapsed < iMagazineSize || IsMisfire()) 
 					Reload();
-		} 
+		}
+	}
 		return true;
 	case kWPN_FIREMODE_PREV:
 		{

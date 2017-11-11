@@ -57,6 +57,7 @@ public:
 	float					m_fShowNearestEnemiesDistance;
 
 	bool					bIsHelmetAvaliable;
+	bool                    m_reload_on_sprint;
 
 	virtual u32				ef_equipment_type		() const;
 	virtual	BOOL			BonePassBullet			(int boneID);

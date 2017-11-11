@@ -108,6 +108,7 @@ void CCustomOutfit::Load(LPCSTR section)
 
 	m_BonesProtectionSect	= READ_IF_EXISTS(pSettings, r_string, section, "bones_koeff_protection",  "" );
 	bIsHelmetAvaliable		= !!READ_IF_EXISTS(pSettings, r_bool, section, "helmet_avaliable", true);
+	m_reload_on_sprint		= !!READ_IF_EXISTS(pSettings, r_bool, section, "reload_on_sprint", false);
 }
 
 void CCustomOutfit::ReloadBonesProtection()
@@ -354,7 +355,10 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 		}
 	}
 	result |= result2;	
-
+	
+	result2 = process_if_exists_set( section, "reload_on_sprint", &CInifile::r_bool, value, test);
+	if (result2 && !test)
+		m_reload_on_sprint = value;
 
 	result2 = process_if_exists_set( section, "bones_koeff_protection", &CInifile::r_string, str, test );
 	if ( result2 && !test )
