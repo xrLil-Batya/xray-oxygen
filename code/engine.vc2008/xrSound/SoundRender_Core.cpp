@@ -22,7 +22,7 @@ float psSoundVFactor = 1.0f;
 float psSoundVMusic = 1.f;
 u32 psSoundModel = 0;
 
-CSoundRender_Core* SoundRender = nullptr;
+XRSOUND_API CSoundRender_Core* SoundRender = nullptr;
 CSound_manager_interface* Sound = nullptr;
 
 CSoundRender_Core::CSoundRender_Core()

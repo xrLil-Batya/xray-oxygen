@@ -4,7 +4,7 @@
 #include "SoundRender_Environment.h"
 #include "SoundRender_Cache.h"
 
-class CSoundRender_Core					: public CSound_manager_interface
+class XRSOUND_API CSoundRender_Core	: public CSound_manager_interface
 {
     volatile bool						bLocked;
 protected:
@@ -122,4 +122,4 @@ public:
 	void								env_unload				();
 	void								env_apply				();
 };
-extern CSoundRender_Core* SoundRender;
+extern XRSOUND_API CSoundRender_Core* SoundRender;

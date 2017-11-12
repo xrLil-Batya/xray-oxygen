@@ -26,6 +26,7 @@ void SStaticSound::Load(IReader& F)
 	m_StopTime				= 0;
 }
 
+#include "..\xrSound\sound.h"
 #include "..\xrSound\SoundRender_Core.h"
 void SStaticSound::Update(u32 game_time, u32 global_time)
 {
