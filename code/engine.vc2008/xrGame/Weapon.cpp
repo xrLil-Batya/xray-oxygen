@@ -871,14 +871,16 @@ void CWeapon::renderable_Render		()
 	UpdateXForm				();
 
 	//нарисовать подсветку
-
 	RenderLight				();	
 
 	//если мы в режиме снайперки, то сам HUD рисовать не надо
-	if(IsZoomed() && !IsRotatingToZoom() && ZoomTexture())
-		RenderHud		(FALSE);
+	if (IsZoomed() && !IsRotatingToZoom() && ZoomTexture())
+	{
+		SwitchState(eHidden); // Fix: if weapon have ZoomTexture then hide the hands
+		RenderHud(FALSE);
+	}
 	else
-		RenderHud		(TRUE);
+		RenderHud(TRUE);
 
 	inherited::renderable_Render	();
 }
