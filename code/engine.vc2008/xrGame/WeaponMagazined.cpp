@@ -748,7 +748,7 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 		CActor* pActor = smart_cast<CActor*>(H_Parent());
 		CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 
-		if (!pActor->mstate_real&mcAnyMove || pActor->mstate_real&mcAnyMove && pOutfit && pOutfit->m_reload_on_sprint)
+		if (!pActor->mstate_real&mcSprint || pActor->mstate_real&mcSprint && pOutfit && pOutfit->m_reload_on_sprint)
 		{
 			if(flags&CMD_START) 
 				if(iAmmoElapsed < iMagazineSize || IsMisfire()) 
