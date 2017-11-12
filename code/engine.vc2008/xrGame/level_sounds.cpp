@@ -26,8 +26,12 @@ void SStaticSound::Load(IReader& F)
 	m_StopTime				= 0;
 }
 
+#include "..\xrSound\SoundRender_Core.h"
 void SStaticSound::Update(u32 game_time, u32 global_time)
 {
+	Fvector occ[3];
+	float occluder_volume = SoundRender->get_occlusion(m_Position, .2f, occ);
+	float vol = m_Volume * occluder_volume;
 	if (!m_ActiveTime.x && !m_ActiveTime.y || ((int(game_time) >= m_ActiveTime.x) && (int(game_time)<m_ActiveTime.y)))
 	{
 		if (!m_Source._feedback()) 
@@ -35,7 +39,7 @@ void SStaticSound::Update(u32 game_time, u32 global_time)
 			if ((!m_PauseTime.x) && (!m_PauseTime.y)) 
 			{
 				m_Source.play_at_pos(0, m_Position, sm_Looped);
-				m_Source.set_volume(m_Volume);
+				m_Source.set_volume(vol);
 				m_Source.set_frequency(m_Freq);
 				m_StopTime = 0xFFFFFFFF;
 			}
@@ -43,7 +47,7 @@ void SStaticSound::Update(u32 game_time, u32 global_time)
 			{
 				bool bFullPlay = (0 == m_PlayTime.x) && (0 == m_PlayTime.y);
 				m_Source.play_at_pos(0, m_Position, bFullPlay ? 0 : sm_Looped);
-				m_Source.set_volume(m_Volume);
+				m_Source.set_volume(vol);
 				m_Source.set_frequency(m_Freq);
 				if (bFullPlay) 
 				{

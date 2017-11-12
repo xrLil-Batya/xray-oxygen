@@ -27,3 +27,5 @@ librariesx64/
 *.db
 code/engine.vc2008/.vs/
 code/engine.vc2008/xrScripts/BuildVm.exe
+/code/utils/.vs/xrUtils/v15/*.db-shm
+/code/utils/.vs/xrUtils/v15/*.db-wal
