@@ -33,10 +33,14 @@ extern volatile bool bClose;
 static const char* h_str =
 	"The following keys are supported / required:\n"
 	"-skip	== Skip the test invalid face\n"
-	"-? or -h		== this help\n"
-	"-o				== modify build options\n"
-	"-nosun			== disable sun-lighting\n"
-	"-f<NAME>		== compile level in GameData\\Levels\\<NAME>\\\n"
+	"-? or -h		 == this help\n"
+	"-o				 == modify build options\n"
+	"-skip			 == skip crash if invalid faces exists\n"
+	"-nosun			 == disable sun-lighting\n"
+	"-norgb			 == disable common lightmap calculating\n"
+	"-notessellation == skip tessellation for lightmap"
+	"-sp<1-5>		 == the level of priority\n"
+	"-f<NAME>		 == compile level in GameData\\Levels\\<NAME>\\\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
 
@@ -64,13 +68,16 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
 	if (strstr(cmd, "-skip"))							g_build_options.b_skipinvalid	= true;
 	if (strstr(cmd, "-notessellation"))                 g_build_options.b_notessellation = true;
+
 	//Added priority setting
-	if (strstr(cmd, "-sp1"))					g_build_options.Priority = 1;
-	else if (strstr(cmd, "-sp2"))				g_build_options.Priority = 2;
-	else if (strstr(cmd, "-sp3"))				g_build_options.Priority = 3;
-	else if (strstr(cmd, "-sp4"))				g_build_options.Priority = 4;
-	else												g_build_options.Priority = 1;
+	const char* isSp = strstr(cmd, "-sp");
+	if(isSp)
+		sscanf(isSp +3, "%lu", &g_build_options.Priority);
+	else										
+		g_build_options.Priority = 2;
+
 	//end
+
 	VERIFY( lc_global_data() );
 	lc_global_data()->b_nosun_set						( !!strstr(cmd,"-nosun") );
 	lc_global_data()->b_skiplmap_set					( !!strstr(cmd,"-norgb") );
@@ -78,7 +85,7 @@ void Startup(LPSTR     lpCmdLine)
 	// Give a LOG-thread a chance to startup
 	//_set_sbh_threshold(1920);
 	InitCommonControls		();
-	thread_spawn			(logThread, "log-update",	1024*1024,0);
+	thread_spawn			(logThread, "log-update" 1024*1024,0);
 	Sleep					(150);
 	
 	// Faster FPU 

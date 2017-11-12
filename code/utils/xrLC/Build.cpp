@@ -3,19 +3,15 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-
 #include "build.h"
 
 #include "../xrLC_Light/xrMU_Model.h"
-
-
-
 #include "../xrLC_Light/xrLC_GlobalData.h"
 #include "../xrLC_Light/xrface.h"
 #include "../xrLC_Light/mu_model_light.h"
 #include "../xrLC_Light/net_cl_data_prepare.h"
 #include "../xrLC_Light/serialize.h"
-//#include "../xrLC_Light/lcnet_task_manager.h"
+
 void	calc_ogf		( xrMU_Model &	mu_model );
 void	export_geometry	( xrMU_Model &	mu_model );
 
@@ -25,29 +21,22 @@ using namespace			std;
 struct OGF_Base;
 xr_vector<OGF_Base *>	g_tree;
 
-//BOOL					b_noise		= FALSE;
-//BOOL					b_radiosity	= FALSE;
-//BOOL					b_net_light	= FALSE;
 SBuildOptions			g_build_options;
 vec2Face				g_XSplit;
 
-void	CBuild::CheckBeforeSave( u32 stage )
+void CBuild::CheckBeforeSave(u32 stage)
 {
-	bool b_g_tree_empty = g_tree.empty() ;
-	R_ASSERT( b_g_tree_empty );
+	bool b_g_tree_empty = g_tree.empty();
+	R_ASSERT(b_g_tree_empty);
 	bool b_g_XSplit_empty = g_XSplit.empty();
-	R_ASSERT( b_g_XSplit_empty );
+	R_ASSERT(b_g_XSplit_empty);
 	bool b_IsOGFContainersEmpty = IsOGFContainersEmpty();
-	R_ASSERT( b_IsOGFContainersEmpty );
-	
-	
-	
+	R_ASSERT(b_IsOGFContainersEmpty);
 }
 
-void	CBuild::TempSave( u32 stage )
+void CBuild::TempSave(u32 stage)
 {
-	CheckBeforeSave( stage );
-
+	CheckBeforeSave(stage);
 }
 
 void	CBuild::read( INetReader &r )

@@ -42,8 +42,6 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 {
 	is_surface_fatal = is_thm_fatal = false;
 	IReader&	fs	= const_cast<IReader&>(_in_FS);
-	// HANDLE		hLargeHeap	= HeapCreate(0,64*1024*1024,0);
-	// clMsg		("* <LargeHeap> handle: %X",hLargeHeap);
 
 	u32				i			= 0;
 
