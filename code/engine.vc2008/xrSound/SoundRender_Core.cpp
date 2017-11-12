@@ -170,12 +170,12 @@ void CSoundRender_Core::set_geometry_som(IReader* I)
 	while (!geom->eof()) {
 		SOM_poly				P;
 		geom->r(&P, sizeof(P));
-		CL.add_face_packed_D(P.v1, P.v2, P.v3, *(u32*)&P.occ, 0.01f);
+		CL.add_face_packed_D(P.v1, P.v2, P.v3, *(size_t*)&P.occ, 0.01f);
 		if (P.b2sided)
-			CL.add_face_packed_D(P.v3, P.v2, P.v1, *(u32*)&P.occ, 0.01f);
+			CL.add_face_packed_D(P.v3, P.v2, P.v1, *(size_t*)&P.occ, 0.01f);
 	}
 	geom_SOM = new CDB::MODEL();
-	geom_SOM->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()));
+	geom_SOM->build(CL.getV(), int(CL.getVS()), CL.getT(), int(CL.getTS()), nullptr, nullptr, false);
 	geom->close();
 }
 
