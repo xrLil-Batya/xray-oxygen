@@ -20,7 +20,7 @@ extern xrSkin1W			xrSkin1W_3DNow;
 
 extern xrSkin4W			xrSkin4W_thread;
 
-xrSkin4W* skin4W_func = NULL;
+xrSkin4W* skin4W_func = nullptr;
 
 extern xrPLC_calc3		PLC_calc3_x86;
 extern xrPLC_calc3		PLC_calc3_SSE;

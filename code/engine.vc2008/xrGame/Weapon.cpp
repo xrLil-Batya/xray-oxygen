@@ -735,13 +735,9 @@ void CWeapon::OnActiveItem ()
 	m_BriefInfo_CalcFrame = 0;
 
 //. Show
-	SwitchState					(eShowing);
-//-
+	SwitchState(eShowing);
 
-	inherited::OnActiveItem		();
-	//если мы занружаемся и оружие было в руках
-//.	SetState					(eIdle);
-//.	SetNextState				(eIdle);
+	inherited::OnActiveItem();
 }
 
 void CWeapon::OnHiddenItem ()
@@ -866,7 +862,7 @@ bool  CWeapon::need_renderable()
 	return !( IsZoomed() && ZoomTexture() && !IsRotatingToZoom() );
 }
 
-void CWeapon::renderable_Render		()
+void CWeapon::renderable_Render()
 {
 	UpdateXForm				();
 

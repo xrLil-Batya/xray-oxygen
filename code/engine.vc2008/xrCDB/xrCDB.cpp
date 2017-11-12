@@ -89,7 +89,6 @@ void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* b
 		{
 			Sleep(5);
 		}
-		Msg("[CDB::build] multithread (%d)", cpu_thrd);
 	}
 	else
 	{

@@ -86,10 +86,7 @@ void memory_monitor::monitor_alloc		(const void *allocation_address, const size_
 {
 	counter++;
 	counter_alloc++;
-	//if(0==stricmp(allocation_description,"char"))
-	//{
-	//	int d = 65+56;
-	//}
+
 	if (!use_monitor())
 		return;
 	static bool initialized		= false;

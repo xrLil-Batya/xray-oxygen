@@ -538,7 +538,6 @@ bool CLocatorAPI::Recurse		(const char* path)
 	intptr_t handle = _findfirst(scanPath, &findData);
 	if (handle == -1)
 	{
-		Log("! FS: Invalid path: ", path);
 		return false;
 	}
 	
