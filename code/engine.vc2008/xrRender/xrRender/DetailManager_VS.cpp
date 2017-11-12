@@ -317,12 +317,7 @@ void	CDetailManager::hw_Render_dump		(ref_constant x_array, u32 var_id, u32 lod_
 				RCache.get_ConstantCache_Vertex().get_array_f().dirty	(c_base,c_base+dwBatch*4);
 				RCache.Render				(D3DPT_TRIANGLELIST,vOffset,0,dwCNT_verts,iOffset,dwCNT_prims);
 				RCache.stat.r.s_details.add	(dwCNT_verts);
-			}
-        #if RENDER!=R_R1
-            if ((ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_SMAP == RImplementation.phase)) // phase_smap 
-            || (!ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS) && (RImplementation.PHASE_NORMAL == RImplementation.phase))) // phase_normal
-        #endif
-        vis.clear();      
+			}     
 		}
 		vOffset		+=	hw_BatchSize * Object.number_vertices;
 		iOffset		+=	hw_BatchSize * Object.number_indices;
