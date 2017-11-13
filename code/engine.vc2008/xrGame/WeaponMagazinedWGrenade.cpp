@@ -622,7 +622,7 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 				{
 					act_state = 3;
 				}
-				#end
+				#endif
 			}
 
 			if(m_bGrenadeMode)
