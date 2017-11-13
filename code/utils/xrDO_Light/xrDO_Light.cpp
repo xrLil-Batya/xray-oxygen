@@ -18,6 +18,8 @@ static const char* h_str =
 	"The following keys are supported / required:\n"
 	"-? or -h	== this help\n"
 	"-f<NAME>	== compile level in gamedata\\levels\\<NAME>\\\n"
+	"-norgb		== disable common lightmap calculating\n"
+	"-nosun		== disable sun-lighting\n"
 	"-o			== modify build options\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
@@ -28,13 +30,19 @@ void Help()
 void Startup(LPSTR     lpCmdLine)
 {
 	char cmd[512],name[256];
-	bool bNet				= false;
+
+	bool bNet = false;
+	bool noRgb = false;
+	bool noSun = false;
+
 	xr_strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
 	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
 	if (strstr(cmd,"-f")==0)							{ Help(); return; }
-	if ( strstr(cmd,"-net") )						
-														bNet = true;
+	if (strstr(cmd,"-net"))								bNet = true;
+	if (strstr(cmd, "-norgb"))							noRgb = true;
+	if (strstr(cmd, "-nosun"))							noSun = true;
+
 	// Give a LOG-thread a chance to startup
 	InitCommonControls	();
 	thread_spawn		(logThread,	"log-update", 1024*1024,0);
@@ -52,7 +60,7 @@ void Startup(LPSTR     lpCmdLine)
 
 	CTimer				dwStartupTime; dwStartupTime.Start();
 
-	xrCompileDO			(bNet);
+	xrCompileDO(bNet, noRgb, noSun);
 
 	// Show statistic
 	char	stats[256];

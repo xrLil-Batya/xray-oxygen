@@ -98,7 +98,7 @@ IC		bool						b_skiplmap		()		{	return _b_slmap; }
 IC		bool						b_nosun			()		{	return _b_nosun; }
 IC		bool						gl_linear		()		{	return _gl_linear; }
 IC		void						b_nosun_set		(bool v){	_b_nosun = v; }
-IC		void						b_skiplmap_set	(bool v){	_b_nosun = v; }
+IC		void						b_skiplmap_set	(bool v){	_b_slmap = v; }
 		void						initialize		()		;
 		void						destroy_rcmodel	()		;
 

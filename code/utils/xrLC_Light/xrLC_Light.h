@@ -1,5 +1,3 @@
-#ifndef	_XRLC_LIGHT_H_
-#define	_XRLC_LIGHT_H_
 #pragma once
 
 #include "../../xrCore/xrCore.h"
@@ -40,7 +38,7 @@ extern XRLC_LIGHT_API xr_pure_interface  XRLC_LIGHT_API i_lc_log
 	virtual	void Phase		( LPCSTR phase_name )	=0;
 } *lc_log;
 
-			XRLC_LIGHT_API void	xrCompileDO		 ( bool net );
+			XRLC_LIGHT_API void	xrCompileDO		 (bool net, bool rgb, bool sun);
 extern "C"	XRLC_LIGHT_API  b_params	&g_params();
 
 IC	u8	u8_clr				(float a)	{ s32 _a = iFloor(a*255.f); clamp(_a,0,255); return u8(_a);		};
@@ -52,6 +50,3 @@ IC	u8	u8_clr				(float a)	{ s32 _a = iFloor(a*255.f); clamp(_a,0,255); return u8
 #define X_TRY try
 #define X_CATCH catch(...)
 #endif
-
-#endif
-

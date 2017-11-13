@@ -44,4 +44,4 @@ struct processor_info {
     }
 };
 
-unsigned int query_processor_info(processor_info*);
+XRCORE_API unsigned int query_processor_info(processor_info*);

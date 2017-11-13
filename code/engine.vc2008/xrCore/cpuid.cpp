@@ -32,16 +32,6 @@ static void CleanDups(char* s, char c = ' ')
 	*++dst = 0;
 }
 
-#ifdef _EDITOR
-unsgined int query_processor_info(processor_info* pinfo)
-{
-    std::memset(pinfo, 0, sizeof(processor_info));
-
-    pinfo->feature = static_cast<u32>(CpuFeature::Mmx) | static_cast<u32>(CpuFeature::Sse);
-    return pinfo->feature;
-}
-#else
-
 #undef _CPUID_DEBUG
 
 DWORD countSetBits(ULONG_PTR bitMask)
@@ -75,7 +65,7 @@ bool isWow64()
 	return (PROCESSOR_ARCHITECTURE_AMD64 == SysInfo.wProcessorArchitecture);
 }
 
-unsigned int query_processor_info(processor_info* pinfo)
+XRCORE_API unsigned int query_processor_info(processor_info* pinfo)
 {	
     std::memset(pinfo,0,sizeof(processor_info));
 
@@ -211,4 +201,3 @@ unsigned int query_processor_info(processor_info* pinfo)
     pinfo->n_cores = processorCoreCount;
     return pinfo->features;
 }
-#endif

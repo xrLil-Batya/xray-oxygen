@@ -27,17 +27,21 @@ void	xrLight			()
 	Threads.wait			();
 	Msg						("%d seconds elapsed.",(start_time.GetElapsed_ms())/1000);
 }
-
-void xrCompileDO( bool net )
+#include "xrLC_GlobalData.h"
+void xrCompileDO(bool net, bool rgb, bool sun)
 {
 	Phase		("Loading level...");
 	gl_data.xrLoad	();
 
 	Phase		("Lighting nodes...");
-	if( net )
+
+	if(net)
 		lc_net::xrNetDOLight();
 	else
 		xrLight		();
+
+	lc_global_data()->b_nosun_set(sun);
+	lc_global_data()->b_skiplmap_set(rgb);
 
 	gl_data.slots_data.Free();
 	

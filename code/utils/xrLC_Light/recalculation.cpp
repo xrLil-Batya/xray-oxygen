@@ -31,17 +31,17 @@ void recalculation::load_calculation_params()
 	
 }
 
-void recalculation::setup_recalculationflags_file( u32 check_sum ) const
+void recalculation::setup_recalculationflags_file(u32 check_sum) const
 {
 	static std::vector<BYTE> buff;
 
-	IWriter	*W	= FS.w_open	(		"$level$", "recalculation_data_slots.details" );
-	W->w_chunk( 0, &check_sum, sizeof( check_sum ) );
-	
-	u32 buff_size = dtH.slots_count( ) * sizeof( slots_flags[0] );
+	IWriter	*W = FS.w_open("$level$", "recalculation_data_slots.details");
+	W->w_chunk(0, &check_sum, sizeof(check_sum));
+
+	u32 buff_size = dtH.slots_count() * sizeof(slots_flags[0]);
 	buff.resize(buff_size);
-	W->w_chunk( 1, &buff[0], buff_size );
-	FS.w_close( W );
+	W->w_chunk(1, &buff[0], buff_size);
+	FS.w_close(W);
 }
 
 void recalculation::check_files( u32 check_sum )
