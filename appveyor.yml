@@ -16,6 +16,8 @@ after_build:
     
     md bins\
     
+    copy ..\code\SDK\binaries\x64\amd_ags_x64.dll bins\
+    
     cd ..\binaries\x64\Release
     
     copy *.dll ..\..\..\game\bins
