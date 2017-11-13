@@ -61,7 +61,7 @@ struct game_PlayerState
 	u32			RespawnTime;
 	u32			DeathTime;
 	s16			money_delta;
-	u8			m_bCurrentVoteAgreed;
+
 	using OLD_GAME_ID = xr_deque<u16>;
 	OLD_GAME_ID	mOldIDs;
 	s32			money_added;

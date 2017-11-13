@@ -85,37 +85,6 @@ void MultipacketSender::_FlushSendBuffer(u32 timeout, Buffer* buf)
 		header->tag = NET_TAG_MERGED;
 		header->unpacked_size = (u16)buf->buffer.B.count;
 
-
-		// dump/log if needed
-
-#if NET_LOG_PACKETS
-		Msg("#send %smulti-packet %u    flags= %08X",
-			(buf->last_flags & DPNSEND_IMMEDIATELLY) ? "IMMEDIATE " : "",
-			buf->buffer.B.count, buf->last_flags
-		);
-#endif // NET_LOG_PACKETS
-
-		if (strstr(Core.Params, "-dump_traffic"))
-		{
-			static bool first_time = true;
-			FILE*       dump = fopen("raw-out-traffic.bins", (first_time) ? "wb" : "ab");
-
-			if (first_time)
-			{
-				fwrite("BINS", 4, 1, dump);
-				first_time = false;
-			}
-
-			u16 sz = u16(buf->buffer.B.count);
-
-			fwrite(&sz, sizeof(u16), 1, dump);
-			fwrite(buf->buffer.B.data, buf->buffer.B.count, 1, dump);
-			fclose(dump);
-		}
-
-
-		// do send
-
 		_SendTo_LL(packet_data, buf->buffer.B.count + sizeof(MultipacketHeader), buf->last_flags, timeout);
 		buf->buffer.B.count = 0;
 	} // if buffer not empty
@@ -134,10 +103,6 @@ MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 p
 		return;
 
 	std::memcpy(data, (u8*)packet_data + sizeof(MultipacketHeader), packet_sz - sizeof(MultipacketHeader));
-
-#if NET_LOG_PACKETS
-	Msg("#receive multi-packet %u", packet_sz);
-#endif
 
 	if (strstr(Core.Params, "-dump_traffic"))
 	{

@@ -23,7 +23,6 @@
 #include "level.h"
 #include "script_callback_ex.h"
 #include "../xrphysics/MathUtils.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 #include "game_level_cross_table.h"
 #include "ai_obstacle.h"
 #include "magic_box3.h"
@@ -95,10 +94,9 @@ void CGameObject::init			()
 void CGameObject::Load(LPCSTR section)
 {
 	inherited::Load			(section);
-	ISpatial*		self				= smart_cast<ISpatial*> (this);
-	if (self)	{
-		// #pragma todo("to Dima: All objects are visible for AI ???")
-		// self->spatial.type	|=	STYPE_VISIBLEFORAI;	
+	ISpatial* self = smart_cast<ISpatial*> (this);
+	if (self)	
+	{
 		self->spatial.type	&= ~STYPE_REACTTOSOUND;
 	}
 }
@@ -120,11 +118,6 @@ void CGameObject::reload	(LPCSTR section)
 
 void CGameObject::net_Destroy	()
 {
-#ifdef DEBUG
-	if (psAI_Flags.test(aiDestroy))
-		Msg					("Destroying client object [%d][%s][%x]",ID(),*cName(),this);
-#endif
-
 	VERIFY					(m_spawned);
 	if( m_anim_mov_ctrl )
 					destroy_anim_mov_ctrl	();
@@ -157,8 +150,6 @@ void CGameObject::net_Destroy	()
 
 	Level().RemoveObject_From_4CrPr(this);
 
-//.	Parent									= 0;
-
 	CScriptBinder::net_Destroy				();
 
 	xr_delete								(m_lua_game_object);
@@ -172,37 +163,9 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 	case GE_HIT:
 	case GE_HIT_STATISTIC:
 		{
-/*
-			u16				id,weapon_id;
-			Fvector			dir;
-			float			power, impulse;
-			s16				element;
-			Fvector			position_in_bone_space;
-			u16				hit_type;
-			float			ap = 0.0f;
-
-			P.r_u16			(id);
-			P.r_u16			(weapon_id);
-			P.r_dir			(dir);
-			P.r_float		(power);
-			P.r_s16			(element);
-			P.r_vec3		(position_in_bone_space);
-			P.r_float		(impulse);
-			P.r_u16			(hit_type);	//hit type
-			if ((ALife::EHitType)hit_type == ALife::eHitTypeFireWound)
-			{
-				P.r_float	(ap);
-			}
-
-			CObject*	Hitter = Level().Objects.net_Find(id);
-			CObject*	Weapon = Level().Objects.net_Find(weapon_id);
-
-			SHit	HDS = SHit(power, dir, Hitter, element, position_in_bone_space, impulse, (ALife::EHitType)hit_type, ap);
-*/
 			SHit	HDS;
 			HDS.PACKET_TYPE = type;
 			HDS.Read_Packet_Cont(P);
-//			Msg("Hit received: %d[%d,%d]", HDS.whoID, HDS.weaponID, HDS.BulletID);
 			CObject*	Hitter = Level().Objects.net_Find(HDS.whoID);
 			CObject*	Weapon = Level().Objects.net_Find(HDS.weaponID);
 			HDS.who		= Hitter;
@@ -237,12 +200,7 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 				// !!! ___ it is necessary to be check!
 				break;
 			}
-#ifdef MP_LOGGING
-			Msg("--- Object: GE_DESTROY of [%d][%s]", ID(), cNameSect().c_str());
-#endif // MP_LOGGING
-
 			setDestroy		(TRUE);
-//			MakeMeCrow		();
 		}
 		break;
 	}
@@ -287,10 +245,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	// XForm
 	XFORM().setXYZ					(E->o_Angle);
 	Position().set					(E->o_Position);
-#ifdef DEBUG
-	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-		Msg("CGameObject::net_Spawn obj %s Position set from CSE_Abstract %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-#endif
+
 	VERIFY							(_valid(renderable.xform));
 	VERIFY							(!fis_zero(DET(renderable.xform)));
 	CSE_ALifeObject					*O = smart_cast<CSE_ALifeObject*>(E);
@@ -341,21 +296,11 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	reinit						();
 	if(!g_dedicated_server)
 		CScriptBinder::reinit	();
-#ifdef DEBUG
-	if(ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject)&&stricmp(PH_DBG_ObjectTrackName(),*cName())==0)
-	{
-		Msg("CGameObject::net_Spawn obj %s After Script Binder reinit %f,%f,%f",PH_DBG_ObjectTrackName(),Position().x,Position().y,Position().z);
-	}
-#endif
 	//load custom user data from server
 	if(!E->client_data.empty())
 	{	
-//		Msg				("client data is present for object [%d][%s], load is processed",ID(),*cName());
 		IReader			ireader = IReader(&*E->client_data.begin(), E->client_data.size());
 		net_Load		(ireader);
-	}
-	else {
-//		Msg				("no client data for object [%d][%s], load is skipped",ID(),*cName());
 	}
 
 	// if we have a parent
@@ -1029,7 +974,6 @@ void CGameObject::on_matrix_change	(const Fmatrix &previous)
 }
 
 #ifdef DEBUG
-
 void render_box						(IRenderVisual *visual, const Fmatrix &xform, const Fvector &additional, bool draw_child_boxes, const u32 &color)
 {
 	CDebugRenderer			&renderer = Level().debug_renderer();

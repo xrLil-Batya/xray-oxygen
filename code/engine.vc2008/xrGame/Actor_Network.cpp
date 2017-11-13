@@ -44,7 +44,6 @@
 #include "actor_memory.h"
 #include "actor_statistic_mgr.h"
 #include "characterphysicssupport.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 #include "../xrengine/xr_collide_form.h"
 #ifdef DEBUG
 #	include "debug_renderer.h"
@@ -170,37 +169,16 @@ static void r_vec_q8(NET_Packet& P,Fvector& vec,const Fvector& min,const Fvector
 }
 static void w_qt_q8(NET_Packet& P,const Fquaternion& q)
 {
-	//Fvector Q;
-	//Q.set(q.x,q.y,q.z);
-	//if(q.w<0.f)	Q.invert();
-	//P.w_float_q8(Q.x,-1.f,1.f);
-	//P.w_float_q8(Q.y,-1.f,1.f);
-	//P.w_float_q8(Q.z,-1.f,1.f);
 	///////////////////////////////////////////////////
 	P.w_float_q8(q.x,-1.f,1.f);
 	P.w_float_q8(q.y,-1.f,1.f);
 	P.w_float_q8(q.z,-1.f,1.f);
 	P.w_float_q8(q.w,-1.f,1.f);
-
 	///////////////////////////////////////////
-
-
-	//P.w_float_q8(q.x,-1.f,1.f);
-	//P.w_float_q8(q.y,-1.f,1.f);
-	//P.w_float_q8(q.z,-1.f,1.f);
-	//P.w(sign())
 }
 static void r_qt_q8(NET_Packet& P,Fquaternion& q)
 {
-	//// x^2 + y^2 + z^2 + w^2 = 1
-	//P.r_float_q8(q.x,-1.f,1.f);
-	//P.r_float_q8(q.y,-1.f,1.f);
-	//P.r_float_q8(q.z,-1.f,1.f);
-	//float w2=1.f-q.x*q.x-q.y*q.y-q.z*q.z;
-	//w2=w2<0.f ? 0.f : w2;
-	//q.w=_sqrt(w2);
 	/////////////////////////////////////////////////////
-	///////////////////////////////////////////////////
 	P.r_float_q8(q.x,-1.f,1.f);
 	P.r_float_q8(q.y,-1.f,1.f);
 	P.r_float_q8(q.z,-1.f,1.f);
@@ -210,6 +188,7 @@ static void r_qt_q8(NET_Packet& P,Fquaternion& q)
 	clamp(q.y,-1.f,1.f);
 	clamp(q.z,-1.f,1.f);
 	clamp(q.w,-1.f,1.f);
+	///////////////////////////////////////////////////
 }
 
 #define F_MAX         3.402823466e+38F
@@ -1594,8 +1573,5 @@ BOOL CActor::BonePassBullet(int boneID)
 
 void CActor::On_B_NotCurrentEntity()
 {
-#ifndef MASTER_GOLD
-	Msg("CActor::On_B_NotCurrentEntity");
-#endif // #ifndef MASTER_GOLD
 	inventory().Items_SetCurrentEntityHud(false);
 };

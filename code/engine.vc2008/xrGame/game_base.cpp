@@ -9,9 +9,6 @@ u64		g_qwStartGameTime		= 12*60*60*1000;
 float	g_fTimeFactor			= pSettings->r_float("alife","time_factor");
 u64		g_qwEStartGameTime		= 12*60*60*1000;
 
-ENGINE_API	bool g_dedicated_server;
-EGameIDs ParseStringToGameType(LPCSTR str);
-
 game_PlayerState::game_PlayerState(NET_Packet* account_info)
 {
 	skin				= 0;
@@ -25,7 +22,6 @@ game_PlayerState::game_PlayerState(NET_Packet* account_info)
 	experience_New		= 0;
 
 	flags__				= 0;
-	m_bCurrentVoteAgreed= 2;
 	RespawnTime			= 0;
 	m_bPayForSpawn		= false;
 
@@ -33,8 +29,6 @@ game_PlayerState::game_PlayerState(NET_Packet* account_info)
 
 	if (account_info)
 		net_Import(*account_info);
-	else if(g_dedicated_server)
-		setFlag(GAME_PLAYER_FLAG_SKIP);
 }
 
 void game_PlayerState::clear()
@@ -148,14 +142,14 @@ void game_GameState::switch_Phase		(u32 new_phase)
 	m_start_time		= Level().timeServer();
 }
 
-ALife::_TIME_ID  game_GameState::GetStartGameTime()
+u64 game_GameState::GetStartGameTime()
 {
 	return			(m_qwStartGameTime);
 }
 
-ALife::_TIME_ID game_GameState::GetGameTime()
+u64 game_GameState::GetGameTime()
 {
-	return			(m_qwStartGameTime + ALife::_TIME_ID(m_fTimeFactor*float(Level().timeServer_Async() - m_qwStartProcessorTime)));
+	return (m_qwStartGameTime + u64(m_fTimeFactor*float(Level().timeServer_Async() - m_qwStartProcessorTime)));
 }
 
 float game_GameState::GetGameTimeFactor()
@@ -170,16 +164,16 @@ void game_GameState::SetGameTimeFactor (const float fTimeFactor)
 	m_fTimeFactor				= fTimeFactor;
 }
 
-void game_GameState::SetGameTimeFactor	(ALife::_TIME_ID GameTime, const float fTimeFactor)
+void game_GameState::SetGameTimeFactor	(u64 GameTime, const float fTimeFactor)
 {
 	m_qwStartGameTime			= GameTime;
 	m_qwStartProcessorTime		= Level().timeServer_Async();
 	m_fTimeFactor				= fTimeFactor;
 }
 
-ALife::_TIME_ID game_GameState::GetEnvironmentGameTime()
+u64 game_GameState::GetEnvironmentGameTime()
 {
-	return						(m_qwEStartGameTime + ALife::_TIME_ID(m_fETimeFactor*float(Level().timeServer_Async() - m_qwEStartProcessorTime)));
+	return						(m_qwEStartGameTime + u64(m_fETimeFactor*float(Level().timeServer_Async() - m_qwEStartProcessorTime)));
 }
 
 float game_GameState::GetEnvironmentGameTimeFactor()
@@ -194,7 +188,7 @@ void game_GameState::SetEnvironmentGameTimeFactor (const float fTimeFactor)
 	m_fETimeFactor				= fTimeFactor;
 }
 
-void game_GameState::SetEnvironmentGameTimeFactor	(ALife::_TIME_ID GameTime, const float fTimeFactor)
+void game_GameState::SetEnvironmentGameTimeFactor	(u64 GameTime, const float fTimeFactor)
 {
 	m_qwEStartGameTime			= GameTime;
 	m_qwEStartProcessorTime		= Level().timeServer_Async();

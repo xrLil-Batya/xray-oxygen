@@ -9,7 +9,6 @@
 #include "Actor.h"
 #include "gamepersistent.h"
 #include "mt_config.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 
 #include "../Include/xrRender/UIRender.h"
 #include "../Include/xrRender/Kinematics.h"
@@ -31,28 +30,9 @@ float const CBulletManager::parent_ignore_distance	= 3.f;
 #endif // #ifdef DEBUG
 float g_bullet_time_factor							= 1.f;
 
-SBullet::SBullet()
-{
-}
-
-SBullet::~SBullet()
-{
-}
-
-
-void SBullet::Init(const Fvector& position,
-				   const Fvector& direction,
-				   float starting_speed,
-				   float power,
-//.				   float power_critical,
-				   float impulse,
-				   u16	sender_id,
-				   u16 sendersweapon_id,
-				   ALife::EHitType e_hit_type,
-				   float maximum_distance,
-				   const CCartridge& cartridge,
-				   float const air_resistance_factor,
-				   bool SendHit)
+void SBullet::Init(const Fvector& position, const Fvector& direction, float starting_speed, float power, float impulse, 
+	u16	sender_id, u16 sendersweapon_id, ALife::EHitType e_hit_type, float maximum_distance, const CCartridge& cartridge,
+	float const air_resistance_factor,  bool SendHit)
 {
 	flags._storage			= 0;
 	bullet_pos 				= position;

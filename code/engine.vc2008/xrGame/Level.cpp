@@ -37,7 +37,6 @@
 #include "level_sounds.h"
 #include "car.h"
 #include "trade_parameters.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 #include "MainMenu.h"
 #include "../xrEngine/XR_IOConsole.h"
 #include "actor.h"
@@ -153,9 +152,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_dwNumSteps				= 0;
 	m_dwDeltaUpdate				= u32(fixed_step*1000);
 	m_dwLastNetUpdateTime		= 0;
-	//VERIFY						( physics_world() );
-	//physics_world()->set_step_time_callback((PhysicsStepTimeCallback*) &PhisStepsCallback);
-	//physics_step_time_callback	= (PhysicsStepTimeCallback*) &PhisStepsCallback;
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
 	if(!g_dedicated_server)

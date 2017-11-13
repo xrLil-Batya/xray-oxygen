@@ -10,33 +10,25 @@
 #include "UI/UIMessagesWindow.h"
 #include "UI/UIDialogWnd.h"
 #include "string_table.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 
 game_cl_GameState::game_cl_GameState()
 {
 	local_player				= createPlayerState(0);	//initializing account info
-	m_WeaponUsageStatistic		= nullptr;
 
 	shedule.t_min				= 5;
 	shedule.t_max				= 20;
 	m_game_ui_custom			= nullptr;
 	shedule_register			();
-
-	m_u16VotingEnabled			= 0;
 	m_bServerControlHits		= true;
-
-	m_WeaponUsageStatistic		= xr_new<WeaponUsageStatistic>();
 }
 
 game_cl_GameState::~game_cl_GameState()
 {
-	PLAYERS_MAP_IT I	= players.begin();
-	for(;I!=players.end(); ++I)
-		xr_delete(I->second);
+	for(auto it: players)
+		xr_delete(it.second);
 	players.clear();
 
 	shedule_unregister();
-	xr_delete(m_WeaponUsageStatistic);
 	xr_delete(local_player);
 }
 
@@ -91,7 +83,7 @@ struct not_exsiting_clients_deleter
 	}
 }; //not_present_clients_deleter
 
-void	game_cl_GameState::net_import_state	(NET_Packet& P)
+void game_cl_GameState::net_import_state (NET_Packet& P)
 {
 	// Generic
 	P.r_clientID	(local_svdpnid);
@@ -103,54 +95,46 @@ void	game_cl_GameState::net_import_state	(NET_Packet& P)
 	if(Phase()!=ph)
 		switch_Phase(ph);
 
-	P.r_u32			(m_start_time);
-	m_u16VotingEnabled = u16(P.r_u8());
-	m_bServerControlHits = !!P.r_u8();	
-	m_WeaponUsageStatistic->SetCollectData(!!P.r_u8());
+	P.r_u32(m_start_time);
+	m_bServerControlHits = !!P.r_u8();
 
 	// Players
-	u16	p_count;
-	P.r_u16			(p_count);
-	R_ASSERT		(p_count <= MAX_PLAYERS_COUNT);
 
 	buffer_vector<ClientID> valid_players(
-		_alloca(sizeof(ClientID) * (p_count+1)),
-		(p_count+1)
+		_alloca(sizeof(ClientID) * (2)),
+		(2)
 	);
 	
-	for (u16 p_it=0; p_it<p_count; ++p_it)
+	ClientID			ID;
+	P.r_clientID		(ID);
+	
+	game_PlayerState*   IP;
+	PLAYERS_MAP_IT I = players.find(ID);
+	if(I != players.end())
 	{
-		ClientID			ID;
-		P.r_clientID		(ID);
-		
-		game_PlayerState*   IP;
-		PLAYERS_MAP_IT I = players.find(ID);
-		if(I != players.end())
+		IP = I->second;
+		//***********************************************
+		u16 OldFlags = IP->flags__;
+		//-----------------------------------------------
+		IP->net_Import(P);
+		//***********************************************
+		valid_players.push_back(ID);
+	}
+	else 
+	{
+		if (ID == local_svdpnid)
 		{
-			IP = I->second;
-			//***********************************************
-			u16 OldFlags = IP->flags__;
-			u8 OldVote = IP->m_bCurrentVoteAgreed;
-			//-----------------------------------------------
-			IP->net_Import(P);
-			//-----------------------------------------------
-			if (OldVote != IP->m_bCurrentVoteAgreed)
-				OnPlayerVoted(IP);
-			//***********************************************
+			game_PlayerState::skip_Import(P);	//this mean that local_player not created yet ..
+		}
+		else
+		{
+			IP = createPlayerState(&P);
+
+			players.insert(std::make_pair(ID, IP));
 			valid_players.push_back(ID);
-		}else{
-			if (ID == local_svdpnid)
-			{
-				game_PlayerState::skip_Import(P);	//this mean that local_player not created yet ..
-				continue;
-			}
-			
-			IP = createPlayerState	(&P);
-			
-			players.insert			(std::make_pair(ID,IP));
-			valid_players.push_back	(ID);
 		}
 	}
+	
 	not_exsiting_clients_deleter	tmp_deleter(&valid_players, &local_player, &local_svdpnid);
 	
 	players.erase(
@@ -173,21 +157,13 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 
 	// Update
 	PLAYERS_MAP_IT I	= players.find(ID);
-	/*VERIFY2(I != players.end(), 
-		make_string("Player ClientID = %d not found in players map", ID.value()).c_str());*/
 	if (players.end()!=I)
 	{
+		//-----------------------------------------------
 		game_PlayerState* IP		= I->second;
-//		CopyMemory	(&IP,&PS,sizeof(PS));		
-		//***********************************************
-		u16 OldFlags = IP->flags__;
-		u8 OldVote = IP->m_bCurrentVoteAgreed;
 		//-----------------------------------------------
 		IP->net_Import(P);
 		//-----------------------------------------------
-		if (OldVote != IP->m_bCurrentVoteAgreed)
-			OnPlayerVoted(IP);
-		//***********************************************
 	}
 	else
 	{
@@ -206,7 +182,7 @@ void	game_cl_GameState::net_signal		(NET_Packet& P)
 
 void game_cl_GameState::TranslateGameMessage	(u32 msg, NET_Packet& P)
 {
-	CStringTable st;
+/*	CStringTable st;
 
 	string512 Text;
 	char	Color_Main[]	= "%c[255,192,192,192]";
@@ -253,10 +229,10 @@ void game_cl_GameState::TranslateGameMessage	(u32 msg, NET_Packet& P)
 			R_ASSERT2(0,"Unknown Game Message");
 		}break;
 	};
-
+	*/
 }
 
-void	game_cl_GameState::OnGameMessage	(NET_Packet& P)
+void game_cl_GameState::OnGameMessage	(NET_Packet& P)
 {
 	VERIFY	(this && &P);
 	u32 msg	;
@@ -272,7 +248,7 @@ game_PlayerState* game_cl_GameState::lookat_player()
 	{
 		return GetPlayerByGameID(current_entity->ID());
 	}
-	return NULL;
+	return nullptr;
 }
 
 game_PlayerState* game_cl_GameState::GetPlayerByGameID(u32 GameID)
@@ -285,7 +261,7 @@ game_PlayerState* game_cl_GameState::GetPlayerByGameID(u32 GameID)
 		game_PlayerState* P = I->second;
 		if (P->GameID == GameID) return P;
 	};
-	return NULL;
+	return nullptr;
 };
 
 game_PlayerState* game_cl_GameState::GetPlayerByOrderID		(u32 idx)
@@ -312,16 +288,6 @@ void game_cl_GameState::shedule_Update		(u32 dt)
 		if( CurrentGameUI() )
 			m_game_ui_custom = CurrentGameUI();
 	} 
-	//---------------------------------------
-	switch (Phase())
-	{
-	case GAME_PHASE_INPROGRESS:
-		{
-		}break;
-	default:
-		{
-		}break;
-	};
 };
 
 void game_cl_GameState::sv_GameEventGen(NET_Packet& P)
@@ -366,28 +332,8 @@ void game_cl_GameState::u_EventSend(NET_Packet& P)
 	Level().Send(P,net_flags(TRUE,TRUE));
 }
 
-void				game_cl_GameState::OnSwitchPhase			(u32 old_phase, u32 new_phase)
+void game_cl_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
 {
-	switch (old_phase)
-	{
-	case GAME_PHASE_INPROGRESS:
-		{
-		}break;
-	default:
-		{
-		}break;
-	};
-
-	switch (new_phase)
-	{
-		case GAME_PHASE_INPROGRESS:
-			{
-				m_WeaponUsageStatistic->Clear();
-			}break;
-		default:
-			{
-			}break;
-	}	
 }
 
 void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)

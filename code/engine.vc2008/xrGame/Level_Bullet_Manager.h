@@ -76,8 +76,8 @@ struct SBullet
 	Fvector			begin_density		;
 	bool			operator	==		(u32 ID){return	ID == m_dwID;}
 public:
-					SBullet				();
-					~SBullet			();
+					SBullet				() = default;
+					~SBullet			() = default;
 
 	bool			CanBeRenderedNow	() const { return (Device.dwFrame > init_frame_num);}
 

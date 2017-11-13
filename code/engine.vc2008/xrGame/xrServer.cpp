@@ -8,7 +8,6 @@
 #include "xrServer_Objects_ALife_All.h"
 #include "level.h"
 #include "game_cl_base.h"
-#include "game_cl_base_weapon_usage_statistic.h"
 #include "ai_space.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "string_table.h"
@@ -28,11 +27,9 @@
 
 u32 g_sv_traffic_optimization_level = eto_none;
 
-xrClientData::xrClientData	() :
-	IClient(Device.GetTimerGlobal())
+xrClientData::xrClientData(): IClient(Device.GetTimerGlobal()), ps(nullptr)
 {
-	ps = NULL;
-	Clear		();
+	Clear();
 }
 
 void	xrClientData::Clear()

@@ -16,15 +16,12 @@ struct SZoneMapEntityData{
 	SZoneMapEntityData(){pos.set(.0f,.0f,.0f);color = 0xff00ff00;}
 };
 
-struct WeaponUsageStatistic;
-
 class	game_cl_GameState	: public game_GameState, public ISheduled
 {
 	typedef game_GameState	inherited;
 	shared_str							m_game_type_name;
 protected:
 	CUIGameCustom*						m_game_ui_custom;
-	u16									m_u16VotingEnabled;	
 	bool								m_bServerControlHits;	
 
 public:
@@ -37,8 +34,6 @@ public:
 	game_PlayerState*					local_player;
 	game_PlayerState*					lookat_player();
 
-
-	WeaponUsageStatistic				*m_WeaponUsageStatistic;
 private:
 				void				switch_Phase			(u32 new_phase)		{inherited::switch_Phase(new_phase);};
 protected:
@@ -71,8 +66,6 @@ public:
 
 				void				OnGameMessage			(NET_Packet& P);
 
-	virtual		char*				getTeamSection			(int Team){return NULL;};
-
 				game_PlayerState*	GetPlayerByGameID		(u32 GameID);
 				game_PlayerState*	GetPlayerByOrderID		(u32 id);
 				ClientID			GetClientIDByOrderID	(u32 id);
@@ -92,17 +85,6 @@ public:
 	virtual		void				OnWarnMessage			(NET_Packet* P)	{};
 	virtual		void				OnRadminMessage			(u16 type, NET_Packet* P)	{};
 	
-
-	virtual		bool				IsVotingEnabled			()	{return m_u16VotingEnabled != 0;};
-	virtual		bool				IsVotingEnabled			(u16 flag) {return (m_u16VotingEnabled & flag) != 0;};
-	virtual		bool				IsVotingActive			()	{ return false; };
-	virtual		void				SetVotingActive			( bool Active )	{ };
-	virtual		void				SendStartVoteMessage	(LPCSTR args)	{};
-	virtual		void				SendVoteYesMessage		()	{};
-	virtual		void				SendVoteNoMessage		()	{};
-	virtual		void				OnVoteStart				(NET_Packet& P)	{};
-	virtual		void				OnVoteStop				(NET_Packet& P)	{};
-
 	virtual		void				OnRender				()	{};
 	virtual		bool				IsServerControlHits		()	{return m_bServerControlHits;};
 	virtual		bool				IsEnemy					(game_PlayerState* ps)	{return false;};
@@ -114,9 +96,7 @@ public:
 
 	virtual		void				OnPlayerFlagsChanged	(game_PlayerState* ps)	{};
 	virtual		void				OnNewPlayerConnected	(ClientID const & newClient) {};
-	virtual		void				OnPlayerVoted			(game_PlayerState* ps)	{};
 	virtual		void				SendPickUpEvent			(u16 ID_who, u16 ID_what);
 
-	virtual		bool				IsPlayerInTeam			(game_PlayerState* ps, ETeam team) {return ps->team == team;};
 	virtual		void				OnConnected				();
 };

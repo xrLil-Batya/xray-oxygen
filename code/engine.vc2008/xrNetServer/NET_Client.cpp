@@ -344,162 +344,7 @@ void IPureClient::Disconnect()
 	net_Connected = EnmConnectionWait;
 	net_Syncronised = FALSE;
 }
-/// #TODO: [FX] Deleted it
-/* 
-HRESULT	IPureClient::net_Handler(u32 dwMessageType, PVOID pMessage)
-{
-	// HRESULT     hr = S_OK;
 
-	switch (dwMessageType)
-	{
-	case DPN_MSGID_ENUM_HOSTS_RESPONSE:
-		{
-			PDPNMSG_ENUM_HOSTS_RESPONSE     pEnumHostsResponseMsg;
-			const DPN_APPLICATION_DESC*     pDesc;
-			// HOST_NODE*                      pHostNode = NULL;
-			// WCHAR*                          pwszSession = NULL;
-
-			pEnumHostsResponseMsg			= (PDPNMSG_ENUM_HOSTS_RESPONSE) pMessage;
-			pDesc							= pEnumHostsResponseMsg->pApplicationDescription;
-			
-			if (pDesc->dwApplicationReservedDataSize && pDesc->pvApplicationReservedData)
-			{
-				R_ASSERT(pDesc->dwApplicationReservedDataSize == sizeof(m_game_description));
-                std::memcpy(&m_game_description, pDesc->pvApplicationReservedData,
-					pDesc->dwApplicationReservedDataSize);
-			}
-			
-			// Insert each host response if it isn't already present
-			net_csEnumeration.lock			();
-			BOOL	bHostRegistered			= FALSE;
-			for (u32 I=0; I<net_Hosts.size(); I++)
-			{
-				HOST_NODE&	N = net_Hosts	[I];
-				if	( pDesc->guidInstance == N.dpAppDesc.guidInstance)
-				{
-					// This host is already in the list
-					bHostRegistered = TRUE;
-					break;
-				}
-			}
-
-			if (!bHostRegistered) 
-			{
-				// This host session is not in the list then so insert it.
-				HOST_NODE	NODE;
-                std::memset(&NODE,0,sizeof(HOST_NODE));
-
-				// Copy the Host Address
-				R_CHK		(pEnumHostsResponseMsg->pAddressSender->Duplicate(&NODE.pHostAddress ) );
-                std::memcpy(&NODE.dpAppDesc,pDesc,sizeof(DPN_APPLICATION_DESC));
-
-				// Null out all the pointers we aren't copying
-				NODE.dpAppDesc.pwszSessionName					= NULL;
-				NODE.dpAppDesc.pwszPassword						= NULL;
-				NODE.dpAppDesc.pvReservedData					= NULL;
-				NODE.dpAppDesc.dwReservedDataSize				= 0;
-				NODE.dpAppDesc.pvApplicationReservedData		= NULL;
-				NODE.dpAppDesc.dwApplicationReservedDataSize	= 0;
-
-				if( pDesc->pwszSessionName)	{
-					string4096			dpSessionName;
-					R_CHK				(WideCharToMultiByte(CP_ACP,0,pDesc->pwszSessionName,-1,dpSessionName,sizeof(dpSessionName),0,0));
-					NODE.dpSessionName	= (char*)(&dpSessionName[0]);
-				}
-
-				net_Hosts.push_back			(NODE);
-
-			}
-			net_csEnumeration.unlock			();
-		}
-		break;
-
-	case DPN_MSGID_RECEIVE:
-		{
-			PDPNMSG_RECEIVE	pMsg	= (PDPNMSG_RECEIVE) pMessage;
-
-   			MultipacketReciever::RecievePacket( pMsg->pReceiveData, pMsg->dwReceiveDataSize );
-		}
-		break;
-	case DPN_MSGID_TERMINATE_SESSION:
-		{
-			PDPNMSG_TERMINATE_SESSION 	pMsg	= (PDPNMSG_TERMINATE_SESSION ) pMessage;
-			char*			m_data	= (char*)pMsg->pvTerminateData;
-			u32				m_size	= pMsg->dwTerminateDataSize;
-			HRESULT			m_hResultCode = pMsg->hResultCode;
-
-			net_Disconnected	= TRUE;
-
-			if (m_size != 0)
-			{
-				OnSessionTerminate(m_data);
-#ifdef DEBUG				
-				Msg("- Session terminated : %s", m_data);
-#endif
-			}
-			else
-			{
-#ifdef DEBUG
-				OnSessionTerminate( (::Debug.error2string(m_hResultCode)));
-				Msg("- Session terminated : %s", (::Debug.error2string(m_hResultCode)));
-#endif
-			}
-		};
-		break;
-	default:
-		{
-#if	1
-			LPSTR	msg = "";	
-			switch (dwMessageType)
-			{
-			case DPN_MSGID_ADD_PLAYER_TO_GROUP:			msg = "DPN_MSGID_ADD_PLAYER_TO_GROUP"; break;
-			case DPN_MSGID_ASYNC_OP_COMPLETE:			msg = "DPN_MSGID_ASYNC_OP_COMPLETE"; break;
-			case DPN_MSGID_CLIENT_INFO:					msg	= "DPN_MSGID_CLIENT_INFO"; break;
-			case DPN_MSGID_CONNECT_COMPLETE:			
-				{
-					PDPNMSG_CONNECT_COMPLETE pMsg = (PDPNMSG_CONNECT_COMPLETE)pMessage;
-#ifdef DEBUG
-//					const char* x = DXGetErrorString9(pMsg->hResultCode);
-					if (pMsg->hResultCode != S_OK)
-					{
-						DXTRACE_ERR(L"", pMsg->hResultCode);
-					}					
-#endif
-					if (pMsg->dwApplicationReplyDataSize)
-					{
-						string256 ResStr = "";
-						strncpy_s(ResStr, (char*)(pMsg->pvApplicationReplyData), pMsg->dwApplicationReplyDataSize);
-						Msg("Connection result : %s", ResStr);
-					}
-					else
-						msg	= "DPN_MSGID_CONNECT_COMPLETE"; 
-				}break;
-			case DPN_MSGID_CREATE_GROUP:				msg	= "DPN_MSGID_CREATE_GROUP"; break;
-			case DPN_MSGID_CREATE_PLAYER:				msg = "DPN_MSGID_CREATE_PLAYER"; break;
-			case DPN_MSGID_DESTROY_GROUP: 				msg = "DPN_MSGID_DESTROY_GROUP"; break;
-			case DPN_MSGID_DESTROY_PLAYER: 				msg = "DPN_MSGID_DESTROY_PLAYER"; break;
-			case DPN_MSGID_ENUM_HOSTS_QUERY:			msg = "DPN_MSGID_ENUM_HOSTS_QUERY"; break;
-			case DPN_MSGID_GROUP_INFO:					msg = "DPN_MSGID_GROUP_INFO"; break;
-			case DPN_MSGID_HOST_MIGRATE:				msg = "DPN_MSGID_HOST_MIGRATE"; break;
-			case DPN_MSGID_INDICATE_CONNECT:			msg = "DPN_MSGID_INDICATE_CONNECT"; break;
-			case DPN_MSGID_INDICATED_CONNECT_ABORTED:	msg = "DPN_MSGID_INDICATED_CONNECT_ABORTED"; break;
-			case DPN_MSGID_PEER_INFO:					msg = "DPN_MSGID_PEER_INFO"; break;
-			case DPN_MSGID_REMOVE_PLAYER_FROM_GROUP:	msg = "DPN_MSGID_REMOVE_PLAYER_FROM_GROUP"; break;
-			case DPN_MSGID_RETURN_BUFFER:				msg = "DPN_MSGID_RETURN_BUFFER"; break;
-			case DPN_MSGID_SEND_COMPLETE:				msg = "DPN_MSGID_SEND_COMPLETE"; break;
-			case DPN_MSGID_SERVER_INFO:					msg = "DPN_MSGID_SERVER_INFO"; break;
-			case DPN_MSGID_TERMINATE_SESSION:			msg = "DPN_MSGID_TERMINATE_SESSION"; break;
-			default:									msg = "???"; break;
-			}
-			//Msg("! ************************************ : %s",msg);
-#endif
-		}
-		break;
-	}
-
-	return S_OK;
-}
-*/
 void IPureClient::OnMessage(void* data, u32 size)
 {
 	// One of the messages - decompress it
@@ -592,7 +437,7 @@ void	IPureClient::UpdateStatistic()
 	net_Statistic.Update(CI);
 }
 
-void	IPureClient::Sync_Average	()
+void IPureClient::Sync_Average	()
 {
 	//***** Analyze results
 	s64		summary_delta	= 0;
@@ -607,15 +452,14 @@ void	IPureClient::Sync_Average	()
 	if (frac>s64(size/2))	summary_delta += (summary_delta<0)?-1:1;
 	net_TimeDelta_Calculated=	s32(summary_delta);
 	net_TimeDelta			=	(net_TimeDelta*5+net_TimeDelta_Calculated)/6;
-//	Msg("* CLIENT: d(%d), dc(%d), s(%d)",net_TimeDelta,net_TimeDelta_Calculated,size);
 }
 
-void	IPureClient::ClearStatistic()
+void IPureClient::ClearStatistic()
 {
 	net_Statistic.Clear();
 }
 
-BOOL	IPureClient::net_IsSyncronised()
+BOOL IPureClient::net_IsSyncronised()
 {
 	return net_Syncronised;
 }
