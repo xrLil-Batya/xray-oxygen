@@ -573,9 +573,22 @@ void CWeaponMagazinedWGrenade::PlayAnimReload()
 	VERIFY(GetState()==eReload);
 
 	if(IsGrenadeLauncherAttached())
-		PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
+	{
+#ifdef NEW_ANIMS_WPN
+   	    if(iAmmoElapsed == 0)
+	    {
+		    PlayHUDMotion("anm_reload_empty_w_gl", TRUE, this, GetState());
+	    }
+	    else
+	    {
+ 		    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
+	    }
+#else
+	    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
+#endif
+	}
 	else
-		inherited::PlayAnimReload();
+        inherited::PlayAnimReload();
 }
 
 void CWeaponMagazinedWGrenade::PlayAnimIdle()
@@ -599,23 +612,31 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 				if(st.bSprint)
 				{
 					act_state = 1;
-				}else
-				if(pActor->AnyMove())
+				}
+				else if(pActor->AnyMove())
 				{
 					act_state = 2;
 				}
+				#ifdef NEW_ANIMS_WPN
+				else if(pActor->AnyMove() && (st.bCrouch))
+				{
+					act_state = 3;
+				}
+				#end
 			}
 
 			if(m_bGrenadeMode)
 			{
-				if(act_state==0)
+				if(act_state == 0)
 					PlayHUDMotion("anm_idle_g", FALSE, NULL, GetState());
-				else
-				if(act_state==1)
+				else if (act_state ==1 )
 					PlayHUDMotion("anm_idle_sprint_g", TRUE, NULL,GetState());
-				else
-				if(act_state==2)
+				else if (act_state == 2)
 					PlayHUDMotion("anm_idle_moving_g", TRUE, NULL,GetState());
+				#ifdef NEW_ANIMS_WPN
+				else if (act_state == 3)
+					PlayHUDMotion("anm_idle_moving_crouch_g", TRUE, NULL,GetState());
+				#endif
 
 			}else
 			{

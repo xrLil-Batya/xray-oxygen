@@ -358,7 +358,7 @@ bool CHudItem::TryPlayAnimIdle()
 				PlayAnimIdleSprint();
 				return true;
 			}else
-			if(!st.bCrouch && pActor->AnyMove())
+			if(pActor->AnyMove())
 			{
 				PlayAnimIdleMoving();
 				return true;
@@ -370,7 +370,21 @@ bool CHudItem::TryPlayAnimIdle()
 
 void CHudItem::PlayAnimIdleMoving()
 {
-	PlayHUDMotion("anm_idle_moving", TRUE, NULL, GetState());
+	CActor* pActor = smart_cast<CActor*>(object().H_Parent());
+	
+    if(pActor)
+	{
+		CEntity::SEntityState st;
+		pActor->g_State(st);
+		
+#ifdef NEW_ANIMS_WPN
+		if (st.bCrouch)
+	        PlayHUDMotion("anm_idle_moving_crouch", TRUE, NULL, GetState()); 
+        else
+#endif	
+		
+            PlayHUDMotion("anm_idle_moving", TRUE, NULL, GetState());
+    }
 }
 
 void CHudItem::PlayAnimIdleSprint()
