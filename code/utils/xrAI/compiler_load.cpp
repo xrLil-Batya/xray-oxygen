@@ -5,6 +5,9 @@
 #include "AIMapExport.h"
 #include <memory>
 
+bool is_thm_missing = false;
+bool is_tga_missing = false;
+
 IC	const Fvector vertex_position(const CLevelGraph::CPosition &Psrc, const Fbox &bb, const SAIParams &params)
 {
 	Fvector				Pdest;
@@ -73,8 +76,9 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 			Fvector*	verts	= (Fvector*)fs->pointer();
 
-			CDB::TRI*	tris	= (CDB::TRI*)(verts+H.vertcount);
-			Level.build			( verts, H.vertcount, tris, H.facecount );
+			CDB::TRI* build_tris = (CDB::TRI*)(verts + H.vertcount);
+			Level.build(verts, H.vertcount, build_tris, H.facecount);
+
 			Level.syncronize	();
 			Msg("* Level CFORM: %dK",Level.memory()/1024);
 
@@ -150,14 +154,16 @@ void xrLoad(LPCSTR name, bool draft_mode)
 					} else {
 						xr_strcat		(N,".thm");
 						IReader* THM	= FS.r_open("$game_textures$",N);
-//						if (!THM)		continue;
 						
-						R_ASSERT2		(THM,	N);
-
+						if (!THM)
+						{
+							clMsg("can't find thm: %s", N);
+							is_thm_missing = true;
+							continue;
+						}
 						// version
 						u32 version				= 0;
 						R_ASSERT				(THM->r_chunk(THM_CHUNK_VERSION,&version));
-						// if( version!=THM_CURRENT_VERSION )	FATAL	("Unsupported version of THM file.");
 
 						// analyze thumbnail information
 						R_ASSERT(THM->find_chunk(THM_CHUNK_TEXTUREPARAM));
@@ -184,7 +190,13 @@ void xrLoad(LPCSTR name, bool draft_mode)
 								clMsg		("- loading: %s",N);
 								u32			w=0, h=0;
 								BT.pSurface = Surface_Load(N,w,h); 
-								R_ASSERT2	(BT.pSurface,"Can't load surface");
+								//R_ASSERT2	(BT.pSurface,"Can't load surface");
+								if (!BT.pSurface)
+								{
+									clMsg("can't find tga texture: %s", N);
+									is_tga_missing = true;
+									continue;
+								}
 								if ((w != BT.dwWidth) || (h != BT.dwHeight))
 									Msg		("! THM doesn't correspond to the texture: %dx%d -> %dx%d", BT.dwWidth, BT.dwHeight, w, h);
 								BT.Vflip	();
@@ -193,28 +205,15 @@ void xrLoad(LPCSTR name, bool draft_mode)
 							}
 						}
 					}
-
 					// save all the stuff we've created
 					g_textures.push_back	(BT);
 				}
+				R_ASSERT2(!is_thm_missing, "Some of required thm's are missing. Please, see log for details.");
+				R_ASSERT2(!is_tga_missing, "Some of required tga are missing. Please, see log for details.");
 			}
 		}
 	}
 	
-//	// Load emitters
-//	{
-//		strconcat			(N,name,"level.game");
-//		IReader				*F = FS.r_open(N);
-//		IReader				*O = 0;
-//		if (0!=(O = F->open_chunk	(AIPOINT_CHUNK))) {
-//			for (int id=0; O->find_chunk(id); id++) {
-//				Emitters.push_back(Fvector());
-//				O->r_fvector3	(Emitters.back());
-//			}
-//			O->close();
-//		}
-//	}
-//
 	// Load lights
 	{
 		strconcat				(sizeof(N),N,name,"build.prj");

@@ -15,35 +15,19 @@ struct CNodeCompressed {
 
 IC void	CNodeCompressed::compress_node(NodeCompressed& Dest, vertex& Src)
 {
-	Dest.light	(15);//compress(Src.LightLevel,15));
+	Dest.light	(15);
 	for	(u8 L=0; L<4; ++L)
 		Dest.link(L,Src.n[L]);
-//	for	(u32 L=0; L<4; ++L)
-//		if ((Src.n[L] < g_nodes.size()) && (Dest.link(L) != Src.n[L])) {
-//			Dest.link(L,Src.n[L]);
-//			Dest.link(L);
-//		}
 }
 
 void	Compress	(NodeCompressed& Dest, vertex& Src, hdrNODES& H)
 {
 	// Compress plane (normal)
 	Dest.plane	= pvCompress	(Src.Plane.n);
-	
 	// Compress position
 	CNodePositionCompressor(Dest.p,Src.Pos,H);
-//	CompressPos	(Dest.p1,Src.P1,H);
-	
-	// Sector
-	// R_ASSERT(Src.sector<=255);
-	// Dest.sector = BYTE(Src.sector);
-
 	// Light & Cover
 	CNodeCompressed().compress_node(Dest,Src);
-//	Dest.cover[0]	= CompressCover(Src.cover[0]);
-//	Dest.cover[1]	= CompressCover(Src.cover[1]);
-//	Dest.cover[2]	= CompressCover(Src.cover[2]);
-//	Dest.cover[3]	= CompressCover(Src.cover[3]);
 	Dest.high.cover0= compress(Src.high_cover[0],15);
 	Dest.high.cover1= compress(Src.high_cover[1],15);
 	Dest.high.cover2= compress(Src.high_cover[2],15);
@@ -52,16 +36,6 @@ void	Compress	(NodeCompressed& Dest, vertex& Src, hdrNODES& H)
 	Dest.low.cover1	= compress(Src.low_cover[1],15);
 	Dest.low.cover2	= compress(Src.low_cover[2],15);
 	Dest.low.cover3	= compress(Src.low_cover[3],15);
-//	Msg				("[%.3f -> %d][%.3f -> %d][%.3f -> %d][%.3f -> %d]",
-//		Src.cover[0],Dest.cover0,
-//		Src.cover[1],Dest.cover1,
-//		Src.cover[2],Dest.cover2,
-//		Src.cover[3],Dest.cover3
-//		);
-
-	// Compress links
-//	R_ASSERT	(Src.neighbours.size()<64);
-//	Dest.links	= BYTE(Src.neighbours.size());
 }
 
 float	CalculateHeight(Fbox& BB)
@@ -103,14 +77,7 @@ class CNodeRenumberer {
 	xr_vector<u32>				&m_renumbering;
 
 public:
-					CNodeRenumberer(
-						xr_vector<NodeCompressed>	&nodes, 
-						xr_vector<u32>				&sorted,
-						xr_vector<u32>				&renumbering
-					) :
-						m_nodes(nodes),
-						m_sorted(sorted),
-						m_renumbering(renumbering)
+	CNodeRenumberer(xr_vector<NodeCompressed> &nodes, xr_vector<u32> &sorted, xr_vector<u32> &renumbering): m_nodes(nodes), m_sorted(sorted), m_renumbering(renumbering)
 	{
 		u32					N = (u32)m_nodes.size();
 		m_sorted.resize		(N);
@@ -158,12 +125,9 @@ void xrSaveNodes(LPCSTR N, LPCSTR out_name)
 	H.guid			= generate_guid();
 	fs->w			(&H,sizeof(H));
 	
-//	fs->w_u32		(g_covers_palette.size());
-//	for (u32 j=0; j<g_covers_palette.size(); ++j)
-//		fs->w		(&g_covers_palette[j],sizeof(g_covers_palette[j]));
-
 	// All nodes
 	Status			("Saving nodes...");
+	compressed_nodes.reserve(g_nodes.size());
 	for (u32 i=0; i<g_nodes.size(); ++i) {
 		vertex			&N	= g_nodes[i];
 		NodeCompressed	NC;

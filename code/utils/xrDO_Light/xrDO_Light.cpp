@@ -5,18 +5,11 @@
 #include "process.h"
 
 #include "../xrlc_light/xrlc_light.h"
-//#pragma comment(linker,"/STACK:0x800000,0x400000")
-
 #pragma comment(lib,"comctl32.lib")
-//#pragma comment(lib,"d3dx9.lib")
-//#pragma comment(lib,"IMAGEHLP.LIB")
 #pragma comment(lib,"winmm.LIB")
 #pragma comment(lib,"xrCDB.lib")
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"xrLC_Light.lib")
-//#pragma comment(lib,"FreeImage.lib")
-
-
 
 extern void logThread			(void *dummy);
 extern volatile BOOL bClose;
@@ -35,13 +28,11 @@ void Help()
 void Startup(LPSTR     lpCmdLine)
 {
 	char cmd[512],name[256];
-//	BOOL bModifyOptions		= FALSE;
 	bool bNet				= false;
 	xr_strcpy(cmd,lpCmdLine);
 	strlwr(cmd);
 	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
 	if (strstr(cmd,"-f")==0)							{ Help(); return; }
-//	if (strstr(cmd,"-o"))								bModifyOptions = TRUE;
 	if ( strstr(cmd,"-net") )						
 														bNet = true;
 	// Give a LOG-thread a chance to startup
@@ -56,8 +47,7 @@ void Startup(LPSTR     lpCmdLine)
 	string256			temp;
 	xr_sprintf			(temp, "%s - Detail Compiler", name);
 	SetWindowText		(logWindow, temp);
-
-	//FS.update_path	(name,"$game_levels$",name);
+	
 	FS.get_path			("$level$")->_set	(name);
 
 	CTimer				dwStartupTime; dwStartupTime.Start();
@@ -76,10 +66,7 @@ void Startup(LPSTR     lpCmdLine)
 	Sleep				(500);
 }
 
-int APIENTRY WinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	// Initialize debugging
 	Debug._initialize	(false);
