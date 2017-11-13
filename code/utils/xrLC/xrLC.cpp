@@ -39,7 +39,7 @@ static const char* h_str =
 	"-nosun			 == disable sun-lighting\n"
 	"-norgb			 == disable common lightmap calculating\n"
 	"-notessellation == skip tessellation for lightmap"
-	"-sp<1-5>		 == the level of priority\n"
+	"-sp<1-4>		 == the level of priority\n"
 	"-f<NAME>		 == compile level in GameData\\Levels\\<NAME>\\\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
@@ -85,7 +85,7 @@ void Startup(LPSTR     lpCmdLine)
 	// Give a LOG-thread a chance to startup
 	//_set_sbh_threshold(1920);
 	InitCommonControls		();
-	thread_spawn			(logThread, "log-update" 1024*1024,0);
+	thread_spawn			(logThread, "log-update", 1024*1024,0);
 	Sleep					(150);
 	
 	// Faster FPU 
