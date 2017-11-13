@@ -68,7 +68,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		{
 			strconcat			(sizeof(N),N,name,"build.cform");
 			IReader*			fs = FS.r_open(N);
-			R_ASSERT			(fs->find_chunk(0));
+			R_ASSERT			(fs, "can`t load build.cform");
 
 			hdrCFORM			H;
 			fs->r				(&H,sizeof(hdrCFORM));
