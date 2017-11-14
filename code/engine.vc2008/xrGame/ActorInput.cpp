@@ -111,6 +111,12 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			SwitchTorch();
 			break;
 		}
+		
+	case kTORCH_MODE:
+		{
+			SwitchTorchMode();
+			break;
+		}
 
 	case kKICK:
 	    {
@@ -598,6 +604,22 @@ void CActor::SwitchTorch()
 		if ( torch )
 		{		
 			torch->Switch();
+			return;
+		}
+	}
+}
+
+void CActor::SwitchTorchMode()
+{ 
+	xr_vector<CAttachableItem*> const& all = CAttachmentOwner::attached_objects();
+	xr_vector<CAttachableItem*>::const_iterator it = all.begin();
+	xr_vector<CAttachableItem*>::const_iterator it_e = all.end();
+	for ( ; it != it_e; ++it )
+	{
+		CTorch* torch = smart_cast<CTorch*>(*it);
+		if (torch)
+		{		
+			torch->SwitchTorchMode();
 			return;
 		}
 	}

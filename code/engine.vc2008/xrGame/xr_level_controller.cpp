@@ -33,7 +33,8 @@ _action  actions[]		= {
 	{ "cam_zoom_in",		kCAM_ZOOM_IN			,_both},	
 	{ "cam_zoom_out",		kCAM_ZOOM_OUT			,_both},	
 															
-	{ "torch",				kTORCH					,_both},	
+	{ "torch",				kTORCH					,_both},
+	{ "torch_mode",			kTORCH_MODE				,_both},
 	{ "night_vision",		kNIGHT_VISION			,_both},	
 	{ "show_detector",		kDETECTOR				,_sp},		
 

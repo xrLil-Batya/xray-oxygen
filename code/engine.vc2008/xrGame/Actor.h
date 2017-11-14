@@ -668,6 +668,8 @@ public:
 	virtual void				OnPrevWeaponSlot				();
 			void				SwitchNightVision				();
 			void				SwitchTorch						();
+			void				SwitchTorchMode					();
+			
 #ifdef DEBUG
 			void				NoClipFly						(int cmd);
 #endif //DEBUG
