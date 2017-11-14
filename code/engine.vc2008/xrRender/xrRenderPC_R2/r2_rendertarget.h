@@ -33,6 +33,7 @@ public:
 	IBlender*					b_combine;
 	IBlender*					b_fxaa;
 	IBlender*					b_sunshafts;
+	IBlender*					b_rain_drops;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -93,6 +94,7 @@ private:
 	// OCCq
 	ref_shader					s_occq;
 	ref_shader					s_SunShafts;
+    ref_shader					s_rain_drops;
 
     ref_shader                  s_fxaa;
     ref_geom					g_fxaa;	
@@ -210,6 +212,7 @@ public:
 
 	void						phase_clear_position	();
 	void						phase_SunShafts			();
+	void						phase_rain_drops		();
 	void						phase_ssao				();
 	void						phase_downsamp			();
 	void						phase_scene_prepare		();
