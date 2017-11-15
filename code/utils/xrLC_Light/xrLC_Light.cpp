@@ -103,7 +103,7 @@ BOOL APIENTRY DllMain( HMODULE hModule,
 			{
 				Debug._initialize	(false);
 				bool init_log	=  (0 != xr_strcmp( Core.ApplicationName, "XRayEditorTools" ));
-				Core._initialize	("xrLC_Light",0,FALSE);
+				Core._initialize	("xrLC_Light",0, TRUE, "fsgame.ltx");
 				if( init_log )
 					CreateLog( );
 				

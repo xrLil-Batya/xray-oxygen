@@ -6,8 +6,7 @@
 #include "log.h"
 #include "../FrayBuildConfig.hpp"
 extern BOOL					LogExecCB		= TRUE;
-static string_path			logFName		= "engine.log";
-static string_path			log_file_name	= "engine.log";
+static string_path			log_file_name;
 static bool 				no_log			= true;
 static std::recursive_mutex	logCS;
 
@@ -21,16 +20,23 @@ static LogCallback			LogCB			= 0;
 
 void FlushLog			()
 {
-	if (!no_log) {
-		std::lock_guard<decltype(logCS)> lock(logCS);
-		IWriter *f = FS.w_open(logFName);
-		if (f) {
-			for (u32 it = 0; it<LogFile->size(); it++) {
-				const char*		s = *((*LogFile)[it]);
-				f->w_string(s ? s : "");
+	try
+	{
+		if (!no_log) {
+			std::lock_guard<decltype(logCS)> lock(logCS);
+			IWriter *f = FS.w_open(log_file_name);
+			if (f) {
+				for (u32 it = 0; it < LogFile->size(); it++) {
+					const char*		s = *((*LogFile)[it]);
+					f->w_string(s ? s : "");
+				}
+				FS.w_close(f);
 			}
-			FS.w_close(f);
 		}
+	}
+	catch (...)
+	{
+		;
 	}
 }
 
@@ -43,8 +49,8 @@ void AddOne(const char *split)
 	std::lock_guard<decltype(logCS)> lock(logCS);
 
 //#ifdef DEBUG
-	OutputDebugString(split);
-	OutputDebugString("\n");
+	//OutputDebugString(split);
+	//OutputDebugString("\n");
 //#endif
 
 	//	DUMP_PHASE;
@@ -223,19 +229,20 @@ void InitLog()
 	LogFile->reserve	(1000);
 }
 
-void CreateLog			(BOOL nl)
+void CreateLog(BOOL nl)
 {
+
     no_log				= !!nl;
 	strconcat(sizeof(log_file_name),	 log_file_name,	"[", Core.UserDate, Core.UserTime, "]", ".log");
-	strconcat(sizeof(lua_log_file_name), lua_log_file_name, Core.ApplicationName, "_", Core.UserName, "lua.log");
+	strconcat(sizeof(lua_log_file_name), lua_log_file_name, Core.ApplicationName, "_", Core.UserName, "_lua.log");
 
 	if (FS.path_exist("$logs$"))
 	{
-		FS.update_path(logFName, "$logs$", log_file_name);
+		FS.update_path(log_file_name, "$logs$", log_file_name);
 		FS.update_path(lua_log_file_name, "$logs$", lua_log_file_name);
 	}
 	if (!no_log){
-        IWriter *f		= FS.w_open	(logFName);
+        IWriter *f		= FS.w_open	(log_file_name);
         if (!f){
         	MessageBox	(nullptr,"Can't create log file.","Error",MB_ICONERROR);
         	abort();

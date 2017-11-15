@@ -303,12 +303,6 @@
     <ClCompile Include="xrMU_Model_Calc_ogf.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>
-    <ClCompile Include="xrMU_Model_export_cform_game.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
-    </ClCompile>
-    <ClCompile Include="xrMU_Model_export_cform_game_s.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
-    </ClCompile>
     <ClCompile Include="xrMU_Model_export_geometry.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>

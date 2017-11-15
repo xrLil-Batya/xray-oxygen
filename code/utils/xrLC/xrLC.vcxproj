@@ -531,20 +531,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="xrMU_Model_Calc_ogf.cpp" />
-    <ClCompile Include="xrMU_Model_export_cform_game.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
-    <ClCompile Include="xrMU_Model_export_cform_game_s.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="xrMU_Model_export_geometry.cpp" />
     <ClCompile Include="xrMU_Model_export_OGF.cpp" />
     <ClCompile Include="net.cpp" />

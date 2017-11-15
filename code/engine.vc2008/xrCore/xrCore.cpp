@@ -30,14 +30,8 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 {
 	std::set_terminate(abort);
 	xr_strcpy					(ApplicationName,_ApplicationName);
-	if (!init_counter) {
-#ifdef XRCORE_STATIC	
-		_clear87	();
-		_control87	( _PC_53,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
-		_control87	( _RC_NEAR, MCW_RC );
-		_control87	( _MCW_EM,  MCW_EM );
-#endif
+	if (!init_counter)
+	{
 		// Init COM so we can use CoCreateInstance
 		xr_strcpy			(Params,sizeof(Params),GetCommandLine());
 //		_strlwr_s			(Params,sizeof(Params));
@@ -74,12 +68,12 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 
 		DUMP_PHASE;
 
-		InitLog				();
-		_initialize_cpu		();
-		rtc_initialize		();
+		InitLog();
+		_initialize_cpu();
+		rtc_initialize();
 
-		xr_FS				= new CLocatorAPI();
-		xr_EFS				= new EFS_Utils();
+		xr_FS = new CLocatorAPI();
+		xr_EFS= new EFS_Utils();
 	}
 	if (init_fs){
 		u32 flags			= 0;
@@ -103,7 +97,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 		Msg					("Process heap 0x%08x",GetProcessHeap());
 #endif // DEBUG
 	}
-	SetLogCB				(cb);
+	SetLogCB(cb);
 	init_counter++;
 }
 
