@@ -69,7 +69,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			string_path cform_path, rc_face_path;
 			strconcat(sizeof(cform_path), cform_path, name, "level.cform");
 			IReader* fs = FS.r_open(cform_path);
-			R_ASSERT2(fs, "can`t load build.cform");
+			R_ASSERT2(fs, "can`t load level.cform");
 
 			hdrCFORM			H;
 			
@@ -87,13 +87,24 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			g_rc_faces.resize	(H.facecount);
 			/////////////////////////////////////////////////////////////////////
 			// New rc_face reader
-			strconcat(sizeof(rc_face_path), rc_face_path, name, "build.rc_face");
-			IReader* face_fs = FS.r_open(cform_path);
-			R_ASSERT(face_fs->find_chunk(0));
+			strconcat(sizeof(rc_face_path), rc_face_path, name, "build.rc_faces");
+			IReader* Face_fs = FS.r_open(rc_face_path);
+			R_ASSERT2(Face_fs, "can`t load build.rc_faces");
 
-			face_fs->open_chunk(0);
-			face_fs->r(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
-			face_fs->close();
+			Face_fs->open_chunk(0);
+			for (auto &it : g_rc_faces)
+			{
+				it.reserved = Face_fs->r_u16();
+				it.dwMaterial = Face_fs->r_u16();
+				it.dwMaterialGame = Face_fs->r_u32();
+				//it.t[0].x = Face_fs->r_float();
+				//it.t[0].y = Face_fs->r_float();
+				Face_fs->r_fvector2(it.t[0]);
+				Face_fs->r_fvector2(it.t[1]);
+				Face_fs->r_fvector2(it.t[2]);
+			}
+			//face_fs->r(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
+			Face_fs->close();
 			/////////////////////////////////////////////////////////////////////
 			LevelBB.set			(H.aabb);
 			FS.r_close			(fs);
