@@ -70,8 +70,8 @@ struct hdrLEVEL
 struct hdrCFORM
 {
 	u32		version;
-	u32		vertcount;
-	u32		facecount;
+	size_t	vertcount;
+	size_t	facecount;
 	Fbox	aabb;
 };
 
@@ -303,6 +303,6 @@ typedef	SNodePositionOld NodePosition;
 
 const u32 XRCL_CURRENT_VERSION		=	18; //17;	// input
 const u32 XRCL_PRODUCTION_VERSION	=	14;	// output 
-const u32 CFORM_CURRENT_VERSION		=	4;
+const u32 CFORM_CURRENT_VERSION		=	5;
 const u32 MAX_NODE_BIT_COUNT		=	23;
 const u32 XRAI_CURRENT_VERSION		=	10;

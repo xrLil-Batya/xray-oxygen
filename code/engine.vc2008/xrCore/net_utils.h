@@ -5,7 +5,7 @@ static constexpr const size_t NET_PacketSizeLimit = 16 * 1024;
 
 struct NET_Buffer {
     BYTE data[NET_PacketSizeLimit];
-    u32 count;
+    size_t count;
 };
 
 class XRCORE_API NET_Packet {
@@ -49,7 +49,7 @@ public:
         VERIFY(p && count);
         VERIFY(B.count + count < NET_PacketSizeLimit);
         std::memcpy(&B.data[B.count], p, count);
-        B.count += (u32)count;
+        B.count += count;
         VERIFY(B.count < NET_PacketSizeLimit);
     }
 

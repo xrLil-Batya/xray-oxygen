@@ -8,10 +8,10 @@ const u32 XR_MAX_PORTAL_VERTS	= 6;
 // internal use
 struct b_rc_face
 {
+	u16					reserved;
 	u16					dwMaterial;
 	u32					dwMaterialGame;
 	Fvector2			t[3];				// TC
-	u16					reserved;
 };
 // All types to interact with xrLC
 typedef Fvector			b_vertex;
