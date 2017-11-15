@@ -262,6 +262,7 @@ float		ps_prop_ss_sample_step_phase1	=	.03f;
 //float		ps_prop_ss_sample_step_phase2	=	.33f;
 float		ps_prop_ss_blend				=	.066f;
 float		ps_prop_ss_intensity			=	1.f;
+float		ps_r2_rain_rops_debug_control   =   1.f;
 
 
 //- Mad Max
@@ -849,6 +850,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale",		&ps_r2_sun_lumscale,		-1.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
+	CMD4(CCC_Float,		"r2_rain_drops_debug_intensity",	&ps_r2_rain_rops_debug_control,	0.f,	3.f);
 
 	
 	

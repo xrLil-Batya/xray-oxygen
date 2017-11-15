@@ -28,9 +28,10 @@ struct		OUTStruct
 //
 uniform		sampler2D		sScene;
 uniform		sampler2D		sPosition;
-uniform		sampler2D		sMask;//sunshafts occlusion mask
-uniform		sampler2D		sMaskBlur;//smoothed mask
-uniform		sampler2D		sSunShafts;//
+uniform		sampler2D		sMask;          //sunshafts occlusion mask
+uniform		sampler2D		sMaskBlur;      //smoothed mask
+uniform		sampler2D		sSunShafts;     //
+uniform		sampler2D		s_rain_drops0;  //rain drops du/dv map
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -39,6 +40,7 @@ uniform		sampler2D		sSunShafts;//
 //uniform		half4		SampleStepParams;
 //uniform		half4		BlendParams;
 //uniform		half4		SSIntensity;
+uniform 	float2 			rain_drops_params0; //x-weather control,y-debug intensity
 uniform		half4		SSParams;
 uniform		half4		SSParamsDISPLAY;
 

@@ -82,7 +82,6 @@ void CTorch::Load(LPCSTR section)
 	inherited::Load			(section);
 	light_trace_bone		= pSettings->r_string(section,"light_trace_bone");
 
-
 	m_bNightVisionEnabled = !!pSettings->r_bool(section,"night_vision");
 }
 
@@ -205,6 +204,8 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return				(FALSE);
 	
+	torch_mode               = 1;
+	
 	bool b_r2				 = !!psDeviceFlags.test(rsR2);
 	b_r2					|= !!psDeviceFlags.test(rsR3);
 	b_r2					|= !!psDeviceFlags.test(rsR4);
@@ -216,35 +217,60 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	guid_bone				= K->LL_BoneID	(pUserData->r_string("torch_definition","guide_bone"));	VERIFY(guid_bone!=BI_NONE);
 
 	Fcolor clr				= pUserData->r_fcolor				("torch_definition",(b_r2)?"color_r2":"color");
-	fBrightness				= clr.intensity();
-	float range				= pUserData->r_float				("torch_definition",(b_r2)?"range_r2":"range");
-	light_render->set_color	(clr);
-	light_render->set_range	(range);
+	range				    = pUserData->r_float				("torch_definition",(b_r2)?"range_r2":"range");
+	range2				    = pUserData->r_float				("torch_definition",(b_r2)?"range_r2_2":"range_2");
 
 	Fcolor clr_o			= pUserData->r_fcolor				("torch_definition",(b_r2)?"omni_color_r2":"omni_color");
-	float range_o			= pUserData->r_float				("torch_definition",(b_r2)?"omni_range_r2":"omni_range");
-	light_omni->set_color	(clr_o);
-	light_omni->set_range	(range_o);
-
+	range_o			        = pUserData->r_float				("torch_definition",(b_r2)?"omni_range_r2":"omni_range");
+	range_o2			    = pUserData->r_float			    ("torch_definition",(b_r2)?"omni_range_r2_2":"omni_range_2");
+	
+	glow_radius			    = pUserData->r_float			    ("torch_definition","glow_radius");
+	glow_radius2			= pUserData->r_float			    ("torch_definition","glow_radius_2");
+	
+	fBrightness	= clr.intensity();
+	light_render->set_color	(clr);
+	light_omni->set_color(clr_o);
+	light_render->set_range(range);
+	light_omni->set_range(range_o );
+	
 	light_render->set_cone	(deg2rad(pUserData->r_float			("torch_definition","spot_angle")));
 	light_render->set_texture(pUserData->r_string				("torch_definition","spot_texture"));
-
-	glow_render->set_texture(pUserData->r_string				("torch_definition","glow_texture"));
+	
 	glow_render->set_color	(clr);
-	glow_render->set_radius	(pUserData->r_float					("torch_definition","glow_radius"));
-
+	glow_render->set_texture(pUserData->r_string				("torch_definition","glow_texture"));
+	glow_render->set_radius	(glow_radius);
+	
 	//включить/выключить фонарик
 	Switch					(torch->m_active);
 	VERIFY					(!torch->m_active || (torch->ID_Parent != 0xffff));
 	
 	if(torch->ID_Parent == 0)		
 		SwitchNightVision	(torch->m_nightvision_active, false);
-	//else
-	//	SwitchNightVision	(false, false);
 
 	m_delta_h				= PI_DIV_2-atan((range*0.5f)/_abs(TORCH_OFFSET.x));
 
 	return					(TRUE);
+}
+
+void CTorch::SwitchTorchMode()
+{
+	if (!m_switched_on)
+		return;
+	
+	if (torch_mode == 1)
+	{
+		torch_mode = 2;
+		light_render->set_range(range);
+	    light_omni->set_range(range_o);
+		glow_render->set_radius(glow_radius);
+	}
+	else
+	{
+		torch_mode = 1;
+		light_render->set_range(range2);
+	    light_omni->set_range(range_o2);
+		glow_render->set_radius(glow_radius2);
+	}
 }
 
 void CTorch::net_Destroy() 
@@ -531,7 +557,7 @@ void CNightVisionEffector::PlaySounds(EPlaySounds which)
 {
 	if(!m_pActor)
 		return;
-
+	
 	bool bPlaySoundFirstPerson = !!m_pActor->HUDview();
 	switch(which)
 	{
