@@ -66,7 +66,7 @@ bool xrCompressor::testSKIP(LPCSTR path)
 	if (0==stricmp(p_name,"build")) 
 	{
 		if (0==stricmp(p_ext,".aimap")	)	return true;
-		if (0==stricmp(p_ext,".cform")	)	return true;
+		if (0==stricmp(p_ext,".rc_faces"))	return true;
 		if (0==stricmp(p_ext,".details"))	return true;
 		if (0==stricmp(p_ext,".prj")	)	return true;
 		if (0==stricmp(p_ext,".lights")	)	return false;

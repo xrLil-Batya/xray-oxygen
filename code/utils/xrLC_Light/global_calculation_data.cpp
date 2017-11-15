@@ -36,8 +36,8 @@ void global_claculation_data::xrLoad()
 
 	// Load CFORM
 	{
-		FS.update_path			(N,"$level$","build.cform");
-		IReader*			fs = FS.r_open("$level$","build.cform");
+		FS.update_path			(N,"$level$","level.cform");
+		IReader*			fs = FS.r_open("$level$","level.cform");
 		
 		R_ASSERT			(fs->find_chunk(0));
 		hdrCFORM			H;
@@ -51,6 +51,24 @@ void global_claculation_data::xrLoad()
 
 		g_rc_faces.resize	(H.facecount);
 		R_ASSERT(fs->find_chunk(1));
+
+		IReader* Face_fs = FS.r_open("$level$", "build.rc_faces");
+		R_ASSERT2(Face_fs, "can`t load build.rc_faces");
+
+		Face_fs->open_chunk(0);
+		for (auto &it : g_rc_faces)
+		{
+			it.reserved = Face_fs->r_u16();
+			it.dwMaterial = Face_fs->r_u16();
+			it.dwMaterialGame = Face_fs->r_u32();
+			//it.t[0].x = Face_fs->r_float();
+			//it.t[0].y = Face_fs->r_float();
+			Face_fs->r_fvector2(it.t[0]);
+			Face_fs->r_fvector2(it.t[1]);
+			Face_fs->r_fvector2(it.t[2]);
+		}
+		//face_fs->r(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
+		Face_fs->close();
 		fs->r				(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
 
 		LevelBB.set			(H.aabb);

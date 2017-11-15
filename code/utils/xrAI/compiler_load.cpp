@@ -97,13 +97,10 @@ void xrLoad(LPCSTR name, bool draft_mode)
 				it.reserved = Face_fs->r_u16();
 				it.dwMaterial = Face_fs->r_u16();
 				it.dwMaterialGame = Face_fs->r_u32();
-				//it.t[0].x = Face_fs->r_float();
-				//it.t[0].y = Face_fs->r_float();
 				Face_fs->r_fvector2(it.t[0]);
 				Face_fs->r_fvector2(it.t[1]);
 				Face_fs->r_fvector2(it.t[2]);
 			}
-			//face_fs->r(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
 			Face_fs->close();
 			/////////////////////////////////////////////////////////////////////
 			LevelBB.set			(H.aabb);
