@@ -66,26 +66,35 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 		// Load CFORM
 		{
-			strconcat			(sizeof(N),N,name,"build.cform");
-			IReader*			fs = FS.r_open(N);
-			R_ASSERT			(fs, "can`t load build.cform");
+			string_path cform_path, rc_face_path;
+			strconcat(sizeof(cform_path), cform_path, name, "level.cform");
+			IReader* fs = FS.r_open(cform_path);
+			R_ASSERT2(fs, "can`t load build.cform");
 
 			hdrCFORM			H;
+			
 			fs->r				(&H,sizeof(hdrCFORM));
 			R_ASSERT			(CFORM_CURRENT_VERSION==H.version);
 
 			Fvector*	verts	= (Fvector*)fs->pointer();
 
 			CDB::TRI* build_tris = (CDB::TRI*)(verts + H.vertcount);
-			Level.build(verts, H.vertcount, build_tris, H.facecount);
+			Level.build(verts, H.vertcount, build_tris, H.facecount/* , nullptr, nullptr, false */);
 
 			Level.syncronize	();
 			Msg("* Level CFORM: %dK",Level.memory()/1024);
 
 			g_rc_faces.resize	(H.facecount);
-			R_ASSERT(fs->find_chunk(1));
-			fs->r				(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
+			/////////////////////////////////////////////////////////////////////
+			// New rc_face reader
+			strconcat(sizeof(rc_face_path), rc_face_path, name, "build.rc_face");
+			IReader* face_fs = FS.r_open(cform_path);
+			R_ASSERT(face_fs->find_chunk(0));
 
+			face_fs->open_chunk(0);
+			face_fs->r(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
+			face_fs->close();
+			/////////////////////////////////////////////////////////////////////
 			LevelBB.set			(H.aabb);
 			FS.r_close			(fs);
 		}

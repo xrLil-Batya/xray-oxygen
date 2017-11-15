@@ -212,7 +212,7 @@ void CBuild::Run	(LPCSTR P)
 		mem_Compact					();
 		Phase("Building tangent-basis...");
 	}
-
+	
 	//****************************************** GLOBAL-RayCast model
 	FPU::m64r					();
 	Msg("%s", "Building rcast-CFORM model...");

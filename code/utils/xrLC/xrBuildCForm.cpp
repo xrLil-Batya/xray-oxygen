@@ -146,13 +146,13 @@ void CBuild::BuildCForm	()
 	// Header
 	hdrCFORM hdr;
 	hdr.version		= CFORM_CURRENT_VERSION;
-	hdr.vertcount	= (u32)CL.getVS();
-	hdr.facecount	= (u32)CL.getTS();
+	hdr.vertcount	= CL.getVS();
+	hdr.facecount	= CL.getTS();
 	hdr.aabb		= BB;
-	MFS->w			(&hdr,sizeof(hdr));
+	MFS->w			(&hdr, sizeof(hdr));
 
 	// Data
-	MFS->w			(CL.getV(),(u32)CL.getVS()*sizeof(Fvector));
+	MFS->w			(CL.getV(), CL.getVS() * sizeof(Fvector));
 #ifdef _M_X64
 	for (size_t i = 0; i < CL.getTS(); ++i)
 	{
@@ -161,7 +161,7 @@ void CBuild::BuildCForm	()
 		MFS->w_u32(tri->dummy_low);
 	}
 #else
-	MFS->w			(CL.getT(),(u32)CL.getTS()*sizeof(CDB::TRI));
+	MFS->w			(CL.getT(),CL.getTS()*sizeof(CDB::TRI));
 #endif
 	// Clear pDeflector (it is stored in the same memory space with dwMaterialGame)
 	for (vecFaceIt I=lc_global_data()->g_faces().begin(); I!=lc_global_data()->g_faces().end(); I++)

@@ -73,15 +73,15 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		adjacent_vec.erase	(std::unique(adjacent_vec.begin(),adjacent_vec.end()),adjacent_vec.end());
 
 		// Unique
-		BOOL			bAlready	= FALSE;
+		bool bAlready = false;
 		for (u32 ait=0; ait<adjacent_vec.size(); ++ait)
 		{
-			Face*	Test					= adjacent_vec[ait];
+			Face* Test = adjacent_vec[ait];
 			if (Test==F)					continue;
 			if (!Test->flags.bProcessed)	continue;
 			if (FaceEqual(*F,*Test))
 			{
-				bAlready					= TRUE;
+				bAlready = true;
 				break;
 			}
 		}
@@ -90,7 +90,7 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		if (!bAlready) 
 		{
 			F->flags.bProcessed	= true;
-			CL.add_face_D(F->v[0]->P, F->v[1]->P, F->v[2]->P, *((u64*)&F), F->sm_group);
+			CL.add_face_D(F->v[0]->P, F->v[1]->P, F->v[2]->P, *((size_t*)&F), F->sm_group);
 		}
 	}
 
@@ -121,7 +121,6 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		Status					("Saving...");
 		string_path				fn;
 
-		IWriter*		MFS		= FS.w_open	(strconcat(sizeof(fn),fn,pBuild->path,"build.cform"));
 		xr_vector<b_rc_face>	rc_faces;
 		rc_faces.resize			(CL.getTS());
 		// Prepare faces
@@ -141,32 +140,11 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 				SaveUVM			(strconcat(sizeof(fn),fn,pBuild->path,"build_cform_source.uvm"),rc_faces);
 		}
 
-		MFS->open_chunk			(0);
-
-		// Header
-		hdrCFORM hdr;
-		hdr.version				= CFORM_CURRENT_VERSION;
-		hdr.vertcount			= (u32)CL.getVS();
-		hdr.facecount			= (u32)CL.getTS();
-		hdr.aabb				= scene_bb;
-		MFS->w					(&hdr,sizeof(hdr));
-
-		// Data
-		MFS->w					(CL.getV(),(u32)CL.getVS()*sizeof(Fvector));
-//#ifdef _M_X64
-//		for (size_t i = 0; i < CL.getTS(); ++i)
-//		{
-//			CDB::TRI_DEPRECATED *tri = reinterpret_cast<CDB::TRI_DEPRECATED*>(&CL.getT()[i]);
-//			MFS->w(&(tri->verts[0]), 12);
-//			MFS->w_u32(tri->dummy);
-//		}
-//#else
-		MFS->w					(CL.getT(),(u32)CL.getTS()*sizeof(CDB::TRI));
-//#endif
-		MFS->close_chunk		();
-
-		MFS->open_chunk			(1);
-		MFS->w					(&*rc_faces.begin(),(u32)rc_faces.size()*sizeof(b_rc_face));
-		MFS->close_chunk		();
+#pragma error("Need fix: Faces_FS->w")
+		IWriter* Faces_FS = FS.w_open(strconcat(sizeof(fn), fn, pBuild->path, "build.rc_faces"));
+		Faces_FS->open_chunk(0);
+		Faces_FS->w(&*rc_faces.begin(), rc_faces.size() * sizeof(b_rc_face));
+		Faces_FS->close_chunk();
+		FS.w_close(Faces_FS);
 	}
 }

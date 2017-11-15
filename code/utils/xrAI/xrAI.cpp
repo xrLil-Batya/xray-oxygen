@@ -14,7 +14,7 @@
 #include <mmsystem.h>
 #include "spawn_patcher.h"
 
-#pragma comment(linker,"/STACK:0x800000,0x400000")
+//#pragma comment(linker,"/STACK:0x800000,0x400000")
 
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -187,22 +187,22 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 
 	buffer_vector_test		();
 
-	HMODULE					hFactory;
-	LPCSTR					g_name	= "xrSE_Factory.dll";
-	Log						("Loading DLL:",g_name);
-	hFactory				= LoadLibrary	(g_name);
-	if (0==hFactory)		R_CHK			(GetLastError());
-	R_ASSERT2				(hFactory,"Factory DLL raised exception during loading or there is no factory DLL at all");
-#ifdef _M_X64
-	create_entity =		(Factory_Create*)  GetProcAddress(hFactory, "create_entity");		R_ASSERT(create_entity);
-	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory, "destroy_entity");		R_ASSERT(destroy_entity);
-#else
-	create_entity =		(Factory_Create*)  GetProcAddress(hFactory,"_create_entity@4");		R_ASSERT(create_entity);
-	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory,"_destroy_entity@4");	R_ASSERT(destroy_entity);
-#endif
+//	HMODULE					hFactory;
+//	LPCSTR					g_name	= "xrSE_Factory.dll";
+//	Log						("Loading DLL:",g_name);
+//	hFactory				= LoadLibrary	(g_name);
+//	if (0==hFactory)		R_CHK			(GetLastError());
+//	R_ASSERT2				(hFactory,"Factory DLL raised exception during loading or there is no factory DLL at all");
+//#ifdef _M_X64
+//	create_entity =		(Factory_Create*)  GetProcAddress(hFactory, "create_entity");		//R_ASSERT(create_entity);
+//	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory, "destroy_entity");		//R_ASSERT(destroy_entity);
+//#else
+//	create_entity =		(Factory_Create*)  GetProcAddress(hFactory,"_create_entity@4");		R_ASSERT(create_entity);
+//	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory,"_destroy_entity@4");	R_ASSERT(destroy_entity);
+//#endif
 	Startup					(lpCmdLine);
 
-	FreeLibrary				(hFactory);
+//	FreeLibrary				(hFactory);
 
 	Core._destroy			();
 
