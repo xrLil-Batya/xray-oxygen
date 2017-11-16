@@ -54,7 +54,7 @@ public:
     }
 
     IC void w_seek(const u32 pos, const void* p, const u32 count);
-    u32 w_tell() const { return B.count; }
+    u32 w_tell() const { return (u32)B.count; }
 
     // writing - utilities
     IC void w_float(const float a) {
@@ -197,7 +197,7 @@ public:
     }
 
     IC u32 r_elapsed() const {
-        return B.count - r_pos;
+        return u32(B.count - r_pos);
     }
 
     void r_advance(const u32 size);
