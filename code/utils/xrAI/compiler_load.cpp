@@ -74,7 +74,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			hdrCFORM			H;
 			
 			fs->r				(&H,sizeof(hdrCFORM));
-			R_ASSERT			(CFORM_CURRENT_VERSION==H.version);
+//			R_ASSERT			(CFORM_CURRENT_VERSION==H.version);
 
 			Fvector*	verts	= (Fvector*)fs->pointer();
 

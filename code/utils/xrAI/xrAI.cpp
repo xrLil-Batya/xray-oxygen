@@ -172,9 +172,6 @@ void Startup(LPSTR     lpCmdLine)
 
 #include "quadtree.h"
 
-Factory_Create	*create_entity	= 0;
-Factory_Destroy	*destroy_entity	= 0;
-
 void buffer_vector_test		();
 
 int APIENTRY WinMain(HINSTANCE hInstance,
@@ -207,4 +204,19 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	Core._destroy			();
 
 	return					(0);
+}
+
+CSE_Abstract *F_entity_Create(LPCSTR section)
+{
+	ISE_Abstract	*i = create_entity(section);
+	CSE_Abstract	*j = smart_cast<CSE_Abstract*>(i);
+	return			(j);
+//	return nullptr;
+}
+
+void F_entity_Destroy(CSE_Abstract *&i)
+{
+	ISE_Abstract	*j = i;
+//	destroy_entity(j);
+	i = 0;
 }
