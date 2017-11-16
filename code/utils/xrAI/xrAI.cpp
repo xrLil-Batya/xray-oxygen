@@ -217,6 +217,6 @@ CSE_Abstract *F_entity_Create(LPCSTR section)
 void F_entity_Destroy(CSE_Abstract *&i)
 {
 	ISE_Abstract	*j = i;
-//	destroy_entity(j);
+	destroy_entity(j);
 	i = 0;
 }
