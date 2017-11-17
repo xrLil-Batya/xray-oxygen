@@ -45,15 +45,8 @@ public:
 	void					max			(base_color& s)								{ 	rgb.max(s.rgb); hemi=std::max(hemi,s.hemi); sun=std::max(sun,s.sun); };
 	void					lerp		(base_color& A, base_color& B, float s)		{ 	rgb.lerp(A.rgb,B.rgb,s); float is=1-s;  hemi=is*A.hemi+s*B.hemi; sun=is*A.sun+s*B.sun; };
 };
-
-
-//IC	u8	u8_clr				(float a)	{ s32 _a = iFloor(a*255.f); clamp(_a,0,255); return u8(_a);		};
-//IC	u8	u8_clr				(float a)	{ s32 _a = iFloor(a*255.f); clamp(_a,0,255); return u8(_a);		};
-
-
 //-----------------------------------------------------------------------------------------------------------------
 const int	LIGHT_Count				=	7;
-
 //-----------------------------------------------------------------
 thread_local		Time		t_start;
 thread_local		Duration	t_time;
@@ -318,8 +311,8 @@ bool detail_slot_calculate( u32 _x, u32 _z, DetailSlot&	DS, DWORDVec& box_result
 	BB.get_CD			( bbC, bbD );	bbD.add( 0.01f );
 	DB.box_query		( &gl_data.RCAST_Model, bbC, bbD );
 
-	box_result.clear	();
-	for (CDB::RESULT* I=DB.r_begin(); I!=DB.r_end(); I++) box_result.push_back(I->id);
+	box_result.clear();
+	for (CDB::RESULT* I = DB.r_begin(); I != DB.r_end(); I++) box_result.push_back(I->id);
 	if (box_result.empty())	
 		return false; 
 		//continue;
@@ -333,35 +326,36 @@ bool detail_slot_calculate( u32 _x, u32 _z, DetailSlot&	DS, DWORDVec& box_result
 	// lighting itself
 	base_color		amount;
 	u32				count	= 0;
-	float coeff		= DETAIL_SLOT_SIZE_2/float(LIGHT_Count);
+	const float coeff = DETAIL_SLOT_SIZE_2 / float(LIGHT_Count);
 	FPU::m64r		();
-	for (int x=-LIGHT_Count; x<=LIGHT_Count; x++) 
+	for (int x = -LIGHT_Count; x <= LIGHT_Count; x++)
 	{
 		Fvector		P;
 		P.x			= bbC.x + coeff*float(x);
 
-		for (int z=-LIGHT_Count; z<=LIGHT_Count; z++) 
+		for (int z = -LIGHT_Count; z <= LIGHT_Count; z++)
 		{
 			// compute position
 			Fvector t_n;	t_n.set(0,1,0);
-			P.z				= bbC.z + coeff*float(z);
+			P.z				= bbC.z + coeff * z;
 			P.y				= BB.min.y-5;
 			Fvector	dir;	dir.set		(0,-1,0);
 			Fvector start;	start.set	(P.x,BB.max.y+EPS,P.z);
 			
 			float r_u,r_v,r_range;
-			for (auto tit: box_result)
+			for (auto tit : box_result)
 			{
-				CDB::TRI&	T		= tris	[tit];
-				Fvector		V[3]	= { verts[T.verts[0]], verts[T.verts[1]], verts[T.verts[2]] };
-				if (CDB::TestRayTri(start,dir,V,r_u,r_v,r_range,TRUE))
-					if (r_range>=0.f)	{
-						float y_test	= start.y - r_range;
-						if (y_test>P.y)	{
-							P.y			= y_test+EPS;
-							t_n.mknormal(V[0],V[1],V[2]);
-						}
+				CDB::TRI&	T = tris[tit];
+				Fvector		V[3] = { verts[T.verts[0]], verts[T.verts[1]], verts[T.verts[2]] };
+				if (CDB::TestRayTri(start, dir, V, r_u, r_v, r_range, true) && (r_range >= 0.f))
+				{
+					const float y_test = start.y - r_range;
+					if (y_test > P.y) 
+					{
+						P.y = y_test + EPS;
+						t_n.mknormal(V[0], V[1], V[2]);
 					}
+				}
 			}
 			if (P.y<BB.min.y) continue;
 			

@@ -13,9 +13,6 @@
     <Filter Include="Kernel\Generic">
       <UniqueIdentifier>{49af9f34-2359-4664-b5b9-48d74f20da27}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\CDB">
-      <UniqueIdentifier>{f3c16031-f786-4993-9257-644a2bb278f6}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
