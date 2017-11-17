@@ -309,7 +309,7 @@ IC void isolate_vertices(BOOL bProgress, xr_vector<typeVertex*> &vertices )
 {
 	if (bProgress)		Status		("Isolating vertices...");
 	//g_bUnregister		= false;
-	const u32 verts_old		= vertices.size();
+	const u32 verts_old		= (u32)vertices.size();
 
 	for (int it=0; it<int(verts_old); ++it)	
 	{

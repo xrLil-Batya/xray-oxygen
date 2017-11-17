@@ -175,7 +175,7 @@ namespace lc_net
 		DWORD t_id = id;
 		string_path data;
 		string_path files;
-		strconcat(sizeof(data), data, libraries, e->data_files(files));
+		strconcat(sizeof(data), data, e->data_files(files), "");
 		std::lock_guard<decltype(run_task_lock)> lock(run_task_lock);
 		bool ok = false;
 		run_task:;

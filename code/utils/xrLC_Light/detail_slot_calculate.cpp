@@ -366,7 +366,7 @@ bool detail_slot_calculate( u32 _x, u32 _z, DetailSlot&	DS, DWORDVec& box_result
 			if (P.y<BB.min.y) continue;
 			
 			// light point
-			LightPoint		(&DB,amount,P,t_n,Selected, (data->b_skiplmap() ? LP_dont_rgb : 0) | (data->b_nosun() ? LP_dont_sun : 0));
+			LightPoint		(&DB,amount,P,t_n,Selected, (inlc_global_data()->b_skiplmap() ? LP_dont_rgb : 0) | (inlc_global_data()->b_nosun() ? LP_dont_sun : 0));
 			count			+= 1;
 		}
 	}

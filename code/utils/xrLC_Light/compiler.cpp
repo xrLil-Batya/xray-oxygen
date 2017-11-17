@@ -35,13 +35,16 @@ void xrCompileDO(bool net, bool rgb, bool sun)
 
 	Phase		("Lighting nodes...");
 
+	if (!inlc_global_data())
+		create_global_data();
+
+	lc_global_data()->b_nosun_set(sun);
+	lc_global_data()->b_skiplmap_set(rgb);
+
 	if(net)
 		lc_net::xrNetDOLight();
 	else
 		xrLight		();
-
-	lc_global_data()->b_nosun_set(sun);
-	lc_global_data()->b_skiplmap_set(rgb);
 
 	gl_data.slots_data.Free();
 	

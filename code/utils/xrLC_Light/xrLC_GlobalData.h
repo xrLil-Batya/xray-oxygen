@@ -55,15 +55,15 @@ private:
 public:
 
 public:
-									xrLC_GlobalData	();//:_RCAST_Model (0), _b_nosun(false),_gl_linear(false){}
+									xrLC_GlobalData	();
 									~xrLC_GlobalData();
 		IC xr_vector<b_BuildTexture>& textures		()		{	return _cl_globs._textures; }
 		IC xr_vector<CLightmap*>	& lightmaps		()		{	return _g_lightmaps; }
 		IC xr_vector<b_material>	& materials		()		{	return _cl_globs._materials; }
 		IC Shader_xrLC_LIB			& shaders		()		{	return _cl_globs._shaders; }
 		IC CMemoryWriter			&err_invalid	()		{	return _err_invalid; }
-		IC CMemoryWriter			&err_multiedge	()		{ return _err_multiedge;  };
-		IC CMemoryWriter			&err_tjunction	()		{ return _err_tjunction;  };
+		IC CMemoryWriter			&err_multiedge	()		{	return _err_multiedge;  };
+		IC CMemoryWriter			&err_tjunction	()		{	return _err_tjunction;  };
 		IC b_params					&g_params		()		{	return _cl_globs._g_params; }
 			
 		Face						*create_face	()		;
@@ -78,8 +78,7 @@ public:
 		vecFace						&g_faces		()		{	return	_g_faces; }
 		vecDefl						&g_deflectors	()		{	return	_g_deflectors; }
 		bool						b_r_vertices	()		;
-		bool						vert_construct_register(){return !b_r_vertices() && !b_vert_not_register; }
-//		bool						b_r_faces		()		;
+		bool						vert_construct_register(){	return !b_r_vertices() && !b_vert_not_register; }
 		base_lighting				&L_static		()		{	return _cl_globs._L_static; }
 		CDB::MODEL*					RCAST_Model		()		{	return _cl_globs._RCAST_Model; }
 		xr_vector<xrMU_Model*>		&mu_models		()		{	return _mu_models; }
@@ -94,11 +93,11 @@ public:
 		void						close_models_write		()const ;
 
 
-IC		bool						b_skiplmap		()		{	return _b_slmap; }
-IC		bool						b_nosun			()		{	return _b_nosun; }
-IC		bool						gl_linear		()		{	return _gl_linear; }
-IC		void						b_nosun_set		(bool v){	_b_nosun = v; }
-IC		void						b_skiplmap_set	(bool v){	_b_slmap = v; }
+		bool						b_skiplmap		()		{	return _b_slmap; }
+		bool						b_nosun			()		{	return _b_nosun; }
+		bool						gl_linear		()		{	return _gl_linear; }
+		void						b_nosun_set		(bool v){	_b_nosun = v; }
+		void						b_skiplmap_set	(bool v){	_b_slmap = v; }
 		void						initialize		()		;
 		void						destroy_rcmodel	()		;
 
@@ -110,20 +109,8 @@ IC		void						b_skiplmap_set	(bool v){	_b_slmap = v; }
 
 		void						set_faces_indexses		();
 		void						set_vertices_indexses	();
-		//void						create_write_faces	() const;
-		//void						destroy_write_faces	() const;
-		//void						create_read_faces	() ;
-		//void						destroy_read_faces	() ;
 
-//		tread_faces					*get_read_faces		()	;
-//		twrite_faces				*get_write_faces	()	;
-		
-
-
-		void						gl_mesh_clear			()		;
-private:
-//std::pair<u32,u32>					get_id				( const _face * v ) const;
-//std::pair<u32,u32>					get_id				( const _vertex * v ) const;
+		void						gl_mesh_clear			();
 public:
 		void						read_base				( INetReader &r );
 		void						write_base				( IWriter	&w ) const ;
@@ -143,7 +130,6 @@ public:
 		void						clear_mesh				();
 		void						clear_mu_models			();	
 		void						mu_models_calc_materials();
-	//	void						cdb_read_create	() ;
 private:
 
 
@@ -158,12 +144,3 @@ extern "C" XRLC_LIGHT_API u32				InvalideFaces();
 extern xrLC_GlobalData* data;
 IC xrLC_GlobalData* inlc_global_data() { return data; }
 static LPCSTR gl_data_net_file_name = "tmp_global_data";
-
-
-#ifdef _DEBUG
-static LPCSTR libraries = "XRLC_LightStab.dll,XRLC_Light.dll,xrCore.dll,xrCDB.dll,xrAPI.dll,DXT.dll,BugTrap.dll,BugTrapD.dll,FreeImage.dll,msvcr80.dll,Microsoft.VC80.CRT.manifest";
-#else
-static LPCSTR libraries = "XRLC_LightStab.dll,XRLC_Light.dll,xrCore.dll,xrCDB.dll,xrAPI.dll,DXT.dll,BugTrap.dll,FreeImage.dll,msvcr80.dll,Microsoft.VC80.CRT.manifest";
-#endif
-//#define NET_CMP
-//#define LOAD_GL_DATA
