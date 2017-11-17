@@ -209,7 +209,6 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 
 	hdrCFORM realCform;
 	geom->r(&realCform, sizeof(hdrCFORM));
-	u32 vertcount, facecount;
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	//if (realCform.version != CFORM_CURRENT_VERSION)														 //
 	//{																									 //
@@ -228,9 +227,9 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	//}																									 //
 	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Fvector*	verts = (Fvector*)geom->pointer();
-	CDB::TRI*	tris = (CDB::TRI*)(verts + vertcount);
+	CDB::TRI*	tris = (CDB::TRI*)(verts + realCform.vertcount);
 	geom_ENV = new CDB::MODEL();
-	geom_ENV->build(verts, vertcount, tris, facecount); // x64 using tris converter
+	geom_ENV->build(verts, realCform.vertcount, tris, realCform.facecount); // x64 using tris converter
 	geom_ch->close();
 	geom->close();
 	xr_free(_data);
