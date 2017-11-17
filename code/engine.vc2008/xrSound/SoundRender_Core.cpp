@@ -12,7 +12,7 @@
 #pragma warning(pop)
 
 int psSoundTargets = 32;
-int psSoundCacheSizeMB = 32;
+int psSoundCacheSizeMB = 64;
 Flags32	psSoundFlags = { ss_Hardware | ss_EAX };
 float psSoundOcclusionScale = 0.5f;
 float psSoundCull = 0.01f;
@@ -205,15 +205,32 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 	u8*	_data = (u8*)xr_malloc(geom_ch->length());
 
 	std::memcpy(_data, geom_ch->pointer(), geom_ch->length());
-
 	IReader* geom = new IReader(_data, geom_ch->length(), 0);
 
-	hdrCFORM			H;
-	geom->r(&H, sizeof(hdrCFORM));
+	hdrCFORM realCform;
+	geom->r(&realCform, sizeof(hdrCFORM));
+	u32 vertcount, facecount;
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	//if (realCform.version != CFORM_CURRENT_VERSION)														 //
+	//{																									 //
+	//	hdrCFORM_4 oldCform;																			 //
+	//	geom->r(&oldCform, sizeof(hdrCFORM_4));															 //
+																										 //		
+	R_ASSERT2(realCform.version == CFORM_CURRENT_VERSION || realCform.version == 4, "Incorrect level.cform! xrOxygen supports ver.4 and ver.5.");  //
+																										 //																									 //
+	//	vertcount = oldCform.vertcount;																	 //
+	//	facecount = oldCform.facecount;																	 //
+	//}																									 //
+	//else																								 //
+	//{																									 //
+	//	vertcount = realCform.vertcount;																 //
+	//	facecount = realCform.facecount;																 //
+	//}																									 //
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
 	Fvector*	verts = (Fvector*)geom->pointer();
-	CDB::TRI*	tris = (CDB::TRI*)(verts + H.vertcount);
+	CDB::TRI*	tris = (CDB::TRI*)(verts + vertcount);
 	geom_ENV = new CDB::MODEL();
-	geom_ENV->build(verts, H.vertcount, tris, H.facecount, nullptr, nullptr, true); // x64 using tris converter
+	geom_ENV->build(verts, vertcount, tris, facecount); // x64 using tris converter
 	geom_ch->close();
 	geom->close();
 	xr_free(_data);

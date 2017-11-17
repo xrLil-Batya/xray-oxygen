@@ -86,30 +86,39 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 {
 	Load("$level$", "level.cform", build_callback);
 }
-void	CObjectSpace::Load(const char* path, const char* fname, CDB::build_callback build_callback)
+
+void CObjectSpace::Load(const char* path, const char* fname, CDB::build_callback build_callback)
 {
-#ifdef USE_ARENA_ALLOCATOR
-	Msg("CObjectSpace::Load, g_collision_allocator.get_allocated_size() - %d", int(g_collision_allocator.get_allocated_size() / 1024.0 / 1024));
-#endif // #ifdef USE_ARENA_ALLOCATOR
 	IReader *F = FS.r_open(path, fname);
 	R_ASSERT(F);
 	Load(F, build_callback);
 }
-void	CObjectSpace::Load(IReader* F, CDB::build_callback build_callback)
 
-
+void CObjectSpace::Load(IReader* F, CDB::build_callback build_callback)
 {
-	hdrCFORM					H;
-	F->r(&H, sizeof(hdrCFORM));
-	Fvector*	verts = (Fvector*)F->pointer();
-	CDB::TRI*	tris = (CDB::TRI*)(verts + H.vertcount);
-	Create(verts, tris, H, build_callback);
+	hdrCFORM realCform;
+	F->r(&realCform, sizeof(hdrCFORM));
+	
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	//if (realCform.version != CFORM_CURRENT_VERSION)													///
+	//{																									///
+	//	hdrCFORM_4 oldCform;																			///
+	//	F->r(&oldCform, sizeof(hdrCFORM_4));															///
+	R_ASSERT2(realCform.version == CFORM_CURRENT_VERSION || realCform.version == 4, "Incorrect level.cform! xrOxygen supports ver.4 and ver.5."); ///
+	//																									///
+	//	realCform.aabb = oldCform.aabb;																	///
+	//	realCform.facecount = oldCform.facecount;														///
+	//	realCform.vertcount = oldCform.vertcount;														///
+	//}																									///
+	///////////////////////////////////////////////////////////////////////////////////////////////////////
+	Fvector* verts = (Fvector*)F->pointer();
+	CDB::TRI* tris = (CDB::TRI*)(verts + realCform.vertcount);
+	Create(verts, tris, realCform, build_callback);
 	FS.r_close(F);
 }
 
-void			CObjectSpace::Create(Fvector*	verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback)
+void CObjectSpace::Create(Fvector*	verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback)
 {
-	R_ASSERT(CFORM_CURRENT_VERSION == H.version);
 	Static.build(verts, H.vertcount, tris, H.facecount, build_callback);
 	m_BoundingVolume.set(H.aabb);
 	g_SpatialSpace->initialize(m_BoundingVolume);

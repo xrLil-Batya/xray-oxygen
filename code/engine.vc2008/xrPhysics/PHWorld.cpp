@@ -1,18 +1,13 @@
 #include "stdafx.h"
-
 #include "PHWorld.h"
 #include "tri-colliderknoopc/dTriList.h"
 #include "PhysicsCommon.h"
-//#include "Level.h"
 #include "ExtendedGeom.h"
 #include "draymotions.h"
 #include "PHCollideValidator.h"
 #include "../xrEngine/gamemtllib.h"
-//#include "PhysicsGamePars.h"
 #include "params.h"
 #include "debug_output.h"
-//#include "PHCommander.h"
-//#include "PHSimpleCalls.h"
 #include "../xrserverentities/PHSynchronize.h"
 #include "../xrserverentities/phnetstate.h"
 #include "geometrybits.h"
@@ -24,8 +19,7 @@
 //////////////////////////////////////////////////////////////
 //////////////CPHMesh///////////////////////////////////////////
 ///////////////////////////////////////////////////////////
-//BOOL		g_bDebugDumpPhysicsStep				= 0;
-CPHWorld	*ph_world							= 0;
+CPHWorld *ph_world = 0;
 
 IPHWorld * __stdcall physics_world()
 {
@@ -36,7 +30,6 @@ void	__stdcall create_physics_world( bool mt, CObjectSpace *os, CObjectList *lo,
 {
 		ph_world							= xr_new<CPHWorld>(); //&commander
 		VERIFY( os );
-//		VERIFY( lo );
 		VERIFY( dv );
 		ph_world->Create					(mt, os, lo, dv);
 }

@@ -120,9 +120,8 @@ void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
 	MessageBox(nullptr, message.c_str(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-#ifdef DEBUG
+
 	DEBUG_INVOKE;
-#endif
 
 	TerminateProcess(GetCurrentProcess(), 1);
 }
