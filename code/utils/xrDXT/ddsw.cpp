@@ -8,17 +8,6 @@ const u32 fcc_DXT3 = MAKEFOURCC('D', 'X', 'T', '3');
 const u32 fcc_DXT4 = MAKEFOURCC('D', 'X', 'T', '4');
 const u32 fcc_DXT5 = MAKEFOURCC('D', 'X', 'T', '5');
 
-DDSWriter::DDSWriter(HFILE& file) : file(file)
-{
-}
-
-void DDSWriter::beginImage(int size, int width, int height, int depth, int face, int miplevel)
-{
-}
-void DDSWriter::endImage(void)
-{
-}
-
 bool DDSWriter::writeData(const void* data, int size)
 {
 	if (size == sizeof(DDS_HEADER))

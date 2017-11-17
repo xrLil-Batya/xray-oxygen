@@ -21,7 +21,8 @@
 
 #include "dds/nvdxt_options.h"
 #include "dds/nvErrorCodes.h"
-#include <nvtt\nvtt.h>
+#include "../../3rd-party/nvtt/include/nvtt/nvtt.h"
+
 struct MIPMapData
 {
     size_t mipLevel; 
