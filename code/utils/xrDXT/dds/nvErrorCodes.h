@@ -1,6 +1,6 @@
 #pragma once
 
-typedef enum NV_ERROR_CODE
+enum NV_ERROR_CODE
 {
     NV_OK = 0,
     NV_FAIL = -1, // generic
