@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : property vec3f base class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_VEC3F_BASE_HPP_INCLUDED
-#define PROPERTY_VEC3F_BASE_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
 #include "property_holder_include.hpp"
 #include "property_container_holder.hpp"
 
@@ -70,5 +68,3 @@ private:
 	property_container^		m_container;
 	vec3f_components*		m_components;
 }; // ref class property_vec3f_base abstract
-
-#endif // ifndef PROPERTY_VEC3F_BASE_HPP_INCLUDED

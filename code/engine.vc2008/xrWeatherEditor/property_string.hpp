@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : string property implementation class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_STRING_HPP_INCLUDED
-#define PROPERTY_STRING_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
 #include "property_holder_include.hpp"
 
 public ref class property_string : public property_value {
@@ -30,5 +28,3 @@ private:
 	string_getter_type		*m_getter;
 	string_setter_type		*m_setter;
 }; // ref class property_string
-
-#endif // ifndef PROPERTY_STRING_HPP_INCLUDED

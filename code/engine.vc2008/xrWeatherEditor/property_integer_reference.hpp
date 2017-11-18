@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : integer property reference implementation class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_INTEGER_REFERENCE_HPP_INCLUDED
-#define PROPERTY_INTEGER_REFERENCE_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
 #include "property_holder_include.hpp"
 
 public ref class property_integer_reference : public property_value {
@@ -22,5 +20,3 @@ public:
 private:
 	value_holder<int>*		m_value;
 }; // ref class property_integer_reference
-
-#endif // ifndef PROPERTY_INTEGER_REFERENCE_HPP_INCLUDED

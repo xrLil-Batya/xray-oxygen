@@ -1,5 +1,5 @@
 #pragma once
-
+#include "property_grid.hpp"
 using namespace System;
 using namespace System::ComponentModel;
 using namespace System::Collections;

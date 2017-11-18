@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : property container property implementation class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_PROPERTY_CONTAINER_HPP_INCLUDED
-#define PROPERTY_PROPERTY_CONTAINER_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
 class property_holder;
 
 public ref class property_property_container : public property_value {
@@ -20,5 +18,3 @@ public:
 private:
 	property_holder*		m_object;
 }; // ref class property_property_container
-
-#endif // ifndef PROPERTY_PROPERTY_CONTAINER_HPP_INCLUDED

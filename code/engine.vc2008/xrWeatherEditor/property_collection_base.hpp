@@ -8,7 +8,7 @@
 
 #ifndef PROPERTY_COLLECTION_BASE_HPP_INCLUDED
 #define PROPERTY_COLLECTION_BASE_HPP_INCLUDED
-
+#include "property_value.hpp"
 #include "property_holder_include.hpp"
 
 ref class property_container;

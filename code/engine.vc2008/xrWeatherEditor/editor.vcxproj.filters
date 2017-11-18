@@ -289,6 +289,9 @@
     <Filter Include="resources">
       <UniqueIdentifier>{3af1b00a-774c-4f1c-837d-18f2ce7c8867}</UniqueIdentifier>
     </Filter>
+    <Filter Include="control">
+      <UniqueIdentifier>{6d89afe1-f893-488e-aab4-054b1053e882}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="window_ide.cpp">
@@ -516,6 +519,9 @@
     <ClCompile Include="ide_impl.cpp">
       <Filter>implementations\ide</Filter>
     </ClCompile>
+    <ClCompile Include="property_grid.cpp">
+      <Filter>control</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="window_ide.h">
@@ -742,6 +748,21 @@
     </ClInclude>
     <ClInclude Include="resource.h">
       <Filter>resources</Filter>
+    </ClInclude>
+    <ClInclude Include="property_container_interface.hpp">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="property_grid.hpp">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="property_incrementable.hpp">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="property_mouse_events.hpp">
+      <Filter>control</Filter>
+    </ClInclude>
+    <ClInclude Include="property_value.hpp">
+      <Filter>control</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

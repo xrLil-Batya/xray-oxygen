@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : boolean property reference implementation class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_BOOLEAN_REFERENCE_HPP_INCLUDED
-#define PROPERTY_BOOLEAN_REFERENCE_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
 #include "property_holder_include.hpp"
 
 public ref class property_boolean_reference : public property_value {
@@ -22,5 +20,3 @@ public:
 private:
 	value_holder<bool>*		m_value;
 }; // ref class property_boolean
-
-#endif // ifndef PROPERTY_BOOLEAN_REFERENCE_HPP_INCLUDED

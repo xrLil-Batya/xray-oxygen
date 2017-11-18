@@ -5,10 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : property color base class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_COLOR_BASE_HPP_INCLUDED
-#define PROPERTY_COLOR_BASE_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
+#include "property_mouse_events.hpp"
+#include "property_incrementable.hpp"
 #include "property_holder_include.hpp"
 #include "property_container_holder.hpp"
 
@@ -78,5 +78,3 @@ private:
 	color_components*							m_components;
 	array<System::Attribute^>^					m_attributes;
 }; // ref class property_color_base abstract
-
-#endif // ifndef PROPERTY_COLOR_BASE_HPP_INCLUDED

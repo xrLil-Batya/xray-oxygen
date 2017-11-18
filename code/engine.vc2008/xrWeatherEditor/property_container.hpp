@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : property container class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_CONTAINER_HPP_INCLUDED
-#define PROPERTY_CONTAINER_HPP_INCLUDED
-
+#pragma once
+#include "property_container_interface.hpp"
 interface class property_value;
 class property_holder;
 ref class property_container_converter;
@@ -55,5 +53,3 @@ private:
 	property_holder*			m_holder;
 	property_container_holder^	m_container_holder;
 }; // class property_container
-
-#endif // ifndef PROPERTY_CONTAINER_HPP_INCLUDED

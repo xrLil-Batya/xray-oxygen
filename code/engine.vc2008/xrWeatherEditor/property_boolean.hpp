@@ -8,7 +8,7 @@
 
 #ifndef PROPERTY_BOOLEAN_HPP_INCLUDED
 #define PROPERTY_BOOLEAN_HPP_INCLUDED
-
+#include "property_value.hpp"
 #include "property_holder_include.hpp"
 
 public ref class property_boolean : public property_value {

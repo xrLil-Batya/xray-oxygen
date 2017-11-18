@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "pch.hpp"
+#include "property_value.hpp"
 #include "property_editor_tree_values.hpp"
 #include "property_container.hpp"
 #include "window_tree_values.h"

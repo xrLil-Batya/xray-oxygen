@@ -1,5 +1,5 @@
 #pragma once
-
+#include "property_grid.hpp"
 #include "ide_impl.hpp"
 
 using namespace System;

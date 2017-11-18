@@ -5,10 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : float property reference implementation class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef PROPERTY_FLOAT_REFERENCE_HPP_INCLUDED
-#define PROPERTY_FLOAT_REFERENCE_HPP_INCLUDED
-
+#pragma once
+#include "property_value.hpp"
+#include "property_incrementable.hpp"
 #include "property_holder_include.hpp"
 
 public ref class property_float_reference :
@@ -27,5 +26,3 @@ private:
 	value_holder<float>*	m_value;
 	float					m_increment_factor;
 }; // ref class property_float_reference
-
-#endif // ifndef PROPERTY_FLOAT_REFERENCE_HPP_INCLUDED

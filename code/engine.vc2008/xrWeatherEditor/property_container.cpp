@@ -5,8 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : property container class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "pch.hpp"
+#include "property_value.hpp"
 #include "property_container.hpp"
 #include "property_holder.hpp"
 
