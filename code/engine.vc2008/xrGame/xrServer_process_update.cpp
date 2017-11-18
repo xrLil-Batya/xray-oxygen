@@ -6,8 +6,8 @@ int	g_Dump_Update_Read = 0;
 
 void xrServer::Process_update(NET_Packet& P, ClientID sender)
 {
-	xrClientData* CL		= ID_to_client(sender);
-	R_ASSERT2				(CL,"Process_update client not found");
+	xrServer_process_update.cppxrClientData* CL = ID_to_client(sender);
+	if(!CL) return;
 
 #ifndef MASTER_GOLD
 	if (g_Dump_Update_Read) Msg("---- UPDATE_Read --- ");
