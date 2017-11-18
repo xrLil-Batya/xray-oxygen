@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "fs_internal.h"
+#include "string"
 
 XRCORE_API CInifile const* pSettings = nullptr;
 XRCORE_API CInifile const* pSettingsAuth = nullptr;
@@ -403,6 +404,21 @@ BOOL CInifile::line_exist(const shared_str& S, const shared_str& L) const {
 u32 CInifile::line_count(const shared_str& S) const { return line_count(*S); }
 BOOL CInifile::section_exist(const shared_str& S) const { return section_exist(*S); }
 
+
+
+//----------------------functions on std::String's------------------------------------------//
+CInifile::Sect& CInifile::r_sectionStd(const std::string& S) const { return r_section(S.c_str()); }
+BOOL CInifile::line_existStd(const std::string& S, const std::string& L) const {
+	return line_exist(S.c_str(), L.c_str());
+}
+u32 CInifile::line_countStd(const std::string& S) const { return line_count(S.c_str()); }
+BOOL CInifile::section_existStd(const std::string& S) const { return section_exist(S.c_str()); }
+
+//----------------------end----------------------------------------------------------------//
+
+
+
+
 //--------------------------------------------------------------------------------------
 // Read functions
 //--------------------------------------------------------------------------------------
@@ -756,10 +772,12 @@ void CInifile::w_bool(LPCSTR S, LPCSTR L, BOOL V, LPCSTR comment) {
     w_string(S, L, V ? "on" : "off", comment);
 }
 
-void CInifile::remove_line(LPCSTR S, LPCSTR L) {
+void CInifile::remove_line(LPCSTR S, LPCSTR L)
+{
     R_ASSERT(!m_flags.test(eReadOnly));
 
-    if (line_exist(S, L)) {
+    if (line_exist(S, L)) 
+	{
         Sect& data = r_section(S);
         auto A = std::lower_bound(data.Data.begin(), data.Data.end(), L, item_pred);
         R_ASSERT(A != data.Data.end() && xr_strcmp(*A->first, L) == 0);
