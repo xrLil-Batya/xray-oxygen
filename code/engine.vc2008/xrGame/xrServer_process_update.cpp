@@ -6,7 +6,7 @@ int	g_Dump_Update_Read = 0;
 
 void xrServer::Process_update(NET_Packet& P, ClientID sender)
 {
-	xrServer_process_update.cppxrClientData* CL = ID_to_client(sender);
+	xrClientData* CL = ID_to_client(sender);
 	if(!CL) return;
 
 #ifndef MASTER_GOLD
