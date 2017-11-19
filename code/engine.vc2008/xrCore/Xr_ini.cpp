@@ -5,7 +5,7 @@
 #include "string"
 
 XRCORE_API CInifile const* pSettings = nullptr;
-XRCORE_API CInifile const* pSettingsAuth = nullptr;
+//XRCORE_API CInifile const* pSettingsAuth = nullptr;
 
 CInifile* CInifile::Create(const char* szFileName, BOOL ReadOnly) {
     return xr_new<CInifile>(szFileName, ReadOnly);

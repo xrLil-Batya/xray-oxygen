@@ -642,7 +642,7 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 	{
 		return;
 	}
-	xr_vector<std::string>::iterator ite = ammo_types.end();
+	//xr_vector<std::string>::iterator ite = ammo_types.end();
 	
 	u32 const cnt = ddlist->ItemsCount();
 	for ( u32 i = 0; i < cnt; ++i )
@@ -661,7 +661,7 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 		}
 		std::string const& ammo_name = item->object().cNameSect().c_str();
 
-		xr_vector<std::string>::iterator itb = ammo_types.begin();
+		//xr_vector<std::string>::iterator itb = ammo_types.begin();
 
 
 		for (auto it: ammo_types)
