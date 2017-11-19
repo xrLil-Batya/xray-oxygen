@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "motion.h"
-#include "envelope.h"      
+#include "../xrCore/envelope.h"
 
 #define EOBJ_OMOTION   			0x1100
 #define EOBJ_SMOTION   			0x1200

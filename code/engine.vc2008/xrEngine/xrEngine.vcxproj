@@ -720,7 +720,6 @@
     <ClCompile Include="cf_dynamic_mesh.cpp" />
     <ClCompile Include="xr_collide_form.cpp" />
     <ClCompile Include="bone.cpp" />
-    <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="interp.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="ObjectAnimator.cpp" />

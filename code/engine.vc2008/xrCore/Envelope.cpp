@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#include "BaseEffector.h"
 #include "envelope.h"
 
 CEnvelope::~CEnvelope()
@@ -242,5 +242,6 @@ void CEnvelope::Optimize()
         keys				= new_keys;
     }
 }
+
 
 

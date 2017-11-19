@@ -1,5 +1,4 @@
-#ifndef EnvelopeH
-#define EnvelopeH
+#pragma once
 
 // refs
 class IWriter;
@@ -107,9 +106,8 @@ using KeyVec = xr_vector<st_Key*>;
 using KeyIt = KeyVec::iterator;
 
 // refs
-class CExporter;
 
-class ENGINE_API CEnvelope {
+class XRCORE_API CEnvelope {
 public:
 	KeyVec		keys;
 	int			behavior[2];
@@ -136,8 +134,5 @@ public:
     void		DeleteKey	(float t);
     BOOL		ScaleKeys	(float from_time, float to_time, float scale_factor, float eps);
     float		GetLength	(float* mn, float* mx);
-
     void		Optimize	();
 };
-
-#endif //_ENVELOPE_H_

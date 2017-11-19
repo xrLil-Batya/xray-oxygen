@@ -1,6 +1,4 @@
 #include "stdafx.h"
-
-#include "ActorEffector.h"
 #include "PostprocessAnimator.h"
 #include "../xrEngine/effectorPP.h"
 #include "../xrEngine/ObjectAnimator.h"
