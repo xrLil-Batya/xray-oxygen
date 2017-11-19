@@ -146,7 +146,7 @@ void CUIWpnParams::SetInfo( CInventoryItem* slot_wpn, CInventoryItem& cur_wpn )
 	m_progressHandling.SetTwoPos( cur_hand,   slot_hand );
 	m_progressRPM.SetTwoPos(      cur_rpm,    slot_rpm );
 
-		xr_vector<shared_str> ammo_types;
+		xr_vector<std::string> ammo_types;
 
 		CWeapon* weapon = cur_wpn.cast_weapon();
 		if(!weapon)

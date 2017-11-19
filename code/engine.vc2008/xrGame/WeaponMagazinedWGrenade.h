@@ -57,7 +57,7 @@ public:
 	virtual void	OnMagazineEmpty	();
 	virtual bool	GetBriefInfo			(II_BriefInfo& info);
 
-	virtual bool	IsNecessaryItem	    (const shared_str& item_sect);
+	virtual bool	IsNecessaryItem	    (const std::string& item_sect);
 
 	//виртуальные функции для проигрывания анимации HUD
 	virtual void	PlayAnimShow		();
@@ -79,7 +79,7 @@ public:
 	//дополнительные параметры патронов 
 	//для подствольника
 //-	CWeaponAmmo*			m_pAmmo2;
-	xr_vector<shared_str>	m_ammoTypes2;
+	xr_vector<std::string>	m_ammoTypes2;
 	u8						m_ammoType2;
 
 	int						iMagazineSize2;

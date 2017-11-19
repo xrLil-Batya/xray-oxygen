@@ -136,33 +136,33 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 {
 	bool result = false;
 
-	shared_str	s_sHitPower;
-	bool result2 = process_if_exists_set( section, "hit_power", &CInifile::r_string_wb, s_sHitPower, test );
+	std::string	s_sHitPower;
+	bool result2 = process_if_exists_set( section, "hit_power", &CInifile::r_string_wbStd, s_sHitPower, test );
 	if ( result2 && !test )
 	{
 		string32 buffer;
-		fvHitPower[egdMaster] = (float)atof( _GetItem( *s_sHitPower, 0, buffer ) );
+		fvHitPower[egdMaster] = (float)atof( _GetItem( s_sHitPower.c_str(), 0, buffer ) );
 		fvHitPower[egdNovice] = fvHitPower[egdStalker] = fvHitPower[egdVeteran] = fvHitPower[egdMaster];
 
-		int num_game_diff_param = _GetItemCount( *s_sHitPower );
-		if ( num_game_diff_param > 1 ) { fvHitPower[egdVeteran]	= (float)atof( _GetItem( *s_sHitPower, 1, buffer ) ); }
-		if ( num_game_diff_param > 2 ) { fvHitPower[egdStalker]	= (float)atof( _GetItem( *s_sHitPower, 2, buffer ) ); }
-		if ( num_game_diff_param > 3 ) { fvHitPower[egdNovice]	= (float)atof( _GetItem( *s_sHitPower, 3, buffer ) ); }
+		int num_game_diff_param = _GetItemCount( s_sHitPower.c_str() );
+		if ( num_game_diff_param > 1 ) { fvHitPower[egdVeteran]	= (float)atof( _GetItem( s_sHitPower.c_str(), 1, buffer ) ); }
+		if ( num_game_diff_param > 2 ) { fvHitPower[egdStalker]	= (float)atof( _GetItem( s_sHitPower.c_str(), 2, buffer ) ); }
+		if ( num_game_diff_param > 3 ) { fvHitPower[egdNovice]	= (float)atof( _GetItem( s_sHitPower.c_str(), 3, buffer ) ); }
 	}
 	result |= result2;
 
-	shared_str	s_sHitPowerCritical;
-	result2 = process_if_exists_set( section, "hit_power_critical", &CInifile::r_string_wb, s_sHitPower, test );
+	std::string	s_sHitPowerCritical;
+	result2 = process_if_exists_set( section, "hit_power_critical", &CInifile::r_string_wbStd, s_sHitPower, test );
 	if ( result2 && !test )
 	{
 		string32 buffer;
-		fvHitPowerCritical[egdMaster] = (float)atof(_GetItem(*s_sHitPowerCritical,0,buffer));
+		fvHitPowerCritical[egdMaster] = (float)atof(_GetItem(s_sHitPowerCritical.c_str(),0,buffer));
 		fvHitPowerCritical[egdNovice] = fvHitPowerCritical[egdStalker] = fvHitPowerCritical[egdVeteran] = fvHitPowerCritical[egdMaster];
 
-		int num_game_diff_param = _GetItemCount(*s_sHitPowerCritical);
-		if ( num_game_diff_param > 1 ) { fvHitPowerCritical[egdVeteran]	= (float)atof(_GetItem(*s_sHitPowerCritical,1,buffer)); }
-		if ( num_game_diff_param > 2 ) { fvHitPowerCritical[egdStalker]	= (float)atof(_GetItem(*s_sHitPowerCritical,2,buffer)); }
-		if ( num_game_diff_param > 3 ) { fvHitPowerCritical[egdNovice]	= (float)atof(_GetItem(*s_sHitPowerCritical,3,buffer)); }
+		int num_game_diff_param = _GetItemCount(s_sHitPowerCritical.c_str());
+		if ( num_game_diff_param > 1 ) { fvHitPowerCritical[egdVeteran]	= (float)atof(_GetItem(s_sHitPowerCritical.c_str(),1,buffer)); }
+		if ( num_game_diff_param > 2 ) { fvHitPowerCritical[egdStalker]	= (float)atof(_GetItem(s_sHitPowerCritical.c_str(),2,buffer)); }
+		if ( num_game_diff_param > 3 ) { fvHitPowerCritical[egdNovice]	= (float)atof(_GetItem(s_sHitPowerCritical.c_str(),3,buffer)); }
 	}
 	result |= result2;
 
@@ -238,8 +238,8 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 		}
 	}
 	result |= process_if_exists_set( section, "scope_dynamic_zoom", &CInifile::r_bool, m_zoom_params.m_bUseDynamicZoom, test );
-	result |= process_if_exists_set( section, "scope_nightvision", &CInifile::r_string_wb, m_zoom_params.m_sUseZoomPostprocess, test );
-	result |= process_if_exists_set( section, "scope_alive_detector", &CInifile::r_string_wb, m_zoom_params.m_sUseBinocularVision, test );
+	result |= process_if_exists_set( section, "scope_nightvision", &CInifile::r_string_wbStd, m_zoom_params.m_sUseZoomPostprocess, test );
+	result |= process_if_exists_set( section, "scope_alive_detector", &CInifile::r_string_wbStd, m_zoom_params.m_sUseBinocularVision, test );
 
 	result |= result2;
 

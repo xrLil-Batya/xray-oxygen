@@ -17,7 +17,7 @@ private:
 	typedef CWeapon inherited;
 protected:
 	//звук текущего выстрела
-	shared_str		m_sSndShotCurrent;
+	std::string		m_sSndShotCurrent;
 
 	//дополнительная информация о глушителе
 	LPCSTR			m_sSilencerFlameParticles;

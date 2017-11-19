@@ -61,7 +61,7 @@ CWeapon::CWeapon()
 	m_pCurrentAmmo			= NULL;
 
 	m_pFlameParticles2		= NULL;
-	m_sFlameParticles2		= NULL;
+	m_sFlameParticles2		= "";
 
 
 	m_fCurrentCartirdgeDisp = 1.f;
@@ -408,7 +408,7 @@ void CWeapon::Load		(LPCSTR section)
 	}
 	else if( m_eScopeStatus == ALife::eAddonPermanent )
 	{
-		shared_str scope_tex_name			= pSettings->r_string(cNameSect(), "scope_texture");
+		std::string scope_tex_name			= pSettings->r_string(cNameSect(), "scope_texture");
 		m_zoom_params.m_fScopeZoomFactor	= pSettings->r_float( cNameSect(), "scope_zoom_factor");
 		if ( !g_dedicated_server )
 		{
@@ -475,8 +475,8 @@ void CWeapon::Load		(LPCSTR section)
 
 	
 	m_zoom_params.m_bUseDynamicZoom				= READ_IF_EXISTS(pSettings,r_bool,section,"scope_dynamic_zoom",FALSE);
-	m_zoom_params.m_sUseZoomPostprocess			= 0;
-	m_zoom_params.m_sUseBinocularVision			= 0;
+	m_zoom_params.m_sUseZoomPostprocess			= "";
+	m_zoom_params.m_sUseBinocularVision			= "";
 }
 
 void CWeapon::LoadFireParams		(LPCSTR section)
@@ -827,7 +827,7 @@ void CWeapon::UpdateCL		()
 				m_bRememberActorNVisnStatus = pTorch->GetNightVisionStatus();
 				pTorch->SwitchNightVision(false, false);
 			}
-			m_zoom_params.m_pNight_vision->Start(m_zoom_params.m_sUseZoomPostprocess, pA, false);
+			m_zoom_params.m_pNight_vision->Start(m_zoom_params.m_sUseZoomPostprocess.c_str(), pA, false);
 		}
 
 	}
@@ -1100,31 +1100,52 @@ int CWeapon::GetAmmoCount( u8 ammo_type ) const
 	return GetAmmoCount_forType( m_ammoTypes[ammo_type] );
 }
 
-int CWeapon::GetAmmoCount_forType( shared_str const& ammo_type ) const
+int CWeapon::GetAmmoCount_forType( std::string const& ammo_type ) const
 {
 	int res = 0;
-
+	/*
 	TIItemContainer::iterator itb = m_pInventory->m_belt.begin();
 	TIItemContainer::iterator ite = m_pInventory->m_belt.end();
 	for ( ; itb != ite; ++itb ) 
 	{
 		CWeaponAmmo*	pAmmo = smart_cast<CWeaponAmmo*>( *itb );
-		if ( pAmmo && (pAmmo->cNameSect() == ammo_type) )
+		if ( pAmmo && (pAmmo->cNameSect() == ammo_type.c_str()) )
 		{
 			res += pAmmo->m_boxCurr;
 		}
 	}
+	*/
 
+	for (auto it : m_pInventory->m_belt)
+	{
+		CWeaponAmmo*	pAmmo = smart_cast<CWeaponAmmo*>(it);
+		if (pAmmo && (pAmmo->cNameSect() == ammo_type.c_str()))
+		{
+			res += pAmmo->m_boxCurr;
+		}
+	}
+	/*
 	itb = m_pInventory->m_ruck.begin();
 	ite = m_pInventory->m_ruck.end();
 	for ( ; itb != ite; ++itb ) 
 	{
 		CWeaponAmmo*	pAmmo = smart_cast<CWeaponAmmo*>( *itb );
-		if ( pAmmo && (pAmmo->cNameSect() == ammo_type) )
+		if ( pAmmo && (pAmmo->cNameSect() == ammo_type.c_str()) )
 		{
 			res += pAmmo->m_boxCurr;
 		}
 	}
+	*/
+
+	for (auto it : m_pInventory->m_ruck)
+	{
+		CWeaponAmmo*	pAmmo = smart_cast<CWeaponAmmo*>(it);
+		if (pAmmo && (pAmmo->cNameSect() == ammo_type.c_str()))
+		{
+			res += pAmmo->m_boxCurr;
+		}
+	}
+
 	return res;
 }
 
@@ -1225,9 +1246,9 @@ bool CWeapon::SilencerAttachable()
 	return (ALife::eAddonAttachable == m_eSilencerStatus);
 }
 
-shared_str wpn_scope				= "wpn_scope";
-shared_str wpn_silencer				= "wpn_silencer";
-shared_str wpn_grenade_launcher		= "wpn_launcher";
+std::string wpn_scope				= "wpn_scope";
+std::string wpn_silencer				= "wpn_silencer";
+std::string wpn_grenade_launcher		= "wpn_launcher";
 
 
 
@@ -1240,38 +1261,38 @@ void CWeapon::UpdateHUDAddonsVisibility()
 
 	if(ScopeAttachable())
 	{
-		HudItemData()->set_bone_visible(wpn_scope, IsScopeAttached() );
+		HudItemData()->set_bone_visible(wpn_scope.c_str(), IsScopeAttached() );
 	}
 
 	if(m_eScopeStatus==ALife::eAddonDisabled )
 	{
-		HudItemData()->set_bone_visible(wpn_scope, FALSE, TRUE );
+		HudItemData()->set_bone_visible(wpn_scope.c_str(), FALSE, TRUE );
 	}else
 		if(m_eScopeStatus==ALife::eAddonPermanent)
-			HudItemData()->set_bone_visible(wpn_scope, TRUE, TRUE );
+			HudItemData()->set_bone_visible(wpn_scope.c_str(), TRUE, TRUE );
 
 	if(SilencerAttachable())
 	{
-		HudItemData()->set_bone_visible(wpn_silencer, IsSilencerAttached());
+		HudItemData()->set_bone_visible(wpn_silencer.c_str(), IsSilencerAttached());
 	}
 	if(m_eSilencerStatus==ALife::eAddonDisabled )
 	{
-		HudItemData()->set_bone_visible(wpn_silencer, FALSE, TRUE);
+		HudItemData()->set_bone_visible(wpn_silencer.c_str(), FALSE, TRUE);
 	}
 	else
 		if(m_eSilencerStatus==ALife::eAddonPermanent)
-			HudItemData()->set_bone_visible(wpn_silencer, TRUE, TRUE);
+			HudItemData()->set_bone_visible(wpn_silencer.c_str(), TRUE, TRUE);
 
 	if(GrenadeLauncherAttachable())
 	{
-		HudItemData()->set_bone_visible(wpn_grenade_launcher, IsGrenadeLauncherAttached());
+		HudItemData()->set_bone_visible(wpn_grenade_launcher.c_str(), IsGrenadeLauncherAttached());
 	}
 	if(m_eGrenadeLauncherStatus==ALife::eAddonDisabled )
 	{
-		HudItemData()->set_bone_visible(wpn_grenade_launcher, FALSE, TRUE);
+		HudItemData()->set_bone_visible(wpn_grenade_launcher.c_str(), FALSE, TRUE);
 	}else
 		if(m_eGrenadeLauncherStatus==ALife::eAddonPermanent)
-			HudItemData()->set_bone_visible(wpn_grenade_launcher, TRUE, TRUE);
+			HudItemData()->set_bone_visible(wpn_grenade_launcher.c_str(), TRUE, TRUE);
 
 }
 
@@ -1284,7 +1305,7 @@ void CWeapon::UpdateAddonsVisibility()
 
 	pWeaponVisual->CalculateBones_Invalidate				();
 
-	bone_id = pWeaponVisual->LL_BoneID					(wpn_scope);
+	bone_id = pWeaponVisual->LL_BoneID					(wpn_scope.c_str());
 	if(ScopeAttachable())
 	{
 		if(IsScopeAttached())
@@ -1302,7 +1323,7 @@ void CWeapon::UpdateAddonsVisibility()
 		pWeaponVisual->LL_SetBoneVisible					(bone_id,FALSE,TRUE);
 //		Log("scope", pWeaponVisual->LL_GetBoneVisible		(bone_id));
 	}
-	bone_id = pWeaponVisual->LL_BoneID						(wpn_silencer);
+	bone_id = pWeaponVisual->LL_BoneID						(wpn_silencer.c_str());
 	if(SilencerAttachable())
 	{
 		if(IsSilencerAttached()){
@@ -1320,7 +1341,7 @@ void CWeapon::UpdateAddonsVisibility()
 //		Log("silencer", pWeaponVisual->LL_GetBoneVisible	(bone_id));
 	}
 
-	bone_id = pWeaponVisual->LL_BoneID						(wpn_grenade_launcher);
+	bone_id = pWeaponVisual->LL_BoneID						(wpn_grenade_launcher.c_str());
 	if(GrenadeLauncherAttachable())
 	{
 		if(IsGrenadeLauncherAttached())
@@ -1376,14 +1397,14 @@ void CWeapon::OnZoomIn()
 		GamePersistent().SetPickableEffectorDOF(true);
 
 	if(m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && NULL==m_zoom_params.m_pVision) 
-		m_zoom_params.m_pVision	= xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision/*"wpn_binoc"*/);
+		m_zoom_params.m_pVision	= xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision.c_str()/*"wpn_binoc"*/);
 	
     if (m_zoom_params.m_sUseZoomPostprocess.size() && IsScopeAttached())
     {
 		CActor *pA = smart_cast<CActor *>(H_Parent());
         if (pA && NULL == m_zoom_params.m_pNight_vision)
         {
-            m_zoom_params.m_pNight_vision = xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess/*"device_torch"*/);
+            m_zoom_params.m_pNight_vision = xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess.c_str()/*"device_torch"*/);
         }
     }	
 }
@@ -1466,8 +1487,8 @@ void CWeapon::reload			(LPCSTR section)
 		m_can_be_strapped		= false;
 
 	if (m_eScopeStatus == ALife::eAddonAttachable) {
-		m_addon_holder_range_modifier	= READ_IF_EXISTS(pSettings,r_float,GetScopeName(),"holder_range_modifier",m_holder_range_modifier);
-		m_addon_holder_fov_modifier		= READ_IF_EXISTS(pSettings,r_float,GetScopeName(),"holder_fov_modifier",m_holder_fov_modifier);
+		m_addon_holder_range_modifier	= READ_IF_EXISTS(pSettings,r_float,GetScopeName().c_str(),"holder_range_modifier",m_holder_range_modifier);
+		m_addon_holder_fov_modifier		= READ_IF_EXISTS(pSettings,r_float,GetScopeName().c_str(),"holder_fov_modifier",m_holder_fov_modifier);
 	}
 	else {
 		m_addon_holder_range_modifier	= m_holder_range_modifier;
@@ -1575,7 +1596,7 @@ CInventoryItem *CWeapon::can_kill	(CInventory *inventory) const
 		if (!inventory_item)
 			continue;
 		
-		xr_vector<shared_str>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect());
+		xr_vector<std::string>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect().c_str());
 		if (i != m_ammoTypes.end())
 			return			(inventory_item);
 	}
@@ -1595,7 +1616,7 @@ const CInventoryItem *CWeapon::can_kill	(const xr_vector<const CGameObject*> &it
 		if (!inventory_item)
 			continue;
 
-		xr_vector<shared_str>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect());
+		xr_vector<std::string>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect().c_str());
 		if (i != m_ammoTypes.end())
 			return			(inventory_item);
 	}
@@ -1693,7 +1714,7 @@ u32	CWeapon::ef_weapon_type	() const
 	return	(m_ef_weapon_type);
 }
 
-bool CWeapon::IsNecessaryItem	    (const shared_str& item_sect)
+bool CWeapon::IsNecessaryItem	    (const std::string& item_sect)
 {
 	return (std::find(m_ammoTypes.begin(), m_ammoTypes.end(), item_sect) != m_ammoTypes.end() );
 }
@@ -1736,13 +1757,13 @@ float CWeapon::Weight() const
 {
 	float res = CInventoryItemObject::Weight();
 	if(IsGrenadeLauncherAttached()&&GetGrenadeLauncherName().size()){
-		res += pSettings->r_float(GetGrenadeLauncherName(),"inv_weight");
+		res += pSettings->r_float(GetGrenadeLauncherName().c_str(),"inv_weight");
 	}
 	if(IsScopeAttached()&&m_scopes.size()){
-		res += pSettings->r_float(GetScopeName(),"inv_weight");
+		res += pSettings->r_float(GetScopeName().c_str(),"inv_weight");
 	}
 	if(IsSilencerAttached()&&GetSilencerName().size()){
-		res += pSettings->r_float(GetSilencerName(),"inv_weight");
+		res += pSettings->r_float(GetSilencerName().c_str(),"inv_weight");
 	}
 	const char* last_type = nullptr; 
 	float w = 0, bs = 0;
@@ -1901,13 +1922,13 @@ u32 CWeapon::Cost() const
 	u32 res = CInventoryItem::Cost();
 
 	if(IsGrenadeLauncherAttached()&&GetGrenadeLauncherName().size())
-		res += pSettings->r_u32(GetGrenadeLauncherName(),"cost");
+		res += pSettings->r_u32(GetGrenadeLauncherName().c_str(),"cost");
 
 	if(IsScopeAttached()&&m_scopes.size())
-		res += pSettings->r_u32(GetScopeName(),"cost");
+		res += pSettings->r_u32(GetScopeName().c_str(),"cost");
 
 	if(IsSilencerAttached()&&GetSilencerName().size())
-		res += pSettings->r_u32(GetSilencerName(),"cost");
+		res += pSettings->r_u32(GetSilencerName().c_str(),"cost");
 	
 	if(iAmmoElapsed)
 	{

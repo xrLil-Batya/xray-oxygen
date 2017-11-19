@@ -619,7 +619,7 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 {
 	VERIFY( weapon_item );
 	VERIFY( ddlist );
-	static xr_vector<shared_str>	ammo_types;
+	static xr_vector<std::string>	ammo_types;
 	ammo_types.clear();
 
 	CWeapon* weapon = smart_cast<CWeapon*>(weapon_item);
@@ -642,7 +642,7 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 	{
 		return;
 	}
-	xr_vector<shared_str>::iterator ite = ammo_types.end();
+	xr_vector<std::string>::iterator ite = ammo_types.end();
 	
 	u32 const cnt = ddlist->ItemsCount();
 	for ( u32 i = 0; i < cnt; ++i )
@@ -659,17 +659,20 @@ void CUIActorMenu::highlight_ammo_for_weapon( PIItem weapon_item, CUIDragDropLis
 			highlight_addons_for_weapon( weapon_item, ci );
 			continue; // for i
 		}
-		shared_str const& ammo_name = item->object().cNameSect();
+		std::string const& ammo_name = item->object().cNameSect().c_str();
 
-		xr_vector<shared_str>::iterator itb = ammo_types.begin();
-		for ( ; itb != ite; ++itb )
+		xr_vector<std::string>::iterator itb = ammo_types.begin();
+
+
+		for (auto it: ammo_types)
 		{
-			if ( ammo_name._get() == (*itb)._get() )
+			if ( ammo_name == it )
 			{
 				ci->m_select_armament = true;
 				break; // itb
 			}
 		}
+
 	}//for i
 
 }
@@ -684,7 +687,7 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 		return;
 	}
 	
-	shared_str const& ammo_name = ammo_item->object().cNameSect();
+	std::string const& ammo_name = ammo_item->object().cNameSect().c_str();
 
 	u32 const cnt = ddlist->ItemsCount();
 	for ( u32 i = 0; i < cnt; ++i )
@@ -700,9 +703,12 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 		{
 			continue;
 		}
+		
 
-		xr_vector<shared_str>::iterator itb = weapon->m_ammoTypes.begin();
-		xr_vector<shared_str>::iterator ite = weapon->m_ammoTypes.end();
+		//xr_vector<std::string>::iterator itb = weapon->m_ammoTypes.begin();
+		//xr_vector<std::string>::iterator ite = weapon->m_ammoTypes.end();
+
+		/*
 		for ( ; itb != ite; ++itb )
 		{
 			if ( ammo_name._get() == (*itb)._get() )
@@ -711,14 +717,26 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 				break; // for itb
 			}
 		}
+		*/
+
+		for (auto it : weapon->m_ammoTypes)
+		{
+			if (ammo_name == it)
+			{
+				ci->m_select_armament = true;
+				break; // itb 
+			}
+		}
+
 		
 		CWeaponMagazinedWGrenade* wg = smart_cast<CWeaponMagazinedWGrenade*>(item);
 		if ( !wg || !wg->IsGrenadeLauncherAttached() || !wg->m_ammoTypes2.size() )
 		{
 			continue; // for i
 		}
-		itb = wg->m_ammoTypes2.begin();
-		ite = wg->m_ammoTypes2.end();
+		//itb = wg->m_ammoTypes2.begin();
+		//ite = wg->m_ammoTypes2.end();
+		/*
 		for ( ; itb != ite; ++itb )
 		{
 			if ( ammo_name._get() == (*itb)._get() )
@@ -727,6 +745,16 @@ void CUIActorMenu::highlight_weapons_for_ammo( PIItem ammo_item, CUIDragDropList
 				break; // for itb
 			}
 		}
+		*/
+		for (auto it : wg->m_ammoTypes2)
+		{
+			if (ammo_name == it)
+			{
+				ci->m_select_armament = true;
+				break; // itb 
+			}
+		}
+
 	}//for i
 
 }

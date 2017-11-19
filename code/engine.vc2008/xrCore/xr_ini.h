@@ -97,9 +97,10 @@ public:
 	const char* 		r_string		( const char* S, const char* L)const;															// оставляет кавычки
 	const char* 		r_string		( const shared_str& S, const char* L)const				{ return r_string(*S,L);		}	// оставляет кавычки
 	const char* 		r_stringStd		(const std::string& S, const char* L)const { return r_string(S.c_str(), L); }	// оставляет кавычки
-	shared_str	r_string_wb		( const char* S, const char* L)const;															// убирает кавычки
+	shared_str	r_string_wb		(const char* S, const char* L)const;
+	std::string	r_string_wbStd  (const char* S, const char* L)const;// убирает кавычки
 	shared_str	r_string_wb		( const shared_str& S, const char* L)const				{ return r_string_wb(*S,L);		}	// убирает кавычки
-	shared_str	r_string_wbStd	(const std::string& S, const char* L)const { return r_string_wb(S.c_str(), L); }	// убирает кавычки
+	std::string	r_string_wbStd	(const std::string& S, const char* L)const { return r_string_wbStd(S.c_str(), L); }	// убирает кавычки
 	u8	 		r_u8			( const char* S, const char* L ) const;
 	u8	 		r_u8			( const shared_str& S, const char* L )const				{ return r_u8(*S,L);			}
 	u8	 		r_u8Std			(const std::string& S, const char* L)const { return r_u8(S.c_str(), L); }

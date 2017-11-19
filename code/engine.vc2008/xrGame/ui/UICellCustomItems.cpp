@@ -255,7 +255,7 @@ void CUIWeaponCellItem::Update()
 			{
 				CreateIcon	(eSilencer);
 				RefreshOffset();
-				InitAddon	(GetIcon(eSilencer), *object()->GetSilencerName(), m_addon_offset[eSilencer], Heading());
+				InitAddon	(GetIcon(eSilencer),object()->GetSilencerName().c_str(), m_addon_offset[eSilencer], Heading());
 			}
 		}
 		else
@@ -272,7 +272,7 @@ void CUIWeaponCellItem::Update()
 			{
 				CreateIcon	(eScope);
 				RefreshOffset();
-				InitAddon	(GetIcon(eScope), *object()->GetScopeName(), m_addon_offset[eScope], Heading());
+				InitAddon	(GetIcon(eScope), object()->GetScopeName().c_str(), m_addon_offset[eScope], Heading());
 			}
 		}
 		else
@@ -289,7 +289,7 @@ void CUIWeaponCellItem::Update()
 			{
 				CreateIcon	(eLauncher);
 				RefreshOffset();
-				InitAddon	(GetIcon(eLauncher), *object()->GetGrenadeLauncherName(), m_addon_offset[eLauncher], Heading());
+				InitAddon	(GetIcon(eLauncher), object()->GetGrenadeLauncherName().c_str(), m_addon_offset[eLauncher], Heading());
 			}
 		}
 		else
@@ -320,13 +320,13 @@ void CUIWeaponCellItem::SetTextureColor( u32 color )
 void CUIWeaponCellItem::OnAfterChild(CUIDragDropListEx* parent_list)
 {
 	if(is_silencer() && GetIcon(eSilencer))
-		InitAddon	(GetIcon(eSilencer), *object()->GetSilencerName(),	m_addon_offset[eSilencer], parent_list->GetVerticalPlacement());
+		InitAddon	(GetIcon(eSilencer), object()->GetSilencerName().c_str(),	m_addon_offset[eSilencer], parent_list->GetVerticalPlacement());
 
 	if(is_scope() && GetIcon(eScope))
-		InitAddon	(GetIcon(eScope),	*object()->GetScopeName(),		m_addon_offset[eScope], parent_list->GetVerticalPlacement());
+		InitAddon	(GetIcon(eScope),	object()->GetScopeName().c_str(),		m_addon_offset[eScope], parent_list->GetVerticalPlacement());
 
 	if(is_launcher() && GetIcon(eLauncher))
-		InitAddon	(GetIcon(eLauncher), *object()->GetGrenadeLauncherName(),m_addon_offset[eLauncher], parent_list->GetVerticalPlacement());
+		InitAddon	(GetIcon(eLauncher), object()->GetGrenadeLauncherName().c_str(),m_addon_offset[eLauncher], parent_list->GetVerticalPlacement());
 }
 
 void CUIWeaponCellItem::InitAddon(CUIStatic* s, LPCSTR section, Fvector2 addon_offset, bool b_rotate)
@@ -393,7 +393,7 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 	{
 		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
 		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
-		InitAddon		(s, *object()->GetSilencerName(), m_addon_offset[eSilencer], false);
+		InitAddon		(s, object()->GetSilencerName().c_str(), m_addon_offset[eSilencer], false);
 		s->SetTextureColor(i->wnd()->GetTextureColor());
 		i->wnd			()->AttachChild	(s);
 	}
@@ -402,7 +402,7 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 	{
 		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
 		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
-		InitAddon		(s,	*object()->GetScopeName(),		m_addon_offset[eScope], false);
+		InitAddon		(s,	object()->GetScopeName().c_str(),		m_addon_offset[eScope], false);
 		s->SetTextureColor(i->wnd()->GetTextureColor());
 		i->wnd			()->AttachChild	(s);
 	}
@@ -411,7 +411,7 @@ CUIDragItem* CUIWeaponCellItem::CreateDragItem()
 	{
 		s				= xr_new<CUIStatic>(); s->SetAutoDelete(true);
 		s->SetShader	(InventoryUtilities::GetEquipmentIconsShader());
-		InitAddon		(s, *object()->GetGrenadeLauncherName(),m_addon_offset[eLauncher], false);
+		InitAddon		(s, object()->GetGrenadeLauncherName().c_str(),m_addon_offset[eLauncher], false);
 		s->SetTextureColor(i->wnd()->GetTextureColor());
 		i->wnd			()->AttachChild	(s);
 	}

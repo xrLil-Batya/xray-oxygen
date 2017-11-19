@@ -18,6 +18,8 @@
 #include "step_manager.h"
 #include "../xrScripts/export/script_export_space.h"
 
+#include "string"
+
 using namespace ACTOR_DEFS;
 
 class CInfoPortion;

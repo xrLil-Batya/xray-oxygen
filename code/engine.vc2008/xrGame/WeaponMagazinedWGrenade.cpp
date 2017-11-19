@@ -99,9 +99,9 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 
 		if(b_if_grenade_mode || b_if_simple_mode) 
 		{
-			shared_str fake_grenade_name = pSettings->r_string(pM->back().m_ammoSect, "fake_grenade_name");
+			std::string fake_grenade_name = pSettings->r_string(pM->back().m_ammoSect.c_str(), "fake_grenade_name");
 			
-			CRocketLauncher::SpawnRocket(*fake_grenade_name, this);
+			CRocketLauncher::SpawnRocket(fake_grenade_name.c_str(), this);
 		}
 	}
 	return l_res;
@@ -441,7 +441,7 @@ bool CWeaponMagazinedWGrenade::CanAttach(PIItem pIItem)
 	if(pGrenadeLauncher &&
 	   ALife::eAddonAttachable == m_eGrenadeLauncherStatus &&
 	   0 == (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) &&
-	   !xr_strcmp(*m_sGrenadeLauncherName, pIItem->object().cNameSect()))
+	   !strcmp(m_sGrenadeLauncherName.c_str(), pIItem->object().cNameSect().c_str()))
        return true;
 	else
 		return inherited::CanAttach(pIItem);
@@ -451,7 +451,7 @@ bool CWeaponMagazinedWGrenade::CanDetach(LPCSTR item_section_name)
 {
 	if(ALife::eAddonAttachable == m_eGrenadeLauncherStatus &&
 	   0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) &&
-	   !xr_strcmp(*m_sGrenadeLauncherName, item_section_name))
+	   !strcmp(m_sGrenadeLauncherName.c_str(), item_section_name))
 	   return true;
 	else
 	   return inherited::CanDetach(item_section_name);
@@ -464,7 +464,7 @@ bool CWeaponMagazinedWGrenade::Attach(PIItem pIItem, bool b_send_event)
 	if(pGrenadeLauncher &&
 	   ALife::eAddonAttachable == m_eGrenadeLauncherStatus &&
 	   0 == (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) &&
-	   !xr_strcmp(*m_sGrenadeLauncherName, pIItem->object().cNameSect()))
+	   !strcmp(m_sGrenadeLauncherName.c_str(), pIItem->object().cNameSect().c_str()))
 	{
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher;
 
@@ -491,7 +491,7 @@ bool CWeaponMagazinedWGrenade::Detach(LPCSTR item_section_name, bool b_spawn_ite
 {
 	if (ALife::eAddonAttachable == m_eGrenadeLauncherStatus &&
 	   0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) &&
-	   !xr_strcmp(*m_sGrenadeLauncherName, item_section_name))
+	   !std::strcmp(m_sGrenadeLauncherName.c_str(), item_section_name))
 	{
 		m_flagsAddOnState &= ~CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher;
 		
@@ -521,7 +521,7 @@ void CWeaponMagazinedWGrenade::InitAddons()
 	{
 		if(IsGrenadeLauncherAttached())
 		{
-			CRocketLauncher::m_fLaunchSpeed = pSettings->r_float(*m_sGrenadeLauncherName,"grenade_vel");
+			CRocketLauncher::m_fLaunchSpeed = pSettings->r_floatStd(m_sGrenadeLauncherName,"grenade_vel");
 		}
 	}
 }
@@ -750,7 +750,7 @@ void CWeaponMagazinedWGrenade::net_Import	(NET_Packet& P)
 	inherited::net_Import		(P);
 }
 
-bool CWeaponMagazinedWGrenade::IsNecessaryItem	    (const shared_str& item_sect)
+bool CWeaponMagazinedWGrenade::IsNecessaryItem	    (const std::string& item_sect)
 {
 	return (	std::find(m_ammoTypes.begin(), m_ammoTypes.end(), item_sect) != m_ammoTypes.end() ||
 				std::find(m_ammoTypes2.begin(), m_ammoTypes2.end(), item_sect) != m_ammoTypes2.end() 
@@ -782,7 +782,7 @@ bool CWeaponMagazinedWGrenade::install_upgrade_ammo_class	( LPCSTR section, bool
 	bool result2 = process_if_exists_set( section, "ammo_class", &CInifile::r_string, str, test );
 	if ( result2 && !test ) 
 	{
-		xr_vector<shared_str>& ammo_types	= m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
+		xr_vector<std::string>& ammo_types	= m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
 		ammo_types.clear					(); 
 		for ( int i = 0, count = _GetItemCount( str ); i < count; ++i )	
 		{
@@ -808,7 +808,7 @@ bool CWeaponMagazinedWGrenade::install_upgrade_impl( LPCSTR section, bool test )
 	bool result2 = process_if_exists_set( section, "grenade_class", &CInifile::r_string, str, test );
 	if ( result2 && !test )
 	{
-		xr_vector<shared_str>& ammo_types	= !m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
+		xr_vector<std::string>& ammo_types	= !m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
 		ammo_types.clear					(); 
 		for ( int i = 0, count = _GetItemCount( str ); i < count; ++i )	
 		{

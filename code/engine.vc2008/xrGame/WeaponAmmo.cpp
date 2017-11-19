@@ -16,7 +16,7 @@
 CCartridge::CCartridge() 
 {
 	m_flags.assign			(cfTracer | cfRicochet);
-	m_ammoSect = NULL;
+	m_ammoSect = "";
 	param_s.Init();
 	bullet_material_idx = u16(-1);
 }
@@ -67,7 +67,8 @@ void CCartridge::Load(LPCSTR section, u8 LocalAmmoType)
 	VERIFY	(u16(-1)!=bullet_material_idx);
 	VERIFY	(param_s.fWallmarkSize>0);
 
-	m_InvShortName			= CStringTable().translate( pSettings->r_string(section, "inv_name_short"));
+	m_InvShortName			= //CStringTable().translate
+			( pSettings->r_stringStd(section, "inv_name_short"));
 }
 
 CWeaponAmmo::CWeaponAmmo(void) 
@@ -161,7 +162,7 @@ s32 CWeaponAmmo::Sort(PIItem pIItem)
 bool CWeaponAmmo::Get(CCartridge &cartridge) 
 {
 	if(!m_boxCurr) return false;
-	cartridge.m_ammoSect = cNameSect();
+	cartridge.m_ammoSect = cNameSect().c_str();
 	
 	cartridge.param_s = cartridge_param;
 
@@ -209,7 +210,7 @@ CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) cons
 		CWeapon		*weapon = smart_cast<CWeapon*>(*I);
 		if (!weapon)
 			continue;
-		xr_vector<shared_str>::const_iterator	i = std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),cNameSect());
+		xr_vector<std::string>::const_iterator	i = std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),cNameSect().c_str());
 		if (i != weapon->m_ammoTypes.end())
 			return			(weapon);
 	}

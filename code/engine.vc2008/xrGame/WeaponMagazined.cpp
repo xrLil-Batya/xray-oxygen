@@ -50,7 +50,7 @@ CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 
 	m_sounds_enabled			= true;
 	
-	m_sSndShotCurrent			= NULL;
+	m_sSndShotCurrent			= "";
 	m_sSilencerFlameParticles	= m_sSilencerSmokeParticles = NULL;
 
 	m_bFireSingleShot			= false;
@@ -265,14 +265,14 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 		xr_map<LPCSTR, u16>::iterator l_it;
 		for(l_it = l_ammo.begin(); l_ammo.end() != l_it; ++l_it) 
 		{
-            if(!xr_strcmp(*l_cartridge.m_ammoSect, l_it->first)) 
+            if(!strcmp(l_cartridge.m_ammoSect.c_str(), l_it->first)) 
             { 
 				 ++(l_it->second); 
 				 break; 
 			}
 		}
 
-		if(l_it == l_ammo.end()) l_ammo[*l_cartridge.m_ammoSect] = 1;
+		if(l_it == l_ammo.end()) l_ammo[l_cartridge.m_ammoSect.c_str()] = 1;
 		m_magazine.pop_back(); 
 		--iAmmoElapsed;
 	}
@@ -355,7 +355,7 @@ void CWeaponMagazined::ReloadMagazine()
 	//разрядить магазин, если загружаем патронами другого типа
 	if(!m_bLockType && !m_magazine.empty() && 
 		(!m_pCurrentAmmo || xr_strcmp(m_pCurrentAmmo->cNameSect(), 
-					 *m_magazine.back().m_ammoSect)))
+					 m_magazine.back().m_ammoSect.c_str())))
 		UnloadMagazine();
 
 	VERIFY((u32)iAmmoElapsed == m_magazine.size());
@@ -816,7 +816,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
         auto it = m_scopes.begin();
 		for(; it!=m_scopes.end(); it++)
 		{
-			if(pSettings->r_string((*it),"scope_name")==pIItem->object().cNameSect())
+			if(pSettings->r_stringStd((*it),"scope_name")==pIItem->object().cNameSect().c_str())
 				return true;
 		}
 		return false;
@@ -824,12 +824,12 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 	else if(	pSilencer &&
 				m_eSilencerStatus == ALife::eAddonAttachable &&
 				(m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonSilencer) == 0 &&
-				(m_sSilencerName == pIItem->object().cNameSect()) )
+				(m_sSilencerName == pIItem->object().cNameSect().c_str()))
        return true;
 	else if (	pGrenadeLauncher &&
 				m_eGrenadeLauncherStatus == ALife::eAddonAttachable &&
 				(m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
-				(m_sGrenadeLauncherName  == pIItem->object().cNameSect()) )
+				(m_sGrenadeLauncherName  == pIItem->object().cNameSect().c_str()) )
 		return true;
 	else
 		return inherited::CanAttach(pIItem);
@@ -844,7 +844,7 @@ bool CWeaponMagazined::CanDetach(const char* item_section_name)
 		auto it = m_scopes.begin();
 		for(; it!=m_scopes.end(); it++)
 		{
-			if(pSettings->r_string((*it),"scope_name")==item_section_name)
+			if(pSettings->r_stringStd((*it),"scope_name")==item_section_name)
 				return true;
 		}
 		return false;
@@ -878,7 +878,7 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 		auto it = m_scopes.begin();
 		for(; it!=m_scopes.end(); it++)
 		{
-			if(pSettings->r_string((*it),"scope_name")==pIItem->object().cNameSect())
+			if(pSettings->r_stringStd((*it),"scope_name")==pIItem->object().cNameSect())
 				m_cur_scope = u8(it-m_scopes.begin());
 		}
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonScope;
@@ -887,7 +887,7 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 	else if(pSilencer &&
 	   m_eSilencerStatus == ALife::eAddonAttachable &&
 	   (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonSilencer) == 0 &&
-	   (m_sSilencerName == pIItem->object().cNameSect()))
+	   (m_sSilencerName == pIItem->object().cNameSect().c_str()))
 	{
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonSilencer;
 		result = true;
@@ -895,7 +895,7 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 	else if(pGrenadeLauncher &&
 	   m_eGrenadeLauncherStatus == ALife::eAddonAttachable &&
 	   (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
-	   (m_sGrenadeLauncherName == pIItem->object().cNameSect()))
+	   (m_sGrenadeLauncherName == pIItem->object().cNameSect().c_str()))
 	{
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher;
 		result = true;
@@ -925,7 +925,7 @@ bool CWeaponMagazined::DetachScope(const char* item_section_name, bool b_spawn_i
     auto it = m_scopes.begin();
 	for(; it!=m_scopes.end(); it++)
 	{
-		LPCSTR iter_scope_name = pSettings->r_string((*it),"scope_name");
+		LPCSTR iter_scope_name = pSettings->r_stringStd((*it),"scope_name");
 		if(!xr_strcmp(iter_scope_name, item_section_name))
 		{
 			m_cur_scope = NULL;
@@ -995,18 +995,18 @@ void CWeaponMagazined::InitAddons()
 	m_zoom_params.m_fIronSightZoomFactor = READ_IF_EXISTS( pSettings, r_float, cNameSect(), "ironsight_zoom_factor", 50.0f );
 	if ( IsScopeAttached() )
 	{
-		shared_str scope_tex_name;
+		//std::string _tex_name;
 		if ( m_eScopeStatus == ALife::eAddonAttachable )
 		{
 			//m_scopes[cur_scope]->m_sScopeName = pSettings->r_string(cNameSect(), "scope_name");
 			//m_scopes[cur_scope]->m_iScopeX	 = pSettings->r_s32(cNameSect(),"scope_x");
 			//m_scopes[cur_scope]->m_iScopeY	 = pSettings->r_s32(cNameSect(),"scope_y");
 
-			scope_tex_name						= pSettings->r_string(GetScopeName(), "scope_texture");
-			m_zoom_params.m_fScopeZoomFactor	= pSettings->r_float( GetScopeName(), "scope_zoom_factor");
-			m_zoom_params.m_sUseZoomPostprocess	= READ_IF_EXISTS(pSettings,r_string,GetScopeName(), "scope_nightvision", 0);
-			m_zoom_params.m_bUseDynamicZoom		= READ_IF_EXISTS(pSettings,r_bool,GetScopeName(),"scope_dynamic_zoom",FALSE);
-			m_zoom_params.m_sUseBinocularVision	= READ_IF_EXISTS(pSettings,r_string,GetScopeName(),"scope_alive_detector",0);
+			std::string scope_tex_name = pSettings->r_stringStd(GetScopeName(), "scope_texture");
+			m_zoom_params.m_fScopeZoomFactor	= pSettings->r_floatStd( GetScopeName(), "scope_zoom_factor");
+			m_zoom_params.m_sUseZoomPostprocess	= READ_IF_EXISTS(pSettings,r_stringStd,GetScopeName().c_str(), "scope_nightvision", 0);
+			m_zoom_params.m_bUseDynamicZoom		= READ_IF_EXISTS(pSettings,r_bool,GetScopeName().c_str(),"scope_dynamic_zoom",FALSE);
+			m_zoom_params.m_sUseBinocularVision	= READ_IF_EXISTS(pSettings,r_stringStd,GetScopeName().c_str(),"scope_alive_detector",0);
 			if ( m_UIScope )
 			{
 				xr_delete( m_UIScope );

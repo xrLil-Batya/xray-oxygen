@@ -501,7 +501,7 @@ void CAI_Stalker::Die				(CObject* who)
 		TIItemContainer::iterator	I = inventory().m_all.begin();
 		TIItemContainer::iterator	E = inventory().m_all.end();
 		for ( ; I != E; ++I) {
-			if (std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),(*I)->object().cNameSect()) == weapon->m_ammoTypes.end())
+			if (std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),(*I)->object().cNameSect().c_str()) == weapon->m_ammoTypes.end())
 				continue;
 
 			NET_Packet				packet;

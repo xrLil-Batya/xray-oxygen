@@ -108,6 +108,7 @@ public:
 // ptr != const res_ptr
 // res_ptr < res_ptr
 // res_ptr > res_ptr
+//IC bool operator	==	(std::string const & a, std::string const & b)		{ return a == b; }
 IC bool operator	==	(shared_str const & a, shared_str const & b)		{ return a._get() == b._get();					}
 IC bool operator	!=	(shared_str const & a, shared_str const & b)		{ return a._get() != b._get();					}
 IC bool operator	<	(shared_str const & a, shared_str const & b)		{ return a._get() <  b._get();					}

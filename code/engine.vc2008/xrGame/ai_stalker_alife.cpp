@@ -117,7 +117,7 @@ void CAI_Stalker::attach_available_ammo			(CWeapon *weapon)
 			std::find(
 				weapon->m_ammoTypes.begin(),
 				weapon->m_ammoTypes.end(),
-				(*I).m_item->object().cNameSect()
+				(*I).m_item->object().cNameSect().c_str()
 			) == 
 			weapon->m_ammoTypes.end()
 		)
@@ -308,7 +308,7 @@ bool CAI_Stalker::enough_ammo						(const CWeapon *new_weapon) const
 	TIItemContainer::const_iterator	I = inventory().m_all.begin();
 	TIItemContainer::const_iterator	E = inventory().m_all.end();
 	for ( ; I != E; ++I) {
-		if (std::find(new_weapon->m_ammoTypes.begin(),new_weapon->m_ammoTypes.end(),(*I)->object().cNameSect()) == new_weapon->m_ammoTypes.end())
+		if (std::find(new_weapon->m_ammoTypes.begin(),new_weapon->m_ammoTypes.end(),(*I)->object().cNameSect().c_str()) == new_weapon->m_ammoTypes.end())
 			continue;
 
 		++ammo_box_count;
@@ -324,7 +324,7 @@ void CAI_Stalker::remove_personal_only_ammo(const CInventoryItem *item)
 	const CWeapon			*weapon = smart_cast<const CWeapon*>(item);
 	VERIFY					(weapon);
 
-	for (shared_str it: weapon->m_ammoTypes) 
+	for (std::string it: weapon->m_ammoTypes) 
 	{
 		bool found = false;
 
@@ -349,7 +349,7 @@ void CAI_Stalker::remove_personal_only_ammo(const CInventoryItem *item)
 
 		for (PIItem i: inventory().m_all)
 		{
-			if (xr_strcmp(it, i->object().cNameSect()))
+			if (strcmp(it.c_str(), i->object().cNameSect().c_str()))
 				continue;
 
 			NET_Packet		packet;

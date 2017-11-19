@@ -157,16 +157,16 @@ public:
 	virtual void InitAddons();
 
 	//для отоброажения иконок апгрейдов в интерфейсе
-	int	GetScopeX() {return pSettings->r_s32(m_scopes[m_cur_scope], "scope_x");}
-	int	GetScopeY() {return pSettings->r_s32(m_scopes[m_cur_scope], "scope_y");}
+	int	GetScopeX() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_x");}
+	int	GetScopeY() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_y");}
 	int	GetSilencerX() {return m_iSilencerX;}
 	int	GetSilencerY() {return m_iSilencerY;}
 	int	GetGrenadeLauncherX() {return m_iGrenadeLauncherX;}
 	int	GetGrenadeLauncherY() {return m_iGrenadeLauncherY;}
 
-	const shared_str& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
-	const shared_str GetScopeName				() const{return pSettings->r_string(m_scopes[m_cur_scope], "scope_name");}
-	const shared_str& GetSilencerName			() const{return m_sSilencerName;}
+	const std::string& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
+	const std::string GetScopeName				() const{return pSettings->r_stringStd(m_scopes[m_cur_scope], "scope_name");}
+	const std::string& GetSilencerName			() const{return m_sSilencerName;}
 
 	IC void	ForceUpdateAmmo						()		{ m_BriefInfo_CalcFrame = 0; }
 
@@ -182,9 +182,9 @@ protected:
 	ALife::EWeaponAddonStatus	m_eGrenadeLauncherStatus;
 
 	//названия секций подключаемых аддонов
-	shared_str		m_sScopeName;
-	shared_str		m_sSilencerName;
-	shared_str		m_sGrenadeLauncherName;
+	std::string		m_sScopeName;
+	std::string		m_sSilencerName;
+	std::string		m_sGrenadeLauncherName;
 
 	//смещение иконов апгрейдов в инвентаре
 	int	m_iScopeX, m_iScopeY;
@@ -211,8 +211,8 @@ protected:
 		Fvector			m_ZoomDof;
 		Fvector4		m_ReloadDof;
 		BOOL			m_bUseDynamicZoom;
-		shared_str		m_sUseZoomPostprocess;
-		shared_str		m_sUseBinocularVision;
+		std::string		m_sUseZoomPostprocess;
+		std::string		m_sUseBinocularVision;
 		CBinocularsVision*		m_pVision;
 		CNightVisionEffector*	m_pNight_vision;
 
@@ -389,12 +389,12 @@ protected:
 			void			StopFlameParticles2	();
 			void			UpdateFlameParticles2();
 protected:
-	shared_str				m_sFlameParticles2;
+	std::string				m_sFlameParticles2;
 	//объект партиклов для стрельбы из 2-го ствола
 	CParticlesObject*		m_pFlameParticles2;
 
 protected:
-	int						GetAmmoCount_forType(shared_str const& ammo_type) const;
+	int						GetAmmoCount_forType(std::string const& ammo_type) const;
 	int						GetAmmoCount		(u8 ammo_type) const;
 
 public:
@@ -426,14 +426,14 @@ protected:
 	mutable u32				m_BriefInfo_CalcFrame;	//кадр на котором просчитали кол-во патронов
 	bool					m_bAmmoWasSpawned;
 
-	virtual bool			IsNecessaryItem	    (const shared_str& item_sect);
+	virtual bool			IsNecessaryItem	    (const std::string& item_sect);
 
 public:
-	xr_vector<shared_str>	m_ammoTypes;
+	xr_vector<std::string>	m_ammoTypes;
 /*
 	struct SScopes
 	{
-		shared_str			m_sScopeName;
+		std::string			m_sScopeName;
 		int					m_iScopeX;
 		int					m_iScopeY;
 	};
@@ -443,13 +443,13 @@ public:
 	u8						cur_scope;
 */
 
-	using SCOPES_VECTOR = xr_vector<shared_str>;
+	using SCOPES_VECTOR = xr_vector<std::string>;
 	SCOPES_VECTOR			m_scopes;
 	u8						m_cur_scope;
 
 	CWeaponAmmo*			m_pCurrentAmmo;
 	u8						m_ammoType;
-//-	shared_str				m_ammoName; <== deleted
+//-	std::string				m_ammoName; <== deleted
 	bool					m_bHasTracers;
 	u8						m_u8TracerColorID;
 	u8						m_set_next_ammoType_on_reload;

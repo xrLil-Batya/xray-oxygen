@@ -128,7 +128,7 @@ void CWeapon::FireEnd()
 
 void CWeapon::StartFlameParticles2	()
 {
-	CShootingObject::StartParticles (m_pFlameParticles2, *m_sFlameParticles2, get_LastFP2());
+	CShootingObject::StartParticles (m_pFlameParticles2, m_sFlameParticles2.c_str(), get_LastFP2());
 }
 void CWeapon::StopFlameParticles2	()
 {
