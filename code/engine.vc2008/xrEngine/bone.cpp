@@ -3,7 +3,7 @@
 
 #include "bone.h"
 #include "gamemtllib.h"
-#include "envelope.h"
+#include "../xrCore/envelope.h"
 
 u16	CBone::get_game_mtl_idx	( )			const	
 {

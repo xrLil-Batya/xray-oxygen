@@ -9,80 +9,76 @@
 #include "dds/tPixel.h"
 #include "dds/nvErrorCodes.h"
 
-typedef	unsigned char	BYTE;
-typedef	unsigned short	WORD;
-typedef	unsigned long	DWORD;
-
-typedef enum nvD3DFORMAT
+using nvD3DFORMAT = enum
 {
-    nvD3DFMT_UNKNOWN = 0,
-    nvD3DFMT_R8G8B8 = 20,
-    nvD3DFMT_A8R8G8B8 = 21,
-    nvD3DFMT_X8R8G8B8 = 22,
-    nvD3DFMT_R5G6B5 = 23,
-    nvD3DFMT_X1R5G5B5 = 24,
-    nvD3DFMT_A1R5G5B5 = 25,
-    nvD3DFMT_A4R4G4B4 = 26,
-    nvD3DFMT_R3G3B2 = 27,
-    nvD3DFMT_A8 = 28,
-    nvD3DFMT_A8R3G3B2 = 29,
-    nvD3DFMT_X4R4G4B4 = 30,
-    nvD3DFMT_A2B10G10R10 = 31,
-    nvD3DFMT_A8B8G8R8 = 32,
-    nvD3DFMT_X8B8G8R8 = 33,
-    nvD3DFMT_G16R16 = 34,
-    nvD3DFMT_A2R10G10B10 = 35,
-    nvD3DFMT_A16B16G16R16 = 36,
-    nvD3DFMT_A8P8 = 40,
-    nvD3DFMT_P8 = 41,
-    nvD3DFMT_L8 = 50,
-    nvD3DFMT_A8L8 = 51,
-    nvD3DFMT_A4L4 = 52,
-    nvD3DFMT_V8U8 = 60,
-    nvD3DFMT_L6V5U5 = 61,
-    nvD3DFMT_X8L8V8U8 = 62,
-    nvD3DFMT_Q8W8V8U8 = 63,
-    nvD3DFMT_V16U16 = 64,
-    nvD3DFMT_A2W10V10U10 = 67,
-    nvD3DFMT_UYVY = MAKEFOURCC('U', 'Y', 'V', 'Y'),
-    nvD3DFMT_R8G8_B8G8 = MAKEFOURCC('R', 'G', 'B', 'G'),
-    nvD3DFMT_YUY2 = MAKEFOURCC('Y', 'U', 'Y', '2'),
-    nvD3DFMT_G8R8_G8B8 = MAKEFOURCC('G', 'R', 'G', 'B'),
-    nvD3DFMT_DXT1 = MAKEFOURCC('D', 'X', 'T', '1'),
-    nvD3DFMT_DXT2 = MAKEFOURCC('D', 'X', 'T', '2'),
-    nvD3DFMT_DXT3 = MAKEFOURCC('D', 'X', 'T', '3'),
-    nvD3DFMT_DXT4 = MAKEFOURCC('D', 'X', 'T', '4'),
-    nvD3DFMT_DXT5 = MAKEFOURCC('D', 'X', 'T', '5'),
-    nvD3DFMT_3Dc = MAKEFOURCC('A', 'T', 'I', '2'),
-    nvD3DFMT_D16_LOCKABLE = 70,
-    nvD3DFMT_D32 = 71,
-    nvD3DFMT_D15S1 = 73,
-    nvD3DFMT_D24S8 = 75,
-    nvD3DFMT_D24X8 = 77,
-    nvD3DFMT_D24X4S4 = 79,
-    nvD3DFMT_D16 = 80,
-    nvD3DFMT_D32F_LOCKABLE = 82,
-    nvD3DFMT_D24FS8 = 83,
-    nvD3DFMT_L16 = 81,
-    nvD3DFMT_VERTEXDATA = 100,
-    nvD3DFMT_INDEX16 = 101,
-    nvD3DFMT_INDEX32 = 102,
-    nvD3DFMT_Q16W16V16U16 = 110,
-    nvD3DFMT_MULTI2_ARGB8 = MAKEFOURCC('M', 'E', 'T', '1'),
-    // Floating point surface formats
-    // s10e5 formats (16-bits per channel)
-    nvD3DFMT_R16F = 111,
-    nvD3DFMT_G16R16F = 112,
-    nvD3DFMT_A16B16G16R16F = 113,
-    // IEEE s23e8 formats (32-bits per channel)
-    nvD3DFMT_R32F = 114,
-    nvD3DFMT_G32R32F = 115,
-    nvD3DFMT_A32B32G32R32F = 116,
-    nvD3DFMT_CxV8U8 = 117,
-    nvD3DFMT_FORCE_DWORD = 0x7fffffff
-} nvD3DFORMAT;
+	nvD3DFMT_UNKNOWN = 0,
+	nvD3DFMT_R8G8B8 = 20,
+	nvD3DFMT_A8R8G8B8 = 21,
+	nvD3DFMT_X8R8G8B8 = 22,
+	nvD3DFMT_R5G6B5 = 23,
+	nvD3DFMT_X1R5G5B5 = 24,
+	nvD3DFMT_A1R5G5B5 = 25,
+	nvD3DFMT_A4R4G4B4 = 26,
+	nvD3DFMT_R3G3B2 = 27,
+	nvD3DFMT_A8 = 28,
+	nvD3DFMT_A8R3G3B2 = 29,
+	nvD3DFMT_X4R4G4B4 = 30,
+	nvD3DFMT_A2B10G10R10 = 31,
+	nvD3DFMT_A8B8G8R8 = 32,
+	nvD3DFMT_X8B8G8R8 = 33,
+	nvD3DFMT_G16R16 = 34,
+	nvD3DFMT_A2R10G10B10 = 35,
+	nvD3DFMT_A16B16G16R16 = 36,
+	nvD3DFMT_A8P8 = 40,
+	nvD3DFMT_P8 = 41,
+	nvD3DFMT_L8 = 50,
+	nvD3DFMT_A8L8 = 51,
+	nvD3DFMT_A4L4 = 52,
+	nvD3DFMT_V8U8 = 60,
+	nvD3DFMT_L6V5U5 = 61,
+	nvD3DFMT_X8L8V8U8 = 62,
+	nvD3DFMT_Q8W8V8U8 = 63,
+	nvD3DFMT_V16U16 = 64,
+	nvD3DFMT_A2W10V10U10 = 67,
+	nvD3DFMT_UYVY = MAKEFOURCC('U', 'Y', 'V', 'Y'),
+	nvD3DFMT_R8G8_B8G8 = MAKEFOURCC('R', 'G', 'B', 'G'),
+	nvD3DFMT_YUY2 = MAKEFOURCC('Y', 'U', 'Y', '2'),
+	nvD3DFMT_G8R8_G8B8 = MAKEFOURCC('G', 'R', 'G', 'B'),
+	nvD3DFMT_DXT1 = MAKEFOURCC('D', 'X', 'T', '1'),
+	nvD3DFMT_DXT2 = MAKEFOURCC('D', 'X', 'T', '2'),
+	nvD3DFMT_DXT3 = MAKEFOURCC('D', 'X', 'T', '3'),
+	nvD3DFMT_DXT4 = MAKEFOURCC('D', 'X', 'T', '4'),
+	nvD3DFMT_DXT5 = MAKEFOURCC('D', 'X', 'T', '5'),
+	nvD3DFMT_3Dc = MAKEFOURCC('A', 'T', 'I', '2'),
+	nvD3DFMT_D16_LOCKABLE = 70,
+	nvD3DFMT_D32 = 71,
+	nvD3DFMT_D15S1 = 73,
+	nvD3DFMT_D24S8 = 75,
+	nvD3DFMT_D24X8 = 77,
+	nvD3DFMT_D24X4S4 = 79,
+	nvD3DFMT_D16 = 80,
+	nvD3DFMT_D32F_LOCKABLE = 82,
+	nvD3DFMT_D24FS8 = 83,
+	nvD3DFMT_L16 = 81,
+	nvD3DFMT_VERTEXDATA = 100,
+	nvD3DFMT_INDEX16 = 101,
+	nvD3DFMT_INDEX32 = 102,
+	nvD3DFMT_Q16W16V16U16 = 110,
+	nvD3DFMT_MULTI2_ARGB8 = MAKEFOURCC('M', 'E', 'T', '1'),
+	// Floating point surface formats
+	// s10e5 formats (16-bits per channel)
+	nvD3DFMT_R16F = 111,
+	nvD3DFMT_G16R16F = 112,
+	nvD3DFMT_A16B16G16R16F = 113,
+	// IEEE s23e8 formats (32-bits per channel)
+	nvD3DFMT_R32F = 114,
+	nvD3DFMT_G32R32F = 115,
+	nvD3DFMT_A32B32G32R32F = 116,
+	nvD3DFMT_CxV8U8 = 117,
+	nvD3DFMT_FORCE_DWORD = 0x7fffffff
+};
 
-typedef enum nvRescaleTypes
+using RescaleTypes = enum nvRescaleTypes
 {
     kRescaleNone, // no rescale
     kRescaleNearestPower2, // rescale to nearest power of two
@@ -91,9 +87,9 @@ typedef enum nvRescaleTypes
     kRescaleNextSmallestPower2, // rescale to next smaller power of 2
     kRescalePreScale, // rescale to this size
     kRescaleRelScale, // relative rescale
-} RescaleTypes;
+};
 
-typedef enum nvSharpenFilterTypes
+enum nvSharpenFilterTypes
 {
     kSharpenFilterNone,
     kSharpenFilterNegative,
@@ -117,7 +113,7 @@ typedef enum nvSharpenFilterTypes
     kSharpenFilterCustom,
 };
 
-typedef enum nvMipMapGeneration
+enum nvMipMapGeneration
 {
     kGenerateMipMaps = 30,
     kUseExistingMipMaps = 31,
@@ -125,7 +121,7 @@ typedef enum nvMipMapGeneration
     kCompleteMipMapChain = 33, // fill in missing MIP maps
 };
 
-typedef enum nvMipFilterTypes
+enum nvMipFilterTypes
 {
     kMipFilterPoint,
     kMipFilterBox,
@@ -267,13 +263,13 @@ public:
     size_t nMIPMapsToLoad;
     bool bFoundAlphaInRead; // is alpha field present and non-zero
     // in the input file
-    DWORD dwCubeMapFlags;
+	DWORD dwCubeMapFlags;
     size_t bits_per_component;
     size_t nPlanes; // number of planes in the file format
     bool bCompressed; // is file a compressed format
     size_t paletteSize; // 16 or 256 entries
     rgba_t palette[256];
-    DWORD fmt; // D3DFORMAT specified in .dds file
+	DWORD fmt; // D3DFORMAT specified in .dds file
     nvTextureFormats textureFormat;
     nvTextureTypes textureType;
     fpMipMappedImage fpMIPImage;

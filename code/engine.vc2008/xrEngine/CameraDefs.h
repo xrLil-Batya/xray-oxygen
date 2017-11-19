@@ -1,11 +1,5 @@
 #pragma once
-
-struct ENGINE_API SBaseEffector
-{
-	typedef fastdelegate::FastDelegate0<>		CB_ON_B_REMOVE;
-	CB_ON_B_REMOVE				m_on_b_remove_callback;
-	virtual ~SBaseEffector(){}
-};
+#include "../xrCore/BaseEffector.h"
 
 struct ENGINE_API SCamEffectorInfo
 {
@@ -48,11 +42,7 @@ enum ECamEffectorType		{
 	cefNext
 };
 
-enum EEffectorPPType	{
-	ppeNext		=0,
-};
-
 // refs
 class ENGINE_API CCameraBase;
 class ENGINE_API CEffectorCam;
-class ENGINE_API CEffectorPP;
+class XRCORE_API CEffectorPP;

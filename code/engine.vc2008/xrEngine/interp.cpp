@@ -13,7 +13,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "envelope.h"
+#include "../xrCore/envelope.h"
 
 //======================================================================
 //range()

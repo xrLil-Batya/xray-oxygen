@@ -686,9 +686,6 @@
     <ClCompile Include="bone.cpp">
       <Filter>Game API\Animator</Filter>
     </ClCompile>
-    <ClCompile Include="Envelope.cpp">
-      <Filter>Game API\Animator</Filter>
-    </ClCompile>
     <ClCompile Include="interp.cpp">
       <Filter>Game API\Animator</Filter>
     </ClCompile>

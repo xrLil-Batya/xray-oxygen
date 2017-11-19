@@ -8735,9 +8735,6 @@
     <ClCompile Include="ui\UIActorMenu_action.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIActorMenu_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIActorMenuDeadBodySearch.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>

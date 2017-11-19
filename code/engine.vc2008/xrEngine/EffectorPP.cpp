@@ -4,7 +4,6 @@
 
 #include "stdafx.h"
 #include "EffectorPP.h"
-#include "CameraManager.h"
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -1016,42 +1016,26 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
-	CMedkit*		pMedkit = smart_cast<CMedkit*>		(item);
-	CAntirad*		pAntirad = smart_cast<CAntirad*>		(item);
 	CEatableItem*	pEatableItem = smart_cast<CEatableItem*>	(item);
 	CBottleItem*	pBottleItem = smart_cast<CBottleItem*>	(item);
 
 	const char* act_str = nullptr;
-	if (pMedkit || pAntirad)
-	{
-		act_str = "st_use";
-	}
-	else if (pBottleItem)
+
+	if (pBottleItem)
 	{
 		act_str = "st_drink";
 	}
 	else if (pEatableItem)
 	{
-		CObject*	pObj = smart_cast<CObject*>		(item);
-		shared_str	section_name = pObj->cNameSect();
-		if (!xr_strcmp(section_name, "vodka") || !(xr_strcmp(section_name, "energy_drink")))
-		{
-			act_str = "st_drink";
-		}
-		else if (!xr_strcmp(section_name, "bread") || !xr_strcmp(section_name, "kolbasa") || !xr_strcmp(section_name, "conserva"))
-		{
-			act_str = "st_eat";
-		}
-		else
-		{
-			act_str = "st_use";
-		}
+		act_str = "st_eat";
 	}
-	if (act_str)
+	else
 	{
-		m_UIPropertiesBox->AddItem(act_str, NULL, INVENTORY_EAT_ACTION);
-		b_show = true;
+		act_str = "st_use";
 	}
+
+	m_UIPropertiesBox->AddItem(act_str, NULL, INVENTORY_EAT_ACTION);
+	b_show = true;
 }
 
 void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)

@@ -1,10 +1,8 @@
-
 #pragma once
-
+#include "../xrCore/BaseEffector.h"
 #include "CameraDefs.h"
 
-
-class ENGINE_API CEffectorCam :public SBaseEffector
+class ENGINE_API CEffectorCam: public SBaseEffector
 {
 protected:
 	ECamEffectorType	eType;

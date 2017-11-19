@@ -417,10 +417,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrEngine\interp.cpp" />
     <ClCompile Include="DateTime.cpp" />
     <ClCompile Include="DebugCore\StackTrace.cpp" />
+    <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="FTimer.cpp" />
     <ClCompile Include="lzo_compressor.cpp" />
+    <ClCompile Include="PostprocessAnimator.cpp" />
+    <ClCompile Include="SPPInfo.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -517,13 +521,17 @@
     <ClCompile Include="os_clipboard.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BaseEffector.h" />
     <ClInclude Include="BuildStackTraceInline.hpp" />
     <ClInclude Include="DateTime.hpp" />
     <ClInclude Include="DebugCore\StackTrace.hpp" />
     <ClInclude Include="DebugCore\SymbolEngine.h" />
+    <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="lzo_compressor.h" />
+    <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="SPPInfo.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrAPI.h" />
     <ClInclude Include="xrCore.h" />
