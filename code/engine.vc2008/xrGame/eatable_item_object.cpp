@@ -30,34 +30,8 @@ void CEatableItemObject::Load				(LPCSTR section)
 	CEatableItem::Load			(section);
 }
 
-//void CEatableItemObject::Hit(float P, Fvector &dir,	
-//						 CObject* who, s16 element,
-//						 Fvector position_in_object_space, 
-//						 float impulse, 
-//						 ALife::EHitType hit_type)
-void	CEatableItemObject::Hit					(SHit* pHDS)
+void CEatableItemObject::Hit(SHit* pHDS)
 {
-	/*
-	CPhysicItem::Hit			(
-		P,
-		dir,
-		who,
-		element,
-		position_in_object_space,
-		impulse,
-		hit_type
-	);
-	
-	CEatableItem::Hit			(
-		P,
-		dir,
-		who,
-		element,
-		position_in_object_space,
-		impulse,
-		hit_type
-	);
-	*/
 	CPhysicItem::Hit(pHDS);
 	CEatableItem::Hit(pHDS);
 }
@@ -209,10 +183,10 @@ bool CEatableItemObject::NeedToDestroyObject() const
 
 u32	 CEatableItemObject::ef_weapon_type		() const
 {
-	return								(0);
+	return (0);
 }
 
 bool CEatableItemObject::Useful				() const
 {
-	return			(CEatableItem::Useful());
+	return (CEatableItem::Useful());
 }

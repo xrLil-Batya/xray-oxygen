@@ -1,42 +1,26 @@
 #include "stdafx.h"
-//#include "igame_level.h"
-
 #include "xr_area.h"
 #include "../xrengine/xr_object.h"
 #include "../xrengine/xrLevel.h"
 #include "../xrengine/xr_collide_form.h"
-//#include "../xrsound/sound.h"
-//#include "x_ray.h"
-//#include "GameFont.h"
-
 
 using namespace	collide;
-
-
 
 //----------------------------------------------------------------------
 // Class	: CObjectSpace
 // Purpose	: stores space slots
 //----------------------------------------------------------------------
-CObjectSpace::CObjectSpace() :
-	xrc()
-	, m_pRender(0)
+CObjectSpace::CObjectSpace(): xrc(), m_pRender(nullptr)
 {
 	if (RenderFactory)
 		m_pRender = CNEW(FactoryPtr<IObjectSpaceRender>)();
 
-	//sh_debug.create				("debug\\wireframe","$nullptr");
 	m_BoundingVolume.invalidate();
 }
 //----------------------------------------------------------------------
 CObjectSpace::~CObjectSpace()
 {
-	//moved to ~IGameLevel
-	//	Sound->set_geometry_occ		(nullptr);
-	//	Sound->set_handler			(nullptr);
-	//
 #ifdef DEBUG
-	//sh_debug.destroy			();
 	CDELETE(m_pRender);
 #endif
 }
@@ -53,10 +37,8 @@ int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*
 	g_SpatialSpace->q_box(q_spatial, 0, STYPE_COLLIDEABLE, point, B);
 
 	// Iterate
-	xr_vector<ISpatial*>::iterator	it = q_spatial.begin();
-	xr_vector<ISpatial*>::iterator	end = q_spatial.end();
-	for (; it != end; it++) {
-		CObject* O = (*it)->dcast_CObject();
+	for (ISpatial* it: q_spatial) {
+		CObject* O = it->dcast_CObject();
 		if (0 == O)				continue;
 		if (O == ignore_object)	continue;
 		Fsphere mS = { O->spatial.sphere.P, O->spatial.sphere.R };
@@ -76,7 +58,7 @@ IC int	CObjectSpace::GetNearest(xr_vector<CObject*>&	q_nearest, const Fvector &p
 IC int   CObjectSpace::GetNearest(xr_vector<CObject*>&	q_nearest, ICollisionForm* obj, float range)
 {
 	CObject*	O = obj->Owner();
-	return				GetNearest(q_nearest, O->spatial.sphere.P, range + O->spatial.sphere.R, O);
+	return GetNearest(q_nearest, O->spatial.sphere.P, range + O->spatial.sphere.R, O);
 }
 
 //----------------------------------------------------------------------
