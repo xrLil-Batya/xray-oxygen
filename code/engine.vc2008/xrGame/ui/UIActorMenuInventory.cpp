@@ -48,10 +48,10 @@ void CUIActorMenu::InitInventoryMode()
 	m_pInventoryPistolList->Show		(true);
 	m_pInventoryAutomaticList->Show		(true);
 	
-	#ifdef NEW_SLOTS
-	    m_pInventoryKnifeList->Show         (true);
-	    m_pInventoryBinocularList->Show     (true);
-	#endif
+#ifdef NEW_SLOTS
+    m_pInventoryKnifeList->Show         (true);
+    m_pInventoryBinocularList->Show     (true);
+#endif
 	
 	m_pQuickSlot->Show					(true);
 	m_pTrashList->Show					(true);
@@ -237,17 +237,17 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		m_pInventoryBeltList,
 		m_pInventoryPistolList,
 		m_pInventoryAutomaticList,
-		#ifdef NEW_SLOTS
-		    m_pInventoryKnifeList,
-		    m_pInventoryBinocularList,
-		#endif
+#ifdef NEW_SLOTS
+    m_pInventoryKnifeList,
+    m_pInventoryBinocularList,
+#endif
 		m_pInventoryOutfitList,
 		m_pInventoryHelmetList,
 		m_pInventoryDetectorList,
 		m_pInventoryBagList,
 		m_pTradeActorBagList,
 		m_pTradeActorList,
-		NULL
+		nullptr
 	};
 
 	switch (action_type)
@@ -388,19 +388,19 @@ void CUIActorMenu::InitCellForSlot( u16 slot_idx )
 void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 {
 	ClearAllLists				();
-	m_pMouseCapturer			= NULL;
+	m_pMouseCapturer			= nullptr;
 	m_UIPropertiesBox->Hide		();
-	SetCurrentItem				(NULL);
+	SetCurrentItem				(nullptr);
 
-	CUIDragDropListEx*			curr_list = NULL;
+	CUIDragDropListEx*			curr_list = nullptr;
 	//Slots
 	InitCellForSlot				(INV_SLOT_2);
 	InitCellForSlot				(INV_SLOT_3);
 	
-	#ifdef NEW_SLOTS
-	    InitCellForSlot             (KNIFE_SLOT);
-	    InitCellForSlot             (BINOCULAR_SLOT);
-	#endif
+#ifdef NEW_SLOTS
+    InitCellForSlot             (KNIFE_SLOT);
+    InitCellForSlot             (BINOCULAR_SLOT);
+#endif
 	
 	InitCellForSlot				(OUTFIT_SLOT);
 	InitCellForSlot				(DETECTOR_SLOT);
@@ -662,7 +662,7 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 			return m_pInventoryAutomaticList;
 			break;
 
-		#ifdef NEW_SLOTS
+#ifdef NEW_SLOTS
 		case KNIFE_SLOT: 
 		    return m_pInventoryKnifeList;
 			break;
@@ -670,7 +670,7 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 		case BINOCULAR_SLOT: 
 		    return m_pInventoryBinocularList; 
 			break;
-		#endif
+#endif
 			
 		case OUTFIT_SLOT:
 			return m_pInventoryOutfitList;
@@ -1016,8 +1016,8 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
-	CEatableItem*	pEatableItem = smart_cast<CEatableItem*>	(item);
-	CBottleItem*	pBottleItem = smart_cast<CBottleItem*>	(item);
+	CEatableItem* pEatableItem = smart_cast<CEatableItem*>(item);
+	CBottleItem* pBottleItem = smart_cast<CBottleItem*>(item);
 
 	const char* act_str = nullptr;
 
@@ -1210,47 +1210,44 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 
 void CUIActorMenu::UpdateOutfit()
 {
-	for ( u8 i = 0; i < e_af_count ; ++i )
+	for (u8 i = 0; i < e_af_count; ++i)
 	{
-		m_belt_list_over[i]->SetVisible( true );
+		m_belt_list_over[i]->SetVisible(true);
 	}
 
-	u32 af_count = m_pActorInvOwner->inventory().BeltWidth();
-	VERIFY( 0 <= af_count && af_count <= 5 );
+	const u32 af_count = m_pActorInvOwner->inventory().BeltWidth();
+	VERIFY(0 <= af_count && af_count <= 5);
 
-	VERIFY( m_pInventoryBeltList );
-	CCustomOutfit* outfit    = m_pActorInvOwner->GetOutfit();
-	if(outfit && !outfit->bIsHelmetAvaliable)
-		m_HelmetOver->Show(true);
-	else
-		m_HelmetOver->Show(false);
+	VERIFY(m_pInventoryBeltList);
+	CCustomOutfit* outfit = m_pActorInvOwner->GetOutfit();
 
-	if ( !outfit )
+	if (!outfit)
 	{
 		MoveArtefactsToBag();
+		m_HelmetOver->Show(false);
 		return;
 	}
-
+	m_HelmetOver->Show(!outfit->bIsHelmetAvaliable);
+	
 	Ivector2 afc;
-	afc.x = af_count;//1;
-	afc.y = 1;//af_count;
+	afc.set(af_count, 1);
 
-	m_pInventoryBeltList->SetCellsCapacity( afc );
+	m_pInventoryBeltList->SetCellsCapacity(afc);
 
-	for ( u8 i = 0; i < af_count ; ++i )
+	for (u8 i = 0; i < af_count; ++i)
 	{
-		m_belt_list_over[i]->SetVisible( false );
+		m_belt_list_over[i]->SetVisible(false);
 	}
 
 }
 
 void CUIActorMenu::MoveArtefactsToBag()
 {
-	while ( m_pInventoryBeltList->ItemsCount() )
+	while (m_pInventoryBeltList->ItemsCount())
 	{
 		CUICellItem* ci = m_pInventoryBeltList->GetItemIdx(0);
-		VERIFY( ci && ci->m_pData );
-		ToBag( ci, false );
-	}//for i
-	m_pInventoryBeltList->ClearAll( true );
+		VERIFY(ci && ci->m_pData);
+		ToBag(ci, false);
+	}
+	m_pInventoryBeltList->ClearAll(true);
 }
