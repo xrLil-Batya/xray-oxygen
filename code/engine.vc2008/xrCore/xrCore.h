@@ -1,5 +1,8 @@
 #pragma once
-
+#ifndef _CLR_MANAGER
+#	include <thread>
+#	include <mutex>
+#endif
 #ifndef DEBUG
 #	define MASTER_GOLD
 #endif // DEBUG

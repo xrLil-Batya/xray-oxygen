@@ -8,7 +8,6 @@
 #	define _WIN32_WINNT 0x0600
 #endif
 
-#include <mutex>
 #include "../xrCore/xrCore.h"
 #include "../xrCore/xrAPI.h"
 
