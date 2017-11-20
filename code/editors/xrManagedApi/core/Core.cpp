@@ -24,10 +24,10 @@ void Core::Initialize(String ^ appName, LogCallback ^ logCallback, bool initFs, 
     if (fsFileName)
     {
         std::string fsFileNameC = msclr::interop::marshal_as<std::string>(fsFileName);
-        ::Core.Initialize(appNameC.c_str(), ::LogCallback(LogCallbackWrapper, nullptr), initFs, fsFileNameC.c_str());
+        ::Core._initialize(appNameC.c_str(), ::LogCallback(LogCallbackWrapper), initFs, fsFileNameC.c_str());
     }
     else
-        ::Core.Initialize(appNameC.c_str(), ::LogCallback(LogCallbackWrapper, nullptr), initFs, nullptr);
+        ::Core._initialize(appNameC.c_str(), ::LogCallback(LogCallbackWrapper), initFs, nullptr);
 }
 
 void Core::Initialize(String ^ appName, LogCallback ^ logCallback, bool initFs)
@@ -42,10 +42,10 @@ void Core::Initialize(String ^ appName, LogCallback ^ logCallback)
 
 void Core::Initialize(String ^ appName) { Core::Initialize(appName, nullptr, false, nullptr); }
 void Core::Destroy() { ::Core._destroy(); }
+#pragma todo("FX to FX: Add build-info to xrCore.")
+const String ^ Core::GetBuildDate() { return msclr::interop::marshal_as<String^>( /* ::Core.GetBuildDate()); */ ""); }
 
-const String ^ Core::GetBuildDate() { return msclr::interop::marshal_as<String^>(::Core.GetBuildDate()); }
-
-const UInt32 Core::GetBuildId() { return ::Core.GetBuildId(); }
+const UInt32 Core::GetBuildId() { return /* ::Core.GetBuildId(); */ 6732; }
 
 }
 }

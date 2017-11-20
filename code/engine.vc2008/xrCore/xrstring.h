@@ -1,5 +1,3 @@
-#ifndef xrstringH
-#define xrstringH
 #pragma once
 
 #pragma pack(push,4)
@@ -30,10 +28,12 @@ struct		XRCORE_API	str_hash_function {
 struct str_container_impl;
 class IWriter;
 //////////////////////////////////////////////////////////////////////////
-class		XRCORE_API	str_container
+class XRCORE_API str_container
 {
 private:
-    std::recursive_mutex					cs;
+#ifndef _CLR_MANAGER
+    std::recursive_mutex				cs;
+#endif
 	str_container_impl*                 impl;
 public:
 						str_container	();
@@ -59,9 +59,6 @@ protected:
 public:
 	void				_set		(str_c rhs) 					{	str_value* v = g_pStringContainer->dock(rhs); if (0!=v) v->dwReference++; _dec(); p_ = v;	}
 	void				_set		(shared_str const &rhs)			{	str_value* v = rhs.p_; if (0!=v) v->dwReference++; _dec(); p_ = v;							}
-//	void				_set		(shared_str const &rhs)			{	str_value* v = g_pStringContainer->dock(rhs.c_str()); if (0!=v) v->dwReference++; _dec(); p_ = v;							}
-	
-
 
 	const str_value*	_get		()	const						{	return p_;																					}
 public:
@@ -100,15 +97,6 @@ public:
 	}
 };
 
-// res_ptr == res_ptr
-// res_ptr != res_ptr
-// const res_ptr == ptr
-// const res_ptr != ptr
-// ptr == const res_ptr
-// ptr != const res_ptr
-// res_ptr < res_ptr
-// res_ptr > res_ptr
-//IC bool operator	==	(std::string const & a, std::string const & b)		{ return a == b; }
 IC bool operator	==	(shared_str const & a, shared_str const & b)		{ return a._get() == b._get();					}
 IC bool operator	!=	(shared_str const & a, shared_str const & b)		{ return a._get() != b._get();					}
 IC bool operator	<	(shared_str const & a, shared_str const & b)		{ return a._get() <  b._get();					}
@@ -128,4 +116,3 @@ IC void	xr_strlwr		(shared_str& src)									{ if (*src){char* lp=xr_strdup(*src
 
 #pragma pack(pop)
 
-#endif

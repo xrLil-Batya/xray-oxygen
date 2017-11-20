@@ -43,7 +43,9 @@ class		XRCORE_API	smem_container
 {
 private:
 	typedef xr_vector<smem_value*>		cdb;
-    std::recursive_mutex					cs;
+#ifndef _CLR_MANAGER
+    std::recursive_mutex				cs;
+#endif
 	cdb									container;
 public:
 	smem_value*			dock			(u32 dwCRC, u32 dwLength, void* ptr);

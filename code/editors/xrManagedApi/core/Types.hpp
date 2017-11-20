@@ -1,5 +1,4 @@
 #pragma once
-
 #include "xrCore/xrCore.h"
 
 namespace XRay

@@ -30,3 +30,20 @@ void	MEMPOOL::_initialize	(u32 _element, u32 _sector, u32 _header)
 	list			= NULL;
 	block_count		= 0;
 }
+
+void* MEMPOOL::create();
+{
+       std::lock_guard<decltype(cs)> lock(cs);
+	if (0==list)	block_create();
+
+	void* E			= list;
+	list			= (u8*)*access(list);
+	return			E;
+}
+
+void MEMPOOL::destroy(void* &P)
+{
+    std::lock_guard<decltype(cs)> lock(cs);
+	*access(P)		= list;
+	list			= (u8*)P;
+}

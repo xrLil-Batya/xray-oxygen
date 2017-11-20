@@ -85,7 +85,6 @@
 #include <math.h>
 #include <string.h>
 #include <typeinfo.h>
-#include <thread>
 #include <cinttypes>
 #include <chrono>
 
@@ -194,12 +193,9 @@
 #include <list>
 #include <set>
 #include <map>
-#include <mutex>
 
-#ifndef _EDITOR
-#   include <unordered_map>
-#   include <unordered_set>
-#endif
+#include <unordered_map>
+#include <unordered_set>
 
 #include <string>
 #pragma warning (pop)

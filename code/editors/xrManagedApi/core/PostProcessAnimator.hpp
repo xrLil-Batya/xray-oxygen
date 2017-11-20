@@ -42,7 +42,7 @@ public:
     // update
     virtual void Update(float dt) = 0;
     // load(IReader)
-    virtual void Load(ReaderBase reader) = 0;
+	virtual void Load(ReaderBase^ reader) = 0;
     // save(IWriter)
     virtual void Save(WriterBase ^ writer) = 0;
     // get_length

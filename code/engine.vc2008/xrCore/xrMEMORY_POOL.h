@@ -1,5 +1,3 @@
-#ifndef xrMemory_POOLh
-#define xrMemory_POOLh
 #pragma once
 
 class xrMemory;
@@ -10,7 +8,9 @@ class	MEMPOOL
 	friend class xrMemory;
 #endif // DEBUG_MEMORY_MANAGER
 private:
+#ifndef _CLR_MANAGER
 	std::recursive_mutex	cs;
+#endif
 	u32					s_sector;		// large-memory sector size
 	u32					s_element;		// element size, for example 32
 	u32					s_count;		// element count = [s_sector/s_element]
@@ -26,20 +26,6 @@ public:
 	ICF u32				get_block_count	()	{ return block_count; }
 	ICF u32				get_element		()	{ return s_element; }
 
-	ICF void*			create			()
-	{
-        std::lock_guard<decltype(cs)> lock(cs);
-		if (0==list)	block_create();
-
-		void* E			= list;
-		list			= (u8*)*access(list);
-		return			E;
-	}
-	ICF void			destroy			(void* &P)
-	{
-        std::lock_guard<decltype(cs)> lock(cs);
-		*access(P)		= list;
-		list			= (u8*)P;
-	}
+		void*			create			();
+		void			destroy			(void* &P);
 };
-#endif

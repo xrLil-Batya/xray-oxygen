@@ -1,8 +1,8 @@
+#pragma once
 class IReader;
 class IWriter;
 
-#include "xrCore/xrCore.h"
-#include "Core/Types.hpp"
+#include "../Types.hpp"
 
 namespace XRay
 {
@@ -160,7 +160,7 @@ public:
     // rewind
     void Rewind();
     // find_chunk
-    UInt32 FindChunk(UInt32 id, int* isCompressed);
+    UInt32 FindChunk(UInt32 id, bool* isCompressed);
     // r_chunk
     bool ReadChunk(UInt32 id, void* buffer);
     // r_chunk_safe
