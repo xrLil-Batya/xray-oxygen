@@ -10,7 +10,7 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("GSC Game World")]
 [assembly: AssemblyProduct("xrPostprocessEditor")]
-[assembly: AssemblyCopyright("Copyright © GSC Game World 2014")]
+[assembly: AssemblyCopyright("Copyright © GSC Game World 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
