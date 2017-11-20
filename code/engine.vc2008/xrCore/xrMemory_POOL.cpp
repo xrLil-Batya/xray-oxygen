@@ -20,7 +20,7 @@ void	MEMPOOL::block_create	()
 	block_count				++;
 }
 
-void	MEMPOOL::_initialize	(u32 _element, u32 _sector, u32 _header)
+void MEMPOOL::_initialize(u32 _element, u32 _sector, u32 _header)
 {
 	R_ASSERT		(_element < _sector/2);
 	s_sector		= _sector;
@@ -31,7 +31,7 @@ void	MEMPOOL::_initialize	(u32 _element, u32 _sector, u32 _header)
 	block_count		= 0;
 }
 
-void* MEMPOOL::create();
+void* MEMPOOL::create()
 {
        std::lock_guard<decltype(cs)> lock(cs);
 	if (0==list)	block_create();
