@@ -1,0 +1,110 @@
+-- Noclip mode v0.4
+-- Author TIGER_VLAD
+-- Adaptation for COP: StalkerEz
+
+noclip_active = false
+chk_t = 0
+delay_time = 30       
+  
+function key_hold(key)
+
+	if noclip_mode.noclip_active == true then
+
+		if (chk_t or 0) < time_global() then
+		chk_t = time_global()+ delay_time
+		
+			if key == DIK_keys.DIK_W then
+			
+				local position = db.actor:position() 
+			    local direction = device().cam_dir 
+		    	local v = position:add(direction)
+			    db.actor:set_actor_position(v)
+			end
+	
+			if key == DIK_keys.DIK_S then
+
+				local position = db.actor:position() 
+				local direction = device().cam_dir 
+				local v = position:sub(direction)
+				db.actor:set_actor_position(v)
+			end
+		
+			if key == DIK_keys.DIK_D then
+
+				local position = db.actor:position() 
+				local direction = device().cam_right
+				local v = position:add(direction)
+				db.actor:set_actor_position(v)
+			
+			end
+		
+			if key == DIK_keys.DIK_A then
+
+				local position = db.actor:position() 
+				local direction = device().cam_right
+				local v = position:sub(direction)
+				db.actor:set_actor_position(v)
+
+			end		
+			
+			
+			if key == DIK_keys.DIK_LSHIFT then
+
+				local position = db.actor:position() 
+				local direction = device().cam_top
+				local v = position:add(direction)
+				db.actor:set_actor_position(v)
+
+			end		
+			
+			if key == DIK_keys.DIK_LCONTROL then
+
+				local position = db.actor:position() 
+				local direction = device().cam_top
+				local v = position:sub(direction)
+				db.actor:set_actor_position(v)
+
+			end		
+		end
+	end
+end
+
+function key_press(key)
+
+	if key == DIK_keys.DIK_V then
+			if noclip_mode.noclip_active == true then
+				get_console():execute("g_god off")
+				get_console():execute("ph_gravity 19.62")
+				news_manager.send_tip(db.actor, "Noclip mode: OFF", nil, nil, 1000)
+				if sobj then
+					alife():release(sobj, true)
+					sobj = nil					
+				end
+
+				noclip_mode.noclip_active = false
+				
+			elseif noclip_mode.noclip_active == false then
+				get_console():execute("g_god on")
+				get_console():execute("ph_gravity 0")
+				news_manager.send_tip(db.actor, "Noclip mode: ON", nil, nil, 1000)
+				noclip_mode.noclip_active = true
+			end	
+	
+	elseif key == DIK_keys.DIK_NUMPAD1 then	
+		if delay_time > 0 then
+			delay_time = noclip_mode.delay_time - 5
+			news_manager.send_tip(db.actor, "Задержка уменьшена на 5 мс", nil, nil, 1000)
+		end
+	elseif key == DIK_keys.DIK_NUMPAD2 then	
+			delay_time = noclip_mode.delay_time + 5
+			news_manager.send_tip(db.actor, "Задержка увеличена на 5 мс", nil, nil, 1000)	
+	end
+end
+
+function key_release(key)
+if noclip_mode.noclip_active == true then
+	if key == DIK_keys.DIK_W or key == DIK_keys.DIK_S or key == DIK_keys.DIK_D or key == DIK_keys.DIK_A or key == DIK_keys.DIK_LSHIFT or key == DIK_keys.DIK_LCONTROL then
+	end
+end	
+end
+
