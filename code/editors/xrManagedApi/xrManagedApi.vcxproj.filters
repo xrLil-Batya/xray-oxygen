@@ -7,6 +7,9 @@
     <Filter Include="core\fs">
       <UniqueIdentifier>{51256af0-c709-4484-b27b-a2cf4bf2e101}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Manager">
+      <UniqueIdentifier>{825bdb18-4454-40c3-b412-bc882c8bda8a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Pch.hpp" />
@@ -22,6 +25,9 @@
     <ClInclude Include="core\Types.hpp">
       <Filter>core</Filter>
     </ClInclude>
+    <ClInclude Include="xmPostprocess.hpp">
+      <Filter>Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -34,6 +40,9 @@
     </ClCompile>
     <ClCompile Include="core\PostProcessAnimator.cpp">
       <Filter>core</Filter>
+    </ClCompile>
+    <ClCompile Include="xmPostprocess.cpp">
+      <Filter>Manager</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

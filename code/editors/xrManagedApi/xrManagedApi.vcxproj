@@ -225,6 +225,7 @@
     <ClInclude Include="core\PostProcessAnimator.hpp" />
     <ClInclude Include="core\Types.hpp" />
     <ClInclude Include="Pch.hpp" />
+    <ClInclude Include="xmPostprocess.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
@@ -239,6 +240,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="xmPostprocess.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\xrCore\xrCore.vcxproj">

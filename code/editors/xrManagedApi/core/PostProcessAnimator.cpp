@@ -1,202 +1,223 @@
 #include "Pch.hpp"
-#include "fs\FS.hpp"
 #include "PostProcessAnimator.hpp"
-#include "xrCore/xrCore.h"
 
-#pragma warning(push)
-#pragma warning(disable : 4995) // ignore deprecation warnings
-#include <msclr/marshal.h>
-#pragma warning(pop)
-
-using msclr::interop::marshal_context;
-
-namespace XRay
+void CPostprocessAnimator::Stop(float sp)
 {
-namespace ManagedApi
-{
-namespace Core
-{
-PostProcessParamBase::PostProcessParamBase(::CPostProcessParam* impl) { this->impl = impl; }
-PostProcessParamBase::~PostProcessParamBase()
-{
-    if (!dontDestroy)
-    {
-        auto p = impl;
-        xr_delete(p);
-    }
-    impl = nullptr;
+	if (m_bStop)			return;
+	m_bStop = true;
+	VERIFY(_valid(sp));
+	m_factor_speed = sp;
 }
 
-PostProcessParam::PostProcessParam(::CPostProcessValue* impl) : PostProcessParamBase(impl) {}
-void PostProcessParam::Update(float dt) { impl->update(dt); }
-void PostProcessParam::Load(ReaderBase ^ reader)
+float CPostprocessAnimator::GetLength()
 {
-    ::IReader& readerImpl = *reader->impl;
-    impl->load(readerImpl);
-}
-void PostProcessParam::Save(WriterBase ^ writer)
-{
-    ::IWriter& writerImpl = *writer->impl;
-    impl->save(writerImpl);
-}
-float PostProcessParam::Length::get() { return impl->get_length(); }
-int PostProcessParam::KeyCount::get() { return (int)impl->get_keys_count(); }
-void PostProcessParam::AddValue(float time, float value, int index) { impl->add_value(time, value, index); }
-void PostProcessParam::DeleteValue(float time) { impl->delete_value(time); }
-void PostProcessParam::UpdateValue(float time, float value, int index) { impl->update_value(time, value, index); }
-void PostProcessParam::GetValue(float time, [Out] float % value, int index)
-{
-    float tmp;
-    impl->get_value(time, tmp, index);
-    value = tmp;
-}
-float PostProcessParam::GetKeyTime(int index) { return impl->get_key_time(index); }
-void PostProcessParam::Reset() { impl->clear_all_keys(); }
-float PostProcessInfo::Blur::get() { return impl->blur; }
-void PostProcessInfo::Blur::set(float value) { impl->blur = value; }
-float PostProcessInfo::Gray::get() { return impl->gray; }
-void PostProcessInfo::Gray::set(float value) { impl->gray = value; }
-PostProcessInfo::Color PostProcessInfo::BaseColor::get()
-{
-    return reinterpret_cast<PostProcessInfo::Color&>(impl->color_base);
-}
-void PostProcessInfo::BaseColor::set(PostProcessInfo::Color value)
-{
-    impl->color_base = reinterpret_cast<::SPPInfo::SColor&>(value);
-}
-PostProcessInfo::Color PostProcessInfo::GrayColor::get()
-{
-    return reinterpret_cast<PostProcessInfo::Color&>(impl->color_gray);
-}
-void PostProcessInfo::GrayColor::set(PostProcessInfo::Color value)
-{
-    impl->color_gray = reinterpret_cast<::SPPInfo::SColor&>(value);
-}
-PostProcessInfo::Color PostProcessInfo::AddColor::get()
-{
-    return reinterpret_cast<PostProcessInfo::Color&>(impl->color_add);
-}
-void PostProcessInfo::AddColor::set(PostProcessInfo::Color value)
-{
-    impl->color_add = reinterpret_cast<::SPPInfo::SColor&>(value);
-}
-float PostProcessInfo::ColorMappingInfluence::get() { return impl->cm_influence; }
-void PostProcessInfo::ColorMappingInfluence::set(float value) { impl->cm_influence = value; }
-float PostProcessInfo::ColorMappingInterpolate::get() { return impl->cm_interpolate; }
-void PostProcessInfo::ColorMappingInterpolate::set(float value) { impl->cm_interpolate = value; }
-String ^ PostProcessInfo::ColorMappingGradient1::get() { return gcnew String(impl->cm_tex1.c_str()); }
-void PostProcessInfo::ColorMappingGradient1::set(String ^ value)
-{
-    marshal_context context;
-    auto tmpStr = context.marshal_as<const char*>(value);
-    impl->cm_tex1 = tmpStr;
-}
-String ^ PostProcessInfo::ColorMappingGradient2::get() { return gcnew String(impl->cm_tex2.c_str()); }
-void PostProcessInfo::ColorMappingGradient2::set(String ^ value)
-{
-    marshal_context context;
-    auto tmpStr = context.marshal_as<const char*>(value);
-    impl->cm_tex2 = tmpStr;
-}
-PostProcessInfo::PostProcessInfo(::SPPInfo* impl) { this->impl = impl; }
-PostProcessInfo::PostProcessInfo(::SPPInfo* impl, bool dontDestroy) : PostProcessInfo(impl)
-{
-    this->dontDestroy = dontDestroy;
-}
-PostProcessInfo::~PostProcessInfo()
-{
-    if (!dontDestroy)
-    {
-        auto p = impl;
-        xr_delete(p);
-    }
-    impl = nullptr;
-}
-PostProcessInfo % PostProcessInfo::Add(const PostProcessInfo % ppi)
-{
-    impl->add(*ppi.impl);
-    return *this;
-}
-PostProcessInfo % PostProcessInfo::Substract(const PostProcessInfo % ppi)
-{
-    impl->sub(*ppi.impl);
-    return *this;
-}
-void PostProcessInfo::Normalize() { impl->normalize(); }
-PostProcessInfo % PostProcessInfo::Interpolate(const PostProcessInfo % def, const PostProcessInfo % to, float factor)
-{
-    impl->lerp(*def.impl, *to.impl, factor);
-    return *this;
-}
-void PostProcessInfo::Validate(String ^ str)
-{
-    marshal_context context;
-    auto tmpStr = context.marshal_as<const char*>(str);
-    impl->validate(tmpStr);
+	float v = 0.0f;
+	for (int a = 0; a < POSTPROCESS_PARAMS_COUNT; a++)
+	{
+		float t = m_Params[a]->get_length();
+		v = std::max(t, v);
+	}
+	return v;
 }
 
-PostProcessParamProxy::PostProcessParamProxy(::CPostProcessParam* impl) : PostProcessParamBase(impl)
+void CPostprocessAnimator::Update(float tm)
 {
-    dontDestroy = true;
-}
-void PostProcessParamProxy::Update(float dt) { impl->update(dt); }
-void PostProcessParamProxy::Load(ReaderBase ^ reader) { impl->load(*reader->impl); }
-void PostProcessParamProxy::Save(WriterBase ^ writer) { impl->save(*writer->impl); }
-float PostProcessParamProxy::Length::get() { return impl->get_length(); }
-int PostProcessParamProxy::KeyCount::get() { return impl->get_keys_count(); }
-void PostProcessParamProxy::AddValue(float time, float value, int index) { impl->add_value(time, value, index); }
-void PostProcessParamProxy::DeleteValue(float time) { impl->delete_value(time); }
-void PostProcessParamProxy::UpdateValue(float time, float value, int index) { impl->update_value(time, value, index); }
-void PostProcessParamProxy::GetValue(float time, [Out] float % value, int index)
-{
-    float tmp;
-    impl->get_value(time, tmp, index);
-    value = tmp;
-}
-float PostProcessParamProxy::GetKeyTime(int index) { return impl->get_key_time(index); }
-void PostProcessParamProxy::Reset() { impl->clear_all_keys(); }
-BasicPostProcessAnimator::BasicPostProcessAnimator() : impl(new ::BasicPostProcessAnimator()) {}
-BasicPostProcessAnimator::BasicPostProcessAnimator(int id, bool cyclic)
-    : impl(new ::BasicPostProcessAnimator(id, cyclic))
-{
+	for (u32 a = 0; a < POSTPROCESS_PARAMS_COUNT; a++)
+		m_Params[a]->update(tm);
 }
 
-BasicPostProcessAnimator::~BasicPostProcessAnimator()
+void CPostprocessAnimator::SetDesiredFactor(float f, float sp)
 {
-    auto p = impl;
-    xr_delete(p);
-    impl = nullptr;
-}
-void BasicPostProcessAnimator::Clear() { impl->Clear(); }
-void BasicPostProcessAnimator::Load(String ^ name, bool internalFs)
+	m_dest_factor = f;
+	m_factor_speed = sp;
+	VERIFY(_valid(m_factor));
+	VERIFY(_valid(m_dest_factor));
+};
+
+void CPostprocessAnimator::SetCurrentFactor(float f)
 {
-    marshal_context context;
-    auto tmpName = context.marshal_as<const char*>(name);
-    impl->Load(tmpName, internalFs);
-}
-String ^ BasicPostProcessAnimator::Name::get() { return gcnew String(impl->Name()); }
-void BasicPostProcessAnimator::Stop(float speed) { impl->Stop(speed); }
-void BasicPostProcessAnimator::SetDesiredFactor(float f, float sp) { impl->SetDesiredFactor(f, sp); }
-void BasicPostProcessAnimator::SetCurrentFactor(float f) { impl->SetCurrentFactor(f); }
-void BasicPostProcessAnimator::SetCyclic(bool b) { impl->SetCyclic(b); }
-float BasicPostProcessAnimator::Length::get() { return impl->GetLength(); }
-PostProcessInfo ^ BasicPostProcessAnimator::PPInfo::get() { return gcnew PostProcessInfo(&impl->PPinfo(), true); }
-bool BasicPostProcessAnimator::Process(float dt, PostProcessInfo ^ PPInfo)
+	m_factor = f;
+	m_dest_factor = f;
+	VERIFY(_valid(m_factor));
+	VERIFY(_valid(m_dest_factor));
+};
+
+BOOL CPostprocessAnimator::Process(float dt, SPPInfo &PPInfo)
 {
-    return !!impl->Process(dt, *PPInfo->impl);
+	Update(dt);
+	clamp(m_factor, 0.001f, 1.0f);
+
+	PPInfo = m_EffectorParams;
+
+	return TRUE;
 }
-void BasicPostProcessAnimator::Create() { impl->Create(); }
-PostProcessParamBase ^ BasicPostProcessAnimator::GetParam(PostProcessParamType param)
+
+void CPostprocessAnimator::Create()
 {
-    return gcnew PostProcessParamProxy(impl->GetParam((pp_params)param));
+	m_factor = 1.0f;
+	m_dest_factor = 1.0f;
+	m_bStop = false;
+	m_start_time = -1.0f;
+	m_factor_speed = 1.0f;
+	f_length = 0.0f;
+
+	m_Params[0] = xr_new<CPostProcessColor>(&m_EffectorParams.color_base);			//base color
+	VERIFY(m_Params[0]);
+	m_Params[1] = xr_new<CPostProcessColor>(&m_EffectorParams.color_add);          //add color
+	VERIFY(m_Params[1]);
+	m_Params[2] = xr_new<CPostProcessColor>(&m_EffectorParams.color_gray);         //gray color
+	VERIFY(m_Params[2]);
+	m_Params[3] = xr_new<CPostProcessValue>(&m_EffectorParams.gray);              //gray value
+	VERIFY(m_Params[3]);
+	m_Params[4] = xr_new<CPostProcessValue>(&m_EffectorParams.blur);              //blur value
+	VERIFY(m_Params[4]);
+	m_Params[5] = xr_new<CPostProcessValue>(&m_EffectorParams.duality.h);          //duality horizontal
+	VERIFY(m_Params[5]);
+	m_Params[6] = xr_new<CPostProcessValue>(&m_EffectorParams.duality.v);          //duality vertical
+	VERIFY(m_Params[6]);
+	m_Params[7] = xr_new<CPostProcessValue>(&m_EffectorParams.noise.intensity);    //noise intensity
+	VERIFY(m_Params[7]);
+	m_Params[8] = xr_new<CPostProcessValue>(&m_EffectorParams.noise.grain);        //noise granularity
+	VERIFY(m_Params[8]);
+	m_Params[9] = xr_new<CPostProcessValue>(&m_EffectorParams.noise.fps);          //noise fps
+	VERIFY(m_Params[9]);
 }
-void BasicPostProcessAnimator::ResetParam(PostProcessParamType param) { impl->ResetParam((pp_params)param); }
-void BasicPostProcessAnimator::Save(String ^ name)
+
+CPostProcessParam* CPostprocessAnimator::GetParam(pp_params param)
 {
-    marshal_context context;
-    auto tmpName = context.marshal_as<const char*>(name);
-    impl->Save(tmpName);
+	VERIFY(param >= pp_base_color && param <= pp_noise_f);
+	return m_Params[param];
 }
+void CPostprocessAnimator::Save(LPCSTR name)
+{
+	IWriter *W = FS.w_open(name);
+	VERIFY(W);
+	W->w_u32(POSTPROCESS_FILE_VERSION);
+	m_Params[0]->save(*W);
+	m_Params[1]->save(*W);
+	m_Params[2]->save(*W);
+	m_Params[3]->save(*W);
+	m_Params[4]->save(*W);
+	m_Params[5]->save(*W);
+	m_Params[6]->save(*W);
+	m_Params[7]->save(*W);
+	m_Params[8]->save(*W);
+	m_Params[9]->save(*W);
+	FS.w_close(W);
 }
+//-----------------------------------------------------------------------
+void CPostprocessAnimator::ResetParam(pp_params param)
+{
+	xr_delete(m_Params[param]);
+	switch (param)
+	{
+	case pp_base_color:
+		m_Params[0] = xr_new<CPostProcessColor>(&m_EffectorParams.color_base);   //base color
+		break;
+	case pp_add_color:
+		m_Params[1] = xr_new<CPostProcessColor>(&m_EffectorParams.color_add);          //add color
+		break;
+	case pp_gray_color:
+		m_Params[2] = xr_new<CPostProcessColor>(&m_EffectorParams.color_gray);         //gray color
+		break;
+	case pp_gray_value:
+		m_Params[3] = xr_new<CPostProcessValue>(&m_EffectorParams.gray);              //gray value
+		break;
+	case pp_blur:
+		m_Params[4] = xr_new<CPostProcessValue>(&m_EffectorParams.blur);              //blur value
+		break;
+	case pp_dual_h:
+		m_Params[5] = xr_new<CPostProcessValue>(&m_EffectorParams.duality.h);       //duality horizontal
+		break;
+	case pp_dual_v:
+		m_Params[6] = xr_new<CPostProcessValue>(&m_EffectorParams.duality.v);       //duality vertical
+		break;
+	case pp_noise_i:
+		m_Params[7] = xr_new<CPostProcessValue>(&m_EffectorParams.noise.intensity);         //noise intensity
+		break;
+	case pp_noise_g:
+		m_Params[8] = xr_new<CPostProcessValue>(&m_EffectorParams.noise.grain);         //noise granularity
+		break;
+	case pp_noise_f:
+		m_Params[9] = xr_new<CPostProcessValue>(&m_EffectorParams.noise.fps);         //noise fps
+		break;
+	}
+	VERIFY(m_Params[param]);
 }
+
+
+CPostprocessAnimator::CPostprocessAnimator()
+{
+	Create();
+}
+
+CPostprocessAnimator::CPostprocessAnimator(int, bool)
+{
+	Create();
+}
+
+CPostprocessAnimator::~CPostprocessAnimator()
+{
+	Clear();
+}
+
+
+void CPostprocessAnimator::Clear()
+{
+	for (int a = 0; a < POSTPROCESS_PARAMS_COUNT; a++)
+		xr_delete(m_Params[a]);
+}
+
+void CPostprocessAnimator::Load(LPCSTR name)
+{
+	m_Name = name;
+	string_path full_path;
+	xr_strcpy(full_path, name);
+
+	LPCSTR  ext = strext(full_path);
+	if (ext)
+	{
+		if (!xr_strcmp(ext, POSTPROCESS_FILE_EXTENSION))
+		{
+			IReader* F = FS.r_open(full_path);
+			u32 dwVersion = F->r_u32();
+			R_ASSERT(dwVersion == POSTPROCESS_FILE_VERSION);
+			//load base color
+			VERIFY(m_Params[0]);
+			m_Params[0]->load(*F);
+			//load add color
+			VERIFY(m_Params[1]);
+			m_Params[1]->load(*F);
+			//load gray color
+			VERIFY(m_Params[2]);
+			m_Params[2]->load(*F);
+			//load gray value
+			VERIFY(m_Params[3]);
+			m_Params[3]->load(*F);
+			//load blur value
+			VERIFY(m_Params[4]);
+			m_Params[4]->load(*F);
+			//load duality horizontal
+			VERIFY(m_Params[5]);
+			m_Params[5]->load(*F);
+			//load duality vertical
+			VERIFY(m_Params[6]);
+			m_Params[6]->load(*F);
+			//load noise intensity
+			VERIFY(m_Params[7]);
+			m_Params[7]->load(*F);
+			//load noise granularity
+			VERIFY(m_Params[8]);
+			m_Params[8]->load(*F);
+			//load noise fps
+			VERIFY(m_Params[9]);
+			m_Params[9]->load(*F);
+			//close reader
+			FS.r_close(F);
+		}
+		else
+			FATAL("ERROR: Can't support files with many animations set. Incorrect file.");
+	}
+
+	f_length = GetLength();
 }
