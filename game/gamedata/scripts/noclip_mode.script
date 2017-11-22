@@ -74,8 +74,7 @@ function key_press(key)
 	if key == DIK_keys.DIK_V then
 			if noclip_mode.noclip_active == true then
 				get_console():execute("g_god off")
-				get_console():execute("ph_gravity 19.62")
-				news_manager.send_tip(db.actor, "Noclip mode: OFF", nil, nil, 1000)
+				news_manager.send_tip(db.actor, "Noclip mode: OFF", nil, nil, 100)
 				if sobj then
 					alife():release(sobj, true)
 					sobj = nil					
@@ -85,26 +84,40 @@ function key_press(key)
 				
 			elseif noclip_mode.noclip_active == false then
 				get_console():execute("g_god on")
-				get_console():execute("ph_gravity 0")
-				news_manager.send_tip(db.actor, "Noclip mode: ON", nil, nil, 1000)
+				news_manager.send_tip(db.actor, "Noclip mode: ON", nil, nil, 100)
 				noclip_mode.noclip_active = true
+				spawn_box()
 			end	
 	
 	elseif key == DIK_keys.DIK_NUMPAD1 then	
 		if delay_time > 0 then
 			delay_time = noclip_mode.delay_time - 5
-			news_manager.send_tip(db.actor, "Задержка уменьшена на 5 мс", nil, nil, 1000)
+			news_manager.send_tip(db.actor, "Задержка уменьшена на 5 мс", nil, nil, 100)
 		end
 	elseif key == DIK_keys.DIK_NUMPAD2 then	
 			delay_time = noclip_mode.delay_time + 5
-			news_manager.send_tip(db.actor, "Задержка увеличена на 5 мс", nil, nil, 1000)	
+			news_manager.send_tip(db.actor, "Задержка увеличена на 5 мс", nil, nil, 100)	
 	end
 end
 
 function key_release(key)
 if noclip_mode.noclip_active == true then
 	if key == DIK_keys.DIK_W or key == DIK_keys.DIK_S or key == DIK_keys.DIK_D or key == DIK_keys.DIK_A or key == DIK_keys.DIK_LSHIFT or key == DIK_keys.DIK_LCONTROL then
+		spawn_box()
 	end
 end	
 end
+
+function spawn_box()								
+	local position	= db.actor:position()
+	position.y = position.y - 1.6  
+
+	if sobj then
+		alife():release(sobj, true)
+		sobj = nil
+	end
+ 
+sobj = alife():create("fake_plane_01", position, db.actor:level_vertex_id(), db.actor:game_vertex_id())
+end
+
 
