@@ -552,15 +552,15 @@ end
 local emun_on_console = 0.5 -- mrnmwar
 
 function actor_binder:key_press(key, act)
--- your code
+	noclip_mode.key_press(key)
 end
 
 function actor_binder:key_release(key, act)
--- your code
+	noclip_mode.key_release(key)
 end
 
 function actor_binder:key_hold(key, act)
--- your code
+	noclip_mode.key_hold(key)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function check_for_weapon_hide_by_zones()
