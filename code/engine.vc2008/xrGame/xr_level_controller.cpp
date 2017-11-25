@@ -58,30 +58,15 @@ _action  actions[]		= {
 															
 	{ "pause",				kPAUSE					,_both},	
 	{ "drop",				kDROP					,_both},	
-	{ "use",				kUSE					,_both},	
-	{ "scores",				kSCORES					,_both},	
-	{ "chat",				kCHAT					,_mp},		
-	{ "chat_team",			kCHAT_TEAM				,_mp},		
+	{ "use",				kUSE					,_both},
+	{ "scores",				kSCORES					,_both},
 	{ "screenshot",			kSCREENSHOT				,_both},	
 	{ "quit",				kQUIT					,_both},	
 	{ "console",			kCONSOLE				,_both},	
-	{ "inventory",			kINVENTORY				,_both},	
-	{ "buy_menu",			kBUY					,_mp},		
-	{ "skin_menu",			kSKIN					,_mp},		
-	{ "team_menu",			kTEAM					,_mp},		
-	{ "active_jobs",		kACTIVE_JOBS			,_sp},		
-																
-	{ "vote_begin",			kVOTE_BEGIN				,_mp},		
-	{ "show_admin_menu",	kSHOW_ADMIN_MENU		,_mp},		
-	{ "vote",				kVOTE					,_mp},		
-	{ "vote_yes",			kVOTEYES				,_mp},		
-	{ "vote_no",			kVOTENO					,_mp},		
-																
+	{ "inventory",			kINVENTORY				,_both},
+	{ "active_jobs",		kACTIVE_JOBS			,_sp},						
 	{ "next_slot",			kNEXT_SLOT				,_both},	
 	{ "prev_slot",			kPREV_SLOT				,_both},	
-															
-	{ "speech_menu_0",		kSPEECH_MENU_0			,_mp},		
-	{ "speech_menu_1",		kSPEECH_MENU_1			,_mp},		
 																
 	{ "quick_use_1",		kQUICK_USE_1			,_both},		
 	{ "quick_use_2",		kQUICK_USE_2			,_both},
@@ -291,9 +276,9 @@ _keyboard*	keyname_to_ptr(LPCSTR _name)
 	return			NULL;
 }
 
-bool is_group_not_conflicted(_key_group g1, _key_group g2)
+bool is_group_not_conflicted(_key_group, _key_group)
 {
-	return ((g1==_sp && g2==_mp) || (g1==_mp && g2==_sp));
+	return true;
 }
 
 bool is_group_matching(_key_group g1, _key_group g2)
