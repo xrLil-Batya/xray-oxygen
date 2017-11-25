@@ -105,8 +105,6 @@ bool CLevel::net_start1				()
 	// Start client and server if need it
 	if (serverOption.size())
 	{
-//		g_pGamePersistent->LoadTitle("st_server_starting");
-
 		typedef IGame_Persistent::params params;
 		params							&p = g_pGamePersistent->m_game_params;
 		// Connect
@@ -116,11 +114,9 @@ bool CLevel::net_start1				()
 		if (xr_strcmp(p.m_alife,"alife"))
 		{
 			shared_str l_ver			= game_sv_GameState::parse_level_version(serverOption);
-			
 			map_data.m_name				= game_sv_GameState::parse_level_name(serverOption);
 			
-			if (!g_dedicated_server)
-				g_pGamePersistent->LoadTitle(true, map_data.m_name);
+			g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
 			int							id = pApp->Level_ID(map_data.m_name.c_str(), l_ver.c_str(), true);
 

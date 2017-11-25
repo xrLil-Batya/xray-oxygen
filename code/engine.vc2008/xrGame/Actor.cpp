@@ -32,7 +32,7 @@
 #include "ActorAnimation.h"
 #include "actor_anim_defs.h"
 #include "HudItem.h"
-#include "ai_sounds.h"
+#include "../xrScripts/export/ai_sounds.h"
 #include "ai_space.h"
 #include "trade.h"
 #include "inventory.h"
@@ -1139,21 +1139,17 @@ void CActor::shedule_Update	(u32 DT)
 	}
 	else 
 	{
-		m_pPersonWeLookingAt	= NULL;
-		m_sDefaultObjAction		= NULL;
-		m_pUsableObject			= NULL;
-		m_pObjectWeLookingAt	= NULL;
-		m_pVehicleWeLookingAt	= NULL;
-		m_pInvBoxWeLookingAt	= NULL;
+		m_pPersonWeLookingAt	= nullptr;
+		m_sDefaultObjAction		= nullptr;
+		m_pUsableObject			= nullptr;
+		m_pObjectWeLookingAt	= nullptr;
+		m_pVehicleWeLookingAt	= nullptr;
+		m_pInvBoxWeLookingAt	= nullptr;
 		m_CapmfireWeLookingAt	= nullptr;
 	}
 
-//	UpdateSleep									();
-
-	//��� ������ ����������, ����������� �� �����
 	UpdateArtefactsOnBeltAndOutfit				();
 	m_pPhysics_support->in_shedule_Update		(DT);
-	Check_for_AutoPickUp						();
 };
 #include "debug_renderer.h"
 void CActor::renderable_Render	()

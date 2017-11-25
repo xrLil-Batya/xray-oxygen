@@ -19,19 +19,20 @@ ENGINE_API	bool g_dedicated_server;
 BOOL CLevel::Load_GameSpecific_Before()
 {
 	// AI space
-	g_pGamePersistent->LoadTitle		();
-	string_path							fn_game;
-	
-	if (!ai().get_alife() && FS.exist(fn_game,"$level$","level.ai") && !net_Hosts.empty())
-		ai().load						(net_SessionName());
+	g_pGamePersistent->LoadTitle();
+	string_path fn_game;
 
-	if (!g_dedicated_server && !ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game")) {
-		IReader							*stream = FS.r_open		(fn_game);
-		ai().patrol_path_storage_raw	(*stream);
-		FS.r_close						(stream);
+	if (!ai().get_alife() && FS.exist(fn_game, "$level$", "level.ai") && !net_Hosts.empty())
+		ai().load(net_SessionName());
+
+	if (!g_dedicated_server && !ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
+	{
+		IReader *stream = FS.r_open(fn_game);
+		ai().patrol_path_storage_raw(*stream);
+		FS.r_close(stream);
 	}
 
-	return								(TRUE);
+	return(TRUE);
 }
 
 BOOL CLevel::Load_GameSpecific_After()
@@ -55,9 +56,6 @@ BOOL CLevel::Load_GameSpecific_After()
 				if(OBJ->length()==sizeof(u32))
 				{
 					ver		= OBJ->r_u32();
-#ifndef MASTER_GOLD
-					Msg		("PS new version, %d", ver);
-#endif // #ifndef MASTER_GOLD
 					continue;
 				}
 			}
@@ -146,22 +144,21 @@ BOOL CLevel::Load_GameSpecific_After()
 		else
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel,xr_new<CScriptProcess>("level",""));
 	}
-		
-	BlockCheatLoad();
 
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
 	return TRUE;
 }
 
-struct translation_pair {
+struct translation_pair 
+{
 	u32			m_id;
 	u16			m_index;
 
-	IC			translation_pair	(u32 id, u16 index)
+	IC			translation_pair(u32 id, u16 index)
 	{
-		m_id	= id;
-		m_index	= index;
+		m_id = id;
+		m_index = index;
 	}
 
 	IC	bool	operator==	(const u16 &id) const
@@ -233,12 +230,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 				(*I).suppress_wm		= mtl->Flags.is(SGameMtl::flSuppressWallmarks);
 				continue;
 			}
-
 			Debug.fatal					(DEBUG_INFO,"Game material '%d' not found",(*I).material);
 		}
 	}
-}
-
-void CLevel::BlockCheatLoad()
-{
 }

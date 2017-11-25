@@ -54,7 +54,7 @@ int			g_cl_InterpolationType		= 0;
 u32			g_cl_InterpolationMaxPoints = 0;
 int			g_dwInputUpdateDelta		= 20;
 BOOL		net_cl_inputguaranteed		= FALSE;
-CActor*		g_actor						= NULL;
+CActor*		g_actor						= nullptr;
 
 CActor*			Actor()	
 {	
@@ -1506,7 +1506,7 @@ BOOL CActor::net_SaveRelevant()
 }
 
 
-void				CActor::SetHitInfo				(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)
+void CActor::SetHitInfo(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)
 {
 	m_iLastHitterID = (who!= NULL) ? who->ID() : u16(-1);
 	m_iLastHittingWeaponID = (weapon != NULL) ? weapon->ID() : u16(-1);
@@ -1515,15 +1515,6 @@ void				CActor::SetHitInfo				(CObject* who, CObject* weapon, s16 element, Fvect
 	m_bWasHitted = true;
 	m_vLastHitDir = Dir;
 	m_vLastHitPos = Pos;
-};
-
-void CActor::OnHitHealthLoss(float NewHealth)
-{
-};
-
-
-void CActor::OnCriticalHitHealthLoss()
-{
 };
 
 void CActor::OnPlayHeadShotParticle(NET_Packet P)
@@ -1543,14 +1534,6 @@ void CActor::OnPlayHeadShotParticle(NET_Packet P)
 
 	ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
 	GamePersistent().ps_needtoplay.push_back(ps);
-};
-
-void				CActor::OnCriticalWoundHealthLoss		() 
-{
-};
-
-void				CActor::OnCriticalRadiationHealthLoss	() 
-{
 };
 
 bool CActor::InventoryAllowSprint()

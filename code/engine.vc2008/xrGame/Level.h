@@ -148,7 +148,6 @@ private:
 	u32							m_dwDeltaUpdate ;
 	u32							m_dwLastNetUpdateTime;
 	void						UpdateDeltaUpd					( u32 LastTime );
-	void						BlockCheatLoad					()				;
 
 	bool						Connect2Server					(const char* options);
 	shared_str					m_client_digest;	//for screenshots

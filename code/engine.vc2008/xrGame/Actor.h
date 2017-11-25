@@ -626,17 +626,14 @@ protected:
 		Fvector							m_AutoPickUp_AABB;
 		Fvector							m_AutoPickUp_AABB_Offset;
 
-		void							Check_for_AutoPickUp			();
-		void							SelectBestWeapon				(CObject* O);
 public:
 		void							SetWeaponHideState				(u16 State, bool bSet);
 private:
-virtual void	_BCL					HideAllWeapons					( bool v ){ SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
-
+virtual void	_BCL					HideAllWeapons					(bool v) { SetWeaponHideState(INV_STATE_BLOCK_ALL,v); }	
 public:
 		void							SetCantRunState					(bool bSet);
 private:
-	CActorCondition				*m_entity_condition;
+	CActorCondition						*m_entity_condition;
 
 protected:
 	virtual	CEntityConditionSimple	*create_entity_condition	(CEntityConditionSimple* ec);
@@ -659,11 +656,6 @@ protected:
 
 public:
 	virtual void				SetHitInfo						(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir);
-
-	virtual	void				OnHitHealthLoss					(float NewHealth);	
-	virtual	void				OnCriticalHitHealthLoss			();
-	virtual	void				OnCriticalWoundHealthLoss		();
-	virtual void				OnCriticalRadiationHealthLoss	();
 
 	virtual	bool				InventoryAllowSprint			();
 	virtual void				OnNextWeaponSlot				();

@@ -227,12 +227,6 @@ void	CActor::PickupModeUpdate_COD	()
 	}
 };
 
-void	CActor::Check_for_AutoPickUp()
-{
-	// mp only
-}
-
-
 void CActor::PickupInfoDraw(CObject* object)
 {
 	LPCSTR draw_str = NULL;
@@ -274,22 +268,19 @@ void CActor::Feel_Grenade_Update( float rad )
 	Center( pos_actor );
 
 	q_nearest.clear();
-	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, NULL );
-
-	xr_vector<CObject*>::iterator	it_b = q_nearest.begin();
-	xr_vector<CObject*>::iterator	it_e = q_nearest.end();
+	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, nullptr);
 
 	// select only grenade
-	for ( ; it_b != it_e; ++it_b )
+	for (auto it: q_nearest)
 	{
-		if ((*it_b)->getDestroy())
+		if (it->getDestroy())
 			continue;					// Don't touch candidates for destroy
 
-		CGrenade* grn = smart_cast<CGrenade*>( *it_b );
+		CGrenade* grn = smart_cast<CGrenade*>(it);
 		if((!grn || grn->Initiator() == ID() || grn->Useful()) || grn->time_from_begin_throw() < m_fFeelGrenadeTime)
 			continue;
 
-	}// for it
+	}
 
 	HUD().Update_GrenadeView( pos_actor );
 }
