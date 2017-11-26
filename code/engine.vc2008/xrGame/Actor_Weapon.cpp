@@ -1,4 +1,4 @@
-// Actor_Weapon.cpp:	 для работы с оружием
+// Actor_Weapon.cpp:	 Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г± Г®Г°ГіГ¦ГЁГҐГ¬
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -22,7 +22,7 @@ static const float VEL_A_MAX	= 10.f;
 
 #define GetWeaponParam(pWeapon, func_name, def_value)	((pWeapon) ? (pWeapon->func_name) : def_value)
 
-//возвращает текуший разброс стрельбы (в радианах)с учетом движения
+//ГўГ®Г§ГўГ°Г Г№Г ГҐГІ ГІГҐГЄГіГёГЁГ© Г°Г Г§ГЎГ°Г®Г± Г±ГІГ°ГҐГ«ГјГЎГ» (Гў Г°Г Г¤ГЁГ Г­Г Гµ)Г± ГіГ·ГҐГІГ®Г¬ Г¤ГўГЁГ¦ГҐГ­ГЁГї
 float CActor::GetWeaponAccuracy() const
 {
 	CWeapon* W	= smart_cast<CWeapon*>(inventory().ActiveItem());
@@ -119,12 +119,7 @@ static	u16 BestWeaponSlots [] = {
 	GRENADE_SLOT	,		// 3
 	KNIFE_SLOT		,		// 0
 };
-void CActor::SelectBestWeapon	(CObject* O)
-{
-	//FX: MP only...
-}
 
-#define ENEMY_HIT_SPOT	"mp_hit_sector_location"
 BOOL	g_bShowHitSectors	= TRUE;
 
 void	CActor::HitSector(CObject* who, CObject* weapon)
@@ -150,9 +145,7 @@ void	CActor::HitSector(CObject* who, CObject* weapon)
 			}
 		}
 	}
-
-	if (!bShowHitSector) return;	
-		Level().MapManager().AddMapLocation(ENEMY_HIT_SPOT, who->ID());
+// #TODO: Remove it!
 }
 
 void CActor::on_weapon_shot_start		(CWeapon *weapon)
@@ -253,9 +246,9 @@ void	CActor::RemoveAmmoForWeapon	(CInventoryItem *pIItem)
 
 	CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*>(inventory().GetAny( pWM->m_ammoTypes[0].c_str() ));
 	if (!pAmmo) return;
-	//--- мы нашли патроны к текущему оружию	
+	//--- Г¬Г» Г­Г ГёГ«ГЁ ГЇГ ГІГ°Г®Г­Г» ГЄ ГІГҐГЄГіГ№ГҐГ¬Гі Г®Г°ГіГ¦ГЁГѕ	
 	/*
-	//--- проверяем не подходят ли они к чему-то еще
+	//--- ГЇГ°Г®ГўГҐГ°ГїГҐГ¬ Г­ГҐ ГЇГ®Г¤ГµГ®Г¤ГїГІ Г«ГЁ Г®Г­ГЁ ГЄ Г·ГҐГ¬Гі-ГІГ® ГҐГ№ГҐ
 	bool CanRemove = true;
 	TIItemContainer::const_iterator I = inventory().m_all.begin();//, B = I;
 	TIItemContainer::const_iterator E = inventory().m_all.end();

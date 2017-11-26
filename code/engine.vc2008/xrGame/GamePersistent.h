@@ -1,5 +1,3 @@
-#ifndef GamePersistentH
-#define GamePersistentH
 #pragma once
 
 #include "../xrEngine/IGame_Persistent.h"
@@ -9,13 +7,11 @@ class CParticlesObject;
 class CUISequencer;
 class ui_core;
 
-class CGamePersistent: 
-	public IGame_Persistent, 
-	public IEventReceiver
+class CGamePersistent: public IGame_Persistent, public IEventReceiver
 {
 	// ambient particles
 	CParticlesObject*	ambient_particles; 
-	u32					ambient_sound_next_time		[20]; //max snd channels
+	u32					ambient_sound_next_time[20]; //max snd channels
 	u32					ambient_effect_next_time;
 	u32					ambient_effect_stop_time;
 
@@ -78,8 +74,8 @@ public:
 	virtual	void		OnGameStart				();
 	virtual void		OnGameEnd				();
 
-	virtual void	_BCL	OnFrame					();
-	virtual void			OnEvent					(EVENT E, u64 P1, u64 P2);
+	virtual void		OnFrame					();
+	virtual void		OnEvent					(EVENT E, u64 P1, u64 P2);
 
 	virtual void		UpdateGameType			();
 
@@ -91,8 +87,6 @@ public:
 	virtual void		OnRenderPPUI_main		();
 	virtual void		OnRenderPPUI_PP			();
 	virtual	void		LoadTitle				(bool change_tip = false, shared_str map_name = "");
-
-	virtual bool		CanBePaused				();
 
 			void		SetPickableEffectorDOF	(bool bSet);
 			void		SetEffectorDOF			(const Fvector& needed_dof);
@@ -109,7 +103,6 @@ public:
     void                SetClientOption(const char* str);
 };
 
-IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent);			}
+IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent); }
 
-#endif //GamePersistentH
 

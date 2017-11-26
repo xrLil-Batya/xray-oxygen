@@ -33,7 +33,6 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 	{
 		P.r_u16(id);
 		CObject* Obj = Level().Objects.net_Find(id);
-		//VERIFY2  ( Obj, make_string("GE_OWNERSHIP_TAKE: Object not found. object_id = [%d]", id).c_str() );
 		if (!Obj) {
 			Msg("! GE_OWNERSHIP_TAKE: Object not found. object_id = [%d]", id);
 			break;
@@ -43,16 +42,7 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 		if (inventory().CanTakeItem(smart_cast<CInventoryItem*>(_GO)))
 		{
 			Obj->H_SetParent(smart_cast<CObject*>(this));
-
-#ifdef MP_LOGGING
-			string64 act;
-			xr_strcpy(act, (type == GE_TRADE_BUY) ? "buys" : "takes");
-			Msg("--- Actor [%d][%s]  %s  [%d][%s]", ID(), Name(), act, _GO->ID(), _GO->cNameSect().c_str());
-#endif // MP_LOGGING
-
 			inventory().Take(_GO, false, true);
-
-			SelectBestWeapon(Obj);
 		}
 		else
 		{
@@ -108,8 +98,6 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 
 			if (!Obj->getDestroy() && inventory().DropItem(GO, just_before_destroy, dont_create_shell)) 
 			{
-				//O->H_SetParent(0,just_before_destroy);//moved to DropItem
-				//feel_touch_deny(O,2000);
 				Level().m_feel_deny.feel_touch_deny(Obj, 1000);
 
 				// [12.11.07] Alexander Maniluk: extended GE_OWNERSHIP_REJECT packet for drop item to selected position
@@ -118,19 +106,8 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 				{
 					P.r_vec3(dropPosition);
 					GO->MoveTo(dropPosition);
-					//Other variant :)
-					/*NET_Packet MovePacket;
-					MovePacket.w_begin(M_MOVE_ARTEFACTS);
-					MovePacket.w_u8(1);
-					MovePacket.w_u16(id);
-					MovePacket.w_vec3(dropPosition);
-					u_EventSend(MovePacket);*/
 				}
 			}
-
-			if (!just_before_destroy)
-				SelectBestWeapon(Obj);
-
 		}
 		break;
 	case GE_INV_ACTION:

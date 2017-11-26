@@ -17,7 +17,7 @@ protected:
 private:
 	u32						m_used_time;
 public:
-	virtual CEntityAlive*				cast_entity_alive		()						{return this;}
+	virtual CEntityAlive*	cast_entity_alive() {return this;}
 public:
 
 	bool					m_bMobility;
@@ -58,14 +58,9 @@ public:
 	virtual void			HitImpulse				(float amount, Fvector& vWorldDir, Fvector& vLocalDir);
 	virtual	void			Hit						(SHit* pHDS);
 	virtual void			Die						(CObject* who);
-	virtual void			g_WeaponBones			(int &L, int &R1, int &R2)										= 0;
+	virtual void			g_WeaponBones			(int &L, int &R1, int &R2) = 0;
 			void			set_lock_corpse			(bool b_l_corpse);
 			bool			is_locked_corpse		();
-//	virtual float			GetfHealth				() const;
-//	virtual float			SetfHealth				(float value);
-
-//	virtual float			g_Health				()	const;
-//	virtual float			g_MaxHealth				()	const;
 
 	virtual float			g_Radiation				()	const;
 	virtual	float			SetfRadiation			(float value);
@@ -78,8 +73,6 @@ public:
 	
 	virtual bool			human_being				() const			{return	(false);}
 public:
-	//IC	CPHMovementControl*					PMovement					()						{return m_PhysicMovementControl;}
-
 	virtual u16								PHGetSyncItemsNumber		()						;
 	virtual CPHSynchronize*					PHGetSyncItem				(u16 item)				;
 	virtual void							PHUnFreeze					()						;
@@ -90,11 +83,11 @@ public:
 	virtual	CIKLimbsController				*character_ik_controller	()						;
 	virtual ICollisionHitCallback			*get_collision_hit_callback	()						;
 	virtual void							set_collision_hit_callback	(ICollisionHitCallback *cc);
+
 protected:
 	using WOUND_VECTOR = xr_vector<CWound*>;
 	WOUND_VECTOR				m_ParticleWounds;
-
-
+protected:
 	virtual void				StartFireParticles(CWound* pWound);
 	virtual void				UpdateFireParticles();
 	virtual void				LoadFireParticles(LPCSTR section);
@@ -172,13 +165,7 @@ public:
 	virtual u32					ef_weapon_type				() const;
 	virtual u32					ef_detector_type			() const;
 
-public:
-	virtual	void				OnHitHealthLoss				(float NewHealth) {};	//вызывается если entity теряет здоровье
-	virtual	void				OnCriticalHitHealthLoss		() {};	//вызывается если entity умрет от хита 
-	virtual	void				OnCriticalWoundHealthLoss	() {};	//вызывается если entity умрет от потери крови 
-	virtual void				OnCriticalRadiationHealthLoss() {};	//вызывается если entity умрет от радиации 
-
-	virtual	CVisualMemoryManager*visual_memory				() const {return(0);}
+	virtual	CVisualMemoryManager*visual_memory				() const {return nullptr;}
 	virtual	void				net_Relcase					(CObject *O);
 
 public:

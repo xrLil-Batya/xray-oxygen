@@ -184,18 +184,18 @@ EGameIDs ParseStringToGameType(LPCSTR str)
 
 void CGamePersistent::UpdateGameType			()
 {
-	__super::UpdateGameType		();
+	__super::UpdateGameType();
 
 	m_game_params.m_e_game_type = eGameIDSingle;
 	g_current_keygroup = _sp;
 }
 
-void CGamePersistent::OnGameEnd	()
+void CGamePersistent::OnGameEnd()
 {
-	__super::OnGameEnd					();
+	__super::OnGameEnd();
 
-	xr_delete							(g_stalker_animation_data_storage);
-	xr_delete							(g_stalker_velocity_holder);
+	xr_delete(g_stalker_animation_data_storage);
+	xr_delete(g_stalker_velocity_holder);
 }
 
 void CGamePersistent::WeathersUpdate()
@@ -737,10 +737,6 @@ void CGamePersistent::LoadTitle(bool change_tip, shared_str map_name)
 	}
 }
 
-bool CGamePersistent::CanBePaused()
-{
-	return true;
-}
 void CGamePersistent::SetPickableEffectorDOF(bool bSet)
 {
 	m_bPickableDOF = bSet;

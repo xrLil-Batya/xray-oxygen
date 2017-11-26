@@ -97,7 +97,6 @@ public:
 	virtual void			HitImpulse			(float P, Fvector &vWorldDir, 	Fvector& vLocalDir)	= 0;
 
 	virtual void			Die					(CObject* who);
-//			void			KillEntity			(CObject* who);
 			void			KillEntity			(u16 whoID);
 		
 	// Events
@@ -111,7 +110,6 @@ public:
 	ALife::_TIME_ID			m_game_death_time;
 
 			void			set_death_time		();
-	virtual	void			set_ready_to_save	();
 
 private:
 	ALife::_OBJECT_ID		m_killer_id;

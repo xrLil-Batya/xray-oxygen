@@ -28,7 +28,6 @@ typedef enum _pp_params
 
 class XRCORE_API CPostProcessParam
 {
-protected:
 public:
     virtual void    update                          (float dt) = 0;
     virtual void    load                            (IReader &pReader) = 0;

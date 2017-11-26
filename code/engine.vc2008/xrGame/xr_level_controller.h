@@ -97,7 +97,6 @@ struct _keyboard
 enum _key_group{
 	_both	=	(1<<0)			,
 	_sp		=	_both | (1<<1)	,
-	_mp		=	_both | (1<<2)	,
 };
 
 extern _key_group g_current_keygroup;
