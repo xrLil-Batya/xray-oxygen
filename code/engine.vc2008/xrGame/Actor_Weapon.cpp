@@ -145,7 +145,7 @@ void	CActor::HitSector(CObject* who, CObject* weapon)
 			}
 		}
 	}
-/#TODO: Remove it!
+// #TODO: Remove it!
 }
 
 void CActor::on_weapon_shot_start		(CWeapon *weapon)
