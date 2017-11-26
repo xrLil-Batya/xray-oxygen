@@ -1,11 +1,11 @@
-// EffectorZoomInertion.h: инерция(покачивания) оружия в режиме 
-//						   приближения	
+// EffectorZoomInertion.h: ГЁГ­ГҐГ°Г¶ГЁГї(ГЇГ®ГЄГ Г·ГЁГўГ Г­ГЁГї) Г®Г°ГіГ¦ГЁГї Гў Г°ГҐГ¦ГЁГ¬ГҐ 
+//						   ГЇГ°ГЁГЎГ«ГЁГ¦ГҐГ­ГЁГї	
 //////////////////////////////////////////////////////////////////////
 
 #pragma once
 
 #include "CameraEffector.h"
-#include "../cameramanager.h"
+#include "../xrEngine/cameramanager.h"
 #include "WeaponMagazined.h"
 
 class CEffectorZoomInertion : public CEffectorCam
@@ -24,13 +24,13 @@ class CEffectorZoomInertion : public CEffectorCam
 	float	m_fTimeCameraMove;
 	bool	m_bCameraMoving;
 
-	//параметры настройки эффектора
+	//ГЇГ Г°Г Г¬ГҐГІГ°Г» Г­Г Г±ГІГ°Г®Г©ГЄГЁ ГЅГґГґГҐГЄГІГ®Г°Г 
 	float	m_fCameraSpeedThreshold;
 	float	m_fDispEpsilon;
 	float	m_fDispMin;
 	float	m_fDispHorzCoef;
 	float	m_fZoomAimingDispK;
-	//время через которое эффектор меняет направление движения
+	//ГўГ°ГҐГ¬Гї Г·ГҐГ°ГҐГ§ ГЄГ®ГІГ®Г°Г®ГҐ ГЅГґГґГҐГЄГІГ®Г° Г¬ГҐГ­ГїГҐГІ Г­Г ГЇГ°Г ГўГ«ГҐГ­ГЁГҐ Г¤ГўГЁГ¦ГҐГ­ГЁГї
 	u32		m_dwDeltaTime;
 	u32		m_dwCenterDeltaTime;
 
