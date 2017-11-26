@@ -87,6 +87,7 @@ public:
 	virtual void	net_Import		(NET_Packet& P);
 
 	virtual void	OnH_A_Chield		();
+			void	OnH_B_Independent	(bool) override;
 
 	virtual bool	Attach			(PIItem pIItem, bool b_send_event);
 	virtual bool	Detach			(const char* item_section_name, bool b_spawn_item);
@@ -167,6 +168,8 @@ protected:
 
 	virtual	int		ShotsFired			() { return m_iShotNum; }
 	virtual float	GetWeaponDeterioration	();
+	
+	virtual void	RemoveZoomInertionEffector();
 
 
 	virtual void	FireBullet			(const Fvector& pos, 
