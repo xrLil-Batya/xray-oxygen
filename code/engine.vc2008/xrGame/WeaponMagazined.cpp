@@ -750,6 +750,7 @@ void CWeaponMagazined::switch2_Hidden()
 
 	signal_HideComplete		();
 	RemoveShotEffector		();
+	RemoveZoomInertionEffector();
 }
 void CWeaponMagazined::switch2_Showing()
 {
@@ -1148,7 +1149,7 @@ void CWeaponMagazined::OnZoomIn			()
 
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
-	if(pActor)
+	if (pActor)
 	{
 		CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(pActor->Cameras().GetCamEffector(eCEZoom));
 		if (!S)	
@@ -1157,6 +1158,7 @@ void CWeaponMagazined::OnZoomIn			()
 			S->Init(this);
 		};
 		S->SetRndSeed			(pActor->GetZoomRndSeed());
+		S->Enable				(true);
 		R_ASSERT				(S);
 	}
 }
@@ -1172,9 +1174,23 @@ void CWeaponMagazined::OnZoomOut		()
 
 	CActor* pActor			= smart_cast<CActor*>(H_Parent());
 
-	if(pActor)
-		pActor->Cameras().RemoveCamEffector	(eCEZoom);
+	if (pActor)
+	{
+		auto S = smart_cast<CEffectorZoomInertion*>(pActor->Cameras().GetCamEffector(eCEZoom));
+		if (S)
+		{
+			S->Enable(false, m_zoom_params.m_fZoomRotateTime);
+		}
+	}
+}
 
+void CWeaponMagazined::RemoveZoomInertionEffector()
+{
+	CActor* pActor = smart_cast<CActor*>(H_Parent());
+	if (pActor)
+	{
+		pActor->Cameras().RemoveCamEffector(eCEZoom);
+	}
 }
 
 //переключение режимов стрельбы одиночными и очередями
@@ -1217,7 +1233,13 @@ void	CWeaponMagazined::OnH_A_Chield		()
 		else SetQueueSize(GetCurrentFireMode());
 	};	
 	inherited::OnH_A_Chield();
-};
+}
+
+void CWeaponMagazined::OnH_B_Independent(bool jbd)
+{
+	RemoveZoomInertionEffector();
+	inherited::OnH_B_Independent(jbd);
+}
 
 void	CWeaponMagazined::SetQueueSize			(int size)  
 {
