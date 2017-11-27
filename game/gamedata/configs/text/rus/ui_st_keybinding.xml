@@ -21,12 +21,6 @@
 	<string id="kb_buy_menu">
 		<text>Меню покупки</text>
 	</string>
-	<string id="kb_chat">
-		<text>Чат</text>
-	</string>
-	<string id="kb_chat_team">
-		<text>Командный чат</text>
-	</string>
 	<string id="kb_console">
 		<text>Консоль</text>
 	</string>
@@ -74,6 +68,9 @@
 	</string>
 	<string id="kb_grp_movement">
 		<text>Движение</text>
+	</string>
+	<string id="kb_grp_multiplayer">
+		<text>Сетевая игра</text>
 	</string>
 	<string id="kb_grp_weapons">
 		<text>Оружие</text>
@@ -129,6 +126,9 @@
 	<string id="kb_right_strafe">
 		<text>Шаг вправо</text>
 	</string>
+	<string id="kb_scores">
+		<text>Очки</text>
+	</string>
 	<string id="kb_screenshot">
 		<text>Скриншот</text>
 	</string>
@@ -137,9 +137,6 @@
 	</string>
 	<string id="kb_torch">
 		<text>Фонарик</text>
-	</string>
-	<string id="kb_torch_mode">
-		<text>Режим фонарика</text>
 	</string>
 	<string id="kb_turn_engine">
 		<text>Включить</text>
@@ -150,8 +147,11 @@
 	<string id="kb_use">
 		<text>Использовать</text>
 	</string>
-	<string id="kb_kick">
-		<text>Пнуть</text>
+	<string id="kb_use_bandage">
+		<text>Быстр. использование бинта</text>
+	</string>
+	<string id="kb_use_medkit">
+		<text>Быстр. использование аптечки</text>
 	</string>
 	<string id="kb_weapon1">
 		<text>Оружие 1</text>

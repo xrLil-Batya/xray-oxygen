@@ -1168,14 +1168,13 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	}
 	sh_name[len]='0'+char(o.dx10_gbuffer_opt); ++len;
 
-   //R_ASSERT						( !o.dx10_sm4_1 );
    if( o.dx10_sm4_1 )
    {
 	   defines[def_it].Name		=	"SM_4_1";
 	   defines[def_it].Definition	=	"1";
 	   def_it++;
    }
-   sh_name[len]='0'+0*char(o.dx10_sm4_1); ++len;
+   sh_name[len]='0'+char(o.dx10_sm4_1); ++len;
 
    R_ASSERT						( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 );
    if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
