@@ -336,30 +336,39 @@ EGameActions get_binded_action(int _dik)
 	return kNOTBINDED;
 }
 
-void GetActionAllBinding		(LPCSTR _action, char* dst_buff, int dst_buff_sz)
+void GetActionAllBinding(LPCSTR _action, char* dst_buff, int dst_buff_sz)
 {
-	int			action_id	= action_name_to_id(_action);
-	_binding*	pbinding	= &g_key_bindings[action_id];
+	int			action_id = action_name_to_id(_action);
+	_binding*	pbinding = &g_key_bindings[action_id];
 
 	string128	prim;
 	string128	sec;
-	prim[0]		= 0;
-	sec[0]		= 0;
+	prim[0] = 0;
+	sec[0] = 0;
 
-	if(pbinding->m_keyboard[0])
+	if (pbinding->m_keyboard[0])
 	{
-		xr_strcpy(prim, pbinding->m_keyboard[0]->key_local_name.c_str());
+		try
+		{
+			xr_strcpy(prim, pbinding->m_keyboard[0]->key_local_name.c_str());
+		}
+		catch (...)
+		{
+			Debug.fatal(DEBUG_INFO, make_string("can't action id: %d", action_id).c_str());
+		}
 	}
-	if(pbinding->m_keyboard[1])
+	if (pbinding->m_keyboard[1])
 	{
 		xr_strcpy(sec, pbinding->m_keyboard[1]->key_local_name.c_str());
 	}
-	if(NULL==pbinding->m_keyboard[0] && NULL==pbinding->m_keyboard[1])
+	if (!pbinding->m_keyboard[0] && !pbinding->m_keyboard[1])
 	{
-		xr_sprintf		(dst_buff, dst_buff_sz, "%s", CStringTable().translate("st_key_notbinded").c_str());
-	}else
-		xr_sprintf		(dst_buff, dst_buff_sz, "%s%s%s", prim[0]?prim:"", (sec[0]&&prim[0])?" , ":"", sec[0]?sec:"");
-					
+		xr_sprintf(dst_buff, dst_buff_sz, "%s", CStringTable().translate("st_key_notbinded").c_str());
+	}
+	else
+	{
+		xr_sprintf(dst_buff, dst_buff_sz, "%s%s%s", prim[0] ? prim : "", (sec[0] && prim[0]) ? " , " : "", sec[0] ? sec : "");
+	}
 }
 
 ConsoleBindCmds	bindConsoleCmds;

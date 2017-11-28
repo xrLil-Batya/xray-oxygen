@@ -69,22 +69,17 @@ void CUIGameLog::Update()
 	CUIScrollView::Update();
 	toDelList.clear();
 
-	WINDOW_LIST_it it = m_pad->GetChildWndList().begin();
-	WINDOW_LIST_it it_e = m_pad->GetChildWndList().end();
-
-	for (; it != it_e; ++it)
+	for (CUIWindow* it: m_pad->GetChildWndList())
 	{
-		CUILightAnimColorConroller* pItem = smart_cast<CUILightAnimColorConroller*>(*it);
+		CUILightAnimColorConroller* pItem = smart_cast<CUILightAnimColorConroller*>(it);
 
 		if (!pItem->IsColorAnimationPresent())
-			toDelList.push_back(*it);
+			toDelList.push_back(it);
 	}
 
 	// Delete elements
-	it_e = toDelList.end();
-
-	for (it = toDelList.begin(); it != it_e; ++it)
-		RemoveWindow(*it);
+	for (CUIWindow* it: toDelList)
+		RemoveWindow(it);
 
 	// REMOVE INVISIBLE AND PART VISIBLE ITEMS
 	if (m_flags.test(eNeedRecalc))
@@ -93,21 +88,20 @@ void CUIGameLog::Update()
 	toDelList.clear();
 	Frect visible_rect;
 	GetAbsoluteRect(visible_rect);
-	it_e = m_pad->GetChildWndList().end();
-	for (it = m_pad->GetChildWndList().begin(); it != it_e; ++it)
+
+	for (CUIWindow* it: m_pad->GetChildWndList())
 	{
 		Frect					r;
-		(*it)->GetAbsoluteRect(r);
+		it->GetAbsoluteRect(r);
 		r.shrink(3.0f, 3.0f);
 
 		if (!(visible_rect.in(r.x1, r.y1) && visible_rect.in(r.x2, r.y1) && visible_rect.in(r.x1, r.y2) && visible_rect.in(r.x2, r.y2)))
-			toDelList.push_back(*it);
+			toDelList.push_back(it);
 	}
 
 	// Delete elements
-	it_e = toDelList.end();
-	for (it = toDelList.begin(); it != it_e; ++it)
-		RemoveWindow(*it);
+	for (CUIWindow* it: toDelList)
+		RemoveWindow(it);
 
 	if (m_flags.test(eNeedRecalc))
 		RecalcSize();

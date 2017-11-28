@@ -411,12 +411,6 @@ bool CUIXmlInit::Init3tButton(CUIXml& xml_doc, LPCSTR path, int index, CUI3tButt
 	return true;
 }
 
-bool CUIXmlInit::InitTabButtonMP(CUIXml& xml_doc, LPCSTR path,	int index, CUITabButtonMP *pWnd)
-{
-	return true;
-}
-
-
 bool CUIXmlInit::InitSound(CUIXml& xml_doc, LPCSTR path, int index, CUI3tButton* pWnd){
 	string256 sound_h;
 	string256 sound_t;
@@ -446,8 +440,6 @@ bool CUIXmlInit::InitDragDropListEx(CUIXml& xml_doc, LPCSTR path, int index, CUI
 	size.y			= xml_doc.ReadAttribFlt(path, index, "height");
 
 	InitAlignment	(xml_doc, path, index, pos.x, pos.y, pWnd);
-
-
 
 	pWnd->InitDragDropList		(pos, size);
 

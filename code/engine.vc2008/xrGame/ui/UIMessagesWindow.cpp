@@ -15,8 +15,7 @@
 #include "UIPdaMsgListItem.h"
 #include "UIGameLog.hpp"
 
-CUIMessagesWindow::CUIMessagesWindow()
-:m_pGameLog(nullptr)
+CUIMessagesWindow::CUIMessagesWindow() :m_pGameLog(nullptr)
 {
 	Init(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT);
 }
@@ -45,7 +44,6 @@ void CUIMessagesWindow::PendingMode(bool const is_pending_mode)
 	m_in_pending_mode			= false;
 }
 
-#define CHAT_LOG_LIST_PENDING "chat_log_list_pending"
 void CUIMessagesWindow::Init(float x, float y, float width, float height)
 {
 
@@ -82,9 +80,6 @@ void CUIMessagesWindow::AddIconedPdaMessage(GAME_NEWS_DATA* news)
 	m_pGameLog->SendMessage(pItem,CHILD_CHANGED_SIZE);
 }
 
-void CUIMessagesWindow::AddChatMessage(shared_str msg, shared_str author)
-{
-}
 void CUIMessagesWindow::Show(bool show)
 {
 	if (m_pGameLog)

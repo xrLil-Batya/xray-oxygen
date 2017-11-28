@@ -11,7 +11,6 @@
 #include "UIWindow.h"
 
 struct GAME_NEWS_DATA;
-struct KillMessageStruct;
 class  CUIGameLog;
 
 class CUIMessagesWindow : public CUIWindow 
@@ -23,8 +22,6 @@ public:
 	void				AddIconedPdaMessage				(GAME_NEWS_DATA* news);
 
 	void				AddLogMessage					(const shared_str& msg);
-	void				AddLogMessage					(KillMessageStruct& msg);
-	void				AddChatMessage					(shared_str msg, shared_str author);
 	void				PendingMode						(bool const is_in_pending_mode);
 	virtual void		Show							(bool show);
 

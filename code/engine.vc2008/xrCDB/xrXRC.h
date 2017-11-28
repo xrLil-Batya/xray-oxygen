@@ -1,11 +1,7 @@
 // xrXRC.h: interface for the xrXRC class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(AFX_XRXRC_H__9AA25268_621F_4FCA_BD75_AF2E9822B8E3__INCLUDED_)
-#define AFX_XRXRC_H__9AA25268_621F_4FCA_BD75_AF2E9822B8E3__INCLUDED_
-//#pragma once
-
+#pragma once
 #include "xrCDB.h"
 
 #ifdef	DEBUG
@@ -70,9 +66,7 @@ public:
 	IC void			r_clear			()	{	CL.r_clear();				};
 	IC void			r_clear_compact	()	{	CL.r_clear_compact();		};
 	
-	xrXRC();
-	~xrXRC();
+	xrXRC()		= default;
+	~xrXRC()	= default;
 };
 XRCDB_API extern xrXRC XRC;
-
-#endif // !defined(AFX_XRXRC_H__9AA25268_621F_4FCA_BD75_AF2E9822B8E3__INCLUDED_)
