@@ -246,11 +246,7 @@ public:
 	}
 
 	BOOL SymSetSearchPath(IN char* SearchPath) { return ::SymSetSearchPath(m_hProcess, SearchPath); }
-#ifdef _M_X64
-	BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN ULONG64 UserContext)
-#else
-	BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN PVOID UserContext)
-#endif
+	BOOL SymRegisterCallback(IN PSYMBOL_REGISTERED_CALLBACK CallbackFunction, IN size_t UserContext)
 	{
 		return ::SymRegisterCallback(m_hProcess, CallbackFunction, UserContext);
 	}

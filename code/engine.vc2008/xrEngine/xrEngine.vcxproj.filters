@@ -740,9 +740,6 @@
     <ClCompile Include="xrTheora_Surface.cpp">
       <Filter>Interfaces\Render\Execution &amp; 3D\Shaders\Textures</Filter>
     </ClCompile>
-    <ClCompile Include="xrTheora_Surface_mmx.cpp">
-      <Filter>Interfaces\Render\Execution &amp; 3D\Shaders\Textures</Filter>
-    </ClCompile>
     <ClCompile Include="Text_Console.cpp">
       <Filter>Interfaces\Render\Execution &amp; 3D\TextConsole</Filter>
     </ClCompile>

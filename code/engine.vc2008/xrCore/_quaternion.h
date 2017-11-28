@@ -316,12 +316,7 @@ public:
         T n = Q.x * Q.x + Q.y * Q.y + Q.z * Q.z;
         T r = _sqrt(n);
         T t = (r > EPS_S) ? 
-#ifdef _M_X64
-			std::atan2(r, Q.w)
-#else
-			std::atan2f(r, Q.w)
-#endif
-			/ r : T(0);
+		std::atan2(r, Q.w) / r : T(0);
         x = t * Q.x;
         y = t * Q.y;
         z = t * Q.z;

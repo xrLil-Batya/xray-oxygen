@@ -62,11 +62,7 @@ public:
 	{
 		if (hf)
 		{
-#ifdef _M_X64
 			_fseeki64(hf, pos, SEEK_SET);
-#else
-			fseek(hf, pos, SEEK_SET);
-#endif
 		}
     }
 

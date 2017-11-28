@@ -112,12 +112,7 @@ LPCTSTR __stdcall GetNextStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* pExP
 	return InternalGetStackTraceString(dwOpts, pExPtrs);
 }
 
-BOOL __stdcall ReadCurrentProcessMemory(HANDLE, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, 
-#ifndef _M_X64
-	LPDWORD lpNumberOfBytesRead)
-#else
-	SIZE_T* lpNumberOfBytesRead)
-#endif
+BOOL __stdcall ReadCurrentProcessMemory(HANDLE, LPCVOID lpBaseAddress, LPVOID lpBuffer, DWORD nSize, SIZE_T* lpNumberOfBytesRead)
 {
 	return ReadProcessMemory(GetCurrentProcess(), lpBaseAddress, lpBuffer, nSize, lpNumberOfBytesRead);
 }
@@ -148,11 +143,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		// Initialize the symbol engine in case it isn't initialized.
 		InitializeSymbolEngine();
 
-#ifdef _M_X64
 #define CH_MACHINE IMAGE_FILE_MACHINE_AMD64
-#else
-#define CH_MACHINE IMAGE_FILE_MACHINE_I386
-#endif
 		// Note:  If the source file and line number functions are used,
 		//        StackWalk can cause an access violation.
 		bool bSWRet = !!StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
@@ -179,25 +170,14 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		int iCurr = 0;
 
 		// At a minimum, put in the address.
-#ifdef _WIN64
 		iCurr += wsprintf(g_szBuff + iCurr, _T("0x%016I64X"), g_stFrame.AddrPC.Offset);
-#else
-		// iCurr += wsprintf(g_szBuff + iCurr, _T("%04X:%08I64X"), pExPtrs->ContextRecord->SegCs,
-		// g_stFrame.AddrPC.Offset);
-		iCurr += wsprintf(g_szBuff + iCurr, _T("%04X:%08X"), pExPtrs->ContextRecord->SegCs, g_stFrame.AddrPC.Offset);
-#endif
 
 		// Output the parameters?
 		if ((dwOpts & GSTSO_PARAMS) == GSTSO_PARAMS)
 		{
 			iCurr += wsprintf(g_szBuff + iCurr,
-#ifdef _WIN64
-				_T(" (0x%016I64X 0x%016I64X 0x%016I64X 0x%016I64X)"),
-#else
-				//_T(" (0x%08I64X 0x%08I64X 0x%08I64X 0x%08I64X)"),
-				_T(" (0x%08X 0x%08X 0x%08X 0x%08X)"),
-#endif
-				g_stFrame.Params[0], g_stFrame.Params[1], g_stFrame.Params[2], g_stFrame.Params[3]);
+			_T(" (0x%016I64X 0x%016I64X 0x%016I64X 0x%016I64X)"),
+			g_stFrame.Params[0], g_stFrame.Params[1], g_stFrame.Params[2], g_stFrame.Params[3]);
 		}
 		// Output the module name.
 		if ((dwOpts & GSTSO_MODULE) == GSTSO_MODULE)

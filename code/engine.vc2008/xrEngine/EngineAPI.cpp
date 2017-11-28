@@ -12,17 +12,12 @@ extern xr_token* vid_quality_token;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-void __cdecl dummy		(void)	{
-};
 CEngineAPI::CEngineAPI	()
 {
 	hGame			= 0;
 	hRender			= 0;
-	hTuner			= 0;
 	pCreate			= 0;
 	pDestroy		= 0;
-	tune_pause		= dummy	;
-	tune_resume		= dummy	;
 }
 
 CEngineAPI::~CEngineAPI()
@@ -34,7 +29,7 @@ CEngineAPI::~CEngineAPI()
 			xr_free					(vid_quality_token[i].name);
 
 		xr_free						(vid_quality_token);
-		vid_quality_token			= NULL;
+		vid_quality_token			= nullptr;
 	}
 }
 
@@ -139,23 +134,6 @@ void CEngineAPI::Initialize(void)
 		pCreate			= (Factory_Create*)GetProcAddress(hGame,"xrFactory_Create");	R_ASSERT(pCreate);
 		pDestroy		= (Factory_Destroy*)GetProcAddress(hGame,"xrFactory_Destroy");	R_ASSERT(pDestroy);
 	}
-
-	//////////////////////////////////////////////////////////////////////////
-	// vTune
-
-	tune_enabled		= FALSE;
-#ifdef _M_X86 // #DEPRECATED anyway [FX]
-	if (strstr(Core.Params,"-tune"))	{
-		LPCSTR			g_name	= "vTuneAPI.dll";
-		Log				("Loading DLL:",g_name);
-		hTuner			= LoadLibrary	(g_name);
-		if (!hTuner)	R_CHK			(GetLastError());
-		R_ASSERT2		(hTuner,"Intel vTune is not installed");
-		tune_enabled	= TRUE;
-		tune_pause		= (VTPause*)	GetProcAddress(hTuner,"VTPause"		);	R_ASSERT(tune_pause);
-		tune_resume		= (VTResume*)	GetProcAddress(hTuner,"VTResume"	);	R_ASSERT(tune_resume);
-	}
-#endif
 }
 
 void CEngineAPI::Destroy	(void)

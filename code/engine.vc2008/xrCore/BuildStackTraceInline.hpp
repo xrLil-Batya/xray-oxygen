@@ -1,19 +1,12 @@
 #pragma once
 
-namespace { 
-	
-#ifdef _M_X64
+namespace 
+{ 
 		extern "C" void * _ReturnAddress(void);
 		DWORD_PTR GetInstructionPtr()
 		{
 				return (DWORD_PTR)_ReturnAddress();
 		}
-#else
-		void __declspec(naked, noinline) * __cdecl GetInstructionPtr()
-		{
-			_asm mov eax, [esp] _asm retn
-		}
-#endif
 }
 
 struct StackTraceInfo
@@ -52,15 +45,10 @@ size_t BuildStackTrace(char* buffer, size_t capacity, size_t lineCapacity)
 	context.ContextFlags = CONTEXT_FULL;
 	if (GetThreadContext(GetCurrentThread(), &context))
 	{
-#ifndef _M_X64
-		context.Eip = (DWORD)GetInstructionPtr();
-		context.Ebp = (DWORD)&ebp;
-		context.Esp = (DWORD)&context;
-#else
 		context.Rip = GetInstructionPtr();
 		context.Rbp = (DWORD)&ebp;
 		context.Rsp = (DWORD)&context;
-#endif
+
 		ex_ptrs.ContextRecord = &context;
 		ex_ptrs.ExceptionRecord = 0;
 		return BuildStackTrace(&ex_ptrs, buffer, capacity, lineCapacity);

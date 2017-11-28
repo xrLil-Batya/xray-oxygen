@@ -1,10 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
-
-// #include "rt_lzo.h"
 #include "rt_lzo1x.h"
-
 
 #define HEAP_ALLOC(var,size) \
 	lzo_align_t __LZO_MMODEL var [ ((size) + (sizeof(lzo_align_t) - 1)) / sizeof(lzo_align_t) ]
@@ -12,24 +8,20 @@
 __declspec(thread) HEAP_ALLOC(rtc_wrkmem,LZO1X_1_MEM_COMPRESS);
 
 
-void	rtc_initialize	()
+void rtc_initialize()
 {
-	VERIFY			(lzo_init()==LZO_E_OK);
+	VERIFY(lzo_init()==LZO_E_OK);
 }
 
-u32		rtc_csize		(u32 in)
+u32 rtc_csize(u32 in)
 {
-	VERIFY			(in);
-	return			in + in/64 + 16 + 3;
+	VERIFY(in);
+	return in + in/64 + 16 + 3;
 }
-#pragma todo("FX to Giperion: Don't forget about the x32")
-u32		rtc_compress	(void *dst, u32 dst_len, const void* src, u32 src_len)
+
+u32 rtc_compress(void *dst, u32 dst_len, const void* src, u32 src_len)
 {
-#ifdef _M_X64
 	u64		out_size	= dst_len;
-#else
-	u32		out_size	= dst_len;
-#endif
 	int r = lzo1x_1_compress	( 
 		(const lzo_byte *) src, (lzo_uint)	src_len, 
 		(lzo_byte *) dst,		(lzo_uintp) &out_size, 
@@ -39,13 +31,9 @@ u32		rtc_compress	(void *dst, u32 dst_len, const void* src, u32 src_len)
 }
 #pragma todo("FX to FX: replace 'rtc_decompress & rtc_compress' by size_t")
 
-u32		rtc_decompress	(void *dst, u32 dst_len, const void* src, u32 src_len)
+u32 rtc_decompress	(void *dst, u32 dst_len, const void* src, u32 src_len)
 {
-#ifdef _M_X64
-	u64		out_size	= dst_len;
-#else
-	u32		out_size	= dst_len;
-#endif
+	u64 out_size = dst_len;
 	int r = lzo1x_decompress	( 
 		(const lzo_byte *) src, (lzo_uint)	src_len,
 		(lzo_byte *) dst,		(lzo_uintp) &out_size,
