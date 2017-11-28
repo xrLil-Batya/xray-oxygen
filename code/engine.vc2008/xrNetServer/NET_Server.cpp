@@ -14,17 +14,12 @@ XRNETSERVER_API int		psNET_ServerPending	= 3;
 
 XRNETSERVER_API ClientID BroadcastCID(0xffffffff);
 
-IClient::IClient(CTimer* timer): stats(timer), server(NULL)
+IClient::IClient(CTimer* timer) : stats(timer), server(nullptr), dwTime_LastUpdate(0)
 {
-	dwTime_LastUpdate	= 0;
 	flags.bLocal = FALSE;
 	flags.bConnected = FALSE;
 	flags.bReconnect = FALSE;
 	flags.bVerified = TRUE;
-}
-
-IClient::~IClient()
-{
 }
 
 void IClientStatistic::Update(DPN_CONNECTION_INFO& CI)
@@ -119,59 +114,13 @@ IPureServer::EConnect IPureServer::Connect(LPCSTR options, GameDescriptionData &
 	// Parse options
     string1024 session_name;
     xr_strcpy(session_name, options);
-    //sertanly we can use game_descr structure for determinig level_name, but for backward compatibility we save next line...
-    //xr_strcpy(session_name, options);
     if (strchr(session_name, '/'))	*strchr(session_name, '/') = 0;
     connect_options = options;
-
-	string64				password_str = "";
-	u32						dwMaxPlayers = 0;
-
-	if (strstr(options, "psw="))
-	{
-		const char* PSW = strstr(options, "psw=") + 4;
-		if (strchr(PSW, '/'))
-			strncpy_s(password_str, PSW, strchr(PSW, '/') - PSW);
-		else
-			strncpy_s(password_str, PSW, 63);
-	}
-	if (strstr(options, "maxplayers="))
-	{
-		const char* sMaxPlayers = strstr(options, "maxplayers=") + 11;
-		string64 tmpStr = "";
-		if (strchr(sMaxPlayers, '/'))
-			strncpy_s(tmpStr, sMaxPlayers, strchr(sMaxPlayers, '/') - sMaxPlayers);
-		else
-			strncpy_s(tmpStr, sMaxPlayers, 63);
-		dwMaxPlayers = atol(tmpStr);
-	}
-	if (dwMaxPlayers > 32 || dwMaxPlayers < 1) dwMaxPlayers = 32;
-#ifdef DEBUG
-	Msg("MaxPlayers = %d", dwMaxPlayers);
-#endif // #ifdef DEBUG
-
-	//-------------------------------------------------------------------
-	bool bPortWasSet = false;
-	u32 dwServerPort = START_PORT_LAN_SV;
-	if (strstr(options, "portsv="))
-	{
-		const char* ServerPort = strstr(options, "portsv=") + 7;
-		string64 tmpStr = "";
-		if (strchr(ServerPort, '/'))
-			strncpy_s(tmpStr, ServerPort, strchr(ServerPort, '/') - ServerPort);
-		else
-			strncpy_s(tmpStr, ServerPort, 63);
-		dwServerPort = atol(tmpStr);
-		clamp(dwServerPort, u32(START_PORT), u32(END_PORT));
-		bPortWasSet = true; //this is not casual game
-	}
-
 	return	ErrNoError;
 }
 
 void IPureServer::Disconnect	()
 {
-//.	config_Save		();
     if( NET )	NET->Close(0);
 	
 	// Release interfaces
@@ -235,16 +184,7 @@ void IPureServer::SendTo_LL(ClientID ID/*DPNID ID*/, void* data, u32 size, u32 d
 	VERIFY		(desc.pBufferData);
 
 	DPNHANDLE	hAsync	= 0;
-	HRESULT		_hr		= NET->SendTo(
-		ID.value(),
-		&desc,1,
-		dwTimeout,
-		0,&hAsync,
-		dwFlags | DPNSEND_COALESCE 
-		);
-
-	
-//	Msg("- IPureServer::SendTo_LL [%d]", size);
+	HRESULT		_hr		= NET->SendTo(ID.value(), &desc,1, dwTimeout, 0, &hAsync, dwFlags | DPNSEND_COALESCE);
 
 	if (SUCCEEDED(_hr) || (DPNERR_CONNECTIONLOST==_hr))	return;
 
@@ -252,19 +192,17 @@ void IPureServer::SendTo_LL(ClientID ID/*DPNID ID*/, void* data, u32 size, u32 d
 
 }
 
-void	IPureServer::SendTo		(ClientID ID/*DPNID ID*/, NET_Packet& P, u32 dwFlags, u32 dwTimeout)
+void IPureServer::SendTo(ClientID ID/*DPNID ID*/, NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 {
-	SendTo_LL( ID, P.B.data, P.B.count, dwFlags, dwTimeout );
+	SendTo_LL( ID, P.B.data, (u32)P.B.count, dwFlags, dwTimeout );
 }
 
-void	IPureServer::SendBroadcast_LL(ClientID exclude, void* data, u32 size, u32 dwFlags)
+void IPureServer::SendBroadcast_LL(ClientID exclude, void* data, u32 size, u32 dwFlags)
 {
 	struct ClientExcluderPredicate
 	{
 		ClientID id_to_exclude;
-		ClientExcluderPredicate(ClientID exclude) :
-			id_to_exclude(exclude)
-		{}
+		ClientExcluderPredicate(ClientID exclude) : id_to_exclude(exclude) {}
 		bool operator()(IClient* client)
 		{
 			if (client->ID == id_to_exclude)
@@ -295,27 +233,7 @@ void	IPureServer::SendBroadcast_LL(ClientID exclude, void* data, u32 size, u32 d
 void	IPureServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
 {
 	// Perform broadcasting
-	SendBroadcast_LL( exclude, P.B.data, P.B.count, dwFlags );
-}
-
-u32	IPureServer::OnMessage	(NET_Packet& P, ClientID sender)	// Non-Zero means broadcasting with "flags" as returned
-{
-	/*
-	u16 m_type;
-	P.r_begin	(m_type);
-	switch (m_type)
-	{
-	case M_CHAT:
-		{
-			char	buffer[256];
-			P.r_string(buffer);
-			printf	("RECEIVE: %s\n",buffer);
-		}
-		break;
-	}
-	*/
-	
-	return 0;
+	SendBroadcast_LL( exclude, P.B.data, (u32)P.B.count, dwFlags );
 }
 
 void IPureServer::OnCL_Connected		(IClient* CL)
@@ -360,7 +278,7 @@ void	IPureServer::ClearStatistic	()
 	net_players.ForEachClientDo(StatsClearFunctor::Clear);
 };
 
-bool			IPureServer::DisconnectClient	(IClient* C, LPCSTR Reason)
+bool IPureServer::DisconnectClient(IClient* C, LPCSTR Reason)
 {
 	if (!C) return false;
 

@@ -35,7 +35,7 @@ public:
 	};
 
                         IClient( CTimer* timer );
-	virtual             ~IClient();
+	virtual             ~IClient() = default;
 
 	IClientStatistic	stats;
 
@@ -145,7 +145,7 @@ public:
 	void					UpdateClientStatistic		(IClient* C);
 
 	// extended functionality
-	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
+	virtual u32				OnMessage			(NET_Packet& P, ClientID sender) = 0;
 	virtual void			OnCL_Connected		(IClient* C);
 	virtual void			OnCL_Disconnected	(IClient* C);
 	virtual bool			OnCL_QueryHost		()		{ return true; };

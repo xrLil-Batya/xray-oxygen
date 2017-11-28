@@ -396,7 +396,7 @@ void	IPureClient::SendTo_LL(void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 
 void IPureClient::Send( NET_Packet& packet, u32 dwFlags, u32 dwTimeout )
 {
-    MultipacketSender::SendPacket( packet.B.data, packet.B.count, dwFlags, dwTimeout );
+    MultipacketSender::SendPacket( packet.B.data, (u32)packet.B.count, dwFlags, dwTimeout );
 }
 
 void IPureClient::Flush_Send_Buffer		()
