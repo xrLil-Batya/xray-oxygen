@@ -208,31 +208,38 @@ void CParticlesPlayer::StopParticles(u16 sender_id, u16 bone_id, bool bDestroy)
 
 void CParticlesPlayer::StopParticles(const shared_str& ps_name, u16 bone_id, bool bDestroy)
 {
-	if (BI_NONE==bone_id){
-		for(auto it=m_Bones.begin(); it!=m_Bones.end(); it++)
-			it->StopParticles	(ps_name, bDestroy);
-	}else{
-		SBoneInfo* bi			= get_bone_info(bone_id); VERIFY(bi);
-		bi->StopParticles		(ps_name, bDestroy);
+	if (BI_NONE == bone_id) 
+	{
+		for (auto it : m_Bones)
+			it.StopParticles(ps_name, bDestroy);
+	}
+	else 
+	{
+		SBoneInfo* bi = get_bone_info(bone_id); VERIFY(bi);
+		bi->StopParticles(ps_name, bDestroy);
 	}
 	UpdateParticles();
 }
 
 //остановка партиклов, по истечении их времени жизни
-void CParticlesPlayer::AutoStopParticles(const shared_str& ps_name, u16 bone_id,u32 life_time)
+void CParticlesPlayer::AutoStopParticles(const shared_str& ps_name, u16 bone_id, u32 life_time)
 {
-	if (BI_NONE==bone_id){
-		for(auto it=m_Bones.begin(); it!=m_Bones.end(); it++)
+	if (BI_NONE == bone_id)
+	{
+		for (auto it : m_Bones)
 		{
-			SParticlesInfo* pInfo = it->FindParticles	(ps_name);
-			if(pInfo) pInfo->life_time = life_time;
+			SParticlesInfo* pInfo = it.FindParticles(ps_name);
+			if (pInfo) pInfo->life_time = life_time;
 		}
-	}else{
-		SBoneInfo* bi			= get_bone_info(bone_id); VERIFY(bi);
-		SParticlesInfo* pInfo = bi->FindParticles	(ps_name);
-		if(pInfo) pInfo->life_time = life_time;
+	}
+	else
+	{
+		SBoneInfo* bi = get_bone_info(bone_id); VERIFY(bi);
+		SParticlesInfo* pInfo = bi->FindParticles(ps_name);
+		if (pInfo) pInfo->life_time = life_time;
 	}
 }
+
 struct SRP
 {
 	bool operator	() (CParticlesPlayer::SParticlesInfo& pi)
@@ -251,8 +258,9 @@ void CParticlesPlayer::UpdateParticles()
 	for(auto b_it=m_Bones.begin(); b_it!=m_Bones.end(); b_it++){
 		SBoneInfo& b_info	= *b_it;
 
-		for (auto p_it=b_info.particles.begin(); p_it!=b_info.particles.end(); p_it++){
-			SParticlesInfo& p_info	= *p_it;
+		for (auto p_it: b_info.particles)
+		{
+			SParticlesInfo& p_info = p_it;
 			if(!p_info.ps) continue;
 			//обновить позицию партиклов
 			Fmatrix xform;
@@ -294,13 +302,13 @@ void CParticlesPlayer::GetBonePos	(CObject* pObject, u16 bone_id, const Fvector&
 	pObject->XFORM().transform_tiny(result);
 }
 
-void CParticlesPlayer::MakeXFORM	(CObject* pObject, u16 bone_id, const Fvector& dir, const Fvector& offset, Fmatrix& result)
+void CParticlesPlayer::MakeXFORM(CObject* pObject, u16 bone_id, const Fvector& dir, const Fvector& offset, Fmatrix& result)
 {
 	generate_orthonormal_basis(dir,result);
 	GetBonePos(pObject, bone_id, offset, result.c);
 }
 
-u16 CParticlesPlayer::GetNearestBone	(IKinematics* K, u16 bone_id)
+u16 CParticlesPlayer::GetNearestBone(IKinematics* K, u16 bone_id)
 {
 	u16 play_bone	= bone_id;
 
@@ -311,10 +319,9 @@ u16 CParticlesPlayer::GetNearestBone	(IKinematics* K, u16 bone_id)
 	return play_bone;
 }
 
-void CParticlesPlayer::net_SpawnParticles	()
+void CParticlesPlayer::net_SpawnParticles()
 {
 	VERIFY				(!m_self_object);
 	m_self_object		= imdexlib::fast_dynamic_cast<CObject*>(this);
 	VERIFY				(m_self_object);
-
 }

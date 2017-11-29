@@ -39,8 +39,10 @@
     <ClInclude Include="particle_params.h">
       <Filter>Scripts</Filter>
     </ClInclude>
-    <ClInclude Include="ParticlesPlayer.h" />
     <ClInclude Include="ParticlesObject.h">
+      <Filter>PAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="ParticlesPlayer.h">
       <Filter>PAPI</Filter>
     </ClInclude>
   </ItemGroup>
@@ -66,11 +68,13 @@
     <ClCompile Include="particle_params.cpp">
       <Filter>Scripts</Filter>
     </ClCompile>
-    <ClCompile Include="ParticlesPlayer.cpp" />
     <ClCompile Include="ParticlesObject.cpp">
       <Filter>PAPI</Filter>
     </ClCompile>
     <ClCompile Include="peffects.cpp">
+      <Filter>PAPI</Filter>
+    </ClCompile>
+    <ClCompile Include="ParticlesPlayer.cpp">
       <Filter>PAPI</Filter>
     </ClCompile>
   </ItemGroup>

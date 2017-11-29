@@ -316,11 +316,8 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 	u16						type;
 	P.r_begin				(type);
 
-	//csPlayers.Enter			();
-
 	VERIFY							(verify_entities());
 	xrClientData* CL				= ID_to_client(sender);
-	//R_ASSERT2						(CL, make_string("packet type [%d]",type).c_str());
 
 	switch (type)
 	{
@@ -360,7 +357,7 @@ u32	xrServer::OnMessageSync(NET_Packet& P, ClientID sender)
 }
 
 extern	float	g_fCatchObjectTime;
-u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
+u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
 {
 	u16			type;
 	P.r_begin	(type);
@@ -549,12 +546,12 @@ u32 xrServer::OnMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means bro
 		}break;
 	}
 
-	VERIFY							(verify_entities());
+	VERIFY (verify_entities());
 
-	return							IPureServer::OnMessage(P, sender);
+	return 0;
 }
 
-void xrServer::SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
+void xrServer::SendTo_LL(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
 	// optimize local traffic
 	Level().OnMessage			(data,size);
@@ -757,12 +754,10 @@ void xrServer::create_direct_client()
 {
 	SClientConnectData cl_data;
 	cl_data.clientID.set(1);
-	xr_strcpy( cl_data.name, "single_player" );
+	xr_strcpy(cl_data.name, "single_player");
 	cl_data.process_id = GetCurrentProcessId();
-	
-	new_client( &cl_data );
+	new_client(&cl_data);
 }
-
 
 void xrServer::ProceedDelayedPackets()
 {
@@ -771,7 +766,6 @@ void xrServer::ProceedDelayedPackets()
 	{
 		DelayedPacket& DPacket	= *m_aDelayedPackets.begin();
 		OnDelayedMessage(DPacket.Packet, DPacket.SenderID);
-//		OnMessage(DPacket.Packet, DPacket.SenderID);
 		m_aDelayedPackets.pop_front();
 	}
 };
@@ -786,7 +780,7 @@ void xrServer::AddDelayedPacket	(NET_Packet& Packet, ClientID Sender)
     std::memcpy(&(NewPacket->Packet),&Packet,sizeof(NET_Packet));
 }
 
-extern	BOOL	g_bCollectStatisticData;
+extern BOOL g_bCollectStatisticData;
 
 void xrServer::GetServerInfo(CServerInfo* si)
 {
