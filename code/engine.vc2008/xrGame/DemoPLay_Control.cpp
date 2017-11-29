@@ -193,15 +193,6 @@ void __stdcall	demoplay_control::on_kill_impl(u32 message, u32 subtype, NET_Pack
 	packet.r_u8();	//kill type
 	packet.r_u16();	//killed_id
 	u16 killer_id	= packet.r_u16();
-	game_PlayerState* killerps = Game().GetPlayerByGameID(killer_id);
-	if (!killerps)
-		return;
-
-	if (strstr(killerps->getName(), m_action_param_str.c_str()))
-	{
-		process_action();
-		return;
-	}
 }
 void __stdcall	demoplay_control::on_die_impl(u32 message, u32 subtype, NET_Packet & packet)
 {
@@ -219,15 +210,6 @@ void __stdcall	demoplay_control::on_die_impl(u32 message, u32 subtype, NET_Packe
 	}
 	packet.r_u8(); //kill type
 	u16 killed_id	= packet.r_u16();
-	game_PlayerState* killedps = Game().GetPlayerByGameID(killed_id);
-	if (!killedps)
-		return;
-
-	if (strstr(killedps->getName(), m_action_param_str.c_str()))
-	{
-		process_action();
-		return;
-	}
 }
 void __stdcall	demoplay_control::on_artefactdelivering_impl(u32 message, u32 subtype, NET_Packet & packet)
 {

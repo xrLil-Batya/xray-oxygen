@@ -219,7 +219,6 @@ bool CLevel::net_start5				()
 	{
 		NET_Packet		NP;
 		NP.w_begin		(M_CLIENTREADY);
-		Game().local_player->net_Export(NP, TRUE);
 		Send			(NP,net_flags(TRUE,TRUE));
 	};
 	return true;

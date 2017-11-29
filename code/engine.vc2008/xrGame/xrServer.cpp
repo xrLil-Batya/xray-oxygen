@@ -27,7 +27,7 @@
 
 u32 g_sv_traffic_optimization_level = eto_none;
 
-xrClientData::xrClientData(): IClient(Device.GetTimerGlobal()), ps(nullptr)
+xrClientData::xrClientData(): IClient(Device.GetTimerGlobal())
 {
 	Clear();
 }
@@ -39,13 +39,6 @@ void	xrClientData::Clear()
 	net_Accepted							= FALSE;
 	net_PassUpdates							= TRUE;
 };
-
-
-xrClientData::~xrClientData()
-{
-	xr_delete(ps);
-}
-
 
 xrServer::xrServer() : IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
 {
@@ -167,12 +160,6 @@ void xrServer::GetPooledState(xrClientData* xrCL)
 	if (!pooled_client)
 		return;
 
-	NET_Packet	tmp_packet;
-	u16			tmp_fake;
-	tmp_packet.w_begin				(M_SPAWN);
-	pooled_client->ps->net_Export	(tmp_packet, TRUE);
-	tmp_packet.r_begin				(tmp_fake);
-	xrCL->ps->net_Import			(tmp_packet);
 	xrCL->flags.bReconnect			= TRUE;
 	xr_delete						(pooled_client);
 }
@@ -477,8 +464,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		}break;
 	case M_CHAT_MESSAGE:
 		{
-			xrClientData *l_pC			= ID_to_client(sender);
-			OnChatMessage				(&P, l_pC);
 		}break;
 	case M_SV_MAP_NAME:
 		{
@@ -648,46 +633,6 @@ CSE_Abstract*	xrServer::GetEntity			(u32 Num)
 		if (C == Num) return I->second;
 	};
 	return NULL;
-};
-
-
-void xrServer::OnChatMessage(NET_Packet* P, xrClientData* CL)
-{
-	if (!CL->net_Ready)
-		return;
-
-	struct MessageSenderController
-	{
-		xrServer*			m_owner;
-		s16					m_team;
-		game_PlayerState*	m_sender_ps;
-		NET_Packet*			m_packet;
-		MessageSenderController(xrServer* owner) :
-			m_owner(owner)
-		{}
-		void operator()(IClient* client)
-		{
-			xrClientData* xr_client = static_cast<xrClientData*>(client);
-			game_PlayerState* ps = xr_client->ps;
-			if (!ps)
-				return;
-			if (!xr_client->net_Ready)
-				return;
-			if (m_team != -1 && ps->team != m_team)
-				return;
-			if (m_sender_ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD) &&
-				!ps->testFlag(GAME_PLAYER_FLAG_VERY_VERY_DEAD))
-			{
-				return;
-			}
-			m_owner->SendTo(client->ID, *m_packet);
-		}
-	};
-	MessageSenderController	mesenger(this);
-	mesenger.m_team			= P->r_s16();
-	mesenger.m_sender_ps	= CL->ps;
-	mesenger.m_packet		= P;
-	ForEachClientDoSender(mesenger);
 };
 
 #ifdef DEBUG

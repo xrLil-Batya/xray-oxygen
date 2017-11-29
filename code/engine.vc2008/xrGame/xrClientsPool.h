@@ -1,8 +1,5 @@
-#ifndef XRCLIENTS_POOL_H_INCLUDED
-#define XRCLIENTS_POOL_H_INCLUDED
-
+#pragma once
 class xrClientData;
-struct game_PlayerState;
 
 class xrClientsPool
 {
@@ -38,5 +35,3 @@ private:
 	typedef xr_vector<dclient>			dclients_t;
 	dclients_t							m_dclients;
 };//class xrClientsPool
-
-#endif//#ifndef XRCLIENTS_POOL_H_INCLUDED

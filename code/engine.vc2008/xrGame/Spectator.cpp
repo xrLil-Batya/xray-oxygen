@@ -101,41 +101,12 @@ void CSpectator::UpdateCL()
 
 	if (g_pGameLevel->CurrentViewEntity()==this)
 	{
-		if (eacFreeFly!=cam_active){
+		if (eacFreeFly!=cam_active)
+		{
 			//-------------------------------------
-		
-			//-------------------------------------
-			int idx			= 0;
-			game_PlayerState* P = Game().local_player;
-			if (P&&(P->team>=0)&&(P->team<(int)Level().seniority_holder().teams().size()))
-			{
-				const CTeamHierarchyHolder& T		= Level().seniority_holder().team(P->team);
-				for (u32 i=0; i<T.squads().size(); ++i)
-				{
-					const CSquadHierarchyHolder& S = T.squad(i);
-					for (u32 j=0; j<S.groups().size(); ++j)
-					{
-						const CGroupHierarchyHolder& G = S.group(j);
-						for (u32 k=0; k<G.members().size(); ++k)
-						{
-							CActor* A = smart_cast<CActor*>(G.members()[k]);
-							if (A)
-							{
-								if(idx==look_idx)
-								{
-									cam_Update	(A);
-									return;
-								}
-								++idx;
-							}
-						}
-					}
-				}
-			}
 			// не найден объект с таким индексом - сбросим на первый объект
 			look_idx = 0;
 			// никого нет за кем смотреть - переключимся на 
-			if (0==idx) cam_Set(eacFreeFly);
 		}
 		// по умолчанию eacFreeFly
 		cam_Update		(0);
@@ -196,8 +167,6 @@ void CSpectator::IR_OnKeyboardRelease(int cmd)
 void CSpectator::IR_OnKeyboardHold(int cmd)
 {
 	if (Remote())		return;
-
-	game_PlayerState* PS = Game().local_player;
 
 	if ((cam_active==eacFreeFly)||(cam_active==eacFreeLook)){
 		CCameraBase* C	= cameras	[cam_active];

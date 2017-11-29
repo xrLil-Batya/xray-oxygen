@@ -5,7 +5,6 @@
 
 class CStreamReader;
 class IWriter;
-struct game_PlayerState;
 
 #define DEMOSTRING_MAX_SIZE 256
 
@@ -22,7 +21,6 @@ private:
 	s16			m_deaths;
 	u16			m_artefacts;
 	s16			m_spots;
-	u8			m_team;
 	u8			m_rank;
 public:
 	demo_player_info();
@@ -32,14 +30,13 @@ public:
 
 	void	read_from_file		(CStreamReader* file_to_read);
 	void	write_to_file		(IWriter* file_to_write) const;
-	void	load_from_player	(game_PlayerState*	player_state);
 
 	LPCSTR				get_name		() const { return m_name.c_str(); };
 	s16	const 			get_frags		() const { return m_frags; };
 	s16	const 			get_deaths		() const { return m_deaths; };
 	u16	const 			get_artefacts	() const { return m_artefacts; };
 	s16	const 			get_spots		() const { return m_spots; };
-	u8	const 			get_team		() const { return m_team; };
+	u8	const 			get_team		() const { return 0; };
 	u8	const 			get_rank		() const { return m_rank; };
 
 	static	u32	const			demo_info_max_size;

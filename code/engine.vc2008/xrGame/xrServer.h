@@ -27,10 +27,9 @@ public:
 	
 	BOOL					net_PassUpdates;
 	u32						net_LastMoveUpdateTime;
-	
-	game_PlayerState*		ps;
+
 							xrClientData			();
-	virtual					~xrClientData			();
+	virtual					~xrClientData			() = default;
 	virtual void			Clear					();
 };
 
@@ -164,7 +163,6 @@ protected:
 	virtual void			Check_BuildVersion_Success			(IClient* CL);
 
 	void					SendConnectionData		(IClient* CL);
-	void					OnChatMessage			(NET_Packet* P, xrClientData* CL);
 	void					OnProcessClientMapData	(NET_Packet& P, ClientID const & clientID);
 
 public:

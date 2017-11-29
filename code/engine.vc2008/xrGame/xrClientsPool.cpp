@@ -6,7 +6,7 @@ extern u32 g_sv_Client_Reconnect_Time;
 
 xrClientsPool::xrClientsPool()
 {
-	m_dclients.reserve	(MAX_PLAYERS_COUNT);
+	m_dclients.reserve	(1);
 }
 
 xrClientsPool::~xrClientsPool()
@@ -49,7 +49,7 @@ void xrClientsPool::ClearExpiredClients()
 
 void xrClientsPool::Add(xrClientData* new_dclient)
 {
-	if (!new_dclient->ps)
+	if (!new_dclient)
 		return;
 
 	if (g_sv_Client_Reconnect_Time == 0)
@@ -66,16 +66,7 @@ void xrClientsPool::Add(xrClientData* new_dclient)
 
 bool const xrClientsPool::pooled_client_finder::operator()(dclient const & right) const
 {
-	if (!right.m_client->ps || !m_new_client->ps)
-		return false;
-
-//	if (m_new_client->m_cdkey_digest != right.m_client->m_cdkey_digest)
-//		return false;
-
-	if (!xr_strcmp(m_new_client->ps->getName(), right.m_client->ps->getName()))
 		return true;
-
-	return false;
 }
 
 xrClientData*	xrClientsPool::Get(xrClientData* new_client)

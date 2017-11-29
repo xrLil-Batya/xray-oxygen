@@ -11,10 +11,8 @@
 #include "UI/UIDialogWnd.h"
 #include "string_table.h"
 
-game_cl_GameState::game_cl_GameState()
+game_cl_GameState::game_cl_GameState(): cl_flags(0)
 {
-	local_player				= createPlayerState(0);	//initializing account info
-
 	shedule.t_min				= 5;
 	shedule.t_max				= 20;
 	m_game_ui_custom			= nullptr;
@@ -24,15 +22,10 @@ game_cl_GameState::game_cl_GameState()
 
 game_cl_GameState::~game_cl_GameState()
 {
-	for(auto it: players)
-		xr_delete(it.second);
-	players.clear();
-
 	shedule_unregister();
-	xr_delete(local_player);
 }
 
-void	game_cl_GameState::net_import_GameTime		(NET_Packet& P)
+void game_cl_GameState::net_import_GameTime		(NET_Packet& P)
 {
 	u64				GameTime;
 	P.r_u64			(GameTime);
@@ -52,37 +45,6 @@ void	game_cl_GameState::net_import_GameTime		(NET_Packet& P)
 		GamePersistent().Environment().Invalidate();
 }
 
-struct not_exsiting_clients_deleter
-{
-	typedef buffer_vector<ClientID>	existing_clients_vector_t;
-	existing_clients_vector_t*	exist_clients;
-	game_PlayerState**			local_player;
-	ClientID*					client_id;
-	not_exsiting_clients_deleter(existing_clients_vector_t* exist, game_PlayerState** local_player, ClientID* client_id) :
-		exist_clients(exist), local_player(local_player), client_id(client_id)
-	{
-	}
-	//default copy constructor is right
-	bool operator()(game_cl_GameState::PLAYERS_MAP::value_type & value)
-	{
-		VERIFY(exist_clients);
-		existing_clients_vector_t::iterator tmp_iter = std::find(
-			exist_clients->begin(),
-			exist_clients->end(),
-			value.first	//key
-		);
-		
-		if (tmp_iter != exist_clients->end())
-			return false;
-
-		if ( *local_player == value.second )
-			return false;
-
-		xr_delete(value.second);
-		return true;
-	}
-}; //not_present_clients_deleter
-
 void game_cl_GameState::net_import_state (NET_Packet& P)
 {
 	// Generic
@@ -100,52 +62,11 @@ void game_cl_GameState::net_import_state (NET_Packet& P)
 
 	// Players
 
-	buffer_vector<ClientID> valid_players(
-		_alloca(sizeof(ClientID) * (2)),
-		(2)
-	);
+	buffer_vector<ClientID> valid_players(_alloca(sizeof(ClientID) * (2)),(2));
 	
-	ClientID			ID;
-	P.r_clientID		(ID);
+	ClientID ID;
+	P.r_clientID(ID);
 	
-	game_PlayerState*   IP;
-	PLAYERS_MAP_IT I = players.find(ID);
-	if(I != players.end())
-	{
-		IP = I->second;
-		//***********************************************
-		u16 OldFlags = IP->flags__;
-		//-----------------------------------------------
-		IP->net_Import(P);
-		//***********************************************
-		valid_players.push_back(ID);
-	}
-	else 
-	{
-		if (ID == local_svdpnid)
-		{
-			game_PlayerState::skip_Import(P);	//this mean that local_player not created yet ..
-		}
-		else
-		{
-			IP = createPlayerState(&P);
-
-			players.insert(std::make_pair(ID, IP));
-			valid_players.push_back(ID);
-		}
-	}
-	
-	not_exsiting_clients_deleter	tmp_deleter(&valid_players, &local_player, &local_svdpnid);
-	
-	players.erase(
-		std::remove_if(
-			players.begin(),
-			players.end(),
-			tmp_deleter
-		),
-		players.end()
-	);
-
 	net_import_GameTime(P);
 }
 
@@ -155,23 +76,6 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 	ClientID			ID;
 	P.r_clientID		(ID);
 
-	// Update
-	PLAYERS_MAP_IT I	= players.find(ID);
-	if (players.end()!=I)
-	{
-		//-----------------------------------------------
-		game_PlayerState* IP		= I->second;
-		//-----------------------------------------------
-		IP->net_Import(P);
-		//-----------------------------------------------
-	}
-	else
-	{
-		//updates can be delivered faster than guarantee packets
-		//that store GAME_EVENT_PLAYER_CONNECTED
-		game_PlayerState::skip_Import(P);
-	};
-
 	//Syncronize GameTime
 	net_import_GameTime (P);
 }
@@ -180,104 +84,12 @@ void	game_cl_GameState::net_signal		(NET_Packet& P)
 {
 }
 
-void game_cl_GameState::TranslateGameMessage	(u32 msg, NET_Packet& P)
-{
-/*	CStringTable st;
-
-	string512 Text;
-	char	Color_Main[]	= "%c[255,192,192,192]";
-	LPSTR	Color_Teams[3]	= {"%c[255,255,240,190]", "%c[255,64,255,64]", "%c[255,64,64,255]"};
-
-	switch (msg)
-	{
-	case GAME_EVENT_PLAYER_CONNECTED:
-		{
-			ClientID newClientId;
-			P.r_clientID(newClientId);
-			game_PlayerState*	PS = NULL;
-
-			if (newClientId == local_svdpnid) PS = local_player;
-			else PS = createPlayerState(&P);
-
-			VERIFY2(PS, "failed to create player state");
-			
-			xr_sprintf(Text, "%s%s %s%s",Color_Teams[0],PS->getName(),Color_Main,*st.translate("mp_connected"));
-			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
-			//---------------------------------------
-			Msg("%s connected", PS->getName());
-		}break;
-	case GAME_EVENT_PLAYER_DISCONNECTED:
-		{
-			string64 PlayerName;
-			P.r_stringZ(PlayerName);
-
-			xr_sprintf(Text, "%s%s %s%s",Color_Teams[0],PlayerName,Color_Main,*st.translate("mp_disconnected"));
-			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
-			//---------------------------------------
-			Msg("%s disconnected", PlayerName);
-		}break;
-	case GAME_EVENT_PLAYER_ENTERED_GAME:
-		{
-			string64 PlayerName;
-			P.r_stringZ(PlayerName);
-
-			xr_sprintf(Text, "%s%s %s%s",Color_Teams[0],PlayerName,Color_Main,*st.translate("mp_entered_game"));
-			if(CurrentGameUI()) CurrentGameUI()->CommonMessageOut(Text);
-		}break;
-	default:
-		{
-			R_ASSERT2(0,"Unknown Game Message");
-		}break;
-	};
-	*/
-}
-
 void game_cl_GameState::OnGameMessage	(NET_Packet& P)
 {
 	VERIFY	(this && &P);
 	u32 msg	;
 	P.r_u32	(msg);
-
-	TranslateGameMessage(msg, P);
 };
-
-game_PlayerState* game_cl_GameState::lookat_player()
-{
-	CObject* current_entity = Level().CurrentEntity();
-	if (current_entity)
-	{
-		return GetPlayerByGameID(current_entity->ID());
-	}
-	return nullptr;
-}
-
-game_PlayerState* game_cl_GameState::GetPlayerByGameID(u32 GameID)
-{
-	PLAYERS_MAP_IT I=players.begin();
-	PLAYERS_MAP_IT E=players.end();
-
-	for (;I!=E;++I)
-	{
-		game_PlayerState* P = I->second;
-		if (P->GameID == GameID) return P;
-	};
-	return nullptr;
-};
-
-game_PlayerState* game_cl_GameState::GetPlayerByOrderID		(u32 idx)
-{
-	PLAYERS_MAP_IT I = players.begin();
-	std::advance(I,idx);
-	game_PlayerState* ps = I->second;
-	return ps;
-}
-
-ClientID game_cl_GameState::GetClientIDByOrderID	(u32 idx)
-{
-	PLAYERS_MAP_IT I = players.begin();
-	std::advance(I,idx);
-	return I->first;
-}
 
 void game_cl_GameState::shedule_Update		(u32 dt)
 {
@@ -298,25 +110,20 @@ void game_cl_GameState::sv_GameEventGen(NET_Packet& P)
 	P.w_u16		(0);//dest==0
 }
 
-void	game_cl_GameState::sv_EventSend(NET_Packet& P)
+void game_cl_GameState::sv_EventSend(NET_Packet& P)
 {
 	Level().Send(P,net_flags(TRUE,TRUE));
 }
-
-bool game_cl_GameState::OnKeyboardPress		(int dik)
+bool isCliping = false;
+bool game_cl_GameState::OnKeyboardPress(int dik)
 {
-	if(!local_player || local_player->IsSkip())
-		return true;
-	else
-		return false;
+	isCliping = !isCliping;
+	return !isCliping;
 }
 
-bool game_cl_GameState::OnKeyboardRelease	(int dik)
+bool game_cl_GameState::OnKeyboardRelease(int dik)
 {
-	if(!local_player || local_player->IsSkip())
-		return true;
-	else
-		return false;
+	return true;
 }
 
 void game_cl_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)

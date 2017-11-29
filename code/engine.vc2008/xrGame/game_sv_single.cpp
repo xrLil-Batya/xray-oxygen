@@ -143,19 +143,12 @@ void game_sv_Single::OnDetach(u16 eid_who, u16 eid_what)
 }
 
 
-void	game_sv_Single::Update			()
+void game_sv_Single::Update()
 {
-	inherited::Update	();
-/*	switch(phase) 	{
-		case GAME_PHASE_PENDING : {
-			OnRoundStart();
-			switch_Phase(GAME_PHASE_INPROGRESS);
-			break;
-		}
-	}*/
+	inherited::Update();
 }
 
-ALife::_TIME_ID game_sv_Single::GetStartGameTime	()
+u64 game_sv_Single::GetStartGameTime	()
 {
 	if (ai().get_alife() && ai().alife().initialized())
 		return(ai().alife().time_manager().start_game_time());
@@ -163,7 +156,7 @@ ALife::_TIME_ID game_sv_Single::GetStartGameTime	()
 		return(inherited::GetStartGameTime());
 }
 
-ALife::_TIME_ID game_sv_Single::GetGameTime		()
+u64 game_sv_Single::GetGameTime		()
 {
 	if (ai().get_alife() && ai().alife().initialized())
 		return(ai().alife().time_manager().game_time());
@@ -187,7 +180,7 @@ void game_sv_Single::SetGameTimeFactor		(const float fTimeFactor)
 		return(inherited::SetGameTimeFactor(fTimeFactor));
 }
 
-ALife::_TIME_ID game_sv_Single::GetEnvironmentGameTime		()
+u64 game_sv_Single::GetEnvironmentGameTime		()
 {
 	if (ai().get_alife() && ai().alife().initialized())
 		return(alife().time_manager().game_time());
@@ -334,7 +327,6 @@ void game_sv_Single::restart_simulator			(LPCSTR saved_game_name)
 	pApp->ls_tip[0] = '\0';
 	pApp->LoadBegin			();
 	m_alife_simulator		= xr_new<CALifeSimulator>(&server(),&options);
-//	g_pGamePersistent->LoadTitle		("st_client_synchronising");
 	g_pGamePersistent->LoadTitle		();
 	Device.PreCache			(60, true, true);
 	pApp->LoadEnd			();

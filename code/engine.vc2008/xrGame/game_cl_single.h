@@ -4,24 +4,23 @@
 
 class game_cl_Single :public game_cl_GameState
 {
-	typedef game_cl_GameState	inherited;
+	typedef game_cl_GameState inherited;
 public :
-										game_cl_Single			();
+										game_cl_Single			() = default;
 	virtual		CUIGameCustom*			createGameUI			();
 	virtual		bool					IsServerControlHits		()	{return true;};
 
-	virtual		ALife::_TIME_ID			GetStartGameTime		();
-	virtual		ALife::_TIME_ID			GetGameTime				();	
+	virtual		u64						GetStartGameTime		();
+	virtual		u64						GetGameTime				();	
 	virtual		float					GetGameTimeFactor		();	
 	virtual		void					SetGameTimeFactor		(const float fTimeFactor);
 
-	virtual		ALife::_TIME_ID		GetEnvironmentGameTime		();
-	virtual		float				GetEnvironmentGameTimeFactor();
-	virtual		void				SetEnvironmentGameTimeFactor(const float fTimeFactor);
+	virtual		u64						GetEnvironmentGameTime		();
+	virtual		float					GetEnvironmentGameTimeFactor();
+	virtual		void					SetEnvironmentGameTimeFactor(const float fTimeFactor);
 
-	void		OnDifficultyChanged		();
+	void								OnDifficultyChanged		();
 };
-
 
 // game difficulty
 enum ESingleGameDifficulty{

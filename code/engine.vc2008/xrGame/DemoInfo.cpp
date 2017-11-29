@@ -24,7 +24,6 @@ void demo_player_info::read_from_file(CStreamReader* file_to_read)
 	m_deaths				= file_to_read->r_s16();
 	m_artefacts				= file_to_read->r_u16();
 	m_spots					= file_to_read->r_s16();
-	m_team					= file_to_read->r_u8();
 	m_rank					= file_to_read->r_u8();
 }
 
@@ -35,22 +34,11 @@ void demo_player_info::write_to_file(IWriter* file_to_write) const
 	file_to_write->w_s16	(m_deaths);
 	file_to_write->w_u16	(m_artefacts);
 	file_to_write->w_s16	(m_spots);
-	file_to_write->w_u8		(m_team);
 	file_to_write->w_u8		(m_rank);
 }
 
-void demo_player_info::load_from_player(game_PlayerState* player_state)
-{
-	m_name		= player_state->getName();
-	m_frags		= player_state->m_iRivalKills;
-	m_artefacts	= static_cast<u16>(player_state->af_count);
-	m_deaths	= player_state->m_iDeaths;
-	m_spots		= m_frags - (player_state->m_iTeamKills * 2) - player_state->m_iSelfKills + (m_artefacts * 3);
-	m_rank		= player_state->rank;
-}
-
 u32 const demo_info::max_demo_info_size = 
-	(demo_player_info::demo_info_max_size * MAX_PLAYERS_COUNT) +
+	(demo_player_info::demo_info_max_size) +
 	(DEMOSTRING_MAX_SIZE * 5) + sizeof(u32);
 
 demo_info::demo_info()
@@ -73,8 +61,6 @@ void demo_info::read_from_file(CStreamReader* file_to_read)
 	R_ASSERT(file_to_read->tell() - old_pos <= (DEMOSTRING_MAX_SIZE * 5));
 	
 	m_players_count			= file_to_read->r_u32();
-
-	R_ASSERT				(m_players_count < MAX_PLAYERS_COUNT);
 	
 	delete_data				(m_players);
 
@@ -114,23 +100,12 @@ void demo_info::load_from_game()
 
 	m_game_type = GameTypeToString(Game().Type(), true);
 	m_game_score = "";
-	if (Game().local_player && (xr_strlen(Game().local_player->getName()) > 0))
-		m_author_name = Game().local_player->getName();
-	else m_author_name = "unknown";
+	m_author_name = "unknown";
 
 	u32	pcount = Game().GetPlayersCount();
 
 	delete_data(m_players);
 	m_players.reserve(pcount);
-
-	for (u32 i = 0; i < pcount; ++i)
-	{
-		game_PlayerState* tmp_player = Game().GetPlayerByOrderID(i);
-		R_ASSERT2(tmp_player, "player not exist");
-		demo_player_info* new_player = xr_new<demo_player_info>();
-		new_player->load_from_player(tmp_player);
-		m_players.push_back(new_player);
-	}
 }
 
 demo_player_info const * demo_info::get_player(u32 player_index) const

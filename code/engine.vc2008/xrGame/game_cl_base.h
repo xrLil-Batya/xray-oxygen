@@ -1,5 +1,4 @@
 #pragma once
-
 #include "game_base.h"
 #include "../xrCore/client_id.h"
 #include "WeaponAmmo.h"
@@ -19,20 +18,15 @@ struct SZoneMapEntityData{
 class	game_cl_GameState	: public game_GameState, public ISheduled
 {
 	typedef game_GameState	inherited;
-	shared_str							m_game_type_name;
+	shared_str						m_game_type_name;
+	u16								cl_flags;
+
 protected:
-	CUIGameCustom*						m_game_ui_custom;
-	bool								m_bServerControlHits;	
+	CUIGameCustom*					m_game_ui_custom;
+	bool							m_bServerControlHits;	
 
 public:
-	typedef associative_vector<ClientID,game_PlayerState*>	PLAYERS_MAP;
-	typedef PLAYERS_MAP::iterator							PLAYERS_MAP_IT;
-	typedef PLAYERS_MAP::const_iterator						PLAYERS_MAP_CIT;
-
-	PLAYERS_MAP							players;
-	ClientID							local_svdpnid;
-	game_PlayerState*					local_player;
-	game_PlayerState*					lookat_player();
+	ClientID						local_svdpnid;
 
 private:
 				void				switch_Phase			(u32 new_phase)		{inherited::switch_Phase(new_phase);};
@@ -40,13 +34,9 @@ protected:
 
 	virtual		void				OnSwitchPhase			(u32 old_phase, u32 new_phase);	
 
-	//for scripting enhancement
-	virtual		void				TranslateGameMessage	(u32 msg, NET_Packet& P);
-
-
 	virtual		shared_str			shedule_Name			() const		{ return shared_str("game_cl_GameState"); };
 	virtual		float				shedule_Scale			()				{ return 1.0f;};
-	virtual		bool				shedule_Needed			()				{return true;};
+	virtual		bool				shedule_Needed			()				{ return true;};
 
 				void				sv_GameEventGen			(NET_Packet& P);
 				void				sv_EventSend			(NET_Packet& P);
@@ -66,11 +56,8 @@ public:
 
 				void				OnGameMessage			(NET_Packet& P);
 
-				game_PlayerState*	GetPlayerByGameID		(u32 GameID);
-				game_PlayerState*	GetPlayerByOrderID		(u32 id);
-				ClientID			GetClientIDByOrderID	(u32 id);
-				u32					GetPlayersCount			() const {return players.size();};
-	virtual		CUIGameCustom*		createGameUI			(){return NULL;};
+				u32					GetPlayersCount			() const {return 1;};
+	virtual		CUIGameCustom*		createGameUI			(){return nullptr;};
 	virtual		void				SetGameUI				(CUIGameCustom*){};
 	virtual		void				GetMapEntities			(xr_vector<SZoneMapEntityData>& dst)	{};
 
@@ -87,16 +74,18 @@ public:
 	
 	virtual		void				OnRender				()	{};
 	virtual		bool				IsServerControlHits		()	{return m_bServerControlHits;};
-	virtual		bool				IsEnemy					(game_PlayerState* ps)	{return false;};
 	virtual		bool				IsEnemy					(CEntityAlive* ea1, CEntityAlive* ea2)	{return false;};
 	virtual		bool				PlayerCanSprint			(CActor* pActor) {return true;};
 
 	virtual		void				OnSpawn					(CObject* pObj)	{};
 	virtual		void				OnDestroy				(CObject* pObj)	{};
 
-	virtual		void				OnPlayerFlagsChanged	(game_PlayerState* ps)	{};
 	virtual		void				OnNewPlayerConnected	(ClientID const & newClient) {};
 	virtual		void				SendPickUpEvent			(u16 ID_who, u16 ID_what);
 
 	virtual		void				OnConnected				();
+public:
+	bool							GetFlag(u16 id)			{ return cl_flags & id;}
+	void							SetFlag(u16 id)			{ cl_flags |= id; }
+	void							ResetFlag(u16 id)		{ cl_flags &= ~ id; }
 };

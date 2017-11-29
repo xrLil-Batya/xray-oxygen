@@ -16,10 +16,6 @@ xr_token	difficulty_type_token						[ ]={
 	{ 0,							0											}
 };
 
-game_cl_Single::game_cl_Single()
-{
-}
-
 CUIGameCustom* game_cl_Single::createGameUI()
 {
 	CLASS_ID clsid			= CLSID_GAME_UI_SINGLE;
@@ -102,10 +98,10 @@ void CScriptGameDifficulty::script_register(lua_State *L)
 			class_<enum_exporter<ESingleGameDifficulty> >("game_difficulty")
 			.enum_("game_difficulty")
 			[
-				value("novice",				int(egdNovice			)),
-				value("stalker",			int(egdStalker			)),
-				value("veteran",			int(egdVeteran			)),
-				value("master",				int(egdMaster			))
+				value("novice",				int(egdNovice)),
+				value("stalker",			int(egdStalker)),
+				value("veteran",			int(egdVeteran)),
+				value("master",				int(egdMaster))
 			]
 		];
 }
