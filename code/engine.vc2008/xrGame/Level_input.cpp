@@ -166,7 +166,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 #endif //DEBUG
 		)	return;
 
-	if ( game && game->OnKeyboardPress(get_binded_action(key)) )	return;
+	if  (game && game->OnKeyboardPress(key))	return;
 
 #ifndef MASTER_GOLD
 	switch (key) {

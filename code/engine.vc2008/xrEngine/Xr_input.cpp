@@ -199,7 +199,6 @@ void CInput::KeyUpdate()
 		KBState[od[idx].dwOfs] = od[idx].dwData & 0x80;
 	}
 
-#ifndef _EDITOR
 	bool b_alt_tab = false;
 
 	if (!b_altF4 && KBState[DIK_F4] && (KBState[DIK_RMENU] || KBState[DIK_LMENU]))
@@ -209,14 +208,10 @@ void CInput::KeyUpdate()
 		Engine.Event.Defer("KERNEL:quit");
 	}
 
-
-#endif
 	if (b_altF4)					
 		return;
 
-#ifndef _EDITOR
 	if (Device.dwPrecacheFrame == 0)
-#endif
 	{
 
 		for (u32 i = 0; i < dwElements; i++)
@@ -230,10 +225,8 @@ void CInput::KeyUpdate()
 			else
 			{
 				cbStack.back()->IR_OnKeyboardRelease(key);
-#ifndef _EDITOR
 				if (key == DIK_TAB && (iGetAsyncKeyState(DIK_RMENU) || iGetAsyncKeyState(DIK_LMENU)))
 					b_alt_tab = true;
-#endif
 			}
 		}
 
@@ -418,7 +411,7 @@ void CInput::MouseUpdate()
 			break;
 		}
 	}
-
+	
 	for (u32 i = 0; i < 3; i++)
 		if (mouseState[i] && mouse_prev[i])
 			cbStack.back()->IR_OnMouseHold(i);

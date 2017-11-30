@@ -114,16 +114,15 @@ void game_cl_GameState::sv_EventSend(NET_Packet& P)
 {
 	Level().Send(P,net_flags(TRUE,TRUE));
 }
-bool isCliping = false;
+
 bool game_cl_GameState::OnKeyboardPress(int dik)
 {
-	isCliping = !isCliping;
-	return !isCliping;
+	return GetKeyState(dik) == WM_KEYUP;
 }
-
+// Fuck the logic...
 bool game_cl_GameState::OnKeyboardRelease(int dik)
 {
-	return true;
+	return false;
 }
 
 void game_cl_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
