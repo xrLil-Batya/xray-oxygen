@@ -8,8 +8,6 @@
 
 server_info_uploader& xrServer::GetServerInfoUploader()
 {
-	VERIFY(m_server_logo && m_server_rules);
-
 	struct free_info_searcher
 	{
 		bool operator()(server_info_uploader const * uplinfo)

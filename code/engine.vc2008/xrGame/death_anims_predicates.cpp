@@ -11,7 +11,7 @@
 #include	"CharacterPhysicsSupport.h"
 #include	"../xrPhysics/animation_utils.h"
 #ifdef	DEBUG
-extern xr_token motion_dirs[];
+extern XRPHYSICS_API xr_token motion_dirs[];
 #endif
 
 Fvector& global_hit_position( Fvector &gp, CEntityAlive& ea, const SHit& H )

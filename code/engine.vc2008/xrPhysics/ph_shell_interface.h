@@ -1,7 +1,9 @@
 #pragma once
 
-interface XRPHYSICS_API IPhysicShellCreator {
+interface IPhysicShellCreator 
+{
 public:
+	IPhysicShellCreator() {}
 	virtual void CreatePhysicsShell() = 0;
 };
 

@@ -30,7 +30,6 @@
 
 #ifdef DEBUG
 #	include "PHDebug.h"
-extern	BOOL death_anim_debug;
 #endif // DEBUG
 
 #include "../xrEngine/device.h"

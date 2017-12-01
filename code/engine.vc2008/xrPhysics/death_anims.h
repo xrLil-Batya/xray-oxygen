@@ -71,6 +71,4 @@ private:
 	rnd_motion				rnd_anims;
 };
 
-#ifdef	DEBUG
- extern	BOOL death_anim_debug;
-#endif
+extern XRPHYSICS_API BOOL death_anim_debug;

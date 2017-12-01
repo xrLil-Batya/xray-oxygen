@@ -48,7 +48,7 @@
 #include "../../debug_renderer.h"
 #include "../../CharacterPhysicsSupport.h"
 #include "../../smart_cover_animation_selector.h"
-#include "../../animation_movement_controller.h"
+#include "../../xrPhysics/animation_movement_controller.h"
 #include "../../phdebug.h"
 #include "../../game_object_space.h"
 #include "../../aimers_weapon.h"

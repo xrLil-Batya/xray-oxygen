@@ -63,5 +63,5 @@ IC void destroy( interactive_motion* & im )
 
 void XRPHYSICS_API interactive_motion_diagnostic( LPCSTR message, const MotionID &m, IPhysicsShellEx *s );
 #ifdef	DEBUG
-extern BOOL		death_anim_debug;
+extern XRPHYSICS_API BOOL		death_anim_debug;
 #endif

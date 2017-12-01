@@ -5,10 +5,9 @@
 #include "../xrphysics/matrix_utils.h"
 
 void	DBG_DrawBones(const Fmatrix &xform, IKinematics *K);
-#ifdef	 DEBUG
-BOOL	dbg_draw_animation_movement_controller = FALSE;
+
+XRPHYSICS_API BOOL	dbg_draw_animation_movement_controller = FALSE;
 u16		dbg_frame_count = 0;
-#endif
 
 animation_movement_controller::animation_movement_controller(Fmatrix *_pObjXForm, const Fmatrix &inital_pose, IKinematics* _pKinematicsC, CBlend* b) :
 	m_startObjXForm(inital_pose),

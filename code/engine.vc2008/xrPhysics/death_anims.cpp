@@ -2,9 +2,7 @@
 #include "death_anims.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 
-#ifdef	DEBUG
-	BOOL death_anim_debug	 = FALSE;
-#endif
+BOOL death_anim_debug	 = FALSE;
 
 rnd_motion::rnd_motion	( )
 {
@@ -41,14 +39,8 @@ void	type_motion::	clear		( )
 	std::for_each( anims.begin(), anims.end(), vec_clear<rnd_motion> );
 	anims.clear();
 }
-/*
-void type_motion::set_motion( IKinematicsAnimated* k, CInifile* ini, LPCSTR type, LPCSTR dir, edirection id_dir )
-{
-	if( ini->line_exist( type, dir ) )
-			anims[ u16( id_dir ) ] = xr_new<rnd_motion>()->setup( k, ini->r_string( type, dir ) );
-}
-*/
-xr_token motion_dirs[]={
+
+XRPHYSICS_API xr_token motion_dirs[]={
 		{ "front",	type_motion::front	},
 		{ "back",	type_motion::back 	},
 		{ "left",	type_motion::left 	},
@@ -58,13 +50,6 @@ xr_token motion_dirs[]={
 
 void type_motion::set_motion( IKinematicsAnimated* k, u16 id_motion, LPCSTR dir_anim )
 {
-	
-	//VERIFY2( _GetItemCount( dir_anim, '-' ) == 2,"wrong params" );
-
-	//string16 sdir; string1024 sanim;
-	//_GetItem( dir_anim, 0, sdir, '-' );
-	//_GetItem( dir_anim, 1, sanim, '-' );
-	//u16( get_token_id ( motion_dirs, sdir  ) )
 	anims[ id_motion ] = xr_new<rnd_motion>()->setup( k, dir_anim );
 }
 
@@ -107,20 +92,6 @@ type_motion* type_motion::setup( IKinematicsAnimated* k, CInifile const * ini, L
 	return this;
 }
 
-/*
-type_motion* type_motion::setup( IKinematicsAnimated* k, CInifile* ini, LPCSTR type, u16 id_type )
-{
-	anims.resize( dirs_number, 0 );
-	if( ini->section_exist( type ) )
-	{
-		set_motion( k, ini, type,  "front",	front);
-		set_motion( k, ini, type,  "back",	back );
-		set_motion( k, ini, type,  "left",	left );
-		set_motion( k, ini, type,  "right",	right);
-	}
-	return this;
-}
-*/
 type_motion::~type_motion	( )
 {
 	clear( );

@@ -50,7 +50,7 @@
 
 #ifdef DEBUG
 #	include "debug_renderer.h"
-#   include "animation_movement_controller.h"
+#   include "../xrPhysics/animation_movement_controller.h"
 #endif // DEBUG
 
 void SetActorVisibility(u16 who, float value);

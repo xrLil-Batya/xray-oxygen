@@ -58,10 +58,6 @@ string_path		g_last_saved_game;
 	extern float air_resistance_epsilon;
 #endif // #ifdef DEBUG
 
-extern void show_smart_cast_stats		();
-extern void clear_smart_cast_stats		();
-extern void release_smart_cast_stats	();
-
 extern	u64		g_qwStartGameTime;
 extern	u64		g_qwEStartGameTime;
 
@@ -117,7 +113,7 @@ extern	BOOL	g_bDrawFirstBulletCrosshair;
 #ifdef DEBUG 
 extern LPSTR	dbg_stalker_death_anim;
 extern BOOL		b_death_anim_velocity;
-extern BOOL		death_anim_debug;
+extern XRPHYSICS_API BOOL death_anim_debug;
 extern BOOL		dbg_imotion_draw_skeleton;
 extern BOOL		dbg_imotion_draw_velocity;
 extern BOOL		dbg_imotion_collide_debug;
@@ -1092,43 +1088,6 @@ public:
 
 };
 
-#ifdef DEBUG
-struct CCC_ShowSmartCastStats : public IConsole_Command {
-	CCC_ShowSmartCastStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-
-	virtual void Execute(LPCSTR args) {
-		show_smart_cast_stats();
-	}
-};
-
-struct CCC_ClearSmartCastStats : public IConsole_Command {
-	CCC_ClearSmartCastStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-
-	virtual void Execute(LPCSTR args) {
-		clear_smart_cast_stats();
-	}
-};
-/*
-struct CCC_NoClip : public CCC_Mask 
-{
-public:
-	CCC_NoClip(LPCSTR N, Flags32* V, u32 M):CCC_Mask(N,V,M){};
-	virtual	void Execute(LPCSTR args)
-	{
-		CCC_Mask::Execute(args);
-		if (EQ(args,"on") || EQ(args,"1"))
-		{
-			if(g_pGameLevel && Level().CurrentViewEntity())
-			{
-				CActor* actor = smart_cast<CActor*>(Level().CurrentViewEntity());
-				actor->character_physics_support()->SetRemoved();
-			}
-		}
-	};
-};
-*/
-#endif
-
 #include "game_graph.h"
 struct CCC_JumpToLevel : public IConsole_Command {
 	CCC_JumpToLevel(LPCSTR N) : IConsole_Command(N)  {};
@@ -1906,8 +1865,6 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 	CMD3(CCC_Mask,		"g_important_save",		&psActorFlags,	AF_IMPORTANT_SAVE);
 	
 #ifdef DEBUG
-	CMD1(CCC_ShowSmartCastStats,	"show_smart_cast_stats");
-	CMD1(CCC_ClearSmartCastStats,	"clear_smart_cast_stats");
 
 	CMD3(CCC_Mask,		"dbg_draw_actor_alive",		&dbg_net_Draw_Flags,	dbg_draw_actor_alive);
 	CMD3(CCC_Mask,		"dbg_draw_actor_dead",		&dbg_net_Draw_Flags,	dbg_draw_actor_dead );
@@ -1984,16 +1941,6 @@ CMD4(CCC_Float,		"ik_cam_shift_speed",&ik_cam_shift_speed,	0.f, 1.f);
 extern	BOOL dbg_draw_doors ;
 CMD4(CCC_Integer,	"dbg_draw_doors"	,&dbg_draw_doors,	FALSE,	TRUE );
 
-/*
-extern int ik_allign_free_foot;
-extern int ik_local_blending;
-extern int ik_blend_free_foot;
-extern int ik_collide_blend;
-	CMD4(CCC_Integer,	"ik_allign_free_foot"			,&ik_allign_free_foot,	0,	1);
-	CMD4(CCC_Integer,	"ik_local_blending"				,&ik_local_blending,	0,	1);
-	CMD4(CCC_Integer,	"ik_blend_free_foot"			,&ik_blend_free_foot,	0,	1);
-	CMD4(CCC_Integer,	"ik_collide_blend"				,&ik_collide_blend,	0,	1);
-*/
 extern 	BOOL dbg_draw_ragdoll_spawn;
 	CMD4(CCC_Integer,	"dbg_draw_ragdoll_spawn"	,&dbg_draw_ragdoll_spawn,	FALSE,	TRUE );
 extern BOOL debug_step_info;
@@ -2008,25 +1955,9 @@ extern XRPHYSICS_API float	camera_collision_character_skin_depth ;
 extern XRPHYSICS_API float	camera_collision_character_shift_z ;
 	CMD4(CCC_FloatBlock,"camera_collision_character_shift_z", &camera_collision_character_shift_z,	0.f, 1.f );
 	CMD4(CCC_FloatBlock,"camera_collision_character_skin_depth", &camera_collision_character_skin_depth, 0.f, 1.f	);
-extern BOOL	dbg_draw_animation_movement_controller;
+extern XRPHYSICS_API BOOL	dbg_draw_animation_movement_controller;
 	CMD4(CCC_Integer,	"dbg_draw_animation_movement_controller"	,&dbg_draw_animation_movement_controller,	FALSE,	TRUE );
 
-/*
-enum 
-{
-	dbg_track_obj_blends_bp_0			= 1<< 0,
-	dbg_track_obj_blends_bp_1			= 1<< 1,
-	dbg_track_obj_blends_bp_2			= 1<< 2,
-	dbg_track_obj_blends_bp_3			= 1<< 3,
-	dbg_track_obj_blends_motion_name	= 1<< 4,
-	dbg_track_obj_blends_time			= 1<< 5,
-	dbg_track_obj_blends_ammount		= 1<< 6,
-	dbg_track_obj_blends_mix_params		= 1<< 7,
-	dbg_track_obj_blends_flags			= 1<< 8,
-	dbg_track_obj_blends_state			= 1<< 9,
-	dbg_track_obj_blends_dump			= 1<< 10
-};
-*/
 extern Flags32	dbg_track_obj_flags	;
 CMD3(CCC_Mask,		"dbg_track_obj_blends_bp_0"			,&dbg_track_obj_flags, dbg_track_obj_blends_bp_0);
 CMD3(CCC_Mask,		"dbg_track_obj_blends_bp_1"			,&dbg_track_obj_flags, dbg_track_obj_blends_bp_1);

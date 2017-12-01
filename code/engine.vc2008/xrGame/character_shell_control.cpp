@@ -8,10 +8,6 @@
 #include "CustomZone.h"
 #include "Hit.h"
 
-#ifdef DEBUG
-extern	BOOL death_anim_debug;
-#endif // DEBUG
-
 character_shell_control::character_shell_control():
 	m_shot_up_factor(0.f),
 	m_after_death_velocity_factor(1.f),
@@ -104,7 +100,6 @@ void character_shell_control::TestForWounded(const Fmatrix& xform,  IKinematics*
 		return;
 	}
 	
-	//IKinematics* CKA=smart_cast<IKinematics*>(m_EntityAlife.Visual());
 	CKA->CalculateBones( );
 	CBoneInstance CBI=CKA->LL_GetBoneInstance( CKA->LL_BoneID("bip01_pelvis") );
 	Fmatrix position_matrix;
@@ -118,13 +113,6 @@ void character_shell_control::TestForWounded(const Fmatrix& xform,  IKinematics*
 	{
 		m_was_wounded=true;
 	}
-#ifdef	DEBUG
-		if( death_anim_debug )
-		{
-			Msg( "death anim: test for wounded %s ", m_was_wounded ? "true" : "false" );
-			
-		}
-#endif
 };
 
 void character_shell_control::CalculateTimeDelta()
