@@ -482,7 +482,7 @@ void CALifeSimulator::script_register(lua_State *L)
 		.def("has_info", &has_info)
 		.def("dont_has_info", &dont_has_info)
 		.def("switch_distance", &CALifeSimulator::switch_distance)
-		.def("switch_distance", &CALifeSimulator::set_switch_distance)
+		.def("set_switch_distance", &CALifeSimulator::set_switch_distance)
 
 		, def("alife", &alife)
 		];

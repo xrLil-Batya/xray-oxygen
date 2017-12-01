@@ -6,14 +6,16 @@
 #include "environment.h"
 #include "xr_input.h"
 
+#include <regex>
 #include "../Include/xrRender/RenderDeviceRender.h"
 
-xr_token*							vid_quality_token = nullptr;
+xr_token* vid_quality_token = nullptr;
 
-xr_token							vid_bpp_token							[ ]={
-	{ "16",							16											},
-	{ "32",							32											},
-	{ 0,							0											}
+xr_token vid_bpp_token[ ]=
+{
+	{ "16",	16},
+	{ "32",	32},
+	{ 0,	0}
 };
 //-----------------------------------------------------------------------
 
@@ -278,14 +280,21 @@ bool CCC_LoadCFG_custom::allow(LPCSTR cmd)
 //-----------------------------------------------------------------------
 class CCC_Start : public IConsole_Command
 {
-	void	parse		(LPSTR dest, LPCSTR args, LPCSTR name)
+	void parse(LPSTR dest, LPCSTR args, LPCSTR name)
 	{
 		dest[0]	= 0;
-		if (strstr(args,name))
-			sscanf(strstr(args,name)+xr_strlen(name),"(%[^)])",dest);
+		// By dsh2dhs
+		if (strstr(args, name)) 
+		{
+			std::string str = strstr(args, name) + xr_strlen(name);
+			std::regex Reg("\\(([^)]+)\\)");
+			std::smatch results;
+			if (std::regex_search(str, results, Reg))
+				strcpy(dest, results[1].str().c_str());
+		}
 	}
 
-	void	protect_Name_strlwr( LPSTR str )
+	void protect_Name_strlwr( LPSTR str )
 	{
  		string4096	out;
 		xr_strcpy( out, sizeof(out), str );
