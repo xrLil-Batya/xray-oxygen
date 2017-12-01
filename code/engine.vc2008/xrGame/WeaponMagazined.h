@@ -69,7 +69,7 @@ protected:
 	virtual void	state_Misfire	(float dt);
 public:
 					CWeaponMagazined	(ESoundTypes eSoundType=SOUND_TYPE_WEAPON_SUBMACHINEGUN);
-	virtual			~CWeaponMagazined	();
+	virtual			~CWeaponMagazined	() = default;
 
 	virtual void	Load			(LPCSTR section);
 			void	LoadSilencerKoeffs();
