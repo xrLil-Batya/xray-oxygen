@@ -12,7 +12,7 @@
 #include "..\xrPhysics\matrix_utils.h"
 #include "..\xrPhysics\pose_extrapolation.h"
 #ifdef DEBUG
-#include "../PHDebug.h"
+#include "PHDebug.h"
 #endif
 
 

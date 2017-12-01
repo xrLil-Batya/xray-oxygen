@@ -7,10 +7,10 @@
 #include "script_engine.h"
 #include "script_game_object.h"
 #include "actor.h"
-SPhraseDialogData::SPhraseDialogData ()
+
+SPhraseDialogData::SPhraseDialogData(): m_iPriority(0)
 {
-	m_PhraseGraph.clear	();
-	m_iPriority			= 0;
+	m_PhraseGraph.clear();
 }
 
 SPhraseDialogData::~SPhraseDialogData ()
@@ -245,7 +245,7 @@ void CPhraseDialog::load_shared	(const char*)
 
 #ifdef DEBUG // debug & mixed
 	const std::string wrong_phrase_id = pXML->CheckUniqueAttrib(phrase_list_node, "phrase", "id");
-	THROW3(wrong_phrase_id.empty(), *item_data.id, wrong_phrase_id);
+	THROW3(wrong_phrase_id.empty(), *item_data.id, wrong_phrase_id.c_str());
 #endif	
 
 	//ищем стартовую фразу

@@ -378,8 +378,6 @@ void CIKFoot::SetFootGeom(ik_foot_geom &fg, const Fmatrix &ref_bone, const Fmatr
 }
 void CIKFoot::Collide(SIKCollideData &cld, ik_foot_collider	&collider, const Fmatrix &ref_bone, const Fmatrix& object_matrix, CGameObject *O, bool foot_step) const
 {
-	VERIFY(O->Visual()->dcast_PKinematics() == Kinematics());
-
 	ik_foot_geom fg;
 	SetFootGeom(fg, ref_bone, object_matrix);
 	collider.collide(cld, fg, O, foot_step);

@@ -444,74 +444,10 @@ float FindBestScoreLookahead ( int iCountdown, float fCurrentScore, float fInput
 	// And now allow tris that are a bit worse.
 	float fExpensiveCutoff = fAverageCost * fExpensiveFactor;
 
-
-
 	VERIFY ( iCountdown > 0 );
 	VERIFY ( iNumTris > 0 );
 
 	int j;
-
-
-
-#if 0
-	if ( iNumTris == 1 )
-	{
-		// Well, that's an easy decision then.
-
-		// Find score after removal.
-		//float fTriScore = CacheAddTri ( pwIndices[0], pwIndices[1], pwIndices[2], TRUE );
-		ScoreTri *pstCur = ppstCurTris[0];
-		float fTriScore = CacheAddTri ( pstCur->wIndex[0], pstCur->wIndex[1], pstCur->wIndex[2], TRUE );
-		for ( j = 0; j < 3; j++ )
-		{
-			// Use the valence score after the tri has been removed.
-			//int iValence = (*(iValenceCounts.item(pwIndices[j]))) - 1;
-			int iValence = (svVertex.item(pstCur->wIndex[j])->iCurrentValence) - 1;
-			VERIFY ( iValence >= 0 );
-			if ( iValence < c_iMaxValenceBoost )
-			{
-				fTriScore += fValenceBoost[iValence];
-			}
-			else
-			{
-				fTriScore += fValenceBoost[c_iMaxValenceBoost-1];
-			}
-		}
-
-		fTriScore += fCurrentScore;
-
-		//pwResult[0] = pwIndices[0];
-		//pwResult[1] = pwIndices[1];
-		//pwResult[2] = pwIndices[2];
-		pwResult[0] = pstCur->wIndex[0];
-		pwResult[1] = pstCur->wIndex[1];
-		pwResult[2] = pstCur->wIndex[2];
-
-		if ( fTriScore > fBestSoFar )
-		{
-			// Oh well.
-			// (actually, not sure this ever happens).
-			return fInputBestSoFar;
-		}
-		else
-		{
-			return fTriScore;
-		}
-	}
-#endif
-
-
-
-#if 0
-#ifdef _DEBUG
-	for ( int k = 0; k < iNumTris; k++ )
-	{
-		VERIFY ( !ppstCurTris[k]->bAllowed );
-		VERIFY ( !ppstCurTris[k]->bUsed );
-	}
-#endif
-#endif
-
 
 	// Should we limit ourselves to tris that share at least one vert with the previous one?
 	bool bNoMadJumps = FALSE;
@@ -1279,46 +1215,16 @@ float FindBestScore ( int iCountdown, float fCurrentScore, float fInputBestSoFar
 		if ( iLookahead > 1 )
 		{
 			// Swap pwCur to the start of the list.
-#if 0
-			WORD wTemp0 = pwCur[0];
-			WORD wTemp1 = pwCur[1];
-			WORD wTemp2 = pwCur[2];
-			pwCur[0] = pwIndices[0];
-			pwCur[1] = pwIndices[1];
-			pwCur[2] = pwIndices[2];
-			//pwIndices[0] = wTemp0;
-			//pwIndices[1] = wTemp1;
-			//pwIndices[2] = wTemp2;
-#else
+
 			ScoreTri *pstTemp = *ppstCur;
 			*ppstCur = *ppstCurTris;
-			//*ppstCurTris = pstTemp;
-#endif
-
-			//VERIFY ( fScore < 1e9 );
 
 			// And look ahead a bit more.
-			//fScore = FindBestScoreLookahead ( iLookahead - 1, fScore, fBestSoFar, pwIndices + 3, iNumTris - 1, pwResult + 3 );
-			float fNewScore = FindBestScoreLookahead ( iLookahead - 1, fScore, fBestSoFar, iNumTris - 1, pwResult + 3 );
-			//VERIFY ( fNewScore < 1e9 );
+			float fNewScore = FindBestScoreLookahead(iLookahead - 1, fScore, fBestSoFar, iNumTris - 1, pwResult + 3);
 			fScore = fNewScore;
-
-#if 0
-			// And swap it back.
-			//wTemp0 = pwIndices[0];
-			//wTemp1 = pwIndices[1];
-			//wTemp2 = pwIndices[2];
-			pwIndices[0] = pwCur[0];
-			pwIndices[1] = pwCur[1];
-			pwIndices[2] = pwCur[2];
-			pwCur[0] = wTemp0;
-			pwCur[1] = wTemp1;
-			pwCur[2] = wTemp2;
-#else
 			//pstTemp = *ppstCurTris;
 			*ppstCurTris = *ppstCur;
 			*ppstCur = pstTemp;
-#endif
 		}
 		//VERIFY ( fScore < 1e9 );
 		if ( fScore < fBestSoFar )
@@ -1348,37 +1254,7 @@ float FindBestScore ( int iCountdown, float fCurrentScore, float fInputBestSoFar
 		ppstCur = NewHeap.FindFirst();
 	}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-	VERIFY ( ppstBest != NULL );
 	{
-		// Found a better solution.
-
-
-
-
-
-
-
-
-
-
-
 		// Swap the best tri to the start of the list.
 		float fNewBestScore = fBestSoFar;
 
@@ -1393,20 +1269,9 @@ float FindBestScore ( int iCountdown, float fCurrentScore, float fInputBestSoFar
 		pwResult[2] = pstBest->wIndex[2];
 		if ( iCountdown > 1 )
 		{
-#if 0
-			WORD wTemp[3];
-			wTemp[0] = pwBest[0];
-			wTemp[1] = pwBest[1];
-			wTemp[2] = pwBest[2];
-			pwBest[0] = pwIndices[0];
-			pwBest[1] = pwIndices[1];
-			pwBest[2] = pwIndices[2];		
-#else
 			ScoreTri *pTemp;
 			pTemp = *ppstBest;
 			*ppstBest = *ppstCurTris;
-#endif
-
 			//float fScore = CacheAddTri ( wTemp[0], wTemp[1], wTemp[2] );
 			float fScore = CacheAddTri ( pstBest->wIndex[0], pstBest->wIndex[1], pstBest->wIndex[2] );
 			VERIFY ( !pstBest->bUsed );
@@ -1476,28 +1341,11 @@ float FindBestScore ( int iCountdown, float fCurrentScore, float fInputBestSoFar
 			}
 
 			// And swap it back.
-#if 0
-			pwIndices[0] = pwBest[0];
-			pwIndices[1] = pwBest[1];
-			pwIndices[2] = pwBest[2];
-			pwBest[0] = wTemp[0];
-			pwBest[1] = wTemp[1];
-			pwBest[2] = wTemp[2];
-#else
 			*ppstCurTris = *ppstBest;
 			*ppstBest = pTemp;
-#endif
-
-
-
 		}
-
 		return fNewBestScore;
-
-
 	}
-
-
 }
 
 // Call this to reorder the tris in this trilist to get good vertex-cache coherency.
@@ -1541,23 +1389,6 @@ case 2:
 		pwIndex++;
 	}
 
-#if 0
-	iValenceCounts.resize(iBiggestIndex+1);
-	for ( i = 0; i <= iBiggestIndex; i++ )
-	{
-		*(iValenceCounts.item(i)) = 0;
-	}
-
-
-	// And set up the valencies.
-	pwIndex = pwList;
-	for ( i = 0; i < iHowManyTris * 3; i++ )
-	{
-		++(*(iValenceCounts.item(*pwIndex)));
-		pwIndex++;
-	}
-#else
-
 	svVertex.resize ( iBiggestIndex + 1 );
 	for ( i = 0; i <= iBiggestIndex; i++ )
 	{
@@ -1583,54 +1414,14 @@ case 2:
 		}
 		pwCurTri += 3;
 	}
-
-#endif
-
 	WORD *pwNewIndex = new WORD[iHowManyTris*3];
-
 	CacheInit ( iBiggestIndex + 1 );
 
-
-#if 0
-	// If you try to optimise from the very first tri, it takes ages to find the "best"
-	// first tri - almost none of the early-outs work, because there is no cache history,
-	// and indeed the whole concept of a "best" first tri is madness - you have to start
-	// somewhere.
-	// So I just pick the first one, and let it carry on from there. Once the cache has
-	// been "seeded" the early-outs come thick and fast and it's a decent speed.
-	pwNewIndex[0] = pwList[0];
-	pwNewIndex[1] = pwList[1];
-	pwNewIndex[2] = pwList[2];
-	--(*(iValenceCounts.item(pwList[0])));
-	--(*(iValenceCounts.item(pwList[1])));
-	--(*(iValenceCounts.item(pwList[2])));
-	CacheAddTri ( pwList[0], pwList[1], pwList[2] );
-	// No need to actually increase the score - everything is relative anyway.
-
-	float fTemp = FindBestScore (	iHowManyTris - 1,
-		0.0f,
-		1e10,
-		pwList + 3,
-		iHowManyTris - 1,
-		pwNewIndex + 3 );
-#else
-	float fTemp = FindBestScore (	iHowManyTris,
-		0.0f,
-		1e10,
-		(pstTri.item(0)),
-		iHowManyTris,
-		pwNewIndex );
-#endif
-
+	float fTemp = FindBestScore(iHowManyTris, 0.0f, 1e10f, (pstTri.item(0)), iHowManyTris, pwNewIndex);
 	CacheBin();
 
-#if 0
-	iValenceCounts.resize(0);
-#else
 	svVertex.resize(0);
 	stTri.resize(0);
-#endif
-
 
 #ifdef _DEBUG
 	// Find new score (hopefully better).
@@ -1639,9 +1430,6 @@ case 2:
 	// And if you definately use indices 0 to iBiggestIndex (which all this code does), then this is the max possible:
 	float fMaxPossible = iBiggestIndex / (float)iHowManyTris;
 #endif
-
-
 	memcpy ( pwList, pwNewIndex, sizeof(WORD) * 3 * iHowManyTris );
-
 	delete[] pwNewIndex;
 }

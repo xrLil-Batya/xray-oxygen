@@ -1,6 +1,4 @@
 #include "stdafx.h"
-
-//#include "Actor.h"
 #include "actorcameracollision.h"
 #include "../xrEngine/CameraBase.h"
 #include "../xrEngine/gamemtllib.h"
@@ -120,20 +118,15 @@ static const float actor_camera_hudge_mass_size = 10000000.f;
 IPhysicsShellEx	* create_camera_shell(IPhysicsShellHolder *actor)
 {
 	VERIFY(actor);
-	//CGameObject	*actor = smart_cast<CGameObject	*>( Level().CurrentEntity() );
-	//VERIFY( Level().CurrentEntity() );
 	IPhysicsShellEx	*shell = P_build_SimpleShell(actor, actor_camera_hudge_mass, true);
 	IPhysicsElementEx* roote = shell->get_ElementByStoreOrder(0);
-	//Fobb obb; obb.m_halfsize.set(0.5f,0.5f,0.5f); obb.m_rotate.identity();obb.m_translate.set(0,0,0);
 	Fcylinder cyl; cyl.m_center.set(0, -0.8f, 0); cyl.m_direction.set(0, 1, 0); cyl.m_height = 1.8f; cyl.m_radius = 0.5f;
-	//roote->add_Box(obb);
 	CODEGeom* character_test_geom = smart_cast<CODEGeom*>(xr_new<CCylinderGeom>(cyl));
 	character_test_geom->build(Fvector().set(0, 0, 0));//roote->mass_Center()
 	VERIFY(smart_cast<CPHElement*>(roote));
 	CPHElement *eeroot = static_cast<CPHElement *>(roote);
 
 	character_test_geom->set_body(eeroot->get_body());
-	//character_test_geom->set_ref_object(smart_cast<CPhysicsShellHolder*>(actor));
 	character_test_geom->set_ref_object(actor);
 	CPHGeometryBits::set_ignore_static(*character_test_geom);
 	roote->add_geom(character_test_geom);
@@ -158,12 +151,9 @@ IPhysicsShellEx	* create_camera_shell(IPhysicsShellHolder *actor)
 	return shell;
 }
 
-
-
 const u16 cam_correction_steps_num = 100;
 void	update_current_entity_camera_collision(IPhysicsShellHolder* l_actor)
 {
-
 	if (actor_camera_shell &&
 		actor_camera_shell->get_ElementByStoreOrder(0)->PhysicsRefObject()
 		!=
@@ -233,19 +223,13 @@ void	do_collide_and_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPh
 	cam_collided = false;
 	cam_step = false;
 	VERIFY(l_actor);
-	//VERIFY( l_actor->character_physics_support() );
-	//VERIFY( l_actor->character_physics_support()->movement() );
-	//l_actor->character_physics_support()->movement()->CollisionEnable( FALSE );
+
 	l_actor->MovementCollisionEnable(false);
 	shell->EnableCollision();
 	shell->CollideAll();
 
 	if (cam_collided)
 	{
-#ifdef	DEBUG
-		//debug_output().PH_DBG_Clear();
-		//debug_output().DBG_OpenCashedDraw();
-#endif
 		cam_step = true;
 		for (u16 i = 0; i < cam_correction_steps_num; ++i)
 		{
@@ -258,13 +242,9 @@ void	do_collide_and_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPh
 				break;
 		}
 		cam_step = false;
-#ifdef	DEBUG
-		//debug_output().DBG_ClosedCashedDraw( 5000 );
-#endif
 	}
 
 	shell->DisableCollision();
-	//l_actor->character_physics_support()->movement()->CollisionEnable( TRUE );
 	l_actor->MovementCollisionEnable(true);
 	shell->Disable();
 }
@@ -277,14 +257,10 @@ bool do_collide_not_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPh
 	cam_collided = false;
 	cam_step = false;
 	VERIFY(l_actor);
-	//VERIFY( l_actor->character_physics_support() );
-	//VERIFY( l_actor->character_physics_support()->movement() );
-	//l_actor->character_physics_support()->movement()->CollisionEnable( FALSE );
 	l_actor->MovementCollisionEnable(false);
 	shell->EnableCollision();
 	shell->CollideAll();
 	shell->DisableCollision();
-	//l_actor->character_physics_support()->movement()->CollisionEnable( TRUE );
 	l_actor->MovementCollisionEnable(true);
 	shell->Disable();
 	return cam_collided;
@@ -292,7 +268,6 @@ bool do_collide_not_move(const Fmatrix &xform, IPhysicsShellHolder* l_actor, IPh
 
 bool test_camera_box(const Fvector &box_size, const Fmatrix &xform, IPhysicsShellHolder* l_actor)
 {
-	//CPhysicsShellHolder* l_actor = smart_cast<CPhysicsShellHolder*>( Level().CurrentEntity() );
 	VERIFY(l_actor);
 	update_current_entity_camera_collision(l_actor);
 
@@ -316,7 +291,6 @@ bool test_camera_box(const Fvector &box_size, const Fmatrix &xform, IPhysicsShel
 
 void	collide_camera(CCameraBase & camera, float _viewport_near, IPhysicsShellHolder *l_actor)
 {
-	//CPhysicsShellHolder* l_actor = smart_cast<CPhysicsShellHolder*>( Level().CurrentEntity() );
 	VERIFY(l_actor);
 	update_current_entity_camera_collision(l_actor);
 	Fvector box_size; Fmatrix xform;

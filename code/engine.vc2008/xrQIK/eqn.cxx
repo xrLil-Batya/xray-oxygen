@@ -4,54 +4,29 @@
 /*
  * Put angle in range 0 .. 2*M_PI. Bounds on range of Psi 
  */
-/*
-const double LowBound  = 0;
-const double HighBound = 2*M_PI;
-const double TwoPi = 2*M_PI;
 
-
-static double angle_normalize(double theta)
-{
-    while (theta < LowBound)
-	theta += TwoPi;
-    while (theta > HighBound)
-	theta -= TwoPi;
-
-    return theta;
-}
-*/
 static int solve_trig1_aux(float c, float a2b2, float atan2ba, float theta[2])
 {
-    float temp  = a2b2-c*c;
-    int num;
+	float temp = a2b2 - c*c;
 
-    if (temp < 0.0f)
-	return 0;
+	if (temp < 0.0f)
+		return 0;
 
-    temp  = atan2(_sqrt(temp), c);
-    num =  (_abs(temp) > 1e-6f) ? 2 : 1;
+	temp = atan2(_sqrt(temp), c);
+	int num = (_abs(temp) > 1e-6f) ? 2 : 1;
 
-    theta[0] = atan2ba;
-    if (num == 2)
-    {
-        theta[1] = theta[0] - temp;
-        theta[0] += temp;
-
-	//theta[0] = angle_normalize(theta[0]);
-	//theta[1] = angle_normalize(theta[1]);
-
-	if (theta[0] > theta[1])
+	theta[0] = atan2ba;
+	if (num == 2)
 	{
-		swap(theta[0],theta[1]);
-	//	temp = theta[0]; 
-	//    theta[0] = theta[1];
-	 //   theta[1] = temp;
+		theta[1] = theta[0] - temp;
+		theta[0] += temp;
+		if (theta[0] > theta[1])
+		{
+			swap(theta[0], theta[1]);
+		}
 	}
-    }
-    return num;
+	return num;
 }
-
-
 
 /*
  *  Solve a*cos(theta) + b*sin(theta) = c
@@ -63,28 +38,6 @@ static int solve_trig1(float a, float b, float c, float theta[2])
 {
     return solve_trig1_aux(c, a*a+b*b, atan2(b,a), theta);
 }
-
-#if 0
-int consistency_check(double a, double b, double c, 
-		      double a2b2, double atan2ba)
-{
-    float t[2], t2[2];
-
-    int n  = solve_trig1(a, b, c, t);
-    int n2 = solve_trig1_aux(a2b2, atan2ba, c, t2);
-
-    if (n != n2)
-    {
-	printf("error\n");
-	n  = solve_trig1(a, b, c, t);
-	n2 = solve_trig1_aux(a2b2, atan2ba, c, t2);
-    }
-
-    for (int i = 0; i < n; i++)
-	if (fabs(t[i] - t2[i]) < 1e-5)
-	    printf("error2\n");
-}
-#endif
 
 #define GOT_ROOTS (1)
 #define GOT_CRITS (2)
