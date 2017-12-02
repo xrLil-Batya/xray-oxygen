@@ -368,5 +368,8 @@ void CHUDManager::net_Relcase( CObject* obj )
 
 CDialogHolder* CurrentDialogHolder()
 {
-	return MainMenu()->IsActive() ? MainMenu() : dynamic_cast <CDialogHolder*> (HUD().GetGameUI());
+	if (MainMenu()->IsActive())
+		return MainMenu();
+	else
+		return HUD().GetGameUI();
 }
