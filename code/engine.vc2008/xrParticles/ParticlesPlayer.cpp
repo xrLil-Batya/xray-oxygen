@@ -15,12 +15,14 @@ static void generate_orthonormal_basis(const Fvector& dir,Fmatrix &result)
 	result.k.normalize	(dir);
 	Fvector::generate_orthonormal_basis(result.k, result.j, result.i);
 }
+
 CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::FindParticles(const shared_str& ps_name)
 {
 	for (auto it=particles.begin(); it!=particles.end(); it++)
 		if (it->ps && it->ps->Name()==ps_name) return &(*it);
 	return 0;
 }
+
 CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::AppendParticles(CObject* object, const shared_str& ps_name)
 {
 	SParticlesInfo* pi	= FindParticles(ps_name);
@@ -30,6 +32,7 @@ CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::AppendParticles(C
 	pi->ps				= CParticlesObject::Create(*ps_name,FALSE);
 	return pi;
 }
+
 void CParticlesPlayer::SBoneInfo::StopParticles(const shared_str& ps_name, bool bDestroy)
 {
 	SParticlesInfo* pi	= FindParticles(ps_name);
@@ -76,11 +79,11 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 
 	m_Bones.clear();
 	
-
 	//считать список косточек и соответствующих
 	//офсетов  куда можно вешать партиклы
 	CInifile* ini		= K->LL_UserData();
-	if(ini&&ini->section_exist("particle_bones")){
+	if(ini&&ini->section_exist("particle_bones"))
+	{
 		bone_mask		= 0;
 		CInifile::Sect& data		= ini->r_section("particle_bones");
 		for (CInifile::SectCIt I=data.Data.begin(); I!=data.Data.end(); I++){
@@ -240,23 +243,17 @@ void CParticlesPlayer::AutoStopParticles(const shared_str& ps_name, u16 bone_id,
 	}
 }
 
-struct SRP
-{
-	bool operator	() (CParticlesPlayer::SParticlesInfo& pi)
-	{
-		return ! pi.ps;
-	}
-};
 void CParticlesPlayer::UpdateParticles()
 {
-	if	(!m_bActiveBones)	return;
-	m_bActiveBones			= false;
+	if	(!m_bActiveBones) return;
+	m_bActiveBones = false;
 
-    CObject* object			= m_self_object;
+    CObject* object = m_self_object;
 	VERIFY	(object);
 
-	for(auto b_it=m_Bones.begin(); b_it!=m_Bones.end(); b_it++){
-		SBoneInfo& b_info	= *b_it;
+	for(auto b_it: m_Bones)
+	{
+		SBoneInfo& b_info = b_it;
 
 		for (auto p_it: b_info.particles)
 		{
@@ -285,7 +282,11 @@ void CParticlesPlayer::UpdateParticles()
 				m_bActiveBones  = true;
 		}
 
-        auto RI=std::remove_if(b_info.particles.begin(),b_info.particles.end(),SRP());
+		const auto RI = std::remove_if(b_info.particles.begin(), b_info.particles.end(), [](const SParticlesInfo& pi)
+		{
+			return pi.ps == nullptr;
+		});
+
 		b_info.particles.erase(RI,b_info.particles.end());
 	}
 }
