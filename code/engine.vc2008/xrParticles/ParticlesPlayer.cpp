@@ -213,8 +213,8 @@ void CParticlesPlayer::StopParticles(const shared_str& ps_name, u16 bone_id, boo
 {
 	if (BI_NONE == bone_id) 
 	{
-		for (auto it : m_Bones)
-			it.StopParticles(ps_name, bDestroy);
+		for (auto it = m_Bones.begin(); it != m_Bones.end(); it++)
+			it->StopParticles(ps_name, bDestroy);
 	}
 	else 
 	{
@@ -229,9 +229,9 @@ void CParticlesPlayer::AutoStopParticles(const shared_str& ps_name, u16 bone_id,
 {
 	if (BI_NONE == bone_id)
 	{
-		for (auto it : m_Bones)
+		for (auto it = m_Bones.begin(); it != m_Bones.end(); it++)
 		{
-			SParticlesInfo* pInfo = it.FindParticles(ps_name);
+			SParticlesInfo* pInfo = it->FindParticles(ps_name);
 			if (pInfo) pInfo->life_time = life_time;
 		}
 	}
@@ -251,10 +251,12 @@ void CParticlesPlayer::UpdateParticles()
     CObject* object = m_self_object;
 	VERIFY	(object);
 
-	for(SBoneInfo b_info : m_Bones)
+	for (auto b_it = m_Bones.begin(); b_it != m_Bones.end(); b_it++) 
 	{
-		for (SParticlesInfo p_info : b_info.particles)
+		SBoneInfo& b_info = *b_it;
+		for (auto p_it = b_info.particles.begin(); p_it != b_info.particles.end(); p_it++) 
 		{
+			SParticlesInfo& p_info = *p_it;
 			if(!p_info.ps) continue;
 			//обновить позицию партиклов
 			Fmatrix xform;
