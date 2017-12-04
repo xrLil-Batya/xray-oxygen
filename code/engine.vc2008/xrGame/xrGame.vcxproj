@@ -1540,8 +1540,6 @@
     <ClInclude Include="helicopter.h" />
     <ClInclude Include="DelayedActionFuse.h" />
     <ClInclude Include="InventoryBox.h" />
-    <ClInclude Include="Spectator.h" />
-    <ClInclude Include="spectator_camera_first_eye.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="NET_Queue.h" />
     <ClInclude Include="traffic_optimization.h" />
@@ -2740,8 +2738,6 @@
     <ClCompile Include="DelayedActionFuse.cpp" />
     <ClCompile Include="InventoryBox.cpp">
     </ClCompile>
-    <ClCompile Include="Spectator.cpp" />
-    <ClCompile Include="spectator_camera_first_eye.cpp" />
     <ClCompile Include="console_commands.cpp">
     </ClCompile>
     <ClCompile Include="date_time.cpp" />

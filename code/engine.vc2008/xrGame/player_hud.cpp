@@ -8,14 +8,9 @@
 #include "actoreffector.h"
 #include "../xrEngine/IGame_Persistent.h"
 
-player_hud* g_player_hud = NULL;
+player_hud* g_player_hud = nullptr;
 Fvector _ancor_pos;
 Fvector _wpn_root_pos;
-
-float CalcMotionSpeed(const shared_str& anim_name)
-{
-	return 1.0f;
-}
 
 player_hud_motion* player_hud_motion_container::find_motion(const shared_str& name)
 {
@@ -23,11 +18,11 @@ player_hud_motion* player_hud_motion_container::find_motion(const shared_str& na
 	xr_vector<player_hud_motion>::iterator it_e = m_anims.end();
 	for(;it!=it_e;++it)
 	{
-		const shared_str& s = (true)?(*it).m_alias_name:(*it).m_base_name;
+		const shared_str& s = (*it).m_alias_name;
 		if( s == name)
 			return &(*it);
 	}
-	return NULL;
+	return nullptr;
 }
 
 void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_str& sect)
@@ -504,14 +499,13 @@ void player_hud::render_hud()
 
 u32 player_hud::motion_length(const shared_str& anim_name, const shared_str& hud_name, const CMotionDef*& md)
 {
-	float speed						= CalcMotionSpeed(anim_name);
 	attachable_hud_item* pi			= create_hud_item(hud_name);
 	player_hud_motion*	pm			= pi->m_hand_motions.find_motion(anim_name);
 	
 	if(!pm) return 100; // ms TEMPORARY
 	
 	R_ASSERT2(pm, make_string("hudItem model [%s] has no motion with alias [%s]", hud_name.c_str(), anim_name.c_str() ).c_str());
-	return motion_length			(pm->m_animations[0].mid, md, speed);
+	return motion_length			(pm->m_animations[0].mid, md, pm->m_anim_speed);
 }
 
 u32 player_hud::motion_length(const MotionID& M, const CMotionDef*& md, float speed)

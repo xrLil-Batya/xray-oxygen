@@ -322,8 +322,6 @@ public:
 	float				GetGameDayTimeSec		();
 	float				GetEnvironmentGameDayTimeSec();
 
-protected:
-//	CFogOfWarMngr*		m_pFogOfWarMngr;
 protected:	
 	CMapManager *			m_map_manager;
 	CGameTaskManager*		m_game_task_manager;

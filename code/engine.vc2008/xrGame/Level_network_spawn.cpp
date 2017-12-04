@@ -134,11 +134,10 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 				{
 					SetControlEntity	(O);
 					SetEntity			(O);	//do not switch !!!
-					SetDemoSpectator	(O);
 				}
 			} else
 			{
-				if (CurrentEntity() != NULL) 
+				if (CurrentEntity()) 
 				{
 					CGameObject* pGO = smart_cast<CGameObject*>(CurrentEntity());
 					if (pGO) pGO->On_B_NotCurrentEntity();

@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "Level.h"
 #include "xrServer.h"
-#include "spectator.h"
 #include "actor.h"
 #include "game_cl_base.h"
 #include "../xrCore/stream_reader.h"
@@ -215,13 +214,6 @@ void CLevel::SimulateServerUpdate()
 	}
 }
 
-void CLevel::SetDemoSpectator(CObject* spectator)
-{
-	R_ASSERT2	(smart_cast<CSpectator*>(spectator),
-		"tried to set not an spectator object to demo spectator");
-	m_current_spectator = spectator;
-}
-
 float CLevel::GetDemoPlayPos() const
 {
 	//if (!m_reader)
@@ -246,48 +238,6 @@ demoplay_control* CLevel::GetDemoPlayControl()
 	m_demoplay_control = xr_new<demoplay_control>();
 	return m_demoplay_control;
 }
-/*
-void CLevel::SetDemoPlayPos(float const pos)
-{
-	if (!IsDemoPlayStarted())
-	{
-		Msg("! ERROR: demo play not started");
-		return;
-	}
-	if (pos > 1.f)
-	{
-		Msg("! ERROR: incorect demo play position");
-		return;
-	}
-	float cur_pos = GetDemoPlayPos();
-	if (cur_pos >= pos)
-	{
-		Msg("! demo play position must be greater than current position");
-		return;
-	}
-	
-	u32 old_file_pos = m_reader->tell();
-
-	u32				file_pos = u32(float(m_reader->length()) * pos);
-	if (file_pos <= old_file_pos)
-	{
-		Msg("! demo play position already at the current point");
-		return;
-	}
-
-	DemoPacket		tmp_hdr;
-	u32				time_shift = 0;
-	
-	while (m_reader->tell() < file_pos)
-	{
-		m_reader->r		(&tmp_hdr, sizeof(DemoPacket));
-		m_reader->seek	(m_reader->tell() + tmp_hdr.m_packet_size);
-		time_shift		+= tmp_hdr.m_time_global_delta;
-	}
-	m_StartGlobalTime	-= time_shift;
-	m_rewind			= TRUE;
-	m_reader->seek		(old_file_pos);
-}*/
 
 float CLevel::GetDemoPlaySpeed() const
 {

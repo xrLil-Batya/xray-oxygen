@@ -17,7 +17,6 @@
 
 #include "ActorEffector.h"
 #include "actor.h"
-#include "spectator.h"
 
 #include "UI/UItextureMaster.h"
 #include "ai_space.h"
@@ -502,14 +501,6 @@ void CGamePersistent::OnFrame	()
 
 	if(Device.Paused())
 	{
-		if (Level().IsDemoPlay())
-		{
-			CSpectator* tmp_spectr = smart_cast<CSpectator*>(Level().CurrentControlEntity());
-			if (tmp_spectr)
-			{
-				tmp_spectr->UpdateCL();	//updating spectator in pause (pause ability of demo play)
-			}
-		}
 #ifndef MASTER_GOLD
 		if (Level().CurrentViewEntity()) {
 			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())) {
@@ -567,7 +558,7 @@ void CGamePersistent::OnFrame	()
 #else // MASTER_GOLD
 		if (g_actor)
 		{
-			CCameraBase* C = NULL;
+			CCameraBase* C = nullptr;
 			if(!Actor()->Holder())
 				C = Actor()->cam_Active();
 			else

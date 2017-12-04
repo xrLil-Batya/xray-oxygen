@@ -11,14 +11,10 @@
 #include "WeaponAmmo.h"
 
 #include "actor.h"
-#include "spectator.h"
 #include "game_cl_base.h"
 #include "level.h"
 #include "level_bullet_manager.h"
 #include "game_cl_single.h"
-
-#define HIT_POWER_EPSILON 0.05f
-#define WALLMARK_SIZE 0.04f
 
 CShootingObject::CShootingObject(void)
 {
@@ -38,9 +34,9 @@ CShootingObject::CShootingObject(void)
 	m_fTimeToAim					= 0.0f;
 
 	//particles
-	m_sFlameParticlesCurrent		= m_sFlameParticles = NULL;
-	m_sSmokeParticlesCurrent		= m_sSmokeParticles = NULL;
-	m_sShellParticles				= NULL;
+	m_sFlameParticlesCurrent		= m_sFlameParticles = nullptr;
+	m_sSmokeParticlesCurrent		= m_sSmokeParticles = nullptr;
+	m_sShellParticles				= nullptr;
 	
 	bWorking						= false;
 
@@ -214,18 +210,12 @@ void CShootingObject::StartParticles (CParticlesObject*& pParticles, LPCSTR part
 	pParticles = CParticlesObject::Create(particles_name,(BOOL)auto_remove_flag);
 	
 	UpdateParticles(pParticles, pos, vel);
-	CSpectator* tmp_spectr = smart_cast<CSpectator*>(Level().CurrentControlEntity());
-	bool in_hud_mode = IsHudModeNow();
-	if (in_hud_mode && tmp_spectr &&
-		(tmp_spectr->GetActiveCam() != CSpectator::eacFirstEye))
-	{
-		in_hud_mode = false;
-	}
-	pParticles->Play(in_hud_mode);
+
+	pParticles->Play(IsHudModeNow());
 }
 void CShootingObject::StopParticles (CParticlesObject*&	pParticles)
 {
-	if(pParticles == NULL) return;
+	if(!pParticles) return;
 
 	pParticles->Stop		();
 	CParticlesObject::Destroy(pParticles);
@@ -300,14 +290,8 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 	particles_pos.c.set		(play_pos);
 
 	pShellParticles->UpdateParent		(particles_pos, parent_vel);
-	CSpectator* tmp_spectr = smart_cast<CSpectator*>(Level().CurrentControlEntity());
-	bool in_hud_mode = IsHudModeNow();
-	if (in_hud_mode && tmp_spectr &&
-		(tmp_spectr->GetActiveCam() != CSpectator::eacFirstEye))
-	{
-		in_hud_mode = false;
-	}
-	pShellParticles->Play(in_hud_mode);
+
+	pShellParticles->Play(IsHudModeNow());
 }
 
 
@@ -322,11 +306,10 @@ void CShootingObject::StartSmokeParticles	(const Fvector& play_pos,
 
 void CShootingObject::StartFlameParticles	()
 {
-	if(0==m_sFlameParticlesCurrent.size()) return;
+	if(!m_sFlameParticlesCurrent.size()) return;
 
 	//если партиклы циклические
-	if(m_pFlameParticles && m_pFlameParticles->IsLooped() && 
-		m_pFlameParticles->IsPlaying()) 
+	if(m_pFlameParticles && m_pFlameParticles->IsLooped() && m_pFlameParticles->IsPlaying()) 
 	{
 		UpdateFlameParticles();
 		return;
@@ -336,26 +319,16 @@ void CShootingObject::StartFlameParticles	()
 	m_pFlameParticles = CParticlesObject::Create(*m_sFlameParticlesCurrent,FALSE);
 	UpdateFlameParticles();
 	
-	
-	CSpectator* tmp_spectr = smart_cast<CSpectator*>(Level().CurrentControlEntity());
-	bool in_hud_mode = IsHudModeNow();
-	if (in_hud_mode && tmp_spectr &&
-		(tmp_spectr->GetActiveCam() != CSpectator::eacFirstEye))
-	{
-		in_hud_mode = false;
-	}
-	m_pFlameParticles->Play(in_hud_mode);
-		
-
+	m_pFlameParticles->Play(IsHudModeNow());
 }
 void CShootingObject::StopFlameParticles	()
 {
-	if(0==m_sFlameParticlesCurrent.size()) return;
-	if(m_pFlameParticles == NULL) return;
+	if(!m_sFlameParticlesCurrent.size()) return;
+	if(!m_pFlameParticles) return;
 
 	m_pFlameParticles->SetAutoRemove(true);
 	m_pFlameParticles->Stop();
-	m_pFlameParticles = NULL;
+	m_pFlameParticles = nullptr;
 }
 
 void CShootingObject::UpdateFlameParticles	()

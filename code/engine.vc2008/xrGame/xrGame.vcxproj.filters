@@ -1909,12 +1909,6 @@
     <Filter Include="Core\Client\Objects\inventory_box">
       <UniqueIdentifier>{43ba2006-4f4a-4102-b09f-7873a299832d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Spectator">
-      <UniqueIdentifier>{3216ff3b-52df-4fc4-b146-9a93c1f772bf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Spectator\Cameras">
-      <UniqueIdentifier>{9b86342c-77ff-4522-a915-4ea5538447e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Common">
       <UniqueIdentifier>{5c69747a-3509-42f5-b096-ec4c4fb095fe}</UniqueIdentifier>
     </Filter>
@@ -5583,12 +5577,6 @@
     <ClInclude Include="InventoryBox.h">
       <Filter>Core\Client\Objects\inventory_box</Filter>
     </ClInclude>
-    <ClInclude Include="Spectator.h">
-      <Filter>Core\Client\Spectator</Filter>
-    </ClInclude>
-    <ClInclude Include="spectator_camera_first_eye.h">
-      <Filter>Core\Client\Spectator\Cameras</Filter>
-    </ClInclude>
     <ClInclude Include="date_time.h">
       <Filter>Core\Common\DateTime</Filter>
     </ClInclude>
@@ -8371,12 +8359,6 @@
     </ClCompile>
     <ClCompile Include="InventoryBox.cpp">
       <Filter>Core\Client\Objects\inventory_box</Filter>
-    </ClCompile>
-    <ClCompile Include="Spectator.cpp">
-      <Filter>Core\Client\Spectator</Filter>
-    </ClCompile>
-    <ClCompile Include="spectator_camera_first_eye.cpp">
-      <Filter>Core\Client\Spectator\Cameras</Filter>
     </ClCompile>
     <ClCompile Include="console_commands.cpp">
       <Filter>Core\Common\Console Commands</Filter>
