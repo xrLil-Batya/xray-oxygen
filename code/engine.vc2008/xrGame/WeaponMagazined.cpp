@@ -966,11 +966,26 @@ void CWeaponMagazined::InitAddons()
 		//std::string _tex_name;
 		if ( m_eScopeStatus == ALife::eAddonAttachable )
 		{
-			std::string scope_tex_name = pSettings->r_stringStd(GetScopeName(), "scope_texture");
-			m_zoom_params.m_fScopeZoomFactor	= pSettings->r_floatStd(GetScopeName(), "scope_zoom_factor");
-			m_zoom_params.m_sUseZoomPostprocess	= READ_IF_EXISTS(pSettings, r_stringStd, GetScopeName().c_str(), "scope_nightvision", nullptr);
-			m_zoom_params.m_bUseDynamicZoom		= READ_IF_EXISTS(pSettings, r_bool, GetScopeName().c_str(), "scope_dynamic_zoom", false);
-			m_zoom_params.m_sUseBinocularVision	= READ_IF_EXISTS(pSettings, r_stringStd, GetScopeName().c_str(), "scope_alive_detector", nullptr);
+			std::string scope_tex_name = pSettings->r_stringStd(GetScopeName().c_str(), "scope_texture");
+			m_zoom_params.m_fScopeZoomFactor = pSettings->r_floatStd(GetScopeName(), "scope_zoom_factor");
+			m_zoom_params.m_bUseDynamicZoom = READ_IF_EXISTS(pSettings, r_bool, GetScopeName().c_str(), "scope_dynamic_zoom", false);
+
+			try
+			{
+				m_zoom_params.m_sUseZoomPostprocess = READ_IF_EXISTS(pSettings, r_string, GetScopeName().c_str(), "scope_nightvision", nullptr);
+			}
+			catch (...)
+			{
+				m_zoom_params.m_sUseZoomPostprocess = nullptr;
+			}
+			try
+			{
+				m_zoom_params.m_sUseBinocularVision = READ_IF_EXISTS(pSettings, r_string, GetScopeName().c_str(), "scope_alive_detector", nullptr);
+			}
+			catch (...)
+			{
+				m_zoom_params.m_sUseBinocularVision = nullptr;
+			}
 
 			xr_delete(m_UIScope);
 
