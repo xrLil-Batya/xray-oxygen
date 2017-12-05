@@ -36,6 +36,8 @@
 #	include "ai_debug.h"
 #endif // _EDITOR
 
+using MySuper = IGame_Persistent;
+
 CGamePersistent::CGamePersistent(void)
 {
 	m_bPickableDOF				= false;
@@ -62,7 +64,7 @@ CGamePersistent::CGamePersistent(void)
 	m_last_stats_frame			= u32(-2);
 #endif
 	// 
-	BOOL	bDemoMode	= (0!=strstr(Core.Params,"-demomode "));
+	bool bDemoMode = (0!=strstr(Core.Params,"-demomode "));
 	if (bDemoMode)
 	{
 		string256	fname;
@@ -125,7 +127,7 @@ void CGamePersistent::OnAppStart()
 	// load game materials
 	GMLib.Load					();
 	init_game_globals			();
-	__super::OnAppStart			();
+	MySuper::OnAppStart			();
 	m_pUI_core					= xr_new<ui_core>();
 	m_pMainMenu					= xr_new<CMainMenu>();
 }
@@ -139,7 +141,7 @@ void CGamePersistent::OnAppEnd	()
 	xr_delete					(m_pMainMenu);
 	xr_delete					(m_pUI_core);
 
-	__super::OnAppEnd			();
+	MySuper::OnAppEnd			();
 
 	clean_game_globals			();
 
@@ -149,7 +151,7 @@ void CGamePersistent::OnAppEnd	()
 
 void CGamePersistent::Start		(LPCSTR op)
 {
-	__super::Start				(op);
+	MySuper::Start				(op);
 }
 
 void CGamePersistent::Disconnect()
@@ -167,7 +169,7 @@ void CGamePersistent::Disconnect()
 
 void CGamePersistent::OnGameStart()
 {
-	__super::OnGameStart		();
+	MySuper::OnGameStart		();
 	UpdateGameType				();
 }
 
@@ -183,7 +185,7 @@ EGameIDs ParseStringToGameType(LPCSTR str)
 
 void CGamePersistent::UpdateGameType			()
 {
-	__super::UpdateGameType();
+	MySuper::UpdateGameType();
 
 	m_game_params.m_e_game_type = eGameIDSingle;
 	g_current_keygroup = _sp;
@@ -191,7 +193,7 @@ void CGamePersistent::UpdateGameType			()
 
 void CGamePersistent::OnGameEnd()
 {
-	__super::OnGameEnd();
+	MySuper::OnGameEnd();
 
 	xr_delete(g_stalker_animation_data_storage);
 	xr_delete(g_stalker_velocity_holder);
@@ -199,7 +201,7 @@ void CGamePersistent::OnGameEnd()
 
 void CGamePersistent::WeathersUpdate()
 {
-	if (g_pGameLevel && !g_dedicated_server)
+	if (g_pGameLevel)
 	{
 		CActor* actor				= smart_cast<CActor*>(Level().CurrentViewEntity());
 		BOOL bIndoor				= TRUE;
@@ -570,7 +572,7 @@ void CGamePersistent::OnFrame	()
 		}
 #endif // MASTER_GOLD
 	}
-	__super::OnFrame			();
+	MySuper::OnFrame			();
 
 	if(!Device.Paused())
 		Engine.Sheduler.Update		();
@@ -795,7 +797,7 @@ void CGamePersistent::OnSectorChanged(int sector)
 
 void CGamePersistent::OnAssetsChanged()
 {
-	IGame_Persistent::OnAssetsChanged	();
+	MySuper::OnAssetsChanged	();
 	CStringTable().rescan				();
 }
 
