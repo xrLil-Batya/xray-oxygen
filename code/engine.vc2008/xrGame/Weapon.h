@@ -211,8 +211,8 @@ protected:
 		Fvector			m_ZoomDof;
 		Fvector4		m_ReloadDof;
 		BOOL			m_bUseDynamicZoom;
-		std::string		m_sUseZoomPostprocess;
-		std::string		m_sUseBinocularVision;
+		shared_str		m_sUseZoomPostprocess;
+		shared_str		m_sUseBinocularVision;
 		CBinocularsVision*		m_pVision;
 		CNightVisionEffector*	m_pNight_vision;
 
