@@ -88,7 +88,7 @@ namespace luabind { namespace detail
 	private:
         template <int ResInit, typename... Args, typename... Policies>
         overload_rep(const bool isConst, const imdexlib::typelist<Args...>, const std::integral_constant<int, ResInit>, const policy_cons<Policies...>)
-         : allocator(), call_fun(std::allocator_arg_t(), allocator), call_fun_static(std::allocator_arg_t(), allocator), m_const(isConst)
+         : call_fun(), call_fun_static(), m_const(isConst)
         {
             m_params_.reserve(sizeof...(Args));
 
@@ -97,8 +97,6 @@ namespace luabind { namespace detail
 
             m_arity =  calcHasArg<ResInit, 1, sizeof...(Args) , Policies...>();
         }
-
-        luabind::memory_allocator<unsigned char> allocator;
 
 		// this is the normal function pointer that may be a virtual
 #pragma warning(push)
