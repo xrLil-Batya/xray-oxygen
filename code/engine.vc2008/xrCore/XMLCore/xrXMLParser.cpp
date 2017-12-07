@@ -154,7 +154,7 @@ XML_NODE* CXml::NavigateToNodeWithAttribute(const char* tag_name, const char* at
 	XML_NODE	*root		= GetLocalRoot() ? GetLocalRoot() : GetRoot();
 	int			tabsCount	= GetNodesNum(root, tag_name);
 
-	for (u32 i = 0; i < tabsCount; ++i)
+	for (int i = 0; i < tabsCount; ++i)
 	{
 		const char* result = ReadAttrib(root, tag_name, i, attrib_name, "");
 		if (result && xr_strcmp(result, attrib_value) == 0)
