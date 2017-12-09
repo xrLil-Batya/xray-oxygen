@@ -23,15 +23,13 @@
 #include "CustomOutfit.h"
 #include "InventoryOwner.h"
 
-ENGINE_API	bool	g_dedicated_server;
-
-CUIXml*				pWpnScopeXml = NULL;
+CUIXml* pWpnScopeXml = nullptr;
 
 void createWpnScopeXML()
 {
 	if(!pWpnScopeXml)
 	{
-		pWpnScopeXml			= xr_new<CUIXml>();
+		pWpnScopeXml			= new CUIXml();
 		pWpnScopeXml->Load		(CONFIG_PATH, UI_PATH, "scopes.xml");
 	}
 }
@@ -1197,13 +1195,19 @@ void CWeaponMagazined::OnPrevFireMode()
 	SetQueueSize(GetCurrentFireMode());
 }
 
+#include "weaponBM16.h"
 void CWeaponMagazined::OnH_A_Chield()
 {
 	if (m_bHasDifferentFireModes)
 	{
-		CActor	*actor = smart_cast<CActor*>(H_Parent());
-		if (!actor) SetQueueSize(-1);
-		else SetQueueSize(GetCurrentFireMode());
+		if (smart_cast<CActor*>(H_Parent()))
+		{
+			SetQueueSize(GetCurrentFireMode()); 
+		}
+		else // НПС всегда переключает на автоматический режим, если он есть, или на максимальную очередь.
+		{
+			SetQueueSize(smart_cast<CWeaponBM16*>(this) ? 1 : WEAPON_ININITE_QUEUE);
+		}
 	};
 	inherited::OnH_A_Chield();
 }

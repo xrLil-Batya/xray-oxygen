@@ -1,12 +1,12 @@
 #pragma once
 
-#include "weaponcustompistol.h"
+#include "WeaponMagazined.h"
 #include "../xrScripts/export/script_export_space.h"
 
 class CWeaponSVD :
-	public CWeaponCustomPistol
+	public CWeaponMagazined
 {
-	typedef CWeaponCustomPistol inherited;
+	typedef CWeaponMagazined inherited;
 protected:
 	virtual void switch2_Fire	();
 	virtual void OnAnimationEnd (u32 state);
