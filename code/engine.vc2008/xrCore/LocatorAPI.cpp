@@ -771,8 +771,8 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 	};
 		
 
-	u32	M2			= Memory.mem_usage();
-	Msg				("FS: %d files cached %d archives, %dKb memory used.",m_files.size(),m_archives.size(), (M2-M1)/1024);
+//	u32	M2			= Memory.mem_usage();
+//	Msg				("FS: %d files cached %d archives, %dKb memory used.",m_files.size(),m_archives.size(), (M2-M1)/1024);
 
 	m_Flags.set		(flReady,TRUE);
 
