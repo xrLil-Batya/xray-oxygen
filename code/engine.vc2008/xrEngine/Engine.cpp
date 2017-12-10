@@ -28,7 +28,7 @@ extern	void msCreate		(LPCSTR name);
 PROTECT_API void CEngine::Initialize	(void)
 {
 	// Bind PSGP
-	hPSGP		= LoadLibrary("xrCPU_Pipe.dll");
+	hPSGP		= LoadLibrary("xrCPU_Pipe");
 	R_ASSERT	(hPSGP);
 	xrBinder*	bindCPU	= (xrBinder*)	GetProcAddress(hPSGP,"xrBind_PSGP");	R_ASSERT(bindCPU);
 	bindCPU		(&PSGP, &CPU::ID );

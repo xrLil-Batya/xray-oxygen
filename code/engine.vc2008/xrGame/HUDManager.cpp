@@ -7,7 +7,6 @@
 #include "GamePersistent.h"
 #include "MainMenu.h"
 #include "grenade.h"
-#include "spectator.h"
 #include "Car.h"
 #include "UIGameCustom.h"
 #include "UICursor.h"
@@ -170,15 +169,15 @@ void CHUDManager::Render_First()
 
 bool need_render_hud()
 {
-	CObject*	O					= g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : NULL;
-	if (!O)						
+	CObject* O = g_pGameLevel ? g_pGameLevel->CurrentViewEntity() : nullptr;
+	if (!O)
 		return false;
 
-	CActor*		A					= smart_cast<CActor*> (O);
-	if (A && (!A->HUDview() || !A->g_Alive()) ) 
+	CActor*		A = smart_cast<CActor*> (O);
+	if (A && (!A->HUDview() || !A->g_Alive()))
 		return false;
 
-	if( smart_cast<CCar*>(O) || smart_cast<CSpectator*>(O) )
+	if (smart_cast<CCar*>(O))
 		return false;
 
 	return true;
@@ -197,19 +196,6 @@ void CHUDManager::Render_Last()
 	::Render->set_Object			(O->H_Root());
 	O->OnHUDDraw					(this);
 	::Render->set_HUD				(FALSE);
-}
-
-void CHUDManager::Render_Actor_Shadow() // added by KD
-{
-    if (!pUIGame) return;
-    CObject* O = g_pGameLevel->CurrentViewEntity();
-    if (!O) return;
-    CActor* A = smart_cast<CActor*> (O);
-    if (!A) return;
-    if (A->active_cam() != eacFirstEye) return; // KD: we need to render actor shadow only in first eye cam mode because
-    // in other modes actor model already in scene graph and renders well
-    ::Render->set_Object(O->H_Root());
-    O->renderable_Render();
 }
 
 #include "player_hud.h"
@@ -368,5 +354,8 @@ void CHUDManager::net_Relcase( CObject* obj )
 
 CDialogHolder* CurrentDialogHolder()
 {
-	return MainMenu()->IsActive() ? MainMenu() : dynamic_cast <CDialogHolder*> (HUD().GetGameUI());
+	if (MainMenu()->IsActive())
+		return MainMenu();
+	else
+		return HUD().GetGameUI();
 }

@@ -17,10 +17,6 @@ XRCORE_API		xrCore	Core;
 XRCORE_API		u32		build_id;
 XRCORE_API		const char*	build_date;
 
-namespace CPU
-{
-	extern	void			Detect	();
-}
 
 static u32	init_counter	= 0;
 //extern char g_application_path[256];
@@ -38,7 +34,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 		string_path		fn,dr,di;
 
 		// application path
-		 GetModuleFileName(GetModuleHandle(MODULE_NAME),fn,sizeof(fn));
+		 GetModuleFileName(GetModuleHandle("xrCore"),fn,sizeof(fn));
 		_splitpath(fn,dr,di,0,0);
 		strconcat(sizeof(ApplicationPath),ApplicationPath,dr,di);
 
@@ -62,7 +58,6 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 		xr_delete(time);
 
 		// Mathematics & PSI detection
-		CPU::Detect			();
 		
 		Memory._initialize	(strstr(Params,"-mem_debug") ? TRUE : FALSE);
 

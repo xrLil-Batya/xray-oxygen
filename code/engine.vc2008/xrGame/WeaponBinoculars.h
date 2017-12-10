@@ -1,16 +1,16 @@
 #pragma once
 
-#include "WeaponCustomPistol.h"
+#include "WeaponMagazined.h"
 #include "../xrScripts/export/script_export_space.h"
 
 class CUIFrameWindow;
 class CUIStatic;
 class CBinocularsVision;
 
-class CWeaponBinoculars: public CWeaponCustomPistol
+class CWeaponBinoculars: public CWeaponMagazined
 {
 private:
-	typedef CWeaponCustomPistol inherited;
+	typedef CWeaponMagazined inherited;
 protected:
 	bool			m_bVision;
 public:

@@ -198,7 +198,7 @@ struct	RC { RayCache	C; };
 class	CoverThread : public CThread
 {
 	u32					Nstart, Nend;
-	xr_vector<RC>		cache;
+	xr_hash_map<u32, RC> cache;
 	CDB::COLLIDER		DB;
 	Query				Q;
 
@@ -262,15 +262,6 @@ public:
 	virtual void		Execute()
 	{
 		DB.ray_options		(CDB::OPT_CULL);
-		{
-			RC				rc;	
-			rc.C[0].set		(0,0,0); 
-			rc.C[1].set		(0,0,0); 
-			rc.C[2].set		(0,0,0);
-			
-			cache.assign	(g_nodes.size()*2,rc);
-		}
-
 		FPU::m24r		();
 
 		Q.Begin			(g_nodes.size());
@@ -527,7 +518,6 @@ void	xrCover	(bool pure_covers)
 	Status("Calculating...");
 
 	processor_info CPU;
-	query_processor_info(&CPU);
 
 	if (!pure_covers)
 		compute_cover_nodes	();

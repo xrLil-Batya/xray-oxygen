@@ -9,7 +9,6 @@ private:
 	message_filter*				m_msg_filter;
 	demoplay_control*			m_demoplay_control;
 public:
-	void						SetDemoSpectator		(CObject* spectator);
 	CObject*					GetDemoSpectator		();
 	
 	void						PrepareToSaveDemo		();

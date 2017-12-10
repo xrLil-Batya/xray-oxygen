@@ -1,6 +1,6 @@
 #pragma once
 
-#include "WeaponCustomPistol.h"
+#include "WeaponMagazined.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrEngine/xr_collide_form.h"
 

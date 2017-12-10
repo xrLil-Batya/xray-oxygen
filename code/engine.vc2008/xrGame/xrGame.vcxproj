@@ -1429,8 +1429,6 @@
     <ClInclude Include="ShootingObject.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponAmmo.h" />
-    <ClInclude Include="WeaponCustomPistol.h" />
-    <ClInclude Include="WeaponPistol.h" />
     <ClInclude Include="Grenade.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Scope.h" />
@@ -1540,8 +1538,6 @@
     <ClInclude Include="helicopter.h" />
     <ClInclude Include="DelayedActionFuse.h" />
     <ClInclude Include="InventoryBox.h" />
-    <ClInclude Include="Spectator.h" />
-    <ClInclude Include="spectator_camera_first_eye.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="NET_Queue.h" />
     <ClInclude Include="traffic_optimization.h" />
@@ -2584,8 +2580,6 @@
     <ClCompile Include="WeaponFire.cpp" />
     <ClCompile Include="WeaponUpgrade.cpp" />
     <ClCompile Include="WeaponAmmo.cpp" />
-    <ClCompile Include="WeaponCustomPistol.cpp" />
-    <ClCompile Include="WeaponPistol.cpp" />
     <ClCompile Include="Grenade.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Scope.cpp">
@@ -2740,8 +2734,6 @@
     <ClCompile Include="DelayedActionFuse.cpp" />
     <ClCompile Include="InventoryBox.cpp">
     </ClCompile>
-    <ClCompile Include="Spectator.cpp" />
-    <ClCompile Include="spectator_camera_first_eye.cpp" />
     <ClCompile Include="console_commands.cpp">
     </ClCompile>
     <ClCompile Include="date_time.cpp" />

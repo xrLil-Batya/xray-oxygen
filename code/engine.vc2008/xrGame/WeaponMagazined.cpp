@@ -23,15 +23,13 @@
 #include "CustomOutfit.h"
 #include "InventoryOwner.h"
 
-ENGINE_API	bool	g_dedicated_server;
-
-CUIXml*				pWpnScopeXml = NULL;
+CUIXml* pWpnScopeXml = nullptr;
 
 void createWpnScopeXML()
 {
 	if(!pWpnScopeXml)
 	{
-		pWpnScopeXml			= xr_new<CUIXml>();
+		pWpnScopeXml			= new CUIXml();
 		pWpnScopeXml->Load		(CONFIG_PATH, UI_PATH, "scopes.xml");
 	}
 }
@@ -749,8 +747,8 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 		CActor* pActor = smart_cast<CActor*>(H_Parent());
 		CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
 
-	    if (psActorFlags.test(AF_RELOADONSPRINT) || !psActorFlags.test(AF_RELOADONSPRINT) && !pActor->mstate_real&mcAnyMove || 
-			!psActorFlags.test(AF_RELOADONSPRINT) && pActor->mstate_real&mcAnyMove && pOutfit && pOutfit->m_reload_on_sprint)
+	    if (psActorFlags.test(AF_RELOADONSPRINT) || !psActorFlags.test(AF_RELOADONSPRINT) && !(pActor->mstate_real&(mcCrouch | mcAccel | mcClimb | mcSprint)) ||
+			(!psActorFlags.test(AF_RELOADONSPRINT) && (pActor->mstate_real&(mcCrouch | mcAccel | mcClimb | mcSprint)) && pOutfit && pOutfit->m_reload_on_sprint))
 		    if(flags&CMD_START)
 			    if(iAmmoElapsed < iMagazineSize || IsMisfire())
 	                Reload();
@@ -966,11 +964,26 @@ void CWeaponMagazined::InitAddons()
 		//std::string _tex_name;
 		if ( m_eScopeStatus == ALife::eAddonAttachable )
 		{
-			std::string scope_tex_name = pSettings->r_stringStd(GetScopeName(), "scope_texture");
-			m_zoom_params.m_fScopeZoomFactor	= pSettings->r_floatStd(GetScopeName(), "scope_zoom_factor");
-			m_zoom_params.m_sUseZoomPostprocess	= READ_IF_EXISTS(pSettings, r_stringStd, GetScopeName().c_str(), "scope_nightvision", nullptr);
-			m_zoom_params.m_bUseDynamicZoom		= READ_IF_EXISTS(pSettings, r_bool, GetScopeName().c_str(), "scope_dynamic_zoom", false);
-			m_zoom_params.m_sUseBinocularVision	= READ_IF_EXISTS(pSettings, r_stringStd, GetScopeName().c_str(), "scope_alive_detector", nullptr);
+			shared_str scope_tex_name = pSettings->r_stringStd(GetScopeName().c_str(), "scope_texture");
+			m_zoom_params.m_fScopeZoomFactor = pSettings->r_floatStd(GetScopeName(), "scope_zoom_factor");
+			m_zoom_params.m_bUseDynamicZoom = READ_IF_EXISTS(pSettings, r_bool, GetScopeName().c_str(), "scope_dynamic_zoom", false);
+
+			try
+			{
+				m_zoom_params.m_sUseZoomPostprocess = READ_IF_EXISTS(pSettings, r_string, GetScopeName().c_str(), "scope_nightvision", nullptr);
+			}
+			catch (...)
+			{
+				m_zoom_params.m_sUseZoomPostprocess = nullptr;
+			}
+			try
+			{
+				m_zoom_params.m_sUseBinocularVision = READ_IF_EXISTS(pSettings, r_string, GetScopeName().c_str(), "scope_alive_detector", nullptr);
+			}
+			catch (...)
+			{
+				m_zoom_params.m_sUseBinocularVision = nullptr;
+			}
 
 			xr_delete(m_UIScope);
 
@@ -1182,13 +1195,19 @@ void CWeaponMagazined::OnPrevFireMode()
 	SetQueueSize(GetCurrentFireMode());
 }
 
+#include "weaponBM16.h"
 void CWeaponMagazined::OnH_A_Chield()
 {
 	if (m_bHasDifferentFireModes)
 	{
-		CActor	*actor = smart_cast<CActor*>(H_Parent());
-		if (!actor) SetQueueSize(-1);
-		else SetQueueSize(GetCurrentFireMode());
+		if (smart_cast<CActor*>(H_Parent()))
+		{
+			SetQueueSize(GetCurrentFireMode()); 
+		}
+		else // НПС всегда переключает на автоматический режим, если он есть, или на максимальную очередь.
+		{
+			SetQueueSize(smart_cast<CWeaponBM16*>(this) ? 1 : WEAPON_ININITE_QUEUE);
+		}
 	};
 	inherited::OnH_A_Chield();
 }

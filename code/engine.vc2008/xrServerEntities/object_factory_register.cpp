@@ -23,7 +23,6 @@
 #	include "gamepersistent.h"
 #	include "hudmanager.h"
 #	include "actor.h"
-#	include "spectator.h"
 
 #	include "ai/monsters/flesh/flesh.h"
 #	include "ai/monsters/chimera/chimera.h"
@@ -188,17 +187,11 @@ void CObjectFactory::register_classes	()
 #endif // NO_XR_GAME
 
 	// server entities
-#ifndef NO_SINGLE
 	add<CSE_ALifeGroupTemplate<CSE_ALifeMonsterBase> >			(CLSID_AI_FLESH_GROUP			,"flesh_group");
-//	add<CSE_SpawnGroup>											(CLSID_AI_SPAWN_GROUP			,"spawn_group");
 	add<CSE_ALifeGraphPoint>									(CLSID_AI_GRAPH					,"graph_point");
 	add<CSE_ALifeOnlineOfflineGroup>							(CLSID_ONLINE_OFFLINE_GROUP		,"online_offline_group");
-#endif // #ifndef NO_SINGLE
 	
 	// client and server entities
-	ADD(CSpectator				,CSE_Spectator					,CLSID_SPECTATOR				,"spectator");
-
-#ifndef NO_SINGLE
 	ADD(CAI_Flesh				,CSE_ALifeMonsterBase			,CLSID_AI_FLESH					,"flesh");
 	ADD(CChimera				,CSE_ALifeMonsterBase			,CLSID_AI_CHIMERA				,"chimera");
 	ADD(CAI_Dog					,CSE_ALifeMonsterBase			,CLSID_AI_DOG_RED				,"dog_red");
@@ -228,7 +221,6 @@ void CObjectFactory::register_classes	()
 	ADD(CCar					,CSE_ALifeCar					,CLSID_CAR						,"car");
 
 	ADD(CHelicopter				,CSE_ALifeHelicopter			,CLSID_VEHICLE_HELICOPTER		,"helicopter");
-#endif // #ifndef NO_SINGLE
 
 	// Artefacts
 	ADD(CMercuryBall			,CSE_ALifeItemArtefact			,CLSID_AF_MERCURY_BALL			,"art_mercury_ball");
@@ -284,9 +276,7 @@ void CObjectFactory::register_classes	()
 	ADD(CGrenadeLauncher		,CSE_ALifeItem					,CLSID_OBJECT_W_GLAUNCHER		,"wpn_grenade_launcher");
 
 	// Inventory
-#ifndef NO_SINGLE
 	ADD(CBolt					,CSE_ALifeItemBolt				,CLSID_IITEM_BOLT				,"obj_bolt");
-#endif // #ifndef NO_SINGLE
 	ADD(CMedkit					,CSE_ALifeItem					,CLSID_IITEM_MEDKIT				,"obj_medkit");
 	ADD(CMedkit					,CSE_ALifeItem					,CLSID_IITEM_BANDAGE			,"obj_bandage");
 	ADD(CAntirad				,CSE_ALifeItem					,CLSID_IITEM_ANTIRAD			,"obj_antirad");
@@ -348,7 +338,6 @@ void CObjectFactory::register_classes	()
 	// objects
 	ADD(CProjector				,CSE_ALifeObjectProjector		,CLSID_OBJECT_PROJECTOR			,"projector");
 	ADD(CWeaponStatMgun			,CSE_ALifeStationaryMgun		,CLSID_OBJECT_W_STATMGUN		,"wpn_stat_mgun");
-//	ADD(CTrigger				,CSE_Trigger					,CLSID_OBJECT_TRIGGER			,"trigger");
 
 	// entity
 	ADD(CHangingLamp			,CSE_ALifeObjectHangingLamp		,CLSID_OBJECT_HLAMP				,"hanging_lamp");
@@ -360,44 +349,5 @@ void CObjectFactory::register_classes	()
 	ADD(CDestroyablePhysicsObject,CSE_ALifeObjectPhysic			,CLSID_PHYSICS_DESTROYABLE		,"obj_phys_destroyable");
 
 	ADD(CInventoryBox			,CSE_ALifeInventoryBox			,CLSID_INVENTORY_BOX			,"inventory_box");
-#ifndef NO_SINGLE
 	ADD(smart_cover::object		,CSE_SmartCover					,TEXT2CLSID("SMRTCOVR")			,"smart_cover");
-#endif // #ifndef NO_SINGLE
-
-#ifndef NO_XR_GAME
-	// hack, for dedicated server only
-	// because we do not have scripts
-	// and script functionality is not
-	// needed here
-	if (!g_dedicated_server)
-		return;
-
-	ADD(CElectricBall			,CSE_ALifeItemArtefact			,TEXT2CLSID("SCRPTART")			,"artefact_s");
-//	ADD(CtaGameArtefact			,CSE_ALifeItemArtefact			,TEXT2CLSID("AF_CTA")			,"ctaartefact_s");
-	ADD(CTorch					,CSE_ALifeItemTorch				,TEXT2CLSID("TORCH_S")			,"device_torch_s");
-	ADD(CStalkerOutfit			,CSE_ALifeItemCustomOutfit		,TEXT2CLSID("E_STLK")			,"equ_stalker_s");
-	ADD(CScope					,CSE_ALifeItem					,TEXT2CLSID("WP_SCOPE")			,"wpn_scope_s");
-	ADD(CWeaponAK74				,CSE_ALifeItemWeaponMagazinedWGL,TEXT2CLSID("WP_AK74")			,"wpn_ak74_s");
-	ADD(CWeaponLR300			,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_LR300")			,"wpn_lr300_s");
-	ADD(CWeaponBinoculars		,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_BINOC")			,"wpn_binocular_s");
-	ADD(CWeaponBM16				,CSE_ALifeItemWeaponShotGun		,TEXT2CLSID("WP_BM16")			,"wpn_bm16_s");
-	ADD(CWeaponGroza			,CSE_ALifeItemWeaponMagazinedWGL,TEXT2CLSID("WP_GROZA")			,"wpn_groza_s");
-	ADD(CWeaponSVD				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_SVD")			,"wpn_svd_s");
-	ADD(CWeaponHPSA				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_HPSA")			,"wpn_hpsa_s");
-	ADD(CWeaponKnife			,CSE_ALifeItemWeapon			,TEXT2CLSID("WP_KNIFE")			,"wpn_knife_s");
-	ADD(CWeaponPM				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_PM")			,"wpn_pm_s");
-	ADD(CWeaponRG6				,CSE_ALifeItemWeaponShotGun		,TEXT2CLSID("WP_RG6")			,"wpn_rg6_s");
-	ADD(CWeaponRPG7				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_RPG7")			,"wpn_rpg7_s");
-	ADD(CWeaponShotgun			,CSE_ALifeItemWeaponShotGun		,TEXT2CLSID("WP_SHOTG")			,"wpn_shotgun_s");
-	ADD(CWeaponSVU				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_SVU")			,"wpn_svu_s");
-	ADD(CWeaponUSP45			,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_USP45")			,"wpn_usp45_s");
-	ADD(CWeaponVal				,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_VAL")			,"wpn_val_s");
-	ADD(CWeaponVintorez			,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_VINT")			,"wpn_vintorez_s");
-	ADD(CWeaponWalther			,CSE_ALifeItemWeaponMagazined	,TEXT2CLSID("WP_WALTH")			,"wpn_walther_s");
-	ADD(CHairsZone				,CSE_ALifeZoneVisual			,TEXT2CLSID("ZS_BFUZZ")			,"zone_bfuzz_s");
-	ADD(CMosquitoBald			,CSE_ALifeAnomalousZone			,TEXT2CLSID("ZS_MBALD")			,"zone_mbald_s");
-	ADD(CMincer					,CSE_ALifeAnomalousZone			,TEXT2CLSID("ZS_GALAN")			,"zone_galant_s");
-	ADD(CMincer					,CSE_ALifeAnomalousZone			,TEXT2CLSID("ZS_MINCE")			,"zone_mincer_s");
-	ADD(CSpaceRestrictor		,CSE_ALifeSpaceRestrictor		,TEXT2CLSID("SPC_RS_S")			,"script_restr");
-#endif // NO_XR_GAME
 }

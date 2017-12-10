@@ -33,23 +33,21 @@ Comments:
 // Defined in this module:
 WORD GetNumberOfBits(DWORD dwMask);
 
-Image_DXTC::Image_DXTC()
+Image_DXTC::Image_DXTC(): m_pCompBytes(nullptr), m_pDecompBytes(nullptr)
 {
-    m_pCompBytes = NULL;
-    m_pDecompBytes = NULL;
 }
 
 Image_DXTC::~Image_DXTC()
 {
-    if (m_pCompBytes != NULL)
+    if (m_pCompBytes)
     {
         free(m_pCompBytes);
-        m_pCompBytes = NULL;
+        m_pCompBytes = nullptr;
     }
-    if (m_pDecompBytes != NULL)
+    if (m_pDecompBytes)
     {
         free(m_pDecompBytes);
-        m_pDecompBytes = NULL;
+        m_pDecompBytes = nullptr;
     }
 }
 
@@ -66,10 +64,10 @@ void Image_DXTC::SaveAsRaw()
 
 bool Image_DXTC::LoadFromFile(LPCSTR filename)
 {
-    if (m_pCompBytes != NULL)
+    if (m_pCompBytes)
     {
         free(m_pCompBytes);
-        m_pCompBytes = NULL;
+        m_pCompBytes = nullptr;
     }
     // only understands .dds files for now
     // return true if success
@@ -78,13 +76,12 @@ bool Image_DXTC::LoadFromFile(LPCSTR filename)
     char fileupper[256];
     strcpy_s(fileupper, filename);
     strupr(fileupper);
-    //TRACE( "\n" );
-    //TRACE( "\n" );
+
     bool knownformat = false;
     for (int i = 0; i < next; i++)
     {
         char* found = strstr(fileupper, exts[0]);
-        if (found != NULL)
+        if (found)
         {
             knownformat = true;
             break;
@@ -92,10 +89,9 @@ bool Image_DXTC::LoadFromFile(LPCSTR filename)
     }
     if (knownformat == false)
     {
-        //TRACE("Unknown file format encountered!  [%s]\n", filename );
         return false;
     }
-    //TRACE("\n\nLoading file [%s]\n", filename );
+
     FILE* file = fopen(filename, "rb");
     if (file == NULL)
     {

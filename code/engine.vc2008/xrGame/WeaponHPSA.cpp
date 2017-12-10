@@ -2,7 +2,7 @@
 
 #include "WeaponHPSA.h"
 
-CWeaponHPSA::CWeaponHPSA() : CWeaponPistol()
+CWeaponHPSA::CWeaponHPSA() : CWeaponMagazined()
 {
 }
 

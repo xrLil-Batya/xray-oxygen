@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 4530 )		// C++ vector(985)
 #ifndef _CLR_MANAGER
 #	include <thread>
 #	include <mutex>
@@ -59,24 +60,12 @@
 
 #	include "xrCore_platform.h"
 
-/*
-// stl-config
-// *** disable exceptions for both STLport and VC7.1 STL
-// #define _STLP_NO_EXCEPTIONS	1
-// #if XRAY_EXCEPTIONS
- 	#define _HAS_EXCEPTIONS		1	// force STL again
-// #endif
-*/
-
 // *** try to minimize code bloat of STLport
-#ifdef __BORLANDC__
-#else
-	#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
+#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
 	#define _STLP_DESIGNATED_DLL	1
 	#define _STLP_USE_DECLSPEC		1
-	#else
+#else
 	#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
-	#endif
 #endif
 
 // #include <exception>
@@ -100,10 +89,6 @@
     #endif
 #endif
 
-#ifdef XRCORE_STATIC
-#	define NO_FS_SCAN
-#endif
-
 #ifdef _EDITOR
 #	define NO_FS_SCAN
 #endif
@@ -111,18 +96,12 @@
 // inline control - redefine to use compiler's heuristics ONLY
 // it seems "IC" is misused in many places which cause code-bloat
 // ...and VC7.1 really don't miss opportunities for inline :)
-#ifdef _EDITOR
-#	define __forceinline	inline
-#endif
 #define _inline			inline
 #define __inline		inline
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
-#ifdef _EDITOR
-#	define ICN
-#else
-#	define ICN			__declspec (noinline)	
-#endif
+
+#	define ICN			__declspec (noinline)
 
 #ifndef DEBUG
 	#pragma inline_depth	( 254 )
@@ -134,53 +113,19 @@
 
 #include <time.h>
 // work-around dumb borland compiler
-#ifdef __BORLANDC__
-	#define ALIGN(a)
-
-	#include <assert.h>
-	#include <utime.h>
-	#define _utimbuf utimbuf
-	#define MODULE_NAME 		"xrCoreB.dll"
-
-	// function redefinition
-    #define fabsf(a) fabs(a)
-    #define sinf(a) sin(a)
-    #define asinf(a) asin(a)
-    #define cosf(a) cos(a)
-    #define acosf(a) acos(a)
-    #define tanf(a) tan(a)
-    #define atanf(a) atan(a)
-    #define sqrtf(a) sqrt(a)
-    #define expf(a) ::exp(a)
-    #define floorf floor
-    #define atan2f atan2
-    #define logf log
-	// float redefine
-	#define _PC_24 PC_24
-	#define _PC_53 PC_53
-	#define _PC_64 PC_64
-	#define _RC_CHOP RC_CHOP
-	#define _RC_NEAR RC_NEAR
-    #define _MCW_EM MCW_EM
-#else
-	#define ALIGN(a)		__declspec(align(a))
-	#include <sys\utime.h>
-	#define MODULE_NAME 	"xrCore.dll"
-#endif
-
+#define ALIGN(a)		__declspec(align(a))
+#include <sys\utime.h>
 
 // Warnings
 #pragma warning (disable : 4251 )		// object needs DLL interface
 #pragma warning (disable : 4201 )		// nonstandard extension used : nameless struct/union
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
 #pragma warning (disable : 4127 )		// conditional expression is constant
-//#pragma warning (disable : 4530 )		// C++ exception handler used, but unwind semantics are not enabled
 #pragma warning (disable : 4345 )
 #pragma warning (disable : 4714 )		// __forceinline not inlined
 #ifndef DEBUG
 #pragma warning (disable : 4189 )		//  local variable is initialized but not refenced
 #endif									//	frequently in release code due to large amount of VERIFY
-
 
 #ifdef _M_AMD64
 #pragma warning (disable : 4512 )
@@ -205,14 +150,10 @@
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
 
 // Our headers
-#ifdef XRCORE_STATIC
-#	define XRCORE_API
+#ifdef XRCORE_EXPORTS
+#	define XRCORE_API __declspec(dllexport)
 #else
-#	ifdef XRCORE_EXPORTS
-#		define XRCORE_API __declspec(dllexport)
-#	else
-#		define XRCORE_API __declspec(dllimport)
-#	endif
+#	define XRCORE_API __declspec(dllimport)
 #endif
 
 #include "xrDebug.h"

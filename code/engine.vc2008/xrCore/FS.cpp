@@ -350,7 +350,8 @@ void IReader::r_string(xr_string& dest) {
     dest.assign(src, sz);
 }
 
-void IReader::r_stringZ(char* dest, const size_t tgt_sz) {
+void IReader::r_stringZ(char* dest, const size_t tgt_sz) 
+{
     const auto sz = std::strlen(data);
     R_ASSERT2(sz < tgt_sz, "Dest string less than needed.");
     while ((data[Pos] != 0) && !eof())

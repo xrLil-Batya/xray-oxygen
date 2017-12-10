@@ -38,7 +38,7 @@ extern "C" {
 		T->PLC_calc3 = PLC_calc3_x86;
 
 		// SSE
-		if (ID->hasFeature(CpuFeature::Sse))
+		if (ID->hasFeature(CPUFeature::SSE))
 		{
 			T->PLC_calc3 = PLC_calc3_SSE;
 #ifndef _M_X64
@@ -48,7 +48,7 @@ extern "C" {
 			T->skin4W = xrSkin4W_SSE;
 			skin4W_func = xrSkin4W_SSE;
 		}
-		else if (ID->hasFeature(CpuFeature::_3dNow))
+		else if (ID->hasFeature(CPUFeature::AMD_3DNow))
 		{
 			T->skin1W = xrSkin1W_3DNow;
 			T->skin2W = xrSkin2W_3DNow;

@@ -27,17 +27,11 @@ void CParticlesObject::Init	(LPCSTR p_name, IRender_Sector* S, BOOL bAutoRemove)
 	m_bAutoRemove			= bAutoRemove;
 	float time_limit		= 0.0f;
 
-	if(!g_dedicated_server)
-	{
-		// create visual
-		renderable.visual		= Render->model_CreateParticles(p_name);
-		VERIFY					(renderable.visual);
-		IParticleCustom* V		= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual);  VERIFY(V);
-		time_limit				= V->GetTimeLimit();
-	}else
-	{
-		time_limit					= 1.0f;
-	}
+	// create visual
+	renderable.visual		= Render->model_CreateParticles(p_name);
+	VERIFY					(renderable.visual);
+	IParticleCustom* V		= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual);  VERIFY(V);
+	time_limit				= V->GetTimeLimit();
 
 	if(time_limit > 0.f)
 	{
@@ -202,8 +196,6 @@ void CParticlesObject::PerformAllTheWork_mt()
 
 void CParticlesObject::SetXFORM			(const Fmatrix& m)
 {
-	if(g_dedicated_server)		return;
-
 	IParticleCustom* V	= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->UpdateParent		(m,zero_vel,TRUE);
 	renderable.xform.set(m);
@@ -212,28 +204,22 @@ void CParticlesObject::SetXFORM			(const Fmatrix& m)
 
 void CParticlesObject::UpdateParent		(const Fmatrix& m, const Fvector& vel)
 {
-	if(g_dedicated_server)		return;
-
 	IParticleCustom* V	= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-	V->UpdateParent		(m,vel,FALSE);
-	UpdateSpatial		();
+	if (V)
+	{
+		V->UpdateParent(m, vel, FALSE);
+		UpdateSpatial();
+	}
 }
 
 Fvector& CParticlesObject::Position		()
 {
-	if(g_dedicated_server) 
-	{
-		static Fvector _pos = Fvector().set(0,0,0);
-		return _pos;
-	}
 	vis_data &vis = renderable.visual->getVisData();
 	return vis.sphere.P;
 }
 
 float CParticlesObject::shedule_Scale		()	
 { 
-	if(g_dedicated_server)		return 5.0f;
-
 	return Device.vCameraPosition.distance_to(Position())/200.f; 
 }
 
