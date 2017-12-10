@@ -1429,8 +1429,6 @@
     <ClInclude Include="ShootingObject.h" />
     <ClInclude Include="Weapon.h" />
     <ClInclude Include="WeaponAmmo.h" />
-    <ClInclude Include="WeaponCustomPistol.h" />
-    <ClInclude Include="WeaponPistol.h" />
     <ClInclude Include="Grenade.h" />
     <ClInclude Include="Missile.h" />
     <ClInclude Include="Scope.h" />
@@ -2582,8 +2580,6 @@
     <ClCompile Include="WeaponFire.cpp" />
     <ClCompile Include="WeaponUpgrade.cpp" />
     <ClCompile Include="WeaponAmmo.cpp" />
-    <ClCompile Include="WeaponCustomPistol.cpp" />
-    <ClCompile Include="WeaponPistol.cpp" />
     <ClCompile Include="Grenade.cpp" />
     <ClCompile Include="Missile.cpp" />
     <ClCompile Include="Scope.cpp">

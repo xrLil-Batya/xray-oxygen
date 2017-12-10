@@ -1651,9 +1651,6 @@
     <Filter Include="Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Ammo">
       <UniqueIdentifier>{84308c0c-658d-43d2-b510-39746efa91c4}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Pistol">
-      <UniqueIdentifier>{821e567b-4163-47b0-9c35-a000a82e9df1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Grenades &amp; Missiles">
       <UniqueIdentifier>{7203dc0a-64f7-4fac-8ba8-a1530d29c823}</UniqueIdentifier>
     </Filter>
