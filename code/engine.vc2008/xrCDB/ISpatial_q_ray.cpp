@@ -287,7 +287,7 @@ void	ISpatial_DB::q_ray(xr_vector<ISpatial*>& R, u32 _o, u32 _mask_and, const Fv
 	std::lock_guard<decltype(cs)> lock(cs);
 	q_result = &R;
 	q_result->clear();
-	if (CPU::ID.hasFeature(CpuFeature::Sse)) 
+	if (CPU::ID.hasFeature(CPUFeature::SSE))
 	{
 		if (_o & O_ONLYFIRST)
 		{

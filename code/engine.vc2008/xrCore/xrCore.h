@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable : 4530 )		// C++ vector(985)
 #ifndef _CLR_MANAGER
 #	include <thread>
 #	include <mutex>
@@ -59,24 +60,12 @@
 
 #	include "xrCore_platform.h"
 
-/*
-// stl-config
-// *** disable exceptions for both STLport and VC7.1 STL
-// #define _STLP_NO_EXCEPTIONS	1
-// #if XRAY_EXCEPTIONS
- 	#define _HAS_EXCEPTIONS		1	// force STL again
-// #endif
-*/
-
 // *** try to minimize code bloat of STLport
-#ifdef __BORLANDC__
-#else
-	#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
+#ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
 	#define _STLP_DESIGNATED_DLL	1
 	#define _STLP_USE_DECLSPEC		1
-	#else
+#else
 	#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
-	#endif
 #endif
 
 // #include <exception>
@@ -100,10 +89,6 @@
     #endif
 #endif
 
-#ifdef XRCORE_STATIC
-#	define NO_FS_SCAN
-#endif
-
 #ifdef _EDITOR
 #	define NO_FS_SCAN
 #endif
@@ -111,18 +96,12 @@
 // inline control - redefine to use compiler's heuristics ONLY
 // it seems "IC" is misused in many places which cause code-bloat
 // ...and VC7.1 really don't miss opportunities for inline :)
-#ifdef _EDITOR
-#	define __forceinline	inline
-#endif
 #define _inline			inline
 #define __inline		inline
 #define IC				inline
 #define ICF				__forceinline			// !!! this should be used only in critical places found by PROFILER
-#ifdef _EDITOR
-#	define ICN
-#else
-#	define ICN			__declspec (noinline)	
-#endif
+
+#	define ICN			__declspec (noinline)
 
 #ifndef DEBUG
 	#pragma inline_depth	( 254 )
@@ -147,7 +126,6 @@
 #ifndef DEBUG
 #pragma warning (disable : 4189 )		//  local variable is initialized but not refenced
 #endif									//	frequently in release code due to large amount of VERIFY
-
 
 #ifdef _M_AMD64
 #pragma warning (disable : 4512 )
