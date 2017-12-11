@@ -679,24 +679,17 @@ public:
 	}
 };
 
-HRESULT	CRender::shader_compile			(
-	LPCSTR							name,
-	DWORD const*                    pSrcData,
-	UINT                            SrcDataLen,
-	LPCSTR                          pFunctionName,
-	LPCSTR                          pTarget,
-	DWORD                           Flags,
-	void*&							result)
+HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcDataLen, LPCSTR pFunctionName, LPCSTR pTarget, DWORD Flags, void*& result)
 {
-	D3DXMACRO						defines			[128];
-	int								def_it			= 0;
-	char							c_smapsize		[32];
-	char							c_gloss			[32];
-	char							c_sun_shafts	[32];
-	char							c_ssao			[32];
-	char							c_sun_quality	[32];
+	D3DXMACRO defines[128];
+	int	def_it = 0;
+	char c_smapsize[32];
+	char c_gloss[32];
+	char c_sun_shafts[32];
+	char c_ssao[32];
+	char c_sun_quality[32];
 
-	char	sh_name[MAX_PATH] = "";
+	char sh_name[MAX_PATH] = "";
 	u32 len	= 0;
 
 	// options
@@ -969,6 +962,7 @@ HRESULT	CRender::shader_compile			(
 	{
 		sh_name[len]='0'; ++len;
 	}
+	sh_name[len] = '\0'; // intorr: String must be null-terminated.
 
 	// finish
 	defines[def_it].Name			=	0;

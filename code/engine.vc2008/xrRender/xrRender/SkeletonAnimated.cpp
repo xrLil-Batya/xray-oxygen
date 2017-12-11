@@ -635,11 +635,11 @@ void	CKinematicsAnimated::LL_SetChannelFactor (u16	channel,float factor)
 void CKinematicsAnimated::IBlend_Startup	()
 {
 	_DBG_SINGLE_USE_MARKER;
-	CBlend B; std::memset(&B,0,sizeof(B));
-	//B.blend				= CBlend::eFREE_SLOT;
+	CBlend B; 
+	// intorr: Initialization of this variable is successfully performed in the constructor.
+	//std::memset(&B,0,sizeof(B));
 
 	B.set_free_state();
-
 #ifdef	DEBUG
 	B.set_falloff_state();
 #endif

@@ -75,10 +75,10 @@ void	CResourceManager::ED_UpdateBlender	(LPCSTR Name, IBlender* data)
 //////////////////////////////////////////////////////////////////////
 void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 {
-	if (0==names || 0==names[0])
+	if (!names || !names[0])
  		names 	= "$null";
 
-    std::memset(&dest,0,sizeof(dest));
+	dest.clear(); // intorr: To avoid memory corruption with debug runtime.
 	char*	P			= (char*) names;
 	svector<char,128>	N;
 
@@ -90,7 +90,6 @@ void	CResourceManager::_ParseList(sh_list& dest, LPCSTR names)
 			strlwr		(N.begin());
 
 			fix_texture_name( N.begin() );
-//. andy			if (strext(N.begin())) *strext(N.begin())=0;
 			dest.push_back(N.begin());
 			N.clear		();
 		} else {
