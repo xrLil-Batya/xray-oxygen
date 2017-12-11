@@ -74,9 +74,6 @@ public:
 	xr_vector<int,render_alloc<int> >									lstLODgroups;
 	xr_vector<ISpatial* /**,render_alloc<ISpatial*>/**/>				lstRenderables;
 	xr_vector<ISpatial* /**,render_alloc<ISpatial*>/**/>				lstSpatial	;
-	xr_vector<dxRender_Visual*,render_alloc<dxRender_Visual*> >			lstVisuals	;
-
-	xr_vector<dxRender_Visual*,render_alloc<dxRender_Visual*> >			lstRecorded	;
 
 	u32															counter_S	;
 	u32															counter_D	;
@@ -126,14 +123,7 @@ public:
 		lstLODgroups.clear		();
 		lstRenderables.clear	();
 		lstSpatial.clear		();
-		lstVisuals.clear		();
 
-		lstRecorded.clear		();
-
-		//mapNormal[0].destroy	();
-		//mapNormal[1].destroy	();
-		//mapMatrix[0].destroy	();
-		//mapMatrix[1].destroy	();
 		for (int i=0; i<SHADER_PASSES_MAX; ++i)
 		{
 			mapNormalPasses[0][i].destroy	();
