@@ -289,10 +289,10 @@ void CSE_ALifeOnlineOfflineGroup::on_after_game_load()
 	if (m_members.empty())
 		return;
 
-	ALife::_OBJECT_ID			*temp = (ALife::_OBJECT_ID*)_alloca(m_members.size() * sizeof(ALife::_OBJECT_ID));
-	ALife::_OBJECT_ID			*i = temp, *e = temp + m_members.size();
+	u16 *temp = (ALife::_OBJECT_ID*)_alloca(m_members.size() * sizeof(ALife::_OBJECT_ID));
+	u16 *i = temp;
 
-	for (auto it : m_members)
+	for (auto &it : m_members)
 	{
 		VERIFY(!it.second);
 		*i = it.first;
@@ -300,7 +300,7 @@ void CSE_ALifeOnlineOfflineGroup::on_after_game_load()
 
 	m_members.clear();
 
-	for (i = temp; i != e; ++i)
+	for (i = temp; i != temp + m_members.size(); ++i)
 		register_member(*i);
 }
 
