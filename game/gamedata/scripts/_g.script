@@ -486,7 +486,9 @@ function npc_in_actor_frustrum(npc)
 	--local actor_dir = db.actor:direction()
 	local npc_dir = npc:position():sub(db.actor:position())
 	local yaw = yaw_degree3d(actor_dir, npc_dir)
-	--printf("YAW %s", tostring(yaw))
+	if string.find(command_line(), "-debug_mode") then
+	    printf("YAW %s", tostring(yaw))
+    end
 	return yaw < 35
 end
 
@@ -578,7 +580,10 @@ function start_game_callback()
 		[clsid.artefact] 				= true,
 		[clsid.artefact_s] 				= true}
 
-	printf	("start_game_callback called")
+    if string.find(command_line(), "-debug_mode") then
+	    printf("start_game_callback called")
+	end
+	
 	smart_names.init_smart_names_table()
 	task_manager.clear_task_manager()
 	sound_theme.load_sound()
@@ -683,7 +688,9 @@ ammo_section["ammo_pkm_100"]		= true
 quest_section = {}
 -- преобразует строку в соответствии со значением
 function get_param_string(src_string , obj)
-	--printf("src_string is [%s] obj name is [%s]", tostring(src_string), obj:name())
+    if string.find(command_line(), "-debug_mode") then
+	    printf("src_string is [%s] obj name is [%s]", tostring(src_string), obj:name())
+	end
 	local script_ids = db.script_ids[obj:id()]
 	local out_string, num = string.gsub(src_string, "%$script_id%$", tostring(script_ids))
 	if num > 0 then
@@ -718,34 +725,42 @@ function set_save_marker(p, mode, check, prefix)
 
 		if mode == "save" then
 			local dif = p:w_tell() - save_markers[result]
-			printf(result..": SAVE DIF: %s", dif)
-			if dif >= 8000 then
-				printf("WARNING! may be this is problem save point")
-			end
-			if dif >= 10240 then
---				abort("You are saving too much")
+			if string.find(command_line(), "-debug_mode") then
+			    printf(result..": SAVE DIF: %s", dif)
+			    if dif >= 8000 then
+				    printf("WARNING! may be this is problem save point")
+			    end
+			    if dif >= 10240 then
+			        printf("You are saving too much!")
+			    end
 			end
 			p:w_u16(dif)
 		else
 			local c_dif = p:r_tell() - save_markers[result]
 			local dif = p:r_u16()
-			 if dif ~= c_dif then
+			if dif ~= c_dif then
 			 	abort("INCORRECT LOAD [%s].[%s][%s]", result, dif, c_dif)
-			 else
-			 	printf(result..": LOAD DIF: %s", dif)
-			 end
+			else
+			    if string.find(command_line(), "-debug_mode") then
+			 	    printf(result..": LOAD DIF: %s", dif)
+				end
+			end
 		end
 		return
 	end
 
 	if mode == "save" then
-		printf(result..": set save marker: %s", p:w_tell())
+	    if string.find(command_line(), "-debug_mode") then
+		    printf(result..": set save marker: %s", p:w_tell())
+		end
 		save_markers[result] = p:w_tell()
 		if p:w_tell() > 16000 then
 			abort("You are saving too much")
 		end
 	else
-		printf(result..": set load marker: %s", p:r_tell())
+	    if string.find(command_line(), "-debug_mode") then
+		    printf(result..": set load marker: %s", p:r_tell())
+		end
 		save_markers[result] = p:r_tell()
 	end
 
@@ -771,7 +786,9 @@ function change_team_squad_group(se_obj, team, squad, group)
 		se_obj.squad = squad
 		se_obj.group = group
 	end
-	--printf("_G:TSG: [%s][%s][%s]", tostring(se_obj.team), tostring(se_obj.squad), tostring(se_obj.group))
+	if string.find(command_line(), "-debug_mode") then
+	    printf("_G:TSG: [%s][%s][%s]", tostring(se_obj.team), tostring(se_obj.squad), tostring(se_obj.group))
+	end
 end
 --     Story_ID -------------------------------------------------------------
 function add_story_object(obj_id , story_obj_id)

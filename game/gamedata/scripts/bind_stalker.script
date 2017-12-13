@@ -22,10 +22,8 @@ function actor_binder:__init (obj) super(obj)
 	self.bCheckStart = false
 	self.weather_manager = level_weathers.get_weather_manager()
 	self.surge_manager = surge_manager.get_surge_manager()
-	--self.actor_detector = xr_detector.actor_detector()
 	self.last_level_name = nil
 	self.deimos_intensity = nil
---	self.actor_weapon_on_start = true
 	self.loaded_active_slot = 3
 	self.loaded_slot_applied = false
 	self.last_detective_achievement_spawn_time 	= nil
@@ -33,7 +31,6 @@ function actor_binder:__init (obj) super(obj)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:net_spawn(data)
---	printf("actor net spawn")
 	level.show_indicators()
 	self.bCheckStart = true
 	self.weapon_hide = false -- спрятано или нет оружие при разговоре.
@@ -88,8 +85,10 @@ function actor_binder:net_destroy()
 	self.object:set_callback(callback.key_release, nil)
 	self.object:set_callback(callback.key_hold, nil)
 
-	log("--------->"..tostring(_G.amb_vol))
-	log("--------->"..tostring(_G.mus_vol))
+	if string.find(command_line(), "-debug_mode") then
+	    log("--------->"..tostring(_G.amb_vol))
+	    log("--------->"..tostring(_G.mus_vol))
+	end
 	if(_G.amb_vol~=0) then
 		get_console():execute("snd_volume_eff "..tostring(_G.amb_vol))
 		_G.amb_vol = 0
@@ -132,9 +131,9 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:info_callback(npc, info_id)
-	printf("*INFO*: npc='%s' id='%s'", npc:name(), info_id)
-	--' Сюжет
-	-- Отметки на карте
+    if string.find(command_line(), "-debug_mode") then
+	    printf("*INFO*: npc='%s' id='%s'", npc:name(), info_id)
+    end
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:on_trade (item, sell_bye, money)
@@ -149,7 +148,9 @@ function actor_binder:article_callback(npc, group, name)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:on_item_take (obj)
-	printf("on_item_take [%s]", obj:name())
+    if string.find(command_line(), "-debug_mode") then
+	    printf("on_item_take [%s]", obj:name())
+	end
 	if isArtefact(obj) then
 		local anomal_zone = bind_anomaly_zone.parent_zones_by_artefact_id[obj:id()]
 		if anomal_zone ~= nil then
@@ -160,14 +161,6 @@ function actor_binder:on_item_take (obj)
 		local artefact = obj:get_artefact()
 		artefact:FollowByPath("NULL",0,vector():set(500,500,500))
 		xr_statistic.inc_founded_artefacts_counter(obj:id())
---[[
-		local s_art = alife():object(obj:id())
-		if(s_art) then
-			xr_statistic.inc_founded_artefacts_counter(s_art:section_name())
-		else
-			xr_statistic.inc_founded_artefacts_counter()
-		end
-]]
 	end
 	treasure_manager.get_treasure_manager():on_item_take(obj:id())
 end
@@ -207,7 +200,9 @@ function anabiotic_callback()
 	end
 	level.change_game_time(0,0,rnd)
 	level_weathers.get_weather_manager():forced_weather_change()
-	printf("anabiotic_callback: time forwarded on [%d]", rnd)
+	if string.find(command_line(), "-debug_mode") then
+	    printf("anabiotic_callback: time forwarded on [%d]", rnd)
+	end
 end
 
 function anabiotic_callback2()
@@ -275,13 +270,17 @@ function actor_binder:update(delta)
 	-- Апдейт прятание оружия игрока во время диалога
 	if self.object:is_talking() then
 		if self.weapon_hide_in_dialog == false then
+		    if string.find(command_line(), "-debug_mode") then
+			    printf("hiding weapon!!!")
+			end
 			self.object:hide_weapon()
-			printf("hiding weapon!!!")
 			self.weapon_hide_in_dialog = true
 		end
 	else
 		if self.weapon_hide_in_dialog == true then
-			printf("restoring weapon!!!")
+		    if string.find(command_line(), "-debug_mode") then
+			    printf("restoring weapon!!!")
+			end
 			self.object:restore_weapon()
 			self.weapon_hide_in_dialog = false
 		end
@@ -289,13 +288,17 @@ function actor_binder:update(delta)
 	-- Апдейт прятание оружия игрока в зоне sr_no_weapon
 	if check_for_weapon_hide_by_zones() == true then
 		if self.weapon_hide == false then
-			printf("hiding weapon!!!")
+		    if string.find(command_line(), "-debug_mode") then
+			    printf("hiding weapon!!!")
+			end
 			self.object:hide_weapon()
 			self.weapon_hide = true
 		end
 	else
 		if self.weapon_hide == true then
-			printf("restoring weapon!!!")
+		    if string.find(command_line(), "-debug_mode") then
+			    printf("restoring weapon!!!")
+			end
 			self.object:restore_weapon()
 			self.weapon_hide = false
 		end
@@ -305,26 +308,11 @@ function actor_binder:update(delta)
 	if sr_psy_antenna.psy_antenna then
 		sr_psy_antenna.psy_antenna:update(delta)
 	end
---[[
-	--' Вывод сообщения о большой радиации
-	if self.object.radiation >= 0.7 then
-		local hud = get_hud()
-		local custom_static = hud:GetCustomStatic("cs_radiation_danger")
-		if custom_static == nil then
-			hud:AddCustomStatic("cs_radiation_danger", true)
-			hud:GetCustomStatic("cs_radiation_danger"):wnd():TextControl():SetTextST("st_radiation_danger")
-		end
-	else
-		local hud = get_hud()
-		local custom_static = hud:GetCustomStatic("cs_radiation_danger")
-		if custom_static ~= nil then
-			hud:RemoveCustomStatic("cs_radiation_danger")
-		end
-	end
-]]--
 
 	if self.bCheckStart then
-		printf("SET DEFAULT INFOS")
+	    if string.find(command_line(), "-debug_mode") then
+		    printf("SET DEFAULT INFOS")
+		end
 		if not has_alife_info("global_dialogs") then
 			self.object:give_info_portion("global_dialogs")
 		end
@@ -332,13 +320,8 @@ function actor_binder:update(delta)
 			self.object:give_info_portion("level_changer_icons")
 		end
 		self.bCheckStart = false
-
---		if self.actor_weapon_on_start == true then
---			db.actor:activate_slot(3)
---			self.actor_weapon_on_start = false
---		end
 	end
---	device().precache_frame  == 0 and
+	
 	if not self.loaded_slot_applied then
 		self.object:activate_slot(self.loaded_active_slot)
 		self.loaded_slot_applied = true
@@ -360,7 +343,9 @@ function actor_binder:update(delta)
 	simulation_objects.get_sim_obj_registry():update_avaliability(alife():actor())
 
 	if not self.loaded then
-		get_console():execute("dump_infos")
+	    if string.find(command_line(), "-debug_mode") then
+		    get_console():execute("dump_infos")
+		end
 		self.loaded = true
 	end
 	treasure_manager.get_treasure_manager():update()
@@ -406,8 +391,6 @@ function actor_binder:save(packet)
 		packet:w_stringZ(v)
 	end
 	task_manager.get_task_manager():save(packet)
-
---	packet:w_bool(self.actor_weapon_on_start)
 	
 	packet:w_u8(self.object:active_slot())
 
@@ -444,7 +427,9 @@ function actor_binder:load(reader)
 	object_binder.load(self, reader)
 	--' Загружаем уровень сложности
 	local game_difficulty = reader:r_u8()
-	printf("load game_difficulty %s", tostring(game_difficulty))
+	if string.find(command_line(), "-debug_mode") then
+	    printf("load game_difficulty %s", tostring(game_difficulty))
+	end
 	get_console():execute("g_game_difficulty "..game_difficulty_by_num[game_difficulty])
 	local stored_input_time = reader:r_u8()
 	if stored_input_time == true then
@@ -453,7 +438,6 @@ function actor_binder:load(reader)
 	xr_logic.pstor_load_all(self.object, reader)
 	self.weather_manager:load(reader)
 	release_body_manager.get_release_body_manager():load(reader)
---	self.surge_manager:initialize()
 	self.surge_manager:load(reader)
 	self.f_surge_manager_loaded = true
 	sr_psy_antenna.load(reader)
@@ -472,8 +456,6 @@ function actor_binder:load(reader)
 	end
 
 	task_manager.get_task_manager():load(reader)
-
---	self.actor_weapon_on_start = reader:r_bool()
 	
 	self.loaded_active_slot = reader:r_u8()
 	
@@ -574,11 +556,15 @@ end
 
 -- Weapon functions
 function hide_weapon(zone_id)
-	printf("[WEAPON_CONTROL]:hiding weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
+    if string.find(command_line(), "-debug_mode") then
+	    printf("[WEAPON_CONTROL]:hiding weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
+	end
 	weapon_hide[zone_id] = true
 end
 
 function restore_weapon(zone_id)
-	printf("[WEAPON_CONTROL]:restoring weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
+    if string.find(command_line(), "-debug_mode") then
+	    printf("[WEAPON_CONTROL]:restoring weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
+	end
 	weapon_hide[zone_id] = false
 end
