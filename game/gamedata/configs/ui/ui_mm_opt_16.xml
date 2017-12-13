@@ -632,13 +632,6 @@
         <options_item entry="hud_draw" group="mm_opt_gameplay"/>
       </check_hud_draw>
 
-      <btn_check_updates x="270" y="322" width="86" height="24" stretch="1">
-            <text align="c" font="letterica16">ui_mm_check_updates</text>
-            <texture>ui_inGame2_button</texture>
-			<text_color>
-				<e r="210" g="210" b="210"/>
-			</text_color>
-        </btn_check_updates>
     </tab_gameplay>
     <tab_controls>
         <cap_mousesens x="12" y="3" width="108" height="24">
