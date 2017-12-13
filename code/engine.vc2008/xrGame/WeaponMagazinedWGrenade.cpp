@@ -216,33 +216,8 @@ void CWeaponMagazinedWGrenade::state_Fire(float dt)
 {
 	VERIFY(fOneShotTime>0.f);
 
-	//режим стрельбы подствольника
-	if(m_bGrenadeMode)
-	{
-		/*
-		fTime					-=dt;
-		while (fTime<=0 && (iAmmoElapsed>0) && (IsWorking() || m_bFireSingleShot))
-		{
-			++m_iShotNum;
-			OnShot			();
-			
-			// Ammo
-			if(Local()) 
-			{
-				VERIFY				(m_magazine.size());
-				m_magazine.pop_back	();
-				--iAmmoElapsed;
-			
-				VERIFY((u32)iAmmoElapsed == m_magazine.size());
-			}
-		}
-		UpdateSounds				();
-		if(m_iShotNum == m_iQueueSize) 
-			FireEnd();
-		*/
-	} 
 	//режим стрельбы очередями
-	else 
+	if(!m_bGrenadeMode)
 		inherited::state_Fire(dt);
 }
 
@@ -750,7 +725,7 @@ void CWeaponMagazinedWGrenade::net_Import	(NET_Packet& P)
 	inherited::net_Import		(P);
 }
 
-bool CWeaponMagazinedWGrenade::IsNecessaryItem	    (const std::string& item_sect)
+bool CWeaponMagazinedWGrenade::IsNecessaryItem	    (const shared_str& item_sect)
 {
 	return (	std::find(m_ammoTypes.begin(), m_ammoTypes.end(), item_sect) != m_ammoTypes.end() ||
 				std::find(m_ammoTypes2.begin(), m_ammoTypes2.end(), item_sect) != m_ammoTypes2.end() 
@@ -782,7 +757,7 @@ bool CWeaponMagazinedWGrenade::install_upgrade_ammo_class	( LPCSTR section, bool
 	bool result2 = process_if_exists_set( section, "ammo_class", &CInifile::r_string, str, test );
 	if ( result2 && !test ) 
 	{
-		xr_vector<std::string>& ammo_types	= m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
+		xr_vector<shared_str>& ammo_types	= m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
 		ammo_types.clear					(); 
 		for ( int i = 0, count = _GetItemCount( str ); i < count; ++i )	
 		{
@@ -808,7 +783,7 @@ bool CWeaponMagazinedWGrenade::install_upgrade_impl( LPCSTR section, bool test )
 	bool result2 = process_if_exists_set( section, "grenade_class", &CInifile::r_string, str, test );
 	if ( result2 && !test )
 	{
-		xr_vector<std::string>& ammo_types	= !m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
+		xr_vector<shared_str>& ammo_types	= !m_bGrenadeMode ? m_ammoTypes2 : m_ammoTypes;
 		ammo_types.clear					(); 
 		for ( int i = 0, count = _GetItemCount( str ); i < count; ++i )	
 		{

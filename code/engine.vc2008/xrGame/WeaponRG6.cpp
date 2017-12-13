@@ -22,8 +22,8 @@ BOOL	CWeaponRG6::net_Spawn				(CSE_Abstract* DC)
 
 	if (iAmmoElapsed && !getCurrentRocket())
 	{
-		std::string grenade_name = m_ammoTypes[0];
-		std::string fake_grenade_name = pSettings->r_stringStd(grenade_name, "fake_grenade_name");
+		shared_str grenade_name = m_ammoTypes[0];
+		shared_str fake_grenade_name = pSettings->r_string(grenade_name, "fake_grenade_name");
 
 		if (fake_grenade_name.size())
 		{
@@ -34,7 +34,6 @@ BOOL	CWeaponRG6::net_Spawn				(CSE_Abstract* DC)
 				inheritedRL::SpawnRocket(fake_grenade_name.c_str(), this);
 			}
 		}
-//			inheritedRL::SpawnRocket(*fake_grenade_name, this);
 	}
 	
 

@@ -1100,7 +1100,7 @@ int CWeapon::GetAmmoCount( u8 ammo_type ) const
 	return GetAmmoCount_forType( m_ammoTypes[ammo_type] );
 }
 
-int CWeapon::GetAmmoCount_forType( std::string const& ammo_type ) const
+int CWeapon::GetAmmoCount_forType(shared_str const& ammo_type ) const
 {
 	int res = 0;
 	/*
@@ -1596,7 +1596,7 @@ CInventoryItem *CWeapon::can_kill	(CInventory *inventory) const
 		if (!inventory_item)
 			continue;
 		
-		xr_vector<std::string>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect().c_str());
+		xr_vector<shared_str>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect().c_str());
 		if (i != m_ammoTypes.end())
 			return			(inventory_item);
 	}
@@ -1616,7 +1616,7 @@ const CInventoryItem *CWeapon::can_kill	(const xr_vector<const CGameObject*> &it
 		if (!inventory_item)
 			continue;
 
-		xr_vector<std::string>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect().c_str());
+		xr_vector<shared_str>::const_iterator	i = std::find(m_ammoTypes.begin(),m_ammoTypes.end(),inventory_item->object().cNameSect().c_str());
 		if (i != m_ammoTypes.end())
 			return			(inventory_item);
 	}
@@ -1714,7 +1714,7 @@ u32	CWeapon::ef_weapon_type	() const
 	return	(m_ef_weapon_type);
 }
 
-bool CWeapon::IsNecessaryItem	    (const std::string& item_sect)
+bool CWeapon::IsNecessaryItem	    (const shared_str& item_sect)
 {
 	return (std::find(m_ammoTypes.begin(), m_ammoTypes.end(), item_sect) != m_ammoTypes.end() );
 }

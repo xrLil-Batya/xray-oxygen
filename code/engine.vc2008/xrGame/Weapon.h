@@ -394,11 +394,11 @@ protected:
 	CParticlesObject*		m_pFlameParticles2;
 
 protected:
-	int						GetAmmoCount_forType(std::string const& ammo_type) const;
+	int						GetAmmoCount_forType(shared_str const& ammo_type) const;
 	int						GetAmmoCount		(u8 ammo_type) const;
 
 public:
-	IC int					GetAmmoElapsed		()	const		{	return /*int(m_magazine.size())*/iAmmoElapsed;}
+	IC int					GetAmmoElapsed		()	const		{	return iAmmoElapsed;}
 	IC int					GetAmmoMagSize		()	const		{	return iMagazineSize;						}
 	int						GetSuitableAmmoTotal(bool use_item_to_spawn = false) const;
 
@@ -426,22 +426,10 @@ protected:
 	mutable u32				m_BriefInfo_CalcFrame;	//кадр на котором просчитали кол-во патронов
 	bool					m_bAmmoWasSpawned;
 
-	virtual bool			IsNecessaryItem	    (const std::string& item_sect);
+	virtual bool			IsNecessaryItem	    (const shared_str& item_sect);
 
 public:
-	xr_vector<std::string>	m_ammoTypes;
-/*
-	struct SScopes
-	{
-		std::string			m_sScopeName;
-		int					m_iScopeX;
-		int					m_iScopeY;
-	};
-	DEFINE_VECTOR(SScopes*, SCOPES_VECTOR, SCOPES_VECTOR_IT);
-	SCOPES_VECTOR			m_scopes;
-
-	u8						cur_scope;
-*/
+	xr_vector<shared_str>	m_ammoTypes;
 
 	using SCOPES_VECTOR = xr_vector<std::string>;
 	SCOPES_VECTOR			m_scopes;
@@ -449,7 +437,6 @@ public:
 
 	CWeaponAmmo*			m_pCurrentAmmo;
 	u8						m_ammoType;
-//-	std::string				m_ammoName; <== deleted
 	bool					m_bHasTracers;
 	u8						m_u8TracerColorID;
 	u8						m_set_next_ammoType_on_reload;

@@ -210,7 +210,7 @@ CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) cons
 		CWeapon		*weapon = smart_cast<CWeapon*>(*I);
 		if (!weapon)
 			continue;
-		xr_vector<std::string>::const_iterator	i = std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),cNameSect().c_str());
+		xr_vector<shared_str>::const_iterator	i = std::find(weapon->m_ammoTypes.begin(),weapon->m_ammoTypes.end(),cNameSect().c_str());
 		if (i != weapon->m_ammoTypes.end())
 			return			(weapon);
 	}

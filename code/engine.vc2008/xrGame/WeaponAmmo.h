@@ -28,7 +28,7 @@ public:
 	CCartridge();
 	void Load(LPCSTR section, u8 LocalAmmoType);
 
-	std::string	m_ammoSect;
+	shared_str	m_ammoSect;
 	enum{
 		cfTracer				= (1<<0),
 		cfRicochet				= (1<<1),
@@ -43,8 +43,8 @@ public:
 	u16		bullet_material_idx;
 	Flags8	m_flags;
 
-	std::string	m_InvShortName;
-	virtual std::string const 	GetAnticheatSectionName	() const { return m_ammoSect; };
+	shared_str	m_InvShortName;
+	virtual shared_str const 	GetAnticheatSectionName	() const { return m_ammoSect; };
 };
 
 class CWeaponAmmo :	

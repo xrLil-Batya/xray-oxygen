@@ -324,7 +324,7 @@ void CAI_Stalker::remove_personal_only_ammo(const CInventoryItem *item)
 	const CWeapon			*weapon = smart_cast<const CWeapon*>(item);
 	VERIFY					(weapon);
 
-	for (std::string it: weapon->m_ammoTypes) 
+	for (shared_str it: weapon->m_ammoTypes)
 	{
 		bool found = false;
 
