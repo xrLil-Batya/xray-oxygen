@@ -153,13 +153,8 @@ luabind::detail::class_rep::class_rep(lua_State* L, const char* name)
 	m_instance_metatable = r->lua_instance();
 }
 
-luabind::detail::class_rep::~class_rep()
-{
-}
-
 // leaves object on lua stack
-std::pair<void*,void*> 
-luabind::detail::class_rep::allocate(lua_State* L) const
+std::pair<void*,void*> luabind::detail::class_rep::allocate(lua_State* L) const
 {
 	const int overlap = sizeof(object_rep)&(m_holder_alignment-1);
 	const int padding = overlap==0?0:m_holder_alignment-overlap;
