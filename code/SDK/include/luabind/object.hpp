@@ -99,35 +99,18 @@ namespace luabind
 		    friend class luabind::object;
 		public:
 
-			proxy_caller(luabind::object* o, const tuple_t& args)
-				: m_obj(o)
-				, m_args(args)
-				, m_called(false)
-			{
-			}
+			proxy_caller(luabind::object* o, const tuple_t& args) : m_obj(o), m_args(args), m_called(false){}
+			proxy_caller(luabind::object* o, tuple_t&& args) : m_obj(o), m_args(std::move(args)), m_called(false){}
 
-            proxy_caller(luabind::object* o, tuple_t&& args)
-                : m_obj(o)
-                , m_args(std::move(args))
-                , m_called(false)
-            {
-            }
-
-			proxy_caller(const proxy_caller& rhs)
-				: m_obj(rhs.m_obj)
-				, m_args(rhs.m_args)
-				, m_called(rhs.m_called)
+			proxy_caller(const proxy_caller& rhs) : m_obj(rhs.m_obj), m_args(rhs.m_args), m_called(rhs.m_called)
 			{
 				rhs.m_called = true;
 			}
 
-            proxy_caller(proxy_caller&& rhs)
-                : m_obj(rhs.m_obj)
-                , m_args(std::move(rhs.m_args))
-                , m_called(rhs.m_called)
-            {
-                rhs.m_called = true;
-            }
+			proxy_caller(proxy_caller&& rhs) : m_obj(rhs.m_obj), m_args(std::move(rhs.m_args)), m_called(rhs.m_called)
+			{
+				rhs.m_called = true;
+			}
 
 			~proxy_caller() LUABIND_DTOR_NOEXCEPT;
 			operator object();

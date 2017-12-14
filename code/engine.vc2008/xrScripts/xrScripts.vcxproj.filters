@@ -485,9 +485,6 @@
     <ClInclude Include="..\..\SDK\include\luabind\class_info.hpp">
       <Filter>Lua\LuaBind\include</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\SDK\include\luabind\com_policy.hpp">
-      <Filter>Lua\LuaBind\include</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\SDK\include\luabind\detail\class_rep_scope.hpp">
       <Filter>Lua\LuaBind\include\detail</Filter>
     </ClInclude>
@@ -925,6 +922,9 @@
     </ClInclude>
     <ClInclude Include="lua_traceback.hpp">
       <Filter>Lua\LuaEtc\Traceback</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\SDK\include\luabind\iterator_pair_policy.hpp">
+      <Filter>Lua\LuaBind\include</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

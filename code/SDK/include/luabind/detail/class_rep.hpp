@@ -73,8 +73,9 @@ namespace luabind { namespace detail
 	friend int lua_class_settable(lua_State*);
 	friend int static_class_gettable(lua_State*);
 	public:
+		std::pair<void*, void*> luabind::detail::class_rep::allocate(lua_State* L) const;
 
-		enum class_type
+		enum class_type: unsigned
 		{
 			cpp_class = 0,
 			lua_class = 1
@@ -116,9 +117,7 @@ namespace luabind { namespace detail
 		// INSTANTIATED!
 		class_rep(lua_State* L, const char* name);
 
-		~class_rep();
-
-		std::pair<void*,void*> allocate(lua_State* L) const;
+		~class_rep() = default;
 
 		// called from the metamethod for __index
 		// the object pointer is passed on the lua stack
@@ -211,13 +210,9 @@ namespace luabind { namespace detail
 		// this is used to describe setters and getters
 		struct callback
 		{
-		private:
-            luabind::memory_allocator<unsigned char> allocator;
 		public:
 
-            callback()
-                : allocator(),
-		          func(std::allocator_arg_t(), allocator),
+            callback():
 #ifndef LUABIND_NO_ERROR_CHECKING
                   match(nullptr),
                   sig(nullptr),
@@ -228,8 +223,7 @@ namespace luabind { namespace detail
 
             callback(const callback&) = default;
 
-            callback(callback&& that)
-                : allocator(std::move(that.allocator)),
+            callback(callback&& that):
                   func(std::move(that.func)),
 #ifndef LUABIND_NO_ERROR_CHECKING
                   match(that.match),
@@ -248,7 +242,6 @@ namespace luabind { namespace detail
 
             callback& operator= (callback&& that)
             {
-                allocator = std::move(that.allocator);
                 func = std::move(that.func);
 #ifndef LUABIND_NO_ERROR_CHECKING
                 match = that.match;

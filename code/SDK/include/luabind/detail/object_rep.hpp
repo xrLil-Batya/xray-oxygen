@@ -37,7 +37,7 @@ namespace luabind { namespace detail
 	class LUABIND_API object_rep
 	{
 	public:
-		enum { constant = 1, owner = 2, lua_class = 4, call_super = 8 };
+		enum: unsigned { constant = 1, owner = 2, lua_class = 4, call_super = 8 };
 
 		// dest is a function that is called to delete the c++ object this struct holds
 		object_rep(void* obj, class_rep* crep, int flags, void(*dest)(void*));
@@ -104,10 +104,6 @@ namespace luabind { namespace detail
 	{
 		static void apply(void* ptr)
 		{
-// #ifndef NDEBUG
-// 			int completeness_check[sizeof(T)];
-// 			(void)completeness_check;
-// #endif
 			static_cast<T*>(ptr)->~T();
 		}
 	};
@@ -117,7 +113,7 @@ namespace luabind { namespace detail
 	{
 		object_rep* obj = static_cast<detail::object_rep*>(lua_touserdata(L, index));
 		if (!obj) return nullptr;
-		if (lua_getmetatable(L, index) == 0) return 0;
+		if (!lua_getmetatable(L, index)) return 0;
 
 		lua_pushstring(L, "__luabind_class");
 		lua_gettable(L, -2);

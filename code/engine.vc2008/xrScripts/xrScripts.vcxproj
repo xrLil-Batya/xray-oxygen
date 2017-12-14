@@ -309,7 +309,6 @@
     <ClInclude Include="..\..\SDK\include\luabind\back_reference_fwd.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\class.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\class_info.hpp" />
-    <ClInclude Include="..\..\SDK\include\luabind\com_policy.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\config.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\container_policy.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\copy_policy.hpp" />
@@ -361,6 +360,7 @@
     <ClInclude Include="..\..\SDK\include\luabind\error.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\function.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\functor.hpp" />
+    <ClInclude Include="..\..\SDK\include\luabind\iterator_pair_policy.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\iterator_policy.hpp" />
     <ClInclude Include="..\..\SDK\include\luabind\library_linkage.h" />
     <ClInclude Include="..\..\SDK\include\luabind\luabind.hpp" />

@@ -102,4 +102,3 @@ using	string_class =	luabind::internal_string;
 #define set_class				luabind::internal_set
 #define multimap_class			luabind::internal_multimap
 #define multiset_class			luabind::internal_multiset
-//#define stringstream_class		luabind::internal_stringstream

@@ -12,7 +12,8 @@
 #include "../../engine.vc2008/xrScripts/xrScripts.h"
 #include <luabind\luabind_memory.h>
 
-namespace luabind {
+namespace luabind 
+{
 	extern LUABIND_API	memory_allocation_function_pointer	allocator;
 
 	template <typename T>
@@ -40,16 +41,11 @@ namespace luabind {
 	};
 
 	template <typename T>
-	inline void luabind_delete		(T *&pointer)
+	inline void luabind_delete(T *&pointer)
 	{
-		if (!pointer)
-			return;
-
-		delete_helper<
-			T,
-			std::is_polymorphic_v<T>
-		>::apply					(
-			pointer
-		);
-	}
+		if (pointer)
+		{
+			delete_helper<T, std::is_polymorphic_v<T>>::apply(pointer);
+		}
+	};
 } // namespace luabind
