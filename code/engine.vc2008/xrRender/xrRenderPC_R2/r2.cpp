@@ -246,8 +246,10 @@ void					CRender::create					()
 	o.advancedpp		= r2_advanced_pp;
 	o.sjitter			= (strstr(Core.Params,"-sjitter"))?		TRUE	:FALSE	;
 	o.depth16			= (strstr(Core.Params,"-depth16"))?		TRUE	:FALSE	;
-	o.noshadows			= (strstr(Core.Params,"-noshadows"))?	TRUE	:FALSE	;
-	o.noshadows			= (strstr(Core.Params,"-render_for_weak_systems")) ? TRUE : FALSE;
+	if (strstr(Core.Params,"-noshadows") || strstr(Core.Params,"-render_for_weak_systems"))
+		o.noshadows = TRUE;
+	else
+		o.noshadows = FALSE;
 	o.Tshadows			= (strstr(Core.Params,"-tsh"))?			TRUE	:FALSE	;
 	o.distortion_enabled= (strstr(Core.Params,"-nodistort"))?	FALSE	:TRUE	;
 	o.distortion		= o.distortion_enabled;
