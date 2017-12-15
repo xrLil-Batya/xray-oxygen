@@ -70,7 +70,7 @@ namespace luabind { namespace detail
         static auto genConverter()
         {
             using converter_policy = typename find_conversion_policy<Index + ResInitWithOffset, Policies...>::type;
-            return typename converter_policy::template generate_converter<U, Direction::lua_to_cpp>::type();
+            return typename converter_policy::generate_converter::type();
         }
 
         template <int ResInitWithOffset, typename... Ts, size_t... Indices, typename... Policies>
@@ -122,7 +122,7 @@ namespace luabind { namespace detail
                               const imdexlib::typelist<Ts...>, const policy_cons<Policies...> policies, std::false_type /*is_void<T>*/)
         {
             using converter_policy_ret = typename find_conversion_policy<0, Policies...>::type;
-            typename converter_policy_ret::template generate_converter<T, Direction::cpp_to_lua>::type converter_ret;
+            typename converter_policy_ret::generate_converter::type converter_ret;
 
             converter_ret.apply(L, callApply<WrappedClass>(std::forward<Fn>(fn), L, apply<ResInitWithOffset, Ts, Indices>(L, std::get<Indices>(converters), policies)...));
         }
