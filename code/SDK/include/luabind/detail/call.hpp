@@ -70,7 +70,7 @@ namespace luabind { namespace detail
         static auto genConverter()
         {
             using converter_policy = typename find_conversion_policy<Index + ResInitWithOffset, Policies...>::type;
-            return typename converter_policy::generate_converter::type();
+            return typename converter_policy::template generate_converter<U, Direction::lua_to_cpp>::type();
         }
 
         template <int ResInitWithOffset, typename... Ts, size_t... Indices, typename... Policies>
