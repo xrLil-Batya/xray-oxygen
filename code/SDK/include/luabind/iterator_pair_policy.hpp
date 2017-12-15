@@ -71,7 +71,7 @@ namespace luabind
 			static void precall(lua_State*, const index_map&) {}
 			static void postcall(lua_State*, const index_map&) {}
 
-			//template<typename T, Direction>
+			template<typename T, Direction>
 			struct generate_converter
 			{
 				using type = iterator_pair_converter;
