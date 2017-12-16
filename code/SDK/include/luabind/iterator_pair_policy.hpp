@@ -1,17 +1,10 @@
-#pragma once
-#include <luabind/config.hpp>
-#include <luabind/detail/policy.hpp>
-#include <luabind/detail/implicit_cast.hpp>
-#include <luabind/detail/convert_to_lua.hpp>
-
-namespace luabind
-{
+namespace luabind {
 	namespace detail
 	{
 		template<typename Iter>
 		struct iterator_pair_state
 		{
-			using self_t = iterator_pair_state<Iter>;
+			typedef iterator_pair_state<Iter> self_t;
 
 			static int step(lua_State* L)
 			{
@@ -31,7 +24,10 @@ namespace luabind
 				}
 			}
 
-			iterator_pair_state(const Iter& s, const Iter& e): start(s), end(e) {}
+			iterator_pair_state(const Iter& s, const Iter& e)
+				: start(s)
+				, end(e)
+			{}
 
 			Iter start;
 			Iter end;
@@ -42,8 +38,8 @@ namespace luabind
 			template<typename T>
 			void apply(lua_State* L, const T& c)
 			{
-				using iter_t = typename T::iterator;
-				using state_t = iterator_pair_state<iter_t>;
+				typedef typename T::const_iterator iter_t;
+				typedef iterator_pair_state<iter_t> state_t;
 
 				// note that this should be destructed, for now.. just hope that iterator
 				// is a pod
@@ -55,11 +51,12 @@ namespace luabind
 			template<typename T>
 			void apply(lua_State* L, T& c)
 			{
-				using iter_t = typename T::iterator;
-				using state_t = iterator_pair_state<iter_t>;
+				typedef typename T::iterator iter_t;
+				typedef iterator_pair_state<iter_t> state_t;
 
 				// note that this should be destructed, for now.. just hope that iterator
 				// is a pod
+				
 				void* iter = lua_newuserdata(L, sizeof(state_t));
 				new (iter) state_t(c.begin(), c.end());
 				lua_pushcclosure(L, state_t::step, 1);
@@ -74,7 +71,7 @@ namespace luabind
 			template<typename T, Direction>
 			struct generate_converter
 			{
-				using type = iterator_pair_converter;
+				typedef iterator_pair_converter type;
 			};
 		};
 

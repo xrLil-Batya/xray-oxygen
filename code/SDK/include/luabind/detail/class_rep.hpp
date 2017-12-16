@@ -212,7 +212,7 @@ namespace luabind { namespace detail
 		{
 		public:
 
-            callback():
+            callback(): func(),
 #ifndef LUABIND_NO_ERROR_CHECKING
                   match(nullptr),
                   sig(nullptr),

@@ -19,9 +19,7 @@
 // ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE
 // OR OTHER DEALINGS IN THE SOFTWARE.
-
 #pragma once
-
 #include <luabind/config.hpp>
 #include <luabind/detail/policy.hpp>
 #include <luabind/detail/implicit_cast.hpp>
@@ -34,7 +32,7 @@ namespace luabind
 		template<typename Iter>
 		struct iterator_state
 		{
-			using self_t = iterator_state<Iter>;
+			typedef iterator_state<Iter> self_t;
 
 			static int step(lua_State* L)
 			{
@@ -53,7 +51,9 @@ namespace luabind
 				return 1;
 			}
 
-			iterator_state(const Iter& s, const Iter& e): start(s), end(e)
+			iterator_state(const Iter& s, const Iter& e)
+				: start(s)
+				, end(e)
 			{}
 
 			Iter start;
@@ -65,8 +65,9 @@ namespace luabind
 			template<typename T>
 			void apply(lua_State* L, const T& c)
 			{
-				using iter_t = typename T::iterator;
-				using state_t = iterator_state<iter_t>;
+				typedef typename T::const_iterator iter_t;
+				typedef iterator_state<iter_t> state_t;
+
 				// note that this should be destructed, for now.. just hope that iterator
 				// is a pod
 				void* iter = lua_newuserdata(L, sizeof(state_t));
@@ -77,8 +78,9 @@ namespace luabind
 			template<typename T>
 			void apply(lua_State* L, T& c)
 			{
-				using iter_t = typename T::iterator;
-				using state_t = iterator_state<iter_t>;
+				typedef typename T::iterator iter_t;
+				typedef iterator_state<iter_t> state_t;
+
 				// note that this should be destructed, for now.. just hope that iterator
 				// is a pod
 				void* iter = lua_newuserdata(L, sizeof(state_t));
@@ -95,7 +97,7 @@ namespace luabind
 			template<typename T, Direction>
 			struct generate_converter
 			{
-				using type = iterator_converter;
+				typedef iterator_converter type;
 			};
 		};
 

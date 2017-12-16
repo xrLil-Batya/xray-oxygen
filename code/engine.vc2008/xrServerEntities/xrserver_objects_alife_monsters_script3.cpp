@@ -67,8 +67,8 @@ void CSE_ALifeCreatureAbstract::script_register(lua_State *L)
 void CSE_ALifeOnlineOfflineGroup::script_register(lua_State *L)
 {
 	module(L)
-	[
-		class_< MEMBERS::value_type >( "MEMBERS__value_type" )
+		[
+		class_<MEMBERS::value_type>( "MEMBERS__value_type" )
 			.def_readonly("id", 	&MEMBERS::value_type::first )
 			.def_readonly("object",	&MEMBERS::value_type::second ),
 
