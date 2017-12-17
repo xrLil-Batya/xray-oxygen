@@ -222,6 +222,34 @@ public:
 };
 // g_spawn 
 
+class CCC_Giveinfo : public IConsole_Command {
+public:
+	CCC_Giveinfo(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR info_id) {
+		if (!g_pGameLevel) return;
+
+		char	Name[128];	Name[0] = 0;
+		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+		if (actor)
+			actor->OnReceiveInfo(info_id);
+
+	}
+};
+
+class CCC_Disinfo : public IConsole_Command {
+public:
+	CCC_Disinfo(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR info_id) {
+		if (!g_pGameLevel) return;
+
+		char	Name[128];	Name[0] = 0;
+		CActor* actor = smart_cast<CActor*>(Level().CurrentEntity());
+		if (actor)
+			actor->OnDisableInfo(info_id);
+
+	}
+};
+
 // console commands
 class CCC_GameDifficulty : public CCC_Token {
 public:
@@ -1859,6 +1887,8 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 	CMD1(CCC_ScriptCommand,	"run_string");
 	CMD1(CCC_TimeFactor,	"time_factor");
 	CMD1(CCC_Spawn,         "g_spawn");
+	CMD1(CCC_Giveinfo, "g_info");                                                           
+	CMD1(CCC_Disinfo, "d_info");  
 
 	CMD3(CCC_Mask,		"g_autopickup",			&psActorFlags,	AF_AUTOPICKUP);
 	CMD3(CCC_Mask,		"g_dynamic_music",		&psActorFlags,	AF_DYNAMIC_MUSIC);
