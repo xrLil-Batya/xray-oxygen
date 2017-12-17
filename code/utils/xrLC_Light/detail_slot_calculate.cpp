@@ -151,27 +151,27 @@ float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
 	return scale;
 }
 
-float rayTrace	(CDB::COLLIDER* DB, R_Light& L, Fvector& P, Fvector& D, float R)//, Face* skip)
+float rayTrace(CDB::COLLIDER* DB, R_Light& L, Fvector& P, Fvector& D, float R)//, Face* skip)
 {
-	R_ASSERT	(DB);
+	R_ASSERT(DB);
 
 	// 1. Check cached polygon
-	float _u,_v,range;
-	bool res = CDB::TestRayTri(P,D,L.tri,_u,_v,range,false);
-	if (res) {
-		if (range>0 && range<R) return 0;
+	float _u, _v, range;
+
+	if (CDB::TestRayTri(P, D, L.tri, _u, _v, range, false))
+	{
+		if (range > 0 && range < R) return 0;
 	}
 
 	// 2. Polygon doesn't pick - real database query
-	DB->ray_query	(&gl_data.RCAST_Model,P,D,R);
+	DB->ray_query(&gl_data.RCAST_Model, P, D, R);
 
 	// 3. Analyze polygons and cache nearest if possible
-	if (0==DB->r_count()) {
+	if (!DB->r_count())
+	{
 		return 1;
-	} else {
-		return getLastRP_Scale(DB,L);//,skip);
 	}
-	return 0;
+	return getLastRP_Scale(DB, L);
 }
 
 void LightPoint(CDB::COLLIDER* DB, base_color &C, Fvector &P, Fvector &N, base_lighting& lights, u32 flags)
