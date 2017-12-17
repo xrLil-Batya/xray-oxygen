@@ -13,12 +13,10 @@
 #include "ai_object_location.h"
 #include "level_graph.h"
 #include "restricted_object.h"
-//#include "movement_manager.h"
 #include "ai_space.h"
 #include "profiler.h"
 #include "ai/stalker/ai_stalker.h"
 #include "stalker_movement_manager_smart_cover.h"
-//#include "restricted_object.h"
 
 CItemManager::CItemManager(CCustomMonster *object)
 {
@@ -53,11 +51,14 @@ bool CItemManager::useful(const CGameObject *object) const
 	if (!m_object->movement().restrictions().accessible(object->ai_location().level_vertex_id()))
 		return false;
 
-	const CInventoryItem	*inventory_item = smart_cast<const CInventoryItem*>(object);
+	// ForserX: NPC can only raise a weapon
+	const CInventoryItem *inventory_item = smart_cast<const CInventoryItem*>(object);
+	const CWeapon* isWeapon = smart_cast<const CWeapon*>(object);
+
 	if (inventory_item && !inventory_item->useful_for_NPC())
 		return false;
 
-	if (m_stalker && (!inventory_item || !m_stalker->movement().restrictions().accessible(inventory_item->object().Position())))
+	if (m_stalker && isWeapon &&!m_stalker->movement().restrictions().accessible(inventory_item->object().Position()))
 		return false;
 
 	if (!ai().get_level_graph())
