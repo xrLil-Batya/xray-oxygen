@@ -17,6 +17,7 @@
 #include "profiler.h"
 #include "ai/stalker/ai_stalker.h"
 #include "stalker_movement_manager_smart_cover.h"
+#include "Weapon.h"
 
 CItemManager::CItemManager(CCustomMonster *object)
 {
@@ -52,13 +53,16 @@ bool CItemManager::useful(const CGameObject *object) const
 		return false;
 
 	// ForserX: NPC can only raise a weapon
-	const CInventoryItem *inventory_item = smart_cast<const CInventoryItem*>(object);
 	const CWeapon* isWeapon = smart_cast<const CWeapon*>(object);
+	if (!isWeapon) return false;
+
+	const CInventoryItem *inventory_item = smart_cast<const CInventoryItem*>(object);
+	
 
 	if (inventory_item && !inventory_item->useful_for_NPC())
 		return false;
 
-	if (m_stalker && isWeapon &&!m_stalker->movement().restrictions().accessible(inventory_item->object().Position()))
+	if (m_stalker && !m_stalker->movement().restrictions().accessible(inventory_item->object().Position()))
 		return false;
 
 	if (!ai().get_level_graph())
