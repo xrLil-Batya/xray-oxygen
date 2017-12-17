@@ -18,8 +18,8 @@ public:
 	lm_layer					lm;
 	b_texture					lm_texture;
 public:
-	CLightmap					();
-	~CLightmap					();
+	CLightmap					() = default;
+	~CLightmap					() = default;
 	void	read				( INetReader	&r );
 	void	write				( IWriter	&w )const;
 	void	Capture				( CDeflector *D, int b_u, int b_v, int s_u, int s_v, BOOL bRotate );

@@ -1,28 +1,15 @@
 #pragma once
-
 #include "base_color.h"
 
-#ifndef BORDER
-#define BORDER 1
-#endif
-
-
+const u16 BORDER = 1;
 class INetReader;
 struct XRLC_LIGHT_API  lm_layer
 {
-/*
-	enum LMODE
-	{
-		LMODE_RGBS			= 0,
-		LMODE_HS			= 1,
-	};
-*/
 	u32						width;
 	u32						height;
 	xr_vector<base_color>	surface;
 	xr_vector<u8>			marker;
-private:
-//	LMODE					mode;	
+
 public:
 	void					create			(u32 w, u32 h)
 	{
