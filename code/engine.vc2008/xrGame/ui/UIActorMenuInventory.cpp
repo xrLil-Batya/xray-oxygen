@@ -1018,6 +1018,8 @@ void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
 	CEatableItem* pEatableItem = smart_cast<CEatableItem*>(item);
 	CBottleItem* pBottleItem = smart_cast<CBottleItem*>(item);
+	CMedkit* pMedkit = smart_cast<CMedkit*>(item);
+	CAntirad* pAntirad = smart_cast<CAntirad*>(item);
 
 	const char* act_str = nullptr;
 
@@ -1027,15 +1029,20 @@ void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 	}
 	else if (pEatableItem)
 	{
-		act_str = "st_eat";
+		if (pMedkit || pAntirad)
+		{
+			act_str = "st_use";
+		}
+		else
+		{
+			act_str = "st_eat";
+		}
 	}
-	else
+	if (act_str)
 	{
-		act_str = "st_use";
+		m_UIPropertiesBox->AddItem(act_str, NULL, INVENTORY_EAT_ACTION);
+		b_show = true;
 	}
-
-	m_UIPropertiesBox->AddItem(act_str, NULL, INVENTORY_EAT_ACTION);
-	b_show = true;
 }
 
 void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)
