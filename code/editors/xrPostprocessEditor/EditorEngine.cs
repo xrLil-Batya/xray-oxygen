@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using XRay.xmAPI;
+using XRay.ManagedApi.Core;
 
 namespace xrPostprocessEditor
 {
@@ -36,52 +36,52 @@ namespace xrPostprocessEditor
             animator = null;
         }
 
-        public xmAPI::xmPostprocessParam GetParam(xmAPI::xmPostprocessParamType paramType)
+        public PostProcessParamBase GetParam(PostProcessParamType paramType)
         {
             return animator.GetParam(paramType);
         }
         
-        public void CreateKey(xmAPI::xmPostprocessParamType paramType, float time)
+        public void CreateKey(PostProcessParamType paramType, float time)
         {
-            xmAPI::xmPostprocessParam param = animator.GetParam(paramType);
+            PostProcessParamBase param = animator.GetParam(paramType);
             try
             {
                 switch (paramType)
                 {
-                    case xmAPI::xmPostprocessParamType.AddColor:
-                    case xmAPI::xmPostprocessParamType.BaseColor:
+                    case PostProcessParamType.AddColor:
+                    case PostProcessParamType.BaseColor:
                         // 3 components
                         param.AddValue(time, 0.0f, 0);
                         param.AddValue(time, 0.0f, 1);
                         param.AddValue(time, 0.0f, 2);
                         break;
-                    case xmAPI::xmPostprocessParamType.GrayColor:
+                    case PostProcessParamType.GrayColor:
                         // 3+1 components
                         param.AddValue(time, 0.0f, 0);
                         param.AddValue(time, 0.0f, 1);
                         param.AddValue(time, 0.0f, 2);
                         param.Dispose();
-                        param = animator.GetParam(xmAPI::xmPostprocessParamType.GrayValue);
+                        param = animator.GetParam(PostProcessParamType.GrayValue);
                         param.AddValue(time, 0.0f, 0);
                         break;
-                    case xmAPI::xmPostprocessParamType.DualityH:
+                    case PostProcessParamType.DualityH:
                         param.AddValue(time, 0.44f, 0);
                         param.Dispose();
-                        param = animator.GetParam(xmAPI::xmPostprocessParamType.DualityV);
+                        param = animator.GetParam(PostProcessParamType.DualityV);
                         param.AddValue(time, 0.44f, 0);
                         // 2 components
                         break;
-                    case xmAPI::xmPostprocessParamType.NoiseIntensity:
+                    case PostProcessParamType.NoiseIntensity:
                         param.AddValue(time, 0.33f, 0);
                         param.Dispose();
-                        param = animator.GetParam(xmAPI::xmPostprocessParamType.NoiseGrain);
+                        param = animator.GetParam(PostProcessParamType.NoiseGrain);
                         param.AddValue(time, 0.11f, 0);
                         param.Dispose();
-                        param = animator.GetParam(xmAPI::xmPostprocessParamType.NoiseFps);
+                        param = animator.GetParam(PostProcessParamType.NoiseFps);
                         param.AddValue(time, 1.0f, 0);
                         break;
-                    case xmAPI::xmPostprocessParamType.Blur:
-                    case xmAPI::xmPostprocessParamType.ColorMappingInfluence:
+                    case PostProcessParamType.Blur:
+                    case PostProcessParamType.ColorMappingInfluence:
                         // 1 component
                         param.AddValue(time, 0.33f, 0);
                         break;
@@ -99,7 +99,7 @@ namespace xrPostprocessEditor
         {
             ColorF result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.AddColor))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.AddColor))
             {
                 time = param.GetKeyTime(keyIndex);
                 result.a = 0;
@@ -114,7 +114,7 @@ namespace xrPostprocessEditor
         {
             ColorF result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.BaseColor))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.BaseColor))
             {
                 time = param.GetKeyTime(keyIndex);
                 result.a = 0;
@@ -129,14 +129,14 @@ namespace xrPostprocessEditor
         {
             ColorF result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.GrayColor))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.GrayColor))
             {
                 time = param.GetKeyTime(keyIndex);                
                 param.GetValue(time, out result.r, 0);
                 param.GetValue(time, out result.g, 1);
                 param.GetValue(time, out result.b, 2);
             }
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.GrayValue))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.GrayValue))
             {
                 param.GetValue(time, out result.a, 0);
             }
@@ -147,12 +147,12 @@ namespace xrPostprocessEditor
         {
             Vector2F result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.DualityH))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.DualityH))
             {
                 time = param.GetKeyTime(keyIndex);
                 param.GetValue(time, out result.x, 0);
             }
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.DualityV))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.DualityV))
             {
                 param.GetValue(time, out result.y, 0);
             }
@@ -163,16 +163,16 @@ namespace xrPostprocessEditor
         {
             NoiseParams result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.NoiseIntensity))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.NoiseIntensity))
             {
                 time = param.GetKeyTime(keyIndex);
                 param.GetValue(time, out result.Intensity, 0);
             }
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.NoiseGrain))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.NoiseGrain))
             {
                 param.GetValue(time, out result.Grain, 0);
             }
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.NoiseFps))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.NoiseFps))
             {
                 param.GetValue(time, out result.FPS, 0);
             }
@@ -183,7 +183,7 @@ namespace xrPostprocessEditor
         {
             float result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.Blur))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.Blur))
             {
                 time = param.GetKeyTime(keyIndex);
                 param.GetValue(time, out result, 0);
@@ -195,7 +195,7 @@ namespace xrPostprocessEditor
         {
             ColorMappingParams result;
             float time;
-            using (xmAPI::xmPostprocessParam param = animator.GetParam(xmAPI::xmPostprocessParamType.ColorMappingInfluence))
+            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.ColorMappingInfluence))
             {
                 time = param.GetKeyTime(keyIndex);
                 param.GetValue(time, out result.Influence, 0);
