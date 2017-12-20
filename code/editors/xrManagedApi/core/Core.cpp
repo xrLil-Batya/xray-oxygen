@@ -20,14 +20,15 @@ static void LogCallbackWrapper(void* context, const char* msg)
 void Core::Initialize(String ^ appName, LogCallback ^ logCallback, bool initFs, String ^ fsFileName)
 {
     ManagedLogCallback = logCallback;
-    std::string appNameC = msclr::interop::marshal_as<std::string>(appName);
+	msclr::interop::marshal_context^ marshal = gcnew msclr::interop::marshal_context();
+	const char* appNameC = marshal->marshal_as<const char*>(appName);// msclr::::marshal_as<const char*>(appName);
     if (fsFileName)
     {
         std::string fsFileNameC = msclr::interop::marshal_as<std::string>(fsFileName);
-        ::Core._initialize(appNameC.c_str(), ::LogCallback(LogCallbackWrapper), initFs, fsFileNameC.c_str());
+        ::Core._initialize(appNameC, ::LogCallback(LogCallbackWrapper), initFs, fsFileNameC.c_str());
     }
     else
-        ::Core._initialize(appNameC.c_str(), ::LogCallback(LogCallbackWrapper), initFs, nullptr);
+        ::Core._initialize(appNameC);
 }
 
 void Core::Initialize(String ^ appName, LogCallback ^ logCallback, bool initFs)

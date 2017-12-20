@@ -13,7 +13,7 @@ namespace xrPostprocessEditor
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Core.Initialize(Application.ProductName);
+            Core.Initialize("xrPostrprocessEditor");
             using (var engine = new EditorEngine())
             {
                 var mainDialog = new MainDialog();
