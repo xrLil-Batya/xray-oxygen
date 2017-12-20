@@ -159,12 +159,3 @@ void CEnvironment::OnDeviceDestroy()
 	CurrentEnv->destroy();
 
 }
-
-# _EDITOR
-void CEnvironment::ED_Reload()
-{
-	OnDeviceDestroy			();
-	OnDeviceCreate			();
-}
-#endif
-
