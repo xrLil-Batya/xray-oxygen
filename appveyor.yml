@@ -39,7 +39,7 @@ deploy:
 - provider: GitHub
   auth_token:
     secure: 1OAwfSrwEQtGa28QEVVJhqs4SQH/9nfoiUnL04rBkGCjuP+3mJIWTg1Usmle6mP/
-  repository: ForserX/xray-oxygen
+  repository: xrOxygen/xray-oxygen
   artifact: Release
   prerelease: true
   force_update: true
