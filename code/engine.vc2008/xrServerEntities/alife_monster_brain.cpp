@@ -31,10 +31,6 @@
 #	endif
 #endif
 
-#define MAX_ITEM_FOOD_COUNT			3
-#define MAX_ITEM_MEDIKIT_COUNT		3
-#define MAX_AMMO_ATTACH_COUNT		1
-
 CALifeMonsterBrain::CALifeMonsterBrain		(object_type *object)
 {
 	VERIFY							(object);
@@ -113,42 +109,44 @@ void CALifeMonsterBrain::process_task			()
 	movement().detail().target		(*task);
 }
 
-void CALifeMonsterBrain::select_task			()
+void CALifeMonsterBrain::select_task(const bool forced)
 {
 	if (object().m_smart_terrain_id != 0xffff)
 		return;
 
 	ALife::_TIME_ID					current_time = ai().alife().time_manager().game_time();
 
-	if (m_last_search_time + m_time_interval > current_time)
+	if (!forced && (m_last_search_time + m_time_interval > current_time))
 		return;
 
 	m_last_search_time				= current_time;
 
 	float							best_value = flt_min;
-	CALifeSmartTerrainRegistry::OBJECTS::const_iterator	I = ai().alife().smart_terrains().objects().begin();
-	CALifeSmartTerrainRegistry::OBJECTS::const_iterator	E = ai().alife().smart_terrains().objects().end();
-	for ( ; I != E; ++I) {
-		if (!(*I).second->enabled(&object()))
+
+	for (const auto& it: ai().alife().smart_terrains().objects())
+	{
+		if (!it.second->enabled(&object()))
 			continue;
 
-		float						value = (*I).second->suitable(&object());
+		float						value = it.second->suitable(&object());
 		if (value > best_value) {
 			best_value				= value;
-			object().m_smart_terrain_id	= (*I).second->ID;
+			object().m_smart_terrain_id	= it.second->ID;
 		}
 	}
 
-	if (object().m_smart_terrain_id != 0xffff) {
+	if (object().m_smart_terrain_id != 0xffff) 
+	{
 		smart_terrain().register_npc	(&object());
 		m_last_search_time				= 0;
 	}
 }
 
-void CALifeMonsterBrain::update()
+void CALifeMonsterBrain::update(const bool forced)
 {
-	if (can_choose_alife_tasks()) {
-		select_task();
+	if (can_choose_alife_tasks()) 
+	{
+		select_task(forced);
 
 		if (object().m_smart_terrain_id != 0xffff)
 			process_task();
@@ -189,7 +187,7 @@ void CALifeMonsterBrain::script_register(lua_State *L)
 		[
 		class_<CALifeMonsterBrain>("CALifeMonsterBrain")
 		.def("movement", &get_movement)
-		.def("update", &CALifeMonsterBrain::update)
+		.def("update", &CALifeMonsterBrain::update_script)
 		.def("can_choose_alife_tasks", (void (CALifeMonsterBrain::*)(bool))&CALifeMonsterBrain::can_choose_alife_tasks)
 		];
 }
