@@ -1,4 +1,4 @@
-////////////////////////////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////////////////////////////
 //	Module 		: game_graph_builder.h
 //	Created 	: 14.12.2005
 //  Modified 	: 14.12.2005
@@ -21,8 +21,10 @@ template <
 >
 class CGraphAbstract;
 
-namespace GameGraph {
+namespace GameGraph 
+{
 	struct CVertex;
+	typedef u16	gr_id;
 };
 
 class NET_Packet;
@@ -33,7 +35,6 @@ class CGameGraphBuilder {
 private:
 	typedef GameGraph::CVertex						vertex_type;
 	typedef CGraphAbstract<vertex_type,float,u32>	graph_type;
-	typedef xr_vector<xr_vector<u32> >				DISTANCES;
 	typedef std::pair<u32,u32>						PAIR;
 	typedef std::pair<float,PAIR>					TRIPPLE;
 	typedef xr_vector<TRIPPLE>						TRIPPLES;
@@ -46,21 +47,19 @@ private:
 	shared_str				m_level_name;
 
 private:
-	CLevelGraph				*m_level_graph;
-	graph_type				*m_graph;
-	xrGUID					m_graph_guid;
+	CLevelGraph							*m_level_graph;
+	graph_type							*m_graph;
+	xrGUID								m_graph_guid;
 	// cross table generation stuff
-	xr_vector<bool>			m_marks;
-	xr_vector<u32>			m_mark_stack;
-	DISTANCES				m_distances;
-	xr_vector<u32>			m_current_fringe;
-	xr_vector<u32>			m_next_fringe;
-	xr_vector<u32>			m_results;
+	xr_vector<GameGraph::gr_id>			m_parents;
+	xr_vector<u32>						m_distances;
+	xr_vector<xr_set<GameGraph::gr_id>> m_neighbours;
+
 	// cross table itself
-	CGameLevelCrossTable	*m_cross_table;
-	TRIPPLES				m_tripples;
-	xr_vector<u32>			m_path;
-	CGraphEngine			*m_graph_engine;
+	CGameLevelCrossTable				*m_cross_table;
+	TRIPPLES							m_tripples;
+	xr_vector<u32>						m_path;
+	CGraphEngine						*m_graph_engine;
 
 private:
 			void		create_graph				(const float &start, const float &amount);
@@ -69,19 +68,14 @@ private:
 			void		load_graph_points			(const float &start, const float &amount);
 
 private:
-			void		mark_vertices				(u32 level_vertex_id);
-			void		fill_marks					(const float &start, const float &amount);
-			void		fill_distances				(const float &start, const float &amount);
-			void		recursive_update			(const u32 &index, const float &start, const float &amount);
+			void		check_fill					();
 			void		iterate_distances			(const float &start, const float &amount);
 			void		save_cross_table			(const float &start, const float &amount);
 			void		build_cross_table			(const float &start, const float &amount);
 			void		load_cross_table			(const float &start, const float &amount);
 			
 private:
-			void		fill_neighbours				(const u32 &game_vertex_id);
 			float		path_distance				(const u32 &game_vertex_id0, const u32 &game_vertex_id1);
-			void		generate_edges				(const u32 &vertex_id);
 			void		generate_edges				(const float &start, const float &amount);
 			void		connectivity_check			(const float &start, const float &amount);
 			void		create_tripples				(const float &start, const float &amount);
