@@ -59,10 +59,9 @@ IC	void	xr_delete(T* const &ptr)
     if (ptr)
     {
         T*& hacked_ptr = const_cast<T*&>(ptr);
-        xr_special_free<std::is_polymorphic_v<T>, T> spec;
-        spec(hacked_ptr);
+        xr_special_free<std::is_polymorphic_v<T>, T>(hacked_ptr);
 
-        //const_cast<T*&>(ptr) = nullptr;
+		hacked_ptr = nullptr;
     }
 }
 
