@@ -1151,16 +1151,15 @@ void CActor::shedule_Update	(u32 DT)
 	UpdateArtefactsOnBeltAndOutfit				();
 	m_pPhysics_support->in_shedule_Update		(DT);
 };
+
 #include "debug_renderer.h"
 void CActor::renderable_Render	()
 {
-	VERIFY(_valid(XFORM()));
 	inherited::renderable_Render			();
-	if(1/*!HUDview()*/)
+	if(1)
 	{
 		CInventoryOwner::renderable_Render	();
 	}
-	VERIFY(_valid(XFORM()));
 }
 
 BOOL CActor::renderable_ShadowGenerate	() 

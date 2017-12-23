@@ -5253,12 +5253,6 @@
     <ClInclude Include="WeaponAmmo.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Ammo</Filter>
     </ClInclude>
-    <ClInclude Include="WeaponCustomPistol.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Pistol</Filter>
-    </ClInclude>
-    <ClInclude Include="WeaponPistol.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Pistol</Filter>
-    </ClInclude>
     <ClInclude Include="Grenade.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Grenades &amp; Missiles</Filter>
     </ClInclude>
@@ -6680,9 +6674,6 @@
     <ClCompile Include="saved_game_wrapper.cpp">
       <Filter>AI\ALife\saved_game_wrapper</Filter>
     </ClCompile>
-    <ClCompile Include="saved_game_wrapper_script.cpp">
-      <Filter>AI\ALife\saved_game_wrapper</Filter>
-    </ClCompile>
     <ClCompile Include="inventory_upgrade_manager.cpp">
       <Filter>AI\ALife\inventory_upgrade</Filter>
     </ClCompile>
@@ -7538,9 +7529,6 @@
     <ClCompile Include="script_binder_object.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptBinderObject</Filter>
     </ClCompile>
-    <ClCompile Include="script_binder_object_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptBinderObject</Filter>
-    </ClCompile>
     <ClCompile Include="script_binder_object_wrapper.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
     </ClCompile>
@@ -7990,12 +7978,6 @@
     </ClCompile>
     <ClCompile Include="WeaponAmmo.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Ammo</Filter>
-    </ClCompile>
-    <ClCompile Include="WeaponCustomPistol.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Pistol</Filter>
-    </ClCompile>
-    <ClCompile Include="WeaponPistol.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Pistol</Filter>
     </ClCompile>
     <ClCompile Include="Grenade.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Weapons\Custom Weapon\Grenades &amp; Missiles</Filter>

@@ -1949,8 +1949,6 @@
     <ClCompile Include="alife_surge_manager.cpp" />
     <ClCompile Include="alife_switch_manager.cpp" />
     <ClCompile Include="saved_game_wrapper.cpp" />
-    <ClCompile Include="saved_game_wrapper_script.cpp">
-    </ClCompile>
     <ClCompile Include="inventory_upgrade_manager.cpp">
     </ClCompile>
     <ClCompile Include="inventory_upgrade_base.cpp">
@@ -2333,8 +2331,6 @@
     <ClCompile Include="script_entity_action_script.cpp">
     </ClCompile>
     <ClCompile Include="script_binder_object.cpp" />
-    <ClCompile Include="script_binder_object_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_binder_object_wrapper.cpp">
     </ClCompile>
     <ClCompile Include="script_effector.cpp" />

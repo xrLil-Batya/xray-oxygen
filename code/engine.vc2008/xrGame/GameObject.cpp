@@ -629,13 +629,6 @@ void CGameObject::renderable_Render	()
 	Visual()->getVisData().hom_frame = Device.dwFrame;
 }
 
-/*
-float CGameObject::renderable_Ambient	()
-{
-	return (ai().get_level_graph() && ai().level_graph().valid_vertex_id(level_vertex_id()) ? float(level_vertex()->light()/15.f) : 1.f);
-}
-*/
-
 CObject::SavedPosition CGameObject::ps_Element(u32 ID) const
 {
 	VERIFY(ID<ps_Size());

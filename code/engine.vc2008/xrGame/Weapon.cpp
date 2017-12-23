@@ -872,7 +872,6 @@ void CWeapon::renderable_Render()
 	//если мы в режиме снайперки, то сам HUD рисовать не надо
 	if (IsZoomed() && !IsRotatingToZoom() && ZoomTexture())
 	{
-		SwitchState(eHidden); // Fix: if weapon have ZoomTexture then hide the hands
 		RenderHud(FALSE);
 	}
 	else
