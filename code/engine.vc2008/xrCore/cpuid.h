@@ -26,7 +26,7 @@ enum class CPUFeature: unsigned
 	AMD_3DNowExt	= 1 << 18
 };
 
-struct processor_info 
+struct XRCORE_API processor_info 
 {
 	processor_info();
 
