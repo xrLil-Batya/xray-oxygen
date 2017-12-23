@@ -18,6 +18,8 @@
 #include "game_base_space.h"
 #include "uigamecustom.h"
 #include "clsid_game.h"
+#include "ai/stalker/ai_stalker.h"
+#include "weaponmagazined.h"
 #include "static_cast_checked.hpp"
 #include "player_hud.h"
 
@@ -28,7 +30,6 @@ u16	INV_STATE_BLOCK_ALL = 0xffff;
 u16	INV_STATE_LADDER	= INV_STATE_BLOCK_ALL;
 u16	INV_STATE_CAR		= INV_STATE_LADDER;
 u16	INV_STATE_INV_WND	= INV_STATE_BLOCK_ALL;
-u16	INV_STATE_BUY_MENU	= INV_STATE_BLOCK_ALL;
 
 CInventorySlot::CInventorySlot() 
 {
@@ -118,6 +119,19 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	//for unknown reason net_Import arrived for object that has a parent, so correction prediction schema will crash
 	Level().RemoveObject_From_4CrPr		(pObj);
 
+	u16 actor_id = Level().CurrentEntity()->ID();
+
+	if (GetOwner()->object_id()==actor_id && this->m_pOwner->object_id()==actor_id)		//actors inventory
+	{
+		CWeaponMagazined*	pWeapon = smart_cast<CWeaponMagazined*>(pIItem);
+		if (pWeapon && pWeapon->strapped_mode())
+		{
+			pWeapon->strapped_mode(false);
+			Ruck(pWeapon);
+		}
+			
+	}
+	
 	m_all.push_back						(pIItem);
 
 	if(!strict_placement)
@@ -1065,20 +1079,34 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 		}
 	}
 	
-	if(m_bSlotsUseful)
+	CAI_Stalker* pOwner = smart_cast<CAI_Stalker*>(m_pOwner);
+	if (pOwner && !pOwner->g_Alive())
 	{
 		u16 I = FirstSlot();
 		u16 E = LastSlot();
 		for(;I<=E;++I)
 		{
 			PIItem item = ItemFromSlot(I);
-			if(item && (!for_trade || item->CanTrade())  )
+			if(item && (item->BaseSlot() == INV_SLOT_3 || item->BaseSlot() == GRENADE_SLOT))
 			{
-				if(!SlotIsPersistent(I) || item->BaseSlot()==GRENADE_SLOT )
+				items_container.push_back(item);
+			}
+		}
+	}
+	else if (m_bSlotsUseful)
+	{
+		u16 I = FirstSlot();
+		u16 E = LastSlot();
+		for(;I<=E;++I)
+		{
+			PIItem item = ItemFromSlot(I);
+			if(item && (!for_trade || item->CanTrade()))
+			{
+				if(!SlotIsPersistent(I) || item->BaseSlot() == GRENADE_SLOT )
 					items_container.push_back(item);
 			}
 		}
-	}		
+	}
 }
 
 bool CInventory::isBeautifulForActiveSlot	(CInventoryItem *pIItem)

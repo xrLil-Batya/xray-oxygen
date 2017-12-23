@@ -20,7 +20,6 @@
 
 #include "../Include/xrRender/UIShader.h"
 
-#define BUY_MENU_TEXTURE "ui\\ui_mp_buy_menu"
 #define CHAR_ICONS		 "ui\\ui_icons_npc"
 #define MAP_ICONS		 "ui\\ui_icons_map"
 

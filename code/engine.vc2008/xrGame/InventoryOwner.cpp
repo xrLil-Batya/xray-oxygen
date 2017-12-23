@@ -305,6 +305,9 @@ void CInventoryOwner::renderable_Render		()
 {
 	if (inventory().ActiveItem())
 		inventory().ActiveItem()->renderable_Render();
+	
+	if (inventory().ItemFromSlot(INV_SLOT_3))
+		inventory().ItemFromSlot(INV_SLOT_3)->renderable_Render();
 
 	CAttachmentOwner::renderable_Render();
 }
