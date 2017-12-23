@@ -12,6 +12,7 @@ enum{
 		AF_IMPORTANT_SAVE	=(1<<9),
 		AF_CROUCH_TOGGLE	=(1<<10),
 		AF_RELOADONSPRINT	=(1<<11),
+		AF_CUR_INS_CROS       =(1<<12),
 };
 
 extern Flags32	psActorFlags;

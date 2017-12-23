@@ -114,7 +114,13 @@ void CStalkerActionDead::execute		()
 	u16 E = object().inventory().LastSlot();
 	for ( ; I <= E; ++I) 
 	{
-		if (I==BOLT_SLOT)
+		if (I == BOLT_SLOT)
+			continue;
+		
+		if (I == TORCH_SLOT)
+			continue;
+		
+		if (I != INV_SLOT_3)
 			continue;
 
 		PIItem item = object().inventory().ItemFromSlot(I);
@@ -123,12 +129,19 @@ void CStalkerActionDead::execute		()
 
 		if (I == object().inventory().GetActiveSlot())
 		{
-			item->SetDropManual(TRUE);
-			continue;
+			CWeapon	*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
+            if (weapon)
+				if (weapon->strapped_mode())
+				{
+ 					continue;
+				}
+				else
+				{
+ 					item->SetDropManual(TRUE);
+ 					continue;
+				}
 		}
 		object().inventory().Ruck		(item);
 	}
-
-
 	set_property						(eWorldPropertyDead,true);
 }

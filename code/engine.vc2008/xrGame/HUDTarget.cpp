@@ -19,7 +19,7 @@
 
 #include "inventory_item.h"
 #include "inventory.h"
-
+#include "Actor_Flags.h"
 #include <ai/monsters/poltergeist/poltergeist.h>
 
 
@@ -235,7 +235,7 @@ void CHUDTarget::Render()
 	}
 
 	//отрендерить кружочек или крестик
-	if(!m_bShowCrosshair || !HUDCrosshair.isEnabled())
+	if (psActorFlags.test(AF_CUR_INS_CROS) || !m_bShowCrosshair || !HUDCrosshair.isEnabled())
 	{
 		UIRender->StartPrimitive	(6, IUIRender::ptTriList, UI().m_currentPointType);
 		
@@ -267,7 +267,9 @@ void CHUDTarget::Render()
 		UIRender->SetShader(*hShader);
 		UIRender->FlushPrimitive();
 
-	}else{
+	}
+	else
+	{
 		//отрендерить прицел
 		HUDCrosshair.cross_color	= C;
 		HUDCrosshair.OnRender		();

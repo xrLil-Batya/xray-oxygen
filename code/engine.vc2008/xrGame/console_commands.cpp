@@ -1880,9 +1880,10 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 #endif // DEBUG
 
 	CMD1(CCC_JumpToLevel,	"jump_to_level"		);
-	CMD3(CCC_Mask,			"g_god",			&psActorFlags,	AF_GODMODE	);
+	CMD3(CCC_Mask,			"g_god",			&psActorFlags,	AF_GODMODE);
 	CMD3(CCC_Mask,			"g_unlimitedammo",	&psActorFlags,	AF_UNLIMITEDAMMO);
 	CMD3(CCC_Mask,			"g_reload_on_sprint",	&psActorFlags,	AF_RELOADONSPRINT);
+	CMD3(CCC_Mask,			"cursor_instead_crosshair",	&psActorFlags,	AF_CUR_INS_CROS);
 	CMD1(CCC_Script,		"run_script");
 	CMD1(CCC_ScriptCommand,	"run_string");
 	CMD1(CCC_TimeFactor,	"time_factor");

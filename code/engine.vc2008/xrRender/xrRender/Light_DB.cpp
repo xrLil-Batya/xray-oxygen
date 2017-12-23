@@ -173,7 +173,7 @@ light*			CLight_DB::Create	()
 	return				L;
 }
 
-#if RENDER==R_R1
+#if RENDER == R_R1
 void			CLight_DB::add_light		(light* L)
 {
 	if (Device.dwFrame==L->frame_render)	return;
@@ -181,9 +181,8 @@ void			CLight_DB::add_light		(light* L)
 	if (L->flags.bStatic)					return;	// skip static lighting, 'cause they are in lmaps
 	if (ps_r1_flags.test(R1FLAG_DLIGHTS))	RImplementation.L_Dynamic->add	(L);
 }
-#endif
+#else
 
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
 void			CLight_DB::add_light		(light* L)
 {
 	if (Device.dwFrame==L->frame_render)	return;
@@ -192,7 +191,7 @@ void			CLight_DB::add_light		(light* L)
 	if (L->flags.bStatic && !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS))	return;
 	L->export_								(package);
 }
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#endif
 
 void			CLight_DB::Update			()
 {
