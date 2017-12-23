@@ -209,11 +209,11 @@ namespace lc_net
 		{
 			net_execution* it = pool[i];
 			R_ASSERT(it);
-                        if (it->id() == id)
-        		{
-                               send_receive_lock.Leave();
-                               return nullptr;
-                        }
+			if (it->id() == id)
+			{
+				send_receive_lock.unlock();
+				return nullptr;
+			}
 		}
 		
 		net_execution* e = execution_factory.create( type, id );
