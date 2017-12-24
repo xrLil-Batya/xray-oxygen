@@ -202,8 +202,8 @@ public:
     {
         _Type* swap = new _Type[cols];
         size_t row;
-        int end_row;
-        int start_row;
+        size_t end_row;
+        size_t start_row;
         size_t len = sizeof(_Type) * cols;
         for (row = 0; row < rows / 2; row++)
         {

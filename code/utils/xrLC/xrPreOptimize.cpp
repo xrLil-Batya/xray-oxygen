@@ -40,8 +40,8 @@ void CBuild::PreOptimize()
 	scale.set			(float(HDIM_X),float(HDIM_Y),float(HDIM_Z));
 	scale.div			(VMscale);
 	
-	u32	Vcount		= lc_global_data()->g_vertices().size(),	Vremoved=0;
-	u32	Fcount		= lc_global_data()->g_faces().size(),		Fremoved=0;
+	u32	Vcount		= (u32)lc_global_data()->g_vertices().size(),	Vremoved=0;
+	u32	Fcount		= (u32)lc_global_data()->g_faces().size(),		Fremoved=0;
 	
 	// Pre-alloc memory
 	int		_size	= (HDIM_X+1)*(HDIM_Y+1)*(HDIM_Z+1);

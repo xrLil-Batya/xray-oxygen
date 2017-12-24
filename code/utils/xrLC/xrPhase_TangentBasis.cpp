@@ -28,7 +28,7 @@ static u32 add_vertex(	 const	Vertex						&V,
 	MeshMender::Vertex new_vertex;
 	set_vertex( new_vertex, V, Ftc );
 	theVerts.push_back( new_vertex );
-	return theVerts.size() - 1;
+	return (int)theVerts.size() - 1;
 }
 
 static void	add_face(	const Face& F, 

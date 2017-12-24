@@ -107,7 +107,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 		unsigned int numIndices = 0;
 		for(int i = 0; i < tempStrips.size(); i++)
 		{
-			numIndices += tempStrips[i]->m_faces.size() * 3;
+			numIndices += (int)tempStrips[i]->m_faces.size() * 3;
 		}
 
 		//add in the list
