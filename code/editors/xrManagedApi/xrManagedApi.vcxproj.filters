@@ -16,10 +16,10 @@
     <ClInclude Include="core\fs\FS.hpp">
       <Filter>core\fs</Filter>
     </ClInclude>
-    <ClInclude Include="core\PostProcessAnimator.hpp">
+    <ClInclude Include="core\Types.hpp">
       <Filter>core</Filter>
     </ClInclude>
-    <ClInclude Include="core\Types.hpp">
+    <ClInclude Include="core\IPostProcessAnimator.hpp">
       <Filter>core</Filter>
     </ClInclude>
   </ItemGroup>
@@ -32,7 +32,7 @@
     <ClCompile Include="core\fs\FS.cpp">
       <Filter>core\fs</Filter>
     </ClCompile>
-    <ClCompile Include="core\PostProcessAnimator.cpp">
+    <ClCompile Include="core\IPostProcessAnimator.cpp">
       <Filter>core</Filter>
     </ClCompile>
   </ItemGroup>

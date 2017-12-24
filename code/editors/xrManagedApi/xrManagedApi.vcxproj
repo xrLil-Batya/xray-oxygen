@@ -32,6 +32,7 @@
     <Keyword>ManagedCProj</Keyword>
     <RootNamespace>xrManagedApi</RootNamespace>
     <WindowsTargetPlatformVersion>10.0.15063.0</WindowsTargetPlatformVersion>
+    <ProjectName>xrManagedAPI</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -222,7 +223,7 @@
   <ItemGroup>
     <ClInclude Include="core\Core.hpp" />
     <ClInclude Include="core\fs\FS.hpp" />
-    <ClInclude Include="core\PostProcessAnimator.hpp" />
+    <ClInclude Include="core\IPostProcessAnimator.hpp" />
     <ClInclude Include="core\Types.hpp" />
     <ClInclude Include="Pch.hpp" />
   </ItemGroup>
@@ -230,7 +231,7 @@
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="core\Core.cpp" />
     <ClCompile Include="core\fs\FS.cpp" />
-    <ClCompile Include="core\PostProcessAnimator.cpp" />
+    <ClCompile Include="core\IPostProcessAnimator.cpp" />
     <ClCompile Include="Pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
