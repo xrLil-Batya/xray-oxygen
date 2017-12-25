@@ -31,12 +31,6 @@
     <Filter Include="Debug core">
       <UniqueIdentifier>{8b6ba4f9-e892-408d-bc4e-1339ce0f2dc6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Debug core\BugTrap">
-      <UniqueIdentifier>{91c17dcf-ec88-4406-8505-3f60584923f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Debug core\BlackBox">
-      <UniqueIdentifier>{c7da2256-244d-469e-be4b-0102fd433575}</UniqueIdentifier>
-    </Filter>
     <Filter Include="shared memory/string library">
       <UniqueIdentifier>{c3689322-66b8-426a-b76b-d5bcfc6f1834}</UniqueIdentifier>
     </Filter>
@@ -78,67 +72,51 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\BlackBoxUI.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\BSUFunctions.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\CrashHandler.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\DiagAssert.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\GetLoadedModules.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\IsNT.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\NT4ProcessInfo.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\stdafx_.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreblackbox\TLHELPProcessInfo.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreclsid.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorecpuid.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorecrc32.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreELocatorAPI.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreFileSystem.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreFileSystem_borland.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorefile_stream_reader.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreFS.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreFTimer.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreLocatorAPI_defs.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreLocatorAPI_Notifications.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorelog.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreLzHuf.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorememory_allocation_stats.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorememory_monitor.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorememory_usage.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreModel.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreos_clipboard.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreppmd_compressor.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_compressor.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_compressor9.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_lzo1x_1.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_lzo1x_9x.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_lzo1x_d1.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_lzo1x_d2.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_lzo1x_d3.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorert_lzo_init.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorestdafx.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorestream_reader.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorestring_concatenations.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrCore.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrDebug.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrDebugNew.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_align.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_debug.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_POOL.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_pso_Copy.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_pso_Fill.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_pso_Fill32.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_subst_borland.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrMemory_subst_msvc.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrsharedmem.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrstring.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexrSyncronize.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCoreXr_ini.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexr_shared.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCorexr_trims.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCore_compressed_normal.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCore_math.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCore_sphere.cpp" />
-    <ClCompile Include="../engine.vc2008/xrCore_std_extensions.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/clsid.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/cpuid.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/crc32.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/ELocatorAPI.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/FileSystem.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/FileSystem_borland.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/file_stream_reader.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/FS.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/FTimer.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/LocatorAPI_defs.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/log.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/LzHuf.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/memory_monitor.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/memory_usage.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/Model.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/os_clipboard.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/ppmd_compressor.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_compressor.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_compressor9.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_lzo1x_1.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_lzo1x_9x.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_lzo1x_d1.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_lzo1x_d2.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_lzo1x_d3.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/rt_lzo_init.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/stdafx.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/stream_reader.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/string_concatenations.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrCore.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrDebugNew.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory_align.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory_debug.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory_POOL.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory_pso_Fill.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory_pso_Fill32.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrMemory_subst_msvc.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrsharedmem.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xrstring.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/Xr_ini.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/xr_trims.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/_compressed_normal.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/_math.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/_sphere.cpp" />
+    <ClCompile Include="../engine.vc2008/xrCore/_std_extensions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -309,36 +287,6 @@
     <ClInclude Include="xrDebug_macros.h">
       <Filter>Debug core</Filter>
     </ClInclude>
-    <ClInclude Include="BTTrace.h">
-      <Filter>Debug core\BugTrap</Filter>
-    </ClInclude>
-    <ClInclude Include="BugTrap.h">
-      <Filter>Debug core\BugTrap</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\BugslayerUtil.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\CrashHandler.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\DiagAssert.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\Internal.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\stdafx_.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\SymbolEngine.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\WarningsOff.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
-    <ClInclude Include="blackbox\WarningsOn.h">
-      <Filter>Debug core\BlackBox</Filter>
-    </ClInclude>
     <ClInclude Include="xr_resource.h">
       <Filter>shared memory/string library</Filter>
     </ClInclude>
@@ -424,16 +372,16 @@
     <ClInclude Include="xrSyncronize.h" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="xrCore.rc">
-      <Filter>Kernel</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
     <CustomBuild Include="FileSystem.h">
       <Filter>FS</Filter>
     </CustomBuild>
     <CustomBuild Include="LocatorAPI_Notifications.h">
       <Filter>FS</Filter>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="..\engine.vc2008\xrCore\xrCore.rc">
+      <Filter>Kernel</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>
