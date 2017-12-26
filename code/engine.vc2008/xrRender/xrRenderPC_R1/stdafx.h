@@ -6,6 +6,10 @@
 
 #pragma warning(disable:4995)
 #include "../../xrEngine/stdafx.h"
+#ifdef _LW_EXPORT
+#undef ENGINE_API
+#define ENGINE_API
+#endif
 #pragma warning(disable:4995 4005)
 #include <d3dx9.h>
 #pragma warning(default:4995 4005)

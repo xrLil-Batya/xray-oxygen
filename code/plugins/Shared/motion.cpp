@@ -274,17 +274,17 @@ CSMotion::~CSMotion(){
 
 void CSMotion::Clear()
 {
-	for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++)
+	for(st_BoneMotion &it: bone_mots)
 	{
-		for (int ch=0; ch<ctMaxChannel; ch++) xr_delete(bm_it->envs[ch]);
+		for (int ch=0; ch<ctMaxChannel; ch++) xr_delete(it.envs[ch]);
     }
 	bone_mots.clear();
 }
 
 st_BoneMotion* CSMotion::FindBoneMotion(shared_str name)
 {
-	for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++)
-    	if (bm_it->name.equal(name)) return &*bm_it;
+	for (st_BoneMotion &it : bone_mots)
+    	if (it.name.equal(name)) return &it;
     return 0;
 }
 
@@ -373,21 +373,15 @@ void CSMotion::Save(IWriter& F)
     F.w_float	(fFalloff);
     F.w_float	(fPower);
 	F.w_u16		((u16)bone_mots.size());
-	for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
-    	xr_strlwr	(bm_it->name);
-    	F.w_stringZ	(bm_it->name);
-		F.w_u8		(bm_it->m_Flags.get());
+	for (st_BoneMotion &it : bone_mots)
+	{
+    	xr_strlwr	(it.name);
+    	F.w_stringZ	(it.name);
+		F.w_u8		(it.m_Flags.get());
 		for (int ch=0; ch<ctMaxChannel; ch++)
-			bm_it->envs[ch]->Save(F);
+			it.envs[ch]->Save(F);
 	}
-#if 0
-    u32 sz			= marks.size();
-    F.w_u32			(sz);
-    for(u32 i=0; i<sz; ++i)
-      marks[i].Save(&F);
-#else
     F.w_u32			(0);
-#endif
 }
 
 bool CSMotion::Load(IReader& F)
@@ -404,8 +398,8 @@ bool CSMotion::Load(IReader& F)
 	    fPower		= F.r_float();
 		bone_mots.resize(F.r_u32());
         string64	temp_buf;
-		for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
-        	bm_it->SetName	(itoa(int(bm_it-bone_mots.begin()),temp_buf,10));
+		for(auto bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
+			bm_it->SetName	(itoa(int(bm_it-bone_mots.begin()),temp_buf,10));
 			bm_it->m_Flags.assign((u8)F.r_u32());
 			for (int ch=0; ch<ctMaxChannel; ch++){
 				bm_it->envs[ch] = xr_new<CEnvelope> ();
@@ -422,13 +416,14 @@ bool CSMotion::Load(IReader& F)
             fPower		= F.r_float();
             bone_mots.resize(F.r_u32());
             string64 	buf;
-            for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
+			for (st_BoneMotion &it : bone_mots)
+			{
                 F.r_stringZ		(buf,sizeof(buf));
-                bm_it->SetName	(buf);
-                bm_it->m_Flags.assign((u8)F.r_u32());
+                it.SetName	(buf);
+                it.m_Flags.assign((u8)F.r_u32());
                 for (int ch=0; ch<ctMaxChannel; ch++){
-                    bm_it->envs[ch] = xr_new<CEnvelope> ();
-                    bm_it->envs[ch]->Load_1(F);
+                    it.envs[ch] = xr_new<CEnvelope> ();
+                    it.envs[ch]->Load_1(F);
                 }
             }
         }else{
@@ -442,40 +437,33 @@ bool CSMotion::Load(IReader& F)
                 fPower		= F.r_float();
                 bone_mots.resize(F.r_u16());
                 string64 	buf;
-                for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
+				for (st_BoneMotion &it : bone_mots)
+				{
                     F.r_stringZ		(buf,sizeof(buf));
-                    bm_it->SetName	(buf);
-                    bm_it->m_Flags.assign(F.r_u8());
+                    it.SetName	(buf);
+                    it.m_Flags.assign(F.r_u8());
                     for (int ch=0; ch<ctMaxChannel; ch++){
-                        bm_it->envs[ch] = xr_new<CEnvelope> ();
-                        bm_it->envs[ch]->Load_2(F);
+                        it.envs[ch] = xr_new<CEnvelope> ();
+                        it.envs[ch]->Load_2(F);
                     }
                 }
             }
         }
 	}
-/*
-	if(vers>=0x0007)
-    {
-    	u32 sz 			= F.r_u32();
-        if(sz>0)
-        {
-        	marks.resize	(sz);
-            for(u32 i=0; i<sz; ++i)
-              marks[i].Load(&F);
-        }
-    }
-*/
-	for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++)
-    	xr_strlwr		(bm_it->name);
+
+	for (st_BoneMotion &it : bone_mots)
+	{
+		xr_strlwr(it.name);
+	}
 	return true;
 }
 
 void CSMotion::Optimize()
 {
-    for(BoneMotionIt bm_it=bone_mots.begin(); bm_it!=bone_mots.end(); bm_it++){
+	for (st_BoneMotion &it : bone_mots)
+	{
         for (int ch=0; ch<ctMaxChannel; ch++)
-            bm_it->envs[ch]->Optimize();
+            it.envs[ch]->Optimize();
     }
 }
 

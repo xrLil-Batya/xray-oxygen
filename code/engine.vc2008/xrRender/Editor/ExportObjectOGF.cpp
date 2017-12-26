@@ -3,7 +3,8 @@
 //----------------------------------------------------
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma comment(lib, "ETools.lib")
+#pragma comment(lib, "xrQSlim.lib")
 #include "ExportObjectOGF.h"
 #include "EditObject.h"
 #include "EditMesh.h"

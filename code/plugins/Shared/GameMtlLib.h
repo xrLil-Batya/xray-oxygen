@@ -1,7 +1,4 @@
 //---------------------------------------------------------------------------
-#ifndef GameMtlLibH
-#define GameMtlLibH
-//---------------------------------------------------------------------------
 #pragma once
 
 #define GAMEMTL_CURRENT_VERSION			0x0001
@@ -56,9 +53,16 @@
 	#define PSVec 		shared_str
 	#define ShaderVec 	shared_str
 #else
-	DEFINE_VECTOR(ref_sound,SoundVec,SoundIt);
-	DEFINE_VECTOR(shared_str,PSVec,PSIt);
-	DEFINE_VECTOR(ref_shader,ShaderVec,ShaderIt);
+using SoundVec = xr_vector<ref_sound>;
+using SoundIt = SoundVec::iterator;
+#ifdef _LW_EXPORT
+#define ref_shader LPVOID
+#endif
+using PSVec = xr_vector<shared_str>;
+using PSIt = PSVec::iterator;
+
+using ShaderVec = xr_vector<ref_shader>;
+using ShaderIt = ShaderVec::iterator;
 #endif
 
 struct ECORE_API SGameMtl
@@ -132,7 +136,8 @@ public:
     void 				FillProp		(PropItemVec& values, ListItem* owner);
 #endif
 };
-DEFINE_VECTOR(SGameMtl*,GameMtlVec,GameMtlIt);
+using GameMtlVec = xr_vector<SGameMtl*>;
+using GameMtlIt = GameMtlVec::iterator;
 
 struct ECORE_API SGameMtlPair{
 	friend class CGameMtlLibrary;
@@ -200,7 +205,8 @@ public:
 #endif
 };
 
-DEFINE_VECTOR(SGameMtlPair*,GameMtlPairVec,GameMtlPairIt);
+using GameMtlPairVec = xr_vector<SGameMtlPair*>;
+using GameMtlPairIt = GameMtlPairVec::iterator;
 
 class ECORE_API CGameMtlLibrary{
 	int					material_index;
@@ -283,6 +289,14 @@ public:
     	return materials.end() != it?*it:0;
 	}
 #else
+#ifdef _LW_EXPORT
+
+	IC SGameMtl*		GetMaterial(LPCSTR name)
+	{
+		GameMtlIt it = GetMaterialIt(name);
+		return materials.end() != it ? *it : 0;
+	}
+#endif
 	// game
 	IC u16				GetMaterialIdx	(int ID)		{GameMtlIt it=GetMaterialItByID(ID);VERIFY(materials.end() != it); return (u16)(it-materials.begin());}
 	IC u16				GetMaterialIdx	(LPCSTR name)	{GameMtlIt it=GetMaterialIt(name);VERIFY(materials.end() != it); return (u16)(it-materials.begin());}
@@ -332,5 +346,3 @@ public:
 	}
 
 extern ECORE_API CGameMtlLibrary GMLib;
-#endif
-

@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#ifdef _LW_EXPORT
+#undef AnsiString
+#endif
 #include "ExportObjectOGF.h"
 
 //--------------------------------------------------------------------------------

@@ -11,6 +11,8 @@ struct 	SRayPickInfo;
 struct 	FSChunkDef;
 class 	CExporter;
 class	CCustomObject;
+#include "../../engine.vc2008/xrCDB/xrCDB.h"
+#include "../../engine.vc2008/xrSound/Sound.h"
 #include "../../xrEngine/bone.h"
 
 #pragma pack( push,1 )

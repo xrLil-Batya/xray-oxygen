@@ -3,16 +3,20 @@
 
 #include "EditObject.h"
 #include "EditMesh.h"
+#ifdef _LW_EXPORT
+#	undef AnsiString
+#	undef ref_shader
+#	define ECORE_API
+
+#	include "../../xrRender/xrRenderPC_R1/stdafx.h"
+#	include "../../xrEngine/pure.h"
+#	include "../xrRender/FVF.h"
+#	include "../../xrEngine/render.h"
+#endif
 #include "../../xrEngine/motion.h"
 #include "../../xrEngine/bone.h"
 #include "ExportSkeleton.h"
 #include "ExportObjectOGF.h"
-//#include "d3dutils.h"
-//#include "ui_main.h"
-//#include "render.h"
-//#include "../../xrServerEntities/PropertiesListHelper.h"
-//#include "ResourceManager.h"
-//#include "ImageManager.h"
 
 const float tex_w	= LOD_SAMPLE_COUNT*LOD_IMAGE_SIZE;
 const float tex_h	= 1*LOD_IMAGE_SIZE;

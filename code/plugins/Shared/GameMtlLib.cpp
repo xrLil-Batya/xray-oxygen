@@ -1,7 +1,9 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 #pragma hdrstop
-
+#define ECORE_API
+#include "../../engine.vc2008/xrCDB/xrCDB.h"
+#include "../../engine.vc2008/xrSound/Sound.h"
 #include "GameMtlLib.h"
 
 CGameMtlLibrary GMLib;

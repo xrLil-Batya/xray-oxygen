@@ -4,20 +4,24 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "ExportSkeleton.h"
 #include "ExportObjectOGF.h"
 #include "EditObject.h"
 #include "EditMesh.h"
+#ifdef _LW_EXPORT
+#	undef AnsiString
+#	undef ref_shader
+#	define ECORE_API
+
+#	include "../../xrRender/xrRenderPC_R1/stdafx.h"
+
+#	include "../../xrEngine/pure.h"
+#	include "../xrRender/FVF.h"
+#	include "../../xrEngine/render.h"
+#endif
+#include "ExportSkeleton.h"
 #include "../../xrEngine/Fmesh.h"
-//#include "std_classes.h"
 #include "../../xrEngine/bone.h"
 #include "../../xrEngine/motion.h"
-//#include "library.h"
-#include <freemagic/MgcCont3DBox.h>
-#include <freemagic/MgcCont3DMinBox.h>
-//#include "ui_main.h"
-//#include "ui_toolscustom.h"
-//#include "SkeletonAnimated.h"
 #include "../xrRender/VertexCache.h"
 
 ECORE_API BOOL g_force16BitTransformQuant = FALSE;
@@ -286,7 +290,8 @@ void CExportSkeleton::SSplit::MakeProgressive()
 	// cleanup
 	VIPM_Destroy();
 }
-
+#pragma comment(lib, "d3dx9.lib")
+#include <d3dx9mesh.h>
 void CExportSkeleton::SSplit::MakeStripify()
 {
 	//	int ccc 	= xrSimulate	((u16*)&m_Faces.front(),m_Faces.size()*3,24);

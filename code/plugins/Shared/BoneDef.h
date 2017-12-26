@@ -1,5 +1,4 @@
 #pragma once
-
 #include "..\..\Shared\helper.h"
 
 // refs
@@ -9,7 +8,7 @@ class CBoneDef
 {
 public:
 	CBoneDef*	parent;
-	string		name;
+	std::string		name;
 	INode*		pBone;
 
 	Fmatrix		matInit;
@@ -33,4 +32,5 @@ public:
 		}
 	}
 };
-DEFINE_VECTOR(CBoneDef*,BoneDefVec,BoneDefIt);
+using BoneDefVec = xr_vector<CBoneDef*>;
+using BoneDefIt = BoneDefVec::iterator;

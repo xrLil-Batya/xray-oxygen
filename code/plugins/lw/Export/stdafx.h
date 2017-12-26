@@ -2,12 +2,8 @@
 //  or project specific include files that are used frequently, but
 //      are changed infrequently
 
-#ifndef StdafxH
-#define StdafxH
-
 #pragma once
-
-#include "../../../xrCore/xrCore.h"
+#include "../../../engine.vc2008/xrCore/xrCore.h"
 
 #define ENGINE_API 
 
@@ -20,13 +16,10 @@ typedef TMsgDlgBtn TMsgDlgButtons[mbHelp];
 
 #include "..\..\Shared\ELog.h"
 #include <d3d9types.h>
-#include <time.h>
-
-#include <string>
 
 #define AnsiString std::string
 
-DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
+xr_vector<std::string> AStringVec;
 
 #define THROW R_ASSERT(0)
 
@@ -44,5 +37,3 @@ DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
 
 #define GAMEMTL_NONE		u32(-1)
 #define _game_data_ "$game_data$"
-
-#endif // StdafxH

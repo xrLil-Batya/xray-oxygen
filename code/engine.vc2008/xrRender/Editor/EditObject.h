@@ -1,6 +1,7 @@
-#ifndef EditObjectH
-#define EditObjectH
+#pragma once
 
+#include "../../engine.vc2008/xrCDB/xrCDB.h"
+#include "../../engine.vc2008/xrSound/Sound.h"
 #include "../../xrEngine/bone.h"
 #include "../../xrEngine/motion.h"
 #include "../../xrEngine/GameMtlLib.h"
@@ -425,17 +426,25 @@ public:
 	CSurface*		CreateSurface			(Mtl* M, u32 mat_id);
 	bool			ImportMAXSkeleton		(CExporter* exporter);
 #endif
+#ifdef _MAX_EXPORT
+	BOOL			ExtractTexName(Texmap *src, LPSTR dest);
+	BOOL			ParseStdMaterial(StdMat* src, CSurface* dest);
+	BOOL			ParseMultiMaterial(MultiMtl* src, u32 mid, CSurface* dest);
+	BOOL			ParseXRayMaterial(XRayMtl* src, u32 mid, CSurface* dest);
+	CSurface*		CreateSurface(Mtl* M, u32 mat_id);
+	bool			ImportMAXSkeleton(CExporter* exporter);
+#endif
 #ifdef _LW_EXPORT
-	bool			Import_LWO				(st_ObjectDB *I);
+	bool			Import_LWO(st_ObjectDB *I);
 	Flags32         m_Flags;
 #endif
 #ifdef _LW_IMPORT
-	bool			Export_LW				(LWObjectImport *local);
+	bool			Export_LW(LWObjectImport *local);
 #endif
 #ifdef _MAYA_EXPORT
-	BOOL			ParseMAMaterial			(CSurface* dest, SXRShaderData& d);
-	CSurface*		CreateSurface			(const char* m_name, SXRShaderData& d);
-	CSurface*		CreateSurface			(MObject shader);
+	BOOL			ParseMAMaterial(CSurface* dest, SXRShaderData& d);
+	CSurface*		CreateSurface(LPCSTR m_name, SXRShaderData& d);
+	CSurface*		CreateSurface(MObject shader);
 #endif
 	bool			ExportLWO				(const char* fname);
 
@@ -468,8 +477,3 @@ public:
 #define EOBJ_CHUNK_LODS				0x0925
 #define EOBJ_CHUNK_SMOTIONS3		0x0926
 //----------------------------------------------------
-
-
-#endif /*_INCDEF_EditObject_H_*/
-
-

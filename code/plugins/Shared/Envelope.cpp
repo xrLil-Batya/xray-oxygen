@@ -5,8 +5,8 @@
 
 CEnvelope::~CEnvelope()
 {
-	for (KeyIt k_it=keys.begin(); k_it!=keys.end(); k_it++)
-    	xr_delete(*k_it);
+	for (auto it:keys)
+    	xr_delete(it);
 }
 CEnvelope::CEnvelope(CEnvelope* source)
 {
@@ -15,23 +15,27 @@ CEnvelope::CEnvelope(CEnvelope* source)
     	keys[i]	= xr_new<st_Key> (*source->keys[i]);
 }
 
-void CEnvelope::FindNearestKey(float t, KeyIt& min_k, KeyIt& max_k, float eps)
+void CEnvelope::FindNearestKey(float t, KeyVec::iterator& min_k, KeyVec::iterator& max_k, float eps)
 {
-	for (KeyIt k_it=keys.begin(); k_it!=keys.end(); k_it++){
-    	if (fsimilar((*k_it)->time,t,eps)){
-        	max_k = k_it+1;
-        	min_k = (k_it==keys.begin())?k_it:k_it-1;
+	for (auto k_it: keys)
+	{
+		if (fsimilar(k_it->time, t, eps))
+		{
+        	*max_k = (k_it+1);
+			*min_k = (k_it == *keys.begin()) ? k_it : k_it - 1;
         	return;
         }
-    	if ((*k_it)->time>t){ 
-        	max_k = k_it;
-        	min_k = (k_it==keys.begin())?k_it:k_it-1;
+		if (k_it->time>t) 
+		{
+        	*max_k = k_it;
+			*min_k = (k_it == *keys.begin()) ? k_it : k_it - 1;
             return;
         }
     }
-    min_k=keys.empty()?keys.end():keys.end()-1;
-    max_k=keys.end();
+	min_k = keys.empty() ? keys.end() : keys.end() - 1;
+	max_k = keys.end();
 }
+using KeyIt = KeyVec::iterator;
 
 KeyIt CEnvelope::FindKey(float t, float eps)
 {
@@ -205,25 +209,30 @@ void CEnvelope::LoadA(IReader& F){
 }
 
 void CEnvelope::Optimize()
-{	
-	KeyIt it 		= keys.begin();
-    st_Key K 		= **it;	it++;
-    bool equal		= true;
-	for (;it!=keys.end();it++){
-    	if (!(*it)->equal(K)){
-        	equal	= false;
-            break;
-        }
-    }
-    if (equal&&(keys.size()>2)){
-        KeyVec		new_keys;
+{
+	KeyIt it = keys.begin();
+	st_Key K = **it;	it++;
+	bool equal = true;
+	for (; it != keys.end(); it++) 
+	{
+		if (!(*it)->equal(K)) 
+		{
+			equal = false;
+			break;
+		}
+	}
+	if (equal && (keys.size() > 2)) 
+	{
+		KeyVec new_keys;
 		new_keys.push_back(xr_new<st_Key>(*keys.front()));
 		new_keys.push_back(xr_new<st_Key>(*keys.back()));
-        for (KeyIt k_it=keys.begin(); k_it!=keys.end(); k_it++)
-            xr_delete(*k_it);
-		keys.clear_and_free	();
-        keys				= new_keys;
-    }
+
+		for (st_Key* &k_it: keys)
+			xr_delete(k_it);
+
+		keys.clear();
+		keys = new_keys;
+	}
 }
 
 

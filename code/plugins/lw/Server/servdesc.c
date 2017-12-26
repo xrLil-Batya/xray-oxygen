@@ -9,15 +9,13 @@
  */
 #include <lwserver.h>
 
-
 extern char             ServerClass[];
 extern char             ServerName[];
 extern ServerUserName   UserNames[];
-extern XCALL_(int)    Activate (long, GlobalFunc *, void *, void *);
+extern XCALL_INIT		Activate (long, GlobalFunc *, void *, void *);
 
 
-    ServerRecord
-ServerDesc[] = {
+ServerRecord ServerDesc[] = {
     { ServerClass, ServerName, Activate, UserNames },
     { 0 }
 };

@@ -1,10 +1,10 @@
 #include "stdafx.h"
-#include "../../../xrCore/FileSystem.h"
-#include "../../../xrCore/FS.h"
+//#include "../../../xrCore/FileSystem.h"
+//#include "../../../xrCore/FS.h"
 #include <lwrender.h>
 #include <lwhost.h>
 #include "Envelope.h"
-#include "Bone.h"
+//#include "Bone.h"
 #include "Motion.h"
 #include "scenscan\objectdb.h"
 #include <lwdisplay.h>

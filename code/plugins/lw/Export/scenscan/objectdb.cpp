@@ -20,28 +20,27 @@ ascending numerical order.  This takes only linear time if point IDs
 arrive in order.
 ====================================================================== */
 
-static int pntScan( ObjectDB *odb, LWPntID id )
+size_t pntScan(ObjectDB *odb, LWPntID id)
 {
-   int j;
+	int j;
 
-   j = odb->npoints;
+	j = odb->npoints;
 
-   if ( j == 0 ) {
-      odb->pt[ 0 ].id = id;
-      ++odb->npoints;
-      return 0;
-   }
+	if (j == 0) {
+		odb->pt[0].id = id;
+		++odb->npoints;
+		return 0;
+	}
 
-   while ( odb->pt[ j - 1 ].id > id ) {
-      odb->pt[ j ].id = odb->pt[ j - 1 ].id;
-      --j;
-      if ( j == 0 ) break;
-   }
+	while (odb->pt[j - 1].id > id) {
+		odb->pt[j].id = odb->pt[j - 1].id;
+		--j;
+		if (j == 0) break;
+	}
 
-   odb->pt[ j ].id = id;
-   ++odb->npoints;
-
-   return 0;
+	odb->pt[j].id = id;
+	++odb->npoints;
+	return 0;
 }
 
 
@@ -52,7 +51,7 @@ polScan()
 Polygon scan callback.  Just store the ID.
 ====================================================================== */
 
-static int polScan( ObjectDB *odb, LWPolID id )
+static size_t polScan( ObjectDB *odb, LWPolID id )
 {
    odb->pol[ odb->npolygons ].id = id;
    ++odb->npolygons;
@@ -237,7 +236,7 @@ ObjectDB *getObjectDB( LWItemID id, GlobalFunc *global )
    odb->pt = (st_DBPoint*)calloc( npts, sizeof( DBPoint ));
    if ( !odb->pt ) goto Finish;
 
-   if ( mesh->scanPoints( mesh, (int (__cdecl *)(void *,struct st_GCoreVertex *))pntScan, odb ))
+   if ( mesh->scanPoints( mesh, (LWPntScanFunc*)pntScan, odb ))
       goto Finish;
 
    /* alloc and init the polygons array */
@@ -246,7 +245,7 @@ ObjectDB *getObjectDB( LWItemID id, GlobalFunc *global )
    odb->pol = (st_DBPolygon*)calloc( npols, sizeof( DBPolygon ));
    if ( !odb->pol ) goto Finish;
 
-   if ( mesh->scanPolys( mesh, (int (__cdecl *)(void *,struct st_GCorePolygon *))polScan, odb ))
+   if ( mesh->scanPolys( mesh, (LWPolScanFunc*)polScan, odb ))
       goto Finish;
 
    /* get the vertices of each polygon */

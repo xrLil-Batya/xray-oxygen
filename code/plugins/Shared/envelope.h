@@ -1,6 +1,4 @@
-#ifndef EnvelopeH
-#define EnvelopeH
-
+#pragma once
 // refs
 class IWriter;
 class IReader;
@@ -46,7 +44,7 @@ struct st_Key{
 	float		continuity;
 	float		bias;
 	float		param[ 4 ];
-				st_Key		(){ZeroMemory(this,sizeof(st_Key));}
+				st_Key		(){memset(this,0, sizeof(st_Key));}
     IC bool		equal		(const st_Key& tgt)
     {
     	if (!fsimilar(value,tgt.value)) 			return false;
@@ -102,8 +100,7 @@ struct st_Key{
     }
 };
 #pragma pack( pop )
-
-DEFINE_VECTOR(st_Key*,KeyVec,KeyIt);
+using KeyVec =  xr_vector<st_Key*>;
 
 // refs
 class CExporter;
@@ -127,8 +124,8 @@ public:
 
     void		RotateKeys	(float angle);
 
-    KeyIt		FindKey		(float t, float eps);
-    void		FindNearestKey(float t, KeyIt& min, KeyIt& max, float eps);
+	KeyVec::iterator FindKey		(float t, float eps);
+    void		FindNearestKey(float t, KeyVec::iterator& min, KeyVec::iterator& max, float eps);
     void		InsertKey	(float t, float val);                                   
     void		DeleteKey	(float t);
     BOOL		ScaleKeys	(float from_time, float to_time, float scale_factor, float eps);
@@ -136,5 +133,3 @@ public:
 
     void		Optimize	();
 };
-
-#endif //_ENVELOPE_H_

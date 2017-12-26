@@ -28,6 +28,10 @@ Comments:
 */
 
 #include "stdafx.h"
+#ifdef _LW_EXPORT
+#undef AnsiString
+#endif
+
 #include "nvMeshMender.h"
 #include "assert.h"
 

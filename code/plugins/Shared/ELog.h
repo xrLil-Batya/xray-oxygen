@@ -1,10 +1,7 @@
 //----------------------------------------------------
 // file: Log.h
 //----------------------------------------------------
-
-#ifndef ELogH
-#define ELogH
-
+#pragma once
 class ECORE_API CLog{
 public:
 	bool 		in_use;
@@ -18,6 +15,3 @@ public:
 void ECORE_API ELogCallback(LPCSTR txt);
 
 extern ECORE_API CLog ELog;
-
-#endif /*_INCDEF_NETDEVICELOG_H_*/
-

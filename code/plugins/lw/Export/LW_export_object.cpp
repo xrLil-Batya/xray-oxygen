@@ -1,10 +1,8 @@
 #include "stdafx.h"
 #include <lwrender.h>
 #include <lwhost.h>
-#include "../../../editors/ECore/Editor/editobject.h"
-#include "../../../xrCore/FileSystem.h"
-#include "../../../xrCore/FS.h"
-#include "bone.h"
+#include "../../engine.vc2008/xrRender/Editor/EditObject.h"
+#include "../../engine.vc2008/xrEngine/bone.h"
 #include <lwdisplay.h>
 #include <lwserver.h>
 

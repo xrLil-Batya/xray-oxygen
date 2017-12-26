@@ -137,7 +137,7 @@ struct 	 ECORE_API	resptrcode_shader	: public resptr_base<Shader>
 	void				create			(IBlender*	B,	LPCSTR s_shader=0, LPCSTR s_textures=0, LPCSTR s_constants=0, LPCSTR s_matrices=0);
 	void				destroy			()	{ _set(NULL);		}
 };
-typedef	resptr_core<Shader,resptrcode_shader>												ref_shader;
+using ref_shader = resptr_core<Shader,resptrcode_shader>;
 
 enum	SE_R1				{
 	SE_R1_NORMAL_HQ			= 0,	// high quality/detail

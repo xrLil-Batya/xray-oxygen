@@ -339,7 +339,9 @@ public:
 	void			    SetParentName	(const char* p){parent_name	= p; xr_strlwr(parent_name);}
 	void			    SetWMap			(const char* p){wmap		= p;}
 	void			    SetRestParams	(float length, const Fvector& offset, const Fvector& rotate){rest_offset.set(offset);rest_rotate.set(rotate);rest_length=length;};
-
+#ifdef _LW_EXPORT
+	void				ParseBone		(void* bone);
+#endif
 	shared_str		    Name			(){return name;}
 	shared_str		    ParentName		(){return parent_name;}
 	shared_str		    WMap			(){return wmap;}
