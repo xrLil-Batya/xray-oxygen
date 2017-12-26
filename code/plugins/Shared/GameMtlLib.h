@@ -37,7 +37,7 @@
 #ifdef _MAX_PLUGIN
 #define GM_NON_GAME
 #endif
-#ifdef _LW_SHADER
+#if defined(_LW_SHADER) || defined(_LW_EXPORT)
 #define GM_NON_GAME
 #endif
 #ifdef _MAYA_PLUGIN

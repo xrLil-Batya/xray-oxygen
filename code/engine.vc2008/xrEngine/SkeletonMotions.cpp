@@ -1,9 +1,11 @@
 //---------------------------------------------------------------------------
 #include 	"stdafx.h"
 #pragma hdrstop
-
+#ifdef _LW_EXPORT
+#undef ENGINE_API
+#define ENGINE_API
+#endif
 #include 	"SkeletonMotions.h"
-//#include 	"SkeletonAnimated.h"
 #include	"Fmesh.h"
 #include	"motion.h"
 #include	"..\Include\xrRender\Kinematics.h"

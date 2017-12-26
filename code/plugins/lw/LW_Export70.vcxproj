@@ -142,9 +142,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\engine.vc2008\xrEngine\SkeletonMotions.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportObjectOGF.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportObjectOGFCalculateTB.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportSkeleton.cpp" />
+    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportSkeletonCalculateTB.cpp" />
     <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
     <ClCompile Include="..\Shared\bone.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditMesh.cpp" />

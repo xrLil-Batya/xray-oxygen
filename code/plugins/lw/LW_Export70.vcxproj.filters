@@ -126,6 +126,12 @@
     <ClCompile Include="..\Shared\EditObjectImport.cpp">
       <Filter>Shared Files\Editor</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\engine.vc2008\xrEngine\SkeletonMotions.cpp">
+      <Filter>Shared Files\Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportSkeletonCalculateTB.cpp">
+      <Filter>Shared Files\Editor</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Export\stdafx.h">

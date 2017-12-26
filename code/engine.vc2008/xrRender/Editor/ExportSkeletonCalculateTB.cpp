@@ -5,6 +5,17 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#ifdef _LW_EXPORT
+#	undef AnsiString
+#	undef ref_shader
+#	define ECORE_API
+
+#	include "../../xrRender/xrRenderPC_R1/stdafx.h"
+
+#	include "../../xrEngine/pure.h"
+#	include "../xrRender/FVF.h"
+#	include "../../xrEngine/render.h"
+#endif
 #ifndef	_EDITOR
 //
 #include "../../xrEngine/defines.h"
@@ -31,7 +42,6 @@ using FLITvertexVec = xr_vector<FVF::LIT>;
 using RStrVec = xr_vector<shared_str>;
 
 #endif
-
 
 #include "ExportSkeleton.h"
 
