@@ -2,8 +2,6 @@
 #include "stdafx.h"
 #pragma hdrstop
 #define ECORE_API
-#include "../../engine.vc2008/xrCDB/xrCDB.h"
-#include "../../engine.vc2008/xrSound/Sound.h"
 #include "GameMtlLib.h"
 
 CGameMtlLibrary GMLib;
@@ -105,9 +103,6 @@ void CGameMtlLibrary::Load()
 }
 
 #ifdef GM_NON_GAME
-//SGameMtlPair::~SGameMtlPair		()
-//{
-//}                
 void SGameMtlPair::Load(IReader& fs)
 {
 	shared_str				buf;

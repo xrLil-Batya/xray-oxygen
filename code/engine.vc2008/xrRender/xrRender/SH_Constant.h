@@ -1,11 +1,5 @@
-#ifndef SH_CONSTANT_H
-#define SH_CONSTANT_H
 #pragma once
-
 #include "../../xrEngine/WaveForm.h"
-
-class		IReader;
-class		IWriter;
 
 class	ECORE_API	CConstant	: public xr_resource_named									{
 public:
@@ -56,5 +50,3 @@ public:
 
 typedef	resptr_core<CConstant,resptr_base<CConstant> >	
 	ref_constant_obsolette;
-
-#endif

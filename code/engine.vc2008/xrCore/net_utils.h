@@ -53,7 +53,10 @@ public:
         VERIFY(B.count < NET_PacketSizeLimit);
     }
 
-    IC void w_seek(const u32 pos, const void* p, const u32 count);
+    IC void w_seek(const u32 pos, const void* p, const u32 count) {
+		VERIFY(p && count && (pos + count <= B.count));
+		std::memcpy(&B.data[pos], p, count);
+	}
     u32 w_tell() const { return (u32)B.count; }
 
     // writing - utilities

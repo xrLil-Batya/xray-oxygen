@@ -154,7 +154,8 @@ public:
 //------------------------------------------------------------------------------------
 
 template <typename implementation_type>
-class IReaderBase {
+class XRCORE_API IReaderBase 
+{
 public:
     IReaderBase() : m_last_pos(0) {}
     virtual ~IReaderBase() = default;

@@ -7,22 +7,22 @@ extern "C" { EShaderList ENShaders; EShaderList LCShaders; EShaderList GameMtls;
 extern "C" {
 	void __cdecl LoadShaders()
 	{
-		Core._initialize("XRayPlugin",0,FALSE);
-		FS._initialize	(CLocatorAPI::flScanAppRoot,NULL,"xray_path.ltx");
+		Core._initialize("XRayPlugin", 0, FALSE);
+		FS._initialize(CLocatorAPI::flScanAppRoot, NULL, "xray_path.ltx");
 		LPSTRVec lst;
-		ENShaders.count=LoadBlenderList(lst);
-		for (LPSTRIt b_it=lst.begin(); b_it!=lst.end(); b_it++)
-			strcpy(ENShaders.Names[b_it-lst.begin()],*b_it);
+		ENShaders.count = LoadBlenderList(lst);
+		for (char* &b_it : lst)
+			strcpy(ENShaders.Names[b_it - *lst.begin()], b_it);
 		ClearList(lst);
 
-		LCShaders.count=LoadShaderLCList(lst);
-		for (LPSTRIt c_it=lst.begin(); c_it!=lst.end(); c_it++)
-			strcpy(LCShaders.Names[c_it-lst.begin()],*c_it);
+		LCShaders.count = LoadShaderLCList(lst);
+		for (char* &c_it : lst)
+			strcpy(LCShaders.Names[c_it - *lst.begin()], c_it);
 		ClearList(lst);
 
-		GameMtls.count=LoadGameMtlList(lst);
-		for (LPSTRIt g_it=lst.begin(); g_it!=lst.end(); g_it++)
-			strcpy(GameMtls.Names[g_it-lst.begin()],*g_it);
+		GameMtls.count = LoadGameMtlList(lst);
+		for (char* &g_it : lst)
+			strcpy(GameMtls.Names[g_it - *lst.begin()], g_it);
 		ClearList(lst);
 	}
 };

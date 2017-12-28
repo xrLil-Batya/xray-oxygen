@@ -45,8 +45,9 @@ public:
 		lm_density				= 1.f;
 	}
 };
+using Shader_xrLCVec = xr_vector<Shader_xrLC>;
+using Shader_xrLCIt = Shader_xrLCVec::iterator;
 
-DEFINE_VECTOR(Shader_xrLC,Shader_xrLCVec,Shader_xrLCIt);
 class Shader_xrLC_LIB
 {
 	Shader_xrLCVec			library;

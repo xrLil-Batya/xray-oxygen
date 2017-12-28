@@ -186,7 +186,7 @@ public:
         m_Owner			= owner;
         OwnProps.one	();
 	}
-	~SGameMtlPair		();
+	~SGameMtlPair()						= default;
     IC int				GetMtl0			(){return mtl0;}
     IC int				GetMtl1			(){return mtl1;}
     IC int				GetID			(){return ID;}

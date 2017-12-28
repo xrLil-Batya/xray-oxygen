@@ -233,6 +233,9 @@
     <ClCompile Include="../engine.vc2008/xrCore/_math.cpp" />
     <ClCompile Include="../engine.vc2008/xrCore/_sphere.cpp" />
     <ClCompile Include="../engine.vc2008/xrCore/_std_extensions.cpp" />
+    <ClCompile Include="..\engine.vc2008\xrCore\DateTime.cpp" />
+    <ClCompile Include="..\engine.vc2008\xrCore\DebugCore\StackTrace.cpp" />
+    <ClCompile Include="..\engine.vc2008\xrCore\NET_utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="clsid.h" />

@@ -150,10 +150,14 @@
 #pragma warning (disable : 4100 )		// unreferenced formal parameter
 
 // Our headers
-#ifdef XRCORE_EXPORTS
-#	define XRCORE_API __declspec(dllexport)
-#else
-#	define XRCORE_API __declspec(dllimport)
+#ifndef XRCORE_STATIC
+#	ifdef XRCORE_EXPORTS
+#		define XRCORE_API __declspec(dllexport)
+#	else
+#		define XRCORE_API __declspec(dllimport)
+#	endif
+#else 
+#	define XRCORE_API
 #endif
 
 #include "xrDebug.h"
@@ -220,9 +224,9 @@ using RTokenVec = xr_vector<xr_rtoken>;
 #include "FTimer.h"
 #include "fastdelegate.h"
 #include "intrusive_ptr.h"
-
+#ifndef XRCORE_STATIC
 #include "net_utils.h"
-
+#endif
 // destructor
 template <class T>
 class destructor

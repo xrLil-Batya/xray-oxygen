@@ -11,11 +11,6 @@ u32 NET_Packet::r_begin(u16& type) { // returns time of receiving
     return timeReceive;
 }
 
-void NET_Packet::w_seek(const u32 pos, const void* p, const u32 count) {
-    VERIFY(p && count && (pos + count <= B.count));
-    std::memcpy(&B.data[pos], p, count);
-}
-
 void NET_Packet::r_seek(const u32 pos) {
     VERIFY(pos < B.count);
     r_pos = pos;

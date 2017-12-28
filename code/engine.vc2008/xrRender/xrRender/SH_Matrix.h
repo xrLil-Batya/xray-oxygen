@@ -1,11 +1,5 @@
-#ifndef SH_MATRIX_H
-#define SH_MATRIX_H
 #pragma once
-
 #include "../../xrEngine/WaveForm.h"
-
-class		IReader;
-class		IWriter;
 
 class	ECORE_API	CMatrix	: public xr_resource_named								{
 public:
@@ -61,5 +55,3 @@ public:
 
 typedef	resptr_core<CMatrix,resptr_base<CMatrix> >	
 	ref_matrix;
-
-#endif
