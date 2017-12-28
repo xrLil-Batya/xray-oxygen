@@ -32,3 +32,5 @@ librariesx64/
 /code/editors/xrPostprocessEditor/obj/
 /code/editors/xrSdkControls/obj/
 /code/editors/.vs/xrEditors/v15/
+*.db-shm
+*.db-wal
