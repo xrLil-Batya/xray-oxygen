@@ -154,7 +154,7 @@ public:
 //------------------------------------------------------------------------------------
 
 template <typename implementation_type>
-class XRCORE_API IReaderBase 
+class IReaderBase 
 {
 public:
     IReaderBase() : m_last_pos(0) {}
