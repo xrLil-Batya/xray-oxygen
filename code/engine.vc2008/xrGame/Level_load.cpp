@@ -14,8 +14,6 @@
 #include "level_sounds.h"
 #include "GamePersistent.h"
 
-ENGINE_API	bool g_dedicated_server;
-
 BOOL CLevel::Load_GameSpecific_Before()
 {
 	// AI space
@@ -25,7 +23,7 @@ BOOL CLevel::Load_GameSpecific_Before()
 	if (!ai().get_alife() && FS.exist(fn_game, "$level$", "level.ai") && !net_Hosts.empty())
 		ai().load(net_SessionName());
 
-	if (!g_dedicated_server && !ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
+	if (!ai().get_alife() && ai().get_game_graph() && FS.exist(fn_game, "$level$", "level.game"))
 	{
 		IReader *stream = FS.r_open(fn_game);
 		ai().patrol_path_storage_raw(*stream);
@@ -35,117 +33,123 @@ BOOL CLevel::Load_GameSpecific_Before()
 	return(TRUE);
 }
 
+#include "../xrEngine/Rain.h"
 BOOL CLevel::Load_GameSpecific_After()
 {
 	R_ASSERT(m_StaticParticles.empty());
 	// loading static particles
 	string_path		fn_game;
-	if (FS.exist(fn_game, "$level$", "level.ps_static")) 
+	if (FS.exist(fn_game, "$level$", "level.ps_static"))
 	{
-		IReader *F = FS.r_open	(fn_game);
-		CParticlesObject* pStaticParticles;
+		IReader *F = FS.r_open(fn_game);
 		u32				chunk = 0;
 		string256		ref_name;
 		Fmatrix			transform;
-		Fvector			zero_vel={0.f,0.f,0.f};
-		u32 ver			= 0;
-		for (IReader *OBJ = F->open_chunk_iterator(chunk); OBJ; OBJ = F->open_chunk_iterator(chunk,OBJ)) 
+		Fvector			zero_vel = { 0.f,0.f,0.f };
+		u32 ver = 0;
+		for (IReader *OBJ = F->open_chunk_iterator(chunk); OBJ; OBJ = F->open_chunk_iterator(chunk, OBJ))
 		{
-			if(chunk==0)
+			if (chunk == 0)
 			{
-				if(OBJ->length()==sizeof(u32))
+				if (OBJ->length() == sizeof(u32))
 				{
-					ver		= OBJ->r_u32();
+					ver = OBJ->r_u32();
 					continue;
 				}
 			}
-			u16 gametype_usage				= 0;
-			if(ver>0)
+			u16 gametype_usage = 0;
+			if (ver > 0)
 			{
-				gametype_usage				= OBJ->r_u16();
+				gametype_usage = OBJ->r_u16();
 			}
-			OBJ->r_stringZ					(ref_name,sizeof(ref_name));
-			OBJ->r							(&transform,sizeof(Fmatrix));transform.c.y+=0.01f;
-			
-						
+			OBJ->r_stringZ(ref_name, sizeof(ref_name));
+			OBJ->r(&transform, sizeof(Fmatrix)); transform.c.y += 0.01f;
+
+
 			if ((g_pGamePersistent->m_game_params.m_e_game_type & EGameIDs(gametype_usage)) || (ver == 0))
 			{
-				pStaticParticles				= CParticlesObject::Create(ref_name,FALSE,false);
-				pStaticParticles->UpdateParent	(transform,zero_vel);
-				pStaticParticles->Play			(false);
-				m_StaticParticles.push_back		(pStaticParticles);
+				CParticlesObject* pStaticParticles = CParticlesObject::Create(ref_name, FALSE, false);
+				pStaticParticles->UpdateParent(transform, zero_vel);
+				pStaticParticles->Play(false);
+				m_StaticParticles.push_back(pStaticParticles);
 			}
 		}
-		FS.r_close		(F);
+		FS.r_close(F);
 	}
-	
-	if	(!g_dedicated_server)
+
+	// loading static sounds
+	VERIFY(m_level_sound_manager);
+	m_level_sound_manager->Load();
+
+	// loading sound environment
+	if (FS.exist(fn_game, "$level$", "level.snd_env")) 
 	{
-		// loading static sounds
-		VERIFY								(m_level_sound_manager);
-		m_level_sound_manager->Load			();
-
-		// loading sound environment
-		if ( FS.exist(fn_game, "$level$", "level.snd_env")) {
-			IReader *F				= FS.r_open	(fn_game);
-			::Sound->set_geometry_env(F);
-			FS.r_close				(F);
-		}
-		// loading SOM
-		if (FS.exist(fn_game, "$level$", "level.som")) {
-			IReader *F				= FS.r_open	(fn_game);
-			::Sound->set_geometry_som(F);
-			FS.r_close				(F);
-		}
-
-		// loading random (around player) sounds
-		if (pSettings->section_exist("sounds_random")){ 
-			CInifile::Sect& S		= pSettings->r_section("sounds_random");
-			Sounds_Random.reserve	(S.Data.size());
-			for (CInifile::SectCIt I=S.Data.begin(); S.Data.end()!=I; ++I) 
-			{
-				Sounds_Random.push_back	(ref_sound());
-				Sound->create			(Sounds_Random.back(),*I->first,st_Effect,sg_SourceType);
-			}
-			Sounds_Random_dwNextTime= Device.TimerAsync	()	+ 50000;
-			Sounds_Random_Enabled	= FALSE;
-		}
-
-		if ( FS.exist(fn_game, "$level$", "level.fog_vol")) 
-		{
-			IReader *F				= FS.r_open	(fn_game);
-			u16 version				= F->r_u16();
-			if(version == 2)
-			{
-				u32 cnt					= F->r_u32();
-
-				Fmatrix					volume_matrix;
-				for(u32 i=0; i<cnt; ++i)
-				{
-					F->r				(&volume_matrix, sizeof(volume_matrix));
-					u32 sub_cnt			= F->r_u32();
-					for(u32 is=0; is<sub_cnt; ++is)
-					{
-						F->r			(&volume_matrix, sizeof(volume_matrix));
-					}
-
-				}
-			}
-			FS.r_close				(F);
-		}
-	}	
-
-	if (!g_dedicated_server) {
-		// loading scripts
-		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
-
-		if (pLevel->section_exist("level_scripts") && pLevel->line_exist("level_scripts","script"))
-			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel,xr_new<CScriptProcess>("level",pLevel->r_string("level_scripts","script")));
-		else
-			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel,xr_new<CScriptProcess>("level",""));
+		IReader *F = FS.r_open(fn_game);
+		::Sound->set_geometry_env(F);
+		FS.r_close(F);
+	}
+	// loading SOM
+	if (FS.exist(fn_game, "$level$", "level.som")) 
+	{
+		IReader *F = FS.r_open(fn_game);
+		::Sound->set_geometry_som(F);
+		FS.r_close(F);
 	}
 
-	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
+	// loading random (around player) sounds
+	if (pSettings->section_exist("sounds_random")) 
+	{
+		CInifile::Sect& S = pSettings->r_section("sounds_random");
+		Sounds_Random.reserve(S.Data.size());
+		for (CInifile::SectCIt I = S.Data.begin(); S.Data.end() != I; ++I)
+		{
+			Sounds_Random.push_back(ref_sound());
+			Sound->create(Sounds_Random.back(), *I->first, st_Effect, sg_SourceType);
+		}
+		Sounds_Random_dwNextTime = Device.TimerAsync() + 50000;
+		Sounds_Random_Enabled = FALSE;
+	}
+
+	if (g_pGamePersistent->pEnvironment)
+	{
+		if (CEffect_Rain* rain = g_pGamePersistent->pEnvironment->eff_Rain)
+		{
+			rain->InvalidateState();
+		}
+	}
+
+	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
+	{
+		IReader *F = FS.r_open(fn_game);
+		u16 version = F->r_u16();
+		if (version == 2)
+		{
+			u32 cnt = F->r_u32();
+
+			Fmatrix					volume_matrix;
+			for (u32 i = 0; i < cnt; ++i)
+			{
+				F->r(&volume_matrix, sizeof(volume_matrix));
+				u32 sub_cnt = F->r_u32();
+				for (u32 is = 0; is < sub_cnt; ++is)
+				{
+					F->r(&volume_matrix, sizeof(volume_matrix));
+				}
+
+			}
+		}
+		FS.r_close(F);
+	}
+
+	// loading scripts
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
+
+	if (pLevel->section_exist("level_scripts") && pLevel->line_exist("level_scripts", "script"))
+		ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", pLevel->r_string("level_scripts", "script")));
+	else
+		ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorLevel, xr_new<CScriptProcess>("level", ""));
+
+	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
 	return TRUE;
 }
