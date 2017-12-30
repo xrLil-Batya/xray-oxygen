@@ -186,6 +186,8 @@ void CBone::CopyData(CBone* bone)
     mass			= bone->mass;
     center_of_mass	= bone->center_of_mass;
 }
+
+#ifdef _LW_EXPORT
 #define ECORE_API
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
@@ -211,3 +213,4 @@ bool CBone::ExportOGF(IWriter& F)
 	F.w_fvector3(center_of_mass);
 	return true;
 }
+#endif

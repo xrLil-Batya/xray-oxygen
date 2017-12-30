@@ -1,8 +1,8 @@
 #include "stdafx.h" 
 
 #include "SmdMaya.h"
-#include "..\..\..\editors\Ecore\editor\EditObject.h"
-#include "..\..\..\editors\Ecore\editor\EditMesh.h"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditObject.h"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditMesh.h"
 #include "Motion.h"
 #include "Envelope.h"
 #include "smoth_flags.h"
@@ -293,7 +293,7 @@ MStatus CXRaySkinExport::reader (const MFileObject& file, const MString& options
 CSurface* CEditableObject::CreateSurface(MObject shader)
 {
 	CSurface* S			= 0;
-	for(SurfaceIt s_it=m_Surfaces.begin(); s_it!=m_Surfaces.end(); s_it++)
+	for(auto s_it=m_Surfaces.begin(); s_it!=m_Surfaces.end(); s_it++)
 		if ((*s_it)->tag==*((int*)&shader)) return *s_it;
 	if (!S){
 		S				= xr_new<CSurface>();
@@ -425,7 +425,7 @@ MStatus CXRaySkinExport::exportObject(LPCSTR fn, bool b_ogf)
 				vm_lst.pts			= xr_alloc<st_VMapPt>(vm_lst.count);
 				vm_lst.pts[0].vmap_index= VM_UV_idx;
 				vm_lst.pts[0].index 	= vt.pindex;
-				for (WBIt vd_it=V->influence.begin(); vd_it!=V->influence.end(); vd_it++){
+				for (auto vd_it=V->influence.begin(); vd_it!=V->influence.end(); vd_it++){
 					u32 idx			= vd_it-V->influence.begin()+1;
 					st_VMap* vm		= _vmaps[vd_it->bone];
 					vm->appendW		(vd_it->weight);
@@ -456,8 +456,8 @@ MStatus CXRaySkinExport::exportObject(LPCSTR fn, bool b_ogf)
 		Fvector offset,rotate;
 		offset.set			((*boneIt)->trans);
 		rotate.set			((*boneIt)->orient);
-		OBJECT->Bones().push_back(xr_new<CBone>());
-		CBone* BONE			= OBJECT->Bones().back(); 
+		OBJECT->Bones().push_back(nullptr);
+		auto BONE			= OBJECT->Bones().back(); 
 		BONE->SetWMap		((*boneIt)->name);
 		BONE->SetName		((*boneIt)->name);
 		BONE->SetParentName	((*boneIt)->parentId>-1?m_boneList[(*boneIt)->parentId]->name:0); //. need convert space
@@ -489,7 +489,7 @@ MStatus CXRaySkinExport::exportObject(LPCSTR fn, bool b_ogf)
 	strconcat				(sizeof(ogf_name), ogf_name, fname, ".ogf");
 	OBJECT->Optimize		();
 	Msg						("Exporting to Object [%s]",object_name);
-	OBJECT->Save			(object_name);
+	OBJECT->Save			(*FS.w_open(object_name));
 	Msg						("success.");
 	if(b_ogf)
 	{
@@ -1107,7 +1107,7 @@ static IC void ParseMatrix	(MTransformationMatrix& mat, Fvector& t, Fvector& r, 
 	t.set((float)dst_x.asMeters(),(float)dst_y.asMeters(),-(float)dst_z.asMeters());
 }
 
-IC MMatrix CalculateFullTransform(MFnTransform node)
+IC MMatrix xrCalculateFullTransform(MFnTransform node)
 {
 	MStatus status;
 	MMatrix mat = node.transformationMatrix(&status);
@@ -1116,7 +1116,7 @@ IC MMatrix CalculateFullTransform(MFnTransform node)
 	if (1==pcnt){
 		MObject obj=node.parent(0);
 		if (obj.hasFn(MFn::kTransform)){
-			mat *= CalculateFullTransform(obj);
+			mat *= xrCalculateFullTransform(obj);
 		}
 	}
 	return mat;
@@ -1151,12 +1151,12 @@ MStatus CXRaySkinExport::getBoneData (const MMatrix& locator)
 				return status;
 			}
 
-			if ((*itBones)->parentId==-1)
+			if ((*itBones)->parentId == -1)
 			{
-				MMatrix FT			= CalculateFullTransform(fnJoint);
-				MMatrix				FT2; 
-				FT2.setToProduct	(FT, locator_i);
-				mat					= FT2;
+				MMatrix FT = xrCalculateFullTransform((*itBones)->path.node(&status)); // Тру костыль, блин;
+				MMatrix FT2;
+				FT2.setToProduct(FT, locator_i);
+				mat = FT2;
 			}
 
 			ParseMatrix(mat,(*itBones)->trans,(*itBones)->orient,(*itBones)->parentId==-1);

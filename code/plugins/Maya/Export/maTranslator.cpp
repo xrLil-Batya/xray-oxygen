@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "maTranslator.h"
-#include "..\..\..\editors\Ecore\editor\EditObject.h"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditObject.h"
 
 #define NO_SMOOTHING_GROUP      -1
 #define INITIALIZE_SMOOTHING    -2
@@ -72,10 +72,10 @@ MStatus CXRayObjectExport::writer ( const MFileObject& file, const MString& opti
 	if (MS::kSuccess==status)
 	{ 
 		OBJECT->Optimize		();
-		OBJECT->Save			(fname);
+		OBJECT->Save			(*FS.w_open(fname));
 
 		Log						("Object succesfully exported.");
-		Msg						("%d vertices, %d faces", OBJECT->GetVertexCount(), OBJECT->GetFaceCount(true, false));
+		Msg						("%d vertices, %d faces", OBJECT->GetVertexCount(), OBJECT->GetFaceCount());
 		if(export_mode)
 		{
 			mname					= file.fullName()+".ogf";

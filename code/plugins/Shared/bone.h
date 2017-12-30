@@ -1,16 +1,16 @@
 //----------------------------------------------------
-#ifndef BoneH
-#define BoneH
-
+#pragma once
 #ifdef _LW_EXPORT
 #include <lwrender.h>
 #include <lwhost.h>
 #endif
+//*** Shared Bone Data ****************************************************************************
+class CBoneData;
+// t-defs
+typedef xr_vector<CBoneData*>		vecBones;
+typedef vecBones::iterator			vecBonesIt;
 
-// refs
-class CBone;
-
-const	u16		BI_NONE				=	u16(-1);
+const u16 BI_NONE = u16(-1);
 
 #define OGF_IKDATA_VERSION		0x0001
 
@@ -103,7 +103,7 @@ struct ECORE_API SJointIKData
     	limits[0].Reset	();
     	limits[1].Reset	();
     	limits[2].Reset	();
-        type			= jtRigid;
+        type			= EJointType::jtRigid;
         spring_factor	= 1.f;
         damping_factor	= 1.f;
         ik_flags.zero	();
@@ -254,5 +254,3 @@ public:
 	bool 			    ExportOGF(IWriter& F);
 #endif
 };
-
-#endif

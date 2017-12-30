@@ -1,14 +1,11 @@
 //----------------------------------------------------
 // file: stdafx.h
 //----------------------------------------------------
-#ifndef __INCDEF_STDAFX_H_
-#define __INCDEF_STDAFX_H_
-
 #pragma once
 
 #define ENGINE_API 
 #define _WIN32_WINNT 0x0500        
-#include "../../../xrCore/xrCore.h"
+#include "../../engine.vc2008/xrCore/xrCore.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -79,22 +76,22 @@ typedef TMsgDlgBtn TMsgDlgButtons[mbHelp];
 #	include "..\..\Shared\ELog.h"
 #pragma warning(pop)
 
-#include "../../../xrEngine/bone.h"
+//#include "../../engine.vc2008/xrEngine/bone.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
 #	include <d3d9.h>
-#	include <d3dx9.h>
 #	include <d3d9types.h>
 #pragma warning(pop)
 
 #include <time.h>
-
 #include <string>
 
 //#define AnsiString std::string
 #define AnsiString xr_string
-DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
+using AStringVec = xr_vector<AnsiString>;
+using AStringIt  = AStringVec::iterator;
+
 
 #define THROW R_ASSERT(0)
 
@@ -108,10 +105,3 @@ DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
 
 #define GAMEMTL_NONE		u32(-1)
 #define _game_data_ "$game_data$"
-
-#endif /*_INCDEF_STDAFX_H_*/
-
-
-
-
-

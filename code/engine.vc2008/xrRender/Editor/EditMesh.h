@@ -2,7 +2,6 @@
 // file: StaticMesh.h
 //----------------------------------------------------
 #pragma once
-
 //----------------------------------------------------
 // refs
 class 	CSurface;
@@ -13,8 +12,11 @@ class 	CExporter;
 class	CCustomObject;
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
+#ifdef _MAYA_PLUGIN
+#include "../Shared/bone.h"
+#else
 #include "../../xrEngine/bone.h"
-
+#endif
 #pragma pack( push,1 )
 const u8	vmtUV		= 0;
 const u8	vmtWeight	= 1;

@@ -5,12 +5,9 @@
 ****/
 //
 //////////////////////////////////////////////////////////////////////
-
-#if !defined(TRIANGLE_H)
-#define TRIANGLE_H
-
+#pragma once
 #include "SmdBone.h"
-#include "..\..\..\editors\Ecore\editor\EditMesh.h"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditMesh.H"
 
 class SmdVertex
 {
@@ -54,5 +51,3 @@ public:
 				SmdTriangle	();
 	virtual		~SmdTriangle();
 };
-
-#endif

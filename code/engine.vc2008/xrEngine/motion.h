@@ -1,6 +1,6 @@
 //----------------------------------------------------
 #pragma once
-
+#ifndef _MAYA_PLUGIN
 #ifdef _LW_EXPORT
 #include <lwrender.h>
 #include <lwhost.h>
@@ -188,3 +188,4 @@ public:
     void			Stop	(){bPlay=false; t_current=min_t; tmp=min_t;}
     void			Pause	(bool val){bPlay=!val;}
 };
+#endif

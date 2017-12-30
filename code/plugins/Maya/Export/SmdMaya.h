@@ -1,7 +1,4 @@
-#ifndef SmdMayaH
-#define SmdMayaH
-
-#include "..\..\..\editors\Ecore\editor\EditMesh.H"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditMesh.H"
 #include "ExportDefines.H"
 #include "SmdBone.h"
 #include "SmdTriangle.h"
@@ -19,9 +16,12 @@ struct lstr {
 typedef xr_map<char *, int, struct lstr> NameIntMap;
 typedef xr_map<int, int> PtLookupMap;
 
-DEFINE_VECTOR(SmdBone*,		SmdBoneVec,	SmdBoneIt);
-DEFINE_VECTOR(SmdTriangle*,	SmdTriVec,	SmdTriIt);
-DEFINE_VECTOR(SmdVertex*,	SmdVertVec,	SmdVertIt);
+using SmdBoneVec = xr_vector<SmdBone*>;
+using SmdBoneIt = SmdBoneVec::iterator;
+using SmdTriVec = xr_vector<SmdTriangle*>;
+using SmdTriIt = SmdTriVec::iterator;
+using SmdVertVec = xr_vector<SmdVertex*>;
+using SmdVertIt = SmdVertVec::iterator;
 
 class CXRaySkinExport: public MPxFileTranslator
 {
@@ -98,5 +98,3 @@ private:
 	bool			m_fSkinCluster;		// true if we should only export the cluster named by "m_strSkinCluster"
 	MString			m_strSkinCluster;	// name of skin cluster selected by user to be exported. if empty, use first cluster in list
 };
-
-#endif //SmdMayaH

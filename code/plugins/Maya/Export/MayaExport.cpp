@@ -2,8 +2,8 @@
 #pragma hdrstop
 
 #include "maTranslator.h"
-#include "..\..\..\editors\Ecore\editor\EditObject.h"
-#include "..\..\..\editors\Ecore\editor\EditMesh.h"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditObject.h"
+#include "..\..\..\engine.vc2008\xrRender\editor\EditMesh.h"
 #include "smoth_flags.h"
 //-----------------------------------------------------------------------------------------
 BOOL CEditableObject::ParseMAMaterial(CSurface* dest, SXRShaderData& d)
@@ -201,7 +201,7 @@ int AppendVertex(FvectorVec& _points, MPoint& _pt)
 	MDistance dst_z	(_pt.z);
 	pt.set		((float)dst_x.asMeters(),(float)dst_y.asMeters(),-(float)dst_z.asMeters());
 
-	for (FvectorIt it=_points.begin(); it!=_points.end(); it++)
+	for (auto it=_points.begin(); it!=_points.end(); it++)
 		if (it->similar(pt)) return it-_points.begin();
 	_points.push_back(pt);
 	return _points.size()-1;
@@ -322,7 +322,8 @@ MStatus CXRayObjectExport::ExportPart(CEditableObject* O, MDagPath& mdagPath, MO
 
 	// write faces
 	{
-		DEFINE_VECTOR(st_Face,FaceVec,FaceIt);
+		using FaceVec = xr_vector<st_Face>;
+		using FaceIt = FaceVec::iterator;
 
 		VMapVec& _vmaps			= MESH->m_VMaps;
 		SurfFaces& _surf_faces	= MESH->m_SurfFaces;
@@ -465,15 +466,15 @@ MStatus CXRayObjectExport::ExportPart(CEditableObject* O, MDagPath& mdagPath, MO
 			MESH->m_VertCount	= _points.size();
 			MESH->m_FaceCount	= _faces.size();
 			MESH->m_Vertices	= xr_alloc<Fvector>(MESH->m_VertCount);
-			Memory.mem_copy		(MESH->m_Vertices,&*_points.begin(),MESH->m_VertCount*sizeof(Fvector));
+			memcpy(MESH->m_Vertices,&*_points.begin(),MESH->m_VertCount*sizeof(Fvector));
 			MESH->m_Faces		= xr_alloc<st_Face>(MESH->m_FaceCount);
-			Memory.mem_copy		(MESH->m_Faces,&*_faces.begin(),MESH->m_FaceCount*sizeof(st_Face));
+			memcpy(MESH->m_Faces,&*_faces.begin(),MESH->m_FaceCount*sizeof(st_Face));
 			MESH->m_SmoothGroups = xr_alloc<u32>(MESH->m_FaceCount);
-			Memory.mem_copy		(MESH->m_SmoothGroups,&*_sgs.begin(),MESH->m_FaceCount*sizeof(u32));
+			memcpy(MESH->m_SmoothGroups,&*_sgs.begin(),MESH->m_FaceCount*sizeof(u32));
 
 			MESH->RecomputeBBox	();
 		}
-		if ((MESH->GetVertexCount()<4)||(MESH->GetFaceCount(true, false)<2))
+		if ((MESH->GetVertexCount()<4)||(MESH->GetFaceCount()<2))
 		{
 			Log		("!Invalid mesh: '%s'. Faces<2 or Verts<4",*MESH->Name());
 			return MS::kFailure;

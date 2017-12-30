@@ -1,9 +1,10 @@
 //---------------------------------------------------------------------------
-#ifndef SkeletonMotionsH
-#define SkeletonMotionsH
-
-//#include		"skeletoncustom.h"
-#include "bone.h"
+#pragma once
+#ifdef _MAYA_PLUGIN
+#include "../Shared/bone.h"
+#else
+#include "../../xrEngine/bone.h"
+#endif
 #include "skeletonmotiondefs.h"	
 // refs
 class CKinematicsAnimated;
@@ -241,4 +242,3 @@ public:
 
 };
 //---------------------------------------------------------------------------
-#endif

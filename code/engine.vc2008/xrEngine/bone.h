@@ -1,7 +1,7 @@
 //----------------------------------------------------
 // refs
 #pragma once
-
+#ifndef _MAYA_PLUGIN
 #include "../xrCore/_matrix.h"
 
 class CBone;
@@ -516,3 +516,4 @@ IC void		CBoneInstance::construct	()
 	mRenderTransform.identity	();
 	Callback_overwrite			= FALSE;
 }
+#endif

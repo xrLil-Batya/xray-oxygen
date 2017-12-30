@@ -2,8 +2,13 @@
 
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
+#ifdef _MAYA_PLUGIN
+#include "../Shared/bone.h"
+#include "../Shared/motion.h"
+#else
 #include "../../xrEngine/bone.h"
 #include "../../xrEngine/motion.h"
+#endif
 #include "../../xrEngine/GameMtlLib.h"
 #ifdef _EDITOR
 #	include "../../../xrServerEntities/PropertiesListTypes.h"
@@ -269,7 +274,7 @@ public:
 
     // skeleton
 	IC BPVec&		BoneParts				()	{return m_BoneParts;}
-    IC int			BonePartCount			()	{return m_BoneParts.size();}
+    IC u32			BonePartCount			()	{return u32(m_BoneParts.size());}
 	IC BoneVec&		Bones					()	{return m_Bones;}
     IC int			BoneCount				()	{return int(m_Bones.size());}
     shared_str		BoneNameByID			(int id);
@@ -278,7 +283,7 @@ public:
     IC CBone*		GetBone					(u32 idx){VERIFY(idx<u32(m_Bones.size())); return m_Bones[idx];}
     void			GetBoneWorldTransform	(u32 bone_idx, float t, CSMotion* motion, Fmatrix& matrix);
 	SMotionVec&		SMotions				()	{return m_SMotions;}
-    IC int			SMotionCount 			()	{return m_SMotions.size();}
+    IC u32			SMotionCount 			()	{return (u32)m_SMotions.size();}
     IC bool			IsAnimated	 			()	{return SMotionCount() || m_SMotionRefs.size();}
     IC void			SkeletonPlay 			()	{m_SMParam.Play();}
     IC void			SkeletonStop 			()	{m_SMParam.Stop();}
