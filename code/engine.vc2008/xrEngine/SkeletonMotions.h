@@ -3,7 +3,7 @@
 #ifdef _MAYA_PLUGIN
 #include "../Shared/bone.h"
 #else
-#include "../../xrEngine/bone.h"
+#include "../xrEngine/bone.h"
 #endif
 #include "skeletonmotiondefs.h"	
 // refs
