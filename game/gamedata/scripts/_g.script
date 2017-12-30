@@ -304,9 +304,9 @@ function vector_rotate_y(v, angle)
 end
 
 -- очистка таблицы.
-function clear_table (t)
-	while #t > 0 do
-		table.remove (t, #t)
+function clear_table (t) --\ “еперь чистит любые таблицы
+	for key, val in pairs(t) do
+		t[key] = nil
 	end
 end
 
