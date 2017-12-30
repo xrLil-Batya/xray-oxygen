@@ -1,0 +1,32 @@
+--[[-----------------------------------------]]
+-- Analogue of engine alcohol-effect;
+--[[-----------------------------------------]]
+
+local time_affect = nil
+
+function use(restart)
+    local float_alc = system_ini():r_float("vodka", "eat_alcohol") * 10000
+	
+    if restart == true and float_alc ~= nil then
+	    if time_affect == nil then
+	        time_affect = time_global() + float_alc
+		else
+		    time_affect = time_affect + float_alc
+		end
+	end
+
+	level.add_cam_effector("camera_effects\\surge_01.anm", 101, false, "oxygen_alcohol.check")
+    level.add_pp_effector("alcohol.ppe", 101, false)
+	
+	if math.random(1, 2) == 1 then
+	    level.add_pp_effector("deimos1.ppe", 102, false)
+	else
+	    level.add_pp_effector("blink.ppe", 103, false)
+	end
+end
+
+function check()
+    if time_affect ~= nil and not time_global() > time_affect then
+        this.use(false)
+	end
+end

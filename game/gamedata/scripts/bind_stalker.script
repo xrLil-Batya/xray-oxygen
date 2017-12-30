@@ -85,10 +85,9 @@ function actor_binder:net_destroy()
 	self.object:set_callback(callback.key_release, nil)
 	self.object:set_callback(callback.key_hold, nil)
 
-	if string.find(command_line(), "-debug_mode") then
-	    log("--------->"..tostring(_G.amb_vol))
-	    log("--------->"..tostring(_G.mus_vol))
-	end
+	log("--------->"..tostring(_G.amb_vol))
+	log("--------->"..tostring(_G.mus_vol))
+
 	if(_G.amb_vol~=0) then
 		get_console():execute("snd_volume_eff "..tostring(_G.amb_vol))
 		_G.amb_vol = 0
@@ -131,9 +130,7 @@ end
 
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:info_callback(npc, info_id)
-    if string.find(command_line(), "-debug_mode") then
-	    printf("*INFO*: npc='%s' id='%s'", npc:name(), info_id)
-    end
+	printf("*INFO*: npc='%s' id='%s'", npc:name(), info_id)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:on_trade (item, sell_bye, money)
@@ -148,9 +145,7 @@ function actor_binder:article_callback(npc, group, name)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:on_item_take (obj)
-    if string.find(command_line(), "-debug_mode") then
-	    printf("on_item_take [%s]", obj:name())
-	end
+	printf("on_item_take [%s]", obj:name())
 	if isArtefact(obj) then
 		local anomal_zone = bind_anomaly_zone.parent_zones_by_artefact_id[obj:id()]
 		if anomal_zone ~= nil then
@@ -181,6 +176,10 @@ function actor_binder:use_inventory_item(obj)
 			get_console():execute("snd_volume_music 0")
 			get_console():execute("snd_volume_eff 0")
 		end
+		
+		if obj:section() == "vodka" then
+		    oxygen_alcohol.use(true)
+		end
 	end
 end
 
@@ -200,9 +199,7 @@ function anabiotic_callback()
 	end
 	level.change_game_time(0,0,rnd)
 	level_weathers.get_weather_manager():forced_weather_change()
-	if string.find(command_line(), "-debug_mode") then
-	    printf("anabiotic_callback: time forwarded on [%d]", rnd)
-	end
+	printf("anabiotic_callback: time forwarded on [%d]", rnd)
 end
 
 function anabiotic_callback2()
@@ -270,17 +267,13 @@ function actor_binder:update(delta)
 	-- Апдейт прятание оружия игрока во время диалога
 	if self.object:is_talking() then
 		if self.weapon_hide_in_dialog == false then
-		    if string.find(command_line(), "-debug_mode") then
-			    printf("hiding weapon!!!")
-			end
+			printf("hiding weapon!!!")
 			self.object:hide_weapon()
 			self.weapon_hide_in_dialog = true
 		end
 	else
 		if self.weapon_hide_in_dialog == true then
-		    if string.find(command_line(), "-debug_mode") then
-			    printf("restoring weapon!!!")
-			end
+			printf("restoring weapon!!!")
 			self.object:restore_weapon()
 			self.weapon_hide_in_dialog = false
 		end
@@ -288,17 +281,13 @@ function actor_binder:update(delta)
 	-- Апдейт прятание оружия игрока в зоне sr_no_weapon
 	if check_for_weapon_hide_by_zones() == true then
 		if self.weapon_hide == false then
-		    if string.find(command_line(), "-debug_mode") then
-			    printf("hiding weapon!!!")
-			end
+			printf("hiding weapon!!!")
 			self.object:hide_weapon()
 			self.weapon_hide = true
 		end
 	else
 		if self.weapon_hide == true then
-		    if string.find(command_line(), "-debug_mode") then
-			    printf("restoring weapon!!!")
-			end
+			printf("restoring weapon!!!")
 			self.object:restore_weapon()
 			self.weapon_hide = false
 		end
@@ -310,9 +299,7 @@ function actor_binder:update(delta)
 	end
 
 	if self.bCheckStart then
-	    if string.find(command_line(), "-debug_mode") then
-		    printf("SET DEFAULT INFOS")
-		end
+		printf("SET DEFAULT INFOS")
 		if not has_alife_info("global_dialogs") then
 			self.object:give_info_portion("global_dialogs")
 		end
@@ -427,9 +414,7 @@ function actor_binder:load(reader)
 	object_binder.load(self, reader)
 	--' Загружаем уровень сложности
 	local game_difficulty = reader:r_u8()
-	if string.find(command_line(), "-debug_mode") then
-	    printf("load game_difficulty %s", tostring(game_difficulty))
-	end
+	printf("load game_difficulty %s", tostring(game_difficulty))
 	get_console():execute("g_game_difficulty "..game_difficulty_by_num[game_difficulty])
 	local stored_input_time = reader:r_u8()
 	if stored_input_time == true then
@@ -535,6 +520,9 @@ local emun_on_console = 0.5 -- mrnmwar
 
 function actor_binder:key_press(key, act)
 	noclip_mode.key_press(key)
+	if key == DIK_keys.DIK_F5 then
+	    oxygen_quicksaves.save()
+	end
 end
 
 function actor_binder:key_release(key, act)
@@ -556,15 +544,11 @@ end
 
 -- Weapon functions
 function hide_weapon(zone_id)
-    if string.find(command_line(), "-debug_mode") then
-	    printf("[WEAPON_CONTROL]:hiding weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
-	end
+	printf("[WEAPON_CONTROL]:hiding weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
 	weapon_hide[zone_id] = true
 end
 
 function restore_weapon(zone_id)
-    if string.find(command_line(), "-debug_mode") then
-	    printf("[WEAPON_CONTROL]:restoring weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
-	end
+	printf("[WEAPON_CONTROL]:restoring weapon from zone [%s] in section [%s]!!!", zone_id, db.storage[zone_id].active_section)
 	weapon_hide[zone_id] = false
 end

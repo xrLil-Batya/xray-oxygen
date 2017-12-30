@@ -1,0 +1,17 @@
+--[[-----------------------------------------]]
+-- Analogue of engine quicksaves;
+-- Use at your own risk!;
+--[[-----------------------------------------]]
+
+local quicksaves_count = 0
+
+function save()
+	if quicksaves_count <= 10 then
+	    get_console():execute("save quicksave - "..quicksaves_count)
+		quicksaves_count = quicksaves_count + 1
+	else
+		quicksaves_count = 0
+		get_console():execute("save quicksave - "..quicksaves_count)
+	end
+end
+

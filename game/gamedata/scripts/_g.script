@@ -35,7 +35,6 @@ end
 ----------------------------------------------------------------------
 dev_debug 		  = false
 sim_debug 		  = false
-Script_Debug_flag = false -- // Used only debugging
 mus_vol 		  = 0
 amb_vol 		  = 0
 ----------------------------------------------------------------------
@@ -54,7 +53,7 @@ local scripts_to_print =	{
 ----------------------------------------------------------------------
 --// LuaScriptDebugger
 function log(mess, ...)
-	if (Script_Debug_flag == true) then
+	if string.find(command_line(), "-debug_mode") then
 		to_log(mess, ...)
 	end
 end
@@ -67,7 +66,7 @@ end
 ----------------------------------------------------------------------
 
 function printf(fmt,...)
-	if (Script_Debug_flag == true) then
+	if string.find(command_line(), "-debug_mode") then
 		local is_g = 0
 		local result = fmt
 		if debug == nil then
@@ -455,8 +454,19 @@ end
 
 -- Крешнуть игру (после вывода сообщения об ошибке в лог)
 function abort(fmt, ...)
+    local no_abort = true
 	local reason = string.format(fmt, ...)
-	--error_log(reason)
+	
+    if db.actor ~= nil then
+	    news_manager.send_tip(db.actor, "Произошла критическая ошибка, подробности в логе.", nil, nil, nil)
+	end
+	
+	if no_abort == true then
+	    -- "log" используется для деббага!
+	    to_log("!Call abort, reason: "..reason)
+	else
+	    error_log("!Call abort, reason: "..reason)
+	end
 end
 
 function set_inactivate_input_time(delta)
@@ -486,9 +496,7 @@ function npc_in_actor_frustrum(npc)
 	--local actor_dir = db.actor:direction()
 	local npc_dir = npc:position():sub(db.actor:position())
 	local yaw = yaw_degree3d(actor_dir, npc_dir)
-	if string.find(command_line(), "-debug_mode") then
-	    printf("YAW %s", tostring(yaw))
-    end
+	printf("YAW %s", tostring(yaw))
 	return yaw < 35
 end
 
@@ -580,9 +588,7 @@ function start_game_callback()
 		[clsid.artefact] 				= true,
 		[clsid.artefact_s] 				= true}
 
-    if string.find(command_line(), "-debug_mode") then
-	    printf("start_game_callback called")
-	end
+	printf("start_game_callback called")
 	
 	smart_names.init_smart_names_table()
 	task_manager.clear_task_manager()
@@ -688,9 +694,7 @@ ammo_section["ammo_pkm_100"]		= true
 quest_section = {}
 -- преобразует строку в соответствии со значением
 function get_param_string(src_string , obj)
-    if string.find(command_line(), "-debug_mode") then
-	    printf("src_string is [%s] obj name is [%s]", tostring(src_string), obj:name())
-	end
+	printf("src_string is [%s] obj name is [%s]", tostring(src_string), obj:name())
 	local script_ids = db.script_ids[obj:id()]
 	local out_string, num = string.gsub(src_string, "%$script_id%$", tostring(script_ids))
 	if num > 0 then
@@ -725,14 +729,12 @@ function set_save_marker(p, mode, check, prefix)
 
 		if mode == "save" then
 			local dif = p:w_tell() - save_markers[result]
-			if string.find(command_line(), "-debug_mode") then
-			    printf(result..": SAVE DIF: %s", dif)
-			    if dif >= 8000 then
-				    printf("WARNING! may be this is problem save point")
-			    end
-			    if dif >= 10240 then
-			        printf("You are saving too much!")
-			    end
+			printf(result..": SAVE DIF: %s", dif)
+			if dif >= 8000 then
+				printf("WARNING! may be this is problem save point")
+			end
+			if dif >= 10240 then
+			    printf("You are saving too much!")
 			end
 			p:w_u16(dif)
 		else
@@ -741,26 +743,20 @@ function set_save_marker(p, mode, check, prefix)
 			if dif ~= c_dif then
 			 	abort("INCORRECT LOAD [%s].[%s][%s]", result, dif, c_dif)
 			else
-			    if string.find(command_line(), "-debug_mode") then
-			 	    printf(result..": LOAD DIF: %s", dif)
-				end
+			 	printf(result..": LOAD DIF: %s", dif)
 			end
 		end
 		return
 	end
 
 	if mode == "save" then
-	    if string.find(command_line(), "-debug_mode") then
-		    printf(result..": set save marker: %s", p:w_tell())
-		end
+		printf(result..": set save marker: %s", p:w_tell())
 		save_markers[result] = p:w_tell()
 		if p:w_tell() > 16000 then
 			abort("You are saving too much")
 		end
 	else
-	    if string.find(command_line(), "-debug_mode") then
-		    printf(result..": set load marker: %s", p:r_tell())
-		end
+		printf(result..": set load marker: %s", p:r_tell())
 		save_markers[result] = p:r_tell()
 	end
 
@@ -786,9 +782,7 @@ function change_team_squad_group(se_obj, team, squad, group)
 		se_obj.squad = squad
 		se_obj.group = group
 	end
-	if string.find(command_line(), "-debug_mode") then
-	    printf("_G:TSG: [%s][%s][%s]", tostring(se_obj.team), tostring(se_obj.squad), tostring(se_obj.group))
-	end
+	printf("_G:TSG: [%s][%s][%s]", tostring(se_obj.team), tostring(se_obj.squad), tostring(se_obj.group))
 end
 --     Story_ID -------------------------------------------------------------
 function add_story_object(obj_id , story_obj_id)
