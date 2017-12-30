@@ -330,7 +330,7 @@ function actor_binder:update(delta)
 	simulation_objects.get_sim_obj_registry():update_avaliability(alife():actor())
 
 	if not self.loaded then
-	    if string.find(command_line(), "-debug_mode") then
+	    if ScriptDebug then
 		    get_console():execute("dump_infos")
 		end
 		self.loaded = true

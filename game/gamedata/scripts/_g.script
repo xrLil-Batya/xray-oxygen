@@ -1,6 +1,8 @@
 ---------------------------------------------------------------
 -- // LuaJIT 
 if (jit == nil) then profiler.setup_hook() end
+-- // Math::Random init 
+math.randomseed(os.time())
 ---------------------------------------------------------------
 function empty	(container)
 	if (type(container) == "function") then
@@ -33,10 +35,11 @@ function load_scheme(filename, scheme, stype)
 end
 
 ----------------------------------------------------------------------
-dev_debug 		  = false
-sim_debug 		  = false
-mus_vol 		  = 0
-amb_vol 		  = 0
+dev_debug 		= false
+sim_debug 		= false
+mus_vol 		= 0
+amb_vol 		= 0
+ScriptDebug		= string.find(command_line(), "-debug_mode")
 ----------------------------------------------------------------------
 local scripts_to_print =	{
 	["stalker_generic"] = true, ["xr_smartcover"] = true, 	["xr_logic"] = true, 	 ["sim_squad_scripted"] = true,
@@ -53,7 +56,7 @@ local scripts_to_print =	{
 ----------------------------------------------------------------------
 --// LuaScriptDebugger
 function log(mess, ...)
-	if string.find(command_line(), "-debug_mode") then
+	if ScriptDebug then
 		to_log(mess, ...)
 	end
 end
@@ -66,7 +69,7 @@ end
 ----------------------------------------------------------------------
 
 function printf(fmt,...)
-	if string.find(command_line(), "-debug_mode") then
+	if ScriptDebug then
 		local is_g = 0
 		local result = fmt
 		if debug == nil then
@@ -82,8 +85,6 @@ function printf(fmt,...)
 		script_name,is_g = string.gsub(script_name, "_g", "")
 		if is_g == 0 then
 			result = script_name..":("..info_table.currentline.."):"..fmt
-		else
-			result = fmt
 		end
 		log(string.format(result,...))
 	end
@@ -170,7 +171,6 @@ function distance_between_safe(obj1, obj2)
 	return obj1:position():distance_to(obj2:position())
 end
 
-local aa = nil
 --' іроверка на инфопоршнv, даже если игрока не существует
 -- Пример: has_info("что-то")
 function has_info(info)
@@ -186,7 +186,6 @@ end
 --------------------------------------------------
 -- Functions and variables added by Zmey
 --------------------------------------------------
-
 -- іонстанта, которуі использовать в местах, где нужно задать неограниченное время действия
 time_infinite = 100000000
 
@@ -227,7 +226,6 @@ function set_current_time (hour, min, sec)
 end
 
 function random_number (min_value, max_value)
-	math.randomseed (device ():time_global ())
 	if min_value == nil and max_value == nil then
 		return math.random ()
 	else
@@ -501,7 +499,7 @@ function npc_in_actor_frustrum(npc)
 end
 
 function start_game_callback()
-	aa = alife()
+	alife()
 
 	squad_community_by_behaviour = {
 		["stalker"]							= "stalker",
