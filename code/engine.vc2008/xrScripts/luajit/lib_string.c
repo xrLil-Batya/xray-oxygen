@@ -268,14 +268,20 @@ static int matchbracketclass(int c, const char *p, const char *ec)
   return !sig;
 }
 
-static int singlematch(int c, const char *p, const char *ep)
+static int singlematch(MatchState *ms, const char *s, const char *p, const char *ep)
 {
-  switch (*p) {
-  case '.': return 1;  /* matches any char */
-  case L_ESC: return match_class(c, uchar(*(p+1)));
-  case '[': return matchbracketclass(c, p, ep-1);
-  default:  return (uchar(*p) == c);
-  }
+	if (s < ms->src_end)
+	{
+		int c = uchar(*s);
+		switch (*p)
+		{
+		 case '.': return 1;  /* matches any char */
+		 case L_ESC: return match_class(c, uchar(*(p + 1)));
+		 case '[': return matchbracketclass(c, p, ep - 1);
+		 default:  return (uchar(*p) == c);
+		}
+	}
+	return 0;
 }
 
 static const char *match(MatchState *ms, const char *s, const char *p);
@@ -307,7 +313,7 @@ static const char *max_expand(MatchState *ms, const char *s,
 			      const char *p, const char *ep)
 {
   ptrdiff_t i = 0;  /* counts maximum expand for item */
-  while ((s+i)<ms->src_end && singlematch(uchar(*(s+i)), p, ep))
+  while (singlematch(ms, s + i, p, ep))
     i++;
   /* keeps trying to match with the maximum repetitions */
   while (i>=0) {
@@ -325,7 +331,7 @@ static const char *min_expand(MatchState *ms, const char *s,
     const char *res = match(ms, s, ep+1);
     if (res != NULL)
       return res;
-    else if (s<ms->src_end && singlematch(uchar(*s), p, ep))
+    else if (singlematch(ms, s, p, ep))
       s++;  /* try with one more repetition */
     else
       return NULL;
@@ -424,7 +430,7 @@ init: /* using goto's to optimize tail recursion */
 		break;
 	default: dflt: {  /* it is a pattern item */
 		const char *ep = classend(ms, p);  /* points to what is next */
-		int m = s < ms->src_end && singlematch(uchar(*s), p, ep);
+		int m = singlematch(ms, s, p, ep);
 		switch (*ep) {
 		case '?': {  /* optional */
 			const char *res;
