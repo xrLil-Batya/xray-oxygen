@@ -860,3 +860,6 @@ function show_all_ui(show)
 			db.actor:disable_hit_marks(true)
 	end
 end
+
+
+prefetch("lua_addition") --/ подключаем дополнительный модуль.
