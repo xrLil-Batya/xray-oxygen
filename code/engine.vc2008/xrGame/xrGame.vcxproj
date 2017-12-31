@@ -2388,8 +2388,6 @@
     <ClCompile Include="script_lanim.cpp">
     </ClCompile>
     <ClCompile Include="script_particles.cpp" />
-    <ClCompile Include="script_particles_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_sound.cpp" />
     <ClCompile Include="script_sound_script.cpp">
     </ClCompile>
