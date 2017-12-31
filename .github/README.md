@@ -11,6 +11,11 @@ Allowed to use **any** projects.
 * Remove unnecessary, obsolete, dead code
 * Make modkit
 
+### Downloads
+* [Engine](https://github.com/xrOxygen/xray-oxygen/releases/)
+* [Modkit xrGame) https://github.com/xrOxygen/xray-oxygen/releases/tag/1.6.02.872m
+* [Lightwawe 2015 Plugins](https://github.com/xrOxygen/xray-oxygen/releases/tag/LW_PLGN)
+
 ### Wiki
 * [Change log](https://github.com/ForserX/FRay-Project/wiki)
 * [Features](https://github.com/ForserX/FRay-Project/wiki/Features)
