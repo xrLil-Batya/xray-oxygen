@@ -13,7 +13,7 @@ Allowed to use **any** projects.
 
 ### Downloads
 * [Engine](https://github.com/xrOxygen/xray-oxygen/releases/)
-* [Modkit xrGame) https://github.com/xrOxygen/xray-oxygen/releases/tag/1.6.02.872m
+* [Modkit xrGame](https://github.com/xrOxygen/xray-oxygen/releases/tag/1.6.02.872m)
 * [Lightwawe 2015 Plugins](https://github.com/xrOxygen/xray-oxygen/releases/tag/LW_PLGN)
 
 ### Wiki
