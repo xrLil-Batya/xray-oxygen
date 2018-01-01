@@ -742,34 +742,34 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	
 	switch(cmd) 
 	{
-	case kWPN_RELOAD:
-	{
-		CActor* pActor = smart_cast<CActor*>(H_Parent());
-		CCustomOutfit* pOutfit = smart_cast<CCustomOutfit*>(pActor->inventory().ItemFromSlot(OUTFIT_SLOT));
+	    case kWPN_RELOAD:
+	    {
+		    CActor* pActor = smart_cast<CActor*>(H_Parent());
+		    CCustomOutfit* pOutfit = pActor->GetOutfit();
 
-	    if (psActorFlags.test(AF_RELOADONSPRINT) || !psActorFlags.test(AF_RELOADONSPRINT) && !(pActor->mstate_real&(mcCrouch | mcAccel | mcClimb | mcSprint)) ||
-			(!psActorFlags.test(AF_RELOADONSPRINT) && (pActor->mstate_real&(mcCrouch | mcAccel | mcClimb | mcSprint)) && pOutfit && pOutfit->m_reload_on_sprint))
-		    if(flags&CMD_START)
-			    if(iAmmoElapsed < iMagazineSize || IsMisfire())
-	                Reload();
-	}
+	        if (psActorFlags.test(AF_RELOADONSPRINT) || !psActorFlags.test(AF_RELOADONSPRINT) && !(pActor->mstate_real&(mcAccel | mcClimb | mcSprint)) ||
+			(!psActorFlags.test(AF_RELOADONSPRINT) && (pActor->mstate_real&(mcAccel | mcClimb | mcSprint)) && pOutfit && pOutfit->m_reload_on_sprint))
+		        if(flags&CMD_START)
+			        if(iAmmoElapsed < iMagazineSize || IsMisfire())
+	                    Reload();
+	    }
 		return true;
-	case kWPN_FIREMODE_PREV:
+	    case kWPN_FIREMODE_PREV:
 		{
 			if(flags&CMD_START) 
 			{
 				OnPrevFireMode();
 				return true;
 			};
-		}break;
-	case kWPN_FIREMODE_NEXT:
+		}   break;
+	    case kWPN_FIREMODE_NEXT:
 		{
 			if(flags&CMD_START) 
 			{
 				OnNextFireMode();
 				return true;
 			};
-		}break;
+		}   break;
 	}
 	return false;
 }

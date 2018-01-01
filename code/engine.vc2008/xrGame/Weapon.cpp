@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "Weapon.h"
+#include "WeaponMagazined.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
 #include "entity_alive.h"
@@ -26,6 +27,7 @@
 #include "ui/UIXmlInit.h"
 #include "Torch.h"
 #include "cameralook.h"
+#include "CustomOutfit.h"
 
 static const int WEAPON_REMOVE_TIME = 60000;
 static const float ROTATION_TIME = 0.25f;
@@ -958,9 +960,15 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			return true;
 		case kWPN_NEXT: 
 			{
-				return SwitchAmmoType(flags);
-			} 
+				CActor* pActor = smart_cast<CActor*>(H_Parent());
+				CCustomOutfit* pOutfit = pActor->GetOutfit();
 
+	            if (psActorFlags.test(AF_RELOADONSPRINT) || !psActorFlags.test(AF_RELOADONSPRINT) && !(pActor->mstate_real&(mcAccel | mcClimb | mcSprint)) ||
+			        (!psActorFlags.test(AF_RELOADONSPRINT) && (pActor->mstate_real&(mcAccel | mcClimb | mcSprint)) && pOutfit && pOutfit->m_reload_on_sprint))
+				    return SwitchAmmoType(flags);
+				else
+					return false;
+			}
 		case kWPN_ZOOM:
 			if(IsZoomEnabled())
 			{
