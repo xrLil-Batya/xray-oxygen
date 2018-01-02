@@ -157,6 +157,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_pObjectWeLookingAt	= 0;
 	pStatGraph				= 0;
 	m_pActorEffector		= 0;
+	m_vehicle_anims	        = xr_new<SActorVehicleAnims>();
 	m_entity_condition		= 0;
 	m_statistic_manager		= 0;
 	m_sDefaultObjAction		= 0;
@@ -204,6 +205,7 @@ CActor::~CActor()
 	xr_delete				(m_pActorEffector);
 	xr_delete				(m_pPhysics_support);
 	xr_delete				(m_anims);
+	xr_delete               (m_vehicle_anims);
 }
 
 void CActor::reinit	()
