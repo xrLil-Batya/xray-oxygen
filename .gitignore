@@ -18,6 +18,7 @@
 *.obj
 *.aps
 *.db
+*.tmp
 
 binaries/
 librarieswin32/
