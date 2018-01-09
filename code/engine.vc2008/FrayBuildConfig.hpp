@@ -16,3 +16,4 @@
 //#define NEW_SLOTS // Add knife slot and binocular slot in inventory
 //#define ASPAWN_CROW // Spawn crows over actor
 //#define NEW_ANIMS_WPN // Enable anm_..._crouch, anm_reload_empty
+//#define DEAD_BODY_WEAPON // Incorrect!!!

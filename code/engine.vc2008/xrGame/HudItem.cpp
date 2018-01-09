@@ -10,6 +10,7 @@
 #include "../xrEngine/CameraBase.h"
 #include "player_hud.h"
 #include "../xrEngine/SkeletonMotions.h"
+#include "../FrayBuildConfig.hpp"
 
 CHudItem::CHudItem()
 {
@@ -70,13 +71,14 @@ void CHudItem::renderable_Render()
 			CInventoryOwner	*owner = smart_cast<CInventoryOwner*>(object().H_Parent());
 			VERIFY			(owner);
 			CInventoryItem	*self = smart_cast<CInventoryItem*>(this);
-			
+#ifdef DEAD_BODY_WEAPON
 			if (item().BaseSlot() != INV_SLOT_3)
 			{
 				if (owner->attached(self))
 					on_renderable_Render();
 			} 
 			else 
+#endif
 				on_renderable_Render();
 		}
 	}

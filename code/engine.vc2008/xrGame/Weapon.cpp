@@ -28,6 +28,7 @@
 #include "Torch.h"
 #include "cameralook.h"
 #include "CustomOutfit.h"
+#include "../FrayBuildConfig.hpp"
 
 static const int WEAPON_REMOVE_TIME = 60000;
 static const float ROTATION_TIME = 0.25f;
@@ -115,26 +116,24 @@ void CWeapon::UpdateXForm	()
 	const CInventoryOwner	*parent = smart_cast<const CInventoryOwner*>(E);
 	if (parent && parent->use_simplified_visual())
 		return;
-
+#ifdef DEAD_BODY_WEAPON
 	if (!m_can_be_strapped_rifle)
-	{
+#endif
 		if (parent->attached(this))
 			return;
-	}
 
 	IKinematics*			V = smart_cast<IKinematics*>	(E->Visual());
 	VERIFY					(V);
 
 	// Get matrices
 	int						boneL = -1, boneR = -1, boneR2 = -1;
-
+	
+#ifdef DEAD_BODY_WEAPON
 	if ((m_strap_bone0_id == -1 || m_strap_bone1_id == -1) && m_can_be_strapped_rifle)
 	{
 		m_strap_bone0_id = V->LL_BoneID(m_strap_bone0);
 		m_strap_bone1_id = V->LL_BoneID(m_strap_bone1);
 	}
-
-
 
 	if(parent->inventory().GetActiveSlot() != INV_SLOT_3 && m_can_be_strapped_rifle && parent->inventory().InSlot(this))
 	{
@@ -151,7 +150,9 @@ void CWeapon::UpdateXForm	()
 		if (m_strapped_mode_rifle)
 			m_strapped_mode_rifle = false;
 	}
-	
+#else
+	E->g_WeaponBones(boneL,boneR,boneR2);
+#endif	
 	if (boneR == -1)		return;
 
 	if ((HandDependence() == hd1Hand) || (GetState() == eReload) || (!E->g_Alive()))
@@ -929,10 +930,14 @@ void CWeapon::SetDefaults()
 void CWeapon::UpdatePosition(const Fmatrix& trans)
 {
 	Position().set		(trans.c);
+#ifdef DEAD_BODY_WEAPON
 	if (m_strapped_mode || m_strapped_mode_rifle)
 		XFORM().mul			(trans, m_StrapOffset);
 	else
 		XFORM().mul			(trans, m_Offset);
+#else
+	XFORM().mul(trans,m_strapped_mode ? m_StrapOffset : m_Offset);
+#endif
 	VERIFY				(!fis_zero(DET(renderable.xform)));
 }
 

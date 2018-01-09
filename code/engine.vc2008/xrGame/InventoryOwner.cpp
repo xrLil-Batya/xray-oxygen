@@ -26,6 +26,7 @@
 #include "alife_object_registry.h"
 #include "CustomOutfit.h"
 #include "Bolt.h"
+#include "../FrayBuildConfig.hpp"
 
 CInventoryOwner::CInventoryOwner			()
 {
@@ -305,10 +306,10 @@ void CInventoryOwner::renderable_Render		()
 {
 	if (inventory().ActiveItem())
 		inventory().ActiveItem()->renderable_Render();
-	
+#ifdef DEAD_BODY_WEAPON
 	if (inventory().ItemFromSlot(INV_SLOT_3))
 		inventory().ItemFromSlot(INV_SLOT_3)->renderable_Render();
-
+#endif
 	CAttachmentOwner::renderable_Render();
 }
 

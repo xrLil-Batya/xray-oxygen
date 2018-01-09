@@ -18,8 +18,13 @@
 #include "game_base_space.h"
 #include "uigamecustom.h"
 #include "clsid_game.h"
-#include "ai/stalker/ai_stalker.h"
-#include "weaponmagazined.h"
+#include "../FrayBuildConfig.hpp"
+
+#ifdef DEAD_BODY_WEAPON
+#	include "ai/stalker/ai_stalker.h"
+#	include "weaponmagazined.h"
+#endif
+
 #include "static_cast_checked.hpp"
 #include "player_hud.h"
 
@@ -118,7 +123,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	//usually net_Import arrived for objects that not has a parent object..
 	//for unknown reason net_Import arrived for object that has a parent, so correction prediction schema will crash
 	Level().RemoveObject_From_4CrPr		(pObj);
-
+#ifdef DEAD_BODY_WEAPON
 	u16 actor_id = Level().CurrentEntity()->ID();
 
 	if (GetOwner()->object_id()==actor_id && this->m_pOwner->object_id()==actor_id)		//actors inventory
@@ -131,7 +136,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		}
 			
 	}
-	
+#endif
 	m_all.push_back						(pIItem);
 
 	if(!strict_placement)
@@ -1078,7 +1083,7 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 				items_container.push_back(pIItem);
 		}
 	}
-	
+#ifdef DEAD_BODY_WEAPON
 	CAI_Stalker* pOwner = smart_cast<CAI_Stalker*>(m_pOwner);
 	if (pOwner && !pOwner->g_Alive())
 	{
@@ -1093,7 +1098,9 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 			}
 		}
 	}
-	else if (m_bSlotsUseful)
+	else 
+#endif
+	if (m_bSlotsUseful)
 	{
 		u16 I = FirstSlot();
 		u16 E = LastSlot();
