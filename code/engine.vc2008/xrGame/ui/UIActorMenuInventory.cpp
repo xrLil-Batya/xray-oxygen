@@ -742,8 +742,10 @@ bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 	CObject*	pObj			= smart_cast<CObject*>		(iitem);
 	shared_str	section_name	= pObj->cNameSect();	
 	
+	Ivector2 iWH = iitem->GetInvGridRect().rb;
 	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
-	if (!CanSwitchToFastSlot)
+	
+	if (!CanSwitchToFastSlot || iWH.x > 1 || iWH.y > 1)
 		return false;	
 	
 	m_pQuickSlot->SetItem(create_cell_item(iitem), GetUICursor().GetCursorPosition());
