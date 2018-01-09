@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#include "customoutfit.h"
+#include "CustomOutfit.h"
 #include "../xrphysics/PhysicsShell.h"
 #include "inventory_space.h"
 #include "Inventory.h"
@@ -383,3 +383,19 @@ void CCustomOutfit::AddBonesProtection(LPCSTR bones_section)
 	if ( parent && parent->Visual() && m_BonesProtectionSect.size() )
 		m_boneProtection->add(bones_section, smart_cast<IKinematics*>( parent->Visual() ) );
 }
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CCustomOutfit::script_register(lua_State *L)
+{
+	module(L)
+	[
+		class_<CCustomOutfit, CGameObject>("CCustomOutfit")
+			.def(constructor<>()),
+
+		class_<CHelmet, CGameObject>("CHelmet")
+			.def(constructor<>())
+	];
+}
+

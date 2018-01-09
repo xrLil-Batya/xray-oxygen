@@ -109,10 +109,7 @@
 #	include "infodocument.h"
 #	include "attachable_item.h"
 
-#	include "ScientificOutfit.h"
-#	include "StalkerOutfit.h"
-#	include "MilitaryOutfit.h"
-#	include "ExoOutfit.h"
+#	include "CustomOutfit.h"
 #	include "ActorHelmet.h"
 
 #	include "f1.h"
@@ -289,10 +286,7 @@ void CObjectFactory::register_classes	()
 	ADD(CInventoryItemObject	,CSE_ALifeItem					,CLSID_IITEM_ATTACH				,"obj_attachable");
 
 	//Equipment outfit
-	ADD(CScientificOutfit		,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_SCIENTIFIC		,"equ_scientific");
-	ADD(CStalkerOutfit			,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_STALKER		,"equ_stalker");
-	ADD(CMilitaryOutfit			,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_MILITARY		,"equ_military");
-	ADD(CExoOutfit				,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_EXO			,"equ_exo");
+	ADD(CCustomOutfit			,CSE_ALifeItemCustomOutfit		,CLSID_EQUIPMENT_STALKER		,"equ_stalker");
 	ADD(CHelmet					,CSE_ALifeItem					,CLSID_EQUIPMENT_HELMET			,"helmet");
 
 	// Grenades

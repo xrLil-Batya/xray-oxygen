@@ -1496,10 +1496,6 @@
     <ClInclude Include="ActorHelmet.h" />
     <ClInclude Include="BoneProtections.h" />
     <ClInclude Include="CustomOutfit.h" />
-    <ClInclude Include="ExoOutfit.h" />
-    <ClInclude Include="MilitaryOutfit.h" />
-    <ClInclude Include="ScientificOutfit.h" />
-    <ClInclude Include="StalkerOutfit.h" />
     <ClInclude Include="InfoDocument.h" />
     <ClInclude Include="hud_item_object.h" />
     <ClInclude Include="HudItem.h" />
@@ -2663,11 +2659,6 @@
     <ClCompile Include="ActorHelmet.cpp" />
     <ClCompile Include="BoneProtections.cpp" />
     <ClCompile Include="CustomOutfit.cpp" />
-    <ClCompile Include="ExoOutfit.cpp" />
-    <ClCompile Include="MilitaryOutfit.cpp" />
-    <ClCompile Include="ScientificOutfit.cpp" />
-    <ClCompile Include="StalkerOutfit.cpp">
-    </ClCompile>
     <ClCompile Include="InfoDocument.cpp" />
     <ClCompile Include="hud_item_object.cpp" />
     <ClCompile Include="HudItem.cpp" />
