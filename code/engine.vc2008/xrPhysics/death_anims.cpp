@@ -2,6 +2,10 @@
 #include "death_anims.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 
+// #ifdef DEBUG
+// #include "../xrGame/entity_alive.h"
+// #endif
+
 BOOL death_anim_debug	 = FALSE;
 
 rnd_motion::rnd_motion	( )
@@ -62,10 +66,10 @@ type_motion* type_motion::setup( IKinematicsAnimated* k, CInifile const * ini, L
 		LPCSTR line = ini->r_string( section, type );
 		if( !line )
 		{
-#ifdef	DEBUG
-		if( death_anim_debug )
-			Msg("death anims: load: no setings in section %s for %s", section, type );
-#endif
+// #ifdef	DEBUG
+// 		if( death_anim_debug )
+// 			Msg("death anims: load: no setings in section %s for %s", section, type );
+// #endif
 			return this;
 		}
 		R_ASSERT( xr_strlen( line ) < 1023 );
@@ -133,10 +137,10 @@ MotionID death_anims::motion ( CEntityAlive& ea, const SHit& H, float &angle ) c
 	angle = 0;
 	if( anims.empty( ) )
 	{
-#ifdef	DEBUG
-		if( death_anim_debug )
-			Msg(" death anims: obj: %s no death motions loaded ", ea.cName().c_str() );
-#endif
+// #ifdef	DEBUG
+// 		if( death_anim_debug )
+// 			Msg(" death anims: obj: %s no death motions loaded ", ea.cName().c_str() );
+// #endif
 		return rnd_anims.motion();
 	}
 	
@@ -146,10 +150,10 @@ MotionID death_anims::motion ( CEntityAlive& ea, const SHit& H, float &angle ) c
 		if((*i)->predicate( ea, H, m, angle ) && m.valid() )
 			return m;
 
-#ifdef	DEBUG
-		if( death_anim_debug )
-			Msg(" death anims: obj: %s no conditions evaluated  returns random ", ea.cName().c_str() );
-#endif
+// #ifdef	DEBUG
+// 		if( death_anim_debug )
+// 			Msg(" death anims: obj: %s no conditions evaluated  returns random ", ea.cName().c_str() );
+// #endif
 	angle = 0;
 	return rnd_anims.motion();
 }

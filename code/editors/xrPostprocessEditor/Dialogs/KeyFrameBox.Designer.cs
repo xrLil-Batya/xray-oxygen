@@ -7,7 +7,7 @@ using System.Drawing;
 
 namespace xrPostprocessEditor
 {
-    partial class KeyFrameBox
+    public partial class KeyFrameBox : UserControl
     {
         /// <summary> 
         /// Required designer variable.

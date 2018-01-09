@@ -59,13 +59,6 @@ void game_cl_GameState::net_import_state (NET_Packet& P)
 
 	P.r_u32(m_start_time);
 	m_bServerControlHits = !!P.r_u8();
-
-	// Players
-
-	buffer_vector<ClientID> valid_players(_alloca(sizeof(ClientID) * (2)),(2));
-	
-	ClientID ID;
-	P.r_clientID(ID);
 	
 	net_import_GameTime(P);
 }

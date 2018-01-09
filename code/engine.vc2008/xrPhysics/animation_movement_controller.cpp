@@ -88,10 +88,6 @@ void animation_movement_controller::InitalPositionBlending(const Fmatrix &to)
 	else
 		m_pObjXForm.set(to);
 
-#ifdef	DEBUG
-	DBG_previous_position = m_pObjXForm;
-#endif
-
 }
 static void get_animation_root_position(Fmatrix &pos, IKinematics* K, IKinematicsAnimated* KA, CBlend *control_blend)
 {

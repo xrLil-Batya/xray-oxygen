@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 #include "postprocessanimator.h"
+#include "FS_internal.h" //for CFileReader
 // postprocess value LOAD method implementation
 void CPostProcessValue::load (IReader &pReader)
 {
@@ -44,67 +45,56 @@ void BasicPostProcessAnimator::Load(LPCSTR name, bool InternalFS /*= true*/)
 {
 	m_Name = name;
 	string_path full_path;
+	IReader* F = nullptr;
 	if (InternalFS)
 	{
-		if (!FS.exist(full_path, "$level$", name))
-		{
-			if (!FS.exist(full_path, "$game_anims$", name))
-				Debug.fatal(DEBUG_INFO, "Can't find motion file '%s'.", name);
-		}
+		F = FS.r_open(full_path);
 	}
 	else
-		xr_strcpy(full_path, name);
-
-	LPCSTR ext = strext(full_path);
-	if (ext)
 	{
-		if (!xr_strcmp(ext, POSTPROCESS_FILE_EXTENSION))
-		{
-			IReader* F = FS.r_open(full_path);
-			u32 dwVersion = F->r_u32();
-			//.       VERIFY (dwVersion == POSTPROCESS_FILE_VERSION);
-			// load base color
-			VERIFY(m_Params[0]);
-			m_Params[0]->load(*F);
-			// load add color
-			VERIFY(m_Params[1]);
-			m_Params[1]->load(*F);
-			// load gray color
-			VERIFY(m_Params[2]);
-			m_Params[2]->load(*F);
-			// load gray value
-			VERIFY(m_Params[3]);
-			m_Params[3]->load(*F);
-			// load blur value
-			VERIFY(m_Params[4]);
-			m_Params[4]->load(*F);
-			// load duality horizontal
-			VERIFY(m_Params[5]);
-			m_Params[5]->load(*F);
-			// load duality vertical
-			VERIFY(m_Params[6]);
-			m_Params[6]->load(*F);
-			// load noise intensity
-			VERIFY(m_Params[7]);
-			m_Params[7]->load(*F);
-			// load noise granularity
-			VERIFY(m_Params[8]);
-			m_Params[8]->load(*F);
-			// load noise fps
-			VERIFY(m_Params[9]);
-			m_Params[9]->load(*F);
-			if (dwVersion >= 0x0002)
-			{
-				VERIFY(m_Params[10]);
-				m_Params[10]->load(*F);
-				F->r_stringZ(m_EffectorParams.cm_tex1);
-			}
-			// close reader
-			FS.r_close(F);
-		}
-		else
-			FATAL("ERROR: Can't support files with many animations set. Incorrect file.");
+		F = new CFileReader(name);
 	}
+
+	u32 dwVersion = F->r_u32();
+	//.       VERIFY (dwVersion == POSTPROCESS_FILE_VERSION);
+	// load base color
+	VERIFY(m_Params[0]);
+	m_Params[0]->load(*F);
+	// load add color
+	VERIFY(m_Params[1]);
+	m_Params[1]->load(*F);
+	// load gray color
+	VERIFY(m_Params[2]);
+	m_Params[2]->load(*F);
+	// load gray value
+	VERIFY(m_Params[3]);
+	m_Params[3]->load(*F);
+	// load blur value
+	VERIFY(m_Params[4]);
+	m_Params[4]->load(*F);
+	// load duality horizontal
+	VERIFY(m_Params[5]);
+	m_Params[5]->load(*F);
+	// load duality vertical
+	VERIFY(m_Params[6]);
+	m_Params[6]->load(*F);
+	// load noise intensity
+	VERIFY(m_Params[7]);
+	m_Params[7]->load(*F);
+	// load noise granularity
+	VERIFY(m_Params[8]);
+	m_Params[8]->load(*F);
+	// load noise fps
+	VERIFY(m_Params[9]);
+	m_Params[9]->load(*F);
+	if (dwVersion >= 0x0002)
+	{
+		VERIFY(m_Params[10]);
+		m_Params[10]->load(*F);
+		F->r_stringZ(m_EffectorParams.cm_tex1);
+	}
+	// close reader
+	FS.r_close(F);
 
 	f_length = GetLength();
 }

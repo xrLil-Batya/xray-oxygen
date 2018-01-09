@@ -151,12 +151,10 @@ void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
 {
 	// Generic
 	P.w_clientID	(to);
-	P.w_s32			(m_type);
+	P.w_u32			(m_type);
 	P.w_u16			(m_phase);
 	P.w_u32			(m_start_time);
-	P.w_u8			(u8(g_sv_base_iVotingEnabled&0xff));
 	P.w_u8			(u8(net_sv_control_hit));
-	P.w_u8			(u8(g_bCollectStatisticData));
 
 	// Players
 	net_Export_GameTime(P);

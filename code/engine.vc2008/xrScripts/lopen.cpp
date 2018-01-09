@@ -21,6 +21,7 @@ int lopen::luaopen_ext(lua_State *L)
 	return 1;
 }
 
+#ifndef DEBUG
 void lopen::put_function(lua_State* state, u8 const* buffer, u32 const buffer_size, const char* package_id)
 {
 	lua_getglobal(state, "package");
@@ -31,6 +32,7 @@ void lopen::put_function(lua_State* state, u8 const* buffer, u32 const buffer_si
 	luaL_loadbuffer(state, (char*)buffer, buffer_size, package_id);
 	lua_settable(state, -3);
 }
+#endif
 
 void lopen::open_lib(lua_State *L, pcstr module_name, lua_CFunction function)
 {

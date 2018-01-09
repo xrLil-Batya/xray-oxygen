@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace xrPostprocessEditor
 {
-    partial class MainDialog
+    public partial class MainDialog : Form
     {
         /// <summary>
         /// Required designer variable.

@@ -171,17 +171,17 @@ void BasicPostProcessAnimator::Clear() { impl->Clear(); }
 void BasicPostProcessAnimator::Load(String ^ name, bool internalFs)
 {
     marshal_context context;
-	std::string new_name = "";
-	char slash_name = '\\';
+// 	std::string new_name = "";
+// 	char slash_name = '\\';
 	const char* tmpName = context.marshal_as<const char*>(name);
-	for (size_t it = 0; it < strlen(tmpName); it++)
-	{
-		new_name += tmpName[it];
-		if (tmpName[it] == slash_name)
-			new_name += slash_name;
-	}
+// 	for (size_t it = 0; it < strlen(tmpName); it++)
+// 	{
+// 		new_name += tmpName[it];
+// 		if (tmpName[it] == slash_name)
+// 			new_name += slash_name;
+// 	}
 
-    impl->Load(new_name.c_str(), internalFs);
+    impl->Load(tmpName, internalFs);
 }
 String ^ BasicPostProcessAnimator::Name::get() { return gcnew String(impl->Name()); }
 void BasicPostProcessAnimator::Stop(float speed) { impl->Stop(speed); }

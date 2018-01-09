@@ -2,8 +2,9 @@
 #include "ik_object_shift.h"
 #include "pose_extrapolation.h"
 #include "../xrphysics/mathutils.h"
+#if 0
 #ifdef	DEBUG
-#include "phdebug.h"
+#include "../xrGame/phdebug.h"
 
 void object_shift::	dbg_draw			( const Fmatrix	&current_pos, const extrapolation::points &predict , const Fvector& start ) const
 {
@@ -47,6 +48,8 @@ void object_shift::	dbg_draw			( const Fmatrix	&current_pos, const extrapolation
 		Fvector().add( p1, Fvector().set( 0, end_shift, 0 ) ),
 			D3DCOLOR_XRGB( 255, 0, 0 ) );
 }
+#endif
+
 #endif
 
 static const float global_max_shift = 1.0f;

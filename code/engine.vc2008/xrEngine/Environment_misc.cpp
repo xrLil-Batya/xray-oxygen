@@ -452,11 +452,11 @@ void	CEnvironment::mods_load()
 		IReader*	fs = FS.r_open(path);
 		u32			id = 0;
 		u32 ver = 0x0015;
-		size_t sz;
+		u32 sz;
 
 		while (0 != (sz = fs->find_chunk(id)))
 		{
-			if (id == 0 && sz == sizeof(size_t))
+			if (id == 0 && sz == sizeof(u32))
 			{
 				ver = fs->r_u32();
 			}

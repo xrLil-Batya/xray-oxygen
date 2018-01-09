@@ -10,8 +10,8 @@
 ////////////////////////////////////////////////////////////////////////////
 extern "C"
 {
-#include <lua.h>
-#include <luajit.h>
+#include <lua/lua.h>
+#include "luajit/luajit.h"
 };
 #include "lua_traceback.hpp"
 
