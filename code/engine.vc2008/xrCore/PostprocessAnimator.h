@@ -67,7 +67,6 @@ public:
 
 };
 
-
 class XRCORE_API CPostProcessColor : public CPostProcessParam
 {
 protected:
@@ -77,7 +76,7 @@ protected:
     CEnvelope       m_Blue;
 	SPPInfo::SColor *m_pColor;
 public:
-                    CPostProcessColor               (SPPInfo::SColor *pcolor) { m_pColor = pcolor; }
+                    CPostProcessColor               (SPPInfo::SColor *pcolor): m_pColor(pcolor) {}
     virtual void    update                          (float dt)
                     {
                     m_pColor->r = m_Red.Evaluate (dt);
@@ -106,7 +105,7 @@ public:
     virtual float   get_key_time                    (size_t index)
                     {
                     VERIFY (index < get_keys_count ());
-                    return m_Red.keys[index]->time;
+                    return m_Red.keys.size() ? m_Red.keys[index]->time : 0;
                     }
     virtual void   clear_all_keys                  ();
 };

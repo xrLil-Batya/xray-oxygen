@@ -60,7 +60,7 @@ namespace xrPostprocessEditor
             this.lbKeyFrames.Name = "lbKeyFrames";
             this.lbKeyFrames.Size = new System.Drawing.Size(177, 27);
             this.lbKeyFrames.TabIndex = 0;
-            this.lbKeyFrames.SelectedIndexChanged += new System.EventHandler(this.lbKeyFrames_SelectedIndexChanged);
+            this.lbKeyFrames.SelectedIndexChanged += new System.EventHandler(this.LbKeyFrames_SelectedIndexChanged);
             // 
             // lHeader
             // 
@@ -113,7 +113,7 @@ namespace xrPostprocessEditor
             this.btnAdd.TabIndex = 2;
             this.btnAdd.Text = "+";
             this.btnAdd.UseVisualStyleBackColor = true;
-            this.btnAdd.Click += new System.EventHandler(this.btnAdd_Click);
+            this.btnAdd.Click += new System.EventHandler(this.BtnAdd_Click);
             // 
             // btnRemove
             // 
@@ -125,7 +125,7 @@ namespace xrPostprocessEditor
             this.btnRemove.TabIndex = 4;
             this.btnRemove.Text = "-";
             this.btnRemove.UseVisualStyleBackColor = true;
-            this.btnRemove.Click += new System.EventHandler(this.btnRemove_Click);
+            this.btnRemove.Click += new System.EventHandler(this.BtnRemove_Click);
             // 
             // btnClear
             // 
@@ -136,7 +136,7 @@ namespace xrPostprocessEditor
             this.btnClear.TabIndex = 3;
             this.btnClear.Text = "Clear";
             this.btnClear.UseVisualStyleBackColor = true;
-            this.btnClear.Click += new System.EventHandler(this.btnClear_Click);
+            this.btnClear.Click += new System.EventHandler(this.BtnClear_Click);
             // 
             // btnCopyFrom
             // 
@@ -174,7 +174,7 @@ namespace xrPostprocessEditor
             this.numKeyFrameTime.Size = new System.Drawing.Size(80, 21);
             this.numKeyFrameTime.TabIndex = 4;
             this.numKeyFrameTime.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.numKeyFrameTime.ValueChanged += new System.EventHandler(this.numKeyFrameTime_ValueChanged);
+            this.numKeyFrameTime.ValueChanged += new System.EventHandler(this.NumKeyFrameTime_ValueChanged);
             // 
             // lKeyFrameTime
             // 

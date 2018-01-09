@@ -1,11 +1,14 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2010
+VisualStudioVersion = 15.0.27130.2003
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrWeatherEditor", "xrWeatherEditor\editor.vcxproj", "{492D3DFE-9068-4E7E-A008-7C2420A651C0}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedAPI", "xrManagedApi\xrManagedApi.vcxproj", "{55B0E2CA-E27A-47FC-BC92-21ABDC1044F5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E} = {A0F7D1FB-59A7-4717-A7E4-96F37E91998E}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "xrPostprocessEditor", "xrPostprocessEditor\xrPostprocessEditor.csproj", "{CB449DB5-9C97-447A-AA25-35EA7712F62C}"
 EndProject
@@ -43,16 +46,16 @@ Global
 		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Mixed|x64.Build.0 = Mixed|x64
 		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Release_AI32|x64.ActiveCfg = Release|x64
 		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Release_AI32|x64.Build.0 = Release|x64
-		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Release|x64.ActiveCfg = Release|Any CPU
-		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Release|x64.Build.0 = Release|Any CPU
+		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Release|x64.ActiveCfg = Release|x64
+		{CB449DB5-9C97-447A-AA25-35EA7712F62C}.Release|x64.Build.0 = Release|x64
 		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Debug|x64.ActiveCfg = Debug|x64
 		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Debug|x64.Build.0 = Debug|x64
 		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Mixed|x64.ActiveCfg = Mixed|x64
 		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Mixed|x64.Build.0 = Mixed|x64
 		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Release_AI32|x64.ActiveCfg = Release|x64
 		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Release_AI32|x64.Build.0 = Release|x64
-		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Release|x64.ActiveCfg = Release|Any CPU
-		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Release|x64.Build.0 = Release|Any CPU
+		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Release|x64.ActiveCfg = Release|x64
+		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}.Release|x64.Build.0 = Release|x64
 		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}.Debug|x64.ActiveCfg = Debug|x64
 		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}.Debug|x64.Build.0 = Debug|x64
 		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}.Mixed|x64.ActiveCfg = Mixed|x64

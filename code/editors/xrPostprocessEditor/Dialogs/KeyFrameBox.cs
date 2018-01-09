@@ -54,7 +54,7 @@ namespace xrPostprocessEditor
                 lbKeyFrames.Items.RemoveAt(size);
                 kf_coef -= 0.1f;
             }
-            catch(Exception expt)
+            catch(Exception)
             {
                 MessageBox.Show("KeyFrames is empty!");
             }
@@ -75,29 +75,14 @@ namespace xrPostprocessEditor
             lbKeyFrames.Items.Add(kf_coef.ToString());
         }
 
-        private void lbKeyFrames_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            SelectedIndexChanged?.Invoke(this, e);
-        }
+        private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e) => SelectedIndexChanged?.Invoke(this, e);
 
-        private void btnAdd_Click(object sender, EventArgs e)
-        {
-            AddButtonClick?.Invoke(this, e);
-        }
+        private void BtnAdd_Click(object sender, EventArgs e) => AddButtonClick?.Invoke(this, e);
 
-        private void btnRemove_Click(object sender, EventArgs e)
-        {
-            RemoveButtonClick?.Invoke(this, e);
-        }
+        private void BtnRemove_Click(object sender, EventArgs e) => RemoveButtonClick?.Invoke(this, e);
 
-        private void btnClear_Click(object sender, EventArgs e)
-        {
-            ClearButtonClick?.Invoke(this, e);
-        }
+        private void BtnClear_Click(object sender, EventArgs e) => ClearButtonClick?.Invoke(this, e);
 
-        private void numKeyFrameTime_ValueChanged(object sender, EventArgs e)
-        {
-            KeyFrameTimeChanged?.Invoke(this, e);
-        }
+        private void NumKeyFrameTime_ValueChanged(object sender, EventArgs e) => KeyFrameTimeChanged?.Invoke(this, e);
     }
 }
