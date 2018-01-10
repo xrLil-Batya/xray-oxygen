@@ -740,36 +740,39 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	//если оружие чем-то занято, то ничего не делать
 	if(IsPending()) return false;
 	
+	if (!(flags&CMD_START)) //if we don't start - refuse
+	{
+		return false;
+	}
+
 	switch(cmd) 
 	{
 	    case kWPN_RELOAD:
 	    {
-		    CActor* pActor = smart_cast<CActor*>(H_Parent());
-		    CCustomOutfit* pOutfit = pActor->GetOutfit();
+			if (CActor* pActor = smart_cast<CActor*>(H_Parent()))
+			{
+				CCustomOutfit* pOutfit = pActor->GetOutfit();
+				if (pActor->mstate_real & (mcSprint) && !psActorFlags.test(AF_RELOADONSPRINT)) //If actor doesn't have rights to reload on sprint - refuse reload
+					break;
 
-	        if (psActorFlags.test(AF_RELOADONSPRINT) || !psActorFlags.test(AF_RELOADONSPRINT) && !(pActor->mstate_real&(mcAccel | mcClimb | mcSprint)) ||
-			(!psActorFlags.test(AF_RELOADONSPRINT) && (pActor->mstate_real&(mcAccel | mcClimb | mcSprint)) && pOutfit && pOutfit->m_reload_on_sprint))
-		        if(flags&CMD_START)
-			        if(iAmmoElapsed < iMagazineSize || IsMisfire())
-	                    Reload();
+				if (pActor->mstate_real & (mcSprint) && pOutfit && !pOutfit->m_reload_on_sprint) //If outfit denied to reload on sprint
+					break;
+			}
+
+			if (iAmmoElapsed < iMagazineSize || IsMisfire())
+				Reload();
+			return true;
 	    }
-		return true;
 	    case kWPN_FIREMODE_PREV:
 		{
-			if(flags&CMD_START) 
-			{
-				OnPrevFireMode();
-				return true;
-			};
-		}   break;
+			OnPrevFireMode();
+			return true;
+		}
 	    case kWPN_FIREMODE_NEXT:
 		{
-			if(flags&CMD_START) 
-			{
-				OnNextFireMode();
-				return true;
-			};
-		}   break;
+			OnNextFireMode();
+			return true;
+		} 
 	}
 	return false;
 }

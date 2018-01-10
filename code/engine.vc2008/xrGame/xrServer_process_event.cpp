@@ -12,9 +12,7 @@
 
 void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 {
-#	ifdef SLOW_VERIFY_ENTITIES
-			VERIFY					(verify_entities());
-#	endif
+	VERIFY					(verify_entities());
 
 	u32			timestamp;
 	u16			type;
@@ -275,17 +273,13 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		{
 			SendTo		(SV_Client->ID, P, net_flags(TRUE, TRUE));
 
-#	ifdef SLOW_VERIFY_ENTITIES
 			VERIFY					(verify_entities());
-#	endif
 		}break;
 	case GEG_PLAYER_ACTIVATE_SLOT:
 	case GEG_PLAYER_ITEM_EAT:
 		{
 			SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
-#	ifdef SLOW_VERIFY_ENTITIES
 			VERIFY					(verify_entities());
-#	endif
 		}break;
 	case GEG_PLAYER_USE_BOOSTER:
 		{

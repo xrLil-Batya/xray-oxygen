@@ -4,6 +4,7 @@
 #include "xr_input.h"
 #include "IInputReceiver.h"
 #include "../include/editor/ide.hpp"
+#include "../FrayBuildConfig.hpp"
 
 CInput *	pInput = NULL;
 IInputReceiver		dummyController;
@@ -411,6 +412,32 @@ void CInput::MouseUpdate()
 			break;
 		}
 	}
+
+#ifdef CHECK_MOUSE_STATE
+	DIMOUSESTATE2 MouseState;
+	hr = pMouse->GetDeviceState(sizeof(MouseState), &MouseState);
+
+	auto RecheckMouseButtonFunc = [&](int MouseBtnIndx)
+	{
+		if ((MouseState.rgbButtons[MouseBtnIndx] & 0x80) && mouseState[MouseBtnIndx] == FALSE)
+		{
+			mouseState[MouseBtnIndx] = TRUE;
+			cbStack.back()->IR_OnMousePress(MouseBtnIndx);
+		}
+		else if ((!(MouseState.rgbButtons[MouseBtnIndx] & 0x80)) && mouseState[MouseBtnIndx] == TRUE)
+		{
+			mouseState[MouseBtnIndx] = FALSE;
+			cbStack.back()->IR_OnMouseRelease(MouseBtnIndx);
+		}
+	};
+
+	if (hr == DI_OK)
+	{
+		RecheckMouseButtonFunc(0);
+		RecheckMouseButtonFunc(1);
+		RecheckMouseButtonFunc(2);
+	}
+#endif
 	
 	for (u32 i = 0; i < 3; i++)
 		if (mouseState[i] && mouse_prev[i])

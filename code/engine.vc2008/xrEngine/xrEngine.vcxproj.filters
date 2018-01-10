@@ -588,6 +588,7 @@
     <ClInclude Include="ide.hpp">
       <Filter>editor\ide</Filter>
     </ClInclude>
+    <ClInclude Include="..\FrayBuildConfig.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">

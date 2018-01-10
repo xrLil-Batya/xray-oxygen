@@ -244,7 +244,8 @@ void CPhraseDialog::load_shared	(const char*)
 	pXML->SetLocalRoot(phrase_list_node);
 
 #ifdef DEBUG // debug & mixed
-	const std::string wrong_phrase_id = pXML->CheckUniqueAttrib(phrase_list_node, "phrase", "id");
+	const char* wrong_phase_id_str = pXML->CheckUniqueAttrib(phrase_list_node, "phrase", "id");
+	const std::string wrong_phrase_id = wrong_phase_id_str == nullptr ? "" : wrong_phase_id_str;
 	THROW3(wrong_phrase_id.empty(), *item_data.id, wrong_phrase_id.c_str());
 #endif	
 

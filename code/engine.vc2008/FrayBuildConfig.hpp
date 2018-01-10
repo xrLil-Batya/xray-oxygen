@@ -17,3 +17,9 @@
 //#define ASPAWN_CROW // Spawn crows over actor
 //#define NEW_ANIMS_WPN // Enable anm_..._crouch, anm_reload_empty
 //#define DEAD_BODY_WEAPON // Incorrect!!!
+
+//#define SLOW_VERIFY_ENTITIES //Very slow verifing every entity on every game update
+
+#define CHECK_MOUSE_STATE //Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
+						  //By defining this, we force to double check mouse state by calling GetDeviceState. 
+						  //It's a very little performance penalty

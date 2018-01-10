@@ -19,11 +19,14 @@
 #include "screenshot_server.h"
 #include "xrServer_info.h"
 
+#include "../FrayBuildConfig.hpp"
+
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
 #include <functional>
 #pragma warning(pop)
+
 
 u32 g_sv_traffic_optimization_level = eto_none;
 
@@ -642,6 +645,7 @@ static	BOOL	_ve_use					= TRUE;
 
 bool xrServer::verify_entities				() const
 {
+#ifdef SLOW_VERIFY_ENTITIES
 	if (!_ve_initialized)	{
 		_ve_initialized					= TRUE;
 		if (strstr(Core.Params,"-~ve"))	_ve_use=FALSE;
@@ -656,6 +660,7 @@ bool xrServer::verify_entities				() const
 		VERIFY3							((*I).first == (*I).second->ID,"SERVER : ID mismatch - map key doesn't correspond to the real entity ID",(*I).second->name_replace());
 		verify_entity					((*I).second);
 	}
+#endif
 	return								(true);
 }
 

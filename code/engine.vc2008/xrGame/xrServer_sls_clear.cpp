@@ -11,7 +11,7 @@ void xrServer::Perform_destroy	(CSE_Abstract* object, u32 mode)
 	R_ASSERT				(object);
 	R_ASSERT				(object->ID_Parent == 0xffff);
 
-#if defined(DEBUG) && defined(SLOW_VERIFY_ENTITIES)
+#if defined(DEBUG)
 	verify_entities			();
 #endif
 
@@ -21,7 +21,7 @@ void xrServer::Perform_destroy	(CSE_Abstract* object, u32 mode)
 		R_ASSERT2		(child, make_string("child registered but not found [%d] [%s]", object->children.back(), object->name()));
         
 		Perform_reject		(child,object,2*NET_Latency);
-#if defined(DEBUG) && defined(SLOW_VERIFY_ENTITIES)
+#if defined(DEBUG)
 		verify_entities			();
 #endif
 		Perform_destroy		(child,mode);
@@ -29,7 +29,7 @@ void xrServer::Perform_destroy	(CSE_Abstract* object, u32 mode)
 	u16						object_id = object->ID;
 	entity_Destroy			(object);
 
-#if defined(DEBUG) && defined(SLOW_VERIFY_ENTITIES)
+#if defined(DEBUG)
 	verify_entities		();
 #endif
 
