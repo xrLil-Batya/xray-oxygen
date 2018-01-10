@@ -180,7 +180,7 @@ process2:
 	while (!(dwAffinitiMask & dwCurrentMask))
 		dwCurrentMask <<= 1;
 
-	SetThreadAffinityMask(GetCurrentThread(), dwCurrentMask);
+	//SetThreadAffinityMask(GetCurrentThread(), dwCurrentMask);
 
 	// Creating threads
 	for (u32 it = 0; it < ttapi_threads_count; it++)
@@ -195,7 +195,7 @@ process2:
 		do dwCurrentMask <<= 1;
 		while (!(dwAffinitiMask & dwCurrentMask));
 
-		SetThreadAffinityMask(ttapi_threads_handles[it], dwCurrentMask);
+		//SetThreadAffinityMask(ttapi_threads_handles[it], dwCurrentMask);
 
 		// Setting thread name
 		sprintf_s(szThreadName, "Helper Thread #%u", it);

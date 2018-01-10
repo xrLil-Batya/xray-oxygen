@@ -116,6 +116,7 @@ void CStateManagerDog::execute()
 			}
 			else state_id = eStateRest;
 		}
+		else state_id = eStateRest;
 	}
 	else state_id = eStateControlled;
 

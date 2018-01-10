@@ -48,6 +48,10 @@ void BasicPostProcessAnimator::Load(LPCSTR name, bool InternalFS /*= true*/)
 	IReader* F = nullptr;
 	if (InternalFS)
 	{
+		if (!FS.exist(full_path, "$level$", name))
+			if (!FS.exist(full_path, "$game_anims$", name))
+				Debug.fatal(DEBUG_INFO, "Can't find motion file '%s'.", name);
+
 		F = FS.r_open(full_path);
 	}
 	else

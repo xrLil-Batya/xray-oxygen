@@ -48,10 +48,10 @@ void AddOne(const char *split)
 
 	std::lock_guard<decltype(logCS)> lock(logCS);
 
-//#ifdef DEBUG
-	//OutputDebugString(split);
-	//OutputDebugString("\n");
-//#endif
+#ifdef DEBUG
+	OutputDebugString(split);
+	OutputDebugString("\n");
+#endif
 
 	//	DUMP_PHASE;
 	if (shared_str_initialized)
