@@ -1,12 +1,7 @@
 #pragma once
 
-class xrMemory;
-
-class	MEMPOOL
+class MEMPOOL
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	friend class xrMemory;
-#endif // DEBUG_MEMORY_MANAGER
 private:
 #ifndef _CLR_MANAGER
 	std::recursive_mutex	cs;
@@ -18,14 +13,14 @@ private:
 	u32					block_count;	// block count
 	u8*					list;
 private:
-	ICF void**			access			(void* P)	{ return (void**) ((void*)(P));	}
-	void				block_create	();
+	ICF void**			access(void* P) { return (void**)((void*)(P)); }
+	void				block_create();
 public:
-	void				_initialize		(u32 _element, u32 _sector, u32 _header);
-	
-	ICF u32				get_block_count	()	{ return block_count; }
-	ICF u32				get_element		()	{ return s_element; }
+	void				_initialize(u32 _element, u32 _sector, u32 _header);
 
-		void*			create			();
-		void			destroy			(void* &P);
+	ICF u32				get_block_count() { return block_count; }
+	ICF u32				get_element() { return s_element; }
+
+	void*			create();
+	void			destroy(void* &P);
 };

@@ -112,19 +112,7 @@ void CAI_Stalker::reinit			()
 
 	//загрузка спецевической звуковой схемы для сталкера согласно m_SpecificCharacter
 	sound().sound_prefix			(SpecificCharacter().sound_voice_prefix());
-
-#ifdef DEBUG_MEMORY_MANAGER
-	u32								start = 0;
-	if (g_bMEMO)
-		start						= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
-
 	LoadSounds						(*cNameSect());
-
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO)
-		Msg					("CAI_Stalker::LoadSounds() : %d",Memory.mem_usage() - start);
-#endif // DEBUG_MEMORY_MANAGER
 
 	m_pPhysics_support->in_Init		();
 	
@@ -219,7 +207,6 @@ void CAI_Stalker::LoadSounds		(LPCSTR section)
 	sound().add						(pSettings->r_string(section,"sound_humming"),						100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskHumming),					eStalkerSoundHumming,					head_bone_name, 0);
 	sound().add						(pSettings->r_string(section,"sound_need_backup"),					100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eStalkerSoundMaskNeedBackup),				eStalkerSoundNeedBackup,				head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_running_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskMovingInDanger),			eStalkerSoundRunningInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
-//	sound().add						(pSettings->r_string(section,"sound_walking_in_danger"),			100, SOUND_TYPE_MONSTER_TALKING,	6, u32(eStalkerSoundMaskMovingInDanger),			eStalkerSoundWalkingInDanger,			head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_kill_wounded"),					100, SOUND_TYPE_MONSTER_TALKING,	5, u32(eStalkerSoundMaskKillWounded),				eStalkerSoundKillWounded,				head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_enemy_critically_wounded"),		100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eStalkerSoundMaskEnemyCriticallyWounded),	eStalkerSoundEnemyCriticallyWounded,	head_bone_name, xr_new<CStalkerSoundData>(this));
 	sound().add						(pSettings->r_string(section,"sound_enemy_killed_or_wounded"),		100, SOUND_TYPE_MONSTER_TALKING,	4, u32(eStalkerSoundMaskEnemyKilledOrWounded),		eStalkerSoundEnemyKilledOrWounded,		head_bone_name, xr_new<CStalkerSoundData>(this));
@@ -228,18 +215,7 @@ void CAI_Stalker::LoadSounds		(LPCSTR section)
 
 void CAI_Stalker::reload			(LPCSTR section)
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	u32									start = 0;
-	if (g_bMEMO)
-		start							= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
-
 	brain().setup					(this);
-
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO)
-		Msg					("brain().setup() : %d",Memory.mem_usage() - start);
-#endif // DEBUG_MEMORY_MANAGER
 
 	CCustomMonster::reload			(section);
 	if (!already_dead())
@@ -525,22 +501,9 @@ void CAI_Stalker::Load				(LPCSTR section)
 
 BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	u32								start = 0;
-	if (g_bMEMO)
-		start						= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
-
 	CSE_Abstract					*e	= (CSE_Abstract*)(DC);
 	CSE_ALifeHumanStalker			*tpHuman = smart_cast<CSE_ALifeHumanStalker*>(e);
 	R_ASSERT						(tpHuman);
-
-
-	//static bool first_time			= true;
-	//if ( first_time ) {
-	//	tpHuman->o_Position.z		-= 3.f;
-	//	first_time					= false;
-	//}
 
 	m_group_behaviour				= !!tpHuman->m_flags.test(CSE_ALifeObject::flGroupBehaviour);
 
@@ -548,19 +511,7 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 		return						(FALSE);
 	
 	set_money						(tpHuman->m_dwMoney, false);
-
-#ifdef DEBUG_MEMORY_MANAGER
-	u32									_start = 0;
-	if (g_bMEMO)
-		_start							= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
-
 	animation().reload				();
-
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO)
-		Msg					("CStalkerAnimationManager::reload() : %d",Memory.mem_usage() - _start);
-#endif // DEBUG_MEMORY_MANAGER
 
 	movement().m_head.current.yaw	= movement().m_head.target.yaw = movement().m_body.current.yaw = movement().m_body.target.yaw	= angle_normalize_signed(-tpHuman->o_torso.yaw);
 	movement().m_body.current.pitch	= movement().m_body.target.pitch	= 0;
@@ -640,12 +591,6 @@ BOOL CAI_Stalker::net_Spawn			(CSE_Abstract* DC)
 	}
 #endif // _DEBUG
 
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO) {
-		Msg							("CAI_Stalker::net_Spawn() : %d",Memory.mem_usage() - start);
-	}
-#endif // DEBUG_MEMORY_MANAGER
-
 	if(SpecificCharacter().terrain_sect().size())
 	{
 		movement().locations().Load(*SpecificCharacter().terrain_sect());
@@ -702,15 +647,11 @@ BOOL CAI_Stalker::net_SaveRelevant	()
 void CAI_Stalker::net_Export		(NET_Packet& P)
 {
 	R_ASSERT						(Local());
-
 	// export last known packet
 	R_ASSERT						(!NET.empty());
 	net_update& N					= NET.back();
-//	P.w_float						(inventory().TotalWeight());
-//	P.w_u32							(m_dwMoney);
 
 	P.w_float						(GetfHealth());
-
 	P.w_u32							(N.dwTimeStamp);
 	P.w_u8							(0);
 	P.w_vec3						(N.p_pos);
@@ -727,8 +668,6 @@ void CAI_Stalker::net_Export		(NET_Packet& P)
 	GameGraph::_GRAPH_ID		l_game_vertex_id = ai_location().game_vertex_id();
 	P.w						(&l_game_vertex_id,			sizeof(l_game_vertex_id));
 	P.w						(&l_game_vertex_id,			sizeof(l_game_vertex_id));
-//	P.w						(&f1,						sizeof(f1));
-//	P.w						(&f1,						sizeof(f1));
 	if (ai().game_graph().valid_vertex_id(l_game_vertex_id)) {
 		f1					= Position().distance_to	(ai().game_graph().vertex(l_game_vertex_id)->level_point());
 		P.w					(&f1,						sizeof(f1));
@@ -1143,12 +1082,6 @@ CMemoryManager *CAI_Stalker::create_memory_manager		()
 
 DLL_Pure *CAI_Stalker::_construct			()
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	u32									start = 0;
-	if (g_bMEMO)
-		start							= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
-	
 	m_pPhysics_support					= xr_new<CCharacterPhysicsSupport>(CCharacterPhysicsSupport::etStalker,this);
 	CCustomMonster::_construct			();
 	CObjectHandler::_construct			();
@@ -1161,11 +1094,6 @@ DLL_Pure *CAI_Stalker::_construct			()
 	m_sight_manager						= xr_new<CSightManager>(this);
 	m_weapon_shot_effector				= xr_new<CWeaponShotEffector>();
 
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO)
-		Msg								("CAI_Stalker::_construct() : %d",Memory.mem_usage() - start);
-#endif // DEBUG_MEMORY_MANAGER
-
 	return								(this);
 }
 
@@ -1176,14 +1104,6 @@ bool CAI_Stalker::use_center_to_aim		() const
 
 void CAI_Stalker::UpdateCamera			()
 {
-/*	u16 bone_id = smart_cast<IKinematics*>(Visual())->LL_BoneID("bip01_head");
-	CBoneInstance &bone = smart_cast<IKinematics*>(Visual())->LL_GetBoneInstance(bone_id);
-
-	Fmatrix	global_transform;
-	global_transform.mul(XFORM(), bone.mTransform);
-
-	g_pGameLevel->Cameras().Update(global_transform.c, global_transform.k, eye_matrix.j, g_fov, .75f, eye_range, 0);
-	*/
 	float								new_range = eye_range, new_fov = eye_fov;
 	Fvector								temp = eye_matrix.k;
 	if (g_Alive()) 
@@ -1275,8 +1195,6 @@ float CAI_Stalker::shedule_Scale				()
 
 void CAI_Stalker::aim_bone_id					(shared_str const &bone_id)
 {
-//	IKinematics				*kinematics = smart_cast<IKinematics*>(Visual());
-//	VERIFY2					(kinematics->LL_BoneID(bone_id) != BI_NONE, make_string("Cannot find bone %s",bone_id));
 	m_aim_bone_id			= bone_id;
 }
 

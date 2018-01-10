@@ -522,24 +522,6 @@ void CLevel::ProcessGameEvents()
 	}
 }
 
-#ifdef DEBUG_MEMORY_MANAGER
-	extern Flags32				psAI_Flags;
-	extern float				debug_on_frame_gather_stats_frequency;
-
-struct debug_memory_guard {
-	inline debug_memory_guard	()
-	{
-		mem_alloc_gather_stats				(!!psAI_Flags.test(aiDebugOnFrameAllocs));
-		mem_alloc_gather_stats_frequency	(debug_on_frame_gather_stats_frequency);
-	}
-
-	inline ~debug_memory_guard	()
-	{
-//		mem_alloc_gather_stats				(false);
-	}
-};
-#endif // DEBUG_MEMORY_MANAGER
-
 void CLevel::MakeReconnect()
 {
 	if (!Engine.Event.Peek("KERNEL:disconnect"))
@@ -567,12 +549,8 @@ void CLevel::MakeReconnect()
 	}
 }
 
-void CLevel::OnFrame	()
+void CLevel::OnFrame()
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	debug_memory_guard					__guard__;
-#endif // DEBUG_MEMORY_MANAGER
-
 #ifdef DEBUG
 	 DBG_RenderUpdate( );
 #endif // #ifdef DEBUG
@@ -688,11 +666,7 @@ void CLevel::OnRender()
 		return;
 
 	Game().OnRender();
-	//  
-	//Device.Statistic->TEST1.Begin();
 	BulletManager().Render();
-	//Device.Statistic->TEST1.End();
-	// c 
 	HUD().RenderUI();
 
 #ifdef DEBUG
@@ -810,24 +784,19 @@ void CLevel::OnRender()
 
 void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 {
-	if (E==eEntitySpawn)	{
+	if (E==eEntitySpawn)
+	{
 		char	Name[128];	Name[0]=0;
 		sscanf	(LPCSTR(P1),"%s", Name);
 		Level().g_cl_Spawn	(Name,0xff, M_SPAWN_OBJECT_LOCAL, Fvector().set(0,0,0));
-	} else if (E==eChangeRP && P1) {
-	} else if (E==eDemoPlay && P1) {
+	} 
+	else if (E==eDemoPlay && P1) 
+	{
 		char* name = (char*)P1;
 		string_path RealName;
 		xr_strcpy		(RealName,name);
 		xr_strcat			(RealName,".xrdemo");
 		Cameras().AddCamEffector(xr_new<CDemoPlay> (RealName,1.3f,0));
-	} else if (E==eChangeTrack && P1) {
-		// int id = atoi((char*)P1);
-		// Environment->Music_Play(id);
-	} else if (E==eEnvironment) {
-		// int id=0; float s=1;
-		// sscanf((char*)P1,"%d,%f",&id,&s);
-		// Environment->set_EnvMode(id,s);
 	}
 }
 

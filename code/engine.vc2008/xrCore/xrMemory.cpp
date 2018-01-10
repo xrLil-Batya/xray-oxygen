@@ -2,192 +2,78 @@
 #pragma hdrstop
 
 #include	"xrsharedmem.h"
-#include	"xrMemory_pure.h"
-
 #include	<malloc.h>
 
-xrMemory	Memory;
-bool		mem_initialized	= false;
-bool		shared_str_initialized	= false;
+xrMemory Memory;
+bool mem_initialized	= false;
+bool shared_str_initialized	= false;
 
 //fake fix of memory corruptions in multiplayer game :(
-XRCORE_API	bool	g_allow_heap_min = true;
+XRCORE_API bool g_allow_heap_min = true;
 
-#ifdef DEBUG_MEMORY_MANAGER
-XRCORE_API void dump_phase		()
+void xrMemory::_initialize()
 {
-	if (!Memory.debug_mode)
-		return;
-
-	static int					phase_counter = 0;
-
-	string256					temp;
-	xr_sprintf					(temp,sizeof(temp),"x:\\$phase$%d.dump",++phase_counter);
-	Memory.mem_statistic		(temp);
-}
-#endif // DEBUG_MEMORY_MANAGER
-
-xrMemory::xrMemory()
-{
-#ifdef DEBUG_MEMORY_MANAGER
-
-	debug_mode	= false;
-
-#endif // DEBUG_MEMORY_MANAGER
-}
-
-#ifdef DEBUG_MEMORY_MANAGER
-	BOOL	g_bMEMO		= FALSE;
-#endif // DEBUG_MEMORY_MANAGER
-
-void	xrMemory::_initialize	(bool bDebug)
-{
-#ifdef DEBUG_MEMORY_MANAGER
-	debug_mode				= bDebug;
-	debug_info_update		= 0;
-#endif // DEBUG_MEMORY_MANAGER
-
 	stat_calls				= 0;
 	stat_counter			= 0;
 
-#ifndef M_BORLAND
-	if (!strstr(Core.Params,"-pure_alloc")) {
+	if (!strstr(Core.Params, "-pure_alloc"))
+	{
 		// initialize POOLs
-		u32	element		= mem_pools_ebase;
-		u32 sector		= mem_pools_ebase*1024;
-		for (u32 pid=0; pid<mem_pools_count; pid++)
+		u32	element = mem_pools_ebase;
+		u32 sector = mem_pools_ebase * 1024;
+		for (u32 pid = 0; pid < mem_pools_count; pid++)
 		{
-			mem_pools[pid]._initialize(element,sector,0x1);
-			element		+=	mem_pools_ebase;
+			mem_pools[pid]._initialize(element, sector, 0x1);
+			element += mem_pools_ebase;
 		}
 	}
-#endif // M_BORLAND
 
-#ifdef DEBUG_MEMORY_MANAGER
-	if (0==strstr(Core.Params,"-memo"))	mem_initialized				= true;
-	else								g_bMEMO						= TRUE;
-#else // DEBUG_MEMORY_MANAGER
 	mem_initialized				= true;
-#endif // DEBUG_MEMORY_MANAGER
 	g_pStringContainer			= new str_container();
 	shared_str_initialized		= true;
 	g_pSharedMemoryContainer	= new smem_container();
 }
 
-#ifdef DEBUG_MEMORY_MANAGER
-	extern void dbg_dump_leaks();
-	extern void dbg_dump_str_leaks();
-#endif // DEBUG_MEMORY_MANAGER
-
-void	xrMemory::_destroy()
+void xrMemory::_destroy()
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	mem_alloc_gather_stats		(false);
-	mem_alloc_show_stats		();
-	mem_alloc_clear_stats		();
-#endif // DEBUG
+	xr_delete(g_pSharedMemoryContainer);
+	xr_delete(g_pStringContainer);
 
-#ifdef DEBUG_MEMORY_MANAGER
-	if (debug_mode)				dbg_dump_str_leaks	();
-#endif // DEBUG_MEMORY_MANAGER
-
-	xr_delete					(g_pSharedMemoryContainer);
-	xr_delete					(g_pStringContainer);
-
-#ifndef M_BORLAND
-#	ifdef DEBUG_MEMORY_MANAGER
-		if (debug_mode)				dbg_dump_leaks	();
-#	endif // DEBUG_MEMORY_MANAGER
-#endif // M_BORLAND
-
-	mem_initialized				= false;
-#ifdef DEBUG_MEMORY_MANAGER
-	debug_mode					= false;
-#endif // DEBUG_MEMORY_MANAGER
+	mem_initialized = false;
 }
 
-void	xrMemory::mem_compact	()
+inline const size_t external_size = -1;
+
+void xrMemory::mem_compact()
 {
-	RegFlushKey						( HKEY_CLASSES_ROOT );
-	RegFlushKey						( HKEY_CURRENT_USER );
+	RegFlushKey(HKEY_CLASSES_ROOT);
+	RegFlushKey(HKEY_CURRENT_USER);
+
 	if (g_allow_heap_min)
-		_heapmin					( );
-	HeapCompact					(GetProcessHeap(),0);
-	if (g_pStringContainer)			g_pStringContainer->clean		();
-	if (g_pSharedMemoryContainer)	g_pSharedMemoryContainer->clean	();
-	if (strstr(Core.Params,"-swap_on_compact"))
-		SetProcessWorkingSetSize	(GetCurrentProcess(),size_t(-1),size_t(-1));
-}
+		_heapmin();
 
-#ifdef DEBUG_MEMORY_MANAGER
-ICF	u8*		acc_header			(void* P)	{	u8*		_P		= (u8*)P;	return	_P-1;	}
-ICF	u32		get_header			(void* P)	{	return	(u32)*acc_header(P);				}
-void	xrMemory::mem_statistic	(const char* fn)
-{
-	if (!debug_mode)	return	;
-	mem_compact				()	;
+	HeapCompact(GetProcessHeap(), 0);
 
-	debug_cs.lock			()	;
-	debug_mode				= false;
+	if (g_pStringContainer)			g_pStringContainer->clean();
+	if (g_pSharedMemoryContainer)	g_pSharedMemoryContainer->clean();
 
-	FILE*		Fa			= fopen		(fn,"w");
-	fprintf					(Fa,"$BEGIN CHUNK #0\n");
-	fprintf					(Fa,"POOL: %d %dKb\n",mem_pools_count,mem_pools_ebase);
-
-	fprintf					(Fa,"$BEGIN CHUNK #1\n");
-	for (u32 k=0; k<mem_pools_count; ++k)
-		fprintf				(Fa,"%2d: %d %db\n",k,mem_pools[k].get_block_count(),(k+1)*16);
-	
-	fprintf					(Fa,"$BEGIN CHUNK #2\n");
-	for (u32 it=0; it<debug_info.size(); it++)
+	if (strstr(Core.Params, "-swap_on_compact"))
 	{
-		if (0==debug_info[it]._p)	continue	;
-
-		u32 p_current		= get_header(debug_info[it]._p);
-		int pool_id			= (mem_generic==p_current)?-1:p_current;
-
-		fprintf				(Fa,"0x%08X[%2d]: %8d %s\n",*(u32*)(&debug_info[it]._p),pool_id,debug_info[it]._size,debug_info[it]._name);
+		SetProcessWorkingSetSize(GetCurrentProcess(), external_size, external_size);
 	}
-
-	{
-		for (u32 k=0; k<mem_pools_count; ++k) {
-			MEMPOOL			&pool = mem_pools[k];
-			u8				*list = pool.list;
-			while (list) {
-				pool.cs.Enter	();
-				u32				temp = *(u32*)(&list);
-				if (!temp)
-					break;
-				fprintf			(Fa,"0x%08X[%2d]: %8d mempool\n",temp,k,pool.s_element);
-				list			= (u8*)*pool.access(list);
-				pool.cs.Leave	();
-			}
-		}
-	}
-
-	fclose		(Fa)		;
-
-	// leave
-	debug_mode				= true;
-	debug_cs.unlock			();
 }
-#endif // DEBUG_MEMORY_MANAGER
 
 // xr_strdup
-char*			xr_strdup		(const char* string)
-{	
-	VERIFY	(string);
-	u32		len			= u32(xr_strlen(string))+1	;
-	char *	memory		= (char*)	Memory.mem_alloc( len
-#ifdef DEBUG_MEMORY_NAME
-		, "strdup"
-#endif // DEBUG_MEMORY_NAME
-	);
-    std::memcpy(memory,string,len);
+char* xr_strdup(const char* string)
+{
+	VERIFY(string);
+	size_t len = xr_strlen(string) + 1;
+	char *	memory = (char*)Memory.mem_alloc(len);
+	std::memcpy(memory, string, len);
 	return	memory;
 }
 
-XRCORE_API		bool			is_stack_ptr		( void* _ptr)
+XRCORE_API bool is_stack_ptr( void* _ptr)
 {
 	int			local_value		= 0;
 	void*		ptr_refsound	= _ptr;

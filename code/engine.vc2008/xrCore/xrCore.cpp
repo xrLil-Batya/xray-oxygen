@@ -58,7 +58,7 @@ void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL ini
 
 		// Mathematics & PSI detection
 		
-		Memory._initialize	(strstr(Params,"-mem_debug") ? TRUE : FALSE);
+		Memory._initialize();
 
 		DUMP_PHASE;
 
@@ -128,9 +128,6 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 	case DLL_THREAD_DETACH:
 		break;
 	case DLL_PROCESS_DETACH:
-#ifdef USE_MEMORY_MONITOR
-		memory_monitor::flush_each_time	(true);
-#endif // USE_MEMORY_MONITOR
 		break;
 	}
     return TRUE;

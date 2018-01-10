@@ -1,6 +1,0 @@
-#ifndef XRMEMORY_PURE_H
-#define XRMEMORY_PURE_H
-
-#define PURE_ALLOC
-
-#endif // XRMEMORY_PURE_H

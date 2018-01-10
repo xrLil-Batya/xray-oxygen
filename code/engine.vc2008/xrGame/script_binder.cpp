@@ -16,9 +16,6 @@
 #include "gameobject.h"
 #include "level.h"
 
-// comment next string when commiting
-//#define DBG_DISABLE_SCRIPTS
-
 CScriptBinder::CScriptBinder		()
 {
 	init					();
@@ -47,11 +44,6 @@ void CScriptBinder::clear			()
 
 void CScriptBinder::reinit			()
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	u32									start = 0;
-	if (g_bMEMO)
-		start							= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
 	if (m_object) {
 		try {
 			m_object->reinit	();
@@ -60,13 +52,6 @@ void CScriptBinder::reinit			()
 			clear			();
 		}
 	}
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO) {
-//		lua_gc				(ai().script_engine().lua(),LUA_GCCOLLECT,0);
-//		lua_gc				(ai().script_engine().lua(),LUA_GCCOLLECT,0);
-		Msg					("CScriptBinder::reinit() : %d",Memory.mem_usage() - start);
-	}
-#endif // DEBUG_MEMORY_MANAGER
 }
 
 void CScriptBinder::Load			(LPCSTR section)
@@ -75,11 +60,6 @@ void CScriptBinder::Load			(LPCSTR section)
 
 void CScriptBinder::reload			(LPCSTR section)
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	u32									start = 0;
-	if (g_bMEMO)
-		start							= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
 #ifndef DBG_DISABLE_SCRIPTS
 	VERIFY					(!m_object);
 	if (!pSettings->line_exist(section,"script_binding"))
@@ -110,25 +90,14 @@ void CScriptBinder::reload			(LPCSTR section)
 		}
 	}
 #endif
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO) {
-//		lua_gc				(ai().script_engine().lua(),LUA_GCCOLLECT,0);
-//		lua_gc				(ai().script_engine().lua(),LUA_GCCOLLECT,0);
-		Msg					("CScriptBinder::reload() : %d",Memory.mem_usage() - start);
-	}
-#endif // DEBUG_MEMORY_MANAGER
 }
 
 BOOL CScriptBinder::net_Spawn		(CSE_Abstract* DC)
 {
-#ifdef DEBUG_MEMORY_MANAGER
-	u32									start = 0;
-	if (g_bMEMO)
-		start							= Memory.mem_usage();
-#endif // DEBUG_MEMORY_MANAGER
 	CSE_Abstract			*abstract = (CSE_Abstract*)DC;
 	CSE_ALifeObject			*object = smart_cast<CSE_ALifeObject*>(abstract);
-	if (object && m_object) {
+	if (object && m_object) 
+	{
 		try {
 			return			((BOOL)m_object->net_Spawn(object));
 		}
@@ -137,23 +106,13 @@ BOOL CScriptBinder::net_Spawn		(CSE_Abstract* DC)
 		}
 	}
 
-#ifdef DEBUG_MEMORY_MANAGER
-	if (g_bMEMO) {
-//		lua_gc				(ai().script_engine().lua(),LUA_GCCOLLECT,0);
-//		lua_gc				(ai().script_engine().lua(),LUA_GCCOLLECT,0);
-		Msg					("CScriptBinder::net_Spawn() : %d",Memory.mem_usage() - start);
-	}
-#endif // DEBUG_MEMORY_MANAGER
-
 	return					(TRUE);
 }
 
 void CScriptBinder::net_Destroy		()
 {
-	if (m_object) {
-#ifdef _DEBUG
-		Msg						("* Core object %s is UNbinded from the script object",smart_cast<CGameObject*>(this) ? *smart_cast<CGameObject*>(this)->cName() : "");
-#endif // _DEBUG
+	if (m_object) 
+	{
 		try {
 			m_object->net_Destroy	();
 		}
@@ -167,9 +126,6 @@ void CScriptBinder::net_Destroy		()
 void CScriptBinder::set_object(CScriptBinderObject *object)
 {
 	VERIFY2(!m_object, "Cannot bind to the object twice!");
-#ifdef _DEBUG
-	Msg("* Core object %s is binded with the script object", smart_cast<CGameObject*>(this) ? *smart_cast<CGameObject*>(this)->cName() : "");
-#endif // _DEBUG
 	m_object = object;
 
 }

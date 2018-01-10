@@ -95,39 +95,19 @@ CDetailManager::CDetailManager	()
 	dm_cache_size = dm_current_cache_size;
 	dm_fade = dm_current_fade;
 	ps_r__Detail_density = ps_current_detail_density;
-	cache_level1 = (CacheSlot1**)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1*)
-#ifdef USE_MEMORY_MONITOR
-		, "CDetailManager::cache_level1"
-#endif
-	);
+	cache_level1 = (CacheSlot1**)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1*));
 	for (u32 i = 0; i < dm_cache1_line; ++i)
 	{
-		cache_level1[i] = (CacheSlot1*)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1)
-#ifdef USE_MEMORY_MONITOR
-			, "CDetailManager::cache_level1 " + i
-#endif
-		);
+		cache_level1[i] = (CacheSlot1*)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1));
 		for (u32 j = 0; j < dm_cache1_line; ++j)
 			new (&(cache_level1[i][j])) CacheSlot1();
 	}
 
-	cache = (Slot***)Memory.mem_alloc(dm_cache_line * sizeof(Slot**)
-#ifdef USE_MEMORY_MONITOR
-		, "CDetailManager::cache"
-#endif
-	);
+	cache = (Slot***)Memory.mem_alloc(dm_cache_line * sizeof(Slot**));
 	for (u32 i = 0; i < dm_cache_line; ++i)
-		cache[i] = (Slot**)Memory.mem_alloc(dm_cache_line * sizeof(Slot*)
-#ifdef USE_MEMORY_MONITOR
-			, "CDetailManager::cache " + i
-#endif		
-		);
+		cache[i] = (Slot**)Memory.mem_alloc(dm_cache_line * sizeof(Slot*));
 
-	cache_pool = (Slot *)Memory.mem_alloc(dm_cache_size * sizeof(Slot)
-#ifdef USE_MEMORY_MONITOR
-		, "CDetailManager::cache_pool"
-#endif
-	);
+	cache_pool = (Slot *)Memory.mem_alloc(dm_cache_size * sizeof(Slot));
 	for (u32 i = 0; i < dm_cache_size; ++i)
 		new (&(cache_pool[i])) Slot();	
 	
@@ -151,19 +131,8 @@ CDetailManager::~CDetailManager	()
 	}
 	Memory.mem_free(cache_level1);
 }
-/*
-*/
-#ifndef _EDITOR
 
-/*
-void dump	(CDetailManager::vis_list& lst)
-{
-	for (int i=0; i<lst.size(); i++)
-	{
-		Msg("%8x / %8x / %8x",	lst[i]._M_start, lst[i]._M_finish, lst[i]._M_end_of_storage._M_data);
-	}
-}
-*/
+#ifndef _EDITOR
 void CDetailManager::Load		()
 {
 	// Open file stream
@@ -287,10 +256,6 @@ void CDetailManager::UpdateVisibleM()
 				Slot*	PS		= *MS.slots[_i];
 				Slot& 	S 		= *PS;
 
-//				if ( ( _i + 1 ) < dwCC );
-//					_mm_prefetch( (char *) *MS.slots[ _i + 1 ]  , _MM_HINT_T1 );
-
-				// if slot empty - continue
 				if (S.empty)
 				{
 					continue;

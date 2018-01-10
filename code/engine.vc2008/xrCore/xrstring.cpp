@@ -133,13 +133,9 @@ str_container::str_container()
 
 str_value*	str_container::dock(str_c value)
 {
-	if (0 == value)				return 0;
+	if (!value) return 0;
 
 	std::lock_guard<decltype(cs)> lock(cs);
-
-#ifdef DEBUG_MEMORY_MANAGER
-	Memory.stat_strdock++;
-#endif // DEBUG_MEMORY_MANAGER
 
 	str_value*	result = 0;
 
@@ -169,11 +165,7 @@ str_value*	str_container::dock(str_c value)
 #endif //DEBUG
 		) {
 
-		result = (str_value*)Memory.mem_alloc(sizeof(str_value) + s_len_with_zero
-#ifdef DEBUG_MEMORY_NAME
-			, "storage: sstring"
-#endif // DEBUG_MEMORY_NAME
-		);
+		result = (str_value*)Memory.mem_alloc(sizeof(str_value) + s_len_with_zero);
 
 #ifdef DEBUG
 		static int num_leaked_string = 0;

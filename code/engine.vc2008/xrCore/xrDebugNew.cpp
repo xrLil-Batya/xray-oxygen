@@ -92,11 +92,6 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		}
 	}
 
-#ifdef USE_MEMORY_MONITOR
-	memory_monitor::flush_each_time(true);
-	memory_monitor::flush_each_time(false);
-#endif // USE_MEMORY_MONITOR
-
 	if (IsDebuggerPresent() || !strstr(GetCommandLine(), "-no_call_stack_assert"))
 		return;
 	if (shared_str_initialized)

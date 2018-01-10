@@ -174,19 +174,6 @@ public:
 		full_memory_stats( );
 	}
 };
-#ifdef DEBUG_MEMORY_NAME
-class CCC_MemCheckpoint : public IConsole_Command
-{
-public:
-	CCC_MemCheckpoint(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = FALSE; };
-	virtual void Execute(LPCSTR args) 
-	{
-		memory_monitor::make_checkpoint(args);
-	}
-	virtual void	Save	(IWriter *F)	{}
-};
-
-#endif // #ifdef DEBUG
 
 // g_spawn
 class CCC_Spawn : public IConsole_Command {
@@ -1474,26 +1461,6 @@ public:
 	}
 };
 
-#ifdef DEBUG_MEMORY_MANAGER
-
-class CCC_MemAllocShowStats : public IConsole_Command {
-public:
-	CCC_MemAllocShowStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR) {
-		mem_alloc_show_stats	();
-	}
-};
-
-class CCC_MemAllocClearStats : public IConsole_Command {
-public:
-	CCC_MemAllocClearStats(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR) {
-		mem_alloc_clear_stats	();
-	}
-};
-
-#endif // DEBUG_MEMORY_MANAGER
-
 class CCC_DumpModelBones : public IConsole_Command {
 public:
 	CCC_DumpModelBones	(LPCSTR N) : IConsole_Command(N)
@@ -1697,9 +1664,7 @@ void CCC_RegisterCommands()
 	// options
 
 	CMD1(CCC_MemStats,			"stat_memory"			);
-#ifdef DEBUG_MEMORY_NAME
-	CMD1(CCC_MemCheckpoint,		"stat_memory_checkpoint");
-#endif //#ifdef DEBUG	
+
 	// game
 	CMD3(CCC_Mask,				"g_crouch_toggle",		&psActorFlags,	AF_CROUCH_TOGGLE);
 	CMD1(CCC_GameDifficulty,	"g_game_difficulty"		);
@@ -1825,14 +1790,6 @@ CMD4(CCC_Float,				"hit_anims_reduce_blend",				&ghit_anims_params.reduce_blend,
 CMD4(CCC_Float,				"hit_anims_reduce_blend_factor",		&ghit_anims_params.reduce_power_factor, 0.0f,	1.0f);
 CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 /////////////////////////////////////////////HIT ANIMATION END////////////////////////////////////////////////////
-
-#ifdef DEBUG_MEMORY_MANAGER
-	CMD3(CCC_Mask,				"debug_on_frame_gather_stats",				&psAI_Flags,	aiDebugOnFrameAllocs);
-	CMD4(CCC_Float,				"debug_on_frame_gather_stats_frequency",	&debug_on_frame_gather_stats_frequency, 0.f, 1.f);
-	CMD1(CCC_MemAllocShowStats,	"debug_on_frame_show_stats");
-	CMD1(CCC_MemAllocClearStats,"debug_on_frame_clear_stats");
-#endif // DEBUG_MEMORY_MANAGER
-
 	CMD1(CCC_DumpModelBones,	"debug_dump_model_bones");
 
 	CMD1(CCC_DrawGameGraphAll,		"ai_draw_game_graph_all");
