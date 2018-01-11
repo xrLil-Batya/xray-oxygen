@@ -58,7 +58,7 @@ void __stdcall PLC_calc3_x86(int& c0, int& c1, int& c2, CRenderDevice& Device_, 
 }
 
 // SSE -----------------------------------------------------------------------------------------------------
-
+#include <immintrin.h>
 __forceinline float PLC_energy_SSE(Fvector& P, Fvector& N, light* L, float E)
 {
 	Fvector Ldir;
