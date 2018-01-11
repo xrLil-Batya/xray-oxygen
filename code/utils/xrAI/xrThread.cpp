@@ -1,15 +1,15 @@
 #include "stdafx.h"
 #include "xrThread.h"
 
-void	CThread::startup(void* P)
+void CThread::startup(void* P)
 {
 	CThread* T = (CThread*)P;
-
-	if (T->thMessages)	clMsg("* THREAD #%d: Started.",T->thID);
-	FPU::m64r		();
-	T->Execute		();
-	T->thCompleted	= TRUE;
-	if (T->thMessages)	clMsg("* THREAD #%d: Task Completed.",T->thID);
+	set_current_thread_name("worker-thread");
+	if (T->thMessages)	clMsg("* THREAD #%d: Started.", T->thID);
+	FPU::m64r();
+	T->Execute();
+	T->thCompleted = TRUE;
+	if (T->thMessages)	clMsg("* THREAD #%d: Task Completed.", T->thID);
 }
 
 void	CThreadManager::start	(CThread*	T)

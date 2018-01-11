@@ -4,7 +4,7 @@
 void	CThread::startup(void* P)
 {
 	CThread* T = (CThread*)P;
-
+	set_current_thread_name("worker-thread");
 	if (T->thMessages)	clMsg("* THREAD #%d: Started.",T->thID);
 	FPU::m64r		();
 	T->Execute		();

@@ -27,7 +27,7 @@
 CBuild*	pBuild		= NULL;
 u32		version		= 0;
 
-extern void logThread(void *dummy);
+extern void logThread();
 extern volatile bool bClose;
 
 static const char* h_str =
@@ -84,9 +84,9 @@ void Startup(LPSTR     lpCmdLine)
 	
 	// Give a LOG-thread a chance to startup
 	//_set_sbh_threshold(1920);
-	InitCommonControls		();
-	thread_spawn			(logThread, "log-update", 1024*1024,0);
-	Sleep					(150);
+	InitCommonControls();
+	std::thread log_thread(logThread);
+	Sleep(150);
 	
 	// Faster FPU 
 	switch (g_build_options.Priority)

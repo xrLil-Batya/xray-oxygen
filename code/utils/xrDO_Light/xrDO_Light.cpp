@@ -11,7 +11,7 @@
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"xrLC_Light.lib")
 
-extern void logThread			(void *dummy);
+extern void logThread();
 extern volatile BOOL bClose;
 
 static const char* h_str = 
@@ -45,8 +45,8 @@ void Startup(LPSTR     lpCmdLine)
 
 	// Give a LOG-thread a chance to startup
 	InitCommonControls	();
-	thread_spawn		(logThread,	"log-update", 1024*1024,0);
-	Sleep				(150);
+	std::thread log_thread(logThread);
+	Sleep (150);
 	
 	// Load project
 	name[0]=0; sscanf	(strstr(cmd,"-f")+2,"%s",name);

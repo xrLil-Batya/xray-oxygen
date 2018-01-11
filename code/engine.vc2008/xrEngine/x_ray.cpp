@@ -194,48 +194,23 @@ void destroySettings()
 	xr_delete					( pGameIni		);
 }
 
-void destroyConsole	()
+void destroyConsole()
 {
-	Console->Execute			("cfg_save");
-	Console->Destroy			();
-	xr_delete					(Console);
+	Console->Execute("cfg_save");
+	Console->Destroy();
+	xr_delete(Console);
 }
 
-void destroyEngine	()
+void destroyEngine()
 {
-	Device.Destroy				( );
-	Engine.Destroy				( );
+	Device.Destroy();
+	Engine.Destroy();
 }
 
-void execUserScript				( )
+void execUserScript()
 {
-	Console->Execute			("default_controls");
-	Console->ExecuteScript		(Console->ConfigFile);
-}
-
-void slowdownthread	( void* )
-{
-//	Sleep		(30*1000);
-	for (;;)	{
-		if (Device.Statistic->fFPS<30) Sleep(1);
-		if (Device.mt_bMustExit)	return;
-		if (0==pSettings)			return;
-		if (0==Console)				return;
-		if (0==pInput)				return;
-		if (0==pApp)				return;
-	}
-}
-void CheckPrivilegySlowdown		( )
-{
-#ifdef DEBUG
-	if	(strstr(Core.Params,"-slowdown"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-	if	(strstr(Core.Params,"-slowdown2x"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
-#endif // DEBUG
+	Console->Execute("default_controls");
+	Console->ExecuteScript(Console->ConfigFile);
 }
 
 void Startup()

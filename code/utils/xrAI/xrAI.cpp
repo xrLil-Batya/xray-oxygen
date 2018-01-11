@@ -9,12 +9,10 @@
 #include "xr_graph_merge.h"
 #include "game_spawn_constructor.h"
 #include "xrCrossTable.h"
-//#include "path_test.h"
 #include "game_graph_builder.h"
 #include <mmsystem.h>
 #include "spawn_patcher.h"
 
-//#pragma comment(linker,"/STACK:0x800000,0x400000")
 
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -27,7 +25,7 @@
 extern LPCSTR LEVEL_GRAPH_NAME;
 
 extern void	xrCompiler			(LPCSTR name, bool draft_mode, bool pure_covers, LPCSTR out_name);
-extern void logThread			(void *dummy);
+extern void logThread			();
 extern volatile BOOL bClose;
 extern void test_smooth_path	(LPCSTR name);
 extern void test_hierarchy		(LPCSTR name);
@@ -35,7 +33,6 @@ extern void	xrConvertMaps		();
 extern void	test_goap			();
 extern void	smart_cover			(LPCSTR name);
 extern void	verify_level_graph	(LPCSTR name, bool verbose);
-//extern void connectivity_test	(LPCSTR);
 extern void compare_graphs		(LPCSTR level_name);
 extern void test_levels			();
 
@@ -150,7 +147,7 @@ void Startup(LPSTR     lpCmdLine)
 	// Give a LOG-thread a chance to startup
 	InitCommonControls	();
 	Sleep				(150);
-	thread_spawn		(logThread,	"log-update", 1024*1024,0);
+	std::thread			log_thread(logThread);
 	while				(!logWindow)	Sleep		(150);
 	
 	u32					dwStartupTime	= timeGetTime();
@@ -174,33 +171,12 @@ void Startup(LPSTR     lpCmdLine)
 
 void buffer_vector_test		();
 
-int APIENTRY WinMain(HINSTANCE hInstance,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	Debug._initialize		(false);
 	Core._initialize		("xrai",0);
-
 	buffer_vector_test		();
-
-//	HMODULE					hFactory;
-//	LPCSTR					g_name	= "xrSE_Factory.dll";
-//	Log						("Loading DLL:",g_name);
-//	hFactory				= LoadLibrary	(g_name);
-//	if (0==hFactory)		R_CHK			(GetLastError());
-//	R_ASSERT2				(hFactory,"Factory DLL raised exception during loading or there is no factory DLL at all");
-//#ifdef _M_X64
-//	create_entity =		(Factory_Create*)  GetProcAddress(hFactory, "create_entity");		//R_ASSERT(create_entity);
-//	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory, "destroy_entity");		//R_ASSERT(destroy_entity);
-//#else
-//	create_entity =		(Factory_Create*)  GetProcAddress(hFactory,"_create_entity@4");		R_ASSERT(create_entity);
-//	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory,"_destroy_entity@4");	R_ASSERT(destroy_entity);
-//#endif
 	Startup					(lpCmdLine);
-
-//	FreeLibrary				(hFactory);
-
 	Core._destroy			();
 
 	return					(0);
