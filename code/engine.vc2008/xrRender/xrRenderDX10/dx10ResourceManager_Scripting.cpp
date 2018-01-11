@@ -18,12 +18,6 @@
 
 using namespace luabind;
 
-#ifdef	DEBUG
-#define MDB	Memory.dbg_check()
-#else
-#define MDB
-#endif
-
 class	adopt_dx10options
 {
 public:
@@ -93,7 +87,6 @@ public:
 
 void LuaLog(LPCSTR caMessage)
 {
-	MDB;	
 	Lua::LuaOut	(Lua::eLuaMessageTypeMessage,"%s",caMessage);
 }
 void LuaError(lua_State* L)
