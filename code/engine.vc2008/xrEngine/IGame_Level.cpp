@@ -26,9 +26,12 @@ IGame_Level::IGame_Level	()
 	Device.DumpResourcesMemoryUsage();
 }
 
+//#include "resourcemanager.h"
+
 IGame_Level::~IGame_Level	()
 {
 	if(strstr(Core.Params,"-nes_texture_storing") )
+		//Device.Resources->StoreNecessaryTextures();
 		Device.m_pRender->ResourcesStoreNecessaryTextures();
 	xr_delete					( pLevel		);
 
@@ -141,6 +144,17 @@ BOOL IGame_Level::Load			(u32 dwNum)
 int		psNET_DedicatedSleep	= 5;
 void	IGame_Level::OnRender()
 {
+#ifndef DEDICATED_SERVER
+	//	if (_abs(Device.fTimeDelta)<EPS_S) return;
+
+#ifdef _GPA_ENABLED	
+	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
+	TAL_CreateID(rtID);
+	TAL_BeginNamedVirtualTaskWithID("GameRenderFrame", rtID);
+	TAL_Parami("Frame#", Device.dwFrame);
+	TAL_EndVirtualTask();
+#endif // _GPA_ENABLED
+
 	// Level render, only when no client output required
 	if (!g_dedicated_server) {
 		Render->Calculate();
@@ -148,13 +162,21 @@ void	IGame_Level::OnRender()
 	}
 	else Sleep(psNET_DedicatedSleep);
 
+#ifdef _GPA_ENABLED	
+	TAL_RetireID(rtID);
+#endif // _GPA_ENABLED
+
 	// Font
 //	pApp->pFontSystem->SetSizeI(0.023f);
 //	pApp->pFontSystem->OnRender	();
+#endif
 }
 
 void	IGame_Level::OnFrame		( ) 
 {
+	// Log				("- level:on-frame: ",u32(Device.dwFrame));
+//	if (_abs(Device.fTimeDelta)<EPS_S) return;
+
 	// Update all objects
 	VERIFY						(bReady);
 	Objects.Update				(false);

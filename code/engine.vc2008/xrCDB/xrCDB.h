@@ -149,6 +149,7 @@ namespace CDB
 			}
 		}
 
+		static	void			build_thread	(void*);
 		void build_internal (Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
 		void build (Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
 		u32						memory			();

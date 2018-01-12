@@ -1622,6 +1622,13 @@ struct TES_PARAMS {
 
 void PATurbulenceExecuteStream( LPVOID lpvParams )
 {
+#ifdef _GPA_ENABLED	
+	TAL_SCOPED_TASK_NAMED( "PATurbulenceExecuteStream()");
+
+	TAL_ID rtID = TAL_MakeID( 1 , Core.dwFrame , 0);	
+	TAL_AddRelationThis(TAL_RELATION_IS_CHILD_OF, rtID);
+#endif // _GPA_ENABLED
+
 	pVector pV;
     pVector vX;
     pVector vY;
@@ -1694,6 +1701,10 @@ void PATurbulenceExecuteStream( LPVOID lpvParams )
 
 void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max)
 {
+#ifdef _GPA_ENABLED	
+	TAL_SCOPED_TASK_NAMED("PATurbulence::Execute()");
+#endif // _GPA_ENABLED
+
 	if (noise_start) 
 	{
 		noise_start = 0;
@@ -1706,7 +1717,7 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 	if (!p_cnt) 
 		return;
 	
-	size_t nWorkers = ttapi.threads.size();
+	u32 nWorkers = (u32)ttapi_GetWorkersCount();
 	//Is how it is in Shadow of Chernobyl and Clear Sky source and does seem to run better then * 20. Only 20% CPU usage.
 	if (p_cnt < nWorkers * 64)
 		nWorkers = 1;
@@ -1731,9 +1742,9 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 		tesParams[i].octaves = octaves;
 		tesParams[i].magnitude = magnitude;
 
-		ttapi.threads[i]->addJob([=] { PATurbulenceExecuteStream((void*)&tesParams[i]); });
+		ttapi_AddWorker(PATurbulenceExecuteStream, (LPVOID)&tesParams[i]);
 	}
-	ttapi.wait();
+	ttapi_RunAllWorkers();
 }
 
 #else

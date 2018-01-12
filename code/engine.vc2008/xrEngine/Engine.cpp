@@ -41,6 +41,8 @@ PROTECT_API void CEngine::Initialize	(void)
 #endif
 }
 
+typedef void __cdecl ttapi_Done_func(void);
+
 void CEngine::Destroy()
 {
 	Engine.Sheduler.Destroy();
@@ -48,6 +50,10 @@ void CEngine::Destroy()
 
 	if (hPSGP)
 	{
+		ttapi_Done_func*  ttapi_Done = (ttapi_Done_func*)GetProcAddress(hPSGP, "ttapi_Done");	R_ASSERT(ttapi_Done);
+		if (ttapi_Done)
+			ttapi_Done();
+
 		FreeLibrary(hPSGP);
 		hPSGP = 0;
 		std::memset(&PSGP, 0, sizeof(PSGP));

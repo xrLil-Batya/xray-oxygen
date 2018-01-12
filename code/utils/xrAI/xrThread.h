@@ -21,8 +21,11 @@ public:
 		thMonitor			= FALSE;
 		thDestroyOnComplete	= TRUE;
 	}
-	virtual				~CThread() = default;
-	void				Start	() { std::thread worker(startup, this); }
+	virtual				~CThread(){}
+	void				Start	()
+	{
+		thread_spawn	(startup,"worker-thread",1024*1024,this);
+	}
 	virtual		void	Execute	()	= 0;
 };
 

@@ -51,12 +51,50 @@ MODEL::~MODEL()
 	xr_free(verts);	verts_count = 0;
 }
 
+struct	BTHREAD_params
+{
+	MODEL*				M;
+	Fvector*			V;
+	int					Vcnt;
+	TRI*				T;
+	int					Tcnt;
+	build_callback*		BC;
+	void*				BCP;
+    bool                rebuildTrisRequired;
+};
+
+void	MODEL::build_thread(void *params)
+{
+	_initialize_cpu_thread();
+	FPU::m64r();
+	BTHREAD_params	P = *((BTHREAD_params*)params);
+	std::lock_guard<std::recursive_mutex> lock(P.M->cs);
+	P.M->build_internal(P.V, P.Vcnt, P.T, P.Tcnt, P.BC, P.BCP, P.rebuildTrisRequired);
+	P.M->status = S_READY;
+}
+
 void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
 {
 	R_ASSERT(S_INIT == status);
 	R_ASSERT((Vcnt >= 4) && (Tcnt >= 2));
-	build_internal(V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired);
-	status = S_READY;
+	_initialize_cpu_thread();
+
+	const unsigned cpu_thrd = CPU::ID.n_threads;
+
+	if (cpu_thrd > 1)
+	{
+		BTHREAD_params P = { this, V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired };
+		thread_spawn(build_thread, "CDB-construction", 0, &P);
+		while (S_INIT == status)
+		{
+			Sleep(5);
+		}
+	}
+	else
+	{
+		build_internal(V, Vcnt, T, Tcnt, bc, bcp, rebuildTrisRequired);
+		status = S_READY;
+	}
 }
 
 void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)

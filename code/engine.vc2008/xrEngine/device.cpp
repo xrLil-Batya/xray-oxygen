@@ -69,8 +69,14 @@ void CRenderDevice::Clear	()
 	m_pRender->Clear();
 }
 
+extern void CheckPrivilegySlowdown();
+
+
 void CRenderDevice::End		(void)
 {
+#ifndef DEDICATED_SERVER
+
+
 #ifdef INGAME_EDITOR
 	bool							load_finished = false;
 #endif // #ifdef INGAME_EDITOR
@@ -78,23 +84,28 @@ void CRenderDevice::End		(void)
 	{
 		::Sound->set_master_volume	(0.f);
 		dwPrecacheFrame	--;
+//.		pApp->load_draw_internal	();
 		if (0==dwPrecacheFrame)
 		{
 
 #ifdef INGAME_EDITOR
 			load_finished			= true;
 #endif // #ifdef INGAME_EDITOR
+			//Gamma.Update		();
 			m_pRender->updateGamma();
 
 			if(precache_light) precache_light->set_active	(false);
 			if(precache_light) precache_light.destroy		();
 			::Sound->set_master_volume						(1.f);
+//			pApp->destroy_loading_shaders					();
 
 			m_pRender->ResourcesDestroyNecessaryTextures	();
 			Memory.mem_compact								();
 			Msg												("* MEMORY USAGE: %d K",Memory.mem_usage()/1024);
 			Msg												("* End of synchronization A[%d] R[%d]",b_is_Active, b_is_Ready);
 
+			CheckPrivilegySlowdown							();
+			
 			if(g_pGamePersistent->GameType()==1)//haCk
 			{
 				WINDOWINFO	wi;
@@ -114,38 +125,35 @@ void CRenderDevice::End		(void)
 		if (load_finished && m_editor)
 			m_editor->on_load_finished	();
 #	endif // #ifdef INGAME_EDITOR
+#endif
 }
 
 
 volatile u32	mt_Thread_marker		= 0x12345678;
-void mt_Thread()
-{
-	set_current_thread_name("X-RAY Secondary thread");
-	while (true) 
-	{
+void 			mt_Thread	(void *ptr)	{
+	while (true) {
 		// waiting for Device permission to execute
-		Device.mt_csEnter.lock();
+		Device.mt_csEnter.lock	();
 
-		if (Device.mt_bMustExit)
-		{
-			Device.mt_bMustExit = false;		// Important!!!
-			Device.mt_csEnter.unlock();			// Important!!!
+		if (Device.mt_bMustExit) {
+			Device.mt_bMustExit = FALSE;				// Important!!!
+			Device.mt_csEnter.unlock();					// Important!!!
 			return;
 		}
 		// we has granted permission to execute
-		mt_Thread_marker = Device.dwFrame;
-
-		for (u32 pit = 0; pit < Device.seqParallel.size(); pit++)
-			Device.seqParallel[pit]();
-		Device.seqParallel.clear();
-		Device.seqFrameMT.Process(rp_Frame);
+		mt_Thread_marker			= Device.dwFrame;
+ 
+		for (u32 pit=0; pit<Device.seqParallel.size(); pit++)
+			Device.seqParallel[pit]	();
+		Device.seqParallel.clear	();
+		Device.seqFrameMT.Process	(rp_Frame);
 
 		// now we give control to device - signals that we are ended our work
-		Device.mt_csEnter.unlock();
+		Device.mt_csEnter.unlock	();
 		// waits for device signal to continue - to start again
-		Device.mt_csLeave.lock();
+		Device.mt_csLeave.lock	();
 		// returns sync signal to device
-		Device.mt_csLeave.unlock();
+		Device.mt_csLeave.unlock	();
 	}
 }
 
@@ -153,7 +161,10 @@ void mt_Thread()
 void CRenderDevice::PreCache	(u32 amount, bool b_draw_loadscreen, bool b_wait_user_input)
 {
 	if (m_pRender->GetForceGPU_REF()) amount=0;
-
+#ifdef DEDICATED_SERVER
+	amount = 0;
+#endif
+	// Msg			("* PCACHE: start for %d...",amount);
 	dwPrecacheFrame	= dwPrecacheTotal = amount;
 	if (amount && !precache_light && g_pGameLevel && g_loading_events.empty()) {
 		precache_light					= ::Render->light_create();
@@ -182,6 +193,9 @@ void CRenderDevice::on_idle		()
 		return;
 	}
 
+#ifdef DEDICATED_SERVER
+	u32 FrameStartTime = TimerGlobal.GetElapsed_ms();
+#endif
 	if (psDeviceFlags.test(rsStatistic))	g_bEnableStatGather	= TRUE;
 	else									g_bEnableStatGather	= FALSE;
 	if (g_loading_events.size())
@@ -225,6 +239,7 @@ void CRenderDevice::on_idle		()
 	mt_csEnter.unlock			();
 	Sleep						(0);
 
+#ifndef DEDICATED_SERVER
 	Statistic->RenderTOTAL_Real.FrameStart	();
 	Statistic->RenderTOTAL_Real.Begin		();
 	if (b_is_Active)							{
@@ -242,7 +257,7 @@ void CRenderDevice::on_idle		()
 	Statistic->RenderTOTAL_Real.End			();
 	Statistic->RenderTOTAL_Real.FrameEnd	();
 	Statistic->RenderTOTAL.accum	= Statistic->RenderTOTAL_Real.accum;
-
+#endif // #ifndef DEDICATED_SERVER
 	// *** Suspend threads
 	// Capture startup point
 	// Release end point - allow thread to wait for startup point
@@ -256,6 +271,36 @@ void CRenderDevice::on_idle		()
 		Device.seqParallel.clear	();
 		seqFrameMT.Process					(rp_Frame);
 	}
+
+#ifdef DEDICATED_SERVER
+	u32 FrameEndTime = TimerGlobal.GetElapsed_ms();
+	u32 FrameTime = (FrameEndTime - FrameStartTime);
+	/*
+	string1024 FPS_str = "";
+	string64 tmp;
+	xr_strcat(FPS_str, "FPS Real - ");
+	if (dwTimeDelta != 0)
+		xr_strcat(FPS_str, ltoa(1000/dwTimeDelta, tmp, 10));
+	else
+		xr_strcat(FPS_str, "~~~");
+
+	xr_strcat(FPS_str, ", FPS Proj - ");
+	if (FrameTime != 0)
+		xr_strcat(FPS_str, ltoa(1000/FrameTime, tmp, 10));
+	else
+		xr_strcat(FPS_str, "~~~");
+	
+*/
+	u32 DSUpdateDelta = 1000/g_svDedicateServerUpdateReate;
+	if (FrameTime < DSUpdateDelta)
+	{
+		Sleep(DSUpdateDelta - FrameTime);
+//		Msg("sleep for %d", DSUpdateDelta - FrameTime);
+//		xr_strcat(FPS_str, ", sleeped for ");
+//		xr_strcat(FPS_str, ltoa(DSUpdateDelta - FrameTime, tmp, 10));
+	}
+//	Msg(FPS_str);
+#endif // #ifdef DEDICATED_SERVER
 
 	if (!b_is_Active)
 		Sleep		(1);
@@ -297,6 +342,7 @@ void CRenderDevice::Run			()
 //	DUMP_PHASE;
 	g_bLoaded		= FALSE;
 	Log				("Starting engine...");
+	thread_name		("X-RAY Primary thread");
 
 	// Startup timers and calculate timer delta
 	dwTimeGlobal				= 0;
@@ -310,20 +356,28 @@ void CRenderDevice::Run			()
 	}
 
 	// Start all threads
-	mt_csEnter.lock();
-	mt_bMustExit = false; 
-	std::thread second_thread(mt_Thread);
+//	InitializeCriticalSection	(&mt_csEnter);
+//	InitializeCriticalSection	(&mt_csLeave);
+	mt_csEnter.lock			();
+	mt_bMustExit				= FALSE;
+	thread_spawn				(mt_Thread,"X-RAY Secondary thread",0,0);
 
 	// Message cycle
 	seqAppStart.Process			(rp_AppStart);
+
+	//CHK_DX(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_XRGB(0,0,0),1,0));
 	m_pRender->ClearTarget		();
+
 	message_loop				();
+
 	seqAppEnd.Process		(rp_AppEnd);
 
 	// Stop Balance-Thread
-	mt_bMustExit			= true;
-	mt_csEnter.unlock		(); 
-	second_thread.join();
+	mt_bMustExit			= TRUE;
+	mt_csEnter.unlock		();
+	while (mt_bMustExit)	Sleep(0);
+//	DeleteCriticalSection	(&mt_csEnter);
+//	DeleteCriticalSection	(&mt_csLeave);
 }
 
 u32 app_inactive_time		= 0;

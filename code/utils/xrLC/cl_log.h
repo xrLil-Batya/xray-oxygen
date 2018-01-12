@@ -7,5 +7,5 @@ inline void Progress(const float F) noexcept { progress = F; }
 void Phase			(const char* phase_name);
 //void Phase			(const char* phase_name, bool setcapt = false);
 
-void logThread	    ();
+void logThread	    (void *dummy);
 void logCallback	(LPCSTR c);

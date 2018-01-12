@@ -146,13 +146,7 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 }
 
 void ImplicitLightingExec(BOOL b_net);
-
-void ImplicitLightingTreadNetExec()
-{
-	std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
-	ImplicitLightingExec(TRUE);
-}
-
+void ImplicitLightingTreadNetExec(void *p);
 void ImplicitLighting(BOOL b_net)
 {
 	if (g_params().m_quality == ebqDraft)
@@ -162,8 +156,7 @@ void ImplicitLighting(BOOL b_net)
 		ImplicitLightingExec(FALSE);
 		return;
 	}
-	std::thread worker(ImplicitLightingTreadNetExec);
-	set_thread_name("worker-thread", worker);
+	thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
 }
 
 std::recursive_mutex implicit_net_lock;
@@ -171,6 +164,12 @@ void XRLC_LIGHT_API ImplicitNetWait()
 {
 	implicit_net_lock.lock();
 	implicit_net_lock.unlock();
+}
+
+void ImplicitLightingTreadNetExec(void *p)
+{
+	std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
+	ImplicitLightingExec(TRUE);
 }
 
 static xr_vector<u32> not_clear;

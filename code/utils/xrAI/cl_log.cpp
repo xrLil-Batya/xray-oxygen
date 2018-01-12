@@ -80,6 +80,11 @@ void Progress		(const float F)
 {
 	// No critical section usage
 	progress		= F;
+	/*
+	LONG* target = (LONG *)(&progress);
+	LONG  src    = *( (LONG *)(&F)  );
+	InterlockedExchange(target, src);
+	*/
 }
 
 void Phase			(const char *phase_name)
@@ -109,9 +114,8 @@ void Phase			(const char *phase_name)
 }
 
 HWND logWindow=0;
-void logThread()
+void logThread(void *dummy)
 {
-	set_current_thread_name("xrAI-log");
 	SetProcessPriorityBoost	(GetCurrentProcess(),TRUE);
 
 	logWindow = CreateDialog(

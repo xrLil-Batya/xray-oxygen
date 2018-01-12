@@ -92,9 +92,8 @@ namespace	lc_net{
 	{
 		start_time.Start();
 		tasks_completed  = 0;
-
-		std::thread release_user(task_manager::user_thread_proc, this);
-		set_thread_name("release-user", release_user);
+		//create_user( );
+		thread_spawn	(task_manager::user_thread_proc,"release-user",1024*1024,this);
 		for(;;)
 		{
 			Sleep(1);
