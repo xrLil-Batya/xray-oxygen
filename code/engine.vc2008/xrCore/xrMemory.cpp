@@ -16,7 +16,9 @@ void xrMemory::_initialize()
 	stat_calls				= 0;
 	stat_counter			= 0;
 
-	if (!strstr(Core.Params, "-pure_alloc"))
+	ConditionalInitPureAlloc();
+
+	if (!use_pure_alloc)
 	{
 		// initialize POOLs
 		u32	element = mem_pools_ebase;
@@ -60,6 +62,21 @@ void xrMemory::mem_compact()
 	if (strstr(Core.Params, "-swap_on_compact"))
 	{
 		SetProcessWorkingSetSize(GetCurrentProcess(), external_size, external_size);
+	}
+}
+
+void xrMemory::ConditionalInitPureAlloc()
+{
+	if (!use_pure_alloc_initialized)
+	{
+		use_pure_alloc_initialized = true;
+ 		use_pure_alloc =
+ #	ifdef XRCORE_STATIC
+ 			true
+ #	else // XRCORE_STATIC
+ 			!!strstr(GetCommandLine(), "-pure_alloc")
+ #	endif // XRCORE_STATIC
+ 			;
 	}
 }
 

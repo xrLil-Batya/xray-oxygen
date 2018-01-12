@@ -54,6 +54,7 @@ public:
 	IC								CGameGraph				(const IReader &stream);
 	IC		void					save					(IWriter &stream);
 	IC	const CGameLevelCrossTable	&cross_table			() const;
+	IC		bool					validate				() const;
 
 public:
 	IC virtual						~CGameGraph				();

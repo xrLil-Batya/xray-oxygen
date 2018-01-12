@@ -486,7 +486,7 @@ void CDbgLuaHelper::DrawVariable(lua_State * l, const char* name, bool bOpenTabl
 		break;
 
 	case LUA_TBOOLEAN:
-		xr_sprintf(value, "%s", lua_toboolean(L, -1) ? "true" : "false");
+		xr_sprintf(value, "%s", lua_toboolean(l, -1) ? "true" : "false");
 		xr_strcpy(var.szValue, value );
 		break;
 

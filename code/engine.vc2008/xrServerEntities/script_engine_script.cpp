@@ -18,7 +18,7 @@ void ErrorLog(LPCSTR caMessage)
 {
 	ai().script_engine().error_log("%s",caMessage);
 #ifdef PRINT_CALL_STACK
-	ai().script_engine().print_stack();
+	ai().script_engine().dump_state();
 #endif // #ifdef PRINT_CALL_STACK
 	
 #ifdef USE_DEBUGGER

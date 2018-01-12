@@ -37,11 +37,7 @@ private:
 	CScriptThread				*m_current_thread	;
 	BOOL						m_jit				;
 
-#ifdef DEBUG
 public:
-	bool						m_stack_is_ready	;
-#endif // #ifdef DEBUG
-
 protected:
 	static	int					vscript_log					(ScriptStorage::ELuaMessageType tLuaMessageType, LPCSTR caFormat, va_list marker);
 			bool				parse_namespace				(LPCSTR caNamespaceName, LPSTR b, u32 const b_size, LPSTR c, u32 const c_size);
@@ -52,9 +48,7 @@ protected:
 #endif // #ifdef PRINT_CALL_STACK
 
 public:
-#ifdef PRINT_CALL_STACK
-			void				print_stack					();
-#endif // #ifdef PRINT_CALL_STACK
+			void				dump_state					();
 								CScriptStorage				();
 	virtual						~CScriptStorage				();
 	IC		lua_State			*lua						();
@@ -71,6 +65,8 @@ public:
 	static	bool				print_output				(lua_State *L, LPCSTR	caScriptName, int iErorCode = 0, const char* caErrorText = "see call_stack for details!");
 	static	void				print_error					(lua_State *L,		int		iErrorCode);
 	virtual	void				on_error					(lua_State *L) = 0;
+			void LogTable (lua_State *l, LPCSTR S, int level);
+			void LogVariable (lua_State * l, const char* name, int level, bool bOpenTable);
 
 #ifdef DEBUG
 			void				flush_log					();

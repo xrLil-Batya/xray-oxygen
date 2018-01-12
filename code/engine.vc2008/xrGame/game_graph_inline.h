@@ -39,6 +39,42 @@ IC CGameGraph::CGameGraph											(const IReader &_stream)
 	m_current_level_cross_table		= 0;
 }
 
+
+IC bool CGameGraph::validate() const
+{
+	//collect list of available maps
+	std::vector<_LEVEL_ID> validMapIDs;
+	validMapIDs.reserve(m_header.level_count());
+
+	const GameGraph::LEVEL_MAP& Levels = m_header.levels();
+	
+	for (int LevelIter = 0; LevelIter < m_header.level_count(); ++LevelIter)
+	{
+		const auto& LevelPair = Levels.begin() + LevelIter;
+		validMapIDs.push_back(LevelPair->first);
+	}
+
+	for (int VertID = 0; VertID < header().vertex_count(); ++VertID)
+	{
+		CVertex* vert = m_nodes + VertID;
+		
+		bool findValidLevelID = false;
+		for (int i = 0; i < validMapIDs.size(); ++i)
+		{
+			if (vert->level_id() == validMapIDs[i])
+			{
+				findValidLevelID = true;
+				break;
+			}
+		}
+
+		VERIFY(findValidLevelID);
+	}
+
+	return true;
+}
+
+
 IC CGameGraph::~CGameGraph											()
 {
 	xr_delete					(m_current_level_cross_table);
@@ -113,6 +149,7 @@ IC	const float &CGameGraph::edge_weight							(const_iterator i) const
 
 IC	const CGameGraph::CVertex *CGameGraph::vertex					(u32 const vertex_id) const
 {
+	VERIFY(valid_vertex_id(vertex_id));
 	return						(m_nodes + vertex_id);
 }
 

@@ -72,14 +72,22 @@ void setup_luabind_allocator()
 	luabind::allocator_parameter = 0;
 }
 
+void xrScriptCrashHandler()
+{
+	Msg("Trying dump lua state");
+	try
+	{
+		ai().script_engine().dump_state();
+	}
+	catch (...)
+	{
+		Msg("Can't dump script call stack - Engine corrupted");
+	}
+}
 
 CScriptStorage::CScriptStorage()
 {
 	m_current_thread = 0;
-
-#ifdef DEBUG
-	m_stack_is_ready = false;
-#endif // DEBUG
 
 	m_virtual_machine = 0;
 
@@ -94,6 +102,8 @@ CScriptStorage::~CScriptStorage()
 {
 	if (m_virtual_machine)
 		lua_close(m_virtual_machine);
+
+	Debug.set_crashhandler(nullptr);
 }
 
 void CScriptStorage::reinit()
@@ -111,6 +121,9 @@ void CScriptStorage::reinit()
 		file_header = file_header_new;
 	else
 		file_header = file_header_old;
+
+	//set our crash handler
+	Debug.set_crashhandler(xrScriptCrashHandler);
 }
 
 int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, va_list marker)
@@ -198,30 +211,124 @@ int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, 
 #endif // #ifdef PRINT_CALL_STACK
 }
 
-#ifdef PRINT_CALL_STACK
-void CScriptStorage::print_stack()
+void CScriptStorage::dump_state()
 {
-#ifdef DEBUG
-	if (!m_stack_is_ready)
-		return;
-
-	m_stack_is_ready = false;
-#endif // #ifdef DEBUG
+	static bool reentrantGuard = false;
+	if (reentrantGuard) return;
+	reentrantGuard = true;
 
 	lua_State				*L = lua();
 	lua_Debug				l_tDebugInfo;
 	for (int i = 0; lua_getstack(L, i, &l_tDebugInfo); ++i) {
 		lua_getinfo(L, "nSlu", &l_tDebugInfo);
 		if (!l_tDebugInfo.name)
-			script_log(ScriptStorage::eLuaMessageTypeError, "%2d : [%s] %s(%d) : %s", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline, "");
+		{
+			Msg("%2d : [%s] %s(%d)", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline);
+		}
+		else if (!xr_strcmp(l_tDebugInfo.what, "C"))
+		{
+			Msg("%2d : [C  ] %s", i, l_tDebugInfo.name);
+		}
 		else
-			if (!xr_strcmp(l_tDebugInfo.what, "C"))
-				script_log(ScriptStorage::eLuaMessageTypeError, "%2d : [C  ] %s", i, l_tDebugInfo.name);
-			else
-				script_log(ScriptStorage::eLuaMessageTypeError, "%2d : [%s] %s(%d) : %s", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline, l_tDebugInfo.name);
+		{
+			Msg("%2d : [%s] %s(%d) : %s", i, l_tDebugInfo.what, l_tDebugInfo.short_src, l_tDebugInfo.currentline, l_tDebugInfo.name);
+		}
+		Msg("\tLocals: ");
+		const char *name = nullptr;
+		int VarID = 1;
+		while ((name = lua_getlocal(L, &l_tDebugInfo, VarID++)) != NULL)
+		{
+			LogVariable(L, name, 1, true);
+
+			lua_pop(L, 1);  /* remove variable value */
+		}
+		Msg("\tEnd");
+	}
+	reentrantGuard = false;
+}
+
+void CScriptStorage::LogTable(lua_State *l, LPCSTR S, int level)
+{
+	if (!lua_istable(l, -1))
+		return;
+
+	lua_pushnil(l);  /* first key */
+	while (lua_next(l, -2) != 0) {
+		char sname[256];
+		char sFullName[256];
+		xr_sprintf(sname, "%s", lua_tostring(l, -2));
+		xr_sprintf(sFullName, "%s.%s", S, sname);
+		LogVariable(l, sFullName, level + 1, false);
+
+		lua_pop(l, 1);  /* removes `value'; keeps `key' for next iteration */
 	}
 }
-#endif // #ifdef PRINT_CALL_STACK
+
+void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable)
+{
+	const char * type;
+	int ntype = lua_type(l, -1);
+	type = lua_typename(l, ntype);
+
+	char tabBuffer[32] = { 0 };
+	memset(tabBuffer, '\t', level);
+
+	char value[128];
+
+	switch (ntype)
+	{
+	case LUA_TNUMBER:
+		xr_sprintf(value, "%f", lua_tonumber(l, -1));
+		break;
+
+	case LUA_TBOOLEAN:
+		xr_sprintf(value, "%s", lua_toboolean(l, -1) ? "true" : "false");
+		break;
+
+	case LUA_TSTRING:
+		xr_sprintf(value, "%.127s", lua_tostring(l, -1));
+		break;
+
+	case LUA_TTABLE:
+		if (bOpenTable)
+		{
+			Msg("%s Table: %s", tabBuffer, name);
+			LogTable(l, name, level + 1);
+			return;
+		}
+		else
+		{
+			xr_sprintf(value, "[...]");
+		}
+		break;
+
+	case LUA_TUSERDATA: 
+	{
+		luabind::detail::object_rep* obj = static_cast<luabind::detail::object_rep*>(lua_touserdata(l, -1));
+		luabind::detail::lua_reference& r = obj->get_lua_table();
+		if (r.is_valid())
+		{
+			r.get(l);
+			Msg("%s Userdata: %s", tabBuffer, name);
+			LogTable(l, name, level + 1);
+			lua_pop(l, 1); //Remove userobject
+			return;
+		}
+		else
+		{
+			xr_strcpy(value, "[not available]");
+		}
+	}
+		break;
+
+	default:
+		xr_strcpy(value, "[not available]");
+		break;
+	}
+
+
+	Msg("%s %s %s : %s", tabBuffer, type, name, value);
+}
 
 int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
@@ -236,7 +343,7 @@ int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessag
 	if (!reenterability) {
 		reenterability = true;
 		if (eLuaMessageTypeError == tLuaMessageType)
-			ai().script_engine().print_stack();
+			ai().script_engine().dump_state();
 		reenterability = false;
 	}
 #	endif // #ifndef ENGINE_BUILD

@@ -1,6 +1,6 @@
 #pragma once
 #include <windows.h>
-#if 0
+
 typedef void(*PTTAPI_WORKER_FUNC)(LPVOID lpWorkerParameters);
 typedef PTTAPI_WORKER_FUNC LPPTTAPI_WORKER_FUNC;
 
@@ -30,4 +30,3 @@ extern "C" {
 	void TTAPI ttapi_RunAllWorkers();
 
 }
-#endif

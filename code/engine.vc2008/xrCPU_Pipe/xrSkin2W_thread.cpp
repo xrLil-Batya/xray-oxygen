@@ -54,7 +54,7 @@ void __stdcall xrSkin4W_thread(vertRender* D, vertBoned4W* S, u32 vCount, CBoneI
 		sknParams[i].Count = ( i == ( nWorkers - 1 ) ) ? nLast : nStep;
 		sknParams[i].Data = (LPVOID) Bones;
 
-		ttapi_AddWorker( Skin4W_Stream , (LPVOID) &sknParams[i] );
+		ttapi_AddTask( Skin4W_Stream , (LPVOID) &sknParams[i] );
 	}
 
 	ttapi_RunAllWorkers();
