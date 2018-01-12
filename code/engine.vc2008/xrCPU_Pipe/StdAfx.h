@@ -1,7 +1,7 @@
 #pragma once
 
 #ifndef _WIN32_WINNT
-	#define _WIN32_WINNT 0x0501
+	#define _WIN32_WINNT 0x0600
 #endif // _WIN32_WINNT
 
 #define NOMINMAX
@@ -31,4 +31,4 @@
 #endif // _EDITOR
 
 #include "xrCPU_Pipe.h"
-#include "ttapi.h"
+#include "ttapi_oxygen.h"

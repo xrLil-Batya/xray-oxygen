@@ -17,26 +17,15 @@ ICF	u32	get_pool(size_t size)
 	else return pid;
 }
 
-bool g_use_pure_alloc = false;
 
 void* xrMemory::mem_alloc(size_t size)
 {
 	stat_calls++;
 
-	static bool g_use_pure_alloc_initialized = false;
-	if (!g_use_pure_alloc_initialized) 
-	{
-		g_use_pure_alloc_initialized = true;
-		g_use_pure_alloc =
-#	ifdef XRCORE_STATIC
-			true
-#	else // XRCORE_STATIC
-			!!strstr(GetCommandLine(), "-pure_alloc")
-#	endif // XRCORE_STATIC
-			;
-	}
+	ConditionalInitPureAlloc();
 
-	if (g_use_pure_alloc)
+
+	if (use_pure_alloc)
 	{
 		return malloc(size);
 	}
@@ -76,7 +65,7 @@ void xrMemory::mem_free(void* P)
 {
 	stat_calls++;
 
-	if (g_use_pure_alloc)
+	if (use_pure_alloc)
 	{
 		free(P);
 		return;
@@ -100,7 +89,7 @@ void xrMemory::mem_free(void* P)
 void* xrMemory::mem_realloc(void* P, size_t size)
 {
 	stat_calls++;
-	if (g_use_pure_alloc)
+	if (use_pure_alloc)
 	{
 		return realloc(P, size);
 	}

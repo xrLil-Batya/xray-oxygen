@@ -60,7 +60,7 @@ namespace CPU
 {
     XRCORE_API u64 qpc_freq;
 	XRCORE_API u32 qpc_counter = 0;
-	XRCORE_API processor_info ID;
+	XRCORE_API processor_info Info;
 
 	XRCORE_API u64 QPC()
 	{
@@ -109,33 +109,33 @@ bool g_initialize_cpu_called = false;
 //------------------------------------------------------------------------------------
 void _initialize_cpu	(void) 
 {
-	Msg("* Vendor CPU: %s", CPU::ID.vendor);
-    Msg("* Detected CPU: %s", CPU::ID.modelName);
+	Msg("* Vendor CPU: %s", CPU::Info.vendor);
+    Msg("* Detected CPU: %s", CPU::Info.modelName);
 
 //	DUMP_PHASE;
 
 	string256	features;	xr_strcpy(features,sizeof(features),"RDTSC");
-    if (CPU::ID.hasFeature(CPUFeature::MMX))    xr_strcat(features,", MMX");
-	if (CPU::ID.hasFeature(CPUFeature::AMD_3DNow)) xr_strcat(features, ", 3DNow!");
-	if (CPU::ID.hasFeature(CPUFeature::AMD_3DNowExt)) xr_strcat(features, ", 3DNowExt!");
-    if (CPU::ID.hasFeature(CPUFeature::SSE))    xr_strcat(features,", SSE");
-    if (CPU::ID.hasFeature(CPUFeature::SSE2))   xr_strcat(features,", SSE2");
-    if (CPU::ID.hasFeature(CPUFeature::SSE3))   xr_strcat(features,", SSE3");
-    if (CPU::ID.hasFeature(CPUFeature::MWait))  xr_strcat(features, ", MONITOR/MWAIT");
-    if (CPU::ID.hasFeature(CPUFeature::SSSE3))  xr_strcat(features,", SSSE3");
-    if (CPU::ID.hasFeature(CPUFeature::SSE41))  xr_strcat(features,", SSE4.1");
-    if (CPU::ID.hasFeature(CPUFeature::SSE42))  xr_strcat(features,", SSE4.2");
-	if (CPU::ID.hasFeature(CPUFeature::HT))     xr_strcat(features, ", HTT");
-	if (CPU::ID.hasFeature(CPUFeature::AVX))    xr_strcat(features, ", AVX");
+    if (CPU::Info.hasFeature(CPUFeature::MMX))    xr_strcat(features,", MMX");
+	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNow)) xr_strcat(features, ", 3DNow!");
+	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNowExt)) xr_strcat(features, ", 3DNowExt!");
+    if (CPU::Info.hasFeature(CPUFeature::SSE))    xr_strcat(features,", SSE");
+    if (CPU::Info.hasFeature(CPUFeature::SSE2))   xr_strcat(features,", SSE2");
+    if (CPU::Info.hasFeature(CPUFeature::SSE3))   xr_strcat(features,", SSE3");
+    if (CPU::Info.hasFeature(CPUFeature::MWait))  xr_strcat(features, ", MONITOR/MWAIT");
+    if (CPU::Info.hasFeature(CPUFeature::SSSE3))  xr_strcat(features,", SSSE3");
+    if (CPU::Info.hasFeature(CPUFeature::SSE41))  xr_strcat(features,", SSE4.1");
+    if (CPU::Info.hasFeature(CPUFeature::SSE42))  xr_strcat(features,", SSE4.2");
+	if (CPU::Info.hasFeature(CPUFeature::HT))     xr_strcat(features, ", HTT");
+	if (CPU::Info.hasFeature(CPUFeature::AVX))    xr_strcat(features, ", AVX");
 #ifndef AI32_USE
 	else Debug.do_exit("X-Ray x64 using AVX anyway!");
 #endif
-	if (CPU::ID.hasFeature(CPUFeature::AVX2))   xr_strcat(features, ", AVX2");
-	if (CPU::ID.hasFeature(CPUFeature::SSE4a))  xr_strcat(features, ", SSE4.a");
-	if (CPU::ID.hasFeature(CPUFeature::MMXExt)) xr_strcat(features, ", MMXExt");
+	if (CPU::Info.hasFeature(CPUFeature::AVX2))   xr_strcat(features, ", AVX2");
+	if (CPU::Info.hasFeature(CPUFeature::SSE4a))  xr_strcat(features, ", SSE4.a");
+	if (CPU::Info.hasFeature(CPUFeature::MMXExt)) xr_strcat(features, ", MMXExt");
 
 	Msg("* CPU features: %s" , features );
-	Msg("* CPU cores/threads: %d/%d \n", CPU::ID.n_cores, CPU::ID.n_threads);
+	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
 
     LARGE_INTEGER Freq;
     QueryPerformanceFrequency(&Freq);
@@ -173,7 +173,7 @@ void _initialize_cpu_thread	()
 	debug_on_thread_spawn	();
 	// fpu & sse 
 	FPU::m24r	();
-	if (CPU::ID.hasFeature(CPUFeature::SSE))
+	if (CPU::Info.hasFeature(CPUFeature::SSE))
 	{
 		_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
 		if (_denormals_are_zero_supported)	{

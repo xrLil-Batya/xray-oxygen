@@ -151,6 +151,11 @@ unsigned int query_processor_info(processor_info* pinfo)
 	//End
 	__cpuid(cpui.data(), 1);
 
+	if (_bittest((long*)&cpui[3], 28))
+	{
+		pinfo->features |= static_cast<unsigned>(CPUFeature::HT);
+	}
+
 	//Edit sv3nk
 	if ((cpui[2] & 0x8) > 0)   pinfo->features |= static_cast<unsigned>(CPUFeature::MWait);
 
@@ -162,42 +167,20 @@ unsigned int query_processor_info(processor_info* pinfo)
 	ulong_t pa_mask_save, sa_mask_stub = 0;
 	GetProcessAffinityMask(GetCurrentProcess(), &pa_mask_save, &sa_mask_stub);
 
-	unsigned long returnedLength = 0;
-	unsigned long byteOffset = 0;
-	GetLogicalProcessorInformation(nullptr, &returnedLength);
-
-	auto buffer = std::make_unique<unsigned char[]>(returnedLength);
-	auto ptr = reinterpret_cast<PSYSTEM_LOGICAL_PROCESSOR_INFORMATION>(buffer.get());
-	GetLogicalProcessorInformation(ptr, &returnedLength);
-
-	auto processorCoreCount = 0u;
-	auto logicalProcessorCount = 0u;
-
-	while (byteOffset + sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION) <= returnedLength)
-	{
-		switch (ptr->Relationship)
-		{
-		case RelationProcessorCore:
-			processorCoreCount++;
-
-			// A hyperthreaded core supplies more than one logical processor.
-			logicalProcessorCount += countSetBits(ptr->ProcessorMask);
-			break;
-
-		default:
-			break;
-		}
-
-		byteOffset += sizeof(SYSTEM_LOGICAL_PROCESSOR_INFORMATION);
-		ptr++;
-	}
-
-	if (logicalProcessorCount != processorCoreCount) pinfo->features |= static_cast<unsigned>(CPUFeature::HT);
-
+	SYSTEM_INFO sysInfo;
+	GetSystemInfo(&sysInfo);
+	
 	// All logical processors
-	pinfo->n_threads = logicalProcessorCount;
+	pinfo->n_threads = sysInfo.dwNumberOfProcessors;
 	pinfo->affinity_mask = unsigned(pa_mask_save);
-	pinfo->n_cores = processorCoreCount;
+	if (pinfo->hasFeature(CPUFeature::HT))
+	{
+		pinfo->n_cores = pinfo->n_threads / 2;
+	}
+	else
+	{
+		pinfo->n_cores = pinfo->n_threads;
+	}
 	return pinfo->features;
 }
 
