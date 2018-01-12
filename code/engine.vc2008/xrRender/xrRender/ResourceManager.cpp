@@ -13,6 +13,7 @@
 #include "tss.h"
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
+#include "../../xrCPU_Pipe/ttapi_oxygen.h"
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);
@@ -305,30 +306,16 @@ void CResourceManager::Delete(const Shader* S)
 	Msg	("! ERROR: Failed to find complete shader");
 }
 
-#include <thread>
-xr_vector<CTexture*> tex_to_load;
-void TextureLoading(u16 thread_num)
+void TextureLoading(LPVOID texture)
 {
-	Msg("TextureLoading -> thread %d started!", thread_num);
-
-	const u16 upperbound = thread_num * 100;
-	const u32 lowerbound = upperbound - 100;
-
-	for (size_t i = lowerbound; i < upperbound; i++)
-	{
-		if (i < tex_to_load.size()) tex_to_load[i]->Load();
-		else break;
-	}
-
-	Msg("TextureLoading -> thread %d finished!", thread_num);
+	CTexture* tex = (CTexture*)texture;
+	tex->Load();
 }
 
 void CResourceManager::DeferredUpload()
 {
 	if (RDEVICE.b_is_Ready)
 	{
-		tex_to_load.clear();
-	
 		Msg("CResourceManager::DeferredUpload -> START, size = %d", m_textures.size());
 	
 		CTimer timer;
@@ -342,18 +329,12 @@ void CResourceManager::DeferredUpload()
 		}
 		else
 		{
-			u32 th_count = (m_textures.size() / 100) + 1;
-			std::thread* th_arr = new std::thread[th_count];
-			for (auto tex : m_textures)
-				tex_to_load.push_back(tex.second);
+			for (auto& tex : m_textures)
+			{
+				ttapi_AddTask(TextureLoading, tex.second);
+			}
 	
-			for (u16 i = 0; i < th_count; i++)
-				th_arr[i] = std::thread(TextureLoading, i + 1);
-	
-			for (size_t i = 0; i < th_count; i++)
-				th_arr[i].join();
-	
-			tex_to_load.clear();
+			ttapi_RunAllWorkers();
 		}
 	
 		Msg("texture loading time: %d", timer.GetElapsed_ms());

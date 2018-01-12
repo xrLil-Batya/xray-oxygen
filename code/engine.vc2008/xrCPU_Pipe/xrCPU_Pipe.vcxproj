@@ -264,6 +264,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ttapi_oxygen.cpp" />
     <ClCompile Include="xrCPU_Pipe.cpp" />
     <ClCompile Include="xrSkin2W.cpp" />
     <ClCompile Include="xrSkin2W_3DNow!.cpp">
@@ -288,6 +289,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="ttapi_oxygen.h" />
     <ClInclude Include="xrCPU_Pipe.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ttapi.h" />

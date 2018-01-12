@@ -240,8 +240,6 @@ void CScriptEngine::lua_hook_call		(lua_State *L, lua_Debug *dbg)
 {
 	if (ai().script_engine().current_thread())
 		ai().script_engine().current_thread()->script_hook(L,dbg);
-	else
-		ai().script_engine().m_stack_is_ready	= true;
 }
 #endif
 
@@ -320,10 +318,6 @@ void CScriptEngine::init				()
 	setup_callbacks						();
 	export_classes						(lua());
 	setup_auto_load						();
-
-#ifdef DEBUG
-	m_stack_is_ready					= true;
-#endif
 
 #ifndef USE_LUA_STUDIO
 #	ifdef DEBUG

@@ -45,6 +45,9 @@
     <ClCompile Include="xrSkin2W_3DNow!.cpp">
       <Filter>Skinning</Filter>
     </ClCompile>
+    <ClCompile Include="ttapi_oxygen.cpp">
+      <Filter>TTAPI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -57,6 +60,9 @@
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="ttapi.h">
+      <Filter>TTAPI</Filter>
+    </ClInclude>
+    <ClInclude Include="ttapi_oxygen.h">
       <Filter>TTAPI</Filter>
     </ClInclude>
   </ItemGroup>

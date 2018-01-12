@@ -1,6 +1,6 @@
 #include "stdafx.h"
-#pragma hdrstop
 
+#if 0
 typedef struct TTAPI_WORKER_PARAMS {
 	volatile long			vlFlag;
 	LPPTTAPI_WORKER_FUNC	lpWorkerFunc;
@@ -213,7 +213,7 @@ size_t ttapi_GetWorkersCount()
 
 // We do not check for overflow here to be faster
 // Assume that caller is smart enough to use ttapi_GetWorkersCount() to get number of available slots
-void ttapi_AddWorker(LPPTTAPI_WORKER_FUNC lpWorkerFunc, LPVOID lpvWorkerFuncParams)
+void ttapi_AddTask(LPPTTAPI_WORKER_FUNC lpWorkerFunc, LPVOID lpvWorkerFuncParams)
 {
 	// Assigning parameters
 	ttapi_worker_params[ttapi_assigned_workers].lpWorkerFunc = lpWorkerFunc;
@@ -274,3 +274,5 @@ void ttapi_Done()
 
 	ttapi_initialized = false;
 }
+
+#endif

@@ -79,7 +79,7 @@ void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* b
 	R_ASSERT((Vcnt >= 4) && (Tcnt >= 2));
 	_initialize_cpu_thread();
 
-	const unsigned cpu_thrd = CPU::ID.n_threads;
+	const unsigned cpu_thrd = CPU::Info.n_threads;
 
 	if (cpu_thrd > 1)
 	{

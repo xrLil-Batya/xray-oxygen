@@ -29,8 +29,15 @@ public:
 	u32					mem_counter_get() { return stat_counter; }
 
 	void*				mem_alloc(size_t size);
+
+	void ConditionalInitPureAlloc();
+
 	void*				mem_realloc(void* p, size_t size);
 	void				mem_free(void* p);
+
+private:
+	bool use_pure_alloc_initialized = false;
+	bool use_pure_alloc = false;
 };
 
 extern XRCORE_API xrMemory Memory;

@@ -5,7 +5,7 @@
 
 #ifndef _EDITOR
 #include <xmmintrin.h>
-#include "../../xrCPU_Pipe/ttapi.h"
+#include "../../xrCPU_Pipe/ttapi_oxygen.h"
 #pragma comment(lib,"xrCPU_Pipe.lib")
 #endif
 
@@ -554,7 +554,7 @@ void CParticleEffect::Render(float )
 				prsParams[i].p_to = ( i == ( nWorkers - 1 ) ) ? p_cnt : ( prsParams[i].p_from + nStep );
 				prsParams[i].particles = particles;
 				prsParams[i].pPE = this;
-				ttapi_AddWorker( ParticleRenderStream , (LPVOID) &prsParams[i] );
+				ttapi_AddTask( ParticleRenderStream , (LPVOID) &prsParams[i] );
 			}
 
 			ttapi_RunAllWorkers();

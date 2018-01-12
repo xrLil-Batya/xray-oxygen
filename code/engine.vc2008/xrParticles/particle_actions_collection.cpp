@@ -1578,7 +1578,7 @@ extern void	noise3Init();
 
 #ifndef DEBUG
 #include <xmmintrin.h>
-#include "../xrCPU_Pipe/ttapi.h"
+#include "../xrCPU_Pipe/ttapi_oxygen.h"
 #pragma comment(lib,"xrCPU_Pipe.lib")
 
 __forceinline __m128 _mm_load_fvector( const Fvector& v )
@@ -1742,7 +1742,7 @@ void PATurbulence::Execute(ParticleEffect *effect, const float dt, float& tm_max
 		tesParams[i].octaves = octaves;
 		tesParams[i].magnitude = magnitude;
 
-		ttapi_AddWorker(PATurbulenceExecuteStream, (LPVOID)&tesParams[i]);
+		ttapi_AddTask(PATurbulenceExecuteStream, (LPVOID)&tesParams[i]);
 	}
 	ttapi_RunAllWorkers();
 }
