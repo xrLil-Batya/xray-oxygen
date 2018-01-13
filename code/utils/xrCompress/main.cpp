@@ -8,7 +8,7 @@
 int __cdecl main	(int argc, char* argv[])
 {
 	Debug._initialize	(false);
-	Core._initialize	("xrCompress",0,FALSE);
+	Core._initialize	("xrCompress");
 	printf				("\n\n");
 
 	LPCSTR params = GetCommandLine();
@@ -37,7 +37,8 @@ int __cdecl main	(int argc, char* argv[])
 			printf("	;<path>     = <recurse>\n");
 			printf("	.\\         = false\n");
 			printf("	textures    = true\n");
-			
+
+			system("pause");
 			Core._destroy();
 			return 3;
 		}
@@ -72,6 +73,6 @@ int __cdecl main	(int argc, char* argv[])
 		}
 	}
 
-	Core._destroy		();
+	Core._destroy();
 	return 0;
 }
