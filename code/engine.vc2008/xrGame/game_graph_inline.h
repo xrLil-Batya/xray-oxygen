@@ -147,10 +147,10 @@ IC	const float &CGameGraph::edge_weight							(const_iterator i) const
 	return						(i->distance());
 }
 
-IC	const CGameGraph::CVertex *CGameGraph::vertex					(u32 const vertex_id) const
+IC	const CGameGraph::CVertex *CGameGraph::vertex(u32 const vertex_id) const
 {
-	VERIFY(valid_vertex_id(vertex_id));
-	return						(m_nodes + vertex_id);
+	return(valid_vertex_id(vertex_id))	? (m_nodes + vertex_id) 
+										: (m_nodes + header().vertex_count() - 1);
 }
 
 IC	const u8 &CGameGraph::CHeader::version							() const
