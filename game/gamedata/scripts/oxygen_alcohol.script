@@ -28,7 +28,7 @@ function use(restart)
 end
 
 function check()
-	if time_affect ~= nil and not time_global() > time_affect then
+	if time_affect > 0 and (time_global() <= time_affect) then
 		this.use(false)
 	end
 end

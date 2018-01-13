@@ -1,7 +1,9 @@
 #include "stdafx.h"
 #include "ttapi_oxygen.h"
 
-PTP_POOL hPool = nullptr;
+PTP_POOL			 hPool		 = nullptr;
+PTP_CLEANUP_GROUP	 hCleanupEnv = nullptr;
+TP_CALLBACK_ENVIRON CallbackEnv;
 
 void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work);
 
@@ -25,10 +27,19 @@ CRITICAL_SECTION WorkerEventsGuard;
 size_t TTAPI ttapi_Init(processor_info* ID)
 {
 	R_ASSERT(hPool == nullptr);
+	R_ASSERT(hCleanupEnv == nullptr);
+
 	hPool = CreateThreadpool(NULL);
 	R_ASSERT(hPool != nullptr);
 
-	SetThreadpoolThreadMinimum(hPool, ID->n_threads / 2);
+	InitializeThreadpoolEnvironment(&CallbackEnv);
+	SetThreadpoolCallbackPool(&CallbackEnv, hPool);
+
+	hCleanupEnv = CreateThreadpoolCleanupGroup();
+	R_ASSERT(hCleanupEnv != nullptr);
+	SetThreadpoolCallbackCleanupGroup(&CallbackEnv, hCleanupEnv, NULL);
+
+	SetThreadpoolThreadMinimum(hPool, ID->n_threads);
 	SetThreadpoolThreadMaximum(hPool, ID->n_threads);
 	WorkerCount = ID->n_threads;
 
@@ -40,7 +51,11 @@ size_t TTAPI ttapi_Init(processor_info* ID)
 void TTAPI ttapi_Done()
 {
 	R_ASSERT(hPool != nullptr);
+	R_ASSERT(hCleanupEnv != nullptr);
 	ttapi_RunAllWorkers();
+
+	CloseThreadpoolCleanupGroup(hCleanupEnv);
+	DestroyThreadpoolEnvironment(&CallbackEnv);
 	CloseThreadpool(hPool);
 	hPool = nullptr;
 	WorkerCount = 0;
@@ -56,7 +71,7 @@ void TTAPI ttapi_AddTask(LPPTTAPI_WORKER_FUNC lpWorkerFunc, LPVOID lpvWorkerFunc
 {
 	HANDLE hWorkerEvent = CreateEvent(NULL, TRUE, FALSE, NULL);
 	ttapi_ThreadParams* pParams = new ttapi_ThreadParams(lpWorkerFunc, lpvWorkerFuncParams, hWorkerEvent);
-	PTP_WORK hWork = CreateThreadpoolWork(ttapi_worker_threadentry, pParams, NULL);
+	PTP_WORK hWork = CreateThreadpoolWork(ttapi_worker_threadentry, pParams, &CallbackEnv);
 	VERIFY(hWork != nullptr);
 
 	EnterCriticalSection(&WorkerEventsGuard);
@@ -96,6 +111,8 @@ void TTAPI ttapi_RunAllWorkers()
 	{
 		CloseHandle(hEvent);
 	}
+
+	CloseThreadpoolCleanupGroupMembers(hCleanupEnv, FALSE, NULL);
 }
 
 void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work)
@@ -117,4 +134,11 @@ void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Contex
 	LeaveCriticalSection(&WorkerEventsGuard);
 
 	delete pParams;
+}
+
+void TTAPI ttapi_example_taskentry(LPVOID param)
+{
+	volatile int Dummy = 2;
+	Dummy += 42;
+	Dummy /= 2;
 }

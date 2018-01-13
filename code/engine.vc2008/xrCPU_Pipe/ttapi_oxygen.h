@@ -29,4 +29,6 @@ extern "C" {
 	// Runs and wait for all workers to complete job
 	void TTAPI ttapi_RunAllWorkers();
 
+	void TTAPI ttapi_example_taskentry(LPVOID param);
+
 }
