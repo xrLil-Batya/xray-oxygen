@@ -357,46 +357,49 @@ bool engine::type_to_string						(char* const buffer, unsigned int const size, l
 #endif // #ifdef DEBUG
 }
 
-void engine::fill_class_info	(cs::lua_studio::backend& backend, char* const buffer, unsigned int const size, luabind::detail::object_rep *object, luabind::detail::class_rep *class_rep, lua_State* state)
+void engine::fill_class_info(cs::lua_studio::backend& backend, char* const buffer, unsigned int const size, luabind::detail::object_rep *object, luabind::detail::class_rep *class_rep, lua_State* state)
 {
 	pstr					stream = buffer;
 
-	stream					+= xr_sprintf(stream, size - (stream - buffer), "{");
+	stream += xr_sprintf(stream, size - (stream - buffer), "{");
 
-	typedef luabind::detail::class_rep::property_map	property_map;
-	property_map::const_iterator	I = class_rep->properties().begin();
-	property_map::const_iterator	E = class_rep->properties().end();
-	for (u32 i=0; I != E; ++I, ++i) 
+	typedef luabind::detail::class_rep::property_map property_map;
+
+	u32 i = 0;
+	for (const auto& it : class_rep->properties())
 	{
-		if (i == 3) {
-			stream				+= xr_sprintf(stream, size - (stream - buffer), "...");
+		if (i == 3)
+		{
+			stream += xr_sprintf(stream, size - (stream - buffer), "...");
 			break;
 		}
-		lua_pushstring			(state,(*I).first);
-		lua_insert				(state,1);
-		lua_pushlightuserdata	(state,object);
-		lua_insert				(state,1);
-		(*I).second.func		(state,(*I).second.pointer_offset);
-		
+		else i++;
+
+		lua_pushstring(state, it.first);
+		lua_insert(state, 1);
+		lua_pushlightuserdata(state, object);
+		lua_insert(state, 1);
+		it.second.func(state, it.second.pointer_offset);
+
 		string4096				type;
 		bool					use_in_description;
-		backend.type_to_string	(type,  sizeof(type), state, -1, use_in_description);
+		backend.type_to_string(type, sizeof(type), state, -1, use_in_description);
 
 		string4096				value;
 		cs::lua_studio::icon_type	icon_type;
-		backend.value_to_string	(value, sizeof(value), state, -1, icon_type, false);
+		backend.value_to_string(value, sizeof(value), state, -1, icon_type, false);
 
-		lua_pop_value			(state,1);
-		lua_remove				(state,1);
-		lua_remove				(state,1);
+		lua_pop_value(state, 1);
+		lua_remove(state, 1);
+		lua_remove(state, 1);
 
 		if (use_in_description)
-			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s[%s]=%s ", (*I).first, type, value);
+			stream += xr_sprintf(stream, size - (stream - buffer), "%s[%s]=%s ", it.first, type, value);
 		else
-			stream				+= xr_sprintf(stream, size - (stream - buffer), "%s=%s ", (*I).first, value);
+			stream += xr_sprintf(stream, size - (stream - buffer), "%s=%s ", it.first, value);
 	}
 
-	stream						+= xr_sprintf(stream, size - (stream - buffer), "}%c",0);
+	stream += xr_sprintf(stream, size - (stream - buffer), "}%c", 0);
 }
 
 void engine::value_convert_class	(cs::lua_studio::backend& backend, char* buffer, unsigned int size, luabind::detail::class_rep	*class_rep, lua_State* state, int index, cs::lua_studio::icon_type& icon_type, bool const full_description)

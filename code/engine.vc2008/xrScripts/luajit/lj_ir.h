@@ -5,7 +5,7 @@
 
 #ifndef _LJ_IR_H
 #define _LJ_IR_H
-
+#pragma warning(disable: 4201, 4127)
 #include "lj_obj.h"
 
 /* -- IR instructions ----------------------------------------------------- */
@@ -547,5 +547,5 @@ static LJ_AINLINE int ir_sideeff(IRIns *ir)
 }
 
 LJ_STATIC_ASSERT((int)IRT_GUARD == (int)IRM_W);
-
+#pragma warning(default: 4201, 4127)
 #endif

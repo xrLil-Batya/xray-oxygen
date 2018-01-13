@@ -5,9 +5,11 @@
 ** Portions taken verbatim or adapted from the Lua interpreter.
 ** Copyright (C) 1994-2008 Lua.org, PUC-Rio. See Copyright Notice in lua.h
 */
-
 #ifndef _LJ_OBJ_H
 #define _LJ_OBJ_H
+#pragma warning(disable:4201)
+#pragma warning(disable:4127)
+#pragma warning(disable:4081)
 
 #include "lua.h"
 #include "lj_def.h"
@@ -852,5 +854,5 @@ LJ_DATA const char *const lj_obj_itypename[~LJ_TNUMX+1];
 
 /* Compare two objects without calling metamethods. */
 LJ_FUNC int lj_obj_equal(cTValue *o1, cTValue *o2);
-
+#pragma warning(default: 4201, 4127, 4081)
 #endif

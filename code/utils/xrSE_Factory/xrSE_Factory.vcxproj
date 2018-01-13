@@ -146,8 +146,8 @@
     <ClCompile>
       <Optimization>Disabled</Optimization>
       <EnableFiberSafeOptimizations>false</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;../../xrServerEntities;../../sdk/include/stlport;../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;..\..\engine.vc2008\xrServerEntities;../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>XRPHYSICS_STATIC;WIN32;DEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <PreprocessSuppressLineNumbers>false</PreprocessSuppressLineNumbers>
       <MinimalRebuild>false</MinimalRebuild>
@@ -170,7 +170,6 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\sdk\libraries\x64;..\..\..\librariesx64\;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -183,6 +182,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
+      <IgnoreSpecificDefaultLibraries>xrPhysics.lib;</IgnoreSpecificDefaultLibraries>
+      <AdditionalDependencies>xrPhysicsStatic.lib;</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -245,7 +246,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;../../engine.vc2008/xrServerEntities;../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;LUABIND_NO_ERROR_CHECKING;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>XRPHYSICS_STATIC;WIN32;NDEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;LUABIND_NO_ERROR_CHECKING;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -281,6 +282,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>xrPhysicsStatic.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>xrPhysics.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
@@ -293,7 +296,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
       <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;./;../../xrServerEntities;../../sdk/include/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;LUABIND_NO_ERROR_CHECKING;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>XRPHYSICS_STATIC;WIN32;NDEBUG;_WINDOWS;_USRDLL;XRSE_FACTORY_EXPORTS;LUABIND_NO_ERROR_CHECKING;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -330,6 +333,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
+      <AdditionalDependencies>xrPhysicsStatic.lib;</AdditionalDependencies>
+      <IgnoreSpecificDefaultLibraries>xrPhysics.lib;</IgnoreSpecificDefaultLibraries>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -414,7 +419,6 @@
     <ClInclude Include="client_id.h" />
     <ClInclude Include="NET_Compressor.h" />
     <ClInclude Include="NET_utils.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHNetState.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHSynchronize.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\character_info.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\character_info_defs.h" />
@@ -496,7 +500,6 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_human_brain.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_monster_brain.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\PHNetState.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\character_info.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\specific_character.cpp" />
     <ClCompile Include="xrUIXmlParser.cpp" />
@@ -526,11 +529,11 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\xrScripts\xrScripts.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrScripts\xrScripts.vcxproj">
       <Project>{cc52e0b3-cc35-4934-9302-035b748f3f2c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
-    <ProjectReference Include="..\..\xrCore\xrCore.vcxproj">
+    <ProjectReference Include="..\..\engine.vc2008\xrCore\xrCore.vcxproj">
       <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>

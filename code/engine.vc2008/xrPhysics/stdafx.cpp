@@ -7,4 +7,6 @@
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
 #pragma comment(lib, "xrCore.lib")
+#ifndef XRPHYSICS_STATIC
 #pragma comment(lib, "xrParticles.lib")
+#endif

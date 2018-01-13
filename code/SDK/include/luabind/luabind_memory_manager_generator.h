@@ -57,8 +57,8 @@ struct luabind_new_detail_copy_constructor {
 template <typename T, typename... Args>
 inline T* luabind_new(Args&&... args)
 {
-    T			*result = static_cast<T*>(call_allocator(nullptr, sizeof(T)));
-    return		(luabind_new_detail_copy_constructor::initialize(result, std::forward<Args>(args)...));
+    T *pResult = static_cast<T*>(call_allocator(nullptr, sizeof(T)));
+    return (luabind_new_detail_copy_constructor::initialize(pResult, std::forward<Args>(args)...));
 }
 
 }

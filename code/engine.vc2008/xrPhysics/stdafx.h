@@ -10,8 +10,9 @@
 #include "../xrServerEntities/smart_cast.h"
 #include "../xrcdb/xrcdb.h"
 #include "../xrsound/sound.h"
+#ifndef XRPHYSICS_STATIC
 #include "../xrParticles/stdafx.h"
-
+#endif
 #include "xrPhysics.h"
 #include "../xrCore/xrapi.h"
 

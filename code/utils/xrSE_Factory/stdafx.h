@@ -7,7 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #pragma once
-#include "../xrPhysics/xrPhysics.h"
+#include "../../xrPhysics/xrPhysics.h"
 #include "../xrCore.h"
 
 #define STRINGIZE(a)			#a

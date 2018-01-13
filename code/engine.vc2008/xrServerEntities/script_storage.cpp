@@ -14,6 +14,11 @@
 #include "../FrayBuildConfig.hpp"
 #include "../xrScripts/luaopen.hpp"
 
+#ifdef XRSE_FACTORY_EXPORTS
+#include "ai_space.h"
+#include "script_engine.h"
+#endif
+
 const char*	file_header_old = "\
 local function script_name() \
 return \"%s\" \

@@ -281,7 +281,6 @@
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\alife_monster_brain_inline.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\game_base_space.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\inventory_space.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHNetState.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHSynchronize.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\character_info.h" />
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\character_info_defs.h" />
@@ -355,7 +354,6 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_human_brain.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_monster_brain.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\PHNetState.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\character_info.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\specific_character.cpp" />
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\xrServer_Factory.cpp" />

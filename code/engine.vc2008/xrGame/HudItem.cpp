@@ -56,10 +56,7 @@ void CHudItem::renderable_Render()
 	UpdateXForm					();
 	BOOL _hud_render			= ::Render->get_HUD() && GetHUDmode();
 	
-	if(_hud_render  && !IsHidden())
-	{ 
-	}
-	else 
+	if(!(_hud_render  && !IsHidden()))
 	{
 		if (!object().H_Parent() || (!_hud_render && !IsHidden()))
 		{

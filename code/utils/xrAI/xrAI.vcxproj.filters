@@ -361,9 +361,6 @@
     <ClCompile Include="..\..\engine.vc2008\xrServerEntities\alife_space.cpp">
       <Filter>ServerEntities</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\engine.vc2008\xrServerEntities\PHNetState.cpp">
-      <Filter>ServerEntities</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\xrLoadSurface.cpp">
       <Filter>ServerEntities</Filter>
     </ClCompile>
@@ -835,9 +832,6 @@
       <Filter>ServerEntities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\object_type_traits.h">
-      <Filter>ServerEntities</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHNetState.h">
       <Filter>ServerEntities</Filter>
     </ClInclude>
     <ClInclude Include="..\..\engine.vc2008\xrServerEntities\PHSynchronize.h">

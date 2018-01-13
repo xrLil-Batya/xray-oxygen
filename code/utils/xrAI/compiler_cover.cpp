@@ -525,10 +525,10 @@ void	xrCover	(bool pure_covers)
 	// Start threads, wait, continue --- perform all the work
 	u32	start_time		= timeGetTime();
 	CThreadManager		Threads;
-	u32	stride			= g_nodes.size() / CPU::ID.n_threads;
-	u32	last			= g_nodes.size()-stride*(CPU::ID.n_threads - 1);
-	for (u32 thID=0; thID < CPU::ID.n_threads; thID++) {
-		Threads.start(xr_new<CoverThread>(thID,thID*stride,thID*stride+((thID==(CPU::ID.n_threads -1))?last:stride)));
+	u32	stride			= g_nodes.size() / CPU::Info.n_threads;
+	u32	last			= g_nodes.size()-stride*(CPU::Info.n_threads - 1);
+	for (u32 thID=0; thID < CPU::Info.n_threads; thID++) {
+		Threads.start(xr_new<CoverThread>(thID,thID*stride,thID*stride+((thID==(CPU::Info.n_threads -1))?last:stride)));
 	}
 	Threads.wait			();
 	Msg("%d seconds elapsed.",(timeGetTime()-start_time)/1000);
