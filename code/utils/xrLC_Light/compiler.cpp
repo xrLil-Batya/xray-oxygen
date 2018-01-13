@@ -12,7 +12,7 @@ void xrLight()
 	u32	range = gl_data.slots_data.size_z();
 
 	// Start threads, wait, continue --- perform all the work
-	const u32 thrds_count = CPU::ID.n_threads;
+	const u32 thrds_count = CPU::Info.n_threads;
 	CThreadManager Threads;
 	CTimer start_time;
 	u32	stride = range / thrds_count;
