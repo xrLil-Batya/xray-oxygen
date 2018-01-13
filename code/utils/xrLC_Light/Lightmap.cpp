@@ -56,7 +56,7 @@ void CLightmap::Capture(CDeflector *D, int b_u, int b_v, int s_u, int s_v, BOOL 
 
 void CLightmap::Save(LPCSTR path)
 {
-	static int lmapNameID = 1; 
+	static int lmapNameID = 0; ++lmapNameID;
 
 	Phase("Saving...");
 
