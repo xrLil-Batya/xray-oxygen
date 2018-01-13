@@ -2,6 +2,7 @@
 #include "mblur.h"
 #include "dof.h"
 #include "MrProperCommon.h" // [FX to mrmnwar] Cheking includes, please
+#include "aces.h"
 
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D 	s_distort;
@@ -27,83 +28,14 @@ half4 	main		( /*v2p*/AntiAliasingStruct I )	: COLOR
 	half4 	bloom	= tex2D(s_bloom, center);
 	
 			img 	= mblur(center,tex2D(s_position,I.texCoord0),img.rgb);
-			
+	// tone-mapping
 	half4 	color 	= combine_bloom( img, bloom ); 
-			color 	+= ACESFilm(color);
+		color 	+= ACESFilm(color);
+	// end
 #ifdef 	USE_DISTORT
  	half3	blurred	= bloom*def_hdr	;
-			img		= lerp(img,blurred,distort.z);
+	img		= lerp(img,blurred,distort.z);
 #endif
 
  	return 	combine_bloom(img,bloom);
 }
-//	Igor: cheap dof
-#define NEAR 		0.2h
-#define MINDIST 	0.4h
-#define MAXDIST 	100.h
-//#define MAXDIST 	10.h
-#define MAXCOF		5.h
-#define MAXCOF_NEAR	100.h
-#define EPSDEPTH	0.0001h
-half4 	main		( v2p I )	: COLOR
-{
-#ifdef 	USE_DISTORT
-  	half 	depth 	= tex2D 	(s_position, 	I.texCoord0).z;
-	half4 	distort	= tex2D		(s_distort, 	I.texCoord0)	;
-	half2	offset	= (distort.xy-.5h)*def_distort		;
-	float2	center	= I.texCoord0 + offset;
-	half 	depth_x	= tex2D 	(s_position, center).z	;
-	if ((depth_x+EPSDEPTH)<depth)	center	= I.texCoord0;	// discard new sample
-#else
-	float2	center 	= I.texCoord0		;
-#endif
-    half3 	img 	= tex2D		(s_image, center);
-	half4 	bloom	= tex2D		(s_bloom, center);
-	
-			img 	= mblur		(center,tex2D(s_position,I.texCoord0),img.rgb);
-
-#ifdef 	USE_DISTORT
-// 	half3	blurred	= bloom*def_hdr	;
-//			img		= lerp	(img,blurred,distort.z);
-#endif
-
-#ifndef USE_DISTORT
-	half 	depth		= tex2D(s_position,center).z;
-#endif 	//	USE_DISTORT
-	if (depth<=EPSDEPTH)	depth = MAXDIST;
-	half3	blurred		= bloom*def_hdr/4;
-	half 	blur		= saturate( (depth-MINDIST)/(MAXDIST-MINDIST) );
-	blur			*= blur;
-	blur	*= 0.5;
-//	blur	*= 1;
-	img			= lerp( img, blurred, blur);
-
- 	return 	combine_bloom		(img,bloom);
-}
-
-//	Igor: original
-half4 main(v2p I): COLOR
-{
-#ifdef 	USE_DISTORT
-  	half 	depth 	= tex2D(s_position, 	I.texCoord0).z;
-	half4 	distort	= tex2D(s_distort, 	I.texCoord0)	;
-	half2	offset	= (distort.xy-.5h)*def_distort		;
-	float2	center	= I.texCoord0 + offset;
-	half 	depth_x	= tex2D 	(s_position, center).z	;
-	if ((depth_x+EPSDEPTH)<depth)	center	= I.texCoord0;	// discard new sample
-#else
-	float2	center 	= I.texCoord0		;
-#endif
-    	half3 	img 	= tex2D		(s_image, center);
-	half4 	bloom	= tex2D		(s_bloom, center);
-	
-	img 	= mblur		(center,tex2D(s_position,I.texCoord0),img.rgb);
-
-#ifdef 	USE_DISTORT
- 	half3	blurred	= bloom*def_hdr	;
-		img	= lerp	(img,blurred,distort.z);
-#endif
-
- 	return 	combine_bloom		(img,bloom);
-}
-/**/
