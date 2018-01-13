@@ -1,8 +1,6 @@
 #pragma once
 #define DUMP_PHASE	do {} while (0)
 
-#include "xrMemory_POOL.h"
-
 XRCORE_API u32 mem_usage_impl(u32* pBlocksUsed = nullptr, u32* pBlocksFree = nullptr);
 
 class XRCORE_API xrMemory
@@ -30,14 +28,8 @@ public:
 
 	void*				mem_alloc(size_t size);
 
-	void ConditionalInitPureAlloc();
-
 	void*				mem_realloc(void* p, size_t size);
 	void				mem_free(void* p);
-
-private:
-	bool use_pure_alloc_initialized = false;
-	bool use_pure_alloc = false;
 };
 
 extern XRCORE_API xrMemory Memory;
@@ -65,7 +57,6 @@ IC void		operator delete[]	(void* p)		{ xr_free(p); }
 const		u32			mem_pools_count = 54;
 const		u32			mem_pools_ebase = 16;
 const		u32			mem_generic = mem_pools_count + 1;
-extern		MEMPOOL		mem_pools[mem_pools_count];
 extern		bool		mem_initialized;
 
 XRCORE_API void vminfo(size_t *_free, size_t *reserved, size_t *committed);

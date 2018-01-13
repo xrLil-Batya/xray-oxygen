@@ -327,7 +327,6 @@
     <ClCompile Include="memory_usage.cpp" />
     <ClCompile Include="xrMemory.cpp" />
     <ClCompile Include="xrMemory_align.cpp" />
-    <ClCompile Include="xrMemory_POOL.cpp" />
     <ClCompile Include="xrMemory_pso_Fill.cpp">
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">AssemblyAndSourceCode</AssemblerOutput>
       <AssemblerOutput Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">AssemblyAndSourceCode</AssemblerOutput>
@@ -445,7 +444,6 @@
     <ClInclude Include="file_stream_reader.h" />
     <ClInclude Include="xrMemory.h" />
     <ClInclude Include="xrMemory_align.h" />
-    <ClInclude Include="xrMEMORY_POOL.h" />
     <ClInclude Include="xrMemory_subst_msvc.h" />
     <ClInclude Include="ptmalloc3\malloc-2.8.3.h" />
     <ClInclude Include="doug_lea_allocator.h" />
