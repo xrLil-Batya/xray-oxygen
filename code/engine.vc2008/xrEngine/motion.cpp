@@ -274,7 +274,7 @@ CSMotion::~CSMotion()
 
 void CSMotion::Clear()
 {
-	for (auto bm_it : bone_mots)
+	for (st_BoneMotion& bm_it : bone_mots)
 	{
 		for (int ch = 0; ch < ctMaxChannel; ch++)
 			xr_delete(bm_it.envs[ch]);
@@ -284,7 +284,7 @@ void CSMotion::Clear()
 
 st_BoneMotion* CSMotion::FindBoneMotion(shared_str name_str)
 {
-	for (auto bm_it : bone_mots)
+	for (st_BoneMotion& bm_it : bone_mots)
 	{
 		if (bm_it.name.equal(name_str)) 
 			return &bm_it;
