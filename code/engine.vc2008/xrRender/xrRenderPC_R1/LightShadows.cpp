@@ -8,7 +8,7 @@
 #include "../../xrEngine/xr_object.h"
 #include "../xrRender/fbasicvisual.h"
 #include "../../xrEngine/CustomHUD.h"
-#include "../../xrCPU_Pipe/ttapi_oxygen.h"
+#include "../../xrCPU_Pipe/ttapi.h"
 
 const	float		S_distance		= 48;
 const	float		S_distance2		= S_distance*S_distance;

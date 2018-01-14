@@ -17,7 +17,7 @@
 //#include "../../xrServerEntities/smart_cast.h"
 
 #ifndef _EDITOR
-#include "../../xrCPU_Pipe/ttapi_oxygen.h"
+#include "../../xrCPU_Pipe/ttapi.h"
 #endif
 
  

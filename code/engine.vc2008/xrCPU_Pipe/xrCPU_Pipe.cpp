@@ -57,6 +57,23 @@ extern "C" {
 		// Init helper threads
 		ttapi_Init(ID);
 
+#ifdef TEST_TTAPI
+		for (int iteration = 0; iteration < 1000; ++iteration)
+		{
+			volatile DWORD TestCounter = 0;
+			for (int taskID = 0; taskID < 10000; ++taskID)
+			{
+				ttapi_AddTask(ttapi_example2_taskentry, (LPVOID)&TestCounter);
+			}
+			ttapi_RunAllWorkers();
+
+			if (TestCounter != 10000)
+			{
+				Msg("! ttapi test failed");
+			}
+		}
+#endif
+
 		// We can use threading
 		if (ttapi_GetWorkersCount() > 1)
 			T->skin4W = xrSkin4W_thread;

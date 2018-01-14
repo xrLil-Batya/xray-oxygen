@@ -289,7 +289,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="ttapi_oxygen.h" />
     <ClInclude Include="xrCPU_Pipe.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="ttapi.h" />

@@ -62,9 +62,6 @@
     <ClInclude Include="ttapi.h">
       <Filter>TTAPI</Filter>
     </ClInclude>
-    <ClInclude Include="ttapi_oxygen.h">
-      <Filter>TTAPI</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCPU_Pipe.rc">

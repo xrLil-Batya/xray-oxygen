@@ -23,3 +23,6 @@
 #define CHECK_MOUSE_STATE //Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
 						  //By defining this, we force to double check mouse state by calling GetDeviceState. 
 						  //It's a very little performance penalty
+
+#define NEW_TTAPI //Enable new ttapi, based on WinAPI ThreadPool system
+//#define TEST_TTAPI //Perform a test of ttapi integrity

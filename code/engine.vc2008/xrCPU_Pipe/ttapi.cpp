@@ -1,6 +1,6 @@
 #include "stdafx.h"
 
-#if 0
+#ifndef NEW_TTAPI
 typedef struct TTAPI_WORKER_PARAMS {
 	volatile long			vlFlag;
 	LPPTTAPI_WORKER_FUNC	lpWorkerFunc;
@@ -275,4 +275,16 @@ void ttapi_Done()
 	ttapi_initialized = false;
 }
 
+void TTAPI ttapi_example_taskentry(LPVOID param)
+{
+	volatile int Dummy = 2;
+	Dummy += 42;
+	Dummy /= 2;
+}
+
+void TTAPI ttapi_example2_taskentry(LPVOID param)
+{
+	volatile DWORD* pCounter = (DWORD*)param;
+	InterlockedIncrement(pCounter);
+}
 #endif

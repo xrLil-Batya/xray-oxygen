@@ -138,7 +138,7 @@ BOOL IGame_Level::Load			(u32 dwNum)
 }
 
 #ifndef _EDITOR
-#include "../xrCPU_Pipe/ttapi_oxygen.h"
+#include "../xrCPU_Pipe/ttapi.h"
 #endif
 
 int		psNET_DedicatedSleep	= 5;
