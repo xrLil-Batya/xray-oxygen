@@ -296,6 +296,7 @@ void CSE_ALifeOnlineOfflineGroup::on_after_game_load()
 	{
 		VERIFY(!it.second);
 		*i = it.first;
+		++i;
 	}
 
 	m_members.clear();
