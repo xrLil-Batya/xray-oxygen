@@ -1,71 +1,11 @@
 #pragma once
 #include "../xr_level_controller.h"
-class CUIWindow;
-
-struct _12b	{ DWORD _[3]; };
-extern poolSS< _12b, 128>	ui_allocator;
-
-
-template <class T>
-class	uialloc
-{
-public:
-	using size_type = size_t;
-	using difference_type = ptrdiff_t;
-	using pointer = T*;
-	using const_pointer = const T*;
-	using reference = T&;
-	using const_reference = const T&;
-	using value_type = T;
-
-public:
-	template<class _Other>	
-	struct rebind			{	typedef uialloc<_Other> other;	};
-public:
-	pointer					address			(reference _Val) const					{	return (&_Val);	}
-	const_pointer			address			(const_reference _Val) const			{	return (&_Val);	}
-							uialloc			()										{	}
-							uialloc			(const uialloc<T>&)						{	}
-	template<class _Other>							uialloc			(const uialloc<_Other>&)					{	}
-	template<class _Other>	uialloc<T>&				operator=		(const uialloc<_Other>&)					{	return (*this);	}
-	pointer					allocate		(size_type n, const void* p=0) const	
-	{	VERIFY(1==n);
-		return (pointer) ui_allocator.create();	
-	};
-	char*			__charalloc		(size_type n)							
-	{	VERIFY	(1==n);
-		return	(char*) ui_allocator.create();	
-	};
-	void					deallocate		(pointer p, size_type n) const			
-	{	
-		VERIFY(1==n);
-		_12b* p_ = (_12b*)p;
-		ui_allocator.destroy	(p_);				
-	}
-	void					deallocate		(void* p, size_type n) const		
-	{	
-		VERIFY(1==n);
-		_12b* p_ = (_12b*)p;
-		ui_allocator.destroy	(p_);				
-	}
-	void					construct		(pointer p, const T& _Val)				{	std::_Construct(p, _Val);	}
-	void					destroy			(pointer p)								{	std::_Destroy(p);			}
-	size_type				max_size		() const								{	size_type _Count = (size_type)(-1) / sizeof (T);	return (0 < _Count ? _Count : 1);	}
-};
-template<class _Ty,	class _Other>	inline	bool operator==(const uialloc<_Ty>&, const uialloc<_Other>&)		{	return (true);							}
-template<class _Ty, class _Other>	inline	bool operator!=(const uialloc<_Ty>&, const uialloc<_Other>&)		{	return (false);							}
-
-#define	 ui_list xr_vector
-
-#define DEF_UILIST(N,T)		typedef ui_list< T > N;			typedef N::iterator N##_it;
-
-//////////////////////////////////////////////////////////////////////////
-
 #include "UIMessages.h"
-#include "script_export_space.h"
+#include "../../xrScripts/export/script_export_space.h"
 #include "uiabstract.h"
 
-
+template <typename T, typename allocator = xalloc<T>>
+using ui_list = xr_vector<T, allocator>;
 class CUIWindow  : public CUISimpleWindow
 {
 public:
@@ -85,7 +25,7 @@ public:
 	CUIWindow*				GetParent			()	const							{return m_pParentWnd;}
 	
 	//получить окно самого верхнего уровня
-	CUIWindow*				GetTop				()								{if(m_pParentWnd == NULL) return  this; 
+	CUIWindow*				GetTop				()								{if(m_pParentWnd == nullptr) return this; 
 																				else return  m_pParentWnd->GetTop();}
 	CUIWindow*				GetCurrentMouseHandler();
 	CUIWindow*				GetChildMouseHandler();
@@ -155,8 +95,8 @@ public:
 	virtual void			Reset				();
 			void			ResetAll			();
 
-
-	DEF_UILIST				(WINDOW_LIST, CUIWindow*);
+	using WINDOW_LIST		= ui_list<CUIWindow*>;
+	using WINDOW_LIST_it	= WINDOW_LIST::iterator;
 	WINDOW_LIST&			GetChildWndList		()							{return m_ChildWndList; }
 
 
