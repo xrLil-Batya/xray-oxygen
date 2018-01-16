@@ -268,19 +268,22 @@ void CGameGraphBuilder::save_cross_table	(const float &start, const float &amoun
 	Progress				(start + amount);
 }
 
+extern bool isVerify;
 void CGameGraphBuilder::build_cross_table	(const float &start, const float &amount)
 {
 	Progress				(start);
 	Msg						("Building cross table");
-
+	
 	iterate_distances		(start + 0.202457f*amount,0.757202f*amount);
-	check_fill				();
+	// For V1RuS_UA ///////////////////////
+	check_fill				(isVerify);
+	///////////////////////////////////////
 	save_cross_table		(start + 0.959659f*amount,0.040327f*amount);
 	load_cross_table		(start + 0.999986f*amount,0.000014f*amount);
 	Progress				(start + amount);
 }
 
-void CGameGraphBuilder::check_fill()
+void CGameGraphBuilder::check_fill(bool isCrossTableBuild)
 {
 	u32 count = 0;
 	for (u32 i = 0; i != m_parents.size(); i++) 
@@ -291,7 +294,7 @@ void CGameGraphBuilder::check_fill()
 		Msg("! AI-node [%.3f, %.3f, %.3f] not connected to AI-map", VPUSH(level_graph().vertex_position(i)));
 		count++;
 	}
-	R_ASSERT2(!count, "Some ai-node is not connected to AI-map. See log for details.");
+	if(!isCrossTableBuild) R_ASSERT2(!count, "Some ai-node is not connected to AI-map. See log for details.");
 }
 
 void CGameGraphBuilder::load_cross_table	(const float &start, const float &amount)

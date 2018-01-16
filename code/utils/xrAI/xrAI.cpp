@@ -52,29 +52,34 @@ void Help()
 {	MessageBox(0,h_str,"Command line options",MB_OK|MB_ICONINFORMATION); }
 
 string_path INI_FILE;
-
 extern  HWND logWindow;
-
 extern LPCSTR GAME_CONFIG;
 
 extern void clear_temp_folder	();
+bool isVerify = false;
 
-void execute	(LPSTR cmd)
+void execute(LPSTR cmd)
 {
 	// Load project
 	string4096 name;
-	name[0]=0; 
-	if (strstr(cmd,"-f"))
-		sscanf	(strstr(cmd,"-f")+2,"%s",name);
-	else
-		if (strstr(cmd,"-s"))
-			sscanf	(strstr(cmd,"-s")+2,"%s",name);
-		else
-			if (strstr(cmd,"-t"))
-				sscanf	(strstr(cmd,"-t")+2,"%s",name);
-			else
-				if (strstr(cmd,"-verify"))
-					sscanf	(strstr(cmd,"-verify")+xr_strlen("-verify"),"%s",name);
+	name[0]=0;
+	if (strstr(cmd, "-f"))
+	{
+		sscanf(strstr(cmd, "-f") + 2, "%s", name);
+	}
+	else if (strstr(cmd, "-s"))
+	{
+		sscanf(strstr(cmd, "-s") + 2, "%s", name);
+	}
+	else if (strstr(cmd, "-t"))
+	{
+		sscanf(strstr(cmd, "-t") + 2, "%s", name);
+	}
+	else if (strstr(cmd, "-verify"))
+	{
+		sscanf(strstr(cmd, "-verify") + xr_strlen("-verify"), "%s", name);
+		isVerify = true;
+	}
 
 	if (xr_strlen(name))
 		xr_strcat			(name,"\\");

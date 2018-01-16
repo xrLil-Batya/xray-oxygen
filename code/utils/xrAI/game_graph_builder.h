@@ -68,7 +68,7 @@ private:
 			void		load_graph_points			(const float &start, const float &amount);
 
 private:
-			void		check_fill					();
+			void		check_fill					(bool isCrossTableBuild = false);
 			void		iterate_distances			(const float &start, const float &amount);
 			void		save_cross_table			(const float &start, const float &amount);
 			void		build_cross_table			(const float &start, const float &amount);
