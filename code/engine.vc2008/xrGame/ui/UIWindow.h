@@ -5,7 +5,7 @@
 #include "uiabstract.h"
 
 template <typename T, typename allocator = xalloc<T>>
-using ui_list = xr_vector<T, allocator>;
+using ui_list = xr_list<T, allocator>; // xr_vector<T, allocator>;
 class CUIWindow  : public CUISimpleWindow
 {
 public:
