@@ -1,7 +1,7 @@
 //----------------------------------------------------
 // file: CEditableObject.cpp
 //----------------------------------------------------
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 
 #include "EditObject.h"

@@ -13,7 +13,8 @@
 #include "ftreevisual.h"
 #include "ParticleGroup.h"
 #include "ParticleEffect.h"
-#include "../Editor/EditObject.h"
+
+#include "../../editors/xrECoreLite/EditObject.h"
 
 dxRender_Visual*	CModelPool::Instance_Create(u32 type)
 {

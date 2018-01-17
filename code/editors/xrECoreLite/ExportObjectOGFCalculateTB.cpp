@@ -1,4 +1,4 @@
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 #ifdef _LW_EXPORT
 #undef AnsiString

@@ -1,18 +1,17 @@
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
+#include <d3dx9.h>
+#include "../../xrRender/xrRender/xrD3DDefs.h"
+#include "../../xrRender/xrRender/FVF.h"
 
 #include "EditObject.h"
 #include "EditMesh.h"
 #ifdef _LW_EXPORT
 #	undef AnsiString
-#	undef ref_shader
 #	define ECORE_API
-
-#	include "../../xrRender/xrRenderPC_R1/stdafx.h"
-#	include "../../xrEngine/pure.h"
-#	include "../xrRender/FVF.h"
-#	include "../../xrEngine/render.h"
 #endif
+
+#define ref_geom void*
 #include "../../xrEngine/motion.h"
 #include "../../xrEngine/bone.h"
 #include "ExportSkeleton.h"
@@ -31,6 +30,7 @@ static Fvector LOD_pos[4]={
 	{ 1.0f-offs_x,-1.0f+offs_y, 0.0f},
 	{-1.0f+offs_x,-1.0f+offs_y, 0.0f}
 };
+
 static FVF::LIT LOD[4]={
 	{{-1.0f, 1.0f, 0.0f},  0xFFFFFFFF, {0.0f,0.0f}}, // F 0
 	{{ 1.0f, 1.0f, 0.0f},  0xFFFFFFFF, {0.0f,0.0f}}, // F 1

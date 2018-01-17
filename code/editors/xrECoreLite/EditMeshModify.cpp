@@ -2,7 +2,7 @@
 // file: EditMeshModify.cpp
 //----------------------------------------------------
 
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 
 #include "EditMesh.h"

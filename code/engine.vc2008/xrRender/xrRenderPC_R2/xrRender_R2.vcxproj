@@ -93,7 +93,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrECoreLite.lib;WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -146,7 +146,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrECoreLite.lib;WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -202,7 +202,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrECoreLite.lib;WildMagic.lib;ETools.lib;nvapi.lib; %(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries;..\..\..\sdk\libraries\$(Platform);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)$(ProjectName).pdb</ProgramDatabaseFile>
@@ -223,17 +223,9 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\utils\common\NvMender2003\convert.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
-    <ClInclude Include="..\Editor\ArbitraryList.h" />
-    <ClInclude Include="..\Editor\EditMesh.h" />
-    <ClInclude Include="..\Editor\EditObject.h" />
-    <ClInclude Include="..\Editor\ExportObjectOGF.h" />
-    <ClInclude Include="..\Editor\ExportSkeleton.h" />
-    <ClInclude Include="..\Editor\itterate_adjacents_dynamic.h" />
-    <ClInclude Include="..\Editor\PropSlimTools.h" />
     <ClInclude Include="Blender_ss.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="stdafx.h" />
@@ -397,18 +389,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
-    <ClCompile Include="..\Editor\EditMesh.cpp" />
-    <ClCompile Include="..\Editor\EditMeshIO.cpp" />
-    <ClCompile Include="..\Editor\EditMeshModify.cpp" />
-    <ClCompile Include="..\Editor\EditObject.cpp" />
-    <ClCompile Include="..\Editor\EditObjectEditor.cpp" />
-    <ClCompile Include="..\Editor\EditObjectIO.cpp" />
-    <ClCompile Include="..\Editor\EditObjectMotions.cpp" />
-    <ClCompile Include="..\Editor\ExportObjectOGF.cpp" />
-    <ClCompile Include="..\Editor\ExportObjectOGFCalculateTB.cpp" />
-    <ClCompile Include="..\Editor\ExportSkeleton.cpp" />
-    <ClCompile Include="..\Editor\ExportSkeletonCalculateTB.cpp" />
-    <ClCompile Include="..\Editor\RAPIDMinBox.cpp" />
     <ClCompile Include="Blender_ss.cpp" />
     <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
     <ClCompile Include="stdafx.cpp">

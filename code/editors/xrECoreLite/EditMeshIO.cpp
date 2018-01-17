@@ -2,7 +2,7 @@
 // file: StaticMesh.cpp
 //----------------------------------------------------
                 
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 #include "EditMesh.h"
 #include "EditObject.h"

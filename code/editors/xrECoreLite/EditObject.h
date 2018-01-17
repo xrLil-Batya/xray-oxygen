@@ -1,5 +1,5 @@
 #pragma once
-
+#include "GameMtlLib.h"
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
 #ifdef _MAYA_PLUGIN
@@ -128,7 +128,7 @@ public:
     IC void			SetFVF			(u32 fvf){m_dwFVF=fvf;}
     IC void			SetTexture		(const char* name){string512 buf; strcpy(buf,name); if(strext(buf)) *strext(buf)=0; m_Texture=buf;}
     IC void			SetVMap			(const char* name){m_VMap=name;}
-    IC u32			_GameMtl		()const	{return GMLib.GetMaterialID	(*m_GameMtlName);}
+    IC u32			_GameMtl		()const	{return GEMLib.GetMaterialID	(*m_GameMtlName);}
 #ifdef _EDITOR
 	IC void			OnDeviceCreate	()
     {

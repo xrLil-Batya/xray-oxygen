@@ -149,7 +149,7 @@ class pauseMngr {
     xr_vector<CTimer_paused_ex*> m_timers;
     bool paused;
 public:
-    ICF pauseMngr::pauseMngr() :paused(false)
+    pauseMngr() :paused(false)
     {
         m_timers.reserve(3);
     }

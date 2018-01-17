@@ -94,6 +94,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound_static", "..\SDK\sour
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrPhysicsStatic", "xrPhysicsStatic.vcxproj", "{98D24A3D-7666-4C11-9D6E-B10393CE8CBA}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrECoreLite", "..\editors\xrECoreLite\xrECoreLite.vcxproj", "{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -309,6 +311,14 @@ Global
 		{98D24A3D-7666-4C11-9D6E-B10393CE8CBA}.Release_AI32|x64.Build.0 = Release_AI32|x64
 		{98D24A3D-7666-4C11-9D6E-B10393CE8CBA}.Release|x64.ActiveCfg = Release|x64
 		{98D24A3D-7666-4C11-9D6E-B10393CE8CBA}.Release|x64.Build.0 = Release|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Debug|x64.ActiveCfg = Debug|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Debug|x64.Build.0 = Debug|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Mixed|x64.ActiveCfg = Release|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Mixed|x64.Build.0 = Release|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release_AI32|x64.ActiveCfg = Release|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release_AI32|x64.Build.0 = Release|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release|x64.ActiveCfg = Release|x64
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -332,6 +342,7 @@ Global
 		{674BAC59-6681-4066-BD5A-9BB6A56D6F8A} = {CF77F12B-3C45-4EAF-9708-0E372676745F}
 		{566551F4-4EF1-4CB4-A131-F982E7606907} = {674BAC59-6681-4066-BD5A-9BB6A56D6F8A}
 		{15CBFEFF-7965-41F5-B4E2-21E8795C9159} = {674BAC59-6681-4066-BD5A-9BB6A56D6F8A}
+		{98D24A3D-7666-4C11-9D6E-B10393CE8CBA} = {712422F5-E0E6-47DB-8FD5-D2E327F800BF}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {918449FC-4178-48DF-BB24-0A33C2DA2AE2}

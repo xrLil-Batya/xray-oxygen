@@ -1,7 +1,7 @@
 //----------------------------------------------------
 // file: ExportSkeleton.cpp
 //----------------------------------------------------
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 #pragma comment(lib, "ETools.lib")
 #pragma comment(lib, "xrQSlim.lib")
@@ -277,7 +277,7 @@ CExportObjectOGF::SSplit* CExportObjectOGF::FindSplit(CSurface* surf)
 	return 0;
 }
 //----------------------------------------------------
-
+#include "GameMtlLib.h"
 bool CExportObjectOGF::PrepareMESH(CEditableMesh* MESH)
 {
 	//        // generate normals
@@ -290,7 +290,7 @@ bool CExportObjectOGF::PrepareMESH(CEditableMesh* MESH)
 		u32 dwTexCnt = ((surf->_FVF()&D3DFVF_TEXCOUNT_MASK) >> D3DFVF_TEXCOUNT_SHIFT);	R_ASSERT(dwTexCnt == 1);
 		SSplit* split = FindSplit(surf);
 		if (!split) {
-			SGameMtl* M = GMLib.GetMaterialByID(surf->_GameMtl());
+			SEGameMtl* M = GEMLib.GetMaterialByID(surf->_GameMtl());
 			if (!M) {
 				Msg("! Surface: '%s' contains undefined game material.", surf->_Name());
 				bResult = false;

@@ -1,8 +1,11 @@
 //----------------------------------------------------
 // file: ExportSkeleton.cpp
 //----------------------------------------------------
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
+#include <d3dx9.h>
+#include "../../xrRender/xrRender/xrD3DDefs.h"
+#include "../../xrRender/xrRender/FVF.h"
 
 #include "ExportObjectOGF.h"
 #include "EditObject.h"
@@ -11,13 +14,9 @@
 #	undef AnsiString
 #	undef ref_shader
 #	define ECORE_API
-
-#	include "../../xrRender/xrRenderPC_R1/stdafx.h"
-
-#	include "../../xrEngine/pure.h"
-#	include "../xrRender/FVF.h"
-#	include "../../xrEngine/render.h"
 #endif
+#define ref_geom void*
+
 #include "ExportSkeleton.h"
 #include "../../xrEngine/Fmesh.h"
 #include "../../xrEngine/bone.h"

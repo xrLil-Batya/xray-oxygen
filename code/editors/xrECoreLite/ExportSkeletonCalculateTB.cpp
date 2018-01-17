@@ -2,38 +2,22 @@
 //----------------------------------------------------
 // file: ExportSkeleton.cpp
 //----------------------------------------------------
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 
 #ifdef _LW_EXPORT
 #	undef AnsiString
-#	undef ref_shader
-#	define ECORE_API
-
-#	include "../../xrRender/xrRenderPC_R1/stdafx.h"
-
-#	include "../../xrEngine/pure.h"
-#	include "../xrRender/FVF.h"
-#	include "../../xrEngine/render.h"
 #endif
 #ifndef	_EDITOR
 //
+#define ref_geom void*
+#define ref_shader void*
+#include <d3dx9.h>
+#include "../../xrRender/xrRender/xrD3DDefs.h"
+#include "../../xrRender/xrRender/FVF.h"
 #include "../../xrEngine/defines.h"
-//
-#include "../../xrCore/xrCore.h"
 
-#include "../xrRender/hwcaps.h"
-#include "../xrRender/hw.h"
-#include "../../xrEngine/pure.h"
 class CGameFont;
-#include "../../include/xrRender/drawutils.h"
-#include "../xrRender/xrD3dDefs.h"
-#include "../xrRender/shader.h"
-#include "../xrRender/R_Backend.h"
-
-#include "../../xrEngine/fmesh.h"
-#include "../../xrEngine/_d3d_extensions.h"
-#include "../../xrEngine/properties.h"
 
 //
 using FLvertexVec = xr_vector<FVF::L>;

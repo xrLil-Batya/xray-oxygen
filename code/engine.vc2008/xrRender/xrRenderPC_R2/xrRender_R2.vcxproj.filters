@@ -648,9 +648,6 @@
     <ClInclude Include="blender_fxaa.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\utils\common\NvMender2003\convert.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -658,27 +655,6 @@
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\ArbitraryList.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\EditMesh.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\EditObject.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\ExportObjectOGF.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\ExportSkeleton.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\itterate_adjacents_dynamic.h">
-      <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Editor\PropSlimTools.h">
       <Filter>Editor</Filter>
     </ClInclude>
     <ClInclude Include="Blender_ss.h">
@@ -1171,42 +1147,6 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\dxUISequenceVideoItem.cpp">
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditMesh.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditMeshIO.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditMeshModify.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditObject.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditObjectEditor.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditObjectIO.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\EditObjectMotions.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\ExportObjectOGF.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\ExportObjectOGFCalculateTB.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\ExportSkeleton.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\ExportSkeletonCalculateTB.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Editor\RAPIDMinBox.cpp">
-      <Filter>Editor</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_ss.cpp">
       <Filter>Core_Target</Filter>

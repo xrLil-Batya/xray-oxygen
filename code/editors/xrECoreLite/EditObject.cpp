@@ -2,7 +2,7 @@
 // file: EditObject.cpp
 //----------------------------------------------------
 
-#include "stdafx.h"
+#include "files_list.hpp"
 #pragma hdrstop
 
 #if defined (_MAX_EXPORT)
@@ -38,7 +38,7 @@ void CSurface::RemoveImageData()
 }
 #endif
 
-CEditableObject::CEditableObject(LPCSTR name)
+CEditableObject::CEditableObject(const char* name)
 {
 	m_LibName		= name;
 

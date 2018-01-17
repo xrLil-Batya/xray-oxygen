@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Editor">
+      <UniqueIdentifier>{20ef14fe-bac1-4744-94a5-eb4c7e406d15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Export">
+      <UniqueIdentifier>{46cc0d35-31fe-433c-8ece-c5d3ae01db1f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{7516da6a-a555-442a-8737-4fac9d8cd7b0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{2b5f13c8-a430-4e09-a03c-fbcd1ba5b808}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="EditMesh.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditMeshIO.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditMeshModify.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditObject.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditObjectEditor.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditObjectIO.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="EditObjectMotions.cpp">
+      <Filter>Editor</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportObjectOGF.cpp">
+      <Filter>Export</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportObjectOGFCalculateTB.cpp">
+      <Filter>Export</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportSkeleton.cpp">
+      <Filter>Export</Filter>
+    </ClCompile>
+    <ClCompile Include="ExportSkeletonCalculateTB.cpp">
+      <Filter>Export</Filter>
+    </ClCompile>
+    <ClCompile Include="RAPIDMinBox.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="GameMtlLib.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="EditMesh.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="EditObject.h">
+      <Filter>Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportObjectOGF.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="ExportSkeleton.h">
+      <Filter>Export</Filter>
+    </ClInclude>
+    <ClInclude Include="ArbitraryList.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="itterate_adjacents_dynamic.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="PropSlimTools.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="files_list.hpp">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="GameMtlLib.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
