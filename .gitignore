@@ -26,6 +26,7 @@ intermediatex64/
 intermediatewin32/
 librariesx64/
 /.vs/
+/code/.vs/
 /code/engine.vc2008/.vs/
 /code/engine.vc2008/xrScripts/BuildVm.exe
 /code/utils/.vs/
@@ -35,3 +36,4 @@ librariesx64/
 /code/editors/.vs/xrEditors/v15/
 *.db-shm
 *.db-wal
+/code/xrScripts/BuildVm.exe

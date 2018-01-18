@@ -17,12 +17,7 @@
  *  Boston, MA  02111-1307, USA.
  * Or go to http://www.gnu.org/copyleft/lgpl.html
  */
-
-
-
-
-#ifndef _OPENAL32_H_
-#define _OPENAL32_H_
+#pragma once
 
 #ifdef __cplusplus
 extern "C" {
@@ -30,7 +25,7 @@ extern "C" {
 
 #define AL_BUILD_LIBRARY
 
-#include "openal\al.h"
+#include "al.h"
 
 // ALAPI
 typedef ALAPI ALvoid         (ALAPIENTRY *ALAPI_ENABLE)(ALenum capability);
@@ -204,7 +199,7 @@ typedef struct ALAPI_FXN_TABLE_STRUCT
 
 } ALAPI_FXN_TABLE;
 
-#include "openal\alc.h"
+#include "alc.h"
 
 // ALCAPI
 typedef struct ALCdevice_struct ALCdevice;
@@ -317,6 +312,3 @@ extern ALCcontext* alCurrentContext;
 #ifdef __cplusplus
 }
 #endif
-
-#endif
-

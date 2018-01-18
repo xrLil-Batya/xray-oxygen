@@ -27,7 +27,7 @@
 #include <stdlib.h>
 #include <memory.h>
 #define AL_BUILD_LIBRARY
-#include "openal\alc.h"
+#include "OpenAL32.h"
 #include <stdio.h>
 #include <tchar.h>
 #include <assert.h>
@@ -53,9 +53,8 @@
 #endif
 #include <mmsystem.h>
 
-#include "OpenAL32.h"
-
-log_fn_ptr_type*	pLog = NULL;
+typedef void __cdecl log_fn_ptr_type(char*);
+ALC_API log_fn_ptr_type* pLog = nullptr;
 void AlLog(LPCSTR format, ...)
 {
 	if(pLog)

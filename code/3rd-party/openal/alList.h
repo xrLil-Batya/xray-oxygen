@@ -24,7 +24,7 @@
 #ifndef _AL_LIST_H_
 #define _AL_LIST_H_
 
-#include "openal\al.h"
+#include "al.h"
 
 #ifdef __cplusplus
 extern "C" {
