@@ -1,7 +1,7 @@
 #if !defined(__ximaCFG_h)
 #define __ximaCFG_h
 
-#include "../../../xrCore/fastdelegate.h"
+#include "../../../engine.vc2008/xrCore/fastdelegate.h"
 
 extern "C" void*	cxalloc(size_t size);
 extern "C" void		cxfree(void* ptr);
