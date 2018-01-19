@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #include "mathutils.h"
-#include "../3rd party/ode/include/ode/common.h"
+#include "../../3rd-party/ode/include/ode/common.h"
 XRPHYSICS_API const float	phInfinity = dInfinity;
 
 IC bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const Fvector &D, float &R, BOOL bCull)
