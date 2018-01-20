@@ -91,8 +91,8 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 			s_targets_defer[it]->fill_parameters();
 	}
 
-	// update EAX
-    if (psSoundFlags.test(ss_EAX) && bEAX)
+	// update EFX
+    if (psSoundFlags.test(ss_EFX) && bEFX)
 	{
         if (bListenerMoved)
 		{
@@ -101,8 +101,7 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
         }
 
         e_current.lerp				(e_current,e_target,dt_sec);
-
-        i_eax_listener_set			(&e_current);
+		EFXTestSupport				(&efx_reverb);
 		i_eax_commit_setting		();
 	}
 
