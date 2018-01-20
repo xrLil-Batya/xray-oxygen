@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../../3rd party/ode/include/ode/common.h"
+#include "../../3rd-party/ode/include/ode/common.h"
 #include "../ExtendedGeom.h"
 #include "dTriColliderMath.h"
 

@@ -29,14 +29,8 @@
 #include <objbase.h>
 #pragma warning(default: 4995)
 
-void __cdecl al_log(char* msg)
-{
-	Log(msg);
-}
-
 ALDeviceList::ALDeviceList()
 {
-	pLog					= al_log;
 	snd_device_id			= u32(-1);
 	Enumerate();
 }
@@ -106,23 +100,16 @@ void ALDeviceList::Enumerate()
 					// if new actual device name isn't already in the list, then add it...
 					actualDeviceName = alcGetString(device, ALC_DEVICE_SPECIFIER);
 
-					if ( (actualDeviceName != nullptr) && xr_strlen(actualDeviceName)>0 ) 
+					if ((actualDeviceName != nullptr) && xr_strlen(actualDeviceName)>0)
 					{
-						alcGetIntegerv						(device, ALC_MAJOR_VERSION, sizeof(int), &major);
-						alcGetIntegerv						(device, ALC_MINOR_VERSION, sizeof(int), &minor);
-						m_devices.push_back					(ALDeviceDesc(actualDeviceName,minor,major));
-						m_devices.back().props.eax			= 0;
-						if(alIsExtensionPresent("EAX2.0"))
-							m_devices.back().props.eax		= 2;	
-						if(alIsExtensionPresent("EAX3.0"))
-							m_devices.back().props.eax		= 3;	
-						if(alIsExtensionPresent("EAX4.0"))
-							m_devices.back().props.eax		= 4;	
-						if(alIsExtensionPresent("EAX5.0"))
-							m_devices.back().props.eax		= 5;	
+						alcGetIntegerv(device, ALC_MAJOR_VERSION, sizeof(int), &major);
+						alcGetIntegerv(device, ALC_MINOR_VERSION, sizeof(int), &minor);
+						m_devices.push_back(ALDeviceDesc(actualDeviceName,minor,major));
 
-						m_devices.back().props.efx			= (alIsExtensionPresent("ALC_EXT_EFX") == true);
-						m_devices.back().props.xram			= (alIsExtensionPresent("EAX_RAM") == true);
+						m_devices.back().props.efx	= alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX");
+						m_devices.back().props.xram = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "EAX_RAM");
+
+						Msg("[OpenAL] EFX Support: %s", m_devices.back().props.efx ? "yes":"no");
 
 						m_devices.back().props.eax_unwanted	= ((0==xr_strcmp(actualDeviceName,AL_GENERIC_HARDWARE))||
 															(0==xr_strcmp(actualDeviceName,AL_GENERIC_SOFTWARE)));
@@ -166,16 +153,6 @@ void ALDeviceList::Enumerate()
 	for (u32 j = 0; j < GetNumDevices(); j++)
 	{
 		GetDeviceVersion		(j, &majorVersion, &minorVersion);
-		Msg	("%d. %s, Spec Version %d.%d %s eax[%d] efx[%s] xram[%s]", 
-			j+1, 
-			GetDeviceName(j), 
-			majorVersion, 
-			minorVersion,
-			(stricmp(GetDeviceName(j),m_defaultDeviceName)==0)? "(default)":"",
-			GetDeviceDesc(j).props.eax,
-			GetDeviceDesc(j).props.efx?"yes":"no",
-			GetDeviceDesc(j).props.xram?"yes":"no"
-			);
 	}
 	if (!strstr(GetCommandLine(),"-editor"))
 		CoInitializeEx (nullptr, COINIT_MULTITHREADED);
