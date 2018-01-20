@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #pragma hdrstop
-
 #include "SoundRender_CoreA.h"
 #include "SoundRender_TargetA.h"
 
@@ -11,37 +10,10 @@ CSoundRender_CoreA::CSoundRender_CoreA	():CSoundRender_Core()
 	pDevice						= 0;
 	pDeviceList					= 0;
 	pContext					= 0;
-    eaxSet						= 0;
-    eaxGet						= 0;
 }
 
 CSoundRender_CoreA::~CSoundRender_CoreA	()
 {
-}
-
-bool CSoundRender_CoreA::EAXQuerySupport(bool bDeferred, const GUID* guid, u32 prop, void* val, u32 sz)
-{
-	if (AL_NO_ERROR!=eaxGet(guid, prop, 0, val, sz)) return false;
-	if (AL_NO_ERROR!=eaxSet(guid, (bDeferred?DSPROPERTY_EAXLISTENER_DEFERRED:0) | prop, 0, val, sz)) return false;
-    return true;
-}
-
-bool CSoundRender_CoreA::EAXTestSupport	(bool bDeferred)
-{
-    EAXLISTENERPROPERTIES 		ep;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOM, 				&ep.lRoom,					sizeof(LONG))) 	return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMHF, 		  	&ep.lRoomHF,				sizeof(LONG))) 	return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ROOMROLLOFFFACTOR, 	&ep.flRoomRolloffFactor,	sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYTIME, 		  	&ep.flDecayTime,			sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_DECAYHFRATIO,		&ep.flDecayHFRatio,			sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONS, 		&ep.lReflections,			sizeof(LONG))) 	return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REFLECTIONSDELAY,   &ep.flReflectionsDelay,		sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERB, 		  	&ep.lReverb,				sizeof(LONG))) 	return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_REVERBDELAY, 		&ep.flReverbDelay,			sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_ENVIRONMENTDIFFUSION,&ep.flEnvironmentDiffusion,sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_AIRABSORPTIONHF, 	&ep.flAirAbsorptionHF,		sizeof(float))) return false;
-    if (!EAXQuerySupport(bDeferred, &DSPROPSETID_EAX_ListenerProperties, DSPROPERTY_EAXLISTENER_FLAGS, 				&ep.dwFlags,				sizeof(DWORD))) return false;
-	return true;
 }
 
 void  CSoundRender_CoreA::_restart()
@@ -103,17 +75,11 @@ void CSoundRender_CoreA::_initialize(int stage)
     A_CHK				        (alListenerf		(AL_GAIN,1.f));
 
     // Check for EAX extension
-    bEAX 				        = deviceDesc.props.eax;
-
-    eaxSet 				        = (EAXSet)alGetProcAddress	((const ALchar*)"EAXSet");
-    if (eaxSet==nullptr) bEAX 		= false;
-    eaxGet 				        = (EAXGet)alGetProcAddress	((const ALchar*)"EAXGet");
-    if (eaxGet==nullptr) bEAX 		= false;
-
-    if (bEAX)
+    bEFX = deviceDesc.props.efx;
+	
+    if (bEFX)
 	{
-		bDeferredEAX			= EAXTestSupport(true);
-        bEAX 					= EAXTestSupport(false);
+		bEFX = EFXTestSupport(&efx_reverb);
     }
 
     inherited::_initialize		(stage);
@@ -129,7 +95,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 				s_targets.push_back	(T);
 			else
 			{
-        		Log					("! SOUND: OpenAL: Max targets - ",tit);
+        		Log					("[OpenAL] ! SOUND: OpenAL: Max targets - ",tit);
 				T->_destroy			();
         		xr_delete			(T);
         		break;
@@ -162,15 +128,6 @@ void CSoundRender_CoreA::_clear	()
     alcDestroyContext			(pContext);		pContext	= 0;
     alcCloseDevice				(pDevice);		pDevice		= 0;
 	xr_delete					(pDeviceList);
-}
-
-void	CSoundRender_CoreA::i_eax_set			(const GUID* guid, u32 prop, void* val, u32 sz)
-{
-	eaxSet	     			 	(guid, prop, 0, val, sz);
-}
-void	CSoundRender_CoreA::i_eax_get			(const GUID* guid, u32 prop, void* val, u32 sz)
-{
-	eaxGet	    		  	    (guid, prop, 0, val, sz);
 }
 
 void CSoundRender_CoreA::update_listener		( const Fvector& P, const Fvector& D, const Fvector& N, float dt )
