@@ -29,14 +29,8 @@
 #include <objbase.h>
 #pragma warning(default: 4995)
 
-void __cdecl al_log(char* msg)
-{
-	Log(msg);
-}
-
 ALDeviceList::ALDeviceList()
 {
-	pLog					= al_log;
 	snd_device_id			= u32(-1);
 	Enumerate();
 }
@@ -111,15 +105,18 @@ void ALDeviceList::Enumerate()
 						alcGetIntegerv						(device, ALC_MAJOR_VERSION, sizeof(int), &major);
 						alcGetIntegerv						(device, ALC_MINOR_VERSION, sizeof(int), &minor);
 						m_devices.push_back					(ALDeviceDesc(actualDeviceName,minor,major));
-						m_devices.back().props.eax			= 0;
+						m_devices.back().props.eax		= 0;
+						
 						if(alIsExtensionPresent("EAX2.0"))
-							m_devices.back().props.eax		= 2;	
+							m_devices.back().props.eax	= 2;	
 						if(alIsExtensionPresent("EAX3.0"))
-							m_devices.back().props.eax		= 3;	
+							m_devices.back().props.eax	= 3;	
 						if(alIsExtensionPresent("EAX4.0"))
-							m_devices.back().props.eax		= 4;	
+							m_devices.back().props.eax	= 4;	
 						if(alIsExtensionPresent("EAX5.0"))
-							m_devices.back().props.eax		= 5;	
+							m_devices.back().props.eax	= 5;	
+
+						Msg("* EAX verison support: %s", m_devices.back().props.eax);
 
 						m_devices.back().props.efx			= (alIsExtensionPresent("ALC_EXT_EFX") == true);
 						m_devices.back().props.xram			= (alIsExtensionPresent("EAX_RAM") == true);
