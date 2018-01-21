@@ -80,7 +80,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Огнестрельное оружие
+;; ГЋГЈГ­ГҐГ±ГІГ°ГҐГ«ГјГ­Г®ГҐ Г®Г°ГіГ¦ГЁГҐ
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 [bullet_manager]
@@ -92,20 +92,20 @@ tracer_width					= 0.08
 tracer_length_max				= 225 ;10.0	;24.0 ;14.0
 tracer_length_min				= 0 ;1 ;2		;0.2
 
-;расстояние после которого учитывается hit_probabilty полностью
+;Г°Г Г±Г±ГІГ®ГїГ­ГЁГҐ ГЇГ®Г±Г«ГҐ ГЄГ®ГІГ®Г°Г®ГЈГ® ГіГ·ГЁГІГ»ГўГ ГҐГІГ±Гї hit_probabilty ГЇГ®Г«Г­Г®Г±ГІГјГѕ
 hit_probability_max_dist		= 3;
 
 gravity_const					= 9.81
-;сопротивление воздуха, процент, который отнимается от скорости полета пули
+;Г±Г®ГЇГ°Г®ГІГЁГўГ«ГҐГ­ГЁГҐ ГўГ®Г§Г¤ГіГµГ , ГЇГ°Г®Г¶ГҐГ­ГІ, ГЄГ®ГІГ®Г°Г»Г© Г®ГІГ­ГЁГ¬Г ГҐГІГ±Гї Г®ГІ Г±ГЄГ®Г°Г®Г±ГІГЁ ГЇГ®Г«ГҐГІГ  ГЇГіГ«ГЁ
 air_resistance_k				= 1 ;0.4;0.3
 
-;размер шага времени (в милисекундах), по которому проигрываются
+;Г°Г Г§Г¬ГҐГ° ГёГ ГЈГ  ГўГ°ГҐГ¬ГҐГ­ГЁ (Гў Г¬ГЁГ«ГЁГ±ГҐГЄГіГ­Г¤Г Гµ), ГЇГ® ГЄГ®ГІГ®Г°Г®Г¬Гі ГЇГ°Г®ГЁГЈГ°Г»ГўГ ГѕГІГ±Гї
 time_step						= 33
-;минимальная скорость (м/с), на которой пуля еще считается и показывается
+;Г¬ГЁГ­ГЁГ¬Г Г«ГјГ­Г Гї Г±ГЄГ®Г°Г®Г±ГІГј (Г¬/Г±), Г­Г  ГЄГ®ГІГ®Г°Г®Г© ГЇГіГ«Гї ГҐГ№ГҐ Г±Г·ГЁГІГ ГҐГІГ±Гї ГЁ ГЇГ®ГЄГ Г§Г»ГўГ ГҐГІГ±Гї
 min_bullet_speed				= 3.0
-;cколько процентов энергии потеряет пуля при столкновении с материалом (при падении под прямым углом)
+;cГЄГ®Г«ГјГЄГ® ГЇГ°Г®Г¶ГҐГ­ГІГ®Гў ГЅГ­ГҐГ°ГЈГЁГЁ ГЇГ®ГІГҐГ°ГїГҐГІ ГЇГіГ«Гї ГЇГ°ГЁ Г±ГІГ®Г«ГЄГ­Г®ГўГҐГ­ГЁГЁ Г± Г¬Г ГІГҐГ°ГЁГ Г«Г®Г¬ (ГЇГ°ГЁ ГЇГ Г¤ГҐГ­ГЁГЁ ГЇГ®Г¤ ГЇГ°ГїГ¬Г»Г¬ ГіГЈГ«Г®Г¬)
 collision_energy_min			= 0.80 ;0.75; 0.90
-;сколько процентов энергии останется у пули при любом столкновении
+;Г±ГЄГ®Г«ГјГЄГ® ГЇГ°Г®Г¶ГҐГ­ГІГ®Гў ГЅГ­ГҐГ°ГЈГЁГЁ Г®Г±ГІГ Г­ГҐГІГ±Гї Гі ГЇГіГ«ГЁ ГЇГ°ГЁ Г«ГѕГЎГ®Г¬ Г±ГІГ®Г«ГЄГ­Г®ГўГҐГ­ГЁГЁ
 collision_energy_max			= 0.5 ;0.7;0.50
 
 whine_sounds					= weapons\whine_1, weapons\whine_2, weapons\whine_3, weapons\whine_4, weapons\whine01, weapons\whine02
@@ -133,6 +133,7 @@ color_5 = 255,  127, 	 63,     150 ;79
 ;belt				= true;
 slot				= -1
 explosive			= false
+material      = objects\bullet
 
 [ammo_9x18_fmj]:ammo_base
 GroupControlSection	= spawn_group
@@ -811,7 +812,7 @@ wm_size         = 0.1
 
 wallmark_section			= explosion_marks
 
-;могут ли боеприпасы быть неограниченными : 1 - могут, 0 - не могут
+;Г¬Г®ГЈГіГІ Г«ГЁ ГЎГ®ГҐГЇГ°ГЁГЇГ Г±Г» ГЎГ»ГІГј Г­ГҐГ®ГЈГ°Г Г­ГЁГ·ГҐГ­Г­Г»Г¬ГЁ : 1 - Г¬Г®ГЈГіГІ, 0 - Г­ГҐ Г¬Г®ГЈГіГІ
 can_be_unlimited = true ;false
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -860,7 +861,7 @@ wm_size         = 0.05
 
 fake_grenade_name = wpn_fake_missile
 
-;могут ли боеприпасы быть неограниченными : 1 - могут, 0 - не могут
+;Г¬Г®ГЈГіГІ Г«ГЁ ГЎГ®ГҐГЇГ°ГЁГЇГ Г±Г» ГЎГ»ГІГј Г­ГҐГ®ГЈГ°Г Г­ГЁГ·ГҐГ­Г­Г»Г¬ГЁ : 1 - Г¬Г®ГЈГіГІ, 0 - Г­ГҐ Г¬Г®ГЈГіГІ
 can_be_unlimited = true ;false
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -907,7 +908,7 @@ wm_size         = 0.05
 
 fake_grenade_name = wpn_fake_missile2
 
-;могут ли боеприпасы быть неограниченными : 1 - могут, 0 - не могут
+;Г¬Г®ГЈГіГІ Г«ГЁ ГЎГ®ГҐГЇГ°ГЁГЇГ Г±Г» ГЎГ»ГІГј Г­ГҐГ®ГЈГ°Г Г­ГЁГ·ГҐГ­Г­Г»Г¬ГЁ : 1 - Г¬Г®ГЈГіГІ, 0 - Г­ГҐ Г¬Г®ГЈГіГІ
 can_be_unlimited = true ;false
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -959,17 +960,17 @@ jump_height = 0
 
 wm_size         = 0.05
 
-;трассы от осколков
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
 fragment_speed				= 100
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 ;wallmarks
 wallmark_section		= explosion_marks
 
-;свойства которые читаются, но не используются
+;Г±ГўГ®Г©Г±ГІГўГ  ГЄГ®ГІГ®Г°Г»ГҐ Г·ГЁГІГ ГѕГІГ±Гї, Г­Г® Г­ГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГѕГІГ±Гї
 inv_name		= ammo-vog-25
 inv_name_short	= ammo-vog-25
 inv_weight		= .2
@@ -984,10 +985,10 @@ kill_msg_y			= 232
 kill_msg_width		= 21
 kill_msg_height		= 22
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Свойства CustomRocket
+;; Г‘ГўГ®Г©Г±ГІГўГ  CustomRocket
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-engine_present		= false		;присутствует ли в ракете двигатель
-lights_enabled		= false		;свет вокруг ракеты, во время полета
+engine_present		= false		;ГЇГ°ГЁГ±ГіГІГ±ГІГўГіГҐГІ Г«ГЁ Гў Г°Г ГЄГҐГІГҐ Г¤ГўГЁГЈГ ГІГҐГ«Гј
+lights_enabled		= false		;Г±ГўГҐГІ ГўГ®ГЄГ°ГіГЈ Г°Г ГЄГҐГІГ», ГўГ® ГўГ°ГҐГ¬Гї ГЇГ®Г«ГҐГІГ 
 force_explode_time  = 10000
 
 [wpn_fake_missile1]:identity_immunities,default_weapon_params
@@ -1033,18 +1034,18 @@ ph_mass			 = 5
 
 jump_height = 1
 
-;трассы от осколков
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
 fragment_speed		= 100
 
 wm_size         	= 0.05
 ;wallmarks
 wallmark_section		 = explosion_marks
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 
-;свойства которые читаются, но не используются
+;Г±ГўГ®Г©Г±ГІГўГ  ГЄГ®ГІГ®Г°Г»ГҐ Г·ГЁГІГ ГѕГІГ±Гї, Г­Г® Г­ГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГѕГІГ±Гї
 inv_name		= ammo-vog-25p
 inv_name_short	= ammo-vog-25p
 inv_weight		= .2
@@ -1061,10 +1062,10 @@ kill_msg_height		= 22
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Свойства CustomRocket
+;; Г‘ГўГ®Г©Г±ГІГўГ  CustomRocket
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-engine_present		= false		;присутствует ли в ракете двигатель
-lights_enabled 		= true			;свет вокруг ракеты, во время полета
+engine_present		= false		;ГЇГ°ГЁГ±ГіГІГ±ГІГўГіГҐГІ Г«ГЁ Гў Г°Г ГЄГҐГІГҐ Г¤ГўГЁГЈГ ГІГҐГ«Гј
+lights_enabled 		= true			;Г±ГўГҐГІ ГўГ®ГЄГ°ГіГЈ Г°Г ГЄГҐГІГ», ГўГ® ГўГ°ГҐГ¬Гї ГЇГ®Г«ГҐГІГ 
 trail_light_color 	= 0.6,0.5,0.3
 trail_light_range 	= 8.0
 force_explode_time  = 10000
@@ -1113,18 +1114,18 @@ ph_mass			 = 5
 
 jump_height = 1
 
-;трассы от осколков
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
 fragment_speed				= 100
 ;wallmarks
 wallmark_section			= explosion_marks
 wm_size						= 0.1 ;0.05
 
-explode_duration			 = 5		;подолжительность взрыва (с)
+explode_duration			 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 
-;свойства которые читаются, но не используются
+;Г±ГўГ®Г©Г±ГІГўГ  ГЄГ®ГІГ®Г°Г»ГҐ Г·ГЁГІГ ГѕГІГ±Гї, Г­Г® Г­ГҐ ГЁГ±ГЇГ®Г«ГјГ§ГіГѕГІГ±Гї
 inv_name		= ammo-m209
 inv_name_short	= "M209"
 inv_weight		= .2
@@ -1140,10 +1141,10 @@ kill_msg_width		= 19
 kill_msg_height		= 22
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Свойства CustomRocket
+;; Г‘ГўГ®Г©Г±ГІГўГ  CustomRocket
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-engine_present		= false		;присутствует ли в ракете двигатель
-lights_enabled 		= true			;свет вокруг ракеты, во время полета
+engine_present		= false		;ГЇГ°ГЁГ±ГіГІГ±ГІГўГіГҐГІ Г«ГЁ Гў Г°Г ГЄГҐГІГҐ Г¤ГўГЁГЈГ ГІГҐГ«Гј
+lights_enabled 		= true			;Г±ГўГҐГІ ГўГ®ГЄГ°ГіГЈ Г°Г ГЄГҐГІГ», ГўГ® ГўГ°ГҐГ¬Гї ГЇГ®Г«ГҐГІГ 
 trail_light_color 	= 0.6,0.5,0.3
 trail_light_range 	= 8.0
 force_explode_time  = 10000
@@ -1170,7 +1171,7 @@ inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
 
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 50
@@ -1200,18 +1201,18 @@ light_color		         = 1.9,1.3,0.5
 light_range		         = 30.0
 light_time 		         = 1.5
 
-;трассы от осколков
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
 fragment_speed				= 100
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 ;wallmarks
 wallmark_section		= explosion_marks
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 immunities_sect			= explosive_fuelcan_immunities_sect
 
 [explosive_fuelcan_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -1244,7 +1245,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 50
@@ -1274,19 +1275,19 @@ light_color		         = 1.9,1.3,0.5
 light_range		         = 30.0
 light_time 		         = 1
 
-;трассы от осколков
-fragment_speed				= 100		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 100		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 ;wallmarks
 wallmark_section		= explosion_marks
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 immunities_sect			= explosive_tank_immunities_sect
 
 [explosive_tank_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -1315,7 +1316,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 500
@@ -1345,14 +1346,14 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;трассы от осколков
-fragment_speed				= 100		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 100		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 immunities_sect			= explosive_barrel_low_immunities_sect
 
@@ -1375,7 +1376,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 500
@@ -1405,14 +1406,14 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;трассы от осколков
-fragment_speed				= 100		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 100		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 2		;подолжительность взрыва (с)
+explode_duration		 = 2		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\t_rgd5_explosion
 immunities_sect			= explosive_explosive_grenade_immunities_sect
 
@@ -1463,7 +1464,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 500
@@ -1493,21 +1494,21 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;трассы от осколков
-fragment_speed				= 50		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 50		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\rpg7_explode
 immunities_sect			= explosive_hide_immunities_sect
 
 ;time_to_explode			= 0.f
 
 [explosive_hide_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 0.0
 strike_immunity			= 0.0
 shock_immunity			= 0.0
@@ -1535,7 +1536,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 500
@@ -1565,14 +1566,14 @@ light_color		         = 0,0,0
 light_range		         = 0.0
 light_time 		         = 0.85
 
-;трассы от осколков
-fragment_speed				= 25		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 25		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 2		;подолжительность взрыва (с)
+explode_duration		 = 2		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
 ;wallmarks
 wallmark_section		 = explosion_marks
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode_
 immunities_sect			= explosive_barrel_low_immunities_sect
 
@@ -1580,7 +1581,7 @@ immunities_sect			= explosive_barrel_low_immunities_sect
 
 
 [explosive_barrel_low_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 1
 strike_immunity			= 1
 shock_immunity			= 1
@@ -1609,7 +1610,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 500
@@ -1639,20 +1640,20 @@ light_color		         = 1.9,1.4,0.5
 light_range		         = 14.0
 light_time 		         = 0.85
 
-;трассы от осколков
-fragment_speed				= 100		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 100		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 immunities_sect			= explosive_barrel_immunities_sect
 ;wallmarks
 wallmark_section		= explosion_marks
 
 [explosive_barrel_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 0.0
 strike_immunity			= 1
 shock_immunity			= 1
@@ -1681,7 +1682,7 @@ inv_grid_width		= 1
 inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 500
@@ -1711,20 +1712,20 @@ light_color		         = 1.9,1.2,0.5
 light_range		         = 30.0
 light_time 		         = 1
 
-;трассы от осколков
-fragment_speed				= 100		;скорость осколков (м/с)
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
+fragment_speed				= 100		;Г±ГЄГ®Г°Г®Г±ГІГј Г®Г±ГЄГ®Г«ГЄГ®Гў (Г¬/Г±)
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 immunities_sect			= explosive_mobiltank_immunities_sect
 ;wallmarks
 wallmark_section		= explosion_marks
 
 [explosive_mobiltank_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 0.0
 strike_immunity			= 1.0
 shock_immunity			= 1.0
@@ -1754,7 +1755,7 @@ inv_grid_height		= 1
 inv_grid_x			= 9
 inv_grid_y			= 9
 
-;вещь невозможно подобрать
+;ГўГҐГ№Гј Г­ГҐГўГ®Г§Г¬Г®Г¦Г­Г® ГЇГ®Г¤Г®ГЎГ°Г ГІГј
 can_take			= false
 
 cost				= 50
@@ -1784,12 +1785,12 @@ light_color		         = 1.9,1.3,0.5
 light_range		         = 30.0
 light_time 		         = 1.5
 
-;трассы от осколков
+;ГІГ°Г Г±Г±Г» Г®ГІ Г®Г±ГЄГ®Г«ГЄГ®Гў
 fragment_speed				= 200
 
-explode_duration		 = 5		;подолжительность взрыва (с)
+explode_duration		 = 5		;ГЇГ®Г¤Г®Г«Г¦ГЁГІГҐГ«ГјГ­Г®Г±ГІГј ГўГ§Г°Г»ГўГ  (Г±)
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_explode = weapons\f1_explode
 immunities_sect			= dinamit_immunities_sect
 ;condition_to_explode        =0.f
@@ -1797,7 +1798,7 @@ immunities_sect			= dinamit_immunities_sect
 wallmark_section		= explosion_marks
 
 [dinamit_immunities_sect]
-;коэффициенты для попаданий различными типами хитов
+;ГЄГ®ГЅГґГґГЁГ¶ГЁГҐГ­ГІГ» Г¤Г«Гї ГЇГ®ГЇГ Г¤Г Г­ГЁГ© Г°Г Г§Г«ГЁГ·Г­Г»Г¬ГЁ ГІГЁГЇГ Г¬ГЁ ГµГЁГІГ®Гў
 burn_immunity			= 0.0
 strike_immunity			= 0.0
 shock_immunity			= 0.0
@@ -1833,7 +1834,7 @@ inv_grid_height		= 1
 inv_grid_x			= 10
 inv_grid_y			= 17
 scope_texture		= wpn_crosshair
-scope_zoom_factor	= 25		;ПСО-1 2X
+scope_zoom_factor	= 25		;ГЏГ‘ГЋ-1 2X
 
 [wpn_addon_scope_x2.7]:identity_immunities
 GroupControlSection	= spawn_group
@@ -1858,7 +1859,7 @@ inv_grid_height		= 1
 inv_grid_x			= 10
 inv_grid_y			= 16
 scope_texture		= wpn_crosshair
-scope_zoom_factor	= 40		;ПСО-1 2X
+scope_zoom_factor	= 40		;ГЏГ‘ГЋ-1 2X
 
 [wpn_addon_scope_detector]:identity_immunities
 GroupControlSection	= spawn_group
@@ -1884,7 +1885,7 @@ inv_grid_x			= 4
 inv_grid_y			= 16
 scope_texture		= wpn_crosshair
 scope_alive_detector = scope_detector
-scope_zoom_factor	= 30		;ПСО-1 2X
+scope_zoom_factor	= 30		;ГЏГ‘ГЋ-1 2X
 
 [wpn_addon_scope_night]:identity_immunities
 GroupControlSection	= spawn_group
@@ -1910,7 +1911,7 @@ inv_grid_x			= 4
 inv_grid_y			= 17
 scope_texture		= wpn_crosshair
 scope_nightvision = scope_nightvision
-scope_zoom_factor	= 30		;ПСО-1 2X
+scope_zoom_factor	= 30		;ГЏГ‘ГЋ-1 2X
 
 [wpn_addon_scope_susat]:identity_immunities
 GroupControlSection	= spawn_group
@@ -2124,8 +2125,8 @@ grenade_vel 		= 32 ;76
 ;;;;;;;;;;;;;Advanced scope settings;;;;;;;;;;;;;;;;
 
 [scope_detector]
-vis_frame_speed				= 4				; скорость, с которой наводится рамка на цель
-vis_frame_color				= 0.7,0.7,0.7,1.0	; цвет рамки RGBA (A) Не учитывается
+vis_frame_speed				= 4				; Г±ГЄГ®Г°Г®Г±ГІГј, Г± ГЄГ®ГІГ®Г°Г®Г© Г­Г ГўГ®Г¤ГЁГІГ±Гї Г°Г Г¬ГЄГ  Г­Г  Г¶ГҐГ«Гј
+vis_frame_color				= 0.7,0.7,0.7,1.0	; Г¶ГўГҐГІ Г°Г Г¬ГЄГЁ RGBA (A) ГЌГҐ ГіГ·ГЁГІГ»ГўГ ГҐГІГ±Гї
 found_snd					= detectors\DA-2_beep1
 catch_snd					= detectors\DA-2_beep1
 
