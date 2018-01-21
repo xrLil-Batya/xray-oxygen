@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include <lwrender.h>
 #include <lwhost.h>
-#include "../../engine.vc2008/xrRender/Editor/EditObject.h"
+#include "../../Editors/xrECoreLite/EditObject.h"
 #include "../../engine.vc2008/xrEngine/bone.h"
 #include <lwdisplay.h>
 #include <lwserver.h>

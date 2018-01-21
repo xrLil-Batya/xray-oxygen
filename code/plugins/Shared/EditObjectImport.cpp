@@ -5,14 +5,14 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "../../engine.vc2008/xrRender/Editor/EditObject.h"
-//#include "lwo2.h"
+#include "../../Editors/xrECoreLite/EditObject.h"
 #include "../lw_shared/LW_ShaderDef.h"
-#include "../../engine.vc2008/xrRender/Editor/EditMesh.h"
+#include "../../Editors/xrECoreLite/EditMesh.h"
 
 extern "C" {
 #include "lwo2.h"
 };
+
 xr_string AppendFolderToName(const char* tex_name, int depth, BOOL full_name)
 {
 	string1024 nm;

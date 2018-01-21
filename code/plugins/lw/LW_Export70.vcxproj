@@ -84,7 +84,7 @@
       <Culture>0x0419</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;lw_server.lib;lwo.lib;xrcorestatic.lib;WildMagic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrECoreLite.lib;odbc32.lib;odbccp32.lib;lw_server.lib;lwo.lib;xrcorestatic.lib;WildMagic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)xray_export.p</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>;../../SDK/Libraries/x64;$(xrLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -103,14 +103,13 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>Export/;../../3rd-party/lwdk/include;%(AdditionalIncludeDirectories);../Shared</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>DEBUG;_X86_;_WIN32;WIN32;_WINDOWS;_USRDLL;_LW_PLUGIN;_LW_EXPORT;XRCORE_STATIC;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>Export/;../../3rd-party/lwdk/include;../../SDK/include/dx/;../Shared;../../SDK/include/</AdditionalIncludeDirectories>
+      <PreprocessorDefinitions>DEBUG;_WINDOWS;_USRDLL;_LW_PLUGIN;_LW_EXPORT;XRCORE_STATIC;_MSWIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <FloatingPointModel>Fast</FloatingPointModel>
-      <ForceConformanceInForLoopScope>false</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
@@ -124,6 +123,8 @@
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CallingConvention>Cdecl</CallingConvention>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -131,7 +132,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;lw_serverd.lib;xrcorestaticd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>odbc32.lib;odbccp32.lib;lw_serverd.lib;xrCoreStaticd.lib;xrECoreLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)xray_export.p</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>Server/$(Configuration)/; ../../../../Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -143,19 +144,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\SkeletonMotions.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportObjectOGF.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportObjectOGFCalculateTB.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportSkeleton.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\ExportSkeletonCalculateTB.cpp" />
     <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
     <ClCompile Include="..\Shared\bone.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditMesh.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditMeshIO.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditMeshModify.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditObject.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditObjectEditor.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditObjectIO.cpp" />
-    <ClCompile Include="..\..\engine.vc2008\xrRender\Editor\EditObjectMotions.cpp" />
     <ClCompile Include="..\Shared\EditObjectImport.cpp" />
     <ClCompile Include="..\Shared\ELog.cpp" />
     <ClCompile Include="..\Shared\Envelope.cpp">
@@ -200,13 +190,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\engine.vc2008\xrRender\Editor\ExportObjectOGF.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrRender\Editor\ExportSkeleton.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\Shared\bone.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrRender\Editor\ArbitraryList.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrRender\Editor\EditMesh.h" />
-    <ClInclude Include="..\..\engine.vc2008\xrRender\Editor\EditObject.h" />
     <ClInclude Include="..\Shared\ELog.h" />
     <ClInclude Include="..\Shared\envelope.h" />
     <ClInclude Include="..\Shared\motion.h" />

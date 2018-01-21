@@ -6,10 +6,10 @@
 #include "../Shared/bone.h"
 #include "../Shared/motion.h"
 #else
-#include "../../xrEngine/bone.h"
-#include "../../xrEngine/motion.h"
+#include "../../engine.vc2008/xrEngine/bone.h"
+#include "../../engine.vc2008/xrEngine/motion.h"
 #endif
-#include "../../xrEngine/GameMtlLib.h"
+#include "../../engine.vc2008/xrEngine/GameMtlLib.h"
 #ifdef _EDITOR
 #	include "../../../xrServerEntities/PropertiesListTypes.h"
 //	#include "PropertiesListHelper.h"

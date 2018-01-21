@@ -271,7 +271,7 @@ public:
 #else
 #ifdef _LW_EXPORT
 
-	IC SGameMtl*		GetMaterial(LPCSTR name)
+	IC SEGameMtl*		GetMaterial(LPCSTR name)
 	{
 		EGameMtlIt it = GetMaterialIt(name);
 		return materials.end() != it ? *it : 0;

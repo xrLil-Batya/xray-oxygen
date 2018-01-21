@@ -15,7 +15,7 @@ class	CCustomObject;
 #ifdef _MAYA_PLUGIN
 #include "../Shared/bone.h"
 #else
-#include "../../xrEngine/bone.h"
+#include "../../engine.vc2008/xrEngine/bone.h"
 #endif
 #pragma pack( push,1 )
 const u8	vmtUV		= 0;
