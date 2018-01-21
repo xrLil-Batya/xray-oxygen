@@ -192,9 +192,9 @@ void CCharacterPhysicsSupport::in_NetSpawn( CSE_Abstract* e )
 			ka->PlayCycle( "death_init" );
 
 	}else if( !m_EntityAlife.animation_movement_controlled( ) )
-		ka->PlayCycle( "death_init" );///íåïîíÿòíî çà÷åì ýòî âîîáùå íàäî çàïóñêàòü
-									  ///ýòîò õàê íóæåí, ïîòîìó ÷òî íåêîòîðûì ìîíñòðàì 
-									  ///àíèìàöèÿ ïîñëå ñïîíà, ìîæåò áûòü âîîáùå íå íàçíà÷åíà
+		ka->PlayCycle( "death_init" );///Ã­Ã¥Ã¯Ã®Ã­Ã¿Ã²Ã­Ã® Ã§Ã Ã·Ã¥Ã¬ Ã½Ã²Ã® Ã¢Ã®Ã®Ã¡Ã¹Ã¥ Ã­Ã Ã¤Ã® Ã§Ã Ã¯Ã³Ã±ÃªÃ Ã²Ã¼
+									  ///Ã½Ã²Ã®Ã² ÃµÃ Ãª Ã­Ã³Ã¦Ã¥Ã­, Ã¯Ã®Ã²Ã®Ã¬Ã³ Ã·Ã²Ã® Ã­Ã¥ÃªÃ®Ã²Ã®Ã°Ã»Ã¬ Ã¬Ã®Ã­Ã±Ã²Ã°Ã Ã¬ 
+									  ///Ã Ã­Ã¨Ã¬Ã Ã¶Ã¨Ã¿ Ã¯Ã®Ã±Ã«Ã¥ Ã±Ã¯Ã®Ã­Ã , Ã¬Ã®Ã¦Ã¥Ã² Ã¡Ã»Ã²Ã¼ Ã¢Ã®Ã®Ã¡Ã¹Ã¥ Ã­Ã¥ Ã­Ã Ã§Ã­Ã Ã·Ã¥Ã­Ã 
 	pK->CalculateBones_Invalidate( );
 	pK->CalculateBones( TRUE );
 	
@@ -515,8 +515,17 @@ void CCharacterPhysicsSupport::in_Hit( SHit &H, bool is_killing )
 	if( ( !m_EntityAlife.g_Alive() || is_killing ) )
 		m_character_shell_control.set_kill_hit( H );
 
-	if(!m_pPhysicsShell&&is_killing)
-		KillHit( H );
+	if(!m_pPhysicsShell && is_killing) 
+	{
+		bool is_actor_holder = false;
+		if( m_eType == etActor )
+		{
+			CActor* A = smart_cast<CActor*>( &m_EntityAlife );
+			if( A->Holder() ) is_actor_holder = true;
+		};			
+		if( !is_actor_holder )
+			KillHit( H );
+	};
 
 	if( m_flags.test(fl_use_hit_anims) && Type() != etBitting && !m_flags.test(fl_death_anim_on) ) //&& Type() == etStalker
 	{
@@ -600,7 +609,7 @@ void CCharacterPhysicsSupport::in_UpdateCL( )
 	if( m_pPhysicsShell )
 	{
 		VERIFY( m_pPhysicsShell->isFullActive( ) );
-		m_pPhysicsShell->SetRagDoll( );//Òåïåðü øåëà îòíîñèòüñÿ ê êëàññó îáúåêòîâ cbClassRagDoll
+		m_pPhysicsShell->SetRagDoll( );//Ã’Ã¥Ã¯Ã¥Ã°Ã¼ Ã¸Ã¥Ã«Ã  Ã®Ã²Ã­Ã®Ã±Ã¨Ã²Ã¼Ã±Ã¿ Ãª ÃªÃ«Ã Ã±Ã±Ã³ Ã®Ã¡ÃºÃ¥ÃªÃ²Ã®Ã¢ cbClassRagDoll
 		
 		if( !is_imotion(m_interactive_motion ) )//!m_flags.test(fl_use_death_motion)
 			m_pPhysicsShell->InterpolateGlobalTransform( &mXFORM );
@@ -1401,6 +1410,13 @@ void		CCharacterPhysicsSupport::in_Die( )
 	{
 		if( m_EntityAlife.use_simplified_visual( ) )
 			return;
+	bool is_actor_holder = false;
+	if( m_eType == etActor )
+	{
+		CActor* A = smart_cast<CActor*>( &m_EntityAlife );
+		if( A->Holder() ) is_actor_holder = true;
+	};			
+	if( !is_actor_holder )
 		ActivateShell( NULL );
 		m_PhysicMovementControl->DestroyCharacter( );
 		return;
