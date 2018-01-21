@@ -235,12 +235,13 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	
 	light_render->set_cone	(deg2rad(pUserData->r_float			("torch_definition","spot_angle")));
 	light_render->set_texture(pUserData->r_string				("torch_definition","spot_texture"));
+	light_render->set_volumetric(pUserData->r_bool				("torch_definition","volumetric"));
 	
 	glow_render->set_color	(clr);
 	glow_render->set_texture(pUserData->r_string				("torch_definition","glow_texture"));
 	glow_render->set_radius	(glow_radius);
 	
-	//âêëþ÷èòü/âûêëþ÷èòü ôîíàðèê
+	//Ã¢ÃªÃ«Ã¾Ã·Ã¨Ã²Ã¼/Ã¢Ã»ÃªÃ«Ã¾Ã·Ã¨Ã²Ã¼ Ã´Ã®Ã­Ã Ã°Ã¨Ãª
 	Switch					(torch->m_active);
 	VERIFY					(!torch->m_active || (torch->ID_Parent != 0xffff));
 	
@@ -408,7 +409,7 @@ void CTorch::UpdateCL()
 	if (!lanim)							return;
 
 	int						frame;
-	// âîçâðàùàåò â ôîðìàòå BGR
+	// Ã¢Ã®Ã§Ã¢Ã°Ã Ã¹Ã Ã¥Ã² Ã¢ Ã´Ã®Ã°Ã¬Ã Ã²Ã¥ BGR
 	u32 clr					= lanim->CalculateBGR(Device.fTimeGlobal,frame); 
 
 	Fcolor					fclr;
