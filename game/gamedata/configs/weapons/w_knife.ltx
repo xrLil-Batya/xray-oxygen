@@ -10,7 +10,7 @@ class                   = WP_KNIFE
 min_radius              = 0
 max_radius              = 50
 description				= st_knife
-
+material          = objects\knife
 ef_weapon_type			= 1
 
 ;---DOF-------------------------------------------------------------------------
@@ -19,8 +19,8 @@ reload_dof				= 0.0, 0.5, 5, 1.7
 ;-------------------------------------------------------------------------------
 
 ;--- scope weapons -------------------------------------------------------------
-holder_range_modifier	= 1.0               ; во сколько раз увеличивается eye_range
-holder_fov_modifier		= 1.0              ; во сколько раз увеличивается eye_fov
+holder_range_modifier	= 1.0               ; ГўГ® Г±ГЄГ®Г«ГјГЄГ® Г°Г Г§ ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГІГ±Гї eye_range
+holder_fov_modifier		= 1.0              ; ГўГ® Г±ГЄГ®Г«ГјГЄГ® Г°Г Г§ ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГІГ±Гї eye_fov
 ;-------------------------------------------------------------------------------
 
 cost					= 0
@@ -63,32 +63,32 @@ kill_msg_height			= 16
 show_ammo				= false
 
 ;-------------------------------------------------------------------------------
-;базовая дисперсия
-fire_dispersion_base	= 0.5 			;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
+;ГЎГ Г§Г®ГўГ Гї Г¤ГЁГ±ГЇГҐГ°Г±ГЁГї
+fire_dispersion_base	= 0.5 			;ГіГЈГ®Г« (Гў ГЈГ°Г Г¤ГіГ±Г Гµ) ГЎГ Г§Г®ГўГ®Г© Г¤ГЁГ±ГЇГҐГ°Г±ГЁГЁ Г®Г°ГіГ¦ГЁГї (Г®Г°ГіГ¦ГЁГї Г§Г Г¦Г ГІГ®ГЈГ® Гў ГІГЁГ±ГЄГ Гµ)
 crosshair_inertion   	= 0.01
 cross_enabled 			= false
-;отдача
-cam_relax_speed         = 8				;скорость возврата в исходное положение
-cam_dispersion          = 0.65			;увеличения угла (в градусах) с каждым выстрелом
-cam_dispersion_inc		= 0.0				;увеличениe cam_dispersion с каждым выстрелом
-cam_dispersion_frac		= 1.0				;ствол будет подыматься на cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
-cam_max_angle			= 20.0			;максимальный угол отдачи
+;Г®ГІГ¤Г Г·Г 
+cam_relax_speed         = 8				;Г±ГЄГ®Г°Г®Г±ГІГј ГўГ®Г§ГўГ°Г ГІГ  Гў ГЁГ±ГµГ®Г¤Г­Г®ГҐ ГЇГ®Г«Г®Г¦ГҐГ­ГЁГҐ
+cam_dispersion          = 0.65			;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГї ГіГЈГ«Г  (Гў ГЈГ°Г Г¤ГіГ±Г Гµ) Г± ГЄГ Г¦Г¤Г»Г¬ ГўГ»Г±ГІГ°ГҐГ«Г®Г¬
+cam_dispersion_inc		= 0.0				;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁe cam_dispersion Г± ГЄГ Г¦Г¤Г»Г¬ ГўГ»Г±ГІГ°ГҐГ«Г®Г¬
+cam_dispersion_frac		= 1.0				;Г±ГІГўГ®Г« ГЎГіГ¤ГҐГІ ГЇГ®Г¤Г»Г¬Г ГІГјГ±Гї Г­Г  cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
+cam_max_angle			= 20.0			;Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г»Г© ГіГЈГ®Г« Г®ГІГ¤Г Г·ГЁ
 cam_max_angle_horz		= 10.0			;(degree) maximum shot horizontal degree
 cam_step_angle_horz		= 0.9				;(degree) size of step camera moved in horizontal position while shooting
 
-fire_dispersion_condition_factor = 5		;увеличение дисперсии в процентах при максимальном износе
-misfire_probability        = 0.005 ;вероятность осечки при максимальном износе  !!!old - now not working
-;изношенность, при которой появляется шанс осечки
+fire_dispersion_condition_factor = 5		;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГҐ Г¤ГЁГ±ГЇГҐГ°Г±ГЁГЁ Гў ГЇГ°Г®Г¶ГҐГ­ГІГ Гµ ГЇГ°ГЁ Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®Г¬ ГЁГ§Г­Г®Г±ГҐ
+misfire_probability        = 0.005 ;ГўГҐГ°Г®ГїГІГ­Г®Г±ГІГј Г®Г±ГҐГ·ГЄГЁ ГЇГ°ГЁ Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®Г¬ ГЁГ§Г­Г®Г±ГҐ  !!!old - now not working
+;ГЁГ§Г­Г®ГёГҐГ­Г­Г®Г±ГІГј, ГЇГ°ГЁ ГЄГ®ГІГ®Г°Г®Г© ГЇГ®ГїГўГ«ГїГҐГІГ±Гї ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ
 misfire_start_condition		= 0.6
-;изношеность при которой шанс осечки становится константным
+;ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГј ГЇГ°ГЁ ГЄГ®ГІГ®Г°Г®Г© ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ Г±ГІГ Г­Г®ГўГЁГІГ±Гї ГЄГ®Г­Г±ГІГ Г­ГІГ­Г»Г¬
 misfire_end_condition		= 0.1
-;шанс осечки при изношености больше чем misfireStartCondition
+;ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ ГЇГ°ГЁ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЎГ®Г«ГјГёГҐ Г·ГҐГ¬ misfireStartCondition
 misfire_start_prob	     	= 0.001
-;шанс осечки при изношености больше чем misfireEndCondition
+;ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ ГЇГ°ГЁ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЎГ®Г«ГјГёГҐ Г·ГҐГ¬ misfireEndCondition
 misfire_end_prob	     	= 0.02
-;увеличение изношености при одиночном выстреле
+;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГҐ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЇГ°ГЁ Г®Г¤ГЁГ­Г®Г·Г­Г®Г¬ ГўГ»Г±ГІГ°ГҐГ«ГҐ
 condition_shot_dec      	= 0.00001
-;увеличение изношености при выстреле очередью
+;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГҐ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЇГ°ГЁ ГўГ»Г±ГІГ°ГҐГ«ГҐ Г®Г·ГҐГ°ГҐГ¤ГјГѕ
 condition_queue_shot_dec	= 0.00002
 
 ;-------------------------------------------------------------------------------
@@ -113,7 +113,7 @@ PDM_disp_accel_factor 	= 0.8
 PDM_disp_crouch	 		= 1.0
 PDM_disp_crouch_no_acc 	= 1.0
 
-use_aim_bullet			= true		;Поддерживается ли первая суппер пуля
+use_aim_bullet			= true		;ГЏГ®Г¤Г¤ГҐГ°Г¦ГЁГўГ ГҐГІГ±Гї Г«ГЁ ГЇГҐГ°ГўГ Гї Г±ГіГЇГЇГҐГ° ГЇГіГ«Гї
 time_to_aim				= 1.0
 
 fire_distance           = 1.8 ;1.4
@@ -173,7 +173,7 @@ silencer_status					= 0
 grenade_launcher_status				= 0
 zoom_enabled					= false
 
-;звуки
+;Г§ГўГіГЄГЁ
 snd_draw							= weapons\walther_draw
 snd_holster						= weapons\generic_holster
 snd_shoot						= weapons\knife_1
