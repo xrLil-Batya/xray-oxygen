@@ -83,7 +83,7 @@ ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 		}
 	}else
 	{
-		//ïîëó÷èòü òðåóãîëüíèê è óçíàòü åãî ìàòåðèàë
+		//Ã¯Ã®Ã«Ã³Ã·Ã¨Ã²Ã¼ Ã²Ã°Ã¥Ã³Ã£Ã®Ã«Ã¼Ã­Ã¨Ãª Ã¨ Ã³Ã§Ã­Ã Ã²Ã¼ Ã¥Ã£Ã® Ã¬Ã Ã²Ã¥Ã°Ã¨Ã Ã«
 		CDB::TRI* T		= Level().ObjectSpace.GetStaticTris()+result.element;
 		if (GMLib.GetMaterialByIdx(T->material)->Flags.is(SGameMtl::flPassable)) 
 			return TRUE;
@@ -119,7 +119,7 @@ void CActor::PickupModeUpdate()
 {
 	if(!m_bPickupMode)				return; // kUSE key pressed
 
-	//ïîäáèðàíèå îáúåêòà
+	//Ã¯Ã®Ã¤Ã¡Ã¨Ã°Ã Ã­Ã¨Ã¥ Ã®Ã¡ÃºÃ¥ÃªÃ²Ã 
 	if(	m_pObjectWeLookingAt									&& 
 		m_pObjectWeLookingAt->cast_inventory_item()				&& 
 		m_pObjectWeLookingAt->cast_inventory_item()->Useful()	&&
@@ -149,7 +149,7 @@ void	CActor::PickupModeUpdate_COD	()
 {
 	if (Level().CurrentViewEntity() != this || !g_b_COD_PickUpMode) return;
 		
-	if (!g_Alive() || eacFirstEye != cam_active) 
+	if (!g_Alive()) 
 	{
 		CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
 		return;
@@ -222,7 +222,7 @@ void	CActor::PickupModeUpdate_COD	()
 		if(pUsableObject && (!m_pUsableObject))
 			pUsableObject->use(this);
 
-		//ïîäáèðàíèå îáúåêòà
+		//Ã¯Ã®Ã¤Ã¡Ã¨Ã°Ã Ã­Ã¨Ã¥ Ã®Ã¡ÃºÃ¥ÃªÃ²Ã 
 		Game().SendPickUpEvent(ID(), pNearestItem->object().ID());
 	}
 };
