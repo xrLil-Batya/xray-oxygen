@@ -5,8 +5,9 @@
 #include "AIMapExport.h"
 #include <memory>
 
-bool is_thm_missing = false;
-bool is_tga_missing = false;
+bool is_thm_missing		= false;
+bool is_thm_deprecated	= false;
+bool is_tga_missing		= false;
 
 IC	const Fvector vertex_position(const CLevelGraph::CPosition &Psrc, const Fbox &bb, const SAIParams &params)
 {
@@ -116,8 +117,8 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			// Version
 			u32 version;
 			fs->r_chunk			(EB_Version,&version);
-			R_ASSERT			(XRCL_CURRENT_VERSION >= 17);
-			R_ASSERT			(XRCL_CURRENT_VERSION <= 18);
+			R_ASSERT2			(XRCL_CURRENT_VERSION >= 17, "xrAI don't support a current version. Sorry.");
+			R_ASSERT2			(XRCL_CURRENT_VERSION <= 19, "xrAI don't support a current version. Sorry.");
 
 			// Header
 			b_params			Params;
@@ -132,28 +133,19 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			{
 				Surface_Init		();
 				F = fs->open_chunk	(EB_Textures);
-#ifdef _M_X64
 				u32 tex_count		= F->length() / sizeof(help_b_texture);
-#else
-				u32 tex_count		= F->length() / sizeof(b_texture);
-#endif
+
 				for (u32 t=0; t<tex_count; t++)
 				{
-					Progress		(float(t)/float(tex_count));
-#ifdef _WIN64
+					Progress(float(t)/float(tex_count));
+
 					// workaround for ptr size mismatching
 					help_b_texture	TEX;
 					F->r(&TEX, sizeof(TEX));
 					b_BuildTexture	BT;
 					std::memcpy(&BT, &TEX, sizeof(TEX) - 4);	// ptr should be copied separately
 					BT.pSurface = (u32*)TEX.pSurface;
-#else
-					b_texture		TEX;
-					F->r			(&TEX,sizeof(TEX));
 
-					b_BuildTexture	BT;
-                    std::memcpy(&BT,&TEX,sizeof(TEX));
-#endif
 					// load thumbnail
 					string128		&N = BT.name;
 					LPSTR			extension = strext(N);
@@ -162,7 +154,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 					xr_strlwr		(N);
 
-					if (0==xr_strcmp(N,"level_lods"))	{
+					if (!xr_strcmp(N,"level_lods"))	{
 						// HACK for merged lod textures
 						BT.dwWidth	= 1024;
 						BT.dwHeight	= 1024;
@@ -179,8 +171,14 @@ void xrLoad(LPCSTR name, bool draft_mode)
 							continue;
 						}
 						// version
-						u32 version				= 0;
-						R_ASSERT				(THM->r_chunk(THM_CHUNK_VERSION,&version));
+						u32 version = 0;
+
+						if (THM->r_chunk(THM_CHUNK_VERSION, &version))
+						{
+							clMsg("xrAI don't support a current version %s.thm.", N);
+							is_thm_deprecated = true;
+						}
+						//R_ASSERT3(THM->r_chunk(THM_CHUNK_VERSION,&version), "xrAI don't support a current version %s.thm", N);
 
 						// analyze thumbnail information
 						R_ASSERT(THM->find_chunk(THM_CHUNK_TEXTUREPARAM));
@@ -226,7 +224,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 					g_textures.push_back	(BT);
 				}
 				R_ASSERT2(!is_thm_missing, "Some of required thm's are missing. Please, see log for details.");
-				R_ASSERT2(!is_tga_missing, "Some of required tga are missing. Please, see log for details.");
+				R_ASSERT2(!(is_tga_missing || is_thm_deprecated), "Some of required tga are missing/deprecated. Please, see log for details.");
 			}
 		}
 	}
@@ -242,8 +240,10 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		// Version
 		u32 version;
 		fs.r_chunk				(EB_Version,&version);
-		R_ASSERT				(XRCL_CURRENT_VERSION >= 17);
-		R_ASSERT				(XRCL_CURRENT_VERSION <= 18);
+
+		// FX: Double check... Very bad...
+		//R_ASSERT				(XRCL_CURRENT_VERSION >= 17);
+		//R_ASSERT				(XRCL_CURRENT_VERSION <= 19);
 
 		// Header
 		b_params				Params;

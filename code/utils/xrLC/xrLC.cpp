@@ -122,7 +122,9 @@ void Startup(LPSTR     lpCmdLine)
 	// Version
 	F->r_chunk			(EB_Version,&version);
 	clMsg				("version: %d",version);
-	R_ASSERT(XRCL_CURRENT_VERSION==version);
+
+	bool oxyVersion = (XRCL_CURRENT_VERSION == version) || (version == 18);
+	R_ASSERT2(oxyVersion, "xrLC don't support a current version. Sorry.");
 
 	// Header
 	b_params				Params;
@@ -132,7 +134,7 @@ void Startup(LPSTR     lpCmdLine)
 	if (bModifyOptions)		
 	{
 		Phase		("Project options...");
-		HMODULE		L = LoadLibrary		("xrLC_Options.dll");
+		HMODULE		L = LoadLibrary		("xrLC_Options");
 		void*		P = GetProcAddress	(L,"_frmScenePropertiesRun");
 		R_ASSERT	(P);
 		xrOptions*	O = (xrOptions*)P;
@@ -170,20 +172,8 @@ void Startup(LPSTR     lpCmdLine)
 	Sleep					(500);
 }
 
-//typedef void DUMMY_STUFF (const void*,const u32&,void*);
-//XRCORE_API DUMMY_STUFF	*g_temporary_stuff;
-//XRCORE_API DUMMY_STUFF	*g_dummy_stuff;
-
-
-
-int APIENTRY WinMain(HINSTANCE hInst,
-                     HINSTANCE hPrevInstance,
-                     LPSTR     lpCmdLine,
-                     int       nCmdShow)
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-//	g_temporary_stuff	= &trivial_encryptor::decode;
-//	g_dummy_stuff		= &trivial_encryptor::encode;
-
 	// Initialize debugging
 	Debug._initialize	(false);
 	Core._initialize	("xrLC");

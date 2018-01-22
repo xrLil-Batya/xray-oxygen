@@ -110,7 +110,9 @@ void global_claculation_data::xrLoad()
 		// Version
 		u32 version;
 		fs->r_chunk			(EB_Version,&version);
-		R_ASSERT(XRCL_CURRENT_VERSION==version);
+
+		bool oxyVersion = (XRCL_CURRENT_VERSION == version) || (version == 18);
+		R_ASSERT2(oxyVersion, "xrLC don't support a current version. Sorry.");
 
 		// Header
 		fs->r_chunk			(EB_Parameters,&g_params);

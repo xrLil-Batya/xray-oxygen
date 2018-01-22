@@ -310,8 +310,8 @@ struct SNodePositionOld {
 typedef	SNodePositionOld NodePosition;
 #endif
 
-const u32 XRCL_CURRENT_VERSION		=	18; //17;	// input
+const u32 XRCL_CURRENT_VERSION		=	19; //17;	// input
 const u32 XRCL_PRODUCTION_VERSION	=	14;	// output 
-const u16 CFORM_CURRENT_VERSION		=	5;
+const u16 CFORM_CURRENT_VERSION		=	4; // Vaniliya support mode: on :))))
 const u32 MAX_NODE_BIT_COUNT		=	23;
 const u32 XRAI_CURRENT_VERSION		=	10;
