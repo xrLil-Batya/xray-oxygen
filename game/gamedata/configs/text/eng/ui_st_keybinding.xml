@@ -1,192 +1,204 @@
 <?xml version="1.0" encoding="windows-1251" ?>
 <string_table>
 	<string id="kb_active_jobs">
-		<text>КПК</text>
+		<text>PDA</text>
 	</string>
 	<string id="kb_alife_command">
-		<text>Приказ атаковать</text>
+		<text>Order to attack</text>
 	</string>
 	<string id="kb_always_run">
-		<text>Шаг</text>
+		<text>Walk</text>
 	</string>
 	<string id="kb_artefact">
-		<text>Артефакт</text>
+		<text>Artifact</text>
 	</string>
 	<string id="kb_backward">
-		<text>Назад</text>
+		<text>Back</text>
 	</string>
 	<string id="kb_binoculars">
-		<text>Бинокль</text>
+		<text>Binoculars</text>
 	</string>
 	<string id="kb_buy_menu">
-		<text>Меню покупки</text>
+		<text>Buy menu</text>
 	</string>
 	<string id="kb_console">
-		<text>Консоль</text>
+		<text>Console</text>
 	</string>
 	<string id="kb_contacts">
-		<text>Контакты в КПК</text>
+		<text>Contacts in PDA</text>
 	</string>
 	<string id="kb_crouch">
-		<text>Присесть</text>
+		<text>Crouch</text>
 	</string>
 	<string id="kb_crouch_toggle">
-		<text>Постоянно присев</text>
+		<text>Toggle crouch</text>
 	</string>
 	<string id="kb_detector">
-		<text>Детектор</text>
+		<text>Detector</text>
 	</string>
 	<string id="kb_down">
-		<text>Вниз</text>
+		<text>Down</text>
 	</string>
 	<string id="kb_drop">
-		<text>Выложить</text>
+		<text>Drop</text>
 	</string>
 	<string id="kb_fire">
-		<text>Огонь</text>
+		<text>Fire</text>
 	</string>
 	<string id="kb_firemode_next">
-		<text>Режим стрельбы след.</text>
+		<text>Next firing mode</text>
 	</string>
 	<string id="kb_firemode_prev">
-		<text>Режим стрельбы пред.</text>
+		<text>Previous firing mode</text>
 	</string>
 	<string id="kb_forward">
-		<text>Вперёд</text>
+		<text>Forward</text>
 	</string>
 	<string id="kb_func">
-		<text>Подствольник</text>
+		<text>Underbarrel grenade launcher</text>
 	</string>
 	<string id="kb_grp_common">
-		<text>Общее</text>
+		<text>General</text>
 	</string>
 	<string id="kb_grp_direction">
-		<text>Направление</text>
+		<text>Direction</text>
 	</string>
 	<string id="kb_grp_inventory">
-		<text>Рюкзак</text>
+		<text>Backpack</text>
 	</string>
 	<string id="kb_grp_movement">
-		<text>Движение</text>
+		<text>Movement</text>
 	</string>
 	<string id="kb_grp_weapons">
-		<text>Оружие</text>
+		<text>Weapon</text>
 	</string>
 	<string id="kb_inventory">
-		<text>Рюкзак</text>
+		<text>Backpack</text>
 	</string>
 	<string id="kb_jump">
-		<text>Прыжок</text>
+		<text>Jump</text>
 	</string>
 	<string id="kb_left">
-		<text>Влево</text>
+		<text>Left</text>
 	</string>
 	<string id="kb_left_lookout">
-		<text>Выглянуть влево</text>
+		<text>Lean left</text>
 	</string>
 	<string id="kb_left_strafe">
-		<text>Шаг влево</text>
+		<text>Strafe left</text>
 	</string>
 	<string id="kb_map">
-		<text>Карта в КПК</text>
+		<text>Map in PDA</text>
 	</string>
 	<string id="kb_next_slot">
-		<text>Оружие из следующего слота</text>
+		<text>Weapon in next slot</text>
 	</string>
 	<string id="kb_night_vision">
-		<text>Прибор ночного видения</text>
+		<text>Night vision device</text>
 	</string>
 	<string id="kb_pause">
-		<text>Пауза</text>
+		<text>Pause</text>
 	</string>
 	<string id="kb_pda">
-		<text>КПК</text>
+		<text>PDA</text>
 	</string>
 	<string id="kb_prev_slot">
-		<text>Оружие из предыдущего слота</text>
+		<text>Weapon in previous slot</text>
 	</string>
 	<string id="kb_quit">
-		<text>Выход</text>
+		<text>Back</text>
 	</string>
 	<string id="kb_reload">
-		<text>Перезарядить</text>
+		<text>Reload</text>
 	</string>
 	<string id="kb_repair">
-		<text>Починить</text>
+		<text>Repair</text>
 	</string>
 	<string id="kb_right">
-		<text>Вправо</text>
+		<text>Right</text>
 	</string>
 	<string id="kb_right_lookout">
-		<text>Выглянуть вправо</text>
+		<text>Lean right</text>
 	</string>
 	<string id="kb_right_strafe">
-		<text>Шаг вправо</text>
+		<text>Strafe right</text>
 	</string>
 	<string id="kb_scores">
-		<text>Очки</text>
+		<text>Points</text>
 	</string>
 	<string id="kb_screenshot">
-		<text>Скриншот</text>
+		<text>Screenshot</text>
 	</string>
 	<string id="kb_sprint">
-		<text>Бег</text>
+		<text>Run</text>
 	</string>
 	<string id="kb_torch">
-		<text>Фонарик</text>
+		<text>Flashlight</text>
 	</string>
 	<string id="kb_turn_engine">
-		<text>Включить</text>
+		<text>Activate</text>
 	</string>
 	<string id="kb_up">
-		<text>Вверх</text>
+		<text>Up</text>
 	</string>
 	<string id="kb_use">
-		<text>Использовать</text>
+		<text>Use</text>
 	</string>
 	<string id="kb_use_bandage">
-		<text>Быстр. использование бинта</text>
+		<text>Quick bandage</text>
 	</string>
 	<string id="kb_use_medkit">
-		<text>Быстр. использование аптечки</text>
+		<text>Quick medkit</text>
+	</string>
+	<string id="kb_vote_begin">
+		<text>Start vote</text>
+	</string>
+	<string id="kb_vote_menu">
+		<text>Vote</text>
+	</string>
+	<string id="kb_vote_no">
+		<text>Vote “No”</text>
+	</string>
+	<string id="kb_vote_yes">
+		<text>Vote "Yes”</text>
 	</string>
 	<string id="kb_weapon1">
-		<text>Оружие 1</text>
+		<text>Weapon 1</text>
 	</string>
 	<string id="kb_weapon2">
-		<text>Оружие 2</text>
+		<text>Weapon 2</text>
 	</string>
 	<string id="kb_weapon3">
-		<text>Оружие 3</text>
+		<text>Weapon 3</text>
 	</string>
 	<string id="kb_weapon4">
-		<text>Оружие 4</text>
+		<text>Weapon 4</text>
 	</string>
 	<string id="kb_weapon5">
-		<text>Оружие 5</text>
+		<text>Weapon 5</text>
 	</string>
 	<string id="kb_weapon6">
-		<text>Оружие 6</text>
+		<text>Weapon 6</text>
 	</string>
 	<string id="kb_wpn_next">
-		<text>Сменить тип патронов</text>
+		<text>Change ammo type</text>
 	</string>
 	<string id="kb_wpn_prev">
-		<text>Предыдущее оружие этого типа</text>
+		<text>Previous weapon of this type</text>
 	</string>
 	<string id="kb_zoom">
-		<text>Приблизить</text>
+		<text>Zoom</text>
 	</string>
 	<string id="kb_quick_use_1">
-		<text>Ячейка быстрого доступа 1</text>
+		<text>Quick Access Slot 1</text>
 	</string>
 	<string id="kb_quick_use_2">
-		<text>Ячейка быстрого доступа 2</text>
+		<text>Quick Access Slot 2</text>
 	</string>
 	<string id="kb_quick_use_3">
-		<text>Ячейка быстрого доступа 3</text>
+		<text>Quick Access Slot 3</text>
 	</string>
 	<string id="kb_quick_use_4">
-		<text>Ячейка быстрого доступа 4</text>
+		<text>Quick Access Slot 4</text>
 	</string>
 </string_table>
