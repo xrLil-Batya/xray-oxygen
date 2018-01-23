@@ -21,7 +21,7 @@
 #include "../../xrEngine/Fmesh.h"
 #include "../../xrEngine/bone.h"
 #include "../../xrEngine/motion.h"
-#include "../xrRender/VertexCache.h"
+#include "../../xrRender/xrRender/VertexCache.h"
 
 ECORE_API BOOL g_force16BitTransformQuant = FALSE;
 
@@ -334,9 +334,9 @@ CExportSkeleton::CExportSkeleton(CEditableObject* object)
 	m_Source = object;
 }
 //----------------------------------------------------
-#include <WildMagic/WmlMath.h>
-#include <WildMagic/WmlContMinBox3.h>
-#include <WildMagic/WmlContBox3.h>
+// #include <WildMagic/WmlMath.h>
+// #include <WildMagic/WmlContMinBox3.h>
+// #include <WildMagic/WmlContBox3.h>
 
 extern BOOL RAPIDMinBox(Fobb& B, Fvector* vertices, u32 v_count);
 void ComputeOBB_RAPID(Fobb &B, FvectorVec& V, u32 t_cnt)
@@ -354,6 +354,7 @@ void ComputeOBB_RAPID(Fobb &B, FvectorVec& V, u32 t_cnt)
 
 void ComputeOBB_WML(Fobb &B, FvectorVec& V)
 {
+#if 0
 	if (V.size()<3) { B.invalidate(); return; }
 	float 	HV = flt_max;
 	{
@@ -375,6 +376,7 @@ void ComputeOBB_WML(Fobb &B, FvectorVec& V)
 	B.m_rotate.j.crossproduct(B.m_rotate.k, B.m_rotate.i);
 
 	VERIFY(_valid(B.m_rotate) && _valid(B.m_translate) && _valid(B.m_halfsize));
+#endif
 }
 //----------------------------------------------------
 
@@ -661,7 +663,7 @@ bool CExportSkeleton::ExportGeometry(IWriter& F, u8 infl)
 		F.w_stringZ((*bone_it)->Name());
 		F.w_stringZ((*bone_it)->Parent() ? (*bone_it)->ParentName().c_str() : "");
 		Fobb	obb;
-		ComputeOBB_WML(obb, bone_points[bone_idx]);
+		ComputeOBB_RAPID(obb, bone_points[bone_idx], 3);
 		F.w(&obb, sizeof(Fobb));
 	}
 	F.close_chunk();

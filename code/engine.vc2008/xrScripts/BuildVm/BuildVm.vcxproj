@@ -92,7 +92,6 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <AdditionalOptions />
       <AdditionalIncludeDirectories>..\luajit\;</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -119,7 +118,6 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <AdditionalIncludeDirectories>..\luajit\;</AdditionalIncludeDirectories>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>

@@ -551,7 +551,6 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 
 int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
-	
 	std::string params = lpCmdLine;
 	if (strstr(lpCmdLine, "-launcher"))
 	{

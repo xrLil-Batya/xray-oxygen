@@ -24,9 +24,9 @@ static u32	init_counter	= 0;
 void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
 	std::set_terminate(abort);
-	xr_strcpy					(ApplicationName,_ApplicationName);
 	if (!init_counter)
 	{
+		xr_strcpy(ApplicationName, _ApplicationName);
 		// Init COM so we can use CoCreateInstance
 		xr_strcpy			(Params,sizeof(Params),GetCommandLine());
 //		_strlwr_s			(Params,sizeof(Params));

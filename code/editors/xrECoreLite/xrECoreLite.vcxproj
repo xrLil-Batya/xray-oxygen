@@ -80,7 +80,6 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_USRDLL;_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -99,7 +98,6 @@
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_USRDLL;_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -114,8 +112,8 @@
       <ConformanceMode>false</ConformanceMode>
       <AdditionalIncludeDirectories>..\..\engine.vc2008\Include\editor;..\..\engine.vc2008\;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_SECURE_SCL=0;</PreprocessorDefinitions>
-      <EnableEnhancedInstructionSet>AdvancedVectorExtensions</EnableEnhancedInstructionSet>
+      <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_SECURE_SCL=0;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>

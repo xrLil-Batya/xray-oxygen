@@ -41,6 +41,9 @@ public:
 	void			do_exit				(const std::string &message);
 };
 
+LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo);
+
+
 // warning
 // this function can be used for debug purposes only
 template <typename... Args>

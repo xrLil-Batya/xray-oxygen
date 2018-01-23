@@ -157,8 +157,8 @@ void SEGameMtlPair::Load(IReader& fs)
 LPCSTR SEGameMtlPair::dbg_Name()
 {
 	static string256 nm;
-	SEGameMtl* M0 = GMLib.GetMaterialByID(GetMtl0());
-	SEGameMtl* M1 = GMLib.GetMaterialByID(GetMtl1());
+	SEGameMtl* M0 = GEMLib.GetMaterialByID(GetMtl0());
+	SEGameMtl* M1 = GEMLib.GetMaterialByID(GetMtl1());
 	sprintf(nm,"Pair: %s - %s",*M0->m_Name,*M1->m_Name);
 	return nm;
 }

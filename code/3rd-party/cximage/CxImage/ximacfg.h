@@ -12,13 +12,12 @@ extern "C" void*	cxrealloc(void* ptr, size_t size);
 
 #ifdef CXIMAGE_AS_SHARED_LIBRARY //must be defined in Release_Shared configuration
 
-#include "../../../xrCore/xrCore.h"
+#include "../../../engine.vc2008/xrCore/xrCore.h"
 
 #pragma comment(lib,"jpeg.lib")
-#pragma comment(lib,"xrcore.lib")
 
 #ifdef DEBUG
-#include "../../../xrCore/ftimer.h"
+#include "../../../engine.vc2008/xrCore/ftimer.h"
 #endif //#ifdef DEBUG
 
 #ifdef	CXIMAGE_BUILD

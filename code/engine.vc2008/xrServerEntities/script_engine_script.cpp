@@ -70,6 +70,14 @@ void Lua_DebugBreak()
     DebugBreak();
 }
 
+void Lua_CrashGame()
+{
+	Msg("* LUA: CrashGame invoked, this is a test crash, it's not a bug");
+
+	int* pSuicidePtr = nullptr;
+	*pSuicidePtr = 42;
+}
+
 void prefetch_module(LPCSTR file_name)
 {
 	ai().script_engine().process_file(file_name);
@@ -174,6 +182,7 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L, "time_global",						script_time_global);
 	function	(L, "time_global_async",				script_time_global_async);
     function    (L, "debuggerTrigger",                  Lua_DebugBreak);
+    function    (L, "crashGame",						Lua_CrashGame);
 	//function	(L, "LoadModule", load_modules);
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",							get_device);
