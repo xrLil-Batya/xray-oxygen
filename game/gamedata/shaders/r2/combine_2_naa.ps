@@ -29,16 +29,19 @@ half4 	main		( /*v2p*/AntiAliasingStruct I )	: COLOR
 	
 			img 	= mblur(center,tex2D(s_position,I.texCoord0),img.rgb);
 	// tone-mapping
-	half4 	color 	= combine_bloom( img, bloom ); 
-		color 	+= ACESFilm(color);
+	half4 	color 	= combine_bloom( img, bloom ); //на кой фиг? если вы в 41 строке возdращали тот же комбайн блума с изображением, по сути, две бесполезные строчки были, а нужно было return color;
+		//color 	+= ACESFilm(color);//кхм, дикость xD
+		color 	= ACESFilm(color);//матчасть, кек
 	// end
 #ifdef 	USE_DISTORT
  	half3	blurred	= bloom*def_hdr	;
 	img		= lerp(img,blurred,distort.z);
 #endif
 
-	//WTF???
+	//WTF??? 
  	//return 	combine_bloom(img,bloom);
 	
-	return color;
+	return color;//вот теперь верно, ловите рабочую тональную компрессию
+	
+	//а вообще, тональная компрессия делается доооо смешивания итогового изображения с блум эффектом, т.е. нужно шейдер ацес филма сделать как half3 и применять его к img, а потом уже имэйдж комбайнить с блумом, всё хуйня давайте по новой xD
 }
