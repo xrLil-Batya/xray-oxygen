@@ -37,5 +37,8 @@ half4 	main		( /*v2p*/AntiAliasingStruct I )	: COLOR
 	img		= lerp(img,blurred,distort.z);
 #endif
 
- 	return 	combine_bloom(img,bloom);
+	//WTF???
+ 	//return 	combine_bloom(img,bloom);
+	
+	return color;
 }
