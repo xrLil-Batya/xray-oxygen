@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
-// ShootingObject.cpp:  интерфейс для семейства стреляющих объектов 
-//						(оружие и осколочные гранаты) 	
+// ShootingObject.cpp:  ГЁГ­ГІГҐГ°ГґГҐГ©Г± Г¤Г«Гї Г±ГҐГ¬ГҐГ©Г±ГІГўГ  Г±ГІГ°ГҐГ«ГїГѕГ№ГЁГµ Г®ГЎГєГҐГЄГІГ®Гў 
+//						(Г®Г°ГіГ¦ГЁГҐ ГЁ Г®Г±ГЄГ®Г«Г®Г·Г­Г»ГҐ ГЈГ°Г Г­Г ГІГ») 	
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -62,7 +62,7 @@ void CShootingObject::Load	(LPCSTR section)
 	}else
 		m_bLightShotEnabled		= true;
 
-	//время затрачиваемое на выстрел
+	//ГўГ°ГҐГ¬Гї Г§Г ГІГ°Г Г·ГЁГўГ ГҐГ¬Г®ГҐ Г­Г  ГўГ»Г±ГІГ°ГҐГ«
 	fOneShotTime			= pSettings->r_float		(section,"rpm");
 	VERIFY(fOneShotTime>0.f);
 	fOneShotTime			= 60.f / fOneShotTime;
@@ -94,50 +94,50 @@ void CShootingObject::LoadFireParams( LPCSTR section )
 	shared_str	s_sHitPower;
 	shared_str	s_sHitPowerCritical;
 
-	//базовая дисперсия оружия
+	//ГЎГ Г§Г®ГўГ Гї Г¤ГЁГ±ГЇГҐГ°Г±ГЁГї Г®Г°ГіГ¦ГЁГї
 	fireDispersionBase	= deg2rad( pSettings->r_float	(section,"fire_dispersion_base"	) );
 
-	//сила выстрела и его мощьность
-	s_sHitPower			= pSettings->r_string_wb(section, "hit_power" );//читаем строку силы хита пули оружия
+	//Г±ГЁГ«Г  ГўГ»Г±ГІГ°ГҐГ«Г  ГЁ ГҐГЈГ® Г¬Г®Г№ГјГ­Г®Г±ГІГј
+	s_sHitPower			= pSettings->r_string_wb(section, "hit_power" );//Г·ГЁГІГ ГҐГ¬ Г±ГІГ°Г®ГЄГі Г±ГЁГ«Г» ГµГЁГІГ  ГЇГіГ«ГЁ Г®Г°ГіГ¦ГЁГї
 	s_sHitPowerCritical	= pSettings->r_string_wb(section, "hit_power_critical" );
-	fvHitPower[egdMaster]			= (float)atof(_GetItem(*s_sHitPower,0,buffer));//первый параметр - это хит для уровня игры мастер
-	fvHitPowerCritical[egdMaster]	= (float)atof(_GetItem(*s_sHitPowerCritical,0,buffer));//первый параметр - это хит для уровня игры мастер
+	fvHitPower[egdMaster]			= (float)atof(_GetItem(*s_sHitPower,0,buffer));//ГЇГҐГ°ГўГ»Г© ГЇГ Г°Г Г¬ГҐГІГ° - ГЅГІГ® ГµГЁГІ Г¤Г«Гї ГіГ°Г®ГўГ­Гї ГЁГЈГ°Г» Г¬Г Г±ГІГҐГ°
+	fvHitPowerCritical[egdMaster]	= (float)atof(_GetItem(*s_sHitPowerCritical,0,buffer));//ГЇГҐГ°ГўГ»Г© ГЇГ Г°Г Г¬ГҐГІГ° - ГЅГІГ® ГµГЁГІ Г¤Г«Гї ГіГ°Г®ГўГ­Гї ГЁГЈГ°Г» Г¬Г Г±ГІГҐГ°
 
-	fvHitPower[egdNovice] = fvHitPower[egdStalker] = fvHitPower[egdVeteran] = fvHitPower[egdMaster];//изначально параметры для других уровней сложности такие же
-	fvHitPowerCritical[egdNovice] = fvHitPowerCritical[egdStalker] = fvHitPowerCritical[egdVeteran] = fvHitPowerCritical[egdMaster];//изначально параметры для других уровней сложности такие же
+	fvHitPower[egdNovice] = fvHitPower[egdStalker] = fvHitPower[egdVeteran] = fvHitPower[egdMaster];//ГЁГ§Г­Г Г·Г Г«ГјГ­Г® ГЇГ Г°Г Г¬ГҐГІГ°Г» Г¤Г«Гї Г¤Г°ГіГЈГЁГµ ГіГ°Г®ГўГ­ГҐГ© Г±Г«Г®Г¦Г­Г®Г±ГІГЁ ГІГ ГЄГЁГҐ Г¦ГҐ
+	fvHitPowerCritical[egdNovice] = fvHitPowerCritical[egdStalker] = fvHitPowerCritical[egdVeteran] = fvHitPowerCritical[egdMaster];//ГЁГ§Г­Г Г·Г Г«ГјГ­Г® ГЇГ Г°Г Г¬ГҐГІГ°Г» Г¤Г«Гї Г¤Г°ГіГЈГЁГµ ГіГ°Г®ГўГ­ГҐГ© Г±Г«Г®Г¦Г­Г®Г±ГІГЁ ГІГ ГЄГЁГҐ Г¦ГҐ
 
-	int num_game_diff_param=_GetItemCount(*s_sHitPower);//узнаём колличество параметров для хитов
-	if (num_game_diff_param>1)//если задан второй параметр хита
+	int num_game_diff_param=_GetItemCount(*s_sHitPower);//ГіГ§Г­Г ВёГ¬ ГЄГ®Г«Г«ГЁГ·ГҐГ±ГІГўГ® ГЇГ Г°Г Г¬ГҐГІГ°Г®Гў Г¤Г«Гї ГµГЁГІГ®Гў
+	if (num_game_diff_param>1)//ГҐГ±Г«ГЁ Г§Г Г¤Г Г­ ГўГІГ®Г°Г®Г© ГЇГ Г°Г Г¬ГҐГІГ° ГµГЁГІГ 
 	{
-		fvHitPower[egdVeteran]	= (float)atof(_GetItem(*s_sHitPower,1,buffer));//то вычитываем его для уровня ветерана
+		fvHitPower[egdVeteran]	= (float)atof(_GetItem(*s_sHitPower,1,buffer));//ГІГ® ГўГ»Г·ГЁГІГ»ГўГ ГҐГ¬ ГҐГЈГ® Г¤Г«Гї ГіГ°Г®ГўГ­Гї ГўГҐГІГҐГ°Г Г­Г 
 	}
-	if (num_game_diff_param>2)//если задан третий параметр хита
+	if (num_game_diff_param>2)//ГҐГ±Г«ГЁ Г§Г Г¤Г Г­ ГІГ°ГҐГІГЁГ© ГЇГ Г°Г Г¬ГҐГІГ° ГµГЁГІГ 
 	{
-		fvHitPower[egdStalker]	= (float)atof(_GetItem(*s_sHitPower,2,buffer));//то вычитываем его для уровня сталкера
+		fvHitPower[egdStalker]	= (float)atof(_GetItem(*s_sHitPower,2,buffer));//ГІГ® ГўГ»Г·ГЁГІГ»ГўГ ГҐГ¬ ГҐГЈГ® Г¤Г«Гї ГіГ°Г®ГўГ­Гї Г±ГІГ Г«ГЄГҐГ°Г 
 	}
-	if (num_game_diff_param>3)//если задан четвёртый параметр хита
+	if (num_game_diff_param>3)//ГҐГ±Г«ГЁ Г§Г Г¤Г Г­ Г·ГҐГІГўВёГ°ГІГ»Г© ГЇГ Г°Г Г¬ГҐГІГ° ГµГЁГІГ 
 	{
-		fvHitPower[egdNovice]	= (float)atof(_GetItem(*s_sHitPower,3,buffer));//то вычитываем его для уровня новичка
+		fvHitPower[egdNovice]	= (float)atof(_GetItem(*s_sHitPower,3,buffer));//ГІГ® ГўГ»Г·ГЁГІГ»ГўГ ГҐГ¬ ГҐГЈГ® Г¤Г«Гї ГіГ°Г®ГўГ­Гї Г­Г®ГўГЁГ·ГЄГ 
 	}
 
-	num_game_diff_param=_GetItemCount(*s_sHitPowerCritical);//узнаём колличество параметров
-	if (num_game_diff_param>1)//если задан второй параметр хита
+	num_game_diff_param=_GetItemCount(*s_sHitPowerCritical);//ГіГ§Г­Г ВёГ¬ ГЄГ®Г«Г«ГЁГ·ГҐГ±ГІГўГ® ГЇГ Г°Г Г¬ГҐГІГ°Г®Гў
+	if (num_game_diff_param>1)//ГҐГ±Г«ГЁ Г§Г Г¤Г Г­ ГўГІГ®Г°Г®Г© ГЇГ Г°Г Г¬ГҐГІГ° ГµГЁГІГ 
 	{
-		fvHitPowerCritical[egdVeteran]	= (float)atof(_GetItem(*s_sHitPowerCritical,1,buffer));//то вычитываем его для уровня ветерана
+		fvHitPowerCritical[egdVeteran]	= (float)atof(_GetItem(*s_sHitPowerCritical,1,buffer));//ГІГ® ГўГ»Г·ГЁГІГ»ГўГ ГҐГ¬ ГҐГЈГ® Г¤Г«Гї ГіГ°Г®ГўГ­Гї ГўГҐГІГҐГ°Г Г­Г 
 	}
-	if (num_game_diff_param>2)//если задан третий параметр хита
+	if (num_game_diff_param>2)//ГҐГ±Г«ГЁ Г§Г Г¤Г Г­ ГІГ°ГҐГІГЁГ© ГЇГ Г°Г Г¬ГҐГІГ° ГµГЁГІГ 
 	{
-		fvHitPowerCritical[egdStalker]	= (float)atof(_GetItem(*s_sHitPowerCritical,2,buffer));//то вычитываем его для уровня сталкера
+		fvHitPowerCritical[egdStalker]	= (float)atof(_GetItem(*s_sHitPowerCritical,2,buffer));//ГІГ® ГўГ»Г·ГЁГІГ»ГўГ ГҐГ¬ ГҐГЈГ® Г¤Г«Гї ГіГ°Г®ГўГ­Гї Г±ГІГ Г«ГЄГҐГ°Г 
 	}
-	if (num_game_diff_param>3)//если задан четвёртый параметр хита
+	if (num_game_diff_param>3)//ГҐГ±Г«ГЁ Г§Г Г¤Г Г­ Г·ГҐГІГўВёГ°ГІГ»Г© ГЇГ Г°Г Г¬ГҐГІГ° ГµГЁГІГ 
 	{
-		fvHitPowerCritical[egdNovice]	= (float)atof(_GetItem(*s_sHitPowerCritical,3,buffer));//то вычитываем его для уровня новичка
+		fvHitPowerCritical[egdNovice]	= (float)atof(_GetItem(*s_sHitPowerCritical,3,buffer));//ГІГ® ГўГ»Г·ГЁГІГ»ГўГ ГҐГ¬ ГҐГЈГ® Г¤Г«Гї ГіГ°Г®ГўГ­Гї Г­Г®ГўГЁГ·ГЄГ 
 	}
 
 	fHitImpulse			= pSettings->r_float	(section, "hit_impulse" );
-	//максимальное расстояние полета пули
+	//Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®ГҐ Г°Г Г±Г±ГІГ®ГїГ­ГЁГҐ ГЇГ®Г«ГҐГІГ  ГЇГіГ«ГЁ
 	fireDistance		= pSettings->r_float	(section, "fire_distance" );
-	//начальная скорость пули
+	//Г­Г Г·Г Г«ГјГ­Г Гї Г±ГЄГ®Г°Г®Г±ГІГј ГЇГіГ«ГЁ
 	m_fStartBulletSpeed = pSettings->r_float	(section, "bullet_speed" );
 	m_bUseAimBullet		= pSettings->r_bool		(section, "use_aim_bullet" );
 	if (m_bUseAimBullet)
@@ -271,7 +271,7 @@ void CShootingObject::LoadFlameParticles (LPCSTR section, LPCSTR prefix)
 		m_sShotParticles = pSettings->r_string (section, full_name);
 
 
-	//текущие партиклы
+	//ГІГҐГЄГіГ№ГЁГҐ ГЇГ Г°ГІГЁГЄГ«Г»
 	m_sFlameParticlesCurrent = m_sFlameParticles;
 	m_sSmokeParticlesCurrent = m_sSmokeParticles;
 }
@@ -281,7 +281,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 									 const Fvector& parent_vel)
 {
 	if(!m_sShellParticles) return;
-	if( Device.vCameraPosition.distance_to_sqr(play_pos)>2*2 ) return;
+	if( Device.vCameraPosition.distance_to_sqr(play_pos)>7*7 ) return;
 
 	CParticlesObject* pShellParticles	= CParticlesObject::Create(*m_sShellParticles,TRUE);
 
@@ -295,7 +295,7 @@ void CShootingObject::OnShellDrop	(const Fvector& play_pos,
 }
 
 
-//партиклы дыма
+//ГЇГ Г°ГІГЁГЄГ«Г» Г¤Г»Г¬Г 
 void CShootingObject::StartSmokeParticles	(const Fvector& play_pos,
 											const Fvector& parent_vel)
 {
@@ -308,7 +308,7 @@ void CShootingObject::StartFlameParticles	()
 {
 	if(!m_sFlameParticlesCurrent.size()) return;
 
-	//если партиклы циклические
+	//ГҐГ±Г«ГЁ ГЇГ Г°ГІГЁГЄГ«Г» Г¶ГЁГЄГ«ГЁГ·ГҐГ±ГЄГЁГҐ
 	if(m_pFlameParticles && m_pFlameParticles->IsLooped() && m_pFlameParticles->IsPlaying()) 
 	{
 		UpdateFlameParticles();
@@ -353,7 +353,7 @@ void CShootingObject::UpdateFlameParticles	()
 	}
 }
 
-//подсветка от выстрела
+//ГЇГ®Г¤Г±ГўГҐГІГЄГ  Г®ГІ ГўГ»Г±ГІГ°ГҐГ«Г 
 void CShootingObject::UpdateLight()
 {
 	if (light_render && light_time>0)		
@@ -419,7 +419,7 @@ void CShootingObject::FireBullet(const Fvector& pos, const Fvector& shot_dir, fl
 	m_fPredBulletTime = Device.fTimeGlobal;
 
 	float l_fHitPower = 0.0f;
-	//если из оружия стреляет актёр(игрок)
+	//ГҐГ±Г«ГЁ ГЁГ§ Г®Г°ГіГ¦ГЁГї Г±ГІГ°ГҐГ«ГїГҐГІ Г ГЄГІВёГ°(ГЁГЈГ°Г®ГЄ)
 	l_fHitPower	= (ParentIsActor()) ? fvHitPower[g_SingleGameDifficulty] : fvHitPower[egdMaster];
 
 	Level().BulletManager().AddBullet(pos, dir, m_fStartBulletSpeed * cur_silencer_koef.bullet_speed, l_fHitPower * cur_silencer_koef.hit_power, fHitImpulse * cur_silencer_koef.hit_impulse, parent_id, weapon_id, ALife::eHitTypeFireWound, fireDistance, cartridge, m_air_resistance_factor, send_hit, aim_bullet);
