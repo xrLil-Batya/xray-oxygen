@@ -63,7 +63,7 @@ CCar::CCar()
 	m_exhaust_particles	="vehiclefx\\exhaust_1";
 	m_car_sound			=xr_new<SCarSound>	(this);
 
-	//у машины слотов в инвентаре нет
+	//Гі Г¬Г ГёГЁГ­Г» Г±Г«Г®ГІГ®Гў Гў ГЁГ­ГўГҐГ­ГІГ Г°ГҐ Г­ГҐГІ
 	inventory			= xr_new<CInventory>();
 	inventory->SetSlotsUseful(false);
 	m_doors_torque_factor = 2.f;
@@ -112,6 +112,22 @@ void CCar::reload		(LPCSTR section)
 	if(m_memory)
 		m_memory->reload	(section);
 }
+void CCar::Rotate_z			(CBoneInstance* B)
+{
+
+	CCar*	C			= static_cast<CCar*>(B->callback_param());
+	Fmatrix m;
+ 
+
+	u32 cur_time = Device.dwTimeGlobal;
+ 	if(C->b_engine_on!=true)
+	m.rotateZ(0);
+ 	else
+	m.rotateZ(cur_time/100.0f*0.5f);
+
+	B->mTransform.mulB_43	(m);
+}
+
 
 void CCar::cb_Steer			(CBoneInstance* B)
 {
@@ -874,6 +890,14 @@ void CCar::Init()
 		m_bone_steer=pKinematics->LL_BoneID(ini->r_string("car_definition","steer"));
 		VERIFY2(fsimilar(DET(pKinematics->LL_GetTransform(m_bone_steer)),1.f,EPS_L),"BBADD MTX");
 		pKinematics->LL_GetBoneInstance(m_bone_steer).set_callback(bctPhysics,cb_Steer,this);
+	}
+	if(ini->line_exist("car_definition","rotate_z"))
+	{
+		
+		
+		m_bone_steer=pKinematics->LL_BoneID(ini->r_string("car_definition","rotate_z"));
+		VERIFY2(fsimilar(DET(pKinematics->LL_GetTransform(m_bone_steer)),1.f,EPS_L),"BBADD MTX");
+		pKinematics->LL_GetBoneInstance(m_bone_steer).set_callback(bctPhysics,Rotate_z,this);
 	}
 	m_steer_angle=0.f;
 	//ref_wheel.Init();
@@ -1682,7 +1706,7 @@ void CCar::OnEvent(NET_Packet& P, u16 type)
 	inherited::OnEvent		(P,type);
 	CExplosive::OnEvent		(P,type);
 
-	//обработка сообщений, нужных для работы с багажником машины
+	//Г®ГЎГ°Г ГЎГ®ГІГЄГ  Г±Г®Г®ГЎГ№ГҐГ­ГЁГ©, Г­ГіГ¦Г­Г»Гµ Г¤Г«Гї Г°Г ГЎГ®ГІГ» Г± ГЎГ ГЈГ Г¦Г­ГЁГЄГ®Г¬ Г¬Г ГёГЁГ­Г»
 	u16 id;
 	switch (type)
 	{
@@ -2040,7 +2064,7 @@ Fvector	CCar::		ExitVelocity				()
 //#endif // #if 0
 
 /************************************************** added by Ray Twitty (aka Shadows) START **************************************************/
-// получить и задать текущее количество топлива
+// ГЇГ®Г«ГіГ·ГЁГІГј ГЁ Г§Г Г¤Г ГІГј ГІГҐГЄГіГ№ГҐГҐ ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГ®ГЇГ«ГЁГўГ 
 float CCar::GetfFuel()
 {
 	return m_fuel;
@@ -2049,7 +2073,7 @@ void CCar::SetfFuel(float fuel)
 {
 	m_fuel = fuel;
 }
-// получить и задать размер топливного бака 
+// ГЇГ®Г«ГіГ·ГЁГІГј ГЁ Г§Г Г¤Г ГІГј Г°Г Г§Г¬ГҐГ° ГІГ®ГЇГ«ГЁГўГ­Г®ГЈГ® ГЎГ ГЄГ  
 float CCar::GetfFuelTank()
 {
 	return m_fuel_tank;
@@ -2058,7 +2082,7 @@ void CCar::SetfFuelTank(float fuel_tank)
 {
 	m_fuel_tank = fuel_tank;
 }
-// получить и задать величину потребление топлива
+// ГЇГ®Г«ГіГ·ГЁГІГј ГЁ Г§Г Г¤Г ГІГј ГўГҐГ«ГЁГ·ГЁГ­Гі ГЇГ®ГІГ°ГҐГЎГ«ГҐГ­ГЁГҐ ГІГ®ГЇГ«ГЁГўГ 
 float CCar::GetfFuelConsumption()
 {
 	return m_fuel_consumption;
@@ -2067,7 +2091,7 @@ void CCar::SetfFuelConsumption(float fuel_consumption)
 {
 	m_fuel_consumption = fuel_consumption;
 }
-// прибавить или убавить количество топлива
+// ГЇГ°ГЁГЎГ ГўГЁГІГј ГЁГ«ГЁ ГіГЎГ ГўГЁГІГј ГЄГ®Г«ГЁГ·ГҐГ±ГІГўГ® ГІГ®ГЇГ«ГЁГўГ 
 void CCar::ChangefFuel(float fuel)
 {
 	if(m_fuel + fuel < 0)
@@ -2085,7 +2109,7 @@ void CCar::ChangefFuel(float fuel)
 		m_fuel = m_fuel_tank;
 	}
 }
-// прибавить или убавить жизней :)
+// ГЇГ°ГЁГЎГ ГўГЁГІГј ГЁГ«ГЁ ГіГЎГ ГўГЁГІГј Г¦ГЁГ§Г­ГҐГ© :)
 void CCar::ChangefHealth(float health)
 {
 	float current_health = GetfHealth();
@@ -2104,7 +2128,7 @@ void CCar::ChangefHealth(float health)
 		SetfHealth(1);
 	}
 }
-// активен ли сейчас двигатель
+// Г ГЄГІГЁГўГҐГ­ Г«ГЁ Г±ГҐГ©Г·Г Г± Г¤ГўГЁГЈГ ГІГҐГ«Гј
 bool CCar::isActiveEngine()
 {
 	return b_engine_on;
