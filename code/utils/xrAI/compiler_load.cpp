@@ -110,19 +110,20 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 		// Load level data
 		{
-			strconcat			(sizeof(N),N,name,"build.prj");
-			IReader*	fs		= FS.r_open (N);
-			IReader*	F;
+			strconcat(sizeof(N),N,name,"build.prj");
+			IReader* fs = FS.r_open (N);
+			R_ASSERT2(fs, "There is no file 'build.prj'!"); // Вот этот вылет никогда раньше не мог появится, хоть и был всё время
 
 			// Version
 			u32 version;
 			fs->r_chunk			(EB_Version,&version);
-			R_ASSERT2			(XRCL_CURRENT_VERSION >= 17, "xrAI don't support a current version. Sorry.");
-			R_ASSERT2			(XRCL_CURRENT_VERSION <= 19, "xrAI don't support a current version. Sorry.");
+
+			R_ASSERT2			(version >= 17, "xrAI don't support a current version. Sorry.");
+			R_ASSERT2			(version <= 19, "xrAI don't support a current version. Sorry.");
 
 			// Header
-			b_params			Params;
-			fs->r_chunk			(EB_Parameters,&Params);
+			//b_params			Params;
+			//fs->r_chunk			(EB_Parameters,&Params);
 
 			// Load level data
 			transfer("materials",	g_materials,			*fs,		EB_Materials);
@@ -132,7 +133,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			Status			("Processing textures...");
 			{
 				Surface_Init		();
-				F = fs->open_chunk	(EB_Textures);
+				IReader* F = fs->open_chunk	(EB_Textures);
 				u32 tex_count		= F->length() / sizeof(help_b_texture);
 
 				for (u32 t=0; t<tex_count; t++)
@@ -173,7 +174,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 						// version
 						u32 version = 0;
 
-						if (THM->r_chunk(THM_CHUNK_VERSION, &version))
+						if (!THM->r_chunk(THM_CHUNK_VERSION, &version))
 						{
 							clMsg("xrAI don't support a current version %s.thm.", N);
 							is_thm_deprecated = true;
@@ -190,8 +191,8 @@ void xrLoad(LPCSTR name, bool draft_mode)
 						BT.THM.mip_filter		= THM->r_u32();
 						BT.THM.width			= THM->r_u32();
 						BT.THM.height           = THM->r_u32();
-						BOOL			bLOD=FALSE;
-						if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') bLOD = TRUE;
+
+						const bool bLOD = (N[0] == 'l' && N[1] == 'o' && N[2] == 'd' && N[3] == '\\');
 
 						// load surface if it has an alpha channel or has "implicit lighting" flag
 						BT.dwWidth				= BT.THM.width;
@@ -231,27 +232,12 @@ void xrLoad(LPCSTR name, bool draft_mode)
 	
 	// Load lights
 	{
-		strconcat				(sizeof(N),N,name,"build.prj");
-
-		IReader*	F			= FS.r_open(N);
-		R_ASSERT2				(F,"There is no file 'build.prj'!");
-		IReader					&fs= *F;
-
-		// Version
-		u32 version;
-		fs.r_chunk				(EB_Version,&version);
-
-		// FX: Double check... Very bad...
-		//R_ASSERT				(XRCL_CURRENT_VERSION >= 17);
-		//R_ASSERT				(XRCL_CURRENT_VERSION <= 19);
-
-		// Header
-		b_params				Params;
-		fs.r_chunk				(EB_Parameters,&Params);
+		strconcat(sizeof(N),N,name,"build.prj");
+		IReader& fs = *FS.r_open(N);
 
 		// Lights (Static)
 		{
-			F = fs.open_chunk(EB_Light_static);
+			IReader* F = fs.open_chunk(EB_Light_static);
 			b_light_static	temp;
 			u32 cnt		= F->length()/sizeof(temp);
 			for				(u32 i=0; i<cnt; i++)
@@ -265,8 +251,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 				}
 
 				// type
-				if			(L.type == D3DLIGHT_DIRECTIONAL)	RL.type	= LT_DIRECT;
-				else											RL.type = LT_POINT;
+				RL.type	= (L.type == D3DLIGHT_DIRECTIONAL) ? LT_DIRECT : LT_POINT;
 
 				// generic properties
 				RL.position.set				(L.position);
@@ -283,14 +268,12 @@ void xrLoad(LPCSTR name, bool draft_mode)
 				RL.tri[2].set			(0,0,0);
 
 				// place into layer
-				if (0==temp.controller_ID)	g_lights.push_back		(RL);
+				if (!temp.controller_ID)	g_lights.push_back		(RL);
 			}
-			F->close		();
+			FS.r_close(F);
+			fs.close();
 		}
 	}
-
-	// Init params
-//	g_params.Init		();
 	
 	// Load initial map from the Level Editor
 	{
@@ -320,7 +303,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		H.size_y			= 1.f;
 		H.aabb				= LevelBB;
 		
-		typedef BYTE NodeLink[3];
+		typedef unsigned char NodeLink[3];
 		for (u32 i=0; i<N; i++) {
 			NodeLink			id;
 			u16 				pl;
