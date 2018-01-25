@@ -127,6 +127,8 @@ void IGame_Persistent::Disconnect	()
 			DEL_INSTANCE			(g_hud);
 //.		g_hud->OnDisconnected			();
 #endif
+	ObjectPool.clear();
+ 	Render->models_Clear(TRUE); 
 }
 
 void IGame_Persistent::OnGameStart()
