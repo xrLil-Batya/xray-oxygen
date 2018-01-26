@@ -28,34 +28,33 @@ Allowed to use in **any** projects
 
 Team of developers and contributors:
 
-@ForserX
-xWolfx
-@Giperionn
-@mrmnwar
-@Borshig
-Sin! (@gunslingermod)
-@LtPetrov
-@DaaGuda
-qweasdd136963
-@Xottab-DUTY
-@StalkerEz
-@phobos2077
-@JHunt41
-@Vampirnik77
-@v2v3v4
+* [ForserX](https://github.com/ForserX)
+* xWolfx
+* [Giperion](https://github.com/Giperionn)
+* [mrmnwar](https://github.com/mrmnwar)
+* [Borshig](https://github.com/Borshig)
+* [Sin!](https://github.com/gunslingermod)
+* [LtPetrov](https://github.com/LtPetrov)
+* [DaaGuda](https://github.com/DaaGuda)
+* qweasdd136963
+* [Xottab-DUTY](https://github.com/Xottab-DUTY)
+* [StalkerEz](https://github.com/StalkerEz)
+* [phobos2077](https://github.com/phobos2077)
+* [JHunt41](https://github.com/JHunt41)
+* [Vampirnik77](https://github.com/Vampirnik77)
+* [v2v3v4](https://github.com/v2v3v4)
 
 Also used code of this developers and teams:
 
-SkyLoader
-@RayTwitty
-@abramcumner
-Shoker
-Полтергейст
-@KD87
-@Alundaio
-Kolmogor
-RvP
-@DJYar
-alpet
-OpenXRay Team (and developers of forks) 
-and another open projects
+* SkyLoader
+* [RayTwitty](https://github.com/RayTwitty)
+* [abramcumner](https://github.com/abramcumner)
+* Shoker
+* Полтергейст
+* [KD87](https://github.com/KD87)
+* Alundaio
+* Kolmogor
+* RvP
+* [DJYar](https://github.com/DJYar)
+* alpet
+* OpenXRay Team with different developers of forks and another open projects
