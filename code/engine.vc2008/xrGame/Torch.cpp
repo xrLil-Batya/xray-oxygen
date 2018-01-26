@@ -37,7 +37,7 @@ CTorch::CTorch(void)
 	light_render->set_shadow	(true);
 	light_omni					= ::Render->light_create();
 	light_omni->set_type		(IRender_Light::POINT);
-	light_omni->set_shadow		(false);
+	light_omni->set_shadow		(true);
 
 	m_switched_on				= false;
 	glow_render					= ::Render->glow_create();
@@ -235,7 +235,13 @@ BOOL CTorch::net_Spawn(CSE_Abstract* DC)
 	
 	light_render->set_cone	(deg2rad(pUserData->r_float			("torch_definition","spot_angle")));
 	light_render->set_texture(pUserData->r_string				("torch_definition","spot_texture"));
-	light_render->set_volumetric(pUserData->r_bool				("torch_definition","volumetric"));
+
+	//--[[ Volumetric light
+	light_render->set_volumetric(pUserData->r_bool("torch_definition", "volumetric")); // Enable or not
+	light_render->set_volumetric_distance(pUserData->r_float("torch_definition", "volumetric_distance"));
+	light_render->set_volumetric_intensity(pUserData->r_float("torch_definition", "volumetric_intensity"));
+	light_render->set_volumetric_quality(pUserData->r_float("torch_definition", "volumetric_quality"));
+	//--]]
 	
 	glow_render->set_color	(clr);
 	glow_render->set_texture(pUserData->r_string				("torch_definition","glow_texture"));
