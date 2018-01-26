@@ -17,7 +17,7 @@
 #include "x_ray.h"
 
 float psCamInert = 0.f;
-float psCamSlideInert = 0.25f;
+float psCamSlideInert = 0.0f;
 
 CCameraManager::CCameraManager(bool bApplyOnUpdate)
 {
