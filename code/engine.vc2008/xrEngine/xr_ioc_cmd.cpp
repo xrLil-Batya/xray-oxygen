@@ -763,7 +763,7 @@ void CCC_Register()
 
 	// Camera
 	CMD2(CCC_Float,		"cam_inert",			&psCamInert);
-	CMD2(CCC_Float,		"cam_slide_inert",		&psCamSlideInert);
+	//CMD2(CCC_Float,		"cam_slide_inert",		&psCamSlideInert);
 
 	CMD1(CCC_r2,		"renderer"				);
 
