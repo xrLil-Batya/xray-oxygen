@@ -127,7 +127,7 @@ void CUIZoneMap::Update()
 		m_Counter_text.SetText(text_str);
 	}
 
-	UpdateRadar( Device.vCameraPosition );
+	UpdateRadar( Level().CurrentControlEntity()->Position() );
 	float h, p;
 	Device.vCameraDirection.getHP( h, p );
 	SetHeading( -h );
