@@ -19,10 +19,13 @@ class ENGINE_API CApplication	:
 		char*				folder;
 		char*				name;
 	};
+
 public:
+	string256				ls_title;
 	string2048				ls_header;
 	string2048				ls_tip_number;
 	string2048				ls_tip;
+
 private:
 	FactoryPtr<IApplicationRender>	m_pRender;
 
@@ -59,6 +62,8 @@ public:
 	void					LoadStage			();
 	void					LoadSwitch			();
 	void					LoadDraw			();
+
+	void					SetLoadStageTitle		(const char* ls_title);
 
 	virtual	void			OnEvent				(EVENT E, u64 P1, u64 P2);
 

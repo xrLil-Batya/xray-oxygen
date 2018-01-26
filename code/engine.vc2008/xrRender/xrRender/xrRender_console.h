@@ -3,6 +3,7 @@
 #pragma once
 
 // Common
+extern ECORE_API	int 			ps_rs_loading_stages;
 extern ECORE_API	u32			ps_r2_smapsize;	//=	2048;
 extern ECORE_API	xr_token	q_smapsize_token[];
 

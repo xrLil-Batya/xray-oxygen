@@ -232,6 +232,7 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 #include "../xrEngine/igame_persistent.h"
 void CALifeUpdateManager::new_game			(LPCSTR save_name)
 {
+	g_pGamePersistent->SetLoadStageTitle	("st_creating_new_game");
 	g_pGamePersistent->LoadTitle		();
 	Msg									("* Creating new game...");
 
@@ -259,6 +260,7 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_only)
 {
+	g_pGamePersistent->SetLoadStageTitle	("st_loading_alife_simulator");
 	g_pGamePersistent->LoadTitle		();
 
 #ifdef DEBUG
@@ -279,6 +281,7 @@ void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_onl
 #ifdef DEBUG
 	Msg									("* Loading alife simulator is successfully completed (%7.3f Mb)",float(Memory.mem_usage() - memory_usage)/1048576.0);
 #endif
+	g_pGamePersistent->SetLoadStageTitle	("st_server_connecting");
 	g_pGamePersistent->LoadTitle		(true, g_pGameLevel->name());
 }
 

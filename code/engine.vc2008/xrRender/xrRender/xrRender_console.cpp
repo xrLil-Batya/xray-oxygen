@@ -253,6 +253,7 @@ float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
 int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
 
 int ps_r2_fxaa = 0; 
+int ps_rs_loading_stages = 0;
 
 float		ps_prop_ss_radius				=	1.56f;
 float		ps_prop_ss_sample_step_phase0	=	.09f;
@@ -715,6 +716,7 @@ void		xrRender_initconsole	()
 {
 	CMD3(CCC_Preset,	"_preset",				&ps_Preset,	qpreset_token	);
 
+	CMD4(CCC_Integer, "rs_loadingstages", &ps_rs_loading_stages, 0, 1);
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&psSkeletonUpdate,	2,		128	);
 #ifdef	DEBUG
 	CMD1(CCC_DumpResources,		"dump_resources");
@@ -956,7 +958,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
 	
-    CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1); 	
+	CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1);
 
 	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
 	CMD1(CCC_memory_stats,	"render_memory_stats" );
