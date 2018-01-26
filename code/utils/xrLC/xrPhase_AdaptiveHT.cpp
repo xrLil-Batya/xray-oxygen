@@ -165,17 +165,13 @@ void CBuild::xrPhase_AdaptiveHT	()
 	if (!g_build_options.b_notessellation)
 	{
 
-	Status			("Tesselating...");
-	if (1)
-	{
-		for (u32 fit=0; fit<lc_global_data()->g_faces().size(); fit++)	{		// clear split flag from all faces + calculate normals
-			lc_global_data()->g_faces()[fit]->flags.bSplitted		= false;
-			lc_global_data()->g_faces()[fit]->flags.bLocked			= true;
-			lc_global_data()->g_faces()[fit]->CalcNormal			();
+		Status("Tesselating...");
+		for (u32 fit = 0; fit < lc_global_data()->g_faces().size(); fit++) {		// clear split flag from all faces + calculate normals
+			lc_global_data()->g_faces()[fit]->flags.bSplitted = false;
+			lc_global_data()->g_faces()[fit]->flags.bLocked = true;
+			lc_global_data()->g_faces()[fit]->CalcNormal();
 		}
-		u_Tesselate		(callback_edge_longest,0,0);		// tesselate
-	}
-
+		u_Tesselate(callback_edge_longest, 0, 0);		// tesselate
 	}
 
 	// Tesselate + calculate

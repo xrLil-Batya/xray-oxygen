@@ -22,29 +22,14 @@
     <Filter Include="External\NV_Mender2003">
       <UniqueIdentifier>{69514ab2-654d-49e1-9b37-0a66559460e7}</UniqueIdentifier>
     </Filter>
-    <Filter Include="External\NV_Mender2002">
-      <UniqueIdentifier>{17fef400-5556-48bb-9092-67b1d038ae0d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="External\NV_Mender2002\NV_Basis">
-      <UniqueIdentifier>{80afe3dc-88b9-4f43-b146-83a23d1ef325}</UniqueIdentifier>
-    </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a">
       <UniqueIdentifier>{90cab4b0-1b69-49ef-9b74-fc1353ac09bd}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Deflector">
-      <UniqueIdentifier>{a17f9a68-8424-48d3-8a04-7c1888669365}</UniqueIdentifier>
     </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\XRAY">
       <UniqueIdentifier>{80ce1c52-0ed1-4dde-ae2f-d783765dc8a1}</UniqueIdentifier>
     </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal">
       <UniqueIdentifier>{39ef7859-bccb-4525-b890-f4376c745ae0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa">
-      <UniqueIdentifier>{8fd55044-d930-4a14-a8b2-7f8b81dec5f2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader">
-      <UniqueIdentifier>{edf7909e-d4d3-41d1-ac37-79a2683eb7c3}</UniqueIdentifier>
     </Filter>
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\Model">
       <UniqueIdentifier>{af1cbabd-58bb-46bf-a088-7b3641789431}</UniqueIdentifier>
@@ -105,18 +90,6 @@
     <ClInclude Include="NV_Library\VertexCache.h">
       <Filter>External\NV_Strips</Filter>
     </ClInclude>
-    <ClInclude Include="NvMender2002\NVMeshMender.h">
-      <Filter>External\NV_Mender2002</Filter>
-    </ClInclude>
-    <ClInclude Include="NvMender2002\nv_algebra.h">
-      <Filter>External\NV_Mender2002\NV_Basis</Filter>
-    </ClInclude>
-    <ClInclude Include="NvMender2002\nv_math.h">
-      <Filter>External\NV_Mender2002\NV_Basis</Filter>
-    </ClInclude>
-    <ClInclude Include="NvMender2002\nv_mathdecl.h">
-      <Filter>External\NV_Mender2002\NV_Basis</Filter>
-    </ClInclude>
     <ClInclude Include="_rect.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClInclude>
@@ -156,9 +129,6 @@
     <ClInclude Include="vbm.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="Image.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader</Filter>
-    </ClInclude>
     <ClInclude Include="net.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
     </ClInclude>
@@ -194,12 +164,6 @@
     </ClCompile>
     <ClCompile Include="NV_Library\VertexCache.cpp">
       <Filter>External\NV_Strips</Filter>
-    </ClCompile>
-    <ClCompile Include="NvMender2002\NVMeshMender.cpp">
-      <Filter>External\NV_Mender2002</Filter>
-    </ClCompile>
-    <ClCompile Include="NvMender2002\nv_algebra.cpp">
-      <Filter>External\NV_Mender2002\NV_Basis</Filter>
     </ClCompile>
     <ClCompile Include="Build.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
@@ -279,9 +243,6 @@
     <ClCompile Include="OGF_CalculateTB.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
     </ClCompile>
-    <ClCompile Include="OGF_CalculateTB2002.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
-    </ClCompile>
     <ClCompile Include="OGF_Face.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
     </ClCompile>
@@ -296,9 +257,6 @@
     </ClCompile>
     <ClCompile Include="OGF_RemoveIsolatedVerts.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\XRAY</Filter>
-    </ClCompile>
-    <ClCompile Include="Image.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal\Targa\ILoader</Filter>
     </ClCompile>
     <ClCompile Include="xrMU_Model_Calc_ogf.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>

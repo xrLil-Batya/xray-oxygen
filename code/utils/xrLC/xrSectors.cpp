@@ -11,7 +11,7 @@ void CBuild::BuildSectors()
 	u32 SectorMax=0;
 	for (u32 I=0; I<g_tree.size(); I++)
 		if (g_tree[I]->Sector>SectorMax) SectorMax=g_tree[I]->Sector;
-	R_ASSERT(SectorMax<0xffff);
+	R_ASSERT2(SectorMax<0xffff, "Reduce the number of sectors.");
 
 	u32 SectorCount = SectorMax+1; 
 	g_sectors.resize(SectorCount);
