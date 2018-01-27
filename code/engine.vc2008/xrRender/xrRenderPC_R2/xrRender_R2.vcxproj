@@ -386,7 +386,7 @@
     <ClInclude Include="..\..\Include\xrRender\UISequenceVideoItem.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
+    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="Blender_ss.cpp" />
     <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
     <ClCompile Include="stdafx.cpp">
