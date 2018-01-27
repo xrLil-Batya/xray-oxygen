@@ -24,24 +24,11 @@
 
 XRCORE_API	xrDebug		Debug;
 
-static bool	error_after_dialog = false;
-//extern char g_stackTrace[100][4096];
-extern int	g_stackTraceCount;
+static bool error_after_dialog = false;
 extern bool shared_str_initialized;
 static bool bException = false;
 
 #include "BuildStackTraceInline.hpp"
-
-void LogStackTrace(const char* header)
-{
-	if (!shared_str_initialized)
-		return;
-
-	StackTrace.Count = BuildStackTrace(StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
-	Msg("%s", header);
-	for (size_t i = 1; i < StackTrace.Count; i++)
-		Msg("%s", StackTrace[i]);
-}
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
@@ -94,18 +81,15 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		}
 	}
 
-	if (IsDebuggerPresent() || !strstr(GetCommandLine(), "-no_call_stack_assert"))
-		return;
-	if (shared_str_initialized)
-		Log("stack trace:\n");
+	//if (IsDebuggerPresent() || !strstr(GetCommandLine(), "-no_call_stack_assert"))
+		//return;
 
 	//BuildStackTrace();
-	BuildStackTrace(StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
+	StackTrace.Count = BuildStackTrace(StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
 
 	for (size_t i = 2; i < StackTrace.Count; i++)
 	{
-		if (shared_str_initialized)
-			Log(StackTrace[i]);
+		Msg("[STACK] %s", StackTrace[i]);
 	}
 	if (shared_str_initialized)
 		FlushLog();
