@@ -147,7 +147,7 @@ LPCTSTR __stdcall InternalGetStackTraceString(DWORD dwOpts, EXCEPTION_POINTERS* 
 		// Note:  If the source file and line number functions are used,
 		//        StackWalk can cause an access violation.
 		bool bSWRet = !!StackWalk(CH_MACHINE, hProcess, GetCurrentThread(), &g_stFrame, pExPtrs->ContextRecord,
-			(PREAD_PROCESS_MEMORY_ROUTINE)ReadCurrentProcessMemory, SymFunctionTableAccess, SymGetModuleBase, nullptr);
+			0, SymFunctionTableAccess, SymGetModuleBase, nullptr);
 
 		if (!bSWRet || !g_stFrame.AddrFrame.Offset)
 		{
