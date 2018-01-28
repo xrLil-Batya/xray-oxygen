@@ -87,6 +87,7 @@ public:
 	// listener
 	virtual void						update_listener			(const Fvector& P, const Fvector& D, const Fvector& N, float dt)=0;
 	void								i_eax_commit_setting	();
+	void								i_efx_listener_set		(CSound_environment* _E, EFXEAXREVERBPROPERTIES* reverb);
 
 public:
 	CSoundRender_Source*				i_create_source			( const char* name				);
@@ -108,7 +109,9 @@ public:
 	void								env_apply				();
 
 protected: // EFX
-	EFXEAXREVERBPROPERTIES				efx_reverb;		
+	EFXEAXREVERBPROPERTIES				efx_reverb;
+	ALuint								effect;
+	ALuint								slot;
 	bool 								EFXTestSupport(const EFXEAXREVERBPROPERTIES* reverb);
 };
 extern XRSOUND_API CSoundRender_Core* SoundRender;

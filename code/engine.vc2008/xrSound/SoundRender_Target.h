@@ -38,5 +38,6 @@ public:
 	virtual void				stop				()=0;
 	virtual void				update				()=0;
 	virtual void				fill_parameters		()=0;
+	virtual	void				alAuxInit			(ALuint slot)=0;
 };
 #endif

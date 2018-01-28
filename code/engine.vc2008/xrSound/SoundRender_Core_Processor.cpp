@@ -16,6 +16,10 @@ CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float 
 	s_emitters.push_back	(E);
 	return E;
 }
+#include <openal\efx.h>
+#define LOAD_PROC(x, type) ((x) = (type)alGetProcAddress(#x))
+static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
+static LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
 
 void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvector& N )
 {
@@ -100,9 +104,24 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
             e_target				= *get_environment	(P);
         }
 
-        e_current.lerp				(e_current,e_target,dt_sec);
-		EFXTestSupport				(&efx_reverb);
-		i_eax_commit_setting		();
+        e_current.lerp				(e_current,e_target,dt_sec); 
+
+		if (EFXTestSupport(&efx_reverb))
+		{
+			i_efx_listener_set(&e_current, &efx_reverb);
+
+			LOAD_PROC(alAuxiliaryEffectSloti, LPALAUXILIARYEFFECTSLOTI);
+			LOAD_PROC(alGenAuxiliaryEffectSlots, LPALGENAUXILIARYEFFECTSLOTS);
+
+			alGenAuxiliaryEffectSlots(1, &slot);
+
+			/* Tell the effect slot to use the loaded effect object. Note that the this
+			* effectively copies the effect properties. You can modify or delete the
+			* effect object afterward without affecting the effect slot.
+			*/
+			alAuxiliaryEffectSloti(slot, AL_EFFECTSLOT_EFFECT, effect);
+			R_ASSERT2(alGetError() == AL_NO_ERROR, "[EFX] Failed to set effect slot");
+		}
 	}
 
     // update listener

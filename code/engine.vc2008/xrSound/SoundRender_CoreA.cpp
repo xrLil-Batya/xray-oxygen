@@ -29,7 +29,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 
 		if (0==pDeviceList->GetNumDevices())
 		{ 
-			CHECK_OR_EXIT			(0,"OpenAL: Can't create sound device.");
+			CHECK_OR_EXIT			(0,"[OpenAL] Can't create sound device.");
 			xr_delete				(pDeviceList);
 		}
 		return;
@@ -42,7 +42,7 @@ void CSoundRender_CoreA::_initialize(int stage)
     pDevice						= alcOpenDevice		(deviceDesc.name);
 	if (pDevice == nullptr)
 	{
-		CHECK_OR_EXIT			(0,"SOUND: OpenAL: Failed to create device.");
+		CHECK_OR_EXIT			(0,"[OpenAL] Failed to create device.");
 		bPresent				= false;
 		return;
 	}
@@ -54,7 +54,7 @@ void CSoundRender_CoreA::_initialize(int stage)
     // Create context
     pContext					= alcCreateContext	(pDevice,nullptr);
 	if (0==pContext){
-		CHECK_OR_EXIT			(0,"SOUND: OpenAL: Failed to create context.");
+		CHECK_OR_EXIT			(0,"[OpenAL] Failed to create context.");
 		bPresent				= false;
 		alcCloseDevice			(pDevice); pDevice = 0;
 		return;
@@ -74,7 +74,7 @@ void CSoundRender_CoreA::_initialize(int stage)
     A_CHK				        (alListenerfv		(AL_ORIENTATION,&orient[0].x));
     A_CHK				        (alListenerf		(AL_GAIN,1.f));
 
-    // Check for EAX extension
+    // Check for EFX extension
     bEFX = deviceDesc.props.efx;
 	
     if (bEFX)
@@ -92,7 +92,10 @@ void CSoundRender_CoreA::_initialize(int stage)
 		{
 			T						=	new CSoundRender_TargetA();
 			if (T->_initialize())
-				s_targets.push_back	(T);
+			{
+				s_targets.push_back(T);
+				if(bEFX)T->alAuxInit(slot);
+			}
 			else
 			{
         		Log					("[OpenAL] ! SOUND: OpenAL: Max targets - ",tit);

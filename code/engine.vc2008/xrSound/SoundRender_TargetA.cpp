@@ -17,8 +17,9 @@ CSoundRender_TargetA::CSoundRender_TargetA() :CSoundRender_Target()
 CSoundRender_TargetA::~CSoundRender_TargetA()
 {
 }
+#include <openal\efx.h>
 
-bool	CSoundRender_TargetA::_initialize()
+bool CSoundRender_TargetA::_initialize()
 {
 	inherited::_initialize();
 	// initialize buffer
@@ -37,6 +38,11 @@ bool	CSoundRender_TargetA::_initialize()
 		Msg("! sound: OpenAL: Can't create source. Error: %s.", (const char*)alGetString(error_));
 		return 			false;
 	}
+}
+
+void CSoundRender_TargetA::alAuxInit(ALuint slot)
+{
+	A_CHK(alSource3i(pSource, AL_AUXILIARY_SEND_FILTER, slot, 0, AL_FILTER_NULL));
 }
 
 void	CSoundRender_TargetA::_destroy()
