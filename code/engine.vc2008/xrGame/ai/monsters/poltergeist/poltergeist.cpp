@@ -365,22 +365,24 @@ void CPoltergeist::net_Destroy()
 
 	ability()->on_destroy();
 }
-
+#include "../FrayBuildConfig.hpp"
 void CPoltergeist::Die(CObject* who)
 {
-// 	if (m_tele) {
-// 		if (state_invisible) {
-// 			setVisible(true);
-// 
-// 			if (PPhysicsShell()) {
-// 				Fmatrix M;
-// 				M.set							(XFORM());
-// 				M.translate_over				(m_current_position);
-// 				PPhysicsShell()->SetTransform	(M);
-// 			} else 
-// 				Position() = m_current_position;
-// 		}
-// 	}
+#ifdef POLTERGEIST_BUILD_DIE
+ 	if (m_tele && state_invisible) 
+	{
+ 		setVisible(true);
+ 
+ 		if (PPhysicsShell()) 
+		{
+ 			Fmatrix M;
+ 			M.set							(XFORM());
+ 			M.translate_over				(m_current_position);
+ 			PPhysicsShell()->SetTransform	(M, mh_unspecified);
+ 		} 
+		else Position() = m_current_position;
+ 	}
+#endif
 
 	inherited::Die				(who);
 	Energy::disable				();

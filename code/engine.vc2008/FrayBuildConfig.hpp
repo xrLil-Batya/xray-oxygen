@@ -1,4 +1,12 @@
 #pragma once
+/* KERNEL */
+#define CHECK_MOUSE_STATE //Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
+//By defining this, we force to double check mouse state by calling GetDeviceState. 
+//It's a very little performance penalty
+
+/* Threading/Cores */
+#define NEW_TTAPI //Enable new ttapi, based on WinAPI ThreadPool system
+//#define TEST_TTAPI //Perform a test of ttapi integrity
 
 /* xrCore */
 #define	LOG_TIME_PRECISE // (by alpet & RvP)
@@ -17,12 +25,5 @@
 //#define ASPAWN_CROW // Spawn crows over actor
 //#define NEW_ANIMS_WPN // Enable anm_..._crouch, anm_reload_empty
 //#define DEAD_BODY_WEAPON // Incorrect!!!
-
+//#define POLTERGEIST_BUILD_DIE // Old style polter dead
 //#define SLOW_VERIFY_ENTITIES //Very slow verifing every entity on every game update
-
-#define CHECK_MOUSE_STATE //Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
-						  //By defining this, we force to double check mouse state by calling GetDeviceState. 
-						  //It's a very little performance penalty
-
-#define NEW_TTAPI //Enable new ttapi, based on WinAPI ThreadPool system
-//#define TEST_TTAPI //Perform a test of ttapi integrity
