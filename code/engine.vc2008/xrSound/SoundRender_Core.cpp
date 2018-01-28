@@ -24,7 +24,14 @@ u32 psSoundModel = 0;
 XRSOUND_API CSoundRender_Core* SoundRender = nullptr;
 CSound_manager_interface* Sound = nullptr;
 
+//////////////////////////////////////////////////
+#include <openal/efx.h>
 #define LOAD_PROC(x, type)  ((x) = (type)alGetProcAddress(#x))
+static LPALEFFECTF alEffectf;
+static LPALEFFECTI alEffecti;
+static LPALDELETEEFFECTS alDeleteEffects;
+static LPALISEFFECT alIsEffect;
+static LPALGENEFFECTS alGenEffects;
 static LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots;
 
 CSoundRender_Core::CSoundRender_Core()
@@ -115,13 +122,6 @@ int CSoundRender_Core::pause_emitters(bool val)
 
 	return m_iPauseCounter;
 }
-//////////////////////////////////////////////////
-#include <openal/efx.h>
-static LPALEFFECTF alEffectf;
-static LPALEFFECTI alEffecti;
-static LPALDELETEEFFECTS alDeleteEffects;
-static LPALISEFFECT alIsEffect;
-static LPALGENEFFECTS alGenEffects;
 
 bool CSoundRender_Core::EFXTestSupport(const EFXEAXREVERBPROPERTIES* reverb)
 {

@@ -1,4 +1,5 @@
 #pragma once
+#include <openal\al.h>
 #include <openal/efx-presets.h>        
 #include "SoundRender.h"
 #include "SoundRender_Environment.h"
