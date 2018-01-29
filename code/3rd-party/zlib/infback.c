@@ -20,7 +20,7 @@ local void fixedtables OF((struct inflate_state FAR *state));
 
 /*
    strm provides memory allocation functions in zalloc and zfree, or
-   Z_NULL to use the library memory allocation functions.
+   nullptr to use the library memory allocation functions.
 
    windowBits is in the range 8..15, and window is a user-supplied
    window and output buffer that is 2**windowBits bytes.
@@ -34,13 +34,13 @@ int stream_size;
 {
     struct inflate_state FAR *state;
 
-    if (version == Z_NULL || version[0] != ZLIB_VERSION[0] ||
+    if (version == nullptr || version[0] != ZLIB_VERSION[0] ||
         stream_size != (int)(sizeof(z_stream)))
         return Z_VERSION_ERROR;
-    if (strm == Z_NULL || window == Z_NULL ||
+    if (strm == nullptr || window == nullptr ||
         windowBits < 8 || windowBits > 15)
         return Z_STREAM_ERROR;
-    strm->msg = Z_NULL;                 /* in case we return an error */
+    strm->msg = nullptr;                 /* in case we return an error */
     if (strm->zalloc == (alloc_func)0) {
         strm->zalloc = zcalloc;
         strm->opaque = (voidpf)0;
@@ -48,7 +48,7 @@ int stream_size;
     if (strm->zfree == (free_func)0) strm->zfree = zcfree;
     state = (struct inflate_state FAR *)ZALLOC(strm, 1,
                                                sizeof(struct inflate_state));
-    if (state == Z_NULL) return Z_MEM_ERROR;
+    if (state == nullptr) return Z_MEM_ERROR;
     Tracev((stderr, "inflate: allocated\n"));
     strm->state = (struct internal_state FAR *)state;
     state->dmax = 32768U;
@@ -151,7 +151,7 @@ struct inflate_state FAR *state;
         if (have == 0) { \
             have = in(in_desc, &next); \
             if (have == 0) { \
-                next = Z_NULL; \
+                next = nullptr; \
                 ret = Z_BUF_ERROR; \
                 goto inf_leave; \
             } \
@@ -231,12 +231,12 @@ struct inflate_state FAR *state;
 
    in() should return zero on failure.  out() should return non-zero on
    failure.  If either in() or out() fails, than inflateBack() returns a
-   Z_BUF_ERROR.  strm->next_in can be checked for Z_NULL to see whether it
+   Z_BUF_ERROR.  strm->next_in can be checked for nullptr to see whether it
    was in() or out() that caused in the error.  Otherwise,  inflateBack()
    returns Z_STREAM_END on success, Z_DATA_ERROR for an deflate format
    error, or Z_MEM_ERROR if it could not allocate memory for the state.
    inflateBack() can also return Z_STREAM_ERROR if the input parameters
-   are not correct, i.e. strm is Z_NULL or the state was not initialized.
+   are not correct, i.e. strm is nullptr or the state was not initialized.
  */
 int ZEXPORT inflateBack(strm, in, in_desc, out, out_desc)
 z_streamp strm;
@@ -261,17 +261,17 @@ void FAR *out_desc;
         {16, 17, 18, 0, 8, 7, 9, 6, 10, 5, 11, 4, 12, 3, 13, 2, 14, 1, 15};
 
     /* Check that the strm exists and that the state was initialized */
-    if (strm == Z_NULL || strm->state == Z_NULL)
+    if (strm == nullptr || strm->state == nullptr)
         return Z_STREAM_ERROR;
     state = (struct inflate_state FAR *)strm->state;
 
     /* Reset the state */
-    strm->msg = Z_NULL;
+    strm->msg = nullptr;
     state->mode = TYPE;
     state->last = 0;
     state->whave = 0;
     next = strm->next_in;
-    have = next != Z_NULL ? strm->avail_in : 0;
+    have = next != nullptr ? strm->avail_in : 0;
     hold = 0;
     bits = 0;
     put = state->window;
@@ -614,10 +614,10 @@ void FAR *out_desc;
 int ZEXPORT inflateBackEnd(strm)
 z_streamp strm;
 {
-    if (strm == Z_NULL || strm->state == Z_NULL || strm->zfree == (free_func)0)
+    if (strm == nullptr || strm->state == nullptr || strm->zfree == (free_func)0)
         return Z_STREAM_ERROR;
     ZFREE(strm, strm->state);
-    strm->state = Z_NULL;
+    strm->state = nullptr;
     Tracev((stderr, "inflate: end\n"));
     return Z_OK;
 }
