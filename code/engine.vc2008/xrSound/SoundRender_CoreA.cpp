@@ -93,8 +93,8 @@ void CSoundRender_CoreA::_initialize(int stage)
 			T						=	new CSoundRender_TargetA();
 			if (T->_initialize())
 			{
-				s_targets.push_back(T);
 				if(bEFX)T->alAuxInit(slot);
+				s_targets.push_back(T);
 			}
 			else
 			{
