@@ -35,9 +35,7 @@ CAttachableItem::~CAttachableItem		()
 
 void CAttachableItem::reload			(LPCSTR section)
 {
-#ifdef DEBUG
 	m_valid							= true;
-#endif
 
 	if(load_attach_position(section))
 		enable						(false);

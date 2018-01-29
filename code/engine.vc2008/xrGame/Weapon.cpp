@@ -28,8 +28,10 @@
 #include "Torch.h"
 #include "cameralook.h"
 #include "CustomOutfit.h"
+#include "HUDManager.h"
 #include "../FrayBuildConfig.hpp"
 
+ENGINE_API extern float psHUD_FOV_def;
 static const int WEAPON_REMOVE_TIME = 60000;
 static const float ROTATION_TIME = 0.25f;
 
@@ -84,6 +86,7 @@ CWeapon::CWeapon()
 	m_activation_speed_is_overriden	=	false;
 	m_cur_scope				= NULL;
 	m_bRememberActorNVisnStatus = false;
+	m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 
 CWeapon::~CWeapon		()
@@ -95,6 +98,24 @@ CWeapon::~CWeapon		()
 void CWeapon::Hit					(SHit* pHDS)
 {
 	inherited::Hit(pHDS);
+}
+
+// Обновление необходимости включения второго вьюпорта +SecondVP+
+// Вызывается только для активного оружия игрока
+void CWeapon::UpdateSecondVP()
+{
+	// + CActor::UpdateCL();
+	bool b_is_active_item = (m_pInventory != NULL) && (m_pInventory->ActiveItem() == this);
+	R_ASSERT(ParentIsActor() && b_is_active_item); // Эта функция должна вызываться только для оружия в руках нашего игрока
+
+	CActor* pActor = smart_cast<CActor*>(H_Parent());
+
+	bool bCond_1 = m_zoom_params.m_fZoomRotationFactor > 0.05f;    // Мы должны целиться
+	bool bCond_2 = m_zoom_params.m_fSecondVP_FovFactor > 0.0f;     // В конфиге должен быть прописан фактор зума (scope_lense_fov_factor) больше чем 0
+	bool bCond_3 = pActor->cam_Active() == pActor->cam_FirstEye(); // Мы должны быть от 1-го лица
+	//bool bCond_4 = m_bGrenadeMode == false;                        // Мы не должны быть в режиме подствольника
+
+	Device.m_SecondViewport.SetSVPActive(bCond_1 && bCond_2 && bCond_3 /*&& bCond_4*/);
 }
 
 void CWeapon::UpdateXForm	()
@@ -379,6 +400,17 @@ void CWeapon::Load		(LPCSTR section)
 	m_crosshair_inertion			= READ_IF_EXISTS(pSettings, r_float, section, "crosshair_inertion",	5.91f);
 	m_first_bullet_controller.load	(section);
 	fireDispersionConditionFactor = pSettings->r_float(section,"fire_dispersion_condition_factor");
+
+	// Модификатор для HUD FOV от бедра
+    m_hud_fov_add_mod = READ_IF_EXISTS(pSettings, r_float, section, "hud_fov_addition_modifier", 0.f);
+	// Параметры изменения HUD FOV когда игрок стоит вплотную к стене
+	m_nearwall_dist_min = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_dist_min", 0.5f);
+	m_nearwall_dist_max = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_dist_max", 1.f);
+	m_nearwall_target_hud_fov = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_target_hud_fov", 0.27f);
+	m_nearwall_speed_mod = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_speed_mod", 10.f);
+
+	// FOV второго вьюпорта при зуме
+	m_zoom_params.m_fSecondVP_FovFactor = READ_IF_EXISTS(pSettings, r_float, section, "scope_lense_fov_factor", 0.0f);
 
 // modified by Peacemaker [17.10.08]
 //	misfireProbability			  = pSettings->r_float(section,"misfire_probability"); 
@@ -741,7 +773,7 @@ void CWeapon::OnH_B_Independent	(bool just_before_destroy)
 	m_strapped_mode_rifle			= false;
 	m_zoom_params.m_bIsZoomModeNow	= false;
 	UpdateXForm					();
-
+	m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 
 void CWeapon::OnH_A_Independent	()
@@ -807,6 +839,7 @@ void CWeapon::OnH_B_Chield		()
 
 	OnZoomOut					();
 	m_set_next_ammoType_on_reload = undefined_ammo_type;
+	m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 
 extern u32 hud_adj_mode;
@@ -1429,7 +1462,7 @@ void CWeapon::OnZoomIn()
 	else
 		m_zoom_params.m_fCurrentZoomFactor	= CurrentZoomFactor();
 
-	EnableHudInertion					(FALSE);
+	//EnableHudInertion(FALSE);
 
 	
 	if(m_zoom_params.m_bZoomDofEnabled && !IsScopeAttached())
@@ -1877,7 +1910,6 @@ extern u32 hud_adj_mode;
 
 void CWeapon::debug_draw_firedeps()
 {
-#ifdef DEBUG
 	if(hud_adj_mode==5||hud_adj_mode==6||hud_adj_mode==7)
 	{
 		CDebugRenderer			&render = Level().debug_renderer();
@@ -1891,7 +1923,6 @@ void CWeapon::debug_draw_firedeps()
 		if(hud_adj_mode==7)
 			render.draw_aabb(get_LastSP(),		0.005f,0.005f,0.005f,D3DCOLOR_XRGB(0,255,0));
 	}
-#endif // DEBUG
 }
 
 const float &CWeapon::hit_probability	() const
@@ -1933,6 +1964,47 @@ u8 CWeapon::GetCurrentHudOffsetIdx()
 		return		0;
 	else
 		return		1;
+}
+
+// Получить HUD FOV текущего оружия
+float CWeapon::GetHudFov()
+{
+	// Рассчитываем HUD FOV от бедра (с учётом упирания в стены)
+	if (ParentIsActor() && Level().CurrentViewEntity() == H_Parent())
+	{
+		// Получаем расстояние от камеры до точки в прицеле
+		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+		float dist = RQ.range;
+
+		// Интерполируем расстояние в диапазон от 0 (min) до 1 (max)
+		clamp(dist, m_nearwall_dist_min, m_nearwall_dist_max);
+		float fDistanceMod = ((dist - m_nearwall_dist_min) / (m_nearwall_dist_max - m_nearwall_dist_min)); // 0.f ... 1.f
+
+																										   // Рассчитываем базовый HUD FOV от бедра
+		float fBaseFov = psHUD_FOV_def + m_hud_fov_add_mod;
+		clamp(fBaseFov, 0.0f, FLT_MAX);
+
+		// Плавно высчитываем итоговый FOV от бедра
+		float src = m_nearwall_speed_mod * Device.fTimeDelta;
+		clamp(src, 0.f, 1.f);
+
+		float fTrgFov = m_nearwall_target_hud_fov + fDistanceMod * (fBaseFov - m_nearwall_target_hud_fov);
+		m_nearwall_last_hud_fov = m_nearwall_last_hud_fov * (1 - src) + fTrgFov * src;
+	}
+
+	/*
+	// Возвращаем итоговый HUD FOV
+	if (m_zoom_params.m_fZoomRotationFactor > 0.0f)
+	{
+		// В процессе зума
+		float fDiff = m_nearwall_last_hud_fov - m_zoom_params.m_fZoomHudFov;
+		return m_zoom_params.m_fZoomHudFov + (fDiff * (1 - m_zoom_params.m_fZoomRotationFactor));
+	}
+	else
+	{*/
+		// От бедра
+		return m_nearwall_last_hud_fov;
+	//}
 }
 
 void CWeapon::render_hud_mode()

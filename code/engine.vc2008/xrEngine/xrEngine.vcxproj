@@ -295,6 +295,7 @@
     <ClInclude Include="trivial_encryptor.h" />
     <ClInclude Include="x_ray.h" />
     <ClInclude Include="resource.h" />
+    <ClInclude Include="ShadersExternalData.h" />
     <ClInclude Include="IInputReceiver.h" />
     <ClInclude Include="xr_input.h" />
     <ClInclude Include="ISheduled.h" />
@@ -339,6 +340,7 @@
     <ClInclude Include="ObjectDump.h" />
     <ClInclude Include="EnnumerateVertices.h" />
     <ClInclude Include="vis_common.h" />
+	<ClInclude Include="vis_object_data.h" />
     <ClInclude Include="PS_instance.h" />
     <ClInclude Include="LightAnimLibrary.h" />
     <ClInclude Include="GameFont.h" />

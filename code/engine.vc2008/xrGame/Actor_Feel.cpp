@@ -216,7 +216,7 @@ void	CActor::PickupModeUpdate_COD	()
 
 	CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(pNearestItem);
 
-	if (pNearestItem && m_bPickupMode)
+	if (pNearestItem && m_bPickupMode && !m_pPersonWeLookingAt)
 	{
 		CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(pNearestItem);
 		if(pUsableObject && (!m_pUsableObject))

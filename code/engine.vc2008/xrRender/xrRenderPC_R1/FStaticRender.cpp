@@ -672,6 +672,23 @@ void	CRender::Statistics	(CGameFont* _F)
 #endif
 }
 
+// Перед началом рендера мира +SecondVP+
+void CRender::BeforeWorldRender() {}
+
+// После рендера мира и пост-эффектов +SecondVP+
+void CRender::AfterWorldRender()
+{
+	if (Device.m_SecondViewport.IsSVPFrame())
+	{
+		// Делает копию бэкбуфера (текущего экрана) в рендер-таргет второго вьюпорта
+		IRender_Target*    T = getTarget();
+		IDirect3DSurface9* pBackBuffer = NULL;
+		HW.pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer); // Получаем ссылку на бэкбуфер
+		D3DXLoadSurfaceFromSurface(Target->RT_SecondVP->pRT, 0, 0, pBackBuffer, 0, 0, D3DX_DEFAULT, 0);
+		pBackBuffer->Release(); // Корректно очищаем ссылку на бэкбуфер (иначе игра зависнет в опциях)
+	}
+}
+
 #pragma comment(lib,"d3dx9.lib")
 
 static inline bool match_shader_id		( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result );

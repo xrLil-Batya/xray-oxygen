@@ -586,3 +586,15 @@ void CLoadScreenRenderer::OnRender()
 {
 	pApp->load_draw_internal();
 }
+
+void CRenderDevice::CSecondVPParams::SetSVPActive(bool bState) //--#SM+#-- +SecondVP+
+ {
+	m_bIsActive = bState;
+	if (g_pGamePersistent != NULL)
+		 g_pGamePersistent->m_pGShaderConstants->m_blender_mode.z = (m_bIsActive ? 1.0f : 0.0f);
+}
+
+bool CRenderDevice::CSecondVPParams::IsSVPFrame() //--#SM+#-- +SecondVP+
+{
+	return IsSVPActive() && ((Device.dwFrame % m_FrameDelay) == 0);
+}

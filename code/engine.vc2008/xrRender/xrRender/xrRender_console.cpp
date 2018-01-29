@@ -194,7 +194,7 @@ float		ps_r2_ls_ssm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_bloom_threshold	= .00001f;				// r2-only
 
 
-
+Flags32     ps_actor_shadow_flags       = { 0 };
 float		ps_r2_mblur					= .3f;				// .5f
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64
@@ -874,6 +874,7 @@ void		xrRender_initconsole	()
 #endif // DEBUG
 	
 	CMD3(CCC_Mask,		"r2_shadow_cascede_old", &ps_r2_ls_flags_ext,		R2FLAGEXT_SUN_OLD);
+	CMD3(CCC_Mask,      "r__actor_shadow",       &ps_actor_shadow_flags,    RFLAG_ACTOR_SHADOW);
 	
 
 

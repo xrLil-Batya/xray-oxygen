@@ -213,4 +213,11 @@ extern BOOL						xrRender_test_hw		();
 extern void						xrRender_apply_tf		();
 extern ECORE_API int			ps_r__detail_radius;
 
+extern ECORE_API Flags32 ps_actor_shadow_flags;
+
+enum
+{
+	RFLAG_ACTOR_SHADOW = (1 << 0),
+};
+
 #endif

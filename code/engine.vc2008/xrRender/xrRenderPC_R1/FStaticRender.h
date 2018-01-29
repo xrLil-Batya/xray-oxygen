@@ -202,11 +202,14 @@ public:
 	virtual void					ScreenshotAsyncBegin	();
 	virtual void					ScreenshotAsyncEnd		(CMemoryWriter& memory_writer);
 	virtual void	_BCL			OnFrame					();
+	virtual void                    BeforeWorldRender       (); // +SecondVP+ Вызывается перед началом рендера мира и пост-эффектов
+	virtual void                    AfterWorldRender        ();  // +SecondVP+ Вызывается после рендера мира и перед UI
 	
 	// Render mode
 	virtual void					rmNear					();
 	virtual void					rmFar					();
 	virtual void					rmNormal				();
+	virtual u32                     active_phase            () { return phase; };
 
 	// Constructor/destructor/loader
 	CRender							();

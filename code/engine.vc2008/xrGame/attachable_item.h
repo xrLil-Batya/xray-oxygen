@@ -18,9 +18,7 @@ private:
 	Fmatrix						m_offset;
 	u16							m_bone_id;
 	bool						m_enabled;
-#ifdef DEBUG
 	bool						m_valid;
-#endif
 
 
 public:

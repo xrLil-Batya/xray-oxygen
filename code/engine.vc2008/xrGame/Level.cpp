@@ -51,16 +51,13 @@
 
 #include "../xrphysics/iphworld.h"
 #include "../xrphysics/console_vars.h"
-#ifdef DEBUG
-#	include "level_debug.h"
-#	include "ai/stalker/ai_stalker.h"
-#	include "debug_renderer.h"
-#	include "physicobject.h"
-#	include "phdebug.h"
+#include "level_debug.h"
+#include "ai/stalker/ai_stalker.h"
+#include "debug_renderer.h"
+#include "physicobject.h"
+#include "phdebug.h"
+#include "debug_text_tree.h"
 
-// Lain:added
-#	include "debug_text_tree.h"
-#endif
 #include "../FrayBuildConfig.hpp"
 
 ENGINE_API bool g_dedicated_server;
@@ -161,11 +158,9 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 		m_client_spawn_manager		= xr_new<CClientSpawnManager>();
 		m_autosave_manager			= xr_new<CAutosaveManager>();
 
-	#ifdef DEBUG
 		m_debug_renderer			= xr_new<CDebugRenderer>();
-		m_level_debug				= xr_new<CLevelDebug>();
-		m_bEnvPaused				= false;
-	#endif
+		//m_level_debug				= xr_new<CLevelDebug>();
+		//m_bEnvPaused				= false;
 
 	}else
 	{
@@ -173,10 +168,8 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 		m_client_spawn_manager		= NULL;
 		m_autosave_manager			= NULL;
 		m_space_restriction_manager = NULL;
-	#ifdef DEBUG
 		m_debug_renderer			= NULL;
-		m_level_debug				= NULL;
-	#endif
+		//m_level_debug				= NULL;
 	}
 
 
@@ -269,10 +262,7 @@ CLevel::~CLevel()
 	xr_delete					(m_seniority_hierarchy_holder);
 	xr_delete					(m_client_spawn_manager);
 	xr_delete					(m_autosave_manager);
-	
-#ifdef DEBUG
 	xr_delete					(m_debug_renderer);
-#endif
 
 	if (!g_dedicated_server)
 		ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
@@ -660,6 +650,7 @@ extern void draw_wnds_rects();
 
 void CLevel::OnRender()
 {
+	::Render->BeforeWorldRender();
 	inherited::OnRender	();
 
 	if (!game)
@@ -667,6 +658,7 @@ void CLevel::OnRender()
 
 	Game().OnRender();
 	BulletManager().Render();
+	::Render->AfterWorldRender();
 	HUD().RenderUI();
 
 #ifdef DEBUG

@@ -43,6 +43,8 @@ IGame_Persistent::IGame_Persistent	()
 	else
 		pEnvironment				= xr_new<CEnvironment>();
 #endif // #ifdef INGAME_EDITOR
+
+	m_pGShaderConstants = new ShadersExternalData();
 }
 
 IGame_Persistent::~IGame_Persistent	()
@@ -55,6 +57,8 @@ IGame_Persistent::~IGame_Persistent	()
 #ifndef _EDITOR
 	xr_delete						(pEnvironment);
 #endif
+
+	xr_delete(m_pGShaderConstants);
 }
 
 void IGame_Persistent::OnAppActivate		()

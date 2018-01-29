@@ -588,6 +588,12 @@
     <ClInclude Include="ide.hpp">
       <Filter>editor\ide</Filter>
     </ClInclude>
+    <ClInclude Include="vis_object_data.h">
+      <Filter>Render\Visibility</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadersExternalData.h">
+      <Filter>Render\Visibility</Filter>
+    </ClInclude>
     <ClInclude Include="..\FrayBuildConfig.hpp" />
   </ItemGroup>
   <ItemGroup>

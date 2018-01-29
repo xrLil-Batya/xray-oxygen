@@ -71,6 +71,8 @@ public:
 
 	virtual	void			Hit					(SHit* pHDS);
 
+	void                   UpdateSecondVP       ();
+
 	virtual void			reinit				();
 	virtual void			reload				(LPCSTR section);
 	virtual void			create_physic_shell	();
@@ -156,6 +158,15 @@ public:
 	//инициализация свойств присоединенных аддонов
 	virtual void InitAddons();
 
+	float m_hud_fov_add_mod;
+	float m_nearwall_dist_max;
+	float m_nearwall_dist_min;
+	float m_nearwall_last_hud_fov;
+	float m_nearwall_target_hud_fov;
+	float m_nearwall_speed_mod;
+
+	float GetHudFov();
+
 	//для отоброажения иконок апгрейдов в интерфейсе
 	int	GetScopeX() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_x");}
 	int	GetScopeY() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_y");}
@@ -207,6 +218,8 @@ protected:
 		float			m_fScopeZoomFactor;		//коэффициент увеличения прицела
 
 		float			m_fZoomRotationFactor;
+
+		float           m_fSecondVP_FovFactor; //модификатор изменения FOV во втором вьюпорте при зуме
 		
 		Fvector			m_ZoomDof;
 		Fvector4		m_ReloadDof;

@@ -23,6 +23,9 @@
 #include "CustomOutfit.h"
 #include "InventoryOwner.h"
 
+ENGINE_API extern float psHUD_FOV;
+ENGINE_API extern float psHUD_FOV_def;
+
 CUIXml* pWpnScopeXml = nullptr;
 
 void createWpnScopeXML()
@@ -722,6 +725,7 @@ void CWeaponMagazined::switch2_Hidden()
 	signal_HideComplete		();
 	RemoveShotEffector		();
 	RemoveZoomInertionEffector();
+	m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 void CWeaponMagazined::switch2_Showing()
 {
