@@ -144,7 +144,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\SkeletonMotions.cpp" />
-    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender3.cpp" />
+    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="..\Shared\bone.cpp" />
     <ClCompile Include="..\Shared\EditObjectImport.cpp" />
     <ClCompile Include="..\Shared\ELog.cpp" />
