@@ -39,7 +39,7 @@ void CSoundRender_CoreA::_initialize(int stage)
 	R_ASSERT						(snd_device_id>=0 && snd_device_id<pDeviceList->GetNumDevices());
 	const ALDeviceDesc& deviceDesc	= pDeviceList->GetDeviceDesc(snd_device_id);
     // OpenAL device
-    pDevice						= alcOpenDevice		(deviceDesc.name);
+    pDevice						= alcOpenDevice(deviceDesc.name);
 	if (pDevice == nullptr)
 	{
 		CHECK_OR_EXIT			(0,"[OpenAL] Failed to create device.");
@@ -75,10 +75,9 @@ void CSoundRender_CoreA::_initialize(int stage)
     A_CHK				        (alListenerf		(AL_GAIN,1.f));
 
     // Check for EFX extension
-    bEFX = deviceDesc.props.efx;
-	
-    if (bEFX)
+    if (deviceDesc.props.efx)
 	{
+		InitAlEFXAPI();
 		bEFX = EFXTestSupport(&efx_reverb);
     }
 

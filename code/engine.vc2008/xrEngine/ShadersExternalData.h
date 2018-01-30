@@ -1,6 +1,4 @@
-#ifndef ISHADEREXTD_H_INCLUDED
-#define ISHADEREXTD_H_INCLUDED
-
+#pragma once
 // Хранилище внешних шейдерных параметров, которые читаются в Blender_Recorder_StandartBinding.cpp
 class	ShadersExternalData	//--#SM+#--
 {
@@ -12,10 +10,8 @@ public:
 
 	ShadersExternalData()
 	{
-		m_script_params = Fmatrix();
+		m_script_params = { 0.f, 0.f, 0.f, 0.f };
 		hud_params.set(0.f, 0.f, 0.f, 0.f);
 		m_blender_mode.set(0.f, 0.f, 0.f, 0.f);
 	};
 };
-
-#endif // ISHADEREXTD_H_INCLUDED

@@ -71,7 +71,7 @@ public:
 #endif
 	IMainMenu*						m_pMainMenu;	
 
-	ShadersExternalData*            m_pGShaderConstants;
+	ShadersExternalData				m_pGShaderConstants;
 
 	virtual bool					OnRenderPPUI_query	() { return FALSE; };	// should return true if we want to have second function called
 	virtual void					OnRenderPPUI_main	() {};

@@ -44,21 +44,17 @@ IGame_Persistent::IGame_Persistent	()
 		pEnvironment				= xr_new<CEnvironment>();
 #endif // #ifdef INGAME_EDITOR
 
-	m_pGShaderConstants = new ShadersExternalData();
+	m_pGShaderConstants = ShadersExternalData();
 }
 
-IGame_Persistent::~IGame_Persistent	()
+IGame_Persistent::~IGame_Persistent()
 {
-	RDEVICE.seqFrame.Remove			(this);
-	RDEVICE.seqAppStart.Remove		(this);
-	RDEVICE.seqAppEnd.Remove			(this);
-	RDEVICE.seqAppActivate.Remove	(this);
-	RDEVICE.seqAppDeactivate.Remove	(this);
-#ifndef _EDITOR
-	xr_delete						(pEnvironment);
-#endif
-
-	xr_delete(m_pGShaderConstants);
+	RDEVICE.seqFrame.Remove(this);
+	RDEVICE.seqAppStart.Remove(this);
+	RDEVICE.seqAppEnd.Remove(this);
+	RDEVICE.seqAppActivate.Remove(this);
+	RDEVICE.seqAppDeactivate.Remove(this);
+	xr_delete(pEnvironment);
 }
 
 void IGame_Persistent::OnAppActivate		()

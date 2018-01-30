@@ -114,5 +114,6 @@ protected: // EFX
 	ALuint								effect;
 	ALuint								slot;
 	bool 								EFXTestSupport(const EFXEAXREVERBPROPERTIES* reverb);
+	void								InitAlEFXAPI();
 };
 extern XRSOUND_API CSoundRender_Core* SoundRender;

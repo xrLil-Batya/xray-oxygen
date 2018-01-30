@@ -1,11 +1,15 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#include <openal\efx.h>
 #include "cl_intersect.h"
 #include "SoundRender_Core.h"
 #include "SoundRender_Emitter.h"
 #include "SoundRender_Target.h"
 #include "SoundRender_Source.h"
+
+extern LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots; //
+extern LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
+extern LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
 
 CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float delay)
 {
@@ -16,103 +20,94 @@ CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float 
 	s_emitters.push_back	(E);
 	return E;
 }
-#include <openal\efx.h>
-#define LOAD_PROC(x, type) ((x) = (type)alGetProcAddress(#x))
-static LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
-static LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
 
-void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvector& N )
+void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector& N)
 {
-	u32 it;
+	if (0 == bReady)	return;
+	bLocked = true;
+	const float new_tm = Timer.GetElapsed_sec();
+	fTimer_Delta = new_tm - fTimer_Value;
+	float dt_sec = fTimer_Delta;
+	fTimer_Value = new_tm;
 
-	if (0==bReady)				return;
-    bLocked						= true;
-	float new_tm				= Timer.GetElapsed_sec();
-	fTimer_Delta				= new_tm-fTimer_Value;
-	float dt_sec				= fTimer_Delta;
-	fTimer_Value				= new_tm;
-
-	s_emitters_u	++	;
+	s_emitters_u++;
 
 	// Firstly update emitters, which are now being rendered
-	for (it=0; it<s_targets.size(); it++)
+	for (u32 it = 0; it < s_targets.size(); it++)
 	{
-		CSoundRender_Target*	T	= s_targets	[it];
-		CSoundRender_Emitter*	E	= T->get_emitter();
-		if (E) {
-			E->update	(dt_sec);
-			E->marker	= s_emitters_u;
-			E			= T->get_emitter();	// update can stop itself
-			if (E)		T->priority	= E->priority();
-			else		T->priority	= -1;
-		} else {
-			T->priority	= -1;
+		CSoundRender_Target*	T = s_targets[it];
+		CSoundRender_Emitter*	E = T->get_emitter();
+		if (E) 
+		{
+			E->update(dt_sec);
+			E->marker = s_emitters_u;
+			E = T->get_emitter();	// update can stop itself
+			if (E)
+			{
+				T->priority = E->priority();
+				continue;
+			}
 		}
+		T->priority = -1;
 	}
 
 	// Update emmitters
-	for (it=0; it<s_emitters.size(); it++)
+	for (u32 it = 0; it < s_emitters.size(); it++)
 	{
 		CSoundRender_Emitter*	pEmitter = s_emitters[it];
-		if (pEmitter->marker!=s_emitters_u)
+		if (pEmitter->marker != s_emitters_u)
 		{
-			pEmitter->update		(dt_sec);
-			pEmitter->marker		= s_emitters_u;
+			pEmitter->update(dt_sec);
+			pEmitter->marker = s_emitters_u;
 		}
-		if (!pEmitter->isPlaying())		
+		if (!pEmitter->isPlaying())
 		{
 			// Stopped
-			xr_delete		(pEmitter);
-			s_emitters.erase(s_emitters.begin()+it);
+			xr_delete(pEmitter);
+			s_emitters.erase(s_emitters.begin() + it);
 			it--;
 		}
 	}
 
 	// Get currently rendering emitters
-	s_targets_defer.clear	();
-	s_targets_pu			++;
-	for (it=0; it<s_targets.size(); it++)
+	s_targets_defer.clear();
+	s_targets_pu++;
+	for (u32 it = 0; it < s_targets.size(); it++)
 	{
-		CSoundRender_Target*	T	= s_targets	[it];
+		CSoundRender_Target*	T = s_targets[it];
 		if (T->get_emitter())
 		{
 			// Has emmitter, maybe just not started rendering
-			if		(T->get_Rendering())	
+			if (T->get_Rendering())
 			{
-				T->fill_parameters	();
-				T->update		();
+				T->fill_parameters();
+				T->update();
 			}
-			else 	
-				s_targets_defer.push_back		(T);
+			else s_targets_defer.push_back(T);
 		}
 	}
 
 	// Commit parameters from pending targets
 	if (!s_targets_defer.empty())
 	{
-		s_targets_defer.erase	(std::unique(s_targets_defer.begin(),s_targets_defer.end()),s_targets_defer.end());
-		for (it=0; it<s_targets_defer.size(); it++)
+		s_targets_defer.erase(std::unique(s_targets_defer.begin(), s_targets_defer.end()), s_targets_defer.end());
+		for (u32 it = 0; it < s_targets_defer.size(); it++)
 			s_targets_defer[it]->fill_parameters();
 	}
 
 	// update EFX
-    if (psSoundFlags.test(ss_EFX) && bEFX)
+	if (psSoundFlags.test(ss_EFX) && bEFX)
 	{
-        if (bListenerMoved)
+		if (bListenerMoved)
 		{
-            bListenerMoved			= false;
-            e_target				= *get_environment	(P);
-        }
+			bListenerMoved = false;
+			e_target = *get_environment(P);
+		}
 
-        e_current.lerp				(e_current,e_target,dt_sec); 
-
+		e_current.lerp(e_current, e_target, dt_sec);
 		if (EFXTestSupport(&efx_reverb))
 		{
 			i_efx_listener_set(&e_current, &efx_reverb);
-
-			LOAD_PROC(alAuxiliaryEffectSloti, LPALAUXILIARYEFFECTSLOTI);
-			LOAD_PROC(alGenAuxiliaryEffectSlots, LPALGENAUXILIARYEFFECTSLOTS);
-
 			alGenAuxiliaryEffectSlots(1, &slot);
 
 			/* Tell the effect slot to use the loaded effect object. Note that the this
@@ -120,24 +115,30 @@ void CSoundRender_Core::update	( const Fvector& P, const Fvector& D, const Fvect
 			* effect object afterward without affecting the effect slot.
 			*/
 			alAuxiliaryEffectSloti(slot, AL_EFFECTSLOT_EFFECT, effect);
-			R_ASSERT2(alGetError() == AL_NO_ERROR, "[EFX] Failed to set effect slot");
+
+			if (alGetError() != AL_NO_ERROR)
+			{
+				Log("[EFX] Failed to set effect slot!");
+				alDeleteAuxiliaryEffectSlots(1, &slot);
+				bEFX = false;
+			}
 		}
 	}
 
-    // update listener
-    update_listener					(P,D,N,dt_sec);
-    
+	// update listener
+	update_listener(P, D, N, dt_sec);
+
 	// Start rendering of pending targets
 	if (!s_targets_defer.empty())
 	{
-		for (it=0; it<s_targets_defer.size(); it++)
-			s_targets_defer[it]->render	();
+		for (u32 it = 0; it < s_targets_defer.size(); it++)
+			s_targets_defer[it]->render();
 	}
 
 	// Events
-	update_events					();
+	update_events();
 
-    bLocked							= false;
+	bLocked = false;
 }
 
 static	u32	g_saved_event_count		= 0;

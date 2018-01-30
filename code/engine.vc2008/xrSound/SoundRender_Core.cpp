@@ -32,7 +32,9 @@ static LPALEFFECTI alEffecti;
 static LPALDELETEEFFECTS alDeleteEffects;
 static LPALISEFFECT alIsEffect;
 static LPALGENEFFECTS alGenEffects;
-static LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots;
+LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots; 
+LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
+LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
 
 CSoundRender_Core::CSoundRender_Core()
 {
@@ -58,7 +60,18 @@ CSoundRender_Core::CSoundRender_Core()
 
 	effect = 0;
 	slot = 0;
+}
+
+void CSoundRender_Core::InitAlEFXAPI()
+{
 	LOAD_PROC(alDeleteAuxiliaryEffectSlots, LPALDELETEAUXILIARYEFFECTSLOTS);
+	LOAD_PROC(alGenEffects, LPALGENEFFECTS);
+	LOAD_PROC(alDeleteEffects, LPALDELETEEFFECTS);
+	LOAD_PROC(alIsEffect, LPALISEFFECT);
+	LOAD_PROC(alEffecti, LPALEFFECTI);
+	LOAD_PROC(alAuxiliaryEffectSloti, LPALAUXILIARYEFFECTSLOTI);
+	LOAD_PROC(alGenAuxiliaryEffectSlots, LPALGENAUXILIARYEFFECTSLOTS);
+	LOAD_PROC(alEffectf, LPALEFFECTF);
 }
 
 CSoundRender_Core::~CSoundRender_Core()
@@ -125,14 +138,6 @@ int CSoundRender_Core::pause_emitters(bool val)
 
 bool CSoundRender_Core::EFXTestSupport(const EFXEAXREVERBPROPERTIES* reverb)
 {
-	LOAD_PROC(alGenEffects, LPALGENEFFECTS);
-	LOAD_PROC(alDeleteEffects, LPALDELETEEFFECTS);
-	LOAD_PROC(alIsEffect, LPALISEFFECT);
-	LOAD_PROC(alEffecti, LPALEFFECTI);
-
-	LOAD_PROC(alEffectf, LPALEFFECTF);
-
-	effect = 0;
 	alGenEffects(1, &effect);
 
 	alEffecti(effect, AL_EFFECT_TYPE, AL_EFFECT_REVERB);
