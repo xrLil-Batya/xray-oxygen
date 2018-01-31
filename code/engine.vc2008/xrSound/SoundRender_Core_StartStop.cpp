@@ -55,8 +55,8 @@ bool CSoundRender_Core::i_allow_play(CSoundRender_Emitter* E)
 	float Ptest	= E->priority	();
 	for (u32 it=0; it<s_targets.size(); it++)
 	{
-		CSoundRender_Target*	T		= s_targets	[it];
-		if (T->priority<Ptest)			return true;
+		if (s_targets[it]->priority<Ptest)
+			return true;
 	}
 	return false;
 }
