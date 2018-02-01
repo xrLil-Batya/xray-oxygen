@@ -40,9 +40,9 @@ size_t TTAPI ttapi_Init(processor_info* ID)
 
 	SetThreadpoolThreadMinimum(hPool, ID->n_threads);
 	SetThreadpoolThreadMaximum(hPool, ID->n_threads);
-	WorkerCount = ID->n_threads;
+	WorkerCount = ID->n_threads * 2;
 
-	return ID->n_threads;
+	return WorkerCount;
 }
 
 void TTAPI ttapi_Done()
