@@ -36,6 +36,17 @@ CStats::~CStats()
 	xr_delete		(pFont);
 }
 
+void draw_fps(CGameFont* pFont)
+{
+	float sz		=
+	pFont->GetHeight();
+	pFont->SetHeightI(0.018f);
+	pFont->SetColor	(0xFFFFA917);
+	pFont->Out		(10, 10, "FPS: %0.0f",1.0f/Device.fTimeDelta);
+	pFont->SetHeight(sz);
+	pFont->OnRender	();
+}
+
 void _draw_cam_pos(CGameFont* pFont)
 {
 	float sz		= pFont->GetHeight();
@@ -362,6 +373,11 @@ void CStats::Show()
 	}
 	dwSND_Played = dwSND_Allocated = 0;
 	Particles_starting = Particles_active = Particles_destroy = 0;
+	
+	if( psDeviceFlags.test(rsDrawFPS) ){
+		draw_fps					(pFont);
+		pFont->OnRender					();
+	};
 }
 
 void	_LogCallback				(LPCSTR string)
