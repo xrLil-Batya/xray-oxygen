@@ -31,9 +31,6 @@
     <Filter Include="intrusive_ptr">
       <UniqueIdentifier>{1bd3b6dd-36ac-44c6-b2ed-a345726579d2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="memory_monitor">
-      <UniqueIdentifier>{4e1200b7-8f1f-48ed-a2d4-5e832bf185ef}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Compression">
       <UniqueIdentifier>{f5537ea7-0833-4792-882a-eda4ae27e7da}</UniqueIdentifier>
     </Filter>
@@ -45,9 +42,6 @@
     </Filter>
     <Filter Include="Compression\lzo">
       <UniqueIdentifier>{7e0bbfb2-e6f1-44ac-9bec-746f04915384}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="OS">
-      <UniqueIdentifier>{1a002462-09b5-4139-923f-2f2083af69de}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{3d385d7c-ac52-4a06-8105-3fc0bffdb6ec}</UniqueIdentifier>
@@ -78,6 +72,9 @@
     </Filter>
     <Filter Include="PostProcessCore">
       <UniqueIdentifier>{15552a91-ab08-4854-982a-ec34dc8e9fb8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="OS">
+      <UniqueIdentifier>{1a002462-09b5-4139-923f-2f2083af69de}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +242,9 @@
     </ClCompile>
     <ClCompile Include="PostprocessAnimator.cpp">
       <Filter>PostProcessCore</Filter>
+    </ClCompile>
+    <ClCompile Include="Buildcpp.cpp">
+      <Filter>Kernel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

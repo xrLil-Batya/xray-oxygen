@@ -5,7 +5,7 @@
 
 #include <mmsystem.h>
 #include <objbase.h>
- 
+#include "../FrayBuildConfig.hpp"
 #pragma comment(lib,"winmm.lib")
 
 #ifdef DEBUG
@@ -18,78 +18,75 @@ XRCORE_API		const char*	build_date;
 
 
 static u32	init_counter	= 0;
-//extern char g_application_path[256];
+void compute_build_id();
 
 #include "DateTime.hpp"
-void xrCore::_initialize	(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
+void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
 	std::set_terminate(abort);
 	if (!init_counter)
 	{
 		xr_strcpy(ApplicationName, _ApplicationName);
 		// Init COM so we can use CoCreateInstance
-		xr_strcpy			(Params,sizeof(Params),GetCommandLine());
-//		_strlwr_s			(Params,sizeof(Params));
-		string_path		fn,dr,di;
+		xr_strcpy(Params, sizeof(Params), GetCommandLine());
+#ifdef _STR_LWRC_
+		_strlwr_s			(Params,sizeof(Params));
+#endif
+		string_path		fn, dr, di;
 
 		// application path
-		 GetModuleFileName(GetModuleHandle("xrCore"),fn,sizeof(fn));
-		_splitpath(fn,dr,di,0,0);
-		strconcat(sizeof(ApplicationPath),ApplicationPath,dr,di);
+		GetModuleFileName(GetModuleHandle("xrCore"), fn, sizeof(fn));
+		_splitpath(fn, dr, di, 0, 0);
+		strconcat(sizeof(ApplicationPath), ApplicationPath, dr, di);
 
-		GetCurrentDirectory(sizeof(WorkingPath),WorkingPath);
+		GetCurrentDirectory(sizeof(WorkingPath), WorkingPath);
 
 		// User/Comp Name
 		string64 _uname;
-		DWORD	sz_user		= sizeof(_uname);
-		GetUserName			(_uname, &sz_user);
-        xr_strcpy(UserName, _uname);
-		
-		DWORD	sz_comp		= sizeof(CompName);
-		GetComputerName		(CompName,&sz_comp);
-		
+		DWORD	sz_user = sizeof(_uname);
+		GetUserName(_uname, &sz_user);
+		xr_strcpy(UserName, _uname);
+
+		DWORD	sz_comp = sizeof(CompName);
+		GetComputerName(CompName, &sz_comp);
+
 		//Date
-		auto *time = new Time();
+		Time *time = new Time();
 		strconcat(sizeof(UserDate), UserDate, time->GetDay().c_str(), ".", time->GetMonth().c_str(), ".", time->GetYear().c_str(), " ");
-		
+
 		//Time
 		strconcat(sizeof(UserTime), UserTime, time->GetHours().c_str(), ".", time->GetMinutes().c_str(), ".", time->GetSeconds().c_str());
 		xr_delete(time);
 
 		// Mathematics & PSI detection
-		
 		Memory._initialize();
-
-		DUMP_PHASE;
 
 		InitLog();
 		_initialize_cpu();
 		rtc_initialize();
 
 		xr_FS = new CLocatorAPI();
-		xr_EFS= new EFS_Utils();
+		xr_EFS = new EFS_Utils();
 	}
-	if (init_fs){
-		u32 flags			= 0;
-		if (0!=strstr(Params,"-build"))	 flags |= CLocatorAPI::flBuildCopy;
-		if (0!=strstr(Params,"-ebuild")) flags |= CLocatorAPI::flBuildCopy|CLocatorAPI::flEBuildCopy;
+	if (init_fs)
+	{
+		u32 flags = 0;
+		if (0 != strstr(Params, "-build"))	 flags |= CLocatorAPI::flBuildCopy;
+		if (0 != strstr(Params, "-ebuild")) flags |= CLocatorAPI::flBuildCopy | CLocatorAPI::flEBuildCopy;
 #ifdef DEBUG
-		if (strstr(Params,"-cache"))  flags |= CLocatorAPI::flCacheFiles;
+		if (strstr(Params, "-cache"))  flags |= CLocatorAPI::flCacheFiles;
 		else flags &= ~CLocatorAPI::flCacheFiles;
 #endif // DEBUG
 		flags |= CLocatorAPI::flScanAppRoot;
 
 #ifndef ELocatorAPIH
-		if (strstr(Params,"-file_activity"))	 
+		if (strstr(Params, "-file_activity"))
 			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
-		FS._initialize		(flags,0,fs_fname);
-		Msg					("'%s' build %d, %s\n","xrCore",build_id, build_date);
-		EFS._initialize		();
-#ifdef DEBUG
-		Msg					("CRT heap 0x%08x",_get_heap_handle());
-		Msg					("Process heap 0x%08x",GetProcessHeap());
-#endif // DEBUG
+		FS._initialize(flags, 0, fs_fname);
+		compute_build_id();
+		Msg("xrCore build %d, %s\n", build_id, build_date);
+		EFS._initialize();
 	}
 	SetLogCB(cb);
 	init_counter++;

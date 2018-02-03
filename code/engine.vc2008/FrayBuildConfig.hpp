@@ -1,29 +1,30 @@
 #pragma once
 /* KERNEL */
-#define CHECK_MOUSE_STATE //Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
-//By defining this, we force to double check mouse state by calling GetDeviceState. 
-//It's a very little performance penalty
+#define CHECK_MOUSE_STATE		//Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
+								//By defining this, we force to double check mouse state by calling GetDeviceState. 
+								//It's a very little performance penalty
+//#define SLOW_VERIFY_ENTITIES	//Very slow verifing every entity on every game update
 
 /* Threading/Cores */
-#define NEW_TTAPI //Enable new ttapi, based on WinAPI ThreadPool system
-//#define TEST_TTAPI //Perform a test of ttapi integrity
+#define NEW_TTAPI			//Enable new ttapi, based on WinAPI ThreadPool system
+//#define TEST_TTAPI		//Perform a test of ttapi integrity
 
 /* xrCore */
-#define	LOG_TIME_PRECISE // (by alpet & RvP)
+#define	LOG_TIME_PRECISE	// (by alpet & RvP)
+//#define _STR_LWRC_		// Lowercase command line
 
 /* Scripts */
-//#define SPAWN_ANTIFREEZE /* spread spawn of game objects thoughout multiple frames to prevent lags (by alpet) */
-//#define LUACP_API		// attaching luaicp.dll
+//#define SPAWN_ANTIFREEZE	/* spread spawn of game objects thoughout multiple frames to prevent lags (by alpet) */
+//#define LUACP_API			// attaching luaicp.dll
 
 /* xrRender */
 #define R34_USE_FIRSTMIPLEVEL //activate: LoadInfo.FirstMipLevel = img_loaded_lod;
 
 /* xrGame */
-#define WPN_AUTORELOAD // Enable autoreload
+#define WPN_AUTORELOAD		// Enable autoreload
 //#define DYNAMIC_SUN_MOVEMENT // Use dynamic sun movement
-//#define NEW_SLOTS // Add knife slot and binocular slot in inventory
-//#define ASPAWN_CROW // Spawn crows over actor
-//#define NEW_ANIMS_WPN // Enable anm_..._crouch, anm_reload_empty
-//#define DEAD_BODY_WEAPON // Incorrect!!!
+//#define NEW_SLOTS			// Add knife slot and binocular slot in inventory
+//#define ASPAWN_CROW		// Spawn crows over actor
+//#define NEW_ANIMS_WPN		// Enable anm_..._crouch, anm_reload_empty
+//#define DEAD_BODY_WEAPON	// Incorrect!!!
 //#define POLTERGEIST_BUILD_DIE // Old style polter dead
-//#define SLOW_VERIFY_ENTITIES //Very slow verifing every entity on every game update
