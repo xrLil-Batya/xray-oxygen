@@ -18,7 +18,7 @@
 #include "clsid_game.h"
 #include "hudmanager.h"
 
-#define PICKUP_INFO_COLOR 0xFFDDDDDD
+#define PICKUP_INFO_COLOR 0xFFFFA916
 
 void CActor::feel_touch_new				(CObject* O)
 {
@@ -138,7 +138,7 @@ void CActor::PickupModeUpdate()
 
 	for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 	{
-		if (CanPickItem(frustum, Device.vCameraPosition, *it)) 
+		if (CanPickItem(frustum, Level().CurrentControlEntity()->Position(), *it)) 
 			PickupInfoDraw(*it);
 	}
 }
@@ -200,7 +200,7 @@ void	CActor::PickupModeUpdate_COD	()
 	{
 		CFrustum					frustum;
 		frustum.CreateFromMatrix	(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
-		if (!CanPickItem(frustum, Device.vCameraPosition, &pNearestItem->object()))
+		if (!CanPickItem(frustum, Level().CurrentControlEntity()->Position(), &pNearestItem->object()))
 			pNearestItem = NULL;
 	}
 	if (pNearestItem && pNearestItem->cast_game_object())
