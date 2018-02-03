@@ -160,7 +160,6 @@
 #endif // NO_XR_GAME
 
 #ifndef NO_XR_GAME
-	ENGINE_API					bool g_dedicated_server;
 #	define ADD(a,b,c,d)			add<a,b>(c,d)
 #else
 #	define ADD(a,b,c,d)			add<b>(c,d)

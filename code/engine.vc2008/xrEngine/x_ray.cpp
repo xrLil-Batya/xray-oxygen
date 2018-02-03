@@ -373,7 +373,6 @@ struct damn_keys_filter {
 
 #include "xr_ioc_cmd.h"
 
-ENGINE_API	bool g_dedicated_server	= false;
 DLL_API int RunXRLauncher();
 DLL_API const char* GetParams();
 
@@ -742,14 +741,8 @@ PROTECT_API void CApplication::LoadDraw		()
 	if(g_appLoaded)				return;
 	Device.dwFrame				+= 1;
 
-
 	if(!Device.Begin () )		return;
-
-	if	(g_dedicated_server)
-		Console->OnRender			();
-	else
-		load_draw_internal			();
-
+	load_draw_internal			();
 	Device.End					();
 }
 

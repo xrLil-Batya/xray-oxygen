@@ -8,6 +8,11 @@
 
 #pragma once
 
+#ifdef DEBUG
+#include "ai_space.h"
+#include "script_engine.h"
+#endif
+
 IC	bool CDetailPathManager::actual			() const
 {
 	return					(m_actuality);
@@ -82,7 +87,7 @@ IC	void CDetailPathManager::set_dest_position	(const Fvector &dest_position)
 {
 #ifdef DEBUG
 	if (!(!m_restricted_object || m_restricted_object->accessible(dest_position))) {
-		LogStackTrace		("error call stack");
+        ai().script_engine().dump_state();
 	}
 #endif // DEBUG
 	THROW2					(!m_restricted_object || m_restricted_object->accessible(dest_position),"Old movement destination is not accessible after changing restrictions!");

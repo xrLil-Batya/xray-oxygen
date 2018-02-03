@@ -110,8 +110,6 @@ bool	CLevel::net_start_client4				()
 		physics_world()->set_default_character_contact_shotmark(CharacterContactShotMark);
 
 		VERIFY(physics_world());
-		physics_world()->set_step_time_callback((PhysicsStepTimeCallback*)&PhisStepsCallback);
-
 
 		// Send network to single or multithreaded mode
 		// *note: release version always has "mt_*" enabled
@@ -129,14 +127,11 @@ bool CLevel::net_start_client5()
 	{
 		// HUD
 		// Textures
-		if	(!g_dedicated_server)
-		{
-			g_pGamePersistent->SetLoadStageTitle	("st_loading_textures");
-			g_pGamePersistent->LoadTitle		();
-			Device.m_pRender->DeferredLoad		(FALSE);
-			Device.m_pRender->ResourcesDeferredUpload();
-			LL_CheckTextures					();
-		}
+        g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
+        g_pGamePersistent->LoadTitle();
+        Device.m_pRender->DeferredLoad(FALSE);
+        Device.m_pRender->ResourcesDeferredUpload();
+        LL_CheckTextures();
 		sended_request_connection_data	= FALSE;
 		deny_m_spawn					= TRUE;
 	}
@@ -156,11 +151,8 @@ bool CLevel::net_start_client6()
 			pApp->LoadEnd(); 
 			return true;
 		}
-		if (!g_dedicated_server)
-		{
-			g_hud->Load						();
-			g_hud->OnConnected				();
-		}
+		g_hud->Load						();
+		g_hud->OnConnected				();
 
 		if (game)
 			game->OnConnected();

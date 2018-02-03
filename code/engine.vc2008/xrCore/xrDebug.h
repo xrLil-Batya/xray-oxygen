@@ -57,6 +57,4 @@ std::string make_string(const char* format, const Args&... args)
 
 extern XRCORE_API	xrDebug		Debug;
 
-XRCORE_API void LogStackTrace	(const char* header);
-
 #include "xrDebug_macros.h"

@@ -148,8 +148,7 @@ bool CLevel::net_start2				()
 		}
 		Server->SLS_Default		();
 		map_data.m_name			= Server->level_name(serverOption);
-		if (!g_dedicated_server)
-			g_pGamePersistent->LoadTitle(true, map_data.m_name);
+		g_pGamePersistent->LoadTitle(true, map_data.m_name);
 	}
 	return true;
 }

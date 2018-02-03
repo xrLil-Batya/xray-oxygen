@@ -43,7 +43,7 @@ void	xrClientData::Clear()
 	net_PassUpdates							= TRUE;
 };
 
-xrServer::xrServer() : IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
+xrServer::xrServer() : IPureServer(Device.GetTimerGlobal())
 {
 	m_file_transfers	= NULL;
 	m_aDelayedPackets.clear();

@@ -124,7 +124,7 @@ protected:
 	
 	virtual IClient*		new_client			(SClientConnectData* cl_data) = 0;
 public:
-							IPureServer			(CTimer* timer, BOOL Dedicated = FALSE);
+							IPureServer (CTimer* timer);
 	virtual					~IPureServer		();
 	
 	virtual EConnect		Connect				(LPCSTR session_name, GameDescriptionData & game_descr);

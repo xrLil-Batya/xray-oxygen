@@ -91,7 +91,7 @@ IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
 
 //==============================================================================
 
-IPureServer::IPureServer	(CTimer* timer, BOOL Dedicated)
+IPureServer::IPureServer(CTimer* timer)
 {
 	device_timer			= timer;
 	stats.clear				();

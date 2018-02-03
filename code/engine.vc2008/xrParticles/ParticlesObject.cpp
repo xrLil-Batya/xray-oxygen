@@ -75,8 +75,6 @@ CParticlesObject::~CParticlesObject()
 
 void CParticlesObject::UpdateSpatial()
 {
-	if(g_dedicated_server)		return;
-
 	// spatial	(+ workaround occasional bug inside particle-system)
 	vis_data &vis = renderable.visual->getVisData();
 	if (_valid(vis.sphere))
@@ -110,8 +108,6 @@ const shared_str CParticlesObject::Name()
 //----------------------------------------------------
 void CParticlesObject::Play		(bool bHudMode)
 {
-	if(g_dedicated_server)		return;
-
 	IParticleCustom* V			= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	if(bHudMode)
 		V->SetHudMode			(bHudMode);
@@ -125,8 +121,6 @@ void CParticlesObject::Play		(bool bHudMode)
 
 void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 {
-	if(g_dedicated_server)		return;
-
 	IParticleCustom* V			= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	Fmatrix m; m.translate		(pos); 
 	V->UpdateParent				(m,zero_vel,xform);
@@ -139,8 +133,6 @@ void CParticlesObject::play_at_pos(const Fvector& pos, BOOL xform)
 
 void CParticlesObject::Stop		(BOOL bDefferedStop)
 {
-	if(g_dedicated_server)		return;
-
 	IParticleCustom* V			= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->Stop						(bDefferedStop);
 	m_bStopping					= true;
@@ -149,8 +141,6 @@ void CParticlesObject::Stop		(BOOL bDefferedStop)
 void CParticlesObject::shedule_Update	(u32 _dt)
 {
 	inherited::shedule_Update		(_dt);
-
-	if(g_dedicated_server)		return;
 
 	// Update
 	if (m_bDead)					return;
@@ -172,8 +162,6 @@ void CParticlesObject::shedule_Update	(u32 _dt)
 
 void CParticlesObject::PerformAllTheWork(u32 _dt)
 {
-	if(g_dedicated_server)		return;
-
 	// Update
 	u32 dt							= Device.dwTimeGlobal - dwLastTime;
 	if (dt)							{
@@ -186,8 +174,6 @@ void CParticlesObject::PerformAllTheWork(u32 _dt)
 
 void CParticlesObject::PerformAllTheWork_mt()
 {
-	if(g_dedicated_server)		return;
-
 	if (0==mt_dt)			return;	//???
 	IParticleCustom* V		= imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
 	V->OnFrame				(mt_dt);

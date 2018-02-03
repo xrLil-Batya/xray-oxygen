@@ -142,8 +142,6 @@ void CStats::Show()
 	}
 
 	////////////////////////////////////////////////
-	if (g_dedicated_server) return;
-	////////////////////////////////////////////////
 	int frm = 2000;
 	div_t ddd = div(Device.dwFrame,frm);
 	if( ddd.rem < frm/2.0f ){

@@ -19,7 +19,7 @@
 #include "breakableobject.h"
 #include "GamePersistent.h"
 
-#define WIND_RADIUS (4*Radius())	//ðàññòîÿíèå äî àêòåðà, êîãäà ïîÿâëÿåòñÿ âåòåð 
+#define WIND_RADIUS (4*Radius())	//расстояние до актера, когда появляется ветер 
 #define FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 
 CCustomZone::CCustomZone(void) 
@@ -82,7 +82,7 @@ void CCustomZone::Load(LPCSTR section)
 	m_zone_flags.set(eIgnoreSmall,		pSettings->r_bool(section,	"ignore_small"));
 	m_zone_flags.set(eIgnoreArtefact,	pSettings->r_bool(section,	"ignore_artefacts"));
 
-	//çàãðóçèòü âðåìåíà äëÿ çîíû
+	//загрузить времена для зоны
 	m_StateTime[eZoneStateIdle]			= -1;
 	m_StateTime[eZoneStateAwaking]		= pSettings->r_s32(section, "awaking_time");
 	m_StateTime[eZoneStateBlowout]		= pSettings->r_s32(section, "blowout_time");
@@ -250,7 +250,7 @@ void CCustomZone::Load(LPCSTR section)
 		m_fBlowoutWindPowerMax = pSettings->r_float(section,"blowout_wind_power");
 	}
 
-	//çàãðóçèòü ïàðàìåòðû ñâåòîâîé âñïûøêè îò âçðûâà
+	//загрузить параметры световой вспышки от взрыва
 	m_zone_flags.set(eBlowoutLight, pSettings->r_bool (section, "blowout_light"));
 	if(m_zone_flags.test(eBlowoutLight) ){
 		sscanf(pSettings->r_string(section,"light_color"), "%f,%f,%f", &m_LightColor.r, &m_LightColor.g, &m_LightColor.b);
@@ -261,7 +261,7 @@ void CCustomZone::Load(LPCSTR section)
 		m_fLightHeight		= pSettings->r_float(section,"light_height");
 	}
 
-	//çàãðóçèòü ïàðàìåòðû idle ïîäñâåòêè
+	//загрузить параметры idle подсветки
 	m_zone_flags.set(eIdleLight,	pSettings->r_bool (section, "idle_light"));
 	if( m_zone_flags.test(eIdleLight) )
 	{
@@ -308,7 +308,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_StartTime					= Device.dwTimeGlobal;
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
-	//äîáàâèòü èñòî÷íèêè ñâåòà
+	//добавить источники света
 	bool br1 = (0==psDeviceFlags.test(rsR2|rsR3|rsR4));
 	
 	
@@ -501,8 +501,8 @@ void CCustomZone::shedule_Update(u32 dt)
 		// update
 		feel_touch_update		(P,s.R);
 
-		//ïðîéòèñü ïî âñåì îáúåêòàì â çîíå
-		//è ïðîâåðèòü èõ ñîñòîÿíèå
+		//пройтись по всем объектам в зоне
+		//и проверить их состояние
 		for(auto it = m_ObjectInfoMap.begin();
 			m_ObjectInfoMap.end() != it; ++it) 
 		{
@@ -525,8 +525,8 @@ void CCustomZone::shedule_Update(u32 dt)
 					StopObjectIdleParticles( pObject );
 			}
 
-			//åñëè åñòü õîòÿ áû îäèí íå äèñàáëåíûé îáúåêò, òî
-			//çîíà ñ÷èòàåòñÿ àêòèâíîé
+            //если есть хотя бы один не дисабленый объект, то
+			//зона считается активной
 			if(info.zone_ignore == false) 
 				m_zone_flags.set(eZoneIsActive,TRUE);
 		}
@@ -709,7 +709,7 @@ void CCustomZone::UpdateIdleLight	()
 	VERIFY(m_pIdleLAnim);
 
 	int frame = 0;
-	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // âîçâðàùàåò â ôîðìàòå BGR
+	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // возвращает в формате BGR
 	Fcolor					fclr;
 	fclr.set				((float)color_get_B(clr)/255.f,(float)color_get_G(clr)/255.f,(float)color_get_R(clr)/255.f,1.f);
 	
@@ -789,7 +789,7 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 	else 
 		vel.set						(0,0,0);
 	
-	//âûáðàòü ñëó÷àéíóþ êîñòî÷êó íà îáúåêòå
+	//выбрать случайную косточку на объекте
 	CParticlesPlayer* PP			= smart_cast<CParticlesPlayer*>(pObject);
 	if (PP)
 	{
@@ -901,7 +901,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 
 	shared_str particle_str = NULL;
 
-	//ðàçíûå ïàðòèêëû äëÿ îáúåêòîâ ðàçíîãî ðàçìåðà
+	//разные партиклы для объектов разного размера
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sIdleObjectParticlesSmall) return;
@@ -914,7 +914,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 	}
 
 	
-	//çàïóñòèòü ïàðòèêëû íà îáúåêòå
+	//запустить партиклы на объекте
 	//. new
 	PP->StopParticles (particle_str, BI_NONE, true);
 
@@ -937,7 +937,7 @@ void CCustomZone::StopObjectIdleParticles(CGameObject* pObject)
 	
 	
 	shared_str particle_str = NULL;
-	//ðàçíûå ïàðòèêëû äëÿ îáúåêòîâ ðàçíîãî ðàçìåðà
+	//разные партиклы для объектов разного размера
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sIdleObjectParticlesSmall) return;

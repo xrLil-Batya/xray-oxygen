@@ -127,10 +127,8 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	// Done
 	FS.r_close					( LL_Stream );
 	bReady						= true;
-	if (!g_dedicated_server)	IR_Capture();
-#ifndef DEDICATED_SERVER
+	IR_Capture();
 	Device.seqRender.Add		(this);
-#endif
 
 	Device.seqFrame.Add			(this);
 
@@ -144,9 +142,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 int		psNET_DedicatedSleep	= 5;
 void	IGame_Level::OnRender()
 {
-#ifndef DEDICATED_SERVER
-	//	if (_abs(Device.fTimeDelta)<EPS_S) return;
-
 #ifdef _GPA_ENABLED	
 	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
 	TAL_CreateID(rtID);
@@ -155,28 +150,16 @@ void	IGame_Level::OnRender()
 	TAL_EndVirtualTask();
 #endif // _GPA_ENABLED
 
-	// Level render, only when no client output required
-	if (!g_dedicated_server) {
-		Render->Calculate();
-		Render->Render();
-	}
-	else Sleep(psNET_DedicatedSleep);
+    Render->Calculate();
+    Render->Render();
 
 #ifdef _GPA_ENABLED	
 	TAL_RetireID(rtID);
 #endif // _GPA_ENABLED
-
-	// Font
-//	pApp->pFontSystem->SetSizeI(0.023f);
-//	pApp->pFontSystem->OnRender	();
-#endif
 }
 
 void	IGame_Level::OnFrame		( ) 
 {
-	// Log				("- level:on-frame: ",u32(Device.dwFrame));
-//	if (_abs(Device.fTimeDelta)<EPS_S) return;
-
 	// Update all objects
 	VERIFY						(bReady);
 	Objects.Update				(false);

@@ -7,19 +7,17 @@
 //
 // Generated from the TEXTINCLUDE 2 resource.
 //
-#include <Windows.h>
+#include "afxres.h"
 
 /////////////////////////////////////////////////////////////////////////////
 #undef APSTUDIO_READONLY_SYMBOLS
 
 /////////////////////////////////////////////////////////////////////////////
-// Neutral resources
+// Нейтральный resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEU)
-#ifdef _WIN32
 LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 #pragma code_page(1251)
-#endif //_WIN32
 
 /////////////////////////////////////////////////////////////////////////////
 //
@@ -27,22 +25,15 @@ LANGUAGE LANG_NEUTRAL, SUBLANG_NEUTRAL
 //
 
 IDD_STOP DIALOGEX 0, 0, 324, 124
-STYLE DS_ABSALIGN | DS_SYSMODAL | DS_SETFONT | DS_MODALFRAME | DS_NOIDLEMSG | 
-    DS_SETFOREGROUND | DS_FIXEDSYS | DS_NOFAILCREATE | DS_CENTER | WS_POPUP | 
-    WS_VISIBLE | WS_SYSMENU
+STYLE DS_ABSALIGN | DS_SYSMODAL | DS_SETFONT | DS_MODALFRAME | DS_NOIDLEMSG | DS_SETFOREGROUND | DS_FIXEDSYS | DS_NOFAILCREATE | DS_CENTER | WS_POPUP | WS_VISIBLE | WS_SYSMENU
 EXSTYLE WS_EX_PALETTEWINDOW | WS_EX_STATICEDGE
-FONT 8, "MS Shell Dlg", 400, 0
-//FONT 8, "MS Shell Dlg", 400, 0, 0x1
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
 BEGIN
-    CTEXT           "Static",IDC_DESC,0,12,324,54,SS_NOPREFIX,
-                    WS_EX_TRANSPARENT
-    CTEXT           "Static",IDC_FILE,0,78,324,18,SS_NOPREFIX,
-                    WS_EX_TRANSPARENT
-    CTEXT           "Static",IDC_LINE,126,102,72,18,SS_NOPREFIX,
-                    WS_EX_TRANSPARENT
+    CTEXT           "Static",IDC_DESC,0,12,324,54,SS_NOPREFIX,WS_EX_TRANSPARENT
+    CTEXT           "Static",IDC_FILE,0,78,324,18,SS_NOPREFIX,WS_EX_TRANSPARENT
+    CTEXT           "Static",IDC_LINE,126,102,72,18,SS_NOPREFIX,WS_EX_TRANSPARENT
     DEFPUSHBUTTON   "Stop",IDC_STOP,6,102,102,18,BS_FLAT,WS_EX_TRANSPARENT
-    PUSHBUTTON      "Debug",IDC_DEBUG,216,102,102,18,BS_FLAT,
-                    WS_EX_TRANSPARENT
+    PUSHBUTTON      "Debug",IDC_DEBUG,216,102,102,18,BS_FLAT,WS_EX_TRANSPARENT
 END
 
 
@@ -52,7 +43,7 @@ END
 //
 
 #ifdef APSTUDIO_INVOKED
-GUIDELINES DESIGNINFO 
+GUIDELINES DESIGNINFO
 BEGIN
     IDD_STOP, DIALOG
     BEGIN
@@ -64,18 +55,106 @@ BEGIN
 END
 #endif    // APSTUDIO_INVOKED
 
-#endif    // Neutral resources
+#endif    // Нейтральный resources
 /////////////////////////////////////////////////////////////////////////////
 
 
 /////////////////////////////////////////////////////////////////////////////
-// English (U.S.) resources
+// Русский (Россия) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_RUS)
+LANGUAGE LANG_RUSSIAN, SUBLANG_DEFAULT
+#pragma code_page(1251)
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_CRASH DIALOGEX 0, 0, 335, 182
+STYLE DS_SETFONT | DS_FIXEDSYS | WS_CHILD
+FONT 8, "MS Shell Dlg", 400, 0, 0x0
+BEGIN
+    CTEXT           "Произошла ошибка, и движок вынужден прекратить работу.\nВы можете помочь проекту, отправив файл дампа разработчикам.\n",IDC_STATIC,31,11,278,24
+    CONTROL         "https://vk.com/xray_oxygen",IDC_MFCLINK1,"MfcLink",WS_TABSTOP,118,36,98,13
+    CTEXT           "Файл дампа можно найти в корне игры. \nЛог уже включен внутрь, так что присылать его не нужно.",IDC_STATIC,59,54,210,21
+    PUSHBUTTON      "OK",IDC_CRASHOKBTN,141,154,50,14
+    GROUPBOX        "Детали исключения",IDC_STATIC,13,78,305,70
+    LTEXT           "Тип",IDC_STATIC,22,91,13,8
+    EDITTEXT        IDC_CRASHTYPE,64,89,81,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Причина",IDC_STATIC,21,109,30,8
+    EDITTEXT        IDC_CRASHNAME,64,107,81,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Выражение",IDC_STATIC,21,126,40,8
+    EDITTEXT        IDC_CRASHEXPERSSION,64,125,81,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Аргумент 1",IDC_STATIC,187,91,39,8
+    EDITTEXT        IDC_CRASHARG1,229,89,81,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Аргумент 2",IDC_STATIC,187,111,39,8
+    EDITTEXT        IDC_CRASHARG2,229,107,81,14,ES_AUTOHSCROLL | ES_READONLY
+    LTEXT           "Место",IDC_STATIC,187,126,22,8
+    EDITTEXT        IDC_CRASHARG3,230,124,81,14,ES_AUTOHSCROLL | ES_READONLY
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO
+BEGIN
+    IDD_CRASH, DIALOG
+    BEGIN
+        LEFTMARGIN, 5
+        RIGHTMARGIN, 330
+        TOPMARGIN, 4
+        BOTTOMMARGIN, 178
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// AFX_DIALOG_LAYOUT
+//
+
+IDD_CRASH AFX_DIALOG_LAYOUT
+BEGIN
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_CRASH DLGINIT
+BEGIN
+    IDC_MFCLINK1, 0x37c, 157, 0
+0x4d3c, 0x4346, 0x694c, 0x6b6e, 0x555f, 0x6c72, 0x3c3e, 0x4d2f, 0x4346, 
+0x694c, 0x6b6e, 0x555f, 0x6c72, 0x3c3e, 0x464d, 0x4c43, 0x6e69, 0x5f6b, 
+0x7255, 0x506c, 0x6572, 0x6966, 0x3e78, 0x2f3c, 0x464d, 0x4c43, 0x6e69, 
+0x5f6b, 0x7255, 0x506c, 0x6572, 0x6966, 0x3e78, 0x4d3c, 0x4346, 0x694c, 
+0x6b6e, 0x545f, 0x6f6f, 0x746c, 0x7069, 0x3c3e, 0x4d2f, 0x4346, 0x694c, 
+0x6b6e, 0x545f, 0x6f6f, 0x746c, 0x7069, 0x3c3e, 0x464d, 0x4c43, 0x6e69, 
+0x5f6b, 0x7546, 0x6c6c, 0x6554, 0x7478, 0x6f54, 0x6c6f, 0x6974, 0x3e70, 
+0x4146, 0x534c, 0x3c45, 0x4d2f, 0x4346, 0x694c, 0x6b6e, 0x465f, 0x6c75, 
+0x546c, 0x7865, 0x5474, 0x6f6f, 0x746c, 0x7069, "\076" 
+    0
+END
+
+#endif    // Русский (Россия) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Английский (США) resources
 
 #if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
-#ifdef _WIN32
 LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
 #pragma code_page(1252)
-#endif //_WIN32
 
 #ifdef APSTUDIO_INVOKED
 /////////////////////////////////////////////////////////////////////////////
@@ -102,7 +181,7 @@ END
 
 #endif    // APSTUDIO_INVOKED
 
-#endif    // English (U.S.) resources
+#endif    // Английский (США) resources
 /////////////////////////////////////////////////////////////////////////////
 
 

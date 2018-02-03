@@ -501,22 +501,9 @@ void CInventory::Activate(u16 slot, bool bForce)
 		{
 			if (tmp_item)
 				tmp_item->ActivateItem();
-			
-//!			if ( m_iActiveSlot != slot ) {
-//!				LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
-//				if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) )
-//					LogStackTrace	("");
-//!				Msg				("[%6d][%s] CInventory::Activate changing active slot from %d to %d", Device.dwTimeGlobal, name, m_iActiveSlot, slot );
-//!			}
 
 			m_iActiveSlot		= slot;
 		}
-//		if ( m_iNextActiveSlot != slot ) {
-//			LPCSTR const name = smart_cast<CGameObject const*>(m_pOwner)->cName().c_str();
-//			if ( !xr_strcmp("jup_b43_stalker_assistant_pri6695", name) && !slot )
-//				LogStackTrace	("");
-//			Msg				( "[%6d][%s] CInventory::Activate changing next active slot3 to %d", Device.dwTimeGlobal, name, slot );
-//		}
 		m_iNextActiveSlot		= slot;
 	}
 }

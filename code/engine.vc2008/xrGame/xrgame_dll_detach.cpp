@@ -44,13 +44,10 @@ void init_game_globals()
 {
 	CreateUIGeom									();
 	InitHudSoundSettings							();
-	if(!g_dedicated_server)
-	{
 //		CInfoPortion::InitInternal					();
 //.		CEncyclopediaArticle::InitInternal			();
-		CPhraseDialog::InitInternal					();
-		InventoryUtilities::CreateShaders			();
-	};
+	CPhraseDialog::InitInternal					    ();
+	InventoryUtilities::CreateShaders			    ();
 	CCharacterInfo::InitInternal					();
 	CSpecificCharacter::InitInternal				();
 	CHARACTER_COMMUNITY::InitInternal				();
