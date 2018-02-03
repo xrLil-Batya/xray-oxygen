@@ -75,7 +75,6 @@ private:
 	typedef xr_vector<server_info_uploader*>	info_uploaders_t;
 
 	info_uploaders_t			m_info_uploaders;
-	IReader*					m_server_logo;
 
 	struct DelayedPacket
 	{
@@ -174,15 +173,12 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
 			u32				OnMessageSync		(NET_Packet& P, ClientID sender);
 	virtual void			OnCL_Connected		(IClient* CL);
-	virtual void			OnCL_Disconnected	(IClient* CL);
-	virtual bool            OnCL_QueryHost () { return false; }
 	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
 			void			GetPooledState			(xrClientData* xrCL);
 			void			ClearDisconnectedPool	() { m_disconnected_clients.Clear(); };
 
 	virtual IClient*		client_Create		();								// create client info
-	virtual void			client_Replicate	();								// replicate current state to client
 	virtual IClient*		client_Find_Get		(ClientID ID);					// Find earlier disconnected client
 	virtual void			client_Destroy		(IClient* C);					// destroy client info
 
@@ -209,9 +205,6 @@ public:
 
 	void					create_direct_client();
 
-	virtual void			Assign_ServerType	( string512& res ) {};
-	virtual bool			HasPassword			()	{ return false; }
-	virtual bool			HasProtected		()	{ return false; }
 	
 	virtual void			GetServerInfo		( CServerInfo* si );
 public:
@@ -225,7 +218,6 @@ public:
 #ifdef DEBUG
 		enum e_dbg_net_Draw_Flags
 		{
-
 			dbg_draw_actor_alive			=(1<<0),	
 			dbg_draw_actor_dead				=(1<<1),	
 			dbg_draw_customzone				=(1<<2),	

@@ -47,7 +47,6 @@ xrServer::xrServer() : IPureServer(Device.GetTimerGlobal(), g_dedicated_server)
 {
 	m_file_transfers	= NULL;
 	m_aDelayedPackets.clear();
-	m_server_logo		= NULL;
 	m_last_updates_size	= 0;
 	m_last_update_time	= 0;
 }
@@ -70,7 +69,6 @@ xrServer::~xrServer()
 	m_aDelayedPackets.clear();
 	entities.clear();
 	delete_data(m_info_uploaders);
-	xr_delete(m_server_logo);
 }
 
 //--------------------------------------------------------------------
@@ -89,11 +87,8 @@ IClient*	xrServer::client_Create		()
 {
 	return xr_new<xrClientData> ();
 }
-void		xrServer::client_Replicate	()
-{
-}
 
-IClient*	xrServer::client_Find_Get	(ClientID ID)
+IClient* xrServer::client_Find_Get	(ClientID ID)
 {
 	DWORD dwPort			= 0;
 	//ip_address tmp_ip_address;
@@ -104,21 +99,16 @@ IClient*	xrServer::client_Find_Get	(ClientID ID)
 	newCL->server			= this;
 	net_players.AddNewClient(newCL);
 
-#ifndef MASTER_GOLD
-	Msg		("# New player created.");
-#endif // #ifndef MASTER_GOLD
 	return newCL;
 };
 
 u32	g_sv_Client_Reconnect_Time = 3;
 
-void		xrServer::client_Destroy	(IClient* C)
+void xrServer::client_Destroy(IClient* C)
 {
 	// Delete assosiated entity
-	// xrClientData*	D = (xrClientData*)C;
-	// CSE_Abstract* E = D->owner;
 	IClient* alife_client =	net_players.FindAndEraseClient(std::bind(std::equal_to<IClient*>(), std::placeholders::_1,C));
-	//VERIFY(alife_client);
+
 	if (alife_client)
 	{
 		CSE_Abstract* pOwner	= static_cast<xrClientData*>(alife_client)->owner;
@@ -465,9 +455,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		{
 			AddDelayedPacket(P, sender);
 		}break;
-	case M_CHAT_MESSAGE:
-		{
-		}break;
 	case M_SV_MAP_NAME:
 		{
 			xrClientData *l_pC			= ID_to_client(sender);
@@ -588,12 +575,8 @@ CSE_Abstract*	xrServer::entity_Create		(LPCSTR name)
 	return F_entity_Create(name);
 }
 
-void			xrServer::entity_Destroy	(CSE_Abstract *&P)
+void xrServer::entity_Destroy(CSE_Abstract *&P)
 {
-#ifdef DEBUG
-if( dbg_net_Draw_Flags.test( dbg_destroy ) )
-		Msg	("xrServer::entity_Destroy : [%d][%s][%s]",P->ID,P->name(),P->name_replace());
-#endif
 	R_ASSERT					(P);
 	entities.erase				(P->ID);
 	m_tID_Generator.vfFreeID	(P->ID,Device.TimerAsync());
@@ -609,13 +592,13 @@ if( dbg_net_Draw_Flags.test( dbg_destroy ) )
 }
 
 //--------------------------------------------------------------------
-void			xrServer::Server_Client_Check(IClient* CL)
+void xrServer::Server_Client_Check(IClient* CL)
 {
 	if (SV_Client && SV_Client->ID == CL->ID)
 	{
 		if (!CL->flags.bConnected)
 		{
-			SV_Client = NULL;
+			SV_Client = nullptr;
 		};
 		return;
 	};
@@ -729,8 +712,6 @@ void xrServer::AddDelayedPacket	(NET_Packet& Packet, ClientID Sender)
 	NewPacket->SenderID = Sender;
     std::memcpy(&(NewPacket->Packet),&Packet,sizeof(NET_Packet));
 }
-
-extern BOOL g_bCollectStatisticData;
 
 void xrServer::GetServerInfo(CServerInfo* si)
 {

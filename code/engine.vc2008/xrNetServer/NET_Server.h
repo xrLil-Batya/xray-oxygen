@@ -151,7 +151,6 @@ public:
 	virtual bool			OnCL_QueryHost		()		{ return true; };
 
 	virtual IClient*		client_Create		()				= 0;			// create client info
-	virtual void			client_Replicate	()				= 0;			// replicate current state to client
 	virtual void			client_Destroy		(IClient* C)	= 0;			// destroy client info
 
 	BOOL					HasBandwidth			(IClient* C);

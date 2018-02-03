@@ -37,14 +37,9 @@ bool const xrClientsPool::expired_client_deleter::operator()(dclient & right) co
 void xrClientsPool::ClearExpiredClients()
 {
 	expired_client_deleter tmp_deleter;
-	tmp_deleter.m_current_time	= Device.dwTimeGlobal;
-	tmp_deleter.m_expire_time	= g_sv_Client_Reconnect_Time * 60*1000; //in minutes
-	m_dclients.erase(
-		std::remove_if(
-			m_dclients.begin(),
-			m_dclients.end(),
-			tmp_deleter),
-		m_dclients.end());
+	tmp_deleter.m_current_time = Device.dwTimeGlobal;
+	tmp_deleter.m_expire_time = g_sv_Client_Reconnect_Time * 60 * 1000; //in minutes
+	m_dclients.erase(std::remove_if(m_dclients.begin(), m_dclients.end(), tmp_deleter), m_dclients.end());
 }
 
 void xrClientsPool::Add(xrClientData* new_dclient)
@@ -74,8 +69,7 @@ xrClientData*	xrClientsPool::Get(xrClientData* new_client)
 	ClearExpiredClients		();
 	pooled_client_finder	tmp_finder;
 	tmp_finder.m_new_client	= new_client;
-	dclients_t::iterator tmp_iter = std::find_if(m_dclients.begin(),
-		m_dclients.end(), tmp_finder);
+	dclients_t::iterator tmp_iter = std::find_if(m_dclients.begin(), m_dclients.end(), tmp_finder);
 	if (tmp_iter != m_dclients.end())
 	{
 		xrClientData*	result	= tmp_iter->m_client;

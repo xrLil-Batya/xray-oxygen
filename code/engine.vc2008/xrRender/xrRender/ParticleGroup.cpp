@@ -326,10 +326,7 @@ void OnGroupParticleDead(void* owner, u32 param, PAPI::Particle& m, u32 idx)
     	PG->items[param].StartFreeChild			(PE,*eff->m_OnDeadChildName,m);
 }
 //------------------------------------------------------------------------------
-struct zero_vis_pred
-{
-	bool operator()(const dxRender_Visual* x){ return x==0; }
-};
+
 void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& box, bool& bPlaying)
 {
     CParticleEffect* E		= static_cast<CParticleEffect*>(_effect);
@@ -391,10 +388,11 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
             }
         }
         // remove if stopped
-        if (rem_cnt){
-            auto new_end=std::remove_if(_children_free.begin(),_children_free.end(),zero_vis_pred());
-            _children_free.erase(new_end,_children_free.end());
-        }
+		if (rem_cnt)
+		{
+			xr_vector<dxRender_Visual*>::iterator new_end = std::remove_if(_children_free.begin(), _children_free.end(), [](const dxRender_Visual* x) { return !x; });
+			_children_free.erase(new_end, _children_free.end());
+		}
     }
 //	Msg("C: %d CS: %d",_children.size(),_children_stopped.size());
 }

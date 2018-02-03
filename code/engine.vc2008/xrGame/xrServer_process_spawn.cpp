@@ -20,9 +20,6 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		E->Spawn_Read		(P);
 		if(!E->m_gameType.MatchType((u16)game->Type() || !E->match_configuration() || !game->OnPreCreate(E)))
 		{
-#ifndef MASTER_GOLD
-			Msg			("- SERVER: Entity [%s] incompatible with current game type.",*E->s_name);
-#endif // #ifndef MASTER_GOLD
 			F_entity_Destroy(E);
 			return			NULL;
 		}
@@ -33,7 +30,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	CSE_Abstract			*e_parent = 0;
 	if (E->ID_Parent != 0xffff)
 	{
-		e_parent			= ID_to_entity(E->ID_Parent);
+		e_parent			= game->get_entity_from_eid(E->ID_Parent);
 		if (!e_parent) {
 			R_ASSERT		(!tpExistedEntity);
 			F_entity_Destroy(E);

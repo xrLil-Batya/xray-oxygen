@@ -347,15 +347,13 @@ void item_respawn_manager::clear_level_items()
 	xr_set<u16>::iterator ie = level_items_respawn.end();
 	for (xr_set<u16>::iterator i = level_items_respawn.begin(); i != ie; ++i)
 	{
-		CSE_Abstract* entity = m_server->ID_to_entity(*i);
+		CSE_Abstract* entity = m_server->game->get_entity_from_eid(*i);
 		if (!entity)
 			continue;		// this can be in case ending of a round...
 		//VERIFY2(entity, make_string("entity not found [%d]", *i).c_str());
 		if (entity->ID_Parent != u16(-1))
 			continue;
-#ifndef MASTER_GOLD
-		Msg("---Destroying level item [%d] before respawn...", *i);
-#endif // #ifndef MASTER_GOLD
+
 		m_server->Perform_destroy(entity, net_flags(TRUE,TRUE));
 	}
 	level_items_respawn.clear();

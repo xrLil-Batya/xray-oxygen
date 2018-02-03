@@ -637,10 +637,6 @@ void CKinematics::AddWallmark(const Fmatrix* parent_xform, const Fvector3& start
 }
 
 static const float LIFE_TIME=30.f;
-struct zero_wm_pred
-{
-	bool operator()(const intrusive_ptr<CSkeletonWallmark> x){ return x==0; }
-};
 
 void CKinematics::CalculateWallmarks()
 {
@@ -658,9 +654,10 @@ void CKinematics::CalculateWallmarks()
 				need_remove							= true;
 			}
 		}
-		if (need_remove){
-            auto new_end= std::remove_if(wallmarks.begin(),wallmarks.end(),zero_wm_pred());
-			wallmarks.erase	(new_end,wallmarks.end());
+		if (need_remove)
+		{
+			SkeletonWMVec::iterator new_end = std::remove_if(wallmarks.begin(), wallmarks.end(), [](const intrusive_ptr<CSkeletonWallmark> x){ return !x; });
+			wallmarks.erase(new_end, wallmarks.end());
 		}
 	}
 }
