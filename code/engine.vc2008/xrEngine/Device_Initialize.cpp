@@ -1,5 +1,5 @@
 #include "stdafx.h"
-#include "resource.h"
+#include "../xrPlay/resource.h"
 #include "dedicated_server_only.h"
 
 #ifdef INGAME_EDITOR

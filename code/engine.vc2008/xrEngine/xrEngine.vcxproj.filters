@@ -4,9 +4,6 @@
     <Filter Include="General">
       <UniqueIdentifier>{a111e29f-5a82-4e9d-90e3-d2f04b02d807}</UniqueIdentifier>
     </Filter>
-    <Filter Include="General\Resources">
-      <UniqueIdentifier>{cdb3c9fa-b542-4ebf-819a-66613fef698e}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interfaces">
       <UniqueIdentifier>{2ced8cad-5920-4b1f-8b61-ca138c6b31c1}</UniqueIdentifier>
     </Filter>
@@ -263,9 +260,6 @@
     </ClInclude>
     <ClInclude Include="x_ray.h">
       <Filter>General</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>General\Resources</Filter>
     </ClInclude>
     <ClInclude Include="IInputReceiver.h">
       <Filter>Interfaces\Input</Filter>
@@ -915,17 +909,6 @@
     <ClCompile Include="BoneEditor.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ResourceCompile Include="resource.rc">
-      <Filter>General\Resources</Filter>
-    </ResourceCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="splash_xrcs_en.bmp">
-      <Filter>General\Resources</Filter>
-    </None>
-    <None Include="stalker_cs.ico">
-      <Filter>General\Resources</Filter>
-    </None>
     <None Include="My Amplifier Results\r000hs\r000hs.ampl">
       <Filter>My Amplifier Results</Filter>
     </None>
