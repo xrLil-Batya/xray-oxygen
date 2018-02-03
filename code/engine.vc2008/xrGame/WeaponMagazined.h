@@ -3,6 +3,7 @@
 #include "weapon.h"
 #include "hudsound.h"
 #include "ai_sounds.h"
+#include "../FrayBuildConfig.hpp"
 
 class ENGINE_API CMotionDef;
 

@@ -5,6 +5,8 @@
 #include "../../xrServerEntities/inventory_space.h"
 #include "UIHint.h"
 
+#include "../../FrayBuildConfig.hpp"
+
 class CUICharacterInfo;
 class CUIDragDropListEx;
 class CUIDragDropReferenceList;

@@ -35,6 +35,8 @@
 
 #include "../actor_defs.h"
 
+#include "../../FrayBuildConfig.hpp"
+
 
 void move_item_from_to(u16 from_id, u16 to_id, u16 what_id);
 

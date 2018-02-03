@@ -22,6 +22,7 @@
 #include "script_game_object.h"
 #include "CustomOutfit.h"
 #include "InventoryOwner.h"
+#include "../FrayBuildConfig.hpp"
 
 ENGINE_API extern float psHUD_FOV;
 ENGINE_API extern float psHUD_FOV_def;

@@ -38,6 +38,8 @@
 #include "UIMainIngameWnd.h"
 #include "../Trade.h"
 
+#include "../../FrayBuildConfig.hpp"
+
 void CUIActorMenu::SetActor(CInventoryOwner* io)
 {
 	R_ASSERT(!IsShown());
