@@ -323,7 +323,7 @@ void CUIHudStatesWnd::UpdateZones()
 	}
 
 	Fvector posf; 
-	posf.set( Device.vCameraPosition );
+	posf.set( Level().CurrentControlEntity()->Position() );
 	Level().hud_zones_list->feel_touch_update( posf, m_zone_feel_radius_max );
 	
 	if ( Level().hud_zones_list->m_ItemInfos.size() == 0 )
@@ -342,7 +342,7 @@ void CUIHudStatesWnd::UpdateZones()
 		ALife::EHitType			hit_type = pZone->GetHitType();
 		ALife::EInfluenceType	z_type = get_indik_type( hit_type );
 
-		Fvector P			= Device.vCameraPosition;
+		Fvector P			= Level().CurrentControlEntity()->Position();
 		P.y					-= 0.5f;
 		float dist_to_zone	= 0.0f;
 		float rad_zone		= 0.0f;
@@ -366,12 +366,12 @@ void CUIHudStatesWnd::UpdateZones()
 			if ( dist_to_zone < rad_zone )
 			{
 				fRelPow *= 0.3f;
-				fRelPow *= ( 2.5f - 2.0f * power ); // çâóê çàâèñèò îò ñèëû çîíû
+				fRelPow *= ( 2.5f - 2.0f * power ); // Ã§Ã¢Ã³Ãª Ã§Ã Ã¢Ã¨Ã±Ã¨Ã² Ã®Ã² Ã±Ã¨Ã«Ã» Ã§Ã®Ã­Ã»
 			}
 		}
 		clamp( fRelPow, 0.0f, 1.0f );
 
-		//îïðåäåëèòü òåêóùóþ ÷àñòîòó ñðàáàòûâàíèÿ ñèãíàëà
+		//Ã®Ã¯Ã°Ã¥Ã¤Ã¥Ã«Ã¨Ã²Ã¼ Ã²Ã¥ÃªÃ³Ã¹Ã³Ã¾ Ã·Ã Ã±Ã²Ã®Ã²Ã³ Ã±Ã°Ã Ã¡Ã Ã²Ã»Ã¢Ã Ã­Ã¨Ã¿ Ã±Ã¨Ã£Ã­Ã Ã«Ã 
 		zone_info.cur_period = zone_type->freq.x + (zone_type->freq.y - zone_type->freq.x) * (fRelPow * fRelPow);
 		
 		if( zone_info.snd_time > zone_info.cur_period )
