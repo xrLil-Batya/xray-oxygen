@@ -99,12 +99,12 @@ bool CActor::use_Vehicle(CHolderCustom* object)
 	Center(center);
 	if(m_holder)
 	{
-		if (!vehicle && m_holder->Use(Device.vCameraPosition, Device.vCameraDirection, center)) 
+		if (!vehicle && m_holder->Use(Level().CurrentControlEntity()->Position(), Device.vCameraDirection, center)) 
 			detach_Vehicle();
 		else
 		{
 			if (m_holder == vehicle)
-				if (m_holder->Use(Device.vCameraPosition, Device.vCameraDirection, center))
+				if (m_holder->Use(Level().CurrentControlEntity()->Position(), Device.vCameraDirection, center))
 					detach_Vehicle();
 		}
 		return true;
@@ -113,7 +113,7 @@ bool CActor::use_Vehicle(CHolderCustom* object)
 	{
 		if (vehicle)
 		{
-			if (vehicle->Use(Device.vCameraPosition, Device.vCameraDirection, center))
+			if (vehicle->Use(Level().CurrentControlEntity()->Position(), Device.vCameraDirection, center))
 			{
 				if (pCamBobbing)
 				{
