@@ -19,7 +19,7 @@
 #include "breakableobject.h"
 #include "GamePersistent.h"
 
-#define WIND_RADIUS (4*Radius())	//расстояние до актера, когда появляется ветер 
+#define WIND_RADIUS (4*Radius())	//Г°Г Г±Г±ГІГ®ГїГ­ГЁГҐ Г¤Г® Г ГЄГІГҐГ°Г , ГЄГ®ГЈГ¤Г  ГЇГ®ГїГўГ«ГїГҐГІГ±Гї ГўГҐГІГҐГ° 
 #define FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 
 CCustomZone::CCustomZone(void) 
@@ -82,7 +82,7 @@ void CCustomZone::Load(LPCSTR section)
 	m_zone_flags.set(eIgnoreSmall,		pSettings->r_bool(section,	"ignore_small"));
 	m_zone_flags.set(eIgnoreArtefact,	pSettings->r_bool(section,	"ignore_artefacts"));
 
-	//загрузить времена для зоны
+	//Г§Г ГЈГ°ГіГ§ГЁГІГј ГўГ°ГҐГ¬ГҐГ­Г  Г¤Г«Гї Г§Г®Г­Г»
 	m_StateTime[eZoneStateIdle]			= -1;
 	m_StateTime[eZoneStateAwaking]		= pSettings->r_s32(section, "awaking_time");
 	m_StateTime[eZoneStateBlowout]		= pSettings->r_s32(section, "blowout_time");
@@ -250,7 +250,7 @@ void CCustomZone::Load(LPCSTR section)
 		m_fBlowoutWindPowerMax = pSettings->r_float(section,"blowout_wind_power");
 	}
 
-	//загрузить параметры световой вспышки от взрыва
+	//Г§Г ГЈГ°ГіГ§ГЁГІГј ГЇГ Г°Г Г¬ГҐГІГ°Г» Г±ГўГҐГІГ®ГўГ®Г© ГўГ±ГЇГ»ГёГЄГЁ Г®ГІ ГўГ§Г°Г»ГўГ 
 	m_zone_flags.set(eBlowoutLight, pSettings->r_bool (section, "blowout_light"));
 	if(m_zone_flags.test(eBlowoutLight) ){
 		sscanf(pSettings->r_string(section,"light_color"), "%f,%f,%f", &m_LightColor.r, &m_LightColor.g, &m_LightColor.b);
@@ -261,7 +261,7 @@ void CCustomZone::Load(LPCSTR section)
 		m_fLightHeight		= pSettings->r_float(section,"light_height");
 	}
 
-	//загрузить параметры idle подсветки
+	//Г§Г ГЈГ°ГіГ§ГЁГІГј ГЇГ Г°Г Г¬ГҐГІГ°Г» idle ГЇГ®Г¤Г±ГўГҐГІГЄГЁ
 	m_zone_flags.set(eIdleLight,	pSettings->r_bool (section, "idle_light"));
 	if( m_zone_flags.test(eIdleLight) )
 	{
@@ -308,7 +308,7 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 	m_StartTime					= Device.dwTimeGlobal;
 	m_zone_flags.set			(eUseOnOffTime,	(m_TimeToDisable!=0)&&(m_TimeToEnable!=0) );
 
-	//добавить источники света
+	//Г¤Г®ГЎГ ГўГЁГІГј ГЁГ±ГІГ®Г·Г­ГЁГЄГЁ Г±ГўГҐГІГ 
 	bool br1 = (0==psDeviceFlags.test(rsR2|rsR3|rsR4));
 	
 	
@@ -459,7 +459,7 @@ void CCustomZone::UpdateWorkload	(u32 dt)
 
 	if (Level().CurrentEntity()) 
 	{
-		Fvector P			= Device.vCameraPosition;
+		Fvector P			= Level().CurrentControlEntity()->Position();
 		P.y					-= 0.9f;
 		float radius		= 1.0f;
 		CalcDistanceTo		(P, m_fDistanceToCurEntity, radius);
@@ -501,8 +501,8 @@ void CCustomZone::shedule_Update(u32 dt)
 		// update
 		feel_touch_update		(P,s.R);
 
-		//пройтись по всем объектам в зоне
-		//и проверить их состояние
+		//ГЇГ°Г®Г©ГІГЁГ±Гј ГЇГ® ГўГ±ГҐГ¬ Г®ГЎГєГҐГЄГІГ Г¬ Гў Г§Г®Г­ГҐ
+		//ГЁ ГЇГ°Г®ГўГҐГ°ГЁГІГј ГЁГµ Г±Г®Г±ГІГ®ГїГ­ГЁГҐ
 		for(auto it = m_ObjectInfoMap.begin();
 			m_ObjectInfoMap.end() != it; ++it) 
 		{
@@ -525,8 +525,8 @@ void CCustomZone::shedule_Update(u32 dt)
 					StopObjectIdleParticles( pObject );
 			}
 
-			//если есть хотя бы один не дисабленый объект, то
-			//зона считается активной
+			//ГҐГ±Г«ГЁ ГҐГ±ГІГј ГµГ®ГІГї ГЎГ» Г®Г¤ГЁГ­ Г­ГҐ Г¤ГЁГ±Г ГЎГ«ГҐГ­Г»Г© Г®ГЎГєГҐГЄГІ, ГІГ®
+			//Г§Г®Г­Г  Г±Г·ГЁГІГ ГҐГІГ±Гї Г ГЄГІГЁГўГ­Г®Г©
 			if(info.zone_ignore == false) 
 				m_zone_flags.set(eZoneIsActive,TRUE);
 		}
@@ -537,9 +537,9 @@ void CCustomZone::shedule_Update(u32 dt)
 		inherited::shedule_Update(dt);
 
 		// check "fast-mode" border
-		float	cam_distance	= Device.vCameraPosition.distance_to(P)-s.R;
+		float	act_distance	= Level().CurrentControlEntity()->Position().distance_to(P)-s.R;
 		
-		if (cam_distance>FASTMODE_DISTANCE && !m_zone_flags.test(eAlwaysFastmode) )	
+		if (act_distance>FASTMODE_DISTANCE && !m_zone_flags.test(eAlwaysFastmode) )	
 			o_switch_2_slow	();
 		else									
 			o_switch_2_fast	();
@@ -709,7 +709,7 @@ void CCustomZone::UpdateIdleLight	()
 	VERIFY(m_pIdleLAnim);
 
 	int frame = 0;
-	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // возвращает в формате BGR
+	u32 clr					= m_pIdleLAnim->CalculateBGR(Device.fTimeGlobal,frame); // ГўГ®Г§ГўГ°Г Г№Г ГҐГІ Гў ГґГ®Г°Г¬Г ГІГҐ BGR
 	Fcolor					fclr;
 	fclr.set				((float)color_get_B(clr)/255.f,(float)color_get_G(clr)/255.f,(float)color_get_R(clr)/255.f,1.f);
 	
@@ -789,7 +789,7 @@ void CCustomZone::PlayEntranceParticles(CGameObject* pObject)
 	else 
 		vel.set						(0,0,0);
 	
-	//выбрать случайную косточку на объекте
+	//ГўГ»ГЎГ°Г ГІГј Г±Г«ГіГ·Г Г©Г­ГіГѕ ГЄГ®Г±ГІГ®Г·ГЄГі Г­Г  Г®ГЎГєГҐГЄГІГҐ
 	CParticlesPlayer* PP			= smart_cast<CParticlesPlayer*>(pObject);
 	if (PP)
 	{
@@ -901,7 +901,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 
 	shared_str particle_str = NULL;
 
-	//разные партиклы для объектов разного размера
+	//Г°Г Г§Г­Г»ГҐ ГЇГ Г°ГІГЁГЄГ«Г» Г¤Г«Гї Г®ГЎГєГҐГЄГІГ®Гў Г°Г Г§Г­Г®ГЈГ® Г°Г Г§Г¬ГҐГ°Г 
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sIdleObjectParticlesSmall) return;
@@ -914,7 +914,7 @@ void CCustomZone::PlayObjectIdleParticles(CGameObject* pObject)
 	}
 
 	
-	//запустить партиклы на объекте
+	//Г§Г ГЇГіГ±ГІГЁГІГј ГЇГ Г°ГІГЁГЄГ«Г» Г­Г  Г®ГЎГєГҐГЄГІГҐ
 	//. new
 	PP->StopParticles (particle_str, BI_NONE, true);
 
@@ -937,7 +937,7 @@ void CCustomZone::StopObjectIdleParticles(CGameObject* pObject)
 	
 	
 	shared_str particle_str = NULL;
-	//разные партиклы для объектов разного размера
+	//Г°Г Г§Г­Г»ГҐ ГЇГ Г°ГІГЁГЄГ«Г» Г¤Г«Гї Г®ГЎГєГҐГЄГІГ®Гў Г°Г Г§Г­Г®ГЈГ® Г°Г Г§Г¬ГҐГ°Г 
 	if(pObject->Radius()<SMALL_OBJECT_RADIUS)
 	{
 		if(!m_sIdleObjectParticlesSmall) return;
