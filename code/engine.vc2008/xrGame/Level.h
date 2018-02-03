@@ -96,11 +96,8 @@ protected:
 	
 public:
 #ifdef DEBUG
-	// level debugger
-	CLevelDebug					*m_level_debug;
+	CLevelDebug					*m_level_debug; // level debugger
 #endif
-
-public:
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
 	void						SetInterpolationSteps	(u32 InterpSteps);
@@ -138,22 +135,19 @@ public:
 	void						SetControlEntity		( CObject* O  )		{ pCurrentControlEntity=O; }
 private:
 	
-	void						make_NetCorrectionPrediction	();
+	void						make_NetCorrectionPrediction();
 
-	u32							m_dwDeltaUpdate ;
+	u32							m_dwDeltaUpdate;
 	u32							m_dwLastNetUpdateTime;
-	void						UpdateDeltaUpd					( u32 LastTime );
+	void						UpdateDeltaUpd			( u32 LastTime );
 
 	bool						Connect2Server					(const char* options);
-	shared_str					m_client_digest;	//for screenshots
-public:
-	shared_str get_cdkey_digest() const { return m_client_digest; };
 private:
 	bool						m_bConnectResultReceived;
 	bool						m_bConnectResult;
 	xr_string					m_sConnectResult;
 public:	
-	void						OnConnectResult					(NET_Packet* P);
+	void						OnConnectResult			(NET_Packet* P);
 public:
 	//////////////////////////////////////////////	
 	// static particles
@@ -182,9 +176,7 @@ public:
 protected:
 	BOOL						net_start_result_total;
 	BOOL						connected_to_server;
-	
 	BOOL						deny_m_spawn;		//only for debug...
-	
 	BOOL						sended_request_connection_data;
 		
 	void						MakeReconnect();
@@ -334,11 +326,7 @@ public:
 	CSE_Abstract	*spawn_item							(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
 			
 protected:
-	u32		m_dwCL_PingDeltaSend;
-	u32		m_dwCL_PingLastSendTime;
-	u32		m_dwRealPing;
 public:
-	virtual	u32				GetRealPing					() { return m_dwRealPing; };
 
 public:
 			void			remove_objects				();

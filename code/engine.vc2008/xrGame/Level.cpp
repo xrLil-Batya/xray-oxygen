@@ -133,15 +133,8 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 
 	m_pBulletManager			= xr_new<CBulletManager>();
 
-	if(!g_dedicated_server)
-	{
-		m_map_manager				= xr_new<CMapManager>();
-		m_game_task_manager			= xr_new<CGameTaskManager>();
-	}else
-	{
-		m_map_manager				= NULL;
-		m_game_task_manager			= NULL;
-	}
+	m_map_manager				= xr_new<CMapManager>();
+	m_game_task_manager			= xr_new<CGameTaskManager>();
 
 //----------------------------------------------------
 	m_bNeed_CrPr				= false;
@@ -189,11 +182,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	pActors4CrPr.clear();
 	//---------------------------------------------------------
 	pCurrentControlEntity = NULL;
-
-	//---------------------------------------------------------
-	m_dwCL_PingLastSendTime = 0;
-	m_dwCL_PingDeltaSend = 1000;
-	m_dwRealPing = 0;
 
 	//---------------------------------------------------------	
 	m_writer = NULL;
