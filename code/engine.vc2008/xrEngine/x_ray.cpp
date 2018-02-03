@@ -17,7 +17,7 @@
 #include "x_ray.h"
 #include "std_classes.h"
 #include "GameFont.h"
-#include "resource.h"
+#include "../xrPlay/resource.h"
 #include "LightAnimLibrary.h"
 #include "../xrcdb/ispatial.h"
 #include "Text_Console.h"
@@ -424,7 +424,7 @@ ENGINE_API	bool g_dedicated_server	= false;
 DLL_API int RunXRLauncher();
 DLL_API const char* GetParams();
 
-int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
+ENGINE_API int RunApplication(char* commandLine)
 {
 	Debug._initialize			(false);
 	//MessageBox(0, lpCmdLine, "", 0);
@@ -488,9 +488,9 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 	LPCSTR						fsgame_ltx_name = "-fsltx ";
 	string_path					fsgame = "";
 
-	if (strstr(lpCmdLine, fsgame_ltx_name)) {
+	if (strstr(commandLine, fsgame_ltx_name)) {
 		int						sz = xr_strlen(fsgame_ltx_name);
-		sscanf					(strstr(lpCmdLine,fsgame_ltx_name)+sz,"%[^ ] ",fsgame);
+		sscanf					(strstr(commandLine,fsgame_ltx_name)+sz,"%[^ ] ",fsgame);
 	}
 
 	compute_build_id			();
@@ -515,7 +515,7 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 		Engine.External.CreateRendererList();
 
 		LPCSTR benchName = "-batch_benchmark ";
-		if(strstr(lpCmdLine, benchName))
+		if(strstr(commandLine, benchName))
 		{
 			int sz = xr_strlen(benchName);
 			string64				b_name;
@@ -546,24 +546,6 @@ int APIENTRY WinMain_impl(char* lpCmdLine, int nCmdShow)
 		CloseHandle( hCheckPresenceMutex );
 #endif
 	}
-	return 0;
-}
-
-int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
-{
-	std::string params = lpCmdLine;
-	if (strstr(lpCmdLine, "-launcher"))
-	{
-		int l_res = RunXRLauncher();
-		switch (l_res)
-		{
-		case 0: return 0;
-		}
-		params = GetParams(); // Fixed
-	}
-
-	WinMain_impl(params.data(),sizeof(params));
-
 	return 0;
 }
 

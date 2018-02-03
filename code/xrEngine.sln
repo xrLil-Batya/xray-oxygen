@@ -115,6 +115,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrECoreLite", "editors\xrEC
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{139490FF-7227-454D-A866-E63D228EC1C0}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrPlay", "engine.vc2008\xrPlay\xrPlay.vcxproj", "{131A9895-FE16-417A-8C41-16A5994A6D13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -341,6 +343,14 @@ Global
 		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release_AI32|x64.Build.0 = Release_AI32|x64
 		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release|x64.ActiveCfg = Release|x64
 		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}.Release|x64.Build.0 = Release|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Debug|x64.ActiveCfg = Debug|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Debug|x64.Build.0 = Debug|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Mixed|x64.ActiveCfg = Release|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Mixed|x64.Build.0 = Release|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Release_AI32|x64.ActiveCfg = Release|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Release_AI32|x64.Build.0 = Release|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Release|x64.ActiveCfg = Release|x64
+		{131A9895-FE16-417A-8C41-16A5994A6D13}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
