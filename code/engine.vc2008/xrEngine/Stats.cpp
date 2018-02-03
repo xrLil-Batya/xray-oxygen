@@ -270,7 +270,11 @@ void CStats::Show()
 		seqStats.Process				(rp_Stats);
 		pFont->OnRender					();
 	};
-
+	if( psDeviceFlags.test(rsDrawFPS) ){
+		draw_fps					(pFont);
+		pFont->OnRender					();
+	};
+	
 	if( /*psDeviceFlags.test(rsStatistic) ||*/ psDeviceFlags.test(rsCameraPos) ){
 		_draw_cam_pos					(pFont);
 		pFont->OnRender					();
@@ -372,10 +376,7 @@ void CStats::Show()
 	dwSND_Played = dwSND_Allocated = 0;
 	Particles_starting = Particles_active = Particles_destroy = 0;
 	
-	if( psDeviceFlags.test(rsDrawFPS) ){
-		draw_fps					(pFont);
-		pFont->OnRender					();
-	};
+
 }
 
 void	_LogCallback				(LPCSTR string)
