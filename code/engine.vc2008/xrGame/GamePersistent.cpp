@@ -383,6 +383,8 @@ void CGamePersistent::start_logo_intro()
 			Msg					("intro_start intro_logo");
 			Console->Hide		();
 		}
+		else
+			m_intro = xr_new<CUISequencer>();
 	}
 }
 
