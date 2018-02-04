@@ -22,8 +22,6 @@
 #include "level_path_builder.h"
 #include "detail_path_builder.h"
 #include "profiler.h"
-#include "mt_config.h"
-//#include "custommonster.h"
 
 // Lain: added 
 #include "steering_behaviour.h"
@@ -342,7 +340,7 @@ void CMovementManager::on_restrictions_change	()
 
 bool CMovementManager::can_use_distributed_computations(u32 option) const
 {
-	return							(!m_build_at_once && g_mt_config.test(option) && !object().getDestroy());
+	return (!m_build_at_once && !object().getDestroy());
 }
 
 void CMovementManager::on_frame					(CPHMovementControl *movement_control, Fvector &dest_position)

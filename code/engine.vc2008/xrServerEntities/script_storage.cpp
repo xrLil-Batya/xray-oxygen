@@ -470,12 +470,6 @@ bool CScriptStorage::do_file(const char* caScriptName, const char* caNameSpaceNa
 		errFuncId = ai().script_engine().debugger()->PrepareLua(lua());
 #	endif // #ifndef USE_LUA_STUDIO
 #endif // #ifdef USE_DEBUGGER
-	if (0)	//.
-	{
-		for (int i = 0; lua_type(lua(), -i - 1); i++)
-			Msg("%2d : %s", -i - 1, lua_typename(lua(), lua_type(lua(), -i - 1)));
-	}
-
 	// because that's the first and the only call of the main chunk - there is no point to compile it
 	int	l_iErrorCode = lua_pcall(lua(), 0, 0, (-1 == errFuncId) ? 0 : errFuncId);
 

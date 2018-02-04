@@ -15,15 +15,12 @@
 #include "custommonster.h"
 #include "level_path_builder.h"
 #include "detail_path_builder.h"
-#include "mt_config.h"
-
 void CMovementManager::process_patrol_path()
 {
 	if (!level_path().actual() && (m_path_state > ePathStateBuildLevelPath))
 		m_path_state		= ePathStateBuildLevelPath;
 
 	if (!patrol().actual() && (m_path_state > ePathStateSelectPatrolPoint)) {
-//		Msg					("[%6d][%s] actuality is false 2",Device.dwFrame,*object().cName());
 		m_path_state		= ePathStateSelectPatrolPoint;
 	}
 
@@ -48,7 +45,8 @@ void CMovementManager::process_patrol_path()
 				&patrol().destination_position()
 			);
 
-			if (can_use_distributed_computations(mtLevelPath)) {
+			if (can_use_distributed_computations(0)) 
+			{
 				level_path_builder().register_to_process	();
 				break;
 			}
@@ -73,7 +71,7 @@ void CMovementManager::process_patrol_path()
 				level_path().intermediate_index()
 			);
 
-			if (can_use_distributed_computations(mtDetailPath)) {
+			if (can_use_distributed_computations(0)) {
 				detail_path_builder().register_to_process	();
 				break;
 			}
@@ -84,7 +82,6 @@ void CMovementManager::process_patrol_path()
 		}
 		case ePathStatePathVerification : {
 			if (!patrol().actual()) {
-//				Msg				("[%6d][%s] actuality is false 3",Device.dwFrame,*object().cName());
 				m_path_state	= ePathStateSelectPatrolPoint;
 			}
 			else

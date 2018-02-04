@@ -56,10 +56,9 @@ CScriptThread::CScriptThread(LPCSTR caNamespaceName, bool do_string, bool reload
 			}
 		}
 
-//		print_stack_		(ai().script_engine().lua());
 		m_virtual_machine	= lua_newthread(ai().script_engine().lua());
-//		m_virtual_machine	= lua_newcthread(ai().script_engine().lua(),0);
 		VERIFY2				(lua(),"Cannot create new Lua thread");
+
 #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 		if ( ai().script_engine().debugger() )
 			ai().script_engine().debugger()->add	( m_virtual_machine );
@@ -118,12 +117,10 @@ bool CScriptThread::update()
 		
 		int					l_iErrorCode = lua_resume(lua(),0);
 		
-		if (l_iErrorCode && (l_iErrorCode != LUA_YIELD)) {
+		if (l_iErrorCode && (l_iErrorCode != LUA_YIELD))
+		{
 			ai().script_engine().print_output	(lua(),*script_name(),l_iErrorCode);
 			ai().script_engine().on_error		(ai().script_engine().lua());
-#ifdef DEBUG
-			print_stack		(lua());
-#endif
 			m_active		= false;
 		}
 		else {
@@ -135,13 +132,10 @@ bool CScriptThread::update()
 //					print_stack		(lua());
 				}
 #endif // DEBUG
-				m_active	= false;
-#ifdef DEBUG
-				ai().script_engine().script_log	(ScriptStorage::eLuaMessageTypeInfo,"Script %s is finished!",*m_script_name);
-#endif // DEBUG
+				m_active = false;
 			}
 			else
-				VERIFY2		(!lua_gettop(lua()),"Do not pass any value to coroutine.yield()!");
+				VERIFY2(!lua_gettop(lua()),"Do not pass any value to coroutine.yield()!");
 		}
 		
 		ai().script_engine().current_thread	(0);

@@ -8,8 +8,6 @@
 #include "game_cl_base.h"
 #include "Actor.h"
 #include "gamepersistent.h"
-#include "mt_config.h"
-
 #include "../Include/xrRender/UIRender.h"
 #include "../Include/xrRender/Kinematics.h"
 
@@ -946,12 +944,8 @@ void CBulletManager::Render	()
 
 void CBulletManager::CommitRenderSet		()	// @ the end of frame
 {
-	m_BulletsRendered	= m_Bullets			;
-	if (g_mt_config.test(mtBullets))		{
-		Device.seqParallel.push_back		(fastdelegate::FastDelegate0<>(this,&CBulletManager::UpdateWorkload));
-	} else {
-		UpdateWorkload						();
-	}
+	m_BulletsRendered	= m_Bullets;
+	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CBulletManager::UpdateWorkload));
 }
 void CBulletManager::CommitEvents			()	// @ the start of frame
 {

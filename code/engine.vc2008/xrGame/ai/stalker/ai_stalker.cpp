@@ -46,7 +46,6 @@
 #include "../../stalker_sound_data.h"
 #include "../../stalker_sound_data_visitor.h"
 #include "ai_stalker_space.h"
-#include "../../mt_config.h"
 #include "../../effectorshot.h"
 #include "../../visual_memory_manager.h"
 #include "../../enemy_manager.h"
@@ -787,38 +786,19 @@ void CAI_Stalker::UpdateCL()
 	START_PROFILE("stalker/client_update")
 	VERIFY2						(PPhysicsShell()||getEnabled(), *cName());
 
-	if (g_Alive()) {
-		if (g_mt_config.test(mtObjectHandler) && CObjectHandler::planner().initialized()) {
-			fastdelegate::FastDelegate0<>								f = fastdelegate::FastDelegate0<>(this,&CAI_Stalker::update_object_handler);
-#ifdef DEBUG
-			xr_vector<fastdelegate::FastDelegate0<> >::const_iterator	I;
-			I	= std::find(Device.seqParallel.begin(),Device.seqParallel.end(),f);
-			VERIFY							(I == Device.seqParallel.end());
-#endif
+	if (g_Alive()) 
+	{
+		if (CObjectHandler::planner().initialized()) 
+		{
 			Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CAI_Stalker::update_object_handler));
 		}
-		else {
-			START_PROFILE("stalker/client_update/object_handler")
-			update_object_handler			();
-			STOP_PROFILE
-		}
 
-		if	(
-				(movement().speed(character_physics_support()->movement()) > EPS_L)
-				&& 
-				(eMovementTypeStand != movement().movement_type())
-				&&
-				(eMentalStateDanger == movement().mental_state())
-			) {
-			if	(
-					(eBodyStateStand == movement().body_state())
-					&&
-					(eMovementTypeRun == movement().movement_type())
-				) {
-				sound().play	(eStalkerSoundRunningInDanger);
-			}
-			else {
-//				sound().play	(eStalkerSoundWalkingInDanger);
+		if ((movement().speed(character_physics_support()->movement()) > EPS_L)
+			&& (eMovementTypeStand != movement().movement_type()) && (eMentalStateDanger == movement().mental_state()))
+		{
+			if ((eBodyStateStand == movement().body_state()) && (eMovementTypeRun == movement().movement_type()))
+			{
+				sound().play(eStalkerSoundRunningInDanger);
 			}
 		}
 	}
@@ -904,18 +884,8 @@ void CAI_Stalker::shedule_Update		( u32 DT )
 		agent_manager().update			();
 #endif // USE_SCHEDULER_IN_AGENT_MANAGER
 
-//		bool			check = !!memory().enemy().selected();
-#if 0//def DEBUG
-		memory().visual().check_visibles();
-#endif
-		if ( false && g_mt_config.test(mtAiVision) )
-			Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CCustomMonster::Exec_Visibility));
-		else {
-			START_PROFILE("stalker/schedule_update/vision")
-			Exec_Visibility				();
-			STOP_PROFILE
-		}
-
+		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CCustomMonster::Exec_Visibility));
+		
 		START_PROFILE("stalker/schedule_update/memory")
 
 		START_PROFILE("stalker/schedule_update/memory/process")

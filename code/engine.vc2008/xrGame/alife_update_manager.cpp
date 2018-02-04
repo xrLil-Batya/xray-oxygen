@@ -21,7 +21,6 @@
 #include "../xrEngine/x_ray.h"
 #include "restriction_space.h"
 #include "profiler.h"
-#include "mt_config.h"
 #include "GamePersistent.h"
 
 #ifdef DEBUG
@@ -123,13 +122,9 @@ void CALifeUpdateManager::shedule_Update	(u32 dt)
 	if (!initialized())
 		return;
 
-	if (!m_first_time && g_mt_config.test(mtALife)) {
-		Device.seqParallel.push_back(
-			fastdelegate::FastDelegate0<>(
-				this,
-				&CALifeUpdateManager::update
-			)
-		);
+	if (!m_first_time) 
+	{
+		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CALifeUpdateManager::update));
 		return;
 	}
 

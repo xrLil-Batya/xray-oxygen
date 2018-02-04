@@ -30,7 +30,6 @@
 #include "autosave_manager.h"
 #include "ClimableObject.h"
 #include "level_graph.h"
-#include "mt_config.h"
 #include "phcommander.h"
 #include "map_manager.h"
 #include "../xrEngine/CameraManager.h"
@@ -544,12 +543,9 @@ void CLevel::OnFrame()
 	ProcessGameEvents	();
 
 
-	if (m_bNeed_CrPr)					make_NetCorrectionPrediction();
+	if (m_bNeed_CrPr) make_NetCorrectionPrediction();
 
-    if (g_mt_config.test(mtMap))
-        Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
-    else
-        MapManager().Update();
+	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
 
     if (Device.dwPrecacheFrame == 0)
         GameTaskManager().UpdateTasks();
@@ -568,7 +564,9 @@ void CLevel::OnFrame()
 #endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
-	ai().script_engine().script_process	(ScriptEngine::eScriptProcessorLevel)->update();
+	CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+	if (levelScript) levelScript->update();
+
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
 
@@ -578,13 +576,9 @@ void CLevel::OnFrame()
 	Device.Statistic->TEST0.End			();
 
 	// update static sounds
-    if (g_mt_config.test(mtLevelSounds))
-        Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
-    else
-        m_level_sound_manager->Update();
+    Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
 	// deffer LUA-GC-STEP
-    if (g_mt_config.test(mtLUA_GC))	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
-    else							script_gc();
+    Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
 	//-----------------------------------------------------
 	if (pStatGraphR)
 	{	

@@ -36,21 +36,22 @@ CScriptProcess::~CScriptProcess()
 
 void CScriptProcess::run_scripts()
 {
-	LPSTR						S;
-	for ( ; !m_scripts_to_run.empty(); ) {
-		LPSTR					I = m_scripts_to_run.back().m_script_name;
-		bool					do_string = m_scripts_to_run.back().m_do_string;
-		bool					reload = m_scripts_to_run.back().m_reload;
-		S						= xr_strdup(I);
+	LPSTR S;
+	while (!m_scripts_to_run.empty())
+	{
+		LPSTR I = m_scripts_to_run.back().m_script_name;
+		bool do_string = m_scripts_to_run.back().m_do_string;
+		bool reload = m_scripts_to_run.back().m_reload;
+		S = xr_strdup(I);
 		m_scripts_to_run.pop_back();
 
-		CScriptThread			*script = xr_new<CScriptThread>(S,do_string,reload);
-		xr_free					(S);
+		CScriptThread *script = xr_new<CScriptThread>(S, do_string, reload);
+		xr_free(S);
 
 		if (script->active())
-			m_scripts.push_back	(script);
+			m_scripts.push_back(script);
 		else
-			xr_delete			(script);
+			xr_delete(script);
 	}
 }
 

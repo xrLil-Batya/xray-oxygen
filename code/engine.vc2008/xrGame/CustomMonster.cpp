@@ -17,7 +17,6 @@
 #include "enemy_manager.h"
 #include "item_manager.h"
 #include "danger_manager.h"
-//#include "ai_object_location.h"
 #include "level_graph.h"
 #include "game_graph.h"
 #include "movement_manager.h"
@@ -27,10 +26,8 @@
 #include "level_debug.h"
 #include "material_manager.h"
 #include "sound_user_data_visitor.h"
-#include "mt_config.h"
 #include "PHMovementControl.h"
 #include "profiler.h"
-//#include "date_time.h"
 #include "characterphysicssupport.h"
 #include "ai/monsters/snork/snork.h"
 #include "ai/monsters/burer/burer.h"
@@ -258,21 +255,10 @@ void CCustomMonster::shedule_Update	( u32 DT )
 
 	float dt			= float(DT)/1000.f;
 	// *** general stuff
-	if (g_Alive()) {
-		if ( false && g_mt_config.test(mtAiVision) )
-#ifndef DEBUG
-			Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::Exec_Visibility));
-#else // DEBUG
-		{
-			if (!psAI_Flags.test(aiStalker) || !!smart_cast<CActor*>(Level().CurrentEntity()))
-				Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CCustomMonster::Exec_Visibility));
-			else
-				Exec_Visibility				();
-		}
-#endif // DEBUG
-		else
-			Exec_Visibility					();
-		memory().update						(dt);
+	if (g_Alive())
+	{
+		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CCustomMonster::Exec_Visibility));
+		memory().update(dt);
 	}
 	inherited::shedule_Update	(DT);
 
@@ -382,13 +368,8 @@ void CCustomMonster::UpdateCL	()
 	}
 	*/
 
-	if (g_mt_config.test(mtSoundPlayer))
-		Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::update_sound_player));
-	else {
-		START_PROFILE("CustomMonster/client_update/sound_player")
-		update_sound_player	();
-		STOP_PROFILE
-	}
+	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::update_sound_player));
+
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
 	if (NET.empty()) {

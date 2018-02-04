@@ -29,7 +29,6 @@
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
 #include "date_time.h"
-#include "mt_config.h"
 #include "UIGameSP.h"
 #include "ui/UIActorMenu.h"
 #include "ui/UIStatic.h"
@@ -96,7 +95,6 @@ ENGINE_API extern float	g_console_sensitive;
 
 		BOOL	g_bCheckTime			= FALSE;
 		int		net_cl_inputupdaterate	= 50;
-		Flags32	g_mt_config				= {mtLevelPath | mtDetailPath | mtObjectHandler | mtSoundPlayer | mtAiVision | mtBullets | mtLUA_GC | mtLevelSounds | mtALife | mtMap};
 #ifdef DEBUG
 		Flags32	dbg_net_Draw_Flags		= {0};
 #endif
@@ -1716,20 +1714,6 @@ void CCC_RegisterCommands()
 	CMD1(CCC_DemoRecordSetPos,	"demo_set_cam_position"	);
 #endif
 	
-#ifndef MASTER_GOLD
-	// ai
-	CMD3(CCC_Mask,				"mt_ai_vision",			&g_mt_config,	mtAiVision);
-	CMD3(CCC_Mask,				"mt_level_path",		&g_mt_config,	mtLevelPath);
-	CMD3(CCC_Mask,				"mt_detail_path",		&g_mt_config,	mtDetailPath);
-	CMD3(CCC_Mask,				"mt_object_handler",	&g_mt_config,	mtObjectHandler);
-	CMD3(CCC_Mask,				"mt_sound_player",		&g_mt_config,	mtSoundPlayer);
-	CMD3(CCC_Mask,				"mt_bullets",			&g_mt_config,	mtBullets);
-	CMD3(CCC_Mask,				"mt_script_gc",			&g_mt_config,	mtLUA_GC);
-	CMD3(CCC_Mask,				"mt_level_sounds",		&g_mt_config,	mtLevelSounds);
-	CMD3(CCC_Mask,				"mt_alife",				&g_mt_config,	mtALife);
-	CMD3(CCC_Mask,				"mt_map",				&g_mt_config,	mtMap);
-#endif // MASTER_GOLD
-
 #ifndef MASTER_GOLD
 	CMD3(CCC_Mask,				"ai_obstacles_avoiding",		&psAI_Flags,			aiObstaclesAvoiding);
 	CMD3(CCC_Mask,				"ai_obstacles_avoiding_static",	&psAI_Flags,			aiObstaclesAvoidingStatic);
