@@ -76,8 +76,11 @@ void CSoundRender_Core::InitAlEFXAPI()
 
 CSoundRender_Core::~CSoundRender_Core()
 {
-	alDeleteAuxiliaryEffectSlots(1, &slot);
-	alDeleteEffects(1, &effect);
+	if (bEFX)
+	{
+		if(effect) alDeleteEffects(1, &effect);
+		if(slot)   alDeleteAuxiliaryEffectSlots(1, &slot);
+	}
 
 	xr_delete(geom_ENV);
 	xr_delete(geom_SOM);
