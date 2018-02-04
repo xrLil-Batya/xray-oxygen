@@ -132,11 +132,8 @@ unsigned int query_processor_info(processor_info* pinfo)
 	}
 	//End
 
-
-	if (pinfo->isAmd)
-		//
-
-		if (f_1_ECX[0])            pinfo->features |= static_cast<unsigned>(CPUFeature::SSE3);
+	if (f_81_EDX[28])          pinfo->features |= static_cast<unsigned>(CPUFeature::HT);
+	if (f_1_ECX[0])            pinfo->features |= static_cast<unsigned>(CPUFeature::SSE3);
 	if (f_1_ECX[9])            pinfo->features |= static_cast<unsigned>(CPUFeature::SSSE3);
 	if (f_1_ECX[19])           pinfo->features |= static_cast<unsigned>(CPUFeature::SSE41);
 	if (f_1_ECX[20])           pinfo->features |= static_cast<unsigned>(CPUFeature::SSE42);
@@ -149,12 +146,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 	if (f_1_EBX[27])           pinfo->features |= static_cast<unsigned>(CPUFeature::AVX512ER);
 	if (f_1_EBX[28])           pinfo->features |= static_cast<unsigned>(CPUFeature::AVX512CD);
 	//End
-	__cpuid(cpui.data(), 1);
 
-	if (_bittest((long*)&cpui[3], 28))
-	{
-		pinfo->features |= static_cast<unsigned>(CPUFeature::HT);
-	}
 
 	//Edit sv3nk
 	if ((cpui[2] & 0x8) > 0)   pinfo->features |= static_cast<unsigned>(CPUFeature::MWait);
@@ -173,14 +165,8 @@ unsigned int query_processor_info(processor_info* pinfo)
 	// All logical processors
 	pinfo->n_threads = sysInfo.dwNumberOfProcessors;
 	pinfo->affinity_mask = unsigned(pa_mask_save);
-	if (pinfo->hasFeature(CPUFeature::HT))
-	{
-		pinfo->n_cores = pinfo->n_threads / 2;
-	}
-	else
-	{
-		pinfo->n_cores = pinfo->n_threads;
-	}
+	pinfo->n_cores = (pinfo->hasFeature(CPUFeature::HT)) ? (pinfo->n_threads / 2) : (pinfo->n_threads);
+	
 	return pinfo->features;
 }
 
