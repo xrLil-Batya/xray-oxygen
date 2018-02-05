@@ -50,37 +50,19 @@ extern "C" {
 
 
 #if defined(WIN32) && (defined(MSVC) || defined(MINGW))
-
-static union { unsigned char __c[4]; float __f; } __ode_huge_valf =
-
-  {{0,0,0x80,0x7f}};
-
-#define _INFINITY4 (__ode_huge_valf.__f)
-
-static union { unsigned char __c[8]; double __d; } __ode_huge_val =
-
-  {{0,0,0,0,0,0,0xf0,0x7f }};
-
-#define _INFINITY8 (__ode_huge_val.__d)
-
+#	define _INFINITY4 float(0x7f)
+#	define _INFINITY8 double(0x7f)
 #else
-
-#define _INFINITY8 HUGE_VAL
-
-#define _INFINITY4 HUGE_VALF
-
+#	define _INFINITY8 HUGE_VAL
+#	define _INFINITY4 HUGE_VALF
 #endif
 
 
 
 #if defined(dSINGLE)
-
 #define dInfinity _INFINITY4
-
 #else
-
 #define dInfinity _INFINITY8
-
 #endif
 
 
