@@ -23,7 +23,11 @@ enum class CPUFeature: unsigned
 	AVX512CD		= 1 << 16,
 
 	AMD_3DNow		= 1 << 17,
-	AMD_3DNowExt	= 1 << 18
+	AMD_3DNowExt	= 1 << 18,
+	TM2				= 1 << 19,
+	AES				= 1 << 20,
+	EST				= 1 << 21,
+	VMX				= 1 << 22
 };
 
 struct XRCORE_API processor_info 
