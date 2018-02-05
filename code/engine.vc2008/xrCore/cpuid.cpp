@@ -116,9 +116,13 @@ unsigned int query_processor_info(processor_info* pinfo)
 	CleanDups(pinfo->modelName);
 	//end
 
+
+#pragma todo("Mb worth make a sort of names registers (like a EBX, ECX, EDX) and flags")
+
 	if (f_1_EDX[23])           pinfo->features |= static_cast<unsigned>(CPUFeature::MMX);
 	if (f_1_EDX[25])           pinfo->features |= static_cast<unsigned>(CPUFeature::SSE);
 	if (f_1_EDX[26])           pinfo->features |= static_cast<unsigned>(CPUFeature::SSE2);
+
 
 	//Added sv3nk: AMD Features
 	if (pinfo->isAmd)
@@ -131,6 +135,13 @@ unsigned int query_processor_info(processor_info* pinfo)
 		if (f_81_EDX[22])		pinfo->features |= static_cast<unsigned>(CPUFeature::MMXExt);
 	}
 	//End
+
+	// Second Thermal monitor
+	if (f_1_ECX[8])            pinfo->features |= static_cast<unsigned>(CPUFeature::TM2);
+
+	if (f_1_ECX[25])           pinfo->features |= static_cast<unsigned>(CPUFeature::AES);
+	if (f_1_ECX[7])            pinfo->features |= static_cast<unsigned>(CPUFeature::EST);
+	if (f_1_ECX[5])            pinfo->features |= static_cast<unsigned>(CPUFeature::VMX);
 
 	if (f_81_EDX[28])          pinfo->features |= static_cast<unsigned>(CPUFeature::HT);
 	if (f_1_ECX[0])            pinfo->features |= static_cast<unsigned>(CPUFeature::SSE3);
@@ -146,6 +157,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 	if (f_1_EBX[27])           pinfo->features |= static_cast<unsigned>(CPUFeature::AVX512ER);
 	if (f_1_EBX[28])           pinfo->features |= static_cast<unsigned>(CPUFeature::AVX512CD);
 	//End
+	//if (f_1_EBX
 
 
 	//Edit sv3nk

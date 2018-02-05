@@ -133,6 +133,10 @@ void _initialize_cpu	(void)
 	if (CPU::Info.hasFeature(CPUFeature::AVX2))   xr_strcat(features, ", AVX2");
 	if (CPU::Info.hasFeature(CPUFeature::SSE4a))  xr_strcat(features, ", SSE4.a");
 	if (CPU::Info.hasFeature(CPUFeature::MMXExt)) xr_strcat(features, ", MMXExt");
+	if (CPU::Info.hasFeature(CPUFeature::TM2))	  xr_strcat(features, ", TM2");
+	if (CPU::Info.hasFeature(CPUFeature::AES))    xr_strcat(features, ", AES");
+	if (CPU::Info.hasFeature(CPUFeature::VMX))	  xr_strcat(features, ", VMX");
+	if (CPU::Info.hasFeature(CPUFeature::EST))    xr_strcat(features, ", EST");
 
 	Msg("* CPU features: %s" , features );
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
