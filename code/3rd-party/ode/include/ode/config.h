@@ -30,34 +30,16 @@
 #define _ODE_CONFIG_H_
 
 #ifdef __cplusplus
-
 extern "C" {
-
 #endif
-
-
-
 #include <stdio.h>
-
 #include <stdarg.h>
-
 #include <malloc.h>		// for alloca under windows
-
 #include <string.h>
-
 #include <math.h>
 
-
-
-#if defined(WIN32) && (defined(MSVC) || defined(MINGW))
-#	define _INFINITY4 float(0x7f)
-#	define _INFINITY8 double(0x7f)
-#else
-#	define _INFINITY8 HUGE_VAL
-#	define _INFINITY4 HUGE_VALF
-#endif
-
-
+#define _INFINITY4 1.f / 0.f
+#define _INFINITY8 1.f / 0.f
 
 #if defined(dSINGLE)
 #define dInfinity _INFINITY4
@@ -65,119 +47,53 @@ extern "C" {
 #define dInfinity _INFINITY8
 #endif
 
-
-
 #define SHAREDLIBIMPORT __declspec (dllimport)
-
 #define SHAREDLIBEXPORT __declspec (dllexport)
 
-
-
 /* some types. assume `int' >= 32 bits */
-
 typedef unsigned int    uint;
-
 typedef int             int32;
-
 typedef unsigned int    uint32;
-
 typedef short           int16;
-
 typedef unsigned short  uint16;
-
 typedef char            int8;
-
 typedef unsigned char   uint8;
 
-
-
-
-
 /* an integer type that we can safely cast a pointer to and from without
-
  * loss of bits.
-
  */
-
 typedef uintptr_t intP;
 
-
-
-
-
 /* if we're compiling on a pentium, we may need to know the clock rate so
-
  * that the timing function can report accurate times. this number only needs
-
  * to be set accurately if we're doing performance tests - otherwise just
-
  * ignore this. i have not worked out how to determine this number
-
  * automatically yet.
-
  */
 
-
-
 #ifdef PENTIUM
-
 #ifndef PENTIUM_HZ
-
 #define PENTIUM_HZ (496.318983e6)
-
 #endif
-
 #endif
-
-
-
-
 
 /* the efficient alignment. most platforms align data structures to some
-
  * number of bytes, but this is not always the most efficient alignment.
-
  * for example, many x86 compilers align to 4 bytes, but on a pentium it is
-
  * important to align doubles to 8 byte boundaries (for speed), and the 4
-
  * floats in a SIMD register to 16 byte boundaries. many other platforms have
-
  * similar behavior. setting a larger alignment can waste a (very) small
-
  * amount of memory. NOTE: this number must be a power of two.
 
  */
-
-
-
 #define EFFICIENT_ALIGNMENT 16
 
-
-
-
-
 /* for unix, define this if your system supports anonymous memory maps
-
  * (linux does).
-
  */
-
-
-
 #define MMAP_ANONYMOUS
-
-
-
-
-
 #ifdef __cplusplus
-
 }
-
 #endif
-
-
-
 #endif
 
