@@ -18,6 +18,7 @@
 #endif
 
 // forward declarations
+namespace Opcode { class Model; }
 class CFrustum;
 
 #pragma pack(push,8)
