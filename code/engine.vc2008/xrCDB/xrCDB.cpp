@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-#pragma comment(lib, "opc.lib")
 #include "xrCDB.h"
 
 #ifdef USE_ARENA_ALLOCATOR
@@ -13,7 +12,9 @@ doug_lea_allocator	g_collision_allocator(s_fake_array, s_arena_size, "collision"
 #endif // #ifdef USE_ARENA_ALLOCATOR
 
 namespace Opcode {
+#	include "../../3rd-party/OPCODE/Opcode.h"
 #	include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
+#	include "../../3rd-party/OPCODE/OPC_Model.h"
 } // namespace Opcode
 
 using namespace CDB;
@@ -148,17 +149,17 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	}
 
 	// Build a non quantized no-leaf tree
-	OPCODECREATE	OPCC;
-	OPCC.NbTris = tris_count;
-	OPCC.NbVerts = verts_count;
-	OPCC.Tris = temp_tris;
-	OPCC.Verts = (Point*)verts;
-	OPCC.Rules = SPLIT_COMPLETE | SPLIT_SPLATTERPOINTS | SPLIT_GEOMCENTER;
-	OPCC.NoLeaf = true;
-	OPCC.Quantized = false;
+	OPCODECREATE OPCC = OPCODECREATE();
+	OPCC.mIMesh->SetNbTriangles(tris_count);
+	OPCC.mIMesh->SetNbVertices(verts_count);
+	OPCC.mIMesh->SetPointers((IndexedTriangle*)temp_tris, (Point*)verts);
+//	OPCC.Verts = (Point*)verts;
+	OPCC.mSettings.mRules = SplittingRules::SPLIT_SPLATTER_POINTS | SplittingRules::SPLIT_GEOM_CENTER;
+	OPCC.mNoLeaf = true;
+	OPCC.mQuantized = false;
 	// if (Memory.debug_mode) OPCC.KeepOriginal = true;
 
-	tree = CNEW(OPCODE_Model) ();
+	tree = CNEW(Model)();
 	if (!tree->Build(OPCC)) 
 	{
 		xr_free(verts);

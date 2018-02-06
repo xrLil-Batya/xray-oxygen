@@ -21,7 +21,7 @@
  *
  *	\class		VolumeCollider
  *	\author		Pierre Terdiman
- *	\version	1.2
+ *	\version	1.3
  *	\date		June, 2, 2001
 */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,14 +38,7 @@ using namespace Opcode;
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 VolumeCollider::VolumeCollider() :
-	mTouchedPrimitives	(nullptr),
-#ifdef OPC_USE_CALLBACKS
-	mUserData			(0),
-	mObjCallback		(nullptr),
-#else
-	mFaces				(nullptr),
-	mVerts				(nullptr),
-#endif
+	mTouchedPrimitives	(null),
 	mNbVolumeBVTests	(0),
 	mNbVolumePrimTests	(0)
 {
@@ -58,37 +51,32 @@ VolumeCollider::VolumeCollider() :
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 VolumeCollider::~VolumeCollider()
 {
-	mTouchedPrimitives = nullptr;
+	mTouchedPrimitives = null;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Validates current settings. You should call this method after all the settings / callbacks have been defined for a collider.
- *	\return		nullptr if everything is ok, else a string describing the problem
+ *	\return		null if everything is ok, else a string describing the problem
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 const char* VolumeCollider::ValidateSettings()
 {
-#ifdef OPC_USE_CALLBACKS
-	if(!mObjCallback)		return "Object callback must be defined! Call: SetCallback().";
-#else
-	if(!mFaces || !mVerts)	return "Object pointers must be defined! Call: SetPointers().";
-#endif
-	return nullptr;
+	return null;
 }
 
-// Pretty dumb way to dump - to do better
+// Pretty dumb way to dump - to do better - one day...
 
-#define IMPLEMENT_NOLEAFDUMP(type)											\
-void VolumeCollider::_Dump(const type* node)								\
-{																			\
-	if(node->HasLeaf())		mTouchedPrimitives->Add(node->GetPrimitive());	\
-	else					_Dump(node->GetPos());							\
-																			\
-	if(ContactFound()) return;												\
-																			\
-	if(node->HasLeaf2())	mTouchedPrimitives->Add(node->GetPrimitive2());	\
-	else					_Dump(node->GetNeg());							\
+#define IMPLEMENT_NOLEAFDUMP(type)												\
+void VolumeCollider::_Dump(const type* node)									\
+{																				\
+	if(node->HasPosLeaf())	mTouchedPrimitives->Add(node->GetPosPrimitive());	\
+	else					_Dump(node->GetPos());								\
+																				\
+	if(ContactFound()) return;													\
+																				\
+	if(node->HasNegLeaf())	mTouchedPrimitives->Add(node->GetNegPrimitive());	\
+	else					_Dump(node->GetNeg());								\
 }
 
 #define IMPLEMENT_LEAFDUMP(type)						\

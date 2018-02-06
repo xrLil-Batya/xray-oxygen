@@ -19,10 +19,6 @@
 
 // forward declarations
 class CFrustum;
-namespace Opcode {
-	class OPCODE_Model;
-	class AABBNoLeafNode;
-};
 
 #pragma pack(push,8)
 namespace CDB
@@ -121,7 +117,7 @@ namespace CDB
 		};
 	private:
 		mutable std::recursive_mutex		cs;
-		Opcode::OPCODE_Model*	tree;
+		Opcode::Model*	tree;
 		u32						status;		// 0=ready, 1=init, 2=building
 
 		// tris

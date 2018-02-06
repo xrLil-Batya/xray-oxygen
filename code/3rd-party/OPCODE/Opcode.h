@@ -1,102 +1,89 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /*
-*	OPCODE - Optimized Collision Detection
-*	Copyright (C) 2001 Pierre Terdiman
-*	Homepage: http://www.codercorner.com/Opcode.htm
-*/
+ *	OPCODE - Optimized Collision Detection
+ *	Copyright (C) 2001 Pierre Terdiman
+ *	Homepage: http://www.codercorner.com/Opcode.htm
+ */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
-*	Main file for Opcode.dll.
-*	\file		Opcode.h
-*	\author		Pierre Terdiman
-*	\date		March, 20, 2001
-*/
+ *	Main file for Opcode.dll.
+ *	\file		Opcode.h
+ *	\author		Pierre Terdiman
+ *	\date		March, 20, 2001
+ */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Include Guard
-#pragma once
+#ifndef __OPCODE_H__
+#define __OPCODE_H__
 
-#ifdef OPCODE_LIB
-#define RC_INVOKED
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+// Compilation messages
+#if defined(OPCODE_EXPORTS)
+	#pragma message("Compiling OPCODE")
+#elif !defined(OPCODE_EXPORTS)
+	#pragma message("Using OPCODE")
+	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	// Automatic linking
+	#ifndef BAN_OPCODE_AUTOLINK
+		#ifdef _DEBUG
+			#pragma comment(lib, "Opcode_D.lib")
+		#else
+			#pragma comment(lib, "Opcode.lib")
+		#endif
+	#endif
 #endif
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Preprocessor
-#define OPCODE_API
-#ifndef __ICECORE_H__
-//using BYTE = unsigned char*;
-#include <Windows.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <assert.h>
-#include <float.h>
-
-#ifndef ASSERT
-#define	ASSERT	assert
+#ifndef ICE_NO_DLL
+	#ifdef OPCODE_EXPORTS
+		#define OPCODE_API __declspec(dllexport)
+	#else
+		#define OPCODE_API __declspec(dllimport)
+	#endif
+#else
+		#define OPCODE_API
 #endif
 
-#define	Log
-#define	SetIceError		false
-#define	EC_OUTOFMEMORY	"Out of memory"
-#define	Alignment
+	#include "OPC_IceHook.h"
 
-#include "OPC_Preprocessor.h"
-#define ICECORE_API	OPCODE_API
+	namespace Opcode
+	{
+		// Bulk-of-the-work
+		#include "OPC_Settings.h"
+		#include "OPC_Common.h"
+		#include "OPC_MeshInterface.h"
+		// Builders
+		#include "OPC_TreeBuilders.h"
+		// Trees
+		#include "OPC_AABBTree.h"
+		#include "OPC_OptimizedTree.h"
+		// Models
+		#include "OPC_BaseModel.h"
+		#include "OPC_Model.h"
+		#include "OPC_HybridModel.h"
+		// Colliders
+		#include "OPC_Collider.h"
+		#include "OPC_VolumeCollider.h"
+		#include "OPC_TreeCollider.h"
+		#include "OPC_RayCollider.h"
+		#include "OPC_SphereCollider.h"
+		#include "OPC_OBBCollider.h"
+		#include "OPC_AABBCollider.h"
+		#include "OPC_LSSCollider.h"
+		#include "OPC_PlanesCollider.h"
+		// Usages
+		#include "OPC_Picking.h"
+		// Sweep-and-prune
+		#include "OPC_BoxPruning.h"
+		#include "OPC_SweepAndPrune.h"
 
-#include "OPC_Types.h"
-#include "OPC_FPU.h"
-#include "OPC_MemoryMacros.h"
-namespace IceCore
-{
-#include "OPC_Container.h"
-}
-using namespace IceCore;
-#endif
+		FUNCTION OPCODE_API bool InitOpcode();
+		FUNCTION OPCODE_API bool CloseOpcode();
+	}
 
-#ifndef __ICEMATHS_H__
-#include <Math.h>
-#define ICEMATHS_API	OPCODE_API
-namespace IceMaths
-{
-#include "OPC_Point.h"
-#include "OPC_Matrix3x3.h"
-#include "OPC_Matrix4x4.h"
-#include "OPC_Plane.h"
-#include "OPC_Ray.h"
-}
-using namespace IceMaths;
-#endif
-
-#ifndef __MESHMERIZER_H__
-#define MESHMERIZER_API	OPCODE_API
-namespace Meshmerizer
-{
-#include "OPC_Triangle.h"
-#include "OPC_AABB.h"
-#include "OPC_OBB.h"
-#include "OPC_BoundingSphere.h"
-}
-using namespace Meshmerizer;
-#endif
-
-namespace Opcode
-{
-	// Bulk-of-the-work
-#include "OPC_Settings.h"
-#include "OPC_Common.h"
-#include "OPC_TreeBuilders.h"
-#include "OPC_AABBTree.h"
-#include "OPC_OptimizedTree.h"
-#include "OPC_Model.h"
-#include "OPC_BVTCache.h"
-#include "OPC_Collider.h"
-#include "OPC_VolumeCollider.h"
-#include "OPC_TreeCollider.h"
-#include "OPC_RayCollider.h"
-#include "OPC_SphereCollider.h"
-#include "OPC_OBBCollider.h"
-#include "OPC_AABBCollider.h"
-#include "OPC_PlanesCollider.h"
-}
+#endif // __OPCODE_H__
