@@ -38,14 +38,7 @@ extern "C" {
 #include <string.h>
 #include <math.h>
 
-#define _INFINITY4 1.f / 0.f
-#define _INFINITY8 1.f / 0.f
-
-#if defined(dSINGLE)
-#define dInfinity _INFINITY4
-#else
-#define dInfinity _INFINITY8
-#endif
+#define dInfinity INFINITY
 
 #define SHAREDLIBIMPORT __declspec (dllimport)
 #define SHAREDLIBEXPORT __declspec (dllexport)
