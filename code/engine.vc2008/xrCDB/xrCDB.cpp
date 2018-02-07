@@ -149,11 +149,14 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	}
 
 	// Build a non quantized no-leaf tree
-	OPCODECREATE OPCC = OPCODECREATE();
+	OPCODECREATE OPCC = OPCODECREATE(); 
+	OPCC.mIMesh = new MeshInterface();
+	
 	OPCC.mIMesh->SetNbTriangles(tris_count);
 	OPCC.mIMesh->SetNbVertices(verts_count);
 	OPCC.mIMesh->SetPointers((IndexedTriangle*)temp_tris, (Point*)verts);
-//	OPCC.Verts = (Point*)verts;
+//	OPCC.Verts = (Point*)verts; 
+	OPCC.mSettings.mLimit = 1; // SPLIT_COMPLETE rule
 	OPCC.mSettings.mRules = SplittingRules::SPLIT_SPLATTER_POINTS | SplittingRules::SPLIT_GEOM_CENTER;
 	OPCC.mNoLeaf = true;
 	OPCC.mQuantized = false;
@@ -168,7 +171,8 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 		return;
 	};
 
-	// Free temporary tris
+	// Free temporary tris 
+	xr_delete(OPCC.mIMesh);
 	xr_free(temp_tris);
 	return;
 }
