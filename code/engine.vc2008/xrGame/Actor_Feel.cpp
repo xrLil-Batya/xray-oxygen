@@ -138,7 +138,9 @@ void CActor::PickupModeUpdate()
 
 	for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 	{
-		if (CanPickItem(frustum, Level().CurrentControlEntity()->Position(), *it)) 
+		Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
+		act_and_cam_pos.y    += CameraHeight();
+		if (CanPickItem(frustum, act_and_cam_pos, *it)) 
 			PickupInfoDraw(*it);
 	}
 }
@@ -160,7 +162,8 @@ void	CActor::PickupModeUpdate_COD	()
 
 	ISpatialResult.clear	();
 	g_SpatialSpace->q_frustum		(ISpatialResult, 0, STYPE_COLLIDEABLE, frustum);
-
+	Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
+	act_and_cam_pos.y    += CameraHeight();
 	float maxlen					= 1000.0f;
 	CInventoryItem* pNearestItem	= NULL;
 
@@ -200,7 +203,7 @@ void	CActor::PickupModeUpdate_COD	()
 	{
 		CFrustum					frustum;
 		frustum.CreateFromMatrix	(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
-		if (!CanPickItem(frustum, Level().CurrentControlEntity()->Position(), &pNearestItem->object()))
+		if (!CanPickItem(frustum, act_and_cam_pos, &pNearestItem->object()))
 			pNearestItem = NULL;
 	}
 	if (pNearestItem && pNearestItem->cast_game_object())
