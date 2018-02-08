@@ -360,8 +360,12 @@ void	COLLIDER::ray_query	(const MODEL *m_def, const Fvector& r_start,  const Fve
 	m_def->syncronize		();
 
 	// Get nodes
-	const AABBNoLeafTree* T = (const AABBNoLeafTree*)m_def->tree->GetTree();
+	AABBNoLeafTree* T = new AABBNoLeafTree(); 
+	T->Build(const_cast<Opcode::AABBTree*>(m_def->tree->GetSourceTree()));
+
 	const AABBNoLeafNode* N = T->GetNodes();
+
+	if (!N) __debugbreak();
 	r_clear					();
 	
 	if (CPU::Info.hasFeature(CPUFeature::SSE))	{

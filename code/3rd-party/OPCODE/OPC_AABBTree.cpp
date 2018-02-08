@@ -415,14 +415,18 @@ bool AABBTree::Build(AABBTreeBuilder* builder)
 	builder->SetNbInvalidSplits(0);
 
 	// Initialize indices. This list will be modified during build.
-	mIndices = new udword[builder->mNbPrimitives];
+	mNodePrimitives = new udword[builder->mNbPrimitives];
 	CHECKALLOC(mIndices);
+
 	// Identity permutation
-	for(udword i=0;i<builder->mNbPrimitives;i++)	mIndices[i] = i;
+	for (udword i = 0; i < builder->mNbPrimitives; i++)
+	{
+		mNodePrimitives[i] = i;
+	}
 
 	// Setup initial node. Here we have a complete permutation of the app's primitives.
-	mNodePrimitives	= mIndices;
-	mNbPrimitives	= builder->mNbPrimitives;
+	mIndices = mNodePrimitives;
+	mNbPrimitives = builder->mNbPrimitives;
 
 	// Use a linear array for complete trees (since we can predict the final number of nodes) [Opcode 1.3]
 //	if(builder->mRules&SPLIT_COMPLETE)
