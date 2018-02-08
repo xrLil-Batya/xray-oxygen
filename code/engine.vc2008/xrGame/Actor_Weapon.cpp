@@ -74,8 +74,10 @@ void CActor::g_fireParams	(const CHudItem* pHudItem, Fvector &fire_pos, Fvector 
 const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
 	if (pMissile)
 	{
-	fire_pos = Actor()->Position();
-	fire_pos.y += 1.24f;
+	Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
+	act_and_cam_pos.y    += CameraHeight();
+	fire_pos = act_and_cam_pos;
+	fire_pos.y += 0.14f;
 	}
 	}
 	fire_dir		= Cameras().Direction();
