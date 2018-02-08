@@ -127,7 +127,7 @@ void _initialize_cpu	(void)
     if (CPU::Info.hasFeature(CPUFeature::SSE42))  xr_strcat(features,", SSE4.2");
 	if (CPU::Info.hasFeature(CPUFeature::HT))     xr_strcat(features, ", HTT");
 	if (CPU::Info.hasFeature(CPUFeature::AVX))    xr_strcat(features, ", AVX");
-#ifndef AI32_USE
+#ifdef __AVX__
 	else Debug.do_exit("X-Ray x64 using AVX anyway!");
 #endif
 	if (CPU::Info.hasFeature(CPUFeature::AVX2))   xr_strcat(features, ", AVX2");
