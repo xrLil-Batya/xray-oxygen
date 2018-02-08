@@ -6,6 +6,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "cximage", "cximage", "{8D7A67B7-7CBA-4E8F-835F-76BD34446767}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrPlay", "engine.vc2008\xrPlay\xrPlay.vcxproj", "{131A9895-FE16-417A-8C41-16A5994A6D13}"
+EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCDB", "engine.vc2008\xrCDB\xrCDB.vcxproj", "{A19B1DF2-82EC-4364-8BDF-85D13A1C89B5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{AE0574E2-BE4C-49B0-98A6-739176D69277} = {AE0574E2-BE4C-49B0-98A6-739176D69277}
@@ -114,8 +116,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrECoreLite", "editors\xrEC
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{139490FF-7227-454D-A866-E63D228EC1C0}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrPlay", "engine.vc2008\xrPlay\xrPlay.vcxproj", "{131A9895-FE16-417A-8C41-16A5994A6D13}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
