@@ -78,7 +78,8 @@ void CSoundRender_CoreA::_initialize(int stage)
     if (deviceDesc.props.efx)
 	{
 		InitAlEFXAPI();
-		bEFX = EFXTestSupport(&efx_reverb);
+        bEFX = EFXTestSupport();
+        Msg("[OpenAL] EFX: %s", bEFX ? "present" : "absent");
     }
 
     inherited::_initialize		(stage);

@@ -1,15 +1,11 @@
 #include "stdafx.h"
 #pragma hdrstop
-#include <openal\efx.h>
+
 #include "cl_intersect.h"
 #include "SoundRender_Core.h"
 #include "SoundRender_Emitter.h"
 #include "SoundRender_Target.h"
 #include "SoundRender_Source.h"
-
-extern LPALDELETEAUXILIARYEFFECTSLOTS alDeleteAuxiliaryEffectSlots; //
-extern LPALGENAUXILIARYEFFECTSLOTS alGenAuxiliaryEffectSlots;
-extern LPALAUXILIARYEFFECTSLOTI alAuxiliaryEffectSloti;
 
 CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float delay)
 {
@@ -51,7 +47,7 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 		T->priority = -1;
 	}
 
-	// Update emmitters
+	// Update emitters
 	for (u32 it = 0; it < s_emitters.size(); it++)
 	{
 		CSoundRender_Emitter*	pEmitter = s_emitters[it];
@@ -77,7 +73,7 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 		CSoundRender_Target*	T = s_targets[it];
 		if (T->get_emitter())
 		{
-			// Has emmitter, maybe just not started rendering
+			// Has emitter, maybe just not started rendering
 			if (T->get_Rendering())
 			{
 				T->fill_parameters();
@@ -105,25 +101,9 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 		}
 
 		e_current.lerp(e_current, e_target, dt_sec);
-		if (EFXTestSupport(&efx_reverb))
-		{
-			i_efx_listener_set(&e_current, &efx_reverb);
-			alGenAuxiliaryEffectSlots(1, &slot);
-
-			/* Tell the effect slot to use the loaded effect object. Note that the this
-			* effectively copies the effect properties. You can modify or delete the
-			* effect object afterward without affecting the effect slot.
-			*/
-			alAuxiliaryEffectSloti(slot, AL_EFFECTSLOT_EFFECT, effect);
-
-			if (alGetError() != AL_NO_ERROR)
-			{
-				Log("[EFX] Failed to set effect slot!");
-				alDeleteAuxiliaryEffectSlots(1, &slot);
-				bEFX = false;
-			}
-		}
-	}
+        i_efx_listener_set(&e_current); //KRodin: Сделал по аналогии с eax. Некоторые эффекты подошли. Посмотрим, что получится.
+        bEFX = i_efx_commit_setting();
+    }
 
 	// update listener
 	update_listener(P, D, N, dt_sec);
