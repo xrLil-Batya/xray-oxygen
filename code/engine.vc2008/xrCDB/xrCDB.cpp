@@ -64,7 +64,7 @@ struct	BTHREAD_params
     bool                rebuildTrisRequired;
 };
 
-void	MODEL::build_thread(void *params)
+void MODEL::build_thread(void *params)
 {
 	_initialize_cpu_thread();
 	FPU::m64r();
@@ -74,7 +74,7 @@ void	MODEL::build_thread(void *params)
 	P.M->status = S_READY;
 }
 
-void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
+void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
 {
 	R_ASSERT(S_INIT == status);
 	R_ASSERT((Vcnt >= 4) && (Tcnt >= 2));
@@ -98,7 +98,7 @@ void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* b
 	}
 }
 
-void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
+void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
 {
 	// verts
 	verts_count = Vcnt;
@@ -155,12 +155,7 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	OPCC.mIMesh->SetNbTriangles(tris_count);
 	OPCC.mIMesh->SetNbVertices(verts_count);
 	OPCC.mIMesh->SetPointers((IndexedTriangle*)temp_tris, (Point*)verts);
-//	OPCC.Verts = (Point*)verts; 
-	OPCC.mSettings.mLimit = 1; // SPLIT_COMPLETE rule
-	OPCC.mSettings.mRules = SplittingRules::SPLIT_SPLATTER_POINTS | SplittingRules::SPLIT_GEOM_CENTER;
-	OPCC.mNoLeaf = true;
 	OPCC.mQuantized = false;
-	// if (Memory.debug_mode) OPCC.KeepOriginal = true;
 
 	tree = CNEW(Model)();
 	if (!tree->Build(OPCC)) 
@@ -173,7 +168,7 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 
 	// Free temporary tris 
 	xr_delete(OPCC.mIMesh);
-	xr_free(temp_tris);
+	//xr_free(temp_tris);
 	return;
 }
 
