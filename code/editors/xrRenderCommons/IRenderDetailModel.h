@@ -1,5 +1,5 @@
 #pragma once
-
+#include "Shader.h"
 //////////////////////////////////////////////////////////////////////////
 // definition (Detail Model)
 class XRRENDER_COMMONS_API IRender_DetailModel

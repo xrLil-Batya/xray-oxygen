@@ -151,3 +151,5 @@ using U16Vec = xr_vector<u16>;
 using U32Vec = xr_vector<u32>;
 using FloatVec = xr_vector<float>;
 using IntVec = xr_vector<int>;
+using boolVec = xr_vector<bool>;
+using Fvector2Vec = xr_vector<Fvector2>;

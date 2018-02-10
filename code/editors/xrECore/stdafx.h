@@ -2,8 +2,8 @@
 // file: stdafx.h
 //----------------------------------------------------
 #pragma once
-
-#define smart_cast dynamic_cast
+#include <imdexlib\fast_dynamic_cast.hpp>
+#define smart_cast imdexlib::fast_dynamic_cast
 
 #define DIRECTINPUT_VERSION 0x0800
 
@@ -18,17 +18,14 @@
 #include <process.h>
 #include <functional>
 
-
 #define fmodf fmod
 
-
 #ifdef	_ECOREB
-    #define ECORE_API		__declspec(dllexport)
-    #define ENGINE_API		__declspec(dllexport)
+#define ECORE_API		__declspec(dllexport)
 #else
-    #define ECORE_API		__declspec(dllimport)
-    #define ENGINE_API		__declspec(dllimport)
+#define ECORE_API		__declspec(dllimport)
 #endif
+#define ENGINE_API		ECORE_API
 
 #define DLL_API			__declspec(dllimport)
 #define PropertyGP(a,b)	__declspec( property( get=a, put=b ) )
@@ -36,82 +33,67 @@
 #define THROW2(a)		FATAL(a);
 #define NO_XRC_STATS
 
-#define clMsg 			Msg
+#define clMsg Msg
+
+//just types at this moments
+#include <d3d9.h>
+#include <d3d9types.h>
+#include <dinput.h>
+#include <xrRenderCommons/xrD3DDefs.h>
 
 // core
 #include <xrCore/xrCore.h>
-#include "../xrRenderCommons/xrRenderCommons.h"
+#include <xrRenderCommons/xrRenderCommons.h>
+#include "editor\engine.h"
 
 #ifdef _EDITOR
-	class PropValue;
-	class PropItem;
-	DEFINE_VECTOR(PropItem*,PropItemVec,PropItemIt);
+class PropValue;
+class PropItem;
+DEFINE_VECTOR(PropItem*, PropItemVec, PropItemIt);
 
-	class ListItem;
-	DEFINE_VECTOR(ListItem*,ListItemsVec,ListItemsIt);
+class ListItem;
+DEFINE_VECTOR(ListItem*, ListItemsVec, ListItemsIt);
 #endif
 
-//#include "..\..\xrCDB\xrCDB.h"
-//#include "..\..\xrSound\Sound.h"
-//#include "..\..\xrEngine\PSystem.h"
+////////////////////////////////////////////////////
+// Fast char* using //
+using AnsiString = std::string;
+using AStringVec = xr_vector<AnsiString>;
+using AStringIt = AStringVec::iterator;
+using LPAStringVec = xr_vector<AnsiString*>;
+using LPAStringIt = LPAStringVec::iterator;
 
-//just types at this moments
-#include <d3d9types.h>
-
-// DirectX headers
-//#include <d3d9.h>
-//#include <d3dx9.h>
-//#include "..\..\Layers\xrRender\xrD3dDefs.h"
-
-#include <dinput.h>
-//#include <dsound.h>
-
-// some user components
-//#include "..\..\xrEngine\fmesh.h"
-//#include "..\..\xrEngine\_d3d_extensions.h"
-
-//#include "D3DX_Wrapper.h"
-
-DEFINE_VECTOR		(AnsiString,AStringVec,AStringIt);
-DEFINE_VECTOR		(AnsiString*,LPAStringVec,LPAStringIt);
-
-//#include "..\..\..\xrServerEntities\xrEProps.h"
-#include "xrCore/Log.h"
-#include "editor\engine.h"
-//#include "..\..\xrEngine\defines.h"
-
-//#include "../../xrphysics/xrphysics.h"
 
 struct str_pred
 {
-    IC bool operator()(LPCSTR x, LPCSTR y) const
-    {
-        return strcmp(x, y) < 0;
-    }
+	IC bool operator()(LPCSTR x, LPCSTR y) const
+	{
+		return strcmp(x, y) < 0;
+	}
 };
 
 struct astr_pred
 {
-    IC bool operator()(const AnsiString& x, const AnsiString& y) const
-    {
-        return x < y;
-    }
+	IC bool operator()(const AnsiString& x, const AnsiString& y) const
+	{
+		return x < y;
+	}
 };
 
 #ifdef _EDITOR
-	#include "editor\device.h"
-	#include "..\..\xrEngine\properties.h"
-	#include "editor\render.h"
-	DEFINE_VECTOR(FVF::L,FLvertexVec,FLvertexIt);
-	DEFINE_VECTOR(FVF::TL,FTLvertexVec,FTLvertexIt);
-	DEFINE_VECTOR(FVF::LIT,FLITvertexVec,FLITvertexIt);
-	DEFINE_VECTOR(shared_str,RStrVec,RStrVecIt);
+#include "editor\device.h"
+#include "..\..\xrEngine\properties.h"
+#include "editor\render.h"
+DEFINE_VECTOR(FVF::L, FLvertexVec, FLvertexIt);
+DEFINE_VECTOR(FVF::TL, FTLvertexVec, FTLvertexIt);
+DEFINE_VECTOR(FVF::LIT, FLITvertexVec, FLITvertexIt);
+DEFINE_VECTOR(shared_str, RStrVec, RStrVecIt);
 
-	#include "EditorPreferences.h"
+#include "EditorPreferences.h"
 #endif
 
 #ifdef _LEVEL_EDITOR                
-	#include "net_utils.h"
+#include "net_utils.h"
 #endif
 
 #define INI_NAME(buf) 		{FS.update_path(buf,"$local_root$",EFS.ChangeFileExt(UI->EditorName(),".ini").c_str());}

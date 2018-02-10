@@ -1,16 +1,13 @@
 //---------------------------------------------------------------------------
-#ifndef ImageManagerH
-#define ImageManagerH
-
-//#include "../xrEProps/folderlib.h"
-#include "ETextureParams.h"
+#pragma once
+#include <xrRender\xrRender\ETextureParams.h>
 #include "Editor/EThumbnail.h"
 class CEditableObject;
 
 struct SSimpleImage{
 	shared_str	name;
-    DEFINE_VECTOR(U32Vec,DATAVec,DATAIt);
-	DATAVec		layers;
+	using		DATAIt = U32Vec::iterator;
+	U32Vec		layers;
     u32			w,h,a;
     u32			tag;
     int 		LongestEdge()const 	{return (w>h)?w:h;}
@@ -18,7 +15,8 @@ struct SSimpleImage{
 };
 IC bool operator == (const SSimpleImage& a, shared_str nm){return a.name==nm;}
 IC bool operator < (const SSimpleImage& a, const SSimpleImage& b){return a.name<b.name;}
-DEFINE_VECTOR	(SSimpleImage,SSimpleImageVec,SSimpleImageVecIt);
+using SSimpleImageVec = xr_vector<SSimpleImage>;
+using SSimpleImageVecIt = SSimpleImageVec::iterator;
 
 class ECORE_API CImageManager{
     bool		MakeGameTexture		(ETextureThumbnail* THM, LPCSTR game_name, u32* data);
@@ -70,5 +68,3 @@ public:
 };
 
 extern ECORE_API CImageManager ImageLib;
-//---------------------------------------------------------------------------
-#endif

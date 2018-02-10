@@ -112,7 +112,7 @@ int CImageManager::CreateMergedTexture(u32 layer_cnt, SSimpleImageVec& src_image
     dest_rotate.clear	();
     dest_remap.resize	(src_images.size());
 
-    SSimpleImage::DATAVec dest_layers(layer_cnt);
+    SSimpleImage::U32Vec dest_layers(layer_cnt);
     for (SSimpleImage::DATAIt layer_it=dest_layers.begin(); layer_it!=dest_layers.end(); layer_it++)
     	layer_it->resize(dest_width*dest_height,0);
 	U8Vec 	dest_mask	(dest_width*dest_height,0); 

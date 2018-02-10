@@ -58,7 +58,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../engine.vc2008/;./;../../SDK/include/dx;../../3rd-party/nvtt/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../engine.vc2008/;./;../../SDK/include/dx;../../3rd-party/nvtt/include;../../SDK/include/;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding /std:c++latest -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>release\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -71,7 +71,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)\xrECore.pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GameMtlLibH;_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -80,7 +80,7 @@
       <WarningLevel>Level3</WarningLevel>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xrCore.lib;xrRenderCommons.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrRenderCommons.lib;FreeImage.lib;xrECoreLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(xrSDKLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>false</GenerateDebugInformation>
@@ -102,7 +102,7 @@
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
-      <AdditionalIncludeDirectories>../../engine.vc2008/;./;../../SDK/include/dx;../../3rd-party/nvtt/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>../../engine.vc2008/;./;../../SDK/include/dx;../../3rd-party/nvtt/include;../../SDK/include/;../;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding /std:c++latest -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
       <AssemblerListingLocation>debug\</AssemblerListingLocation>
       <BrowseInformation>false</BrowseInformation>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)\xrECore.pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>GameMtlLibH;_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
@@ -124,7 +124,7 @@
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>xrCore.lib;xrRenderCommons.lib;FreeImage.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;xrRenderCommons.lib;FreeImage.lib;xrECoreLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>$(xrSDKLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <DataExecutionPrevention>true</DataExecutionPrevention>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -151,25 +151,12 @@
     <ClCompile Include="Editor\EThumbnail.cpp" />
     <ClCompile Include="Editor\EThumbnailObject.cpp" />
     <ClCompile Include="Editor\EThumbnailTexture.cpp" />
-    <ClCompile Include="Editor\EditMesh.cpp" />
-    <ClCompile Include="Editor\EditMeshIO.cpp" />
-    <ClCompile Include="Editor\EditMeshModify.cpp" />
     <ClCompile Include="Editor\EditMeshPick.cpp" />
     <ClCompile Include="Editor\EditMeshRender.cpp" />
-    <ClCompile Include="Editor\EditObject.cpp" />
-    <ClCompile Include="Editor\EditObjectEditor.cpp" />
-    <ClCompile Include="Editor\EditObjectIO.cpp" />
     <ClCompile Include="Editor\EditObjectImport.cpp" />
-    <ClCompile Include="Editor\EditObjectMotions.cpp" />
-    <ClCompile Include="Editor\EditObjectProps.cpp" />
     <ClCompile Include="Editor\EditObjectSkin.cpp" />
     <ClCompile Include="Editor\EditorPreferences.cpp" />
     <ClCompile Include="Editor\Engine.cpp" />
-    <ClCompile Include="Editor\ExportObjectOGF.cpp" />
-    <ClCompile Include="Editor\ExportObjectOGFCalculateTB.cpp" />
-    <ClCompile Include="Editor\ExportSkeleton.cpp" />
-    <ClCompile Include="Editor\ExportSkeletonCalculateTB.cpp" />
-    <ClCompile Include="Engine\GameMtlLib.cpp" />
     <ClCompile Include="Engine\GameMtlLib_Engine.cpp" />
     <ClCompile Include="Editor\GeometryCollector.cpp" />
     <ClCompile Include="Engine\Image.cpp" />
@@ -178,23 +165,6 @@
     <ClCompile Include="Editor\ImageManagerLOD.cpp" />
     <ClCompile Include="Editor\Library.cpp" />
     <ClCompile Include="WildMagic\RAPIDMinBox.cpp" />
-    <ClCompile Include="WildMagic\WmlApprGaussPointsFit3.cpp" />
-    <ClCompile Include="WildMagic\WmlBox3.cpp" />
-    <ClCompile Include="WildMagic\WmlContBox3.cpp" />
-    <ClCompile Include="WildMagic\WmlContMinBox3.cpp" />
-    <ClCompile Include="WildMagic\WmlEigen.cpp" />
-    <ClCompile Include="WildMagic\WmlMath.cpp" />
-    <ClCompile Include="WildMagic\WmlMatrix2.cpp" />
-    <ClCompile Include="WildMagic\WmlMatrix3.cpp" />
-    <ClCompile Include="WildMagic\WmlMatrix4.cpp" />
-    <ClCompile Include="WildMagic\WmlMinimize1.cpp" />
-    <ClCompile Include="WildMagic\WmlMinimizeN.cpp" />
-    <ClCompile Include="WildMagic\WmlQuaternion.cpp" />
-    <ClCompile Include="WildMagic\WmlSystem.cpp" />
-    <ClCompile Include="WildMagic\WmlVector2.cpp" />
-    <ClCompile Include="WildMagic\WmlVector3.cpp" />
-    <ClCompile Include="WildMagic\WmlVector4.cpp" />
-    <ClCompile Include="WildMagic\WmlWinSystem.cpp" />
     <ClCompile Include="Engine\ai_sounds.cpp" />
     <ClCompile Include="Engine\blenders\blender_light.cpp" />
     <ClCompile Include="Editor\c_dinput.cpp" />
@@ -218,11 +188,7 @@
     <ClInclude Include="Editor\ELog.h" />
     <ClInclude Include="Editor\EStats.h" />
     <ClInclude Include="Editor\EThumbnail.h" />
-    <ClInclude Include="Editor\EditMesh.h" />
-    <ClInclude Include="Editor\EditObject.h" />
     <ClInclude Include="Editor\EditorPreferences.h" />
-    <ClInclude Include="Editor\ExportObjectOGF.h" />
-    <ClInclude Include="Editor\ExportSkeleton.h" />
     <ClInclude Include="Engine\GameMtlLib.h" />
     <ClInclude Include="Editor\GeometryCollector.h" />
     <ClInclude Include="Engine\Image.h" />
@@ -244,41 +210,6 @@
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Editor\UI_Camera.h" />
     <ClInclude Include="Editor\UI_MainCommand.h" />
-    <ClInclude Include="Editor\UI_ToolsCustom.h" />
-    <ClInclude Include="WildMagic\WmlApprGaussPointsFit3.h" />
-    <ClInclude Include="WildMagic\WmlBox3.h" />
-    <ClInclude Include="WildMagic\WmlContBox3.h" />
-    <ClInclude Include="WildMagic\WmlContMinBox3.h" />
-    <ClInclude Include="WildMagic\WmlEigen.h" />
-    <ClInclude Include="WildMagic\WmlGMatrix.h" />
-    <ClInclude Include="WildMagic\WmlGMatrix.inl" />
-    <ClInclude Include="WildMagic\WmlGVector.h" />
-    <ClInclude Include="WildMagic\WmlGVector.inl" />
-    <ClInclude Include="WildMagic\WmlMath.h" />
-    <ClInclude Include="WildMagic\WmlMath.inl" />
-    <ClInclude Include="WildMagic\WmlMatrix.h" />
-    <ClInclude Include="WildMagic\WmlMatrix.inl" />
-    <ClInclude Include="WildMagic\WmlMatrix2.h" />
-    <ClInclude Include="WildMagic\WmlMatrix2.inl" />
-    <ClInclude Include="WildMagic\WmlMatrix3.h" />
-    <ClInclude Include="WildMagic\WmlMatrix3.inl" />
-    <ClInclude Include="WildMagic\WmlMatrix4.h" />
-    <ClInclude Include="WildMagic\WmlMatrix4.inl" />
-    <ClInclude Include="WildMagic\WmlMinimize1.h" />
-    <ClInclude Include="WildMagic\WmlMinimizeN.h" />
-    <ClInclude Include="WildMagic\WmlQuaternion.h" />
-    <ClInclude Include="WildMagic\WmlQuaternion.inl" />
-    <ClInclude Include="WildMagic\WmlSystem.h" />
-    <ClInclude Include="WildMagic\WmlSystem.inl" />
-    <ClInclude Include="WildMagic\WmlVector.h" />
-    <ClInclude Include="WildMagic\WmlVector.inl" />
-    <ClInclude Include="WildMagic\WmlVector2.h" />
-    <ClInclude Include="WildMagic\WmlVector2.inl" />
-    <ClInclude Include="WildMagic\WmlVector3.h" />
-    <ClInclude Include="WildMagic\WmlVector3.inl" />
-    <ClInclude Include="WildMagic\WmlVector4.h" />
-    <ClInclude Include="WildMagic\WmlVector4.inl" />
-    <ClInclude Include="WildMagic\WmlWinSystem.h" />
     <ClInclude Include="Engine\ai_sounds.h" />
     <ClInclude Include="Engine\blenders\blender_light.h" />
     <ClInclude Include="Engine\cl_collector.h" />

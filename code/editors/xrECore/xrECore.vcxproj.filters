@@ -48,37 +48,13 @@
     <ClCompile Include="Editor\EThumbnailTexture.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\EditMesh.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\EditMeshIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\EditMeshModify.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Editor\EditMeshPick.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditMeshRender.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Editor\EditObject.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\EditObjectEditor.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\EditObjectIO.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Editor\EditObjectImport.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\EditObjectMotions.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\EditObjectProps.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor\EditObjectSkin.cpp">
@@ -88,21 +64,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Editor\Engine.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ExportObjectOGF.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ExportObjectOGFCalculateTB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ExportSkeleton.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Editor\ExportSkeletonCalculateTB.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\GameMtlLib.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\GameMtlLib_Engine.cpp">
@@ -127,57 +88,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="WildMagic\RAPIDMinBox.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlApprGaussPointsFit3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlBox3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlContBox3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlContMinBox3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlEigen.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlMath.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlMatrix2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlMatrix3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlMatrix4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlMinimize1.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlMinimizeN.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlQuaternion.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlSystem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlVector2.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlVector3.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlVector4.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="WildMagic\WmlWinSystem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ai_sounds.cpp">
@@ -245,19 +155,7 @@
     <ClInclude Include="Editor\EThumbnail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\EditMesh.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\EditObject.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\EditorPreferences.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\ExportObjectOGF.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\ExportSkeleton.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\GameMtlLib.h">
@@ -321,111 +219,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Editor\UI_MainCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\UI_ToolsCustom.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlApprGaussPointsFit3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlBox3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlContBox3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlContMinBox3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlEigen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlGMatrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlGMatrix.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlGVector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlGVector.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMath.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMath.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix2.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix3.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMatrix4.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMinimize1.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlMinimizeN.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlQuaternion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlQuaternion.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlSystem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlSystem.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector2.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector2.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector3.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector3.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector4.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlVector4.inl">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="WildMagic\WmlWinSystem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ai_sounds.h">

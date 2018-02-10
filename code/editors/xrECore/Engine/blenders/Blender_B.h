@@ -13,8 +13,8 @@ public:
 	virtual		void		Save			(IWriter&  fs);
 	virtual		void		Load			(IReader&	fs, u16 version);
 
-    virtual		void		Compile(CBlender_Compile& C) {}
+    virtual		void		Compile(CBlender_Compile&) {}
 
 	CBlender_B();
-	virtual ~CBlender_B();
+	virtual ~CBlender_B()					= default;
 };

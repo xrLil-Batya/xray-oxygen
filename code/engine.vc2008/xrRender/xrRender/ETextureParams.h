@@ -1,6 +1,4 @@
-#ifndef ETextureParamsH
-#define ETextureParamsH
-
+#pragma once
 #pragma pack(push,1)
 struct ECORE_API STextureParams{
 	enum ETType{
@@ -143,12 +141,12 @@ struct ECORE_API STextureParams{
         bump_virtual_height = 0.05f;
 	}
 
-    IC BOOL HasAlpha()
+    IC bool HasAlpha()
     { 
     	// исходная текстура содержит альфа канал
     	return flags.is(flHasAlpha);
     }
-	IC BOOL HasAlphaChannel() // игровая текстура содержит альфа канал
+	IC bool HasAlphaChannel() // игровая текстура содержит альфа канал
 	{
 		switch (fmt)
 		{
@@ -158,9 +156,9 @@ struct ECORE_API STextureParams{
 		case tf4444:
 		case tf1555:
 		case tfRGBA:
-			return TRUE;
+			return true;
 		default:
-			return FALSE;
+			return false;
 		}
 	}
     void Load (IReader& F);
@@ -198,5 +196,3 @@ extern xr_token	ttype_token[];
 #define THUMB_HEIGHT 	128
 #define THUMB_SIZE 		THUMB_HEIGHT*THUMB_WIDTH
 //----------------------------------------------------
-#endif /*_INCDEF_TextureParams_H_*/
-

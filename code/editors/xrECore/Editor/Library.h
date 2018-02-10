@@ -1,15 +1,12 @@
 //----------------------------------------------------
 // file: Library.h
 //----------------------------------------------------
-
-#ifndef LibraryH
-#define LibraryH
-
-//#include "../xrEProps/FolderLib.h"              
+#pragma once
 //----------------------------------------------------
 class CEditableObject;
 
-DEFINE_MAP_PRED(AnsiString,CEditableObject*,EditObjMap,EditObjPairIt,astr_pred);
+using EditObjMap = xr_map<AnsiString, CEditableObject*, astr_pred>;
+using EditObjPairIt = EditObjMap::iterator;
 //----------------------------------------------------
 class ECORE_API ELibrary//:	public pureDeviceCreate, public pureDeviceDestroy
 {
@@ -50,5 +47,3 @@ public:
 
 extern ECORE_API ELibrary Lib;
 //----------------------------------------------------
-#endif /*_INCDEF_Library_H_*/
-

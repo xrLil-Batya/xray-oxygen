@@ -261,9 +261,11 @@ public:
     void			Optimize				();
 
     IC EditMeshVec& Meshes					()	{return m_Meshes; }
+IC EditMeshVec::iterator& FirstMesh			()	{return m_Meshes.begin();}
     IC int			MeshCount				()	{return int(m_Meshes.size());}
 	IC void			AppendMesh				(CEditableMesh* M){m_Meshes.push_back(M);}
     IC SurfaceVec&	Surfaces				()	{return m_Surfaces;}
+IC SurfaceVec::iterator& FirstSurface		()	{return m_Surfaces.begin();}
     IC int			SurfaceCount			()	{return int(m_Surfaces.size());}
     IC int 			Version 				() 	{return m_ObjectVersion;}
 

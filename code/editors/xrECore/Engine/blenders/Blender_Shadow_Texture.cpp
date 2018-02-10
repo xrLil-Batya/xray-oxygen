@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
-#include "Blender.h"
-#include "Blender_CLSID.h"
+#include <xrRenderCommons\Blender.h>
+#include <xrRenderCommons\Blender_CLSID.h>
 #include "Blender_Shadow_Texture.h"
 
 //////////////////////////////////////////////////////////////////////

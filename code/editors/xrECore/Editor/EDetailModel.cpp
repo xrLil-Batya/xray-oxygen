@@ -1,9 +1,9 @@
 #include "stdafx.h"
 
 #include "EDetailModel.h"
+#include <xrECoreLite\EditObject.h>
+#include <xrECoreLite\EditMesh.h>
 #include "Library.h"
-#include "EditObject.h"
-#include "EditMesh.h"
 #include "ImageManager.h"
 
 //------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ IC BOOL isDegenerated(u16 v[3])
 };
 IC BOOL isEqual(U16Vec& ind, u16 v[3])
 {
-	for (U16It it=ind.begin(); it!=ind.end(); it+=3){
+	for (U16Vec::iterator it=ind.begin(); it!=ind.end(); it+=3){
         // Test for 6 variations
         if ((*(it+0)==v[0]) && (*(it+1)==v[1]) && (*(it+2)==v[2])) return true;
         if ((*(it+0)==v[0]) && (*(it+2)==v[1]) && (*(it+1)==v[2])) return true;
@@ -229,7 +229,7 @@ void EDetail::Save(IWriter& F)
 void EDetail::Export(IWriter& F, LPCSTR tex_name, const Fvector2& offs, const Fvector2& scale, bool rot)
 {
 	R_ASSERT			(m_pRefs);
-    CSurface* surf		= *m_pRefs->FirstSurface();
+    CSurface* surf		= *m_pRefs->Surfaces.begin();
 	R_ASSERT			(surf);
     // write data
 	F.w_stringZ			(surf->_ShaderName());

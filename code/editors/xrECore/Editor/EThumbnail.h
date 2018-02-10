@@ -1,10 +1,6 @@
-#ifndef EThumbnailH
-#define EThumbnailH
+#pragma once
+#include <xrRender\xrRender\ETextureParams.h>
 
-#include "ETextureParams.h"
-//#include "../../xrServerEntities/PropertiesListHelper.h"
-
-//#include "MXCtrls.hpp"
 //------------------------------------------------------------------------------
 // Custom class
 //------------------------------------------------------------------------------
@@ -175,6 +171,3 @@ public:
 //------------------------------------------------------------------------------
 #endif
 EImageThumbnail* CreateThumbnail	(LPCSTR src_name, ECustomThumbnail::THMType type, bool bLoad=true);
-
-#endif
-

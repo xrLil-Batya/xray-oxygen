@@ -1,11 +1,11 @@
 #pragma once
-
-#include "DetailModel.h"
+#include <xrRenderCommons\DetailModel.h>
 
 // refs
 class CEditableObject;
 
-class ECORE_API EDetail: public CDetail{
+class ECORE_API EDetail: public CDetail
+{
 	friend class EDetailManager;
 	friend class CDetailManager;
     friend class TfrmDOShuffle;
@@ -86,4 +86,6 @@ public:
 	void				OnDeviceDestroy	();
     void				DefferedLoad	();
 };
-DEFINE_VECTOR(EDetail*,DOVec,DOIt);
+
+using DOVec = xr_vector<EDetail*>;
+using DOIt = DOVec::iterator;
