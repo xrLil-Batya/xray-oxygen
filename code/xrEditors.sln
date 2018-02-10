@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrWeatherEditor", "editors\xrWeatherEditor\editor.vcxproj", "{492D3DFE-9068-4E7E-A008-7C2420A651C0}"
 EndProject
@@ -34,6 +34,17 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WildMagic", "3rd-party\WildMagic\WildMagic.vcxproj", "{35448F1E-E96F-40A2-8F46-6FB1D8DFF1F1}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ETools", "engine.vc2008\xrTools\ETools.vcxproj", "{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrECore", "editors\xrECore\xrECore.vcxproj", "{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB} = {F213ED3C-FDF3-372D-812D-D7C1843D5BAB}
+		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E} = {A0F7D1FB-59A7-4717-A7E4-96F37E91998E}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRenderCommons", "editors\xrRenderCommons\xrRenderCommons.vcxproj", "{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A0F7D1FB-59A7-4717-A7E4-96F37E91998E} = {A0F7D1FB-59A7-4717-A7E4-96F37E91998E}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -115,6 +126,22 @@ Global
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}.Release_AI32|x64.Build.0 = Release_AI32|x64
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}.Release|x64.ActiveCfg = Release|x64
 		{65CBB9D0-FBC6-41A4-8316-F5E9B5D7FB33}.Release|x64.Build.0 = Release|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Debug|x64.ActiveCfg = Debug|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Debug|x64.Build.0 = Debug|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Mixed|x64.ActiveCfg = Release|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Mixed|x64.Build.0 = Release|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Release_AI32|x64.ActiveCfg = Release|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Release_AI32|x64.Build.0 = Release|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Release|x64.ActiveCfg = Release|x64
+		{2EE5C608-5361-38EE-BF88-E52BE5CFEB3E}.Release|x64.Build.0 = Release|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Debug|x64.ActiveCfg = Debug|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Debug|x64.Build.0 = Debug|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Mixed|x64.ActiveCfg = Release|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Mixed|x64.Build.0 = Release|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Release_AI32|x64.ActiveCfg = Release|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Release_AI32|x64.Build.0 = Release|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Release|x64.ActiveCfg = Release|x64
+		{F213ED3C-FDF3-372D-812D-D7C1843D5BAB}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
