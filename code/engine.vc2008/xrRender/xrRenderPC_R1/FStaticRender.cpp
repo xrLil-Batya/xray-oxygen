@@ -62,9 +62,12 @@ void					CRender::create					()
 	Device.seqFrame.Add	(this,REG_PRIORITY_HIGH+0x12345678);
 
 	// c-setup
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("L_dynamic_pos",		&r1_dlight_binder_PR);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("L_dynamic_color",	&r1_dlight_binder_color);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("L_dynamic_xform",	&r1_dlight_binder_xform);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup
+		("L_dynamic_pos",		&r1_dlight_binder_PR);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup
+		("L_dynamic_color",	&r1_dlight_binder_color);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup
+		("L_dynamic_xform",	&r1_dlight_binder_xform);
 
 	// distortion
 	u32		v_dev	= CAP_VERSION(HW.Caps.raster_major, HW.Caps.raster_minor);
@@ -75,9 +78,16 @@ void					CRender::create					()
 	Msg				("* distortion: %s, dev(%d),need(%d)",o.distortion?"used":"unavailable",v_dev,v_need);
 
 	//	Color mapping
-	if ( v_dev >= v_need )						o.color_mapping = TRUE;
-	else										o.color_mapping = FALSE;
-	if (strstr(Core.Params,"-nocolormap"))		o.color_mapping = FALSE;
+	if (v_dev >= v_need) {
+		o.color_mapping = TRUE; 
+	}
+	else {
+		o.color_mapping = FALSE;
+	}
+	if (strstr(Core.Params, "-nocolormap")) {			// ?? strange method
+		o.color_mapping = FALSE;
+	}
+
 	Msg				("* color_mapping: %s, dev(%d),need(%d)",o.color_mapping?"used":"unavailable",v_dev,v_need);
 
 	m_skinning					= -1;

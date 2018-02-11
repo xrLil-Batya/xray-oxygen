@@ -658,6 +658,7 @@ extern Flags32		psEnvFlags;
 
 extern int			g_ErrorLineCount;
 
+ENGINE_API int			ps_always_active			= 0;
 ENGINE_API int			ps_r__Supersample			= 1;
 void CCC_Register()
 {
@@ -765,6 +766,7 @@ void CCC_Register()
 	// Camera
 	CMD2(CCC_Float,		"cam_inert",			&psCamInert);
 	//CMD2(CCC_Float,		"cam_slide_inert",		&psCamSlideInert);
+	CMD4(CCC_Integer,	"always_active",		&ps_always_active,	0,	1);
 
 	CMD1(CCC_r2,		"renderer"				);
 

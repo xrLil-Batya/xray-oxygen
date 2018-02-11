@@ -214,6 +214,7 @@ void CGlowManager::render_sw		()
 	{
 		u32	ID		= dwTestID%Selected.size();
 		CGlow&	G	= *( (CGlow*)Selected[ID]._get() );
+		// (int)1952805748 - ahm, what?
 		if (G.dwFrame=='test')	break;
 		G.dwFrame	=	'test';
 		Fvector		dir;

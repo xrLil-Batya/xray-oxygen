@@ -1154,9 +1154,7 @@
     <ClCompile Include="Blender_ss.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender3.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

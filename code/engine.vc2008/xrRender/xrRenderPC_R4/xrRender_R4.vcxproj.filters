@@ -1346,8 +1346,6 @@
     <ClCompile Include="blender_fxaa.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender3.cpp">
-      <Filter>Editor</Filter>
-    </ClCompile>
+    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
   </ItemGroup>
 </Project>

@@ -22,7 +22,7 @@ ICF float calcLOD	(float ssa/*fDistSq*/, float R)
 
 // NORMAL
 IC	bool	cmp_normal_items		(const _NormalItem& N1, const _NormalItem& N2)
-{	return (N1.ssa > N2.ssa);		}
+{	return (N1.ssa > N2.ssa);		}	
 
 void __fastcall mapNormal_Render	(mapNormalItems& N)
 {
@@ -315,6 +315,7 @@ void R_dsgraph_structure::r_dsgraph_render_graph	(u32	_priority, bool _clear)
 						std::sort						(nrmCS.begin(), nrmCS.end(), cmp_cs_nrm);
 						for (u32 cs_id=0; cs_id<nrmCS.size(); cs_id++)
 						{
+							// struct to const???
 							mapNormalCS::TNode*	Ncs			= nrmCS[cs_id];
 							RCache.set_Constants			(Ncs->key);
 
@@ -662,7 +663,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 		Fvector box_radius;		box_radius.set	(EPS_L*20,EPS_L*20,EPS_L*20);
 		RImplementation.Sectors_xrc.box_options	(CDB::OPT_FULL_TEST);
 		RImplementation.Sectors_xrc.box_query	(RImplementation.rmPortals,_cop,box_radius);
-		for (int K=0; K<RImplementation.Sectors_xrc.r_count(); K++)
+		for (int K = 0; K < RImplementation.Sectors_xrc.r_count(); K++)
 		{
 			CPortal*	pPortal		= (CPortal*) RImplementation.Portals[RImplementation.rmPortals->get_tris()[RImplementation.Sectors_xrc.r_begin()[K].id].dummy];
 			pPortal->bDualRender	= TRUE;
@@ -701,7 +702,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 		{
 			ISpatial*	spatial		= lstRenderables[o_it];
 			CSector*	sector		= (CSector*)spatial->spatial.sector;
-			if	(0==sector)										continue;	// disassociated from S/P structure
+			if	(sector == NULL)								continue;	// disassociated from S/P structure
 			if	(PortalTraverser.i_marker != sector->r_marker)	continue;	// inactive (untouched) sector
 			for (u32 v_it=0; v_it<sector->r_frustums.size(); v_it++)
 			{
@@ -710,7 +711,7 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 
 				// renderable
 				IRenderable*	renderable		= spatial->dcast_Renderable	();
-				if (0==renderable)				continue;					// unknown, but renderable object (r1_glow???)
+				if (renderable == NULL)							continue;	// unknown, but renderable object (r1_glow???)
 
 				renderable->renderable_Render	();
 			}
@@ -746,7 +747,7 @@ void	R_dsgraph_structure::r_dsgraph_render_R1_box(IRender_Sector* _S, Fbox& BB, 
 			// Add all children
 			FHierrarhyVisual* pV = (FHierrarhyVisual*)it;
 
-			for (auto &i : pV->children)
+			for (auto &i : pV->children)				// auto is not optimized
 			{
 				dxRender_Visual* T = i;
 				if (BB.intersect(T->vis.box))

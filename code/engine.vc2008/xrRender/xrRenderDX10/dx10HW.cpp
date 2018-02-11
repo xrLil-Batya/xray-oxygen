@@ -395,9 +395,11 @@ void CHW::updateWindowProps(HWND m_hWnd)
 	if (bWindowed)		{
 		if (m_move_window) {
 			if (strstr(Core.Params,"-no_dialog_header"))
-				SetWindowLong	( m_hWnd, GWL_STYLE, dwWindowStyle=(WS_BORDER|WS_VISIBLE) );
-			else
-				SetWindowLong	( m_hWnd, GWL_STYLE, dwWindowStyle=(WS_BORDER|WS_DLGFRAME|WS_VISIBLE|WS_SYSMENU|WS_MINIMIZEBOX ) );
+				dwWindowStyle |= WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+			bool bBordersMode = strstr(Core.Params, "-draw_borders");
+			dwWindowStyle = WS_VISIBLE;
+			if (bBordersMode)
+			dwWindowStyle |= WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
 			// When moving from fullscreen to windowed mode, it is important to
 			// adjust the window size after recreating the device rather than
 			// beforehand to ensure that you get the window size you want.  For
@@ -408,6 +410,7 @@ void CHW::updateWindowProps(HWND m_hWnd)
 			// desktop.
 
 			RECT			m_rcWindowBounds;
+			float fYOffset = 0.f;
 			BOOL			bCenter = TRUE;
 			if (strstr(Core.Params, "-no_center_screen"))	bCenter = FALSE;
 
@@ -415,18 +418,18 @@ void CHW::updateWindowProps(HWND m_hWnd)
 				RECT				DesktopRect;
 
 				GetClientRect		(GetDesktopWindow(), &DesktopRect);
-
-				SetRect(			&m_rcWindowBounds, 
-					(DesktopRect.right-m_ChainDesc.BufferDesc.Width)/2, 
-					(DesktopRect.bottom-m_ChainDesc.BufferDesc.Height)/2, 
-					(DesktopRect.right+m_ChainDesc.BufferDesc.Width)/2, 
-					(DesktopRect.bottom+m_ChainDesc.BufferDesc.Height)/2);
-			}else{
-				SetRect(			&m_rcWindowBounds,
-					0, 
-					0, 
-					m_ChainDesc.BufferDesc.Width, 
-					m_ChainDesc.BufferDesc.Height);
+				SetRect(&m_rcWindowBounds, (DesktopRect.right - m_ChainDesc.BufferDesc.Width) / 2,
+				(DesktopRect.bottom - m_ChainDesc.BufferDesc.Height) / 2,
+				(DesktopRect.right + m_ChainDesc.BufferDesc.Width) / 2,
+				(DesktopRect.bottom + m_ChainDesc.BufferDesc.Height) / 2);
+			}
+			else
+			{
+				if (bBordersMode) {
+					fYOffset = GetSystemMetrics(SM_CYCAPTION); // size of the window title bar
+				}
+					SetRect(&m_rcWindowBounds, 0, 0, m_ChainDesc.BufferDesc.Width, m_ChainDesc.BufferDesc.Height);
+				
 			};
 
 			AdjustWindowRect		(	&m_rcWindowBounds, dwWindowStyle, FALSE );
@@ -434,9 +437,9 @@ void CHW::updateWindowProps(HWND m_hWnd)
 			SetWindowPos			(	m_hWnd, 
 				HWND_NOTOPMOST,	
 				m_rcWindowBounds.left, 
-				m_rcWindowBounds.top,
+				m_rcWindowBounds.top + fYOffset,
 				( m_rcWindowBounds.right - m_rcWindowBounds.left ),
-				( m_rcWindowBounds.bottom - m_rcWindowBounds.top ),
+				( m_rcWindowBounds.bottom - m_rcWindowBounds.top),
 				SWP_SHOWWINDOW|SWP_NOCOPYBITS|SWP_DRAWFRAME );
 		}
 	}
