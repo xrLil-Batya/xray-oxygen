@@ -363,6 +363,8 @@ void CTorch::UpdateCL()
 					offset.mad					(M.k,OMNI_OFFSET.z);
 					light_omni->set_position	(offset);
 				}
+				if(actor->cam_FirstEye())
+					light_omni->set_shadow		(false);
 			}//if (true)
 			glow_render->set_position	(M.c);
 
