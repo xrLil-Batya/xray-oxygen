@@ -32,7 +32,7 @@ public:
 	Factory_Create*		pCreate;
 	Factory_Destroy*	pDestroy;
 	void				Initialize	();
-	void				InitializeNotDedicated();
+	void				InitializeRenderer();
 	void				Destroy		();
 	void				CreateRendererList();
 
