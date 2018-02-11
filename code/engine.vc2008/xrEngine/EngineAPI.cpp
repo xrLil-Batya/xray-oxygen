@@ -179,7 +179,7 @@ void CEngineAPI::CreateRendererList()
 	hRender = LoadLibrary(r1_name);
 	if (hRender)
 	{
-		modes.emplace_back(xr_token("renderer_r1", 1));
+		modes.emplace_back(xr_token("renderer_r1", 0));
 		FreeLibrary(hRender);
 	}
 
@@ -188,6 +188,7 @@ void CEngineAPI::CreateRendererList()
 	hRender			= LoadLibrary		(r2_name);
 	if (hRender)	
 	{
+		modes.push_back(xr_token("renderer_r2a", 1));
 		modes.emplace_back(xr_token("renderer_r2", 2));
 		SupportsAdvancedRendering *test_rendering = (SupportsAdvancedRendering*) GetProcAddress(hRender,"SupportsAdvancedRendering");	
 		if (test_rendering && test_rendering())
