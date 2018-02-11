@@ -283,13 +283,13 @@ void ComputeCylinder(Fcylinder& C, Fobb& B, FvectorVec& V)
 	
 //	Fvector axis;
     float max_hI   	= flt_min;
-    float min_hI   	= flt_max;
+    float min_hI   	= fltstd::max;
     float max_rI   	= flt_min;
     float max_hJ   	= flt_min;
-    float min_hJ   	= flt_max;
+    float min_hJ   	= fltstd::max;
     float max_rJ   	= flt_min;
     float max_hK   	= flt_min;
-    float min_hK   	= flt_max;
+    float min_hK   	= fltstd::max;
     float max_rK   	= flt_min;
     Fvector axisJ 		= B.m_rotate.j;
     Fvector axisI 		= B.m_rotate.i;
@@ -302,21 +302,21 @@ void ComputeCylinder(Fcylinder& C, Fobb& B, FvectorVec& V)
 
     	float pI		= axisI.dotproduct(pt);
         min_hI			= _min(min_hI,pI);
-        max_hI			= _max(max_hI,pI);
+        max_hI			= std::max(max_hI,pI);
         tmp.mad			(c,axisI,axisI.dotproduct(pt_c));
-        max_rI			= _max(max_rI,tmp.distance_to(pt));
+        max_rI			= std::max(max_rI,tmp.distance_to(pt));
         
     	float pJ		= axisJ.dotproduct(pt);
         min_hJ			= _min(min_hJ,pJ);
-        max_hJ			= _max(max_hJ,pJ);
+        max_hJ			= std::max(max_hJ,pJ);
         tmp.mad			(c,axisJ,axisJ.dotproduct(pt_c));
-        max_rJ			= _max(max_rJ,tmp.distance_to(pt));
+        max_rJ			= std::max(max_rJ,tmp.distance_to(pt));
 
     	float pK		= axisK.dotproduct(pt);
         min_hK			= _min(min_hK,pK);
-        max_hK			= _max(max_hK,pK);
+        max_hK			= std::max(max_hK,pK);
         tmp.mad			(c,axisK,axisK.dotproduct(pt_c));
-        max_rK			= _max(max_rK,tmp.distance_to(pt));
+        max_rK			= std::max(max_rK,tmp.distance_to(pt));
     }
 
     float hI			= (max_hI-min_hI);

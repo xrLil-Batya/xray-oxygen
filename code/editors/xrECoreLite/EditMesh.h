@@ -6,7 +6,6 @@
 // refs
 class 	CSurface;
 struct 	SRayPickInfo;
-//struct CFrustum;
 struct 	FSChunkDef;
 class 	CExporter;
 class	CCustomObject;
@@ -185,11 +184,13 @@ class CSector;
 	struct ECORE_API st_RenderBuffer{
 		u32			dwStartVertex;
 	    u32			dwNumVertex;
-        ref_geom 	pGeom;
+        void*	 	pGeom;
 		st_RenderBuffer	(u32 sv, u32 nv):dwStartVertex(sv),dwNumVertex(nv),pGeom(0){;}
 	};
-	DEFINE_VECTOR(st_RenderBuffer,RBVector,RBVecIt);
-	DEFINE_MAP(CSurface*,RBVector,RBMap,RBMapPairIt);
+	using RBVector = xr_vector<st_RenderBuffer>;
+	using RBMap = xr_map<CSurface*, RBVector>;
+	using RBVecIt = RBVector::iterator;
+	using RBMapPairIt = RBMap::iterator;
 #endif
 
 class ECORE_API CEditableMesh {
@@ -263,10 +264,8 @@ protected:
     VMapVec		    m_VMaps;
     VMRefsVec	    m_VMRefs;
 
-#ifdef _EDITOR
     CDB::MODEL*		m_CFModel;
-	RBMap*			m_RenderBuffers;
-#endif
+	//RBMap*			m_RenderBuffers;
 
 	void 			FillRenderBuffer		(IntVec& face_lst, int start_face, int num_face, const CSurface* surf, LPBYTE& data);
 

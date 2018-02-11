@@ -963,7 +963,7 @@ quat & slerp_quats(quat & p, nv_scalar s, const quat & q1, const quat & q2)
     return p;
 }
 
-const int HALF_RAND = (RAND_MAX / 2);
+const int HALF_RAND = (RANDstd::max / 2);
 
  nv_scalar nv_random()
 {

@@ -25,10 +25,8 @@ void CEditableMesh::Construct()
 {
 	m_Box.set		(0,0,0,0,0,0);
 	m_Flags.assign	(flVisible);
-    m_Name			= "";
-#ifdef _EDITOR
-    m_CFModel		= 0;         
-#endif
+	m_Name			= "";	
+    m_CFModel		= 0;
 	m_Vertices		= 0;
     m_SmoothGroups	= 0;
     m_Adjs			= 0;
@@ -70,11 +68,10 @@ void CEditableMesh::Clear()
     m_VMRefs.clear		();
 }
 
+#include <xrTools\ETools.h>
 void CEditableMesh::UnloadCForm     ()
 {
-#ifdef _EDITOR
 	ETOOLS::destroy_model			(m_CFModel);
-#endif
 }
 
 void CEditableMesh::UnloadFNormals  (bool force)

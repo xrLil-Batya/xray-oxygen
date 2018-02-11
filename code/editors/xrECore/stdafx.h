@@ -17,6 +17,7 @@
 #include <sys\stat.h>
 #include <process.h>
 #include <functional>
+#include <algorithm>
 
 #define fmodf fmod
 

@@ -284,7 +284,7 @@ void CEditableMesh::RenderEdge(const Fmatrix& parent, CSurface* s, u32 color)
 }
 //----------------------------------------------------
 
-#define SKEL_MAX_FACE_COUNT 10000
+#define SKELstd::max_FACE_COUNT 10000
 struct svertRender
 {
 	Fvector		P;
@@ -302,7 +302,7 @@ void CEditableMesh::RenderSkeleton(const Fmatrix&, CSurface* S)
 	_VertexStream*	Stream	= &RCache.Vertex;
 	u32				vBase;
 
-	svertRender*	pv		= (svertRender*)Stream->Lock(SKEL_MAX_FACE_COUNT*3,m_Parent->vs_SkeletonGeom->vb_stride,vBase);
+	svertRender*	pv		= (svertRender*)Stream->Lock(SKELstd::max_FACE_COUNT*3,m_Parent->vs_SkeletonGeom->vb_stride,vBase);
 	Fvector			P0,N0,P1,N1;
     
     int f_cnt=0;
@@ -338,11 +338,11 @@ void CEditableMesh::RenderSkeleton(const Fmatrix&, CSurface* S)
         	pv->P.set((pv-5)->P);	pv->N.invert((pv-5)->N);	pv->uv.set((pv-5)->uv); pv++;
 	        f_cnt++;
         }
-        if (f_cnt>=SKEL_MAX_FACE_COUNT-1)
+        if (f_cnt>=SKELstd::max_FACE_COUNT-1)
         {
             Stream->Unlock		(f_cnt*3,m_Parent->vs_SkeletonGeom->vb_stride);
             EDevice.DP			(D3DPT_TRIANGLELIST,m_Parent->vs_SkeletonGeom,vBase,f_cnt);
-			pv					= (svertRender*)Stream->Lock(SKEL_MAX_FACE_COUNT*3,m_Parent->vs_SkeletonGeom->vb_stride,vBase);
+			pv					= (svertRender*)Stream->Lock(SKELstd::max_FACE_COUNT*3,m_Parent->vs_SkeletonGeom->vb_stride,vBase);
             f_cnt				= 0;
         }
     }

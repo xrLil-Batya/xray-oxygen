@@ -691,7 +691,7 @@ inline vec3 & lerp(vec3 & w, const nv_scalar & t, const vec3 & u, const vec3 & v
 inline nv_scalar nv_min(const nv_scalar & lambda, const nv_scalar & n)
 { return (lambda < n ) ? lambda : n; }
 
-inline nv_scalar nv_max(const nv_scalar & lambda, const nv_scalar & n)
+inline nv_scalar nvstd::max(const nv_scalar & lambda, const nv_scalar & n)
 { return (lambda > n ) ? lambda : n; }
 
 inline nv_scalar nv_clamp(nv_scalar u, const nv_scalar min, const nv_scalar max)

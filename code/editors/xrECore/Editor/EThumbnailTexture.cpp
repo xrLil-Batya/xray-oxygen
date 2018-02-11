@@ -11,24 +11,23 @@
 //------------------------------------------------------------------------------
 
 //------------------------------------------------------------------------------
-ETextureThumbnail::ETextureThumbnail(LPCSTR src_name, bool bLoad):EImageThumbnail(src_name,ETTexture)
+ETextureThumbnail::ETextureThumbnail(LPCSTR src_name, bool bLoad) :EImageThumbnail(src_name, ETTexture)
 {
-    if(!strchr(src_name,'\\'))
-    {
-      xr_string _name                     	= src_name;
-      ImageLib.UpdateFileName             	(_name);
-      m_Name                              	= _name.c_str();
-      m_Name 	                			= EFS.ChangeFileExt(m_Name,".thm");
-     }
-    m_bValid                            	= false;
-    if (bLoad)
+	if (!strchr(src_name, '\\'))
+	{
+		xr_string _name = src_name;
+		ImageLib.UpdateFileName(_name);
+		m_Name = EFS.ChangeFileExt(_name.c_str(), ".thm");
+	}
+	m_bValid = false;
+	if (bLoad)
 #ifdef XR_EPROPS_EXPORTS
-    	Load();
+		Load();
 #else
 		if (!Load())
-        {
-            ImageLib.CreateTextureThumbnail(this,src_name);
-        }
+		{
+			ImageLib.CreateTextureThumbnail(this, src_name);
+		}
 #endif
 }
 //------------------------------------------------------------------------------
@@ -157,11 +156,6 @@ void ETextureThumbnail::Save(int age, LPCSTR path)
     }
 }
 
-
-LPCSTR ETextureThumbnail::FormatString()
-{
-    return m_TexParams.FormatString();
-}
 //------------------------------------------------------------------------------
 #if 0
 

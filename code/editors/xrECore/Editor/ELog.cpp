@@ -35,7 +35,7 @@
 		}
 	}
 #endif
-#ifdef _MAX_EXPORT
+#ifdef std::max_EXPORT
 	#include "NetDeviceLog.h"
 	void ELogCallback(LPCSTR txt)
 	{
@@ -90,7 +90,7 @@ int CLog::DlgMsg (TMsgDlgType mt, TMsgDlgButtons btn, LPCSTR _Format, ...)
 	default:			g_msg->info(buf,0);		break;
 	}
 #endif
-#ifdef _MAX_PLUGIN
+#ifdef std::max_PLUGIN
 	switch(mt){
 	case mtError:		MessageBox(0,buf,"Error",		MB_OK|MB_ICONERROR);		break;
 	case mtInformation: MessageBox(0,buf,"Information",	MB_OK|MB_ICONINFORMATION);	break;
@@ -137,7 +137,7 @@ int CLog::DlgMsg (TMsgDlgType mt, LPCSTR _Format, ...)
 	default:			g_msg->info(buf,0);		break;
 	}
 #endif
-#ifdef _MAX_PLUGIN
+#ifdef std::max_PLUGIN
 	switch(mt){
 	case mtError:		MessageBox(0,buf,"Error",		MB_OK|MB_ICONERROR);		break;
 	case mtInformation: MessageBox(0,buf,"Information",	MB_OK|MB_ICONINFORMATION);	break;
@@ -162,7 +162,7 @@ void CLog::Msg(TMsgDlgType mt, LPCSTR _Format, ...)
 #ifdef _EDITOR
     TfrmLog::AddMessage(mt,AnsiString(buf));
 #endif
-#ifdef _MAX_EXPORT
+#ifdef std::max_EXPORT
 	EConsole.print(mt,buf);
 #endif
 #ifdef _LW_EXPORT

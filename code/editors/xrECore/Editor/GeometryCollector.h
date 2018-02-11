@@ -18,17 +18,15 @@ struct ECORE_API GCFace{
 class ECORE_API VCPacked
 {
 protected:
-	DEFINE_VECTOR(U32Vec,GCHash,GCHashIt);
-
     xr_vector<GCVertex>	verts;
 
-    GCHash				VM;
+    U32Vec				VM;
     Fvector				VMmin, VMscale;
     Fvector				VMeps;
     float				eps;
     u32					sx,sy,sz;
 
-    IC U32Vec&			get_element	(u32 ix, u32 iy, u32 iz)	{VERIFY((ix<sx)&&(iy<sy)&&(iz<sz)); return VM[iz*sy*sx+iy*sx+ix];}
+IC u32&					get_element	(u32 ix, u32 iy, u32 iz)		{VERIFY((ix<sx)&&(iy<sy)&&(iz<sz)); return VM[iz*sy*sx+iy*sx+ix];}
 public:
     					VCPacked	(const Fbox &bb, float eps=EPS, u32 clpSX=24, u32 clpSY=16, u32 clpSZ=24, int apx_vertices=5000);
 	virtual				~VCPacked	()	{ clear();					}
@@ -40,8 +38,8 @@ public:
     size_t				getVS		()	{ return verts.size();		}
     xr_vector<GCVertex>&Vertices	()	{ return verts;				}
 
-    void				getHASH_size(u32& x, u32& y, u32& z){x=sx;y=sy;z=sz;}
-    U32Vec&				getHASH_elem(u32 ix, u32 iy, u32 iz){return get_element(ix,iy,iz);}
+    void				setHASH_size(u32& x, u32& y, u32& z){x=sx;y=sy;z=sz;}
+//	U32Vec::iterator	getHASH_elem(u32 ix, u32 iy, u32 iz){return get_element(ix,iy,iz);}
 };
 
 class ECORE_API GCPacked: public VCPacked

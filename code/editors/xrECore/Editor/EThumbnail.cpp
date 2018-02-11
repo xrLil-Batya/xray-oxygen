@@ -2,7 +2,7 @@
 
 #include "EThumbnail.h"
 //#include "folderlib.h"
-#include "xrImage_Resampler.h"
+#include <xrRenderCommons\xrImage_Resampler.h>
 
 //------------------------------------------------------------------------------
 // Custom Thumbnail
@@ -11,7 +11,7 @@ ECustomThumbnail::ECustomThumbnail(LPCSTR src_name, THMType type)
 {
 	m_Type		= type;
     m_SrcName   = src_name;
-	m_Name 		= EFS.ChangeFileExt(AnsiString(src_name),".thm");
+	m_Name		= EFS.ChangeFileExt(src_name, ".thm");
     m_Age		= 0;
 }
 //------------------------------------------------------------------------------

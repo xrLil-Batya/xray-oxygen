@@ -39,7 +39,7 @@
 #ifdef _EDITOR
 #define GM_NON_GAME
 #endif
-#ifdef _MAX_PLUGIN
+#ifdef std::max_PLUGIN
 #define GM_NON_GAME
 #endif
 #ifdef _LW_SHADER

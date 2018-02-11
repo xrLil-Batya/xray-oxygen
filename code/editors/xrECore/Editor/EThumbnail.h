@@ -89,7 +89,6 @@ public:
 #endif
 
     virtual int		MemoryUsage		();
-    LPCSTR			FormatString	();
 };
 //------------------------------------------------------------------------------
 

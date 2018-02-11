@@ -34,7 +34,8 @@ IC void _rect_register(U8Vec& mask, int dest_width, int dest_height, Irect& R)
         
     // Normal (and fastest way)
     for (u32 y=0; y<s_y; y++){
-        u8* P 	= mask.begin()+(y+R.lt.y)*dest_width+R.lt.x;  // destination scan-line
+		// msk = mask.begin();
+		u8* P = mask.begin() + (y + R.lt.y)*dest_width + R.lt.x;  // destination scan-line
         for (u32 x=0; x<s_x; x++,P++) *P = 0xff;
     }
 }
@@ -63,11 +64,11 @@ IC bool _rect_place(U8Vec& mask, int dest_width, int dest_height, Irect& r, BOOL
 
     // Normal
     if ((r.rb.x<dest_width)&&(r.rb.y<dest_height)){
-        u32 x_max = dest_width -r.rb.x; 
-        u32 y_max = dest_height-r.rb.y; 
+        u32 xstd::max = dest_width -r.rb.x; 
+        u32 ystd::max = dest_height-r.rb.y; 
 	    bRotated = FALSE;
-        for (u32 _Y=0; _Y<y_max; _Y++){
-            for (u32 _X=0; _X<x_max; _X++){
+        for (u32 _Y=0; _Y<ystd::max; _Y++){
+            for (u32 _X=0; _X<xstd::max; _X++){
                 if (mask[_Y*dest_width+_X]) continue;
                 R.set(_X,_Y,_X+r.rb.x,_Y+r.rb.y);
                 if (_rect_test(mask,dest_width,dest_height,R)){
@@ -81,11 +82,11 @@ IC bool _rect_place(U8Vec& mask, int dest_width, int dest_height, Irect& r, BOOL
 
     // Rotated
     if ((r.rb.y<dest_width)&&(r.rb.x<dest_height)){
-        u32 x_max = dest_width -r.rb.y; 
-        u32 y_max = dest_height-r.rb.x; 
+        u32 xstd::max = dest_width -r.rb.y; 
+        u32 ystd::max = dest_height-r.rb.x; 
 	    bRotated = TRUE;
-        for (u32 _Y=0; _Y<y_max; _Y++){
-            for (u32 _X=0; _X<x_max; _X++){
+        for (u32 _Y=0; _Y<ystd::max; _Y++){
+            for (u32 _X=0; _X<xstd::max; _X++){
                 if (mask[_Y*dest_width+_X]) continue;
                 R.set(_X,_Y,_X+r.rb.y,_Y+r.rb.x);
                 if (_rect_test(mask,dest_width,dest_height,R)) {

@@ -147,6 +147,7 @@ struct pred_stri {
 using FvectorVec = xr_vector<Fvector>;
 using LPSTRVec = xr_vector<LPSTR>;
 using SStringVec = xr_vector<xr_string>;
+using U8Vec = xr_vector<u8>;
 using U16Vec = xr_vector<u16>;
 using U32Vec = xr_vector<u32>;
 using FloatVec = xr_vector<float>;

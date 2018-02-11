@@ -132,8 +132,8 @@ struct EParticleAction
     }
 public:
 	void			appendFloat	(LPCSTR name, float v, float mn, float mx);
-	void			appendInt	(LPCSTR name, int v, int mn=-P_MAXINT, int mx=P_MAXINT);
-	void			appendVector(LPCSTR name, PVector::EType type, float vx, float vy, float vz, float mn=-P_MAXFLOAT, float mx=P_MAXFLOAT);
+	void			appendInt	(LPCSTR name, int v, int mn=-Pstd::maxINT, int mx=Pstd::maxINT);
+	void			appendVector(LPCSTR name, PVector::EType type, float vx, float vy, float vz, float mn=-Pstd::maxFLOAT, float mx=Pstd::maxFLOAT);
 	void			appendDomain(LPCSTR name, PDomain v);
 	void			appendBool	(LPCSTR name, BOOL b);
 	PFloat&			_float		(LPCSTR name){PFloatMapIt 	it=floats.find(name); 	R_ASSERT2(it!=floats.end(),name);	return it->second;}

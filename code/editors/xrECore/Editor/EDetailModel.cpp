@@ -229,7 +229,7 @@ void EDetail::Save(IWriter& F)
 void EDetail::Export(IWriter& F, LPCSTR tex_name, const Fvector2& offs, const Fvector2& scale, bool rot)
 {
 	R_ASSERT			(m_pRefs);
-    CSurface* surf		= *m_pRefs->Surfaces.begin();
+    CSurface* surf		= *m_pRefs->FirstSurface();
 	R_ASSERT			(surf);
     // write data
 	F.w_stringZ			(surf->_ShaderName());

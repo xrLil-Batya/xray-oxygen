@@ -3,28 +3,14 @@
 //----------------------------------------------------
 
 #include "stdafx.h"
-
-#include "EditMesh.h"
-#include "EditObject.h"
-#include "cl_collector.h"
+#define _EDITOR
+#include "pick_defs.h"
+#include <xrECoreLite\EditMesh.h>
+#undef _EDITOR
+#include <xrECoreLite\EditObject.h>
 #include "ui_main.h"
 #include "pick_defs.h"
-#include "../ETools/ETools.h"
-
-/*
-void CEditableMesh::CHullPickFaces(PlaneVec& pl, Fmatrix& parent, U32Vec& fl){
-	u32 i=0;
-	Fvector p;
-    vector<bool> inside(m_Points.size(),true);
-    for(FvectorIt v_it=m_Points.begin();v_it!=m_Points.end();v_it++){
-        parent.transform_tiny(p,*v_it);
-        for(PlaneIt p_it=pl.begin(); p_it!=pl.end(); p_it++)
-        	if (p_it->classify(p)>EPS_L) { inside[v_it-m_Points.begin()]=false; break; }
-    }
-    for(FaceIt f_it=m_Faces.begin();f_it!=m_Faces.end();f_it++,i++)
-    	if (inside[f_it->pv[0].pindex]&&inside[f_it->pv[1].pindex]&&inside[f_it->pv[2].pindex]) fl.push_back(i);
-}
-*/
+#include <xrTools/ETools.h>
 //----------------------------------------------------
 
 static IntVec		sml_processed;
@@ -41,13 +27,15 @@ void CEditableMesh::GenerateCFModel()
 	// Collect faces
 	CDB::Collector* CL = ETOOLS::create_collector();
 	// double sided
-	for (SurfFacesPairIt sp_it=m_SurfFaces.begin(); sp_it!=m_SurfFaces.end(); sp_it++){
-		IntVec& face_lst = sp_it->second;
-		for (IntIt it=face_lst.begin(); it!=face_lst.end(); it++){
-			st_Face&	F = m_Faces[*it];
-            ETOOLS::collector_add_face_d(CL,m_Vertices[F.pv[0].pindex],m_Vertices[F.pv[1].pindex],m_Vertices[F.pv[2].pindex], *it);
-			if (sp_it->first->m_Flags.is(CSurface::sf2Sided))
-				ETOOLS::collector_add_face_d(CL,m_Vertices[F.pv[2].pindex],m_Vertices[F.pv[1].pindex],m_Vertices[F.pv[0].pindex], *it);
+	for (auto& sp_it: m_SurfFaces)
+	{
+		IntVec& face_lst = sp_it.second;
+		for (auto it: face_lst)
+		{
+			st_Face& F = m_Faces[it];
+            ETOOLS::collector_add_face_d(CL,m_Vertices[F.pv[0].pindex],m_Vertices[F.pv[1].pindex],m_Vertices[F.pv[2].pindex], it);
+			if (sp_it.first->m_Flags.is(CSurface::sf2Sided))
+				ETOOLS::collector_add_face_d(CL,m_Vertices[F.pv[2].pindex],m_Vertices[F.pv[1].pindex],m_Vertices[F.pv[0].pindex], it);
 		}
 	}
 	m_CFModel 		= ETOOLS::create_model_cl(CL);
