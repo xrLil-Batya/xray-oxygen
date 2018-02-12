@@ -184,11 +184,7 @@ void CEngineAPI::CreateRendererList()
 		Console->Execute("renderer renderer_r2");
 	else if (strstr(Core.Params, "-r1"))
 		Console->Execute("renderer renderer_r1");
-	else
-	{
-		CCC_LoadCFG_custom cmd("renderer ");
-		cmd.Execute(Console->ConfigFile);
-	}
+	
 
 	xr_vector<xr_token> modes;
 
