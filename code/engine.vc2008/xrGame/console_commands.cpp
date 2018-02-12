@@ -37,7 +37,6 @@
 #include "MainMenu.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
-#include "../xrEngine/doug_lea_memory_allocator.h"
 #include "cameralook.h"
 #include "character_hit_animations_params.h"
 #include "inventory_upgrade_manager.h"

@@ -520,9 +520,6 @@
     <ClCompile Include="editor_environment_detail.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="My Amplifier Results\r000hs\r000hs.ampl" />
-    <None Include="My Amplifier Results\r001hs\r001hs.ampl" />
-    <None Include="My Amplifier Results\r002cc\r002cc.ampl" />
     <None Include="ClientServer.txt" />
     <None Include="Effects description.txt" />
     <None Include="features.txt" />
