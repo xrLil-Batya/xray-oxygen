@@ -16,6 +16,7 @@ Flags32	psSoundFlags = { ss_Hardware | ss_EFX };
 float psSoundOcclusionScale = 0.5f;
 float psSoundCull = 0.01f;
 float psSoundRolloff = 0.75f;
+float psSpeedOfSound = 1.0f;
 float psSoundVEffects = 1.0f;
 float psSoundVFactor = 1.0f;
 float psSoundVMusic = 1.f;
@@ -416,7 +417,10 @@ void CSoundRender_Core::_create_data(ref_sound_data& S, const char* fName, esoun
 	S.g_object = 0;
 	S.g_userdata = 0;
 	S.dwBytesTotal = S.handle->bytes_total();
-	S.fTimeTotal = S.handle->length_sec();
+	if (strstr(Core.Params,"-snd_speed_ctrl"))
+		S.fTimeTotal		= S.handle->length_sec()/psSpeedOfSound*3.2f;
+	else 
+		S.fTimeTotal		= S.handle->length_sec();
 }
 void CSoundRender_Core::_destroy_data(ref_sound_data& S)
 {
