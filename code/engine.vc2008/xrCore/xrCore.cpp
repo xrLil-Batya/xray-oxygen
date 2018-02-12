@@ -28,7 +28,7 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 	{
 		xr_strcpy(ApplicationName, _ApplicationName);
 		// Init COM so we can use CoCreateInstance
-		xr_strcpy(Params, sizeof(Params), GetCommandLine());
+		Params = GetCommandLine();
 #ifdef _STR_LWRC_
 		_strlwr_s			(Params,sizeof(Params));
 #endif

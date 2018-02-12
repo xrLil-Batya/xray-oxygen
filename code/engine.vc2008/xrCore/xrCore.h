@@ -250,7 +250,7 @@ public:
 	string64	CompName;
 	string64	UserDate;
 	string64	UserTime;
-	string512	Params;
+	char*		Params;
 	DWORD		dwFrame;
 
 public:
