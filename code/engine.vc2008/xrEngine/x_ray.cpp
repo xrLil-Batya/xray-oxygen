@@ -32,8 +32,6 @@ ENGINE_API bool g_bootComplete		= false;
 #endif
 bool	g_bIntroFinished			= false;
 extern	void	Intro				( void* fn );
-extern	void	Intro_DSHOW			( void* fn );
-extern	int PASCAL IntroDSHOW_wnd	(HINSTANCE hInstC, HINSTANCE hInstP, LPSTR lpCmdLine, int nCmdShow);
 
 #ifdef MASTER_GOLD
 #	define NO_MULTI_INSTANCES
@@ -378,16 +376,8 @@ ENGINE_API int RunApplication(char* commandLine)
 	Debug._initialize			(false);
 	if (!IsDebuggerPresent()) 
 	{
-		HMODULE const kernel32	= LoadLibrary("kernel32.dll");
-		R_ASSERT				(kernel32);
-
-		typedef BOOL (__stdcall*HeapSetInformation_type) (HANDLE, HEAP_INFORMATION_CLASS, PVOID, SIZE_T);
-		HeapSetInformation_type const heap_set_information = (HeapSetInformation_type)GetProcAddress(kernel32, "HeapSetInformation");
-		if (heap_set_information) 
-		{
-			ULONG HeapFragValue	= 2;
-			heap_set_information(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
-		}
+		size_t HeapFragValue = 2;
+		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
 	}
 
 	// Check for another instance
