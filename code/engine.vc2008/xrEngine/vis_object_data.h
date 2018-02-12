@@ -1,5 +1,3 @@
-#ifndef vis_object_dataH
-#define vis_object_dataH
 #pragma once
 
 // Структура, хранящие уникальные данные для конкретного визуала --#SM+#--
@@ -35,5 +33,3 @@ public:
 		sh_entity_data.set(-2.f, -2.f, -2.f, 0.f);
 	}
 };
-
-#endif	// vis_object_dataH

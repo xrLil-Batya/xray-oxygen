@@ -373,13 +373,9 @@ struct damn_keys_filter {
 
 #include "xr_ioc_cmd.h"
 
-DLL_API int RunXRLauncher();
-DLL_API const char* GetParams();
-
 ENGINE_API int RunApplication(char* commandLine)
 {
 	Debug._initialize			(false);
-	//MessageBox(0, lpCmdLine, "", 0);
 	if (!IsDebuggerPresent()) 
 	{
 		HMODULE const kernel32	= LoadLibrary("kernel32.dll");
@@ -446,6 +442,7 @@ ENGINE_API int RunApplication(char* commandLine)
 	}
 
 	Core._initialize			("xray", nullptr, TRUE, fsgame[0] ? fsgame : nullptr);
+	strcpy(Core.Params, commandLine);
 
 	InitSettings				();
 
@@ -458,9 +455,7 @@ ENGINE_API int RunApplication(char* commandLine)
 	{
 		FPU::m24r				();
 		InitEngine				();
-
 		InitInput				();
-
 		InitConsole				();
 
 		Engine.External.CreateRendererList();
@@ -473,18 +468,6 @@ ENGINE_API int RunApplication(char* commandLine)
 			sscanf					(strstr(Core.Params,benchName)+sz,"%[^ ] ",b_name);
 			doBenchmark				(b_name);
 			return 0;
-		}
-
-		if(strstr(Core.Params,"-r2a"))	
-			Console->Execute			("renderer renderer_r2a");
-		else
-		if(strstr(Core.Params,"-r2"))	
-			Console->Execute			("renderer renderer_r2");
-		else
-		{
-			CCC_LoadCFG_custom*	pTmp = xr_new<CCC_LoadCFG_custom>("renderer ");
-			pTmp->Execute				(Console->ConfigFile);
-			xr_delete					(pTmp);
 		}
 
 		Engine.External.Initialize	( );

@@ -517,6 +517,7 @@ public:
 		tokens					= vid_quality_token.data();
 
 		inherited::Execute		(args);
+
 		//	0 - r1
 		//	1..3 - r2
 		//	4 - r3

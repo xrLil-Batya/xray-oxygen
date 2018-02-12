@@ -45,6 +45,18 @@ void CEngineAPI::InitializeRenderer()
 {
 	// If we failed to load render,
 	// then try to fallback to lower one.
+	if (strstr(Core.Params, "-r2a"))
+		Console->Execute("renderer renderer_r2a");
+	else if (strstr(Core.Params, "-r2"))
+		Console->Execute("renderer renderer_r2");
+	else if (strstr(Core.Params, "-r2.5"))
+		Console->Execute("renderer renderer_r2.5");
+	else if (strstr(Core.Params, "-r3"))
+		Console->Execute("renderer renderer_r3");
+	else if (strstr(Core.Params, "-r4"))
+		Console->Execute("renderer renderer_r4");
+	else if(strstr(Core.Params, "-r1"))
+		Console->Execute("renderer renderer_r1");
 
 	if (psDeviceFlags.test(rsR4))
 	{
@@ -131,7 +143,7 @@ void CEngineAPI::Initialize(void)
 	if (0 == hRender)
 		R_CHK(GetLastError());
 
-	R_ASSERT(hRender, "Can't load renderer");
+	R_ASSERT2(hRender, "Can't load renderer");
 
 	Device.ConnectToRender();
 

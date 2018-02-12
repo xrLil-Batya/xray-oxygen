@@ -248,23 +248,11 @@ void			ISpatial_DB::_insert	(ISpatial_NODE* N, Fvector& n_C, float n_R)
 	}
 }
 
-void			ISpatial_DB::insert		(ISpatial* S)
+void ISpatial_DB::insert(ISpatial* S)
 {
     std::lock_guard<decltype(cs)> lock(cs);
 #ifdef DEBUG
 	stat_insert.Begin	();
-
-	bool		bValid	= _valid(S->spatial.sphere.R) && _valid(S->spatial.sphere.P);
-	if (!bValid)	
-	{
-		CObject*	O	= dynamic_cast<CObject*>(S);
-		if	(O)			Debug.fatal(DEBUG_INFO,"Invalid OBJECT position or radius (%s)",O->cName().c_str());
-		else			{
-			CPS_Instance* P = dynamic_cast<CPS_Instance*>(S);
-			if (P)		Debug.fatal(DEBUG_INFO,"Invalid PS spatial position{%3.2f,%3.2f,%3.2f} or radius{%3.2f}",VPUSH(S->spatial.sphere.P),S->spatial.sphere.R);
-			else		Debug.fatal(DEBUG_INFO,"Invalid OTHER spatial position{%3.2f,%3.2f,%3.2f} or radius{%3.2f}",VPUSH(S->spatial.sphere.P),S->spatial.sphere.R);
-		}
-	}
 #endif
 
 	if (verify_sp(S,m_center,m_bounds))
@@ -285,29 +273,30 @@ void			ISpatial_DB::insert		(ISpatial* S)
 #endif
 }
 
-void			ISpatial_DB::_remove	(ISpatial_NODE* N, ISpatial_NODE* N_sub)
+void ISpatial_DB::_remove(ISpatial_NODE* N, ISpatial_NODE* N_sub)
 {
-	if (0==N)							return;
+	if (!N) return;
 
 	//*** we are assured that node contains N_sub and this subnode is empty
-	u32 octant	= u32(-1);
-	if (N_sub==N->children[0])			octant = 0;
-	else if (N_sub==N->children[1])		octant = 1;
-	else if (N_sub==N->children[2])		octant = 2;
-	else if (N_sub==N->children[3])		octant = 3;
-	else if (N_sub==N->children[4])		octant = 4;
-	else if (N_sub==N->children[5])		octant = 5;
-	else if (N_sub==N->children[6])		octant = 6;
-	else if (N_sub==N->children[7])		octant = 7;
-	VERIFY		(octant<8);
-	VERIFY		(N_sub->_empty());
-	_node_destroy						(N->children[octant]);
+	u32 octant = 8;
+
+	for (u32 it = 0; it < 8; it++)
+	{
+		if (N_sub == N->children[it])
+		{
+			octant = it;
+			break;
+		}
+	}
+
+	VERIFY(N_sub->_empty());
+	_node_destroy (N->children[octant]);
 
 	// Recurse
-	if (N->_empty())					_remove(N->parent,N);
+	if (N->_empty()) _remove(N->parent,N);
 }
 
-void			ISpatial_DB::remove		(ISpatial* S)
+void ISpatial_DB::remove(ISpatial* S)
 {
     std::lock_guard<decltype(cs)> lock(cs);
 #ifdef DEBUG
@@ -324,7 +313,7 @@ void			ISpatial_DB::remove		(ISpatial* S)
 #endif
 }
 
-void			ISpatial_DB::update		(u32 nodes/* =8 */)
+void ISpatial_DB::update(u32 nodes/* =8 */)
 {
 #ifdef DEBUG
 	if (!m_root)	return;

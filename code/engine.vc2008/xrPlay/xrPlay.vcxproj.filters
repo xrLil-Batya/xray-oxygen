@@ -2,10 +2,16 @@
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="entry_point.cpp" />
+    <ClCompile Include="AssemblyInfo.cpp">
+      <Filter>Launcher</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resources">
       <UniqueIdentifier>{50fcfd19-55ee-4f2a-919a-b5b90510ea63}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Launcher">
+      <UniqueIdentifier>{552545a6-b39d-45f9-b306-8533722aed38}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -20,10 +26,19 @@
     <ClInclude Include="resource.h">
       <Filter>Resources</Filter>
     </ClInclude>
+    <ClInclude Include="xrLauncherWnd.h">
+      <Filter>Launcher</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">
       <Filter>Resources</Filter>
     </ResourceCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="LaunchWindow.resx">
+      <Filter>Launcher</Filter>
+    </EmbeddedResource>
+    <EmbeddedResource Include="xrLauncherWnd.resx" />
   </ItemGroup>
 </Project>

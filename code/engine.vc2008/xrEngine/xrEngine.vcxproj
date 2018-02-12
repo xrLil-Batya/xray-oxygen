@@ -339,7 +339,7 @@
     <ClInclude Include="ObjectDump.h" />
     <ClInclude Include="EnnumerateVertices.h" />
     <ClInclude Include="vis_common.h" />
-	<ClInclude Include="vis_object_data.h" />
+    <ClInclude Include="vis_object_data.h" />
     <ClInclude Include="PS_instance.h" />
     <ClInclude Include="LightAnimLibrary.h" />
     <ClInclude Include="GameFont.h" />
@@ -371,7 +371,6 @@
     <ClInclude Include="Fmesh.h" />
     <ClInclude Include="SkeletonMotionDefs.h" />
     <ClInclude Include="SkeletonMotions.h" />
-    <ClInclude Include="doug_lea_memory_allocator.h" />
     <ClInclude Include="engine_impl.hpp" />
     <ClInclude Include="editor_environment_suns_manager.hpp" />
     <ClInclude Include="editor_environment_suns_sun.hpp" />
