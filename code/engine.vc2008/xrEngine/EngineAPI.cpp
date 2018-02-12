@@ -191,6 +191,7 @@ void CEngineAPI::CreateRendererList()
 	}
 
 	xr_vector<xr_token> modes;
+
 	// try to initialize R1
 	Log("Loading DLL:", r1_name);
 	hRender = LoadLibrary(r1_name);

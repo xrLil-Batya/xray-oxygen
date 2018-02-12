@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 
-#include "GameMtlLib.h"
+#include <xrECoreLite\GameMtlLib.h>
 
 void DestroySounds(SoundVec& lst)
 {

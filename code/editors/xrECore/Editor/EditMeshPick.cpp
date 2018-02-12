@@ -121,7 +121,7 @@ bool CEditableMesh::CHullPickMesh(PlaneVec& pl, const Fmatrix& parent)
     	if (inside[m_Faces[f_id].pv[0].pindex]&&inside[m_Faces[f_id].pv[1].pindex]&&inside[m_Faces[f_id].pv[2].pindex]) return true;
     return false;
 }
-//----------------------------------------------------
+----------------------------------------------------
 
 void CEditableMesh::RecurseTri(int id)
 {

@@ -1,5 +1,4 @@
 
-#pragma error
 //---------------------------------------------------------------------------
 #ifndef GameMtlLibH
 #define GameMtlLibH

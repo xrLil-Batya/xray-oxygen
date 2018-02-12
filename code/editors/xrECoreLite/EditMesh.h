@@ -9,6 +9,9 @@ struct 	SRayPickInfo;
 struct 	FSChunkDef;
 class 	CExporter;
 class	CCustomObject;
+using PlaneVec = xr_vector<Fplane>;
+using PlaneIt = PlaneVec::iterator;
+
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
 #ifdef _MAYA_PLUGIN

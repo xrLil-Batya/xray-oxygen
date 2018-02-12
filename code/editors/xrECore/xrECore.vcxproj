@@ -71,7 +71,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)\xrECore.pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>GameMtlLibH;_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_EDITOR;GameMtlLibH;_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;QT_NO_DEBUG;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -115,7 +115,7 @@
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
       <PrecompiledHeaderOutputFile>$(IntDir)\xrECore.pch</PrecompiledHeaderOutputFile>
-      <PreprocessorDefinitions>GameMtlLibH;_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_EDITOR;GameMtlLibH;_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;_ECOREB;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessToFile>false</PreprocessToFile>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <SuppressStartupBanner>true</SuppressStartupBanner>
