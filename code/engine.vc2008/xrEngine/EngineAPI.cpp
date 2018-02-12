@@ -45,6 +45,25 @@ void CEngineAPI::InitializeRenderer()
 {
 	// If we failed to load render,
 	// then try to fallback to lower one.
+	/// FX to Xottab-DUTU: Не трогай!
+	if (strstr(Core.Params, "-r4"))
+		Console->Execute("renderer renderer_r4");
+	else if (strstr(Core.Params, "-r3"))
+		Console->Execute("renderer renderer_r3");
+	else if (strstr(Core.Params, "-r2.5"))
+		Console->Execute("renderer renderer_r2.5");
+	else if (strstr(Core.Params, "-r2a"))
+		Console->Execute("renderer renderer_r2a");
+	else if (strstr(Core.Params, "-r2"))
+		Console->Execute("renderer renderer_r2");
+	else if (strstr(Core.Params, "-r1"))
+		Console->Execute("renderer renderer_r1");
+	else
+	{
+		CCC_LoadCFG_custom cmd("renderer ");
+		cmd.Execute(Console->ConfigFile);
+	}
+	
 	if (psDeviceFlags.test(rsR4))
 	{
 		// try to initialize R4
@@ -171,20 +190,6 @@ void CEngineAPI::CreateRendererList()
 {
 	if (!vid_quality_token.empty())
 		return;
-
-	if (strstr(Core.Params, "-r4"))
-		Console->Execute("renderer renderer_r4");
-	else if (strstr(Core.Params, "-r3"))
-		Console->Execute("renderer renderer_r3");
-	else if (strstr(Core.Params, "-r2.5"))
-		Console->Execute("renderer renderer_r2.5");
-	else if (strstr(Core.Params, "-r2a"))
-		Console->Execute("renderer renderer_r2a");
-	else if (strstr(Core.Params, "-r2"))
-		Console->Execute("renderer renderer_r2");
-	else if (strstr(Core.Params, "-r1"))
-		Console->Execute("renderer renderer_r1");
-	
 
 	xr_vector<xr_token> modes;
 
