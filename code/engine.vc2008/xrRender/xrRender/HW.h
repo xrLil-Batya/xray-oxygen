@@ -83,8 +83,6 @@ public:
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
 #else
-private:
-	HINSTANCE 				hD3D;
 
 public:
 

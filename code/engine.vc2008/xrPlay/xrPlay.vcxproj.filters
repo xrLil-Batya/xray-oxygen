@@ -36,9 +36,6 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="LaunchWindow.resx">
-      <Filter>Launcher</Filter>
-    </EmbeddedResource>
     <EmbeddedResource Include="xrLauncherWnd.resx" />
   </ItemGroup>
 </Project>
