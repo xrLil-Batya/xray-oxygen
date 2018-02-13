@@ -1312,7 +1312,7 @@ bool CSE_ALifeObjectPhysic::can_save			() const
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeObjectHangingLamp::CSE_ALifeObjectHangingLamp(LPCSTR caSection) : CSE_ALifeDynamicObjectVisual(caSection),CSE_PHSkeleton(caSection)
 {
-	flags.assign				(flTypeSpot|flR1|flR2);
+	flags.assign				(flTypeSpot|flR2);
 
 	range						= 10.f;
 	color						= 0xffffffff;
@@ -1480,7 +1480,6 @@ void CSE_ALifeObjectHangingLamp::FillProps	(LPCSTR pref, PropItemVec& values)
     PropValue* P				= 0;
 	PHelper().CreateFlag16		(values, PrepareKey(pref,*s_name,"Flags\\Physic"),		&flags,			flPhysic);
 	PHelper().CreateFlag16		(values, PrepareKey(pref,*s_name,"Flags\\Cast Shadow"),	&flags,			flCastShadow);
-	PHelper().CreateFlag16		(values, PrepareKey(pref,*s_name,"Flags\\Allow R1"),	&flags,			flR1);
 	PHelper().CreateFlag16		(values, PrepareKey(pref,*s_name,"Flags\\Allow R2"),	&flags,			flR2);
 	P=PHelper().CreateFlag16	(values, PrepareKey(pref,*s_name,"Flags\\Allow Ambient"),&flags,			flPointAmbient);
     P->OnChangeEvent.bind		(this,&CSE_ALifeObjectHangingLamp::OnChangeFlag);
@@ -1561,21 +1560,18 @@ bool CSE_ALifeObjectHangingLamp::used_ai_locations	() const
 
 bool CSE_ALifeObjectHangingLamp::validate			()
 {
-	if (flags.test(flR1) || flags.test(flR2))
-		return					(true);
+	if (flags.test(flR2))
+		return (true);
 
-	Msg							("! Render type is not set properly!");
-	return						(false);
+	Msg("! Render type is not set properly!");
+	return (false);
 }
 
 bool CSE_ALifeObjectHangingLamp::match_configuration() const
 {
-	R_ASSERT3(flags.test(flR1) || flags.test(flR2),"no renderer type set for hanging-lamp ",name_replace());
+	R_ASSERT3(flags.test(flR2),"no renderer type set for hanging-lamp ",name_replace());
 #ifdef XRGAME_EXPORTS
-	return						(
-		(flags.test(flR1) && (::Render->get_generation() == IRender_interface::GENERATION_R1)) ||
-		(flags.test(flR2) && (::Render->get_generation() == IRender_interface::GENERATION_R2))
-	);
+	return flags.test(flR2);
 #else
 	return						(true);
 #endif

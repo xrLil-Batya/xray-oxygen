@@ -201,46 +201,47 @@ void CEffect_Thunderbolt::Bolt(shared_str id, float period, float lt)
 
 void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 {
-	BOOL enabled			= !!(id.size());
-	if (bEnabled!=enabled){
-    	bEnabled			= enabled;
+	bool enabled = bool(id.size());
+	if (bEnabled!=enabled)
+	{
+    	bEnabled = enabled;
 	    next_lightning_time = Device.fTimeGlobal+period+Random.randF(-period*0.5f,period*0.5f);
-    }else if (bEnabled&&(Device.fTimeGlobal>next_lightning_time)){ 
-    	if (state==stIdle && !!(id.size())) Bolt(id,period,duration);
     }
-	if (state==stWorking){
-    	if (current_time>life_time) state = stIdle;
-    	current_time	+= Device.fTimeDelta;
-		Fvector fClr;		
+	else if (bEnabled && (Device.fTimeGlobal > next_lightning_time) && (enabled && state == stIdle))
+	{
+		Bolt(id, period, duration);
+	}
+	if (state == stWorking)
+	{
+		if (current_time > life_time) state = stIdle;
+		current_time += Device.fTimeDelta;
+		Fvector fClr;
 		int frame;
-		u32 uClr		= current->color_anim->CalculateRGB(current_time/life_time,frame);
-		fClr.set		(
-			clampr(float(color_get_R(uClr)/255.f), 0.f, 1.f),
-			clampr(float(color_get_G(uClr)/255.f), 0.f, 1.f),
-			clampr(float(color_get_B(uClr)/255.f), 0.f, 1.f)
+		u32 uClr = current->color_anim->CalculateRGB(current_time / life_time, frame);
+		fClr.set(
+			clampr(float(color_get_R(uClr) / 255.f), 0.f, 1.f),
+			clampr(float(color_get_G(uClr) / 255.f), 0.f, 1.f),
+			clampr(float(color_get_B(uClr) / 255.f), 0.f, 1.f)
 		);
 
-        lightning_phase	= 1.5f*(current_time/life_time);
-        clamp			(lightning_phase,0.f,1.f);
+		lightning_phase = 1.5f*(current_time / life_time);
+		clamp(lightning_phase, 0.f, 1.f);
 
 		CEnvironment&	environment = g_pGamePersistent->Environment();
-		
+
 		Fvector&		sky_color = environment.CurrentEnv->sky_color;
-        sky_color.mad	( fClr, environment.p_sky_color );
-		clamp			( sky_color.x, 0.f, 1.f );
-		clamp			( sky_color.y, 0.f, 1.f );
-		clamp			( sky_color.z, 0.f, 1.f );
+		sky_color.mad(fClr, environment.p_sky_color);
+		clamp(sky_color.x, 0.f, 1.f);
+		clamp(sky_color.y, 0.f, 1.f);
+		clamp(sky_color.z, 0.f, 1.f);
 
-        environment.CurrentEnv->sun_color.mad(fClr,environment.p_sun_color);
-		environment.CurrentEnv->fog_color.mad(fClr,environment.p_fog_color);
+		environment.CurrentEnv->sun_color.mad(fClr, environment.p_sun_color);
+		environment.CurrentEnv->fog_color.mad(fClr, environment.p_fog_color);
 
-		if (::Render->get_generation()==IRender_interface::GENERATION_R2)	{
-			R_ASSERT	( _valid(current_direction) );
-			g_pGamePersistent->Environment().CurrentEnv->sun_dir = current_direction;
-			VERIFY2(g_pGamePersistent->Environment().CurrentEnv->sun_dir.y<0,"Invalid sun direction settings while CEffect_Thunderbolt");
-
-		} 
-    }
+		R_ASSERT(_valid(current_direction));
+		g_pGamePersistent->Environment().CurrentEnv->sun_dir = current_direction;
+		VERIFY2(g_pGamePersistent->Environment().CurrentEnv->sun_dir.y < 0, "Invalid sun direction settings while CEffect_Thunderbolt");
+	}
 }
 
 void CEffect_Thunderbolt::Render()

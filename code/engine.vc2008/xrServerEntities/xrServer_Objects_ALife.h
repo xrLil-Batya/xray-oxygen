@@ -451,10 +451,10 @@ add_to_type_list(CSE_ALifeObjectPhysic)
 SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeObjectHangingLamp,CSE_ALifeDynamicObjectVisual,CSE_PHSkeleton)
 
     void __stdcall 					OnChangeFlag	(PropValue* sender);
-    enum{
+    enum: u32
+	{
         flPhysic					= (1<<0),
 		flCastShadow				= (1<<1),
-		flR1						= (1<<2),
 		flR2						= (1<<3),
 		flTypeSpot					= (1<<4),
         flPointAmbient				= (1<<5),

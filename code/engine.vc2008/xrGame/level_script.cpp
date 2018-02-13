@@ -655,13 +655,8 @@ u32 vertex_id	(Fvector position)
 	return	(ai().level_graph().vertex_id(position));
 }
 
-u32 render_get_dx_level()
-{
-	return ::Render->get_dx_level();
-}
-
-CUISequencer* g_tutorial = NULL;
-CUISequencer* g_tutorial2 = NULL;
+CUISequencer* g_tutorial = nullptr;
+CUISequencer* g_tutorial2 = nullptr;
 
 void start_tutorial(LPCSTR name)
 {
@@ -940,7 +935,6 @@ void CLevel::script_register(lua_State *L)
 
 		def("command_line",						&command_line),
 		def("IsDynamicMusic",					&IsDynamicMusic),
-		def("render_get_dx_level",				&render_get_dx_level),
 		def("IsImportantSave",					&IsImportantSave)
 	];
 

@@ -39,9 +39,6 @@
 	<string id="gd_veteran">
 		<text>ветеран</text>
 	</string>
-	<string id="renderer_r1">
-		<text>Статичное освещение</text>
-	</string>
 	<string id="renderer_r2">
 		<text>Полное динамическое освещение</text>
 	</string>

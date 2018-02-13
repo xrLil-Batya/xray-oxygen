@@ -1,6 +1,4 @@
-#ifndef DefinesH
-#define DefinesH
-
+#pragma once
 ENGINE_API	extern bool			bDebug;
 
 #define _RELEASE(x)			{ if(x) { (x)->Release();       (x)=NULL; } }
@@ -10,34 +8,34 @@ ENGINE_API	extern bool			bDebug;
 ENGINE_API extern	int		psTextureLOD;
 
 // psDeviceFlags
-enum {
-	rsFullscreen					= (1ul<<0ul),
-	rsClearBB						= (1ul<<1ul),
-	rsVSync							= (1ul<<2ul),
-	rsWireframe						= (1ul<<3ul),
-	rsOcclusion						= (1ul<<4ul),
-	rsStatistic						= (1ul<<5ul),
-	rsDetails						= (1ul<<6ul),
-	rsRefresh60hz					= (1ul<<7ul),
-	rsConstantFPS					= (1ul<<8ul),
-	rsDrawStatic					= (1ul<<9ul),
-	rsDrawDynamic					= (1ul<<10ul),
-	rsDisableObjectsAsCrows			= (1ul<<11ul),
+enum: unsigned long
+{
+	rsFullscreen					= (1<<0),
+	rsClearBB						= (1<<1),
+	rsVSync							= (1<<2),
+	rsWireframe						= (1<<3),
+	rsOcclusion						= (1<<4),
+	rsStatistic						= (1<<5),
+	rsDetails						= (1<<6),
+	rsRefresh60hz					= (1<<7),
+	rsConstantFPS					= (1<<8),
+	rsDrawStatic					= (1<<9),
+	rsDrawDynamic					= (1<<10),
+	rsDisableObjectsAsCrows			= (1<<11),
 
-	rsOcclusionDraw					= (1ul<<12ul),
-	rsOcclusionStats				= (1ul<<13ul),
+	rsOcclusionDraw					= (1<<12),
+	rsOcclusionStats				= (1<<13),
 
-	mtSound							= (1ul<<14ul),
-	mtPhysics						= (1ul<<15ul),
-	mtNetwork						= (1ul<<16ul),
-	mtParticles						= (1ul<<17ul),
+	mtSound							= (1<<14),
+	mtPhysics						= (1<<15),
+	mtNetwork						= (1<<16),
+	mtParticles						= (1<<17),
 
-	rsCameraPos						= (1ul<<18ul),
-	rsR1							= (1ul<<19ul),
-	rsR2							= (1ul<<20ul),
-	rsR3							= (1ul<<21ul),
-	rsR4							= (1ul<<22ul), // was reserved to Editor
-	rsDrawFPS						= (1ul<<23ul), // was reserved to Editor
+	rsCameraPos						= (1<<18),
+	rsR2							= (1<<20),
+	rsR3							= (1<<21),
+	rsR4							= (1<<22), // was reserved to Editor
+	rsDrawFPS						= (1<<23), // was reserved to Editor
 	// 22-32 bit - reserved to Editor
 };
 
@@ -70,5 +68,3 @@ ENGINE_API extern	Flags32		psDeviceFlags		;
 #define _omotions_			    "$omotions$"
 #define _smotion_			    "$smotion$"
 #define _detail_objects_	    "$detail_objects$"
-
-#endif
