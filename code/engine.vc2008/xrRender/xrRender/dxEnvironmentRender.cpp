@@ -173,20 +173,20 @@ void dxEnvironmentRender::OnFrame(CEnvironment &env)
 {
 	dxEnvDescriptorMixerRender &mixRen = *(dxEnvDescriptorMixerRender*)&*env.CurrentEnv->m_pDescriptorMixer;
 
-	if (::Render->get_generation()==IRender_interface::GENERATION_R2){
-		//. very very ugly hack
-		if (HW.Caps.raster_major >= 3 && HW.Caps.geometry.bVTF){
-			// tonemapping in VS
-			mixRen.sky_r_textures.push_back		(std::make_pair(u32(D3DVERTEXTEXTURESAMPLER0),tonemap));	//. hack
-			mixRen.sky_r_textures_env.push_back	(std::make_pair(u32(D3DVERTEXTEXTURESAMPLER0),tonemap));	//. hack
-			mixRen.clouds_r_textures.push_back	(std::make_pair(u32(D3DVERTEXTEXTURESAMPLER0),tonemap));	//. hack
-		} else {
-			// tonemapping in PS
-			mixRen.sky_r_textures.push_back		(std::make_pair(2,tonemap));								//. hack
-			mixRen.sky_r_textures_env.push_back	(std::make_pair(2,tonemap));								//. hack
-			mixRen.clouds_r_textures.push_back	(std::make_pair(2,tonemap));								//. hack
-		}
-
+	//. very very ugly hack
+	if (HW.Caps.raster_major >= 3 && HW.Caps.geometry.bVTF)
+	{
+		// tonemapping in VS
+		mixRen.sky_r_textures.push_back		(std::make_pair(u32(D3DVERTEXTEXTURESAMPLER0),tonemap));	//. hack
+		mixRen.sky_r_textures_env.push_back	(std::make_pair(u32(D3DVERTEXTEXTURESAMPLER0),tonemap));	//. hack
+		mixRen.clouds_r_textures.push_back	(std::make_pair(u32(D3DVERTEXTEXTURESAMPLER0),tonemap));	//. hack
+	} 
+	else 
+	{
+		// tonemapping in PS
+		mixRen.sky_r_textures.push_back		(std::make_pair(2,tonemap));								//. hack
+		mixRen.sky_r_textures_env.push_back	(std::make_pair(2,tonemap));								//. hack
+		mixRen.clouds_r_textures.push_back	(std::make_pair(2,tonemap));								//. hack
 	}
 
 	//. Setup skybox textures, somewhat ugly

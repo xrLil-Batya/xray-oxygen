@@ -9,7 +9,6 @@
 
 extern xr_vector<xr_token> vid_quality_token;
 
-constexpr const char* r1_name = "xrRender_R1";
 constexpr const char* r2_name = "xrRender_R2";
 constexpr const char* r3_name = "xrRender_R3";
 constexpr const char* r4_name = "xrRender_R4";
@@ -56,8 +55,6 @@ void CEngineAPI::InitializeRenderer()
 		Console->Execute("renderer renderer_r2a");
 	else if (strstr(Core.Params, "-r2"))
 		Console->Execute("renderer renderer_r2");
-	else if (strstr(Core.Params, "-r1"))
-		Console->Execute("renderer renderer_r1");
 	
 	if (psDeviceFlags.test(rsR4))
 	{
@@ -92,32 +89,10 @@ void CEngineAPI::InitializeRenderer()
 	if (psDeviceFlags.test(rsR2))	
 	{
 		// try to initialize R2
-		Log				("Loading DLL:",	r2_name);
-		hRender			= LoadLibrary		(r2_name);
-		if (0==hRender)	
-		{
-			// try to load R1
-			Msg			("! ...Failed - incompatible hardware.");
-			psDeviceFlags.set	(rsR1, true);
-		}
-		else
-			g_current_renderer	= 2;
-	}
-
-	if (psDeviceFlags.test(rsR1))
-	{
-		// try to load R1
-		renderer_value = 0; //con cmd
-
-		Log("Loading DLL:", r1_name);
-		hRender = LoadLibrary(r1_name);
-		if (0 == hRender)
-		{
-			// try to load R1
-			Msg("! ...Failed - incompatible hardware.");
-		}
-		else
-			g_current_renderer = 1;
+		Log("Loading DLL:",	r2_name);
+		hRender = LoadLibrary(r2_name);
+		R_ASSERT2(hRender, "! ...Failed - incompatible hardware.");
+		g_current_renderer	= 2;
 	}
 }
 #include <thread>
@@ -187,15 +162,6 @@ void CEngineAPI::CreateRendererList()
 		return;
 
 	xr_vector<xr_token> modes;
-
-	// try to initialize R1
-	Log("Loading DLL:", r1_name);
-	hRender = LoadLibrary(r1_name);
-	if (hRender)
-	{
-		modes.emplace_back(xr_token("renderer_r1", 0));
-		FreeLibrary(hRender);
-	}
 
 	// try to initialize R2
 	Log				("Loading DLL:",	r2_name);
