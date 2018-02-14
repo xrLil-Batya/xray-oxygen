@@ -66,10 +66,9 @@ void CHW::CreateD3D()
 		}
 		++i;
 	}
+#else
+	pFactory->EnumAdapters(0, &m_pAdapter);
 #endif	//	MASTER_GOLD
-
-	if (!m_pAdapter)
-		pFactory->EnumAdapters(0, &m_pAdapter);
 
 	pFactory->Release();
 }

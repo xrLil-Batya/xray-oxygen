@@ -413,7 +413,6 @@
     <ClCompile Include="r2_R_lights.cpp" />
     <ClCompile Include="r2_R_sun.cpp" />
     <ClCompile Include="r2_sector_detect.cpp" />
-    <ClCompile Include="r2_test_hw.cpp" />
     <ClCompile Include="r3.cpp" />
     <ClCompile Include="r3_loader.cpp" />
     <ClCompile Include="r3_R_rain.cpp" />

@@ -9,7 +9,7 @@
 #include <regex>
 #include "../Include/xrRender/RenderDeviceRender.h"
 
-xr_vector<xr_token> vid_quality_token;
+ENGINE_API xr_vector<xr_token> vid_quality_token;
 
 xr_token vid_bpp_token[ ]=
 {
@@ -498,6 +498,7 @@ ENGINE_API BOOL r2_sun_static = TRUE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
 
 u32	renderer_value	= 3;
+bool isLoaded = false;
 //void fill_render_mode_list();
 //void free_render_mode_list();
 
@@ -505,29 +506,34 @@ class CCC_r2 : public CCC_Token
 {
 	typedef CCC_Token inherited;
 public:
-	CCC_r2(LPCSTR N) :inherited(N, &renderer_value, NULL){renderer_value=3;};
+	CCC_r2(LPCSTR N) :inherited(N, &renderer_value, NULL) {renderer_value = 3; };
 	virtual			~CCC_r2	()
 	{
 		//free_render_mode_list();
 	}
-	virtual void	Execute	(LPCSTR args)
+	virtual void	Execute(LPCSTR args)
 	{
 		//fill_render_mode_list	();
 		//	vid_quality_token must be already created!
-		tokens					= vid_quality_token.data();
+		if (!isLoaded)
+		{
+		tokens = vid_quality_token.data();
 
-		inherited::Execute		(args);
+		inherited::Execute(args);
 
 		//	0 - r1
 		//	1..3 - r2
 		//	4 - r3
-		psDeviceFlags.set		(rsR2, ((renderer_value>0) && renderer_value<4) );
-		psDeviceFlags.set		(rsR3, (renderer_value==4) );
-		psDeviceFlags.set		(rsR4, (renderer_value>=5) );
+			psDeviceFlags.set(rsR2, ((renderer_value > 0) && renderer_value < 4));
+			psDeviceFlags.set(rsR3, (renderer_value == 4));
+			psDeviceFlags.set(rsR4, (renderer_value >= 5));
 
-		r2_sun_static	= (renderer_value<2);
+			r2_sun_static = (renderer_value < 2);
 
-		r2_advanced_pp  = (renderer_value>=3);
+			r2_advanced_pp = (renderer_value >= 3);
+
+			isLoaded = true;
+		}
 	}
 
 	virtual void	Save	(IWriter *F)	

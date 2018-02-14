@@ -6,6 +6,8 @@
 #include "EngineAPI.h"
 #include "../xrcdb/xrXRC.h"
 #include "XR_IOConsole.h"
+#include "xr_ioc_cmd.h"
+
 
 extern xr_vector<xr_token> vid_quality_token;
 
@@ -55,7 +57,12 @@ void CEngineAPI::InitializeRenderer()
 		Console->Execute("renderer renderer_r2a");
 	else if (strstr(Core.Params, "-r2"))
 		Console->Execute("renderer renderer_r2");
-	
+	else
+	{
+		CCC_LoadCFG_custom pTmp("renderer ");
+		pTmp.Execute(Console->ConfigFile);
+	}
+
 	if (psDeviceFlags.test(rsR4))
 	{
 		// try to initialize R4
@@ -85,8 +92,7 @@ void CEngineAPI::InitializeRenderer()
 		else
 			g_current_renderer	= 3;
 	}
-
-	if (psDeviceFlags.test(rsR2))	
+	if (psDeviceFlags.test(rsR2) || !hRender)
 	{
 		// try to initialize R2
 		Log("Loading DLL:",	r2_name);
@@ -95,7 +101,6 @@ void CEngineAPI::InitializeRenderer()
 		g_current_renderer	= 2;
 	}
 }
-#include <thread>
 
 void CEngineAPI::Initialize(void)
 {
@@ -147,73 +152,4 @@ void CEngineAPI::Destroy	(void)
 	pDestroy				= 0;
 	Engine.Event._destroy	();
 	XRC.r_clear_compact		();
-}
-
-extern "C" {
-	typedef bool __cdecl SupportsAdvancedRendering	(void);
-	typedef bool _declspec(dllexport) SupportsDX10Rendering();
-	typedef bool _declspec(dllexport) SupportsDX11Rendering();
-};
-
-#include "xr_ioc_cmd.h"
-void CEngineAPI::CreateRendererList()
-{
-	if (!vid_quality_token.empty())
-		return;
-
-	xr_vector<xr_token> modes;
-
-	// try to initialize R2
-	Log				("Loading DLL:",	r2_name);
-	hRender			= LoadLibrary		(r2_name);
-	if (hRender)	
-	{
-		modes.push_back(xr_token("renderer_r2a", 1));
-		modes.emplace_back(xr_token("renderer_r2", 2));
-		SupportsAdvancedRendering *test_rendering = (SupportsAdvancedRendering*) GetProcAddress(hRender,"SupportsAdvancedRendering");	
-		if (test_rendering && test_rendering())
-			modes.emplace_back(xr_token("renderer_r2.5", 3));
-		FreeLibrary(hRender);
-	}
-
-	// try to initialize R3
-	Log				("Loading DLL:",	r3_name);
-	//	Hide "d3d10 not found" message box for XP
-	SetErrorMode(SEM_FAILCRITICALERRORS);
-	hRender			= LoadLibrary		(r3_name);
-	//	Restore error handling
-	SetErrorMode(0);
-	if (hRender)	
-	{
-		SupportsDX10Rendering *test_dx10_rendering = (SupportsDX10Rendering*) GetProcAddress(hRender,"SupportsDX10Rendering");
-		if (test_dx10_rendering && test_dx10_rendering())
-			modes.emplace_back(xr_token("renderer_r3", 4));
-		FreeLibrary(hRender);
-	}
-
-	// try to initialize R4
-	Log				("Loading DLL:",	r4_name);
-	//	Hide "d3d10 not found" message box for XP
-	SetErrorMode	(SEM_FAILCRITICALERRORS);
-	hRender			= LoadLibrary		(r4_name);
-	//	Restore error handling
-	SetErrorMode	(0);
-	if (hRender)	
-	{
-		SupportsDX11Rendering *test_dx11_rendering = (SupportsDX11Rendering*) GetProcAddress(hRender,"SupportsDX11Rendering");
-		if (test_dx11_rendering && test_dx11_rendering())
-			modes.emplace_back(xr_token("renderer_r4", 5));
-		FreeLibrary(hRender);
-	}
-
-	modes.emplace_back(xr_token(nullptr, -1));
-
-	hRender = nullptr;
-
-	Msg("Available render modes[%d]:", modes.size());
-	for (auto& mode : modes)
-		if (mode.name)
-			Log(mode.name);
-
-	vid_quality_token = std::move(modes);
 }

@@ -1,16 +1,27 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="AssemblyInfo.cpp">
-      <Filter>Launcher</Filter>
+      <Filter>PlayCore\Launcher</Filter>
+    </ClCompile>
+    <ClCompile Include="entry_point.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererList.cpp">
+      <Filter>PlayCore</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resources">
       <UniqueIdentifier>{50fcfd19-55ee-4f2a-919a-b5b90510ea63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Launcher">
+    <Filter Include="Kernel">
+      <UniqueIdentifier>{f07c72d4-f864-4201-86d5-cd9322a93414}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayCore">
+      <UniqueIdentifier>{d7d1bc4c-0bb7-405b-91f3-659a4331bd50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayCore\Launcher">
       <UniqueIdentifier>{552545a6-b39d-45f9-b306-8533722aed38}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -27,7 +38,10 @@
       <Filter>Resources</Filter>
     </ClInclude>
     <ClInclude Include="xrLauncherWnd.h">
-      <Filter>Launcher</Filter>
+      <Filter>PlayCore\Launcher</Filter>
+    </ClInclude>
+    <ClInclude Include="IEIncl.hpp">
+      <Filter>Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

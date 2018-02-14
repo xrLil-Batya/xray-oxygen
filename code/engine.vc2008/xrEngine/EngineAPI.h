@@ -34,7 +34,6 @@ public:
 	void				Initialize	();
 	void				InitializeRenderer();
 	void				Destroy		();
-	void				CreateRendererList();
 
 	CEngineAPI	();
 	~CEngineAPI	();

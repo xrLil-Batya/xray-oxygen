@@ -38,7 +38,7 @@ namespace xrPlay {
 	private: System::Windows::Forms::MaskedTextBox^  textBox1;
 	private: System::Windows::Forms::Label^  BtnClose;
 	private: System::Windows::Forms::Label^  label1;
-	private: System::Windows::Forms::RadioButton^  radioButton1;
+
 	private: System::Windows::Forms::RadioButton^  radioButton2;
 	private: System::Windows::Forms::RadioButton^  radioButton3;
 	private: System::Windows::Forms::RadioButton^  radioButton4;
@@ -63,7 +63,6 @@ namespace xrPlay {
 			this->textBox1 = (gcnew System::Windows::Forms::MaskedTextBox());
 			this->BtnClose = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
-			this->radioButton1 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton2 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton3 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton4 = (gcnew System::Windows::Forms::RadioButton());
@@ -116,19 +115,6 @@ namespace xrPlay {
 			this->label1->Text = L"_";
 			this->label1->Click += gcnew System::EventHandler(this, &xrLauncherWnd::label1_Click);
 			// 
-			// radioButton1
-			// 
-			this->radioButton1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
-			this->radioButton1->AutoSize = true;
-			this->radioButton1->BackColor = System::Drawing::Color::Transparent;
-			this->radioButton1->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton1->Location = System::Drawing::Point(301, 28);
-			this->radioButton1->Name = L"radioButton1";
-			this->radioButton1->Size = System::Drawing::Size(182, 17);
-			this->radioButton1->TabIndex = 6;
-			this->radioButton1->Text = L"Статическое освещение (DX 9)";
-			this->radioButton1->UseVisualStyleBackColor = false;
-			// 
 			// radioButton2
 			// 
 			this->radioButton2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
@@ -136,7 +122,7 @@ namespace xrPlay {
 			this->radioButton2->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton2->Checked = true;
 			this->radioButton2->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton2->Location = System::Drawing::Point(301, 51);
+			this->radioButton2->Location = System::Drawing::Point(300, 25);
 			this->radioButton2->Name = L"radioButton2";
 			this->radioButton2->Size = System::Drawing::Size(194, 17);
 			this->radioButton2->TabIndex = 7;
@@ -150,7 +136,7 @@ namespace xrPlay {
 			this->radioButton3->AutoSize = true;
 			this->radioButton3->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton3->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton3->Location = System::Drawing::Point(301, 74);
+			this->radioButton3->Location = System::Drawing::Point(300, 48);
 			this->radioButton3->Name = L"radioButton3";
 			this->radioButton3->Size = System::Drawing::Size(202, 17);
 			this->radioButton3->TabIndex = 8;
@@ -163,7 +149,7 @@ namespace xrPlay {
 			this->radioButton4->AutoSize = true;
 			this->radioButton4->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton4->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton4->Location = System::Drawing::Point(301, 97);
+			this->radioButton4->Location = System::Drawing::Point(300, 71);
 			this->radioButton4->Name = L"radioButton4";
 			this->radioButton4->Size = System::Drawing::Size(202, 17);
 			this->radioButton4->TabIndex = 9;
@@ -176,7 +162,7 @@ namespace xrPlay {
 			this->radioButton5->AutoSize = true;
 			this->radioButton5->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton5->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton5->Location = System::Drawing::Point(301, 120);
+			this->radioButton5->Location = System::Drawing::Point(300, 94);
 			this->radioButton5->Name = L"radioButton5";
 			this->radioButton5->Size = System::Drawing::Size(202, 17);
 			this->radioButton5->TabIndex = 10;
@@ -194,7 +180,6 @@ namespace xrPlay {
 			this->Controls->Add(this->radioButton4);
 			this->Controls->Add(this->radioButton3);
 			this->Controls->Add(this->radioButton2);
-			this->Controls->Add(this->radioButton1);
 			this->Controls->Add(this->label1);
 			this->Controls->Add(this->BtnClose);
 			this->Controls->Add(this->textBox1);
@@ -216,8 +201,9 @@ namespace xrPlay {
 	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
 		type_ptr = 1;
 		msclr::interop::marshal_context marsh;
-		System::String^ rendered = "-r1";
-		if (radioButton2->Checked) rendered = "-r2";
+
+		System::String^ rendered = "-r2";
+
 		if (radioButton3->Checked) rendered = "-r2.5";
 		if (radioButton4->Checked) rendered = "-r3";
 		if (radioButton5->Checked) rendered = "-r4";

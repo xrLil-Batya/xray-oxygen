@@ -1,9 +1,10 @@
 #include <string>
+#include "IEIncl.hpp"
 #include <windows.h>
 #include "xrLauncherWnd.h"
 
 #pragma comment(lib, "xrEngine.lib")
-#define DLL_API __declspec(dllimport)
+void CreateRendererList();
 
 int RunXRLauncher()
 {
@@ -31,7 +32,7 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
         }
         params = GetParams();
     }
-
+	CreateRendererList();
     RunApplication(params.data());
 
     return 0;

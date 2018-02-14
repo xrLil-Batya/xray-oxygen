@@ -434,6 +434,7 @@ ENGINE_API int RunApplication(char* commandLine)
 	Core._initialize			("xray", nullptr, TRUE, fsgame[0] ? fsgame : nullptr);
 
 	InitSettings				();
+	Core.Params = commandLine;
 
 	// Adjust player & computer name for Asian
 	if ( pSettings->line_exist( "string_table" , "no_native_input" ) ) {
@@ -447,7 +448,6 @@ ENGINE_API int RunApplication(char* commandLine)
 		InitInput				();
 		InitConsole				();
 
-		Engine.External.CreateRendererList();
 		Engine.External.Initialize	( );
 		Console->Execute			("stat_memory");
 
