@@ -34,20 +34,6 @@
 
 using namespace Opcode;
 
-	inline_ void FindRunningIndex(uqword& index, float* array, uqword* sorted, int last, float max)
-	{
-		int First=index;
-		while(First<=last)
-		{
-			index = (First+last)>>1;
-
-			if(max>array[sorted[index]])	First	= index+1;
-			else							last	= index-1;
-		}
-	}
-// ### could be log(n) !
-// and maybe use cmp integers
-
 // InsertionSort has better coherence, RadixSort is better for one-shot queries.
 #define PRUNING_SORTER	RadixSort
 //#define PRUNING_SORTER	InsertionSort

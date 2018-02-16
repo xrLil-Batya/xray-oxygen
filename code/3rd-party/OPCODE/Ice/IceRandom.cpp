@@ -13,12 +13,12 @@
 
 using namespace IceCore;
 
-void IceCore::	SRand(uqword seed)
+void IceCore::	SRand(udword seed)
 {
 	srand(seed);
 }
 
-uqword IceCore::Rand()
+udword IceCore::Rand()
 {
 	return rand();
 }

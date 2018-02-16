@@ -419,7 +419,7 @@ bool AABBTree::Build(AABBTreeBuilder* builder)
 	CHECKALLOC(mNodePrimitives);
 
 	// Identity permutation
-	for (uqword i = 0; i < builder->mNbPrimitives; i++)
+	for (udword i = 0; i < builder->mNbPrimitives; i++)
 	{
 		mNodePrimitives[i] = i;
 	}
@@ -457,7 +457,7 @@ bool AABBTree::Build(AABBTreeBuilder* builder)
  *	\return		depth of the tree
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-uqword AABBTree::ComputeDepth() const
+udword AABBTree::ComputeDepth() const
 {
 	return Walk(null, null);	// Use the walking code without callback
 }
@@ -467,15 +467,15 @@ uqword AABBTree::ComputeDepth() const
  *	Walks the tree, calling the user back for each node.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-uqword AABBTree::Walk(WalkingCallback callback, void* user_data) const
+udword AABBTree::Walk(WalkingCallback callback, void* user_data) const
 {
 	// Call it without callback to compute max depth
-	uqword MaxDepth = 0;
-	uqword CurrentDepth = 0;
+	udword MaxDepth = 0;
+	udword CurrentDepth = 0;
 
 	struct Local
 	{
-		static void _Walk(const AABBTreeNode* current_node, uqword& max_depth, uqword& current_depth, WalkingCallback callback, void* user_data)
+		static void _Walk(const AABBTreeNode* current_node, udword& max_depth, udword& current_depth, WalkingCallback callback, void* user_data)
 		{
 			// Checkings
 			if(!current_node)	return;

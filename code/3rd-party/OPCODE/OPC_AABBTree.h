@@ -121,9 +121,9 @@
 		// Infos
 				bool				IsComplete()		const;
 		// Stats
-				uqword				ComputeDepth()		const;
-				uqword				GetUsedBytes()		const;
-				uqword				Walk(WalkingCallback callback, void* user_data) const;
+				udword				ComputeDepth()		const;
+				uqword				GetUsedBytes()		const; // size_t (x64) -> uqword
+				udword				Walk(WalkingCallback callback, void* user_data) const;
 
 				bool				Refit(AABBTreeBuilder* builder);
 				bool				Refit2(AABBTreeBuilder* builder);
