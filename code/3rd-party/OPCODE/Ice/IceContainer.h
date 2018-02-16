@@ -28,7 +28,7 @@
 		// Constructor / Destructor
 								Container();
 								Container(const Container& object);
-								Container(udword size, float growth_factor);
+								Container(uqword size, float growth_factor);
 								~Container();
 		// Management
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,14 +37,14 @@
 		 *	The method is inline, not the resize. The call overhead happens on resizes only, which is not a problem since the resizing operation
 		 *	costs a lot more than the call overhead...
 		 *
-		 *	\param		entry		[in] a udword to store in the container
+		 *	\param		entry		[in] a uqword to store in the container
 		 *	\see		Add(float entry)
 		 *	\see		Empty()
-		 *	\see		Contains(udword entry)
+		 *	\see		Contains(uqword entry)
 		 *	\return		Self-Reference
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_	Container&		Add(udword entry)
+		inline_	Container&		Add(uqword entry)
 								{
 									// Resize if needed
 									if(mCurNbEntries==mMaxNbEntries)	Resize();
@@ -54,13 +54,23 @@
 									return *this;
 								}
 
-		inline_	Container&		Add(const udword* entries, udword nb)
+        inline_	Container&		Add(udword entry)
+								{
+									// Resize if needed
+									if(mCurNbEntries==mMaxNbEntries)	Resize();
+
+									// Add new entry
+									mEntries[mCurNbEntries++]	= entry;
+									return *this;
+								}
+
+		inline_	Container&		Add(const uqword* entries, uqword nb)
 								{
 									// Resize if needed
 									if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
 
 									// Add new entry
-									CopyMemory(&mEntries[mCurNbEntries], entries, nb*sizeof(udword));
+									CopyMemory(&mEntries[mCurNbEntries], entries, nb*sizeof(uqword));
 									mCurNbEntries+=nb;
 									return *this;
 								}
@@ -72,9 +82,9 @@
 		 *	costs a lot more than the call overhead...
 		 *
 		 *	\param		entry		[in] a float to store in the container
-		 *	\see		Add(udword entry)
+		 *	\see		Add(uqword entry)
 		 *	\see		Empty()
-		 *	\see		Contains(udword entry)
+		 *	\see		Contains(uqword entry)
 		 *	\return		Self-Reference
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -88,7 +98,7 @@
 									return *this;
 								}
 
-		inline_	Container&		Add(const float* entries, udword nb)
+		inline_	Container&		Add(const float* entries, uqword nb)
 								{
 									// Resize if needed
 									if(mCurNbEntries+nb>mMaxNbEntries)	Resize(nb);
@@ -100,7 +110,7 @@
 								}
 
 		//! Add unique [slow]
-		inline_	Container&		AddUnique(udword entry)
+		inline_	Container&		AddUnique(uqword entry)
 								{
 									if(!Contains(entry))	Add(entry);
 									return *this;
@@ -130,7 +140,7 @@
 								}
 
 		// HANDLE WITH CARE
-		inline_	void			ForceSize(udword size)
+		inline_	void			ForceSize(uqword size)
 								{
 									mCurNbEntries = size;
 								}
@@ -142,7 +152,7 @@
 		 *	\return		true if success
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				bool			SetSize(udword nb);
+				bool			SetSize(uqword nb);
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -153,59 +163,59 @@
 				bool			Refit();
 
 		// Checks whether the container already contains a given value.
-				bool			Contains(udword entry, udword* location=null) const;
+				bool			Contains(uqword entry, uqword* location=null) const;
 		// Deletes an entry - doesn't preserve insertion order.
-				bool			Delete(udword entry);
+				bool			Delete(uqword entry);
 		// Deletes an entry - does preserve insertion order.
-				bool			DeleteKeepingOrder(udword entry);
+				bool			DeleteKeepingOrder(uqword entry);
 		//! Deletes the very last entry.
 		inline_	void			DeleteLastEntry()						{ if(mCurNbEntries)	mCurNbEntries--;			}
 		//! Deletes the entry whose index is given
-		inline_	void			DeleteIndex(udword index)				{ mEntries[index] = mEntries[--mCurNbEntries];	}
+		inline_	void			DeleteIndex(uqword index)				{ mEntries[index] = mEntries[--mCurNbEntries];	}
 
 		// Helpers
-				Container&		FindNext(udword& entry, FindMode find_mode=FIND_CLAMP);
-				Container&		FindPrev(udword& entry, FindMode find_mode=FIND_CLAMP);
+				Container&		FindNext(uqword& entry, FindMode find_mode=FIND_CLAMP);
+				Container&		FindPrev(uqword& entry, FindMode find_mode=FIND_CLAMP);
 		// Data access.
-		inline_	udword			GetNbEntries()					const	{ return mCurNbEntries;					}	//!< Returns the current number of entries.
-		inline_	udword			GetEntry(udword i)				const	{ return mEntries[i];					}	//!< Returns ith entry
-		inline_	udword*			GetEntries()					const	{ return mEntries;						}	//!< Returns the list of entries.
+		inline_	uqword			GetNbEntries()					const	{ return mCurNbEntries;					}	//!< Returns the current number of entries.
+		inline_	uqword			GetEntry(uqword i)				const	{ return mEntries[i];					}	//!< Returns ith entry
+		inline_	uqword*			GetEntries()					const	{ return mEntries;						}	//!< Returns the list of entries.
 
-		inline_	udword			GetFirst()						const	{ return mEntries[0];					}
-		inline_	udword			GetLast()						const	{ return mEntries[mCurNbEntries-1];		}
+		inline_	uqword			GetFirst()						const	{ return mEntries[0];					}
+		inline_	uqword			GetLast()						const	{ return mEntries[mCurNbEntries-1];		}
 
 		// Growth control
 		inline_	float			GetGrowthFactor()				const	{ return mGrowthFactor;					}	//!< Returns the growth factor
 		inline_	void			SetGrowthFactor(float growth)			{ mGrowthFactor = growth;				}	//!< Sets the growth factor
 		inline_	bool			IsFull()						const	{ return mCurNbEntries==mMaxNbEntries;	}	//!< Checks the container is full
-		inline_	BOOL			IsNotEmpty()					const	{ return mCurNbEntries;					}	//!< Checks the container is empty
+		inline_	uqword			IsNotEmpty()					const	{ return mCurNbEntries;					}	//!< Checks the container is empty
 
 		//! Read-access as an array
-		inline_	udword			operator[](udword i)			const	{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
+		inline_	uqword			operator[](uqword i)			const	{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
 		//! Write-access as an array
-		inline_	udword&			operator[](udword i)					{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
+		inline_	uqword&			operator[](uqword i)					{ ASSERT(i>=0 && i<mCurNbEntries); return mEntries[i];	}
 
 		// Stats
-				udword			GetUsedRam()					const;
+				uqword			GetUsedRam()					const;
 
 		//! Operator for "Container A = Container B"
 				void			operator = (const Container& object);
 
 #ifdef CONTAINER_STATS
-		inline_	udword			GetNbContainers()				const	{ return mNbContainers;		}
-		inline_	udword			GetTotalBytes()					const	{ return mUsedRam;			}
+		inline_	uqword			GetNbContainers()				const	{ return mNbContainers;		}
+		inline_	uqword			GetTotalBytes()					const	{ return mUsedRam;			}
 		private:
 
-		static	udword			mNbContainers;		//!< Number of containers around
-		static	udword			mUsedRam;			//!< Amount of bytes used by containers in the system
+		static	uqword			mNbContainers;		//!< Number of containers around
+		static	uqword			mUsedRam;			//!< Amount of bytes used by containers in the system
 #endif
 		private:
 		// Resizing
-				bool			Resize(udword needed=1);
+				bool			Resize(uqword needed=1);
 		// Data
-				udword			mMaxNbEntries;		//!< Maximum possible number of entries
-				udword			mCurNbEntries;		//!< Current number of entries
-				udword*			mEntries;			//!< List of entries
+				uqword			mMaxNbEntries;		//!< Maximum possible number of entries
+				uqword			mCurNbEntries;		//!< Current number of entries
+				uqword*			mEntries;			//!< List of entries
 				float			mGrowthFactor;		//!< Resize: new number of entries = old number * mGrowthFactor
 	};
 

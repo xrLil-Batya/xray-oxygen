@@ -31,12 +31,12 @@
 		/* Data access */																					\
 		inline_			const base_class*	GetPos()		const	{ return (base_class*)mData;		}	\
 		inline_			const base_class*	GetNeg()		const	{ return ((base_class*)mData)+1;	}	\
-		inline_			udword				GetPrimitive()	const	{ return (mData>>1);				}	\
+		inline_			uqword				GetPrimitive()	const	{ return (mData>>1);				}	\
 		/* Stats */																							\
-		inline_			udword				GetNodeSize()	const	{ return SIZEOFOBJECT;				}	\
+		inline_			uqword				GetNodeSize()	const	{ return SIZEOFOBJECT;				}	\
 																											\
 						volume				mAABB;															\
-						udword				mData;
+						uqword				mData;
 
 	//! Common interface for a node of a no-leaf tree
 	#define IMPLEMENT_NOLEAF_NODE(base_class, volume)														\
@@ -50,14 +50,14 @@
 		/* Data access */																					\
 		inline_			const base_class*	GetPos()			const	{ return (base_class*)mPosData;	}	\
 		inline_			const base_class*	GetNeg()			const	{ return (base_class*)mNegData;	}	\
-		inline_			udword				GetPosPrimitive()	const	{ return (mPosData>>1);			}	\
-		inline_			udword				GetNegPrimitive()	const	{ return (mNegData>>1);			}	\
+		inline_			uqword				GetPosPrimitive()	const	{ return (mPosData>>1);			}	\
+		inline_			uqword				GetNegPrimitive()	const	{ return (mNegData>>1);			}	\
 		/* Stats */																							\
-		inline_			udword				GetNodeSize()		const	{ return SIZEOFOBJECT;			}	\
+		inline_			uqword				GetNodeSize()		const	{ return SIZEOFOBJECT;			}	\
 																											\
 						volume				mAABB;															\
-						udword				mPosData;														\
-						udword				mNegData;
+						uqword				mPosData;														\
+						uqword				mNegData;
 
 	class OPCODE_API AABBCollisionNode
 	{
@@ -65,10 +65,10 @@
 
 		inline_			float				GetVolume()		const	{ return mAABB.mExtents.x * mAABB.mExtents.y * mAABB.mExtents.z;	}
 		inline_			float				GetSize()		const	{ return mAABB.mExtents.SquareMagnitude();	}
-		inline_			udword				GetRadius()		const
+		inline_			uqword				GetRadius()		const
 											{
-												udword* Bits = (udword*)&mAABB.mExtents.x;
-												udword Max = Bits[0];
+												uqword* Bits = (uqword*)&mAABB.mExtents.x;
+												uqword Max = Bits[0];
 												if(Bits[1]>Max)	Max = Bits[1];
 												if(Bits[2]>Max)	Max = Bits[2];
 												return Max;
@@ -124,7 +124,7 @@
 		/* Data access */																							\
 		inline_						const node*		GetNodes()		const	{ return mNodes;					}	\
 		/* Stats */																									\
-		override(AABBOptimizedTree)	udword			GetUsedBytes()	const	{ return mNbNodes*sizeof(node);		}	\
+		override(AABBOptimizedTree)	uqword			GetUsedBytes()	const	{ return mNbNodes*sizeof(node);		}	\
 		private:																									\
 									node*			mNodes;
 
@@ -168,11 +168,11 @@
 		virtual			bool				Walk(GenericWalkingCallback callback, void* user_data) const	= 0;
 
 		// Data access
-		virtual			udword				GetUsedBytes()		const										= 0;
-		inline_			udword				GetNbNodes()		const						{ return mNbNodes;	}
+		virtual			uqword				GetUsedBytes()		const										= 0;
+		inline_			uqword				GetNbNodes()		const						{ return mNbNodes;	}
 
 		protected:
-						udword				mNbNodes;
+						uqword				mNbNodes;
 	};
 
 	class OPCODE_API AABBCollisionTree : public AABBOptimizedTree

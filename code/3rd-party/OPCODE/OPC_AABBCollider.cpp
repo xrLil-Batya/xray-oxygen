@@ -173,7 +173,7 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 			mTouchedPrimitives->Reset();
 
 			// Perform overlap test between the unique triangle and the box (and set contact status if needed)
-			AABB_PRIM(udword(0), OPC_CONTACT)
+			AABB_PRIM(uqword(0), OPC_CONTACT)
 
 			// Return immediately regardless of status
 			return TRUE;
@@ -191,7 +191,7 @@ BOOL AABBCollider::InitQuery(AABBCache& cache, const CollisionAABB& box)
 			if(mTouchedPrimitives->GetNbEntries())
 			{
 				// Get index of previously touched face = the first entry in the array
-				udword PreviouslyTouchedFace = mTouchedPrimitives->GetEntry(0);
+				uqword PreviouslyTouchedFace = mTouchedPrimitives->GetEntry(0);
 
 				// Then reset the array:
 				// - if the overlap test below is successful, the index we'll get added back anyway
@@ -585,10 +585,10 @@ bool HybridAABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, con
 	if(mCurrentModel && mCurrentModel->HasSingleNode())
 	{
 		// Here we're supposed to perform a normal query, except our tree has a single node, i.e. just a few triangles
-		udword Nb = mIMesh->GetNbTriangles();
+		uqword Nb = mIMesh->GetNbTriangles();
 
 		// Loop through all triangles
-		for(udword i=0;i<Nb;i++)
+		for(uqword i=0;i<Nb;i++)
 		{
 			AABB_PRIM(i, OPC_CONTACT)
 		}
@@ -654,11 +654,11 @@ bool HybridAABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, con
 		mTouchedPrimitives = &cache.TouchedPrimitives;
 
 		// Read touched leaf boxes
-		udword Nb = mTouchedBoxes.GetNbEntries();
-		const udword* Touched = mTouchedBoxes.GetEntries();
+		uqword Nb = mTouchedBoxes.GetNbEntries();
+		const uqword* Touched = mTouchedBoxes.GetEntries();
 
 		const LeafTriangles* LT = model.GetLeafTriangles();
-		const udword* Indices = model.GetIndices();
+		const uqword* Indices = model.GetIndices();
 
 		// Loop through touched leaves
 		while(Nb--)
@@ -666,26 +666,26 @@ bool HybridAABBCollider::Collide(AABBCache& cache, const CollisionAABB& box, con
 			const LeafTriangles& CurrentLeaf = LT[*Touched++];
 
 			// Each leaf box has a set of triangles
-			udword NbTris = CurrentLeaf.GetNbTriangles();
+			uqword NbTris = CurrentLeaf.GetNbTriangles();
 			if(Indices)
 			{
-				const udword* T = &Indices[CurrentLeaf.GetTriangleIndex()];
+				const uqword* T = &Indices[CurrentLeaf.GetTriangleIndex()];
 
 				// Loop through triangles and test each of them
 				while(NbTris--)
 				{
-					udword TriangleIndex = *T++;
+					uqword TriangleIndex = *T++;
 					AABB_PRIM(TriangleIndex, OPC_CONTACT)
 				}
 			}
 			else
 			{
-				udword BaseIndex = CurrentLeaf.GetTriangleIndex();
+				uqword BaseIndex = CurrentLeaf.GetTriangleIndex();
 
 				// Loop through triangles and test each of them
 				while(NbTris--)
 				{
-					udword TriangleIndex = BaseIndex++;
+					uqword TriangleIndex = BaseIndex++;
 					AABB_PRIM(TriangleIndex, OPC_CONTACT)
 				}
 			}

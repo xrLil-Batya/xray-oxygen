@@ -55,7 +55,7 @@
  *	Ex:
  *
  *	\code
- *		static void ColCallback(udword triangle_index, VertexPointers& triangle, udword user_data)
+ *		static void ColCallback(uqword triangle_index, VertexPointers& triangle, uqword user_data)
  *		{
  *			// Get back Mesh0 or Mesh1 (you also can use 2 different callbacks)
  *			Mesh* MyMesh = (Mesh*)user_data;
@@ -68,8 +68,8 @@
  *		}
  *
  *		// Setup callbacks
- *		MeshInterface0->SetCallback(ColCallback, udword(Mesh0));
- *		MeshInterface1->SetCallback(ColCallback, udword(Mesh1));
+ *		MeshInterface0->SetCallback(ColCallback, uqword(Mesh0));
+ *		MeshInterface1->SetCallback(ColCallback, uqword(Mesh1));
  *	\endcode
  *
  *	Of course, you should make this callback as fast as possible. And you're also not supposed
@@ -175,19 +175,19 @@ bool MeshInterface::IsValid() const
  *	\return		number of degenerate faces
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword MeshInterface::CheckTopology()	const
+uqword MeshInterface::CheckTopology()	const
 {
 	// Check topology. If the model contains degenerate faces, collision report can be wrong in some cases.
 	// e.g. it happens with the standard MAX teapot. So clean your meshes first... If you don't have a mesh cleaner
 	// you can try this: www.codercorner.com/Consolidation.zip
 
-	udword NbDegenerate = 0;
+	uqword NbDegenerate = 0;
 
 	VertexPointers VP;
 
 	// Using callbacks, we don't have access to vertex indices. Nevertheless we still can check for
 	// redundant vertex pointers, which cover all possibilities (callbacks/pointers/strides).
-	for(udword i=0;i<mNbTris;i++)
+	for(uqword i=0;i<mNbTris;i++)
 	{
 		GetTriangle(VP, i);
 
@@ -242,7 +242,7 @@ bool MeshInterface::SetPointers(const IndexedTriangle* tris, const Point* verts)
  *	\return		true if success
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool MeshInterface::SetStrides(udword tri_stride, udword vertex_stride)
+bool MeshInterface::SetStrides(uqword tri_stride, uqword vertex_stride)
 {
 	if(tri_stride<sizeof(IndexedTriangle))	return SetIceError("MeshInterface::SetStrides: invalid triangle stride", null);
 	if(vertex_stride<sizeof(Point))			return SetIceError("MeshInterface::SetStrides: invalid vertex stride", null);
@@ -262,7 +262,7 @@ bool MeshInterface::SetStrides(udword tri_stride, udword vertex_stride)
  *	\return		true if success
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-bool MeshInterface::RemapClient(udword nb_indices, const udword* permutation) const
+bool MeshInterface::RemapClient(uqword nb_indices, const uqword* permutation) const
 {
 	// Checkings
 	if(!nb_indices || !permutation)	return false;
@@ -276,18 +276,18 @@ bool MeshInterface::RemapClient(udword nb_indices, const udword* permutation) co
 	CHECKALLOC(Tmp);
 
 	#ifdef OPC_USE_STRIDE
-	udword Stride = mTriStride;
+	uqword Stride = mTriStride;
 	#else
-	udword Stride = sizeof(IndexedTriangle);
+	uqword Stride = sizeof(IndexedTriangle);
 	#endif
 
-	for(udword i=0;i<mNbTris;i++)
+	for(uqword i=0;i<mNbTris;i++)
 	{
 		const IndexedTriangle* T = (const IndexedTriangle*)(((ubyte*)mTris) + i * Stride);
 		Tmp[i] = *T;
 	}
 
-	for(udword i=0;i<mNbTris;i++)
+	for(uqword i=0;i<mNbTris;i++)
 	{
 		IndexedTriangle* T = (IndexedTriangle*)(((ubyte*)mTris) + i * Stride);
 		*T = Tmp[permutation[i]];

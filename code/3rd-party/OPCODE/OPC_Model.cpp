@@ -68,7 +68,7 @@
  *		BOOL Status = TC.GetContactStatus();
  *
  *		// Number of colliding pairs and list of pairs
- *		udword NbPairs = TC.GetNbPairs();
+ *		uqword NbPairs = TC.GetNbPairs();
  *		const Pair* p = TC.GetPairs()
  *	\endcode
  *
@@ -145,7 +145,7 @@ bool Model::Build(const OPCODECREATE& create)
 	if(create.mSettings.mLimit!=1)	return SetIceError("OPCODE WARNING: supports complete trees only! Use mLimit = 1.\n", null);
 
 	// Look for degenerate faces.
-	udword NbDegenerate = create.mIMesh->CheckTopology();
+	uqword NbDegenerate = create.mIMesh->CheckTopology();
 	if(NbDegenerate)	Log("OPCODE WARNING: found %d degenerate faces in model! Collision might report wrong results!\n", NbDegenerate);
 	// We continue nonetheless.... 
 
@@ -155,7 +155,7 @@ bool Model::Build(const OPCODECREATE& create)
 	SetMeshInterface(create.mIMesh);
 
 	// Special case for 1-triangle meshes [Opcode 1.3]
-	udword NbTris = create.mIMesh->GetNbTriangles();
+	uqword NbTris = create.mIMesh->GetNbTriangles();
 	if(NbTris==1)
 	{
 		// We don't need to actually create a tree here, since we'll only have a single triangle to deal with anyway.
@@ -215,7 +215,7 @@ bool Model::Build(const OPCODECREATE& create)
  *	\return		amount of bytes used
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword Model::GetUsedBytes() const
+uqword Model::GetUsedBytes() const
 {
 	if(!mTree)	return 0;
 	return mTree->GetUsedBytes();

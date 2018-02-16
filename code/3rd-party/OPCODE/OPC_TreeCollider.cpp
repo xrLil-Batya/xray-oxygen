@@ -113,7 +113,7 @@ bool AABBTreeCollider::Collide(BVTCache& cache, const Matrix4x4* world0, const M
 		{
 			struct Local
 			{
-				static Point* SVCallback(const Point& sv, udword& previndex, udword user_data)
+				static Point* SVCallback(const Point& sv, uqword& previndex, uqword user_data)
 				{
 					CollisionHull* Hull = (CollisionHull*)user_data;
 					previndex = Hull->ComputeSupportingVertex(sv, previndex);
@@ -136,8 +136,8 @@ bool AABBTreeCollider::Collide(BVTCache& cache, const Matrix4x4* world0, const M
 				}
 				GJK.SetCallbackObj0(Local::SVCallback);
 				GJK.SetCallbackObj1(Local::SVCallback);
-				GJK.SetUserData0(udword(cache.Model0->GetHull()));
-				GJK.SetUserData1(udword(cache.Model1->GetHull()));
+				GJK.SetUserData0(uqword(cache.Model0->GetHull()));
+				GJK.SetUserData1(uqword(cache.Model1->GetHull()));
 				Collide = GJK.Collide(*world0, *world1, &cache.SepVector);
 			}
 			else
@@ -145,8 +145,8 @@ bool AABBTreeCollider::Collide(BVTCache& cache, const Matrix4x4* world0, const M
 				static SVEngine SVE;
 				SVE.SetCallbackObj0(Local::SVCallback);
 				SVE.SetCallbackObj1(Local::SVCallback);
-				SVE.SetUserData0(udword(cache.Model0->GetHull()));
-				SVE.SetUserData1(udword(cache.Model1->GetHull()));
+				SVE.SetUserData0(uqword(cache.Model0->GetHull()));
+				SVE.SetUserData1(uqword(cache.Model1->GetHull()));
 				Collide = SVE.Collide(*world0, *world1, &cache.SepVector);
 			}
 
@@ -256,9 +256,9 @@ void AABBTreeCollider::InitQuery(const Matrix4x4* world0, const Matrix4x4* world
 	mR1to0 = World1to0;		World1to0.GetTrans(mT1to0);
 
 	// Precompute absolute 1-to-0 rotation matrix
-	for(udword i=0;i<3;i++)
+	for(uqword i=0;i<3;i++)
 	{
-		for(udword j=0;j<3;j++)
+		for(uqword j=0;j<3;j++)
 		{
 			// Epsilon value prevents floating-point inaccuracies (strategy borrowed from RAPID)
 			mAR.m[i][j] = 1e-6f + fabsf(mR1to0.m[i][j]);
@@ -318,7 +318,11 @@ bool AABBTreeCollider::Collide(const AABBCollisionTree* tree0, const AABBCollisi
 	// Perform collision query
 	_Collide(tree0->GetNodes(), tree1->GetNodes());
 
-	UPDATE_CACHE
+	if(cache && GetContactStatus())	
+	{								
+        cache->id0 = mPairs.GetEntry(0);
+        cache->id1 = mPairs.GetEntry(1);
+	}
 
 	return true;
 }
@@ -525,7 +529,7 @@ void AABBTreeCollider::_Collide(const AABBCollisionNode* b0, const AABBCollision
  *	\param		id1		[in] index from second leaf-triangle
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void AABBTreeCollider::PrimTest(udword id0, udword id1)
+void AABBTreeCollider::PrimTest(uqword id0, uqword id1)
 {
 	// Request vertices from the app
 	VertexPointers VP0;
@@ -555,7 +559,7 @@ void AABBTreeCollider::PrimTest(udword id0, udword id1)
  *	\param		id1		[in] leaf-triangle index from tree B
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ void AABBTreeCollider::PrimTestTriIndex(udword id1)
+inline_ void AABBTreeCollider::PrimTestTriIndex(uqword id1)
 {
 	// Request vertices from the app
 	VertexPointers VP;
@@ -577,7 +581,7 @@ inline_ void AABBTreeCollider::PrimTestTriIndex(udword id1)
  *	\param		id0		[in] leaf-triangle index from tree A
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ void AABBTreeCollider::PrimTestIndexTri(udword id0)
+inline_ void AABBTreeCollider::PrimTestIndexTri(uqword id0)
 {
 	// Request vertices from the app
 	VertexPointers VP;

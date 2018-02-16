@@ -24,7 +24,7 @@
 	//!	\see		StoreDwords
 	//!	\see		CopyMemory
 	//!	\see		MoveMemory
-	inline_ void ZeroMemory(void* addr, udword size)					{ memset(addr, 0, size);		}
+	inline_ void ZeroMemory(void* addr, uqword size)					{ memset(addr, 0, size);		}
 
 	//!	Fills a buffer with a given byte.
 	//!	\param		addr	[in] buffer address
@@ -34,7 +34,7 @@
 	//!	\see		ZeroMemory
 	//!	\see		CopyMemory
 	//!	\see		MoveMemory
-	inline_ void FillMemory(void* dest, udword size, ubyte val)			{ memset(dest, val, size);		}
+	inline_ void FillMemory(void* dest, uqword size, ubyte val)			{ memset(dest, val, size);		}
 
 	//!	Fills a buffer with a given dword.
 	//!	\param		addr	[in] buffer address
@@ -47,14 +47,14 @@
 	//!	\warning	writes nb*4 bytes !
 
 #if 0 // [ForserX] unused anyway
-	inline_ void StoreDwords(udword* dest, udword nb, udword value)
+	inline_ void StoreDwords(uqword* dest, uqword nb, uqword value)
 	{
 		// The asm code below **SHOULD** be equivalent to one of those C versions
 		// or the other if your compiled is good: (checked on VC++ 6.0)
 		//
 		//	1) while(nb--)	*dest++ = value;
 		//
-		//	2) for(udword i=0;i<nb;i++)	dest[i] = value;
+		//	2) for(uqword i=0;i<nb;i++)	dest[i] = value;
 		//
 		_asm push eax
 		_asm push ecx
@@ -76,7 +76,7 @@
 	//!	\see		FillMemory
 	//!	\see		StoreDwords
 	//!	\see		MoveMemory
-	inline_ void CopyMemory(void* dest, const void* src, udword size)	{ memcpy(dest, src, size);		}
+	inline_ void CopyMemory(void* dest, const void* src, uqword size)	{ memcpy(dest, src, size);		}
 
 	//!	Moves a buffer.
 	//!	\param		addr	[in] destination buffer address
@@ -86,7 +86,7 @@
 	//!	\see		FillMemory
 	//!	\see		StoreDwords
 	//!	\see		CopyMemory
-	inline_ void MoveMemory(void* dest, const void* src, udword size)	{ memmove(dest, src, size);		}
+	inline_ void MoveMemory(void* dest, const void* src, uqword size)	{ memmove(dest, src, size);		}
 
 	#define SIZEOFOBJECT		sizeof(*this)									//!< Gives the size of current object. Avoid some mistakes (e.g. "sizeof(this)").
 	//#define CLEAROBJECT		{ memset(this, 0, SIZEOFOBJECT);	}			//!< Clears current object. Laziness is my business. HANDLE WITH CARE.

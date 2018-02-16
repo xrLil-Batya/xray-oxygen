@@ -240,11 +240,11 @@
 								}
 
 		//! Slighty moves the point
-				void			Tweak(udword coord_mask, udword tweak_mask)
+				void			Tweak(uqword coord_mask, uqword tweak_mask)
 								{
-									if(coord_mask&1)	{ udword Dummy = IR(x);	Dummy^=tweak_mask;	x = FR(Dummy); }
-									if(coord_mask&2)	{ udword Dummy = IR(y);	Dummy^=tweak_mask;	y = FR(Dummy); }
-									if(coord_mask&4)	{ udword Dummy = IR(z);	Dummy^=tweak_mask;	z = FR(Dummy); }
+									if(coord_mask&1)	{ uqword Dummy = IR(x);	Dummy^=tweak_mask;	x = FR(Dummy); }
+									if(coord_mask&2)	{ uqword Dummy = IR(y);	Dummy^=tweak_mask;	y = FR(Dummy); }
+									if(coord_mask&4)	{ uqword Dummy = IR(z);	Dummy^=tweak_mask;	z = FR(Dummy); }
 								}
 
 		#define TWEAKMASK		0x3fffff
@@ -252,7 +252,7 @@
 		//! Slighty moves the point out
 		inline_	void			TweakBigger()
 								{
-									udword	Dummy = (IR(x)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
+									uqword	Dummy = (IR(x)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
 											Dummy = (IR(y)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(y))	Dummy+=TWEAKMASK+1;	y = FR(Dummy);
 											Dummy = (IR(z)&TWEAKNOTMASK);	if(!IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
 								}
@@ -260,7 +260,7 @@
 		//! Slighty moves the point in
 		inline_	void			TweakSmaller()
 								{
-									udword	Dummy = (IR(x)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
+									uqword	Dummy = (IR(x)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(x))	Dummy+=TWEAKMASK+1;	x = FR(Dummy);
 											Dummy = (IR(y)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(y))	Dummy+=TWEAKMASK+1;	y = FR(Dummy);
 											Dummy = (IR(z)&TWEAKNOTMASK);	if(IS_NEGATIVE_FLOAT(z))	Dummy+=TWEAKMASK+1;	z = FR(Dummy);
 								}
@@ -332,7 +332,7 @@
 								}
 
 		//! Vector code ( bitmask = sign(z) | sign(y) | sign(x) )
-		inline_	udword			VectorCode()						const
+		inline_	uqword			VectorCode()						const
 								{
 									return (IR(x)>>31) | ((IR(y)&SIGN_BITMASK)>>30) | ((IR(z)&SIGN_BITMASK)>>29);
 								}
@@ -380,10 +380,10 @@
 				Point&			Unfold(Plane& p, Point& a, Point& b);
 
 		//! Hash function from Ville Miettinen
-		inline_	udword			GetHashValue()						const
+		inline_	uqword			GetHashValue()						const
 								{
-									const udword* h = (const udword*)(this);
-									udword f = (h[0]+h[1]*11-(h[2]*17)) & 0x7fffffff;	// avoid problems with +-0
+									const uqword* h = (const uqword*)(this);
+									uqword f = (h[0]+h[1]*11-(h[2]*17)) & 0x7fffffff;	// avoid problems with +-0
 									return (f>>22)^(f>>12)^(f);
 								}
 

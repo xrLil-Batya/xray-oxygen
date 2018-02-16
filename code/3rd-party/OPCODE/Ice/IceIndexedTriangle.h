@@ -48,17 +48,17 @@
 				bool			IsVisible(const Point* verts, const Point& source)					const;
 				bool			BackfaceCulling(const Point* verts, const Point& source)			const;
 				float			ComputeOcclusionPotential(const Point* verts, const Point& view)	const;
-				bool			ReplaceVertex(udword oldref, udword newref);
+				bool			ReplaceVertex(uqword oldref, uqword newref);
 				bool			IsDegenerate()														const;
-				bool			HasVertex(udword ref)												const;
-				bool			HasVertex(udword ref, udword* index)								const;
-				ubyte			FindEdge(udword vref0, udword vref1)								const;
-				udword			OppositeVertex(udword vref0, udword vref1)							const;
-		inline_	udword			OppositeVertex(ubyte edgenb)										const	{ return mVRef[2-edgenb];	}
-				void			GetVRefs(ubyte edgenb, udword& vref0, udword& vref1, udword& vref2)	const;
+				bool			HasVertex(uqword ref)												const;
+				bool			HasVertex(uqword ref, uqword* index)								const;
+				ubyte			FindEdge(uqword vref0, uqword vref1)								const;
+				uqword			OppositeVertex(uqword vref0, uqword vref1)							const;
+		inline_	uqword			OppositeVertex(ubyte edgenb)										const	{ return mVRef[2-edgenb];	}
+				void			GetVRefs(ubyte edgenb, uqword& vref0, uqword& vref1, uqword& vref2)	const;
 				float			MinEdgeLength(const Point* verts)									const;
 				float			MaxEdgeLength(const Point* verts)									const;
-				void			ComputePoint(const Point* verts, float u, float v, Point& pt, udword* nearvtx=null)	const;
+				void			ComputePoint(const Point* verts, float u, float v, Point& pt, uqword* nearvtx=null)	const;
 				float			Angle(const IndexedTriangle& tri, const Point* verts)				const;
 		inline_	Plane			PlaneEquation(const Point* verts)									const	{ return Plane(verts[mVRef[0]], verts[mVRef[1]], verts[mVRef[2]]);	}
 				bool			Equal(const IndexedTriangle& tri)									const;

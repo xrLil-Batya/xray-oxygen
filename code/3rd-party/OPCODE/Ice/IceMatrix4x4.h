@@ -70,25 +70,25 @@
 
 		// Row-column access
 		//! Returns a row.
-		inline_	void				GetRow(const udword r, HPoint& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];	p.w=m[r][3];		}
+		inline_	void				GetRow(const uqword r, HPoint& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];	p.w=m[r][3];		}
 		//! Returns a row.
-		inline_	void				GetRow(const udword r, Point& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];						}
+		inline_	void				GetRow(const uqword r, Point& p)	const	{ p.x=m[r][0];	p.y=m[r][1];	p.z=m[r][2];						}
 		//! Returns a row.
-		inline_	const HPoint&		GetRow(const udword r)				const	{ return *(const HPoint*)&m[r][0];									}
+		inline_	const HPoint&		GetRow(const uqword r)				const	{ return *(const HPoint*)&m[r][0];									}
 		//! Returns a row.
-		inline_	HPoint&				GetRow(const udword r)						{ return *(HPoint*)&m[r][0];										}
+		inline_	HPoint&				GetRow(const uqword r)						{ return *(HPoint*)&m[r][0];										}
 		//! Sets a row.
-		inline_	void				SetRow(const udword r, const HPoint& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]=p.w;		}
+		inline_	void				SetRow(const uqword r, const HPoint& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]=p.w;		}
 		//! Sets a row.
-		inline_	void				SetRow(const udword r, const Point& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]= (r!=3) ? 0.0f : 1.0f;		}
+		inline_	void				SetRow(const uqword r, const Point& p)		{ m[r][0]=p.x;	m[r][1]=p.y;	m[r][2]=p.z;	m[r][3]= (r!=3) ? 0.0f : 1.0f;		}
 		//! Returns a column.
-		inline_	void				GetCol(const udword c, HPoint& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];	p.w=m[3][c];		}
+		inline_	void				GetCol(const uqword c, HPoint& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];	p.w=m[3][c];		}
 		//! Returns a column.
-		inline_	void				GetCol(const udword c, Point& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];						}
+		inline_	void				GetCol(const uqword c, Point& p)	const	{ p.x=m[0][c];	p.y=m[1][c];	p.z=m[2][c];						}
 		//! Sets a column.
-		inline_	void				SetCol(const udword c, const HPoint& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]=p.w;		}
+		inline_	void				SetCol(const uqword c, const HPoint& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]=p.w;		}
 		//! Sets a column.
-		inline_	void				SetCol(const udword c, const Point& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]= (c!=3) ? 0.0f : 1.0f;	}
+		inline_	void				SetCol(const uqword c, const Point& p)		{ m[0][c]=p.x;	m[1][c]=p.y;	m[2][c]=p.z;	m[3][c]= (c!=3) ? 0.0f : 1.0f;	}
 
 		// Translation
 		//! Returns the translation part of the matrix.
@@ -123,11 +123,11 @@
 									}
 /*
 		//! Returns a row.
-		inline_	HPoint		GetRow(const udword row)	const			{ return mRow[row];														}
+		inline_	HPoint		GetRow(const uqword row)	const			{ return mRow[row];														}
 		//! Sets a row.
-		inline_	Matrix4x4&	SetRow(const udword row, const HPoint& p)	{ mRow[row] = p;	return *this;										}
+		inline_	Matrix4x4&	SetRow(const uqword row, const HPoint& p)	{ mRow[row] = p;	return *this;										}
 		//! Sets a row.
-						Matrix4x4&	SetRow(const udword row, const Point& p)
+						Matrix4x4&	SetRow(const uqword row, const Point& p)
 						{
 							m[row][0] = p.x;
 							m[row][1] = p.y;
@@ -136,7 +136,7 @@
 							return	*this;
 						}
 		//! Returns a column.
-						HPoint		GetCol(const udword col)		const
+						HPoint		GetCol(const uqword col)		const
 						{
 							HPoint	Res;
 							Res.x = m[0][col];
@@ -146,7 +146,7 @@
 							return	Res;
 						}
 		//! Sets a column.
-						Matrix4x4&	SetCol(const udword col, const HPoint& p)
+						Matrix4x4&	SetCol(const uqword col, const HPoint& p)
 						{
 							m[0][col] = p.x;
 							m[1][col] = p.y;
@@ -155,7 +155,7 @@
 							return	*this;
 						}
 		//! Sets a column.
-						Matrix4x4&	SetCol(const udword col, const Point& p)
+						Matrix4x4&	SetCol(const uqword col, const Point& p)
 						{
 							m[0][col] = p.x;
 							m[1][col] = p.y;
@@ -200,9 +200,9 @@
 		//! Checks matrix validity
 		inline_	BOOL				IsValid()		const
 									{
-										for(udword j=0;j<4;j++)
+										for(uqword j=0;j<4;j++)
 										{
-											for(udword i=0;i<4;i++)
+											for(uqword i=0;i<4;i++)
 											{
 												if(!IsValidFloat(m[j][i]))	return FALSE;
 											}
@@ -232,7 +232,7 @@
 									}
 
 		//! Computes a cofactor. Used for matrix inversion.
-				float				CoFactor(udword row, udword col)	const;
+				float				CoFactor(uqword row, uqword col)	const;
 		//! Computes the determinant of the matrix.
 				float				Determinant()	const;
 		//! Inverts the matrix. Determinant must be different from zero, else matrix can't be inverted.

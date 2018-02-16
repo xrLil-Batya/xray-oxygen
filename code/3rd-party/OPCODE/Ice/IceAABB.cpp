@@ -203,9 +203,9 @@ const Point* AABB::GetVertexNormals()	const
  *	\return		24 indices (12 edges) indexing the list returned by ComputePoints()
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const udword* AABB::GetEdges() const
+const uqword* AABB::GetEdges() const
 {
-	static udword Indices[] = {
+	static uqword Indices[] = {
 	0, 1,	1, 2,	2, 3,	3, 0,
 	7, 6,	6, 5,	5, 4,	4, 7,
 	1, 5,	6, 2,

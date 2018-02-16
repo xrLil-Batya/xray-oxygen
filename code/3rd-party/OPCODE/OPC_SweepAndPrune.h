@@ -29,7 +29,7 @@
 	 *	\return		TRUE to continue enumeration
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	typedef BOOL	(*PairCallback)	(udword id0, udword id1, void* user_data);
+	typedef BOOL	(*PairCallback)	(uqword id0, uqword id1, void* user_data);
 
 	class SAP_Element;
 	class SAP_EndPoint;
@@ -41,23 +41,23 @@
 								SAP_PairData();
 								~SAP_PairData();
 
-				bool			Init(udword nb_objects);
+				bool			Init(uqword nb_objects);
 
-				void			AddPair(udword id1, udword id2);
-				void			RemovePair(udword id1, udword id2);
+				void			AddPair(uqword id1, uqword id2);
+				void			RemovePair(uqword id1, uqword id2);
 
 				void			DumpPairs(Pairs& pairs)								const;
 				void			DumpPairs(PairCallback callback, void* user_data)	const;
 		private:
-				udword			mNbElements;		//!< Total number of elements in the pool
-				udword			mNbUsedElements;	//!< Number of used elements
+				uqword			mNbElements;		//!< Total number of elements in the pool
+				uqword			mNbUsedElements;	//!< Number of used elements
 				SAP_Element*	mElementPool;		//!< Array of mNbElements elements
 				SAP_Element*	mFirstFree;			//!< First free element in the pool
 
-				udword			mNbObjects;			//!< Max number of objects we can handle
+				uqword			mNbObjects;			//!< Max number of objects we can handle
 				SAP_Element**	mArray;				//!< Pointers to pool
 		// Internal methods
-				SAP_Element*	GetFreeElem(udword id, SAP_Element* next, udword* remap=null);
+				SAP_Element*	GetFreeElem(uqword id, SAP_Element* next, uqword* remap=null);
 		inline_	void			FreeElem(SAP_Element* elem);
 				void			Release();
 	};
@@ -68,15 +68,15 @@
 								SweepAndPrune();
 								~SweepAndPrune();
 
-				bool			Init(udword nb_objects, const AABB** boxes);
-				bool			UpdateObject(udword i, const AABB& box);
+				bool			Init(uqword nb_objects, const AABB** boxes);
+				bool			UpdateObject(uqword i, const AABB& box);
 
 				void			GetPairs(Pairs& pairs)								const;
 				void			GetPairs(PairCallback callback, void* user_data)	const;
 		private:
 				SAP_PairData	mPairs;
 
-				udword			mNbObjects;
+				uqword			mNbObjects;
 				SAP_Box*		mBoxes;
 				SAP_EndPoint*	mList[3];
 		// Internal methods

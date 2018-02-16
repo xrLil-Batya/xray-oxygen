@@ -180,7 +180,7 @@ bool OBB::ComputeVertexNormals(Point* pts)	const
 	if(!pts)	return false;
 
 	const Point* VN = (const Point*)VertexNormals;
-	for(udword i=0;i<8;i++)
+	for(uqword i=0;i<8;i++)
 	{
 		pts[i] = VN[i] * mRot;
 	}
@@ -194,9 +194,9 @@ bool OBB::ComputeVertexNormals(Point* pts)	const
  *	\return		24 indices (12 edges) indexing the list returned by ComputePoints()
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-const udword* OBB::GetEdges() const
+const uqword* OBB::GetEdges() const
 {
-	static udword Indices[] = {
+	static uqword Indices[] = {
 	0, 1,	1, 2,	2, 3,	3, 0,
 	7, 6,	6, 5,	5, 4,	4, 7,
 	1, 5,	6, 2,
@@ -240,7 +240,7 @@ const Point* OBB::GetLocalEdgeNormals() const
  *	\param		world_normal	[out] edge normal in world space
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void OBB::ComputeWorldEdgeNormal(udword edge_index, Point& world_normal) const
+void OBB::ComputeWorldEdgeNormal(uqword edge_index, Point& world_normal) const
 {
 	ASSERT(edge_index<12);
 	world_normal = GetLocalEdgeNormals()[edge_index] * mRot;

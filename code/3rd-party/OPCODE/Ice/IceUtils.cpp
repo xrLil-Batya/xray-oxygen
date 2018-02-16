@@ -21,14 +21,14 @@ using namespace IceCore;
  *	\return		the best alignment (e.g. 1 for odd addresses, etc)
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword IceCore::Alignment(udword address)
+uqword IceCore::Alignment(uqword address)
 {
 	// Returns 0 for null addresses
 	if(!address) return 0;
 
 	// Test all bits
-	udword Align = 1;
-	for(udword i=1;i<32;i++)
+	uqword Align = 1;
+	for(uqword i=1;i<32;i++)
 	{
 		// Returns as soon as the alignment is broken
 		if(address&Align)	return Align;

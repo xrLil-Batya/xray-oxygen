@@ -89,14 +89,14 @@ static bool gFixQuantized = true;
  *	else					remaining bits are a P-node pointer, and N = P + 1
  *
  *	\relates	AABBCollisionNode
- *	\fn			_BuildCollisionTree(AABBCollisionNode* linear, const udword box_id, udword& current_id, const AABBTreeNode* current_node)
+ *	\fn			_BuildCollisionTree(AABBCollisionNode* linear, const uqword box_id, uqword& current_id, const AABBTreeNode* current_node)
  *	\param		linear			[in] base address of destination nodes
  *	\param		box_id			[in] index of destination node
  *	\param		current_id		[in] current running index
  *	\param		current_node	[in] current node from input tree
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void _BuildCollisionTree(AABBCollisionNode* linear, const udword box_id, udword& current_id, const AABBTreeNode* current_node)
+static void _BuildCollisionTree(AABBCollisionNode* linear, const uqword box_id, uqword& current_id, const AABBTreeNode* current_node)
 {
 	// Current node from input tree is "current_node". Must be flattened into "linear[boxid]".
 
@@ -109,17 +109,17 @@ static void _BuildCollisionTree(AABBCollisionNode* linear, const udword box_id, 
 		// The input tree must be complete => i.e. one primitive/leaf
 		ASSERT(current_node->GetNbPrimitives()==1);
 		// Get the primitive index from the input tree
-		udword PrimitiveIndex = current_node->GetPrimitives()[0];
+		uqword PrimitiveIndex = current_node->GetPrimitives()[0];
 		// Setup box data as the primitive index, marked as leaf
 		linear[box_id].mData = (PrimitiveIndex<<1)|1;
 	}
 	else
 	{
 		// To make the negative one implicit, we must store P and N in successive order
-		udword PosID = current_id++;	// Get a new id for positive child
-		udword NegID = current_id++;	// Get a new id for negative child
+		uqword PosID = current_id++;	// Get a new id for positive child
+		uqword NegID = current_id++;	// Get a new id for negative child
 		// Setup box data as the forthcoming new P pointer
-		linear[box_id].mData = (udword)&linear[PosID];
+		linear[box_id].mData = (uqword)&linear[PosID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[box_id].mData&1));
 		// Recurse with new IDs
@@ -140,14 +140,14 @@ static void _BuildCollisionTree(AABBCollisionNode* linear, const udword box_id, 
  *			- N pointer => a node (LSB=0) or a primitive (LSB=1)
  *
  *	\relates	AABBNoLeafNode
- *	\fn			_BuildNoLeafTree(AABBNoLeafNode* linear, const udword box_id, udword& current_id, const AABBTreeNode* current_node)
+ *	\fn			_BuildNoLeafTree(AABBNoLeafNode* linear, const uqword box_id, uqword& current_id, const AABBTreeNode* current_node)
  *	\param		linear			[in] base address of destination nodes
  *	\param		box_id			[in] index of destination node
  *	\param		current_id		[in] current running index
  *	\param		current_node	[in] current node from input tree
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword box_id, udword& current_id, const AABBTreeNode* current_node)
+static void _BuildNoLeafTree(AABBNoLeafNode* linear, const uqword box_id, uqword& current_id, const AABBTreeNode* current_node)
 {
 	const AABBTreeNode* P = current_node->GetPos();
 	const AABBTreeNode* N = current_node->GetNeg();
@@ -163,16 +163,16 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword box_id, udword
 		// The input tree must be complete => i.e. one primitive/leaf
 		ASSERT(P->GetNbPrimitives()==1);
 		// Get the primitive index from the input tree
-		udword PrimitiveIndex = P->GetPrimitives()[0];
+		uqword PrimitiveIndex = P->GetPrimitives()[0];
 		// Setup prev box data as the primitive index, marked as leaf
 		linear[box_id].mPosData = (PrimitiveIndex<<1)|1;
 	}
 	else
 	{
 		// Get a new id for positive child
-		udword PosID = current_id++;
+		uqword PosID = current_id++;
 		// Setup box data
-		linear[box_id].mPosData = (udword)&linear[PosID];
+		linear[box_id].mPosData = (uqword)&linear[PosID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[box_id].mPosData&1));
 		// Recurse
@@ -184,16 +184,16 @@ static void _BuildNoLeafTree(AABBNoLeafNode* linear, const udword box_id, udword
 		// The input tree must be complete => i.e. one primitive/leaf
 		ASSERT(N->GetNbPrimitives()==1);
 		// Get the primitive index from the input tree
-		udword PrimitiveIndex = N->GetPrimitives()[0];
+		uqword PrimitiveIndex = N->GetPrimitives()[0];
 		// Setup prev box data as the primitive index, marked as leaf
 		linear[box_id].mNegData = (PrimitiveIndex<<1)|1;
 	}
 	else
 	{
 		// Get a new id for negative child
-		udword NegID = current_id++;
+		uqword NegID = current_id++;
 		// Setup box data
-		linear[box_id].mNegData = (udword)&linear[NegID];
+		linear[box_id].mNegData = (uqword)&linear[NegID];
 		// Make sure it's not marked as leaf
 		ASSERT(!(linear[box_id].mNegData&1));
 		// Recurse
@@ -232,8 +232,8 @@ bool AABBCollisionTree::Build(AABBTree* tree)
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	uqword NbTriangles	= tree->GetNbPrimitives();
+	uqword NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -246,7 +246,7 @@ bool AABBCollisionTree::Build(AABBTree* tree)
 	}
 
 	// Build the tree
-	udword CurID = 1;
+	uqword CurID = 1;
 	_BuildCollisionTree(mNodes, 0, CurID, tree);
 	ASSERT(CurID==mNbNodes);
 
@@ -327,8 +327,8 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	uqword NbTriangles	= tree->GetNbPrimitives();
+	uqword NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -341,7 +341,7 @@ bool AABBNoLeafTree::Build(AABBTree* tree)
 	}
 
 	// Build the tree
-	udword CurID = 1;
+	uqword CurID = 1;
 	_BuildNoLeafTree(mNodes, 0, CurID, tree);
 	ASSERT(CurID==mNbNodes);
 
@@ -386,7 +386,7 @@ bool AABBNoLeafTree::Refit(const MeshInterface* mesh_interface)
 	VertexPointers VP;
 	Point Min,Max;
 	Point Min_,Max_;
-	udword Index = mNbNodes;
+	uqword Index = mNbNodes;
 	while(Index--)
 	{
 		AABBNoLeafNode& Current = mNodes[Index];
@@ -478,7 +478,7 @@ bool AABBNoLeafTree::Walk(GenericWalkingCallback callback, void* user_data) cons
 	/* Get max values */																		\
 	Point CMax(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);												\
 	Point EMax(MIN_FLOAT, MIN_FLOAT, MIN_FLOAT);												\
-	for(udword i=0;i<mNbNodes;i++)																\
+	for(uqword i=0;i<mNbNodes;i++)																\
 	{																							\
 		if(fabsf(Nodes[i].mAABB.mCenter.x)>CMax.x)	CMax.x = fabsf(Nodes[i].mAABB.mCenter.x);	\
 		if(fabsf(Nodes[i].mAABB.mCenter.y)>CMax.y)	CMax.y = fabsf(Nodes[i].mAABB.mCenter.y);	\
@@ -489,8 +489,8 @@ bool AABBNoLeafTree::Walk(GenericWalkingCallback callback, void* user_data) cons
 	}
 
 #define INIT_QUANTIZATION													\
-	udword nbc=15;	/* Keep one bit for sign */								\
-	udword nbe=15;	/* Keep one bit for fix */								\
+	uqword nbc=15;	/* Keep one bit for sign */								\
+	uqword nbe=15;	/* Keep one bit for fix */								\
 	if(!gFixQuantized) nbe++;												\
 																			\
 	/* Compute quantization coeffs */										\
@@ -524,7 +524,7 @@ bool AABBNoLeafTree::Walk(GenericWalkingCallback callback, void* user_data) cons
 		Point Max = Nodes[i].mAABB.mCenter + Nodes[i].mAABB.mExtents;				\
 		Point Min = Nodes[i].mAABB.mCenter - Nodes[i].mAABB.mExtents;				\
 		/* For each axis */															\
-		for(udword j=0;j<3;j++)														\
+		for(uqword j=0;j<3;j++)														\
 		{	/* Dequantize the box center */											\
 			float qc = float(mNodes[i].mAABB.mCenter[j]) * mCenterCoeff[j];			\
 			bool FixMe=true;														\
@@ -550,8 +550,8 @@ bool AABBNoLeafTree::Walk(GenericWalkingCallback callback, void* user_data) cons
 	if(!(Data&1))													\
 	{																\
 		/* Compute box number */									\
-		udword Nb = (Data - udword(Nodes))/Nodes[i].GetNodeSize();	\
-		Data = udword(&mNodes[Nb]);									\
+		uqword Nb = (Data - uqword(Nodes))/Nodes[i].GetNodeSize();	\
+		Data = uqword(&mNodes[Nb]);									\
 	}																\
 	/* ...remapped */												\
 	mNodes[i].member = Data;
@@ -587,8 +587,8 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	uqword NbTriangles	= tree->GetNbPrimitives();
+	uqword NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -598,7 +598,7 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 	CHECKALLOC(Nodes);
 
 	// Build the tree
-	udword CurID = 1;
+	uqword CurID = 1;
 	_BuildCollisionTree(Nodes, 0, CurID, tree);
 
 	// Quantize
@@ -613,8 +613,8 @@ bool AABBQuantizedTree::Build(AABBTree* tree)
 		INIT_QUANTIZATION
 
 		// Quantize
-		udword Data;
-		for(udword i=0;i<mNbNodes;i++)
+		uqword Data;
+		for(uqword i=0;i<mNbNodes;i++)
 		{
 			PERFORM_QUANTIZATION
 			REMAP_DATA(mData)
@@ -701,8 +701,8 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 	// Checkings
 	if(!tree)	return false;
 	// Check the input tree is complete
-	udword NbTriangles	= tree->GetNbPrimitives();
-	udword NbNodes		= tree->GetNbNodes();
+	uqword NbTriangles	= tree->GetNbPrimitives();
+	uqword NbNodes		= tree->GetNbNodes();
 	if(NbNodes!=NbTriangles*2-1)	return false;
 
 	// Get nodes
@@ -712,7 +712,7 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 	CHECKALLOC(Nodes);
 
 	// Build the tree
-	udword CurID = 1;
+	uqword CurID = 1;
 	_BuildNoLeafTree(Nodes, 0, CurID, tree);
 	ASSERT(CurID==mNbNodes);
 
@@ -728,8 +728,8 @@ bool AABBQuantizedNoLeafTree::Build(AABBTree* tree)
 		INIT_QUANTIZATION
 
 		// Quantize
-		udword Data;
-		for(udword i=0;i<mNbNodes;i++)
+		uqword Data;
+		for(uqword i=0;i<mNbNodes;i++)
 		{
 			PERFORM_QUANTIZATION
 			REMAP_DATA(mPosData)

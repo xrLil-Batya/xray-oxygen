@@ -29,14 +29,14 @@
 		//! Constructor
 		inline_					Sphere(const Point& center, float radius) : mCenter(center), mRadius(radius)	{}
 		//! Constructor
-								Sphere(udword nb_verts, const Point* verts);
+								Sphere(uqword nb_verts, const Point* verts);
 		//! Copy constructor
 		inline_					Sphere(const Sphere& sphere) : mCenter(sphere.mCenter), mRadius(sphere.mRadius)	{}
 		//! Destructor
 		inline_					~Sphere()																		{}
 
-				BSphereMethod	Compute(udword nb_verts, const Point* verts);
-				bool			FastCompute(udword nb_verts, const Point* verts);
+				BSphereMethod	Compute(uqword nb_verts, const Point* verts);
+				bool			FastCompute(uqword nb_verts, const Point* verts);
 
 		// Access methods
 		inline_	const Point&	GetCenter()						const		{ return mCenter; }

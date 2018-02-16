@@ -48,7 +48,7 @@
 	typedef signed short		sword;		//!< sizeof(sword)	must be 2
 	typedef unsigned short		uword;		//!< sizeof(uword)	must be 2
 	typedef signed int			sdword;		//!< sizeof(sdword)	must be 4
-	typedef unsigned int		udword;		//!< sizeof(udword)	must be 4
+	typedef unsigned int		udword;		//!< sizeof(uqword)	must be 4
 	typedef signed __int64		sqword;		//!< sizeof(sqword)	must be 8
 	typedef unsigned __int64	uqword;		//!< sizeof(uqword)	must be 8
 	typedef float				float32;	//!< sizeof(float32)	must be 4
@@ -67,14 +67,14 @@
 	//! TO BE DOCUMENTED
 	#define DECLARE_ICE_HANDLE(name)	struct name##__ { int unused; }; typedef struct name##__ *name
 
-	typedef udword				DynID;		//!< Dynamic identifier
+	typedef uqword				DynID;		//!< Dynamic identifier
 #ifdef USE_HANDLE_MANAGER
-	typedef udword				KID;		//!< Kernel ID
+	typedef uqword				KID;		//!< Kernel ID
 //	DECLARE_ICE_HANDLE(KID);
 #else
 	typedef uword				KID;		//!< Kernel ID
 #endif
-	typedef udword				RTYPE;		//!< Relationship-type (!) between owners and references
+	typedef uqword				RTYPE;		//!< Relationship-type (!) between owners and references
 	#define	INVALID_ID			0xffffffff	//!< Invalid dword ID (counterpart of null pointers)
 #ifdef USE_HANDLE_MANAGER
 	#define	INVALID_KID			0xffffffff	//!< Invalid Kernel ID
@@ -94,10 +94,10 @@
 		sdword	d;							//!< The integer
 	}scell;
 
-	//! Union of a float and a udword
+	//! Union of a float and a uqword
 	typedef union {
 		float	f;							//!< The float
-		udword	d;							//!< The integer
+		uqword	d;							//!< The integer
 	}ucell;
 
 	// Type ranges
@@ -111,8 +111,8 @@
 	#define	MIN_UWORD				0x0000						//!< min possible uword value
 	#define	MAX_SDWORD				0x7fffffff					//!< max possible sdword value
 	#define	MIN_SDWORD				0x80000000					//!< min possible sdword value
-	#define	MAX_UDWORD				0xffffffff					//!< max possible udword value
-	#define	MIN_UDWORD				0x00000000					//!< min possible udword value
+	#define	MAX_uqword				0xffffffff					//!< max possible uqword value
+	#define	MIN_uqword				0x00000000					//!< min possible uqword value
 	#define	MAX_FLOAT				FLT_MAX						//!< max possible float value
 	#define	MIN_FLOAT				(-FLT_MAX)					//!< min possible loat value
 	#define IEEE_1_0				0x3f800000					//!< integer representation of 1.0
@@ -124,7 +124,7 @@
 	#define ONE_OVER_RAND_MAX		(1.0f / float(RAND_MAX))	//!< Inverse of the max possible value returned by rand()
 
 //	typedef int					(__stdcall* PROC)();			//!< A standard procedure call.
-	typedef bool				(*ENUMERATION)(udword value, udword param, udword context);	//!< ICE standard enumeration call
+	typedef bool				(*ENUMERATION)(uqword value, uqword param, uqword context);	//!< ICE standard enumeration call
 	typedef	void**				VTABLE;							//!< A V-Table.
 
 	#undef		MIN

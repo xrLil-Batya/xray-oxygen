@@ -137,7 +137,7 @@ PartVal Triangle::TestAgainstPlane(const Plane& plane, float epsilon) const
 	bool Pos = false, Neg = false;
 
 	// Loop through all vertices
-	for(udword i=0;i<3;i++)
+	for(uqword i=0;i<3;i++)
 	{
 		// Compute side:
 		sdword Side = VPlaneSideEps(mVerts[i], plane, epsilon);
@@ -248,7 +248,7 @@ float Triangle::MaxEdgeLength()	const
  *	\param		nearvtx		[out] index of nearest vertex
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-void Triangle::ComputePoint(float u, float v, Point& pt, udword* nearvtx)	const
+void Triangle::ComputePoint(float u, float v, Point& pt, uqword* nearvtx)	const
 {
 	// Compute point coordinates
 	pt = (1.0f - u - v)*mVerts[0] + u*mVerts[1] + v*mVerts[2];
@@ -275,7 +275,7 @@ void Triangle::Inflate(float fat_coeff, bool constant_border)
 	// Don't normalize?
 	// Normalize => add a constant border, regardless of triangle size
 	// Don't => add more to big triangles
-	for(udword i=0;i<3;i++)
+	for(uqword i=0;i<3;i++)
 	{
 		Point v = mVerts[i] - TriangleCenter;
 

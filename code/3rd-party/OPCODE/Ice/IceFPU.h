@@ -14,7 +14,7 @@
 #define	SIGN_BITMASK			0x80000000
 
 //! Integer representation of a floating-point value.
-#define IR(x)					((udword&)(x))
+#define IR(x)					((uqword&)(x))
 
 //! Signed integer representation of a floating-point value.
 #define SIR(x)					((sdword&)(x))
@@ -33,7 +33,7 @@
 //! Don't use it blindy, it can be faster or slower than the FPU comparison, depends on the context.
 inline_ float FastFabs(float x)
 {
-	udword FloatBits = IR(x) & 0x7fffffff;
+	uqword FloatBits = IR(x) & 0x7fffffff;
 	return FR(FloatBits);
 }
 
@@ -51,7 +51,7 @@ inline_ float FastSqrt(float* square)
 //! Saturates positive to zero.
 inline_ float fsat(float f)
 {
-	udword y = (udword&)f & ~((sdword&)f >> 31);
+	uqword y = (uqword&)f & ~((sdword&)f >> 31);
 	return (float&)y;
 }
 
@@ -59,7 +59,7 @@ inline_ float fsat(float f)
 inline_ float frsqrt(float f)
 {
 	float x = f * 0.5f;
-	udword y = 0x5f3759df - ((udword&)f >> 1);
+	uqword y = 0x5f3759df - ((uqword&)f >> 1);
 	// Iteration...
 	(float&)y = (float&)y * (1.5f - (x * (float&)y * (float&)y));
 	// Result
@@ -69,7 +69,7 @@ inline_ float frsqrt(float f)
 //! Computes 1.0f / sqrtf(x). Comes from NVIDIA.
 inline_ float InvSqrt(const float& x)
 {
-	udword tmp = (udword(IEEE_1_0 << 1) + IEEE_1_0 - *(udword*)&x) >> 1;
+	uqword tmp = (uqword(IEEE_1_0 << 1) + IEEE_1_0 - *(uqword*)&x) >> 1;
 	float y = *(float*)&tmp;
 	return y * (1.47f - 0.47f * x * y * y);
 }
@@ -95,7 +95,7 @@ inline_ float RSqrt(float number)
 //! TO BE DOCUMENTED
 inline_ float fsqrt(float f)
 {
-	udword y = (((sdword&)f - 0x3f800000) >> 1) + 0x3f800000;
+	uqword y = (((sdword&)f - 0x3f800000) >> 1) + 0x3f800000;
 	// Iteration...?
 	// (float&)y = (3.0f - ((float&)y * (float&)y) / f) * (float&)y * 0.5f;
 	// Result
@@ -105,8 +105,8 @@ inline_ float fsqrt(float f)
 //! Returns the float ranged espilon value.
 inline_ float fepsilon(float f)
 {
-	udword b = (udword&)f & 0xff800000;
-	udword a = b | 0x00000001;
+	uqword b = (uqword&)f & 0xff800000;
+	uqword a = b | 0x00000001;
 	(float&)a -= (float&)b;
 	// Result
 	return (float&)a;
@@ -164,7 +164,7 @@ fldcw   wTemp
 inline_ float ComputeFloatEpsilon()
 {
 	float f = 1.0f;
-	((udword&)f) ^= 1;
+	((uqword&)f) ^= 1;
 	return f - 1.0f;	// You can check it's the same as FLT_EPSILON
 }
 

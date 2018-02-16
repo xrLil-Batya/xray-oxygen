@@ -137,10 +137,10 @@ void HybridModel::Release()
 			DELETEARRAY(mLeaves);
 		}
 
-		udword			mNbLeaves;
+		uqword			mNbLeaves;
 		AABB*			mLeaves;
 		LeafTriangles*	mTriangles;
-		const udword*	mBase;
+		const uqword*	mBase;
 	};
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -156,7 +156,7 @@ bool HybridModel::Build(const OPCODECREATE& create)
 	if(!create.mIMesh || !create.mIMesh->IsValid())	return false;
 
 	// Look for degenerate faces.
-	udword NbDegenerate = create.mIMesh->CheckTopology();
+	uqword NbDegenerate = create.mIMesh->CheckTopology();
 	if(NbDegenerate)	Log("OPCODE WARNING: found %d degenerate faces in model! Collision might report wrong results!\n", NbDegenerate);
 	// We continue nonetheless.... 
 
@@ -188,7 +188,7 @@ bool HybridModel::Build(const OPCODECREATE& create)
 	struct Local
 	{
 		// A callback to count leaf nodes
-		static bool CountLeaves(const AABBTreeNode* current, udword depth, void* user_data)
+		static bool CountLeaves(const AABBTreeNode* current, uqword depth, void* user_data)
 		{
 			if(current->IsLeaf())
 			{
@@ -199,7 +199,7 @@ bool HybridModel::Build(const OPCODECREATE& create)
 		}
 
 		// A callback to setup leaf nodes in our internal structures
-		static bool SetupLeafData(const AABBTreeNode* current, udword depth, void* user_data)
+		static bool SetupLeafData(const AABBTreeNode* current, uqword depth, void* user_data)
 		{
 			if(current->IsLeaf())
 			{
@@ -209,7 +209,7 @@ bool HybridModel::Build(const OPCODECREATE& create)
 				Data->mLeaves[Data->mNbLeaves] = *current->GetAABB();
 
 				// Setup leaf data
-				udword Index = (udword(current->GetPrimitives()) - udword(Data->mBase))/sizeof(udword);
+				uqword Index = (uqword(current->GetPrimitives()) - uqword(Data->mBase))/sizeof(uqword);
 				Data->mTriangles[Data->mNbLeaves].SetData(current->GetNbPrimitives(), Index);
 
 				Data->mNbLeaves++;
@@ -259,8 +259,8 @@ bool HybridModel::Build(const OPCODECREATE& create)
 		{
 			// Keep track of source indices (from vanilla tree)
 			mNbPrimitives = mSource->GetNbPrimitives();
-			mIndices = new udword[mNbPrimitives];
-			CopyMemory(mIndices, mSource->GetIndices(), mNbPrimitives*sizeof(udword));
+			mIndices = new uqword[mNbPrimitives];
+			CopyMemory(mIndices, mSource->GetIndices(), mNbPrimitives*sizeof(uqword));
 		}
 	}
 
@@ -300,11 +300,11 @@ FreeAndExit:	// Allow me this one...
  *	\return		amount of bytes used
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-udword HybridModel::GetUsedBytes() const
+uqword HybridModel::GetUsedBytes() const
 {
-	udword UsedBytes = 0;
+	uqword UsedBytes = 0;
 	if(mTree)		UsedBytes += mTree->GetUsedBytes();
-	if(mIndices)	UsedBytes += mNbPrimitives * sizeof(udword);	// mIndices
+	if(mIndices)	UsedBytes += mNbPrimitives * sizeof(uqword);	// mIndices
 	if(mTriangles)	UsedBytes += mNbLeaves * sizeof(LeafTriangles);	// mTriangles
 	return UsedBytes;
 }
@@ -348,13 +348,13 @@ bool HybridModel::Refit()
 	if(HasLeafNodes())	return false;
 
 	const LeafTriangles* LT = GetLeafTriangles();
-	const udword* Indices = GetIndices();
+	const uqword* Indices = GetIndices();
 
 	// Bottom-up update
 	VertexPointers VP;
 	Point Min,Max;
 	Point Min_,Max_;
-	udword Index = mTree->GetNbNodes();
+	uqword Index = mTree->GetNbNodes();
 	AABBNoLeafNode* Nodes = (AABBNoLeafNode*)((AABBNoLeafTree*)mTree)->GetNodes();
 	while(Index--)
 	{
@@ -370,10 +370,10 @@ bool HybridModel::Refit()
 			Point TmpMin, TmpMax;
 
 			// Each leaf box has a set of triangles
-			udword NbTris = CurrentLeaf.GetNbTriangles();
+			uqword NbTris = CurrentLeaf.GetNbTriangles();
 			if(Indices)
 			{
-				const udword* T = &Indices[CurrentLeaf.GetTriangleIndex()];
+				const uqword* T = &Indices[CurrentLeaf.GetTriangleIndex()];
 
 				// Loop through triangles and test each of them
 				while(NbTris--)
@@ -386,7 +386,7 @@ bool HybridModel::Refit()
 			}
 			else
 			{
-				udword BaseIndex = CurrentLeaf.GetTriangleIndex();
+				uqword BaseIndex = CurrentLeaf.GetTriangleIndex();
 
 				// Loop through triangles and test each of them
 				while(NbTris--)
@@ -415,10 +415,10 @@ bool HybridModel::Refit()
 			Point TmpMin, TmpMax;
 
 			// Each leaf box has a set of triangles
-			udword NbTris = CurrentLeaf.GetNbTriangles();
+			uqword NbTris = CurrentLeaf.GetNbTriangles();
 			if(Indices)
 			{
-				const udword* T = &Indices[CurrentLeaf.GetTriangleIndex()];
+				const uqword* T = &Indices[CurrentLeaf.GetTriangleIndex()];
 
 				// Loop through triangles and test each of them
 				while(NbTris--)
@@ -431,7 +431,7 @@ bool HybridModel::Refit()
 			}
 			else
 			{
-				udword BaseIndex = CurrentLeaf.GetTriangleIndex();
+				uqword BaseIndex = CurrentLeaf.GetTriangleIndex();
 
 				// Loop through triangles and test each of them
 				while(NbTris--)

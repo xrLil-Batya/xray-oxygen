@@ -47,7 +47,7 @@
 	 *	\param		user_data		[in] user-defined data from SetCallback()
 	 */
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	typedef void	(*RequestCallback)	(udword triangle_index, VertexPointers& triangle, void* user_data);
+	typedef void	(*RequestCallback)	(uqword triangle_index, VertexPointers& triangle, void* user_data);
 #endif
 
 	class OPCODE_API MeshInterface
@@ -57,10 +57,10 @@
 											MeshInterface();
 											~MeshInterface();
 		// Common settings
-		inline_			udword				GetNbTriangles()	const	{ return mNbTris;	}
-		inline_			udword				GetNbVertices()		const	{ return mNbVerts;	}
-		inline_			void				SetNbTriangles(udword nb)	{ mNbTris = nb;		}
-		inline_			void				SetNbVertices(udword nb)	{ mNbVerts = nb;	}
+		inline_			uqword				GetNbTriangles()	const	{ return mNbTris;	}
+		inline_			uqword				GetNbVertices()		const	{ return mNbVerts;	}
+		inline_			void				SetNbTriangles(uqword nb)	{ mNbTris = nb;		}
+		inline_			void				SetNbVertices(uqword nb)	{ mNbVerts = nb;	}
 
 #ifdef OPC_USE_CALLBACKS
 		// Callback settings
@@ -102,9 +102,9 @@
 		 *	\return		true if success
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						bool				SetStrides(udword tri_stride=sizeof(IndexedTriangle), udword vertex_stride=sizeof(Point));
-		inline_			udword				GetTriStride()		const	{ return mTriStride;	}
-		inline_			udword				GetVertexStride()	const	{ return mVertexStride;	}
+						bool				SetStrides(uqword tri_stride=sizeof(IndexedTriangle), uqword vertex_stride=sizeof(Point));
+		inline_			uqword				GetTriStride()		const	{ return mTriStride;	}
+		inline_			uqword				GetVertexStride()	const	{ return mVertexStride;	}
 	#endif
 #endif
 
@@ -115,7 +115,7 @@
 		 *	\param		index	[in] triangle index
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			void				GetTriangle(VertexPointers& vp, udword index)	const
+		inline_			void				GetTriangle(VertexPointers& vp, uqword index)	const
 											{
 #ifdef OPC_USE_CALLBACKS
 												(mObjCallback)(index, vp, mUserData);
@@ -142,7 +142,7 @@
 		 *	\return		true if success
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		inline_			bool				RemapClient(udword nb_indices, const udword* permutation)	const;
+		inline_			bool				RemapClient(uqword nb_indices, const uqword* permutation)	const;
 
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
@@ -159,11 +159,11 @@
 		 *	\return		number of degenerate faces
 		 */
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-						udword				CheckTopology()	const;
+						uqword				CheckTopology()	const;
 		private:
 
-						udword				mNbTris;			//!< Number of triangles in the input model
-						udword				mNbVerts;			//!< Number of vertices in the input model
+						uqword				mNbTris;			//!< Number of triangles in the input model
+						uqword				mNbVerts;			//!< Number of vertices in the input model
 #ifdef OPC_USE_CALLBACKS
 		// User callback
 						void*				mUserData;			//!< User-defined data sent to callback
@@ -173,8 +173,8 @@
 				const	IndexedTriangle*	mTris;				//!< Array of indexed triangles
 				const	Point*				mVerts;				//!< Array of vertices
 	#ifdef OPC_USE_STRIDE
-						udword				mTriStride;			//!< Possible triangle stride in bytes [Opcode 1.3]
-						udword				mVertexStride;		//!< Possible vertex stride in bytes [Opcode 1.3]
+						uqword				mTriStride;			//!< Possible triangle stride in bytes [Opcode 1.3]
+						uqword				mVertexStride;		//!< Possible vertex stride in bytes [Opcode 1.3]
 	#endif
 #endif
 	};

@@ -13,12 +13,12 @@
 
 using namespace IceCore;
 
-void IceCore::	SRand(udword seed)
+void IceCore::	SRand(uqword seed)
 {
 	srand(seed);
 }
 
-udword IceCore::Rand()
+uqword IceCore::Rand()
 {
 	return rand();
 }
@@ -26,10 +26,10 @@ udword IceCore::Rand()
 
 static BasicRandom gRandomGenerator(42);
 
-udword IceCore::GetRandomIndex(udword max_index)
+uqword IceCore::GetRandomIndex(uqword max_index)
 {
 	// We don't use rand() since it's limited to RAND_MAX
-	udword Index = gRandomGenerator.Randomize();
+	uqword Index = gRandomGenerator.Randomize();
 	return Index % max_index;
 }
 
