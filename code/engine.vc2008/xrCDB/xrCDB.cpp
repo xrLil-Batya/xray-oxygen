@@ -3,7 +3,6 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-#pragma comment(lib, "opc.lib")
 #include "xrCDB.h"
 
 #ifdef USE_ARENA_ALLOCATOR
@@ -13,7 +12,9 @@ doug_lea_allocator	g_collision_allocator(s_fake_array, s_arena_size, "collision"
 #endif // #ifdef USE_ARENA_ALLOCATOR
 
 namespace Opcode {
+#	include "../../3rd-party/OPCODE/Opcode.h"
 #	include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
+#	include "../../3rd-party/OPCODE/OPC_Model.h"
 } // namespace Opcode
 
 using namespace CDB;
@@ -63,7 +64,7 @@ struct	BTHREAD_params
     bool                rebuildTrisRequired;
 };
 
-void	MODEL::build_thread(void *params)
+void MODEL::build_thread(void *params)
 {
 	_initialize_cpu_thread();
 	FPU::m64r();
@@ -73,7 +74,7 @@ void	MODEL::build_thread(void *params)
 	P.M->status = S_READY;
 }
 
-void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
+void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
 {
 	R_ASSERT(S_INIT == status);
 	R_ASSERT((Vcnt >= 4) && (Tcnt >= 2));
@@ -97,7 +98,7 @@ void CDB::MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* b
 	}
 }
 
-void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
+void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc/*=nullptr*/, void* bcp/*=nullptr*/, bool rebuildTrisRequired /*= true*/)
 {
 	// verts
 	verts_count = Vcnt;
@@ -148,17 +149,18 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	}
 
 	// Build a non quantized no-leaf tree
-	OPCODECREATE	OPCC;
-	OPCC.NbTris = tris_count;
-	OPCC.NbVerts = verts_count;
-	OPCC.Tris = temp_tris;
-	OPCC.Verts = (Point*)verts;
-	OPCC.Rules = SPLIT_COMPLETE | SPLIT_SPLATTERPOINTS | SPLIT_GEOMCENTER;
-	OPCC.NoLeaf = true;
-	OPCC.Quantized = false;
-	// if (Memory.debug_mode) OPCC.KeepOriginal = true;
+	OPCODECREATE OPCC = OPCODECREATE();
+	OPCC.mIMesh = new MeshInterface();
 
-	tree = CNEW(OPCODE_Model) ();
+	OPCC.mIMesh->SetNbTriangles(tris_count);
+	OPCC.mIMesh->SetNbVertices(verts_count);
+	OPCC.mIMesh->SetPointers((IndexedTriangle*)temp_tris, (Point*)verts);
+
+	OPCC.mSettings.mRules = SplittingRules::SPLIT_SPLATTER_POINTS | SplittingRules::SPLIT_GEOM_CENTER;
+	OPCC.mQuantized = false;
+	OPCC.mNoLeaf = true;
+
+	tree = CNEW(Model)();
 	if (!tree->Build(OPCC)) 
 	{
 		xr_free(verts);
@@ -172,12 +174,12 @@ void CDB::MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, build_ca
 	return;
 }
 
-u32 MODEL::memory()
+size_t MODEL::memory()
 {
 	if (S_BUILD == status)
 	{
 		Msg("! xrCDB: model still isn't ready"); 
-		return 0;
+		return 0u;
 	}
 	const u32 V = verts_count * sizeof(Fvector);
 	const u32 T = tris_count * sizeof(TRI);

@@ -8,10 +8,10 @@
  *	\param		extents			[in] box extents
  *	\param		out_clip_mask	[out] bitmask for active planes
  *	\param		in_clip_mask	[in] bitmask for active planes
- *	\return		true if boxes overlap planes
+ *	\return		TRUE if boxes overlap planes
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ bool PlanesCollider::PlanesAABBOverlap(const Point& center, const Point& extents, udword& out_clip_mask, udword in_clip_mask)
+inline_ BOOL PlanesCollider::PlanesAABBOverlap(const Point& center, const Point& extents, uqword& out_clip_mask, uqword in_clip_mask)
 {
 	// Stats
 	mNbVolumeBVTests++;
@@ -26,8 +26,8 @@ inline_ bool PlanesCollider::PlanesAABBOverlap(const Point& center, const Point&
 	// to be outside any of the planes. The loop also constructs a new output
 	// clip mask. Most FPUs have a native single-cycle fabsf() operation.
 
-	udword Mask				= 1;			// current mask index (1,2,4,8,..)
-	udword TmpOutClipMask	= 0;			// initialize output clip mask into empty. 
+	uqword Mask				= 1;			// current mask index (1,2,4,8,..)
+	uqword TmpOutClipMask	= 0;			// initialize output clip mask into empty. 
 
 	while(Mask<=in_clip_mask)				// keep looping while we have active planes left...
 	{
@@ -37,7 +37,7 @@ inline_ bool PlanesCollider::PlanesAABBOverlap(const Point& center, const Point&
 			float MP = center.x*p->n.x + center.y*p->n.y + center.z*p->n.z + p->d;
 
 			if(NP < MP)						// near vertex behind the clip plane... 
-				return false;				// .. so there is no intersection..
+				return FALSE;				// .. so there is no intersection..
 			if((-NP) < MP)					// near and far vertices on different sides of plane..
 				TmpOutClipMask |= Mask;		// .. so update the clip mask...
 		}
@@ -46,5 +46,5 @@ inline_ bool PlanesCollider::PlanesAABBOverlap(const Point& center, const Point&
 	}
 
 	out_clip_mask = TmpOutClipMask;			// copy output value (temp used to resolve aliasing!)
-	return true;							// indicate that AABB intersects frustum
+	return TRUE;							// indicate that AABB intersects frustum
 }

@@ -3,18 +3,17 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
  *	Computes a ray-triangle intersection test.
- *	From Tomas Möller's "Fast Minimum Storage Ray-Triangle Intersection"
+ *	Original code from Tomas Möller's "Fast Minimum Storage Ray-Triangle Intersection".
+ *	It's been optimized a bit with integer code, and modified to return a non-intersection if distance from
+ *	ray origin to triangle is negative.
  *
  *	\param		vert0	[in] triangle vertex
  *	\param		vert1	[in] triangle vertex
  *	\param		vert2	[in] triangle vertex
- *	\param		t		[out] distance
- *	\param		u		[out] impact barycentric coordinate
- *	\param		v		[out] impact barycentric coordinate
- *	\return		true on overlap
+ *	\return		true on overlap. mStabbedFace is filled with relevant info.
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ bool RayCollider::RayTriOverlap(const Point& vert0, const Point& vert1, const Point& vert2)
+inline_ BOOL RayCollider::RayTriOverlap(const Point& vert0, const Point& vert1, const Point& vert2)
 {
 	// Stats
 	mNbRayPrimTests++;
@@ -31,7 +30,7 @@ inline_ bool RayCollider::RayTriOverlap(const Point& vert0, const Point& vert1, 
 
 	if(mCulling)
 	{
-		if(det<LOCAL_EPSILON)														return false;
+		if(det<LOCAL_EPSILON)														return FALSE;
 		// From here, det is > 0. So we can use integer cmp.
 
 		// Calculate distance from vert0 to ray origin
@@ -39,46 +38,52 @@ inline_ bool RayCollider::RayTriOverlap(const Point& vert0, const Point& vert1, 
 
 		// Calculate U parameter and test bounds
 		mStabbedFace.mU = tvec|pvec;
-//		if(IR(u)&0x80000000 || u>det)					return false;
-		if(IR(mStabbedFace.mU)&0x80000000 || IR(mStabbedFace.mU)>IR(det))			return false;
+//		if(IR(u)&0x80000000 || u>det)					return FALSE;
+		if(IS_NEGATIVE_FLOAT(mStabbedFace.mU) || IR(mStabbedFace.mU)>IR(det))		return FALSE;
 
 		// Prepare to test V parameter
 		Point qvec = tvec^edge1;
 
 		// Calculate V parameter and test bounds
 		mStabbedFace.mV = mDir|qvec;
-		if(IR(mStabbedFace.mV)&0x80000000 || mStabbedFace.mU+mStabbedFace.mV>det)	return false;
+		if(IS_NEGATIVE_FLOAT(mStabbedFace.mV) || mStabbedFace.mU+mStabbedFace.mV>det)	return FALSE;
 
 		// Calculate t, scale parameters, ray intersects triangle
 		mStabbedFace.mDistance = edge2|qvec;
-		float inv_det = 1.0f / det;
-		mStabbedFace.mDistance *= inv_det;
-		mStabbedFace.mU *= inv_det;
-		mStabbedFace.mV *= inv_det;
+		// Det > 0 so we can early exit here
+		// Intersection point is valid if distance is positive (else it can just be a face behind the orig point)
+		if(IS_NEGATIVE_FLOAT(mStabbedFace.mDistance))								return FALSE;
+		// Else go on
+		float OneOverDet = 1.0f / det;
+		mStabbedFace.mDistance *= OneOverDet;
+		mStabbedFace.mU *= OneOverDet;
+		mStabbedFace.mV *= OneOverDet;
 	}
 	else
 	{
 		// the non-culling branch
-		if(det>-LOCAL_EPSILON && det<LOCAL_EPSILON)									return false;
-		float inv_det = 1.0f / det;
+		if(det>-LOCAL_EPSILON && det<LOCAL_EPSILON)									return FALSE;
+		float OneOverDet = 1.0f / det;
 
 		// Calculate distance from vert0 to ray origin
 		Point tvec = mOrigin - vert0;
 
 		// Calculate U parameter and test bounds
-		mStabbedFace.mU = (tvec|pvec) * inv_det;
-//		if(IR(u)&0x80000000 || u>1.0f)					return false;
-		if(IR(mStabbedFace.mU)&0x80000000 || IR(mStabbedFace.mU)>IEEE_1_0)			return false;
+		mStabbedFace.mU = (tvec|pvec) * OneOverDet;
+//		if(IR(u)&0x80000000 || u>1.0f)					return FALSE;
+		if(IS_NEGATIVE_FLOAT(mStabbedFace.mU) || IR(mStabbedFace.mU)>IEEE_1_0)		return FALSE;
 
 		// prepare to test V parameter
 		Point qvec = tvec^edge1;
 
 		// Calculate V parameter and test bounds
-		mStabbedFace.mV = (mDir|qvec) * inv_det;
-		if(IR(mStabbedFace.mV)&0x80000000 || mStabbedFace.mU+mStabbedFace.mV>1.0f)	return false;
+		mStabbedFace.mV = (mDir|qvec) * OneOverDet;
+		if(IS_NEGATIVE_FLOAT(mStabbedFace.mV) || mStabbedFace.mU+mStabbedFace.mV>1.0f)	return FALSE;
 
 		// Calculate t, ray intersects triangle
-		mStabbedFace.mDistance = (edge2|qvec) * inv_det;
+		mStabbedFace.mDistance = (edge2|qvec) * OneOverDet;
+		// Intersection point is valid if distance is positive (else it can just be a face behind the orig point)
+		if(IS_NEGATIVE_FLOAT(mStabbedFace.mDistance))								return FALSE;
 	}
-	return true;
+	return TRUE;
 }

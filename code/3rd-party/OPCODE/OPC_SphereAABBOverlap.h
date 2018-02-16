@@ -3,10 +3,10 @@
  *	Sphere-AABB overlap test, based on Jim Arvo's code.
  *	\param		center		[in] box center
  *	\param		extents		[in] box extents
- *	\return		true on overlap
+ *	\return		TRUE on overlap
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point& extents)
+inline_ BOOL SphereCollider::SphereAABBOverlap(const Point& center, const Point& extents)
 { 
 	// Stats
 	mNbVolumeBVTests++;
@@ -16,7 +16,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	//find the square of the distance
 	//from the sphere to the box
 #ifdef OLDIES
-	for(udword i=0;i<3;i++)
+	for(uqword i=0;i<3;i++)
 	{
 		float tmp = mCenter[i] - center[i];
 		float s = tmp + extents[i];
@@ -43,7 +43,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	if(s<0.0f)
 	{
 		d += s*s;
-		if(d>mRadius2)	return false;
+		if(d>mRadius2)	return FALSE;
 	}
 	else
 	{
@@ -51,7 +51,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 		if(s>0.0f)
 		{
 			d += s*s;
-			if(d>mRadius2)	return false;
+			if(d>mRadius2)	return FALSE;
 		}
 	}
 
@@ -61,7 +61,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	if(s<0.0f)
 	{
 		d += s*s;
-		if(d>mRadius2)	return false;
+		if(d>mRadius2)	return FALSE;
 	}
 	else
 	{
@@ -69,7 +69,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 		if(s>0.0f)
 		{
 			d += s*s;
-			if(d>mRadius2)	return false;
+			if(d>mRadius2)	return FALSE;
 		}
 	}
 
@@ -79,7 +79,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 	if(s<0.0f)
 	{
 		d += s*s;
-		if(d>mRadius2)	return false;
+		if(d>mRadius2)	return FALSE;
 	}
 	else
 	{
@@ -87,7 +87,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 		if(s>0.0f)
 		{
 			d += s*s;
-			if(d>mRadius2)	return false;
+			if(d>mRadius2)	return FALSE;
 		}
 	}
 //#endif
@@ -100,7 +100,7 @@ inline_ bool SphereCollider::SphereAABBOverlap(const Point& center, const Point&
 
 	//find the square of the distance
 	//from the sphere to the box
-	for(udword i=0;i<3;i++)
+	for(uqword i=0;i<3;i++)
 	{
 float Min = center[i] - extents[i];
 

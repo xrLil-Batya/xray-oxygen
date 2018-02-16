@@ -24,11 +24,11 @@
 		const float e=Ax*Cy - Ay*Cx;					\
 		if(f>0.0f)										\
 		{												\
-			if(e>=0.0f && e<=f) return true;			\
+			if(e>=0.0f && e<=f) return TRUE;			\
 		}												\
 		else											\
 		{												\
-			if(e<=0.0f && e>=f) return true;			\
+			if(e<=0.0f && e>=f) return TRUE;			\
 		}												\
 	}
 
@@ -67,12 +67,12 @@
 	const float d2 = a*V0[i0] + b*V0[i1] + c;			\
 	if(d0*d1>0.0f)										\
 	{													\
-		if(d0*d2>0.0f) return true;						\
+		if(d0*d2>0.0f) return TRUE;						\
 	}													\
 }
 
 //! TO BE DOCUMENTED
-bool CoplanarTriTri(const Point& n, const Point& v0, const Point& v1, const Point& v2, const Point& u0, const Point& u1, const Point& u2)
+BOOL CoplanarTriTri(const Point& n, const Point& v0, const Point& v1, const Point& v2, const Point& u0, const Point& u1, const Point& u2)
 {
 	float A[3];
 	short i0,i1;
@@ -117,7 +117,7 @@ bool CoplanarTriTri(const Point& n, const Point& v0, const Point& v1, const Poin
 	POINT_IN_TRI(v0, u0, u1, u2);
 	POINT_IN_TRI(u0, v0, v1, v2);
 
-	return false;
+	return FALSE;
 }
 
 //! TO BE DOCUMENTED
@@ -176,7 +176,7 @@ bool CoplanarTriTri(const Point& n, const Point& v0, const Point& v1, const Poin
  *	\return		true if triangles overlap
  */
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-inline_ bool AABBTreeCollider::TriTriOverlap(const Point& V0, const Point& V1, const Point& V2, const Point& U0, const Point& U1, const Point& U2)
+inline_ BOOL AABBTreeCollider::TriTriOverlap(const Point& V0, const Point& V1, const Point& V2, const Point& U0, const Point& U1, const Point& U2)
 {
 	// Stats
 	mNbPrimPrimTests++;
@@ -203,7 +203,7 @@ inline_ bool AABBTreeCollider::TriTriOverlap(const Point& V0, const Point& V1, c
 	const float du0du2 = du0 * du2;
 
 	if(du0du1>0.0f && du0du2>0.0f)	// same sign on all of them + not equal 0 ?
-		return false;				// no intersection occurs
+		return FALSE;				// no intersection occurs
 
 	// Compute plane of triangle (U0,U1,U2)
 	E1 = U1 - U0;
@@ -227,7 +227,7 @@ inline_ bool AABBTreeCollider::TriTriOverlap(const Point& V0, const Point& V1, c
 	const float dv0dv2 = dv0 * dv2;
 
 	if(dv0dv1>0.0f && dv0dv2>0.0f)	// same sign on all of them + not equal 0 ?
-		return false;				// no intersection occurs
+		return FALSE;				// no intersection occurs
 
 	// Compute direction of intersection line
 	const Point D = N1^N2;
@@ -274,6 +274,6 @@ inline_ bool AABBTreeCollider::TriTriOverlap(const Point& V0, const Point& V1, c
 	SORT(isect1[0],isect1[1]);
 	SORT(isect2[0],isect2[1]);
 
-	if(isect1[1]<isect2[0] || isect2[1]<isect1[0]) return false;
-	return true;
+	if(isect1[1]<isect2[0] || isect2[1]<isect1[0]) return FALSE;
+	return TRUE;
 }
