@@ -1,28 +1,21 @@
 #pragma once
-#ifdef XR_NETSERVER_EXPORTS
-#	define XRNETSERVER_API __declspec(dllexport)
-#else
-#	define XRNETSERVER_API __declspec(dllimport)
-#	pragma comment(lib, "xrNetServer")
-#endif
-
 #include "../xrCore/net_utils.h"
 #include <dplay/dplay8.h>
 #include "net_messages.h"
 
 
-XRNETSERVER_API extern ClientID BroadcastCID;
+ENGINE_API extern ClientID BroadcastCID;
 
-XRNETSERVER_API extern Flags32	psNET_Flags;
-XRNETSERVER_API extern int		psNET_ClientUpdate;
-XRNETSERVER_API extern int		get_psNET_ClientUpdate();
-XRNETSERVER_API extern int		psNET_ClientPending;
-XRNETSERVER_API extern char		psNET_Name[];
-XRNETSERVER_API extern int		psNET_ServerUpdate;
-XRNETSERVER_API extern int		get_psNET_ServerUpdate();
-XRNETSERVER_API extern int		psNET_ServerPending;
+ENGINE_API extern Flags32	psNET_Flags;
+ENGINE_API extern int		psNET_ClientUpdate;
+ENGINE_API extern int		get_psNET_ClientUpdate();
+ENGINE_API extern int		psNET_ClientPending;
+ENGINE_API extern char		psNET_Name[];
+ENGINE_API extern int		psNET_ServerUpdate;
+ENGINE_API extern int		get_psNET_ServerUpdate();
+ENGINE_API extern int		psNET_ServerPending;
 
-XRNETSERVER_API extern BOOL		psNET_direct_connect;
+ENGINE_API extern BOOL		psNET_direct_connect;
 
 enum	{
 	NETFLAG_MINIMIZEUPDATES		= (1<<0),
@@ -34,7 +27,7 @@ enum	{
 IC u32 TimeGlobal	(CTimer* timer)	{ return timer->GetElapsed_ms();	}
 IC u32 TimerAsync	(CTimer* timer) { return TimeGlobal	(timer);		}
 
-class XRNETSERVER_API IClientStatistic
+class ENGINE_API IClientStatistic
 {
 	DPN_CONNECTION_INFO	ci_last;
 	u32					mps_recive, mps_receive_base;

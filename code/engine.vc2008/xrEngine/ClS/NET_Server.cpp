@@ -9,10 +9,10 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-XRNETSERVER_API int		psNET_ServerUpdate	= 30;		// FPS
-XRNETSERVER_API int		psNET_ServerPending	= 3;
+ENGINE_API int		psNET_ServerUpdate	= 30;		// FPS
+ENGINE_API int		psNET_ServerPending	= 3;
 
-XRNETSERVER_API ClientID BroadcastCID(0xffffffff);
+ENGINE_API ClientID BroadcastCID(0xffffffff);
 
 IClient::IClient(CTimer* timer) : stats(timer), server(nullptr), dwTime_LastUpdate(0)
 {

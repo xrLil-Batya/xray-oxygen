@@ -6,7 +6,7 @@
 #include "../xrCore/client_id.h"
 #include "game_sv_event_queue.h"
 #include "game_sv_item_respawner.h"
-#include "../xrNetServer/NET_Server.h"
+#include "../xrEngine/ClS/NET_Server.h"
 
 class CSE_Abstract;
 class xrServer;

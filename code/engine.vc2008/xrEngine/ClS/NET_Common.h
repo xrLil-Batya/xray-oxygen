@@ -26,7 +26,7 @@ struct GameDescriptionData
 #define START_PORT 0
 #define END_PORT 65535
 //end
-extern XRNETSERVER_API int psNET_GuaranteedPacketMode;
+extern ENGINE_API int psNET_GuaranteedPacketMode;
 
 /*#ifdef DEBUG
 void PrintParsedPacket(const char* message, u16 message_type, const void* packet_data, u32 packet_size);
@@ -34,8 +34,7 @@ void PrintParsedPacket(const char* message, u16 message_type, const void* packet
 
 //==============================================================================
 
-class XRNETSERVER_API
-	MultipacketSender
+class ENGINE_API MultipacketSender
 {
 public:
 	MultipacketSender();
@@ -66,7 +65,7 @@ private:
 
 
 //==============================================================================
-class XRNETSERVER_API
+class ENGINE_API
 	MultipacketReciever
 {
 public:

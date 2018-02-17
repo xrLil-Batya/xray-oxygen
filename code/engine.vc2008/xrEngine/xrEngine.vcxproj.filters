@@ -226,6 +226,9 @@
     <Filter Include="Device">
       <UniqueIdentifier>{0bcaaabd-28be-4fc6-aee0-5c8529d8e19e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="NetServer">
+      <UniqueIdentifier>{92513ec2-b350-4a0d-b927-6ad48a38eca8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -576,6 +579,24 @@
     <ClInclude Include="..\FrayBuildConfig.hpp" />
     <ClInclude Include="ShadersExternalData.h" />
     <ClInclude Include="vis_object_data.h" />
+    <ClInclude Include="ClS\NET_PlayersMonitor.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClS\NET_Server.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClS\NET_Shared.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClS\NET_Client.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClS\NET_Common.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClS\NET_Messages.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -895,6 +916,15 @@
     </ClCompile>
     <ClCompile Include="BoneEditor.cpp">
       <Filter>RenderRef</Filter>
+    </ClCompile>
+    <ClCompile Include="ClS\NET_Server.cpp">
+      <Filter>NetServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ClS\NET_Client.cpp">
+      <Filter>NetServer</Filter>
+    </ClCompile>
+    <ClCompile Include="ClS\NET_Common.cpp">
+      <Filter>NetServer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
