@@ -20,7 +20,7 @@ void light_Package::sort()
 		}
 		else 
 		{
-			return !isPending ? (first->range > second->range) : true;
+			return (!isPending) ? (first->range > second->range) : true;
 		}
 	};
 

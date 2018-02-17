@@ -1,14 +1,20 @@
 #include "stdafx.h"
 #include "NET_Common.h"
-//==============================================================================
+#include <dplay/dplay8.h>
 
+#pragma comment(lib, "dinput8.lib")
+#pragma comment(lib, "dxguid.lib")
+//==============================================================================
+#ifndef DPNSEND_IMMEDIATELLY
+#define	DPNSEND_IMMEDIATELLY 0x0100
+#endif
 #pragma pack( push )
 #pragma pack( 1 )
-struct
-MultipacketHeader
+
+struct MultipacketHeader
 {
-    u8  tag;
-    u16 unpacked_size;
+	u8  tag;
+	u16 unpacked_size;
 };
 #pragma pack( pop )
 
@@ -16,7 +22,7 @@ MultipacketHeader
 //==============================================================================
 static constexpr unsigned MaxMultipacketSize = 32768;
 
-XRNETSERVER_API int psNET_GuaranteedPacketMode = NET_GUARANTEEDPACKET_DEFAULT;
+ENGINE_API int psNET_GuaranteedPacketMode = NET_GUARANTEEDPACKET_DEFAULT;
 //------------------------------------------------------------------------------
 MultipacketSender::MultipacketSender()
 {
@@ -61,7 +67,7 @@ void MultipacketSender::SendPacket(const void* packet_data, u32 packet_sz, u32 f
 
 //------------------------------------------------------------------------------
 
-void            
+void
 MultipacketSender::FlushSendBuffer(u32 timeout)
 {
 	std::lock_guard<decltype(_buf_cs)> lock(_buf_cs);
@@ -93,13 +99,13 @@ void MultipacketSender::_FlushSendBuffer(u32 timeout, Buffer* buf)
 
 //------------------------------------------------------------------------------
 
-void            
+void
 MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 param)
 {
 	MultipacketHeader*  header = (MultipacketHeader*)packet_data;
 	u8                  data[MaxMultipacketSize];
 
-	if (header->tag != NET_TAG_MERGED  &&  header->tag != NET_TAG_NONMERGED)
+	if (header->tag != NET_TAG_MERGED && header->tag != NET_TAG_NONMERGED)
 		return;
 
 	std::memcpy(data, (u8*)packet_data + sizeof(MultipacketHeader), packet_sz - sizeof(MultipacketHeader));

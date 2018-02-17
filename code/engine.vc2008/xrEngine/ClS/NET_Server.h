@@ -22,7 +22,7 @@ struct SClientConnectData
 
 class IPureServer;
 
-class XRNETSERVER_API 
+class ENGINE_API 
 IClient		: public MultipacketSender
 {
 public:
@@ -57,7 +57,7 @@ private:
 
 IC bool operator== (IClient const* pClient, ClientID const& ID) { return pClient->ID == ID; }
 
-class XRNETSERVER_API IServerStatistic
+class ENGINE_API IServerStatistic
 {
 public:
 	void	clear();
@@ -88,7 +88,7 @@ struct ClientIdSearchPredicate
 
 class CServerInfo;
 
-class XRNETSERVER_API IPureServer: private MultipacketReciever
+class ENGINE_API IPureServer: private MultipacketReciever
 {
 public:
 	enum EConnect

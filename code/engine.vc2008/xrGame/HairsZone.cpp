@@ -6,6 +6,7 @@
 #include "PHMovementControl.h"
 #include "CharacterPhysicsSupport.h"
 #include "../xrengine/xr_collide_form.h"
+
 bool CHairsZone::BlowoutState()
 {
 	bool result = inherited::BlowoutState();
@@ -16,27 +17,27 @@ bool CHairsZone::BlowoutState()
 
 void CHairsZone::CheckForAwaking()
 {
-	for(auto it = m_ObjectInfoMap.begin();
-		m_ObjectInfoMap.end() != it; ++it) 
+	for(SZoneObjectInfo &it: m_ObjectInfoMap) 
 	{
-		CObject* pObject = (*it).object;
+		CObject* pObject = it.object;
 		if (!pObject) continue;
 
 		CEntityAlive* pEnt = smart_cast<CEntityAlive*>(pObject);
-		if(pEnt){
-			float sp = pEnt->character_physics_support()->movement()->GetVelocityActual();
-			if(sp>m_min_speed_to_react){
-				SwitchZoneState				(eZoneStateAwaking);
+		if(pEnt)
+		{
+			if (pEnt->character_physics_support()->movement()->GetVelocityActual()>m_min_speed_to_react)
+			{
+				SwitchZoneState(eZoneStateAwaking);
 				return;
 			}
 		}
 	}
 }
 
-void CHairsZone::Load(LPCSTR section) 
+void CHairsZone::Load(LPCSTR section)
 {
-	inherited::Load				(section);
-	m_min_speed_to_react		= pSettings->r_float(section,			"min_speed_to_react");
+	inherited::Load(section);
+	m_min_speed_to_react = pSettings->r_float(section, "min_speed_to_react");
 }
 
 void CHairsZone::Affect(SZoneObjectInfo* O) 
@@ -50,9 +51,7 @@ void CHairsZone::Affect(SZoneObjectInfo* O)
 	XFORM().transform_tiny(P,CFORM()->getSphere().P);
 
 	Fvector hit_dir; 
-	hit_dir.set(::Random.randF(-.5f,.5f), 
-		::Random.randF(.0f,1.f), 
-		::Random.randF(-.5f,.5f)); 
+	hit_dir.set(::Random.randF(-.5f,.5f), ::Random.randF(.0f,1.f), ::Random.randF(-.5f,.5f)); 
 	hit_dir.normalize();
 
 
@@ -71,4 +70,16 @@ void CHairsZone::Affect(SZoneObjectInfo* O)
 
 		PlayHitParticles(pGameObject);
 	}
+}
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CHairsZone::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CHairsZone, CGameObject>("CHairsZone")
+			.def(constructor<>())
+		];
 }

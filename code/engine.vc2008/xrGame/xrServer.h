@@ -4,7 +4,7 @@
 //////////////////////////////////////////////////////////////////////
 #pragma once
 
-#include "../xrNetServer/net_server.h"
+#include "../xrEngine/ClS/net_server.h"
 #include "game_sv_base.h"
 #include "id_generator.h"
 #include "../xrEngine/mp_logging.h"

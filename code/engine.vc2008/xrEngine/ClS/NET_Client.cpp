@@ -221,7 +221,7 @@ void			INetQueue::Release	()
 //
 const u32 syncQueueSize		= 512;
 const int syncSamples		= 256;
-class XRNETSERVER_API syncQueue
+class ENGINE_API syncQueue
 {
 	u32				table	[syncQueueSize];
 	u32				write;
@@ -243,11 +243,11 @@ public:
 } net_DeltaArray;
 
 //-------
-XRNETSERVER_API Flags32	psNET_Flags			= {0};
-XRNETSERVER_API int		psNET_ClientUpdate	= 30;		// FPS
-XRNETSERVER_API int		psNET_ClientPending	= 2;
-XRNETSERVER_API char	psNET_Name[32]		= "Player";
-XRNETSERVER_API BOOL	psNET_direct_connect = FALSE;
+ENGINE_API Flags32	psNET_Flags			= {0};
+ENGINE_API int		psNET_ClientUpdate	= 30;		// FPS
+ENGINE_API int		psNET_ClientPending	= 2;
+ENGINE_API char	psNET_Name[32]		= "Player";
+ENGINE_API BOOL	psNET_direct_connect = FALSE;
 
 /****************************************************************************
  *

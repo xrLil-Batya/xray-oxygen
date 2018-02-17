@@ -3,7 +3,7 @@
 #include "net_shared.h"
 #include "NET_Common.h"
 //==============================================================================
-class XRNETSERVER_API INetQueue
+class ENGINE_API INetQueue
 {
 	std::recursive_mutex cs;
 	xr_deque<NET_Packet*>	ready;
@@ -20,7 +20,7 @@ public:
 	inline void			Unlock	() { cs.unlock(); };
 };
 //==============================================================================
-class XRNETSERVER_API IPureClient: private MultipacketReciever, private MultipacketSender
+class ENGINE_API IPureClient: private MultipacketReciever, private MultipacketSender
 {
 	enum ConnectionState
 	{
