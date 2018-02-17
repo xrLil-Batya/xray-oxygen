@@ -1464,19 +1464,6 @@
     <ClInclude Include="WeaponStatMgun.h" />
     <ClInclude Include="Artefact.h" />
     <ClInclude Include="artefact_activation.h" />
-    <ClInclude Include="GraviArtifact.h" />
-    <ClInclude Include="BlackDrops.h" />
-    <ClInclude Include="Needles.h" />
-    <ClInclude Include="BastArtifact.h" />
-    <ClInclude Include="BlackGraviArtifact.h" />
-    <ClInclude Include="DummyArtifact.h" />
-    <ClInclude Include="ZudaArtifact.h" />
-    <ClInclude Include="ThornArtifact.h" />
-    <ClInclude Include="FadedBall.h" />
-    <ClInclude Include="MercuryBall.h" />
-    <ClInclude Include="ElectricBall.h" />
-    <ClInclude Include="RustyHairArtifact.h" />
-    <ClInclude Include="GalantineArtifact.h" />
     <ClInclude Include="ui\ArtefactDetectorUI.h" />
     <ClInclude Include="CustomDetector.h" />
     <ClInclude Include="SimpleDetector.h" />
@@ -1508,14 +1495,12 @@
     <ClInclude Include="searchlight.h" />
     <ClInclude Include="trade.h" />
     <ClInclude Include="CustomZone.h" />
-    <ClInclude Include="FryupZone.h" />
     <ClInclude Include="GraviZone.h" />
     <ClInclude Include="level_changer.h" />
     <ClInclude Include="Mincer.h" />
     <ClInclude Include="MosquitoBald.h" />
     <ClInclude Include="RadioactiveZone.h" />
     <ClInclude Include="script_zone.h" />
-    <ClInclude Include="team_base_zone.h" />
     <ClInclude Include="TorridZone.h" />
     <ClInclude Include="space_restrictor.h" />
     <ClInclude Include="space_restrictor_inline.h" />
@@ -2477,8 +2462,6 @@
     <ClCompile Include="Actor_Movement.cpp" />
     <ClCompile Include="Actor_Network.cpp">
     </ClCompile>
-    <ClCompile Include="actor_script.cpp">
-    </ClCompile>
     <ClCompile Include="Actor_Weapon.cpp" />
     <ClCompile Include="ActorAnimation.cpp" />
     <ClCompile Include="ActorCameras.cpp" />
@@ -2511,8 +2494,6 @@
     <ClCompile Include="InfoPortion.cpp">
     </ClCompile>
     <ClCompile Include="GameTask.cpp">
-    </ClCompile>
-    <ClCompile Include="GameTask_script.cpp">
     </ClCompile>
     <ClCompile Include="GametaskManager.cpp">
     </ClCompile>
@@ -2626,21 +2607,6 @@
     <ClCompile Include="WeaponStatMgunIR.cpp" />
     <ClCompile Include="Artefact.cpp" />
     <ClCompile Include="artefact_activation.cpp" />
-    <ClCompile Include="artefact_script.cpp">
-    </ClCompile>
-    <ClCompile Include="GraviArtifact.cpp" />
-    <ClCompile Include="BlackDrops.cpp" />
-    <ClCompile Include="Needles.cpp" />
-    <ClCompile Include="BastArtifact.cpp" />
-    <ClCompile Include="BlackGraviArtifact.cpp" />
-    <ClCompile Include="DummyArtifact.cpp" />
-    <ClCompile Include="ZudaArtifact.cpp" />
-    <ClCompile Include="ThornArtifact.cpp" />
-    <ClCompile Include="FadedBall.cpp" />
-    <ClCompile Include="MercuryBall.cpp" />
-    <ClCompile Include="ElectricBall.cpp" />
-    <ClCompile Include="RustyHairArtifact.cpp" />
-    <ClCompile Include="GalantineArtifact.cpp" />
     <ClCompile Include="ui\ArtefactDetectorUI.cpp" />
     <ClCompile Include="CustomDetector.cpp" />
     <ClCompile Include="SimpleDetector.cpp" />
@@ -2672,7 +2638,6 @@
     <ClCompile Include="trade.cpp">
     </ClCompile>
     <ClCompile Include="CustomZone.cpp" />
-    <ClCompile Include="FryupZone.cpp" />
     <ClCompile Include="GraviZone.cpp" />
     <ClCompile Include="level_changer.cpp" />
     <ClCompile Include="Mincer.cpp" />
@@ -2680,13 +2645,10 @@
     <ClCompile Include="RadioactiveZone.cpp" />
     <ClCompile Include="script_zone.cpp">
     </ClCompile>
-    <ClCompile Include="team_base_zone.cpp" />
     <ClCompile Include="TorridZone.cpp" />
     <ClCompile Include="space_restrictor.cpp">
     </ClCompile>
     <ClCompile Include="HairsZone.cpp">
-    </ClCompile>
-    <ClCompile Include="HairsZone_script.cpp">
     </ClCompile>
     <ClCompile Include="NoGravityZone.cpp" />
     <ClCompile Include="ZoneVisual.cpp" />

@@ -596,3 +596,18 @@ void CArtefact::OnHiddenItem()
 	SetState(eHidden);
 	SetNextState(eHidden);
 }
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CArtefact::script_register(lua_State *L)
+{
+	module(L)
+	[
+		class_<CArtefact			,CGameObject>("CArtefact")
+		.def(						constructor<>() )
+		.def("FollowByPath",		&CArtefact::FollowByPath)
+		.def("SwitchVisibility",	&CArtefact::SwitchVisibility)
+		.def("GetAfRank",			&CArtefact::GetAfRank),
+	];
+}

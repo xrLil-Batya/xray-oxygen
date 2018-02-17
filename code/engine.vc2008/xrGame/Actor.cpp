@@ -1578,12 +1578,12 @@ void CActor::OnDifficultyChanged	()
 	conditions().LoadTwoHitsDeathParams(tmp);
 }
 
-CVisualMemoryManager	*CActor::visual_memory	() const
+CVisualMemoryManager *CActor::visual_memory() const
 {
-	return							(&memory().visual());
+	return (&memory().visual());
 }
 
-float		CActor::GetMass				()
+float CActor::GetMass()
 {
 	return g_Alive()?character_physics_support()->movement()->GetMass():m_pPhysicsShell?m_pPhysicsShell->getMass():0; 
 }
@@ -1594,9 +1594,9 @@ bool CActor::is_on_ground()
 }
 
 
-bool CActor::is_ai_obstacle				() const
+bool CActor::is_ai_obstacle() const
 {
-	return							(false);//true);
+	return (false);//true);
 }
 
 float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
@@ -1608,7 +1608,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	{
 		res = conditions().change_v().m_fV_HealthRestore;
 		res += conditions().V_SatietyHealth() * ((conditions().GetSatiety() > 0.0f) ? 1.0f : -1.0f);
-		for (auto it : inventory().m_belt)
+		for (PIItem &it : inventory().m_belt)
 		{
 			CArtefact*	artefact = smart_cast<CArtefact*>(it);
 			if (artefact)
@@ -1625,7 +1625,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	}
 	case ALife::eRadiationRestoreSpeed:
 	{
-		for (auto it : inventory().m_belt)
+		for (PIItem &it : inventory().m_belt)
 		{
 			CArtefact*	artefact = smart_cast<CArtefact*>(it);
 			if (artefact)
@@ -1644,7 +1644,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	{
 		res = conditions().V_Satiety();
 
-		for (auto it : inventory().m_belt)
+		for (PIItem &it : inventory().m_belt)
 		{
 			CArtefact*	artefact = smart_cast<CArtefact*>(it);
 			if (artefact)
@@ -1663,7 +1663,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	{
 		res = conditions().GetSatietyPower();
 
-		for (auto it : inventory().m_belt)
+		for (PIItem &it : inventory().m_belt)
 		{
 			CArtefact*	artefact = smart_cast<CArtefact*>(it);
 			if (artefact)
@@ -1686,7 +1686,7 @@ float CActor::GetRestoreSpeed(ALife::EConditionRestoreType const& type)
 	{
 		res = conditions().change_v().m_fV_WoundIncarnation;
 
-		for (auto it : inventory().m_belt)
+		for (PIItem &it : inventory().m_belt)
 		{
 			CArtefact*	artefact = smart_cast<CArtefact*>(it);
 			if (artefact)
@@ -1718,4 +1718,20 @@ void CActor::On_SetEntity()
 bool CActor::unlimited_ammo()
 {
 	return !!psActorFlags.test(AF_UNLIMITEDAMMO);
+}
+
+#include "level_changer.h"
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CActor::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CActor, CGameObject>("CActor")
+			.def(constructor<>()),
+
+		class_<CLevelChanger, CGameObject>("CLevelChanger")
+		.def(constructor<>())
+		];
 }
