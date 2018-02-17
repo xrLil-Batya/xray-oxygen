@@ -294,7 +294,7 @@ void CGameGraphBuilder::check_fill(bool isCrossTableBuild)
 		Msg("! AI-node [%.3f, %.3f, %.3f] not connected to AI-map", VPUSH(level_graph().vertex_position(i)));
 		count++;
 	}
-	if(!isCrossTableBuild) R_ASSERT2(!count, "Some ai-node is not connected to AI-map. See log for details.");
+	//if(!isCrossTableBuild) R_ASSERT2(!count, "Some ai-node is not connected to AI-map. See log for details.");
 }
 
 void CGameGraphBuilder::load_cross_table	(const float &start, const float &amount)
