@@ -6213,6 +6213,7 @@
     <ClInclude Include="imotion_velocity.h">
       <Filter>GamePhysics</Filter>
     </ClInclude>
+    <ClInclude Include="MercuryBall.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8918,6 +8919,7 @@
     <ClCompile Include="imotion_velocity.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
+    <ClCompile Include="MercuryBall.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">
