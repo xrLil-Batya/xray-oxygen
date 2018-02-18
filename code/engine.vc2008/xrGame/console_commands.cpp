@@ -1666,6 +1666,7 @@ void CCC_RegisterCommands()
 
 	// game
 	CMD3(CCC_Mask,				"g_crouch_toggle",		&psActorFlags,	AF_CROUCH_TOGGLE);
+	CMD3(CCC_Mask,				"g_colored_feel",		&psActorFlags,	AF_COLORED_FEEL);
 	CMD1(CCC_GameDifficulty,	"g_game_difficulty"		);
 
 	CMD3(CCC_Mask,				"g_backrun",			&psActorFlags,	AF_RUN_BACKWARD);
