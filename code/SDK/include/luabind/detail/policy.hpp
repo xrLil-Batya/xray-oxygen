@@ -235,6 +235,10 @@ namespace luabind { namespace detail
 		void apply(lua_State* L, double v) { lua_pushnumber(L, (lua_Number)v); }
 		void apply(lua_State* L, long double v) { lua_pushnumber(L, (lua_Number)v); }
 		void apply(lua_State* L, const char* v) { lua_pushstring(L, v); }
+		void apply(lua_State* L, const std::string& v)
+		{ lua_pushlstring(L, v.data(), v.size()); }
+		void apply(lua_State* L, const std::string_view& v)
+		{ lua_pushlstring(L, v.data(), v.size()); }
 		void apply(lua_State* L, const string_class& v)
 		{ lua_pushlstring(L, v.data(), v.size()); }
 		void apply(lua_State* L, bool b) { lua_pushboolean(L, b); }
