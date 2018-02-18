@@ -229,23 +229,23 @@ inline decltype(auto) get_extension(const stdfs::path& file)
 }
 
 //¬рем€ последнего изменени€ файла ( наверное в секундах, но € не уверен )
-inline decltype(auto) get_last_write_time(const stdfs::path& file)
+inline long long get_last_write_time(const stdfs::path& file)
 {
 	const auto ftime = stdfs::last_write_time(file);
-	const auto cftime = decltype(ftime)::clock::to_time_t(ftime);
+	long long cftime = decltype(ftime)::clock::to_time_t(ftime);
 	return cftime;
 }
 
 //¬рем€ последнего изменени€ файла в формате [вторник 02 €нв 2018 14:03:32]
-inline decltype(auto) get_last_write_time_string(const stdfs::path& file)
-{
-	const auto ftime = stdfs::last_write_time(file);
-	const auto cftime = decltype(ftime)::clock::to_time_t(ftime);
-	std::stringstream ss;
-	ss.imbue(std::locale("")); //”станавливаем системную локаль потоку, чтоб мес€ц/день недели были на системном €зыке.
-	ss << std::put_time(std::localtime(&cftime), "[%A %d %b %Y %T]");
-	return ss.str();
-}
+//inline decltype(auto) get_last_write_time_string(const stdfs::path& file)
+//{
+//	const auto ftime = stdfs::last_write_time(file);
+//	const auto cftime = decltype(ftime)::clock::to_time_t(ftime);
+//	std::stringstream ss;
+//	ss.imbue(std::locale("")); //”станавливаем системную локаль потоку, чтоб мес€ц/день недели были на системном €зыке.
+//	ss << std::put_time(std::localtime(&cftime), "[%A %d %b %Y %T]");
+//	return ss.str();
+//}
 
 #pragma optimize("s",on)
 void script_register_stdfs(lua_State *L)
@@ -255,15 +255,16 @@ void script_register_stdfs(lua_State *L)
 		def("directory_iterator", &directory_iterator),
 		def("recursive_directory_iterator", &recursive_directory_iterator),
 
-		class_<stdfs::path>("path")
-			.property("full_path_name", &get_full_path)
-			.property("full_filename", &get_full_filename)
-			.property("short_filename", &get_short_filename)
-			.property("extension", &get_extension)
-			.property("last_write_time", &get_last_write_time)
-			.property("last_write_time_string", &get_last_write_time_string)
-			.property("get_engine_dir", &get_engine_dir)
-		];
+		///#TODO: Fix Luabind later
+//		class_<stdfs::path>("path")
+//			.property("full_path_name", &get_full_path)
+//			.property("full_filename", &get_full_filename)
+//			.property("short_filename", &get_short_filename)
+//			.property("extension", &get_extension)
+//			.property("last_write_time", &get_last_write_time)
+//			.property("last_write_time_string", &get_last_write_time_string)
+//			.property("get_engine_dir", &get_engine_dir)
+//		];
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// SCRIPT C++17 FILESYSTEM - END ///////////////////////////////

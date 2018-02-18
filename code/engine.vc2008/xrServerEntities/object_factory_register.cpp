@@ -113,7 +113,6 @@
 #	include "radioactivezone.h"
 #	include "level_changer.h"
 #	include "script_zone.h"
-#	include "team_base_zone.h"
 #	include "torridZone.h"
 #	include "ZoneVisual.h"
 #	include "hairszone.h"
