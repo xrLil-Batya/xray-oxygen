@@ -222,6 +222,7 @@ namespace luabind { namespace detail
 			v.pushvalue();
 		}
 		void apply(lua_State* L, int v) { lua_pushnumber(L, (lua_Number)v); }
+		void apply(lua_State* L, long long v) { lua_pushnumber(L, (lua_Number)v); }
 		void apply(lua_State* L, short v) { lua_pushnumber(L, (lua_Number)v); }
 		void apply(lua_State* L, char v) { lua_pushnumber(L, (lua_Number)v); }
 		void apply(lua_State* L, long v) { lua_pushnumber(L, (lua_Number)v); }
