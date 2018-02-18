@@ -155,6 +155,7 @@ namespace luabind { namespace detail
 	LUABIND_INTEGER_TYPE(short)
 	LUABIND_INTEGER_TYPE(int)
 	LUABIND_INTEGER_TYPE(long)
+	LUABIND_INTEGER_TYPE(long long)
 
 	template<> struct is_primitive<signed char> : std::true_type {}; \
 	template<> struct is_primitive<signed char const> : std::true_type {}; \
@@ -170,29 +171,36 @@ namespace luabind { namespace detail
 	template<> struct is_primitive<const luabind::weak_ref>: std::true_type {};
 	template<> struct is_primitive<const luabind::weak_ref&>: std::true_type {};
 	
-	template<> struct is_primitive<float>: std::true_type {};
-	template<> struct is_primitive<double>: std::true_type {};
 	template<> struct is_primitive<long double>: std::true_type {};
-	template<> struct is_primitive<char*>: std::true_type {};
-	template<> struct is_primitive<bool>: std::true_type {};
+	template<> struct is_primitive<const long double> : std::true_type {};
+	template<> struct is_primitive<const long double&> : std::true_type {};
 
-	template<> struct is_primitive<const float>: std::true_type {};
-	template<> struct is_primitive<const double>: std::true_type {};
-	template<> struct is_primitive<const long double>: std::true_type {};
+	template<> struct is_primitive<char*>: std::true_type {};
 	template<> struct is_primitive<const char*>: std::true_type {};
 	template<> struct is_primitive<const char* const>: std::true_type {};
+
+	template<> struct is_primitive<bool> : std::true_type {};
 	template<> struct is_primitive<const bool>: std::true_type {};
+	template<> struct is_primitive<const bool&> : std::true_type {};
 
 	// TODO: add more
+	template<> struct is_primitive<float> : std::true_type {};
 	template<> struct is_primitive<const float&>: std::true_type {};
+	template<> struct is_primitive<const float> : std::true_type {};
+
+	template<> struct is_primitive<double> : std::true_type {};
+	template<> struct is_primitive<const double> : std::true_type {};
 	template<> struct is_primitive<const double&>: std::true_type {};
-	template<> struct is_primitive<const long double&>: std::true_type {};
-	template<> struct is_primitive<const bool&>: std::true_type {};
 
+
+	template<> struct is_primitive<string_class> : std::true_type {};
+	template<> struct is_primitive<const string_class> : std::true_type {};
 	template<> struct is_primitive<const string_class&>: std::true_type {};
-	template<> struct is_primitive<string_class>: std::true_type {};
-	template<> struct is_primitive<const string_class>: std::true_type {};
 
+	template<> struct is_primitive<std::string> : std::true_type {};
+	template<> struct is_primitive<const std::string> : std::true_type {};
+	template<> struct is_primitive<const std::string&> : std::true_type {};
+	template<> struct is_primitive<const std::string_view&> : std::true_type {}; // C++17
 
 	template<Direction> struct primitive_converter;
 	
@@ -287,6 +295,9 @@ namespace luabind { namespace detail
 		PRIMITIVE_CONVERTER(double) { return static_cast<double>(lua_tonumber(L, index)); }
 		PRIMITIVE_MATCHER(double) { if (lua_type(L, index) == LUA_TNUMBER) return 0; else return -1; }
 
+		PRIMITIVE_CONVERTER(long long) { return static_cast<long long>(lua_tonumber(L, index)); }
+		PRIMITIVE_MATCHER(long long) { if (lua_type(L, index) == LUA_TNUMBER) return 0; else return -1; }
+
 		PRIMITIVE_CONVERTER(string_class)
 		{ return string_class(lua_tostring(L, index), lua_strlen(L, index)); }
 		PRIMITIVE_MATCHER(string_class) { if (lua_type(L, index) == LUA_TSTRING) return 0; else return -1; }
@@ -309,6 +320,11 @@ namespace luabind { namespace detail
             constexpr const int kMaxArity = 1000;
             return std::numeric_limits<int>::max() / kMaxArity;
 		}
+		PRIMITIVE_CONVERTER(std::string){ return std::string(lua_tostring(L, index), lua_strlen(L, index)); }
+		PRIMITIVE_MATCHER(std::string) { if (lua_type(L, index) == LUA_TSTRING) return 0; else return -1; }
+
+		PRIMITIVE_CONVERTER(std::string_view&) { return std::string_view(lua_tostring(L, index), lua_strlen(L, index)); }
+		PRIMITIVE_MATCHER(std::string_view&) { if (lua_type(L, index) == LUA_TSTRING) return 0; else return -1; }
 
 		PRIMITIVE_CONVERTER(luabind::weak_ref)
 		{
