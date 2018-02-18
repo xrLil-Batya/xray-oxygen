@@ -608,6 +608,6 @@ void CArtefact::script_register(lua_State *L)
 		.def(						constructor<>() )
 		.def("FollowByPath",		&CArtefact::FollowByPath)
 		.def("SwitchVisibility",	&CArtefact::SwitchVisibility)
-		.def("GetAfRank",			&CArtefact::GetAfRank),
+		.def("GetAfRank",			&CArtefact::GetAfRank)
 	];
 }

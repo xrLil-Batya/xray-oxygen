@@ -19,7 +19,6 @@
 #include "script_process.h"
 #include "script_engine.h"
 #include "script_engine_space.h"
-#include "team_base_zone.h"
 #include "infoportion.h"
 #include "patrol_path_storage.h"
 #include "date_time.h"
@@ -216,8 +215,9 @@ CLevel::~CLevel()
 	}
 
 	// destroy PSs
-	for (auto p_it=m_StaticParticles.begin(); m_StaticParticles.end()!=p_it; ++p_it)
-		CParticlesObject::Destroy(*p_it);
+	for (CParticlesObject* &p_it: m_StaticParticles)
+		CParticlesObject::Destroy(p_it);
+
 	m_StaticParticles.clear		();
 
 	// Unload sounds
@@ -344,9 +344,6 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
 	if (!GO)		{
-#ifndef MASTER_GOLD
-		Msg("! ERROR: c_EVENT[%d] : non-game-object",dest);
-#endif // #ifndef MASTER_GOLD
 		return;
 	}
 	if (type != GE_DESTROY_REJECT)
@@ -366,17 +363,11 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 
 		CObject			*D	= Objects.net_Find	(id);
 		if (0==D)		{
-#ifndef MASTER_GOLD
-			Msg			("! ERROR: c_EVENT[%d] : unknown dest",id);
-#endif // #ifndef MASTER_GOLD
 			ok			= false;
 		}
 
 		CGameObject		*GD = smart_cast<CGameObject*>(D);
 		if (!GD)		{
-#ifndef MASTER_GOLD
-			Msg			("! ERROR: c_EVENT[%d] : non-game-object",id);
-#endif // #ifndef MASTER_GOLD
 			ok			= false;
 		}
 
@@ -658,9 +649,6 @@ void CLevel::OnRender()
 			CClimableObject		*climable		  = smart_cast<CClimableObject*>	(_O);
 			if(climable)
 				climable->OnRender();
-			CTeamBaseZone	*team_base_zone = smart_cast<CTeamBaseZone*>(_O);
-			if (team_base_zone)
-				team_base_zone->OnRender();
 			
 			if (dbg_net_Draw_Flags.test(dbg_draw_skeleton)) //draw skeleton
 			{
