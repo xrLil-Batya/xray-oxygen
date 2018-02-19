@@ -32,7 +32,6 @@ class	CLevelSoundManager;
 class	CGameTaskManager;
 class	CZoneList;
 class	message_filter;
-class	demoplay_control;
 class	demo_info;
 class	CDebugRenderer;
 
@@ -79,10 +78,8 @@ protected:
 	CPHCommander				*m_ph_commander;
 	CPHCommander				*m_ph_commander_scripts;
 	CPHCommander				*m_ph_commander_physics_worldstep;
+
 	// Local events
-	EVENT						eChangeRP;
-	EVENT						eDemoPlay;
-	EVENT						eChangeTrack;
 	EVENT						eEnvironment;
 	EVENT						eEntitySpawn;
 	//---------------------------------------------
@@ -100,8 +97,7 @@ public:
 #endif
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
-	void						SetInterpolationSteps	(u32 InterpSteps);
-    static bool						InterpolationDisabled	();
+    static bool					InterpolationDisabled	();
 	void						ReculcInterpolationSteps() const;
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
@@ -261,7 +257,6 @@ public:
 	void						g_sv_Spawn				(CSE_Abstract* E);					// server reply/command spawning
 	
 	// Save/Load/State
-	void						SLS_Load				(LPCSTR name);		// Game Load
 	void						SLS_Default				();					// Default/Editor Load
 	
 	IC CSpaceRestrictionManager		&space_restriction_manager	();

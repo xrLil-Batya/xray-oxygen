@@ -206,9 +206,8 @@ public:
 
 	
 	virtual void			GetServerInfo		( CServerInfo* si );
-public:
-	xr_string				ent_name_safe		(u16 eid);
 #ifdef DEBUG
+public:
 			bool			verify_entities		() const;
 			void			verify_entity		(const CSE_Abstract *entity) const;
 #endif

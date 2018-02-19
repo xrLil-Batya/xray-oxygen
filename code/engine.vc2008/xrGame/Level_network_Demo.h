@@ -7,7 +7,6 @@ private:
 	u32							m_StartGlobalTime;
 	CObject*					m_current_spectator;	//in real, this is CurrentControlEntity 
 	message_filter*				m_msg_filter;
-	demoplay_control*			m_demoplay_control;
 public:
 	CObject*					GetDemoSpectator		();
 	
@@ -25,7 +24,6 @@ public:
 	float						GetDemoPlaySpeed			() const;					//Device.time_factor()
 	void						SetDemoPlaySpeed			(float const time_factor);	//Device.time_factor(
 	message_filter*				GetMessageFilter			();
-	demoplay_control*			GetDemoPlayControl			();
 
 
 	//virtual	NET_Packet*		net_msg_Retreive		();

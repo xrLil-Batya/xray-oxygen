@@ -1327,7 +1327,6 @@
     <ClInclude Include="Level_network_map_sync.h" />
     <ClInclude Include="DemoInfo.h" />
     <ClInclude Include="DemoInfo_Loader.h" />
-    <ClInclude Include="DemoPlay_Control.h" />
     <ClInclude Include="Level_network_Demo.h" />
     <ClInclude Include="Message_Filter.h" />
     <ClInclude Include="xr_level_controller.h" />
@@ -2449,7 +2448,6 @@
     <ClCompile Include="Level_network_map_sync.cpp" />
     <ClCompile Include="DemoInfo.cpp" />
     <ClCompile Include="DemoInfo_Loader.cpp" />
-    <ClCompile Include="DemoPLay_Control.cpp" />
     <ClCompile Include="Level_network_Demo.cpp" />
     <ClCompile Include="Message_Filter.cpp" />
     <ClCompile Include="xr_level_controller.cpp" />

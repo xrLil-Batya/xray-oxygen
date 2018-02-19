@@ -5,7 +5,6 @@
 #include "game_cl_base.h"
 #include "../xrCore/stream_reader.h"
 #include "Message_Filter.h"
-#include "DemoPlay_Control.h"
 #include "DemoInfo.h"
 #include "../xrEngine/CameraManager.h"
 
@@ -230,13 +229,6 @@ message_filter*	 CLevel::GetMessageFilter()
 		return m_msg_filter;
 	m_msg_filter = xr_new<message_filter>();
 	return m_msg_filter;
-}
-demoplay_control* CLevel::GetDemoPlayControl()
-{
-	if (m_demoplay_control)
-		return m_demoplay_control;
-	m_demoplay_control = xr_new<demoplay_control>();
-	return m_demoplay_control;
 }
 
 float CLevel::GetDemoPlaySpeed() const

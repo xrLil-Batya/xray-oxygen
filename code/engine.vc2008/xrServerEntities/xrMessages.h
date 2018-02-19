@@ -11,15 +11,8 @@ enum {
 	M_SV_CONFIG_GAME,
 	M_SV_CONFIG_FINISHED,
 
-	M_MIGRATE_DEACTIVATE,		// TO:   Changing server, just deactivate
-	M_MIGRATE_ACTIVATE,			// TO:   Changing server, full state
-
-	M_CHAT,						// DUAL:
-
 	M_EVENT,					// Game Event
-	M_CL_INPUT,					// Client Input Data
 	//----------- for E3 -----------------------------
-	M_CL_UPDATE,
 	M_UPDATE_OBJECTS,
 	//-------------------------------------------------
 	M_CLIENTREADY,				// Client has finished to load level and are ready to play
@@ -33,21 +26,10 @@ enum {
 	M_SWITCH_DISTANCE,
 	M_GAMEMESSAGE,					// Game Message
 	M_EVENT_PACK,					// Pack of M_EVENT
-
 	//-----------------------------------------------------
-	M_GAMESPY_CDKEY_VALIDATION_CHALLENGE,
-	M_GAMESPY_CDKEY_VALIDATION_CHALLENGE_RESPOND,
 	M_CLIENT_CONNECT_RESULT,
 	M_CLIENT_REQUEST_CONNECTION_DATA,
-
-	M_CHAT_MESSAGE,
-	M_CLIENT_WARN,
-	M_CHANGE_LEVEL_GAME,
 	//-----------------------------------------------------
-	M_CL_PING_CHALLENGE,
-	M_CL_PING_CHALLENGE_RESPOND,
-	//-----------------------------------------------------
-	M_CL_AUTH,
 	M_BULLET_CHECK_RESPOND,
 	//-----------------------------------------------------
 	M_STATISTIC_UPDATE,
@@ -55,23 +37,13 @@ enum {
 	//-----------------------------------------------------
 	M_PLAYER_FIRE,
 	//-----------------------------------------------------
-	M_MOVE_PLAYERS,
-	M_MOVE_ARTEFACTS,
-	M_MOVE_PLAYERS_RESPOND,
-	//-----------------------------------------------------
-	M_CHANGE_SELF_NAME,
 	M_REMOTE_CONTROL_AUTH,
 	M_REMOTE_CONTROL_CMD,
-	M_BATTLEYE,
 
 	M_SV_MAP_NAME,				//request and responce
 	M_SV_DIGEST,				//request and responce
 
 	M_FILE_TRANSFER,
-	M_MAKE_SCREENSHOT,
-	M_SECURE_KEY_SYNC,
-	M_SECURE_MESSAGE,
-	M_CREATE_PLAYER_STATE,
 	M_COMPRESSED_UPDATE_OBJECTS,
 
 	MSG_FORCEDWORD				= u32(-1)
