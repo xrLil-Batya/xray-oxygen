@@ -253,7 +253,7 @@ void script_register_stdfs(lua_State *L)
 	module(L, "stdfs")
 		[
 		def("directory_iterator", &directory_iterator),
-		def("recursive_directory_iterator", &recursive_directory_iterator),
+		def("recursive_directory_iterator", &recursive_directory_iterator)
 
 		///#TODO: Fix Luabind later
 //		class_<stdfs::path>("path")
