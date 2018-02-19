@@ -91,6 +91,7 @@ public:
 
 	virtual void	afterDetach				();
 	virtual void	renderable_Render		();
+	ref_sound 		m_switch_sound;
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

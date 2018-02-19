@@ -164,6 +164,15 @@ void CTorch::Switch()
 {
 	bool bActive			= !m_switched_on;
 	Switch					(bActive);
+	if(pSettings->line_exist(cNameSect(), "switch_sound"))
+	{
+	if(m_switch_sound._feedback())
+		m_switch_sound.stop		();
+	
+		shared_str snd_name			= pSettings->r_string(cNameSect(), "switch_sound");
+		m_switch_sound.create			(snd_name.c_str(), st_Effect, sg_SourceType);
+		m_switch_sound.play			(NULL, sm_2D);
+	}
 }
 
 void CTorch::Switch(bool light_on)

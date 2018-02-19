@@ -853,7 +853,13 @@ void CActor::UpdateCL	()
 			Device.m_SecondViewport.SetSVPActive(false);
         }
     }
-
+	float	cs_min		= pSettings->r_float	(cNameSect(),"ph_crash_speed_min"	);
+	float	cs_max		= pSettings->r_float	(cNameSect(),"ph_crash_speed_max"	);
+	if(psActorFlags.test(AF_GODMODE_RT || AF_GODMODE || AF_NO_CLIP))
+	character_physics_support()->movement()->SetCrashSpeeds	(800,900);
+	else
+	character_physics_support()->movement()->SetCrashSpeeds	(cs_min,cs_max);
+	
 	UpdateDefferedMessages();
 
 	if (g_Alive()) 

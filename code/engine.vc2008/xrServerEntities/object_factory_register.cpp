@@ -61,17 +61,6 @@
 #	include "helicopter.h"
 
 #	include "MercuryBall.h"
-#	include "BlackDrops.h"
-#	include "BlackGraviArtifact.h"
-#	include "BastArtifact.h"
-#	include "DummyArtifact.h"
-#	include "ZudaArtifact.h"
-#	include "ThornArtifact.h"
-#	include "FadedBall.h"
-#	include "ElectricBall.h"
-#	include "RustyHairArtifact.h"
-#	include "GalantineArtifact.h"
-#	include "GraviArtifact.h"
 
 #	include "weaponFN2000.h"
 #	include "weaponAK74.h"
@@ -124,7 +113,6 @@
 #	include "radioactivezone.h"
 #	include "level_changer.h"
 #	include "script_zone.h"
-#	include "team_base_zone.h"
 #	include "torridZone.h"
 #	include "ZoneVisual.h"
 #	include "hairszone.h"
@@ -219,20 +207,7 @@ void CObjectFactory::register_classes	()
 	ADD(CHelicopter				,CSE_ALifeHelicopter			,CLSID_VEHICLE_HELICOPTER		,"helicopter");
 
 	// Artefacts
-	ADD(CMercuryBall			,CSE_ALifeItemArtefact			,CLSID_AF_MERCURY_BALL			,"art_mercury_ball");
-	ADD(CBlackDrops				,CSE_ALifeItemArtefact			,CLSID_AF_BLACKDROPS			,"art_black_drops");
-	ADD(CBlackGraviArtefact		,CSE_ALifeItemArtefact			,CLSID_AF_NEEDLES				,"art_needles");
-	ADD(CBastArtefact			,CSE_ALifeItemArtefact			,CLSID_AF_BAST					,"art_bast_artefact");
-	ADD(CBlackGraviArtefact		,CSE_ALifeItemArtefact			,CLSID_AF_BLACK_GRAVI			,"art_gravi_black");
-	ADD(CDummyArtefact			,CSE_ALifeItemArtefact			,CLSID_AF_DUMMY					,"art_dummy");
-	ADD(CZudaArtefact			,CSE_ALifeItemArtefact			,CLSID_AF_ZUDA					,"art_zuda");
-	ADD(CThornArtefact			,CSE_ALifeItemArtefact			,CLSID_AF_THORN					,"art_thorn");
-	ADD(CFadedBall				,CSE_ALifeItemArtefact			,CLSID_AF_FADED_BALL			,"art_faded_ball");
-	ADD(CElectricBall			,CSE_ALifeItemArtefact			,CLSID_AF_ELECTRIC_BALL			,"art_electric_ball");
-	ADD(CRustyHairArtefact		,CSE_ALifeItemArtefact			,CLSID_AF_RUSTY_HAIR			,"art_rusty_hair");
-	ADD(CGalantineArtefact		,CSE_ALifeItemArtefact			,CLSID_AF_GALANTINE				,"art_galantine");
-	ADD(CGraviArtefact			,CSE_ALifeItemArtefact			,CLSID_AF_GRAVI					,"art_gravi");
-	ADD(CGraviArtefact			,CSE_ALifeItemArtefact			,CLSID_ARTEFACT					,"artefact");
+	ADD(CArtefact				,CSE_ALifeItemArtefact			,CLSID_ARTEFACT					,"artefact");
 
 	//  [8/15/2006]
 	ADD(CWeaponMagazined		,CSE_ALifeItemWeaponMagazined	,CLSID_OBJECT_W_MAGAZINED		,"wpn_wmagaz");
@@ -311,7 +286,6 @@ void CObjectFactory::register_classes	()
 #endif	//	BENCHMARK_BUILD
 	ADD(CScriptZone				,CSE_ALifeSpaceRestrictor		,CLSID_SCRIPT_ZONE				,"script_zone");
 	ADD(CSmartZone				,CSE_ALifeSmartZone				,CLSID_SMART_ZONE				,"smart_zone");
-	ADD(CTeamBaseZone			,CSE_ALifeTeamBaseZone			,CLSID_Z_TEAM_BASE				,"team_base_zone");
 	ADD(CTorridZone				,CSE_ALifeTorridZone			,CLSID_Z_TORRID					,"torrid_zone");
 	ADD(CSpaceRestrictor		,CSE_ALifeSpaceRestrictor		,CLSID_SPACE_RESTRICTOR			,"space_restrictor");
 //.	ADD(CAmebaZone				,CSE_ALifeZoneVisual			,CLSID_Z_AMEBA					,"ameba_zone");
