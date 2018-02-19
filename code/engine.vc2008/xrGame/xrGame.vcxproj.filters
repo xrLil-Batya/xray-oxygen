@@ -6213,7 +6213,9 @@
     <ClInclude Include="imotion_velocity.h">
       <Filter>GamePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="MercuryBall.h" />
+    <ClInclude Include="MercuryBall.h">
+      <Filter>Core\Client\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8322,9 +8324,6 @@
     <ClCompile Include="xrServer_perform_migration.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
-    <ClCompile Include="xrServer_perform_RPgen.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
     <ClCompile Include="xrServer_perform_sls_default.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
@@ -8919,7 +8918,9 @@
     <ClCompile Include="imotion_velocity.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="MercuryBall.cpp" />
+    <ClCompile Include="MercuryBall.cpp">
+      <Filter>Core\Client\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">
