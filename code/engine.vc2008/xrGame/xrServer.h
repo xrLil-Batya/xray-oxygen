@@ -174,8 +174,6 @@ public:
 	virtual void			OnCL_Connected		(IClient* CL);
 	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
-			void			GetPooledState			(xrClientData* xrCL);
-			void			ClearDisconnectedPool	() { m_disconnected_clients.Clear(); };
 
 	virtual IClient*		client_Create		();								// create client info
 	virtual IClient*		client_Find_Get		(ClientID ID);					// Find earlier disconnected client

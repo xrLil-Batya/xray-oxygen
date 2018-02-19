@@ -147,16 +147,6 @@ void xrServer::client_Destroy(IClient* C)
 	}
 }
 
-void xrServer::GetPooledState(xrClientData* xrCL)
-{
-	xrClientData* pooled_client = m_disconnected_clients.Get(xrCL);
-	if (!pooled_client)
-		return;
-
-	xrCL->flags.bReconnect			= TRUE;
-	xr_delete						(pooled_client);
-}
-
 //--------------------------------------------------------------------
 int	g_Dump_Update_Write = 0;
 
