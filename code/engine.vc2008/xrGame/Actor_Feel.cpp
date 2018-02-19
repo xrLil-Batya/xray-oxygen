@@ -237,7 +237,7 @@ void	CActor::PickupModeUpdate_COD	()
 #include "grenadelauncher.h"
 #include "Scope.h"
 #include "Silencer.h"
-#include "StalkerOutfit.h"
+#include "CustomOutfit.h"
 #include "ActorHelmet.h"
 #include "pda.h"
 
@@ -259,7 +259,7 @@ void CActor::PickupInfoDraw(CObject* object)
 	CGrenadeLauncher* grenadela = smart_cast<CGrenadeLauncher*>(object);
 	CScope* scope = smart_cast<CScope*>(object);
 	CSilencer* sil = smart_cast<CSilencer*>(object);
-	CStalkerOutfit* stalk = smart_cast<CStalkerOutfit*>(object);
+	CCustomOutfit* stalk = smart_cast<CCustomOutfit*>(object);
 	CHelmet* helm = smart_cast<CHelmet*>(object);
 	CPda* doc = smart_cast<CPda*>(object);
 	

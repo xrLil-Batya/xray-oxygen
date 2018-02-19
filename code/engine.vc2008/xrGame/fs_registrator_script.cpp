@@ -256,15 +256,15 @@ void script_register_stdfs(lua_State *L)
 		def("recursive_directory_iterator", &recursive_directory_iterator),
 
 		///#TODO: Fix Luabind later
-//		class_<stdfs::path>("path")
-//			.property("full_path_name", &get_full_path)
-//			.property("full_filename", &get_full_filename)
-//			.property("short_filename", &get_short_filename)
-//			.property("extension", &get_extension)
-//			.property("last_write_time", &get_last_write_time)
-//			.property("last_write_time_string", &get_last_write_time_string)
-//			.property("get_engine_dir", &get_engine_dir)
-//		];
+		class_<stdfs::path>("path")
+			.property("full_path_name", &get_full_path)
+			.property("full_filename", &get_full_filename)
+			.property("short_filename", &get_short_filename)
+			.property("extension", &get_extension)
+			.property("last_write_time", &get_last_write_time)
+			.property("last_write_time_string", &get_last_write_time_string)
+			.property("get_engine_dir", &get_engine_dir)
+		];
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// SCRIPT C++17 FILESYSTEM - END ///////////////////////////////
