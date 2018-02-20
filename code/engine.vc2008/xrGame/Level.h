@@ -32,7 +32,6 @@ class	CLevelSoundManager;
 class	CGameTaskManager;
 class	CZoneList;
 class	message_filter;
-class	demoplay_control;
 class	demo_info;
 class	CDebugRenderer;
 
@@ -79,10 +78,8 @@ protected:
 	CPHCommander				*m_ph_commander;
 	CPHCommander				*m_ph_commander_scripts;
 	CPHCommander				*m_ph_commander_physics_worldstep;
+
 	// Local events
-	EVENT						eChangeRP;
-	EVENT						eDemoPlay;
-	EVENT						eChangeTrack;
 	EVENT						eEnvironment;
 	EVENT						eEntitySpawn;
 	//---------------------------------------------
@@ -100,15 +97,13 @@ public:
 #endif
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
-	void						SetInterpolationSteps	(u32 InterpSteps);
-    static bool						InterpolationDisabled	();
+    static bool					InterpolationDisabled	();
 	void						ReculcInterpolationSteps() const;
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnInvalidHost			();
 	virtual void				OnSessionFull			();
 	virtual void				OnConnectRejected		();
 			bool				PostponedSpawn			(u16 id);
@@ -198,8 +193,6 @@ protected:
 	bool	xr_stdcall			net_start_client5				();
 	bool	xr_stdcall			net_start_client6				();
 
-	void						net_OnChangeSelfName			(NET_Packet* P);
-
 	void						CalculateLevelCrc32		();
 public:
 	bool						IsChecksumsEqual		(u32 check_sum) const;
@@ -245,9 +238,6 @@ public:
 	virtual void				IR_OnMouseStop			( int, int);
 	virtual void				IR_OnMouseWheel			( int direction);
 	virtual void				IR_OnActivate			(void);
-	
-			int					get_RPID				(LPCSTR name);
-
 
 	// Game
 	void						InitializeClientGame	(NET_Packet& P);
@@ -261,7 +251,6 @@ public:
 	void						g_sv_Spawn				(CSE_Abstract* E);					// server reply/command spawning
 	
 	// Save/Load/State
-	void						SLS_Load				(LPCSTR name);		// Game Load
 	void						SLS_Default				();					// Default/Editor Load
 	
 	IC CSpaceRestrictionManager		&space_restriction_manager	();

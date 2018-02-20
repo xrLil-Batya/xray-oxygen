@@ -140,56 +140,6 @@ void CLevel::ClientReceive()
 				u8 compression_type = P->r_u8();
 				ProcessCompressedUpdate(*P, compression_type);
 			}break;
-		case M_CL_UPDATE:
-			{
-				P->r_u16		(ID);
-				u32 Ping = P->r_u32();
-				CGameObject*	O	= smart_cast<CGameObject*>(Objects.net_Find		(ID));
-				if (0 == O)		break;
-				O->net_Import(*P);
-		//---------------------------------------------------
-				UpdateDeltaUpd(timeServer());
-				if (pObjects4CrPr.empty() && pActors4CrPr.empty())
-					break;
-				if (!smart_cast<CActor*>(O))
-					break;
-
-				u32 dTime = (Level().timeServer() + Ping) < P->timeReceive ? Ping : Level().timeServer() - P->timeReceive + Ping;
-
-				u32 NumSteps = physics_world()->CalcNumSteps(dTime);
-				SetNumCrSteps(NumSteps);
-
-				O->CrPr_SetActivationStep(u32(physics_world()->StepsNum()) - NumSteps);
-				AddActor_To_Actors4CrPr(O);
-
-			}break;
-		case M_MOVE_PLAYERS:
-			{
-				game_events->insert		(*P);
-				if (g_bDebugEvents)		ProcessGameEvents();
-			}break;
-		// [08.11.07] Alexander Maniluk: added new message handler for moving artefacts.
-		case M_MOVE_ARTEFACTS:
-			{
-				u8 Count = P->r_u8();
-				for (u8 i=0; i<Count; ++i)
-				{
-					u16 ID = P->r_u16();					
-					Fvector NewPos;
-					P->r_vec3(NewPos);
-					CArtefact * OArtefact = smart_cast<CArtefact*>(Objects.net_Find(ID));
-					if (!OArtefact)		break;
-					OArtefact->MoveTo(NewPos);
-				};
-			}break;
-		//------------------------------------------------
-		case M_CL_INPUT:
-			{
-				P->r_u16		(ID);
-				CObject*	O	= Objects.net_Find		(ID);
-				if (0 == O)		break;
-				O->net_ImportInput(*P);
-			}break;
 		//---------------------------------------------------
 		case M_SV_CONFIG_NEW_CLIENT:
 			InitializeClientGame	(*P);
@@ -201,23 +151,6 @@ void CLevel::ClientReceive()
 			{
 				game_configured			= TRUE;
 			}break;
-		case M_MIGRATE_DEACTIVATE:	// TO:   Changing server, just deactivate
-			{
-				NODEFAULT;
-			}
-			break;
-		case M_MIGRATE_ACTIVATE:	// TO:   Changing server, full state
-			{
-				NODEFAULT;
-			}
-			break;
-		case M_CHAT:
-			{
-				char	buffer[256];
-				P->r_stringZ(buffer);
-				Msg		("- %s",buffer);
-			}
-			break;
 		case M_GAMEMESSAGE:
 			{
 				if (!game) break;
@@ -256,16 +189,6 @@ void CLevel::ClientReceive()
 			{
 				OnConnectResult(P);
 			}break;
-		case M_CHAT_MESSAGE:
-			{
-				if (!game) break;
-				Game().OnChatMessage(P);
-			}break;
-		case M_CLIENT_WARN:
-			{
-				if (!game) break;
-				Game().OnWarnMessage(P);
-			}break;
 		case M_REMOTE_CONTROL_AUTH:
 		case M_REMOTE_CONTROL_CMD:
 			{
@@ -277,41 +200,6 @@ void CLevel::ClientReceive()
 			}break;
 		case M_SV_DIGEST:
 			{
-			}break;
-		case M_CHANGE_LEVEL_GAME:
-			{
-				Msg("- M_CHANGE_LEVEL_GAME Received");
-				
-                shared_str serverOption = GamePersistent().GetServerOption();
-				const char* m_SO = serverOption.c_str();
-				m_SO = strchr(m_SO, '/'); if (m_SO) m_SO++;
-				m_SO = strchr(m_SO, '/'); 
-
-				shared_str LevelName;
-				shared_str LevelVersion;
-				shared_str GameType;
-
-				P->r_stringZ(LevelName);
-				P->r_stringZ(LevelVersion);
-				P->r_stringZ(GameType);
-
-				string4096 NewServerOptions = "";
-				xr_sprintf(NewServerOptions, "%s/%s/%s%s", LevelName.c_str(), GameType.c_str(), map_ver_string, LevelVersion.c_str());
-
-				if (m_SO)
-				{
-					string4096 additional_options;
-					xr_strcat(NewServerOptions, sizeof(NewServerOptions),
-						remove_version_option(m_SO, additional_options, sizeof(additional_options))
-					);
-				}
-                GamePersistent().SetServerOption(NewServerOptions);
-				MakeReconnect();
-			
-			}break;
-		case M_CHANGE_SELF_NAME:
-			{
-				net_OnChangeSelfName(P);
 			}break;
 		case M_BULLET_CHECK_RESPOND:
 			{
@@ -331,12 +219,6 @@ void CLevel::ClientReceive()
 			{
 				game_events->insert		(*P);
 				if (g_bDebugEvents)		ProcessGameEvents();
-			}break;
-		case M_SECURE_KEY_SYNC:
-			{
-			}break;
-		case M_SECURE_MESSAGE:
-			{
 			}break;
 		}
 

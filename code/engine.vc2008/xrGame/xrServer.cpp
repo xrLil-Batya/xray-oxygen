@@ -147,16 +147,6 @@ void xrServer::client_Destroy(IClient* C)
 	}
 }
 
-void xrServer::GetPooledState(xrClientData* xrCL)
-{
-	xrClientData* pooled_client = m_disconnected_clients.Get(xrCL);
-	if (!pooled_client)
-		return;
-
-	xrCL->flags.bReconnect			= TRUE;
-	xr_delete						(pooled_client);
-}
-
 //--------------------------------------------------------------------
 int	g_Dump_Update_Write = 0;
 
@@ -375,37 +365,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 				OnMessage			(tmpP, sender);
 			};			
 		}break;
-	case M_CL_UPDATE:
-		{
-			xrClientData* CL		= ID_to_client	(sender);
-			if (!CL)				break;
-			CL->net_Ready			= TRUE;
-
-			if (!CL->net_PassUpdates)
-				break;
-			//-------------------------------------------------------------------
-			u32 ClientPing = CL->stats.getPing();
-			P.w_seek(P.r_tell()+2, &ClientPing, 4);
-			//-------------------------------------------------------------------
-			if (SV_Client) 
-				SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-			VERIFY					(verify_entities());
-		}break;
-	case M_MOVE_PLAYERS_RESPOND:
-		{
-			xrClientData* CL		= ID_to_client	(sender);
-			if (!CL)				break;
-			CL->net_Ready			= TRUE;
-			CL->net_PassUpdates		= TRUE;
-		}break;
 	//-------------------------------------------------------------------
-	case M_CL_INPUT:
-		{
-			xrClientData* CL		= ID_to_client	(sender);
-			if (CL)	CL->net_Ready	= TRUE;
-			if (SV_Client) SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-			VERIFY					(verify_entities());
-		}break;
 	case M_GAMEMESSAGE:
 		{
 			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
@@ -465,19 +425,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			R_ASSERT(CL);
 			ProcessClientDigest			(CL, &P);
 		}break;
-	case M_CHANGE_LEVEL_GAME:
-		{
-			ClientID CID; CID.set		(0xffffffff);
-			SendBroadcast				(CID,P,net_flags(TRUE,TRUE));
-		}break;
-	case M_CL_AUTH:
-		{
-			game->AddDelayedEvent		(P,GAME_EVENT_PLAYER_AUTH, 0, sender);
-		}break;
-	case M_CREATE_PLAYER_STATE:
-		{
-			game->AddDelayedEvent		(P,GAME_EVENT_CREATE_PLAYER_STATE, 0, sender);
-		}break;
 	case M_STATISTIC_UPDATE:
 		{
 			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
@@ -506,18 +453,9 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		{
 			AddDelayedPacket(P, sender);
 		}break;
-	case M_BATTLEYE:
-		{
-		}break;
 	case M_FILE_TRANSFER:
 		{
 			AddDelayedPacket(P, sender);
-		}break;
-	case M_SECURE_KEY_SYNC:
-		{
-		}break;
-	case M_SECURE_MESSAGE:
-		{
 		}break;
 	}
 

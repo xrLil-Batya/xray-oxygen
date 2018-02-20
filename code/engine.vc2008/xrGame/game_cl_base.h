@@ -15,7 +15,7 @@ struct SZoneMapEntityData{
 	SZoneMapEntityData(){pos.set(.0f,.0f,.0f);color = 0xff00ff00;}
 };
 
-class	game_cl_GameState	: public game_GameState, public ISheduled
+class game_cl_GameState : public game_GameState, public ISheduled
 {
 	typedef game_GameState	inherited;
 	shared_str						m_game_type_name;
@@ -38,7 +38,6 @@ protected:
 	virtual		float				shedule_Scale			()				{ return 1.0f;};
 	virtual		bool				shedule_Needed			()				{ return true;};
 
-				void				sv_GameEventGen			(NET_Packet& P);
 				void				sv_EventSend			(NET_Packet& P);
 public:
 									game_cl_GameState		();
@@ -67,9 +66,6 @@ public:
 	void							u_EventGen				(NET_Packet& P, u16 type, u16 dest);
 	void							u_EventSend				(NET_Packet& P);
 
-	virtual		void				ChatSay					(LPCSTR phrase, bool bAll)	{};
-	virtual		void				OnChatMessage			(NET_Packet* P)	{};
-	virtual		void				OnWarnMessage			(NET_Packet* P)	{};
 	virtual		void				OnRadminMessage			(u16 type, NET_Packet* P)	{};
 	
 	virtual		void				OnRender				()	{};

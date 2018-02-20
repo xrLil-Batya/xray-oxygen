@@ -42,7 +42,6 @@
 #include "UI/UIGameTutorial.h"
 #include "file_transfer.h"
 #include "message_filter.h"
-#include "demoplay_control.h"
 #include "demoinfo.h"
 #include "CustomDetector.h"
 #include "GamePersistent.h"
@@ -121,11 +120,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bGameConfigStarted		= FALSE;
 	m_connect_server_err		= xrServer::ErrNoError;
 
-	eChangeRP					= Engine.Event.Handler_Attach	("LEVEL:ChangeRP",this);
-	eDemoPlay					= Engine.Event.Handler_Attach	("LEVEL:PlayDEMO",this);
-	eChangeTrack				= Engine.Event.Handler_Attach	("LEVEL:PlayMusic",this);
 	eEnvironment				= Engine.Event.Handler_Attach	("LEVEL:Environment",this);
-
 	eEntitySpawn				= Engine.Event.Handler_Attach	("LEVEL:spawn",this);
 
 	m_pBulletManager			= xr_new<CBulletManager>();
@@ -178,7 +173,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_DemoSaveStarted = FALSE;
 	m_current_spectator = nullptr;
 	m_msg_filter = nullptr;
-	m_demoplay_control = nullptr;
 	m_demo_info	= nullptr;
 
 	R_ASSERT				(!g_player_hud);
@@ -200,13 +194,9 @@ CLevel::~CLevel()
 	hud_zones_list				= NULL;
 
 	Msg							("- Destroying level");
-
+	
 	Engine.Event.Handler_Detach	(eEntitySpawn,	this);
-
 	Engine.Event.Handler_Detach	(eEnvironment,	this);
-	Engine.Event.Handler_Detach	(eChangeTrack,	this);
-	Engine.Event.Handler_Detach	(eDemoPlay,		this);
-	Engine.Event.Handler_Detach	(eChangeRP,		this);
 
 	if (physics_world())
 	{
@@ -289,7 +279,6 @@ CLevel::~CLevel()
 		}
 	}
 	xr_delete(m_msg_filter);
-	xr_delete(m_demoplay_control);
 	xr_delete(m_demo_info);
 	if (IsDemoSave())
 	{
@@ -325,12 +314,6 @@ void CLevel::PrefetchSound		(LPCSTR name)
 	// if find failed - preload sound
 	if (it==sound_registry.end())
 		sound_registry[snd_name].create(snd_name.c_str(),st_Effect,sg_SourceType);
-}
-
-// Game interface ////////////////////////////////////////////////////
-int	CLevel::get_RPID(LPCSTR)
-{
-	return -1;
 }
 
 BOOL		g_bDebugEvents = FALSE	;
@@ -437,25 +420,6 @@ void CLevel::ProcessGameEvents()
 			case M_EVENT:
 				{
 					cl_Process_Event(dest, type, P);
-				}break;
-			case M_MOVE_PLAYERS:
-				{
-					u8 Count = P.r_u8();
-					for (u8 i=0; i<Count; i++)
-					{
-						u16 ID = P.r_u16();					
-						Fvector NewPos, NewDir;
-						P.r_vec3(NewPos);
-						P.r_vec3(NewDir);
-
-						CActor*	OActor	= smart_cast<CActor*>(Objects.net_Find		(ID));
-						if (0 == OActor)		break;
-						OActor->MoveActor(NewPos, NewDir);
-					};
-
-					NET_Packet PRespond;
-					PRespond.w_begin(M_MOVE_PLAYERS_RESPOND);
-					Send(PRespond, net_flags(TRUE, TRUE));
 				}break;
 			case M_STATISTIC_UPDATE: break;
 			case M_FILE_TRANSFER:
@@ -727,14 +691,6 @@ void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 		char	Name[128];	Name[0]=0;
 		sscanf	(LPCSTR(P1),"%s", Name);
 		Level().g_cl_Spawn	(Name,0xff, M_SPAWN_OBJECT_LOCAL, Fvector().set(0,0,0));
-	} 
-	else if (E==eDemoPlay && P1) 
-	{
-		char* name = (char*)P1;
-		string_path RealName;
-		xr_strcpy		(RealName,name);
-		xr_strcat			(RealName,".xrdemo");
-		Cameras().AddCamEffector(xr_new<CDemoPlay> (RealName,1.3f,0));
 	}
 }
 

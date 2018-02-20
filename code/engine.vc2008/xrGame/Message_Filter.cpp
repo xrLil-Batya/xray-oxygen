@@ -160,16 +160,9 @@ void message_filter::dbg_print_msg(NET_Packet & packet, msg_type_subtype_t const
 				};
 			}
 		}break;
-	case M_CHAT_MESSAGE:
-		{
-		}break;
 	case M_SPAWN:
 		{
 			xr_sprintf(tmp_string, "--- M_SPAWN                [%7u]", msg_type.msg_receive_time);
-		}break;
-	case M_SV_CONFIG_NEW_CLIENT:
-		{
-			xr_sprintf(tmp_string, "--- M_SV_CONFIG_NEW_CLIENT [%7u]", msg_type.msg_receive_time);
 		}break;
 	case M_SV_CONFIG_GAME:
 		{
