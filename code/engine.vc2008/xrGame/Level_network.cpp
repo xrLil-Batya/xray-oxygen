@@ -15,7 +15,6 @@
 #include "seniority_hierarchy_holder.h"
 #include "UIGameCustom.h"
 #include "string_table.h"
-#include "file_transfer.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
 #include "GamePersistent.h"
@@ -110,16 +109,6 @@ void CLevel::net_Stop		()
 	bReady						= false;
 	m_bGameConfigStarted		= FALSE;
 
-	if (m_file_transfer)
-		xr_delete(m_file_transfer);
-
-	if (IsDemoPlay() && m_current_spectator)	//destroying demo spectator ...
-	{
-		m_current_spectator->setDestroy	(TRUE);
-		SetControlEntity(NULL); //m_current_spectator == CurrentControlEntity()
-		m_current_spectator = NULL;
-		
-	}else 
 	if(IsDemoSave() && !IsDemoInfoSaved())
 		SaveDemoInfo();
 

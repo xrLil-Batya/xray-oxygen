@@ -60,7 +60,6 @@ void CLevel::StartPlayDemo()
 {
 	R_ASSERT(IsDemoPlay() && !m_DemoPlayStarted);
 
-	m_current_spectator	= NULL;
 	m_DemoPlayStarted	= TRUE;
 	m_StartGlobalTime	= Device.dwTimeGlobal;
 	SetDemoPlaySpeed	(1.0f);
@@ -94,9 +93,7 @@ void CLevel::RestartPlayDemo()
 		//After remove_objects() invokation there where left a serveral (20) UpdateCLs so:
 #ifdef DEBUG
 		VERIFY(g_pGameLevel);
-		VERIFY(m_current_spectator);
 		g_pGameLevel->Cameras().dbg_upd_frame	= 0;
-		m_current_spectator->dbg_update_cl		= 0;
 #endif
 		StopPlayDemo	();
 	}
@@ -274,5 +271,6 @@ void __stdcall CLevel::MSpawnsCatchCallback(u32 message, u32 subtype, NET_Packet
 
 CObject* CLevel::GetDemoSpectator()	
 { 
-	return smart_cast<CGameObject*>(m_current_spectator); 
+#pragma message("Remove CLevel::GetDemoSpectator()")
+	return nullptr;
 };

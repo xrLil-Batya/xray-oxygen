@@ -14,10 +14,8 @@
 #include "Level_network_map_sync.h"
 #include "traffic_optimization.h"
 
-
 class	CHUDManager;
 class	CParticlesObject;
-class	xrServer;
 class	game_cl_GameState;
 class	NET_Queue_Event;
 class	CSE_Abstract;
@@ -37,18 +35,8 @@ class	CDebugRenderer;
 
 extern float g_fov;
 
-const int maxRP					= 64;
-const int maxTeams				= 32;
-
-//class CFogOfWar;
-class CFogOfWarMngr;
 class CBulletManager;
 class CMapManager;
-
-namespace file_transfer
-{
-	class client_site;
-}; //namespace file_transfer
 
 class CLevel					: public IGame_Level, public IPureClient
 {
@@ -311,19 +299,14 @@ public:
 	IC CBulletManager&	BulletManager() {return	*m_pBulletManager;}
 
 	//by Mad Max 
-	CSE_Abstract	*spawn_item							(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
+	CSE_Abstract		*spawn_item							(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
 			
-protected:
 public:
-
-public:
-			void			remove_objects				();
-			virtual void	OnSessionTerminate		(LPCSTR reason);
+		void			remove_objects				();
+		virtual void	OnSessionTerminate		(LPCSTR reason);
 			
-			file_transfer::client_site*					m_file_transfer;
-			
-//	compression::ppmd_trained_stream*			m_trained_stream;
 	compression::lzo_dictionary_buffer			m_lzo_dictionary;
+
 	//alligned to 16 bytes m_lzo_working_buffer
 	u8*											m_lzo_working_memory;
 	u8*											m_lzo_working_buffer;

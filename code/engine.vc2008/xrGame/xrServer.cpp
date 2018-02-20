@@ -15,9 +15,6 @@
 
 #include "../xrEngine/XR_IOConsole.h"
 #include "ui/UIInventoryUtilities.h"
-#include "file_transfer.h"
-#include "screenshot_server.h"
-#include "xrServer_info.h"
 
 #include "../FrayBuildConfig.hpp"
 
@@ -45,7 +42,6 @@ void	xrClientData::Clear()
 
 xrServer::xrServer() : IPureServer(Device.GetTimerGlobal())
 {
-	m_file_transfers	= NULL;
 	m_aDelayedPackets.clear();
 	m_last_updates_size	= 0;
 	m_last_update_time	= 0;
@@ -68,7 +64,6 @@ xrServer::~xrServer()
 	}
 	m_aDelayedPackets.clear();
 	entities.clear();
-	delete_data(m_info_uploaders);
 }
 
 //--------------------------------------------------------------------
@@ -308,14 +303,8 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 				SendTo				(sender,P_answ,net_flags(TRUE,TRUE));
 			}
 		}break;
-		case M_FILE_TRANSFER:
-		{
-			m_file_transfers->on_message(&P, sender);
-		}break;
 	}
 	VERIFY							(verify_entities());
-
-	//csPlayers.Leave					();
 	return 0;
 }
 
@@ -453,12 +442,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		{
 			AddDelayedPacket(P, sender);
 		}break;
-	case M_FILE_TRANSFER:
-		{
-			AddDelayedPacket(P, sender);
-		}break;
 	}
-
 	VERIFY (verify_entities());
 
 	return 0;
@@ -675,4 +659,11 @@ void xrServer::GetServerInfo(CServerInfo* si)
 
 		si->AddItem("Game time", tmp256, RGB(205, 228, 178));
 	}
+}
+
+void xrServer::Disconnect()
+{
+	IPureServer::Disconnect();
+	SLS_Clear();
+	xr_delete(game);
 }

@@ -1,4 +1,3 @@
-#pragma once
 // xrServer.h: interface for the xrServer class.
 //
 //////////////////////////////////////////////////////////////////////
@@ -42,21 +41,12 @@ struct	svs_respawn
 };
 IC bool operator < (const svs_respawn& A, const svs_respawn& B)	{ return A.timestamp<B.timestamp; }
 
-namespace file_transfer
-{
-	class server_site;
-};//namespace file_transfer
-
-class server_info_uploader;
-
 class xrServer	: public IPureServer  
 {
 private:
 	xrS_entities				entities;
 	xr_multiset<svs_respawn>	q_respawn;
 	xr_vector<u16>				conn_spawned_ids;
-
-	file_transfer::server_site*	m_file_transfers;
 	
 	typedef server_updates_compressor::send_ready_updates_t::const_iterator update_iterator_t;
 	update_iterator_t			m_update_begin;
@@ -67,14 +57,6 @@ private:
 	void						SendUpdatePacketsToAll		();
 	u32							m_last_updates_size;
 	u32							m_last_update_time;
-	
-	
-	void						SendServerInfoToClient		(ClientID const & new_client);
-	server_info_uploader&		GetServerInfoUploader		();
-	
-	typedef xr_vector<server_info_uploader*>	info_uploaders_t;
-
-	info_uploaders_t			m_info_uploaders;
 
 	struct DelayedPacket
 	{
@@ -108,10 +90,10 @@ private:
 		> id_generator_type;
 
 private:
-	id_generator_type					m_tID_Generator;
+	id_generator_type		m_tID_Generator;
 
 protected:
-	void					Server_Client_Check				(IClient* CL);
+	void					Server_Client_Check		(IClient* CL);
 public:
 	game_sv_GameState*		game;
 
@@ -146,7 +128,6 @@ public:
 	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
 	
-	xrClientData*			SelectBestClientToMigrateTo		(CSE_Abstract* E, BOOL bForceAnother=FALSE);
 	void					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
 	void	__stdcall		SendConfigFinished		(ClientID const & clientId);
 	void					AttachNewClient			(IClient* CL);

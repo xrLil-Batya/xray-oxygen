@@ -5,7 +5,6 @@ private:
 	BOOL						m_DemoSave;
 	BOOL						m_DemoSaveStarted;
 	u32							m_StartGlobalTime;
-	CObject*					m_current_spectator;	//in real, this is CurrentControlEntity 
 	message_filter*				m_msg_filter;
 public:
 	CObject*					GetDemoSpectator		();

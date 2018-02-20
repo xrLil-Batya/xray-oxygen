@@ -11,7 +11,6 @@
 #include "ai_space.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
-#include "file_transfer.h"
 #include "message_filter.h"
 #include "../xrphysics/iphworld.h"
 #include "GamePersistent.h"
@@ -215,13 +214,7 @@ void CLevel::ClientReceive()
 		case M_STATISTIC_UPDATE_RESPOND: //deprecated, see  xrServer::OnMessage
 			{
 			}break;
-		case M_FILE_TRANSFER:
-			{
-				game_events->insert		(*P);
-				if (g_bDebugEvents)		ProcessGameEvents();
-			}break;
 		}
-
 		net_msg_Release();
 	}	
 	EndProcessQueue();
@@ -229,7 +222,7 @@ void CLevel::ClientReceive()
 	if (g_bDebugEvents) ProcessGameSpawns();
 }
 
-void				CLevel::OnMessage				(void* data, u32 size)
+void CLevel::OnMessage(void* data, u32 size)
 {	
 	IPureClient::OnMessage(data, size);	
 };

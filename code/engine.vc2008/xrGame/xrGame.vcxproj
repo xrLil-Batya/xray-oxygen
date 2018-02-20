@@ -1556,10 +1556,8 @@
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h" />
     <ClInclude Include="static_cast_checked.hpp" />
-    <ClInclude Include="screenshot_server.h" />
     <ClInclude Include="xrClientsPool.h" />
     <ClInclude Include="xrServer.h" />
-    <ClInclude Include="xrServer_info.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="xrServer_updates_compressor.h" />
     <ClInclude Include="xrServerMapSync.h" />
@@ -1595,10 +1593,6 @@
     <ClInclude Include="..\xrServerEntities\script_value_container_impl.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
     <ClInclude Include="xrServer_svclient_validation.h" />
-    <ClInclude Include="file_transfer.h" />
-    <ClInclude Include="filereceiver_node.h" />
-    <ClInclude Include="filetransfer_common.h" />
-    <ClInclude Include="filetransfer_node.h" />
     <ClInclude Include="ui_base.h" />
     <ClInclude Include="ui_defs.h" />
     <ClInclude Include="UIDialogHolder.h" />
@@ -2705,13 +2699,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="screenshot_server.cpp" />
     <ClCompile Include="xrClientsPool.cpp" />
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">
     </ClCompile>
-    <ClCompile Include="xrServer_balance.cpp" />
-    <ClCompile Include="xrServer_info.cpp" />
     <ClCompile Include="xrServer_updates_compressor.cpp" />
     <ClCompile Include="xrServerMapSync.cpp" />
     <ClCompile Include="game_base.cpp">
@@ -2774,12 +2765,8 @@
     <ClCompile Include="xrServer_process_spawn.cpp" />
     <ClCompile Include="xrServer_process_update.cpp" />
     <ClCompile Include="xrServer_svclient_validation.cpp" />
-    <ClCompile Include="file_transfer.cpp" />
-    <ClCompile Include="filereceiver_node.cpp" />
-    <ClCompile Include="filetransfer_node.cpp" />
     <ClCompile Include="xrServer_CL_connect.cpp" />
     <ClCompile Include="xrServer_Connect.cpp" />
-    <ClCompile Include="xrServer_Disconnect.cpp" />
     <ClCompile Include="ui_base.cpp" />
     <ClCompile Include="UIDialogHolder.cpp" />
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">

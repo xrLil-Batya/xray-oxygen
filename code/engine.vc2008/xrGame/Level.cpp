@@ -40,7 +40,6 @@
 #include "actor.h"
 #include "player_hud.h"
 #include "UI/UIGameTutorial.h"
-#include "file_transfer.h"
 #include "message_filter.h"
 #include "demoinfo.h"
 #include "CustomDetector.h"
@@ -171,7 +170,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_DemoPlayStoped	= FALSE;
 	m_DemoSave = FALSE;
 	m_DemoSaveStarted = FALSE;
-	m_current_spectator = nullptr;
 	m_msg_filter = nullptr;
 	m_demo_info	= nullptr;
 
@@ -180,7 +178,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	g_player_hud->load_default();
 	
 	hud_zones_list			= nullptr;
-	m_file_transfer			= nullptr;
 	m_lzo_working_memory	= nullptr;
 	m_lzo_working_buffer	= nullptr;
 }
@@ -422,11 +419,6 @@ void CLevel::ProcessGameEvents()
 					cl_Process_Event(dest, type, P);
 				}break;
 			case M_STATISTIC_UPDATE: break;
-			case M_FILE_TRANSFER:
-				{
-					if (m_file_transfer)			//in case of net_Stop
-						m_file_transfer->on_message(&P);
-				}break;
 			case M_GAMEMESSAGE:
 				{
 					Game().OnGameMessage(P);
