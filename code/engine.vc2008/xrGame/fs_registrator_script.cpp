@@ -1,4 +1,4 @@
-#include "pch_script.h"
+#include "stdafx.h"
 #include "fs_registrator.h"
 #include "../xrcore/LocatorApi.h"
 
@@ -107,13 +107,14 @@ FS_file_list_ex::FS_file_list_ex(LPCSTR path, u32 flags, LPCSTR mask)
 	FS_FileSet		files;
 	FS.file_list(files,path,flags,mask);
 
-	for(FS_FileSetIt it=files.begin();it!=files.end();++it){
+	for(const FS_File &it : files)
+	{
 		m_file_items.push_back	(FS_item());
 		FS_item& itm			= m_file_items.back();
-		ZeroMemory				(itm.name,sizeof(itm.name));
-		xr_strcat					(itm.name,it->name.c_str());
-		itm.modif				= (u32)it->time_write;
-		itm.size				= it->size;
+		std::memset				(itm.name, 0, sizeof(itm.name));
+		xr_strcat					(itm.name,it.name.c_str());
+		itm.modif				= (u32)it.time_write;
+		itm.size				= it.size;
 	}
 
 	FS.m_Flags.set	(CLocatorAPI::flNeedCheck,FALSE);
