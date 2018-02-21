@@ -41,6 +41,7 @@ Team of developers and contributors:
 * [qweasdd136963](https://github.com/qweasdd136963)
 * [Xottab-DUTY](https://github.com/Xottab-DUTY)
 * [StalkerEz](https://github.com/StalkerEz)
+* [Vertver](https://github.com/Vertver)
 * [phobos2077](https://github.com/phobos2077)
 * [JHunt41](https://github.com/JHunt41)
 * [Vampirnik77](https://github.com/Vampirnik77)

@@ -15,7 +15,6 @@
 #include "seniority_hierarchy_holder.h"
 #include "UIGameCustom.h"
 #include "string_table.h"
-#include "file_transfer.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
 #include "GamePersistent.h"
@@ -110,16 +109,6 @@ void CLevel::net_Stop		()
 	bReady						= false;
 	m_bGameConfigStarted		= FALSE;
 
-	if (m_file_transfer)
-		xr_delete(m_file_transfer);
-
-	if (IsDemoPlay() && m_current_spectator)	//destroying demo spectator ...
-	{
-		m_current_spectator->setDestroy	(TRUE);
-		SetControlEntity(NULL); //m_current_spectator == CurrentControlEntity()
-		m_current_spectator = NULL;
-		
-	}else 
 	if(IsDemoSave() && !IsDemoInfoSaved())
 		SaveDemoInfo();
 
@@ -374,14 +363,6 @@ void CLevel::ClearAllObjects()
 	};
 	ProcessGameEvents();
 };
-
-void CLevel::OnInvalidHost()
-{
-	IPureClient::OnInvalidHost();
-	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
-		MainMenu()->SetErrorDialog(CMainMenu::ErrInvalidHost);
-};
-
 void CLevel::OnSessionFull()
 {
 	IPureClient::OnSessionFull();
@@ -393,30 +374,3 @@ void CLevel::OnConnectRejected()
 {
 	IPureClient::OnConnectRejected();
 };
-
-void CLevel::net_OnChangeSelfName(NET_Packet* P)
-{
-	if (!P) return;
-	string64 NewName			;
-	P->r_stringZ(NewName)		;
-    shared_str clientOption = GamePersistent().GetClientOption();
-	if (!strstr(*clientOption, "/name="))
-	{
-		string1024 tmpstr;
-		xr_strcpy(tmpstr, *clientOption);
-		xr_strcat(tmpstr, "/name=");
-		xr_strcat(tmpstr, NewName);
-        GamePersistent().SetClientOption(tmpstr);
-	}
-	else
-	{
-		string1024 tmpstr;
-		xr_strcpy(tmpstr, *clientOption);
-		*(strstr(tmpstr, "name=")+5) = 0;
-		xr_strcat(tmpstr, NewName);
-		const char* ptmp = strstr(strstr(*clientOption, "name="), "/");
-		if (ptmp)
-			xr_strcat(tmpstr, ptmp);
-        GamePersistent().SetClientOption(tmpstr);
-	}
-}

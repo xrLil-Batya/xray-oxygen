@@ -41,7 +41,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	// check if we can assign entity to some client
 	if (!CL)
 	{
-		CL	= SelectBestClientToMigrateTo	(E);
+		CL	= (xrClientData*)SV_Client;
 	}
 
 	// check for respawn-capability and create phantom as needed
@@ -93,7 +93,6 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	}
 
 	// PROCESS RP;	 3D position/orientation
-	PerformRP				(E);
 	E->s_RP					= 0xFE;	// Use supplied
 
 	// Parent-Connect

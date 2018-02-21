@@ -519,10 +519,7 @@ function start_game_callback()
 		["monster_zombied_night"]			= "monster",
 		["monster_special"]					= "monster"
 	}
-
-
-
-
+	
 	monster_classes = {
 		[clsid.bloodsucker_s] 			= true,
 		[clsid.boar_s] 					= true,
@@ -570,21 +567,7 @@ function start_game_callback()
 		[clsid.wpn_grenade_fake] 		= true}
 
 	artefact_classes = {
-		[clsid.art_bast_artefact] 		= true,
-		[clsid.art_black_drops] 		= true,
-		[clsid.art_dummy] 				= true,
-		[clsid.art_electric_ball] 		= true,
-		[clsid.art_faded_ball] 			= true,
-		[clsid.art_galantine] 			= true,
-		[clsid.art_gravi] 				= true,
-		[clsid.art_gravi_black] 		= true,
-		[clsid.art_mercury_ball] 		= true,
-		[clsid.art_needles] 			= true,
-		[clsid.art_rusty_hair] 			= true,
-		[clsid.art_thorn] 				= true,
-		[clsid.art_zuda] 				= true,
-		[clsid.artefact] 				= true,
-		[clsid.artefact_s] 				= true}
+		[clsid.artefact] 				= true}
 
 	printf("start_game_callback called")
 	

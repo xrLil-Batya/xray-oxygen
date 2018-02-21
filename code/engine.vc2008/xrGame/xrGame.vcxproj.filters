@@ -1984,9 +1984,6 @@
     <Filter Include="Core\Server\ServerProcess">
       <UniqueIdentifier>{7ce64bec-06f0-40fb-9a14-95fa02f0c108}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\filetransfer">
-      <UniqueIdentifier>{0e6e2684-1723-4da8-b39e-67c9e8cca164}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server\ServerConnect">
       <UniqueIdentifier>{da77a547-a6e5-4fd7-8b22-22b7827af41f}</UniqueIdentifier>
     </Filter>
@@ -4929,9 +4926,6 @@
     <ClInclude Include="DemoInfo_Loader.h">
       <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
     </ClInclude>
-    <ClInclude Include="DemoPlay_Control.h">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClInclude>
     <ClInclude Include="Level_network_Demo.h">
       <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
     </ClInclude>
@@ -5583,16 +5577,10 @@
     <ClInclude Include="static_cast_checked.hpp">
       <Filter>Core\Common\debug\static_cast_checked</Filter>
     </ClInclude>
-    <ClInclude Include="screenshot_server.h">
-      <Filter>Core\Server</Filter>
-    </ClInclude>
     <ClInclude Include="xrClientsPool.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="xrServer.h">
-      <Filter>Core\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="xrServer_info.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h">
@@ -5699,18 +5687,6 @@
     </ClInclude>
     <ClInclude Include="xrServer_svclient_validation.h">
       <Filter>Core\Server\ServerProcess</Filter>
-    </ClInclude>
-    <ClInclude Include="file_transfer.h">
-      <Filter>Core\Server\filetransfer</Filter>
-    </ClInclude>
-    <ClInclude Include="filereceiver_node.h">
-      <Filter>Core\Server\filetransfer</Filter>
-    </ClInclude>
-    <ClInclude Include="filetransfer_common.h">
-      <Filter>Core\Server\filetransfer</Filter>
-    </ClInclude>
-    <ClInclude Include="filetransfer_node.h">
-      <Filter>Core\Server\filetransfer</Filter>
     </ClInclude>
     <ClInclude Include="ui_base.h">
       <Filter>AI\AScript\ScriptClasses\UI</Filter>
@@ -6213,7 +6189,9 @@
     <ClInclude Include="imotion_velocity.h">
       <Filter>GamePhysics</Filter>
     </ClInclude>
-    <ClInclude Include="MercuryBall.h" />
+    <ClInclude Include="MercuryBall.h">
+      <Filter>Core\Client\Objects</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -7680,9 +7658,6 @@
     <ClCompile Include="DemoInfo_Loader.cpp">
       <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
     </ClCompile>
-    <ClCompile Include="DemoPLay_Control.cpp">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClCompile>
     <ClCompile Include="Level_network_Demo.cpp">
       <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
     </ClCompile>
@@ -8208,9 +8183,6 @@
     <ClCompile Include="static_cast_checked_test.cpp">
       <Filter>Core\Common\debug\static_cast_checked</Filter>
     </ClCompile>
-    <ClCompile Include="screenshot_server.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
     <ClCompile Include="xrClientsPool.cpp">
       <Filter>Core\Server</Filter>
     </ClCompile>
@@ -8218,12 +8190,6 @@
       <Filter>Core\Server</Filter>
     </ClCompile>
     <ClCompile Include="xrServer.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_balance.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_info.cpp">
       <Filter>Core\Server</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_updates_compressor.cpp">
@@ -8322,9 +8288,6 @@
     <ClCompile Include="xrServer_perform_migration.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
-    <ClCompile Include="xrServer_perform_RPgen.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
     <ClCompile Include="xrServer_perform_sls_default.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
@@ -8364,22 +8327,10 @@
     <ClCompile Include="xrServer_svclient_validation.cpp">
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
-    <ClCompile Include="file_transfer.cpp">
-      <Filter>Core\Server\filetransfer</Filter>
-    </ClCompile>
-    <ClCompile Include="filereceiver_node.cpp">
-      <Filter>Core\Server\filetransfer</Filter>
-    </ClCompile>
-    <ClCompile Include="filetransfer_node.cpp">
-      <Filter>Core\Server\filetransfer</Filter>
-    </ClCompile>
     <ClCompile Include="xrServer_CL_connect.cpp">
       <Filter>Core\Server\ServerConnect</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_Connect.cpp">
-      <Filter>Core\Server\ServerConnect</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_Disconnect.cpp">
       <Filter>Core\Server\ServerConnect</Filter>
     </ClCompile>
     <ClCompile Include="ui_base.cpp">
@@ -8919,7 +8870,9 @@
     <ClCompile Include="imotion_velocity.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="MercuryBall.cpp" />
+    <ClCompile Include="MercuryBall.cpp">
+      <Filter>Core\Client\Objects</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

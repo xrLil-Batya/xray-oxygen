@@ -15,9 +15,6 @@
 
 #include "../xrEngine/XR_IOConsole.h"
 #include "ui/UIInventoryUtilities.h"
-#include "file_transfer.h"
-#include "screenshot_server.h"
-#include "xrServer_info.h"
 
 #include "../FrayBuildConfig.hpp"
 
@@ -45,7 +42,6 @@ void	xrClientData::Clear()
 
 xrServer::xrServer() : IPureServer(Device.GetTimerGlobal())
 {
-	m_file_transfers	= NULL;
 	m_aDelayedPackets.clear();
 	m_last_updates_size	= 0;
 	m_last_update_time	= 0;
@@ -68,7 +64,6 @@ xrServer::~xrServer()
 	}
 	m_aDelayedPackets.clear();
 	entities.clear();
-	delete_data(m_info_uploaders);
 }
 
 //--------------------------------------------------------------------
@@ -145,16 +140,6 @@ void xrServer::client_Destroy(IClient* C)
 		xrClientData*	xr_client = static_cast<xrClientData*>(alife_client);
 		m_disconnected_clients.Add(xr_client); //xr_delete(alife_client);				
 	}
-}
-
-void xrServer::GetPooledState(xrClientData* xrCL)
-{
-	xrClientData* pooled_client = m_disconnected_clients.Get(xrCL);
-	if (!pooled_client)
-		return;
-
-	xrCL->flags.bReconnect			= TRUE;
-	xr_delete						(pooled_client);
 }
 
 //--------------------------------------------------------------------
@@ -318,14 +303,8 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 				SendTo				(sender,P_answ,net_flags(TRUE,TRUE));
 			}
 		}break;
-		case M_FILE_TRANSFER:
-		{
-			m_file_transfers->on_message(&P, sender);
-		}break;
 	}
 	VERIFY							(verify_entities());
-
-	//csPlayers.Leave					();
 	return 0;
 }
 
@@ -375,37 +354,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 				OnMessage			(tmpP, sender);
 			};			
 		}break;
-	case M_CL_UPDATE:
-		{
-			xrClientData* CL		= ID_to_client	(sender);
-			if (!CL)				break;
-			CL->net_Ready			= TRUE;
-
-			if (!CL->net_PassUpdates)
-				break;
-			//-------------------------------------------------------------------
-			u32 ClientPing = CL->stats.getPing();
-			P.w_seek(P.r_tell()+2, &ClientPing, 4);
-			//-------------------------------------------------------------------
-			if (SV_Client) 
-				SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-			VERIFY					(verify_entities());
-		}break;
-	case M_MOVE_PLAYERS_RESPOND:
-		{
-			xrClientData* CL		= ID_to_client	(sender);
-			if (!CL)				break;
-			CL->net_Ready			= TRUE;
-			CL->net_PassUpdates		= TRUE;
-		}break;
 	//-------------------------------------------------------------------
-	case M_CL_INPUT:
-		{
-			xrClientData* CL		= ID_to_client	(sender);
-			if (CL)	CL->net_Ready	= TRUE;
-			if (SV_Client) SendTo	(SV_Client->ID, P, net_flags(TRUE, TRUE));
-			VERIFY					(verify_entities());
-		}break;
 	case M_GAMEMESSAGE:
 		{
 			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
@@ -465,19 +414,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			R_ASSERT(CL);
 			ProcessClientDigest			(CL, &P);
 		}break;
-	case M_CHANGE_LEVEL_GAME:
-		{
-			ClientID CID; CID.set		(0xffffffff);
-			SendBroadcast				(CID,P,net_flags(TRUE,TRUE));
-		}break;
-	case M_CL_AUTH:
-		{
-			game->AddDelayedEvent		(P,GAME_EVENT_PLAYER_AUTH, 0, sender);
-		}break;
-	case M_CREATE_PLAYER_STATE:
-		{
-			game->AddDelayedEvent		(P,GAME_EVENT_CREATE_PLAYER_STATE, 0, sender);
-		}break;
 	case M_STATISTIC_UPDATE:
 		{
 			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
@@ -506,21 +442,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		{
 			AddDelayedPacket(P, sender);
 		}break;
-	case M_BATTLEYE:
-		{
-		}break;
-	case M_FILE_TRANSFER:
-		{
-			AddDelayedPacket(P, sender);
-		}break;
-	case M_SECURE_KEY_SYNC:
-		{
-		}break;
-	case M_SECURE_MESSAGE:
-		{
-		}break;
 	}
-
 	VERIFY (verify_entities());
 
 	return 0;
@@ -737,4 +659,11 @@ void xrServer::GetServerInfo(CServerInfo* si)
 
 		si->AddItem("Game time", tmp256, RGB(205, 228, 178));
 	}
+}
+
+void xrServer::Disconnect()
+{
+	IPureServer::Disconnect();
+	SLS_Clear();
+	xr_delete(game);
 }

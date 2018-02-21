@@ -8,34 +8,15 @@
 #include "ai_space.h"
 #include "alife_object_registry.h"
 
-xr_string xrServer::ent_name_safe(u16 eid)
-{
-	string1024						buff;
-	CSE_Abstract*	e_dest			= game->get_entity_from_eid	(eid);
-	if(e_dest)
-		xr_sprintf(buff,"[%d][%s:%s]",eid,e_dest->name(),e_dest->name_replace());
-	else
-		xr_sprintf(buff,"[%d][%s]",eid,"NOTFOUND");
-
-	return buff;
-}
-
 void xrServer::Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack)
 {
 	u32								MODE = net_flags(TRUE,TRUE);
 	// Parse message
 	u16								id_dest	= ID;
-#ifdef DEBUG
-	if( dbg_net_Draw_Flags.test( dbg_destroy ) )
-		Msg								("sv destroy object %s [%d]", ent_name_safe(id_dest).c_str(), Device.dwFrame);
-#endif
 
 	CSE_Abstract*					e_dest = game->get_entity_from_eid	(id_dest);	// кто должен быть уничтожен
 	if (!e_dest) 
 	{
-#ifndef MASTER_GOLD
-		Msg							("!SV:ge_destroy: [%d] not found on server",id_dest);
-#endif // #ifndef MASTER_GOLD
 		return;
 	};
 
@@ -45,11 +26,6 @@ void xrServer::Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, 
 	xrClientData					*c_from = ID_to_client(sender);	// клиент, кто прислал
 	R_ASSERT						(c_dest == c_from);							// assure client ownership of event
 	u16								parent_id = e_dest->ID_Parent;
-
-#ifdef MP_LOGGING
-	Msg("--- SV: Process destroy: parent [%d] item [%d][%s]", 
-		parent_id, id_dest, e_dest->name());
-#endif //#ifdef MP_LOGGING
 
 	//---------------------------------------------
 	NET_Packet	P2, *pEventPack = pEPack;

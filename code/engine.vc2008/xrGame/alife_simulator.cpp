@@ -10,13 +10,12 @@
 #include "alife_simulator.h"
 #include "xrServer_Objects_ALife.h"
 #include "ai_space.h"
-#include "../xrEngine/IGame_Persistent.h"
+#include "GamePersistent.h"
 #include "script_engine.h"
 #include "mainmenu.h"
 #include "object_factory.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/xr_ioconsole.h"
-#include "GamePersistent.h"
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG

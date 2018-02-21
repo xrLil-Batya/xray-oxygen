@@ -5,8 +5,7 @@
 #include "game_cl_single.h"
 #include "MainMenu.h"
 #include "../xrEngine/x_ray.h"
-#include "file_transfer.h"
-#include "screenshot_server.h"
+
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>

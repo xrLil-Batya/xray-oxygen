@@ -68,19 +68,18 @@ void xrServer::SendConfigFinished(ClientID const & clientId)
 void xrServer::SendConnectionData(IClient* _CL)
 {
 	conn_spawned_ids.clear();
-	xrClientData*	CL				= (xrClientData*)_CL;
+	xrClientData*	CL = (xrClientData*)_CL;
 	NET_Packet		P;
 	// Replicate current entities on to this client
 
-	for (xrS_entities::iterator	xrSe_it = entities.begin(); xrSe_it != entities.end(); ++xrSe_it)
-		xrSe_it->second->net_Processed	= FALSE;
+	for (auto &xrSe_it: entities)
+		xrSe_it.second->net_Processed = FALSE;
 
-	for (xrS_entities::iterator xrSe_it = entities.begin(); xrSe_it != entities.end(); ++xrSe_it)
-		Perform_connect_spawn		(xrSe_it->second,CL,P);
+	for (auto &xrSe_it : entities)
+		Perform_connect_spawn(xrSe_it.second, CL, P);
 
 	// Start to send server logo and rules
-	SendServerInfoToClient			(CL->ID);
-
+	SendConfigFinished(CL->ID);
 };
 
 void xrServer::OnCL_Connected		(IClient* _CL)
@@ -92,7 +91,6 @@ void xrServer::OnCL_Connected		(IClient* _CL)
 	Perform_game_export();
 	SendConnectionData(CL);
 
-	//VERIFY2(CL->ps, "Player state not created");
 	if (!CL)
 	{
 		Msg("! ERROR: Player state not created - incorect message sequence!");

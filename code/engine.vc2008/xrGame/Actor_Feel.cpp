@@ -237,84 +237,73 @@ void	CActor::PickupModeUpdate_COD	()
 #include "grenadelauncher.h"
 #include "Scope.h"
 #include "Silencer.h"
-#include "StalkerOutfit.h"
+#include "CustomOutfit.h"
 #include "ActorHelmet.h"
 #include "pda.h"
 
 void CActor::PickupInfoDraw(CObject* object)
 {
 	LPCSTR draw_str = NULL;
-	
+
 	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
-	
-	CArtefact* artefact = smart_cast<CArtefact*>(object);
-	CEatableItem* boost = smart_cast<CEatableItem*>(object);
-	CWeaponAmmo* ammo = smart_cast<CWeaponAmmo*>(object);
-	CWeapon* weapon = smart_cast<CWeapon*>(object);
-	CInventoryItem* item = smart_cast<CInventoryItem*>(object);
-	CEliteDetector* edetect = smart_cast<CEliteDetector*>(object);
-	CAdvancedDetector* adetect = smart_cast<CAdvancedDetector*>(object);
-	CSimpleDetector* sdetect = smart_cast<CSimpleDetector*>(object);
-	CGrenade* grenade = smart_cast<CGrenade*>(object);
-	CGrenadeLauncher* grenadela = smart_cast<CGrenadeLauncher*>(object);
-	CScope* scope = smart_cast<CScope*>(object);
-	CSilencer* sil = smart_cast<CSilencer*>(object);
-	CStalkerOutfit* stalk = smart_cast<CStalkerOutfit*>(object);
-	CHelmet* helm = smart_cast<CHelmet*>(object);
-	CPda* doc = smart_cast<CPda*>(object);
-	
-	if(!item)		return;
+	if (!item)		return;
 
 	Fmatrix			res;
-	res.mul			(Device.mFullTransform,object->XFORM());
+	res.mul(Device.mFullTransform, object->XFORM());
 	Fvector4		v_res;
-	Fvector			shift;
 
 	draw_str = item->NameItem();
-	shift.set(0,0,0);
+	Fvector shift;  shift.set(0, 0, 0);
 
-	res.transform(v_res,shift);
+	res.transform(v_res, shift);
 
 	if (v_res.z < 0 || v_res.w < 0)	return;
 	if (v_res.x < -1.f || v_res.x > 1.f || v_res.y<-1.f || v_res.y>1.f) return;
 
-	float x = (1.f + v_res.x)/2.f * (Device.dwWidth);
-	float y = (1.f - v_res.y)/2.f * (Device.dwHeight);
+	float x = (1.f + v_res.x) / 2.f * (Device.dwWidth);
+	float y = (1.f - v_res.y) / 2.f * (Device.dwHeight);
 
-	UI().Font().pFontLetterica16Russian->SetAligment	(CGameFont::alCenter);
-	UI().Font().pFontLetterica16Russian->SetColor		(PICKUP_INFO_COLOR);
-	if(psActorFlags.test(AF_COLORED_FEEL))
+	UI().Font().pFontLetterica16Russian->SetAligment(CGameFont::alCenter);
+	UI().Font().pFontLetterica16Russian->SetColor(PICKUP_INFO_COLOR);
+
+	if (psActorFlags.test(AF_COLORED_FEEL))
 	{
-	if(doc)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFD7A096);
-	if(ammo)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFFA121);
-	if(weapon)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6B42);
-	if(boost)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF8330);
-	if(artefact)
-	UI().Font().pFontLetterica16Russian->SetColor		(0xFF736FD5);
-	if(edetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBDD0B);
-	if(adetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBFFA1);
-	if(sdetect)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEBFFC8);
-	if(grenade)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6432);
-	if(grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB6E0A);		
-	if(scope && !grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB8C0A);
-	if(sil && !scope && !grenadela)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFEB8C64);
-	if(stalk)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF6464);
-	if(helm && !stalk)
-	UI().Font().pFontLetterica18Russian->SetColor		(0xFFFF9178);
+		if (smart_cast<CPda*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFD7A096);
+		if (smart_cast<CWeaponAmmo*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFFFA121);
+		if (smart_cast<CWeapon*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFFF6B42);
+		if (smart_cast<CEatableItem*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFFF8330);
+		if (smart_cast<CArtefact*>(object))
+			UI().Font().pFontLetterica16Russian->SetColor(0xFF736FD5);
+		if (smart_cast<CEliteDetector*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFEBDD0B);
+		if (smart_cast<CAdvancedDetector*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFEBFFA1);
+		if (smart_cast<CSimpleDetector*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFEBFFC8);
+		if (smart_cast<CGrenade*>(object))
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFFF6432);
+		if (smart_cast<CGrenadeLauncher*>(object))
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFEB6E0A);
+			if (smart_cast<CScope*>(object))
+			{
+				UI().Font().pFontLetterica18Russian->SetColor(0xFFEB8C0A);
+				if (smart_cast<CSilencer*>(object))
+					UI().Font().pFontLetterica18Russian->SetColor(0xFFEB8C64);
+			}
+		}
+		if (smart_cast<CCustomOutfit*>(object))
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(0xFFFF6464);
+			if (smart_cast<CHelmet*>(object))
+				UI().Font().pFontLetterica18Russian->SetColor(0xFFFF9178);
+		}
 	}
-	UI().Font().pFontLetterica16Russian->Out			(x,y,draw_str);
+	UI().Font().pFontLetterica16Russian->Out(x, y, draw_str);
 }
 
 void CActor::feel_sound_new(CObject* who, int type, CSound_UserDataPtr user_data, const Fvector& Position, float power)

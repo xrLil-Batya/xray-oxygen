@@ -1327,7 +1327,6 @@
     <ClInclude Include="Level_network_map_sync.h" />
     <ClInclude Include="DemoInfo.h" />
     <ClInclude Include="DemoInfo_Loader.h" />
-    <ClInclude Include="DemoPlay_Control.h" />
     <ClInclude Include="Level_network_Demo.h" />
     <ClInclude Include="Message_Filter.h" />
     <ClInclude Include="xr_level_controller.h" />
@@ -1557,10 +1556,8 @@
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h" />
     <ClInclude Include="static_cast_checked.hpp" />
-    <ClInclude Include="screenshot_server.h" />
     <ClInclude Include="xrClientsPool.h" />
     <ClInclude Include="xrServer.h" />
-    <ClInclude Include="xrServer_info.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="xrServer_updates_compressor.h" />
     <ClInclude Include="xrServerMapSync.h" />
@@ -1596,10 +1593,6 @@
     <ClInclude Include="..\xrServerEntities\script_value_container_impl.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
     <ClInclude Include="xrServer_svclient_validation.h" />
-    <ClInclude Include="file_transfer.h" />
-    <ClInclude Include="filereceiver_node.h" />
-    <ClInclude Include="filetransfer_common.h" />
-    <ClInclude Include="filetransfer_node.h" />
     <ClInclude Include="ui_base.h" />
     <ClInclude Include="ui_defs.h" />
     <ClInclude Include="UIDialogHolder.h" />
@@ -2449,7 +2442,6 @@
     <ClCompile Include="Level_network_map_sync.cpp" />
     <ClCompile Include="DemoInfo.cpp" />
     <ClCompile Include="DemoInfo_Loader.cpp" />
-    <ClCompile Include="DemoPLay_Control.cpp" />
     <ClCompile Include="Level_network_Demo.cpp" />
     <ClCompile Include="Message_Filter.cpp" />
     <ClCompile Include="xr_level_controller.cpp" />
@@ -2707,13 +2699,10 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="screenshot_server.cpp" />
     <ClCompile Include="xrClientsPool.cpp" />
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">
     </ClCompile>
-    <ClCompile Include="xrServer_balance.cpp" />
-    <ClCompile Include="xrServer_info.cpp" />
     <ClCompile Include="xrServer_updates_compressor.cpp" />
     <ClCompile Include="xrServerMapSync.cpp" />
     <ClCompile Include="game_base.cpp">
@@ -2763,7 +2752,6 @@
     </ClCompile>
     <ClCompile Include="xrServer_perform_GameExport.cpp" />
     <ClCompile Include="xrServer_perform_migration.cpp" />
-    <ClCompile Include="xrServer_perform_RPgen.cpp" />
     <ClCompile Include="xrServer_perform_sls_default.cpp" />
     <ClCompile Include="xrServer_perform_sls_load.cpp" />
     <ClCompile Include="xrServer_perform_sls_save.cpp" />
@@ -2777,12 +2765,8 @@
     <ClCompile Include="xrServer_process_spawn.cpp" />
     <ClCompile Include="xrServer_process_update.cpp" />
     <ClCompile Include="xrServer_svclient_validation.cpp" />
-    <ClCompile Include="file_transfer.cpp" />
-    <ClCompile Include="filereceiver_node.cpp" />
-    <ClCompile Include="filetransfer_node.cpp" />
     <ClCompile Include="xrServer_CL_connect.cpp" />
     <ClCompile Include="xrServer_Connect.cpp" />
-    <ClCompile Include="xrServer_Disconnect.cpp" />
     <ClCompile Include="ui_base.cpp" />
     <ClCompile Include="UIDialogHolder.cpp" />
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
@@ -2927,10 +2911,6 @@
   <ItemGroup>
     <ProjectReference Include="..\xrEngine\xrEngine.vcxproj">
       <Project>{2578c6d8-660d-48ae-9322-7422f8664f06}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\xrNetServer\xrNetServer.vcxproj">
-      <Project>{435bac9a-b225-457d-ab40-c9bd0cc8838c}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
     <ProjectReference Include="..\xrPhysics\xrPhysics.vcxproj">
