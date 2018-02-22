@@ -6,6 +6,7 @@
     <xrIntermediate>$(SolutionDir)..\intermediate$(Platform)\$(TargetName)\$(Configuration)\</xrIntermediate>
     <xrLib>$(SolutionDir)..\libraries$(Platform)\$(Configuration)\</xrLib>
     <xrSDKLib>$(SolutionDir)\SDK\libraries\$(Platform)\</xrSDKLib>
+    <xrSDKBins>$(SolutionDir)\SDK\binaries\$(Platform)\</xrSDKBins>
   </PropertyGroup>
   <PropertyGroup>
     <OutDir>$(xrBinOut)</OutDir>
@@ -13,7 +14,7 @@
   </PropertyGroup>
   <ItemDefinitionGroup>
     <Link>
-      <AdditionalLibraryDirectories>$(xrLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(xrLib);$(xrSDKLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <ClCompile>
       <PreprocessorDefinitions>_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -35,6 +36,9 @@
     </BuildMacro>
     <BuildMacro Include="xrSDKLib">
       <Value>$(xrSDKLib)</Value>
+    </BuildMacro>
+    <BuildMacro Include="xrSDKBins">
+      <Value>$(xrSDKBins)</Value>
     </BuildMacro>
   </ItemGroup>
 </Project>

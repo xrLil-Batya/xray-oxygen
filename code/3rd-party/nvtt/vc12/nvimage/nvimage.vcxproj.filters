@@ -11,72 +11,72 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\src\nvimage\BlockDXT.cpp">
+    <ClCompile Include="..\..\src\nvimage\BlockDXT.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\ColorBlock.cpp">
+    <ClCompile Include="..\..\src\nvimage\ColorBlock.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\DirectDrawSurface.cpp">
+    <ClCompile Include="..\..\src\nvimage\DirectDrawSurface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\Filter.cpp">
+    <ClCompile Include="..\..\src\nvimage\Filter.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\FloatImage.cpp">
+    <ClCompile Include="..\..\src\nvimage\FloatImage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\Image.cpp">
+    <ClCompile Include="..\..\src\nvimage\Image.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\ImageIO.cpp">
+    <ClCompile Include="..\..\src\nvimage\ImageIO.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\NormalMap.cpp">
+    <ClCompile Include="..\..\src\nvimage\NormalMap.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\src\nvimage\Quantize.cpp">
+    <ClCompile Include="..\..\src\nvimage\Quantize.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\src\nvimage\BlockDXT.h">
+    <ClInclude Include="..\..\src\nvimage\BlockDXT.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\ColorBlock.h">
+    <ClInclude Include="..\..\src\nvimage\ColorBlock.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\DirectDrawSurface.h">
+    <ClInclude Include="..\..\src\nvimage\DirectDrawSurface.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\Filter.h">
+    <ClInclude Include="..\..\src\nvimage\Filter.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\FloatImage.h">
+    <ClInclude Include="..\..\src\nvimage\FloatImage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\Image.h">
+    <ClInclude Include="..\..\src\nvimage\Image.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\ImageIO.h">
+    <ClInclude Include="..\..\src\nvimage\ImageIO.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\NormalMap.h">
+    <ClInclude Include="..\..\src\nvimage\NormalMap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\nvimage.h">
+    <ClInclude Include="..\..\src\nvimage\nvimage.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\PixelFormat.h">
+    <ClInclude Include="..\..\src\nvimage\PixelFormat.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\PsdFile.h">
+    <ClInclude Include="..\..\src\nvimage\PsdFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\Quantize.h">
+    <ClInclude Include="..\..\src\nvimage\Quantize.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\src\nvimage\TgaFile.h">
+    <ClInclude Include="..\..\src\nvimage\TgaFile.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
