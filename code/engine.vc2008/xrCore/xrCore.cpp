@@ -23,6 +23,7 @@ void compute_build_id();
 #include "DateTime.hpp"
 void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
+	PluginMode = false;
 	std::set_terminate(abort);
 	if (!init_counter)
 	{

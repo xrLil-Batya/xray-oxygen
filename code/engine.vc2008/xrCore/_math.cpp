@@ -176,7 +176,11 @@ void _initialize_cpu_thread	()
 {
 	debug_on_thread_spawn	();
 	// fpu & sse 
-	FPU::m24r	();
+	if (Core.PluginMode)
+        FPU::m64r();
+    else
+		FPU::m24r	();
+	
 	if (CPU::Info.hasFeature(CPUFeature::SSE))
 	{
 		_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
