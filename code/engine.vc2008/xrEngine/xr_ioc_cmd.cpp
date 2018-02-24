@@ -498,7 +498,7 @@ ENGINE_API BOOL r2_sun_static = TRUE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
 
 u32	renderer_value	= 3;
-bool isLoaded = false;
+u32 isLoaded = 2;
 //void fill_render_mode_list();
 //void free_render_mode_list();
 
@@ -515,7 +515,7 @@ public:
 	{
 		//fill_render_mode_list	();
 		//	vid_quality_token must be already created!
-		if (!isLoaded)
+		if (isLoaded != 1)
 		{
 		tokens = vid_quality_token.data();
 
@@ -532,8 +532,9 @@ public:
 
 			r2_advanced_pp = (renderer_value >= 3);
 
-			isLoaded = true;
+			isLoaded--;
 		}
+		else isLoaded = 16;
 	}
 
 	virtual void	Save	(IWriter *F)	

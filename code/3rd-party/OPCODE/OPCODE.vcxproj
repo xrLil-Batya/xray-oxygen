@@ -158,15 +158,15 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <TargetName>opcode</TargetName>
-    <OutDir>$(xrLib)</OutDir>
+    <OutDir>$(xrSDKLib)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
     <TargetName>opcode</TargetName>
-    <OutDir>$(xrLib)</OutDir>
+    <OutDir>$(xrSDKLib)</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <TargetName>opcode</TargetName>
-    <OutDir>$(xrLib)</OutDir>
+    <OutDir>$(xrSDKLib)</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>

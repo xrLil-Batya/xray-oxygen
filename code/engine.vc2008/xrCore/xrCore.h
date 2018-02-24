@@ -256,6 +256,10 @@ public:
 public:
 	void		_initialize	(const char* ApplicationName, LogCallback cb=0, BOOL init_fs=TRUE, const char* fs_fname=0);
 	void		_destroy	();
+IC	void		SetPluginMode() { PluginMode = true; }
+	
+public:
+	bool		PluginMode;
 };
 
 //Borland class dll interface

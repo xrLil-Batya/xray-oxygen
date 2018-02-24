@@ -79,7 +79,7 @@ CSoundRender_Core::~CSoundRender_Core()
 {
 	if (bEFX)
 	{
-		if(effect) alDeleteEffects(1, &effect);
+		if(effect > 1) alDeleteEffects(1, &effect);
 		if(slot > 1)   alDeleteAuxiliaryEffectSlots(1, &slot);
 	}
 
