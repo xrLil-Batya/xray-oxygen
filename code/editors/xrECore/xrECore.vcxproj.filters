@@ -284,6 +284,9 @@
     <ClInclude Include="Editor\ui_main.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="Editor\vis_data.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.h.cpp">

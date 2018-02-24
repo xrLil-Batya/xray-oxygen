@@ -19,19 +19,14 @@ void CDetail::transfer	(Fmatrix& mXform, fvfVertexOut* vDest, u32 C, u16* iDest,
 {
 	// Transfer vertices
 	{
-		CDetail::fvfVertexIn	*srcIt = vertices, *srcEnd = vertices+number_vertices;
+		CDetail::fvfVertexIn	*srcIt = vertices, *srcEnd = vertices + number_vertices;
 		CDetail::fvfVertexOut	*dstIt = vDest;
-		for	(; srcIt!=srcEnd; srcIt++, dstIt++)
+		for (; srcIt != srcEnd; srcIt++, dstIt++)
 		{
-            Fvector4 destPos;
-            destPos.set(dstIt->P.x, dstIt->P.y, dstIt->P.z);
-            Fvector4 srcPos;
-            srcPos.set(srcIt->P.x, srcIt->P.y, srcIt->P.z);
-
-			mXform.transform_tiny	(destPos, srcPos);
-			dstIt->C	= C;
-			dstIt->u	= srcIt->u;
-			dstIt->v	= srcIt->v;
+			mXform.transform_tiny(dstIt->P, srcIt->P);
+			dstIt->C = C;
+			dstIt->u = srcIt->u;
+			dstIt->v = srcIt->v;
 		}
 	}
 	
@@ -53,19 +48,14 @@ void CDetail::transfer	(Fmatrix& mXform, fvfVertexOut* vDest, u32 C, u16* iDest,
 {
 	// Transfer vertices
 	{
-		CDetail::fvfVertexIn	*srcIt = vertices, *srcEnd = vertices+number_vertices;
+		CDetail::fvfVertexIn	*srcIt = vertices, *srcEnd = vertices + number_vertices;
 		CDetail::fvfVertexOut	*dstIt = vDest;
-		for	(; srcIt!=srcEnd; srcIt++, dstIt++)
+		for (; srcIt != srcEnd; srcIt++, dstIt++)
 		{
-            Fvector4 destPos;
-            destPos.set(dstIt->P.x, dstIt->P.y, dstIt->P.z);
-            Fvector4 srcPos;
-            srcPos.set(srcIt->P.x, srcIt->P.y, srcIt->P.z);
-
-			mXform.transform_tiny	(destPos, srcPos);
-			dstIt->C	= C;
-			dstIt->u	= srcIt->u+du;
-			dstIt->v	= srcIt->v+dv;
+			mXform.transform_tiny(dstIt->P, srcIt->P);
+			dstIt->C = C;
+			dstIt->u = srcIt->u + du;
+			dstIt->v = srcIt->v + dv;
 		}
 	}
 	

@@ -1,8 +1,11 @@
 #include "stdafx.h"
 #pragma hdrstop
+#include "../engine.vc2008/xrEngine/render.h"
+#include "../engine.vc2008/xrEngine/device.h"
+#include "HW.h"
 #include "SH_Texture.h"
-
 #include "ResourceManager.h"
+#include "../xrECore/Editor/render.h"
 
 // #ifndef _EDITOR
 // #include "../../xrEngine/render.h"
@@ -83,7 +86,7 @@ void CTexture::apply_load	(u32 dwStage)	{
 
 void CTexture::apply_theora	(u32 dwStage)
 {
-	if (pTheora->Update(m_play_time!=0xFFFFFFFF?m_play_time:RDEVICE->dwTimeContinual))
+	if (pTheora->Update(m_play_time!=0xFFFFFFFF?m_play_time:RDEVICE.dwTimeContinual))
     {
 		R_ASSERT(D3DRTYPE_TEXTURE == pSurface->GetType());
 		ID3DTexture2D*	T2D		= (ID3DTexture2D*)pSurface;
@@ -126,7 +129,7 @@ void CTexture::apply_avi	(u32 dwStage)
 };
 void CTexture::apply_seq	(u32 dwStage)	{
 	// SEQ
-	u32	frame = RDEVICE->dwTimeContinual/seqMSPF; //RDEVICE->dwTimeGlobal
+	u32	frame = RDEVICE.dwTimeContinual/seqMSPF; //RDEVICE->dwTimeGlobal
 	u32	frame_data	= seqDATA.size();
 	if (flags.seqCycles)		{
 		u32	frame_id	= frame%(frame_data*2);
@@ -164,10 +167,6 @@ void CTexture::Load		()
 	}
 
 	Preload							();
-//#ifndef		DEDICATED_SERVER
-#ifndef _EDITOR
-	if (!g_dedicated_server)
-#endif
 	{
 		// Check for OGM
 		string_path			fn;
@@ -186,7 +185,7 @@ void CTexture::Load		()
 			{
 				flags.MemoryUsage	= pTheora->Width(true)*pTheora->Height(true)*4;
 				BOOL bstop_at_end	= (0!=strstr(cName.c_str(), "intro\\")) || (0!=strstr(cName.c_str(), "outro\\"));
-				pTheora->Play		(!bstop_at_end, RDEVICE->dwTimeContinual);
+				pTheora->Play		(!bstop_at_end, RDEVICE.dwTimeContinual);
 
 				// Now create texture
 				ID3DTexture2D*	pTexture = 0;
@@ -293,12 +292,6 @@ void CTexture::Load		()
 
 void CTexture::Unload	()
 {
-#ifdef DEBUG
-	string_path				msg_buff;
-	xr_sprintf				(msg_buff,sizeof(msg_buff),"* Unloading texture [%s] pSurface RefCount=",cName.c_str());
-#endif // DEBUG
-
-//.	if (flags.bLoaded)		Msg		("* Unloaded: %s",cName.c_str());
 	
 	flags.bLoaded			= FALSE;
 	if (!seqDATA.empty())	{
@@ -335,7 +328,7 @@ void CTexture::desc_update	()
 
 void CTexture::video_Play		(BOOL looped, u32 _time)	
 { 
-	if (pTheora) pTheora->Play	(looped,(_time!=0xFFFFFFFF)?(m_play_time=_time):RDEVICE->dwTimeContinual);
+	if (pTheora) pTheora->Play	(looped,(_time!=0xFFFFFFFF)?(m_play_time=_time):RDEVICE.dwTimeContinual);
 }
 
 void CTexture::video_Pause		(BOOL state)

@@ -1,24 +1,20 @@
 // TextureManager.h: interface for the CTextureManager class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef ResourceManagerH
-#define ResourceManagerH
 #pragma once
+#include "shader.h"
+#include "tss_def.h"
+#include "TextureDescrManager.h"
 
-#include	"shader.h"
-#include	"tss_def.h"
-#include	"TextureDescrManager.h"
-
-#include "_stl_extensions.h"
 
 #include <functional>
 
 // refs
-struct		lua_State;
+struct lua_State;
 
 class dx10ConstantBuffer;
 
+#define DEFINE_MAP_PRED(K,T,N,I,P)	typedef xr_map< K, T, P > N;	typedef N::iterator I;
 // defs
 class XRRENDER_COMMONS_API CResourceManager
 {
@@ -216,7 +212,7 @@ public:
 	Shader*			Create					(LPCSTR s_shader=0, LPCSTR s_textures=0,	LPCSTR s_constants=0,	LPCSTR s_matrices=0);
 	Shader*			Create					(IBlender*	B,		LPCSTR s_shader=0,		LPCSTR s_textures=0,	LPCSTR s_constants=0, LPCSTR s_matrices=0);
 	void			Delete					(const Shader*		S	);
-	void			RegisterConstantSetup	(LPCSTR name,		ConstantTableSetup* s)	{	v_constant_setup.push_back(mk_pair(shared_str(name),s));	}
+	void			RegisterConstantSetup	(LPCSTR name,		ConstantTableSetup* s)	{	v_constant_setup.push_back(std::make_pair(shared_str(name),s));	}
 
 	SGeometry*		CreateGeom				(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
 	SGeometry*		CreateGeom				(u32 FVF				, ID3DVertexBuffer* vb, ID3DIndexBuffer* ib);
@@ -227,7 +223,7 @@ public:
 	void			StoreNecessaryTextures	();
 	void			DestroyNecessaryTextures();
 	void			Dump					(bool bBrief);
-
+	
 private:
 #ifdef USE_DX11
 	map_DS	m_ds;
@@ -246,4 +242,4 @@ private:
 #endif	//	USE_DX10
 };
 
-#endif //ResourceManagerH
+#undef DEFINE_MAP_PRED

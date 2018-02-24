@@ -9,10 +9,13 @@
 #include "dds.h"
 #include <fcntl.h>
 
+#pragma warning(push)
+#pragma warning(disable:4100)
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
     return TRUE;
 }
+#pragma warning(pop)
 
 static HFILE gFileOut;
 static HFILE gFileIn;

@@ -9,6 +9,9 @@
 #include <d3d9.h>
 #include "xrD3DDefs.h"
 
+#define ENGINE_API
+#define ECORE_API XRRENDER_COMMONS_API
+
 #define USE_NVTT
 
 #ifndef MAKEFOURCC

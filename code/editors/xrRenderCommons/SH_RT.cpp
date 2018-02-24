@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "ResourceManager.h"
-
+#include "HW.h"
 #include "dxRenderDeviceRender.h"
 
 CRT::CRT			()
@@ -70,7 +70,7 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 	if (FAILED(_hr))					return;
 
 	// Try to create texture/surface
-	DEV->Evict				();
+	HW.pDevice->EvictManagedResources();
 	_hr = HW.pDevice->CreateTexture		(w, h, 1, usage, f, D3DPOOL_DEFAULT, &pSurface,NULL);
 	HW.stats_manager.increment_stats_rtarget	( pSurface );
 

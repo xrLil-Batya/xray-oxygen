@@ -62,14 +62,14 @@ void		IBlender::CreatePalette(xr_vector<IBlender*> &palette)
 #ifndef _EDITOR
 // Engine
 /*#include "../../../xrEngine/render.h"*/
-IBlender*	IBlender::Create	(CLASS_ID cls)
+IBlender*	IBlender::Create	(CLASS_ID)
 {
     //#TODO: COMMENTED IMPLEMENTATION
     R_ASSERT(0);
 	//return ::RImplementation.blender_create	(cls);
     return nullptr;
 }
-void		IBlender::Destroy	(IBlender*& B)
+void		IBlender::Destroy	(IBlender*&)
 {
     //#TODO: COMMENTED IMPLEMENTATION
     R_ASSERT(0);

@@ -126,6 +126,12 @@
     <ClCompile Include="xr_effgamma.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="HWCaps.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="stats_manager.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blender.h">
@@ -298,6 +304,15 @@
     </ClInclude>
     <ClInclude Include="xr_effgamma.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="HWCaps.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="stats_manager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="vis_data.h">
+      <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

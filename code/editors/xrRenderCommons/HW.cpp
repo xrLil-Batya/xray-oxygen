@@ -8,7 +8,9 @@
 #include <d3dx9.h>
 #pragma warning(default:4995)
 #include "HW.h"
-#include "../../xrEngine/XR_IOConsole.h"
+#include "../engine.vc2008/xrEngine/defines.h"
+#include "../engine.vc2008/xrEngine/pure.h"
+#include "../engine.vc2008/xrEngine/XR_IOConsole.h"
 
 void	fill_vid_mode_list			(CHW* _hw);
 void	free_vid_mode_list			();
@@ -39,8 +41,8 @@ void CHW::Reset		(HWND hwnd)
 	_RELEASE			(pBaseRT);
 
 	bool	bWindowed		= TRUE;
-	if (!g_dedicated_server)
-		bWindowed		= !psDeviceFlags.is	(rsFullscreen);
+
+	bWindowed		= !psDeviceFlags.is	(rsFullscreen);
 
 	selectResolution		(DevPP.BackBufferWidth, DevPP.BackBufferHeight, bWindowed);
 	// Windoze
@@ -67,11 +69,10 @@ void CHW::Reset		(HWND hwnd)
 	updateWindowProps	(hwnd);
 }
 
-#include "../../xrCore/xrAPI.h"
 void CHW::CreateD3D	()
 {
 
-	LPCSTR _name		=  "d3d9.dll";
+	LPCWSTR _name		=  L"d3d9.dll";
 
 	hD3D            			= LoadLibrary(_name);
 	R_ASSERT2	           	 	(hD3D,"Can't find 'd3d9.dll'\nPlease install latest version of DirectX before running this program");
@@ -145,14 +146,6 @@ void	CHW::DestroyDevice	()
 void	CHW::selectResolution	(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed)
 {
 	fill_vid_mode_list			(this);
-#ifndef _EDITOR
-	if (g_dedicated_server)
-	{
-		dwWidth		= 640;
-		dwHeight	= 480;
-	}
-	else
-#endif
 	{
 		if(bWindowed)
 		{
@@ -194,7 +187,6 @@ void		CHW::CreateDevice		(HWND m_hWnd, bool move_window)
 	BOOL  bWindowed			= TRUE;
 	
 #ifndef _EDITOR
-	if (!g_dedicated_server)
 		bWindowed			= !psDeviceFlags.is(rsFullscreen);
 #else
 	bWindowed				= 1;
@@ -282,7 +274,7 @@ void		CHW::CreateDevice		(HWND m_hWnd, bool move_window)
 							 "Can not find matching format for back buffer."
 							 );
 		FlushLog			();
-		MessageBox			(NULL,"Failed to initialize graphics hardware.\nPlease try to restart the game.","Error!",MB_OK|MB_ICONERROR);
+		MessageBox			(NULL,L"Failed to initialize graphics hardware.\nPlease try to restart the game.",L"Error!",MB_OK|MB_ICONERROR);
 		TerminateProcess	(GetCurrentProcess(),0);
 	}
 
@@ -342,7 +334,7 @@ void		CHW::CreateDevice		(HWND m_hWnd, bool move_window)
 							 "Please try to restart the game.\n"
 							 "CreateDevice returned 0x%08x(D3DERR_DEVICELOST)", R);
 		FlushLog			();
-		MessageBox			(NULL,"Failed to initialize graphics hardware.\nPlease try to restart the game.","Error!",MB_OK|MB_ICONERROR);
+		MessageBox			(NULL,L"Failed to initialize graphics hardware.\nPlease try to restart the game.",L"Error!",MB_OK|MB_ICONERROR);
 		TerminateProcess	(GetCurrentProcess(),0);
 	};
 	R_CHK		(R);
@@ -419,24 +411,25 @@ u32 CHW::selectGPU ()
 			}
 	}
 
-	if ( isIntelGMA )
-		switch ( ps_r1_SoftwareSkinning ) {
-			case 0 : 
-				Msg( "* Enabling software skinning" );
-				ps_r1_SoftwareSkinning = 1;
-				break;
-			case 1 : 
-				Msg( "* Using software skinning" );
-				break;
-			case 2 : 
-				Msg( "* WARNING: Using hardware skinning" );
-				Msg( "*   setting 'r1_software_skinning' to '1' may improve performance" );
-				break;
-	} else
-		if ( ps_r1_SoftwareSkinning == 1 ) {
-				Msg( "* WARNING: Using software skinning" );
-				Msg( "*   setting 'r1_software_skinning' to '0' should improve performance" );
-		}
+	//if (isIntelGMA)
+	//	switch (ps_r1_SoftwareSkinning) {
+	//	case 0:
+	//		Msg("* Enabling software skinning");
+	//		ps_r1_SoftwareSkinning = 1;
+	//		break;
+	//	case 1:
+	//		Msg("* Using software skinning");
+	//		break;
+	//	case 2:
+	//		Msg("* WARNING: Using hardware skinning");
+	//		Msg("*   setting 'r1_software_skinning' to '1' may improve performance");
+	//		break;
+	//	}
+	//else
+	//	if (ps_r1_SoftwareSkinning == 1) {
+	//		Msg("* WARNING: Using software skinning");
+	//		Msg("*   setting 'r1_software_skinning' to '0' should improve performance");
+	//	}
 
 #endif // RENDER == R_R1
 
@@ -495,8 +488,7 @@ void	CHW::updateWindowProps	(HWND m_hWnd)
 
 	BOOL	bWindowed				= TRUE;
 #ifndef _EDITOR
-	if (!g_dedicated_server)
-		bWindowed			= !psDeviceFlags.is(rsFullscreen);
+	bWindowed			= !psDeviceFlags.is(rsFullscreen);
 #endif	
 
 	u32		dwWindowStyle			= 0;
@@ -556,11 +548,8 @@ void	CHW::updateWindowProps	(HWND m_hWnd)
 	}
 
 #ifndef _EDITOR
-	if (!g_dedicated_server)
-	{
-		ShowCursor	(FALSE);
-		SetForegroundWindow( m_hWnd );
-	}
+	ShowCursor	(FALSE);
+	SetForegroundWindow( m_hWnd );
 #endif
 }
 

@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
 #include "TextureDescrManager.h"
-#include "ETextureParams.h"
+#include "../engine.vc2008/xrRender/xrRender/ETextureParams.h"
 
 // eye-params
 float					r__dtex_range	= 50;
