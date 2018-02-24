@@ -327,9 +327,6 @@
     <ClInclude Include="blender_ssao.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
-    <ClInclude Include="dx11HDAOCSBlender.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
     <ClInclude Include="dx11MinMaxSMBlender.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
@@ -929,9 +926,6 @@
     <ClCompile Include="blender_ssao.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
-    <ClCompile Include="dx11HDAOCSBlender.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="dx11MinMaxSMBlender.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
@@ -1050,9 +1044,6 @@
       <Filter>Core_Target</Filter>
     </ClCompile>
     <ClCompile Include="r4_rendertarget_phase_combine.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="r4_rendertarget_phase_hdao.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
     <ClCompile Include="r4_rendertarget_phase_luminance.cpp">

@@ -71,10 +71,10 @@ void Startup(LPSTR     lpCmdLine)
 
 	//Added priority setting
 	const char* isSp = strstr(cmd, "-sp");
-	if(isSp)
-		sscanf(isSp +3, "%lu", &g_build_options.Priority);
+	if (isSp)
+		g_build_options.Priority = isSp[3] - '0';
 	else										
-		g_build_options.Priority = 2;
+		g_build_options.Priority = 1;
 
 	//end
 

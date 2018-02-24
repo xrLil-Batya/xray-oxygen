@@ -284,7 +284,7 @@ void					CRender::create					()
 	//	TODO: fix hbao shader to allow to perform per-subsample effect!
 	o.hbao_vectorized = false;
 	
-    else if( o.ssao_hbao)
+    if( o.ssao_hbao)
 	{
 		if (HW.Caps.id_vendor==0x1002)
 			o.hbao_vectorized = true;
