@@ -229,11 +229,6 @@ end
 function options_dialog:OnAOOptionChange()
 	local ao_opt_id = self.tab_ao_opt:GetActiveId()
 	local render_id = self.combo_renderer:CurrentID()
-	if(render_id>=4) and (ao_opt_id=="hdao") then
-		self.combo_ssao:enable_id(4)
-	else
-		self.combo_ssao:disable_id(4)
-	end
 	self.combo_ssao:SetCurrentOptValue()
 end
 

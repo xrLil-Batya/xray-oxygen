@@ -11,7 +11,6 @@
 #include "blender_luminance.h"
 #include "blender_ssao.h"
 #include "dx11MinMaxSMBlender.h"
-#include "dx11HDAOCSBlender.h"
 #include "../xrRenderDX10/msaa/dx10MSAABlender.h"
 #include "../xrRenderDX10/DX10 Rain/dx10RainBlender.h"
 #include "blender_fxaa.h"
@@ -267,7 +266,7 @@ CRenderTarget::CRenderTarget		()
 {
    u32 SampleCount = 1;
 
-   if (ps_r_ssao_mode!=2/*hdao*/)
+   if (ps_r_ssao_mode!=2)
 	   ps_r_ssao = std::min(ps_r_ssao, (u32)3);
 
 	RImplementation.o.ssao_ultra		= ps_r_ssao>3;
@@ -319,13 +318,6 @@ CRenderTarget::CRenderTarget		()
 	b_ssao					= xr_new<CBlender_SSAO_noMSAA>		();
 	
 	b_fxaa = xr_new<CBlender_FXAA>();
-
-	// HDAO
-	b_hdao_cs               = xr_new<CBlender_CS_HDAO>			();
-	if( RImplementation.o.dx10_msaa )
-	{
-		b_hdao_msaa_cs      = xr_new<CBlender_CS_HDAO_MSAA>     ();
-	}
 
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -666,18 +658,6 @@ CRenderTarget::CRenderTarget		()
 	//		}
 	//	}
 	//}
-
-	// HDAO
-	if( RImplementation.o.ssao_hdao && RImplementation.o.ssao_ultra)
-	{
-		u32		w = Device.dwWidth, h = Device.dwHeight;
-		rt_ssao_temp.create			(r2_RT_ssao_temp,  w, h, D3DFMT_R16F, 1, true);
-		s_hdao_cs.create			(b_hdao_cs, "r2\\ssao");
-		if( RImplementation.o.dx10_msaa )
-		{
-			s_hdao_cs_msaa.create			(b_hdao_msaa_cs, "r2\\ssao");
-		}
-	}
 
 	// COMBINE
 	{
@@ -1078,11 +1058,6 @@ CRenderTarget::~CRenderTarget	()
    }
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
-	xr_delete					(b_hdao_cs				);
-	if( RImplementation.o.dx10_msaa )
-	{
-        xr_delete( b_hdao_msaa_cs );
-    }
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)

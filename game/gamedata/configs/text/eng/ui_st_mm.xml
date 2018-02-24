@@ -843,9 +843,6 @@
 	<string id="ui_mm_ssao">
 		<text>default</text>
 	</string>
-	<string id="ui_mm_hdao">
-		<text>HDAO</text>
-	</string>
 	<string id="ui_mm_hbao">
 		<text>HBAO</text>
 	</string>

@@ -266,7 +266,7 @@ CRenderTarget::CRenderTarget		()
 {
    u32 SampleCount = 1;
 
-   if (ps_r_ssao_mode!=2/*hdao*/)
+   if (ps_r_ssao_mode!=2)
 	   ps_r_ssao = std::min(ps_r_ssao, (u32)3);
 
    if( RImplementation.o.dx10_msaa )

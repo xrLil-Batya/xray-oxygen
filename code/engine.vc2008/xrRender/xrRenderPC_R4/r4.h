@@ -58,7 +58,6 @@ public:
 		u32		ssao_opt_data		: 1;
 		u32		ssao_half_data		: 1;
 		u32		ssao_hbao			: 1;
-		u32		ssao_hdao			: 1;
 		u32		ssao_ultra			: 1;
 		u32		hbao_vectorized		: 1;
 

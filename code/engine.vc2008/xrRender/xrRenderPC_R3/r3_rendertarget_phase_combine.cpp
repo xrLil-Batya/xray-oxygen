@@ -63,21 +63,12 @@ void	CRenderTarget::phase_combine	()
 		t_LUM_dest->surface_set		(rt_LUM_pool[gpu_id*2+1]->pSurface);
 	}
 
-    if (RImplementation.o.ssao_hdao )
-    {
-	    //phase_downsamp();
+	if (RImplementation.o.ssao_opt_data)
+	{
+	    phase_downsamp();
 	    //phase_ssao();
-    } 
-    else 
-    {
-	    if (RImplementation.o.ssao_opt_data)
-	    {
-		    phase_downsamp();
-		    //phase_ssao();
-	    } 
-	    else if (RImplementation.o.ssao_blur_on)
-		    phase_ssao();
-    }	
+	} 
+	else if (RImplementation.o.ssao_blur_on) phase_ssao();
 
 	// low/hi RTs
 	if( !RImplementation.o.dx10_msaa )
