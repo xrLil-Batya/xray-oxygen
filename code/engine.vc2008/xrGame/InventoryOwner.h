@@ -85,22 +85,18 @@ public:
 	virtual void DisableTalk	()		{m_bAllowTalk = false;}
 	virtual bool IsTalkEnabled	()		{ return m_bAllowTalk;}
 
-	void EnableTrade			()		{m_bAllowTrade = true;}
-	void DisableTrade			()		{m_bAllowTrade = false;}
-	bool IsTradeEnabled			()		{ return m_bAllowTrade;}
+IC	void EnableTrade			()		{m_bAllowTrade = true;}
+IC	void DisableTrade			()		{m_bAllowTrade = false;}
+IC	bool IsTradeEnabled			()		{ return m_bAllowTrade;}
 
-	void EnableInvUpgrade		()		{m_bAllowInvUpgrade = true;}
-	void DisableInvUpgrade		()		{m_bAllowInvUpgrade = false;}
-	bool IsInvUpgradeEnabled	()		{ return m_bAllowInvUpgrade;}
-
-	CInventoryOwner* GetTalkPartner()	{return m_pTalkPartner;}
+IC	CInventoryOwner* GetTalkPartner()	{return m_pTalkPartner;}
 	virtual void	 NewPdaContact		(CInventoryOwner*);
 	virtual void	 LostPdaContact		(CInventoryOwner*);
 
 	//игровое имя 
 	virtual LPCSTR	Name        () const;
 	LPCSTR				IconName		() const;
-	u32					get_money		() const				{return m_money;}
+IC	u32					get_money		() const				{return m_money;}
 	void				set_money		(u32 amount, bool bSendEvent);
 	bool				is_alive		();
 
@@ -114,7 +110,6 @@ protected:
 
 	bool				m_bAllowTalk;
 	bool				m_bAllowTrade;
-	bool				m_bAllowInvUpgrade;
 
 	u16					m_tmp_active_slot_num;
 	

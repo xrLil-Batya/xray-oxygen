@@ -351,11 +351,6 @@ public:
 			void				DisableTrade		();
 			bool				IsTradeEnabled		();
 
-			void				EnableInvUpgrade	();	
-			void				DisableInvUpgrade	();
-			bool				IsInvUpgradeEnabled	();
-
-
 			void				ActorLookAtPoint	(Fvector point);
 			void				IterateInventory	(luabind::functor<void> functor, luabind::object object);
 			void				IterateBelt			(luabind::functor<void> functor, luabind::object object);			
