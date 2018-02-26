@@ -190,6 +190,35 @@ float AABBTreeOfTrianglesBuilder::GetSplittingValue(const uqword* primitives, uq
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
+*	Computes the splitting value along a given axis for a given primitive.
+*	\param		index		[in] index of the primitive to split
+*	\return		splitting value
+*/
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Point AABBTreeOfAABBsBuilder::GetSplittingValues(uqword index) const
+ {
+		// For an AABB, the splitting value is the middle of the given axis,
+		// i.e. the corresponding component of the center point
+	Point p;
+	mAABBArray[index].GetCenter(p);
+	return p;
+}
+
+Point AABBTreeOfTrianglesBuilder::GetSplittingValues(uqword index) const
+{
+	VertexPointers VP;
+	mIMesh->GetTriangle(VP, index);
+	
+	return ( *VP.Vertex[0] + *VP.Vertex[1] + *VP.Vertex[2] ) * INV3;
+}
+
+Point AABBTreeOfVerticesBuilder::GetSplittingValues(uqword index) const
+{
+	// For a vertex, the splitting value is simply the vertex coordinate.
+	return mVertexArray[index];
+}
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+/**
  *	Computes the AABB of a set of primitives.
  *	\param		primitives		[in] list of indices of primitives
  *	\param		nb_prims		[in] number of indices

@@ -92,7 +92,7 @@
 														// Default split value = middle of the axis (using only the box)
 														return global_box.GetCenter(axis);
 													}
-
+		virtual						Point			GetSplittingValues(uqword index) const;
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 *	Validates node subdivision. This is called each time a node is considered for subdivision, during tree building.
@@ -137,7 +137,7 @@
 		override(AABBTreeBuilder)	bool			ComputeGlobalBox(const uqword* primitives, uqword nb_prims, AABB& global_box)	const;
 		override(AABBTreeBuilder)	float			GetSplittingValue(uqword index, uqword axis)									const;
 		override(AABBTreeBuilder)	float			GetSplittingValue(const uqword* primitives, uqword nb_prims, const AABB& global_box, uqword axis)	const;
-
+		override(Point)				Point			GetSplittingValues(uqword index) const;
 		const						Point*			mVertexArray;		//!< Shortcut to an app-controlled array of vertices.
 	};
 
@@ -151,6 +151,7 @@
 
 		override(AABBTreeBuilder)	bool			ComputeGlobalBox(const uqword* primitives, uqword nb_prims, AABB& global_box)	const;
 		override(AABBTreeBuilder)	float			GetSplittingValue(uqword index, uqword axis)									const;
+		override(Point)				Point			GetSplittingValues(uqword index) const;
 
 		const						AABB*			mAABBArray;			//!< Shortcut to an app-controlled array of AABBs.
 	};
@@ -166,6 +167,7 @@
 		override(AABBTreeBuilder)	bool			ComputeGlobalBox(const uqword* primitives, uqword nb_prims, AABB& global_box)	const;
 		override(AABBTreeBuilder)	float			GetSplittingValue(uqword index, uqword axis)									const;
 		override(AABBTreeBuilder)	float			GetSplittingValue(const uqword* primitives, uqword nb_prims, const AABB& global_box, uqword axis)	const;
+		override(Point)				Point			GetSplittingValues(uqword index) const;
 
 		const				MeshInterface*			mIMesh;			//!< Shortcut to an app-controlled mesh interface
 	};
