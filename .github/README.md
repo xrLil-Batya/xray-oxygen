@@ -23,7 +23,7 @@ X-Ray 1.6.02.f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xra
 ## License
 
 * [GSC](https://github.com/xrOxygen/xray-oxygen/blob/master/LICENSE-GSC.md)
-* [Apache 2.0](https://github.com/xrOxygen/xray-oxygen/blob/master/LICENSE.md)
+* [Apache 2.0](https://github.com/xrOxygen/xray-oxygen/blob/master/LICENSE)
 * Allowed to use in **any** projects
 
 ## Contributors
