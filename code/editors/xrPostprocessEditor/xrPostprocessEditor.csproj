@@ -156,9 +156,9 @@
       <Name>xrManagedAPI</Name>
       <Private>False</Private>
     </ProjectReference>
-    <ProjectReference Include="..\xrSdkControls\xrSdkControls.csproj">
+    <ProjectReference Include="..\xrSdkControls\xrSDKControls.csproj">
       <Project>{e9dc16a3-d0fa-4924-af6e-f6fdf3ea0661}</Project>
-      <Name>xrSdkControls</Name>
+      <Name>xrSDKControls</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
