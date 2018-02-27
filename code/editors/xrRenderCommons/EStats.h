@@ -1,11 +1,16 @@
 // Stats.h: interface for the CStats class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef EStatsH
-#define EStatsH
 #pragma once
-#include "../../../xrengine/stats.h"
+
+class ENGINE_API CStatsPhysics
+{
+public:
+	CStatTimer	ph_collision;		// collision
+	CStatTimer	ph_core;			// integrate
+	CStatTimer	Physics;			// movement+collision
+};
+
 // refs
 class CGameFont;
 
@@ -52,5 +57,3 @@ public:
 };
 
 #define UPDATEC(vert,poly,pass)		{ EDevice.Statistic->dwVert+=(vert)*(pass);EDevice.Statistic->dwPoly+=(poly)*pass; EDevice.Statistic->dwCalls+=pass; }
-
-#endif // !defined(AFX_STATS_H__4C8D1860_0EE2_11D4_B4E3_4854E82A090D__INCLUDED_)

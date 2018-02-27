@@ -5,7 +5,7 @@
 #include "RenderWindow.hpp"
 #include "UI_MainCommand.h"
 #include "IInputReceiver.h"
-
+#define AnsiString char*
 // refs
 class CCustomObject;
 class TUI_Tools;

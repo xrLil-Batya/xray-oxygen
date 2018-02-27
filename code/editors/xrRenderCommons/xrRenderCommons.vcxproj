@@ -143,16 +143,19 @@
   <ItemGroup>
     <ClCompile Include="Blender.cpp" />
     <ClCompile Include="Blender_Palette.cpp" />
+    <ClCompile Include="device.cpp" />
     <ClCompile Include="DXT\DXT.cpp" />
     <ClCompile Include="DetailModel.cpp" />
     <ClCompile Include="DXT\ETextureParams.cpp" />
     <ClCompile Include="Envelope.cpp" />
+    <ClCompile Include="EStats.cpp" />
     <ClCompile Include="HW.cpp" />
     <ClCompile Include="DXT\Image_DXTC.cpp" />
     <ClCompile Include="DXT\NVI_Convolution.cpp" />
     <ClCompile Include="DXT\NVI_Image.cpp" />
     <ClCompile Include="DXT\NormalMapGen.cpp" />
     <ClCompile Include="HWCaps.cpp" />
+    <ClCompile Include="render.cpp" />
     <ClCompile Include="ResourceManager.cpp" />
     <ClCompile Include="SH_Atomic.cpp" />
     <ClCompile Include="SH_Constant.cpp" />
@@ -172,6 +175,11 @@
     <ClCompile Include="DXT\tga.cpp" />
     <ClCompile Include="tntQAVI.cpp" />
     <ClCompile Include="tss_def.cpp" />
+    <ClCompile Include="UI\UI_Camera.cpp" />
+    <ClCompile Include="UI\ui_main.cpp" />
+    <ClCompile Include="UI\UI_MainCommand.cpp" />
+    <ClCompile Include="UI\UI_MainMail.cpp" />
+    <ClCompile Include="UI\UI_ToolsCustom.cpp" />
     <ClCompile Include="xrImage_Resampler.cpp" />
     <ClCompile Include="xrTheora_Stream.cpp" />
     <ClCompile Include="xrTheora_Surface.cpp" />
@@ -180,9 +188,11 @@
   <ItemGroup>
     <ClInclude Include="Blender.h" />
     <ClInclude Include="Blender_CLSID.h" />
+    <ClInclude Include="device.h" />
     <ClInclude Include="DXT\dds\ConvertColor.h" />
     <ClInclude Include="DetailModel.h" />
     <ClInclude Include="DXT\ETextureParams.h" />
+    <ClInclude Include="EStats.h" />
     <ClInclude Include="Fmesh.h" />
     <ClInclude Include="HW.h" />
     <ClInclude Include="HWCaps.h" />
@@ -193,6 +203,7 @@
     <ClInclude Include="DXT\NVI_Image.h" />
     <ClInclude Include="DXT\NV_Common.h" />
     <ClInclude Include="Properties.h" />
+    <ClInclude Include="render.h" />
     <ClInclude Include="RenderDeviceRender.h" />
     <ClInclude Include="RenderVisual.h" />
     <ClInclude Include="ResourceManager.h" />
@@ -206,6 +217,9 @@
     <ClInclude Include="SkeletonMotions.h" />
     <ClInclude Include="stats_manager.h" />
     <ClInclude Include="TextureDescrManager.h" />
+    <ClInclude Include="UI\UI_Camera.h" />
+    <ClInclude Include="UI\ui_main.h" />
+    <ClInclude Include="UI\UI_MainCommand.h" />
     <ClInclude Include="vis_data.h" />
     <ClInclude Include="WaveForm.h" />
     <ClInclude Include="blender_recorder.h" />

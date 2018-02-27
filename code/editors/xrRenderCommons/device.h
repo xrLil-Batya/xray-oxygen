@@ -1,13 +1,12 @@
-#ifndef DeviceH
-#define DeviceH
-
+#pragma once
 #include <xrEngine/device.h>
-#include "ui_camera.h"
+#include "UI/ui_camera.h"
+#include "EStats.h"
 #include <xrRender/xrRender/hwcaps.h>
 #include <xrRender/xrRender/hw.h>
 #include <xrEngine/pure.h>
 #include <xrCore/ftimer.h>
-#include "estats.h"
+#include "_d3d_extensions.h"
 #include <xrEngine/Shader_xrLC.h>
 #include <xrRender/xrRender/shader.h>
 #include <xrRender/xrRender/R_Backend.h>
@@ -19,7 +18,7 @@ class CInifile;
 class CResourceManager;
 
 //------------------------------------------------------------------------------
-class ECORE_API CEditorRenderDevice :
+class XRRENDER_COMMONS_API CEditorRenderDevice :
 	public CRenderDeviceBase
 {
     friend class 			CUI_Camera;
@@ -197,5 +196,3 @@ enum {
 ENGINE_API extern xrDispatchTable	PSGP;
 
 #include <xrRender/xrRender/R_Backend_Runtime.h>
-
-#endif

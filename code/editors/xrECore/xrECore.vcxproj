@@ -187,7 +187,6 @@
     <ClInclude Include="Editor\D3DX_Wrapper.h" />
     <ClInclude Include="Editor\EDetailModel.h" />
     <ClInclude Include="Editor\ELog.h" />
-    <ClInclude Include="Editor\EStats.h" />
     <ClInclude Include="Editor\EThumbnail.h" />
     <ClInclude Include="Editor\EditorPreferences.h" />
     <ClInclude Include="Engine\GameMtlLib.h" />
@@ -209,13 +208,10 @@
     <ClInclude Include="Editor\SoundManager.h" />
     <ClInclude Include="Editor\TLSPRITE.h" />
     <ClInclude Include="Engine\Texture.h" />
-    <ClInclude Include="Editor\UI_Camera.h" />
-    <ClInclude Include="Editor\UI_MainCommand.h" />
     <ClInclude Include="Engine\ai_sounds.h" />
     <ClInclude Include="Engine\blenders\blender_light.h" />
     <ClInclude Include="Engine\cl_collector.h" />
     <ClInclude Include="Engine\cl_intersect.h" />
-    <ClInclude Include="Editor\device.h" />
     <ClInclude Include="Editor\du_box.h" />
     <ClInclude Include="Editor\du_cone.h" />
     <ClInclude Include="Editor\du_cylinder.h" />
@@ -229,7 +225,6 @@
     <ClInclude Include="Engine\nv_math.h" />
     <ClInclude Include="Engine\nv_mathdecl.h" />
     <ClInclude Include="Editor\pick_defs.h" />
-    <ClInclude Include="Editor\render.h" />
     <CustomBuild Include="stdafx.h">
       <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">echo /*-------------------------------------------------------------------- &gt;stdafx.h.cpp
 if errorlevel 1 goto VCEnd
@@ -298,7 +293,6 @@ echo #include "stdafx.h"&gt;&gt;stdafx.h.cpp</Command>
       <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generating precompiled header source file 'stdafx.h.cpp' ...</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">stdafx.h.cpp;%(Outputs)</Outputs>
     </CustomBuild>
-    <ClInclude Include="Editor\ui_main.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.h.cpp">

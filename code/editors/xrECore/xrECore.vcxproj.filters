@@ -149,9 +149,6 @@
     <ClInclude Include="Editor\ELog.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\EStats.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\EThumbnail.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -215,12 +212,6 @@
     <ClInclude Include="Engine\Texture.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\UI_Camera.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\UI_MainCommand.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ai_sounds.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -231,9 +222,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Engine\cl_intersect.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Editor\device.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Editor\du_box.h">
@@ -275,15 +263,9 @@
     <ClInclude Include="Editor\pick_defs.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Editor\render.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <CustomBuild Include="stdafx.h">
       <Filter>Header Files</Filter>
     </CustomBuild>
-    <ClInclude Include="Editor\ui_main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Editor\vis_data.h">
       <Filter>Generated Files</Filter>
     </ClInclude>

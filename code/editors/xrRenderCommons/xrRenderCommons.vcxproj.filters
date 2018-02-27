@@ -25,6 +25,9 @@
       <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
     </Filter>
+    <Filter Include="Header Files\DXT">
+      <UniqueIdentifier>{3e78c447-0c05-4d7a-8e9f-fda80c845c0f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Blender.cpp">
@@ -132,15 +135,36 @@
     <ClCompile Include="stats_manager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="device.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="render.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\ui_main.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI_MainCommand.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI_MainMail.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI_ToolsCustom.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="UI\UI_Camera.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="EStats.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Blender.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Blender_CLSID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\dds\ConvertColor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="DetailModel.h">
@@ -158,19 +182,7 @@
     <ClInclude Include="IRenderDetailModel.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DXT\Image_DXTC.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Kinematics.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\NVI_Convolution.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\NVI_Image.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\NV_Common.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Properties.h">
@@ -221,19 +233,7 @@
     <ClInclude Include="bone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="DXT\dds.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\dds\ddsTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\ddsTypes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dxRenderDeviceRender.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\dxtlib.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="envelope.h">
@@ -249,12 +249,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="motion.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\dds\nvErrorCodes.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="DXT\dds\nvdxt_options.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="r_constants.h">
@@ -313,6 +307,57 @@
     </ClInclude>
     <ClInclude Include="vis_data.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="render.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="device.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\ui_main.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UI_MainCommand.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UI\UI_Camera.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="EStats.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\dds\ConvertColor.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\dds.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\dds\ddsTypes.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\ddsTypes.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\dxtlib.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\NV_Common.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\dds\nvdxt_options.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\NVI_Convolution.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\NVI_Image.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\dds\nvErrorCodes.h">
+      <Filter>Header Files\DXT</Filter>
+    </ClInclude>
+    <ClInclude Include="DXT\Image_DXTC.h">
+      <Filter>Header Files\DXT</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

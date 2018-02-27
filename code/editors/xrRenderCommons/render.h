@@ -15,6 +15,7 @@ class IRenderVisual;
 class CSkeletonWallmark;
 class CKinematics;
 
+#include "..\engine.vc2008\xrEngine\device.h"
 // definition (Renderer)
 class CRenderTarget /*:public IRender_Target*/
 {

@@ -1,13 +1,13 @@
 //---------------------------------------------------------------------------
 #include "stdafx.h"
 
-#include "gamefont.h"
+#include "../engine.vc2008/xrEngine/gamefont.h"
 #include <sal.h>
 #include "dxerr.h"
 #include "ImageManager.h"
-#include "ui_main.h"
+#include "UI/ui_main.h"
 #include "render.h"
-#include "GameMtlLib.h"
+#include "../engine.vc2008/xrEngine/GameMtlLib.h"
 #include "ResourceManager.h"
 
 
