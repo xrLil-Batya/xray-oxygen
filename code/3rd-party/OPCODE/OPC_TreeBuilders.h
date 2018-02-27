@@ -92,7 +92,7 @@
 														// Default split value = middle of the axis (using only the box)
 														return global_box.GetCenter(axis);
 													}
-		virtual						Point			GetSplittingValues(uqword index) const;
+		virtual						Point			GetSplittingValues(uqword index) const = 0;
 		///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		/**
 		 *	Validates node subdivision. This is called each time a node is considered for subdivision, during tree building.

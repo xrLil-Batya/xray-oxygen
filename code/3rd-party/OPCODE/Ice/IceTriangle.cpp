@@ -137,72 +137,31 @@ PartVal Triangle::TestAgainstPlane(const Plane& plane, float epsilon) const
 	bool Pos = false, Neg = false;
 
 	// Loop through all vertices
-	for(uqword i=0;i<3;i++)
+	for (uqword i = 0; i < 3; i++)
 	{
 		// Compute side:
 		sdword Side = VPlaneSideEps(mVerts[i], plane, epsilon);
 
-				if (Side < 0)	Neg = true;
-		else	if (Side > 0)	Pos = true;
+		if (Side < 0)		Neg = true;
+		else if (Side > 0)	Pos = true;
 	}
 
-			if (!Pos && !Neg)	return TRI_ON_PLANE;
-	else	if (Pos && Neg)		return TRI_INTERSECT;
-	else	if (Pos && !Neg)	return TRI_PLUS_SPACE;
-	else	if (!Pos && Neg)	return TRI_MINUS_SPACE;
-
-	// What?!
-	return TRI_FORCEDWORD;
-}
-
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/**
- *	Computes the triangle moment.
- *	\param		m	[out] the moment
- */
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-/*
-void Triangle::ComputeMoment(Moment& m)
-{
-	// Compute the area of the triangle
-	m.mArea = Area();
-
-	// Compute the centroid
-	Center(m.mCentroid);
-
-	// Second-order components. Handle zero-area faces.
-	Point& p = mVerts[0];
-	Point& q = mVerts[1];
-	Point& r = mVerts[2];
-	if(m.mArea==0.0f)
+	if (Pos)
 	{
-		// This triangle has zero area. The second order components would be eliminated with the usual formula, so, for the 
-		// sake of robustness we use an alternative form. These are the centroid and second-order components of the triangle's vertices.
-		m.mCovariance.m[0][0] = (p.x*p.x + q.x*q.x + r.x*r.x);
-		m.mCovariance.m[0][1] = (p.x*p.y + q.x*q.y + r.x*r.y);
-		m.mCovariance.m[0][2] = (p.x*p.z + q.x*q.z + r.x*r.z);
-		m.mCovariance.m[1][1] = (p.y*p.y + q.y*q.y + r.y*r.y);
-		m.mCovariance.m[1][2] = (p.y*p.z + q.y*q.z + r.y*r.z);
-		m.mCovariance.m[2][2] = (p.z*p.z + q.z*q.z + r.z*r.z);      
-		m.mCovariance.m[2][1] = m.mCovariance.m[1][2];
-		m.mCovariance.m[1][0] = m.mCovariance.m[0][1];
-		m.mCovariance.m[2][0] = m.mCovariance.m[0][2];
+		if(Neg) return TRI_INTERSECT;
+		else	return TRI_PLUS_SPACE;
 	}
 	else
 	{
-		const float OneOverTwelve = 1.0f / 12.0f;
-		m.mCovariance.m[0][0] = m.mArea * (9.0f * m.mCentroid.x*m.mCentroid.x + p.x*p.x + q.x*q.x + r.x*r.x) * OneOverTwelve;
-		m.mCovariance.m[0][1] = m.mArea * (9.0f * m.mCentroid.x*m.mCentroid.y + p.x*p.y + q.x*q.y + r.x*r.y) * OneOverTwelve;
-		m.mCovariance.m[1][1] = m.mArea * (9.0f * m.mCentroid.y*m.mCentroid.y + p.y*p.y + q.y*q.y + r.y*r.y) * OneOverTwelve;
-		m.mCovariance.m[0][2] = m.mArea * (9.0f * m.mCentroid.x*m.mCentroid.z + p.x*p.z + q.x*q.z + r.x*r.z) * OneOverTwelve;
-		m.mCovariance.m[1][2] = m.mArea * (9.0f * m.mCentroid.y*m.mCentroid.z + p.y*p.z + q.y*q.z + r.y*r.z) * OneOverTwelve;
-		m.mCovariance.m[2][2] = m.mArea * (9.0f * m.mCentroid.z*m.mCentroid.z + p.z*p.z + q.z*q.z + r.z*r.z) * OneOverTwelve;
-		m.mCovariance.m[2][1] = m.mCovariance.m[1][2];
-		m.mCovariance.m[1][0] = m.mCovariance.m[0][1];
-		m.mCovariance.m[2][0] = m.mCovariance.m[0][2];
+		if(Neg)	return TRI_MINUS_SPACE;
+		else	return TRI_ON_PLANE;
 	}
+	// #FX: Unreachable code
+	/*
+	// What?!
+	return TRI_FORCEDWORD;
+	*/
 }
-*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 /**
