@@ -11,12 +11,9 @@ namespace XRay.SdkControls
 {
     public sealed partial class NumericSpinner : UserControl
     {
-        private bool ignoreOnChanged;
+        bool ignoreOnChanged;
 
-        public NumericSpinner()
-        {
-            InitializeComponent();
-        }
+        public NumericSpinner() => InitializeComponent();
 
         public event EventHandler ValueChanged;
 
@@ -62,18 +59,16 @@ namespace XRay.SdkControls
             /*get { return trackBar.Maximum; }
             set { trackBar.Maximum = value; }*/
         }
+        public bool IgnoreOnChanged { get => ignoreOnChanged; set => ignoreOnChanged = value; }
 
-        private void OnValueChanged()
-        {
-            ValueChanged?.Invoke(this, null);
-        }
+        private void OnValueChanged() => ValueChanged?.Invoke(this, null);
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
             numSpinner.ValueChanged += (obj, args) =>
             {
-                if (ignoreOnChanged)
+                if (IgnoreOnChanged)
                     return;
                 OnValueChanged();
             };
@@ -84,7 +79,7 @@ namespace XRay.SdkControls
         private int mouseX;
         private int accumulation;
 
-        private void btnHSpin_MouseDown(object sender, MouseEventArgs e)
+        private void BtnHSpin_MouseDown(object sender, MouseEventArgs e)
         {
             isDragging = true;
             mouseX = e.X;
@@ -92,14 +87,14 @@ namespace XRay.SdkControls
             Cursor.Hide();
         }
 
-        private void btnHSpin_MouseUp(object sender, MouseEventArgs e)
+        private void BtnHSpin_MouseUp(object sender, MouseEventArgs e)
         {
             isDragging = false;
             mouseX = btnHSpin.Location.X;
             Cursor.Show();
         }
 
-        private void btnHSpin_MouseMove(object sender, MouseEventArgs e)
+        private void BtnHSpin_MouseMove(object sender, MouseEventArgs e)
         {
             if (!isDragging || mouseX == e.X)
                 return;

@@ -58,9 +58,9 @@ namespace XRay.SdkControls
             this.btnHSpin.TabIndex = 1;
             this.btnHSpin.Text = "<>";
             this.btnHSpin.UseVisualStyleBackColor = true;
-            this.btnHSpin.MouseDown += new System.Windows.Forms.MouseEventHandler(this.btnHSpin_MouseDown);
-            this.btnHSpin.MouseMove += new System.Windows.Forms.MouseEventHandler(this.btnHSpin_MouseMove);
-            this.btnHSpin.MouseUp += new System.Windows.Forms.MouseEventHandler(this.btnHSpin_MouseUp);
+            this.btnHSpin.MouseDown += new System.Windows.Forms.MouseEventHandler(this.BtnHSpin_MouseDown);
+            this.btnHSpin.MouseMove += new System.Windows.Forms.MouseEventHandler(this.BtnHSpin_MouseMove);
+            this.btnHSpin.MouseUp += new System.Windows.Forms.MouseEventHandler(this.BtnHSpin_MouseUp);
             // 
             // NumericSpinner
             // 
