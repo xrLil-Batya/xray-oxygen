@@ -22,7 +22,6 @@
     <ClCompile Include="xrEProps.cpp">
       <Filter>Props</Filter>
     </ClCompile>
-    <ClCompile Include="GameType.cpp" />
     <ClCompile Include="NumericVector.cpp" />
     <ClCompile Include="ShaderFunction.cpp" />
   </ItemGroup>
@@ -34,7 +33,6 @@
     <ClInclude Include="Token.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="GameType.h" />
     <ClInclude Include="NumericVector.h" />
     <ClInclude Include="ShaderFunction.h" />
   </ItemGroup>

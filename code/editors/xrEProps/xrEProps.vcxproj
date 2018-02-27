@@ -73,16 +73,12 @@
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
-    <ClCompile Include="GameType.cpp" />
     <ClCompile Include="NumericVector.cpp" />
     <ClCompile Include="ShaderFunction.cpp" />
     <ClCompile Include="xrEProps.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="pch.hpp" />
-    <ClInclude Include="GameType.h">
-      <FileType>CppForm</FileType>
-    </ClInclude>
     <ClInclude Include="NumericVector.h">
       <FileType>CppForm</FileType>
     </ClInclude>
@@ -93,9 +89,6 @@
     <ClInclude Include="xrEProps.h" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GameType.resx">
-      <DependentUpon>GameType.h</DependentUpon>
-    </EmbeddedResource>
     <EmbeddedResource Include="NumericVector.resx">
       <DependentUpon>NumericVector.h</DependentUpon>
     </EmbeddedResource>
