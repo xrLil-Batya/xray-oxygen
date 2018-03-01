@@ -6,24 +6,25 @@
 #include "../xrECoreLite/EditObject.h"
 #pragma comment(lib, "xrECoreLite.lib")
 using namespace ECore;
-
+#include <string>
 struct Mesh
 {
 public:
 	Mesh(const char* file)
 	{
 		path = file;
-		mesh = new CFileReader(path);
+		mesh = new CFileReader(path.c_str());
 	}
 
 	void ExportOgf()
 	{
-		CEditableObject obj(path);
-		obj.LoadObject(path);
-		obj.ExportOGF(path, 4);
+		CEditableObject obj(path.c_str());
+
+		obj.LoadObject(std::string(path).c_str());
+		obj.ExportOGF(std::string(path + ".ogf").c_str(), 4);
 	}
 private:
-	const char* path;
+	std::string path;
 	CFileReader* mesh;
 };
 

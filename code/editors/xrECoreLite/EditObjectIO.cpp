@@ -24,7 +24,7 @@ bool CEditableObject::Load(const char* fname)
     //else return LoadObject(fname);
 	return LoadObject(fname);
 }
-
+#include "xrCore\FS_internal.h"
 bool CEditableObject::LoadObject(const char* fname)
 {
 	if (FS.exist(fname)){
@@ -41,6 +41,27 @@ bool CEditableObject::LoadObject(const char* fname)
         }
         return bRes;
     }
+	else
+	{
+		DWORD FileAttrib;
+		FileAttrib = GetFileAttributes(fname);
+		if (FileAttrib != DWORD(-1))//если найден
+		{
+			IReader* F = new CFileReader(fname);
+			//int age = fl->get_file_age(fname);		VERIFY3(age>0, "Invalid file age:", fname);
+			IReader* OBJ = F->open_chunk(EOBJ_CHUNK_OBJECT_BODY);
+			R_ASSERT2(OBJ, "Corrupted file.");
+			bool bRes = Load(*OBJ);
+			OBJ->close();
+			FS.r_close(F);
+
+			if (bRes) {
+				m_LoadName = fname;
+				m_ObjectVersion = 4;
+			}
+			return bRes;
+		}
+	}
     return false;
 }
 //#endif
