@@ -69,7 +69,7 @@ MeshMender::DONT_FIX_CYLINDRICAL);
 #pragma warning( disable : 4786)
 #pragma warning( disable : 4100)
 
-#include "d3dx9.h"
+#include <dx/d3dx9.h>
 #include <map>
 #include <set>
 #include <vector>

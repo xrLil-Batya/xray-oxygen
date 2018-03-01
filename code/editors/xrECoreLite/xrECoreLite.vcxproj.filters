@@ -54,6 +54,11 @@
     <ClCompile Include="GameMtlLib.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="motion.cpp" />
+    <ClCompile Include="bone.cpp" />
+    <ClCompile Include="Envelope.cpp" />
+    <ClCompile Include="VertCache.cpp" />
+    <ClCompile Include="ogf_desc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditMesh.h">
@@ -83,5 +88,8 @@
     <ClInclude Include="GameMtlLib.h">
       <Filter>Engine</Filter>
     </ClInclude>
+    <ClInclude Include="motion.h" />
+    <ClInclude Include="bone.h" />
+    <ClInclude Include="envelope.h" />
   </ItemGroup>
 </Project>

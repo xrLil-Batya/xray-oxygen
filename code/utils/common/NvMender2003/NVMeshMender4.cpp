@@ -21,7 +21,11 @@ a simple c interface for all those simple c folks. or the
 old nvMeshMender interface for all those using it already
 
 */
+#ifdef _CLR_MANAGER
+#include "xrCore\xrCore.h"
+#else
 #include "stdafx.h"
+#endif
 #include "nvMeshMender.h"
 #include "assert.h"
 

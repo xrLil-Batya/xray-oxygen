@@ -44,10 +44,6 @@
 #define GM_NON_GAME
 #endif
 
-#ifdef _EDITOR
-#include "ElTree.hpp"
-#endif
-
 #define ESoundVec	shared_str
 #define EPSVec 		shared_str
 #define EShaderVec 	shared_str
@@ -263,20 +259,13 @@ public:
 	    EGameMtlIt it=GetMaterialItByID(ID);
     	return materials.end() != it?*it:0;
     }
-	IC SGameMtl*		GetMaterial		(LPCSTR name)
+#else
+	IC SEGameMtl*		GetMaterial		(LPCSTR name)
     {
 	    EGameMtlIt it=GetMaterialIt(name);
     	return materials.end() != it?*it:0;
 	}
-#else
-#ifdef _LW_EXPORT
 
-	IC SEGameMtl*		GetMaterial(LPCSTR name)
-	{
-		EGameMtlIt it = GetMaterialIt(name);
-		return materials.end() != it ? *it : 0;
-	}
-#endif
 	// game
 	IC u16				GetMaterialIdx	(int ID)		{EGameMtlIt it=GetMaterialItByID(ID);VERIFY(materials.end() != it); return (u16)(it-materials.begin());}
 	IC u16				GetMaterialIdx	(LPCSTR name)	{EGameMtlIt it=GetMaterialIt(name);VERIFY(materials.end() != it); return (u16)(it-materials.begin());}

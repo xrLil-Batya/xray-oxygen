@@ -70,12 +70,12 @@
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_USRDLL;_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -93,7 +93,7 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_USRDLL;_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -110,13 +110,14 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\Include\editor;..\..\engine.vc2008\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\Include\editor;..\..\engine.vc2008\;</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_SECURE_SCL=0;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="bone.cpp" />
     <ClCompile Include="EditMesh.cpp" />
     <ClCompile Include="EditMeshIO.cpp" />
     <ClCompile Include="EditMeshModify.cpp" />
@@ -124,6 +125,7 @@
     <ClCompile Include="EditObjectEditor.cpp" />
     <ClCompile Include="EditObjectIO.cpp" />
     <ClCompile Include="EditObjectMotions.cpp" />
+    <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="ExportObjectOGF.cpp" />
     <ClCompile Include="ExportObjectOGFCalculateTB.cpp" />
     <ClCompile Include="ExportSkeleton.cpp" />
@@ -133,12 +135,17 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="motion.cpp" />
+    <ClCompile Include="ogf_desc.cpp" />
     <ClCompile Include="RAPIDMinBox.cpp" />
+    <ClCompile Include="VertCache.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ArbitraryList.h" />
+    <ClInclude Include="bone.h" />
     <ClInclude Include="EditMesh.h" />
     <ClInclude Include="EditObject.h" />
+    <ClInclude Include="envelope.h" />
     <ClInclude Include="ExportObjectOGF.h" />
     <ClInclude Include="ExportSkeleton.h" />
     <ClInclude Include="files_list.hpp" />
@@ -148,6 +155,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="itterate_adjacents_dynamic.h" />
+    <ClInclude Include="motion.h" />
     <ClInclude Include="PropSlimTools.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

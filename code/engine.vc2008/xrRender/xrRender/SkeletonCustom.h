@@ -1,9 +1,12 @@
 //---------------------------------------------------------------------------
-#ifndef SkeletonCustomH
-#define SkeletonCustomH
-
-#include		"fhierrarhyvisual.h"
+#pragma once
+#ifdef GM_NON_GAME
+#define IBoneData CBoneData
+#include		"bone.h"
+#else
 #include		"../../xrEngine/bone.h"
+#endif
+#include		"fhierrarhyvisual.h"
 #include		"../../Include/xrRender/Kinematics.h"
 
 extern	std::recursive_mutex	UCalc_Mutex;
@@ -236,4 +239,3 @@ private:
 };
 IC CKinematics* PCKinematics		(dxRender_Visual* V)		{ return V?(CKinematics*)V->dcast_PKinematics():0; }
 //---------------------------------------------------------------------------
-#endif

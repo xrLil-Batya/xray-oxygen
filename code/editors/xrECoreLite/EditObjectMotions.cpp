@@ -5,8 +5,8 @@
 #pragma hdrstop
 
 #include "EditObject.h"
-#include "../../xrEngine/motion.h"
-#include "../../xrEngine/bone.h"
+#include "bone.h"
+#include "motion.h"
 #include "EditMesh.h"
 
 //----------------------------------------------------

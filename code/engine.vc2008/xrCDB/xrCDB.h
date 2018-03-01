@@ -117,7 +117,9 @@ namespace CDB
 			S_forcedword		= u32(-1)
 		};
 	private:
+#ifndef _CLR_MANAGER
 		mutable std::recursive_mutex		cs;
+#endif
 		Opcode::Model*	tree;
 		u32						status;		// 0=ready, 1=init, 2=building
 
@@ -141,8 +143,10 @@ namespace CDB
 			if (S_READY!=status)
 			{
 				Log						("! WARNING: syncronized CDB::query");
+#ifndef _CLR_MANAGER
                 cs.lock();
                 cs.unlock();
+#endif
 			}
 		}
 

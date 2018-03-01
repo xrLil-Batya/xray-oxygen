@@ -7,8 +7,8 @@
 
 #include "EditObject.h"
 #include "EditMesh.h"
-#include "../../xrEngine/bone.h"
-#include "../../xrEngine/motion.h"
+#include "bone.h"
+#include "motion.h"
 
 #ifdef _EDITOR
  #include "exportskeleton.h"

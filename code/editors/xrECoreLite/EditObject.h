@@ -1,15 +1,12 @@
 #pragma once
 #include "GameMtlLib.h"
-#include "../../engine.vc2008/xrCDB/xrCDB.h"
-#include "../../engine.vc2008/xrSound/Sound.h"
-#ifdef _MAYA_PLUGIN
-#include "../Shared/bone.h"
-#include "../Shared/motion.h"
-#else
-#include "../../engine.vc2008/xrEngine/bone.h"
-#include "../../engine.vc2008/xrEngine/motion.h"
-#endif
-#include "../../engine.vc2008/xrEngine/GameMtlLib.h"
+#include "xrCDB/xrCDB.h"
+#include "xrSound/Sound.h"
+
+#include "bone.h"
+#include "motion.h"
+
+#include "xrEngine/GameMtlLib.h"
 #ifdef _EDITOR
 #	include "../../../xrServerEntities/PropertiesListTypes.h"
 //	#include "PropertiesListHelper.h"
@@ -157,7 +154,7 @@ struct ECORE_API SBonePart {
 	RStringVec 		bones;
 };
 using BPVec = xr_vector<SBonePart>;
-
+#include "files_list.hpp"
 const u32 FVF_SV	= D3DFVF_XYZ | D3DFVF_TEX1 | D3DFVF_NORMAL;
 
 class ECORE_API CEditableObject{

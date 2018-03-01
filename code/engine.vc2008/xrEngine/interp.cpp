@@ -247,7 +247,7 @@ static float incoming( st_Key *key0, st_Key *key1, st_Key *key1n ){
 //Given a _list_ of keys and a time, returns the interpolated value of the
 //envelope at that time.
 //======================================================================
-float evalEnvelope( CEnvelope *env, float time ){
+float XRCORE_API evalEnvelope( CEnvelope *env, float time ){
    	st_Key *key0, *key1, *skey, *ekey, *skey_n, *ekey_p, *key0_p=0, *key1_n=0;
    	float t, h1, h2, h3, h4, in, out, offset = 0.0f;
    	int noff;

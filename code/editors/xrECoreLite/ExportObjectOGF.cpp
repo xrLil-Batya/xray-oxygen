@@ -9,8 +9,8 @@
 #include "EditObject.h"
 #include "EditMesh.h"
 #include "../../xrEngine/fmesh.h"
-#include "../../xrEngine/bone.h"
-#include "../../xrEngine/motion.h"
+#include "bone.h"
+#include "motion.h"
 
 CObjectOGFCollectorPacked::CObjectOGFCollectorPacked(const Fbox &bb, int apx_vertices, int apx_faces)
 {

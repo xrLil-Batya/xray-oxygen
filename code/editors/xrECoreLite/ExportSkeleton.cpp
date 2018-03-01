@@ -7,6 +7,9 @@
 #include "../../xrRender/xrRender/xrD3DDefs.h"
 #include "../../xrRender/xrRender/FVF.h"
 
+const	f32		KEY_Quant = 32767.f;
+const	f32		KEY_QuantI = 1.f / KEY_Quant;
+
 #include "ExportObjectOGF.h"
 #include "EditObject.h"
 #include "EditMesh.h"
@@ -19,8 +22,8 @@
 
 #include "ExportSkeleton.h"
 #include "../../xrEngine/Fmesh.h"
-#include "../../xrEngine/bone.h"
-#include "../../xrEngine/motion.h"
+#include "bone.h"
+#include "motion.h"
 #include "../../xrRender/xrRender/VertexCache.h"
 
 ECORE_API BOOL g_force16BitTransformQuant = FALSE;
@@ -75,6 +78,12 @@ u16 CSkeletonCollectorPacked::VPack(SSkelVert& V)
 	VERIFY(P<u16(-1));
 	return 	(u16)P;
 }
+
+enum {
+	flTKeyPresent = (1 << 0),
+	flRKeyAbsent = (1 << 1),
+	flTKey16IsBit = (1 << 2),
+};
 
 CSkeletonCollectorPacked::CSkeletonCollectorPacked(const Fbox &_bb, int apx_vertices, int apx_faces)
 {
@@ -715,6 +724,18 @@ bool CExportSkeleton::ExportGeometry(IWriter& F, u8 infl)
 return bRes;
 }
 //----------------------------------------------------
+struct  CKeyQR
+{
+	s16			x, y, z, w;	// rotation
+};
+struct  CKeyQT8
+{
+	s8			x1, y1, z1;
+};
+struct  CKeyQT16
+{
+	s16			x1, y1, z1;
+};
 struct bm_item {
 	CKeyQR* 		_keysQR;
 	CKeyQT8* 		_keysQT8;

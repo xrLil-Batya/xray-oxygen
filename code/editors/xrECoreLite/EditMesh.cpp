@@ -1,12 +1,11 @@
 //----------------------------------------------------
 // file: StaticMesh.cpp
 //----------------------------------------------------
-
+#include "xrCore\xrCore.h"
 #include "files_list.hpp"
 #pragma hdrstop
 #include "EditMesh.h"
 #include "EditObject.h"
-#include "../../xrEngine/bone.h"
 #include "../../utils/common/itterate_adjacents.h"
 #include "itterate_adjacents_dynamic.h"
 #ifdef _EDITOR

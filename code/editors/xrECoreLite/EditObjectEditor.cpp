@@ -3,7 +3,7 @@
 #include <d3dx9.h>
 #include "../../xrRender/xrRender/xrD3DDefs.h"
 #include "../../xrRender/xrRender/FVF.h"
-
+#define ENGINE_API
 #include "EditObject.h"
 #include "EditMesh.h"
 #ifdef _LW_EXPORT
@@ -12,8 +12,6 @@
 #endif
 
 #define ref_geom void*
-#include "../../xrEngine/motion.h"
-#include "../../xrEngine/bone.h"
 #include "ExportSkeleton.h"
 #include "ExportObjectOGF.h"
 
