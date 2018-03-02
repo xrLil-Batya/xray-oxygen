@@ -154,42 +154,24 @@ void CBone::LoadData(IReader& F)
     F.r_stringZ		(game_mtl);
 
 	R_ASSERT(F.find_chunk(BONE_CHUNK_SHAPE));
- //   F.r				(&shape,sizeof(SBoneShape));
-	F.r(&shape.type, sizeof(u16) + 4);
-	F.r(&shape.flags, sizeof(Flags16) + 4);
 
-	F.r(&shape.box.m_rotate.i[1], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.i[2], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.i[3], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.j[1], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.j[2], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.j[3], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.k[1], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.k[2], sizeof(float) + 4);
-	F.r(&shape.box.m_rotate.k[3], sizeof(float) + 4);
+//	F.r(&shape.type, sizeof(u16));
+//	F.r(&shape.flags, sizeof(Flags16));
+//
+//	F.r(&shape.box.m_rotate, sizeof(Fmatrix33) + 4);
+//	F.r(&shape.box.m_translate, sizeof(Fvector));
+//
+//	F.r(&shape.box.m_halfsize, sizeof(Fvector));
+//
+//	F.r(&shape.sphere, sizeof(Fsphere));
+// //   F.r(&shape.cylinder,sizeof(Fcylinder));
+//	F.r(&shape.cylinder.m_center, sizeof(Fvector) + 4);
+//	F.r(&shape.cylinder.m_direction, sizeof(Fvector));
+//
+//	F.r(&shape.cylinder.m_height, sizeof(float));
+//	F.r(&shape.cylinder.m_radius, sizeof(float));
 
-	F.r(&shape.box.m_translate[1], sizeof(float) + 4);
-	F.r(&shape.box.m_translate[2], sizeof(float) + 4);
-	F.r(&shape.box.m_translate[3], sizeof(float) + 4);
-
-	F.r(&shape.box.m_halfsize[1], sizeof(float) + 8);
-	F.r(&shape.box.m_halfsize[2], sizeof(float) + 8);
-	F.r(&shape.box.m_halfsize[3], sizeof(float) + 8);
-
-	F.r(&shape.sphere, sizeof(Fsphere) + 4);
- //   F.r(&shape.cylinder,sizeof(Fcylinder));
-	F.r(&shape.cylinder.m_center.x, sizeof(float) + 4);
-	F.r(&shape.cylinder.m_center.y, sizeof(float) + 4);
-	F.r(&shape.cylinder.m_center.z, sizeof(float) + 4);
-
-	F.r(&shape.cylinder.m_direction.x, sizeof(float));
-	F.r(&shape.cylinder.m_direction.y, sizeof(float));
-	F.r(&shape.cylinder.m_direction.z, sizeof(float));
-
-	F.r(&shape.cylinder.m_height, sizeof(float));
-	F.r(&shape.cylinder.m_radius, sizeof(float));
-
-  //  F.r				(&shape,sizeof(SBoneShape));
+   F.r(&shape,sizeof(SBoneShape) + 8);
     
     if (F.find_chunk(BONE_CHUNK_FLAGS))
 	    IK_data.ik_flags.assign(F.r_u32());
@@ -228,15 +210,20 @@ void CBone::CopyData(CBone* bone)
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
 #include "GameMtlLib.h"
+#include <xrCore\FS_internal.h>
+
 bool CBone::ExportOGF(IWriter& F)
 {
 	// check valid
-	R_ASSERT3(!shape.Valid(), "! Bone '%s' has invalid shape.", *Name());
 
-	const SEGameMtl* M = GEMLib.GetMaterial(game_mtl.c_str());
-	R_ASSERT3(!M, "! Bone '%s' has invalid game material.", *Name());
-	R_ASSERT3(!M->Flags.is(SEGameMtl::flDynamic), "! Bone '%s' has non-dynamic game material.", *Name());
-
+	if (shape.Valid())
+		MessageBox(0, "! Bone '%s' has invalid shape.", std::string("Invalid Shape!" + std::string(*Name())).c_str(), 0);
+	else
+	{
+		const SEGameMtl* M = GEMLib.GetMaterial(game_mtl.c_str());
+		R_ASSERT3(!M, "! Bone '%s' has invalid game material.", *Name());
+		R_ASSERT3(!M->Flags.is(SEGameMtl::flDynamic), "! Bone '%s' has non-dynamic game material.", *Name());
+	}
 	F.w_u32(OGF_IKDATA_VERSION);
 	F.w_stringZ(game_mtl);
 	F.w(&shape, sizeof(SBoneShape));

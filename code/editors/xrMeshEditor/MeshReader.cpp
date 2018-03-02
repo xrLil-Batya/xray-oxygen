@@ -4,6 +4,7 @@
 #define ECORE_API
 #define ENGINE_API
 #include "../xrECoreLite/EditObject.h"
+
 #pragma comment(lib, "xrECoreLite.lib")
 using namespace ECore;
 #include <string>
@@ -34,6 +35,11 @@ private:
 using msclr::interop::marshal_context;
 #pragma warning(pop)
 
+System::Void MeshEdit::MeshEdit_Load(System::Object^  sender, System::EventArgs^  e)
+{
+	GEMLib.Load();
+}
+
 System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
@@ -41,6 +47,10 @@ System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, Syste
 		marshal_context context;
 		const char* tmpStr = context.marshal_as<const char*>(openFileDialog1->FileName);
 		mesh = new Mesh(tmpStr);
-		mesh->ExportOgf();
 	}
+}
+
+System::Void MeshEdit::xRayIngameToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) 
+{
+	mesh->ExportOgf();
 }

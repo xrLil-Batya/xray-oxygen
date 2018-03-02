@@ -70,14 +70,14 @@ namespace ECore {
 			this->meshToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->loadToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->xRayObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->xRayAnimLibraryToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->exportToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->toolsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->xRayIngameToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->xRayAnimGameToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->xRayAnimSDKToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->xRayObjectToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->xRayAnimLibraryToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->toolsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
@@ -146,6 +146,18 @@ namespace ECore {
 			this->saveToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->saveToolStripMenuItem->Text = L"Save";
 			// 
+			// xRayObjectToolStripMenuItem
+			// 
+			this->xRayObjectToolStripMenuItem->Name = L"xRayObjectToolStripMenuItem";
+			this->xRayObjectToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->xRayObjectToolStripMenuItem->Text = L"X-Ray Object";
+			// 
+			// xRayAnimLibraryToolStripMenuItem
+			// 
+			this->xRayAnimLibraryToolStripMenuItem->Name = L"xRayAnimLibraryToolStripMenuItem";
+			this->xRayAnimLibraryToolStripMenuItem->Size = System::Drawing::Size(173, 22);
+			this->xRayAnimLibraryToolStripMenuItem->Text = L"X-Ray AnimLibrary";
+			// 
 			// exportToolStripMenuItem
 			// 
 			this->exportToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
@@ -156,23 +168,12 @@ namespace ECore {
 			this->exportToolStripMenuItem->Size = System::Drawing::Size(152, 22);
 			this->exportToolStripMenuItem->Text = L"Export";
 			// 
-			// toolsToolStripMenuItem
-			// 
-			this->toolsToolStripMenuItem->Name = L"toolsToolStripMenuItem";
-			this->toolsToolStripMenuItem->Size = System::Drawing::Size(48, 20);
-			this->toolsToolStripMenuItem->Text = L"Tools";
-			// 
-			// helpToolStripMenuItem
-			// 
-			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
-			this->helpToolStripMenuItem->Size = System::Drawing::Size(44, 20);
-			this->helpToolStripMenuItem->Text = L"Help";
-			// 
 			// xRayIngameToolStripMenuItem
 			// 
 			this->xRayIngameToolStripMenuItem->Name = L"xRayIngameToolStripMenuItem";
 			this->xRayIngameToolStripMenuItem->Size = System::Drawing::Size(166, 22);
 			this->xRayIngameToolStripMenuItem->Text = L"X-Ray inGame";
+			this->xRayIngameToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::xRayIngameToolStripMenuItem_Click);
 			// 
 			// xRayAnimGameToolStripMenuItem
 			// 
@@ -186,17 +187,17 @@ namespace ECore {
 			this->xRayAnimSDKToolStripMenuItem->Size = System::Drawing::Size(166, 22);
 			this->xRayAnimSDKToolStripMenuItem->Text = L"X-Ray animSDK";
 			// 
-			// xRayObjectToolStripMenuItem
+			// toolsToolStripMenuItem
 			// 
-			this->xRayObjectToolStripMenuItem->Name = L"xRayObjectToolStripMenuItem";
-			this->xRayObjectToolStripMenuItem->Size = System::Drawing::Size(173, 22);
-			this->xRayObjectToolStripMenuItem->Text = L"X-Ray Object";
+			this->toolsToolStripMenuItem->Name = L"toolsToolStripMenuItem";
+			this->toolsToolStripMenuItem->Size = System::Drawing::Size(48, 20);
+			this->toolsToolStripMenuItem->Text = L"Tools";
 			// 
-			// xRayAnimLibraryToolStripMenuItem
+			// helpToolStripMenuItem
 			// 
-			this->xRayAnimLibraryToolStripMenuItem->Name = L"xRayAnimLibraryToolStripMenuItem";
-			this->xRayAnimLibraryToolStripMenuItem->Size = System::Drawing::Size(173, 22);
-			this->xRayAnimLibraryToolStripMenuItem->Text = L"X-Ray AnimLibrary";
+			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
+			this->helpToolStripMenuItem->Size = System::Drawing::Size(44, 20);
+			this->helpToolStripMenuItem->Text = L"Help";
 			// 
 			// MeshEdit
 			// 
@@ -211,6 +212,7 @@ namespace ECore {
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"MeshEdit";
 			this->Text = L"MeshEdit";
+			this->Load += gcnew System::EventHandler(this, &MeshEdit::MeshEdit_Load);
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
 			this->ResumeLayout(false);
@@ -222,5 +224,7 @@ private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  
 	this->openFileDialog1->OpenFile();
 }
 private: System::Void loadToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
+private: System::Void xRayIngameToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+private: System::Void MeshEdit_Load(System::Object^  sender, System::EventArgs^  e);
 };
 }
