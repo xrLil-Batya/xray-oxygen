@@ -40,6 +40,16 @@ System::Void MeshEdit::MeshEdit_Load(System::Object^  sender, System::EventArgs^
 	GEMLib.Load();
 }
 
+System::Void MeshEdit::gameMaterialsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	for (u32 it = 0; it < GEMLib.CountMaterial(); it++)
+	{
+		System::String^ name = gcnew System::String(GEMLib.GetMaterialByIdx(it)->m_Name.c_str());
+		listBox1->Items->Add(name);
+	}
+	listBox1->Visible = !listBox1->Visible;
+}
+
 System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)
 {
 	if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
