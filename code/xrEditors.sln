@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2003
+VisualStudioVersion = 15.0.27130.2020
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrWeatherEditor", "editors\xrWeatherEditor\editor.vcxproj", "{492D3DFE-9068-4E7E-A008-7C2420A651C0}"
 EndProject
@@ -41,6 +41,9 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrEProps", "editors\xrEProps\xrEProps.vcxproj", "{1EA62E41-6CF6-4B68-842D-DAFDDF786888}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrMeshEditor", "editors\xrMeshEditor\xrMesh.vcxproj", "{F4605D33-B64E-492A-8F03-3E59660F8FE7}"
+	ProjectSection(ProjectDependencies) = postProject
+		{722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1} = {722D40C3-FE5A-4A9B-94A5-5DC23A7C7AE1}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrQSlim", "engine.vc2008\xrQSlim\xrQSlim.vcxproj", "{F1836CE2-59EF-4189-8B9C-D103A511CB27}"
 EndProject

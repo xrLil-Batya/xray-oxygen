@@ -154,7 +154,42 @@ void CBone::LoadData(IReader& F)
     F.r_stringZ		(game_mtl);
 
 	R_ASSERT(F.find_chunk(BONE_CHUNK_SHAPE));
-    F.r				(&shape,sizeof(SBoneShape));
+ //   F.r				(&shape,sizeof(SBoneShape));
+	F.r(&shape.type, sizeof(u16) + 4);
+	F.r(&shape.flags, sizeof(Flags16) + 4);
+
+	F.r(&shape.box.m_rotate.i[1], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.i[2], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.i[3], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.j[1], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.j[2], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.j[3], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.k[1], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.k[2], sizeof(float) + 4);
+	F.r(&shape.box.m_rotate.k[3], sizeof(float) + 4);
+
+	F.r(&shape.box.m_translate[1], sizeof(float) + 4);
+	F.r(&shape.box.m_translate[2], sizeof(float) + 4);
+	F.r(&shape.box.m_translate[3], sizeof(float) + 4);
+
+	F.r(&shape.box.m_halfsize[1], sizeof(float) + 8);
+	F.r(&shape.box.m_halfsize[2], sizeof(float) + 8);
+	F.r(&shape.box.m_halfsize[3], sizeof(float) + 8);
+
+	F.r(&shape.sphere, sizeof(Fsphere) + 4);
+ //   F.r(&shape.cylinder,sizeof(Fcylinder));
+	F.r(&shape.cylinder.m_center.x, sizeof(float) + 4);
+	F.r(&shape.cylinder.m_center.y, sizeof(float) + 4);
+	F.r(&shape.cylinder.m_center.z, sizeof(float) + 4);
+
+	F.r(&shape.cylinder.m_direction.x, sizeof(float));
+	F.r(&shape.cylinder.m_direction.y, sizeof(float));
+	F.r(&shape.cylinder.m_direction.z, sizeof(float));
+
+	F.r(&shape.cylinder.m_height, sizeof(float));
+	F.r(&shape.cylinder.m_radius, sizeof(float));
+
+  //  F.r				(&shape,sizeof(SBoneShape));
     
     if (F.find_chunk(BONE_CHUNK_FLAGS))
 	    IK_data.ik_flags.assign(F.r_u32());
