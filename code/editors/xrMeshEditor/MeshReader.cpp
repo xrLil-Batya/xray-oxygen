@@ -14,19 +14,27 @@ public:
 	Mesh(const char* file)
 	{
 		path = file;
-		mesh = new CFileReader(path.c_str());
+		mesh = new CEditableObject(path.c_str());
+		mesh->LoadObject(std::string(path).c_str());
 	}
 
 	void ExportOgf()
 	{
-		CEditableObject obj(path.c_str());
+		mesh->ExportOGF(std::string(path + ".ogf").c_str(), 4);
+	}
 
-		obj.LoadObject(std::string(path).c_str());
-		obj.ExportOGF(std::string(path + ".ogf").c_str(), 4);
+	inline CBone* GetBone(int idx) const
+	{
+		return mesh->m_Bones[idx];
+	}
+
+	inline size_t GetBoneSize() const
+	{
+		return mesh->m_Bones.size();
 	}
 private:
 	std::string path;
-	CFileReader* mesh;
+	CEditableObject* mesh;
 };
 
 #pragma warning(push)
@@ -45,9 +53,26 @@ System::Void MeshEdit::gameMaterialsToolStripMenuItem_Click(System::Object^  sen
 	for (u32 it = 0; it < GEMLib.CountMaterial(); it++)
 	{
 		System::String^ name = gcnew System::String(GEMLib.GetMaterialByIdx(it)->m_Name.c_str());
-		listBox1->Items->Add(name);
+		this->GMtList->Items->Add(name);
 	}
-	listBox1->Visible = !listBox1->Visible;
+	this->GMtList->Visible = !this->GMtList->Visible;
+}
+
+System::Void MeshEdit::BonesList_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e)
+{
+}
+
+System::Void MeshEdit::bonesListToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	if (mesh)
+	{
+		for (u32 it = 0; it < mesh->GetBoneSize(); it++)
+		{
+			System::String^ name = gcnew System::String(mesh->GetBone(it)->Name().c_str());
+			this->BonesList->Items->Add(name);
+		}
+	}
+	this->BonesList->Visible = !this->BonesList->Visible;
 }
 
 System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e)

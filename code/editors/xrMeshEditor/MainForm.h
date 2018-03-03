@@ -17,9 +17,14 @@ namespace ECore {
 		MeshEdit(void)
 		{
 			InitializeComponent();
+			mesh = nullptr;
 		}
-	private: System::Windows::Forms::ListBox^  listBox1;
+	private: System::Windows::Forms::ListBox^  GMtList;
+	public:
+
 	private: System::Windows::Forms::ToolStripMenuItem^  gameMaterialsToolStripMenuItem;
+	private: System::Windows::Forms::ListBox^  BonesList;
+	private: System::Windows::Forms::ToolStripMenuItem^  bonesListToolStripMenuItem;
 	public:
 
 	public:
@@ -69,7 +74,8 @@ namespace ECore {
 		void InitializeComponent(void)
 		{
 			this->groupBox1 = (gcnew System::Windows::Forms::GroupBox());
-			this->listBox1 = (gcnew System::Windows::Forms::ListBox());
+			this->BonesList = (gcnew System::Windows::Forms::ListBox());
+			this->GMtList = (gcnew System::Windows::Forms::ListBox());
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->menuStrip1 = (gcnew System::Windows::Forms::MenuStrip());
 			this->filesToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
@@ -85,6 +91,7 @@ namespace ECore {
 			this->toolsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gameMaterialsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->bonesListToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->groupBox1->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
@@ -93,7 +100,8 @@ namespace ECore {
 			// 
 			this->groupBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(64)),
 				static_cast<System::Int32>(static_cast<System::Byte>(70)));
-			this->groupBox1->Controls->Add(this->listBox1);
+			this->groupBox1->Controls->Add(this->BonesList);
+			this->groupBox1->Controls->Add(this->GMtList);
 			this->groupBox1->Location = System::Drawing::Point(748, 27);
 			this->groupBox1->Name = L"groupBox1";
 			this->groupBox1->Size = System::Drawing::Size(200, 507);
@@ -101,16 +109,28 @@ namespace ECore {
 			this->groupBox1->TabStop = false;
 			this->groupBox1->Text = L"Menu";
 			// 
-			// listBox1
+			// BonesList
 			// 
-			this->listBox1->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(69)),
+			this->BonesList->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(69)),
 				static_cast<System::Int32>(static_cast<System::Byte>(70)));
-			this->listBox1->FormattingEnabled = true;
-			this->listBox1->Location = System::Drawing::Point(1, 360);
-			this->listBox1->Name = L"listBox1";
-			this->listBox1->Size = System::Drawing::Size(200, 147);
-			this->listBox1->TabIndex = 0;
-			this->listBox1->Visible = false;
+			this->BonesList->FormattingEnabled = true;
+			this->BonesList->Location = System::Drawing::Point(1, 212);
+			this->BonesList->Name = L"BonesList";
+			this->BonesList->Size = System::Drawing::Size(200, 147);
+			this->BonesList->TabIndex = 1;
+			this->BonesList->Visible = false;
+			this->BonesList->SelectedIndexChanged += gcnew System::EventHandler(this, &MeshEdit::BonesList_SelectedIndexChanged);
+			// 
+			// GMtList
+			// 
+			this->GMtList->BackColor = System::Drawing::Color::FromArgb(static_cast<System::Int32>(static_cast<System::Byte>(64)), static_cast<System::Int32>(static_cast<System::Byte>(69)),
+				static_cast<System::Int32>(static_cast<System::Byte>(70)));
+			this->GMtList->FormattingEnabled = true;
+			this->GMtList->Location = System::Drawing::Point(1, 360);
+			this->GMtList->Name = L"GMtList";
+			this->GMtList->Size = System::Drawing::Size(200, 147);
+			this->GMtList->TabIndex = 0;
+			this->GMtList->Visible = false;
 			// 
 			// openFileDialog1
 			// 
@@ -209,7 +229,10 @@ namespace ECore {
 			// 
 			// toolsToolStripMenuItem
 			// 
-			this->toolsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->gameMaterialsToolStripMenuItem });
+			this->toolsToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->gameMaterialsToolStripMenuItem,
+					this->bonesListToolStripMenuItem
+			});
 			this->toolsToolStripMenuItem->Name = L"toolsToolStripMenuItem";
 			this->toolsToolStripMenuItem->Size = System::Drawing::Size(48, 20);
 			this->toolsToolStripMenuItem->Text = L"Tools";
@@ -226,6 +249,13 @@ namespace ECore {
 			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
 			this->helpToolStripMenuItem->Size = System::Drawing::Size(44, 20);
 			this->helpToolStripMenuItem->Text = L"Help";
+			// 
+			// bonesListToolStripMenuItem
+			// 
+			this->bonesListToolStripMenuItem->Name = L"bonesListToolStripMenuItem";
+			this->bonesListToolStripMenuItem->Size = System::Drawing::Size(153, 22);
+			this->bonesListToolStripMenuItem->Text = L"Bones list";
+			this->bonesListToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::bonesListToolStripMenuItem_Click);
 			// 
 			// MeshEdit
 			// 
@@ -249,12 +279,15 @@ namespace ECore {
 
 		}
 #pragma endregion
-	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
+	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) 
+	{
 		this->openFileDialog1->OpenFile();
 	}
 	private: System::Void loadToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e);
 	private: System::Void xRayIngameToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void MeshEdit_Load(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void gameMaterialsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
-	};
+	private: System::Void BonesList_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void bonesListToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+};
 }

@@ -78,17 +78,24 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
+    <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="MeshEditor.cpp" />
     <ClCompile Include="MeshReader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
+    <ClInclude Include="BoneEditor.h">
+      <FileType>CppForm</FileType>
+    </ClInclude>
     <ClInclude Include="MainForm.h">
       <FileType>CppForm</FileType>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="BoneEditor.resx">
       <DependentUpon>MainForm.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
