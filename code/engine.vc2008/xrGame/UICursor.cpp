@@ -3,7 +3,7 @@
 #include "ui/UIStatic.h"
 #include "ui/UIBtnHint.h"
 #include "../xrEngine/xr_input.h"
-
+#include "Actor_Flags.h"
 //#define C_DEFAULT	D3DCOLOR_XRGB(0xff,0xff,0xff)
 
 CUICursor::CUICursor(): m_static(NULL), m_b_use_win_cursor(false)
@@ -56,7 +56,8 @@ void CUICursor::OnRender	()
 	g_statHint->OnRender();
 
 	if( !IsVisible() ) return;
-#ifdef DEBUG
+	if(AF_SHOW_CURPOS)
+	{
 	VERIFY(last_render_frame != Device.dwFrame);
 	last_render_frame = Device.dwFrame;
 
@@ -70,7 +71,7 @@ void CUICursor::OnRender	()
 	Fvector2			pt = GetCursorPosition();
 	F->OutNext			("%f-%f",pt.x, pt.y);
 	}
-#endif
+	}
 
 	m_static->SetWndPos	(vPos);
 	m_static->Update	();

@@ -1829,6 +1829,7 @@ CMD4(CCC_Integer,			"hit_anims_tune",						&tune_hit_anims,		0, 1);
 	CMD3(CCC_Mask,			"cursor_instead_crosshair",	&psActorFlags,	AF_CUR_INS_CROS);
 	CMD1(CCC_Script,		"run_script");
 	CMD1(CCC_ScriptCommand,	"run_string");
+	CMD3(CCC_Mask,				"rs_show_cursor_pos",		&psActorFlags,	AF_SHOW_CURPOS);
 	CMD1(CCC_TimeFactor,	"time_factor");
 	CMD1(CCC_Spawn,         "g_spawn");
 	CMD1(CCC_Giveinfo, "g_info");                                                           
