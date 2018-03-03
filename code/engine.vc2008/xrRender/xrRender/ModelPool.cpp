@@ -14,8 +14,6 @@
 #include "ParticleGroup.h"
 #include "ParticleEffect.h"
 
-#include "../../editors/xrECoreLite/EditObject.h"
-
 dxRender_Visual*	CModelPool::Instance_Create(u32 type)
 {
 	dxRender_Visual *V = NULL;
@@ -87,6 +85,7 @@ dxRender_Visual*	CModelPool::Instance_Duplicate	(dxRender_Visual* V)
 
 dxRender_Visual* CModelPool::TryLoadObject(const char* N)
 {
+	/*
 	char* ext = strext(N);
 	string_path name;
 	if (!ext)
@@ -113,8 +112,9 @@ dxRender_Visual* CModelPool::TryLoadObject(const char* N)
 	strconcat(sizeof(ogfName), ogfName, fn, ".ogf");
 	R_ASSERT3(obj.ExportOGF(ogfName, 4), "Can`t export to OGF [%s]", fn);
 
-	dxRender_Visual* result = TryLoadOgf(ogfName);
-	return result;
+	return TryLoadOgf(ogfName);
+	*/
+	return nullptr;
 }
 dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 {
@@ -153,8 +153,8 @@ dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 dxRender_Visual*	CModelPool::Instance_Load		(const char* N, BOOL allow_register)
 {
 	dxRender_Visual* V = TryLoadOgf(N);
-	if (!V)
-		V = TryLoadObject(N);
+//	if (!V)
+//		V = TryLoadObject(N);
 	if (!V) 
 		Debug.fatal(DEBUG_INFO, "Can't find model file '%s'.", N);
 

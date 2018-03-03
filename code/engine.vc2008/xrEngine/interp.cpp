@@ -240,7 +240,7 @@ static float incoming( st_Key *key0, st_Key *key1, st_Key *key1n ){
 }
 
 
-
+#ifndef ENGINE_BUILD
 //======================================================================
 //evalEnvelope()
 //
@@ -344,3 +344,4 @@ float XRCORE_API evalEnvelope( CEnvelope *env, float time ){
          	return offset;
    	}
 }
+#endif
