@@ -45,7 +45,7 @@ bool	CLevel::net_start_client1				()
 
 #include "xrServer.h"
 
-bool	CLevel::net_start_client2()
+bool CLevel::net_start_client2()
 {
 	Server->create_direct_client();
 	//offline account creation
@@ -55,13 +55,13 @@ bool	CLevel::net_start_client2()
 	Server->Update();
 	m_bConnectResultReceived = true;
 
-    shared_str clientOption = GamePersistent().GetClientOption();
-	connected_to_server = Connect2Server(*clientOption);
+    const char* clientOption = GamePersistent().GetClientOption().c_str();
+	connected_to_server = Connect2Server(clientOption);
 
 	return true;
 }
 
-bool	CLevel::net_start_client3				()
+bool CLevel::net_start_client3()
 {
 	if(connected_to_server)
 	{
@@ -73,12 +73,8 @@ bool	CLevel::net_start_client3				()
 		// Determine internal level-ID
 		int						level_id = pApp->Level_ID(level_name, level_ver, true);
 		
-#ifdef DEBUG
-		Msg("--- net_start_client3: level_id [%d], level_name[%s], level_version[%s]", level_id, level_name, level_ver);
-#endif // #ifdef DEBUG
 		map_data.m_name					= level_name;
 		map_data.m_map_version			= level_ver;
-//		map_data.m_map_download_url		= download_url;
 		map_data.m_map_loaded			= true;
 		
 		deny_m_spawn			= FALSE;

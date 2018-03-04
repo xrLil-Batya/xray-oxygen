@@ -349,14 +349,18 @@ void CHOM::OnRender	()
     if (!bDebug) return;
 	Raster.on_dbg_render();
 
-	if (psDeviceFlags.is(rsOcclusionDraw)){
-		if (m_pModel){
+	if (psDeviceFlags.is(rsOcclusionDraw))
+	{
+		if (m_pModel)
+		{
             using LVec = xr_vector<FVF::L>;
-			static LVec	poly;	poly.resize(m_pModel->get_tris_count()*3);
-			static LVec	line;	line.resize(m_pModel->get_tris_count()*6);
-			for (int it=0; it<m_pModel->get_tris_count(); it++){
+			static LVec	poly;	poly.resize(m_pModel->get_tris_count() * 3);
+			static LVec	line;	line.resize(m_pModel->get_tris_count() * 6);
+			for (u32 it = 0; it < m_pModel->get_tris_count(); it++)
+			{
 				CDB::TRI* T		= m_pModel->get_tris()+it;
 				Fvector* verts	= m_pModel->get_verts();
+
 				poly[it*3+0].set(*(verts+T->verts[0]),0x80FFFFFF);
 				poly[it*3+1].set(*(verts+T->verts[1]),0x80FFFFFF);
 				poly[it*3+2].set(*(verts+T->verts[2]),0x80FFFFFF);

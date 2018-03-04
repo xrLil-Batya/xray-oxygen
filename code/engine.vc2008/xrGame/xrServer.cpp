@@ -43,8 +43,6 @@ void	xrClientData::Clear()
 xrServer::xrServer() : IPureServer(Device.GetTimerGlobal())
 {
 	m_aDelayedPackets.clear();
-	m_last_updates_size	= 0;
-	m_last_update_time	= 0;
 }
 
 xrServer::~xrServer()
@@ -190,30 +188,6 @@ void xrServer::Update	()
 	Flush_Clients_Buffers			();
 }
 
-void _stdcall xrServer::SendGameUpdateTo(IClient* client)
-{
-	xrClientData*	xr_client = static_cast<xrClientData*>(client);
-	VERIFY			(xr_client);
-
-	if (!xr_client->net_Ready)
-		return;
-
-	if (!HasBandwidth(client)
-#ifdef DEBUG 
-			&& !g_sv_SendUpdate
-#endif
-		)
-	{
-		return;
-	}
-	
-	NET_Packet				Packet;
-	u16 PacketType			= M_UPDATE;
-	Packet.w_begin			(PacketType);
-	game->net_Export_Update	(Packet, xr_client->ID, xr_client->ID);
-	SendTo					(xr_client->ID, Packet, net_flags(FALSE,TRUE));
-}
-
 void xrServer::MakeUpdatePackets()
 {
 	NET_Packet						tmpPacket;			
@@ -254,13 +228,11 @@ void xrServer::MakeUpdatePackets()
 
 void xrServer::SendUpdatePacketsToAll()
 {
-	m_last_updates_size = 0;
 	for (update_iterator_t i = m_update_begin; i != m_update_end; ++i)
 	{
 		NET_Packet& to_send = **i;
 		if (to_send.B.count > 2)
 		{
-			m_last_updates_size += to_send.B.count;
 			SendBroadcast	(GetServerClient()->ID, to_send, net_flags(FALSE,TRUE));
 			if (Level().IsDemoSave())
 			{
@@ -418,9 +390,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		{
 			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
 		}break;
-	case M_STATISTIC_UPDATE_RESPOND:
-		{
-		}break;
+	case M_STATISTIC_UPDATE_RESPOND: {}break;
 	case M_PLAYER_FIRE:
 		{
 			if (game)
@@ -514,46 +484,28 @@ void xrServer::entity_Destroy(CSE_Abstract *&P)
 }
 
 //--------------------------------------------------------------------
-void xrServer::Server_Client_Check(IClient* CL)
+CSE_Abstract* xrServer::GetEntity(u32 Num)
 {
-	if (SV_Client && SV_Client->ID == CL->ID)
-	{
-		if (!CL->flags.bConnected)
-		{
-			SV_Client = nullptr;
-		};
-		return;
-	};
-
-	if (SV_Client && SV_Client->ID != CL->ID || !CL->flags.bConnected)
-		return;
-
-	CL->flags.bLocal = 1;
-	SV_Client = (xrClientData*)CL;
-	Msg("New SV client 0x%08x", SV_Client->ID.value());
-};
-
-CSE_Abstract*	xrServer::GetEntity			(u32 Num)
-{
-	xrS_entities::iterator	I=entities.begin(),E=entities.end();
-	for (u32 C=0; I!=E; ++I,++C)
+	xrS_entities::iterator I = entities.begin(), E = entities.end();
+	for (u32 C = 0; I != E; ++I, ++C)
 	{
 		if (C == Num) return I->second;
 	};
-	return NULL;
+	return nullptr;
 };
 
 #ifdef DEBUG
 
-static	BOOL	_ve_initialized			= FALSE;
-static	BOOL	_ve_use					= TRUE;
+static	bool _ve_initialized	= false;
+static	bool _ve_use			= true;
 
 bool xrServer::verify_entities				() const
 {
 #ifdef SLOW_VERIFY_ENTITIES
-	if (!_ve_initialized)	{
-		_ve_initialized					= TRUE;
-		if (strstr(Core.Params,"-~ve"))	_ve_use=FALSE;
+	if (!_ve_initialized) 
+	{
+		_ve_initialized = false;
+		if (strstr(Core.Params, "-~ve"))	_ve_use = false;
 	}
 	if (!_ve_use)						return true;
 
@@ -596,13 +548,13 @@ void xrServer::verify_entity				(const CSE_Abstract *entity) const
 
 #endif // DEBUG
 
-shared_str xrServer::level_name				(const shared_str &server_options) const
+shared_str xrServer::level_name(const shared_str &server_options) const
 {
 	return	(game->level_name(server_options));
 }
-shared_str xrServer::level_version			(const shared_str &server_options) const
+shared_str xrServer::level_version(const shared_str &server_options) const
 {
-	return	(game_sv_GameState::parse_level_version(server_options));						
+	return	(game_sv_GameState::parse_level_version(server_options));
 }
 
 void xrServer::create_direct_client()

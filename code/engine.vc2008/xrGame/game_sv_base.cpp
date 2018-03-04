@@ -455,27 +455,7 @@ void game_sv_GameState::OnHit (u16 id_hitter, u16 id_hitted, NET_Packet& P)
 void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
 	switch	(type)
-	{	
-	case GAME_EVENT_PLAYER_CONNECTED:
-		{
-			ClientID ID;
-			tNetPacket.r_clientID(ID);
-			OnPlayerConnect(ID);
-		}break;
-
-	case GAME_EVENT_PLAYER_DISCONNECTED:
-		{
-			ClientID ID;
-			tNetPacket.r_clientID(ID);
-			string1024 PlayerName;
-			tNetPacket.r_stringZ(PlayerName);
-			u16		GameID = tNetPacket.r_u16();
-			OnPlayerDisconnect(ID, PlayerName, GameID);
-		}break;
-
-	case GAME_EVENT_PLAYER_KILLED:
-		{
-		}break	;
+	{
 	case GAME_EVENT_ON_HIT:
 		{
 			u16		id_dest				= tNetPacket.r_u16();
@@ -496,15 +476,6 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 			
 			CL->flags.bConnected		= TRUE;
 			m_server->AttachNewClient	(CL);
-		}break;
-	case GAME_EVENT_PLAYER_AUTH:
-		{
-			IClient* CL				=	m_server->ID_to_client		(sender);
-			m_server->OnBuildVersionRespond(CL, tNetPacket);
-		}break;
-	case GAME_EVENT_CREATE_PLAYER_STATE:
-		{
-			break;
 		}break;
 	default:
 		{
@@ -550,22 +521,9 @@ public:
 		id_entity_victim = id_entity;
 	}
 
-	bool __stdcall PredicateDelVictim(GameEvent* const ge)
+	inline bool __stdcall PredicateDelVictim(GameEvent* const ge)
 	{
-		bool ret_val = false;
-		switch (ge->type)
-		{
-			case GAME_EVENT_PLAYER_KILLED:
-			case GAME_EVENT_PLAYER_HITTED:
-				{
-					u32 tmp_pos			= ge->P.r_tell();
-					u16 id_entity_for	= ge->P.r_u16();
-					if (id_entity_for == id_entity_victim)
-						ret_val = true;
-					ge->P.r_seek(tmp_pos);
-				} break;
-		};
-		return ret_val;
+		return false;
 	}
 	bool __stdcall PredicateForAll(GameEvent* const ge)
 	{

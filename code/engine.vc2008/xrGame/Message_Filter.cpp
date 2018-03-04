@@ -140,25 +140,6 @@ void message_filter::dbg_print_msg(NET_Packet & packet, msg_type_subtype_t const
 		}break;
 	case M_GAMEMESSAGE:
 		{
-			switch (msg_type.msg_subtype)
-			{
-			case GAME_EVENT_PLAYER_KILLED:
-				{
-					xr_sprintf(tmp_string, "--- GM_EVENT [%7u]: GAME_EVENT_PLAYER_KILLED", msg_type.msg_receive_time);
-				}break;
-			case GAME_EVENT_ROUND_STARTED:
-				{
-					xr_sprintf(tmp_string, "--- GM_EVENT [%7u]: GAME_EVENT_ROUND_STARTED", msg_type.msg_receive_time);
-				}break;
-			case GAME_EVENT_ARTEFACT_TAKEN:
-				{
-					xr_sprintf(tmp_string, "--- GM_EVENT [%7u]: GAME_EVENT_ARTEFACT_TAKEN", msg_type.msg_receive_time);	
-				}break;
-			default:
-				{
-					xr_sprintf(tmp_string, "--- GM_EVENT [%7u]: GAME_EVENT_ID=[%d]", msg_type.msg_receive_time, msg_type.msg_subtype);	
-				};
-			}
 		}break;
 	case M_SPAWN:
 		{

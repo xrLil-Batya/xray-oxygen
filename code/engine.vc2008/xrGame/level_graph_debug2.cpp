@@ -23,7 +23,6 @@
 #include "cover_point.h"
 #include "cover_manager.h"
 #include "cover_evaluators.h"
-#include "team_base_zone.h"
 #include "alife_simulator.h"
 #include "alife_graph_registry.h"
 #include "alife_object_registry.h"
@@ -322,16 +321,10 @@ void CLevelGraph::draw_covers	()
 
 void CLevelGraph::draw_objects	()
 {
-	u32					I = 0;
-	u32					E = Level().Objects.o_count	();
-	for ( ; I < E; ++I) {
-		CObject			*_O = Level().Objects.o_get_by_iterator(I);
-		CTeamBaseZone	*team_base_zone = smart_cast<CTeamBaseZone*>(_O);
-		if (team_base_zone) {
-			team_base_zone->OnRender();
-			continue;
-		}
-
+	for (u32 it = 0; it < Level().Objects.o_count	(); ++it) 
+	{
+		CObject *_O = Level().Objects.o_get_by_iterator(it);
+		
 		CCustomMonster	*tpCustomMonster = smart_cast<CCustomMonster*>(_O);
 		if (tpCustomMonster) {
 			tpCustomMonster->OnRender();
@@ -342,7 +335,8 @@ void CLevelGraph::draw_objects	()
 		}
 
 		smart_cover::object	*smart_cover = smart_cast<smart_cover::object*>(_O);
-		if (smart_cover) {
+		if (smart_cover) 
+		{
 			smart_cover->OnRender	();
 			continue;
 		}

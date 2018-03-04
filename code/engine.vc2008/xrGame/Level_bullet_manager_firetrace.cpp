@@ -244,9 +244,9 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	//только для динамических объектов
 	VERIFY(E.R.O);
 
-	if ( CEntity* entity = smart_cast<CEntity*>(E.R.O) )
+	if (CEntity* entity = smart_cast<CEntity*>(E.R.O))
 	{
-		if ( !entity->in_solid_state() )
+		if (!entity->in_solid_state())
 		{
 			return;
 		}
@@ -255,19 +255,12 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 	if (g_clear) E.Repeated = false;
 	E.Repeated = false;
 	bool NeedShootmark = true;//!E.Repeated;
-	
-	if (smart_cast<CActor*>(E.R.O))
+
+	if (CBaseMonster * monster = smart_cast<CBaseMonster *>(E.R.O))
 	{
-		if (Game().GetFlag(GAME_PLAYER_FLAG_INVINCIBLE))
-		{
-			NeedShootmark = false;
-		};
+		NeedShootmark = monster->need_shotmark();
 	}
-	else if ( CBaseMonster * monster = smart_cast<CBaseMonster *>(E.R.O) )
-	{
-		NeedShootmark	=	monster->need_shotmark();
-	}
-	
+
 	//визуальное обозначение попадание на объекте
 //	Fvector			hit_normal;
 	FireShotmark	(&E.bullet, E.bullet.dir, E.point, E.R, E.tgt_material, E.normal, NeedShootmark);

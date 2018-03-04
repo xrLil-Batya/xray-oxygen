@@ -55,8 +55,6 @@ private:
 	
 	void						MakeUpdatePackets			();
 	void						SendUpdatePacketsToAll		();
-	u32							m_last_updates_size;
-	u32							m_last_update_time;
 
 	struct DelayedPacket
 	{
@@ -74,7 +72,6 @@ private:
 	void						AddDelayedPacket		(NET_Packet& Packet, ClientID Sender);
 	u32							OnDelayedMessage		(NET_Packet& P, ClientID sender);			// Non-Zero means broadcasting with "flags" as returned
 
-	void	_stdcall			SendGameUpdateTo		(IClient* client);
 private:
 	typedef 
 		CID_Generator<
@@ -92,8 +89,6 @@ private:
 private:
 	id_generator_type		m_tID_Generator;
 
-protected:
-	void					Server_Client_Check		(IClient* CL);
 public:
 	game_sv_GameState*		game;
 
@@ -165,7 +160,6 @@ public:
 	void					entity_Destroy		(CSE_Abstract *&P);
 	u32						GetEntitiesNum		()			{ return entities.size(); };
 	CSE_Abstract*			GetEntity			(u32 Num);
-	u32 const				GetLastUpdatesSize	() const { return m_last_updates_size; };
 
 	xrClientData*			ID_to_client		(ClientID ID, bool ScanAll = false ) { return (xrClientData*)(IPureServer::ID_to_client( ID, ScanAll)); }
 	CSE_Abstract*			ID_to_entity		(u16 ID);
@@ -177,7 +171,8 @@ public:
 	void					SLS_Default			();
 	void					SLS_Clear			();
 	void					SLS_Save			(IWriter&	fs);
-	void					SLS_Load			(IReader&	fs);	
+	void					SLS_Load			(IReader&	fs);
+
 			shared_str		level_name			(const shared_str &server_options) const;
 			shared_str		level_version		(const shared_str &server_options) const;
 
