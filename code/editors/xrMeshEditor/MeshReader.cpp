@@ -3,39 +3,10 @@
 #include "xrCore/fs_internal.h"
 #define ECORE_API
 #define ENGINE_API
-#include "../xrECoreLite/EditObject.h"
-
+#include "Meshs.h"
 #pragma comment(lib, "xrECoreLite.lib")
 using namespace ECore;
-#include <string>
-struct Mesh
-{
-public:
-	Mesh(const char* file)
-	{
-		path = file;
-		mesh = new CEditableObject(path.c_str());
-		mesh->LoadObject(std::string(path).c_str());
-	}
-
-	void ExportOgf()
-	{
-		mesh->ExportOGF(std::string(path + ".ogf").c_str(), 4);
-	}
-
-	inline CBone* GetBone(int idx) const
-	{
-		return mesh->m_Bones[idx];
-	}
-
-	inline size_t GetBoneSize() const
-	{
-		return mesh->m_Bones.size();
-	}
-private:
-	std::string path;
-	CEditableObject* mesh;
-};
+//#include <string>
 
 #pragma warning(push)
 #pragma warning(disable : 4995) // ignore deprecation warnings
@@ -64,7 +35,7 @@ System::Void MeshEdit::BonesList_SelectedIndexChanged(System::Object^  sender, S
 
 System::Void MeshEdit::bonesListToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
 {
-	if (mesh)
+	if (mesh && !this->BonesList->Visible)
 	{
 		for (u32 it = 0; it < mesh->GetBoneSize(); it++)
 		{
@@ -72,6 +43,11 @@ System::Void MeshEdit::bonesListToolStripMenuItem_Click(System::Object^  sender,
 			this->BonesList->Items->Add(name);
 		}
 	}
+	else if (this->BonesList->Visible)
+	{
+		this->BonesList->Items->Clear();
+	}
+
 	this->BonesList->Visible = !this->BonesList->Visible;
 }
 

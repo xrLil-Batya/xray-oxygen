@@ -86,9 +86,9 @@ namespace ECore {
 		{
 			this->openFileDialog1 = (gcnew System::Windows::Forms::OpenFileDialog());
 			this->tableLayoutPanel1 = (gcnew System::Windows::Forms::TableLayoutPanel());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->label1 = (gcnew System::Windows::Forms::Label());
 			this->textBox1 = (gcnew System::Windows::Forms::TextBox());
-			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
 			this->tableLayoutPanel1->SuspendLayout();
 			this->SuspendLayout();
@@ -121,6 +121,16 @@ namespace ECore {
 			this->tableLayoutPanel1->Size = System::Drawing::Size(268, 443);
 			this->tableLayoutPanel1->TabIndex = 0;
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
+			this->label2->Location = System::Drawing::Point(3, 24);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(49, 17);
+			this->label2->TabIndex = 4;
+			this->label2->Text = L"Shape";
+			// 
 			// label1
 			// 
 			this->label1->AutoSize = true;
@@ -133,25 +143,15 @@ namespace ECore {
 			// 
 			// textBox1
 			// 
-			this->textBox1->Location = System::Drawing::Point(87, 3);
+			this->textBox1->Location = System::Drawing::Point(88, 3);
 			this->textBox1->Name = L"textBox1";
 			this->textBox1->Size = System::Drawing::Size(177, 20);
 			this->textBox1->TabIndex = 1;
 			// 
-			// label2
-			// 
-			this->label2->AutoSize = true;
-			this->label2->Font = (gcnew System::Drawing::Font(L"Microsoft Sans Serif", 10));
-			this->label2->Location = System::Drawing::Point(3, 24);
-			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(49, 17);
-			this->label2->TabIndex = 4;
-			this->label2->Text = L"Shape";
-			// 
 			// comboBox1
 			// 
 			this->comboBox1->FormattingEnabled = true;
-			this->comboBox1->Location = System::Drawing::Point(87, 27);
+			this->comboBox1->Location = System::Drawing::Point(88, 27);
 			this->comboBox1->Name = L"comboBox1";
 			this->comboBox1->Size = System::Drawing::Size(177, 21);
 			this->comboBox1->TabIndex = 7;

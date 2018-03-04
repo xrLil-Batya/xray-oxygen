@@ -90,8 +90,8 @@ namespace ECore {
 			this->xRayAnimSDKToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->toolsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->gameMaterialsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bonesListToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->groupBox1->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
@@ -244,18 +244,18 @@ namespace ECore {
 			this->gameMaterialsToolStripMenuItem->Text = L"GameMaterials";
 			this->gameMaterialsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::gameMaterialsToolStripMenuItem_Click);
 			// 
-			// helpToolStripMenuItem
-			// 
-			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
-			this->helpToolStripMenuItem->Size = System::Drawing::Size(44, 20);
-			this->helpToolStripMenuItem->Text = L"Help";
-			// 
 			// bonesListToolStripMenuItem
 			// 
 			this->bonesListToolStripMenuItem->Name = L"bonesListToolStripMenuItem";
 			this->bonesListToolStripMenuItem->Size = System::Drawing::Size(153, 22);
 			this->bonesListToolStripMenuItem->Text = L"Bones list";
 			this->bonesListToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::bonesListToolStripMenuItem_Click);
+			// 
+			// helpToolStripMenuItem
+			// 
+			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
+			this->helpToolStripMenuItem->Size = System::Drawing::Size(44, 20);
+			this->helpToolStripMenuItem->Text = L"Help";
 			// 
 			// MeshEdit
 			// 
