@@ -90,8 +90,6 @@ public:
 	virtual	void			Send					(NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
 	virtual void			Flush_Send_Buffer		();
 	virtual void			OnMessage				(void* data, u32 size);
-	virtual void			OnInvalidHost			()	{};
-	virtual void			OnSessionFull			()	{};
 	virtual void			OnConnectRejected		()	{};
 	BOOL					net_HasBandwidth		();
 	void					ClearStatistic			();

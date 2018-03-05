@@ -188,66 +188,6 @@ void xrServer::Update	()
 	Flush_Clients_Buffers			();
 }
 
-void xrServer::MakeUpdatePackets()
-{
-	NET_Packet						tmpPacket;			
-	u32								position;
-
-	m_updator.begin_updates			();
-	
-	xrS_entities::iterator I	= entities.begin();
-	xrS_entities::iterator E	= entities.end();
-	for (; I!=E; ++I)
-	{//all entities
-		CSE_Abstract&	Test			= *(I->second);
-
-		if (0==Test.owner)								continue;
-		if (!Test.net_Ready)							continue;
-		if (Test.s_flags.is(M_SPAWN_OBJECT_PHANTOM))	continue;	// Surely: phantom
-		if (!Test.Net_Relevant() )						continue;
-
-		tmpPacket.B.count				= 0;
-		// write specific data
-		{
-			tmpPacket.w_u16					(Test.ID);
-			tmpPacket.w_chunk_open8			(position);
-			Test.UPDATE_Write				(tmpPacket);
-			u32 ObjectSize					= u32(tmpPacket.w_tell()-position)-sizeof(u8);
-			tmpPacket.w_chunk_close8		(position);
-
-			if (ObjectSize == 0)			continue;					
-#ifdef DEBUG
-			if (g_Dump_Update_Write) Msg("* %s : %d", Test.name(), ObjectSize);
-#endif
-			m_updator.write_update_for		(Test.ID, tmpPacket);
-		}
-	}//all entities
-
-	m_updator.end_updates			(m_update_begin, m_update_end);
-}
-
-void xrServer::SendUpdatePacketsToAll()
-{
-	for (update_iterator_t i = m_update_begin; i != m_update_end; ++i)
-	{
-		NET_Packet& to_send = **i;
-		if (to_send.B.count > 2)
-		{
-			SendBroadcast	(GetServerClient()->ID, to_send, net_flags(FALSE,TRUE));
-			if (Level().IsDemoSave())
-			{
-				Level().SavePacket(to_send);
-			}
-		}
-	}
-}
-
-xr_vector<shared_str>	_tmp_log;
-void console_log_cb(LPCSTR text)
-{
-	_tmp_log.push_back	(text);
-}
-
 u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
 {
 	u16						type;

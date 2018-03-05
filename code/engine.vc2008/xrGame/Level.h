@@ -10,11 +10,8 @@
 #include "../xrcore/xrDebug.h"
 #include "xrServer.h"
 #include "GlobalFeelTouch.hpp"
-
 #include "Level_network_map_sync.h"
-#include "traffic_optimization.h"
 
-class	CHUDManager;
 class	CParticlesObject;
 class	game_cl_GameState;
 class	NET_Queue_Event;
@@ -29,7 +26,6 @@ class	CLevelDebug;
 class	CLevelSoundManager;
 class	CGameTaskManager;
 class	CZoneList;
-class	message_filter;
 class	demo_info;
 class	CDebugRenderer;
 
@@ -92,7 +88,6 @@ public:
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnSessionFull			();
 	virtual void				OnConnectRejected		();
 			bool				PostponedSpawn			(u16 id);
 private:
@@ -207,14 +202,12 @@ public:
 	virtual void				OnRender				( );
 
 	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
-	virtual void				net_StartPlayDemo		();
 
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);
 	void						ProcessGameEvents		( );
 	void						ProcessGameSpawns		( );
-	void						ProcessCompressedUpdate	(NET_Packet& P, u8 const compression_type);
-
+	
 	// Input
 	virtual	void				IR_OnKeyboardPress		( int btn );
 	virtual void				IR_OnKeyboardRelease	( int btn );
@@ -299,17 +292,10 @@ public:
 	IC CBulletManager&	BulletManager() {return	*m_pBulletManager;}
 
 	//by Mad Max 
-	CSE_Abstract		*spawn_item							(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
+	CSE_Abstract		*spawn_item						(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
 			
 public:
-		void			remove_objects				();
-		virtual void	OnSessionTerminate		(LPCSTR reason);
-			
-	compression::lzo_dictionary_buffer			m_lzo_dictionary;
-
-	//alligned to 16 bytes m_lzo_working_buffer
-	u8*											m_lzo_working_memory;
-	u8*											m_lzo_working_buffer;
+		void			remove_objects			();
 	
 	void			init_compression			();
 	void			deinit_compression			();

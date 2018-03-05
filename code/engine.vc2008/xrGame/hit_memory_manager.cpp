@@ -195,7 +195,7 @@ void CHitMemoryManager::update()
 		std::remove_if(	
 			m_hits->begin(),
 			m_hits->end(),
-			[](const CHitObject &object) { return !object || !!object.m_object->getDestroy() || object.m_object->H_Parent(); }
+			[](const CHitObject &object) { return object == 0 || !!object.m_object->getDestroy() || object.m_object->H_Parent(); }
 		),
 		m_hits->end()
 	);
@@ -218,7 +218,7 @@ void CHitMemoryManager::update()
 
 void CHitMemoryManager::enable			(const CObject *object, bool enable)
 {
-	HITS::iterator				J = std::find(m_hits->begin(),m_hits->end(),object_id(object));
+	HITS::iterator J = std::find(m_hits->begin(),m_hits->end(),object_id(object));
 	if (J == m_hits->end())
 		return;
 

@@ -33,23 +33,7 @@ class CMainMenu : public IMainMenu, public IInputReceiver, public pureRender, pu
 
 	xr_vector<CUIWindow*> m_pp_draw_wnds;
 
-public:
-	enum	EErrorDlg
-	{
-		ErrInvalidHost,
-		ErrSessionFull,
-		ErrServerReject,
-		ErrGSServiceFailed,
-		ErrMasterServerConnectFailed,
-		ConnectToMasterServer,
-		SessionTerminate,
-		LoadingError,
-		ErrMax,
-		ErrNoError = ErrMax,
-	};
-
 protected:
-	EErrorDlg		m_NeedErrDialog;
 	u32				m_start_time;
 
 	xr_vector<CUIMessageBoxEx*>	m_pMB_ErrDlgs;
@@ -81,7 +65,6 @@ public:
 
 	bool			OnRenderPPUI_query();
 	void			OnRenderPPUI_main();
-	void			OnRenderPPUI_PP();
 
 	virtual void			OnRender();
 	virtual void	_BCL	OnFrame(void);
@@ -94,19 +77,8 @@ public:
 	void			RegisterPPDraw(CUIWindow* w);
 	void			UnregisterPPDraw(CUIWindow* w);
 
-	void			SetErrorDialog(EErrorDlg ErrDlg);
-	IC EErrorDlg	GetErrorDialogType() const { return m_NeedErrDialog; };
-	void			CheckForErrorDlg();
-
-	void xr_stdcall OnConnectToMasterServerOkClicked(CUIWindow*, void*);
-	void			OnSessionTerminate(LPCSTR reason);
-	void			OnLoadError(LPCSTR module);
-
-	void			Show_CTMS_Dialog();
-	void			Hide_CTMS_Dialog();
-	void			SetNeedVidRestart();
-	virtual void	OnDeviceReset();
 	IC const char*	GetGSVer() { return "1.6.02.f"; };
+	virtual void	OnDeviceReset();
 };
 
 extern CMainMenu*	MainMenu();

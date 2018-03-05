@@ -363,12 +363,6 @@ void CLevel::ClearAllObjects()
 	};
 	ProcessGameEvents();
 };
-void CLevel::OnSessionFull()
-{
-	IPureClient::OnSessionFull();
-	if (MainMenu()->GetErrorDialogType() == CMainMenu::ErrNoError)
-		MainMenu()->SetErrorDialog(CMainMenu::ErrSessionFull);
-}
 
 void CLevel::OnConnectRejected()
 {

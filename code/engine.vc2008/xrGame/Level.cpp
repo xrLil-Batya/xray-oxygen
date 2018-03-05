@@ -178,8 +178,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	g_player_hud->load_default();
 	
 	hud_zones_list			= nullptr;
-	m_lzo_working_memory	= nullptr;
-	m_lzo_working_buffer	= nullptr;
 }
 
 extern CAI_Space *g_ai_space;
@@ -910,11 +908,6 @@ void CLevel::OnAlifeSimulatorLoaded()
 {
 	MapManager().ResetStorage();
 	GameTaskManager().ResetStorage();
-}
-
-void CLevel::OnSessionTerminate		(LPCSTR reason)
-{
-	MainMenu()->OnSessionTerminate(reason);
 }
 
 u32	GameID()

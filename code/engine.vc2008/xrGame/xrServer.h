@@ -7,7 +7,6 @@
 #include "game_sv_base.h"
 #include "id_generator.h"
 #include "../xrEngine/mp_logging.h"
-#include "xrServer_updates_compressor.h"
 #include "xrClientsPool.h"
 
 class CSE_Abstract;
@@ -48,14 +47,6 @@ private:
 	xr_multiset<svs_respawn>	q_respawn;
 	xr_vector<u16>				conn_spawned_ids;
 	
-	typedef server_updates_compressor::send_ready_updates_t::const_iterator update_iterator_t;
-	update_iterator_t			m_update_begin;
-	update_iterator_t			m_update_end;
-	server_updates_compressor	m_updator;
-	
-	void						MakeUpdatePackets			();
-	void						SendUpdatePacketsToAll		();
-
 	struct DelayedPacket
 	{
 		ClientID		SenderID;

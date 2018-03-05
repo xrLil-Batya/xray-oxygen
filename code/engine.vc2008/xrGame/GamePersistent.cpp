@@ -692,13 +692,6 @@ void CGamePersistent::OnAppDeactivate	()
 	bEntryFlag = FALSE;
 }
 
-
-bool CGamePersistent::OnRenderPPUI_query()
-{
-	return MainMenu()->OnRenderPPUI_query();
-	// enable PP or not
-}
-
 extern void draw_wnds_rects();
 void CGamePersistent::OnRenderPPUI_main()
 {
@@ -707,10 +700,6 @@ void CGamePersistent::OnRenderPPUI_main()
 	draw_wnds_rects();
 }
 
-void CGamePersistent::OnRenderPPUI_PP()
-{
-	MainMenu()->OnRenderPPUI_PP();
-}
 #include "string_table.h"
 #include "../xrEngine/x_ray.h"
 

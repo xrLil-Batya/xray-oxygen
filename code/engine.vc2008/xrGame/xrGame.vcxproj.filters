@@ -5466,9 +5466,6 @@
     <ClInclude Include="NET_Queue.h">
       <Filter>Core\Common\NET Shared</Filter>
     </ClInclude>
-    <ClInclude Include="traffic_optimization.h">
-      <Filter>Core\Common\NET Shared</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\xrMessages.h">
       <Filter>Core\Common\NET Shared</Filter>
     </ClInclude>
@@ -5584,9 +5581,6 @@
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h">
-      <Filter>Core\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="xrServer_updates_compressor.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="xrServerMapSync.h">
@@ -7586,9 +7580,6 @@
     <ClCompile Include="Level_network.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
-    <ClCompile Include="Level_network_compressed_updates.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Level_network_messages.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
@@ -8153,9 +8144,6 @@
     <ClCompile Include="xrgame_dll_detach.cpp">
       <Filter>Core\Common\Dll Process Detach</Filter>
     </ClCompile>
-    <ClCompile Include="traffic_optimization.cpp">
-      <Filter>Core\Common\NET Shared</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\object_factory.cpp">
       <Filter>Core\Common\ObjectFactory</Filter>
     </ClCompile>
@@ -8190,9 +8178,6 @@
       <Filter>Core\Server</Filter>
     </ClCompile>
     <ClCompile Include="xrServer.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_updates_compressor.cpp">
       <Filter>Core\Server</Filter>
     </ClCompile>
     <ClCompile Include="xrServerMapSync.cpp">

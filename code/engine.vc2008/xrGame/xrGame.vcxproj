@@ -1519,7 +1519,6 @@
     <ClInclude Include="InventoryBox.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="NET_Queue.h" />
-    <ClInclude Include="traffic_optimization.h" />
     <ClInclude Include="..\xrServerEntities\xrMessages.h" />
     <ClInclude Include="..\xrServerEntities\object_broker.h" />
     <ClInclude Include="..\xrServerEntities\object_cloner.h" />
@@ -1559,7 +1558,6 @@
     <ClInclude Include="xrClientsPool.h" />
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
-    <ClInclude Include="xrServer_updates_compressor.h" />
     <ClInclude Include="xrServerMapSync.h" />
     <ClInclude Include="..\xrServerEntities\DrawUtils.h" />
     <ClInclude Include="..\xrServerEntities\FastDelegate.h" />
@@ -2411,7 +2409,6 @@
     <ClCompile Include="Level_load.cpp" />
     <ClCompile Include="Level_network.cpp">
     </ClCompile>
-    <ClCompile Include="Level_network_compressed_updates.cpp" />
     <ClCompile Include="Level_network_messages.cpp" />
     <ClCompile Include="Level_network_spawn.cpp">
     </ClCompile>
@@ -2678,7 +2675,6 @@
     <ClCompile Include="date_time.cpp" />
     <ClCompile Include="xrgame_dll_detach.cpp">
     </ClCompile>
-    <ClCompile Include="traffic_optimization.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory_register.cpp">
     </ClCompile>
@@ -2703,7 +2699,6 @@
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">
     </ClCompile>
-    <ClCompile Include="xrServer_updates_compressor.cpp" />
     <ClCompile Include="xrServerMapSync.cpp" />
     <ClCompile Include="game_base.cpp">
     </ClCompile>

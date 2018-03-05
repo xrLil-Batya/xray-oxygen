@@ -44,7 +44,6 @@ enum {
 	M_SV_DIGEST,				//request and responce
 
 	M_FILE_TRANSFER,
-	M_COMPRESSED_UPDATE_OBJECTS,
 
 	MSG_FORCEDWORD				= u32(-1)
 };

@@ -40,7 +40,6 @@ private:
 	EVENT					eStartLoad;
 	EVENT					eDisconnect;
 	EVENT					eConsole;
-	EVENT					eStartMPDemo;
 
 	void					Level_Append		(LPCSTR lname);
 public:

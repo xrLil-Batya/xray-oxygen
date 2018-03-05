@@ -59,19 +59,10 @@ CMainMenu::CMainMenu()
 	m_deactivated_frame = 0;
 
 	//-------------------------------------------
-
-	m_NeedErrDialog = ErrNoError;
 	m_start_time = 0;
 
     g_btnHint = xr_new<CUIButtonHint>();
     g_statHint = xr_new<CUIButtonHint>();
-
-    for (u32 i = 0; i < u32(ErrMax); i++)
-    {
-        CUIMessageBoxEx*			pNewErrDlg;
-        INIT_MSGBOX(pNewErrDlg, ErrMsgBoxTemplate[i]);
-        m_pMB_ErrDlgs.push_back(pNewErrDlg);
-    }
 
 	Device.seqFrame.Add(this, REG_PRIORITY_LOW - 1000);
 }
@@ -225,8 +216,14 @@ bool CMainMenu::CanSkipSceneRendering()
 	return IsActive() && !m_Flags.test(flGameSaveScreenshot);
 }
 
+void CMainMenu::OnDeviceReset()
+{
+	if (IsActive() && g_pGameLevel)
+		m_Flags.set(flNeedVidRestart, TRUE);
+}
+
 //IInputReceiver
-static int mouse_button_2_key[] = { MOUSE_1,MOUSE_2,MOUSE_3 };
+static int mouse_button_2_key[] = { MOUSE_1,MOUSE_2,MOUSE_3, MOUSE_4, MOUSE_5, MOUSE_6, MOUSE_7, MOUSE_8 };
 void	CMainMenu::IR_OnMousePress(int btn)
 {
 	if (IsActive())
@@ -255,7 +252,7 @@ void	CMainMenu::IR_OnMouseStop(int x, int y)
 {
 };
 
-void	CMainMenu::IR_OnKeyboardPress(int dik)
+void CMainMenu::IR_OnKeyboardPress(int dik)
 {
 	if (IsActive())
 	{
@@ -264,14 +261,15 @@ void	CMainMenu::IR_OnKeyboardPress(int dik)
 			Console->Show();
 			return;
 		}
-		if (DIK_F12 == dik) {
+		if (DIK_F12 == dik)
+		{
 			Render->Screenshot();
-		return;
+			return;
 		}
 
-	CDialogHolder::IR_UIOnKeyboardPress(dik);
+		CDialogHolder::IR_UIOnKeyboardPress(dik);
 	}
-};
+}
 
 void	CMainMenu::IR_OnKeyboardRelease(int dik)
 {
@@ -334,22 +332,6 @@ void CMainMenu::OnRenderPPUI_main()
 	UI().pp_stop();
 }
 
-void CMainMenu::OnRenderPPUI_PP()
-{
-	if (!IsActive()) return;
-
-	if (m_Flags.test(flGameSaveScreenshot))	return;
-
-	UI().pp_start();
-
-	xr_vector<CUIWindow*>::iterator it = m_pp_draw_wnds.begin();
-	for (; it != m_pp_draw_wnds.end(); ++it)
-	{
-		(*it)->Draw();
-	}
-	UI().pp_stop();
-}
-
 //pureFrame
 void CMainMenu::OnFrame()
 {
@@ -380,7 +362,6 @@ void CMainMenu::OnFrame()
 
 	if (IsActive())
 	{
-		CheckForErrorDlg();
 		bool b_is_16_9 = (float)Device.dwWidth / (float)Device.dwHeight > (UI_BASE_WIDTH / UI_BASE_HEIGHT + 0.01f);
 		if (b_is_16_9 != m_activatedScreenRatio)
 		{
@@ -432,80 +413,8 @@ void CMainMenu::UnregisterPPDraw(CUIWindow* w)
 	);
 }
 
-void CMainMenu::SetErrorDialog(EErrorDlg ErrDlg)
-{
-	m_NeedErrDialog = ErrDlg;
-};
-
-void CMainMenu::CheckForErrorDlg()
-{
-	if (m_NeedErrDialog == ErrNoError)	return;
-	m_pMB_ErrDlgs[m_NeedErrDialog]->ShowDialog(false);
-	m_NeedErrDialog = ErrNoError;
-};
-
-
 void CMainMenu::DestroyInternal(bool bForce)
 {
 	if (m_startDialog && ((m_deactivated_frame < Device.dwFrame + 4) || bForce))
 		xr_delete(m_startDialog);
-}
-
-void	CMainMenu::OnSessionTerminate(LPCSTR reason)
-{
-	if (m_NeedErrDialog == SessionTerminate && (Device.dwTimeGlobal - m_start_time) < 8000)
-		return;
-
-	m_start_time = Device.dwTimeGlobal;
-	CStringTable	st;
-	LPCSTR str = st.translate("ui_st_kicked_by_server").c_str();
-	LPSTR		text;
-
-	if (reason && xr_strlen(reason) && reason[0] == '@')
-		STRCONCAT(text, reason + 1);
-	else
-		STRCONCAT(text, str, " ", reason);
-
-	m_pMB_ErrDlgs[SessionTerminate]->SetText(st.translate(text).c_str());
-	SetErrorDialog(CMainMenu::SessionTerminate);
-}
-
-void	CMainMenu::OnLoadError(LPCSTR module)
-{
-	LPCSTR str = CStringTable().translate("ui_st_error_loading").c_str();
-	string1024 Text;
-	strconcat(sizeof(Text), Text, str, " ");
-	xr_strcat(Text, sizeof(Text), module);
-	m_pMB_ErrDlgs[LoadingError]->SetText(Text);
-	SetErrorDialog(CMainMenu::LoadingError);
-}
-
-void CMainMenu::SetNeedVidRestart()
-{
-	m_Flags.set(flNeedVidRestart, TRUE);
-}
-
-void CMainMenu::OnDeviceReset()
-{
-	if (IsActive() && g_pGameLevel)
-		SetNeedVidRestart();
-}
-
-void		CMainMenu::Show_CTMS_Dialog()
-{
-	if (!m_pMB_ErrDlgs[ConnectToMasterServer]) return;
-	if (m_pMB_ErrDlgs[ConnectToMasterServer]->IsShown()) return;
-	m_pMB_ErrDlgs[ConnectToMasterServer]->ShowDialog(false);
-}
-
-void		CMainMenu::Hide_CTMS_Dialog()
-{
-	if (!m_pMB_ErrDlgs[ConnectToMasterServer]) return;
-	if (!m_pMB_ErrDlgs[ConnectToMasterServer]->IsShown()) return;
-	m_pMB_ErrDlgs[ConnectToMasterServer]->HideDialog();
-}
-
-void CMainMenu::OnConnectToMasterServerOkClicked(CUIWindow*, void*)
-{
-	Hide_CTMS_Dialog();
 }

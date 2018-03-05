@@ -134,11 +134,6 @@ void CLevel::ClientReceive()
 				u32 NumSteps = physics_world()->CalcNumSteps(dTime);
 				SetNumCrSteps(NumSteps);
 			}break;
-		case M_COMPRESSED_UPDATE_OBJECTS:
-			{
-				u8 compression_type = P->r_u8();
-				ProcessCompressedUpdate(*P, compression_type);
-			}break;
 		//---------------------------------------------------
 		case M_SV_CONFIG_NEW_CLIENT:
 			InitializeClientGame	(*P);
@@ -160,9 +155,6 @@ void CLevel::ClientReceive()
 		case M_LOAD_GAME:
 		case M_CHANGE_LEVEL:
 			{
-#ifdef DEBUG
-				Msg("--- Changing level message received...");
-#endif // #ifdef DEBUG
 				if(m_type==M_LOAD_GAME)
 				{
 					string256						saved_name;
