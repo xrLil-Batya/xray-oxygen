@@ -184,14 +184,6 @@ void CHitMemoryManager::add					(const CHitObject &_hit_object)
 	}
 }
 
-struct CRemoveOfflinePredicate {
-	bool		operator()						(const CHitObject &object) const
-	{
-		VERIFY	(object.m_object);
-		return	( !object.m_object || !!object.m_object->getDestroy() || object.m_object->H_Parent() );
-	}
-};
-
 void CHitMemoryManager::update()
 {
 	START_PROFILE("Memory Manager/hits::update")
@@ -203,7 +195,7 @@ void CHitMemoryManager::update()
 		std::remove_if(	
 			m_hits->begin(),
 			m_hits->end(),
-			CRemoveOfflinePredicate()
+			[](const CHitObject &object) { return !object || !!object.m_object->getDestroy() || object.m_object->H_Parent(); }
 		),
 		m_hits->end()
 	);
