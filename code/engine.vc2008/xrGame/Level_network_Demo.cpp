@@ -204,8 +204,6 @@ void CLevel::SimulateServerUpdate()
 	NET_Packet tmp_packet;
 	while (LoadPacket(tmp_packet, tdelta))
 	{
-		if (m_msg_filter)
-			m_msg_filter->check_new_data(tmp_packet);
 		IPureClient::OnMessage(tmp_packet.B.data, tmp_packet.B.count);
 	}
 }
@@ -218,14 +216,6 @@ float CLevel::GetDemoPlayPos() const
 		return 1.f;
 	
 	return ( float(m_reader->tell()) / float(m_reader->length()) );
-}
-
-message_filter*	 CLevel::GetMessageFilter()
-{
-	if (m_msg_filter)
-		return m_msg_filter;
-	m_msg_filter = xr_new<message_filter>();
-	return m_msg_filter;
 }
 
 float CLevel::GetDemoPlaySpeed() const
@@ -250,12 +240,6 @@ void CLevel::SetDemoPlaySpeed(float const time_factor)
 
 void CLevel::CatchStartingSpawns()
 {
-	message_filter::msg_type_subtype_func_t spawns_catcher =
-		fastdelegate::MakeDelegate(this, &CLevel::MSpawnsCatchCallback);
-	message_filter* tmp_msg_filter = GetMessageFilter();
-	R_ASSERT(tmp_msg_filter);
-	u32 fake_sub_msg = 0;
-	tmp_msg_filter->filter(M_SPAWN, fake_sub_msg, spawns_catcher);
 }
 
 void __stdcall CLevel::MSpawnsCatchCallback(u32 message, u32 subtype, NET_Packet & packet)
@@ -263,14 +247,5 @@ void __stdcall CLevel::MSpawnsCatchCallback(u32 message, u32 subtype, NET_Packet
 	//see SimulateServerUpdate and using of message_filter
 	m_starting_spawns_pos	= m_prev_packet_pos; 
 	m_starting_spawns_dtime	= m_prev_packet_dtime;
-	u32 fake_sub_msg = 0;
-	message_filter* tmp_msg_filter = GetMessageFilter();
-	R_ASSERT(tmp_msg_filter);
-	tmp_msg_filter->remove_filter(M_SPAWN, fake_sub_msg);
 }
 
-CObject* CLevel::GetDemoSpectator()	
-{ 
-#pragma message("Remove CLevel::GetDemoSpectator()")
-	return nullptr;
-};

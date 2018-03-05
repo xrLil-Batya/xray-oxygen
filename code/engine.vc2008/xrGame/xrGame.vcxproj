@@ -2294,8 +2294,6 @@
     <ClCompile Include="script_object_action_script.cpp">
     </ClCompile>
     <ClCompile Include="script_action_condition.cpp" />
-    <ClCompile Include="script_action_condition_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_monster_action.cpp" />
     <ClCompile Include="script_monster_action_script.cpp">
     </ClCompile>

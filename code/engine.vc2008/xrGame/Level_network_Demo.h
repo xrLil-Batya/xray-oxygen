@@ -5,9 +5,7 @@ private:
 	BOOL						m_DemoSave;
 	BOOL						m_DemoSaveStarted;
 	u32							m_StartGlobalTime;
-	message_filter*				m_msg_filter;
 public:
-	CObject*					GetDemoSpectator		();
 	
 	void						PrepareToSaveDemo		();
 	void						SaveDemoInfo			();
@@ -22,8 +20,6 @@ public:
 	//void						SetDemoPlayPos				(float const pos);
 	float						GetDemoPlaySpeed			() const;					//Device.time_factor()
 	void						SetDemoPlaySpeed			(float const time_factor);	//Device.time_factor(
-	message_filter*				GetMessageFilter			();
-
 
 	//virtual	NET_Packet*		net_msg_Retreive		();
 	BOOL						IsDemoPlay				()	{return (!m_DemoSave && m_DemoPlay);};
