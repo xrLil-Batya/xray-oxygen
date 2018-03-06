@@ -87,6 +87,9 @@ CWeapon::CWeapon()
 	m_cur_scope				= NULL;
 	m_bRememberActorNVisnStatus = false;
 	m_nearwall_last_hud_fov = psHUD_FOV_def;
+
+	m_strap_bone0_id = -1;
+	m_strap_bone1_id = -1;
 }
 
 CWeapon::~CWeapon		()

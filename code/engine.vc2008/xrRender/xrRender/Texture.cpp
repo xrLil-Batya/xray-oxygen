@@ -95,6 +95,7 @@ const float		_BUMPHEIGH = 8.f;
 //////////////////////////////////////////////////////////////////////
 // Utility pack
 //////////////////////////////////////////////////////////////////////
+#include "../../FrayBuildConfig.hpp"
 IC u32 GetPowerOf2Plus1	(u32 v)
 {
         u32 cnt=0;
@@ -105,10 +106,11 @@ IC void	Reduce				(int& w, int& h, int& l, int& skip)
 {
 	while ((l>1) && skip)
 	{
+#ifdef LOW_TEXTURES_SIZE
 		w /= 2;
 		h /= 2;
-		l -= 1;
-
+#endif
+		l--;
 		skip--;
 	}
 	if (w<1)	w=1;

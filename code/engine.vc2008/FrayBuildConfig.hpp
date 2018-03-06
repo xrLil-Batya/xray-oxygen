@@ -5,9 +5,12 @@
 								//It's a very little performance penalty
 //#define SLOW_VERIFY_ENTITIES	//Very slow verifing every entity on every game update
 
-/* Threading/Cores */
-#define NEW_TTAPI			//Enable new ttapi, based on WinAPI ThreadPool system
-//#define TEST_TTAPI		//Perform a test of ttapi integrity
+/* Memory */
+#define LOW_TEXTURES_SIZE	// Reduces the size of textures in 2 times.
+
+/* Threading */
+#define NEW_TTAPI			// Enable new ttapi, based on WinAPI ThreadPool system
+//#define TEST_TTAPI		// Perform a test of ttapi integrity
 
 /* xrCore */
 #define	LOG_TIME_PRECISE	// (by alpet & RvP)
@@ -26,5 +29,5 @@
 //#define NEW_SLOTS			// Add knife slot and binocular slot in inventory
 //#define ASPAWN_CROW		// Spawn crows over actor
 //#define NEW_ANIMS_WPN		// Enable anm_..._crouch, anm_reload_empty
-//#define DEAD_BODY_WEAPON	// Incorrect!!!
+#define DEAD_BODY_WEAPON	// Enable weapons in dead stalkers
 //#define POLTERGEIST_BUILD_DIE // Old style polter dead
