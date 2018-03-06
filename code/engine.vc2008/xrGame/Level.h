@@ -202,7 +202,7 @@ public:
 	virtual void				OnRender				( );
 
 	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
-	virtual void				net_StartPlayDemo		();
+	virtual void				net_StartPlayDemo		() {} ;
 	
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);

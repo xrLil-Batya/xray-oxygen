@@ -278,7 +278,6 @@ CLevel::~CLevel()
 	{
 		StopSaveDemo();
 	}
-	deinit_compression();
 }
 
 shared_str	CLevel::name		() const
