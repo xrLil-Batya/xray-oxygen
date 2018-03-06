@@ -93,14 +93,14 @@ void CStalkerActionNoALife::execute		()
 #ifndef STALKER_DEBUG_MODE
 	object().sound().play			(eStalkerSoundHumming,60000,10000);
 	if (Device.dwTimeGlobal >= m_stop_weapon_handling_time)
+	{
 		if (!object().best_weapon())
 			object().CObjectHandler::set_goal	(eObjectActionIdle);
 		else
 			object().CObjectHandler::set_goal	(eObjectActionStrapped,object().best_weapon());
+	}
 	else
 		object().CObjectHandler::set_goal		(eObjectActionIdle,object().best_weapon());
-#else
-//	object().movement().set_movement_type		(eMovementTypeRun);
 #endif
 }
 

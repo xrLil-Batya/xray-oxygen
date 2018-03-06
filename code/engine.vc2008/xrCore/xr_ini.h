@@ -38,7 +38,7 @@ public:
 #endif
 	static CInifile*	Create		( const char* szFileName, BOOL ReadOnly=TRUE);
 	static void			Destroy		( CInifile*);
-    static IC BOOL		IsBOOL		( const char* B)	{ return (xr_strcmp(B,"on")==0 || xr_strcmp(B,"yes")==0 || xr_strcmp(B,"true")==0 || xr_strcmp(B,"1")==0);}
+    static IC bool		IsBOOL		( const char* B)	{ return (xr_strcmp(B,"on")==0 || xr_strcmp(B,"yes")==0 || xr_strcmp(B,"true")==0 || xr_strcmp(B,"1")==0);}
 private:
 	enum{eSaveAtEnd = (1<<0), eReadOnly= (1<<1), eOverrideNames=(1<<2),};
 	Flags8			m_flags;
@@ -165,8 +165,8 @@ public:
     void		w_s8			( const char* S, const char* L, s8				V, const char* comment=0 );
 	void		w_s16			( const char* S, const char* L, s16				V, const char* comment=0 );
 	void		w_s32			( const char* S, const char* L, s32				V, const char* comment=0 );
-	void		w_float			( const char* S, const char* L, float				V, const char* comment=0 );
-    void		w_fcolor		( const char* S, const char* L, const Fcolor&		V, const char* comment=0 );
+	void		w_float			( const char* S, const char* L, float			V, const char* comment=0 );
+    void		w_fcolor		( const char* S, const char* L, const Fcolor&	V, const char* comment=0 );
     void		w_color			( const char* S, const char* L, u32				V, const char* comment=0 );
     void		w_ivector2		( const char* S, const char* L, const Ivector2&	V, const char* comment=0 );
 	void		w_ivector3		( const char* S, const char* L, const Ivector3&	V, const char* comment=0 );
@@ -174,7 +174,7 @@ public:
 	void		w_fvector2		( const char* S, const char* L, const Fvector2&	V, const char* comment=0 );
 	void		w_fvector3		( const char* S, const char* L, const Fvector3&	V, const char* comment=0 );
 	void		w_fvector4		( const char* S, const char* L, const Fvector4&	V, const char* comment=0 );
-	void		w_bool			( const char* S, const char* L, BOOL				V, const char* comment=0 );
+	void		w_bool			( const char* S, const char* L, bool			V, const char* comment=0 );
 
     void		remove_line		( const char* S, const char* L );
 };
