@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../xrEngine/igame_level.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/ClS/net_client.h"
@@ -28,6 +27,7 @@ class	CGameTaskManager;
 class	CZoneList;
 class	demo_info;
 class	CDebugRenderer;
+class 	message_filter;
 
 extern float g_fov;
 

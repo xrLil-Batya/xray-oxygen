@@ -170,6 +170,7 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_DemoPlayStoped	= FALSE;
 	m_DemoSave = FALSE;
 	m_DemoSaveStarted = FALSE;
+	m_msg_filter = nullptr;
 	m_demo_info	= nullptr;
 
 	R_ASSERT				(!g_player_hud);
@@ -272,7 +273,7 @@ CLevel::~CLevel()
 			m_reader			= NULL;
 		}
 	}
-
+	xr_delete(m_msg_filter);
 	xr_delete(m_demo_info);
 	if (IsDemoSave())
 	{
