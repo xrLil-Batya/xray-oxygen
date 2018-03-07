@@ -44,7 +44,7 @@ namespace ETOOLS{
 
 		out							= fopen(out_fn, "wb");
 		if(out == NULL){
-			fclose					(out);
+			fclose					(in);
 			return 0;
 		}	
 
