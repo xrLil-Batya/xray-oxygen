@@ -185,12 +185,14 @@ void CRender::render_menu	()
 }
 
 extern u32 g_r;
+bool isFirstload = true;
+
 void CRender::Render		()
 {
 	g_r						= 1;
 	VERIFY					(0==mapDistort.size());
 
-	bool	_menu_pp		= g_pGamePersistent?g_pGamePersistent->OnRenderPPUI_query():false;
+	bool	_menu_pp		= g_pGamePersistent? g_pGamePersistent->OnRenderPPUI_query() :false;
 	if (_menu_pp)			{
 		render_menu			()	;
 		return					;

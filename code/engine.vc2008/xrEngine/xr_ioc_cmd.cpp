@@ -307,13 +307,12 @@ public:
 			return;
 		}
 */
-		string4096	op_server,op_client,op_demo;
+		string4096	op_server,op_client;
 		op_server[0] = 0;
 		op_client[0] = 0;
 		
 		parse		(op_server,args,"server");	// 1. server
 		parse		(op_client,args,"client");	// 2. client
-		parse		(op_demo, args,	"demo");	// 3. demo
 		
 		strlwr( op_server );
 		protect_Name_strlwr( op_client );
@@ -321,21 +320,10 @@ public:
 		if(!op_client[0] && strstr(op_server,"single"))
 			xr_strcpy(op_client, "localhost");
 
-		if ((0==xr_strlen(op_client)) && (0 == xr_strlen(op_demo)))
-		{
-			Log("! Can't start game without client. Arguments: '%s'.",args);
-			return;
-		}
 		if (g_pGameLevel)
 			Engine.Event.Defer("KERNEL:disconnect");
 		
-		if (xr_strlen(op_demo))
-		{
-			Engine.Event.Defer	("KERNEL:start_mp_demo",u64(xr_strdup(op_demo)),0);
-		} else
-		{
-			Engine.Event.Defer	("KERNEL:start",u64(xr_strlen(op_server)?xr_strdup(op_server):0),u64(xr_strdup(op_client)));
-		}
+		Engine.Event.Defer	("KERNEL:start",u64(xr_strlen(op_server)?xr_strdup(op_server):0),u64(xr_strdup(op_client)));
 	}
 };
 
@@ -444,55 +432,6 @@ public:
 		Device.m_pRender->updateGamma();
 	}
 };
-
-//-----------------------------------------------------------------------
-/*
-#ifdef	DEBUG
-extern  INT	g_bDR_LM_UsePointsBBox;
-extern	INT	g_bDR_LM_4Steps;
-extern	INT g_iDR_LM_Step;
-extern	Fvector	g_DR_LM_Min, g_DR_LM_Max;
-
-class CCC_DR_ClearPoint : public IConsole_Command
-{
-public:
-	CCC_DR_ClearPoint(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		g_DR_LM_Min.x = 1000000.0f;
-		g_DR_LM_Min.z = 1000000.0f;
-
-		g_DR_LM_Max.x = -1000000.0f;
-		g_DR_LM_Max.z = -1000000.0f;
-
-		Msg("Local BBox (%f, %f) - (%f, %f)", g_DR_LM_Min.x, g_DR_LM_Min.z, g_DR_LM_Max.x, g_DR_LM_Max.z);
-	}
-};
-
-class CCC_DR_TakePoint : public IConsole_Command
-{
-public:
-	CCC_DR_TakePoint(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		Fvector CamPos =  Device.vCameraPosition;
-
-		if (g_DR_LM_Min.x > CamPos.x)	g_DR_LM_Min.x = CamPos.x;
-		if (g_DR_LM_Min.z > CamPos.z)	g_DR_LM_Min.z = CamPos.z;
-
-		if (g_DR_LM_Max.x < CamPos.x)	g_DR_LM_Max.x = CamPos.x;
-		if (g_DR_LM_Max.z < CamPos.z)	g_DR_LM_Max.z = CamPos.z;
-
-		Msg("Local BBox (%f, %f) - (%f, %f)", g_DR_LM_Min.x, g_DR_LM_Min.z, g_DR_LM_Max.x, g_DR_LM_Max.z);
-	}
-};
-
-class CCC_DR_UsePoints : public CCC_Integer
-{
-public:
-	CCC_DR_UsePoints(LPCSTR N, int* V, int _min=0, int _max=999) : CCC_Integer(N, V, _min, _max)	{};
-	virtual void	Save	(IWriter *F)	{};
-};
-#endif
-*/
 
 ENGINE_API BOOL r2_sun_static = TRUE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects

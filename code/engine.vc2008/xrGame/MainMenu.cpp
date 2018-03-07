@@ -418,3 +418,19 @@ void CMainMenu::DestroyInternal(bool bForce)
 	if (m_startDialog && ((m_deactivated_frame < Device.dwFrame + 4) || bForce))
 		xr_delete(m_startDialog);
 }
+
+void CMainMenu::OnRenderPPUI_PP()
+ {
+ 	if (!IsActive()) return;
+ 
+ 	if (m_Flags.test(flGameSaveScreenshot))	return;
+ 
+ 	UI().pp_start();
+ 
+ 	xr_vector<CUIWindow*>::iterator it = m_pp_draw_wnds.begin();
+ 	for (; it != m_pp_draw_wnds.end(); ++it)
+ 	{
+ 		(*it)->Draw();
+ 	}
+ 	UI().pp_stop();
+ }

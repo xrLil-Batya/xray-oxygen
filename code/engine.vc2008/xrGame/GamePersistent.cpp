@@ -402,6 +402,16 @@ void CGamePersistent::update_logo_intro()
 		m_intro_event			= 0;
 	}
 }
+bool CGamePersistent::OnRenderPPUI_query()
+ {
+ 	return MainMenu()->OnRenderPPUI_query();
+ 	// enable PP or not
+ }
+
+void CGamePersistent::OnRenderPPUI_PP()
+{
+	MainMenu()->OnRenderPPUI_PP();
+}
 
 extern int g_keypress_on_start;
 void CGamePersistent::game_loaded()

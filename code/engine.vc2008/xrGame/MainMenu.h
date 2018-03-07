@@ -65,6 +65,7 @@ public:
 
 	bool			OnRenderPPUI_query();
 	void			OnRenderPPUI_main();
+	void			OnRenderPPUI_PP();
 
 	virtual void			OnRender();
 	virtual void	_BCL	OnFrame(void);
