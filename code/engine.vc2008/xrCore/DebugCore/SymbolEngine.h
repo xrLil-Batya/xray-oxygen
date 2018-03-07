@@ -112,7 +112,7 @@ public:
 		LPVOID lpData = (LPVOID) new TCHAR[dwVerSize];
 		if (GetFileVersionInfo(szImageHlp, dwVerInfoHandle, dwVerSize, lpData) == false)
 		{
-			delete[] lpData;
+			delete lpData;
 			return false;
 		}
 
@@ -125,7 +125,7 @@ public:
 			dwLS = lpVerInfo->dwFileVersionLS;
 		}
 
-		delete[] lpData;
+		delete lpData;
 		return bRet;
 	}
 

@@ -246,11 +246,12 @@ namespace CDB
 		void			clear			()	{ verts.clear(); faces.clear();	}
 	};
 
-	struct non_copyable {
+	struct non_copyable // C++11 Style: on :))
+	{
 						non_copyable	() {}
 	private:
-						non_copyable	(const non_copyable &) {}
-						non_copyable	&operator=		(const non_copyable &) {}
+						non_copyable	(const non_copyable &) = delete;
+						non_copyable	&operator=		(const non_copyable &) = delete;
 	};
 
 #pragma warning(push)
