@@ -67,6 +67,11 @@ int APIENTRY WinMain(
 ) {
 	if (CPUID::AVX())
 	{
+		/*
+		std::string huy;
+		CPUID::Brand() = huy; 
+		LPSTR s = const_cast<char *>(huy.c_str());
+		*/
 		MessageBox(NULL, "THIS IS AVX!", "THIS IS AVX!", MB_OK | MB_ICONASTERISK);
 	}
 	else

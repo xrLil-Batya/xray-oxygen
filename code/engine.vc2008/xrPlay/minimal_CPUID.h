@@ -23,6 +23,12 @@ public:
 	{
 		return CPU_Rep.vendor_;
 	}
+	/*
+	static bool huintol(void)
+	{
+		return CPU_Rep.isIntel_;
+	}
+	*/
 	static std::string Brand(void)
 	{
 		return CPU_Rep.brand_;
@@ -32,7 +38,6 @@ public:
 	{
 		return CPU_Rep.f_1_ECX_[28];
 	}
-
 
 private:
 	static const CPUID_Internal CPU_Rep;
@@ -118,12 +123,14 @@ private:
 				memcpy(brand + 32, extdata_[4].data(), sizeof(cpui));
 				brand_ = brand;
 			}
+
+			
 		};
 
 		int nIds_;
 		int nExIds_;
-		LPSTR vendor_;
-		LPSTR brand_;
+		std::string vendor_;
+		std::string brand_;
 		bool isIntel_;
 		bool isAMD_;
 		std::bitset<32> f_1_ECX_;
