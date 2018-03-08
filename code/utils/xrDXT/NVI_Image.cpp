@@ -89,6 +89,8 @@ UINT NVI_Image::GetBytesPerPixel()
     case NVI_R16_G16_B16_A16:
         return 8;
         break;
+	default:
+		break;
     }
     //.	FDebug("Unrecognized format! %d\n", m_Format );
     assert(false);

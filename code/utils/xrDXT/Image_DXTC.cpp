@@ -220,6 +220,7 @@ void Image_DXTC::Decompress()
         //TRACE( "Decompressing image format:  DXT5\n" );
         DecompressDXT5();
         break;
+	case PF_ARGB:
     case PF_UNKNOWN:
         break;
     }

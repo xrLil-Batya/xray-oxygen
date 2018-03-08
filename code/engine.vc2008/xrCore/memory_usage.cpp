@@ -1,11 +1,12 @@
 #include "stdafx.h"
 #include <malloc.h>
 
-XRCORE_API void vminfo (size_t *_free, size_t *reserved, size_t *committed) {
+XRCORE_API void vminfo (size_t *_free, size_t *reserved, size_t *committed) 
+{
 	MEMORY_BASIC_INFORMATION memory_info;
 	memory_info.BaseAddress = nullptr;
 	*_free = *reserved = *committed = 0;
-	while (VirtualQuery (memory_info.BaseAddress, &memory_info, sizeof (memory_info))) 
+	while (VirtualQuery(memory_info.BaseAddress, &memory_info, sizeof(memory_info)) != 0)
 	{
 		switch (memory_info.State) 
 		{
@@ -25,51 +26,54 @@ XRCORE_API void vminfo (size_t *_free, size_t *reserved, size_t *committed) {
 
 XRCORE_API void log_vminfo	()
 {
-	size_t w_free, w_reserved, w_committed;
-	vminfo(&w_free, &w_reserved, &w_committed);
-	Msg("* [win32]: free[%d K], reserved[%d K], committed[%d K]", w_free / 1024, w_reserved / 1024, w_committed / 1024);
+	if (!!strstr(GetCommandLine(), "-memory_usage"))
+	{
+		size_t w_free, w_reserved, w_committed;
+		vminfo(&w_free, &w_reserved, &w_committed);
+		Msg("* [win32]: free[%d K], reserved[%d K], committed[%d K]", w_free / 1024, w_reserved / 1024, w_committed / 1024);
+	}
 }
 
-u32	mem_usage_impl	(u32* pBlocksUsed, u32* pBlocksFree)
+u32	mem_usage_impl(u32* pBlocksUsed, u32* pBlocksFree)
 {
 	if (!!strstr(GetCommandLine(), "-memory_usage"))
 	{
 		_HEAPINFO hinfo;
 		int heapstatus;
 		hinfo._pentry = nullptr;
-		size_t	total	= 0;
-		u32	blocks_free	= 0;
-		u32	blocks_used	= 0;
-		while((heapstatus = _heapwalk(&hinfo)) == _HEAPOK)
-		{ 
+		size_t	total = 0;
+		u32	blocks_free = 0;
+		u32	blocks_used = 0;
+		while ((heapstatus = _heapwalk(&hinfo)) == _HEAPOK)
+		{
 			if (hinfo._useflag == _USEDENTRY)
 			{
-				total		+= hinfo._size;
-				blocks_used	+= 1;
-			} 
-			else blocks_free	+= 1;
+				total += hinfo._size;
+				blocks_used += 1;
+			}
+			else blocks_free += 1;
 		}
-		if (pBlocksFree)	*pBlocksFree= 1024*(u32)blocks_free;
-		if (pBlocksUsed)	*pBlocksUsed= 1024*(u32)blocks_used;
-	
-		switch( heapstatus )
+		if (pBlocksFree)	*pBlocksFree = 1024 * (u32)blocks_free;
+		if (pBlocksUsed)	*pBlocksUsed = 1024 * (u32)blocks_used;
+
+		switch (heapstatus)
 		{
 		case _HEAPEMPTY:
 			break;
 		case _HEAPEND:
 			break;
 		case _HEAPBADPTR:
-			Msg			("bad pointer to heap");
+			Msg("bad pointer to heap");
 			break;
 		case _HEAPBADBEGIN:
-			Msg			("bad start of heap");
+			Msg("bad start of heap");
 			break;
 		case _HEAPBADNODE:
-			Msg			("bad node in heap");
+			Msg("bad node in heap");
 			break;
 		}
-		return (u32) total;
+		return (u32)total;
 	}
-	
+
 	return 0;
 }

@@ -101,7 +101,6 @@ IC	void CSQuadTree::insert		(_object_type *object)
 
 		distance		*= .5f;
 		u32				index = neighbour_index(object->position(),center,distance);
-		VERIFY			(index < 4);
 		
 		node			= (*node)->m_neighbours + index;
 	}
@@ -120,7 +119,6 @@ IC	_object_type *CSQuadTree::find	(const Fvector &position)
 
 		distance		*= .5f;
 		u32				index = neighbour_index(position,center,distance);
-		VERIFY			(index < 4);
 
 		if (depth == m_max_depth) {
 			CListItem	*leaf = ((CListItem*)((void*)(node)));
@@ -163,7 +161,6 @@ IC	void CSQuadTree::nearest	(const Fvector &position, float radius, xr_vector<_o
 	distance		*= .5f;
 	Fvector			next_center = center;
 	u32				index = neighbour_index(position,next_center,distance);
-	VERIFY			(index < 4);
 	if (_abs(position.z - center.z) < radius) {
 		if (_abs(position.x - center.x) < radius) {
 			if (_sqr(position.z - center.z) + _sqr(position.x - center.x) < _sqr(radius)) {
@@ -254,7 +251,6 @@ IC	_object_type *CSQuadTree::remove		(const _object_type *object, CQuadNode *&no
 
 	distance		*= .5f;
 	u32				index = neighbour_index(object->position(),center,distance);
-	VERIFY			(index < 4);
 	_object_type	*_object = remove(object,node->m_neighbours[index],center,distance,depth + 1);
 	if (node->m_neighbours[index] || node->m_neighbours[0] || node->m_neighbours[1] || node->m_neighbours[2] || node->m_neighbours[3])
 		return		(_object);

@@ -66,7 +66,7 @@
 		inline_	bool	Contains(const LSS& lss)
 						{
 							// We check the LSS contains the two spheres at the start and end of the sweep
-							return Contains(Sphere(lss.mP0, lss.mRadius)) && Contains(Sphere(lss.mP0, lss.mRadius));
+							return Contains(Sphere(lss.mP0, lss.mRadius));
 						}
 
 				float	mRadius;	//!< Sphere radius

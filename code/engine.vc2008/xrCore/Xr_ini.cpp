@@ -160,7 +160,7 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
     string4096 str;
     string4096 str2;
 
-    BOOL bInsideSTR = FALSE;
+    bool bInsideSTR = false;
 
     while (!F->eof()) {
         F->r_string(str, sizeof(str));
@@ -168,7 +168,8 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
         LPSTR comm = strchr(str, ';');
         LPSTR comm_1 = strchr(str, '/');
 
-        if (comm_1 && (*(comm_1 + 1) == '/') && ((!comm) || (comm && (comm_1 < comm)))) {
+        if (comm_1 && (*(comm_1 + 1) == '/') && ((!comm) || (comm && (comm_1 < comm)))) 
+		{
             comm = comm_1;
         }
 
@@ -266,7 +267,7 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
                     _Trim(name);
                     ++t;
                     xr_strcpy(value_raw, sizeof(value_raw), t);
-                    bInsideSTR = _parse(str2, value_raw);
+                    bInsideSTR = !!_parse(str2, value_raw);
                     if (bInsideSTR) // multiline str value
                     {
                         while (bInsideSTR) {
@@ -279,7 +280,7 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
                                             "Odd number of quotes (\") found, but should be even.",
                                             Current->Name.c_str(), name));
                             xr_strcat(value_raw, sizeof(value_raw), str_add_raw);
-                            bInsideSTR = _parse(str2, value_raw);
+                            bInsideSTR = !!_parse(str2, value_raw);
                             if (bInsideSTR) {
                                 if (is_empty_line_now(F))
                                     xr_strcat(value_raw, sizeof(value_raw), "\r\n");

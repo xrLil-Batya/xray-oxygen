@@ -30,7 +30,7 @@ ENGINE_API CInifile* pGameIni		= nullptr;
 #ifdef SPAWN_ANTIFREEZE
 ENGINE_API bool g_bootComplete		= false;
 #endif
-bool	g_bIntroFinished			= false;
+volatile bool	g_bIntroFinished			= false;
 extern	void	Intro				( void* fn );
 
 #ifdef MASTER_GOLD

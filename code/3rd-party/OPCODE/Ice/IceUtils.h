@@ -90,7 +90,7 @@
 	inline_ void	ZeroLeastSetBit(uqword& n)			{ n&=(n-1);									}
 
 	//! Set the least significant N bits in a word. (from Steve Baker's Cute Code Collection)
-	inline_ void	SetLeastNBits(uqword& x, uqword n)	{ x|=~(~0<<n);								}
+	inline_ void	SetLeastNBits(uqword& x, uqword n)	{ x|=~(~0ui64<<n);								}
 
 	//! Classic XOR swap (from Steve Baker's Cute Code Collection)
 	//! x ^= y;		/* x' = (x^y) */
@@ -122,7 +122,7 @@
 	inline_ sdword	min_(sdword a, sdword b)			{ sdword delta = b-a;	return a + (delta&(delta>>31));	}
 
 	// Determine if one of the bytes in a 4 byte word is zero
-	inline_	BOOL	HasNullByte(uqword x)			{ return ((x + 0xfefefeff) & (~x) & 0x80808080);		}
+	inline_	bool	HasNullByte(uqword x)			{ return !!((x + 0xfefefeff) & (~x) & 0x80808080);		}
 
 	// To find the smallest 1 bit in a word  EG: ~~~~~~10---0    =>    0----010---0
 	inline_	uqword	LowestOneBit(uqword w)			{ return ((w) & (~(w)+1));					}

@@ -42,7 +42,7 @@ inline_ float FastFabs(float x)
 
 inline_ float FastSqrt(float* square)
 {
-	float *retval;
+	float *retval = nullptr;
 	_mm_store_ss(retval, _mm_sqrt_ss(_mm_load_ss(square)));
 	// compiles to movss, sqrtss, movss
 	return *retval;

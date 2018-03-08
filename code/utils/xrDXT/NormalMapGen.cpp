@@ -357,6 +357,7 @@ void RotateArrayCCW(float* pInArray, int num_x, int num_y, float* pOutArray)
     {
         SAFE_ARRAY_DELETE(pSrc);
     }
+	delete pSrc;
 }
 
 void ConvertAlphaToNormalMap_7x7(NVI_Image* pSrc, float scale, bool wrap)

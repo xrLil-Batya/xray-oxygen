@@ -37,6 +37,7 @@ IC CNodePositionConverter::CNodePositionConverter(const SNodePositionOld &Psrc, 
 }
 
 //-----------------------------------------------------------------
+#ifndef PVS_STUDIO
 template <class T>
 void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 {
@@ -50,6 +51,7 @@ void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 	}
 	if (O)		O->close	();
 }
+#endif
 
 extern u32*		Surface_Load	(char* name, u32& w, u32& h);
 extern void		Surface_Init	();

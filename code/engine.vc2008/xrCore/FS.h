@@ -5,6 +5,7 @@
 #include <filesystem>
 #include <array>
 #include <string_view>
+#pragma warning(push)
 #pragma warning(disable: 4267)
 static constexpr auto CFS_CompressMark = 1ul << 31ul;
 static constexpr auto CFS_HeaderChunkID = 666;
@@ -400,4 +401,4 @@ public:
     virtual ~CVirtualFileRW();
 };
 
-#pragma warning(default: 4267)
+#pragma warning(pop)

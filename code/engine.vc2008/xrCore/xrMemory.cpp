@@ -30,7 +30,7 @@ void xrMemory::_destroy()
 	mem_initialized = false;
 }
 
-inline const size_t external_size = -1;
+inline const size_t external_size = size_t(-1);
 
 void xrMemory::mem_compact()
 {
