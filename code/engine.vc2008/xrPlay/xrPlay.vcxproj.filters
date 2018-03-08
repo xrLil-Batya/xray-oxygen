@@ -5,24 +5,27 @@
       <Filter>PlayCore\Launcher</Filter>
     </ClCompile>
     <ClCompile Include="entry_point.cpp">
-      <Filter>Kernel</Filter>
+      <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
     <ClCompile Include="RendererList.cpp">
       <Filter>PlayCore</Filter>
+    </ClCompile>
+    <ClCompile Include="minimal_CPUID.cpp">
+      <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Resources">
       <UniqueIdentifier>{50fcfd19-55ee-4f2a-919a-b5b90510ea63}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel">
-      <UniqueIdentifier>{f07c72d4-f864-4201-86d5-cd9322a93414}</UniqueIdentifier>
-    </Filter>
     <Filter Include="PlayCore">
       <UniqueIdentifier>{d7d1bc4c-0bb7-405b-91f3-659a4331bd50}</UniqueIdentifier>
     </Filter>
     <Filter Include="PlayCore\Launcher">
       <UniqueIdentifier>{552545a6-b39d-45f9-b306-8533722aed38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="PlayCore\Kernel">
+      <UniqueIdentifier>{f07c72d4-f864-4201-86d5-cd9322a93414}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -39,6 +42,9 @@
     </ClInclude>
     <ClInclude Include="xrLauncherWnd.h">
       <Filter>PlayCore\Launcher</Filter>
+    </ClInclude>
+    <ClInclude Include="minimal_CPUID.h">
+      <Filter>PlayCore\Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

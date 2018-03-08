@@ -3,6 +3,8 @@
 #include <string>
 #include <windows.h>
 #include "xrLauncherWnd.h"
+#include <intrin.h>  
+#include "minimal_CPUID.h"
 #pragma comment(lib, "xrEngine.lib")
 
 #define DLL_API __declspec(dllimport)
@@ -18,6 +20,14 @@ void CreateRendererList						( );					// In RenderList.cpp
 int RunXRLauncher							( )
 {
 	// Get initialize
+	if (CPUID::AVX())
+	{
+
+	}
+	else
+	{
+
+	}
 	xrPlay::Application::EnableVisualStyles					( );
 	xrPlay::Application::SetCompatibleTextRenderingDefault	(false);
 	xrPlay::Application::Run(gcnew xrPlay::xrLauncherWnd);
@@ -40,13 +50,15 @@ extern DLL_API int RunApplication(char* commandLine);
 * WinMain() - main init
 *
 ***********************************************/
-int APIENTRY WinMain (
+int APIENTRY WinMain(
 	HINSTANCE hInsttance,
 	HINSTANCE hPrevInstance,
 	char* lpCmdLine,
 	int nCmdShow
 )
+
 {
+	
     std::string params = lpCmdLine;
     if (
 		strstr(lpCmdLine, "-launcher"))

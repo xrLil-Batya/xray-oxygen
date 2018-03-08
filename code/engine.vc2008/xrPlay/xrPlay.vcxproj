@@ -83,6 +83,7 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="entry_point.cpp" />
+    <ClCompile Include="minimal_CPUID.cpp" />
     <ClCompile Include="RendererList.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -90,6 +91,7 @@
     <Image Include="stalker_cs.ico" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="minimal_CPUID.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="xrLauncherWnd.h">
       <FileType>CppForm</FileType>
