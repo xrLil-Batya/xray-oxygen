@@ -40,9 +40,6 @@
     <ClInclude Include="xrLauncherWnd.h">
       <Filter>PlayCore\Launcher</Filter>
     </ClInclude>
-    <ClInclude Include="IEIncl.hpp">
-      <Filter>Kernel</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">

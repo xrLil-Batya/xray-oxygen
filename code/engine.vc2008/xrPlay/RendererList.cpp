@@ -1,5 +1,4 @@
 ////////////////////////////////////
-#include "IEIncl.hpp"
 #include <d3d9.h>
 #include <d3d11.h>
 ////////////////////////////////////
@@ -11,6 +10,8 @@
 #pragma comment(lib, "dxguid.lib")
 #include "../xrCore/xrCore.h"
 ///////////////////////////////////////////////
+#define DLL_API __declspec(dllimport)
+
 DLL_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r2_name = "xrRender_R2";
