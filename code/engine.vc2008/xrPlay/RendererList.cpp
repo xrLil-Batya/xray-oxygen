@@ -9,6 +9,9 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 #include "../xrCore/xrCore.h"
+#include "minimal_CPUID.h"
+#include <stdio.h>
+#include <iostream>
 ///////////////////////////////////////////////
 #define DLL_API __declspec(dllimport)
 
@@ -20,6 +23,7 @@ constexpr const char* r4_name = "xrRender_R4";
 /////////////////////////////////////////////////////
 bool SupportsAdvancedRendering()
 {
+
 	D3DCAPS9 caps;
 
 	IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
@@ -110,6 +114,7 @@ bool SupportsDX11Rendering()
 
 void CreateRendererList()
 {
+
 	if (!vid_quality_token.empty())
 		return;
 

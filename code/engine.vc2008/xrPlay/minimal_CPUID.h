@@ -9,7 +9,8 @@
 #include <bitset>  
 #include <array>  
 #include <string>  
-#include <intrin.h>  
+#include <intrin.h> 
+#include <windows.h>
 
 class CPUID
 {
@@ -121,8 +122,8 @@ private:
 
 		int nIds_;
 		int nExIds_;
-		std::string vendor_;
-		std::string brand_;
+		LPSTR vendor_;
+		LPSTR brand_;
 		bool isIntel_;
 		bool isAMD_;
 		std::bitset<32> f_1_ECX_;
