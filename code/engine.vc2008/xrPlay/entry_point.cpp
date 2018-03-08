@@ -9,94 +9,57 @@
 
 #define DLL_API __declspec(dllimport)
 
-void CreateRendererList						( );					// In RenderList.cpp
-
-
+void CreateRendererList();					// In RenderList.cpp
 
 /***********************************************
-*
-* RunXRLauncher() - main method for initialize 
-* and run all elements. 
-*
+* RunXRLauncher() - main method for initialize launcher
+* and run all elements.
 ***********************************************/
-int RunXRLauncher							( )
+int RunXRLauncher()
 {
 	// Get initialize
-	xrPlay::Application::EnableVisualStyles					( );
-	xrPlay::Application::SetCompatibleTextRenderingDefault	(false);
+	xrPlay::Application::EnableVisualStyles();
+	xrPlay::Application::SetCompatibleTextRenderingDefault(false);
 	xrPlay::Application::Run(gcnew xrPlay::xrLauncherWnd);
-	int huy;
-	if (CPUID::AVX())
-	{
-	}
-	else
-	{
-	}
-	return xrPlay::type_ptr;								// return the type of Render 
-															// (-r2.5, r2 and etc.)
+	return xrPlay::type_ptr;
 }
 
-
-
 /***********************************************
-*
-* GetParams() - return the list pf parametres 
-*
+* GetParams() - return the list pf parametres
 ***********************************************/
-const char* GetParams						( )
+const char* GetParams()
 {
 	return xrPlay::params_list;
 }
 
-
-
 extern DLL_API int RunApplication(char* commandLine);
-
-
-
 /***********************************************
-*
 * WinMain() - Parametres for starting launcher
-*
 ***********************************************/
-int APIENTRY WinMain(
-	HINSTANCE hInsttance,
-	HINSTANCE hPrevInstance,
-	char* lpCmdLine,
-	int nCmdShow 
-) {
-	if (CPUID::AVX())
+int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow) 
+{
+
+	if (!CPUID::AVX())
 	{
-		/*
-		std::string huy;
-		CPUID::Brand() = huy; 
-		LPSTR s = const_cast<char *>(huy.c_str());
-		*/
-		MessageBox(NULL, "THIS IS AVX!", "THIS IS AVX!", MB_OK | MB_ICONASTERISK);
-	}
-	else
-	{
-		MessageBox(NULL, "THIS IS NOAVX!", "THIS IS NOAVX!", MB_OK | MB_ICONASTERISK);
+		MessageBox(NULL, "Your PC don't support xrOxy...", "AVX is not a support!", MB_OK | MB_ICONASTERISK);
 	}
 
-    std::string params = lpCmdLine;
-    if	(
+	std::string params = lpCmdLine;
+	if (
 		strstr(lpCmdLine, "-launcher")
 		)
-    {
-        const int l_res			=	RunXRLauncher	( );
-        switch										( l_res )
-        {
-        case 0: 
+	{
+		const int l_res = RunXRLauncher();
+		switch (l_res)
+		{
+		case 0:
 			return 0;
-        }
-        params 					=	GetParams		( );
-    }
-	CreateRendererList								( );
-    RunApplication(
-		params.data()
-	);
+		}
+		params = GetParams();
+	}
+	CreateRendererList();
+	RunApplication(params.data());
 
-    return 0;
+	return 0;
 
 }
