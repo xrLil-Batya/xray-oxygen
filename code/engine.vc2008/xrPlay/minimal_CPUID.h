@@ -2,7 +2,6 @@
 * minimal_CPUID.h - Minimal instructions
 * for initialize Oxygen's xrPlay.
 * Some methods of CPUID maded by Microsoft.
-*
 ******************************************/
 #pragma once
 #include <vector>  
@@ -32,6 +31,11 @@ public:
 	static bool AVX(void)
 	{
 		return CPU_Rep.f_1_ECX_[28];
+	}
+
+	static bool HighEndCPU(void)
+	{
+		return CPU_Rep.f_1_ECX_[25];		// AES Instruction
 	}
 
 private:

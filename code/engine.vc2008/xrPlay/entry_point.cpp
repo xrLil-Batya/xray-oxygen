@@ -44,6 +44,11 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		MessageBox(NULL, "Your PC don't support xrOxy...", "AVX is not a support!", MB_OK | MB_ICONASTERISK);
 	}
 
+	if (!CPUID::HighEndCPU())
+	{
+		MessageBox(NULL, "AES was appeared after AMD Bulldozers\nand Intel Westmere", "Your CPU doesn't have new instructions", MB_OK | MB_ICONASTERISK);
+	}
+
 	std::string params = lpCmdLine;
 	if (
 		strstr(lpCmdLine, "-launcher")
