@@ -23,7 +23,6 @@ CUISequenceVideoItem::CUISequenceVideoItem(CUISequencer* owner):CUISequenceItem(
 	m_delay					= 0.f;
 	m_wnd					= NULL;
 	m_wnd_bg				= NULL;
-	m_delay					= 0.f;
 	m_time_start			= 0;
 	m_sync_time				= 0;
 }

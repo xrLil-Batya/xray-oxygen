@@ -61,22 +61,22 @@ void CMonsterEnemyMemory::update()
 		}
 	}
 
-	if ( monster->SoundMemory.IsRememberSound() )
+	if (monster->SoundMemory.IsRememberSound())
 	{
 		SoundElem sound;
 		bool dangerous;
 		monster->SoundMemory.GetSound(sound, dangerous);
-		if ( dangerous && Device.dwTimeGlobal < sound.time + 2000 )
+		if (dangerous && Device.dwTimeGlobal < sound.time + 2000 && g_actor)
 		{
-			if ( CEntityAlive const* enemy = smart_cast<CEntityAlive const*>(sound.who) )
+			if (CEntityAlive const* enemy = smart_cast<CEntityAlive const*>(sound.who))
 			{
-				float const xz_dist	=	monster->Position().distance_to_xz(g_actor->Position());
-				float const y_dist	=	_abs(monster->Position().y - g_actor->Position().y);
+				float const xz_dist	= monster->Position().distance_to_xz(g_actor->Position());
+				float const y_dist = _abs(monster->Position().y - g_actor->Position().y);
 
-				if ( monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
+				if (monster->CCustomMonster::useful(&monster->memory().enemy(), enemy) && 
 					 y_dist < 10 &&
 					 xz_dist < monster->get_feel_enemy_who_made_sound_max_distance() &&
-					 g_actor->memory().visual().visible_now(monster)	)
+					 g_actor->memory().visual().visible_now(monster))
 				{
 					add_enemy					(enemy);
 
@@ -91,32 +91,24 @@ void CMonsterEnemyMemory::update()
 		}
 	}
 
-	for ( objects_list::const_iterator	I	=	objects.begin();
-										I	!=	objects.end(); 
-									  ++I	) 
+	for (objects_list::const_iterator I	= objects.begin(); I !=	objects.end(); ++I) 
 	{
 		const CEntityAlive* enemy = *I;
-		const bool feel_enemy	  = monster->Position().distance_to(enemy->Position()) 
-													< 
-									monster->get_feel_enemy_max_distance();
+		const bool feel_enemy = monster->Position().distance_to(enemy->Position()) < monster->get_feel_enemy_max_distance();
 
-		if ( feel_enemy || monster->memory().visual().visible_now(*I) )
+		if (feel_enemy || monster->memory().visual().visible_now(*I))
 			add_enemy(*I);
 	}
 
-	float const feel_enemy_max_distance	=	monster->get_feel_enemy_max_distance();
-	if ( g_actor )
-	{
-		float const xz_dist	=	monster->Position().distance_to_xz(g_actor->Position());
-		float const y_dist	=	_abs(monster->Position().y - g_actor->Position().y);
+	float const feel_enemy_max_distance	= monster->get_feel_enemy_max_distance();
 
-		if ( xz_dist < feel_enemy_max_distance && 
-			 y_dist < 10 &&
-			 monster->memory().enemy().is_useful(g_actor) &&
-			 g_actor->memory().visual().visible_now(monster) )
-		{
+	if (g_actor)
+	{
+		float const xz_dist	= monster->Position().distance_to_xz(g_actor->Position());
+		float const y_dist = _abs(monster->Position().y - g_actor->Position().y);
+
+		if (xz_dist < feel_enemy_max_distance && y_dist < 10 && monster->memory().enemy().is_useful(g_actor) && g_actor->memory().visual().visible_now(monster))
 			add_enemy(g_actor);
-		}
 	}
 	
 	// удалить устаревших врагов

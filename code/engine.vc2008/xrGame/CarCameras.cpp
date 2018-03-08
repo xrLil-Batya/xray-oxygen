@@ -47,22 +47,24 @@ void	CCar::OnCameraChange		(int type)
 {
 	if(Owner())
 	{
-		if	(type==ectFirst)
+		if (type == ectFirst)
 		{
 			Owner()->setVisible(FALSE);
 		}
-		else if(active_camera->tag==ectFirst)
+		else if (active_camera && active_camera->tag == ectFirst)
 		{
 			Owner()->setVisible(TRUE);
 		}
 	}
 	
-	if (!active_camera||active_camera->tag!=type){
-		active_camera	= camera[type];
-		if (ectFree==type){
+	if (!active_camera || active_camera && active_camera->tag != type)
+	{
+		active_camera = camera[type];
+		if (ectFree == type)
+		{
 			Fvector xyz;
 			XFORM().getXYZi(xyz);
-			active_camera->yaw		= xyz.y;
+			active_camera->yaw = xyz.y;
 		}
 	}
 

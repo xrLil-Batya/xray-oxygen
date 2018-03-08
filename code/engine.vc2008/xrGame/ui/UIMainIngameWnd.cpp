@@ -905,7 +905,7 @@ void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBoost
 	flags |= LA_TEXTURECOLOR;
 
 	xr_map<EBoostParams, SBooster>::const_iterator b = influences.begin(), e = influences.end();
-	for(; b!=e; b++)
+	for(; b != e; ++b)
 	{
 		switch(b->second.m_type)
 		{

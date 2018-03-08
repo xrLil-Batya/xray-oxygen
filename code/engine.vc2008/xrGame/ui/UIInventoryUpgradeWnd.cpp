@@ -101,16 +101,19 @@ void CUIInventoryUpgradeWnd::InitInventory( CInventoryItem* item, bool can_upgra
 	{
 		is_shader = true;
 		m_item->SetShader(InventoryUtilities::GetWeaponUpgradeIconsShader());
-		if(smart_cast<CWeaponRPG7*>(item))
+
+		if (smart_cast<CWeaponRPG7*>(item))
 			m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
 	}
-	else if(smart_cast<CCustomOutfit*>(item) || smart_cast<CHelmet*>(item))
+	else if (smart_cast<CCustomOutfit*>(item) || smart_cast<CHelmet*>(item))
 	{
 		is_shader = true;
-		m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
+
+		if (m_item)
+			m_item->SetShader(InventoryUtilities::GetOutfitUpgradeIconsShader());
 	}
 
-	if(m_item && is_shader)
+	if (m_item && is_shader)
 	{
 
 		Irect item_upgrade_grid_rect = item->GetUpgrIconRect();

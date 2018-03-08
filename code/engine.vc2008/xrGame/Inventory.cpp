@@ -1017,22 +1017,26 @@ CInventoryItem	*CInventory::GetItemFromInventory(LPCSTR caItemName)
 
 bool CInventory::CanTakeItem(CInventoryItem *inventory_item) const
 {
-	VERIFY			(inventory_item);
-	VERIFY			(m_pOwner);
+	VERIFY(inventory_item);
+	VERIFY(m_pOwner);
 
-	if (inventory_item->object().getDestroy()) return false;
+	if (inventory_item->object().getDestroy()) 
+		return false;
 
-	if(!inventory_item->CanTake()) return false;
+	if (!inventory_item->CanTake()) 
+		return false;
 
     TIItemContainer::const_iterator it = m_all.begin();
-	for(; it != m_all.end(); it++)
-		if((*it)->object().ID() == inventory_item->object().ID()) break;
-	VERIFY3(it == m_all.end(), "item already exists in inventory",*inventory_item->object().cName());
+	for(; it != m_all.end(); ++it)
+		if ((*it)->object().ID() == inventory_item->object().ID()) 
+			break;
+
+	VERIFY3(it == m_all.end(), "item already exists in inventory", *inventory_item->object().cName());
 
 	CActor* pActor = smart_cast<CActor*>(m_pOwner);
 	//актер всегда может взять вещь
 	if(!pActor && (TotalWeight() + inventory_item->Weight() > m_pOwner->MaxCarryWeight()))
-		return	false;
+		return false;
 
 	return	true;
 }

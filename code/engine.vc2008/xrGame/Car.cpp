@@ -644,17 +644,19 @@ void CCar::detach_Actor()
 
 bool CCar::attach_Actor(CGameObject* actor)
 {
-	if(Owner()||CPHDestroyable::Destroyed()) return false;
+	if (Owner() || CPHDestroyable::Destroyed()) 
+		return false;
+
 	CHolderCustom::attach_Actor(actor);
 
-	IKinematics* K	= smart_cast<IKinematics*>(Visual());
-	CInifile* ini	= K->LL_UserData();
+	IKinematics* K = smart_cast<IKinematics*>(Visual());
+	CInifile* ini = K->LL_UserData();
 	int id;
-	if(ini->line_exist("car_definition","driver_place"))
-		id=K->LL_BoneID(ini->r_string("car_definition","driver_place"));
+	if (ini->line_exist("car_definition", "driver_place"))
+		id=K->LL_BoneID(ini->r_string("car_definition", "driver_place"));
 	else
 	{	
-		Owner()->setVisible(0);
+		//Owner()->setVisible(0);
 		id=K->LL_GetBoneRoot();
 	}
 	CBoneInstance& instance=K->LL_GetBoneInstance				(u16(id));
