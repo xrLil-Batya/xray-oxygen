@@ -23,12 +23,7 @@ public:
 	{
 		return CPU_Rep.vendor_;
 	}
-	/*
-	static bool huintol(void)
-	{
-		return CPU_Rep.isIntel_;
-	}
-	*/
+
 	static std::string Brand(void)
 	{
 		return CPU_Rep.brand_;

@@ -25,13 +25,6 @@ int RunXRLauncher							( )
 	xrPlay::Application::EnableVisualStyles					( );
 	xrPlay::Application::SetCompatibleTextRenderingDefault	(false);
 	xrPlay::Application::Run(gcnew xrPlay::xrLauncherWnd);
-	int huy;
-	if (CPUID::AVX())
-	{
-	}
-	else
-	{
-	}
 	return xrPlay::type_ptr;								// return the type of Render 
 															// (-r2.5, r2 and etc.)
 }
@@ -67,11 +60,6 @@ int APIENTRY WinMain(
 ) {
 	if (CPUID::AVX())
 	{
-		/*
-		std::string huy;
-		CPUID::Brand() = huy; 
-		LPSTR s = const_cast<char *>(huy.c_str());
-		*/
 		MessageBox(NULL, "THIS IS AVX!", "THIS IS AVX!", MB_OK | MB_ICONASTERISK);
 	}
 	else
