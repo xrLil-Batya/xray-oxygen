@@ -44,8 +44,10 @@ bool SupportsDX10Rendering()
 
 	HRESULT hr = m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
 
-	delete pFactory;
-	delete m_pAdapter;
+    pFactory->Release();
+    pFactory = nullptr;
+    m_pAdapter->Release();
+    m_pAdapter = nullptr;
 
 	return SUCCEEDED(hr);
 }
