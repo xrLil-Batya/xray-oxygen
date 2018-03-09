@@ -8,7 +8,13 @@ namespace xray
 		void dSet(dReal*& src, const dReal* copy, float up = 0.f)
 		{
 			for (u32 it = 0u; it < 3; it++)
+			{
 				src[it] = copy[it];
+				if (up != 0.f) 
+				{
+					src[it] *= up;
+				}
+			}
 		}
 
 		void dSet(dReal*& src, float copy = 0.f)
@@ -16,7 +22,6 @@ namespace xray
 			for (u32 it = 0u; it < 3; it++)
 			{
 				src[it] = copy;
-				if (up) src[it] *= up;
 			}
 		}
 
