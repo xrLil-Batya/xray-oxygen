@@ -25,7 +25,7 @@ int RunXRLauncher()
 }
 
 /***********************************************
-* GetParams() - return the list pf parametres
+* GetParams() - return the list of parametres
 ***********************************************/
 const char* GetParams()
 {
@@ -33,26 +33,29 @@ const char* GetParams()
 }
 
 extern DLL_API int RunApplication(char* commandLine);
+
 /***********************************************
 * WinMain() - Parametres for starting launcher
 ***********************************************/
 int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow) 
 {
 
-	if (!CPUID::AVX())
-	{
-		MessageBox(NULL, "Your PC don't support xrOxy...", "AVX is not a support!", MB_OK | MB_ICONASTERISK);
-	}
-
-	if (!CPUID::HighEndCPU())
-	{
-		MessageBox(NULL, "AES was appeared after AMD Bulldozers\nand Intel Westmere", "Your CPU doesn't have new instructions", MB_OK | MB_ICONASTERISK);
-	}
-
 	std::string params = lpCmdLine;
-	if (
-		strstr(lpCmdLine, "-launcher")
-		)
+
+	// If we don't needy for a excetions - we can delete exceptions with option "-silent"
+	if (!strstr(lpCmdLine, "-silent")) {
+		if (!CPUID::AVX())
+		{
+			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX is not a support!", MB_OK | MB_ICONWARNING);
+		}
+
+		if (!CPUID::HighEndCPU())
+		{
+			MessageBox(NULL, "AES was appeared after AMD Bulldozers\nand Intel Westmere", "Your CPU doesn't have new instructions", MB_OK | MB_ICONASTERISK);
+		}
+	}
+
+	if (strstr(lpCmdLine, "-launcher"))
 	{
 		const int l_res = RunXRLauncher();
 		switch (l_res)

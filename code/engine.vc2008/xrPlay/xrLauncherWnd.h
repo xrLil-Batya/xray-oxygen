@@ -1,5 +1,6 @@
 #pragma once
 #include <msclr\marshal.h>  
+#include "minimal_CPUID.h"
 namespace xrPlay {
 
 	using namespace System;
@@ -43,6 +44,7 @@ namespace xrPlay {
 	private: System::Windows::Forms::RadioButton^  radioButton3;
 	private: System::Windows::Forms::RadioButton^  radioButton4;
 	private: System::Windows::Forms::RadioButton^  radioButton5;
+	private: System::Windows::Forms::Label^  label2;
 	protected:
 
 	private:
@@ -67,6 +69,7 @@ namespace xrPlay {
 			this->radioButton3 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton4 = (gcnew System::Windows::Forms::RadioButton());
 			this->radioButton5 = (gcnew System::Windows::Forms::RadioButton());
+			this->label2 = (gcnew System::Windows::Forms::Label());
 			this->SuspendLayout();
 			// 
 			// button1
@@ -169,6 +172,32 @@ namespace xrPlay {
 			this->radioButton5->Text = L"Улучшенное динамическое (DX 11)";
 			this->radioButton5->UseVisualStyleBackColor = false;
 			// 
+			// label2
+			// 
+			this->label2->AutoSize = true;
+			this->label2->Location = System::Drawing::Point(3, 170);
+			this->label2->Name = L"label2";
+			this->label2->Size = System::Drawing::Size(35, 13);
+			this->label2->TabIndex = 11;
+
+			// Checking for a AVX instructions
+			if (CPUID::AVX()) {
+				this->label2->Text = L"All instructions are expected. Done!";
+				this->label2->ForeColor = System::Drawing::Color::Green;
+			}
+			else
+			{
+				// If they aren't presented
+				this->label2->Text = L"AVX instructions aren't expected. That may be affect on stability.";
+				this->label2->ForeColor = System::Drawing::Color::Yellow;
+				// If AES Instructios aren't presented too
+				if (!CPUID::HighEndCPU()) {
+					this->label2->Text = L"AES and AVX instructions aren't expected. That may be affect on stability.";
+					this->label2->ForeColor = System::Drawing::Color::Red;
+				}
+			}
+
+			// 
 			// xrLauncherWnd
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -176,6 +205,7 @@ namespace xrPlay {
 			this->BackgroundImage = (cli::safe_cast<System::Drawing::Image^>(resources->GetObject(L"$this.BackgroundImage")));
 			this->ClientSize = System::Drawing::Size(506, 212);
 			this->ControlBox = false;
+			this->Controls->Add(this->label2);
 			this->Controls->Add(this->radioButton5);
 			this->Controls->Add(this->radioButton4);
 			this->Controls->Add(this->radioButton3);
@@ -203,10 +233,10 @@ namespace xrPlay {
 		msclr::interop::marshal_context marsh;
 
 		System::String^ rendered = "-r2";
-
 		if (radioButton3->Checked) rendered = "-r2.5";
 		if (radioButton4->Checked) rendered = "-r3";
 		if (radioButton5->Checked) rendered = "-r4";
+
 
 		params_list = marsh.marshal_as<char const*>(textBox1->Text + " " + rendered);
 		this->Close();
@@ -223,5 +253,5 @@ namespace xrPlay {
 		//this->showShowMainForm = false;
 		ShowWindow((HWND)this->Handle.ToInt32(), SW_MINIMIZE);
 	}
-	};
+};
 }

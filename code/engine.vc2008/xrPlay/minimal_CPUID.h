@@ -46,13 +46,13 @@ private:
 	public:
 		CPUID_Internal()
 			:
-			nIds_{ NULL },
-			nExIds_{ NULL },
+			nIds_	{ NULL },
+			nExIds_	{ NULL },
 			isIntel_{},
-			isAMD_{},
+			isAMD_	{},
 			f_1_ECX_{ NULL },
 			f_1_EDX_{ NULL },
-			data_{},
+			data_	{},
 			extdata_{}
 		{
 			//int cpuInfo[4] = {-1};  
@@ -95,12 +95,8 @@ private:
 				f_1_EDX_ = data_[1][3];
 			}
 
-			// load bitset with flags for function 0x00000007  
-
 			// Calling __cpuid with 0x80000000 as the function_id argument  
 			// gets the number of the highest valid extended ID.  
-
-
 			__cpuid(cpui.data(), 0x80000000);
 			nExIds_ = cpui[0];
 
