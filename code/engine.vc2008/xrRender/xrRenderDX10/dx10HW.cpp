@@ -43,32 +43,9 @@ void CHW::CreateD3D()
 	IDXGIFactory * pFactory;
 	R_CHK( CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory)) );
 
-	m_pAdapter = 0;
 	m_bUsePerfhud = false;
 
-#ifndef	MASTER_GOLD
-	// Look for 'NVIDIA NVPerfHUD' adapter
-	// If it is present, override default settings
-	UINT i = 0;
-	while(pFactory->EnumAdapters(i, &m_pAdapter) != DXGI_ERROR_NOT_FOUND)
-	{
-		DXGI_ADAPTER_DESC desc;
-		m_pAdapter->GetDesc(&desc);
-		if(!wcscmp(desc.Description,L"NVIDIA PerfHUD"))
-		{
-			m_bUsePerfhud = true;
-			break;
-		}
-		else
-		{
-			m_pAdapter->Release();
-			m_pAdapter = 0;
-		}
-		++i;
-	}
-#else
 	pFactory->EnumAdapters(0, &m_pAdapter);
-#endif	//	MASTER_GOLD
 
 	pFactory->Release();
 }
