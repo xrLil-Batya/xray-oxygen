@@ -110,10 +110,10 @@ Object^ property_converter_vec3f::ConvertFrom	(
 		Object^ value
 	)
 {
-	String^			string = dynamic_cast<String^>(value);
 	if (!value)
 		return		(inherited::ConvertFrom(context, culture, value));
 
+	String^			string = dynamic_cast<String^>(value);
 	try {
 		int			comma = string->IndexOf(" ");
 		String		^real_value = string->Substring(0, comma);

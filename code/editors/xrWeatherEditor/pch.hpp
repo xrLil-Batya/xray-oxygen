@@ -41,14 +41,7 @@ inline LPSTR to_string			(System::String ^string)
 	errno_t						err = 0;
 	LPSTR						result = (LPSTR)malloc(sizeInBytes);
 
-	err							=
-		wcstombs_s	(
-			&convertedChars, 
-			result,
-			sizeInBytes,
-			wch,
-			sizeInBytes
-		);
+	err = wcstombs_s(&convertedChars, result, sizeInBytes, wch, sizeInBytes);
 
 	if (err)
 		VERIFY					(!"[tostring][failed] : wcstombs_s failed");
@@ -56,7 +49,7 @@ inline LPSTR to_string			(System::String ^string)
 	return						(result);
 }
 
-inline System::String ^to_string	(LPCSTR string)
+inline System::String ^to_string(LPCSTR string)
 {
 	return						(gcnew System::String(string));
 }

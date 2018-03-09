@@ -110,11 +110,12 @@ Object^ property_converter_color::ConvertFrom	(
 		Object^ value
 	)
 {
-	String^			string = dynamic_cast<String^>(value);
 	if (!value)
 		return		(inherited::ConvertFrom(context, culture, value));
 
-	try {
+	String^		string = dynamic_cast<String^>(value);
+	try 
+	{
 		int			comma = string->IndexOf(" ");
 		String		^real_value = string->Substring(0, comma);
 		Color		color;
@@ -130,9 +131,9 @@ Object^ property_converter_color::ConvertFrom	(
 
 		return		(color);
 	}
-	catch(...) {
-        throw gcnew ArgumentException(
-            "Can not convert '" + value + "' to color"
-		);
+	catch(...) 
+	{
+		delete string;
+        throw gcnew ArgumentException("Can not convert '" + value + "' to color");
 	}
 }

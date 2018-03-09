@@ -12,7 +12,7 @@ using System::String;
 using System::Windows::Forms::Clipboard;
 
 using Flobbster::Windows::Forms::PropertyBag;
-typedef PropertyBag::PropertySpecDescriptor		PropertySpecDescriptor;
+typedef PropertyBag::PropertySpecDescriptor	PropertySpecDescriptor;
 
 using editor::window_weather_editor;
 using editor::engine;
@@ -158,9 +158,9 @@ void window_weather_editor::fill_weathers							()
 
 void window_weather_editor::fill_frames								(LPCSTR current_weather_id)
 {
-	FramesComboBox->Items->Clear	();
+	FramesComboBox->Items->Clear();
 
-	LPCSTR const*					frames_ids = (*m_frames_getter)(current_weather_id);
+	LPCSTR const* frames_ids = (*m_frames_getter)(current_weather_id);
 	for (u32 i=0, n=(*m_frames_size_getter)(current_weather_id); i<n; ++i)
 		FramesComboBox->Items->Add(
 			to_string(
@@ -168,11 +168,10 @@ void window_weather_editor::fill_frames								(LPCSTR current_weather_id)
 			)
 		);
 
-	int								index = FramesComboBox->Items->IndexOf(to_string(m_engine.current_weather_frame()));
+	int index = FramesComboBox->Items->IndexOf(to_string(m_engine.current_weather_frame()));
 	if ((index == -1) && FramesComboBox->Items->Count)
 		index						= 0;
-
-	VERIFY							(!m_update_frames_combo_box);
+	
 	m_update_frames_combo_box		= true;
 	FramesComboBox->SelectedIndex	= index;
 	m_update_frames_combo_box		= false;

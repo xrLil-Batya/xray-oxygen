@@ -93,29 +93,27 @@ void ide_impl::pause			()
 	m_window->view().pause		();
 }
 
-editor::property_holder* ide_impl::create_property_holder	(
-		LPCSTR display_name,
-		editor::property_holder_collection* collection,
-		editor::property_holder_holder* holder
-	)
+editor::property_holder* ide_impl::create_property_holder(LPCSTR display_name, editor::property_holder_collection* collection, editor::property_holder_holder* holder)
 {
-	return				(new ::property_holder(m_engine, display_name, collection, holder));
+	return (new ::property_holder(m_engine, display_name, collection, holder));
 }
 
-void ide_impl::destroy										(editor::property_holder *&property_holder)
+#ifndef PVS_STUDIO
+void ide_impl::destroy(editor::property_holder *&property_holder)
 {
-	delete				(property_holder);
-	property_holder		= 0;
+	delete(property_holder);
+	property_holder = 0;
 }
+#endif
 
-void ide_impl::environment_levels							(property_holder *property_holder)
+void ide_impl::environment_levels(property_holder *property_holder)
 {
 	::property_holder*	properties = dynamic_cast<::property_holder*>(property_holder);
 	VERIFY				(properties);
 	m_window->levels().property_grid()->SelectedObject	= properties->container();
 }
 
-void ide_impl::environment_weathers							(property_holder *property_holder)
+void ide_impl::environment_weathers(property_holder *property_holder)
 {
 	::property_holder*	properties = dynamic_cast<::property_holder*>(property_holder);
 	VERIFY				(properties);

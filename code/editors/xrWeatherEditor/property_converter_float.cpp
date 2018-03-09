@@ -62,22 +62,17 @@ bool property_converter_float::CanConvertFrom	(
 	return					(inherited::CanConvertFrom(context, source_type));
 }
 
-Object^ property_converter_float::ConvertFrom	(
-		ITypeDescriptorContext^ context,
-		CultureInfo^ culture,
-		Object^ value
-	)
+Object^ property_converter_float::ConvertFrom(ITypeDescriptorContext^ context, CultureInfo^ culture, Object^ value)
 {
-	String^			string = dynamic_cast<String^>(value);
 	if (!value)
-		return		(inherited::ConvertFrom(context, culture, value));
+		return(inherited::ConvertFrom(context, culture, value));
 
-	try {
-		return		( float::Parse(string) );
+	try 
+	{
+		return( float::Parse(dynamic_cast<String^>(value)) );
 	}
-	catch(...) {
-        throw gcnew ArgumentException(
-            "Can not convert '" + value + "' to float"
-		);
+	catch(...) 
+	{
+        throw gcnew ArgumentException("Can not convert '" + value + "' to float");
 	}
 }
