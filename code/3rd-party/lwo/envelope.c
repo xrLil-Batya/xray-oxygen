@@ -343,8 +343,7 @@ static float incoming( Key *key0, Key *key1 )
       case SHAPE_HERM:
          in = key1->param[ 0 ];
          if ( key1->next )
-            in *= ( key1->time - key0->time ) / ( key1->next->time - key0->time );
-         break;
+            in *= ( key1->time - key0->time ) / ( key1->next->time - key0->time );\
          return in;
 
       case SHAPE_STEP:

@@ -482,7 +482,7 @@ int lwGetTags( FILE *fp, int cksize, lwTagList *tlist )
 
    tlist->offset = tlist->count;
    tlist->count += ntags;
-   tlist->tag = realloc( tlist->tag, tlist->count * sizeof( char * ));
+   tlist->tag = realloc(tlist->tag, tlist->count * sizeof(char *));
    if ( !tlist->tag ) goto Fail;
    memset( &tlist->tag[ tlist->offset ], 0, ntags * sizeof( char * ));
 
@@ -496,7 +496,7 @@ int lwGetTags( FILE *fp, int cksize, lwTagList *tlist )
    return 1;
 
 Fail:
-   if ( buf ) free( buf );
+   free( buf );
    return 0;
 }
 

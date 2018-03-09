@@ -1795,14 +1795,15 @@ extern "C" dReal dJointGetHinge2Angle2Rate (dxJointHinge2 *joint)
 {
   dUASSERT(joint,"bad joint argument");
   dUASSERT(joint->vtable == &__dhinge2_vtable,"joint is not a hinge2");
-  if (joint->node[0].body && joint->node[1].body) {
+  if (joint->node[0].body && joint->node[1].body) 
+  {
     dVector3 axis;
     dMULTIPLY0_331 (axis,joint->node[1].body->R,joint->axis2);
     dReal rate = dDOT(axis,joint->node[0].body->avel);
-    if (joint->node[1].body) rate -= dDOT(axis,joint->node[1].body->avel);
+    rate	  -= dDOT(axis,joint->node[1].body->avel);
     return rate;
   }
-  else return 0;
+  else return 0.f;
 }
 
 
@@ -2539,14 +2540,13 @@ extern "C" void dJointSetAMotorAxis (dxJointAMotor *joint, int anum, int rel,
 }
 
 
-extern "C" void dJointSetAMotorAngle (dxJointAMotor *joint, int anum,
-				      dReal angle)
+extern "C" void dJointSetAMotorAngle (dxJointAMotor *joint, int anum, dReal angle)
 {
   dAASSERT(joint && anum >= 0 && anum < 3);
   dUASSERT(joint->vtable == &__damotor_vtable,"joint is not an amotor");
   if (joint->mode == dAMotorUser) {
     if (anum < 0) anum = 0;
-    if (anum > 3) anum = 3;
+    if (anum > 2) anum = 2; // FX: dReal angle[3]... 
     joint->angle[anum] = angle;
   }
 }
@@ -2623,7 +2623,7 @@ extern "C" dReal dJointGetAMotorAngle (dxJointAMotor *joint, int anum)
   dAASSERT(joint && anum >= 0 && anum < 3);
   dUASSERT(joint->vtable == &__damotor_vtable,"joint is not an amotor");
   if (anum < 0) anum = 0;
-  if (anum > 3) anum = 3;
+  if (anum > 2) anum = 2;
   return joint->angle[anum];
 }
 

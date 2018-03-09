@@ -118,7 +118,7 @@ lwVMap *lwGetVMap( FILE *fp, int cksize, int ptoffset, int poloffset,
    return vmap;
 
 Fail:
-   if ( buf ) free( buf );
+   free( buf );
    lwFreeVMap( vmap );
    return NULL;
 }
