@@ -182,8 +182,7 @@ namespace xrPlay {
 
 			// Checking for a AVX instructions
 			if (CPUID::AVX()) {
-				this->label2->Text = L"All instructions are found. Done!";
-				this->label2->ForeColor = System::Drawing::Color::Green;
+			// code here
 			}
 			else
 			{
