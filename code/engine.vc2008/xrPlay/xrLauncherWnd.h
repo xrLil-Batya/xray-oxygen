@@ -181,11 +181,7 @@ namespace xrPlay {
 			this->label2->TabIndex = 11;
 
 			// Checking for a AVX instructions
-			if (CPUID::AVX()) {
-			// code here
-			}
-			else
-			{
+			if (!CPUID::AVX()) {
 				// If they aren't presented
 				this->label2->Text = L"AVX instructions aren't found. That may be affect on stability.";
 				this->label2->ForeColor = System::Drawing::Color::Yellow;
