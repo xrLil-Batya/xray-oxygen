@@ -9,6 +9,7 @@ namespace xrPlay {
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
+
 	unsigned int type_ptr;
 	char const* params_list;
 	/// <summary>
@@ -130,7 +131,7 @@ namespace xrPlay {
 			this->radioButton2->Size = System::Drawing::Size(194, 17);
 			this->radioButton2->TabIndex = 7;
 			this->radioButton2->TabStop = true;
-			this->radioButton2->Text = L"Динамическое освещение (DX 9)";
+			this->radioButton2->Text = L"Dynamic Light (D3D9)      ";
 			this->radioButton2->UseVisualStyleBackColor = false;
 			// 
 			// radioButton3
@@ -143,7 +144,7 @@ namespace xrPlay {
 			this->radioButton3->Name = L"radioButton3";
 			this->radioButton3->Size = System::Drawing::Size(202, 17);
 			this->radioButton3->TabIndex = 8;
-			this->radioButton3->Text = L"Улучшенное динамическое (DX 9)  ";
+			this->radioButton3->Text = L"Full Dynamic Light (D3D9)  ";
 			this->radioButton3->UseVisualStyleBackColor = false;
 			// 
 			// radioButton4
@@ -156,7 +157,7 @@ namespace xrPlay {
 			this->radioButton4->Name = L"radioButton4";
 			this->radioButton4->Size = System::Drawing::Size(202, 17);
 			this->radioButton4->TabIndex = 9;
-			this->radioButton4->Text = L"Улучшенное динамическое (DX 10)";
+			this->radioButton4->Text = L"Full Dynamic Light (D3D10)";
 			this->radioButton4->UseVisualStyleBackColor = false;
 			// 
 			// radioButton5
@@ -169,7 +170,7 @@ namespace xrPlay {
 			this->radioButton5->Name = L"radioButton5";
 			this->radioButton5->Size = System::Drawing::Size(202, 17);
 			this->radioButton5->TabIndex = 10;
-			this->radioButton5->Text = L"Улучшенное динамическое (DX 11)";
+			this->radioButton5->Text = L"Full Dynamic Light (D3D11)";
 			this->radioButton5->UseVisualStyleBackColor = false;
 			// 
 			// label2
@@ -214,7 +215,7 @@ namespace xrPlay {
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
-			this->Name = L"xrLauncherWnd";
+			this->Name = L"xrPlay";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Load += gcnew System::EventHandler(this, &xrLauncherWnd::xrLauncherWnd_Load);
 			this->ResumeLayout(false);
@@ -244,9 +245,8 @@ namespace xrPlay {
 		type_ptr = 0;
 		this->Close();
 	}
-	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) {
-		//this->showShowMainForm = false;
-		ShowWindow((HWND)this->Handle.ToInt32(), SW_MINIMIZE);
+	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) { 
+		ShowWindow((HWND) this->Handle.ToInt32(), SW_MINIMIZE );
 	}
 };
 }

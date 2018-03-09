@@ -37,7 +37,7 @@ extern DLL_API int RunApplication(char* commandLine);
 /***********************************************
 * WinMain() - Parametres for starting launcher
 ***********************************************/
-int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow) 
+int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
 
 	std::string params = lpCmdLine;
@@ -55,6 +55,7 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		}
 	}
 
+	// If we want to start launcher
 	if (strstr(lpCmdLine, "-launcher"))
 	{
 		const int l_res = RunXRLauncher();
@@ -65,6 +66,17 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		}
 		params = GetParams();
 	}
+	/*
+	if (!strstr(lpCmdLine, "-launcher")) {
+		if (strstr(lpCmdLine, "r2")) {
+			xrPlay::type_ptr = 1;
+			msclr::interop::marshal_context marsh;
+			System::String^ rendered = "-r2";
+			xrPlay::params_list = marsh.marshal_as<char const*>(textBox1->Text + " " + rendered);
+
+		}
+	}
+	*/
 	CreateRendererList();
 	RunApplication(params.data());
 
