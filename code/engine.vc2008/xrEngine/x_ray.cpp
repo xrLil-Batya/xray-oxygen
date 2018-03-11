@@ -451,6 +451,11 @@ ENGINE_API int RunApplication(char* commandLine)
 		Engine.External.Initialize	( );
 		Console->Execute			("stat_memory");
 
+		/////////////////////////////////////////////
+		// Exeption debug
+		///xrCore* crash_me = nullptr;
+		///crash_me->SetPluginMode();
+
 		Startup	 					( );
 		Core._destroy				( );
 #ifdef NO_MULTI_INSTANCES		
