@@ -17,6 +17,13 @@
 
 CRender										RImplementation;
 
+template<UINT TNameLength>
+inline void SetDebugObjectName(_In_ ID3D10DeviceChild* resource,
+    _In_z_ const char(&name)[TNameLength])
+{
+    resource->SetPrivateData(WKPDID_D3DDebugObjectName, TNameLength - 1, name);
+}
+
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
 {
@@ -708,13 +715,14 @@ LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
 LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
 };
 */
-static HRESULT create_shader				(
-		LPCSTR const	pTarget,
-		DWORD const*	buffer,
-		u32	const		buffer_size,
-		LPCSTR const	file_name,
-		void*&			result,
-		bool const		disasm
+static HRESULT create_shader (
+		LPCSTR name,
+		LPCSTR const pTarget,
+		DWORD const* buffer,
+		u32 const buffer_size,
+		LPCSTR const file_name,
+		void*& result,
+		bool const disasm
 	)
 {
 	HRESULT		_result = E_FAIL;
@@ -1368,7 +1376,7 @@ HRESULT	CRender::shader_compile			(
 			u32 const real_crc = crc32(file->pointer(), file->elapsed());
 
 			if ( real_crc == crc ) {
-				_result				= create_shader(pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
+				_result				= create_shader(name, pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
 			}
 		}
 		file->close();
@@ -1404,7 +1412,7 @@ HRESULT	CRender::shader_compile			(
 			file->w					(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
 			FS.w_close				(file);
 			
-			_result					= create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
+			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
 		}
 		else {
 //			Msg						( "! shader compilation failed" );
