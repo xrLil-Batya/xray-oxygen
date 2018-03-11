@@ -67,7 +67,7 @@ float3 	skinning_dir 	(float3 dir, float3 m0, float3 m1, float3 m2)
 }
 float4 	skinning_pos 	(float4 pos, float4 m0, float4 m1, float4 m2)
 {
-	float4 	P	= u_position(pos, 1.f);		//--#SM+#--
+	float4 	P	= u_position(pos);		//--#SM+#--
 	return 	float4
 		(
 			dot	(m0, P),
@@ -81,7 +81,7 @@ v_model skinning_0	(v_model_skinned_0	v)
 {
 	// skinning
 	v_model 	o;
-	o.P 		= u_position(v.P.xyz);	//--#SM+#--
+	o.P 		= u_position(v.P);	//--#SM+#--
 	o.N 		= unpack_normal(v.N);
 	o.T 		= unpack_normal(v.T);
 	o.B 		= unpack_normal(v.B);
