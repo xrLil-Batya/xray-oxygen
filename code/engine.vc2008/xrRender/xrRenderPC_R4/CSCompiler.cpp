@@ -195,7 +195,12 @@ void CSCompiler::compile(const char* name)
 	LPCSTR						c_target	= "cs_5_0";
 	LPCSTR						c_entry		= "main";
 
-	HRESULT	const _hr			= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, D3D10_SHADER_PACK_MATRIX_ROW_MAJOR, (void*&)m_cs );
+    DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
+    if (strstr(Core.Params, "-shader_debug"))
+    {
+        shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+    }
+	HRESULT	const _hr			= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)m_cs );
 
 	FS.r_close					( file );
 

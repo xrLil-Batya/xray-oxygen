@@ -18,6 +18,13 @@
 
 CRender										RImplementation;
 
+template<UINT TNameLength>
+inline void SetDebugObjectName(_In_ ID3D11DeviceChild* resource,
+    _In_z_ const char(&name)[TNameLength])
+{
+    resource->SetPrivateData(WKPDID_D3DDebugObjectName, TNameLength - 1, name);
+}
+
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
 {
@@ -655,13 +662,14 @@ void CRender::addShaderOption(const char* name, const char* value)
 }
 
 template <typename T>
-static HRESULT create_shader				(
-		LPCSTR const	pTarget,
-		DWORD const*	buffer,
-		u32	const		buffer_size,
-		LPCSTR const	file_name,
-		T*&				result,
-		bool const		disasm
+static HRESULT create_shader (
+		LPCSTR name,
+		LPCSTR const pTarget,
+		DWORD const* buffer,
+		u32 const buffer_size,
+		LPCSTR const file_name,
+		T*& result,
+		bool const disasm
 	)
 {
 	result->sh			= ShaderTypeTraits<T>::CreateHWShader(buffer, buffer_size);
@@ -682,7 +690,7 @@ static HRESULT create_shader				(
 	return				_hr;
 }
 
-static HRESULT create_shader(const char* const pTarget, DWORD const* buffer, u32 const buffer_size, const char* const file_name, void*& result, bool const disasm)
+static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const* buffer, u32 const buffer_size, const char* const file_name, void*& result, bool const disasm)
 {
 	HRESULT		_result = E_FAIL;
 	if (pTarget[0] == 'p') {
@@ -697,6 +705,11 @@ static HRESULT create_shader(const char* const pTarget, DWORD const* buffer, u32
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
+
+        string64 PsDebugName;
+        ZeroMemory(PsDebugName, sizeof(PsDebugName));
+        xr_sprintf(PsDebugName, "%s_ps", name);
+        SetDebugObjectName(sps_result->ps, PsDebugName);
 
 		ID3DShaderReflection *pReflection = 0;
 
@@ -729,6 +742,10 @@ static HRESULT create_shader(const char* const pTarget, DWORD const* buffer, u32
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
 #endif // #ifdef USE_DX11
 
+        string64 VsDebugName;
+        ZeroMemory(VsDebugName, sizeof(VsDebugName));
+        xr_sprintf(VsDebugName, "%s_vs", name);
+        SetDebugObjectName(svs_result->vs, VsDebugName);
 		if ( !SUCCEEDED(_result) ) {
 			Log			("! VS: ", file_name);
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
@@ -775,6 +792,12 @@ static HRESULT create_shader(const char* const pTarget, DWORD const* buffer, u32
 #else // USE_DX10
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
 #endif
+
+        string64 GsDebugName;
+        ZeroMemory(GsDebugName, sizeof(GsDebugName));
+        xr_sprintf(GsDebugName, "%s_vs", name);
+        SetDebugObjectName(sgs_result->gs, GsDebugName);
+
 		if ( !SUCCEEDED(_result) ) {
 			Log			("! GS: ", file_name);
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
@@ -805,11 +828,11 @@ static HRESULT create_shader(const char* const pTarget, DWORD const* buffer, u32
 		}
 	}
 	else if (pTarget[0] == 'c')
-		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SCS*&)result, disasm );
+		_result = create_shader	(name, pTarget, buffer, buffer_size, file_name, (SCS*&)result , disasm );
 	else if (pTarget[0] == 'h') 
-		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SHS*&)result, disasm );
+		_result = create_shader	(name, pTarget, buffer, buffer_size, file_name, (SHS*&)result , disasm );
 	else if (pTarget[0] == 'd') 
-		_result = create_shader	( pTarget, buffer, buffer_size, file_name, (SDS*&)result, disasm );
+		_result = create_shader	(name, pTarget, buffer, buffer_size, file_name, (SDS*&)result , disasm );
 	else 
 		NODEFAULT;
 
@@ -1337,7 +1360,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 			u32 const real_crc = crc32(file->pointer(), file->elapsed());
 
 			if ( real_crc == crc ) {
-				_result				= create_shader(pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
+				_result				= create_shader(name, pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
 			}
 		}
 		file->close();
@@ -1352,7 +1375,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 			D3DCompile( 
 				pSrcData, 
 				SrcDataLen,
-				"",//NULL, //LPCSTR pFileName,	//	NVPerfHUD bug workaround.
+				name,//NULL, //LPCSTR pFileName,	//	NVPerfHUD bug workaround.
 				defines, &Includer, pFunctionName,
 				pTarget,
 				Flags, 0,
@@ -1372,7 +1395,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 			file->w					(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
 			FS.w_close				(file);
 
-			_result					= create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
+			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
 		}
 		else {
 //			Msg						( "! shader compilation failed" );

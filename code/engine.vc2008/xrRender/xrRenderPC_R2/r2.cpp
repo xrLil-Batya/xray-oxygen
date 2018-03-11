@@ -578,13 +578,14 @@ LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
 LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
 };
 */
-static HRESULT create_shader				(
-		LPCSTR const	pTarget,
-		DWORD const*	buffer,
-		u32	const		buffer_size,
-		LPCSTR const	file_name,
-		void*&			result,
-		bool const		disasm
+static HRESULT create_shader (
+		LPCSTR name,
+		LPCSTR const pTarget,
+		DWORD const* buffer,
+		u32 const buffer_size,
+		LPCSTR const file_name,
+		void*& result,
+		bool const disasm
 	)
 {
 	HRESULT		_result = E_FAIL;
@@ -1021,7 +1022,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			u32 const real_crc = crc32(file->pointer(), file->elapsed());
 
 			if ( real_crc == crc ) {
-				_result				= create_shader(pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
+				_result				= create_shader(name, pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
 				//if ( !SUCCEEDED(_result) ) {
 				//	Msg				("! create shader failed");
 				//}
@@ -1060,7 +1061,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			file->w					( pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
 			FS.w_close				(file);
 
-			_result					= create_shader(pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
+			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
 		}
 		else {
 //			Msg						( "! shader compilation failed" );

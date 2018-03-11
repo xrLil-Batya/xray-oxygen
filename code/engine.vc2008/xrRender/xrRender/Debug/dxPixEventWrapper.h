@@ -1,6 +1,9 @@
 #pragma once
 
-#ifdef	DEBUG
+//TEMP
+#define RENDER_DEBUG
+
+#ifdef	RENDER_DEBUG
 #define PIX_EVENT(Name)	dxPixEventWrapper	pixEvent##Name(L#Name)
 
 class dxPixEventWrapper
