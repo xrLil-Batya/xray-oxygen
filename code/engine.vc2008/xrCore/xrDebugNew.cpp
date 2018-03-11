@@ -321,9 +321,9 @@ IC void floating_point_handler(int signal)
 IC void illegal_instruction_handler(int signal)
 {
 	//#VERTVER: We're using xrCore CPUID cuz it's more faster then another
-	if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
 	{
-		handler_base("SSE3 instructions isn't legal for your CPU");
+		handler_base("SSE41 instructions isn't legal for your CPU");
 	}
 	else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 	{
