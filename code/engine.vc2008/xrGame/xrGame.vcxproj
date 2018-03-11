@@ -367,6 +367,7 @@
     <ClInclude Include="character_hit_animations_params.h" />
     <ClInclude Include="character_shell_control.h" />
     <ClInclude Include="ClimableObject.h" />
+    <ClInclude Include="c_artefact.h" />
     <ClInclude Include="DestroyablePhysicsObject.h" />
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IKFoot.h" />
@@ -1719,6 +1720,7 @@
     <ClCompile Include="character_hit_animations.cpp" />
     <ClCompile Include="character_shell_control.cpp" />
     <ClCompile Include="ClimableObject.cpp" />
+    <ClCompile Include="c_artefact.cpp" />
     <ClCompile Include="damage_manager.cpp" />
     <ClCompile Include="death_anims_predicates.cpp" />
     <ClCompile Include="DestroyablePhysicsObject.cpp" />
