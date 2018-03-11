@@ -185,7 +185,7 @@ namespace xrPlay {
 			if (!CPUID::AVX()) {
 				// If they aren't presented
 				this->label2->Text = L"AVX instructions aren't found. That may be affect on stability.";
-				this->label2->ForeColor = System::Drawing::Color::Yellow;
+				this->label2->ForeColor = System::Drawing::Color::YellowGreen;
 				// If AES Instructios aren't presented too
 				if (!CPUID::HighEndCPU()) {
 					this->label2->Text = L"AES and AVX instructions aren't found. That may be affect on stability.";
