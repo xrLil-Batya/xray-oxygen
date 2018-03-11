@@ -384,8 +384,7 @@ ENGINE_API int RunApplication(char* commandLine)
 #ifdef NO_MULTI_INSTANCES
 	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
 	
-	HANDLE hCheckPresenceMutex = INVALID_HANDLE_VALUE;
-	hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
+	HANDLE hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
 	if ( hCheckPresenceMutex == NULL ) {
 		// New mutex
 		hCheckPresenceMutex = CreateMutex( NULL , FALSE , STALKER_PRESENCE_MUTEX );

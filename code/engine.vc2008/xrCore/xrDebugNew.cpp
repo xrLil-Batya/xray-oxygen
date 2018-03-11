@@ -140,15 +140,10 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 
 const char* xrDebug::error2string(long code)
 {
-	const char*				result = 0;
-	static	string1024	desc_storage;
+	string1024	desc_storage;
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
 
-	if (!result)
-	{
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
-		result = desc_storage;
-	}
-	return result;
+	return desc_storage;
 }
 
 void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)

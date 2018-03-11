@@ -34,6 +34,7 @@ size_t BuildStackTrace(EXCEPTION_POINTERS* exPtrs, char* buffer, size_t capacity
 	}
 	return frameCount;
 }
+#pragma warning(push)
 #pragma warning(disable: 4311 4302)
 size_t BuildStackTrace(char* buffer, size_t capacity, size_t lineCapacity)
 {
@@ -55,6 +56,6 @@ size_t BuildStackTrace(char* buffer, size_t capacity, size_t lineCapacity)
 	}
 	return 0;
 }
-#pragma warning(default: 4311 4302)
+#pragma warning(pop)
 
 StackTraceInfo StackTrace = {};
