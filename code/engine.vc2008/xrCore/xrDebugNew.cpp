@@ -16,7 +16,7 @@
 #include <signal.h>							// for signals
 #include <sal.h>
 #include <intrin.h> // for __debugbreak
-
+#include "cpuid.h"
 #include <DbgHelp.h>
 
 #define DEBUG_INVOKE	__debugbreak()
@@ -100,7 +100,7 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
-	MessageBox(nullptr, message.c_str(), "Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	MessageBox(nullptr, message.c_str(), "X-ray error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 
 	DEBUG_INVOKE;
 
@@ -196,7 +196,7 @@ void __cdecl xrDebug::fatal(const char *file, int line, const char *function, co
 
 	bool		ignore_always = true;
 
-	backend("fatal error", "<no expression>", buffer, 0, file, line, function, ignore_always);
+	backend("Fatal error", "<no expression>", buffer, 0, file, line, function, ignore_always);
 }
 
 typedef void(*full_memory_stats_callback_type) ();
@@ -213,8 +213,8 @@ int out_of_memory_handler(size_t size)
 		u32					process_heap = mem_usage_impl();
 		int					eco_strings = g_pStringContainer->stat_economy();
 		int					eco_smem = g_pSharedMemoryContainer->stat_economy();
-		Msg("* [x-ray]: process heap[%d K]", process_heap / 1024);
-		Msg("* [x-ray]: economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);
+		Msg("* [X-ray]: Process heap[%d K]", process_heap / 1024);
+		Msg("* [X-ray]: Economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);
 	}
 
 	Debug.fatal(DEBUG_INFO, "Out of memory. Memory request: %d K", size / 1024);
@@ -258,7 +258,7 @@ typedef int(__cdecl * _PNH)(size_t);
 IC void handler_base(const char* reason_string)
 {
 	bool alw_ignored = false;
-	Debug.backend("error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
+	Debug.backend("Error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
 }
 
 static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *function, const wchar_t *file, unsigned int line, uintptr_t reserved
@@ -293,40 +293,52 @@ static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *
 		xr_strcpy(file_, __FILE__);
 	}
 
-	Debug.backend("error handler is invoked!", expression_, 0, 0, file_, line, function_, ignore_always);
+	Debug.backend("Error handler is invoked!", expression_, 0, 0, file_, line, function_, ignore_always);
 }
 
 IC void pure_call_handler()
 {
-	handler_base("pure virtual function call");
+	handler_base("Pure virtual function call");
 }
 
 #ifdef XRAY_USE_EXCEPTIONS
 IC void unexpected_handler()
 {
-	handler_base("unexpected program termination");
+	handler_base("Unexpected program termination");
 }
 #endif // XRAY_USE_EXCEPTIONS
 
 IC void abort_handler(int signal)
 {
-	handler_base("application is aborting");
+	handler_base("Application is aborting");
 }
 
 IC void floating_point_handler(int signal)
 {
-	handler_base("floating point error");
+	handler_base("Floating point error");
 }
 
 IC void illegal_instruction_handler(int signal)
 {
-	handler_base("illegal instruction");
+	//#VERTVER: We're using xrCore CPUID cuz it's more faster then another
+	if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+	{
+		handler_base("SSE3 instructions isn't legal for your CPU");
+	}
+	else if (!CPU::Info.hasFeature(CPUFeature::AVX))
+	{
+		handler_base("AVX instructions isn't legal for your CPU");
+	}
+	else 
+	{
+		handler_base("Illegal instruction");
+	}
 }
 
 
 IC void termination_handler(int signal)
 {
-	handler_base("termination with exit code 3");
+	handler_base("Termination with exit code 3");
 }
 
 void debug_on_thread_spawn()
@@ -367,7 +379,7 @@ typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("* ####[UNHANDLED EXCEPTION]####");
-	Log("* X-Ray Oxygen crash handler ver. 1");
+	Log("* X-Ray Oxygen crash handler ver. 1.2");
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
 	if (pCrashHandler != nullptr)
@@ -375,7 +387,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 		pCrashHandler();
 	}
 
-	//Flush, after crashhandler. We include log file in a minidump
+	// Flush, after crashhandler. We include log file in a minidump
 	if (shared_str_initialized)
 		FlushLog();
 
@@ -456,7 +468,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 						const char* logFileName = log_name();
 						if (logFileName == nullptr) break;
 
-						//Don't use X-Ray FS - it can be corrupted at this point
+						// Don't use X-Ray FS - it can be corrupted at this point
 						HANDLE hLogFile = CreateFile(logFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 						if (hLogFile == INVALID_HANDLE_VALUE) break;
 
@@ -496,7 +508,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 				}
 				__except (EXCEPTION_EXECUTE_HANDLER)
 				{
-					//better luck next time
+					// better luck next time
 				}
 
 				MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;

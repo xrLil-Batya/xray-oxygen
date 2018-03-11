@@ -35,7 +35,7 @@ public:
 
 	static bool HighEndCPU(void)
 	{
-		return CPU_Rep.f_1_ECX_[25];		// AES Instruction
+		return CPU_Rep.f_1_ECX_[19];		// SSE4.1
 	}
 
 private:
@@ -44,6 +44,18 @@ private:
 	class CPUID_Internal
 	{
 	public:
+		int	nIds_;
+		int nExIds_;
+		std::string vendor_;
+		std::string brand_;
+		bool isIntel_;
+		bool isAMD_;
+		std::bitset<32>	f_1_ECX_;
+		std::bitset<32>	f_1_EDX_;
+		std::vector<std::array<int, 4>>	data_;
+		std::vector<std::array<int, 4>>	extdata_;
+
+		// class CPUID_Internal
 		CPUID_Internal()
 			:
 			nIds_	{ NULL },
@@ -121,16 +133,5 @@ private:
 
 			
 		};
-
-		int nIds_;
-		int nExIds_;
-		std::string vendor_;
-		std::string brand_;
-		bool isIntel_;
-		bool isAMD_;
-		std::bitset<32> f_1_ECX_;
-		std::bitset<32> f_1_EDX_;
-		std::vector<std::array<int, 4>> data_;
-		std::vector<std::array<int, 4>> extdata_;
 	};
 };

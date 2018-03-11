@@ -14,7 +14,7 @@ using namespace System::Security::Permissions;
 [assembly:AssemblyConfigurationAttribute(L"")];
 [assembly:AssemblyCompanyAttribute(L"")];
 [assembly:AssemblyProductAttribute(L"xrLauncher")];
-[assembly:AssemblyCopyrightAttribute(L"Copyright (c)  2017")];
+[assembly:AssemblyCopyrightAttribute(L"Copyright (c)  2018")];
 [assembly:AssemblyTrademarkAttribute(L"")];
 [assembly:AssemblyCultureAttribute(L"")];
 
@@ -29,7 +29,7 @@ using namespace System::Security::Permissions;
 // Можно задать все значения или принять номера сборки и редакции по умолчанию
 // используя "*", как показано ниже:
 
-[assembly:AssemblyVersionAttribute("1.0.*")];
+[assembly:AssemblyVersionAttribute("1.3.*")];
 
 [assembly:ComVisible(false)];
 

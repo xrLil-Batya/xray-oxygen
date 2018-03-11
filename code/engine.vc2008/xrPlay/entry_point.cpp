@@ -12,12 +12,12 @@
 void CreateRendererList();					// In RenderList.cpp
 
 /***********************************************
-* RunXRLauncher() - main method for initialize launcher
-* and run all elements.
+* RunXRLauncher() - main method for initialize 
+* launcher and run all elements.
 ***********************************************/
 int RunXRLauncher()
 {
-	// Get initialize
+	// Get initialize launcher
 	xrPlay::Application::EnableVisualStyles();
 	xrPlay::Application::SetCompatibleTextRenderingDefault(false);
 	xrPlay::Application::Run(gcnew xrPlay::xrLauncherWnd);
@@ -39,19 +39,22 @@ extern DLL_API int RunApplication(char* commandLine);
 ***********************************************/
 int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
-
 	std::string params = lpCmdLine;
 
 	// If we don't needy for a excetions - we can delete exceptions with option "-silent"
-	if (!strstr(lpCmdLine, "-silent")) {
+	if (!strstr(lpCmdLine, "-silent")) 
+	{
+		//#VERTVER: We're using our CPUID cuz using the xrCore CPUID may affect on stability 
 		if (!CPUID::AVX())
 		{
-			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX is not a support!", MB_OK | MB_ICONWARNING);
+			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
 		}
 
+		// Checking for SSE4.1
 		if (!CPUID::HighEndCPU())
 		{
-			MessageBox(NULL, "AES was appeared after AMD Bulldozers\nand Intel Westmere", "Your CPU doesn't have new instructions", MB_OK | MB_ICONASTERISK);
+			MessageBox(NULL, "It's can affect on the stability of the game.", "SSE4.1 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
+			//#VERTVER: We're checking for SSE4.1 instructions cuz MSVC compiler use the SSE4.1 for CPU manipulation 
 		}
 	}
 
@@ -67,6 +70,7 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		params = GetParams();
 	}
 	/*
+	// Unused method
 	if (!strstr(lpCmdLine, "-launcher")) {
 		if (strstr(lpCmdLine, "r2")) {
 			xrPlay::type_ptr = 1;

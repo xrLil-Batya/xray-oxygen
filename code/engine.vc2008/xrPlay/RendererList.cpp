@@ -105,7 +105,7 @@ bool SupportsDX11Rendering()
 	if (FAILED(hr))
 		Msg("* D3D11: device creation failed with hr=0x%08x", hr);
 
-	if (pContext) pContext->Release();
+	if (pContext)	pContext  ->Release();
 	if (pSwapChain) pSwapChain->Release();
 	if (pd3dDevice) pd3dDevice->Release();
 
