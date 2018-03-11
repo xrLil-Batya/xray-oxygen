@@ -6186,6 +6186,9 @@
     <ClInclude Include="MercuryBall.h">
       <Filter>Core\Client\Objects</Filter>
     </ClInclude>
+    <ClInclude Include="c_artefact.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Artifacts</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8854,6 +8857,9 @@
     </ClCompile>
     <ClCompile Include="MercuryBall.cpp">
       <Filter>Core\Client\Objects</Filter>
+    </ClCompile>
+    <ClCompile Include="c_artefact.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Artifacts</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
