@@ -20,6 +20,7 @@
 #include "ai_space.h"
 #include "patrol_path.h"
 #include "patrol_path_storage.h"
+#include "c_artefact.h"
 
 #define	FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 
@@ -608,6 +609,8 @@ void CArtefact::script_register(lua_State *L)
 		.def(						constructor<>() )
 		.def("FollowByPath",		&CArtefact::FollowByPath)
 		.def("SwitchVisibility",	&CArtefact::SwitchVisibility)
-		.def("GetAfRank",			&CArtefact::GetAfRank)
+		.def("GetAfRank",			&CArtefact::GetAfRank),
+
+        class_<C_Arterfact, CArtefact>("C_Artefact").def(constructor<>())
 	];
 }
