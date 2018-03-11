@@ -14,7 +14,7 @@
     <ProjectGuid>{64ED3039-C2AD-4EDF-A058-7660E7C4E10C}</ProjectGuid>
     <Keyword>Win32Proj</Keyword>
     <ProjectName>LwSDK</ProjectName>
-    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
