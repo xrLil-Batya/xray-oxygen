@@ -38,9 +38,10 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	const char*				endline = "\n";
 	const char*				prefix = "[error]";
 	bool				extended_description = (description && !argument0 && strchr(description, '\n'));
-	for (int i = 0; i < 2; ++i) {
-		if (!i)
-			buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sFATAL ERROR%s%s", endline, endline, endline);
+	buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sFATAL ERROR%s%s", endline, endline, endline);
+
+	for (int i = 0; i < 2; ++i) 
+	{
 		buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sExpression    : %s%s", prefix, expression, endline);
 		buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sFunction      : %s%s", prefix, function, endline);
 		buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sFile          : %s%s", prefix, file, endline);
@@ -139,15 +140,10 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 
 const char* xrDebug::error2string(long code)
 {
-	const char*				result = 0;
-	static	string1024	desc_storage;
+	string1024	desc_storage;
+	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
 
-	if (!result)
-	{
-		FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
-		result = desc_storage;
-	}
-	return result;
+	return desc_storage;
 }
 
 void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
@@ -379,7 +375,7 @@ typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("* ####[UNHANDLED EXCEPTION]####");
-	Log("* X-Ray Oxygen crash handler ver. 1.2");
+	Log("* X-Ray Oxygen crash handler ver. 1.2.f");
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
 	if (pCrashHandler != nullptr)
@@ -411,7 +407,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 		}
 	}
 
-	if (hDll == NULL)
+	if (!hDll)
 	{
 		// load any version we can
 		hDll = ::LoadLibrary("DBGHELP.DLL");
@@ -430,7 +426,10 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 
 			// work out a good place for the dump file
 			timestamp(t_stemp);
-			xr_strcpy(szDumpPath, "logs\\");
+
+			FS.update_path(szDumpPath, "$dump$", "");
+
+//			xr_strcpy(szDumpPath, "logs\\");
 			xr_strcat(szDumpPath, Core.ApplicationName);
 			xr_strcat(szDumpPath, "_");
 			xr_strcat(szDumpPath, Core.UserName);
@@ -473,7 +472,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 						if (hLogFile == INVALID_HANDLE_VALUE) break;
 
 						LARGE_INTEGER FileSize;
-						BOOL bResult = GetFileSizeEx(hLogFile, &FileSize);
+						bool bResult = (bool)GetFileSizeEx(hLogFile, &FileSize);
 						if (!bResult)
 						{
 							CloseHandle(hLogFile);
@@ -494,7 +493,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 						do 
 						{
 							DWORD BytesReaded = 0;
-							bResult = ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, NULL);
+							bResult = (bool)ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, NULL);
 							if (!bResult)
 							{
 								CloseHandle(hLogFile);
@@ -514,8 +513,8 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 				MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
 				MINIDUMP_USER_STREAM LogFileUserStream;
 
-				ZeroMemory(&UserStreamsInfo, sizeof(UserStreamsInfo));
-				ZeroMemory(&LogFileUserStream, sizeof(LogFileUserStream));
+				std::memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
+				std::memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
 				if (logFileContent != nullptr)
 				{
 					UserStreamsInfo.UserStreamCount = 1;
