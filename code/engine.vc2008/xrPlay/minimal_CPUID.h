@@ -1,8 +1,4 @@
-/*****************************************
-* minimal_CPUID.h - Minimal instructions
-* for initialize Oxygen's xrPlay.
-* Some methods of CPUID maded by Microsoft.
-******************************************/
+// minimal_CPUID.h - Minimal CPUID for xrPlay
 #pragma once
 #include <vector>  
 #include <bitset>  
@@ -27,7 +23,8 @@ private:
 		std::bitset<32>	f_1_EDX_;
 		std::vector<std::array<int, 4>>	data_;
 		std::vector<std::array<int, 4>>	extdata_;
-		CPUID_Internal() :
+		CPUID_Internal() 
+		 :
 			nIds_	{ 0 },
 			nExIds_	{ 0 },
 			f_1_ECX_{ 0 },
