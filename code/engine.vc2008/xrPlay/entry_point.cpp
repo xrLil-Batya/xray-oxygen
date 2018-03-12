@@ -31,7 +31,7 @@ const char* GetParams()
 	return xrPlay::params_list;
 }
 
-extern DLL_API int RunApplication(char* commandLine);
+DLL_API int RunApplication(char* commandLine);
 
 /***********************************************
 * WinMain() - Parametres for starting launcher
@@ -68,18 +68,7 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		}
 		params = GetParams();
 	}
-	/*
-	// Unused method
-	if (!strstr(lpCmdLine, "-launcher")) {
-		if (strstr(lpCmdLine, "r2")) {
-			xrPlay::type_ptr = 1;
-			msclr::interop::marshal_context marsh;
-			System::String^ rendered = "-r2";
-			xrPlay::params_list = marsh.marshal_as<char const*>(textBox1->Text + " " + rendered);
-
-		}
-	}
-	*/
+	
 	CreateRendererList();
 	RunApplication(params.data());
 
