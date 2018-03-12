@@ -323,11 +323,11 @@ IC void illegal_instruction_handler(int signal)
 	//#VERTVER: We're using xrCore CPUID cuz it's more faster then another
 	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
 	{
-		handler_base("SSE4.1 and AVX instructions isn't legal for your CPU");
+		handler_base("SSE4.1 and AVX instructions isn't legal on your CPU");
 	}
 	else if (!CPU::Info.hasFeature(CPUFeature::AVX)) 
 	{
-		handler_base("AVX instructions isn't legal for your CPU");
+		handler_base("AVX instructions isn't legal on your CPU");
 	}
 	else 
 	{

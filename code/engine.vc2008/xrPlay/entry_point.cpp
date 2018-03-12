@@ -5,8 +5,9 @@
 #include "xrLauncherWnd.h"
 #include <intrin.h>  
 #include "minimal_CPUID.h"
+#include "../xrCore/cpuid.h"
+#include "../xrCore/_math.h"
 #pragma comment(lib, "xrEngine.lib")
-
 #define DLL_API __declspec(dllimport)
 
 void CreateRendererList();					// In RenderList.cpp

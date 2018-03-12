@@ -157,9 +157,6 @@ unsigned int query_processor_info(processor_info* pinfo)
 	if (f_1_EBX[27])           pinfo->features |= static_cast<unsigned>(CPUFeature::AVX512ER);
 	if (f_1_EBX[28])           pinfo->features |= static_cast<unsigned>(CPUFeature::AVX512CD);
 	//End
-	//if (f_1_EBX
-
-
 	//Edit sv3nk
 	if ((cpui[2] & 0x8) > 0)   pinfo->features |= static_cast<unsigned>(CPUFeature::MWait);
 
