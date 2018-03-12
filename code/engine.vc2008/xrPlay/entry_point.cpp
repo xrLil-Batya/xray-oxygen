@@ -5,8 +5,6 @@
 #include "xrLauncherWnd.h"
 #include <intrin.h>  
 #include "minimal_CPUID.h"
-#include "../xrCore/cpuid.h"
-#include "../xrCore/_math.h"
 #pragma comment(lib, "xrEngine.lib")
 #define DLL_API __declspec(dllimport)
 
@@ -45,14 +43,14 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 	// If we don't needy for a excetions - we can delete exceptions with option "-silent"
 	if (!strstr(lpCmdLine, "-silent")) 
 	{
-		//#VERTVER: We're using our CPUID cuz using the xrCore CPUID may affect on stability 
+		//#VERTVER: We're using our CPUID cuz initialization xrCore CPUID can affect on starting launcher
 		if (!CPUID::AVX())
 		{
 			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
 		}
 
 		// Checking for SSE4.1
-		if (!CPUID::HighEndCPU())
+		if (!CPUID::SSE41())
 		{
 			MessageBox(NULL, "It's can affect on the stability of the game.", "SSE4.1 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
 			//#VERTVER: We're checking for SSE4.1 instructions cuz MSVC compiler use the SSE4.1 for CPU manipulation 

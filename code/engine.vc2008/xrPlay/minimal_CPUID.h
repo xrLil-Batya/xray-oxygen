@@ -16,7 +16,7 @@ class CPUID {
 	class CPUID_Internal;
 public:
 	static bool AVX			(void)	{ return CPU_Rep.f_1_ECX_[28]; }		// AVX
-	static bool HighEndCPU	(void)	{ return CPU_Rep.f_1_ECX_[19]; }		// SSE4.1
+	static bool SSE41		(void)	{ return CPU_Rep.f_1_ECX_[19]; }		// SSE4.1
 private:
 	static const CPUID_Internal CPU_Rep;
 	class CPUID_Internal {
