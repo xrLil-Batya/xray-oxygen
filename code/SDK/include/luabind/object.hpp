@@ -1090,6 +1090,8 @@ private:
 			{
 				for (std::size_t i = 0; i < x.n; ++i)
 					objs[i] = *x.refs[i];
+
+				n = x.n;
 			}
 
 			std::size_t n;
