@@ -192,7 +192,6 @@ float		ps_r2_ls_psm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_ssm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_bloom_threshold	= .00001f;				// r2-only
 
-
 Flags32     ps_actor_shadow_flags       = { 0 };
 float		ps_r2_mblur					= .3f;				// .5f
 
@@ -254,7 +253,6 @@ int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
 
 int ps_rs_loading_stages = 0;
 
-float		ps_prop_ss_blend				=	.066f;
 //- Mad Max
 float		ps_r2_gloss_factor			= 4.0f;
 //- Mad Max

@@ -12,7 +12,6 @@
 #include "blender_luminance.h"
 #include "blender_ssao.h"
 #include "blender_fxaa.h"
-#include "blender_ss.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -213,7 +212,6 @@ CRenderTarget::CRenderTarget		()
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
 	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
-	b_sunshafts						= xr_new<CBlender_ss>					();
 
 	//	NORMAL
 	{
