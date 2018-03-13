@@ -31,7 +31,6 @@ public:
 	IBlender*					b_ssao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
-	IBlender*					b_fxaa;
 	IBlender*					b_sunshafts;
 #ifdef DEBUG
 	struct		dbg_line_t		{
@@ -90,9 +89,6 @@ private:
 	// OCCq
 	ref_shader					s_occq;
 
-    ref_shader                  s_fxaa;
-    ref_geom					g_fxaa;	
-	
 	// Accum
 	ref_shader					s_accum_mask	;
 	ref_shader					s_accum_direct	;
@@ -210,7 +206,6 @@ public:
 	void						phase_scene_begin		();
 	void						phase_scene_end			();
 	void						phase_occq				();
-	void						phase_fxaa              ();
 	void						phase_wallmarks			();
 	void						phase_smap_direct		(light* L,	u32 sub_phase);
 	void						phase_smap_direct_tsh	(light* L,	u32 sub_phase);
