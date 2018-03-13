@@ -1,10 +1,11 @@
 #pragma once
 #include <string>
+#include "xrCore/xrCore.h"
 #include "../xrECoreLite/EditObject.h"
 
 struct Mesh
 {
-private:
+public:
 	std::string path;
 	CEditableObject* mesh;
 
