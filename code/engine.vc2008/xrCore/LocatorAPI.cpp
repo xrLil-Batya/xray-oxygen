@@ -1563,6 +1563,23 @@ void CLocatorAPI::unlock_rescan()
 		rescan_pathes();
 }
 
+bool CLocatorAPI::getFileName(LPCSTR path, string512& outFilename)
+{
+    //std::experimental::filesystem
+    std::experimental::filesystem::path stdPath = path;
+    if (stdPath.has_filename())
+    {
+        std::experimental::filesystem::path fileNamePath = stdPath.filename();
+        std::string fileNameStr = fileNamePath.u8string();
+        R_ASSERT2(fileNameStr.size() < sizeof(string512), fileNameStr.c_str());
+
+        xr_strcpy(outFilename, fileNameStr.c_str());
+        return true;
+    }
+
+    return false;
+}
+
 void CLocatorAPI::check_pathes()
 {
 	if (m_Flags.is(flNeedRescan)&&(0==m_iLockRescan)){

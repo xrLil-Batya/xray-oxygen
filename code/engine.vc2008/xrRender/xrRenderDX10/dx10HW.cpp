@@ -22,6 +22,8 @@ void	free_vid_mode_list			();
 void	fill_render_mode_list		();
 void	free_render_mode_list		();
 
+ENGINE_API bool isGraphicDebugging;
+
 CHW HW;
 
 CHW::CHW() : m_pAdapter(0), pDevice(NULL), m_move_window(true)
@@ -40,12 +42,12 @@ CHW::~CHW()
 //////////////////////////////////////////////////////////////////////
 void CHW::CreateD3D()
 {
-	IDXGIFactory * pFactory;
-	R_CHK( CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory)) );
+	IDXGIFactory1 * pFactory;
+	R_CHK( CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory)) );
 
 	m_bUsePerfhud = false;
 
-	pFactory->EnumAdapters(0, &m_pAdapter);
+	pFactory->EnumAdapters1(0, &m_pAdapter);
 
 	pFactory->Release();
 }
@@ -72,8 +74,8 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 		m_DriverType = D3D_DRIVER_TYPE_REFERENCE;
 
 	// Display the name of video board
-	DXGI_ADAPTER_DESC Desc;
-	R_CHK( m_pAdapter->GetDesc(&Desc) );
+	DXGI_ADAPTER_DESC1 Desc;
+	R_CHK( m_pAdapter->GetDesc1(&Desc) );
 	//	Warning: Desc.Description is wide string
 	Msg		("* GPU [vendor:%X]-[device:%X]: %S", Desc.VendorId, Desc.DeviceId, Desc.Description);
 	Caps.id_vendor	= Desc.VendorId;
@@ -116,6 +118,15 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 
 	//	Additional set up
 	UINT createDeviceFlags = 0;
+    if (isGraphicDebugging)
+    {
+#ifdef USE_DX11
+        //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
+        createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+#else
+        createDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
+#endif
+}
 	sd.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
 	HRESULT R;
 #ifdef USE_DX11

@@ -2,6 +2,8 @@
 
 #ifdef USE_DX11
 
+ENGINE_API bool isGraphicDebugging;
+
 #	include "ResourceManager.h"
 
 	template<typename T>
@@ -13,7 +15,7 @@
 		typedef CResourceManager::map_HS	MapType;
 		typedef ID3D11HullShader DXIface;
 
-		static inline const char* GetShaderExt() {return ".hs";}
+		static inline const char* GetShaderExt() {return "hs_";}
 		static inline const char* GetCompilationTarget() {return "hs_5_0";}
 		static inline DXIface* CreateHWShader(DWORD const* buffer, size_t size)
 		{
@@ -31,7 +33,7 @@
 		typedef CResourceManager::map_DS	MapType;
 		typedef ID3D11DomainShader			DXIface;
 
-		static inline const char* GetShaderExt() {return ".ds";}
+		static inline const char* GetShaderExt() {return "ds_";}
 		static inline const char* GetCompilationTarget() {return "ds_5_0";}
 		static inline DXIface* CreateHWShader(DWORD const* buffer, size_t size)
 		{
@@ -49,7 +51,7 @@
 		typedef CResourceManager::map_CS	MapType;
 		typedef ID3D11ComputeShader			DXIface;
 
-		static inline const char* GetShaderExt() {return ".cs";}
+		static inline const char* GetShaderExt() {return "cs_";}
 		static inline const char* GetCompilationTarget() {return "cs_5_0";}
 		static inline DXIface* CreateHWShader(DWORD const* buffer, size_t size)
 		{
@@ -97,9 +99,16 @@
 			strncpy(shName, name, strSize);
 			shName[strSize] = 0;
 
+            string64 PrependPath;
+            //ZeroMemory(PrependPath, sizeof(PrependPath));
+            memcpy(PrependPath, shName, sizeof(PrependPath));
+            char* ClearShaderName = NULL;
+            char* PathStart = strtok_s(PrependPath, "\\", &ClearShaderName);
+            //memcpy(shName, PathStart, sizeof(string_path) - sizeof(PrependPath));
+
 			// Open file
 			string_path					cname;
-			strconcat					(sizeof(cname), cname,::Render->getShaderPath(),/*name*/shName, ShaderTypeTraits<T>::GetShaderExt());
+			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), PrependPath, "\\", ShaderTypeTraits<T>::GetShaderExt(),/*name*/ClearShaderName, ".hlsl");
 			FS.update_path				(cname,	"$game_shaders$", cname);
 
 			// duplicate and zero-terminate
@@ -112,9 +121,9 @@
 
 			// Compile
             DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-            if (strstr(Core.Params, "-shader_debug"))
+            if (isGraphicDebugging)
             {
-                shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+                shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
             }
 			HRESULT	const _hr			= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)sh );
 
