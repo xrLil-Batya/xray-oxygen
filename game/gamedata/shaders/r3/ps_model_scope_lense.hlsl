@@ -28,24 +28,24 @@ float4 main( v2p I ) : SV_Target
 //	float2 	distort	= s_distort.Sample( smp_rtlinear, I.tc);
 //	float3	image 	= s_base.Sample( smp_rtlinear, I.tc + offset);
 	
-	float4	t_base 		= s_base.Sample		( smp_base, I.tc0);		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ	
- //	float4	t_skymap 	= s_skymap.Sample	( smp_base, I.tc0); 	// пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+	float4	t_base 		= s_base.Sample		( smp_base, I.tc0);		// Текстура сетки	
+ //	float4	t_skymap 	= s_skymap.Sample	( smp_base, I.tc0); 	// Карта отражения неба
 	
-	I.tc0.x = (I.tc0.x-0.5f)*(screen_res.y*screen_res.z)+0.5f;	// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅ, пїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ	
-	float4	t_vp2	 = s_vp2.Sample	( smp_base, I.tc0);  			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+	I.tc0.x = (I.tc0.x-0.5f)*(screen_res.y*screen_res.z)+0.5f;	// Растягиваем картинку в линзе так, чтобы на любом разрешении экрана были правильные пропорции	
+	float4	t_vp2	 = s_vp2.Sample	( smp_base, I.tc0);  			// Изображение со второго вьюпорта
 	float3	final	 = float3(0, 0, 0);
 	
-	{	//** пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅ **//
+	{	//** Стандартный режим **//
 	
-		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ
+		// Текущая и следующая текстура неба
 		//float3	env0		= texCUBE	(s_env0, I.tc1);
 		//float3	env1		= texCUBE	(s_env1, I.tc1);
-		//float3	env			= lerp		(env0, env1, L_ambient.w);	// пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		//float3	env			= lerp		(env0, env1, L_ambient.w);	// Их миксовка
 		
-		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
-		float3 	base	= lerp	(t_vp2, t_base, t_base.a);		// пїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+		// Миксуем всё и собираем финальную картинку
+		float3 	base	= lerp	(t_vp2, t_base, t_base.a);		// Сетку с вьюпортом
 				final	= base;
-		//		final	= lerp	(base,  env,    t_skymap.a);	// base c пїЅпїЅпїЅпїЅпїЅ
+		//		final	= lerp	(base,  env,    t_skymap.a);	// base c небом
 	}
 	
 	// out

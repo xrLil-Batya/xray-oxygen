@@ -33,7 +33,6 @@ public:
 	IBlender*					b_combine;
 	IBlender*					b_fxaa;
 	IBlender*					b_sunshafts;
-	IBlender*					b_droplets;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -96,11 +95,8 @@ public:
 private:
 	// OCCq
 	ref_shader					s_occq;
-	
 	ref_shader					s_SunShafts;
-	ref_shader					s_droplets;
-	
-	// FXAA
+
     ref_shader                  s_fxaa;
     ref_geom					g_fxaa;	
 	
@@ -232,7 +228,6 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
-	void						phase_droplets          ();
 	void						shadow_direct			(light* L, u32 dls_phase);
 
 	bool						need_to_render_sunshafts();

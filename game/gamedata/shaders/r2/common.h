@@ -34,6 +34,28 @@
 // #define USE_SUNMASK                		//- shader defined
 // #define DBG_TMAPPING
 //////////////////////////////////////////////////////////////////////////////////////////
++// Глобальные параметры шейдеров --#SM+#--
+uniform float4x4	m_script_params; 
+uniform	half4		m_hud_params;	// zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL
+uniform	half4		m_blender_mode;	// x\y = [0 - default, 1 - night vision, 2 - thermal vision]; x - основной вьюпорт, y - второй впьюпорт, z = ?, w = [0 - идёт рендер обычного объекта, 1 - идёт рендер детальных объектов (трава, мусор)]
+
+// Параметры, уникальные для разных моделей --#SM+#--
+uniform float4x4	m_obj_camo_data; 
+uniform half4		m_obj_custom_data;
+uniform half4		m_obj_generic_data;
+
+// Активен-ли двойной рендер --#SM+#--
+inline bool isSecondVPActive()
+{
+	return (m_blender_mode.z == 1.f);
+}
+
+// Возвращает 1.f, если сейчас идёт рендер второго вьюпорта --#SM+#--
+inline bool isSecondVP()
+{
+	return m_blender_mode.z > 0.5f;
+}
+//////////////////////////////////////////////////////////////////////////////////////////
 #ifndef SMAP_size
 #define SMAP_size        1024
 #endif
