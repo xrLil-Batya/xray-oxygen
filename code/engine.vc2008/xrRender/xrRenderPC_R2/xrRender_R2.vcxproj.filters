@@ -660,6 +660,9 @@
     <ClInclude Include="Blender_ss.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="blender_droplets.h" />
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1151,8 +1154,14 @@
     <ClCompile Include="r2_rendertarget_phase_ss.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
+	<ClCompile Include="r2_rendertarget_phase_droplets.cpp" />
+      <Filter>Core_Target</Filter>
+    </ClCompile>
     <ClCompile Include="Blender_ss.cpp">
       <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_droplets.cpp" />
+	    <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
   </ItemGroup>

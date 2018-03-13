@@ -231,15 +231,15 @@ float		ps_r2_slight_fade			= 0.5f;				// 1.f
 // KD start
 int			ps_r__detail_radius = 49;
 u32			dm_size = 24;
-u32 		dm_cache1_line = 12;	//dm_size*2/dm_cache1_count
-u32			dm_cache_line = 49;	//dm_size+1+dm_size
-u32			dm_cache_size = 2401;	//dm_cache_line*dm_cache_line
-float		dm_fade = 47.5;	//float(2*dm_size)-.5f;
+u32 		dm_cache1_line = 12;
+u32			dm_cache_line = 49;
+u32			dm_cache_size = 2401;
+float		dm_fade = 47.5;
 u32			dm_current_size = 24;
-u32 		dm_current_cache1_line = 12;	//dm_current_size*2/dm_cache1_count
-u32			dm_current_cache_line = 49;	//dm_current_size+1+dm_current_size
-u32			dm_current_cache_size = 2401;	//dm_current_cache_line*dm_current_cache_line
-float		dm_current_fade = 47.5;	//float(2*dm_current_size)-.5f;
+u32 		dm_current_cache1_line = 12;
+u32			dm_current_cache_line = 49;
+u32			dm_current_cache_size = 2401;
+float		dm_current_fade = 47.5;
 float		ps_current_detail_density = 0.6;
 
 //	x - min (0), y - focus (1.4), z - max (100)
@@ -260,8 +260,7 @@ float		ps_prop_ss_sample_step_phase1	=	.03f;
 //float		ps_prop_ss_sample_step_phase2	=	.33f;
 float		ps_prop_ss_blend				=	.066f;
 float		ps_prop_ss_intensity			=	1.f;
-float		ps_r2_rain_rops_debug_control   =   1.f;
-
+float		droplets_power_debug            =   1.f;
 
 //- Mad Max
 float		ps_r2_gloss_factor			= 4.0f;
@@ -820,9 +819,6 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_sun",				&ps_r2_ls_flags,			R2FLAG_SUN		);
 	CMD3(CCC_Mask,		"r2_sun_details",		&ps_r2_ls_flags,			R2FLAG_SUN_DETAILS);
 	CMD3(CCC_Mask,		"r2_sun_focus",			&ps_r2_ls_flags,			R2FLAG_SUN_FOCUS);
-//	CMD3(CCC_Mask,		"r2_sun_static",		&ps_r2_ls_flags,			R2FLAG_SUN_STATIC);
-//	CMD3(CCC_Mask,		"r2_exp_splitscene",	&ps_r2_ls_flags,			R2FLAG_EXP_SPLIT_SCENE);
-//	CMD3(CCC_Mask,		"r2_exp_donttest_uns",	&ps_r2_ls_flags,			R2FLAG_EXP_DONT_TEST_UNSHADOWED);
 	CMD3(CCC_Mask,		"r2_exp_donttest_shad",	&ps_r2_ls_flags,			R2FLAG_EXP_DONT_TEST_SHADOWED);
 	
 	CMD3(CCC_Mask,		"r2_sun_tsm",			&ps_r2_ls_flags,			R2FLAG_SUN_TSM	);
@@ -840,7 +836,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale",		&ps_r2_sun_lumscale,		-1.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
-	CMD4(CCC_Float,		"r2_rain_drops_debug_intensity",	&ps_r2_rain_rops_debug_control,	0.f,	3.f);
+	CMD4(CCC_Float,		"r2_droplets_power_debug", &droplets_power_debug,	0.f,	1.5f);
 
 	
 	
@@ -900,7 +896,6 @@ void		xrRender_initconsole	()
 //	float		ps_r2_dof_focus			= 1.4f;					// 1.4f
 	
 	CMD3(CCC_Mask,		"r2_volumetric_lights",			&ps_r2_ls_flags,			R2FLAG_VOLUMETRIC_LIGHTS);
-//	CMD3(CCC_Mask,		"r2_sun_shafts",				&ps_r2_ls_flags,			R2FLAG_SUN_SHAFTS);
 	CMD3(CCC_Token,		"r2_sun_shafts",				&ps_r_sun_shafts,			qsun_shafts_token);
 	CMD3(CCC_SSAO_Mode,	"r2_ssao_mode",					&ps_r_ssao_mode,			qssao_mode_token);
 	CMD3(CCC_Token,		"r2_ssao",						&ps_r_ssao,					qssao_token);

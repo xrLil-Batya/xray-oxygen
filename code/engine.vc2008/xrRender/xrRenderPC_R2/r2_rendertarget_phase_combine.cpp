@@ -248,6 +248,7 @@ void	CRenderTarget::phase_combine	()
 	if (!_menu_pp)
 	{
 		phase_SunShafts();
+		phase_droplets();
 	}
 
 	// Combine everything + perform AA

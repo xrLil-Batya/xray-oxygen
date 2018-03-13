@@ -63,5 +63,13 @@ System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, Syste
 
 System::Void MeshEdit::xRayIngameToolStripMenuItem_Click(System::Object^ sender, System::EventArgs^ e) 
 {
-	mesh->ExportOgf();
+	this->saveFileDialog1->FileName = gcnew System::String(mesh->path.c_str());
+	this->saveFileDialog1->Filter = L"Stalker Mesh (*.ogf)|*.ogf";
+
+	if (saveFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
+	{
+		marshal_context context;
+		mesh->path = context.marshal_as<const char*>(saveFileDialog1->FileName);
+		mesh->ExportOgf();
+	}
 }

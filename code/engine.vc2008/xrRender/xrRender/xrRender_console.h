@@ -70,7 +70,6 @@ extern ECORE_API	Flags32		ps_r1_flags;			// r1-only
 extern ECORE_API	float		ps_r1_fog_luminance;	//1.f r1-only
 extern ECORE_API	int			ps_r1_SoftwareSkinning;	// r1-only
 extern ECORE_API	int	        ps_r2_fxaa;
-extern ECORE_API    float	    ps_r2_rain_rops_debug_control;
 
 enum
 {
@@ -211,6 +210,8 @@ extern void						xrRender_initconsole	();
 extern BOOL						xrRender_test_hw		();
 extern void						xrRender_apply_tf		();
 extern ECORE_API int			ps_r__detail_radius;
+
+extern ECORE_API float			droplets_power_debug;
 
 extern ECORE_API Flags32 ps_actor_shadow_flags;
 

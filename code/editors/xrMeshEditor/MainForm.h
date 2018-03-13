@@ -25,6 +25,7 @@ namespace ECore {
 	private: System::Windows::Forms::ToolStripMenuItem^  gameMaterialsToolStripMenuItem;
 	private: System::Windows::Forms::ListBox^  BonesList;
 	private: System::Windows::Forms::ToolStripMenuItem^  bonesListToolStripMenuItem;
+	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
 	public:
 
 	public:
@@ -92,6 +93,7 @@ namespace ECore {
 			this->gameMaterialsToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->bonesListToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
+			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
 			this->groupBox1->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();

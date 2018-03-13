@@ -330,7 +330,8 @@ static Reg ra_rematk(ASMState *as, IRRef ref)
     emit_loadn(as, r, ir_knum(ir));
   } else
 #endif
-  if (emit_canremat(REF_BASE) && ir->o == IR_BASE) {
+  if (ir->o == IR_BASE) 
+  {
     ra_sethint(ir->r, RID_BASE);  /* Restore BASE register hint. */
     emit_getgl(as, r, jit_base);
   } else if (emit_canremat(ASMREF_L) && ir->o == IR_KPRI) {
