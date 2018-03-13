@@ -2,8 +2,6 @@
 #include "mblur.h"
 #include "dof.h"
 #include "MrProperCommon.h" // [FX to mrmnwar] Cheking includes, please
-#include "aces.h"
-
 //////////////////////////////////////////////////////////////////////////////////////////
 uniform sampler2D 	s_distort;
 uniform half4 		e_barrier;	// x=norm(.8f), y=depth(.1f), z=clr
@@ -27,21 +25,12 @@ half4 	main		( /*v2p*/AntiAliasingStruct I )	: COLOR
 	half3	img		= dof(center);
 	half4 	bloom	= tex2D(s_bloom, center);
 	
-			img 	= mblur(center,tex2D(s_position,I.texCoord0),img.rgb);
-	// tone-mapping
-	half4 	color 	= combine_bloom( img, bloom ); //на кой фиг? если вы в 41 строке возdращали тот же комбайн блума с изображением, по сути, две бесполезные строчки были, а нужно было return color;
-		//color 	+= ACESFilm(color);//кхм, дикость xD
-		color 	= ACESFilm(color);//матчасть, кек
+			img 	= mblur(center,tex2D(s_position,I.texCoord0),img.rgb);; 
 	// end
 #ifdef 	USE_DISTORT
  	half3	blurred	= bloom*def_hdr	;
 	img		= lerp(img,blurred,distort.z);
 #endif
 
-	//WTF??? 
- 	//return 	combine_bloom(img,bloom);
-	
-	return color;//вот теперь верно, ловите рабочую тональную компрессию
-	
-	//а вообще, тональная компрессия делается доооо смешивания итогового изображения с блум эффектом, т.е. нужно шейдер ацес филма сделать как half3 и применять его к img, а потом уже имэйдж комбайнить с блумом, всё хуйня давайте по новой xD
+ 	return 	combine_bloom(img,bloom);
 }

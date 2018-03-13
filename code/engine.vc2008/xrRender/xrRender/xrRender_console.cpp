@@ -150,6 +150,10 @@ float		ps_r2_ssaLOD_A				= 64.f	;
 float		ps_r2_ssaLOD_B				= 48.f	;
 float		ps_r2_tf_Mipbias			= 0.0f	;
 
+Fvector		ps_r2_aa_barier				= { .8f, .1f, 0};	// r2-only
+Fvector		ps_r2_aa_weight				= { .25f,.25f,0};	// r2-only
+float		ps_r2_aa_kernel				= .5f;				// r2-only
+
 // R2-specific
 Flags32		ps_r2_ls_flags				= { R2FLAG_SUN 
 	//| R2FLAG_SUN_IGNORE_PORTALS
@@ -829,7 +833,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale",		&ps_r2_sun_lumscale,		-1.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
-	CMD4(CCC_Float,		"r2_rain_drops_debug_intensity",	&ps_r2_rain_rops_debug_control,	0.f,	3.f);
 
 	CMD3(CCC_Mask,		"r2_aa",				&ps_r2_ls_flags,			R2FLAG_AA);
 	CMD4(CCC_Float,		"r2_aa_kernel",			&ps_r2_aa_kernel,			0.3f,	0.7f	);
