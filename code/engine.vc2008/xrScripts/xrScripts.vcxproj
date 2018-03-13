@@ -138,6 +138,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>

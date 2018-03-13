@@ -328,6 +328,7 @@
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj</AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

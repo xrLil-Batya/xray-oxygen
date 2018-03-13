@@ -72,6 +72,7 @@
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ExceptionHandling>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</BufferSecurityCheck>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</BufferSecurityCheck>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</LinkTimeCodeGeneration>

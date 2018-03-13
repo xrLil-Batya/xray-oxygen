@@ -170,7 +170,7 @@
       <PreprocessorDefinitions>REL;_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>false</ExceptionHandling>
       <LanguageStandard>stdcpplatest</LanguageStandard>
-      <EnableEnhancedInstructionSet>NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

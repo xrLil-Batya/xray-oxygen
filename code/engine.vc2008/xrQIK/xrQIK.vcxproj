@@ -95,6 +95,7 @@
       <StringPooling>true</StringPooling>
       <ExceptionHandling>false</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>

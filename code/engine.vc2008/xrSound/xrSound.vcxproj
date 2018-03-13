@@ -209,6 +209,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <AdditionalDependencies>soft_oal.lib;%(AdditionalDependencies)</AdditionalDependencies>
