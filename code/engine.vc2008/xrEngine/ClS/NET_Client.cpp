@@ -9,8 +9,7 @@
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
-#include "dxerr/dxerr.h"
-#pragma comment(lib, "dxerr2015.lib")
+#include <dxerr/dxerr.h>
 //#pragma warning(pop)
 
 // {0218FA8B-515B-4bf2-9A5F-2F079D1759F3}

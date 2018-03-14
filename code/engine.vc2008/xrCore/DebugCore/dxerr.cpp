@@ -12,8 +12,8 @@
 //--------------------------------------------------------------------------------------
 
 // This version only supports UNICODE.
-
-#include "dxerr/dxerr.h"
+#include "stdafx.h"
+#include <dxerr/dxerr.h>
 
 #include <stdio.h>
 #include <algorithm>
@@ -21,9 +21,9 @@
 #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
 #include <ddraw.h>
 #include <d3d9.h>
+#include <mmeapi.h>
 #include <dsound.h>
 
-#define DIRECTINPUT_VERSION 0x800
 #include <dinput.h>
 #include <dinputd.h>
 #endif
@@ -81,7 +81,7 @@
              return L##strOut;
 
 //-----------------------------------------------------
-const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
+XRCORE_API const WCHAR* DXGetErrorStringW( _In_ HRESULT hr )
 {
    switch(hr)
    {
@@ -3457,7 +3457,7 @@ const WCHAR* WINAPI DXGetErrorStringW( _In_ HRESULT hr )
 
 
 //--------------------------------------------------------------------------------------
-void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* desc, _In_ size_t count )
+void XRCORE_API DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* desc, _In_ size_t count )
 {
     if ( !count )
         return;
@@ -3910,7 +3910,7 @@ void WINAPI DXGetErrorDescriptionW( _In_ HRESULT hr, _Out_cap_(count) WCHAR* des
 }
 
 //-----------------------------------------------------------------------------
-HRESULT WINAPI DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HRESULT hr,
+HRESULT XRCORE_API DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In_ HRESULT hr,
                          _In_opt_ const WCHAR* strMsg, _In_ bool bPopMsgBox )
 {
     WCHAR strBufferLine[128];

@@ -20,7 +20,6 @@
 #include <DbgHelp.h>
 
 #define DEBUG_INVOKE	__debugbreak()
-#pragma comment(lib,"dxerr2015.lib")
 
 XRCORE_API	xrDebug		Debug;
 
@@ -140,7 +139,7 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 
 const char* xrDebug::error2string(long code)
 {
-	string1024	desc_storage;
+	char* desc_storage = nullptr;
 	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
 
 	return desc_storage;
