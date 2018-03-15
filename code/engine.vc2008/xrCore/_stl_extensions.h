@@ -155,3 +155,7 @@ using FloatVec = xr_vector<float>;
 using IntVec = xr_vector<int>;
 using boolVec = xr_vector<bool>;
 using Fvector2Vec = xr_vector<Fvector2>;
+
+template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::equal_to<K>,
+	typename allocator = xalloc<std::pair<const K, V>>>
+	using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;

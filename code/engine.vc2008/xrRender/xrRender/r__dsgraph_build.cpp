@@ -20,16 +20,16 @@ float		r_ssaLOD_A,			r_ssaLOD_B;
 float		r_ssaGLOD_start,	r_ssaGLOD_end;
 float		r_ssaHZBvsTEX;
 
-ICF	float	CalcSSA				(float& distSQ, Fvector& C, dxRender_Visual* V)
+ICF float CalcSSA(float& distSQ, Fvector& C, dxRender_Visual* V)
 {
-	float R	= V->vis.sphere.R + 0;
-	distSQ	= Device.vCameraPosition.distance_to_sqr(C)+EPS;
-	return	R/distSQ;
+	float R = V->vis.sphere.R + 0;
+	distSQ = Device.vCameraPosition.distance_to_sqr(C) + EPS;
+	return R / distSQ;
 }
-ICF	float	CalcSSA				(float& distSQ, Fvector& C, float R)
+ICF float CalcSSA(float& distSQ, Fvector& C, float R)
 {
-	distSQ	= Device.vCameraPosition.distance_to_sqr(C)+EPS;
-	return	R/distSQ;
+	distSQ = Device.vCameraPosition.distance_to_sqr(C) + EPS;
+	return R / distSQ;
 }
 
 void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fvector& Center)
@@ -53,13 +53,15 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	// b) Should be rendered to special distort buffer in another pass
 	VERIFY						(pVisual->shader._get());
 	ShaderElement*		sh_d	= &*pVisual->shader->E[4];
-	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority/2]) {
-		mapSorted_Node* N		= mapDistort.insertInAnyWay	(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= RI.val_pObject;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= *RI.val_pTransform;
-		N->val.se				= sh_d;		// 4=L_special
+	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority/2]) 
+	{
+		_MatrixItemS temp;
+		temp.ssa		= SSA;
+		temp.pObject	= RI.val_pObject;
+		temp.pVisual	= pVisual;
+		temp.Matrix		= *RI.val_pTransform;
+		temp.se			= sh_d;
+		mapDistort.emplace_back(std::make_pair(distSQ, temp));
 	}
 
 	// Select shader
@@ -67,60 +69,58 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	if (0==sh)								return;
 	if (!pmask[sh->flags.iPriority/2])		return;
 
-	// Create common node
-	// NOTE: Invisible elements exist only in R1
-	_MatrixItem		item	= {SSA,RI.val_pObject,pVisual,*RI.val_pTransform};
-
 	// HUD rendering
 	if (RI.val_bHUD)			
 	{
 		if (sh->flags.bStrictB2F)	
 		{
-			mapSorted_Node* N		= mapSorted.insertInAnyWay	(distSQ);
-			N->val.ssa				= SSA;
-			N->val.pObject			= RI.val_pObject;
-			N->val.pVisual			= pVisual;
-			N->val.Matrix			= *RI.val_pTransform;
-			N->val.se				= sh;
+			_MatrixItemS temp;
+			temp.ssa = SSA;
+			temp.pObject = RI.val_pObject;
+			temp.pVisual = pVisual;
+			temp.Matrix = *RI.val_pTransform;
+			temp.se = sh;
+
+			mapSorted.emplace_back(std::make_pair(distSQ, temp));
 			return;
 		} 
 		else 
 		{
-			mapHUD_Node* N			= mapHUD.insertInAnyWay		(distSQ);
-			N->val.ssa				= SSA;
-			N->val.pObject			= RI.val_pObject;
-			N->val.pVisual			= pVisual;
-			N->val.Matrix			= *RI.val_pTransform;
-			N->val.se				= sh;
-#if RENDER!=R_R1
+			_MatrixItemS temp;
+			temp.ssa = SSA;
+			temp.pObject = RI.val_pObject;
+			temp.pVisual = pVisual;
+			temp.Matrix = *RI.val_pTransform;
+			temp.se = sh;
+			mapHUD.emplace_back(std::make_pair(distSQ, temp));
+
 			if (sh->flags.bEmissive) 
 			{
-				mapSorted_Node* N		= mapHUDEmissive.insertInAnyWay	(distSQ);
-				N->val.ssa				= SSA;
-				N->val.pObject			= RI.val_pObject;
-				N->val.pVisual			= pVisual;
-				N->val.Matrix			= *RI.val_pTransform;
-				N->val.se				= &*pVisual->shader->E[4];		// 4=L_special
+				_MatrixItemS temp;
+				temp.ssa = SSA;
+				temp.pObject = RI.val_pObject;
+				temp.pVisual = pVisual;
+				temp.Matrix = *RI.val_pTransform;
+				temp.se = &*pVisual->shader->E[4];		// 4=L_special
+				mapHUDEmissive.emplace_back(std::make_pair(distSQ, temp));
 			}
-#endif	//	RENDER!=R_R1
 			return;
 		}
 	}
 
 	// Shadows registering
-#if RENDER==R_R1
-	RI.L_Shadows->add_element	(item);
-#endif
 	if (RI.val_bInvisible)		return;
 
 	// strict-sorting selection
-	if (sh->flags.bStrictB2F)	{
-		mapSorted_Node* N		= mapSorted.insertInAnyWay	(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= RI.val_pObject;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= *RI.val_pTransform;
-		N->val.se				= sh;
+	if (sh->flags.bStrictB2F)	
+	{
+		_MatrixItemS temp;
+		temp.ssa = SSA;
+		temp.pObject = RI.val_pObject;
+		temp.pVisual = pVisual;
+		temp.Matrix = *RI.val_pTransform;
+		temp.se = sh;
+		mapSorted.emplace_back(std::make_pair(distSQ, temp));
 		return;
 	}
 
@@ -130,100 +130,111 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	// b) Allow to make them 100% lit and really bright
 	// c) Should not cast shadows
 	// d) Should be rendered to accumulation buffer in the second pass
-	if (sh->flags.bEmissive) {
-		mapSorted_Node* N		= mapEmissive.insertInAnyWay	(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= RI.val_pObject;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= *RI.val_pTransform;
-		N->val.se				= &*pVisual->shader->E[4];		// 4=L_special
+	if (sh->flags.bEmissive)
+	{
+		_MatrixItemS temp;
+		temp.ssa = SSA;
+		temp.pObject = RI.val_pObject;
+		temp.pVisual = pVisual;
+		temp.Matrix = *RI.val_pTransform;
+		temp.se = &*pVisual->shader->E[4];		// 4=L_special
+		mapEmissive.emplace_back(std::make_pair(distSQ, temp));
 	}
-	if (sh->flags.bWmark	&& pmask_wmark)	{
-		mapSorted_Node* N		= mapWmark.insertInAnyWay		(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= RI.val_pObject;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= *RI.val_pTransform;
-		N->val.se				= sh;							
-		return					;
+
+	if (sh->flags.bWmark && pmask_wmark)
+	{
+		_MatrixItemS temp;
+		temp.ssa = SSA;
+		temp.pObject = RI.val_pObject;
+		temp.pVisual = pVisual;
+		temp.Matrix = *RI.val_pTransform;
+		temp.se = sh;
+		mapWmark.emplace_back(std::make_pair(distSQ, temp));
+		return;
 	}
 #endif
 
-	for ( u32 iPass = 0; iPass<sh->passes.size(); ++iPass)
+	_MatrixItem item = { SSA, RI.val_pObject, pVisual, *RI.val_pTransform };
+	for (u32 iPass = 0; iPass < sh->passes.size(); ++iPass)
 	{
 		// the most common node
-		//SPass&						pass	= *sh->passes.front	();
-		//mapMatrix_T&				map		= mapMatrix			[sh->flags.iPriority/2];
-		SPass&						pass	= *sh->passes[iPass];
-		mapMatrix_T&				map		= mapMatrixPasses	[sh->flags.iPriority/2][iPass];
-		
+		SPass &pass = *sh->passes[iPass];
+		auto &map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
+
 
 #ifdef USE_RESOURCE_DEBUGGER
-	#if defined(USE_DX10) || defined(USE_DX11)
-		mapMatrixVS::TNode*			Nvs		= map.insert		(pass.vs);
-		mapMatrixGS::TNode*			Ngs		= Nvs->val.insert	(pass.gs);
-		mapMatrixPS::TNode*			Nps		= Ngs->val.insert	(pass.ps);
-	#else	//	USE_DX10
-		mapMatrixVS::TNode*			Nvs		= map.insert		(pass.vs);
-		mapMatrixPS::TNode*			Nps		= Nvs->val.insert	(pass.ps);
-	#endif	//	USE_DX10
-#else
-	#if defined(USE_DX10) || defined(USE_DX11)
-		mapMatrixVS::TNode*			Nvs		= map.insert		(&*pass.vs);
-		mapMatrixGS::TNode*			Ngs		= Nvs->val.insert	(pass.gs->gs);
-		mapMatrixPS::TNode*			Nps		= Ngs->val.insert	(pass.ps->ps);
-	#else	//	USE_DX10
-		mapMatrixVS::TNode*			Nvs		= map.insert		(pass.vs->vs);
-		mapMatrixPS::TNode*			Nps		= Nvs->val.insert	(pass.ps->ps);
-	#endif	//	USE_DX10
-#endif
-
-#ifdef USE_DX11
-#	ifdef USE_RESOURCE_DEBUGGER
-		Nps->val.hs = pass.hs;
-		Nps->val.ds = pass.ds;
-		mapMatrixCS::TNode*			Ncs		= Nps->val.mapCS.insert	(pass.constants._get());
-#	else
-		Nps->val.hs = pass.hs->sh;
-		Nps->val.ds = pass.ds->sh;
-		mapMatrixCS::TNode*			Ncs		= Nps->val.mapCS.insert	(pass.constants._get());
-#	endif
-#else
-		mapMatrixCS::TNode*			Ncs		= Nps->val.insert	(pass.constants._get());
-#endif
-		mapMatrixStates::TNode*		Nstate	= Ncs->val.insert	(pass.state->state);
-		mapMatrixTextures::TNode*	Ntex	= Nstate->val.insert(pass.T._get());
-		mapMatrixItems&				items	= Ntex->val;
-		items.push_back						(item);
-
-		// Need to sort for HZB efficient use
-		if (SSA>Ntex->val.ssa)		{ Ntex->val.ssa = SSA;
-		if (SSA>Nstate->val.ssa)	{ Nstate->val.ssa = SSA;
-		if (SSA>Ncs->val.ssa)		{ Ncs->val.ssa = SSA;
-#ifdef USE_DX11
-		if (SSA>Nps->val.mapCS.ssa)		{ Nps->val.mapCS.ssa = SSA;
-#else
-		if (SSA>Nps->val.ssa)		{ Nps->val.ssa = SSA;
-#endif
 #if defined(USE_DX10) || defined(USE_DX11)
-		if (SSA>Ngs->val.ssa)		{ Ngs->val.ssa = SSA;
-#endif	//	USE_DX10
-		if (SSA>Nvs->val.ssa)		{ Nvs->val.ssa = SSA;
-#if defined(USE_DX10) || defined(USE_DX11)
-		} } } } } }
+		mapMatrixVS::value_type&			Nvs = map.insert(pass.vs);
+		mapMatrixGS::value_type&			Ngs = Nvs->val.insert(pass.gs);
+		mapMatrixPS::value_type&			Nps = Ngs->val.insert(pass.ps);
 #else	//	USE_DX10
-		} } } } }
+		mapMatrixVS::value_type&			Nvs = map.insert(pass.vs);
+		mapMatrixPS::value_type&			Nps = Nvs->val.insert(pass.ps);
 #endif	//	USE_DX10
+#else
+#if defined(USE_DX10) || defined(USE_DX11)
+		auto &Nvs = map[&*pass.vs];
+		auto &Ngs = Nvs[pass.gs->gs];
+		auto &Nps = Ngs[pass.ps->ps];
+#else
+		auto &Nvs = map[pass.vs->vs];
+		auto &Nps = Nvs[pass.ps->ps];
+#endif
+#endif
+
+#ifdef USE_DX11
+		Nps.hs = pass.hs->sh;
+		Nps.ds = pass.ds->sh;
+
+		auto &Ncs = Nps.mapCS[pass.constants._get()];
+#else
+		R_dsgraph::mapMatrixStates &Ncs = Nps[pass.constants._get()];
+#endif
+		auto &Nstate = Ncs[&pass.state];
+		auto &Ntex = Nstate[pass.T._get()];
+		Ntex.push_back(item);
+
+		// Need to sort for HZB efficient use// Need to sort for HZB efficient use
+		if (SSA > Ntex.ssa)
+		{
+			Ntex.ssa = SSA;
+			if (SSA > Nstate.ssa)
+			{
+				Nstate.ssa = SSA;
+				if (SSA > Ncs.ssa)
+				{
+					Ncs.ssa = SSA;
+#ifdef USE_DX11
+					if (SSA > Nps.mapCS.ssa)
+					{
+						Nps.mapCS.ssa = SSA;
+#else
+					if (SSA > Nps.ssa)
+					{
+						Nps.ssa = SSA;
+#endif
+#if defined(USE_DX10) || defined(USE_DX11)
+						if (SSA > Ngs.ssa)
+						{
+							Ngs.ssa = SSA;
+#endif
+							if (SSA > Nvs.ssa)
+							{
+								Nvs.ssa = SSA;
+							}
+#if defined(USE_DX10) || defined(USE_DX11)
+						}
+#endif
+					}
+				}
+			}
+		}
 	}
 
-#if RENDER!=R_R1
-	if (val_recorder)			{
-		Fbox3		temp		;
-		Fmatrix&	xf			= *RI.val_pTransform;
-		temp.xform	(pVisual->vis.box,xf);
-		val_recorder->push_back	(temp);
+	if (val_recorder)
+	{
+		val_recorder->push_back(pVisual->vis.box);
 	}
-#endif
 }
 
 void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
@@ -247,13 +258,15 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 	// b) Should be rendered to special distort buffer in another pass
 	VERIFY						(pVisual->shader._get());
 	ShaderElement*		sh_d	= &*pVisual->shader->E[4];
+
 	if (RImplementation.o.distortion && sh_d && sh_d->flags.bDistort && pmask[sh_d->flags.iPriority/2]) {
-		mapSorted_Node* N		= mapDistort.insertInAnyWay		(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= NULL;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= Fidentity;
-		N->val.se				= &*pVisual->shader->E[4];		// 4=L_special
+		_MatrixItemS temp; 
+		temp.ssa = SSA;
+		temp.pObject = NULL;
+		temp.pVisual = pVisual;
+		temp.Matrix = Fidentity;
+		temp.se = sh_d;		// 4=L_special
+		mapDistort.emplace_back(std::make_pair(distSQ, temp));
 	}
 
 	// Select shader
@@ -263,130 +276,130 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 
 	// strict-sorting selection
 	if (sh->flags.bStrictB2F) {
-		mapSorted_Node* N			= mapSorted.insertInAnyWay(distSQ);
-		N->val.pObject				= NULL;
-		N->val.pVisual				= pVisual;
-		N->val.Matrix				= Fidentity;
-		N->val.se					= sh;
+		_MatrixItemS temp;
+		temp.pObject = NULL;
+		temp.pVisual = pVisual;
+		temp.Matrix = Fidentity;
+		temp.se = sh;
+		mapSorted.emplace_back(std::make_pair(distSQ, temp));
+
 		return;
 	}
 
-#if RENDER!=R_R1
 	// Emissive geometry should be marked and R2 special-cases it
 	// a) Allow to skeep already lit pixels
 	// b) Allow to make them 100% lit and really bright
 	// c) Should not cast shadows
 	// d) Should be rendered to accumulation buffer in the second pass
-	if (sh->flags.bEmissive) {
-		mapSorted_Node* N		= mapEmissive.insertInAnyWay	(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= NULL;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= Fidentity;
-		N->val.se				= &*pVisual->shader->E[4];		// 4=L_special
-	}
-	if (sh->flags.bWmark	&& pmask_wmark)	{
-		mapSorted_Node* N		= mapWmark.insertInAnyWay		(distSQ);
-		N->val.ssa				= SSA;
-		N->val.pObject			= NULL;
-		N->val.pVisual			= pVisual;
-		N->val.Matrix			= Fidentity;
-		N->val.se				= sh;							
-		return					;
-	}
-#endif
-
-	if	(val_feedback && counter_S==val_feedback_breakp)	val_feedback->rfeedback_static(pVisual);
-
-	counter_S					++;
-
-	for ( u32 iPass = 0; iPass<sh->passes.size(); ++iPass)
+	if (sh->flags.bEmissive) 
 	{
-		//SPass&						pass	= *sh->passes.front	();
-		//mapNormal_T&				map		= mapNormal			[sh->flags.iPriority/2];
+		_MatrixItemS temp; 
+		temp.ssa = SSA;
+		temp.pObject = NULL;
+		temp.pVisual = pVisual;
+		temp.Matrix = Fidentity;
+		temp.se = &*pVisual->shader->E[4];		// 4=L_special
+		mapEmissive.emplace_back(std::make_pair(distSQ, temp));
+	}
+	if (sh->flags.bWmark && pmask_wmark)
+	{
+		_MatrixItemS temp;
+		temp.ssa = SSA;
+		temp.pObject = nullptr;
+		temp.pVisual = pVisual;
+		temp.Matrix = Fidentity;
+		temp.se = sh;
+		mapWmark.emplace_back(std::make_pair(distSQ, temp));
+		return;
+	}
+
+	if (val_feedback && counter_S == val_feedback_breakp)
+	{
+		val_feedback->rfeedback_static(pVisual);
+	}
+	counter_S++;
+
+	_NormalItem item = { SSA, pVisual };
+	for (u32 iPass = 0; iPass<sh->passes.size(); ++iPass)
+	{
 		SPass&						pass	= *sh->passes[iPass];
 		mapNormal_T&				map		= mapNormalPasses[sh->flags.iPriority/2][iPass];
 
-//#ifdef USE_RESOURCE_DEBUGGER
-//	mapNormalVS::TNode*			Nvs		= map.insert		(pass.vs);
-//	mapNormalPS::TNode*			Nps		= Nvs->val.insert	(pass.ps);
-//#else
-//#if defined(USE_DX10) || defined(USE_DX11)
-//	mapNormalVS::TNode*			Nvs		= map.insert		(&*pass.vs);
-//#else	//	USE_DX10
-//	mapNormalVS::TNode*			Nvs		= map.insert		(pass.vs->vs);
-//#endif	//	USE_DX10
-//	mapNormalPS::TNode*			Nps		= Nvs->val.insert	(pass.ps->ps);
-//#endif
-
 #ifdef USE_RESOURCE_DEBUGGER
 #	if defined(USE_DX10) || defined(USE_DX11)
-		mapNormalVS::TNode*			Nvs		= map.insert		(pass.vs);
-		mapNormalGS::TNode*			Ngs		= Nvs->val.insert	(pass.gs);
-		mapNormalPS::TNode*			Nps		= Ngs->val.insert	(pass.ps);
+		mapNormalVS::value_type&			Nvs		= map.insert		(pass.vs);
+		mapNormalGS::value_type&			Ngs		= Nvs->val.insert	(pass.gs);
+		mapNormalPS::value_type&			Nps		= Ngs->val.insert	(pass.ps);
 #	else	//	USE_DX10
-		mapNormalVS::TNode*			Nvs		= map.insert		(pass.vs);
-		mapNormalPS::TNode*			Nps		= Nvs->val.insert	(pass.ps);
+		mapNormalVS::value_type&			Nvs		= map.insert		(pass.vs);
+		mapNormalPS::value_type&			Nps		= Nvs->val.insert	(pass.ps);
 #	endif	//	USE_DX10
 #else // USE_RESOURCE_DEBUGGER
-#	if defined(USE_DX10) || defined(USE_DX11)
-		mapNormalVS::TNode*			Nvs		= map.insert		(&*pass.vs);
-		mapNormalGS::TNode*			Ngs		= Nvs->val.insert	(pass.gs->gs);
-		mapNormalPS::TNode*			Nps		= Ngs->val.insert	(pass.ps->ps);
-#	else	//	USE_DX10
-		mapNormalVS::TNode*			Nvs		= map.insert		(pass.vs->vs);
-		mapNormalPS::TNode*			Nps		= Nvs->val.insert	(pass.ps->ps);
-#	endif	//	USE_DX10
-#endif // USE_RESOURCE_DEBUGGER
+
+#if defined(USE_DX10) || defined(USE_DX11)
+		auto &Nvs = map[&*pass.vs];
+		auto &Ngs = Nvs[pass.gs->gs];
+		auto &Nps = Ngs[pass.ps->ps];
+#else
+		auto &Nvs = map[pass.vs->vs];
+		auto &Nps = Nvs[pass.ps->ps];
+#endif
+#endif
 
 #ifdef USE_DX11
-#	ifdef USE_RESOURCE_DEBUGGER
-		Nps->val.hs = pass.hs;
-		Nps->val.ds = pass.ds;
-		mapNormalCS::TNode*			Ncs		= Nps->val.mapCS.insert	(pass.constants._get());
-#	else
-		Nps->val.hs = pass.hs->sh;
-		Nps->val.ds = pass.ds->sh;
-		mapNormalCS::TNode*			Ncs		= Nps->val.mapCS.insert	(pass.constants._get());
-#	endif
-#else
-		mapNormalCS::TNode*			Ncs		= Nps->val.insert	(pass.constants._get());
-#endif
-		mapNormalStates::TNode*		Nstate	= Ncs->val.insert	(pass.state->state);
-		mapNormalTextures::TNode*	Ntex	= Nstate->val.insert(pass.T._get());
-		mapNormalItems&				items	= Ntex->val;
-		_NormalItem					item	= {SSA,pVisual};
-		items.push_back						(item);
+		Nps.hs = pass.hs->sh;
+		Nps.ds = pass.ds->sh;
 
-		// Need to sort for HZB efficient use
-		if (SSA>Ntex->val.ssa)		{ Ntex->val.ssa = SSA;
-		if (SSA>Nstate->val.ssa)	{ Nstate->val.ssa = SSA;
-		if (SSA>Ncs->val.ssa)		{ Ncs->val.ssa = SSA;
+		auto &Ncs = Nps.mapCS[pass.constants._get()];
+#else
+		auto &Ncs = Nps[pass.constants._get()];
+#endif
+		auto &Nstate = Ncs[&pass.state];
+		auto &Ntex = Nstate[pass.T._get()];
+		Ntex.push_back(item);
+
+		// Need to sort for HZB efficient use// Need to sort for HZB efficient use
+		if (SSA > Ntex.ssa)
+		{
+			Ntex.ssa = SSA;
+			if (SSA > Nstate.ssa)
+			{
+				Nstate.ssa = SSA;
+				if (SSA > Ncs.ssa)
+				{
+					Ncs.ssa = SSA;
 #ifdef USE_DX11
-		if (SSA>Nps->val.mapCS.ssa)		{ Nps->val.mapCS.ssa = SSA;
+					if (SSA > Nps.mapCS.ssa)
+					{
+						Nps.mapCS.ssa = SSA;
 #else
-		if (SSA>Nps->val.ssa)		{ Nps->val.ssa = SSA;
+					if (SSA > Nps.ssa)
+					{
+						Nps.ssa = SSA;
 #endif
-//	if (SSA>Nvs->val.ssa)		{ Nvs->val.ssa = SSA;
-//	} } } } }
 #if defined(USE_DX10) || defined(USE_DX11)
-		if (SSA>Ngs->val.ssa)		{ Ngs->val.ssa = SSA;
-#endif	//	USE_DX10
-		if (SSA>Nvs->val.ssa)		{ Nvs->val.ssa = SSA;
+						if (SSA > Ngs.ssa)
+						{
+							Ngs.ssa = SSA;
+#endif
+							if (SSA > Nvs.ssa)
+							{
+								Nvs.ssa = SSA;
+							}
 #if defined(USE_DX10) || defined(USE_DX11)
-		} } } } } }
-#else	//	USE_DX10
-		} } } } }
-#endif	//	USE_DX10
+						}
+#endif
+					}
+				}
+			}
+		}
 	}
 
-#if RENDER!=R_R1
-	if (val_recorder)			{
-		val_recorder->push_back	(pVisual->vis.box	);
+	if (val_recorder)
+	{
+		val_recorder->push_back(pVisual->vis.box);
 	}
-#endif
 }
-
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -525,15 +538,10 @@ void CRender::add_leafs_Static(dxRender_Visual *pVisual)
 			if (ssa<r_ssaLOD_A)
 			{
 				if (ssa<r_ssaDISCARD)	return;
-				mapLOD_Node*	N	=	mapLOD.insertInAnyWay(D);
-				N->val.ssa			=	ssa;
-				N->val.pVisual		=	pVisual;
+				mapLOD.emplace_back(std::make_pair(D, _LodItem({ ssa, pVisual })));
 			}
-#if RENDER!=R_R1
+
 			if (ssa>r_ssaLOD_B || phase==PHASE_SMAP)
-#else
-			if (ssa>r_ssaLOD_B)
-#endif
 			{
 				// Add all children, doesn't perform any tests
 				I = pV->children.begin	();
@@ -730,15 +738,10 @@ void CRender::add_Static(dxRender_Visual *pVisual, u32 planes)
 			if (ssa<r_ssaLOD_A)	
 			{
 				if (ssa<r_ssaDISCARD)	return;
-				mapLOD_Node*	N		= mapLOD.insertInAnyWay(D);
-				N->val.ssa				= ssa;
-				N->val.pVisual			= pVisual;
+				mapLOD.emplace_back(std::make_pair(D, _LodItem({ ssa, pVisual })));
 			}
-#if RENDER!=R_R1
+
 			if (ssa>r_ssaLOD_B || phase==PHASE_SMAP)
-#else
-			if (ssa>r_ssaLOD_B)
-#endif
 			{
 				// Add all children, perform tests
 				I = pV->children.begin	();
