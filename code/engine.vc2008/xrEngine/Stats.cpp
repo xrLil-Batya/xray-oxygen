@@ -36,16 +36,6 @@ CStats::~CStats()
 	xr_delete		(pFont);
 }
 
-void draw_fps(CGameFont* pFont)
-{
-	float sz		=
-	pFont->GetHeight();
-	pFont->SetHeightI(0.018f);
-	pFont->SetColor	(0xFFFFA917);
-	pFont->Out		(10, 10, "FPS: %0.0f",1.0f/Device.fTimeDelta);
-	pFont->SetHeight(sz);
-	pFont->OnRender	();
-}
 
 void _draw_cam_pos(CGameFont* pFont)
 {
@@ -270,12 +260,17 @@ void CStats::Show()
 		seqStats.Process				(rp_Stats);
 		pFont->OnRender					();
 	};
-	if( psDeviceFlags.test(rsDrawFPS) ){
-		draw_fps					(pFont);
-		pFont->OnRender					();
+	if( psDeviceFlags.test(rsDrawFPS) )
+	{
+	float sz = pFont->GetHeight();
+	pFont->SetHeightI(0.018f);
+	pFont->SetColor	(0xFFFFA917);
+	pFont->Out		(10, 10, "FPS: %0.0f",1.0f/Device.fTimeDelta);
+	pFont->SetHeight(sz);
+	pFont->OnRender	();
 	};
 	
-	if( /*psDeviceFlags.test(rsStatistic) ||*/ psDeviceFlags.test(rsCameraPos) ){
+	if( psDeviceFlags.test(rsCameraPos) ){
 		_draw_cam_pos					(pFont);
 		pFont->OnRender					();
 	};
