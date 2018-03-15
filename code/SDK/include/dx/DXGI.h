@@ -3,23 +3,14 @@
 /* this ALWAYS GENERATED file contains the definitions for the interfaces */
 
 
- /* File created by MIDL compiler version 7.00.0555 */
-/* Compiler settings for dxgi.idl:
-    Oicf, W1, Zp8, env=Win64 (32b run), target_arch=AMD64 7.00.0555 
-    protocol : all , ms_ext, c_ext, robust
-    error checks: allocation ref bounds_check enum stub_data 
-    VC __declspec() decoration level: 
-         __declspec(uuid()), __declspec(selectany), __declspec(novtable)
-         DECLSPEC_UUID(), MIDL_INTERFACE()
-*/
+ /* File created by MIDL compiler version 8.01.0622 */
 /* @@MIDL_FILE_HEADING(  ) */
 
-#pragma warning( disable: 4049 )  /* more than 64k source lines */
 
 
 /* verify that the <rpcndr.h> version is high enough to compile this file*/
 #ifndef __REQUIRED_RPCNDR_H_VERSION__
-#define __REQUIRED_RPCNDR_H_VERSION__ 475
+#define __REQUIRED_RPCNDR_H_VERSION__ 500
 #endif
 
 /* verify that the <rpcsal.h> version is high enough to compile this file*/
@@ -32,7 +23,7 @@
 
 #ifndef __RPCNDR_H_VERSION__
 #error this stub requires an updated version of <rpcndr.h>
-#endif // __RPCNDR_H_VERSION__
+#endif /* __RPCNDR_H_VERSION__ */
 
 #ifndef COM_NO_WINDOWS_H
 #include "windows.h"
@@ -51,90 +42,105 @@
 #ifndef __IDXGIObject_FWD_DEFINED__
 #define __IDXGIObject_FWD_DEFINED__
 typedef interface IDXGIObject IDXGIObject;
+
 #endif 	/* __IDXGIObject_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIDeviceSubObject_FWD_DEFINED__
 #define __IDXGIDeviceSubObject_FWD_DEFINED__
 typedef interface IDXGIDeviceSubObject IDXGIDeviceSubObject;
+
 #endif 	/* __IDXGIDeviceSubObject_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIResource_FWD_DEFINED__
 #define __IDXGIResource_FWD_DEFINED__
 typedef interface IDXGIResource IDXGIResource;
+
 #endif 	/* __IDXGIResource_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIKeyedMutex_FWD_DEFINED__
 #define __IDXGIKeyedMutex_FWD_DEFINED__
 typedef interface IDXGIKeyedMutex IDXGIKeyedMutex;
+
 #endif 	/* __IDXGIKeyedMutex_FWD_DEFINED__ */
 
 
 #ifndef __IDXGISurface_FWD_DEFINED__
 #define __IDXGISurface_FWD_DEFINED__
 typedef interface IDXGISurface IDXGISurface;
+
 #endif 	/* __IDXGISurface_FWD_DEFINED__ */
 
 
 #ifndef __IDXGISurface1_FWD_DEFINED__
 #define __IDXGISurface1_FWD_DEFINED__
 typedef interface IDXGISurface1 IDXGISurface1;
+
 #endif 	/* __IDXGISurface1_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIAdapter_FWD_DEFINED__
 #define __IDXGIAdapter_FWD_DEFINED__
 typedef interface IDXGIAdapter IDXGIAdapter;
+
 #endif 	/* __IDXGIAdapter_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIOutput_FWD_DEFINED__
 #define __IDXGIOutput_FWD_DEFINED__
 typedef interface IDXGIOutput IDXGIOutput;
+
 #endif 	/* __IDXGIOutput_FWD_DEFINED__ */
 
 
 #ifndef __IDXGISwapChain_FWD_DEFINED__
 #define __IDXGISwapChain_FWD_DEFINED__
 typedef interface IDXGISwapChain IDXGISwapChain;
+
 #endif 	/* __IDXGISwapChain_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIFactory_FWD_DEFINED__
 #define __IDXGIFactory_FWD_DEFINED__
 typedef interface IDXGIFactory IDXGIFactory;
+
 #endif 	/* __IDXGIFactory_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIDevice_FWD_DEFINED__
 #define __IDXGIDevice_FWD_DEFINED__
 typedef interface IDXGIDevice IDXGIDevice;
+
 #endif 	/* __IDXGIDevice_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIFactory1_FWD_DEFINED__
 #define __IDXGIFactory1_FWD_DEFINED__
 typedef interface IDXGIFactory1 IDXGIFactory1;
+
 #endif 	/* __IDXGIFactory1_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIAdapter1_FWD_DEFINED__
 #define __IDXGIAdapter1_FWD_DEFINED__
 typedef interface IDXGIAdapter1 IDXGIAdapter1;
+
 #endif 	/* __IDXGIAdapter1_FWD_DEFINED__ */
 
 
 #ifndef __IDXGIDevice1_FWD_DEFINED__
 #define __IDXGIDevice1_FWD_DEFINED__
 typedef interface IDXGIDevice1 IDXGIDevice1;
+
 #endif 	/* __IDXGIDevice1_FWD_DEFINED__ */
 
 
 /* header files for imported files */
 #include "oaidl.h"
 #include "ocidl.h"
+#include "dxgicommon.h"
 #include "dxgitype.h"
 
 #ifdef __cplusplus
@@ -150,13 +156,13 @@ extern "C"{
 #define DXGI_CPU_ACCESS_READ_WRITE    ( 2 )
 #define DXGI_CPU_ACCESS_SCRATCH    ( 3 )
 #define DXGI_CPU_ACCESS_FIELD        15
-#define DXGI_USAGE_SHADER_INPUT             ( 1L << (0 + 4) )
-#define DXGI_USAGE_RENDER_TARGET_OUTPUT     ( 1L << (1 + 4) )
-#define DXGI_USAGE_BACK_BUFFER              ( 1L << (2 + 4) )
-#define DXGI_USAGE_SHARED                   ( 1L << (3 + 4) )
-#define DXGI_USAGE_READ_ONLY                ( 1L << (4 + 4) )
-#define DXGI_USAGE_DISCARD_ON_PRESENT       ( 1L << (5 + 4) )
-#define DXGI_USAGE_UNORDERED_ACCESS         ( 1L << (6 + 4) )
+#define DXGI_USAGE_SHADER_INPUT             0x00000010UL
+#define DXGI_USAGE_RENDER_TARGET_OUTPUT     0x00000020UL
+#define DXGI_USAGE_BACK_BUFFER              0x00000040UL
+#define DXGI_USAGE_SHARED                   0x00000080UL
+#define DXGI_USAGE_READ_ONLY                0x00000100UL
+#define DXGI_USAGE_DISCARD_ON_PRESENT       0x00000200UL
+#define DXGI_USAGE_UNORDERED_ACCESS         0x00000400UL
 typedef UINT DXGI_USAGE;
 
 typedef struct DXGI_FRAME_STATISTICS
@@ -175,6 +181,8 @@ typedef struct DXGI_MAPPED_RECT
     } 	DXGI_MAPPED_RECT;
 
 #ifdef __midl
+#ifndef LUID_DEFINED
+#define LUID_DEFINED 1
 typedef struct _LUID
     {
     DWORD LowPart;
@@ -183,6 +191,7 @@ typedef struct _LUID
 
 typedef struct _LUID *PLUID;
 
+#endif
 #endif
 typedef struct DXGI_ADAPTER_DESC
     {
@@ -231,9 +240,10 @@ typedef struct DXGI_SHARED_RESOURCE
 
 typedef 
 enum DXGI_RESIDENCY
-    {	DXGI_RESIDENCY_FULLY_RESIDENT	= 1,
-	DXGI_RESIDENCY_RESIDENT_IN_SHARED_MEMORY	= 2,
-	DXGI_RESIDENCY_EVICTED_TO_DISK	= 3
+    {
+        DXGI_RESIDENCY_FULLY_RESIDENT	= 1,
+        DXGI_RESIDENCY_RESIDENT_IN_SHARED_MEMORY	= 2,
+        DXGI_RESIDENCY_EVICTED_TO_DISK	= 3
     } 	DXGI_RESIDENCY;
 
 typedef struct DXGI_SURFACE_DESC
@@ -246,15 +256,29 @@ typedef struct DXGI_SURFACE_DESC
 
 typedef 
 enum DXGI_SWAP_EFFECT
-    {	DXGI_SWAP_EFFECT_DISCARD	= 0,
-	DXGI_SWAP_EFFECT_SEQUENTIAL	= 1
+    {
+        DXGI_SWAP_EFFECT_DISCARD	= 0,
+        DXGI_SWAP_EFFECT_SEQUENTIAL	= 1,
+        DXGI_SWAP_EFFECT_FLIP_SEQUENTIAL	= 3,
+        DXGI_SWAP_EFFECT_FLIP_DISCARD	= 4
     } 	DXGI_SWAP_EFFECT;
 
 typedef 
 enum DXGI_SWAP_CHAIN_FLAG
-    {	DXGI_SWAP_CHAIN_FLAG_NONPREROTATED	= 1,
-	DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH	= 2,
-	DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE	= 4
+    {
+        DXGI_SWAP_CHAIN_FLAG_NONPREROTATED	= 1,
+        DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH	= 2,
+        DXGI_SWAP_CHAIN_FLAG_GDI_COMPATIBLE	= 4,
+        DXGI_SWAP_CHAIN_FLAG_RESTRICTED_CONTENT	= 8,
+        DXGI_SWAP_CHAIN_FLAG_RESTRICT_SHARED_RESOURCE_DRIVER	= 16,
+        DXGI_SWAP_CHAIN_FLAG_DISPLAY_ONLY	= 32,
+        DXGI_SWAP_CHAIN_FLAG_FRAME_LATENCY_WAITABLE_OBJECT	= 64,
+        DXGI_SWAP_CHAIN_FLAG_FOREGROUND_LAYER	= 128,
+        DXGI_SWAP_CHAIN_FLAG_FULLSCREEN_VIDEO	= 256,
+        DXGI_SWAP_CHAIN_FLAG_YUV_VIDEO	= 512,
+        DXGI_SWAP_CHAIN_FLAG_HW_PROTECTED	= 1024,
+        DXGI_SWAP_CHAIN_FLAG_ALLOW_TEARING	= 2048,
+        DXGI_SWAP_CHAIN_FLAG_RESTRICTED_TO_ALL_HOLOGRAPHIC_DISPLAYS	= 4096
     } 	DXGI_SWAP_CHAIN_FLAG;
 
 typedef struct DXGI_SWAP_CHAIN_DESC
@@ -290,24 +314,34 @@ EXTERN_C const IID IID_IDXGIObject;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE SetPrivateData( 
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData) = 0;
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetPrivateDataInterface( 
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown) = 0;
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetPrivateData( 
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData) = 0;
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetParent( 
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent) = 0;
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -319,7 +353,7 @@ EXTERN_C const IID IID_IDXGIObject;
             IDXGIObject * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIObject * This);
@@ -329,25 +363,34 @@ EXTERN_C const IID IID_IDXGIObject;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIObject * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIObject * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIObject * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIObject * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         END_INTERFACE
     } IDXGIObjectVtbl;
@@ -411,10 +454,13 @@ EXTERN_C const IID IID_IDXGIDeviceSubObject;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetDevice( 
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice) = 0;
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -426,7 +472,7 @@ EXTERN_C const IID IID_IDXGIDeviceSubObject;
             IDXGIDeviceSubObject * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIDeviceSubObject * This);
@@ -436,30 +482,41 @@ EXTERN_C const IID IID_IDXGIDeviceSubObject;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIDeviceSubObject * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIDeviceSubObject * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIDeviceSubObject * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIDeviceSubObject * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
             IDXGIDeviceSubObject * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice);
         
         END_INTERFACE
     } IDXGIDeviceSubObjectVtbl;
@@ -527,7 +584,8 @@ EXTERN_C const IID IID_IDXGIResource;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetSharedHandle( 
-            /* [out] */ HANDLE *pSharedHandle) = 0;
+            /* [annotation][out] */ 
+            _Out_  HANDLE *pSharedHandle) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetUsage( 
             /* [out] */ DXGI_USAGE *pUsage) = 0;
@@ -536,9 +594,11 @@ EXTERN_C const IID IID_IDXGIResource;
             /* [in] */ UINT EvictionPriority) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetEvictionPriority( 
-            /* [retval][out] */ UINT *pEvictionPriority) = 0;
+            /* [annotation][retval][out] */ 
+            _Out_  UINT *pEvictionPriority) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -550,7 +610,7 @@ EXTERN_C const IID IID_IDXGIResource;
             IDXGIResource * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIResource * This);
@@ -560,34 +620,46 @@ EXTERN_C const IID IID_IDXGIResource;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIResource * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIResource * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIResource * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIResource * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
             IDXGIResource * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice);
         
         HRESULT ( STDMETHODCALLTYPE *GetSharedHandle )( 
             IDXGIResource * This,
-            /* [out] */ HANDLE *pSharedHandle);
+            /* [annotation][out] */ 
+            _Out_  HANDLE *pSharedHandle);
         
         HRESULT ( STDMETHODCALLTYPE *GetUsage )( 
             IDXGIResource * This,
@@ -599,7 +671,8 @@ EXTERN_C const IID IID_IDXGIResource;
         
         HRESULT ( STDMETHODCALLTYPE *GetEvictionPriority )( 
             IDXGIResource * This,
-            /* [retval][out] */ UINT *pEvictionPriority);
+            /* [annotation][retval][out] */ 
+            _Out_  UINT *pEvictionPriority);
         
         END_INTERFACE
     } IDXGIResourceVtbl;
@@ -688,6 +761,7 @@ EXTERN_C const IID IID_IDXGIKeyedMutex;
         
     };
     
+    
 #else 	/* C style interface */
 
     typedef struct IDXGIKeyedMutexVtbl
@@ -698,7 +772,7 @@ EXTERN_C const IID IID_IDXGIKeyedMutex;
             IDXGIKeyedMutex * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIKeyedMutex * This);
@@ -708,30 +782,41 @@ EXTERN_C const IID IID_IDXGIKeyedMutex;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIKeyedMutex * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIKeyedMutex * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIKeyedMutex * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIKeyedMutex * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
             IDXGIKeyedMutex * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice);
         
         HRESULT ( STDMETHODCALLTYPE *AcquireSync )( 
             IDXGIKeyedMutex * This,
@@ -829,15 +914,18 @@ EXTERN_C const IID IID_IDXGISurface;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetDesc( 
-            /* [out] */ DXGI_SURFACE_DESC *pDesc) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_SURFACE_DESC *pDesc) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE Map( 
-            /* [out] */ DXGI_MAPPED_RECT *pLockedRect,
+            /* [annotation][out] */ 
+            _Out_  DXGI_MAPPED_RECT *pLockedRect,
             /* [in] */ UINT MapFlags) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE Unmap( void) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -849,7 +937,7 @@ EXTERN_C const IID IID_IDXGISurface;
             IDXGISurface * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGISurface * This);
@@ -859,38 +947,51 @@ EXTERN_C const IID IID_IDXGISurface;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGISurface * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGISurface * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGISurface * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGISurface * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
             IDXGISurface * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc )( 
             IDXGISurface * This,
-            /* [out] */ DXGI_SURFACE_DESC *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_SURFACE_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *Map )( 
             IDXGISurface * This,
-            /* [out] */ DXGI_MAPPED_RECT *pLockedRect,
+            /* [annotation][out] */ 
+            _Out_  DXGI_MAPPED_RECT *pLockedRect,
             /* [in] */ UINT MapFlags);
         
         HRESULT ( STDMETHODCALLTYPE *Unmap )( 
@@ -973,12 +1074,15 @@ EXTERN_C const IID IID_IDXGISurface1;
     public:
         virtual HRESULT STDMETHODCALLTYPE GetDC( 
             /* [in] */ BOOL Discard,
-            /* [out] */ HDC *phdc) = 0;
+            /* [annotation][out] */ 
+            _Out_  HDC *phdc) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE ReleaseDC( 
-            /* [in] */ RECT *pDirtyRect) = 0;
+            /* [annotation][in] */ 
+            _In_opt_  RECT *pDirtyRect) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -990,7 +1094,7 @@ EXTERN_C const IID IID_IDXGISurface1;
             IDXGISurface1 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGISurface1 * This);
@@ -1000,38 +1104,51 @@ EXTERN_C const IID IID_IDXGISurface1;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGISurface1 * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGISurface1 * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGISurface1 * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGISurface1 * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
             IDXGISurface1 * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc )( 
             IDXGISurface1 * This,
-            /* [out] */ DXGI_SURFACE_DESC *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_SURFACE_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *Map )( 
             IDXGISurface1 * This,
-            /* [out] */ DXGI_MAPPED_RECT *pLockedRect,
+            /* [annotation][out] */ 
+            _Out_  DXGI_MAPPED_RECT *pLockedRect,
             /* [in] */ UINT MapFlags);
         
         HRESULT ( STDMETHODCALLTYPE *Unmap )( 
@@ -1040,11 +1157,13 @@ EXTERN_C const IID IID_IDXGISurface1;
         HRESULT ( STDMETHODCALLTYPE *GetDC )( 
             IDXGISurface1 * This,
             /* [in] */ BOOL Discard,
-            /* [out] */ HDC *phdc);
+            /* [annotation][out] */ 
+            _Out_  HDC *phdc);
         
         HRESULT ( STDMETHODCALLTYPE *ReleaseDC )( 
             IDXGISurface1 * This,
-            /* [in] */ RECT *pDirtyRect);
+            /* [annotation][in] */ 
+            _In_opt_  RECT *pDirtyRect);
         
         END_INTERFACE
     } IDXGISurface1Vtbl;
@@ -1139,16 +1258,21 @@ EXTERN_C const IID IID_IDXGIAdapter;
     public:
         virtual HRESULT STDMETHODCALLTYPE EnumOutputs( 
             /* [in] */ UINT Output,
-            /* [out][in] */ IDXGIOutput **ppOutput) = 0;
+            /* [annotation][out][in] */ 
+            _COM_Outptr_  IDXGIOutput **ppOutput) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetDesc( 
-            /* [out] */ DXGI_ADAPTER_DESC *pDesc) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_ADAPTER_DESC *pDesc) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE CheckInterfaceSupport( 
-            /* [in] */ REFGUID InterfaceName,
-            /* [out] */ LARGE_INTEGER *pUMDVersion) = 0;
+            /* [annotation][in] */ 
+            _In_  REFGUID InterfaceName,
+            /* [annotation][out] */ 
+            _Out_  LARGE_INTEGER *pUMDVersion) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -1160,7 +1284,7 @@ EXTERN_C const IID IID_IDXGIAdapter;
             IDXGIAdapter * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIAdapter * This);
@@ -1170,39 +1294,52 @@ EXTERN_C const IID IID_IDXGIAdapter;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIAdapter * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIAdapter * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIAdapter * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIAdapter * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *EnumOutputs )( 
             IDXGIAdapter * This,
             /* [in] */ UINT Output,
-            /* [out][in] */ IDXGIOutput **ppOutput);
+            /* [annotation][out][in] */ 
+            _COM_Outptr_  IDXGIOutput **ppOutput);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc )( 
             IDXGIAdapter * This,
-            /* [out] */ DXGI_ADAPTER_DESC *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_ADAPTER_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *CheckInterfaceSupport )( 
             IDXGIAdapter * This,
-            /* [in] */ REFGUID InterfaceName,
-            /* [out] */ LARGE_INTEGER *pUMDVersion);
+            /* [annotation][in] */ 
+            _In_  REFGUID InterfaceName,
+            /* [annotation][out] */ 
+            _Out_  LARGE_INTEGER *pUMDVersion);
         
         END_INTERFACE
     } IDXGIAdapterVtbl;
@@ -1288,46 +1425,60 @@ EXTERN_C const IID IID_IDXGIOutput;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetDesc( 
-            /* [out] */ DXGI_OUTPUT_DESC *pDesc) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_OUTPUT_DESC *pDesc) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetDisplayModeList( 
             /* [in] */ DXGI_FORMAT EnumFormat,
             /* [in] */ UINT Flags,
-            /* [out][in] */ UINT *pNumModes,
-            /* [out] */ DXGI_MODE_DESC *pDesc) = 0;
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pNumModes,
+            /* [annotation][out] */ 
+            _Out_writes_to_opt_(*pNumModes,*pNumModes)  DXGI_MODE_DESC *pDesc) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE FindClosestMatchingMode( 
-            /* [in] */ const DXGI_MODE_DESC *pModeToMatch,
-            /* [out] */ DXGI_MODE_DESC *pClosestMatch,
-            /* [in] */ IUnknown *pConcernedDevice) = 0;
+            /* [annotation][in] */ 
+            _In_  const DXGI_MODE_DESC *pModeToMatch,
+            /* [annotation][out] */ 
+            _Out_  DXGI_MODE_DESC *pClosestMatch,
+            /* [annotation][in] */ 
+            _In_opt_  IUnknown *pConcernedDevice) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE WaitForVBlank( void) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE TakeOwnership( 
-            /* [in] */ IUnknown *pDevice,
+            /* [annotation][in] */ 
+            _In_  IUnknown *pDevice,
             BOOL Exclusive) = 0;
         
         virtual void STDMETHODCALLTYPE ReleaseOwnership( void) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetGammaControlCapabilities( 
-            /* [out] */ DXGI_GAMMA_CONTROL_CAPABILITIES *pGammaCaps) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_GAMMA_CONTROL_CAPABILITIES *pGammaCaps) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetGammaControl( 
-            /* [in] */ const DXGI_GAMMA_CONTROL *pArray) = 0;
+            /* [annotation][in] */ 
+            _In_  const DXGI_GAMMA_CONTROL *pArray) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetGammaControl( 
-            /* [out] */ DXGI_GAMMA_CONTROL *pArray) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_GAMMA_CONTROL *pArray) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetDisplaySurface( 
-            /* [in] */ IDXGISurface *pScanoutSurface) = 0;
+            /* [annotation][in] */ 
+            _In_  IDXGISurface *pScanoutSurface) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetDisplaySurfaceData( 
-            /* [in] */ IDXGISurface *pDestination) = 0;
+            /* [annotation][in] */ 
+            _In_  IDXGISurface *pDestination) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetFrameStatistics( 
-            /* [out] */ DXGI_FRAME_STATISTICS *pStats) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_FRAME_STATISTICS *pStats) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -1339,7 +1490,7 @@ EXTERN_C const IID IID_IDXGIOutput;
             IDXGIOutput * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIOutput * This);
@@ -1349,49 +1500,65 @@ EXTERN_C const IID IID_IDXGIOutput;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIOutput * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIOutput * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIOutput * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIOutput * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc )( 
             IDXGIOutput * This,
-            /* [out] */ DXGI_OUTPUT_DESC *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_OUTPUT_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *GetDisplayModeList )( 
             IDXGIOutput * This,
             /* [in] */ DXGI_FORMAT EnumFormat,
             /* [in] */ UINT Flags,
-            /* [out][in] */ UINT *pNumModes,
-            /* [out] */ DXGI_MODE_DESC *pDesc);
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pNumModes,
+            /* [annotation][out] */ 
+            _Out_writes_to_opt_(*pNumModes,*pNumModes)  DXGI_MODE_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *FindClosestMatchingMode )( 
             IDXGIOutput * This,
-            /* [in] */ const DXGI_MODE_DESC *pModeToMatch,
-            /* [out] */ DXGI_MODE_DESC *pClosestMatch,
-            /* [in] */ IUnknown *pConcernedDevice);
+            /* [annotation][in] */ 
+            _In_  const DXGI_MODE_DESC *pModeToMatch,
+            /* [annotation][out] */ 
+            _Out_  DXGI_MODE_DESC *pClosestMatch,
+            /* [annotation][in] */ 
+            _In_opt_  IUnknown *pConcernedDevice);
         
         HRESULT ( STDMETHODCALLTYPE *WaitForVBlank )( 
             IDXGIOutput * This);
         
         HRESULT ( STDMETHODCALLTYPE *TakeOwnership )( 
             IDXGIOutput * This,
-            /* [in] */ IUnknown *pDevice,
+            /* [annotation][in] */ 
+            _In_  IUnknown *pDevice,
             BOOL Exclusive);
         
         void ( STDMETHODCALLTYPE *ReleaseOwnership )( 
@@ -1399,27 +1566,33 @@ EXTERN_C const IID IID_IDXGIOutput;
         
         HRESULT ( STDMETHODCALLTYPE *GetGammaControlCapabilities )( 
             IDXGIOutput * This,
-            /* [out] */ DXGI_GAMMA_CONTROL_CAPABILITIES *pGammaCaps);
+            /* [annotation][out] */ 
+            _Out_  DXGI_GAMMA_CONTROL_CAPABILITIES *pGammaCaps);
         
         HRESULT ( STDMETHODCALLTYPE *SetGammaControl )( 
             IDXGIOutput * This,
-            /* [in] */ const DXGI_GAMMA_CONTROL *pArray);
+            /* [annotation][in] */ 
+            _In_  const DXGI_GAMMA_CONTROL *pArray);
         
         HRESULT ( STDMETHODCALLTYPE *GetGammaControl )( 
             IDXGIOutput * This,
-            /* [out] */ DXGI_GAMMA_CONTROL *pArray);
+            /* [annotation][out] */ 
+            _Out_  DXGI_GAMMA_CONTROL *pArray);
         
         HRESULT ( STDMETHODCALLTYPE *SetDisplaySurface )( 
             IDXGIOutput * This,
-            /* [in] */ IDXGISurface *pScanoutSurface);
+            /* [annotation][in] */ 
+            _In_  IDXGISurface *pScanoutSurface);
         
         HRESULT ( STDMETHODCALLTYPE *GetDisplaySurfaceData )( 
             IDXGIOutput * This,
-            /* [in] */ IDXGISurface *pDestination);
+            /* [annotation][in] */ 
+            _In_  IDXGISurface *pDestination);
         
         HRESULT ( STDMETHODCALLTYPE *GetFrameStatistics )( 
             IDXGIOutput * This,
-            /* [out] */ DXGI_FRAME_STATISTICS *pStats);
+            /* [annotation][out] */ 
+            _Out_  DXGI_FRAME_STATISTICS *pStats);
         
         END_INTERFACE
     } IDXGIOutputVtbl;
@@ -1508,9 +1681,15 @@ EXTERN_C const IID IID_IDXGIOutput;
 /* [local] */ 
 
 #define DXGI_MAX_SWAP_CHAIN_BUFFERS        ( 16 )
-#define DXGI_PRESENT_TEST               0x00000001UL
-#define DXGI_PRESENT_DO_NOT_SEQUENCE    0x00000002UL
-#define DXGI_PRESENT_RESTART            0x00000004UL
+#define DXGI_PRESENT_TEST                      0x00000001UL
+#define DXGI_PRESENT_DO_NOT_SEQUENCE           0x00000002UL
+#define DXGI_PRESENT_RESTART                   0x00000004UL
+#define DXGI_PRESENT_DO_NOT_WAIT               0x00000008UL
+#define DXGI_PRESENT_STEREO_PREFER_RIGHT       0x00000010UL
+#define DXGI_PRESENT_STEREO_TEMPORARY_MONO     0x00000020UL
+#define DXGI_PRESENT_RESTRICT_TO_OUTPUT        0x00000040UL
+#define DXGI_PRESENT_USE_DURATION              0x00000100UL
+#define DXGI_PRESENT_ALLOW_TEARING             0x00000200UL
 
 
 extern RPC_IF_HANDLE __MIDL_itf_dxgi_0000_0008_v0_0_c_ifspec;
@@ -1537,19 +1716,25 @@ EXTERN_C const IID IID_IDXGISwapChain;
         
         virtual HRESULT STDMETHODCALLTYPE GetBuffer( 
             /* [in] */ UINT Buffer,
-            /* [in] */ REFIID riid,
-            /* [out][in] */ void **ppSurface) = 0;
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][out][in] */ 
+            _COM_Outptr_  void **ppSurface) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetFullscreenState( 
             /* [in] */ BOOL Fullscreen,
-            /* [in] */ IDXGIOutput *pTarget) = 0;
+            /* [annotation][in] */ 
+            _In_opt_  IDXGIOutput *pTarget) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetFullscreenState( 
-            /* [out] */ BOOL *pFullscreen,
-            /* [out] */ IDXGIOutput **ppTarget) = 0;
+            /* [annotation][out] */ 
+            _Out_opt_  BOOL *pFullscreen,
+            /* [annotation][out] */ 
+            _COM_Outptr_opt_result_maybenull_  IDXGIOutput **ppTarget) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetDesc( 
-            /* [out] */ DXGI_SWAP_CHAIN_DESC *pDesc) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_SWAP_CHAIN_DESC *pDesc) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE ResizeBuffers( 
             /* [in] */ UINT BufferCount,
@@ -1559,18 +1744,23 @@ EXTERN_C const IID IID_IDXGISwapChain;
             /* [in] */ UINT SwapChainFlags) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE ResizeTarget( 
-            /* [in] */ const DXGI_MODE_DESC *pNewTargetParameters) = 0;
+            /* [annotation][in] */ 
+            _In_  const DXGI_MODE_DESC *pNewTargetParameters) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetContainingOutput( 
-            IDXGIOutput **ppOutput) = 0;
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIOutput **ppOutput) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetFrameStatistics( 
-            /* [out] */ DXGI_FRAME_STATISTICS *pStats) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_FRAME_STATISTICS *pStats) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetLastPresentCount( 
-            /* [out] */ UINT *pLastPresentCount) = 0;
+            /* [annotation][out] */ 
+            _Out_  UINT *pLastPresentCount) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -1582,7 +1772,7 @@ EXTERN_C const IID IID_IDXGISwapChain;
             IDXGISwapChain * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGISwapChain * This);
@@ -1592,30 +1782,41 @@ EXTERN_C const IID IID_IDXGISwapChain;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGISwapChain * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGISwapChain * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGISwapChain * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGISwapChain * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetDevice )( 
             IDXGISwapChain * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppDevice);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppDevice);
         
         HRESULT ( STDMETHODCALLTYPE *Present )( 
             IDXGISwapChain * This,
@@ -1625,22 +1826,28 @@ EXTERN_C const IID IID_IDXGISwapChain;
         HRESULT ( STDMETHODCALLTYPE *GetBuffer )( 
             IDXGISwapChain * This,
             /* [in] */ UINT Buffer,
-            /* [in] */ REFIID riid,
-            /* [out][in] */ void **ppSurface);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][out][in] */ 
+            _COM_Outptr_  void **ppSurface);
         
         HRESULT ( STDMETHODCALLTYPE *SetFullscreenState )( 
             IDXGISwapChain * This,
             /* [in] */ BOOL Fullscreen,
-            /* [in] */ IDXGIOutput *pTarget);
+            /* [annotation][in] */ 
+            _In_opt_  IDXGIOutput *pTarget);
         
         HRESULT ( STDMETHODCALLTYPE *GetFullscreenState )( 
             IDXGISwapChain * This,
-            /* [out] */ BOOL *pFullscreen,
-            /* [out] */ IDXGIOutput **ppTarget);
+            /* [annotation][out] */ 
+            _Out_opt_  BOOL *pFullscreen,
+            /* [annotation][out] */ 
+            _COM_Outptr_opt_result_maybenull_  IDXGIOutput **ppTarget);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc )( 
             IDXGISwapChain * This,
-            /* [out] */ DXGI_SWAP_CHAIN_DESC *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_SWAP_CHAIN_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *ResizeBuffers )( 
             IDXGISwapChain * This,
@@ -1652,19 +1859,23 @@ EXTERN_C const IID IID_IDXGISwapChain;
         
         HRESULT ( STDMETHODCALLTYPE *ResizeTarget )( 
             IDXGISwapChain * This,
-            /* [in] */ const DXGI_MODE_DESC *pNewTargetParameters);
+            /* [annotation][in] */ 
+            _In_  const DXGI_MODE_DESC *pNewTargetParameters);
         
         HRESULT ( STDMETHODCALLTYPE *GetContainingOutput )( 
             IDXGISwapChain * This,
-            IDXGIOutput **ppOutput);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIOutput **ppOutput);
         
         HRESULT ( STDMETHODCALLTYPE *GetFrameStatistics )( 
             IDXGISwapChain * This,
-            /* [out] */ DXGI_FRAME_STATISTICS *pStats);
+            /* [annotation][out] */ 
+            _Out_  DXGI_FRAME_STATISTICS *pStats);
         
         HRESULT ( STDMETHODCALLTYPE *GetLastPresentCount )( 
             IDXGISwapChain * This,
-            /* [out] */ UINT *pLastPresentCount);
+            /* [annotation][out] */ 
+            _Out_  UINT *pLastPresentCount);
         
         END_INTERFACE
     } IDXGISwapChainVtbl;
@@ -1776,25 +1987,32 @@ EXTERN_C const IID IID_IDXGIFactory;
     public:
         virtual HRESULT STDMETHODCALLTYPE EnumAdapters( 
             /* [in] */ UINT Adapter,
-            /* [out] */ IDXGIAdapter **ppAdapter) = 0;
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **ppAdapter) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE MakeWindowAssociation( 
             HWND WindowHandle,
             UINT Flags) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetWindowAssociation( 
-            HWND *pWindowHandle) = 0;
+            /* [annotation][out] */ 
+            _Out_  HWND *pWindowHandle) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE CreateSwapChain( 
-            IUnknown *pDevice,
-            DXGI_SWAP_CHAIN_DESC *pDesc,
-            IDXGISwapChain **ppSwapChain) = 0;
+            /* [annotation][in] */ 
+            _In_  IUnknown *pDevice,
+            /* [annotation][in] */ 
+            _In_  DXGI_SWAP_CHAIN_DESC *pDesc,
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGISwapChain **ppSwapChain) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE CreateSoftwareAdapter( 
             /* [in] */ HMODULE Module,
-            /* [out] */ IDXGIAdapter **ppAdapter) = 0;
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **ppAdapter) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -1806,7 +2024,7 @@ EXTERN_C const IID IID_IDXGIFactory;
             IDXGIFactory * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIFactory * This);
@@ -1816,30 +2034,40 @@ EXTERN_C const IID IID_IDXGIFactory;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIFactory * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIFactory * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIFactory * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIFactory * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *EnumAdapters )( 
             IDXGIFactory * This,
             /* [in] */ UINT Adapter,
-            /* [out] */ IDXGIAdapter **ppAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **ppAdapter);
         
         HRESULT ( STDMETHODCALLTYPE *MakeWindowAssociation )( 
             IDXGIFactory * This,
@@ -1848,18 +2076,23 @@ EXTERN_C const IID IID_IDXGIFactory;
         
         HRESULT ( STDMETHODCALLTYPE *GetWindowAssociation )( 
             IDXGIFactory * This,
-            HWND *pWindowHandle);
+            /* [annotation][out] */ 
+            _Out_  HWND *pWindowHandle);
         
         HRESULT ( STDMETHODCALLTYPE *CreateSwapChain )( 
             IDXGIFactory * This,
-            IUnknown *pDevice,
-            DXGI_SWAP_CHAIN_DESC *pDesc,
-            IDXGISwapChain **ppSwapChain);
+            /* [annotation][in] */ 
+            _In_  IUnknown *pDevice,
+            /* [annotation][in] */ 
+            _In_  DXGI_SWAP_CHAIN_DESC *pDesc,
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGISwapChain **ppSwapChain);
         
         HRESULT ( STDMETHODCALLTYPE *CreateSoftwareAdapter )( 
             IDXGIFactory * This,
             /* [in] */ HMODULE Module,
-            /* [out] */ IDXGIAdapter **ppAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **ppAdapter);
         
         END_INTERFACE
     } IDXGIFactoryVtbl;
@@ -1926,8 +2159,8 @@ EXTERN_C const IID IID_IDXGIFactory;
 /* interface __MIDL_itf_dxgi_0000_0010 */
 /* [local] */ 
 
-HRESULT WINAPI CreateDXGIFactory(REFIID riid, void **ppFactory);
-HRESULT WINAPI CreateDXGIFactory1(REFIID riid, void **ppFactory);
+HRESULT WINAPI CreateDXGIFactory(REFIID riid, _COM_Outptr_ void **ppFactory);
+HRESULT WINAPI CreateDXGIFactory1(REFIID riid, _COM_Outptr_ void **ppFactory);
 
 
 extern RPC_IF_HANDLE __MIDL_itf_dxgi_0000_0010_v0_0_c_ifspec;
@@ -1949,27 +2182,35 @@ EXTERN_C const IID IID_IDXGIDevice;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetAdapter( 
-            /* [out] */ IDXGIAdapter **pAdapter) = 0;
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **pAdapter) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE CreateSurface( 
-            /* [in] */ const DXGI_SURFACE_DESC *pDesc,
+            /* [annotation][in] */ 
+            _In_  const DXGI_SURFACE_DESC *pDesc,
             /* [in] */ UINT NumSurfaces,
             /* [in] */ DXGI_USAGE Usage,
-            /* [in] */ const DXGI_SHARED_RESOURCE *pSharedResource,
-            /* [out] */ IDXGISurface **ppSurface) = 0;
+            /* [annotation][in] */ 
+            _In_opt_  const DXGI_SHARED_RESOURCE *pSharedResource,
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGISurface **ppSurface) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE QueryResourceResidency( 
-            /* [size_is][in] */ IUnknown *const *ppResources,
-            /* [size_is][out] */ DXGI_RESIDENCY *pResidencyStatus,
+            /* [annotation][size_is][in] */ 
+            _In_reads_(NumResources)  IUnknown *const *ppResources,
+            /* [annotation][size_is][out] */ 
+            _Out_writes_(NumResources)  DXGI_RESIDENCY *pResidencyStatus,
             /* [in] */ UINT NumResources) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE SetGPUThreadPriority( 
             /* [in] */ INT Priority) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetGPUThreadPriority( 
-            /* [retval][out] */ INT *pPriority) = 0;
+            /* [annotation][retval][out] */ 
+            _Out_  INT *pPriority) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -1981,7 +2222,7 @@ EXTERN_C const IID IID_IDXGIDevice;
             IDXGIDevice * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIDevice * This);
@@ -1991,42 +2232,57 @@ EXTERN_C const IID IID_IDXGIDevice;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIDevice * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIDevice * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIDevice * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIDevice * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetAdapter )( 
             IDXGIDevice * This,
-            /* [out] */ IDXGIAdapter **pAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **pAdapter);
         
         HRESULT ( STDMETHODCALLTYPE *CreateSurface )( 
             IDXGIDevice * This,
-            /* [in] */ const DXGI_SURFACE_DESC *pDesc,
+            /* [annotation][in] */ 
+            _In_  const DXGI_SURFACE_DESC *pDesc,
             /* [in] */ UINT NumSurfaces,
             /* [in] */ DXGI_USAGE Usage,
-            /* [in] */ const DXGI_SHARED_RESOURCE *pSharedResource,
-            /* [out] */ IDXGISurface **ppSurface);
+            /* [annotation][in] */ 
+            _In_opt_  const DXGI_SHARED_RESOURCE *pSharedResource,
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGISurface **ppSurface);
         
         HRESULT ( STDMETHODCALLTYPE *QueryResourceResidency )( 
             IDXGIDevice * This,
-            /* [size_is][in] */ IUnknown *const *ppResources,
-            /* [size_is][out] */ DXGI_RESIDENCY *pResidencyStatus,
+            /* [annotation][size_is][in] */ 
+            _In_reads_(NumResources)  IUnknown *const *ppResources,
+            /* [annotation][size_is][out] */ 
+            _Out_writes_(NumResources)  DXGI_RESIDENCY *pResidencyStatus,
             /* [in] */ UINT NumResources);
         
         HRESULT ( STDMETHODCALLTYPE *SetGPUThreadPriority )( 
@@ -2035,7 +2291,8 @@ EXTERN_C const IID IID_IDXGIDevice;
         
         HRESULT ( STDMETHODCALLTYPE *GetGPUThreadPriority )( 
             IDXGIDevice * This,
-            /* [retval][out] */ INT *pPriority);
+            /* [annotation][retval][out] */ 
+            _Out_  INT *pPriority);
         
         END_INTERFACE
     } IDXGIDeviceVtbl;
@@ -2104,9 +2361,11 @@ EXTERN_C const IID IID_IDXGIDevice;
 
 typedef 
 enum DXGI_ADAPTER_FLAG
-    {	DXGI_ADAPTER_FLAG_NONE	= 0,
-	DXGI_ADAPTER_FLAG_REMOTE	= 1,
-	DXGI_ADAPTER_FLAG_FORCE_DWORD	= 0xffffffff
+    {
+        DXGI_ADAPTER_FLAG_NONE	= 0,
+        DXGI_ADAPTER_FLAG_REMOTE	= 1,
+        DXGI_ADAPTER_FLAG_SOFTWARE	= 2,
+        DXGI_ADAPTER_FLAG_FORCE_DWORD	= 0xffffffff
     } 	DXGI_ADAPTER_FLAG;
 
 typedef struct DXGI_ADAPTER_DESC1
@@ -2152,11 +2411,13 @@ EXTERN_C const IID IID_IDXGIFactory1;
     public:
         virtual HRESULT STDMETHODCALLTYPE EnumAdapters1( 
             /* [in] */ UINT Adapter,
-            /* [out] */ IDXGIAdapter1 **ppAdapter) = 0;
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter1 **ppAdapter) = 0;
         
         virtual BOOL STDMETHODCALLTYPE IsCurrent( void) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -2168,7 +2429,7 @@ EXTERN_C const IID IID_IDXGIFactory1;
             IDXGIFactory1 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIFactory1 * This);
@@ -2178,30 +2439,40 @@ EXTERN_C const IID IID_IDXGIFactory1;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIFactory1 * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIFactory1 * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIFactory1 * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIFactory1 * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *EnumAdapters )( 
             IDXGIFactory1 * This,
             /* [in] */ UINT Adapter,
-            /* [out] */ IDXGIAdapter **ppAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **ppAdapter);
         
         HRESULT ( STDMETHODCALLTYPE *MakeWindowAssociation )( 
             IDXGIFactory1 * This,
@@ -2210,23 +2481,29 @@ EXTERN_C const IID IID_IDXGIFactory1;
         
         HRESULT ( STDMETHODCALLTYPE *GetWindowAssociation )( 
             IDXGIFactory1 * This,
-            HWND *pWindowHandle);
+            /* [annotation][out] */ 
+            _Out_  HWND *pWindowHandle);
         
         HRESULT ( STDMETHODCALLTYPE *CreateSwapChain )( 
             IDXGIFactory1 * This,
-            IUnknown *pDevice,
-            DXGI_SWAP_CHAIN_DESC *pDesc,
-            IDXGISwapChain **ppSwapChain);
+            /* [annotation][in] */ 
+            _In_  IUnknown *pDevice,
+            /* [annotation][in] */ 
+            _In_  DXGI_SWAP_CHAIN_DESC *pDesc,
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGISwapChain **ppSwapChain);
         
         HRESULT ( STDMETHODCALLTYPE *CreateSoftwareAdapter )( 
             IDXGIFactory1 * This,
             /* [in] */ HMODULE Module,
-            /* [out] */ IDXGIAdapter **ppAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **ppAdapter);
         
         HRESULT ( STDMETHODCALLTYPE *EnumAdapters1 )( 
             IDXGIFactory1 * This,
             /* [in] */ UINT Adapter,
-            /* [out] */ IDXGIAdapter1 **ppAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter1 **ppAdapter);
         
         BOOL ( STDMETHODCALLTYPE *IsCurrent )( 
             IDXGIFactory1 * This);
@@ -2316,9 +2593,11 @@ EXTERN_C const IID IID_IDXGIAdapter1;
     {
     public:
         virtual HRESULT STDMETHODCALLTYPE GetDesc1( 
-            /* [out] */ DXGI_ADAPTER_DESC1 *pDesc) = 0;
+            /* [annotation][out] */ 
+            _Out_  DXGI_ADAPTER_DESC1 *pDesc) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -2330,7 +2609,7 @@ EXTERN_C const IID IID_IDXGIAdapter1;
             IDXGIAdapter1 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIAdapter1 * This);
@@ -2340,43 +2619,57 @@ EXTERN_C const IID IID_IDXGIAdapter1;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIAdapter1 * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIAdapter1 * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIAdapter1 * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIAdapter1 * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *EnumOutputs )( 
             IDXGIAdapter1 * This,
             /* [in] */ UINT Output,
-            /* [out][in] */ IDXGIOutput **ppOutput);
+            /* [annotation][out][in] */ 
+            _COM_Outptr_  IDXGIOutput **ppOutput);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc )( 
             IDXGIAdapter1 * This,
-            /* [out] */ DXGI_ADAPTER_DESC *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_ADAPTER_DESC *pDesc);
         
         HRESULT ( STDMETHODCALLTYPE *CheckInterfaceSupport )( 
             IDXGIAdapter1 * This,
-            /* [in] */ REFGUID InterfaceName,
-            /* [out] */ LARGE_INTEGER *pUMDVersion);
+            /* [annotation][in] */ 
+            _In_  REFGUID InterfaceName,
+            /* [annotation][out] */ 
+            _Out_  LARGE_INTEGER *pUMDVersion);
         
         HRESULT ( STDMETHODCALLTYPE *GetDesc1 )( 
             IDXGIAdapter1 * This,
-            /* [out] */ DXGI_ADAPTER_DESC1 *pDesc);
+            /* [annotation][out] */ 
+            _Out_  DXGI_ADAPTER_DESC1 *pDesc);
         
         END_INTERFACE
     } IDXGIAdapter1Vtbl;
@@ -2457,9 +2750,11 @@ EXTERN_C const IID IID_IDXGIDevice1;
             /* [in] */ UINT MaxLatency) = 0;
         
         virtual HRESULT STDMETHODCALLTYPE GetMaximumFrameLatency( 
-            /* [out] */ UINT *pMaxLatency) = 0;
+            /* [annotation][out] */ 
+            _Out_  UINT *pMaxLatency) = 0;
         
     };
+    
     
 #else 	/* C style interface */
 
@@ -2471,7 +2766,7 @@ EXTERN_C const IID IID_IDXGIDevice1;
             IDXGIDevice1 * This,
             /* [in] */ REFIID riid,
             /* [annotation][iid_is][out] */ 
-            __RPC__deref_out  void **ppvObject);
+            _COM_Outptr_  void **ppvObject);
         
         ULONG ( STDMETHODCALLTYPE *AddRef )( 
             IDXGIDevice1 * This);
@@ -2481,42 +2776,57 @@ EXTERN_C const IID IID_IDXGIDevice1;
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateData )( 
             IDXGIDevice1 * This,
-            /* [in] */ REFGUID Name,
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
             /* [in] */ UINT DataSize,
-            /* [in] */ const void *pData);
+            /* [annotation][in] */ 
+            _In_reads_bytes_(DataSize)  const void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *SetPrivateDataInterface )( 
             IDXGIDevice1 * This,
-            /* [in] */ REFGUID Name,
-            /* [in] */ const IUnknown *pUnknown);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][in] */ 
+            _In_opt_  const IUnknown *pUnknown);
         
         HRESULT ( STDMETHODCALLTYPE *GetPrivateData )( 
             IDXGIDevice1 * This,
-            /* [in] */ REFGUID Name,
-            /* [out][in] */ UINT *pDataSize,
-            /* [out] */ void *pData);
+            /* [annotation][in] */ 
+            _In_  REFGUID Name,
+            /* [annotation][out][in] */ 
+            _Inout_  UINT *pDataSize,
+            /* [annotation][out] */ 
+            _Out_writes_bytes_(*pDataSize)  void *pData);
         
         HRESULT ( STDMETHODCALLTYPE *GetParent )( 
             IDXGIDevice1 * This,
-            /* [in] */ REFIID riid,
-            /* [retval][out] */ void **ppParent);
+            /* [annotation][in] */ 
+            _In_  REFIID riid,
+            /* [annotation][retval][out] */ 
+            _COM_Outptr_  void **ppParent);
         
         HRESULT ( STDMETHODCALLTYPE *GetAdapter )( 
             IDXGIDevice1 * This,
-            /* [out] */ IDXGIAdapter **pAdapter);
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGIAdapter **pAdapter);
         
         HRESULT ( STDMETHODCALLTYPE *CreateSurface )( 
             IDXGIDevice1 * This,
-            /* [in] */ const DXGI_SURFACE_DESC *pDesc,
+            /* [annotation][in] */ 
+            _In_  const DXGI_SURFACE_DESC *pDesc,
             /* [in] */ UINT NumSurfaces,
             /* [in] */ DXGI_USAGE Usage,
-            /* [in] */ const DXGI_SHARED_RESOURCE *pSharedResource,
-            /* [out] */ IDXGISurface **ppSurface);
+            /* [annotation][in] */ 
+            _In_opt_  const DXGI_SHARED_RESOURCE *pSharedResource,
+            /* [annotation][out] */ 
+            _COM_Outptr_  IDXGISurface **ppSurface);
         
         HRESULT ( STDMETHODCALLTYPE *QueryResourceResidency )( 
             IDXGIDevice1 * This,
-            /* [size_is][in] */ IUnknown *const *ppResources,
-            /* [size_is][out] */ DXGI_RESIDENCY *pResidencyStatus,
+            /* [annotation][size_is][in] */ 
+            _In_reads_(NumResources)  IUnknown *const *ppResources,
+            /* [annotation][size_is][out] */ 
+            _Out_writes_(NumResources)  DXGI_RESIDENCY *pResidencyStatus,
             /* [in] */ UINT NumResources);
         
         HRESULT ( STDMETHODCALLTYPE *SetGPUThreadPriority )( 
@@ -2525,7 +2835,8 @@ EXTERN_C const IID IID_IDXGIDevice1;
         
         HRESULT ( STDMETHODCALLTYPE *GetGPUThreadPriority )( 
             IDXGIDevice1 * This,
-            /* [retval][out] */ INT *pPriority);
+            /* [annotation][retval][out] */ 
+            _Out_  INT *pPriority);
         
         HRESULT ( STDMETHODCALLTYPE *SetMaximumFrameLatency )( 
             IDXGIDevice1 * This,
@@ -2533,7 +2844,8 @@ EXTERN_C const IID IID_IDXGIDevice1;
         
         HRESULT ( STDMETHODCALLTYPE *GetMaximumFrameLatency )( 
             IDXGIDevice1 * This,
-            /* [out] */ UINT *pMaxLatency);
+            /* [annotation][out] */ 
+            _Out_  UINT *pMaxLatency);
         
         END_INTERFACE
     } IDXGIDevice1Vtbl;
