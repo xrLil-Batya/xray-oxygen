@@ -19,22 +19,23 @@
 #include <algorithm>
 
 #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
-#include <ddraw.h>
-#include <d3d9.h>
+#include <dx/dxgi1_6.h>
+#include <dx/ddraw.h>
+#include <dx/d3d9.h>
 #include <mmeapi.h>
 #include <dsound.h>
 
-#include <dinput.h>
-#include <dinputd.h>
+#include <dx/dinput.h>
+#include <dx/dinputd.h>
 #endif
 
-#include <d3d10_1.h>
-#include <d3d11_1.h>
+#include <dx/d3d10_1.h>
+#include <dx/d3d11_1.h>
 
 #if !defined(WINAPI_FAMILY) || WINAPI_FAMILY != WINAPI_FAMILY_PHONE_APP
 #include <wincodec.h>
 #include <d2derr.h>
-#include <dwrite.h>
+#include <dx/dwrite.h>
 #endif
 
 #define XAUDIO2_E_INVALID_CALL          0x88960001
