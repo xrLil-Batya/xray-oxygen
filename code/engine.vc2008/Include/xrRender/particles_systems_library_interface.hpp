@@ -6,8 +6,7 @@
 //	Description : particles systems library interface
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef PARTICLES_SYSTEMS_LIBRARY_INTERFACE_HPP_INCLUDED
-#define PARTICLES_SYSTEMS_LIBRARY_INTERFACE_HPP_INCLUDED
+#pragma once
 
 namespace PS {
 	class CPGDef;
@@ -24,5 +23,3 @@ public:
 }; // class library_interface
 
 } // namespace particles_systems
-
-#endif // #define PARTICLES_SYSTEMS_LIBRARY_INTERFACE_HPP_INCLUDED

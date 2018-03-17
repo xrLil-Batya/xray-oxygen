@@ -1,5 +1,3 @@
-#ifndef	QueryHelper_included
-#define	QueryHelper_included
 #pragma once
 
 //	Interface
@@ -107,5 +105,3 @@ IC HRESULT EndQuery( ID3DQuery *pQuery)
 }
 
 #endif	//	USE_DX10
-
-#endif	//	QueryHelper_included
