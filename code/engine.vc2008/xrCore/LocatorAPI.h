@@ -170,6 +170,9 @@ public:
 	void						rescan_pathes		();
 	void						lock_rescan			();
 	void						unlock_rescan		();
+
+    bool                        getFileName         (LPCSTR path, string512& outFilename);
+
 };
 
 extern XRCORE_API	CLocatorAPI*					xr_FS;

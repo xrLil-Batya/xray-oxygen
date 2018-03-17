@@ -12,43 +12,13 @@
 
 #include "d3d10.h"
 
-///////////////////////////////////////////////////////////////////////////
-// ID3D10Blob:
-// ------------
-// The buffer object is used by D3D10 to return arbitrary size data.
-//
-// GetBufferPointer -
-//    Returns a pointer to the beginning of the buffer.
-//
-// GetBufferSize -
-//    Returns the size of the buffer, in bytes.
-///////////////////////////////////////////////////////////////////////////
-
-typedef interface ID3D10Blob ID3D10Blob;
-typedef interface ID3D10Blob *LPD3D10BLOB;
-
-// {8BA5FB08-5195-40e2-AC58-0D989C3A0102}
-DEFINE_GUID(IID_ID3D10Blob, 
-0x8ba5fb08, 0x5195, 0x40e2, 0xac, 0x58, 0xd, 0x98, 0x9c, 0x3a, 0x1, 0x2);
-
-#undef INTERFACE
-#define INTERFACE ID3D10Blob
-
-DECLARE_INTERFACE_(ID3D10Blob, IUnknown)
-{
-    // IUnknown
-    STDMETHOD(QueryInterface)(THIS_ REFIID iid, LPVOID *ppv) PURE;
-    STDMETHOD_(ULONG, AddRef)(THIS) PURE;
-    STDMETHOD_(ULONG, Release)(THIS) PURE;
-
-    // ID3D10Blob
-    STDMETHOD_(LPVOID, GetBufferPointer)(THIS) PURE;
-    STDMETHOD_(SIZE_T, GetBufferSize)(THIS) PURE;
-};
+// ID3D10Blob has been made version-neutral and moved to d3dcommon.h.
 
 #ifdef __cplusplus
 extern "C" {
 #endif //__cplusplus
+
+
 
 ///////////////////////////////////////////////////////////////////////////
 // D3D10_DRIVER_TYPE
@@ -104,12 +74,12 @@ DEFINE_GUID(GUID_DeviceType,
 //      
 ///////////////////////////////////////////////////////////////////////////
 HRESULT WINAPI D3D10CreateDevice(
-    IDXGIAdapter *pAdapter,
+    _In_opt_ IDXGIAdapter *pAdapter,
     D3D10_DRIVER_TYPE DriverType,
     HMODULE Software,
     UINT Flags,
     UINT SDKVersion,
-    ID3D10Device **ppDevice);
+    _Out_opt_ ID3D10Device **ppDevice);
 
 ///////////////////////////////////////////////////////////////////////////
 // D3D10CreateDeviceAndSwapChain
@@ -148,14 +118,14 @@ HRESULT WINAPI D3D10CreateDevice(
 //      
 ///////////////////////////////////////////////////////////////////////////
 HRESULT WINAPI D3D10CreateDeviceAndSwapChain(
-    IDXGIAdapter *pAdapter,
+    _In_opt_ IDXGIAdapter *pAdapter,
     D3D10_DRIVER_TYPE DriverType,
     HMODULE Software,
     UINT Flags,
     UINT SDKVersion,
-    DXGI_SWAP_CHAIN_DESC *pSwapChainDesc,
-    IDXGISwapChain **ppSwapChain,    
-    ID3D10Device **ppDevice);
+    _In_opt_ DXGI_SWAP_CHAIN_DESC *pSwapChainDesc,
+    _Out_opt_ IDXGISwapChain **ppSwapChain,    
+    _Out_opt_ ID3D10Device **ppDevice);
 
 
 ///////////////////////////////////////////////////////////////////////////
@@ -164,7 +134,8 @@ HRESULT WINAPI D3D10CreateDeviceAndSwapChain(
 // Creates a Buffer of n Bytes
 //////////////////////////////////////////////////////////////////////////
 
-HRESULT WINAPI D3D10CreateBlob(SIZE_T NumBytes, LPD3D10BLOB *ppBuffer);
+HRESULT WINAPI D3D10CreateBlob(SIZE_T NumBytes, _Out_ LPD3D10BLOB *ppBuffer);
+
 
 #ifdef __cplusplus
 }

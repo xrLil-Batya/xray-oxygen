@@ -239,17 +239,15 @@ void CRenderDevice::on_idle		()
 	mt_csEnter.unlock			();
 	Sleep						(0);
 
-#ifndef DEDICATED_SERVER
 	Statistic->RenderTOTAL_Real.FrameStart	();
 	Statistic->RenderTOTAL_Real.Begin		();
 	if (b_is_Active)							{
 		if (Begin())				{
 
 			seqRender.Process						(rp_Render);
-			if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic) || Statistic->errors.size())	
+			if (psDeviceFlags.test(rsCameraPos) || psDeviceFlags.test(rsStatistic) || psDeviceFlags.test(rsDrawFPS) ||Statistic->errors.size())
 				Statistic->Show						();
-			//	TEST!!!
-			//Statistic->RenderTOTAL_Real.End			();
+
 			//	Present goes here
 			End										();
 		}
@@ -257,7 +255,7 @@ void CRenderDevice::on_idle		()
 	Statistic->RenderTOTAL_Real.End			();
 	Statistic->RenderTOTAL_Real.FrameEnd	();
 	Statistic->RenderTOTAL.accum	= Statistic->RenderTOTAL_Real.accum;
-#endif // #ifndef DEDICATED_SERVER
+
 	// *** Suspend threads
 	// Capture startup point
 	// Release end point - allow thread to wait for startup point

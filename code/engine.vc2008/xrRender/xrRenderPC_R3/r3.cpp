@@ -15,6 +15,8 @@
 
 #include "D3DX10Core.h"
 
+ENGINE_API bool isGraphicDebugging;
+
 CRender										RImplementation;
 
 template<UINT TNameLength>
@@ -739,6 +741,11 @@ static HRESULT create_shader (
 			return		E_FAIL;
 		}
 
+        string64 PsDebugName;
+        ZeroMemory(PsDebugName, sizeof(PsDebugName));
+        xr_sprintf(PsDebugName, "%s", name);
+        SetDebugObjectName(sps_result->ps, PsDebugName);
+
 		ID3DShaderReflection *pReflection = 0;
 
 #ifdef USE_DX11
@@ -775,6 +782,11 @@ static HRESULT create_shader (
 			Msg			("! CreatePixelShader hr == 0x%08x", _result);
 			return		E_FAIL;
 		}
+
+        string64 VsDebugName;
+        ZeroMemory(VsDebugName, sizeof(VsDebugName));
+        xr_sprintf(VsDebugName, "%s", name);
+        SetDebugObjectName(svs_result->vs, VsDebugName);
 
 		ID3DShaderReflection *pReflection = 0;
 #ifdef USE_DX11
@@ -822,6 +834,11 @@ static HRESULT create_shader (
 			Msg			("! CreateGeometryShaderhr == 0x%08x", _result);
 			return		E_FAIL;
 		}
+
+        string64 GsDebugName;
+        ZeroMemory(GsDebugName, sizeof(GsDebugName));
+        xr_sprintf(GsDebugName, "%s", name);
+        SetDebugObjectName(sgs_result->gs, GsDebugName);
 
 		ID3DShaderReflection *pReflection = 0;
 
@@ -1332,9 +1349,12 @@ HRESULT	CRender::shader_compile			(
 	HRESULT		_result = E_FAIL;
 
 	string_path	folder_name, folder;
-	//xr_strcpy		( folder, "objects\\r3\\" );
-	xr_strcpy		( folder, "mrProper\\objects\\r3" );
-	xr_strcat		( folder, name );
+	xr_strcpy		( folder, "objects\\r3\\" );
+    string512 shaderFilename;
+    bool bGetFilenameResult = FS.getFileName(name, shaderFilename);
+    VERIFY(bGetFilenameResult);
+
+	xr_strcat		( folder, shaderFilename);
 	xr_strcat		( folder, "." );
 
 	char extension[3];
@@ -1363,7 +1383,7 @@ HRESULT	CRender::shader_compile			(
 		xr_strcat		( file_name, temp_file_name );
 	}
 
-	if (FS.exist(file_name))
+	if (!isGraphicDebugging && FS.exist(file_name))
 	{
 		IReader* file = FS.r_open(file_name);
 		if (file->length()>4)
@@ -1391,7 +1411,7 @@ HRESULT	CRender::shader_compile			(
 			D3DCompile(
 				pSrcData, 
 				SrcDataLen,
-				"",//NULL, //LPCSTR pFileName,	//	NVPerfHUD bug workaround.
+				name,//NULL, //LPCSTR pFileName,	//	NVPerfHUD bug workaround.
 				defines, &Includer, pFunctionName,
 				pTarget,
 				Flags,

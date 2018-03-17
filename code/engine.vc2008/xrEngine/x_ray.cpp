@@ -33,6 +33,9 @@ ENGINE_API bool g_bootComplete		= false;
 volatile bool	g_bIntroFinished			= false;
 extern	void	Intro				( void* fn );
 
+//for Graphic debugging
+ENGINE_API bool isGraphicDebugging;
+
 #ifdef MASTER_GOLD
 #	define NO_MULTI_INSTANCES
 #endif // #ifdef MASTER_GOLD
@@ -433,7 +436,12 @@ ENGINE_API int RunApplication(char* commandLine)
 	Core._initialize			("xray", nullptr, TRUE, fsgame[0] ? fsgame : nullptr);
 
 	InitSettings				();
-	Core.Params = commandLine;
+
+    isGraphicDebugging = false;
+    if (strstr(Core.Params, "-renderdebug"))
+    {
+        isGraphicDebugging = true;
+    }
 
 	// Adjust player & computer name for Asian
 	if ( pSettings->line_exist( "string_table" , "no_native_input" ) ) {

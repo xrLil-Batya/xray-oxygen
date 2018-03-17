@@ -31,9 +31,7 @@ public:
 	IBlender*					b_ssao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
-	IBlender*					b_fxaa;
 	IBlender*					b_sunshafts;
-	IBlender*					b_droplets;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -53,12 +51,6 @@ public:
 	// 
 	ref_rt						rt_Accumulator;		// 64bit		(r,g,b,specular)
 	ref_rt						rt_Accumulator_temp;// only for HW which doesn't feature fp16 blend
-	ref_rt						rt_SunShaftsMask;
-	ref_rt						rt_SunShaftsMaskSmoothed;
-	ref_rt						rt_SunShaftsPass0;
-	//ref_rt						rt_SunShaftsPass2;
-	//ref_rt						rt_SunShaftsPass1;
-	
 	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
 	//	Igor: for volumetric lights
@@ -96,14 +88,7 @@ public:
 private:
 	// OCCq
 	ref_shader					s_occq;
-	
-	ref_shader					s_SunShafts;
-	ref_shader					s_droplets;
-	
-	// FXAA
-    ref_shader                  s_fxaa;
-    ref_geom					g_fxaa;	
-	
+
 	// Accum
 	ref_shader					s_accum_mask	;
 	ref_shader					s_accum_direct	;
@@ -215,15 +200,12 @@ public:
 	BOOL						u_DBT_enable			(float zMin, float zMax);
 	void						u_DBT_disable			();
 
-	void						phase_clear_position	();
-	void						phase_SunShafts			();
 	void						phase_ssao				();
 	void						phase_downsamp			();
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();
 	void						phase_scene_end			();
 	void						phase_occq				();
-	void						phase_fxaa              ();
 	void						phase_wallmarks			();
 	void						phase_smap_direct		(light* L,	u32 sub_phase);
 	void						phase_smap_direct_tsh	(light* L,	u32 sub_phase);
@@ -232,7 +214,6 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
-	void						phase_droplets          ();
 	void						shadow_direct			(light* L, u32 dls_phase);
 
 	bool						need_to_render_sunshafts();

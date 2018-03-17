@@ -69,7 +69,7 @@ extern ECORE_API	Flags32		ps_r1_flags;			// r1-only
 
 extern ECORE_API	float		ps_r1_fog_luminance;	//1.f r1-only
 extern ECORE_API	int			ps_r1_SoftwareSkinning;	// r1-only
-extern ECORE_API	int	        ps_r2_fxaa;
+extern ECORE_API    float	    ps_r2_rain_rops_debug_control;
 
 enum
 {
@@ -99,9 +99,9 @@ extern ECORE_API float			ps_r2_ls_bloom_speed;		// r2-only
 extern ECORE_API float			ps_r2_ls_dsm_kernel;		// r2-only
 extern ECORE_API float			ps_r2_ls_psm_kernel;		// r2-only
 extern ECORE_API float			ps_r2_ls_ssm_kernel;		// r2-only
-
-
-
+extern ECORE_API Fvector		ps_r2_aa_barier;			// r2-only
+extern ECORE_API Fvector		ps_r2_aa_weight;			// r2-only
+extern ECORE_API float			ps_r2_aa_kernel;			// r2-only
 extern ECORE_API float			ps_r2_mblur;				// .5f
 extern ECORE_API int			ps_r2_GI_depth;				// 1..5
 extern ECORE_API int			ps_r2_GI_photons;			// 8..256
@@ -139,13 +139,6 @@ extern ECORE_API float			ps_r3_dyn_wet_surf_near;	// 10.0f
 extern ECORE_API float			ps_r3_dyn_wet_surf_far;		// 30.0f
 extern ECORE_API int			ps_r3_dyn_wet_surf_sm_res;	// 256
 
-extern ECORE_API float			ps_prop_ss_sample_step_phase0;
-extern ECORE_API float			ps_prop_ss_sample_step_phase1;
-//extern ECORE_API float			ps_prop_ss_sample_step_phase2;
-extern ECORE_API float			ps_prop_ss_radius;
-extern ECORE_API float			ps_prop_ss_intensity;
-extern ECORE_API float			ps_prop_ss_blend;
-
 enum
 {
 	R2FLAG_SUN					= (1<<0),
@@ -154,6 +147,7 @@ enum
 	R2FLAG_SUN_DETAILS			= (1<<3),
 	R2FLAG_TONEMAP				= (1<<4),
 	R2FLAG_MBLUR				= (1<<5),
+	R2FLAG_AA					= (1<<5),
 	R2FLAG_GI					= (1<<6),
 	R2FLAG_FASTBLOOM			= (1<<7),
 	R2FLAG_GLOBALMATERIAL		= (1<<8),
@@ -210,8 +204,6 @@ extern void						xrRender_initconsole	();
 extern BOOL						xrRender_test_hw		();
 extern void						xrRender_apply_tf		();
 extern ECORE_API int			ps_r__detail_radius;
-
-extern ECORE_API float			droplets_power_debug;
 
 extern ECORE_API Flags32 ps_actor_shadow_flags;
 

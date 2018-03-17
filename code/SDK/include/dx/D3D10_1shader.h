@@ -12,6 +12,9 @@
 
 #include "d3d10shader.h"
 
+
+
+
 //----------------------------------------------------------------------------
 // Shader debugging structures
 //----------------------------------------------------------------------------
@@ -30,6 +33,7 @@ typedef enum _D3D10_SHADER_DEBUG_REGTYPE
     D3D10_SHADER_DEBUG_REG_LITERAL,
     D3D10_SHADER_DEBUG_REG_UNUSED,
     D3D11_SHADER_DEBUG_REG_INTERFACE_POINTERS,
+    D3D11_SHADER_DEBUG_REG_UAV,
     D3D10_SHADER_DEBUG_REG_FORCE_DWORD = 0x7fffffff,
 } D3D10_SHADER_DEBUG_REGTYPE;
 
@@ -244,6 +248,7 @@ typedef struct _D3D10_SHADER_DEBUG_INFO
 // Interface definitions
 //
 
+
 typedef interface ID3D10ShaderReflection1 ID3D10ShaderReflection1;
 typedef interface ID3D10ShaderReflection1 *LPD3D10SHADERREFLECTION1;
 
@@ -260,28 +265,28 @@ DECLARE_INTERFACE_(ID3D10ShaderReflection1, IUnknown)
     STDMETHOD_(ULONG, AddRef)(THIS) PURE;
     STDMETHOD_(ULONG, Release)(THIS) PURE;
 
-    STDMETHOD(GetDesc)(THIS_ D3D10_SHADER_DESC *pDesc) PURE;
+    STDMETHOD(GetDesc)(THIS_ _Out_ D3D10_SHADER_DESC *pDesc) PURE;
     
     STDMETHOD_(ID3D10ShaderReflectionConstantBuffer*, GetConstantBufferByIndex)(THIS_ UINT Index) PURE;
     STDMETHOD_(ID3D10ShaderReflectionConstantBuffer*, GetConstantBufferByName)(THIS_ LPCSTR Name) PURE;
     
-    STDMETHOD(GetResourceBindingDesc)(THIS_ UINT ResourceIndex, D3D10_SHADER_INPUT_BIND_DESC *pDesc) PURE;
+    STDMETHOD(GetResourceBindingDesc)(THIS_ UINT ResourceIndex, _Out_ D3D10_SHADER_INPUT_BIND_DESC *pDesc) PURE;
     
-    STDMETHOD(GetInputParameterDesc)(THIS_ UINT ParameterIndex, D3D10_SIGNATURE_PARAMETER_DESC *pDesc) PURE;
-    STDMETHOD(GetOutputParameterDesc)(THIS_ UINT ParameterIndex, D3D10_SIGNATURE_PARAMETER_DESC *pDesc) PURE;
+    STDMETHOD(GetInputParameterDesc)(THIS_ UINT ParameterIndex, _Out_ D3D10_SIGNATURE_PARAMETER_DESC *pDesc) PURE;
+    STDMETHOD(GetOutputParameterDesc)(THIS_ UINT ParameterIndex, _Out_ D3D10_SIGNATURE_PARAMETER_DESC *pDesc) PURE;
 
     STDMETHOD_(ID3D10ShaderReflectionVariable*, GetVariableByName)(THIS_ LPCSTR Name) PURE;
 
-    STDMETHOD(GetResourceBindingDescByName)(THIS_ LPCSTR Name, D3D10_SHADER_INPUT_BIND_DESC *pDesc) PURE;
+    STDMETHOD(GetResourceBindingDescByName)(THIS_ LPCSTR Name, _Out_ D3D10_SHADER_INPUT_BIND_DESC *pDesc) PURE;
 
-    STDMETHOD(GetMovInstructionCount)(THIS_ UINT* pCount) PURE;
-    STDMETHOD(GetMovcInstructionCount)(THIS_ UINT* pCount) PURE;
-    STDMETHOD(GetConversionInstructionCount)(THIS_ UINT* pCount) PURE;
-    STDMETHOD(GetBitwiseInstructionCount)(THIS_ UINT* pCount) PURE;
+    STDMETHOD(GetMovInstructionCount)(THIS_ _Out_ UINT* pCount) PURE;
+    STDMETHOD(GetMovcInstructionCount)(THIS_ _Out_ UINT* pCount) PURE;
+    STDMETHOD(GetConversionInstructionCount)(THIS_ _Out_ UINT* pCount) PURE;
+    STDMETHOD(GetBitwiseInstructionCount)(THIS_ _Out_ UINT* pCount) PURE;
     
-    STDMETHOD(GetGSInputPrimitive)(THIS_ D3D10_PRIMITIVE* pPrim) PURE;
-    STDMETHOD(IsLevel9Shader)(THIS_ BOOL* pbLevel9Shader) PURE;
-    STDMETHOD(IsSampleFrequencyShader)(THIS_ BOOL* pbSampleFrequency) PURE;
+    STDMETHOD(GetGSInputPrimitive)(THIS_ _Out_ D3D10_PRIMITIVE* pPrim) PURE;
+    STDMETHOD(IsLevel9Shader)(THIS_ _Out_ BOOL* pbLevel9Shader) PURE;
+    STDMETHOD(IsSampleFrequencyShader)(THIS_ _Out_ BOOL* pbSampleFrequency) PURE;
 };
 
 //////////////////////////////////////////////////////////////////////////////

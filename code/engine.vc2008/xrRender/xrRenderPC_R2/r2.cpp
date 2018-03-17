@@ -14,6 +14,8 @@
 
 CRender										RImplementation;
 
+ENGINE_API bool isGraphicDebugging;
+
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
 {
@@ -976,9 +978,11 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	HRESULT		_result = E_FAIL;
 
 	string_path	folder_name, folder;
-	//xr_strcpy		( folder, "objects\\r2" );
-	xr_strcpy		( folder, "mrProper\\objects\\r2" );
-	xr_strcat		( folder, name );
+	xr_strcpy		( folder, "objects\\r2" );
+    string512 shaderFilename;
+    bool bGetFilenameResult = FS.getFileName(name, shaderFilename);
+    VERIFY(bGetFilenameResult);
+	xr_strcat		( folder, shaderFilename);
 	xr_strcat		( folder, "." );
 
 	char extension[3];
@@ -1008,7 +1012,8 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		xr_strcat		( file_name, temp_file_name );
 	}
 
-	if (FS.exist(file_name))
+    //When graphical debugger enabled, we want to always compile shader from source, because they changing to frequently
+	if (!isGraphicDebugging && FS.exist(file_name))
 	{
 //		Msg				( "opening library or cache shader..." );
 		IReader* file = FS.r_open(file_name);

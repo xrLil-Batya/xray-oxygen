@@ -17,6 +17,8 @@
 // include this file content only if compiling for DX9 interfaces
 #if(DIRECT3D_VERSION >= 0x0900)
 
+
+
 #if defined(_X86_) || defined(_IA64_)
 #pragma pack(4)
 #endif
@@ -65,6 +67,8 @@ typedef struct _D3DPSHADERCAPS2_0
 #define D3DMIN30SHADERINSTRUCTIONS 512
 #define D3DMAX30SHADERINSTRUCTIONS 32768
 
+/* D3D9Ex only -- */
+#if !defined(D3D_DISABLE_9EX)
 
 typedef struct _D3DOVERLAYCAPS
 {
@@ -113,6 +117,8 @@ DEFINE_GUID(D3DKEYEXCHANGE_RSAES_OAEP,
 DEFINE_GUID(D3DKEYEXCHANGE_DXVA, 
 0x43d3775c, 0x38e5, 0x4924, 0x8d, 0x86, 0xd3, 0xfc, 0xcf, 0x15, 0x3e, 0x9b);
 
+#endif // !D3D_DISABLE_9EX
+/* -- D3D9Ex only */
 
 typedef struct _D3DCAPS9
 {
@@ -254,6 +260,7 @@ typedef struct _D3DCAPS9
 #define D3DCAPS3_COPY_TO_VIDMEM         0x00000100L /* Device can acclerate copies from sysmem to local vidmem */
 #define D3DCAPS3_COPY_TO_SYSTEMMEM      0x00000200L /* Device can acclerate copies from local vidmem to sysmem */
 #define D3DCAPS3_DXVAHD                 0x00000400L
+#define D3DCAPS3_DXVAHD_LIMITED         0x00000800L
 
 
 //
@@ -557,6 +564,7 @@ typedef struct _D3DCAPS9
 
 
 #pragma pack()
+
 
 #endif /* (DIRECT3D_VERSION >= 0x0900) */
 #endif /* _d3d9CAPS_H_ */

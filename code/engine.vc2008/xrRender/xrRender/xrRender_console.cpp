@@ -150,6 +150,10 @@ float		ps_r2_ssaLOD_A				= 64.f	;
 float		ps_r2_ssaLOD_B				= 48.f	;
 float		ps_r2_tf_Mipbias			= 0.0f	;
 
+Fvector		ps_r2_aa_barier				= { .8f, .1f, 0};	// r2-only
+Fvector		ps_r2_aa_weight				= { .25f,.25f,0};	// r2-only
+float		ps_r2_aa_kernel				= .5f;				// r2-only
+
 // R2-specific
 Flags32		ps_r2_ls_flags				= { R2FLAG_SUN 
 	//| R2FLAG_SUN_IGNORE_PORTALS
@@ -192,9 +196,9 @@ float		ps_r2_ls_psm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_ssm_kernel			= .7f;				// r2-only
 float		ps_r2_ls_bloom_threshold	= .00001f;				// r2-only
 
-
 Flags32     ps_actor_shadow_flags       = { 0 };
 float		ps_r2_mblur					= .3f;				// .5f
+
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64
 float		ps_r2_GI_clip				= EPS_L;			// EPS
@@ -231,15 +235,15 @@ float		ps_r2_slight_fade			= 0.5f;				// 1.f
 // KD start
 int			ps_r__detail_radius = 49;
 u32			dm_size = 24;
-u32 		dm_cache1_line = 12;
-u32			dm_cache_line = 49;
-u32			dm_cache_size = 2401;
-float		dm_fade = 47.5;
+u32 		dm_cache1_line = 12;	//dm_size*2/dm_cache1_count
+u32			dm_cache_line = 49;	//dm_size+1+dm_size
+u32			dm_cache_size = 2401;	//dm_cache_line*dm_cache_line
+float		dm_fade = 47.5;	//float(2*dm_size)-.5f;
 u32			dm_current_size = 24;
-u32 		dm_current_cache1_line = 12;
-u32			dm_current_cache_line = 49;
-u32			dm_current_cache_size = 2401;
-float		dm_current_fade = 47.5;
+u32 		dm_current_cache1_line = 12;	//dm_current_size*2/dm_cache1_count
+u32			dm_current_cache_line = 49;	//dm_current_size+1+dm_current_size
+u32			dm_current_cache_size = 2401;	//dm_current_cache_line*dm_current_cache_line
+float		dm_current_fade = 47.5;	//float(2*dm_current_size)-.5f;
 float		ps_current_detail_density = 0.6;
 
 //	x - min (0), y - focus (1.4), z - max (100)
@@ -251,21 +255,11 @@ float		ps_r3_dyn_wet_surf_near		= 10.f;				// 10.0f
 float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
 int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
 
-int ps_r2_fxaa = 0; 
 int ps_rs_loading_stages = 0;
-
-float		ps_prop_ss_radius				=	1.56f;
-float		ps_prop_ss_sample_step_phase0	=	.09f;
-float		ps_prop_ss_sample_step_phase1	=	.03f;
-//float		ps_prop_ss_sample_step_phase2	=	.33f;
-float		ps_prop_ss_blend				=	.066f;
-float		ps_prop_ss_intensity			=	1.f;
-float		droplets_power_debug            =   1.f;
 
 //- Mad Max
 float		ps_r2_gloss_factor			= 4.0f;
 //- Mad Max
-
 #ifndef _EDITOR
 #include	"../../xrEngine/xr_ioconsole.h"
 #include	"../../xrEngine/xr_ioc_cmd.h"
@@ -819,6 +813,9 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_sun",				&ps_r2_ls_flags,			R2FLAG_SUN		);
 	CMD3(CCC_Mask,		"r2_sun_details",		&ps_r2_ls_flags,			R2FLAG_SUN_DETAILS);
 	CMD3(CCC_Mask,		"r2_sun_focus",			&ps_r2_ls_flags,			R2FLAG_SUN_FOCUS);
+//	CMD3(CCC_Mask,		"r2_sun_static",		&ps_r2_ls_flags,			R2FLAG_SUN_STATIC);
+//	CMD3(CCC_Mask,		"r2_exp_splitscene",	&ps_r2_ls_flags,			R2FLAG_EXP_SPLIT_SCENE);
+//	CMD3(CCC_Mask,		"r2_exp_donttest_uns",	&ps_r2_ls_flags,			R2FLAG_EXP_DONT_TEST_UNSHADOWED);
 	CMD3(CCC_Mask,		"r2_exp_donttest_shad",	&ps_r2_ls_flags,			R2FLAG_EXP_DONT_TEST_SHADOWED);
 	
 	CMD3(CCC_Mask,		"r2_sun_tsm",			&ps_r2_ls_flags,			R2FLAG_SUN_TSM	);
@@ -836,10 +833,9 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale",		&ps_r2_sun_lumscale,		-1.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
-	CMD4(CCC_Float,		"r2_droplets_power_debug", &droplets_power_debug,	0.f,	1.5f);
 
-	
-	
+	CMD3(CCC_Mask,		"r2_aa",				&ps_r2_ls_flags,			R2FLAG_AA);
+	CMD4(CCC_Float,		"r2_aa_kernel",			&ps_r2_aa_kernel,			0.3f,	0.7f	);
 	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
 	CMD3(CCC_Mask,		"r2_mblur_enabled",		&ps_r2_ls_flags,			R2FLAG_MBLUR	);
 
@@ -875,11 +871,11 @@ void		xrRender_initconsole	()
 
 	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			.2f,	1.f		);
 
-	//tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
-	
+	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
+	CMD4(CCC_Vector3,	"r2_aa_break",			&ps_r2_aa_barier,			tw_min, tw_max	);
 
-	//tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
-	
+	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
+	CMD4(CCC_Vector3,	"r2_aa_weight",			&ps_r2_aa_weight,			tw_min, tw_max	);
 
 	//	Igor: Depth of field
 	tw_min.set			(-10000,-10000,0);	tw_max.set	(10000,10000,10000);
@@ -896,6 +892,7 @@ void		xrRender_initconsole	()
 //	float		ps_r2_dof_focus			= 1.4f;					// 1.4f
 	
 	CMD3(CCC_Mask,		"r2_volumetric_lights",			&ps_r2_ls_flags,			R2FLAG_VOLUMETRIC_LIGHTS);
+//	CMD3(CCC_Mask,		"r2_sun_shafts",				&ps_r2_ls_flags,			R2FLAG_SUN_SHAFTS);
 	CMD3(CCC_Token,		"r2_sun_shafts",				&ps_r_sun_shafts,			qsun_shafts_token);
 	CMD3(CCC_SSAO_Mode,	"r2_ssao_mode",					&ps_r_ssao_mode,			qssao_mode_token);
 	CMD3(CCC_Token,		"r2_ssao",						&ps_r_ssao,					qssao_token);
@@ -909,12 +906,6 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_detail_bump",				&ps_r2_ls_flags,			R2FLAG_DETAIL_BUMP);
 
 	CMD3(CCC_Token,		"r2_sun_quality",				&ps_r_sun_quality,			qsun_quality_token);
-	
-	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase1",	&ps_prop_ss_sample_step_phase0,	.01f,	.2f);
-	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase2",	&ps_prop_ss_sample_step_phase1,	.01f,	.2f);
-	CMD4(CCC_Float,		"r2_SunShafts_Radius",			&ps_prop_ss_radius,				.5f,	2.f);
-	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
-	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
 
 	//	Igor: need restart
 	CMD3(CCC_Token,		"r2_shadow_map_size",			&ps_r2_smapsize,			q_smapsize_token);
@@ -944,8 +935,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
-	
-	CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1);
 
 	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
 	CMD1(CCC_memory_stats,	"render_memory_stats" );

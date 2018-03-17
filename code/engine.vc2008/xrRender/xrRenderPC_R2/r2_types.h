@@ -16,12 +16,6 @@
 #define		r2_T_sky0			"$user$sky0" 
 #define		r2_T_sky1			"$user$sky1" 
 
-#define		r2_RT_SunShaftsMask				"$user$SunShaftsMask"
-#define		r2_RT_SunShaftsMaskSmoothed		"$user$SunShaftsMaskSmoothed"
-#define		r2_RT_SunShaftsPass0			"$user$SunShaftsPass0"
-//#define		r2_RT_SunShaftsPass1			"$user$SunShaftsPass1"
-//#define		r2_RT_SunShaftsPass2			"$user$SunShaftsPass2"
-
 #define		r2_RT_generic0		"$user$generic0"		// ---
 #define		r2_RT_generic1		"$user$generic1"		// ---
 #define		r2_RT_generic2		"$user$generic2"		// ---	//	Igor: for volumetric lights

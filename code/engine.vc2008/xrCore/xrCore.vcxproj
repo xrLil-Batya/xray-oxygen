@@ -290,6 +290,7 @@
     <ClCompile Include="..\xrEngine\interp.cpp" />
     <ClCompile Include="Buildcpp.cpp" />
     <ClCompile Include="DateTime.cpp" />
+    <ClCompile Include="DebugCore\dxerr.cpp" />
     <ClCompile Include="DebugCore\StackTrace.cpp" />
     <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="FTimer.cpp" />

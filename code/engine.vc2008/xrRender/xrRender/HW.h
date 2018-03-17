@@ -52,7 +52,7 @@ public:
 //	Variables section
 #if defined(USE_DX11)	//	USE_DX10
 public:
-	IDXGIAdapter*			m_pAdapter;	//	pD3D equivalent
+	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D11Device*			pDevice;	//	combine with DX9 pDevice via typedef
 	ID3D11DeviceContext*    pContext;	//	combine with DX9 pDevice via typedef
 	IDXGISwapChain*         m_pSwapChain;
@@ -67,7 +67,7 @@ public:
 	D3D_FEATURE_LEVEL		FeatureLevel;
 #elif defined(USE_DX10)
 public:
-	IDXGIAdapter*			m_pAdapter;	//	pD3D equivalent
+	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D10Device1*       	pDevice1;	//	combine with DX9 pDevice via typedef
 	ID3D10Device*        	pDevice;	//	combine with DX9 pDevice via typedef
 	ID3D10Device1*       	pContext1;	//	combine with DX9 pDevice via typedef

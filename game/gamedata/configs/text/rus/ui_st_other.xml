@@ -513,4 +513,7 @@
 	<string id="st_save_pri_a28_evacuation_heli">
 		<text>отлёт вертолётов эвакуации</text>
 	</string>
+	<string id="st_quicksave">
+	    <text>Быстрое сохранение</text>
+	</string>
 </string_table>

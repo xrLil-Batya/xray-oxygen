@@ -14,7 +14,6 @@
 
 /* xrCore */
 #define	LOG_TIME_PRECISE	// (by alpet & RvP)
-//#define _STR_LWRC_		// Lowercase command line
 
 /* Scripts */
 //#define SPAWN_ANTIFREEZE	/* spread spawn of game objects thoughout multiple frames to prevent lags (by alpet) */

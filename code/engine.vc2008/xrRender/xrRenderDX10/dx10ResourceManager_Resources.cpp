@@ -21,6 +21,8 @@
 
 #include "../xrRender/ShaderResourceTraits.h"
 
+ENGINE_API bool isGraphicDebugging;
+
 #ifdef USE_DX11
 	SHS*	CResourceManager::_CreateHS			(LPCSTR Name)
 	{
@@ -163,7 +165,9 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		}
 
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),/*_name*/shName,".vs");
+		strconcat					(sizeof(cname),cname,::Render->getShaderPath(), "vs_",/*_name*/shName,".hlsl");
+        string512                   shaderName;
+        strconcat                   (sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 		//		LPCSTR						target		= NULL;
 
@@ -175,7 +179,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 			string1024			tmp;
 			xr_sprintf			(tmp, "DX10: %s is missing. Replace with stub_default.vs", cname);
 			Msg					(tmp);
-			strconcat			(sizeof(cname), cname,::Render->getShaderPath(),"stub_default",".vs");
+			strconcat			(sizeof(cname), cname, ::Render->getShaderPath(),"vs_","stub_default",".hlsl");
 			FS.update_path		(cname,	"$game_shaders$", cname);
 			file				= FS.r_open(cname);
 		}
@@ -195,12 +199,12 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		if (strstr(data, "main_vs_2_0"))	{ c_target = "vs_2_0"; c_entry = "main_vs_2_0";	}
 
         DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-        if (strstr(Core.Params, "-shader_debug"))
+        if (isGraphicDebugging)
         {
-            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
         }
 
-		HRESULT	const _hr		= ::Render->shader_compile(name,(DWORD const*)data,size, c_entry, c_target, shaderCompileFlags, (void*&)_vs );
+		HRESULT	const _hr		= ::Render->shader_compile(shaderName,(DWORD const*)data,size, c_entry, c_target, shaderCompileFlags, (void*&)_vs );
 
 		VERIFY(SUCCEEDED(_hr));
 
@@ -272,7 +276,9 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname,::Render->getShaderPath(),/*_name*/shName,".ps");
+		strconcat					(sizeof(cname), cname,::Render->getShaderPath(), "ps_",/*_name*/shName,".hlsl");
+        string512                   shaderName;
+        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -285,7 +291,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 			//Memory.mem_compact();
 			xr_sprintf				(tmp, "DX10: %s is missing. Replace with stub_default.ps", cname);
 			Msg					(tmp);
-			strconcat					(sizeof(cname), cname,::Render->getShaderPath(),"stub_default",".ps");
+			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(),"ps_", "stub_default",".hlsl");
 			FS.update_path				(cname,	"$game_shaders$", cname);
 			R		= FS.r_open(cname);
 		}
@@ -308,11 +314,11 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR _name)
 		if (strstr(data,"main_ps_2_0"))			{ c_target = "ps_2_0"; c_entry = "main_ps_2_0";	}
 
         DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-        if (strstr(Core.Params, "-shader_debug"))
+        if (isGraphicDebugging)
         {
-            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
         }
-		HRESULT	const _hr		= ::Render->shader_compile(name,(DWORD const*)data,size, c_entry, c_target, shaderCompileFlags, (void*&)_ps );
+		HRESULT	const _hr		= ::Render->shader_compile(shaderName,(DWORD const*)data,size, c_entry, c_target, shaderCompileFlags, (void*&)_ps );
 		
 		VERIFY(SUCCEEDED(_hr));
 
@@ -355,7 +361,9 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 
 		// Open file
 		string_path					cname;
-		strconcat					(sizeof(cname), cname,::Render->getShaderPath(),name,".gs");
+		strconcat					(sizeof(cname), cname, ::Render->getShaderPath(), "gs_", name,".hlsl");
+        string512                   shaderName;
+        strconcat(sizeof(shaderName), shaderName, "gamedata\\shaders\\", cname);
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -368,7 +376,7 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 			//Memory.mem_compact();
 			xr_sprintf				(tmp, "DX10: %s is missing. Replace with stub_default.gs", cname);
 			Msg					(tmp);
-			strconcat					(sizeof(cname), cname,::Render->getShaderPath(),"stub_default",".gs");
+			strconcat					(sizeof(cname), cname, ::Render->getShaderPath(),"gs_", "stub_default",".hlsl");
 			FS.update_path				(cname,	"$game_shaders$", cname);
 			R		= FS.r_open(cname);
 		}
@@ -380,11 +388,11 @@ SGS*	CResourceManager::_CreateGS			(LPCSTR name)
 		LPCSTR						c_entry		= "main";
 
         DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-        if (strstr(Core.Params, "-shader_debug"))
+        if (isGraphicDebugging)
         {
-            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+            shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
         }
-		HRESULT	const _hr		= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)_gs );
+		HRESULT	const _hr		= ::Render->shader_compile(shaderName,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)_gs );
 
 		VERIFY(SUCCEEDED(_hr));
 

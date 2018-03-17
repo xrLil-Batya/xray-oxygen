@@ -9,6 +9,8 @@
 #include "ComputeShader.h"
 #include "..\xrRender\dxRenderDeviceRender.h"
 
+ENGINE_API bool isGraphicDebugging;
+
 CSCompiler::CSCompiler(ComputeShader& target):
 	m_Target(target), m_cs(0)
 {
@@ -185,7 +187,7 @@ void CSCompiler::compile(const char* name)
 	}
 
 	string_path					cname;
-	strconcat					(sizeof(cname),cname,::Render->getShaderPath(),name,".cs");
+	strconcat					(sizeof(cname),cname, ::Render->getShaderPath(), "cs_", name,".hlsl");
 	FS.update_path				(cname,	"$game_shaders$", cname);
 
 	IReader* file				= FS.r_open(cname);
@@ -196,9 +198,9 @@ void CSCompiler::compile(const char* name)
 	LPCSTR						c_entry		= "main";
 
     DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
-    if (strstr(Core.Params, "-shader_debug"))
+    if (isGraphicDebugging)
     {
-        shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION;
+        shaderCompileFlags |= D3D10_SHADER_DEBUG | D3D10_SHADER_SKIP_OPTIMIZATION | D3D10_SHADER_PREFER_FLOW_CONTROL;
     }
 	HRESULT	const _hr			= ::Render->shader_compile(name,(DWORD const*)file->pointer(),file->length(), c_entry, c_target, shaderCompileFlags, (void*&)m_cs );
 

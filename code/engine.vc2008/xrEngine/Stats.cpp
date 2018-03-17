@@ -275,7 +275,7 @@ void CStats::Show()
 		pFont->OnRender					();
 	};
 	
-	if( /*psDeviceFlags.test(rsStatistic) ||*/ psDeviceFlags.test(rsCameraPos) ){
+	if( psDeviceFlags.test(rsCameraPos) ){
 		_draw_cam_pos					(pFont);
 		pFont->OnRender					();
 	};

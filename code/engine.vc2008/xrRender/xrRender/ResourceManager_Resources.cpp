@@ -14,6 +14,8 @@
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
 
+ENGINE_API bool isGraphicDebugging;
+
 void fix_texture_name(LPSTR fn);
 
 void simplify_texture(string_path &fn)
@@ -158,7 +160,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		}
 
 		string_path					cname;
-		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),_name,".vs");
+		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),"vs_",_name,".hlsl");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 //		LPCSTR						target		= NULL;
 
@@ -183,8 +185,14 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		if (strstr(data, "main_vs_1_1"))	{ c_target = "vs_1_1"; c_entry = "main_vs_1_1";	}
 		if (strstr(data, "main_vs_2_0"))	{ c_target = "vs_2_0"; c_entry = "main_vs_2_0";	}
 
+        DWORD shaderCompileFlags = D3DXSHADER_PACKMATRIX_ROWMAJOR;
+        if (isGraphicDebugging)
+        {
+            shaderCompileFlags |= D3DXSHADER_DEBUG | D3DXSHADER_SKIPOPTIMIZATION | D3DXSHADER_PREFER_FLOW_CONTROL;
+        }
+
 		Msg						( "compiling shader %s", name );
-		HRESULT const _hr		= ::Render->shader_compile( name, (DWORD const*)data, size, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, (void*&)_vs);
+		HRESULT const _hr		= ::Render->shader_compile( name, (DWORD const*)data, size, c_entry, c_target, shaderCompileFlags, (void*&)_vs);
 
 		if ( FAILED(_hr) ) {
 			FlushLog();
@@ -232,7 +240,7 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 		// Open file
 		string_path					cname;
         LPCSTR						shader_path = ::Render->getShaderPath();
-		strconcat					(sizeof(cname), cname,shader_path,name,".ps");
+		strconcat					(sizeof(cname), cname,shader_path,"ps_", name,".hlsl");
 		FS.update_path				(cname,	"$game_shaders$", cname);
 
 		// duplicate and zero-terminate
@@ -253,8 +261,14 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 		if (strstr(data,"main_ps_1_4"))			{ c_target = "ps_1_4"; c_entry = "main_ps_1_4";	}
 		if (strstr(data,"main_ps_2_0"))			{ c_target = "ps_2_0"; c_entry = "main_ps_2_0";	}
 
+        DWORD shaderCompileFlags = D3DXSHADER_PACKMATRIX_ROWMAJOR;
+        if (isGraphicDebugging)
+        {
+            shaderCompileFlags |= D3DXSHADER_DEBUG | D3DXSHADER_SKIPOPTIMIZATION | D3DXSHADER_PREFER_FLOW_CONTROL;
+        }
+
 		Msg						( "compiling shader %s", name );
-		HRESULT const _hr		= ::Render->shader_compile( name, (DWORD const*)data, size, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, (void*&)_ps);
+		HRESULT const _hr		= ::Render->shader_compile( name, (DWORD const*)data, size, c_entry, c_target, shaderCompileFlags, (void*&)_ps);
 
 		if ( FAILED(_hr) ) {
 			FlushLog();

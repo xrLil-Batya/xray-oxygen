@@ -1,0 +1,21 @@
+#include "common.h"
+#include "MrProperCommon.h" // [FX to mrmnwar] Cheking includes, please
+/*
+struct		OUTStruct
+{
+	half4		Position		:		COLOR0;
+	half4		Normal		:		COLOR1;
+};
+*/
+//////////////////////////////////////////////////////////////////////////////////////////
+//
+
+OUTStruct		main		(	AntiAliasingStruct	INStruct	)
+{
+	OUTStruct		OUT;
+	
+	OUT.Position		=	half4(0.f,	0.f,	10000.f,	0.f);
+	OUT.Normal		=	half4(0.f,	0.f,	0.f,	0.f);
+	
+	return OUT;
+}

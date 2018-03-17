@@ -513,4 +513,7 @@
 	<string id="st_save_pri_a28_evacuation_heli">
 		<text>evacuation helicopter take-off</text>
 	</string>
+	<string id="st_quicksave">
+	    <text>Quick save</text>
+	</string>
 </string_table>
