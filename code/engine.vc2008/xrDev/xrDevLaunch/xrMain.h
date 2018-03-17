@@ -8,6 +8,7 @@
 
 #pragma once
 #include <QMainWindow>
+#include "minimal_CPUID.h"
 
 namespace Ui {
 class xrLaunch;

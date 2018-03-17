@@ -585,68 +585,104 @@
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
   <action name="actionxrEngine">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>xrEngine</string>
    </property>
   </action>
   <action name="actionxrPlay_2">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>xrPlay (Old oxygen)</string>
    </property>
   </action>
   <action name="action_silent">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>-silent</string>
    </property>
   </action>
   <action name="action_renderdebug">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>-renderdebug</string>
    </property>
   </action>
   <action name="actionOther">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Other...</string>
    </property>
   </action>
   <action name="actionxrEditorTools_in_dev">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>xrEditorTools (in dev)</string>
    </property>
   </action>
   <action name="actionxrAI">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>xrAI</string>
    </property>
   </action>
   <action name="actionOptions">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Parametres</string>
    </property>
   </action>
   <action name="actionView">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>View</string>
    </property>
   </action>
   <action name="actionSave_and_Exit">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Save and Exit</string>
    </property>
   </action>
   <action name="actionExit">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Exit</string>
    </property>
   </action>
   <action name="actionMain">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
    <property name="text">
     <string>Main</string>
    </property>
   </action>
   <action name="actionParametres">
    <property name="text">
-    <string>Parametres</string>
+    <string>Parametres of load</string>
    </property>
   </action>
  </widget>

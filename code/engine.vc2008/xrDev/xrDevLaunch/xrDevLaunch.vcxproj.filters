@@ -43,6 +43,9 @@
     <ClCompile Include="xrMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="minimal_CPUID.cpp">
+      <Filter>Header Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="xrMain.h">
@@ -61,5 +64,10 @@
     <QtUic Include="xrMain.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="minimal_CPUID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

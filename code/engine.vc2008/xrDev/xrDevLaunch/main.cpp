@@ -14,7 +14,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     xrLaunch LaunchWIN;
 	LaunchWIN.show();
-	
     return a.exec();
 // d
 }
+

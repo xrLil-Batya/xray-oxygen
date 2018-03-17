@@ -238,7 +238,7 @@ public:
         actionSave_and_Exit->setText(QApplication::translate("xrLaunch", "Save and Exit", nullptr));
         actionExit->setText(QApplication::translate("xrLaunch", "Exit", nullptr));
         actionMain->setText(QApplication::translate("xrLaunch", "Main", nullptr));
-        actionParametres->setText(QApplication::translate("xrLaunch", "Parametres", nullptr));
+        actionParametres->setText(QApplication::translate("xrLaunch", "Parameteres of load", nullptr));
         pushButton->setText(QApplication::translate("xrLaunch", "Run", nullptr));
         menu->setTitle(QApplication::translate("xrLaunch", "Launch", nullptr));
         menuGame->setTitle(QApplication::translate("xrLaunch", "Game...", nullptr));
