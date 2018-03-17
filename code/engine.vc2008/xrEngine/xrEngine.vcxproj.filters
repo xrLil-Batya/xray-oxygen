@@ -933,4 +933,7 @@
     <None Include="features.txt" />
     <None Include="TODO.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\xrCore.natvis" />
+  </ItemGroup>
 </Project>

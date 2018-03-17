@@ -720,9 +720,6 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
       <Filter>Interfase implementations\Debug</Filter>
     </ClInclude>
-    <ClInclude Include="blender_fxaa.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\utils\common\NvMender2003\convert.h">
       <Filter>Editor</Filter>
     </ClInclude>
@@ -1304,16 +1301,13 @@
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidRenderer.cpp">
       <Filter>Shading templates\3dFluid</Filter>
     </ClCompile>
-    <ClCompile Include="r3_rendertarget_phase_FXAA.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_fxaa.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
     <None Include="VTune\xrRender_R3.vpj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\..\xrCore.natvis" />
   </ItemGroup>
 </Project>

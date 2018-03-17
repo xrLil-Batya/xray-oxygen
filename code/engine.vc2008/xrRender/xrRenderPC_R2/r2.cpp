@@ -1013,7 +1013,8 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	}
 
     //When graphical debugger enabled, we want to always compile shader from source, because they changing to frequently
-	if (!isGraphicDebugging && FS.exist(file_name))
+    //#Giperion: Shader cache needs to be refactored
+	if (false && FS.exist(file_name))
 	{
 //		Msg				( "opening library or cache shader..." );
 		IReader* file = FS.r_open(file_name);

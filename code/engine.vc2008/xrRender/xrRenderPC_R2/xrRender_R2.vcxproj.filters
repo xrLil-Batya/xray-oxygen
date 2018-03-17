@@ -636,17 +636,8 @@
     <ClInclude Include="..\xrRender\dxUISequenceVideoItem.h">
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
     </ClInclude>
-    <ClCompile Include="r2_rendertarget_phase_FXAA.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_fxaa.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClInclude Include="..\..\Include\xrRender\UISequenceVideoItem.h">
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_fxaa.h">
-      <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h">
       <Filter>Editor</Filter>
@@ -656,9 +647,6 @@
     </ClInclude>
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h">
       <Filter>Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="Blender_ss.h">
-      <Filter>Shading templates</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1148,15 +1136,12 @@
     <ClCompile Include="..\xrRender\dxUISequenceVideoItem.cpp">
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_ss.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="Blender_ss.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\..\xrCore.natvis" />
   </ItemGroup>
 </Project>

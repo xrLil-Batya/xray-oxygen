@@ -8879,4 +8879,9 @@
       <Filter>Core\Client\Objects\items &amp; weapons\Explosives</Filter>
     </CustomBuildStep>
   </ItemGroup>
+  <ItemGroup>
+    <Natvis Include="..\xrCore.natvis">
+      <Filter>Core</Filter>
+    </Natvis>
+  </ItemGroup>
 </Project>

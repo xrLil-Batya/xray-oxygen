@@ -24,4 +24,15 @@
       <ExpandedItem>DATA</ExpandedItem>
     </Expand>
   </Type>
+
+  <Type Name="resptr_base&lt;*&gt;">
+    <DisplayString Condition="p_ == 0">""</DisplayString>
+    <DisplayString>{p_->name}</DisplayString>
+  </Type>
+
+  <Type Name="resptr_base&lt;CTexture&gt;">
+    <DisplayString Condition="p_ == 0">""</DisplayString>
+    <DisplayString>{p_->name}</DisplayString>
+  </Type>
+  
 </AutoVisualizer>

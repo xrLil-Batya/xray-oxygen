@@ -710,7 +710,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
         string64 PsDebugName;
         ZeroMemory(PsDebugName, sizeof(PsDebugName));
-        xr_sprintf(PsDebugName, "%s_ps", name);
+        xr_sprintf(PsDebugName, "%s", name);
         SetDebugObjectName(sps_result->ps, PsDebugName);
 
 		ID3DShaderReflection *pReflection = 0;
@@ -751,7 +751,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
         string64 VsDebugName;
         ZeroMemory(VsDebugName, sizeof(VsDebugName));
-        xr_sprintf(VsDebugName, "%s_vs", name);
+        xr_sprintf(VsDebugName, "%s", name);
         SetDebugObjectName(svs_result->vs, VsDebugName);
 
 		ID3DShaderReflection *pReflection = 0;
@@ -803,7 +803,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
         string64 GsDebugName;
         ZeroMemory(GsDebugName, sizeof(GsDebugName));
-        xr_sprintf(GsDebugName, "%s_vs", name);
+        xr_sprintf(GsDebugName, "%s", name);
         SetDebugObjectName(sgs_result->gs, GsDebugName);
 
 		ID3DShaderReflection *pReflection = 0;
@@ -1317,56 +1317,38 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 	HRESULT		_result = E_FAIL;
 
-	string_path	folder_name, folder;
-	xr_strcpy		( folder, "objects\\r4\\" );
-
+	string_path	folder_name, sh_filePath;
     string512 shaderFilename;
     bool bGetFilenameResult = FS.getFileName(name, shaderFilename);
     VERIFY(bGetFilenameResult);
-	xr_strcat		( folder, shaderFilename);
-	xr_strcat		( folder, "." );
 
-	char extension[3];
-	strncpy_s		( extension, pTarget, 2 );
-	xr_strcat		( folder, extension );
+    xr_strcpy(folder_name, "shaders_cache\\r4\\");
+    xr_strcat(folder_name, shaderFilename);
+    xr_strcat(folder_name, "\\");
+    xr_strcat(folder_name, sh_name);
+    FS.update_path(sh_filePath, "$app_data_root$", folder_name);
 
-	FS.update_path	( folder_name, "$game_shaders$", folder );
-	xr_strcat		( folder_name, "\\" );
-	
-	m_file_set.clear( );
-	FS.file_list	( m_file_set, folder_name, FS_ListFiles | FS_RootOnly, "*");
+    u32 const real_sourcecodeCRC = crc32(pSrcData, SrcDataLen);
 
-	string_path temp_file_name, file_name;
-	if ( !match_shader_id(name, sh_name, m_file_set, temp_file_name) ) {
-		string_path file;
-		xr_strcpy		( file, "shaders_cache\\r4\\" );
-		xr_strcat		( file, name );
-		xr_strcat		( file, "." );
-		xr_strcat		( file, extension );
-		xr_strcat		( file, "\\" );
-		xr_strcat		( file, sh_name );
-		FS.update_path	( file_name, "$app_data_root$", file);
-	}
-	else {
-		xr_strcpy		( file_name, folder_name );
-		xr_strcat		( file_name, temp_file_name );
-	}
-
-	if (!isGraphicDebugging && FS.exist(file_name))
+    //#Giperion: Shader caching is broken right now, we need to reimplement it later
+	if (false && FS.exist(sh_filePath))
 	{
-		IReader* file = FS.r_open(file_name);
-		if (file->length()>4)
+		IReader* file = FS.r_open(sh_filePath);
+		if (file->length()>8)
 		{
-			u32 crc = 0;
-			crc = file->r_u32();
+			u32 shaderCRC = 0;
+			shaderCRC = file->r_u32();
+            u32 sourceCodeCRC = 0;
+            sourceCodeCRC = file->r_u32();
 
-			//boost::crc_32_type		processor;
-			//processor.process_block	( file->pointer(), ((char*)file->pointer()) + file->elapsed() );
-			u32 const real_crc = crc32(file->pointer(), file->elapsed());
+            if (sourceCodeCRC == real_sourcecodeCRC)
+            {
+                u32 const real_crc = crc32(file->pointer(), file->elapsed());
 
-			if ( real_crc == crc ) {
-				_result				= create_shader(name, pTarget, (DWORD*)file->pointer(), file->elapsed(), file_name, result, o.disasm);
-			}
+                if (real_crc == shaderCRC) {
+                    _result = create_shader(name, pTarget, (DWORD*)file->pointer(), file->elapsed(), sh_filePath, result, o.disasm);
+                }
+            }
 		}
 		file->close();
 	}
@@ -1390,21 +1372,22 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 		if (SUCCEEDED(_result))
 		{
-			IWriter* file = FS.w_open(file_name);
+			IWriter* file = FS.w_open(sh_filePath);
 
 			//boost::crc_32_type		processor;
 			//processor.process_block	( pShaderBuf->GetBufferPointer(), ((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize() );
 			u32 const crc = crc32(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize());
 
 			file->w_u32				(crc);
+            file->w_u32             (real_sourcecodeCRC);
 			file->w					(pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize());
 			FS.w_close				(file);
 
-			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
+			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), (u32)pShaderBuf->GetBufferSize(), sh_filePath, result, o.disasm);
 		}
 		else {
 //			Msg						( "! shader compilation failed" );
-			Log						("! ", file_name);
+			Log						("! ", sh_filePath);
 			if ( pErrorBuf )
 				Log					("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
 			else

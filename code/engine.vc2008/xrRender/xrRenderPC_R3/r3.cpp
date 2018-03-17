@@ -1383,7 +1383,8 @@ HRESULT	CRender::shader_compile			(
 		xr_strcat		( file_name, temp_file_name );
 	}
 
-	if (!isGraphicDebugging && FS.exist(file_name))
+    //#Giperion: Shader cache needs to be refactored
+	if (false && FS.exist(file_name))
 	{
 		IReader* file = FS.r_open(file_name);
 		if (file->length()>4)

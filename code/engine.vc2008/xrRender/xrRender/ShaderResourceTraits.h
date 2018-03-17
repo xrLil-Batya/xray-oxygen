@@ -120,6 +120,7 @@ ENGINE_API bool isGraphicDebugging;
 			LPCSTR						c_entry		= "main";
 
 			// Compile
+            //DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
             DWORD shaderCompileFlags = D3D10_SHADER_PACK_MATRIX_ROW_MAJOR;
             if (isGraphicDebugging)
             {
