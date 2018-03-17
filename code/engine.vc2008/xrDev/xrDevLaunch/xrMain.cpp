@@ -8,7 +8,8 @@
 #include "xrMain.h"
 #include "ui_xrMain.h"
 #include <windows.h>
-void CreateRendererList();
+#pragma comment(lib, "xrEngine.lib")
+#define DLL_API __declspec(dllimport)
 
 xrLaunch::xrLaunch(QWidget *parent) :
     QMainWindow(parent),
@@ -32,4 +33,32 @@ xrLaunch::xrLaunch(QWidget *parent) :
 xrLaunch::~xrLaunch()
 {
     delete ui;
+}
+
+DLL_API int RunApplication(char* commandLine);
+
+void xrLaunch::on_pushButton_clicked()
+{
+}
+
+int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
+{
+	std::string params = lpCmdLine;
+
+	// If we want to start launcher
+	if (strstr(lpCmdLine, "-launcher"))
+	{
+		params = "-launcher";
+	}
+
+	RunApplication(params.data());
+
+	return 0;
+
+}
+
+
+void xrLaunch::on_actionExit_triggered()
+{
+	xrLaunch::close();
 }

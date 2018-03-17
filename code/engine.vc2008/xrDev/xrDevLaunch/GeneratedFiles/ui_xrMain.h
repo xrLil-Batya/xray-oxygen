@@ -137,24 +137,34 @@ public:
         xrLaunch->setPalette(palette);
         actionxrEngine = new QAction(xrLaunch);
         actionxrEngine->setObjectName(QStringLiteral("actionxrEngine"));
+        actionxrEngine->setCheckable(false);
         actionxrPlay_2 = new QAction(xrLaunch);
         actionxrPlay_2->setObjectName(QStringLiteral("actionxrPlay_2"));
+        actionxrPlay_2->setCheckable(false);
         action_silent = new QAction(xrLaunch);
         action_silent->setObjectName(QStringLiteral("action_silent"));
+        action_silent->setCheckable(false);
         action_renderdebug = new QAction(xrLaunch);
         action_renderdebug->setObjectName(QStringLiteral("action_renderdebug"));
+        action_renderdebug->setCheckable(false);
         actionOther = new QAction(xrLaunch);
         actionOther->setObjectName(QStringLiteral("actionOther"));
+        actionOther->setCheckable(false);
         actionxrEditorTools_in_dev = new QAction(xrLaunch);
         actionxrEditorTools_in_dev->setObjectName(QStringLiteral("actionxrEditorTools_in_dev"));
+        actionxrEditorTools_in_dev->setCheckable(false);
         actionxrAI = new QAction(xrLaunch);
         actionxrAI->setObjectName(QStringLiteral("actionxrAI"));
+        actionxrAI->setCheckable(false);
         actionOptions = new QAction(xrLaunch);
         actionOptions->setObjectName(QStringLiteral("actionOptions"));
+        actionOptions->setCheckable(false);
         actionView = new QAction(xrLaunch);
         actionView->setObjectName(QStringLiteral("actionView"));
+        actionView->setCheckable(false);
         actionSave_and_Exit = new QAction(xrLaunch);
         actionSave_and_Exit->setObjectName(QStringLiteral("actionSave_and_Exit"));
+        actionSave_and_Exit->setEnabled(true);
         actionExit = new QAction(xrLaunch);
         actionExit->setObjectName(QStringLiteral("actionExit"));
         actionMain = new QAction(xrLaunch);
@@ -165,13 +175,15 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         progressRunningBar = new QProgressBar(centralWidget);
         progressRunningBar->setObjectName(QStringLiteral("progressRunningBar"));
-        progressRunningBar->setGeometry(QRect(430, 390, 271, 23));
+        progressRunningBar->setGeometry(QRect(430, 400, 271, 23));
         progressRunningBar->setMinimumSize(QSize(200, 23));
         progressRunningBar->setValue(0);
         progressRunningBar->setTextVisible(false);
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(710, 390, 80, 21));
+        pushButton->setGeometry(QRect(710, 400, 80, 21));
+        pushButton->setAutoDefault(false);
+        pushButton->setFlat(false);
         listWidget = new QListWidget(centralWidget);
         listWidget->setObjectName(QStringLiteral("listWidget"));
         listWidget->setGeometry(QRect(10, 10, 251, 411));
@@ -205,7 +217,6 @@ public:
         menu->addAction(actionOptions);
         menu->addAction(actionView);
         menu->addSeparator();
-        menu->addAction(actionSave_and_Exit);
         menu->addAction(actionExit);
         menuGame->addAction(actionxrEngine);
         menuGame->addAction(menuxrEngine_with_options->menuAction());
@@ -219,6 +230,9 @@ public:
         menuOptions->addAction(actionParametres);
 
         retranslateUi(xrLaunch);
+
+        pushButton->setDefault(false);
+
 
         QMetaObject::connectSlotsByName(xrLaunch);
     } // setupUi
@@ -238,7 +252,7 @@ public:
         actionSave_and_Exit->setText(QApplication::translate("xrLaunch", "Save and Exit", nullptr));
         actionExit->setText(QApplication::translate("xrLaunch", "Exit", nullptr));
         actionMain->setText(QApplication::translate("xrLaunch", "Main", nullptr));
-        actionParametres->setText(QApplication::translate("xrLaunch", "Parameteres of load", nullptr));
+        actionParametres->setText(QApplication::translate("xrLaunch", "Parametres of load", nullptr));
         pushButton->setText(QApplication::translate("xrLaunch", "Run", nullptr));
         menu->setTitle(QApplication::translate("xrLaunch", "Launch", nullptr));
         menuGame->setTitle(QApplication::translate("xrLaunch", "Game...", nullptr));
