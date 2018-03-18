@@ -18,7 +18,6 @@
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
 #include <QtWidgets/QMenuBar>
-#include <QtWidgets/QProgressBar>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QStatusBar>
 #include <QtWidgets/QToolBar>
@@ -43,7 +42,6 @@ public:
     QAction *actionMain;
     QAction *actionParametres;
     QWidget *centralWidget;
-    QProgressBar *progressRunningBar;
     QPushButton *pushButton;
     QListWidget *listWidget;
     QMenuBar *menuBar;
@@ -173,15 +171,9 @@ public:
         actionParametres->setObjectName(QStringLiteral("actionParametres"));
         centralWidget = new QWidget(xrLaunch);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
-        progressRunningBar = new QProgressBar(centralWidget);
-        progressRunningBar->setObjectName(QStringLiteral("progressRunningBar"));
-        progressRunningBar->setGeometry(QRect(430, 400, 271, 23));
-        progressRunningBar->setMinimumSize(QSize(200, 23));
-        progressRunningBar->setValue(0);
-        progressRunningBar->setTextVisible(false);
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(710, 400, 80, 21));
+        pushButton->setGeometry(QRect(530, 340, 261, 71));
         pushButton->setAutoDefault(false);
         pushButton->setFlat(false);
         listWidget = new QListWidget(centralWidget);

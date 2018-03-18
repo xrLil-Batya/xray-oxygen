@@ -1,5 +1,5 @@
 /*************************************************
-* X-ray Oxygen, 2018 (C)
+* Oxygen Team, 2018 (C)
 *
 * xrMain.h - Main header for compilation with Qt
 *
@@ -7,10 +7,18 @@
 *************************************************/
 
 #pragma once
+/////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
+#include <windows.h>
+#include <thread>
 #include "minimal_CPUID.h"
-//#define DLL_API __declspec(dllimport)
+#include "ui_xrMain.h"
+#include <QApplication>
+/////////////////////////////////////////
+#define DLL_API __declspec(dllimport)
+#define CXX 199711L
+/////////////////////////////////////////
 
 void CreateRendererList();
 
@@ -27,9 +35,9 @@ public:
     ~xrLaunch();
 
 private slots:
-    void on_pushButton_clicked();
-
-    void on_actionExit_triggered();
+    void on_pushButton_clicked();			// Run
+    void on_actionExit_triggered();			// Menu->Exit
+    void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
 
 private:
     Ui::xrLaunch *ui;

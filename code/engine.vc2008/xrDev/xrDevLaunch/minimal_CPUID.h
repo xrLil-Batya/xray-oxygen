@@ -1,11 +1,13 @@
-// minimal_CPUID.h - Minimal CPUID for xrPlay
+// minimal_CPUID.h - Minimal CPUID for xrDevLaunch
+/////////////////////////////////////////
 #pragma once
+/////////////////////////////////////////
 #include <vector>  
 #include <bitset>  
 #include <array>  
 #include <string>  
 #include <intrin.h> 
-#include <windows.h>
+/////////////////////////////////////////
 
 class CPUID {
 	// forward declarations  

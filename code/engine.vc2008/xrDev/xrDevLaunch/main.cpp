@@ -1,14 +1,16 @@
 /*************************************************
-* X-ray Oxygen, 2018 (C)
+* Oxygen Team, 2018 (C)
 *
 * main.cxx - Main source file for compilation with Qt
 *
 * int main()
 *************************************************/
 #include "xrMain.h"
-#include <QApplication>
+/////////////////////////////////////////
 
-
+/***********************************************
+* int main() - entry-point for application.
+***********************************************/
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);

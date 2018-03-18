@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_xrLaunch_t {
-    QByteArrayData data[10];
-    char stringdata0[116];
+    QByteArrayData data[5];
+    char stringdata0[84];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,19 +34,13 @@ static const qt_meta_stringdata_xrLaunch_t qt_meta_stringdata_xrLaunch = {
 QT_MOC_LITERAL(0, 0, 8), // "xrLaunch"
 QT_MOC_LITERAL(1, 9, 21), // "on_pushButton_clicked"
 QT_MOC_LITERAL(2, 31, 0), // ""
-QT_MOC_LITERAL(3, 32, 9), // "HINSTANCE"
-QT_MOC_LITERAL(4, 42, 10), // "hInsttance"
-QT_MOC_LITERAL(5, 53, 13), // "hPrevInstance"
-QT_MOC_LITERAL(6, 67, 5), // "char*"
-QT_MOC_LITERAL(7, 73, 9), // "lpCmdLine"
-QT_MOC_LITERAL(8, 83, 8), // "nCmdShow"
-QT_MOC_LITERAL(9, 92, 23) // "on_actionExit_triggered"
+QT_MOC_LITERAL(3, 32, 23), // "on_actionExit_triggered"
+QT_MOC_LITERAL(4, 56, 27) // "on_actionxrEngine_triggered"
 
     },
     "xrLaunch\0on_pushButton_clicked\0\0"
-    "HINSTANCE\0hInsttance\0hPrevInstance\0"
-    "char*\0lpCmdLine\0nCmdShow\0"
-    "on_actionExit_triggered"
+    "on_actionExit_triggered\0"
+    "on_actionxrEngine_triggered"
 };
 #undef QT_MOC_LITERAL
 
@@ -56,7 +50,7 @@ static const uint qt_meta_data_xrLaunch[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       2,   14, // methods
+       3,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -64,11 +58,13 @@ static const uint qt_meta_data_xrLaunch[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    4,   24,    2, 0x08 /* Private */,
-       9,    0,   33,    2, 0x08 /* Private */,
+       1,    0,   29,    2, 0x08 /* Private */,
+       3,    0,   30,    2, 0x08 /* Private */,
+       4,    0,   31,    2, 0x08 /* Private */,
 
  // slots: parameters
-    QMetaType::Void, 0x80000000 | 3, 0x80000000 | 3, 0x80000000 | 6, QMetaType::Int,    4,    5,    7,    8,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
 
        0        // eod
@@ -80,11 +76,13 @@ void xrLaunch::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         xrLaunch *_t = static_cast<xrLaunch *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->on_pushButton_clicked((*reinterpret_cast< HINSTANCE(*)>(_a[1])),(*reinterpret_cast< HINSTANCE(*)>(_a[2])),(*reinterpret_cast< char*(*)>(_a[3])),(*reinterpret_cast< int(*)>(_a[4]))); break;
+        case 0: _t->on_pushButton_clicked(); break;
         case 1: _t->on_actionExit_triggered(); break;
+        case 2: _t->on_actionxrEngine_triggered(); break;
         default: ;
         }
     }
+    Q_UNUSED(_a);
 }
 
 QT_INIT_METAOBJECT const QMetaObject xrLaunch::staticMetaObject = {
@@ -112,13 +110,13 @@ int xrLaunch::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 2)
+        if (_id < 3)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 2;
+        _id -= 3;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 2)
+        if (_id < 3)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 2;
+        _id -= 3;
     }
     return _id;
 }
