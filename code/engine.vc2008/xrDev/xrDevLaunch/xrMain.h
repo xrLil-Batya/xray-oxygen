@@ -1,8 +1,8 @@
 /*************************************************
-* Oxygen Team, 2018 (C)
+* Vertver, 2018 (C)
 *
+* Edited: 18 March, 03/18
 * xrMain.h - Main header for compilation with Qt
-*
 * main namespace, classes and vars.
 *************************************************/
 
@@ -36,7 +36,7 @@ public:
 
 private slots:
     void on_pushButton_clicked();			// Run
-    void on_actionExit_triggered();			// Menu->Exit
+    void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
 
 private:

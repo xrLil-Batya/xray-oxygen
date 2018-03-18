@@ -1,8 +1,8 @@
 /*************************************************
-* Oxygen Team, 2018 (C)
+* Vertver, 2018 (C)
 *
+* Edited: 18 March, 03/18
 * main.cxx - Main source file for compilation with Qt
-*
 * int main()
 *************************************************/
 #include "xrMain.h"
