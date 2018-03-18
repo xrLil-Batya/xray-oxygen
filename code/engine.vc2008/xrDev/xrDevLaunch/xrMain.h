@@ -1,5 +1,6 @@
 /*************************************************
 * Vertver, 2018 (C)
+* X-RAY OXYGEN 1.7 PROJECT
 *
 * Edited: 18 March, 03/18
 * xrMain.h - Main header for compilation with Qt
