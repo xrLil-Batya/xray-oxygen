@@ -1,4 +1,4 @@
-/*///////////////////////////////////
+///////////////////////////////////
 #include <d3d9.h>
 #include <d3d11.h>
 ////////////////////////////////////
@@ -22,6 +22,7 @@ constexpr const char* r2_name = "xrRender_R2";
 constexpr const char* r3_name = "xrRender_R3";
 constexpr const char* r4_name = "xrRender_R4";
 /////////////////////////////////////////////////////
+
 bool SupportsAdvancedRendering()
 {
 
@@ -103,9 +104,6 @@ bool SupportsDX11Rendering()
 	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, pFeatureLevels, 1,
 		D3D11_SDK_VERSION, &sd, &pSwapChain, &pd3dDevice, &FeatureLevel, &pContext);
 
-	if (FAILED(hr))
-		Msg("* D3D11: device creation failed with hr=0x%08x", hr);
-
 	if (pContext)	pContext  ->Release();
 	if (pSwapChain) pSwapChain->Release();
 	if (pd3dDevice) pd3dDevice->Release();
@@ -149,11 +147,5 @@ void CreateRendererList()
 
 	modes.emplace_back(xr_token(nullptr, -1));
 
-	Msg("Available render modes[%d]:", modes.size());
-	for (auto& mode : modes)
-		if (mode.name)
-			Log(mode.name);
-
 	vid_quality_token = std::move(modes);
 }
-*/

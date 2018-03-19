@@ -25,10 +25,14 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 SOURCES += \
         main.cpp \
-        xrMain.cpp
+        xrMain.cpp \
+        RendererList.cpp \
+        minimal_CPUID.cpp \
+        InitLib.cpp
 
 HEADERS += \
-        xrMain.h
+        xrMain.h \
+        minimal_CPUID.h
 
 FORMS += \
         xrMain.ui

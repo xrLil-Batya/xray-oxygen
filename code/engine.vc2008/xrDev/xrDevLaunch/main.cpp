@@ -1,22 +1,22 @@
 /*************************************************
-* Vertver, 2018 (C)
+* VERTVER, 2018 (C)
+* X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 18 March, 03/18
+* Edited: 19 March, 2018
 * main.cxx - Main source file for compilation with Qt
 * int main()
 *************************************************/
 #include "xrMain.h"
-/////////////////////////////////////////
-
 /***********************************************
 * int main() - entry-point for application.
 ***********************************************/
-int main(int argc, char *argv[])
+int WINAPI main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     xrLaunch LaunchWIN;
+	//#VERTVER: Critical moment: The compiler create code with SSE2 instructions,
+	//#some part of matrix and vectors use SSE3. Be difficult!
 	LaunchWIN.show();
-    return a.exec();
-// d
+	return a.exec();
 }
 

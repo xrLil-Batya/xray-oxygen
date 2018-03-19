@@ -43,10 +43,13 @@
     <ClCompile Include="xrMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="minimal_CPUID.cpp">
-      <Filter>Header Files</Filter>
-    </ClCompile>
     <ClCompile Include="RendererList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="InitLib.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="minimal_CPUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

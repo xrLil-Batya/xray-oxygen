@@ -1,14 +1,20 @@
 /*************************************************
-* Vertver, 2018 (C)
+* VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 18 March, 03/18
+* Edited: 19 March, 2018
 * xrMain.cpp - Main source file for compilation with Qt
 * xrLaunch
 *************************************************/
 #include "xrMain.h"
 /////////////////////////////////////////
 #pragma comment(lib, "xrEngine.lib")
+/////////////////////////////////////////
+unsigned int type_ptr;
+char const* params_list;
+/////////////////////////////////////////
+// In RenderList.cpp
+void CreateRendererList();
 /////////////////////////////////////////
 
 /***********************************************
@@ -33,7 +39,10 @@ xrLaunch::xrLaunch(QWidget *parent) :
 	{
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
 	}
+
+	ui->listWidget->addItems ( LIST_ITEMS );
 }
+
 
 /***********************************************
 * ~xrLaunch() - remove the main thread
@@ -42,21 +51,36 @@ xrLaunch::~xrLaunch() {
     delete ui;
 }
 
+
 /***********************************************
 * int RunApplication() - Running the DLL 
 * (xrEngine or xrEditor)
 ***********************************************/
 DLL_API int RunApplication(char* commandLine);
 
+
 /***********************************************
-* void RunApplication() - Method for Button "Run"
+* void on_pushButton_clicked() - Method for run button
 ***********************************************/
 void xrLaunch::on_pushButton_clicked() {
-	char const* params_list;
-
-	std::string rendered = " -r2";
-	RunApplication(rendered.data());
+	run_xrEngine();
 }
+
+
+/***********************************************
+* void run_xrEngine() - Method for Launch 
+* xrEngine.dll
+***********************************************/
+void xrLaunch::run_xrEngine()
+{
+	QString rendered = ui->listWidget->currentItem()->text();
+	//QString launchParams = " " + rendered;
+	CreateRendererList();
+	//#VERTVER: Don't use here toLatin1(). 
+	//#It's can crush compiler on Release/Release_IA32 configuration
+	RunApplication(rendered.toLocal8Bit().data());
+}
+
 
 /***********************************************
 * void on_actionExit_triggered() - method for 
@@ -66,11 +90,55 @@ void xrLaunch::on_actionExit_triggered() {
 	xrLaunch::close();
 }
 
+
 /***********************************************
 * void RunApplication() - Method for menu 
 * (Run xrEngine.dll)
 ***********************************************/
 void xrLaunch::on_actionxrEngine_triggered() {
-	std::string params;
-	RunApplication(params.data());
+	run_xrEngine();
+}
+
+
+/***********************************************
+* void on_actionForserX_triggered() - link to
+* Oxygen Team page
+***********************************************/
+void xrLaunch::on_actionOxygen_Team_triggered()
+{
+	QString oxylink = "https://github.com/xrOxygen";
+	QDesktopServices::openUrl(QUrl(oxylink));
+}
+
+
+/***********************************************
+* void on_actionForserX_triggered() - link to
+* Vertver page
+***********************************************/
+void xrLaunch::on_actionVertver_triggered()
+{
+	QString oxylink = "https://github.com/Vertver";
+	QDesktopServices::openUrl(QUrl(oxylink));
+}
+
+
+/***********************************************
+* void on_actionForserX_triggered() - link to
+* Giperion page
+***********************************************/
+void xrLaunch::on_actionGiperion_2_triggered()
+{
+	QString oxylink = "https://github.com/Giperionn";
+	QDesktopServices::openUrl(QUrl(oxylink));
+}
+
+
+/***********************************************
+* void on_actionForserX_triggered() - link to
+* ForserX page
+***********************************************/
+void xrLaunch::on_actionForserX_triggered()
+{
+	QString oxylink = "https://github.com/ForserX";
+	QDesktopServices::openUrl(QUrl(oxylink));
 }
