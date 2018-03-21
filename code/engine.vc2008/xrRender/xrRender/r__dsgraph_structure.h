@@ -126,7 +126,7 @@ public:
 
 		for (u32 i = 0; i < 2; ++i)
 		{
-			for (u32 j; j < SHADER_PASSES_MAX; j++)
+			for (u32 j = 0; j < SHADER_PASSES_MAX; j++)
 			{
 				mapNormalPasses[i][j].clear();
 				mapMatrixPasses[i][j].clear();
@@ -137,10 +137,8 @@ public:
 		mapLOD.clear();
 		mapDistort.clear();
 
-#if RENDER!=R_R1
 		mapWmark.clear();
 		mapEmissive.clear();
-#endif
 	}
 
 	void		r_pmask											(bool _1, bool _2, bool _wm=false)				{ pmask[0]=_1; pmask[1]=_2;	pmask_wmark = _wm; }

@@ -150,10 +150,6 @@ float		ps_r2_ssaLOD_A				= 64.f	;
 float		ps_r2_ssaLOD_B				= 48.f	;
 float		ps_r2_tf_Mipbias			= 0.0f	;
 
-Fvector		ps_r2_aa_barier				= { .8f, .1f, 0};	// r2-only
-Fvector		ps_r2_aa_weight				= { .25f,.25f,0};	// r2-only
-float		ps_r2_aa_kernel				= .5f;				// r2-only
-
 // R2-specific
 Flags32		ps_r2_ls_flags				= { R2FLAG_SUN 
 	//| R2FLAG_SUN_IGNORE_PORTALS
@@ -834,11 +830,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
 
-	CMD3(CCC_Mask,		"r2_aa",				&ps_r2_ls_flags,			R2FLAG_AA);
-	CMD4(CCC_Float,		"r2_aa_kernel",			&ps_r2_aa_kernel,			0.3f,	0.7f	);
-	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
-	CMD3(CCC_Mask,		"r2_mblur_enabled",		&ps_r2_ls_flags,			R2FLAG_MBLUR	);
-
 	CMD3(CCC_Mask,		"r2_gi",				&ps_r2_ls_flags,			R2FLAG_GI);
 	CMD4(CCC_Float,		"r2_gi_clip",			&ps_r2_GI_clip,				EPS,	0.1f	);
 	CMD4(CCC_Integer,	"r2_gi_depth",			&ps_r2_GI_depth,			1,		5		);
@@ -870,12 +861,6 @@ void		xrRender_initconsole	()
 //	CMD4(CCC_Float,		"r2_parallax_range",	&ps_r2_df_parallax_range,	5.0f,	175.0f	);
 
 	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			.2f,	1.f		);
-
-	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
-	CMD4(CCC_Vector3,	"r2_aa_break",			&ps_r2_aa_barier,			tw_min, tw_max	);
-
-	tw_min.set			(0,0,0);	tw_max.set	(1,1,1);
-	CMD4(CCC_Vector3,	"r2_aa_weight",			&ps_r2_aa_weight,			tw_min, tw_max	);
 
 	//	Igor: Depth of field
 	tw_min.set			(-10000,-10000,0);	tw_max.set	(10000,10000,10000);
