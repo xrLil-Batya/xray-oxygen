@@ -5,11 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : aimers base class
 ////////////////////////////////////////////////////////////////////////////
-
-#ifndef AIMERS_BASE_H_INCLUDED
-#define AIMERS_BASE_H_INCLUDED
-
-#include "../include/xrrender/animation_motion.h"
+#pragma once
+#include "../include/xrRender/animation_motion.h"
 
 class CGameObject;
 class IKinematics;
@@ -20,37 +17,17 @@ namespace aimers {
 class base
 {
 public:
-							base			(
-								CGameObject* object,
-								LPCSTR animation_id,
-								bool animation_start,
-								Fvector const& target
-							);
+	base(CGameObject* object, LPCSTR animation_id, bool animation_start, Fvector const& target);
 
-                            base(const base&) = delete;
-                            base& operator= (const base&) = delete;
+    base(const base&) = delete;
+    base& operator= (const base&) = delete;
 
 protected:
 	template <u32 bone_count0, u32 bone_count1>
-	inline	void			fill_bones		(
-								u32 const (&bones)[bone_count0],
-								u16 const (&bones_ids)[bone_count1],
-								Fmatrix (&local_bones)[bone_count1],
-								Fmatrix (&global_bones)[bone_count1]
-							);
-			void			aim_at_position	(
-								Fvector const& bone_position,
-								Fvector const& object_position,
-								Fvector object_direction,
-								Fmatrix& result
-							);
-			void			aim_at_direction(
-								Fvector const& bone_position,
-								Fvector const& object_position,
-								Fvector const& object_direction,
-								Fmatrix& result
-							);
-	static	void	_BCL	callback		(CBoneInstance* bone);
+IC	void fill_bones			(u32 const (&bones)[bone_count0], u16 const (&bones_ids)[bone_count1], Fmatrix (&local_bones)[bone_count1], Fmatrix (&global_bones)[bone_count1]);
+	void aim_at_position	(Fvector const& bone_position, Fvector const& object_position, Fvector object_direction, Fmatrix& result);
+	void aim_at_direction	(Fvector const& bone_position, Fvector const& object_position, Fvector const& object_direction, Fmatrix& result);
+static void callback		(CBoneInstance* bone);
 
 protected:
 	Fmatrix					m_start_transform;
@@ -65,5 +42,3 @@ protected:
 } // namespace aimers
 
 #include "aimers_base_inline.h"
-
-#endif // #ifndef AIMERS_BASE_H_INCLUDED
