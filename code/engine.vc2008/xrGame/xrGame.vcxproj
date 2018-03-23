@@ -2277,8 +2277,6 @@
     <ClCompile Include="patrol_point.cpp" />
     <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
-    <ClCompile Include="script_movement_action_script.cpp">
-    </ClCompile>
     <ClCompile Include="patrol_path_params.cpp">
     </ClCompile>
     <ClCompile Include="patrol_path_params_script.cpp">
@@ -2288,18 +2286,12 @@
     <ClCompile Include="script_animation_action_script.cpp">
     </ClCompile>
     <ClCompile Include="script_sound_action.cpp" />
-    <ClCompile Include="script_sound_action_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_particle_action.cpp" />
-    <ClCompile Include="script_particle_action_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_object_action.cpp" />
     <ClCompile Include="script_object_action_script.cpp">
     </ClCompile>
     <ClCompile Include="script_action_condition.cpp" />
     <ClCompile Include="script_monster_action.cpp" />
-    <ClCompile Include="script_monster_action_script.cpp">
-    </ClCompile>
     <ClCompile Include="script_entity_action.cpp" />
     <ClCompile Include="script_entity_action_script.cpp">
     </ClCompile>
