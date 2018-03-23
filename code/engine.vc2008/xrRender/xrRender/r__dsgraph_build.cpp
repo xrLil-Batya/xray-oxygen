@@ -39,11 +39,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	if (pVisual->vis.marker	==	RI.marker)	return	;
 	pVisual->vis.marker		=	RI.marker			;
 
-#if RENDER==R_R1
-	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!=Device.dwFrame))	return;
-	pVisual->vis.accept_frame	=	Device.dwFrame	;
-#endif
-
 	float distSQ			;
 	float SSA				=	CalcSSA		(distSQ,Center,pVisual);
 	if (SSA<=r_ssaDISCARD)		return;
@@ -124,7 +119,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 		return;
 	}
 
-#if RENDER!=R_R1
 	// Emissive geometry should be marked and R2 special-cases it
 	// a) Allow to skeep already lit pixels
 	// b) Allow to make them 100% lit and really bright
@@ -152,7 +146,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 		mapWmark.emplace_back(std::make_pair(distSQ, temp));
 		return;
 	}
-#endif
 
 	_MatrixItem item = { SSA, RI.val_pObject, pVisual, *RI.val_pTransform };
 	for (u32 iPass = 0; iPass < sh->passes.size(); ++iPass)
@@ -243,11 +236,6 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 
 	if (pVisual->vis.marker		==	RI.marker)	return	;
 	pVisual->vis.marker			=	RI.marker			;
-
-#if RENDER==R_R1
-	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!=Device.dwFrame))	return;
-	pVisual->vis.accept_frame	=	Device.dwFrame		;
-#endif
 
 	float distSQ;
 	float SSA					=	CalcSSA		(distSQ,pVisual->vis.sphere.P,pVisual);
