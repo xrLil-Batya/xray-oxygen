@@ -1,5 +1,8 @@
 #include "stdafx.h"
+#include "Render.h"
+#include "../xrRender/xrRender/light.h"
 #pragma hdrstop
+#include <immintrin.h>
 
 const	float		S_distance		= 48;
 const	float		S_distance2		= S_distance*S_distance;

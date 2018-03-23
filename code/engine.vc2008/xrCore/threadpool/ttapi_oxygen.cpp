@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../../FrayBuildConfig.hpp"
 #include "ttapi.h"
 
 #ifdef NEW_TTAPI

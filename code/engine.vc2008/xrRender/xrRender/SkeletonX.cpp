@@ -18,7 +18,7 @@
 #include "SkeletonX.h"
 #include "SkeletonCustom.h"
 #include "../../xrEngine/fmesh.h"
-#include "../../xrCPU_Pipe/xrCPU_Pipe.h"
+#include "../../xrEngine/CPU/xrCPU_Pipe.h"
 
 shared_str	s_bones_array_const;
 

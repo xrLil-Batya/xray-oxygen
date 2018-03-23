@@ -13,7 +13,7 @@
 #include "tss.h"
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
-#include "../../xrCPU_Pipe/ttapi.h"
+#include "../../xrCore/threadpool/ttapi.h"
 
 //	Already defined in Texture.cpp
 void fix_texture_name(LPSTR fn);

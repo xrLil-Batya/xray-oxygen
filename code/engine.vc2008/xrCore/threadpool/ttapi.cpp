@@ -1,4 +1,5 @@
 #include "stdafx.h"
+#include "../../FrayBuildConfig.hpp"
 
 #ifndef NEW_TTAPI
 typedef struct TTAPI_WORKER_PARAMS {

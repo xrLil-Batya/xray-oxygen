@@ -1,17 +1,9 @@
-#ifndef xrCPU_PipeH
-#define xrCPU_PipeH
 #pragma once
+#include "../bone.h"
+#include "../device.h"
+#include "../../xrRender/xrRender/SkeletonXVertRender.h"
 
-// Forward references
-struct	ENGINE_API	vertRender;
-struct	ENGINE_API	vertBoned1W;
-struct	ENGINE_API	vertBoned2W;
-struct	ENGINE_API	vertBoned3W;
-struct	ENGINE_API	vertBoned4W;
-class	ENGINE_API	CBoneInstance;
-class	light;
-class	ENGINE_API CRenderDevice;
-
+class light;
 // Skinning processor specific functions
 // NOTE: Destination memory is uncacheble write-combining (AGP), so avoid non-linear writes
 // D: AGP,			32b aligned
@@ -38,6 +30,4 @@ struct xrDispatchTable
 
 // Binder
 // NOTE: Engine calls function named "_xrBindPSGP"
-typedef void	__cdecl	xrBinder	(xrDispatchTable* T, processor_info* ID);
-
-#endif
+void xrBind_PSGP(xrDispatchTable* T, processor_info* ID);

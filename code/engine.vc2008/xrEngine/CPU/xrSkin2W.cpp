@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#include "xrCPU_Pipe.h"
 #ifdef _EDITOR
 #	include "skeletonX.h"
 #	include "skeletoncustom.h"

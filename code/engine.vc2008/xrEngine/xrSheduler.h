@@ -1,9 +1,7 @@
-#ifndef XRSHEDULER_H_INCLUDED
-#define XRSHEDULER_H_INCLUDED
-
+#pragma once
 #include "ISheduled.h"
 
-class	ENGINE_API	CSheduler
+class ENGINE_API CSheduler
 {
 private:
 	struct Item
@@ -56,5 +54,3 @@ public:
 	void			Initialize	();
 	void			Destroy		();
 };
-
-#endif // XRSHEDULER_H_INCLUDED
