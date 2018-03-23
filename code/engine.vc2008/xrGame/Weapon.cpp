@@ -1846,39 +1846,33 @@ bool CWeapon::unlimited_ammo()
 float CWeapon::Weight() const
 {
 	float res = CInventoryItemObject::Weight();
-	if(IsGrenadeLauncherAttached()&&GetGrenadeLauncherName().size()){
-		res += pSettings->r_float(GetGrenadeLauncherName().c_str(),"inv_weight");
-	}
-	if(IsScopeAttached()&&m_scopes.size()){
-		res += pSettings->r_float(GetScopeName().c_str(),"inv_weight");
-	}
-	if(IsSilencerAttached()&&GetSilencerName().size()){
-		res += pSettings->r_float(GetSilencerName().c_str(),"inv_weight");
-	}
-	const char* last_type = nullptr; 
-	float w = 0, bs = 0;
-	for (auto& c : m_magazine)
+
+	if (IsGrenadeLauncherAttached() && GetGrenadeLauncherName().size()) 
 	{
-	// Usually ammos in mag have same type, use it to improve performance
-		if (last_type != c.m_ammoSect.c_str())
-		{
-			last_type = c.m_ammoSect.c_str();
-			w  = pSettings->r_float(last_type, "inv_weight");
-			bs = pSettings->r_float(last_type, "box_size");
-		}
-		res += w / bs;
+		res += pSettings->r_float(GetGrenadeLauncherName().c_str(), "inv_weight");
 	}
+	if (IsScopeAttached() && m_scopes.size()) 
+	{
+		res += pSettings->r_float(GetScopeName().c_str(), "inv_weight");
+	}
+	if (IsSilencerAttached() && GetSilencerName().size()) 
+	{
+		res += pSettings->r_float(GetSilencerName().c_str(), "inv_weight");
+	}
+
+	res += GetMagazineWeight(m_magazine);
+
 	return res;
 }
 
 bool CWeapon::show_crosshair()
 {
-	return !IsPending() && ( !IsZoomed() || !ZoomHideCrosshair() );
+	return !IsPending() && (!IsZoomed() || !ZoomHideCrosshair());
 }
 
 bool CWeapon::show_indicators()
 {
-	return ! ( IsZoomed() && ZoomTexture() );
+	return !(IsZoomed() && ZoomTexture());
 }
 
 float CWeapon::GetConditionToShow	() const
@@ -2067,5 +2061,22 @@ u32 CWeapon::Cost() const
 		res			+= iFloor(w*(iAmmoElapsed/bs));
 	}
 	return res;
+}
 
+float CWeapon::GetMagazineWeight(const decltype(CWeapon::m_magazine)& mag) const
+{
+    float res = 0;
+    const char* last_type = nullptr;
+    float last_ammo_weight = 0;
+    for (auto& c : mag)
+    {
+        // Usually ammos in mag have same type, use this fact to improve performance
+        if (last_type != c.m_ammoSect.c_str())
+        {
+            last_type = c.m_ammoSect.c_str();
+            last_ammo_weight = c.Weight();
+        }
+        res += last_ammo_weight;
+    }
+    return res;
 }

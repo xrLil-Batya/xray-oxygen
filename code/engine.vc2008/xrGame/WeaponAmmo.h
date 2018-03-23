@@ -27,7 +27,8 @@ class CCartridge
 public:
 	CCartridge();
 	void Load(LPCSTR section, u8 LocalAmmoType);
-
+	// Получить вес
+	float Weight() const; 
 	shared_str	m_ammoSect;
 	enum{
 		cfTracer				= (1<<0),
@@ -38,9 +39,9 @@ public:
 	};
 	SCartridgeParam param_s;
 
-	u8		m_LocalAmmoType;
+	u8 m_LocalAmmoType;
 
-	u16		bullet_material_idx;
+	u16 bullet_material_idx;
 	Flags8	m_flags;
 
 	shared_str	m_InvShortName;
