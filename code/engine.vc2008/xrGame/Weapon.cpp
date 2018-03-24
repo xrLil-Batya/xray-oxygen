@@ -84,7 +84,7 @@ CWeapon::CWeapon()
 	m_set_next_ammoType_on_reload = undefined_ammo_type;
 	m_crosshair_inertion	= 0.f;
 	m_activation_speed_is_overriden	=	false;
-	m_cur_scope				= NULL;
+	m_cur_scope				= u8(-1);
 	m_bRememberActorNVisnStatus = false;
 	m_nearwall_last_hud_fov = psHUD_FOV_def;
 
@@ -258,6 +258,23 @@ void CWeapon::ForceUpdateFireParticles()
 		_pxf.c						= XFORM().c;
 		
 		m_current_firedeps.m_FireParticlesXForm.set	(_pxf);
+	}
+}
+
+// Установить аддон (не требует предмета)
+void CWeapon::InstallAddonScope(u8 addon_idx, bool bNoUpdate)
+{
+	if (!bNoUpdate)
+	{
+		//UpdateAddons();
+	}
+}
+// Отсоединить аддон (не возвращает предмет в инвентарь)
+void CWeapon::UnistallAddonScope(u8 iSlot, bool bNoUpdate)
+{
+	if (!bNoUpdate)
+	{
+		//UpdateAddons();
 	}
 }
 
@@ -455,10 +472,10 @@ void CWeapon::Load		(LPCSTR section)
 
 	if ( m_eScopeStatus == ALife::eAddonAttachable )
 	{
-		if(pSettings->line_exist(section, "scopes_sect"))		
+		if(pSettings->line_exist(section, "scopes_sect"))
 		{
 			LPCSTR str = pSettings->r_string(section, "scopes_sect");
-			for(int i = 0, count = _GetItemCount(str); i < count; ++i )	
+			for(int i = 0, count = _GetItemCount(str); i < count; ++i )
 			{
 				string128						scope_section;
 				_GetItem						(str, i, scope_section);
@@ -571,6 +588,9 @@ BOOL CWeapon::net_Spawn		(CSE_Abstract* DC)
 	CSE_Abstract					*e	= (CSE_Abstract*)(DC);
 	CSE_ALifeItemWeapon			    *E	= smart_cast<CSE_ALifeItemWeapon*>(e);
 
+	inherited::net_Spawn_install_upgrades(E->m_upgrades);
+	InstallAddonScope(E->m_scope_idx, true);
+
 	//iAmmoCurrent					= E->a_current;
 	iAmmoElapsed					= E->a_elapsed;
 	m_flagsAddOnState				= E->m_addon_flags.get();
@@ -631,6 +651,7 @@ void CWeapon::net_Export(NET_Packet& P)
 	P.w_u8					(m_ammoType);
 	P.w_u8					((u8)GetState());
 	P.w_u8					((u8)IsZoomed());
+	P.w_u8                  (m_cur_scope);
 }
 
 void CWeapon::net_Import(NET_Packet& P)
@@ -650,8 +671,7 @@ void CWeapon::net_Import(NET_Packet& P)
 	u8						NewAddonState;
 	P.r_u8					(NewAddonState);
 
-	m_flagsAddOnState		= NewAddonState;
-	UpdateAddonsVisibility	();
+	
 
 	u8 ammoType, wstate;
 	P.r_u8					(ammoType);
@@ -659,6 +679,9 @@ void CWeapon::net_Import(NET_Packet& P)
 
 	u8 Zoom;
 	P.r_u8					((u8)Zoom);
+
+	u8 Cur_Scope;
+	P.r_u8(Cur_Scope);
 
 	if (H_Parent() && H_Parent()->Remote())
 	{
@@ -685,6 +708,11 @@ void CWeapon::net_Import(NET_Packet& P)
 		}break;
 	}
 	
+	InstallAddonScope(Cur_Scope, true);
+
+	m_flagsAddOnState = NewAddonState;
+	UpdateAddonsVisibility();
+
 	VERIFY((u32)iAmmoElapsed == m_magazine.size());
 }
 
@@ -692,7 +720,7 @@ void CWeapon::save(NET_Packet &output_packet)
 {
 	inherited::save	(output_packet);
 	save_data		(iAmmoElapsed,					output_packet);
-	save_data		(m_cur_scope, 					output_packet);
+	//save_data		(m_cur_scope, 					output_packet); //???
 	save_data		(m_flagsAddOnState, 			output_packet);
 	save_data		(m_ammoType,					output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow,output_packet);
@@ -703,7 +731,7 @@ void CWeapon::load(IReader &input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					input_packet);
-	load_data		(m_cur_scope,					input_packet);
+	//load_data		(m_cur_scope,					input_packet); //???
 	load_data		(m_flagsAddOnState,				input_packet);
 	///duplicate in net_Spawn! 
 	//UpdateAddonsVisibility			();
