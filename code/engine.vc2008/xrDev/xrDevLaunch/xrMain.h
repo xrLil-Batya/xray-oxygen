@@ -47,11 +47,8 @@ private slots:
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
     void on_actionOxygen_Team_triggered();
-
     void on_actionVertver_triggered();
-
     void on_actionGiperion_2_triggered();
-
     void on_actionForserX_triggered();
 
 private:

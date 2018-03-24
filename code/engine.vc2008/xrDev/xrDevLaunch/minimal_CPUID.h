@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////
 // VERTVER, 2018 (C) * X-RAY OXYGEN 1.7 PROJECT	
 // minimal_CPUID.h - MinCPUID for OXYLaunch		
-// Edited: 19 March, 2018						
+// Edited: 20 March, 2018						
 ////////////////////////////////////////////////////
 #pragma once								
 ////////////////////////////////////////////////////
@@ -16,9 +16,10 @@ class CPUID {
 	// forward declarations  
 	class CPUID_Internal;
 public:
-	static bool AVX			(void)	{ return CPU_Rep.f_1_ECX_[28]; }		// AVX
-	static bool SSE41		(void)	{ return CPU_Rep.f_1_ECX_[19]; }		// SSE4.1
-	static bool SSE2		(void)	{ return CPU_Rep.f_1_ECX_[26]; }		// SSE2
+	static bool AVX				(void)	{ return CPU_Rep.f_1_ECX_[28]; }		// AVX
+	static bool SSE41			(void)	{ return CPU_Rep.f_1_ECX_[19]; }		// SSE4.1
+	static bool SSE2			(void)	{ return CPU_Rep.f_1_ECX_[26]; }		// SSE2
+	static bool SSE3			(void)	{ return CPU_Rep.f_1_ECX_[0];  }		// SSE3
 private:
 	static const CPUID_Internal CPU_Rep;
 	class CPUID_Internal {
@@ -34,14 +35,14 @@ private:
 
 		// Create the main class of CPUID
 		/////////////////////////////////////////
-		CPUID_Internal() 
-		 :
+		CPUID_Internal() :
 			nIds_	{ 0 },
 			nExIds_	{ 0 },
 			f_1_ECX_{ 0 },
 			f_1_EDX_{ 0 },
 			data_	{},
-			extdata_{} {
+			extdata_{} 
+		{
 			std::array<int, 4> cpui;
 
 			// Calling __cpuid with 0x0 as the function_id argument  

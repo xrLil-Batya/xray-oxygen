@@ -250,7 +250,7 @@ public:
         pushButton->setFlat(false);
         listWidget = new QListWidget(centralWidget);
         listWidget->setObjectName(QStringLiteral("listWidget"));
-        listWidget->setGeometry(QRect(69, -1, 191, 3011));
+        listWidget->setGeometry(QRect(0, 0, 251, 3011));
         xrLaunch->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(xrLaunch);
         menuBar->setObjectName(QStringLiteral("menuBar"));
