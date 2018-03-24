@@ -186,6 +186,8 @@ float		ps_r2_df_parallax_range = 75.f;
 Flags32     ps_actor_shadow_flags       = { 0 };
 float		ps_r2_mblur					= .3f;				// .5f
 
+float		droplets_power_debug = 1.f;
+
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64
 float		ps_r2_GI_clip				= EPS_L;			// EPS
@@ -848,6 +850,8 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_detail_bump",				&ps_r2_ls_flags,			R2FLAG_DETAIL_BUMP);
 
 	CMD3(CCC_Token,		"r2_sun_quality",				&ps_r_sun_quality,			qsun_quality_token);
+
+	CMD4(CCC_Float,     "r2_droplets_power_debug",      &droplets_power_debug,      0.f, 1.5f);
 
 	//	Igor: need restart
 	CMD3(CCC_Token,		"r2_shadow_map_size",			&ps_r2_smapsize,			q_smapsize_token);
