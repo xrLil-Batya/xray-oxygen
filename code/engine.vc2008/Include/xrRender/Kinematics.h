@@ -1,5 +1,3 @@
-#ifndef	Kinematics_included
-#define	Kinematics_included
 #pragma once
 
 #include "RenderVisual.h"
@@ -89,5 +87,3 @@ virtual	const IBoneData&		_BCL	GetBoneData(u16 bone_id) const = 0;
 };
 
 IC IKinematics* PKinematics (IRenderVisual* V) { return V?V->dcast_PKinematics():0;}
-
-#endif	//	Kinematics_included

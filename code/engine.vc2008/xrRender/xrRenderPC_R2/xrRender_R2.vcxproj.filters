@@ -648,6 +648,9 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h">
       <Filter>Editor</Filter>
     </ClInclude>
+    <ClInclude Include="blender_droplets.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1137,6 +1140,12 @@
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_droplets.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_droplets.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

@@ -415,6 +415,11 @@
     <ClCompile Include="ClS\NET_Client.cpp" />
     <ClCompile Include="ClS\NET_Common.cpp" />
     <ClCompile Include="ClS\NET_Server.cpp" />
+    <ClCompile Include="CPU\PLC.cpp" />
+    <ClCompile Include="CPU\xrCPU_Pipe.cpp" />
+    <ClCompile Include="CPU\xrSkin2W.cpp" />
+    <ClCompile Include="CPU\xrSkin2W_SSE.cpp" />
+    <ClCompile Include="CPU\xrSkin2W_thread.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

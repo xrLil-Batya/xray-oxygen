@@ -52,7 +52,6 @@ light::~light()
 
 void light::set_texture		(LPCSTR name)
 {
-#if	RENDER != R_R1
 	if ((0==name) || (0==name[0]))
 	{
 		// default shaders
@@ -86,7 +85,6 @@ void light::set_texture		(LPCSTR name)
 		}
 	}
 #	endif // (RENDER!=R_R3) || (RENDER!=R_R4)
-#endif
 }
 
 void light::set_active		(bool a)

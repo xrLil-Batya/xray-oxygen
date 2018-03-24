@@ -251,23 +251,6 @@ RDEVICE.Statistic->TEST0.End		();
 #endif
 
 			// Color
-			/*
-			DetailPalette*	c_pal			= (DetailPalette*)&DS.color;
-			float gray255	[4];
-			gray255[0]						=	255.f*float(c_pal->a0)/15.f;
-			gray255[1]						=	255.f*float(c_pal->a1)/15.f;
-			gray255[2]						=	255.f*float(c_pal->a2)/15.f;
-			gray255[3]						=	255.f*float(c_pal->a3)/15.f;
-			*/
-			//float c_f						=	1.f;	//Interpolate		(gray255,x,z,d_size)+.5f;
-			//int c_dw						=	255;	//iFloor			(c_f);
-			//clamp							(c_dw,0,255);
-			//Item.C_dw						=	color_rgba		(c_dw,c_dw,c_dw,255);
-#if RENDER==R_R1
-			Item.c_rgb.x					=	DS.r_qclr	(DS.c_r,	15);
-			Item.c_rgb.y					=	DS.r_qclr	(DS.c_g,	15);
-			Item.c_rgb.z					=	DS.r_qclr	(DS.c_b,	15);
-#endif
 			Item.c_hemi						=	DS.r_qclr	(DS.c_hemi,	15);
 			Item.c_sun						=	DS.r_qclr	(DS.c_dir,	15);
 

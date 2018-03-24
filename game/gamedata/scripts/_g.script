@@ -452,15 +452,13 @@ end
 
 -- Крешнуть игру (после вывода сообщения об ошибке в лог)
 function abort(fmt, ...)
-    local no_abort = true
 	local reason = string.format(fmt, ...)
 	
     if db.actor ~= nil then
 	    news_manager.send_tip(db.actor, "Произошла критическая ошибка, подробности в логе.", nil, nil, nil)
 	end
 	
-	if no_abort == true then
-	    -- "log" используется для деббага!
+	if ScriptDebug then
 	    to_log("!Call abort, reason: "..reason)
 	else
 	    error_log("!Call abort, reason: "..reason)

@@ -32,9 +32,6 @@ void	CResourceManager::reset_begin			()
 	RCache.Vertex.reset_begin	();
 }
 
-bool	cmp_rt	(const CRT* A,const CRT* B)		{ return A->_order < B->_order; }
-//	DX10 cut bool	cmp_rtc	(const CRTC* A,const CRTC* B)	{ return A->_order < B->_order; }
-
 void	CResourceManager::reset_end				()
 {
 	// create RDStreams
@@ -70,17 +67,12 @@ void	CResourceManager::reset_end				()
 		// RT
 #pragma todo("container is created in stack!")
 		xr_vector<CRT*>		rt;
-		for (auto rt_it=m_rtargets.begin(); rt_it!=m_rtargets.end(); rt_it++)	rt.push_back(rt_it->second);
-		std::sort(rt.begin(),rt.end(),cmp_rt);
+		for (auto rt_it = m_rtargets.begin(); rt_it != m_rtargets.end(); rt_it++)
+		{
+			rt.push_back(rt_it->second);
+		}
+		std::sort(rt.begin(),rt.end(), [](const CRT* A, const CRT* B) { return A->_order < B->_order; });
 		for (u32 _it=0; _it<rt.size(); _it++)	rt[_it]->reset_end	();
-	}
-	{
-		// RTc
-#pragma todo("container is created in stack!")
-//	DX10 cut 		xr_vector<CRTC*>	rt;
-//	DX10 cut 		for (map_RTCIt rt_it=m_rtargets_c.begin(); rt_it!=m_rtargets_c.end(); rt_it++)	rt.push_back(rt_it->second);
-//	DX10 cut 		std::sort(rt.begin(),rt.end(),cmp_rtc);
-//	DX10 cut 		for (u32 _it=0; _it<rt.size(); _it++)	rt[_it]->reset_end	();
 	}
 
 	// create state-blocks
@@ -100,9 +92,11 @@ void	CResourceManager::reset_end				()
 
 template<class C>	void mdump(C c)
 {
-	if (0==c.size())	return;
-	for (C::iterator I=c.begin(); I!=c.end(); I++)
-		Msg	("*        : %3d: %s",I->second->dwReference, I->second->cName.c_str());
+	if (c.size())
+	{
+		for (C::iterator I = c.begin(); I != c.end(); I++)
+			Msg("* DUMP: %3d: %s", I->second->dwReference, I->second->cName.c_str());
+	}
 }
 
 CResourceManager::~CResourceManager		()

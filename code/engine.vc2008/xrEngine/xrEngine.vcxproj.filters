@@ -229,6 +229,9 @@
     <Filter Include="NetServer">
       <UniqueIdentifier>{92513ec2-b350-4a0d-b927-6ad48a38eca8}</UniqueIdentifier>
     </Filter>
+    <Filter Include="CPU">
+      <UniqueIdentifier>{3639cf0d-7c52-4245-ba7e-455492fb902d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -925,6 +928,21 @@
     </ClCompile>
     <ClCompile Include="ClS\NET_Common.cpp">
       <Filter>NetServer</Filter>
+    </ClCompile>
+    <ClCompile Include="CPU\xrSkin2W_thread.cpp">
+      <Filter>CPU</Filter>
+    </ClCompile>
+    <ClCompile Include="CPU\xrSkin2W.cpp">
+      <Filter>CPU</Filter>
+    </ClCompile>
+    <ClCompile Include="CPU\xrSkin2W_SSE.cpp">
+      <Filter>CPU</Filter>
+    </ClCompile>
+    <ClCompile Include="CPU\xrCPU_Pipe.cpp">
+      <Filter>CPU</Filter>
+    </ClCompile>
+    <ClCompile Include="CPU\PLC.cpp">
+      <Filter>CPU</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

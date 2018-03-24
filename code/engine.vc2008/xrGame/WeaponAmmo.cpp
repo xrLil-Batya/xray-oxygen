@@ -220,11 +220,13 @@ CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) cons
 
 float CWeaponAmmo::Weight() const
 {
-	float res = inherited::Weight();
-
-	res *= (float)m_boxCurr/(float)m_boxSize;
-
-	return res;
+	if (m_boxSize > 0)
+    {
+        float res = inherited::Weight();
+        res *= (float)m_boxCurr / (float)m_boxSize;
+        return res;
+    }
+    return 0.f;
 }
 
 u32 CWeaponAmmo::Cost() const
@@ -234,4 +236,20 @@ u32 CWeaponAmmo::Cost() const
 	res = iFloor(res*(float)m_boxCurr/(float)m_boxSize+0.5f);
 
 	return res;
+}
+
+float CCartridge::Weight() const
+{
+    auto s = m_ammoSect.c_str();
+    float res = 0;
+    if (s)
+    {
+        float box = pSettings->r_float(s, "box_size");
+        if (box > 0)
+        {
+            float w = pSettings->r_float(s, "inv_weight");
+            res = w / box;
+        }
+    }
+    return res;
 }

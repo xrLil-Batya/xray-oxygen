@@ -528,7 +528,6 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	Device.mFullTransform.mul	(Device.mProject, Device.mView);
 	RCache.set_xform_project	(Device.mProject);
 
-#if	RENDER!=R_R1
 	// Targets, use accumulator for temporary storage
 	const ref_rt	rt_null;
 	RCache.set_RT(0,	1);
@@ -548,7 +547,6 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	if (RImplementation.o.albedo_wo)	RImplementation.Target->u_setrt		(RImplementation.Target->rt_Accumulator,	rt_null,	rt_null,	HW.pBaseZB);
 	else								RImplementation.Target->u_setrt		(RImplementation.Target->rt_Color,			rt_null,	rt_null,	HW.pBaseZB);
 #endif // (RENDER==R_R3) || (RENDER==R_R4)
-#endif // RENDER!=R_R1
 
 	rmNear						();
 	g_hud->RenderActiveItemUI	();
@@ -711,10 +709,8 @@ void	R_dsgraph_structure::r_dsgraph_render_subspace	(IRender_Sector* _sector, CF
 				renderable->renderable_Render	();
 			}
 		}
-        #if RENDER!=R_R1
-		        if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW)) 
-					g_hud->Render_Actor_Shadow();
-        #endif 
+		 if (g_pGameLevel && (phase == RImplementation.PHASE_SMAP) && ps_actor_shadow_flags.test(RFLAG_ACTOR_SHADOW)) 
+				g_hud->Render_Actor_Shadow();
 	}
 
 	// Restore

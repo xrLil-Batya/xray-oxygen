@@ -1,61 +1,47 @@
 // Engine.cpp: implementation of the CEngine class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "Engine.h"
-#include "dedicated_server_only.h"
+#include "CPU\xrCPU_Pipe.h"
 
-CEngine				Engine;
-xrDispatchTable		PSGP;
+CEngine Engine;
+xrDispatchTable	PSGP;
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
 CEngine::CEngine()
 {
-	
 }
 
 CEngine::~CEngine()
 {
-	
 }
 
-extern	void msCreate		(LPCSTR name);
+#ifdef DEBUG
+extern void msCreate (LPCSTR name);
+#endif
 
-PROTECT_API void CEngine::Initialize	(void)
+ENGINE_API void CEngine::Initialize(void)
 {
 	// Bind PSGP
-	hPSGP		= LoadLibrary("xrCPU_Pipe");
-	R_ASSERT	(hPSGP);
-	xrBinder*	bindCPU	= (xrBinder*)	GetProcAddress(hPSGP,"xrBind_PSGP");	R_ASSERT(bindCPU);
-	bindCPU		(&PSGP, &CPU::Info );
+	xrBind_PSGP(&PSGP, &CPU::Info);
 
 	// Other stuff
-	Engine.Sheduler.Initialize			( );
+	Engine.Sheduler.Initialize();
 	// 
 #ifdef DEBUG
-	msCreate							("game");
+	msCreate("game");
 #endif
 }
 
-typedef void __cdecl ttapi_Done_func(void);
-
+#include "..\xrCore\threadpool\ttapi.h"
 void CEngine::Destroy()
 {
 	Engine.Sheduler.Destroy();
 	Engine.External.Destroy();
 
-	if (hPSGP)
-	{
-		ttapi_Done_func*  ttapi_Done = (ttapi_Done_func*)GetProcAddress(hPSGP, "ttapi_Done");	R_ASSERT(ttapi_Done);
-		if (ttapi_Done)
-			ttapi_Done();
-
-		FreeLibrary(hPSGP);
-		hPSGP = 0;
-		std::memset(&PSGP, 0, sizeof(PSGP));
-	}
+	ttapi_Done();
+	std::memset(&PSGP, 0, sizeof(PSGP));
 }

@@ -358,11 +358,11 @@ void	CRenderTarget::phase_combine	()
 	RCache.set_Stencil		( FALSE		)	;
 
 
-	if (1)	
+	if (1)
 	{
 		PIX_EVENT(combine_2);
 		// 
-		struct v_aa	{
+		struct v_aa {
 			Fvector4	p;
 			Fvector2	uv0;
 			Fvector2	uv1;
@@ -373,51 +373,46 @@ void	CRenderTarget::phase_combine	()
 			Fvector4	uv6;
 		};
 
-		float	_w					= float(Device.dwWidth);
-		float	_h					= float(Device.dwHeight);
-		float	ddw					= 1.f/_w;
-		float	ddh					= 1.f/_h;
-		p0.set						(.5f/_w, .5f/_h);
-		p1.set						((_w+.5f)/_w, (_h+.5f)/_h );
+		float	_w = float(Device.dwWidth);
+		float	_h = float(Device.dwHeight);
+		float	ddw = 1.f / _w;
+		float	ddh = 1.f / _h;
+		p0.set(.5f / _w, .5f / _h);
+		p1.set((_w + .5f) / _w, (_h + .5f) / _h);
 
 		// Fill vertex buffer
-		v_aa* pv					= (v_aa*) RCache.Vertex.Lock	(4,g_aa_AA->vb_stride,Offset);
-		pv->p.set(EPS,			float(_h+EPS),	EPS,1.f); pv->uv0.set(p0.x, p1.y);pv->uv1.set(p0.x-ddw,p1.y-ddh);pv->uv2.set(p0.x+ddw,p1.y+ddh);pv->uv3.set(p0.x+ddw,p1.y-ddh);pv->uv4.set(p0.x-ddw,p1.y+ddh);pv->uv5.set(p0.x-ddw,p1.y,p1.y,p0.x+ddw);pv->uv6.set(p0.x,p1.y-ddh,p1.y+ddh,p0.x);pv++;
-		pv->p.set(EPS,			EPS,			EPS,1.f); pv->uv0.set(p0.x, p0.y);pv->uv1.set(p0.x-ddw,p0.y-ddh);pv->uv2.set(p0.x+ddw,p0.y+ddh);pv->uv3.set(p0.x+ddw,p0.y-ddh);pv->uv4.set(p0.x-ddw,p0.y+ddh);pv->uv5.set(p0.x-ddw,p0.y,p0.y,p0.x+ddw);pv->uv6.set(p0.x,p0.y-ddh,p0.y+ddh,p0.x);pv++;
-		pv->p.set(float(_w+EPS),float(_h+EPS),	EPS,1.f); pv->uv0.set(p1.x, p1.y);pv->uv1.set(p1.x-ddw,p1.y-ddh);pv->uv2.set(p1.x+ddw,p1.y+ddh);pv->uv3.set(p1.x+ddw,p1.y-ddh);pv->uv4.set(p1.x-ddw,p1.y+ddh);pv->uv5.set(p1.x-ddw,p1.y,p1.y,p1.x+ddw);pv->uv6.set(p1.x,p1.y-ddh,p1.y+ddh,p1.x);pv++;
-		pv->p.set(float(_w+EPS),EPS,			EPS,1.f); pv->uv0.set(p1.x, p0.y);pv->uv1.set(p1.x-ddw,p0.y-ddh);pv->uv2.set(p1.x+ddw,p0.y+ddh);pv->uv3.set(p1.x+ddw,p0.y-ddh);pv->uv4.set(p1.x-ddw,p0.y+ddh);pv->uv5.set(p1.x-ddw,p0.y,p0.y,p1.x+ddw);pv->uv6.set(p1.x,p0.y-ddh,p0.y+ddh,p1.x);pv++;
-		RCache.Vertex.Unlock		(4,g_aa_AA->vb_stride);
+		v_aa* pv = (v_aa*)RCache.Vertex.Lock(4, g_aa_AA->vb_stride, Offset);
+		pv->p.set(EPS, float(_h + EPS), EPS, 1.f); pv->uv0.set(p0.x, p1.y); pv->uv1.set(p0.x - ddw, p1.y - ddh); pv->uv2.set(p0.x + ddw, p1.y + ddh); pv->uv3.set(p0.x + ddw, p1.y - ddh); pv->uv4.set(p0.x - ddw, p1.y + ddh); pv->uv5.set(p0.x - ddw, p1.y, p1.y, p0.x + ddw); pv->uv6.set(p0.x, p1.y - ddh, p1.y + ddh, p0.x); pv++;
+		pv->p.set(EPS, EPS, EPS, 1.f); pv->uv0.set(p0.x, p0.y); pv->uv1.set(p0.x - ddw, p0.y - ddh); pv->uv2.set(p0.x + ddw, p0.y + ddh); pv->uv3.set(p0.x + ddw, p0.y - ddh); pv->uv4.set(p0.x - ddw, p0.y + ddh); pv->uv5.set(p0.x - ddw, p0.y, p0.y, p0.x + ddw); pv->uv6.set(p0.x, p0.y - ddh, p0.y + ddh, p0.x); pv++;
+		pv->p.set(float(_w + EPS), float(_h + EPS), EPS, 1.f); pv->uv0.set(p1.x, p1.y); pv->uv1.set(p1.x - ddw, p1.y - ddh); pv->uv2.set(p1.x + ddw, p1.y + ddh); pv->uv3.set(p1.x + ddw, p1.y - ddh); pv->uv4.set(p1.x - ddw, p1.y + ddh); pv->uv5.set(p1.x - ddw, p1.y, p1.y, p1.x + ddw); pv->uv6.set(p1.x, p1.y - ddh, p1.y + ddh, p1.x); pv++;
+		pv->p.set(float(_w + EPS), EPS, EPS, 1.f); pv->uv0.set(p1.x, p0.y); pv->uv1.set(p1.x - ddw, p0.y - ddh); pv->uv2.set(p1.x + ddw, p0.y + ddh); pv->uv3.set(p1.x + ddw, p0.y - ddh); pv->uv4.set(p1.x - ddw, p0.y + ddh); pv->uv5.set(p1.x - ddw, p0.y, p0.y, p1.x + ddw); pv->uv6.set(p1.x, p0.y - ddh, p0.y + ddh, p1.x); pv++;
+		RCache.Vertex.Unlock(4, g_aa_AA->vb_stride);
 
 		//	Set up variable
 		Fvector2	vDofKernel;
-		vDofKernel.set(0.5f/Device.dwWidth, 0.5f/Device.dwHeight);
+		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
 		vDofKernel.mul(ps_r2_dof_kernel_size);
 
 		// Draw COLOR
-      if( !RImplementation.o.dx10_msaa )
-      {
-		   if (ps_r2_ls_flags.test(R2FLAG_AA))			RCache.set_Element	(s_combine->E[bDistort?3:1]);	// look at blender_combine.cpp
-		   else										RCache.set_Element	(s_combine->E[bDistort?4:2]);	// look at blender_combine.cpp
-      }
-      else
-      {
-         if (ps_r2_ls_flags.test(R2FLAG_AA))			RCache.set_Element	(s_combine_msaa[0]->E[bDistort?3:1]);	// look at blender_combine.cpp
-         else										RCache.set_Element	(s_combine_msaa[0]->E[bDistort?4:2]);	// look at blender_combine.cpp
-      }
-		RCache.set_c				("e_barrier",	ps_r2_aa_barier.x,	ps_r2_aa_barier.y,	ps_r2_aa_barier.z,	0);
-		RCache.set_c				("e_weights",	ps_r2_aa_weight.x,	ps_r2_aa_weight.y,	ps_r2_aa_weight.z,	0);
-		RCache.set_c				("e_kernel",	ps_r2_aa_kernel,	ps_r2_aa_kernel,	ps_r2_aa_kernel,	0);
-		RCache.set_c				("m_current",	m_current);
-		RCache.set_c				("m_previous",	m_previous);
-		RCache.set_c				("m_blur",		m_blur_scale.x,m_blur_scale.y, 0,0);
+		if (!RImplementation.o.dx10_msaa)
+		{
+			RCache.set_Element(s_combine->E[bDistort ? 4 : 2]);	// look at blender_combine.cpp
+		}
+		else
+		{
+			RCache.set_Element(s_combine_msaa[0]->E[bDistort ? 4 : 2]);	// look at blender_combine.cpp
+		}
+		RCache.set_c("m_current", m_current);
+		RCache.set_c("m_previous", m_previous);
+		RCache.set_c("m_blur", m_blur_scale.x, m_blur_scale.y, 0, 0);
 		Fvector3					dof;
 		g_pGamePersistent->GetCurrentDof(dof);
-		RCache.set_c				("dof_params",	dof.x, dof.y, dof.z, ps_r2_dof_sky);
-//.		RCache.set_c				("dof_params",	ps_r2_dof.x, ps_r2_dof.y, ps_r2_dof.z, ps_r2_dof_sky);
-		RCache.set_c				("dof_kernel",	vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
-		
-		RCache.set_Geometry			(g_aa_AA);
-		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
+		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
+		//.		RCache.set_c				("dof_params",	ps_r2_dof.x, ps_r2_dof.y, ps_r2_dof.z, ps_r2_dof_sky);
+		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+
+		RCache.set_Geometry(g_aa_AA);
+		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 	}
 	RCache.set_Stencil		(FALSE);
 

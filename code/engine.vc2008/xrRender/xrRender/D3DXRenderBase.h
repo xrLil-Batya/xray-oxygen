@@ -40,11 +40,9 @@ public:
 	R_dsgraph::mapLOD_T											mapLOD;
 	R_dsgraph::mapSorted_T										mapDistort;
 
-#if RENDER!=R_R1
 	R_dsgraph::mapSorted_T										mapWmark;			// sorted
 	R_dsgraph::mapSorted_T										mapEmissive;
 	R_dsgraph::mapSorted_T										mapHUDEmissive;
-#endif
 
 	// Runtime structures 
 	xr_vector<R_dsgraph::mapNormalVS::TNode*,render_alloc<R_dsgraph::mapNormalVS::TNode*> >				nrmVS;
@@ -150,11 +148,8 @@ public:
 		mapHUD.destroy			();
 		mapLOD.destroy			();
 		mapDistort.destroy		();
-
-#if RENDER!=R_R1
 		mapWmark.destroy		();
 		mapEmissive.destroy		();
-#endif
 	}
 
 	void r_pmask(bool _1, bool _2, bool _wm=false)
