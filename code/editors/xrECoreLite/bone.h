@@ -1,5 +1,8 @@
 //----------------------------------------------------
 #pragma once
+#ifdef _LW_PLUGIN
+#include <lwtypes.h>
+#endif
 //*** Shared Bone Data ****************************************************************************
 class CBoneData;
 // t-defs

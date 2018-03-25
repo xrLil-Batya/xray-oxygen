@@ -84,7 +84,7 @@ CWeapon::CWeapon()
 	m_set_next_ammoType_on_reload = undefined_ammo_type;
 	m_crosshair_inertion	= 0.f;
 	m_activation_speed_is_overriden	=	false;
-	m_cur_scope				= u8(-1);
+	m_cur_scope				= NULL;
 	m_bRememberActorNVisnStatus = false;
 	m_nearwall_last_hud_fov = psHUD_FOV_def;
 
@@ -260,7 +260,7 @@ void CWeapon::ForceUpdateFireParticles()
 		m_current_firedeps.m_FireParticlesXForm.set	(_pxf);
 	}
 }
-
+#ifdef STCOP
 // Установить аддон (не требует предмета)
 void CWeapon::InstallAddonScope(u8 addon_idx, bool bNoUpdate)
 {
@@ -277,6 +277,7 @@ void CWeapon::UnistallAddonScope(u8 iSlot, bool bNoUpdate)
 		//UpdateAddons();
 	}
 }
+#endif
 
 void CWeapon::Load		(LPCSTR section)
 {
@@ -588,8 +589,10 @@ BOOL CWeapon::net_Spawn		(CSE_Abstract* DC)
 	CSE_Abstract					*e	= (CSE_Abstract*)(DC);
 	CSE_ALifeItemWeapon			    *E	= smart_cast<CSE_ALifeItemWeapon*>(e);
 
-	inherited::net_Spawn_install_upgrades(E->m_upgrades);
+	//inherited::net_Spawn_install_upgrades(E->m_upgrades);
+#ifdef STCOP
 	InstallAddonScope(E->m_scope_idx, true);
+#endif
 
 	//iAmmoCurrent					= E->a_current;
 	iAmmoElapsed					= E->a_elapsed;
@@ -707,8 +710,13 @@ void CWeapon::net_Import(NET_Packet& P)
 			}
 		}break;
 	}
-	
+
+#ifdef STCOP
 	InstallAddonScope(Cur_Scope, true);
+#else
+	m_cur_scope = Cur_Scope;
+#endif
+
 
 	m_flagsAddOnState = NewAddonState;
 	UpdateAddonsVisibility();
@@ -724,6 +732,7 @@ void CWeapon::save(NET_Packet &output_packet)
 	save_data		(m_flagsAddOnState, 			output_packet);
 	save_data		(m_ammoType,					output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow,output_packet);
+	save_data       (m_cur_scope, output_packet);
 	save_data		(m_bRememberActorNVisnStatus,	output_packet);
 }
 
@@ -742,7 +751,7 @@ void CWeapon::load(IReader &input_packet)
 			OnZoomIn();
 		else			
 			OnZoomOut();
-
+	load_data       (m_cur_scope, input_packet);
 	load_data		(m_bRememberActorNVisnStatus,	input_packet);
 }
 

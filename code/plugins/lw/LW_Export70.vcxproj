@@ -59,7 +59,7 @@
     </Midl>
     <ClCompile>
       <InlineFunctionExpansion>OnlyExplicitInline</InlineFunctionExpansion>
-      <AdditionalIncludeDirectories>Export/;../../3rd-party/lwdk/include;../../SDK/include/dx/;../Shared;../../SDK/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Export/;../../3rd-party/lwdk/include;../../SDK/include/dx/;../Shared;../../SDK/include/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NDEBUG;_WINDOWS;_USRDLL;_LW_PLUGIN;_LW_EXPORT;XRCORE_STATIC;_MSWIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -84,7 +84,7 @@
       <Culture>0x0419</Culture>
     </ResourceCompile>
     <Link>
-      <AdditionalDependencies>xrECoreLite.lib;odbc32.lib;odbccp32.lib;lw_server.lib;lwo.lib;xrcorestatic.lib;WildMagic.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrECoreLite.lib;odbc32.lib;odbccp32.lib;lw_server.lib;lwo.lib;xrCore.lib;WildMagic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)xray_export.p</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>;../../SDK/Libraries/x64;$(xrLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -103,7 +103,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>Export/;../../3rd-party/lwdk/include;../../SDK/include/dx/;../Shared;../../SDK/include/</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>Export/;../../3rd-party/lwdk/include;../../SDK/include/dx/;../Shared;../../SDK/include/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>DEBUG;_WINDOWS;_USRDLL;_LW_PLUGIN;_LW_EXPORT;XRCORE_STATIC;_MSWIN;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>Sync</ExceptionHandling>

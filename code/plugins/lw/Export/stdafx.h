@@ -17,7 +17,7 @@ typedef TMsgDlgBtn TMsgDlgButtons[mbHelp];
 #include "..\..\Shared\ELog.h"
 #include <d3d9types.h>
 
-#define AnsiString std::string
+//#define AnsiString std::string
 
 xr_vector<std::string> AStringVec;
 

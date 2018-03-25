@@ -453,13 +453,10 @@ public:
 	SCOPES_VECTOR			m_scopes;
 	u8						m_cur_scope;
 
-	//RGS
+#ifdef STCOP
 	void                    InstallAddonScope(u8 addon_idx, bool bNoUpdate);
 	void                    UnistallAddonScope(u8 addon_idx, bool bNoUpdate);
-	//
-
-
-
+#endif
 
 	CWeaponAmmo*			m_pCurrentAmmo;
 	u8						m_ammoType;

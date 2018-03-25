@@ -45,11 +45,7 @@ public		:
 	BENCH_SEC_SCRAMBLEVTBL3
 
 	IC const char*			Name()		{ return cName;	}
-	void			InvalidSyntax() {
-		TInfo I; Info(I);
-		Msg("~ Invalid syntax in call to '%s'",cName);
-		Msg("~ Valid arguments: %s", I);
-	}
+	void			InvalidSyntax();
 	virtual void	Execute	(LPCSTR args)	= 0;
 	virtual void	Status	(TStatus& S)	{ S[0]=0; }
 	virtual void	Info	(TInfo& I)		{ xr_strcpy(I,"(no arguments)"); }

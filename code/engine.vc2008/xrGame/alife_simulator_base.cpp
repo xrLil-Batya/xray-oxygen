@@ -105,6 +105,7 @@ void CALifeSimulatorBase::reload			(LPCSTR section)
 
 CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, u16 parent_id, bool registration)
 {
+#ifdef STCOP
 	//Mortan: грязный хак
 	if (pSettings->line_exist(section, "parent_section"))
 	{
@@ -117,6 +118,7 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 			section = m_parentSection.c_str();
 		}
 	}
+#endif
 
 	CSE_Abstract				*abstract = F_entity_Create(section);
 	R_ASSERT3					(abstract,"Cannot find item with section",section);

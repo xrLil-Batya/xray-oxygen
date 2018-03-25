@@ -70,7 +70,7 @@ bool CEditableObject::Import_LWO(const char* fn, bool bNeedOptimize)
                     m_Surfaces.push_back(Osf);
                     if (Isf->name&&Isf->name[0]) Osf->SetName(Isf->name); else Osf->SetName("Default");
                     Osf->m_Flags.set(CSurface::sf2Sided,(Isf->sideflags==3)?TRUE:FALSE);
-                    AnsiString en_name="default", lc_name="default", gm_name="default";
+                    std::string en_name="default", lc_name="default", gm_name="default";
                     XRShader* sh_info = 0;
                     if (Isf->nshaders&&(stricmp(Isf->shader->name,SH_PLUGIN_NAME)==0)){
                     	sh_info 	= (XRShader*)Isf->shader->data;

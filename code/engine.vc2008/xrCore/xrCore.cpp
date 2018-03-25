@@ -112,19 +112,18 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvRese
 	{
 	case DLL_PROCESS_ATTACH:
 		{
-			_clear87		();
-			_control87		( _PC_53,   MCW_PC );
-			_control87		( _RC_CHOP, MCW_RC );
-			_control87		( _RC_NEAR, MCW_RC );
-			_control87		( _MCW_EM,  MCW_EM );
+			_clearfp();
+			_controlfp(_RC_CHOP, _MCW_RC);
+			_controlfp(_RC_NEAR, _MCW_RC);
+			_control87(_MCW_EM, MCW_EM);
+			timeBeginPeriod(1);
 		}
 		break;
-	case DLL_THREAD_ATTACH:
-		timeBeginPeriod	(1);
-		break;
-	case DLL_THREAD_DETACH:
-		break;
 	case DLL_PROCESS_DETACH:
+		{
+			_clearfp();
+			timeEndPeriod(1);
+		}
 		break;
 	}
     return TRUE;

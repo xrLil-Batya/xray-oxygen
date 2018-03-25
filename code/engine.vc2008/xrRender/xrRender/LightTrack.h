@@ -74,7 +74,7 @@ private:
 
 public:
 	virtual	void			force_mode			(u32 mode)		{ MODE = mode;															};
-	virtual float			get_luminocity		()				{ float result = std::max(approximate.x, std::max(approximate.y, approximate.z)); clamp(result, 0.f, 1.f); return (result); };
+	virtual float			get_luminocity		()				{ float presult = std::max(approximate.x, std::max(approximate.y, approximate.z)); clamp(presult, 0.f, 1.f); return (presult); };
 	virtual float			get_luminocity_hemi	()				{ return get_hemi();}
 	virtual float*			get_luminocity_hemi_cube		()				{ return hemi_cube_smooth;}
 

@@ -330,15 +330,15 @@ public:
 	ICF	ref_constant				get_c				(shared_str&	n)													{ if (ctable)	return ctable->get(n);else return 0;}
 
 	// constants - direct (fast)
-	ICF	void						set_c				(R_constant* C, const Fmatrix& A)									{ if (C)		constants.set(C,A);					}
-	ICF	void						set_c				(R_constant* C, const Fvector4& A)									{ if (C)		constants.set(C,A);					}
-	ICF	void						set_c				(R_constant* C, float x, float y, float z, float w)					{ if (C)		constants.set(C,x,y,z,w);			}
-	ICF	void						set_ca				(R_constant* C, u32 e, const Fmatrix& A)							{ if (C)		constants.seta(C,e,A);				}
-	ICF	void						set_ca				(R_constant* C, u32 e, const Fvector4& A)							{ if (C)		constants.seta(C,e,A);				}
-	ICF	void						set_ca				(R_constant* C, u32 e, float x, float y, float z, float w)			{ if (C)		constants.seta(C,e,x,y,z,w);		}
+	ICF	void						set_c				(R_constant* pC, const Fmatrix& A)									{ if (pC)		constants.set(pC,A);				}
+	ICF	void						set_c				(R_constant* pC, const Fvector4& A)									{ if (pC)		constants.set(pC,A);				}
+	ICF	void						set_c				(R_constant* pC, float x, float y, float z, float w)				{ if (pC)		constants.set(pC,x,y,z,w);			}
+	ICF	void						set_ca				(R_constant* pC, u32 e, const Fmatrix& A)							{ if (pC)		constants.seta(pC,e,A);				}
+	ICF	void						set_ca				(R_constant* pC, u32 e, const Fvector4& A)							{ if (pC)		constants.seta(pC,e,A);				}
+	ICF	void						set_ca				(R_constant* pC, u32 e, float x, float y, float z, float w)			{ if (pC)		constants.seta(pC,e,x,y,z,w);		}
 #if defined(USE_DX10) || defined(USE_DX11)
-	ICF	void						set_c				(R_constant* C, float A)											{ if (C)		constants.set(C,A);					}
-	ICF	void						set_c				(R_constant* C, int A)												{ if (C)		constants.set(C,A);					}
+	ICF	void						set_c				(R_constant* pC, float A)											{ if (pC)		constants.set(pC,A);				}
+	ICF	void						set_c				(R_constant* pC, int A)												{ if (pC)		constants.set(pC,A);				}
 #endif	//	USE_DX10
 
 
@@ -398,12 +398,12 @@ public:
 #endif	//	USE_DX10
 	void dbg_Draw					(D3DPRIMITIVETYPE T, FVF::L* pVerts, int vcnt, u16* pIdx, int pcnt);
 	void dbg_Draw					(D3DPRIMITIVETYPE T, FVF::L* pVerts, int pcnt);
-	IC void dbg_DrawAABB			(Fvector& T, float sx, float sy, float sz, u32 C)						{	Fvector half_dim;	half_dim.set(sx,sy,sz); Fmatrix	TM;	TM.translate(T); dbg_DrawOBB(TM,half_dim,C);	}
-	void dbg_DrawOBB				(Fmatrix& T, Fvector& half_dim, u32 C);
-	IC void dbg_DrawTRI				(Fmatrix& T, Fvector* p, u32 C)											{	dbg_DrawTRI(T,p[0],p[1],p[2],C);	}
-	void dbg_DrawTRI				(Fmatrix& T, Fvector& p1, Fvector& p2, Fvector& p3, u32 C);
-	void dbg_DrawLINE				(Fmatrix& T, Fvector& p1, Fvector& p2, u32 C);
-	void dbg_DrawEllipse			(Fmatrix& T, u32 C);
+	IC void dbg_DrawAABB			(Fvector& fT, float sx, float sy, float sz, u32 uC)						{	Fvector half_dim;	half_dim.set(sx,sy,sz); Fmatrix	TM;	TM.translate(fT); dbg_DrawOBB(TM,half_dim,uC);	}
+	void dbg_DrawOBB				(Fmatrix& fT, Fvector& half_dim, u32 uC);
+	IC void dbg_DrawTRI				(Fmatrix& fT, Fvector* p, u32 uC)											{	dbg_DrawTRI(fT,p[0],p[1],p[2],uC);	}
+	void dbg_DrawTRI				(Fmatrix& fT, Fvector& p1, Fvector& p2, Fvector& p3, u32 uC);
+	void dbg_DrawLINE				(Fmatrix& fT, Fvector& p1, Fvector& p2, u32 uC);
+	void dbg_DrawEllipse			(Fmatrix& fT, u32 uC);
 
 	CBackend()						{	Invalidate(); };
 
