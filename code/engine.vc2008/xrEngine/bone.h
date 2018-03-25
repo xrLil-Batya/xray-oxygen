@@ -1,7 +1,7 @@
 //----------------------------------------------------
 // refs
 #pragma once
-#ifndef _MAYA_PLUGIN
+#if !defined( _MAYA_PLUGIN) && !defined(_LW_PLUGIN)
 #include "../xrCore/_matrix.h"
 
 class CBone;
@@ -14,7 +14,7 @@ class CBone;
 
 //*** Bone Instance *******************************************************************************
 #pragma pack(push,8)
-class ENGINE_API		CBoneInstance
+class ENGINE_API CBoneInstance
 {
 public:
     typedef void  __stdcall BoneCallbackFunction(CBoneInstance* P);

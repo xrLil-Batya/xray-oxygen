@@ -1,7 +1,7 @@
 //---------------------------------------------------------------------------
 #pragma once
-#ifdef _MAYA_PLUGIN
-#include "../Shared/bone.h"
+#if defined( _MAYA_PLUGIN) || defined(_LW_PLUGIN)
+#include "../../editors/xrECoreLite/bone.h"
 #else
 #include "../xrEngine/bone.h"
 #endif
