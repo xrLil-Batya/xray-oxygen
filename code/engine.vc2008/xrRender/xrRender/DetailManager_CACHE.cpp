@@ -16,12 +16,16 @@ void CDetailManager::cache_Initialize	()
 		}
 	VERIFY	(cache_Validate());
 
-    for (int _mz1=0; _mz1<dm_cache1_line; _mz1++){
-    	for (int _mx1=0; _mx1<dm_cache1_line; _mx1++){
+    for (u32 _mz1=0; _mz1<dm_cache1_line; _mz1++)
+	{
+    	for (u32 _mx1=0; _mx1<dm_cache1_line; _mx1++)
+		{
 		    CacheSlot1& MS 	= cache_level1[_mz1][_mx1];
-			for (int _z=0; _z<dm_cache1_count; _z++)
-				for (int _x=0; _x<dm_cache1_count; _x++)
-					MS.slots[_z*dm_cache1_count+_x] = &cache[_mz1*dm_cache1_count+_z][_mx1*dm_cache1_count+_x];
+			for (int _z = 0; _z < dm_cache1_count; _z++)
+			{
+				for (int _x = 0; _x < dm_cache1_count; _x++)
+					MS.slots[_z*dm_cache1_count + _x] = &cache[_mz1*dm_cache1_count + _z][_mx1*dm_cache1_count + _x];
+			}
         }
     }
 }
