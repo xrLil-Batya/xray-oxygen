@@ -22,31 +22,32 @@ typedef struct _PROCESSOR_POWER_INFORMATION
     ULONG CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
  
-namespace	FPU 
+namespace FPU 
 {
-	XRCORE_API void 	m24		(void)	{
-		_control87	( _PC_24,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
+	//  огда-нибудь можно будет задавать точность дл€ float в х64...
+	XRCORE_API void m24(void)
+	{
+		_controlfp(_RC_CHOP, MCW_RC);
 	}
-	XRCORE_API void 	m24r	(void)	{
-		_control87	( _PC_24,   MCW_PC );
-		_control87	( _RC_NEAR, MCW_RC );
+	XRCORE_API void m24r(void)
+	{
+		_controlfp(_RC_NEAR, MCW_RC);
 	}
-	XRCORE_API void 	m53		(void)	{
-		_control87	( _PC_53,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
+	XRCORE_API void m53(void)
+	{
+		_controlfp(_RC_CHOP, MCW_RC);
 	}
-	XRCORE_API void 	m53r	(void)	{
-		_control87	( _PC_53,   MCW_PC );
-		_control87	( _RC_NEAR, MCW_RC );
+	XRCORE_API void m53r(void)
+	{
+		_controlfp(_RC_NEAR, MCW_RC);
 	}
-	XRCORE_API void 	m64		(void)	{
-		_control87	( _PC_64,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
+	XRCORE_API void m64(void)
+	{
+		_controlfp(_RC_CHOP, MCW_RC);
 	}
-	XRCORE_API void 	m64r	(void)	{
-		_control87	( _PC_64,   MCW_PC );
-		_control87	( _RC_NEAR, MCW_RC );
+	XRCORE_API void m64r(void)
+	{
+		_controlfp(_RC_NEAR, MCW_RC);
 	}
 
 	void initialize()				

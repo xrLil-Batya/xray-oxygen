@@ -683,7 +683,6 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 	CTimer t;
 	t.Start();
 	Log				("Initializing File System...");
-	u32	M1			= Memory.mem_usage();
 
 	m_Flags.set		(flags,TRUE);
 
