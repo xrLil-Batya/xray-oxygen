@@ -26,7 +26,15 @@ xrLaunch::xrLaunch(QWidget *parent) :
 	ui->setupUi(this);		// setup it
 
 	// Checking for instructions
-	if (!CPUID::SSE41()) 
+	if (!CPUID::SSE2())
+	{
+		statusBar()->showMessage(tr("Error! Your CPU doesn't support SSE2 instructions."));
+	}
+	else if (!CPUID::SSE3())
+	{
+		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."));
+	}
+	else if (!CPUID::SSE41()) 
 	{
 		statusBar()->showMessage(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"));
 	}
@@ -40,9 +48,13 @@ xrLaunch::xrLaunch(QWidget *parent) :
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
 	}
 
+/***********************************************
+#VERTVER: If you wan't to check AMD - use that
+if(CPUID::AMD || CPUID::AMDelse) { your code }
+***********************************************/
+
 	ui->listWidget->addItems ( LIST_ITEMS );
 }
-
 
 /***********************************************
 * ~xrLaunch() - remove the main thread
