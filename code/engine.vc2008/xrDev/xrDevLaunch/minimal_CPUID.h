@@ -26,10 +26,10 @@ class CPUID {
 	class CPUID_Internal;
 public:
 	////////////////////////////////////////////////////
-	static bool AVX			(void)	{ return CPU_Rep.f_1_ECX_[28]; }		// AVX
-	static bool SSE41		(void)	{ return CPU_Rep.f_1_ECX_[19]; }		// SSE4.1
 	static bool SSE2		(void)	{ return CPU_Rep.f_1_ECX_[26]; }		// SSE2
 	static bool SSE3		(void)	{ return CPU_Rep.f_1_ECX_[0];  }		// SSE3
+	static bool SSE41		(void)	{ return CPU_Rep.f_1_ECX_[19]; }		// SSE4.1
+	static bool AVX			(void)	{ return CPU_Rep.f_1_ECX_[28]; }		// AVX
 	////////////////////////////////////////////////////
 	//#VERTVER: HACK: AMD only istructions supported only on AMD
 	static bool AMD			(void)	{ return CPU_Rep.f_1_ECX_[6];  }		// SSE4a
@@ -54,17 +54,16 @@ private:
 		// Create the main class of CPUID
 		/////////////////////////////////////////
 		CPUID_Internal() :
-			nIds_{ 0 },
-			nExIds_{ 0 },
-			f_1_ECX_{ 0 },
-			f_1_EDX_{ 0 },
+			nIds_	 { 0 },
+			nExIds_	 { 0 },
+			f_1_ECX_ { 0 },
+			f_1_EDX_ { 0 },
 			f_81_ECX_{ 0 },
 			f_81_EDX_{ 0 },
-			data_{},
-			extdata_{}
+			data_	 {},
+			extdata_ {}
 
 		{
-			//int cpuInfo[4] = {-1};  
 			std::array<int, 4> cpui;
 
 			// Calling __cpuid with 0x0 as the function_id argument  

@@ -1,3 +1,12 @@
+/*************************************************
+* OXYGEN TEAM, 2018 (C)
+* X-RAY OXYGEN 1.7 PROJECT
+*
+* Edited: 26 March, 2018
+* RenderList.cpp - Checking to available render
+* CreateRendererList()
+*************************************************/
+
 ///////////////////////////////////
 #include <d3d9.h>
 #include <d3d11.h>
@@ -39,17 +48,17 @@ bool SupportsAdvancedRendering()
 
 bool SupportsDX10Rendering()
 {
-	IDXGIAdapter* m_pAdapter;	//	pD3D equivalent
+	IDXGIAdapter*  m_pAdapter;	//	pD3D equivalent
 	IDXGIFactory * pFactory;
 	CreateDXGIFactory(__uuidof(IDXGIFactory), (void**)(&pFactory));
 	pFactory->EnumAdapters(0, &m_pAdapter);
 
 	HRESULT hr = m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
 
-    pFactory->Release();
-    pFactory = nullptr;
+    pFactory->	Release();
+    pFactory  = nullptr;
     m_pAdapter->Release();
-    m_pAdapter = nullptr;
+    m_pAdapter= nullptr;
 
 	return SUCCEEDED(hr);
 }
@@ -58,11 +67,13 @@ bool SupportsDX11Rendering()
 {
 	// Register class
 	WNDCLASSEX wcex;
-	std::memset(&wcex, 0, sizeof(wcex));
-	wcex.cbSize = sizeof(WNDCLASSEX);
-	wcex.lpfnWndProc = DefWindowProc;
-	wcex.hInstance = GetModuleHandle(nullptr);
-	wcex.lpszClassName = "TestDX11WindowClass";
+	std::memset(&wcex, 0, sizeof( wcex ));
+	wcex.cbSize			= sizeof( WNDCLASSEX );
+	wcex.lpfnWndProc	= DefWindowProc;
+	wcex.hInstance		= GetModuleHandle( nullptr );
+	wcex.lpszClassName	= "TestDX11WindowClass";
+
+	// If class can't register
 	if (!RegisterClassEx(&wcex))
 	{
 		Msg("* DX11: failed to register window class");
@@ -70,8 +81,20 @@ bool SupportsDX11Rendering()
 	}
 
 	// Create window
-	HWND hWnd = CreateWindow("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, 0, 0);
+	HWND hWnd = CreateWindow(
+		"TestDX11WindowClass",
+		"", WS_OVERLAPPEDWINDOW,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT,
+		CW_USEDEFAULT, 
+		NULL,
+		NULL,
+		NULL,
+		NULL
+	);
 
+	// If window can't create
 	if (!hWnd)
 	{
 		Msg("* DX11: failed to create window");
@@ -97,13 +120,14 @@ bool SupportsDX11Rendering()
 	D3D_FEATURE_LEVEL pFeatureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
 	D3D_FEATURE_LEVEL FeatureLevel;
 
-	ID3D11Device*           pd3dDevice = NULL;
-	ID3D11DeviceContext*    pContext = NULL;
-	IDXGISwapChain*         pSwapChain = NULL;
+	ID3D11Device*           pd3dDevice	= NULL;
+	ID3D11DeviceContext*    pContext	= NULL;
+	IDXGISwapChain*         pSwapChain	= NULL;
 
 	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, pFeatureLevels, 1,
 		D3D11_SDK_VERSION, &sd, &pSwapChain, &pd3dDevice, &FeatureLevel, &pContext);
 
+	//#TODO: graphics pointers must delete by Release();
 	if (pContext)	pContext  ->Release();
 	if (pSwapChain) pSwapChain->Release();
 	if (pd3dDevice) pd3dDevice->Release();
@@ -130,7 +154,7 @@ void CreateRendererList()
 	}
 
 	// try to initialize R3
-	//	Restore error handling
+	// Restore error handling
 	SetErrorMode(0);
 	{
 		if (SupportsDX10Rendering())
@@ -138,7 +162,7 @@ void CreateRendererList()
 	}
 
 	// try to initialize R4
-	//	Restore error handling
+	// Restore error handling
 	SetErrorMode(0);
 	{
 		if (SupportsDX11Rendering())

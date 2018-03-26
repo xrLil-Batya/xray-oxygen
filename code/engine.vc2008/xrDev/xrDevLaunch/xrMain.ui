@@ -2,6 +2,9 @@
 <ui version="4.0">
  <class>xrLaunch</class>
  <widget class="QMainWindow" name="xrLaunch">
+  <property name="windowModality">
+   <enum>Qt::WindowModal</enum>
+  </property>
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -9,6 +12,12 @@
     <width>800</width>
     <height>480</height>
    </rect>
+  </property>
+  <property name="sizePolicy">
+   <sizepolicy hsizetype="Fixed" vsizetype="Fixed">
+    <horstretch>0</horstretch>
+    <verstretch>0</verstretch>
+   </sizepolicy>
   </property>
   <property name="minimumSize">
    <size>
@@ -18,14 +27,14 @@
   </property>
   <property name="maximumSize">
    <size>
-    <width>800</width>
-    <height>480</height>
+    <width>16777215</width>
+    <height>16777215</height>
    </size>
   </property>
   <property name="baseSize">
    <size>
-    <width>800</width>
-    <height>800</height>
+    <width>0</width>
+    <height>0</height>
    </size>
   </property>
   <property name="palette">
@@ -498,22 +507,22 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>xrLaunch</string>
+   <string>Oxygen Development Launcher</string>
   </property>
   <widget class="QWidget" name="centralWidget">
    <widget class="QPushButton" name="pushButton">
     <property name="geometry">
      <rect>
-      <x>669</x>
-      <y>370</y>
-      <width>121</width>
-      <height>41</height>
+      <x>380</x>
+      <y>10</y>
+      <width>81</width>
+      <height>21</height>
      </rect>
     </property>
     <property name="sizePolicy">
-     <sizepolicy hsizetype="Minimum" vsizetype="Fixed">
-      <horstretch>0</horstretch>
-      <verstretch>0</verstretch>
+     <sizepolicy hsizetype="Minimum" vsizetype="Minimum">
+      <horstretch>5</horstretch>
+      <verstretch>5</verstretch>
      </sizepolicy>
     </property>
     <property name="palette">
@@ -870,6 +879,16 @@
       <y>0</y>
       <width>251</width>
       <height>3011</height>
+     </rect>
+    </property>
+   </widget>
+   <widget class="QLineEdit" name="lineEdit">
+    <property name="geometry">
+     <rect>
+      <x>260</x>
+      <y>10</y>
+      <width>113</width>
+      <height>21</height>
      </rect>
     </property>
    </widget>

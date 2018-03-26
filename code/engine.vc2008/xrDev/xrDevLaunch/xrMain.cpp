@@ -26,11 +26,8 @@ xrLaunch::xrLaunch(QWidget *parent) :
 	ui->setupUi(this);		// setup it
 
 	// Checking for instructions
-	if (!CPUID::SSE2())
-	{
-		statusBar()->showMessage(tr("Error! Your CPU doesn't support SSE2 instructions."));
-	}
-	else if (!CPUID::SSE3())
+	//#NOTE: Don't use here CPUID::SSE2
+	if (!CPUID::SSE3())
 	{
 		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."));
 	}
@@ -43,6 +40,7 @@ xrLaunch::xrLaunch(QWidget *parent) :
 		statusBar()->showMessage(tr("Your CPU doesn't support AVX instructions!"));
 	}
 	// if all instructions are supported
+	// d
 	else
 	{
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
@@ -74,8 +72,9 @@ DLL_API int RunApplication(char* commandLine);
 /***********************************************
 * void on_pushButton_clicked() - Method for run button
 ***********************************************/
-void xrLaunch::on_pushButton_clicked() {
-	run_xrEngine();
+void xrLaunch::on_pushButton_clicked() 
+{
+	run_xrEngineButton();
 }
 
 
@@ -83,7 +82,7 @@ void xrLaunch::on_pushButton_clicked() {
 * void run_xrEngine() - Method for Launch 
 * xrEngine.dll
 ***********************************************/
-void xrLaunch::run_xrEngine()
+void xrLaunch::run_xrEngineButton() 
 {
 	QString rendered = ui->listWidget->currentItem()->text();
 	//QString launchParams = " " + rendered;
@@ -98,7 +97,8 @@ void xrLaunch::run_xrEngine()
 * void on_actionExit_triggered() - method for 
 * close the MainWindow
 ***********************************************/
-void xrLaunch::on_actionExit_triggered() {
+void xrLaunch::on_actionExit_triggered() 
+{
 	xrLaunch::close();
 }
 
@@ -107,8 +107,9 @@ void xrLaunch::on_actionExit_triggered() {
 * void RunApplication() - Method for menu 
 * (Run xrEngine.dll)
 ***********************************************/
-void xrLaunch::on_actionxrEngine_triggered() {
-	run_xrEngine();
+void xrLaunch::on_actionxrEngine_triggered() 
+{
+	run_xrEngineButton();
 }
 
 

@@ -14,6 +14,7 @@
 #include <QtWidgets/QApplication>
 #include <QtWidgets/QButtonGroup>
 #include <QtWidgets/QHeaderView>
+#include <QtWidgets/QLineEdit>
 #include <QtWidgets/QListWidget>
 #include <QtWidgets/QMainWindow>
 #include <QtWidgets/QMenu>
@@ -50,6 +51,7 @@ public:
     QWidget *centralWidget;
     QPushButton *pushButton;
     QListWidget *listWidget;
+    QLineEdit *lineEdit;
     QMenuBar *menuBar;
     QMenu *menu;
     QMenu *menuGame;
@@ -65,10 +67,16 @@ public:
     {
         if (xrLaunch->objectName().isEmpty())
             xrLaunch->setObjectName(QStringLiteral("xrLaunch"));
+        xrLaunch->setWindowModality(Qt::WindowModal);
         xrLaunch->resize(800, 480);
+        QSizePolicy sizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+        sizePolicy.setHorizontalStretch(0);
+        sizePolicy.setVerticalStretch(0);
+        sizePolicy.setHeightForWidth(xrLaunch->sizePolicy().hasHeightForWidth());
+        xrLaunch->setSizePolicy(sizePolicy);
         xrLaunch->setMinimumSize(QSize(800, 480));
-        xrLaunch->setMaximumSize(QSize(800, 480));
-        xrLaunch->setBaseSize(QSize(800, 800));
+        xrLaunch->setMaximumSize(QSize(16777215, 16777215));
+        xrLaunch->setBaseSize(QSize(0, 0));
         QPalette palette;
         QBrush brush(QColor(23, 121, 157, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -196,12 +204,12 @@ public:
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         pushButton = new QPushButton(centralWidget);
         pushButton->setObjectName(QStringLiteral("pushButton"));
-        pushButton->setGeometry(QRect(669, 370, 121, 41));
-        QSizePolicy sizePolicy(QSizePolicy::Minimum, QSizePolicy::Fixed);
-        sizePolicy.setHorizontalStretch(0);
-        sizePolicy.setVerticalStretch(0);
-        sizePolicy.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
-        pushButton->setSizePolicy(sizePolicy);
+        pushButton->setGeometry(QRect(380, 10, 81, 21));
+        QSizePolicy sizePolicy1(QSizePolicy::Minimum, QSizePolicy::Minimum);
+        sizePolicy1.setHorizontalStretch(5);
+        sizePolicy1.setVerticalStretch(5);
+        sizePolicy1.setHeightForWidth(pushButton->sizePolicy().hasHeightForWidth());
+        pushButton->setSizePolicy(sizePolicy1);
         QPalette palette1;
         palette1.setBrush(QPalette::Active, QPalette::WindowText, brush);
         QBrush brush12(QColor(203, 219, 235, 255));
@@ -251,6 +259,9 @@ public:
         listWidget = new QListWidget(centralWidget);
         listWidget->setObjectName(QStringLiteral("listWidget"));
         listWidget->setGeometry(QRect(0, 0, 251, 3011));
+        lineEdit = new QLineEdit(centralWidget);
+        lineEdit->setObjectName(QStringLiteral("lineEdit"));
+        lineEdit->setGeometry(QRect(260, 10, 113, 21));
         xrLaunch->setCentralWidget(centralWidget);
         menuBar = new QMenuBar(xrLaunch);
         menuBar->setObjectName(QStringLiteral("menuBar"));
@@ -316,7 +327,7 @@ public:
 
     void retranslateUi(QMainWindow *xrLaunch)
     {
-        xrLaunch->setWindowTitle(QApplication::translate("xrLaunch", "xrLaunch", nullptr));
+        xrLaunch->setWindowTitle(QApplication::translate("xrLaunch", "Oxygen Development Launcher", nullptr));
         actionxrEngine->setText(QApplication::translate("xrLaunch", "xrEngine", nullptr));
 #ifndef QT_NO_SHORTCUT
         actionxrEngine->setShortcut(QApplication::translate("xrLaunch", "Alt+Shift+R", nullptr));

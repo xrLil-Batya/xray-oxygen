@@ -43,7 +43,7 @@ public:
 
 private slots:
     void on_pushButton_clicked();			// Run
-	void run_xrEngine();					// Run the xrEngine
+	void run_xrEngineButton();					// Run the xrEngine
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
     void on_actionOxygen_Team_triggered();
