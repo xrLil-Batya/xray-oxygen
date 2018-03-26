@@ -149,7 +149,6 @@
   <ItemGroup>
     <ClCompile Include="..\Shared\BlenderListLoader.cpp" />
     <ClCompile Include="..\Shared\ELog.cpp" />
-    <ClCompile Include="..\Shared\GameMaterial.cpp" />
     <ClCompile Include="..\Shared\GameMtlLib.cpp" />
     <ClCompile Include="..\Shared\TexMaps.cpp" />
     <ClCompile Include="Material\DllEntry.cpp" />
@@ -159,12 +158,8 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Shared\GameMaterial.def" />
-  </ItemGroup>
-  <ItemGroup>
     <ClInclude Include="..\Shared\BlenderListLoader.h" />
     <ClInclude Include="..\Shared\ELog.h" />
-    <ClInclude Include="..\Shared\GameMaterial.h" />
     <ClInclude Include="..\Shared\GameMtlLib.h" />
     <ClInclude Include="..\Shared\Shader_xrLC.h" />
     <ClInclude Include="..\Shared\TexMaps.h" />

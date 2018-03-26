@@ -5,11 +5,11 @@
 
 #include "Exporter.h"
 #include "MeshExpUtility.h"
-#include "..\..\..\editors\ECore\Editor\EditObject.h"
-#include "..\..\..\editors\ECore\Editor\EditMesh.h"
-#include "Bone.h"
-#include "Motion.h"
-#include "Envelope.h"
+#include "xrECoreLite\EditObject.h"
+#include "xrECoreLite\EditMesh.h"
+#include "xrECoreLite\Bone.h"
+#include "xrECoreLite\Motion.h"
+#include "xrECoreLite\Envelope.h"
 
 BOOL CExporter::ExportMotion(INode* pNode, LPCSTR fname)
 {

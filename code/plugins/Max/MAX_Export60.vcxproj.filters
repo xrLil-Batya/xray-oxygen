@@ -51,12 +51,6 @@
     <ClCompile Include="..\Shared\motion.cpp">
       <Filter>Shared Files\Engine</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\editors\ECore\Editor\EditMesh.cpp">
-      <Filter>Shared Files\Editor</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\editors\ECore\Editor\EditObjectMotions.cpp">
-      <Filter>Shared Files\Editor</Filter>
-    </ClCompile>
     <ClCompile Include="..\Shared\ELog.cpp">
       <Filter>Shared Files\Editor</Filter>
     </ClCompile>
@@ -73,18 +67,6 @@
       <Filter>Export Object</Filter>
     </ClCompile>
     <ClCompile Include="Export\BoneDef.cpp">
-      <Filter>Export Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\editors\ECore\Editor\EditMeshIO.cpp">
-      <Filter>Export Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\editors\ECore\Editor\EditMeshModify.cpp">
-      <Filter>Export Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\editors\ECore\Editor\EditObject.cpp">
-      <Filter>Export Skin</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\editors\ECore\Editor\EditObjectIO.cpp">
       <Filter>Export Skin</Filter>
     </ClCompile>
     <ClCompile Include="Export\Exporter.cpp">
@@ -124,12 +106,6 @@
     </ClInclude>
     <ClInclude Include="..\Shared\motion.h">
       <Filter>Shared Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\editors\ECore\Editor\EditMesh.h">
-      <Filter>Shared Files\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\editors\ECore\Editor\editobject.h">
-      <Filter>Shared Files\Editor</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\ELog.h">
       <Filter>Shared Files\Editor</Filter>

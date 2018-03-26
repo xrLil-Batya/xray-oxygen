@@ -9,14 +9,15 @@
 //-------------------------------------------------------------------
 // Class Descriptor
 
-class MeshExpUtilityClassDesc : public ClassDesc {
-	public:
+class MeshExpUtilityClassDesc : public ClassDesc 
+{
+public:
 	int 			IsPublic()					{ return 1; }
 	void *			Create( BOOL loading )		{ return &U; }
-	const TCHAR *	ClassName()					{ return "S.T.A.L.K.E.R. Export"; }
+	const WCHAR *	ClassName()					{ return L"S.T.A.L.K.E.R. Export"; }
 	SClass_ID		SuperClassID()				{ return UTILITY_CLASS_ID; }
 	Class_ID 		ClassID()					{ return Class_ID(EXP_UTILITY_CLASSID,0); }
-	const TCHAR* 	Category()					{ return "S.T.A.L.K.E.R. Export";  }
+	const WCHAR* 	Category()					{ return L"S.T.A.L.K.E.R. Export";  }
 };
 
 MeshExpUtility U;
@@ -61,8 +62,8 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,ULONG fdwReason,LPVOID lpvReserved)
 
 
 
-__declspec( dllexport ) const TCHAR *
-LibDescription() { return "S.T.A.L.K.E.R. Mesh Export utility"; }
+__declspec( dllexport ) const WCHAR *
+LibDescription() { return L"S.T.A.L.K.E.R. Mesh Export utility"; }
 
 
 __declspec( dllexport ) int LibNumberClasses() {
