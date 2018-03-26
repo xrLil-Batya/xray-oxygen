@@ -145,7 +145,7 @@ public:
 	virtual bool GrenadeLauncherAttachable();
 	virtual bool ScopeAttachable();
 	virtual bool SilencerAttachable();
-
+			
 	ALife::EWeaponAddonStatus	get_GrenadeLauncherStatus	() const { return m_eGrenadeLauncherStatus; }
 	ALife::EWeaponAddonStatus	get_ScopeStatus				() const { return m_eScopeStatus; }
 	ALife::EWeaponAddonStatus	get_SilencerStatus			() const { return m_eSilencerStatus; }
@@ -452,11 +452,6 @@ public:
 	using SCOPES_VECTOR = xr_vector<std::string>;
 	SCOPES_VECTOR			m_scopes;
 	u8						m_cur_scope;
-
-#ifdef STCOP
-	void                    InstallAddonScope(u8 addon_idx, bool bNoUpdate);
-	void                    UnistallAddonScope(u8 addon_idx, bool bNoUpdate);
-#endif
 
 	CWeaponAmmo*			m_pCurrentAmmo;
 	u8						m_ammoType;

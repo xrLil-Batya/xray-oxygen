@@ -140,8 +140,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
 	typedef	ALife::EWeaponAddonStatus	EWeaponAddonStatus;
 	
-    using ADDONS_VECTOR = xr_vector<shared_str>;
-
 	//текущее состояние аддонов
 	enum EWeaponAddonState 
 	{
@@ -177,26 +175,28 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 		}
 	}; //struct grenade_count_t
 	grenade_count_t					a_elapsed_grenades;
+
 	float							m_fHitPower;
 	ALife::EHitType					m_tHitType;
 	LPCSTR							m_caAmmoSections;
 	u32								m_dwAmmoAvailable;
 	Flags8							m_addon_flags;
-	//-------------------RGS----------------------//
-	u8                              m_scope_idx;
-
-	shared_str                      m_scope_section;
-
-	ADDONS_VECTOR                   m_scope_list;
-	void                            load_addon_data(LPCSTR sAddonsList, ADDONS_VECTOR& m_addons_list);
-
-
-	void                            AddonsUpdate(); //Stealed from SWM!!!
-	void                            AddonsLoad();
-	//--------------------------------------------//
 	u8								m_bZoom;
 	u32								m_ef_main_weapon_type;
 	u32								m_ef_weapon_type;
+
+
+	using SCOPES_VECTOR = xr_vector<shared_str>;
+	SCOPES_VECTOR			m_scopes;
+	u8  m_scope_idx;
+
+	bool CheckScope(shared_str scope_name);
+	void LoadScopes(LPCSTR scopes_list);
+
+
+	//u8  m_silencer_idx;
+	//u8  m_launcher_idx;
+
 
 									CSE_ALifeItemWeapon	(LPCSTR caSection);
 	virtual							~CSE_ALifeItemWeapon();

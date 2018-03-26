@@ -105,21 +105,6 @@ void CALifeSimulatorBase::reload			(LPCSTR section)
 
 CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &position, u32 level_vertex_id, GameGraph::_GRAPH_ID game_vertex_id, u16 parent_id, bool registration)
 {
-#ifdef STCOP
-	//Mortan: грязный хак
-	if (pSettings->line_exist(section, "parent_section"))
-	{
-		shared_str m_parentSection = pSettings->r_string(section, "parent_section");
-		u32 num = m_parentSection.size();
-		xr_string st = section;
-		st.erase(0, num + 1);
-		if (section != m_parentSection.c_str())
-		{
-			section = m_parentSection.c_str();
-		}
-	}
-#endif
-
 	CSE_Abstract				*abstract = F_entity_Create(section);
 	R_ASSERT3					(abstract,"Cannot find item with section",section);
 
@@ -149,11 +134,8 @@ CSE_Abstract *CALifeSimulatorBase::spawn_item	(LPCSTR section, const Fvector &po
 
 	//������ ������� � ������ ���������
 	CSE_ALifeItemWeapon* weapon = smart_cast<CSE_ALifeItemWeapon*>(dynamic_object);
-	if (weapon)
-	{
-		weapon->a_elapsed = weapon->get_ammo_magsize();
-	}
-		
+	if(weapon)
+		weapon->a_elapsed		= weapon->get_ammo_magsize();
 
 	dynamic_object->m_tNodeID	= level_vertex_id;
 	dynamic_object->m_tGraphID	= game_vertex_id;
