@@ -31,20 +31,24 @@ int controlsInit = FALSE;
 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL,ULONG fdwReason,LPVOID lpvReserved) 
 {
-	hInstance = hinstDLL;
+	hInstance = hinstDLL;  // Hang on to this DLL's instance handle.
 
-	if ( !controlsInit ) {
+	if (!controlsInit)
+	{
 		controlsInit = TRUE;
-		Core._initialize("S.T.A.L.K.E.R.Plugin",ELogCallback,FALSE);
-		FS._initialize	(CLocatorAPI::flScanAppRoot,NULL,"xray_path.ltx");
-		FPU::m64r	(); // нужно чтобы макс не сбрасывал контрольки в 0
-		InitCustomControls(hInstance);
+		Core._initialize("S.T.A.L.K.E.R.Plugin", ELogCallback, FALSE);
+		FS._initialize(CLocatorAPI::flScanAppRoot, NULL, "xray_path.ltx");
+		FPU::m64r(); // нужно чтобы макс не сбрасывал контрольки в 0
+
+		MaxSDK::Util::UseLanguagePackLocale();
+		DisableThreadLibraryCalls(hInstance);
 		InitCommonControls();
-		ELog.Msg(mtInformation,"S.T.A.L.K.E.R. Object Export (ver. %d.%02d)",EXPORTER_VERSION,EXPORTER_BUILD);
-		ELog.Msg(mtInformation,"-------------------------------------------------------" );
+		ELog.Msg(mtInformation, "S.T.A.L.K.E.R. Object Export (ver. %d.%02d)", EXPORTER_VERSION, EXPORTER_BUILD);
+		ELog.Msg(mtInformation, "-------------------------------------------------------");
 	}
 
-	switch(fdwReason) {
+	switch(fdwReason) 
+	{
 
 		case DLL_PROCESS_ATTACH:
 			break;

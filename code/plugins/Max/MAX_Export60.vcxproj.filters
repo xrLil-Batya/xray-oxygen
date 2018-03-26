@@ -7,9 +7,6 @@
     <Filter Include="Shared Files">
       <UniqueIdentifier>{e80831df-dae3-46c3-946a-6453fd4040a9}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Shared Files\Engine">
-      <UniqueIdentifier>{8f006572-cc84-4b8c-b13f-858ff1bc8029}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Shared Files\Editor">
       <UniqueIdentifier>{2de13190-153a-4d62-9ba4-31829bddd2da}</UniqueIdentifier>
     </Filter>
@@ -38,18 +35,6 @@
     </ClCompile>
     <ClCompile Include="Export\stdafx.cpp">
       <Filter>Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\bone.cpp">
-      <Filter>Shared Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\Envelope.cpp">
-      <Filter>Shared Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\interp.cpp">
-      <Filter>Shared Files\Engine</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Shared\motion.cpp">
-      <Filter>Shared Files\Engine</Filter>
     </ClCompile>
     <ClCompile Include="..\Shared\ELog.cpp">
       <Filter>Shared Files\Editor</Filter>
@@ -84,6 +69,7 @@
     <ClCompile Include="Export\ExportKeys.cpp">
       <Filter>Export Skin Keys</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Export\MeshExpUtility.h">
@@ -94,18 +80,6 @@
     </ClInclude>
     <ClInclude Include="Export\Stdafx.h">
       <Filter>Kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\bone.h">
-      <Filter>Shared Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\envelope.h">
-      <Filter>Shared Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="Export\Fmesh.h">
-      <Filter>Shared Files\Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Shared\motion.h">
-      <Filter>Shared Files\Engine</Filter>
     </ClInclude>
     <ClInclude Include="..\Shared\ELog.h">
       <Filter>Shared Files\Editor</Filter>

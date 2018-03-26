@@ -9,7 +9,7 @@
 #include "xrECoreLite\EditMesh.h"
 #include "xrECoreLite\Bone.h"
 #include "xrECoreLite\Motion.h"
-#include "xrECoreLite\Envelope.h"
+#include "xrCore\Envelope.h"
 
 BOOL CExporter::ExportMotion(INode* pNode, LPCSTR fname)
 {
