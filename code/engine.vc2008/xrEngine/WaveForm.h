@@ -1,7 +1,7 @@
+// WaveForm.h - Header for Waveform Utility
 #ifndef WAVEFORM_H
 #define WAVEFORM_H
 #pragma once
-
 #pragma pack(push,4)
 struct WaveForm
 {
@@ -61,4 +61,3 @@ public:
 };
 
 #pragma pack(pop)
-#endif

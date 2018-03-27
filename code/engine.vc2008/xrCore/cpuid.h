@@ -1,29 +1,39 @@
+//////////////////////////////////////////
+// OXYGEN TEAM, 2018 (C)
+// ForserX, Vertver
+//////////////////////////////////////////
+// cpuid.h - CPUID for xrCore 
+//////////////////////////////////////////
+using ulong_t = unsigned long long;
+using long_t = long long;
+//////////////////////////////////////////
 #pragma once
 
 enum class CPUFeature: unsigned
 {
 	MMX				= 1 << 0,
 	MMXExt			= 1 << 1,
-	MWait			= 1 << 2,
-	HT				= 1 << 3,
 
-	SSE				= 1 << 4,
-	SSE2			= 1 << 5,
-	SSE3			= 1 << 6,
-	SSSE3			= 1 << 7,
-	SSE41			= 1 << 8,
-	SSE4a			= 1 << 9,
-	SSE42			= 1 << 10,
+	SSE				= 1 << 2,
+	SSE2			= 1 << 3,
+	SSE3			= 1 << 4,
+	SSSE3			= 1 << 5,
+	SSE41			= 1 << 6,
+	SSE4a			= 1 << 7,
+	SSE42			= 1 << 8,
 
-	AVX				= 1 << 11,
-	AVX2			= 1 << 12,
-	AVX512F			= 1 << 13,
-	AVX512PF		= 1 << 14,
-	AVX512ER		= 1 << 15,
-	AVX512CD		= 1 << 16,
+	AVX				= 1 << 9,
+	AVX2			= 1 << 10,
+	AVX512F			= 1 << 11,
+	AVX512PF		= 1 << 12,
+	AVX512ER		= 1 << 13,
+	AVX512CD		= 1 << 14,
 
-	AMD_3DNow		= 1 << 17,
-	AMD_3DNowExt	= 1 << 18,
+	AMD_3DNow		= 1 << 15,
+	AMD_3DNowExt	= 1 << 16,
+
+	MWait			= 1 << 17,
+	HT				= 1 << 18,
 	TM2				= 1 << 19,
 	AES				= 1 << 20,
 	EST				= 1 << 21,
