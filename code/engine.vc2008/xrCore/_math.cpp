@@ -117,11 +117,11 @@ void _initialize_cpu	(void)
 	if (CPU::Info.hasFeature(CPUFeature::MMXExt) ||
 		CPU::Info.hasFeature(CPUFeature::SSE4a)) 
 	{
-		Msg("Vendor CPU: AMD");
+		Msg("* Vendor CPU: AMD");
 	}
 	else 
 	{
-		Msg("Vendor CPU: Intel");
+		Msg("* Vendor CPU: Intel");
 	}
 	////////////////////////////////////////////////
     Msg("* Detected CPU: %s", CPU::Info.modelName);
