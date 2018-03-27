@@ -127,6 +127,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 	//Added sv3nk: AMD Features
 	if (pinfo->isAmd)
 	{
+		pinfo->features |= static_cast<unsigned>(CPUFeature::AMD);
 		// 3DNow!
 		if (f_81_EDX[31])			pinfo->features |= static_cast<unsigned>(CPUFeature::AMD_3DNow);
 		if (f_81_EDX[30])			pinfo->features |= static_cast<unsigned>(CPUFeature::AMD_3DNowExt);

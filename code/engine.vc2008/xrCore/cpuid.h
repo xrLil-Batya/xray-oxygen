@@ -37,7 +37,8 @@ enum class CPUFeature: unsigned
 	TM2				= 1 << 19,
 	AES				= 1 << 20,
 	EST				= 1 << 21,
-	VMX				= 1 << 22
+	VMX				= 1 << 22,
+	AMD				= 1 << 23
 };
 
 struct XRCORE_API processor_info 

@@ -114,8 +114,7 @@ void _initialize_cpu	(void)
 	//#VERTVER: We're don't needy for vendor string: 
 	//modelName has full name of your 
 	////////////////////////////////////////////////
-	if (CPU::Info.hasFeature(CPUFeature::MMXExt) ||
-		CPU::Info.hasFeature(CPUFeature::SSE4a)) 
+	if (CPU::Info.hasFeature(CPUFeature::AMD))
 	{
 		Msg("* Vendor CPU: AMD");
 	}
