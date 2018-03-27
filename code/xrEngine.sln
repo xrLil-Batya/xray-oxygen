@@ -62,11 +62,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ode", "3rd-party\ode\defaul
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{9A6A94C9-26FC-450C-986F-AA512F84C030}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrDevLaunch", "engine.vc2008\xrDev\xrDevLaunch\xrDevLaunch.vcxproj", "{6D22CE37-2161-3BF5-9F9C-590EB507E306}"
-	ProjectSection(ProjectDependencies) = postProject
-		{2578C6D8-660D-48AE-9322-7422F8664F06} = {2578C6D8-660D-48AE-9322-7422F8664F06}
-	EndProjectSection
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -252,16 +247,6 @@ Global
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release_IA32|x64.Build.0 = Release_AI32|x64
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|x64.ActiveCfg = Release|x64
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|x64.Build.0 = Release|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Debug|x64.ActiveCfg = Debug|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Debug|x64.Build.0 = Debug|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Mixed|x64.ActiveCfg = Release|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Mixed|x64.Build.0 = Release|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Release_AI32|x64.ActiveCfg = Release_IA32|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Release_AI32|x64.Build.0 = Release_IA32|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Release_IA32|x64.ActiveCfg = Release_IA32|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Release_IA32|x64.Build.0 = Release_IA32|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Release|x64.ActiveCfg = Release|x64
-		{6D22CE37-2161-3BF5-9F9C-590EB507E306}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

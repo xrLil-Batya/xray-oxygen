@@ -22,31 +22,32 @@ typedef struct _PROCESSOR_POWER_INFORMATION
     ULONG CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
  
-namespace	FPU 
+namespace FPU 
 {
-	XRCORE_API void 	m24		(void)	{
-		_control87	( _PC_24,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
+	//  огда-нибудь можно будет задавать точность дл€ float в х64...
+	XRCORE_API void m24(void)
+	{
+		_controlfp(_RC_CHOP, MCW_RC);
 	}
-	XRCORE_API void 	m24r	(void)	{
-		_control87	( _PC_24,   MCW_PC );
-		_control87	( _RC_NEAR, MCW_RC );
+	XRCORE_API void m24r(void)
+	{
+		_controlfp(_RC_NEAR, MCW_RC);
 	}
-	XRCORE_API void 	m53		(void)	{
-		_control87	( _PC_53,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
+	XRCORE_API void m53(void)
+	{
+		_controlfp(_RC_CHOP, MCW_RC);
 	}
-	XRCORE_API void 	m53r	(void)	{
-		_control87	( _PC_53,   MCW_PC );
-		_control87	( _RC_NEAR, MCW_RC );
+	XRCORE_API void m53r(void)
+	{
+		_controlfp(_RC_NEAR, MCW_RC);
 	}
-	XRCORE_API void 	m64		(void)	{
-		_control87	( _PC_64,   MCW_PC );
-		_control87	( _RC_CHOP, MCW_RC );
+	XRCORE_API void m64(void)
+	{
+		_controlfp(_RC_CHOP, MCW_RC);
 	}
-	XRCORE_API void 	m64r	(void)	{
-		_control87	( _PC_64,   MCW_PC );
-		_control87	( _RC_NEAR, MCW_RC );
+	XRCORE_API void m64r(void)
+	{
+		_controlfp(_RC_NEAR, MCW_RC);
 	}
 
 	void initialize()				
@@ -109,34 +110,45 @@ bool g_initialize_cpu_called = false;
 //------------------------------------------------------------------------------------
 void _initialize_cpu	(void) 
 {
-	Msg("* Vendor CPU: %s", CPU::Info.vendor);
+	////////////////////////////////////////////////
+	//#VERTVER: We're don't needy for vendor string: 
+	//modelName has full name of your 
+	////////////////////////////////////////////////
+	if (CPU::Info.hasFeature(CPUFeature::AMD))
+	{
+		Msg("* Vendor CPU: AMD");
+	}
+	else 
+	{
+		Msg("* Vendor CPU: Intel");
+	}
+	////////////////////////////////////////////////
     Msg("* Detected CPU: %s", CPU::Info.modelName);
 
-//	DUMP_PHASE;
-
-	string256	features;	xr_strcpy(features,sizeof(features),"RDTSC");
-    if (CPU::Info.hasFeature(CPUFeature::MMX))    xr_strcat(features,", MMX");
-	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNow)) xr_strcat(features, ", 3DNow!");
+	string256	features;								xr_strcpy(features,sizeof(features),"RDTSC");
+    if (CPU::Info.hasFeature(CPUFeature::MMX))			xr_strcat(features,	", MMX");
+	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNow))	xr_strcat(features, ", 3DNow!");
 	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNowExt)) xr_strcat(features, ", 3DNowExt!");
-    if (CPU::Info.hasFeature(CPUFeature::SSE))    xr_strcat(features,", SSE");
-    if (CPU::Info.hasFeature(CPUFeature::SSE2))   xr_strcat(features,", SSE2");
-    if (CPU::Info.hasFeature(CPUFeature::SSE3))   xr_strcat(features,", SSE3");
-    if (CPU::Info.hasFeature(CPUFeature::MWait))  xr_strcat(features, ", MONITOR/MWAIT");
-    if (CPU::Info.hasFeature(CPUFeature::SSSE3))  xr_strcat(features,", SSSE3");
-    if (CPU::Info.hasFeature(CPUFeature::SSE41))  xr_strcat(features,", SSE4.1");
-    if (CPU::Info.hasFeature(CPUFeature::SSE42))  xr_strcat(features,", SSE4.2");
-	if (CPU::Info.hasFeature(CPUFeature::HT))     xr_strcat(features, ", HTT");
-	if (CPU::Info.hasFeature(CPUFeature::AVX))    xr_strcat(features, ", AVX");
+    if (CPU::Info.hasFeature(CPUFeature::SSE))			xr_strcat(features,	", SSE");
+    if (CPU::Info.hasFeature(CPUFeature::SSE2))			xr_strcat(features,	", SSE2");
+    if (CPU::Info.hasFeature(CPUFeature::SSE3))			xr_strcat(features,	", SSE3");
+    if (CPU::Info.hasFeature(CPUFeature::MWait))		xr_strcat(features, ", MONITOR/MWAIT");
+    if (CPU::Info.hasFeature(CPUFeature::SSSE3))		xr_strcat(features,	", SSSE3");
+    if (CPU::Info.hasFeature(CPUFeature::SSE41))		xr_strcat(features,	", SSE4.1");
+    if (CPU::Info.hasFeature(CPUFeature::SSE42))		xr_strcat(features,	", SSE4.2");
+	if (CPU::Info.hasFeature(CPUFeature::HT))			xr_strcat(features, ", HTT");
+	if (CPU::Info.hasFeature(CPUFeature::AVX))			xr_strcat(features, ", AVX");
+	//#NOTE: Compiler doesn't use AVX now
 #ifdef __AVX__
-	else Debug.do_exit("X-Ray x64 using AVX anyway!");
+	else Debug.do_exit( "X-Ray x64 using AVX anyway!" );
 #endif
-	if (CPU::Info.hasFeature(CPUFeature::AVX2))   xr_strcat(features, ", AVX2");
-	if (CPU::Info.hasFeature(CPUFeature::SSE4a))  xr_strcat(features, ", SSE4.a");
-	if (CPU::Info.hasFeature(CPUFeature::MMXExt)) xr_strcat(features, ", MMXExt");
-	if (CPU::Info.hasFeature(CPUFeature::TM2))	  xr_strcat(features, ", TM2");
-	if (CPU::Info.hasFeature(CPUFeature::AES))    xr_strcat(features, ", AES");
-	if (CPU::Info.hasFeature(CPUFeature::VMX))	  xr_strcat(features, ", VMX");
-	if (CPU::Info.hasFeature(CPUFeature::EST))    xr_strcat(features, ", EST");
+	if (CPU::Info.hasFeature(CPUFeature::AVX2))			xr_strcat(features, ", AVX2");
+	if (CPU::Info.hasFeature(CPUFeature::SSE4a))		xr_strcat(features, ", SSE4.a");
+	if (CPU::Info.hasFeature(CPUFeature::MMXExt))		xr_strcat(features, ", MMXExt");
+	if (CPU::Info.hasFeature(CPUFeature::TM2))			xr_strcat(features, ", TM2");
+	if (CPU::Info.hasFeature(CPUFeature::AES))			xr_strcat(features, ", AES");
+	if (CPU::Info.hasFeature(CPUFeature::VMX))			xr_strcat(features, ", VMX");
+	if (CPU::Info.hasFeature(CPUFeature::EST))			xr_strcat(features, ", EST");
 
 	Msg("* CPU features: %s" , features );
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);

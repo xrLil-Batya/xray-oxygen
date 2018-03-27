@@ -17,9 +17,10 @@
 #pragma comment(lib, "d3d11.lib")
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
+////////////////////////////////////
 #include "../../xrCore/xrCore.h"
-#include "minimal_CPUID.h"
 #include "xrMain.h"
+////////////////////////////////////
 #include <stdio.h>
 #include <iostream>
 ///////////////////////////////////////////////
@@ -106,8 +107,8 @@ bool SupportsDX11Rendering()
 
 	std::memset(&sd, 0, sizeof(sd));
 	sd.BufferCount = 1;
-	sd.BufferDesc.Width = 800;
-	sd.BufferDesc.Height = 600;
+	sd.BufferDesc.Width = 640;
+	sd.BufferDesc.Height = 360;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 	sd.BufferDesc.RefreshRate.Numerator = 60;
 	sd.BufferDesc.RefreshRate.Denominator = 1;

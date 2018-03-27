@@ -22,7 +22,7 @@ QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_xrLaunch_t {
     QByteArrayData data[10];
-    char stringdata0[212];
+    char stringdata0[218];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -34,17 +34,17 @@ static const qt_meta_stringdata_xrLaunch_t qt_meta_stringdata_xrLaunch = {
 QT_MOC_LITERAL(0, 0, 8), // "xrLaunch"
 QT_MOC_LITERAL(1, 9, 21), // "on_pushButton_clicked"
 QT_MOC_LITERAL(2, 31, 0), // ""
-QT_MOC_LITERAL(3, 32, 12), // "run_xrEngine"
-QT_MOC_LITERAL(4, 45, 23), // "on_actionExit_triggered"
-QT_MOC_LITERAL(5, 69, 27), // "on_actionxrEngine_triggered"
-QT_MOC_LITERAL(6, 97, 30), // "on_actionOxygen_Team_triggered"
-QT_MOC_LITERAL(7, 128, 26), // "on_actionVertver_triggered"
-QT_MOC_LITERAL(8, 155, 29), // "on_actionGiperion_2_triggered"
-QT_MOC_LITERAL(9, 185, 26) // "on_actionForserX_triggered"
+QT_MOC_LITERAL(3, 32, 18), // "run_xrEngineButton"
+QT_MOC_LITERAL(4, 51, 23), // "on_actionExit_triggered"
+QT_MOC_LITERAL(5, 75, 27), // "on_actionxrEngine_triggered"
+QT_MOC_LITERAL(6, 103, 30), // "on_actionOxygen_Team_triggered"
+QT_MOC_LITERAL(7, 134, 26), // "on_actionVertver_triggered"
+QT_MOC_LITERAL(8, 161, 29), // "on_actionGiperion_2_triggered"
+QT_MOC_LITERAL(9, 191, 26) // "on_actionForserX_triggered"
 
     },
     "xrLaunch\0on_pushButton_clicked\0\0"
-    "run_xrEngine\0on_actionExit_triggered\0"
+    "run_xrEngineButton\0on_actionExit_triggered\0"
     "on_actionxrEngine_triggered\0"
     "on_actionOxygen_Team_triggered\0"
     "on_actionVertver_triggered\0"
@@ -96,7 +96,7 @@ void xrLaunch::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         Q_UNUSED(_t)
         switch (_id) {
         case 0: _t->on_pushButton_clicked(); break;
-        case 1: _t->run_xrEngine(); break;
+        case 1: _t->run_xrEngineButton(); break;
         case 2: _t->on_actionExit_triggered(); break;
         case 3: _t->on_actionxrEngine_triggered(); break;
         case 4: _t->on_actionOxygen_Team_triggered(); break;

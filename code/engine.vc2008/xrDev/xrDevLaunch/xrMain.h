@@ -9,12 +9,13 @@
 
 #pragma once
 /////////////////////////////////////////
+#include "minimal_CPUID.h"
+#include "ui_xrMain.h"
+/////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
 #include <windows.h>
 #include <thread>
-#include "minimal_CPUID.h"
-#include "ui_xrMain.h"
 #include <QApplication>
 #include <QDesktopServices>
 #include <QUrl>
