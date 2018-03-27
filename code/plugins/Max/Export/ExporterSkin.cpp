@@ -2,7 +2,7 @@
 #pragma hdrstop
 
 #include "exporter.h"
-#include "..\..\..\editors\ECore\Editor\EditObject.h"
+#include "xrECoreLite\EditObject.h"
 #include "MeshExpUtility.h"
 //----------------------------------------------------------------------------------------------
 

@@ -1,9 +1,9 @@
 #ifndef __GAME_MATERIAL__H
 #define __GAME_MATERIAL__H
 
-#include "shaders.h"
-#include "samplers.h"
-#include "iparamm2.h"
+#include "Max_16/shaders.h"
+#include "Max_16/samplers.h"
+#include "Max_16/iparamm2.h"
 #include "texmaps.h"
 #include "XRayMtlRes.h"
 
@@ -216,10 +216,10 @@ public:
 	void SetFlag(ULONG f, ULONG val);
 	void EnableMap(int i, BOOL onoff);
 	BOOL IsMapEnabled(int i) { return (*maps)[i].mapOn; }
-	BOOL KeyAtTime(int id,TimeValue t) { return (id == OPACITY_PARAM) ? pb_extended->KeyFrameAtTime(std2_opacity, t) : FALSE; }
+	BOOL KeyAtTime(int id,TimeValue t) { return (id == OPACITY_PARAM) ? pb_extended->KeyFrameAtTimeByIndex(std2_opacity, t) : FALSE; }
 	BOOL AmtKeyAtTime(int i, TimeValue t);
 	int  GetMapState( int indx ); //returns 0 = no map, 1 = disable, 2 = mapon
-	TSTR  GetMapName( int indx ); 
+	MSTR  GetMapName( int indx ); 
 	void SyncADTexLock( BOOL lockOn );
 
 	// from StdMat
@@ -434,7 +434,7 @@ public:
 	Texmap* GetSubTexmap(int i) { return (*maps)[i].map; }
 	int MapSlotType(int i);
 	void SetSubTexmap(int i, Texmap *m);
-	TSTR GetSubTexmapSlotName(int i);
+	MSTR GetSubTexmapSlotName(int i);
 	int SubTexmapOn(int i) { return  MAPACTIVE(i); } 
 	long StdIDToChannel( long id ){ return stdIDToChannel[id]; }
 
@@ -446,7 +446,7 @@ public:
 
 	int NumSubs() { return NUM_SUB_ANIMS; }  
 	Animatable* SubAnim(int i);
-	TSTR SubAnimName(int i);
+	MSTR SubAnimName(int i);
 	int SubNumToRefNum(int subNum);
 
 	// JBW: add direct ParamBlock access
@@ -459,9 +459,8 @@ public:
 	RefTargetHandle GetReference(int i);
 	void SetReference(int i, RefTargetHandle rtarg);
 
-	RefTargetHandle Clone(RemapDir &remap = NoRemap());
-	RefResult NotifyRefChanged( Interval changeInt, RefTargetHandle hTarget, 
-		PartID& partID, RefMessage message );
+//	RefTargetHandle Clone(RemapDir &remap = NoRemap());
+	//RefResult NotifyRefChanged( Interval changeInt, RefTargetHandle hTarget, PartID& partID, RefMessage message );
 
 	// IO
 	IOResult Save(ISave *isave);

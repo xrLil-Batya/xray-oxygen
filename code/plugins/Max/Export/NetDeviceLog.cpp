@@ -14,7 +14,8 @@
 CExportConsole EConsole;
 
 //----------------------------------------------------
-BOOL CALLBACK ConsoleDialogProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp){
+INT_PTR CALLBACK ConsoleDialogProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp)
+{
 	
 	std::list<CExportConsole::_ConsoleMsg>::iterator _F;
 	std::list<CExportConsole::_ConsoleMsg>::iterator _E;
@@ -46,10 +47,9 @@ BOOL CALLBACK ConsoleDialogProc( HWND hw, UINT msg, WPARAM wp, LPARAM lp){
 	return TRUE;
 }
 
-DWORD WINAPI ConsoleThreadProc( LPVOID ){
-	DialogBox( EConsole.m_hInstance,
-		MAKEINTRESOURCE(IDD_CONSOLE),
-		0/*GetForegroundWindow()*/, ConsoleDialogProc );
+DWORD WINAPI ConsoleThreadProc(LPVOID)
+{
+	DialogBox(EConsole.m_hInstance, MAKEINTRESOURCE(IDD_CONSOLE), 0/*GetForegroundWindow()*/, ConsoleDialogProc);
 	return 0;
 }
 

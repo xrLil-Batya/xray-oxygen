@@ -56,7 +56,6 @@
     </ClCompile>
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="bone.cpp" />
-    <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="VertCache.cpp" />
     <ClCompile Include="ogf_desc.cpp" />
   </ItemGroup>
@@ -90,6 +89,5 @@
     </ClInclude>
     <ClInclude Include="motion.h" />
     <ClInclude Include="bone.h" />
-    <ClInclude Include="envelope.h" />
   </ItemGroup>
 </Project>

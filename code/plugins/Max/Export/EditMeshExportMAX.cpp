@@ -7,8 +7,8 @@
 //#include "..\..\Shared\EditMesh.h"
 //#include "..\..\Shared\EditObject.h"
 
-#include "..\..\..\editors\ECore\Editor\EditMesh.h"
-#include "..\..\..\editors\ECore\Editor\EditObject.h"
+#include "xrECoreLite\EditMesh.h"
+#include "xrECoreLite\EditObject.h"
 
 #include "MeshExpUtility.h"
 
@@ -186,7 +186,7 @@ bool CEditableMesh::Convert(CExporter* E)
 {
 	bool bResult		= true;
 
-	m_Name				= E->m_MeshNode->GetName();
+	m_Name				= (const char*)E->m_MeshNode->GetName();
 
 	// maps
 	// Weight maps 

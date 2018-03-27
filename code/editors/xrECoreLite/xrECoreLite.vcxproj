@@ -125,7 +125,6 @@
     <ClCompile Include="EditObjectEditor.cpp" />
     <ClCompile Include="EditObjectIO.cpp" />
     <ClCompile Include="EditObjectMotions.cpp" />
-    <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="ExportObjectOGF.cpp" />
     <ClCompile Include="ExportObjectOGFCalculateTB.cpp" />
     <ClCompile Include="ExportSkeleton.cpp" />
@@ -145,7 +144,6 @@
     <ClInclude Include="bone.h" />
     <ClInclude Include="EditMesh.h" />
     <ClInclude Include="EditObject.h" />
-    <ClInclude Include="envelope.h" />
     <ClInclude Include="ExportObjectOGF.h" />
     <ClInclude Include="ExportSkeleton.h" />
     <ClInclude Include="files_list.hpp" />

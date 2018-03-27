@@ -432,14 +432,7 @@ IC SurfaceVec::iterator FirstSurface		()	{return m_Surfaces.begin();}
 	CSurface*		CreateSurface			(Mtl* M, u32 mat_id);
 	bool			ImportMAXSkeleton		(CExporter* exporter);
 #endif
-#ifdef _MAX_EXPORT
-	BOOL			ExtractTexName(Texmap *src, LPSTR dest);
-	BOOL			ParseStdMaterial(StdMat* src, CSurface* dest);
-	BOOL			ParseMultiMaterial(MultiMtl* src, u32 mid, CSurface* dest);
-	BOOL			ParseXRayMaterial(XRayMtl* src, u32 mid, CSurface* dest);
-	CSurface*		CreateSurface(Mtl* M, u32 mat_id);
-	bool			ImportMAXSkeleton(CExporter* exporter);
-#endif
+
 #ifdef _LW_EXPORT
 	bool			Import_LWO(st_ObjectDB *I);
 	Flags32         m_Flags;
