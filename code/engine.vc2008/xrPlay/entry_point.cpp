@@ -34,9 +34,9 @@ const char* GetParams()
 DLL_API int RunApplication(char* commandLine);
 
 /***********************************************
-* WinMain() - Parametres for starting launcher
+* WinMain() - Main method for initialize xrEngine
 ***********************************************/
-int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
 	std::string params = lpCmdLine;
 
