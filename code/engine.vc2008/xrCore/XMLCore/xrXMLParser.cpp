@@ -50,9 +50,10 @@ void ParseFile(const char* path, CMemoryWriter& W, IReader *F, CXml* xml)
 				}
 
 				if (!I)
+				{
 					I = FS.r_open(path, inc_name);
-
-				R_ASSERT4(I, "XML file[%s] parsing failed. Can't find include file:[%s]", path, inc_name);
+					R_ASSERT4(I, "XML file[%s] parsing failed. Can't find include file:[%s]", path, inc_name);
+				}
 
 				ParseFile(path, W, I, xml);
 				FS.r_close(I);
@@ -86,44 +87,47 @@ void CXml::Load(const char* path, const char* xml_filename)
 	FS.r_close				(F);
 
 	m_Doc.Parse				((const char*)W.pointer());
-	//FX:  m_Doc.Value() всё равно возвращает 0 при ошибке, толку от него нет
-	R_ASSERT4(!m_Doc.Error(), "XML file:%s value:%s errDescr:%s", m_xml_file_name, m_Doc.ErrorName());
 
-	m_root					= m_Doc.FirstChildElement();
+	if (m_Doc.Error())
+	{
+		std::string Error = "XML file: " + std::string(m_xml_file_name) + "value: " + m_Doc.Value() + "errDescr " + m_Doc.ErrorName();
+		Debug.fatal(DEBUG_INFO, Error.c_str());
+	}
+
+	m_root = m_Doc.FirstChildElement();
 }
 
 XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node_index)
 {
-	R_ASSERT3					(start_node && path, "NavigateToNode failed in XML file ",m_xml_file_name);
-	XML_NODE*	node			= NULL;
-	XML_NODE*	node_parent		= NULL;
+	R_ASSERT3(start_node && path, "NavigateToNode failed in XML file ",m_xml_file_name);
+	XML_NODE* node = nullptr;
 
-	string_path					buf_str;
-	VERIFY						(xr_strlen(path)<200);
-	buf_str[0]					= 0;
-	xr_strcpy						(buf_str, path);
+	string_path buf_str;
+	buf_str[0] = 0;
+	xr_strcpy(buf_str, path);
 
-	char seps[]					= ":";
+	char seps[] = ":";
     char *token;
-	int tmp						= 0;
 
     //разбить путь на отдельные подпути
-	token = strtok( buf_str, seps );
-
+	token = strtok(buf_str, seps);
+	
 	if (token)
 	{
 		node = start_node->FirstChildElement(token);
 
-		while (tmp++ < node_index && node)
+		for (int tmp = 0; tmp < node_index && node; tmp++)
 		{
 			//node = start_node->IterateChildren(token, node);
 			//FX: tinyxml::IterateChildren code:
-			if (!node)
-				node = start_node->FirstChildElement(token);
-			else
+			if (node)
 			{
 				R_ASSERT(node->Parent() == start_node);
 				node = node->NextSiblingElement(token);
+			}
+			else
+			{
+				node = start_node->FirstChildElement(token);
 			}
 		}
 	}
@@ -135,7 +139,7 @@ XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node
 
 		if (token && node)
 		{
-			node_parent = node;
+			XML_NODE* node_parent = node;
 			node = node_parent->FirstChildElement(token);
 		}
 	}
@@ -281,7 +285,7 @@ int CXml::ReadAttribInt(const char* path, int index, const char* attrib, int def
 
 int CXml::ReadAttribInt(XML_NODE* start_node, const char* path, int index, const char* attrib, int default_int_val)
 {
-	const char* result_str		= ReadAttrib(start_node, path, index, attrib, nullptr); 
+	const char* result_str = ReadAttrib(start_node, path, index, attrib, nullptr); 
 	return result_str ? atoi(result_str) : default_int_val;
 }
 
@@ -381,7 +385,7 @@ const char* CXml::CheckUniqueAttrib(XML_NODE* start_node, const char* tag_name, 
 {
 	m_AttribValues.clear();
 
-	const int tags_num = GetNodesNum(start_node, tag_name);
+	const u32 tags_num = GetNodesNum(start_node, tag_name);
 
 	for (u32 i = 0; i < tags_num; i++)
 	{

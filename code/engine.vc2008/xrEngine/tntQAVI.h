@@ -1,3 +1,5 @@
+// tntQAVI.h - хедер для декодера AVI
+// Oles (C), 2002-2007
 #pragma once
 #include <math.h>
 #include "vfw.h"

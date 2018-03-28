@@ -363,46 +363,45 @@ void CDrawUtilities::DrawEntity(u32 clr, ref_shader s)
     }
 }
 
-void CDrawUtilities::DrawFlag(const Fvector& p, float heading, float height, float sz, float sz_fl, u32 clr, BOOL bDrawEntity){
+void CDrawUtilities::DrawFlag(const Fvector& p, float heading, float height, float sz, float sz_fl, u32 clr, BOOL bDrawEntity) {
 	// fill VB
-	_VertexStream*	Stream	= &RCache.Vertex;
+	_VertexStream*	Stream = &RCache.Vertex;
 	u32			vBase;
-	FVF::L*	pv	 	= (FVF::L*)Stream->Lock(2,vs_L->vb_stride,vBase);
-    pv->set			(p,clr); pv++;
-    pv->set			(p.x,p.y+height,p.z,clr); pv++;
-	Stream->Unlock	(2,vs_L->vb_stride);
+	FVF::L*	pv = (FVF::L*)Stream->Lock(2, vs_L->vb_stride, vBase);
+	pv->set(p, clr); pv++;
+	pv->set(p.x, p.y + height, p.z, clr); pv++;
+	Stream->Unlock(2, vs_L->vb_stride);
 	// and Render it as triangle list
-    DU_DRAW_DP		(D3DPT_LINELIST,vs_L,vBase,1);
+	DU_DRAW_DP(D3DPT_LINELIST, vs_L, vBase, 1);
 
-    if (bDrawEntity){
+	if (bDrawEntity) {
 		// fill VB
-        float rx		= _sin(heading);
-        float rz		= _cos(heading);
-		FVF::L*	pv	 	= (FVF::L*)Stream->Lock(6,vs_L->vb_stride,vBase);
-        sz				*= 0.8f;
-        pv->set			(p.x,p.y+height,p.z,clr);											pv++;
-        pv->set			(p.x+rx*sz,p.y+height,p.z+rz*sz,clr);                               pv++;
-        sz				*= 0.5f;
-        pv->set			(p.x,p.y+height*(1.f-sz_fl*.5f),p.z,clr);                           pv++;
-        pv->set			(p.x+rx*sz*0.6f,p.y+height*(1.f-sz_fl*.5f),p.z+rz*sz*0.75f,clr);   	pv++;
-        pv->set			(p.x,p.y+height*(1.f-sz_fl),p.z,clr);                               pv++;
-        pv->set			(p.x+rx*sz,p.y+height*(1.f-sz_fl),p.z+rz*sz,clr);                   pv++;
-		Stream->Unlock	(6,vs_L->vb_stride);
+		float rx = _sin(heading);
+		float rz = _cos(heading);
+		FVF::L*	pVF = (FVF::L*)Stream->Lock(6, vs_L->vb_stride, vBase); sz *= 0.8f;
+		pVF->set(p.x, p.y + height, p.z, clr); pVF++;
+		pVF->set(p.x + rx * sz, p.y + height, p.z + rz * sz, clr); pVF++; sz *= 0.5f;
+		pVF->set(p.x, p.y + height * (1.f - sz_fl * .5f), p.z, clr); pVF++;
+		pVF->set(p.x + rx * sz*0.6f, p.y + height * (1.f - sz_fl * .5f), p.z + rz * sz*0.75f, clr); pVF++;
+		pVF->set(p.x, p.y + height * (1.f - sz_fl), p.z, clr); pVF++;
+		pVF->set(p.x + rx * sz, p.y + height * (1.f - sz_fl), p.z + rz * sz, clr); pVF++;
+		Stream->Unlock(6, vs_L->vb_stride);
 		// and Render it as line list
-    	DU_DRAW_DP		(D3DPT_LINELIST,vs_L,vBase,3);
-    }else{
+		DU_DRAW_DP(D3DPT_LINELIST, vs_L, vBase, 3);
+	}
+	else {
 		// fill VB
-		FVF::L*	pv	 	= (FVF::L*)Stream->Lock(6,vs_L->vb_stride,vBase);
-	    pv->set			(p.x,p.y+height*(1.f-sz_fl),p.z,clr); 								pv++;
-    	pv->set			(p.x,p.y+height,p.z,clr); 											pv++;
-	    pv->set			(p.x+_sin(heading)*sz,((pv-2)->p.y+(pv-1)->p.y)/2,p.z+_cos(heading)*sz,clr); pv++;
-    	pv->set			(*(pv-3)); 															pv++;
-	    pv->set			(*(pv-2)); 															pv++;
-    	pv->set			(*(pv-4)); 															pv++;
-		Stream->Unlock	(6,vs_L->vb_stride);
+		FVF::L*	pVF = (FVF::L*)Stream->Lock(6, vs_L->vb_stride, vBase);
+		pVF->set(p.x, p.y + height * (1.f - sz_fl), p.z, clr); pVF++;
+		pVF->set(p.x, p.y + height, p.z, clr); pVF++;
+		pVF->set(p.x + _sin(heading)*sz, ((pVF - 2)->p.y + (pVF - 1)->p.y) / 2, p.z + _cos(heading)*sz, clr); pVF++;
+		pVF->set(*(pVF - 3)); pVF++;
+		pVF->set(*(pVF - 2)); pVF++;
+		pVF->set(*(pVF - 4)); pVF++;
+		Stream->Unlock(6, vs_L->vb_stride);
 		// and Render it as triangle list
-    	DU_DRAW_DP		(D3DPT_TRIANGLELIST,vs_L,vBase,2);
-    }
+		DU_DRAW_DP(D3DPT_TRIANGLELIST, vs_L, vBase, 2);
+	}
 }
 
 //------------------------------------------------------------------------------

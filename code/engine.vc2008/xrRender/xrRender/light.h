@@ -1,15 +1,13 @@
-#ifndef LAYERS_XRRENDER_LIGHT_H_INCLUDED
-#define LAYERS_XRRENDER_LIGHT_H_INCLUDED
-
+#pragma once
 #include "../../xrcdb/ispatial.h"
 
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#ifndef ENGINE_BUILD
 #	include "light_package.h"
 #	include "light_smapvis.h"
 #	include "light_GI.h"
-#endif //(RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#endif
 
-class	light		:	public IRender_Light, public ISpatial
+class light: public IRender_Light, public ISpatial
 {
 public:
 	struct {
@@ -35,7 +33,7 @@ public:
 	float			m_volumetric_intensity;
 	float			m_volumetric_distance;
 
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#ifndef ENGINE_BUILD
 	float			falloff;			// precalc to make light equal to zero at light range
 	float	        attenuation0;		// Constant attenuation		
 	float	        attenuation1;		// Linear attenuation		
@@ -92,7 +90,7 @@ public:
 			BOOL						transluent	;
 		}	S;
 	}	X;
-#endif	//	(RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#endif
 
 public:
 	virtual void	set_type				(LT type)						{ flags.type = type;		}
@@ -128,7 +126,7 @@ public:
 	virtual IRender_Light*	dcast_Light		()	{ return this; }
 
 	vis_data&		get_homdata				();
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+#ifndef ENGINE_BUILD
 	void			gi_generate				();
 	void			xform_calc				();
 	void			vis_prepare				();
@@ -142,5 +140,3 @@ public:
 	light();
 	virtual ~light();
 };
-
-#endif // #define LAYERS_XRRENDER_LIGHT_H_INCLUDED

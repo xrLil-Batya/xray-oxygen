@@ -60,8 +60,9 @@ class TexmapSlot {
 		float GetAmount(TimeValue t);
 };
 
-
-class Texmaps: public TexmapContainer {
+#include "Max_16/imtl.h"
+class Texmaps: public TexmapContainer 
+{
 	public:  
 		MtlBase *client;
 		TexmapSlot txmap[32];
@@ -75,9 +76,8 @@ class Texmaps: public TexmapContainer {
 		Class_ID ClassID();
 
 		void DeleteThis();
-		RefTargetHandle Clone(RemapDir &remap = NoRemap());	
-		RefResult NotifyRefChanged( Interval changeInt, RefTargetHandle hTarget, 
-		   PartID& partID, RefMessage message );
+//		RefTargetHandle Clone(RemapDir &remap = NoRemap());	
+//		RefResult NotifyRefChanged( Interval changeInt, RefTargetHandle hTarget, PartID& partID, RefMessage message );
 
 		void RescaleWorldUnits(float f);
 
@@ -88,7 +88,7 @@ class Texmaps: public TexmapContainer {
 
 		int NumSubs();
 	    Animatable* SubAnim(int i);
-		TSTR SubAnimName(int i);
+		MSTR SubAnimName(int i);
 		int SubNumToRefNum(int subNum) {return subNum; }
 		BOOL InvisibleProperty() { return TRUE; }  // maps are made visible in scripter by pb_maps paramblock in the material so don't expose them as a subanim
 		

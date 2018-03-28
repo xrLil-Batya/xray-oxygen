@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-
+#include "xrEngine\device.h"
 #include "../../Editors/xrECoreLite/EditObject.h"
 #include "../lw_shared/LW_ShaderDef.h"
 #include "../../Editors/xrECoreLite/EditMesh.h"
@@ -70,29 +70,33 @@ bool CEditableObject::Import_LWO(const char* fn, bool bNeedOptimize)
                     m_Surfaces.push_back(Osf);
                     if (Isf->name&&Isf->name[0]) Osf->SetName(Isf->name); else Osf->SetName("Default");
                     Osf->m_Flags.set(CSurface::sf2Sided,(Isf->sideflags==3)?TRUE:FALSE);
-                    AnsiString en_name="default", lc_name="default", gm_name="default";
+                    std::string en_name="default", lc_name="default", gm_name="default";
                     XRShader* sh_info = 0;
-                    if (Isf->nshaders&&(stricmp(Isf->shader->name,SH_PLUGIN_NAME)==0)){
+                    if (Isf->nshaders&&(stricmp(Isf->shader->name,SH_PLUGIN_NAME)==0))
+					{
                     	sh_info 	= (XRShader*)Isf->shader->data;
                         en_name 	= sh_info->en_name;
                         lc_name 	= sh_info->lc_name;
                         gm_name		= sh_info->gm_name;
-                    }else
-						ELog.Msg(mtError,"CEditableObject: Shader not found on surface '%s'.",Osf->_Name());
-#ifdef _EDITOR
-					if (!Device.Resources->_FindBlender(en_name.c_str())){
-						ELog.Msg(mtError,"CEditableObject: Render shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", en_name.c_str(), Osf->_Name());
-	                    en_name = "default";
-					}
-					if (!Device.ShaderXRLC.Get(lc_name.c_str())){
-						ELog.Msg(mtError,"CEditableObject: Compiler shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", lc_name.c_str(), Osf->_Name());
-	                    lc_name = "default";
-					}
-					if (!GMLib.GetMaterial(gm_name.c_str())){
-						ELog.Msg(mtError,"CEditableObject: Game material '%s' - can't find in library.\nUsing 'default' material on surface '%s'.", lc_name.c_str(), Osf->_Name());
-	                    gm_name = "default";
-					}
-#endif
+                    }
+					else ELog.Msg(mtError,"CEditableObject: Shader not found on surface '%s'.",Osf->_Name());
+#pragma todo("Implemented Resources to Device!")
+					//if (!Device.Resources->_FindBlender(en_name.c_str()))
+					//{
+					//	ELog.Msg(mtError,"CEditableObject: Render shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", en_name.c_str(), Osf->_Name());
+	                //    en_name = "default";
+					//}
+					//if (!Device.ShaderXRLC.Get(lc_name.c_str()))
+					//{
+					//	ELog.Msg(mtError,"CEditableObject: Compiler shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", lc_name.c_str(), Osf->_Name());
+	                //    lc_name = "default";
+					//}
+					//if (!GMLib.GetMaterial(gm_name.c_str()))
+					//{
+					//	ELog.Msg(mtError,"CEditableObject: Game material '%s' - can't find in library.\nUsing 'default' material on surface '%s'.", lc_name.c_str(), Osf->_Name());
+	                //    gm_name = "default";
+					//}
+
                     // fill texture layers
                     int cidx;
                     st_lwClip* Icl;

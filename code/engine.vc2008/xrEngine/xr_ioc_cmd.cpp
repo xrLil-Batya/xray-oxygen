@@ -752,3 +752,9 @@ if(strstr(Core.Params,"-snd_speed_ctrl") )
 #endif
 };
  
+void IConsole_Command::InvalidSyntax()
+{
+	TInfo I; Info(I);
+	Msg("~ Invalid syntax in call to '%s'", cName);
+	Msg("~ Valid arguments: %s", I);
+}

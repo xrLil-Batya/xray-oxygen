@@ -1,6 +1,4 @@
-#ifndef _CPS_Instance_H_
-#define _CPS_Instance_H_
-
+#pragma once
 #include "../xrcdb/ispatial.h"
 #include "isheduled.h"
 #include "irenderable.h"
@@ -44,5 +42,3 @@ public:
 	virtual void			shedule_Update		(u32 dt);
 	virtual	IRenderable*	dcast_Renderable	()				{ return this;	}
 };
-
-#endif

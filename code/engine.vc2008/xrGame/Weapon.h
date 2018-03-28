@@ -463,9 +463,6 @@ public:
 	CCartridge				m_DefaultCartridge;
 	float					m_fCurrentCartirdgeDisp;
 
-		bool				unlimited_ammo				();
-	IC	bool				can_be_strapped				() const {return m_can_be_strapped;};
-
 protected:
 	u32						m_ef_main_weapon_type;
 	u32						m_ef_weapon_type;
@@ -473,6 +470,11 @@ protected:
 public:
 	virtual u32				ef_main_weapon_type	() const;
 	virtual u32				ef_weapon_type		() const;
+	// Получаем вес обоймы
+	float					GetMagazineWeight	(const decltype(m_magazine)& mag) const;
+	// Получаем флаг бесконечных патрон
+	bool					unlimited_ammo		();
+IC	bool					can_be_strapped		() const {return m_can_be_strapped;};
 
 protected:
 	// This is because when scope is attached we can't ask scope for these params

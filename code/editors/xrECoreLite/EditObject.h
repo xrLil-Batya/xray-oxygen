@@ -1,15 +1,17 @@
 #pragma once
 #include "GameMtlLib.h"
+#ifndef _LW_PLUGIN
 #include "xrCDB/xrCDB.h"
 #include "xrSound/Sound.h"
-
+#endif
 #include "bone.h"
 #include "motion.h"
 
+#ifndef _LW_PLUGIN
 #include "xrEngine/GameMtlLib.h"
+#endif
 #ifdef _EDITOR
 #	include "../../../xrServerEntities/PropertiesListTypes.h"
-//	#include "PropertiesListHelper.h"
 #	include "pick_defs.h"
 #endif
 //----------------------------------------------------
@@ -279,7 +281,7 @@ IC SurfaceVec::iterator FirstSurface		()	{return m_Surfaces.begin();}
     shared_str		BoneNameByID			(int id);
     int				GetRootBoneID			();
     int				PartIDByName			(const char* name);
-    IC CBone*		GetBone					(u32 idx){VERIFY(idx<u32(m_Bones.size())); return m_Bones[idx];}
+    IC CBone*		GetBone					(u32 idx){VERIFY(idx<u32(m_Bones.size())); return (CBone*)m_Bones[idx];}
     void			GetBoneWorldTransform	(u32 bone_idx, float t, CSMotion* motion, Fmatrix& matrix);
 	SMotionVec&		SMotions				()	{return m_SMotions;}
     IC u32			SMotionCount 			()	{return (u32)m_SMotions.size();}
@@ -430,14 +432,7 @@ IC SurfaceVec::iterator FirstSurface		()	{return m_Surfaces.begin();}
 	CSurface*		CreateSurface			(Mtl* M, u32 mat_id);
 	bool			ImportMAXSkeleton		(CExporter* exporter);
 #endif
-#ifdef _MAX_EXPORT
-	BOOL			ExtractTexName(Texmap *src, LPSTR dest);
-	BOOL			ParseStdMaterial(StdMat* src, CSurface* dest);
-	BOOL			ParseMultiMaterial(MultiMtl* src, u32 mid, CSurface* dest);
-	BOOL			ParseXRayMaterial(XRayMtl* src, u32 mid, CSurface* dest);
-	CSurface*		CreateSurface(Mtl* M, u32 mat_id);
-	bool			ImportMAXSkeleton(CExporter* exporter);
-#endif
+
 #ifdef _LW_EXPORT
 	bool			Import_LWO(st_ObjectDB *I);
 	Flags32         m_Flags;

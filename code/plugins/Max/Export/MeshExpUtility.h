@@ -8,7 +8,7 @@
 #include "MeshExpUtility.rh"
 
 #define EXPORTER_VERSION	2
-#define EXPORTER_BUILD		03
+#define EXPORTER_BUILD		0
 //using namespace std;
 
 // refs
@@ -16,7 +16,8 @@ class CEditableObject;
 
 #define	EXP_UTILITY_CLASSID 0x507d29c0
 
-class ExportItem {
+class ExportItem 
+{
 public:
 	INode *pNode;
 	ExportItem(){ pNode = 0;};
@@ -24,8 +25,11 @@ public:
 	~ExportItem(){};
 };
 
-DEFINE_VECTOR(ExportItem,ExportItemVec,ExportItemIt);
-class MeshExpUtility : public UtilityObj {
+using ExportItemVec = xr_vector<ExportItem>;
+using ExportItemIt = ExportItemVec::iterator;
+
+class MeshExpUtility : public UtilityObj 
+{
 public:
 
 	IUtil		*iu;

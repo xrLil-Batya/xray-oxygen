@@ -1,10 +1,9 @@
 #pragma once
-
 #include "..\..\Shared\helper.h"
 #include "..\..\Shared\bonedef.h"
 #include "..\..\Shared\face.h"
-
-DEFINE_VECTOR(INode*,INodeVec,INodeIt);
+using INodeVec = xr_vector<INode*>;
+using INodeIt = INodeVec::iterator;
 
 //-----------------------------------------------------------------------------
 IC void ERR(LPCSTR s, LPCSTR dop="") 
@@ -57,7 +56,7 @@ private:
 	BOOL			Capture		();
 	int				AddVert		(const st_VERT& pTestV)
 	{
-		for (ExpVertIt vI=m_ExpVertices.begin(); vI!=m_ExpVertices.end(); vI++)
+		for (auto vI=m_ExpVertices.begin(); vI!=m_ExpVertices.end(); vI++)
 			if ((*vI)->similar(pTestV)) return vI-m_ExpVertices.begin();
 
 		st_VERT* V	= xr_new<st_VERT>();

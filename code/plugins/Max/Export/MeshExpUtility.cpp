@@ -4,10 +4,9 @@
 #pragma hdrstop
 
 #include "MeshExpUtility.h"
-#include "..\..\..\xrCore\FileSystem.h"
 #include "MeshExpUtility.rh"
-#include "..\..\..\editors\ECore\Editor\EditObject.h"
-#include "..\..\..\editors\ECore\Editor\EditMesh.h"
+#include "xrECoreLite\EditObject.h"
+#include "xrECoreLite\EditMesh.h"
 //-------------------------------------------------------------------
 //  Dialog Handler for Utility
 
@@ -76,8 +75,9 @@ void MeshExpUtility::BeginEditParams(Interface *ip,IUtil *iu)
 	this->iu = iu;
 	this->ip = ip;
 	EConsole.Init( hInstance, 0 );
+	//virtual HWND AddRollupPage(HINSTANCE hInst, const MCHAR *dlgTemplate, dlgProc, const MCHAR *title, LPARAM param = 0, DWORD flags = 0, int category = ROLLUP_CAT_STANDARD ) = 0;
 
-	hPanel = ip->AddRollupPage(hInstance, MAKEINTRESOURCE(IDD_MWND), DefaultDlgProc, "S.T.A.L.K.E.R. Export", 0);
+	hPanel = ip->AddRollupPage(hInstance, (const MCHAR *)MAKEINTRESOURCE(IDD_MWND), (DLGPROC)DefaultDlgProc, (MCHAR*)"S.T.A.L.K.E.R. Export");
 }
 	
 void MeshExpUtility::EndEditParams(Interface *ip,IUtil *iu) 
@@ -175,7 +175,7 @@ BOOL MeshExpUtility::BuildObject(CEditableObject*& exp_obj, LPCSTR m_ExportName)
 			if(m_ObjectFlipFaces)		submesh->FlipFaces();
 			submesh->RecomputeBBox();
 			// append mesh
-			submesh->SetName			(it->pNode->GetName());
+			submesh->SetName			((const char*)it->pNode->GetName());
 			exp_obj->m_Meshes.push_back	(submesh);
 		}else{
 			ELog.Msg(mtError,"! can't convert", it->pNode->GetName());
@@ -207,9 +207,11 @@ BOOL MeshExpUtility::SaveAsObject(const char* m_ExportName)
 	ELog.Msg(mtInformation,"Exporting..." );
 	ELog.Msg(mtInformation,"-------------------------------------------------------" );
 	CEditableObject* exp_obj=0;	
-	if (bResult=BuildObject(exp_obj,m_ExportName)){
+	if (bResult=BuildObject(exp_obj,m_ExportName))
+	{
 		ELog.Msg				(mtInformation,"Saving object...");
-		for (SurfaceIt s_it=exp_obj->FirstSurface(); s_it!=exp_obj->LastSurface(); s_it++){
+		for (auto s_it=exp_obj->FirstSurface(); s_it!=exp_obj->FirstSurface() + exp_obj->SurfaceCount(); s_it++)
+		{
 			LPSTR t=(LPSTR)(*s_it)->_Texture();
 			if (strext(t)) *strext(t)=0;
 		}

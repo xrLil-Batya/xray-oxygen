@@ -249,6 +249,12 @@
     <ClCompile Include="DebugCore\dxerr.cpp">
       <Filter>Debug core</Filter>
     </ClCompile>
+    <ClCompile Include="threadpool\ttapi.cpp">
+      <Filter>OS</Filter>
+    </ClCompile>
+    <ClCompile Include="threadpool\ttapi_oxygen.cpp">
+      <Filter>OS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -523,6 +529,9 @@
     </ClInclude>
     <ClInclude Include="PostprocessAnimator.h">
       <Filter>PostProcessCore</Filter>
+    </ClInclude>
+    <ClInclude Include="threadpool\ttapi.h">
+      <Filter>OS</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

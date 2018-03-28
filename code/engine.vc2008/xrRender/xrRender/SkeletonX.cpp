@@ -18,7 +18,7 @@
 #include "SkeletonX.h"
 #include "SkeletonCustom.h"
 #include "../../xrEngine/fmesh.h"
-#include "../../xrCPU_Pipe/xrCPU_Pipe.h"
+#include "../../xrEngine/CPU/xrCPU_Pipe.h"
 
 shared_str	s_bones_array_const;
 
@@ -176,13 +176,8 @@ void CSkeletonX::_Load	(const char* N, IReader *data, u32& dwVertCount)
 	//u16			hw_bones_cnt		= u16((HW.Caps.geometry.dwRegisters-22)/3);
 	//	Igor: some shaders in r1 need more free constant registers
 	u16			hw_bones_cnt		= u16((HW.Caps.geometry.dwRegisters-22-3)/3);
-
-	#if RENDER == R_R1
-		if ( ps_r1_SoftwareSkinning == 1 )
-			hw_bones_cnt = 0;
-	#endif // RENDER == R_R1
-
 	u16			sw_bones_cnt		= 0;
+
 #ifdef _EDITOR
 	hw_bones_cnt					= 0;
 #endif

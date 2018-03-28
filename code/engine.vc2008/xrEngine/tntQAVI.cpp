@@ -1,3 +1,5 @@
+// tntQAVI.h - декодер AVI видеопотока
+// Oles (C), 2002-2007
 #include "stdafx.h"
 #pragma hdrstop
 #include "tntQAVI.h"

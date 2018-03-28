@@ -4,7 +4,7 @@
 #define ENGINE_API
 
 #include "bone.h"
-#include "envelope.h"
+#include "xrCore/envelope.h"
 
 #define BONE_VERSION					0x0002
 //------------------------------------------------------------------------------

@@ -39,11 +39,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 	if (pVisual->vis.marker	==	RI.marker)	return	;
 	pVisual->vis.marker		=	RI.marker			;
 
-#if RENDER==R_R1
-	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!=Device.dwFrame))	return;
-	pVisual->vis.accept_frame	=	Device.dwFrame	;
-#endif
-
 	float distSQ			;
 	float SSA				=	CalcSSA		(distSQ,Center,pVisual);
 	if (SSA<=r_ssaDISCARD)		return;
@@ -124,7 +119,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 		return;
 	}
 
-#if RENDER!=R_R1
 	// Emissive geometry should be marked and R2 special-cases it
 	// a) Allow to skeep already lit pixels
 	// b) Allow to make them 100% lit and really bright
@@ -152,7 +146,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 		mapWmark.emplace_back(std::make_pair(distSQ, temp));
 		return;
 	}
-#endif
 
 	_MatrixItem item = { SSA, RI.val_pObject, pVisual, *RI.val_pTransform };
 	for (u32 iPass = 0; iPass < sh->passes.size(); ++iPass)
@@ -162,16 +155,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 		auto &map = mapMatrixPasses[sh->flags.iPriority / 2][iPass];
 
 
-#ifdef USE_RESOURCE_DEBUGGER
-#if defined(USE_DX10) || defined(USE_DX11)
-		mapMatrixVS::value_type&			Nvs = map.insert(pass.vs);
-		mapMatrixGS::value_type&			Ngs = Nvs->val.insert(pass.gs);
-		mapMatrixPS::value_type&			Nps = Ngs->val.insert(pass.ps);
-#else	//	USE_DX10
-		mapMatrixVS::value_type&			Nvs = map.insert(pass.vs);
-		mapMatrixPS::value_type&			Nps = Nvs->val.insert(pass.ps);
-#endif	//	USE_DX10
-#else
 #if defined(USE_DX10) || defined(USE_DX11)
 		auto &Nvs = map[&*pass.vs];
 		auto &Ngs = Nvs[pass.gs->gs];
@@ -179,7 +162,6 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 #else
 		auto &Nvs = map[pass.vs->vs];
 		auto &Nps = Nvs[pass.ps->ps];
-#endif
 #endif
 
 #ifdef USE_DX11
@@ -243,11 +225,6 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 
 	if (pVisual->vis.marker		==	RI.marker)	return	;
 	pVisual->vis.marker			=	RI.marker			;
-
-#if RENDER==R_R1
-	if (RI.o.vis_intersect &&	(pVisual->vis.accept_frame!=Device.dwFrame))	return;
-	pVisual->vis.accept_frame	=	Device.dwFrame		;
-#endif
 
 	float distSQ;
 	float SSA					=	CalcSSA		(distSQ,pVisual->vis.sphere.P,pVisual);
@@ -322,19 +299,8 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 	_NormalItem item = { SSA, pVisual };
 	for (u32 iPass = 0; iPass<sh->passes.size(); ++iPass)
 	{
-		SPass&						pass	= *sh->passes[iPass];
-		mapNormal_T&				map		= mapNormalPasses[sh->flags.iPriority/2][iPass];
-
-#ifdef USE_RESOURCE_DEBUGGER
-#	if defined(USE_DX10) || defined(USE_DX11)
-		mapNormalVS::value_type&			Nvs		= map.insert		(pass.vs);
-		mapNormalGS::value_type&			Ngs		= Nvs->val.insert	(pass.gs);
-		mapNormalPS::value_type&			Nps		= Ngs->val.insert	(pass.ps);
-#	else	//	USE_DX10
-		mapNormalVS::value_type&			Nvs		= map.insert		(pass.vs);
-		mapNormalPS::value_type&			Nps		= Nvs->val.insert	(pass.ps);
-#	endif	//	USE_DX10
-#else // USE_RESOURCE_DEBUGGER
+		SPass& pass	= *sh->passes[iPass];
+		mapNormal_T& map = mapNormalPasses[sh->flags.iPriority/2][iPass];
 
 #if defined(USE_DX10) || defined(USE_DX11)
 		auto &Nvs = map[&*pass.vs];
@@ -343,7 +309,6 @@ void R_dsgraph_structure::r_dsgraph_insert_static	(dxRender_Visual *pVisual)
 #else
 		auto &Nvs = map[pass.vs->vs];
 		auto &Nps = Nvs[pass.ps->ps];
-#endif
 #endif
 
 #ifdef USE_DX11

@@ -96,21 +96,21 @@ ICF void CBackend::set_Indices(ID3DIndexBuffer* _ib)
 	}
 }
 
-ICF void CBackend::Render(D3DPRIMITIVETYPE T, u32 baseV, u32 startV, u32 countV, u32 startI, u32 PC)
+ICF void CBackend::Render(D3DPRIMITIVETYPE ET, u32 baseV, u32 startV, u32 countV, u32 startI, u32 PC)
 {
 	//Fix D3D ERROR
-	if (PC==0)
+	if (PC == 0)
 		return;
 
-	stat.calls			++;
-	stat.verts			+= countV;
-	stat.polys			+= PC;
-	constants.flush		();
-	CHK_DX				(HW.pDevice->DrawIndexedPrimitive(T,baseV, startV, countV,startI,PC));
-	PGO					(Msg("PGO:DIP:%dv/%df",countV,PC));
+	stat.calls++;
+	stat.verts += countV;
+	stat.polys += PC;
+	constants.flush();
+	CHK_DX(HW.pDevice->DrawIndexedPrimitive(ET, baseV, startV, countV, startI, PC));
+	PGO(Msg("PGO:DIP:%dv/%df", countV, PC));
 }
 
-ICF void CBackend::Render(D3DPRIMITIVETYPE T, u32 startV, u32 PC)
+ICF void CBackend::Render(D3DPRIMITIVETYPE ET, u32 startV, u32 PC)
 {
 	//Fix D3D ERROR
 	if (PC==0)
@@ -120,7 +120,7 @@ ICF void CBackend::Render(D3DPRIMITIVETYPE T, u32 startV, u32 PC)
 	stat.verts			+= 3*PC;
 	stat.polys			+= PC;
 	constants.flush		();
-	CHK_DX				(HW.pDevice->DrawPrimitive(T, startV, PC));
+	CHK_DX				(HW.pDevice->DrawPrimitive(ET, startV, PC));
 	PGO					(Msg("PGO:DIP:%dv/%df",3*PC,PC));
 }
 
@@ -207,23 +207,22 @@ ICF void CBackend::set_VS(ref_vs& _vs)
 	set_VS(_vs->vs,_vs->cName.c_str());				
 }
 
-IC void CBackend::set_Constants			(R_constant_table* C)
+IC void CBackend::set_Constants(R_constant_table* pC)
 {
 	// caching
-	if (ctable==C)	return;
-	ctable			= C;
-	xforms.unmap	();
-	hemi.unmap		();
-	tree.unmap		();
-	if (0==C)		return;
+	if (ctable == pC)	return;
+	ctable = pC;
+	xforms.unmap();
+	hemi.unmap();
+	tree.unmap();
+	if (0 == C)		return;
 
-	PGO				(Msg("PGO:c-table"));
+	PGO(Msg("PGO:c-table"));
 
 	// process constant-loaders
-	R_constant_table::c_table::iterator	it	= C->table.begin();
-	R_constant_table::c_table::iterator	end	= C->table.end	();
-	for (; it!=end; it++)	{
-		R_constant*		Cs	= &**it;
+	for (auto &it: pC->table) 
+	{
+		R_constant* Cs = &*it;
 		VERIFY(Cs);
 		if (Cs && Cs->handler)
 			Cs->handler->setup(Cs);
