@@ -333,10 +333,13 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="parametersdialog.ui" />
     <QtUic Include="xrMain.ui">
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="GeneratedFiles\ui_parametersdialog.h" />
+    <ClInclude Include="GeneratedFiles\ui_xrMain.h" />
     <ClInclude Include="minimal_CPUID.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

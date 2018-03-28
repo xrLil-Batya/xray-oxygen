@@ -35,4 +35,5 @@ HEADERS += \
         minimal_CPUID.h
 
 FORMS += \
-        xrMain.ui
+        xrMain.ui \
+        parametersdialog.ui

@@ -11,6 +11,7 @@
 /////////////////////////////////////////
 #include "minimal_CPUID.h"
 #include "ui_xrMain.h"
+#include "ui_parametersdialog.h"
 /////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
@@ -30,8 +31,24 @@ static const QStringList LIST_ITEMS = QStringList()
 void CreateRendererList();
 
 namespace Ui {
-class xrLaunch;
+class xrLaunch;			// main window
+class xrDialogParam;	// parameters dialog
 }
+
+class xrDialogParam : public QDialog 
+{
+	Q_OBJECT
+public: 
+		
+	explicit xrDialogParam(QWidget *parent = NULL);
+	~xrDialogParam();
+
+private slots:
+
+private:
+	//! other field for other types
+	Ui::Dialog	 *uiDialog;
+};
 
 class xrLaunch : public QMainWindow
 {
@@ -40,18 +57,20 @@ class xrLaunch : public QMainWindow
 public:
 
     explicit xrLaunch(QWidget *parent = 0);
-    ~xrLaunch();
+	~xrLaunch();
 
 private slots:
     void on_pushButton_clicked();			// Run
-	void run_xrEngineButton();					// Run the xrEngine
+	void run_xrEngineButton();				// Run the xrEngine
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
     void on_actionOxygen_Team_triggered();
     void on_actionVertver_triggered();
     void on_actionGiperion_2_triggered();
     void on_actionForserX_triggered();
+    void on_actionParametres_triggered();	
 
 private:
     Ui::xrLaunch *ui;
 };
+

@@ -54,6 +54,28 @@ if(CPUID::AMD || CPUID::AMDelse) { your code }
 	ui->listWidget->addItems ( LIST_ITEMS );
 }
 
+
+/***********************************************
+* explicit xrLaunch() - Init parameters dialog
+***********************************************/
+xrDialogParam::xrDialogParam(QWidget *parent) :
+	QDialog(parent),
+	uiDialog(new Ui::Dialog)
+{
+	uiDialog->setupUi(this);
+}
+
+
+/***********************************************
+* ~xrLaunch() - remove the parameters dialog
+***********************************************/
+xrDialogParam::~xrDialogParam()
+{
+	delete uiDialog;
+}
+
+
+
 /***********************************************
 * ~xrLaunch() - remove the main thread
 ***********************************************/
@@ -154,4 +176,10 @@ void xrLaunch::on_actionForserX_triggered()
 {
 	QString oxylink = "https://github.com/ForserX";
 	QDesktopServices::openUrl(QUrl(oxylink));
+}
+
+void xrLaunch::on_actionParametres_triggered()
+{
+	xrDialogParam *dlgprm = new xrDialogParam;
+	dlgprm->show();
 }
