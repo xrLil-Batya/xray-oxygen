@@ -2,14 +2,14 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 18 March, 2018
+* Edited: 28 March, 2018
 * aboutlauncher.h - header for "About" dialog 
 *************************************************/
-#ifndef ABOUTLAUNCHER_H
-#define ABOUTLAUNCHER_H
 
-#include <QDialog>
-
+#pragma once
+/////////////////////////////////////////
+#include "xrMain.h"
+/////////////////////////////////////////
 namespace Ui {
 class AboutLauncher;
 }
@@ -25,5 +25,3 @@ public:
 private:
     Ui::AboutLauncher *about_ui;
 };
-
-#endif // ABOUTLAUNCHER_H

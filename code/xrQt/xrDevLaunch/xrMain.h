@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 18 March, 2018
+* Edited: 28 March, 2018
 * xrMain.h - Main header for compilation with Qt
 * main namespace, classes and vars.
 *************************************************/
@@ -13,6 +13,7 @@
 #include "ui_xrMain.h"
 #include "ui_parametersdialog.h"
 #include "aboutlauncher.h"
+#include "ui_aboutlauncher.h"
 /////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
@@ -21,6 +22,7 @@
 #include <QApplication>
 #include <QDesktopServices>
 #include <QUrl>
+#include <QDialog>
 /////////////////////////////////////////
 #define DLL_API __declspec(dllimport)
 #define CXX 199711L
