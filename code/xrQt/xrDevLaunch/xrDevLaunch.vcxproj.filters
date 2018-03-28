@@ -52,9 +52,15 @@
     <ClCompile Include="minimal_CPUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="aboutlauncher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="xrMain.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="aboutlauncher.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -73,6 +79,9 @@
     <QtUic Include="parametersdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="aboutlauncher.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="minimal_CPUID.h">
@@ -84,5 +93,17 @@
     <ClInclude Include="GeneratedFiles\ui_parametersdialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="GeneratedFiles\ui_aboutlauncher.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
 </Project>

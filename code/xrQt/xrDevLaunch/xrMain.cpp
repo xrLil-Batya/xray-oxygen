@@ -12,6 +12,7 @@
 /////////////////////////////////////////
 unsigned int type_ptr;
 char const* params_list;
+char const* string_accept;
 /////////////////////////////////////////
 // In RenderList.cpp
 void CreateRendererList();
@@ -40,7 +41,6 @@ xrLaunch::xrLaunch(QWidget *parent) :
 		statusBar()->showMessage(tr("Your CPU doesn't support AVX instructions!"));
 	}
 	// if all instructions are supported
-	// d
 	else
 	{
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
@@ -75,11 +75,11 @@ xrDialogParam::~xrDialogParam()
 }
 
 
-
 /***********************************************
 * ~xrLaunch() - remove the main thread
 ***********************************************/
-xrLaunch::~xrLaunch() {
+xrLaunch::~xrLaunch() 
+{
     delete ui;
 }
 
@@ -92,11 +92,31 @@ DLL_API int RunApplication(char* commandLine);
 
 
 /***********************************************
-* void on_pushButton_clicked() - Method for run button
+* void on_pushButton_clicked() - Method for run 
+* xrEngine
 ***********************************************/
 void xrLaunch::on_pushButton_clicked() 
 {
-	run_xrEngineButton();
+	run_xrEngineRun();
+}
+
+
+/***********************************************
+* void run_xrEngine() - add string if pressed
+***********************************************/
+void xrLaunch::on_listWidget_itemPressed(QListWidgetItem *item)
+{
+	add_stringToList();
+}
+
+
+
+/***********************************************
+* void run_xrEngine() - add string to buffer
+************************************************/
+void xrLaunch::add_stringToList() 
+{
+	
 }
 
 
@@ -104,13 +124,12 @@ void xrLaunch::on_pushButton_clicked()
 * void run_xrEngine() - Method for Launch 
 * xrEngine.dll
 ***********************************************/
-void xrLaunch::run_xrEngineButton() 
+void xrLaunch::run_xrEngineRun() 
 {
+	//#NOTE: QString can't be public variable.
 	QString rendered = ui->listWidget->currentItem()->text();
-	//QString launchParams = " " + rendered;
 	CreateRendererList();
-	//#VERTVER: Don't use here toLatin1(). 
-	//#It's can crush compiler on Release/Release_IA32 configuration
+	//#VERTVER: Don't use here toLatin1(). Crash on Release
 	RunApplication(rendered.toLocal8Bit().data());
 }
 
@@ -126,12 +145,12 @@ void xrLaunch::on_actionExit_triggered()
 
 
 /***********************************************
-* void RunApplication() - Method for menu 
-* (Run xrEngine.dll)
+* void on_actionxrEngine_triggered - Method
+* for run xrEngine
 ***********************************************/
 void xrLaunch::on_actionxrEngine_triggered() 
 {
-	run_xrEngineButton();
+	run_xrEngineRun();
 }
 
 
@@ -178,8 +197,29 @@ void xrLaunch::on_actionForserX_triggered()
 	QDesktopServices::openUrl(QUrl(oxylink));
 }
 
+
+/***********************************************
+* void on_actionParametres_triggered - open the
+* new window with xrEngine params (doesn't works)
+***********************************************/
 void xrLaunch::on_actionParametres_triggered()
 {
-	xrDialogParam *dlgprm = new xrDialogParam;
-	dlgprm->show();
+	xrDialogParam *dlg = new xrDialogParam;
+	dlg->show();
+}
+
+
+/***********************************************
+* void on_buttonBox_accepted() - send the string
+* of params to xrEngineRun();
+***********************************************/
+void xrDialogParam::on_buttonBox_accepted()
+{
+	//uiDialog->textEdit
+}
+
+void xrLaunch::on_actionVertver_Github_triggered()
+{
+	AboutLauncher *dlg = new AboutLauncher;
+	dlg->show();
 }

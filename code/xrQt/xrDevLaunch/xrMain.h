@@ -12,6 +12,7 @@
 #include "minimal_CPUID.h"
 #include "ui_xrMain.h"
 #include "ui_parametersdialog.h"
+#include "aboutlauncher.h"
 /////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
@@ -45,6 +46,8 @@ public:
 
 private slots:
 
+    void on_buttonBox_accepted();
+
 private:
 	//! other field for other types
 	Ui::Dialog	 *uiDialog;
@@ -60,8 +63,9 @@ public:
 	~xrLaunch();
 
 private slots:
+	void add_stringToList();
     void on_pushButton_clicked();			// Run
-	void run_xrEngineButton();				// Run the xrEngine
+	void run_xrEngineRun();					// Run the xrEngine
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
     void on_actionOxygen_Team_triggered();
@@ -69,6 +73,8 @@ private slots:
     void on_actionGiperion_2_triggered();
     void on_actionForserX_triggered();
     void on_actionParametres_triggered();	
+    void on_listWidget_itemPressed(QListWidgetItem *item);
+    void on_actionVertver_Github_triggered();
 
 private:
     Ui::xrLaunch *ui;

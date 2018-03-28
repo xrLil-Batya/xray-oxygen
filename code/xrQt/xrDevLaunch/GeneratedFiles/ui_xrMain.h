@@ -365,7 +365,7 @@ public:
         actionExit->setShortcut(QApplication::translate("xrLaunch", "Ctrl+Q", nullptr));
 #endif // QT_NO_SHORTCUT
         actionMain->setText(QApplication::translate("xrLaunch", "Main", nullptr));
-        actionParametres->setText(QApplication::translate("xrLaunch", "Parametres of load", nullptr));
+        actionParametres->setText(QApplication::translate("xrLaunch", "xrEngine parameters...", nullptr));
         actionVertver_Github->setText(QApplication::translate("xrLaunch", "About xrDevLaunch...", nullptr));
         actionGiperion->setText(QApplication::translate("xrLaunch", "Giperion", nullptr));
         actionMain_parameters->setText(QApplication::translate("xrLaunch", "Main parameters", nullptr));

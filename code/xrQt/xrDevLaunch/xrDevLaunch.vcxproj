@@ -284,6 +284,7 @@
     </QtUic>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="aboutlauncher.cpp" />
     <ClCompile Include="InitLib.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="minimal_CPUID.cpp">
@@ -333,14 +334,24 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <QtUic Include="aboutlauncher.ui" />
     <QtUic Include="parametersdialog.ui" />
     <QtUic Include="xrMain.ui">
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <QtMoc Include="aboutlauncher.h" />
+    <ClInclude Include="GeneratedFiles\ui_aboutlauncher.h" />
     <ClInclude Include="GeneratedFiles\ui_parametersdialog.h" />
     <ClInclude Include="GeneratedFiles\ui_xrMain.h" />
     <ClInclude Include="minimal_CPUID.h" />
+    <ClInclude Include="resource.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="Resource.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="icon1.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">

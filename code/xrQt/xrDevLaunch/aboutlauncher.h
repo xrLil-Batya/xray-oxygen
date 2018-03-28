@@ -1,3 +1,10 @@
+/*************************************************
+* VERTVER, 2018 (C)
+* X-RAY OXYGEN 1.7 PROJECT
+*
+* Edited: 18 March, 2018
+* aboutlauncher.h - header for "About" dialog 
+*************************************************/
 #ifndef ABOUTLAUNCHER_H
 #define ABOUTLAUNCHER_H
 
@@ -16,7 +23,7 @@ public:
     ~AboutLauncher();
 
 private:
-    Ui::AboutLauncher *ui;
+    Ui::AboutLauncher *about_ui;
 };
 
 #endif // ABOUTLAUNCHER_H
