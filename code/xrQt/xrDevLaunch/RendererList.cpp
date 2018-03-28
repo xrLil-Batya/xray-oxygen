@@ -18,7 +18,7 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 ////////////////////////////////////
-#include "../../xrCore/xrCore.h"
+#include "../../engine.vc2008/xrCore/xrCore.h"
 #include "xrMain.h"
 ////////////////////////////////////
 #include <stdio.h>
