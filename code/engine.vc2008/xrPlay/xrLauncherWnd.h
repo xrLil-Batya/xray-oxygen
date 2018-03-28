@@ -180,8 +180,9 @@ namespace xrPlay {
 			this->label2->Name = L"label2";
 			this->label2->Size = System::Drawing::Size(35, 13);
 			this->label2->TabIndex = 11;
-
+			//
 			// Checking for a AVX instructions
+			//
 			if (!CPUID::AVX()) {
 				// If they aren't presented
 				this->label2->Text = L"AVX instructions aren't found. That may be affect on stability.";
@@ -233,8 +234,8 @@ namespace xrPlay {
 		if (radioButton4->Checked) rendered = "-r3";
 		if (radioButton5->Checked) rendered = "-r4";
 
-
-		params_list = marsh.marshal_as<char const*>(textBox1->Text + " " + rendered);
+		const char* pCmdLine = marsh.marshal_as<char const*>(textBox1->Text + " " + rendered);
+		params_list = strdup(pCmdLine);
 		this->Close();
 	}
 	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {

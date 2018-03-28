@@ -54,17 +54,16 @@ private:
 		// Create the main class of CPUID
 		/////////////////////////////////////////
 		CPUID_Internal() :
-			nIds_		{ 0 },
-			nExIds_		{ 0 },
-			f_1_ECX_	{ 0 },
-			f_1_EDX_	{ 0 },
-			f_81_ECX_	{ 0 },
-			f_81_EDX_	{ 0 },
-			data_		{},
-			extdata_	{}
+			nIds_	 { 0 },
+			nExIds_	 { 0 },
+			f_1_ECX_ { 0 },
+			f_1_EDX_ { 0 },
+			f_81_ECX_{ 0 },
+			f_81_EDX_{ 0 },
+			data_	 {},
+			extdata_ {}
 
 		{
-			//int cpuInfo[4] = {-1};  
 			std::array<int, 4> cpui;
 
 			// Calling __cpuid with 0x0 as the function_id argument  
