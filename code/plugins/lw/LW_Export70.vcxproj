@@ -139,7 +139,7 @@
       <ModuleDefinitionFile>Server\serv.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)xray_export.pdb</ProgramDatabaseFile>
-      <ImportLibrary>..\..\..\..\intermediate_plugs\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>

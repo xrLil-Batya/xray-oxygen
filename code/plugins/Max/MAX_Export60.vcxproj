@@ -101,7 +101,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)xray_export.pdb</ProgramDatabaseFile>
       <BaseAddress>0x08970000</BaseAddress>
-      <ImportLibrary>..\..\..\..\intermediate_plugs\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,8 +144,6 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>mesh.lib;geom.lib;gfx.lib;maxutil.lib;core.lib;paramblk2.lib;comctl32.lib;odbc32.lib;odbccp32.lib;Winmm.lib;xrCore.lib;xrECoreLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>
-      </OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>$(xrSDKLib)../max/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Export\Utility.def</ModuleDefinitionFile>
@@ -153,7 +151,7 @@
       </ProgramDatabaseFile>
       <SetChecksum>true</SetChecksum>
       <BaseAddress>0x08970000</BaseAddress>
-      <ImportLibrary>..\..\..\..\intermediate_plugs\$(Configuration)\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
