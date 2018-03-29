@@ -1,11 +1,13 @@
 ////////////////////////////////////////
-// ForserX, 2018 (C) * X-RAY OXYGEN	
-// IParser.cpp - xrPlay parser
-// Edited: 29 March, 2018						
+// author: ForserX, 2017-2018 (C)
+// class : IParser - ini files parser			
 ////////////////////////////////////////
 #include "IParserSystem.h"
 ////////////////////////////////////////
-
+#include <fstream>
+#include <iostream>
+#include <algorithm>
+////////////////////////////////////////
 
 // Trim leading white-spaces
 inline std::string_view ltrim(std::string_view s)
@@ -16,7 +18,6 @@ inline std::string_view ltrim(std::string_view s)
 	return s;
 }
 
-
 // Trim trailing white-spaces
 inline std::string_view rtrim(std::string_view s)
 {
@@ -26,13 +27,11 @@ inline std::string_view rtrim(std::string_view s)
 	return s;
 }
 
-
 // Getting and founding sects
 inline std::list<config::section>::iterator get_found(const std::string& sectname, std::list<config::section>& sects)
 {
 	return std::find_if(sects.begin(), sects.end(), [sectname](const config::section& sect) { return sect.name.compare(sectname) == 0; });
 }
-
 
 // Config to parse
 config::config(const string_view filename, bool create)
@@ -56,7 +55,6 @@ config::config(const string_view filename, bool create)
 	path = new_file;
 	parse(new_file, create);
 }
-
 
 /// <summary>
 /// Writing the section
@@ -84,7 +82,6 @@ void config::WriteSect(const std::string_view filename, const std::string_view s
 	inp.close();
 };
 
-
 // Getting the section
 config::section* config::get_section(const string& sectionname)
 {
@@ -95,7 +92,6 @@ config::section* config::get_section(const string& sectionname)
 	}
 	return 0;
 }
-
 
 // Get value of sector
 std::string config::get_value(const string& sectionname, const string& keyname)
@@ -123,7 +119,6 @@ std::string config::get_value(const string& sectionname, const string& keyname)
 	}
 	return "Error reading! Section: " + sectionname + " Key: " + keyname;
 }
-
 
 // Parse method
 void config::parse(const string& filename, bool create)
@@ -191,7 +186,7 @@ void config::parse(const string& filename, bool create)
 				currentsection.keyvalues[name] = value;
 			}
 		}
-	} // for
+	}
 
 	  // if we are out of loop we add last section
 	  // this is a new section so if we have a current section populated, add it to list

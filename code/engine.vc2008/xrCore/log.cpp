@@ -40,7 +40,6 @@ void FlushLog			()
 	}
 }
 
-extern bool shared_str_initialized;
 void AddOne(const char *split)
 {
 	if (!LogFile)
@@ -48,17 +47,11 @@ void AddOne(const char *split)
 
 	std::lock_guard<decltype(logCS)> lock(logCS);
 
-#ifdef DEBUG
 	OutputDebugString(split);
 	OutputDebugString("\n");
-#endif
 
-	//	DUMP_PHASE;
-	if (shared_str_initialized)
-	{
-		shared_str temp = shared_str(split);
-		LogFile->push_back(temp);
-	}
+	shared_str temp = shared_str(split);
+	LogFile->push_back(temp);
 #ifdef	LOG_TIME_PRECISE 
 	if (LogWriter)
 	{

@@ -219,9 +219,6 @@
     <ClCompile Include="DateTime.cpp">
       <Filter>Math</Filter>
     </ClCompile>
-    <ClCompile Include="DebugCore\StackTrace.cpp">
-      <Filter>Debug core</Filter>
-    </ClCompile>
     <ClCompile Include="lzo_compressor.cpp">
       <Filter>Compression\lzo</Filter>
     </ClCompile>
@@ -499,15 +496,6 @@
     </ClInclude>
     <ClInclude Include="DateTime.hpp">
       <Filter>Math</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugCore\SymbolEngine.h">
-      <Filter>Debug core</Filter>
-    </ClInclude>
-    <ClInclude Include="DebugCore\StackTrace.hpp">
-      <Filter>Debug core</Filter>
-    </ClInclude>
-    <ClInclude Include="BuildStackTraceInline.hpp">
-      <Filter>Debug core</Filter>
     </ClInclude>
     <ClInclude Include="lzo_compressor.h">
       <Filter>Compression\lzo</Filter>
