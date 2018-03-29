@@ -149,7 +149,7 @@ public:
         label_2->setText(QApplication::translate("AboutLauncher", "Oxygen Team (C), 2018", nullptr));
         label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 0.4v", nullptr));
         label_4->setText(QApplication::translate("AboutLauncher", "Developer Launcher by Oxygen Team.", nullptr));
-        label_5->setText(QApplication::translate("AboutLauncher", "Creaters: Vertver, ForserX, Giperion", nullptr));
+        label_5->setText(QApplication::translate("AboutLauncher", "Creators: Vertver, ForserX, Giperion", nullptr));
         label_7->setText(QApplication::translate("AboutLauncher", "Builded by Microsoft Visual Studio \n"
 "C++ Compiler 2017, Qt 5.10.1", nullptr));
         label_6->setText(QApplication::translate("AboutLauncher", "Platform: Windows 7+", nullptr));

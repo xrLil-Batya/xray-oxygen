@@ -228,3 +228,4 @@ void xrLaunch::on_actionVertver_Github_triggered()
 	AboutLauncher *dlg = new AboutLauncher;
 	dlg->show();
 }
+

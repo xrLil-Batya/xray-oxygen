@@ -6,6 +6,7 @@
 //	Description : preocmpiled header for editor library
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
+/////////////////////////////////////////
 #ifdef DEBUG
 #	define VERIFY(expression)	do { if (!(expression)) throw; } while (0)
 #	define NODEFAULT			do { __debugbreak(); } while (0)
@@ -13,7 +14,9 @@
 #	define VERIFY(expression)	do {} while (0)
 #	define NODEFAULT			__assume(0)
 #endif // #ifdef DEBUG
-
+/////////////////////////////////////////
+#define CXX 199711L		  // __ cplusplus
+/////////////////////////////////////////
 typedef unsigned int			u32;
 typedef char const *			LPCSTR;
 typedef char *					LPSTR;
