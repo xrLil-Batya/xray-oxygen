@@ -218,6 +218,11 @@ void xrDialogParam::on_buttonBox_accepted()
 	//uiDialog->textEdit
 }
 
+
+/***********************************************
+* void on_actionVertver_Github_triggered() - 
+* create a new window with "About" dialog
+***********************************************/
 void xrLaunch::on_actionVertver_Github_triggered()
 {
 	AboutLauncher *dlg = new AboutLauncher;

@@ -562,7 +562,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>Creaters: Vertver, ForserX, Giperion</string>
+    <string>Creators: Vertver, ForserX, Giperion</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_7">

@@ -3,7 +3,7 @@
 * X-RAY OXYGEN 1.7 PROJECT
 *
 * Edited: 28 March, 2018
-* aboutlauncher.cpp - soruce for "About" dialog
+* aboutlauncher.cpp - source for "About" dialog
 *************************************************/
 
 /////////////////////////////////////////
@@ -15,6 +15,7 @@ AboutLauncher::AboutLauncher(QWidget *parent) :
 {
     about_ui->setupUi(this);
 }
+
 
 AboutLauncher::~AboutLauncher()
 {
