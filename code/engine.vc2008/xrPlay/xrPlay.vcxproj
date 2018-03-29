@@ -93,7 +93,7 @@
     <Image Include="stalker_cs.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="IParserSystem.hpp" />
+    <ClInclude Include="IParserSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="xrLauncherWnd.h">
       <FileType>CppForm</FileType>

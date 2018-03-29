@@ -95,5 +95,6 @@ extern "C" __declspec(dllexport)	void finalize	(editor::ide*& ide)
 	ide				= nullptr;
 	g_ide			= nullptr;
 }
-#pragma managed
+
 #endif
+#pragma managed

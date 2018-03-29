@@ -1,27 +1,44 @@
-#include "IParserSystem.hpp"
+////////////////////////////////////////
+// ForserX, 2018 (C) * X-RAY OXYGEN	
+// IParser.cpp - xrPlay parser
+// Edited: 29 March, 2018						
+////////////////////////////////////////
+#include "IParserSystem.h"
 #include <fstream>
 #include <iostream>
 #include <algorithm>
+////////////////////////////////////////
 
-inline std::string_view ltrim(std::string_view s) // trim leading white-spaces
+
+// Trim leading white-spaces
+inline std::string_view ltrim(std::string_view s)
 {
 	const size_t startpos = s.find_first_not_of(" \t\r\n\v\f");
 	if (std::string::npos != startpos)
 		s = s.substr(startpos);
 	return s;
 }
-inline std::string_view rtrim(std::string_view s) // trim trailing white-spaces
+
+
+
+// Trim trailing white-spaces
+inline std::string_view rtrim(std::string_view s)
 {
 	const size_t endpos = s.find_last_not_of(" \t\r\n\v\f");
 	if (std::string::npos != endpos)
 		s = s.substr(0, endpos + 1);
 	return s;
 }
+
+
+// Getting and founding sects
 inline std::list<config::section>::iterator get_found(const std::string& sectname, std::list<config::section>& sects)
 {
 	return std::find_if(sects.begin(), sects.end(), [sectname](const config::section& sect) { return sect.name.compare(sectname) == 0; });
 }
 
+
+// Config to parse
 config::config(const string_view filename, bool create)
 {
 	currentsection.isParent = false;
@@ -44,6 +61,10 @@ config::config(const string_view filename, bool create)
 	parse(new_file, create);
 }
 
+
+/// <summary>
+/// Writing the section
+/// </summary>
 void config::WriteSect(const std::string_view filename, const std::string_view sectionname, const std::string_view keyname, const std::string_view key, const std::string_view parent)
 {
 	std::ofstream inp(filename.data(), std::ios::in);
@@ -67,6 +88,8 @@ void config::WriteSect(const std::string_view filename, const std::string_view s
 	inp.close();
 };
 
+
+// Getting the section
 config::section* config::get_section(const string& sectionname)
 {
 	std::list<config::section>::iterator found = get_found(sectionname, sections);
@@ -77,6 +100,8 @@ config::section* config::get_section(const string& sectionname)
 	return 0;
 }
 
+
+// Get value of sector
 std::string config::get_value(const string& sectionname, const string& keyname)
 {
 	const section* sect = get_section(sectionname);
@@ -103,6 +128,8 @@ std::string config::get_value(const string& sectionname, const string& keyname)
 	return "Error reading! Section: " + sectionname + " Key: " + keyname;
 }
 
+
+// Parse method
 void config::parse(const string& filename, bool create)
 {
 	std::ifstream fstrm(filename.data());
@@ -180,7 +207,12 @@ void config::parse(const string& filename, bool create)
 	}
 };
 
+////////////////////////////////////////
 #include <locale>
+////////////////////////////////////////
+
+
+// Getting the string
 bool config::get_logic(const string& sectionname, const string& keyname)
 {
 	std::string &val = this->get_value(sectionname, keyname);
@@ -188,20 +220,31 @@ bool config::get_logic(const string& sectionname, const string& keyname)
 	return val == "true";
 }
 
+
+// Getting the int
 int config::get_number(const string& sectionname, const string& keyname)
 {
 	const std::string &val = this->get_value(sectionname, keyname);
 	return std::stoi(val);
 }
 
+
+// Getting the float
 float config::get_float(const string& sectionname, const string& keyname)
 {
 	const std::string &val = this->get_value(sectionname, keyname);
 	return std::stof(val);
 }
 
-// Пока так, не хочу сейчас писать десятки строк ради одной записи
+
+//[FX]: Пока так, не хочу сейчас писать десятки строк ради одной записи
+////////////////////////////////////////
 #include <Windows.h>
+////////////////////////////////////////
+
+/// <summary>
+/// Writting the sectors
+/// </summary>
 void config::WriteSect(const std::string_view sectionname, const std::string_view keyname, const std::string_view key, const std::string_view parent)
 {
 	WritePrivateProfileStringA(sectionname.data(), keyname.data(), key.data(), path.data());
