@@ -14,6 +14,7 @@
 #include "ui_parametersdialog.h"
 #include "aboutlauncher.h"
 #include "ui_aboutlauncher.h"
+#include "../../engine.vc2008/xrCore/xrCore.h"
 /////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
@@ -66,7 +67,9 @@ public:
 
 private slots:
 	void add_stringToList();
-    void on_pushButton_clicked();			// Run
+    void on_pushButton_clicked();
+	
+	// Run
 	void run_xrEngineRun();					// Run the xrEngine
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
@@ -77,6 +80,7 @@ private slots:
     void on_actionParametres_triggered();	
     void on_listWidget_itemPressed(QListWidgetItem *item);
     void on_actionVertver_Github_triggered();
+	void init_xrCore();
 
 private:
     Ui::xrLaunch *ui;

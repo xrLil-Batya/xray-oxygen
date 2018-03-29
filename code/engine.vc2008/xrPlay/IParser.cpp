@@ -4,9 +4,6 @@
 // Edited: 29 March, 2018						
 ////////////////////////////////////////
 #include "IParserSystem.h"
-#include <fstream>
-#include <iostream>
-#include <algorithm>
 ////////////////////////////////////////
 
 
@@ -18,7 +15,6 @@ inline std::string_view ltrim(std::string_view s)
 		s = s.substr(startpos);
 	return s;
 }
-
 
 
 // Trim trailing white-spaces

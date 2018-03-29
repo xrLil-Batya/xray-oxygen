@@ -19,7 +19,7 @@ void CreateRendererList();
 /////////////////////////////////////////
 
 /***********************************************
-* explicit xrLaunch() - Init UI 
+Init UI 
 ***********************************************/
 xrLaunch::xrLaunch(QWidget *parent) :
     QMainWindow(parent),
@@ -56,7 +56,7 @@ if(CPUID::AMD || CPUID::AMDelse) { your code }
 
 
 /***********************************************
-* explicit xrLaunch() - Init parameters dialog
+Init parameters dialog
 ***********************************************/
 xrDialogParam::xrDialogParam(QWidget *parent) :
 	QDialog(parent),
@@ -67,7 +67,7 @@ xrDialogParam::xrDialogParam(QWidget *parent) :
 
 
 /***********************************************
-* ~xrLaunch() - remove the parameters dialog
+remove the parameters dialog
 ***********************************************/
 xrDialogParam::~xrDialogParam()
 {
@@ -76,7 +76,7 @@ xrDialogParam::~xrDialogParam()
 
 
 /***********************************************
-* ~xrLaunch() - remove the main thread
+remove the main thread
 ***********************************************/
 xrLaunch::~xrLaunch() 
 {
@@ -85,15 +85,13 @@ xrLaunch::~xrLaunch()
 
 
 /***********************************************
-* int RunApplication() - Running the DLL 
-* (xrEngine or xrEditor)
+Running the DLL (xrEngine or xrEditor)
 ***********************************************/
 DLL_API int RunApplication(char* commandLine);
 
 
 /***********************************************
-* void on_pushButton_clicked() - Method for run 
-* xrEngine
+Method for run xrEngine
 ***********************************************/
 void xrLaunch::on_pushButton_clicked() 
 {
@@ -102,7 +100,7 @@ void xrLaunch::on_pushButton_clicked()
 
 
 /***********************************************
-* void run_xrEngine() - add string if pressed
+add string if pressed
 ***********************************************/
 void xrLaunch::on_listWidget_itemPressed(QListWidgetItem *item)
 {
@@ -110,33 +108,50 @@ void xrLaunch::on_listWidget_itemPressed(QListWidgetItem *item)
 }
 
 
+std::string params;
+
 
 /***********************************************
-* void run_xrEngine() - add string to buffer
+add string to buffer
 ************************************************/
 void xrLaunch::add_stringToList() 
 {
-	
+	//QString rendered = ui->listWidget->currentItem()->text();
+	//params = rendered.toLocal8Bit();
+}
+
+
+void xrLaunch::init_xrCore() 
+{
+	try
+	{
+		// Init X-ray core
+		Debug._initialize(false);
+		Core._initialize("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
+	}
+	catch (...)
+	{
+		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
+	}
 }
 
 
 /***********************************************
-* void run_xrEngine() - Method for Launch 
-* xrEngine.dll
+Method for Launch xrEngine.dll
 ***********************************************/
 void xrLaunch::run_xrEngineRun() 
 {
-	//#NOTE: QString can't be public variable.
 	QString rendered = ui->listWidget->currentItem()->text();
+	params = rendered.toLocal8Bit();
+	init_xrCore();
 	CreateRendererList();
 	//#VERTVER: Don't use here toLatin1(). Crash on Release
-	RunApplication(rendered.toLocal8Bit().data());
+	RunApplication(params.data());
 }
 
 
 /***********************************************
-* void on_actionExit_triggered() - method for 
-* close the MainWindow
+method for close the MainWindow
 ***********************************************/
 void xrLaunch::on_actionExit_triggered() 
 {
@@ -145,8 +160,7 @@ void xrLaunch::on_actionExit_triggered()
 
 
 /***********************************************
-* void on_actionxrEngine_triggered - Method
-* for run xrEngine
+Method for run xrEngine
 ***********************************************/
 void xrLaunch::on_actionxrEngine_triggered() 
 {
@@ -155,8 +169,7 @@ void xrLaunch::on_actionxrEngine_triggered()
 
 
 /***********************************************
-* void on_actionForserX_triggered() - link to
-* Oxygen Team page
+link to Oxygen Team page
 ***********************************************/
 void xrLaunch::on_actionOxygen_Team_triggered()
 {
@@ -166,8 +179,7 @@ void xrLaunch::on_actionOxygen_Team_triggered()
 
 
 /***********************************************
-* void on_actionForserX_triggered() - link to
-* Vertver page
+link to Vertver page
 ***********************************************/
 void xrLaunch::on_actionVertver_triggered()
 {
@@ -177,8 +189,7 @@ void xrLaunch::on_actionVertver_triggered()
 
 
 /***********************************************
-* void on_actionForserX_triggered() - link to
-* Giperion page
+link to Giperion page
 ***********************************************/
 void xrLaunch::on_actionGiperion_2_triggered()
 {
@@ -188,8 +199,7 @@ void xrLaunch::on_actionGiperion_2_triggered()
 
 
 /***********************************************
-* void on_actionForserX_triggered() - link to
-* ForserX page
+link to ForserX page
 ***********************************************/
 void xrLaunch::on_actionForserX_triggered()
 {
@@ -199,8 +209,7 @@ void xrLaunch::on_actionForserX_triggered()
 
 
 /***********************************************
-* void on_actionParametres_triggered - open the
-* new window with xrEngine params (doesn't works)
+open the new window with xrEngine params (doesn't works)
 ***********************************************/
 void xrLaunch::on_actionParametres_triggered()
 {
@@ -210,8 +219,7 @@ void xrLaunch::on_actionParametres_triggered()
 
 
 /***********************************************
-* void on_buttonBox_accepted() - send the string
-* of params to xrEngineRun();
+send the string of params to xrEngineRun();
 ***********************************************/
 void xrDialogParam::on_buttonBox_accepted()
 {
@@ -220,8 +228,7 @@ void xrDialogParam::on_buttonBox_accepted()
 
 
 /***********************************************
-* void on_actionVertver_Github_triggered() - 
-* create a new window with "About" dialog
+create a new window with "About" dialog
 ***********************************************/
 void xrLaunch::on_actionVertver_Github_triggered()
 {

@@ -8,7 +8,7 @@
 *************************************************/
 #include "xrMain.h"
 /***********************************************
-* int main() - entry-point for application.
+entry-point for application.
 ***********************************************/
 int WINAPI main(int argc, char *argv[])
 {
