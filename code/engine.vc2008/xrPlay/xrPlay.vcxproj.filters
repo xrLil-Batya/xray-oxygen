@@ -10,8 +10,11 @@
     <ClCompile Include="RendererList.cpp">
       <Filter>PlayCore</Filter>
     </ClCompile>
-    <ClCompile Include="minimal_CPUID.cpp">
+    <ClCompile Include="IParser.cpp">
       <Filter>PlayCore\Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="xrLauncherWnd.cpp">
+      <Filter>PlayCore\Launcher</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -43,7 +46,7 @@
     <ClInclude Include="xrLauncherWnd.h">
       <Filter>PlayCore\Launcher</Filter>
     </ClInclude>
-    <ClInclude Include="minimal_CPUID.h">
+    <ClInclude Include="IParserSystem.hpp">
       <Filter>PlayCore\Kernel</Filter>
     </ClInclude>
   </ItemGroup>

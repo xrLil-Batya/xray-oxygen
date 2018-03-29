@@ -9,7 +9,6 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 #include "../xrCore/xrCore.h"
-#include "minimal_CPUID.h"
 #include <stdio.h>
 #include <iostream>
 ///////////////////////////////////////////////

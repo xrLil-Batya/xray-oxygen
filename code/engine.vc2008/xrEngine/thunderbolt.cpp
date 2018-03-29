@@ -202,7 +202,7 @@ void CEffect_Thunderbolt::Bolt(shared_str id, float period, float lt)
 void CEffect_Thunderbolt::OnFrame(shared_str id, float period, float duration)
 {
 	bool enabled = bool(id.size());
-	if (bEnabled!=enabled)
+	if (bEnabled != id.size())
 	{
     	bEnabled = enabled;
 	    next_lightning_time = Device.fTimeGlobal+period+Random.randF(-period*0.5f,period*0.5f);

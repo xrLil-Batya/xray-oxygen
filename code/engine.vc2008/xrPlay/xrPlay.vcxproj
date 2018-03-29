@@ -84,15 +84,16 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="entry_point.cpp" />
-    <ClCompile Include="minimal_CPUID.cpp" />
+    <ClCompile Include="IParser.cpp" />
     <ClCompile Include="RendererList.cpp" />
+    <ClCompile Include="xrLauncherWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="splash_xrcs_en.bmp" />
     <Image Include="stalker_cs.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="minimal_CPUID.h" />
+    <ClInclude Include="IParserSystem.hpp" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="xrLauncherWnd.h">
       <FileType>CppForm</FileType>
