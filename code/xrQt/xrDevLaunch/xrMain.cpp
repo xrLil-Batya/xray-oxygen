@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 28 March, 2018
+* Edited: 30 March, 2018
 * xrMain.cpp - Main source file for compilation with Qt
 * xrLaunch
 *************************************************/
@@ -19,7 +19,7 @@ void CreateRendererList();
 /////////////////////////////////////////
 
 /***********************************************
-Init UI 
+init UI 
 ***********************************************/
 xrLaunch::xrLaunch(QWidget *parent) :
     QMainWindow(parent),
@@ -27,8 +27,12 @@ xrLaunch::xrLaunch(QWidget *parent) :
 	ui->setupUi(this);		// setup it
 
 	// Checking for instructions
-	//#NOTE: Don't use here CPUID::SSE2
-	if (!CPUID::SSE3())
+	//#VERTVER: Using a minCPUID cuz initialization xrCore CPUID isn't safely
+	if (!CPUID::SSE2())
+	{
+		statusBar()->showMessage(tr("Error! Your CPU doesn't support SSE2 instructions. Launcher can't start xrEngine."));
+	}
+	else if (!CPUID::SSE3())
 	{
 		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."));
 	}
@@ -46,17 +50,13 @@ xrLaunch::xrLaunch(QWidget *parent) :
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
 	}
 
-/***********************************************
-#VERTVER: If you wan't to check AMD - use that
-if(CPUID::AMD || CPUID::AMDelse) { your code }
-***********************************************/
-
+	//if (CPU::Info.hasFeature(CPUFeature::AVX)) {}			// Doesn't compile with it
 	ui->listWidget->addItems ( LIST_ITEMS );
 }
 
 
 /***********************************************
-Init parameters dialog
+init parameters dialog
 ***********************************************/
 xrDialogParam::xrDialogParam(QWidget *parent) :
 	QDialog(parent),
@@ -85,13 +85,13 @@ xrLaunch::~xrLaunch()
 
 
 /***********************************************
-Running the DLL (xrEngine or xrEditor)
+running the DLL (xrEngine or xrEditor)
 ***********************************************/
 DLL_API int RunApplication(char* commandLine);
 
 
 /***********************************************
-Method for run xrEngine
+method for run xrEngine
 ***********************************************/
 void xrLaunch::on_pushButton_clicked() 
 {
@@ -121,6 +121,9 @@ void xrLaunch::add_stringToList()
 }
 
 
+/***********************************************
+init xrCore
+************************************************/
 void xrLaunch::init_xrCore() 
 {
 	try
@@ -137,16 +140,26 @@ void xrLaunch::init_xrCore()
 
 
 /***********************************************
-Method for Launch xrEngine.dll
+method for Launch xrEngine.dll
 ***********************************************/
 void xrLaunch::run_xrEngineRun() 
 {
 	QString rendered = ui->listWidget->currentItem()->text();
 	params = rendered.toLocal8Bit();
 	init_xrCore();
-	CreateRendererList();
-	//#VERTVER: Don't use here toLatin1(). Crash on Release
-	RunApplication(params.data());
+
+	//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
+	//#(only xrDevLauncher compiling with IA32-x86 instructions),
+	//#some part of matrix and vectors use SSE3. It's can be difficult!
+	if (CPUID::SSE2()) {
+		CreateRendererList();
+		//#VERTVER: Don't use here toLatin1(). Crash on Release
+		RunApplication(params.data());
+	}
+	else
+	{
+		MessageBox(NULL, "Can't load xrEngine! SSE2 is not supported on your CPU.", "Init error", MB_OK | MB_ICONWARNING);
+	}
 }
 
 
@@ -160,7 +173,7 @@ void xrLaunch::on_actionExit_triggered()
 
 
 /***********************************************
-Method for run xrEngine
+method for run xrEngine
 ***********************************************/
 void xrLaunch::on_actionxrEngine_triggered() 
 {

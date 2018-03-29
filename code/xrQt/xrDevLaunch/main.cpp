@@ -14,9 +14,6 @@ int WINAPI main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
     xrLaunch LaunchWIN;
-	//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
-	//#(only xrDevLauncher compiling with IA32-x86 instructions),
-	//#some part of matrix and vectors use SSE3. It's can be difficult!
 	LaunchWIN.show();
 	return a.exec();
 }

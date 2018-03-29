@@ -15,6 +15,7 @@
 #include "aboutlauncher.h"
 #include "ui_aboutlauncher.h"
 #include "../../engine.vc2008/xrCore/xrCore.h"
+#include "../../engine.vc2008/xrCore/cpuid.h"
 /////////////////////////////////////////
 #include <QMainWindow>
 #include <QPushButton>
