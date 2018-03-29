@@ -11,22 +11,21 @@
 
 void os_clipboard::copy_to_clipboard(const char* buf)
 {
-	if (!OpenClipboard(0))
-		return;
-	const u32 handle_size = (xr_strlen(buf) + 1) * sizeof(char);
-	const HGLOBAL handle = GlobalAlloc(GHND, handle_size);
-	if (!handle)
+	if (OpenClipboard(0))
 	{
-		CloseClipboard();
-		return;
-	}
+		const size_t handle_size = (xr_strlen(buf) + 1) * sizeof(char);
+		const HGLOBAL handle = GlobalAlloc(GHND, handle_size);
 
-	char* memory = (char*)GlobalLock(handle);
-	xr_strcpy(memory, handle_size, buf);
-	GlobalUnlock(handle);
-	EmptyClipboard();
-	SetClipboardData(CF_TEXT, handle);
-	CloseClipboard();
+		if (handle)
+		{
+			char* memory = (char*)GlobalLock(handle);
+			xr_strcpy(memory, handle_size, buf);
+			GlobalUnlock(handle);
+			EmptyClipboard();
+			SetClipboardData(CF_TEXT, handle);
+		}
+		CloseClipboard();
+	}
 }
 
 void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
@@ -34,27 +33,26 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 	VERIFY(buffer);
 	VERIFY(buffer_size > 0);
 
-	if (!OpenClipboard(0))
-		return;
-
-	const HGLOBAL	hmem = GetClipboardData(CF_TEXT);
-	if (!hmem)
-		return;
-
-	const char* clipdata = (const char*)GlobalLock(hmem);
-	strncpy_s(buffer, buffer_size, clipdata, buffer_size - 1);
-	buffer[buffer_size - 1] = 0;
-	for (u32 i = 0; i < strlen(buffer); ++i)
+	if (OpenClipboard(0))
 	{
-		char c = buffer[i];
-		if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "ÿ" = -1
+		const HGLOBAL hmem = GetClipboardData(CF_TEXT);
+		if (hmem)
 		{
-			buffer[i] = ' ';
+			const char* clipdata = (const char*)GlobalLock(hmem);
+			strncpy_s(buffer, buffer_size, clipdata, buffer_size - 1);
+			buffer[buffer_size - 1] = 0;
+			for (u32 i = 0; i < strlen(buffer); ++i)
+			{
+				char c = buffer[i];
+				if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "ÿ" = -1
+				{
+					buffer[i] = ' ';
+				}
+			}
+			GlobalUnlock(hmem);
 		}
+		CloseClipboard();
 	}
-
-	GlobalUnlock(hmem);
-	CloseClipboard();
 }
 
 void os_clipboard::update_clipboard(const char* string)

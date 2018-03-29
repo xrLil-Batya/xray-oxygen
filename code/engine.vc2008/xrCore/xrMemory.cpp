@@ -6,7 +6,6 @@
 
 xrMemory Memory;
 bool mem_initialized	= false;
-bool shared_str_initialized	= false;
 
 //fake fix of memory corruptions in multiplayer game :(
 XRCORE_API bool g_allow_heap_min = true;
@@ -17,9 +16,6 @@ void xrMemory::_initialize()
 	stat_counter			= 0;
 
 	mem_initialized				= true;
-	g_pStringContainer			= new str_container();
-	shared_str_initialized		= true;
-	g_pSharedMemoryContainer	= new smem_container();
 }
 
 void xrMemory::_destroy()

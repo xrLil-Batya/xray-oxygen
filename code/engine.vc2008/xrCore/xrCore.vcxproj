@@ -291,7 +291,6 @@
     <ClCompile Include="Buildcpp.cpp" />
     <ClCompile Include="DateTime.cpp" />
     <ClCompile Include="DebugCore\dxerr.cpp" />
-    <ClCompile Include="DebugCore\StackTrace.cpp" />
     <ClCompile Include="Envelope.cpp" />
     <ClCompile Include="FTimer.cpp" />
     <ClCompile Include="lzo_compressor.cpp" />
@@ -380,10 +379,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BaseEffector.h" />
-    <ClInclude Include="BuildStackTraceInline.hpp" />
     <ClInclude Include="DateTime.hpp" />
-    <ClInclude Include="DebugCore\StackTrace.hpp" />
-    <ClInclude Include="DebugCore\SymbolEngine.h" />
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="lzo_compressor.h" />
