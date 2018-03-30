@@ -94,10 +94,11 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 	init_counter++;
 }
 
-void xrCore::_destroy		()
+void xrCore::_destroy()
 {
 	--init_counter;
-	if (!init_counter){
+	if (!init_counter)
+	{
 		FS._destroy			();
 		EFS._destroy		();
 		xr_delete			(xr_FS);
@@ -107,7 +108,6 @@ void xrCore::_destroy		()
 	}
 }
 
-//. why ??? 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
 {
 	switch (ul_reason_for_call)

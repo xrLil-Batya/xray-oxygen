@@ -41,7 +41,8 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 			const char* clipdata = (const char*)GlobalLock(hmem);
 			strncpy_s(buffer, buffer_size, clipdata, buffer_size - 1);
 			buffer[buffer_size - 1] = 0;
-			for (u32 i = 0; i < strlen(buffer); ++i)
+
+			for (size_t i = 0; i < strlen(buffer); ++i)
 			{
 				char c = buffer[i];
 				if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "ÿ" = -1
@@ -57,26 +58,27 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 
 void os_clipboard::update_clipboard(const char* string)
 {
-	if (!OpenClipboard(0))
-		return;
-
-	const HGLOBAL handle = GetClipboardData(CF_TEXT);
-	if (!handle)
+	if (OpenClipboard(0))
 	{
-		CloseClipboard();
-		copy_to_clipboard(string);
-		return;
+		const HGLOBAL handle = GetClipboardData(CF_TEXT);
+		if (handle)
+		{
+			char* memory = (char*)GlobalLock(handle);
+			size_t memory_length = strlen(memory);
+			size_t string_length = strlen(string);
+			size_t buffer_size = (memory_length + string_length + 1) * sizeof(char);
+			char* buffer = (char*)_alloca(buffer_size);
+			xr_strcpy(buffer, buffer_size, memory);
+			GlobalUnlock(handle);
+
+			xr_strcat(buffer, buffer_size, string);
+			CloseClipboard();
+			copy_to_clipboard(buffer);
+		}
+		else
+		{
+			CloseClipboard();
+			copy_to_clipboard(string);
+		}
 	}
-
-	char*	memory = (char*)GlobalLock(handle);
-	int		memory_length = (int)strlen(memory);
-	int		string_length = (int)strlen(string);
-	int		buffer_size = (memory_length + string_length + 1) * sizeof(char);
-	char*	buffer = (char*)_alloca(buffer_size);
-	xr_strcpy(buffer, buffer_size, memory);
-	GlobalUnlock(handle);
-
-	xr_strcat(buffer, buffer_size, string);
-	CloseClipboard();
-	copy_to_clipboard(buffer);
 }

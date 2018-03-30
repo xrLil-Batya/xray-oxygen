@@ -456,7 +456,6 @@
     <ClCompile Include="cf_dynamic_mesh.cpp" />
     <ClCompile Include="xr_collide_form.cpp" />
     <ClCompile Include="bone.cpp" />
-    <ClCompile Include="interp.cpp" />
     <ClCompile Include="motion.cpp" />
     <ClCompile Include="ObjectAnimator.cpp" />
     <ClCompile Include="Feel_Touch.cpp" />
@@ -465,7 +464,9 @@
     <ClCompile Include="FDemoRecord.cpp" />
     <ClCompile Include="GameMtlLib.cpp" />
     <ClCompile Include="GameMtlLib_Engine.cpp" />
-    <ClCompile Include="ObjectDump.cpp" />
+    <ClCompile Include="ObjectDump.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="PS_instance.cpp" />
     <ClCompile Include="LightAnimLibrary.cpp" />
     <ClCompile Include="GameFont.cpp" />

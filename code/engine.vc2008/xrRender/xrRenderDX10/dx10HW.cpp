@@ -19,9 +19,6 @@
 void	fill_vid_mode_list			(CHW* _hw);
 void	free_vid_mode_list			();
 
-void	fill_render_mode_list		();
-void	free_render_mode_list		();
-
 ENGINE_API bool isGraphicDebugging;
 
 CHW HW;
@@ -67,8 +64,7 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	// General - select adapter and device
 	BOOL  bWindowed			= !psDeviceFlags.is(rsFullscreen);
 
-	m_DriverType = Caps.bForceGPU_REF ? 
-		D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE;
+	m_DriverType = Caps.bForceGPU_REF ? D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE;
 
 	if (m_bUsePerfhud)
 		m_DriverType = D3D_DRIVER_TYPE_REFERENCE;
@@ -155,11 +151,9 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 		// Fatal error! Cannot create rendering device AT STARTUP !!!
 		Msg					("Failed to initialize graphics hardware.\n"
 							 "Please try to restart the game.\n"
-							 "CreateDevice returned 0x%08x", R
-							 );
-		FlushLog			();
-		MessageBox			(NULL,"Failed to initialize graphics hardware.\nPlease try to restart the game.","Error!",MB_OK|MB_ICONERROR);
-		TerminateProcess	(GetCurrentProcess(),0);
+							 "CreateDevice returned 0x%08x", R);
+		FlushLog();
+		Debug.do_exit("Failed to initialize graphics hardware.\nPlease try to restart the game.");
 	};
 	R_CHK(R);
 
@@ -167,10 +161,10 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	//	Create render target and depth-stencil views here
 	UpdateViews();
 
-	size_t	memory									= Desc.DedicatedVideoMemory;
-	Msg		("*     Texture memory: %d M",		memory/(1024*1024));
-	updateWindowProps							(m_hWnd);
-	fill_vid_mode_list							(this);
+	size_t	memory = Desc.DedicatedVideoMemory;
+	Msg("* Texture memory: %d M", memory/(1024*1024));
+	updateWindowProps(m_hWnd);
+	fill_vid_mode_list(this);
 }
 
 void CHW::DestroyDevice()
@@ -199,7 +193,7 @@ void CHW::DestroyDevice()
 #ifndef USE_DX11
 	_RELEASE				(HW.pDevice1);
 #endif
-	_SHOW_REF				("DeviceREF:",HW.pDevice);
+	_SHOW_REF				("refCount:DeviceREF:",HW.pDevice);
 	_RELEASE				(HW.pDevice);
 
 

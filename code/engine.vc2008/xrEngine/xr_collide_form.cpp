@@ -25,14 +25,12 @@ using namespace	collide;
 // Class	: CXR_CFObject
 // Purpose	: stores collision form
 //----------------------------------------------------------------------
-ICollisionForm::ICollisionForm( CObject* _owner, ECollisionFormType tp )
+ICollisionForm::ICollisionForm(CObject* _owner, ECollisionFormType tp): owner(_owner), m_type(tp)
 {
-	owner				= _owner;
-	m_type				= tp;
-	bv_sphere.identity	( );
+	bv_sphere.identity();
 }
 
-ICollisionForm::~ICollisionForm( )
+ICollisionForm::~ICollisionForm()
 {
 }
 
@@ -105,10 +103,10 @@ IC bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const Fvect
 CCF_Skeleton::CCF_Skeleton(CObject* O) : ICollisionForm(O,cftObject)
 {
 	//getVisData
-	IRenderVisual	*pVisual = O->Visual();
-	//IKinematics* K	= PKinematics(pVisual); VERIFY3(K,"Can't create skeleton without Kinematics.",*O->cNameVisual());
-	IKinematics* K	= PKinematics(pVisual); VERIFY3(K,"Can't create skeleton without Kinematics.",*O->cNameVisual());
-	//bv_box.set		(K->vis.box);
+	IRenderVisual *pVisual = O->Visual();
+	IKinematics* K	= PKinematics(pVisual); 
+	VERIFY3(K,"Can't create skeleton without Kinematics.",*O->cNameVisual());
+
 	bv_box.set		(pVisual->getVisData().box);
 	bv_box.getsphere(bv_sphere.P,bv_sphere.R);
 	vis_mask		= 0;
@@ -157,14 +155,12 @@ void CCF_Skeleton::BuildState()
 				TW.mul_43					(L2W,T		);		// world space
 				bool b						= I->b_IM.invert_b	(TW);
 				// check matrix validity
-				if (!b)	{
-					Msg						("! ERROR: invalid bone xform . Bone disabled.");
-					Msg						("! ERROR: bone_id=[%d], world_pos[%f,%f,%f]",I->elem_id,VPUSH(TW.c));
-					Msg						("visual name %s",owner->cNameVisual().c_str());
-					Msg						("object name %s",owner->cName().c_str());
-#ifdef DEBUG
-					Msg						( dbg_object_full_dump_string( owner ).c_str() );
-#endif //#ifdef DEBUG
+				if (!b)
+				{
+					Msg						("* ERROR: invalid bone xform . Bone disabled.");
+					Msg						("* ERROR: bone_id=[%d], world_pos[%f,%f,%f]",I->elem_id,VPUSH(TW.c));
+					Msg						("* MSG: visual name %s",owner->cNameVisual().c_str());
+					Msg						("* MSG: object name %s",owner->cName().c_str());
 					I->elem_id				= u16(-1);				//. hack - disable invalid bone
 				}
 								   }break;
@@ -205,7 +201,6 @@ void CCF_Skeleton::BuildTopLevel()
 BOOL CCF_Skeleton::_RayQuery( const collide::ray_defs& Q, collide::rq_results& R)
 {
 	if (dwFrameTL!=Device.dwFrame)			BuildTopLevel();
-
 
 	Fsphere w_bv_sphere;
 	owner->XFORM().transform_tiny		(w_bv_sphere.P,bv_sphere.P);

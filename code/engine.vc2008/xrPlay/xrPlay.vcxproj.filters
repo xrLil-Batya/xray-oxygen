@@ -7,14 +7,14 @@
     <ClCompile Include="entry_point.cpp">
       <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
-    <ClCompile Include="RendererList.cpp">
-      <Filter>PlayCore</Filter>
-    </ClCompile>
     <ClCompile Include="IParser.cpp">
       <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
     <ClCompile Include="xrLauncherWnd.cpp">
       <Filter>PlayCore\Launcher</Filter>
+    </ClCompile>
+    <ClCompile Include="RendererList.cpp">
+      <Filter>PlayCore\Kernel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

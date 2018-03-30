@@ -399,8 +399,7 @@ ENGINE_API int RunApplication(char* commandLine)
 		return 1;
 	}
 #endif
-
-	//SetThreadAffinityMask		(GetCurrentThread(),1);
+	strcat(Core.Params, commandLine);
 
 	// Title window
 	logoWindow					= CreateDialog(GetModuleHandle(NULL),	MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc );
@@ -424,15 +423,6 @@ ENGINE_API int RunApplication(char* commandLine)
 	g_sLaunchOnExit_app[0]		= 0;
 	g_sLaunchOnExit_params[0]	= 0;
 
-	//LPCSTR						fsgame_ltx_name = "-fsltx ";
-	//string_path					fsgame = "";
-	//
-	//if (strstr(commandLine, fsgame_ltx_name)) {
-	//	int						sz = xr_strlen(fsgame_ltx_name);
-	//	sscanf					(strstr(commandLine,fsgame_ltx_name)+sz,"%[^ ] ",fsgame);
-	//}
-
-	//Core._initialize			("xray", nullptr, FALSE);
 
 	InitSettings				();
 
