@@ -123,36 +123,35 @@ struct qt_meta_stringdata_xrLaunch_t {
 static const qt_meta_stringdata_xrLaunch_t qt_meta_stringdata_xrLaunch = {
     {
 QT_MOC_LITERAL(0, 0, 8), // "xrLaunch"
-QT_MOC_LITERAL(1, 9, 16), // "add_stringToList"
-QT_MOC_LITERAL(2, 26, 0), // ""
-QT_MOC_LITERAL(3, 27, 21), // "on_pushButton_clicked"
-QT_MOC_LITERAL(4, 49, 15), // "run_xrEngineRun"
-QT_MOC_LITERAL(5, 65, 23), // "on_actionExit_triggered"
-QT_MOC_LITERAL(6, 89, 27), // "on_actionxrEngine_triggered"
-QT_MOC_LITERAL(7, 117, 30), // "on_actionOxygen_Team_triggered"
-QT_MOC_LITERAL(8, 148, 26), // "on_actionVertver_triggered"
-QT_MOC_LITERAL(9, 175, 29), // "on_actionGiperion_2_triggered"
-QT_MOC_LITERAL(10, 205, 26), // "on_actionForserX_triggered"
-QT_MOC_LITERAL(11, 232, 29), // "on_actionParametres_triggered"
-QT_MOC_LITERAL(12, 262, 25), // "on_listWidget_itemPressed"
-QT_MOC_LITERAL(13, 288, 16), // "QListWidgetItem*"
-QT_MOC_LITERAL(14, 305, 4), // "item"
-QT_MOC_LITERAL(15, 310, 33), // "on_actionVertver_Github_trigg..."
+QT_MOC_LITERAL(1, 9, 21), // "on_pushButton_clicked"
+QT_MOC_LITERAL(2, 31, 0), // ""
+QT_MOC_LITERAL(3, 32, 15), // "run_xrEngineRun"
+QT_MOC_LITERAL(4, 48, 23), // "on_actionExit_triggered"
+QT_MOC_LITERAL(5, 72, 27), // "on_actionxrEngine_triggered"
+QT_MOC_LITERAL(6, 100, 30), // "on_actionOxygen_Team_triggered"
+QT_MOC_LITERAL(7, 131, 26), // "on_actionVertver_triggered"
+QT_MOC_LITERAL(8, 158, 29), // "on_actionGiperion_2_triggered"
+QT_MOC_LITERAL(9, 188, 26), // "on_actionForserX_triggered"
+QT_MOC_LITERAL(10, 215, 29), // "on_actionParametres_triggered"
+QT_MOC_LITERAL(11, 245, 33), // "on_actionVertver_Github_trigg..."
+QT_MOC_LITERAL(12, 279, 25), // "on_listWidget_itemPressed"
+QT_MOC_LITERAL(13, 305, 16), // "QListWidgetItem*"
+QT_MOC_LITERAL(14, 322, 4), // "item"
+QT_MOC_LITERAL(15, 327, 16), // "add_stringToList"
 QT_MOC_LITERAL(16, 344, 11) // "init_xrCore"
 
     },
-    "xrLaunch\0add_stringToList\0\0"
-    "on_pushButton_clicked\0run_xrEngineRun\0"
-    "on_actionExit_triggered\0"
+    "xrLaunch\0on_pushButton_clicked\0\0"
+    "run_xrEngineRun\0on_actionExit_triggered\0"
     "on_actionxrEngine_triggered\0"
     "on_actionOxygen_Team_triggered\0"
     "on_actionVertver_triggered\0"
     "on_actionGiperion_2_triggered\0"
     "on_actionForserX_triggered\0"
     "on_actionParametres_triggered\0"
+    "on_actionVertver_Github_triggered\0"
     "on_listWidget_itemPressed\0QListWidgetItem*\0"
-    "item\0on_actionVertver_Github_triggered\0"
-    "init_xrCore"
+    "item\0add_stringToList\0init_xrCore"
 };
 #undef QT_MOC_LITERAL
 
@@ -208,18 +207,18 @@ void xrLaunch::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         xrLaunch *_t = static_cast<xrLaunch *>(_o);
         Q_UNUSED(_t)
         switch (_id) {
-        case 0: _t->add_stringToList(); break;
-        case 1: _t->on_pushButton_clicked(); break;
-        case 2: _t->run_xrEngineRun(); break;
-        case 3: _t->on_actionExit_triggered(); break;
-        case 4: _t->on_actionxrEngine_triggered(); break;
-        case 5: _t->on_actionOxygen_Team_triggered(); break;
-        case 6: _t->on_actionVertver_triggered(); break;
-        case 7: _t->on_actionGiperion_2_triggered(); break;
-        case 8: _t->on_actionForserX_triggered(); break;
-        case 9: _t->on_actionParametres_triggered(); break;
+        case 0: _t->on_pushButton_clicked(); break;
+        case 1: _t->run_xrEngineRun(); break;
+        case 2: _t->on_actionExit_triggered(); break;
+        case 3: _t->on_actionxrEngine_triggered(); break;
+        case 4: _t->on_actionOxygen_Team_triggered(); break;
+        case 5: _t->on_actionVertver_triggered(); break;
+        case 6: _t->on_actionGiperion_2_triggered(); break;
+        case 7: _t->on_actionForserX_triggered(); break;
+        case 8: _t->on_actionParametres_triggered(); break;
+        case 9: _t->on_actionVertver_Github_triggered(); break;
         case 10: _t->on_listWidget_itemPressed((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
-        case 11: _t->on_actionVertver_Github_triggered(); break;
+        case 11: _t->add_stringToList(); break;
         case 12: _t->init_xrCore(); break;
         default: ;
         }

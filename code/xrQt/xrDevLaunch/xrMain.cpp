@@ -13,7 +13,7 @@
 unsigned int type_ptr;
 char const* params_list;
 char const* string_accept;
-std::string params;
+std::string params = "-nointro";
 /////////////////////////////////////////
 // In RenderList.cpp
 void CreateRendererList();
@@ -102,9 +102,10 @@ add string to buffer
 ************************************************/
 void xrLaunch::add_stringToList() 
 {
-	//QString rendered = ui->listWidget->currentItem()->text();
-	//params = rendered.toLocal8Bit();
-	statusBar()->showMessage(tr("Added to string buffer"));
+	QString rendered = ui->listWidget->currentItem()->text();
+	//#VERTVER: Don't use here toLatin1(). Crash on Release
+	params = rendered.toLocal8Bit();
+	statusBar()->showMessage(tr("Added to string buffer"), 2000);
 }
 
 
@@ -122,27 +123,24 @@ void xrLaunch::init_xrCore()
 	}
 	catch (...)
 	{
-		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
 		statusBar()->showMessage(tr("Error! Can't load xrCore."));
+		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
 	}
 }
 
 
 /***********************************************
-method for Launch xrEngine.dll
+method for launch xrEngine.dll
 ***********************************************/
 void xrLaunch::run_xrEngineRun() 
 {
 	try 
 	{
-		QString rendered = ui->listWidget->currentItem()->text();
-		//#VERTVER: Don't use here toLatin1(). Crash on Release
-		params = rendered.toLocal8Bit();
 		init_xrCore();
 		//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
 		//#(only xrDevLauncher compiling with IA32-x86 instructions),
 		//#some part of matrix and vectors use SSE3. It's can be difficult!
-		if (CPUID::SSE2)
+		if (CPUID::SSE2())
 		{
 			statusBar()->showMessage(tr("Creating render list..."));
 			CreateRendererList();
@@ -152,20 +150,20 @@ void xrLaunch::run_xrEngineRun()
 		}
 		else
 		{
+			statusBar()->showMessage(tr("Error! SSE2 is not supported on your CPU."));
 			MessageBox(NULL,
 				"Can't load xrEngine! SSE2 is not supported on your CPU.",
 				"Init error",
 				MB_OK | MB_ICONWARNING);
-			statusBar()->showMessage(tr("Error! SSE2 is not supported on your CPU."));
 		}
 	}
 	catch (...)
 	{
+		statusBar()->showMessage(tr("Error! Can't load xrEngine."));
 		MessageBox(NULL,
 			"Can't load xrEngine",
 			"Init error",
 			MB_OK | MB_ICONWARNING);
-		statusBar()->showMessage(tr("Error! Can't load xrEngine."));
 	}
 }
 
@@ -255,5 +253,6 @@ void xrLaunch::on_actionVertver_Github_triggered()
 {
 	AboutLauncher *dlg = new AboutLauncher;
 	dlg->show();
+	
 }
 
