@@ -13,6 +13,7 @@
 unsigned int type_ptr;
 char const* params_list;
 char const* string_accept;
+std::string params;
 /////////////////////////////////////////
 // In RenderList.cpp
 void CreateRendererList();
@@ -25,31 +26,19 @@ xrLaunch::xrLaunch(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::xrLaunch) {	// Init new UI   
 	ui->setupUi(this);		// setup it
-
 	// Checking for instructions
-	//#VERTVER: Using a minCPUID cuz initialization xrCore CPUID isn't safely
+	//#VERTVER: Use minCPUID cuz initialization xrCore CPUID isn't safely
 	if (!CPUID::SSE2())
-	{
 		statusBar()->showMessage(tr("Error! Your CPU doesn't support SSE2 instructions. Launcher can't start xrEngine."));
-	}
 	else if (!CPUID::SSE3())
-	{
 		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."));
-	}
 	else if (!CPUID::SSE41()) 
-	{
 		statusBar()->showMessage(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"));
-	}
 	else if (!CPUID::AVX())
-	{
 		statusBar()->showMessage(tr("Your CPU doesn't support AVX instructions!"));
-	}
-	// if all instructions are supported
 	else
-	{
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
-	}
-
+	/////////////////////////////////////////
 	//if (CPU::Info.hasFeature(CPUFeature::AVX)) {}			// Doesn't compile with it
 	ui->listWidget->addItems ( LIST_ITEMS );
 }
@@ -108,9 +97,6 @@ void xrLaunch::on_listWidget_itemPressed(QListWidgetItem *item)
 }
 
 
-std::string params;
-
-
 /***********************************************
 add string to buffer
 ************************************************/
@@ -118,6 +104,7 @@ void xrLaunch::add_stringToList()
 {
 	//QString rendered = ui->listWidget->currentItem()->text();
 	//params = rendered.toLocal8Bit();
+	statusBar()->showMessage(tr("Added to string buffer"));
 }
 
 
@@ -129,12 +116,14 @@ void xrLaunch::init_xrCore()
 	try
 	{
 		// Init X-ray core
+		statusBar()->showMessage(tr("Loading xrCore..."));
 		Debug._initialize(false);
 		Core._initialize("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
 	}
 	catch (...)
 	{
 		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
+		statusBar()->showMessage(tr("Error! Can't load xrCore."));
 	}
 }
 
@@ -144,21 +133,39 @@ method for Launch xrEngine.dll
 ***********************************************/
 void xrLaunch::run_xrEngineRun() 
 {
-	QString rendered = ui->listWidget->currentItem()->text();
-	params = rendered.toLocal8Bit();
-	init_xrCore();
-
-	//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
-	//#(only xrDevLauncher compiling with IA32-x86 instructions),
-	//#some part of matrix and vectors use SSE3. It's can be difficult!
-	if (CPUID::SSE2()) {
-		CreateRendererList();
-		//#VERTVER: Don't use here toLatin1(). Crash on Release
-		RunApplication(params.data());
-	}
-	else
+	try 
 	{
-		MessageBox(NULL, "Can't load xrEngine! SSE2 is not supported on your CPU.", "Init error", MB_OK | MB_ICONWARNING);
+		QString rendered = ui->listWidget->currentItem()->text();
+		//#VERTVER: Don't use here toLatin1(). Crash on Release
+		params = rendered.toLocal8Bit();
+		init_xrCore();
+		//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
+		//#(only xrDevLauncher compiling with IA32-x86 instructions),
+		//#some part of matrix and vectors use SSE3. It's can be difficult!
+		if (CPUID::SSE2)
+		{
+			statusBar()->showMessage(tr("Creating render list..."));
+			CreateRendererList();
+			statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
+			RunApplication(params.data());
+			xrLaunch::close();				// After closing main thread
+		}
+		else
+		{
+			MessageBox(NULL,
+				"Can't load xrEngine! SSE2 is not supported on your CPU.",
+				"Init error",
+				MB_OK | MB_ICONWARNING);
+			statusBar()->showMessage(tr("Error! SSE2 is not supported on your CPU."));
+		}
+	}
+	catch (...)
+	{
+		MessageBox(NULL,
+			"Can't load xrEngine",
+			"Init error",
+			MB_OK | MB_ICONWARNING);
+		statusBar()->showMessage(tr("Error! Can't load xrEngine."));
 	}
 }
 
@@ -168,6 +175,7 @@ method for close the MainWindow
 ***********************************************/
 void xrLaunch::on_actionExit_triggered() 
 {
+	statusBar()->showMessage(tr("Closing launcher..."));
 	xrLaunch::close();
 }
 
