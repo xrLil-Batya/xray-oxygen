@@ -172,7 +172,7 @@ void dx103DFluidData::ParseProfile(const xr_string &Profile)
 	m_Emitters.clear();
 	m_Emitters.resize(iEmittersNum);
 
-	for ( u32 i=0; i<iEmittersNum; ++i )
+	for (u32 i = 0; i<iEmittersNum; ++i)
 	{
 		string32	EmitterSectionName;
 		CEmitter	&Emitter = m_Emitters[i];

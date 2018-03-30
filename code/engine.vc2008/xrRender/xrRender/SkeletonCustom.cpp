@@ -221,7 +221,8 @@ void	CKinematics::Load(const char* N, IReader *data, u32 dwFlags)
 
 	// Attach bones to their parents
 	iRoot = BI_NONE;
-	for (u32 i=0; i<bones->size(); i++) {
+	for (u32 i=0; i<bones->size(); i++) 
+	{
 		shared_str	P 		= L_parents[i];
 		CBoneData* B	= (*bones)[i];
 		if (!P||!P[0]) {
