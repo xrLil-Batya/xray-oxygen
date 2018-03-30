@@ -309,14 +309,18 @@ void CRender::LoadSectors(IReader* fs)
 
 	// load sectors
 	IReader* S = fs->open_chunk(fsL_SECTORS);
-	for (u32 i=0; ; i++)
+#pragma omp parallel
+	for (u32 i = 0; ; i++)
 	{
 		IReader* P = S->open_chunk(i);
-		if (0==P) break;
+		if (0 == P) break;
 
-		CSector* __S		= xr_new<CSector> ();
-		__S->load			(*P);
-		Sectors.push_back	(__S);
+		CSector* pSector = xr_new<CSector>();
+#pragma omp single
+		{
+			pSector->load(*P);
+		}
+		Sectors.push_back(pSector);
 
 		P->close();
 	}
@@ -327,19 +331,17 @@ void CRender::LoadSectors(IReader* fs)
 	{
 		CDB::Collector	CL;
 		fs->find_chunk	(fsL_PORTALS);
-		for (u32 i=0; i<count; i++)
+
+#pragma omp parallel
+		for (u32 i = 0; i < count; i++)
 		{
-			b_portal	P;
-			fs->r		(&P,sizeof(P));
-			CPortal*	__P	= (CPortal*)Portals[i];
-			__P->Setup	(P.vertices.begin(),P.vertices.size(),
-				(CSector*)getSector(P.sector_front),
-				(CSector*)getSector(P.sector_back));
-			for (u32 j=2; j<P.vertices.size(); j++)
-				CL.add_face_packed_D(
-				P.vertices[0],P.vertices[j-1],P.vertices[j],
-				u32(i)
-				);
+			b_portal P;
+			fs->r(&P, sizeof(P));
+			CPortal* pPortal = (CPortal*)Portals[i];
+			pPortal->Setup(P.vertices.begin(), P.vertices.size(), (CSector*)getSector(P.sector_front), (CSector*)getSector(P.sector_back));
+
+			for (u32 j = 2; j < P.vertices.size(); j++)
+				CL.add_face_packed_D(P.vertices[0], P.vertices[j - 1], P.vertices[j], i);
 		}
 		if (CL.getTS()<2)
 		{

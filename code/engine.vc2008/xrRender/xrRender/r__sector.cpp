@@ -77,12 +77,13 @@ void	CPortal::Setup	(Fvector* V, int vcnt, CSector* face, CSector* back)
 
 	FPU::m64r();
 	u32	_cnt			= 0;
-	for (int i=2; i<vcnt; i++) {
-		T.mknormal_non_normalized		(poly[0],poly[i-1],poly[i]);
-		float		m	= T.magnitude	();
-		if (m>EPS_S)	{
-			N.add		(T.div(m))	;
-			_cnt		++			;
+	for (int i = 2; i < vcnt; i++)
+	{
+		T.mknormal_non_normalized(poly[0], poly[i - 1], poly[i]);
+		float		m = T.magnitude();
+		if (m > EPS_S) {
+			N.add(T.div(m));
+			_cnt++;
 		}
 	}
 	R_ASSERT2	(_cnt, "Invalid portal detected");
@@ -233,17 +234,19 @@ void CSector::traverse			(CFrustum &F, _scissor& R_scissor)
 	}
 }
 
-void CSector::load		(IReader& fs)
+void CSector::load(IReader& fs)
 {
 	// Assign portal polygons
 	u32 size			= fs.find_chunk(fsP_Portals); R_ASSERT(0==(size&1));
 	u32 count			= size/2;
 	m_portals.reserve	(count);
-	while (count) {
-		u16 ID		= fs.r_u16();
-		CPortal* P	= (CPortal*)RImplementation.getPortal	(ID);
+
+#pragma omp parallel
+	for(; count > 0; count--)
+	{
+		u16 ID = fs.r_u16();
+		CPortal* P = (CPortal*)RImplementation.getPortal(ID);
 		m_portals.push_back(P);
-		count--;
 	}
 
 	// Assign visual
