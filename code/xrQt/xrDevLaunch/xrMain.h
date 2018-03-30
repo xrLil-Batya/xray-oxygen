@@ -30,7 +30,7 @@
 #define CXX 199711L
 /////////////////////////////////////////
 static const QStringList LIST_ITEMS = QStringList() 
-<< "-r2" << "-r3" << "-r4" << "-renderdebug";
+<< "-r2" << "-r3" << "-r4" << "-renderdebug" << "-nointro";
 /////////////////////////////////////////
 
 void CreateRendererList();
@@ -43,13 +43,11 @@ class xrDialogParam;	// parameters dialog
 class xrDialogParam : public QDialog 
 {
 	Q_OBJECT
-public: 
-		
+public: 	
 	explicit xrDialogParam(QWidget *parent = NULL);
 	~xrDialogParam();
 
 private slots:
-
     void on_buttonBox_accepted();
 
 private:
@@ -62,15 +60,11 @@ class xrLaunch : public QMainWindow
     Q_OBJECT
 
 public:
-
     explicit xrLaunch(QWidget *parent = 0);
 	~xrLaunch();
 
 private slots:
-	void add_stringToList();
-    void on_pushButton_clicked();
-	
-	// Run
+    void on_pushButton_clicked();			// Run
 	void run_xrEngineRun();					// Run the xrEngine
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
@@ -79,11 +73,13 @@ private slots:
     void on_actionGiperion_2_triggered();
     void on_actionForserX_triggered();
     void on_actionParametres_triggered();	
+	void on_actionVertver_Github_triggered();
     void on_listWidget_itemPressed(QListWidgetItem *item);
-    void on_actionVertver_Github_triggered();
+	void add_stringToList();
 	void init_xrCore();
 
 private:
     Ui::xrLaunch *ui;
+
 };
 
