@@ -34,7 +34,6 @@ void CRender::level_Load(IReader* fs)
 		u32 count = chunk->r_u32	();
 		Shaders.resize				(count);
 
-#pragma omp parallel
 		for(u32 i=0; i<count; i++)	// skip first shader as "reserved" one
 		{
 			string512				n_sh,n_tlist;
@@ -312,19 +311,18 @@ void CRender::LoadSectors(IReader* fs)
 	R_ASSERT(0==size%sizeof(b_portal));
 	u32 count = size/sizeof(b_portal);
 	Portals.resize	(count);
-	for (u32 c=0; c<count; c++)
-		Portals[c]	= xr_new<CPortal> ();
+
+	for (u32 c = 0; c < count; c++)
+		Portals[c] = new CPortal();
 
 	// load sectors
 	IReader* S = fs->open_chunk(fsL_SECTORS);
-#pragma omp parallel
 	for (u32 i = 0; ; i++)
 	{
 		IReader* P = S->open_chunk(i);
 		if (0 == P) break;
 
-		CSector* pSector = xr_new<CSector>();
-#pragma omp single
+		CSector* pSector = new CSector();
 		{
 			pSector->load(*P);
 		}

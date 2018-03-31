@@ -13,7 +13,7 @@
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CPortal::CPortal		()
+CPortal::CPortal()
 {
 	Device.seqRender.Add(this,REG_PRIORITY_LOW-1000);
 }
@@ -241,7 +241,10 @@ void CSector::load(IReader& fs)
 	u32 count			= size/2;
 	m_portals.reserve	(count);
 
+#if defined(USE_DX11)
 #pragma omp parallel
+#endif
+
 	for(; count > 0; count--)
 	{
 		u16 ID = fs.r_u16();
