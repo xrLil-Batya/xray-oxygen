@@ -38,6 +38,7 @@ void CRender::level_Load(IReader* fs)
 		R_ASSERT2					(chunk,"Level doesn't builded correctly.");
 		u32 count = chunk->r_u32	();
 		Shaders.resize				(count);
+#pragma omp parallel
 		for(u32 i=0; i<count; i++)	// skip first shader as "reserved" one
 		{
 			string512				n_sh,n_tlist;
@@ -135,9 +136,11 @@ void CRender::level_Unload()
 	pLastSector				= 0;
 	vLastCameraPos.set		(0,0,0);
 	// 2.
+#pragma omp parallel
 	for (I=0; I<Sectors.size(); I++)	xr_delete(Sectors[I]);
 	Sectors.clear			();
 	// 3.
+#pragma omp parallel
 	for (I=0; I<Portals.size(); I++)	xr_delete(Portals[I]);
 	Portals.clear			();
 
@@ -154,15 +157,18 @@ void CRender::level_Unload()
 	Visuals.clear			();
 
 	//*** SWI
+#pragma omp parallel
 	for (I=0; I<SWIs.size();I++)xr_free	(SWIs[I].sw);
 	SWIs.clear				();
 
 	//*** VB/IB
+#pragma omp parallel
 	for (I=0; I<nVB.size(); I++)
 	{
 		HW.stats_manager.decrement_stats_vb	( nVB[I] );
 		_RELEASE(nVB[I]);
 	}
+#pragma omp parallel
 	for (I=0; I<xVB.size(); I++)
 	{
 		HW.stats_manager.decrement_stats_vb ( xVB[I] );
@@ -170,11 +176,13 @@ void CRender::level_Unload()
 	}
 	nVB.clear(); xVB.clear();
 
+#pragma omp parallel
 	for (I=0; I<nIB.size(); I++)	
 	{
 		HW.stats_manager.decrement_stats_ib ( nIB[I] );
 		_RELEASE(nIB[I]);
 	}
+#pragma omp parallel
 	for (I=0; I<xIB.size(); I++)	
 	{
 		HW.stats_manager.decrement_stats_ib ( xIB[I] );
