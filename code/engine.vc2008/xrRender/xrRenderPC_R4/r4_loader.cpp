@@ -38,20 +38,17 @@ void CRender::level_Load(IReader* fs)
 		R_ASSERT2					(chunk,"Level doesn't builded correctly.");
 		u32 count = chunk->r_u32	();
 		Shaders.resize				(count);
-
 		for(u32 i=0; i<count; i++)	// skip first shader as "reserved" one
 		{
-			string512 n_sh, n_tlist;
-			LPCSTR n = LPCSTR(chunk->pointer());
-			chunk->skip_stringZ();
-
-			if (0==n[0]) continue;
-
-			xr_strcpy(n_sh,n);
-			LPSTR delim	= strchr(n_sh,'/');
-			*delim = 0;
-			xr_strcpy(n_tlist,delim+1);
-			Shaders[i] = dxRenderDeviceRender::Instance().Resources->Create(n_sh,n_tlist);
+			string512				n_sh,n_tlist;
+			LPCSTR			n		= LPCSTR(chunk->pointer());
+			chunk->skip_stringZ		();
+			if (0==n[0])			continue;
+			xr_strcpy					(n_sh,n);
+			LPSTR			delim	= strchr(n_sh,'/');
+			*delim					= 0;
+			xr_strcpy					(n_tlist,delim+1);
+			Shaders[i]				= dxRenderDeviceRender::Instance().Resources->Create(n_sh,n_tlist);
 		}
 		chunk->close();
 	}
@@ -138,11 +135,9 @@ void CRender::level_Unload()
 	pLastSector				= 0;
 	vLastCameraPos.set		(0,0,0);
 	// 2.
-#pragma omp parallel
 	for (I=0; I<Sectors.size(); I++)	xr_delete(Sectors[I]);
 	Sectors.clear			();
 	// 3.
-#pragma omp parallel
 	for (I=0; I<Portals.size(); I++)	xr_delete(Portals[I]);
 	Portals.clear			();
 
@@ -151,7 +146,6 @@ void CRender::level_Unload()
 	Lights.Unload			();
 
 	//*** Visuals
-#pragma omp parallel
 	for (I=0; I<Visuals.size(); I++)
 	{
 		Visuals[I]->Release();
@@ -164,16 +158,11 @@ void CRender::level_Unload()
 	SWIs.clear				();
 
 	//*** VB/IB
-#pragma omp parallel
-	for (I = 0; I<nVB.size(); I++)	_RELEASE(nVB[I]);
-#pragma omp parallel
-	for (I = 0; I<xVB.size(); I++)	_RELEASE(xVB[I]);
+	for (I=0; I<nVB.size(); I++)	_RELEASE(nVB[I]);
+	for (I=0; I<xVB.size(); I++)	_RELEASE(xVB[I]);
 	nVB.clear(); xVB.clear();
-
-#pragma omp parallel
-	for (I = 0; I<nIB.size(); I++)	_RELEASE(nIB[I]);
-#pragma omp parallel
-	for (I = 0; I<xIB.size(); I++)	_RELEASE(xIB[I]);
+	for (I=0; I<nIB.size(); I++)	_RELEASE(nIB[I]);
+	for (I=0; I<xIB.size(); I++)	_RELEASE(xIB[I]);
 	nIB.clear(); xIB.clear();
 	nDC.clear(); xDC.clear();
 
@@ -188,65 +177,79 @@ void CRender::level_Unload()
 
 void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 {
-	R_ASSERT2(base_fs,"Could not load geometry. File not found.");
-	dxRenderDeviceRender::Instance().Resources->Evict();
+	R_ASSERT2					(base_fs,"Could not load geometry. File not found.");
+	dxRenderDeviceRender::Instance().Resources->Evict		();
+//	u32	dwUsage					= D3DUSAGE_WRITEONLY;
 
-	xr_vector<VertexDeclarator> &_DC	= _alternative?xDC:nDC;
-	xr_vector<ID3DVertexBuffer*> &_VB	= _alternative?xVB:nVB;
-	xr_vector<ID3DIndexBuffer*> &_IB	= _alternative?xIB:nIB;
+	xr_vector<VertexDeclarator>				&_DC	= _alternative?xDC:nDC;
+	xr_vector<ID3DVertexBuffer*>		&_VB	= _alternative?xVB:nVB;
+	xr_vector<ID3DIndexBuffer*>		&_IB	= _alternative?xIB:nIB;
 
 	// Vertex buffers
 	{
 		// Use DX9-style declarators
-		CStreamReader *fs = base_fs->open_chunk(fsL_VB);
-		R_ASSERT2(fs,"Could not load geometry. File 'level.geom?' corrupted.");
-		u32 count = fs->r_u32();
-		_DC.resize(count);
-		_VB.resize(count);
+		CStreamReader			*fs	= base_fs->open_chunk(fsL_VB);
+		R_ASSERT2				(fs,"Could not load geometry. File 'level.geom?' corrupted.");
+		u32 count				= fs->r_u32();
+		_DC.resize				(count);
+		_VB.resize				(count);
 
 		// decl
-		u32 buffer_size = (MAXD3DDECLLENGTH + 1) * sizeof(D3DVERTEXELEMENT9);
-		D3DVERTEXELEMENT9 *dcl = (D3DVERTEXELEMENT9*)_alloca(buffer_size);
+		u32					buffer_size = (MAXD3DDECLLENGTH + 1) * sizeof(D3DVERTEXELEMENT9);
+		D3DVERTEXELEMENT9	*dcl = (D3DVERTEXELEMENT9*)_alloca(buffer_size);
 
 		for (u32 i=0; i<count; i++)
 		{
-			fs->r(dcl,buffer_size);
-			fs->advance(-(int)buffer_size);
+			fs->r				(dcl,buffer_size);
+			fs->advance			(-(int)buffer_size);
 
-			u32 dcl_len = D3DXGetDeclLength (dcl)+1;
-			_DC[i].resize(dcl_len);
-			fs->r(_DC[i].begin(),dcl_len*sizeof(D3DVERTEXELEMENT9));
+			u32 dcl_len			= D3DXGetDeclLength		(dcl)+1;
+			_DC[i].resize		(dcl_len);
+			fs->r				(_DC[i].begin(),dcl_len*sizeof(D3DVERTEXELEMENT9));
 
 			// count, size
-			u32 vCount = fs->r_u32	();
-			u32 vSize = D3DXGetDeclVertexSize	(dcl,0);
+			u32 vCount			= fs->r_u32	();
+			u32 vSize			= D3DXGetDeclVertexSize	(dcl,0);
+			Msg	("* [Loading VB] %d verts, %d Kb",vCount,(vCount*vSize)/1024);
 
 			//	TODO: DX10: Check fragmentation.
 			//	Check if buffer is less then 2048 kb
-			BYTE* pData = xr_alloc<BYTE>(vCount*vSize);
-			fs->r(pData,vCount*vSize);
+			BYTE*	pData		= xr_alloc<BYTE>(vCount*vSize);
+			fs->r				(pData,vCount*vSize);
 			dx10BufferUtils::CreateVertexBuffer(&_VB[i], pData, vCount*vSize);
 			xr_free(pData);
+
+//			fs->advance			(vCount*vSize);
 		}
 		fs->close				();
 	}
 
 	// Index buffers
 	{
-		CStreamReader *fs = base_fs->open_chunk(fsL_IB);
-		u32 count = fs->r_u32();
-		_IB.resize(count);
+		CStreamReader			*fs	= base_fs->open_chunk(fsL_IB);
+		u32 count				= fs->r_u32();
+		_IB.resize				(count);
 		for (u32 i=0; i<count; i++)
 		{
 			u32 iCount			= fs->r_u32	();
+			Msg("* [Loading IB] %d indices, %d Kb",iCount,(iCount*2)/1024);
 
 			// Create and fill
+			//BYTE*	pData		= 0;
+			//R_CHK				(HW.pDevice->CreateIndexBuffer(iCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&_IB[i],0));
+			//R_CHK				(_IB[i]->Lock(0,0,(void**)&pData,0));
+//			CopyMemory			(pData,fs().pointer(),iCount*2);
+			//fs->r				(pData,iCount*2);
+			//_IB[i]->Unlock		();
+
 			//	TODO: DX10: Check fragmentation.
 			//	Check if buffer is less then 2048 kb
-			BYTE* pData	= xr_alloc<BYTE>(iCount*2);
-			fs->r(pData,iCount*2);
+			BYTE*	pData		= xr_alloc<BYTE>(iCount*2);
+			fs->r				(pData,iCount*2);
 			dx10BufferUtils::CreateIndexBuffer(&_IB[i], pData, iCount*2);
 			xr_free(pData);
+
+//			fs().advance		(iCount*2);
 		}
 		fs->close				();
 	}
@@ -254,16 +257,16 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 
 void CRender::LoadVisuals(IReader *fs)
 {
-	IReader* chunk = 0;
-	u32 index = 0;
-	dxRender_Visual* V = 0;
-	ogf_header H;
+	IReader*		chunk	= 0;
+	u32			index	= 0;
+	dxRender_Visual*		V		= 0;
+	ogf_header		H;
 
-	while ((chunk = fs->open_chunk(index)) != 0)
+	while ((chunk=fs->open_chunk(index))!=0)
 	{
-		chunk->r_chunk_safe(OGF_HEADER, &H, sizeof(H));
-		V = Models->Instance_Create(H.type);
-		V->Load(0, chunk, 0);
+		chunk->r_chunk_safe			(OGF_HEADER,&H,sizeof(H));
+		V = Models->Instance_Create	(H.type);
+		V->Load(0,chunk,0);
 		Visuals.push_back(V);
 
 		chunk->close();
@@ -282,7 +285,7 @@ struct b_portal
 {
 	u16				sector_front;
 	u16				sector_back;
-	svector<Fvector, 6>	vertices;
+	svector<Fvector,6>	vertices;
 };
 
 void CRender::LoadSectors(IReader* fs)
@@ -297,18 +300,14 @@ void CRender::LoadSectors(IReader* fs)
 
 	// load sectors
 	IReader* S = fs->open_chunk(fsL_SECTORS);
-#pragma omp parallel
-	for (u32 i = 0; ; i++)
+	for (u32 i=0; ; i++)
 	{
 		IReader* P = S->open_chunk(i);
-		if (0 == P) break;
+		if (0==P) break;
 
-		CSector* __S = xr_new<CSector>();
-#pragma omp single
-		{
-			__S->load(*P);
-		}
-		Sectors.push_back(__S);
+		CSector* __S		= xr_new<CSector> ();
+		__S->load			(*P);
+		Sectors.push_back	(__S);
 
 		P->close();
 	}
@@ -319,16 +318,19 @@ void CRender::LoadSectors(IReader* fs)
 	{
 		CDB::Collector	CL;
 		fs->find_chunk	(fsL_PORTALS);
-#pragma omp parallel
-		for (u32 i = 0; i < count; i++)
+		for (u32 i=0; i<count; i++)
 		{
-			b_portal P;
-			fs->r(&P, sizeof(P));
-			CPortal* pPortal = (CPortal*)Portals[i];
-			pPortal->Setup(P.vertices.begin(), P.vertices.size(), (CSector*)getSector(P.sector_front), (CSector*)getSector(P.sector_back));
-
-			for (u32 j = 2; j < P.vertices.size(); j++)
-				CL.add_face_packed_D(P.vertices[0], P.vertices[j - 1], P.vertices[j], i);
+			b_portal	P;
+			fs->r		(&P,sizeof(P));
+			CPortal*	__P	= (CPortal*)Portals[i];
+			__P->Setup	(P.vertices.begin(),P.vertices.size(),
+				(CSector*)getSector(P.sector_front),
+				(CSector*)getSector(P.sector_back));
+			for (u32 j=2; j<P.vertices.size(); j++)
+				CL.add_face_packed_D(
+				P.vertices[0],P.vertices[j-1],P.vertices[j],
+				u32(i)
+				);
 		}
 		if (CL.getTS()<2)
 		{
@@ -342,8 +344,7 @@ void CRender::LoadSectors(IReader* fs)
 		// build portal model
 		rmPortals = xr_new<CDB::MODEL> ();
 		rmPortals->build	(CL.getV(),int(CL.getVS()),CL.getT(),int(CL.getTS()), nullptr, nullptr, false);
-	} else 
-	{
+	} else {
 		rmPortals = 0;
 	}
 
@@ -387,19 +388,20 @@ void CRender::LoadSWIs(CStreamReader* base_fs)
 
 void CRender::Load3DFluid()
 {
+	//if (strstr(Core.Params,"-no_volumetric_fog"))
 	if (!RImplementation.o.volumetricfog)
 		return;
 
 	string_path fn_game;
-	if (FS.exist(fn_game, "$level$", "level.fog_vol"))
+	if ( FS.exist( fn_game, "$level$", "level.fog_vol" ) )
 	{
-		IReader *F = FS.r_open(fn_game);
-		u16 version = F->r_u16();
+		IReader *F	= FS.r_open( fn_game );
+		u16 version	= F->r_u16();
 
-		if (version == 3)
+		if(version == 3)
 		{
 			u32 cnt = F->r_u32();
-			for (u32 i = 0; i < cnt; ++i)
+			for(u32 i=0; i<cnt; ++i)
 			{
 				dx103DFluidVolume *pVolume = xr_new<dx103DFluidVolume>();
 				pVolume->Load("", F, 0);
@@ -413,7 +415,7 @@ void CRender::Load3DFluid()
 				//	Sector must have root
 				VERIFY(pRoot);
 				VERIFY(pRoot->getType() == MT_HIERRARHY);
-
+				
 				((FHierrarhyVisual*)pRoot)->children.push_back(pVolume);
 			}
 		}

@@ -38,7 +38,6 @@ void CRender::level_Load(IReader* fs)
 		R_ASSERT2					(chunk,"Level doesn't builded correctly.");
 		u32 count = chunk->r_u32	();
 		Shaders.resize				(count);
-
 		for(u32 i=0; i<count; i++)	// skip first shader as "reserved" one
 		{
 			string512				n_sh,n_tlist;
@@ -136,11 +135,9 @@ void CRender::level_Unload()
 	pLastSector				= 0;
 	vLastCameraPos.set		(0,0,0);
 	// 2.
-#pragma omp parallel
 	for (I=0; I<Sectors.size(); I++)	xr_delete(Sectors[I]);
 	Sectors.clear			();
 	// 3.
-#pragma omp parallel
 	for (I=0; I<Portals.size(); I++)	xr_delete(Portals[I]);
 	Portals.clear			();
 
@@ -157,18 +154,15 @@ void CRender::level_Unload()
 	Visuals.clear			();
 
 	//*** SWI
-#pragma omp parallel
 	for (I=0; I<SWIs.size();I++)xr_free	(SWIs[I].sw);
 	SWIs.clear				();
 
 	//*** VB/IB
-#pragma omp parallel
 	for (I=0; I<nVB.size(); I++)
 	{
 		HW.stats_manager.decrement_stats_vb	( nVB[I] );
 		_RELEASE(nVB[I]);
 	}
-#pragma omp parallel
 	for (I=0; I<xVB.size(); I++)
 	{
 		HW.stats_manager.decrement_stats_vb ( xVB[I] );
@@ -176,13 +170,11 @@ void CRender::level_Unload()
 	}
 	nVB.clear(); xVB.clear();
 
-#pragma omp parallel
 	for (I=0; I<nIB.size(); I++)	
 	{
 		HW.stats_manager.decrement_stats_ib ( nIB[I] );
 		_RELEASE(nIB[I]);
 	}
-#pragma omp parallel
 	for (I=0; I<xIB.size(); I++)	
 	{
 		HW.stats_manager.decrement_stats_ib ( xIB[I] );
@@ -317,18 +309,14 @@ void CRender::LoadSectors(IReader* fs)
 
 	// load sectors
 	IReader* S = fs->open_chunk(fsL_SECTORS);
-#pragma omp parallel
-	for (u32 i = 0; ; i++)
+	for (u32 i=0; ; i++)
 	{
 		IReader* P = S->open_chunk(i);
-		if (0 == P) break;
+		if (0==P) break;
 
-		CSector* pSector = xr_new<CSector>();
-#pragma omp single
-		{
-			pSector->load(*P);
-		}
-		Sectors.push_back(pSector);
+		CSector* __S		= xr_new<CSector> ();
+		__S->load			(*P);
+		Sectors.push_back	(__S);
 
 		P->close();
 	}
@@ -339,17 +327,19 @@ void CRender::LoadSectors(IReader* fs)
 	{
 		CDB::Collector	CL;
 		fs->find_chunk	(fsL_PORTALS);
-
-#pragma omp parallel
-		for (u32 i = 0; i < count; i++)
+		for (u32 i=0; i<count; i++)
 		{
-			b_portal P;
-			fs->r(&P, sizeof(P));
-			CPortal* pPortal = (CPortal*)Portals[i];
-			pPortal->Setup(P.vertices.begin(), P.vertices.size(), (CSector*)getSector(P.sector_front), (CSector*)getSector(P.sector_back));
-
-			for (u32 j = 2; j < P.vertices.size(); j++)
-				CL.add_face_packed_D(P.vertices[0], P.vertices[j - 1], P.vertices[j], i);
+			b_portal	P;
+			fs->r		(&P,sizeof(P));
+			CPortal*	__P	= (CPortal*)Portals[i];
+			__P->Setup	(P.vertices.begin(),P.vertices.size(),
+				(CSector*)getSector(P.sector_front),
+				(CSector*)getSector(P.sector_back));
+			for (u32 j=2; j<P.vertices.size(); j++)
+				CL.add_face_packed_D(
+				P.vertices[0],P.vertices[j-1],P.vertices[j],
+				u32(i)
+				);
 		}
 		if (CL.getTS()<2)
 		{
