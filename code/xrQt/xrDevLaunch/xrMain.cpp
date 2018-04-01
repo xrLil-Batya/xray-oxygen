@@ -31,13 +31,13 @@ xrLaunch::xrLaunch(QWidget *parent) :
 	if (!CPUID::SSE2())
 		statusBar()->showMessage(tr("Error! Your CPU doesn't support SSE2 instructions. Launcher can't start xrEngine."));
 	else if (!CPUID::SSE3())
-		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."));
+		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."), 12000);
 	else if (!CPUID::SSE41()) 
-		statusBar()->showMessage(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"));
+		statusBar()->showMessage(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"), 6000);
 	else if (!CPUID::AVX())
-		statusBar()->showMessage(tr("Your CPU doesn't support AVX instructions!"));
+		statusBar()->showMessage(tr("Your CPU doesn't support AVX instructions!"), 6000);
 	else
-		statusBar()->showMessage(tr("All instructions are supported on your CPU!"));
+		statusBar()->showMessage(tr("All instructions are supported on your CPU!"), 6000);
 	/////////////////////////////////////////
 	//if (CPU::Info.hasFeature(CPUFeature::AVX)) {}			// Doesn't compile with it
 	ui->listWidget->addItems ( LIST_ITEMS );
@@ -120,6 +120,7 @@ void xrLaunch::init_xrCore()
 		statusBar()->showMessage(tr("Loading xrCore..."));
 		Debug._initialize(false);
 		Core._initialize("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
+		statusBar()->showMessage(tr("Loading complete"), 4000);
 	}
 	catch (...)
 	{
@@ -136,17 +137,23 @@ void xrLaunch::run_xrEngineRun()
 {
 	try 
 	{
-		init_xrCore();
 		//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
 		//#(only xrDevLauncher compiling with IA32-x86 instructions),
 		//#some part of matrix and vectors use SSE3. It's can be difficult!
 		if (CPUID::SSE2())
 		{
+			init_xrCore();
 			statusBar()->showMessage(tr("Creating render list..."));
 			CreateRendererList();
 			statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
 			RunApplication(params.data());
-			xrLaunch::close();				// After closing main thread
+#ifndef NOAWDA
+			MessageBox(NULL,
+				"Awda",
+				"Awda",
+				MB_OK | MB_ICONINFORMATION);
+#endif
+			xrLaunch::close();				// After closing xrCore main thread
 		}
 		else
 		{
@@ -256,3 +263,11 @@ void xrLaunch::on_actionVertver_Github_triggered()
 	
 }
 
+
+/***********************************************
+init xrCore without xrEngine
+***********************************************/
+void xrLaunch::on_actionxrCore_triggered()
+{
+	init_xrCore();
+}

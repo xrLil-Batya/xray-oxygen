@@ -1,7 +1,7 @@
 ////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C) * X-RAY OXYGEN	
 // entry_point.cpp - methods for init.
-// Edited: 29 March, 2018						
+// Edited: 30 March, 2018						
 ////////////////////////////////////////
 #include <string>
 #include <intrin.h>  
@@ -51,8 +51,6 @@ DLL_API int RunApplication(char* commandLine);
 int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
 	std::string params = lpCmdLine;
-
-
 	try
 	{
 		// Init X-ray core

@@ -1,7 +1,6 @@
 ////////////////////////////////////////
-// ForserX, 2018 (C) * X-RAY OXYGEN	
-// IParser.h - xrPlay parser
-// Edited: 29 March, 2018						
+// author: ForserX, 2017-2018 (C)
+// class : IParser - ini files parser			
 ////////////////////////////////////////
 #pragma once
 ////////////////////////////////////////

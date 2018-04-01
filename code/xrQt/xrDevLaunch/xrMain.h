@@ -28,6 +28,7 @@
 /////////////////////////////////////////
 #define DLL_API __declspec(dllimport)
 #define CXX 199711L
+#define NOAWDA 1
 /////////////////////////////////////////
 static const QStringList LIST_ITEMS = QStringList() 
 << "-r2" << "-r3" << "-r4" << "-renderdebug" << "-nointro";
@@ -68,6 +69,7 @@ private slots:
 	void run_xrEngineRun();					// Run the xrEngine
 	void on_actionExit_triggered();			// Menu->Launch->Exit
     void on_actionxrEngine_triggered();		// Menu->Launch->Game->xrEngine
+    void on_actionxrCore_triggered();
     void on_actionOxygen_Team_triggered();
     void on_actionVertver_triggered();
     void on_actionGiperion_2_triggered();
