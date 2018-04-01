@@ -5,6 +5,7 @@
 #include "ETextureParams.h"
 
 class cl_dt_scaler;
+struct TH_LoadTHM;
 
 class CTextureDescrMngr
 {
@@ -23,19 +24,23 @@ class CTextureDescrMngr
 		float				m_material;
 		bool				m_use_steep_parallax;
 	};
-	struct texture_desc{
+public:
+	static struct texture_desc
+	{
 		texture_assoc*		m_assoc;
 		texture_spec*		m_spec;
-        texture_desc            ():m_assoc(NULL),m_spec(NULL){}
+        texture_desc		():m_assoc(NULL),m_spec(NULL){}
 	};
 
+private:
     using map_TD = xr_map<shared_str, texture_desc>;
     using map_CS = xr_map<shared_str, cl_dt_scaler*>;
-
-	map_TD									m_texture_details;
-	map_CS									m_detail_scalers;
-
-	void		LoadTHM		(LPCSTR initial);
+	
+	map_TD		m_texture_details;
+	map_CS		m_detail_scalers;
+	
+static void		LoadTHM		(LPCSTR initial, map_TD &s_texture_details, map_CS &s_detail_scalers);
+static void		LoadTHMThread(void* args);
 
 public:
 				~CTextureDescrMngr();
