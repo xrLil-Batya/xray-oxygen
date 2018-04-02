@@ -68,7 +68,7 @@ void CUIGameCustom::OnFrame()
 		m_custom_statics.pop_back	();
 	}
 
-	Remove_all_statics();
+	//Remove_all_statics();
 	m_window->Update();
 
 	//update windows
