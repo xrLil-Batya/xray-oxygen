@@ -40,9 +40,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="eulersolver.cxx">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="jtlimits.cxx">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
@@ -55,13 +52,16 @@
     <ClCompile Include="mathTrig.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="aint.cxx">
-      <Filter>Файлы исходного кода</Filter>
-    </ClCompile>
     <ClCompile Include="Dof7control.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
-    <ClCompile Include="eqn.cxx">
+    <ClCompile Include="aint.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="eqn.cpp">
+      <Filter>Файлы исходного кода</Filter>
+    </ClCompile>
+    <ClCompile Include="eulersolver.cpp">
       <Filter>Файлы исходного кода</Filter>
     </ClCompile>
   </ItemGroup>

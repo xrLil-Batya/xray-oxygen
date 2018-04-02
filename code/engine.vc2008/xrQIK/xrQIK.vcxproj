@@ -129,10 +129,10 @@
     <ClInclude Include="mathTrig.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="aint.cxx" />
+    <ClCompile Include="aint.cpp" />
     <ClCompile Include="Dof7control.cpp" />
-    <ClCompile Include="eqn.cxx" />
-    <ClCompile Include="eulersolver.cxx" />
+    <ClCompile Include="eqn.cpp" />
+    <ClCompile Include="eulersolver.cpp" />
     <ClCompile Include="jtlimits.cxx" />
     <ClCompile Include="limb.cxx" />
     <ClCompile Include="math3d.cpp" />

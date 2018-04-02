@@ -1,3 +1,29 @@
+/*
+This source code is a part of IKAN.
+Copyright (c) 2000 University of Pennsylvania
+Center for Human Modeling and Simulation
+All Rights Reserved.
+IN NO EVENT SHALL THE UNIVERSITY OF PENNSYLVANIA BE LIABLE TO ANY
+PARTY FOR DIRECT, INDIRECT, SPECIAL, INCIDENTAL, OR CONSEQUENTIAL
+DAMAGES, INCLUDING LOST PROFITS, ARISING OUT OF THE USE OF THIS
+SOFTWARE AND ITS DOCUMENTATION, EVEN IF THE UNIVERSITY OF PENNSYLVANIA
+HAVE BEEN ADVISED OF THE POSSIBILITY OF SUCH DAMAGES.
+Permission to use, copy, modify and distribute this software and its
+documentation for educational, research and non-profit purposes,
+without fee, and without a written agreement is hereby granted,
+provided that the above copyright notice and the following three
+paragraphs appear in all copies. For for-profit purposes, please
+contact University of Pennsylvania
+(http://hms.upenn.edu/software/ik/ik.html) for the software license
+agreement.
+THE UNIVERSITY OF PENNSYLVANIA SPECIFICALLY DISCLAIM ANY
+WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+PURPOSE.  THE SOFTWARE PROVIDED HEREUNDER IS ON AN "AS IS"
+BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
+TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
+MODIFICATIONS.
+*/
 #include "../xrCore/xrCore.h"
 #include <math.h>
 #include "aint.h"
@@ -7,7 +33,7 @@
 // 
 void AngleInt::SetLow(float l)
 {
-	low = angle_normalize(l);
+	low				= angle_normalize(l);
 }
 
 //
@@ -15,14 +41,14 @@ void AngleInt::SetLow(float l)
 // 
 void AngleInt::SetHigh(float h)
 {
-	high = angle_normalize(h);
+	high			= angle_normalize(h);
 }
 
 
 AngleInt::AngleInt(float l, float h)
 {
-	SetLow(l);
-	SetHigh(h);
+	SetLow	(l);
+	SetHigh	(h);
 }
 
 float AngleInt::Mid() const
@@ -48,7 +74,7 @@ float AngleInt::Distance(float v) const
 	const float TwoPi = 2 * M_PI;
 
 	float t1, t2;
-	v = angle_normalize(v);
+	v				= angle_normalize(v);
 
 	if (IsEmpty(eps))
 		return TwoPi;
@@ -60,13 +86,13 @@ float AngleInt::Distance(float v) const
 	{
 		if (High() > Low())
 		{
-			t1 = Low();
-			t2 = TwoPi - High();
+			t1	= Low();
+			t2	= TwoPi - High();
 		}
 		else
 		{
-			t1 = Low() - TwoPi;
-			t2 = -High();
+			t1	= Low() - TwoPi;
+			t2	= -High();
 		}
 	}
 	else if (High() > Low())
@@ -74,22 +100,22 @@ float AngleInt::Distance(float v) const
 		// 0 <= v < Low
 		if (v < Low())
 		{
-			t1 = Low() - v;
-			t2 = TwoPi - High() + v;
+			t1	= Low() - v;
+			t2	= TwoPi - High() + v;
 		}
 
 		// Low <= v < High
 		else if (v < High())
 		{
-			t1 = v - High();
-			t2 = Low() - v;
+			t1	= v - High();
+			t2	= Low() - v;
 		}
 
 		// High <= v < 2*M_PI
 		else
 		{
-			t1 = v - High();
-			t2 = TwoPi - v + Low();
+			t1	= v - High();
+			t2	= TwoPi - v + Low();
 		}
 	}
 	else // (Low() > High())
@@ -97,22 +123,22 @@ float AngleInt::Distance(float v) const
 		// 0 < v < High
 		if (v < High())
 		{
-			t1 = v - High();
-			t2 = Low() - v - TwoPi;
+			t1	= v - High();
+			t2	= Low() - v - TwoPi;
 		}
 
 		// High <= v < Low
 		else if (v < Low())
 		{
-			t1 = v - High();
-			t2 = Low() - v;
+			t1	= v - High();
+			t2	= Low() - v;
 		}
 
 		// Low <= v < 2*M_PI
 		else
 		{
-			t1 = Low() - v;
-			t2 = v - TwoPi - High();
+			t1	= Low() - v;
+			t2	= v - TwoPi - High();
 		}
 	}
 
@@ -157,8 +183,8 @@ int AngleInt::IsSubsetOf(const AngleInt &a, float eps) const
 
 int AngleInt::merge_aux(const AngleInt &a, AngleInt &b, float eps)  const
 {
-	int in1 = InRange(a.Low(), eps);
-	int in2 = InRange(a.High(), eps);
+	int in1			= InRange(a.Low(), eps);
+	int in2			= InRange(a.High(), eps);
 
 	if (!in1 && !in2)
 		return 0;
@@ -208,11 +234,11 @@ void AngleIntList::add(float l, float h)
 	AngleIntListNode *t = xr_new<AngleIntListNode>(l, h, (AngleIntListNode*)0);
 
 	if (!head)
-		head = tail = t;
+		head	= tail = t;
 	else
 	{
-		tail->next = t;
-		tail = t;
+		tail->next	= t;
+		tail	= t;
 	}
 }
 
@@ -225,8 +251,8 @@ void AngleIntList::remove(AngleIntListNode *t)
 
 	if (head == t)
 	{
-		prev = 0;
-		head = t->next;
+		prev	= 0;
+		head	= t->next;
 	}
 	else
 	{
@@ -239,7 +265,7 @@ void AngleIntList::remove(AngleIntListNode *t)
 	}
 
 	if (tail == t)
-		tail = prev;
+		tail	= prev;
 
 	delete t;
 }
@@ -258,10 +284,10 @@ void swell(const AngleInt &a,
 		c.Set(0, 2 * M_PI);
 	else
 	{
-		float l = a.Low();
-		float h = a.High();
-		float l2 = b.Low();
-		float h2 = b.High();
+		float l		= a.Low();
+		float h		= a.High();
+		float l2	= b.Low();
+		float h2	= b.High();
 
 		if (l < h)
 		{
@@ -273,16 +299,7 @@ void swell(const AngleInt &a,
 		}
 		else
 		{
-			if (l2 < h2)
-			{
-				/*
-				if (istwopi(h2))
-				h = h;
-				else
-				h = std::max(h,h2);
-				*/
-			}
-			else
+			if (!l2 < h2)
 			{
 				l = std::min(l, l2);
 				h = std::max(h, h2);
@@ -364,7 +381,7 @@ void AngleIntList::AddList(AngleIntList &dest, float eps) const
 
 float AngleIntList::Distance(float a) const
 {
-	float dist = 2 * M_PI;
+	float dist		= 2 * M_PI;
 
 	for (AngleIntListNode *t = head; t; t = t->next)
 	{
