@@ -8,32 +8,22 @@
 #pragma once
 
 #include "../xrCore/xrCore.h"
-
 #include "../xrCore/doug_lea_allocator.h"
 #include "../xrCore/memory_allocator_options.h"
+#include "../../SDK/include/imdexlib/fast_dynamic_cast.hpp"
 
-#ifdef USE_ARENA_ALLOCATOR
-extern doug_lea_allocator	g_collision_allocator;
-
-#	define CNEW(type)			new (g_collision_allocator.alloc_impl<type>(1)) type
-#	define CDELETE(ptr)			cdelete(ptr)
-#	define CFREE(ptr)			g_collision_allocator.free_impl(ptr)
-#	define CMALLOC(size)		g_collision_allocator.malloc_impl(size)
-#	define CALLOC(type, count)	g_collision_allocator.alloc_impl<type>(count)
-#else // #ifdef USE_ARENA_ALLOCATOR
-#	define CNEW(type)			new (xr_alloc<type>(1)) type
-#	define CDELETE(ptr)			xr_delete(ptr)
-#	define CFREE(ptr)			xr_free(ptr)
-#	define CMALLOC(size)		xr_malloc(size)
-#	define CALLOC(type, count)	xr_alloc<type>(count)
-#endif // #ifdef USE_ARENA_ALLOCATOR
+#define CNEW(type)			new (xr_alloc<type>(1)) type
+#define CDELETE(ptr)			xr_delete(ptr)
+#define CFREE(ptr)			xr_free(ptr)
+#define CMALLOC(size)		xr_malloc(size)
+#define CALLOC(type, count)	xr_alloc<type>(count)
 
 template <bool _is_pm, typename T>
 struct cspecial_free
 {
 	IC void operator()(T* &ptr)
 	{
-		void*	_real_ptr = dynamic_cast<void*>(ptr);
+		void*	_real_ptr = imdexlib::fast_dynamic_cast<void*>(ptr);
 		ptr->~T();
 		CFREE(_real_ptr);
 	}
@@ -62,4 +52,3 @@ IC	void cdelete(T* &ptr)
 #define WIN32_LEAN_AND_MEAN		// Exclude rarely-used stuff from Windows headers
 #define ENGINE_API
 #include "../../3rd-party/OPCODE/Opcode.h"
-

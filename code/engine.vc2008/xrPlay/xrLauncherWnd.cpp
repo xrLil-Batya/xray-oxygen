@@ -38,7 +38,7 @@ System::Void xrLauncherWnd::BtnClose_Click(System::Object^  sender, System::Even
 // Showing the window minimized
 System::Void xrLauncherWnd::label1_Click(System::Object^  sender, System::EventArgs^  e)
 {
-	ShowWindow((HWND)this->Handle.ToInt32(), SW_MINIMIZE);
+	ShowWindow((HWND)this->Handle.ToInt64(), SW_MINIMIZE);
 }
 
 ////////////////////////////////////////
