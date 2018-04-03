@@ -156,44 +156,31 @@ void CEnvAmbient::destroy ()
 	delete_data				(m_sound_channels);
 }
 
-void CEnvAmbient::load( 
-		CInifile& ambients_config,
-		CInifile& sound_channels_config,
-		CInifile& effects_config,
-		const shared_str& sect
-	)
+void CEnvAmbient::load(CInifile& ambients_config, CInifile& sound_channels_config, CInifile& effects_config, const shared_str& sect)
 {
 	m_ambients_config_filename = ambients_config.fname();
-	m_load_section		= sect;
-	string_path			tmp;
-	
+	m_load_section = sect;
+	string_path tmp;
+
 	// sounds
-	LPCSTR channels			= ambients_config.r_string	(sect,"sound_channels");
-	u32 cnt					= _GetItemCount(channels);
-//	R_ASSERT3				(cnt,"sound_channels empty", sect.c_str());
-	m_sound_channels.resize	(cnt);
+	LPCSTR channels = ambients_config.r_string(sect, "sound_channels");
+	u32 cnt = _GetItemCount(channels);
+	m_sound_channels.resize(cnt);
 
-	for (u32 i=0; i<cnt; ++i)
-		m_sound_channels[i]	= create_sound_channel(sound_channels_config, _GetItem(channels,i,tmp));
-
+	for (u32 i = 0; i < cnt; ++i)
+	{
+		m_sound_channels[i] = create_sound_channel(sound_channels_config, _GetItem(channels, i, tmp));
+	}
 	// effects
-	m_effect_period.set		(
-		iFloor(
-			ambients_config.r_float(sect,"min_effect_period")*1000.f
-		),
-		iFloor(
-			ambients_config.r_float(sect,"max_effect_period")*1000.f
-		)
-	);
-	LPCSTR effs				= ambients_config.r_string	(sect,"effects");
-	cnt						= _GetItemCount(effs);
-//	R_ASSERT3				(cnt,"effects empty", sect.c_str());
+	m_effect_period.set(iFloor(ambients_config.r_float(sect, "min_effect_period")*1000.f), iFloor(ambients_config.r_float(sect, "max_effect_period")*1000.f));
+	LPCSTR effs = ambients_config.r_string(sect, "effects");
+	cnt = _GetItemCount(effs);
 
-	m_effects.resize		(cnt);
-	for (u32 k=0; k<cnt; ++k)
-		m_effects[k]		= create_effect(effects_config, _GetItem(effs,k,tmp));
+	m_effects.resize(cnt);
+	for (u32 k = 0; k < cnt; ++k)
+		m_effects[k] = create_effect(effects_config, _GetItem(effs, k, tmp));
 
-	R_ASSERT					(!m_sound_channels.empty() || !m_effects.empty());
+	R_ASSERT(!m_sound_channels.empty() || !m_effects.empty());
 }
 
 //-----------------------------------------------------------------------------
@@ -288,23 +275,23 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 //		);
 	VERIFY2					(sun_dir.y < 0, "Invalid sun direction settings while loading");
 
-	lens_flare_id			= environment.eff_LensFlare->AppendDef(environment, environment.m_suns_config, config.r_string(m_identifier.c_str(),"sun"));
-	tb_id					= environment.eff_Thunderbolt->AppendDef(environment, environment.m_thunderbolt_collections_config, environment.m_thunderbolts_config, config.r_string(m_identifier.c_str(),"thunderbolt_collection"));
-	bolt_period				= (tb_id.size())?config.r_float	(m_identifier.c_str(),"thunderbolt_period"):0.f;
-	bolt_duration			= (tb_id.size())?config.r_float	(m_identifier.c_str(),"thunderbolt_duration"):0.f;
-	env_ambient				= config.line_exist(m_identifier.c_str(),"ambient")?environment.AppendEnvAmb	(config.r_string(m_identifier.c_str(),"ambient")):0;
+	lens_flare_id	= environment.eff_LensFlare->AppendDef(environment, environment.m_suns_config, config.r_string(m_identifier,"sun"));
+	tb_id			= environment.eff_Thunderbolt->AppendDef(environment, environment.m_thunderbolt_collections_config, environment.m_thunderbolts_config, config.r_string(m_identifier,"thunderbolt_collection"));
+	bolt_period		= (tb_id.size())?config.r_float	(m_identifier,"thunderbolt_period"):0.f;
+	bolt_duration	= (tb_id.size())?config.r_float	(m_identifier,"thunderbolt_duration"):0.f;
+	env_ambient		= config.line_exist(m_identifier,"ambient")?environment.AppendEnvAmb	(config.r_string(m_identifier,"ambient")):0;
 
-	if (config.line_exist(m_identifier.c_str(),"sun_shafts_intensity"))
-		m_fSunShaftsIntensity = config.r_float(m_identifier.c_str(),"sun_shafts_intensity");
+	if (config.line_exist(m_identifier,"sun_shafts_intensity"))
+		m_fSunShaftsIntensity = config.r_float(m_identifier,"sun_shafts_intensity");
 
-	if (config.line_exist(m_identifier.c_str(),"water_intensity"))
-		m_fWaterIntensity = config.r_float(m_identifier.c_str(),"water_intensity");
+	if (config.line_exist(m_identifier,"water_intensity"))
+		m_fWaterIntensity = config.r_float(m_identifier,"water_intensity");
 	
-	if (config.line_exist(m_identifier.c_str(), "tree_amplitude_intensity"))
-		m_fTreeAmplitudeIntensity = config.r_float(m_identifier.c_str(), "tree_amplitude_intensity");
+	if (config.line_exist(m_identifier, "tree_amplitude_intensity"))
+		m_fTreeAmplitudeIntensity = config.r_float(m_identifier, "tree_amplitude_intensity");
 	
-	if (config.line_exist(m_identifier.c_str(),"sgm_rain_drops_intensity"))
-		m_fRainDropsIntensity = config.r_float(m_identifier.c_str(),"sgm_rain_drops_intensity");	
+	if (config.line_exist(m_identifier,"sgm_rain_drops_intensity"))
+		m_fRainDropsIntensity = config.r_float(m_identifier,"sgm_rain_drops_intensity");	
 
 	C_CHECK					(clouds_color);
 	C_CHECK					(sky_color	);
@@ -452,17 +439,17 @@ void	CEnvironment::mods_load()
 		IReader*	fs = FS.r_open(path);
 		u32			id = 0;
 		u32 ver = 0x0015;
-		u32 sz;
+		size_t sz;
 
 		while (0 != (sz = fs->find_chunk(id)))
 		{
-			if (id == 0 && sz == sizeof(u32))
+			if (id == 0 && sz == sizeof(size_t))
 			{
 				ver = fs->r_u32();
 			}
 			else
 			{
-				CEnvModifier		E;
+				CEnvModifier E;
 				E.load(fs, ver);
 				Modifiers.push_back(E);
 			}
@@ -570,11 +557,11 @@ void CEnvironment::load_weathers		()
 	// sorting weather envs
 	for (auto _I: WeatherCycles)
 	{
-		R_ASSERT3(_I.second.size()>1,"Environment in weather must >=2",_I.first.c_str());
+		R_ASSERT3(_I.second.size()>1,"Environment in weather must >=2",_I.first.data());
 		std::sort(_I.second.begin(),_I.second.end(),sort_env_etl_pred);
 	}
 	R_ASSERT2	(!WeatherCycles.empty(),"Empty weathers.");
-	SetWeather	((*WeatherCycles.begin()).first.c_str());
+	SetWeather	((*WeatherCycles.begin()).first);
 }
 
 void CEnvironment::load_weather_effects	()
@@ -587,7 +574,7 @@ void CEnvironment::load_weather_effects	()
 	VERIFY							(pfile_list);
 	file_list_type&					file_list = *pfile_list;
 
-	for (LPSTR weatherEffectFileName : file_list)
+	for (char* weatherEffectFileName : file_list)
 	{
 		u32							length = xr_strlen(weatherEffectFileName);
 		VERIFY						(length >= 4);
