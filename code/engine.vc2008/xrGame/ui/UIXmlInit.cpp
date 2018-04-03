@@ -146,9 +146,22 @@ bool CUIXmlInit::InitOptionsItem(CUIXml& xml_doc, LPCSTR path, int index, CUIOpt
 	else return false;	
 }
 
+bool CUIXmlInit::InitTextureOffset(CUIXml &xml_doc, LPCSTR path, int index, CUIStatic* pWnd)
+{
+	string256 textureOffset;
+	if (0 == xr_strcmp(path, ""))
+		xr_strcpy(textureOffset, "texture_offset");
+	else
+		strconcat(sizeof(textureOffset), textureOffset, path, ":texture_offset");
 
-bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path, 
-									int index, CUIStatic* pWnd)
+	float x = xml_doc.ReadAttribFlt(textureOffset, index, "x");
+	float y = xml_doc.ReadAttribFlt(textureOffset, index, "y");
+
+	pWnd->SetTextureOffset(x, y);
+	return true;
+}
+
+bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path, int index, CUIStatic* pWnd)
 {
 	R_ASSERT4(xml_doc.NavigateToNode(path,index), "XML node not found", path, xml_doc.m_xml_file_name);
 
