@@ -16,6 +16,7 @@ struct vf
 #ifdef	USE_SOFT_PARTICLES
 	float4 tctexgen	: TEXCOORD1;
 #endif	//	USE_SOFT_PARTICLES
+	float  fog	: FOG;
 };
 
 vf main (vv v)
@@ -32,6 +33,8 @@ vf main (vv v)
 	o.tctexgen 	= mul( mVPTexgen, v.P);
 	o.tctexgen.z	= o.hpos.z;
 #endif	//	USE_SOFT_PARTICLES
+
+	o.fog 		= saturate(calc_fogging(v.P));	// skyloader: fog, input in world coords
 
 	return o;
 }

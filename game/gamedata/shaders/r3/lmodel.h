@@ -12,7 +12,10 @@ float4 plight_infinity( float m, float3 pnt, float3 normal, float3 light_directi
   	float3 L 		= -light_direction;						// vector2light
   	float3 H			= normalize	(L+V);						// float-angle-vector 
 //	return tex3D 		(s_material,	float3( dot(L,N), dot(H,N), m ) );		// sample material
-	return s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
+	float4 ret;
+	float4 light =  s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
+	ret = light+float4(light.www*(Ldynamic_color.xyz*2),light.w)*Ldynamic_color.w/2;
+	return ret;
 }
 /*
 float plight_infinity2( float m, float3 pnt, float3 normal, float3 light_direction )
@@ -43,7 +46,7 @@ float4 plight_local( float m, float3 pnt, float3 normal, float3 light_position, 
   	float  att 	= saturate	(1 - rsqr*light_range_rsq);			// q-linear attenuate
 //	float4 light	= tex3D		(s_material, float3( dot(L,N), dot(H,N), m ) ); 	// sample material
 	float4 light	= s_material.Sample( smp_material, float3( dot(L,N), dot(H,N), m ) ).xxxy;		// sample material
-  	return att*light;
+  	return att*light+att*float4(light.www*(Ldynamic_color.xyz*2),light.w)*Ldynamic_color.w/2;
 }
 
 //	TODO: DX10: Remove path without blending

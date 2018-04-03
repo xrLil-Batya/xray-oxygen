@@ -9,6 +9,7 @@ struct 	v2p
 //	Igor: for additional depth dest
 	float4 tctexgen	: TEXCOORD1;
 #endif	//	USE_SOFT_PARTICLES
+    	float   fog:            FOG;		// fog
 };
 
 
@@ -25,13 +26,11 @@ half4 	main	( v2p I )	: COLOR
 	half4 _P               = tex2Dproj         (s_position,         I.tctexgen);
 	half spaceDepth = _P.z-I.tctexgen.z-DEPTH_EPSILON;
 	if (spaceDepth < -2*DEPTH_EPSILON ) spaceDepth = 100000.0h; //  Skybox doesn't draw into position buffer
-	//result.a *= saturate(spaceDepth*0.3h);
 	result.a *= Contrast( saturate(spaceDepth*1.3h), 2);
 	result.rgb *= Contrast( saturate(spaceDepth*1.3h), 2);
-//	result = Contrast( saturate(spaceDepth*1.3h), 2);
-//	result = saturate (spaceDepth*5.0);
-//	result.a = 1;
 #endif	//	USE_SOFT_PARTICLES
+
+	result.a	*= I.fog*I.fog; // skyloader: fog fix
 
 	return	result;
 }

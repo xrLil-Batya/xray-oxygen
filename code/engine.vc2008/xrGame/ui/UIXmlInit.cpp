@@ -146,9 +146,22 @@ bool CUIXmlInit::InitOptionsItem(CUIXml& xml_doc, LPCSTR path, int index, CUIOpt
 	else return false;	
 }
 
+bool CUIXmlInit::InitTextureOffset(CUIXml &xml_doc, LPCSTR path, int index, CUIStatic* pWnd)
+{
+	string256 textureOffset;
+	if (0 == xr_strcmp(path, ""))
+		xr_strcpy(textureOffset, "texture_offset");
+	else
+		strconcat(sizeof(textureOffset), textureOffset, path, ":texture_offset");
 
-bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path, 
-									int index, CUIStatic* pWnd)
+	float x = xml_doc.ReadAttribFlt(textureOffset, index, "x");
+	float y = xml_doc.ReadAttribFlt(textureOffset, index, "y");
+
+	pWnd->SetTextureOffset(x, y);
+	return true;
+}
+
+bool CUIXmlInit::InitStatic(CUIXml& xml_doc, LPCSTR path, int index, CUIStatic* pWnd)
 {
 	R_ASSERT4(xml_doc.NavigateToNode(path,index), "XML node not found", path, xml_doc.m_xml_file_name);
 
@@ -889,54 +902,41 @@ bool CUIXmlInit::InitSleepStatic(CUIXml &xml_doc, const char *path, int index, C
 	return true;
 }
 
-bool CUIXmlInit::InitTexture(CUIXml& xml_doc, LPCSTR path, int index, ITextureOwner* pWnd)
+bool CUIXmlInit::InitTexture(CUIXml& xml_doc, const char* path, int index, ITextureOwner* pWnd)
 {
-	string256 buf;
-	LPCSTR texture	= NULL;
-	LPCSTR shader	= NULL;
-	strconcat	(sizeof(buf),buf, path, ":texture");
-	if (xml_doc.NavigateToNode(buf))
+	int nodes_num = xml_doc.GetNodesNum(path, index, "texture");
+	if (nodes_num > 0)
 	{
-		texture		= xml_doc.Read(buf, index, NULL);
-		shader		= xml_doc.ReadAttrib(buf, index, "shader", NULL);
-	}
-	if (texture)
-	{
-		if(shader)
-			pWnd->InitTextureEx(texture, shader);
-		else
-	       pWnd->InitTexture(texture);
-	}
-//--------------------
-	Frect			rect;
-	rect.x1			= xml_doc.ReadAttribFlt(buf, index, "x", 0);
-	rect.y1			= xml_doc.ReadAttribFlt(buf, index, "y", 0);
-	rect.x2			= rect.x1 + xml_doc.ReadAttribFlt(buf, index, "width", 0);	
-	rect.y2			= rect.y1 + xml_doc.ReadAttribFlt(buf, index, "height", 0);
+		XML_NODE* root = xml_doc.GetLocalRoot();
+		xml_doc.SetLocalRoot(xml_doc.NavigateToNode(path, index));
 
+		int ind = Random.randI(nodes_num);
+
+		const char* texture = xml_doc.Read("texture", ind, nullptr);
+		const char* shader = xml_doc.ReadAttrib("texture", ind, "shader", nullptr);
+
+		if (texture) 
+		{
+			if (shader)
+				pWnd->InitTextureEx(texture, shader);
+			else
+				pWnd->InitTexture(texture);
+		}
+
+		Frect rect;
+		rect.x1 = xml_doc.ReadAttribFlt("texture", ind, "x", 0);
+		rect.y1 = xml_doc.ReadAttribFlt("texture", ind, "y", 0);
+		rect.x2 = rect.x1 + xml_doc.ReadAttribFlt("texture", ind, "width", 0);
+		rect.y2 = rect.y1 + xml_doc.ReadAttribFlt("texture", ind, "height", 0);
+		if (rect.width() != 0 && rect.height() != 0) pWnd->SetTextureRect(rect);
+
+		u32 color = GetColor(xml_doc, "texture", ind, 0xff);
+		pWnd->SetTextureColor(color);
+
+		xml_doc.SetLocalRoot(root);
+	}
 	bool stretch_flag = xml_doc.ReadAttribInt(path, index, "stretch") ? true : false;
 	pWnd->SetStretchTexture(stretch_flag);
-
-	u32 color = GetColor(xml_doc, buf, index, 0xff);
-	pWnd->SetTextureColor(color);
-
-	if (rect.width() != 0 && rect.height() != 0)
-		pWnd->SetTextureRect(rect);
-
-	return true;
-}
-
-bool CUIXmlInit::InitTextureOffset(CUIXml &xml_doc, LPCSTR path, int index, CUIStatic* pWnd){
-    string256 textureOffset;
-	if (0 == xr_strcmp(path, ""))
-		xr_strcpy(textureOffset, "texture_offset");
-	else
-		strconcat(sizeof(textureOffset),textureOffset, path, ":texture_offset");
-
-	float x = xml_doc.ReadAttribFlt(textureOffset, index, "x");
-	float y = xml_doc.ReadAttribFlt(textureOffset, index, "y");
-
-	pWnd->SetTextureOffset(x, y);
 
 	return true;
 }
