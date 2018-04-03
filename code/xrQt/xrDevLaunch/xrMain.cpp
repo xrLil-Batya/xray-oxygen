@@ -27,10 +27,8 @@ xrLaunch::xrLaunch(QWidget *parent) :
     ui(new Ui::xrLaunch) {	// Init new UI   
 	ui->setupUi(this);		// setup it
 	// Checking for instructions
-	//#VERTVER: Use minCPUID cuz initialization xrCore CPUID isn't safely
-	if (!CPUID::SSE2())
-		statusBar()->showMessage(tr("Error! Your CPU doesn't support SSE2 instructions. Launcher can't start xrEngine."));
-	else if (!CPUID::SSE3())
+	//#VERTVER: SSE2 can't check: compiler already compile it at SSE2
+	if (!CPUID::SSE3())
 		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."), 12000);
 	else if (!CPUID::SSE41()) 
 		statusBar()->showMessage(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"), 6000);
