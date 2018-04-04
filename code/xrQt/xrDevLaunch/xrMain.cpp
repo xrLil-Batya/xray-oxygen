@@ -25,6 +25,9 @@ init UI
 xrLaunch::xrLaunch(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::xrLaunch) {	// Init new UI   
+#ifndef NOXRCORE_LOAD
+	init_xrCore();
+#endif
 	ui->setupUi(this);		// setup it
 	// Checking for instructions
 	//#VERTVER: SSE2 can't check: compiler already compile it at SSE2
