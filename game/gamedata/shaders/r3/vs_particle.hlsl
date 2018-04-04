@@ -5,7 +5,6 @@ struct vv
 	float4 P	: POSITION;
 	float2 tc	: TEXCOORD0;
 	float4 c	: COLOR0;
-	float  fog	: FOG;	// Fog
 };
 
 struct v2p
@@ -17,7 +16,7 @@ struct v2p
 #ifdef	USE_SOFT_PARTICLES
 	float4 tctexgen	: TEXCOORD1;
 #endif	//	USE_SOFT_PARTICLES
-
+	float  fog	: FOG;	// Fog
 	float4 hpos	: SV_Position;
 };
 
