@@ -1464,7 +1464,7 @@ void CWeapon::OnZoomIn()
 	else
 		m_zoom_params.m_fCurrentZoomFactor	= CurrentZoomFactor();
 
-	//EnableHudInertion(FALSE);
+	EnableHudInertion(FALSE);
 
 	
 	if(m_zoom_params.m_bZoomDofEnabled && !IsScopeAttached())
