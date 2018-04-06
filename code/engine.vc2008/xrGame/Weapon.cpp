@@ -614,7 +614,9 @@ void CWeapon::net_Destroy	()
 	StopLight			();
 	Light_Destroy		();
 
-	while (m_magazine.size()) m_magazine.pop_back();
+	// Charsi82: 29 Oct 2015
+	m_magazine.clear();
+	m_magazine.shrink_to_fit();
 }
 
 BOOL CWeapon::IsUpdating()
@@ -1478,7 +1480,7 @@ void CWeapon::OnZoomIn()
 	else
 		m_zoom_params.m_fCurrentZoomFactor	= CurrentZoomFactor();
 
-	//EnableHudInertion(FALSE);
+	EnableHudInertion(FALSE);
 
 	
 	if(m_zoom_params.m_bZoomDofEnabled && !IsScopeAttached())

@@ -16,7 +16,7 @@ void	XRCORE_API		LogXrayOffset(const char* key, LPVOID base, LPVOID pval); //lua
 typedef void	( * LogCallback)	(const char* string);
 LogCallback	XRCORE_API			SetLogCB	(LogCallback cb);
 void 	XRCORE_API				CreateLog	(BOOL no_log=FALSE);
-void 							InitLog		();
+void 	XRCORE_API				InitLog		();
 void 							CloseLog	();
 void	XRCORE_API				FlushLog	();
 

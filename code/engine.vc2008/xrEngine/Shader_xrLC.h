@@ -1,7 +1,8 @@
+// Shader_xrLC.h - Header for xrLC Shader
+//#VERTVER: IntelliSense at this header was broken :(
 #ifndef SHADER_XRLC_H
 #define SHADER_XRLC_H
 #pragma once
-
 struct Shader_xrLC
 {
 public:
@@ -120,4 +121,3 @@ public:
 	}
 	Shader_xrLCVec&			Library	(){return library;}
 };
-#endif

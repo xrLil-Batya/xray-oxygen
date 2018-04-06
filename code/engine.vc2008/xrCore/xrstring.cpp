@@ -3,7 +3,7 @@
 
 #include "xrstring.h"
 
-XRCORE_API	extern		str_container*	g_pStringContainer = nullptr;
+XRCORE_API extern str_container* g_pStringContainer = new str_container();
 
 struct str_container_impl
 {
@@ -17,7 +17,7 @@ struct str_container_impl
 		std::memset(buffer, 0, sizeof(buffer));
 	}
 
-	str_value*       find(str_value* value, const char* str)
+	str_value* find(str_value* value, const char* str)
 	{
 		str_value* candidate = buffer[value->dwCRC % buffer_size];
 		while (candidate)
@@ -131,7 +131,7 @@ str_container::str_container()
 	impl = new str_container_impl();
 }
 
-str_value*	str_container::dock(str_c value)
+str_value* str_container::dock(str_c value)
 {
 	if (!value) return 0;
 
@@ -187,19 +187,19 @@ str_value*	str_container::dock(str_c value)
 	return	result;
 }
 
-void		str_container::clean()
+void str_container::clean()
 {
 	std::lock_guard<decltype(cs)> lock(cs);
 	impl->clean();
 }
 
-void		str_container::verify()
+void str_container::verify()
 {
 	std::lock_guard<decltype(cs)> lock(cs);
 	impl->verify();
 }
 
-void		str_container::dump()
+void str_container::dump()
 {
 	std::lock_guard<decltype(cs)> lock(cs);
 	FILE* F = fopen("d:\\$str_dump$.txt", "w");
@@ -207,13 +207,13 @@ void		str_container::dump()
 	fclose(F);
 }
 
-void		str_container::dump(IWriter* W)
+void str_container::dump(IWriter* W)
 {
 	std::lock_guard<decltype(cs)> lock(cs);
 	impl->dump(W);
 }
 
-u32			str_container::stat_economy()
+u32 str_container::stat_economy()
 {
 	std::lock_guard<decltype(cs)> lock(cs);
 	int				counter = 0;

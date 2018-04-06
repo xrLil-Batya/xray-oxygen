@@ -23,16 +23,16 @@ void compute_build_id();
 #include "DateTime.hpp"
 void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init_fs, const char* fs_fname)
 {
-	PluginMode = false;
 	std::set_terminate(abort);
 	if (!init_counter)
 	{
+		PluginMode = false;
 		xr_strcpy(ApplicationName, _ApplicationName);
 		// Init COM so we can use CoCreateInstance
         ZeroMemory(Params, sizeof(Params));
         xr_strcpy(Params, GetCommandLine());
-		_strlwr_s			(Params,sizeof(Params));
-		string_path		fn, dr, di;
+		_strlwr_s(Params,sizeof(Params));
+		string_path fn, dr, di;
 
 		// application path
 		GetModuleFileName(GetModuleHandle("xrCore"), fn, sizeof(fn));
@@ -84,18 +84,21 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
 		FS._initialize(flags, 0, fs_fname);
+
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
+
 		EFS._initialize();
 	}
 	SetLogCB(cb);
 	init_counter++;
 }
 
-void xrCore::_destroy		()
+void xrCore::_destroy()
 {
 	--init_counter;
-	if (!init_counter){
+	if (!init_counter)
+	{
 		FS._destroy			();
 		EFS._destroy		();
 		xr_delete			(xr_FS);
@@ -105,7 +108,6 @@ void xrCore::_destroy		()
 	}
 }
 
-//. why ??? 
 BOOL WINAPI DllMain(HINSTANCE hinstDLL, DWORD ul_reason_for_call, LPVOID lpvReserved)
 {
 	switch (ul_reason_for_call)

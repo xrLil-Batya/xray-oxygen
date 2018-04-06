@@ -5,9 +5,9 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "..\..\..\editors\ECore\Editor\EditObject.h"
-#include "..\..\..\editors\ECore\Editor\EditMesh.h"
-#include "Bone.h"
+#include "xrECoreLite\EditObject.h"
+#include "xrECoreLite\EditMesh.h"
+#include "xrECoreLite\Bone.h"
 #include "Exporter.h"
 #include "..\..\Shared\GameMaterial.h"
 
@@ -19,8 +19,8 @@ BOOL CEditableObject::ExtractTexName(Texmap *src, LPSTR dest)
 	if( src->ClassID() != Class_ID(BMTEX_CLASS_ID,0) )
 		return FALSE;
 	BitmapTex *bmap = (BitmapTex*)src;
-	_splitpath( bmap->GetMapName(), 0, 0, dest, 0 );
-	EFS.AppendFolderToName(dest,1,TRUE);
+	_splitpath((const char*)bmap->GetMapName(), 0, 0, dest, 0);
+	EFS.AppendFolderToName(dest, sizeof(dest), 1,TRUE);
 	return TRUE;
 }
 
@@ -51,7 +51,7 @@ BOOL CEditableObject::ParseStdMaterial(StdMat* src, CSurface* dest)
 	}
 	dest->m_Flags.set(CSurface::sf2Sided,!!src->GetTwoSided());
 	if (src->GetTwoSided()) ELog.Msg(mtInformation,"  - material 2-sided");
-	dest->SetName(GenerateSurfaceName(src->GetName()));
+	dest->SetName(GenerateSurfaceName((const char*)src->GetName().data()));
 	dest->SetFVF(D3DFVF_XYZ|D3DFVF_NORMAL|(1<<D3DFVF_TEXCOUNT_SHIFT));
 	dest->SetVMap("Texture");
 	dest->SetShader("default");
@@ -113,8 +113,11 @@ BOOL CEditableObject::ParseXRayMaterial(XRayMtl* src, u32 mid, CSurface* dest)
 CSurface* CEditableObject::CreateSurface(Mtl* mtl, u32 mid)
 {
 	if (!mtl){ ELog.Msg(mtError,"Empty material..."); return 0;	}
-	for (SurfaceIt s_it=m_Surfaces.begin(); s_it!=m_Surfaces.end(); s_it++)
-		if (((*s_it)->mid==mid)&&((*s_it)->mtl==mtl)) return *s_it;
+	for (CSurface* &s_it : m_Surfaces)
+	{
+		if ((s_it->mid == mid) && (s_it->mtl == mtl)) 
+			return s_it;
+	}
 	CSurface* S		= xr_new<CSurface>();
 	S->mid			= mid;
 	S->mtl			= mtl;
@@ -148,7 +151,7 @@ bool CEditableObject::ImportMAXSkeleton(CExporter* E)
 	// BONES
 	m_Bones.reserve(E->m_Bones.size());
 	for (int B=0; B!=E->m_Bones.size(); B++){
-		m_Bones.push_back(xr_new<CBone>());
+		m_Bones.push_back(new CBone());
 		CBone* BONE				= m_Bones.back(); 
 		CBoneDef* bone			= E->m_Bones[B];
 		CBoneDef* parent_bone	= bone->parent;
@@ -165,7 +168,7 @@ bool CEditableObject::ImportMAXSkeleton(CExporter* E)
 
 		BONE->SetWMap		(bone->name.c_str());
 		BONE->SetName		(bone->name.c_str());
-		BONE->SetParentName	(Helper::ConvertSpace(string(bone->pBone->GetParentNode()->GetName())).c_str());
+		BONE->SetParentName	(Helper::ConvertSpace(string((const char*)bone->pBone->GetParentNode()->GetName())).c_str());
 		BONE->SetRestParams	(length,offset,rotate);
 	}
 

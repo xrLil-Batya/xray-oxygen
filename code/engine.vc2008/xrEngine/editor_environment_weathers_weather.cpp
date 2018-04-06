@@ -103,16 +103,15 @@ LPCSTR weather::id_getter	() const
 	return				(m_id.c_str());
 }
 
-void weather::id_setter		(LPCSTR value_)
+void weather::id_setter(LPCSTR value_)
 {
-	shared_str			value = value_;
-	if (m_id._get() == value._get())
+	if (m_id.equal(value_))
 		return;
 
-	m_id				= m_manager.weathers().unique_id(value);
+	m_id = m_manager.weathers().unique_id(value_);
 }
 
-void weather::fill			(editor::property_holder_collection* collection)
+void weather::fill(editor::property_holder_collection* collection)
 {
 	VERIFY				(!m_property_holder);
 	m_property_holder	= ::ide().create_property_holder(m_id.c_str(), collection, this);
@@ -193,19 +192,20 @@ shared_str weather::unique_id			(shared_str const& current, shared_str const& id
 	return				(generate_unique_id(id));
 }
 
-bool weather::try_hours					(u32& hours, u32& minutes, u32& seconds, shared_str& result) const
+bool weather::try_hours(u32& hours, u32& minutes, u32& seconds, shared_str& result) const
 {
-	for (u32 i=hours + 1; i<24; ++i) {
-		string16		temp;
-		xr_sprintf		(temp, "%02d:%02d:%02d", i, minutes, seconds);
+	for (u32 i = hours + 1; i < 24; ++i)
+	{
+		string16 temp;
+		xr_sprintf(temp, "%02d:%02d:%02d", i, minutes, seconds);
 		if (!m_collection->unique_id(temp))
 			continue;
 
-		result			= temp;
-		return			(true);
+		result = temp;
+		return (true);
 	}
 
-	return				(false);
+	return (false);
 }
 
 bool weather::try_minutes				(u32& hours, u32& minutes, u32& seconds, shared_str& result) const

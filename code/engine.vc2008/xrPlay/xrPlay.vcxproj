@@ -62,9 +62,9 @@
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
       <AdditionalOptions Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">/Zc:twoPhase- %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../../../sdk/include/dx;</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../../sdk/include/dx;</AdditionalIncludeDirectories>
-      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">../../../sdk/include/dx;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_XRLAUNCHER;_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">_XRLAUNCHER;_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -72,7 +72,9 @@
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ExceptionHandling>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</BufferSecurityCheck>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</BufferSecurityCheck>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NoExtensions</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</LinkTimeCodeGeneration>
@@ -84,15 +86,16 @@
   <ItemGroup>
     <ClCompile Include="AssemblyInfo.cpp" />
     <ClCompile Include="entry_point.cpp" />
-    <ClCompile Include="minimal_CPUID.cpp" />
+    <ClCompile Include="IParser.cpp" />
     <ClCompile Include="RendererList.cpp" />
+    <ClCompile Include="xrLauncherWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="splash_xrcs_en.bmp" />
     <Image Include="stalker_cs.ico" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="minimal_CPUID.h" />
+    <ClInclude Include="IParserSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="xrLauncherWnd.h">
       <FileType>CppForm</FileType>

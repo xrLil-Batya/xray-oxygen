@@ -37,7 +37,6 @@
     <ClInclude Include="ShaderFunction.h" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="GameType.resx" />
     <EmbeddedResource Include="NumericVector.resx" />
     <EmbeddedResource Include="ShaderFunction.resx" />
   </ItemGroup>

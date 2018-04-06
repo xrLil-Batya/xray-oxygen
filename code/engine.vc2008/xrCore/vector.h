@@ -1,3 +1,5 @@
+// vector.h - векторы и их вычисление
+// P.S. Коменты на нашем потому что в ранних ТЧ был именно русский
 #pragma once
 
 // Undef some macros
@@ -22,76 +24,92 @@
 #define M_BORLAND
 #endif
 
-// Constants
+//////////////////////////////////////////////
+//#VERTVER: Т.к. Visual C++ Compiler не умеет вычислять геометрические,
+// в ПЫС тупо сделали эти все числа константными.
+//////////////////////////////////////////////
+// Константы
 #ifdef M_VISUAL
-const	float		EPS_S		= 0.0000001f;
-const	float		EPS			= 0.0000100f;
-const	float		EPS_L		= 0.0010000f;
-
+//////////////////////////////////////////////
+const	float		EPS_S		= 0.0000001f;			// одна десяти миллионная 
+const	float		EPS			= 0.0000100f;			// одна десяти тысячная
+const	float		EPS_L		= 0.0010000f;			// одна тысячная
+//////////////////////////////////////////////
 #undef M_SQRT1_2
-const	float		M_SQRT1_2	= 0.7071067811865475244008443621048f;//490;
-
-const	float		M_PI		= 3.1415926535897932384626433832795f;
-const	float		PI			= 3.1415926535897932384626433832795f;
-const	float		PI_MUL_2	= 6.2831853071795864769252867665590f;
-const	float		PI_MUL_3	= 9.4247779607693797153879301498385f;
-const	float		PI_MUL_4	= 12.566370614359172953850573533118f;
-const	float		PI_MUL_6	= 18.849555921538759430775860299677f;
-const	float		PI_MUL_8	= 25.132741228718345907701147066236f;
-const	float		PI_DIV_2	= 1.5707963267948966192313216916398f;
-const	float		PI_DIV_3	= 1.0471975511965977461542144610932f;
-const	float		PI_DIV_4	= 0.7853981633974483096156608458199f;
-const	float		PI_DIV_6	= 0.5235987755982988730771072305466f;
-const	float		PI_DIV_8	= 0.3926990816987241548078304229099f;
+//////////////////////////////////////////////
+const	float		M_SQRT1_2	= 0.7071067811865475244008443621048f;	// Одна вторая корня из двух
+//////////////////////////////////////////////
+const	float		M_PI		= 3.1415926535897932384626433832795f;	// Дополнительное число Пи
+const	float		PI			= 3.1415926535897932384626433832795f;	// Число Пи
+const	float		PI_MUL_2	= 6.2831853071795864769252867665590f;	// Два числа Пи
+const	float		PI_MUL_3	= 9.4247779607693797153879301498385f;	// Три числа Пи
+const	float		PI_MUL_4	= 12.566370614359172953850573533118f;	// Четыре числа Пи
+const	float		PI_MUL_6	= 18.849555921538759430775860299677f;	// Шесть числа Пи
+const	float		PI_MUL_8	= 25.132741228718345907701147066236f;	// Восемь числа Пи
+const	float		PI_DIV_2	= 1.5707963267948966192313216916398f;	// Одна вторая числа Пи
+const	float		PI_DIV_3	= 1.0471975511965977461542144610932f;	// Одна третяя числа Пи
+const	float		PI_DIV_4	= 0.7853981633974483096156608458199f;	// Одна четвёртая числа Пи
+const	float		PI_DIV_6	= 0.5235987755982988730771072305466f;	// Одна шестая числа Пи
+const	float		PI_DIV_8	= 0.3926990816987241548078304229099f;	// Одна восьмая числа Пи
+//////////////////////////////////////////////
 #endif
 
-// Define types and namespaces (CPU & FPU)
-#include	"_types.h"
-#include	"_math.h"
-#include	"_bitwise.h"
-#include	"_std_extensions.h"
+//////////////////////////////////////////////
+// Дефайны типов и пространств имён (CPU & FPU)
+#include "_types.h"
+#include "_math.h"
+#include "_bitwise.h"
+#include "_std_extensions.h"
+//////////////////////////////////////////////
 
-// comparisions
+// Сравниваемые
 IC BOOL  fsimilar		( float		a, float	b, float	cmp=EPS )		{ return _abs(a-b)<cmp;	}
 IC BOOL  dsimilar		( double	a, double	b, double	cmp=EPS )		{ return _abs(a-b)<cmp;		}
 
 IC BOOL  fis_zero		( float		val, float	cmp=EPS_S )					{ return _abs(val)<cmp;	}
 IC BOOL  dis_zero		( double	val, double	cmp=EPS_S )					{ return _abs(val)<cmp;		}
 
-// degree 2 radians and vice-versa
-namespace implement{
+// Возводим две радианы в градусы и обратно
+//////////////////////////////////////////////
+namespace implement
+{
 	template <class T>	ICF T	deg2rad		( T val )						{ return (val*T(M_PI)/T(180));	};
 	template <class T>	ICF T	rad2deg		( T val )						{ return (val*T(180)/T(M_PI));	};
 };
+//////////////////////////////////////////////
 ICF float	deg2rad 	(float val)											{return implement::deg2rad(val);}
 ICF double	deg2rad 	(double val)										{return implement::deg2rad(val);}
 ICF float	rad2deg 	(float val)											{return implement::rad2deg(val);}
 ICF double	rad2deg 	(double val)										{return implement::rad2deg(val);}
-
-// clamping/snapping
+//////////////////////////////////////////////
+// Клэмпим
 template <class T>
 IC void clamp	( T& val, const T& _low, const T& _high ){
 	if( val<_low ) val = _low; else if( val>_high ) val = _high;
 };
+//////////////////////////////////////////////
 template <class T>
 IC T	clampr	( const T& val, const T& _low, const T& _high ){
 	if		( val<_low	)	return _low; 
 	else if	( val>_high )	return _high;
 	else					return val;
 };
+//////////////////////////////////////////////
 IC float snapto	( float value, float snap )	{
 	if( snap<=0.f ) return value;
 	return float(iFloor((value+(snap*0.5f)) / snap )) * snap;
 };
+//////////////////////////////////////////////
 
-// pre-definitions
+//////////////////////////////////////////////
+// Пре-определения
 template <class T> struct _quaternion;
-
+//////////////////////////////////////////////
 #pragma pack(push)
 #pragma pack(1)
-
+//////////////////////////////////////////////
 #include "_random.h"
-
+//////////////////////////////////////////////
 #include "_color.h"
 #include "_vector3d.h"
 #include "_vector2.h"
@@ -113,10 +131,12 @@ template <class T> struct _quaternion;
 #ifdef	DEBUG
 #include "dump_string.h"
 #endif
+//////////////////////////////////////////////
 #pragma pack(pop)
+//////////////////////////////////////////////
 
 
-// normalize angle (0..2PI)
+// Нормализация угла от 0 до 2Пи
 ICF float		angle_normalize_always	(float a)
 {
 	float		div	 =	a/PI_MUL_2;
@@ -126,14 +146,14 @@ ICF float		angle_normalize_always	(float a)
 	return		frac *	PI_MUL_2;
 }
 
-// normalize angle (0..2PI)
+// Нормализация угла от 0 до 2Пи
 ICF float		angle_normalize	(float a)
 {
 	if (a>=0 && a<=PI_MUL_2)	return	a;
 	else						return	angle_normalize_always(a);
 }
 
-// -PI .. +PI
+// от -Пи до +Пи
 ICF float		angle_normalize_signed(float a)
 {
 	if (a>=(-PI) && a<=PI)		return		a;
@@ -142,7 +162,7 @@ ICF float		angle_normalize_signed(float a)
 	return angle;
 }
 
-// -PI..PI
+// от -Пи до Пи
 ICF float		angle_difference_signed(float a, float b)
 {
 	float diff	= angle_normalize_signed(a) - angle_normalize_signed(b);
@@ -156,7 +176,7 @@ ICF float		angle_difference_signed(float a, float b)
 	return diff;
 }
 
-// 0..PI
+// от нуля до Пи
 ICF float		angle_difference(float a, float b)
 {
 	return _abs	(angle_difference_signed(a,b));
@@ -178,7 +198,7 @@ IC bool			is_between		( float const value, float const left, float const right )
 	return		are_ordered( left, value, right );
 }
 
-// c=current, t=target, s=speed, dt=dt
+// c - текущий, t - цель, s - скорость, dt - dt
 IC bool			angle_lerp		(float& c, float t, float s, float dt)
 {
 	float const before = c;
@@ -210,7 +230,7 @@ IC bool			angle_lerp		(float& c, float t, float s, float dt)
 	return false;
 }
 
-// Just lerp :)	expects normalized angles in range [0..2PI)
+// Тупо lerp :)	ожидает нормализованные углы в радиусе от 0 до 2Пи
 ICF float		angle_lerp		(float A, float B, float f)
 {
 	float diff		= B - A;
@@ -303,7 +323,7 @@ IC _quaternion<T>& _quaternion<T>::set(const _matrix<T>& M)
 				biggest = E;
 		}
 
-		// in the unusual case the original trace fails to produce a good sqrt, try others...
+		// В необычном кейсе оригиналный след фейлит на построение правильного квадратного корня
 		switch (biggest){
 		case A:
 			s = float(std::sqrt( M._11 - (M._22 + M._33) + 1.0));

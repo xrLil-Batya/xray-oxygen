@@ -18,16 +18,19 @@ size_t cached_log = 0;
 xr_vector<shared_str>*		LogFile			= NULL;
 static LogCallback			LogCB			= 0;
 
-void FlushLog			()
+void FlushLog()
 {
 	try
 	{
-		if (!no_log) {
+		if (!no_log) 
+		{
 			std::lock_guard<decltype(logCS)> lock(logCS);
 			IWriter *f = FS.w_open(log_file_name);
-			if (f) {
-				for (u32 it = 0; it < LogFile->size(); it++) {
-					const char*		s = *((*LogFile)[it]);
+			if (f)
+			{
+				for (u32 it = 0; it < LogFile->size(); it++) 
+				{
+					const char* s = *((*LogFile)[it]);
 					f->w_string(s ? s : "");
 				}
 				FS.w_close(f);
@@ -40,7 +43,6 @@ void FlushLog			()
 	}
 }
 
-extern bool shared_str_initialized;
 void AddOne(const char *split)
 {
 	if (!LogFile)
@@ -48,17 +50,11 @@ void AddOne(const char *split)
 
 	std::lock_guard<decltype(logCS)> lock(logCS);
 
-#ifdef DEBUG
 	OutputDebugString(split);
 	OutputDebugString("\n");
-#endif
 
-	//	DUMP_PHASE;
-	if (shared_str_initialized)
-	{
-		shared_str temp = shared_str(split);
-		LogFile->push_back(temp);
-	}
+	shared_str temp = shared_str(split);
+	LogFile->push_back(temp);
 #ifdef	LOG_TIME_PRECISE 
 	if (LogWriter)
 	{
@@ -99,31 +95,31 @@ void AddOne(const char *split)
 	FlushLog();
 }
 
-void Log				(const char *s) 
+void Log(const char *s) 
 {
-	int		i,j;
+	int i,j;
 
-	u32			length = xr_strlen( s );
-#ifndef _EDITOR    
-	PSTR split  = (PSTR)_alloca( (length + 1) * sizeof(char) );
-#else
-	PSTR split  = (PSTR)alloca( (length + 1) * sizeof(char) );
-#endif
-	for (i=0,j=0; s[i]!=0; i++) {
-		if (s[i]=='\n') {
-			split[j]=0;	// end of line
-			if (split[0]==0) { split[0]=' '; split[1]=0; }
+	u32 length = xr_strlen( s );
+	PSTR split = (PSTR)_alloca((length + 1) * sizeof(char));
+
+	for (i = 0, j = 0; s[i] != 0; i++) 
+	{
+		if (s[i] == '\n') {
+			split[j] = 0;	// end of line
+			if (split[0] == 0) { split[0] = ' '; split[1] = 0; }
 			AddOne(split);
-			j=0;
-		} else {
-			split[j++]=s[i];
+			j = 0;
+		}
+		else 
+		{
+			split[j++] = s[i];
 		}
 	}
 	split[j]=0;
 	AddOne(split);
 }
 
-void __cdecl Msg		( const char *format, ...)
+void __cdecl Msg(const char *format, ...)
 {
 	va_list		mark;
 	string2048	buf;
@@ -232,7 +228,7 @@ void InitLog()
 void CreateLog(BOOL nl)
 {
 
-    no_log				= !!nl;
+    no_log = !!nl;
 	strconcat(sizeof(log_file_name),	 log_file_name,	"[", Core.UserDate, Core.UserTime, "]", ".log");
 	strconcat(sizeof(lua_log_file_name), lua_log_file_name, Core.ApplicationName, "_", Core.UserName, "_lua.log");
 
@@ -241,9 +237,11 @@ void CreateLog(BOOL nl)
 		FS.update_path(log_file_name, "$logs$", log_file_name);
 		FS.update_path(lua_log_file_name, "$logs$", lua_log_file_name);
 	}
-	if (!no_log){
-        IWriter *f		= FS.w_open	(log_file_name);
-        if (!f){
+	if (!no_log)
+	{
+        IWriter *f = FS.w_open	(log_file_name);
+        if (!f)
+		{
         	MessageBox	(nullptr,"Can't create log file.","Error",MB_ICONERROR);
         	abort();
         }

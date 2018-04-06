@@ -114,8 +114,9 @@ CExporter::~CExporter()
 	for (BoneDefIt b_it=m_Bones.begin(); b_it!=m_Bones.end(); b_it++){
 		xr_delete(*b_it);
 	}
-	for (VertexDefIt v_it=m_Vertices.begin(); v_it!=m_Vertices.end(); v_it++){
-		xr_delete(*v_it);
+	for (auto v_it: m_Vertices)
+	{
+		xr_delete(v_it);
 	}
 	for (ExpVertIt ev_it=m_ExpVertices.begin(); ev_it!=m_ExpVertices.end(); ev_it++){
 		xr_delete(*ev_it);
@@ -272,12 +273,12 @@ BOOL CExporter::Capture()
 			case RIGID_TYPE:{			
 				INode* node				= pRigidVertex->GetNode(); 
 				R_ASSERT				(node);
-				LPCSTR nm				= node->GetName();
+				LPCSTR nm				= (const char*)node->GetName();
 				// get bone and create vertex
 				CVertexDef* pVertex		= AddVertex();
 				int boneId				= AddBone(node,matMesh,pExport);
 				if(BONE_NONE==boneId){
-					ERR					("Invalid bone: ",node->GetName());
+					ERR					("Invalid bone: ", (const char*)node->GetName());
 					bRes				= FALSE;
 				}else pVertex->Append	(boneId,1.f);
 							}break;
@@ -288,11 +289,11 @@ BOOL CExporter::Capture()
 				for (int i=0; i<cnt; i++){
 					INode* node			= pBlendedRigidVertex->GetNode(i); 
 					R_ASSERT			(node);
-					LPCSTR nm			= node->GetName();
+					LPCSTR nm			= (const char*)node->GetName();
 					// get bone and create vertex
 					int boneId			= AddBone(node,matMesh,pExport);
 					if(BONE_NONE==boneId){
-						ERR				("Invalid bone: ",node->GetName());
+						ERR				("Invalid bone: ", (const char*)node->GetName());
 						bRes			= FALSE;
 					}else pVertex->Append(boneId,pBlendedRigidVertex->GetWeight(i));
 				}

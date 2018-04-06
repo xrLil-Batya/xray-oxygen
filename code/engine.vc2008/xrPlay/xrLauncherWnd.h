@@ -1,8 +1,12 @@
+////////////////////////////////////////
 #pragma once
+////////////////////////////////////////
 #include <msclr\marshal.h>  
-#include "minimal_CPUID.h"
-namespace xrPlay {
+#include "IParserSystem.h"
+////////////////////////////////////////
 
+namespace xrPlay 
+{
 	using namespace System;
 	using namespace System::ComponentModel;
 	using namespace System::Collections;
@@ -10,8 +14,13 @@ namespace xrPlay {
 	using namespace System::Data;
 	using namespace System::Drawing;
 
-	unsigned int type_ptr;
-	char const* params_list;
+	struct returned_values
+	{
+		unsigned int type_ptr;
+		char const* params_list;
+	};
+
+	extern returned_values ret_values;
 	/// <summary>
 	/// Сводка для xrLauncherWnd
 	/// </summary>
@@ -37,16 +46,17 @@ namespace xrPlay {
 	private: System::Windows::Forms::Button^  button1;
 
 
-	private: System::Windows::Forms::MaskedTextBox^  textBox1;
-	private: System::Windows::Forms::Label^  BtnClose;
-	private: System::Windows::Forms::Label^  label1;
+	private: System::Windows::Forms::MaskedTextBox^ textBox1;
+	private: System::Windows::Forms::Label^ BtnClose;
+	private: System::Windows::Forms::Label^ label1;
 
-	private: System::Windows::Forms::RadioButton^  radioButton2;
-	private: System::Windows::Forms::RadioButton^  radioButton3;
-	private: System::Windows::Forms::RadioButton^  radioButton4;
-	private: System::Windows::Forms::RadioButton^  radioButton5;
-	private: System::Windows::Forms::Label^  label2;
-	protected:
+	private: System::Windows::Forms::RadioButton^ radioButton2;
+	private: System::Windows::Forms::RadioButton^ radioButton3;
+	private: System::Windows::Forms::RadioButton^ radioButton4;
+	private: System::Windows::Forms::RadioButton^ radioButton5;
+	private: System::Windows::Forms::Label^ label2;
+	protected: 
+		config* launch;
 
 	private:
 		/// <summary>
@@ -124,13 +134,11 @@ namespace xrPlay {
 			this->radioButton2->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Top | System::Windows::Forms::AnchorStyles::Right));
 			this->radioButton2->AutoSize = true;
 			this->radioButton2->BackColor = System::Drawing::Color::Transparent;
-			this->radioButton2->Checked = true;
 			this->radioButton2->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton2->Location = System::Drawing::Point(300, 25);
+			this->radioButton2->Location = System::Drawing::Point(347, 25);
 			this->radioButton2->Name = L"radioButton2";
-			this->radioButton2->Size = System::Drawing::Size(194, 17);
+			this->radioButton2->Size = System::Drawing::Size(147, 17);
 			this->radioButton2->TabIndex = 7;
-			this->radioButton2->TabStop = true;
 			this->radioButton2->Text = L"Dynamic Light (D3D9)      ";
 			this->radioButton2->UseVisualStyleBackColor = false;
 			// 
@@ -140,9 +148,9 @@ namespace xrPlay {
 			this->radioButton3->AutoSize = true;
 			this->radioButton3->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton3->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton3->Location = System::Drawing::Point(300, 48);
+			this->radioButton3->Location = System::Drawing::Point(348, 48);
 			this->radioButton3->Name = L"radioButton3";
-			this->radioButton3->Size = System::Drawing::Size(202, 17);
+			this->radioButton3->Size = System::Drawing::Size(154, 17);
 			this->radioButton3->TabIndex = 8;
 			this->radioButton3->Text = L"Full Dynamic Light (D3D9)  ";
 			this->radioButton3->UseVisualStyleBackColor = false;
@@ -153,9 +161,9 @@ namespace xrPlay {
 			this->radioButton4->AutoSize = true;
 			this->radioButton4->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton4->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton4->Location = System::Drawing::Point(300, 71);
+			this->radioButton4->Location = System::Drawing::Point(348, 71);
 			this->radioButton4->Name = L"radioButton4";
-			this->radioButton4->Size = System::Drawing::Size(202, 17);
+			this->radioButton4->Size = System::Drawing::Size(154, 17);
 			this->radioButton4->TabIndex = 9;
 			this->radioButton4->Text = L"Full Dynamic Light (D3D10)";
 			this->radioButton4->UseVisualStyleBackColor = false;
@@ -166,9 +174,9 @@ namespace xrPlay {
 			this->radioButton5->AutoSize = true;
 			this->radioButton5->BackColor = System::Drawing::Color::Transparent;
 			this->radioButton5->ForeColor = System::Drawing::SystemColors::ButtonFace;
-			this->radioButton5->Location = System::Drawing::Point(300, 94);
+			this->radioButton5->Location = System::Drawing::Point(348, 94);
 			this->radioButton5->Name = L"radioButton5";
-			this->radioButton5->Size = System::Drawing::Size(202, 17);
+			this->radioButton5->Size = System::Drawing::Size(154, 17);
 			this->radioButton5->TabIndex = 10;
 			this->radioButton5->Text = L"Full Dynamic Light (D3D11)";
 			this->radioButton5->UseVisualStyleBackColor = false;
@@ -178,21 +186,8 @@ namespace xrPlay {
 			this->label2->AutoSize = true;
 			this->label2->Location = System::Drawing::Point(3, 170);
 			this->label2->Name = L"label2";
-			this->label2->Size = System::Drawing::Size(35, 13);
+			this->label2->Size = System::Drawing::Size(0, 13);
 			this->label2->TabIndex = 11;
-
-			// Checking for a AVX instructions
-			if (!CPUID::AVX()) {
-				// If they aren't presented
-				this->label2->Text = L"AVX instructions aren't found. That may be affect on stability.";
-				this->label2->ForeColor = System::Drawing::Color::YellowGreen;
-				// If AES Instructios aren't presented too
-				if (!CPUID::SSE41()) {
-					this->label2->Text = L"SSE4.1 and AVX instructions aren't found. That may be affect on stability.";
-					this->label2->ForeColor = System::Drawing::Color::Red;
-				}
-			}
-
 			// 
 			// xrLauncherWnd
 			// 
@@ -215,7 +210,7 @@ namespace xrPlay {
 			this->Icon = (cli::safe_cast<System::Drawing::Icon^>(resources->GetObject(L"$this.Icon")));
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
-			this->Name = L"xrPlay";
+			this->Name = L"xrLauncherWnd";
 			this->StartPosition = System::Windows::Forms::FormStartPosition::CenterScreen;
 			this->Load += gcnew System::EventHandler(this, &xrLauncherWnd::xrLauncherWnd_Load);
 			this->ResumeLayout(false);
@@ -223,30 +218,18 @@ namespace xrPlay {
 
 		}
 #pragma endregion
+	// Forms
+	private: System::Void button1_Click		(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void button3_Click		(System::Object^ sender, System::EventArgs^ e) {}
+	private: System::Void xrLauncherWnd_Load(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void BtnClose_Click	(System::Object^ sender, System::EventArgs^ e);
+	private: System::Void label1_Click		(System::Object^ sender, System::EventArgs^ e);
+	// Oxy
 
-	private: System::Void button1_Click(System::Object^  sender, System::EventArgs^  e) {
-		type_ptr = 1;
-		msclr::interop::marshal_context marsh;
-
-		System::String^ rendered = "-r2";
-		if (radioButton3->Checked) rendered = "-r2.5";
-		if (radioButton4->Checked) rendered = "-r3";
-		if (radioButton5->Checked) rendered = "-r4";
-
-
-		params_list = marsh.marshal_as<char const*>(textBox1->Text + " " + rendered);
-		this->Close();
-	}
-	private: System::Void button3_Click(System::Object^  sender, System::EventArgs^  e) {
-	}
-	private: System::Void xrLauncherWnd_Load(System::Object^  sender, System::EventArgs^  e) {
-	}
-	private: System::Void BtnClose_Click(System::Object^  sender, System::EventArgs^  e) {
-		type_ptr = 0;
-		this->Close();
-	}
-	private: System::Void label1_Click(System::Object^  sender, System::EventArgs^  e) { 
-		ShowWindow((HWND) this->Handle.ToInt32(), SW_MINIMIZE );
-	}
+	/// <summary>
+	/// Checking for a AVX and SSE4.1 instructions
+	/// </summary>
+	private: void CPUTest();
+	private: void Init();
 };
 }

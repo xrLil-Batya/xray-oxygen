@@ -98,7 +98,7 @@ void manager::save()
 		it->save();
 }
 
-LPCSTR const* manager::weathers_getter	() const
+const char* const* manager::weathers_getter	() const
 {
 	return							(&*weather_ids().begin());
 }
@@ -111,7 +111,7 @@ u32 manager::weathers_size_getter() const
 struct predicate {
 	shared_str		value;
 
-	inline			predicate	(LPCSTR const& value_) :
+	inline			predicate	(const char* const& value_) :
 		value						(value_)
 	{
 	}
@@ -122,7 +122,7 @@ struct predicate {
 	}
 }; // struct predicate
 
-LPCSTR const* manager::frames_getter	(LPCSTR weather_id) const
+const char* const* manager::frames_getter	(const char* weather_id) const
 {
 	delete_data						(m_times_ids);
 
@@ -149,20 +149,11 @@ LPCSTR const* manager::frames_getter	(LPCSTR weather_id) const
 	return							(&*m_times_ids.begin());
 }
 
-u32 manager::frames_size_getter			(LPCSTR weather_id) const
+u32 manager::frames_size_getter(const char* weather_id) const
 {
-	weather_container_type::const_iterator	found =
-		std::find_if(
-			m_weathers.begin(),
-			m_weathers.end(),
-			predicate(weather_id)
-		);
+	weather_container_type::const_iterator found = std::find_if(m_weathers.begin(), m_weathers.end(), predicate(weather_id));
 
-	if (found == m_weathers.end())
-		return						(0);
-
-#pragma todo("Dima to Dima: dangerous scheme: it depends on the call sequence (frames_getter should be called berfore frames_size_getter to get correct results)")
-	return							int(m_times_ids.size());
+	return (found == m_weathers.end()) ? 0 : u32(m_times_ids.size());
 }
 
 void manager::fill					(property_holder_type* holder)

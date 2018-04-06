@@ -1,6 +1,5 @@
 #ifndef skeleton_motion_defs_inluded
 #define skeleton_motion_defs_inluded
-
 #pragma once
 
 const	u32		MAX_PARTS			=	4;

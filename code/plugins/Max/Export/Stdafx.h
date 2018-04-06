@@ -1,17 +1,13 @@
 //----------------------------------------------------
 // file: stdafx.h
 //----------------------------------------------------
-#ifndef __INCDEF_STDAFX_H_
-#define __INCDEF_STDAFX_H_
-
 #pragma once
 
 #define _WIN32_WINNT 0x0500        
 
 #pragma warning (disable:4995)
-#include "Max.h"
-
-#include "../../../xrCore/xrCore.h"
+#include <Max_16/Max.h>
+#include <xrCore/xrCore.h>
 
 #undef _MIN
 #undef _MAX
@@ -38,19 +34,21 @@ using std::string;
 #include <fcntl.h>
 #include <sys\utime.h>
 
-#include "istdplug.h"
-#include "iparamb2.h"
-#include "iparamm2.h"
-#include "stdmat.h"
-#include "UTILAPI.H"
+#define _UNICODE
+#include <Max_16/istdplug.h>
+#include <Max_16/iparamb2.h>
+#include <Max_16/iparamm2.h>
+#include <Max_16/stdmat.h>
+#include "Max_16/UTILAPI.H"
+#undef _UNICODE
 
 // CS SDK
 #ifdef _MAX_EXPORT
-#	include "phyexp.h"
-#	include "bipexp.h"
+#	include "Max_16/cs/phyexp.h"
+#	include "Max_16/cs/bipexp.h"
 #endif
 
-#include <d3d9types.h>
+#include <dx/d3d9types.h>
 
 #define ENGINE_API
 #define ECORE_API
@@ -61,8 +59,8 @@ typedef TMsgDlgBtn TMsgDlgButtons[mbHelp];
 
 #include <string>
 
-#define AnsiString string
-DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
+//#define AnsiString string
+//DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
 
 //#include "clsid.h"
 //#include "Engine.h"
@@ -83,10 +81,4 @@ DEFINE_VECTOR(AnsiString,AStringVec,AStringIt);
 #define _game_data_ "$game_data$"
 
 #pragma warning (default:4995)
-
-#endif /*_INCDEF_STDAFX_H_*/
-
-
-
-
 

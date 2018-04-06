@@ -1,0 +1,8 @@
+$server_root$	= false| false|	.\
+$local_root$	= false| false|	.\
+$game_data$		= false| true|	$server_root$|			gamedata\
+$import$		= true|  true|	$local_root$| 			import\|		*.object;*.lwo;*.txt;*.xr;*.wav|		Files
+$omotion$		= true|  true|	$import$|				|		*.anm;*.anms|				object motion files
+$smotion$		= true|  true|	$import$|				|		*.skl;*.skls|				Skeleton motion files
+$logs$			= true|  false|	$server_root$| 			logs\|		*.err|					Log files
+

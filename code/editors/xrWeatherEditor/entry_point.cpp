@@ -1,14 +1,19 @@
+/////////////////////////////////////////
 #include "pch.hpp"
-
+/////////////////////////////////////////
 #pragma unmanaged
+/////////////////////////////////////////
 #include <windows.h>
 #include "../Include/editor/engine.hpp"
 #include "ide_impl.hpp"
+/////////////////////////////////////////
 #pragma managed
-
+/////////////////////////////////////////
 #include "window_ide.h"
-
+/////////////////////////////////////////
 #pragma comment(lib,"user32.lib")
+/////////////////////////////////////////
+
 
 private ref class window_ide_final : public editor::window_ide {
 public:
@@ -74,16 +79,22 @@ static void initialize_impl							(editor::ide*& ide, editor::engine* engine)
 WINOLEAPI  CoInitializeEx(IN LPVOID pvReserved, IN DWORD dwCoInit);
 #pragma comment(lib,"ole32.lib")
 
+//#VERTVER: Компилятор Visual C++ иногда без этого дефайна будет кидать забавные лулзы
+#ifdef CXX
 extern "C" __declspec(dllexport)	void initialize	(editor::ide*& ide, editor::engine* engine)
 {
 	CoInitializeEx	(NULL, COINIT_APARTMENTTHREADED);
 	initialize_impl	(ide, engine);
 }
+#endif
 
+#ifdef CXX
 extern "C" __declspec(dllexport)	void finalize	(editor::ide*& ide)
 {
 	delete			(ide);
 	ide				= nullptr;
 	g_ide			= nullptr;
 }
+
+#endif
 #pragma managed

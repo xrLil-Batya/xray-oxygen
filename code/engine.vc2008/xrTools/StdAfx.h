@@ -3,10 +3,6 @@
 //      are changed infrequently
 //
 // Third generation by Oles.
-
-#if !defined(AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_)
-#define AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_
-
 #pragma once
 #define ENGINE_API 
 #define NO_XRC_STATS
@@ -19,7 +15,6 @@
 #pragma warning(pop)
 
 #pragma comment(lib,"d3dx9.lib")
-#pragma comment(lib,"dxerr2015.lib")
 
 // Warnings
 #pragma warning (disable : 4786 )		// too long names
@@ -31,5 +26,3 @@
 #pragma comment(lib,"xrCDB.lib")
 //{{AFX_INSERT_LOCATION}}
 // Microsoft Visual C++ will insert additional declarations immediately before the previous line.
-
-#endif // !defined(AFX_STDAFX_H__A9DB83DB_A9FD_11D0_BFD1_444553540000__INCLUDED_)

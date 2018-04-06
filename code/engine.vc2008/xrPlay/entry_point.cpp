@@ -1,64 +1,104 @@
-// entry_point.cpp - Main methods for initialize.
-
+////////////////////////////////////////
+// OXYGEN TEAM, 2018 (C) * X-RAY OXYGEN	
+// entry_point.cpp - methods for init.
+// Edited: 30 March, 2018						
+////////////////////////////////////////
 #include <string>
-#include <windows.h>
-#include "xrLauncherWnd.h"
 #include <intrin.h>  
-#include "minimal_CPUID.h"
+#include <windows.h>
+////////////////////////////////////
+#include "xrLauncherWnd.h"
+#include "../xrCore/xrCore.h"
+////////////////////////////////////
 #pragma comment(lib, "xrEngine.lib")
 #define DLL_API __declspec(dllimport)
+////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
 
-/***********************************************
-* RunXRLauncher() - main method for initialize 
-* launcher and run all elements.
-***********************************************/
+/// <summary>
+/// Method for init launcher
+/// </summary>
+int RunXRLauncher();
 int RunXRLauncher()
 {
 	// Get initialize launcher
 	xrPlay::Application::EnableVisualStyles();
 	xrPlay::Application::SetCompatibleTextRenderingDefault(false);
 	xrPlay::Application::Run(gcnew xrPlay::xrLauncherWnd);
-	return xrPlay::type_ptr;
+	return xrPlay::ret_values.type_ptr;
 }
 
-/***********************************************
-* GetParams() - return the list of parametres
-***********************************************/
+
+/// <summary>
+/// Return the list of parametres
+/// </summary>
 const char* GetParams()
 {
-	return xrPlay::params_list;
+	return xrPlay::ret_values.params_list;
 }
 
+
+/// <summary>
+/// Dll import
+/// </summary>
 DLL_API int RunApplication(char* commandLine);
 
-/***********************************************
-* WinMain() - Parametres for starting launcher
-***********************************************/
-int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
+
+/// <summary>
+/// Main method for initialize xrEngine
+/// </summary>
+int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
 {
 	std::string params = lpCmdLine;
-
-	// If we don't needy for a excetions - we can delete exceptions with option "-silent"
-	if (!strstr(lpCmdLine, "-silent")) 
+	try
 	{
-		//#VERTVER: We're using our CPUID cuz initialization xrCore CPUID can affect on starting launcher
-		if (!CPUID::AVX())
-		{
-			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
-		}
+		// Init X-ray core
+		Debug._initialize(false);
+		Core._initialize("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
+	}
+	catch (...)
+	{
+		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
+	}
 
-		// Checking for SSE4.1
-		if (!CPUID::SSE41())
+	const bool launch = strstr(lpCmdLine, "-launcher");
+
+	////////////////////////////////////////////////////
+	// If we don't needy for a excetions - we can 
+	// delete exceptions with option "-silent"
+	////////////////////////////////////////////////////
+	if (!strstr(lpCmdLine, "-silent") && !launch)
+	{
+		// Checking for SSE2
+		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
 		{
-			MessageBox(NULL, "It's can affect on the stability of the game.", "SSE4.1 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
-			//#VERTVER: We're checking for SSE4.1 instructions cuz MSVC compiler use the SSE4.1 for CPU manipulation 
+			MessageBox(NULL,
+				"xrEngine can't start launching...",
+				"SSE2 isn't supported on your CPU",
+				MB_OK | MB_ICONSTOP);
+		}
+		// Checking for SSE3
+		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+		{
+			MessageBox(NULL,
+				"It's can affect on the stability of the game.",
+				"SSE3 isn't supported on your CPU",
+				MB_OK | MB_ICONASTERISK);
+			//#VERTVER: some part of vectors use SSE3 instructions
+		}
+		// Checking for AVX
+		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
+		{
+			MessageBox(NULL,
+				"It's can affect on the stability of the game.",
+				"AVX isn't supported on your CPU!",
+				MB_OK | MB_ICONWARNING);
 		}
 	}
 
 	// If we want to start launcher
-	if (strstr(lpCmdLine, "-launcher"))
+	if (launch)
 	{
 		const int l_res = RunXRLauncher();
 		switch (l_res)
@@ -68,10 +108,8 @@ int APIENTRY WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdL
 		}
 		params = GetParams();
 	}
-	
+
 	CreateRendererList();
 	RunApplication(params.data());
-
 	return 0;
-
 }

@@ -270,16 +270,14 @@ SPS*	CResourceManager::_CreatePS			(LPCSTR name)
 		Msg						( "compiling shader %s", name );
 		HRESULT const _hr		= ::Render->shader_compile( name, (DWORD const*)data, size, c_entry, c_target, shaderCompileFlags, (void*&)_ps);
 
-		if ( FAILED(_hr) ) {
+		if (FAILED(_hr))
+		{
 			FlushLog();
 		}
 
-		CHECK_OR_EXIT		(
-			!FAILED(_hr),
-			make_string("Your video card doesn't meet game requirements.\n\nTry to lower game settings.")
-		);
+		R_ASSERT3(SUCCEEDED(_hr), "Can't compile shader", name);
 
-		return					_ps;
+		return _ps;
 	}
 }
 #endif

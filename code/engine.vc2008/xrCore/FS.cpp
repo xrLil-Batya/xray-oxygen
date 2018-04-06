@@ -278,13 +278,15 @@ IReader* IReader::open_chunk_iterator(u32& ID, IReader* _prev) {
         return new IReader(pointer(), _size, tell() + _size);
     }
 }
-
-void IReader::r(void* p, const size_t cnt) {
+#include <imdexlib\fast_dynamic_cast.hpp>
+void IReader::r(void* p, const size_t cnt) 
+{
     VERIFY(Pos + cnt <= Size);
     std::memcpy(p, pointer(), cnt);
     advance(cnt);
 #ifdef DEBUG
-    if (dynamic_cast<CFileReader*>(this) || dynamic_cast<CVirtualFileReader*>(this)) {
+    if (imdexlib::fast_dynamic_cast<CFileReader*>(this) || imdexlib::fast_dynamic_cast<CVirtualFileReader*>(this)) 
+	{
         FS.dwOpenCounter++;
     }
 #endif

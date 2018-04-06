@@ -91,7 +91,7 @@ void MultipacketSender::_FlushSendBuffer(u32 timeout, Buffer* buf)
 		header->tag = NET_TAG_MERGED;
 		header->unpacked_size = (u16)buf->buffer.B.count;
 
-		_SendTo_LL(packet_data, buf->buffer.B.count + sizeof(MultipacketHeader), buf->last_flags, timeout);
+		_SendTo_LL(packet_data, u32(buf->buffer.B.count + sizeof(MultipacketHeader)), buf->last_flags, timeout);
 		buf->buffer.B.count = 0;
 	} // if buffer not empty
 }

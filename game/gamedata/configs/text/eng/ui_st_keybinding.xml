@@ -18,9 +18,6 @@
 	<string id="kb_binoculars">
 		<text>Binoculars</text>
 	</string>
-	<string id="kb_buy_menu">
-		<text>Buy menu</text>
-	</string>
 	<string id="kb_console">
 		<text>Console</text>
 	</string>
@@ -152,15 +149,6 @@
 	</string>
 	<string id="kb_vote_begin">
 		<text>Start vote</text>
-	</string>
-	<string id="kb_vote_menu">
-		<text>Vote</text>
-	</string>
-	<string id="kb_vote_no">
-		<text>Vote “No”</text>
-	</string>
-	<string id="kb_vote_yes">
-		<text>Vote "Yes”</text>
 	</string>
 	<string id="kb_weapon1">
 		<text>Weapon 1</text>

@@ -62,6 +62,16 @@ CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 	m_bLockType					= false;
 }
 
+BOOL CWeaponMagazined::net_Spawn(CSE_Abstract* DC)
+{
+	// Charsi82: 29 Oct 2015
+	BOOL bRes = inherited::net_Spawn(DC);
+	CSE_ALifeItemWeaponMagazined* const wpn = smart_cast<CSE_ALifeItemWeaponMagazined*>(DC);
+	m_iCurFireMode = wpn->m_u8CurFireMode;
+	SetQueueSize(GetCurrentFireMode());
+	return bRes;
+}
+
 void CWeaponMagazined::net_Destroy()
 {
 	inherited::net_Destroy();

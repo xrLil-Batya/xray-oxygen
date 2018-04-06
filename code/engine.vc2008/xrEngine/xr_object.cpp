@@ -335,17 +335,12 @@ void CObject::UpdateCL			()
 void CObject::shedule_Update	( u32 T )
 {
 	// consistency check
-	// Msg						("-SUB-:[%x][%s] CObject::shedule_Update",dynamic_cast<void*>(this),*cName());
 	ISheduled::shedule_Update	(T);
 	spatial_update				(base_spu_epsP*1,base_spu_epsR*1);
 
 	// Always make me crow on shedule-update 
 	// Makes sure that update-cl called at least with freq of shedule-update
 	MakeMeCrow					();	
-	/*
-	if (AlwaysTheCrow())																	MakeMeCrow	();
-	else if (Device.vCameraPosition.distance_to_sqr(Position()) < CROW_RADIUS*CROW_RADIUS)	MakeMeCrow	();
-	*/
 }
 
 void	CObject::spatial_register	()
@@ -423,17 +418,11 @@ void CObject::setDestroy			(BOOL _destroy)
 	Props.bDestroy	= _destroy?1:0;
 	if (_destroy)
 	{
-		g_pGameLevel->Objects.register_object_to_destroy	(this);
+		g_pGameLevel->Objects.register_object_to_destroy(this);
+	}
 #ifdef DEBUG
-		extern BOOL debug_destroy;
-		if(debug_destroy)
-			Msg("cl setDestroy [%d][%d]",ID(),Device.dwFrame);
+	else VERIFY (!g_pGameLevel->Objects.registered_object_to_destroy(this));
 #endif
-#ifdef MP_LOGGING
-		Msg("cl setDestroy [%d][%d]",ID(),Device.dwFrame);
-#endif //#ifdef MP_LOGGING
-	}else
-		VERIFY		(!g_pGameLevel->Objects.registered_object_to_destroy(this));
 }
 
 Fvector CObject::get_new_local_point_on_mesh	( u16& bone_id ) const

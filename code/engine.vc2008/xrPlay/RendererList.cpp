@@ -9,12 +9,11 @@
 #pragma comment(lib, "dxgi.lib")
 #pragma comment(lib, "dxguid.lib")
 #include "../xrCore/xrCore.h"
-#include "minimal_CPUID.h"
 #include <stdio.h>
 #include <iostream>
 ///////////////////////////////////////////////
 #define DLL_API __declspec(dllimport)
-
+#define _RELEASE(x) { if(x) { (x)->Release(); (x)=NULL; } }
 DLL_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r2_name = "xrRender_R2";
@@ -59,16 +58,17 @@ bool SupportsDX11Rendering()
 	std::memset(&wcex, 0, sizeof(wcex));
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpfnWndProc = DefWindowProc;
-	wcex.hInstance = GetModuleHandle(nullptr);
+	wcex.hInstance = GetModuleHandle(NULL);
 	wcex.lpszClassName = "TestDX11WindowClass";
 	if (!RegisterClassEx(&wcex))
 	{
-		Msg("* DX11: failed to register window class");
+		Log("* DX11: failed to register window class");
 		return false;
 	}
 
 	// Create window
-	HWND hWnd = CreateWindow("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, 0, 0, 0, 0);
+	HWND hWnd = CreateWindow("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+		CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
 
 	if (!hWnd)
 	{
@@ -76,9 +76,7 @@ bool SupportsDX11Rendering()
 		return false;
 	}
 
-	HRESULT hr = E_FAIL;
 	DXGI_SWAP_CHAIN_DESC sd;
-
 	std::memset(&sd, 0, sizeof(sd));
 	sd.BufferCount = 1;
 	sd.BufferDesc.Width = 800;
@@ -95,21 +93,22 @@ bool SupportsDX11Rendering()
 	D3D_FEATURE_LEVEL pFeatureLevels[] = { D3D_FEATURE_LEVEL_11_0 };
 	D3D_FEATURE_LEVEL FeatureLevel;
 
-	ID3D11Device*           pd3dDevice = NULL;
-	ID3D11DeviceContext*    pContext = NULL;
-	IDXGISwapChain*         pSwapChain = NULL;
+	ID3D11Device* pd3dDevice = NULL;
+	ID3D11DeviceContext* pContext = NULL;
+	IDXGISwapChain* pSwapChain = NULL;
 
-	hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, pFeatureLevels, 1,
-		D3D11_SDK_VERSION, &sd, &pSwapChain, &pd3dDevice, &FeatureLevel, &pContext);
+	HRESULT hr = D3D11CreateDeviceAndSwapChain(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, 0, pFeatureLevels, 1, D3D11_SDK_VERSION,
+		&sd, &pSwapChain, &pd3dDevice, &FeatureLevel, &pContext);
 
 	if (FAILED(hr))
 		Msg("* D3D11: device creation failed with hr=0x%08x", hr);
 
-	if (pContext)	pContext  ->Release();
-	if (pSwapChain) pSwapChain->Release();
-	if (pd3dDevice) pd3dDevice->Release();
+	_RELEASE(pSwapChain);
+	_RELEASE(pd3dDevice);
+	_RELEASE(pContext);
 
 	DestroyWindow(hWnd);
+	UnregisterClass("TestDX11WindowClass", GetModuleHandle(NULL));
 
 	return SUCCEEDED(hr);
 }

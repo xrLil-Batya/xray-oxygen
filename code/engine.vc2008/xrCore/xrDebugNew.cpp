@@ -3,7 +3,6 @@
 
 #include "xrdebug.h"
 #include "os_clipboard.h"
-#include "DebugCore\StackTrace.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -12,10 +11,10 @@
 #pragma warning(pop)
 
 #include <exception>
-#include <new.h>							// for _set_new_mode
-#include <signal.h>							// for signals
+#include <new.h>		// for _set_new_mode
+#include <signal.h>		// for signals
 #include <sal.h>
-#include <intrin.h> // for __debugbreak
+#include <intrin.h>		// for __debugbreak
 #include "cpuid.h"
 #include <DbgHelp.h>
 
@@ -24,10 +23,7 @@
 XRCORE_API	xrDebug		Debug;
 
 static bool error_after_dialog = false;
-extern bool shared_str_initialized;
 static bool bException = false;
-
-#include "BuildStackTraceInline.hpp"
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
@@ -70,29 +66,18 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		}
 
 		buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%s", endline);
-		if (!i) {
-			if (shared_str_initialized) {
-				Msg("%s", assertion_info);
-				FlushLog();
-			}
+		if (!i) 
+		{
+			Msg("%s", assertion_info);
+			FlushLog();
+
 			buffer = assertion_info;
 			endline = "\r\n";
 			prefix = "";
 		}
 	}
 
-	//if (IsDebuggerPresent() || !strstr(GetCommandLine(), "-no_call_stack_assert"))
-		//return;
-
-	//BuildStackTrace();
-	StackTrace.Count = BuildStackTrace(StackTrace.Frames, StackTrace.Capacity, StackTrace.LineCapacity);
-
-	for (size_t i = 2; i < StackTrace.Count; i++)
-	{
-		Msg("[STACK] %s", StackTrace[i]);
-	}
-	if (shared_str_initialized)
-		FlushLog();
+	FlushLog();
 
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
@@ -220,28 +205,23 @@ extern const char* log_name();
 
 XRCORE_API string_path g_bug_report_file;
 
-void CALLBACK PreErrorHandler(INT_PTR)
-{
-}
-
-
-extern void BuildStackTrace(struct _EXCEPTION_POINTERS *pExceptionInfo);
 typedef LONG WINAPI UnhandledExceptionFilterType(struct _EXCEPTION_POINTERS *pExceptionInfo);
-typedef LONG(__stdcall *PFNCHFILTFN) (EXCEPTION_POINTERS * pExPtrs);
+//typedef LONG(__stdcall *PFNCHFILTFN) (EXCEPTION_POINTERS * pExPtrs);
 
 static UnhandledExceptionFilterType	*previous_filter = 0;
 
 void format_message(char* buffer, const u32 &buffer_size)
 {
-	char*		message = nullptr;
-	DWORD		error_code = GetLastError();
+	char* message = nullptr;
+	DWORD error_code = GetLastError();
 
-	if (!error_code) {
+	if (!error_code) 
+	{
 		*buffer = 0;
 		return;
 	}
 
-	FormatMessageA(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 0, 0);
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 0, 0);
 
 	xr_sprintf(buffer, buffer_size, "[error][%8d]    : %s", error_code, message);
 	LocalFree(message);
@@ -256,23 +236,18 @@ IC void handler_base(const char* reason_string)
 	Debug.backend("Error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
 }
 
-static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *function, const wchar_t *file, unsigned int line, uintptr_t reserved
-)
+static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *function, const wchar_t *file, unsigned int line, uintptr_t reserved)
 {
-	bool		ignore_always = false;
+	bool ignore_always = false;
 
 	string4096	expression_,
 		function_,
 		file_;
 
-	size_t		converted_chars = 0;
+	size_t converted_chars = 0;
 
 	if (expression)
-		wcstombs_s(&converted_chars, expression_,
-			sizeof(expression_),
-			expression,
-			(wcslen(expression) + 1) * 2 * sizeof(char)
-		);
+		wcstombs_s(&converted_chars, expression_, sizeof(expression_), expression, (wcslen(expression) + 1) * 2 * sizeof(char));
 	else
 		xr_strcpy(expression_, "");
 
@@ -283,7 +258,8 @@ static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *
 
 	if (file)
 		wcstombs_s(&converted_chars, file_, sizeof(file_), file, (wcslen(file) + 1) * 2 * sizeof(char));
-	else {
+	else 
+	{
 		line = __LINE__;
 		xr_strcpy(file_, __FILE__);
 	}
@@ -376,6 +352,10 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 	Log("* ####[UNHANDLED EXCEPTION]####");
 	Log("* X-Ray Oxygen crash handler ver. 1.2.f");
 
+#ifdef AWDA
+	MessageBox(NULL, "awda", "awda", MB_OK | MB_ICONASTERISK);
+#endif
+
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
 	if (pCrashHandler != nullptr)
 	{
@@ -383,11 +363,10 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 	}
 
 	// Flush, after crashhandler. We include log file in a minidump
-	if (shared_str_initialized)
-		FlushLog();
+	FlushLog();
 
-	LONG retval = EXCEPTION_CONTINUE_SEARCH;
-	bException = TRUE;
+	long retval = EXCEPTION_CONTINUE_SEARCH;
+	bException = true;
 
 	// firstly see if dbghelp.dll is around and has the function we need
 	// look next to the EXE first, as the one in System32 might be old
@@ -554,9 +533,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 	}
 
 	Log(szResult);
-
-	if (shared_str_initialized)
-		FlushLog();
+	FlushLog();
 
 	return retval;
 }
