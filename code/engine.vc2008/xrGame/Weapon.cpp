@@ -575,6 +575,12 @@ BOOL CWeapon::net_Spawn		(CSE_Abstract* DC)
 	iAmmoElapsed					= E->a_elapsed;
 	m_flagsAddOnState				= E->m_addon_flags.get();
 	m_ammoType						= E->ammo_type;
+
+	if (E->m_scope_idx == (u8)-1)
+		m_cur_scope = NULL;
+	else
+		m_cur_scope = E->m_scope_idx;
+
 	SetState						(E->wpn_state);
 	SetNextState					(E->wpn_state);
 	
@@ -633,6 +639,7 @@ void CWeapon::net_Export(NET_Packet& P)
 	P.w_u8					(m_ammoType);
 	P.w_u8					((u8)GetState());
 	P.w_u8					((u8)IsZoomed());
+	P.w_u8                  (u8(m_cur_scope));
 }
 
 void CWeapon::net_Import(NET_Packet& P)
@@ -652,8 +659,6 @@ void CWeapon::net_Import(NET_Packet& P)
 	u8						NewAddonState;
 	P.r_u8					(NewAddonState);
 
-	m_flagsAddOnState		= NewAddonState;
-	UpdateAddonsVisibility	();
 
 	u8 ammoType, wstate;
 	P.r_u8					(ammoType);
@@ -661,6 +666,17 @@ void CWeapon::net_Import(NET_Packet& P)
 
 	u8 Zoom;
 	P.r_u8					((u8)Zoom);
+
+	u8 scope = 0;
+	P.r_u8(scope);
+
+	if (scope == (u8)-1)
+		m_cur_scope = NULL;
+	else
+		m_cur_scope = scope;
+
+	m_flagsAddOnState = NewAddonState;
+	UpdateAddonsVisibility();
 
 	if (H_Parent() && H_Parent()->Remote())
 	{
@@ -694,7 +710,7 @@ void CWeapon::save(NET_Packet &output_packet)
 {
 	inherited::save	(output_packet);
 	save_data		(iAmmoElapsed,					output_packet);
-	save_data		(m_cur_scope, 					output_packet);
+	//save_data		(m_cur_scope, 					output_packet);
 	save_data		(m_flagsAddOnState, 			output_packet);
 	save_data		(m_ammoType,					output_packet);
 	save_data		(m_zoom_params.m_bIsZoomModeNow,output_packet);
@@ -705,7 +721,7 @@ void CWeapon::load(IReader &input_packet)
 {
 	inherited::load	(input_packet);
 	load_data		(iAmmoElapsed,					input_packet);
-	load_data		(m_cur_scope,					input_packet);
+	//load_data		(m_cur_scope,					input_packet);
 	load_data		(m_flagsAddOnState,				input_packet);
 	///duplicate in net_Spawn! 
 	//UpdateAddonsVisibility			();

@@ -47,6 +47,7 @@ Team of developers and contributors:
 * [Vampirnik77](https://github.com/Vampirnik77)
 * [v2v3v4](https://github.com/v2v3v4)
 * [acidicMercury8](https://github.com/acidicMercury8)
+* [mortany](https://github.com/mortany)
 
 Also used code of this developers and teams:
 

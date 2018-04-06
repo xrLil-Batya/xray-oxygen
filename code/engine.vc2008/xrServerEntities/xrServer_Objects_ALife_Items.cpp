@@ -487,9 +487,13 @@ CSE_ALifeItemWeapon::CSE_ALifeItemWeapon	(LPCSTR caSection) : CSE_ALifeItem(caSe
 	a_elapsed_grenades.grenades_count	=	0;
 	a_elapsed_grenades.grenades_type	=	0;
 
+	m_scope_idx                 = (u8)-1;
+
 	wpn_flags					= 0;
 	wpn_state					= 0;
 	ammo_type					= 0;
+
+	LoadAddons("scopes_sect");
 
 	m_fHitPower					= pSettings->r_float(caSection,"hit_power");
 	m_tHitType					= ALife::g_tfString2HitType(pSettings->r_string(caSection,"hit_type"));
@@ -510,6 +514,42 @@ CSE_ALifeItemWeapon::~CSE_ALifeItemWeapon	()
 {
 }
 
+bool CSE_ALifeItemWeapon::CheckScope(shared_str scope_name)
+{
+	if (m_scopes.size() != 0)
+	{
+		SCOPES_VECTOR::iterator it = m_scopes.begin();
+		for (; it != m_scopes.end(); it++)               
+		{                                                
+			 if ((*it) == scope_name)                    
+			 {                                            
+				 return true;
+			 }                                        
+		}
+	}
+	else
+	{
+		return false;
+	}
+}
+
+void CSE_ALifeItemWeapon::LoadAddons(LPCSTR scopes_list)
+{
+	if (pSettings->line_exist(s_name, scopes_list))
+		 {
+		LPCSTR str = pSettings->r_string(s_name, scopes_list);
+		if (xr_strcmp(str, "none") != 0)
+			 {
+			for (int i = 0, count = _GetItemCount(str); i < count; ++i)
+				 {
+				string128 addon_section;
+				_GetItem(str, i, addon_section);
+				m_scopes.push_back(addon_section);
+				}
+			}
+		}
+}
+
 u32	CSE_ALifeItemWeapon::ef_main_weapon_type() const
 {
 	VERIFY	(m_ef_main_weapon_type != u32(-1));
@@ -526,13 +566,14 @@ void CSE_ALifeItemWeapon::UPDATE_Read(NET_Packet	&tNetPacket)
 {
 	inherited::UPDATE_Read		(tNetPacket);
 
-	tNetPacket.r_float_q8		(m_fCondition,0.0f,1.0f);
-	tNetPacket.r_u8				(wpn_flags);
-	tNetPacket.r_u16			(a_elapsed);
-	tNetPacket.r_u8				(m_addon_flags.flags);
-	tNetPacket.r_u8				(ammo_type);
-	tNetPacket.r_u8				(wpn_state);
-	tNetPacket.r_u8				(m_bZoom);
+	tNetPacket.r_float_q8(m_fCondition,0.0f,1.0f);
+	tNetPacket.r_u8(wpn_flags);
+	tNetPacket.r_u16(a_elapsed);
+	tNetPacket.r_u8(m_addon_flags.flags);
+	tNetPacket.r_u8(ammo_type);
+	tNetPacket.r_u8(wpn_state);
+	tNetPacket.r_u8(m_bZoom);
+	tNetPacket.r_u8(m_scope_idx);
 }
 
 void CSE_ALifeItemWeapon::clone_addons(CSE_ALifeItemWeapon* parent)
@@ -540,45 +581,106 @@ void CSE_ALifeItemWeapon::clone_addons(CSE_ALifeItemWeapon* parent)
 	m_addon_flags = parent->m_addon_flags;
 }
 
+void CSE_ALifeItemWeapon::AddonsLoad()
+{
+	if (m_scopes.size() != 0)
+	{
+		SCOPES_VECTOR::iterator it = m_scopes.begin();
+		for (; it != m_scopes.end(); it++)
+		{
+			if ((*it) == m_scope_name)
+			{
+				m_scope_idx = u8(it - m_scopes.begin());
+				m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, true);
+			}
+		}
+	}
+	else
+	{
+		m_scope_idx = (u8)-1;
+		m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, false);
+	}
+	       
+}
+
+u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
+{
+	if (m_scopes.size() != 0)
+	{
+		SCOPES_VECTOR::iterator it = m_scopes.begin();
+		for (; it != m_scopes.end(); it++)
+		{
+			if ((*it) == scope_name)
+			{
+				return u8(it - m_scopes.begin());
+			}
+		}
+	}
+	else
+	{
+		return (u8)-1;
+	}
+}
+
+void CSE_ALifeItemWeapon::AddonsUpdate()
+{
+	if (m_scope_idx != u8(-1) && m_scope_idx < m_scopes.size())
+		m_scope_name = m_scopes[m_scope_idx];
+	else
+	{
+		m_scope_idx = u8(-1);
+		m_scope_name = NULL;
+	}
+}
+
 void CSE_ALifeItemWeapon::UPDATE_Write(NET_Packet	&tNetPacket)
 {
 	inherited::UPDATE_Write		(tNetPacket);
 
-	tNetPacket.w_float_q8		(m_fCondition,0.0f,1.0f);
-	tNetPacket.w_u8				(wpn_flags);
-	tNetPacket.w_u16			(a_elapsed);
-	tNetPacket.w_u8				(m_addon_flags.get());
-	tNetPacket.w_u8				(ammo_type);
-	tNetPacket.w_u8				(wpn_state);
-	tNetPacket.w_u8				(m_bZoom);
+	tNetPacket.w_float_q8(m_fCondition,0.0f,1.0f);
+	tNetPacket.w_u8(wpn_flags);
+	tNetPacket.w_u16(a_elapsed);
+	tNetPacket.w_u8(m_addon_flags.get());
+	tNetPacket.w_u8(ammo_type);
+	tNetPacket.w_u8(wpn_state);
+	tNetPacket.w_u8(m_bZoom);
+	tNetPacket.w_u8(m_scope_idx);
+
 }
 
 void CSE_ALifeItemWeapon::STATE_Read(NET_Packet	&tNetPacket, u16 size)
 {
-	inherited::STATE_Read		(tNetPacket, size);
-	tNetPacket.r_u16			(a_current);
-	tNetPacket.r_u16			(a_elapsed);
-	tNetPacket.r_u8				(wpn_state);
-	
+	inherited::STATE_Read(tNetPacket, size);
+	tNetPacket.r_u16(a_current);
+	tNetPacket.r_u16(a_elapsed);
+	tNetPacket.r_u8(wpn_state);
 	if (m_wVersion > 40)
-		tNetPacket.r_u8			(m_addon_flags.flags);
+		tNetPacket.r_u8(m_addon_flags.flags);
 
 	if (m_wVersion > 46)
-		tNetPacket.r_u8			(ammo_type);
+		tNetPacket.r_u8(ammo_type);
 	
 	if (m_wVersion > 122)
 		a_elapsed_grenades.unpack_from_byte(tNetPacket.r_u8());
+
+	tNetPacket.r_stringZ(m_scope_name);
+
+	AddonsLoad();
 }
 
 void CSE_ALifeItemWeapon::STATE_Write		(NET_Packet	&tNetPacket)
 {
-	inherited::STATE_Write		(tNetPacket);
-	tNetPacket.w_u16			(a_current);
-	tNetPacket.w_u16			(a_elapsed);
-	tNetPacket.w_u8				(wpn_state);
-	tNetPacket.w_u8				(m_addon_flags.get());
-	tNetPacket.w_u8				(ammo_type);
-	tNetPacket.w_u8				(a_elapsed_grenades.pack_to_byte());
+	inherited::STATE_Write(tNetPacket);
+	tNetPacket.w_u16(a_current);
+	tNetPacket.w_u16(a_elapsed);
+	tNetPacket.w_u8(wpn_state);
+	tNetPacket.w_u8(m_addon_flags.get());
+	tNetPacket.w_u8(ammo_type);
+	tNetPacket.w_u8(a_elapsed_grenades.pack_to_byte());
+	//AddonsUpdate();
+	tNetPacket.w_stringZ(m_scope_name);
+
+	
 }
 
 void CSE_ALifeItemWeapon::OnEvent			(NET_Packet	&tNetPacket, u16 type, u32 time, ClientID sender )

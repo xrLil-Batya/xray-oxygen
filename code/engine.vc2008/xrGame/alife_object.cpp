@@ -36,26 +36,38 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 #pragma warning(pop)
 
 	if (ini.section_exist("spawn")) {
-		LPCSTR					N,V;
+		LPCSTR					N,V,S;
 		float					p;
 		for (u32 k = 0, j; ini.r_line("spawn",k,&N,&V); k++) {
 			VERIFY				(xr_strlen(N));
 	
-			float f_cond						= 1.0f;
-			bool bScope							= false;
-			bool bSilencer						= false;
-			bool bLauncher						= false;
-
+			float f_cond = 1.0f;
+			bool bScope	= false;
+			bool bSilencer = false;
+			bool bLauncher = false;
+			xr_string TS = "none";
 			
-			j					= 1;
-			p					= 1.f;
+			j = 1;
+			p = 1.f;
 			
 			if (V && xr_strlen(V)) {
-				string64			buf;
-				j					= atoi(_GetItem(V, 0, buf));
-				if (!j)		j		= 1;
+				string64 buf;
+				j = atoi(_GetItem(V, 0, buf));
+				if (!j)	j = 1;
 
-				bScope				= (NULL!=strstr(V,"scope"));
+				if (NULL != strstr(V, "scope="))
+				{
+					S = strstr(V, "scope=");
+					TS = S;
+					TS.erase(0, 6);
+					S = TS.c_str();
+				}
+				else
+				{
+					bScope = (NULL != strstr(V, "scope"));
+				}
+
+				//bScope				= (NULL!=strstr(V,"scope"));
 				bSilencer			= (NULL!=strstr(V,"silencer"));
 				bLauncher			= (NULL!=strstr(V,"launcher"));
 				//probability
@@ -71,6 +83,12 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 					//подсоединить аддоны к оружию, если включены соответствующие флажки
 					CSE_ALifeItemWeapon* W =  smart_cast<CSE_ALifeItemWeapon*>(E);
 					if (W) {
+						if (TS != "none")
+						{							
+							bScope = W->CheckScope(TS.c_str());
+							W->m_scope_idx = W->GetScopeIdx(TS.c_str());
+						}
+							
 						if (W->m_scope_status == ALife::eAddonAttachable)
 							W->m_addon_flags.set(CSE_ALifeItemWeapon::eWeaponAddonScope, bScope);
 						if (W->m_silencer_status == ALife::eAddonAttachable)

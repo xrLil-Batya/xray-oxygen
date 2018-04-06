@@ -185,6 +185,23 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 	u32								m_ef_main_weapon_type;
 	u32								m_ef_weapon_type;
 
+
+	using SCOPES_VECTOR = xr_vector<shared_str>;
+	SCOPES_VECTOR			m_scopes;
+	u8  m_scope_idx;
+	shared_str m_scope_name;
+
+	bool CheckScope(shared_str scope_name);
+	u8 GetScopeIdx(shared_str scope_name);
+	void LoadAddons(LPCSTR scopes_list);
+	void AddonsLoad();
+	void AddonsUpdate();
+
+
+	//u8  m_silencer_idx;
+	//u8  m_launcher_idx;
+
+
 									CSE_ALifeItemWeapon	(LPCSTR caSection);
 	virtual							~CSE_ALifeItemWeapon();
 	virtual void					OnEvent				(NET_Packet& P, u16 type, u32 time, ClientID sender );
