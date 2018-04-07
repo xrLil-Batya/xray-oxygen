@@ -718,7 +718,7 @@ float CActor::currentFOV()
 
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());	
 
-	if (eacFirstEye == cam_active && pWeapon &&
+	if (pWeapon &&
 		pWeapon->IsZoomed() && 
 		( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture()) )
 		 )
@@ -880,11 +880,8 @@ void CActor::UpdateCL	()
 			xr_delete(m_sndShockEffector);
 	}
 	Fmatrix							trans;
-	if(cam_Active() == cam_FirstEye())
-	{
-		Cameras().hud_camera_Matrix		(trans);
-	}else
-		Cameras().camera_Matrix			(trans);
+
+	Cameras().hud_camera_Matrix			(trans);
 	
 	if(IsFocused())
 		g_player_hud->update			(trans);

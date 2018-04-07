@@ -297,7 +297,7 @@ void CActor::cam_Update(float dt, float fFOV)
 	if (this == Level().CurrentControlEntity())
 	{
 		CWeapon* pWeapon = smart_cast<CWeapon*>(this->inventory().ActiveItem());
-		if (eacFirstEye == cam_active && pWeapon)
+		if (pWeapon)
 			psHUD_FOV = pWeapon->GetHudFov();
 		else
 			psHUD_FOV = psHUD_FOV_def;
@@ -380,7 +380,7 @@ void CActor::cam_Update(float dt, float fFOV)
 	if (Level().CurrentEntity() == this)
 	{
 		Level().Cameras().UpdateFromCamera	(C);
-		if(eacFirstEye == cam_active && !Level().Cameras().GetCamEffector(cefDemo)){
+		if(!Level().Cameras().GetCamEffector(cefDemo)){
 			Cameras().ApplyDevice	(_viewport_near);
 		}
 	}
@@ -392,7 +392,7 @@ void CActor::update_camera (CCameraShotEffector* effector)
 	if (!effector) return;
 	//	if (Level().CurrentViewEntity() != this) return;
 
-	CCameraBase* pACam = cam_FirstEye();
+	CCameraBase* pACam = cam_Active();
 	if (!pACam) return;
 
 	if (pACam->bClampPitch)

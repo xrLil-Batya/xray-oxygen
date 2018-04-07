@@ -26,6 +26,7 @@ protected:
 
 class CCameraLook2	: public CCameraLook
 {
+	Fvector2		lim_zoom;
 public:
 	static Fvector	m_cam_offset;
 protected:

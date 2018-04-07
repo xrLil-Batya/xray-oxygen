@@ -757,7 +757,7 @@ void  CScriptGameObject::RunTalkDialog(CScriptGameObject* pToWho, bool disable_b
 
 void CScriptGameObject::ActorLookAtPoint	(Fvector point)
 {
-	CCameraBase* c		= Actor()->cam_FirstEye();
+	CCameraBase* c		= Actor()->cam_Active();
 	CCameraFirstEye* cf = smart_cast<CCameraFirstEye*>(c);
 	cf->LookAtPoint		(point);
 }
