@@ -189,4 +189,13 @@
 	<string id="kb_quick_use_4">
 		<text>Ячейка быстрого доступа 4</text>
 	</string>
+	<string id="kcam_1">
+		<text>Камера от 1го лица</text>
+	</string>
+	<string id="kcam_2">
+		<text>Камера от 2го лица</text>
+	</string>
+	<string id="kcam_3">
+		<text>Камера от 3го лица</text>
+	</string>
 </string_table>

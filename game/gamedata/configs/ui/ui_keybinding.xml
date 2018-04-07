@@ -52,5 +52,8 @@
 		<command id="kb_screenshot"				exe="screenshot"/>
 		<command id="kb_quit"						  exe="quit"/>
 		<command id="kb_console"					exe="console"/>
+		<command id="kcam_1"					exe="cam_1"/>
+		<command id="kcam_2"					exe="cam_2"/>
+		<command id="kcam_3"					exe="cam_3"/>
 	</group>
 </keybingidg>
