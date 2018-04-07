@@ -45,7 +45,8 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 			bool bScope	= false;
 			bool bSilencer = false;
 			bool bLauncher = false;
-			xr_string TS = "none";
+			bool alt_scope = false;
+			std::string st;
 			
 			j = 1;
 			p = 1.f;
@@ -57,10 +58,9 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 
 				if (NULL != strstr(V, "scope="))
 				{
-					S = strstr(V, "scope=");
-					TS = S;
-					TS.erase(0, 6);
-					S = TS.c_str();
+					st = strstr(V, "scope=");
+					st.erase(0, 6);
+					alt_scope = true;
 				}
 				else
 				{
@@ -83,10 +83,11 @@ void CSE_ALifeObject::spawn_supplies		(LPCSTR ini_string)
 					//подсоединить аддоны к оружию, если включены соответствующие флажки
 					CSE_ALifeItemWeapon* W =  smart_cast<CSE_ALifeItemWeapon*>(E);
 					if (W) {
-						if (TS != "none")
+						if (alt_scope)
 						{							
-							bScope = W->CheckScope(TS.c_str());
-							W->m_scope_idx = W->GetScopeIdx(TS.c_str());
+							u8 idx = W->GetScopeIdx(st.c_str());
+							bScope = (idx != (u8)-1) ? true : false;
+							W->m_scope_idx = idx;
 						}
 							
 						if (W->m_scope_status == ALife::eAddonAttachable)

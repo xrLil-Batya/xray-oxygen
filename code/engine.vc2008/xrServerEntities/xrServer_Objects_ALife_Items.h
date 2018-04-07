@@ -191,7 +191,6 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 	u8  m_scope_idx;
 	shared_str m_scope_name;
 
-	bool CheckScope(shared_str scope_name);
 	u8 GetScopeIdx(shared_str scope_name);
 	void LoadAddons(LPCSTR scopes_list);
 	void AddonsLoad();

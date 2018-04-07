@@ -514,25 +514,6 @@ CSE_ALifeItemWeapon::~CSE_ALifeItemWeapon	()
 {
 }
 
-bool CSE_ALifeItemWeapon::CheckScope(shared_str scope_name)
-{
-	if (m_scopes.size() != 0)
-	{
-		SCOPES_VECTOR::iterator it = m_scopes.begin();
-		for (; it != m_scopes.end(); it++)               
-		{                                                
-			 if ((*it) == scope_name)                    
-			 {                                            
-				 return true;
-			 }                                        
-		}
-	}
-	else
-	{
-		return false;
-	}
-}
-
 void CSE_ALifeItemWeapon::LoadAddons(LPCSTR scopes_list)
 {
 	if (pSettings->line_exist(s_name, scopes_list))
@@ -605,16 +586,20 @@ void CSE_ALifeItemWeapon::AddonsLoad()
 
 u8 CSE_ALifeItemWeapon::GetScopeIdx(shared_str scope_name)
 {
+	if(!pSettings->section_exist(scope_name))
+		return (u8)-1;
+
 	if (m_scopes.size() != 0)
 	{
 		SCOPES_VECTOR::iterator it = m_scopes.begin();
 		for (; it != m_scopes.end(); it++)
 		{
-			if ((*it) == scope_name)
+			if (pSettings->r_string((*it), "scope_name") == scope_name)
 			{
 				return u8(it - m_scopes.begin());
 			}
 		}
+		return (u8)-1;
 	}
 	else
 	{
