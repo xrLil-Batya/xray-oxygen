@@ -29,7 +29,8 @@ void compute_build_id()
 	xr_strcpy(buffer, __DATE__);
 	sscanf(buffer, "%s %d %d", month, &days, &years);
 
-	for (int i = 0; i<12; i++) {
+	for (u32 i = 0; i<12; i++)
+	{
 		if (_stricmp(month_id[i], month))
 			continue;
 
@@ -39,9 +40,9 @@ void compute_build_id()
 
 	build_id = (years - start_year) * 365 + days - start_day;
 
-	for (int i = 0; i<months; ++i)
+	for (u32 i = 0; i<months; ++i)
 		build_id += days_in_month[i];
 
-	for (int i = 0; i<start_month - 1; ++i)
+	for (u32 i = 0; i<start_month - 1; ++i)
 		build_id -= days_in_month[i];
 }

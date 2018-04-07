@@ -41,9 +41,6 @@ enum {
 	M_REMOTE_CONTROL_CMD,
 
 	M_SV_MAP_NAME,				//request and responce
-	M_SV_DIGEST,				//request and responce
-
-	M_FILE_TRANSFER,
 
 	MSG_FORCEDWORD				= u32(-1)
 };
@@ -65,8 +62,6 @@ enum {
 	GE_REMOVE_ALL_RESTRICTIONS,
 
 	GE_BUY,
-
-
 	GE_INFO_TRANSFER,			//transfer _new_ info on PDA
 	
 	GE_TRADE_SELL,
@@ -88,7 +83,6 @@ enum {
 	GE_ZONE_STATE_CHANGE,
 
 	GE_MOVE_ACTOR,				//move actor to desired position instantly
-	GE_ACTOR_JUMPING,			//actor press jump key
 	GE_ACTOR_MAX_POWER,
 	GE_ACTOR_MAX_HEALTH,
 
@@ -110,21 +104,16 @@ enum {
 	GEG_PLAYER_WEAPON_HIDE_STATE,
 	GEG_PLAYER_DISABLE_SPRINT,
 	
-
 	GEG_PLAYER_ATTACH_HOLDER,
 	GEG_PLAYER_DETACH_HOLDER,
 
-	GEG_PLAYER_PLAY_HEADSHOT_PARTICLE,
 	//-------------------------------------
 	GE_HIT_STATISTIC,
 	//-------------------------------------
 	GE_KILL_SOMEONE,
-
-	GE_FREEZE_OBJECT,
 	GE_LAUNCH_ROCKET,
 	
 	GEG_PLAYER_USE_BOOSTER,
-	GE_REQUEST_PLAYERS_INFO,
 
 	GE_FORCEDWORD				= u32(-1)
 };

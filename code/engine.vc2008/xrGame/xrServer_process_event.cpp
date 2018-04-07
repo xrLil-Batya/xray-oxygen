@@ -45,8 +45,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	case GE_INFO_TRANSFER:
 	case GE_WPN_STATE_CHANGE:
 	case GE_ZONE_STATE_CHANGE:
-	case GE_ACTOR_JUMPING:
-	case GEG_PLAYER_PLAY_HEADSHOT_PARTICLE:
 	case GEG_PLAYER_ATTACH_HOLDER:
 	case GEG_PLAYER_DETACH_HOLDER:
 	case GEG_PLAYER_ITEM2SLOT:
@@ -135,8 +133,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		if (creature)
 			creature->set_killer_id( id_src );
 
-//		Msg							("[%d][%s] killed [%d][%s]",id_src,id_src==u16(-1) ? "UNKNOWN" : game->get_entity_from_eid(id_src)->name_replace(),id_dest,e_dest->name_replace());
-
 		break;
 	}
 	case GE_CHANGE_VISUAL:
@@ -166,7 +162,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 				xrClientData*	C = (xrClientData*)	game->get_client(id_src);
 				if (C) e_src = C->owner;
 			};
-			VERIFY				(e_src);
+
 			if (!e_src)
 			{
 				Msg("! ERROR: SV: src killer not exist.");
@@ -302,11 +298,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			CSE_ALifeTraderAbstract*	pTa = smart_cast<CSE_ALifeTraderAbstract*>(e_dest);
 			pTa->m_dwMoney				= P.r_u32();
 						
-		}break;
-	case GE_FREEZE_OBJECT:
-		break;
-	case GE_REQUEST_PLAYERS_INFO:
-		{
 		}break;
 	default:
 		R_ASSERT2	(0,"Game Event not implemented!!!");

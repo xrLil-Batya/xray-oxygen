@@ -68,8 +68,7 @@ IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 	return nullptr;
 }
 
-void
-IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
+void IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
 {
 	if (data_size >= NET_PacketSizeLimit) {
 		Msg		("! too large packet size[%d] received, DoS attack?", data_size);

@@ -167,9 +167,6 @@ public:
 	virtual void OnItemDrop		(CInventoryItem *inventory_item, bool just_before_destroy);
 	virtual void OnItemDropUpdate ();
 
-	virtual	void OnPlayHeadShotParticle (NET_Packet P);
-
-
 	virtual void						Die				(CObject* who);
 	virtual	void						Hit				(SHit* pHDS);
 	virtual	void						PHHit			(SHit &H);

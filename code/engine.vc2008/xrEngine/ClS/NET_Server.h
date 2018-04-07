@@ -103,18 +103,10 @@ protected:
 	IDirectPlay8Address*	net_Address_device;
 
 	PlayersMonitor			net_players;
-	//xrCriticalSection		csPlayers;
-	//xr_vector<IClient*>	net_Players;
-	//xr_vector<IClient*>	net_Players_disconnected;
 	IClient*				SV_Client;
 
-	int						psNET_Port;	
-	
 	// 
 	std::recursive_mutex		csMessage;
-
-	void					client_link_aborted	(ClientID ID);
-	void					client_link_aborted	(IClient* C);
 	
 	// Statistic
 	IServerStatistic		stats;
@@ -148,14 +140,12 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender) = 0;
 	virtual void			OnCL_Connected		(IClient* C);
 	virtual void			OnCL_Disconnected	(IClient* C);
-	virtual bool			OnCL_QueryHost		()		{ return true; };
 
 	virtual IClient*		client_Create		()				= 0;			// create client info
 	virtual void			client_Destroy		(IClient* C)	= 0;			// destroy client info
 
 	BOOL					HasBandwidth			(IClient* C);
 
-	IC int					GetPort					()				{ return psNET_Port; };
 	virtual bool			DisconnectClient		(IClient* C, LPCSTR Reason);
 
 	virtual void			GetServerInfo( CServerInfo* si ) {};

@@ -85,7 +85,7 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	//---------------------------------------------------------------------------
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start3));
+//	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start3));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start4));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start5));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
@@ -130,7 +130,7 @@ bool CLevel::net_start1				()
 	return true;
 }
 
-bool CLevel::net_start2				()
+bool CLevel::net_start2()
 {
     shared_str serverOption = GamePersistent().GetServerOption();
 	if (net_start_result_total && serverOption.size())
@@ -139,58 +139,12 @@ bool CLevel::net_start2				()
 		if ((m_connect_server_err=Server->Connect(serverOption, game_descr))!=xrServer::ErrNoError)
 		{
 			net_start_result_total = false;
-			Msg				("! Failed to start server.");
+			Msg("! Failed to start server.");
 			return true;
 		}
 		Server->SLS_Default		();
 		map_data.m_name			= Server->level_name(serverOption);
 		g_pGamePersistent->LoadTitle(true, map_data.m_name);
-	}
-	return true;
-}
-
-bool CLevel::net_start3				()
-{
-	if(!net_start_result_total) return true;
-	//add server port if don't have one in options
-    shared_str& clientOption = GamePersistent().GetClientOption();
-	if (!strstr(clientOption.c_str(), "port=") && Server)
-	{
-		string64	PortStr;
-		xr_sprintf(PortStr, "/port=%d", Server->GetPort());
-
-		string4096	tmp;
-		xr_strcpy(tmp, clientOption.c_str());
-		xr_strcat(tmp, PortStr);
-		
-        GamePersistent().SetClientOption(tmp);
-	}
-	//add password string to client, if don't have one
-    shared_str serverOption = GamePersistent().GetServerOption();
-	if(serverOption.size()){
-		if (strstr(serverOption.c_str(), "psw=") && !strstr(clientOption.c_str(), "psw="))
-		{
-			string64	PasswordStr = "";
-			const char* PSW = strstr(serverOption.c_str(), "psw=") + 4;
-			if (strchr(PSW, '/')) 
-				strncpy_s(PasswordStr, PSW, strchr(PSW, '/') - PSW);
-			else
-				xr_strcpy(PasswordStr, PSW);
-
-			string4096	tmp;
-			xr_sprintf(tmp, "%s/psw=%s", clientOption.c_str(), PasswordStr);
-            GamePersistent().SetClientOption(tmp);
-		};
-	};
-	//setting players GameSpy CDKey if it comes from command line
-	if (strstr(clientOption.c_str(), "/cdkey="))
-	{
-		string64 CDKey;
-		const char* start = strstr(clientOption.c_str(),"/cdkey=") +xr_strlen("/cdkey=");
-		sscanf			(start, "%[^/]",CDKey);
-		string128 cmd;
-		xr_sprintf(cmd, "cdkey %s", _strupr(CDKey));
-		Console->Execute			(cmd);
 	}
 	return true;
 }

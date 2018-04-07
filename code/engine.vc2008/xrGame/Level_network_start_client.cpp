@@ -73,21 +73,22 @@ bool CLevel::net_start_client3()
 		// Determine internal level-ID
 		int						level_id = pApp->Level_ID(level_name, level_ver, true);
 		
-		map_data.m_name					= level_name;
-		map_data.m_map_version			= level_ver;
-		map_data.m_map_loaded			= true;
+		map_data.m_name			= level_name;
+		map_data.m_map_version	= level_ver;
+		map_data.m_map_loaded	= true;
 		
-		deny_m_spawn			= FALSE;
+		deny_m_spawn = FALSE;
 		// Load level
-		R_ASSERT2				(Load(level_id),"Loading failed.");
+		R_ASSERT3(Load(level_id),"Loading failed. Level: %s", level_name);
 		map_data.m_level_geom_crc32 = 0;
 	}
 	return true;
 }
 
-bool	CLevel::net_start_client4				()
+bool CLevel::net_start_client4()
 {
-	if (connected_to_server) {
+	if (connected_to_server) 
+	{
 		// Begin spawn
 		g_pGamePersistent->SetLoadStageTitle	("st_client_spawning");
 		g_pGamePersistent->LoadTitle();

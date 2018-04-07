@@ -397,22 +397,12 @@ BOOL CSE_ALifeItem::Net_Relevant			()
 	if (!m_physics_disabled && !fis_zero(State.linear_vel.square_magnitude(),EPS_L))
 		return					(TRUE);
 
-#ifdef XRGAME_EXPORTS
-//	if (Device.dwTimeGlobal < (m_last_update_time + update_rate()))
-//		return					(FALSE);
-#endif // XRGAME_EXPORTS
-
 	return						(FALSE);
 }
 
-void CSE_ALifeItem::OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
+void CSE_ALifeItem::OnEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
 {
 	inherited1::OnEvent			(tNetPacket,type,time,sender);
-
-	if (type != GE_FREEZE_OBJECT)
-		return;
-
-//	R_ASSERT					(!m_physics_disabled);
 	m_physics_disabled			= true;
 }
 
