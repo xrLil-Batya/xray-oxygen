@@ -318,16 +318,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			xrClientData *l_pC			= ID_to_client(sender);
 			OnProcessClientMapData		(P, l_pC->ID);
 		}break;
-	case M_SV_DIGEST:
-		{
-			R_ASSERT(CL);
-			ProcessClientDigest			(CL, &P);
-		}break;
-	case M_STATISTIC_UPDATE:
-		{
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-		}break;
-	case M_STATISTIC_UPDATE_RESPOND: {}break;
 	case M_PLAYER_FIRE:
 		{
 			if (game)
@@ -526,26 +516,17 @@ void xrServer::AddDelayedPacket	(NET_Packet& Packet, ClientID Sender)
 
 void xrServer::GetServerInfo(CServerInfo* si)
 {
-	string32  tmp;
 	string256 tmp256;
 
-	si->AddItem("Server port", itoa(GetPort(), tmp, 10), RGB(128, 128, 255));
 	LPCSTR time = InventoryUtilities::GetTimeAsString(Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay).c_str();
-	si->AddItem("Uptime", time, RGB(255, 228, 0));
 
-	xr_strcpy(tmp256, "single");
-	{
-		xr_strcat(tmp256, " time limit [");
-		xr_strcat(tmp256, "] ");
-	}
-	si->AddItem("Game type", tmp256, RGB(128, 255, 255));
+	si->AddItem("Uptime", time, RGB(255, 228, 0));
+	si->AddItem("Game type", "single", RGB(128, 255, 255));
 
 	if (g_pGameLevel)
 	{
 		time = InventoryUtilities::GetGameTimeAsString(InventoryUtilities::etpTimeToMinutes).c_str();
-
 		xr_strcpy(tmp256, time);
-
 		si->AddItem("Game time", tmp256, RGB(205, 228, 178));
 	}
 }

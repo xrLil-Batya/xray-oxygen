@@ -10,6 +10,8 @@
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
+#pragma warning(push)
+#pragma warning(disable: 4005)
 
 // This version only supports UNICODE.
 #include "stdafx.h"
@@ -3964,3 +3966,4 @@ HRESULT XRCORE_API DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In
 
     return hr;
 }
+#pragma warning(pop)

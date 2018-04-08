@@ -10,7 +10,7 @@ CEnvelope::~CEnvelope()
 
 CEnvelope::CEnvelope(CEnvelope* source)
 {
-	*this 		= *source;
+	*this = *source;
 	for (u32 i=0; i<source->keys.size(); i++)
     	keys[i]	= xr_new<st_Key> (*source->keys[i]);
 }
@@ -23,8 +23,10 @@ void  CEnvelope::ClearAndFree()
 
 void CEnvelope::Clear()
 {
-	for (auto k_it=keys.begin(); k_it!=keys.end(); k_it++)
-		xr_delete(*k_it);
+	for (st_Key* k_it: keys)
+	{
+		xr_delete(k_it);
+	}
 }
 
 void CEnvelope::FindNearestKey(float t, KeyIt& min_k, KeyIt& max_k, float eps)

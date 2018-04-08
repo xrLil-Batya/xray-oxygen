@@ -132,12 +132,6 @@ void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
 	}
 }
 
-void xrServer::OnBuildVersionRespond				( IClient* CL, NET_Packet& P )
-{
-// 	imdex NOTE: useless now
-	RequestClientDigest(CL);
-};
-
 void xrServer::Check_BuildVersion_Success			( IClient* CL )
 {
 	CL->flags.bVerified = TRUE;

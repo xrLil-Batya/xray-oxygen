@@ -164,7 +164,6 @@ protected:
 
 	bool	xr_stdcall			net_start1				();
 	bool	xr_stdcall			net_start2				();
-	bool	xr_stdcall			net_start3				();
 	bool	xr_stdcall			net_start4				();
 	bool	xr_stdcall			net_start5				();
 	bool	xr_stdcall			net_start6				();
@@ -252,7 +251,7 @@ public:
 
 	//названияе текущего уровня
 	virtual shared_str			name					() const;
-			shared_str			version					() const { return map_data.m_map_version.c_str(); } //this method can be used ONLY from CCC_ChangeGameType
+			shared_str			version					() const { return map_data.m_map_version; } //this method can be used ONLY from CCC_ChangeGameType
 
 	virtual void				GetLevelInfo		( CServerInfo* si );
 
@@ -296,11 +295,7 @@ public:
 	CSE_Abstract		*spawn_item						(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item = false);
 			
 public:
-		void			remove_objects			();
-	
-	void			init_compression			();
-	void			deinit_compression			();
-			
+	void				remove_objects			();
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

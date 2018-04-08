@@ -1500,7 +1500,6 @@ BOOL CActor::net_SaveRelevant()
 	return TRUE;
 }
 
-
 void CActor::SetHitInfo(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)
 {
 	m_iLastHitterID = (who!= NULL) ? who->ID() : u16(-1);
@@ -1510,25 +1509,6 @@ void CActor::SetHitInfo(CObject* who, CObject* weapon, s16 element, Fvector Pos,
 	m_bWasHitted = true;
 	m_vLastHitDir = Dir;
 	m_vLastHitPos = Pos;
-};
-
-void CActor::OnPlayHeadShotParticle(NET_Packet P)
-{
-	Fvector	HitDir, HitPos;
-	s16	element = P.r_s16();	
-	P.r_dir(HitDir);	HitDir.invert();
-	P.r_vec3(HitPos);
-	//-----------------------------------
-	if (!m_sHeadShotParticle.size()) return;
-	Fmatrix pos; 	
-	CParticlesPlayer::MakeXFORM(this,element,HitDir,HitPos,pos);
-	//  particles
-	CParticlesObject* ps = NULL;
-	
-	ps = CParticlesObject::Create(m_sHeadShotParticle.c_str(),TRUE);
-
-	ps->UpdateParent(pos,Fvector().set(0.f,0.f,0.f));
-	GamePersistent().ps_needtoplay.push_back(ps);
 };
 
 bool CActor::InventoryAllowSprint()
