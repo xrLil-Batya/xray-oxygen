@@ -33,26 +33,6 @@ LPSTR remove_version_option(LPCSTR opt_str, LPSTR new_opt_str, u32 new_opt_str_s
 	return new_opt_str;
 }
 
-#ifdef DEBUG
-s32 lag_simmulator_min_ping	= 0;
-s32 lag_simmulator_max_ping	= 0;
-static bool SimmulateNetworkLag()
-{
-	static u32 max_lag_time	= 0;
-
-	if (!lag_simmulator_max_ping && !lag_simmulator_min_ping)
-		return false;
-	
-	if (!max_lag_time || (max_lag_time <= Device.dwTimeGlobal))
-	{
-		CRandom				tmp_random(Device.dwTimeGlobal);
-		max_lag_time		= Device.dwTimeGlobal + tmp_random.randI(lag_simmulator_min_ping, lag_simmulator_max_ping);
-		return false;
-	}
-	return true;
-}
-#endif
-
 void CLevel::ClientReceive()
 {
 	m_dwRPC = 0;
@@ -62,10 +42,7 @@ void CLevel::ClientReceive()
 	{
 		SimulateServerUpdate();
 	}
-#ifdef DEBUG
-	if (SimmulateNetworkLag())
-		return;
-#endif
+
 	StartProcessQueue();
 	for (NET_Packet* P = net_msg_Retreive(); P; P=net_msg_Retreive())
 	{
@@ -189,21 +166,7 @@ void CLevel::ClientReceive()
 			{
 				map_data.ReceiveServerMapSync(*P);
 			}break;
-		case M_SV_DIGEST:
-			{
-			}break;
 		case M_BULLET_CHECK_RESPOND:
-			{
-				if (!game) break;
-			}break;
-		case M_STATISTIC_UPDATE:
-			{
-				Msg("--- CL: On Update Request");
-					if (!game) break;
-				game_events->insert		(*P);
-				if (g_bDebugEvents)		ProcessGameEvents();
-			}break;
-		case M_STATISTIC_UPDATE_RESPOND: //deprecated, see  xrServer::OnMessage
 			{
 			}break;
 		}

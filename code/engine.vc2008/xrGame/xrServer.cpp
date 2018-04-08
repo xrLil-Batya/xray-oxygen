@@ -318,11 +318,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			xrClientData *l_pC			= ID_to_client(sender);
 			OnProcessClientMapData		(P, l_pC->ID);
 		}break;
-	case M_STATISTIC_UPDATE:
-		{
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-		}break;
-	case M_STATISTIC_UPDATE_RESPOND: {}break;
 	case M_PLAYER_FIRE:
 		{
 			if (game)

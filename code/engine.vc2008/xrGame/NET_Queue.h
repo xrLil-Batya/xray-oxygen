@@ -32,7 +32,6 @@ public:
 				P.r_u16			(type		);
 				P.r_u16			(destination);
 			}break;
-		case M_STATISTIC_UPDATE:
 		case M_GAMEMESSAGE:
 			{
 			}break;

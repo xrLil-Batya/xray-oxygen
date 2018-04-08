@@ -415,7 +415,6 @@ void CLevel::ProcessGameEvents()
 				{
 					cl_Process_Event(dest, type, P);
 				}break;
-			case M_STATISTIC_UPDATE: break;
 			case M_GAMEMESSAGE:
 				{
 					Game().OnGameMessage(P);

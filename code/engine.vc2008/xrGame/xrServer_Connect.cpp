@@ -89,8 +89,3 @@ void xrServer::RequestClientDigest(IClient* CL)
 	Check_BuildVersion_Success(CL);
 	return;
 }
-
-void xrServer::ProcessClientDigest(xrClientData*, NET_Packet*)
-{
-
-}
