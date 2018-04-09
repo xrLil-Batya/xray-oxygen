@@ -685,23 +685,19 @@ void CApplication::SetLoadStageTitle(const char* _ls_title)
 
 void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 {
-	xr_strcpy					(ls_header, str1);
-	xr_strcpy					(ls_tip_number, str2);
-	xr_strcpy					(ls_tip, str3);
-//	LoadDraw					();
+	xr_strcpy(ls_header, str1);
+	xr_strcpy(ls_tip_number, str2);
+	xr_strcpy(ls_tip, str3);
 }
 void CApplication::LoadStage()
 {
 	load_stage++;
-	VERIFY						(ll_dwReference);
-	Msg							("* phase time: %d ms",phase_timer.GetElapsed_ms());	phase_timer.Start();
-//	Msg							("* phase cmem: %d K", Memory.mem_usage()/1024);
+	VERIFY(ll_dwReference);
+	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());	phase_timer.Start();
 	
-    if  (g_pGamePersistent->GameType()==1)//[FX]: "alife" add on clicked new_game in main_manu !!! DON'T EDIT THIS LINE
-		max_load_stage			= 17;
-	else
-		max_load_stage			= 14;
-	LoadDraw					();
+	max_load_stage = 18;
+
+	LoadDraw();
 }
 
 void CApplication::LoadSwitch	()
