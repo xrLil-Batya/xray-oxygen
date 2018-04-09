@@ -88,4 +88,17 @@ __declspec( dllexport ) ULONG LibVersion()
 	return VERSION_3DSMAX; 
 }
 
+__declspec( dllexport ) int LibInitialize(void)
+{
+	return 1;
+}
 
+__declspec( dllexport ) int LibShutdown(void)
+{
+	return 1;
+}
+
+__declspec( dllexport ) int LibNumberClasses()
+{
+	return 1;
+}
