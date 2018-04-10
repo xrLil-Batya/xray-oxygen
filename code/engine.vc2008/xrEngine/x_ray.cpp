@@ -695,7 +695,7 @@ void CApplication::LoadStage()
 	VERIFY(ll_dwReference);
 	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());	phase_timer.Start();
 	
-	max_load_stage = 18;
+	max_load_stage = 19;
 
 	LoadDraw();
 }
