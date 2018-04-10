@@ -49,12 +49,8 @@
 #include "map_hint.h"
 #include "../game_news.h"
 
-#include "static_cast_checked.hpp"
 #include "UIHudStatesWnd.h"
 #include "UIActorMenu.h"
-
-void test_draw	();
-void test_key	(int dik);
 
 #include "../Include/xrRender/Kinematics.h"
 

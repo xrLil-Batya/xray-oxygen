@@ -106,15 +106,13 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
  
     cameras[eacFreeLook] = xr_new<CCameraLook>(this);
     cameras[eacFreeLook]->Load("actor_free_cam");
-    cameras[eacFixedLookAt] = xr_new<CCameraFixedLook>(this);
-    cameras[eacFixedLookAt]->Load("actor_look_cam");
 
     cam_active = eacFirstEye;
-	fPrevCamPos				= 0.0f;
-	vPrevCamDir.set			(0.f,0.f,1.f);
-	fCurAVelocity			= 0.0f;
-	// ���������
-	pCamBobbing				= 0;
+	fPrevCamPos = 0.0f;
+	vPrevCamDir.set(0.f,0.f,1.f);
+	fCurAVelocity = 0.0f;
+	// Раскачка
+	pCamBobbing = 0;
 
 
 	r_torso.yaw				= 0;

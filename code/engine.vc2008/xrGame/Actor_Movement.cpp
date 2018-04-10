@@ -14,7 +14,6 @@
 #include "WeaponMagazined.h"
 #include "CharacterPhysicsSupport.h"
 #include "actoreffector.h"
-#include "static_cast_checked.hpp"
 #include "player_hud.h"
 
 #ifdef DEBUG
@@ -311,10 +310,10 @@ void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Ju
 
 		if (state_anm)
 		{ //play moving cam effect
-			CActor*	control_entity = static_cast_checked<CActor*>(Level().CurrentControlEntity());
-			R_ASSERT2(control_entity, "current control entity is NULL");
+			CActor*	control_entity = static_cast<CActor*>(Level().CurrentControlEntity());
+			R_ASSERT2(control_entity, "current control entity is nullptr");
 			CEffectorCam* ec = control_entity->Cameras().GetCamEffector(eCEActorMoving);
-			if (NULL == ec)
+			if (nullptr == ec)
 			{
 				string_path			eff_name;
 				xr_sprintf(eff_name, sizeof(eff_name), "%s.anm", state_anm);

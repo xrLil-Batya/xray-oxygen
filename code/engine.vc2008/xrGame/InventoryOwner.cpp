@@ -188,30 +188,30 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 {
 	inventory().Update();
 
-	if ( m_pTrade )
+	if (m_pTrade)
 	{
 		m_pTrade->UpdateTrade();
 	}
-	if ( IsTrading() )
+	if (IsTrading())
 	{
 		//если мы умерли, то нет "trade"
-		if ( !is_alive() )
+		if (!is_alive())
 		{
 			StopTrading();
 		}
 	}
 
-	if ( IsTalking() )
+	if (IsTalking())
 	{
 		//если наш собеседник перестал говорить с нами,
 		//то и нам нечего ждать.
-		if ( !m_pTalkPartner->IsTalking() )
+		if (!m_pTalkPartner->IsTalking())
 		{
 			StopTalk();
 		}
 
 		//если мы умерли, то тоже не говорить
-		if ( !is_alive() )
+		if (!is_alive())
 		{
 			StopTalk();
 		}
@@ -309,11 +309,13 @@ void CInventoryOwner::renderable_Render		()
 #ifdef DEAD_BODY_WEAPON
 	if (inventory().ItemFromSlot(INV_SLOT_3))
 		inventory().ItemFromSlot(INV_SLOT_3)->renderable_Render();
+	else if (inventory().ItemFromSlot(INV_SLOT_2))
+		inventory().ItemFromSlot(INV_SLOT_2)->renderable_Render();
 #endif
 	CAttachmentOwner::renderable_Render();
 }
 
-void CInventoryOwner::OnItemTake			(CInventoryItem *inventory_item)
+void CInventoryOwner::OnItemTake(CInventoryItem *inventory_item)
 {
 	CGameObject	*object = smart_cast<CGameObject*>(this);
 	VERIFY		(object);

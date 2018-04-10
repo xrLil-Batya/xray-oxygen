@@ -4,8 +4,7 @@
 #include "ui/xrUIXmlParser.h"
 #include "xr_level_controller.h"
 
-STRING_TABLE_DATA* CStringTable::pData = NULL;
-BOOL CStringTable::m_bWriteErrorsToLog = FALSE;
+STRING_TABLE_DATA* CStringTable::pData = nullptr;
 
 CStringTable::CStringTable	()
 {
@@ -74,14 +73,7 @@ void CStringTable::Load	(LPCSTR xml_file_full)
 		VERIFY3(pData->m_StringTable.find(string_name) == pData->m_StringTable.end(), "duplicate string table id", string_name);
 
 		LPCSTR string_text		= uiXml.Read(uiXml.GetRoot(), "string:text", i,  NULL);
-
-		if(m_bWriteErrorsToLog && string_text)
-			Msg("[string table] '%s' no translation in '%s'", string_name, pData->m_sLanguage.c_str() );
-		
-		//VERIFY3						(string_text, "string table entry does not has a text", string_name);
-		
-		STRING_VALUE str_val		= ParseLine(string_text, string_name, true);
-		
+		shared_str str_val		= ParseLine(string_text, string_name, true);
 		pData->m_StringTable[string_name] = str_val;
 	}
 }
@@ -99,13 +91,13 @@ void CStringTable::ReparseKeyBindings()
 }
 
 
-STRING_VALUE CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
+shared_str CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
 {
 //	LPCSTR str = "1 $$action_left$$ 2 $$action_right$$ 3 $$action_left$$ 4";
     if (str == nullptr)
     {
         //doesn't have localization info, display as key
-        return STRING_VALUE(skey);
+        return shared_str(skey);
     }
 
 	xr_string			res;
@@ -147,10 +139,10 @@ STRING_VALUE CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
 
 	if(b_hit&&bFirst) pData->m_string_key_binding[skey] = str;
 
-	return STRING_VALUE(res.c_str());
+	return shared_str(res.c_str());
 }
 
-STRING_VALUE CStringTable::translate (const STRING_ID& str_id) const
+shared_str CStringTable::translate (const shared_str& str_id) const
 {
 	VERIFY					(pData);
 

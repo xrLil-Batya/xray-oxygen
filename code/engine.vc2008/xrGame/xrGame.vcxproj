@@ -1551,12 +1551,10 @@
     <ClInclude Include="..\xrServerEntities\shared_data.h" />
     <ClInclude Include="..\xrServerEntities\smart_cast.h" />
     <ClInclude Include="string_table.h" />
-    <ClInclude Include="string_table_defs.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_inline.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h" />
-    <ClInclude Include="static_cast_checked.hpp" />
     <ClInclude Include="xrClientsPool.h" />
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
@@ -2682,12 +2680,6 @@
     <ClCompile Include="ai\weighted_random.cpp" />
     <ClCompile Include="random32.cpp" />
     <ClCompile Include="string_table.cpp" />
-    <ClCompile Include="static_cast_checked_test.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="xrClientsPool.cpp" />
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">

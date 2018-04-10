@@ -3,7 +3,7 @@
 #include "actor.h"
 #include "CustomOutfit.h"
 #include "trade.h"
-#include "weapon.h"
+#include "weaponmagazined.h"
 
 #include "ui/UIInventoryUtilities.h"
 #include "ui/UIActorMenu.h"
@@ -22,10 +22,8 @@
 
 #ifdef DEAD_BODY_WEAPON
 #	include "ai/stalker/ai_stalker.h"
-#	include "weaponmagazined.h"
 #endif
 
-#include "static_cast_checked.hpp"
 #include "player_hud.h"
 
 using namespace InventoryUtilities;
