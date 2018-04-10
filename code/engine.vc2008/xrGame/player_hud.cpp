@@ -3,7 +3,7 @@
 #include "HudItem.h"
 #include "ui_base.h"
 #include "actor.h"
-#include "physic_item.h
+#include "physic_item.h"
 #include "actoreffector.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "inventory_item.h"
@@ -22,6 +22,7 @@ static const float ORIGIN_OFFSET        = -0.05f;   // Фактор влияни
 static const float ORIGIN_OFFSET_AIM    = -0.03f;   // (Для прицеливания)
 static const float TENDTO_SPEED         = 5.f;      // Скорость нормализации положения ствола
 static const float TENDTO_SPEED_AIM     = 8.f;      // (Для прицеливания)
+
 player_hud_motion* player_hud_motion_container::find_motion(const shared_str& name)
 {
 	xr_vector<player_hud_motion>::iterator it	= m_anims.begin();
@@ -93,9 +94,6 @@ void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_
 					pm->m_animations.resize			(pm->m_animations.size()+1);
 					pm->m_animations.back().mid		= motion_ID;
 					pm->m_animations.back().name	= buff;
-#ifdef DEBUG
-//					Msg(" alias=[%s] base=[%s] name=[%s]",pm->m_alias_name.c_str(), pm->m_base_name.c_str(), buff);
-#endif // #ifdef DEBUG
 				}
 			}
 			R_ASSERT2(pm->m_animations.size(),make_string("motion not found [%s]", pm->m_base_name.c_str()).c_str());
@@ -130,10 +128,11 @@ void attachable_hud_item::set_bone_visible(const shared_str& bone_name, BOOL bVi
 	u16  bone_id;
 	BOOL bVisibleNow;
 	bone_id			= m_model->LL_BoneID			(bone_name);
+
 	if(bone_id==BI_NONE)
 	{
 		if(bSilent)	return;
-		R_ASSERT2	(0,			make_string("model [%s] has no bone [%s]",pSettings->r_string(m_sect_name, "item_visual"), bone_name.c_str()).c_str());
+		R_ASSERT2	(0, make_string("model [%s] has no bone [%s]",pSettings->r_string(m_sect_name, "item_visual"), bone_name.c_str()).c_str());
 	}
 	bVisibleNow		= m_model->LL_GetBoneVisible	(bone_id);
 	if(bVisibleNow!=bVisibility)
@@ -202,7 +201,6 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		fire_mat.transform_tiny		(fd.vLastFP2,m_measures.m_fire_point2_offset);
 		m_item_transform.transform_tiny	(fd.vLastFP2);
 		VERIFY(_valid(fd.vLastFP2));
-		VERIFY(_valid(fd.vLastFP2));
 	}
 
 	if(m_measures.m_prop_flags.test(hud_item_measures::e_shell_point))
@@ -210,7 +208,6 @@ void attachable_hud_item::setup_firedeps(firedeps& fd)
 		Fmatrix& fire_mat			= m_model->LL_GetTransform(m_measures.m_shell_bone);
 		fire_mat.transform_tiny		(fd.vLastSP,m_measures.m_shell_point_offset);
 		m_item_transform.transform_tiny	(fd.vLastSP);
-		VERIFY(_valid(fd.vLastSP));
 		VERIFY(_valid(fd.vLastSP));
 	}
 }
@@ -462,8 +459,6 @@ void player_hud::load(const shared_str& player_hud_sect)
 			m_ancors.push_back		(m_model->dcast_PKinematics()->LL_BoneID(_bone));
 		}
 	}
-	
-//	Msg("hands visual changed to[%s] [%s] [%s]", model_name.c_str(), b_reload?"R":"", m_attached_items[0]?"Y":"");
 
 	if(!b_reload)
 	{
@@ -628,18 +623,13 @@ void player_hud::update_inertion(Fmatrix& trans)
     if (inertion_allowed())
     {
         attachable_hud_item* pMainHud = m_attached_items[0];
-								  
-					   
-
+		
         Fmatrix xform;
         Fvector& origin = trans.c;
         xform = trans;
 
-					
         static Fvector st_last_dir = {0, 0, 0};
-						  
-										   
-
+		
         // load params
         hud_item_measures::inertion_params inertion_data;
         if (pMainHud != NULL)
