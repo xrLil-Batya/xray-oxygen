@@ -130,10 +130,6 @@ void xrServer::client_Destroy(IClient* C)
 		{
 			game->CleanDelayedEventFor(pOwner->ID);
 		}
-		
-//.		if (!alife_client->flags.bVerified)
-		xrClientData*	xr_client = static_cast<xrClientData*>(alife_client);
-		m_disconnected_clients.Add(xr_client); //xr_delete(alife_client);				
 	}
 }
 

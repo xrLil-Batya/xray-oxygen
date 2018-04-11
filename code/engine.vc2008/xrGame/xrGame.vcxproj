@@ -1555,7 +1555,6 @@
     <ClInclude Include="..\xrServerEntities\associative_vector_inline.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h" />
-    <ClInclude Include="xrClientsPool.h" />
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="xrServerMapSync.h" />
@@ -1757,7 +1756,6 @@
     <ClCompile Include="raypick.cpp" />
     <ClCompile Include="action_base_script.cpp">
     </ClCompile>
-    <ClCompile Include="game_sv_item_respawner.cpp" />
     <ClCompile Include="script_action_wrapper.cpp">
     </ClCompile>
     <ClCompile Include="action_planner_script.cpp">
@@ -2680,7 +2678,6 @@
     <ClCompile Include="ai\weighted_random.cpp" />
     <ClCompile Include="random32.cpp" />
     <ClCompile Include="string_table.cpp" />
-    <ClCompile Include="xrClientsPool.cpp" />
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">
     </ClCompile>

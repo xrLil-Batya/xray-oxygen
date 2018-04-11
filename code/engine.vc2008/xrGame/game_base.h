@@ -5,22 +5,9 @@
 #pragma pack(push,1)
 class NET_Packet;
 
-struct RPoint
-{
-	Fvector	P;
-	Fvector A;
-	u32		TimeToUnfreeze;
-	bool	bBlocked;
-	u16		BlockedByID;
-	u32		BlockTime;
-	RPoint(){P.set(.0f,0.f,.0f);A.set(.0f,0.f,.0f); TimeToUnfreeze = 0; bBlocked = false;}
-	bool	operator ==		(const u16& ID)	const			{ return (bBlocked && BlockedByID == ID);		}
-};
-//--------------
-
 #pragma pack(pop)
 
-class	game_GameState : public DLL_Pure
+class game_GameState : public DLL_Pure
 {
 protected:
 	EGameIDs						m_type;

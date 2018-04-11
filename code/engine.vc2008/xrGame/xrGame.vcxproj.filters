@@ -2155,6 +2155,9 @@
     <Filter Include="Core\Client\Objects\Trade">
       <UniqueIdentifier>{d4634bbb-5b2b-4935-9834-0ac02849b001}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Server\Games\server\base">
+      <UniqueIdentifier>{365ed75e-e2e4-420d-aecd-9b4593b55b0e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -5556,9 +5559,6 @@
     <ClInclude Include="string_table.h">
       <Filter>Core\Common\StringTable</Filter>
     </ClInclude>
-    <ClInclude Include="string_table_defs.h">
-      <Filter>Core\Common\StringTable</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\associative_vector.h">
       <Filter>Core\Common\associative_vector\vector</Filter>
     </ClInclude>
@@ -5570,12 +5570,6 @@
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h">
       <Filter>Core\Common\associative_vector\compare</Filter>
-    </ClInclude>
-    <ClInclude Include="static_cast_checked.hpp">
-      <Filter>Core\Common\debug\static_cast_checked</Filter>
-    </ClInclude>
-    <ClInclude Include="xrClientsPool.h">
-      <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="xrServer.h">
       <Filter>Core\Server</Filter>
@@ -5622,13 +5616,7 @@
     <ClInclude Include="game_cl_base.h">
       <Filter>Core\Server\Games\client\base</Filter>
     </ClInclude>
-    <ClInclude Include="game_sv_base.h">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
     <ClInclude Include="game_sv_event_queue.h">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
-    <ClInclude Include="xr_time.h">
       <Filter>Core\Server\Games\server</Filter>
     </ClInclude>
     <ClInclude Include="game_sv_single.h">
@@ -6188,6 +6176,12 @@
     </ClInclude>
     <ClInclude Include="c_artefact.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Artifacts</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_time.h">
+      <Filter>Core\Server\Games\server</Filter>
+    </ClInclude>
+    <ClInclude Include="game_sv_base.h">
+      <Filter>Core\Server\Games\server\base</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -8156,12 +8150,6 @@
     <ClCompile Include="string_table.cpp">
       <Filter>Core\Common\StringTable</Filter>
     </ClCompile>
-    <ClCompile Include="static_cast_checked_test.cpp">
-      <Filter>Core\Common\debug\static_cast_checked</Filter>
-    </ClCompile>
-    <ClCompile Include="xrClientsPool.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
     <ClCompile Include="xrGame.cpp">
       <Filter>Core\Server</Filter>
     </ClCompile>
@@ -8180,13 +8168,7 @@
     <ClCompile Include="game_cl_base.cpp">
       <Filter>Core\Server\Games\client\base</Filter>
     </ClCompile>
-    <ClCompile Include="game_sv_base.cpp">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
     <ClCompile Include="game_sv_event_queue.cpp">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
-    <ClCompile Include="xr_time.cpp">
       <Filter>Core\Server\Games\server</Filter>
     </ClCompile>
     <ClCompile Include="game_sv_single.cpp">
@@ -8669,9 +8651,6 @@
     <ClCompile Include="..\xrServerEntities\script_debugger.cpp">
       <Filter>AI\AScript\ScriptDebugger</Filter>
     </ClCompile>
-    <ClCompile Include="game_sv_item_respawner.cpp">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
@@ -8848,6 +8827,12 @@
     </ClCompile>
     <ClCompile Include="c_artefact.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Artifacts</Filter>
+    </ClCompile>
+    <ClCompile Include="xr_time.cpp">
+      <Filter>Core\Server\Games\server</Filter>
+    </ClCompile>
+    <ClCompile Include="game_sv_base.cpp">
+      <Filter>Core\Server\Games\server\base</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

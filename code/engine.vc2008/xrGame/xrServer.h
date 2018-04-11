@@ -6,8 +6,6 @@
 #include "../xrEngine/ClS/net_server.h"
 #include "game_sv_base.h"
 #include "id_generator.h"
-#include "../xrEngine/mp_logging.h"
-#include "xrClientsPool.h"
 
 class CSE_Abstract;
 
@@ -118,7 +116,6 @@ public:
 	void	__stdcall		SendConfigFinished		(ClientID const & clientId);
 	void					AttachNewClient			(IClient* CL);
 protected:
-	xrClientsPool			m_disconnected_clients;
 	virtual IClient*		new_client				( SClientConnectData* cl_data );
 
 			void			RequestClientDigest					(IClient* CL);

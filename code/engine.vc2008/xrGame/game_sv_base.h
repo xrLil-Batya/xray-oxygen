@@ -19,8 +19,6 @@ protected:
 	xrServer*						m_server;
 	
 	GameEventQueue*					m_event_queue;
-	item_respawn_manager			m_item_respawner;
-		
 	//Events
 	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
 
@@ -28,30 +26,9 @@ protected:
 	virtual		void				ConsoleCommands_Create	();
 	virtual		void				ConsoleCommands_Clear	();
 
-	struct SMapRot{
-		shared_str	map_name;
-		shared_str	map_ver;
-	};
-	using MAP_ROTATION_LIST = xr_deque<SMapRot>;
-	bool							m_bMapRotation;
-	bool							m_bMapNeedRotation;
-	bool							m_bMapSwitched;
-	bool							m_bFastRestart;
-	MAP_ROTATION_LIST				m_pMapRotation_List;
-
 public:
-#define		TEAM_COUNT 4
-
 	BOOL							sv_force_sync;
-	float							rpoints_MinDist [TEAM_COUNT];
-	xr_vector<RPoint>				rpoints	[TEAM_COUNT];
-	using RPRef = xr_vector<RPoint*>;
-	RPRef							rpointsBlocked;
-	
-	virtual		void				SaveMapList				();
-	virtual		bool				HasMapRotation			() {return m_bMapRotation; };
 
-				bool				FindPlayerName			(char const * name, IClient const * to_exclude);
 public:
 	virtual		void				OnPlayerConnect			(ClientID id_who);
 	virtual		void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID);
@@ -62,29 +39,14 @@ public:
 	virtual		void				OnPlayer_Sell_Item		(ClientID id_who, NET_Packet &P) {};
 				void				GenerateGameMessage		(NET_Packet &P);
 
-				void				MapRotation_AddMap		(LPCSTR MapName, LPCSTR MapVer);
-				void				MapRotation_ListMaps	();
-	virtual		bool				OnNextMap				()									{return false;}
-	virtual		void				OnPrevMap				()									{}
-	virtual		bool				SwitchToNextMap			()	{ return m_bMapNeedRotation; };
-
 public:
 									game_sv_GameState		();
 	virtual							~game_sv_GameState		();
 	// Main accessors
 	virtual		void*				get_client				(u16 id);
-	
-	virtual		LPCSTR				get_name_id				(ClientID id);								
-				LPCSTR				get_player_name_id		(ClientID id);								
-	virtual		u16					get_id_2_eid			(ClientID id);
-	virtual		u32					get_players_count		();
 				CSE_Abstract*		get_entity_from_eid		(u16 id);
-				RPoint				getRP					(u16 team_idx, u32 rp_idx);
-				u32					getRPcount				(u16 team_idx);
 	// Signals
 	virtual		void				signal_Syncronize		();
-	virtual		bool				IsPointFreezed			(RPoint* rp);
-	virtual		void				SetPointFreezed			(RPoint* rp);
 
 #ifdef DEBUG
 	virtual		void				OnRender				();
@@ -98,7 +60,6 @@ public:
 	float							get_option_f			(LPCSTR lst, LPCSTR name, float def = 0.0f);
 	s32								get_option_i			(LPCSTR lst, LPCSTR name, s32 def = 0);
 	string64&						get_option_s			(LPCSTR lst, LPCSTR name, LPCSTR def = 0);
-	virtual		u32					get_alive_count			(u32 team);
 	virtual		xr_vector<u16>*		get_children			(ClientID id_who);
 	void							u_EventGen				(NET_Packet& P, u16 type, u16 dest	);
 	void							u_EventSend				(NET_Packet& P, u32 dwFlags = DPNSEND_GUARANTEED);
@@ -136,8 +97,6 @@ public:
 				void				CleanDelayedEventFor	(ClientID const & clientId);
 				void				CleanDelayedEvents		();
 
-	virtual		BOOL				isFriendlyFireEnabled	()	{return FALSE;};
-	virtual		BOOL				CanHaveFriendlyFire		()	= 0;
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
 	virtual		void				add_restriction			(NET_Packet &packet, u16 id);
 	virtual		void				remove_restriction		(NET_Packet &packet, u16 id);
@@ -150,6 +109,4 @@ public:
 	static		shared_str			parse_level_version		(const shared_str &server_options);
 
 	virtual		void				on_death				(CSE_Abstract *e_dest, CSE_Abstract *e_src);
-
-	virtual		void				DumpOnlineStatistic		(){};
 };
