@@ -260,11 +260,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			};			
 		}break;
 	//-------------------------------------------------------------------
-	case M_GAMEMESSAGE:
-		{
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-			VERIFY					(verify_entities());
-		}break;
 	case M_CLIENTREADY:
 		{
 			game->OnPlayerConnectFinished(sender);

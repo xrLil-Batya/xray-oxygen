@@ -122,12 +122,6 @@ void CLevel::ClientReceive()
 			{
 				game_configured			= TRUE;
 			}break;
-		case M_GAMEMESSAGE:
-			{
-				if (!game) break;
-				game_events->insert		(*P);
-				if (g_bDebugEvents)		ProcessGameEvents();
-			}break;
 		case M_RELOAD_GAME:
 		case M_LOAD_GAME:
 		case M_CHANGE_LEVEL:

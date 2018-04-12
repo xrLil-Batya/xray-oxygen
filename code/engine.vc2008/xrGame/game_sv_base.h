@@ -14,29 +14,21 @@ class GameEventQueue;
 class	game_sv_GameState	: public game_GameState
 {
 	typedef game_GameState inherited;
-protected:
-	xrServer*						m_server;
-	
-	GameEventQueue*					m_event_queue;
-	//Events
-	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
-
-	virtual		void				ReadOptions				(shared_str &options);
-	virtual		void				ConsoleCommands_Create	();
-	virtual		void				ConsoleCommands_Clear	();
 
 public:
 	BOOL							sv_force_sync;
-
+protected:
+	xrServer*						m_server;
+	GameEventQueue*					m_event_queue;
+	//Events
+	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
 public:
 	virtual		void				OnPlayerConnect			(ClientID id_who);
 	virtual		void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID);
-	virtual		void				OnPlayerReady			(ClientID id_who)							   {};
-	virtual		void				OnPlayerEnteredGame		(ClientID id_who)	{};
+	virtual		void				OnPlayerReady			(ClientID id_who)	{};
 	virtual		void				OnPlayerConnectFinished	(ClientID id_who)	{};
 	virtual		void				OnPlayerFire			(ClientID id_who, NET_Packet &P) {};
 	virtual		void				OnPlayer_Sell_Item		(ClientID id_who, NET_Packet &P) {};
-				void				GenerateGameMessage		(NET_Packet &P);
 
 public:
 									game_sv_GameState		();
@@ -56,9 +48,7 @@ public:
 				CSE_Abstract*		spawn_end				(CSE_Abstract* E, ClientID id);
 
 	// Utilities
-	float							get_option_f			(LPCSTR lst, LPCSTR name, float def = 0.0f);
 	s32								get_option_i			(LPCSTR lst, LPCSTR name, s32 def = 0);
-	string64&						get_option_s			(LPCSTR lst, LPCSTR name, LPCSTR def = 0);
 	virtual		xr_vector<u16>*		get_children			(ClientID id_who);
 	void							u_EventGen				(NET_Packet& P, u16 type, u16 dest	);
 	void							u_EventSend				(NET_Packet& P, u32 dwFlags = DPNSEND_GUARANTEED);
@@ -86,7 +76,6 @@ public:
 	virtual		bool				change_level			(NET_Packet &net_packet, ClientID sender);
 	virtual		void				save_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
-	virtual		void				reload_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		void				switch_distance			(NET_Packet &net_packet, ClientID sender);
 
 				void				AddDelayedEvent			(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );

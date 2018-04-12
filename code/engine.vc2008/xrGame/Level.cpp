@@ -415,10 +415,6 @@ void CLevel::ProcessGameEvents()
 				{
 					cl_Process_Event(dest, type, P);
 				}break;
-			case M_GAMEMESSAGE:
-				{
-					Game().OnGameMessage(P);
-				}break;
 			default:
 				{
 					VERIFY(0);

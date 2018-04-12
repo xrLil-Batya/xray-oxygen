@@ -24,7 +24,6 @@ enum {
 	M_SAVE_PACKET,
 
 	M_SWITCH_DISTANCE,
-	M_GAMEMESSAGE,					// Game Message
 	M_EVENT_PACK,					// Pack of M_EVENT
 	//-----------------------------------------------------
 	M_CLIENT_CONNECT_RESULT,
