@@ -5,7 +5,7 @@
 class xrServer;
 class CALifeSimulator;
 
-class	game_sv_Single				: public game_sv_GameState
+class game_sv_Single : public game_sv_GameState
 {
 private:
 	typedef game_sv_GameState inherited;
@@ -17,9 +17,7 @@ public:
 									game_sv_Single			();
 	virtual							~game_sv_Single			();
 
-	virtual		LPCSTR				type_name				() const { return "single";};
 	virtual		void				Create					(shared_str& options);
-
 
 	virtual		void				OnCreate				(u16 id_who);
 	virtual		BOOL				OnTouch					(u16 eid_who, u16 eid_what, BOOL bForced = FALSE);
@@ -41,7 +39,6 @@ public:
 	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		void				reload_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		void				switch_distance			(NET_Packet &net_packet, ClientID sender);
-	virtual		BOOL				CanHaveFriendlyFire		()	{return FALSE;}
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
 	virtual		void				add_restriction			(NET_Packet &packet, u16 id);
 	virtual		void				remove_restriction		(NET_Packet &packet, u16 id);

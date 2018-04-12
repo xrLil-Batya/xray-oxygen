@@ -157,9 +157,10 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			if (!e_dest)
 				break;
 
-			CSE_Abstract*		e_src		= game->get_entity_from_eid	(id_src	);	// кто убил
-			if (!e_src) {
-				xrClientData*	C = (xrClientData*)	game->get_client(id_src);
+			CSE_Abstract* e_src = game->get_entity_from_eid(id_src);	// кто убил
+			if (!e_src) 
+			{
+				xrClientData* C = (xrClientData*)game->get_client(id_src);
 				if (C) e_src = C->owner;
 			};
 

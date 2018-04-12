@@ -11,7 +11,7 @@
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
 #pragma warning(push)
-#pragma warning(disable: 4005)
+#pragma warning(disable: 6001 6221 4005)
 
 // This version only supports UNICODE.
 #include "stdafx.h"
@@ -60,8 +60,6 @@
 
 //-----------------------------------------------------------------------------
 #define BUFFER_SIZE 3000
-
-#pragma warning( disable : 6001 6221 )
 
 //--------------------------------------------------------------------------------------
 #define  CHK_ERR(hrchk, strOut) \
@@ -3966,4 +3964,5 @@ HRESULT XRCORE_API DXTraceW( _In_z_ const WCHAR* strFile, _In_ DWORD dwLine, _In
 
     return hr;
 }
+
 #pragma warning(pop)
