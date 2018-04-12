@@ -19,7 +19,6 @@ enum {
 	
 	M_CHANGE_LEVEL,				// changing level
 	M_LOAD_GAME,
-	M_RELOAD_GAME,
 	M_SAVE_GAME,
 	M_SAVE_PACKET,
 
@@ -33,9 +32,6 @@ enum {
 	//-----------------------------------------------------
 	M_PLAYER_FIRE,
 	//-----------------------------------------------------
-	M_REMOTE_CONTROL_AUTH,
-	M_REMOTE_CONTROL_CMD,
-
 	M_SV_MAP_NAME,				//request and responce
 
 	MSG_FORCEDWORD				= u32(-1)

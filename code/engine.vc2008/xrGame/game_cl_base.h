@@ -66,8 +66,6 @@ public:
 	void							u_EventGen				(NET_Packet& P, u16 type, u16 dest);
 	void							u_EventSend				(NET_Packet& P);
 
-	virtual		void				OnRadminMessage			(u16 type, NET_Packet* P)	{};
-	
 	virtual		void				OnRender				()	{};
 	virtual		bool				IsServerControlHits		()	{return m_bServerControlHits;};
 	virtual		bool				IsEnemy					(CEntityAlive* ea1, CEntityAlive* ea2)	{return false;};
@@ -76,7 +74,6 @@ public:
 	virtual		void				OnSpawn					(CObject* pObj)	{};
 	virtual		void				OnDestroy				(CObject* pObj)	{};
 
-	virtual		void				OnNewPlayerConnected	(ClientID const & newClient) {};
 	virtual		void				SendPickUpEvent			(u16 ID_who, u16 ID_what);
 
 	virtual		void				OnConnected				();

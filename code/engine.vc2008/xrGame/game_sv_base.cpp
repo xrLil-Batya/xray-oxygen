@@ -34,7 +34,7 @@ CSE_Abstract*		game_sv_GameState::get_entity_from_eid		(u16 id)
 
 // Utilities
 
-xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
+xr_vector<u16>* game_sv_GameState::get_children(ClientID id)
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
 	if (0==C)			return 0;
@@ -43,7 +43,7 @@ xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
 	return	&(E->children);
 }
 
-s32 game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
+s32 game_sv_GameState::get_option_i(LPCSTR lst, LPCSTR name, s32 def)
 {
 	string64		op;
 	strconcat		(sizeof(op),op,"/",name,"=");
@@ -53,7 +53,7 @@ s32 game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
 
 void game_sv_GameState::signal_Syncronize()
 {
-	sv_force_sync	= TRUE;
+	sv_force_sync = TRUE;
 }
 
 // Network
@@ -117,7 +117,7 @@ void game_sv_GameState::Create(shared_str &options)
 }
 
 //-----------------------------------------------------------
-CSE_Abstract*		game_sv_GameState::spawn_begin				(LPCSTR N)
+CSE_Abstract* game_sv_GameState::spawn_begin(LPCSTR N)
 {
 	CSE_Abstract*	A	=   F_entity_Create(N);	R_ASSERT(A);	// create SE
 	A->s_name			=   N;									// ltx-def
@@ -129,7 +129,7 @@ CSE_Abstract*		game_sv_GameState::spawn_begin				(LPCSTR N)
 	return A;
 }
 
-CSE_Abstract*		game_sv_GameState::spawn_end				(CSE_Abstract* E, ClientID id)
+CSE_Abstract* game_sv_GameState::spawn_end(CSE_Abstract* E, ClientID id)
 {
 	NET_Packet						P;
 	u16								skip_header;
@@ -253,12 +253,6 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 			R_ASSERT3	(0,"Game Event not implemented!!!", itoa(type, tmp, 10));
 		};
 	};
-}
-
-void game_sv_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
-{
-	inherited::OnSwitchPhase(old_phase, new_phase);
-	signal_Syncronize	(); 
 }
 
 void game_sv_GameState::AddDelayedEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )

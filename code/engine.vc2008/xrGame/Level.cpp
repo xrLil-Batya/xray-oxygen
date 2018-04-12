@@ -281,19 +281,10 @@ CLevel::~CLevel()
 	}
 }
 
-shared_str	CLevel::name		() const
+shared_str CLevel::name() const
 {
-	return						(map_data.m_name);
+	return (map_data.m_name);
 }
-
-void CLevel::GetLevelInfo( CServerInfo* si )
-{
-	if ( Server && game )
-	{
-		Server->GetServerInfo( si );
-	}
-}
-
 
 void CLevel::PrefetchSound		(LPCSTR name)
 {

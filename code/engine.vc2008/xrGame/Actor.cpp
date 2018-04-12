@@ -38,8 +38,6 @@
 #include "inventory.h"
 #include "level.h"
 #include "GamePersistent.h"
-#include "game_cl_base.h"
-#include "game_cl_single.h"
 #include "xrmessages.h"
 #include "string_table.h"
 #include "usablescriptobject.h"

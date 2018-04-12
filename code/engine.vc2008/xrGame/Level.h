@@ -252,10 +252,6 @@ public:
 	//названияе текущего уровня
 	virtual shared_str			name					() const;
 			shared_str			version					() const { return map_data.m_map_version; } //this method can be used ONLY from CCC_ChangeGameType
-
-	virtual void				GetLevelInfo		( CServerInfo* si );
-
-	//gets the time from the game simulation
 	
 	//возвращает время в милисекундах относительно начала игры
 	ALife::_TIME_ID		GetStartGameTime		();
