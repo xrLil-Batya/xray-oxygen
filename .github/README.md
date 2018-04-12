@@ -23,7 +23,7 @@ X-Ray 1.6.02.f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xra
 ## License
 
 * [GSC](https://github.com/xrOxygen/xray-oxygen/blob/master/LICENSE-GSC.md)
-* [Apache 2.0](https://github.com/xrOxygen/xray-oxygen/blob/master/LICENSE)
+* [Apache 2.0](https://github.com/xrOxygen/xray-oxygen/blob/master/LICENSE.md)
 * Allowed to use in **any** projects
 
 ## Contributors
@@ -57,5 +57,6 @@ Also used code of this developers and teams:
 * Полтергейст
 * Kolmogor
 * [DJYar](https://github.com/DJYar)
-* OpenXRay Team with different developers of forks and another open projects
+* [OpenXRay](https://github.com/openxray) Team with different developers of forks and another open projects
 * [X-Ray Engine by Alpet & KD](https://xp-dev.com/summary/210311)
+* [OGSR Fork](https://github.com/KRodinn/OGSR-Engine)
