@@ -5,7 +5,6 @@
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrCore/client_id.h"
 #include "game_sv_event_queue.h"
-#include "game_sv_item_respawner.h"
 #include "../xrEngine/ClS/NET_Server.h"
 
 class CSE_Abstract;
@@ -74,8 +73,8 @@ public:
 
 	virtual		void				OnDestroyObject			(u16 eid_who);			
 
-	virtual		void				OnHit					(u16 id_hitter, u16 id_hitted, NET_Packet& P);	//кто-то получил Hit
-	virtual		void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P){}; //игрок получил Hit
+	virtual		void				OnHit					(u16 id_hitter, u16 id_hitted, NET_Packet& P);	//ГЄГІГ®-ГІГ® ГЇГ®Г«ГіГ·ГЁГ« Hit
+	virtual		void				OnPlayerHitPlayer		(u16 id_hitter, u16 id_hitted, NET_Packet& P){}; //ГЁГЈГ°Г®ГЄ ГЇГ®Г«ГіГ·ГЁГ« Hit
 
 	// Main
 	virtual		void				Create					(shared_str& options);
