@@ -63,9 +63,8 @@ xrServer::~xrServer()
 
 //--------------------------------------------------------------------
 
-CSE_Abstract*	xrServer::ID_to_entity		(u16 ID)
+CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 {
-	// #pragma todo("??? to all : ID_to_entity - must be replaced to 'game->entity_from_eid()'")	
 	if (0xffff==ID)				return 0;
 	xrS_entities::iterator	I	= entities.find	(ID);
 	if (entities.end()!=I)		return I->second;
@@ -73,7 +72,7 @@ CSE_Abstract*	xrServer::ID_to_entity		(u16 ID)
 }
 
 //--------------------------------------------------------------------
-IClient*	xrServer::client_Create		()
+IClient* xrServer::client_Create()
 {
 	return xr_new<xrClientData> ();
 }
@@ -91,8 +90,6 @@ IClient* xrServer::client_Find_Get	(ClientID ID)
 
 	return newCL;
 };
-
-u32	g_sv_Client_Reconnect_Time = 3;
 
 void xrServer::client_Destroy(IClient* C)
 {
@@ -183,41 +180,16 @@ void xrServer::Update	()
 
 u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
 {
-	u16						type;
-	P.r_begin				(type);
+	u16 type;
+	P.r_begin(type);
 
-	VERIFY							(verify_entities());
-	xrClientData* CL				= ID_to_client(sender);
-
-	switch (type)
+	if (type == M_CLIENT_REQUEST_CONNECTION_DATA)
 	{
-		case M_CLIENT_REQUEST_CONNECTION_DATA:
-		{
-			IClient* tmp_client = net_players.GetFoundClient(
-				ClientIdSearchPredicate(sender));
-			VERIFY(tmp_client);
-			OnCL_Connected(tmp_client);
-			//OnCL_Connected				(CL);
-		}break;
-		case M_REMOTE_CONTROL_CMD:
-		{
-			{
-				NET_Packet			P_answ;			
-				P_answ.w_begin		(M_REMOTE_CONTROL_CMD);
-				P_answ.w_stringZ	("you dont have admin rights");
-				SendTo				(sender,P_answ,net_flags(TRUE,TRUE));
-			}
-		}break;
+		IClient* tmp_client = net_players.GetFoundClient(ClientIdSearchPredicate(sender));
+		OnCL_Connected(tmp_client);
 	}
-	VERIFY							(verify_entities());
+	VERIFY(verify_entities());
 	return 0;
-}
-
-u32	xrServer::OnMessageSync(NET_Packet& P, ClientID sender)
-{
-    std::lock_guard<decltype(csMessage)> lock(csMessage);
-	u32 ret = OnMessage(P, sender);
-	return ret;
 }
 
 extern	float	g_fCatchObjectTime;
@@ -260,15 +232,9 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			};			
 		}break;
 	//-------------------------------------------------------------------
-	case M_GAMEMESSAGE:
-		{
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-			VERIFY					(verify_entities());
-		}break;
 	case M_CLIENTREADY:
 		{
 			game->OnPlayerConnectFinished(sender);
-			//game->signal_Syncronize	();
 			VERIFY					(verify_entities());
 		}break;
 	case M_SWITCH_DISTANCE:
@@ -295,11 +261,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
 			VERIFY					(verify_entities());
 		}break;
-	case M_RELOAD_GAME:
-		{
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
-			VERIFY					(verify_entities());
-		}break;
 	case M_SAVE_PACKET:
 		{
 			Process_save			(P,sender);
@@ -319,22 +280,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			if (game)
 				game->OnPlayerFire(sender, P);
 		}break;
-	case M_REMOTE_CONTROL_AUTH:
-		{
-			string512				reason;
-			shared_str				user;
-			P.r_stringZ				(user);
-
-			NET_Packet			P_answ;			
-			P_answ.w_begin		(M_REMOTE_CONTROL_AUTH);
-			P_answ.w_stringZ	(reason);
-			SendTo				(CL->ID,P_answ,net_flags(TRUE,TRUE));
-		}break;
-
-	case M_REMOTE_CONTROL_CMD:
-		{
-			AddDelayedPacket(P, sender);
-		}break;
 	}
 	VERIFY (verify_entities());
 
@@ -344,7 +289,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 void xrServer::SendTo_LL(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
 {
 	// optimize local traffic
-	Level().OnMessage			(data,size);
+	Level().OnMessage(data,size);
 }
 
 void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
@@ -508,23 +453,6 @@ void xrServer::AddDelayedPacket	(NET_Packet& Packet, ClientID Sender)
 	DelayedPacket* NewPacket = &(m_aDelayedPackets.back());
 	NewPacket->SenderID = Sender;
     std::memcpy(&(NewPacket->Packet),&Packet,sizeof(NET_Packet));
-}
-
-void xrServer::GetServerInfo(CServerInfo* si)
-{
-	string256 tmp256;
-
-	LPCSTR time = InventoryUtilities::GetTimeAsString(Device.dwTimeGlobal, InventoryUtilities::etpTimeToSecondsAndDay).c_str();
-
-	si->AddItem("Uptime", time, RGB(255, 228, 0));
-	si->AddItem("Game type", "single", RGB(128, 255, 255));
-
-	if (g_pGameLevel)
-	{
-		time = InventoryUtilities::GetGameTimeAsString(InventoryUtilities::etpTimeToMinutes).c_str();
-		xr_strcpy(tmp256, time);
-		si->AddItem("Game time", tmp256, RGB(205, 228, 178));
-	}
 }
 
 void xrServer::Disconnect()

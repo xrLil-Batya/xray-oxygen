@@ -131,8 +131,8 @@ public:
 
 	// extended functionality
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
-			u32				OnMessageSync		(NET_Packet& P, ClientID sender);
 	virtual void			OnCL_Connected		(IClient* CL);
+
 	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
 
@@ -143,7 +143,6 @@ public:
 	// utilities
 	CSE_Abstract*			entity_Create		(LPCSTR name);
 	void					entity_Destroy		(CSE_Abstract *&P);
-	u32						GetEntitiesNum		()			{ return entities.size(); };
 	CSE_Abstract*			GetEntity			(u32 Num);
 
 	xrClientData*			ID_to_client		(ClientID ID, bool ScanAll = false ) { return (xrClientData*)(IPureServer::ID_to_client( ID, ScanAll)); }
@@ -163,8 +162,6 @@ public:
 
 	void					create_direct_client();
 
-	
-	virtual void			GetServerInfo		( CServerInfo* si );
 #ifdef DEBUG
 public:
 			bool			verify_entities		() const;

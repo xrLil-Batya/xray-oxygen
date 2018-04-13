@@ -13,14 +13,12 @@
 #include "string_table.h"
 
 #include "debug_renderer.h"
-#define			MAPROT_LIST_NAME		"maprot_list.ltx"
-string_path		MAPROT_LIST		= "";
+
+//-----------------------------------------------------------------
 BOOL	net_sv_control_hit	= FALSE		;
 BOOL	g_bCollectStatisticData = TRUE;
 //-----------------------------------------------------------------
-u32		g_sv_base_dwRPointFreezeTime	= 0;
-int		g_sv_base_iVotingEnabled		= 0x00ff;
-//-----------------------------------------------------------------
+
 void* game_sv_GameState::get_client (u16 id) //if exist
 {
 	CSE_Abstract* entity = get_entity_from_eid(id);
@@ -36,7 +34,7 @@ CSE_Abstract*		game_sv_GameState::get_entity_from_eid		(u16 id)
 
 // Utilities
 
-xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
+xr_vector<u16>* game_sv_GameState::get_children(ClientID id)
 {
 	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
 	if (0==C)			return 0;
@@ -45,7 +43,7 @@ xr_vector<u16>*		game_sv_GameState::get_children				(ClientID id)
 	return	&(E->children);
 }
 
-s32					game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
+s32 game_sv_GameState::get_option_i(LPCSTR lst, LPCSTR name, s32 def)
 {
 	string64		op;
 	strconcat		(sizeof(op),op,"/",name,"=");
@@ -53,70 +51,13 @@ s32					game_sv_GameState::get_option_i				(LPCSTR lst, LPCSTR name, s32 def)
 	else				return def;
 }
 
-float					game_sv_GameState::get_option_f				(LPCSTR lst, LPCSTR name, float def)
+void game_sv_GameState::signal_Syncronize()
 {
-	string64		op;
-	strconcat		(sizeof(op),op,"/",name,"=");
-	LPCSTR			found =	strstr(lst,op);
-
-	if (found)
-	{	
-		float		val;
-		int cnt		= sscanf(found+xr_strlen(op),"%f",&val);
-		VERIFY		(cnt==1);
-		return		val;
-//.		return atoi	(strstr(lst,op)+xr_strlen(op));
-	}else
-		return def;
-}
-
-string64&			game_sv_GameState::get_option_s				(LPCSTR lst, LPCSTR name, LPCSTR def)
-{
-	static string64	ret;
-
-	string64		op;
-	strconcat		(sizeof(op),op,"/",name,"=");
-	LPCSTR			start	= strstr(lst,op);
-	if (start)		
-	{
-		LPCSTR			begin	= start + xr_strlen(op); 
-		sscanf			(begin, "%[^/]",ret);
-	}
-	else			
-	{
-		if (def)	xr_strcpy		(ret,def);
-		else		ret[0]=0;
-	}
-	return ret;
-}
-void				game_sv_GameState::signal_Syncronize		()
-{
-	sv_force_sync	= TRUE;
+	sv_force_sync = TRUE;
 }
 
 // Network
-
-struct player_exporter
-{
-	u16					counter;
-	ClientID			to_client;
-	NET_Packet*			p_to_send;
-
-	void __stdcall count_players(IClient* client)
-	{
-		xrClientData* tmp_client = static_cast<xrClientData*>(client);
-		if (!tmp_client->net_Ready)
-		{
-			return;
-		}
-		++counter;
-	}
-	void __stdcall export_players(IClient* client)
-	{
-	}
-};
-
-void game_sv_GameState::net_Export_State						(NET_Packet& P, ClientID to)
+void game_sv_GameState::net_Export_State(NET_Packet& P, ClientID to)
 {
 	// Generic
 	P.w_clientID	(to);
@@ -134,7 +75,7 @@ void game_sv_GameState::net_Export_Update(NET_Packet& P, ClientID id_to, ClientI
 	net_Export_GameTime			(P);
 };
 
-void game_sv_GameState::net_Export_GameTime						(NET_Packet& P)
+void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 {
 	//Syncronize GameTime 
 	P.w_u64(GetGameTime());
@@ -173,41 +114,10 @@ void game_sv_GameState::Create(shared_str &options)
 			ai().script_engine().add_script_process(ScriptEngine::eScriptProcessorGame, xr_new<CScriptProcess>("game", ""));
 	}
     xr_delete(l_tpIniFile);
-	//---------------------------------------------------------------------
-	ConsoleCommands_Create();
-	//---------------------------------------------------------------------
-	ReadOptions(options);	
 }
 
-void	game_sv_GameState::ReadOptions				(shared_str &options)
-{
-	g_sv_base_dwRPointFreezeTime = get_option_i(*options, "rpfrz", g_sv_base_dwRPointFreezeTime/1000) * 1000;
-
-//.	xr_strcpy(MAPROT_LIST, MAPROT_LIST_NAME);
-//.	if (!FS.exist(MAPROT_LIST))
-	FS.update_path(MAPROT_LIST, "$app_data_root$", MAPROT_LIST_NAME);
-	if (FS.exist(MAPROT_LIST))
-		Console->ExecuteScript(MAPROT_LIST);
-	
-	g_sv_base_iVotingEnabled = get_option_i(*options,"vote",(g_sv_base_iVotingEnabled));
-	//---------------------------
-	//Convert old vote param
-	if (g_sv_base_iVotingEnabled != 0)
-	{
-		if (g_sv_base_iVotingEnabled == 1)
-			g_sv_base_iVotingEnabled = 0x00ff;
-	}
-};
 //-----------------------------------------------------------
-void	game_sv_GameState::ConsoleCommands_Create	()
-{
-};
-
-void	game_sv_GameState::ConsoleCommands_Clear	()
-{
-};
-
-CSE_Abstract*		game_sv_GameState::spawn_begin				(LPCSTR N)
+CSE_Abstract* game_sv_GameState::spawn_begin(LPCSTR N)
 {
 	CSE_Abstract*	A	=   F_entity_Create(N);	R_ASSERT(A);	// create SE
 	A->s_name			=   N;									// ltx-def
@@ -219,7 +129,7 @@ CSE_Abstract*		game_sv_GameState::spawn_begin				(LPCSTR N)
 	return A;
 }
 
-CSE_Abstract*		game_sv_GameState::spawn_end				(CSE_Abstract* E, ClientID id)
+CSE_Abstract* game_sv_GameState::spawn_end(CSE_Abstract* E, ClientID id)
 {
 	NET_Packet						P;
 	u16								skip_header;
@@ -230,11 +140,6 @@ CSE_Abstract*		game_sv_GameState::spawn_end				(CSE_Abstract* E, ClientID id)
 
 	return N;
 }
-
-void game_sv_GameState::GenerateGameMessage (NET_Packet &P)
-{ 
-	P.w_begin(M_GAMEMESSAGE); 
-};
 
 void game_sv_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 {
@@ -283,8 +188,6 @@ game_sv_GameState::~game_sv_GameState()
 {
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
 	xr_delete(m_event_queue);
-	//-------------------------------------------------------
-	ConsoleCommands_Clear();
 }
 
 bool game_sv_GameState::change_level (NET_Packet &net_packet, ClientID sender)
@@ -299,10 +202,6 @@ void game_sv_GameState::save_game (NET_Packet &net_packet, ClientID sender)
 bool game_sv_GameState::load_game (NET_Packet &net_packet, ClientID sender)
 {
 	return						(true);
-}
-
-void game_sv_GameState::reload_game (NET_Packet &net_packet, ClientID sender)
-{
 }
 
 void game_sv_GameState::switch_distance (NET_Packet &net_packet, ClientID sender)
@@ -354,12 +253,6 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 			R_ASSERT3	(0,"Game Event not implemented!!!", itoa(type, tmp, 10));
 		};
 	};
-}
-
-void game_sv_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
-{
-	inherited::OnSwitchPhase(old_phase, new_phase);
-	signal_Syncronize	(); 
 }
 
 void game_sv_GameState::AddDelayedEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )

@@ -96,57 +96,9 @@ void MultipacketSender::_FlushSendBuffer(u32 timeout, Buffer* buf)
 	} // if buffer not empty
 }
 
-
 //------------------------------------------------------------------------------
-
-void
-MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 param)
+#include "NET_Messages.h"
+void MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 param)
 {
-	MultipacketHeader*  header = (MultipacketHeader*)packet_data;
-	u8                  data[MaxMultipacketSize];
-
-	if (header->tag != NET_TAG_MERGED && header->tag != NET_TAG_NONMERGED)
-		return;
-
-	std::memcpy(data, (u8*)packet_data + sizeof(MultipacketHeader), packet_sz - sizeof(MultipacketHeader));
-
-	if (strstr(Core.Params, "-dump_traffic"))
-	{
-		static bool first_time = true;
-		FILE*       dump = fopen("raw-in-traffic.bins", (first_time) ? "wb" : "ab");
-
-		if (first_time)
-		{
-			fwrite("BINS", 4, 1, dump);
-			first_time = false;
-		}
-
-		u16 sz = header->unpacked_size;
-
-		fwrite(&sz, sizeof(u16), 1, dump);
-		fwrite(data, header->unpacked_size, 1, dump);
-		fclose(dump);
-	}
-
-
-	bool    is_multi_packet = header->tag == NET_TAG_MERGED;
-	u32     processed_sz = 0;
-	u8*     dat = data;
-
-	while (processed_sz < header->unpacked_size)
-	{
-		u32 size = (is_multi_packet) ? u32(*((u16*)dat)) : header->unpacked_size;
-
-		if (is_multi_packet)
-			dat += sizeof(u16);
-
-#if NET_LOG_PACKETS
-		Msg("  packet %u", size);
-#endif
-
-		_Recieve(dat, size, param);
-
-		dat += size;
-		processed_sz += size + ((is_multi_packet) ? sizeof(u16) : 0);
-	}
+#pragma todo("FX: Remove me!")
 }

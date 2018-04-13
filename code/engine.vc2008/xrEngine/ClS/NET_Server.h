@@ -57,21 +57,7 @@ private:
 
 IC bool operator== (IClient const* pClient, ClientID const& ID) { return pClient->ID == ID; }
 
-class ENGINE_API IServerStatistic
-{
-public:
-	void	clear();
-
-	u32		bytes_out,bytes_out_real;
-	u32		bytes_in, bytes_in_real;
-
-	u32		dwBytesSended;
-	u32		dwSendTime;
-	u32		dwBytesPerSec;
-};
-
 //==============================================================================
-
 struct ClientIdSearchPredicate
 {
 	ClientID clientId;
@@ -109,7 +95,6 @@ protected:
 	std::recursive_mutex		csMessage;
 	
 	// Statistic
-	IServerStatistic		stats;
 	CTimer*					device_timer;
 
 	IClient*				ID_to_client		(ClientID ID, bool ScanAll = false);
@@ -131,11 +116,6 @@ public:
 	void					SendBroadcast_LL	(ClientID exclude, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED);
 	virtual void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
 
-	// statistic
-	const IServerStatistic*	GetStatistic		() { return &stats; }
-	void					ClearStatistic		();
-	void					UpdateClientStatistic		(IClient* C);
-
 	// extended functionality
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender) = 0;
 	virtual void			OnCL_Connected		(IClient* C);
@@ -144,11 +124,7 @@ public:
 	virtual IClient*		client_Create		()				= 0;			// create client info
 	virtual void			client_Destroy		(IClient* C)	= 0;			// destroy client info
 
-	BOOL					HasBandwidth			(IClient* C);
-
 	virtual bool			DisconnectClient		(IClient* C, LPCSTR Reason);
-
-	virtual void			GetServerInfo( CServerInfo* si ) {};
 
 	u32						GetClientsCount		()			{ return net_players.ClientsCount(); };
 	IClient*				GetServerClient		()			{ return SV_Client; };
@@ -175,11 +151,5 @@ public:
 
 
 	const shared_str&		GetConnectOptions	() const {return connect_options;}
-
-
-private:
-	bool					sender_functor_invoked;
-
-    virtual void    _Recieve( const void* data, u32 data_size, u32 param );
 };
 

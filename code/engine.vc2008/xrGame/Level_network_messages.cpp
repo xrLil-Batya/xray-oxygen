@@ -122,13 +122,6 @@ void CLevel::ClientReceive()
 			{
 				game_configured			= TRUE;
 			}break;
-		case M_GAMEMESSAGE:
-			{
-				if (!game) break;
-				game_events->insert		(*P);
-				if (g_bDebugEvents)		ProcessGameEvents();
-			}break;
-		case M_RELOAD_GAME:
 		case M_LOAD_GAME:
 		case M_CHANGE_LEVEL:
 			{
@@ -156,11 +149,6 @@ void CLevel::ClientReceive()
 		case M_CLIENT_CONNECT_RESULT:
 			{
 				OnConnectResult(P);
-			}break;
-		case M_REMOTE_CONTROL_AUTH:
-		case M_REMOTE_CONTROL_CMD:
-			{
-				Game().OnRadminMessage(m_type, P);
 			}break;
 		case M_SV_MAP_NAME:
 			{

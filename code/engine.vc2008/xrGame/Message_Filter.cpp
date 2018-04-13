@@ -33,23 +33,17 @@ void message_filter::remove_filter(u16 const & msg_type, u32 const & msg_subtype
 
 void message_filter::msg_type_subtype_t::import(NET_Packet& packet)
 {
-	packet.r_begin	(msg_type);
-	msg_subtype		= 0;
-	switch (msg_type)
+	packet.r_begin(msg_type);
+	msg_subtype = 0;
+
+	if (msg_type == M_EVENT)
 	{
-	case M_EVENT:
-		{
-			u16				tmp_subtype;
-			packet.r_u32			(msg_receive_time);
-			packet.r_u16			(tmp_subtype);
-			packet.r_u16			(dest_obj_id);
-			msg_subtype		= static_cast<u32>(tmp_subtype);
-		}break;
-	case M_GAMEMESSAGE:
-		{
-			packet.r_u32			(msg_subtype);
-		}break;
-	};//switch (msg_type)
+		u16				tmp_subtype;
+		packet.r_u32(msg_receive_time);
+		packet.r_u16(tmp_subtype);
+		packet.r_u16(dest_obj_id);
+		msg_subtype = static_cast<u32>(tmp_subtype);
+	}
 }
 
 void message_filter::check_new_data	(NET_Packet & packet)
@@ -137,9 +131,6 @@ void message_filter::dbg_print_msg(NET_Packet & packet, msg_type_subtype_t const
 	case M_EVENT_PACK:
 		{
 			FATAL("can't print M_EVENT_PACK message");
-		}break;
-	case M_GAMEMESSAGE:
-		{
 		}break;
 	case M_SPAWN:
 		{

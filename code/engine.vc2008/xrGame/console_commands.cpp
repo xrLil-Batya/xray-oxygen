@@ -262,25 +262,23 @@ public:
 	}
 };
 
-class CCC_ALifeSwitchDistance : public IConsole_Command {
+class CCC_ALifeSwitchDistance : public IConsole_Command 
+{
 public:
 	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
-		if (ai().get_alife()) 
-		{
-			float id1 = 0.0f;
-			sscanf(args ,"%f",&id1);
-			if (id1 < 2.0f)
-				Msg("Invalid online distance! (%.4f)",id1);
-			else {
-				NET_Packet		P;
-				P.w_begin		(M_SWITCH_DISTANCE);
-				P.w_float		(id1);
-				Level().Send	(P,net_flags(TRUE,TRUE));
-			}
+
+	virtual void Execute(LPCSTR args)
+	{
+		float id1 = 0.0f;
+		sscanf(args, "%f", &id1);
+		if (id1 < 2.0f)
+			Msg("Invalid online distance! (%.4f)", id1);
+		else {
+			NET_Packet		P;
+			P.w_begin(M_SWITCH_DISTANCE);
+			P.w_float(id1);
+			Level().Send(P, net_flags(TRUE, TRUE));
 		}
-		else
-			Log("!Not a single player game!");
 	}
 };
 

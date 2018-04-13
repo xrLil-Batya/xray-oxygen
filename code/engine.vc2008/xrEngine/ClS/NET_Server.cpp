@@ -68,33 +68,10 @@ IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 	return nullptr;
 }
 
-void IPureServer::_Recieve( const void* data, u32 data_size, u32 param )
-{
-	if (data_size >= NET_PacketSizeLimit) {
-		Msg		("! too large packet size[%d] received, DoS attack?", data_size);
-		return;
-	}
-
-    NET_Packet packet(data, data_size);
-    ClientID    id(param);
-
-	csMessage.lock();
-	//---------------------------------------
-	u32	result = OnMessage( packet, id );
-	//Msg("-S- Leaving from csMessages [%d]", currentThreadId);
-	csMessage.unlock();
-	
-	if( result )		
-	    SendBroadcast( id, packet, result );
-}
-
 //==============================================================================
-
 IPureServer::IPureServer(CTimer* timer)
 {
 	device_timer			= timer;
-	stats.clear				();
-	stats.dwSendTime		= TimeGlobal(device_timer);
 	SV_Client				= NULL;
 	NET						= NULL;
 	net_Address_device		= NULL;
@@ -125,16 +102,6 @@ void IPureServer::Disconnect	()
 	// Release interfaces
     _RELEASE	(net_Address_device);
     _RELEASE	(NET);
-}
-
-void IServerStatistic::clear()
-{
-	bytes_out = bytes_out_real = 0;
-	bytes_in = bytes_in_real = 0;
-
-	dwBytesSended = 0;
-	dwSendTime = 0;
-	dwBytesPerSec = 0;
 }
 
 void IPureServer::Flush_Clients_Buffers()
@@ -243,39 +210,6 @@ void IPureServer::OnCL_Disconnected		(IClient* CL)
 {
 	Msg("* Player 0x%08x disconnected.\n", CL->ID.value());
 }
-
-BOOL IPureServer::HasBandwidth(IClient* C)
-{
-	u32	dwTime = TimeGlobal(device_timer);
-	u32	dwInterval = 0;
-
-	UpdateClientStatistic(C);
-	C->dwTime_LastUpdate = dwTime;
-	dwInterval = 1000;
-	return TRUE;
-}
-
-void IPureServer::UpdateClientStatistic(IClient* C)
-{
-	// Query network statistic for this client
-	DPN_CONNECTION_INFO			CI;
-	std::memset(&CI, 0, sizeof(CI));
-	CI.dwSize = sizeof(CI);
-	C->stats.Update(CI);
-}
-
-void	IPureServer::ClearStatistic	()
-{
-	stats.clear();
-	struct StatsClearFunctor
-	{
-		static void Clear(IClient* client)
-		{
-			client->stats.Clear();
-		}
-	};
-	net_players.ForEachClientDo(StatsClearFunctor::Clear);
-};
 
 bool IPureServer::DisconnectClient(IClient* C, LPCSTR Reason)
 {
