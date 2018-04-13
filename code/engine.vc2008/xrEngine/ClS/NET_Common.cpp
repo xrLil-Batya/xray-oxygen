@@ -103,12 +103,12 @@ void
 MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 param)
 {
 	MultipacketHeader*  header = (MultipacketHeader*)packet_data;
-	u8                  data[MaxMultipacketSize];
+	u8                  pdata[MaxMultipacketSize];
 
 	if (header->tag != NET_TAG_MERGED && header->tag != NET_TAG_NONMERGED)
 		return;
 
-	std::memcpy(data, (u8*)packet_data + sizeof(MultipacketHeader), packet_sz - sizeof(MultipacketHeader));
+	std::memcpy(pdata, (u8*)packet_data + sizeof(MultipacketHeader), packet_sz - sizeof(MultipacketHeader));
 
 	if (strstr(Core.Params, "-dump_traffic"))
 	{
@@ -124,14 +124,14 @@ MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 p
 		u16 sz = header->unpacked_size;
 
 		fwrite(&sz, sizeof(u16), 1, dump);
-		fwrite(data, header->unpacked_size, 1, dump);
+		fwrite(pdata, header->unpacked_size, 1, dump);
 		fclose(dump);
 	}
 
 
 	bool    is_multi_packet = header->tag == NET_TAG_MERGED;
 	u32     processed_sz = 0;
-	u8*     dat = data;
+	u8*     data = pdata;
 
 	while (processed_sz < header->unpacked_size)
 	{
@@ -140,11 +140,37 @@ MultipacketReciever::RecievePacket(const void* packet_data, u32 packet_sz, u32 p
 		if (is_multi_packet)
 			dat += sizeof(u16);
 
-#if NET_LOG_PACKETS
-		Msg("  packet %u", size);
-#endif
-
-		_Recieve(dat, size, param);
+		MSYS_PING*    cfg = (MSYS_PING*)data;
+		net_Statistic.dwBytesReceived += data_size;
+	
+		if((data_size>=2*sizeof(u32)) && (cfg->sign1==0x12071980) && (cfg->sign2==0x26111975))
+		{
+			// Internal system message
+			if((data_size == sizeof(MSYS_PING)))
+			{
+				// It is reverted(server) ping
+				u32		    time	= TimerAsync( device_timer );
+				u32		    ping	= time - (cfg->dwTime_ClientSend);
+				u32		    delta	= cfg->dwTime_Server + ping/2 - time;
+	
+				net_DeltaArray.push		( delta );
+				Sync_Average			();
+				return;
+			}
+			
+			if (data_size == sizeof(MSYS_CONFIG))
+			{
+				net_Connected = EnmConnectionCompleted;
+				return;
+			}
+			Msg( "! Unknown system message" );
+			return;
+		} 
+		else if(net_Connected == EnmConnectionCompleted)
+		{
+			// one of the messages - decompress it
+			OnMessage(const_cast<void*>(data), data_size);
+		}
 
 		dat += size;
 		processed_sz += size + ((is_multi_packet) ? sizeof(u16) : 0);

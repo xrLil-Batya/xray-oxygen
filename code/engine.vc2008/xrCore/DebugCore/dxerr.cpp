@@ -10,16 +10,15 @@
 //
 // Copyright (c) Microsoft Corporation. All rights reserved.
 //--------------------------------------------------------------------------------------
-#pragma warning(push)
-#pragma warning(disable: 6001 6221 4005)
-
 // This version only supports UNICODE.
 #include "stdafx.h"
-#include <dxerr/dxerr.h>
 
+#include <dxerr/dxerr.h>
 #include <stdio.h>
 #include <algorithm>
 
+#pragma warning(push)
+#pragma warning(disable: 6001 6221 4005)
 #if !defined(WINAPI_FAMILY) || (WINAPI_FAMILY == WINAPI_FAMILY_DESKTOP_APP)
 #include <dx/dxgi1_6.h>
 #include <dx/ddraw.h>
