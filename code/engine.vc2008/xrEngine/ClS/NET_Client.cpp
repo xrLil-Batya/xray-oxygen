@@ -75,9 +75,6 @@ NET_Packet*		INetQueue::Create	(const NET_Packet& _other)
 {
 	NET_Packet*	P			= 0;
     std::lock_guard<decltype(cs)> lock(cs);
-//#ifdef _DEBUG
-//		Msg ("- INetQueue::Create - ready %d, unused %d", ready.size(), unused.size());
-//#endif
 	if (unused.empty())	
 	{
 		ready.push_back		(xr_new<NET_Packet> ());
@@ -96,10 +93,6 @@ NET_Packet*		INetQueue::Create	(const NET_Packet& _other)
 NET_Packet*		INetQueue::Retreive	()
 {
 	NET_Packet*	P			= 0;
-	//cs.Enter		();
-//#ifdef _DEBUG
-//			Msg ("INetQueue::Retreive - ready %d, unused %d", ready.size(), unused.size());
-//#endif
 	if (!ready.empty())		P = ready.front();
 	//---------------------------------------------	
 	else
@@ -113,15 +106,10 @@ NET_Packet*		INetQueue::Retreive	()
 		}		
 	}
 	//---------------------------------------------	
-	//cs.Leave		();
 	return	P;
 }
 void			INetQueue::Release	()
 {
-	//cs.Enter		();
-//#ifdef _DEBUG
-//		Msg ("INetQueue::Release - ready %d, unused %d", ready.size(), unused.size());
-//#endif
 	VERIFY			(!ready.empty());
 	//---------------------------------------------
 	u32 tmp_time = GetTickCount()-60000;
@@ -135,7 +123,6 @@ void			INetQueue::Release	()
 		unused.push_back(ready.front());
 	//---------------------------------------------	
 	ready.pop_front	();
-	//cs.Leave		();
 }
 
 //
