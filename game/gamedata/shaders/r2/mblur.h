@@ -1,9 +1,8 @@
 #ifndef	MBLUR_H
 #define MBLUR_H
 
-//#ifndef 	USE_MBLUR
+#ifndef 	USE_MBLUR
 half3 	mblur	(float2 UV, half3 pos, half3 c_original)	{ return c_original; }
-/*
 #else
 #include "common.h"
 
@@ -39,5 +38,5 @@ half3 	mblur	(float2 UV, half3 pos, half3 c_original)	{
 	return 	blurred/MBLUR_SAMPLES;
 }
 #endif
-*/
+
 #endif
