@@ -215,7 +215,7 @@ IC void CBackend::set_Constants(R_constant_table* pC)
 	xforms.unmap();
 	hemi.unmap();
 	tree.unmap();
-	if (0 == C)		return;
+	if (0 == pC)		return;
 
 	PGO(Msg("PGO:c-table"));
 
