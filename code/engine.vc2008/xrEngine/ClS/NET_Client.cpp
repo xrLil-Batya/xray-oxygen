@@ -170,51 +170,13 @@ ENGINE_API char	psNET_Name[32]		= "Player";
 ENGINE_API BOOL	psNET_direct_connect = FALSE;
 
 /****************************************************************************
- *
  * DirectPlay8 Service Provider GUIDs
- *
  ****************************************************************************/
 //------------------------------------------------------------------------------
 void IPureClient::_SendTo_LL( const void* data, u32 size, u32 flags, u32 timeout )
 {
     IPureClient::SendTo_LL( const_cast<void*>(data), size, flags, timeout );
 }
-//------------------------------------------------------------------------------
-void IPureClient::_Recieve( const void* data, u32 data_size, u32 /*param*/ )
-{
-    MSYS_PING*    cfg = (MSYS_PING*)data;
-	net_Statistic.dwBytesReceived += data_size;
-
-	if((data_size>=2*sizeof(u32)) && (cfg->sign1==0x12071980) && (cfg->sign2==0x26111975))
-	{
-		// Internal system message
-		if((data_size == sizeof(MSYS_PING)))
-		{
-			// It is reverted(server) ping
-			u32		    time	= TimerAsync( device_timer );
-			u32		    ping	= time - (cfg->dwTime_ClientSend);
-			u32		    delta	= cfg->dwTime_Server + ping/2 - time;
-
-			net_DeltaArray.push		( delta );
-			Sync_Average			();
-			return;
-		}
-		
-		if (data_size == sizeof(MSYS_CONFIG))
-		{
-			net_Connected = EnmConnectionCompleted;
-			return;
-		}
-		Msg( "! Unknown system message" );
-		return;
-	} 
-	else if(net_Connected == EnmConnectionCompleted)
-	{
-		// one of the messages - decompress it
-		OnMessage(const_cast<void*>(data), data_size);
-	}
-}
-
 //==============================================================================
 
 IPureClient::IPureClient(CTimer* timer): net_Statistic(timer)

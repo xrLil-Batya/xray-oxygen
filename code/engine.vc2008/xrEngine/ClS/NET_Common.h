@@ -71,9 +71,6 @@ class ENGINE_API
 public:
 	virtual         ~MultipacketReciever() {}
 	void            RecievePacket(const void* packet_data, u32 packet_sz, u32 param = 0);
-
-protected:
-	virtual void    _Recieve(const void* data, u32 data_size, u32 param) = 0;
 };
 
 
