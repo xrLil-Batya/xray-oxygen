@@ -219,7 +219,7 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	m_fSunShaftsIntensity = 1;
 	m_fWaterIntensity = 1;
 	m_fTreeAmplitudeIntensity = 0.01;
-	m_fRainDropsIntensity = 0; // Max - 3
+	m_fRainDropsIntensity = 0; // Max - 1.5
 	
     lens_flare_id		= "";
 	tb_id				= "";
@@ -290,8 +290,8 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 	if (config.line_exist(m_identifier, "tree_amplitude_intensity"))
 		m_fTreeAmplitudeIntensity = config.r_float(m_identifier, "tree_amplitude_intensity");
 	
-	if (config.line_exist(m_identifier,"sgm_rain_drops_intensity"))
-		m_fRainDropsIntensity = config.r_float(m_identifier,"sgm_rain_drops_intensity");	
+	if (config.line_exist(m_identifier, "droplets_intensity"))
+		m_fDropletsIntensity = config.r_float(m_identifier, "droplets_intensity");	
 
 	C_CHECK					(clouds_color);
 	C_CHECK					(sky_color	);
@@ -377,7 +377,7 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	m_fSunShaftsIntensity	=	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
 	m_fWaterIntensity		=	fi*A.m_fWaterIntensity + f*B.m_fWaterIntensity;
 	m_fTreeAmplitudeIntensity = fi*A.m_fTreeAmplitudeIntensity + f*B.m_fTreeAmplitudeIntensity;
-    m_fRainDropsIntensity	=	fi*A.m_fRainDropsIntensity + f*B.m_fRainDropsIntensity;
+    m_fDropletsIntensity	=	fi*A.m_fDropletsIntensity + f*B.m_fDropletsIntensity;
 
 	// colors
 //.	sky_color.lerp			(A.sky_color,B.sky_color,f).add(Mdf.sky_color).mul(modif_power);

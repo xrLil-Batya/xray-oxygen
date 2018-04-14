@@ -186,7 +186,7 @@ float		ps_r2_df_parallax_range = 75.f;
 Flags32     ps_actor_shadow_flags       = { 0 };
 float		ps_r2_mblur					= .3f;				// .5f
 
-float		droplets_power_debug = 1.f;
+float		droplets_power_debug = 0.f;
 
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64

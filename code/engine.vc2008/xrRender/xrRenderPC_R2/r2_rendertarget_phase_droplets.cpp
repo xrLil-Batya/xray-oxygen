@@ -26,6 +26,8 @@ void CRenderTarget::phase_droplets()
 	p0.set(.5f / _w, .5f / _h);
 	p1.set((_w + .5f) / _w, (_h + .5f) / _h);
 
+	CEnvDescriptorMixer& CurrenEnv = *g_pGamePersistent->Environment().CurrentEnv;
+
 	// Set RT's
 	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);
@@ -41,7 +43,7 @@ void CRenderTarget::phase_droplets()
 
 	//draw color
 	RCache.set_Element(s_droplets->E[0]);
-	RCache.set_c("droplets", droplets_power_debug, 0, 0, 0);
+	RCache.set_c("droplets", CurrenEnv.m_fDropletsIntensity, droplets_power_debug, 0, 0);
 	RCache.set_Geometry(g_aa_AA);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
