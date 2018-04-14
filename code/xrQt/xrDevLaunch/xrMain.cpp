@@ -141,22 +141,22 @@ void xrLaunch::run_xrEngineRun()
 		//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
 		//#(only xrDevLauncher compiling with IA32-x86 instructions),
 		//#some part of matrix and vectors use SSE3. It's can be difficult!
-		if (CPUID::SSE2())
-		{
-			init_xrCore();
-			statusBar()->showMessage(tr("Creating render list..."));
-			CreateRendererList();
-			statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
-			RunApplication(params.data());
+		init_xrCore();
+		statusBar()->showMessage(tr("Creating render list..."));
+		CreateRendererList();
+		statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
+		RunApplication(params.data());
 #ifndef NOAWDA
-			MessageBox(NULL,
-				"Awda",
-				"Awda",
-				MB_OK | MB_ICONINFORMATION);
+		MessageBox(NULL,
+			"Awda",
+			"Awda",
+			MB_OK | MB_ICONINFORMATION);
 #endif
-			xrLaunch::close();				// After closing xrCore main thread
-		}
-		else
+		xrLaunch::close();				// After closing xrCore main thread
+	}
+	catch (...)
+	{
+		if (!CPUID::SSE2()) 
 		{
 			statusBar()->showMessage(tr("Error! SSE2 is not supported on your CPU."));
 			MessageBox(NULL,
@@ -164,14 +164,14 @@ void xrLaunch::run_xrEngineRun()
 				"Init error",
 				MB_OK | MB_ICONWARNING);
 		}
-	}
-	catch (...)
-	{
-		statusBar()->showMessage(tr("Error! Can't load xrEngine."));
-		MessageBox(NULL,
-			"Can't load xrEngine",
-			"Init error",
-			MB_OK | MB_ICONWARNING);
+		else
+		{
+			statusBar()->showMessage(tr("Error! Can't load xrEngine."));
+			MessageBox(NULL,
+				"Can't load xrEngine",
+				"Init error",
+				MB_OK | MB_ICONWARNING);
+		}
 	}
 }
 

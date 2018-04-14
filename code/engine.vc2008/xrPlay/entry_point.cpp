@@ -73,10 +73,7 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 		// Checking for SSE2
 		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
 		{
-			MessageBox(NULL,
-				"xrEngine can't start launching...",
-				"SSE2 isn't supported on your CPU",
-				MB_OK | MB_ICONSTOP);
+			return 0;
 		}
 		// Checking for SSE3
 		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
