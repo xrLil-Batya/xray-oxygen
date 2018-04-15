@@ -55,6 +55,7 @@ extern ECORE_API	int			ps_r__tf_Anisotropic;
 extern ECORE_API	float		ps_r1_pps_u;
 extern ECORE_API	float		ps_r1_pps_v;
 
+extern ECORE_API	int	        ps_r2_fxaa;
 // R2
 extern ECORE_API	float		ps_r2_ssaLOD_A;
 extern ECORE_API	float		ps_r2_ssaLOD_B;
@@ -78,6 +79,7 @@ extern ECORE_API float			ps_r2_ls_bloom_speed;		// r2-only
 extern ECORE_API float			ps_r2_ls_dsm_kernel;		// r2-only
 extern ECORE_API float			ps_r2_ls_psm_kernel;		// r2-only
 extern ECORE_API float			ps_r2_ls_ssm_kernel;		// r2-only
+
 extern ECORE_API float			ps_r2_mblur;				// .5f
 extern ECORE_API int			ps_r2_GI_depth;				// 1..5
 extern ECORE_API int			ps_r2_GI_photons;			// 8..256
@@ -116,6 +118,13 @@ extern ECORE_API float	        droplets_power_debug;
 extern ECORE_API float			ps_r3_dyn_wet_surf_near;	// 10.0f
 extern ECORE_API float			ps_r3_dyn_wet_surf_far;		// 30.0f
 extern ECORE_API int			ps_r3_dyn_wet_surf_sm_res;	// 256
+
+extern ECORE_API float			ps_prop_ss_sample_step_phase0;
+extern ECORE_API float			ps_prop_ss_sample_step_phase1;
+//extern ECORE_API float			ps_prop_ss_sample_step_phase2;
+extern ECORE_API float			ps_prop_ss_radius;
+extern ECORE_API float			ps_prop_ss_intensity;
+extern ECORE_API float			ps_prop_ss_blend;
 
 enum
 {

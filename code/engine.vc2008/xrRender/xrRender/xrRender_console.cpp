@@ -183,10 +183,10 @@ float		ps_r2_ls_bloom_threshold	= .00001f;
 float		ps_r2_df_parallax_h = 0.02f;
 float		ps_r2_df_parallax_range = 75.f;
 
+
 Flags32     ps_actor_shadow_flags       = { 0 };
 float		ps_r2_mblur					= .3f;				// .5f
-
-float		droplets_power_debug = 0.f;
+float		droplets_power_debug =		 0.f;
 
 int			ps_r2_GI_depth				= 1;				// 1..5
 int			ps_r2_GI_photons			= 16;				// 8..64
@@ -244,11 +244,22 @@ float		ps_r3_dyn_wet_surf_near		= 10.f;				// 10.0f
 float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
 int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
 
+int ps_r2_fxaa = 0; 
 int ps_rs_loading_stages = 0;
+
+float		ps_prop_ss_radius				=	1.56f;
+float		ps_prop_ss_sample_step_phase0	=	.09f;
+float		ps_prop_ss_sample_step_phase1	=	.03f;
+//float		ps_prop_ss_sample_step_phase2	=	.33f;
+float		ps_prop_ss_blend				=	.066f;
+float		ps_prop_ss_intensity			=	1.f;
+float		ps_r2_rain_rops_debug_control   =   1.f;
+
 
 //- Mad Max
 float		ps_r2_gloss_factor			= 0.03f;
 //- Mad Max
+
 #ifndef _EDITOR
 #include	"../../xrEngine/xr_ioconsole.h"
 #include	"../../xrEngine/xr_ioc_cmd.h"
@@ -789,6 +800,10 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale",		&ps_r2_sun_lumscale,		-1.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
+	
+	CMD4(CCC_Float,		"r2_rain_drops_debug_intensity",	&ps_r2_rain_rops_debug_control,	0.f,	3.f);
+	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
+	CMD3(CCC_Mask,		"r2_mblur_enabled",		&ps_r2_ls_flags,			R2FLAG_MBLUR	);
 
 	CMD3(CCC_Mask,		"r2_gi",				&ps_r2_ls_flags,			R2FLAG_GI);
 	CMD4(CCC_Float,		"r2_gi_clip",			&ps_r2_GI_clip,				EPS,	0.1f	);
@@ -850,6 +865,12 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_detail_bump",				&ps_r2_ls_flags,			R2FLAG_DETAIL_BUMP);
 
 	CMD3(CCC_Token,		"r2_sun_quality",				&ps_r_sun_quality,			qsun_quality_token);
+	
+	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase1",	&ps_prop_ss_sample_step_phase0,	.01f,	.2f);
+	CMD4(CCC_Float,		"r2_SunShafts_SampleStep_Phase2",	&ps_prop_ss_sample_step_phase1,	.01f,	.2f);
+	CMD4(CCC_Float,		"r2_SunShafts_Radius",			&ps_prop_ss_radius,				.5f,	2.f);
+	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
+	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
 
 	CMD4(CCC_Float,     "r2_droplets_power_debug",      &droplets_power_debug,      0.f, 1.5f);
 
@@ -881,6 +902,8 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
+	
+	CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1);
 
 	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
 	CMD1(CCC_memory_stats,	"render_memory_stats" );

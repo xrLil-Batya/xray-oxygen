@@ -16,9 +16,6 @@
     <Filter Include="Lights">
       <UniqueIdentifier>{79a23351-411d-496e-abe6-698dae6f0b0e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Glows">
-      <UniqueIdentifier>{2f6e4850-bdaf-4f89-a03d-003e15988315}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Wallmarks">
       <UniqueIdentifier>{f85aea0e-c326-444c-b0dc-9f6db61141aa}</UniqueIdentifier>
     </Filter>
@@ -651,6 +648,9 @@
     <ClInclude Include="blender_droplets.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="blender_fxaa.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1146,6 +1146,14 @@
     <ClCompile Include="blender_droplets.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_FXAA.cpp" />
+    <ClCompile Include="Blender_ss.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_fxaa.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

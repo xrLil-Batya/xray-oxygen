@@ -68,6 +68,8 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_End				();
 		break;
 	case 5:	// post-processing
+		C.r_Pass			("null",			"ClearPosition",	FALSE,	FALSE,	FALSE);
+		C.r_End				();
 		break;
 	}
 }
