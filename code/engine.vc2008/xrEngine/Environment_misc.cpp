@@ -219,7 +219,7 @@ CEnvDescriptor::CEnvDescriptor	(shared_str const& identifier) :
 	m_fSunShaftsIntensity = 1;
 	m_fWaterIntensity = 1;
 	m_fTreeAmplitudeIntensity = 0.01;
-	m_fRainDropsIntensity = 0; // Max - 1.5
+	m_fDropletsIntensity = 0; // Max - 1.5
 	
     lens_flare_id		= "";
 	tb_id				= "";

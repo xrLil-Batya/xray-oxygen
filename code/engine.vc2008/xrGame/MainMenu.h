@@ -78,7 +78,7 @@ public:
 	void			RegisterPPDraw(CUIWindow* w);
 	void			UnregisterPPDraw(CUIWindow* w);
 
-	IC const char*	GetGSVer() { return "1.6.02.f"; };
+IC	const char*		GetGSVer() { return "1.7f"; };
 	virtual void	OnDeviceReset();
 };
 
