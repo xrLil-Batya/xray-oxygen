@@ -14,7 +14,7 @@ CUIButtonHint::CUIButtonHint	()
 {
 	CUIXmlInit					xml_init;
 	CUIXml						uiXml;
-	uiXml.Load					(CONFIG_PATH, UI_PATH, "hint_item.xml");
+	uiXml.Load					(CONFIG_PATH, UI_PATH, "pda.xml");
 	xml_init.InitFrameWindow	(uiXml,"button_hint",0,this);
 	
 	m_text						= xr_new<CUITextWnd>();
