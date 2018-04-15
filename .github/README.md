@@ -1,6 +1,6 @@
-# X-Ray Oxygen 1.6.02
+# X-Ray Oxygen 1.7
 
-X-Ray 1.6.02.f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
+X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
 
 ## Purposes
 
@@ -31,17 +31,17 @@ X-Ray 1.6.02.f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xra
 Team of developers and contributors:
 
 * [ForserX](https://github.com/ForserX)
-* [xWolfx](https://github.com/phantom1020)
 * [Giperion](https://github.com/Giperionn)
+* [LtPetrov](https://github.com/LtPetrov)
+* [Vertver](https://github.com/Vertver)
+* [Xottab-DUTY](https://github.com/Xottab-DUTY)
 * [mrmnwar](https://github.com/mrmnwar)
 * [Borshig](https://github.com/Borshig)
 * [Sin!](https://github.com/gunslingermod)
-* [LtPetrov](https://github.com/LtPetrov)
+* [xWolfx](https://github.com/phantom1020)
 * [DaaGuda](https://github.com/DaaGuda)
 * [qweasdd136963](https://github.com/qweasdd136963)
-* [Xottab-DUTY](https://github.com/Xottab-DUTY)
 * [StalkerEz](https://github.com/StalkerEz)
-* [Vertver](https://github.com/Vertver)
 * [phobos2077](https://github.com/phobos2077)
 * [JHunt41](https://github.com/JHunt41)
 * [Vampirnik77](https://github.com/Vampirnik77)
