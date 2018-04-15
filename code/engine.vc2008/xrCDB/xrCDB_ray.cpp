@@ -112,6 +112,8 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 #VERTVER: This is a part of AVX xrCDB project (now it's can unstability)
 #TODO: convert float to double for AVX registers
 */
+#ifdef _AVX_
+/*
 #define loadpd(mem)			_mm256_load_pd((const double * const)(mem))
 #define storepd(ss,mem)		_mm256_store_pd((double * const)(mem),(ss))
 #define minpd				_mm256_min_pd
@@ -121,7 +123,8 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 #define rotatelpd(ps)		_mm256_shuffle_pd((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
 // NO ANALOG IN AVX
 #define muxhpd(low,high)	_mm256_div_pd((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
-
+*/
+#endif
 
 
 // turn those verbose intrinsics into something readable.
@@ -142,6 +145,7 @@ static const float _MM_ALIGN16
 	ps_cst_plus_inf	[4]	=	{  flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
+/*
 #ifdef _AVX_
 ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
 {
@@ -197,6 +201,7 @@ ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
 	return  ret;
 }
 #endif
+*/
 
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)	
 {
@@ -288,7 +293,7 @@ public:
 	}
 
 #ifdef _AVX_
-
+/*
 	ICF bool _box_avx(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
 	{
 		aabb_t		box;
@@ -304,6 +309,7 @@ public:
 		return false;
 	}
 	
+	*/
 #endif
 
 
@@ -408,18 +414,12 @@ public:
 		// Actual ray/aabb test
 		// use SSE
 		float d;
-		double dd;
 		if (!_box_sse((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, d))
 		{
 			return;
 		}
-		//if (!_box_avx((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, dd)) 
-		//{
-		//	return
-		//}
 
 		if			(d  > rRange)		return;
-		//if			(dd > rRange)		return;
 
 		// 1st chield
 		if (node->HasPosLeaf())	_prim((DWORD)node->GetPosPrimitive());
