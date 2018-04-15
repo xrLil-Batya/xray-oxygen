@@ -107,6 +107,23 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 	return false;
 }
 
+
+/*
+#VERTVER: This is a part of AVX xrCDB project (now it's can unstability)
+#TODO: convert float to double for AVX registers
+*/
+#define loadpd(mem)			_mm256_load_pd((const double * const)(mem))
+#define storepd(ss,mem)		_mm256_store_pd((double * const)(mem),(ss))
+#define minpd				_mm256_min_pd
+#define maxpd				_mm256_max_pd
+#define mulpd				_mm256_mul_pd
+#define subpd				_mm256_sub_pd
+#define rotatelpd(ps)		_mm256_shuffle_pd((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+// NO ANALOG IN AVX
+#define muxhpd(low,high)	_mm256_div_pd((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+
+
+
 // turn those verbose intrinsics into something readable.
 #define loadps(mem)			_mm_load_ps((const float * const)(mem))
 #define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
@@ -124,6 +141,60 @@ static const float flt_plus_inf = -logf(0);	// let's keep C and C++ compilers ha
 static const float _MM_ALIGN16
 	ps_cst_plus_inf	[4]	=	{  flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
+
+ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
+{
+	// you may already have those values hanging around somewhere
+	const __m256d
+		plus_inf = loadpd(ps_cst_plus_inf),
+		minus_inf = loadpd(ps_cst_minus_inf);
+
+	// use whatever's apropriate to load.
+	const __m256d
+		box_min = loadpd(&box.min),
+		box_max = loadpd(&box.max),
+		pos = loadpd(&ray.pos),
+		inv_dir = loadpd(&ray.inv_dir);
+
+	// use a div if inverted directions aren't available
+	const __m256d l1 = mulpd(subpd(box_min, pos), inv_dir);
+	const __m256d l2 = mulpd(subpd(box_max, pos), inv_dir);
+
+	// the order we use for those min/max is vital to filter out
+	// NaNs that happens when an inv_dir is +/- inf and
+	// (box_min - pos) is 0. inf * 0 = NaN
+	const __m256d filtered_l1a = minpd(l1, plus_inf);
+	const __m256d filtered_l2a = minpd(l2, plus_inf);
+
+	const __m256d filtered_l1b = maxpd(l1, minus_inf);
+	const __m256d filtered_l2b = maxpd(l2, minus_inf);
+
+	// now that we're back on our feet, test those slabs.
+	__m256d lmax = maxpd(filtered_l1a, filtered_l2a);
+	__m256d lmin = minpd(filtered_l1b, filtered_l2b);
+
+	// unfold back. try to hide the latency of the shufps & co.
+	const __m256d lmax0 = rotatelpd(lmax);
+	const __m256d lmin0 = rotatelpd(lmin);
+	lmax = minpd(lmax, lmax0);
+	lmin = maxpd(lmin, lmin0);
+
+	//#TODO: It's broken
+	//////////////////////////////////////////////
+	const __m256d lmax1 = muxhpd(lmax, lmax);
+	const __m256d lmin1 = muxhpd(lmin, lmin);
+	//////////////////////////////////////////////
+
+	lmax = minpd(lmax, lmax1);
+	lmin = maxpd(lmin, lmin1);
+
+	const bool ret = FALSE;
+
+	storepd(lmin, &dist);
+	//storess	(lmax, &rs.t_far);
+
+	return  ret;
+}
 
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)	
 {
@@ -212,6 +283,21 @@ public:
 		_mm_store_ps( (float*) &box.max , _mm_add_ps( CN , EX ) );
 
         return isect_sse (box,ray,dist);
+	}
+
+	ICF bool _box_avx(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
+	{
+		aabb_t		box;
+		__m256d CN = _mm256_unpacklo_pd(_mm256_load_pd((double*)&bCenter.x), _mm256_load_pd((double*)&bCenter.y));
+		CN = _mm256_movedup_pd(CN + _mm256_load_pd((double*)&bCenter.z));
+		__m256d EX = _mm256_unpacklo_pd(_mm256_load_pd((double*)&bExtents.x), _mm256_load_pd((double*)&bExtents.y));
+		EX = _mm256_movedup_pd(EX, _mm256_load_pd((double*)&bExtents.z));
+
+		_mm256_store_pd((double*)&box.min, _mm256_sub_pd(CN, EX));
+		_mm256_store_pd((double*)&box.max, _mm256_add_pd(CN, EX));
+
+		//return isect_avx(box, ray, dist);
+		return false;
 	}
 	
 	IC bool _tri(u32* p, float& u, float& v, float& range)
@@ -315,10 +401,18 @@ public:
 		// Actual ray/aabb test
 		// use SSE
 		float d;
+		double dd;
 		if (!_box_sse((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, d))
+		{
 			return;
+		}
+		//if (!_box_avx((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, dd)) 
+		//{
+		//	return
+		//}
 
-		if (d > rRange) return;
+		if			(d  > rRange)		return;
+		//if			(dd > rRange)		return;
 
 		// 1st chield
 		if (node->HasPosLeaf())	_prim((DWORD)node->GetPosPrimitive());
