@@ -105,22 +105,21 @@ ICF bool	isect_fpu(const Fvector& min, const Fvector& max, const ray_t &ray, Fve
 	return false;
 }
 
-#ifdef _AVX_
-/************************************************
-#VERTVER: This is a part of AVX xrCDB project
-(now it's can unstability)
-#TODO: convert float to double for AVX registers
-*************************************************/
-#define loadpd(mem)			_mm256_load_pd((const double * const)(mem))
-#define storepd(ss,mem)		_mm256_store_pd((double * const)(mem),(ss))
-#define minpd				_mm256_min_pd
-#define maxpd				_mm256_max_pd
-#define mulpd				_mm256_mul_pd
-#define subpd				_mm256_sub_pd
-#define rotatelpd(ps)		_mm256_shuffle_pd((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
-// NO ANALOG IN AVX
-#define muxhpd(low,high)	_mm256_div_pd((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+#ifdef __AVX__ // This is a part of AVX xrCDB project
+#define loadps(mem)			_mm256_load_ps((const float * const)(mem))
+#define storeps(ss,mem)		_mm256_store_ps((float * const)(mem),(ss))
+#define minps				_mm256_min_ps
+#define maxps				_mm256_max_ps
+#define mulps				_mm256_mul_ps
+#define subps				_mm256_sub_ps
+#define rotatelps(ps)		_mm256_shuffle_ps((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+#define muxhps(low,high)	_mm256_div_ps((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
 
+// SSE types
+#define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
+#define minss				_mm_min_ss
+#define maxss				_mm_max_ss
+#define m128_cast			_mm256_castps256_ps128
 #else 
 
 // turn those verbose intrinsics into something readable.
@@ -142,6 +141,56 @@ static const float _MM_ALIGN16
 ps_cst_plus_inf[4] = { flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 ps_cst_minus_inf[4] = { -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
+#ifdef __AVX__
+ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) 
+{
+	// you may already have those values hanging around somewhere
+	const __m256
+		plus_inf = loadps(ps_cst_plus_inf),
+		minus_inf = loadps(ps_cst_minus_inf);
+
+	// use whatever's apropriate to load.
+	const __m256
+		box_min = loadps(&box.min),
+		box_max = loadps(&box.max),
+		pos = loadps(&ray.pos),
+		inv_dir = loadps(&ray.inv_dir);
+
+	// use a div if inverted directions aren't available
+	const __m256 l1 = mulps(subps(box_min, pos), inv_dir);
+	const __m256 l2 = mulps(subps(box_max, pos), inv_dir);
+
+	// the order we use for those min/max is vital to filter out
+	// NaNs that happens when an inv_dir is +/- inf and
+	// (box_min - pos) is 0. inf * 0 = NaN
+	const __m256 filtered_l1a = minps(l1, plus_inf);
+	const __m256 filtered_l2a = minps(l2, plus_inf);
+
+	const __m256 filtered_l1b = maxps(l1, minus_inf);
+	const __m256 filtered_l2b = maxps(l2, minus_inf);
+
+	// now that we're back on our feet, test those slabs.
+	__m128 lmax = _mm_max_ps(m128_cast(filtered_l1a), m128_cast(filtered_l2a));
+	__m128 lmin = _mm_max_ps(m128_cast(filtered_l1b), m128_cast(filtered_l2b));
+
+	// unfold back. try to hide the latency of the shufps & co.
+	const __m128 lmax0 = _mm_shuffle_ps((lmax), (lmax), 0x39);
+	const __m128 lmin0 = _mm_shuffle_ps((lmin), (lmin), 0x39);
+	lmax = minss(lmax, lmax0);
+	lmin = maxss(lmin, lmin0);
+	
+	const __m128 lmax1 = _mm_div_ps(lmax, lmax);
+	const __m128 lmin1 = _mm_div_ps(lmin, lmin);
+	lmax = minss(lmax, lmax1);
+	lmin = maxss(lmin, lmin1);
+
+	const bool ret = !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax, lmin));
+
+	storess(lmin, &dist);
+
+	return  ret;
+}
+#else
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) {
 	// you may already have those values hanging around somewhere
 	const __m128
@@ -190,7 +239,7 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) {
 
 	return  ret;
 }
-
+#endif
 extern Fvector	c_spatial_offset[8];
 
 template <bool b_use_sse, bool b_first, bool b_nearest>
