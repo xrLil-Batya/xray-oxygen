@@ -105,6 +105,24 @@ ICF bool	isect_fpu(const Fvector& min, const Fvector& max, const ray_t &ray, Fve
 	return false;
 }
 
+#ifdef _AVX_
+/************************************************
+#VERTVER: This is a part of AVX xrCDB project
+(now it's can unstability)
+#TODO: convert float to double for AVX registers
+*************************************************/
+#define loadpd(mem)			_mm256_load_pd((const double * const)(mem))
+#define storepd(ss,mem)		_mm256_store_pd((double * const)(mem),(ss))
+#define minpd				_mm256_min_pd
+#define maxpd				_mm256_max_pd
+#define mulpd				_mm256_mul_pd
+#define subpd				_mm256_sub_pd
+#define rotatelpd(ps)		_mm256_shuffle_pd((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+// NO ANALOG IN AVX
+#define muxhpd(low,high)	_mm256_div_pd((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+
+#else 
+
 // turn those verbose intrinsics into something readable.
 #define loadps(mem)			_mm_load_ps((const float * const)(mem))
 #define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
@@ -117,6 +135,7 @@ ICF bool	isect_fpu(const Fvector& min, const Fvector& max, const ray_t &ray, Fve
 #define rotatelps(ps)		_mm_shuffle_ps((ps),(ps), 0x39)	// a,b,c,d -> b,c,d,a
 #define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
 
+#endif
 
 static const float flt_plus_inf = -logf(0);	// let's keep C and C++ compilers happy.
 static const float _MM_ALIGN16
