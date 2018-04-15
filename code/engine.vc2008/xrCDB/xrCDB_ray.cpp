@@ -142,6 +142,7 @@ static const float _MM_ALIGN16
 	ps_cst_plus_inf	[4]	=	{  flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
+#ifdef _AVX_
 ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
 {
 	// you may already have those values hanging around somewhere
@@ -195,6 +196,7 @@ ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
 
 	return  ret;
 }
+#endif
 
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)	
 {
@@ -285,6 +287,8 @@ public:
         return isect_sse (box,ray,dist);
 	}
 
+#ifdef _AVX_
+
 	ICF bool _box_avx(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
 	{
 		aabb_t		box;
@@ -300,6 +304,9 @@ public:
 		return false;
 	}
 	
+#endif
+
+
 	IC bool _tri(u32* p, float& u, float& v, float& range)
 	{
 		Fvector edge1, edge2, tvec, pvec, qvec;
