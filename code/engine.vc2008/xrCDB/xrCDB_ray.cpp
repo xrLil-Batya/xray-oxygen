@@ -108,7 +108,6 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 }
 
 
-#define __AVX__
 #ifdef __AVX__
 /************************************************
 *#VERTVER: AVX use the part of SSE, and some
@@ -165,7 +164,7 @@ static const float _MM_ALIGN16
 
 
 #ifdef __AVX__
-ICF bool isect_avx(const aabb_t &box, const ray_t &ray, float &dist)
+ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 {
 	// you may already have those values hanging around somewhere
 	const __m256
@@ -304,7 +303,7 @@ public:
 
 #ifdef _AVX_
 
-	ICF bool _box_avx(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
+	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
 	{
 		aabb_t		box;
 		__m256d CN	= _mm256_unpacklo_pd	(_mm256_load_pd			((double*)&bCenter.x),	_mm256_load_pd((double*)&bCenter.y));
