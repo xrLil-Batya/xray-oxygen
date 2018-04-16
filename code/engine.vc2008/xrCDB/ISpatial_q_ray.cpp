@@ -13,97 +13,18 @@
 struct	_MM_ALIGN16		vec_t : public Fvector3 {
 	float		pad;
 };
-//static vec_t	vec_c	( float _x, float _y, float _z)	{ vec_t v; v.x=_x;v.y=_y;v.z=_z;v.pad=0; return v; }
 
-struct _MM_ALIGN16		aabb_t {
+struct _MM_ALIGN16 aabb_t 
+{
 	vec_t		min;
 	vec_t		max;
 };
-struct _MM_ALIGN16		ray_t {
+struct _MM_ALIGN16 ray_t 
+{
 	vec_t		pos;
 	vec_t		inv_dir;
 	vec_t		fwd_dir;
 };
-struct ray_segment_t {
-	float		t_near, t_far;
-};
-
-ICF u32&	uf(float &x) { return (u32&)x; }
-ICF bool	isect_fpu(const Fvector& min, const Fvector& max, const ray_t &ray, Fvector& coord)
-{
-	Fvector				MaxT;
-	MaxT.x = MaxT.y = MaxT.z = -1.0f;
-	bool Inside = true;
-
-	// Find candidate planes.
-	if (ray.pos[0] < min[0]) {
-		coord[0] = min[0];
-		Inside = false;
-		if (uf(ray.inv_dir[0]))	MaxT[0] = (min[0] - ray.pos[0]) * ray.inv_dir[0]; // Calculate T distances to candidate planes
-	}
-	else if (ray.pos[0] > max[0]) {
-		coord[0] = max[0];
-		Inside = false;
-		if (uf(ray.inv_dir[0]))	MaxT[0] = (max[0] - ray.pos[0]) * ray.inv_dir[0]; // Calculate T distances to candidate planes
-	}
-	if (ray.pos[1] < min[1]) {
-		coord[1] = min[1];
-		Inside = false;
-		if (uf(ray.inv_dir[1]))	MaxT[1] = (min[1] - ray.pos[1]) * ray.inv_dir[1]; // Calculate T distances to candidate planes
-	}
-	else if (ray.pos[1] > max[1]) {
-		coord[1] = max[1];
-		Inside = false;
-		if (uf(ray.inv_dir[1]))	MaxT[1] = (max[1] - ray.pos[1]) * ray.inv_dir[1]; // Calculate T distances to candidate planes
-	}
-	if (ray.pos[2] < min[2]) {
-		coord[2] = min[2];
-		Inside = false;
-		if (uf(ray.inv_dir[2]))	MaxT[2] = (min[2] - ray.pos[2]) * ray.inv_dir[2]; // Calculate T distances to candidate planes
-	}
-	else if (ray.pos[2] > max[2]) {
-		coord[2] = max[2];
-		Inside = false;
-		if (uf(ray.inv_dir[2]))	MaxT[2] = (max[2] - ray.pos[2]) * ray.inv_dir[2]; // Calculate T distances to candidate planes
-	}
-
-	// Ray ray.pos inside bounding box
-	if (Inside) {
-		coord = ray.pos;
-		return		true;
-	}
-
-	// Get largest of the maxT's for final choice of intersection
-	u32 WhichPlane = 0;
-	if (MaxT[1] > MaxT[0])				WhichPlane = 1;
-	if (MaxT[2] > MaxT[WhichPlane])	WhichPlane = 2;
-
-	// Check final candidate actually inside box (if max < 0)
-	if (uf(MaxT[WhichPlane]) & 0x80000000) return false;
-
-	if (0 == WhichPlane) {	// 1 & 2
-		coord[1] = ray.pos[1] + MaxT[0] * ray.fwd_dir[1];
-		if ((coord[1] < min[1]) || (coord[1] > max[1]))	return false;
-		coord[2] = ray.pos[2] + MaxT[0] * ray.fwd_dir[2];
-		if ((coord[2] < min[2]) || (coord[2] > max[2]))	return false;
-		return true;
-	}
-	if (1 == WhichPlane) {	// 0 & 2
-		coord[0] = ray.pos[0] + MaxT[1] * ray.fwd_dir[0];
-		if ((coord[0] < min[0]) || (coord[0] > max[0]))	return false;
-		coord[2] = ray.pos[2] + MaxT[1] * ray.fwd_dir[2];
-		if ((coord[2] < min[2]) || (coord[2] > max[2]))	return false;
-		return true;
-	}
-	if (2 == WhichPlane) {	// 0 & 1
-		coord[0] = ray.pos[0] + MaxT[2] * ray.fwd_dir[0];
-		if ((coord[0] < min[0]) || (coord[0] > max[0]))	return false;
-		coord[1] = ray.pos[1] + MaxT[2] * ray.fwd_dir[1];
-		if ((coord[1] < min[1]) || (coord[1] > max[1]))	return false;
-		return true;
-	}
-	return false;
-}
 
 #ifdef __AVX__ 
 /************************************************
@@ -199,12 +120,8 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	lmax = minps(lmax, lmax1);
 	lmin = maxps(lmin, lmin1);
 
-
-
 	storeps(lmin, &dist);
-	return !!(_mm_comige_ss(mm128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(mm128_cast(lmax), mm128_cast(lmin)));
-
-}
+	return !!(_mm_comige_ss(m128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(m128_cast(lmax), m128_cast(lmin)));
 }
 #else
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) {
