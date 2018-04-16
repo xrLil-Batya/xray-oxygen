@@ -32,7 +32,7 @@ void create_force_progress()
 {
 	VERIFY							(!g_MissileForceShape);
 	CUIXml uiXml;
-	uiXml.Load						(CONFIG_PATH, UI_PATH, "grenade.xml");
+	uiXml.Load						(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
 
 
 	CUIXmlInit						xml_init;
