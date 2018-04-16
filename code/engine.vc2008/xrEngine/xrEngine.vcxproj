@@ -115,7 +115,7 @@
       <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <CompileAs>Default</CompileAs>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
-      <DisableSpecificWarnings>4996;4099</DisableSpecificWarnings>
+      <DisableSpecificWarnings>4366;4996;4099</DisableSpecificWarnings>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <ResourceCompile>
@@ -182,6 +182,7 @@
       <AdditionalOptions>
       </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
+      <DisableSpecificWarnings>4366;4996;4577;4315</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -251,6 +252,7 @@
       </AdditionalOptions>
       <LanguageStandard>stdcpplatest</LanguageStandard>
       <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <DisableSpecificWarnings>4366;4996;4577;4315</DisableSpecificWarnings>
     </ClCompile>
     <ResourceCompile>
       <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>

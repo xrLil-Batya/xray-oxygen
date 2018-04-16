@@ -181,11 +181,6 @@ void	IGame_Level::OnFrame		( )
 }
 // ==================================================================================================
 
-void CServerInfo::AddItem( LPCSTR name_, LPCSTR value_, u32 color_ )
-{
-	AddItem(name_, value_, color_);
-}
-
 void CServerInfo::AddItem(shared_str& name_, LPCSTR value_, u32 color_)
 {
 	SItem_ServerInfo it;

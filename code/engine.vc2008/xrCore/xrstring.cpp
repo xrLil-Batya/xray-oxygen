@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma warning(push)
+#pragma warning(disable: 4366)
 #include "xrstring.h"
 
 XRCORE_API extern str_container* g_pStringContainer = new str_container();
@@ -228,3 +229,4 @@ str_container::~str_container()
 	//dump ();
 	xr_delete(impl);
 }
+#pragma warning(pop)
