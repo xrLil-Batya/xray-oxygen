@@ -108,6 +108,7 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 }
 
 
+#define __AVX__
 #ifdef __AVX__
 /************************************************
 *#VERTVER: AVX use the part of SSE, and some
@@ -211,7 +212,7 @@ ICF bool isect_avx(const aabb_t &box, const ray_t &ray, float &dist)
 	lmax2 = minpssse(lmax2, lmax1);
 	lmin2 = maxpssse(lmin2, lmin1);
 
-	const bool ret = FALSE;
+	const bool ret = !!(_mm_comige_ss(lmax2, _mm_setzero_ps()) & _mm_comige_ss(lmax2, lmin2));
 
 	storeps(lmin, &dist);
 	//storess	(lmax, &rs.t_far);
