@@ -108,22 +108,33 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 }
 
 
-
-#ifdef _AVX_
+#ifdef __AVX__
 /************************************************
-#VERTVER: This is a part of AVX xrCDB project
-(now it's can unstability)
-#TODO: convert float to double for AVX registers
+*#VERTVER: AVX use the part of SSE, and some
+*of AVX instructions
+* SSE - xmm, AVX - ymm
+* Size of register: AVX-256, SSE-128
 *************************************************/
-#define loadpd(mem)			_mm256_load_pd((const double * const)(mem))
-#define storepd(ss,mem)		_mm256_store_pd((double * const)(mem),(ss))
-#define minpd				_mm256_min_pd
-#define maxpd				_mm256_max_pd
-#define mulpd				_mm256_mul_pd
-#define subpd				_mm256_sub_pd
-#define rotatelpd(ps)		_mm256_shuffle_pd((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+
+// load ymm
+#define loadps(mem)			_mm256_load_ps((const float * const)(mem))
+#define storeps(ss,mem)		_mm256_store_ps((float * const)(mem),(ss))
+#define minps				_mm256_min_ps
+#define minpssse			_mm_min_ps
+#define maxps				_mm256_max_ps
+#define maxpssse			_mm_max_ps
+#define mulps				_mm256_mul_ps
+#define subps				_mm256_sub_ps
+#define rotatelps(ps)		_mm256_shuffle_ps((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
 // NO ANALOG IN AVX
-#define muxhpd(low,high)	_mm256_div_pd((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+#define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+
+
+// SSE types
+#define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
+#define minss				_mm_min_ss
+#define maxss				_mm_max_ss
+#define m128_cast			_mm256_castps256_ps128
 
 #else 
 
@@ -152,56 +163,57 @@ static const float _MM_ALIGN16
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
 
-#ifdef _AVX_
-ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
+#ifdef __AVX__
+ICF bool isect_avx(const aabb_t &box, const ray_t &ray, float &dist)
 {
 	// you may already have those values hanging around somewhere
-	const __m256d
-		plus_inf = loadpd(ps_cst_plus_inf),
-		minus_inf = loadpd(ps_cst_minus_inf);
+	const __m256
+		plus_inf = loadps(ps_cst_plus_inf),
+		minus_inf = loadps(ps_cst_minus_inf);
 
 	// use whatever's apropriate to load.
-	const __m256d
-		box_min = loadpd(&box.min),
-		box_max = loadpd(&box.max),
-		pos = loadpd(&ray.pos),
-		inv_dir = loadpd(&ray.inv_dir);
+	const __m256
+		box_min = loadps(&box.min),
+		box_max = loadps(&box.max),
+		pos = loadps(&ray.pos),
+		inv_dir = loadps(&ray.inv_dir);
 
 	// use a div if inverted directions aren't available
-	const __m256d l1 = mulpd(subpd(box_min, pos), inv_dir);
-	const __m256d l2 = mulpd(subpd(box_max, pos), inv_dir);
+	const __m256 l1 = mulps(subps(box_min, pos), inv_dir);
+	const __m256 l2 = mulps(subps(box_max, pos), inv_dir);
 
 	// the order we use for those min/max is vital to filter out
 	// NaNs that happens when an inv_dir is +/- inf and
 	// (box_min - pos) is 0. inf * 0 = NaN
-	const __m256d filtered_l1a = minpd(l1, plus_inf);
-	const __m256d filtered_l2a = minpd(l2, plus_inf);
+	const __m256 filtered_l1a = minps(l1, plus_inf);
+	const __m256 filtered_l2a = minps(l2, plus_inf);
 
-	const __m256d filtered_l1b = maxpd(l1, minus_inf);
-	const __m256d filtered_l2b = maxpd(l2, minus_inf);
+	const __m256 filtered_l1b = maxps(l1, minus_inf);
+	const __m256 filtered_l2b = maxps(l2, minus_inf);
 
 	// now that we're back on our feet, test those slabs.
-	__m256d lmax = maxpd(filtered_l1a, filtered_l2a);
-	__m256d lmin = minpd(filtered_l1b, filtered_l2b);
+	__m256 lmax = maxps(filtered_l1a, filtered_l2a);
+	__m256 lmin = minps(filtered_l1b, filtered_l2b);
 
 	// unfold back. try to hide the latency of the shufps & co.
-	const __m256d lmax0 = rotatelpd(lmax);
-	const __m256d lmin0 = rotatelpd(lmin);
-	lmax = minpd(lmax, lmax0);
-	lmin = maxpd(lmin, lmin0);
+	const __m256 lmax0 = rotatelps(lmax);
+	const __m256 lmin0 = rotatelps(lmin);
 
-	//#TODO: It's broken
-	//////////////////////////////////////////////
-	const __m256d lmax1 = muxhpd(lmax, lmax);
-	const __m256d lmin1 = muxhpd(lmin, lmin);
-	//////////////////////////////////////////////
+	__m128 lmax2 = m128_cast(lmax);
+	__m128 lmin2 = m128_cast(lmin);
 
-	lmax = minpd(lmax, lmax1);
-	lmin = maxpd(lmin, lmin1);
+	lmax = minps(lmax, lmax0);
+	lmin = maxps(lmin, lmin0);
+
+	const __m128 lmax1 = muxhps(lmax2, lmax2);
+	const __m128 lmin1 = muxhps(lmin2, lmin2);
+
+	lmax2 = minpssse(lmax2, lmax1);
+	lmin2 = maxpssse(lmin2, lmin1);
 
 	const bool ret = FALSE;
 
-	storepd(lmin, &dist);
+	storeps(lmin, &dist);
 	//storess	(lmax, &rs.t_far);
 
 	return  ret;
@@ -294,10 +306,10 @@ public:
 	ICF bool _box_avx(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
 	{
 		aabb_t		box;
-		__m256d CN = _mm256_unpacklo_pd(_mm256_load_pd((double*)&bCenter.x), _mm256_load_pd((double*)&bCenter.y));
-		CN = _mm256_movedup_pd(CN + _mm256_load_pd((double*)&bCenter.z));
-		__m256d EX = _mm256_unpacklo_pd(_mm256_load_pd((double*)&bExtents.x), _mm256_load_pd((double*)&bExtents.y));
-		EX = _mm256_movedup_pd(EX, _mm256_load_pd((double*)&bExtents.z));
+		__m256d CN	= _mm256_unpacklo_pd	(_mm256_load_pd			((double*)&bCenter.x),	_mm256_load_pd((double*)&bCenter.y));
+		CN			= _mm256_movedup_pd		(CN + _mm256_load_pd	((double*)&bCenter.z));
+		__m256d EX	= _mm256_unpacklo_pd	(_mm256_load_pd			((double*)&bExtents.x), _mm256_load_pd((double*)&bExtents.y));
+		EX			= _mm256_movedup_pd		(EX, _mm256_load_pd		((double*)&bExtents.z));
 
 		_mm256_store_pd((double*)&box.min, _mm256_sub_pd(CN, EX));
 		_mm256_store_pd((double*)&box.max, _mm256_add_pd(CN, EX));

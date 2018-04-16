@@ -105,15 +105,27 @@ ICF bool	isect_fpu(const Fvector& min, const Fvector& max, const ray_t &ray, Fve
 	return false;
 }
 
-#ifdef __AVX__ // This is a part of AVX xrCDB project
+#ifdef __AVX__ 
+/************************************************
+*#VERTVER: AVX use the part of SSE, and some
+*of AVX instructions
+* SSE - xmm, AVX - ymm
+* Size of register: AVX-256, SSE-128
+*************************************************/
+
+// load ymm
 #define loadps(mem)			_mm256_load_ps((const float * const)(mem))
 #define storeps(ss,mem)		_mm256_store_ps((float * const)(mem),(ss))
 #define minps				_mm256_min_ps
+#define minpssse			_mm_min_ps
 #define maxps				_mm256_max_ps
+#define maxpssse			_mm_max_ps
 #define mulps				_mm256_mul_ps
 #define subps				_mm256_sub_ps
 #define rotatelps(ps)		_mm256_shuffle_ps((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
-#define muxhps(low,high)	_mm256_div_ps((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+// NO ANALOG IN AVX
+#define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+
 
 // SSE types
 #define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
@@ -170,23 +182,29 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	const __m256 filtered_l2b = maxps(l2, minus_inf);
 
 	// now that we're back on our feet, test those slabs.
-	__m128 lmax = _mm_max_ps(m128_cast(filtered_l1a), m128_cast(filtered_l2a));
-	__m128 lmin = _mm_max_ps(m128_cast(filtered_l1b), m128_cast(filtered_l2b));
+	__m256 lmax = maxps(filtered_l1a, filtered_l2a);
+	__m256 lmin = minps(filtered_l1b, filtered_l2b);
 
 	// unfold back. try to hide the latency of the shufps & co.
-	const __m128 lmax0 = _mm_shuffle_ps((lmax), (lmax), 0x39);
-	const __m128 lmin0 = _mm_shuffle_ps((lmin), (lmin), 0x39);
-	lmax = minss(lmax, lmax0);
-	lmin = maxss(lmin, lmin0);
-	
-	const __m128 lmax1 = _mm_div_ps(lmax, lmax);
-	const __m128 lmin1 = _mm_div_ps(lmin, lmin);
-	lmax = minss(lmax, lmax1);
-	lmin = maxss(lmin, lmin1);
+	const __m256 lmax0 = rotatelps(lmax);
+	const __m256 lmin0 = rotatelps(lmin);
 
-	const bool ret = !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax, lmin));
+	__m128 lmax2 = m128_cast(lmax);
+	__m128 lmin2 = m128_cast(lmin);
 
-	storess(lmin, &dist);
+	lmax = minps(lmax, lmax0);
+	lmin = maxps(lmin, lmin0);
+
+	const __m128 lmax1 = muxhps(lmax2, lmax2);
+	const __m128 lmin1 = muxhps(lmin2, lmin2);
+
+	lmax2 = minpssse(lmax2, lmax1);
+	lmin2 = maxpssse(lmin2, lmin1);
+
+	const bool ret = FALSE;
+
+	storeps(lmin, &dist);
+	//storess	(lmax, &rs.t_far);
 
 	return  ret;
 }
