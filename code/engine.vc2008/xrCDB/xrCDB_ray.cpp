@@ -107,7 +107,6 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 	return false;
 }
 
-
 #ifdef __AVX__
 /************************************************
 *#VERTVER: AVX use the part of SSE, and some
@@ -119,6 +118,7 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 // load ymm
 #define loadps(mem)			_mm256_load_ps((const float * const)(mem))
 #define storeps(ss,mem)		_mm256_store_ps((float * const)(mem),(ss))
+#define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
 #define minps				_mm256_min_ps
 #define minpssse			_mm_min_ps
 #define maxps				_mm256_max_ps
@@ -126,6 +126,7 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 #define mulps				_mm256_mul_ps
 #define subps				_mm256_sub_ps
 #define rotatelps(ps)		_mm256_shuffle_ps((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+#define rotatelpssse(ps)		_mm_shuffle_ps((ps),(ps), 0x39)	
 // NO ANALOG IN AVX
 #define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
 
@@ -134,7 +135,8 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 #define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
 #define minss				_mm_min_ss
 #define maxss				_mm_max_ss
-#define m128_cast			_mm256_castps256_ps128
+#define mm128_cast			_mm256_castps256_ps128
+#define mm256_cast			_mm256_castps128_ps256
 
 #else 
 
@@ -199,24 +201,20 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	const __m256 lmax0 = rotatelps(lmax);
 	const __m256 lmin0 = rotatelps(lmin);
 
-	__m128 lmax2 = m128_cast(lmax);
-	__m128 lmin2 = m128_cast(lmin);
-
 	lmax = minps(lmax, lmax0);
 	lmin = maxps(lmin, lmin0);
 
-	const __m128 lmax1 = muxhps(lmax2, lmax2);
-	const __m128 lmin1 = muxhps(lmin2, lmin2);
+	const __m256 lmax1 = _mm256_moveldup_ps(lmax);
+	const __m256 lmin1 = _mm256_moveldup_ps(lmin);
 
-	lmax2 = minpssse(lmax2, lmax1);
-	lmin2 = maxpssse(lmin2, lmin1);
+	lmax = minps(lmax, lmax1);
+	lmin = maxps(lmin, lmin1);
 
-	const bool ret = !!(_mm_comige_ss(lmax2, _mm_setzero_ps()) & _mm_comige_ss(lmax2, lmin2));
+
 
 	storeps(lmin, &dist);
-	//storess	(lmax, &rs.t_far);
+	return !!(_mm_comige_ss(mm128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(mm128_cast(lmax), mm128_cast(lmin)));
 
-	return  ret;
 }
 
 #else

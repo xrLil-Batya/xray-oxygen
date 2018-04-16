@@ -157,6 +157,7 @@ ps_cst_minus_inf[4] = { -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_i
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) 
 {
 	// you may already have those values hanging around somewhere
+	// you may already have those values hanging around somewhere
 	const __m256
 		plus_inf = loadps(ps_cst_plus_inf),
 		minus_inf = loadps(ps_cst_minus_inf);
@@ -189,24 +190,21 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	const __m256 lmax0 = rotatelps(lmax);
 	const __m256 lmin0 = rotatelps(lmin);
 
-	__m128 lmax2 = m128_cast(lmax);
-	__m128 lmin2 = m128_cast(lmin);
-
 	lmax = minps(lmax, lmax0);
 	lmin = maxps(lmin, lmin0);
 
-	const __m128 lmax1 = muxhps(lmax2, lmax2);
-	const __m128 lmin1 = muxhps(lmin2, lmin2);
+	const __m256 lmax1 = _mm256_moveldup_ps(lmax);
+	const __m256 lmin1 = _mm256_moveldup_ps(lmin);
 
-	lmax2 = minpssse(lmax2, lmax1);
-	lmin2 = maxpssse(lmin2, lmin1);
+	lmax = minps(lmax, lmax1);
+	lmin = maxps(lmin, lmin1);
 
-	const bool ret = !!(_mm_comige_ss(lmax2, _mm_setzero_ps()) & _mm_comige_ss(lmax2, lmin2));
+
 
 	storeps(lmin, &dist);
-	//storess	(lmax, &rs.t_far);
+	return !!(_mm_comige_ss(mm128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(mm128_cast(lmax), mm128_cast(lmin)));
 
-	return  ret;
+}
 }
 #else
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) {
