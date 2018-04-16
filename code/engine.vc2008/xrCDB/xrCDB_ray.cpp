@@ -107,6 +107,27 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 	return false;
 }
 
+
+
+#ifdef _AVX_
+/************************************************
+#VERTVER: This is a part of AVX xrCDB project
+(now it's can unstability)
+#TODO: convert float to double for AVX registers
+*************************************************/
+#define loadpd(mem)			_mm256_load_pd((const double * const)(mem))
+#define storepd(ss,mem)		_mm256_store_pd((double * const)(mem),(ss))
+#define minpd				_mm256_min_pd
+#define maxpd				_mm256_max_pd
+#define mulpd				_mm256_mul_pd
+#define subpd				_mm256_sub_pd
+#define rotatelpd(ps)		_mm256_shuffle_pd((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+// NO ANALOG IN AVX
+#define muxhpd(low,high)	_mm256_div_pd((low),(high))				// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+
+#else 
+
+// SSE and SSE2
 // turn those verbose intrinsics into something readable.
 #define loadps(mem)			_mm_load_ps((const float * const)(mem))
 #define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
@@ -116,8 +137,13 @@ ICF bool	isect_fpu	(const Fvector& min, const Fvector& max, const ray_t &ray, Fv
 #define maxps				_mm_max_ps
 #define mulps				_mm_mul_ps
 #define subps				_mm_sub_ps
-#define rotatelps(ps)		_mm_shuffle_ps((ps),(ps), 0x39)	// a,b,c,d -> b,c,d,a
-#define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+#define rotatelps(ps)		_mm_shuffle_ps((ps),(ps), 0x39)	
+#define muxhps(low,high)	_mm_movehl_ps((low),(high))		
+
+#endif
+
+
+
 
 
 static const float flt_plus_inf = -logf(0);	// let's keep C and C++ compilers happy.
@@ -125,19 +151,76 @@ static const float _MM_ALIGN16
 	ps_cst_plus_inf	[4]	=	{  flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
-ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)	
+
+#ifdef _AVX_
+ICF bool isect_avx(const aabb_t &box, const ray_t &ray, double &dist)
+{
+	// you may already have those values hanging around somewhere
+	const __m256d
+		plus_inf = loadpd(ps_cst_plus_inf),
+		minus_inf = loadpd(ps_cst_minus_inf);
+
+	// use whatever's apropriate to load.
+	const __m256d
+		box_min = loadpd(&box.min),
+		box_max = loadpd(&box.max),
+		pos = loadpd(&ray.pos),
+		inv_dir = loadpd(&ray.inv_dir);
+
+	// use a div if inverted directions aren't available
+	const __m256d l1 = mulpd(subpd(box_min, pos), inv_dir);
+	const __m256d l2 = mulpd(subpd(box_max, pos), inv_dir);
+
+	// the order we use for those min/max is vital to filter out
+	// NaNs that happens when an inv_dir is +/- inf and
+	// (box_min - pos) is 0. inf * 0 = NaN
+	const __m256d filtered_l1a = minpd(l1, plus_inf);
+	const __m256d filtered_l2a = minpd(l2, plus_inf);
+
+	const __m256d filtered_l1b = maxpd(l1, minus_inf);
+	const __m256d filtered_l2b = maxpd(l2, minus_inf);
+
+	// now that we're back on our feet, test those slabs.
+	__m256d lmax = maxpd(filtered_l1a, filtered_l2a);
+	__m256d lmin = minpd(filtered_l1b, filtered_l2b);
+
+	// unfold back. try to hide the latency of the shufps & co.
+	const __m256d lmax0 = rotatelpd(lmax);
+	const __m256d lmin0 = rotatelpd(lmin);
+	lmax = minpd(lmax, lmax0);
+	lmin = maxpd(lmin, lmin0);
+
+	//#TODO: It's broken
+	//////////////////////////////////////////////
+	const __m256d lmax1 = muxhpd(lmax, lmax);
+	const __m256d lmin1 = muxhpd(lmin, lmin);
+	//////////////////////////////////////////////
+
+	lmax = minpd(lmax, lmax1);
+	lmin = maxpd(lmin, lmin1);
+
+	const bool ret = FALSE;
+
+	storepd(lmin, &dist);
+	//storess	(lmax, &rs.t_far);
+
+	return  ret;
+}
+
+#else
+ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 {
 	// you may already have those values hanging around somewhere
 	const __m128
-		plus_inf	= loadps(ps_cst_plus_inf),
-		minus_inf	= loadps(ps_cst_minus_inf);
+		plus_inf = loadps(ps_cst_plus_inf),
+		minus_inf = loadps(ps_cst_minus_inf);
 
 	// use whatever's apropriate to load.
 	const __m128
-		box_min		= loadps(&box.min),
-		box_max		= loadps(&box.max),
-		pos			= loadps(&ray.pos),
-		inv_dir		= loadps(&ray.inv_dir);
+		box_min = loadps(&box.min),
+		box_max = loadps(&box.max),
+		pos = loadps(&ray.pos),
+		inv_dir = loadps(&ray.inv_dir);
 
 	// use a div if inverted directions aren't available
 	const __m128 l1 = mulps(subps(box_min, pos), inv_dir);
@@ -162,18 +245,22 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	lmax = minss(lmax, lmax0);
 	lmin = maxss(lmin, lmin0);
 
-	const __m128 lmax1 = muxhps(lmax,lmax);
-	const __m128 lmin1 = muxhps(lmin,lmin);
+	const __m128 lmax1 = muxhps(lmax, lmax);
+	const __m128 lmin1 = muxhps(lmin, lmin);
 	lmax = minss(lmax, lmax1);
 	lmin = maxss(lmin, lmin1);
 
-	const bool ret = !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax,lmin));
+	const bool ret = !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax, lmin));
 
-	storess		(lmin, &dist);
+	storess(lmin, &dist);
 	//storess	(lmax, &rs.t_far);
 
 	return  ret;
 }
+#endif
+
+
+
 
 template <bool bCull, bool bFirst, bool bNearest>
 class _MM_ALIGN16	ray_collider
@@ -200,20 +287,43 @@ public:
 	}
 
 	// sse
-	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, float&  dist )
+
+
+#ifdef _AVX_
+
+	ICF bool _box_avx(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
 	{
 		aabb_t		box;
-		__m128 CN = _mm_unpacklo_ps( _mm_load_ss( (float*) &bCenter.x ) , _mm_load_ss( (float*) &bCenter.y ) );
-		CN = _mm_movelh_ps( CN , _mm_load_ss( (float*) &bCenter.z ) );
-		__m128 EX = _mm_unpacklo_ps( _mm_load_ss( (float*) &bExtents.x ) , _mm_load_ss( (float*) &bExtents.y ) );
-		EX = _mm_movelh_ps( EX , _mm_load_ss( (float*) &bExtents.z ) );
+		__m256d CN = _mm256_unpacklo_pd(_mm256_load_pd((double*)&bCenter.x), _mm256_load_pd((double*)&bCenter.y));
+		CN = _mm256_movedup_pd(CN + _mm256_load_pd((double*)&bCenter.z));
+		__m256d EX = _mm256_unpacklo_pd(_mm256_load_pd((double*)&bExtents.x), _mm256_load_pd((double*)&bExtents.y));
+		EX = _mm256_movedup_pd(EX, _mm256_load_pd((double*)&bExtents.z));
 
-		_mm_store_ps( (float*) &box.min , _mm_sub_ps( CN , EX ) );
-		_mm_store_ps( (float*) &box.max , _mm_add_ps( CN , EX ) );
+		_mm256_store_pd((double*)&box.min, _mm256_sub_pd(CN, EX));
+		_mm256_store_pd((double*)&box.max, _mm256_add_pd(CN, EX));
 
-        return isect_sse (box,ray,dist);
+		//return isect_avx(box, ray, dist);
+		return false;
 	}
 	
+	
+#else
+	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, float&  dist)
+	{
+		aabb_t		box;
+		__m128 CN = _mm_unpacklo_ps(_mm_load_ss((float*)&bCenter.x), _mm_load_ss((float*)&bCenter.y));
+		CN = _mm_movelh_ps(CN, _mm_load_ss((float*)&bCenter.z));
+		__m128 EX = _mm_unpacklo_ps(_mm_load_ss((float*)&bExtents.x), _mm_load_ss((float*)&bExtents.y));
+		EX = _mm_movelh_ps(EX, _mm_load_ss((float*)&bExtents.z));
+
+		_mm_store_ps((float*)&box.min, _mm_sub_ps(CN, EX));
+		_mm_store_ps((float*)&box.max, _mm_add_ps(CN, EX));
+
+		return isect_sse(box, ray, dist);
+	}
+#endif
+
+
 	IC bool _tri(u32* p, float& u, float& v, float& range)
 	{
 		Fvector edge1, edge2, tvec, pvec, qvec;
@@ -309,28 +419,45 @@ public:
 	}
 	void _stab(const AABBNoLeafNode* node)
 	{
-		// Should help
+
+		// Here's the prefetchwt1, but can compile with SSE prefetcht1 or prefetcht2
 		_mm_prefetch((char *)node->GetNeg(), _MM_HINT_NTA);
 
 		// Actual ray/aabb test
+#ifdef _AVX_
+		// use AVX
+		double dd;
+		if (!_box_avx((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, dd))
+		{
+			return
+		}
+		if			(dd > rRange)		return;
+
+#else
 		// use SSE
 		float d;
 		if (!_box_sse((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, d))
+		{
 			return;
+		}
+		if			(d  > rRange)		return;
 
-		if (d > rRange) return;
-
+#endif
 		// 1st chield
-		if (node->HasPosLeaf())	_prim((DWORD)node->GetPosPrimitive());
-		else					_stab(node->GetPos());
+		if (node->HasPosLeaf())	
+			_prim((DWORD)node->GetPosPrimitive());
+		else					
+			_stab(node->GetPos());
 
 		// Early exit for "only first"
 		if (bFirst && dest->r_count())
 			return;
 
 		// 2nd chield
-		if (node->HasNegLeaf())	_prim((DWORD)node->GetNegPrimitive());
-		else					_stab(node->GetNeg());
+		if (node->HasNegLeaf())	
+			_prim((DWORD)node->GetNegPrimitive());
+		else					
+			_stab(node->GetNeg());
 	}
 };
 
@@ -362,14 +489,16 @@ void COLLIDER::ray_query(const MODEL *m_def, const Fvector& r_start, const Fvect
 				RC._stab(N);
 			}
 		}
-		else {
+		else 
+		{
 			if (ray_mode&OPT_ONLYNEAREST) 
 			{
 				ray_collider<true, false, true>	RC;
 				RC._init(this, m_def->verts, m_def->tris, r_start, r_dir, r_range);
 				RC._stab(N);
 			}
-			else {
+			else 
+			{
 				ray_collider<true, false, false> RC;
 				RC._init(this, m_def->verts, m_def->tris, r_start, r_dir, r_range);
 				RC._stab(N);
@@ -393,8 +522,10 @@ void COLLIDER::ray_query(const MODEL *m_def, const Fvector& r_start, const Fvect
 				RC._stab(N);
 			}
 		}
-		else {
-			if (ray_mode&OPT_ONLYNEAREST) {
+		else 
+		{
+			if (ray_mode&OPT_ONLYNEAREST) 
+			{
 				ray_collider<false, false, true> RC;
 				RC._init(this, m_def->verts, m_def->tris, r_start, r_dir, r_range);
 				RC._stab(N);

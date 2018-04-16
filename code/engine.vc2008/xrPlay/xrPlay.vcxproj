@@ -73,8 +73,8 @@
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</BufferSecurityCheck>
       <BufferSecurityCheck Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</BufferSecurityCheck>
       <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">NoExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NoExtensions</EnableEnhancedInstructionSet>
-      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NoExtensions</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotSet</EnableEnhancedInstructionSet>
+      <EnableEnhancedInstructionSet Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotSet</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</LinkTimeCodeGeneration>
