@@ -20,35 +20,6 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-struct ShadersThread
-{
-	IReader* fs;
-	xr_vector<ref_shader> & Shaders;
-};
-
-static void sh_load(void* p)
-{
-	ShadersThread* th = (ShadersThread*)p;
-
-	IReader* chunk = th->fs->open_chunk(fsL_SHADERS);
-	R_ASSERT2(chunk, "Level doesn't builded correctly.");
-	u32 count = chunk->r_u32();
-	th->Shaders.resize(count);
-	for (u32 i = 0; i<count; i++)	// skip first shader as "reserved" one
-	{
-		string512				n_sh, n_tlist;
-		LPCSTR			n = LPCSTR(chunk->pointer());
-		chunk->skip_stringZ();
-		if (0 == n[0])			continue;
-		xr_strcpy(n_sh, n);
-		LPSTR			delim = strchr(n_sh, '/');
-		*delim = 0;
-		xr_strcpy(n_tlist, delim + 1);
-		th->Shaders[i] = dxRenderDeviceRender::Instance().Resources->Create(n_sh, n_tlist);
-	}
-	chunk->close();
-}
-
 void CRender::level_Load(IReader* fs)
 {
 	R_ASSERT						(0!=g_pGameLevel);
@@ -62,10 +33,26 @@ void CRender::level_Load(IReader* fs)
 	// Shaders
 	g_pGamePersistent->SetLoadStageTitle		("st_loading_shaders");
 	g_pGamePersistent->LoadTitle		();
+	{
+		chunk = fs->open_chunk		(fsL_SHADERS);
+		R_ASSERT2					(chunk,"Level doesn't builded correctly.");
+		u32 count = chunk->r_u32	();
+		Shaders.resize				(count);
+		for(u32 i=0; i<count; i++)	// skip first shader as "reserved" one
+		{
+			string512				n_sh,n_tlist;
+			LPCSTR			n		= LPCSTR(chunk->pointer());
+			chunk->skip_stringZ		();
+			if (0==n[0])			continue;
+			xr_strcpy					(n_sh,n);
+			LPSTR			delim	= strchr(n_sh,'/');
+			*delim					= 0;
+			xr_strcpy					(n_tlist,delim+1);
+			Shaders[i]				= dxRenderDeviceRender::Instance().Resources->Create(n_sh,n_tlist);
+		}
+		chunk->close();
+	}
 
-	ShadersThread* SThread = new ShadersThread({fs, Shaders});
-	thread_spawn(sh_load, "Shaders Loader", 0, SThread);
-	Sleep(30);
 	// Components
 	Wallmarks					= xr_new<CWallmarksEngine>	();
 	Details						= xr_new<CDetailManager>	();
