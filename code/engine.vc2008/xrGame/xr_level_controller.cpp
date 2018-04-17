@@ -36,7 +36,10 @@ _action  actions[]		= {
 	{ "torch",				kTORCH					,_both},
 	{ "torch_mode",			kTORCH_MODE				,_both},
 	{ "night_vision",		kNIGHT_VISION			,_both},	
-	{ "show_detector",		kDETECTOR				,_sp},		
+	{ "show_detector",		kDETECTOR				,_sp},	
+
+	{ "turn_engine",		kTURN_ENGINE			,_both},	
+	{ "switch_horn",		kSWITCH_HORN			,_both},	
 
 	{ "kick",               kKICK                   ,_both},		
 	{ "wpn_1",				kWPN_1					,_both},	
