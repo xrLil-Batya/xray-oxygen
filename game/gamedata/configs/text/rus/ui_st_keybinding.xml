@@ -198,4 +198,13 @@
 	<string id="kcam_3">
 		<text>Камера от 3го лица</text>
 	</string>
+	<string id="kb_grp_vehicle">
+		<text>Транспорт</text>
+	</string>
+	<string id="kb_turn_engine">
+		<text>Завести двигатель</text>
+	</string>
+	<string id="kb_switch_horn">
+		<text>Гудок</text>
+	</string>	
 </string_table>

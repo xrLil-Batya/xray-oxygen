@@ -189,4 +189,22 @@
 	<string id="kb_quick_use_4">
 		<text>Quick Access Slot 4</text>
 	</string>
+	<string id="kcam_1">
+		<text>First eye cam</text>
+	</string>
+	<string id="kcam_2">
+		<text>2nd person cam</text>
+	</string>
+	<string id="kcam_3">
+		<text>3rd person cam</text>
+	</string>
+	<string id="kb_grp_vehicle">
+		<text>Vehicle</text>
+	</string>
+	<string id="kb_turn_engine">
+		<text>Turn engine</text>
+	</string>
+	<string id="kb_switch_horn">
+		<text>Horn</text>
+	</string>	
 </string_table>
