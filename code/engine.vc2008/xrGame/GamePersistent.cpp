@@ -374,17 +374,9 @@ void CGamePersistent::start_logo_intro()
 {
 	if(Device.dwPrecacheFrame==0)
 	{
-		m_intro_event.bind		(this, &CGamePersistent::update_logo_intro);
-		if (!xr_strlen(m_game_params.m_game_or_spawn) && !g_pGameLevel && allow_intro())
-		{
-			VERIFY				(NULL==m_intro);
-			m_intro				= xr_new<CUISequencer>();
-			m_intro->Start		("intro_logo");
-			Msg					("intro_start intro_logo");
-			Console->Hide		();
-		}
-		else
-			m_intro = xr_new<CUISequencer>();
+		m_intro_event.bind(this, &CGamePersistent::update_logo_intro);
+		m_intro = xr_new<CUISequencer>();
+		Console->Hide();
 	}
 }
 
