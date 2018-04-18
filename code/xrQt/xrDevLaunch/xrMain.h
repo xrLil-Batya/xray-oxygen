@@ -25,6 +25,7 @@
 #include <QDesktopServices>
 #include <QUrl>
 #include <QDialog>
+#include <QMessageBox>
 /////////////////////////////////////////
 #define DLL_API __declspec(dllimport)
 #define CXX 199711L
@@ -32,7 +33,7 @@
 #define NOXRCORE_LOAD 1
 /////////////////////////////////////////
 static const QStringList LIST_ITEMS = QStringList() 
-<< "-r2" << "-r3" << "-r4" << "-renderdebug" << "-nointro";
+<< "-r2" << "-r3" << "-r4" << "-renderdebug" << "-nointro" << "-mblur";
 /////////////////////////////////////////
 
 void CreateRendererList();

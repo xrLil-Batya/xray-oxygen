@@ -13,7 +13,10 @@
 unsigned int type_ptr;
 char const* params_list;
 char const* string_accept;
-std::string params = "-nointro";
+std::string params;
+std::string params_line;
+std::string params_string;
+std::string params_line_box;
 /////////////////////////////////////////
 // In RenderList.cpp
 void CreateRendererList();
@@ -71,6 +74,7 @@ remove the main thread
 xrLaunch::~xrLaunch() 
 {
     delete ui;
+	
 }
 
 
@@ -102,10 +106,10 @@ void xrLaunch::on_listWidget_itemPressed(QListWidgetItem *item)
 add string to buffer
 ************************************************/
 void xrLaunch::add_stringToList() 
-{
+{ 
 	QString rendered = ui->listWidget->currentItem()->text();
 	//#VERTVER: Don't use here toLatin1(). Crash on Release
-	params = rendered.toLocal8Bit();
+	params_string = rendered.toLocal8Bit();
 	statusBar()->showMessage(tr("Added to string buffer"), 2000);
 }
 
@@ -141,6 +145,10 @@ void xrLaunch::run_xrEngineRun()
 		//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
 		//#(only xrDevLauncher compiling with IA32-x86 instructions),
 		//#some part of matrix and vectors use SSE3. It's can be difficult!
+	
+		QString rendered_line = ui->lineEdit->text();
+		params_line = rendered_line.toLocal8Bit();
+		params = params_string + " " + params_line;
 		init_xrCore();
 		statusBar()->showMessage(tr("Creating render list..."));
 		CreateRendererList();
@@ -250,7 +258,8 @@ send the string of params to xrEngineRun();
 ***********************************************/
 void xrDialogParam::on_buttonBox_accepted()
 {
-	//uiDialog->textEdit
+	//QString textbox;
+	//params_line_box = textbox.toLocal8Bit();
 }
 
 

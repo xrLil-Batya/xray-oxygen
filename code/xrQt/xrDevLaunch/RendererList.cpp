@@ -24,8 +24,6 @@
 #include <stdio.h>
 #include <iostream>
 ///////////////////////////////////////////////
-#define DLL_API __declspec(dllimport)
-
 DLL_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r2_name = "xrRender_R2";

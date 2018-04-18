@@ -131,7 +131,7 @@ ICF bool	isect_fpu(const Fvector& min, const Fvector& max, const ray_t &ray, Fve
 #define storess(ss,mem)		_mm_store_ss((float * const)(mem),(ss))
 #define minss				_mm_min_ss
 #define maxss				_mm_max_ss
-#define m128_cast			_mm256_castps256_ps128
+#define mm128_cast			_mm256_castps256_ps128
 #else 
 
 // turn those verbose intrinsics into something readable.
@@ -204,7 +204,6 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	storeps(lmin, &dist);
 	return !!(_mm_comige_ss(mm128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(mm128_cast(lmax), mm128_cast(lmin)));
 
-}
 }
 #else
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) {

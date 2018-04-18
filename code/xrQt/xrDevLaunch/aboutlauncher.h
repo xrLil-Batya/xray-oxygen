@@ -19,6 +19,7 @@ class AboutLauncher : public QDialog
     Q_OBJECT
 
 public:
+	
     explicit AboutLauncher(QWidget *parent = 0);
     ~AboutLauncher();
 
