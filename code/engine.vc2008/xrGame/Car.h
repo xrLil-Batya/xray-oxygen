@@ -444,6 +444,10 @@ private:
 	void				 Unclutch							()	;
 	void				 SwitchEngine						()	;
 	void				 NeutralDrive						()	;
+
+	void				 SwitchHorn							()	;
+						 ref_sound 					  snd_horn	;
+
 	void				 UpdatePower						()	;
 	void				 ReleasePedals						()	;
 	void				 ResetKeys							()	;

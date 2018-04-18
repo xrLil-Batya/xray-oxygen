@@ -26,7 +26,6 @@ public:
 	u32		Size()			{ return data.size(); }
 	void	ResetData()		{ data.clear(); }
 
-	void	AddItem( LPCSTR name_,		LPCSTR value_, u32 color_ = RGB(255,255,255) );
 	void	AddItem( shared_str& name_,	LPCSTR value_, u32 color_ = RGB(255,255,255) );
 
 	IC SItem_ServerInfo&	operator[] ( u32 id ) { VERIFY( id < max_item ); return data[id]; }

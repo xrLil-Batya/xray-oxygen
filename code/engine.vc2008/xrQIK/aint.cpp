@@ -299,7 +299,7 @@ void swell(const AngleInt &a,
 		}
 		else
 		{
-			if (!l2 < h2)
+			if (float(!l2) < h2)
 			{
 				l = std::min(l, l2);
 				h = std::max(h, h2);

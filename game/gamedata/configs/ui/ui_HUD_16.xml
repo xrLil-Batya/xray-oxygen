@@ -1,11 +1,11 @@
-<! Unite config with all HUD files: (grenade.xml, motion_icon.xml, zone_map.xml)-can transform to _16, maingame_16.xml>
+<!-- Unite config with all HUD files: (grenade.xml, motion_icon.xml, zone_map.xml)-can transform to _16, maingame_16.xm -->
 <window>
-<! grenade.xml>
+<!-- grenade.xm -->
 	<progress x="467" y="338" width="91" height="92" sector_count="30" clockwise="0">
 			<texture>ui_hud_grenadetarget_e</texture>			
 	</progress>
 
-<! motion_icon.xml>
+<!-- motion_icon.xm -->
 	<window rel_size="1.25" width="10" height="10" alignment="c"/>
 	<luminosity_progress x="10" y="10" width="10" height="10" alignment="c" stretch="1" sector_count="240" clockwise="1" begin_angle="-0.227" end_angle="0.835" blend="0">
 		<texture>ui_inGame2_Radar_green_bar</texture>
@@ -14,12 +14,12 @@
 		<texture>ui_inGame2_Radar_blue_bar</texture>
 	</noise_progress>
 
-<! zone_map.xml>
+<!-- zone_map.xm -->
 	<minimap>
 		<level_frame x="0.15" y="0.15" width="0.217" height="0.217" stretch="1" alignment="c"/>
 
 		<background width="0.30" height="0.30" stretch="1" alignment="c">
-			<texture></texture>
+			<texture>ui_inGame2_Radar_main_window</texture>
 		</background>
 
 	    <clock_wnd x="0.15" y="0.86" width="39" height="16" alignment="c">
@@ -41,7 +41,7 @@
 		</static_counter>
 	</minimap>
 
-<! maingame_16.xml>
+<!-- maingame_16.xm -->
   <main x="0" y="0" width="1024" height="768">
     <_auto_static x="512" y="384" width="115" height="115" alignment="c" stretch="1" heading="1" xform_anim="xfrom_rotate_3sec" xform_anim_cyclic="1">
       <texture>ui_icons_newPDA_Crclbig_h</texture>
@@ -100,7 +100,7 @@
 	</artefact_static>
 
 	<disk_io x="760" y="750" width="14" height="16" stretch="1">
-<!--		<texture>ui\ui_disk_io</texture> -->
+<!----		<texture>ui\ui_disk_io</texture> -->
 	</disk_io>
 
 	<flashing_icons>

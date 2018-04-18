@@ -206,9 +206,15 @@ void CCameraLook2::UpdateAutoAim()
 void CCameraLook2::Load(LPCSTR section)
 {
 	CCameraLook::Load		(section);
-	m_cam_offset = Fvector().set(0.314f,0.2f,0.0f);
-	dist				= 1.4f;
-	m_autoaim_inertion_yaw	= pSettings->r_fvector2	(section,"autoaim_speed_y");
-	m_autoaim_inertion_pitch= pSettings->r_fvector2	(section,"autoaim_speed_x");
-	m_look_cam_fp_zoom = pSettings->r_bool(section, "first_person_zoom");	
+	m_cam_offset 				= 				Fvector().set(0.314f,0.2f,0.0f);
+	dist						= 				1.4f;
+	// hide aimbot hack at release
+	m_autoaim_inertion_yaw		= 				Fvector2().set( 0.0f, 0.0f);
+	m_autoaim_inertion_pitch	= 				Fvector2().set( 0.0f, 0.0f);
+	if (strstr(Core.Params,"-dbg")) 
+	{
+	m_autoaim_inertion_yaw		= 				pSettings->r_fvector2	(section,"autoaim_speed_y");
+	m_autoaim_inertion_pitch	= 				pSettings->r_fvector2	(section,"autoaim_speed_x");
+	}					
+	m_look_cam_fp_zoom 			= 				pSettings->r_bool(section, "first_person_zoom");	
 }

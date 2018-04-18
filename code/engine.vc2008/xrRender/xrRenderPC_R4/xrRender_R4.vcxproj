@@ -614,12 +614,6 @@
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidRenderer.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\xrCPU_Pipe\xrCPU_Pipe.vcxproj">
-      <Project>{ca0649dd-d089-423a-981c-46b57a884eb9}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
