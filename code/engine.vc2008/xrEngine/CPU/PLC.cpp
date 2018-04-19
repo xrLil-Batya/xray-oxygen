@@ -11,7 +11,6 @@ const	float		S_fade			= 4.5;
 const	float		S_fade2			= S_fade*S_fade;
 
 // x86 -----------------------------------------------------------------------------------------------------
-
 __inline float PLC_energy_x86(Fvector& P, Fvector& N, light* L, float E)
 {
 	Fvector Ldir;
@@ -40,7 +39,6 @@ __inline float PLC_energy_x86(Fvector& P, Fvector& N, light* L, float E)
 	}
 }
 
-
 void __stdcall PLC_calc3_x86(int& c0, int& c1, int& c2, CRenderDevice& Device_, Fvector* P, Fvector& N, light* L, float energy, Fvector& O)
 {
 	float	E		= PLC_energy_x86(P[0],N,L,energy);
@@ -61,7 +59,6 @@ void __stdcall PLC_calc3_x86(int& c0, int& c1, int& c2, CRenderDevice& Device_, 
 }
 
 // SSE -----------------------------------------------------------------------------------------------------
-
 __forceinline float PLC_energy_SSE(Fvector& P, Fvector& N, light* L, float E)
 {
 	Fvector Ldir;

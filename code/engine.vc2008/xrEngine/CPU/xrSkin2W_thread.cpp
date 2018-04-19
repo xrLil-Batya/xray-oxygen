@@ -3,7 +3,7 @@
 #include "../xrCore/threadpool/ttapi.h"
 #pragma hdrstop
 
-extern xrSkin4W* skin4W_func;
+extern xrSkin4W xrSkin4W_x86;
 
 struct SKIN_PARAMS 
 {
@@ -15,10 +15,6 @@ struct SKIN_PARAMS
 
 void Skin4W_Stream(LPVOID lpvParams)
 {
-#ifdef _GPA_ENABLED	
-	TAL_SCOPED_TASK_NAMED("xrSkin4W_Stream()");
-#endif // _GPA_ENABLED
-
 	SKIN_PARAMS* sp = (SKIN_PARAMS*)lpvParams;
 
 	vertRender*		D = (vertRender*)sp->Dest;
@@ -26,19 +22,16 @@ void Skin4W_Stream(LPVOID lpvParams)
 	u32				vCount = sp->Count;
 	CBoneInstance*	Bones = (CBoneInstance*)sp->Data;
 
-	skin4W_func(D, S, vCount, Bones);
+	xrSkin4W_x86(D, S, vCount, Bones);
 }
 
 void ENGINE_API xrSkin4W_thread(vertRender* D, vertBoned4W* S, u32 vCount, CBoneInstance* Bones)
 {
-#ifdef _GPA_ENABLED	
-	TAL_SCOPED_TASK_NAMED("xrSkin4W()");
-#endif // _GPA_ENABLED
-
 	u32 nWorkers = (u32)ttapi_GetWorkersCount();
 
-	if (vCount < (nWorkers * 64)) {
-		skin4W_func(D, S, vCount, Bones);
+	if (vCount < (nWorkers * 64)) 
+	{
+		xrSkin4W_x86(D, S, vCount, Bones);
 		return;
 	}
 
@@ -51,7 +44,8 @@ void ENGINE_API xrSkin4W_thread(vertRender* D, vertBoned4W* S, u32 vCount, CBone
 	u32 nStep = ((vCount - nSlice) / nWorkers);
 	u32 nLast = vCount - nStep * (nWorkers - 1);
 
-	for (u32 i = 0; i < nWorkers; ++i) {
+	for (u32 i = 0; i < nWorkers; ++i) 
+	{
 		sknParams[i].Dest = (void*)(D + i * nStep);
 		sknParams[i].Src = (void*)(S + i * nStep);
 		sknParams[i].Count = (i == (nWorkers - 1)) ? nLast : nStep;
