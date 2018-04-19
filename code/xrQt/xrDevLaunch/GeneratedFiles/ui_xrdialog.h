@@ -1,13 +1,13 @@
 /********************************************************************************
-** Form generated from reading UI file 'parametersdialog.ui'
+** Form generated from reading UI file 'xrdialog.ui'
 **
 ** Created by: Qt User Interface Compiler version 5.10.1
 **
 ** WARNING! All changes made in this file will be lost when recompiling UI file!
 ********************************************************************************/
 
-#ifndef UI_PARAMETERSDIALOG_H
-#define UI_PARAMETERSDIALOG_H
+#ifndef UI_XRDIALOG_H
+#define UI_XRDIALOG_H
 
 #include <QtCore/QVariant>
 #include <QtWidgets/QAction>
@@ -16,26 +16,21 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QDialogButtonBox>
 #include <QtWidgets/QHeaderView>
-#include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 
 QT_BEGIN_NAMESPACE
 
-class Ui_Dialog
+class Ui_xrDialog
 {
 public:
     QDialogButtonBox *buttonBox;
-    QLabel *label;
     QLineEdit *lineEdit;
 
-    void setupUi(QDialog *Dialog)
+    void setupUi(QDialog *xrDialog)
     {
-        if (Dialog->objectName().isEmpty())
-            Dialog->setObjectName(QStringLiteral("Dialog"));
-        Dialog->resize(380, 90);
-        Dialog->setMinimumSize(QSize(380, 90));
-        Dialog->setMaximumSize(QSize(380, 90));
-        Dialog->setBaseSize(QSize(380, 90));
+        if (xrDialog->objectName().isEmpty())
+            xrDialog->setObjectName(QStringLiteral("xrDialog"));
+        xrDialog->resize(400, 300);
         QPalette palette;
         QBrush brush(QColor(23, 121, 157, 255));
         brush.setStyle(Qt::SolidPattern);
@@ -69,19 +64,12 @@ public:
         QBrush brush9(QColor(41, 41, 41, 255));
         brush9.setStyle(Qt::SolidPattern);
         palette.setBrush(QPalette::Active, QPalette::Shadow, brush9);
-        palette.setBrush(QPalette::Active, QPalette::HighlightedText, brush);
-        QBrush brush10(QColor(165, 122, 255, 255));
+        palette.setBrush(QPalette::Active, QPalette::Link, brush);
+        palette.setBrush(QPalette::Active, QPalette::AlternateBase, brush4);
+        QBrush brush10(QColor(25, 25, 25, 255));
         brush10.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::Link, brush10);
-        QBrush brush11(QColor(90, 57, 255, 255));
-        brush11.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::LinkVisited, brush11);
-        QBrush brush12(QColor(25, 25, 25, 255));
-        brush12.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::AlternateBase, brush12);
-        QBrush brush13(QColor(32, 181, 230, 102));
-        brush13.setStyle(Qt::SolidPattern);
-        palette.setBrush(QPalette::Active, QPalette::ToolTipBase, brush13);
+        palette.setBrush(QPalette::Active, QPalette::NoRole, brush10);
+        palette.setBrush(QPalette::Active, QPalette::ToolTipText, brush7);
         palette.setBrush(QPalette::Inactive, QPalette::WindowText, brush);
         palette.setBrush(QPalette::Inactive, QPalette::Button, brush1);
         palette.setBrush(QPalette::Inactive, QPalette::Light, brush2);
@@ -94,11 +82,10 @@ public:
         palette.setBrush(QPalette::Inactive, QPalette::Base, brush4);
         palette.setBrush(QPalette::Inactive, QPalette::Window, brush4);
         palette.setBrush(QPalette::Inactive, QPalette::Shadow, brush9);
-        palette.setBrush(QPalette::Inactive, QPalette::HighlightedText, brush);
-        palette.setBrush(QPalette::Inactive, QPalette::Link, brush10);
-        palette.setBrush(QPalette::Inactive, QPalette::LinkVisited, brush11);
-        palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush12);
-        palette.setBrush(QPalette::Inactive, QPalette::ToolTipBase, brush13);
+        palette.setBrush(QPalette::Inactive, QPalette::Link, brush);
+        palette.setBrush(QPalette::Inactive, QPalette::AlternateBase, brush4);
+        palette.setBrush(QPalette::Inactive, QPalette::NoRole, brush10);
+        palette.setBrush(QPalette::Inactive, QPalette::ToolTipText, brush7);
         palette.setBrush(QPalette::Disabled, QPalette::WindowText, brush4);
         palette.setBrush(QPalette::Disabled, QPalette::Button, brush1);
         palette.setBrush(QPalette::Disabled, QPalette::Light, brush2);
@@ -111,43 +98,38 @@ public:
         palette.setBrush(QPalette::Disabled, QPalette::Base, brush4);
         palette.setBrush(QPalette::Disabled, QPalette::Window, brush4);
         palette.setBrush(QPalette::Disabled, QPalette::Shadow, brush9);
-        palette.setBrush(QPalette::Disabled, QPalette::HighlightedText, brush);
-        palette.setBrush(QPalette::Disabled, QPalette::Link, brush10);
-        palette.setBrush(QPalette::Disabled, QPalette::LinkVisited, brush11);
-        palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush12);
-        palette.setBrush(QPalette::Disabled, QPalette::ToolTipBase, brush13);
-        Dialog->setPalette(palette);
-        buttonBox = new QDialogButtonBox(Dialog);
+        palette.setBrush(QPalette::Disabled, QPalette::Link, brush);
+        palette.setBrush(QPalette::Disabled, QPalette::AlternateBase, brush4);
+        palette.setBrush(QPalette::Disabled, QPalette::NoRole, brush10);
+        palette.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush7);
+        xrDialog->setPalette(palette);
+        buttonBox = new QDialogButtonBox(xrDialog);
         buttonBox->setObjectName(QStringLiteral("buttonBox"));
-        buttonBox->setGeometry(QRect(290, 20, 81, 241));
-        buttonBox->setOrientation(Qt::Vertical);
+        buttonBox->setGeometry(QRect(50, 260, 341, 32));
+        buttonBox->setOrientation(Qt::Horizontal);
         buttonBox->setStandardButtons(QDialogButtonBox::Cancel|QDialogButtonBox::Ok);
-        label = new QLabel(Dialog);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 10, 201, 16));
-        lineEdit = new QLineEdit(Dialog);
+        lineEdit = new QLineEdit(xrDialog);
         lineEdit->setObjectName(QStringLiteral("lineEdit"));
-        lineEdit->setGeometry(QRect(10, 30, 271, 51));
+        lineEdit->setGeometry(QRect(10, 10, 381, 251));
 
-        retranslateUi(Dialog);
-        QObject::connect(buttonBox, SIGNAL(accepted()), Dialog, SLOT(accept()));
-        QObject::connect(buttonBox, SIGNAL(rejected()), Dialog, SLOT(reject()));
+        retranslateUi(xrDialog);
+        QObject::connect(buttonBox, SIGNAL(accepted()), xrDialog, SLOT(accept()));
+        QObject::connect(buttonBox, SIGNAL(rejected()), xrDialog, SLOT(reject()));
 
-        QMetaObject::connectSlotsByName(Dialog);
+        QMetaObject::connectSlotsByName(xrDialog);
     } // setupUi
 
-    void retranslateUi(QDialog *Dialog)
+    void retranslateUi(QDialog *xrDialog)
     {
-        Dialog->setWindowTitle(QApplication::translate("Dialog", "xrEngine parameters", nullptr));
-        label->setText(QApplication::translate("Dialog", "Parameters for xrEngine...", nullptr));
+        xrDialog->setWindowTitle(QApplication::translate("xrDialog", "Dialog", nullptr));
     } // retranslateUi
 
 };
 
 namespace Ui {
-    class Dialog: public Ui_Dialog {};
+    class xrDialog: public Ui_xrDialog {};
 } // namespace Ui
 
 QT_END_NAMESPACE
 
-#endif // UI_PARAMETERSDIALOG_H
+#endif // UI_XRDIALOG_H

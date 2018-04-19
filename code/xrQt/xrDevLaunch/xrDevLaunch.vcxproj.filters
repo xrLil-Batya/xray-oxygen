@@ -93,17 +93,8 @@
     <ClInclude Include="GeneratedFiles\ui_parametersdialog.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_aboutlauncher.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="Resource.rc" />
-  </ItemGroup>
-  <ItemGroup>
-    <Image Include="icon1.ico" />
   </ItemGroup>
 </Project>

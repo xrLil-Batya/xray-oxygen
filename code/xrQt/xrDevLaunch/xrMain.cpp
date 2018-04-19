@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 30 March, 2018
+* Edited: 19 April, 2018
 * xrMain.cpp - Main source file for compilation with Qt
 * xrLaunch
 *************************************************/
@@ -11,15 +11,20 @@
 #pragma comment(lib, "xrEngine.lib")
 /////////////////////////////////////////
 unsigned int type_ptr;
+char const* inerr = "Init error";
 char const* params_list;
 char const* string_accept;
 std::string params;
 std::string params_line;
 std::string params_string;
-std::string params_line_box;
+std::string params_box;
 /////////////////////////////////////////
 // In RenderList.cpp
 void CreateRendererList();
+bool SupportsAdvancedRendering();
+bool SupportsDX10Rendering();
+bool SupportsDX11Rendering();
+
 /////////////////////////////////////////
 
 /***********************************************
@@ -28,12 +33,11 @@ init UI
 xrLaunch::xrLaunch(QWidget *parent) :
     QMainWindow(parent),
     ui(new Ui::xrLaunch) {	// Init new UI   
-#ifndef NOXRCORE_LOAD
-	init_xrCore();
-#endif
 	ui->setupUi(this);		// setup it
 	// Checking for instructions
-	//#VERTVER: SSE2 can't check: compiler already compile it at SSE2
+	//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
+	//#(only xrDevLauncher compiling with IA32-x86 instructions),
+	//#and some part of matrix and vectors use SSE3. It's can be difficult!
 	if (!CPUID::SSE3())
 		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."), 12000);
 	else if (!CPUID::SSE41()) 
@@ -43,7 +47,6 @@ xrLaunch::xrLaunch(QWidget *parent) :
 	else
 		statusBar()->showMessage(tr("All instructions are supported on your CPU!"), 6000);
 	/////////////////////////////////////////
-	//if (CPU::Info.hasFeature(CPUFeature::AVX)) {}			// Doesn't compile with it
 	ui->listWidget->addItems ( LIST_ITEMS );
 }
 
@@ -79,7 +82,7 @@ xrLaunch::~xrLaunch()
 
 
 /***********************************************
-running the DLL (xrEngine or xrEditor)
+running the DLL (xrEngine)
 ***********************************************/
 DLL_API int RunApplication(char* commandLine);
 
@@ -129,9 +132,39 @@ void xrLaunch::init_xrCore()
 	}
 	catch (...)
 	{
-		statusBar()->showMessage(tr("Error! Can't load xrCore."));
-		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
+		if (!CPUID::SSE3())
+		{
+			statusBar()->showMessage(tr("Error! SSE3 is not supported on your CPU."));
+			QMessageBox::critical(this, inerr, "Can't load xrCore (SSE3 is not supported on your CPU");
+		}
+		else
+		{
+			statusBar()->showMessage(tr("Error! Can't load xrEngine."));
+			QMessageBox::critical(this, inerr, "Can't load xrCore (Unknown Error)");
+		}
 	}
+}
+
+
+/***********************************************
+available renders
+***********************************************/
+void xrLaunch::status_render()
+{
+	std::string renders;
+	if (SupportsDX11Rendering())
+		renders = "Supported renders: R4, R3, R2.5, R2, R2a";
+	else if (SupportsDX10Rendering())
+		renders = "Supported renders: R3, R2.5, R2, R2a";
+	else if (SupportsAdvancedRendering())
+		renders = "Supported renders: R2.5, R2, R2a";
+	else 
+	{
+		renders = "Error! Your GPU doesn't supported";
+		QMessageBox::critical(this, inerr, "Error! Your GPU doesn't supported (DX9 init error)");
+	}
+	const char * c = renders.c_str();
+	statusBar()->showMessage(tr(c));
 }
 
 
@@ -142,44 +175,23 @@ void xrLaunch::run_xrEngineRun()
 {
 	try 
 	{
-		//#VERTVER: Critical moment: The compiler create code with SSE2 instructions 
-		//#(only xrDevLauncher compiling with IA32-x86 instructions),
-		//#some part of matrix and vectors use SSE3. It's can be difficult!
-	
 		QString rendered_line = ui->lineEdit->text();
 		params_line = rendered_line.toLocal8Bit();
-		params = params_string + " " + params_line;
+		params = params_string + " " + params_line + " " + params_box;
 		init_xrCore();
 		statusBar()->showMessage(tr("Creating render list..."));
 		CreateRendererList();
 		statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
 		RunApplication(params.data());
 #ifndef NOAWDA
-		MessageBox(NULL,
-			"Awda",
-			"Awda",
-			MB_OK | MB_ICONINFORMATION);
+		QMessageBox::information(this, "Awda", "Awda");
 #endif
 		xrLaunch::close();				// After closing xrCore main thread
 	}
 	catch (...)
 	{
-		if (!CPUID::SSE2()) 
-		{
-			statusBar()->showMessage(tr("Error! SSE2 is not supported on your CPU."));
-			MessageBox(NULL,
-				"Can't load xrEngine! SSE2 is not supported on your CPU.",
-				"Init error",
-				MB_OK | MB_ICONWARNING);
-		}
-		else
-		{
-			statusBar()->showMessage(tr("Error! Can't load xrEngine."));
-			MessageBox(NULL,
-				"Can't load xrEngine",
-				"Init error",
-				MB_OK | MB_ICONWARNING);
-		}
+		statusBar()->showMessage(tr("Error! Can't load xrEngine."));
+		QMessageBox::critical(this, inerr, "Can't load xrEngine (Unknown Error)");
 	}
 }
 
@@ -238,7 +250,7 @@ link to ForserX page
 ***********************************************/
 void xrLaunch::on_actionForserX_triggered()
 {
-	QString oxylink = "https://github.com/ForserX";
+    QString oxylink = "https://github.com/ForserX";
 	QDesktopServices::openUrl(QUrl(oxylink));
 }
 
@@ -254,21 +266,13 @@ void xrLaunch::on_actionParametres_triggered()
 
 
 /***********************************************
-send the string of params to xrEngineRun();
-***********************************************/
-void xrDialogParam::on_buttonBox_accepted()
-{
-	//QString textbox;
-	//params_line_box = textbox.toLocal8Bit();
-}
-
-
-/***********************************************
 create a new window with "About" dialog
 ***********************************************/
 void xrLaunch::on_actionVertver_Github_triggered()
 {
 	AboutLauncher *dlg = new AboutLauncher;
+	dlg->setWindowFlags(Qt::WindowStaysOnTopHint);
+	dlg->setWindowTitle("About xrDev");
 	dlg->show();
 	
 }
@@ -280,4 +284,20 @@ init xrCore without xrEngine
 void xrLaunch::on_actionxrCore_triggered()
 {
 	init_xrCore();
+	QMessageBox::information(this, "Init xrCore complete!", "Please, close the window to continue.");
+}
+
+
+
+void xrDialogParam::on_buttonBox_accepted()
+{
+	QString Qparams = uiDialog->lineEdit->text();
+	params_box = Qparams.toLocal8Bit();
+}
+
+
+void xrLaunch::on_actionAbout_Oxygen_Team_triggered()
+{
+    QString oxylink = "https://github.com/xrOxygen";
+    QDesktopServices::openUrl(QUrl(oxylink));
 }

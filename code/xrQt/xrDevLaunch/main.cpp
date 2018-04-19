@@ -16,5 +16,6 @@ int WINAPI main(int argc, char *argv[])
     xrLaunch LaunchWIN;
 	LaunchWIN.show();
 	return a.exec();
+	
 }
 

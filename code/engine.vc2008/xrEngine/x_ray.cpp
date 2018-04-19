@@ -33,7 +33,7 @@ ENGINE_API bool g_bootComplete		= false;
 volatile bool	g_bIntroFinished			= false;
 extern	void	Intro				( void* fn );
 
-//for Graphic debugging
+//#GIPERION: Graphic debugging
 ENGINE_API bool isGraphicDebugging;
 
 #ifdef MASTER_GOLD
@@ -88,16 +88,6 @@ PROTECT_API void InitSettings	()
 
 	CInifile::allow_include_func_t	tmp_functor;
 	tmp_functor.bind([](LPCSTR) { return true; });
-	/*
-	pSettingsAuth					= xr_new<CInifile>(
-		fname,
-		TRUE,
-		TRUE,
-		FALSE,
-		0,
-		tmp_functor
-	);
-	*/
 	FS.update_path				(fname,"$game_config$","game.ltx");
 	pGameIni					= xr_new<CInifile>	(fname,TRUE);
 	CHECK_OR_EXIT				(0!=pGameIni->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));

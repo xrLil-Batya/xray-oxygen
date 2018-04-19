@@ -59,6 +59,7 @@ public:
     QHBoxLayout *horizontalLayout_2;
     QListWidget *listWidget;
     QHBoxLayout *horizontalLayout_5;
+    QListWidget *listWidget_2;
     QHBoxLayout *horizontalLayout;
     QSpacerItem *horizontalSpacer_3;
     QSpacerItem *horizontalSpacer;
@@ -239,6 +240,11 @@ public:
         horizontalLayout_5 = new QHBoxLayout();
         horizontalLayout_5->setSpacing(6);
         horizontalLayout_5->setObjectName(QStringLiteral("horizontalLayout_5"));
+        listWidget_2 = new QListWidget(centralWidget);
+        listWidget_2->setObjectName(QStringLiteral("listWidget_2"));
+
+        horizontalLayout_5->addWidget(listWidget_2);
+
 
         gridLayout->addLayout(horizontalLayout_5, 1, 1, 1, 1);
 

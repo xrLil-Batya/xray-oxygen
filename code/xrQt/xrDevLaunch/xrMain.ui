@@ -519,7 +519,11 @@
      </layout>
     </item>
     <item row="1" column="1">
-     <layout class="QHBoxLayout" name="horizontalLayout_5"/>
+     <layout class="QHBoxLayout" name="horizontalLayout_5">
+      <item>
+       <widget class="QListWidget" name="listWidget_2"/>
+      </item>
+     </layout>
     </item>
     <item row="2" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">

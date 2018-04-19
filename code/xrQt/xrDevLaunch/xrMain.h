@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 28 March, 2018
+* Edited: 19 April, 2018
 * xrMain.h - Main header for compilation with Qt
 * main namespace, classes and vars.
 *************************************************/
@@ -33,10 +33,8 @@
 #define NOXRCORE_LOAD 1
 /////////////////////////////////////////
 static const QStringList LIST_ITEMS = QStringList() 
-<< "-r2" << "-r3" << "-r4" << "-renderdebug" << "-nointro" << "-mblur";
+<< "-r2a" << "-r2" << "-r2.5" <<  "-r3" << "-r4" << "-renderdebug" << "-nointro" << "-mblur";
 /////////////////////////////////////////
-
-void CreateRendererList();
 
 namespace Ui {
 class xrLaunch;			// main window
@@ -52,6 +50,7 @@ public:
 
 private slots:
     void on_buttonBox_accepted();
+	//
 
 private:
 	//! other field for other types
@@ -78,7 +77,9 @@ private slots:
     void on_actionForserX_triggered();
     void on_actionParametres_triggered();	
 	void on_actionVertver_Github_triggered();
+    void on_actionAbout_Oxygen_Team_triggered();
     void on_listWidget_itemPressed(QListWidgetItem *item);
+	void status_render();
 	void add_stringToList();
 	void init_xrCore();
 
