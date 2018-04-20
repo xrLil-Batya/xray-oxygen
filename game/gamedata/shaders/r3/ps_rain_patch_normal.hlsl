@@ -94,8 +94,8 @@ float4 main ( float2 tc : TEXCOORD0, float2 tcJ : TEXCOORD1 ) : SV_Target
 
 	// Read rain projection with some jetter. Also adding pixel normal 
 	// factor to jitter to make rain strips more realistic.
-	//float s		= shadow_rain( PS, WorldP.xz*1.1 - WorldN.xz*0.035 );	
-	float s		= shadow_rain( PS, WorldP.xz - WorldN.xz );	
+	float s		= shadow_rain( PS, WorldP.xz*1.1 - WorldN.xz*0.035 );	
+	
 	//	Apply distance falloff
 	//float	fAtten = 1 - smoothstep( 10, 30, length( _P.xyz ));
 	// Using fixed fallof factors according to float16 depth coordinate precision.
@@ -139,7 +139,7 @@ float4 main ( float2 tc : TEXCOORD0, float2 tcJ : TEXCOORD1 ) : SV_Target
 	float3 waterFall = GetWaterNMap( s_waterFall, float2( dot(tc1.xz, IsDir), tc1.y+timers.x) );
 	
 //	float WeaponAttenuation = smoothstep( 1.0, 1.1, length( _P.xyz ));
-	float WeaponAttenuation = 1;//smoothstep( 0.8, 0.9, length( _P.xyz ));
+	float WeaponAttenuation = smoothstep( 0.8, 0.9, length( _P.xyz ));
 	float ApplyNormalCoeff = s * WeaponAttenuation;
 
 	float3 water = waterSplash*(fIsUp*ApplyNormalCoeff);
