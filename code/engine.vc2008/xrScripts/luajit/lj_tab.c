@@ -424,54 +424,88 @@ cTValue *lj_tab_get(lua_State *L, GCtab *t, cTValue *key)
 /* Insert new key. Use Brent's variation to optimize the chain length. */
 TValue *lj_tab_newkey(lua_State *L, GCtab *t, cTValue *key)
 {
-  Node *n = hashkey(t, key);
-  if (!tvisnil(&n->val) || t->hmask == 0) {
-    Node *nodebase = noderef(t->node);
-    Node *collide, *freenode = noderef(nodebase->freetop);
-    lua_assert(freenode >= nodebase && freenode <= nodebase+t->hmask+1);
-    do {
-      if (freenode == nodebase) {  /* No free node found? */
-	rehashtab(L, t, key);  /* Rehash table. */
-	return lj_tab_set(L, t, key);  /* Retry key insertion. */
-      }
-    } while (!tvisnil(&(--freenode)->key));
-    setmref(nodebase->freetop, freenode);
-    lua_assert(freenode != &G(L)->nilnode);
-    collide = hashkey(t, &n->key);
-    if (collide != n) {  /* Colliding node not the main node? */
-      while (noderef(collide->next) != n)  /* Find predecessor. */
-	collide = nextnode(collide);
-      setmref(collide->next, freenode);  /* Relink chain. */
-      /* Copy colliding node into free node and free main node. */
-      freenode->val = n->val;
-      freenode->key = n->key;
-      freenode->next = n->next;
-      setmref(n->next, NULL);
-      setnilV(&n->val);
-      /* Rechain pseudo-resurrected string keys with colliding hashes. */
-      while (nextnode(freenode)) {
-	Node *nn = nextnode(freenode);
-	if (tvisstr(&nn->key) && !tvisnil(&nn->val) &&
-	    hashstr(t, strV(&nn->key)) == n) {
-	  freenode->next = nn->next;
-	  nn->next = n->next;
-	  setmref(n->next, nn);
-	} else {
-	  freenode = nn;
+	Node *n = hashkey(t, key);
+	if (!tvisnil(&n->val) || t->hmask == 0) {
+		Node *nodebase = noderef(t->node);
+		Node *collide, *freenode = noderef(nodebase->freetop);
+		lua_assert(freenode >= nodebase && freenode <= nodebase + t->hmask + 1);
+		do {
+			if (freenode == nodebase) {  /* No free node found? */
+				rehashtab(L, t, key);  /* Rehash table. */
+				return lj_tab_set(L, t, key);  /* Retry key insertion. */
+			}
+		} while (!tvisnil(&(--freenode)->key));
+		setmref(nodebase->freetop, freenode);
+		lua_assert(freenode != &G(L)->nilnode);
+		collide = hashkey(t, &n->key);
+		if (collide != n) {  /* Colliding node not the main node? */
+			while (noderef(collide->next) != n)  /* Find predecessor. */
+				collide = nextnode(collide);
+			setmref(collide->next, freenode);  /* Relink chain. */
+			/* Copy colliding node into free node and free main node. */
+			freenode->val = n->val;
+			freenode->key = n->key;
+			freenode->next = n->next;
+			setmref(n->next, NULL);
+			setnilV(&n->val);
+			/* Rechain pseudo-resurrected string keys with colliding hashes. */
+			while (nextnode(freenode))
+			{
+				Node *nn = nextnode(freenode);
+				if (tvisstr(&nn->key) && !tvisnil(&nn->val) && hashstr(t, strV(&nn->key)) == n)
+				{
+					freenode->next = nn->next;
+					nn->next = n->next;
+					setmref(n->next, nn);
+
+					/*************************************************************
+					** Rechaining a resurrected string key creates a new dilemma:
+					** Another string key may have originally been resurrected via
+					** _any_ of the previous nodes as a chain anchor. Including
+					** a node that had to be moved, which makes them unreachable.
+					** It's not feasible to check for all previous nodes, so rechain
+					** any string key that's currently in a non-main positions.
+					*************************************************************/
+					while ((nn = nextnode(freenode))) 
+					{
+						if (tvisstr(&nn->key) && !tvisnil(&nn->val)) 
+						{
+							Node *mn = hashstr(t, strV(&nn->key));
+							if (mn != freenode) 
+							{
+								freenode->next = nn->next;
+								nn->next = mn->next;
+								setmref(mn->next, nn);
+							}
+							else 
+							{
+								freenode = nn;
+							}
+						}
+						else 
+						{
+							freenode = nn;
+						}
+					}
+					break;
+				}
+				else {
+					freenode = nn;
+				}
+			}
+		}
+		else {  /* Otherwise use free node. */
+			setmrefr(freenode->next, n->next);  /* Insert into chain. */
+			setmref(n->next, freenode);
+			n = freenode;
+		}
 	}
-      }
-    } else {  /* Otherwise use free node. */
-      setmrefr(freenode->next, n->next);  /* Insert into chain. */
-      setmref(n->next, freenode);
-      n = freenode;
-    }
-  }
-  n->key.u64 = key->u64;
-  if (LJ_UNLIKELY(tvismzero(&n->key)))
-    n->key.u64 = 0;
-  lj_gc_anybarriert(L, t);
-  lua_assert(tvisnil(&n->val));
-  return &n->val;
+	n->key.u64 = key->u64;
+	if (LJ_UNLIKELY(tvismzero(&n->key)))
+		n->key.u64 = 0;
+	lj_gc_anybarriert(L, t);
+	lua_assert(tvisnil(&n->val));
+	return &n->val;
 }
 
 TValue *lj_tab_setinth(lua_State *L, GCtab *t, int32_t key)
