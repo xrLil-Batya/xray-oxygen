@@ -96,7 +96,7 @@
 	</artefact_static>
 
 	<disk_io x="690" y="750" width="16" height="16" stretch="1">
-<!--		<texture>ui\ui_disk_io</texture> -->
+		<texture>ui\ui_disk_io</texture>
 	</disk_io>
 
 	<flashing_icons>
@@ -106,8 +106,6 @@
 	</flashing_icons>
 
 	<pick_up_item x="437" y="400" width="150" height="100"/>
-
-	<new_contact_snd>detectors\contact_1</new_contact_snd>
 
     <quick_slot0 x="20" y="710" width="40" height="40">
 	    <counter x="1" y="1" width="29" height="16">
