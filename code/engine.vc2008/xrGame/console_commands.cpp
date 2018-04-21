@@ -1746,9 +1746,8 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock, "ph_rigid_break_weapon_factor", &ph_console::phRigidBreakWeaponFactor, 0.f, 1000000000.f);
 	CMD4(CCC_Integer, "ph_tri_clear_disable_count", &ph_console::ph_tri_clear_disable_count, 0, 255);
 	CMD4(CCC_FloatBlock, "ph_tri_query_ex_aabb_rate", &ph_console::ph_tri_query_ex_aabb_rate, 1.01f, 3.f);
-	CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
 #endif // DEBUG
-
+	CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
 	CMD1(CCC_JumpToLevel, "jump_to_level");
 	CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
 	CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);

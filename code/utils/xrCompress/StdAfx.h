@@ -3,8 +3,9 @@
 //. #define MOD_COMPRESS
 
 #include "../../xrcore/xrCore.h"
-
-#include "lzo\lzo1x.h"
+#include "lzo/lzo1x.h"
+#include "../../3rd-party/zlib/zlib.h"
+#include "lzo/lzo1z.h"
 #include <mmsystem.h>
 
 #pragma warning	(disable:4995)
