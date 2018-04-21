@@ -72,7 +72,12 @@ static lzo_bool __lzo_assert_fail(const char *s, unsigned line)
 
 
 #undef COMPILE_TIME_ASSERT
-#define COMPILE_TIME_ASSERT(expr)     LZO_COMPILE_TIME_ASSERT(expr)
+#if 0
+#  define COMPILE_TIME_ASSERT(expr)     r &= __lzo_assert(expr)
+#else
+#  define COMPILE_TIME_ASSERT(expr)     LZO_COMPILE_TIME_ASSERT(expr)
+#endif
+
 
 /***********************************************************************
 // The next two functions should get completely optimized out of existance.
@@ -134,6 +139,11 @@ static lzo_bool basic_integral_check(void)
 #endif
 #if defined(SIZEOF_UNSIGNED_SHORT)
 	COMPILE_TIME_ASSERT(SIZEOF_UNSIGNED_SHORT == sizeof(unsigned short));
+#endif
+#if !defined(__LZO_IN_MINILZO)
+#if defined(SIZEOF_SIZE_T)
+	COMPILE_TIME_ASSERT(SIZEOF_SIZE_T == sizeof(size_t));
+#endif
 #endif
 
 	/* assert the signedness of our integral types */

@@ -96,19 +96,19 @@ int ProcessDifference()
 		return 3;
 	}
 
-	CLocatorAPI* FS_new = NULL;
-	CLocatorAPI* FS_old = NULL;
+	CLocatorAPI* FS_new = nullptr;
+	CLocatorAPI* FS_old = nullptr;
 	
 
-	xr_vector<char*>*	file_list_old		= NULL;
-	xr_vector<char*>*	folder_list_old		= NULL;
+	xr_vector<char*>*	file_list_old		= nullptr;
+	xr_vector<char*>*	folder_list_old		= nullptr;
 
-	xr_vector<char*>*	file_list_new		= NULL;
-	xr_vector<char*>*	folder_list_new		= NULL;
+	xr_vector<char*>*	file_list_new		= nullptr;
+	xr_vector<char*>*	folder_list_new		= nullptr;
 
-	sscanf					(strstr(params,"-diff ")+6,"%[^ ] ",new_folder);
-	sscanf					(strstr(params,"-diff ")+6+xr_strlen(new_folder)+1,"%[^ ] ",old_folder);
-	sscanf					(strstr(params,"-out ")+5,"%[^ ] ",target_folder);
+	sscanf(strstr(params,"-diff ")+6,"%[^ ] ",new_folder);
+	sscanf(strstr(params,"-diff ")+6+xr_strlen(new_folder)+1,"%[^ ] ",old_folder);
+	sscanf(strstr(params,"-out ")+5,"%[^ ] ",target_folder);
 	
 	if(strstr(params,"-nofileage")){
 		_flags.set(file_comparer::eDontCheckFileAge, TRUE);
@@ -136,7 +136,8 @@ int ProcessDifference()
 	xr_vector<LPCSTR> target_file_list;
 	target_file_list.reserve(file_list_new->size());
 
-	for(u32 i=0; i<file_list_new->size();++i){
+	for(u32 i=0; i<file_list_new->size();++i)
+	{
 		file_comparer fc(file_list_new->at(i),FS_new, FS_old,_flags);
 		xr_vector<char*>::iterator it = std::find_if(file_list_old->begin(),file_list_old->end(),fc);
 		if(it != file_list_old->end()){
