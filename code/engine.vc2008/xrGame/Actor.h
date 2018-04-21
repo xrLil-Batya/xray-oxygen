@@ -661,9 +661,9 @@ public:
 			void				SwitchTorch						();
 			void				SwitchTorchMode					();
 			
-#ifdef DEBUG
+
 			void				NoClipFly						(int cmd);
-#endif //DEBUG
+
 
 public:
 	
