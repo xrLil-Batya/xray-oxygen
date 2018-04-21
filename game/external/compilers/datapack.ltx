@@ -1,0 +1,26 @@
+[options]
+exclude_exts = *.ncb,*.sln,*.vcproj,*.old,*.rc,*.scc,*.vssscc,*.bmp,*.smf,*.uvm,*.prj,*.tga,*.txt,*.log,*.tmp
+bytes = 2
+[include_folders]
+;<path>       = <recurse>
+.\            = false
+ai            = true
+anims         = true
+configs       = true
+meshes        = true
+levels        = true
+scripts       = true
+shaders       = true
+sounds        = true
+spawns        = true
+textures      = true
+
+[exclude_folders]
+ 
+[header]
+auto_load    = true			; Автоматическая загрузка
+level_name   = single			; Режим игры
+level_ver    = 1.0			; И так понятно
+entry_point  = $fs_root$\gamedata\	; Не менять. Точка входа листа файлов этого архива
+creator      = "xrOxygen"		
+link         = "https://github.com/xrOxygen"

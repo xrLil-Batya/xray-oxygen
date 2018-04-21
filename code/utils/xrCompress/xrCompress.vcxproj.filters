@@ -350,6 +350,7 @@
     <ClInclude Include="lzo\stats1c.h">
       <Filter>LZO\Include</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="lzo\lzo1_cm.ch">
@@ -406,5 +407,11 @@
     <None Include="lzo\lzo_swd.ch">
       <Filter>LZO\Include</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xrCompress.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Image Include="cop.ico" />
   </ItemGroup>
 </Project>
