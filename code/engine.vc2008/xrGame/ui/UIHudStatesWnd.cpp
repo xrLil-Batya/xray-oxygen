@@ -220,13 +220,6 @@ void CUIHudStatesWnd::UpdateActiveItemInfo( CActor* actor )
 		CWeaponMagazinedWGrenade* wpn = smart_cast<CWeaponMagazinedWGrenade*>(item);
 		if(wpn && wpn->m_bGrenadeMode)
 		{
-			m_ui_weapon_fmj_ammo->SetTextColor(color_rgba(238,155,23,150));
-			m_ui_grenade->SetTextColor(color_rgba(238,155,23,255));
-		}
-		else
-		{
-			m_ui_weapon_fmj_ammo->SetTextColor(color_rgba(238,155,23,255));
-			m_ui_grenade->SetTextColor(color_rgba(238,155,23,150));
 		}
 	}
 	else

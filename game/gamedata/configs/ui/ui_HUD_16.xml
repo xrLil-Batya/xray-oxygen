@@ -36,7 +36,7 @@
 
 		<static_counter x="0.94" y="0.5" width="18" height="17" alignment="c">
 			<text_static width="18" height="17">
-				<text  align="c" font="graffiti19" color="blue"/>
+				<text  align="c" font="graffiti19" color="ui_7"/>
 			</text_static>
 		</static_counter>
 	</minimap>
@@ -198,7 +198,7 @@
 	    </static_fmj_ammo>
 
 	    <static_ap_ammo x="915" y="724" width="26" height="15">
-	        <text align="c" complex_mode="0" font="graffiti19" r="238" g="155" b="23" a="150">ap</text>
+	        <text align="c" complex_mode="0" font="graffiti19" color="ui_7">ap</text>
 	    </static_ap_ammo>
 
 	    <static_grenade x="864" y="690" width="14" height="19">
