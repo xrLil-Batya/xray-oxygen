@@ -97,7 +97,6 @@ bool xrCompressor::testSKIP(LPCSTR path)
 	if (0 == stricmp(p_name, "do_light") && 0 == stricmp(p_ext, ".ltx"))	return true;
 
 	if (0 == stricmp(p_ext, ".txt"))	return true;
-	if (0 == stricmp(p_ext, ".tga"))	return true;
 	if (0 == stricmp(p_ext, ".db"))	return true;
 	if (0 == stricmp(p_ext, ".smf"))	return true;
 
