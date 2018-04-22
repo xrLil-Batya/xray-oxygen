@@ -69,7 +69,7 @@ int __cdecl main(int argc, char* argv[])
 			FS._initialize(CLocatorAPI::flTargetFolderOnly, folder);
 			FS.append_path("$target_folder$", "", 0, false);
 
-			C.SetFastMode(NULL != strstr(params, "-nocompress"));
+			C.SetFastMode(NULL != strstr(params, "-fast"));
 			C.SetTargetName(argv[1]);
 
 			LPCSTR p = strstr(params, "-ltx");
