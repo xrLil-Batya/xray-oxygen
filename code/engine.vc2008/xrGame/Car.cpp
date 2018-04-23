@@ -37,11 +37,11 @@ CCar::CCar()
 	camera[ectFirst]->tag	= ectFirst;
 	camera[ectFirst]->Load("car_firsteye_cam");
 
-	camera[ectChase]= xr_new<CCameraLook>		(this,	CCameraBase::flRelativeLink); 
+	camera[ectChase]= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
 	camera[ectChase]->tag	= ectChase;
 	camera[ectChase]->Load("car_look_cam");
 
-	camera[ectFree]	= xr_new<CCameraLook>		(this); 
+	camera[ectFree]	= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
 	camera[ectFree]->tag	= ectFree;
 	camera[ectFree]->Load("car_free_cam");
 	OnCameraChange(ectFirst);
@@ -459,20 +459,20 @@ void CCar::UpdateCL()
 
  void CCar::VisualUpdate(float fov)
 {
+	
+	if (m_pPhysicsShell)
 	m_pPhysicsShell->InterpolateGlobalTransform(&XFORM());
-
-	Fvector lin_vel;
-	m_pPhysicsShell->get_LinearVel(lin_vel);
-	// Sound
-	Fvector		C,V;
-	Center		(C);
-	V.set		(lin_vel);
-
+	
+	
+	
+	
+	
+	
 	m_car_sound->Update();
 	if(Owner())
 	{
 		
-		if(m_pPhysicsShell->isEnabled())
+		if(m_pPhysicsShell && m_pPhysicsShell->isEnabled())
 		{
 			Owner()->XFORM().mul_43	(XFORM(),m_sits_transforms[0]);
 		}
@@ -625,6 +625,7 @@ void CCar::detach_Actor()
 		return;
 	
 	Owner()->setVisible(1);
+	psCamInert=0.4;
 	CHolderCustom::detach_Actor();
 	PPhysicsShell()->remove_ObjectContactCallback(ActorObstacleCallback);
 	NeutralDrive();
@@ -661,7 +662,7 @@ bool CCar::attach_Actor(CGameObject* actor)
 	}
 	CBoneInstance& instance=K->LL_GetBoneInstance				(u16(id));
 	m_sits_transforms.push_back(instance.mTransform);
-	OnCameraChange(ectFirst);
+	OnCameraChange(ectFree);
 	PPhysicsShell()->Enable();
 	PPhysicsShell()->add_ObjectContactCallback(ActorObstacleCallback);
 //	VisualUpdate();
@@ -726,6 +727,7 @@ bool CCar::Exit(const Fvector& pos,const Fvector& dir)
 {
 	xr_map<u16,SDoor>::iterator i,e;
 
+	psCamInert=0.4;
 	i=m_doors.begin();e=m_doors.end();
 	for(;i!=e;++i)
 	{
@@ -864,6 +866,10 @@ void CCar::CreateSkeleton(CSE_Abstract	*po)
 	}
 	phys_shell_verify_object_model ( *this );
 	m_pPhysicsShell = P_build_Shell(this, true, &bone_map);
+
+
+
+
 	m_pPhysicsShell->SetPrefereExactIntegration();
 
 	ApplySpawnIniToPhysicShell(&po->spawn_ini(),m_pPhysicsShell,false);
@@ -1121,7 +1127,7 @@ void CCar::UpdatePower()
 {
 	m_current_rpm=EngineDriveSpeed();
 	m_current_engine_power=EnginePower();
-	if(b_auto_switch_transmission&&!b_transmission_switching) 
+	if(b_auto_switch_transmission&&!b_transmission_switching&&b_engine_on) 
 	{
 		VERIFY2(CurrentTransmission()<m_gear_ratious.size(),"wrong transmission");
 		if(m_current_rpm<m_gear_ratious[CurrentTransmission()][1]) TransmissionDown();
@@ -1823,10 +1829,12 @@ void CCar::OnBeforeExplosion()
 void CCar::CarExplode()
 {
 
+	psCamInert=0.8;
 	if(b_exploded) return;
 	CPHSkeleton::SetNotNeedSave();
 	if(m_car_weapon)m_car_weapon->Action(CCarWeapon::eWpnActivate,0);
 	m_lights.TurnOffHeadLights();
+	AscCall(ascExhoustStop);
 	m_damage_particles.Stop1(this);
 	m_damage_particles.Stop2(this);
 	b_exploded=true;
