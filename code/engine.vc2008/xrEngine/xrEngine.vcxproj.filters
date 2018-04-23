@@ -932,9 +932,6 @@
     <ClCompile Include="CPU\xrSkin2W.cpp">
       <Filter>CPU</Filter>
     </ClCompile>
-    <ClCompile Include="CPU\xrSkin2W_SSE.cpp">
-      <Filter>CPU</Filter>
-    </ClCompile>
     <ClCompile Include="CPU\xrCPU_Pipe.cpp">
       <Filter>CPU</Filter>
     </ClCompile>

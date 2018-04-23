@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 19 April, 2018
+* Edited: 20 April, 2018
 * xrMain.cpp - Main source file for compilation with Qt
 * xrLaunch
 *************************************************/
@@ -11,9 +11,9 @@
 #pragma comment(lib, "xrEngine.lib")
 /////////////////////////////////////////
 unsigned int type_ptr;
-char const* inerr = "Init error";
-char const* params_list;
-char const* string_accept;
+LPCSTR inerr = "Init error";
+LPCSTR params_list;
+LPCSTR string_accept;
 std::string params;
 std::string params_line;
 std::string params_string;
@@ -84,7 +84,7 @@ xrLaunch::~xrLaunch()
 /***********************************************
 running the DLL (xrEngine)
 ***********************************************/
-DLL_API int RunApplication(char* commandLine);
+DLL_API int RunApplication(LPSTR commandLine);
 
 
 /***********************************************
@@ -151,7 +151,7 @@ available renders
 ***********************************************/
 void xrLaunch::status_render()
 {
-	std::string renders;
+	LPCSTR renders;
 	if (SupportsDX11Rendering())
 		renders = "Supported renders: R4, R3, R2.5, R2, R2a";
 	else if (SupportsDX10Rendering())
@@ -163,8 +163,7 @@ void xrLaunch::status_render()
 		renders = "Error! Your GPU doesn't supported";
 		QMessageBox::critical(this, inerr, "Error! Your GPU doesn't supported (DX9 init error)");
 	}
-	const char * c = renders.c_str();
-	statusBar()->showMessage(tr(c));
+	statusBar()->showMessage(tr(renders));
 }
 
 
@@ -289,6 +288,9 @@ void xrLaunch::on_actionxrCore_triggered()
 
 
 
+/***********************************************
+if pressed "Accept"
+***********************************************/
 void xrDialogParam::on_buttonBox_accepted()
 {
 	QString Qparams = uiDialog->lineEdit->text();
@@ -296,6 +298,9 @@ void xrDialogParam::on_buttonBox_accepted()
 }
 
 
+/***********************************************
+link to OxyTeam
+***********************************************/
 void xrLaunch::on_actionAbout_Oxygen_Team_triggered()
 {
     QString oxylink = "https://github.com/xrOxygen";

@@ -507,7 +507,10 @@
    </palette>
   </property>
   <property name="windowTitle">
-   <string>Oxygen Development Launcher</string>
+   <string>Oxygen Developer Launcher</string>
+  </property>
+  <property name="locale">
+   <locale language="English" country="UnitedStates"/>
   </property>
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
