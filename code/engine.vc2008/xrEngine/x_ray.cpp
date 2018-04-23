@@ -391,6 +391,7 @@ ENGINE_API int RunApplication(char* commandLine)
 		return 1;
 	}
 #endif
+
 	strcat(Core.Params, commandLine);
 
 	// Title window
@@ -437,7 +438,23 @@ ENGINE_API int RunApplication(char* commandLine)
 		InitConsole				();
 
 		Engine.External.Initialize	( );
-		Console->Execute			("stat_memory");
+
+		if (strstr(Core.Params, "-$"))
+		{
+			string256                buf, cmd, param;
+			sscanf(strstr(Core.Params, "-$")
+				+ 2,
+				"%[^ ] %[^ ] ",
+				cmd,
+				param);
+			strconcat(sizeof(buf),
+				buf,
+				cmd,
+				" ",
+				param);
+			Console->Execute(buf);
+		}
+		//Console->Execute			("stat_memory");
 
 		/////////////////////////////////////////////
 		// Exeption debug
