@@ -391,7 +391,6 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	unlink(fname);
 	FS.update_path(fname, "$fs_root$", fname); // FX to LostAlphaRus: Исправление косяка пыс. Без // в названии создаётся папка, а не файл
 
-	MessageBox(0, "", fname, 0);
 	fs_pack_writer = FS.w_open(fname);
 	fs_desc.clear();
 	aliases.clear();

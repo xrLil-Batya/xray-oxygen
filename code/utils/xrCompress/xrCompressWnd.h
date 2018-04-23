@@ -49,6 +49,7 @@ namespace xrCompress
 	private: System::Windows::Forms::RadioButton^  bDb;
 	private: System::Windows::Forms::RadioButton^  bXdb;
 	private: System::Windows::Forms::ComboBox^  comboBox1;
+	private: System::Windows::Forms::ProgressBar^  progressBar1;
 
 
 
@@ -78,6 +79,7 @@ namespace xrCompress
 			this->bDb = (gcnew System::Windows::Forms::RadioButton());
 			this->bXdb = (gcnew System::Windows::Forms::RadioButton());
 			this->comboBox1 = (gcnew System::Windows::Forms::ComboBox());
+			this->progressBar1 = (gcnew System::Windows::Forms::ProgressBar());
 			this->SuspendLayout();
 			// 
 			// CloseBtn
@@ -145,7 +147,7 @@ namespace xrCompress
 			this->textBox3->Size = System::Drawing::Size(273, 20);
 			this->textBox3->TabIndex = 6;
 			this->textBox3->Text = L"AnothersKeys";
-			this->textBox3->TextChanged += gcnew System::EventHandler(this, &xrCompressWnd::textBox3_TextChanged);
+			this->textBox3->Click += gcnew System::EventHandler(this, &xrCompressWnd::textBox3_TextChanged);
 			// 
 			// bFastMode
 			// 
@@ -199,6 +201,14 @@ namespace xrCompress
 			this->comboBox1->TabIndex = 11;
 			this->comboBox1->Text = L"-512";
 			// 
+			// progressBar1
+			// 
+			this->progressBar1->Location = System::Drawing::Point(91, 97);
+			this->progressBar1->Name = L"progressBar1";
+			this->progressBar1->Size = System::Drawing::Size(275, 20);
+			this->progressBar1->TabIndex = 12;
+			this->progressBar1->Visible = false;
+			// 
 			// xrCompressWnd
 			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
@@ -206,6 +216,7 @@ namespace xrCompress
 			this->BackColor = System::Drawing::SystemColors::ControlLight;
 			this->ClientSize = System::Drawing::Size(459, 130);
 			this->ControlBox = false;
+			this->Controls->Add(this->progressBar1);
 			this->Controls->Add(this->comboBox1);
 			this->Controls->Add(this->bXdb);
 			this->Controls->Add(this->bDb);
@@ -221,6 +232,7 @@ namespace xrCompress
 			this->MaximizeBox = false;
 			this->MinimizeBox = false;
 			this->Name = L"xrCompressWnd";
+			this->Load += gcnew System::EventHandler(this, &xrCompressWnd::xrCompressWnd_Load);
 			this->ResumeLayout(false);
 			this->PerformLayout();
 
@@ -235,5 +247,6 @@ namespace xrCompress
 	{
 		this->textBox3->Text = nullptr;
 	}
+	private: System::Void xrCompressWnd_Load(System::Object^  sender, System::EventArgs^  e);
 };
 }

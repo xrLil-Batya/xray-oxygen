@@ -9,27 +9,28 @@
 	
 extern const char* FolderName;
 extern const char* KeysList;
+bool SecondThreadWorking = true;
 
-void Startup(const char* argv)
+void Startup(void*)
 {
-	LPCSTR params = argv;
-
 	xrCompressor C;
 
-	if (strstr(params, "-delete"))
+	if (strstr(KeysList, "-delete"))
 	{
-		for (u32 iter = 0; iter < 21; iter++)
+		for (int iter = 0; iter < 21; iter++)
 		{
-			std::string name1 = "gamedata.db";
-			std::string name2 = "gamedata.xdb";
-			name1 += char(iter);
-			name2 += char(iter);
-			remove(name1.c_str());
-			remove(name2.c_str());
+			std::string name1 = std::string(FolderName) + ".db" + std::to_string(iter);
+			std::string name2 = std::string(FolderName) + ".xdb" + std::to_string(iter);
+
+			string_path path;
+			FS.update_path(path, "$fs_root$", name1.data());
+			remove(path);
+			FS.update_path(path, "$fs_root$", name2.data());
+			remove(path);
 		}
 	}
 
-	C.SetStoreFiles(NULL != strstr(params, "-store"));
+	C.SetStoreFiles(NULL != strstr(KeysList, "-store"));
 
 #ifdef MOD_COMPRESS
 	if (strstr(params, "-diff"))
@@ -46,16 +47,15 @@ void Startup(const char* argv)
 		FS._initialize(CLocatorAPI::flTargetFolderOnly, FolderName);
 		FS.append_path("$target_folder$", "", 0, false);
 
-		C.SetFastMode(NULL != strstr(params, "-fast"));
+		C.SetFastMode(NULL != strstr(KeysList, "-fast"));
 		C.SetTargetName(FolderName);
 
-		MessageBox(0, "", FolderName, 0);
-		LPCSTR p = strstr(params, "-ltx");
+		LPCSTR p = strstr(KeysList, "-ltx");
 
 		if (0 != p)
 		{
 			string64 ltx_name;
-			sscanf(strstr(params, "-ltx ") + 5, "%[^ ] ", ltx_name);
+			sscanf(strstr(KeysList, "-ltx ") + 5, "%[^ ] ", ltx_name);
 
 			CInifile ini(ltx_name);
 			printf("Processing ...\n");
@@ -64,11 +64,12 @@ void Startup(const char* argv)
 		else
 		{
 			string64 header_name;
-			sscanf(strstr(params, "-header ") + 8, "%[^ ] ", header_name);
+			sscanf(strstr(KeysList, "-header ") + 8, "%[^ ] ", header_name);
 			C.SetPackHeaderName(header_name);
 			C.ProcessTargetFolder();
 		}
 	}
+	SecondThreadWorking = false;
 }
 
 

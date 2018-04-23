@@ -4,6 +4,9 @@
     <Filter Include="Main">
       <UniqueIdentifier>{4ae108b9-40f0-4213-adef-8d90914007ec}</UniqueIdentifier>
     </Filter>
+    <Filter Include="xrCompressorWnd">
+      <UniqueIdentifier>{0d12377e-2f93-47e5-b0a9-41ecab03eed3}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
@@ -18,7 +21,12 @@
     <ClCompile Include="xrCompressDifference.cpp">
       <Filter>Main</Filter>
     </ClCompile>
-    <ClCompile Include="xrCompressWnd.cpp" />
+    <ClCompile Include="IParser.cpp">
+      <Filter>xrCompressorWnd</Filter>
+    </ClCompile>
+    <ClCompile Include="xrCompressWnd.cpp">
+      <Filter>xrCompressorWnd</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="StdAfx.h">
@@ -29,6 +37,9 @@
     </ClInclude>
     <ClInclude Include="resource.h" />
     <ClInclude Include="xrCompressWnd.h" />
+    <ClInclude Include="IParserSystem.h">
+      <Filter>xrCompressorWnd</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCompress.rc" />

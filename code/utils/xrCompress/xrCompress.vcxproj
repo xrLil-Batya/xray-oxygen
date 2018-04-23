@@ -248,6 +248,7 @@
     </EmbeddedResource>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="IParser.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="StdAfx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
@@ -259,6 +260,7 @@
     <ClCompile Include="xrCompressWnd.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="IParserSystem.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
     <ClInclude Include="xrCompress.h" />
