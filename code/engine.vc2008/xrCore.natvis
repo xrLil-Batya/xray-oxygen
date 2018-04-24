@@ -35,4 +35,7 @@
     <DisplayString>{p_->name}</DisplayString>
   </Type>
   
+  <Type Name="CAI_Stalker">
+    <DisplayString>{NameObject.p_->value, s}, $(Type)</DisplayString>
+  </Type>
 </AutoVisualizer>
