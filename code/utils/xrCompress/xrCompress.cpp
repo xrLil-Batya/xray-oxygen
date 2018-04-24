@@ -393,7 +393,6 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 
 	fs_pack_writer = FS.w_open(fname);
 	fs_desc.clear();
-	aliases.clear();
 
 	bytesSRC = 0;
 	bytesDST = 0;
@@ -477,6 +476,13 @@ void xrCompressor::ClosePack()
 		((dwTimeEnd - dwTimeStart) / 1000) % 60,
 		float((float(bytesDST) / float(1024 * 1024)) / (t_compress.GetElapsed_sec()))
 	);
+	
+	for (auto &it : aliases)
+	{
+        xr_free(it.second.path);
+	}
+	
+    aliases.clear();
 }
 
 void xrCompressor::PerformWork()
