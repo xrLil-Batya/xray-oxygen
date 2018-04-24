@@ -536,14 +536,14 @@
     </rect>
    </property>
    <property name="text">
-    <string>xrDevLaunch 0.7v</string>
+    <string>xrDevLaunch 0.9v</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>50</y>
+     <x>10</x>
+     <y>170</y>
      <width>191</width>
      <height>16</height>
     </rect>
@@ -555,8 +555,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>70</y>
+     <x>10</x>
+     <y>190</y>
      <width>181</width>
      <height>16</height>
     </rect>
@@ -568,8 +568,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>130</y>
+     <x>10</x>
+     <y>250</y>
      <width>291</width>
      <height>31</height>
     </rect>
@@ -582,14 +582,27 @@ C++ Compiler 2017, Qt 5.10.1</string>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>20</x>
-     <y>90</y>
+     <x>10</x>
+     <y>210</y>
      <width>171</width>
      <height>16</height>
     </rect>
    </property>
    <property name="text">
     <string>Platform: Windows 7+</string>
+   </property>
+  </widget>
+  <widget class="QLabel" name="label_8">
+   <property name="geometry">
+    <rect>
+     <x>15</x>
+     <y>20</y>
+     <width>150</width>
+     <height>150</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>TextLabel</string>
    </property>
   </widget>
  </widget>

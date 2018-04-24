@@ -7,7 +7,6 @@ extern xrSkin1W			xrSkin1W_x86;
 extern xrSkin2W			xrSkin2W_x86;
 extern xrSkin3W			xrSkin3W_x86;
 extern xrSkin4W			xrSkin4W_x86;
-extern xrSkin4W			xrSkin4W_SSE;
 extern xrSkin4W			xrSkin4W_thread;
 
 extern xrPLC_calc3		PLC_calc3_x86;

@@ -29,6 +29,7 @@ public:
     QLabel *label_5;
     QLabel *label_7;
     QLabel *label_6;
+    QLabel *label_8;
 
     void setupUi(QDialog *AboutLauncher)
     {
@@ -126,16 +127,19 @@ public:
         label_3->setGeometry(QRect(340, 10, 91, 20));
         label_4 = new QLabel(AboutLauncher);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(20, 50, 191, 16));
+        label_4->setGeometry(QRect(10, 170, 191, 16));
         label_5 = new QLabel(AboutLauncher);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(20, 70, 181, 16));
+        label_5->setGeometry(QRect(10, 190, 181, 16));
         label_7 = new QLabel(AboutLauncher);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(20, 130, 291, 31));
+        label_7->setGeometry(QRect(10, 250, 291, 31));
         label_6 = new QLabel(AboutLauncher);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(20, 90, 171, 16));
+        label_6->setGeometry(QRect(10, 210, 171, 16));
+        label_8 = new QLabel(AboutLauncher);
+        label_8->setObjectName(QStringLiteral("label_8"));
+        label_8->setGeometry(QRect(15, 20, 150, 150));
 
         retranslateUi(AboutLauncher);
 
@@ -147,12 +151,13 @@ public:
         AboutLauncher->setWindowTitle(QApplication::translate("AboutLauncher", "Dialog", nullptr));
         label->setText(QApplication::translate("AboutLauncher", "About xrDevLaunch...", nullptr));
         label_2->setText(QApplication::translate("AboutLauncher", "Oxygen Team (C), 2018", nullptr));
-        label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 0.7v", nullptr));
+        label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 0.9v", nullptr));
         label_4->setText(QApplication::translate("AboutLauncher", "Developer Launcher by Oxygen Team.", nullptr));
         label_5->setText(QApplication::translate("AboutLauncher", "Creators: Vertver, ForserX, Giperion", nullptr));
         label_7->setText(QApplication::translate("AboutLauncher", "Builded by Microsoft Visual Studio \n"
 "C++ Compiler 2017, Qt 5.10.1", nullptr));
         label_6->setText(QApplication::translate("AboutLauncher", "Platform: Windows 7+", nullptr));
+        label_8->setText(QApplication::translate("AboutLauncher", "TextLabel", nullptr));
     } // retranslateUi
 
 };
