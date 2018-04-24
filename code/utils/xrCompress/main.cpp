@@ -1,33 +1,36 @@
 #include "stdafx.h"
 #include "xrCompress.h"
+#include "xrCompressWnd.h"
 #include <iostream>
 
 #ifndef MOD_COMPRESS
 	extern int ProcessDifference();
 #endif
+	
+extern const char* FolderName;
+extern const char* KeysList;
+bool SecondThreadWorking = true;
 
-int __cdecl main(int argc, char* argv[])
+void Startup(void*)
 {
-	Debug._initialize(false);
-	Core._initialize("xrCompress", 0, TRUE, "fsgame.ltx");
-	std::cout << "xrCompressor Oxygen x64 (Base: LostAlphaRus)" << std::endl << "----------------------------------------------------------------------------";
-	LPCSTR params = GetCommandLine();
-	xrCompressor		C;
+	xrCompressor C;
 
-	if (strstr(params, "-delete"))
+	if (strstr(KeysList, "-delete"))
 	{
-		for (u32 iter = 0; iter < 21; iter++)
+		for (int iter = 0; iter < 21; iter++)
 		{
-			std::string name1 = "gamedata.db";
-			std::string name2 = "gamedata.xdb";
-			name1 += char(iter);
-			name2 += char(iter);
-			remove(name1.c_str());
-			remove(name2.c_str());
+			std::string name1 = std::string(FolderName) + ".db" + std::to_string(iter);
+			std::string name2 = std::string(FolderName) + ".xdb" + std::to_string(iter);
+
+			string_path path;
+			FS.update_path(path, "$fs_root$", name1.data());
+			remove(path);
+			FS.update_path(path, "$fs_root$", name2.data());
+			remove(path);
 		}
 	}
 
-	C.SetStoreFiles(NULL != strstr(params, "-store"));
+	C.SetStoreFiles(NULL != strstr(KeysList, "-store"));
 
 #ifdef MOD_COMPRESS
 	if (strstr(params, "-diff"))
@@ -38,58 +41,46 @@ int __cdecl main(int argc, char* argv[])
 #endif
 
 #ifdef MOD_XDB
-		if (strstr(params, "-pack"))
+	if (strstr(params, "-pack"))
 #endif
+	{
+		FS._initialize(CLocatorAPI::flTargetFolderOnly, FolderName);
+		FS.append_path("$target_folder$", "", 0, false);
+
+		C.SetFastMode(NULL != strstr(KeysList, "-fast"));
+		C.SetTargetName(FolderName);
+
+		LPCSTR p = strstr(KeysList, "-ltx");
+
+		if (0 != p)
 		{
-#ifdef MOD_COMPRESS
-			if (argc < 2)
-			{
-				printf("ERROR: u must pass folder name as parameter.\n");
-				printf("-diff /? option to get information about creating difference.\n");
-				printf("-fast	- fast compression.\n");
-				printf("-store	- store files. No compression.\n");
-				printf("-ltx <file_name.ltx> - pathes to compress.\n");
-				printf("\n");
-				printf("LTX format:\n");
-				printf("	[config]\n");
-				printf("	;<path>     = <recurse>\n");
-				printf("	.\\         = false\n");
-				printf("	textures    = true\n");
+			string64 ltx_name;
+			sscanf(strstr(KeysList, "-ltx ") + 5, "%[^ ] ", ltx_name);
 
-				Core._destroy();
-				return 3;
-			}
-#endif
-
-			string_path		folder;
-			strconcat(sizeof(folder), folder, argv[1], "\\");
-			_strlwr_s(folder, sizeof(folder));
-			printf("\nCompressing files (%s)...\n\n", folder);
-
-			FS._initialize(CLocatorAPI::flTargetFolderOnly, folder);
-			FS.append_path("$target_folder$", "", 0, false);
-
-			C.SetFastMode(NULL != strstr(params, "-fast"));
-			C.SetTargetName(argv[1]);
-
-			LPCSTR p = strstr(params, "-ltx");
-
-			if (0 != p)
-			{
-				string64				ltx_name;
-				sscanf(strstr(params, "-ltx ") + 5, "%[^ ] ", ltx_name);
-
-				CInifile ini(ltx_name);
-				printf("Processing ...\n");
-				C.ProcessLTX(ini);
-			}
-			else {
-				string64				header_name;
-				sscanf(strstr(params, "-header ") + 8, "%[^ ] ", header_name);
-				C.SetPackHeaderName(header_name);
-				C.ProcessTargetFolder();
-			}
+			CInifile ini(ltx_name);
+			printf("Processing ...\n");
+			C.ProcessLTX(ini);
 		}
+		else
+		{
+			string64 header_name;
+			sscanf(strstr(KeysList, "-header ") + 8, "%[^ ] ", header_name);
+			C.SetPackHeaderName(header_name);
+			C.ProcessTargetFolder();
+		}
+	}
+	SecondThreadWorking = false;
+}
+
+
+int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
+{
+	Debug._initialize(false);
+	Core._initialize("xrCompress", 0, TRUE, "fsgame.ltx");
+	// Initialize debugging
+	xrCompress::Application::EnableVisualStyles();
+	xrCompress::Application::SetCompatibleTextRenderingDefault(false);
+	xrCompress::Application::Run(gcnew xrCompress::xrCompressWnd);
 
 	Core._destroy();
 	return 0;

@@ -126,26 +126,17 @@ void global_claculation_data::xrLoad()
 		{
 			Surface_Init		();
 			F = fs->open_chunk	(EB_Textures);
-#ifdef _M_X64
 			u32 tex_count = F->length() / sizeof(help_b_texture);
-#else
-			u32 tex_count = F->length() / sizeof(b_texture);
-#endif
 			for (u32 t=0; t<tex_count; t++)
 			{
 				Progress		(float(t)/float(tex_count));
-#ifdef _M_X64
+				
 				help_b_texture	TEX;
 				F->r(&TEX, sizeof(TEX));
 				b_BuildTexture	BT;
 				std::memcpy(&BT, &TEX, sizeof(TEX) - 4);
-				BT.pSurface = (u32*)TEX.pSurface;
-#else
-				b_texture		TEX;
-				F->r			(&TEX,sizeof(TEX));
-				b_BuildTexture	BT;
-                std::memcpy(&BT,&TEX,sizeof(TEX));
-#endif
+				BT.pSurface = nullptr;
+				
 				// load thumbnail
 				LPSTR N			= BT.name;
 				if (strchr(N,'.')) *(strchr(N,'.')) = 0;
@@ -156,7 +147,6 @@ void global_claculation_data::xrLoad()
 					BT.dwWidth	= 1024;
 					BT.dwHeight	= 1024;
 					BT.bHasAlpha= TRUE;
-					BT.pSurface	= 0;
 					BT.THM.SetHasSurface(FALSE);
 				} else {
 					xr_strcat				(N,sizeof(BT.name),".thm");
@@ -191,7 +181,6 @@ void global_claculation_data::xrLoad()
 					BT.dwWidth				= BT.THM.width;
 					BT.dwHeight				= BT.THM.height;
 					BT.bHasAlpha			= BT.THM.HasAlphaChannel();
-					BT.pSurface				= 0;
 					BT.THM.SetHasSurface(FALSE);
 					if (!bLOD) 
 					{
@@ -201,7 +190,7 @@ void global_claculation_data::xrLoad()
 							u32			w=0, h=0;
 							BT.pSurface		= Surface_Load(N,w,h);
 							BT.THM.SetHasSurface(TRUE);
-							//R_ASSERT2	(BT.pSurface,"Can't load surface");
+							
 							if (!BT.pSurface)
 							{
 								clMsg("can't find tga texture: %s", N);

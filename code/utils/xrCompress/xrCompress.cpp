@@ -3,6 +3,7 @@
 #include <cstdio>
 
 //Edit source: LostAlphaRus and ForserX
+extern const char* KeysList;
 
 xrCompressor::xrCompressor() :	fs_pack_writer(nullptr), bnoFast(false), files_list(nullptr),
 								folders_list(nullptr), bStoreFiles(false), pPackHeader(nullptr), config_ltx(nullptr)
@@ -16,43 +17,33 @@ xrCompressor::xrCompressor() :	fs_pack_writer(nullptr), bnoFast(false), files_li
 	c_heap = nullptr;
 	dwTimeStart = 0;
 
+	XRP_MAX_SIZE = 1024 * 1024 * 512; // bytes (512Mb)
 
-	LPCSTR params = GetCommandLine();
-
-
-	if (strstr(params, "-128")) {
+	if (strstr(KeysList, "-128")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 128; // bytes (128Mb)
 		printf("\nINFO: Pack in ~128mb");
 	}
 
-	if (strstr(params, "-512")) {
-		XRP_MAX_SIZE = 1024 * 1024 * 512; // bytes (512Mb)
-		printf("\nINFO: Pack in ~512mb");
-	}
-
-	if (strstr(params, "-256")) {
+	if (strstr(KeysList, "-256")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 256; // bytes (256Mb)
 		printf("\nINFO: Pack in ~256mb");
 	}
 
-	if (strstr(params, "-768")) {
+	if (strstr(KeysList, "-768")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 768; // bytes (768Mb)
 
 		printf("\nINFO: Pack in ~768mb");
 	}
 
-	if (strstr(params, "-1024")) {
+	if (strstr(KeysList, "-1024")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 1024; // bytes (1024Mb)
 		printf("\nINFO: Pack in ~1024mb");
 	}
 
-	if (strstr(params, "-640")) {
+	if (strstr(KeysList, "-640")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 640; // bytes (640Mb)
 		printf("\nINFO: Pack in ~640mb");
 	}
-
-
-
 }
 
 xrCompressor::~xrCompressor()
@@ -389,17 +380,17 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 
 	string_path		fname;
 	string128		s_num;
-	LPCSTR params = GetCommandLine();
 
-	if (strstr(params, "-xdb")) {
+	if (strstr(KeysList, "-xdb")) {
 		strconcat(sizeof(fname), fname, tgt_folder, ".xdb", itoa(num, s_num, 20));
 	}
-	if (strstr(params, "-db")) {
+	if (strstr(KeysList, "-db")) {
 		strconcat(sizeof(fname), fname, tgt_folder, ".db", itoa(num, s_num, 20));
 	}
 
 	unlink(fname);
 	FS.update_path(fname, "$fs_root$", fname); // FX to LostAlphaRus: Исправление косяка пыс. Без // в названии создаётся папка, а не файл
+
 	fs_pack_writer = FS.w_open(fname);
 	fs_desc.clear();
 	aliases.clear();
@@ -412,11 +403,6 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	filesALIAS = 0;
 
 	dwTimeStart = timeGetTime();
-
-	//write pack header without compression
-	//	DUMMY_STUFF* _dummy_stuff_subst		= NULL;
-	//	_dummy_stuff_subst					= g_dummy_stuff;
-	//	g_dummy_stuff						= NULL;
 
 	if (config_ltx && config_ltx->section_exist("header"))
 	{
