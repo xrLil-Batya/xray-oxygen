@@ -281,46 +281,37 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	}
 	
 	// process textures
-	Status			("Processing textures...");
+	Status("Processing textures...");
 	{
-		Surface_Init		();
-		F = fs.open_chunk	(EB_Textures);
-#ifdef _M_X64
-		u32 tex_count	= F->length()/sizeof(help_b_texture);	//KD
-#else
-		u32 tex_count = F->length() / sizeof(b_texture);
-#endif
+		Surface_Init();
+		F = fs.open_chunk(EB_Textures);
+		u32 tex_count = F->length()/sizeof(help_b_texture);	//KD
+		
 		for (u32 t=0; t<tex_count; t++)
 		{
 			Progress		(float(t)/float(tex_count));
 
-#ifdef _M_X64
 			help_b_texture		TEX;
 			F->r(&TEX, sizeof(TEX));
 
 			b_BuildTexture	BT;
 			std::memcpy(&BT, &TEX, sizeof(TEX) - 4);	// ptr should be copied separately
-			BT.pSurface = (u32*)TEX.pSurface;
-#else
-			b_texture		TEX;
-			F->r(&TEX, sizeof(TEX));
+			BT.pSurface = nullptr;
 
-			b_BuildTexture	BT;
-			std::memcpy(&BT, &TEX, sizeof(TEX));
-#endif
 			// load thumbnail
 			LPSTR N			= BT.name;
 			if (strchr(N,'.')) *(strchr(N,'.')) = 0;
 			strlwr			(N);
-			if (0==xr_strcmp(N,"level_lods"))	{
+			if (0==xr_strcmp(N,"level_lods"))	
+			{
 				// HACK for merged lod textures
 				BT.dwWidth		= 1024;
 				BT.dwHeight		= 1024;
 				BT.bHasAlpha	= TRUE;
 				BT.THM.SetHasSurface(FALSE);
-				BT.pSurface		= 0;
-
-			} else {
+			} 
+			else 
+			{
 				string_path			th_name;
 				FS.update_path	(th_name,"$game_textures$",strconcat(sizeof(th_name),th_name,N,".thm"));
 				clMsg			("processing: %s",th_name);
