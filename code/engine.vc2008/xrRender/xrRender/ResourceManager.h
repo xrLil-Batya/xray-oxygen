@@ -1,9 +1,6 @@
 // TextureManager.h: interface for the CTextureManager class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef ResourceManagerH
-#define ResourceManagerH
 #pragma once
 
 #include	"shader.h"
@@ -144,8 +141,6 @@ public:
 #endif
 	void							_DeleteRT			(const CRT*	RT	);
 
-	//	DX10 cut CRTC*							_CreateRTC			(LPCSTR Name, u32 size,	D3DFORMAT f);
-	//	DX10 cut void							_DeleteRTC			(const CRTC*	RT	);
 #if defined(USE_DX10) || defined(USE_DX11)
 	SGS*							_CreateGS			(LPCSTR Name);
 	void							_DeleteGS			(const SGS*	GS	);
@@ -216,7 +211,6 @@ public:
 	void			DeleteGeom				(const SGeometry* VS		);
 	void			DeferredLoad			(BOOL E)					{ bDeferredLoad=E;	}
 	void			DeferredUpload			();
-//.	void			DeferredUnload			();
 	void			Evict					();
 	void			StoreNecessaryTextures	();
 	void			DestroyNecessaryTextures();
@@ -239,5 +233,3 @@ private:
 
 #endif	//	USE_DX10
 };
-
-#endif //ResourceManagerH

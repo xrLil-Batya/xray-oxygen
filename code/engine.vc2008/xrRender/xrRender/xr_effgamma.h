@@ -1,5 +1,4 @@
-#ifndef __XR_GAMMA_H__
-#define __XR_GAMMA_H__
+#pragma once
 
 //-----------------------------------------------------------------------------------------------------------
 //Gamma control
@@ -43,5 +42,3 @@ private:
 	void	GenLUT		(D3DGAMMARAMP &G);
 #endif	//	USE_DX10
 };
-
-#endif

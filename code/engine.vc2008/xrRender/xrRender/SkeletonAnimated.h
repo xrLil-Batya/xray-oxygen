@@ -1,6 +1,5 @@
 //---------------------------------------------------------------------------
-#ifndef SkeletonAnimatedH
-#define SkeletonAnimatedH
+#pragma once
 
 #include		"skeletoncustom.h"
 #include		"animation.h"
@@ -35,10 +34,6 @@ IC	BlendSVec			&blend_vector	()	{ return Blend;}
 	}
 };
 #pragma pack(pop)
-
-
-
-//typedef void	( * MotionMarkCallback)		(CBlend*		P);
 
 //*** The visual itself ***************************************************************************
 class  ECORE_API	CKinematicsAnimated	: public CKinematics, public IKinematicsAnimated
@@ -102,7 +97,6 @@ protected:
 private:
 	void						IBlendSetup				(CBlend& B,u16 part,u8 channel, MotionID motion_ID, BOOL  bMixing, float blendAccrue, float blendFalloff, float Speed, BOOL noloop, PlayCallback Callback, LPVOID CallbackParam);
 	void						IFXBlendSetup			(CBlend &B, MotionID motion_ID, float blendAccrue, float blendFalloff,float Power ,float Speed,u16 bone);
-//.	bool						LoadMotions				(LPCSTR N, IReader *data);
 public:
 	std::pair<LPCSTR,LPCSTR>	LL_MotionDefName_dbg	(MotionID	ID);
 	void						LL_DumpBlends_dbg		( );
@@ -112,7 +106,6 @@ public:
 
 	void						SetUpdateTracksCalback		( IUpdateTracksCallback	*callback );
 	IUpdateTracksCallback		*GetUpdateTracksCalback		( ){ return m_update_tracks_callback; }
-//	LPCSTR						LL_MotionDefName_dbg	(LPVOID		ptr);
 
 #ifdef _EDITOR
     u32							LL_CycleCount	(){u32 cnt=0; for (u32 k=0; k<m_Motions.size(); k++) cnt+=m_Motions[k].motions.cycle()->size(); return cnt;}
@@ -189,7 +182,6 @@ public:
 
 	virtual float				get_animation_length (MotionID motion_ID);
 };
-//IC CKinematicsAnimated* PKinematicsAnimated(IRender_Visual* V) { return V?V->dcast_PKinematicsAnimated():0; }
+
 IC CKinematicsAnimated* PKinematicsAnimated(IRenderVisual* V) { return V?(CKinematicsAnimated*)V->dcast_PKinematicsAnimated():0; }
 //---------------------------------------------------------------------------
-#endif

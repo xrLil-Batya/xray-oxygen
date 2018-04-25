@@ -21,28 +21,22 @@ xrCompressor::xrCompressor() :	fs_pack_writer(nullptr), bnoFast(false), files_li
 
 	if (strstr(KeysList, "-128")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 128; // bytes (128Mb)
-		printf("\nINFO: Pack in ~128mb");
 	}
 
 	if (strstr(KeysList, "-256")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 256; // bytes (256Mb)
-		printf("\nINFO: Pack in ~256mb");
 	}
 
 	if (strstr(KeysList, "-768")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 768; // bytes (768Mb)
-
-		printf("\nINFO: Pack in ~768mb");
 	}
 
 	if (strstr(KeysList, "-1024")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 1024; // bytes (1024Mb)
-		printf("\nINFO: Pack in ~1024mb");
 	}
 
 	if (strstr(KeysList, "-640")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 640; // bytes (640Mb)
-		printf("\nINFO: Pack in ~640mb");
 	}
 }
 
@@ -246,21 +240,17 @@ void xrCompressor::CompressOne(LPCSTR path)
 	if (testSKIP(path))
 	{
 		filesSKIP++;
-		printf(" - a SKIP");
 		Msg("%-80s   - SKIP", path);
 		return;
 	}
 
-	string_path	 fn;
-
+	string_path fn;
 	FS.update_path(fn, "$target_folder$", path);
-	//strconcat(sizeof(fn), fn, "$target_folder$", "\\", path);
 
 	IReader*		src = FS.r_open(fn);
 	if (0 == src)
 	{
 		filesSKIP++;
-		printf(" - CAN'T OPEN");
 		Msg("%-80s   - CAN'T OPEN", path);
 		return;
 	}
@@ -274,11 +264,9 @@ void xrCompressor::CompressOne(LPCSTR path)
 
 
 	ALIAS*		A = testALIAS(src, c_crc32, a_tests);
-	printf("%3da ", a_tests);
 	if (A)
 	{
 		filesALIAS++;
-		printf("ALIAS");
 		Msg("%-80s   - ALIAS (%s)", path, A->path);
 
 		// Alias found
@@ -297,7 +285,6 @@ void xrCompressor::CompressOne(LPCSTR path)
 			c_size_real = src->length();
 			c_size_compressed = src->length();
 			fs_pack_writer->w(src->pointer(), c_size_real);
-			printf("No compression");
 			Msg("%-80s   - No compression", path);
 		}
 		else
@@ -324,7 +311,6 @@ void xrCompressor::CompressOne(LPCSTR path)
 					filesVFS++;
 					c_size_compressed = c_size_real;
 					fs_pack_writer->w(src->pointer(), c_size_real);
-					printf("No compression (R)");
 					Msg("%-80s   - No compression (R)", path);
 				}
 				else
@@ -339,7 +325,6 @@ void xrCompressor::CompressOne(LPCSTR path)
 						xr_free(c_out);
 					}//bnoFast
 					fs_pack_writer->w(c_data, c_size_compressed);
-					printf("%3.1f%%", 100.f*float(c_size_compressed) / float(src->length()));
 					Msg("%-80s   - OK (%3.1f%%)", path, 100.f*float(c_size_compressed) / float(src->length()));
 				}
 
@@ -350,7 +335,6 @@ void xrCompressor::CompressOne(LPCSTR path)
 			{
 				filesVFS++;
 				c_size_compressed = c_size_real;
-				printf("No compression (R)");
 				Msg("%-80s   - EMPTY FILE", path);
 			}
 		}//test VFS
@@ -420,8 +404,7 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 		}
 		W.seek(0);
 		IReader	R(W.pointer(), W.size());
-
-		printf("...Writing pack header\n");
+		
 		fs_pack_writer->open_chunk(CFS_HeaderChunkID);
 		fs_pack_writer->w(R.pointer(), R.length());
 		fs_pack_writer->close_chunk();
@@ -429,13 +412,11 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	else
 		if (pPackHeader)
 		{
-			printf("...Writing pack header\n");
 			fs_pack_writer->open_chunk(CFS_HeaderChunkID);
 			fs_pack_writer->w(pPackHeader->pointer(), pPackHeader->length());
 			fs_pack_writer->close_chunk();
 		}
-		else
-			printf("...Pack header not found\n");
+		else MessageBox(0, "...Pack header not found", "Error", MB_OK);
 
 	fs_pack_writer->open_chunk(0);
 }
@@ -460,20 +441,11 @@ void xrCompressor::ClosePack()
 	FS.w_close(fs_pack_writer);
 	Msg("Pack saved.");
 	u32	dwTimeEnd = timeGetTime();
-	printf("\n\nFiles total/skipped/No compression/aliased: %d/%d/%d/%d\nOveral: %dK/%dK, %3.1f%%\nElapsed time: %d:%d\nCompression speed: %3.1f Mb/s",
-		filesTOTAL, filesSKIP, filesVFS, filesALIAS,
-		bytesDST / 1024, bytesSRC / 1024,
-		100.f*float(bytesDST) / float(bytesSRC),
-		((dwTimeEnd - dwTimeStart) / 1000) / 60,
-		((dwTimeEnd - dwTimeStart) / 1000) % 60,
-		float((float(bytesDST) / float(1024 * 1024)) / (t_compress.GetElapsed_sec()))
-	);
+	
 	Msg("\n\nFiles total/skipped/No compression/aliased: %d/%d/%d/%d\nOveral: %dK/%dK, %3.1f%%\nElapsed time: %d:%d\nCompression speed: %3.1f Mb/s\n\n",
 		filesTOTAL, filesSKIP, filesVFS, filesALIAS,
-		bytesDST / 1024, bytesSRC / 1024,
-		100.f*float(bytesDST) / float(bytesSRC),
-		((dwTimeEnd - dwTimeStart) / 1000) / 60,
-		((dwTimeEnd - dwTimeStart) / 1000) % 60,
+		bytesDST / 1024, bytesSRC / 1024, 100.f*float(bytesDST) / float(bytesSRC),
+		((dwTimeEnd - dwTimeStart) / 1000) / 60, ((dwTimeEnd - dwTimeStart) / 1000) % 60,
 		float((float(bytesDST) / float(1024 * 1024)) / (t_compress.GetElapsed_sec()))
 	);
 	
@@ -489,8 +461,6 @@ void xrCompressor::PerformWork()
 {
 	if (!files_list->empty() && target_name.size())
 	{
-		string256		caption;
-
 		int pack_num = 0;
 		OpenPack(target_name.c_str(), pack_num++);
 
@@ -502,9 +472,6 @@ void xrCompressor::PerformWork()
 
 		for (u32 it = 0; it<files_list->size(); it++)
 		{
-			xr_sprintf(caption, "Compress files: %d/%d - %d%%", it, files_list->size(), (it * 100) / files_list->size());
-			SetWindowText(GetConsoleWindow(), caption);
-			printf("\n%-80s   ", (*files_list)[it]);
 			if (fs_pack_writer->tell()>XRP_MAX_SIZE)
 			{
 				ClosePack();
@@ -515,12 +482,13 @@ void xrCompressor::PerformWork()
 		}
 		ClosePack();
 
-		if (!bStoreFiles) {
+		if (!bStoreFiles) 
+		{
 			xr_free(c_heap);
 		}
 		else
 		{
-			Msg("ERROR: folder not found.");
+			MessageBox(0, "ERROR: folder not found.", "Error", MB_OK);
 		}
 	}
 }
