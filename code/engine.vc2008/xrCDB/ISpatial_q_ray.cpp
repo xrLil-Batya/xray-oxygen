@@ -26,7 +26,7 @@ struct _MM_ALIGN16 ray_t
 	vec_t		fwd_dir;
 };
 
-#ifdef __AVX__ 
+#ifdef __AVX_USE__ 
 /************************************************
 *#VERTVER: AVX use the part of SSE, and some
 *of AVX instructions
@@ -74,7 +74,7 @@ static const float _MM_ALIGN16
 ps_cst_plus_inf[4] = { flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf },
 ps_cst_minus_inf[4] = { -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
-#ifdef __AVX__
+#ifdef __AVX_USE__
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) 
 {
 	// you may already have those values hanging around somewhere
