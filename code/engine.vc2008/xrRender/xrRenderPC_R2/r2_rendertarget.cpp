@@ -26,7 +26,6 @@ void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt&
 	if (_2) RCache.set_RT(_2->pRT,	1); else RCache.set_RT(NULL,1);
 	if (_3) RCache.set_RT(_3->pRT,	2); else RCache.set_RT(NULL,2);
 	RCache.set_ZB							(zb);
-//	RImplementation.rmNormal				();
 }
 
 void	CRenderTarget::u_setrt			(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSurface9* _2, IDirect3DSurface9* _3, IDirect3DSurface9* zb)
@@ -39,7 +38,6 @@ void	CRenderTarget::u_setrt			(u32 W, u32 H, IDirect3DSurface9* _1, IDirect3DSur
 	RCache.set_RT							(_2,	1);
 	RCache.set_RT							(_3,	2);
 	RCache.set_ZB							(zb);
-//	RImplementation.rmNormal				();
 }
 
 void	CRenderTarget::u_stencil_optimize	(BOOL		common_stencil)
@@ -260,8 +258,14 @@ CRenderTarget::CRenderTarget		()
 		//	temp: for higher quality blends
 		if (RImplementation.o.advancedpp)
 			rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A16B16G16R16F);
+
+		rt_flares.create(r2_RT_flares, (w / 2), (h / 2), D3DFMT_A8R8G8B8);
 	}
 	
+	// FLARES
+	s_flare.create("effects\\flare", "fx\\lenslare");
+
+	// SUNSHAFTS
 	s_SunShafts.create				(b_sunshafts,	"r2\\SunShafts");
 
 	// DROPLETS
@@ -422,6 +426,7 @@ CRenderTarget::CRenderTarget		()
 		g_combine.create					(FVF::F_TL,		RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_2UV.create				(FVF::F_TL2uv,	RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_cuboid.create				(FVF::F_L,	RCache.Vertex.Buffer(), RCache.Index.Buffer());
+		g_flare.create                      (FVF::F_LIT, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 		u32 fvf_aa_blur				= D3DFVF_XYZRHW|D3DFVF_TEX4|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3);
 		g_aa_blur.create			(fvf_aa_blur,	RCache.Vertex.Buffer(), RCache.QuadIB);

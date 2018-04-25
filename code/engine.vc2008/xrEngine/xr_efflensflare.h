@@ -61,6 +61,16 @@ public:
 
 using LensFlareDescVec = xr_vector<CLensFlareDescriptor*>;
 
+IC void	blend_lerp(float& cur, float tgt, float speed, float dt)
+{
+	float diff = tgt - cur;
+	float diff_a = _abs(diff);
+	if (diff_a<EPS_S)	return;
+	float mot = speed * dt;
+	if (mot>diff_a) mot = diff_a;
+	cur += (diff / diff_a)*mot;
+}
+
 class ENGINE_API CLensFlare
 {
 	friend class dxLensFlareRender;

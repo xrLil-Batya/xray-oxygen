@@ -1,5 +1,3 @@
-#ifndef BLENDER_EDITOR_SELECTION_H
-#define BLENDER_EDITOR_SELECTION_H
 #pragma once
 
 class CBlender_Editor_Selection : public IBlender  
@@ -18,5 +16,3 @@ public:
 	virtual ~CBlender_Editor_Selection();
 
 };
-
-#endif //BLENDER_EDITOR_SELECTION_H

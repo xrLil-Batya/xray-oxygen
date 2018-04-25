@@ -1,5 +1,3 @@
-#ifndef BLENDER_EDITOR_WIRE_H
-#define BLENDER_EDITOR_WIRE_H
 #pragma once
 
 class CBlender_Editor_Wire : public IBlender  
@@ -17,5 +15,3 @@ public:
 	CBlender_Editor_Wire();
 	virtual ~CBlender_Editor_Wire();
 };
-
-#endif //BLENDER_EDITOR_WIRE_H

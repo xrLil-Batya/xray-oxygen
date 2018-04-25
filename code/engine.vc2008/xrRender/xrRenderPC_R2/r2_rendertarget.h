@@ -68,6 +68,9 @@ public:
 	ref_rt						rt_LUM_64;			// 64bit, 64x64,	log-average in all components
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
+    // LENS FLARES
+	ref_rt						rt_flares;
+
 	//  Second viewport
 	ref_rt                      rt_secondVP;        // 32bit (r,g,b,a) +SecondVP+
 
@@ -94,13 +97,20 @@ public:
 	IDirect3DTexture9*			t_noise_surf	[TEX_jitter_count];
 	ref_texture					t_noise			[TEX_jitter_count];
 private:
+
+	// LENS FLARES
+	ref_shader					s_flare;
+
 	// OCCq
 	ref_shader					s_occq;
+
+	// SUNSHAFTS
 	ref_shader					s_SunShafts;
 
 	// DROPLETS
 	ref_shader					s_droplets;
 
+	// FXAA
     ref_shader                  s_fxaa;
     ref_geom					g_fxaa;	
 	
@@ -166,6 +176,7 @@ public:
 	ref_geom					g_postprocess;
 	ref_shader					s_menu;
 	ref_geom					g_menu;
+	ref_geom					g_flare;
 private:
 	float						im_noise_time;
 	u32							im_noise_shift_w;
@@ -189,6 +200,8 @@ private:
 
 	//	Igor: used for volumetric lights
 	bool						m_bHasActiveVolumetric;
+
+	u32							dwFlareClearMark;
 public:
 								CRenderTarget			();
 								~CRenderTarget			();
@@ -224,6 +237,8 @@ public:
 	void						phase_scene_end			();
 	void						phase_occq				();
 	void						phase_fxaa              ();
+	void						phase_flares            ();
+	void						render_flare            (light* L);
 	void						phase_wallmarks			();
 	void						phase_smap_direct		(light* L,	u32 sub_phase);
 	void						phase_smap_direct_tsh	(light* L,	u32 sub_phase);

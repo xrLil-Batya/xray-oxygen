@@ -80,6 +80,7 @@ void CShootingObject::Light_Create		()
 	//lights
 	light_render = ::Render->light_create();
 	light_render->set_shadow(true);
+	light_render->set_flare(false);
 }
 
 void CShootingObject::Light_Destroy		()

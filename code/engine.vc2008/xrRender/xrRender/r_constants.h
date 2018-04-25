@@ -1,5 +1,3 @@
-#ifndef r_constantsH
-#define r_constantsH
 #pragma once
 
 #include "../../xrcore/xr_resource.h"
@@ -189,5 +187,3 @@ typedef	resptr_core<R_constant_table,resptr_base<R_constant_table> >				ref_ctab
 #if defined(USE_DX10) || defined(USE_DX11)
 #include "../xrRenderDX10/dx10ConstantBuffer_impl.h"
 #endif	//	USE_DX10
-
-#endif

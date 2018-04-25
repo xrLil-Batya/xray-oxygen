@@ -1,6 +1,3 @@
-#ifndef TSS_DEF_H
-#define TSS_DEF_H
-
 #pragma once
 
 class	 SimulatorStates
@@ -50,4 +47,3 @@ public:
 	void	UpdateDesc( D3D_SAMPLER_DESC descArray[D3D_COMMONSHADER_SAMPLER_SLOT_COUNT], bool SamplerUsed[D3D_COMMONSHADER_SAMPLER_SLOT_COUNT], int iBaseSamplerIndex ) const;
 #endif	//	USE_DX10
 };
-#endif

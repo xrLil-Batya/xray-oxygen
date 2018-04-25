@@ -1,5 +1,4 @@
-#ifndef VisMaskH
-#define VisMaskH
+#pragma once
 
 struct /* ENGINE_API*/ VisMask
 {
@@ -76,5 +75,3 @@ struct /* ENGINE_API*/ VisMask
 		_visimask_ex.invert();
 	}
 };
-
-#endif
