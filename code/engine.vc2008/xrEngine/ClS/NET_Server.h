@@ -143,9 +143,6 @@ public:
 																					sender_functor_invoked = false;
 #endif //#ifdef DEBUG
 																				}
-#ifdef DEBUG
-	bool					IsPlayersMonitorLockedByMe()	const				{ return net_players.IsCurrentThreadIteratingOnClients() && !sender_functor_invoked; };
-#endif
 	//WARNING! very bad method :(
 	IClient*				GetClientByID	(ClientID clientId)					{return net_players.GetFoundClient(ClientIdSearchPredicate(clientId));};
 
