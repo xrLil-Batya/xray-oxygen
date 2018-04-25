@@ -437,7 +437,7 @@ void ParticleRenderStream( LPVOID lpvParams )
 
 				if (angle != *((DWORD*)&m.rot.x)) {
 					angle = *((DWORD*)&m.rot.x);
-					fsincos(angle, sina, cosa);
+					fsincos(*(float*)&angle, sina, cosa);
 				}
 
 				 _mm_prefetch( 64 + (char*) &particles[i + 1] , _MM_HINT_NTA );
