@@ -16,7 +16,7 @@ System::Void xrCompressWnd::PackBtn_Click(System::Object^ sender, System::EventA
 	KeysList = nullptr;
 	FolderName = marsh.marshal_as<const char*>(textBox1->Text);
 
-	System::String^ keys = "-pack" + textBox1->Text + " " + "-ltx " + textBox2->Text + (bFastMode->Checked ? " -fast " : " ") + textBox3->Text;
+	System::String^ keys = "-pack " + "-ltx " + textBox2->Text + (bFastMode->Checked ? " -fast " : " ") + textBox3->Text;
 	keys += bDb->Checked ? " -db " : " -xdb ";
 	keys += checkBox1->Checked ? "-delete " : " ";
 	keys += comboBox1->Text;
