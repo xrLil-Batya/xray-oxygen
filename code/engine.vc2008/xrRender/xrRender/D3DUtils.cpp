@@ -63,25 +63,6 @@ static Fvector identboxwire[identboxwirecount] = {
     {+0.5f, -0.5f, -0.5f},	{+0.5f, -0.5f, +0.5f},		{-0.5f, -0.5f, -0.5f},	{-0.5f, -0.5f, +0.5f}
 };
 
-/*
-static const int identboxindexcount = 36;
-static const WORD identboxindices[identboxindexcount] = {
-	0, 1, 2,   2, 3, 0,
-	3, 2, 6,   6, 7, 3,
-	6, 4, 5,   6, 5, 7,
-    4, 1, 5,   1, 0, 5,
-    3, 5, 0,   3, 7, 5,
-    1, 4, 6,   1, 6, 2};
-static const int identboxindexwirecount = 24;
-static const WORD identboxindiceswire[identboxindexwirecount] = {
-	0, 1, 	1, 2,
-	2, 3, 	3, 0,
-	4, 6, 	6, 7,
-    7, 5, 	5, 4,
-    1, 4, 	2, 6,
-    3, 7, 	0, 5};
-*/
-
 #define SIGN(x) ((x<0)?-1:1)
 
 using FLvertexVec = xr_vector<FVF::L>;
@@ -97,10 +78,6 @@ u32 m_ColorSafeRect = 0xffB040B0;
 
 void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices, u32 _i_cnt)
 {
-#if defined(USE_DX10) || defined(USE_DX11)
-//	TODO: DX10: Implement SPrimitiveBuffer::CreateFromData for DX10
-//	VERIFY(!"SPrimitiveBuffer::CreateFromData not implemented for dx10");
-#else	//	USE_DX10
 	ID3DVertexBuffer*	pVB=0;
 	ID3DIndexBuffer*	pIB=0;
 	p_cnt				= _p_cnt;
@@ -128,7 +105,6 @@ void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF,
 		OnRender.bind	(this,&SPrimitiveBuffer::RenderDP);
 	}
 	pGeom.create		(FVF,pVB,pIB);
-#endif	//	USE_DX10
 }
 void SPrimitiveBuffer::Destroy()
 {                       

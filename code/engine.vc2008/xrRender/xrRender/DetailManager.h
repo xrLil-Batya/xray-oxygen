@@ -2,8 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef DetailManagerH
-#define DetailManagerH
 #pragma once
 
 #include "../../xrCore/xrpool.h"
@@ -11,7 +9,6 @@
 #include "detailmodel.h"
 
 #ifdef _EDITOR
-//.	#include	"ESceneClassList.h"
 	const int	dm_max_decompress	= 14;
 	class CCustomObject;
 	typedef u32	ObjClassID;
@@ -203,5 +200,3 @@ public:
 	CDetailManager					();
 	virtual ~CDetailManager			();
 };
-
-#endif //DetailManagerH

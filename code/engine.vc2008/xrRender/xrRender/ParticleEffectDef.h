@@ -1,6 +1,5 @@
 //---------------------------------------------------------------------------
-#ifndef ParticleEffectDefH
-#define ParticleEffectDefH
+#pragma once
 
 #include "Shader.h"
 
@@ -51,7 +50,6 @@ namespace PS
 	public:
 		enum{
 			dfSprite		= (1<<0),
-//			dfObject		= (1<<1),
 
 			dfFramed		= (1<<10),
 			dfAnimated		= (1<<11),
@@ -72,18 +70,22 @@ namespace PS
 		};
 		shared_str		  	m_Name;
 		Flags32				m_Flags;
+
 	// texture
 		shared_str		  	m_ShaderName;
 		shared_str		  	m_TextureName;
 		ref_shader			m_CachedShader;
 		SFrame				m_Frame;
+
 	// compiled actions
         CMemoryWriter		m_Actions;
+
 	// def        
 		float				m_fTimeLimit;			// time limit
 		int					m_MaxParticles;			// max particle count
 	    Fvector				m_VelocityScale;		// velocity scale
 	    Fvector				m_APDefaultRotation;	// align to path
+
     // collision
 	    float 				m_fCollideOneMinusFriction;
         float 				m_fCollideResilience;
@@ -91,6 +93,7 @@ namespace PS
 	public:
 		BOOL 				SaveActionList		(IWriter& F);
 		BOOL 				LoadActionList		(IReader& F);
+
 	// execute
 		void				ExecuteAnimate		(PAPI::Particle *particles, u32 p_cnt, float dt);
         void				ExecuteCollision	(PAPI::Particle *particles, u32 p_cnt, float dt, CParticleEffect* owner, CollisionCallback cb);
@@ -157,4 +160,3 @@ namespace PS
 #define PED_CHUNK_EDATA			0x0024
 #define PED_CHUNK_ALIGN_TO_PATH	0x0025
 //---------------------------------------------------------------------------
-#endif

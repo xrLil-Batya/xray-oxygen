@@ -21,13 +21,9 @@ void CBackend::CreateQuadIB		()
 	static const u32 dwIdxCount	= dwTriCount*2*3;
 	u16		IndexBuffer[dwIdxCount];
 	u16		*Indices		= IndexBuffer;
-	//u32		dwUsage			= D3DUSAGE_WRITEONLY;
-	//if (HW.Caps.geometry.bSoftware)	dwUsage|=D3DUSAGE_SOFTWAREPROCESSING;
-	//R_CHK(HW.pDevice->CreateIndexBuffer(dwIdxCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&QuadIB,NULL));
 
 	D3D_BUFFER_DESC desc;
 	desc.ByteWidth = dwIdxCount*2;
-	//desc.Usage = D3D_USAGE_IMMUTABLE;
 	desc.Usage = D3D_USAGE_DEFAULT;
 	desc.BindFlags = D3D_BIND_INDEX_BUFFER;
 	desc.CPUAccessFlags = 0;
@@ -36,7 +32,6 @@ void CBackend::CreateQuadIB		()
 	D3D_SUBRESOURCE_DATA subData;
 	subData.pSysMem = IndexBuffer;
 
-	//R_CHK(QuadIB->Lock(0,0,(void**)&Indices,0));
 	{
 		int		Cnt = 0;
 		int		ICnt= 0;
@@ -53,9 +48,7 @@ void CBackend::CreateQuadIB		()
 			Cnt+=4;
 		}
 	}
-	//R_CHK(QuadIB->Unlock());
 
-	//R_CHK(HW.pDevice->CreateIndexBuffer(dwIdxCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&QuadIB,NULL));
 	R_CHK(HW.pDevice->CreateBuffer		( &desc, &subData, &QuadIB));
 	HW.stats_manager.increment_stats_ib	( QuadIB);
 }
@@ -97,7 +90,6 @@ void CBackend::CreateQuadIB		()
 	if (HW.Caps.geometry.bSoftware)	dwUsage|=D3DUSAGE_SOFTWAREPROCESSING;
 	R_CHK(HW.pDevice->CreateIndexBuffer	(dwIdxCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_DEFAULT,&QuadIB,NULL));
 	HW.stats_manager.increment_stats_ib	(QuadIB);
-//	Msg("CBackend::CreateQuadIB(). Created buffer size = %d ", dwIdxCount*2 );
 	R_CHK(QuadIB->Lock(0,0,(void**)&Indices,0));
 	{
 		int		Cnt = 0;
@@ -123,10 +115,6 @@ void CBackend::CreateQuadIB		()
 // Device dependance
 void CBackend::OnDeviceCreate	()
 {
-#if defined(USE_DX10) || defined(USE_DX11)
-	//CreateConstantBuffers();
-#endif	//	USE_DX10
-
 	CreateQuadIB		();
 
 	// streams
@@ -146,26 +134,4 @@ void CBackend::OnDeviceDestroy()
 	// Quad
 	HW.stats_manager.decrement_stats_ib	(QuadIB);
 	_RELEASE							(QuadIB);
-
-#if defined(USE_DX10) || defined(USE_DX11)
-	//DestroyConstantBuffers();
-#endif	//	USE_DX10
 }
-
-#if defined(USE_DX10) || defined(USE_DX11)
-/*
-void CBackend::CreateConstantBuffers()
-{
-	const int iVectorElements = 4;
-	const int iVectorNumber = 256;
-	dx10BufferUtils::CreateConstantBuffer(&m_pPixelConstants, iVectorNumber*iVectorElements*sizeof(float));
-	dx10BufferUtils::CreateConstantBuffer(&m_pVertexConstants, iVectorNumber*iVectorElements*sizeof(float));
-}
-
-void CBackend::DestroyConstantBuffers()
-{
-	_RELEASE(m_pVertexConstants);
-	_RELEASE(m_pPixelConstants);
-}
-*/
-#endif	USE_DX10

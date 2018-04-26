@@ -60,15 +60,14 @@ void light::set_texture		(LPCSTR name)
 		return;
 	}
 
-//#pragma todo				("Only shadowed spot implements projective texture")
 	string256				temp;
 	
 	strconcat(sizeof(temp),temp,"r2\\accum_spot_",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
-#	if	(RENDER!=R_R3) && (RENDER!=R_R4)
+#if	(RENDER==R_R2)
 	s_volumetric.create		("accum_volumetric", name);
-#	else
+#else
 	s_volumetric.create		("accum_volumetric_nomsaa", name);
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -83,7 +82,7 @@ void light::set_texture		(LPCSTR name)
 			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i],strconcat(sizeof(temp),temp,"r2\\accum_volumetric_",name),name);
 		}
 	}
-#	endif // (RENDER!=R_R3) || (RENDER!=R_R4)
+#endif
 }
 
 void light::set_active		(bool a)
@@ -94,7 +93,6 @@ void light::set_active		(bool a)
 		flags.bActive						= true;
 		spatial_register					();
 		spatial_move						();
-		//Msg								("!!! L-register: %X",u32(this));
 
 #ifdef DEBUG
 		Fvector	zero = {0,-1000,0}			;
@@ -109,7 +107,6 @@ void light::set_active		(bool a)
 		flags.bActive						= false;
 		spatial_move						();
 		spatial_unregister					();
-		//Msg								("!!! L-unregister: %X",u32(this));
 	}
 }
 
@@ -296,7 +293,7 @@ void	light::export_		(light_Package& package)
 						L->s_point			= s_point	;
 						
 						// Holger - do we need to export msaa stuff as well ?
-#if	(RENDER==R_R3) || (RENDER==R_R4)
+#if	(RENDER!=R_R2)
 						if( RImplementation.o.dx10_msaa )
 						{
 							int bound = 1;
@@ -308,10 +305,9 @@ void	light::export_		(light_Package& package)
 							{
 								L->s_point_msaa[i] = s_point_msaa[i];
 								L->s_spot_msaa[i] = s_spot_msaa[i];
-								//L->s_volumetric_msaa[i] = s_volumetric_msaa[i];
 							}
 						}
-#endif	//	(RENDER==R_R3) || (RENDER==R_R4)
+#endif
 
 						//	Igor: add volumetric support
 						L->set_volumetric(flags.bVolumetric);

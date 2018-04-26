@@ -2,9 +2,6 @@
 //
 //////////////////////////////////////////////////////////////////////
 
-#ifndef FHierrarhyVisualH
-#define FHierrarhyVisualH
-
 #pragma once
 
 #include "fbasicvisual.h"
@@ -22,5 +19,3 @@ public:
 	virtual void	Copy			(dxRender_Visual *pFrom);
 	virtual void	Release			();
 };
-
-#endif //FHierrarhyVisualH

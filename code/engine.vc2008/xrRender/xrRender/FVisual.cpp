@@ -68,40 +68,39 @@ void Fvisual::Load		(const char* N, IReader *data, u32 dwFlags)
 		p_rm_Indices		= RImplementation.getIB		(ID);
 		p_rm_Indices->AddRef();
 #endif
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+
 		// check for fast-vertices
-		if (data->find_chunk(OGF_FASTPATH))		{
-			destructor<IReader>	geomdef	(data->open_chunk		(OGF_FASTPATH));
-			destructor<IReader>	def		(geomdef().open_chunk	(OGF_GCONTAINER));
+		if (data->find_chunk(OGF_FASTPATH)) {
+			destructor<IReader>	geomdef(data->open_chunk(OGF_FASTPATH));
+			destructor<IReader>	def(geomdef().open_chunk(OGF_GCONTAINER));
 
 			// we have fast-mesh
-			m_fast						= xr_new<IRender_Mesh>	();
+			m_fast = xr_new<IRender_Mesh>();
 
 			// verts
-			D3DVERTEXELEMENT9*	fmt		= 0;
-			ID							= def().r_u32			();
-			m_fast->vBase				= def().r_u32			();
-			m_fast->vCount				= def().r_u32			();
+			D3DVERTEXELEMENT9*	fmt = 0;
+			ID = def().r_u32();
+			m_fast->vBase = def().r_u32();
+			m_fast->vCount = def().r_u32();
 
-			VERIFY						(NULL==m_fast->p_rm_Vertices);
-			m_fast->p_rm_Vertices		= RImplementation.getVB	(ID,true);
+			VERIFY(NULL == m_fast->p_rm_Vertices);
+			m_fast->p_rm_Vertices = RImplementation.getVB(ID, true);
 			m_fast->p_rm_Vertices->AddRef();
-			fmt							= RImplementation.getVB_Format(ID,true);
+			fmt = RImplementation.getVB_Format(ID, true);
 
 			// indices
-			ID							= def().r_u32			();
-			m_fast->iBase				= def().r_u32			();
-			m_fast->iCount				= def().r_u32			();
-			m_fast->dwPrimitives		= iCount/3;
-		
-			VERIFY						(NULL==m_fast->p_rm_Indices);
-			m_fast->p_rm_Indices		= RImplementation.getIB	(ID,true);
+			ID = def().r_u32();
+			m_fast->iBase = def().r_u32();
+			m_fast->iCount = def().r_u32();
+			m_fast->dwPrimitives = iCount / 3;
+
+			VERIFY(NULL == m_fast->p_rm_Indices);
+			m_fast->p_rm_Indices = RImplementation.getIB(ID, true);
 			m_fast->p_rm_Indices->AddRef();
 
 			// geom
-			m_fast->rm_geom.create			(fmt,m_fast->p_rm_Vertices,m_fast->p_rm_Indices);
+			m_fast->rm_geom.create(fmt, m_fast->p_rm_Vertices, m_fast->p_rm_Indices);
 		}
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
 	}
 
 	// read vertices
@@ -165,21 +164,13 @@ void Fvisual::Load		(const char* N, IReader *data, u32 dwFlags)
 			dwPrimitives		= iCount/3;
 
 #if defined(USE_DX10) || defined(USE_DX11)
-			//BOOL	bSoft		= HW.Caps.geometry.bSoftware || (dwFlags&VLOAD_FORCESOFTWARE);
-			//u32		dwUsage		= /*D3DUSAGE_WRITEONLY |*/ (bSoft?D3DUSAGE_SOFTWAREPROCESSING:0);	// indices are read in model-wallmarks code
-			//BYTE*	bytes		= 0;
-
-			//VERIFY				(NULL==p_rm_Indices);
-			//R_CHK				(HW.pDevice->CreateIndexBuffer(iCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&p_rm_Indices,0));
-			//R_CHK				(p_rm_Indices->Lock(0,0,(void**)&bytes,0));
-			//CopyMemory		(bytes, data->pointer(), iCount*2);
 
 			VERIFY				(NULL==p_rm_Indices);
 			R_CHK				(dx10BufferUtils::CreateIndexBuffer(&p_rm_Indices, data->pointer(), iCount*2));
 			HW.stats_manager.increment_stats_ib		( p_rm_Indices);
 #else	//	USE_DX10
 			BOOL	bSoft		= HW.Caps.geometry.bSoftware;
-			u32		dwUsage		= /*D3DUSAGE_WRITEONLY |*/ (bSoft?D3DUSAGE_SOFTWAREPROCESSING:0);	// indices are read in model-wallmarks code
+			u32		dwUsage		= (bSoft?D3DUSAGE_SOFTWAREPROCESSING:0);	// indices are read in model-wallmarks code
 			BYTE*	bytes		= 0;
 
 			VERIFY				(NULL==p_rm_Indices);
@@ -200,7 +191,6 @@ void Fvisual::Load		(const char* N, IReader *data, u32 dwFlags)
 
 void Fvisual::Render		(float )
 {
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
 	if (m_fast && RImplementation.phase==CRender::PHASE_SMAP && !RCache.is_TessEnabled())
 	{
 		RCache.set_Geometry		(m_fast->rm_geom);
@@ -211,11 +201,6 @@ void Fvisual::Render		(float )
 		RCache.Render			(D3DPT_TRIANGLELIST,vBase,0,vCount,iBase,dwPrimitives);
 		RCache.stat.r.s_static.add	(vCount);
 	}
-#else // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
-	RCache.set_Geometry			(rm_geom);
-	RCache.Render				(D3DPT_TRIANGLELIST,vBase,0,vCount,iBase,dwPrimitives);
-	RCache.stat.r.s_static.add	(vCount);
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
 }
 
 #define PCOPY(a)	a = pFrom->a

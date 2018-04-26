@@ -68,7 +68,6 @@ void FTreeVisual::Load		(const char* N, IReader *data, u32 dwFlags)
 		data->r			(&xform,	sizeof(xform));
 		data->r			(&c_scale,	sizeof(c_scale));	c_scale.rgb.mul	(.5f);	c_scale.hemi*=.5f;	c_scale.sun	*=.5f;
 		data->r			(&c_bias,	sizeof(c_bias));	c_bias.rgb.mul	(.5f);	c_bias.hemi	*=.5f;	c_bias.sun	*=.5f;
-		//Msg				("hemi[%f / %f], sun[%f / %f]",c_scale.hemi,c_bias.hemi,c_scale.sun,c_bias.sun);
 	}
 
 	// Geom
@@ -103,13 +102,12 @@ struct	FTreeVisual_setup
 
 		// Calc wind-vector3, scale
 		float	tm_rot			= PI_MUL_2*Device.fTimeGlobal/ps_r__Tree_w_rot;
-		//wind.set				(_sin(tm_rot),0,_cos(tm_rot),0);	wind.normalize	();	wind.mul(ps_r__Tree_w_amp);	// dir1*amplitude
 
   		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
  		float fValue = E.m_fTreeAmplitudeIntensity;
  		wind.set(_sin(tm_rot), 0, _cos(tm_rot), 0);
  		wind.normalize();
- 		wind.mul(fValue);	// dir1*amplitude
+ 		wind.mul(fValue);
 		scale					= 1.f/float(FTreeVisual_quant);
         
 		// setup constants

@@ -30,7 +30,6 @@ public:
 	using map_Matrix = xr_map<const char*, CMatrix*, str_pred>;
 	using map_Constant = xr_map<const char*, CConstant*, str_pred>;
 	using map_RT = xr_map<const char*, CRT*, str_pred>;
-	//	DX10 cut DEFINE_MAP_PRED(const char*,CRTC*,			map_RTC,		map_RTCIt,			str_pred);
 	using map_VS = xr_map<const char*, SVS*, str_pred>;
 
 #if defined(USE_DX10) || defined(USE_DX11)
@@ -97,7 +96,6 @@ public:
 	IBlender* 						_FindBlender		(LPCSTR Name);
 	void							_GetMemoryUsage		(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps);
 	void							_DumpMemoryUsage	();
-//.	BOOL							_GetDetailTexture	(LPCSTR Name, LPCSTR& T, R_constant_setup* &M);
 
 	map_Blender&					_GetBlenders		()		{	return m_blenders;	}
 

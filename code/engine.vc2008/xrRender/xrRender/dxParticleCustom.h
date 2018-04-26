@@ -1,6 +1,4 @@
-//---------------------------------------------------------------------------
-#ifndef ParticleCustomH
-#define ParticleCustomH
+#pragma once
 
 #include "../../Include/xrRender/ParticleCustom.h"
 #include "FBasicVisual.h"
@@ -15,7 +13,4 @@ public:
 
 	virtual IParticleCustom*	dcast_ParticleCustom	()				{ return this;	}
 };
-
-//---------------------------------------------------------------------------
-#endif //ParticleCustomH
  

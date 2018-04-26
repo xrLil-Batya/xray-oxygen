@@ -311,8 +311,6 @@ void CDetailManager::UpdateVisibleM()
 							if (ssa > r_ssaCHEAP)	vis_id = Item.vis_ID;
 							
 							sp.r_items[vis_id].push_back	(*siIT);
-
-//2							visible[vis_id][sp.id].push_back(&Item);
 						}
 					}
 				}

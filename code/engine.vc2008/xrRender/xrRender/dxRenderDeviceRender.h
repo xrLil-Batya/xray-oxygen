@@ -1,5 +1,3 @@
-#ifndef dxRenderDeviceRender_included
-#define dxRenderDeviceRender_included
 #pragma once
 
 #ifndef _EDITOR
@@ -30,18 +28,18 @@ public:
 	virtual void	setContrast(float fGamma);
 	virtual void	updateGamma();
 
-	//void	gammaGenLUT(D3DGAMMARAMP &G) {m_Gamma.GenLUT(G);}
-
 	//	Destroy
 	virtual void	OnDeviceDestroy( BOOL bKeepTextures);
 	virtual void	ValidateHW();
 	virtual void	DestroyHW();
 	virtual void	Reset( HWND hWnd, u32 &dwWidth, u32 &dwHeight, float &fWidth_2, float &fHeight_2);
+
 	//	Init
 	virtual void	SetupStates();
 	virtual void	OnDeviceCreate(LPCSTR shName);
 	virtual void	Create( HWND hWnd, u32 &dwWidth, u32 &dwHeight, float &fWidth_2, float &fHeight_2, bool);
 	virtual void	SetupGPU( BOOL bForceGPU_SW, BOOL bForceGPU_NonPure, BOOL bForceGPU_REF);
+
 	//	Overdraw
 	virtual void	overdrawBegin();
 	virtual void	overdrawEnd();
@@ -79,6 +77,3 @@ private:
 };
 
 #endif //ifndef _EDITOR
-
-
-#endif	//	RenderDeviceRender_included

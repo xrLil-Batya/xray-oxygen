@@ -43,7 +43,7 @@ void CRenderTarget::phase_droplets()
 
 	//draw color
 	RCache.set_Element(s_droplets->E[0]);
-	RCache.set_c("droplets", CurrenEnv.m_fDropletsIntensity, droplets_power_debug, 0, 0);
+	RCache.set_c("droplets", CurrenEnv.m_fDropletsIntensity, 0, 0, 0);
 	RCache.set_Geometry(g_aa_AA);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }

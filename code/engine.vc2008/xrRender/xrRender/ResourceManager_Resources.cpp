@@ -162,7 +162,6 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		string_path					cname;
 		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),"vs_",_name,".hlsl");
 		FS.update_path				(cname,	"$game_shaders$", cname);
-//		LPCSTR						target		= NULL;
 
 		IReader*					fs			= FS.r_open(cname);
 		R_ASSERT3					(fs, "shader file doesnt exist", cname);
@@ -340,55 +339,7 @@ void	CResourceManager::_DeleteRT		(const CRT* RT)
 	Msg	("! ERROR: Failed to find render-target '%s'",*RT->cName);
 }
 
-//	DX10 cut 
-/*
-//--------------------------------------------------------------------------------------------------------------
-CRTC*	CResourceManager::_CreateRTC		(LPCSTR Name, u32 size,	D3DFORMAT f)
-{
-	R_ASSERT(Name && Name[0] && size);
-
-	// ***** first pass - search already created RTC
-	LPSTR N = LPSTR(Name);
-	map_RTC::iterator I = m_rtargets_c.find	(N);
-	if (I!=m_rtargets_c.end())	return I->second;
-	else
-	{
-		CRTC *RT				=	xr_new<CRTC>();
-		RT->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
-		m_rtargets_c.insert		(std::make_pair(RT->set_name(Name),RT));
-		if (RDEVICE.b_is_Ready)	RT->create	(Name,size,f);
-		return					RT;
-	}
-}
-void	CResourceManager::_DeleteRTC		(const CRTC* RT)
-{
-	if (0==(RT->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
-	LPSTR N				= LPSTR		(*RT->cName);
-	map_RTC::iterator I	= m_rtargets_c.find	(N);
-	if (I!=m_rtargets_c.end())	{
-		m_rtargets_c.erase(I);
-		return;
-	}
-	Msg	("! ERROR: Failed to find render-target '%s'",*RT->cName);
-}
-*/
-//--------------------------------------------------------------------------------------------------------------
-void	CResourceManager::DBG_VerifyGeoms	()
-{
-	/*
-	for (u32 it=0; it<v_geoms.size(); it++)
-	{
-	SGeometry* G					= v_geoms[it];
-
-	D3DVERTEXELEMENT9		test	[MAX_FVF_DECL_SIZE];
-	u32						size	= 0;
-	G->dcl->GetDeclaration			(test,(unsigned int*)&size);
-	u32 vb_stride					= D3DXGetDeclVertexSize	(test,0);
-	u32 vb_stride_cached			= G->vb_stride;
-	R_ASSERT						(vb_stride == vb_stride_cached);
-	}
-	*/
-}
+void	CResourceManager::DBG_VerifyGeoms	() {}
 
 SGeometry*	CResourceManager::CreateGeom	(D3DVERTEXELEMENT9* decl, IDirect3DVertexBuffer9* vb, IDirect3DIndexBuffer9* ib)
 {
@@ -431,7 +382,6 @@ void		CResourceManager::DeleteGeom		(const SGeometry* Geom)
 //--------------------------------------------------------------------------------------------------------------
 CTexture* CResourceManager::_CreateTexture	(LPCSTR _Name)
 {
-	// DBG_VerifyTextures	();
 	if (0==xr_strcmp(_Name,"null"))	return 0;
 	R_ASSERT		(_Name && _Name[0]);
 	string_path		Name;
@@ -458,8 +408,6 @@ CTexture* CResourceManager::_CreateTexture	(LPCSTR _Name)
 }
 void	CResourceManager::_DeleteTexture		(const CTexture* T)
 {
-	// DBG_VerifyTextures	();
-
 	if (0==(T->dwFlags&xr_resource_flagged::RF_REGISTERED))	return;
 	LPSTR N					= LPSTR		(*T->cName);
 	map_Texture::iterator I	= m_textures.find	(N);
@@ -689,7 +637,6 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		string_path					cname;
 		strconcat					(sizeof(cname),cname,::Render->getShaderPath(),_name,".vs");
 		FS.update_path				(cname,	"$game_shaders$", cname);
-//		LPCSTR						target		= NULL;
 
 		IReader*					fs			= FS.r_open(cname);
 		R_ASSERT3					(fs, "shader file doesnt exist", cname);
@@ -697,8 +644,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 		// Select target
 		LPCSTR						c_target	= "vs_2_0";
 		LPCSTR						c_entry		= "main";
-		/*if (HW.Caps.geometry.dwVersion>=CAP_VERSION(3,0))			target="vs_3_0";
-		else*/ if (HW.Caps.geometry_major>=2)						c_target="vs_2_0";
+		if (HW.Caps.geometry_major>=2)						c_target="vs_2_0";
 		else 														c_target="vs_1_1";
 
 		u32 needed_len				= fs->length() + 1;
@@ -713,8 +659,7 @@ SVS*	CResourceManager::_CreateVS		(LPCSTR _name)
 
 		// vertex
 		R_ASSERT2					(fs,cname);
-		_hr = ::Render->shader_compile(name,LPCSTR(fs->pointer()),fs->length(), NULL, &Includer, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR /*| D3DXSHADER_PREFER_FLOW_CONTROL*/, &pShaderBuf, &pErrorBuf, NULL);
-//		_hr = D3DXCompileShader		(LPCSTR(fs->pointer()),fs->length(), NULL, &Includer, "main", target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, &pShaderBuf, &pErrorBuf, NULL);
+		_hr = ::Render->shader_compile(name,LPCSTR(fs->pointer()),fs->length(), NULL, &Includer, c_entry, c_target, D3DXSHADER_DEBUG | D3DXSHADER_PACKMATRIX_ROWMAJOR, &pShaderBuf, &pErrorBuf, NULL);
 		FS.r_close					(fs);
 
 		if (SUCCEEDED(_hr))

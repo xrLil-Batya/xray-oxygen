@@ -71,8 +71,6 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
 				CHK_DX( HW.pDevice->CreateTexture2D( &desc, NULL, &pSrcSmallTexture ) );
 
-				//	D3DX10_TEXTURE_LOAD_INFO *pLoadInfo
-
 #ifdef USE_DX11
 				CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pSrcTexture,
 					NULL, pSrcSmallTexture ));
@@ -120,8 +118,6 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				desc.BindFlags = D3D_BIND_SHADER_RESOURCE;
 				CHK_DX( HW.pDevice->CreateTexture2D( &desc, NULL, &pSrcSmallTexture ) );
 
-				//	D3DX10_TEXTURE_LOAD_INFO *pLoadInfo
-
 #ifdef USE_DX11
 				CHK_DX(D3DX11LoadTextureFromTexture(HW.pContext, pSrcTexture,
 					NULL, pSrcSmallTexture ));
@@ -135,7 +131,6 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				HRESULT hr	= D3DX11SaveTextureToMemory(HW.pContext, pSrcSmallTexture, D3DX11_IFF_DDS, &saved, 0);
 #else
 				HRESULT hr	= D3DX10SaveTextureToMemory( pSrcSmallTexture, D3DX10_IFF_DDS, &saved, 0);
-				//HRESULT hr					= D3DXSaveTextureToFileInMemory (&saved,D3DXIFF_DDS,texture,0);
 #endif
 				if(hr==D3D_OK)
 				{

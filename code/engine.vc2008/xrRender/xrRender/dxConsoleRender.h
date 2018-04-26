@@ -1,5 +1,3 @@
-#ifndef dxConsoleRender_included
-#define dxConsoleRender_included
 #pragma once
 
 #include "..\..\Include\xrRender\ConsoleRender.h"
@@ -19,5 +17,3 @@ private:
 	ref_geom	m_Geom;
 #endif
 };
-
-#endif	//	ConsoleRender_included
