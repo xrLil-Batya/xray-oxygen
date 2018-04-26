@@ -78,6 +78,7 @@ u32 m_ColorSafeRect = 0xffB040B0;
 
 void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF, LPVOID vertices, u32 _v_cnt, u16* indices, u32 _i_cnt)
 {
+#if !defined(USE_DX10) || !defined(USE_DX11)
 	ID3DVertexBuffer*	pVB=0;
 	ID3DIndexBuffer*	pIB=0;
 	p_cnt				= _p_cnt;
@@ -105,6 +106,7 @@ void SPrimitiveBuffer::CreateFromData(D3DPRIMITIVETYPE _pt, u32 _p_cnt, u32 FVF,
 		OnRender.bind	(this,&SPrimitiveBuffer::RenderDP);
 	}
 	pGeom.create		(FVF,pVB,pIB);
+#endif
 }
 void SPrimitiveBuffer::Destroy()
 {                       
