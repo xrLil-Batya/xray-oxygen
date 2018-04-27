@@ -1,5 +1,3 @@
-#ifndef	ColorMapManager_included
-#define	ColorMapManager_included
 #pragma once
 
 //	Reduces amount of work if the texture was not changed.
@@ -34,5 +32,3 @@ private:
 
 	map_Tex			m_TexCache;
 };
-
-#endif	//	ColorMapManager_included

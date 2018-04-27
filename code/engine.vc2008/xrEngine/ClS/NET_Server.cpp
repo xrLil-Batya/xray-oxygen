@@ -72,12 +72,9 @@ IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 IPureServer::IPureServer(CTimer* timer)
 {
 	device_timer			= timer;
-	SV_Client				= NULL;
-	NET						= NULL;
-	net_Address_device		= NULL;
-#ifdef DEBUG
-	sender_functor_invoked = false;
-#endif
+	SV_Client				= nullptr;
+	NET						= nullptr;
+	net_Address_device		= nullptr;
 }
 
 IPureServer::~IPureServer	()

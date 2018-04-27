@@ -1,8 +1,6 @@
 // FVisual.h: interface for the FVisual class.
 //
 //////////////////////////////////////////////////////////////////////
-#ifndef FVisualH
-#define FVisualH
 #pragma once
 
 #ifdef _EDITOR
@@ -24,5 +22,3 @@ public:
 	Fvisual();
 	virtual ~Fvisual();
 };
-
-#endif 

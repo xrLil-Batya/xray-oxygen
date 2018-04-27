@@ -357,9 +357,6 @@
     <ClInclude Include="r2_rendertarget.h">
       <Filter>Core_Target</Filter>
     </ClInclude>
-    <ClInclude Include="r2_rendertarget_wallmarks.h">
-      <Filter>Core_Target</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\ColorMapManager.h">
       <Filter>Core_Target\ColorMap</Filter>
     </ClInclude>
@@ -1154,6 +1151,9 @@
       <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
+    <ClCompile Include="r2_rendertarget_render_flare.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

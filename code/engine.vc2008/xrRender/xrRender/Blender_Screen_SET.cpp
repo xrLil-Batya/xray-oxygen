@@ -98,7 +98,6 @@ void	CBlender_Screen_SET::Load	( IReader& fs, u16 version)
 void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
-	//C.r_Pass			("stub_notransform_t", "Blender_Screen_SET", false);
 
 	if (oBlend.IDselected==6)
 	{
@@ -118,8 +117,6 @@ void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 		{
 			// 4x R
 			C.r_Pass			("stub_notransform_t_m4", "stub_default", false);
-			//C.StageSET_Color	(D3DTA_TEXTURE,	  D3DTOP_MODULATE4X,	D3DTA_DIFFUSE);
-			//C.StageSET_Alpha	(D3DTA_TEXTURE,	  D3DTOP_SELECTARG1,	D3DTA_DIFFUSE);
 		} 
 		else 
 		{
@@ -127,21 +124,14 @@ void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 			{
 				// 2x R
 				C.r_Pass			("stub_notransform_t_m2", "stub_default", false);
-				//C.StageSET_Color	(D3DTA_TEXTURE,	  D3DTOP_MODULATE2X,	D3DTA_DIFFUSE);
-				//C.StageSET_Alpha	(D3DTA_TEXTURE,	  D3DTOP_SELECTARG1,	D3DTA_DIFFUSE);
 			} 
 			else 
 			{
 				// 1x R
 				C.r_Pass			("stub_notransform_t", "stub_default", false);
-				//C.StageSET_Color	(D3DTA_TEXTURE,	  D3DTOP_MODULATE,		D3DTA_DIFFUSE);
-				//C.StageSET_Alpha	(D3DTA_TEXTURE,	  D3DTOP_MODULATE,		D3DTA_DIFFUSE);
 			}
 		}
-		//C.Stage_Texture		(oT_Name);
-		//C.Stage_Matrix		(oT_xform,	0);
-		//C.Stage_Constant	("$null");
-		//C.StageEnd			();
+
 		VERIFY(C.L_textures.size()>0);
 		C.r_dx10Texture			("s_base",	C.L_textures[0]	);
 		int iSmp = C.r_dx10Sampler("smp_base");
@@ -231,7 +221,6 @@ void	CBlender_Screen_SET::Compile	(CBlender_Compile& C)
 			break;
 		}
 		C.PassSET_LightFog	(oLighting.value,oFog.value);
-		// C.PassSET_LightFog	(FALSE,FALSE);
 
 		if (oBlend.IDselected==6)	
 		{

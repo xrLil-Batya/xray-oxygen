@@ -135,17 +135,8 @@ public:
 	template<typename SenderFunctor>
 	void					ForEachClientDoSender(SenderFunctor & action)		{ 
                                                                                     std::lock_guard<decltype(csMessage)> lock(csMessage);
-#ifdef DEBUG
-																					sender_functor_invoked = true;
-#endif //#ifdef DEBUG
 																					net_players.ForEachClientDo(action);
-#ifdef DEBUG
-																					sender_functor_invoked = false;
-#endif //#ifdef DEBUG
 																				}
-#ifdef DEBUG
-	bool					IsPlayersMonitorLockedByMe()	const				{ return net_players.IsCurrentThreadIteratingOnClients() && !sender_functor_invoked; };
-#endif
 	//WARNING! very bad method :(
 	IClient*				GetClientByID	(ClientID clientId)					{return net_players.GetFoundClient(ClientIdSearchPredicate(clientId));};
 

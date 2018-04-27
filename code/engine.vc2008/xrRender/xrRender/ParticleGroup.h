@@ -1,6 +1,5 @@
 //---------------------------------------------------------------------------
-#ifndef ParticleGroupH
-#define ParticleGroupH
+#pragma once
 
 #include "../xrRender/dxParticleCustom.h"
 
@@ -152,4 +151,3 @@ namespace PS
 #define PGD_CHUNK_EFFECTS2		0x0007
 
 //---------------------------------------------------------------------------
-#endif

@@ -75,7 +75,6 @@ void dxDebugRender::NextSceneMode()
 
 void dxDebugRender::ZEnable(bool bEnable)
 {
-	//CHK_DX(HW.pDevice->SetRenderState(D3DRS_ZENABLE,bEnable));
 	RCache.set_Z(bEnable);
 }
 
@@ -115,7 +114,7 @@ void dxDebugRender::SetDebugShader(dbgShaderHandle shdHandle)
 
 	static const LPCSTR dbgShaderParams[][2] = 
 	{
-		{"hud\\default" , "ui\\ui_pop_up_active_back"} ,// dbgShaderWindow
+		{"hud\\default" , "ui\\ui_pop_up_active_back"} ,
 	};
 
 	if(!m_dbgShaders[shdHandle])
@@ -146,12 +145,9 @@ private:
  xr_vector<u16>		_line_indices;
  xr_vector<FVF::L>	_line_vertices;
 
-//	Vertices		_line_vertices;
-//	Indices			_line_indices;
 public:
 	RDebugRender()
 	{
-		//Device.seqRender.Add		(this);
 		Device.seqRender.Add		(this,REG_PRIORITY_LOW-100);
 	}
 

@@ -29,7 +29,6 @@ public:
 	void					Unload		();
 	void					Render		(CFrustum&	base);
 	void					Render_ZB	();
-//	void					Debug		();
 
 	void					occlude		(Fbox2&		space) { }
 	void					Disable		();

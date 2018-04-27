@@ -21,28 +21,22 @@ xrCompressor::xrCompressor() :	fs_pack_writer(nullptr), bnoFast(false), files_li
 
 	if (strstr(KeysList, "-128")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 128; // bytes (128Mb)
-		printf("\nINFO: Pack in ~128mb");
 	}
 
 	if (strstr(KeysList, "-256")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 256; // bytes (256Mb)
-		printf("\nINFO: Pack in ~256mb");
 	}
 
 	if (strstr(KeysList, "-768")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 768; // bytes (768Mb)
-
-		printf("\nINFO: Pack in ~768mb");
 	}
 
 	if (strstr(KeysList, "-1024")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 1024; // bytes (1024Mb)
-		printf("\nINFO: Pack in ~1024mb");
 	}
 
 	if (strstr(KeysList, "-640")) {
 		XRP_MAX_SIZE = 1024 * 1024 * 640; // bytes (640Mb)
-		printf("\nINFO: Pack in ~640mb");
 	}
 }
 
@@ -108,88 +102,52 @@ bool xrCompressor::testSKIP(LPCSTR path)
 bool xrCompressor::testVFS(LPCSTR path)
 {
 
-	string256			p_ext;
+	string256 p_ext;
 	_splitpath(path, 0, 0, 0, p_ext);
+
+	xr_vector<const char*> cFast = { ".xml", ".ltx" , ".script" };
+	xr_vector<const char*> cCompress = { ".xml", ".ltx" , ".script", ".ogf", ".dds", ".ogg" , ".xr", 
+										 ".spawn", ".geom", ".cform", ".details" , ".ai", ".omf", ".geom" };
 
 	if (bnoFast)
 	{
-
-		if (bStoreFiles)
-			return			(true);
+		if (!bStoreFiles)
 		{
-			if (!stricmp(p_ext, ".xml"))
-				return			(false);
-
-			if (!stricmp(p_ext, ".ltx"))
-				return			(FALSE);
-
-			if (!stricmp(p_ext, ".script"))
-				return			(FALSE);
+			for (const char* &it : cFast)
+			{
+				if (!stricmp(p_ext, it))
+					return (false);
+			}
 		}
 	}
-	else {
-
-		if (!stricmp(p_ext, ".xml"))
-			return			(false);
-
-		if (!stricmp(p_ext, ".ltx"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".script"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".ogf"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".dds"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".ogg"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".xr"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".spawn"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".geom"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".geomx"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".cform"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".details"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".ai"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ".omf"))
-			return			(FALSE);
-
-		if (!stricmp(p_ext, ""))
-			return			(FALSE);
+	else 
+	{
+		if (!bStoreFiles)
+		{
+			for (const char* &it : cCompress)
+			{
+				if (!stricmp(p_ext, it))
+					return (false);
+			}
+		}
 	}
 
-	return				(TRUE);
+	return true;
 }
 
 bool xrCompressor::testEqual(LPCSTR path, IReader* base)
 {
 	bool res = false;
-	IReader*	test = FS.r_open(path);
 
+	IReader* test = FS.r_open(path);
 	if (test->length() == base->length())
 	{
 		if (0 == memcmp(test->pointer(), base->pointer(), base->length()))
-			res = TRUE;
+			res = true;
 	}
 	FS.r_close(test);
-	return				res;
+
+	return res;
 }
 
 xrCompressor::ALIAS* xrCompressor::testALIAS(IReader* base, u32 crc, u32& a_tests)
@@ -246,39 +204,33 @@ void xrCompressor::CompressOne(LPCSTR path)
 	if (testSKIP(path))
 	{
 		filesSKIP++;
-		printf(" - a SKIP");
 		Msg("%-80s   - SKIP", path);
 		return;
 	}
 
-	string_path	 fn;
-
+	string_path fn;
 	FS.update_path(fn, "$target_folder$", path);
-	//strconcat(sizeof(fn), fn, "$target_folder$", "\\", path);
 
 	IReader*		src = FS.r_open(fn);
 	if (0 == src)
 	{
 		filesSKIP++;
-		printf(" - CAN'T OPEN");
 		Msg("%-80s   - CAN'T OPEN", path);
 		return;
 	}
 
 	bytesSRC += src->length();
-	u32			c_crc32 = crc32(src->pointer(), src->length());
-	u32			c_ptr = 0;
-	u32			c_size_real = 0;
-	u32			c_size_compressed = 0;
-	u32			a_tests = 0;
+	u32	c_crc32 = crc32(src->pointer(), src->length());
+	size_t	c_ptr = 0;
+	u32	c_size_real = 0;
+	u32	c_size_compressed = 0;
+	u32	a_tests = 0;
 
 
 	ALIAS*		A = testALIAS(src, c_crc32, a_tests);
-	printf("%3da ", a_tests);
 	if (A)
 	{
 		filesALIAS++;
-		printf("ALIAS");
 		Msg("%-80s   - ALIAS (%s)", path, A->path);
 
 		// Alias found
@@ -297,25 +249,21 @@ void xrCompressor::CompressOne(LPCSTR path)
 			c_size_real = src->length();
 			c_size_compressed = src->length();
 			fs_pack_writer->w(src->pointer(), c_size_real);
-			printf("No compression");
 			Msg("%-80s   - No compression", path);
 		}
 		else
-		{ //if(testVFS(path))
-		  // Compress into BaseFS
+		{
+			// Compress into BaseFS
 			c_ptr = fs_pack_writer->tell();
-			c_size_real = src->length();
+			c_size_real = (u32)src->length();
 			if (0 != c_size_real)
 			{
 				u32 c_size_max = rtc_csize(src->length());
 				u8*	c_data = xr_alloc<u8>(c_size_max);
 
 				t_compress.Begin();
-
 				c_size_compressed = c_size_max;
-
 				R_ASSERT(LZO_E_OK == lzo1x_999_compress((u8*)src->pointer(), c_size_real, c_data, &c_size_compressed, c_heap));
-
 				t_compress.End();
 
 				if ((c_size_compressed + 16) >= c_size_real)
@@ -324,7 +272,6 @@ void xrCompressor::CompressOne(LPCSTR path)
 					filesVFS++;
 					c_size_compressed = c_size_real;
 					fs_pack_writer->w(src->pointer(), c_size_real);
-					printf("No compression (R)");
 					Msg("%-80s   - No compression (R)", path);
 				}
 				else
@@ -339,7 +286,6 @@ void xrCompressor::CompressOne(LPCSTR path)
 						xr_free(c_out);
 					}//bnoFast
 					fs_pack_writer->w(c_data, c_size_compressed);
-					printf("%3.1f%%", 100.f*float(c_size_compressed) / float(src->length()));
 					Msg("%-80s   - OK (%3.1f%%)", path, 100.f*float(c_size_compressed) / float(src->length()));
 				}
 
@@ -350,22 +296,21 @@ void xrCompressor::CompressOne(LPCSTR path)
 			{
 				filesVFS++;
 				c_size_compressed = c_size_real;
-				printf("No compression (R)");
 				Msg("%-80s   - EMPTY FILE", path);
 			}
-		}//test VFS
-	} //(A)
+		}
+	}
 
 	  // Write description
-	write_file_header(path, c_crc32, c_ptr, c_size_real, c_size_compressed);
+	write_file_header(path, c_crc32, (u32)c_ptr, c_size_real, c_size_compressed);
 
 	if (0 == A)
 	{
 		// Register for future aliasing
-		ALIAS				R;
+		ALIAS R;
 		R.path = xr_strdup(fn);
 		R.crc = c_crc32;
-		R.c_ptr = c_ptr;
+		R.c_ptr = (u32)c_ptr;
 		R.c_size_real = c_size_real;
 		R.c_size_compressed = c_size_compressed;
 		aliases.insert(std::make_pair(R.c_size_real, R));
@@ -391,9 +336,17 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	unlink(fname);
 	FS.update_path(fname, "$fs_root$", fname); // FX to LostAlphaRus: Исправление косяка пыс. Без // в названии создаётся папка, а не файл
 
+	if (strstr(KeysList, "-delete"))
+	{
+		MessageBox(0, fname, "", 0);
+		if (FS.exist(fname))
+		{
+			remove(fname);
+		}
+	}
+
 	fs_pack_writer = FS.w_open(fname);
 	fs_desc.clear();
-	aliases.clear();
 
 	bytesSRC = 0;
 	bytesDST = 0;
@@ -420,9 +373,8 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 			W.w_string(buff);
 		}
 		W.seek(0);
-		IReader	R(W.pointer(), W.size());
-
-		printf("...Writing pack header\n");
+		IReader	R(W.pointer(), (u32)W.size());
+		
 		fs_pack_writer->open_chunk(CFS_HeaderChunkID);
 		fs_pack_writer->w(R.pointer(), R.length());
 		fs_pack_writer->close_chunk();
@@ -430,13 +382,11 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	else
 		if (pPackHeader)
 		{
-			printf("...Writing pack header\n");
 			fs_pack_writer->open_chunk(CFS_HeaderChunkID);
 			fs_pack_writer->w(pPackHeader->pointer(), pPackHeader->length());
 			fs_pack_writer->close_chunk();
 		}
-		else
-			printf("...Pack header not found\n");
+		else MessageBox(0, "...Pack header not found", "Error", MB_OK);
 
 	fs_pack_writer->open_chunk(0);
 }
@@ -451,7 +401,7 @@ void xrCompressor::ClosePack()
 {
 	fs_pack_writer->close_chunk();
 	// save list
-	bytesDST = fs_pack_writer->tell();
+	bytesDST = (u32)fs_pack_writer->tell();
 	Msg("...Writing pack desc");
 
 	fs_pack_writer->w_chunk(1 | CFS_CompressMark, fs_desc.pointer(), fs_desc.size());
@@ -461,30 +411,26 @@ void xrCompressor::ClosePack()
 	FS.w_close(fs_pack_writer);
 	Msg("Pack saved.");
 	u32	dwTimeEnd = timeGetTime();
-	printf("\n\nFiles total/skipped/No compression/aliased: %d/%d/%d/%d\nOveral: %dK/%dK, %3.1f%%\nElapsed time: %d:%d\nCompression speed: %3.1f Mb/s",
-		filesTOTAL, filesSKIP, filesVFS, filesALIAS,
-		bytesDST / 1024, bytesSRC / 1024,
-		100.f*float(bytesDST) / float(bytesSRC),
-		((dwTimeEnd - dwTimeStart) / 1000) / 60,
-		((dwTimeEnd - dwTimeStart) / 1000) % 60,
-		float((float(bytesDST) / float(1024 * 1024)) / (t_compress.GetElapsed_sec()))
-	);
+	
 	Msg("\n\nFiles total/skipped/No compression/aliased: %d/%d/%d/%d\nOveral: %dK/%dK, %3.1f%%\nElapsed time: %d:%d\nCompression speed: %3.1f Mb/s\n\n",
 		filesTOTAL, filesSKIP, filesVFS, filesALIAS,
-		bytesDST / 1024, bytesSRC / 1024,
-		100.f*float(bytesDST) / float(bytesSRC),
-		((dwTimeEnd - dwTimeStart) / 1000) / 60,
-		((dwTimeEnd - dwTimeStart) / 1000) % 60,
+		bytesDST / 1024, bytesSRC / 1024, 100.f*float(bytesDST) / float(bytesSRC),
+		((dwTimeEnd - dwTimeStart) / 1000) / 60, ((dwTimeEnd - dwTimeStart) / 1000) % 60,
 		float((float(bytesDST) / float(1024 * 1024)) / (t_compress.GetElapsed_sec()))
 	);
+	
+	for (auto &it : aliases)
+	{
+        xr_free(it.second.path);
+	}
+	
+    aliases.clear();
 }
 
 void xrCompressor::PerformWork()
 {
 	if (!files_list->empty() && target_name.size())
 	{
-		string256		caption;
-
 		int pack_num = 0;
 		OpenPack(target_name.c_str(), pack_num++);
 
@@ -496,9 +442,6 @@ void xrCompressor::PerformWork()
 
 		for (u32 it = 0; it<files_list->size(); it++)
 		{
-			xr_sprintf(caption, "Compress files: %d/%d - %d%%", it, files_list->size(), (it * 100) / files_list->size());
-			SetWindowText(GetConsoleWindow(), caption);
-			printf("\n%-80s   ", (*files_list)[it]);
 			if (fs_pack_writer->tell()>XRP_MAX_SIZE)
 			{
 				ClosePack();
@@ -509,12 +452,13 @@ void xrCompressor::PerformWork()
 		}
 		ClosePack();
 
-		if (!bStoreFiles) {
+		if (!bStoreFiles) 
+		{
 			xr_free(c_heap);
 		}
 		else
 		{
-			Msg("ERROR: folder not found.");
+			MessageBox(0, "ERROR: folder not found.", "Error", MB_OK);
 		}
 	}
 }

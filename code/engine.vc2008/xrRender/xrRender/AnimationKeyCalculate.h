@@ -20,36 +20,13 @@ struct ConsistantKey
 
 IC bool operator < (const ConsistantKey& A, const ConsistantKey& B)	// note: inverse operator
 {	return A.w>B.w; }
-/*
-IC void MakeKeysConsistant(ConsistantKey *keys, int count)
-{
-	// sort in decreasing order
-	std::sort(keys,keys+count);
 
-	// recalc
-	for (int i=0; i<count-1; i++) {
-		Fquaternion Q1,Q2;
-		Q1.add(keys[i].K->Q,keys[i+1].K->Q);
-		Q2.sub(keys[i].K->Q,keys[i+1].K->Q);
-		if (Q1.magnitude()<Q2.magnitude())	keys[i+1].K->Q.inverse_with_w();
-	}
-}
-*/
 IC void MakeKeysSelected(ConsistantKey *keys, int count)
 {
 	// sort in decreasing order
 	std::sort(keys,keys+count);
 }
 
-/*
-ICF float smooth(float x)
-{
-    float x0	= x*2.f-1.f;
-    float s 	= (x0<0.f)?-1.f:1.f;
-
-    return ((s*pow(_abs(x0),1.f/1.5f))+1.f)/2.f;
-}
-*/
 IC	void QR2Quat(const CKeyQR &K,Fquaternion &Q)
 {
 	Q.x		= float(K.x)*KEY_QuantI;
@@ -114,56 +91,10 @@ IC void Dequantize(CKey& K,const CBlend& BD,const CMotion& M)
             QT8_2T(*K1t,M,T1);
             QT8_2T(*K2t,M,T2);
         }
-		/*
-		T1.x		= float(K1t->x)*M._sizeT.x+M._initT.x;
-		T1.y		= float(K1t->y)*M._sizeT.y+M._initT.y;
-		T1.z		= float(K1t->z)*M._sizeT.z+M._initT.z;
 
-		T2.x		= float(K2t->x)*M._sizeT.x+M._initT.x;
-		T2.y		= float(K2t->y)*M._sizeT.y+M._initT.y;
-		T2.z		= float(K2t->z)*M._sizeT.z+M._initT.z;
-		*/
 		D->T.lerp	(T1,T2,delta);
-		/*					
-		if ((_abs(D->T.y)>10000) || (_abs(D->T.x)>10000) || (_abs(D->T.z)>10000))
-		{
-		Log("xxx");
-		Log("Blend--------");
-		Log("blendAmount", B->blendAmount);
-		Log("timeCurrent", B->timeCurrent);
-		Log("timeTotal", B->timeTotal);
-		Log("bone_or_part", B->bone_or_part);
 
-		Log("blendAccrue", B->blendAccrue);
-		Log("blendFalloff", B->blendFalloff);
-		Log("blendPower", B->blendPower);
-		Log("speed", B->speed);
-		Log("playing", B->playing);
-		Log("stop_at_end", B->stop_at_end);
-		Log("motionID", (u32)B->motionID.idx);
-		Log("blend", B->blend);
-
-		Log("dwFrame", B->dwFrame);
-		Log("Device.dwFrame", Device.dwFrame);
-		Log("Blend-------end");
-
-		Log("Bone",LL_BoneName_dbg(SelfID));
-		Log("parent",*parent);
-		Msg("K1t %d,%d,%d",K1t->x,K1t->y,K1t->z);
-		Msg("K2t %d,%d,%d",K2t->x,K2t->y,K2t->z);
-
-		Log("count",count);
-		Log("time",time);
-		Log("frame",frame);
-		Log("T1",T1);
-		Log("T2",T2);
-		Log("delta",delta);
-		Log("Dt",D->T);
-		VERIFY(0);
-
-		}
-		*/
-	} //if (M.test_flag(flTKeyPresent))
+	}
 	else
 	{
 		D->T.set	(M._initT);
@@ -185,16 +116,6 @@ IC void MixInterlerp( CKey &Result, const CKey	*R, const CBlend* const BA[MAX_BL
 		break;
 	case 1: 
 		Result			= R[0];
-		/*
-		if(Result.T.y>10000){
-		Log("1");
-		Log("BLEND_INST",BLEND_INST.Blend.size());
-		Log("Bone",LL_BoneName_dbg(SelfID));
-		Msg("Result.Q %f,%f,%f,%f",Result.Q.x,Result.Q.y,Result.Q.z,Result.Q.w);
-		Log("Result.T",Result.T);
-		VERIFY(0);
-		}
-		*/
 		break;
 	case 2:
 		{
@@ -204,28 +125,12 @@ IC void MixInterlerp( CKey &Result, const CKey	*R, const CBlend* const BA[MAX_BL
 			float w;
 			if (fis_zero(ws))	w = 0;
 			else				w = w1/ws;
-#ifdef DEBUG
-			//.					if (fis_zero(w0+w1) || (!_valid(w))){
-			//.						Debug.fatal		(DEBUG_INFO,"TO ALEXMX VERY IMPORTANT: (TOTAL: %f) w: %f, w0: %f, w1: %f, ws:%f, BIS: %d",w0+w1,w,w0,w1,ws,BLEND_INST.Blend.size());
-			//.					}
-#endif
+
 			KEY_Interp	(Result,R[0],R[1], clampr(w,0.f,1.f));
-			/*
-			if(Result.T.y>10000){
-			Log("2");
-			Log("BLEND_INST",BLEND_INST.Blend.size());
-			Log("Bone",LL_BoneName_dbg(SelfID));
-			Msg("Result.Q %f,%f,%f,%f",Result.Q.x,Result.Q.y,Result.Q.z,Result.Q.w);
-			Log("Result.T",Result.T);
-			Log("parent",*parent);
-			VERIFY(0);
-			}
-			*/
 		}
 		break;
 	default:
 		{
-			//int 	count 	= Blend.size();
 			float   total 	= 0;
 			ConsistantKey		S[MAX_BLENDED];
 			for (int i=0; i<b_count; i++)					
@@ -242,12 +147,6 @@ IC void MixInterlerp( CKey &Result, const CKey	*R, const CBlend* const BA[MAX_BL
 				else d	= S[cnt].w/total;
 
 				clampr(d,0.f,1.f);
-
-#ifdef DEBUG
-				//.						if ((total==0) || (!_valid(S[cnt].w/total))){
-				//.							Debug.fatal		(DEBUG_INFO,"TO ALEXMX VERY IMPORTANT: (TOTAL: %f) w: %f, total: %f, count: %d, real count: %d",total,S[cnt].w,total,count,BLEND_INST.Blend.size());
-				//.						}
-#endif
 
 				KEY_Interp	(Result,tmp, *S[cnt].K, d );
 				tmp 		= Result;
@@ -300,8 +199,6 @@ IC void key_mad(CKey &res, const CKey &k0, const CKey& k1, float v)
 	key_add(res,k,k0);
 }
 
-
-
 IC void keys_substruct(CKey	*R, const CKey	*BR, int b_count )
 {
 	for (int i=0; i<b_count; i++)
@@ -312,8 +209,6 @@ IC void keys_substruct(CKey	*R, const CKey	*BR, int b_count )
 	}
 }
 
-
-
 IC void q_scalem(Fmatrix &m, float v)
 {
 	Fquaternion q;
@@ -321,8 +216,6 @@ IC void q_scalem(Fmatrix &m, float v)
 	q_scale(q,v);
 	m.rotation(q);
 }
-
-
 
 //sclale base' * q by scale_factor returns result in matrix  m_res
 IC void q_scale_vs_basem(Fmatrix &m_res,const Fquaternion &q, const Fquaternion &base,float scale_factor)
@@ -339,7 +232,6 @@ IC void q_scale_vs_basem(Fmatrix &m_res,const Fquaternion &q, const Fquaternion 
 
 IC void q_add_scaled_basem( Fquaternion &q, const Fquaternion &base, const Fquaternion &q0, const Fquaternion &q1, float v1 )
 {
-	//VERIFY(0.f =< v && 1.f >= v );
 	Fmatrix m0;m0.rotation(q0);
 	Fmatrix m,ml1;
 	q_scale_vs_basem( ml1, q1, base, v1 );
@@ -398,7 +290,6 @@ IC void MixChannels(CKey &Result,const CKey	*R,const animation::channel_def* BA,
 	VERIFY(b_count>0);
 	Result = R[0];
 
-	//MixinAdd(Result,R,BA,b_count);
 	float	lerp_factor_sum = 0.f;
 	for ( int i=1; i<b_count; i++ )
 		switch( BA[i].rule.extern_ )

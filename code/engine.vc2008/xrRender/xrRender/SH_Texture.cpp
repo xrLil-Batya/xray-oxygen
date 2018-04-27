@@ -276,10 +276,8 @@ void CTexture::Load		()
 		pSurface = ::RImplementation.texture_load	(*cName,mem);
 
 		// Calc memory usage and preload into vid-mem
-		if (pSurface) {
-			// pSurface->SetPriority	(PRIORITY_NORMAL);
+		if (pSurface)
 			flags.MemoryUsage		=	mem;
-		}
 	}
 	PostLoad	()		;
 }
@@ -290,8 +288,6 @@ void CTexture::Unload	()
 	string_path				msg_buff;
 	xr_sprintf				(msg_buff,sizeof(msg_buff),"* Unloading texture [%s] pSurface RefCount=",cName.c_str());
 #endif // DEBUG
-
-//.	if (flags.bLoaded)		Msg		("* Unloaded: %s",cName.c_str());
 	
 	flags.bLoaded			= FALSE;
 	if (!seqDATA.empty())	{

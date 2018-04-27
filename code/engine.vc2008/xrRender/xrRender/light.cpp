@@ -13,6 +13,7 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	flags.bShadow	= false;
 	flags.bVolumetric = false;
 	flags.bHudMode	= false;
+	flags.bFlare = true;
 	position.set	(0,-1000,0);
 	direction.set	(0,-1,0);
 	right.set		(0,0,0);
@@ -21,13 +22,11 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	color.set		(1,1,1,1);
 
 	m_volumetric_quality	= 1;
-	//m_volumetric_quality	= 0.5;
 	m_volumetric_intensity	= 1;
 	m_volumetric_distance	= 1;
 
 	frame_render	= 0;
 
-#if (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
     std::memset(omnipart,0,sizeof(omnipart));
 	s_spot			= NULL;
 	s_point			= NULL;
@@ -36,7 +35,7 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	vis.query_order	= 0;
 	vis.visible		= true;
 	vis.pending		= false;
-#endif // (RENDER==R_R2) || (RENDER==R_R3) || (RENDER==R_R4)
+	fBlend          = 0;
 }
 
 light::~light()
@@ -61,15 +60,14 @@ void light::set_texture		(LPCSTR name)
 		return;
 	}
 
-//#pragma todo				("Only shadowed spot implements projective texture")
 	string256				temp;
 	
 	strconcat(sizeof(temp),temp,"r2\\accum_spot_",name);
 	s_spot.create			(RImplementation.Target->b_accum_spot,temp,name);
 
-#	if	(RENDER!=R_R3) && (RENDER!=R_R4)
+#if	(RENDER==R_R2)
 	s_volumetric.create		("accum_volumetric", name);
-#	else
+#else
 	s_volumetric.create		("accum_volumetric_nomsaa", name);
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -84,7 +82,7 @@ void light::set_texture		(LPCSTR name)
 			s_volumetric_msaa[i].create	(RImplementation.Target->b_accum_volumetric_msaa[i],strconcat(sizeof(temp),temp,"r2\\accum_volumetric_",name),name);
 		}
 	}
-#	endif // (RENDER!=R_R3) || (RENDER!=R_R4)
+#endif
 }
 
 void light::set_active		(bool a)
@@ -95,7 +93,6 @@ void light::set_active		(bool a)
 		flags.bActive						= true;
 		spatial_register					();
 		spatial_move						();
-		//Msg								("!!! L-register: %X",u32(this));
 
 #ifdef DEBUG
 		Fvector	zero = {0,-1000,0}			;
@@ -110,7 +107,6 @@ void light::set_active		(bool a)
 		flags.bActive						= false;
 		spatial_move						();
 		spatial_unregister					();
-		//Msg								("!!! L-unregister: %X",u32(this));
 	}
 }
 
@@ -291,12 +287,13 @@ void	light::export_		(light_Package& package)
 						L->set_cone			(PI_DIV_2);
 						L->set_range		(range);
 						L->set_color		(color);
+						L->set_flare        (flags.bFlare);
 						L->spatial.sector	= spatial.sector;	//. dangerous?
 						L->s_spot			= s_spot	;
 						L->s_point			= s_point	;
 						
 						// Holger - do we need to export msaa stuff as well ?
-#if	(RENDER==R_R3) || (RENDER==R_R4)
+#if	(RENDER!=R_R2)
 						if( RImplementation.o.dx10_msaa )
 						{
 							int bound = 1;
@@ -308,10 +305,9 @@ void	light::export_		(light_Package& package)
 							{
 								L->s_point_msaa[i] = s_point_msaa[i];
 								L->s_spot_msaa[i] = s_spot_msaa[i];
-								//L->s_volumetric_msaa[i] = s_volumetric_msaa[i];
 							}
 						}
-#endif	//	(RENDER==R_R3) || (RENDER==R_R4)
+#endif
 
 						//	Igor: add volumetric support
 						L->set_volumetric(flags.bVolumetric);

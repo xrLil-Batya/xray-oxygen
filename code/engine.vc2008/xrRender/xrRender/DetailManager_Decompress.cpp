@@ -42,7 +42,6 @@ IC bool		InterpolateAndDither(float* alpha255,	u32 x, u32 y, u32 sx, u32 sy, u32
 
 #ifndef _EDITOR
 #ifdef	DEBUG
-//#include "../../Include/xrRender/DebugRender.h"
 #include "dxDebugRender.h"
 static void draw_obb		( const Fmatrix &matrix, const u32 &color )
 {
@@ -69,7 +68,6 @@ bool det_render_debug = false;
 
 #include "../../xrEngine/gamemtllib.h"
 
-//#define		DBG_SWITCHOFF_RANDOMIZE
 void		CDetailManager::cache_Decompress(Slot* S)
 {
 	VERIFY				(S);
@@ -85,6 +83,7 @@ void		CDetailManager::cache_Decompress(Slot* S)
 
 #ifdef _EDITOR
 	ETOOLS::box_options	(CDB::OPT_FULL_TEST);
+
 	// Select polygons
 	SBoxPickInfoVec		pinf;
     Scene->BoxPickObjects(D.vis.box,pinf,GetSnapList());
@@ -253,9 +252,6 @@ RDEVICE.Statistic->TEST0.End		();
 			// Color
 			Item.c_hemi						=	DS.r_qclr	(DS.c_hemi,	15);
 			Item.c_sun						=	DS.r_qclr	(DS.c_dir,	15);
-
-			//? hack: RGB = hemi
-			//? Item.c_rgb.add					(ps_r__Detail_rainbow_hemi*Item.c_hemi);
 
 			// Vis-sorting
 #ifndef		DBG_SWITCHOFF_RANDOMIZE

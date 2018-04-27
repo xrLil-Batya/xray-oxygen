@@ -1,9 +1,6 @@
 // TextureManager.h: interface for the CTextureManager class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef ResourceManagerH
-#define ResourceManagerH
 #pragma once
 
 #include	"shader.h"
@@ -33,7 +30,6 @@ public:
 	using map_Matrix = xr_map<const char*, CMatrix*, str_pred>;
 	using map_Constant = xr_map<const char*, CConstant*, str_pred>;
 	using map_RT = xr_map<const char*, CRT*, str_pred>;
-	//	DX10 cut DEFINE_MAP_PRED(const char*,CRTC*,			map_RTC,		map_RTCIt,			str_pred);
 	using map_VS = xr_map<const char*, SVS*, str_pred>;
 
 #if defined(USE_DX10) || defined(USE_DX11)
@@ -100,7 +96,6 @@ public:
 	IBlender* 						_FindBlender		(LPCSTR Name);
 	void							_GetMemoryUsage		(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps);
 	void							_DumpMemoryUsage	();
-//.	BOOL							_GetDetailTexture	(LPCSTR Name, LPCSTR& T, R_constant_setup* &M);
 
 	map_Blender&					_GetBlenders		()		{	return m_blenders;	}
 
@@ -144,8 +139,6 @@ public:
 #endif
 	void							_DeleteRT			(const CRT*	RT	);
 
-	//	DX10 cut CRTC*							_CreateRTC			(LPCSTR Name, u32 size,	D3DFORMAT f);
-	//	DX10 cut void							_DeleteRTC			(const CRTC*	RT	);
 #if defined(USE_DX10) || defined(USE_DX11)
 	SGS*							_CreateGS			(LPCSTR Name);
 	void							_DeleteGS			(const SGS*	GS	);
@@ -216,7 +209,6 @@ public:
 	void			DeleteGeom				(const SGeometry* VS		);
 	void			DeferredLoad			(BOOL E)					{ bDeferredLoad=E;	}
 	void			DeferredUpload			();
-//.	void			DeferredUnload			();
 	void			Evict					();
 	void			StoreNecessaryTextures	();
 	void			DestroyNecessaryTextures();
@@ -239,5 +231,3 @@ private:
 
 #endif	//	USE_DX10
 };
-
-#endif //ResourceManagerH

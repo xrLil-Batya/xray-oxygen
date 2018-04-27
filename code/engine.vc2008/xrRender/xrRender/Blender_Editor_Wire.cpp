@@ -49,7 +49,6 @@ void CBlender_Editor_Wire::Compile	(CBlender_Compile& C)
 			C.Stage_Texture		("$null");
 			C.Stage_Matrix		("$null",	0);
 			C.Stage_Constant	("$null");
-			//		C.Stage_Constant	("$base0",	"$user$wire");
 			C.StageEnd			();
 		}
 		C.PassEnd			();

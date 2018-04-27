@@ -293,7 +293,6 @@
     <ClInclude Include="..\xrRender\HOM.h" />
     <ClInclude Include="..\xrRender\occRasterizer.h" />
     <ClInclude Include="r2_rendertarget.h" />
-    <ClInclude Include="r2_rendertarget_wallmarks.h" />
     <ClInclude Include="..\xrRender\ColorMapManager.h" />
     <ClInclude Include="..\xrRender\HW.h" />
     <ClInclude Include="..\xrRender\HWCaps.h" />
@@ -396,6 +395,7 @@
     <ClCompile Include="Blender_ss.cpp" />
     <ClCompile Include="r2_rendertarget_phase_droplets.cpp" />
     <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
+    <ClCompile Include="r2_rendertarget_render_flare.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

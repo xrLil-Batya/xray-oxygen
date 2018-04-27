@@ -265,5 +265,4 @@ void	_IndexStream::reset_begin	()
 void	_IndexStream::reset_end	()
 {
 	Create				();
-	//old_pIB				= NULL;
 }

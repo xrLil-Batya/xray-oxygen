@@ -15,21 +15,6 @@ void Startup(void*)
 {
 	xrCompressor C;
 
-	if (strstr(KeysList, "-delete"))
-	{
-		for (int iter = 0; iter < 21; iter++)
-		{
-			std::string name1 = std::string(FolderName) + ".db" + std::to_string(iter);
-			std::string name2 = std::string(FolderName) + ".xdb" + std::to_string(iter);
-
-			string_path path;
-			FS.update_path(path, "$fs_root$", name1.data());
-			remove(path);
-			FS.update_path(path, "$fs_root$", name2.data());
-			remove(path);
-		}
-	}
-
 	C.SetStoreFiles(NULL != strstr(KeysList, "-store"));
 
 #ifdef MOD_COMPRESS

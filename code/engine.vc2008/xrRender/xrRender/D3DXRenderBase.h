@@ -31,9 +31,7 @@ public:
 	bool														pmask_wmark			;
 public:
 	// Dynamic scene graph
-	//R_dsgraph::mapNormal_T										mapNormal	[2]		;	// 2==(priority/2)
 	R_dsgraph::mapNormalPasses_T								mapNormalPasses	[2]	;	// 2==(priority/2)
-	//R_dsgraph::mapMatrix_T										mapMatrix	[2]		;
 	R_dsgraph::mapMatrixPasses_T								mapMatrixPasses	[2]	;
 	R_dsgraph::mapSorted_T										mapSorted;
 	R_dsgraph::mapHUD_T											mapHUD;
@@ -133,10 +131,6 @@ public:
 
 		lstRecorded.clear		();
 
-		//mapNormal[0].destroy	();
-		//mapNormal[1].destroy	();
-		//mapMatrix[0].destroy	();
-		//mapMatrix[1].destroy	();
 		for (int i=0; i<SHADER_PASSES_MAX; ++i)
 		{
 			mapNormalPasses[0][i].destroy	();
@@ -161,6 +155,7 @@ public:
 
 	void r_dsgraph_insert_dynamic(dxRender_Visual *pVisual, Fvector &Center);
 	void r_dsgraph_insert_static(dxRender_Visual *pVisual);
+
     // render primitives
 	void r_dsgraph_render_graph(u32	_priority,	bool _clear = true);
 	void r_dsgraph_render_hud();
@@ -176,24 +171,29 @@ public:
 	virtual u32 memory_usage() override { return g_render_allocator.get_allocated_size(); }
 
     virtual void Copy(IRender &_in) override;
+
     //	Gamma correction functions
     virtual void setGamma(float fGamma) override;
     virtual void setBrightness(float fGamma) override;
     virtual void setContrast(float fGamma) override;
     virtual void updateGamma() override;
+
     //	Destroy
     virtual void OnDeviceDestroy(bool bKeepTextures) override;
     virtual void ValidateHW() override;
     virtual void DestroyHW() override;
     virtual void Reset(HWND hWnd, u32 &dwWidth, u32 &dwHeight, float &fWidth_2, float &fHeight_2) override;
+
     //	Init
     virtual void SetupStates() override;
     virtual void OnDeviceCreate(const char *shName) override;
     virtual void Create(HWND hWnd, u32 &dwWidth, u32 &dwHeight, float &fWidth_2, float &fHeight_2, bool) override;
     virtual void SetupGPU(bool bForceGPU_SW, bool bForceGPU_NonPure, bool bForceGPU_REF) override;
+
     //	Overdraw
     virtual void overdrawBegin() override;
     virtual void overdrawEnd() override;
+
     //	Resources control
     virtual void DeferredLoad(bool E) override;
     virtual void ResourcesDeferredUpload() override;
@@ -201,8 +201,10 @@ public:
     virtual void ResourcesDestroyNecessaryTextures() override;
     virtual void ResourcesStoreNecessaryTextures() override;
     virtual void ResourcesDumpMemoryUsage() override;
+
     //	HWSupport
     virtual bool HWSupportsShaderYUV2RGB() override;
+
     //	Device state
     virtual DeviceState GetDeviceState() override;
     virtual bool GetForceGPU_REF() override;

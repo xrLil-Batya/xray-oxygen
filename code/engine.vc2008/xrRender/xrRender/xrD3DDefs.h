@@ -1,5 +1,3 @@
-#ifndef	xrD3DDefs_included
-#define	xrD3DDefs_included
 #pragma once
 
 #if defined(USE_DX11) || defined(USE_DX10)
@@ -28,6 +26,3 @@ typedef	IDirect3DStateBlock9	ID3DState;
 #define DX10_ONLY(expr)			do {} while (0)
 
 #endif	//	USE_DX10
-
-
-#endif	//	xrD3DDefs_included

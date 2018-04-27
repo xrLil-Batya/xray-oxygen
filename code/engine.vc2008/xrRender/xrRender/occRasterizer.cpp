@@ -69,7 +69,6 @@ void occRasterizer::clear		()
 	std::size_t size			= occ_dim*occ_dim;
 	float f				= 1.f;
     std::memset(bufFrame,0,size * 4); // fill32
-    //std::memset(bufDepth,*LPDWORD(&f),size); // fill32
 
     u32 fillValue = *LPDWORD(&f);
     for (std::size_t i = 0; i < size; i++) // fill32 TODO: SSE optimize

@@ -51,10 +51,7 @@ void PS::OnEffectParticleBirth(void* owner, u32 , PAPI::Particle& m, u32 )
             m.flags.set(Particle::ANIMATE_CCW,TRUE);
     }
 }
-void PS::OnEffectParticleDead(void* , u32 , PAPI::Particle& , u32 )
-{
-//	CPEDef* PE = static_cast<CPEDef*>(owner);
-}
+void PS::OnEffectParticleDead(void* , u32 , PAPI::Particle& , u32 ) {}
 //------------------------------------------------------------------------------
 // class CParticleEffect
 //------------------------------------------------------------------------------
@@ -73,7 +70,6 @@ CParticleEffect::CParticleEffect()
 }
 CParticleEffect::~CParticleEffect()
 {
-	// Log					("--- destroy PE");
 	OnDeviceDestroy			();
 	ParticleManager()->DestroyEffect		(m_HandleEffect);
 	ParticleManager()->DestroyActionList	(m_HandleActionList);
@@ -337,8 +333,6 @@ IC void FillSprite	(FVF::LIT*& pv, const Fvector& pos, const Fvector& dir, const
 	const Fvector& T 	= dir;
 	Fvector R; 	
 
-	// R.crossproduct(T,RDEVICE.vCameraDirection).normalize_safe();
-
 	__m128 _t , _t1 , _t2 , _r , _r1 , _r2 ;
 
 	// crossproduct
@@ -437,7 +431,7 @@ void ParticleRenderStream( LPVOID lpvParams )
 
 				if (angle != *((DWORD*)&m.rot.x)) {
 					angle = *((DWORD*)&m.rot.x);
-					fsincos(angle, sina, cosa);
+					fsincos(*(float*)&angle, sina, cosa);
 				}
 
 				 _mm_prefetch( 64 + (char*) &particles[i + 1] , _MM_HINT_NTA );
@@ -539,9 +533,6 @@ void CParticleEffect::Render(float )
 			u32 nSlice = p_cnt / 128;
 
 			u32 nStep = ( ( p_cnt - nSlice ) / nWorkers );
-			//u32 nStep = ( p_cnt  / nWorkers );
-
-			//Msg( "Rnd: %u" , nStep );
 
 			for ( u32 i = 0 ; i < nWorkers ; ++i ) {
 				prsParams[i].pv = pv + i*nStep*4;

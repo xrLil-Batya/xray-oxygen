@@ -91,7 +91,6 @@ BOOL CPGDef::Load(IReader& F)
 
 BOOL CPGDef::Load2(CInifile& ini)
 {
-//.	u16 version						= ini.r_u16("_group", "version");
 	m_Flags.assign					(ini.r_u32("_group", "flags"));
 
 
@@ -186,7 +185,6 @@ void CParticleGroup::SItem::Clear()
     GetVisuals		(visuals);
     for (auto it=visuals.begin(); it!=visuals.end(); it++)
 	{
-	    //::Render->model_Delete(*it);
 		IRenderVisual *pVisual = smart_cast<IRenderVisual*>(*it);
 		::Render->model_Delete(pVisual);
 		*it = 0;
@@ -272,14 +270,12 @@ void CParticleGroup::SItem::Stop(BOOL def_stop)
 	{
         for (auto it=_children_related.begin(); it!=_children_related.end(); it++)
 		{
-			//::Render->model_Delete(*it);
 			IRenderVisual *pVisual = smart_cast<IRenderVisual*>(*it);
 			::Render->model_Delete(pVisual);
 			*it = 0;
 		}
         for (auto it=_children_free.begin(); it!=_children_free.end(); it++)
 		{
-			//::Render->model_Delete(*it);
 			IRenderVisual *pVisual = smart_cast<IRenderVisual*>(*it);
 			::Render->model_Delete(pVisual);
 			*it = nullptr;
@@ -304,6 +300,7 @@ void OnGroupParticleBirth(void* owner, u32 param, PAPI::Particle& m, u32 idx)
 	CParticleGroup* PG 	= static_cast<CParticleGroup*>(owner); 	VERIFY(PG);
     CParticleEffect*PE	= static_cast<CParticleEffect*>(PG->items[param]._effect);
 	PS::OnEffectParticleBirth(PE, param, m, idx);
+
     // if have child
     const CPGDef* PGD			= PG->GetDefinition();					VERIFY(PGD);
     const CPGDef::SEffect* eff	= PGD->m_Effects[param];
@@ -317,6 +314,7 @@ void OnGroupParticleDead(void* owner, u32 param, PAPI::Particle& m, u32 idx)
 	CParticleGroup* PG 	= static_cast<CParticleGroup*>(owner); VERIFY(PG);
     CParticleEffect*PE	= static_cast<CParticleEffect*>(PG->items[param]._effect);
 	PS::OnEffectParticleDead(PE, param, m, idx);
+
     // if have child
     const CPGDef* PGD			= PG->GetDefinition();					VERIFY(PGD);
     const CPGDef::SEffect* eff	= PGD->m_Effects[param];
@@ -380,13 +378,13 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
                     if (E->vis.box.is_valid()) box.merge	(E->vis.box);
                 }else{
                 	rem_cnt++	;
-					//::Render->model_Delete(*it);
 					IRenderVisual *pVisual = smart_cast<IRenderVisual*>(*it);
 					::Render->model_Delete(pVisual);
 					*it = 0;                    
                 }
             }
         }
+
         // remove if stopped
 		if (rem_cnt)
 		{
@@ -394,7 +392,6 @@ void CParticleGroup::SItem::OnFrame(u32 u_dt, const CPGDef::SEffect& def, Fbox& 
 			_children_free.erase(new_end, _children_free.end());
 		}
     }
-//	Msg("C: %d CS: %d",_children.size(),_children_stopped.size());
 }
 void CParticleGroup::SItem::OnDeviceCreate()
 {
@@ -432,7 +429,6 @@ CParticleGroup::CParticleGroup()
 
 CParticleGroup::~CParticleGroup()
 {
-	// Msg ("!!! destoy PG");
 	for (u32 i=0; i<items.size(); i++) items[i].Clear();
 	items.clear();
 }

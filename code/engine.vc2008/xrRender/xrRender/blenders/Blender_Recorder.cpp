@@ -59,7 +59,6 @@ void	CBlender_Compile::_cpp_Compile	(ShaderElement* _SH)
 			if (id>=int(lst.size()))	Debug.fatal(DEBUG_INFO,"Not enought textures for shader. Base texture: '%s'.",*lst[0]);
 			base	=	*lst [id];
 		}
-//.		if (!dxRenderDeviceRender::Instance().Resources->_GetDetailTexture(base,detail_texture,detail_scaler))	bDetail	= FALSE;
 		if (!DEV->m_textures_description.GetDetailTexture(base,detail_texture,detail_scaler))	bDetail	= FALSE;
 	} 
 	else 
@@ -88,40 +87,25 @@ void	CBlender_Compile::_cpp_Compile	(ShaderElement* _SH)
 	bDetail_Diffuse	= FALSE;
 	bDetail_Bump	= FALSE;
 
-#ifndef _EDITOR
-#if RENDER==R_R1
-	if (RImplementation.o.no_detail_textures)
-		bDetail = FALSE;
-#endif
-#endif
-
 	if(bDetail)
 	{
 		DEV->m_textures_description.GetTextureUsage(base, bDetail_Diffuse, bDetail_Bump);
 
 #ifndef _EDITOR
-#if RENDER!=R_R1
 		//	Detect the alowance of detail bump usage here.
 		if (  !(RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DETAIL_BUMP) ) )
 		{
 			bDetail_Diffuse |= bDetail_Bump;
 			bDetail_Bump = false;
 		}
-#endif
+
 #endif
 
 	}
 
 	bUseSteepParallax = DEV->m_textures_description.UseSteepParallax(base) 
 		&& BT->canUseSteepParallax();
-/*
-	if (DEV->m_textures_description.UseSteepParallax(base))
-	{
-		bool bSteep = BT->canUseSteepParallax();
-		DEV->m_textures_description.UseSteepParallax(base);
-		bUseSteepParallax = true;
-	}
-*/	
+
 #ifdef USE_DX11
 	TessMethod = 0;
 #endif
@@ -144,10 +128,8 @@ void	CBlender_Compile::SetParams		(int iPriority, bool bStrictB2F)
     	VERIFY(1==(SH->flags.iPriority/2));
 #endif
     }
-	//SH->Flags.bLighting		= FALSE;
 }
 
-//
 void	CBlender_Compile::PassBegin		()
 {
 	RS.Invalidate			();
@@ -213,10 +195,6 @@ void	CBlender_Compile::PassSET_ZB		(BOOL bZTest, BOOL bZWrite, BOOL bInvertZTest
 	if (Pass())	bZWrite = FALSE;
 	RS.SetRS	(D3DRS_ZFUNC,			bZTest?(bInvertZTest?D3DCMP_GREATER:D3DCMP_LESSEQUAL):D3DCMP_ALWAYS);
 	RS.SetRS	(D3DRS_ZWRITEENABLE,	BC(bZWrite));
-	/*
-	if (bZWrite || bZTest)				RS.SetRS	(D3DRS_ZENABLE,	D3DZB_TRUE);
-	else								RS.SetRS	(D3DRS_ZENABLE,	D3DZB_FALSE);
-	*/
 }
 
 void	CBlender_Compile::PassSET_ablend_mode	(BOOL bABlend,	u32 abSRC, u32 abDST)
@@ -255,7 +233,6 @@ void	CBlender_Compile::PassSET_LightFog	(BOOL bLight, BOOL bFog)
 {
 	RS.SetRS(D3DRS_LIGHTING,			BC(bLight));
 	RS.SetRS(D3DRS_FOGENABLE,			BC(bFog));
-	//SH->Flags.bLighting				|= !!bLight;
 }
 
 //
@@ -317,7 +294,6 @@ void	CBlender_Compile::Stage_Texture	(LPCSTR name, u32 ,	u32	 fmin, u32 fmip, u3
 		N = *lst [id];
 	}
 	passTextures.push_back	(std::make_pair( Stage(),ref_texture( DEV->_CreateTexture(N))));
-//	i_Address				(Stage(),address);
 	i_Filter				(Stage(),fmin,fmip,fmag);
 }
 #endif	//	USE_DX10

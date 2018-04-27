@@ -30,7 +30,7 @@ struct _MM_ALIGN16		ray_t	{
 	vec_t		fwd_dir;
 };
 
-#ifdef __AVX__
+#ifdef __AVX_USE__
 /************************************************
 *#VERTVER: AVX use the part of SSE, and some
 *of AVX instructions
@@ -84,7 +84,7 @@ static const float _MM_ALIGN16
 	ps_cst_minus_inf[4]	=	{ -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
 
-#ifdef __AVX__
+#ifdef __AVX_USE__
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 {
 	// you may already have those values hanging around somewhere
@@ -215,7 +215,7 @@ public:
 	// sse
 
 
-#ifdef _AVX_
+#ifdef _AVX_USE_
 
 	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
 	{
@@ -350,7 +350,7 @@ public:
 		_mm_prefetch((char *)node->GetNeg(), _MM_HINT_NTA);
 
 		// Actual ray/aabb test
-#ifdef _AVX_
+#ifdef _AVX_USE_
 		// use AVX
 		double dd;
 		if (!_box_avx((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, dd))

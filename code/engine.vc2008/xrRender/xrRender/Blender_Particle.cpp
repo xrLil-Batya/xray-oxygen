@@ -141,7 +141,6 @@ void	CBlender_Particle::Compile	(CBlender_Compile& C)
 		case 5:	C.r_Pass	("particle-clip",	"particle_s-aadd",	FALSE,	TRUE,FALSE,	TRUE,	D3DBLEND_DESTCOLOR,	D3DBLEND_ZERO,	TRUE,0);	break;	// ALPHA-ADD
 		};
 		{
-			//C.r_Sampler			("s_base",	C.L_textures[0],false,oClamp.value?D3DTADDRESS_CLAMP:D3DTADDRESS_WRAP);
 			C.r_dx10Texture		("s_base",	C.L_textures[0]);
 			u32 hSampler = 	C.r_dx10Sampler("smp_base");
 			if (oClamp.value&&(hSampler!=(u32)-1)) 

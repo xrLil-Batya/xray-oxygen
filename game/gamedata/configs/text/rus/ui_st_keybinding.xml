@@ -135,9 +135,6 @@
 	<string id="kb_torch">
 		<text>‘онарик</text>
 	</string>
-	<string id="kb_turn_engine">
-		<text>¬ключить</text>
-	</string>
 	<string id="kb_up">
 		<text>¬верх</text>
 	</string>
