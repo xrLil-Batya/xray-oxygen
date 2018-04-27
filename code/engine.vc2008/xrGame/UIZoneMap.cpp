@@ -138,7 +138,7 @@ void CUIZoneMap::Update()
 void CUIZoneMap::SetHeading		(float angle)
 {
 	m_activeMap->SetHeading(angle);
-	m_compass.SetHeading(angle);
+	m_compass.SetHeading(angle + 110.0f);
 };
 
 void CUIZoneMap::UpdateRadar		(Fvector pos)
