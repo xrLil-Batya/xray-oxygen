@@ -4,6 +4,7 @@
 // Edited: 19 March, 2018						
 ////////////////////////////////////////////////////
 #include "minimal_CPUID.h"						
+#ifdef __cplusplus
 ////////////////////////////////////////////////////
 const CPUID::CPUID_Internal CPUID::CPU_Rep;
-
+#endif

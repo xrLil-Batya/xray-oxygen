@@ -6,7 +6,8 @@
 * RenderList.cpp - Checking to available render
 * CreateRendererList()
 *************************************************/
-
+#include "xrMain.h"
+#ifdef __cplusplus
 ///////////////////////////////////
 #include <d3d9.h>
 #include <d3d11.h>
@@ -172,3 +173,4 @@ void CreateRendererList()
 
 	vid_quality_token = std::move(modes);
 }
+#endif

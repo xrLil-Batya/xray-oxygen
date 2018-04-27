@@ -8,9 +8,9 @@
 *************************************************/
 #include "xrMain.h"
 /////////////////////////////////////////
+#ifdef __cplusplus
 #pragma comment(lib, "xrEngine.lib")
 /////////////////////////////////////////
-xrConstChar		inerr			= "Init error";
 xrConstChar		params_list;
 xrConstChar		string_accept;
 xrString		params;
@@ -52,7 +52,7 @@ available renders
 ***********************************************/
 void xrLaunch::status_render()
 {
-	char const* renders;
+	xrConstChar renders;
 	if (SupportsDX11Rendering())
 		renders = "Supported renders: R4, R3, R2.5, R2, R2a";
 	else if (SupportsDX10Rendering())
@@ -62,7 +62,7 @@ void xrLaunch::status_render()
 	else
 	{
 		renders = "Error! Your GPU doesn't supported";
-		QMessageBox::critical		(this, inerr, "Error! Your GPU doesn't supported (DX9 init error)");
+		QMessageBox::critical		(this, INIT_ERROR, "Error! Your GPU doesn't supported (DX9 init error)");
 	}
 	statusBar()->showMessage		(tr(renders));
 }
@@ -171,12 +171,12 @@ void xrLaunch::init_xrCore()
 		if (!CPUID::SSE3())
 		{
 			statusBar()->showMessage	(tr("Error! SSE3 is not supported on your CPU."));
-			QMessageBox::critical		(this, inerr, "Can't load xrCore (SSE3 is not supported on your CPU");
+			QMessageBox::critical		(this, INIT_ERROR, "Can't load xrCore (SSE3 is not supported on your CPU");
 		}
 		else
 		{
 			statusBar()->showMessage	(tr("Error! Can't load xrEngine."));
-			QMessageBox::critical		(this, inerr, "Can't load xrCore (Unknown Error)");
+			QMessageBox::critical		(this, INIT_ERROR, "Can't load xrCore (Unknown Error)");
 		}
 	}
 }
@@ -189,7 +189,6 @@ void xrLaunch::run_xrEngineRun()
 {
 	try 
 	{
-		//ui->progressBar->setValue		(5);
 		xrQString rendered_line			= ui->lineEdit->text();
 		params_line						= rendered_line.toLocal8Bit();
 #ifdef DEBUG_LAUNCHER
@@ -204,10 +203,10 @@ void xrLaunch::run_xrEngineRun()
 		//#VERTVER: Короче, идите нахуй. params_settings правильно определяется, но движку похуй.
 		params							= params_string + " " +  params_line + params_settings + " " + params_box ;
 		init_xrCore						();
-		ui->progressBar->setValue		(30);
+		ui->progressBar->setValue		(33);
 		statusBar()->showMessage		(tr("Creating render list..."));
 		CreateRendererList				();
-		ui->progressBar->setValue		(45);
+		ui->progressBar->setValue		(66);
 		statusBar()->showMessage(tr		("Loading xrEngine..."), 4000);
 		ui->progressBar->setValue		(100);
 		RunApplication					(params.data());
@@ -221,7 +220,7 @@ void xrLaunch::run_xrEngineRun()
 	{
 		ui->progressBar->setValue		(0);
 		statusBar()->showMessage		(tr("Error! Can't load xrEngine."));
-		QMessageBox::critical			(this, inerr, "Can't load xrEngine (Unknown Error)");
+		QMessageBox::critical			(this, INIT_ERROR, "Can't load xrEngine (Unknown Error)");
 	}
 }
 
@@ -337,3 +336,4 @@ void xrLaunch::on_actionAbout_Oxygen_Team_triggered()
     xrQString oxylink				= "https://github.com/xrOxygen";
     QDesktopServices::openUrl		(QUrl(oxylink));
 }
+#endif

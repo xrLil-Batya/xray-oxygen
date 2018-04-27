@@ -8,6 +8,7 @@
 
 /////////////////////////////////////////
 #include "xrMain.h"
+#ifdef __cplusplus
 /////////////////////////////////////////
 AboutLauncher::AboutLauncher		(QWidget *parent) 
 :	QDialog							(parent),
@@ -23,3 +24,4 @@ AboutLauncher::~AboutLauncher		()
 {
 	delete about_ui;
 }
+#endif

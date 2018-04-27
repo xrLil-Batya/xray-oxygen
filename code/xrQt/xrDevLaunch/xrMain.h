@@ -8,12 +8,14 @@
 *************************************************/
 
 #pragma once
+
 /////////////////////////////////////////
 #include "minimal_CPUID.h"
 #include "ui_xrMain.h"
 #include "ui_parametersdialog.h"
 #include "ui_aboutlauncher.h"
 #include "aboutlauncher.h"
+#include "stdio.h"
 #include "../../engine.vc2008/xrCore/xrCore.h"
 #include "../../engine.vc2008/xrCore/cpuid.h"
 /////////////////////////////////////////
@@ -26,10 +28,11 @@
 #include <QDialog>
 #include <QMessageBox>
 /////////////////////////////////////////
+#define INIT_ERROR		"Init error"
 #define DLL_API			__declspec(dllimport)
-#define CXX				199711L
 #define NOAWDA			1
 #define NOXRCORE_LOAD	1
+#ifdef __cplusplus
 /////////////////////////////////////////
 typedef std::string		xrString;
 typedef LPCSTR			xrConstChar;
@@ -175,4 +178,4 @@ private:
     Ui::xrLaunch	*ui;
 
 };
-
+#endif

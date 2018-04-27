@@ -9,6 +9,7 @@
 #pragma once
 /////////////////////////////////////////
 #include "xrMain.h"
+#ifdef __cplusplus
 /////////////////////////////////////////
 namespace Ui {
 class AboutLauncher;
@@ -26,3 +27,4 @@ public:
 private:
     Ui::AboutLauncher *about_ui;
 };
+#endif
