@@ -58,49 +58,47 @@ void CRocketLauncher::AttachRocket(u16 rocket_id, CGameObject* parent_rocket_lau
 
 void CRocketLauncher::DetachRocket(u16 rocket_id, bool bLaunch)
 {
+	// Object may disappear
+	if (Level().Objects.net_Find(rocket_id) != 0)
+	{
+		Msg("[RocketLauncher]: object %d is not found!", rocket_id);
+		return;
+	}
+
 	CCustomRocket *pRocket = smart_cast<CCustomRocket*>(Level().Objects.net_Find(rocket_id));
 
 	VERIFY(pRocket);
-	auto It = std::find(m_rockets.begin(), m_rockets.end(),pRocket);
-    auto It_l = std::find(m_launched_rockets.begin(), m_launched_rockets.end(),pRocket);
+	auto It = std::find(m_rockets.begin(), m_rockets.end(), pRocket);
+	auto It_l = std::find(m_launched_rockets.begin(), m_launched_rockets.end(), pRocket);
 
-	VERIFY( (It != m_rockets.end())||
-		(It_l != m_launched_rockets.end()) );
+	VERIFY((It != m_rockets.end()) || (It_l != m_launched_rockets.end()));
 
-	if( It != m_rockets.end() )
+	if (It != m_rockets.end())
 	{
-		(*It)->m_bLaunched	= bLaunch;
-		(*It)->H_SetParent	(NULL);
-		m_rockets.erase		(It);
+		(*It)->m_bLaunched = bLaunch;
+		(*It)->H_SetParent(nullptr);
+		m_rockets.erase(It);
 	};
 
-	if( It_l != m_launched_rockets.end() )
+	if (It_l != m_launched_rockets.end())
 	{
-		(*It)->m_bLaunched			= bLaunch;
-		(*It_l)->H_SetParent		(NULL);
-		m_launched_rockets.erase	(It_l);
+		(*It)->m_bLaunched = bLaunch;
+		(*It_l)->H_SetParent(nullptr);
+		m_launched_rockets.erase(It_l);
 	}
 }
 
-
-
-
-void CRocketLauncher::LaunchRocket(const Fmatrix& xform,  
-								   const Fvector& vel, 
-								   const Fvector& angular_vel)
+void CRocketLauncher::LaunchRocket(const Fmatrix& xform, const Fvector& vel, const Fvector& angular_vel)
 {
-	VERIFY2(_valid(xform),"CRocketLauncher::LaunchRocket. Invalid xform argument!");
+	VERIFY2(_valid(xform), "CRocketLauncher::LaunchRocket. Invalid xform argument!");
 	getCurrentRocket()->SetLaunchParams(xform, vel, angular_vel);
 
-	m_launched_rockets.push_back( getCurrentRocket() );
+	m_launched_rockets.push_back(getCurrentRocket());
 }
 
-CCustomRocket*	CRocketLauncher::getCurrentRocket()
+CCustomRocket* CRocketLauncher::getCurrentRocket()
 {
-	if( m_rockets.size() )
-		return m_rockets.back();
-	else
-		return (CCustomRocket*)0;
+	return (this->getRocketCount() ? m_rockets.back() : nullptr);
 }
 
 void CRocketLauncher::dropCurrentRocket()
@@ -110,5 +108,5 @@ void CRocketLauncher::dropCurrentRocket()
 
 u32 CRocketLauncher::getRocketCount()
 {
-	return m_rockets.size();
+	return (u32)m_rockets.size();
 }
