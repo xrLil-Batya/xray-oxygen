@@ -220,11 +220,8 @@ public:
 	IC		float					get_health				() const								{ return fHealth;}
 	IC		ALife::_OBJECT_ID		get_killer_id			() const								{ return m_killer_id; }
 
-	void					set_health				(float const health_value);
-	void					set_killer_id			(ALife::_OBJECT_ID const killer_id)
-	{
-		m_killer_id = killer_id;
-	}
+	void							set_health				(float const health_value);
+	void							set_killer_id			(ALife::_OBJECT_ID const killer_id)		{ m_killer_id = killer_id; }
 
 	IC		bool					g_Alive					() const								{ return (get_health() > 0.f);}
 	virtual bool					used_ai_locations		() const;
@@ -237,6 +234,7 @@ public:
 #ifdef XRGAME_EXPORTS
 	virtual	void					on_death				(CSE_Abstract *killer);
 	virtual void					on_spawn				();
+	virtual void					kill_entity				(u16 id);
 #endif
 #ifdef DEBUG
 	virtual bool					match_configuration		() const;

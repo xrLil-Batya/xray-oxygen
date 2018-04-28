@@ -12,8 +12,6 @@
 #include "object_broker.h"
 #include "alife_human_brain.h"
 
-
-
 #ifndef AI_COMPILER
 #	include "ai_space.h"
 #	include "character_info.h"
@@ -1283,20 +1281,30 @@ bool CSE_ALifeMonsterAbstract::need_update	(CSE_ALifeDynamicObject *object)
 {
 	return						(CSE_ALifeSchedulable::need_update(object) && (get_health() > EPS_L));
 }
+
 #ifdef XRGAME_EXPORTS
-void CSE_ALifeMonsterAbstract::kill						()
+void CSE_ALifeMonsterAbstract::kill()
 {
 	if (m_group_id != 0xffff)
 		ai().alife().groups().object(m_group_id).unregister_member	(ID);
 	set_health(0.f);
-
 }
+
+void CSE_ALifeCreatureAbstract::kill_entity(u16 id)
+{
+	if (fHealth>0.f)
+	{
+		m_killer_id = (id);
+		m_game_death_time = Level().GetGameTime();
+		fHealth = -1.f;
+	}
+}
+
 bool CSE_ALifeMonsterAbstract::has_detector	()
 {
-	OBJECT_IT			I = this->children.begin();
-	OBJECT_IT			E = this->children.end();
-	for ( ; I != E; ++I){
-		CSE_ALifeItemDetector* detector = smart_cast<CSE_ALifeItemDetector*>(ai().alife().objects().object(*I));
+	for (u16 &it: this->children)
+	{
+		CSE_ALifeItemDetector* detector = smart_cast<CSE_ALifeItemDetector*>(ai().alife().objects().object(it));
 		if (detector) return true;
 	};
 	return false;
