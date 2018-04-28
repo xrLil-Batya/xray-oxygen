@@ -1,7 +1,7 @@
 #pragma once
 
 class ImplicitDeflector;
-void RunImplicitMultithread(ImplicitDeflector& defl);
+void RunImplicitMultithread(ImplicitDeflector& defl, u32 thCount);
 
 namespace lc_net
 {

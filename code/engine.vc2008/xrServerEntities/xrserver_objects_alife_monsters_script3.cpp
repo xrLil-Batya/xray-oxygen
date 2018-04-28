@@ -61,7 +61,9 @@ void CSE_ALifeCreatureAbstract::script_register(lua_State *L)
 		.def_readwrite("squad",	&CSE_ALifeCreatureAbstract::s_squad)
 		.def_readwrite("group",	&CSE_ALifeCreatureAbstract::s_group)
 		.def("o_torso",			&CSE_ALifeCreatureAbstract__o_torso)
+#ifdef XRGAME_EXPORTS
 		.def("kill",			&CSE_ALifeCreatureAbstract::kill_entity)
+#endif
 	];
 }
 

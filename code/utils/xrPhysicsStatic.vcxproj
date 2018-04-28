@@ -65,12 +65,21 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(xrLib)</OutDir>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
     <OutDir>$(xrLib)</OutDir>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <OutDir>$(xrLib)</OutDir>
+    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
+    <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
@@ -121,7 +130,8 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\ode.dll $(xrBinOut)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -179,7 +189,8 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\ode.dll $(xrBinOut)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
@@ -237,7 +248,8 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
     <PostBuildEvent>
-      <Command>copy ..\..\SDK\binaries\x64\ode.dll $(xrBinOut)</Command>
+      <Command>
+      </Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -402,16 +414,6 @@
     <ClInclude Include="..\engine.vc2008\xrPhysics\PHImpact.h" />
     <ClInclude Include="..\engine.vc2008\xrPhysics\debug_output.h" />
     <ClInclude Include="..\engine.vc2008\xrPhysics\icollisiondamagereceiver.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\xrCDB\xrCDB.vcxproj">
-      <Project>{a19b1df2-82ec-4364-8bdf-85d13a1c89b5}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\xrSound\xrSound.vcxproj">
-      <Project>{ccca7859-eb86-493e-9b53-c4235f45b3c5}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

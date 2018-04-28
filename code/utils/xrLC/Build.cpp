@@ -422,5 +422,11 @@ xr_vector<xrMU_Reference*>&CBuild::mu_refs()
 
 void CBuild::ImplicitLighting()
 {
-	::ImplicitLighting( g_build_options.b_net_light );
+	u32 thCount = CPU::Info.n_threads;
+	if (!g_build_options.b_mxthread)
+	{
+		thCount--;
+	}
+
+	::ImplicitLighting( g_build_options.b_net_light, thCount);
 }
