@@ -189,9 +189,9 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 	}
 
 	// Lighing
-	for (auto imp = calculator.begin(); imp != calculator.end(); imp++)
+	for (auto& imp: calculator)
 	{
-		ImplicitDeflector& defl = imp->second;
+		ImplicitDeflector& defl = imp.second;
 		Status("Lighting implicit map '%s'...", defl.texture->name);
 		Progress(0);
 		defl.Allocate();
@@ -211,7 +211,13 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 
 		// Expand
 		Status("Processing lightmap...");
-		for (u32 ref = 254; ref>0; ref--)	if (!ApplyBorders(defl.lmap, ref)) break;
+		for (u32 ref = 254; ref > 0; ref--)
+		{
+			if (!ApplyBorders(defl.lmap, ref))
+			{
+				break;
+			}
+		}
 
 		Status("Mixing lighting with texture...");
 		{
