@@ -1,6 +1,3 @@
-#ifndef _TextureDescrManager_included_
-#define _TextureDescrManager_included_
-
 #pragma once
 #include "ETextureParams.h"
 
@@ -12,10 +9,9 @@ class CTextureDescrMngr
 	struct texture_assoc
 	{
 		shared_str			detail_name;
-		//R_constant_setup*	cs;
 		u8					usage;
-        texture_assoc       () : /*cs(NULL),*/ usage(0) {}
-		~texture_assoc		() { /*xr_delete(cs);*/ }
+        texture_assoc       () : usage(0) {}
+		~texture_assoc		() { }
 
 	};
 	struct texture_spec
@@ -53,4 +49,3 @@ public:
 	BOOL		GetDetailTexture(const shared_str& tex_name, LPCSTR& res, R_constant_setup* &CS) const;
 	BOOL		UseSteepParallax(const shared_str& tex_name) const;
 };
-#endif

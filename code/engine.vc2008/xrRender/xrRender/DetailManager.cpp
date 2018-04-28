@@ -20,6 +20,7 @@
 #   include <xmmintrin.h>
 #endif
 
+u32 reset_frame = 0;
 
 const float dbgOffset			= 0.f;
 const int	dbgItems			= 128;
@@ -310,8 +311,6 @@ void CDetailManager::UpdateVisibleM()
 							if (ssa > r_ssaCHEAP)	vis_id = Item.vis_ID;
 							
 							sp.r_items[vis_id].push_back	(*siIT);
-
-//2							visible[vis_id][sp.id].push_back(&Item);
 						}
 					}
 				}
@@ -366,6 +365,7 @@ void CDetailManager::Render	()
 void __stdcall	CDetailManager::MT_CALC		()
 {
 #ifndef _EDITOR
+	if (reset_frame == Device.dwFrame)	return; // !!! ogse
 	if (0==RImplementation.Details)		return;	// possibly deleted
 	if (0==dtFS)						return;
 	if (!psDeviceFlags.is(rsDetails))	return;

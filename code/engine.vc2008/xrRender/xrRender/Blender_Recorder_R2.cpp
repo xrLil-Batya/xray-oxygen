@@ -74,7 +74,6 @@ u32		CBlender_Compile::i_Sampler		(LPCSTR _name)
 	//
 	string256				name;
 	xr_strcpy					(name,_name);
-//. andy	if (strext(name)) *strext(name)=0;
 	fix_texture_name		(name);
 
 	// Find index
@@ -85,7 +84,6 @@ u32		CBlender_Compile::i_Sampler		(LPCSTR _name)
 	u32 stage				= C->samp.index;
 
 	// Create texture
-	// while (stage>=passTextures.size())	passTextures.push_back		(NULL);
 	return					stage;
 }
 void	CBlender_Compile::i_Texture		(u32 s, LPCSTR name)
@@ -146,7 +144,6 @@ u32		CBlender_Compile::r_Sampler		(LPCSTR _name, LPCSTR texture, bool b_ps1x_Pro
 		// Sampler states
 		i_Address				(dwStage,address);
 		i_Filter				(dwStage,fmin,fmip,fmag);
-		//.i_Filter				(dwStage,D3DTEXF_POINT,D3DTEXF_POINT,D3DTEXF_POINT); // show pixels
 		if (dwStage<4)			i_Projective		(dwStage,b_ps1x_ProjectiveDivide);
 	}
 	return	dwStage;

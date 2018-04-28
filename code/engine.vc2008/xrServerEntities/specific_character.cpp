@@ -65,10 +65,6 @@ void CSpecificCharacter::Load(shared_str id)
 
 void CSpecificCharacter::load_shared	(LPCSTR)
 {
-#if 0
-	CTimer			timer;
-	timer.Start		();
-#endif
 	const ITEM_DATA& item_data = *id_to_index::GetById(m_OwnId);
 
 	CUIXml*		pXML = item_data._xml;
@@ -198,16 +194,13 @@ void CSpecificCharacter::load_shared	(LPCSTR)
 		MoneyDef().inf_money	= !!pXML->ReadAttribInt("money", 0, "infinitive");
 		MoneyDef().max_money	= std::max(MoneyDef().max_money, MoneyDef().min_money); // :)
 
-	}else{
+	}else
+	{
 		MoneyDef().min_money	= 0;
 		MoneyDef().max_money	= 0;
 		MoneyDef().inf_money	= false;
 	}
 
-#endif
-
-#if 0
-	Msg			("CSpecificCharacter::load_shared() takes %f milliseconds",timer.GetElapsed_sec()*1000.f);
 #endif
 }
 

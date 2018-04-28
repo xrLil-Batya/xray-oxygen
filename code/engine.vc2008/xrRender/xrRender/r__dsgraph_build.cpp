@@ -611,15 +611,6 @@ BOOL CRender::add_Dynamic(dxRender_Visual *pVisual, u32 planes)
 				E = pV->children.end		();
 				for (; I!=E; I++)	add_leafs_Dynamic	(*I);
 			}
-			/*
-			I = pV->children.begin		();
-			E = pV->children.end		();
-			if (fcvPartial==VIS) {
-				for (; I!=E; I++)	add_Dynamic			(*I,planes);
-			} else {
-				for (; I!=E; I++)	add_leafs_Dynamic	(*I);
-			}
-			*/
 		}
 		break;
 	default:

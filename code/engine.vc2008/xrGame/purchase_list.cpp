@@ -38,7 +38,7 @@ void CPurchaseList::process	(CInifile &ini_file, LPCSTR section, CInventoryOwner
 		);
 	}
 }
-
+#include <random>
 void CPurchaseList::process	(const CGameObject &owner, const shared_str &name, const u32 &count, const float &probability)
 {
 	VERIFY3					(count,"Invalid count for section in the purchase list",*name);
@@ -47,15 +47,23 @@ void CPurchaseList::process	(const CGameObject &owner, const shared_str &name, c
 	const Fvector			&position = owner.Position();
 	const u32				&level_vertex_id = owner.ai_location().level_vertex_id();
 	const ALife::_OBJECT_ID	&id = owner.ID();
-	CRandom					random((u32)(CPU::QPC() & u32(-1)));
+
+	// Balathruin
+	/// With proper range, the trader inventory generation is now actually randomised.
+	std::random_device rd;
+	std::mt19937 rng(rd());
+	std::uniform_real_distribution<float> uni(0.f, 1.f);
+
     u32 j = 0;
-	for (u32 i=0; i<count; ++i) {
-		if (random.randF() > probability)
+	for (u32 i = 0; i<count; ++i)
+	{
+		if (uni(rng) > probability)
 			continue;
 
 		++j;
 		Level().spawn_item		(*name,position,level_vertex_id,id,false);
 	}
+	// End
 
 	DEFICITS::const_iterator	I = m_deficits.find(name);
 	VERIFY3						(I == m_deficits.end(),"Duplicate section in the purchase list",*name);

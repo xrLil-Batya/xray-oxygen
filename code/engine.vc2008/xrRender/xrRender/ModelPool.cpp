@@ -85,35 +85,6 @@ dxRender_Visual*	CModelPool::Instance_Duplicate	(dxRender_Visual* V)
 
 dxRender_Visual* CModelPool::TryLoadObject(const char* N)
 {
-	/*
-	char* ext = strext(N);
-	string_path name;
-	if (!ext)
-		strconcat(sizeof(name), name, N, ".object");
-	else if (!strcmp(ext, ".object"))
-		strcpy_s(name, sizeof(name), N);
-	else
-		return nullptr;
-
-	string_path fn;
-	if (!FS.exist(N) && !FS.exist(fn, "$level$", name) && !FS.exist(fn, "$game_meshes$", name))
-		return nullptr;
-
-#ifdef DEBUG
-	if (bLogging)
-		Msg("- Uncached model converting: %s", fn);
-#endif
-
-	CEditableObject obj(name);
-	obj.LoadObject(fn);
-
-	ext = strext(fn); *ext = '\0';
-	string_path ogfName;
-	strconcat(sizeof(ogfName), ogfName, fn, ".ogf");
-	R_ASSERT3(obj.ExportOGF(ogfName, 4), "Can`t export to OGF [%s]", fn);
-
-	return TryLoadOgf(ogfName);
-	*/
 	return nullptr;
 }
 dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
@@ -153,8 +124,7 @@ dxRender_Visual* CModelPool::TryLoadOgf(const char* N)
 dxRender_Visual*	CModelPool::Instance_Load		(const char* N, BOOL allow_register)
 {
 	dxRender_Visual* V = TryLoadOgf(N);
-//	if (!V)
-//		V = TryLoadObject(N);
+
 	if (!V) 
 		Debug.fatal(DEBUG_INFO, "Can't find model file '%s'.", N);
 
@@ -255,7 +225,6 @@ dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 	string_path low_name;	VERIFY	(xr_strlen(name)<sizeof(low_name));
 	xr_strcpy(low_name,name);	strlwr	(low_name);
 	if (strext(low_name))	*strext	(low_name)=0;
-//	Msg						("-CREATE %s",low_name);
 
 	// 0. Search POOL
 	POOL_IT	it			=	Pool.find	(low_name);
@@ -295,7 +264,7 @@ dxRender_Visual* CModelPool::CreateChild(LPCSTR name, IReader* data)
 
 	// 1. Search for already loaded model
 	dxRender_Visual* Base	= Instance_Find(low_name);
-//.	if (0==Base) Base	 	= Instance_Load(name,data,FALSE);
+
 	if(0==Base)
 	{
 		if (data)		Base = Instance_Load	(low_name,data,FALSE);
@@ -387,7 +356,6 @@ void	CModelPool::Discard	(dxRender_Visual* &V, BOOL b_complete)
 			}
 		// Registry
 		xr_delete		(V);	
-//.		xr_free			(name);
 		Registry.erase	(it);
 	} else {
 		// Registry entry not-found - just special type of visual / particles / etc.

@@ -4,7 +4,6 @@
 
 #include "du_cylinder.h"
 //---------------------------------------------------------------------------
-//#pragma package(smart_init)
 Fvector du_cylinder_vertices[DU_CYLINDER_NUMVERTEX]={
     {0.5000f,	0.0000f,	0.5000f },	 // 0
     {0.5000f,	-0.0000f,	-0.5000f},	 // 1
@@ -88,17 +87,11 @@ u16 du_cylinder_faces[DU_CYLINDER_NUMFACES*3]={
 u16 du_cylinder_lines[DU_CYLINDER_NUMLINES*2]={
 // tile
 	 0,	   1,
-//	 2,	   3,
 	 4,	   5,
-//	 6,	   7,
 	 8,	   9,
-//	 10,  11,
 	 12,  13,
-//	 14,  15,
 	 16,  17,
-//	 18,  19,
 	 20,  21,
-//	 22,  23,
 // cape 0
 	 1,    2,
 	 2,	   4,

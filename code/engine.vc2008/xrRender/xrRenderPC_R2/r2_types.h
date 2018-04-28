@@ -19,8 +19,8 @@
 #define		r2_RT_SunShaftsMask				"$user$SunShaftsMask"
 #define		r2_RT_SunShaftsMaskSmoothed		"$user$SunShaftsMaskSmoothed"
 #define		r2_RT_SunShaftsPass0			"$user$SunShaftsPass0"
-//#define		r2_RT_SunShaftsPass1			"$user$SunShaftsPass1"
-//#define		r2_RT_SunShaftsPass2			"$user$SunShaftsPass2"
+
+#define		r2_RT_flares		"$user$flares" // KD lensflares
 
 #define		r2_RT_generic0		"$user$generic0"		// ---
 #define		r2_RT_generic1		"$user$generic1"		// ---

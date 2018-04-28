@@ -89,7 +89,7 @@ void CActor::detach_Vehicle()
 	V->PlayCycle		(m_anims->m_normal.m_torso_idle);
 	m_holderID=u16(-1);
 
-	SetWeaponHideState(INV_STATE_CAR, false);
+	SetWeaponHideState(INV_STATE_BLOCK_ALL, false);
 }
 
 bool CActor::use_Vehicle(CHolderCustom* object)
@@ -130,6 +130,5 @@ bool CActor::use_Vehicle(CHolderCustom* object)
 
 void CActor::on_requested_spawn(CObject *object)
 {
-	CCar * car= smart_cast<CCar*>(object);
-	attach_Vehicle(car);
+	attach_Vehicle(smart_cast<CCar*>(object));
 }

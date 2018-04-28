@@ -188,8 +188,6 @@ void CDetailManager::hw_Render()
 	m_time_rot_2	+= (PI_MUL_2*fDelta/swing_current.rot2);
 	m_time_pos		+= fDelta*swing_current.speed;
 
-	//float		tm_rot1		= (PI_MUL_2*RDEVICE.fTimeGlobal/swing_current.rot1);
-	//float		tm_rot2		= (PI_MUL_2*RDEVICE.fTimeGlobal/swing_current.rot2);
 	float		tm_rot1		= m_time_rot_1;
 	float		tm_rot2		= m_time_rot_2;
 
@@ -211,7 +209,6 @@ void CDetailManager::hw_Render()
 	hw_Render_dump			(&*hwc_array,	1, 0, c_hdr );
 
 	// Wave1
-	//wave.set				(1.f/3.f,		1.f/7.f,	1.f/5.f,	RDEVICE.fTimeGlobal*swing_current.speed);
 	wave.set				(1.f/3.f,		1.f/7.f,	1.f/5.f,	m_time_pos);
 	RCache.set_c			(&*hwc_wave,	wave.div(PI_MUL_2));	// wave
 	RCache.set_c			(&*hwc_wind,	dir2);																					// wind-dir

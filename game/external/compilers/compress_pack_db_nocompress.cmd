@@ -1,0 +1,1 @@
+@start bins/xrCompress.exe gamedata -ltx datapack.ltx -pack -db -640 -fast -crc -nobinary -nosize -nofileage

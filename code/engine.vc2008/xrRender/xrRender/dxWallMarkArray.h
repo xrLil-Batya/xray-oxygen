@@ -1,5 +1,3 @@
-#ifndef dxWallMarkArray_included
-#define dxWallMarkArray_included
 #pragma once
 
 #include "..\..\Include\xrRender\WallMarkArray.h"
@@ -21,5 +19,3 @@ private:
 
 	ShaderVec	m_CollideMarks;
 };
-
-#endif	//	WallMarkArray_included

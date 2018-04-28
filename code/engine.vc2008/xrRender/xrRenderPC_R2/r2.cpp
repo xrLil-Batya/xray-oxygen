@@ -314,6 +314,7 @@ void					CRender::destroy				()
 	r_dsgraph_destroy			();
 }
 
+extern u32 reset_frame;
 void CRender::reset_begin()
 {
 	// Update incremental shadowmap-visibility solver
@@ -331,6 +332,8 @@ void CRender::reset_begin()
 		}
 		Lights_LastFrame.clear	();
 	}
+
+	reset_frame = Device.dwFrame;
 
 	// KD: let's reload details while changed details options on vid_restart
 	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
@@ -1059,8 +1062,6 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 //			Msg						( "shader compilation succeeded" );
 			IWriter* file = FS.w_open(file_name);
 
-			//boost::crc_32_type		processor;
-			//processor.process_block	( pShaderBuf->GetBufferPointer(), ((char*)pShaderBuf->GetBufferPointer()) + pShaderBuf->GetBufferSize() );
 			u32 const crc = crc32(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize());
 
 			file->w_u32				(crc);
@@ -1079,9 +1080,6 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		}
 	}
 
-	//if (!SUCCEEDED(_result)) {
-	//	Msg							( "! FAILED" );
-	//}
 	return							_result;
 }
 

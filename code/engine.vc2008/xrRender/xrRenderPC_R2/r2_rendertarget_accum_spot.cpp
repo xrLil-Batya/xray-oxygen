@@ -165,6 +165,10 @@ void CRenderTarget::accum_spot	(light* L)
 	increment_light_marker();
 
 	u_DBT_disable				();
+
+	// Рендерим флары
+	if (L->flags.bFlare)
+		 render_flare(L);
 }
 
 void CRenderTarget::accum_volumetric(light* L)

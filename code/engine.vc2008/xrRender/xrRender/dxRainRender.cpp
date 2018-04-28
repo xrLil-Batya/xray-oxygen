@@ -62,7 +62,6 @@ void dxRainRender::Render(CEffect_Rain &owner)
 	// born _new_ if needed
 	float	b_radius_wrap_sqr	= _sqr((source_radius+.5f));
 	if (owner.items.size()<desired_items)	{
-		// owner.items.reserve		(desired_items);
 		while (owner.items.size()<desired_items)	{
 			CEffect_Rain::Item				one;
 			owner.Born				(one,source_radius);
@@ -89,8 +88,6 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		if (one.dwTime_Life<Device.dwTimeGlobal)	owner.Born(one,source_radius);
 
 		// последн€€ дельта ??
-		//.		float xdt		= float(one.dwTime_Hit-Device.dwTimeGlobal)/1000.f;
-		//.		float dt		= Device.fTimeDelta;//xdt<Device.fTimeDelta?xdt:Device.fTimeDelta;
 		float dt		= Device.fTimeDelta;
 		one.P.mad		(one.D,one.fSpeed*dt);
 
@@ -99,7 +96,6 @@ void dxRainRender::Render(CEffect_Rain &owner)
 		float	wlen	= wdir.square_magnitude();
 		if (wlen>b_radius_wrap_sqr)	{
 			wlen		= _sqrt(wlen);
-			//.			Device.Statistic->TEST3.Begin();
 			if ((one.P.y-vEye.y)<sink_offset){
 				// need born
 				one.invalidate();
@@ -114,22 +110,17 @@ void dxRainRender::Render(CEffect_Rain &owner)
 					if (owner.RayPick(src_p,one.D,height,collide::rqtBoth)){	
 						if (_sqr(height)<=dist_sqr){ 
 							one.invalidate	();								// need born
-							//							Log("1");
 						}else{	
 							owner.RenewItem	(one,height-_sqrt(dist_sqr),TRUE);		// fly to point
-							//							Log("2",height-dist);
 						}
 					}else{
 						owner.RenewItem		(one,max_distance-_sqrt(dist_sqr),FALSE);		// fly ...
-						//						Log("3",1.5f*b_height-dist);
 					}
 				}else{
 					// need born
 					one.invalidate();
-					//					Log("4");
 				}
 			}
-			//.			Device.Statistic->TEST3.End();
 		}
 		Device.Statistic->TEST1.End();
 
@@ -168,13 +159,11 @@ void dxRainRender::Render(CEffect_Rain &owner)
 
 	// Render if needed
 	if (vCount)	{
-		//HW.pDevice->SetRenderState	(D3DRS_CULLMODE,D3DCULL_NONE);
 		RCache.set_CullMode(CULL_NONE);
 		RCache.set_xform_world		(Fidentity);
 		RCache.set_Shader			(SH_Rain);
 		RCache.set_Geometry			(hGeom_Rain);
 		RCache.Render				(D3DPT_TRIANGLELIST,vOffset,0,vCount,0,vCount/2);
-		//HW.pDevice->SetRenderState	(D3DRS_CULLMODE,D3DCULL_CCW);
 		RCache.set_CullMode(CULL_CCW);
 	}
 

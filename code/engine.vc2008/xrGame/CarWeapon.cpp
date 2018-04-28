@@ -9,7 +9,7 @@
 #include "weaponAmmo.h"
 #include "xr_level_controller.h"
 #include "game_object_space.h"
-
+#include "Actor.h"
 void CCarWeapon::BoneCallbackX		(CBoneInstance *B)
 {
 	CCarWeapon	*P = static_cast<CCarWeapon*>(B->callback_param());

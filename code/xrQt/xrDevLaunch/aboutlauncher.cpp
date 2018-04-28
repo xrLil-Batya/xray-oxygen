@@ -8,16 +8,20 @@
 
 /////////////////////////////////////////
 #include "xrMain.h"
+#ifdef __cplusplus
 /////////////////////////////////////////
-AboutLauncher::AboutLauncher(QWidget *parent) :
-    QDialog(parent),
-    about_ui(new Ui::AboutLauncher)
+AboutLauncher::AboutLauncher		(QWidget *parent) 
+:	QDialog							(parent),
+    about_ui						(new Ui::AboutLauncher)
 {
-    about_ui->setupUi(this);
+    about_ui->setupUi					(this);
+	QPixmap myPixmap("icon2.ico");
+	about_ui->label_8->setPixmap(myPixmap);
 }
 
 
-AboutLauncher::~AboutLauncher()
+AboutLauncher::~AboutLauncher		()
 {
 	delete about_ui;
 }
+#endif

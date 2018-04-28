@@ -8,10 +8,6 @@
 #include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
-
-#include "dedicated_server_only.h"
-#include "no_single.h"
-
 #include "xr_input.h"
 #include "xr_ioconsole.h"
 #include "x_ray.h"
@@ -26,15 +22,12 @@
 
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
-ENGINE_API CInifile* pGameIni		= nullptr;
+ENGINE_API CInifile* pGameIni = nullptr;
+volatile bool g_bIntroFinished = false;
+ENGINE_API bool isGraphicDebugging; //#GIPERION: Graphic debugging
 #ifdef SPAWN_ANTIFREEZE
-ENGINE_API bool g_bootComplete		= false;
+ENGINE_API bool g_bootComplete = false;
 #endif
-volatile bool	g_bIntroFinished			= false;
-extern	void	Intro				( void* fn );
-
-//#GIPERION: Graphic debugging
-ENGINE_API bool isGraphicDebugging;
 
 #ifdef MASTER_GOLD
 #	define NO_MULTI_INSTANCES
@@ -76,7 +69,7 @@ void InitEngine()
 	Device.Initialize();
 }
 
-PROTECT_API void InitSettings	()
+ENGINE_API void InitSettings	()
 {
 	string_path					fname; 
 	FS.update_path				(fname,"$game_config$","system.ltx");
@@ -92,43 +85,45 @@ PROTECT_API void InitSettings	()
 	pGameIni					= xr_new<CInifile>	(fname,TRUE);
 	CHECK_OR_EXIT				(0!=pGameIni->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 }
-PROTECT_API void InitConsole	()
+ENGINE_API void InitConsole	()
 {
-	Console						= xr_new<CConsole>	();
-	Console->Initialize			( );
+	Console = xr_new<CConsole>();
+	Console->Initialize();
 
-	xr_strcpy						(Console->ConfigFile,"user.ltx");
-	if (strstr(Core.Params,"-ltx ")) {
-		string64				c_name;
-		sscanf					(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);
-		xr_strcpy					(Console->ConfigFile,c_name);
+	xr_strcpy(Console->ConfigFile,"user.ltx");
+	if (strstr(Core.Params,"-ltx ")) 
+	{
+		string64 c_name;
+		sscanf(strstr(Core.Params,"-ltx ")+5,"%[^ ] ",c_name);
+		xr_strcpy(Console->ConfigFile,c_name);
 	}
 }
 
-PROTECT_API void InitInput		()
+ENGINE_API void InitInput()
 {
-	BOOL bCaptureInput			= !strstr(Core.Params,"-i");
+	BOOL bCaptureInput = !strstr(Core.Params, "-i");
 
-	pInput						= xr_new<CInput>		(bCaptureInput);
-}
-void destroyInput	()
-{
-	xr_delete					( pInput		);
+	pInput = xr_new<CInput>(bCaptureInput);
 }
 
-PROTECT_API void InitSound1		()
+void destroyInput()
 {
-	CSound_manager_interface::_create				(0);
+	xr_delete(pInput);
 }
 
-PROTECT_API void InitSound2		()
+ENGINE_API void InitSound1()
 {
-	CSound_manager_interface::_create				(1);
+	CSound_manager_interface::_create(0);
 }
 
-void destroySound	()
+ENGINE_API void InitSound2		()
 {
-	CSound_manager_interface::_destroy				( );
+	CSound_manager_interface::_create(1);
+}
+
+inline void destroySound()
+{
+	CSound_manager_interface::_destroy( );
 }
 
 void destroySettings()
@@ -372,10 +367,12 @@ ENGINE_API int RunApplication(char* commandLine)
 		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
 	}
 
+
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
 	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
 	
+	//#WARNING: That's can affect on startup stability
 	HANDLE hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
 	if ( hCheckPresenceMutex == NULL ) {
 		// New mutex
@@ -389,6 +386,7 @@ ENGINE_API int RunApplication(char* commandLine)
 		return 1;
 	}
 #endif
+
 	strcat(Core.Params, commandLine);
 
 	// Title window
@@ -435,7 +433,23 @@ ENGINE_API int RunApplication(char* commandLine)
 		InitConsole				();
 
 		Engine.External.Initialize	( );
-		Console->Execute			("stat_memory");
+
+		if (strstr(Core.Params, "-$"))
+		{
+			string256                buf, cmd, param;
+			sscanf(strstr(Core.Params, "-$")
+				+ 2,
+				"%[^ ] %[^ ] ",
+				cmd,
+				param);
+			strconcat(sizeof(buf),
+				buf,
+				cmd,
+				" ",
+				param);
+			Console->Execute(buf);
+		}
+		//Console->Execute			("stat_memory");
 
 		/////////////////////////////////////////////
 		// Exeption debug
@@ -644,7 +658,7 @@ void CApplication::LoadEnd		()
 	if (0==ll_dwReference)		{
 		Msg						("* phase time: %d ms",phase_timer.GetElapsed_ms());
 		Msg						("* phase cmem: %d K", Memory.mem_usage()/1024);
-		Console->Execute		("stat_memory");
+		//Console->Execute		("stat_memory");
 		g_appLoaded				= TRUE;
 //		DUMP_PHASE;
 	}
@@ -658,7 +672,7 @@ void CApplication::destroy_loading_shaders()
 #endif
 }
 
-PROTECT_API void CApplication::LoadDraw		()
+ENGINE_API void CApplication::LoadDraw		()
 {
 	if(g_appLoaded)				return;
 	Device.dwFrame				+= 1;

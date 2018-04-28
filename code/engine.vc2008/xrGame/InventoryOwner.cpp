@@ -309,8 +309,6 @@ void CInventoryOwner::renderable_Render		()
 #ifdef DEAD_BODY_WEAPON
 	if (inventory().ItemFromSlot(INV_SLOT_3))
 		inventory().ItemFromSlot(INV_SLOT_3)->renderable_Render();
-	else if (inventory().ItemFromSlot(INV_SLOT_2))
-		inventory().ItemFromSlot(INV_SLOT_2)->renderable_Render();
 #endif
 	CAttachmentOwner::renderable_Render();
 }

@@ -611,7 +611,6 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->SetHeight	(16.0f);
 		UI().Font().pFontStat->SetColor	(0xffff0000);
 
-		if(Server)UI().Font().pFontStat->OutNext("Client Objects:      [%d]", Server->GetEntitiesNum());
 		UI().Font().pFontStat->OutNext			("Server Objects:      [%d]", Objects.o_count());
 		UI().Font().pFontStat->OutNext			("Interpolation Steps: [%d]", Level().GetInterpolationSteps());
 

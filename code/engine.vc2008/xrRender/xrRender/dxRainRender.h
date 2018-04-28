@@ -1,5 +1,3 @@
-#ifndef dxRainRender_included
-#define dxRainRender_included
 #pragma once
 
 #include "..\..\Include\xrRender\RainRender.h"
@@ -24,5 +22,3 @@ private:
 	IRender_DetailModel*			DM_Drop;
 	ref_geom						hGeom_Drops;
 };
-
-#endif	//	RainRender_included

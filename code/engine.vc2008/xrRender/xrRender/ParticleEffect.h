@@ -1,7 +1,4 @@
-//---------------------------------------------------------------------------
-#ifndef ParticleEffectH
-#define ParticleEffectH
-//---------------------------------------------------------------------------
+#pragma once
 
 #include "ParticleEffectDef.h"
 
@@ -17,7 +14,6 @@ namespace PS
 {
 	class ECORE_API CParticleEffect: public dxParticleCustom
 	{
-//		friend void ParticleRenderStream( LPVOID lpvParams );
 		friend class CPEDef;
 	protected:
 		float				m_fElapsedLimit;
@@ -91,5 +87,3 @@ namespace PS
     extern const u32		uDT_STEP;
 	extern const float		fDT_STEP;
 }
-//---------------------------------------------------------------------------
-#endif

@@ -26,8 +26,6 @@
 
 dxRenderFactory RenderFactoryImpl;
 
-//# include "dx##Class.h" \
-
 #define RENDER_FACTORY_IMPLEMENT(Class) \
 	I##Class* dxRenderFactory::Create##Class() \
 { \
@@ -48,9 +46,6 @@ dxRenderFactory RenderFactoryImpl;
 	RENDER_FACTORY_IMPLEMENT(ApplicationRender)
 	RENDER_FACTORY_IMPLEMENT(WallMarkArray)
 	RENDER_FACTORY_IMPLEMENT(StatsRender)
-#endif // _EDITOR
-
-#ifndef _EDITOR
     RENDER_FACTORY_IMPLEMENT(ThunderboltRender)
     RENDER_FACTORY_IMPLEMENT(ThunderboltDescRender)
     RENDER_FACTORY_IMPLEMENT(RainRender)

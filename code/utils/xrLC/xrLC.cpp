@@ -51,7 +51,7 @@ void Help()
 
 typedef int __cdecl xrOptions(b_params* params, u32 version, bool bRunBuild);
 
-void Startup(LPSTR     lpCmdLine)
+void Startup(char* lpCmdLine)
 {
 	
 	create_global_data();
@@ -68,15 +68,11 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd, "-net"))							g_build_options.b_net_light		= true;
 	if (strstr(cmd, "-skip"))							g_build_options.b_skipinvalid	= true;
 	if (strstr(cmd, "-notessellation"))                 g_build_options.b_notessellation = true;
-
-	//Added priority setting
+	if (strstr(cmd, "-mxthread"))						g_build_options.b_mxthread		= true;
+	// Added priority setting
 	const char* isSp = strstr(cmd, "-sp");
-	if (isSp)
-		g_build_options.Priority = isSp[3] - '0';
-	else										
-		g_build_options.Priority = 1;
-
-	//end
+	if (isSp)											g_build_options.Priority = isSp[3] - '0';
+	// end
 
 	VERIFY( lc_global_data() );
 	lc_global_data()->b_nosun_set						( !!strstr(cmd,"-nosun") );

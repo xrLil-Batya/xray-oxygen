@@ -18,8 +18,6 @@ u32 GetNVGpuNum()
 	NvPhysicalGpuHandle physicalGPUs[NVAPI_MAX_PHYSICAL_GPUS];
 	NvU32               physicalGPUCount;
 
-//	int result = NVAPI_OK;
-
 	int iGpuNum = 0;
 
 	NvAPI_Status	status;
@@ -96,7 +94,6 @@ u32 GetGpuNum()
 	u32 res = GetNVGpuNum();
 
 	res = std::max(res, GetATIGpuNum());
-//	res = std::max(res, (u32)2);
 	res = std::min(res, (u32)CHWCaps::MAX_GPUS);
 
 	//	It's vital to have at least one GPU, else
@@ -169,7 +166,7 @@ void CHWCaps::Update()
 #endif
 
 	//
-	bTableFog			=	FALSE;	//BOOL	(caps.RasterCaps&D3DPRASTERCAPS_FOGTABLE);
+	bTableFog			=	FALSE;
 
 	// Detect if stencil available
 	bStencil			=	FALSE;

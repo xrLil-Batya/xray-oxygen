@@ -420,7 +420,6 @@
     <ClCompile Include="CPU\PLC.cpp" />
     <ClCompile Include="CPU\xrCPU_Pipe.cpp" />
     <ClCompile Include="CPU\xrSkin2W.cpp" />
-    <ClCompile Include="CPU\xrSkin2W_SSE.cpp" />
     <ClCompile Include="CPU\xrSkin2W_thread.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="stdafx.cpp">

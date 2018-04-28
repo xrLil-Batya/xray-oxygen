@@ -1,5 +1,3 @@
-#ifndef	dxStatGraphRender_included
-#define	dxStatGraphRender_included
 #pragma once
 
 #include "..\..\Include\xrRender\StatGraphRender.h"
@@ -25,5 +23,3 @@ private:
 	ref_geom 		hGeomTri;
 	ref_geom 		hGeomLine;
 };
-
-#endif	//	dxStatGraphRender_included

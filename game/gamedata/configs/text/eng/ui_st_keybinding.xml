@@ -132,9 +132,7 @@
 	<string id="kb_torch">
 		<text>Flashlight</text>
 	</string>
-	<string id="kb_turn_engine">
-		<text>Activate</text>
-	</string>
+
 	<string id="kb_up">
 		<text>Up</text>
 	</string>

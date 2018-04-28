@@ -8,6 +8,7 @@
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "Car.h"
+#include "CarWeapon.h"
 #include "xrserver_objects_alife_monsters.h"
 #include "CameraLook.h"
 #include "CameraFirstEye.h"

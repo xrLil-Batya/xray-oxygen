@@ -19,7 +19,6 @@ void CreateRendererList();					// In RenderList.cpp
 /// <summary>
 /// Method for init launcher
 /// </summary>
-int RunXRLauncher();
 int RunXRLauncher()
 {
 	// Get initialize launcher

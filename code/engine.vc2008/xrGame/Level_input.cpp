@@ -170,16 +170,8 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 #ifndef MASTER_GOLD
 	switch (key) {
-	case DIK_F7: {
-		FS.get_path					("$game_config$")->m_Flags.set(FS_Path::flNeedRescan, TRUE);
-		FS.get_path					("$game_scripts$")->m_Flags.set(FS_Path::flNeedRescan, TRUE);
-		FS.rescan_pathes			();
-		NET_Packet					net_packet;
-		net_packet.w_begin			(M_RELOAD_GAME);
-		Send						(net_packet,net_flags(TRUE));
-		return;
-	}
-	case DIK_DIVIDE: {
+	case DIK_DIVIDE: 
+	{
 		if (!Server)
 			break;
 
@@ -194,7 +186,8 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		
 		break;	
 	}
-	case DIK_MULTIPLY: {
+	case DIK_MULTIPLY: 
+	{
 		if (!Server)
 			break;
 

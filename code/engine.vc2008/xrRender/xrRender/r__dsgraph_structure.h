@@ -34,9 +34,7 @@ public:
 	bool														pmask_wmark			;
 public:
 	// Dynamic scene graph
-	//R_dsgraph::mapNormal_T										mapNormal	[2]		;	// 2==(priority/2)
 	R_dsgraph::mapNormalPasses_T								mapNormalPasses	[2]	;	// 2==(priority/2)
-	//R_dsgraph::mapMatrix_T										mapMatrix	[2]		;
 	R_dsgraph::mapMatrixPasses_T								mapMatrixPasses	[2]	;
 	R_dsgraph::mapSorted_T										mapSorted;
 	R_dsgraph::mapHUD_T											mapHUD;
@@ -70,8 +68,8 @@ public:
 
 	xr_vector<R_dsgraph::_LodItem,xalloc<R_dsgraph::_LodItem> >	lstLODs		;
 	xr_vector<int,xalloc<int> >									lstLODgroups;
-	xr_vector<ISpatial* /**,xalloc<ISpatial*>/**/>				lstRenderables;
-	xr_vector<ISpatial* /**,xalloc<ISpatial*>/**/>				lstSpatial	;
+	xr_vector<ISpatial*>				                        lstRenderables;
+	xr_vector<ISpatial*>				                        lstSpatial	;
 
 	u32															counter_S	;
 	u32															counter_D	;
