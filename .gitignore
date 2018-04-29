@@ -21,9 +21,7 @@
 *.tmp
 
 binaries/
-librarieswin32/
 intermediatex64/
-intermediatewin32/
 librariesx64/
 /.vs/
 /code/.vs/
@@ -33,7 +31,6 @@ librariesx64/
 /code/utils/.vs/
 /code/editors/xrPostprocessEditor/obj/
 /code/editors/xrSdkControls/obj/
-/code/editors/.vs/xrEditors/v15/
+/code/editors/.vs/
 *.db-shm
 *.db-wal
-/code/xrScripts/BuildVm.exe

@@ -130,6 +130,5 @@ bool CActor::use_Vehicle(CHolderCustom* object)
 
 void CActor::on_requested_spawn(CObject *object)
 {
-	CCar * car= smart_cast<CCar*>(object);
-	attach_Vehicle(car);
+	attach_Vehicle(smart_cast<CCar*>(object));
 }

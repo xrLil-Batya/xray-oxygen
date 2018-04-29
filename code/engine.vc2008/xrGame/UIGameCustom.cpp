@@ -20,11 +20,6 @@
 
 EGameIDs ParseStringToGameType(LPCSTR str);
 
-void Remove_all_statics()
-{
-	delete_data(CurrentGameUI()->m_custom_statics);
-}
-
 struct predicate_find_stat 
 {
 	LPCSTR	m_id;
@@ -35,17 +30,19 @@ struct predicate_find_stat
 	}
 };
 
-CUIGameCustom::CUIGameCustom(): 
-	m_msgs_xml(nullptr),m_ActorMenu(nullptr),m_PdaMenu(nullptr),m_window(nullptr),UIMainIngameWnd(nullptr),m_pMessagesWnd(nullptr)
+CUIGameCustom::CUIGameCustom()
+:m_msgs_xml(NULL),m_ActorMenu(NULL),m_PdaMenu(NULL),m_window(NULL),UIMainIngameWnd(NULL),m_pMessagesWnd(NULL)
 {
 	ShowGameIndicators		(true);
 	ShowCrosshair			(true);
 
 }
+bool g_b_ClearGameCaptions = false;
 
 CUIGameCustom::~CUIGameCustom()
 {
-	Remove_all_statics();
+	delete_data				(m_custom_statics);
+	g_b_ClearGameCaptions	= false;
 }
 
 
@@ -67,8 +64,12 @@ void CUIGameCustom::OnFrame()
 		delete_data					(m_custom_statics.back());
 		m_custom_statics.pop_back	();
 	}
-
-	//Remove_all_statics();
+	
+	if(g_b_ClearGameCaptions)
+	{
+		delete_data				(m_custom_statics);
+		g_b_ClearGameCaptions	= false;
+	}
 	m_window->Update();
 
 	//update windows
@@ -142,7 +143,7 @@ SDrawStaticStruct* CUIGameCustom::GetCustomStatic(LPCSTR id)
 	if(it!=m_custom_statics.end())
 		return (*it);
 
-	return nullptr;
+	return NULL;
 }
 
 void CUIGameCustom::RemoveCustomStatic(LPCSTR id)
@@ -235,31 +236,31 @@ void CUIGameCustom::UnLoad()
 
 void CUIGameCustom::Load()
 {
-	if (g_pGameLevel)
+	if(g_pGameLevel)
 	{
-		R_ASSERT(!m_msgs_xml);
-		m_msgs_xml = xr_new<CUIXml>();
-		m_msgs_xml->Load(CONFIG_PATH, UI_PATH, "ui_custom_msgs.xml");
+		R_ASSERT				(NULL==m_msgs_xml);
+		m_msgs_xml				= xr_new<CUIXml>();
+		m_msgs_xml->Load		(CONFIG_PATH, UI_PATH, "ui_custom_msgs.xml");
 
-		R_ASSERT(!m_ActorMenu);
-		m_ActorMenu = xr_new<CUIActorMenu>();
+		R_ASSERT				(NULL==m_ActorMenu);
+		m_ActorMenu				= xr_new<CUIActorMenu>		();
 
-		R_ASSERT(!m_PdaMenu);
-		m_PdaMenu = xr_new<CUIPdaWnd>();
+		R_ASSERT				(NULL==m_PdaMenu);
+		m_PdaMenu				= xr_new<CUIPdaWnd>			();
+		
+		R_ASSERT				(NULL==m_window);
+		m_window				= xr_new<CUIWindow>			();
 
-		R_ASSERT(!m_window);
-		m_window = xr_new<CUIWindow>();
+		R_ASSERT				(NULL==UIMainIngameWnd);
+		UIMainIngameWnd			= xr_new<CUIMainIngameWnd>	();
+		UIMainIngameWnd->Init	();
 
-		R_ASSERT(!UIMainIngameWnd);
-		UIMainIngameWnd = xr_new<CUIMainIngameWnd>();
-		UIMainIngameWnd->Init();
-
-		R_ASSERT(!m_pMessagesWnd);
-		m_pMessagesWnd = xr_new<CUIMessagesWindow>();
-
-		Init(0);
-		Init(1);
-		Init(2);
+		R_ASSERT				(NULL==m_pMessagesWnd);
+		m_pMessagesWnd			= xr_new<CUIMessagesWindow>();
+		
+		Init					(0);
+		Init					(1);
+		Init					(2);
 	}
 }
 

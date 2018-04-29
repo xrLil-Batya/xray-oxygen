@@ -1,19 +1,6 @@
-#ifndef __MESHSTRUCTURE_H__
-#define __MESHSTRUCTURE_H__
+#pragma once
+#define MESHSTRUCTURE_API XRLC_LIGHT_API
 
-//#ifdef MESHSTRUCTURE_EXSPORTS_IMPORTS
-#	define MESHSTRUCTURE_API XRLC_LIGHT_API
-//#else
-//#	define MESHSTRUCTURE_API 
-//#endif
-
-	//typedef	xr_vector<_vertex*>		v_vertices;
-	//typedef	v_vertices::iterator	v_vertices_it;
-	
-	//typedef v_faces::iterator		v_faces_it;
-	//typedef xr_vector<_subdiv>		v_subdivs;
-	//typedef v_subdivs::iterator		v_subdivs_it;
-//extern	volatile	u32		dwInvalidFaces;
 class MESHSTRUCTURE_API vector_item
 {
 protected:
@@ -37,12 +24,9 @@ struct MESHSTRUCTURE_API Tface: public DataVertexType::DataFaceType, public vect
 {
 	typedef	Tvertex<DataVertexType>	type_vertex;
 	typedef	Tface<DataVertexType>	type_face;
-//private:
+
 	type_vertex*	v[3];
-//	u32				m_self_index;
 public:
-//IC	void			set_index	( u32 idx )		{ m_self_index = idx; }
-//IC	u32				self_index	( )	const		{return m_self_index ;}
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 			Tface	();
 virtual		~Tface	();
@@ -305,45 +289,34 @@ struct remove_pred
 } ;
 
 template<typename typeVertex>
-IC void isolate_vertices(BOOL bProgress, xr_vector<typeVertex*> &vertices )
+IC void isolate_vertices(BOOL bProgress, xr_vector<typeVertex*> &vertices)
 {
-	if (bProgress)		Status		("Isolating vertices...");
-	//g_bUnregister		= false;
-	const u32 verts_old		= (u32)vertices.size();
-
-	for (int it=0; it<int(verts_old); ++it)	
+	if (bProgress)
 	{
-		if (bProgress)	
-			Progress	(float(it)/float(verts_old));
+		Status("Isolating vertices...");
+	}
+
+	const size_t verts_old = vertices.size();
+	for (size_t it = 0; it < verts_old; ++it)
+	{
+		if (bProgress)
+			Progress(float(it) / float(verts_old));
 
 		if (vertices[it] && vertices[it]->m_adjacents.empty())
-			_destroy_vertex( vertices[it], false );
-			
+			_destroy_vertex(vertices[it], false);
 	}
-	VERIFY( verts_old == vertices.size() );
+	VERIFY(verts_old == vertices.size());
 
-	xr_vector<typeVertex*>::iterator	_end	= std::remove	(vertices.begin(),vertices.end(),(typeVertex*)0);
+	xr_vector<typeVertex*>::iterator	_end = std::remove(vertices.begin(), vertices.end(), (typeVertex*)0);
 
-/*
-	remove_pred<typeVertex> rp;
-	xr_vector<typeVertex*>::iterator	_end	= std::remove_if	(vertices.begin(),vertices.end(),rp);
-	
-*/
-	vertices.erase	(_end,vertices.end());
-	//g_bUnregister		= true;
-	Memory.mem_compact	();
-	
-	if (bProgress)	
-			Progress	(1.f);
+	vertices.erase(_end, vertices.end());
+	Memory.mem_compact();
 
-	u32 verts_new		= vertices.size();
-	u32	_count			= verts_old-verts_new;
-	
-	if	(_count)		
-		clMsg	("::compact:: %d verts removed",_count);
+	if (bProgress)
+		Progress(1.f);
+
+	size_t _count = verts_old - vertices.size();
+
+	if (_count)
+		clMsg("::compact:: %d verts removed", _count);
 }
-
-
-
-
-#endif //__MESHSTRUCTURE_H__

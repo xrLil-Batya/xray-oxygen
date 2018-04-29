@@ -145,20 +145,6 @@ void ImplicitExecute::Execute(net_task_callback *net_callback)
 	}
 }
 
-void ImplicitLightingExec(BOOL b_net);
-void ImplicitLightingTreadNetExec(void *p);
-void ImplicitLighting(BOOL b_net)
-{
-	if (g_params().m_quality == ebqDraft)
-		return;
-	if (!b_net)
-	{
-		ImplicitLightingExec(FALSE);
-		return;
-	}
-	thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
-}
-
 std::recursive_mutex implicit_net_lock;
 void XRLC_LIGHT_API ImplicitNetWait()
 {
@@ -166,14 +152,8 @@ void XRLC_LIGHT_API ImplicitNetWait()
 	implicit_net_lock.unlock();
 }
 
-void ImplicitLightingTreadNetExec(void *p)
-{
-	std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
-	ImplicitLightingExec(TRUE);
-}
-
 static xr_vector<u32> not_clear;
-void ImplicitLightingExec(BOOL b_net)
+void ImplicitLightingExec(BOOL b_net, u32 thCount)
 {
 	Implicit		calculator;
 
@@ -209,9 +189,9 @@ void ImplicitLightingExec(BOOL b_net)
 	}
 
 	// Lighing
-	for (auto imp = calculator.begin(); imp != calculator.end(); imp++)
+	for (auto& imp: calculator)
 	{
-		ImplicitDeflector& defl = imp->second;
+		ImplicitDeflector& defl = imp.second;
 		Status("Lighting implicit map '%s'...", defl.texture->name);
 		Progress(0);
 		defl.Allocate();
@@ -220,15 +200,24 @@ void ImplicitLightingExec(BOOL b_net)
 		Progress(0);
 		cl_globs.Initialize(defl);
 		if (b_net)
+		{
 			lc_net::RunImplicitnet(defl, not_clear);
+		}
 		else
-			RunImplicitMultithread(defl);
-
+		{
+			RunImplicitMultithread(defl, thCount);
+		}
 		defl.faces.clear();
 
 		// Expand
 		Status("Processing lightmap...");
-		for (u32 ref = 254; ref>0; ref--)	if (!ApplyBorders(defl.lmap, ref)) break;
+		for (u32 ref = 254; ref > 0; ref--)
+		{
+			if (!ApplyBorders(defl.lmap, ref))
+			{
+				break;
+			}
+		}
 
 		Status("Mixing lighting with texture...");
 		{
@@ -301,4 +290,23 @@ void ImplicitLightingExec(BOOL b_net)
 	calculator.clear();
 	if (b_net)
 		inlc_global_data()->clear_build_textures_surface();
+}
+
+void ImplicitLightingTreadNetExec(void *p)
+{
+	std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
+	ImplicitLightingExec(TRUE, 2);
+}
+
+void ImplicitLighting(BOOL b_net, u32 thCount)
+{
+	if (g_params().m_quality != ebqDraft)
+	{
+		if (!b_net)
+		{
+			ImplicitLightingExec(FALSE, thCount);
+			return;
+		}
+		thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
+	}
 }

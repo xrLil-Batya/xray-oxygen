@@ -11,9 +11,10 @@ CPHSoundPlayer::CPHSoundPlayer(CPhysicsShellHolder* obj)
 CPHSoundPlayer::~CPHSoundPlayer()
 {
 	m_sound.stop();
-	m_object=NULL;
+	m_object = nullptr;
 }
-
+#pragma warning(push)
+#pragma warning(disable: 4267)
 void CPHSoundPlayer::Play(SGameMtlPair* mtl_pair,const Fvector& pos)
 {
 
@@ -27,5 +28,4 @@ void CPHSoundPlayer::Play(SGameMtlPair* mtl_pair,const Fvector& pos)
 		}
 	}
 }
-
-
+#pragma warning(pop)

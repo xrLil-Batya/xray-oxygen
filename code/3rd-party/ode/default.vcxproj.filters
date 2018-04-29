@@ -5,9 +5,6 @@
       <UniqueIdentifier>{48644d31-c7ca-4932-be31-9b7294bcbb37}</UniqueIdentifier>
       <Extensions>h;hpp;hxx;hm;inl;inc</Extensions>
     </Filter>
-    <Filter Include="Shared Header Files">
-      <UniqueIdentifier>{f1325282-657a-44f5-be80-00bff0d79df0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Source Files">
       <UniqueIdentifier>{d924688b-3c00-4283-b209-159e1091f901}</UniqueIdentifier>
       <Extensions>cpp;c;cxx;def;odl;idl;hpj;bat;asm</Extensions>

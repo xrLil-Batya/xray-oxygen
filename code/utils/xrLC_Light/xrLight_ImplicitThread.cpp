@@ -20,14 +20,15 @@ void ImplicitThread::Execute()
 	execute.Execute(0);
 }
 
-const u16 NUM_THREADS = 8;
-
-void RunImplicitMultithread(ImplicitDeflector& defl)
+void RunImplicitMultithread(ImplicitDeflector& defl, u32 thCount)
 {
 	// Start threads
 	CThreadManager tmanager;
-	u32	stride = defl.Height() / NUM_THREADS;
-	for (u32 thID = 0; thID<NUM_THREADS; thID++)
+
+	u32	stride = defl.Height() / thCount;
+	for (u32 thID = 0; thID < thCount; thID++)
+	{
 		tmanager.start(xr_new<ImplicitThread>(thID, &defl, thID*stride, thID*stride + stride));
+	}
 	tmanager.wait();
 }

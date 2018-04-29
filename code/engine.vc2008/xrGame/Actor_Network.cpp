@@ -56,11 +56,9 @@ int			g_dwInputUpdateDelta		= 20;
 BOOL		net_cl_inputguaranteed		= FALSE;
 CActor*		g_actor						= nullptr;
 
-CActor*			Actor()	
-{	
-//	R_ASSERT2	(true, "Actor() method invokation must be only in Single Player game!");
-	VERIFY		(g_actor);
-	return		(g_actor); 
+CActor* Actor()	
+{
+	return (g_actor); 
 };
 
 //--------------------------------------------------------------------
@@ -90,7 +88,7 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	P.w_u32				(Level().timeServer());
 	P.w_u8				(flags);
 	Fvector				p = Position();
-	P.w_vec3			(p);//Position());
+	P.w_vec3			(p);
 
 	P.w_float /*w_angle8*/			(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
 	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
@@ -100,19 +98,11 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	P.w_u8				(u8(g_Squad()));
 	P.w_u8				(u8(g_Group()));
 
-
-	//CSE_ALifeCreatureTrader
-//	P.w_float			(inventory().TotalWeight());
-//	P.w_u32				(m_dwMoney);
-
-	//CSE_ALifeCreatureActor
-	
 	u16 ms	= (u16)(mstate_real & 0x0000ffff);
 	P.w_u16				(u16(ms));
 	P.w_sdir			(NET_SavedAccel);
 	Fvector				v = character_physics_support()->movement()->GetVelocity();
-	P.w_sdir			(v);//m_PhysicMovementControl.GetVelocity());
-//	P.w_float_q16		(fArmor,-500,1000);
+	P.w_sdir			(v);
 	P.w_float			(g_Radiation());
 
 	P.w_u8				(u8(inventory().GetActiveSlot()));
@@ -256,12 +246,11 @@ void		CActor::net_ExportDeadBody		(NET_Packet &P)
 	};	
 };
 
-void CActor::net_Import		(NET_Packet& P)					// import from server
+void CActor::net_Import(NET_Packet& P) // import from server
 {
 	//-----------------------------------------------
 	net_Import_Base(P);
 	//-----------------------------------------------
-
 	m_u16NumBones = P.r_u16();
 	if (m_u16NumBones == 0) return;
 	//-----------------------------------------------
@@ -269,22 +258,18 @@ void CActor::net_Import		(NET_Packet& P)					// import from server
 	//-----------------------------------------------
 };
 
-void		CActor::net_Import_Base				( NET_Packet& P)
+void CActor::net_Import_Base( NET_Packet& P)
 {
 	net_update			N;
 
 	u8					flags;
 	u16					tmp;
 
-	//CSE_ALifeCreatureAbstract
 	float health;
 	P.r_float			(health);
 	//----------- for E3 -----------------------------
 	P.r_u32				(N.dwTimeStamp	);
 	//---------------------------------------------
-	
-	//---------------------------------------------
-
 	P.r_u8				(flags			);
 	P.r_vec3			(N.p_pos		);
 	P.r_float /*r_angle8*/			(N.o_model		);
@@ -478,9 +463,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	m_current_torso.invalidate();
 	m_current_head.invalidate();
 	//-------------------------------------
-	//  ,  
 	game_news_registry->registry().init(ID());
-
 
 	if (!CInventoryOwner::net_Spawn(DC)) return FALSE;
 	if (!inherited::net_Spawn(DC))	return FALSE;
@@ -488,21 +471,13 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	CSE_ALifeTraderAbstract	 *pTA = smart_cast<CSE_ALifeTraderAbstract*>(e);
 	set_money(pTA->m_dwMoney, false);
 
-	//.	if(	TRUE == E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && TRUE == E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
-	//.		CurrentGameUI()->UIMainIngameWnd->m_artefactPanel->InitIcons(m_ArtefactsOnBelt);
-
-
 	ROS()->force_mode(IRender_ObjectSpecific::TRACE_ALL);
 
-	//mstate_wishful = E->mstate;
-	mstate_wishful = 0;
 	mstate_wishful = E->mstate&(mcCrouch | mcAccel);
 	mstate_old = mstate_real = mstate_wishful;
 	set_state_box(mstate_real);
 	m_pPhysics_support->in_NetSpawn(e);
 
-	//set_state_box( mstate_real );
-	//character_physics_support()->movement()->ActivateBox	(0);
 	if (E->m_holderID != u16(-1))
 	{
 		character_physics_support()->movement()->DestroyCharacter();
@@ -524,16 +499,10 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	else
 		cam_Set(eacFirstEye);
 
-	cam_Active()->Set(-E->o_torso.yaw, E->o_torso.pitch, 0);//E->o_Angle.z);
+	cam_Active()->Set(-E->o_torso.yaw, E->o_torso.pitch, 0);
 
 	// *** movement state - respawn
-	//mstate_wishful			= 0;
-	//mstate_real				= 0;
-	//mstate_old				= 0;
 	m_bJumpKeyPressed = FALSE;
-	//
-	//	m_bJumpKeyPressed = ((mstate_wishful&mcJump)!=0);
-	//		
 	NET_SavedAccel.set(0, 0, 0);
 	NET_WasInterpolating = TRUE;
 

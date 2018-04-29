@@ -430,17 +430,22 @@ void CActorCondition::UpdateRadiation()
 
 void CActorCondition::UpdateSatiety()
 {
-	if(m_fSatiety>0)
+	if (m_fSatiety > 0.f)
 	{
-		m_fSatiety -= m_fV_Satiety*m_fDeltaTime;
+		m_fSatiety -= m_fV_Satiety * m_fDeltaTime;
 		clamp(m_fSatiety, 0.0f, 1.0f);
 	}
-		
-	float satiety_health_koef = (m_fSatiety-m_fSatietyCritical)/(m_fSatiety>=m_fSatietyCritical?1-m_fSatietyCritical:m_fSatietyCritical);
-	if(CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT) )
+	else if (m_fSatiety <= 0.f && !GodMode() && object().g_Alive())
 	{
-		m_fDeltaHealth += m_fV_SatietyHealth*satiety_health_koef*m_fDeltaTime;
-		m_fDeltaPower += m_fV_SatietyPower*m_fSatiety*m_fDeltaTime;
+		// Actor must die. (^_^)
+		object().KillEntity(object().ID());
+	}
+
+	float satiety_health_koef = (m_fSatiety - m_fSatietyCritical) / (m_fSatiety >= m_fSatietyCritical ? 1 - m_fSatietyCritical : m_fSatietyCritical);
+	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
+	{
+		m_fDeltaHealth += m_fV_SatietyHealth * satiety_health_koef*m_fDeltaTime;
+		m_fDeltaPower += m_fV_SatietyPower * m_fSatiety*m_fDeltaTime;
 	}
 }
 void CActorCondition::UpdateThirst()

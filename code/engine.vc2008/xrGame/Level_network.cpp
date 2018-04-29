@@ -18,12 +18,13 @@
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
 #include "GamePersistent.h"
+
 #include "../xrphysics/physicscommon.h"
 
 const int max_objects_size			= 4096;
 const int max_objects_size_in_save	= 8 * 2048;
 
-void Remove_all_statics();
+extern bool	g_b_ClearGameCaptions;
 
 void CLevel::remove_objects()
 {
@@ -64,9 +65,10 @@ void CLevel::remove_objects()
 	space_restriction_manager().clear();
 
 	psDeviceFlags.set(rsDisableObjectsAsCrows, b_stored);
+	g_b_ClearGameCaptions = true;
 
 	ai().script_engine().collect_all_garbage();
-	Remove_all_statics();
+
 	stalker_animation_data_storage().clear();
 
 	VERIFY(Render);
@@ -78,6 +80,7 @@ void CLevel::remove_objects()
 	if (!client_spawn_manager().registry().empty())
 		client_spawn_manager().dump();
 #endif // DEBUG
+	VERIFY(client_spawn_manager().registry().empty());
 	client_spawn_manager().clear();
 
 	g_pGamePersistent->destroy_particles(false);
@@ -126,8 +129,7 @@ void CLevel::net_Stop		()
 		xr_delete				(Server);
 	}
 
-	ai().script_engine().collect_all_garbage (); 
-	Remove_all_statics();
+	ai().script_engine().collect_all_garbage	();
 
 #ifdef DEBUG
 	show_animation_stats		();
