@@ -262,7 +262,7 @@ namespace luabind
                     rhs.m_called = true;
                 }
 
-				~proxy_function_void_caller() LUABIND_DTOR_NOEXCEPT
+				~proxy_function_void_caller()
 				{
 					if (m_called) return;
 

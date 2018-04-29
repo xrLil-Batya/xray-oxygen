@@ -30,7 +30,7 @@
 #		define LUABIND_NO_ERROR_CHECKING
 #	endif // LUABIND_NO_ERROR_CHECKING
 
-#	pragma warning(disable: 4251 577)
+#	pragma warning(disable: 4251 577 297)
 #   define LUABIND_DTOR_NOEXCEPT noexcept
 #else
 #   define LUABIND_DTOR_NOEXCEPT
