@@ -87,12 +87,10 @@ void dx103DFluidEmitters::ApplyDensity( const CEmitter &Emitter)
 	switch (Emitter.m_eType)
 	{
 	case ET_SimpleDraught:
-		//fRadius += (0.1f - fRadius) * (1.0f + 0.5f * _sin( (1.0f/30.0f) * t * (2.0f * float(PI))) );
-		//float fFactor = 1.0f + 0.5f * _sin(t * (2.0f * float(PI)) / 30 );
-		//FlowVelocity.mul( fFactor );
 		break;
 	}
 
+	// Todo - check it!
 	// Color is the density of the smoke. We use a sinusoidal function of 't' to make it more interesting.
 	//static float t = 0.0f;
 	//t += 0.05f;
@@ -136,8 +134,6 @@ void dx103DFluidEmitters::ApplyVelocity( const CEmitter &Emitter)
 	switch (Emitter.m_eType)
 	{
 	case ET_SimpleDraught:
-		//fRadius += (0.1f - fRadius) * (1.0f + 0.5f * _sin( (1.0f/30.0f) * t * (2.0f * float(PI))) );
-		//float fFactor = 1.0f + 0.5f * _sin(t * (2.0f * float(PI)) / 10 );
 		float fPeriod = Emitter.m_DraughtParams.m_fPeriod;
 		if (fPeriod<0.0001f) fPeriod = 0.0001f;
 		float fFactor = 1.0f + 

@@ -1,5 +1,3 @@
-#ifndef	dx103DFluidObstacles_included
-#define	dx103DFluidObstacles_included
 #pragma once
 
 class dx103DFluidGrid;
@@ -36,7 +34,6 @@ private:
 	void	RenderPhysicsElement( const IPhysicsElement &Element, const Fmatrix &WorldToFluid, float timestep);
 
 	void	RenderStaticOOBB( const Fmatrix &Transform);
-	//void	RenderDynamicOOBB( const IPhysicsElement &Element, const Fmatrix &WorldToFluid, float timestep);
 	void	RenderDynamicOOBB( const IPhysicsGeometry &Geometry, const Fmatrix &WorldToFluid, float timestep);
 	
 private:
@@ -52,5 +49,3 @@ private:
 	xr_vector<const IPhysicsShell*>	m_lstShells;
 	xr_vector<const IPhysicsElement*>	m_lstElements;
 };
-
-#endif	//	dx103DFluidObstacles_included

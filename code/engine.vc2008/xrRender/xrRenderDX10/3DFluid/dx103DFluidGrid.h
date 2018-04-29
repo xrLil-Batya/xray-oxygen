@@ -1,5 +1,3 @@
-#ifndef	dx103DFluidGrid_included
-#define	dx103DFluidGrid_included
 #pragma once
 
 struct VS_INPUT_FLUIDSIM_STRUCT;
@@ -49,5 +47,3 @@ private:
 	int			m_iNumVerticesBoundarySlices;
 	int			m_iNumVerticesBoundaryLines;
 };
-
-#endif	//	dx103DFluidGrid_included

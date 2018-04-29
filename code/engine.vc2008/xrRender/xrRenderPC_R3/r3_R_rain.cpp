@@ -40,8 +40,6 @@ void CRender::render_rain()
 	//	Use light as placeholder for rain data.
 	light			RainLight;
 
-	//static const float	source_offset		= 40.f;
-
 	static const float	source_offset		= 10000.f;
 	RainLight.direction.set(0.0f, -1.0f, 0.0f);
 	RainLight.position.set(Device.vCameraPosition.x,Device.vCameraPosition.y+source_offset,Device.vCameraPosition.z);
@@ -69,8 +67,6 @@ void CRender::render_rain()
 		}
 	}
 
-	//Device.vCameraDirection
-
 	// Compute volume(s) - something like a frustum for infinite directional light
 	// Also compute virtual light position and sector it is inside
 	CFrustum					cull_frustum;
@@ -80,6 +76,7 @@ void CRender::render_rain()
 	Fmatrix						cull_xform;
 	{
 		FPU::m64r					();
+
 		// Lets begin from base frustum
 		Fmatrix		fullxform_inv	= ex_full_inverse;
 #ifdef	_DEBUG
@@ -100,7 +97,7 @@ void CRender::render_rain()
 					hull.polys.back().points.push_back(facetable[plane][pt]);
 			}
 		}
-		//hull.compute_caster_model	(cull_planes,fuckingsun->direction);
+
 		hull.compute_caster_model	(cull_planes,RainLight.direction);
 #ifdef	_DEBUG
 		for (u32 it=0; it<cull_planes.size(); it++)
@@ -156,14 +153,6 @@ void CRender::render_rain()
 		Fbox&	bb					= frustum_bb;
 		bb.grow				(EPS);
 
-		//	HACK
-		//	TODO: DX10: Calculate bounding sphere for view frustum
-		//	TODO: DX10: Reduce resolution.
-		//bb.min.x = -50;
-		//bb.max.x = 50;
-		//bb.min.y = -50;
-		//bb.max.y = 50;
-
 		//	Offset RainLight position to center rain shadowmap
 		Fvector3	vRectOffset;
 		vRectOffset.set( fBoundingSphereRadius*Device.vCameraDirection.x, 0, fBoundingSphereRadius*Device.vCameraDirection.z);
@@ -172,7 +161,6 @@ void CRender::render_rain()
 		bb.min.y = -fBoundingSphereRadius + vRectOffset.z;
 		bb.max.y = fBoundingSphereRadius + vRectOffset.z;
 
-		//D3DXMatrixOrthoOffCenterLH	((D3DXMATRIX*)&mdir_Project,bb.min.x,bb.max.x,  bb.min.y,bb.max.y,  bb.min.z-tweak_rain_ortho_xform_initial_offs,bb.max.z);
 		D3DXMatrixOrthoOffCenterLH	((D3DXMATRIX*)&mdir_Project,bb.min.x,bb.max.x,  bb.min.y,bb.max.y,  bb.min.z-tweak_rain_ortho_xform_initial_offs,bb.min.z+2*tweak_rain_ortho_xform_initial_offs);
 
 		cull_xform.mul		(mdir_Project,mdir_View	);
@@ -221,7 +209,6 @@ void CRender::render_rain()
 	}
 
 	// Fill the database
-	//r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 	r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, FALSE);
 
 	// Finalize & Cleanup
@@ -238,14 +225,11 @@ void CRender::render_rain()
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(RainLight.X.D.combine	);	
 			r_dsgraph_render_graph				(0)	;
-			//if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))	
-			//	Details->Render					()	;
 		}
 	}
 
 	// End SMAP-render
 	{
-		//		fuckingsun->svis.end					();
 		r_pmask									(true,false);
 	}
 

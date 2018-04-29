@@ -142,72 +142,6 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Check for NULL render target support
-	//	DX10 disabled
-	//D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
-	//o.nullrt			= HW.support	(nullrt,			D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
-	o.nullrt = false;
-	/*
-	if (o.nullrt)		{
-	Msg				("* NULLRT supported and used");
-	};
-	*/
-	if (o.nullrt)		{
-		Msg				("* NULLRT supported");
-
-		//.	    _tzset			();
-		//.		??? _strdate	( date, 128 );	???
-		//.		??? if (date < 22-march-07)		
-		if (0)
-		{
-			u32 device_id	= HW.Caps.id_device;
-			bool disable_nullrt = false;
-			switch (device_id)	
-			{
-			case 0x190:
-			case 0x191:
-			case 0x192:
-			case 0x193:
-			case 0x194:
-			case 0x197:
-			case 0x19D:
-			case 0x19E:{
-				disable_nullrt = true;	//G80
-				break;
-					   }
-			case 0x400:
-			case 0x401:
-			case 0x402:
-			case 0x403:
-			case 0x404:
-			case 0x405:
-			case 0x40E:
-			case 0x40F:{
-				disable_nullrt = true;	//G84
-				break;
-					   }
-			case 0x420:
-			case 0x421:
-			case 0x422:
-			case 0x423:
-			case 0x424:
-			case 0x42D:
-			case 0x42E:
-			case 0x42F:{
-				disable_nullrt = true;	// G86
-				break;
-					   }
-			}
-			if (disable_nullrt)	o.nullrt=false;
-		};
-		if (o.nullrt)	Msg				("* ...and used");
-	};
-
-
-	// SMAP / DST
-	o.HW_smap_FETCH4	= FALSE;
-	//	DX10 disabled
-	//o.HW_smap			= HW.support	(D3DFMT_D24X8,			D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
 	o.HW_smap			= true;
 	o.HW_smap_PCF		= o.HW_smap		;
 	if (o.HW_smap)		
@@ -221,8 +155,6 @@ void					CRender::create					()
 	}
 
 	//	DX10 disabled
-	//o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
-	//o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 	o.fp16_filter		= true;
 	o.fp16_blend		= true;
 
@@ -232,35 +164,14 @@ void					CRender::create					()
 		if (o.HW_smap)	{
 			o.HW_smap_FORMAT= MAKEFOURCC	('D','F','2','4');
 			o.HW_smap_PCF	= FALSE			;
-			o.HW_smap_FETCH4= TRUE			;
 		}
 		Msg				("* DF24/F4 supported and used [%X]", o.HW_smap_FORMAT);
-	}
-
-	// emulate ATI-R4xx series
-	if (strstr(Core.Params,"-r4xx"))	{
-		o.mrtmixdepth	= FALSE;
-		o.HW_smap		= FALSE;
-		o.HW_smap_PCF	= FALSE;
-		o.fp16_filter	= FALSE;
-		o.fp16_blend	= FALSE;
 	}
 
 	VERIFY2				(o.mrt && (HW.Caps.raster.dwInstructions>=256),"Hardware doesn't meet minimum feature-level");
 	if (o.mrtmixdepth)		o.albedo_wo		= FALSE	;
 	else if (o.fp16_blend)	o.albedo_wo		= FALSE	;
 	else					o.albedo_wo		= TRUE	;
-
-	// nvstencil on NV40 and up
-	o.nvstencil			= FALSE;
-	//if ((HW.Caps.id_vendor==0x10DE)&&(HW.Caps.id_device>=0x40))	o.nvstencil = TRUE;
-	if (strstr(Core.Params,"-nonvs"))		o.nvstencil	= FALSE;
-
-	// nv-dbt
-	//	DX10 disabled
-	//o.nvdbt				= HW.support	((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
-	o.nvdbt				= false;
-	if (o.nvdbt)		Msg	("* NV-DBT supported and used");
 
 	// gloss
 	char*	g			= strstr(Core.Params,"-gloss ");
@@ -398,13 +309,7 @@ void					CRender::create					()
 	qdesc.MiscFlags				= 0;
 	qdesc.Query					= D3D10_QUERY_EVENT;
     std::memset(q_sync_point,0,sizeof(q_sync_point));
-	//R_CHK						(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[1]));
-	//	Prevent error on first get data
-	//q_sync_point[0]->End();
-	//q_sync_point[1]->End();
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
+
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[i]));
 	q_sync_point[0]->End();
@@ -412,7 +317,6 @@ void					CRender::create					()
 	xrRender_apply_tf			();
 	::PortalTraverser.initialize();
 	FluidManager.Initialize( 70, 70, 70 );
-//	FluidManager.Initialize( 100, 100, 100 );
 	FluidManager.SetScreenSize(Device.dwWidth, Device.dwHeight);
 }
 
@@ -421,8 +325,7 @@ void					CRender::destroy				()
 	m_bMakeAsyncSS				= false;
 	FluidManager.Destroy();
 	::PortalTraverser.destroy	();
-	//_RELEASE					(q_sync_point[1]);
-	//_RELEASE					(q_sync_point[0]);
+
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		_RELEASE				(q_sync_point[i]);
 	
@@ -461,8 +364,7 @@ void CRender::reset_begin()
 
 	xr_delete					(Target);
 	HWOCC.occq_destroy			();
-	//_RELEASE					(q_sync_point[1]);
-	//_RELEASE					(q_sync_point[0]);
+
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		_RELEASE				(q_sync_point[i]);
 }
@@ -472,15 +374,12 @@ void CRender::reset_end()
 	D3D10_QUERY_DESC			qdesc;
 	qdesc.MiscFlags				= 0;
 	qdesc.Query					= D3D10_QUERY_EVENT;
-	//R_CHK						(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[1]));
+
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[i]));
+
 	//	Prevent error on first get data
 	q_sync_point[0]->End();
-	//q_sync_point[1]->End();
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
 	HWOCC.occq_create			(occq_size);
 
 	Target						=	xr_new<CRenderTarget>	();
@@ -499,15 +398,7 @@ void CRender::reset_end()
 	// that some data is not ready in the first frame (for example device camera position)
 	m_bFirstFrameAfterReset		= true;
 }
-/*
-void CRender::OnFrame()
-{
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
-}*/
+
 void CRender::OnFrame()
 {
 	Models->DeleteQueue			();
@@ -652,23 +543,22 @@ void					CRender::rmNear				()
 	D3D_VIEWPORT VP		=	{0,0,T->get_width(),T->get_height(),0,0.02f };
 
 	HW.pDevice->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
+
 void					CRender::rmFar				()
 {
 	IRender_Target* T	=	getTarget	();
 	D3D_VIEWPORT VP		=	{0,0,T->get_width(),T->get_height(),0.99999f,1.f };
 
 	HW.pDevice->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
+
 void					CRender::rmNormal			()
 {
 	IRender_Target* T	=	getTarget	();
 	D3D_VIEWPORT VP		= {0,0,T->get_width(),T->get_height(),0,1.f };
 
 	HW.pDevice->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
 //////////////////////////////////////////////////////////////////////
@@ -710,13 +600,7 @@ static inline bool match_shader_id		( LPCSTR const debug_shader_id, LPCSTR const
 
 /////////
 #pragma comment(lib,"d3dx9.lib")
-/*
-extern "C"
-{
-LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
-LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
-};
-*/
+
 static HRESULT create_shader (
 		LPCSTR name,
 		LPCSTR const pTarget,
@@ -800,9 +684,7 @@ static HRESULT create_shader (
 		if (SUCCEEDED(_result) && pReflection)
 		{
 			//	TODO: DX10: share the same input signatures
-
 			//	Store input signature (need only for VS)
-			//CHK_DX( D3DxxGetInputSignatureBlob(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), &_vs->signature) );
 			ID3DBlob*	pSignatureBlob;
 			CHK_DX		( D3DGetInputSignatureBlob(buffer, buffer_size, &pSignatureBlob) );
 			VERIFY		(pSignatureBlob);
@@ -868,7 +750,6 @@ static HRESULT create_shader (
 	{
 		ID3DBlob*		disasm	= 0;
 		D3DDisassemble	(buffer, buffer_size, FALSE, 0, &disasm );
-		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
 		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
 		IWriter*		W		= FS.w_open("$logs$",dname);
@@ -932,6 +813,7 @@ HRESULT	CRender::shader_compile			(
 
 	char	sh_name[MAX_PATH] = "";
 	u32 len = 0;
+
 	// options
 	{
 		xr_sprintf						(c_smapsize,"%04d",u32(o.smapsize));
@@ -969,13 +851,6 @@ HRESULT	CRender::shader_compile			(
 		def_it						++	;
 	}
 	sh_name[len]='0'+char(o.HW_smap_PCF); ++len;
-
-	if (o.HW_smap_FETCH4)			{
-		defines[def_it].Name		=	"USE_FETCH4";
-		defines[def_it].Definition	=	"1";
-		def_it						++	;
-	}
-	sh_name[len]='0'+char(o.HW_smap_FETCH4); ++len;
 
 	if (o.sjitter)			{
 		defines[def_it].Name		=	"USE_SJITTER";
@@ -1478,10 +1353,7 @@ static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const fu
 
 static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result )
 {
-#if 0
-	strcpy_s					( result, "" );
-	return						false;
-#else // #if 1
+#if 1
 #ifdef DEBUG
 	LPCSTR temp					= "";
 	bool found					= false;

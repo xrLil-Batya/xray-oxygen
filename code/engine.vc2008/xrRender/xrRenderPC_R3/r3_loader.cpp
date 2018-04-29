@@ -196,7 +196,6 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 {
 	R_ASSERT2					(base_fs,"Could not load geometry. File not found.");
 	dxRenderDeviceRender::Instance().Resources->Evict		();
-//	u32	dwUsage					= D3DUSAGE_WRITEONLY;
 
 	xr_vector<VertexDeclarator>				&_DC	= _alternative?xDC:nDC;
 	xr_vector<ID3DVertexBuffer*>		&_VB	= _alternative?xVB:nVB;
@@ -234,8 +233,6 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 			dx10BufferUtils::CreateVertexBuffer	(&_VB[i], pData, vCount*vSize);
 			HW.stats_manager.increment_stats_vb	(_VB[i]);
 			xr_free(pData);
-
-//			fs->advance			(vCount*vSize);
 		}
 		fs->close				();
 	}
@@ -257,8 +254,6 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 			dx10BufferUtils::CreateIndexBuffer	(&_IB[i], pData, iCount*2);
 			HW.stats_manager.increment_stats_ib	(_IB[i]);
 			xr_free(pData);
-
-//			fs().advance		(iCount*2);
 		}
 		fs->close				();
 	}
@@ -357,10 +352,6 @@ void CRender::LoadSectors(IReader* fs)
 		rmPortals = 0;
 	}
 
-	// debug
-	//	for (int d=0; d<Sectors.size(); d++)
-	//		Sectors[d]->DebugDump	();
-
 	pLastSector = 0;
 }
 
@@ -397,7 +388,6 @@ void CRender::LoadSWIs(CStreamReader* base_fs)
 
 void CRender::Load3DFluid()
 {
-	//if (strstr(Core.Params,"-no_volumetric_fog"))
 	if (!RImplementation.o.volumetricfog)
 		return;
 
@@ -417,10 +407,12 @@ void CRender::Load3DFluid()
 
 				//	Attach to sector's static geometry
 				CSector *pSector = (CSector*)detectSector(pVolume->getVisData().sphere.P);
+
 				//	3DFluid volume must be in render sector
 				VERIFY(pSector);
 
 				dxRender_Visual* pRoot = pSector->root();
+
 				//	Sector must have root
 				VERIFY(pRoot);
 				VERIFY(pRoot->getType() == MT_HIERRARHY);

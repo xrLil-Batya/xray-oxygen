@@ -28,15 +28,12 @@ void CRenderTarget::accum_point		(light* L)
 	RCache.set_xform_view			(Device.mView);
 	RCache.set_xform_project		(Device.mProject);
 	enable_scissor					(L);
-	enable_dbt_bounds				(L);
 
 	// *****************************	Mask by stencil		*************************************
 	// *** similar to "Carmack's reverse", but assumes convex, non intersecting objects,
 	// *** thus can cope without stencil clear with 127 lights
 	// *** in practice, 'cause we "clear" it back to 0x1 it usually allows us to > 200 lights :)
 	RCache.set_Element				(s_accum_mask->E[SE_MASK_POINT]);			// masker
-	//	Done in blender!
-	//RCache.set_ColorWriteEnable		(FALSE);
 
 	// backfaces: if (1<=stencil && zfail)	stencil = light_id
 	RCache.set_CullMode				(CULL_CW);
@@ -54,17 +51,10 @@ void CRenderTarget::accum_point		(light* L)
 	   RCache.set_Stencil				(TRUE,D3DCMP_LESSEQUAL,0x01,0x7f,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE);
 	draw_volume						(L);
 
-	// nv-stencil recompression
-	if (RImplementation.o.nvstencil)		u_stencil_optimize();
-
 	// *****************************	Minimize overdraw	*************************************
 	// Select shader (front or back-faces), *** back, if intersect near plane
 	RCache.set_ColorWriteEnable				();
 	RCache.set_CullMode						(CULL_CW);		// back
-	/*
-	if (bIntersect)	RCache.set_CullMode		(CULL_CW);		// back
-	else			RCache.set_CullMode		(CULL_CCW);		// front
-	*/
 
 	// 2D texgens 
 	Fmatrix			m_Texgen;			u_compute_texgen_screen	(m_Texgen	);
@@ -90,14 +80,8 @@ void CRenderTarget::accum_point		(light* L)
 		RCache.set_c					("Ldynamic_color",	L_clr.x,L_clr.y,L_clr.z,L_spec);
 		RCache.set_c					("m_texgen",		m_Texgen);
 
-		// Fetch4 : enable
-//		if (RImplementation.o.HW_smap_FETCH4)	{
-			//. we hacked the shader to force smap on S0
-//#			define FOURCC_GET4  MAKEFOURCC('G','E','T','4') 
-//			HW.pDevice->SetSamplerState	( 0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET4 );
-//		}
-
 		RCache.set_CullMode				(CULL_CW);		// back
+
 		// Render if (light_id <= stencil && z-pass)
       if( ! RImplementation.o.dx10_msaa )
       {
@@ -132,13 +116,6 @@ void CRenderTarget::accum_point		(light* L)
          }
 		   RCache.set_Stencil(TRUE,D3DCMP_EQUAL,dwLightMarkerID,0xff,0x00);
       }
-
-		// Fetch4 : disable
-//		if (RImplementation.o.HW_smap_FETCH4)	{
-			//. we hacked the shader to force smap on S0
-//#			define FOURCC_GET1  MAKEFOURCC('G','E','T','1') 
-//			HW.pDevice->SetSamplerState	( 0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET1 );
-//		}
 	}
 
 	// blend-copy
@@ -184,11 +161,7 @@ void CRenderTarget::accum_point		(light* L)
       }
 	}
 
-	//CHK_DX		(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE,FALSE));
 	RCache.set_Scissor(0);
 
-	//dwLightMarkerID					+=	2;	// keep lowest bit always setted up
 	increment_light_marker();
-
-	u_DBT_disable				();
 }
