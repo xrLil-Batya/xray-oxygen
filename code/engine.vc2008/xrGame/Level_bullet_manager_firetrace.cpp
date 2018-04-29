@@ -189,7 +189,7 @@ void CBulletManager::FireShotmark (SBullet* bullet, const Fvector& vDir, const F
 	}
 
 	ref_sound* pSound = (!mtl_pair || mtl_pair->CollideSounds.empty())?
-						NULL:&mtl_pair->CollideSounds[::Random.randI(0,mtl_pair->CollideSounds.size())];
+						NULL:&mtl_pair->CollideSounds[::Random.randI(0, (u32)mtl_pair->CollideSounds.size())];
 
 	//проиграть звук
 	if(pSound && ShowMark)
@@ -200,7 +200,7 @@ void CBulletManager::FireShotmark (SBullet* bullet, const Fvector& vDir, const F
 	}
 
 	LPCSTR ps_name = ( !mtl_pair || mtl_pair->CollideParticles.empty() ) ? NULL : 
-		*mtl_pair->CollideParticles[ ::Random.randI(0,mtl_pair->CollideParticles.size()) ];
+		*mtl_pair->CollideParticles[ ::Random.randI(0, (u32)mtl_pair->CollideParticles.size()) ];
 
 	SGameMtl*	tgt_mtl = GMLib.GetMaterialByIdx(target_material);
 	BOOL bStatic = !tgt_mtl->Flags.test(SGameMtl::flDynamic);

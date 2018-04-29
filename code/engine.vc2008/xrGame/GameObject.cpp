@@ -294,7 +294,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	//load custom user data from server
 	if(!E->client_data.empty())
 	{	
-		IReader			ireader = IReader(&*E->client_data.begin(), E->client_data.size());
+		IReader			ireader = IReader(&*E->client_data.begin(), (u32)E->client_data.size());
 		net_Load		(ireader);
 	}
 
