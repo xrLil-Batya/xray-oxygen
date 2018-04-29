@@ -157,17 +157,19 @@ struct CLoader {
 	{
 		if (p.can_clear())
 			data.clear();
-		u32								prev_count = data.size();
-		data.resize						(prev_count + stream.r_u32());
+		size_t							prev_count = data.size();
+		data.resize(prev_count + stream.r_u32());
 		xr_vector<bool>::iterator		I = data.begin() + prev_count;
 		xr_vector<bool>::iterator		E = data.end();
 		u32								mask = 0;
-		for (int j=32; I != E; ++I, ++j) {
-			if (j >= 32) {
-				mask					= stream.r_u32();
-				j						= 0;
+		for (u32 j = 32; I != E; ++I, ++j) 
+		{
+			if (j >= 32u) 
+			{
+				mask = stream.r_u32();
+				j = 0u;
 			}
-			*I							= !!(mask & (u32(1) << j));
+			*I = !!(mask & (1u << j));
 		}
 	};
 

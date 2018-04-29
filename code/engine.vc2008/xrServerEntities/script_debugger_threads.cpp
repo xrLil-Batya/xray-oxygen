@@ -31,19 +31,18 @@ u32 CDbgScriptThreads::Fill()
 u32 CDbgScriptThreads::FillFrom(CScriptProcess* sp)
 {
 	m_threads.clear();
-	const CScriptProcess::SCRIPT_REGISTRY &vScripts = 	sp->scripts();
-	CScriptProcess::SCRIPT_REGISTRY::const_iterator It = vScripts.begin();
-	for(;It!=vScripts.end(); ++It){
+
+	for(CScriptThread* it: sp->scripts())
+	{
 		SScriptThread th;
-//		th.pScript		= (*It);
-		th.lua			= (*It)->lua();
-		th.scriptID		= (*It)->thread_reference();
-		th.active		= (*It)->active();
-		xr_strcat			(th.name, *(*It)->script_name());
-		xr_strcat			(th.process, *sp->name());
+		th.lua			= it->lua();
+		th.scriptID		= it->thread_reference();
+		th.active		= it->active();
+		xr_strcat		(th.name, it->script_name().c_str());
+		xr_strcat		(th.process, sp->name().c_str());
 		m_threads.push_back(th);
 	}
-	return m_threads.size();
+	return u32(m_threads.size());
 }
 
 lua_State* CDbgScriptThreads::FindScript(int nThreadID)
@@ -58,7 +57,6 @@ lua_State* CDbgScriptThreads::FindScript(int nThreadID)
 
 void  CDbgScriptThreads::DrawThreads()
 {
-	//CScriptDebugger::GetDebugger()->ClearThreads();
 	m_debugger->ClearThreads();
 	xr_vector<SScriptThread>::iterator It = m_threads.begin();
 	for(;It!=m_threads.end();++It){
