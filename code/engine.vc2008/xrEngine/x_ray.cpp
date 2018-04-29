@@ -193,6 +193,22 @@ void Startup()
 		if (pStartup)				Console->Execute		(pStartup+1);
 	}
 
+	if (strstr(Core.Params, "-$"))
+	{
+		string256                buf, cmd, param;
+		sscanf(strstr(Core.Params, "-$")
+			+ 2,
+			"%[^ ] %[^ ] ",
+			cmd,
+			param);
+		strconcat(sizeof(buf),
+			buf,
+			cmd,
+			" ",
+			param);
+		Console->Execute(buf);
+	}
+
 	// Initialize APP
 //#ifndef DEDICATED_SERVER
 	ShowWindow( Device.m_hWnd , SW_SHOWNORMAL );
@@ -434,21 +450,6 @@ ENGINE_API int RunApplication(char* commandLine)
 
 		Engine.External.Initialize	( );
 
-		if (strstr(Core.Params, "-$"))
-		{
-			string256                buf, cmd, param;
-			sscanf(strstr(Core.Params, "-$")
-				+ 2,
-				"%[^ ] %[^ ] ",
-				cmd,
-				param);
-			strconcat(sizeof(buf),
-				buf,
-				cmd,
-				" ",
-				param);
-			Console->Execute(buf);
-		}
 		//Console->Execute			("stat_memory");
 
 		/////////////////////////////////////////////

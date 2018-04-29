@@ -218,20 +218,24 @@ clean the buffers of params
 ************************************************/
 void xrLaunch::clean_buffers()
 {
-	if (!params_settings.empty())
+	if (!params_settings.empty() && !params_string.empty())
+	{
+		params_settings.clear			();
+		params_string.clear				();
+		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
+	}
+	else if (!params_settings.empty())
 	{ 
-		params_settings.clear();
+		params_settings.clear			();
 		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
 	}
 	else if (!params_string.empty())
 	{ 
-		params_string.clear();
+		params_string.clear				();
 		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
 	}
 	else
-	{
 		statusBar()->showMessage		(tr("There is nothing to clean"), 2000);
-	}
 }
 
 
