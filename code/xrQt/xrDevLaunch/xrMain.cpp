@@ -218,34 +218,19 @@ clean the buffers of params
 ************************************************/
 void xrLaunch::clean_buffers()
 {
-	try 
-	{
-		if (!params_string.empty())
-		{ 
-			params_settings.clear();	
-		}
-		if (!params_string.empty())
-		{ 
-			params_string.clear();	
-		}
-		statusBar()->showMessage		(tr("The string buffers were cleaned"));
+	if (!params_settings.empty())
+	{ 
+		params_settings.clear();
+		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
 	}
-	catch (const EcxeptionOpSet& ex)
+	else if (!params_string.empty())
+	{ 
+		params_string.clear();
+		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
+	}
+	else
 	{
-		switch							(ex.opset())
-		{
-		default:
-			statusBar()->showMessage		(tr("Error: Can't clean the strings buffers (Unknown case)"));
-			break;
-		}
-	}	
-	catch (...)
-	{
-#ifdef DEBUG_LAUNCHER
-		MessageBox						(NULL, "ERROR", "Error: Can't clean the strings buffers", MB_OK | MB_ICONHAND);
-#else
-		statusBar()->showMessage		(tr("Error: Can't clean the strings buffers"));
-#endif
+		statusBar()->showMessage		(tr("There is nothing to clean"), 2000);
 	}
 }
 
