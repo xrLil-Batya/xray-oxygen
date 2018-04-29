@@ -30,21 +30,14 @@ void	light::vis_prepare			()
 		safe_area	= std::max(std::max(VIEWPORT_NEAR, std::max(x0,x1)),c);
 	}
 
-	//Msg	("sc[%f,%f,%f]/c[%f,%f,%f] - sr[%f]/r[%f]",VPUSH(spatial.center),VPUSH(position),spatial.radius,range);
-	//Msg	("dist:%f, sa:%f",Device.vCameraPosition.distance_to(spatial.center),safe_area);
 	bool	skiptest	= false;
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_DONT_TEST_UNSHADOWED) && !flags.bShadow)	skiptest=true;
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_DONT_TEST_SHADOWED) && flags.bShadow)	skiptest=true;
-
-	//	TODO: DX10: Remove this pessimization
-	//skiptest	= true;
 
 	if (skiptest || Device.vCameraPosition.distance_to(spatial.sphere.P)<=(spatial.sphere.R*1.01f+safe_area))	{	// small error
 		vis.visible		=	true;
 		vis.pending		=	false;
 		vis.frame2test	=	frame	+ ::Random.randI(delay_small_min,delay_small_max);
-		//	TODO: DX10: Remove this pessimisation
-		//vis.frame2test	=	frame	+ 1;
 		return;
 	}
 
@@ -76,17 +69,11 @@ void	light::vis_update			()
 
 	u32	frame			= Device.dwFrame;
 	u64 fragments		= RImplementation.occq_get	(vis.query_id);
-	//Log					("",fragments);
 	vis.visible			= (fragments > cullfragments);
 	vis.pending			= false;
+
 	if (vis.visible)	
-	{
 		vis.frame2test	=	frame	+ ::Random.randI(delay_large_min,delay_large_max);
-		//	TODO: DX10: Remove this pessimisation
-		//vis.frame2test	=	frame	+ 1;
-	} 
 	else 
-	{
 		vis.frame2test	=	frame	+ 1; 
-	}
 }

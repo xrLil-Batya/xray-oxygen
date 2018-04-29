@@ -100,10 +100,6 @@ D3D_BLEND ConvertBlendArg(D3DBLEND Arg)
 		return D3D_BLEND_INV_DEST_COLOR;
 	case D3DBLEND_SRCALPHASAT:
 		return D3D_BLEND_SRC_ALPHA_SAT;
-	//case D3DBLEND_BOTHSRCALPHA:
-	//	return ;
-	//case D3DBLEND_BOTHINVSRCALPHA:
-	//	return ;
 	case D3DBLEND_BLENDFACTOR:
 		return D3D_BLEND_BLEND_FACTOR;
 	case D3DBLEND_INVBLENDFACTOR:
@@ -351,8 +347,7 @@ bool operator==(const D3D_SAMPLER_DESC &desc1, const D3D_SAMPLER_DESC &desc2)
 	if( desc1.AddressV != desc2.AddressV) return false;
 	if( desc1.AddressW != desc2.AddressW) return false;
 	if( desc1.MipLODBias != desc2.MipLODBias) return false;
-//	Ignore anisotropy since it's set up automatically by the manager
-//	if( desc1.MaxAnisotropy != desc2.MaxAnisotropy) return false;
+    // Ignore anisotropy since it's set up automatically by the manager
 	if( desc1.ComparisonFunc != desc2.ComparisonFunc) return false;
 	if( desc1.BorderColor[0] != desc2.BorderColor[0]) return false;
 	if( desc1.BorderColor[1] != desc2.BorderColor[1]) return false;
@@ -460,8 +455,7 @@ u32 GetHash( const D3D_SAMPLER_DESC &desc )
 	Hash.AddData( &desc.AddressV, sizeof(desc.AddressV) );
 	Hash.AddData( &desc.AddressW, sizeof(desc.AddressW) );
 	Hash.AddData( &desc.MipLODBias, sizeof(desc.MipLODBias) );
-//	Ignore anisotropy since it's set up automatically by the manager
-//	Hash.AddData( &desc.MaxAnisotropy, sizeof(desc.MaxAnisotropy) );
+    // Ignore anisotropy since it's set up automatically by the manager
 	Hash.AddData( &desc.ComparisonFunc, sizeof(desc.ComparisonFunc) );
 	Hash.AddData( &desc.BorderColor[0], sizeof(desc.BorderColor[0]) );
 	Hash.AddData( &desc.BorderColor[1], sizeof(desc.BorderColor[1]) );

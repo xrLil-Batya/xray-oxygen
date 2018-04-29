@@ -40,56 +40,6 @@ void dx103DFluidVolume::Load( LPCSTR N, IReader *data, u32 dwFlags )
 
 	vis.box.getcenter(vis.sphere.P);
 	vis.sphere.R = vis.box.getradius();
-
-/*
-	//	Version 2
-	//	Prepare transform
-	Fmatrix		Transform;
-	data->r( &Transform, sizeof(Transform) );
-	m_FluidData.SetTransform(Transform);
-
-	//	Update visibility data
-	vis.box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
-	vis.box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
-
-	vis.box.xform(Transform);
-
-	vis.box.getcenter(vis.sphere.P);
-	vis.sphere.R = vis.box.getradius();
-
-	//	Read obstacles
-	u32 uiObstCnt = data->r_u32();
-	for(u32 i=0; i<uiObstCnt; ++i)
-	{
-		Fmatrix		ObstTransform;
-		data->r( &ObstTransform, sizeof(ObstTransform) );
-		m_FluidData.AddObstacle(ObstTransform);
-	}
-	*/
-
-	//	Version 0
-	/*
-	Fbox	B;
-	data->r( &B, sizeof(B) );
-
-	Fmatrix		Transform;
-	Fvector3	temp;
-
-	B.getsize(temp);
-	Transform.scale(temp);
-
-	B.getcenter(temp);
-	Transform.translate_over(temp);
-
-	m_FluidData.SetTransform(Transform);
-
-	vis.box.set(B);
-	//vis.box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
-	//vis.box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
-
-	vis.box.getcenter(vis.sphere.P);
-	vis.sphere.R = vis.box.getradius();
-	*/
 }
 
 void dx103DFluidVolume::Render( float LOD )		// LOD - Level Of Detail  [0.0f - min, 1.0f - max], Ignored ?
@@ -97,7 +47,6 @@ void dx103DFluidVolume::Render( float LOD )		// LOD - Level Of Detail  [0.0f - m
 	//	Render debug box
 	//	Do it BEFORE update since update resets shaders and other pipeline settings
 
-//	FluidManager.RenderFluid( m_FluidData );
 
 	u32 dwOffset,dwCount;
 
@@ -109,8 +58,6 @@ void dx103DFluidVolume::Render( float LOD )		// LOD - Level Of Detail  [0.0f - m
 	Fbox	box;
 	box.min = Fvector3().set(-0.5f, -0.5f, -0.5f);
 	box.max = Fvector3().set( 0.5f,  0.5f,  0.5f);
-	//box.min = Fvector3().set( 0.0f,  0.0f,  0.0f);
-	//box.max = Fvector3().set( 1.0f,  1.0f,  1.0f);
 
 	//	Prepare box here
 	{
@@ -158,23 +105,16 @@ void dx103DFluidVolume::Render( float LOD )		// LOD - Level Of Detail  [0.0f - m
 	RCache.Vertex.Unlock( dwCount, m_Geom->vb_stride );
 	RCache.set_Geometry( m_Geom );
 
-	//RCache.Render(D3DPT_TRIANGLELIST,dwOffset,0,dwCount,0,dwCount/2);
-
 	//	Render obstacles
 	const xr_vector<Fmatrix> &Obstacles = m_FluidData.GetObstaclesList();
 	int iObstNum = Obstacles.size();
 	for (int i=0; i<iObstNum; ++i)
 	{
 		RCache.set_xform_world( Obstacles[i] );
-		//RCache.Render(D3DPT_TRIANGLELIST,dwOffset,0,dwCount,0,dwCount/2);
 	}
-	
-//	FluidManager.Update( m_FluidData, 1.0f/30.0f);
 
-	//float fTimeStep = Device.fTimeDelta*30*2.0f;
 	const float fTimeStep = 2.0f;
 
-	//FluidManager.Update( m_FluidData, 2.0f);
 	FluidManager.Update( m_FluidData, fTimeStep);
 	FluidManager.RenderFluid( m_FluidData );
 }

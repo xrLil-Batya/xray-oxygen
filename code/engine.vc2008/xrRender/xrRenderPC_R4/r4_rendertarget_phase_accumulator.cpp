@@ -24,7 +24,6 @@ void	CRenderTarget::phase_accumulator()
    		u_setrt								(rt_Accumulator,		NULL,NULL,HW.pBaseZB);
       else
          u_setrt								(rt_Accumulator,		NULL,NULL,rt_MSAADepth->pZRT);
-		//dwLightMarkerID						= 5;					// start from 5, increment in 2 units
 		reset_light_marker();
 		//	Igor: AMD bug workaround. Should be fixed in 8.7 catalyst
 		//	Need for MSAA to work correctly.

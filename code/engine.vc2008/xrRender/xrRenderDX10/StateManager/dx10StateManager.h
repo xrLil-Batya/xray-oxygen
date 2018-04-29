@@ -1,5 +1,3 @@
-#ifndef	dx10StateManager_included
-#define	dx10StateManager_included
 #pragma once
 
 class dx10StateManager
@@ -91,5 +89,3 @@ private:
 };
 
 extern	dx10StateManager	StateManager;
-
-#endif	//	dx10StateManager_included

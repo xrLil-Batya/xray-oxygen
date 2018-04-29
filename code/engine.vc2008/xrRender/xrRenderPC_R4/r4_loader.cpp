@@ -179,7 +179,6 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 {
 	R_ASSERT2					(base_fs,"Could not load geometry. File not found.");
 	dxRenderDeviceRender::Instance().Resources->Evict		();
-//	u32	dwUsage					= D3DUSAGE_WRITEONLY;
 
 	xr_vector<VertexDeclarator>				&_DC	= _alternative?xDC:nDC;
 	xr_vector<ID3DVertexBuffer*>		&_VB	= _alternative?xVB:nVB;
@@ -218,8 +217,6 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 			fs->r				(pData,vCount*vSize);
 			dx10BufferUtils::CreateVertexBuffer(&_VB[i], pData, vCount*vSize);
 			xr_free(pData);
-
-//			fs->advance			(vCount*vSize);
 		}
 		fs->close				();
 	}
@@ -234,22 +231,12 @@ void CRender::LoadBuffers		(CStreamReader *base_fs,	BOOL _alternative)
 			u32 iCount			= fs->r_u32	();
 			Msg("* [Loading IB] %d indices, %d Kb",iCount,(iCount*2)/1024);
 
-			// Create and fill
-			//BYTE*	pData		= 0;
-			//R_CHK				(HW.pDevice->CreateIndexBuffer(iCount*2,dwUsage,D3DFMT_INDEX16,D3DPOOL_MANAGED,&_IB[i],0));
-			//R_CHK				(_IB[i]->Lock(0,0,(void**)&pData,0));
-//			CopyMemory			(pData,fs().pointer(),iCount*2);
-			//fs->r				(pData,iCount*2);
-			//_IB[i]->Unlock		();
-
 			//	TODO: DX10: Check fragmentation.
 			//	Check if buffer is less then 2048 kb
 			BYTE*	pData		= xr_alloc<BYTE>(iCount*2);
 			fs->r				(pData,iCount*2);
 			dx10BufferUtils::CreateIndexBuffer(&_IB[i], pData, iCount*2);
 			xr_free(pData);
-
-//			fs().advance		(iCount*2);
 		}
 		fs->close				();
 	}
@@ -348,10 +335,6 @@ void CRender::LoadSectors(IReader* fs)
 		rmPortals = 0;
 	}
 
-	// debug
-	//	for (int d=0; d<Sectors.size(); d++)
-	//		Sectors[d]->DebugDump	();
-
 	pLastSector = 0;
 }
 
@@ -388,7 +371,6 @@ void CRender::LoadSWIs(CStreamReader* base_fs)
 
 void CRender::Load3DFluid()
 {
-	//if (strstr(Core.Params,"-no_volumetric_fog"))
 	if (!RImplementation.o.volumetricfog)
 		return;
 

@@ -1,5 +1,3 @@
-#ifndef	dx10StateUtils_included
-#define	dx10StateUtils_included
 #pragma once
 
 namespace dx10StateUtils
@@ -35,5 +33,3 @@ namespace dx10StateUtils
 	void	ValidateState(D3D_BLEND_DESC &desc);
 	void	ValidateState(D3D_SAMPLER_DESC &desc);
 };
-
-#endif	//	dx10StateUtils_included

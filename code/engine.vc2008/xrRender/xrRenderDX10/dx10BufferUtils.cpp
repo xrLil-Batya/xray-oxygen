@@ -8,7 +8,6 @@ HRESULT	IC CreateBuffer( ID3DBuffer** ppBuffer, const void* pData, UINT DataSize
 {
 	D3D_BUFFER_DESC desc;
 	desc.ByteWidth = DataSize;
-	//desc.Usage = bImmutable ? D3D_USAGE_IMMUTABLE : D3D_USAGE_DEFAULT;
 	desc.Usage = D3D_USAGE_DEFAULT;
 	desc.BindFlags = bIndexBuffer ? D3D_BIND_INDEX_BUFFER : D3D_BIND_VERTEX_BUFFER;
 	desc.CPUAccessFlags = 0;
@@ -42,7 +41,6 @@ HRESULT	CreateConstantBuffer( ID3DBuffer** ppBuffer, UINT DataSize)
 	desc.MiscFlags = 0;
 
 	HRESULT res = HW.pDevice->CreateBuffer( &desc, 0, ppBuffer);
-	//R_CHK(res);
 	return res;
 }
 
@@ -67,8 +65,6 @@ VertexFormatPairs	VertexFormatList[] =
 	{ D3DDECLTYPE_SHORT4N,	DXGI_FORMAT_R16G16B16A16_SNORM },
 	{ D3DDECLTYPE_USHORT2N,	DXGI_FORMAT_R16G16_UNORM },
 	{ D3DDECLTYPE_USHORT4N,	DXGI_FORMAT_R16G16B16A16_UNORM },
-	//D3DDECLTYPE_UDEC3 Not available 
-	//D3DDECLTYPE_DEC3N Not available 
 	{ D3DDECLTYPE_FLOAT16_2,DXGI_FORMAT_R16G16_FLOAT },
 	{ D3DDECLTYPE_FLOAT16_4,DXGI_FORMAT_R16G16B16A16_FLOAT }
 };
@@ -94,7 +90,7 @@ struct VertexSemanticPairs
 
 VertexSemanticPairs	VertexSemanticList[] = 
 {
-	{ D3DDECLUSAGE_POSITION,		"POSITION" },		//	0
+	{ D3DDECLUSAGE_POSITION,		"POSITION" },		// 0
 	{ D3DDECLUSAGE_BLENDWEIGHT,		"BLENDWEIGHT" },	// 1
 	{ D3DDECLUSAGE_BLENDINDICES,	"BLENDINDICES" },	// 2
 	{ D3DDECLUSAGE_NORMAL,			"NORMAL" },			// 3
@@ -102,12 +98,8 @@ VertexSemanticPairs	VertexSemanticList[] =
 	{ D3DDECLUSAGE_TEXCOORD,		"TEXCOORD" },		// 5
 	{ D3DDECLUSAGE_TANGENT,			"TANGENT" },		// 6
 	{ D3DDECLUSAGE_BINORMAL,		"BINORMAL" },		// 7
-	//D3DDECLUSAGE_TESSFACTOR,    // 8
-	{ D3DDECLUSAGE_POSITIONT,		"POSITIONT" },		// 9
-	{ D3DDECLUSAGE_COLOR,			"COLOR" },			// 10
-	//D3DDECLUSAGE_FOG,           // 11
-	//D3DDECLUSAGE_DEPTH,         // 12
-	//D3DDECLUSAGE_SAMPLE,        // 13
+	{ D3DDECLUSAGE_POSITIONT,		"POSITIONT" },		// 8
+	{ D3DDECLUSAGE_COLOR,			"COLOR" },			// 9
 };
 
 LPCSTR	ConvertSemantic(D3DDECLUSAGE Semantic)

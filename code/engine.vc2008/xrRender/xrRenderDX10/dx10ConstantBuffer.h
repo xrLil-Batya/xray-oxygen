@@ -1,5 +1,3 @@
-#ifndef	dx10ConstantBuffer_included
-#define	dx10ConstantBuffer_included
 #pragma once
 
 struct	R_constant;
@@ -53,5 +51,3 @@ private:
 };
 
 typedef	resptr_core<dx10ConstantBuffer,resptr_base<dx10ConstantBuffer> > ref_cbuffer;
-
-#endif	//	dx10ConstantBuffer_included

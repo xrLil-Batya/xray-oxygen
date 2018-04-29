@@ -36,24 +36,11 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 	if (pSurface)	return;
 
 	R_ASSERT	(HW.pDevice && Name && Name[0] && w && h);
-	_order		= CPU::GetCLK()	;	//Device.GetTimerGlobal()->GetElapsed_clk();
-
-	//HRESULT		_hr;
+	_order		= CPU::GetCLK()	;
 
 	dwWidth		= w;
 	dwHeight	= h;
 	fmt			= f;
-
-	// Get caps
-	//D3DCAPS9	caps;
-	//R_CHK		(HW.pDevice->GetDeviceCaps(&caps));
-
-	//	DirectX 10 supports non-power of two textures
-	// Pow2
-	//if (!btwIsPow2(w) || !btwIsPow2(h))
-	//{
-	//	if (!HW.Caps.raster.bNonPow2)	return;
-	//}
 
 	// Check width-and-height of render target surface
 	if (w>D3D_REQ_TEXTURE2D_U_OR_V_DIMENSION)		return;
@@ -83,30 +70,9 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 
 	bool	bUseAsDepth = (usage == D3DUSAGE_RENDERTARGET)?false:true;
 
-   // Validate render-target usage
-	//_hr = HW.pD3D->CheckDeviceFormat(
-		//HW.DevAdapter,
-		//HW.DevT,
-		//HW.Caps.fTarget,
-		//usage,
-		//D3DRTYPE_TEXTURE,
-		//f
-		//);
-	//	TODO: DX10: implement format support check
-	//UINT	FormatSupport;
-	//_hr = HW.pDevice->CheckFormatSupport( dx10FMT, &FormatSupport);
-	//if (FAILED(_hr)) return;
-	//if (!(
-			//(FormatSupport&D3Dxx_FORMAT_SUPPORT_TEXTURE2D) 
-			//&&	(FormatSupport&(bUseAsDepth?D3Dxx_FORMAT_SUPPORT_DEPTH_STENCIL:D3Dxx_FORMAT_SUPPORT_RENDER_TARGET))
-		//))
-		//return;
-
 	// Try to create texture/surface
 	DEV->Evict				();
-	//_hr = HW.pDevice->CreateTexture		(w, h, 1, usage, f, D3DPOOL_DEFAULT, &pSurface,NULL);
-	//if (FAILED(_hr) || (0==pSurface))	return;
-	// Create the render target texture
+
 	D3D_TEXTURE2D_DESC desc;
     std::memset(&desc,0,sizeof(desc));
 	desc.Width = dwWidth;
@@ -138,7 +104,7 @@ void CRT::create	(LPCSTR Name, u32 w, u32 h,	D3DFORMAT f, u32 SampleCount )
 #ifdef DEBUG
 	Msg			("* created RT(%s), %dx%d, format = %d samples = %d",Name,w,h, dx10FMT, SampleCount );
 #endif // DEBUG
-	//R_CHK		(pSurface->GetSurfaceLevel	(0,&pRT));
+
 	if (bUseAsDepth)
 	{
 		D3D_DEPTH_STENCIL_VIEW_DESC	ViewDesc;
@@ -223,94 +189,3 @@ void resptrcode_crt::create(LPCSTR Name, u32 w, u32 h, D3DFORMAT f, u32 SampleCo
 	_set			(DEV->_CreateRT(Name,w,h,f, SampleCount));
 }
 #endif
-
-//////////////////////////////////////////////////////////////////////////
-/*	DX10 cut
-CRTC::CRTC			()
-{
-	if (pSurface)	return;
-
-	pSurface									= NULL;
-	pRT[0]=pRT[1]=pRT[2]=pRT[3]=pRT[4]=pRT[5]	= NULL;
-	dwSize										= 0;
-	fmt											= D3DFMT_UNKNOWN;
-}
-CRTC::~CRTC			()
-{
-	destroy			();
-
-	// release external reference
-	DEV->_DeleteRTC	(this);
-}
-
-void CRTC::create	(LPCSTR Name, u32 size,	D3DFORMAT f)
-{
-	R_ASSERT	(HW.pDevice && Name && Name[0] && size && btwIsPow2(size));
-	_order		= CPU::GetCLK();	//Device.GetTimerGlobal()->GetElapsed_clk();
-
-	HRESULT		_hr;
-
-	dwSize		= size;
-	fmt			= f;
-
-	// Get caps
-	//D3DCAPS9	caps;
-	//R_CHK		(HW.pDevice->GetDeviceCaps(&caps));
-
-	//	DirectX 10 supports non-power of two textures
-	// Pow2
-	//if (!btwIsPow2(size))
-	//{
-	//	if (!HW.Caps.raster.bNonPow2)	return;
-	//}
-
-	// Check width-and-height of render target surface
-	if (size>D3Dxx_REQ_TEXTURECUBE_DIMENSION)		return;
-
-	//	TODO: DX10: Validate cube texture format
-	// Validate render-target usage
-	//_hr = HW.pD3D->CheckDeviceFormat(
-	//	HW.DevAdapter,
-	//	HW.DevT,
-	//	HW.Caps.fTarget,
-	//	D3DUSAGE_RENDERTARGET,
-	//	D3DRTYPE_CUBETEXTURE,
-	//	f
-	//	);
-	//if (FAILED(_hr))					return;
-
-	// Try to create texture/surface
-	DEV->Evict					();
-	_hr = HW.pDevice->CreateCubeTexture	(size, 1, D3DUSAGE_RENDERTARGET, f, D3DPOOL_DEFAULT, &pSurface,NULL);
-	if (FAILED(_hr) || (0==pSurface))	return;
-
-	// OK
-	Msg			("* created RTc(%s), 6(%d)",Name,size);
-	for (u32 face=0; face<6; face++)
-		R_CHK	(pSurface->GetCubeMapSurface	((D3DCUBEMAP_FACES)face, 0, pRT+face));
-	pTexture	= DEV->_CreateTexture	(Name);
-	pTexture->surface_set						(pSurface);
-}
-
-void CRTC::destroy		()
-{
-	pTexture->surface_set	(0);
-	pTexture				= NULL;
-	for (u32 face=0; face<6; face++)
-		_RELEASE	(pRT[face]	);
-	_RELEASE	(pSurface	);
-}
-void CRTC::reset_begin	()
-{
-	destroy		();
-}
-void CRTC::reset_end	()
-{
-	create		(*cName,dwSize,fmt);
-}
-
-void resptrcode_crtc::create(LPCSTR Name, u32 size, D3DFORMAT f)
-{
-	_set		(DEV->_CreateRTC(Name,size,f));
-}
-*/
