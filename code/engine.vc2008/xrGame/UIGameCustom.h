@@ -64,6 +64,7 @@ protected:
 	CUIXml*				m_msgs_xml;
 	typedef xr_vector<SDrawStaticStruct*>	st_vec;
 	typedef st_vec::iterator				st_vec_it;
+	st_vec									m_custom_statics;
 
 	CUIActorMenu*		m_ActorMenu;
 	CUIPdaWnd*			m_PdaMenu;
@@ -71,7 +72,6 @@ protected:
 	bool				m_bShowGameIndicators;
 
 public:
-	st_vec				m_custom_statics;
 	CUIMainIngameWnd*	UIMainIngameWnd;
 	CUIMessagesWindow*	m_pMessagesWnd;
 
