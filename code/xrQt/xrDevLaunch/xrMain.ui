@@ -538,6 +538,19 @@
     <item row="1" column="1">
      <layout class="QHBoxLayout" name="horizontalLayout">
       <item>
+       <spacer name="horizontalSpacer_2">
+        <property name="orientation">
+         <enum>Qt::Horizontal</enum>
+        </property>
+        <property name="sizeHint" stdset="0">
+         <size>
+          <width>40</width>
+          <height>20</height>
+         </size>
+        </property>
+       </spacer>
+      </item>
+      <item>
        <spacer name="horizontalSpacer_3">
         <property name="orientation">
          <enum>Qt::Horizontal</enum>
@@ -590,30 +603,78 @@
        </spacer>
       </item>
       <item>
-       <spacer name="horizontalSpacer_6">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+       <widget class="QPushButton" name="pushButton_2">
+        <property name="palette">
+         <palette>
+          <active>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </active>
+          <inactive>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </inactive>
+          <disabled>
+           <colorrole role="Button">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
+             </color>
+            </brush>
+           </colorrole>
+           <colorrole role="ButtonText">
+            <brush brushstyle="SolidPattern">
+             <color alpha="255">
+              <red>30</red>
+              <green>30</green>
+              <blue>30</blue>
+             </color>
+            </brush>
+           </colorrole>
+          </disabled>
+         </palette>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
+        <property name="text">
+         <string>Clean buffers</string>
         </property>
-       </spacer>
-      </item>
-      <item>
-       <spacer name="horizontalSpacer_2">
-        <property name="orientation">
-         <enum>Qt::Horizontal</enum>
+        <property name="flat">
+         <bool>false</bool>
         </property>
-        <property name="sizeHint" stdset="0">
-         <size>
-          <width>40</width>
-          <height>20</height>
-         </size>
-        </property>
-       </spacer>
+       </widget>
       </item>
       <item>
        <widget class="QLineEdit" name="lineEdit">
@@ -838,18 +899,18 @@
            <colorrole role="WindowText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>23</red>
-              <green>121</green>
-              <blue>157</blue>
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
              </color>
             </brush>
            </colorrole>
            <colorrole role="Button">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>203</red>
-              <green>219</green>
-              <blue>235</blue>
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
              </color>
             </brush>
            </colorrole>
@@ -883,9 +944,9 @@
            <colorrole role="ButtonText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>25</red>
-              <green>86</green>
-              <blue>126</blue>
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
              </color>
             </brush>
            </colorrole>
@@ -948,18 +1009,18 @@
            <colorrole role="WindowText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>23</red>
-              <green>121</green>
-              <blue>157</blue>
+              <red>255</red>
+              <green>255</green>
+              <blue>255</blue>
              </color>
             </brush>
            </colorrole>
            <colorrole role="Button">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>203</red>
-              <green>219</green>
-              <blue>235</blue>
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
              </color>
             </brush>
            </colorrole>
@@ -993,9 +1054,9 @@
            <colorrole role="ButtonText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>25</red>
-              <green>86</green>
-              <blue>126</blue>
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
              </color>
             </brush>
            </colorrole>
@@ -1067,9 +1128,9 @@
            <colorrole role="Button">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>203</red>
-              <green>219</green>
-              <blue>235</blue>
+              <red>22</red>
+              <green>81</green>
+              <blue>121</blue>
              </color>
             </brush>
            </colorrole>

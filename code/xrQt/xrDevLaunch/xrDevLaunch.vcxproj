@@ -285,15 +285,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="aboutlauncher.cpp" />
-    <ClCompile Include="InitLib.cpp" />
-    <ClCompile Include="main.cpp" />
-    <ClCompile Include="minimal_CPUID.cpp">
+    <ClCompile Include="xrFS.cpp" />
+    <ClCompile Include="xrEntryPoint.cpp" />
+    <ClCompile Include="xrCPUID.cpp">
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">None</DebugInformationFormat>
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|x64'">None</DebugInformationFormat>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</CompileAsManaged>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</CompileAsManaged>
     </ClCompile>
-    <ClCompile Include="RendererList.cpp">
+    <ClCompile Include="xrD3DList.cpp">
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">None</DebugInformationFormat>
       <DebugInformationFormat Condition="'$(Configuration)|$(Platform)'=='Release|x64'">None</DebugInformationFormat>
       <CompileAsManaged Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</CompileAsManaged>
@@ -340,11 +340,12 @@
     </QtUic>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="xrException.h" />
     <QtMoc Include="aboutlauncher.h" />
     <ClInclude Include="GeneratedFiles\ui_aboutlauncher.h" />
     <ClInclude Include="GeneratedFiles\ui_parametersdialog.h" />
     <ClInclude Include="GeneratedFiles\ui_xrMain.h" />
-    <ClInclude Include="minimal_CPUID.h" />
+    <ClInclude Include="xrCPUID.h" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\engine.vc2008\xrCore\xrCore.vcxproj">

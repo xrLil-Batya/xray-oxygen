@@ -1,8 +1,10 @@
-////////////////////////////////////////////////////
-// VERTVER, 2018 (C) * X-RAY OXYGEN 1.7 PROJECT	
-// minimal_CPUID.h - MinCPUID for OXYLaunch		
-// Edited: 26 March, 2018						
-////////////////////////////////////////////////////
+/*************************************************
+* VERTVER, 2018 (C)
+* X-RAY OXYGEN 1.7 PROJECT
+*
+* Edited: 26 March, 2018
+* minimal_CPUID.h - MinCPUID for launcher
+*************************************************/
 #pragma once								
 ////////////////////////////////////////////////////
 #include <vector>

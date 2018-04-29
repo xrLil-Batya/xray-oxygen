@@ -11,9 +11,9 @@
 #ifdef __cplusplus
 #pragma comment(lib, "xrEngine.lib")
 /////////////////////////////////////////
-xrConstChar		params_list;
-xrConstChar		string_accept;
 xrString		params;
+xrString		string_accept;
+xrString		params_list;
 xrString		params_line;
 xrString		params_string;
 xrString		params_settings;
@@ -54,15 +54,15 @@ void xrLaunch::status_render()
 {
 	xrConstChar renders;
 	if (SupportsDX11Rendering())
-		renders = "Supported renders: R4, R3, R2.5, R2, R2a";
+		renders							= "Supported renders: R4, R3, R2.5, R2, R2a";
 	else if (SupportsDX10Rendering())
-		renders = "Supported renders: R3, R2.5, R2, R2a";
+		renders							= "Supported renders: R3, R2.5, R2, R2a";
 	else if (SupportsAdvancedRendering())
-		renders = "Supported renders: R2.5, R2, R2a";
+		renders							= "Supported renders: R2.5, R2, R2a";
 	else
 	{
-		renders = "Error! Your GPU doesn't supported";
-		QMessageBox::critical		(this, INIT_ERROR, "Error! Your GPU doesn't supported (DX9 init error)");
+		renders							= "Error! Your GPU doesn't supported";
+		QMessageBox::critical			(this, INIT_ERROR, "Error! Your GPU doesn't supported (DX9 init error)");
 	}
 	statusBar()->showMessage		(tr(renders));
 }
@@ -93,8 +93,7 @@ remove the main thread
 ***********************************************/
 xrLaunch::~xrLaunch() 
 {
-    delete ui;
-	
+    delete ui;	
 }
 
 
@@ -113,16 +112,45 @@ void xrLaunch::on_pushButton_clicked()
 }
 
 
-
-
 /***********************************************
 add parameter if pressed
 ***********************************************/
 void xrLaunch::add_paramsToList()
 {
-	xrQString list_settins			= ui->listWidget_2->currentItem()->text();
-	params_settings					= list_settins.toLocal8Bit();
-	statusBar()->showMessage		(tr("Added to settings buffer"), 2000);
+
+	try
+	{
+		xrQString list_settings			= ui->listWidget_2->currentItem()->text();
+		params_settings					= list_settings.toLocal8Bit();
+		if (params_settings.empty()) 
+		{
+			throw new EcxeptionOpSet	("std::string can't be nullptr",
+										OpSet::STRING_NULLPTR);
+		}
+		statusBar()->showMessage		(tr("Added to settings buffer"), 2000);
+	}
+	catch							(const EcxeptionOpSet& ex)
+	{
+		xrConstChar opset_string;
+		switch (ex.opset())
+		{
+			case OpSet::STRING_NULLPTR:
+				opset_string				= "string_nullptr";
+				break;
+			default:
+				opset_string				= "default";
+				break;
+		}
+		statusBar()->showMessage		(tr(ex.what(), opset_string));
+	}
+	catch (...)
+	{
+#ifdef DEBUG_LAUNCHER
+		MessageBox						(NULL, "ERROR", "Error: Can't add string to string buffer", MB_OK | MB_ICONINFORMATION);
+#else
+		statusBar()->showMessage		(tr("Error: Can't add string to settings buffer"));
+#endif
+	}
 }
 
 
@@ -146,10 +174,88 @@ add string to buffer
 ************************************************/
 void xrLaunch::add_stringToList() 
 { 
-	//#VERTVER: Don't use here toLatin1(). Crash on Release
-	xrQString list_string				= ui->listWidget->currentItem()->text();
-	params_string					= list_string.toLocal8Bit();
-	statusBar()->showMessage		(tr("Added to string buffer"), 2000);
+	try 
+	{
+		xrQString list_string			= ui->listWidget->currentItem()->text();
+		params_string					= list_string.toLocal8Bit();	//#VERTVER: Don't use here toLatin1(). Crash on Release
+		if (params_string.empty()) 
+		{
+			throw new EcxeptionOpSet	("std::string can't be nullptr",
+										OpSet::STRING_NULLPTR);
+		}
+		statusBar()->showMessage		(tr("Added to string buffer"), 2000);
+	}
+	catch (const EcxeptionOpSet& ex)
+	{
+		xrConstChar opset_string;
+		switch (ex.opset())
+		{
+			case OpSet::STRING_NULLPTR:
+				opset_string				= "string_nullptr";
+				break;
+			default:
+				opset_string				= "default";
+				break;
+		}
+		statusBar()->showMessage		(tr(ex.what(), opset_string));
+
+	}
+	catch (...)
+	{
+
+#ifdef DEBUG_LAUNCHER
+		MessageBox						(NULL, "ERROR", "Error: Can't add string to string buffer", MB_OK | MB_ICONHAND);
+#else
+		statusBar()->showMessage		(tr("Error: Can't add string to string buffer"));
+#endif
+	}
+
+}
+
+
+/***********************************************
+clean the buffers of params
+************************************************/
+void xrLaunch::clean_buffers()
+{
+	try 
+	{
+		if (!params_string.empty())
+		{ 
+			params_settings.clear();	
+		}
+		if (!params_string.empty())
+		{ 
+			params_string.clear();	
+		}
+		statusBar()->showMessage		(tr("The string buffers were cleaned"));
+	}
+	catch (const EcxeptionOpSet& ex)
+	{
+		switch							(ex.opset())
+		{
+		default:
+			statusBar()->showMessage		(tr("Error: Can't clean the strings buffers (Unknown case)"));
+			break;
+		}
+	}	
+	catch (...)
+	{
+#ifdef DEBUG_LAUNCHER
+		MessageBox						(NULL, "ERROR", "Error: Can't clean the strings buffers", MB_OK | MB_ICONHAND);
+#else
+		statusBar()->showMessage		(tr("Error: Can't clean the strings buffers"));
+#endif
+	}
+}
+
+
+/***********************************************
+method for button
+************************************************/
+void xrLaunch::on_pushButton_2_clicked()
+{
+	clean_buffers					();
 }
 
 
@@ -160,24 +266,34 @@ void xrLaunch::init_xrCore()
 {
 	try
 	{
+		if (!CPUID::SSE3()) 
+		{
+			throw new EcxeptionOpSet	("Your CPU doesn't support SSE3 instructions",
+										OpSet::SSE3);
+		}
 		// Init X-ray core
 		statusBar()->showMessage		(tr("Loading xrCore..."));
 		Debug._initialize				(false);
 		Core._initialize				("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
 		statusBar()->showMessage		(tr("Loading complete"), 4000);
 	}
+	catch (const EcxeptionOpSet& ex)
+	{
+		switch (ex.opset())
+		{
+		case OpSet::SSE3:
+			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
+			QMessageBox::critical			(this, INIT_ERROR, ex.what());
+			break;
+		default:
+			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
+			QMessageBox::critical			(this, INIT_ERROR, ex.what());
+			break;
+		}
+	}
 	catch (...)
 	{
-		if (!CPUID::SSE3())
-		{
-			statusBar()->showMessage	(tr("Error! SSE3 is not supported on your CPU."));
-			QMessageBox::critical		(this, INIT_ERROR, "Can't load xrCore (SSE3 is not supported on your CPU");
-		}
-		else
-		{
-			statusBar()->showMessage	(tr("Error! Can't load xrEngine."));
-			QMessageBox::critical		(this, INIT_ERROR, "Can't load xrCore (Unknown Error)");
-		}
+		statusBar()->showMessage		(tr(INIT_ERROR, "Engine init error (Unknown Error)"));
 	}
 }
 
@@ -187,27 +303,32 @@ method for launch xrEngine.dll
 ***********************************************/
 void xrLaunch::run_xrEngineRun() 
 {
-	try 
+	try
 	{
-		xrQString rendered_line			= ui->lineEdit->text();
+		if (!CPUID::SSE3())
+		{
+			throw new EcxeptionOpSet	("Your CPU doesn't support SSE3 instructions",
+										OpSet::SSE3);
+		}
+		QString rendered_line			= ui->lineEdit->text();
 		params_line						= rendered_line.toLocal8Bit();
 #ifdef DEBUG_LAUNCHER
 		xrConstChar c1					= params_line.c_str();
 		xrConstChar c2					= params_settings.c_str();
 		xrConstChar c3					= params_string.c_str();
 		xrConstChar c4					= params.c_str();
-		//MessageBox						(NULL, c1, "params_line",		MB_OK | MB_ICONINFORMATION);
+		MessageBox						(NULL, c1, "params_line",		MB_OK | MB_ICONINFORMATION);
 		MessageBox						(NULL, c2, "params_settings",	MB_OK | MB_ICONINFORMATION);
-		//MessageBox						(NULL, c3, "params_string",		MB_OK | MB_ICONINFORMATION);
+		MessageBox						(NULL, c3, "params_string",		MB_OK | MB_ICONINFORMATION);
+		MessageBox						(NULL, c4, "params_string",		MB_OK | MB_ICONINFORMATION);
 #endif
-		//#VERTVER: Короче, идите нахуй. params_settings правильно определяется, но движку похуй.
-		params							= params_string + " " +  params_line + params_settings + " " + params_box ;
+		params							= params_string + " " + params_line + " " + params_settings + " " + params_box;
 		init_xrCore						();
 		ui->progressBar->setValue		(33);
 		statusBar()->showMessage		(tr("Creating render list..."));
 		CreateRendererList				();
 		ui->progressBar->setValue		(66);
-		statusBar()->showMessage(tr		("Loading xrEngine..."), 4000);
+		statusBar()->showMessage		(tr("Loading xrEngine..."), 4000);
 		ui->progressBar->setValue		(100);
 		RunApplication					(params.data());
 #ifndef NOAWDA
@@ -215,12 +336,26 @@ void xrLaunch::run_xrEngineRun()
 #endif
 		// After closing xrEngine thread
 		xrLaunch::close					();				
+
+	}
+	catch (const EcxeptionOpSet& ex)
+	{
+		switch (ex.opset())
+		{
+		case OpSet::SSE3:
+			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
+			QMessageBox::critical			(this, INIT_ERROR, ex.what());
+			break;
+		default:
+			statusBar()->showMessage		(tr(INIT_ERROR, "Engine init error (Unknown Error)"));
+			QMessageBox::critical			(this, INIT_ERROR, "Engine init error (Unknown Error)");
+			break;
+		}
 	}
 	catch (...)
 	{
-		ui->progressBar->setValue		(0);
-		statusBar()->showMessage		(tr("Error! Can't load xrEngine."));
-		QMessageBox::critical			(this, INIT_ERROR, "Can't load xrEngine (Unknown Error)");
+		statusBar()->showMessage		(tr(INIT_ERROR, "Engine init error (Unknown Error)"));
+		QMessageBox::critical			(this, INIT_ERROR, "Engine init error (Unknown Error)");
 	}
 }
 
@@ -337,3 +472,4 @@ void xrLaunch::on_actionAbout_Oxygen_Team_triggered()
     QDesktopServices::openUrl		(QUrl(oxylink));
 }
 #endif
+

@@ -112,8 +112,8 @@ int xrDialogParam::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     return _id;
 }
 struct qt_meta_stringdata_xrLaunch_t {
-    QByteArrayData data[22];
-    char stringdata0[478];
+    QByteArrayData data[24];
+    char stringdata0[516];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -136,14 +136,16 @@ QT_MOC_LITERAL(10, 214, 26), // "on_actionForserX_triggered"
 QT_MOC_LITERAL(11, 241, 29), // "on_actionParametres_triggered"
 QT_MOC_LITERAL(12, 271, 33), // "on_actionVertver_Github_trigg..."
 QT_MOC_LITERAL(13, 305, 36), // "on_actionAbout_Oxygen_Team_tr..."
-QT_MOC_LITERAL(14, 342, 25), // "on_listWidget_itemPressed"
-QT_MOC_LITERAL(15, 368, 16), // "QListWidgetItem*"
-QT_MOC_LITERAL(16, 385, 4), // "item"
-QT_MOC_LITERAL(17, 390, 27), // "on_listWidget_2_itemPressed"
-QT_MOC_LITERAL(18, 418, 13), // "status_render"
-QT_MOC_LITERAL(19, 432, 16), // "add_stringToList"
-QT_MOC_LITERAL(20, 449, 16), // "add_paramsToList"
-QT_MOC_LITERAL(21, 466, 11) // "init_xrCore"
+QT_MOC_LITERAL(14, 342, 13), // "clean_buffers"
+QT_MOC_LITERAL(15, 356, 23), // "on_pushButton_2_clicked"
+QT_MOC_LITERAL(16, 380, 25), // "on_listWidget_itemPressed"
+QT_MOC_LITERAL(17, 406, 16), // "QListWidgetItem*"
+QT_MOC_LITERAL(18, 423, 4), // "item"
+QT_MOC_LITERAL(19, 428, 27), // "on_listWidget_2_itemPressed"
+QT_MOC_LITERAL(20, 456, 13), // "status_render"
+QT_MOC_LITERAL(21, 470, 16), // "add_stringToList"
+QT_MOC_LITERAL(22, 487, 16), // "add_paramsToList"
+QT_MOC_LITERAL(23, 504, 11) // "init_xrCore"
 
     },
     "xrLaunch\0on_pushButton_clicked\0\0"
@@ -157,6 +159,7 @@ QT_MOC_LITERAL(21, 466, 11) // "init_xrCore"
     "on_actionParametres_triggered\0"
     "on_actionVertver_Github_triggered\0"
     "on_actionAbout_Oxygen_Team_triggered\0"
+    "clean_buffers\0on_pushButton_2_clicked\0"
     "on_listWidget_itemPressed\0QListWidgetItem*\0"
     "item\0on_listWidget_2_itemPressed\0"
     "status_render\0add_stringToList\0"
@@ -170,7 +173,7 @@ static const uint qt_meta_data_xrLaunch[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-      18,   14, // methods
+      20,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -178,24 +181,26 @@ static const uint qt_meta_data_xrLaunch[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,  104,    2, 0x08 /* Private */,
-       3,    0,  105,    2, 0x08 /* Private */,
-       4,    0,  106,    2, 0x08 /* Private */,
-       5,    0,  107,    2, 0x08 /* Private */,
-       6,    0,  108,    2, 0x08 /* Private */,
-       7,    0,  109,    2, 0x08 /* Private */,
-       8,    0,  110,    2, 0x08 /* Private */,
-       9,    0,  111,    2, 0x08 /* Private */,
-      10,    0,  112,    2, 0x08 /* Private */,
-      11,    0,  113,    2, 0x08 /* Private */,
-      12,    0,  114,    2, 0x08 /* Private */,
-      13,    0,  115,    2, 0x08 /* Private */,
-      14,    1,  116,    2, 0x08 /* Private */,
-      17,    1,  119,    2, 0x08 /* Private */,
-      18,    0,  122,    2, 0x08 /* Private */,
-      19,    0,  123,    2, 0x08 /* Private */,
-      20,    0,  124,    2, 0x08 /* Private */,
-      21,    0,  125,    2, 0x08 /* Private */,
+       1,    0,  114,    2, 0x08 /* Private */,
+       3,    0,  115,    2, 0x08 /* Private */,
+       4,    0,  116,    2, 0x08 /* Private */,
+       5,    0,  117,    2, 0x08 /* Private */,
+       6,    0,  118,    2, 0x08 /* Private */,
+       7,    0,  119,    2, 0x08 /* Private */,
+       8,    0,  120,    2, 0x08 /* Private */,
+       9,    0,  121,    2, 0x08 /* Private */,
+      10,    0,  122,    2, 0x08 /* Private */,
+      11,    0,  123,    2, 0x08 /* Private */,
+      12,    0,  124,    2, 0x08 /* Private */,
+      13,    0,  125,    2, 0x08 /* Private */,
+      14,    0,  126,    2, 0x08 /* Private */,
+      15,    0,  127,    2, 0x08 /* Private */,
+      16,    1,  128,    2, 0x08 /* Private */,
+      19,    1,  131,    2, 0x08 /* Private */,
+      20,    0,  134,    2, 0x08 /* Private */,
+      21,    0,  135,    2, 0x08 /* Private */,
+      22,    0,  136,    2, 0x08 /* Private */,
+      23,    0,  137,    2, 0x08 /* Private */,
 
  // slots: parameters
     QMetaType::Void,
@@ -210,8 +215,10 @@ static const uint qt_meta_data_xrLaunch[] = {
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
-    QMetaType::Void, 0x80000000 | 15,   16,
-    QMetaType::Void, 0x80000000 | 15,   16,
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void, 0x80000000 | 17,   18,
+    QMetaType::Void, 0x80000000 | 17,   18,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -238,12 +245,14 @@ void xrLaunch::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id, vo
         case 9: _t->on_actionParametres_triggered(); break;
         case 10: _t->on_actionVertver_Github_triggered(); break;
         case 11: _t->on_actionAbout_Oxygen_Team_triggered(); break;
-        case 12: _t->on_listWidget_itemPressed((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
-        case 13: _t->on_listWidget_2_itemPressed((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
-        case 14: _t->status_render(); break;
-        case 15: _t->add_stringToList(); break;
-        case 16: _t->add_paramsToList(); break;
-        case 17: _t->init_xrCore(); break;
+        case 12: _t->clean_buffers(); break;
+        case 13: _t->on_pushButton_2_clicked(); break;
+        case 14: _t->on_listWidget_itemPressed((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 15: _t->on_listWidget_2_itemPressed((*reinterpret_cast< QListWidgetItem*(*)>(_a[1]))); break;
+        case 16: _t->status_render(); break;
+        case 17: _t->add_stringToList(); break;
+        case 18: _t->add_paramsToList(); break;
+        case 19: _t->init_xrCore(); break;
         default: ;
         }
     }
@@ -274,13 +283,13 @@ int xrLaunch::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 18)
+        if (_id < 20)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 18;
+        _id -= 20;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 18)
+        if (_id < 20)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 18;
+        _id -= 20;
     }
     return _id;
 }

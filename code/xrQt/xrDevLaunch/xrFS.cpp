@@ -9,6 +9,13 @@
 #pragma once
 /////////////////////////////////////////
 #include "xrMain.h"
-#ifdef __cplusplus
+#include <iostream>
+#include <fstream>
 /////////////////////////////////////////
+#ifdef __cplusplus
+VOID openltxFile() 
+{
+
+
+}
 #endif
