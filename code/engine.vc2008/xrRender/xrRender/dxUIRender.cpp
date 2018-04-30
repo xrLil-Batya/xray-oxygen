@@ -31,7 +31,7 @@ void dxUIRender::SetAlphaRef(int aref)
 
 void dxUIRender::SetScissor(Irect* rect)
 {
-#if (!RENDER == R_R2)
+#if (RENDER != R_R2)
 	RCache.set_Scissor(rect);
 	StateManager.OverrideScissoring( rect?true:false, TRUE );
 #else

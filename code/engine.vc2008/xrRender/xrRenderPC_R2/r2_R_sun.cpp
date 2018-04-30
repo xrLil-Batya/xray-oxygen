@@ -7,7 +7,6 @@ const	float	tweak_COP_initial_offs			= 1200.f	;
 const	float	tweak_ortho_xform_initial_offs	= 1000.f	;	//. ?
 const	float	tweak_guaranteed_range			= 20.f		;	//. ?
 
-//float			OLES_SUN_LIMIT_27_01_07			= 180.f		;
 float			OLES_SUN_LIMIT_27_01_07			= 100.f		;
 
 const	float	MAP_SIZE_START					= 6.f		;
@@ -820,7 +819,6 @@ void CRender::render_sun				()
 		phase									= PHASE_SMAP;
 		if (RImplementation.o.Tshadows)	r_pmask	(true,true	);
 		else							r_pmask	(true,false	);
-//		fuckingsun->svis.begin					();
 	}
 
 	// Fill the database
@@ -1110,14 +1108,6 @@ void CRender::render_sun				()
 		if (b_receivers.max.y>+1)	b_receivers.max.y	=+1;
 		if (b_casters.max.z>+1)		b_casters.max.z		=+1;
 
-		// refit?
-		/*
-		const float EPS				= 0.001f;
-		D3DXMATRIX					refit;
-		D3DXMatrixOrthoOffCenterLH	( &refit, b_receivers.min.x, b_receivers.max.x, b_receivers.min.y, b_receivers.max.y, b_casters.min.z-EPS, b_casters.max.z+EPS );
-		D3DXMatrixMultiply			( &m_LightViewProj, &m_LightViewProj, &refit);
-		*/
-
 		float boxWidth  = b_receivers.max.x - b_receivers.min.x;
 		float boxHeight = b_receivers.max.y - b_receivers.min.y;
 		//  the divide by two's cancel out in the translation, but included for clarity
@@ -1128,7 +1118,6 @@ void CRender::render_sun				()
 													0.f,		0.f,					1.f, 0.f,
 										-2.f*boxX/boxWidth,		-2.f*boxY/boxHeight,	0.f, 1.f );
 		D3DXMatrixMultiply			( &m_LightViewProj, &m_LightViewProj, &trapezoidUnitCube);
-		//D3DXMatrixMultiply( &trapezoid_space, &trapezoid_space, &trapezoidUnitCube );
 		FPU::m24r					();
 	}
 
@@ -1160,7 +1149,6 @@ void CRender::render_sun				()
 
 	// End SMAP-render
 	{
-//		fuckingsun->svis.end					();
 		r_pmask									(true,false);
 	}
 
@@ -1257,36 +1245,6 @@ void CRender::render_sun_near	()
 		L_right.crossproduct		(L_up,L_dir).normalize		();
 		mdir_View.build_camera_dir	(L_pos,L_dir,L_up);
 
-		// projection: box
-		/*
-		//	Original
-		float	_D					= ps_r2_sun_near;
-		float	a0					= deg2rad(Device.fFOV*Device.fASPECT)/2.f;
-		float	a1					= deg2rad(Device.fFOV)/2.f;
-		float	c0					= _D/_cos(a0);
-		float	c1					= _D/_cos(a1);
-		float	k0					= 2.f*c0*_sin(a0);
-		float	k1					= 2.f*c1*_sin(a1);
-		float	borderalpha			= (Device.fFOV-10) / (90-10);
-
-		float	nearborder			= 1*borderalpha + 1.136363636364f*(1-borderalpha);
-		float	spherical_range		= ps_r2_sun_near_border * nearborder * _max(_max(c0,c1), _max(k0,k1)*1.414213562373f );
-		Fbox	frustum_bb;			frustum_bb.invalidate	();
-		hull.points.push_back		(Device.vCameraPosition);
-		for (int it=0; it<9; it++)	{
-		Fvector	xf	= wform		(mdir_View,hull.points[it]);
-		frustum_bb.modify		(xf);
-		}
-		float	size_x				= frustum_bb.max.x - frustum_bb.min.x;
-		float	size_y				= frustum_bb.max.y - frustum_bb.min.y;
-		float	diff_x				= (spherical_range - size_x)/2.f;	//VERIFY(diff_x>=0);
-		float	diff_y				= (spherical_range - size_y)/2.f;	//VERIFY(diff_y>=0);
-		frustum_bb.min.x -= diff_x; frustum_bb.max.x += diff_x;
-		frustum_bb.min.y -= diff_y; frustum_bb.max.y += diff_y;
-		Fbox&	bb					= frustum_bb;
-		D3DXMatrixOrthoOffCenterLH	((D3DXMATRIX*)&mdir_Project,bb.min.x,bb.max.x,  bb.min.y,bb.max.y,  bb.min.z-tweak_ortho_xform_initial_offs,bb.max.z);
-		/**/
-
 		//	Simple
 		Fbox	frustum_bb;			frustum_bb.invalidate();
 		for (int it=0; it<8; it++)	{
@@ -1347,14 +1305,13 @@ void CRender::render_sun_near	()
 		phase									= PHASE_SMAP;
 		if (RImplementation.o.Tshadows)	r_pmask	(true,true	);
 		else							r_pmask	(true,false	);
-//		fuckingsun->svis.begin					();
 	}
 
 	// Fill the database
 	r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 
 	// Finalize & Cleanup
-	fuckingsun->X.D.combine					= cull_xform;	//*((Fmatrix*)&m_LightViewProj);
+	fuckingsun->X.D.combine					= cull_xform;
 
 	// Render shadow-map
 	//. !!! We should clip based on shrinked frustum (again)
@@ -1381,7 +1338,6 @@ void CRender::render_sun_near	()
 
 	// End SMAP-render
 	{
-//		fuckingsun->svis.end					();
 		r_pmask									(true,false);
 	}
 
@@ -1408,7 +1364,7 @@ void CRender::init_cacades				( )
 	m_sun_cascades.resize(cascade_count);
 
 	float fBias = -0.0000025f;
-	//	float size = MAP_SIZE_START;
+
 	m_sun_cascades[0].reset_chain = true;
 	m_sun_cascades[0].size = 9;
 	m_sun_cascades[0].bias = m_sun_cascades[0].size*fBias;
@@ -1418,13 +1374,6 @@ void CRender::init_cacades				( )
 
  	m_sun_cascades[2].size = 160;
  	m_sun_cascades[2].bias = m_sun_cascades[2].size*fBias;
-
-// 	for( u32 i = 0; i < cascade_count; ++i )
-// 	{
-// 		m_sun_cascades[i].size = size;
-// 		size *= MAP_GROW_FACTOR;
-// 	}
-/// 	m_sun_cascades[m_sun_cascades.size()-1].size = 80;
 }
 
 void CRender::render_sun_cascades ( )
@@ -1557,8 +1506,6 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 		cull_xform.mul		(mdir_Project,mdir_View	);
 		Fmatrix	cull_xform_inv; cull_xform_inv.invert(cull_xform);
 
-
-		//		light_cuboid.light_cuboid_points.reserve		(9);
 		for	(int p=0; p < 8; p++)	{
 			Fvector3				xf	= wform		(cull_xform_inv,corners[p]);
 			light_cuboid.light_cuboid_points[p] = xf;
@@ -1578,7 +1525,6 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 			Fvector proj_view = Device.vCameraDirection;
 			proj_view.y = 0;
 			proj_view.normalize();
-//			lightXZshift.mad(proj_view, 20);
 
 			// Initialize rays for the next cascade
 			if( cascade_ind < m_sun_cascades.size()-1 )
@@ -1661,7 +1607,6 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 		phase									= PHASE_SMAP;
 		if (RImplementation.o.Tshadows)	r_pmask	(true,true	);
 		else							r_pmask	(true,false	);
-		//		fuckingsun->svis.begin					();
 	}
 
 	// Fill the database
@@ -1695,7 +1640,6 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 
 	// End SMAP-render
 	{
-		//		fuckingsun->svis.end					();
 		r_pmask									(true,false);
 	}
 

@@ -23,9 +23,6 @@ void	CBlender_SSAO::Compile			(CBlender_Compile& C)
 	case 1:		// downsample HBAO source rendertarget
 		C.r_Pass			("combine_1",		"depth_downs",	FALSE,	FALSE,	FALSE);
 		C.r_Sampler_rtf		("s_position",		r2_RT_P);
-		//C.r_Sampler_rtf		("s_normal",		r2_RT_N);
-		//C.r_Sampler_rtf		("s_half_depth",	r2_RT_half_depth);
-		//jitter(C);
 		C.r_End				();
 		break;
 	}
