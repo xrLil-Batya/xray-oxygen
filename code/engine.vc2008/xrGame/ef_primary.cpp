@@ -302,7 +302,7 @@ u32 CPersonalMaxHealth::dwfGetDiscreteValue(u32 dwDiscretizationValue)
 			return(dwDiscretizationValue - 1);
 		else
 		{
-			float const_dw = const_dw;
+			float const_dw = float(dwDiscretizationValue) / 10 + .5f;
 			if (fTemp <= 30)
 				return(iFloor(1 * const_dw));
 			if (fTemp <= 50)
