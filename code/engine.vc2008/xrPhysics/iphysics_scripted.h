@@ -40,7 +40,7 @@ namespace non_copy
 	{
 	 protected:
 		noncopyable() {}
-		~noncopyable() {}
+		virtual ~noncopyable() {}
 	 private:  // emphasize the following members are private
 		noncopyable( const noncopyable& );
 		const noncopyable& operator=( const noncopyable& );

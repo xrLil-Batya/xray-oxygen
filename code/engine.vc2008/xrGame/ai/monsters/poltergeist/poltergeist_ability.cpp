@@ -112,7 +112,7 @@ void CPoltergeist::PhysicalImpulse	(const Fvector &position)
 	//xr_vector<CObject*> &m_nearest = Level().ObjectSpace.q_nearest;
 	if (m_nearest.empty())			return;
 	
-	u32 index = Random.randI		(m_nearest.size());
+	u32 index = Random.randI		((u32)m_nearest.size());
 	
 	CPhysicsShellHolder  *obj = smart_cast<CPhysicsShellHolder *>(m_nearest[index]);
 	if (!obj || !obj->m_pPhysicsShell) return;

@@ -348,7 +348,7 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 		COLLISIONS::iterator	e = m_collisions.end();
 		for ( ; i != e; ++i) {
 			if ((*i).second.second.first == object) {
-				if (exchange_all((*i).second.second.second, object, collision_count))
+				if (exchange_all((*i).second.second.second, object, (u32)collision_count))
 					continue;
 
 				(*i).second.second.first	= 0;
@@ -356,7 +356,7 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 			}
 
 			VERIFY				((*i).second.second.second == object);
-			if (!exchange_all((*i).second.second.first, object, collision_count))
+			if (!exchange_all((*i).second.second.first, object, (u32)collision_count))
 				(*i).second.second.first	= 0;
 		}
 
@@ -482,7 +482,7 @@ void moving_objects::resolve_collisions			()
 		collidee_count			= u32(std::unique(collidees, collidees + collidee_count) - collidees);
 	}
 
-	u32							decision_count = collidee_count;
+	size_t						decision_count = collidee_count;
 	decision					*decisions = (decision*)_alloca(decision_count*sizeof(decision));
 
 	{

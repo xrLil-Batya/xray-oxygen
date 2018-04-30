@@ -200,7 +200,7 @@ void CLevelSoundManager::Update()
 	{
 		if (m_CurrentTrack<0 && engine_time>m_NextTrackTime)
 		{
-			U32Vec indices;
+			xr_vector<size_t> indices;
 			for (size_t k = 0; k < m_MusicTracks.size(); ++k)
 			{
 				SMusicTrack& T = m_MusicTracks[k];

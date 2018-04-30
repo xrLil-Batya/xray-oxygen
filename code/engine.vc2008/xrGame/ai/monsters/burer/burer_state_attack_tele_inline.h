@@ -215,15 +215,15 @@ void CStateBurerAttackTele<Object>::FindFreeObjects(xr_vector<CObject*> &tpObjec
 }
 
 template <typename Object>
-void CStateBurerAttackTele<Object>::FindObjects	()
+void CStateBurerAttackTele<Object>::FindObjects()
 {
-	u32	res_size					= tele_objects.size		();
+	const size_t res_size = tele_objects.size();
 	tele_objects.clear	();
 
 	// получить список объектов вокруг врага
-	m_nearest.clear		();
-	m_nearest.reserve				(res_size);
-	FindFreeObjects					(m_nearest, object->EnemyMan.get_enemy()->Position());
+	m_nearest.clear();
+	m_nearest.reserve(res_size);
+	FindFreeObjects(m_nearest, object->EnemyMan.get_enemy()->Position());
 
 	// получить список объектов вокруг монстра
 	FindFreeObjects					(m_nearest, object->Position());
@@ -238,15 +238,8 @@ void CStateBurerAttackTele<Object>::FindObjects	()
 	pos.mad							(object->Position(), dir, dist / 2.f);
 	FindFreeObjects					(m_nearest, pos);	
 	
-
 	// оставить уникальные объекты
-	tele_objects.erase				(
-		std::unique(
-			tele_objects.begin(),
-			tele_objects.end()
-		),
-		tele_objects.end()
-	);
+	tele_objects.erase(std::unique(tele_objects.begin(), tele_objects.end()), tele_objects.end());
 }
 
 template <typename Object>
