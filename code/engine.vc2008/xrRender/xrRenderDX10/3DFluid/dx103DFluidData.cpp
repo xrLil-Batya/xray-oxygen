@@ -136,6 +136,7 @@ void dx103DFluidData::ParseProfile(const xr_string &Profile)
 		Fmatrix Scale;
 		Fmatrix Translate;
 		Fmatrix TranslateScale;
+
 		//	Convert to 0..intDim space since it is used by simulation
 		//Scale.scale((float)m_iTextureWidth-1, (float)m_iTextureHeight-1, (float)m_iTextureDepth-1);
 		//Translate.translate(0.5, 0.5, 0.5);
@@ -144,6 +145,7 @@ void dx103DFluidData::ParseProfile(const xr_string &Profile)
 		vGridDim.set( (float)FluidManager.GetTextureWidth(), (float)FluidManager.GetTextureHeight(), (float)FluidManager.GetTextureDepth() );
 		Scale.scale(vGridDim.x-1, -(vGridDim.y-1), vGridDim.z-1 );
 		Translate.translate(0.5, -0.5, 0.5);
+
 		//	Actually it is mul(Translate, Scale).
 		//	Our matrix multiplication is not correct.
 		TranslateScale.mul(Scale, Translate);

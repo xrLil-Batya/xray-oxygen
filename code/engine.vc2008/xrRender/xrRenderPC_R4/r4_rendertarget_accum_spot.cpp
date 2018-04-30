@@ -38,7 +38,6 @@ void CRenderTarget::accum_spot	(light* L)
 		RCache.set_xform_view			(Device.mView		);
 		RCache.set_xform_project		(Device.mProject	);
 		bIntersect						= enable_scissor	(L);
-		enable_dbt_bounds				(L);
 
 		// *** similar to "Carmack's reverse", but assumes convex, non intersecting objects,
 		// *** thus can cope without stencil clear with 127 lights
@@ -63,9 +62,6 @@ void CRenderTarget::accum_spot	(light* L)
 		   RCache.set_Stencil		(TRUE,D3DCMP_LESSEQUAL,0x01,0x7f,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE);
 		draw_volume					(L);
 	}
-
-	// nv-stencil recompression
-	if (RImplementation.o.nvstencil)	u_stencil_optimize();
 
 	// *****************************	Minimize overdraw	*************************************
 	// Select shader (front or back-faces), *** back, if intersect near plane
@@ -234,8 +230,6 @@ void CRenderTarget::accum_spot	(light* L)
 	
 	RCache.set_Scissor(0);
 	increment_light_marker();
-
-	u_DBT_disable				();
 }
 
 void CRenderTarget::accum_volumetric(light* L)

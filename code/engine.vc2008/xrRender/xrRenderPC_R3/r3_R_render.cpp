@@ -218,14 +218,11 @@ void CRender::Render		()
 		return;
 	}
 
-//.	VERIFY					(g_pGameLevel && g_pGameLevel->pHUD);
-
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
 	bool					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
 	if (o.sunstatic)		bSUN				= false;
-	// Msg						("sstatic: %s, sun: %s",o.sunstatic?;"true":"false", bSUN?"true":"false");
 
 	// HOM
 	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
@@ -243,7 +240,7 @@ void CRender::Render		()
 		float		z_distance	= ps_r2_zfill		;
 		Fmatrix		m_zfill, m_project				;
 		m_project.build_projection	(
-			deg2rad(Device.fFOV/* *Device.fASPECT*/), 
+			deg2rad(Device.fFOV), 
 			Device.fASPECT, VIEWPORT_NEAR, 
 			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		m_zfill.mul	(m_project,Device.mView);
@@ -284,7 +281,6 @@ void CRender::Render		()
 	}
 	Device.Statistic->RenderDUMP_Wait_S.End		();
 	q_sync_count								= (q_sync_count+1)%HW.Caps.iGPUNum;
-	//CHK_DX										(q_sync_point[q_sync_count]->Issue(D3DISSUE_END));
 	CHK_DX										(EndQuery(q_sync_point[q_sync_count]));
 
 	//******* Main calc - DEFERRER RENDERER
@@ -306,6 +302,7 @@ void CRender::Render		()
 	if (!split_the_scene_to_minimize_wait)
 	{
 		PIX_EVENT(DEFER_PART0_NO_SPLIT);
+
 		// level, DO NOT SPLIT
 		Target->phase_scene_begin				();
 		r_dsgraph_render_hud					();
@@ -317,6 +314,7 @@ void CRender::Render		()
 	else 
 	{
 		PIX_EVENT(DEFER_PART0_SPLIT);
+
 		// level, SPLIT
 		Target->phase_scene_begin				();
 		r_dsgraph_render_graph					(0);
@@ -331,6 +329,7 @@ void CRender::Render		()
       RCache.set_ZB( RImplementation.Target->rt_MSAADepth->pZRT );
 	{
 		PIX_EVENT(DEFER_TEST_LIGHT_VIS);
+
 		// perform tests
 		size_t	count			= 0;
 		light_Package&	LP	= Lights.package;
@@ -372,6 +371,7 @@ void CRender::Render		()
 	if (split_the_scene_to_minimize_wait)	
 	{
 		PIX_EVENT(DEFER_PART1_SPLIT);
+
 		// level
 		Target->phase_scene_begin				();
 		r_dsgraph_render_hud					();
@@ -444,15 +444,16 @@ void CRender::Render		()
 	{
 		PIX_EVENT(DEFER_SELF_ILLUM);
 		Target->phase_accumulator			();
+
 		// Render emissive geometry, stencil - write 0x0 at pixel pos
 		RCache.set_xform_project			(Device.mProject); 
 		RCache.set_xform_view				(Device.mView);
+
 		// Stencil - write 0x1 at pixel pos - 
       if( !RImplementation.o.dx10_msaa )
 		   RCache.set_Stencil					( TRUE,D3DCMP_ALWAYS,0x01,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
       else
 		   RCache.set_Stencil					( TRUE,D3DCMP_ALWAYS,0x01,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
-		//RCache.set_Stencil				(TRUE,D3DCMP_ALWAYS,0x00,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 		RCache.set_CullMode					(CULL_CCW);
 		RCache.set_ColorWriteEnable			();
 		RImplementation.r_dsgraph_render_emissive();
@@ -493,6 +494,7 @@ void CRender::render_forward				()
 		r_pmask									(false,true);			// enable priority "1"
 		phase									= PHASE_NORMAL;
 		render_main								(Device.mFullTransform,false);//
+
 		//	Igor: we don't want to render old lods on next frame.
 		mapLOD.clear							();
 		r_dsgraph_render_graph					(1)	;					// normal level, secondary priority

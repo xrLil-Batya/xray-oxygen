@@ -55,10 +55,6 @@ void dump_collision_hit(CPHMovementControl *movement_control)
 	VERIFY( smart_cast<CPhysicsShellHolder*>(iobj) );
 	CPhysicsShellHolder	*obj = static_cast<CPhysicsShellHolder	*>(iobj);
 	Msg( "ai unit: %s hited by collision; power: %f, spawn frame %d, current frame %d ", obj->cName().c_str(), movement_control->gcontact_HealthLost, obj->spawn_time(), Device.dwFrame ); 
-	//CPhysicsShellHolder* object =static_cast<CPhysicsShellHolder*>(Level().Objects.net_Find(m_collision_damage_info.m_obj_id));
-	//const ICollisionDamageInfo * di=movement_control->CollisionDamageInfo();
-	//VERIFY( di );
-	//di->
 }
 #endif
 void CMovementManager::apply_collision_hit	(CPHMovementControl *movement_control)
@@ -95,9 +91,6 @@ bool CMovementManager::move_along_path		() const
 
 	if (!actual())
 		return			(false);
-
-//	if (path_completed())
-//		return			(true);
 
 	if (detail().path().empty())
 		return			(false);
@@ -153,13 +146,11 @@ Fvector CMovementManager::path_position	(const float & velocity, const Fvector &
 		dist					-= dist_to_target;
 
 		if (current_travel_point + 1 >= detail().path().size()) {
-//			VERIFY				(dist <= dist_to_target);
 			return				(dest_position);
 		}
 		
 		++current_travel_point;
 		if ((current_travel_point+1) >= detail().path().size()) {
-//			VERIFY				(dist <= dist_to_target);
 			dist				= 0.f;
 			return				(dest_position);
 		}
@@ -225,11 +216,9 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 
 		// проверка на хит
 		apply_collision_hit(movement_control);
-//		Msg				("[%6d][%s] no move, curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
 		return;
 	}
 
-//. 	VERIFY2(movement_control->CharacterExist() || object().animation_movement_controlled() , "! Can not move - physics movement shell does not exist. Try to move in wonded state?" );
 	if(!movement_control->CharacterExist())
 		return;
 
@@ -246,16 +235,6 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 	dest_position		= path_position(old_desirable_speed(),object().Position(),time_delta,current_travel_point,dist,dist_to_target,dir_to_target);
 
 	// Lain: added steering behaviour
-	// 	Fvector target; 
-	// 	target.add(dest_position, dir_to_target);
-	// 	Fvector steer_offs = m_steer_manager->calc_acceleration();
-	// 	steer_offs.mul(time_delta*10.f);
-	// 	target.add(steer_offs);
-	// 	dir_to_target.sub(target, dest_position);
-	// 	dist_to_target = dir_to_target.magnitude();
-	// 	Fvector steer_offs = m_steer_manager->calc_acceleration();
-	// 	steer_offs.mul(time_delta*1000.f);
-	// 	movement_control->AddControlVel(steer_offs);
 
 	if (detail().m_current_travel_point != current_travel_point)
 		on_travel_point_change	(detail().m_current_travel_point);
@@ -266,12 +245,10 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 		if(current_travel_point + 1 < detail().path().size())
 			detail().m_current_travel_point = current_travel_point + 1;
 		else
-			detail().m_current_travel_point = detail().path().size() - 1;
+			detail().m_current_travel_point = (u32)detail().path().size() - 1;
 		m_speed			= 0.f;
-		//Msg				("[%6d][%s] strange exit, curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
 		return;
 	}
-//	Msg					("[%6d][%s] curr_tp=%d",Device.dwFrame,*object().cName(),detail().m_current_travel_point);
 
 	// Физика устанавливает новую позицию
 	Device.Statistic->Physics.Begin	();
@@ -283,7 +260,6 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 	// установить позицию
 	VERIFY				(dist >= 0.f);
 	VERIFY				(dist_to_target >= 0.f);
-//	VERIFY				(dist <= dist_to_target);
 	motion.mul			(dir_to_target, dist / dist_to_target);
 	dest_position.add	(motion);
 
@@ -315,23 +291,13 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 		}
 		movement_control->GetPosition	(dest_position);
 	}
-	else {
-		//DBG_PH_MOVE_CONDITIONS( if(ph_dbg_draw_mask.test(phDbgNeverUseAiPhMove)){movement_control->SetPosition(dest_position);movement_control->DisableCharacter();})
+	else  // есть физ. объекты
+	{
 			movement_control->SetPosition(dest_position);
 			movement_control->DisableCharacter();
 			movement_control->b_exect_position	=	true;
 
 	}
-	/*
-	} else { // есть физ. объекты
-
-		movement_control->Calculate				(detail().path(), desirable_speed, detail().m_current_travel_point, precision);
-		movement_control->GetPosition			(dest_position);
-		
-		// проверка на хит
-		apply_collision_hit						(movement_control);
-	}
-		*/
 
 	// установить скорость
 	float	real_motion	= motion.magnitude() + desirable_dist - dist;
@@ -339,7 +305,6 @@ void CMovementManager::move_along_path		(CPHMovementControl *movement_control, F
 	
 	m_speed				= 0.5f * desirable_speed + 0.5f * real_speed;
 	
-
 	// Физика устанавливает позицию в соответствии с нулевой скоростью 
 	if (detail().completed(dest_position,true)) {
 		if(!movement_control->PhysicsOnlyMode()) {

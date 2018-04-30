@@ -1201,7 +1201,7 @@ void CWeaponMagazined::OnNextFireMode()
 {
 	if (!m_bHasDifferentFireModes) return;
 	if (GetState() != eIdle) return;
-	m_iCurFireMode = (m_iCurFireMode + 1 + m_aFireModes.size()) % m_aFireModes.size();
+	m_iCurFireMode = u32((m_iCurFireMode + 1 + m_aFireModes.size()) % m_aFireModes.size());
 	SetQueueSize(GetCurrentFireMode());
 }
 
@@ -1209,7 +1209,7 @@ void CWeaponMagazined::OnPrevFireMode()
 {
 	if (!m_bHasDifferentFireModes) return;
 	if (GetState() != eIdle) return;
-	m_iCurFireMode = (m_iCurFireMode - 1 + m_aFireModes.size()) % m_aFireModes.size();
+	m_iCurFireMode = (u32)((m_iCurFireMode - 1 + m_aFireModes.size()) % m_aFireModes.size());
 	SetQueueSize(GetCurrentFireMode());
 }
 
@@ -1309,7 +1309,7 @@ bool CWeaponMagazined::GetBriefInfo(II_BriefInfo& info)
 	GetSuitableAmmoTotal();//update m_BriefInfo_CalcFrame
 	info.grenade = "";
 
-	u32 at_size = m_ammoTypes.size();
+	size_t at_size = m_ammoTypes.size();
 	if (unlimited_ammo() || at_size == 0)
 	{
 		info.fmj_ammo._set("--");

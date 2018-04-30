@@ -28,12 +28,6 @@ void CRenderTarget::phase_ssao	()
 
 	RCache.set_Stencil	(FALSE);
 
-	/*RCache.set_Stencil					(TRUE,D3DCMP_LESSEQUAL,0x01,0xff,0x00);	// stencil should be >= 1
-	if (RImplementation.o.nvstencil)	{
-		u_stencil_optimize				(CRenderTarget::SO_Combine);
-		RCache.set_ColorWriteEnable		();
-	}*/
-
 	// Compute params
 	Fmatrix		m_v2w;			m_v2w.invert				(Device.mView		);
 
@@ -77,26 +71,6 @@ void CRenderTarget::phase_ssao	()
 	else
 	{
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-		/*RCache.set_Stencil( TRUE, D3DCMP_EQUAL, 0x01, 0x81, 0 );
-		RCache.Render		( D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-		if( RImplementation.o.dx10_msaa_opt )
-		{
-			RCache.set_Element( s_ssao_msaa[0]->E[0]	);
-			RCache.set_Stencil( TRUE, D3DCMP_EQUAL, 0x81, 0x81, 0 );
-			RCache.Render	  ( D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-		}
-		else
-		{
-			for( u32 i = 0; i < RImplementation.o.dx10_msaa_samples; ++i )
-			{
-				RCache.set_Element			( s_ssao_msaa[i]->E[0]	);
-				StateManager.SetSampleMask	( u32(1) << i  );
-				RCache.set_Stencil			( TRUE, D3DCMP_EQUAL, 0x81, 0x81, 0 );
-				RCache.Render				( D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-			}
-			StateManager.SetSampleMask( 0xffffffff );
-		}*/
-		//RCache.set_Stencil( FALSE, D3DCMP_EQUAL, 0x01, 0xff, 0 );
 	}  
 
 	set_viewport(HW.pDevice, Device.dwWidth, Device.dwHeight);
@@ -107,16 +81,9 @@ void CRenderTarget::phase_ssao	()
 
 void CRenderTarget::phase_downsamp	()
 {
-	// DON'T DO THIS!!!
-	//IDirect3DSurface9 *source, *dest;
-	//rt_Position->pSurface->GetSurfaceLevel(0, &source);
-	//rt_half_depth->pSurface->GetSurfaceLevel(0, &dest);
-	//HW.pDevice->StretchRect(source, NULL, dest, NULL, D3DTEXF_POINT);
-
-	//Fvector2	p0,p1;
 	u32			Offset = 0;
 
-    u_setrt( rt_half_depth,0,0,0/*HW.pBaseZB*/ );
+    u_setrt( rt_half_depth,0,0,0);
    	FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
     HW.pContext->ClearRenderTargetView(rt_half_depth->pRT, ColorRGBA);
 	u32 w = Device.dwWidth;

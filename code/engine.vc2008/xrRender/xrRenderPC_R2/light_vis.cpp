@@ -30,8 +30,6 @@ void	light::vis_prepare			()
 		safe_area	= std::max(std::max(VIEWPORT_NEAR, std::max(x0,x1)),c);
 	}
 
-	//Msg	("sc[%f,%f,%f]/c[%f,%f,%f] - sr[%f]/r[%f]",VPUSH(spatial.center),VPUSH(position),spatial.radius,range);
-	//Msg	("dist:%f, sa:%f",Device.vCameraPosition.distance_to(spatial.center),safe_area);
 	bool	skiptest	= false;
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_DONT_TEST_UNSHADOWED) && !flags.bShadow)	skiptest=true;
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_DONT_TEST_SHADOWED) && flags.bShadow)	skiptest=true;
@@ -48,6 +46,7 @@ void	light::vis_prepare			()
 	xform_calc										();
 	RCache.set_xform_world							(m_xform);
 	vis.query_order	= RImplementation.occq_begin	(vis.query_id);
+
 	//	Hack: Igor. Light is visible if it's frutum is visible. (Only for volumetric)
 	//	Hope it won't slow down too much since there's not too much volumetric lights
 	//	TODO: sort for performance improvement if this technique hurts
@@ -71,7 +70,7 @@ void	light::vis_update			()
 
 	u32	frame			= Device.dwFrame;
 	u32 fragments		= RImplementation.occq_get	(vis.query_id);
-	//Log					("",fragments);
+
 	vis.visible			= (fragments > cullfragments);
 	vis.pending			= false;
 	if (vis.visible)	{

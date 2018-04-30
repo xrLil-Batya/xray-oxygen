@@ -138,7 +138,6 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			Fmatrix			m_xform;
 			Fvector			direction	= fuckingsun->direction	;
 			float	w_dir				= g_pGamePersistent->Environment().CurrentEnv->wind_direction	;
-			//float	w_speed				= g_pGamePersistent->Environment().CurrentEnv->wind_velocity	;
 			Fvector			normal	;	normal.setHP(w_dir,0);
 							w_shift		+=	0.003f*Device.fTimeDelta;
 			Fvector			position;	position.set(0,0,0);
@@ -154,7 +153,6 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		// Make jitter texture
 		Fvector2					j0,j1;
 		float	scale_X				= float(Device.dwWidth)	/ float(TEX_jitter);
-		//float	scale_Y				= float(Device.dwHeight)/ float(TEX_jitter);
 		float	offset				= (.5f / float(TEX_jitter));
 		j0.set						(offset,offset);
 		j1.set						(scale_X,scale_X).add(offset);
@@ -219,7 +217,6 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		u_DBT_disable	();
 
 		//	Igor: draw volumetric here
-		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
 		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0))
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
@@ -289,7 +286,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	if (RImplementation.o.nvstencil  && (SE_SUN_NEAR==sub_phase))	u_stencil_optimize();	//. driver bug?
 
 	// Perform lighting
-	//if( sub_phase == SE_SUN_FAR ) //******************************************************************
 	{
 		phase_accumulator					()	;
 		RCache.set_CullMode					(CULL_CCW); //******************************************************************
@@ -298,7 +294,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		// texture adjustment matrix
 		float			fTexelOffs			= (0.5f / float(RImplementation.o.smapsize));
 		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
-		//float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_bias:ps_r2_sun_depth_far_bias;
 		//	Use this when triangle culling is not inverted.
 //		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r2_sun_depth_near_bias):ps_r2_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
@@ -336,7 +331,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			Fmatrix			m_xform;
 			Fvector			direction	= fuckingsun->direction	;
 			float	w_dir				= g_pGamePersistent->Environment().CurrentEnv->wind_direction	;
-			//float	w_speed				= g_pGamePersistent->Environment().CurrentEnv->wind_velocity	;
 			Fvector			normal	;	normal.setHP(w_dir,0);
 							w_shift		+=	0.003f*Device.fTimeDelta;
 			Fvector			position;	position.set(0,0,0);
@@ -359,7 +353,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		// Make jitter texture
 		Fvector2					j0,j1;
 		float	scale_X				= float(Device.dwWidth)	/ float(TEX_jitter);
-		//float	scale_Y				= float(Device.dwHeight)/ float(TEX_jitter);
 		float	offset				= (.5f / float(TEX_jitter));
 		j0.set						(offset,offset);
 		j1.set						(scale_X,scale_X).add(offset);
@@ -378,7 +371,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			
 
 			Fmatrix inv_XDcombine;
-			if( /*ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING) &&*/ sub_phase == SE_SUN_FAR )
+			if(sub_phase == SE_SUN_FAR )
 				inv_XDcombine.invert(xform_prev);
 			else
 				inv_XDcombine.invert(xform);
@@ -477,7 +470,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		u_DBT_disable	();
 
 		//	Igor: draw volumetric here
-		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
 		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && sub_phase == SE_SUN_FAR)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
@@ -511,7 +503,7 @@ void CRenderTarget::accum_direct_blend	()
 		RCache.set_Stencil			(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2	);
 	}
-	//dwLightMarkerID				+= 2;
+
 	increment_light_marker();
 }
 
@@ -621,7 +613,6 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		// Make jitter texture
 		Fvector2					j0,j1;
 		float	scale_X				= float(Device.dwWidth)	/ float(TEX_jitter);
-		//float	scale_Y				= float(Device.dwHeight)/ float(TEX_jitter);
 		float	offset				= (.5f / float(TEX_jitter));
 		j0.set						(offset,offset);
 		j1.set						(scale_X,scale_X).add(offset);
@@ -646,7 +637,6 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 
 		//	Igor: draw volumetric here
-		//accum_direct_volumetric	(sub_phase, Offset);
 	}
 }
 
@@ -680,11 +670,6 @@ void CRenderTarget::accum_direct_lum	()
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
-	// nv-stencil recompression
-	/*
-	if (RImplementation.o.nvstencil  && (SE_SUN_NEAR==sub_phase))	u_stencil_optimize();	//. driver bug?
-	*/
-
 	// Perform lighting
 		RCache.set_CullMode					(CULL_NONE	);
 		RCache.set_ColorWriteEnable			();
@@ -692,7 +677,6 @@ void CRenderTarget::accum_direct_lum	()
 		// Make jitter texture
 		Fvector2					j0,j1;
 		float	scale_X				= float(Device.dwWidth)	/ float(TEX_jitter);
-//		float	scale_Y				= float(Device.dwHeight)/ float(TEX_jitter);
 		float	offset				= (.5f / float(TEX_jitter));
 		j0.set						(offset,offset);
 		j1.set						(scale_X,scale_X).add(offset);
@@ -744,10 +728,6 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 		//	TODO: add multiplication by sun color here
 		if (fValue<0.0001) return;
 	}
-	
-	//	Test. draw only for near part
-//	if (sub_phase!=SE_SUN_N/EAR) return;
-//	if (sub_phase!=SE_SUN_FAR) return;
 
 	phase_vol_accumulator();
 
@@ -762,12 +742,6 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 		BOOL		b_HW_smap	= RImplementation.o.HW_smap;
 		BOOL		b_HW_PCF	= RImplementation.o.HW_smap_PCF;
 		if (b_HW_smap)		{
-			/*
-			if (b_HW_PCF)
-				pszSMapName = r2_RT_smap_depth;
-			else
-			*/
-
 				pszSMapName = r2_RT_smap_depth;
 		}
 		else				pszSMapName = r2_RT_smap_surf;
@@ -803,13 +777,6 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 		Fvector		L_clr;
 		L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 		
-		//	Use g_combine_2UV that was set up by accum_direct
-		//	RCache.set_Geometry			(g_combine_2UV);
-
-		// setup
-
-		
-
 		if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
 			RCache.set_Element			(s_accum_direct_volumetric->E[0]);
 		else
@@ -818,7 +785,6 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 			RCache.set_CullMode			(CULL_CCW); 
 		}
 
-//		RCache.set_c				("Ldynamic_dir",		L_dir.x,L_dir.y,L_dir.z,0 );
 		RCache.set_c				("Ldynamic_color",		L_clr.x,L_clr.y,L_clr.z,0);
 		RCache.set_c				("m_shadow",			mShadow);
 		Fmatrix			m_Texgen;
@@ -829,7 +795,6 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
  		u_compute_texgen_screen	( m_Texgen );
 
 		RCache.set_c				("m_texgen",			m_Texgen);
-//		RCache.set_c				("m_sunmask",			m_clouds_shadow);
 
 		// nv-DBT
 		float zMin,zMax;
@@ -841,7 +806,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 			if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
 				zMin = ps_r2_sun_near;
 			else
-				zMin = 0; /////*****************************************************************************************
+				zMin = 0;
 
 			zMax = OLES_SUN_LIMIT_27_01_07;
 		}
@@ -877,9 +842,6 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 #			define FOURCC_GET4  MAKEFOURCC('G','E','T','4') 
 			HW.pDevice->SetSamplerState	( 0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET4 );
 		}
-
-		// setup stencil: we have to draw to both lit and unlit pixels
-		//RCache.set_Stencil			(TRUE,D3DCMP_LESSEQUAL,dwLightMarkerID,0xff,0x00);
 
 		if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
 			RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);

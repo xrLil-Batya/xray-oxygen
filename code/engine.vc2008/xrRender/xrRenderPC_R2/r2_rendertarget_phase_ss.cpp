@@ -87,8 +87,6 @@ void	CRenderTarget::phase_SunShafts	()
 	
 	// Draw COLOR
 	RCache.set_Element			(s_SunShafts->E[2]);
-	//RCache.set_c				("SunShaftsRadius",ps_prop_ss_radius,0,0,0);
-	//RCache.set_c				("SampleStepParams",ps_prop_ss_sample_step_phase0,0,0,0);
 	RCache.set_c				("SSParams",ps_prop_ss_sample_step_phase0,ps_prop_ss_radius,0,0);
 	RCache.set_Geometry			(g_aa_AA);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
@@ -112,37 +110,9 @@ void	CRenderTarget::phase_SunShafts	()
 	
 	// Draw COLOR
 	RCache.set_Element			(s_SunShafts->E[3]);
-	//RCache.set_c				("SunShaftsRadius",ps_prop_ss_radius,0,0,0);
-	//RCache.set_c				("SampleStepParams",ps_prop_ss_sample_step_phase1,0,0,0);	
 	RCache.set_c				("SSParams",ps_prop_ss_sample_step_phase1,ps_prop_ss_radius,0,0);
 	RCache.set_Geometry			(g_aa_AA);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-	
-	//////////////////////////////////////////////////////////////////////////////////////////
-	//SUNSHAFTS PASS2
-	//////////////////////////////////////////////////////////////////////////////////////////
-	
-	//Set RT's
-//	u_setrt			(	rt_SunShaftsPass0,0,0,HW.pBaseZB	)	;
-//	RCache.set_CullMode		( CULL_NONE )	;
-//	RCache.set_Stencil		( FALSE		)	;
-	
-	// Fill vertex buffer
-//	pv					= (v_aa*) RCache.Vertex.Lock	(4,g_aa_AA->vb_stride,Offset);
-//	pv->p.set(EPS,			float(_h+EPS),	EPS,1.f); pv->uv0.set(p0.x, p1.y);pv->uv1.set(p0.x-ddw,p1.y-ddh);pv->uv2.set(p0.x+ddw,p1.y+ddh);pv->uv3.set(p0.x+ddw,p1.y-ddh);pv->uv4.set(p0.x-ddw,p1.y+ddh);pv->uv5.set(p0.x-ddw,p1.y,p1.y,p0.x+ddw);pv->uv6.set(p0.x,p1.y-ddh,p1.y+ddh,p0.x);pv++;
-//	pv->p.set(EPS,			EPS,			EPS,1.f); pv->uv0.set(p0.x, p0.y);pv->uv1.set(p0.x-ddw,p0.y-ddh);pv->uv2.set(p0.x+ddw,p0.y+ddh);pv->uv3.set(p0.x+ddw,p0.y-ddh);pv->uv4.set(p0.x-ddw,p0.y+ddh);pv->uv5.set(p0.x-ddw,p0.y,p0.y,p0.x+ddw);pv->uv6.set(p0.x,p0.y-ddh,p0.y+ddh,p0.x);pv++;
-//	pv->p.set(float(_w+EPS),float(_h+EPS),	EPS,1.f); pv->uv0.set(p1.x, p1.y);pv->uv1.set(p1.x-ddw,p1.y-ddh);pv->uv2.set(p1.x+ddw,p1.y+ddh);pv->uv3.set(p1.x+ddw,p1.y-ddh);pv->uv4.set(p1.x-ddw,p1.y+ddh);pv->uv5.set(p1.x-ddw,p1.y,p1.y,p1.x+ddw);pv->uv6.set(p1.x,p1.y-ddh,p1.y+ddh,p1.x);pv++;
-//	pv->p.set(float(_w+EPS),EPS,			EPS,1.f); pv->uv0.set(p1.x, p0.y);pv->uv1.set(p1.x-ddw,p0.y-ddh);pv->uv2.set(p1.x+ddw,p0.y+ddh);pv->uv3.set(p1.x+ddw,p0.y-ddh);pv->uv4.set(p1.x-ddw,p0.y+ddh);pv->uv5.set(p1.x-ddw,p0.y,p0.y,p1.x+ddw);pv->uv6.set(p1.x,p0.y-ddh,p0.y+ddh,p1.x);pv++;
-//	RCache.Vertex.Unlock		(4,g_aa_AA->vb_stride);
-	
-	// Draw COLOR
-//	RCache.set_Element			(s_SunShafts->E[4]);
-//	RCache.set_c				("SunShaftsRadius",ps_prop_ss_radius,0,0,0);
-//	RCache.set_c				("SampleStepParams",ps_prop_ss_sample_step_phase2,0,0,0);	
-//	RCache.set_Geometry			(g_aa_AA);
-//	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-	
-//	RCache.set_Stencil		( FALSE		)	;
 	
 	//////////////////////////////////////////////////////////////////////////////////////////
 	//COMBINE
@@ -163,8 +133,6 @@ void	CRenderTarget::phase_SunShafts	()
 	
 	// Draw COLOR
 	RCache.set_Element			(s_SunShafts->E[5]);
-	//RCache.set_c				("BlendParams",ps_prop_ss_blend,0,0,0);
-	//RCache.set_c				("SSIntensity",ps_prop_ss_intensity,0,0,0);
 	RCache.set_c				("SSParamsDISPLAY",ps_prop_ss_intensity,ps_prop_ss_blend,0,0);	
 	RCache.set_Geometry			(g_aa_AA);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);

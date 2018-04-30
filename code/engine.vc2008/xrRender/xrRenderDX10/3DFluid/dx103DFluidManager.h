@@ -1,5 +1,3 @@
-#ifndef	dx103DFluidManager_included
-#define	dx103DFluidManager_included
 #pragma once
 
 class dx103DFluidData;
@@ -45,7 +43,6 @@ public:
 	int		GetTextureHeight() const { return m_iTextureHeight; }
 	int		GetTextureDepth() const { return m_iTextureDepth; }
 
-//	float	GetDecay() { return m_fDecay; }
 	float	GetImpulseSize() const { return m_fImpulseSize; }
 
 	static LPCSTR*	GetEngineTextureNames() { return m_pEngineTextureNames; }
@@ -142,5 +139,3 @@ private:
 };
 
 extern dx103DFluidManager	FluidManager;
-
-#endif	//	dx103DFluidManager_included

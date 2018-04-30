@@ -41,7 +41,7 @@ public:
 	const shared_str&	GetPrevActiveId				()								{ return m_sPrevPushedId; }
 			void		SetActiveTab				(const shared_str& sNewTab);
 			void		SetActiveTab_script			(LPCSTR sNewTab)				{SetActiveTab(sNewTab);};
-	const	u32			GetTabsCount				() const						{ return m_TabsArr.size(); }
+	const	u32			GetTabsCount				() const						{ return (u32)m_TabsArr.size(); }
 	
 	// Режим клавилатурных акселераторов (вкл/выкл)
 	IC bool				GetAcceleratorsMode			() const						{ return m_bAcceleratorsEnable; }
@@ -52,7 +52,7 @@ public:
 	CUITabButton*		GetButtonById				(const shared_str& id);
 	CUITabButton*		GetButtonById_script		(LPCSTR s)						{ return GetButtonById(s);}
 
-	void		ResetTab					();
+	void				ResetTab					();
 protected:
 	// Список кнопок - переключателей закладок
 	TABS_VECTOR			m_TabsArr;

@@ -10,7 +10,6 @@
 #include "../xrRender/dxRenderDeviceRender.h"
 #include "../xrRender/dxWallMarkArray.h"
 #include "../xrRender/dxUIShader.h"
-//#include "../../xrServerEntities/smart_cast.h"
 
 CRender										RImplementation;
 
@@ -63,7 +62,6 @@ static class cl_parallax		: public R_constant_setup
 	}
 }	binder_parallax;
 
-//#TODO: FIX THAT SHIT!
 static class cl_tree_amplitude_intensity : public R_constant_setup
 {
  	virtual void setup(R_constant* C)
@@ -121,60 +119,9 @@ void					CRender::create					()
 	// Check for NULL render target support
 	D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
 	o.nullrt			= HW.support	(nullrt,			D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
-	/*
-	if (o.nullrt)		{
-	Msg				("* NULLRT supported and used");
-	};
-	*/
-	if (o.nullrt)		{
-		Msg				("* NULLRT supported");
 
-		//.	    _tzset			();
-		//.		??? _strdate	( date, 128 );	???
-		//.		??? if (date < 22-march-07)		
-		if (0)
-		{
-			u32 device_id	= HW.Caps.id_device;
-			bool disable_nullrt = false;
-			switch (device_id)	
-			{
-			case 0x190:
-			case 0x191:
-			case 0x192:
-			case 0x193:
-			case 0x194:
-			case 0x197:
-			case 0x19D:
-			case 0x19E:{
-				disable_nullrt = true;	//G80
-				break;
-					   }
-			case 0x400:
-			case 0x401:
-			case 0x402:
-			case 0x403:
-			case 0x404:
-			case 0x405:
-			case 0x40E:
-			case 0x40F:{
-				disable_nullrt = true;	//G84
-				break;
-					   }
-			case 0x420:
-			case 0x421:
-			case 0x422:
-			case 0x423:
-			case 0x424:
-			case 0x42D:
-			case 0x42E:
-			case 0x42F:{
-				disable_nullrt = true;	// G86
-				break;
-					   }
-			}
-			if (disable_nullrt)	o.nullrt=false;
-		};
-		if (o.nullrt)	Msg				("* ...and used");
+	if (o.nullrt)		{
+		Msg				("* NULLRT supported and used");
 	};
 
 
@@ -222,8 +169,6 @@ void					CRender::create					()
 	o.nvstencil			= FALSE;
 	if ((HW.Caps.id_vendor==0x10DE)&&(HW.Caps.id_device>=0x40))	
 	{
-		//o.nvstencil = HW.support	((D3DFORMAT)MAKEFOURCC('R','A','W','Z'), D3DRTYPE_SURFACE, 0);
-		//o.nvstencil = TRUE;
 		o.nvstencil = ( S_OK==HW.pD3D->CheckDeviceFormat(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, D3DFMT_X8R8G8B8 , 0, D3DRTYPE_TEXTURE, (D3DFORMAT MAKEFOURCC('R','A','W','Z'))) );
 	}
 
@@ -243,7 +188,6 @@ void					CRender::create					()
 	// options
 	o.bug				= (strstr(Core.Params,"-bug"))?			TRUE	:FALSE	;
 	o.sunfilter			= (strstr(Core.Params,"-sunfilter"))?	TRUE	:FALSE	;
-	//.	o.sunstatic			= (strstr(Core.Params,"-sunstatic"))?	TRUE	:FALSE	;
 	o.sunstatic			= r2_sun_static;
 	o.advancedpp		= r2_advanced_pp;
 	o.sjitter			= (strstr(Core.Params,"-sjitter"))?		TRUE	:FALSE	;
@@ -286,10 +230,8 @@ void					CRender::create					()
 	PSLibrary.OnCreate			();
 	HWOCC.occq_create			(occq_size);
 
-	//rmNormal					();
 	marker						= 0;
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
+
     std::memset(q_sync_point,0,sizeof(q_sync_point));
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[i]));
@@ -302,8 +244,6 @@ void					CRender::destroy				()
 {
 	m_bMakeAsyncSS				= false;
 	::PortalTraverser.destroy	();
-	//_RELEASE					(q_sync_point[1]);
-	//_RELEASE					(q_sync_point[0]);
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		_RELEASE(q_sync_point[i]);
 	HWOCC.occq_destroy			();
@@ -344,16 +284,13 @@ void CRender::reset_begin()
 	
 	xr_delete					(Target);
 	HWOCC.occq_destroy			();
-	//_RELEASE					(q_sync_point[1]);
-	//_RELEASE					(q_sync_point[0]);
+
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		_RELEASE(q_sync_point[i]);
 }
 
 void CRender::reset_end()
 {
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[0]));
-	//R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[1]));
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK					(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[i]));
 	HWOCC.occq_create			(occq_size);
@@ -373,15 +310,7 @@ void CRender::reset_end()
 	// that some data is not ready in the first frame (for example device camera position)
 	m_bFirstFrameAfterReset = true;
 }
-/*
-void CRender::OnFrame()
-{
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
-}*/
+
 void CRender::OnFrame()
 {
 	Models->DeleteQueue			();
@@ -576,13 +505,7 @@ void	CRender::Statistics	(CGameFont* _F)
 
 /////////
 #pragma comment(lib,"d3dx9.lib")
-/*
-extern "C"
-{
-LPCSTR WINAPI	D3DXGetPixelShaderProfile	(LPDIRECT3DDEVICE9  pDevice);
-LPCSTR WINAPI	D3DXGetVertexShaderProfile	(LPDIRECT3DDEVICE9	pDevice);
-};
-*/
+
 static HRESULT create_shader (
 		LPCSTR name,
 		LPCSTR const pTarget,
@@ -1000,7 +923,6 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 
 	string_path temp_file_name, file_name;
 	if ( !match_shader_id(name, sh_name, m_file_set, temp_file_name) ) {
-//		Msg				( "no library shader found" );
 		string_path file;
 		xr_strcpy		( file, "shaders_cache\\r2\\" );
 		xr_strcat		( file, name );
@@ -1059,7 +981,6 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		
 		_result						= D3DXCompileShader((LPCSTR)pSrcData,SrcDataLen,defines,pInclude,pFunctionName,pTarget,Flags|D3DXSHADER_USE_LEGACY_D3DX9_31_DLL,&pShaderBuf,&pErrorBuf,&pConstants);
 		if (SUCCEEDED(_result)) {
-//			Msg						( "shader compilation succeeded" );
 			IWriter* file = FS.w_open(file_name);
 
 			u32 const crc = crc32(pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize());
@@ -1071,7 +992,6 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 			_result					= create_shader(name, pTarget, (DWORD*)pShaderBuf->GetBufferPointer(), pShaderBuf->GetBufferSize(), file_name, result, o.disasm);
 		}
 		else {
-//			Msg						( "! shader compilation failed" );
 			Log						("! ", file_name);
 			if ( pErrorBuf )
 				Log					("! error: ",(LPCSTR)pErrorBuf->GetBufferPointer());
@@ -1113,10 +1033,7 @@ static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const fu
 
 static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result )
 {
-#if 0
-	strcpy_s					( result, "" );
-	return						false;
-#else // #if 1
+#if 1
 #ifdef DEBUG
 	LPCSTR temp					= "";
 	bool found					= false;

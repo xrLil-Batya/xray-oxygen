@@ -151,13 +151,6 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Check for NULL render target support
-	//	DX10 disabled
-	o.nullrt = false;
-
-	// SMAP / DST
-	o.HW_smap_FETCH4	= FALSE;
-	//	DX10 disabled
 	o.HW_smap			= true;
 	o.HW_smap_PCF = o.HW_smap;
 
@@ -166,9 +159,9 @@ void					CRender::create					()
 		o.HW_smap_FORMAT = D3DFMT_D32F_LOCKABLE;
 	else
 		o.HW_smap_FORMAT = D3DFMT_D24X8;
+
 	Msg("* HWDST/PCF supported and used");
 
-	//	DX10 disabled
 	o.fp16_filter		= true;
 	o.fp16_blend		= true;
 
@@ -178,35 +171,14 @@ void					CRender::create					()
 		if (o.HW_smap)	{
 			o.HW_smap_FORMAT= MAKEFOURCC	('D','F','2','4');
 			o.HW_smap_PCF	= FALSE			;
-			o.HW_smap_FETCH4= TRUE			;
 		}
 		Msg				("* DF24/F4 supported and used [%X]", o.HW_smap_FORMAT);
-	}
-
-	// emulate ATI-R4xx series
-	if (strstr(Core.Params,"-r4xx"))	{
-		o.mrtmixdepth	= FALSE;
-		o.HW_smap		= FALSE;
-		o.HW_smap_PCF	= FALSE;
-		o.fp16_filter	= FALSE;
-		o.fp16_blend	= FALSE;
 	}
 
 	VERIFY2				(o.mrt && (HW.Caps.raster.dwInstructions>=256),"Hardware doesn't meet minimum feature-level");
 	if (o.mrtmixdepth)		o.albedo_wo		= FALSE	;
 	else if (o.fp16_blend)	o.albedo_wo		= FALSE	;
 	else					o.albedo_wo		= TRUE	;
-
-	// nvstencil on NV40 and up
-	o.nvstencil			= FALSE;
-	//if ((HW.Caps.id_vendor==0x10DE)&&(HW.Caps.id_device>=0x40))	o.nvstencil = TRUE;
-	if (strstr(Core.Params,"-nonvs"))		o.nvstencil	= FALSE;
-
-	// nv-dbt
-	//	DX10 disabled
-	//o.nvdbt				= HW.support	((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
-	o.nvdbt				= false;
-	if (o.nvdbt)		Msg	("* NV-DBT supported and used");
 
 	// gloss
 	char*	g = strstr(Core.Params, "-gloss ");
@@ -942,13 +914,6 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	}
 	sh_name[len]='0'+char(o.HW_smap_PCF); ++len;
 
-	if (o.HW_smap_FETCH4)			{
-		defines[def_it].Name		=	"USE_FETCH4";
-		defines[def_it].Definition	=	"1";
-		def_it						++	;
-	}
-	sh_name[len]='0'+char(o.HW_smap_FETCH4); ++len;
-
 	if (o.sjitter)			{
 		defines[def_it].Name		=	"USE_SJITTER";
 		defines[def_it].Definition	=	"1";
@@ -1428,10 +1393,7 @@ static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const fu
 
 static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result )
 {
-#if 0
-	strcpy_s					( result, "" );
-	return						false;
-#else // #if 1
+#if 1
 #ifdef DEBUG
 	LPCSTR temp					= "";
 	bool found					= false;

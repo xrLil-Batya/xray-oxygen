@@ -18,18 +18,25 @@ namespace
 	// For render call
 	//pZNearVar = pEffect->GetVariableByName("ZNear")->AsScalar();
 	shared_str	strZNear("ZNear");
+
 	//pZFarVar = pEffect->GetVariableByName("ZFar")->AsScalar();
 	shared_str	strZFar("ZFar");
+
 	//pGridScaleFactorVar = pEffect->GetVariableByName( "gridScaleFactor")->AsScalar();
 	shared_str	strGridScaleFactor("gridScaleFactor");
+
 	//pEyeOnGridVar = pEffect->GetVariableByName("eyeOnGrid")->AsVector();
 	shared_str	strEyeOnGrid("eyeOnGrid");
+
 	//pWorldViewProjectionVar = pEffect->GetVariableByName("WorldViewProjection")->AsMatrix();
 	shared_str	strWorldViewProjection("WorldViewProjection");
+
 	//pInvWorldViewProjectionVar = pEffect->GetVariableByName("InvWorldViewProjection")->AsMatrix();
 	shared_str	strInvWorldViewProjection("InvWorldViewProjection");
+
 	//pRTWidthVar = pEffect->GetVariableByName("RTWidth")->AsScalar();
 	shared_str	strRTWidth("RTWidth");
+
 	//pRTHeightVar = pEffect->GetVariableByName("RTHeight")->AsScalar();
 	shared_str	strRTHeight("RTHeight");
 
@@ -83,6 +90,7 @@ void dx103DFluidRenderer::Initialize(int gridWidth, int gridHeight, int gridDept
 		D3DXMATRIX scaleM;
 		D3DXMatrixIdentity(&scaleM);
 		D3DXMatrixScaling(&scaleM, m_vGridDim[0] / m_fMaxDim, m_vGridDim[1] / m_fMaxDim, m_vGridDim[2] / m_fMaxDim);
+
 		// offset grid to be centered at origin
 		D3DXMATRIX translationM;
 		D3DXMatrixTranslation(&translationM, -0.5, -0.5, -0.5);
@@ -428,23 +436,16 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 	View = *(D3DXMATRIX*)&RCache.xforms.m_v;
 	D3DXMATRIX WorldView = gridWorld * View;
 
-	//	Modified later
-	//Fmatrix	WorldView = RCache.xforms.m_wv;
-	//RCache.set_xform_world( transform );
-
 	// The length of one of the axis of the worldView matrix is the length of longest side of the box
 	//  in view space. This is used to convert the length of a ray from view space to grid space.
-	//D3DXVECTOR3 worldXaxis = D3DXVECTOR3(worldView._11, worldView._12, worldView._13);
 	D3DXVECTOR3 worldXaxis = D3DXVECTOR3(WorldView._11, WorldView._12, WorldView._13);
 	float worldScale = D3DXVec3Length(&worldXaxis);
-	//pGridScaleFactorVar->SetFloat( worldScale );
 	RCache.set_c(strGridScaleFactor, worldScale);
 
 	// We prepend the current world matrix with this other matrix which adds an offset (-0.5, -0.5, -0.5)
 	//  and scale factors to account for unequal number of voxels on different sides of the volume box. 
 	// This is because we want to preserve the aspect ratio of the original simulation grid when 
 	//  raytracing through it.
-	//worldView = m_gridMatrix * worldView;
 	WorldView = m_gridMatrix * WorldView;
 	
 	// worldViewProjection is used to transform the volume box to screen space

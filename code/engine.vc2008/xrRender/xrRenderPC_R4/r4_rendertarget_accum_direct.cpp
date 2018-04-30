@@ -124,9 +124,6 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
-	// nv-stencil recompression
-	if (RImplementation.o.nvstencil  && (SE_SUN_NEAR==sub_phase))	u_stencil_optimize();	//. driver bug?
-
 	PIX_EVENT(Perform_lighting);
 
 	// Perform lighting
@@ -363,9 +360,6 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
-
-	// nv-stencil recompression
-	if (RImplementation.o.nvstencil  && (SE_SUN_NEAR==sub_phase))	u_stencil_optimize();	//. driver bug?
 
 	PIX_EVENT(Perform_lighting);
 
@@ -752,9 +746,6 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
-
-	// nv-stencil recompression
-	if (RImplementation.o.nvstencil  && (SE_SUN_NEAR==sub_phase))	u_stencil_optimize();	//. driver bug?
 
 	// Perform lighting
 	{

@@ -102,43 +102,6 @@ void	CRenderTarget::u_setrt			(u32 W, u32 H, ID3DRenderTargetView* _1, ID3DRende
 	RCache.set_ZB							(zb);
 }
 
-void	CRenderTarget::u_stencil_optimize	(eStencilOptimizeMode eSOM)
-{
-	//	TODO: DX10: remove half pixel offset?
-	VERIFY	(RImplementation.o.nvstencil);
-
-	u32		Offset;
-	float	_w					= float(Device.dwWidth);
-	float	_h					= float(Device.dwHeight);
-	u32		C					= color_rgba	(255,255,255,255);
-	float	eps					= 0;
-	float	_dw					= 0.5f;
-	float	_dh					= 0.5f;
-	FVF::TL* pv					= (FVF::TL*) RCache.Vertex.Lock	(4,g_combine->vb_stride,Offset);
-	pv->set						(-_dw,		_h-_dh,		eps,	1.f, C, 0, 0);	pv++;
-	pv->set						(-_dw,		-_dh,		eps,	1.f, C, 0, 0);	pv++;
-	pv->set						(_w-_dw,	_h-_dh,		eps,	1.f, C, 0, 0);	pv++;
-	pv->set						(_w-_dw,	-_dh,		eps,	1.f, C, 0, 0);	pv++;
-	RCache.Vertex.Unlock		(4,g_combine->vb_stride);
-	RCache.set_Element			(s_occq->E[1]	);
-
-	switch(eSOM)
-	{
-	case SO_Light:
-		StateManager.SetStencilRef(dwLightMarkerID);
-		break;
-	case SO_Combine:
-		StateManager.SetStencilRef(0x01);
-		break;
-	default:
-		VERIFY(!"CRenderTarget::u_stencil_optimize. switch no default!");
-	}	
-
-	RCache.set_Geometry			(g_combine		);
-	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-	
-}
-
 // 2D texgen (texture adjustment matrix)
 void	CRenderTarget::u_compute_texgen_screen	(Fmatrix& m_Texgen)
 {
@@ -403,9 +366,6 @@ CRenderTarget::CRenderTarget		()
 
 	if (RImplementation.o.HW_smap)
 	{
-		D3DFORMAT	nullrt				= D3DFMT_R5G6B5;
-		if (RImplementation.o.nullrt)	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
-
 		u32	size					=RImplementation.o.smapsize	;
 		rt_smap_depth.create		(r2_RT_smap_depth,			size,size,depth_format	);
 
@@ -461,19 +421,6 @@ CRenderTarget::CRenderTarget		()
 				}
 			}
 		}
-	}
-	else
-	{
-		//	TODO: DX10: Check if we need old-style SMap
-		VERIFY(!"Use HW SMAPs only!");
-		//u32	size					=RImplementation.o.smapsize	;
-		//rt_smap_surf.create			(r2_RT_smap_surf,			size,size,D3DFMT_R32F);
-		//rt_smap_depth				= NULL;
-		//R_CHK						(HW.pDevice->CreateDepthStencilSurface	(size,size,D3DFMT_D24X8,D3DMULTISAMPLE_NONE,0,TRUE,&rt_smap_ZB,NULL));
-		//s_accum_mask.create			(b_accum_mask,				"r2\\accum_mask");
-		//s_accum_direct.create		(b_accum_direct,			"r2\\accum_direct");
-		//if (RImplementation.o.advancedpp)
-		//	s_accum_direct_volumetric.create("accum_volumetric_sun");
 	}
 
 	//	RAIN
@@ -941,9 +888,6 @@ CRenderTarget::~CRenderTarget	()
 	t_envmap_1->surface_set		(NULL);
 	t_envmap_0.destroy			();
 	t_envmap_1.destroy			();
-
-	//	TODO: DX10: Check if we need old style SMAPs
-//	_RELEASE					(rt_smap_ZB);
 
 	// Jitter
 	for (int it=0; it<TEX_jitter_count; it++)	{

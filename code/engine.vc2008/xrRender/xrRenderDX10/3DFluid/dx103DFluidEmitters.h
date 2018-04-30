@@ -1,5 +1,3 @@
-#ifndef	dx103DFluidEmitters_included
-#define	dx103DFluidEmitters_included
 #pragma once
 
 class dx103DFluidGrid;
@@ -69,5 +67,3 @@ private:
 
 	dx103DFluidGrid*	m_pGrid;
 };
-
-#endif	//	dx103DFluidEmitters_included

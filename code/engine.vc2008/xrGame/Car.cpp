@@ -1508,7 +1508,7 @@ bool CCar::Use(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos)
 	if (g_pGameLevel->ObjectSpace.RayQuery(RQR,collidable.model,Q))
 	{
 		collide::rq_results& R = RQR;
-		int y=R.r_count();
+		int y = (int)R.r_count();
 		for (int k=0; k<y; ++k)
 		{
 			collide::rq_result* I = R.r_begin()+k;

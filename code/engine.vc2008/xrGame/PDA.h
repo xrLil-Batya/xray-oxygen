@@ -9,13 +9,8 @@
 #include "PdaMsg.h"
 
 class CInventoryOwner;
-class CPda;
 
-using PDA_LIST = xr_vector<CPda*>;
-
-class CPda :
-	public CInventoryItemObject,
-	public Feel::Touch
+class CPda : public CInventoryItemObject, public Feel::Touch
 {
 	typedef	CInventoryItemObject inherited;
 public:
@@ -41,29 +36,25 @@ public:
 	virtual CObject*						GetOwnerObject			();
 
 
-			void							TurnOn					() {m_bTurnedOff = false;}
-			void							TurnOff					() {m_bTurnedOff = true;}
+	inline	void							TurnOn					() {m_bTurnedOff = false;}
+	inline	void							TurnOff					() {m_bTurnedOff = true;}
 	
-			bool 							IsActive				() {return IsOn();}
-			bool 							IsOn					() {return !m_bTurnedOff;}
-			bool 							IsOff					() {return m_bTurnedOff;}
-
+	inline	bool 							IsActive				() {return IsOn();}
+	inline	bool 							IsOn					() {return !m_bTurnedOff;}
+	inline	bool 							IsOff					() {return m_bTurnedOff;}
 
 			void							ActivePDAContacts		(xr_vector<CPda*>& res);
 			CPda*							GetPdaFromOwner			(CObject* owner);
-			u32								ActiveContactsNum		()							{return m_active_contacts.size();}
+	inline	u32								ActiveContactsNum		()	{return u32(m_active_contacts.size());}
 			void							PlayScriptFunction		();
-			bool							CanPlayScriptFunction	() {if(!xr_strcmp(m_functor_str, "")) return false; return true;};
+	inline	bool							CanPlayScriptFunction	() { return bool(xr_strcmp(m_functor_str, "")); };
 
 
 	virtual void							save					(NET_Packet &output_packet);
 	virtual void							load					(IReader &input_packet);
 
-//*	virtual LPCSTR							Name					();
-
 protected:
 	void									UpdateActiveContacts	();
-
 
 	xr_vector<CObject*>						m_active_contacts;
 	float									m_fRadius;
@@ -75,3 +66,5 @@ protected:
 	bool									m_bTurnedOff;
 	shared_str								m_functor_str;
 };
+
+using PDA_LIST = xr_vector<CPda*>;

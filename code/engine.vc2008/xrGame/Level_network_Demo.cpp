@@ -128,7 +128,7 @@ void CLevel::SaveDemoHeader(shared_str const & server_options)
 	m_demo_header.m_time_delta_user		= net_TimeDelta_User;
 	m_writer->w(&m_demo_header, sizeof(m_demo_header));
 	m_writer->w_stringZ(server_options);
-	m_demo_info_file_pos				=	m_writer->tell();
+	m_demo_info_file_pos				=	(u32)m_writer->tell();
 	m_writer->seek(m_demo_info_file_pos + demo_info::max_demo_info_size);
 }
 
@@ -140,7 +140,7 @@ void CLevel::SavePacket(NET_Packet& packet)
 {
 	m_writer->w_u32	(Device.dwTimeGlobal - m_demo_header.m_time_global);
 	m_writer->w_u32	(packet.timeReceive);
-	m_writer->w_u32	(packet.B.count);
+	m_writer->w_u32	((u32)packet.B.count);
 	m_writer->w		(packet.B.data, packet.B.count);
 }
 
@@ -149,7 +149,7 @@ bool CLevel::LoadDemoHeader	()
 	R_ASSERT(m_reader);
 	m_reader->r				(&m_demo_header, sizeof(m_demo_header));
 	m_reader->r_stringZ		(m_demo_server_options);
-	u32 demo_info_start_pos	= m_reader->tell();
+	u32 demo_info_start_pos	= (u32)m_reader->tell();
 	
 	R_ASSERT(m_demo_info == NULL);
 	m_demo_info = xr_new<demo_info>();
@@ -164,7 +164,7 @@ bool CLevel::LoadPacket		(NET_Packet & dest_packet, u32 global_time_delta)
 	if (!m_reader || m_reader->eof())
 		return false;
 	
-	m_prev_packet_pos	= m_reader->tell();
+	m_prev_packet_pos	= (u32)m_reader->tell();
 	DemoPacket			tmp_hdr;
 	
 	m_reader->r		(&tmp_hdr, sizeof(DemoPacket));
@@ -196,7 +196,7 @@ void CLevel::SimulateServerUpdate()
 	{
 		if (m_msg_filter)
 			m_msg_filter->check_new_data(tmp_packet);
-		IPureClient::OnMessage(tmp_packet.B.data, tmp_packet.B.count);
+		IPureClient::OnMessage(tmp_packet.B.data, (u32)tmp_packet.B.count);
 	}
 }
 

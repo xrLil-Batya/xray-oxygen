@@ -18,9 +18,7 @@
 #include "script_callback_ex.h"
 #include "game_object_space.h"
 #include "level_graph.h"
-
-#if 1//def DEBUG
-#	include "space_restriction_manager.h"
+#include "space_restriction_manager.h"
 
 static void show_restrictions	(LPCSTR restrictions)
 {
@@ -45,7 +43,6 @@ bool show_restrictions			(CRestrictedObject *object)
 
 	return				(false);
 }
-#endif
 
 CPatrolPathManager::~CPatrolPathManager			()
 {
@@ -112,7 +109,7 @@ void CPatrolPathManager::select_point(const Fvector &position, u32 &dest_vertex_
 				break;
 			}
 			case ePatrolStartTypeLast : {
-				vertex		= m_path->vertex(m_path->vertices().size() - 1);
+				vertex		= m_path->vertex(u32(m_path->vertices().size() - 1));
 				VERIFY3		(accessible(vertex) || show_restrictions(m_object),*m_path_name,*m_game_object->cName());
 				break;
 			}

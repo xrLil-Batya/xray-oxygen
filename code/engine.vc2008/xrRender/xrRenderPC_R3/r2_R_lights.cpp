@@ -181,6 +181,7 @@ void	CRender::render_lights	(light_Package& LP)
 	}
 
    PIX_EVENT(POINT_LIGHTS_ACCUM);
+
 	// Point lighting (unshadowed, if left)
 	if (!LP.v_point.empty())		{
 		xr_vector<light*>&	Lvec		= LP.v_point;
@@ -195,6 +196,7 @@ void	CRender::render_lights	(light_Package& LP)
 	}
 
    PIX_EVENT(SPOT_LIGHTS_ACCUM);
+
 	// Spot lighting (unshadowed, if left)
 	if (!LP.v_spot.empty())		{
 		xr_vector<light*>&	Lvec		= LP.v_spot;

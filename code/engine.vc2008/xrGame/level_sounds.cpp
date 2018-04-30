@@ -200,25 +200,22 @@ void CLevelSoundManager::Update()
 	{
 		if (m_CurrentTrack<0 && engine_time>m_NextTrackTime)
 		{
-			U32Vec				indices;
-			for (u32 k=0; k<m_MusicTracks.size(); ++k)
+			U32Vec indices;
+			for (size_t k = 0; k < m_MusicTracks.size(); ++k)
 			{
-				SMusicTrack& T		= m_MusicTracks[k];
-				if (T.IsPlaying())	
+				SMusicTrack& T = m_MusicTracks[k];
+				if (T.IsPlaying())
 					T.Stop();
-				
-				if( T.in(game_time) )
-					indices.push_back	(k);
+
+				if (T.in(game_time))
+					indices.push_back(k);
 			}
 			if (!indices.empty())
 			{
-				u32 idx			= Random.randI(indices.size());
+				u32 idx			= Random.randI((u32)indices.size());
 				m_CurrentTrack	= indices[idx];
 				SMusicTrack& T	= m_MusicTracks[m_CurrentTrack];
 				T.Play			();
-//#ifdef DEBUG
-//				Log				("- Play music track:",T.m_DbgName.c_str());
-//#endif
 			}
 			else m_NextTrackTime = engine_time + 10000; // next check after 10 sec
 		}

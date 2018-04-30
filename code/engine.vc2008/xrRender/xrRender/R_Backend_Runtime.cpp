@@ -170,13 +170,9 @@ void	CBackend::set_ClipPlanes	(u32 _enable, Fmatrix*	_xform  /*=NULL */, u32 fma
 {
 	if (0==HW.Caps.geometry.dwClipPlanes)	return;
 	if (!_enable)	{
-#if defined(USE_DX10) || defined(USE_DX11)
-		//	TODO: DX10: Implement in the corresponding vertex shaders
-		//	Use this to set up location, were shader setup code will get data
-		//VERIFY(!"CBackend::set_ClipPlanes not implemented!");
-#else	//	USE_DX10
+#if !defined(USE_DX10) && !defined(USE_DX11)
 		CHK_DX	(HW.pDevice->SetRenderState(D3DRS_CLIPPLANEENABLE,FALSE));
-#endif	//	USE_DX10
+#endif
 		return;
 	}
 	VERIFY		(_xform && fmask);
@@ -337,7 +333,6 @@ void CBackend::set_Textures			(STextureList* _T)
 				{
 					PGO					(Msg("PGO:tex%d:%s",load_id,load_surf->cName.c_str()));
 					load_surf->bind		(load_id);
-					//					load_surf->Apply	(load_id);
 				}
 			}
 		}
@@ -358,7 +353,6 @@ void CBackend::set_Textures			(STextureList* _T)
 #if defined(USE_DX10) || defined(USE_DX11)
 		//	TODO: DX10: Optimise: set all resources at once
 		ID3DShaderResourceView	*pRes = 0;
-		//HW.pDevice->PSSetShaderResources(_last_ps, 1, &pRes);
 		SRVSManager.SetPSResource(_last_ps, pRes);
 #else	//	USE_DX10
 		CHK_DX							(HW.pDevice->SetTexture(_last_ps,NULL));
@@ -392,7 +386,6 @@ void CBackend::set_Textures			(STextureList* _T)
 
 		//	TODO: DX10: Optimise: set all resources at once
 		ID3DShaderResourceView	*pRes = 0;
-		//HW.pDevice->GSSetShaderResources(_last_gs, 1, &pRes);
 		SRVSManager.SetGSResource(_last_gs, pRes);
 	}
 #ifdef USE_DX11

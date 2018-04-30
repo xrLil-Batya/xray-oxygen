@@ -291,19 +291,20 @@ void CMovementManager::clear_path				()
 bool CMovementManager::distance_to_destination_greater	(const float &distance_to_check) const
 {
 	if (path().size() < 2)
-		return				(true);
+		return (true);
 
 	if (path_completed())
-		return				(true);
+		return (true);
 
-	float					accumulator = 0.f;
-	for (u32 i = detail().curr_travel_point_index(), n=detail().path().size()-1; i<n; ++i) {
-		accumulator			+= detail().path()[i].position.distance_to(detail().path()[i+1].position);
+	float accumulator = 0.f;
+	for (size_t i = detail().curr_travel_point_index(); i < detail().path().size() - 1; ++i) 
+	{
+		accumulator += detail().path()[i].position.distance_to(detail().path()[i + 1].position);
 		if (accumulator >= distance_to_check)
-			return			(true);
+			return (true);
 	}
 
-	return					(false);
+	return (false);
 }
 
 #ifdef USE_FREE_IN_RESTRICTIONS
@@ -329,9 +330,8 @@ void CMovementManager::verify_detail_path		()
 }
 #endif // USE_FREE_IN_RESTRICTIONS
 
-void CMovementManager::on_restrictions_change	()
+void CMovementManager::on_restrictions_change()
 {
-//	Msg								("[%6d][%s][on_restrictions_change]",Device.dwTimeGlobal,*object().cName());
 	m_path_actuality				= false;
 	level_path_builder().remove		();
 	detail_path_builder().remove	();
@@ -343,26 +343,22 @@ bool CMovementManager::can_use_distributed_computations(u32 option) const
 	return (!m_build_at_once && !object().getDestroy());
 }
 
-void CMovementManager::on_frame					(CPHMovementControl *movement_control, Fvector &dest_position)
+void CMovementManager::on_frame(CPHMovementControl *movement_control, Fvector &dest_position)
 {
-	if	(
-			enabled() &&
-			(m_path_state != ePathStatePathVerification) &&
-			(m_path_state != ePathStatePathCompleted)
-		)
-		update_path					();
-			
-	move_along_path					(movement_control,dest_position,object().client_update_fdelta());
+	if (enabled() && (m_path_state != ePathStatePathVerification) && (m_path_state != ePathStatePathCompleted))
+	{
+		update_path();
+	}
+	move_along_path(movement_control,dest_position,object().client_update_fdelta());
 }
 
-void CMovementManager::on_travel_point_change	(const u32 &previous_travel_point_index)
+void CMovementManager::on_travel_point_change(const u32 &previous_travel_point_index)
 {
 	detail().on_travel_point_change	(previous_travel_point_index);
 }
 
-void CMovementManager::enable_movement			(bool enabled)
+void CMovementManager::enable_movement(bool enabled)
 {
-//	m_path_actuality					= m_path_actuality && (m_enabled == enabled);
 	if (!enabled && m_enabled)
 		m_on_disable_object_position	= object().Position();
 	else {
@@ -385,23 +381,19 @@ CMovementManager::CLevelPathManager::PATH &CMovementManager::level_path_path		()
 
 void CMovementManager::build_level_path	()
 {
-//	CTimer								timer;
-//	timer.Start							();
 	level_path_builder().process_impl	();
-//	static int i=0;
-//	Msg									("[%6d][%6d][%4d][%f] build_level_path",Device.dwTimeGlobal,Device.dwFrame,++i,timer.GetElapsed_sec()*1000.f);
 }
 
 Fvector CMovementManager::predict_position	(const float &time_delta, const Fvector &start_position, u32 &current_travel_point, const float &velocity) const
 {
 	typedef xr_vector<DetailPathManager::STravelPathPoint>	PATH;
-	const PATH				&path = detail().path();
+	const PATH &path = detail().path();
 	if (path.empty())
-		return				(start_position);
+		return (start_position);
 
-	float					distance_to_check = velocity*time_delta;
+	float distance_to_check = velocity*time_delta;
 
-	const u32				&path_size = path.size();
+	const size_t			&path_size = path.size();
 	if (current_travel_point == path_size - 1)
 		return				(path.back().position);
 
