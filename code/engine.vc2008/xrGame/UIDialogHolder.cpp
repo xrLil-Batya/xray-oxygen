@@ -175,28 +175,32 @@ void CDialogHolder::SetMainInputReceiver	(CUIDialogWnd* ir, bool _find_remove)
 { 
 	if( TopInputReceiver() == ir ) return;
 
-	if(!ir || _find_remove){
+	if(!ir || _find_remove)
+	{
 		if(m_input_receivers.empty())	return;
 
-		if(!ir)
-			m_input_receivers.pop_back();
-		else{
+		if(ir)
+		{
 			VERIFY(ir && _find_remove);
 
-			u32 cnt = m_input_receivers.size();
-			for(;cnt>0;--cnt)
-				if( m_input_receivers[cnt-1].m_item == ir ){
-					m_input_receivers[cnt].m_flags.set(recvItem::eCrosshair, m_input_receivers[cnt-1].m_flags.test(recvItem::eCrosshair) );
-					m_input_receivers[cnt].m_flags.set(recvItem::eIndicators, m_input_receivers[cnt-1].m_flags.test(recvItem::eIndicators) );
+			
+			for (size_t cnt = m_input_receivers.size(); cnt > 0; --cnt)
+			{
+				if (m_input_receivers[cnt - 1].m_item == ir)
+				{
+					m_input_receivers[cnt].m_flags.set(recvItem::eCrosshair, m_input_receivers[cnt - 1].m_flags.test(recvItem::eCrosshair));
+					m_input_receivers[cnt].m_flags.set(recvItem::eIndicators, m_input_receivers[cnt - 1].m_flags.test(recvItem::eIndicators));
 					xr_vector<recvItem>::iterator it = m_input_receivers.begin();
-					std::advance			(it,cnt-1);
-					m_input_receivers.erase	(it);
+					std::advance(it, cnt - 1);
+					m_input_receivers.erase(it);
 					break;
 				}
-			
+			}
 		}
-
-	}else{
+		else m_input_receivers.pop_back();
+	}
+	else
+	{
 		m_input_receivers.push_back(recvItem(ir));
 	}
 };

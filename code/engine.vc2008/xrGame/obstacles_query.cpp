@@ -45,9 +45,7 @@ void obstacles_query::set_intersection	(const obstacles_query &query)
 void obstacles_query::merge				(const AREA &object_area)
 {
 	AREA temp(std::move(m_area));
-	u32 area_size = temp.size();
-	u32 destination_size = area_size + object_area.size();
-	m_area.resize(destination_size);
+	m_area.resize(temp.size() + object_area.size());
 	m_area.erase(std::set_union(temp.begin(), temp.end(), object_area.begin(), object_area.end(), m_area.begin()), m_area.end());
 }
 
@@ -57,7 +55,7 @@ void obstacles_query::compute_area		()
 	m_area.clear();
 	m_crc = 0;
 	
-	for (auto it : m_obstacles)
+	for (auto &it : m_obstacles)
 	{
 		ai_obstacle				&obstacle = it.first->obstacle();
 		merge					(obstacle.area());
@@ -68,7 +66,7 @@ void obstacles_query::compute_area		()
 
 void obstacles_query::merge				(const obstacles_query &query)
 {
-	for (auto it : query.obstacles())
+	for (auto &it : query.obstacles())
 	{
 		add(it.first);
 	}
