@@ -1291,9 +1291,9 @@
     <property name="title">
      <string>Options</string>
     </property>
-    <addaction name="actionParametres"/>
     <addaction name="separator"/>
     <addaction name="actionMain"/>
+    <addaction name="actionParametres"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -1410,7 +1410,7 @@
   </action>
   <action name="actionMain">
    <property name="text">
-    <string>Main</string>
+    <string>Settings</string>
    </property>
   </action>
   <action name="actionParametres">

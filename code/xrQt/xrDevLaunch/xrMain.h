@@ -1,4 +1,3 @@
-void on_pushButton_2_clicked();
 /*************************************************
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
@@ -11,16 +10,20 @@ void on_pushButton_2_clicked();
 #pragma once
 
 /////////////////////////////////////////
-#include "xrCPUID.h"
 #include "ui_xrMain.h"
 #include "ui_parametersdialog.h"
 #include "ui_aboutlauncher.h"
-#include "aboutlauncher.h"
-#include "stdio.h"
+#include "ui_xrSettings.h"
+#include "xrFS.h"
+#include "xrCPUID.h"
+#include "xrSettings.h"
 #include "xrException.h"
+#include "aboutlauncher.h"
 #include "../../engine.vc2008/xrCore/xrCore.h"
 #include "../../engine.vc2008/xrCore/cpuid.h"
+
 /////////////////////////////////////////
+#include <stdio.h>
 #include <QMainWindow>
 #include <QPushButton>
 #include <windows.h>
@@ -33,7 +36,10 @@ void on_pushButton_2_clicked();
 #define INIT_ERROR		"Init error: "
 #define DLL_API			__declspec(dllimport)
 #define NOAWDA			1
-#define NOXRCORE_LOAD	1
+#define NOXRCORE_LOAD	1s
+#ifdef DEBUG
+#define LAUNCHER_DEBUG	1
+#endif
 #ifdef __cplusplus
 /////////////////////////////////////////
 typedef std::string		xrString;
@@ -172,6 +178,9 @@ private slots:
     void on_actionParametres_triggered			();	
 	void on_actionVertver_Github_triggered		();
     void on_actionAbout_Oxygen_Team_triggered	();
+	void open_settings							();
+	void on_actionMain_parameters_triggered		();
+	void on_actionMain_triggered				();
 	void clean_buffers							();
 	void on_pushButton_2_clicked				();
     void on_listWidget_itemPressed				(QListWidgetItem *item);

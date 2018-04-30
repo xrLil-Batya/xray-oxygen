@@ -236,7 +236,6 @@ void Startup()
 	Engine.Event.Dump			( );
 
 	// Destroying
-//.	destroySound();
 	destroyInput();
 
 	if(!g_bBenchmark)

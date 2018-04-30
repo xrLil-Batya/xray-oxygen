@@ -471,7 +471,7 @@ public:
         actionParametres->setText(QApplication::translate("xrLaunch", "xrEngine parameters...", nullptr));
         actionVertver_Github->setText(QApplication::translate("xrLaunch", "About xrDevLaunch...", nullptr));
         actionGiperion->setText(QApplication::translate("xrLaunch", "Giperion", nullptr));
-        actionMain_parameters->setText(QApplication::translate("xrLaunch", "Main parameters", nullptr));
+        actionMain_parameters->setText(QApplication::translate("xrLaunch", "Settings", nullptr));
         actionAbout_Oxygen_Team->setText(QApplication::translate("xrLaunch", "About Oxygen Team...", nullptr));
         actionOxygen_Team->setText(QApplication::translate("xrLaunch", "Oxygen Team", nullptr));
         actionVertver->setText(QApplication::translate("xrLaunch", "Vertver", nullptr));

@@ -536,7 +536,7 @@
     </rect>
    </property>
    <property name="text">
-    <string>xrDevLaunch 0.9v</string>
+    <string>xrDevLaunch 1.0f</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">

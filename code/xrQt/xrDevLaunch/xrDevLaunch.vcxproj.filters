@@ -55,12 +55,18 @@
     <ClCompile Include="xrD3DList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="xrSettings.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <QtMoc Include="xrMain.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="aboutlauncher.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="xrSettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -82,6 +88,9 @@
     <QtUic Include="aboutlauncher.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="xrSettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GeneratedFiles\ui_xrMain.h">
@@ -97,6 +106,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="xrCPUID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xrFS.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

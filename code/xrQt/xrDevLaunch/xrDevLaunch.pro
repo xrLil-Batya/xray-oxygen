@@ -29,14 +29,17 @@ SOURCES += \
         RendererList.cpp \
         minimal_CPUID.cpp \
         InitLib.cpp \
-    aboutlauncher.cpp
+    aboutlauncher.cpp \
+    xrSettings.cpp
 
 HEADERS += \
         xrMain.h \
         minimal_CPUID.h \
-    aboutlauncher.h
+    aboutlauncher.h \
+    xrSettings.h
 
 FORMS += \
         xrMain.ui \
         parametersdialog.ui \
-    aboutlauncher.ui
+    aboutlauncher.ui \
+    xrSettings.ui
