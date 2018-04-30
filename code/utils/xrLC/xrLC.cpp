@@ -79,7 +79,6 @@ void Startup(char* lpCmdLine)
 	lc_global_data()->b_skiplmap_set					( !!strstr(cmd,"-norgb") );
 	
 	// Give a LOG-thread a chance to startup
-	//_set_sbh_threshold(1920);
 	InitCommonControls		();
 	thread_spawn			(logThread, "log-update", 1024*1024,0);
 	Sleep					(150);

@@ -179,10 +179,9 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	transfer("portals",		portals,			fs,		EB_Portals);
 	transfer("LODs",		lods,				fs,		EB_LOD_models);
 
-	// Load lights
-	//VCCLCompilerTool::OpenMP
+	// Load lights=
 	omp_set_num_threads(8);
-#pragma omp parallel
+
 	Status	("Loading lights...");
 	{
 		xr_vector<R_Layer>			L_layers;

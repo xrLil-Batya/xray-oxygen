@@ -147,7 +147,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 					F->r(&TEX, sizeof(TEX));
 					b_BuildTexture	BT;
 					std::memcpy(&BT, &TEX, sizeof(TEX) - 4);	// ptr should be copied separately
-					BT.pSurface = (u32*)TEX.pSurface;
+					BT.pSurface = nullptr;
 
 					// load thumbnail
 					string128		&N = BT.name;
@@ -157,13 +157,15 @@ void xrLoad(LPCSTR name, bool draft_mode)
 
 					xr_strlwr		(N);
 
-					if (!xr_strcmp(N,"level_lods"))	{
+					if (!xr_strcmp(N,"level_lods"))	
+					{
 						// HACK for merged lod textures
 						BT.dwWidth	= 1024;
 						BT.dwHeight	= 1024;
 						BT.bHasAlpha= TRUE;
-						BT.pSurface	= 0;
-					} else {
+					} 
+					else 
+					{
 						xr_strcat		(N,".thm");
 						IReader* THM	= FS.r_open("$game_textures$",N);
 						
@@ -200,7 +202,6 @@ void xrLoad(LPCSTR name, bool draft_mode)
 						BT.dwWidth				= BT.THM.width;
 						BT.dwHeight				= BT.THM.height;
 						BT.bHasAlpha			= BT.THM.HasAlphaChannel();
-						BT.pSurface				= 0;
 						if (!bLOD) 
 						{
 							if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted))

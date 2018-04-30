@@ -97,18 +97,18 @@ static		xr_vector< unsigned int >		mender_mapping_out_to_in_vert;
 void CBuild::xrPhase_TangentBasis()
 {
 	// ************************************* Declare inputs
-	Status						("Declarator...");
-	u32 v_count_reserve			= iFloor(float(lc_global_data()->g_vertices().size())*1.33f);
-	u32 i_count_reserve			= 3*lc_global_data()->g_faces().size();
-	
-	mender_in_out_verts				.clear( );
-	mender_in_out_indices			.clear( );
-	mender_mapping_out_to_in_vert	.clear( );
+	Status("Declarator...");
+	size_t v_count_reserve = iFloor(float(lc_global_data()->g_vertices().size())*1.33f);
+	size_t i_count_reserve = 3 * lc_global_data()->g_faces().size();
+
+	mender_in_out_verts.clear();
+	mender_in_out_indices.clear();
+	mender_mapping_out_to_in_vert.clear();
 
 
-	mender_in_out_verts				.reserve( v_count_reserve );
-	mender_in_out_indices			.reserve( i_count_reserve );
-	mender_mapping_out_to_in_vert	.reserve( v_count_reserve );
+	mender_in_out_verts.reserve(v_count_reserve);
+	mender_in_out_indices.reserve(i_count_reserve);
+	mender_mapping_out_to_in_vert.reserve(v_count_reserve);
 
 
 	fill_mender_input( mender_in_out_verts, mender_in_out_indices );
@@ -137,7 +137,6 @@ void CBuild::xrPhase_TangentBasis()
 	)
 	{
 		Debug.fatal	(DEBUG_INFO, "NVMeshMender failed " );
-		//Debug.fatal	(DEBUG_INFO,"NVMeshMender failed (%s)",mender.GetLastError().c_str());
 	}
 
 	// ************************************* Bind declarators

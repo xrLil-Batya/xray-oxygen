@@ -53,35 +53,48 @@ public:
 		}
 	}
 };
-#include <random>
-void	CBuild::LMapsLocal				()
-{
-		FPU::m64r		();
-		
-		mem_Compact		();
 
-		// Randomize deflectors
+#include <random>
+
+void CBuild::LMapsLocal()
+{
+	FPU::m64r();
+	mem_Compact();
+
+	// Randomize deflectors
 #ifndef NET_CMP
-		std::shuffle(lc_global_data()->g_deflectors().begin(),lc_global_data()->g_deflectors().end(), std::mt19937(std::random_device()()));
+	std::shuffle(lc_global_data()->g_deflectors().begin(), lc_global_data()->g_deflectors().end(), std::mt19937(std::random_device()()));
 #endif
 
 #ifndef NET_CMP	
-for(u32 dit = 0; dit<lc_global_data()->g_deflectors().size(); dit++)	
+	for (u32 dit = 0; dit < lc_global_data()->g_deflectors().size(); dit++)
 		task_pool.push_back(dit);
 #else
-		task_pool.push_back(14);
-		task_pool.push_back(16);
+	task_pool.push_back(14);
+	task_pool.push_back(16);
 #endif
-		
+	// Main process (4 threads)
+	Status("Lighting...");
+	CThreadManager threads;
 
-		// Main process (4 threads)
-		Status			("Lighting...");
-		CThreadManager	threads;
-		const	u32	thNUM	= 6;
-		CTimer	start_time;	start_time.Start();				
-		for				(int L=0; L<thNUM; L++)	threads.start(xr_new<CLMThread> (L));
-		threads.wait	(500);
-		clMsg			("%f seconds",start_time.GetElapsed_sec());
+	u32 thNUM = CPU::Info.n_threads;
+
+	if (!g_build_options.b_mxthread)
+	{
+		clMsg("Max threading lighting: off...");
+		thNUM--;
+	}
+
+	CTimer start_time;	
+	start_time.Start();
+
+	for (u32 L = 0; L < thNUM; L++)
+	{
+		threads.start(xr_new<CLMThread>(L));
+	}
+
+	threads.wait(500);
+	clMsg("%f seconds", start_time.GetElapsed_sec());
 }
 
 void	CBuild::LMaps					()
