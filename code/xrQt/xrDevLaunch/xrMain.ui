@@ -1280,8 +1280,6 @@
      <addaction name="actionGiperion_2"/>
      <addaction name="actionForserX"/>
     </widget>
-    <addaction name="actionMain_parameters"/>
-    <addaction name="separator"/>
     <addaction name="actionVertver_Github"/>
     <addaction name="actionAbout_Oxygen_Team"/>
     <addaction name="menuGithub_Pages"/>
@@ -1293,7 +1291,6 @@
     </property>
     <addaction name="actionParametres"/>
     <addaction name="separator"/>
-    <addaction name="actionMain"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -1308,15 +1305,7 @@
      <addaction name="separator"/>
      <addaction name="actionxrCore"/>
     </widget>
-    <widget class="QMenu" name="menuEditors">
-     <property name="title">
-      <string>Editors</string>
-     </property>
-     <addaction name="actionxrEditorTools_in_dev"/>
-     <addaction name="actionxrAI"/>
-    </widget>
     <addaction name="menuGame"/>
-    <addaction name="menuEditors"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>

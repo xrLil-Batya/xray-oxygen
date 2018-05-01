@@ -178,9 +178,6 @@ private slots:
     void on_actionParametres_triggered			();	
 	void on_actionVertver_Github_triggered		();
     void on_actionAbout_Oxygen_Team_triggered	();
-	void open_settings							();
-	void on_actionMain_parameters_triggered		();
-	void on_actionMain_triggered				();
 	void clean_buffers							();
 	void on_pushButton_2_clicked				();
     void on_listWidget_itemPressed				(QListWidgetItem *item);

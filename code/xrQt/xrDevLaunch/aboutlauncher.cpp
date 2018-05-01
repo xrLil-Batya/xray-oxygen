@@ -15,7 +15,7 @@ AboutLauncher::AboutLauncher		(QWidget *parent)
     about_ui						(new Ui::AboutLauncher)
 {
     about_ui->setupUi					(this);
-	QPixmap myPixmap("icon2.ico");
+	QPixmap myPixmap("icon.png");
 	about_ui->label_8->setPixmap(myPixmap);
 }
 
@@ -24,4 +24,12 @@ AboutLauncher::~AboutLauncher		()
 {
 	delete about_ui;
 }
+
+
+void AboutLauncher::on_pushButton_clicked()
+{
+	AboutLauncher::close			();
+}
+
+
 #endif

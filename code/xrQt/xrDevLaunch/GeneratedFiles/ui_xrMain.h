@@ -78,7 +78,6 @@ public:
     QMenu *menuOptions;
     QMenu *menu;
     QMenu *menuGame;
-    QMenu *menuEditors;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -404,8 +403,6 @@ public:
         menu->setObjectName(QStringLiteral("menu"));
         menuGame = new QMenu(menu);
         menuGame->setObjectName(QStringLiteral("menuGame"));
-        menuEditors = new QMenu(menu);
-        menuEditors->setObjectName(QStringLiteral("menuEditors"));
         xrLaunch->setMenuBar(menuBar);
         mainToolBar = new QToolBar(xrLaunch);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -417,8 +414,6 @@ public:
         menuBar->addAction(menu->menuAction());
         menuBar->addAction(menuOptions->menuAction());
         menuBar->addAction(menuAbout->menuAction());
-        menuAbout->addAction(actionMain_parameters);
-        menuAbout->addSeparator();
         menuAbout->addAction(actionVertver_Github);
         menuAbout->addAction(actionAbout_Oxygen_Team);
         menuAbout->addAction(menuGithub_Pages->menuAction());
@@ -429,17 +424,13 @@ public:
         menuGithub_Pages->addAction(actionForserX);
         menuOptions->addAction(actionParametres);
         menuOptions->addSeparator();
-        menuOptions->addAction(actionMain);
         menu->addAction(menuGame->menuAction());
-        menu->addAction(menuEditors->menuAction());
         menu->addSeparator();
         menu->addAction(actionExit);
         menuGame->addAction(actionxrEngine);
         menuGame->addAction(actionxrPlay_2);
         menuGame->addSeparator();
         menuGame->addAction(actionxrCore);
-        menuEditors->addAction(actionxrEditorTools_in_dev);
-        menuEditors->addAction(actionxrAI);
 
         retranslateUi(xrLaunch);
 
@@ -485,7 +476,6 @@ public:
         menuOptions->setTitle(QApplication::translate("xrLaunch", "Options", nullptr));
         menu->setTitle(QApplication::translate("xrLaunch", "Launch", nullptr));
         menuGame->setTitle(QApplication::translate("xrLaunch", "Game...", nullptr));
-        menuEditors->setTitle(QApplication::translate("xrLaunch", "Editors", nullptr));
     } // retranslateUi
 
 };

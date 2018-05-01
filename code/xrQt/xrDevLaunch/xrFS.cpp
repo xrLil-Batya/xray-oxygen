@@ -6,7 +6,7 @@
 * xrFS.cpp - filesystem for launcher
 * FileSystem
 *************************************************/
-
+/////////////////////////////////////////
 #pragma once
 /////////////////////////////////////////
 #include "xrFS.h"
@@ -14,7 +14,10 @@
 #ifdef __cplusplus
 /////////////////////////////////////////
 QSettings qs("OxyTeam", "xrDevLaunch");
-
+_TCHAR szPath[] = _T("Software\\xrDevLaunch\\");
+_TCHAR szBuf[MAX_PATH];
+DWORD dwBufLen = MAX_PATH;
+HKEY hKey;
 /////////////////////////////////////////
 
 
@@ -69,10 +72,6 @@ void FileSystem::createReg	(_TCHAR szString[],
 	//more safety.
 	/////////////////////////////////////////
 	_tsetlocale				(LC_ALL, _T( "English" ));
-	_TCHAR szPath[]			= _T( "Software\\xrDevLaunch\\" );
-	_TCHAR szBuf[MAX_PATH];
-	DWORD dwBufLen = MAX_PATH;
-	HKEY hKey;
 	/////////////////////////////////////////
 	if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, szPath, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
 		MessageBox(NULL, "1","All methods are ready!", MB_OK | MB_ICONINFORMATION);
@@ -94,10 +93,6 @@ void FileSystem::createReg	(_TCHAR szString[],
 void FileSystem::openReg	(_TCHAR szString[])
 {
 	_tsetlocale				(LC_ALL, _T( "English" ));
-	_TCHAR szPath[]			= _T( "Software\\xrDevLaunch\\" );
-	_TCHAR szBuf[MAX_PATH];
-	DWORD dwBufLen = MAX_PATH;
-	HKEY hKey;
 	/////////////////////////////////////////
 	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
 		MessageBox(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
@@ -113,10 +108,6 @@ void FileSystem::writeReg	(_TCHAR szString[],
 							 _TCHAR szValue[])
 {
 	_tsetlocale				(LC_ALL, _T( "English" ));
-	_TCHAR szPath[]			= _T( "Software\\xrDevLaunch\\" );
-	_TCHAR szBuf[MAX_PATH];
-	DWORD dwBufLen = MAX_PATH;
-	HKEY hKey;
 	/////////////////////////////////////////
 	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
 		MessageBox(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);

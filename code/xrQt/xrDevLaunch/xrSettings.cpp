@@ -11,13 +11,18 @@
 #include "qrect.h"
 /////////////////////////////////////////
 FileSystem fs;
+LPCSTR szSetting = "xrCoreInit";
+/////////////////////////////////////////
+
+
 xrSettings::xrSettings		(QWidget *parent) 
 :	QDialog					(parent),
 	settings_ui				(new Ui::xrSettings)
 {
     settings_ui->setupUi		(this);
-	loadSettings();
+	loadSettings				();
 }
+
 
 xrSettings::~xrSettings()
 {
@@ -27,7 +32,6 @@ xrSettings::~xrSettings()
 
 void xrSettings::loadSettings()
 {
-	LPCSTR szSetting		= "xrCoreInit";
 	QSettings qs			("OxyTeam", "xrDevLaunch");
 	qs.beginGroup			("main");
 	i1						= qs.value(szSetting).toInt();
@@ -37,7 +41,6 @@ void xrSettings::loadSettings()
 
 void xrSettings::saveSettings()
 {
-	LPCSTR szSetting		= "xrCoreInit";
 	QSettings qs			("OxyTeam", "xrDevLaunch");
 	qs.beginGroup			("main");
 	qs.setValue				(szSetting, i1);
@@ -53,5 +56,5 @@ void xrSettings::on_buttonBox_accepted()
 
 void xrSettings::on_checkBox_stateChanged(int arg1)
 {
-	i1 = arg1;
+	i1						= arg1;
 }

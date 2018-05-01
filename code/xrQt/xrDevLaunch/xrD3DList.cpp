@@ -53,10 +53,10 @@ bool SupportsDX10Rendering()
 
 	HRESULT hr							= m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
 
-    pFactory->Release					();
-    pFactory							= nullptr;
-    m_pAdapter->Release					();
-    m_pAdapter							= nullptr;
+	pFactory->Release();
+	pFactory = nullptr;
+	m_pAdapter->Release();
+	m_pAdapter = nullptr;
 
 	return SUCCEEDED					(hr);
 }
@@ -128,9 +128,9 @@ bool SupportsDX11Rendering()
 											&FeatureLevel, &pContext);
 
 	//#TODO: graphics pointers must delete by Release();
-	if (pContext)	pContext  ->Release		();
-	if (pSwapChain) pSwapChain->Release		();
-	if (pd3dDevice) pd3dDevice->Release		();
+	if (pContext)	pContext->Release();
+	if (pSwapChain) pSwapChain->Release();
+	if (pd3dDevice) pd3dDevice->Release();
 
 	DestroyWindow							(hWnd);
 

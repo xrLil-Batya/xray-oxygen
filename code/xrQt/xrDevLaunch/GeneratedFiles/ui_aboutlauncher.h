@@ -16,13 +16,13 @@
 #include <QtWidgets/QDialog>
 #include <QtWidgets/QHeaderView>
 #include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 
 QT_BEGIN_NAMESPACE
 
 class Ui_AboutLauncher
 {
 public:
-    QLabel *label;
     QLabel *label_2;
     QLabel *label_3;
     QLabel *label_4;
@@ -30,6 +30,7 @@ public:
     QLabel *label_7;
     QLabel *label_6;
     QLabel *label_8;
+    QPushButton *pushButton;
 
     void setupUi(QDialog *AboutLauncher)
     {
@@ -116,30 +117,31 @@ public:
         palette.setBrush(QPalette::Disabled, QPalette::NoRole, brush11);
         palette.setBrush(QPalette::Disabled, QPalette::ToolTipText, brush7);
         AboutLauncher->setPalette(palette);
-        label = new QLabel(AboutLauncher);
-        label->setObjectName(QStringLiteral("label"));
-        label->setGeometry(QRect(10, 313, 111, 15));
         label_2 = new QLabel(AboutLauncher);
         label_2->setObjectName(QStringLiteral("label_2"));
-        label_2->setGeometry(QRect(310, 310, 121, 20));
+        label_2->setGeometry(QRect(10, 310, 121, 20));
         label_3 = new QLabel(AboutLauncher);
         label_3->setObjectName(QStringLiteral("label_3"));
         label_3->setGeometry(QRect(340, 10, 91, 20));
         label_4 = new QLabel(AboutLauncher);
         label_4->setObjectName(QStringLiteral("label_4"));
-        label_4->setGeometry(QRect(10, 170, 191, 16));
+        label_4->setGeometry(QRect(20, 30, 191, 16));
         label_5 = new QLabel(AboutLauncher);
         label_5->setObjectName(QStringLiteral("label_5"));
-        label_5->setGeometry(QRect(10, 190, 181, 16));
+        label_5->setGeometry(QRect(20, 50, 181, 16));
         label_7 = new QLabel(AboutLauncher);
         label_7->setObjectName(QStringLiteral("label_7"));
-        label_7->setGeometry(QRect(10, 250, 291, 31));
+        label_7->setGeometry(QRect(20, 110, 291, 31));
         label_6 = new QLabel(AboutLauncher);
         label_6->setObjectName(QStringLiteral("label_6"));
-        label_6->setGeometry(QRect(10, 210, 171, 16));
+        label_6->setGeometry(QRect(20, 70, 171, 16));
         label_8 = new QLabel(AboutLauncher);
         label_8->setObjectName(QStringLiteral("label_8"));
-        label_8->setGeometry(QRect(15, 20, 150, 150));
+        label_8->setGeometry(QRect(170, 30, 251, 271));
+        label_8->setPixmap(QPixmap(QString::fromUtf8("ico.png")));
+        pushButton = new QPushButton(AboutLauncher);
+        pushButton->setObjectName(QStringLiteral("pushButton"));
+        pushButton->setGeometry(QRect(350, 310, 80, 21));
 
         retranslateUi(AboutLauncher);
 
@@ -149,15 +151,15 @@ public:
     void retranslateUi(QDialog *AboutLauncher)
     {
         AboutLauncher->setWindowTitle(QApplication::translate("AboutLauncher", "Dialog", nullptr));
-        label->setText(QApplication::translate("AboutLauncher", "About xrDevLaunch...", nullptr));
         label_2->setText(QApplication::translate("AboutLauncher", "Oxygen Team (C), 2018", nullptr));
-        label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 1.0f", nullptr));
+        label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 1.1f", nullptr));
         label_4->setText(QApplication::translate("AboutLauncher", "Developer Launcher by Oxygen Team.", nullptr));
         label_5->setText(QApplication::translate("AboutLauncher", "Creators: Vertver, ForserX, Giperion", nullptr));
         label_7->setText(QApplication::translate("AboutLauncher", "Builded by Microsoft Visual Studio \n"
 "C++ Compiler 2017, Qt 5.10.1", nullptr));
         label_6->setText(QApplication::translate("AboutLauncher", "Platform: Windows 7+", nullptr));
-        label_8->setText(QApplication::translate("AboutLauncher", "TextLabel", nullptr));
+        label_8->setText(QString());
+        pushButton->setText(QApplication::translate("AboutLauncher", "Exit", nullptr));
     } // retranslateUi
 
 };

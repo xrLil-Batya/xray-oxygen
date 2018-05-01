@@ -302,8 +302,8 @@ void xrLaunch::run_xrEngineRun()
 	{
 		if (!CPUID::SSE3())
 		{
-			throw new EcxeptionOpSet	("Your CPU doesn't support SSE3 instructions",
-										OpSet::SSE3);
+			throw new EcxeptionOpSet		("Your CPU doesn't support SSE3 instructions",
+											OpSet::SSE3);
 		}
 		QString rendered_line			= ui->lineEdit->text();
 		params_line						= rendered_line.toLocal8Bit();
@@ -319,12 +319,12 @@ void xrLaunch::run_xrEngineRun()
 #endif
 		params							= params_string + " " + params_line + " " + params_settings + " " + params_box;
 		init_xrCore						();
-		ui->progressBar->setValue(33);
-		statusBar()->showMessage(tr("Creating render list..."));
+		ui->progressBar->setValue		(33);
+		statusBar()->showMessage		(tr("Creating render list..."));
 		CreateRendererList				();
-		ui->progressBar->setValue(66);
-		statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
-		ui->progressBar->setValue(100);
+		ui->progressBar->setValue		(66);
+		statusBar()->showMessage		(tr("Loading xrEngine..."), 4000);
+		ui->progressBar->setValue		(100);
 		RunApplication					(params.data());
 #ifndef NOAWDA
 		QMessageBox::information		(this, "Awda", "Awda");
@@ -465,36 +465,6 @@ void xrLaunch::on_actionAbout_Oxygen_Team_triggered()
 {
     xrQString oxylink				= "https://github.com/xrOxygen";
     QDesktopServices::openUrl		(QUrl(oxylink));
-}
-
-
-/***********************************************
-method for open settings window
-***********************************************/
-void xrLaunch::open_settings()
-{
-	xrSettings *settings = new xrSettings;
-	settings->setWindowFlags(Qt::WindowStaysOnTopHint);
-	settings->setWindowTitle("Settings");
-	settings->show();
-}
-
-
-/***********************************************
-link to settings window
-***********************************************/
-void xrLaunch::on_actionMain_parameters_triggered()
-{
-	open_settings();
-}
-
-
-/***********************************************
-link to settings window
-***********************************************/
-void xrLaunch::on_actionMain_triggered()
-{
-	open_settings();
 }
 
 
