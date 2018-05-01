@@ -253,7 +253,6 @@ float		ps_prop_ss_sample_step_phase1	=	.03f;
 //float		ps_prop_ss_sample_step_phase2	=	.33f;
 float		ps_prop_ss_blend				=	.066f;
 float		ps_prop_ss_intensity			=	1.f;
-float		ps_r2_rain_rops_debug_control   =   1.f;
 
 
 //- Mad Max
@@ -802,7 +801,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
 	
-	CMD4(CCC_Float,		"r2_rain_drops_debug_intensity",	&ps_r2_rain_rops_debug_control,	0.f,	3.f);
 	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
 	CMD3(CCC_Mask,		"r2_mblur_enabled",		&ps_r2_ls_flags,			R2FLAG_MBLUR	);
 
@@ -873,7 +871,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
 	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
 
-	CMD4(CCC_Float,     "r2_droplets_power_debug",      &droplets_power_debug,      0.f, 3.f);
+	CMD4(CCC_Float,     "r2_rain_drops_power_debug",      &droplets_power_debug,      0.f, 3.f);
 
 	//	Igor: need restart
 	CMD3(CCC_Token,		"r2_shadow_map_size",			&ps_r2_smapsize,			q_smapsize_token);

@@ -31,7 +31,7 @@ void CRenderTarget::phase_rain_drops()
 	CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
 
 	// Set RT's
-	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
+    u_setrt(rt_Generic, 0, NULL, HW.pBaseZB);
 	RCache.set_CullMode(CULL_NONE);
 	RCache.set_Stencil(FALSE);
 
@@ -45,7 +45,10 @@ void CRenderTarget::phase_rain_drops()
 
 	// Draw COLOR
 	RCache.set_Element(s_rain_drops->E[0]);
-	RCache.set_c("rain_drops_params0", envdesc.m_fDropletsIntensity, droplets_power_debug, 0, 0);
+    //RCache.set_c("rain_drops_params0", envdesc.m_fDropletsIntensity, droplets_power_debug, 0, 0);
+	RCache.set_c("rain_drops_params0", envdesc.rain_density, droplets_power_debug, 0, 0);
 	RCache.set_Geometry(g_aa_AA);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+
+    HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
 };
