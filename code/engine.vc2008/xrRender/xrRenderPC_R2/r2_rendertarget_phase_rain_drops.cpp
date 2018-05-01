@@ -45,7 +45,8 @@ void CRenderTarget::phase_rain_drops()
 
 	// Draw COLOR
 	RCache.set_Element(s_rain_drops->E[0]);
-	RCache.set_c("rain_drops_params0", envdesc.m_fDropletsIntensity, droplets_power_debug, 0, 0);
+	//RCache.set_c("rain_drops_params0", envdesc.m_fDropletsIntensity, droplets_power_debug, 0, 0);
+    RCache.set_c("rain_drops_params0", envdesc.rain_density, droplets_power_debug, 0, 0);
 	RCache.set_Geometry(g_aa_AA);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 };
