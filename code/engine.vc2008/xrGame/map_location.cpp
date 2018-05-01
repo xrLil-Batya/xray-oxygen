@@ -283,10 +283,15 @@ void CMapLocation::CalcLevelName()
 	}
 }
 
-bool CMapLocation::Update() //returns actual
+//returns actual
+bool CMapLocation::Update() 
 {
-	R_ASSERT(m_cached.m_updatedFrame!=Device.dwFrame);
-		
+	// FX: Затычка одного редкого вылета, проявляющегося только под отладчиком в релизе (Лично у меня)
+	if (m_cached.m_updatedFrame == Device.dwFrame)
+	{
+		Log("[PANIC] Your PC is very slow...");
+		return m_cached.m_Actuality;
+	}
 
 	if(	m_flags.test(eTTL) )
 	{
