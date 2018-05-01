@@ -4,7 +4,7 @@
 #define CHECK_MOUSE_STATE		// Sometimes, IDirectInputDevice8::GetDeviceData losses data (reason: unknown). 
 								// By defining this, we force to double check mouse state by calling GetDeviceState. 
 								// It's a very little performance penalty
-#define JIT_OXY_MEMPOOL_DEBUG	// Memory debbuging for 'X-Ray Mempool for LuaJIT'
+//#define JIT_OXY_MEMPOOL_DEBUG	// Memory debbuging for 'X-Ray Mempool for LuaJIT'
 #endif
 //#define SLOW_VERIFY_ENTITIES	// Very slow verifing every entity on every game update
 

@@ -168,7 +168,8 @@ bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
 	strconcat					(sizeof(temp),temp,CStringTable().translate("st_loading_saved_game").c_str()," \"",save_name,SAVE_EXTENSION,"\"");
 
 	pApp->SetLoadStageTitle(temp);
-	pApp->LoadStage();
+	//pApp->LoadStage();
+    g_pGamePersistent->LoadTitle();
 
 	unload						();
 	reload						(m_section);
