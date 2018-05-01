@@ -168,7 +168,6 @@ _DDS:
 #endif // DEBUG
 		img_size				= S->length	();
 		R_ASSERT				(S);
-		//R_CHK2					(D3DXGetImageInfoFromFileInMemory	(S->pointer(),S->length(),&IMG), fn);
 #ifdef USE_DX11
 		R_CHK2 (D3DX11GetImageInfoFromMemory(S->pointer(),S->length(), 0, &IMG, 0), fn);
 #else
@@ -185,7 +184,6 @@ _DDS_CUBE:
 #else
 			D3DX10_IMAGE_LOAD_INFO LoadInfo;
 #endif
-			//LoadInfo.Usage = D3D_USAGE_IMMUTABLE;
 			if (bStaging)
 			{
 				LoadInfo.Usage = D3D_USAGE_STAGING;
@@ -265,7 +263,6 @@ _DDS_2D:
 
 _BUMP_from_base:
 	{
-		//Msg			("! auto-generated bump map: %s",fname);
 		Msg			("! Fallback to default bump map: %s",fname);
 		//////////////////
 		if (strstr(fname,"_bump#"))			

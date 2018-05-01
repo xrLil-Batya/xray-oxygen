@@ -247,14 +247,12 @@ CRenderTarget::CRenderTarget		()
 		rt_SunShaftsMask.create					(r2_RT_SunShaftsMask,w,h,D3DFMT_A8R8G8B8		);
 		rt_SunShaftsMaskSmoothed.create			(r2_RT_SunShaftsMaskSmoothed,w,h,D3DFMT_A8R8G8B8);
 		rt_SunShaftsPass0.create				(r2_RT_SunShaftsPass0,w,h,D3DFMT_A8R8G8B8		);
-		//rt_SunShaftsPass1.create				(r2_RT_SunShaftsPass1,w,h,D3DFMT_A8R8G8B8		);
-		//rt_SunShaftsPass2.create				(r2_RT_SunShaftsPass2,w,h,D3DFMT_A8R8G8B8		);
+
 		// generic(LDR) RTs
 		rt_Generic_0.create			(r2_RT_generic0,w,h,D3DFMT_A8R8G8B8		);
 		rt_Generic_1.create			(r2_RT_generic1,w,h,D3DFMT_A8R8G8B8		);
 		rt_secondVP.create          (r2_RT_secondVP, w, h, D3DFMT_A8R8G8B8);
-		//	Igor: for volumetric lights
-		//rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A8R8G8B8		);
+
 		//	temp: for higher quality blends
 		if (RImplementation.o.advancedpp)
 			rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A16B16G16R16F);
@@ -503,9 +501,6 @@ CRenderTarget::CRenderTarget		()
 				}
 			}
 			R_CHK		(t_material_surf->UnlockBox	(0));
-			// #ifdef DEBUG
-			// R_CHK	(D3DXSaveTextureToFile	("x:\\r2_material.dds",D3DXIFF_DDS,t_material_surf,0));
-			// #endif
 		}
 
 		// Build noise table
@@ -590,14 +585,10 @@ CRenderTarget::CRenderTarget		()
 
 	//	Igor: TMP
 	//	Create an RT for online screenshot makining
-	//u32		w = Device.dwWidth, h = Device.dwHeight;
-	//HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth,Device.dwHeight,D3DFMT_A8R8G8B8,D3DPOOL_SYSTEMMEM,&pFB,NULL);
-	//HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth,Device.dwHeight,rt_Color->fmt,D3DPOOL_SYSTEMMEM,&pFB,NULL);
 	D3DSURFACE_DESC	desc;
 	HW.pBaseRT->GetDesc(&desc);
 	HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth,Device.dwHeight,desc.Format,D3DPOOL_SYSTEMMEM,&pFB,NULL);
 
-	// 
 	dwWidth		= Device.dwWidth;
 	dwHeight	= Device.dwHeight;
 }
@@ -627,8 +618,6 @@ CRenderTarget::~CRenderTarget	()
 	pSurf = t_envmap_1->surface_get();
 	if (pSurf) pSurf->Release();
 	_SHOW_REF("t_envmap_1 - #small",pSurf);
-	//_SHOW_REF("t_envmap_0 - #small",t_envmap_0->pSurface);
-	//_SHOW_REF("t_envmap_1 - #small",t_envmap_1->pSurface);
 #endif // DEBUG
 	t_envmap_0->surface_set		(NULL);
 	t_envmap_1->surface_set		(NULL);
@@ -689,29 +678,9 @@ void CRenderTarget::reset_light_marker( bool bResetStencil)
 		RCache.set_CullMode			(CULL_NONE	);
 		//	Clear everything except last bit
 		RCache.set_Stencil	(TRUE,D3DCMP_ALWAYS,dwLightMarkerID,0x00,0xFE, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO);
-		//RCache.set_Stencil	(TRUE,D3DCMP_ALWAYS,dwLightMarkerID,0x00,0xFF, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO, D3DSTENCILOP_ZERO);
 		RCache.set_Element			(s_occq->E[1]	);
 		RCache.set_Geometry			(g_combine		);
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-
-/*
-		u32		Offset;
-		float	_w					= float(Device.dwWidth);
-		float	_h					= float(Device.dwHeight);
-		u32		C					= color_rgba	(255,255,255,255);
-		float	eps					= 0;
-		float	_dw					= 0.5f;
-		float	_dh					= 0.5f;
-		FVF::TL* pv					= (FVF::TL*) RCache.Vertex.Lock	(4,g_combine->vb_stride,Offset);
-		pv->set						(-_dw,		_h-_dh,		eps,	1.f, C, 0, 0);	pv++;
-		pv->set						(-_dw,		-_dh,		eps,	1.f, C, 0, 0);	pv++;
-		pv->set						(_w-_dw,	_h-_dh,		eps,	1.f, C, 0, 0);	pv++;
-		pv->set						(_w-_dw,	-_dh,		eps,	1.f, C, 0, 0);	pv++;
-		RCache.Vertex.Unlock		(4,g_combine->vb_stride);
-		RCache.set_Element			(s_occq->E[2]	);
-		RCache.set_Geometry			(g_combine		);
-		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
-*/
 	}
 }
 
@@ -719,7 +688,6 @@ void CRenderTarget::increment_light_marker()
 {
 	dwLightMarkerID += 2;
 
-	//if (dwLightMarkerID>10)
 	if (dwLightMarkerID>255)
 		reset_light_marker(true);
 }

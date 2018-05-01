@@ -1,5 +1,3 @@
-#ifndef	dx10SamplerStateCache_included
-#define	dx10SamplerStateCache_included
 #pragma once
 
 
@@ -77,5 +75,3 @@ private:
 };
 
 extern	dx10SamplerStateCache	SSManager;
-
-#endif	//	dx10SamplerStateCache_included

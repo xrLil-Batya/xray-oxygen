@@ -214,32 +214,20 @@ void CSE_ALifeTraderAbstract::add_online	(const bool &update_registries)
 
 void add_offline_impl						(CSE_ALifeDynamicObject *object, const xr_vector<ALife::_OBJECT_ID> &saved_children, const bool &update_registries)
 {
-	for (u32 i=0, n=saved_children.size(); i<n; ++i) {
+	for (size_t i = 0, n = saved_children.size(); i < n; ++i)
+	{
 		CSE_ALifeDynamicObject	*child = smart_cast<CSE_ALifeDynamicObject*>(ai().alife().objects().object(saved_children[i],true));
 		R_ASSERT				(child);
 		child->m_bOnline		= false;
 
 		CSE_ALifeInventoryItem	*inventory_item = smart_cast<CSE_ALifeInventoryItem*>(child);
 		VERIFY2					(inventory_item,"Non inventory item object has parent?!");
-#ifdef DEBUG
-//		if (psAI_Flags.test(aiALife))
-//			Msg					("[LSS] Destroying item [%s][%s][%d]",inventory_item->base()->name_replace(),*inventory_item->base()->s_name,inventory_item->base()->ID);
-		Msg						(
-			"[LSS][%d] Going offline [%d][%s][%d] with parent [%d][%s] on '%s'",
-			Device.dwFrame,
-			Device.dwTimeGlobal,
-			inventory_item->base()->name_replace(),
-			inventory_item->base()->ID,
-			object->ID,
-			object->name_replace(),
-			"*SERVER*"
-		);
-#endif
-		
+
 		ALife::_OBJECT_ID				item_id = inventory_item->base()->ID;
 		inventory_item->base()->ID		= object->alife().server().PerformIDgen(item_id);
 
-		if (!child->can_save()) {
+		if (!child->can_save()) 
+		{
 			object->alife().release		(child);
 			--i;
 			--n;

@@ -23,15 +23,12 @@ BOOL	exact_normalize					(float*		a);
 
 struct SBuildOptions
 {
-	union
-	{
-		bool b_radiosity;
-		bool b_noise;
-		bool b_net_light;
-		bool b_skipinvalid;
-		bool b_notessellation;
-		bool b_mxthread;
-	}; // Flags
+	bool b_radiosity;
+	bool b_noise;
+	bool b_net_light;
+	bool b_skipinvalid;
+	bool b_notessellation;
+	bool b_mxthread;
 
 	u32	 Priority;
 	SBuildOptions() :	b_radiosity(false), b_noise(false), b_net_light(false), 

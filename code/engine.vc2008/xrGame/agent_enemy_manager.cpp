@@ -236,37 +236,41 @@ void CAgentEnemyManager::assign_enemies			()
 		(*I).m_probability				*= 1.f - best; 
 
 		// recovering sort order
-		for (u32 i=0, n = m_enemies.size() - 1; i<n; ++i)
+		for (size_t i = 0, n = m_enemies.size() - 1; i < n; ++i)
+		{
 			if (m_enemies[i + 1] < m_enemies[i])
-				std::swap				(m_enemies[i],m_enemies[i + 1]);
+				std::swap(m_enemies[i], m_enemies[i + 1]);
 			else
 				break;
+		}
 	}
 }
 
 void CAgentEnemyManager::permutate_enemies		()
 {
 	// filling member enemies
-	CAgentMemberManager::iterator					I = object().member().combat_members().begin();
-	CAgentMemberManager::iterator					E = object().member().combat_members().end();
-	for ( ; I != E; ++I) {
+	for (CMemberOrder* it: object().member().combat_members())
+	{
 		// clear enemies
-		(*I)->enemies().clear	();
+		it->enemies().clear	();
 		// setup procesed flag
-		(*I)->processed			(false);
+		it->processed(false);
 		// get member squad mask
-		squad_mask_type			member_mask = object().member().mask(&(*I)->object());
+		squad_mask_type member_mask = object().member().mask(&it->object());
 		// setup if player has enemy
-		bool					enemy_selected = false;
+		bool enemy_selected = false;
 		// iterate on enemies
 		ENEMIES::const_iterator	i = m_enemies.begin(), b = i;
 		ENEMIES::const_iterator	e = m_enemies.end();
-		for ( ; i != e; ++i) {
-			if ((*i).m_mask.is(member_mask))
-				(*I)->enemies().push_back	(u32(i - b));
 
-			if ((*i).m_distribute_mask.is(member_mask)) {
-				(*I)->selected_enemy		(u32(i - b));
+		for ( ; i != e; ++i) 
+		{
+			if ((*i).m_mask.is(member_mask))
+				it->enemies().push_back	(u32(i - b));
+
+			if ((*i).m_distribute_mask.is(member_mask)) 
+			{
+				it->selected_enemy		(u32(i - b));
 				enemy_selected				= true;
 			}
 		}
@@ -275,7 +279,7 @@ void CAgentEnemyManager::permutate_enemies		()
 			continue;
 
 		// otherwise temporary make the member processed
-		(*I)->processed			(true);
+		it->processed(true);
 	}
 	
 	// perform permutations
@@ -410,18 +414,7 @@ void CAgentEnemyManager::assign_wounded			()
 {
 	VERIFY					(m_only_wounded_left);
 
-#if 0//def DEBUG
-	u32						enemy_mask = 0;
-	ENEMIES::iterator		I = m_enemies.begin();
-	ENEMIES::iterator		E = m_enemies.end();
-	for ( ; I != E; ++I) {
-		VERIFY				(!(*I).m_distribute_mask.get());
-		enemy_mask			|= (*I).m_mask.get();
-	}
-	VERIFY					(enemy_mask == object().member().combat_mask());
-#endif // DEBUG
-
-	u32						previous_wounded_count = m_wounded.size();
+	size_t					previous_wounded_count = m_wounded.size();
 	WOUNDED_ENEMY			*previous_wounded = (WOUNDED_ENEMY*)_alloca(previous_wounded_count*sizeof(WOUNDED_ENEMY));
 	std::copy				(m_wounded.begin(),m_wounded.end(),previous_wounded);
 	m_wounded.clear			();

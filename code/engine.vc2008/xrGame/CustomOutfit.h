@@ -4,7 +4,7 @@
 #include "../xrScripts/export/script_export_space.h"
 
 struct SBoneProtections;
-struct CBinocularsVision;
+class CBinocularsVision;
 
 class CCustomOutfit: public CInventoryItemObject {
 private:

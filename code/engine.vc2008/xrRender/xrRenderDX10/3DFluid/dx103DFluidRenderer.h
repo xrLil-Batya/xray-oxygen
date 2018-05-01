@@ -1,5 +1,3 @@
-#ifndef	dx103DFluidRenderer_included
-#define	dx103DFluidRenderer_included
 #pragma once
 
 class dx103DFluidData;
@@ -83,7 +81,6 @@ private:
 	int			m_iRenderTextureHeight;
 
 	D3DXMATRIX	m_gridMatrix;
-	//Fmatrix		m_gridMatrix;
 
 	D3DFORMAT				RTFormats[ RRT_NumRT ];
 	ref_rt					RT[ RRT_NumRT ];
@@ -108,5 +105,3 @@ private:
 	//	TODO: DX10: Reserve memory on object creation
 	xr_vector<ISpatial*>		m_lstRenderables;
 };
-
-#endif	//	dx103DFluidRenderer_included

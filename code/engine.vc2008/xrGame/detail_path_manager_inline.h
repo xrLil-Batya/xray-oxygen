@@ -35,7 +35,7 @@ IC	bool CDetailPathManager::completed		(const Fvector &position, bool bRealCompl
 		
 	if ( bRealCompleted || !m_state_patrol_path )
 	{
-		u32 const path_size		=	m_path.size();
+		size_t const path_size		=	m_path.size();
 		return						travel_point_point_index == (path_size - 1);
 	}
 	else

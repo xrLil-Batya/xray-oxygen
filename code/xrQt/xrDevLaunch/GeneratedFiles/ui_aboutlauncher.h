@@ -151,7 +151,7 @@ public:
         AboutLauncher->setWindowTitle(QApplication::translate("AboutLauncher", "Dialog", nullptr));
         label->setText(QApplication::translate("AboutLauncher", "About xrDevLaunch...", nullptr));
         label_2->setText(QApplication::translate("AboutLauncher", "Oxygen Team (C), 2018", nullptr));
-        label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 0.9v", nullptr));
+        label_3->setText(QApplication::translate("AboutLauncher", "xrDevLaunch 1.0f", nullptr));
         label_4->setText(QApplication::translate("AboutLauncher", "Developer Launcher by Oxygen Team.", nullptr));
         label_5->setText(QApplication::translate("AboutLauncher", "Creators: Vertver, ForserX, Giperion", nullptr));
         label_7->setText(QApplication::translate("AboutLauncher", "Builded by Microsoft Visual Studio \n"

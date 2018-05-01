@@ -1,8 +1,5 @@
 #include "stdafx.h"
 
-//#include "../../xrEngine/igame_persistent.h"
-//#include "../../xrEngine/environment.h"
-
 #pragma pack(push,4)
 struct v_ssao {
 	Fvector4	p;
@@ -68,7 +65,6 @@ void CRenderTarget::phase_ssao	()
 		// HBAO constants
 		RCache.set_c				("c1", _w * 0.5f, _h * 0.5f, 2.0f / _w, 2.0f / _h);
 		RCache.set_c				("c2", 1.12245429f,       1.49660575f,      0.890904903f,      0.668178618f);
-		//RCache.set_c				("c3", 8.f,               8.f,              1.5f,               0.0f);
 		RCache.set_c				("c4", 0.400009334f,      0.160007462f,       2.49994159f,             _h / _w);
 		
 		RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
@@ -81,11 +77,6 @@ void CRenderTarget::phase_ssao	()
 
 void CRenderTarget::phase_downsamp	()
 {
-	//IDirect3DSurface9 *source, *dest;
-	//rt_Position->pSurface->GetSurfaceLevel(0, &source);
-	//rt_half_depth->pSurface->GetSurfaceLevel(0, &dest);
-	//HW.pDevice->StretchRect(source, NULL, dest, NULL, D3DTEXF_POINT);
-
 	Fvector2	p0,p1;
 	u32			Offset = 0;
 

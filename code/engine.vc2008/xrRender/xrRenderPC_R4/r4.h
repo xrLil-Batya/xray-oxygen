@@ -70,14 +70,10 @@ public:
 		u32		albedo_wo			: 1;						// work-around albedo on less capable HW
 		u32		HW_smap				: 1;
 		u32		HW_smap_PCF			: 1;
-		u32		HW_smap_FETCH4		: 1;
 
 		u32		HW_smap_FORMAT		: 32;
 
-		u32		nvstencil			: 1;
 		u32		nvdbt				: 1;
-
-		u32		nullrt				: 1;
 
 		u32		distortion			: 1;
 		u32		distortion_enabled	: 1;
@@ -221,7 +217,6 @@ public:
 		CROS_impl& LT				= *((CROS_impl*)O->renderable_ROS());
 		LT.update_smooth			(O)								;
 		o_hemi						= 0.75f*LT.get_hemi			()	;
-		//o_hemi						= 0.5f*LT.get_hemi			()	;
 		o_sun						= 0.75f*LT.get_sun			()	;
         std::memcpy(o_hemi_cube, LT.get_hemi_cube(), CROS_impl::NUM_FACES*sizeof(float));
 	}

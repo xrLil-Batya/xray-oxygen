@@ -1924,12 +1924,6 @@
     <Filter Include="Core\Common\associative_vector\compare">
       <UniqueIdentifier>{619b9df0-cfe6-4918-82f3-afa734d1c058}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Common\debug">
-      <UniqueIdentifier>{f9034e26-9175-4f7e-9087-c89762986bea}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Common\debug\static_cast_checked">
-      <UniqueIdentifier>{4b90c1ab-e637-4196-912b-a5f29f73a1ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server">
       <UniqueIdentifier>{04771e36-10bf-4a5f-b065-10acc52e71ee}</UniqueIdentifier>
     </Filter>

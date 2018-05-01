@@ -1,6 +1,5 @@
-#ifndef	dx10BufferUtils_included
-#define	dx10BufferUtils_included
 #pragma once
+
 #if defined(USE_DX10) || defined(USE_DX11)
 
 namespace dx10BufferUtils
@@ -12,4 +11,3 @@ void	ConvertVertexDeclaration( const xr_vector<D3DVERTEXELEMENT9> &declIn, xr_ve
 };
 
 #endif	//	USE_DX10
-#endif	//	dx10BufferUtils_included

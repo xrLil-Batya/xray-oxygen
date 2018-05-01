@@ -4,8 +4,7 @@
 //	Copyright (C) GSC Game World - 2009
 ////////////////////////////////////////////////////////////////////////////
 
-#ifndef COMPUTESHADER_H_INCLUDED
-#define COMPUTESHADER_H_INCLUDED
+#pragma once
 
 class ComputeShader
 {
@@ -34,5 +33,3 @@ private:
 	xr_vector<ID3D11ShaderResourceView*>	m_Textures;
 	xr_vector<ID3D11UnorderedAccessView*>	m_Outputs;
 }; // class ComputeShader
-
-#endif // #ifndef COMPUTESHADER_H_INCLUDED

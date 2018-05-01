@@ -162,7 +162,7 @@ void moving_objects::fill_nearest_moving		(moving_object *object)
 		m_nearest_moving.end()
 	);
 
-	u32							size = m_nearest_moving.size();
+	size_t						size = m_nearest_moving.size();
 	moving_object				**temp = (moving_object**)_alloca(size*sizeof(moving_object*));
 	std::copy					(m_nearest_moving.begin(),m_nearest_moving.end(),temp);
 	std::sort					(temp, temp + size);
@@ -197,7 +197,6 @@ void moving_objects::generate_emitters			()
 	std::sort					(m_collision_emitters.begin(),m_collision_emitters.end());
 
 	// it should be alredy sorted here
-//	std::sort					(m_nearest_moving.begin(),m_nearest_moving.end());
 #ifdef DEBUG
 	if (!m_nearest_moving.empty()) {
 		NEAREST_MOVING::const_iterator	I = m_nearest_moving.begin(), J = I + 1;
@@ -208,7 +207,7 @@ void moving_objects::generate_emitters			()
 	}
 #endif // DEBUG
 
-	u32							size = m_collision_emitters.size();
+	size_t size = m_collision_emitters.size();
 	m_collision_emitters.resize	(size + m_nearest_moving.size());
 
 	m_collision_emitters.erase	(
@@ -306,7 +305,7 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 	}
 
 	{
-		u32							collision_count = m_collisions.size();
+		size_t						collision_count = m_collisions.size();
 		COLLISION_TIME				*collisions = (COLLISION_TIME*)_alloca(collision_count*sizeof(COLLISION_TIME));
 		std::copy					(m_collisions.begin(), m_collisions.end(), collisions);
 		COLLISION_TIME				*I = collisions;
@@ -349,7 +348,7 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 		COLLISIONS::iterator	e = m_collisions.end();
 		for ( ; i != e; ++i) {
 			if ((*i).second.second.first == object) {
-				if (exchange_all((*i).second.second.second, object, collision_count))
+				if (exchange_all((*i).second.second.second, object, (u32)collision_count))
 					continue;
 
 				(*i).second.second.first	= 0;
@@ -357,7 +356,7 @@ bool moving_objects::fill_collisions			(moving_object *object, const Fvector &ob
 			}
 
 			VERIFY				((*i).second.second.second == object);
-			if (!exchange_all((*i).second.second.first, object, collision_count))
+			if (!exchange_all((*i).second.second.first, object, (u32)collision_count))
 				(*i).second.second.first	= 0;
 		}
 
@@ -458,7 +457,7 @@ void moving_objects::resolve_collisions			()
 
 	m_previous_collisions		= m_collisions;
 
-	u32							collidee_count = m_collisions.size()*2 + m_visited_emitters.size();
+	size_t						collidee_count = m_collisions.size()*2 + m_visited_emitters.size();
 	moving_object				**collidees = (moving_object **)_alloca(collidee_count*sizeof(moving_object*));
 	{
 		moving_object			**J = collidees;
@@ -483,7 +482,7 @@ void moving_objects::resolve_collisions			()
 		collidee_count			= u32(std::unique(collidees, collidees + collidee_count) - collidees);
 	}
 
-	u32							decision_count = collidee_count;
+	size_t						decision_count = collidee_count;
 	decision					*decisions = (decision*)_alloca(decision_count*sizeof(decision));
 
 	{

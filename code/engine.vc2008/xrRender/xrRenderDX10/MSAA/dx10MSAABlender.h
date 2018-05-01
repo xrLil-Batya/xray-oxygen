@@ -1,5 +1,4 @@
-#ifndef	dx10MSAABlender_included
-#define	dx10MSAABlender_included
+#pragma once
 
 class CBlender_msaa	: public IBlender  
 {
@@ -10,5 +9,3 @@ public:
 
 	virtual		void		Compile			(CBlender_Compile& C);
 };
-
-#endif	//	dx10RainBlender_included

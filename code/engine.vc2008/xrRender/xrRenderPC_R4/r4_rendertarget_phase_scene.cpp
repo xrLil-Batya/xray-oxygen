@@ -4,15 +4,10 @@
 void	CRenderTarget::phase_scene_prepare	()
 {
 	PIX_EVENT(phase_scene_prepare);
-	// Clear depth & stencil
-	//u_setrt	( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB );
-	//CHK_DX	( HW.pDevice->Clear	( 0L, NULL, D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
-	//	Igor: soft particles
 
 	CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
 	float fValue = E.m_fSunShaftsIntensity;
 	//	TODO: add multiplication by sun color here
-	//if (fValue<0.0001) FlagSunShafts = 0;
 
 	//	TODO: DX10: Check if complete clear of _ALL_ rendertargets will increase
 	//	FPS. Make check for SLI configuration.
@@ -30,11 +25,8 @@ void	CRenderTarget::phase_scene_prepare	()
       else
          u_setrt	( Device.dwWidth,Device.dwHeight,rt_Position->pRT,NULL,NULL,rt_MSAADepth->pZRT );
       
-		//CHK_DX	( HW.pDevice->Clear	( 0L, NULL, D3DCLEAR_TARGET|D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
 		FLOAT ColorRGBA[4] = {0.0f, 0.0f, 0.0f, 0.0f};
 		HW.pContext->ClearRenderTargetView(rt_Position->pRT, ColorRGBA);
-		//HW.pContext->ClearRenderTargetView(rt_Normal->pRT, ColorRGBA);
-		//HW.pContext->ClearRenderTargetView(rt_Color->pRT, ColorRGBA);
       if( !RImplementation.o.dx10_msaa )
          HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D_CLEAR_DEPTH|D3D_CLEAR_STENCIL, 1.0f, 0);
       else
@@ -51,13 +43,11 @@ void	CRenderTarget::phase_scene_prepare	()
       if( !RImplementation.o.dx10_msaa )
       {
          u_setrt	( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB );
-         //CHK_DX	( HW.pDevice->Clear	( 0L, NULL, D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
          HW.pContext->ClearDepthStencilView(HW.pBaseZB, D3D_CLEAR_DEPTH|D3D_CLEAR_STENCIL, 1.0f, 0);
       }
       else
       {
          u_setrt	( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,rt_MSAADepth->pZRT );
-         //CHK_DX	( HW.pDevice->Clear	( 0L, NULL, D3DCLEAR_ZBUFFER|D3DCLEAR_STENCIL, 0x0, 1.0f, 0L) );
          HW.pContext->ClearDepthStencilView(rt_MSAADepth->pZRT, D3D_CLEAR_DEPTH|D3D_CLEAR_STENCIL, 1.0f, 0);
       }
 	}
@@ -85,7 +75,6 @@ void	CRenderTarget::phase_scene_begin	()
    {
    	if (RImplementation.o.albedo_wo)	u_setrt		(rt_Position, rt_Accumulator,	pZB);
 	   else								u_setrt		(rt_Position,	rt_Color,		pZB);
-	   //else								u_setrt		(rt_Position,	rt_Color, rt_Normal,		pZB);
    }
 
 	// Stencil - write 0x1 at pixel pos
@@ -102,8 +91,6 @@ void	CRenderTarget::disable_aniso		()
 {
 	// Disable ANISO
 	//	TODO: DX10: disable aniso here
-	//for (u32 i=0; i<HW.Caps.raster.dwStages; i++)
-	//	CHK_DX(HW.pDevice->SetSamplerState( i, D3DSAMP_MAXANISOTROPY, 1	));
 }
 
 // end
@@ -119,8 +106,6 @@ void	CRenderTarget::phase_scene_end		()
    else
       u_setrt								( rt_Color,	0,	0,	rt_MSAADepth->pZRT	);
 	RCache.set_CullMode					( CULL_NONE );
-	RCache.set_Stencil					(TRUE,D3DCMP_LESSEQUAL,0x01,0xff,0x00);	// stencil should be >= 1
-	if (RImplementation.o.nvstencil)	u_stencil_optimize	(CRenderTarget::SO_Combine);
 	RCache.set_Stencil					(TRUE,D3DCMP_LESSEQUAL,0x01,0xff,0x00);	// stencil should be >= 1
 	RCache.set_ColorWriteEnable			();
 
@@ -142,7 +127,6 @@ void	CRenderTarget::phase_scene_end		()
 	pv->set						(float(_w+EPS),	EPS,			d_Z,	d_W, C, p1.x, p0.y);	pv++;
 	RCache.Vertex.Unlock		(4,g_combine->vb_stride);
 
-	// if (stencil>=1 && aref_pass)	stencil = light_id
 	RCache.set_Element			(s_accum_mask->E[SE_MASK_ALBEDO]);		// masker
 	RCache.set_Geometry			(g_combine);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);

@@ -67,11 +67,11 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 		objects().save			(stream);
 		registry().save			(stream);
 
-		source_count			= stream.tell();
+		source_count			= (u32)stream.tell();
 		void					*source_data = stream.pointer();
 		dest_count				= rtc_csize(source_count);
 		dest_data				= xr_malloc(dest_count);
-		dest_count				= rtc_compress(dest_data,dest_count,source_data,source_count);
+		dest_count				= (u32)rtc_compress(dest_data,dest_count,source_data,source_count);
 	}
 
 	string_path					temp;
@@ -168,7 +168,8 @@ bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
 	strconcat					(sizeof(temp),temp,CStringTable().translate("st_loading_saved_game").c_str()," \"",save_name,SAVE_EXTENSION,"\"");
 
 	pApp->SetLoadStageTitle(temp);
-	pApp->LoadStage();
+	//pApp->LoadStage();
+    g_pGamePersistent->LoadTitle();
 
 	unload						();
 	reload						(m_section);

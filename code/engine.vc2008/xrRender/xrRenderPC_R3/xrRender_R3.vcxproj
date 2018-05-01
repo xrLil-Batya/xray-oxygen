@@ -288,7 +288,6 @@
     <ClInclude Include="..\xrRender\HOM.h" />
     <ClInclude Include="..\xrRender\occRasterizer.h" />
     <ClInclude Include="r3_rendertarget.h" />
-    <ClInclude Include="r3_rendertarget_wallmarks.h" />
     <ClInclude Include="..\xrRender\ColorMapManager.h" />
     <ClInclude Include="..\xrRender\HW.h" />
     <ClInclude Include="..\xrRender\HWCaps.h" />

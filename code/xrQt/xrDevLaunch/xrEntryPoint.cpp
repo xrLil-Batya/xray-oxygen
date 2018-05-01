@@ -7,10 +7,10 @@
 * int main()
 *************************************************/
 #include "xrMain.h"
+#ifdef __cplusplus
 /***********************************************
 entry-point for application.
 ***********************************************/
-#ifdef __cplusplus
 int WINAPI main(int argc,
 				char *argv[])
 {
@@ -22,16 +22,17 @@ int WINAPI main(int argc,
 }
 #else
 {
-
-	int main();
-	int main()
+	extern "C"
 	{
-		const char* err			= "Visual C compiler doesn't supported by xrDevLaunch";
-		printf					(err);
-		Sleep					(2500);
-		return 0;
+		int main();
+		int main()
+		{
+			const char* err		= "Visual C compiler doesn't supported by xrDevLaunch";
+			printf(err);
+			Sleep(2500);
+			return 0;
+		}
+
 	}
-
-
 }
 #endif

@@ -326,7 +326,7 @@ void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
 			m_owner->SendTo_LL(client->ID, m_data, m_size, m_dwFlags);			
 		}
 	};
-	ClientSenderFunctor temp_functor(this, P.B.data, P.B.count, dwFlags);
+	ClientSenderFunctor temp_functor(this, P.B.data, (u32)P.B.count, dwFlags);
 	net_players.ForFoundClientsDo(ClientExcluderPredicate(exclude), temp_functor);
 }
 //--------------------------------------------------------------------

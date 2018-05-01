@@ -18,18 +18,25 @@ namespace
 	// For render call
 	//pZNearVar = pEffect->GetVariableByName("ZNear")->AsScalar();
 	shared_str	strZNear("ZNear");
+
 	//pZFarVar = pEffect->GetVariableByName("ZFar")->AsScalar();
 	shared_str	strZFar("ZFar");
+
 	//pGridScaleFactorVar = pEffect->GetVariableByName( "gridScaleFactor")->AsScalar();
 	shared_str	strGridScaleFactor("gridScaleFactor");
+
 	//pEyeOnGridVar = pEffect->GetVariableByName("eyeOnGrid")->AsVector();
 	shared_str	strEyeOnGrid("eyeOnGrid");
+
 	//pWorldViewProjectionVar = pEffect->GetVariableByName("WorldViewProjection")->AsMatrix();
 	shared_str	strWorldViewProjection("WorldViewProjection");
+
 	//pInvWorldViewProjectionVar = pEffect->GetVariableByName("InvWorldViewProjection")->AsMatrix();
 	shared_str	strInvWorldViewProjection("InvWorldViewProjection");
+
 	//pRTWidthVar = pEffect->GetVariableByName("RTWidth")->AsScalar();
 	shared_str	strRTWidth("RTWidth");
+
 	//pRTHeightVar = pEffect->GetVariableByName("RTHeight")->AsScalar();
 	shared_str	strRTHeight("RTHeight");
 
@@ -83,13 +90,12 @@ void dx103DFluidRenderer::Initialize(int gridWidth, int gridHeight, int gridDept
 		D3DXMATRIX scaleM;
 		D3DXMatrixIdentity(&scaleM);
 		D3DXMatrixScaling(&scaleM, m_vGridDim[0] / m_fMaxDim, m_vGridDim[1] / m_fMaxDim, m_vGridDim[2] / m_fMaxDim);
+
 		// offset grid to be centered at origin
 		D3DXMATRIX translationM;
 		D3DXMatrixTranslation(&translationM, -0.5, -0.5, -0.5);
 
 		m_gridMatrix = translationM * scaleM;
-		//m_gridMatrix.scale(m_vGridDim[0] / m_fMaxDim, m_vGridDim[1] / m_fMaxDim, m_vGridDim[2] / m_fMaxDim);
-		//m_gridMatrix.translate_over(-0.5, -0.5, -0.5);
 	}
 
 	InitShaders();
@@ -165,22 +171,10 @@ void dx103DFluidRenderer::CreateGridBox ()
 	};
 	m_iGridBoxVertNum = sizeof(vertices)/sizeof(vertices[0]);
 
-	//D3D_BUFFER_DESC bd;
-	//bd.Usage = D3D_USAGE_DEFAULT;
-	//bd.ByteWidth = sizeof(vertices);
-	//bd.BindFlags = D3Dxx_BIND_VERTEX_BUFFER;
-	//bd.CPUAccessFlags = 0;
-	//bd.MiscFlags = 0;
-	//D3Dxx_SUBRESOURCE_DATA InitData;
-	//InitData.pSysMem = vertices;
-	//V_RETURN( m_pD3DDevice->CreateBuffer( &bd, &InitData, &pGridBoxVertexBuffer ) );
-
 	CHK_DX(dx10BufferUtils::CreateVertexBuffer(&m_pGridBoxVertexBuffer, vertices, sizeof(vertices)));
 
 
 	// Create index buffer
-	//DWORD indices[] =
-	//DWORD indices[] =
 	u16 indices[] =
 	{
 		0, 4, 1, 1, 4, 5,
@@ -192,23 +186,10 @@ void dx103DFluidRenderer::CreateGridBox ()
 	};
 	m_iGridBoxFaceNum = (sizeof(indices)/sizeof(indices[0]))/3;
 
-	//bd.Usage = D3D_USAGE_DEFAULT;
-	//bd.ByteWidth = sizeof(indices);
-	//bd.BindFlags = D3Dxx_BIND_INDEX_BUFFER;
-	//bd.CPUAccessFlags = 0;
-	//bd.MiscFlags = 0;
-	//InitData.pSysMem = indices;
-	//V_RETURN( m_pD3DDevice->CreateBuffer( &bd, &InitData, &pGridBoxIndexBuffer ) );
-
 	CHK_DX(dx10BufferUtils::CreateIndexBuffer	(&m_pGridBoxIndexBuffer, indices, sizeof(indices)));
 	HW.stats_manager.increment_stats				(sizeof(indices), enum_stats_buffer_type_index, D3DPOOL_MANAGED);
 
 	// Define the input layout
-	//D3Dxx_INPUT_ELEMENT_DESC layout[] =
-	//{
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3Dxx_INPUT_PER_VERTEX_DATA, 0 },  
-	//};
-	//UINT numElements = sizeof(layout)/sizeof(layout[0]);
 	static D3DVERTEXELEMENT9 layout[] = 
 	{
 		{ 0, 0,		D3DDECLTYPE_FLOAT3,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,		0 },
@@ -216,32 +197,17 @@ void dx103DFluidRenderer::CreateGridBox ()
 	};
 
 	// Create the input layout
-	//D3Dxx_PASS_DESC PassDesc;
-	//pTechnique->GetPassByName("CompRayData_Back")->GetDesc( &PassDesc );
-	//V_RETURN( m_pD3DDevice->CreateInputLayout( layout, numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pGridBoxLayout ) );
-
 	m_GeomGridBox.create(layout, m_pGridBoxVertexBuffer, m_pGridBoxIndexBuffer);
 }
 
 void dx103DFluidRenderer::CreateScreenQuad() 
 {
 	// Create our quad input layout
-	//const D3Dxx_INPUT_ELEMENT_DESC quadlayout[] =
-	//{
-	//	{ "POSITION", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, 0, D3Dxx_INPUT_PER_VERTEX_DATA, 0 },
-	//};
-	//UINT numElements = sizeof(quadlayout)/sizeof(quadlayout[0]);
-
 	static D3DVERTEXELEMENT9 quadlayout[] = 
 	{
 		{ 0, 0,		D3DDECLTYPE_FLOAT3,		D3DDECLMETHOD_DEFAULT, 	D3DDECLUSAGE_POSITION,		0 },
 		D3DDECL_END()
 	};
-
-	// Create the input layout
-	//D3Dxx_PASS_DESC PassDesc;
-	//V_RETURN(pTechnique->GetPassByName("QuadRaycast")->GetDesc( &PassDesc ));
-	//V_RETURN( m_pD3DDevice->CreateInputLayout( quadlayout, numElements, PassDesc.pIAInputSignature, PassDesc.IAInputSignatureSize, &pQuadLayout ) );
 
 	// Create a screen quad for all render to texture operations
 	VsInput svQuad[4];
@@ -249,21 +215,6 @@ void dx103DFluidRenderer::CreateScreenQuad()
 	svQuad[1].pos = D3DXVECTOR3(1.0f, 1.0f, 0.0f );
 	svQuad[2].pos = D3DXVECTOR3(-1.0f, -1.0f, 0.0f );
 	svQuad[3].pos = D3DXVECTOR3(1.0f, -1.0f, 0.0f );
-
-	//D3D_BUFFER_DESC vbdesc =
-	//{
-	//	4*sizeof(VsInput),
-	//	D3D_USAGE_DEFAULT,
-	//	D3Dxx_BIND_VERTEX_BUFFER,
-	//	0,
-	//	0
-	//};
-
-	//D3Dxx_SUBRESOURCE_DATA InitData;
-	//InitData.pSysMem = svQuad;
-	//InitData.SysMemPitch = 0;
-	//InitData.SysMemSlicePitch = 0;
-	//V_RETURN( m_pD3DDevice->CreateBuffer( &vbdesc, &InitData, &pQuadVertexBuffer ) );
 
 	CHK_DX(dx10BufferUtils::CreateVertexBuffer(&m_pQuadVertexBuffer, svQuad, sizeof(svQuad)));
 	m_GeomQuadVertex.create(quadlayout, m_pQuadVertexBuffer, 0);
@@ -282,11 +233,9 @@ void dx103DFluidRenderer::CreateJitterTexture()
 	desc.Height = 256;
 	desc.MipLevels = 1;
 	desc.ArraySize = 1;
-	//desc.Format = DXGI_FORMAT_R8_TYPELESS;
 	desc.Format = DXGI_FORMAT_R8_UNORM;
 	desc.SampleDesc.Count = 1;
 	desc.SampleDesc.Quality = 0;
-	//desc.Usage = D3D_USAGE_IMMUTABLE;
 #ifdef USE_DX11
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -303,30 +252,14 @@ void dx103DFluidRenderer::CreateJitterTexture()
 	dataDesc.SysMemPitch = 256;
 
 	ID3DTexture2D* NoiseTexture = NULL;
-	//ID3DxxShaderResourceView* JitterTextureSRV = NULL;
 
 	CHK_DX( HW.pDevice->CreateTexture2D(&desc, &dataDesc, &NoiseTexture));
-
-	//( m_pD3DDevice->CreateTexture2D(&desc, &dataDesc, &NoiseTexture) );
-
-	// Create the shader resource view for jittering
-	//D3Dxx_SHADER_RESOURCE_VIEW_DESC descSRV;
-
-	//ZeroMemory( &descSRV, sizeof(descSRV) );
-	//descSRV.Format = DXGI_FORMAT_R8_UNORM;
-	//descSRV.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
-	//descSRV.Texture2D.MipLevels = 1;
-	//descSRV.Texture2D.MostDetailedMip = 0;
-
-	//V( m_pD3DDevice->CreateShaderResourceView( NoiseTexture, &descSRV, &JitterTextureSRV ) );
-	//pEffect->GetVariableByName("jitterTex")->AsShaderResource() -> SetResource (JitterTextureSRV);
 
 	m_JitterTexture = dxRenderDeviceRender::Instance().Resources->_CreateTexture("$user$NVjitterTex");
 	m_JitterTexture->surface_set(NoiseTexture);
 
 
 	_RELEASE(NoiseTexture);
-	//SAFE_RELEASE(JitterTextureSRV);
 }
 
 namespace
@@ -375,17 +308,9 @@ namespace
 
 void dx103DFluidRenderer::CreateHHGGTexture()
 {
-//	static const int iNumSamples = 256;
 	static const int iNumSamples = 16;
-//	static const int iNumSamples = 1;
 	float data[4*iNumSamples];
 	D3DXFLOAT16 converted[4*iNumSamples];
-
-//	Fvector4 mmin;
-//	Fvector4 mmax;
-
-//	mmin.set(10000, 10000, 10000, 10000);
-//	mmax.set(-10000, -10000, -10000, -10000);
 
 	for (int i = 0; i < iNumSamples; i++)
 	{
@@ -394,12 +319,6 @@ void dx103DFluidRenderer::CreateHHGGTexture()
 		data[4*i+1] = h1texels(a);
 		data[4*i+2] = 1.0f-g0(a);
 		data[4*i+3] = g0(a);
-
-//		for ( int j=0; j < 4; ++j )
-//		{
-//			mmin[j] = _min(mmin[j], data[4*i+j]);
-//			mmax[j] = _max(mmax[j], data[4*i+j]);
-//		}
 	}
 
 	//	Min value is -1
@@ -411,9 +330,7 @@ void dx103DFluidRenderer::CreateHHGGTexture()
 	desc.Width = iNumSamples;
 	desc.MipLevels = 1;
 	desc.ArraySize = 1;
-	//desc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 	desc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
-	//desc.Usage = D3D_USAGE_IMMUTABLE;
 #ifdef USE_DX11
 	desc.Usage = D3D11_USAGE_DEFAULT;
 	desc.BindFlags = D3D11_BIND_SHADER_RESOURCE;
@@ -425,8 +342,6 @@ void dx103DFluidRenderer::CreateHHGGTexture()
 	desc.MiscFlags = 0;
 
 	D3D_SUBRESOURCE_DATA dataDesc;
-	//dataDesc.pSysMem = data;
-	//dataDesc.SysMemPitch = sizeof(data);
 	dataDesc.pSysMem = converted;
 	dataDesc.SysMemPitch = sizeof(converted);
 
@@ -474,76 +389,8 @@ void dx103DFluidRenderer::CalculateRenderTextureSize(int screenWidth, int screen
 
 void dx103DFluidRenderer::CreateRayDataResources( int width, int height )
 {
-
-//	SAFE_RELEASE(pRayDataTex2D);
-//	SAFE_RELEASE(pRayDataSRV);
-//	SAFE_RELEASE(pRayDataRTV);
-//	SAFE_RELEASE(pRayDataSmallTex2D);
-//	SAFE_RELEASE(pRayDataSmallSRV);
-//	SAFE_RELEASE(pRayDataSmallRTV);
-//	SAFE_RELEASE(pRayCastTex2D);
-//	SAFE_RELEASE(pRayCastSRV);
-//	SAFE_RELEASE(pRayCastRTV);
-//	SAFE_RELEASE(pEdgeTex2D);
-//	SAFE_RELEASE(pEdgeSRV);
-//	SAFE_RELEASE(pEdgeRTV);
-
-	
 	// find a good resolution for raycasting purposes
 	CalculateRenderTextureSize(width, height);
-/*
-	DXGI_FORMAT volumeDataFmt = DXGI_FORMAT_R32G32B32A32_FLOAT;
-
-	D3D_TEXTURE2D_DESC desc;
-	desc.ArraySize = 1;
-	desc.BindFlags = D3D_BIND_SHADER_RESOURCE | D3Dxx_BIND_RENDER_TARGET;
-	desc.CPUAccessFlags = 0;
-	desc.MipLevels = 1;
-	desc.MiscFlags = 0;
-	desc.SampleDesc.Count = 1;
-	desc.SampleDesc.Quality = 0;
-	desc.Usage = D3D_USAGE_DEFAULT;
-	desc.Width = width;
-	desc.Height = height;
-	desc.Format = volumeDataFmt;
-	V_RETURN(m_pD3DDevice->CreateTexture2D(&desc,NULL,&pRayDataTex2D));
-
-	desc.Width = m_iRenderTextureWidth;
-	desc.Height = m_iRenderTextureHeight;
-	V_RETURN(m_pD3DDevice->CreateTexture2D(&desc,NULL,&pRayDataSmallTex2D));
-	V_RETURN(m_pD3DDevice->CreateTexture2D(&desc,NULL,&pRayCastTex2D));
-
-	desc.Format = DXGI_FORMAT_R32_FLOAT;
-	V_RETURN(m_pD3DDevice->CreateTexture2D(&desc,NULL,&pEdgeTex2D));
-
-	D3Dxx_RENDER_TARGET_VIEW_DESC DescRT;
-	DescRT.Format = volumeDataFmt;
-	DescRT.ViewDimension = D3D_RTV_DIMENSION_TEXTURE2D;
-	DescRT.Texture2D.MipSlice = 0;
-	V_RETURN( m_pD3DDevice->CreateRenderTargetView(pRayDataTex2D, &DescRT, &pRayDataRTV));
-	V_RETURN( m_pD3DDevice->CreateRenderTargetView(pRayDataSmallTex2D, &DescRT, &pRayDataSmallRTV));
-	V_RETURN( m_pD3DDevice->CreateRenderTargetView(pRayCastTex2D, &DescRT, &pRayCastRTV));
-	DescRT.Format = DXGI_FORMAT_R32_FLOAT;
-	V_RETURN( m_pD3DDevice->CreateRenderTargetView(pEdgeTex2D, &DescRT, &pEdgeRTV));
-
-	D3Dxx_SHADER_RESOURCE_VIEW_DESC SRVDesc;
-	ZeroMemory( &SRVDesc, sizeof(SRVDesc) );
-	SRVDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
-	SRVDesc.Texture2D.MostDetailedMip = 0;
-	SRVDesc.Texture2D.MipLevels = 1;
-	SRVDesc.Format = volumeDataFmt;
-	V_RETURN(m_pD3DDevice->CreateShaderResourceView(pRayDataTex2D, &SRVDesc, &pRayDataSRV));
-	V_RETURN(m_pD3DDevice->CreateShaderResourceView(pRayDataSmallTex2D, &SRVDesc, &pRayDataSmallSRV));
-	V_RETURN(m_pD3DDevice->CreateShaderResourceView(pRayCastTex2D, &SRVDesc, &pRayCastSRV));
-	SRVDesc.Format = DXGI_FORMAT_R32_FLOAT;
-	V_RETURN(m_pD3DDevice->CreateShaderResourceView(pEdgeTex2D, &SRVDesc, &pEdgeSRV));
-
-
-	pRayDataVar = pEffect->GetVariableByName("rayDataTex")->AsShaderResource();
-	pRayDataSmallVar = pEffect->GetVariableByName("rayDataTexSmall")->AsShaderResource();
-	pRayCastVar = pEffect->GetVariableByName("rayCastTex")->AsShaderResource();
-	pEdgeVar    = pEffect->GetVariableByName("edgeTex")->AsShaderResource();
-	*/
 
 	RT[0] = 0;
 	RT[0].create( m_pRTNames[0], width, height, RTFormats[0]);
@@ -572,8 +419,6 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 
 	RCache.set_xform_world( transform );
 
-	//pColorTexVar->SetResource(pSourceTexSRV);
-
 	//	Set shader element to set up all necessary constants to constant buffer
 	//	If you change constant buffer layout make sure this hack works ok.
 	RCache.set_Element(m_RendererTechnique[RS_CompRayData_Back]);
@@ -582,94 +427,47 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 	//=========================================================================
 
 	// The near and far planes are used to unproject the scene's z-buffer values
-	//pZNearVar->SetFloat(g_zNear);
 	RCache.set_c(strZNear, VIEWPORT_NEAR);
-	//pZFarVar->SetFloat(g_zFar);
 	RCache.set_c(strZFar, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 
-	//D3DXMATRIX worldView = g_gridWorld * g_View;
 	D3DXMATRIX gridWorld;
-	//D3DXMatrixTranspose(&gridWorld, (D3DXMATRIX*)&transform);
 	gridWorld = *(D3DXMATRIX*)&transform;
 	D3DXMATRIX View;
-	//D3DXMatrixTranspose(&View, (D3DXMATRIX*)&RCache.xforms.m_v);
 	View = *(D3DXMATRIX*)&RCache.xforms.m_v;
 	D3DXMATRIX WorldView = gridWorld * View;
 
-	//	Modified later
-	//Fmatrix	WorldView = RCache.xforms.m_wv;
-	//RCache.set_xform_world( transform );
-
 	// The length of one of the axis of the worldView matrix is the length of longest side of the box
 	//  in view space. This is used to convert the length of a ray from view space to grid space.
-	//D3DXVECTOR3 worldXaxis = D3DXVECTOR3(worldView._11, worldView._12, worldView._13);
 	D3DXVECTOR3 worldXaxis = D3DXVECTOR3(WorldView._11, WorldView._12, WorldView._13);
 	float worldScale = D3DXVec3Length(&worldXaxis);
-	//pGridScaleFactorVar->SetFloat( worldScale );
 	RCache.set_c(strGridScaleFactor, worldScale);
 
 	// We prepend the current world matrix with this other matrix which adds an offset (-0.5, -0.5, -0.5)
 	//  and scale factors to account for unequal number of voxels on different sides of the volume box. 
 	// This is because we want to preserve the aspect ratio of the original simulation grid when 
 	//  raytracing through it.
-	//worldView = m_gridMatrix * worldView;
 	WorldView = m_gridMatrix * WorldView;
-	//WorldView.mulB_44(m_gridMatrix);
-
-//	Fmatrix temp;
-//	temp = transform;
-//	temp.mulB_44(m_gridMatrix);
-
-//	RCache.set_xform_world( temp );
-//	return;
 	
-
 	// worldViewProjection is used to transform the volume box to screen space
-	//D3DXMATRIX WorldViewProjection;
 	D3DXMATRIX WorldViewProjection;
-	//Fmatrix WorldViewProjection;
-	//worldViewProjection = worldView * g_Projection;
 	D3DXMATRIX Projection;
-	//D3DXMatrixTranspose(&Projection, (D3DXMATRIX*)&RCache.xforms.m_p);
 	Projection = *(D3DXMATRIX*)&RCache.xforms.m_p;
 	WorldViewProjection = WorldView * Projection;
-	//WorldViewProjection.mul(RCache.xforms.m_p, WorldView);
-	//pWorldViewProjectionVar->SetMatrix( (float*)&worldViewProjection );
-	//	NVidia used different matrix orientation
-	//WorldViewProjection.transpose();
-	//RCache.set_c(strWorldViewProjection, WorldViewProjection);
 	RCache.set_c(strWorldViewProjection, *(Fmatrix*)&WorldViewProjection);
-	//WorldViewProjection.transpose();
 
 	// invWorldViewProjection is used to transform positions in the "near" plane into grid space
-	//D3DXMATRIX invWorldViewProjection;
 	D3DXMATRIX InvWorldViewProjection;
-	//Fmatrix InvWorldViewProjection;
-	//WorldViewProjection.transpose();
 	D3DXMatrixInverse((D3DXMATRIX*)&InvWorldViewProjection, NULL, (D3DXMATRIX*)&WorldViewProjection);
-	//WorldViewProjection.transpose();
-	//pInvWorldViewProjectionVar->SetMatrix((float*)&invWorldViewProjection);
-	//InvWorldViewProjection.transpose();
-	//RCache.set_c(strInvWorldViewProjection, InvWorldViewProjection);
 	RCache.set_c(strInvWorldViewProjection, *(Fmatrix*)&InvWorldViewProjection);
-	//InvWorldViewProjection.transpose();
 
-	// Compute the inverse of the worldView matrix 
-	//D3DXMATRIX worldViewInv;
+	// Compute the inverse of the worldView matrix ;
 	D3DXMATRIX WorldViewInv;
-	//Fmatrix WorldViewInv;
 	D3DXMatrixInverse((D3DXMATRIX*)&WorldViewInv, NULL, (D3DXMATRIX*)&WorldView);
+
 	// Compute the eye's position in "grid space" (the 0-1 texture coordinate cube)
-	//D3DXVECTOR4 eyeInGridSpace;
-	//D3DXVECTOR3 origin(0,0,0);
 	D3DXVECTOR4 EyeInGridSpace;
 	D3DXVECTOR3 Origin(0,0,0);
-	//Fvector4 EyeInGridSpace;
-	//Fvector3 Origin = Fvector3().set(0,0,0);
-	//WorldViewInv.transpose();
 	D3DXVec3Transform((D3DXVECTOR4*)&EyeInGridSpace, (D3DXVECTOR3*)&Origin, (D3DXMATRIX*)&WorldViewInv);
-	//WorldViewInv.transpose();
-	//pEyeOnGridVar->SetFloatVector((float*)&eyeInGridSpace);
 	RCache.set_c(strEyeOnGrid, *(Fvector4*)&EyeInGridSpace);
 
 	float color[4] = {0, 0, 0, 0 };
@@ -700,29 +498,19 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 
 	// Raycast into the temporary render target: 
 	//  raycasting is done at the smaller resolution, using a fullscreen quad
-	//m_pD3DDevice->ClearRenderTargetView( pRayCastRTV, color );
 	HW.pContext->ClearRenderTargetView( RT[RRT_RayCastTex]->pRT, color );
-	//m_pD3DDevice->OMSetRenderTargets( 1, &pRayCastRTV , NULL ); 
 	CRenderTarget* pTarget = RImplementation.Target;
 	pTarget->u_setrt(RT[RRT_RayCastTex],0,0,0);		// LDR RT
 
-	//rtViewport.Width = renderTextureWidth;
-	//rtViewport.Height = renderTextureHeight;
-	//m_pD3DDevice->RSSetViewports(1,&rtViewport);
 	RImplementation.rmNormal();
 
-	//pTechnique->GetPassByName("QuadRaycast")->Apply(0);
 	if (bRenderFire)
 		RCache.set_Element(m_RendererTechnique[RS_QuadRaycastFire]);
 	else
 		RCache.set_Element(m_RendererTechnique[RS_QuadRaycastFog]);
 
-	//pRTWidthVar->SetFloat((float)renderTextureWidth);
 	RCache.set_c(strRTWidth, (float)m_iRenderTextureWidth);
-	//pRTHeightVar->SetFloat((float)renderTextureHeight);
 	RCache.set_c(strRTHeight, (float)m_iRenderTextureHeight);
-
-	//pRayDataSmallVar->SetResource(pRayDataSmallSRV);
 
 	DrawScreenQuad();
 
@@ -744,22 +532,13 @@ void dx103DFluidRenderer::Draw(const dx103DFluidData &FluidData)
 	else
 		RCache.set_Element(m_RendererTechnique[RS_QuadRaycastCopyFog]);
 
-	//rtViewport.Width = g_Width;
-	//rtViewport.Height = g_Height;
-	//m_pD3DDevice->RSSetViewports(1,&rtViewport);
 	RImplementation.rmNormal();
 
-	//pRTWidthVar->SetFloat((float)g_Width);
 	RCache.set_c(strRTWidth, (float)Device.dwWidth);
-	//pRTHeightVar->SetFloat((float)g_Height);
 	RCache.set_c(strRTHeight, (float)Device.dwHeight);
 
 	RCache.set_c(strDiffuseLight, LightData.m_vLightIntencity.x, LightData.m_vLightIntencity.y, LightData.m_vLightIntencity.z, 1.0f);
 
-	//pRayCastVar->SetResource(pRayCastSRV);
-	//pEdgeVar->SetResource(pEdgeSRV);
-
-	//pTechnique->GetPassByName("QuadRaycastCopy")->Apply(0);
 	DrawScreenQuad();
 }
 
@@ -767,12 +546,9 @@ void dx103DFluidRenderer::ComputeRayData()
 {
 	// Clear the color buffer to 0
 	float blackColor[4] = {0, 0, 0, 0 };
-	//m_pD3DDevice->ClearRenderTargetView(pRayDataRTV, blackColor);
 	HW.pContext->ClearRenderTargetView( RT[RRT_RayDataTex]->pRT, blackColor );
-	//m_pD3DDevice->OMSetRenderTargets(1, &pRayDataRTV, NULL);
 	CRenderTarget* pTarget = RImplementation.Target;
 	pTarget->u_setrt(RT[RRT_RayDataTex],0,0,0);		// LDR RT
-	//pEffect->GetVariableByName("sceneDepthTex")->AsShaderResource()->SetResource(g_pSceneDepthSRV);
 	RCache.set_Element(m_RendererTechnique[RS_CompRayData_Back]);
 
 	// Setup viewport to match the window's backbuffer
@@ -783,11 +559,8 @@ void dx103DFluidRenderer::ComputeRayData()
 	//rtViewport.MaxDepth = 1;
 	//rtViewport.Width = g_Width;
 	//rtViewport.Height = g_Height;
-	//m_pD3DDevice->RSSetViewports(1,&rtViewport);
 	RImplementation.rmNormal();
-	//pRTWidthVar->SetFloat((float)g_Width);
 	RCache.set_c(strRTWidth, (float)Device.dwWidth);
-	//pRTHeightVar->SetFloat((float)g_Height);
 	RCache.set_c(strRTHeight, (float)Device.dwHeight);
 
 	// Render volume back faces
@@ -801,7 +574,6 @@ void dx103DFluidRenderer::ComputeRayData()
 	//m_pD3DDevice->OMSetRenderTargets(1, &pRayDataRTV, NULL);
 	pTarget->u_setrt(RT[RRT_RayDataTex],0,0,0);		// LDR RT
 	RCache.set_Element(m_RendererTechnique[RS_CompRayData_Front]);
-	//pTechnique->GetPassByName("CompRayData_Front")->Apply(0);
 	DrawBox();
 
 }
@@ -836,35 +608,17 @@ void dx103DFluidRenderer::ComputeEdgeTexture()
 	// Create an edge texture, performing edge detection on 'rayDataTexSmall'
 	pTarget->u_setrt(RT[RRT_EdgeTex],0,0,0);		// LDR RT
 	RCache.set_Element(m_RendererTechnique[RS_QuadEdgeDetect]);
-	//m_pD3DDevice->OMSetRenderTargets( 1, &pEdgeRTV , NULL ); 
-	//pRayDataSmallVar->SetResource(pRayDataSmallSRV);
-	//pTechnique->GetPassByName("QuadEdgeDetect")->Apply(0);
 	DrawScreenQuad();
 }
 
 void dx103DFluidRenderer::DrawScreenQuad()
 {
-	//UINT strides = sizeof(VsInput);
-	//UINT offsets = 0;
-	//m_pD3DDevice->IASetInputLayout( pQuadLayout );
-	//m_pD3DDevice->IASetVertexBuffers( 0, 1, &pQuadVertexBuffer, &strides, &offsets );
-	//m_pD3DDevice->IASetPrimitiveTopology( D3Dxx_PRIMITIVE_TOPOLOGY_TRIANGLESTRIP );
-	//m_pD3DDevice->Draw( 4, 0 );
-
 	RCache.set_Geometry(m_GeomQuadVertex);
 	RCache.Render( D3DPT_TRIANGLESTRIP, 0, 2);
 }
 
 void dx103DFluidRenderer::DrawBox()
 {
-//	UINT stride = sizeof( VsInput );
-//	UINT offset = 0;
-//	m_pD3DDevice->IASetVertexBuffers( 0, 1, &pGridBoxVertexBuffer, &stride, &offset );
-//	m_pD3DDevice->IASetIndexBuffer( pGridBoxIndexBuffer, DXGI_FORMAT_R32_UINT, 0 );
-//	m_pD3DDevice->IASetPrimitiveTopology( D3Dxx_PRIMITIVE_TOPOLOGY_TRIANGLELIST );
-//	m_pD3DDevice->IASetInputLayout(pGridBoxLayout);
-//	m_pD3DDevice->DrawIndexed(36, 0, 0);
-
 	RCache.set_Geometry(m_GeomGridBox);
 	RCache.Render( D3DPT_TRIANGLELIST, 0, 0, m_iGridBoxVertNum ,0, m_iGridBoxFaceNum);
 }
@@ -878,7 +632,6 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 	const dx103DFluidData::Settings &VolumeSettings = FluidData.GetSettings();
 
 	Fvector4 hemi_color = g_pGamePersistent->Environment().CurrentEnv->hemi_color;
-	//hemi_color.mul(0.2f);
 	hemi_color.mul(VolumeSettings.m_fHemi);
 	LightData.m_vLightIntencity.set(hemi_color.x, hemi_color.y, hemi_color.z);
 	LightData.m_vLightIntencity.add(g_pGamePersistent->Environment().CurrentEnv->ambient);
@@ -899,7 +652,7 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 	g_SpatialSpace->q_box
 		(
 		m_lstRenderables,
-		0, //ISpatial_DB::O_ORDERED,
+		0,
 		STYPE_LIGHTSOURCE,
 		center,
 		size
@@ -927,11 +680,6 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 
 		LightIntencity.set(pLight->color.r, pLight->color.g, pLight->color.b);
 
-		//LightIntencity.mul(0.5f);
-
-		//if (!pLight->flags.bStatic)
-		//	LightIntencity.mul(0.5f);
-
 		float	r	=	pLight->range;
 		float	a	=	clampr(1.f - d/(r+EPS),0.f,1.f)*(pLight->flags.bStatic?1.f:2.f);
 
@@ -939,7 +687,4 @@ void dx103DFluidRenderer::CalculateLighting(const dx103DFluidData &FluidData, Fo
 
 		LightData.m_vLightIntencity.add(LightIntencity);
 	}
-
-	//LightData.m_vLightIntencity.set( 1.0f, 0.5f, 0.0f);
-	//LightData.m_vLightIntencity.set( 1.0f, 1.0f, 1.0f);
 }

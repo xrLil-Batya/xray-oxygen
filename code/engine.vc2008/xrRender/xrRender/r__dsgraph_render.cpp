@@ -15,7 +15,7 @@ extern float		r_ssaDONTSORT;
 extern float		r_ssaHZBvsTEX;
 extern float		r_ssaGLOD_start,	r_ssaGLOD_end;
 
-ICF float calcLOD	(float ssa/*fDistSq*/, float R)
+ICF float calcLOD	(float ssa, float R)
 {
 	return			_sqrt(clampr((ssa - r_ssaGLOD_end)/(r_ssaGLOD_start-r_ssaGLOD_end),0.f,1.f));
 }
@@ -531,7 +531,7 @@ void R_dsgraph_structure::r_dsgraph_render_hud_ui()
 	const ref_rt	rt_null;
 	RCache.set_RT(0,	1);
 	RCache.set_RT(0,	2);
-#if	(!RENDER==R_R2)
+#if	(RENDER!=R_R2)
 	if( !RImplementation.o.dx10_msaa )
 	{
 		if (RImplementation.o.albedo_wo)	RImplementation.Target->u_setrt		(RImplementation.Target->rt_Accumulator,	rt_null,	rt_null,	HW.pBaseZB);

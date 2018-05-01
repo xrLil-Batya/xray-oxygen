@@ -833,7 +833,7 @@ bool CWeaponMagazinedWGrenade::GetBriefInfo( II_BriefInfo& info )
 
 	GetSuitableAmmoTotal();
 
-	u32 at_size = m_bGrenadeMode ? m_ammoTypes2.size() : m_ammoTypes.size();
+	size_t at_size = m_bGrenadeMode ? m_ammoTypes2.size() : m_ammoTypes.size();
 	if(unlimited_ammo() || at_size == 0)
 	{
 		info.fmj_ammo._set("--");

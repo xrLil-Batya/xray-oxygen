@@ -4,10 +4,6 @@
 
 class light;
 
-//#define DU_SPHERE_NUMVERTEX 92
-//#define DU_SPHERE_NUMFACES	180
-//#define DU_CONE_NUMVERTEX	18
-//#define DU_CONE_NUMFACES	32
 //	no less than 2
 #define	VOLUMETRIC_SLICES	100
 
@@ -98,8 +94,6 @@ public:
 	ref_rt						rt_smap_surf;	// 32bit,		color
 	ref_rt						rt_smap_depth;	// 24(32) bit,	depth 
 	ref_rt						rt_smap_depth_minmax;	//	is used for min/max sm
-//	TODO: DX10: CHeck if we need old-style SMAP
-//	IDirect3DSurface9*			rt_smap_ZB;		//
 
 	//	Igor: for async screenshots
 	ID3DTexture2D*			t_ss_async;				//32bit		(r,g,b,a) is situated in the system memory
@@ -233,11 +227,11 @@ public:
 	void						accum_omnip_geom_destroy();
 	void						accum_spot_geom_create	();
 	void						accum_spot_geom_destroy	();
+
 	//	Igor: used for volumetric lights
 	void						accum_volumetric_geom_create();
 	void						accum_volumetric_geom_destroy();
 
-	void						u_stencil_optimize		(eStencilOptimizeMode eSOM = SO_Light);
 	void						u_compute_texgen_screen	(Fmatrix&	dest);
 	void						u_compute_texgen_jitter	(Fmatrix&	dest);
 	void						u_setrt					(const ref_rt& _1, const ref_rt& _2, const ref_rt& _3, ID3DDepthStencilView* zb);
@@ -247,8 +241,6 @@ public:
 	void						u_calc_tc_duality_ss	(Fvector2& r0, Fvector2& r1, Fvector2& l0, Fvector2& l1);
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
-	BOOL						u_DBT_enable			(float zMin, float zMax);
-	void						u_DBT_disable			();
 
     void						phase_fxaa              ();	
 	void						phase_scene_prepare		();
@@ -279,7 +271,6 @@ public:
 	bool						use_minmax_sm_this_frame();
 
 	BOOL						enable_scissor			(light* L);		// true if intersects near plane
-	void						enable_dbt_bounds		(light* L);
 
 	void						disable_aniso			();
 

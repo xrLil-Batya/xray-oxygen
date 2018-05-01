@@ -77,16 +77,11 @@ void HUD_SOUND_ITEM::DestroySound(HUD_SOUND_ITEM& hud_snd)
 	hud_snd.m_activeSnd		= NULL;
 }
 
-void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
-								const Fvector&	position,
-								const CObject*	parent,
-								bool			b_hud_mode,
-								bool			looped,
-								u8 index)
+void HUD_SOUND_ITEM::PlaySound(HUD_SOUND_ITEM& hud_snd, const Fvector& position, const CObject* parent, bool b_hud_mode, bool looped, u8 index)
 {
 	if (hud_snd.sounds.empty())	return;
 
-	hud_snd.m_activeSnd			= NULL;
+	hud_snd.m_activeSnd			= nullptr;
 	StopSound					(hud_snd);
 
 	u32 flags = b_hud_mode?sm_2D:0;
@@ -94,30 +89,29 @@ void HUD_SOUND_ITEM::PlaySound(	HUD_SOUND_ITEM&		hud_snd,
 		flags |= sm_Looped;
 
 	if(index==u8(-1))
-		index = (u8)Random.randI(hud_snd.sounds.size());
+		index = (u8)Random.randI((u32)hud_snd.sounds.size());
 
 	hud_snd.m_activeSnd = &hud_snd.sounds[ index ];
 	
 
-	hud_snd.m_activeSnd->snd.play_at_pos(	const_cast<CObject*>(parent),
-											flags&sm_2D?Fvector().set(0,0,0):position,
-											flags,
-											hud_snd.m_activeSnd->delay);
-											// FX: The '?:' operator has a lower priority than the '*' operator.
-	hud_snd.m_activeSnd->snd.set_volume		(hud_snd.m_activeSnd->volume * (b_hud_mode? psHUDSoundVolume : 1.0f));
+	hud_snd.m_activeSnd->snd.play_at_pos(const_cast<CObject*>(parent), flags&sm_2D?Fvector().set(0,0,0):position, flags, hud_snd.m_activeSnd->delay);
+										
+										// FX: The '?:' operator has a lower priority than the '*' operator.
+	hud_snd.m_activeSnd->snd.set_volume(hud_snd.m_activeSnd->volume * (b_hud_mode? psHUDSoundVolume : 1.0f));
 }
 
 void HUD_SOUND_ITEM::StopSound(HUD_SOUND_ITEM& hud_snd)
 {
-	for(HUD_SOUND_ITEM::SSnd it : hud_snd.sounds)
-		it.snd.stop		();
-	hud_snd.m_activeSnd		= NULL;
+	for(HUD_SOUND_ITEM::SSnd &it : hud_snd.sounds)
+		it.snd.stop();
+
+	hud_snd.m_activeSnd	= nullptr;
 }
 
 //----------------------------------------------------------
 HUD_SOUND_COLLECTION::~HUD_SOUND_COLLECTION()
 {
-	for(auto it : m_sound_items)
+	for(HUD_SOUND_ITEM &it : m_sound_items)
 	{
 		HUD_SOUND_ITEM::StopSound		(it);
 		HUD_SOUND_ITEM::DestroySound	(it);

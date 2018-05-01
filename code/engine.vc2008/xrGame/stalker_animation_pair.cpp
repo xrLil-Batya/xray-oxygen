@@ -211,7 +211,7 @@ std::pair<LPCSTR,LPCSTR> *CStalkerAnimationPair::blend_id	(IKinematicsAnimated *
 void CStalkerAnimationPair::select_animation(const ANIM_VECTOR &array, const ANIMATION_WEIGHTS *weights)
 {
 	if (!weights) {
-		m_array_animation	= array[::Random.randI(array.size())];
+		m_array_animation	= array[::Random.randI((u32)array.size())];
 		VERIFY				(m_array_animation);
 		return;
 	}
@@ -220,7 +220,7 @@ void CStalkerAnimationPair::select_animation(const ANIM_VECTOR &array, const ANI
 	ANIMATION_WEIGHTS::const_iterator	I = weights->begin(), B = I;
 	ANIMATION_WEIGHTS::const_iterator	E = weights->end();
 	
-	u32						array_size = array.size();
+	size_t array_size = array.size();
 	if (array_size < weights->size())
 		E					= B + array_size;
 
@@ -266,7 +266,7 @@ void CStalkerAnimationPair::on_animation_end	()
 	if (m_callbacks.empty())
 		return;
 
-	u32							callback_count = m_callbacks.size();
+	size_t callback_count = m_callbacks.size();
 	typedef buffer_vector<CALLBACK_ID>	Callbacks;
 	Callbacks callbacks			(
 		_alloca(callback_count*sizeof(Callbacks::value_type)),

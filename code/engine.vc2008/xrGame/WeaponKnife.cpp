@@ -161,7 +161,7 @@ void CWeaponKnife::MakeShot(Fvector const & pos, Fvector const & dir, float cons
 	cartridge.bullet_material_idx	= knife_material_idx;
 
 	while(m_magazine.size() < 2)	m_magazine.push_back(cartridge);
-	iAmmoElapsed					= m_magazine.size();
+	iAmmoElapsed					= (u32)m_magazine.size();
 	bool SendHit					= SendHitAllowed(H_Parent());
 
 	PlaySound						("sndShot",pos);
@@ -269,7 +269,6 @@ void CWeaponKnife::FireStart()
 void CWeaponKnife::Fire2Start () 
 {
 	SwitchState(eFire2);
-    #pragma todo ("Giperion to ForserX: wtf is set_state_wishful")
 	if (ParentIsActor())
 		g_actor->set_state_wishful(g_actor->get_state_wishful() & (~mcSprint));
 }
@@ -446,7 +445,7 @@ u32 CWeaponKnife::get_entity_bones_count(CEntityAlive const * entity)
 	if (!tmp_accel)
 		return 0;
 
-	return tmp_accel->size();
+	return (u32)tmp_accel->size();
 };
 
 void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const & camera_endpos, victims_shapes_list_t & dest_shapes)

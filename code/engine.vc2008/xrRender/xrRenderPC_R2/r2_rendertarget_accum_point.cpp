@@ -30,7 +30,6 @@ void CRenderTarget::accum_point		(light* L)
 	// Common
 	Fvector		L_pos;
 	float		L_spec;
-	//float		L_R					= L->range;
 	float		L_R					= L->range*0.95f;
 	Fvector		L_clr;				L_clr.set		(L->color.r,L->color.g,L->color.b);
 	L_spec							= u_diffuse2s	(L_clr);
@@ -68,10 +67,6 @@ void CRenderTarget::accum_point		(light* L)
 	// Select shader (front or back-faces), *** back, if intersect near plane
 	RCache.set_ColorWriteEnable				();
 	RCache.set_CullMode						(CULL_CW);		// back
-	/*
-	if (bIntersect)	RCache.set_CullMode		(CULL_CW);		// back
-	else			RCache.set_CullMode		(CULL_CCW);		// front
-	*/
 
 	// 2D texgens 
 	Fmatrix			m_Texgen;			u_compute_texgen_screen	(m_Texgen	);
@@ -88,7 +83,6 @@ void CRenderTarget::accum_point		(light* L)
 			else					_id	= SE_L_NORMAL;
 		} else {
 			_id						= SE_L_UNSHADOWED;
-			//m_Shadow				= m_Lmap;
 		}
 		RCache.set_Element				(shader->E[ _id ]	);
 
@@ -126,7 +120,6 @@ void CRenderTarget::accum_point		(light* L)
 
 	CHK_DX		(HW.pDevice->SetRenderState(D3DRS_SCISSORTESTENABLE,FALSE));
 
-	//dwLightMarkerID					+=	2;	// keep lowest bit always setted up
 	increment_light_marker();
 
 	u_DBT_disable				();

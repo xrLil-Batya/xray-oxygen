@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 19 April, 2018
+* Edited: 28 April, 2018
 * xrMain.h - Main header for compilation with Qt
 * main namespace, classes and vars.
 *************************************************/
@@ -10,15 +10,20 @@
 #pragma once
 
 /////////////////////////////////////////
-#include "minimal_CPUID.h"
 #include "ui_xrMain.h"
 #include "ui_parametersdialog.h"
 #include "ui_aboutlauncher.h"
+#include "ui_xrSettings.h"
+#include "xrFS.h"
+#include "xrCPUID.h"
+#include "xrSettings.h"
+#include "xrException.h"
 #include "aboutlauncher.h"
-#include "stdio.h"
 #include "../../engine.vc2008/xrCore/xrCore.h"
 #include "../../engine.vc2008/xrCore/cpuid.h"
+
 /////////////////////////////////////////
+#include <stdio.h>
 #include <QMainWindow>
 #include <QPushButton>
 #include <windows.h>
@@ -28,10 +33,13 @@
 #include <QDialog>
 #include <QMessageBox>
 /////////////////////////////////////////
-#define INIT_ERROR		"Init error"
+#define INIT_ERROR		"Init error: "
 #define DLL_API			__declspec(dllimport)
 #define NOAWDA			1
-#define NOXRCORE_LOAD	1
+#define NOXRCORE_LOAD	1s
+#ifdef DEBUG
+#define LAUNCHER_DEBUG	1
+#endif
 #ifdef __cplusplus
 /////////////////////////////////////////
 typedef std::string		xrString;
@@ -47,6 +55,9 @@ static const xrQStringList LIST_ITEMS			= xrQStringList()
 << "-r2.5" 
 << "-r3" 
 << "-r4" 
+#ifdef DEBUG_LAUNCHER
+<< ""
+#endif
 /////////////////////////////////////////
 << "-renderdebug" 
 << "-nointro"
@@ -167,11 +178,16 @@ private slots:
     void on_actionParametres_triggered			();	
 	void on_actionVertver_Github_triggered		();
     void on_actionAbout_Oxygen_Team_triggered	();
+	void open_settings							();
+	void on_actionMain_parameters_triggered		();
+	void on_actionMain_triggered				();
+	void clean_buffers							();
+	void on_pushButton_2_clicked				();
     void on_listWidget_itemPressed				(QListWidgetItem *item);
     void on_listWidget_2_itemPressed			(QListWidgetItem *item);
 	void status_render							();
 	void add_stringToList						();
-	void add_paramsToList();
+	void add_paramsToList						();
 	void init_xrCore							();
 
 private:

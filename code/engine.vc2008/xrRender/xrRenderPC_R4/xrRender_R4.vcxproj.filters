@@ -396,9 +396,6 @@
     <ClInclude Include="r4_rendertarget.h">
       <Filter>Core_Target</Filter>
     </ClInclude>
-    <ClInclude Include="r4_rendertarget_wallmarks.h">
-      <Filter>Core_Target</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrRender\ColorMapManager.h">
       <Filter>Core_Target\ColorMap</Filter>
     </ClInclude>

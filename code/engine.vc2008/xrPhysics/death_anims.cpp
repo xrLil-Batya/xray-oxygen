@@ -2,10 +2,6 @@
 #include "death_anims.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 
-// #ifdef DEBUG
-// #include "../xrGame/entity_alive.h"
-// #endif
-
 BOOL death_anim_debug	 = FALSE;
 
 rnd_motion::rnd_motion	( )
@@ -150,11 +146,6 @@ MotionID death_anims::motion ( CEntityAlive& ea, const SHit& H, float &angle ) c
 		if((*i)->predicate( ea, H, m, angle ) && m.valid() )
 			return m;
 
-// #ifdef	DEBUG
-// 		if( death_anim_debug )
-// 			Msg(" death anims: obj: %s no conditions evaluated  returns random ", ea.cName().c_str() );
-// #endif
 	angle = 0;
 	return rnd_anims.motion();
 }
-

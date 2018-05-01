@@ -6,6 +6,7 @@
 #include "xrserver_objects_alife_monsters.h"
 #include "xrServer.h"
 #include "../xrEngine/CustomHUD.h"
+#include "../xrEngine/x_ray.h"
 #include "CameraLook.h"
 #include "CameraFirstEye.h"
 
@@ -429,8 +430,9 @@ void	CActor::net_Import_Physic_proceed	( )
 BOOL CActor::net_Spawn(CSE_Abstract* DC)
 {
 	// Alpet
-	g_pGamePersistent->SetLoadStageTitle("st_actor_netspawn");
-	g_pGamePersistent->LoadTitle();
+    //pApp->LoadBegin();
+// 	g_pGamePersistent->SetLoadStageTitle("st_actor_netspawn");
+// 	g_pGamePersistent->LoadTitle();
 	// End
 	
 	m_holder_id = ALife::_OBJECT_ID(-1);
@@ -572,6 +574,8 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	psHUD_Flags.set(HUD_WEAPON_RT, TRUE);
 	psHUD_Flags.set(HUD_WEAPON_RT2, TRUE);
 	
+    //pApp->LoadEnd();
+
 	return TRUE;
 }
 

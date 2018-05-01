@@ -1,5 +1,3 @@
-#ifndef	dx10ShaderResourceStateCache_included
-#define	dx10ShaderResourceStateCache_included
 #pragma once
 
 class dx10ShaderResourceStateCache
@@ -61,5 +59,3 @@ private:
 };
 
 extern	dx10ShaderResourceStateCache	SRVSManager;
-
-#endif	//	dx10ShaderResourceStateCache_included

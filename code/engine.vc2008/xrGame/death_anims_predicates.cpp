@@ -1,18 +1,15 @@
-#include	"stdafx.h"
-
-#include	"../xrPhysics/death_anims.h"
-
-#include	"actor.h"
-#include	"ai/stalker/ai_stalker.h"
-#include	"stalker_movement_manager_smart_cover.h"
-#include	"weaponshotgun.h"
-#include	"explosive.h"
-#include	"weaponmagazined.h"
-#include	"CharacterPhysicsSupport.h"
-#include	"../xrPhysics/animation_utils.h"
-#ifdef	DEBUG
-extern XRPHYSICS_API xr_token motion_dirs[];
-#endif
+#include "stdafx.h"
+		 
+#include "../xrPhysics/death_anims.h"
+		 
+#include "actor.h"
+#include "ai/stalker/ai_stalker.h"
+#include "stalker_movement_manager_smart_cover.h"
+#include "weaponshotgun.h"
+#include "explosive.h"
+#include "weaponmagazined.h"
+#include "CharacterPhysicsSupport.h"
+#include "../xrPhysics/animation_utils.h"
 
 Fvector& global_hit_position( Fvector &gp, CEntityAlive& ea, const SHit& H )
 {
@@ -23,83 +20,52 @@ Fvector& global_hit_position( Fvector &gp, CEntityAlive& ea, const SHit& H )
 	ea.XFORM().transform_tiny( gp );
 	return gp;
 }
-
-type_motion::edirection	type_motion::dir( CEntityAlive& ea, const SHit& H, float& angle  )
+#pragma warning(push)
+#pragma warning(disable: 4273)
+type_motion::edirection	type_motion::dir(CEntityAlive& ea, const SHit& H, float& angle)
 {
-	
 	Fvector dir = H.direction();
 	dir.y = 0;
 	float m = dir.magnitude();
-	if( fis_zero( m ) )
+	if (fis_zero(m))
 	{
 		edirection dr;
-		dr = (edirection) ::Random.randI( 0, (s32) not_definite );
-		VERIFY( dr < not_definite );
+		dr = (edirection) ::Random.randI(0, (s32)not_definite);
+		VERIFY(dr < not_definite);
 		return	dr;
 	}
-	dir.mul( 1.f / m );
+	dir.mul(1.f / m);
 
 	Fvector z_dir = { ea.XFORM().k.x, 0.f, ea.XFORM().k.z };
-	Fvector x_dir =  { ea.XFORM().i.x, 0.f, ea.XFORM().i.z };
-	z_dir.normalize_safe();x_dir.normalize_safe();
+	Fvector x_dir = { ea.XFORM().i.x, 0.f, ea.XFORM().i.z };
+	z_dir.normalize_safe(); x_dir.normalize_safe();
 
-	float front_factor	= dir.dotproduct( z_dir );
-	float sidefactor	= dir.dotproduct( x_dir );
+	float front_factor = dir.dotproduct(z_dir);
+	float sidefactor = dir.dotproduct(x_dir);
 
-	if( _abs( front_factor ) > M_SQRT1_2 )
+	if (_abs(front_factor) > M_SQRT1_2)
 	{
 		float sign = front_factor < 0.f ? -1.f : 1.f;
 
-		angle = atan2( -sign * sidefactor, sign * front_factor );	
+		angle = atan2(-sign * sidefactor, sign * front_factor);
 
 		return sign < 0.f ? front : back;
-	} 
+	}
 	else
 	{
 		float sign = sidefactor > 0.f ? 1.f : -1.f;
 
-		angle = atan2( sign * front_factor, sign * sidefactor );	
+		angle = atan2(sign * front_factor, sign * sidefactor);
 		return sign > 0.f ? left : right;
 	}
-
 }
 
-bool is_bone_head( IKinematics &K, u16 bone )
+inline bool is_bone_head(IKinematics &K, u16 bone)
 {
-	
-	const u16 head_bone = K.LL_BoneID( "bip01_head" ) ;
-	const u16 neck_bone = K.LL_BoneID( "bip01_neck" ) ;
-	return ( bone != BI_NONE ) && 
-			neck_bone == bone ||
-			find_in_parents( head_bone, bone, K );
-
+	const u16 head_bone = K.LL_BoneID("bip01_head");
+	const u16 neck_bone = K.LL_BoneID("bip01_neck");
+	return (bone != BI_NONE) && neck_bone == bone || find_in_parents(head_bone, bone, K);
 }
-
-void type_motion_diagnostic( LPCSTR message, type_motion::edirection dr, const CEntityAlive& ea, const SHit& H, const MotionID &m )
-{
-#ifdef DEBUG
-
-	if(! death_anim_debug )
-		return;
-	
-	IKinematicsAnimated *KA = smart_cast<IKinematicsAnimated*>( ea.Visual() );
-	VERIFY( KA );
-	IKinematics *K  = smart_cast<IKinematics*>( ea.Visual() );
-	LPCSTR bone_name = "not_definite";
-	if( H.bone() != BI_NONE )
-	{
-		CBoneData& bd = K->LL_GetData( H.bone() );
-		bone_name = bd.name.c_str();
-	}
-	LPCSTR motion_name = "not_set";
-	if( m.valid() )
-		motion_name = KA->LL_MotionDefName_dbg( m ).first;
-
-	Msg( "death anims: %s, dir: %s, motion: %s,  obj: %s, model: %s, bone: %s " ,message ,motion_dirs[ dr ].name, motion_name, ea.cName().c_str(), ea.cNameVisual().c_str(), bone_name );
-
-#endif
-}
-
 
  //1.	Инерционное движение вперед от попадания в голову 
 class	type_motion0: public type_motion
@@ -145,7 +111,6 @@ class	type_motion0: public type_motion
 			return false;
 
 		m = motion( front );
-		type_motion_diagnostic( " type_motion0: 1. = Инерционное движение вперед от попадания в голову ", front, ea, H, m );
 		return true;
 	}
 };
@@ -186,7 +151,6 @@ class	type_motion2: public type_motion
 			return false;
 		edirection dr = dir( ea, H, angle );
 		m = motion( dr );
-		type_motion_diagnostic( " type_motion2: 3.	Шотган ", dr, ea, H, m );
 		return true;
 	}
 };
@@ -206,7 +170,6 @@ class	type_motion3: public type_motion
 		{
 			edirection dr = dir( ea, H, angle );
 			m = motion( dr );
-			type_motion_diagnostic( " type_motion3: 4.	Хедшот (по вероятности), кроме 5 (4)", dr, ea, H, m );
 			return true;
 		}
 		return false;
@@ -249,7 +212,6 @@ class	type_motion4: public type_motion
 		{
 			edirection dr = dir( ea, H, angle );
 			m = motion( dr );
-			type_motion_diagnostic( " type_motion4: 5.	Снайперка в голову", dr, ea, H, m );
 			return true;
 		}
 		return false;
@@ -272,7 +234,6 @@ class	type_motion5: public type_motion
 		{
 			edirection dr = dir( ea, H, angle );
 			m = motion( dr );
-			type_motion_diagnostic( "type_motion5: 6.	Снайперка в тело", dr, ea, H, m );
 			return true;
 		}
 		return false;
@@ -292,7 +253,6 @@ class	type_motion6: public type_motion
 		{
 			edirection dr = dir( ea, H, angle );
 			m = motion( dr );
-			type_motion_diagnostic( "type_motion6: 7. Гранта", dr, ea, H, m );
 			return true;
 		}
 
@@ -307,7 +267,6 @@ class	type_motion6: public type_motion
 		{	
 			edirection dr = dir( ea, H, angle );
 			m = motion(  dr );
-			type_motion_diagnostic( "type_motion6: 7. Гранта - осколок", dr, ea, H, m );
 			return true;
 		}
 
@@ -336,3 +295,5 @@ void death_anims::setup		( IKinematicsAnimated* k, LPCSTR section, CInifile cons
 	if( ini->line_exist( section , "random_death_animations" )  )
 		rnd_anims.setup( k, ini->r_string( section , "random_death_animations" ) ); 
 }
+
+#pragma warning(pop)

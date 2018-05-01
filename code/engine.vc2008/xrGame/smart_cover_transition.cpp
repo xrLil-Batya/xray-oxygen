@@ -108,5 +108,5 @@ animation_action const &action::animation	(MonsterSpace::EBodyState const &targe
 
 animation_action const	&action::animation	() const
 {
-	return						(*m_animations[Random.randI(m_animations.size())]);
+	return						(*m_animations[Random.randI((u32)m_animations.size())]);
 }

@@ -51,7 +51,6 @@ void CBlender_Compile::r_dx10Texture(LPCSTR ResourceName,	LPCSTR texture)
 
 	// Find index
 	ref_constant C			= ctable.get(ResourceName);
-	//VERIFY(C);
 	if (!C)					return;
 
 	R_ASSERT				(C->type == RC_dx10texture);
@@ -62,7 +61,6 @@ void CBlender_Compile::r_dx10Texture(LPCSTR ResourceName,	LPCSTR texture)
 
 void CBlender_Compile::i_dx10Address(u32 s, u32 address)
 {
-	//VERIFY(s!=u32(-1));
    if( s == u32(-1) )
    {
       Msg( "s != u32(-1)" );
@@ -110,17 +108,14 @@ void CBlender_Compile::i_dx10Filter(u32 s, u32 _min, u32 _mip, u32 _mag)
 
 u32 CBlender_Compile::r_dx10Sampler(LPCSTR ResourceName)
 {
-	//	TEST
-	//return ((u32)-1);
 	VERIFY(ResourceName);
 	string256				name;
 	xr_strcpy				(name,ResourceName);
 	fix_texture_name		(name);
 
 	// Find index
-	//ref_constant C			= ctable.get(ResourceName);
 	ref_constant C			= ctable.get(name);
-	//VERIFY(C);
+
 	if (!C)					return	u32(-1);
 
 	R_ASSERT				(C->type == RC_sampler);
@@ -154,7 +149,6 @@ u32 CBlender_Compile::r_dx10Sampler(LPCSTR ResourceName)
 	{
 		i_dx10Address( stage, D3DTADDRESS_WRAP);
 		i_dx10FilterAnizo( stage, TRUE);
-		//i_dx10Filter(stage, D3DTEXF_LINEAR, D3DTEXF_LINEAR, D3DTEXF_LINEAR);
 	}
 
 	//	Use D3DTADDRESS_CLAMP,	D3DTEXF_LINEAR,			D3DTEXF_NONE,	D3DTEXF_LINEAR
@@ -247,5 +241,4 @@ void	CBlender_Compile::r_End			()
 	dest.C					= 0;
 	ref_matrix_list			temp(0);
 	SH->passes.push_back	(DEV->_CreatePass(dest));
-	//SH->passes.push_back	(DEV->_CreatePass(dest.state,dest.ps,dest.vs,dest.gs,dest.constants,dest.T,temp,dest.C));
 }

@@ -147,19 +147,18 @@ using Nearest = xr_vector<u32>;
 class			Query
 {
 public:
+	xr_hash_map<u32, bool> q_Marks;
 	Nearest		q_List;
 	Nearest		q_Clear;
-	Marks		q_Marks;
 	Fvector		q_Base;
 	
 	IC void		Begin	(int count)
 	{
 		q_List.reserve	(8192);
 		q_Clear.reserve	(8192);
-		q_Marks.assign	(count,false);
 	}
 
-	IC void		Init	(Fvector& P)
+	IC void		Init	(const Fvector& P)
 	{
 		q_Base.set		(P);
 		q_List.clear	();
@@ -169,7 +168,6 @@ public:
 	IC void		Perform	(u32 ID)
 	{
 		if (ID==InvalidNode)		return;
-		if (ID>=q_Marks.size())		return;
 		if (q_Marks[ID])			return;
 		
 		q_Marks[ID]			= true;
@@ -189,8 +187,7 @@ public:
 
 	IC void		Clear	()
 	{
-		for (auto it=q_Clear.begin(); it!=q_Clear.end();  it++)
-			q_Marks[*it]	= false;
+		q_Marks.clear();
 	}
 };
 struct	RC { RayCache	C; };

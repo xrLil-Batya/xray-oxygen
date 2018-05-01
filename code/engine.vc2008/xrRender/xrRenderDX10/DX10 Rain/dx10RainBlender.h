@@ -1,5 +1,4 @@
-#ifndef	dx10RainBlender_included
-#define	dx10RainBlender_included
+#pragma once
 
 class CBlender_rain : public IBlender  
 {
@@ -29,5 +28,3 @@ public:
    LPCSTR Name;
    LPCSTR Definition;
 };
-
-#endif	//	dx10RainBlender_included

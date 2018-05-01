@@ -209,14 +209,11 @@ void CRender::Render		()
 		return;
 	}
 
-//.	VERIFY					(g_pGameLevel && g_pGameLevel->pHUD);
-
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
 	BOOL					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
 	if (o.sunstatic)		bSUN				= FALSE;
-	// Msg						("sstatic: %s, sun: %s",o.sunstatic?"true":"false", bSUN?"true":"false");
 
 	// HOM
 	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
@@ -232,7 +229,7 @@ void CRender::Render		()
 		float		z_distance	= ps_r2_zfill		;
 		Fmatrix		m_zfill, m_project				;
 		m_project.build_projection	(
-			deg2rad(Device.fFOV/* *Device.fASPECT*/), 
+			deg2rad(Device.fFOV), 
 			Device.fASPECT, VIEWPORT_NEAR, 
 			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		m_zfill.mul	(m_project,Device.mView);
@@ -407,7 +404,6 @@ void CRender::Render		()
 		RCache.set_xform_view						(Device.mView);
 		// Stencil - write 0x1 at pixel pos - 
 		RCache.set_Stencil							( TRUE,D3DCMP_ALWAYS,0x01,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
-		//RCache.set_Stencil						(TRUE,D3DCMP_ALWAYS,0x00,0xff,0xff,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 		RCache.set_CullMode							(CULL_CCW);
 		RCache.set_ColorWriteEnable					();
 		RImplementation.r_dsgraph_render_emissive	();

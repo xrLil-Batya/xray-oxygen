@@ -340,7 +340,7 @@ u32 attachable_hud_item::anim_play(const shared_str& anm_name_b, BOOL bMixIn, co
 	R_ASSERT2				(anm, make_string("model [%s] has no motion alias defined [%s]", m_sect_name.c_str(), anim_name_r).c_str());
 	R_ASSERT2				(anm->m_animations.size(), make_string("model [%s] has no motion defined in motion_alias [%s]", pSettings->r_string(m_sect_name, "item_visual"), anim_name_r).c_str());
 	
-	rnd_idx					= (u8)Random.randI(anm->m_animations.size()) ;
+	rnd_idx					= (u8)Random.randI((u32)anm->m_animations.size()) ;
 	const motion_descr& M	= anm->m_animations[ rnd_idx ];
 	float speed				= anm->m_anim_speed;
 
@@ -540,6 +540,8 @@ u32 player_hud::motion_length(const MotionID& M, const CMotionDef*& md, float sp
 	}
 	return					0;
 }
+#pragma warning(push)
+#pragma warning(disable: 4172)
 const Fvector& player_hud::attach_rot() const
 {
 	if(m_attached_items[0])
@@ -561,6 +563,7 @@ const Fvector& player_hud::attach_pos() const
 	else
 		return Fvector().set(0,0,0);
 }
+#pragma warning(pop)
 
 void player_hud::update(const Fmatrix& cam_trans)
 {

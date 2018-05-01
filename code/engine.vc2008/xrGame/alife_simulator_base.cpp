@@ -280,8 +280,8 @@ void CALifeSimulatorBase::release	(CSE_Abstract *abstract, bool alife_query)
 	VERIFY							(object);
 
 	if (!object->children.empty()) {
-		u32							children_count = object->children.size();
-		u32							bytes = children_count*sizeof(ALife::_OBJECT_ID);
+		size_t						children_count = object->children.size();
+		size_t						bytes = children_count*sizeof(ALife::_OBJECT_ID);
 		ALife::_OBJECT_ID			*children = (ALife::_OBJECT_ID*)_alloca(bytes);
         std::memcpy(children,&*object->children.begin(),bytes);
 

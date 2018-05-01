@@ -1,5 +1,3 @@
-#ifndef	dx10StateCacheImpl_included
-#define	dx10StateCacheImpl_included
 #pragma once
 
 #include "../dx10StateUtils.h"
@@ -16,23 +14,6 @@ dx10StateCache<IDeviceState, StateDecs>
 	state_code.UpdateDesc(desc);
 
 	return GetState(desc);
-
-	/*
-	u32 crc = crc32( &desc, sizeof(desc));
-
-	pResult = FindState( desc, crc);
-
-	if (!pResult)
-	{
-		StateRecord rec;
-		rec.m_crc = crc;
-		CreateState(desc, &rec.m_pState);
-		pResult = rec.m_pState;
-		m_StateArray.push_back(rec);
-	}
-
-	return pResult;
-	*/
 }
 
 template <class IDeviceState, class StateDecs>
@@ -72,18 +53,12 @@ dx10StateCache<IDeviceState, StateDecs>
 		{
 			StateDecs	descCandidate;
 			m_StateArray[i].m_pState->GetDesc(&descCandidate);
-			//if ( !memcmp(&descCandidate, &desc, sizeof(desc)) )
 			if (descCandidate==desc)
-				//break;
 			//	TEST
 			{
                 res = i;
 				break;
 			}
-			//else
-			//{
-			//	VERIFY(0);
-			//}
 		}
 	}
 
@@ -91,12 +66,4 @@ dx10StateCache<IDeviceState, StateDecs>
 		return m_StateArray[res].m_pState;
 	else
 		return NULL;
-    /*
-	if (i!=m_StateArray.size())
-		return m_StateArray[i].m_pState;
-	else
-		return NULL;
-        */
 }
-
-#endif	//	dx10StateCacheImpl_included

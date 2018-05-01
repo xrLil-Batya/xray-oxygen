@@ -6,8 +6,6 @@
 
 #pragma warning(disable:4995)
 #include <d3dx9.h>
-//#include <d3dx10.h>
-//#include <d3dx11.h>
 #pragma warning(default:4995)
 #include "../xrRender/HW.h"
 #include "../../xrEngine/XR_IOConsole.h"
@@ -92,7 +90,6 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	selectResolution	(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
-	//sd.BufferDesc.Format		= fTarget;
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //Prep for HDR10; breaks nothing
 	sd.BufferCount = 1;
 
@@ -117,7 +114,6 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
     if (isGraphicDebugging)
     {
 #ifdef USE_DX11
-        //createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG | D3D11_CREATE_DEVICE_DEBUGGABLE;
         createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #else
         createDeviceFlags |= D3D10_CREATE_DEVICE_DEBUG;
@@ -231,10 +227,6 @@ void CHW::Reset(HWND hwnd)
 
 	CHK_DX(m_pSwapChain->ResizeTarget(&desc));
 
-
-#ifdef DEBUG
-	//	_RELEASE			(dwDebugSB);
-#endif
 	_SHOW_REF("refCount:pBaseZB", pBaseZB);
 	_SHOW_REF("refCount:pBaseRT", pBaseRT);
 
@@ -459,7 +451,6 @@ void fill_vid_mode_list(CHW* _hw)
 	xr_vector<DXGI_MODE_DESC>	modes;
 
 	IDXGIOutput *pOutput;
-	//_hw->m_pSwapChain->GetContainingOutput(&pOutput);
 	_hw->m_pAdapter->EnumOutputs(0, &pOutput);
 	VERIFY(pOutput);
 
@@ -518,8 +509,6 @@ void CHW::UpdateViews()
 	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
 	HRESULT R;
 
-	// Create a render target view
-	//R_CHK	(pDevice->GetRenderTarget			(0,&pBaseRT));
 	ID3DTexture2D *pBuffer;
 	R = m_pSwapChain->GetBuffer( 0, __uuidof( ID3DTexture2D ), (LPVOID*)&pBuffer );
 	R_CHK(R);

@@ -1,5 +1,4 @@
-#ifndef	dx10MinMaxSMBlender_included
-#define	dx10MinMaxSMBlender_included
+#pragma once
 
 
 class CBlender_createminmax	: public IBlender  
@@ -11,5 +10,3 @@ public:
 
 	virtual		void		Compile			(CBlender_Compile& C);
 };
-
-#endif

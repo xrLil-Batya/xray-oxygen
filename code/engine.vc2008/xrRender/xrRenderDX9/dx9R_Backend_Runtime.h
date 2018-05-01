@@ -1,5 +1,3 @@
-#ifndef	dx9R_Backend_Runtime_included
-#define	dx9R_Backend_Runtime_included
 #pragma once
 
 IC void		CBackend::set_xform			(u32 ID, const Fmatrix& M_)
@@ -228,5 +226,3 @@ IC void CBackend::set_Constants(R_constant_table* pC)
 			Cs->handler->setup(Cs);
 	}
 }
-
-#endif	//	dx9R_Backend_Runtime_included

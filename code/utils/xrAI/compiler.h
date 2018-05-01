@@ -50,16 +50,6 @@ struct vertex					// definition of "patch" or "node"
 };
 
 using DWORDs = xr_vector<u32>;
-//struct NodeMerged
-//{
-//	DWORDs		neighbours;	// list of neighbours
-//	DWORDs		contains;	// while merging - contains list of elementar nodes
-//	Fplane		plane;
-//	Fvector		P;			// min
-//	WORD		sector;
-//	BYTE		light;
-//	float		cover[4];
-//};
 
 #include "level_graph.h"
 
@@ -162,18 +152,17 @@ const float	sim_dist		= 0.15f;
 const int	sim_light		= 32;
 const float	sim_cover		= 48;
 
-struct CNodePositionCompressor {
-	IC				CNodePositionCompressor(NodePosition& Pdest, Fvector& Psrc, hdrNODES& H);
-};
-
-IC CNodePositionCompressor::CNodePositionCompressor(NodePosition& Pdest, Fvector& Psrc, hdrNODES& H)
+struct CNodePositionCompressor 
 {
-	float sp = 1/g_params.fPatchSize;
-	int row_length = iFloor((H.aabb.max.z - H.aabb.min.z)/H.size + EPS_L + 1.5f);
-	int pxz	= iFloor((Psrc.x - H.aabb.min.x)*sp + EPS_L + .5f)*row_length + iFloor((Psrc.z - H.aabb.min.z)*sp   + EPS_L + .5f);
-	int py	= iFloor(65535.f*(Psrc.y-H.aabb.min.y)/(H.size_y)+EPS_L);
-	VERIFY	(pxz < (1 << MAX_NODE_BIT_COUNT) - 1);
-	Pdest.xz(pxz);
-	clamp	(py,0,     65535);	Pdest.y			(u16(py));
-}
-
+	IC CNodePositionCompressor(NodePosition& Pdest, Fvector& Psrc, hdrNODES& H)
+	{
+		float sp = 1 / g_params.fPatchSize;
+		int row_length = iFloor((H.aabb.max.z - H.aabb.min.z) / H.size + EPS_L + 1.5f);
+		int pxz = iFloor((Psrc.x - H.aabb.min.x)*sp + EPS_L + .5f)*row_length + iFloor((Psrc.z - H.aabb.min.z)*sp + EPS_L + .5f);
+		int py = iFloor(65535.f*(Psrc.y - H.aabb.min.y) / (H.size_y) + EPS_L);
+		VERIFY(pxz < (1 << MAX_NODE_BIT_COUNT) - 1);
+		Pdest.xz(pxz);
+		clamp(py, 0, 65535);	Pdest.y(u16(py));
+	}
+	;
+};

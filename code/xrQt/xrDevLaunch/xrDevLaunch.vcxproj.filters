@@ -37,22 +37,25 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="xrMain.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="RendererList.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="InitLib.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="minimal_CPUID.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="aboutlauncher.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrFS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrEntryPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrCPUID.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrD3DList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -61,6 +64,9 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="aboutlauncher.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="xrSettings.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>
@@ -82,11 +88,11 @@
     <QtUic Include="aboutlauncher.ui">
       <Filter>Form Files</Filter>
     </QtUic>
+    <QtUic Include="xrSettings.ui">
+      <Filter>Form Files</Filter>
+    </QtUic>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="minimal_CPUID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_xrMain.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
@@ -95,6 +101,15 @@
     </ClInclude>
     <ClInclude Include="GeneratedFiles\ui_aboutlauncher.h">
       <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xrException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xrCPUID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xrFS.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

@@ -1,5 +1,3 @@
-#ifndef	dx10State_included
-#define	dx10State_included
 #pragma once
 
 class SimulatorStates;
@@ -51,5 +49,3 @@ private:
 //	Private data
 private:
 };
-
-#endif	//	dx10State_included

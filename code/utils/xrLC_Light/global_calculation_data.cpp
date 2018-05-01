@@ -64,8 +64,6 @@ void global_claculation_data::xrLoad()
 			Face_fs->r_fvector2(it.t[2]);
 		}
 		Face_fs->close();
-		//fs->r				(&*g_rc_faces.begin(),g_rc_faces.size()*sizeof(b_rc_face));
-
 		LevelBB.set			(H.aabb);
 	}
 	
@@ -142,16 +140,18 @@ void global_claculation_data::xrLoad()
 				if (strchr(N,'.')) *(strchr(N,'.')) = 0;
 				strlwr			(N);
 
-				if (0==xr_strcmp(N,"level_lods"))	{
+				if (0==xr_strcmp(N,"level_lods"))	
+				{
 					// HACK for merged lod textures
 					BT.dwWidth	= 1024;
 					BT.dwHeight	= 1024;
 					BT.bHasAlpha= TRUE;
 					BT.THM.SetHasSurface(FALSE);
-				} else {
+				} 
+				else
+				{
 					xr_strcat				(N,sizeof(BT.name),".thm");
 					IReader* THM			= FS.r_open("$game_textures$",N);
-					//R_ASSERT2				(THM,	N);
 					if (!THM) 
 					{
 						clMsg("can't find thm: %s", N);
@@ -162,7 +162,6 @@ void global_claculation_data::xrLoad()
 					// version
 					u32 version				= 0;
 					R_ASSERT				(THM->r_chunk(THM_CHUNK_VERSION,&version));
-					// if( version!=THM_CURRENT_VERSION )	FATAL	("Unsupported version of THM file.");
 
 					// analyze thumbnail information
 					R_ASSERT(THM->find_chunk(THM_CHUNK_TEXTUREPARAM));
@@ -174,8 +173,8 @@ void global_claculation_data::xrLoad()
 					BT.THM.mip_filter		= THM->r_u32();
 					BT.THM.width			= THM->r_u32();
 					BT.THM.height           = THM->r_u32();
-					BOOL			bLOD=FALSE;
-					if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') bLOD = TRUE;
+					bool bLOD = false;
+					if (N[0]=='l' && N[1]=='o' && N[2]=='d' && N[3]=='\\') bLOD = true;
 
 					// load surface if it has an alpha channel or has "implicit lighting" flag
 					BT.dwWidth				= BT.THM.width;
@@ -215,50 +214,37 @@ void global_claculation_data::xrLoad()
 	}
 }
 
-void read( INetReader	&r, CDB::MODEL &m );
+void read(INetReader &r, CDB::MODEL &m);
 
-void		global_claculation_data::read			( INetReader &r )
+void global_claculation_data::read(INetReader &r)
 {
-			
-	g_lights.read( r );
-	R_ASSERT( !g_shaders_xrlc );
-	g_shaders_xrlc = xr_new<Shader_xrLC_LIB>();
-	r_pod_vector( r, g_shaders_xrlc->Library	() );
-	r_pod( r, g_params );
-	r_pod_vector( r, g_materials );
-	r_vector( r, g_textures );
-	::read( r, RCAST_Model );
-	r_pod( r, LevelBB );
-	slots_data.read( r );
-	r_pod_vector( r, g_shader_compile );
-	r_pod_vector( r, g_rc_faces );
 
+	g_lights.read(r);
+	R_ASSERT(!g_shaders_xrlc);
+	g_shaders_xrlc = xr_new<Shader_xrLC_LIB>();
+	r_pod_vector(r, g_shaders_xrlc->Library());
+	r_pod(r, g_params);
+	r_pod_vector(r, g_materials);
+	r_vector(r, g_textures);
+	::read(r, RCAST_Model);
+	r_pod(r, LevelBB);
+	slots_data.read(r);
+	r_pod_vector(r, g_shader_compile);
+	r_pod_vector(r, g_rc_faces);
 }
 
-	//base_lighting					g_lights; /////////////////////lc
-	//Shader_xrLC_LIB*				g_shaders_xrlc;////////////////lc
-	//b_params						g_params;//////////////////////lc
-	//xr_vector<b_material>			g_materials;///////////////////lc
-	//xr_vector<b_BuildTexture>		g_textures;////////////////////lc
-	//CDB::MODEL						RCAST_Model;///////////////////lc
-
-	//Fbox							LevelBB;//-----------============
-	//global_slots_data				slots_data;//-------=============
-	//xr_vector<b_shader>				g_shader_compile;//-----==========
-	//xr_vector<b_rc_face>			g_rc_faces;//---------===============
-
-void write( IWriter	&w, const  CDB::MODEL &m );
-void		global_claculation_data::write			( IWriter	&w ) const
+void write(IWriter &w, const CDB::MODEL &m);
+void global_claculation_data::write(IWriter &w) const
 {
-	g_lights.write( w );
-	R_ASSERT( g_shaders_xrlc );
-	w_pod_vector( w, g_shaders_xrlc->Library	() );
-	w_pod( w, g_params );
-	w_pod_vector( w, g_materials );
-	w_vector( w, g_textures );
-	::write( w, RCAST_Model );
-	w_pod( w, LevelBB );
-	slots_data.write( w );
-	w_pod_vector( w, g_shader_compile );
-	w_pod_vector( w, g_rc_faces );
+	g_lights.write(w);
+	R_ASSERT(g_shaders_xrlc);
+	w_pod_vector(w, g_shaders_xrlc->Library());
+	w_pod(w, g_params);
+	w_pod_vector(w, g_materials);
+	w_vector(w, g_textures);
+	::write(w, RCAST_Model);
+	w_pod(w, LevelBB);
+	slots_data.write(w);
+	w_pod_vector(w, g_shader_compile);
+	w_pod_vector(w, g_rc_faces);
 }

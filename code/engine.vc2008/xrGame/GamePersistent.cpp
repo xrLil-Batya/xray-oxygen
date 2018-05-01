@@ -489,7 +489,7 @@ void CGamePersistent::OnFrame	()
 	{
 		xr_delete(g_tutorial);
 	}
-	if(!Device.dwFrame % 200)
+	if(!(Device.dwFrame % 200))
 		CUITextureMaster::FreeCachedShaders();
 
 #ifdef DEBUG

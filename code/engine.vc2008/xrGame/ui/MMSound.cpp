@@ -69,7 +69,7 @@ void CMMSound::music_Play()
 	if (m_play_list.empty())
 		return;
 
-	int i = Random.randI(m_play_list.size());
+	int i = Random.randI((u32)m_play_list.size());
 
 	string_path		_path;
 	strconcat		(sizeof(_path),_path, m_play_list[i].c_str(), ".ogg");

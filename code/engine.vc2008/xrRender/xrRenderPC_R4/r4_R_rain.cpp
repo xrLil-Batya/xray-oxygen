@@ -156,14 +156,6 @@ void CRender::render_rain()
 		Fbox&	bb					= frustum_bb;
 		bb.grow				(EPS);
 
-		//	HACK
-		//	TODO: DX10: Calculate bounding sphere for view frustum
-		//	TODO: DX10: Reduce resolution.
-		//bb.min.x = -50;
-		//bb.max.x = 50;
-		//bb.min.y = -50;
-		//bb.max.y = 50;
-
 		//	Offset RainLight position to center rain shadowmap
 		Fvector3	vRectOffset;
 		vRectOffset.set( fBoundingSphereRadius*Device.vCameraDirection.x, 0, fBoundingSphereRadius*Device.vCameraDirection.z);
@@ -221,7 +213,6 @@ void CRender::render_rain()
 	}
 
 	// Fill the database
-	//r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 	r_dsgraph_render_subspace				(cull_sector, &cull_frustum, cull_xform, cull_COP, FALSE);
 
 	// Finalize & Cleanup
@@ -238,14 +229,11 @@ void CRender::render_rain()
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(RainLight.X.D.combine	);	
 			r_dsgraph_render_graph				(0)	;
-			//if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))	
-			//	Details->Render					()	;
 		}
 	}
 
 	// End SMAP-render
 	{
-		//		fuckingsun->svis.end					();
 		r_pmask									(true,false);
 	}
 
