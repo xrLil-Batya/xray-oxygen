@@ -49,31 +49,29 @@ CUILogsWnd::~CUILogsWnd()
 }
 
 
-void CUILogsWnd::Show( bool status )
+void CUILogsWnd::Show(bool status)
 {
 	m_ctrl_press = false;
-	if ( status )
+	if (status)
 	{
 		m_selected_period = GetShiftPeriod(Level().GetGameTime(), 0);
 		m_need_reload = true;
 		Update();
 	}
-	inherited::Show( status );
+	inherited::Show(status);
 }
 
 void CUILogsWnd::Update()
 {
 	inherited::Update();
-	if( m_need_reload )
+	if (m_need_reload)
 		ReLoadNews();
 
 
 	if(!m_items_ready.empty())
 	{
-		WINDOW_LIST::reverse_iterator it	= m_items_ready.rbegin();
-		WINDOW_LIST::reverse_iterator it_e	= m_items_ready.rend();
-		for(; it!=it_e; ++it)
-			m_list->AddWindow			(*it, true);
+		for(CUIWindow* it: m_items_ready)
+			m_list->AddWindow(it, true);
 		
 		m_items_ready.clear();
 	}
@@ -87,7 +85,7 @@ void CUILogsWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 void CUILogsWnd::Init()
 {
-	m_uiXml.Load( CONFIG_PATH, UI_PATH, PDA_LOGS_XML );
+	m_uiXml.Load(CONFIG_PATH, UI_PATH, PDA_LOGS_XML);
 
 	CUIXmlInit::InitWindow( m_uiXml, "main_wnd", 0, this );
 
@@ -275,7 +273,7 @@ void CUILogsWnd::NextPeriod( CUIWindow* w, void* d )
 		m_need_reload = true;
 }
 
-ALife::_TIME_ID CUILogsWnd::GetShiftPeriod( ALife::_TIME_ID datetime, int shift_day )
+u64 CUILogsWnd::GetShiftPeriod( ALife::_TIME_ID datetime, int shift_day )
 {
 	datetime -= (datetime % day2ms);
 	datetime += (u64)shift_day * day2ms;
@@ -324,48 +322,47 @@ bool CUILogsWnd::OnKeyboardHold( int dik )
 	return inherited::OnKeyboardHold( dik );
 }
 
-void CUILogsWnd::on_scroll_keys( int dik )
+void CUILogsWnd::on_scroll_keys(int dik)
 {
-	VERIFY( m_list && m_list->ScrollBar() );
+	VERIFY(m_list && m_list->ScrollBar());
 
-	switch ( dik )
+	switch (dik)
 	{
 	case DIK_UP:
-		{
-			int orig = m_list->ScrollBar()->GetStepSize();
-			m_list->ScrollBar()->SetStepSize( 1 );
-			m_list->ScrollBar()->TryScrollDec();
-			m_list->ScrollBar()->SetStepSize( orig );
-			break;
-		}	
+	{
+		int orig = m_list->ScrollBar()->GetStepSize();
+		m_list->ScrollBar()->SetStepSize(1);
+		m_list->ScrollBar()->TryScrollDec();
+		m_list->ScrollBar()->SetStepSize(orig);
+		break;
+	}
 	case DIK_DOWN:
-		{
-			int orig = m_list->ScrollBar()->GetStepSize();
-			m_list->ScrollBar()->SetStepSize( 1 );
-			m_list->ScrollBar()->TryScrollInc();
-			m_list->ScrollBar()->SetStepSize( orig );
-			break;
-		}
+	{
+		int orig = m_list->ScrollBar()->GetStepSize();
+		m_list->ScrollBar()->SetStepSize(1);
+		m_list->ScrollBar()->TryScrollInc();
+		m_list->ScrollBar()->SetStepSize(orig);
+		break;
+	}
 	case DIK_PRIOR:
+	{
+		if (m_ctrl_press)
 		{
-			if ( m_ctrl_press )
-			{
-				m_list->ScrollToBegin();
-				break;
-			}
-			m_list->ScrollBar()->TryScrollDec();
+			m_list->ScrollToBegin();
 			break;
 		}
+		m_list->ScrollBar()->TryScrollDec();
+		break;
+	}
 	case DIK_NEXT:
+	{
+		if (m_ctrl_press)
 		{
-			if ( m_ctrl_press )
-			{
-				m_list->ScrollToEnd();
-				break;
-			}
-			m_list->ScrollBar()->TryScrollInc();
+			m_list->ScrollToEnd();
 			break;
-		}		
+		}
+		m_list->ScrollBar()->TryScrollInc();
+		break;
+	}
 	}// switch
-
 }

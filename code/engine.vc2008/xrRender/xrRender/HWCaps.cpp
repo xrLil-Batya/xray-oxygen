@@ -92,8 +92,8 @@ u32 GetATIGpuNum()
 u32 GetGpuNum()
 {
 	u32 res = GetNVGpuNum();
-
 	res = std::max(res, GetATIGpuNum());
+	res = std::max(res, 3u);
 	res = std::min(res, (u32)CHWCaps::MAX_GPUS);
 
 	//	It's vital to have at least one GPU, else
