@@ -1,12 +1,15 @@
 #include "stdafx.h"
+#include "../../xrEngine/igame_persistent.h"
+#include "../../xrEngine/environment.h"
 
-void CRenderTarget::phase_droplets()
+#include "../xrRender/dxEnvironmentRender.h"
+
+void CRenderTarget::phase_rain_drops()
 {
-	//common
 	u32			Offset = 0;
 	Fvector2	p0, p1;
 
-	//struct
+	// 
 	struct v_aa {
 		Fvector4	p;
 		Fvector2	uv0;
@@ -22,11 +25,10 @@ void CRenderTarget::phase_droplets()
 	float	_h = float(Device.dwHeight);
 	float	ddw = 1.f / _w;
 	float	ddh = 1.f / _h;
-
 	p0.set(.5f / _w, .5f / _h);
 	p1.set((_w + .5f) / _w, (_h + .5f) / _h);
 
-	CEnvDescriptorMixer& CurrenEnv = *g_pGamePersistent->Environment().CurrentEnv;
+	CEnvDescriptorMixer& envdesc = *g_pGamePersistent->Environment().CurrentEnv;
 
 	// Set RT's
 	u_setrt(rt_Generic_0, 0, 0, HW.pBaseZB);
@@ -41,9 +43,9 @@ void CRenderTarget::phase_droplets()
 	pv->p.set(float(_w + EPS), EPS, EPS, 1.f); pv->uv0.set(p1.x, p0.y); pv->uv1.set(p1.x - ddw, p0.y - ddh); pv->uv2.set(p1.x + ddw, p0.y + ddh); pv->uv3.set(p1.x + ddw, p0.y - ddh); pv->uv4.set(p1.x - ddw, p0.y + ddh); pv->uv5.set(p1.x - ddw, p0.y, p0.y, p1.x + ddw); pv->uv6.set(p1.x, p0.y - ddh, p0.y + ddh, p1.x); pv++;
 	RCache.Vertex.Unlock(4, g_aa_AA->vb_stride);
 
-	//draw color
-	RCache.set_Element(s_droplets->E[0]);
-	RCache.set_c("droplets", CurrenEnv.m_fDropletsIntensity, 0, 0, 0);
+	// Draw COLOR
+	RCache.set_Element(s_rain_drops->E[0]);
+	RCache.set_c("rain_drops_params0", envdesc.m_fDropletsIntensity, droplets_power_debug, 0, 0);
 	RCache.set_Geometry(g_aa_AA);
 	RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-}
+};

@@ -49,6 +49,7 @@ public:
 	IBlender*					b_ssao;
 	IBlender*					b_ssao_msaa[8];
 	IBlender*					b_fxaa;
+	IBlender*					b_rain_drops;
 	
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -109,10 +110,13 @@ public:
 	ref_texture					t_noise				[TEX_jitter_count];
 	ID3DTexture2D*			t_noise_surf_mipped;
 	ref_texture					t_noise_mipped;
+
 private:
 	// OCCq
-
 	ref_shader					s_occq;
+
+	// RAIN DROPS
+	ref_shader					s_rain_drops;
 
 	// SSAO
 	ref_rt						rt_ssao_temp;
@@ -245,6 +249,7 @@ public:
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
 	
+	void						phase_rain_drops        ();
     void						phase_fxaa              ();	
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();

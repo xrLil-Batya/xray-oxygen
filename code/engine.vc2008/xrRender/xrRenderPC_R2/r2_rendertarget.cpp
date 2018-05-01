@@ -11,7 +11,7 @@
 #include "blender_bloom_build.h"
 #include "blender_luminance.h"
 #include "blender_ssao.h"
-#include "blender_droplets.h"
+#include "blender_rain_drops.h"
 #include "blender_fxaa.h"
 #include "blender_ss.h"
 
@@ -211,7 +211,7 @@ CRenderTarget::CRenderTarget		()
 	b_ssao							= xr_new<CBlender_SSAO>					();
 	b_luminance						= xr_new<CBlender_luminance>			();
 	b_combine						= xr_new<CBlender_combine>				();
-	b_droplets                      = xr_new<CBlender_droplets>             ();
+	b_rain_drops                    = xr_new<CBlender_rain_drops>           ();
 	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
 	b_sunshafts						= xr_new<CBlender_ss>					();
 
@@ -266,8 +266,8 @@ CRenderTarget::CRenderTarget		()
 	// SUNSHAFTS
 	s_SunShafts.create				(b_sunshafts,	"r2\\SunShafts");
 
-	// DROPLETS
-	s_droplets.create(b_droplets, "r2\\droplets");
+	// RAIN DROPS
+	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
 
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
@@ -654,7 +654,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete                   (b_fxaa                 );
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
-	xr_delete                   (b_droplets             );
+	xr_delete                   (b_rain_drops           );
 	xr_delete					(b_sunshafts			);
 }
 

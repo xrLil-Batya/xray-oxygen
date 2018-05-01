@@ -226,7 +226,7 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
-    <ClInclude Include="blender_droplets.h" />
+    <ClInclude Include="blender_rain_drops.h" />
     <ClInclude Include="cl_intersect.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="..\xrRender\xrD3DDefs.h" />
@@ -391,9 +391,9 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="blender_droplets.cpp" />
+    <ClCompile Include="blender_rain_drops.cpp" />
     <ClCompile Include="Blender_ss.cpp" />
-    <ClCompile Include="r2_rendertarget_phase_droplets.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_rain_drops.cpp" />
     <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
     <ClCompile Include="r2_rendertarget_render_flare.cpp" />
     <ClCompile Include="stdafx.cpp">

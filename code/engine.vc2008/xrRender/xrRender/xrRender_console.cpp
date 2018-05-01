@@ -873,7 +873,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
 	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
 
-	CMD4(CCC_Float,     "r2_droplets_power_debug",      &droplets_power_debug,      0.f, 1.5f);
+	CMD4(CCC_Float,     "r2_droplets_power_debug",      &droplets_power_debug,      0.f, 3.f);
 
 	//	Igor: need restart
 	CMD3(CCC_Token,		"r2_shadow_map_size",			&ps_r2_smapsize,			q_smapsize_token);

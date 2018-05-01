@@ -188,11 +188,6 @@ void	CRenderTarget::phase_combine	()
 		if (g_pGamePersistent)	g_pGamePersistent->OnRenderPPUI_main()	;	// PP-UI
 	}
 
-	if (!_menu_pp)
-	{
-		phase_droplets();
-	}
-
 	//	Igor: for volumetric lights
 	//	combine light volume here
 	if (m_bHasActiveVolumetric)
@@ -232,6 +227,7 @@ void	CRenderTarget::phase_combine	()
 	if (!_menu_pp)
 	{
 		phase_SunShafts();
+		phase_rain_drops();
 	}
 
 	// Combine everything + perform AA
