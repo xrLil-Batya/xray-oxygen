@@ -635,6 +635,14 @@ CGameFont* GetFontDI()
 	return mngr().pFontDI;
 }
 //רנטפעû הכÿ טםעונפויסא
+CGameFont* GetFontArial14()
+{
+	return mngr().pFontArial14;
+}
+CGameFont* GetFontArial21()
+{
+	return mngr().pFontArial21;
+}
 CGameFont* GetFontGraffiti19Russian()
 {
 	return mngr().pFontGraffiti19Russian;
@@ -662,6 +670,10 @@ CGameFont* GetFontGraffiti50Russian()
 CGameFont* GetFontLetterica25()
 {
 	return mngr().pFontLetterica25;
+}
+CGameFont* GetFontelectron18()
+{
+	return mngr().pFontelectron18;
 }
 
 
