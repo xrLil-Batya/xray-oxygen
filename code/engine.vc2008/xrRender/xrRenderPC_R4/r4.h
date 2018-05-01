@@ -241,6 +241,12 @@ public:
 			o_hemi_cube[CROS_impl::CUBE_FACE_NEG_Z]);
 	}
 
+	inline bool is_sun()
+	{
+		if (o.sunstatic) return false;
+		Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
+		return (ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r, sun_color.g, sun_color.b)>EPS));
+	}
 public:
 	// feature level
 	virtual bool					is_sun_static			()	{ return o.sunstatic;}
