@@ -30,6 +30,7 @@ struct CFontManager :public pureDeviceReset			{
 	CGameFont*				pFontDI;
 
 	CGameFont*				pFontArial14;
+	CGameFont*				pFontArial21;
 	CGameFont*				pFontGraffiti19Russian;
 	CGameFont*				pFontGraffiti22Russian;
 	CGameFont*				pFontLetterica16Russian;
@@ -37,6 +38,7 @@ struct CFontManager :public pureDeviceReset			{
 	CGameFont*				pFontGraffiti32Russian;
 	CGameFont*				pFontGraffiti50Russian;
 	CGameFont*				pFontLetterica25;
+	CGameFont*				pFontelectron18;
 	CGameFont*				pFontStat;
 
 	void					InitializeFonts			();
