@@ -24,7 +24,8 @@
 
 extern int keyname_to_dik(LPCSTR);
 
-#define ARIAL_FONT_NAME			"arial"
+#define ARIAL14_FONT_NAME			"arial14"
+#define ARIAL21_FONT_NAME			"arial21"
 
 #define MEDIUM_FONT_NAME		"medium"
 #define SMALL_FONT_NAME			"small"
@@ -37,6 +38,7 @@ extern int keyname_to_dik(LPCSTR);
 #define LETTERICA16_FONT_NAME	"letterica16"
 #define LETTERICA18_FONT_NAME	"letterica18"
 #define LETTERICA25_FONT_NAME	"letterica25"
+#define ELECTRON18_FONT_NAME	"electron18"
 
 #define DI_FONT_NAME			"di"
 
@@ -720,9 +722,13 @@ bool CUIXmlInit::InitFont(CUIXml &xml_doc, LPCSTR path, int index, u32 &color, C
 		{
 			pFnt = UI().Font().pFontGraffiti50Russian;
 		}
-		else if(!xr_strcmp(font_name, "arial_14"))
+		else if(!xr_strcmp(font_name, ARIAL14_FONT_NAME))
 		{
 			pFnt = UI().Font().pFontArial14;
+		}
+		else if(!xr_strcmp(font_name, ARIAL21_FONT_NAME))
+		{
+			pFnt = UI().Font().pFontArial21;
 		}
 		else if(!xr_strcmp(font_name, MEDIUM_FONT_NAME))
 		{
@@ -743,6 +749,10 @@ bool CUIXmlInit::InitFont(CUIXml &xml_doc, LPCSTR path, int index, u32 &color, C
 		else if(!xr_strcmp(font_name, LETTERICA25_FONT_NAME))
 		{
 			pFnt = UI().Font().pFontLetterica25;
+		}
+		else if(!xr_strcmp(font_name, ELECTRON18_FONT_NAME))
+		{
+			pFnt = UI().Font().pFontelectron18;
 		}
 		else if(!xr_strcmp(font_name, DI_FONT_NAME))
 		{
