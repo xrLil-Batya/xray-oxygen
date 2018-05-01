@@ -212,23 +212,34 @@ void CGamePersistent::WeathersUpdate()
 		CEnvDescriptor* const current_env	= Environment().Current[0]; 
 		VERIFY						(current_env);
 
-		CEnvDescriptor* const _env	= Environment().Current[data_set]; 
-		VERIFY						(_env);
+		CEnvDescriptor* const _env	= Environment().Current[data_set];
+		CEnvAmbient * env_amb = nullptr;
 
-		CEnvAmbient* env_amb		= _env->env_ambient;
-		if (env_amb) {
+		if (!_env)
+		{
+			Msg("[ERROR] Environment().Current[%d] == nullptr", data_set);
+		}
+		else
+		{
+			CEnvAmbient * env_amb = _env->env_ambient;
+		}
+
+		if (env_amb) 
+		{
 			CEnvAmbient::SSndChannelVec& vec	= current_env->env_ambient->get_snd_channels();
             auto I		= vec.begin();
             auto E		= vec.end();
 			
-			for (u32 idx=0; I!=E; ++I,++idx) {
+			for (u32 idx=0; I!=E; ++I,++idx) 
+			{
 				CEnvAmbient::SSndChannel& ch	= **I;
 				R_ASSERT						(idx<20);
+
 				if(ambient_sound_next_time[idx]==0)//first
 				{
 					ambient_sound_next_time[idx] = Device.dwTimeGlobal + ch.get_rnd_sound_first_time();
-				}else
-				if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
+				}
+				else if(Device.dwTimeGlobal > ambient_sound_next_time[idx])
 				{
 					ref_sound& snd					= ch.get_rnd_sound();
 
@@ -241,35 +252,12 @@ void CGamePersistent::WeathersUpdate()
 					pos.y				+= 10.f;
 					snd.play_at_pos		(0,pos);
 
-#ifdef DEBUG
-					if (!snd._handle() && strstr(Core.Params,"-nosound"))
-						continue;
-#endif // DEBUG
-
 					VERIFY							(snd._handle());
 					u32 _length_ms					= iFloor(snd.get_length_sec()*1000.0f);
 					ambient_sound_next_time[idx]	= Device.dwTimeGlobal + _length_ms + ch.get_rnd_sound_time();
-//					Msg("- Playing ambient sound channel [%s] file[%s]",ch.m_load_section.c_str(),snd._handle()->file_name());
 				}
 			}
-/*
-			if (Device.dwTimeGlobal > ambient_sound_next_time)
-			{
-				ref_sound* snd			= env_amb->get_rnd_sound();
-				ambient_sound_next_time	= Device.dwTimeGlobal + env_amb->get_rnd_sound_time();
-				if (snd)
-				{
-					Fvector	pos;
-					float	angle		= ::Random.randF(PI_MUL_2);
-					pos.x				= _cos(angle);
-					pos.y				= 0;
-					pos.z				= _sin(angle);
-					pos.normalize		().mul(env_amb->get_rnd_sound_dist()).add(Device.vCameraPosition);
-					pos.y				+= 10.f;
-					snd->play_at_pos	(0,pos);
-				}
-			}
-*/
+
 			// start effect
 			if ((FALSE==bIndoor) && (0==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
 				CEnvAmbient::SEffect* eff			= env_amb->get_rnd_effect(); 
