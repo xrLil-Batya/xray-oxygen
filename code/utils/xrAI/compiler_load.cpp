@@ -123,10 +123,6 @@ void xrLoad(LPCSTR name, bool draft_mode)
 			R_ASSERT2			(version >= 17, "xrAI don't support a current version. Sorry.");
 			R_ASSERT2			(version <= 19, "xrAI don't support a current version. Sorry.");
 
-			// Header
-			//b_params			Params;
-			//fs->r_chunk			(EB_Parameters,&Params);
-
 			// Load level data
 			transfer("materials",	g_materials,			*fs,		EB_Materials);
 			transfer("shaders_xrlc",g_shader_compile,		*fs,		EB_Shaders_Compile);
