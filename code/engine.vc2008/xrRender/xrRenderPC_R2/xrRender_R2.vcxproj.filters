@@ -648,6 +648,9 @@
     <ClInclude Include="blender_rain_drops.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="blender_sunshafts.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1137,14 +1140,12 @@
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
-    <ClCompile Include="r2_rendertarget_phase_FXAA.cpp" />
     <ClCompile Include="Blender_ss.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="blender_fxaa.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
     <ClCompile Include="r2_rendertarget_render_flare.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
@@ -1153,6 +1154,18 @@
     </ClCompile>
     <ClCompile Include="blender_rain_drops.cpp">
       <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_sunshafts.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_FXAA.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_ss.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="r2_rendertarget_phase_sunshafts.cpp">
+      <Filter>Core_Target</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

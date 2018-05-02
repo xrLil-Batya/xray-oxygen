@@ -1301,6 +1301,7 @@
       <string>Game...</string>
      </property>
      <addaction name="actionxrEngine"/>
+     <addaction name="actionxrEngine_2"/>
      <addaction name="actionxrPlay_2"/>
      <addaction name="separator"/>
      <addaction name="actionxrCore"/>
@@ -1327,7 +1328,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>xrEngine (without params)</string>
+    <string>xrEngine</string>
    </property>
    <property name="shortcut">
     <string>Alt+Shift+R</string>
@@ -1450,6 +1451,11 @@
   <action name="actionxrCore">
    <property name="text">
     <string>xrCore</string>
+   </property>
+  </action>
+  <action name="actionxrEngine_2">
+   <property name="text">
+    <string>xrEngine (without params)</string>
    </property>
   </action>
  </widget>
