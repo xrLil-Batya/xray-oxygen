@@ -1,3 +1,4 @@
+void on_actionxrEngine_2_triggered();
 /*************************************************
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
@@ -167,7 +168,7 @@ public:
 
 private slots:
     void on_pushButton_clicked					();		// Run
-	void run_xrEngineRun						();		// Run the xrEngine
+	void run_xrEngine							();		// Run the xrEngine
 	void on_actionExit_triggered				();		// Menu->Launch->Exit
     void on_actionxrEngine_triggered			();		// Menu->Launch->Game->xrEngine
     void on_actionxrCore_triggered				();
@@ -178,6 +179,7 @@ private slots:
     void on_actionParametres_triggered			();	
 	void on_actionVertver_Github_triggered		();
     void on_actionAbout_Oxygen_Team_triggered	();
+	void on_actionxrEngine_2_triggered			();
 	void clean_buffers							();
 	void on_pushButton_2_clicked				();
     void on_listWidget_itemPressed				(QListWidgetItem *item);

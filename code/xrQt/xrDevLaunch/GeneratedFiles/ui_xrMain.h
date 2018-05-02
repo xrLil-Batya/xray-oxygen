@@ -55,6 +55,7 @@ public:
     QAction *actionGiperion_2;
     QAction *actionForserX;
     QAction *actionxrCore;
+    QAction *actionxrEngine_2;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout_2;
@@ -219,6 +220,8 @@ public:
         actionForserX->setObjectName(QStringLiteral("actionForserX"));
         actionxrCore = new QAction(xrLaunch);
         actionxrCore->setObjectName(QStringLiteral("actionxrCore"));
+        actionxrEngine_2 = new QAction(xrLaunch);
+        actionxrEngine_2->setObjectName(QStringLiteral("actionxrEngine_2"));
         centralWidget = new QWidget(xrLaunch);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -428,6 +431,7 @@ public:
         menu->addSeparator();
         menu->addAction(actionExit);
         menuGame->addAction(actionxrEngine);
+        menuGame->addAction(actionxrEngine_2);
         menuGame->addAction(actionxrPlay_2);
         menuGame->addSeparator();
         menuGame->addAction(actionxrCore);
@@ -443,7 +447,7 @@ public:
     void retranslateUi(QMainWindow *xrLaunch)
     {
         xrLaunch->setWindowTitle(QApplication::translate("xrLaunch", "Oxygen Developer Launcher", nullptr));
-        actionxrEngine->setText(QApplication::translate("xrLaunch", "xrEngine (without params)", nullptr));
+        actionxrEngine->setText(QApplication::translate("xrLaunch", "xrEngine", nullptr));
 #ifndef QT_NO_SHORTCUT
         actionxrEngine->setShortcut(QApplication::translate("xrLaunch", "Alt+Shift+R", nullptr));
 #endif // QT_NO_SHORTCUT
@@ -469,6 +473,7 @@ public:
         actionGiperion_2->setText(QApplication::translate("xrLaunch", "Giperion", nullptr));
         actionForserX->setText(QApplication::translate("xrLaunch", "ForserX", nullptr));
         actionxrCore->setText(QApplication::translate("xrLaunch", "xrCore", nullptr));
+        actionxrEngine_2->setText(QApplication::translate("xrLaunch", "xrEngine (without params)", nullptr));
         pushButton_2->setText(QApplication::translate("xrLaunch", "Clean buffers", nullptr));
         pushButton->setText(QApplication::translate("xrLaunch", "Run", nullptr));
         menuAbout->setTitle(QApplication::translate("xrLaunch", "Help", nullptr));
