@@ -226,7 +226,11 @@ void	CRenderTarget::phase_combine	()
 	
 	if (!_menu_pp)
 	{
-		phase_SunShafts();
+        if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_SCREEN_SPACE)
+            phase_ogse_sunshafts();
+		else if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_MANOWAR_SSSS)
+            phase_SunShafts();
+
 		phase_rain_drops();
 	}
 

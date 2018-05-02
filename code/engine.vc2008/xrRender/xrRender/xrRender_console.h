@@ -119,6 +119,10 @@ extern ECORE_API float			ps_r3_dyn_wet_surf_near;	// 10.0f
 extern ECORE_API float			ps_r3_dyn_wet_surf_far;		// 30.0f
 extern ECORE_API int			ps_r3_dyn_wet_surf_sm_res;	// 256
 
+extern ECORE_API float ps_r2_ss_sunshafts_length;
+extern ECORE_API float ps_r2_ss_sunshafts_radius;
+extern u32 ps_sunshafts_mode;
+
 extern ECORE_API float			ps_prop_ss_sample_step_phase0;
 extern ECORE_API float			ps_prop_ss_sample_step_phase1;
 //extern ECORE_API float			ps_prop_ss_sample_step_phase2;
@@ -180,6 +184,13 @@ enum
 	R_FLAGEXT_HOM_DEPTH_DRAW		= (1<<7),
 	R2FLAGEXT_SUN_ZCULLING			= (1<<8),
 	R2FLAGEXT_SUN_OLD				= (1<<9),
+};
+
+enum
+{
+    R2SS_VOLUMETRIC,
+    R2SS_SCREEN_SPACE,
+    R2SS_MANOWAR_SSSS,
 };
 
 extern void						xrRender_initconsole	();
