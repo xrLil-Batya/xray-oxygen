@@ -30,6 +30,7 @@ public:
 	IBlender*					b_fxaa;
 	IBlender*					b_sunshafts;
 	IBlender*					b_rain_drops;
+    IBlender*					b_ogse_sunshafts;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -49,6 +50,8 @@ public:
 	// 
 	ref_rt						rt_Accumulator;		// 64bit		(r,g,b,specular)
 	ref_rt						rt_Accumulator_temp;// only for HW which doesn't feature fp16 blend
+    ref_rt						rt_sunshafts_0;		// ss0
+    ref_rt						rt_sunshafts_1;		// ss1
 	ref_rt						rt_SunShaftsMask;
 	ref_rt						rt_SunShaftsMaskSmoothed;
 	ref_rt						rt_SunShaftsPass0;
@@ -99,6 +102,7 @@ private:
 
 	// OCCq
 	ref_shader					s_occq;
+    ref_shader					s_ogse_sunshafts;
 
 	// SUNSHAFTS
 	ref_shader					s_SunShafts;
@@ -156,6 +160,7 @@ private:
 	float						f_luminance_adapt;
 
 	// Combine
+    ref_geom g_KD;
 	ref_geom					g_combine;
 	ref_geom					g_combine_VP;		// xy=p,zw=tc
 	ref_geom					g_combine_2UV;
@@ -225,6 +230,7 @@ public:
 	void						u_DBT_disable			();
 
 	void						phase_clear_position	();
+    void						phase_ogse_sunshafts    ();
 	void						phase_SunShafts			();
 	void						phase_ssao				();
 	void						phase_downsamp			();
