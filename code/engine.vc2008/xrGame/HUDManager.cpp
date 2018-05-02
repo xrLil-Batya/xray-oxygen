@@ -33,7 +33,7 @@ CFontManager::CFontManager()
 	m_all_fonts.push_back(&pFontGraffiti32Russian	);
 	m_all_fonts.push_back(&pFontGraffiti50Russian	);
 	m_all_fonts.push_back(&pFontLetterica25			);
-	m_all_fonts.push_back(&pFontelectron18			);
+	m_all_fonts.push_back(&pFontElectron18			);
 	m_all_fonts.push_back(&pFontStat				);
 
 	for(CGameFont** it : m_all_fonts)
@@ -57,7 +57,7 @@ void CFontManager::InitializeFonts()
 	InitializeFont(pFontGraffiti32Russian	,"ui_font_graff_32"				);
 	InitializeFont(pFontGraffiti50Russian	,"ui_font_graff_50"				);
 	InitializeFont(pFontLetterica25			,"ui_font_letter_25"			);
-	InitializeFont(pFontelectron18			,"electron_18"					);
+	InitializeFont(pFontElectron18			,"ui_font_electron_18"			);
 	InitializeFont(pFontStat				,"stat_font",					CGameFont::fsDeviceIndependent);
 	pFontStat->SetInterval	(0.75f, 1.0f);
 
@@ -243,7 +243,7 @@ void   CHUDManager::RenderActiveItemUI()
 }
 
 extern ENGINE_API BOOL bShowPauseString;
-//отрисовка элементов интерфейса
+//РѕС‚СЂРёСЃРѕРІРєР° СЌР»РµРјРµРЅС‚РѕРІ РёРЅС‚РµСЂС„РµР№СЃР°
 void  CHUDManager::RenderUI()
 {
 	if (!psHUD_Flags.is(HUD_DRAW_RT2)) return;
