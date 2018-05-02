@@ -1,3 +1,10 @@
+/*
+	* Authors:
+	* Date of creation:
+	* Description:
+	* Copyright:
+*/
+
 #define ENGINE_API
 #include "xrCore/xrCore.h"
 #include "xrEngine/Fmesh.h"
@@ -22,4 +29,3 @@ void ogf_desc::Save(IWriter& F)
 	F.w_stringZ(modif_name);
 	F.w(&modif_time, sizeof(modif_time));
 }
-

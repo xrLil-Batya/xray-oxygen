@@ -1,8 +1,10 @@
 #include "files_list.hpp"
 #pragma hdrstop
+
 #ifdef _LW_EXPORT
 #undef AnsiString
 #endif
+
 #include "ExportObjectOGF.h"
 
 //--------------------------------------------------------------------------------
@@ -11,7 +13,7 @@
 #include "../../utils/common/NvMender2003/mender_input_output.h"
 #include "../../utils/common/NvMender2003/remove_isolated_verts.h"
 //--------------------------------------------------------------------------------
-IC void	set_vertex(MeshMender::Vertex &out_vertex, const SOGFVert& in_vertex)
+inline void	set_vertex(MeshMender::Vertex &out_vertex, const SOGFVert& in_vertex)
 {
 	cv_vector(out_vertex.pos, in_vertex.P);
 	cv_vector(out_vertex.normal, in_vertex.N);
@@ -19,7 +21,7 @@ IC void	set_vertex(MeshMender::Vertex &out_vertex, const SOGFVert& in_vertex)
 	out_vertex.t = in_vertex.UV.y;
 }
 
-IC void	set_vertex(SOGFVert& out_vertex, const SOGFVert& in_old_vertex, const MeshMender::Vertex &in_vertex)
+inline void	set_vertex(SOGFVert& out_vertex, const SOGFVert& in_old_vertex, const MeshMender::Vertex &in_vertex)
 {
 	out_vertex = in_old_vertex;
 
@@ -33,14 +35,13 @@ IC void	set_vertex(SOGFVert& out_vertex, const SOGFVert& in_old_vertex, const Me
 	out_vertex.B.set(cv_vector(binormal, in_vertex.binormal));
 }
 
-
-IC WORD	&face_vertex(SOGFFace &F, u32 vertex_index)
+inline WORD	&face_vertex(SOGFFace &F, u32 vertex_index)
 {
 	VERIFY(vertex_index < 3);
 	return F.v[vertex_index];
 }
 
-IC const WORD &face_vertex(const SOGFFace &F, u32 vertex_index)
+inline const WORD &face_vertex(const SOGFFace &F, u32 vertex_index)
 {
 	VERIFY(vertex_index < 3);
 	return F.v[vertex_index];
@@ -49,23 +50,14 @@ IC const WORD &face_vertex(const SOGFFace &F, u32 vertex_index)
 //--------------------------------------------------------------------------------------------
 void CObjectOGFCollectorPacked::CalculateTB()
 {
-	xr_vector<MeshMender::Vertex>	mender_in_out_verts;
-	xr_vector< unsigned int >		mender_in_out_indices;
-	xr_vector< unsigned int >		mender_mapping_out_to_in_vert;
+	xr_vector<MeshMender::Vertex> mender_in_out_verts;
+	xr_vector<unsigned int> mender_in_out_indices;
+	xr_vector<unsigned int> mender_mapping_out_to_in_vert;
 
 	fill_mender_input(m_Verts, m_Faces, mender_in_out_verts, mender_in_out_indices);
 
 	MeshMender	mender;
-	if (!mender.Mend(
-		mender_in_out_verts,
-		mender_in_out_indices,
-		mender_mapping_out_to_in_vert,
-		1,
-		0.5,
-		0.5,
-		0.0f,
-		MeshMender::DONT_CALCULATE_NORMALS,
-		MeshMender::RESPECT_SPLITS,
+	if (!mender.Mend(mender_in_out_verts, mender_in_out_indices, mender_mapping_out_to_in_vert, 1, 0.5, 0.5, 0.0f, MeshMender::DONT_CALCULATE_NORMALS, MeshMender::RESPECT_SPLITS,
 		MeshMender::DONT_FIX_CYLINDRICAL))
 		Debug.fatal(DEBUG_INFO, "NVMeshMender failed ");
 

@@ -1,4 +1,3 @@
-
 //----------------------------------------------------
 // file: ExportSkeleton.cpp
 //----------------------------------------------------
@@ -8,6 +7,7 @@
 #ifdef _LW_EXPORT
 #	undef AnsiString
 #endif
+
 #ifndef	_EDITOR
 //
 #define ref_geom void*
@@ -29,7 +29,7 @@ using RStrVec = xr_vector<shared_str>;
 
 #include "ExportSkeleton.h"
 
-///////////////////////////////////////////////////////////////////////////////////////////////////// 
+/////////////////////////////////////////////////////////////////////////////////////////////////////
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////
 #include "../../utils/common/nvMender2003/nvmeshmender.h"
@@ -48,28 +48,31 @@ void 	CExportSkeleton::SSplit::OptimizeTextureCoordinates()
 
 	u32	v_cnt = m_Verts.size();
 
-	for (u32 v_idx = 0; v_idx != v_cnt; v_idx++) {
+	for (u32 v_idx = 0; v_idx != v_cnt; ++v_idx)
+	{
 		SSkelVert	&iV = m_Verts[v_idx];
 		Tmin.min(iV.uv);
 		Tmax.max(iV.uv);
 	}
+
 	Tdelta.x = floorf((Tmax.x - Tmin.x) / 2 + Tmin.x);
 	Tdelta.y = floorf((Tmax.y - Tmin.y) / 2 + Tmin.y);
 
 	Fvector2	Tsize;
 	Tsize.sub(Tmax, Tmin);
-	if ((Tsize.x>32) || (Tsize.y>32))
+	if ((Tsize.x > 32) || (Tsize.y > 32))
 		Msg("#!Surface [T:'%s', S:'%s'] has UV tiled more than 32 times.", *m_Texture, *m_Shader);
 	{
 		// 2. Recalc UV mapping
-		for (u32 v_idx = 0; v_idx != v_cnt; v_idx++) {
+		for (u32 v_idx = 0; v_idx != v_cnt; ++v_idx)
+		{
 			SSkelVert	&iV = m_Verts[v_idx];
 			iV.uv.sub(Tdelta);
 		}
 	}
 }
 
-IC void	set_vertex(MeshMender::Vertex &out_vertex, const SSkelVert& in_vertex)
+inline void	set_vertex(MeshMender::Vertex &out_vertex, const SSkelVert& in_vertex)
 {
 	cv_vector(out_vertex.pos, in_vertex.offs);
 	cv_vector(out_vertex.normal, in_vertex.norm);
@@ -79,7 +82,7 @@ IC void	set_vertex(MeshMender::Vertex &out_vertex, const SSkelVert& in_vertex)
 	//out_vertex.binormal;
 }
 
-IC void	set_vertex(SSkelVert& out_vertex, const SSkelVert& in_old_vertex, const MeshMender::Vertex &in_vertex)
+inline void	set_vertex(SSkelVert& out_vertex, const SSkelVert& in_old_vertex, const MeshMender::Vertex &in_vertex)
 {
 	out_vertex = in_old_vertex;
 
@@ -93,13 +96,13 @@ IC void	set_vertex(SSkelVert& out_vertex, const SSkelVert& in_old_vertex, const 
 	out_vertex.binorm.set(cv_vector(binormal, in_vertex.binormal));
 }
 
-IC u16	&face_vertex(SSkelFace &F, u32 vertex_index)
+inline u16	&face_vertex(SSkelFace &F, u32 vertex_index)
 {
 	VERIFY(vertex_index < 3);
 	return F.v[vertex_index];
 }
 
-IC const u16 &face_vertex(const SSkelFace &F, u32 vertex_index)
+inline const u16 &face_vertex(const SSkelFace &F, u32 vertex_index)
 {
 	VERIFY(vertex_index < 3);
 	return F.v[vertex_index];
@@ -107,13 +110,13 @@ IC const u16 &face_vertex(const SSkelFace &F, u32 vertex_index)
 
 void 	CExportSkeleton::SSplit::CalculateTB()
 {
-	xr_vector<MeshMender::Vertex>	mender_in_out_verts;
-	xr_vector< unsigned int >		mender_in_out_indices;
-	xr_vector< unsigned int >		mender_mapping_out_to_in_vert;
+	xr_vector<MeshMender::Vertex> mender_in_out_verts;
+	xr_vector<unsigned int> mender_in_out_indices;
+	xr_vector<unsigned int> mender_mapping_out_to_in_vert;
 
 	fill_mender_input(m_Verts, m_Faces, mender_in_out_verts, mender_in_out_indices);
 
-	MeshMender	mender; 
+	MeshMender mender;
 	if (!mender.Mend(mender_in_out_verts, mender_in_out_indices, mender_mapping_out_to_in_vert, 1, 0.5, 0.5, 0.0f, MeshMender::DONT_CALCULATE_NORMALS, MeshMender::RESPECT_SPLITS, MeshMender::DONT_FIX_CYLINDRICAL))
 		Debug.fatal(DEBUG_INFO, "NVMeshMender failed ");
 

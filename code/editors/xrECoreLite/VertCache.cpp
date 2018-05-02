@@ -1,8 +1,14 @@
+/*
+	* Authors:
+	* Date of creation:
+	* Description:
+	* Copyright:
+*/
+
 #include "xrCore\xrCore.h"
 
 class VertexCache
 {
-
 public:
 	VertexCache(int size);
 	VertexCache();
@@ -16,7 +22,6 @@ VertexCache::VertexCache() : VertexCache(16)
 {
 }
 
-
 VertexCache::VertexCache(int size)
 {
 	entries.assign(size, -1);
@@ -26,4 +31,3 @@ VertexCache::~VertexCache()
 {
 	entries.clear();
 }
-
