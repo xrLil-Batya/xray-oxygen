@@ -45,6 +45,7 @@
     <ClCompile Include="Launcher.cpp">
       <Filter>Application\Kernel\Launcher</Filter>
     </ClCompile>
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LE_Form.h">
@@ -53,5 +54,8 @@
     <ClInclude Include="Launcher.h">
       <Filter>Application\Kernel\Launcher</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Launcher.resx" />
   </ItemGroup>
 </Project>

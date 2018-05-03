@@ -133,6 +133,7 @@
   <ItemGroup>
     <ClCompile Include="Launcher.cpp" />
     <ClCompile Include="LE_Form.cpp" />
+    <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Launcher.h">
@@ -145,6 +146,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Launcher.resx">
       <DependentUpon>Launcher.h</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="LE_Form.resx">
+      <DependentUpon>LE_Form.h</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
