@@ -260,11 +260,9 @@ int ps_rs_loading_stages = 0;
 
 float		ps_prop_ss_radius				=	1.56f;
 float		ps_prop_ss_sample_step_phase0	=	.09f;
-float		ps_prop_ss_sample_step_phase1	=	.03f;
-//float		ps_prop_ss_sample_step_phase2	=	.33f;
+float		ps_prop_ss_sample_step_phase1	=	.07f;
 float		ps_prop_ss_blend				=	.066f;
 float		ps_prop_ss_intensity			=	1.f;
-
 
 //- Mad Max
 float		ps_r2_gloss_factor			= 0.03f;

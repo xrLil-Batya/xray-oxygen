@@ -55,7 +55,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Editor Launcher", "Editor L
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SDK", "SDK", "{BF65BC94-DFBC-4B59-9AE7-E32A3F6ABBDE}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Oxy.SDK", "Oxy.SDK\Oxy.SDK.vcxproj", "{9CAC50EB-D394-411B-BC7F-7BD697C4E4E1}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Oxy.SDK", "editors\Oxy.SDK\Oxy.SDK.vcxproj", "{9CAC50EB-D394-411B-BC7F-7BD697C4E4E1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
