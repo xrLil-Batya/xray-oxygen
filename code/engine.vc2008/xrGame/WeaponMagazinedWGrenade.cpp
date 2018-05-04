@@ -13,6 +13,7 @@
 #include "game_base_space.h"
 #include "../xrphysics/MathUtils.h"
 #include "player_hud.h"
+#include "../FrayBuildConfig.hpp"
 
 #ifdef DEBUG
 #	include "phdebug.h"
