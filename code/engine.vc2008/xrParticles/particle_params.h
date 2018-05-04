@@ -11,15 +11,17 @@
 #include "psystem.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class PARTICLES_API CParticleParams 
+class PARTICLES_API CParticleParams
 {
 public:
-	Fvector			m_tParticlePosition;
-	Fvector			m_tParticleAngles;
-	Fvector			m_tParticleVelocity;
+	Fvector m_tParticlePosition;
+	Fvector m_tParticleAngles;
+	Fvector m_tParticleVelocity;
 
 public:
-	CParticleParams(const Fvector &tPositionOffset = Fvector().set(0, 0, 0), const Fvector &tAnglesOffset = Fvector().set(0, 0, 0), const Fvector &tVelocity = Fvector().set(0, 0, 0));
+	CParticleParams(const Fvector &tPositionOffset = Fvector().set(0, 0, 0), const Fvector &tAnglesOffset = Fvector().set(0, 0, 0),
+		const Fvector &tVelocity = Fvector().set(0, 0, 0));
+
 	virtual			~CParticleParams() = default;
 	void			initialize() {}
 

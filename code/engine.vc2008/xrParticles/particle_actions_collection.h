@@ -4,7 +4,8 @@
 
 #include "particle_actions.h"
 #include "particle_core.h"
-namespace PAPI{
+namespace PAPI
+{
 #define _METHODS	virtual void 	Load		(IReader& F);\
                     virtual void 	Save		(IWriter& F);\
                     virtual void 	Execute		(ParticleEffect *pe, const float dt, float& m_max);\
@@ -18,7 +19,7 @@ namespace PAPI{
 		float magnitude;	// what percent of the way to go each time
 		float epsilon;		// add to r^2 for softening
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PABounce : public ParticleAction
@@ -29,14 +30,14 @@ namespace PAPI{
 		float resilience;	// Resilence perpendicular to surface
 		float cutoffSqr;	// cutoff velocity; friction applies iff v > cutoff
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PACopyVertexB : public ParticleAction
 	{
 		BOOL copy_pos;		// True to copy pos to posB.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PADamping : public ParticleAction
@@ -45,7 +46,7 @@ namespace PAPI{
 		float vlowSqr;		// Low and high cutoff velocities
 		float vhighSqr;
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAExplosion : public ParticleAction
@@ -58,7 +59,7 @@ namespace PAPI{
 		float age;			// How long it's been going on
 		float epsilon;		// Softening parameter
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAFollow : public ParticleAction
@@ -67,7 +68,7 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAGravitate : public ParticleAction
@@ -76,7 +77,7 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAGravity : public ParticleAction
@@ -84,7 +85,7 @@ namespace PAPI{
 		pVector directionL;	// Amount to increment velocity (in local space)
 		pVector direction;	// Amount to increment velocity
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAJet : public ParticleAction
@@ -97,15 +98,15 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAKillOld : public ParticleAction
 	{
-    	float age_limit;		// Exact age at which to kill particles.
+		float age_limit;		// Exact age at which to kill particles.
 		BOOL kill_less_than;	// True to kill particles less than limit.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAMatchVelocity : public ParticleAction
@@ -114,12 +115,12 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAMove : public ParticleAction
 	{
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAOrbitLine : public ParticleAction
@@ -130,7 +131,7 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAOrbitPoint : public ParticleAction
@@ -141,7 +142,7 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PARandomAccel : public ParticleAction
@@ -149,7 +150,7 @@ namespace PAPI{
 		pDomain gen_accL;	// The domain of random accelerations.(in local space)
 		pDomain gen_acc;	// The domain of random accelerations.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PARandomDisplace : public ParticleAction
@@ -157,7 +158,7 @@ namespace PAPI{
 		pDomain gen_dispL;	// The domain of random displacements.(in local space)
 		pDomain gen_disp;	// The domain of random displacements.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PARandomVelocity : public ParticleAction
@@ -165,14 +166,14 @@ namespace PAPI{
 		pDomain gen_velL;	// The domain of random velocities.(in local space)
 		pDomain gen_vel;	// The domain of random velocities.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PARestore : public ParticleAction
 	{
 		float time_left;	// Time remaining until they should be in position.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAScatter : public ParticleAction
@@ -183,7 +184,7 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PASink : public ParticleAction
@@ -192,7 +193,7 @@ namespace PAPI{
 		pDomain positionL;	// Disposal region (in local space)
 		pDomain position;	// Disposal region
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PASinkVelocity : public ParticleAction
@@ -201,7 +202,7 @@ namespace PAPI{
 		pDomain velocityL;	// Disposal region (in local space)
 		pDomain velocity;	// Disposal region
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PASpeedLimit : public ParticleAction
@@ -209,16 +210,16 @@ namespace PAPI{
 		float min_speed;		// Clamp speed to this minimum.
 		float max_speed;		// Clamp speed to this maximum.
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PASource : public ParticleAction
 	{
-		enum{
-			flSingleSize		= (1ul<<29ul),// True to get positionB from position.
-			flSilent			= (1ul<<30ul),
-			flVertexB_tracks	= (1ul<<31ul),// True to get positionB from position.
-			fl_FORCEDWORD		= u32(-1)
+		enum {
+			flSingleSize = (1ul << 29ul),// True to get positionB from position.
+			flSilent = (1ul << 30ul),
+			flVertexB_tracks = (1ul << 31ul),// True to get positionB from position.
+			fl_FORCEDWORD = u32(-1)
 		};
 		pDomain positionL;	// Choose a position in this domain. (local_space)
 		pDomain velocityL;	// Choose a velocity in this domain. (local_space)
@@ -231,22 +232,22 @@ namespace PAPI{
 		float particle_rate;// Particles to generate per unit time
 		float age;			// Initial age of the particles
 		float age_sigma;	// St. dev. of initial age of the particles
-		pVector parent_vel;	
+		pVector parent_vel;
 		float parent_motion;
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PATargetColor : public ParticleAction
 	{
-		PATargetColor():timeFrom(0.0f),timeTo(1.0f){}
+		PATargetColor() :timeFrom(0.0f), timeTo(1.0f) {}
 		pVector color;		// Color to shift towards
 		float alpha;		// Alpha value to shift towards
 		float scale;		// Amount to shift by (1 == all the way)
 		float timeFrom;
 		float timeTo;
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PATargetSize : public ParticleAction
@@ -254,7 +255,7 @@ namespace PAPI{
 		pVector size;		// Size to shift towards
 		pVector scale;		// Amount to shift by per frame (1 == all the way)
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PATargetRotate : public ParticleAction
@@ -262,7 +263,7 @@ namespace PAPI{
 		pVector rot;		// Rotation to shift towards
 		float scale;		// Amount to shift by per frame (1 == all the way)
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PATargetVelocity : public ParticleAction
@@ -271,7 +272,7 @@ namespace PAPI{
 		pVector velocity;	// Velocity to shift towards
 		float scale;		// Amount to shift by (1 == all the way)
 
-        _METHODS;
+		_METHODS;
 	};
 
 	struct PARTICLES_API PAVortex : public ParticleAction
@@ -284,20 +285,20 @@ namespace PAPI{
 		float epsilon;		// Softening parameter
 		float max_radius;	// Only influence particles within max_radius
 
-        _METHODS;
+		_METHODS;
 	};
 
-    struct PARTICLES_API PATurbulence : public ParticleAction
-    {
+	struct PARTICLES_API PATurbulence : public ParticleAction
+	{
 		float frequency;	// Frequency
 		int	octaves;		// Octaves
 		float magnitude;	// Scale for rotation around axis
 		float epsilon;		// Softening parameter
-        pVector offset;		// Offset
-        float age;
+		pVector offset;		// Offset
+		float age;
 
-        _METHODS;
-    };
+		_METHODS;
+	};
 };
 
 //---------------------------------------------------------------------------

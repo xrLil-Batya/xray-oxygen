@@ -10,26 +10,26 @@ using namespace PAPI;
 
 // system
 CParticleManager PM;
-PARTICLES_API IParticleManager* PAPI::ParticleManager(){	return &PM; }
+PARTICLES_API IParticleManager* PAPI::ParticleManager() { return &PM; }
 
-// 
-CParticleManager::CParticleManager	()
+//
+CParticleManager::CParticleManager()
 {
 }
 
-CParticleManager::~CParticleManager	()
+CParticleManager::~CParticleManager()
 {
 }
 
 ParticleEffect*	CParticleManager::GetEffectPtr(int effect_id)
 {
-	R_ASSERT(effect_id>=0&&effect_id<(int)effect_vec.size());
+	R_ASSERT(effect_id >= 0 && effect_id < (int)effect_vec.size());
 	return effect_vec[effect_id];
 }
 
 ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
 {
-	R_ASSERT(a_list_num>=0&&a_list_num<(int)m_alist_vec.size());
+	R_ASSERT(a_list_num >= 0 && a_list_num < (int)m_alist_vec.size());
 	return m_alist_vec[a_list_num];
 }
 
@@ -37,7 +37,7 @@ ParticleActions* CParticleManager::GetActionListPtr(int a_list_num)
 int CParticleManager::CreateEffect(u32 max_particles)
 {
 	int eff_id = -1;
-	for (auto i = 0; i < effect_vec.size(); i++)
+	for (auto i = 0; i < effect_vec.size(); ++i)
 	{
 		if (!effect_vec[i])
 		{
@@ -45,20 +45,22 @@ int CParticleManager::CreateEffect(u32 max_particles)
 			break;
 		}
 	}
+
 	if (eff_id < 0)
 	{
 		// Couldn't find a big enough gap. Reallocate.
 		eff_id = (int)effect_vec.size();
 		effect_vec.push_back(0);
 	}
+
 	effect_vec[eff_id] = new ParticleEffect(max_particles);
 
 	return eff_id;
 }
 void CParticleManager::DestroyEffect(int effect_id)
 {
-	R_ASSERT(effect_id>=0&&effect_id<(int)effect_vec.size());
-    xr_delete(effect_vec[effect_id]);
+	R_ASSERT(effect_id >= 0 && effect_id < (int)effect_vec.size());
+	xr_delete(effect_vec[effect_id]);
 }
 int	CParticleManager::CreateActionList()
 {
@@ -84,27 +86,36 @@ int	CParticleManager::CreateActionList()
 }
 void CParticleManager::DestroyActionList(int alist_id)
 {
-	R_ASSERT(alist_id>=0&&alist_id<(int)m_alist_vec.size());
-    xr_delete(m_alist_vec[alist_id]);
+	R_ASSERT(alist_id >= 0 && alist_id < (int)m_alist_vec.size());
+	xr_delete(m_alist_vec[alist_id]);
 }
 
 // control
 void CParticleManager::PlayEffect(int effect_id, int alist_id)
 {
 	// Execute the specified action list.
-	ParticleActions* pa	= GetActionListPtr(alist_id);
-	VERIFY				(pa);
-	if(pa == nullptr)
+	ParticleActions* pa = GetActionListPtr(alist_id);
+	VERIFY(pa);
+
+	if (pa == nullptr)
 		return; // ERROR
+
 	pa->lock();
 	// Step through all the actions in the action list.
-	for(PAVecIt it=pa->begin(); it!=pa->end(); ++it)
+	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
 	{
 		VERIFY((*it));
-		switch((*it)->type){
-		case PASourceID: 	static_cast<PASource*>(*it)->m_Flags.set(PASource::flSilent,FALSE); break;
-		case PAExplosionID: static_cast<PAExplosion*>(*it)->age = 0.f; break;
-		case PATurbulenceID:static_cast<PATurbulence*>(*it)->age = 0.f; break;
+		switch ((*it)->type)
+		{
+		case PASourceID:
+			static_cast<PASource*>(*it)->m_Flags.set(PASource::flSilent, FALSE);
+			break;
+		case PAExplosionID:
+			static_cast<PAExplosion*>(*it)->age = 0.f;
+			break;
+		case PATurbulenceID:
+			static_cast<PATurbulence*>(*it)->age = 0.f;
+			break;
 		}
 	}
 	pa->unlock();
@@ -112,31 +123,41 @@ void CParticleManager::PlayEffect(int effect_id, int alist_id)
 
 void CParticleManager::StopEffect(int effect_id, int alist_id, BOOL deffered)
 {
-    // Execute the specified action list.
-    ParticleActions* pa	= GetActionListPtr(alist_id);
-	VERIFY				(pa);
-    if(pa == NULL)		return; // ERROR
+	// Execute the specified action list.
+	ParticleActions* pa = GetActionListPtr(alist_id);
+	VERIFY(pa);
+
+	if (pa == NULL)
+		return; // ERROR
+
 	pa->lock();
 
-    // Step through all the actions in the action list.
-    for(PAVecIt it=pa->begin(); it!=pa->end(); it++){
-        switch((*it)->type){
-        case PASourceID: static_cast<PASource*>(*it)->m_Flags.set(PASource::flSilent,TRUE);		break;
-        }
-    }
-	if (!deffered){
-    	// effect
-        ParticleEffect* pe		= GetEffectPtr(effect_id);
-        pe->p_count				= 0;
-    }
+	// Step through all the actions in the action list.
+	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
+	{
+		switch ((*it)->type)
+		{
+		case PASourceID:
+			static_cast<PASource*>(*it)->m_Flags.set(PASource::flSilent, TRUE);
+			break;
+		}
+	}
+
+	if (!deffered)
+	{
+		// effect
+		ParticleEffect* pe = GetEffectPtr(effect_id);
+		pe->p_count = 0;
+	}
+
 	pa->unlock();
 }
 
 // update&render
 void CParticleManager::Update(int effect_id, int alist_id, float dt)
 {
-    ParticleEffect* pe	= GetEffectPtr(effect_id);
-    ParticleActions* pa	= GetActionListPtr(alist_id);
+	ParticleEffect* pe = GetEffectPtr(effect_id);
+	ParticleActions* pa = GetActionListPtr(alist_id);
 
 	VERIFY(pa);
 	VERIFY(pe);
@@ -144,38 +165,42 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 	pa->lock();
 
 	// Step through all the actions in the action list.
-    float kill_old_time = 1.0f;
-	for(PAVecIt it=pa->begin(); it!=pa->end(); it++)
+	float kill_old_time = 1.0f;
+	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
 	{
 		VERIFY((*it));
-    	(*it)->Execute	(pe, dt, kill_old_time);
+		(*it)->Execute(pe, dt, kill_old_time);
 	}
 	pa->unlock();
 }
 void CParticleManager::Render(int effect_id)
 {
-//    ParticleEffect* pe	= GetEffectPtr(effect_id);
+	//    ParticleEffect* pe	= GetEffectPtr(effect_id);
 }
 void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvector& vel)
 {
 	// Execute the specified action list.
-	ParticleActions* pa	= GetActionListPtr(alist_id);
+	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
 
-	if(pa == NULL)		return; // ERROR
+	if (pa == NULL)
+		return; // ERROR
+
 	pa->lock();
 
-	Fmatrix mT;			mT.translate(full.c);
+	Fmatrix mT;
+	mT.translate(full.c);
 
 	// Step through all the actions in the action list.
-	for(PAVecIt it=pa->begin(); it!=pa->end(); it++){
-		BOOL r 			= (*it)->m_Flags.is(ParticleAction::ALLOW_ROTATE);
-		const Fmatrix& m = r?full:mT;
-        (*it)->Transform(m);
-		switch((*it)->type)
+	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
+	{
+		BOOL r = (*it)->m_Flags.is(ParticleAction::ALLOW_ROTATE);
+		const Fmatrix& m = r ? full : mT;
+		(*it)->Transform(m);
+		switch ((*it)->type)
 		{
 		case PASourceID:
-			static_cast<PASource*>(*it)->parent_vel = pVector(vel.x,vel.y,vel.z)*static_cast<PASource*>(*it)->parent_motion;
+			static_cast<PASource*>(*it)->parent_vel = pVector(vel.x, vel.y, vel.z)*static_cast<PASource*>(*it)->parent_motion;
 			break;
 		}
 	}
@@ -186,107 +211,164 @@ void CParticleManager::Transform(int alist_id, const Fmatrix& full, const Fvecto
 void CParticleManager::RemoveParticle(int effect_id, u32 p_id)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	pe->Remove		(p_id);
+	pe->Remove(p_id);
 }
 void CParticleManager::SetMaxParticles(int effect_id, u32 max_particles)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	pe->Resize		(max_particles);
+	pe->Resize(max_particles);
 }
 void CParticleManager::SetCallback(int effect_id, OnBirthParticleCB b, OnDeadParticleCB d, void* owner, u32 param)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	pe->b_cb		= b;
-	pe->d_cb		= d;
-    pe->owner		= owner;
-    pe->param		= param;
+	pe->b_cb = b;
+	pe->d_cb = d;
+	pe->owner = owner;
+	pe->param = param;
 }
 void CParticleManager::GetParticles(int effect_id, Particle*& particles, u32& cnt)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-    particles		= pe->particles;
-    cnt				= pe->p_count;
+	particles = pe->particles;
+	cnt = pe->p_count;
 }
-u32	CParticleManager::GetParticlesCount	(int effect_id)
+u32	CParticleManager::GetParticlesCount(int effect_id)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-    return 			pe->p_count;
+	return 			pe->p_count;
 }
 
 // action
 ParticleAction* CParticleManager::CreateAction(PActionEnum type)
 {
-	ParticleAction* pa			= 0;
-    switch(type){
-    case PAAvoidID:				pa = new PAAvoid();				break;
-    case PABounceID:    		pa = new PABounce();			break;
-    case PACopyVertexBID:    	pa = new PACopyVertexB();		break;
-    case PADampingID:    		pa = new PADamping();			break;
-    case PAExplosionID:    		pa = new PAExplosion();			break;
-    case PAFollowID:    		pa = new PAFollow();			break;
-    case PAGravitateID:    		pa = new PAGravitate();			break;
-    case PAGravityID:    		pa = new PAGravity();			break;
-    case PAJetID:    			pa = new PAJet();				break;
-    case PAKillOldID:    		pa = new PAKillOld();			break;
-    case PAMatchVelocityID:    	pa = new PAMatchVelocity();		break;
-    case PAMoveID:    			pa = new PAMove();				break;
-    case PAOrbitLineID:    		pa = new PAOrbitLine();			break;
-    case PAOrbitPointID:    	pa = new PAOrbitPoint();		break;
-    case PARandomAccelID:    	pa = new PARandomAccel();		break;
-    case PARandomDisplaceID:    pa = new PARandomDisplace();	break;
-    case PARandomVelocityID:    pa = new PARandomVelocity();	break;
-    case PARestoreID:    		pa = new PARestore();			break;
-    case PASinkID:    			pa = new PASink();				break;
-    case PASinkVelocityID:    	pa = new PASinkVelocity();		break;
-    case PASourceID:    		pa = new PASource();			break;
-    case PASpeedLimitID:    	pa = new PASpeedLimit();		break;
-    case PATargetColorID:    	pa = new PATargetColor();		break;
-    case PATargetSizeID:    	pa = new PATargetSize();		break;
-    case PATargetRotateID:    	pa = new PATargetRotate();		break;
-    case PATargetRotateDID:    	pa = new PATargetRotate();		break;
-    case PATargetVelocityID:    pa = new PATargetVelocity(); 	break;
-    case PATargetVelocityDID:   pa = new PATargetVelocity();	break;
-    case PAVortexID:    		pa = new PAVortex();			break;
-    case PATurbulenceID:		pa = new PATurbulence();		break;
-    case PAScatterID:  			pa = new PAScatter();			break;
-    default: NODEFAULT;
-    }
-    pa->type					= type;
-    return pa;
+	ParticleAction* pa = 0;
+	switch (type) {
+	case PAAvoidID:
+		pa = new PAAvoid();
+		break;
+	case PABounceID:
+		pa = new PABounce();
+		break;
+	case PACopyVertexBID:
+		pa = new PACopyVertexB();
+		break;
+	case PADampingID:
+		pa = new PADamping();
+		break;
+	case PAExplosionID:
+		pa = new PAExplosion();
+		break;
+	case PAFollowID:
+		pa = new PAFollow();
+		break;
+	case PAGravitateID:
+		pa = new PAGravitate();
+		break;
+	case PAGravityID:
+		pa = new PAGravity();
+		break;
+	case PAJetID:
+		pa = new PAJet();
+		break;
+	case PAKillOldID:
+		pa = new PAKillOld();
+		break;
+	case PAMatchVelocityID:
+		pa = new PAMatchVelocity();
+		break;
+	case PAMoveID:
+		pa = new PAMove();
+		break;
+	case PAOrbitLineID:
+		pa = new PAOrbitLine();
+		break;
+	case PAOrbitPointID:
+		pa = new PAOrbitPoint();
+		break;
+	case PARandomAccelID:
+		pa = new PARandomAccel();
+		break;
+	case PARandomDisplaceID:
+		pa = new PARandomDisplace();
+		break;
+	case PARandomVelocityID:
+		pa = new PARandomVelocity();
+		break;
+	case PARestoreID:
+		pa = new PARestore();
+		break;
+	case PASinkID:
+		pa = new PASink();
+		break;
+	case PASinkVelocityID:
+		pa = new PASinkVelocity();
+		break;
+	case PASourceID:
+		pa = new PASource();
+		break;
+	case PASpeedLimitID:
+		pa = new PASpeedLimit();
+		break;
+	case PATargetColorID:
+		pa = new PATargetColor();
+		break;
+	case PATargetSizeID:
+		pa = new PATargetSize();
+		break;
+	case PATargetRotateID:
+		pa = new PATargetRotate();
+		break;
+	case PATargetRotateDID:
+		pa = new PATargetRotate();
+		break;
+	case PATargetVelocityID:
+		pa = new PATargetVelocity();
+		break;
+	case PATargetVelocityDID:
+		pa = new PATargetVelocity();
+		break;
+	case PAVortexID:
+		pa = new PAVortex();
+		break;
+	case PATurbulenceID:
+		pa = new PATurbulence();
+		break;
+	case PAScatterID:
+		pa = new PAScatter();
+		break;
+	default: NODEFAULT;
+	}
+	pa->type = type;
+	return pa;
 }
 u32 CParticleManager::LoadActions(int alist_id, IReader& R)
 {
 	// Execute the specified action list.
-	ParticleActions* pa		= GetActionListPtr(alist_id);
+	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
-    pa->clear				();
-    if (R.length())
+	pa->clear();
+	if (R.length())
 	{
-        u32 cnt					= R.r_u32();
-        for (u32 k=0; k<cnt; k++){
-            ParticleAction* act	= CreateAction	((PActionEnum)R.r_u32());
-            act->Load			(R);
-            pa->append			(act);
-        }
-    }
-    return pa->size();
+		u32 cnt = R.r_u32();
+		for (u32 k = 0; k < cnt; ++k)
+		{
+			ParticleAction* act = CreateAction((PActionEnum)R.r_u32());
+			act->Load(R);
+			pa->append(act);
+		}
+	}
+	return pa->size();
 }
 void CParticleManager::SaveActions(int alist_id, IWriter& W)
 {
 	// Execute the specified action list.
-	ParticleActions* pa		= GetActionListPtr(alist_id);
+	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
 	pa->lock();
-    W.w_u32					(pa->size());
-    for (PAVecIt it=pa->begin(); it!=pa->end(); it++)
-        (*it)->Save			(W);
+	W.w_u32(pa->size());
+
+	for (PAVecIt it = pa->begin(); it != pa->end(); ++it)
+		(*it)->Save(W);
+
 	pa->unlock();
 }
-
-
-
-
-
-
-
-

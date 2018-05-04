@@ -43,7 +43,6 @@ int ParticleEffect::Resize(u32 max_count)
 		return max_particles;
 	}
 
-
 	std::memcpy(new_particles, particles, p_count * sizeof(Particle));
 	xr_free(particles);
 	particles = new_particles;
@@ -58,10 +57,10 @@ void ParticleEffect::Remove(int i)
 	if (p_count)
 	{
 		Particle& m = particles[i];
+
 		if (d_cb)
-		{
 			d_cb(owner, param, m, i);
-		}
+
 		m = particles[--p_count]; // не менять правило удаления !!! (dependence ParticleGroup)
 	}
 }
