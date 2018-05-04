@@ -12,17 +12,17 @@ XRCORE_API Fmatrix Fidentity;
 XRCORE_API Dmatrix Didentity;
 XRCORE_API CRandom Random;
 
-typedef struct _PROCESSOR_POWER_INFORMATION 
+typedef struct _PROCESSOR_POWER_INFORMATION
 {
-    ULONG Number;
-    ULONG MaxMhz;
-    ULONG CurrentMhz;
-    ULONG MhzLimit;
-    ULONG MaxIdleState;
-    ULONG CurrentIdleState;
+	ULONG Number;
+	ULONG MaxMhz;
+	ULONG CurrentMhz;
+	ULONG MhzLimit;
+	ULONG MaxIdleState;
+	ULONG CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
- 
-namespace FPU 
+
+namespace FPU
 {
 	//  огда-нибудь можно будет задавать точность дл€ float в х64...
 	XRCORE_API void m24(void)
@@ -50,16 +50,16 @@ namespace FPU
 		_controlfp(_RC_NEAR, MCW_RC);
 	}
 
-	void initialize()				
+	void initialize()
 	{
-		 m24r();
+		m24r();
 		::Random.seed(u32(CPU::GetCLK() % (1i64 << 32i64)));
 	}
 };
 
-namespace CPU 
+namespace CPU
 {
-    XRCORE_API u64 qpc_freq;
+	XRCORE_API u64 qpc_freq;
 	XRCORE_API u32 qpc_counter = 0;
 	XRCORE_API processor_info Info;
 
@@ -71,97 +71,135 @@ namespace CPU
 		return _dest;
 	}
 
-    u64 getProcessorFrequencyGeneral()
-    {
-        u64 start, end;
-        u32 dwStart, dwTest;
+	u64 getProcessorFrequencyGeneral()
+	{
+		u64 start, end;
+		u32 dwStart, dwTest;
 
-        dwTest = timeGetTime();
-        do { dwStart = timeGetTime(); } while (dwTest == dwStart);
-        start = GetCLK();
-        while (timeGetTime() - dwStart < 1000);
-        end = GetCLK();
-        return end - start;
-    }
+		dwTest = timeGetTime();
+		do { dwStart = timeGetTime(); } while (dwTest == dwStart);
+		start = GetCLK();
+		while (timeGetTime() - dwStart < 1000);
+		end = GetCLK();
+		return end - start;
+	}
 
-    typedef struct _PROCESSOR_POWER_INFORMATION 
+	typedef struct _PROCESSOR_POWER_INFORMATION
 	{
 		unsigned long Number;
-        unsigned long MaxMhz;
-        unsigned long CurrentMhz;
-        unsigned long MhzLimit;
-        unsigned long MaxIdleState;
-        unsigned long CurrentIdleState;
-    } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
-    u64 getProcessorFrequency(u32 logicalProcessorCount)
-    {
-        PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
-        LONG retCode = CallNtPowerInformation(ProcessorInformation, nullptr, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
-        if (retCode != 0x0l)
-        {
-            return getProcessorFrequencyGeneral();
-        }
-        return pInfo->MhzLimit * u64(1000000);
-    }
+		unsigned long MaxMhz;
+		unsigned long CurrentMhz;
+		unsigned long MhzLimit;
+		unsigned long MaxIdleState;
+		unsigned long CurrentIdleState;
+	} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+	u64 getProcessorFrequency(u32 logicalProcessorCount)
+	{
+		PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
+		LONG retCode = CallNtPowerInformation(ProcessorInformation, nullptr, 0, pInfo, sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount);
+		if (retCode != 0x0l)
+		{
+			return getProcessorFrequencyGeneral();
+		}
+		return pInfo->MhzLimit * u64(1000000);
+	}
 };
 
 bool g_initialize_cpu_called = false;
 
 //------------------------------------------------------------------------------------
-void _initialize_cpu	(void) 
+void _initialize_cpu(void)
 {
 	////////////////////////////////////////////////
-	//#VERTVER: We're don't needy for vendor string: 
-	//modelName has full name of your 
+	//#VERTVER: We're don't needy for vendor string:
+	//modelName has full name of your
 	////////////////////////////////////////////////
 	if (CPU::Info.hasFeature(CPUFeature::AMD))
 	{
 		Msg("* Vendor CPU: AMD");
 	}
-	else 
+	else
 	{
 		Msg("* Vendor CPU: Intel");
 	}
 	////////////////////////////////////////////////
-    Msg("* Detected CPU: %s", CPU::Info.modelName);
+	Msg("* Detected CPU: %s", CPU::Info.modelName);
 
-	string256	features;								xr_strcpy(features,sizeof(features),"RDTSC");
-    if (CPU::Info.hasFeature(CPUFeature::MMX))			xr_strcat(features,	", MMX");
-	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNow))	xr_strcat(features, ", 3DNow!");
-	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNowExt)) xr_strcat(features, ", 3DNowExt!");
-    if (CPU::Info.hasFeature(CPUFeature::SSE))			xr_strcat(features,	", SSE");
-    if (CPU::Info.hasFeature(CPUFeature::SSE2))			xr_strcat(features,	", SSE2");
-    if (CPU::Info.hasFeature(CPUFeature::SSE3))			xr_strcat(features,	", SSE3");
-    if (CPU::Info.hasFeature(CPUFeature::MWait))		xr_strcat(features, ", MONITOR/MWAIT");
-    if (CPU::Info.hasFeature(CPUFeature::SSSE3))		xr_strcat(features,	", SSSE3");
-    if (CPU::Info.hasFeature(CPUFeature::SSE41))		xr_strcat(features,	", SSE4.1");
-    if (CPU::Info.hasFeature(CPUFeature::SSE42))		xr_strcat(features,	", SSE4.2");
-	if (CPU::Info.hasFeature(CPUFeature::HT))			xr_strcat(features, ", HTT");
-	if (CPU::Info.hasFeature(CPUFeature::AVX))			xr_strcat(features, ", AVX");
+	string256	features;
+	xr_strcpy(features, sizeof(features), "RDTSC");
+	if (CPU::Info.hasFeature(CPUFeature::MMX))
+		xr_strcat(features, ", MMX");
+
+	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNow))
+		xr_strcat(features, ", 3DNow!");
+
+	if (CPU::Info.hasFeature(CPUFeature::AMD_3DNowExt))
+		xr_strcat(features, ", 3DNowExt!");
+
+	if (CPU::Info.hasFeature(CPUFeature::SSE))
+		xr_strcat(features, ", SSE");
+
+	if (CPU::Info.hasFeature(CPUFeature::SSE2))
+		xr_strcat(features, ", SSE2");
+
+	if (CPU::Info.hasFeature(CPUFeature::SSE3))
+		xr_strcat(features, ", SSE3");
+
+	if (CPU::Info.hasFeature(CPUFeature::MWait))
+		xr_strcat(features, ", MONITOR/MWAIT");
+
+	if (CPU::Info.hasFeature(CPUFeature::SSSE3))
+		xr_strcat(features, ", SSSE3");
+
+	if (CPU::Info.hasFeature(CPUFeature::SSE41))
+		xr_strcat(features, ", SSE4.1");
+
+	if (CPU::Info.hasFeature(CPUFeature::SSE42))
+		xr_strcat(features, ", SSE4.2");
+
+	if (CPU::Info.hasFeature(CPUFeature::HT))
+		xr_strcat(features, ", HTT");
+
+	if (CPU::Info.hasFeature(CPUFeature::AVX))
+		xr_strcat(features, ", AVX");
+
 	//#NOTE: Compiler doesn't use AVX now
 #ifdef __AVX__
-	else Debug.do_exit( "X-Ray x64 using AVX anyway!" );
+	else Debug.do_exit("X-Ray x64 using AVX anyway!");
 #endif
-	if (CPU::Info.hasFeature(CPUFeature::AVX2))			xr_strcat(features, ", AVX2");
-	if (CPU::Info.hasFeature(CPUFeature::SSE4a))		xr_strcat(features, ", SSE4.a");
-	if (CPU::Info.hasFeature(CPUFeature::MMXExt))		xr_strcat(features, ", MMXExt");
-	if (CPU::Info.hasFeature(CPUFeature::TM2))			xr_strcat(features, ", TM2");
-	if (CPU::Info.hasFeature(CPUFeature::AES))			xr_strcat(features, ", AES");
-	if (CPU::Info.hasFeature(CPUFeature::VMX))			xr_strcat(features, ", VMX");
-	if (CPU::Info.hasFeature(CPUFeature::EST))			xr_strcat(features, ", EST");
+	if (CPU::Info.hasFeature(CPUFeature::AVX2))
+		xr_strcat(features, ", AVX2");
 
-	Msg("* CPU features: %s" , features );
+	if (CPU::Info.hasFeature(CPUFeature::SSE4a))
+		xr_strcat(features, ", SSE4.a");
+
+	if (CPU::Info.hasFeature(CPUFeature::MMXExt))
+		xr_strcat(features, ", MMXExt");
+
+	if (CPU::Info.hasFeature(CPUFeature::TM2))
+		xr_strcat(features, ", TM2");
+
+	if (CPU::Info.hasFeature(CPUFeature::AES))
+		xr_strcat(features, ", AES");
+
+	if (CPU::Info.hasFeature(CPUFeature::VMX))
+		xr_strcat(features, ", VMX");
+
+	if (CPU::Info.hasFeature(CPUFeature::EST))
+		xr_strcat(features, ", EST");
+
+	Msg("* CPU features: %s", features);
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
 
-    LARGE_INTEGER Freq;
-    QueryPerformanceFrequency(&Freq);
-    CPU::qpc_freq = Freq.QuadPart;
+	LARGE_INTEGER Freq;
+	QueryPerformanceFrequency(&Freq);
+	CPU::qpc_freq = Freq.QuadPart;
 
-	Fidentity.identity		();	// Identity matrix
-	Didentity.identity		();	// Identity matrix
-	pvInitializeStatics		();	// Lookup table for compressed normals
-	FPU::initialize			();
-	_initialize_cpu_thread	();
+	Fidentity.identity();	// Identity matrix
+	Didentity.identity();	// Identity matrix
+	pvInitializeStatics();	// Lookup table for compressed normals
+	FPU::initialize();
+	_initialize_cpu_thread();
 
 	g_initialize_cpu_called = true;
 }
@@ -171,62 +209,67 @@ void _initialize_cpu	(void)
 const int _MM_DENORMALS_ZERO = 0x0040;
 const int _MM_FLUSH_ZERO = 0x8000;
 
-IC void _mm_set_flush_zero_mode(u32 mode)
+inline void _mm_set_flush_zero_mode(u32 mode)
 {
 	_mm_setcsr((_mm_getcsr() & ~_MM_FLUSH_ZERO) | (mode));
 }
 
-IC void _mm_set_denormals_zero_mode(u32 mode)
+inline void _mm_set_denormals_zero_mode(u32 mode)
 {
 	_mm_setcsr((_mm_getcsr() & ~_MM_DENORMALS_ZERO) | (mode));
 }
 
-static	bool _denormals_are_zero_supported	= true;
-void debug_on_thread_spawn	();
+static	bool _denormals_are_zero_supported = true;
+void debug_on_thread_spawn();
 
-void _initialize_cpu_thread	()
+void _initialize_cpu_thread()
 {
-	debug_on_thread_spawn	();
-	// fpu & sse 
+	debug_on_thread_spawn();
+	// fpu & sse
 	if (Core.PluginMode)
-        FPU::m64r();
-    else
-		FPU::m24r	();
-	
+		FPU::m64r();
+	else
+		FPU::m24r();
+
 	if (CPU::Info.hasFeature(CPUFeature::SSE))
 	{
 		_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
-		if (_denormals_are_zero_supported)	{
-			__try	{
+		if (_denormals_are_zero_supported)
+		{
+			__try
+			{
 				_mm_set_denormals_zero_mode(_MM_DENORMALS_ZERO);
-			} __except(EXCEPTION_EXECUTE_HANDLER) {
-				_denormals_are_zero_supported	= false;
+			}
+			__except (EXCEPTION_EXECUTE_HANDLER)
+			{
+				_denormals_are_zero_supported = false;
 			}
 		}
 	}
 }
 
-// threading API 
+// threading API
 #pragma pack(push,8)
-struct THREAD_NAME	{
-	DWORD	dwType;
-	const char*	szName;
-	DWORD	dwThreadID;
-	DWORD	dwFlags;
+struct THREAD_NAME
+{
+	DWORD dwType;
+	const char* szName;
+	DWORD dwThreadID;
+	DWORD dwFlags;
 };
 
 void thread_name(const char* name)
 {
-	THREAD_NAME		tn;
-	tn.dwType		= 0x1000;
-	tn.szName		= name;
-	tn.dwThreadID	= DWORD(-1);
-	tn.dwFlags		= 0;
+	THREAD_NAME tn;
+	tn.dwType = 0x1000;
+	tn.szName = name;
+	tn.dwThreadID = DWORD(-1);
+	tn.dwFlags = 0;
 	__try
 	{
 		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(size_t), (size_t*)&tn);
 	}
-	__except(EXCEPTION_CONTINUE_EXECUTION)
+	__except (EXCEPTION_CONTINUE_EXECUTION)
 	{
 	}
 }
@@ -234,33 +277,34 @@ void thread_name(const char* name)
 
 struct	THREAD_STARTUP
 {
-	thread_t*	entry;
-	char*		name;
-	void*		args;
+	thread_t* entry;
+	char* name;
+	void* args;
 };
+
 void __cdecl thread_entry(void*	_params)
 {
 	// initialize
-	THREAD_STARTUP*		startup	= (THREAD_STARTUP*)_params;
-	thread_name			(startup->name);
-	thread_t*			entry = startup->entry;
-	void*				arglist	= startup->args;
-	xr_delete			(startup);
-	_initialize_cpu_thread		();
+	THREAD_STARTUP* startup = (THREAD_STARTUP*)_params;
+	thread_name(startup->name);
+	thread_t* entry = startup->entry;
+	void* arglist = startup->args;
+	xr_delete(startup);
+	_initialize_cpu_thread();
 
 	// call
 	entry(arglist);
 }
 
-void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist )
+void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist)
 {
-	Debug._initialize	(false);
+	Debug._initialize(false);
 
-	auto* startup		= new THREAD_STARTUP();
-	startup->entry		= entry;
-	startup->name		= (char*)name;
-	startup->args		= arglist;
-	_beginthread		(thread_entry,stack,startup);
+	auto* startup = new THREAD_STARTUP();
+	startup->entry = entry;
+	startup->name = (char*)name;
+	startup->args = arglist;
+	_beginthread(thread_entry, stack, startup);
 }
 
 void spline1(float t, Fvector *p, Fvector *ret)
@@ -292,7 +336,7 @@ void spline2(float t, Fvector *p, Fvector *ret)
 	const float t3 = t2 * t;
 	float m[4];
 
-	m[0] = s*s*s;
+	m[0] = s * s*s;
 	m[1] = 3.0f*t3 - 6.0f*t2 + 4.0f;
 	m[2] = -3.0f*t3 + 3.0f*t2 + 3.0f*t + 1;
 	m[3] = t3;
@@ -305,21 +349,21 @@ void spline2(float t, Fvector *p, Fvector *ret)
 const float beta1 = 1.0f;
 const float beta2 = 0.8f;
 
-void spline3( float t, Fvector *p, Fvector *ret )
+void spline3(float t, Fvector *p, Fvector *ret)
 {
-	float	s= 1.0f - t;
-	float   t2 = t * t;
-	float   t3 = t2 * t;
-	float	b12=beta1*beta2;
-	float	b13=b12*beta1;
-	float	delta=2.0f-b13+4.0f*b12+4.0f*beta1+beta2+2.0f;
-	float	d=1.0f/delta;
-	float	b0=2.0f*b13*d*s*s*s;
-	float	b3=2.0f*t3*d;
-	float	b1=d*(2*b13*t*(t2-3*t+3)+2*b12*(t3-3*t2+2)+2*beta1*(t3-3*t+2)+beta2*(2*t3-3*t2+1));
-	float	b2=d*(2*b12*t2*(-t+3)+2*beta1*t*(-t2+3)+beta2*t2*(-2*t+3)+2*(-t3+1));
+	float s = 1.0f - t;
+	float t2 = t * t;
+	float t3 = t2 * t;
+	float b12 = beta1 * beta2;
+	float b13 = b12 * beta1;
+	float delta = 2.0f - b13 + 4.0f*b12 + 4.0f*beta1 + beta2 + 2.0f;
+	float d = 1.0f / delta;
+	float b0 = 2.0f*b13*d*s*s*s;
+	float b3 = 2.0f*t3*d;
+	float b1 = d * (2 * b13*t*(t2 - 3 * t + 3) + 2 * b12*(t3 - 3 * t2 + 2) + 2 * beta1*(t3 - 3 * t + 2) + beta2 * (2 * t3 - 3 * t2 + 1));
+	float b2 = d * (2 * b12*t2*(-t + 3) + 2 * beta1*t*(-t2 + 3) + beta2 * t2*(-2 * t + 3) + 2 * (-t3 + 1));
 
-	ret->x = p[0].x*b0+p[1].x*b1+p[2].x*b2+p[3].x*b3;
-	ret->y = p[0].y*b0+p[1].y*b1+p[2].y*b2+p[3].y*b3;
-	ret->z = p[0].z*b0+p[1].z*b1+p[2].z*b2+p[3].z*b3;
+	ret->x = p[0].x*b0 + p[1].x*b1 + p[2].x*b2 + p[3].x*b3;
+	ret->y = p[0].y*b0 + p[1].y*b1 + p[2].y*b2 + p[3].y*b3;
+	ret->z = p[0].z*b0 + p[1].z*b1 + p[2].z*b2 + p[3].z*b3;
 }

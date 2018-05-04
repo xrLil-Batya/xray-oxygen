@@ -18,18 +18,22 @@ SPPInfo& SPPInfo::add(const SPPInfo& ppi)
 	color_gray += ppi.color_gray;
 	color_add += ppi.color_add;
 
-	if (ppi.cm_tex1.size()) {
-		if (cm_tex1.size()) {
+	if (ppi.cm_tex1.size())
+	{
+		if (cm_tex1.size())
+		{
 			cm_tex2 = ppi.cm_tex1;
 			cm_interpolate = 1.0f - cm_influence / (cm_influence + ppi.cm_influence);
 		}
-		else {
+		else
+		{
 			cm_tex1 = ppi.cm_tex1;
 			cm_influence = ppi.cm_influence;
 			cm_interpolate = 0.0f;
 		}
 		cm_influence = std::max(cm_influence, ppi.cm_influence);
 	}
+
 	return *this;
 }
 
@@ -42,6 +46,7 @@ SPPInfo& SPPInfo::sub(const SPPInfo& ppi)
 	color_base -= ppi.color_base;
 	color_gray -= ppi.color_gray;
 	color_add -= ppi.color_add;
+
 	return *this;
 }
 
@@ -95,19 +100,13 @@ SPPInfo& SPPInfo::lerp(const SPPInfo& def, const SPPInfo& to, float factor)
 	pp.noise.grain = to.noise.grain; //		+ (to.noise.grain		- def.noise.grain)		* factor;
 	pp.noise.fps = to.noise.fps; //		+ (to.noise.fps			- def.noise.fps)		* factor;
 
-	pp.color_base.set(
-		def.color_base.r + (to.color_base.r - def.color_base.r) * factor,
-		def.color_base.g + (to.color_base.g - def.color_base.g) * factor,
+	pp.color_base.set(def.color_base.r + (to.color_base.r - def.color_base.r) * factor, def.color_base.g + (to.color_base.g - def.color_base.g) * factor,
 		def.color_base.b + (to.color_base.b - def.color_base.b) * factor);
 
-	pp.color_gray.set(
-		def.color_gray.r + (to.color_gray.r - def.color_gray.r) * factor,
-		def.color_gray.g + (to.color_gray.g - def.color_gray.g) * factor,
+	pp.color_gray.set(def.color_gray.r + (to.color_gray.r - def.color_gray.r) * factor, def.color_gray.g + (to.color_gray.g - def.color_gray.g) * factor,
 		def.color_gray.b + (to.color_gray.b - def.color_gray.b) * factor);
 
-	pp.color_add.set(
-		def.color_add.r + (to.color_add.r - def.color_add.r) * factor,
-		def.color_add.g + (to.color_add.g - def.color_add.g) * factor,
+	pp.color_add.set(def.color_add.r + (to.color_add.r - def.color_add.r) * factor, def.color_add.g + (to.color_add.g - def.color_add.g) * factor,
 		def.color_add.b + (to.color_add.b - def.color_add.b) * factor);
 
 	pp.cm_tex1 = to.cm_tex1;

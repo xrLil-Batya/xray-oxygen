@@ -9,8 +9,8 @@ XRCORE_API extern str_container* g_pStringContainer = new str_container();
 struct str_container_impl
 {
 	static const u32 buffer_size = 1024 * 256;
-	str_value*		 buffer[buffer_size];
-	int              num_docs;
+	str_value* buffer[buffer_size];
+	int num_docs;
 
 	str_container_impl()
 	{
@@ -23,12 +23,8 @@ struct str_container_impl
 		str_value* candidate = buffer[value->dwCRC % buffer_size];
 		while (candidate)
 		{
-			if (candidate->dwCRC == value->dwCRC &&
-				candidate->dwLength == value->dwLength &&
-				!memcmp(candidate->value, str, value->dwLength))
-			{
+			if (candidate->dwCRC == value->dwCRC && candidate->dwLength == value->dwLength && !memcmp(candidate->value, str, value->dwLength))
 				return candidate;
-			}
 
 			candidate = candidate->next;
 		}
@@ -36,16 +32,16 @@ struct str_container_impl
 		return nullptr;
 	}
 
-	void			 insert(str_value* value)
+	void insert(str_value* value)
 	{
 		str_value** element = &buffer[value->dwCRC % buffer_size];
 		value->next = *element;
 		*element = value;
 	}
 
-	void			 clean()
+	void clean()
 	{
-		for (u32 i = 0; i<buffer_size; ++i)
+		for (u32 i = 0; i < buffer_size; ++i)
 		{
 			str_value** current = &buffer[i];
 
@@ -63,16 +59,16 @@ struct str_container_impl
 		}
 	}
 
-	void			 verify()
+	void verify()
 	{
 		Msg("strings verify started");
-		for (u32 i = 0; i<buffer_size; ++i)
+		for (u32 i = 0; i < buffer_size; ++i)
 		{
 			str_value* value = buffer[i];
 			while (value)
 			{
-				u32			crc = crc32(value->value, value->dwLength);
-				string32	crc_str;
+				u32 crc = crc32(value->value, value->dwLength);
+				string32 crc_str;
 				R_ASSERT3(crc == value->dwCRC, "CorePanic: read-only memory corruption (shared_strings)", itoa(value->dwCRC, crc_str, 16));
 				R_ASSERT3(value->dwLength == xr_strlen(value->value), "CorePanic: read-only memory corruption (shared_strings, internal structures)", value->value);
 				value = value->next;
@@ -81,9 +77,9 @@ struct str_container_impl
 		Msg("strings verify completed");
 	}
 
-	void			dump(FILE* f) const
+	void dump(FILE* f) const
 	{
-		for (u32 i = 0; i<buffer_size; ++i)
+		for (u32 i = 0; i < buffer_size; ++i)
 		{
 			str_value* value = buffer[i];
 			while (value)
@@ -94,9 +90,9 @@ struct str_container_impl
 		}
 	}
 
-	void			dump(IWriter* f) const
+	void dump(IWriter* f) const
 	{
-		for (u32 i = 0; i<buffer_size; ++i)
+		for (u32 i = 0; i < buffer_size; ++i)
 		{
 			str_value* value = buffer[i];
 			string4096		temp;
@@ -109,10 +105,10 @@ struct str_container_impl
 		}
 	}
 
-	int				stat_economy()
+	int stat_economy()
 	{
-		int				counter = 0;
-		for (u32 i = 0; i<buffer_size; ++i)
+		int counter = 0;
+		for (u32 i = 0; i < buffer_size; ++i)
 		{
 			str_value* value = buffer[i];
 			while (value)
@@ -134,19 +130,20 @@ str_container::str_container()
 
 str_value* str_container::dock(str_c value)
 {
-	if (!value) return 0;
+	if (!value)
+		return 0;
 
 	std::lock_guard<decltype(cs)> lock(cs);
 
 	str_value*	result = 0;
 
 	// calc len
-	u32		s_len = xr_strlen(value);
-	u32		s_len_with_zero = (u32)s_len + 1;
+	u32	s_len = xr_strlen(value);
+	u32	s_len_with_zero = (u32)s_len + 1;
 	VERIFY(sizeof(str_value) + s_len_with_zero < 4096);
 
 	// setup find structure
-	char	header[sizeof(str_value)];
+	char header[sizeof(str_value)];
 	str_value*	sv = (str_value*)header;
 	sv->dwReference = 0;
 	sv->dwLength = s_len;
@@ -165,7 +162,6 @@ str_value* str_container::dock(str_c value)
 		|| is_leaked_string
 #endif //DEBUG
 		) {
-
 		result = (str_value*)Memory.mem_alloc(sizeof(str_value) + s_len_with_zero);
 
 #ifdef DEBUG
@@ -217,10 +213,11 @@ void str_container::dump(IWriter* W)
 u32 str_container::stat_economy()
 {
 	std::lock_guard<decltype(cs)> lock(cs);
-	int				counter = 0;
+	int counter = 0;
 	counter -= sizeof(*this);
 	counter += impl->stat_economy();
-	return			u32(counter);
+
+	return u32(counter);
 }
 
 str_container::~str_container()

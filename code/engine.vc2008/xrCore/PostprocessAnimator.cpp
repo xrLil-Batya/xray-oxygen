@@ -3,31 +3,31 @@
 #include "postprocessanimator.h"
 #include "FS_internal.h" //for CFileReader
 // postprocess value LOAD method implementation
-void CPostProcessValue::load (IReader &pReader)
+void CPostProcessValue::load(IReader &pReader)
 {
-    m_Value.Load_2 (pReader);
+	m_Value.Load_2(pReader);
 }
 
-void CPostProcessValue::save (IWriter &pWriter)
+void CPostProcessValue::save(IWriter &pWriter)
 {
-    m_Value.Save (pWriter);
+	m_Value.Save(pWriter);
 }
- 
+
 // postprocess color LOAD method implementation
-void CPostProcessColor::load (IReader &pReader)
+void CPostProcessColor::load(IReader &pReader)
 {
-    m_fBase = pReader.r_float	();
-    m_Red.Load_2				(pReader);
-    m_Green.Load_2				(pReader);
-    m_Blue.Load_2				(pReader);
+	m_fBase = pReader.r_float();
+	m_Red.Load_2(pReader);
+	m_Green.Load_2(pReader);
+	m_Blue.Load_2(pReader);
 }
 
-void CPostProcessColor::save (IWriter &pWriter)
+void CPostProcessColor::save(IWriter &pWriter)
 {
-    pWriter.w_float				(m_fBase);
-    m_Red.Save					(pWriter);
-    m_Green.Save				(pWriter);
-    m_Blue.Save					(pWriter);
+	pWriter.w_float(m_fBase);
+	m_Red.Save(pWriter);
+	m_Green.Save(pWriter);
+	m_Blue.Save(pWriter);
 }
 
 //main PostProcessAnimator class
@@ -115,7 +115,7 @@ void BasicPostProcessAnimator::Stop(float sp)
 float BasicPostProcessAnimator::GetLength()
 {
 	float v = 0.0f;
-	for (int a = 0; a < POSTPROCESS_PARAMS_COUNT; a++)
+	for (int a = 0; a < POSTPROCESS_PARAMS_COUNT; ++a)
 	{
 		float t = m_Params[a]->get_length();
 		v = std::max(t, v);
@@ -125,7 +125,7 @@ float BasicPostProcessAnimator::GetLength()
 
 void BasicPostProcessAnimator::Update(float tm)
 {
-	for (int a = 0; a < POSTPROCESS_PARAMS_COUNT; a++)
+	for (int a = 0; a < POSTPROCESS_PARAMS_COUNT; ++a)
 		m_Params[a]->update(tm);
 }
 
@@ -174,24 +174,34 @@ void BasicPostProcessAnimator::Create()
 
 	m_Params[0] = new CPostProcessColor(&m_EffectorParams.color_base); // base color
 	VERIFY(m_Params[0]);
+
 	m_Params[1] = new CPostProcessColor(&m_EffectorParams.color_add); // add color
 	VERIFY(m_Params[1]);
+
 	m_Params[2] = new CPostProcessColor(&m_EffectorParams.color_gray); // gray color
 	VERIFY(m_Params[2]);
+
 	m_Params[3] = new CPostProcessValue(&m_EffectorParams.gray); // gray value
 	VERIFY(m_Params[3]);
+
 	m_Params[4] = new CPostProcessValue(&m_EffectorParams.blur); // blur value
 	VERIFY(m_Params[4]);
+
 	m_Params[5] = new CPostProcessValue(&m_EffectorParams.duality.h); // duality horizontal
 	VERIFY(m_Params[5]);
+
 	m_Params[6] = new CPostProcessValue(&m_EffectorParams.duality.v); // duality vertical
 	VERIFY(m_Params[6]);
+
 	m_Params[7] = new CPostProcessValue(&m_EffectorParams.noise.intensity); // noise intensity
 	VERIFY(m_Params[7]);
+
 	m_Params[8] = new CPostProcessValue(&m_EffectorParams.noise.grain); // noise granularity
 	VERIFY(m_Params[8]);
+
 	m_Params[9] = new CPostProcessValue(&m_EffectorParams.noise.fps); // noise fps
 	VERIFY(m_Params[9]);
+
 	m_Params[10] = new CPostProcessValue(&m_EffectorParams.cm_influence);
 	VERIFY(m_Params[10]);
 }
@@ -207,6 +217,7 @@ void BasicPostProcessAnimator::Save(LPCSTR name)
 	IWriter* W = FS.w_open(name);
 	VERIFY(W);
 	W->w_u32(POSTPROCESS_FILE_VERSION);
+
 	m_Params[0]->save(*W);
 	m_Params[1]->save(*W);
 	m_Params[2]->save(*W);
@@ -218,6 +229,7 @@ void BasicPostProcessAnimator::Save(LPCSTR name)
 	m_Params[8]->save(*W);
 	m_Params[9]->save(*W);
 	m_Params[10]->save(*W);
+
 	W->w_stringZ(m_EffectorParams.cm_tex1);
 	FS.w_close(W);
 }

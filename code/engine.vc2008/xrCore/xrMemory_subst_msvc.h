@@ -1,13 +1,13 @@
 // new(0)
 template <class T>
-IC T* xr_new()
+inline T* xr_new()
 {
 	T* ptr = (T*)Memory.mem_alloc(sizeof(T));
 	return new (ptr) T();
 }
 // new(...)
 template <class T, class ... Args>
-IC T* xr_new(const Args& ... args)
+inline T* xr_new(const Args& ... args)
 {
 	T* ptr = (T*)Memory.mem_alloc(sizeof(T));
 	return new (ptr)T(args...);
@@ -16,7 +16,7 @@ IC T* xr_new(const Args& ... args)
 template <bool _is_pm, typename T>
 struct xr_special_free
 {
-	IC void operator()(T* &ptr)
+	inline void operator()(T* &ptr)
 	{
 		void*	_real_ptr = dynamic_cast<void*>(ptr);
 		ptr->~T();
@@ -27,7 +27,7 @@ struct xr_special_free
 template <typename T>
 struct xr_special_free<false, T>
 {
-	IC void operator()(T* &ptr)
+	inline void operator()(T* &ptr)
 	{
 		ptr->~T();
 		Memory.mem_free(ptr);
@@ -35,7 +35,7 @@ struct xr_special_free<false, T>
 };
 
 template <class T>
-IC void xr_delete(T* &ptr)
+inline void xr_delete(T* &ptr)
 {
 	if (ptr)
 	{
@@ -45,13 +45,13 @@ IC void xr_delete(T* &ptr)
 }
 
 template <class T>
-IC void xr_delete(T* const &ptr)
+inline void xr_delete(T* const &ptr)
 {
-    if (ptr)
-    {
-        T*& hacked_ptr = const_cast<T*&>(ptr);
-        xr_special_free<std::is_polymorphic_v<T>, T>()(hacked_ptr);
+	if (ptr)
+	{
+		T*& hacked_ptr = const_cast<T*&>(ptr);
+		xr_special_free<std::is_polymorphic_v<T>, T>()(hacked_ptr);
 
 		hacked_ptr = nullptr;
-    }
+	}
 }

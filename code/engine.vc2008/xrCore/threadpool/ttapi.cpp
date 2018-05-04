@@ -33,7 +33,7 @@ DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 
 	while (true) {
 		// Wait. Fast
-		for (i = 0; i < dwFastIter; ++i) 
+		for (i = 0; i < dwFastIter; ++i)
 		{
 			if (!pParams->vlFlag)
 				goto process;
@@ -41,7 +41,7 @@ DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 		}
 
 		// Moderate
-		for (i = 0; i < dwSlowIter; ++i) 
+		for (i = 0; i < dwSlowIter; ++i)
 		{
 			if (!pParams->vlFlag)
 				goto process;
@@ -62,7 +62,6 @@ DWORD WINAPI ttapiThreadProc(LPVOID lpParameter)
 			break;
 
 		_InterlockedDecrement(&ttapi_queue_size.size);
-
 	} // while
 
 	return 0;
@@ -127,7 +126,7 @@ process1:
 	// We want 1/25 (40ms) fast spin-loop
 	ttapi_dwFastIter = (dwNumIter * liFrequency.QuadPart) / ((liEnd.QuadPart - liStart.QuadPart) * 25);
 #ifdef DEBUG
-	Msg( "fast spin-loop iterations : %u" , ttapi_dwFastIter );
+	Msg("fast spin-loop iterations : %u", ttapi_dwFastIter);
 #endif
 	// Get slow spin-loop timings
 	dwNumIter = 10000000;
@@ -155,10 +154,10 @@ process2:
 #ifdef _M_X64
 	if (pszTemp && sscanf_s(pszTemp + strlen(szSearchFor), "%zu", &dwOverride) &&
 #else
-	if (pszTemp && sscanf_s(pszTemp + strlen(szSearchFor), "%u", &dwOverride) && 
+	if (pszTemp && sscanf_s(pszTemp + strlen(szSearchFor), "%u", &dwOverride) &&
 #endif
 		(dwOverride >= 1) && (dwOverride < ttapi_workers_count))
-				ttapi_workers_count = dwOverride;
+		ttapi_workers_count = dwOverride;
 
 	// Number of helper threads
 	ttapi_threads_count = ttapi_workers_count - 1;
@@ -174,7 +173,7 @@ process2:
 
 	char szThreadName[64];
 	DWORD dwThreadId = 0,
-		  dwAffinitiMask = ID->affinity_mask;
+		dwAffinitiMask = ID->affinity_mask;
 	auto dwCurrentMask = 0x01;
 
 	// Setting affinity
@@ -227,7 +226,7 @@ void ttapi_RunAllWorkers()
 {
 	size_t ttapi_thread_workers = (ttapi_assigned_workers - 1);
 
-	if (ttapi_thread_workers) 
+	if (ttapi_thread_workers)
 	{
 		// Setting queue size
 		ttapi_queue_size.size = (long)ttapi_thread_workers;
@@ -235,14 +234,14 @@ void ttapi_RunAllWorkers()
 		for (auto i = 0; i < ttapi_thread_workers; ++i)
 			_InterlockedExchange(&ttapi_worker_params[i].vlFlag, 0);
 	}
-		// Running 'the only/last' worker in current thread
-		ttapi_worker_params[ttapi_thread_workers].lpWorkerFunc(ttapi_worker_params[ttapi_thread_workers].lpvWorkerFuncParams);
+	// Running 'the only/last' worker in current thread
+	ttapi_worker_params[ttapi_thread_workers].lpWorkerFunc(ttapi_worker_params[ttapi_thread_workers].lpvWorkerFuncParams);
 
-		// Waiting task queue to become empty
-		if (ttapi_thread_workers)
-			while (ttapi_queue_size.size)
-				_mm_pause();
-	
+	// Waiting task queue to become empty
+	if (ttapi_thread_workers)
+		while (ttapi_queue_size.size)
+			_mm_pause();
+
 	// Cleaning active workers count
 	ttapi_assigned_workers = 0;
 }
@@ -253,20 +252,20 @@ void ttapi_Done()
 		return;
 
 	// Asking helper threads to terminate
-	for (auto i = 0; i < ttapi_threads_count; i++) 
+	for (auto i = 0; i < ttapi_threads_count; i++)
 	{
 		ttapi_worker_params[i].lpWorkerFunc = nullptr;
 		_InterlockedExchange(&ttapi_worker_params[i].vlFlag, 0);
 	}
 
 	// Waiting threads for completion
-	
+
 	WaitForMultipleObjects((DWORD)ttapi_threads_count, ttapi_threads_handles, true, INFINITE);
-	
+
 	// Freeing resources
-	free(ttapi_threads_handles);		
+	free(ttapi_threads_handles);
 	ttapi_threads_handles = nullptr;
-	free(ttapi_worker_params);		
+	free(ttapi_worker_params);
 	ttapi_worker_params = nullptr;
 
 	ttapi_workers_count = 0;

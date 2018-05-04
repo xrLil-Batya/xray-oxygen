@@ -22,25 +22,29 @@
 // token type definition
 struct XRCORE_API xr_token
 {
-    xr_token() : name(nullptr), id(-1) {}
-    xr_token(const char* _name, const int _id) : name(_name), id(_id) {}
+	xr_token() : name(nullptr), id(-1) {}
+	xr_token(const char* _name, const int _id) : name(_name), id(_id) {}
 	const char*	name;
-	int 	id;
+
+	int id;
 };
 
-IC const char* get_token_name(xr_token* tokens, int key)
+inline const char* get_token_name(xr_token* tokens, int key)
 {
-    for (int k=0; tokens[k].name; k++)
-    	if (key==tokens[k].id) return tokens[k].name;
-    return "";
+	for (int k = 0; tokens[k].name; ++k)
+		if (key == tokens[k].id)
+			return tokens[k].name;
+
+	return "";
 }
 
-IC int get_token_id(xr_token* tokens, const char* key)
+inline int get_token_id(xr_token* tokens, const char* key)
 {
-    for (int k=0; tokens[k].name; k++)
-    	if ( stricmp(tokens[k].name,key)==0 ) 
+	for (int k = 0; tokens[k].name; ++k)
+		if (stricmp(tokens[k].name, key) == 0)
 			return tokens[k].id;
-    return -1;
+
+	return -1;
 }
 
 struct XRCORE_API xr_token2
@@ -51,170 +55,178 @@ struct XRCORE_API xr_token2
 };
 
 // generic
-template <class T>	IC T		_sqr	(T a)		{ return a*a;		}
+template <class T>
+inline T _sqr(T a) { return a * a; }
 
 // float
-IC float	_abs	(float x)		{ return fabsf(x); }
-IC float	_sqrt	(float x)		{ return sqrtf(x); }
-IC float	_sin	(float x)		{ return sinf(x);  }
-IC float	_cos	(float x)		{ return cosf(x);  }
-IC float    _log    (float x)		{ return logf(x);  }
-IC BOOL		_valid	(const float x)
+inline float _abs(float x) { return fabsf(x); }
+inline float _sqrt(float x) { return sqrtf(x); }
+inline float _sin(float x) { return sinf(x); }
+inline float _cos(float x) { return cosf(x); }
+inline float _log(float x) { return logf(x); }
+inline BOOL _valid(const float x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
-	int			cls			= _fpclass		(double(x));
-	if (cls&(_FPCLASS_SNAN+_FPCLASS_QNAN+_FPCLASS_NINF+_FPCLASS_PINF+_FPCLASS_ND+_FPCLASS_PD))	
-		return	false;	
+	int			cls = _fpclass(double(x));
+	if (cls&(_FPCLASS_SNAN + _FPCLASS_QNAN + _FPCLASS_NINF + _FPCLASS_PINF + _FPCLASS_ND + _FPCLASS_PD))
+		return	false;
 
 	/*	*****other cases are*****
-	_FPCLASS_NN Negative normalized non-zero 
-	_FPCLASS_NZ Negative zero ( – 0) 
-	_FPCLASS_PZ Positive 0 (+0) 
-	_FPCLASS_PN Positive normalized non-zero 
+	_FPCLASS_NN Negative normalized non-zero
+	_FPCLASS_NZ Negative zero ( – 0)
+	_FPCLASS_PZ Positive 0 (+0)
+	_FPCLASS_PN Positive normalized non-zero
 	*/
 	return		true;
 }
 
-
 // double
-IC double	_abs	(double x)		{ return fabs(x); }
-IC double	_sqrt	(double x)		{ return sqrt(x); }
-IC double	_sin	(double x)		{ return sin(x); }
-IC double	_cos	(double x)		{ return cos(x); }
-IC double    _log	(double x)		{ return log(x); }
-IC BOOL		_valid	(const double x)
+inline double _abs(double x) { return fabs(x); }
+inline double _sqrt(double x) { return sqrt(x); }
+inline double _sin(double x) { return sin(x); }
+inline double _cos(double x) { return cos(x); }
+inline double _log(double x) { return log(x); }
+inline BOOL _valid(const double x)
 {
 	// check for: Signaling NaN, Quiet NaN, Negative infinity ( –INF), Positive infinity (+INF), Negative denormalized, Positive denormalized
-	int			cls			= _fpclass		(x);
-	if (cls&(_FPCLASS_SNAN+_FPCLASS_QNAN+_FPCLASS_NINF+_FPCLASS_PINF+_FPCLASS_ND+_FPCLASS_PD))	
-		return false;	
+	int			cls = _fpclass(x);
+	if (cls&(_FPCLASS_SNAN + _FPCLASS_QNAN + _FPCLASS_NINF + _FPCLASS_PINF + _FPCLASS_ND + _FPCLASS_PD))
+		return false;
 
 	/*	*****other cases are*****
-	_FPCLASS_NN Negative normalized non-zero 
-	_FPCLASS_NZ Negative zero ( – 0) 
-	_FPCLASS_PZ Positive 0 (+0) 
-	_FPCLASS_PN Positive normalized non-zero 
+	_FPCLASS_NN Negative normalized non-zero
+	_FPCLASS_NZ Negative zero ( – 0)
+	_FPCLASS_PZ Positive 0 (+0)
+	_FPCLASS_PN Positive normalized non-zero
 	*/
 	return		true;
 }
 
 // int8
-IC s8		_abs	(s8  x)			{ return (x>=0)? x : s8(-x); }
+inline s8 _abs(s8  x) { return (x >= 0) ? x : s8(-x); }
 
 // unsigned int8
-IC u8		_abs	(u8 x)			{ return x; }
+inline u8 _abs(u8 x) { return x; }
 
 // int16
-IC s16		_abs	(s16 x)			{ return (x>=0)? x : s16(-x); }
+inline s16 _abs(s16 x) { return (x >= 0) ? x : s16(-x); }
 
 // unsigned int16
-IC u16		_abs	(u16 x)			{ return x; }
+inline u16 _abs(u16 x) { return x; }
 
 // int32
-IC s32		_abs	(s32 x)			{ return (x>=0)? x : s32(-x); }
+inline s32 _abs(s32 x) { return (x >= 0) ? x : s32(-x); }
 
 // int64
-IC s64		_abs	(s64 x)			{ return (x>=0)? x : s64(-x); }
+inline s64 _abs(s64 x) { return (x >= 0) ? x : s64(-x); }
 
-IC u32							xr_strlen				( const char* S );
+inline u32 xr_strlen(const char* S);
 
 // string management
 
 // return pointer to ".ext"
-IC char*						strext					( const char* S )
-{	return (char*) strrchr(S,'.');	}
+inline char* strext(const char* S)
+{
+	return (char*)strrchr(S, '.');
+}
 
-IC u32							xr_strlen				( const char* S )
-{	return (u32)strlen(S);			}
+inline u32 xr_strlen(const char* S)
+{
+	return (u32)strlen(S);
+}
 
-IC char*						xr_strlwr				(char* S)
-{	return strlwr(S);				}
+inline char* xr_strlwr(char* S)
+{
+	return strlwr(S);
+}
 
-IC int							xr_strcmp				( const char* S1, const char* S2 )
-{	return (int)strcmp(S1,S2);  }
+inline int xr_strcmp(const char* S1, const char* S2)
+{
+	return (int)strcmp(S1, S2);
+}
 
 #ifndef  _EDITOR
 #ifndef MASTER_GOLD
 
-inline errno_t xr_strcpy		( char* destination, size_t const destination_size, const char* source )
+inline errno_t xr_strcpy(char* destination, size_t const destination_size, const char* source)
 {
-	return						strcpy_s( destination, destination_size, source );
+	return strcpy_s(destination, destination_size, source);
 }
 
-inline errno_t xr_strcat		( char* destination, size_t const buffer_size, const char* source )
+inline errno_t xr_strcat(char* destination, size_t const buffer_size, const char* source)
 {
-	return						strcat_s( destination, buffer_size, source );
+	return strcat_s(destination, buffer_size, source);
 }
 
-inline int __cdecl xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
+inline int __cdecl xr_sprintf(char* destination, size_t const buffer_size, const char* format_string, ...)
 {
 	va_list args;
-	va_start					( args, format_string);
-	return						vsprintf_s( destination, buffer_size, format_string, args );
+	va_start(args, format_string);
+	return vsprintf_s(destination, buffer_size, format_string, args);
 }
 
 template <int count>
-inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_string, ... )
+inline int __cdecl xr_sprintf(char(&destination)[count], const char* format_string, ...)
 {
 	va_list args;
-	va_start					( args, format_string);
-	return						vsprintf_s( destination, count, format_string, args );
+	va_start(args, format_string);
+	return						vsprintf_s(destination, count, format_string, args);
 }
 #else // #ifndef MASTER_GOLD
 
-inline errno_t xr_strcpy	( char* destination, size_t const destination_size, const char* source )
+inline errno_t xr_strcpy(char* destination, size_t const destination_size, const char* source)
 {
-	return						strncpy_s( destination, destination_size, source, destination_size );
+	return						strncpy_s(destination, destination_size, source, destination_size);
 }
 
-inline errno_t xr_strcat		( char* destination, size_t const buffer_size, const char* source )
+inline errno_t xr_strcat(char* destination, size_t const buffer_size, const char* source)
 {
-	size_t const destination_length	= xr_strlen(destination);
-	char* i						= destination + destination_length;
-	char* const e				= destination + buffer_size - 1;
-	if ( i > e )
-		return					0;
+	size_t const destination_length = xr_strlen(destination);
+	char* i = destination + destination_length;
+	char* const e = destination + buffer_size - 1;
+	if (i > e)
+		return 0;
 
-	for ( const char* j = source; *j && (i != e); ++i, ++j )
-		*i						= *j;
+	for (const char* j = source; *j && (i != e); ++i, ++j)
+		*i = *j;
 
-	*i							= 0;
-	return						0;
+	*i = 0;
+	return 0;
 }
 
-inline int __cdecl xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
+inline int __cdecl xr_sprintf(char* destination, size_t const buffer_size, const char* format_string, ...)
 {
 	va_list args;
-	va_start					( args, format_string);
-	return						vsnprintf_s( destination, buffer_size, buffer_size - 1, format_string, args );
+	va_start(args, format_string);
+	return vsnprintf_s(destination, buffer_size, buffer_size - 1, format_string, args);
 }
 
 template <int count>
-inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_string, ... )
+inline int __cdecl xr_sprintf(char(&destination)[count], const char* format_string, ...)
 {
 	va_list args;
-	va_start					( args, format_string);
-	return						vsnprintf_s( destination, count, count - 1, format_string, args );
+	va_start(args, format_string);
+	return vsnprintf_s(destination, count, count - 1, format_string, args);
 }
 #endif // #ifndef MASTER_GOLD
 
 //#	pragma deprecated( strcpy, strcpy_s, sprintf, sprintf_s, strcat, strcat_s )
 
 template <int count>
-inline errno_t xr_strcpy	( char (&destination)[count], const char* source )
+inline errno_t xr_strcpy(char(&destination)[count], const char* source)
 {
-	return						xr_strcpy( destination, count, source );
+	return xr_strcpy(destination, count, source);
 }
 
 template <int count>
-inline errno_t xr_strcat	( char (&destination)[count], const char* source )
+inline errno_t xr_strcat(char(&destination)[count], const char* source)
 {
-	return						xr_strcat( destination, count, source );
+	return xr_strcat(destination, count, source);
 }
 #endif // #ifndef _EDITOR
 
-XRCORE_API	char*				timestamp				(string64& dest);
+XRCORE_API	char* timestamp(string64& dest);
 
-extern XRCORE_API u32			crc32					(const void* P, u32 len);
-extern XRCORE_API u32			crc32					(const void* P, u32 len, u32 starting_crc);
-extern XRCORE_API u32			path_crc32				(const char* path, u32 len); // ignores '/' and '\'
+extern XRCORE_API u32 crc32(const void* P, u32 len);
+extern XRCORE_API u32 crc32(const void* P, u32 len, u32 starting_crc);
+extern XRCORE_API u32 path_crc32(const char* path, u32 len); // ignores '/' and '\'
