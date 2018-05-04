@@ -21,11 +21,11 @@ void CSoundRender_Emitter::set_position(const Fvector &pos)
 
 CSoundRender_Emitter::CSoundRender_Emitter(void)
 {
-
 #ifdef DEBUG
-	static	u32			incrementalID = 0;
+	static	u32 incrementalID = 0;
 	dbg_ID = ++incrementalID;
 #endif
+
 	target = nullptr;
 	//.	source						= nullptr;
 	owner_data = nullptr;
@@ -60,10 +60,11 @@ CSoundRender_Emitter::~CSoundRender_Emitter(void)
 //////////////////////////////////////////////////////////////////////
 void CSoundRender_Emitter::Event_ReleaseOwner()
 {
-	if (!(owner_data))			return;
+	if (!(owner_data))
+		return;
 
-	for (u32 it = 0; it<SoundRender->s_events.size(); it++)
-		if (owner_data == SoundRender->s_events[it].first) 
+	for (u32 it = 0; it < SoundRender->s_events.size(); ++it)
+		if (owner_data == SoundRender->s_events[it].first)
 		{
 			SoundRender->s_events.erase(SoundRender->s_events.begin() + it);
 			it--;
@@ -73,16 +74,27 @@ void CSoundRender_Emitter::Event_ReleaseOwner()
 void CSoundRender_Emitter::Event_Propagade()
 {
 	fTimeToPropagade += ::Random.randF(s_f_def_event_pulse - 0.030f, s_f_def_event_pulse + 0.030f);
-	if (!(owner_data))			return;
-	if (0 == owner_data->g_type)	return;
-	if (0 == owner_data->g_object)return;
-	if (0 == SoundRender->Handler)return;
+
+	if (!(owner_data))
+		return;
+
+	if (0 == owner_data->g_type)
+		return;
+
+	if (0 == owner_data->g_object)
+		return;
+
+	if (0 == SoundRender->Handler)
+		return;
 
 	VERIFY(_valid(p_source.volume));
+
 	// Calculate range
-	float	clip = p_source.max_ai_distance*p_source.volume;
-	float	range = std::min(p_source.max_ai_distance, clip);
-	if (range<0.1f)				return;
+	float clip = p_source.max_ai_distance*p_source.volume;
+	float range = std::min(p_source.max_ai_distance, clip);
+
+	if (range < 0.1f)
+		return;
 
 	// Inform objects
 	SoundRender->s_events.push_back(std::make_pair(owner_data, range));
@@ -101,11 +113,7 @@ void CSoundRender_Emitter::switch_to_3D()
 
 u32	CSoundRender_Emitter::play_time()
 {
-	if (m_current_state == stPlaying ||
-		m_current_state == stPlayingLooped ||
-		m_current_state == stSimulating ||
-		m_current_state == stSimulatingLooped
-		)
+	if (m_current_state == stPlaying || m_current_state == stPlayingLooped || m_current_state == stSimulating || m_current_state == stSimulatingLooped)
 		return iFloor((SoundRender->fTimer_Value - fTimeStarted)*1000.0f);
 	else
 		return 0;

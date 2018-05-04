@@ -3,8 +3,9 @@
 
 #include "SoundRender_CoreA.h"
 
-XRSOUND_API xr_token*		snd_devices_token = nullptr;
-XRSOUND_API u32				snd_device_id = u32(-1);
+XRSOUND_API xr_token* snd_devices_token = nullptr;
+XRSOUND_API u32 snd_device_id = u32(-1);
+
 void CSound_manager_interface::_create(int stage)
 {
 	if (!stage)
@@ -20,10 +21,11 @@ void CSound_manager_interface::_create(int stage)
 		}
 		else
 			SoundRender->bPresent = true;
-
 	}
 
-	if (!SoundRender->bPresent) return;
+	if (!SoundRender->bPresent)
+		return;
+
 	Sound->_initialize(stage);
 }
 
