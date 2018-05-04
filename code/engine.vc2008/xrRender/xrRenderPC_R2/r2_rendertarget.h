@@ -160,7 +160,7 @@ private:
 	float						f_luminance_adapt;
 
 	// Combine
-    ref_geom g_KD;
+    ref_geom					g_KD;
 	ref_geom					g_combine;
 	ref_geom					g_combine_VP;		// xy=p,zw=tc
 	ref_geom					g_combine_2UV;

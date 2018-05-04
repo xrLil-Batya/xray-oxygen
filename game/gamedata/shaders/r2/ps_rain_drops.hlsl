@@ -1,3 +1,5 @@
+// mrnmwar -> SGM 3.0
+
 #include "common.h"
 #include "MrProperCommon.h"
 

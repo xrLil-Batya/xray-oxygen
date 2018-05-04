@@ -266,14 +266,13 @@ CRenderTarget::CRenderTarget		()
 		rt_flares.create(r2_RT_flares, (w / 2), (h / 2), D3DFMT_A8R8G8B8);
 	}
 
-    s_ogse_sunshafts.create(b_ogse_sunshafts, "r2\\sunshafts");
-	
 	// FLARES
 	s_flare.create("effects\\flare", "fx\\lenslare");
 
 	// SUNSHAFTS
 	s_SunShafts.create				(b_sunshafts,	"r2\\SunShafts");
-
+    s_ogse_sunshafts.create			(b_ogse_sunshafts, "r2\\sunshafts");
+	
 	// RAIN DROPS
 	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
 
