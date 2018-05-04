@@ -11,13 +11,28 @@ https://github.com/orthecreedence/ghostie/blob/master/opengl/glsl/dof.bokeh.2.4.
 */
 
 uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
-#define PI  3.14159265f
-//	TODO: По-хорошему нужно сделать выбор качества глубины резкости
 
-#define BOKEH_RINGS int(10)
-#define BOKEH_SAMPLES int(4)
+#include "ogse_config.h"
 
-#define DDOF_CHROMATIC_ABERRATION
+#if !defined(BOKEH_QUALITY)
+	#define	BOKEH_RINGS int(1)
+	#define	BOKEH_SAMPLES int(1)
+#elif BOKEH_QUALITY==1
+    #define BOKEH_RINGS int(3)
+    #define BOKEH_SAMPLES int(3)
+#elif BOKEH_QUALITY==2
+    #define BOKEH_RINGS int(5)
+    #define BOKEH_SAMPLES int(4)
+#elif BOKEH_QUALITY==3
+    #define BOKEH_RINGS int(7)
+    #define BOKEH_SAMPLES int(4)
+#elif BOKEH_QUALITY==4
+    #define BOKEH_RINGS int(9)
+    #define BOKEH_SAMPLES int(4)
+#else
+	#define	BOKEH_RINGS int(1)
+	#define	BOKEH_SAMPLES int(1)
+#endif
 
 static const float2 inv_resolution = screen_res.zw*2;
 static const float2 resolution = screen_res.xy*0.5;
@@ -44,31 +59,28 @@ float penta(float2 coords) {  				//pentagonal shape
 	dist.z = dot( P, HS2 );
 	dist.w = dot( P, HS3 );
 	
-	dist = smoothstep( -0.4, 0.4, dist );
+	dist = smoothstep( -BOKEH_FEATHER, BOKEH_FEATHER, dist );
 	
 	inorout += dot( dist, one );
 	
 	dist.x = dot( P, HS4 );
 	dist.y = HS5.w - abs( P.z );
 	
-	dist = smoothstep( -0.4, 0.4, dist );
+	dist = smoothstep( -BOKEH_FEATHER, BOKEH_FEATHER, dist );
 	inorout += dist.x;
 	
 	return saturate( inorout );
 }
 
 float3 color(float2 coords,float blur, float2 color_scale) {	//processing the sample
-	float3 col = float3(0.0, 0.0, 0.0);
-#ifdef DDOF_CHROMATIC_ABERRATION
-	col.r = s_image.SampleLevel(smp_rtlinear, coords.xy,0 + float4(0.0,1.0,0.0,0.0)*float4(color_scale.xy,0,0)).r;
-	col.g = s_image.SampleLevel(smp_rtlinear, coords.xy,0 + float4(-0.866,-0.5,0.0,0.0)*float4(color_scale.xy,0,0)).g;
-	col.b = s_image.SampleLevel(smp_rtlinear, coords.xy,0 + float4(0.866,-0.5,0.0,0.0)*float4(color_scale.xy,0,0)).b;
-#else
-	col = s_image.SampleLevel(smp_rtlinear, coords.xy,0,0).xyz;
-#endif
+	float3 col;
+	
+	col.r = s_image.Sample(smp_rtlinear, float4(coords.xy,0,0) + float4(0.0,1.0,0.0,0.0)*float4(color_scale.xy,0,0)).r;
+	col.g = s_image.Sample(smp_rtlinear, float4(coords.xy,0,0) + float4(-0.866,-0.5,0.0,0.0)*float4(color_scale.xy,0,0)).g;
+	col.b = s_image.Sample(smp_rtlinear, float4(coords.xy,0,0) + float4(0.866,-0.5,0.0,0.0)*float4(color_scale.xy,0,0)).b;
 
 	float lum = dot(col.rgb, LUMINANCE_VECTOR);
-	float thresh = max((lum-0.5)*1, 0.0);
+	float thresh = max((lum-BOKEH_THRESHOLD)*BOKEH_GAIN, 0.0);
 	return (col+lerp(float3(0.0, 0.0, 0.0),col,thresh*blur));
 }
 float2 rand(float2 coord)  {	 			//generating noise/pattern texture for dithering
@@ -85,14 +97,13 @@ float3 bokeh_dof(float2 center, float blur) {
 	
 	// getting blur x and y step factor
 	float2 texel = inv_resolution.xy;
-	float2 scale = (texel*1+noise_)*blur/4;	
+	float2 scale = (texel*BOKEH_KERNEL+noise_)*blur/BOKEH_QUALITY;	
 	// calculation of final color
 	float3 col = s_image.Sample(smp_rtlinear, center).rgb;
-	float2 color_scale = texel*0.7*blur;
+	float2 color_scale = texel*BOKEH_FRINGE*blur;
 	if (blur >= 0.05) {			//some optimization thingy
 		float s = 1.0;
 		int ringsamples = 0;	
-		
        [unroll]		
 		for (int i = 1; i <= BOKEH_RINGS; i++) {   
 			ringsamples = i * BOKEH_SAMPLES;
@@ -104,8 +115,8 @@ float3 bokeh_dof(float2 center, float blur) {
 				pwh *= i;
 				float p = penta(pwh);
 
-				col += color(center + pwh*scale,blur, color_scale)*lerp(1.0, i*(1/BOKEH_RINGS), 0.5)*p;
-				s += lerp(1.0, i*(1/BOKEH_RINGS), 0.5)*p; 
+				col += color(center + pwh*scale,blur, color_scale)*lerp(1.0, i*(1/BOKEH_RINGS), BOKEH_BIAS)*p;
+				s += lerp(1.0, i*(1/BOKEH_RINGS), BOKEH_BIAS)*p; 
 			}
 		}
 		col /= s; //divide by sample count
