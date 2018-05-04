@@ -8,81 +8,82 @@
 
 CSoundRender_Target::CSoundRender_Target(void)
 {
-	m_pEmitter		= 0;
-	rendering		= false;
-	wave			= 0;
+	m_pEmitter = 0;
+	rendering = false;
+	wave = 0;
 }
 
 CSoundRender_Target::~CSoundRender_Target(void)
 {
-	VERIFY				(wave==0);
+	VERIFY(wave == 0);
 }
 
 bool CSoundRender_Target::_initialize()
 {
-    return					true;
+	return true;
 }
 
-void	CSoundRender_Target::start(CSoundRender_Emitter* E)
+void CSoundRender_Target::start(CSoundRender_Emitter* E)
 {
-	R_ASSERT		(E);
+	R_ASSERT(E);
 
 	// *** Initial buffer startup ***
 	// 1. Fill parameters
 	// 4. Load 2 blocks of data (as much as possible)
 	// 5. Deferred-play-signal (emitter-exist, rendering-false)
-	m_pEmitter		= E;
-	rendering		= false;
+	m_pEmitter = E;
+	rendering = false;
 }
 
-void	CSoundRender_Target::render			()
+void CSoundRender_Target::render()
 {
-	rendering		= true;
+	rendering = true;
 }
 
-void	CSoundRender_Target::stop			()
+void CSoundRender_Target::stop()
 {
-	dettach			();
-	m_pEmitter		= nullptr;
-	rendering		= false;
+	dettach();
+	m_pEmitter = nullptr;
+	rendering = false;
 }
 
-void	CSoundRender_Target::rewind			()
+void CSoundRender_Target::rewind()
 {
-	R_ASSERT		(rendering);
+	R_ASSERT(rendering);
 }
 
-void	CSoundRender_Target::update			()
+void CSoundRender_Target::update()
 {
-	R_ASSERT		(m_pEmitter);
+	R_ASSERT(m_pEmitter);
 }
 
-void	CSoundRender_Target::fill_parameters()
+void CSoundRender_Target::fill_parameters()
 {
-	VERIFY			(m_pEmitter);
+	VERIFY(m_pEmitter);
 }
 
-extern int		ov_seek_func	(void *datasource, s64 offset, int whence);
-extern size_t	ov_read_func	(void *ptr, size_t size, size_t nmemb, void *datasource);
-extern int		ov_close_func	(void *datasource);
-extern long		ov_tell_func	(void *datasource);
+extern int ov_seek_func(void *datasource, s64 offset, int whence);
+extern size_t ov_read_func(void *ptr, size_t size, size_t nmemb, void *datasource);
+extern int ov_close_func(void *datasource);
+extern long ov_tell_func(void *datasource);
 
-void	CSoundRender_Target::attach()
+void CSoundRender_Target::attach()
 {
-	VERIFY			(0==wave);
-	VERIFY			(m_pEmitter);
-	ov_callbacks ovc= {ov_read_func,ov_seek_func,ov_close_func,ov_tell_func};
-	wave			= FS.r_open		(m_pEmitter->source()->pname.c_str()); 
-	R_ASSERT3		(wave&&wave->length(),"Can't open wave file:", m_pEmitter->source()->pname.c_str());
- 	ov_open_callbacks(wave,&ovf,nullptr,0,ovc);
-	VERIFY			(0!=wave);
+	VERIFY(0 == wave);
+	VERIFY(m_pEmitter);
+
+	ov_callbacks ovc = { ov_read_func,ov_seek_func,ov_close_func,ov_tell_func };
+	wave = FS.r_open(m_pEmitter->source()->pname.c_str());
+	R_ASSERT3(wave&&wave->length(), "Can't open wave file:", m_pEmitter->source()->pname.c_str());
+	ov_open_callbacks(wave, &ovf, nullptr, 0, ovc);
+	VERIFY(0 != wave);
 }
 
-void	CSoundRender_Target::dettach()
+void CSoundRender_Target::dettach()
 {
-	if (wave)		{
-		ov_clear		(&ovf);
-		FS.r_close		(wave);
+	if (wave)
+	{
+		ov_clear(&ovf);
+		FS.r_close(wave);
 	}
 }
-

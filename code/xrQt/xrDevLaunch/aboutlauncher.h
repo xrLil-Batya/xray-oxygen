@@ -1,3 +1,4 @@
+
 /*************************************************
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
@@ -23,6 +24,9 @@ public:
 	
     explicit AboutLauncher(QWidget *parent = 0);
     ~AboutLauncher();
+
+private slots:
+    void on_pushButton_clicked();
 
 private:
     Ui::AboutLauncher *about_ui;

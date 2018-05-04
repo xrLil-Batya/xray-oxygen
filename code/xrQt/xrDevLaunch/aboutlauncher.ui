@@ -500,23 +500,10 @@
   <property name="windowTitle">
    <string>Dialog</string>
   </property>
-  <widget class="QLabel" name="label">
-   <property name="geometry">
-    <rect>
-     <x>10</x>
-     <y>313</y>
-     <width>111</width>
-     <height>15</height>
-    </rect>
-   </property>
-   <property name="text">
-    <string>About xrDevLaunch...</string>
-   </property>
-  </widget>
   <widget class="QLabel" name="label_2">
    <property name="geometry">
     <rect>
-     <x>310</x>
+     <x>10</x>
      <y>310</y>
      <width>121</width>
      <height>20</height>
@@ -536,14 +523,14 @@
     </rect>
    </property>
    <property name="text">
-    <string>xrDevLaunch 1.0f</string>
+    <string>xrDevLaunch 1.1f</string>
    </property>
   </widget>
   <widget class="QLabel" name="label_4">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>170</y>
+     <x>20</x>
+     <y>30</y>
      <width>191</width>
      <height>16</height>
     </rect>
@@ -555,8 +542,8 @@
   <widget class="QLabel" name="label_5">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>190</y>
+     <x>20</x>
+     <y>50</y>
      <width>181</width>
      <height>16</height>
     </rect>
@@ -568,8 +555,8 @@
   <widget class="QLabel" name="label_7">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>250</y>
+     <x>20</x>
+     <y>110</y>
      <width>291</width>
      <height>31</height>
     </rect>
@@ -582,8 +569,8 @@ C++ Compiler 2017, Qt 5.10.1</string>
   <widget class="QLabel" name="label_6">
    <property name="geometry">
     <rect>
-     <x>10</x>
-     <y>210</y>
+     <x>20</x>
+     <y>70</y>
      <width>171</width>
      <height>16</height>
     </rect>
@@ -595,14 +582,30 @@ C++ Compiler 2017, Qt 5.10.1</string>
   <widget class="QLabel" name="label_8">
    <property name="geometry">
     <rect>
-     <x>15</x>
-     <y>20</y>
-     <width>150</width>
-     <height>150</height>
+     <x>170</x>
+     <y>30</y>
+     <width>251</width>
+     <height>271</height>
     </rect>
    </property>
    <property name="text">
-    <string>TextLabel</string>
+    <string/>
+   </property>
+   <property name="pixmap">
+    <pixmap>ico.png</pixmap>
+   </property>
+  </widget>
+  <widget class="QPushButton" name="pushButton">
+   <property name="geometry">
+    <rect>
+     <x>350</x>
+     <y>310</y>
+     <width>80</width>
+     <height>21</height>
+    </rect>
+   </property>
+   <property name="text">
+    <string>Exit</string>
    </property>
   </widget>
  </widget>

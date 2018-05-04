@@ -55,6 +55,7 @@ public:
     QAction *actionGiperion_2;
     QAction *actionForserX;
     QAction *actionxrCore;
+    QAction *actionxrEngine_2;
     QWidget *centralWidget;
     QGridLayout *gridLayout;
     QHBoxLayout *horizontalLayout_2;
@@ -78,7 +79,6 @@ public:
     QMenu *menuOptions;
     QMenu *menu;
     QMenu *menuGame;
-    QMenu *menuEditors;
     QToolBar *mainToolBar;
     QStatusBar *statusBar;
 
@@ -220,6 +220,8 @@ public:
         actionForserX->setObjectName(QStringLiteral("actionForserX"));
         actionxrCore = new QAction(xrLaunch);
         actionxrCore->setObjectName(QStringLiteral("actionxrCore"));
+        actionxrEngine_2 = new QAction(xrLaunch);
+        actionxrEngine_2->setObjectName(QStringLiteral("actionxrEngine_2"));
         centralWidget = new QWidget(xrLaunch);
         centralWidget->setObjectName(QStringLiteral("centralWidget"));
         gridLayout = new QGridLayout(centralWidget);
@@ -404,8 +406,6 @@ public:
         menu->setObjectName(QStringLiteral("menu"));
         menuGame = new QMenu(menu);
         menuGame->setObjectName(QStringLiteral("menuGame"));
-        menuEditors = new QMenu(menu);
-        menuEditors->setObjectName(QStringLiteral("menuEditors"));
         xrLaunch->setMenuBar(menuBar);
         mainToolBar = new QToolBar(xrLaunch);
         mainToolBar->setObjectName(QStringLiteral("mainToolBar"));
@@ -417,8 +417,6 @@ public:
         menuBar->addAction(menu->menuAction());
         menuBar->addAction(menuOptions->menuAction());
         menuBar->addAction(menuAbout->menuAction());
-        menuAbout->addAction(actionMain_parameters);
-        menuAbout->addSeparator();
         menuAbout->addAction(actionVertver_Github);
         menuAbout->addAction(actionAbout_Oxygen_Team);
         menuAbout->addAction(menuGithub_Pages->menuAction());
@@ -429,17 +427,14 @@ public:
         menuGithub_Pages->addAction(actionForserX);
         menuOptions->addAction(actionParametres);
         menuOptions->addSeparator();
-        menuOptions->addAction(actionMain);
         menu->addAction(menuGame->menuAction());
-        menu->addAction(menuEditors->menuAction());
         menu->addSeparator();
         menu->addAction(actionExit);
         menuGame->addAction(actionxrEngine);
+        menuGame->addAction(actionxrEngine_2);
         menuGame->addAction(actionxrPlay_2);
         menuGame->addSeparator();
         menuGame->addAction(actionxrCore);
-        menuEditors->addAction(actionxrEditorTools_in_dev);
-        menuEditors->addAction(actionxrAI);
 
         retranslateUi(xrLaunch);
 
@@ -452,7 +447,7 @@ public:
     void retranslateUi(QMainWindow *xrLaunch)
     {
         xrLaunch->setWindowTitle(QApplication::translate("xrLaunch", "Oxygen Developer Launcher", nullptr));
-        actionxrEngine->setText(QApplication::translate("xrLaunch", "xrEngine (without params)", nullptr));
+        actionxrEngine->setText(QApplication::translate("xrLaunch", "xrEngine", nullptr));
 #ifndef QT_NO_SHORTCUT
         actionxrEngine->setShortcut(QApplication::translate("xrLaunch", "Alt+Shift+R", nullptr));
 #endif // QT_NO_SHORTCUT
@@ -478,6 +473,7 @@ public:
         actionGiperion_2->setText(QApplication::translate("xrLaunch", "Giperion", nullptr));
         actionForserX->setText(QApplication::translate("xrLaunch", "ForserX", nullptr));
         actionxrCore->setText(QApplication::translate("xrLaunch", "xrCore", nullptr));
+        actionxrEngine_2->setText(QApplication::translate("xrLaunch", "xrEngine (without params)", nullptr));
         pushButton_2->setText(QApplication::translate("xrLaunch", "Clean buffers", nullptr));
         pushButton->setText(QApplication::translate("xrLaunch", "Run", nullptr));
         menuAbout->setTitle(QApplication::translate("xrLaunch", "Help", nullptr));
@@ -485,7 +481,6 @@ public:
         menuOptions->setTitle(QApplication::translate("xrLaunch", "Options", nullptr));
         menu->setTitle(QApplication::translate("xrLaunch", "Launch", nullptr));
         menuGame->setTitle(QApplication::translate("xrLaunch", "Game...", nullptr));
-        menuEditors->setTitle(QApplication::translate("xrLaunch", "Editors", nullptr));
     } // retranslateUi
 
 };

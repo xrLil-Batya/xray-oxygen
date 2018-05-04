@@ -14,7 +14,7 @@
 #include "../xrRenderDX10/msaa/dx10MSAABlender.h"
 #include "../xrRenderDX10/DX10 Rain/dx10RainBlender.h"
 #include "blender_fxaa.h"
-
+#include "blender_rain_drops.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -258,16 +258,18 @@ CRenderTarget::CRenderTarget		()
 	b_accum_spot			= xr_new<CBlender_accum_spot>			();
 	b_accum_reflected		= xr_new<CBlender_accum_reflected>		();
 	b_bloom					= xr_new<CBlender_bloom_build>			();
-	if( RImplementation.o.dx10_msaa )
+
+	if (RImplementation.o.dx10_msaa)
 	{
-		b_bloom_msaa			= xr_new<CBlender_bloom_build_msaa>		();
+		b_bloom_msaa		= xr_new<CBlender_bloom_build_msaa>	();
 		b_postprocess_msaa	= xr_new<CBlender_postprocess_msaa>	();
 	}
+
 	b_luminance				= xr_new<CBlender_luminance>		();
 	b_combine				= xr_new<CBlender_combine>			();
 	b_ssao					= xr_new<CBlender_SSAO_noMSAA>		();
-	
-	b_fxaa = xr_new<CBlender_FXAA>();
+	b_fxaa                  = xr_new<CBlender_FXAA>             ();
+	b_rain_drops            = xr_new<CBlender_rain_drops>       ();
 
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -360,6 +362,9 @@ CRenderTarget::CRenderTarget		()
 
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
+
+	// RAIN DROPS
+	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
 
 	// DIRECT (spot)
 	D3DFORMAT						depth_format	= (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
@@ -920,6 +925,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_accum_direct			);
 	xr_delete					(b_ssao					);
 	xr_delete                   (b_fxaa                 );
+	xr_delete                   (b_rain_drops           );
 
    if( RImplementation.o.dx10_msaa )
    {

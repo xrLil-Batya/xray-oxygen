@@ -14,15 +14,13 @@
 
 ///////////////////////////////////////////////////////////////////////
 //	SVS
-VertexShaderRes::VertexShaderRes() :
-	vs(0)
+VertexShaderRes::VertexShaderRes() : vs(0)
 #if defined(USE_DX10) || defined(USE_DX11)
 //	,signature(0)
 #endif	//	USE_DX10
 {
 	;
 }
-
 
 VertexShaderRes::~VertexShaderRes()
 {
@@ -34,41 +32,40 @@ VertexShaderRes::~VertexShaderRes()
 	_RELEASE(vs);
 }
 
-
 ///////////////////////////////////////////////////////////////////////
 //	SPS
-PixelShaderRes::~PixelShaderRes								()			{	_RELEASE(ps);		DEV->_DeletePS			(this);	}
+PixelShaderRes::~PixelShaderRes() { _RELEASE(ps);		DEV->_DeletePS(this); }
 
 #if defined(USE_DX10) || defined(USE_DX11)
 ///////////////////////////////////////////////////////////////////////
 //	SGS
-GeometryShaderRes::~GeometryShaderRes								()			{	_RELEASE(gs);		DEV->_DeleteGS			(this);	}
+GeometryShaderRes::~GeometryShaderRes() { _RELEASE(gs);		DEV->_DeleteGS(this); }
 
 #	ifdef USE_DX11
-HullShaderRes::~HullShaderRes								()			{	_RELEASE(sh);		DEV->_DeleteHS			(this);	}
-DomainShaderRes::~DomainShaderRes								()			{	_RELEASE(sh);		DEV->_DeleteDS			(this);	}
-ComputeShaderRes::~ComputeShaderRes								()			{	_RELEASE(sh);		DEV->_DeleteCS			(this);	}
+HullShaderRes::~HullShaderRes() { _RELEASE(sh);		DEV->_DeleteHS(this); }
+DomainShaderRes::~DomainShaderRes() { _RELEASE(sh);		DEV->_DeleteDS(this); }
+ComputeShaderRes::~ComputeShaderRes() { _RELEASE(sh);		DEV->_DeleteCS(this); }
 #	endif
 
 ///////////////////////////////////////////////////////////////////////
 //	SInputSignature
-SInputSignature::SInputSignature(ID3DBlob* pBlob)	{ VERIFY(pBlob); signature=pBlob; signature->AddRef();};
-SInputSignature::~SInputSignature		()			{	_RELEASE(signature); DEV->_DeleteInputSignature(this); }
+SInputSignature::SInputSignature(ID3DBlob* pBlob) { VERIFY(pBlob); signature = pBlob; signature->AddRef(); };
+SInputSignature::~SInputSignature() { _RELEASE(signature); DEV->_DeleteInputSignature(this); }
 #endif	//	USE_DX10
 
 ///////////////////////////////////////////////////////////////////////
 //	SState
-ShaderStateRes::~ShaderStateRes							()			{	_RELEASE(state);	DEV->_DeleteState		(this);	}
+ShaderStateRes::~ShaderStateRes() { _RELEASE(state);	DEV->_DeleteState(this); }
 
 ///////////////////////////////////////////////////////////////////////
 //	SDeclaration
 ShaderDeclarationRes::~ShaderDeclarationRes()
-{	
-	DEV->_DeleteDecl(this);	
+{
+	DEV->_DeleteDecl(this);
 #if defined(USE_DX10) || defined(USE_DX11)
 	xr_map<ID3DBlob*, ID3DInputLayout*>::iterator iLayout;
 	iLayout = vs_to_layout.begin();
-	for( ; iLayout != vs_to_layout.end(); ++iLayout)
+	for (; iLayout != vs_to_layout.end(); ++iLayout)
 	{
 		//	Release vertex layout
 		_RELEASE(iLayout->second);

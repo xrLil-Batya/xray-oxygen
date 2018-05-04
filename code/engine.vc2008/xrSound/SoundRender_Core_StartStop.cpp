@@ -8,19 +8,20 @@
 
 void CSoundRender_Core::i_start(CSoundRender_Emitter* E)
 {
-	R_ASSERT	(E);
+	R_ASSERT(E);
 
 	// Search lowest-priority target
-	float					Ptest	= E->priority	();
-	float					Ptarget	= flt_max;
-	CSoundRender_Target*	T		= 0;
-	for (u32 it=0; it<s_targets.size(); it++)
+	float Ptest = E->priority();
+	float Ptarget = flt_max;
+	CSoundRender_Target *T = 0;
+
+	for (u32 it = 0; it < s_targets.size(); ++it)
 	{
-		CSoundRender_Target*	Ttest	= s_targets[it];
+		CSoundRender_Target*	Ttest = s_targets[it];
 		if (Ttest->priority < Ptarget)
 		{
-			T		= Ttest;
-			Ptarget	= Ttest->priority;
+			T = Ttest;
+			Ptarget = Ttest->priority;
 		}
 	}
 
@@ -29,34 +30,36 @@ void CSoundRender_Core::i_start(CSoundRender_Emitter* E)
 		T->get_emitter()->cancel();
 
 	// Associate
-	E->target			= T;
-	E->target->start	(E);
-	T->priority			= Ptest;
+	E->target = T;
+	E->target->start(E);
+	T->priority = Ptest;
 }
 
 void CSoundRender_Core::i_stop(CSoundRender_Emitter* E)
 {
-	R_ASSERT			(E);
-	R_ASSERT			(E == E->target->get_emitter());
-	E->target->stop		();
-	E->target			= nullptr;
+	R_ASSERT(E);
+	R_ASSERT(E == E->target->get_emitter());
+
+	E->target->stop();
+	E->target = nullptr;
 }
 
 void CSoundRender_Core::i_rewind(CSoundRender_Emitter* E)
 {
-	R_ASSERT			(E);
-	R_ASSERT			(E == E->target->get_emitter());
-	E->target->rewind	();
+	R_ASSERT(E);
+	R_ASSERT(E == E->target->get_emitter());
+
+	E->target->rewind();
 }
 
 bool CSoundRender_Core::i_allow_play(CSoundRender_Emitter* E)
 {
 	// Search available target
-	float Ptest	= E->priority	();
-	for (u32 it=0; it<s_targets.size(); it++)
-	{
-		if (s_targets[it]->priority<Ptest)
+	float Ptest = E->priority();
+
+	for (u32 it = 0; it < s_targets.size(); ++it)
+		if (s_targets[it]->priority < Ptest)
 			return true;
-	}
+
 	return false;
 }

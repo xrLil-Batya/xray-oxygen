@@ -34,18 +34,30 @@ xrLaunch::xrLaunch				(QWidget *parent)
     ui							(new Ui::xrLaunch) 
 {
 	ui->setupUi(this);
+	init_xrCore();
 	if (!CPUID::SSE3())
-		statusBar()->showMessage(tr("Warning! Your CPU doesn't support SSE3 instructions."), 12000);
+	{
+		Msg								("xrDev: unsupported instructions: SSE3, SSE4.1, AVX");
+		statusBar()->showMessage		(tr("Warning! Your CPU doesn't support SSE3 instructions."), 12000);
+	}
 	else if (!CPUID::SSE41())
-		statusBar()->showMessage(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"), 6000);
+	{
+		Msg								("xrDev: unsupported instructions: SSE4.1, AVX");
+		statusBar()->showMessage		(tr("Your CPU doesn't support SSE4.1 and AVX instructions!"), 6000);
+	}
 	else if (!CPUID::AVX())
-		statusBar()->showMessage(tr("Your CPU doesn't support AVX instructions!"), 6000);
+	{
+		Msg								("xrDev: unsupported instructions: AVX");
+		statusBar()->showMessage		(tr("Your CPU doesn't support AVX instructions!"), 6000);
+	}
 	else
-		statusBar()->showMessage(tr("All instructions are supported on your CPU!"), 6000);
+	{
+		statusBar()->showMessage		(tr("All instructions are supported on your CPU!"), 6000);
+	}
 
 		/////////////////////////////////////////
-		ui->listWidget->addItems(LIST_ITEMS);
-		ui->listWidget_2->addItems(LIST_ITEMS_SETTINGS);
+		ui->listWidget->addItems	(LIST_ITEMS);
+		ui->listWidget_2->addItems	(LIST_ITEMS_SETTINGS);
 }
 
 
@@ -111,7 +123,7 @@ method for run xrEngine
 ***********************************************/
 void xrLaunch::on_pushButton_clicked() 
 {
-	run_xrEngineRun					();
+	run_xrEngine 					();
 }
 
 
@@ -127,10 +139,10 @@ void xrLaunch::add_paramsToList()
 		params_settings					= list_settings.toLocal8Bit();
 		if (params_settings.empty()) 
 		{
-			throw new EcxeptionOpSet	("std::string can't be nullptr",
-										OpSet::STRING_NULLPTR);
+			throw new EcxeptionOpSet		("std::string can't be nullptr",
+											OpSet::STRING_NULLPTR);
 		}
-		statusBar()->showMessage(tr("Added to settings buffer"), 2000);
+		statusBar()->showMessage		(tr("Added to settings buffer"), 2000);
 	}
 	catch							(const EcxeptionOpSet& ex)
 	{
@@ -151,7 +163,8 @@ void xrLaunch::add_paramsToList()
 #ifdef DEBUG_LAUNCHER
 		MessageBox						(NULL, "ERROR", "Error: Can't add string to string buffer", MB_OK | MB_ICONINFORMATION);
 #else
-			statusBar()->showMessage		(tr("Error: Can't add string to settings buffer"));
+		statusBar()->showMessage		(tr("Error: Can't add string to settings buffer"));
+		Msg								("xrDev: string_settings buffer error");
 #endif
 	}
 }
@@ -209,7 +222,8 @@ void xrLaunch::add_stringToList()
 #ifdef DEBUG_LAUNCHER
 		MessageBox						(NULL, "ERROR", "Error: Can't add string to string buffer", MB_OK | MB_ICONHAND);
 #else
-			statusBar()->showMessage		(tr("Error: Can't add string to string buffer"));
+		statusBar()->showMessage		(tr("Error: Can't add string to string buffer"));
+		Msg								("xrDev: string buffer error");
 #endif
 	}
 
@@ -226,16 +240,19 @@ void xrLaunch::clean_buffers()
 		params_settings.clear			();
 		params_string.clear				();
 		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
+		Msg								("xrDev: The string buffers were cleaned");
 	}
 	else if (!params_settings.empty())
 	{ 
 		params_settings.clear			();
 		statusBar()->showMessage		(tr("The string buffer was cleaned"), 2000);
+		Msg								("xrDev: The string buffer was cleaned");
 	}
 	else if (!params_string.empty())
 	{ 
 		params_string.clear				();
 		statusBar()->showMessage		(tr("The string buffer was cleaned"), 2000);
+		Msg								("xrDev: The string buffer was cleaned");
 	}
 	else
 		statusBar()->showMessage		(tr("There is nothing to clean"), 2000);
@@ -267,9 +284,11 @@ void xrLaunch::init_xrCore()
 
 		
 		statusBar()->showMessage		(tr("Loading xrCore..."));
+		Msg								("xrDev: Loading xrCore...");
 		Debug._initialize				(false);
 		Core._initialize				("X-Ray Oxygen", nullptr, TRUE, "fsgame.ltx");
 		statusBar()->showMessage		(tr("Loading complete"), 4000);
+		Msg								("xrDev: xrCore already loaded");
 	}
 	catch (const EcxeptionOpSet& ex)
 	{
@@ -287,6 +306,7 @@ void xrLaunch::init_xrCore()
 	}
 	catch (...)
 	{
+		Msg								("xrDev: Engine init error (Unknown Error)");
 		statusBar()->showMessage		(tr(INIT_ERROR, "Engine init error (Unknown Error)"));
 		QMessageBox::critical			(this, INIT_ERROR, "Engine init error (Unknown Error)");
 	}
@@ -296,14 +316,14 @@ void xrLaunch::init_xrCore()
 /***********************************************
 method for launch xrEngine.dll
 ***********************************************/
-void xrLaunch::run_xrEngineRun() 
+void xrLaunch::run_xrEngine() 
 {
 	try
 	{
 		if (!CPUID::SSE3())
 		{
-			throw new EcxeptionOpSet	("Your CPU doesn't support SSE3 instructions",
-										OpSet::SSE3);
+			Msg								("xrDev: exception: SSE3 isn't supported");
+			throw new EcxeptionOpSet		("Your CPU doesn't support SSE3 instructions", OpSet::SSE3);
 		}
 		QString rendered_line			= ui->lineEdit->text();
 		params_line						= rendered_line.toLocal8Bit();
@@ -319,12 +339,14 @@ void xrLaunch::run_xrEngineRun()
 #endif
 		params							= params_string + " " + params_line + " " + params_settings + " " + params_box;
 		init_xrCore						();
-		ui->progressBar->setValue(33);
-		statusBar()->showMessage(tr("Creating render list..."));
+		ui->progressBar->setValue		(33);
+		Msg								("xrDev: Creating render list...");
+		statusBar()->showMessage		(tr("Creating render list..."));
 		CreateRendererList				();
-		ui->progressBar->setValue(66);
-		statusBar()->showMessage(tr("Loading xrEngine..."), 4000);
-		ui->progressBar->setValue(100);
+		ui->progressBar->setValue		(66);
+		Msg								("xrDev: Loading xrEngine...");
+		statusBar()->showMessage		(tr("Loading xrEngine..."), 4000);
+		ui->progressBar->setValue		(100);
 		RunApplication					(params.data());
 #ifndef NOAWDA
 		QMessageBox::information		(this, "Awda", "Awda");
@@ -338,10 +360,12 @@ void xrLaunch::run_xrEngineRun()
 		switch (ex.opset())
 		{
 		case OpSet::SSE3:	
+			Msg								(INIT_ERROR, ex.what());
 			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
 			QMessageBox::critical			(this, INIT_ERROR, ex.what());
 			break;
 		default:
+			Msg								(INIT_ERROR, ex.what());
 			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
 			QMessageBox::critical			(this, INIT_ERROR, ex.what());
 			break;
@@ -349,6 +373,7 @@ void xrLaunch::run_xrEngineRun()
 	}
 	catch (...)
 	{
+		Msg								(INIT_ERROR, "Engine init error (Unknown Error)");
 		statusBar()->showMessage		(tr(INIT_ERROR, "Engine init error (Unknown Error)"));
 		QMessageBox::critical			(this, INIT_ERROR, "Engine init error (Unknown Error)");
 	}
@@ -360,6 +385,7 @@ method for close the MainWindow
 ***********************************************/
 void xrLaunch::on_actionExit_triggered() 
 {
+	Msg								("xrDev: closing...");
 	statusBar()->showMessage		(tr("Closing launcher..."));
 	xrLaunch::close					();
 }
@@ -370,7 +396,7 @@ method for run xrEngine
 ***********************************************/
 void xrLaunch::on_actionxrEngine_triggered() 
 {
-	run_xrEngineRun					();
+	run_xrEngine					();
 }
 
 
@@ -433,7 +459,7 @@ void xrLaunch::on_actionVertver_Github_triggered()
 	dlg->setWindowFlags				(Qt::WindowStaysOnTopHint);
 	dlg->setWindowTitle				("About xrDev");
 	dlg->show();
-	
+	Msg								("xrDev: aboutlauncher loaded");
 }
 
 
@@ -469,33 +495,17 @@ void xrLaunch::on_actionAbout_Oxygen_Team_triggered()
 
 
 /***********************************************
-method for open settings window
+launch without params
 ***********************************************/
-void xrLaunch::open_settings()
+void xrLaunch::on_actionxrEngine_2_triggered()
 {
-	xrSettings *settings = new xrSettings;
-	settings->setWindowFlags(Qt::WindowStaysOnTopHint);
-	settings->setWindowTitle("Settings");
-	settings->show();
+    /////////////////////////////////////////
+    params_string					= " ";
+    params_line.clear				();
+    params_settings.clear			();
+    params_box.clear				();
+    /////////////////////////////////////////
+    run_xrEngine					();
 }
-
-
-/***********************************************
-link to settings window
-***********************************************/
-void xrLaunch::on_actionMain_parameters_triggered()
-{
-	open_settings();
-}
-
-
-/***********************************************
-link to settings window
-***********************************************/
-void xrLaunch::on_actionMain_triggered()
-{
-	open_settings();
-}
-
-
 #endif
+

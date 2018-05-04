@@ -31,6 +31,7 @@ uniform		sampler2D		sPosition;
 uniform		sampler2D		sMask;          //sunshafts occlusion mask
 uniform		sampler2D		sMaskBlur;      //smoothed mask
 uniform		sampler2D		sSunShafts;     //
+uniform		sampler2D		s_rain_drops0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //
@@ -41,6 +42,7 @@ uniform		sampler2D		sSunShafts;     //
 //uniform		half4		SSIntensity;
 uniform		half4		SSParams;
 uniform		half4		SSParamsDISPLAY;
+uniform 	float2 		rain_drops_params0;
 
 //////////////////////////////////////////////////////////////////////////////////////////
 //

@@ -194,7 +194,11 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 					RCache.Render				(D3DPT_TRIANGLELIST,vOffset,0,dwCNT_verts,iOffset,dwCNT_prims);
 					RCache.stat.r.s_details.add	(dwCNT_verts);
 				}
-
+				const bool isSunDetails = ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS);
+				if ((isSunDetails && (RImplementation.PHASE_SMAP == RImplementation.phase))										// phase smap with shadows
+					|| (isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase) && (!RImplementation.is_sun()))	// phase normal with shadows without sun
+					|| (!isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase)))								// phase normal without shadows
+					vis.clear();
 			}
 		}
 		vOffset		+=	hw_BatchSize * Object.number_vertices;

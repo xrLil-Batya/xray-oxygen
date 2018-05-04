@@ -11,8 +11,7 @@
 /***********************************************
 entry-point for application.
 ***********************************************/
-int WINAPI main(int argc,
-				char *argv[])
+int WINAPI main(int argc, char *argv[])
 {
 	QApplication a				(argc, argv);
 	xrLaunch LaunchWIN;
@@ -27,12 +26,11 @@ int WINAPI main(int argc,
 		int main();
 		int main()
 		{
-			const char* err		= "Visual C compiler doesn't supported by xrDevLaunch";
-			printf(err);
-			Sleep(2500);
-			return 0;
+			const char* err			= "Visual C compiler doesn't supported by xrDevLaunch";
+			printf					(err);
+			Sleep					(2500);
+			return					0;
 		}
-
 	}
 }
 #endif

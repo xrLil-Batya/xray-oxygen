@@ -231,16 +231,11 @@ void	CDetailManager::hw_Render_dump		(ref_constant x_array, u32 var_id, u32 lod_
 	vis_list& list	=	m_visibles	[var_id];
 
 	Fvector					c_sun,c_ambient,c_hemi;
-#ifndef _EDITOR
+
 	CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
 	c_sun.set				(desc.sun_color.x,	desc.sun_color.y,	desc.sun_color.z);	c_sun.mul(.5f);
 	c_ambient.set			(desc.ambient.x,	desc.ambient.y,		desc.ambient.z);
 	c_hemi.set				(desc.hemi_color.x, desc.hemi_color.y,	desc.hemi_color.z);
-#else
-	c_sun.set				(1,1,1);	c_sun.mul(.5f);
-	c_ambient.set			(1,1,1);
-	c_hemi.set				(1,1,1);
-#endif    
 
 	VERIFY(objects.size()<=list.size());
 
@@ -248,7 +243,8 @@ void	CDetailManager::hw_Render_dump		(ref_constant x_array, u32 var_id, u32 lod_
 	for (u32 O=0; O<objects.size(); O++){
 		CDetail&	Object				= *objects	[O];
 		xr_vector <SlotItemVec* >& vis	= list		[O];
-		if (!vis.empty()){
+		if (!vis.empty())
+		{
 			// Setup matrices + colors (and flush it as nesessary)
 			RCache.set_Element				(Object.shader->E[lod_id]);
 			RImplementation.apply_lmaterial	();
@@ -307,6 +303,11 @@ void	CDetailManager::hw_Render_dump		(ref_constant x_array, u32 var_id, u32 lod_
 				RCache.Render				(D3DPT_TRIANGLELIST,vOffset,0,dwCNT_verts,iOffset,dwCNT_prims);
 				RCache.stat.r.s_details.add	(dwCNT_verts);
 			}     
+			const bool isSunDetails = ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS);
+			if ((isSunDetails && (RImplementation.PHASE_SMAP == RImplementation.phase))										// phase smap with shadows
+				|| (isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase) && (!RImplementation.is_sun()))	// phase normal with shadows without sun
+				|| (!isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase)))								// phase normal without shadows
+				vis.clear();
 		}
 		vOffset		+=	hw_BatchSize * Object.number_vertices;
 		iOffset		+=	hw_BatchSize * Object.number_indices;

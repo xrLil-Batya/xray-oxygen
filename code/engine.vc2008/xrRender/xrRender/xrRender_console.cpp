@@ -16,6 +16,15 @@ xr_token q_smapsize_token		[ ]={
 	{ 0, 0			        }
 };
 
+u32 ps_sunshafts_mode = 0;
+xr_token sunshafts_mode_token[] = {
+    { "volumetric", 0 },
+    { "screen_space", 1 },
+    { "manowar_ssss", 2 },
+    { 0, 0 }
+};
+
+
 
 u32			ps_Preset				=	2	;
 xr_token							qpreset_token							[ ]={
@@ -27,7 +36,7 @@ xr_token							qpreset_token							[ ]={
 	{ 0,							0											}
 };
 
-u32			ps_r_ssao_mode			=	2;
+u32			ps_r_ssao_mode			=	1;
 xr_token							qssao_mode_token						[ ]={
 	{ "disabled",					0											},
 	{ "default",					1											},
@@ -244,17 +253,16 @@ float		ps_r3_dyn_wet_surf_near		= 10.f;				// 10.0f
 float		ps_r3_dyn_wet_surf_far		= 30.f;				// 30.0f
 int			ps_r3_dyn_wet_surf_sm_res	= 256;				// 256
 
+float ps_r2_ss_sunshafts_length = 1.f;
+float ps_r2_ss_sunshafts_radius = 1.f;
 int ps_r2_fxaa = 0; 
 int ps_rs_loading_stages = 0;
 
 float		ps_prop_ss_radius				=	1.56f;
 float		ps_prop_ss_sample_step_phase0	=	.09f;
-float		ps_prop_ss_sample_step_phase1	=	.03f;
-//float		ps_prop_ss_sample_step_phase2	=	.33f;
+float		ps_prop_ss_sample_step_phase1	=	.07f;
 float		ps_prop_ss_blend				=	.066f;
 float		ps_prop_ss_intensity			=	1.f;
-float		ps_r2_rain_rops_debug_control   =   1.f;
-
 
 //- Mad Max
 float		ps_r2_gloss_factor			= 0.03f;
@@ -802,7 +810,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_sun_lumscale_hemi",	&ps_r2_sun_lumscale_hemi,	0.0,	+3.0	);
 	CMD4(CCC_Float,		"r2_sun_lumscale_amb",	&ps_r2_sun_lumscale_amb,	0.0,	+3.0	);
 	
-	CMD4(CCC_Float,		"r2_rain_drops_debug_intensity",	&ps_r2_rain_rops_debug_control,	0.f,	3.f);
 	CMD4(CCC_Float,		"r2_mblur",				&ps_r2_mblur,				0.0f,	1.0f	);
 	CMD3(CCC_Mask,		"r2_mblur_enabled",		&ps_r2_ls_flags,			R2FLAG_MBLUR	);
 
@@ -852,6 +859,9 @@ void		xrRender_initconsole	()
 //	float		ps_r2_dof_near			= 0.f;					// 0.f
 //	float		ps_r2_dof_focus			= 1.4f;					// 1.4f
 	
+    CMD3(CCC_Token, "r2_sunshafts_mode", &ps_sunshafts_mode, sunshafts_mode_token);
+    CMD4(CCC_Float, "r2_ss_sunshafts_length", &ps_r2_ss_sunshafts_length, .2f, 1.5f);
+    CMD4(CCC_Float, "r2_ss_sunshafts_radius", &ps_r2_ss_sunshafts_radius, .5f, 2.f);
 	CMD3(CCC_Mask,		"r2_volumetric_lights",			&ps_r2_ls_flags,			R2FLAG_VOLUMETRIC_LIGHTS);
 	CMD3(CCC_Token,		"r2_sun_shafts",				&ps_r_sun_shafts,			qsun_shafts_token);
 	CMD3(CCC_SSAO_Mode,	"r2_ssao_mode",					&ps_r_ssao_mode,			qssao_mode_token);
@@ -873,7 +883,7 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_SunShafts_Intensity",		&ps_prop_ss_intensity,			.0f,	2.f);
 	CMD4(CCC_Float,		"r2_SunShafts_Blend",			&ps_prop_ss_blend,				.01f,	1.f);
 
-	CMD4(CCC_Float,     "r2_droplets_power_debug",      &droplets_power_debug,      0.f, 1.5f);
+	CMD4(CCC_Float,     "r2_rain_drops_power_debug",      &droplets_power_debug,      0.f, 3.f);
 
 	//	Igor: need restart
 	CMD3(CCC_Token,		"r2_shadow_map_size",			&ps_r2_smapsize,			q_smapsize_token);

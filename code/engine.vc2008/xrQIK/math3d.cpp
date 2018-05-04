@@ -37,7 +37,6 @@ Matrix idmat =
 	{ 0.0, 0.0, 0.0, 1.0 }
 };
 
-
 void matmult(Matrix A, Matrix B, Matrix C)
 /*
 * Multiply 4x4 matrices:
@@ -49,14 +48,16 @@ void matmult(Matrix A, Matrix B, Matrix C)
 * A *CAN* point to the same matrix as B or C.
 */
 {
-	int         i, j, k;
-	Matrix      a;
+	int i, j, k;
+	Matrix a;
 
-
-	for (i = 0; i<4; i++) {
-		for (j = 0; j<4; j++) {
+	for (i = 0; i < 4; ++i)
+	{
+		for (j = 0; j < 4; ++j)
+		{
 			a[i][j] = 0.0;
-			for (k = 0; k<4; k++) {
+			for (k = 0; k < 4; ++k)
+			{
 				a[i][j] += B[i][k] * C[k][j];
 			}
 		}
@@ -76,49 +77,56 @@ void hmatmult(Matrix A, Matrix B, Matrix C)
 * A *CAN* point to the same matrix as B or C.
 */
 {
-	float	*a, *b, *c, *bp, *cp;
-	float	*bmax, *cmax, *cpmax;
-	float	*b32, *c00, *c03;
-	Matrix		Bt, Ct;
+	float *a, *b, *c, *bp, *cp;
+	float *bmax, *cmax, *cpmax;
+	float *b32, *c00, *c03;
+	Matrix Bt, Ct;
 
-	if (A == B) {
+	if (A == B)
+	{
 		cpmatrix(Bt, B);
 		bmax = &Bt[3][0];
 		b = &Bt[0][0];
 		b32 = &Bt[3][2];
 	}
-	else {
+	else
+	{
 		bmax = &B[3][0];
 		b = &B[0][0];
 		b32 = &B[3][2];
 	}
 
-	if (A == C) {
+	if (A == C)
+	{
 		cpmatrix(Ct, C);
 		c00 = &Ct[0][0];
 		c03 = &Ct[0][3];
 	}
-	else {
+	else
+	{
 		c00 = &C[0][0];
 		c03 = &C[0][3];
 	}
 
 	a = (float *)&A[0][0];
 
-	while (b < bmax) {
+	while (b < bmax)
+	{
 		c = c00;
 		cmax = c03;
-		while (c < cmax) {
+		while (c < cmax)
+		{
 			cp = c;
 			cpmax = c + 8;
 			bp = b;
 			*a = (*bp++) * (*cp);
-			do {
+			do
+			{
 				cp += 4;
 				*a += *bp++ * (*cp);
 			} while (cp < cpmax);
-			a++;
-			c++;
+			++a;
+			++c;
 		}
 		b += 4;
 		*a++ = 0.0;
@@ -126,11 +134,13 @@ void hmatmult(Matrix A, Matrix B, Matrix C)
 
 	c = c00;
 	cmax = c03;
-	while (c < cmax) {
+	while (c < cmax)
+	{
 		cp = c + 12;
 		bp = b32;
 		*a = *cp;
-		do {
+		do
+		{
 			cp -= 4;
 			*a += *bp-- * (*cp);
 		} while (cp > c);
@@ -154,7 +164,8 @@ void inverthomomatrix(Matrix N, Matrix M)
 	nmax = &N[2][3];
 	n = &N[0][0];
 	C = &M[0][0];
-	while (n < nmax) {
+	while (n < nmax)
+	{
 		m = C;
 		*n++ = *m;
 		m += 4;
@@ -186,14 +197,17 @@ void vecmult0(float y[], float x[], Matrix M)
 */
 {
 	int	i, j;
-	float   	Y[3];
+	float Y[3];
 
-	for (i = 0; i<3; i++) {
+	for (i = 0; i < 3; ++i)
+	{
 		Y[i] = 0;
-		for (j = 0; j<3; j++) {
+		for (j = 0; j < 3; ++j)
+		{
 			Y[i] += x[j] * M[j][i];
 		}
 	}
+
 	y[0] = Y[0];
 	y[1] = Y[1];
 	y[2] = Y[2];
@@ -206,11 +220,13 @@ void vecmult(float y[], float x[], Matrix M)
 */
 {
 	int i, j;
-	float   	Y[3];
+	float Y[3];
 
-	for (i = 0; i<3; i++) {
+	for (i = 0; i < 3; ++i)
+	{
 		Y[i] = M[3][i];
-		for (j = 0; j<3; j++) {
+		for (j = 0; j < 3; ++j)
+		{
 			Y[i] += x[j] * M[j][i];
 		}
 	}
@@ -218,7 +234,6 @@ void vecmult(float y[], float x[], Matrix M)
 	y[1] = Y[1];
 	y[2] = Y[2];
 }
-
 
 void
 axisangletomatrix(Matrix m, float axis[], float theta)
@@ -228,9 +243,9 @@ axisangletomatrix(Matrix m, float axis[], float theta)
 * like the coordinate axes.
 */
 {
-	float	s, v, c;
-	float	*p;
-	float	a01, a02, a12, a0s, a1s, a2s, a01v, a02v, a12v;
+	float s, v, c;
+	float *p;
+	float a01, a02, a12, a0s, a1s, a2s, a01v, a02v, a12v;
 
 	c = _cos(theta);
 	s = _sin(theta);
@@ -238,10 +253,11 @@ axisangletomatrix(Matrix m, float axis[], float theta)
 
 	p = (float *)m;
 
-	if (axis[0] == 0.0f && axis[1] == 0.0f) {
-		if (axis[2] < 0) {
+	if (axis[0] == 0.0f && axis[1] == 0.0f)
+	{
+		if (axis[2] < 0)
 			s = -s;
-		}
+
 		/*
 		* z rotation
 		*/
@@ -259,10 +275,11 @@ axisangletomatrix(Matrix m, float axis[], float theta)
 		*p++ = 0.0;
 		*p++ = 1.0;
 	}
-	else if (axis[0] == 0.0 && axis[2] == 0.0) {
-		if (axis[1] < 0) {
+	else if (axis[0] == 0.0 && axis[2] == 0.0)
+	{
+		if (axis[1] < 0)
 			s = -s;
-		}
+
 		/*
 		* y rotation
 		*/
@@ -280,10 +297,11 @@ axisangletomatrix(Matrix m, float axis[], float theta)
 		*p++ = 0.0;
 		*p++ = c;
 	}
-	else if (axis[1] == 0.0 && axis[2] == 0.0) {
-		if (axis[0] < 0) {
+	else if (axis[1] == 0.0 && axis[2] == 0.0)
+	{
+		if (axis[0] < 0)
 			s = -s;
-		}
+
 		/*
 		* x rotation
 		*/
@@ -301,7 +319,8 @@ axisangletomatrix(Matrix m, float axis[], float theta)
 		*p++ = -s;
 		*p++ = c;
 	}
-	else {
+	else
+	{
 		a01 = axis[0] * axis[1];
 		a02 = axis[0] * axis[2];
 		a12 = axis[1] * axis[2];
@@ -326,6 +345,7 @@ axisangletomatrix(Matrix m, float axis[], float theta)
 		*p++ = a12v - a0s;
 		*p++ = axis[2] * axis[2] * v + c;
 	}
+
 	*p++ = 0.0;
 
 	*p++ = 0.0;
@@ -347,7 +367,7 @@ void rotation_axis_to_matrix(float axis[3], float angle, Matrix R)
 	cos_a = _cos(angle);
 	sin_a = _sin(angle);
 
-	// Assume axis is normalized 
+	// Assume axis is normalized
 
 #if 0
 	// float normal[3];
@@ -364,18 +384,18 @@ void rotation_axis_to_matrix(float axis[3], float angle, Matrix R)
 	s3 = axis[2];
 
 #endif
-	float s1s1 = s1*s1;
-	float s1s2 = s1*s2;
-	float s1s3 = s1*s3;
-	float s2s2 = s2*s2;
-	float s2s3 = s2*s3;
-	float s3s3 = s3*s3;
+	float s1s1 = s1 * s1;
+	float s1s2 = s1 * s2;
+	float s1s3 = s1 * s3;
+	float s2s2 = s2 * s2;
+	float s2s3 = s2 * s3;
+	float s3s3 = s3 * s3;
 	float cos_as1s2 = cos_a * s1s2;
 	float cos_as1s3 = cos_a * s1s3;
 	float cos_as2s3 = cos_a * s2s3;
-	float s1sin_a = s1*sin_a;
-	float s2sin_a = s2*sin_a;
-	float s3sin_a = s3*sin_a;
+	float s1sin_a = s1 * sin_a;
+	float s2sin_a = s2 * sin_a;
+	float s3sin_a = s3 * sin_a;
 	float *r = (float *)R;
 
 	*r++ = s1s1 + cos_a * (1 - s1s1);
@@ -397,12 +417,11 @@ void rotation_axis_to_matrix(float axis[3], float angle, Matrix R)
 	*r++ = 0;
 	*r++ = 0;
 	*r = 1;
-
 }
 
 //
 // p = Projection of u onto v
-// 
+//
 void project(float p[3], const float u[3], const float v[3])
 {
 	float vnorm[3];
@@ -411,7 +430,6 @@ void project(float p[3], const float u[3], const float v[3])
 	unitize(vnorm);
 	vecscalarmult(p, vnorm, DOT(u, vnorm));
 }
-
 
 //
 // p = Projection of u onto plane whose normal is n
@@ -423,7 +441,6 @@ void project_plane(float p[3], float u[3], float n[3])
 	project(un, u, n);
 	vecsub(p, u, un);
 }
-
 
 //
 // Return the angle between two vectors u,v about the axis n
@@ -443,7 +460,7 @@ float angle_between_vectors(float u[3], float v[3], float n[3])
 	crossproduct(temp, up, vp);
 	float mag = DOT(temp, n);
 
-	// Vectors are parallel at 0 or 180 
+	// Vectors are parallel at 0 or 180
 	if (mag*mag < 1e-8)
 	{
 		if (DOT(up, vp) < 0)
@@ -458,7 +475,7 @@ float angle_between_vectors(float u[3], float v[3], float n[3])
 		t = 1.0;
 	else if (t < -1.0)
 		t = -1.0;
-	return sign*acos(t);
+	return sign * acos(t);
 #else
 
 	float up[3];
@@ -473,9 +490,8 @@ float angle_between_vectors(float u[3], float v[3], float n[3])
 #endif
 }
 
-
 //
-// Print 4x4 homogeneous matrix 
+// Print 4x4 homogeneous matrix
 //
 void print_matrix(Matrix M)
 {
@@ -487,7 +503,6 @@ void print_matrix(Matrix M)
 	}
 }
 
-
 //
 // Print vector
 //
@@ -495,7 +510,6 @@ void print_vector(float v[3])
 {
 	printf(" %lf %lf %lf \n", *v, v[1], v[2]);
 }
-
 
 //
 // Find a vector n normal to v
@@ -563,14 +577,10 @@ void find_normal_vector(float v[3], float n[3])
 		unitize(n);
 		break;
 	}
-
 }
 
-
-
-
 //
-// Multiplies only the rotational components of B*C 
+// Multiplies only the rotational components of B*C
 // and stores the result into A
 //
 void rmatmult(Matrix A, Matrix B, Matrix C)
@@ -609,21 +619,21 @@ void rmatmult(Matrix A, Matrix B, Matrix C)
 	float v1, v2, v3;
 
 	v1 = *b++; v2 = *b++; v3 = *b++; b++;
-	*a++ = v1*c11 + v2*c21 + v3*c31;
-	*a++ = v1*c12 + v2*c22 + v3*c32;
-	*a++ = v1*c13 + v2*c23 + v3*c33;
+	*a++ = v1 * c11 + v2 * c21 + v3 * c31;
+	*a++ = v1 * c12 + v2 * c22 + v3 * c32;
+	*a++ = v1 * c13 + v2 * c23 + v3 * c33;
 	*a++ = 0;
 
 	v1 = *b++; v2 = *b++; v3 = *b++; b++;
-	*a++ = v1*c11 + v2*c21 + v3*c31;
-	*a++ = v1*c12 + v2*c22 + v3*c32;
-	*a++ = v1*c13 + v2*c23 + v3*c33;
+	*a++ = v1 * c11 + v2 * c21 + v3 * c31;
+	*a++ = v1 * c12 + v2 * c22 + v3 * c32;
+	*a++ = v1 * c13 + v2 * c23 + v3 * c33;
 	*a++ = 0;
 
 	v1 = *b++; v2 = *b++; v3 = *b++;
-	*a++ = v1*c11 + v2*c21 + v3*c31;
-	*a++ = v1*c12 + v2*c22 + v3*c32;
-	*a++ = v1*c13 + v2*c23 + v3*c33;
+	*a++ = v1 * c11 + v2 * c21 + v3 * c31;
+	*a++ = v1 * c12 + v2 * c22 + v3 * c32;
+	*a++ = v1 * c13 + v2 * c23 + v3 * c33;
 	*a++ = 0;
 
 	*a++ = 0;
@@ -724,21 +734,20 @@ void rotation_principal_axis_to_matrix(char axis, float angle, Matrix m)
 //
 // To extract axis and angle from R use the formulas (murray, pg 414)
 //
-//	2 * cos(theta) - 1 = trace(R) 
-// and 
-//	axis = vector associated with skew symmetric matrix (R-R')/(2*sin(theta)) 
+//	2 * cos(theta) - 1 = trace(R)
+// and
+//	axis = vector associated with skew symmetric matrix (R-R')/(2*sin(theta))
 //
 //
 // By our convention always return 0 <= angle < M_PI
-// 
+//
 void rotation_matrix_to_axis(const Matrix R, float axis[], float &angle)
 {
 	const float eps = 1e-7f;
 
 	angle = acos((R[0][0] + R[1][1] + R[2][2] - 1) / 2.0f);
 
-
-	// Close to identity. Arbitrarily set solution to z axis rotation of 0 
+	// Close to identity. Arbitrarily set solution to z axis rotation of 0
 	if (_abs(angle) < eps || _abs(angle - M_PI) < eps)
 	{
 		angle = 0.0;
@@ -782,14 +791,13 @@ linterpmatrix(Matrix R, Matrix A, Matrix B, float t)
 	vecinterp(R[3], A[3], B[3], t);
 }
 
-
 #define ATAN2(a,b) ((a==0.0)&&(b==0.0) ? 0.0 : atan2(a,b))
 
 #define EPSILON 0.001f
-#define W q[0]    
-#define X q[1]    
-#define Y q[2]    
-#define Z q[3]    
+#define W q[0]
+#define X q[1]
+#define Y q[2]
+#define Z q[3]
 
 void
 qtomatrix(Matrix m, Quaternion q)
@@ -923,7 +931,6 @@ unitize4(float u[4])
 	return(f);
 }
 
-
 // length of a vector
 //
 float norm(float v[3])
@@ -990,4 +997,3 @@ float vecdist(const float t[], const float t2[])
 	vecsub(t3, (float*)t, (float*)t2);
 	return _sqrt(DOT(t3, t3));
 }
-

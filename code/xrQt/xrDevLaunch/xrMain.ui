@@ -1280,8 +1280,6 @@
      <addaction name="actionGiperion_2"/>
      <addaction name="actionForserX"/>
     </widget>
-    <addaction name="actionMain_parameters"/>
-    <addaction name="separator"/>
     <addaction name="actionVertver_Github"/>
     <addaction name="actionAbout_Oxygen_Team"/>
     <addaction name="menuGithub_Pages"/>
@@ -1293,7 +1291,6 @@
     </property>
     <addaction name="actionParametres"/>
     <addaction name="separator"/>
-    <addaction name="actionMain"/>
    </widget>
    <widget class="QMenu" name="menu">
     <property name="title">
@@ -1304,19 +1301,12 @@
       <string>Game...</string>
      </property>
      <addaction name="actionxrEngine"/>
+     <addaction name="actionxrEngine_2"/>
      <addaction name="actionxrPlay_2"/>
      <addaction name="separator"/>
      <addaction name="actionxrCore"/>
     </widget>
-    <widget class="QMenu" name="menuEditors">
-     <property name="title">
-      <string>Editors</string>
-     </property>
-     <addaction name="actionxrEditorTools_in_dev"/>
-     <addaction name="actionxrAI"/>
-    </widget>
     <addaction name="menuGame"/>
-    <addaction name="menuEditors"/>
     <addaction name="separator"/>
     <addaction name="actionExit"/>
    </widget>
@@ -1338,7 +1328,7 @@
     <bool>false</bool>
    </property>
    <property name="text">
-    <string>xrEngine (without params)</string>
+    <string>xrEngine</string>
    </property>
    <property name="shortcut">
     <string>Alt+Shift+R</string>
@@ -1461,6 +1451,11 @@
   <action name="actionxrCore">
    <property name="text">
     <string>xrCore</string>
+   </property>
+  </action>
+  <action name="actionxrEngine_2">
+   <property name="text">
+    <string>xrEngine (without params)</string>
    </property>
   </action>
  </widget>

@@ -34,7 +34,7 @@ MODIFICATIONS.
 
 int solve_trig1(float a, float b, float c, float theta[2])
 {
-	float temp = (a*a + b*b - c*c);
+	float temp = (a*a + b * b - c * c);
 
 	if (temp < 0.0)
 	{
@@ -72,14 +72,14 @@ int solve_trig1(float a, float b, float c, float theta[2])
 //      a*sin(theta) + b*cos(theta) = d
 //
 // There is at most one solution. The answer is returned in radians
-// 
+//
 float solve_trig2(float a, float b, float c, float d)
 {
-	return (float)atan2(a*d - b*c, a*c + b*d);
+	return (float)atan2(a*d - b * c, a*c + b * d);
 }
 
-// 
-// arccos routine that returns up to two solutions. 
+//
+// arccos routine that returns up to two solutions.
 //
 int myacos(float x, float solns[2])
 {
@@ -96,8 +96,8 @@ int myacos(float x, float solns[2])
 	return 2;
 }
 
-// 
-// arcsin routine that returns up to two solutions. 
+//
+// arcsin routine that returns up to two solutions.
 //
 int myasin(float x, float solns[2])
 {
@@ -116,7 +116,3 @@ int myasin(float x, float solns[2])
 
 	return 2;
 }
-
-
-
-

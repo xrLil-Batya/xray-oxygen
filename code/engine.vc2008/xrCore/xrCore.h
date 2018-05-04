@@ -1,3 +1,9 @@
+/*
+	* Authors:
+	* Date of creation:
+	* Description:
+	* Copyright:
+*/
 #pragma once
 #pragma warning (disable : 4530 )		// C++ vector(985)
 #ifndef _CLR_MANAGER
@@ -32,40 +38,40 @@
 
 #if (defined(_DEBUG) || defined(MIXED) || defined(DEBUG)) && !defined(FORCE_NO_EXCEPTIONS)
 	// "debug" or "mixed"
-	#if !defined(_CPPUNWIND)
-		#error Please enable exceptions...
-	#endif
-	#define _HAS_EXCEPTIONS		1	// STL
-	#define XRAY_EXCEPTIONS		1	// XRAY
+#if !defined(_CPPUNWIND)
+#error Please enable exceptions...
+#endif
+#define _HAS_EXCEPTIONS		1	// STL
+#define XRAY_EXCEPTIONS		1	// XRAY
 
-    #define XR_NOEXCEPT noexcept
-    #define XR_NOEXCEPT_OP(x) noexcept(x)
+#define XR_NOEXCEPT noexcept
+#define XR_NOEXCEPT_OP(x) noexcept(x)
 #else
 	// "release"
-	#if defined(_CPPUNWIND) && !defined __BORLANDC__ && !defined(_XRLAUNCHER)
-		#error Please disable exceptions...
-	#endif
-	#define _HAS_EXCEPTIONS		1	// STL
-	#define XRAY_EXCEPTIONS		0	// XRAY
-	#pragma warning(disable:4530)
+#if defined(_CPPUNWIND) && !defined __BORLANDC__ && !defined(_XRLAUNCHER)
+#error Please disable exceptions...
+#endif
+#define _HAS_EXCEPTIONS		1	// STL
+#define XRAY_EXCEPTIONS		0	// XRAY
+#pragma warning(disable:4530)
 
-    #define XR_NOEXCEPT throw()
-    #define XR_NOEXCEPT_OP(x)
+#define XR_NOEXCEPT throw()
+#define XR_NOEXCEPT_OP(x)
 #endif
 
 #if !defined(_MT)
 	// multithreading disabled
-	#error Please enable multi-threaded library...
+#error Please enable multi-threaded library...
 #endif
 
 #	include "xrCore_platform.h"
 
 // *** try to minimize code bloat of STLport
 #ifdef XRCORE_EXPORTS				// no exceptions, export allocator and common stuff
-	#define _STLP_DESIGNATED_DLL	1
-	#define _STLP_USE_DECLSPEC		1
+#define _STLP_DESIGNATED_DLL	1
+#define _STLP_USE_DECLSPEC		1
 #else
-	#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
+#define _STLP_USE_DECLSPEC		1	// no exceptions, import allocator and common stuff
 #endif
 
 // #include <exception>
@@ -81,12 +87,12 @@
 #include <chrono>
 
 #ifndef DEBUG
-	#ifdef _DEBUG
-    	#define DEBUG
-    #endif
-	#ifdef MIXED
-    	#define DEBUG
-    #endif
+#ifdef _DEBUG
+#define DEBUG
+#endif
+#ifdef MIXED
+#define DEBUG
+#endif
 #endif
 
 #ifdef _EDITOR
@@ -104,11 +110,11 @@
 #	define ICN			__declspec (noinline)
 
 #ifndef DEBUG
-	#pragma inline_depth	( 254 )
-	#pragma inline_recursion( on )
-	#ifndef __BORLANDC__
-		#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcat)
-	#endif
+#pragma inline_depth	( 254 )
+#pragma inline_recursion( on )
+#ifndef __BORLANDC__
+#pragma intrinsic	(abs, fabs, fmod, sin, cos, tan, asin, acos, atan, sqrt, exp, log, log10, strcat)
+#endif
 #endif
 
 #include <time.h>
@@ -130,7 +136,7 @@
 #ifdef _M_AMD64
 #pragma warning (disable : 4512 )
 #endif
-       
+
 // stl
 #pragma warning (push)
 #pragma warning (disable:4702)
@@ -172,32 +178,32 @@
 #include "string_concatenations.h"
 
 // stl ext
-struct XRCORE_API xr_rtoken{
-    shared_str	name;
-    int	   	id;
-           	xr_rtoken	(const char* _nm, int _id){name=_nm;id=_id;}
+struct XRCORE_API xr_rtoken {
+	shared_str	name;
+	int	   	id;
+	xr_rtoken(const char* _nm, int _id) { name = _nm; id = _id; }
 public:
-    void	rename		(const char* _nm)		{name=_nm;}
-    bool	equal		(const char* _nm)		{return (0==xr_strcmp(*name,_nm));}
+	void	rename(const char* _nm) { name = _nm; }
+	bool	equal(const char* _nm) { return (0 == xr_strcmp(*name, _nm)); }
 };
 
 #pragma pack (push,1)
-struct XRCORE_API xr_shortcut{
-    enum{
-        flShift	= 0x20,
-        flCtrl	= 0x40,
-        flAlt	= 0x80,
-    };
-    union{
-    	struct{
-            u8	 	key;
-            Flags8	ext;
-        };
-        u16		hotkey;
-    };
-                xr_shortcut		(u8 k, BOOL a, BOOL c, BOOL s):key(k){ext.assign(u8((a?flAlt:0)|(c?flCtrl:0)|(s?flShift:0)));}
-                xr_shortcut		(){ext.zero();key=0;}
-    bool		similar			(const xr_shortcut& v)const{return ext.equal(v.ext)&&(key==v.key);}
+struct XRCORE_API xr_shortcut {
+	enum {
+		flShift = 0x20,
+		flCtrl = 0x40,
+		flAlt = 0x80,
+	};
+	union {
+		struct {
+			u8	 	key;
+			Flags8	ext;
+		};
+		u16		hotkey;
+	};
+	xr_shortcut(u8 k, BOOL a, BOOL c, BOOL s) :key(k) { ext.assign(u8((a ? flAlt : 0) | (c ? flCtrl : 0) | (s ? flShift : 0))); }
+	xr_shortcut() { ext.zero(); key = 0; }
+	bool		similar(const xr_shortcut& v)const { return ext.equal(v.ext) && (key == v.key); }
 };
 #pragma pack (pop)
 
@@ -229,14 +235,16 @@ class destructor
 {
 	T* ptr;
 public:
-	destructor(T* p)	{ ptr=p;			}
-	~destructor()		{ xr_delete(ptr);	}
+	destructor(T* p) { ptr = p; }
+	~destructor() { xr_delete(ptr); }
 	IC T& operator() ()
-	{	return *ptr; }
+	{
+		return *ptr;
+	}
 };
 
 // ********************************************** The Core definition
-class XRCORE_API xrCore 
+class XRCORE_API xrCore
 {
 public:
 	string64	ApplicationName;
@@ -250,19 +258,18 @@ public:
 	DWORD		dwFrame;
 
 public:
-	void		_initialize	(const char* ApplicationName, LogCallback cb=0, BOOL init_fs=TRUE, const char* fs_fname=0);
-	void		_destroy	();
-IC	void		SetPluginMode() { PluginMode = true; }
-	
+	void		_initialize(const char* ApplicationName, LogCallback cb = 0, BOOL init_fs = TRUE, const char* fs_fname = 0);
+	void		_destroy();
+	IC	void		SetPluginMode() { PluginMode = true; }
+
 public:
 	bool		PluginMode;
 };
 
 //Borland class dll interface
-#define	_BCL			__stdcall	
+#define	_BCL			__stdcall
 
 //Borland global function dll interface
-#define	_BGCL			__stdcall	
-
+#define	_BGCL			__stdcall
 
 extern XRCORE_API xrCore Core;

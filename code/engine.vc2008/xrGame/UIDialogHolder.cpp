@@ -10,7 +10,7 @@
 
 dlgItem::dlgItem(CUIWindow* pWnd)
 {
-	wnd		= pWnd;
+	wnd = pWnd;
 	enabled = true;
 }
 
@@ -26,8 +26,8 @@ bool operator == (const dlgItem& i1, const dlgItem& i2)
 
 recvItem::recvItem(CUIDialogWnd* r)
 {
-	m_item			= r;
-	m_flags.zero	();
+	m_item = r;
+	m_flags.zero();
 }
 bool operator == (const recvItem& i1, const recvItem& i2)
 {
@@ -36,7 +36,7 @@ bool operator == (const recvItem& i1, const recvItem& i2)
 
 CDialogHolder::CDialogHolder()
 {
-	m_b_in_update			= false;
+	m_b_in_update = false;
 }
 
 CDialogHolder::~CDialogHolder()
@@ -45,82 +45,89 @@ CDialogHolder::~CDialogHolder()
 
 void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 {
-	R_ASSERT						( !pDialog->IsShown() );
+	R_ASSERT(!pDialog->IsShown());
 
-	AddDialogToRender				(pDialog);
-	SetMainInputReceiver			(pDialog, false);
+	AddDialogToRender(pDialog);
+	SetMainInputReceiver(pDialog, false);
 
-	if(UseIndicators())
+	if (UseIndicators())
 	{
-		bool b							= !!psHUD_Flags.test(HUD_CROSSHAIR_RT);
+		bool b = !!psHUD_Flags.test(HUD_CROSSHAIR_RT);
 		m_input_receivers.back().m_flags.set(recvItem::eCrosshair, b);
 
-		b								= CurrentGameUI()->GameIndicatorsShown();
+		b = CurrentGameUI()->GameIndicatorsShown();
 		m_input_receivers.back().m_flags.set(recvItem::eIndicators, b);
-		
-		if(bDoHideIndicators){
-			psHUD_Flags.set				(HUD_CROSSHAIR_RT, FALSE);
+
+		if (bDoHideIndicators)
+		{
+			psHUD_Flags.set(HUD_CROSSHAIR_RT, FALSE);
 			CurrentGameUI()->ShowGameIndicators(false);
 		}
 	}
-	pDialog->SetHolder				(this);
+	pDialog->SetHolder(this);
 
-	if( pDialog->NeedCursor() )
+	if (pDialog->NeedCursor())
 		GetUICursor().Show();
 
-	if(g_pGameLevel)
+	if (g_pGameLevel)
 	{
-		CActor* A	= smart_cast<CActor*>( Level().CurrentViewEntity() );
-		if ( A && pDialog->StopAnyMove() )
+		CActor* A = smart_cast<CActor*>(Level().CurrentViewEntity());
+
+		if (A && pDialog->StopAnyMove())
 		{
-			A->StopAnyMove				();
+			A->StopAnyMove();
 		};
-		if(A)
-		{	
-			A->IR_OnKeyboardRelease		(kWPN_ZOOM);
-			A->IR_OnKeyboardRelease		(kWPN_FIRE);
+
+		if (A)
+		{
+			A->IR_OnKeyboardRelease(kWPN_ZOOM);
+			A->IR_OnKeyboardRelease(kWPN_FIRE);
 		}
 	}
 }
 
-
 void CDialogHolder::StopMenu(CUIDialogWnd* pDialog)
 {
-	R_ASSERT( pDialog->IsShown() );
+	R_ASSERT(pDialog->IsShown());
 
-	if( TopInputReceiver()==pDialog )
+	if (TopInputReceiver() == pDialog)
 	{
-		if(UseIndicators())
+		if (UseIndicators())
 		{
-			bool b					= !!m_input_receivers.back().m_flags.test(recvItem::eCrosshair);
-			psHUD_Flags.set			(HUD_CROSSHAIR_RT, b);
-			b						= !!m_input_receivers.back().m_flags.test(recvItem::eIndicators);
+			bool b = !!m_input_receivers.back().m_flags.test(recvItem::eCrosshair);
+			psHUD_Flags.set(HUD_CROSSHAIR_RT, b);
+			b = !!m_input_receivers.back().m_flags.test(recvItem::eIndicators);
 			CurrentGameUI()->ShowGameIndicators(b);
 		}
-		
-		SetMainInputReceiver	(NULL, false);
-	}else
-		SetMainInputReceiver	(pDialog, true);
 
-	RemoveDialogToRender	(pDialog);
-	pDialog->SetHolder		(NULL);
+		SetMainInputReceiver(NULL, false);
+	}
+	else
+		SetMainInputReceiver(pDialog, true);
 
-	if(!TopInputReceiver() || !TopInputReceiver()->NeedCursor() )
+	RemoveDialogToRender(pDialog);
+	pDialog->SetHolder(NULL);
+
+	if (!TopInputReceiver() || !TopInputReceiver()->NeedCursor())
 		GetUICursor().Hide();
 }
 
 void CDialogHolder::AddDialogToRender(CUIWindow* pDialog)
 {
-	dlgItem itm		(pDialog);
-	itm.enabled		= true;
+	dlgItem itm(pDialog);
+	itm.enabled = true;
 
-	bool bAdd		= (m_dialogsToRender_new.end() == std::find(m_dialogsToRender_new.begin(),m_dialogsToRender_new.end(),itm));
-	if(!bAdd)		return;
-	
-	bAdd			= (m_dialogsToRender.end() == std::find(m_dialogsToRender.begin(),m_dialogsToRender.end(),itm));
-	if(!bAdd)		return;
+	bool bAdd = (m_dialogsToRender_new.end() == std::find(m_dialogsToRender_new.begin(), m_dialogsToRender_new.end(), itm));
 
-	if(m_b_in_update)
+	if (!bAdd)
+		return;
+
+	bAdd = (m_dialogsToRender.end() == std::find(m_dialogsToRender.begin(), m_dialogsToRender.end(), itm));
+
+	if (!bAdd)
+		return;
+
+	if (m_b_in_update)
 		m_dialogsToRender_new.push_back(itm);
 	else
 		m_dialogsToRender.push_back(itm);
@@ -130,11 +137,11 @@ void CDialogHolder::AddDialogToRender(CUIWindow* pDialog)
 
 void CDialogHolder::RemoveDialogToRender(CUIWindow* pDialog)
 {
-	dlgItem itm		(pDialog);
-	itm.enabled		= true;
-	xr_vector<dlgItem>::iterator it = std::find(m_dialogsToRender.begin(),m_dialogsToRender.end(),itm);
+	dlgItem itm(pDialog);
+	itm.enabled = true;
+	xr_vector<dlgItem>::iterator it = std::find(m_dialogsToRender.begin(), m_dialogsToRender.end(), itm);
 
-	if(it!=m_dialogsToRender.end())
+	if (it != m_dialogsToRender.end())
 	{
 		(*it).wnd->Show(false);
 		(*it).wnd->Enable(false);
@@ -142,13 +149,11 @@ void CDialogHolder::RemoveDialogToRender(CUIWindow* pDialog)
 	}
 }
 
-
-
 void CDialogHolder::DoRenderDialogs()
 {
 	xr_vector<dlgItem>::iterator it = m_dialogsToRender.begin();
-	for(; it!=m_dialogsToRender.end();++it){
-		if( (*it).enabled && (*it).wnd->IsShown() )
+	for (; it != m_dialogsToRender.end(); ++it) {
+		if ((*it).enabled && (*it).wnd->IsShown())
 			(*it).wnd->Draw();
 	}
 }
@@ -157,7 +162,7 @@ void  CDialogHolder::OnExternalHideIndicators()
 {
 	xr_vector<recvItem>::iterator it = m_input_receivers.begin();
 	xr_vector<recvItem>::iterator it_e = m_input_receivers.end();
-	for(;it!=it_e;++it)
+	for (; it != it_e; ++it)
 	{
 		(*it).m_flags.set(recvItem::eIndicators, FALSE);
 		(*it).m_flags.set(recvItem::eCrosshair, FALSE);
@@ -165,25 +170,27 @@ void  CDialogHolder::OnExternalHideIndicators()
 }
 
 CUIDialogWnd* CDialogHolder::TopInputReceiver()
-{ 
-	if ( !m_input_receivers.empty() ) 
-		return m_input_receivers.back().m_item; 
-	return NULL; 
+{
+	if (!m_input_receivers.empty())
+		return m_input_receivers.back().m_item;
+
+	return NULL;
 };
 
-void CDialogHolder::SetMainInputReceiver	(CUIDialogWnd* ir, bool _find_remove)	
-{ 
-	if( TopInputReceiver() == ir ) return;
+void CDialogHolder::SetMainInputReceiver(CUIDialogWnd* ir, bool _find_remove)
+{
+	if (TopInputReceiver() == ir)
+		return;
 
-	if(!ir || _find_remove)
+	if (!ir || _find_remove)
 	{
-		if(m_input_receivers.empty())	return;
+		if (m_input_receivers.empty())
+			return;
 
-		if(ir)
+		if (ir)
 		{
 			VERIFY(ir && _find_remove);
 
-			
 			for (size_t cnt = m_input_receivers.size(); cnt > 0; --cnt)
 			{
 				if (m_input_receivers[cnt - 1].m_item == ir)
@@ -225,69 +232,74 @@ void CDialogHolder::OnFrame()
 {
 	m_b_in_update = true;
 	CUIDialogWnd* wnd = TopInputReceiver();
-	if ( wnd && wnd->IsEnabled() )
+	if (wnd && wnd->IsEnabled())
 	{
 		wnd->Update();
 	}
 	//else
 	{
 		xr_vector<dlgItem>::iterator it = m_dialogsToRender.begin();
-		for(; it!=m_dialogsToRender.end();++it)
-			if((*it).enabled && (*it).wnd->IsEnabled())
+		for (; it != m_dialogsToRender.end(); ++it)
+			if ((*it).enabled && (*it).wnd->IsEnabled())
 				(*it).wnd->Update();
 	}
 
 	m_b_in_update = false;
-	if(!m_dialogsToRender_new.empty())
+	if (!m_dialogsToRender_new.empty())
 	{
-		m_dialogsToRender.insert	(m_dialogsToRender.end(),m_dialogsToRender_new.begin(),m_dialogsToRender_new.end());
-		m_dialogsToRender_new.clear	();
+		m_dialogsToRender.insert(m_dialogsToRender.end(), m_dialogsToRender_new.begin(), m_dialogsToRender_new.end());
+		m_dialogsToRender_new.clear();
 	}
 
-	std::sort			(m_dialogsToRender.begin(), m_dialogsToRender.end());
-	while (!m_dialogsToRender.empty() && (!m_dialogsToRender[m_dialogsToRender.size()-1].enabled)) 
+	std::sort(m_dialogsToRender.begin(), m_dialogsToRender.end());
+	while (!m_dialogsToRender.empty() && (!m_dialogsToRender[m_dialogsToRender.size() - 1].enabled))
 		m_dialogsToRender.pop_back();
 }
 
 void CDialogHolder::CleanInternals()
 {
-	while( !m_input_receivers.empty() )
+	while (!m_input_receivers.empty())
 		m_input_receivers.pop_back();
 
-	m_dialogsToRender.clear	();
-	GetUICursor().Hide		();
+	m_dialogsToRender.clear();
+	GetUICursor().Hide();
 }
 
 bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 {
-	CUIDialogWnd*	TIR = TopInputReceiver();
-	if(!TIR)				return false;
-	if(!TIR->IR_process())	return false;
+	CUIDialogWnd *TIR = TopInputReceiver();
+
+	if (!TIR)
+		return false;
+
+	if (!TIR->IR_process())
+		return false;
 	//mouse click
-	if(dik==MOUSE_1 || dik==MOUSE_2 || dik==MOUSE_3)
+	if (dik == MOUSE_1 || dik == MOUSE_2 || dik == MOUSE_3)
 	{
 		Fvector2 cp = GetUICursor().GetCursorPosition();
-		EUIMessages action = (dik==MOUSE_1)?WINDOW_LBUTTON_DOWN :(dik==MOUSE_2)?WINDOW_RBUTTON_DOWN:WINDOW_CBUTTON_DOWN;
-		if (TIR->OnMouseAction(cp.x,cp.y, action))
-            return true;
+		EUIMessages action = (dik == MOUSE_1) ? WINDOW_LBUTTON_DOWN : (dik == MOUSE_2) ? WINDOW_RBUTTON_DOWN : WINDOW_CBUTTON_DOWN;
+		if (TIR->OnMouseAction(cp.x, cp.y, action))
+			return true;
 	}
 
-	if (TIR->OnKeyboardAction(dik,	WINDOW_KEY_PRESSED))
+	if (TIR->OnKeyboardAction(dik, WINDOW_KEY_PRESSED))
 		return true;
 
-	if( !TIR->StopAnyMove() && g_pGameLevel )
+	if (!TIR->StopAnyMove() && g_pGameLevel)
 	{
 		CObject* O = Level().CurrentEntity();
-		if( O ){
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+		if (O)
+		{
+			IInputReceiver*		IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
 			if (IR)
-//				IR->IR_OnKeyboardPress(get_binded_action(dik));
+				//				IR->IR_OnKeyboardPress(get_binded_action(dik));
 			{
 				EGameActions action = get_binded_action(dik);
-				if(action!=kQUICK_USE_1 && action!=kQUICK_USE_2 && action!=kQUICK_USE_3 && action!=kQUICK_USE_4)
+				if (action != kQUICK_USE_1 && action != kQUICK_USE_2 && action != kQUICK_USE_3 && action != kQUICK_USE_4)
 					IR->IR_OnKeyboardPress(action);
 			}
-			return			(false);
+			return (false);
 		}
 	}
 	return true;
@@ -295,31 +307,37 @@ bool CDialogHolder::IR_UIOnKeyboardPress(int dik)
 
 bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 {
-	CUIDialogWnd* TIR		= TopInputReceiver();
-	if(!TIR)				return false;
-	if(!TIR->IR_process())	return false;
-	
+	CUIDialogWnd *TIR = TopInputReceiver();
+
+	if (!TIR)
+		return false;
+
+	if (!TIR->IR_process())
+		return false;
+
 	//mouse click
-	if(dik==MOUSE_1 || dik==MOUSE_2 || dik==MOUSE_3)
+	if (dik == MOUSE_1 || dik == MOUSE_2 || dik == MOUSE_3)
 	{
 		Fvector2 cp = GetUICursor().GetCursorPosition();
-		EUIMessages action = (dik==MOUSE_1)?WINDOW_LBUTTON_UP :(dik==MOUSE_2)?WINDOW_RBUTTON_UP:WINDOW_CBUTTON_UP;
+		EUIMessages action = (dik == MOUSE_1) ? WINDOW_LBUTTON_UP : (dik == MOUSE_2) ? WINDOW_RBUTTON_UP : WINDOW_CBUTTON_UP;
 		if (TIR->OnMouseAction(cp.x, cp.y, action))
-            return true;
+			return true;
 	}
 
-	if (TIR->OnKeyboardAction(dik,	WINDOW_KEY_RELEASED))
+	if (TIR->OnKeyboardAction(dik, WINDOW_KEY_RELEASED))
 		return true;
 
-	if( !TIR->StopAnyMove() && g_pGameLevel )
+	if (!TIR->StopAnyMove() && g_pGameLevel)
 	{
 		CObject* O = Level().CurrentEntity();
-		if( O )
+		if (O)
 		{
-			IInputReceiver*		IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
+			IInputReceiver*		IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
+
 			if (IR)
 				IR->IR_OnKeyboardRelease(get_binded_action(dik));
-			return			(false);
+
+			return (false);
 		}
 	}
 	return true;
@@ -327,60 +345,78 @@ bool CDialogHolder::IR_UIOnKeyboardRelease(int dik)
 
 bool CDialogHolder::IR_UIOnKeyboardHold(int dik)
 {
-	CUIDialogWnd* TIR		= TopInputReceiver();
-	if(!TIR)				return false;
-	if(!TIR->IR_process())	return false;
+	CUIDialogWnd* TIR = TopInputReceiver();
 
-	if(TIR->OnKeyboardHold(dik)) 
+	if (!TIR)
+		return false;
+
+	if (!TIR->IR_process())
+		return false;
+
+	if (TIR->OnKeyboardHold(dik))
 		return true;
 
-	if(!TIR->StopAnyMove() && g_pGameLevel )
+	if (!TIR->StopAnyMove() && g_pGameLevel)
 	{
 		CObject* O = Level().CurrentEntity();
-		if(O)
+		if (O)
 		{
-			IInputReceiver*	IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
-			if(IR)
+			IInputReceiver*	IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
+
+			if (IR)
 				IR->IR_OnKeyboardHold(get_binded_action(dik));
-			return		false;
+
+			return false;
 		}
 	}
 	return true;
 }
 
-bool CDialogHolder::IR_UIOnMouseWheel (int direction)
+bool CDialogHolder::IR_UIOnMouseWheel(int direction)
 {
-	CUIDialogWnd* TIR		= TopInputReceiver();
-	if(!TIR)				return false;
-	if(!TIR->IR_process())	return false;
+	CUIDialogWnd *TIR = TopInputReceiver();
 
-	Fvector2 pos			= GetUICursor().GetCursorPosition();
+	if (!TIR)
+		return false;
 
-	TIR->OnMouseAction		(pos.x,pos.y,(direction>0)?WINDOW_MOUSE_WHEEL_UP:WINDOW_MOUSE_WHEEL_DOWN);
-	return					true;
+	if (!TIR->IR_process())
+		return false;
+
+	Fvector2 pos = GetUICursor().GetCursorPosition();
+
+	TIR->OnMouseAction(pos.x, pos.y, (direction > 0) ? WINDOW_MOUSE_WHEEL_UP : WINDOW_MOUSE_WHEEL_DOWN);
+	return true;
 }
 
 bool CDialogHolder::IR_UIOnMouseMove(int dx, int dy)
 {
-	CUIDialogWnd* TIR		= TopInputReceiver();
-	if(!TIR)				return false;
-	if(!TIR->IR_process())	return false;
+	CUIDialogWnd *TIR = TopInputReceiver();
+
+	if (!TIR)
+		return false;
+
+	if (!TIR->IR_process())
+		return false;
+
 	if (GetUICursor().IsVisible())
-	{ 
-		GetUICursor().UpdateCursorPosition(dx, dy);
-		Fvector2 cPos			= GetUICursor().GetCursorPosition();
-		TIR->OnMouseAction		(cPos.x, cPos.y , WINDOW_MOUSE_MOVE);
-	}else 
-	if(!TIR->StopAnyMove() && g_pGameLevel )
 	{
-		CObject* O				= Level().CurrentEntity();
-		if(O)
+		GetUICursor().UpdateCursorPosition(dx, dy);
+		Fvector2 cPos = GetUICursor().GetCursorPosition();
+		TIR->OnMouseAction(cPos.x, cPos.y, WINDOW_MOUSE_MOVE);
+	}
+	else
+		if (!TIR->StopAnyMove() && g_pGameLevel)
 		{
-			IInputReceiver*	IR	= smart_cast<IInputReceiver*>( smart_cast<CGameObject*>(O) );
-			if (IR)
-				IR->IR_OnMouseMove	(dx,dy);
-			return			false;
-		}
-	};
+			CObject* O = Level().CurrentEntity();
+			if (O)
+			{
+				IInputReceiver*	IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(O));
+
+				if (IR)
+					IR->IR_OnMouseMove(dx, dy);
+
+				return false;
+			}
+		};
 	return true;
 }
