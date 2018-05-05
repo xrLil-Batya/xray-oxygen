@@ -236,13 +236,13 @@ void	CBlender_accum_direct_volumetric_msaa::Compile(CBlender_Compile& C)
 		{
 		case 0:		// near pass - enable Z-test to perform depth-clipping
 			C.r_Pass			("accum_sun","accum_volumetric_sun_msaa",	false,	TRUE,	FALSE,blend,D3DBLEND_ONE,dest);
-				C.r_dx10Texture		("s_lmap",			C.L_textures[0]);
-				C.r_dx10Texture	("s_smap",			r2_RT_smap_depth);
-				 C.r_dx10Texture	("s_noise", "fx\\fx_noise");
+			C.r_dx10Texture		("s_lmap",			C.L_textures[0]);
+			C.r_dx10Texture	("s_smap",			r2_RT_smap_depth);
+			C.r_dx10Texture	("s_noise", "fx\\fx_noise");
 
          C.r_dx10Sampler		("smp_rtlinear");
-				 C.r_dx10Sampler		("smp_linear");
-				 C.r_dx10Sampler		("smp_smap");
+		 C.r_dx10Sampler		("smp_linear");
+		 C.r_dx10Sampler		("smp_smap");
          C.r_End				();
 			break;
 		}
