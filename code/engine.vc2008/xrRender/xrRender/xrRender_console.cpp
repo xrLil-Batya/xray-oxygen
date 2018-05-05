@@ -176,18 +176,18 @@ Flags32		ps_r2_ls_flags_ext			= {
 
 
 // R2-Only
-float		ps_r2_tonemap_middlegray	= 1.f;
-float		ps_r2_tonemap_adaptation	= 1.f;
-float		ps_r2_tonemap_low_lum		= 0.0001f;
-float		ps_r2_tonemap_amount		= 0.7f;
+float		ps_r2_tonemap_middlegray	= 1.3f;
+float		ps_r2_tonemap_adaptation	= 10.f;
+float		ps_r2_tonemap_low_lum		= 0.5f;
+float		ps_r2_tonemap_amount		= 1.0f;
 float		ps_r2_ls_bloom_kernel_g		= 3.f;
-float		ps_r2_ls_bloom_kernel_b		= .7f;
-float		ps_r2_ls_bloom_speed		= 100.f;
-float		ps_r2_ls_bloom_kernel_scale	= .7f; // gauss
+float		ps_r2_ls_bloom_kernel_b		= 1.0f;
+float		ps_r2_ls_bloom_speed		= 50.f;
+float		ps_r2_ls_bloom_kernel_scale	= .9f; // gauss
 float		ps_r2_ls_dsm_kernel			= .7f;
 float		ps_r2_ls_psm_kernel			= .7f;
 float		ps_r2_ls_ssm_kernel			= .7f;
-float		ps_r2_ls_bloom_threshold	= .00001f;
+float		ps_r2_ls_bloom_threshold	= .03f;
 
 float		ps_r2_df_parallax_h = 0.02f;
 float		ps_r2_df_parallax_range = 75.f;
