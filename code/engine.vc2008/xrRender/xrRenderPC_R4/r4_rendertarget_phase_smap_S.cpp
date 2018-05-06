@@ -8,9 +8,7 @@ void	CRenderTarget::phase_smap_spot_clear()
 void	CRenderTarget::phase_smap_spot		(light* L)
 {
 	// Targets + viewport
-	//	TODO: DX10: CHeck if we don't need old-style SMAP
-	if (RImplementation.o.HW_smap)		u_setrt	(rt_smap_surf, NULL, NULL, rt_smap_depth->pZRT);
-	else								VERIFY(!"Use HW SMap only for DX10!");
+	u_setrt	(rt_smap_surf, NULL, NULL, rt_smap_depth->pZRT);
 	D3D_VIEWPORT VP					=	{(float)L->X.S.posX, (float)L->X.S.posY, (float)L->X.S.size, (float)L->X.S.size, 0, 1};
 	HW.pContext->RSSetViewports(1, &VP);
 
@@ -19,7 +17,7 @@ void	CRenderTarget::phase_smap_spot		(light* L)
 	RCache.set_Stencil					( FALSE		);
 	// no transparency
 	#pragma todo("can optimize for multi-lights covering more than say 50%...")
-	if (RImplementation.o.HW_smap)		RCache.set_ColorWriteEnable	(FALSE);
+	RCache.set_ColorWriteEnable	(FALSE);
 }
 
 void	CRenderTarget::phase_smap_spot_tsh	(light* L)

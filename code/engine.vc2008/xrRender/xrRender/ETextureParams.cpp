@@ -214,7 +214,6 @@ void STextureParams::FillProp(LPCSTR base_name, PropItemVec& items, PropValue::T
         PHelper().CreateToken32		(items, "Material\\Base",			(u32*)&material,	tmtl_token);
         PHelper().CreateFloat	   	(items, "Material\\Weight",			&material_weight	);
         
-//		PHelper().CreateFlag32		(items, "Flags\\Binary Alpha",		&flags,				flBinaryAlpha);
         PHelper().CreateFlag32		(items, "Flags\\Dither",			&flags,				flDitherColor);
         PHelper().CreateFlag32		(items, "Flags\\Dither Each MIP",	&flags,				flDitherEachMIPLevel);
         PHelper().CreateFlag32		(items, "Flags\\Implicit Lighted",	&flags,				flImplicitLighted);

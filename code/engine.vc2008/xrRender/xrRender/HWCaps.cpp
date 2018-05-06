@@ -250,7 +250,7 @@ void CHWCaps::Update()
 	if (0==raster_major)		geometry_major=0;		// Disable VS if no PS
 
 	//
-	bTableFog			=	FALSE;	//BOOL	(caps.RasterCaps&D3DPRASTERCAPS_FOGTABLE);
+	bTableFog			=	FALSE;
 
 	// Detect if stencil available
 	bStencil			=	TRUE;

@@ -114,7 +114,7 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		uber_deffer		(C,true,tvs,"base",oBlend.value,0,true);
 		C.r_Stencil		( TRUE,D3DCMP_ALWAYS,0xff,0x7f,D3DSTENCILOP_KEEP,D3DSTENCILOP_REPLACE,D3DSTENCILOP_KEEP);
 		C.r_StencilRef	(0x01);
-		//C.PassSET_ZB		(true,false);
+
 		//	Need only for ATOC to emulate stencil test
 		if (bUseATOC)
 			C.RS.SetRS	( D3DRS_ZFUNC, D3DCMP_EQUAL);
@@ -145,7 +145,6 @@ void	CBlender_Tree::Compile	(CBlender_Compile& C)
 		//	TODO: DX10: Use dumb shader for shadowmap since shadows are drawn using hardware PCF
 		if (oBlend.value)	C.r_Pass	(tvs_s,"shadow_direct_base_aref",	FALSE,TRUE,TRUE,TRUE,D3DBLEND_ZERO,D3DBLEND_ONE,TRUE,200);
 		else				C.r_Pass	(tvs_s,"shadow_direct_base",		FALSE);
-		//C.r_Sampler			("s_base",	C.L_textures[0]);
 		C.r_dx10Texture			("s_base",	C.L_textures[0]);
 		C.r_dx10Sampler			("smp_base");
 		C.r_dx10Sampler			("smp_linear");
