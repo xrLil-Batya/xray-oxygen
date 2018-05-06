@@ -553,8 +553,10 @@ FreeImage_GetColorType(FIBITMAP *dib) {
 	const FREE_IMAGE_TYPE image_type = FreeImage_GetImageType(dib);
 
 	// special bitmap type
-	if(image_type != FIT_BITMAP) {
-		switch(image_type) {
+	if(image_type != FIT_BITMAP)
+	{
+		switch(image_type) 
+		{
 			case FIT_UINT16:
 			{
 				// 16-bit greyscale TIF can be either FIC_MINISBLACK (the most common case) or FIC_MINISWHITE
@@ -573,11 +575,11 @@ FreeImage_GetColorType(FIBITMAP *dib) {
 			case FIT_RGBF:
 				return FIC_RGB;
 			case FIT_RGBA16:
-			case FIT_RGBAF:
+			case FIT_RGBAF: 
 				return FIC_RGBALPHA;
-		}
 
-		return FIC_MINISBLACK;
+			default: return FIC_MINISBLACK;
+		}
 	}
 
 	// standard image type
