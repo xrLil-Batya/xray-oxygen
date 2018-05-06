@@ -72,7 +72,7 @@
 #include <ImathFun.h>
 #include <Iex.h>
 #include <half.h>
-#include <zlib.h>
+#include "../../3rd-party/zlib/zlib.h"
 #include <assert.h>
 #include <algorithm>
 

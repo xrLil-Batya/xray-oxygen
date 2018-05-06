@@ -58,8 +58,10 @@
 #include <vector>
 #include <fstream>
 #include <assert.h>
+#include <algorithm>
 
-namespace Imf {
+namespace Imf 
+{
 
 using Imath::Box2i;
 using Imath::divp;
@@ -75,6 +77,8 @@ using IlmThread::Semaphore;
 using IlmThread::Task;
 using IlmThread::TaskGroup;
 using IlmThread::ThreadPool;
+using std::string;
+using std::vector;
 
 namespace {
 
@@ -951,7 +955,7 @@ OutputFile::writePixels (int numScanLines)
                 scanLineMin = _data->currentScanLine;
                 scanLineMax = _data->currentScanLine + numScanLines - 1;
     
-                int numTasks = std::max (std::min((int)_data->lineBuffers.size<int>(),
+                int numTasks = std::max (std::min((int)_data->lineBuffers.size(),
                                          last - first + 1),
 				    1);
 

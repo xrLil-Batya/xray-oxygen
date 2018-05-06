@@ -38,12 +38,11 @@
 //	Miscellaneous stuff related to tiled files
 //
 //-----------------------------------------------------------------------------
-
+#include <algorithm>
 #include <ImfTiledMisc.h>
 #include "Iex.h"
 #include <ImfMisc.h>
 #include <ImfChannelList.h>
-
 
 namespace Imf {
 

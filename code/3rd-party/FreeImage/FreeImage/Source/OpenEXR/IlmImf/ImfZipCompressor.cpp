@@ -44,7 +44,7 @@
 #include <ImfZipCompressor.h>
 #include <ImfCheckedArithmetic.h>
 #include "Iex.h"
-#include <zlib.h>
+#include "../../3rd-party/zlib/zlib.h"
 
 namespace Imf {
 
