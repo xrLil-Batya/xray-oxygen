@@ -61,7 +61,9 @@ void ui_actor_state_wnd::init_from_xml( CUIXml& xml, LPCSTR path )
 	}
 	m_state[stt_health]->init_from_xml( xml, "health_state");
 	m_state[stt_bleeding]->init_from_xml( xml, "bleeding_state");
+	m_state[stt_blood]->init_from_xml( xml, "blood");
 	m_state[stt_radiation]->init_from_xml( xml, "radiation_state");
+	m_state[stt_rad]->init_from_xml( xml, "rad");
 	m_state[stt_fire]->init_from_xml( xml, "fire_sensor");
 	m_state[stt_radia]->init_from_xml( xml, "radia_sensor");
 	m_state[stt_acid ]->init_from_xml( xml, "acid_sensor");
@@ -83,11 +85,26 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	}
 
 	float value = 0.0f;
+	float text = 0.0f;
+	float text_rad = 0.0f;
+	float value_rad = 0.0f;
+	float text_blood = 0.0f;
+	float value_blood = 0.0f;
 	
 	value = actor->conditions().GetHealth();
+	text = actor->conditions().GetHealth();
 	value = floor(value * 55) / 55; // number of sticks in progress bar
-// show bleeding icon
+	text = floor(value * 101); // if 100 max health is 99(maybe can fixed in game configs)
 	m_state[stt_health]->set_progress(value);
+	m_state[stt_health]->set_text(text);
+
+	// show bleeding icon
+	value_blood = actor->conditions().BleedingSpeed();
+	text_blood = actor->conditions().BleedingSpeed();
+	text_blood = floor(value_blood * 100);
+	m_state[stt_blood]->set_text(text_blood);	
+	m_state[stt_blood]->set_progress(value_blood);
+
 	value = actor->conditions().BleedingSpeed();					
 	m_state[stt_bleeding]->show_static(false, 1);
 	m_state[stt_bleeding]->show_static(false, 2);
@@ -101,7 +118,14 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		else 
 			m_state[stt_bleeding]->show_static(true, 3);
 	}
-// show radiation icon
+
+	// show radiation icon
+	value_rad = actor->conditions().GetRadiation();
+	text_rad = actor->conditions().GetRadiation();
+	text_rad = floor(value_rad * 100);
+	m_state[stt_rad]->set_text(text_rad);	
+	m_state[stt_rad]->set_progress(value_rad);
+
 	value = actor->conditions().GetRadiation();
 	m_state[stt_radiation]->show_static(false, 1);
 	m_state[stt_radiation]->show_static(false, 2);
@@ -115,6 +139,7 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		else 
 			m_state[stt_radiation]->show_static(true, 3);
 	}
+
 
 	CCustomOutfit* outfit = actor->GetOutfit();
 	PIItem itm = actor->inventory().ItemFromSlot(HELMET_SLOT);
