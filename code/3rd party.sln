@@ -51,6 +51,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Physics", "Physics", "{6F6D
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Effects11", "3rd-party\FX11\Effects11_2017_Win10.vcxproj", "{DF460EAB-570D-4B50-9089-2E2FC801BF38}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "FreeImage", "3rd-party\FreeImage\FreeImage\FreeImage.2010.vcxproj", "{B39ED2B3-D53A-4077-B957-930979A3577D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -142,6 +144,12 @@ Global
 		{DF460EAB-570D-4B50-9089-2E2FC801BF38}.Release_AI32|x64.Build.0 = Release|x64
 		{DF460EAB-570D-4B50-9089-2E2FC801BF38}.Release|x64.ActiveCfg = Release|x64
 		{DF460EAB-570D-4B50-9089-2E2FC801BF38}.Release|x64.Build.0 = Release|x64
+		{B39ED2B3-D53A-4077-B957-930979A3577D}.Debug|x64.ActiveCfg = Debug|x64
+		{B39ED2B3-D53A-4077-B957-930979A3577D}.Debug|x64.Build.0 = Debug|x64
+		{B39ED2B3-D53A-4077-B957-930979A3577D}.Release_AI32|x64.ActiveCfg = Release|x64
+		{B39ED2B3-D53A-4077-B957-930979A3577D}.Release_AI32|x64.Build.0 = Release|x64
+		{B39ED2B3-D53A-4077-B957-930979A3577D}.Release|x64.ActiveCfg = Release|x64
+		{B39ED2B3-D53A-4077-B957-930979A3577D}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
