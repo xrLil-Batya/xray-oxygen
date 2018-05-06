@@ -16,9 +16,6 @@
     <Filter Include="Lights">
       <UniqueIdentifier>{a25a5157-37d6-40d7-b095-5731ed9a9e64}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Glows">
-      <UniqueIdentifier>{e0857e92-dd97-4e92-84e4-b363e29fe850}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Wallmarks">
       <UniqueIdentifier>{b76f0bb5-99f2-4b47-8852-a0fbd2896a6c}</UniqueIdentifier>
     </Filter>
@@ -750,6 +747,8 @@
     <ClInclude Include="blender_rain_drops.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="Blender_ss.h" />
+    <ClInclude Include="blender_sunshafts.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1329,7 +1328,6 @@
       <Filter>Shading templates\3dFluid</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
-    <ClCompile Include="r4_rendertarget_phase_FXAA.cpp" />
     <ClCompile Include="blender_fxaa.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
@@ -1339,6 +1337,13 @@
     <ClCompile Include="blender_rain_drops.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
+    <ClCompile Include="r4_rendertarget_phase_FXAA.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_sunshafts.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_ss.cpp" />
+    <ClCompile Include="r2_rendertarget_phase_sunshafts.cpp" />
+    <ClCompile Include="Blender_ss.cpp" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />

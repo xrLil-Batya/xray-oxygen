@@ -15,7 +15,8 @@
 #include "blender_fxaa.h"
 #include "../xrRenderDX10/DX10 Rain/dx10RainBlender.h"
 #include "blender_rain_drops.h"
-
+#include "blender_sunshafts.h"
+#include "Blender_ss.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -58,24 +59,24 @@ void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, const ref_rt&
 	RCache.set_ZB							(zb);
 }
 
-void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, ID3DDepthStencilView* zb)
+void CRenderTarget::u_setrt(const ref_rt& _1, const ref_rt& _2, ID3DDepthStencilView* zb)
 {
-	VERIFY									(_1||zb);
+	VERIFY(_1 || zb);
 	if (_1)
 	{
-		dwWidth									= _1->dwWidth;
-		dwHeight								= _1->dwHeight;
+		dwWidth = _1->dwWidth;
+		dwHeight = _1->dwHeight;
 	}
 	else
 	{
 		D3D10_DEPTH_STENCIL_VIEW_DESC	desc;
 		zb->GetDesc(&desc);
-      if( ! RImplementation.o.dx10_msaa )
-		   VERIFY(desc.ViewDimension==D3D10_DSV_DIMENSION_TEXTURE2D);
+		if (!RImplementation.o.dx10_msaa)
+			VERIFY(desc.ViewDimension == D3D10_DSV_DIMENSION_TEXTURE2D);
 
 		ID3D10Resource *pRes;
 
-		zb->GetResource( &pRes);
+		zb->GetResource(&pRes);
 
 		ID3D10Texture2D *pTex = (ID3D10Texture2D *)pRes;
 
@@ -85,15 +86,15 @@ void	CRenderTarget::u_setrt			(const ref_rt& _1, const ref_rt& _2, ID3DDepthSten
 
 		dwWidth = TexDesc.Width;
 		dwHeight = TexDesc.Height;
-		_RELEASE( pRes );
+		_RELEASE(pRes);
 	}
 
-	if (_1) RCache.set_RT(_1->pRT,	0); else RCache.set_RT(NULL,0);
-	if (_2) RCache.set_RT(_2->pRT,	1); else RCache.set_RT(NULL,1);
-	RCache.set_ZB							(zb);
+	if (_1) RCache.set_RT(_1->pRT, 0); else RCache.set_RT(NULL, 0);
+	if (_2) RCache.set_RT(_2->pRT, 1); else RCache.set_RT(NULL, 1);
+	RCache.set_ZB(zb);
 }
 
-void	CRenderTarget::u_setrt			(u32 W, u32 H, ID3DRenderTargetView* _1, ID3DRenderTargetView* _2, ID3DRenderTargetView* _3, ID3DDepthStencilView* zb)
+void CRenderTarget::u_setrt(u32 W, u32 H, ID3DRenderTargetView* _1, ID3DRenderTargetView* _2, ID3DRenderTargetView* _3, ID3DDepthStencilView* zb)
 {
 	dwWidth									= W;
 	dwHeight								= H;
@@ -191,20 +192,21 @@ Ivector	vpack			(Fvector src)
 	return		ipck;
 }
 
-void	generate_jitter	(DWORD*	dest, u32 elem_count)
+void generate_jitter(DWORD*	dest, u32 elem_count)
 {
-	const	int		cmax		= 8;
+	const int cmax = 8;
 	svector<Ivector2,cmax>		samples;
 	while (samples.size()<elem_count*2)
 	{
-		Ivector2	test;
-		test.set	(::Random.randI(0,256),::Random.randI(0,256));
-		BOOL		valid = TRUE;
+		Ivector2 test;
+		test.set(::Random.randI(0,256),::Random.randI(0,256));
+		bool valid = true;
 		for (u32 t=0; t<samples.size(); t++)
 		{
-			int		dist	= _abs(test.x-samples[t].x)+_abs(test.y-samples[t].y);
-			if (dist<32)	{
-				valid		= FALSE;
+			int	dist = _abs(test.x-samples[t].x)+_abs(test.y-samples[t].y);
+			if (dist<32)
+			{
+				valid = false;
 				break;
 			}
 		}
@@ -251,23 +253,25 @@ CRenderTarget::CRenderTarget		()
 	dxRenderDeviceRender::Instance().Resources->Evict			();
 
 	// Blenders
-	b_occq					= xr_new<CBlender_light_occq>			();
-	b_accum_mask			= xr_new<CBlender_accum_direct_mask>	();
-	b_accum_direct			= xr_new<CBlender_accum_direct>			();
-	b_accum_point			= xr_new<CBlender_accum_point>			();
-	b_accum_spot			= xr_new<CBlender_accum_spot>			();
-	b_accum_reflected		= xr_new<CBlender_accum_reflected>		();
-	b_bloom					= xr_new<CBlender_bloom_build>			();
+	b_occq					= xr_new<CBlender_light_occq>();
+	b_accum_mask			= xr_new<CBlender_accum_direct_mask>();
+	b_accum_direct			= xr_new<CBlender_accum_direct>();
+	b_accum_point			= xr_new<CBlender_accum_point>();
+	b_accum_spot			= xr_new<CBlender_accum_spot>();
+	b_accum_reflected		= xr_new<CBlender_accum_reflected>();
+	b_bloom					= xr_new<CBlender_bloom_build>();
 	if( RImplementation.o.dx10_msaa )
 	{
-		b_bloom_msaa			= xr_new<CBlender_bloom_build_msaa>		();
+		b_bloom_msaa			= xr_new<CBlender_bloom_build_msaa>();
 		b_postprocess_msaa	= xr_new<CBlender_postprocess_msaa>	();
 	}
-	b_luminance				= xr_new<CBlender_luminance>			();
-	b_combine				= xr_new<CBlender_combine>				();
-	b_ssao					= xr_new<CBlender_SSAO_noMSAA>			();
-	b_fxaa                  = xr_new<CBlender_FXAA>                 ();
-	b_rain_drops            = xr_new<CBlender_rain_drops>			();
+	b_luminance				= xr_new<CBlender_luminance>();
+	b_combine				= xr_new<CBlender_combine>();
+	b_ssao					= xr_new<CBlender_SSAO_noMSAA>();
+	b_fxaa                  = xr_new<CBlender_FXAA>();
+	b_rain_drops            = xr_new<CBlender_rain_drops>();
+	b_sunshafts				= xr_new<CBlender_ss>();
+    b_ogse_sunshafts		= xr_new<CBlender_sunshafts>();
 
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -275,28 +279,28 @@ CRenderTarget::CRenderTarget		()
 
 		if( RImplementation.o.dx10_msaa_opt )
 			bound = 1;
-
-		for( int i = 0; i < bound; ++i )
+		
+		for (u32 i = 0; i < bound; ++i)
 		{
 			static LPCSTR SampleDefs[] = { "0","1","2","3","4","5","6","7" };
-			b_combine_msaa[i]							= xr_new<CBlender_combine_msaa>					();
-			b_accum_mask_msaa[i]						= xr_new<CBlender_accum_direct_mask_msaa>		();
-			b_accum_direct_msaa[i]					= xr_new<CBlender_accum_direct_msaa>			();
-			b_accum_direct_volumetric_msaa[i]			= xr_new<CBlender_accum_direct_volumetric_msaa>	();
-			b_accum_spot_msaa[i]		 				= xr_new<CBlender_accum_spot_msaa>			();
-			b_accum_volumetric_msaa[i]				= xr_new<CBlender_accum_volumetric_msaa>	();
-			b_accum_point_msaa[i]						= xr_new<CBlender_accum_point_msaa>			();
-			b_accum_reflected_msaa[i]					= xr_new<CBlender_accum_reflected_msaa>		();
-			b_ssao_msaa[i]							= xr_new<CBlender_SSAO_MSAA>				();
-			static_cast<CBlender_accum_direct_mask_msaa*>( b_accum_mask_msaa[i] )->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_accum_direct_volumetric_msaa*>(b_accum_direct_volumetric_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_accum_direct_msaa*>(b_accum_direct_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_accum_volumetric_msaa*>(b_accum_volumetric_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_accum_spot_msaa*>(b_accum_spot_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_accum_point_msaa*>(b_accum_point_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_accum_reflected_msaa*>(b_accum_reflected_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_combine_msaa*>(b_combine_msaa[i])->SetDefine( "ISAMPLE", SampleDefs[i]);
-			static_cast<CBlender_SSAO_MSAA*>(b_ssao_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			b_combine_msaa[i]					= xr_new<CBlender_combine_msaa>					();
+			b_accum_mask_msaa[i]				= xr_new<CBlender_accum_direct_mask_msaa>		();
+			b_accum_direct_msaa[i]				= xr_new<CBlender_accum_direct_msaa>			();
+			b_accum_direct_volumetric_msaa[i]	= xr_new<CBlender_accum_direct_volumetric_msaa>	();
+			b_accum_spot_msaa[i]		 		= xr_new<CBlender_accum_spot_msaa>			();
+			b_accum_volumetric_msaa[i]			= xr_new<CBlender_accum_volumetric_msaa>	();
+			b_accum_point_msaa[i]				= xr_new<CBlender_accum_point_msaa>			();
+			b_accum_reflected_msaa[i]			= xr_new<CBlender_accum_reflected_msaa>		();
+			b_ssao_msaa[i]						= xr_new<CBlender_SSAO_MSAA>				();
+			static_cast<CBlender_accum_direct_mask_msaa*>		(b_accum_mask_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_accum_direct_volumetric_msaa*>	(b_accum_direct_volumetric_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_accum_direct_msaa*>			(b_accum_direct_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_accum_volumetric_msaa*>		(b_accum_volumetric_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_accum_spot_msaa*>				(b_accum_spot_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_accum_point_msaa*>				(b_accum_point_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_accum_reflected_msaa*>			(b_accum_reflected_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_combine_msaa*>					(b_combine_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
+			static_cast<CBlender_SSAO_MSAA*>					(b_ssao_msaa[i])->SetDefine("ISAMPLE", SampleDefs[i]);
 		}
 	}
 	//	NORMAL
@@ -340,6 +344,10 @@ CRenderTarget::CRenderTarget		()
 				rt_Accumulator_temp.create	(r2_RT_accum_temp,	w,h,D3DFMT_A16B16G16R16F, SampleCount );
 			}
 		}
+		// Mrmnwar SunShaft Screen Space
+		rt_SunShaftsMask.create(r2_RT_SunShaftsMask, w, h, D3DFMT_A8R8G8B8);
+		rt_SunShaftsMaskSmoothed.create(r2_RT_SunShaftsMaskSmoothed, w, h, D3DFMT_A8R8G8B8);
+		rt_SunShaftsPass0.create(r2_RT_SunShaftsPass0, w, h, D3DFMT_A8R8G8B8);
 
 		// generic(LDR) RTs
 		rt_Generic_0.create		(r2_RT_generic0,w,h,D3DFMT_A8R8G8B8, 1		);
@@ -353,6 +361,10 @@ CRenderTarget::CRenderTarget		()
 			rt_Generic_1_r.create(r2_RT_generic1_r,w,h,D3DFMT_A8R8G8B8, SampleCount		);
 		}
 
+		// RT - KD
+		rt_sunshafts_0.create(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
+		rt_sunshafts_1.create(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
+
 		//	temp: for higher quality blends
 		if (RImplementation.o.advancedpp)
 			rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A16B16G16R16F, SampleCount );
@@ -360,7 +372,11 @@ CRenderTarget::CRenderTarget		()
 
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
-
+	
+	// SUNSHAFTS
+	s_SunShafts.create				(b_sunshafts,	"r2\\SunShafts");
+    s_ogse_sunshafts.create			(b_ogse_sunshafts, "r2\\sunshafts");
+	
 	// RAIN DROPS
 	s_rain_drops.create				(b_rain_drops,	"r2\\sgm_rain_drops");
 
@@ -605,6 +621,9 @@ CRenderTarget::CRenderTarget		()
 
 		u32 fvf_aa_AA				= D3DFVF_XYZRHW|D3DFVF_TEX7|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3)|D3DFVF_TEXCOORDSIZE2(4)|D3DFVF_TEXCOORDSIZE4(5)|D3DFVF_TEXCOORDSIZE4(6);
 		g_aa_AA.create				(fvf_aa_AA,		RCache.Vertex.Buffer(), RCache.QuadIB);
+
+		u32 fvf_KD = D3DFVF_XYZRHW | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0);
+		g_KD.create(fvf_KD, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 		t_envmap_0.create			(r2_T_envs0);
 		t_envmap_1.create			(r2_T_envs1);
@@ -911,16 +930,18 @@ CRenderTarget::~CRenderTarget	()
 	accum_volumetric_geom_destroy();
 
 	// Blenders
-	xr_delete					(b_combine				);
-	xr_delete					(b_luminance			);
-	xr_delete					(b_bloom				);
-	xr_delete					(b_accum_reflected		);
-	xr_delete					(b_accum_spot			);
-	xr_delete					(b_accum_point			);
-	xr_delete					(b_accum_direct			);
-	xr_delete					(b_ssao					);
-	xr_delete                   (b_fxaa                 );
-	xr_delete					(b_rain_drops			);
+	xr_delete(b_combine);
+	xr_delete(b_luminance);
+	xr_delete(b_bloom);
+	xr_delete(b_accum_reflected);
+	xr_delete(b_accum_spot);
+	xr_delete(b_accum_point);
+	xr_delete(b_accum_direct);
+	xr_delete(b_ssao);
+	xr_delete(b_fxaa);
+	xr_delete(b_rain_drops);
+	xr_delete(b_sunshafts);
+	xr_delete(b_ogse_sunshafts);
 
    if( RImplementation.o.dx10_msaa )
    {

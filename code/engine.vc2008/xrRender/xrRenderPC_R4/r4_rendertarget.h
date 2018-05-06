@@ -46,6 +46,8 @@ public:
 	IBlender*					b_ssao_msaa[8];
 	IBlender*					b_fxaa;
 	IBlender*					b_rain_drops;
+	IBlender*					b_sunshafts;
+	IBlender*					b_ogse_sunshafts;
 
 #ifdef DEBUG
 	struct		dbg_line_t		{
@@ -96,6 +98,12 @@ public:
 	ref_rt						rt_smap_depth;	// 24(32) bit,	depth 
 	ref_rt						rt_smap_depth_minmax;	//	is used for min/max sm
 
+	ref_rt						rt_sunshafts_0;		// ss0
+	ref_rt						rt_sunshafts_1;		// ss1
+	ref_rt						rt_SunShaftsMask;
+	ref_rt						rt_SunShaftsMaskSmoothed;
+	ref_rt						rt_SunShaftsPass0;
+
 	//	Igor: for async screenshots
 	ID3DTexture2D*			t_ss_async;				//32bit		(r,g,b,a) is situated in the system memory
 
@@ -111,6 +119,10 @@ public:
 private:
 	// OCCq
 	ref_shader					s_occq;
+
+	// SUNSHAFTS
+	ref_shader					s_SunShafts;
+	ref_shader					s_ogse_sunshafts;
 
 	// RAIN DROPS
 	ref_shader					s_rain_drops;
@@ -181,24 +193,25 @@ private:
 	float						f_luminance_adapt;
 
 	// Combine
-	ref_geom					g_combine;
-	ref_geom					g_combine_VP;		// xy=p,zw=tc
-	ref_geom					g_combine_2UV;
-	ref_geom					g_combine_cuboid;
-	ref_geom					g_aa_blur;
-	ref_geom					g_aa_AA;
+    ref_geom				g_KD;
+	ref_geom				g_combine;
+	ref_geom				g_combine_VP;		// xy=p,zw=tc
+	ref_geom				g_combine_2UV;
+	ref_geom				g_combine_cuboid;
+	ref_geom				g_aa_blur;
+	ref_geom				g_aa_AA;
 	ref_shader				s_combine_dbg_0;
 	ref_shader				s_combine_dbg_1;
 	ref_shader				s_combine_dbg_Accumulator;
 	ref_shader				s_combine;
-   ref_shader				s_combine_msaa[8];
+	ref_shader				s_combine_msaa[8];
 	ref_shader				s_combine_volumetric;
 public:
 	ref_shader				s_postprocess;
-   ref_shader           s_postprocess_msaa;
-	ref_geom					g_postprocess;
+	ref_shader				s_postprocess_msaa;
+	ref_geom				g_postprocess;
 	ref_shader				s_menu;
-	ref_geom					g_menu;
+	ref_geom				g_menu;
 private:
 	float						im_noise_time;
 	u32							im_noise_shift_w;
@@ -262,6 +275,8 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
+	void						phase_SunShafts			();
+	void						phase_ogse_sunshafts	();
 	void						shadow_direct			(light* L, u32 dls_phase);
 
 	//	Generates min/max sm
