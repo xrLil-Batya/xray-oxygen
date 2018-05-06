@@ -304,56 +304,55 @@ void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 	}
 }
 
-void CWeaponMagazined::ReloadMagazine() 
+void CWeaponMagazined::ReloadMagazine()
 {
-	m_BriefInfo_CalcFrame = 0;	
+	m_BriefInfo_CalcFrame = 0;
 
-	// Если есть осечка - устранить
-	if (IsMisfire())
+	if (IsMisfire())	
 		bMisfire = false;
-	
+
 	if (!m_bLockType)
+	{
 		m_pCurrentAmmo = NULL;
-	
-	if (!m_pInventory || unlimited_ammo())
-		return;
+	}
+
+	if (!m_pInventory) return;
 
 	if (m_set_next_ammoType_on_reload != undefined_ammo_type)
 	{
 		m_ammoType = m_set_next_ammoType_on_reload;
 		m_set_next_ammoType_on_reload = undefined_ammo_type;
 	}
-	
-	if (m_ammoTypes.size() <= m_ammoType)
-		return;
 
-	LPCSTR tmp_sect_name = m_ammoTypes[m_ammoType].c_str();
-
-	if (!tmp_sect_name)
-		return;
-
-	// Попытаться найти в инвентаре патроны текущего типа 
-	m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(tmp_sect_name));
-
-	if (!m_pCurrentAmmo && !m_bLockType)
+	if (!unlimited_ammo())
 	{
-		for (u8 i = 0; i < u8(m_ammoTypes.size()); ++i)
+		if (m_ammoTypes.size() <= m_ammoType)
+			return;
+
+		LPCSTR tmp_sect_name = m_ammoTypes[m_ammoType].c_str();
+
+		if (!tmp_sect_name)
+			return;
+
+		m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(tmp_sect_name));
+
+		if (!m_pCurrentAmmo && !m_bLockType)
 		{
-			// Проверить патроны всех подходящих типов
-			m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
-			if (m_pCurrentAmmo)
+			for (u8 i = 0; i < u8(m_ammoTypes.size()); ++i)
 			{
-				m_ammoType = i;
-				break;
+				m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
+				if (m_pCurrentAmmo)
+				{
+					m_ammoType = i;
+					break;
+				}
 			}
 		}
 	}
 
-	// Нет патронов для перезарядки
-	if (!m_pCurrentAmmo) 
+	if (!m_pCurrentAmmo && !unlimited_ammo()) 
 		return;
 
-	// Разрядить магазин, если загружаем патронами другого типа
 	if (!m_bLockType && !m_magazine.empty() && (!m_pCurrentAmmo || xr_strcmp(m_pCurrentAmmo->cNameSect(), m_magazine.back().m_ammoSect.c_str())))
 		UnloadMagazine();
 
@@ -363,22 +362,22 @@ void CWeaponMagazined::ReloadMagazine()
 	CCartridge l_cartridge = m_DefaultCartridge;
 	while (iAmmoElapsed < iMagazineSize)
 	{
-		if (!m_pCurrentAmmo->Get(l_cartridge)) 
-			break;
+		if (!unlimited_ammo())
+			if (!m_pCurrentAmmo->Get(l_cartridge)) break;
+
 		++iAmmoElapsed;
 		l_cartridge.m_LocalAmmoType = m_ammoType;
 		m_magazine.push_back(l_cartridge);
 	}
 
-	// Выкинуть коробку патронов, если она пустая
-	if (m_pCurrentAmmo && !m_pCurrentAmmo->m_boxCurr) 
+	if (m_pCurrentAmmo && !m_pCurrentAmmo->m_boxCurr)
 		m_pCurrentAmmo->SetDropManual(TRUE);
 
-	if (iMagazineSize > iAmmoElapsed) 
-	{ 
-		m_bLockType = true; 
-		ReloadMagazine(); 
-		m_bLockType = false; 
+	if (iMagazineSize > iAmmoElapsed)
+	{
+		m_bLockType = true;
+		ReloadMagazine();
+		m_bLockType = false;
 	}
 }
 
