@@ -303,15 +303,6 @@ static class cl_screen_res : public R_constant_setup
 		RCache.set_c	(C, (float)RDEVICE.dwWidth, (float)RDEVICE.dwHeight, 1.0f/(float)RDEVICE.dwWidth, 1.0f/(float)RDEVICE.dwHeight);
 	}
 }	binder_screen_res;
-/*
-static class cl_screenParams : public R_constant_setup		
-{	
-	virtual void setup	(R_constant* C)
-	{
-		RCache.set_c	(C, (float)RDEVICE.dwWidth, (float)RDEVICE.dwHeight, 1.0f/(float)RDEVICE.dwWidth, 1.0f/(float)RDEVICE.dwHeight);
-	}
-}	binder_screenParams;
-*/
 
 static class cl_screen_params : public R_constant_setup
 {

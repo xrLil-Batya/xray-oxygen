@@ -383,24 +383,22 @@ CRenderTarget::CRenderTarget		()
 	// DIRECT (spot)
 	D3DFORMAT						depth_format	= (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
 
-	if (RImplementation.o.HW_smap)
+	u32	size = RImplementation.o.smapsize	;
+	rt_smap_depth.create		(r2_RT_smap_depth,			size,size,depth_format	);
+
+	if (RImplementation.o.dx10_minmax_sm)
 	{
-		u32	size					=RImplementation.o.smapsize	;
-		rt_smap_depth.create		(r2_RT_smap_depth,			size,size,depth_format	);
+		rt_smap_depth_minmax.create( r2_RT_smap_depth_minmax,	size/4,size/4, D3DFMT_R32F	);
+		CBlender_createminmax TempBlender;
+		s_create_minmax_sm.create( &TempBlender, "null" );
+	}
 
-		if (RImplementation.o.dx10_minmax_sm)
-		{
-			rt_smap_depth_minmax.create( r2_RT_smap_depth_minmax,	size/4,size/4, D3DFMT_R32F	);
-			CBlender_createminmax TempBlender;
-			s_create_minmax_sm.create( &TempBlender, "null" );
-		}
-
-		s_accum_mask.create			(b_accum_mask,				"r3\\accum_mask");
-		s_accum_direct.create		(b_accum_direct,			"r3\\accum_direct");
+	s_accum_mask.create			(b_accum_mask,				"r3\\accum_mask");
+	s_accum_direct.create		(b_accum_direct,			"r3\\accum_direct");
 
 
-		if( RImplementation.o.dx10_msaa )
-		{
+	if( RImplementation.o.dx10_msaa )
+	{
 			int bound = RImplementation.o.dx10_msaa_samples;
 
 			if( RImplementation.o.dx10_msaa_opt )
@@ -411,34 +409,33 @@ CRenderTarget::CRenderTarget		()
 				s_accum_direct_msaa[i].create		(b_accum_direct_msaa[i],			"r3\\accum_direct");
 				s_accum_mask_msaa[i].create		(b_accum_mask_msaa[i],			"r3\\accum_direct");
 			}
-		}
-		if (RImplementation.o.advancedpp)
+	}
+
+	if (RImplementation.o.advancedpp)
+	{
+		s_accum_direct_volumetric.create("accum_volumetric_sun_nomsaa");
+
+		if (RImplementation.o.dx10_minmax_sm)
+			s_accum_direct_volumetric_minmax.create("accum_volumetric_sun_nomsaa_minmax");
+
+		if( RImplementation.o.dx10_msaa )
 		{
-			s_accum_direct_volumetric.create("accum_volumetric_sun_nomsaa");
+			static LPCSTR snames[] = { "accum_volumetric_sun_msaa0",
+				"accum_volumetric_sun_msaa1",
+				"accum_volumetric_sun_msaa2",
+				"accum_volumetric_sun_msaa3",
+				"accum_volumetric_sun_msaa4",
+				"accum_volumetric_sun_msaa5",
+				"accum_volumetric_sun_msaa6",
+				"accum_volumetric_sun_msaa7" };
 
-			if (RImplementation.o.dx10_minmax_sm)
-				s_accum_direct_volumetric_minmax.create("accum_volumetric_sun_nomsaa_minmax");
+			int bound = RImplementation.o.dx10_msaa_samples;
 
-			if( RImplementation.o.dx10_msaa )
-			{
-				static LPCSTR snames[] = { "accum_volumetric_sun_msaa0",
-					"accum_volumetric_sun_msaa1",
-					"accum_volumetric_sun_msaa2",
-					"accum_volumetric_sun_msaa3",
-					"accum_volumetric_sun_msaa4",
-					"accum_volumetric_sun_msaa5",
-					"accum_volumetric_sun_msaa6",
-					"accum_volumetric_sun_msaa7" };
-				int bound = RImplementation.o.dx10_msaa_samples;
-
-				if( RImplementation.o.dx10_msaa_opt )
+			if (RImplementation.o.dx10_msaa_opt)
 					bound = 1;
 
-				for( int i = 0; i < bound; ++i )
-				{
-					s_accum_direct_volumetric_msaa[i].create		(snames[i]);
-				}
-			}
+			for (int i = 0; i < bound; ++i)
+				s_accum_direct_volumetric_msaa[i].create(snames[i]);
 		}
 	}
 

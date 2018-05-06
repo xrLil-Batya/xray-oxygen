@@ -48,6 +48,7 @@ Team of developers and contributors:
 * [v2v3v4](https://github.com/v2v3v4)
 * [acidicMercury8](https://github.com/acidicMercury8)
 * [mortany](https://github.com/mortany)
+* [Unfainthful](https://github.com/Unfainthful)
 
 Also used code of this developers and teams:
 

@@ -416,17 +416,27 @@ protected:
 	int						GetAmmoCount		(u8 ammo_type) const;
 
 public:
-	IC int					GetAmmoElapsed		()	const		{	return iAmmoElapsed;}
-	IC int					GetAmmoMagSize		()	const		{	return iMagazineSize;						}
+	// Получить текущее количество патронов в магазине
+	IC int					GetAmmoElapsed		()	const		{ return iAmmoElapsed;  }
+	
+	// Получить вместительность магазина
+	IC int					GetAmmoMagSize		()	const		{ return iMagazineSize; }
+
 	int						GetSuitableAmmoTotal(bool use_item_to_spawn = false) const;
 
+	// Установить указанное количество патронов в магазин
 	void					SetAmmoElapsed		(int ammo_count);
 
+	// Если магазин пустой
 	virtual void			OnMagazineEmpty		();
-			void			SpawnAmmo			(u32 boxCurr = 0xffffffff, 
+	
+	// Заспавнить патроны
+	void			        SpawnAmmo			(u32 boxCurr = 0xffffffff, 
 													LPCSTR ammoSect = NULL, 
 													u32 ParentID = 0xffffffff);
-			bool			SwitchAmmoType		(u32 flags);
+
+	// Изменить тип патронов
+	bool			        SwitchAmmoType		(u32 flags);
 
 	virtual	float			Get_PDM_Base		()	const	{ return m_pdm.m_fPDM_disp_base			; };
 	virtual	float			Get_PDM_Vel_F		()	const	{ return m_pdm.m_fPDM_disp_vel_factor		; };
@@ -435,9 +445,13 @@ public:
 	virtual	float			Get_PDM_Crouch_NA	()	const	{ return m_pdm.m_fPDM_disp_crouch_no_acc	; };
 	virtual	float			GetCrosshairInertion()	const	{ return m_crosshair_inertion; };
 			float			GetFirstBulletDisp	()	const	{ return m_first_bullet_controller.get_fire_dispertion(); };
+
 protected:
-	int						iAmmoElapsed;		// ammo in magazine, currently
-	int						iMagazineSize;		// size (in bullets) of magazine
+	// Текущее количество патронов в магазине оружия
+	int						iAmmoElapsed;
+
+	// Вместительность патронов в магазине
+	int						iMagazineSize;
 
 	//для подсчета в GetSuitableAmmoTotal
 	mutable int				m_iAmmoCurrentTotal;
@@ -468,12 +482,19 @@ protected:
 	u32						m_ef_weapon_type;
 
 public:
+	// Основной тип оружия
 	virtual u32				ef_main_weapon_type	() const;
+
+	// Тип оружия
 	virtual u32				ef_weapon_type		() const;
+
 	// Получаем вес обоймы
 	float					GetMagazineWeight	(const decltype(m_magazine)& mag) const;
+
 	// Получаем флаг бесконечных патрон
 	bool					unlimited_ammo		();
+
+	// Получаем, надо ли убрать оружие
 IC	bool					can_be_strapped		() const {return m_can_be_strapped;};
 
 protected:
@@ -514,6 +535,4 @@ public:
 	virtual void			SetActivationSpeedOverride	(Fvector const& speed);
 			bool			GetRememberActorNVisnStatus	() {return m_bRememberActorNVisnStatus;};
 	virtual void			EnableActorNVisnAfterZoom	();
-	
-	virtual shared_str const	GetAnticheatSectionName		() const { return cNameSect(); };
 };
