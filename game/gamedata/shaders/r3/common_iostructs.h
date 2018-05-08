@@ -468,13 +468,13 @@ struct v_detail
 
 struct p_screen
 {
-        float4          hpos 	: POSITION;
+        float4          hpos 	: SV_Position;
         float2          tc0		: TEXCOORD0;        // Texture coordinates         (for sampling maps)
 };
 
 struct	v2p_screen
 {
 	float2 tc0 : TEXCOORD0;
-	float4 HPos : SV_Position;	// Clip-space position 	(for rasterization)
+	float4 HPos : POSITIONT;	// Clip-space position 	(for rasterization)
 };
 #endif	//	common_iostructs_h_included
