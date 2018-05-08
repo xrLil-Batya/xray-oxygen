@@ -139,7 +139,7 @@ void CUIZoneMap::Update()
 
 	m_clock_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameTimeAsString( InventoryUtilities::etpTimeToMinutes ).c_str() );
 
-	m_date_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameDateAsString( InventoryUtilities::edpDateToDay ).c_str() );
+	m_date_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameNumDateAsString( InventoryUtilities::edpDateToDay ).c_str() );
 }
 
 void CUIZoneMap::SetHeading		(float angle)

@@ -44,6 +44,22 @@ const LPCSTR st_months[12]= // StringTable for GetDateAsString()
 	"month_december"
 };
 
+const LPCSTR st_num_months[12]= // StringTable for GetDateAsString()
+{
+	"month_01",
+	"month_02",
+	"month_03",
+	"month_04",
+	"month_05",
+	"month_06",
+	"month_07",
+	"month_08",
+	"month_09",
+	"month_10",
+	"month_11",
+	"month_12"
+};
+
 ui_shader	*g_BuyMenuShader			= nullptr;
 ui_shader	*g_EquipmentIconsShader		= nullptr;
 ui_shader	*g_MPCharIconsShader		= nullptr;
@@ -227,6 +243,12 @@ const shared_str InventoryUtilities::GetGameDateAsString(EDatePrecision datePrec
 
 //////////////////////////////////////////////////////////////////////////
 
+const shared_str InventoryUtilities::GetGameNumDateAsString(EDatePrecision datePrec, char dateSeparator)
+{
+	return GetNumDateAsString(Level().GetGameTime(), datePrec, dateSeparator);
+}
+
+//////////////////////////////////////////////////////////////////////////
 const shared_str InventoryUtilities::GetGameTimeAsString(ETimePrecision timePrec, char timeSeparator)
 {
 	return GetTimeAsString(Level().GetGameTime(), timePrec, timeSeparator);
@@ -309,6 +331,37 @@ const shared_str InventoryUtilities::GetDateAsString(ALife::_TIME_ID date, EDate
 	split_time(date, year, month, day, hours, mins, secs, milisecs);
 	VERIFY( 1 <= month && month <= 12 );
 	LPCSTR month_str = CStringTable().translate( st_months[month-1] ).c_str();
+
+	// Date
+	switch (datePrec)
+	{
+	case edpDateToYear:
+		xr_sprintf(bufDate, "%04i", year);
+		break;
+	case edpDateToMonth:
+		xr_sprintf(bufDate, "%s %04i", month_str, year);
+		break;
+	case edpDateToDay:
+		xr_sprintf(bufDate, "%d %s %04i", day, month_str, year);
+		break;
+	default:
+		R_ASSERT(!"Unknown type of date precision");
+	}
+
+	return bufDate;
+}
+
+const shared_str InventoryUtilities::GetNumDateAsString(ALife::_TIME_ID date, EDatePrecision datePrec, char dateSeparator)
+{
+	string64 bufDate;
+
+    std::memset(bufDate, 0, sizeof(bufDate));
+
+	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
+
+	split_time(date, year, month, day, hours, mins, secs, milisecs);
+	VERIFY( 1 <= month && month <= 12 );
+	LPCSTR month_str = CStringTable().translate( st_num_months[month-1] ).c_str();
 
 	// Date
 	switch (datePrec)
