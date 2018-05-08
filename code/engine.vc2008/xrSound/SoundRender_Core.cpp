@@ -5,10 +5,6 @@
 #include "SoundRender_Core.h"
 #include "SoundRender_Source.h"
 #include "SoundRender_Emitter.h"
-#pragma warning(push)
-#pragma warning(disable:4995)
-#include <dsound.h>
-#pragma warning(pop)
 
 int psSoundTargets = 32;
 int psSoundCacheSizeMB = 64;

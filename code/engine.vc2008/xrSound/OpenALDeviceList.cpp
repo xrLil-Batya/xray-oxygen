@@ -22,7 +22,6 @@
  * POSSIBILITY OF SUCH DAMAGE.
  */
 #include "stdafx.h"
-
 #include "OpenALDeviceList.h"
 
 #pragma warning(disable: 4995 4805)
@@ -135,6 +134,7 @@ void ALDeviceList::Enumerate()
 	snd_devices_token = xr_alloc<xr_token>(_cnt + 1);
 	snd_devices_token[_cnt].id = -1;
 	snd_devices_token[_cnt].name = nullptr;
+
 	for (u32 i = 0; i < _cnt; ++i)
 	{
 		snd_devices_token[i].id = i;
@@ -205,6 +205,4 @@ void ALDeviceList::GetDeviceVersion(u32 index, int *major, int *minor)
 {
 	*major = m_devices[index].major_ver;
 	*minor = m_devices[index].minor_ver;
-
-	return;
 }
