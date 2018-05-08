@@ -962,6 +962,9 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 	if (!need_to_render_sunshafts())
 		return;
 
+    if (ps_sunshafts_mode != R2SS_VOLUMETRIC)
+        return;
+
 	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_FAR) ) return;
 
 	phase_vol_accumulator();

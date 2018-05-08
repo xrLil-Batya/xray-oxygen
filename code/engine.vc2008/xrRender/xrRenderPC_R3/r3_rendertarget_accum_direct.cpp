@@ -258,7 +258,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		//	Igor: draw volumetric here
 		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
-		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0))
+		if ( RImplementation.o.advancedpp && (ps_r_sun_shafts>0))
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }
@@ -962,6 +962,9 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 	if (!need_to_render_sunshafts())
 		return;
+
+    if (ps_sunshafts_mode != R2SS_VOLUMETRIC)
+        return;
 
 	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_FAR) ) return;
 
