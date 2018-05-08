@@ -188,8 +188,6 @@ function options_dialog:OnBtnAccept()
 		self:OnApplyChanges()
 	end
 
-	opt:OptionsPostAccept()
-
 	console:execute("cfg_save")
 end
 
