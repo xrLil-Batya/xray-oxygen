@@ -3,7 +3,7 @@
 
 #include "xrXMLParser.h"
 
-XRCORE_API CXml::CXml(): m_root(nullptr), m_pLocalRoot(nullptr)
+XRCORE_API CXml::CXml() : m_root(nullptr), m_pLocalRoot(nullptr)
 {}
 
 XRCORE_API CXml::~CXml()
@@ -18,17 +18,15 @@ void CXml::ClearInternal()
 
 inline char* ClearFromWhitespace(char* str)
 {
-    while (*str == ' ')
-    {
-        ++str;
-    }
+	while (*str == ' ')
+		++str;
 
-    return str;
+	return str;
 }
 
 void ParseFile(const char* path, CMemoryWriter& W, IReader *F, CXml* xml)
 {
-	string4096	str;
+	string4096 str;
 
 	while (!F->eof())
 	{
@@ -65,28 +63,28 @@ void ParseFile(const char* path, CMemoryWriter& W, IReader *F, CXml* xml)
 
 void CXml::Load(const char* path_alias, const char* path, const char* _xml_filename)
 {
-	shared_str fn			= correct_file_name(path, _xml_filename);
+	shared_str fn = correct_file_name(path, _xml_filename);
 
-	string_path				str;
-	xr_sprintf					(str,"%s\\%s", path, *fn);
-	return Load				(path_alias, str);
+	string_path str;
+	xr_sprintf(str, "%s\\%s", path, *fn);
+	return Load(path_alias, str);
 }
 
 //инициализаци€ и загрузка XML файла
 void CXml::Load(const char* path, const char* xml_filename)
 {
-	xr_strcpy					(m_xml_file_name, xml_filename);
+	xr_strcpy(m_xml_file_name, xml_filename);
 	// Load and parse xml file
 
-	IReader *F				= FS.r_open(path, xml_filename);
-	R_ASSERT2				(F,xml_filename);
+	IReader *F = FS.r_open(path, xml_filename);
+	R_ASSERT2(F, xml_filename);
 
-	CMemoryWriter			W;
-	ParseFile				(path, W, F, this);
-	W.w_stringZ				("");
-	FS.r_close				(F);
+	CMemoryWriter W;
+	ParseFile(path, W, F, this);
+	W.w_stringZ("");
+	FS.r_close(F);
 
-	m_Doc.Parse				((const char*)W.pointer());
+	m_Doc.Parse((const char*)W.pointer());
 
 	if (m_Doc.Error())
 	{
@@ -99,7 +97,7 @@ void CXml::Load(const char* path, const char* xml_filename)
 
 XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node_index)
 {
-	R_ASSERT3(start_node && path, "NavigateToNode failed in XML file ",m_xml_file_name);
+	R_ASSERT3(start_node && path, "NavigateToNode failed in XML file ", m_xml_file_name);
 	XML_NODE* node = nullptr;
 
 	string_path buf_str;
@@ -107,11 +105,11 @@ XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node
 	xr_strcpy(buf_str, path);
 
 	char seps[] = ":";
-    char *token;
+	char *token;
 
-    //разбить путь на отдельные подпути
+	//разбить путь на отдельные подпути
 	token = strtok(buf_str, seps);
-	
+
 	if (token)
 	{
 		node = start_node->FirstChildElement(token);
@@ -131,10 +129,10 @@ XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node
 			}
 		}
 	}
-	
+
 	while (token)
 	{
-		// Get next token: 
+		// Get next token:
 		token = strtok(nullptr, seps);
 
 		if (token && node)
@@ -149,14 +147,13 @@ XML_NODE* CXml::NavigateToNode(XML_NODE* start_node, const char*  path, int node
 
 XML_NODE* CXml::NavigateToNode(const char* path, int node_index)
 {
-	return NavigateToNode(GetLocalRoot()?GetLocalRoot():GetRoot(), path, node_index);
+	return NavigateToNode(GetLocalRoot() ? GetLocalRoot() : GetRoot(), path, node_index);
 }
 
 XML_NODE* CXml::NavigateToNodeWithAttribute(const char* tag_name, const char* attrib_name, const char* attrib_value)
 {
-
-	XML_NODE	*root		= GetLocalRoot() ? GetLocalRoot() : GetRoot();
-	int			tabsCount	= GetNodesNum(root, tag_name);
+	XML_NODE *root = GetLocalRoot() ? GetLocalRoot() : GetRoot();
+	int tabsCount = GetNodesNum(root, tag_name);
 
 	for (int i = 0; i < tabsCount; ++i)
 	{
@@ -169,23 +166,21 @@ XML_NODE* CXml::NavigateToNodeWithAttribute(const char* tag_name, const char* at
 	return nullptr;
 }
 
-
 const char* CXml::Read(const char* path, int index, const char* default_str_val)
 {
-	XML_NODE* node			= NavigateToNode(path, index);
+	XML_NODE* node = NavigateToNode(path, index);
 	return					Read(node, default_str_val);
 }
 
 const char* CXml::Read(XML_NODE* start_node, const char* path, int index, const char* default_str_val)
 {
-	XML_NODE* node			= NavigateToNode(start_node, path, index);
+	XML_NODE* node = NavigateToNode(start_node, path, index);
 	return					Read(node, default_str_val);
 }
 
-
 const char*  CXml::Read(XML_NODE* node, const char* default_str_val)
 {
-	if(node)
+	if (node)
 	{
 		node = node->FirstChild();
 		if (node)
@@ -207,13 +202,13 @@ int CXml::ReadInt(XML_NODE* node, int default_int_val)
 
 int CXml::ReadInt(const char* path, int index, int default_int_val)
 {
-	const char* result_str = Read(path, index, nullptr );
+	const char* result_str = Read(path, index, nullptr);
 	return result_str ? atoi(result_str) : default_int_val;
 }
 
 int CXml::ReadInt(XML_NODE* start_node, const char* path, int index, int default_int_val)
 {
-	const char* result_str = Read(start_node, path, index, nullptr );
+	const char* result_str = Read(start_node, path, index, nullptr);
 	return result_str ? atoi(result_str) : default_int_val;
 }
 
@@ -249,19 +244,19 @@ const char* CXml::ReadAttrib(const char* path, int index, const char* attrib, co
 
 const char* CXml::ReadAttrib(XML_NODE* node, const char* attrib, const char* default_str_val)
 {
-	if(node)
+	if (node)
 	{
-/*
-		//об€зательно делаем ref_str, а то 
-		//не сможем запомнить строку и return вернет левый указатель
-		shared_str result_str;
-*/
+		/*
+				//об€зательно делаем ref_str, а то
+				//не сможем запомнить строку и return вернет левый указатель
+				shared_str result_str;
+		*/
 		const char* result_str;
 		//  астаем ниже по иерархии
 
-		tinyxml2::XMLElement *el = node->ToElement(); 
-		
-		if(el)
+		tinyxml2::XMLElement *el = node->ToElement();
+
+		if (el)
 		{
 			result_str = el->Attribute(attrib);
 			if (result_str)
@@ -285,7 +280,7 @@ int CXml::ReadAttribInt(const char* path, int index, const char* attrib, int def
 
 int CXml::ReadAttribInt(XML_NODE* start_node, const char* path, int index, const char* attrib, int default_int_val)
 {
-	const char* result_str = ReadAttrib(start_node, path, index, attrib, nullptr); 
+	const char* result_str = ReadAttrib(start_node, path, index, attrib, nullptr);
 	return result_str ? atoi(result_str) : default_int_val;
 }
 

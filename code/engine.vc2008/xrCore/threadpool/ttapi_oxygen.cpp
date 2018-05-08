@@ -5,8 +5,8 @@
 #ifdef NEW_TTAPI
 #define USE_EVENT_SYSTEM
 
-PTP_POOL			 hPool		 = nullptr;
-PTP_CLEANUP_GROUP	 hCleanupEnv = nullptr;
+PTP_POOL hPool = nullptr;
+PTP_CLEANUP_GROUP hCleanupEnv = nullptr;
 TP_CALLBACK_ENVIRON CallbackEnv;
 
 void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work);
@@ -16,13 +16,11 @@ DWORD WorkerCount = 0;
 struct ttapi_ThreadParams
 {
 	LPPTTAPI_WORKER_FUNC Func;
-	LPVOID				 FuncParams;
+	LPVOID FuncParams;
 
-	ttapi_ThreadParams(LPPTTAPI_WORKER_FUNC InFunc, LPVOID InFuncParams)
-		: Func(InFunc), FuncParams(InFuncParams)
+	ttapi_ThreadParams(LPPTTAPI_WORKER_FUNC InFunc, LPVOID InFuncParams) : Func(InFunc), FuncParams(InFuncParams)
 	{}
 };
-
 
 size_t TTAPI ttapi_Init(processor_info* ID)
 {
@@ -40,7 +38,7 @@ size_t TTAPI ttapi_Init(processor_info* ID)
 	SetThreadpoolCallbackCleanupGroup(&CallbackEnv, hCleanupEnv, NULL);
 
 	WorkerCount = ID->n_threads * 2;
-	
+
 	SetThreadpoolThreadMinimum(hPool, ID->n_threads);
 	SetThreadpoolThreadMaximum(hPool, WorkerCount);
 

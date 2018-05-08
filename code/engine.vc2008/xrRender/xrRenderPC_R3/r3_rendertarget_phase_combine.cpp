@@ -270,17 +270,28 @@ void	CRenderTarget::phase_combine	()
     RCache.set_Stencil(FALSE);
 
     //FXAA
-    if (ps_r2_fxaa){
+    if (ps_r2_fxaa)
+	{
         PIX_EVENT(FXAA);
         phase_fxaa();
         RCache.set_Stencil(FALSE);
     }   
 
 	// RAIN DROPS AND OTHER
-	if (!_menu_pp)
+	if (_menu_pp)
 	{
+
+	}
+	else
+	{
+		if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_SCREEN_SPACE)
+			phase_ogse_sunshafts();
+		else if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_MANOWAR_SSSS)
+			phase_SunShafts();
+
 		phase_rain_drops();
 	}
+
    
 	// PP enabled ?
 	//	Render to RT texture to be able to copy RT even in windowed mode.

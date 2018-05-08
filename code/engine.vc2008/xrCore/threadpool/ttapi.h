@@ -5,8 +5,8 @@
 typedef void(*PTTAPI_WORKER_FUNC)(LPVOID lpWorkerParameters);
 typedef PTTAPI_WORKER_FUNC LPPTTAPI_WORKER_FUNC;
 
-extern "C" {
-
+extern "C"
+{
 	// Initializes subsystem
 	// Returns zero for error, and number of workers on success
 	size_t TTAPI ttapi_Init(processor_info* ID);

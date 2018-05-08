@@ -5,17 +5,17 @@
 #include	<malloc.h>
 
 xrMemory Memory;
-bool mem_initialized	= false;
+bool mem_initialized = false;
 
 //fake fix of memory corruptions in multiplayer game :(
 XRCORE_API bool g_allow_heap_min = true;
 
 void xrMemory::_initialize()
 {
-	stat_calls				= 0;
-	stat_counter			= 0;
+	stat_calls = 0;
+	stat_counter = 0;
 
-	mem_initialized				= true;
+	mem_initialized = true;
 }
 
 void xrMemory::_destroy()
@@ -38,13 +38,14 @@ void xrMemory::mem_compact()
 
 	HeapCompact(GetProcessHeap(), 0);
 
-	if (g_pStringContainer)			g_pStringContainer->clean();
-	if (g_pSharedMemoryContainer)	g_pSharedMemoryContainer->clean();
+	if (g_pStringContainer)
+		g_pStringContainer->clean();
+
+	if (g_pSharedMemoryContainer)
+		g_pSharedMemoryContainer->clean();
 
 	if (strstr(Core.Params, "-swap_on_compact"))
-	{
 		SetProcessWorkingSetSize(GetCurrentProcess(), external_size, external_size);
-	}
 }
 
 // xr_strdup
@@ -54,14 +55,15 @@ char* xr_strdup(const char* string)
 	size_t len = xr_strlen(string) + 1;
 	char *	memory = (char*)Memory.mem_alloc(len);
 	std::memcpy(memory, string, len);
-	return	memory;
+
+	return memory;
 }
 
-XRCORE_API bool is_stack_ptr( void* _ptr)
+XRCORE_API bool is_stack_ptr(void* _ptr)
 {
-	int			local_value		= 0;
-	void*		ptr_refsound	= _ptr;
-	void*		ptr_local		= &local_value;
-	ptrdiff_t	difference		= (ptrdiff_t)_abs(s64(ptrdiff_t(ptr_local) - ptrdiff_t(ptr_refsound)));
-	return		(difference < (512*1024));
+	int local_value = 0;
+	void* ptr_refsound = _ptr;
+	void* ptr_local = &local_value;
+	ptrdiff_t difference = (ptrdiff_t)_abs(s64(ptrdiff_t(ptr_local) - ptrdiff_t(ptr_refsound)));
+	return (difference < (512 * 1024));
 }

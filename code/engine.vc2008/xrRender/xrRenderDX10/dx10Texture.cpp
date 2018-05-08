@@ -229,11 +229,10 @@ _DDS_2D:
 #endif
 			LoadInfo.Width	= IMG.Width;
 			LoadInfo.Height	= IMG.Height;
+
 #ifndef R34_USE_FIRSTMIPLEVEL
 			if (img_loaded_lod)
-			{
 				Reduce(LoadInfo.Width, LoadInfo.Height, IMG.MipLevels, img_loaded_lod);
-			}
 #endif
 			if (bStaging)
 			{
@@ -255,6 +254,7 @@ _DDS_2D:
 #endif
 			FS.r_close				(S);
 			mip_cnt					= IMG.MipLevels;
+
 			// OK
 			ret_msize				= calc_texture_size(img_loaded_lod, mip_cnt, img_size);
 			return					pTexture2D;

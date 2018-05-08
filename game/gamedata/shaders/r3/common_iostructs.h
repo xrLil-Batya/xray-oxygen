@@ -466,4 +466,9 @@ struct        v_detail
         int4        misc        : TEXCOORD0;        // (u(Q),v(Q),frac,matrix-id)
 };
 
+struct  				p_screen                {
+        float4          hpos               		: POSITION;
+        float2          tc0                		: TEXCOORD0;        // Texture coordinates         (for sampling maps)
+};
+
 #endif	//	common_iostructs_h_included
