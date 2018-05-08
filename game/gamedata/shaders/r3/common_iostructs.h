@@ -460,15 +460,21 @@ struct	v_tree
 
 ////////////////////////////////////////////////////////////////
 //	Details
-struct        v_detail                    
+struct v_detail                    
 {
-        float4      pos                : POSITION;                // (float,float,float,1)
+        float4      pos         : POSITION;         // (float,float,float,1)
         int4        misc        : TEXCOORD0;        // (u(Q),v(Q),frac,matrix-id)
 };
 
-struct  				p_screen                {
-        float4          hpos               		: POSITION;
-        float2          tc0                		: TEXCOORD0;        // Texture coordinates         (for sampling maps)
+struct p_screen
+{
+        float4          hpos 	: POSITION;
+        float2          tc0		: TEXCOORD0;        // Texture coordinates         (for sampling maps)
 };
 
+struct	v2p_screen
+{
+	float2 tc0 : TEXCOORD0;
+	float4 HPos : SV_Position;	// Clip-space position 	(for rasterization)
+};
 #endif	//	common_iostructs_h_included
