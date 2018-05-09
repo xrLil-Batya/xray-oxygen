@@ -17,7 +17,7 @@
 void	fill_vid_mode_list			(CHW* _hw);
 void	free_vid_mode_list			();
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 CHW HW;
 

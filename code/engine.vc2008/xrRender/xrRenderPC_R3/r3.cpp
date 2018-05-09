@@ -15,7 +15,7 @@
 
 #include "D3DX10Core.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 CRender										RImplementation;
 
