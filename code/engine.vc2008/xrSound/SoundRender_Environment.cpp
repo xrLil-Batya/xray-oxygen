@@ -173,7 +173,7 @@ void	SoundEnvironment_LIB::Unload()
 int		SoundEnvironment_LIB::GetID(const char* name)
 {
 	for (auto it = library.begin(); it != library.end(); ++it)
-		if (!_stricmp(name, *(*it)->name))
+		if (!_stricmp(name, (*it)->name.c_str()))
 			return int(it - library.begin());
 
 	return -1;
@@ -181,8 +181,8 @@ int		SoundEnvironment_LIB::GetID(const char* name)
 
 CSoundRender_Environment*	SoundEnvironment_LIB::Get(const char* name)
 {
-	for (const auto& it : library)
-		if (!_stricmp(name, *it->name))
+	for (CSoundRender_Environment* it : library)
+		if (!_stricmp(name, it->name.c_str()))
 			return it;
 
 	return nullptr;
