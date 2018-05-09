@@ -15,6 +15,7 @@ enum{
 		AF_CUR_INS_CROS     =(1<<12),
 		AF_COLORED_FEEL     =(1<<13),
 		AF_SHOW_CURPOS		=(1<<14),
+		AF_ZOOM_NEW_FD		=(1<<15),
 };
 
 extern Flags32	psActorFlags;

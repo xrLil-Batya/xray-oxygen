@@ -10,6 +10,8 @@
 #include "../xrServerEntities/object_broker.h"
 #include "../xrServerEntities/LevelGameDef.h"
 
+ENGINE_API float ccSunshaftsIntensity = 0.f;
+
 void CEnvModifier::load	(IReader* fs, u32 version)
 {
 	use_flags.one					();
@@ -280,7 +282,9 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 	bolt_period		= (tb_id.size())?config.r_float	(m_identifier,"thunderbolt_period"):0.f;
 	bolt_duration	= (tb_id.size())?config.r_float	(m_identifier,"thunderbolt_duration"):0.f;
 	env_ambient		= config.line_exist(m_identifier,"ambient")?environment.AppendEnvAmb	(config.r_string(m_identifier,"ambient")):0;
-	m_fSunShaftsIntensity = 0.25f;
+	
+    if (config.line_exist(m_identifier.c_str(), "sun_shafts_intensity"))
+        m_fSunShaftsIntensity = config.r_float(m_identifier.c_str(), "sun_shafts_intensity");
 
 	if (config.line_exist(m_identifier,"water_intensity"))
 		m_fWaterIntensity = config.r_float(m_identifier,"water_intensity");
@@ -372,7 +376,11 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	wind_velocity			=	fi*A.wind_velocity + f*B.wind_velocity;
 	wind_direction			=	fi*A.wind_direction + f*B.wind_direction;
 
-	m_fSunShaftsIntensity	=	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
+    if (ccSunshaftsIntensity > 0.f)
+        m_fSunShaftsIntensity = ccSunshaftsIntensity;
+    else
+	    m_fSunShaftsIntensity =	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
+
 	m_fWaterIntensity		=	fi*A.m_fWaterIntensity + f*B.m_fWaterIntensity;
 	m_fTreeAmplitudeIntensity = fi*A.m_fTreeAmplitudeIntensity + f*B.m_fTreeAmplitudeIntensity;
     m_fDropletsIntensity	=	fi*A.m_fDropletsIntensity + f*B.m_fDropletsIntensity;
