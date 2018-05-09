@@ -56,12 +56,7 @@ void CUICursor::OnRender	()
 	g_statHint->OnRender();
 
 	if( !IsVisible() ) return;
-	if(AF_SHOW_CURPOS)
-	{
-	VERIFY(last_render_frame != Device.dwFrame);
-	last_render_frame = Device.dwFrame;
-
-	if(bDebug)
+	if( psActorFlags.test(AF_SHOW_CURPOS))
 	{
 	CGameFont* F		= UI().Font().pFontDI;
 	F->SetAligment		(CGameFont::alCenter);
@@ -71,7 +66,7 @@ void CUICursor::OnRender	()
 	Fvector2			pt = GetCursorPosition();
 	F->OutNext			("%f-%f",pt.x, pt.y);
 	}
-	}
+
 
 	m_static->SetWndPos	(vPos);
 	m_static->Update	();
