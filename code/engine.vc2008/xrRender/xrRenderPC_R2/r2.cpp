@@ -831,7 +831,10 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	{
 		sh_name[len]='0'; ++len;
 	}
-
+	//
+	#pragma todo("Please repair DOF!")
+	ps_r2_ls_flags.set(R2FLAG_DOF, FALSE);
+	//
 	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
 	{
 		defines[def_it].Name		=	"USE_DOF";
