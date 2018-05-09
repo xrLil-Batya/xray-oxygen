@@ -16,12 +16,13 @@
 
 #define	GAMESAVE_SIZE	128
 
-IC u32 convert				(float c)	{
+IC u32 convert				(float c)	
+{
 	u32 C=iFloor(c);
 	if (C>255) C=255;
 	return C;
 }
-IC void MouseRayFromPoint	( Fvector& direction, int x, int y, Fmatrix& m_CamMat )
+IC void MouseRayFromPoint	(Fvector& direction, int x, int y, Fmatrix& m_CamMat)
 {
 	int halfwidth		= Device.dwWidth/2;
 	int halfheight		= Device.dwHeight/2;
@@ -158,29 +159,55 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 			{
 				string64			t_stemp;
 				string_path			buf;
-				xr_sprintf			(buf,sizeof(buf),"ss_%s_%s_(%s).png",Core.UserName,timestamp(t_stemp),(g_pGameLevel)?g_pGameLevel->name().c_str():"mainmenu");
-				ID3DBlob			*saved	= 0;
+				xr_sprintf			(buf,sizeof(buf),
+									"ss_%s_%s_(%s).png",
+									Core.UserName,
+									timestamp(t_stemp),
+									(g_pGameLevel) ?
+									g_pGameLevel->name().c_str()
+									: "mainmenu");
+				ID3DBlob* saved		= 0;
 #ifdef USE_DX11
-				CHK_DX				(D3DX11SaveTextureToMemory(HW.pContext, pSrcTexture, D3DX11_IFF_PNG, &saved, 0));
+				CHK_DX				(D3DX11SaveTextureToMemory(
+									HW.pContext,
+									pSrcTexture,
+									D3DX11_IFF_PNG, &saved, 0));
 #else
-				CHK_DX				(D3DX10SaveTextureToMemory( pSrcTexture, D3DX10_IFF_PNG, &saved, 0));
+				CHK_DX				(D3DX10SaveTextureToMemory( 
+									pSrcTexture,
+									D3DX10_IFF_PNG,
+									&saved, 0));
 #endif
-				IWriter*		fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
+				IWriter* fs			= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
 				fs->w				(saved->GetBufferPointer(), saved->GetBufferSize());
 				FS.w_close			(fs);
 				_RELEASE			(saved);
 
-				if (strstr(Core.Params,"-ss_tga"))	
-				{ // hq
-					xr_sprintf			(buf,sizeof(buf),"ssq_%s_%s_(%s).tga",Core.UserName,timestamp(t_stemp),(g_pGameLevel)?g_pGameLevel->name().c_str():"mainmenu");
-					ID3DBlob*		saved	= 0;
+				if (strstr(Core.Params, "-ss_bmp"))	
+				{ 
+					// hq
+					xr_sprintf			(buf,sizeof(buf),
+										"ssq_%s_%s_(%s).bmp",
+										Core.UserName,
+										timestamp(t_stemp),
+										(g_pGameLevel) ?
+										g_pGameLevel->name().c_str()
+										: "mainmenu");
+					ID3DBlob* saved		= 0;
+//#VERTVER: TGA - формат без сжатия, который идентичен по алгоритмам отображения
 #ifdef USE_DX11
-					CHK_DX				(D3DX11SaveTextureToMemory(HW.pContext, pSrcTexture, D3DX11_IFF_BMP, &saved, 0));
+					CHK_DX				(D3DX11SaveTextureToMemory(HW.pContext,
+										pSrcTexture,
+										D3DX11_IFF_BMP,
+										&saved, 0));
 #else
-					CHK_DX				(D3DX10SaveTextureToMemory( pSrcTexture, D3DX10_IFF_BMP, &saved, 0));
-					//		CHK_DX				(D3DXSaveSurfaceToFileInMemory (&saved,D3DXIFF_TGA,pFB,0,0));
+
+					CHK_DX				(D3DX10SaveTextureToMemory( 
+										pSrcTexture,
+										D3DX10_IFF_BMP,			
+										&saved, 0));
 #endif
-					IWriter*		fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
+					IWriter* fs			= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
 					fs->w				(saved->GetBufferPointer(),(u32)saved->GetBufferSize());
 					FS.w_close			(fs);
 					_RELEASE			(saved);
@@ -190,7 +217,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 		case IRender_interface::SM_FOR_LEVELMAP:
 		case IRender_interface::SM_FOR_CUBEMAP:
 			{
-			VERIFY(!"CRender::Screenshot. This screenshot type is not supported for DX10.");
+				VERIFY(!"CRender::Screenshot. This screenshot type is not supported for DX10.");
 			}
 			break;
 	}
@@ -304,7 +331,8 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				// cleanup
 				_RELEASE			(texture);
 
-			}break;
+			}
+			break;
 		case IRender_interface::SM_NORMAL:
 			{
 				string64			t_stemp;
@@ -316,10 +344,11 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				fs->w				(saved->GetBufferPointer(),saved->GetBufferSize());
 				FS.w_close			(fs);
 				_RELEASE			(saved);
-				if (strstr(Core.Params,"-ss_tga"))	{ // hq
-					xr_sprintf			(buf,sizeof(buf),"ssq_%s_%s_(%s).tga",Core.UserName,timestamp(t_stemp),(g_pGameLevel)?g_pGameLevel->name().c_str():"mainmenu");
+				if (strstr(Core.Params,"-ss_bmp"))	
+				{ // hq
+					xr_sprintf			(buf,sizeof(buf),"ssq_%s_%s_(%s).bmp",Core.UserName,timestamp(t_stemp),(g_pGameLevel)?g_pGameLevel->name().c_str():"mainmenu");
 					ID3DBlob*		saved	= 0;
-					CHK_DX				(D3DXSaveSurfaceToFileInMemory (&saved,D3DXIFF_TGA,pFB,0,0));
+					CHK_DX				(D3DXSaveSurfaceToFileInMemory (&saved,D3DXIFF_BMP,pFB,0,0));
 					IWriter*		fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
 					fs->w				(saved->GetBufferPointer(),saved->GetBufferSize());
 					FS.w_close			(fs);
@@ -330,16 +359,13 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 		case IRender_interface::SM_FOR_LEVELMAP:
 		case IRender_interface::SM_FOR_CUBEMAP:
 			{
-//				string64			t_stemp;
 				string_path			buf;
 				VERIFY				(name);
-				strconcat			(sizeof(buf), buf, name, ".tga");
-				IWriter*		fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
-				TGAdesc				p;
+				strconcat			(sizeof(buf), buf, name, ".bmp");
+				IWriter*			fs	= FS.w_open	("$screenshots$",buf); R_ASSERT(fs);
+				BMPdesc				p;
 				p.format			= IMG_24B;
 
-				//	TODO: DX10: This is totally incorrect but mimics 
-				//	original behavior. Fix later.
 				hr					= pFB->LockRect(&D,0,D3DLOCK_NOSYSLOCK);
 				if(hr!=D3D_OK)		return;
 				hr					= pFB->UnlockRect();
@@ -352,7 +378,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 				p.width				= Device.dwHeight;
 				p.height			= Device.dwHeight;
 				p.data				= data;
-				p.maketga			(*fs);
+				p.makebmp			(*fs);
 				xr_free				(data);
 
 				FS.w_close			(fs);
@@ -413,14 +439,12 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter &memory_writer)
 		for (;pPixel!=pEnd; pPixel++)	
 		{
 			u32 p = *pPixel;
-			*pPixel = color_xrgb	(
-				color_get_B(p),
-				color_get_G(p),
-				color_get_R(p)
-				);
+			*pPixel = color_xrgb(color_get_B(p),
+								 color_get_G(p),
+								 color_get_R(p));
 		}
 
-		memory_writer.w( &Device.dwWidth, sizeof(Device.dwWidth) );
+		memory_writer.w( &Device.dwWidth,  sizeof(Device.dwWidth) );
 		memory_writer.w( &Device.dwHeight, sizeof(Device.dwHeight) );
 		memory_writer.w( MappedData.pData, (Device.dwWidth*Device.dwHeight)*4 );
 	}
@@ -472,12 +496,10 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter &memory_writer)
 
 			for ( int i=0; i<iProcessPixels; ++i)
 			{
-				*pPixel = color_argb_f	(
-					1.0f,
-					tmpArray[i*4],
-					tmpArray[i*4+1],
-					tmpArray[i*4+2]
-					);
+				*pPixel = color_argb_f	(1.0f,
+										tmpArray[i*4],
+										tmpArray[i*4+1],
+										tmpArray[i*4+2]);
 
 				++pPixel;
 			}
@@ -490,18 +512,16 @@ void CRender::ScreenshotAsyncEnd(CMemoryWriter &memory_writer)
 		for (;pPixel!=pEnd; pPixel++)	
 		{
 			u32 p = *pPixel;
-			*pPixel = color_xrgb	(
-				color_get_R(p),
-				color_get_G(p),
-				color_get_B(p)
-				);
+			*pPixel = color_xrgb(color_get_R(p),
+								 color_get_G(p),
+								 color_get_B(p));
 		}
 	}
 
 	{
-		memory_writer.w( &rtWidth, sizeof(rtWidth) );
+		memory_writer.w( &rtWidth,	sizeof(rtWidth) );
 		memory_writer.w( &rtHeight, sizeof(rtHeight) );
-		memory_writer.w( pOrigin, (rtWidth*rtHeight)*4 );
+		memory_writer.w( pOrigin,	(rtWidth*rtHeight)*4 );
 	}
 
 	hr					= pFB->UnlockRect();

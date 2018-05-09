@@ -9,7 +9,7 @@
 #include "ComputeShader.h"
 #include "..\xrRender\dxRenderDeviceRender.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 CSCompiler::CSCompiler(ComputeShader& target):
 	m_Target(target), m_cs(0)

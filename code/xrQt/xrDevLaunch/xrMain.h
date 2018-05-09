@@ -1,4 +1,3 @@
-void on_actionxrEngine_2_triggered();
 /*************************************************
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT

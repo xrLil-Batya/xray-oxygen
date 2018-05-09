@@ -14,7 +14,7 @@
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 void fix_texture_name(LPSTR fn);
 

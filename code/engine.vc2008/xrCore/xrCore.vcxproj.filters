@@ -1,15 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="FS">
-      <UniqueIdentifier>{b9fd0780-73b0-4440-9f29-57cf35ba1cbc}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FS\stream_reader">
-      <UniqueIdentifier>{5e36b257-9f6f-4a62-ad28-8eb6d6a402d6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="FS\file_stream_reader">
-      <UniqueIdentifier>{4d7345dc-3247-4b52-988d-4cc4ffd82129}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Memory manager">
       <UniqueIdentifier>{8aa698ec-2bd2-4827-9da8-1e2a98b5a26b}</UniqueIdentifier>
     </Filter>
@@ -75,6 +66,15 @@
     </Filter>
     <Filter Include="OS">
       <UniqueIdentifier>{1a002462-09b5-4139-923f-2f2083af69de}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FS">
+      <UniqueIdentifier>{b9fd0780-73b0-4440-9f29-57cf35ba1cbc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FS\stream_reader">
+      <UniqueIdentifier>{5e36b257-9f6f-4a62-ad28-8eb6d6a402d6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="FS\file_stream_reader">
+      <UniqueIdentifier>{4d7345dc-3247-4b52-988d-4cc4ffd82129}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
