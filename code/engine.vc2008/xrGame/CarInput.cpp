@@ -118,6 +118,8 @@ void CCar::vfProcessInputKey	(int iCommand, bool bPressed)
 	else
 		OnKeyboardRelease		(iCommand);
 }
+	float const base_fov	=	g_fov;
+	float const dest_fov	=	g_fov - (g_fov-30.f);
 
 void CCar::OnKeyboardPress(int cmd)
 {
@@ -176,11 +178,16 @@ void CCar::OnKeyboardPress(int cmd)
         break;
 		
 	case kTORCH:	
-	    m_lights.SwitchHeadLights();
+	    m_lights.SwitchHeadLights(); 
 		break;
 		
-	case kUSE:									
+	case kUSE:		
+		if (HasWeapon()) (g_fov = base_fov);
 	    break;
+		
+	case kWPN_ZOOM: 
+		if (HasWeapon()) (g_fov = dest_fov);
+		break;
 		
 	case kWPN_FIRE: 
 	    if (HasWeapon()) 
@@ -198,13 +205,31 @@ void	CCar::OnKeyboardRelease(int cmd)
 	if (Remote())								return;
 	switch (cmd)	
 	{
-	case kACCEL:break;
-	case kFWD:		ReleaseForward();			break;
-	case kBACK:		ReleaseBack();				break;
-	case kL_STRAFE:	ReleaseLeft();				if (OwnerActor()) OwnerActor()->steer_Vehicle(0);	break;
-	case kR_STRAFE:	ReleaseRight();				if (OwnerActor()) OwnerActor()->steer_Vehicle(0);	break;
-	case kWPN_FIRE: 							if (HasWeapon()) m_car_weapon->Action(CCarWeapon::eWpnFire, 0);		break;
-	case kJUMP:		ReleaseBreaks();			break;
+	case kACCEL:
+		 break;
+	case kFWD:		
+		ReleaseForward();			
+		 break;
+	case kBACK:		
+		ReleaseBack();				
+		 break;
+	case kL_STRAFE:	
+		ReleaseLeft();				
+		if (OwnerActor()) OwnerActor()->steer_Vehicle(0);	
+		 break;
+	case kR_STRAFE:	
+		ReleaseRight();				
+		if (OwnerActor()) OwnerActor()->steer_Vehicle(0);	
+		 break;
+	case kWPN_FIRE: 							
+		if (HasWeapon()) m_car_weapon->Action(CCarWeapon::eWpnFire, 0);		
+		 break;
+	case kJUMP:		
+		ReleaseBreaks();			
+		 break;
+	case kWPN_ZOOM: 
+		if (HasWeapon()) (g_fov = base_fov);
+		 break;
 	case kSWITCH_HORN: snd_horn.destroy();		break;
 	};
 }

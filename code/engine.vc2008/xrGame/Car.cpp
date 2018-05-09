@@ -447,6 +447,7 @@ void CCar::UpdateCL()
 	}
 	
 	ASCUpdate();
+	UpdateEx			(g_fov);
 	
 	if(Owner()) 
 		return;
@@ -625,7 +626,7 @@ void CCar::detach_Actor()
 		return;
 	
 	Owner()->setVisible(1);
-	psCamInert=0.4;
+	psCamInert=0.3;
 	CHolderCustom::detach_Actor();
 	PPhysicsShell()->remove_ObjectContactCallback(ActorObstacleCallback);
 	NeutralDrive();
@@ -650,6 +651,7 @@ bool CCar::attach_Actor(CGameObject* actor)
 
 	CHolderCustom::attach_Actor(actor);
 
+	psCamInert=0.7;
 	IKinematics* K = smart_cast<IKinematics*>(Visual());
 	CInifile* ini = K->LL_UserData();
 	int id;
@@ -723,11 +725,12 @@ bool CCar::Enter(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos)
 	return false;
 }
 
+
 bool CCar::Exit(const Fvector& pos,const Fvector& dir)
 {
 	xr_map<u16,SDoor>::iterator i,e;
 
-	psCamInert=0.4;
+	psCamInert=0.3;
 	i=m_doors.begin();e=m_doors.end();
 	for(;i!=e;++i)
 	{
@@ -1829,7 +1832,7 @@ void CCar::OnBeforeExplosion()
 void CCar::CarExplode()
 {
 
-	psCamInert=0.8;
+	psCamInert=0.3;
 	if(b_exploded) return;
 	CPHSkeleton::SetNotNeedSave();
 	if(m_car_weapon)m_car_weapon->Action(CCarWeapon::eWpnActivate,0);
@@ -1848,6 +1851,9 @@ void CCar::CarExplode()
 		A->detach_Vehicle();
 		if(A->g_Alive()<=0.f)A->character_physics_support()->movement()->DestroyCharacter();
 	}
+	float const base_fov = g_fov;
+	float const dest_fov = g_fov - (g_fov - 30.f);
+	g_fov = base_fov;
 
 	if(CPHDestroyable::CanDestroy())
 		CPHDestroyable::Destroy(ID(),"physic_destroyable_object");	
