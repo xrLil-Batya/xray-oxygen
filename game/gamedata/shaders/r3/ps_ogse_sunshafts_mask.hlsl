@@ -1,7 +1,6 @@
-#include "common_iostructs.h"
+#include "common.h"
 #include "ogse_config.h"
 #include "ogse_functions.h"
-#include "common_samplers.h"
 
 uniform float4 screen_res;
 
