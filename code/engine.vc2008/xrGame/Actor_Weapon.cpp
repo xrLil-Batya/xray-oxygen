@@ -80,6 +80,12 @@ const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
 	fire_pos.y += 0.14f;
 	}
 	}
+	if (psActorFlags.test(AF_ZOOM_NEW_FD))
+	{
+		fire_dir = weapon->get_LastFD();
+		fire_pos = weapon->get_LastFP();
+	}
+	else
 	fire_dir		= Cameras().Direction();
 }
 

@@ -934,7 +934,10 @@ void CWeapon::renderable_Render()
 
 	// если мы в режиме снайперки, то сам HUD рисовать не надо
 	if (IsZoomed() && !IsRotatingToZoom() && ZoomTexture())
+	{
+		psActorFlags.set(AF_ZOOM_NEW_FD, FALSE);
 		RenderHud(FALSE);
+	}
 	else
 		RenderHud(TRUE);
 
@@ -1419,7 +1422,7 @@ void GetZoomData(const float scope_factor, float& delta, float& min_zoom_factor)
 void CWeapon::OnZoomIn()
 {
 	m_zoom_params.m_bIsZoomModeNow = true;
-
+   psActorFlags.set(AF_ZOOM_NEW_FD, TRUE);
 	if (m_zoom_params.m_bUseDynamicZoom)
 	{
 		if (!m_fRTZoomFactor)
@@ -1456,7 +1459,7 @@ void CWeapon::OnZoomOut()
 	m_fRTZoomFactor = GetZoomFactor(); //store current
 	m_zoom_params.m_fCurrentZoomFactor = g_fov;
 	EnableHudInertion(TRUE);
-
+    psActorFlags.set(AF_ZOOM_NEW_FD, FALSE);
  	GamePersistent().RestoreEffectorDOF();
 
 	if (GetHUDmode())
