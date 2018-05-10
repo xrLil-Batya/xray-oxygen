@@ -261,21 +261,9 @@ pureFrame*	g_pNetProcessor	= &NET_processor;
 
 bool CLevel::Connect2Server(const char* options)
 {
-	m_bConnectResultReceived	= true	;
 	m_bConnectResult			= true	;
 
-	if (!Connect(options))		
-		return false;
-	//---------------------------------------------------------------------------
-
 	Msg("%c client : connection %s - <%s>", m_bConnectResult ? '*' : '!', m_bConnectResult ? "accepted" : "rejected", m_sConnectResult.c_str());
-
-	if (net_Disconnected)
-	{
-		Disconnect();
-		return false;
-	}
-	//---------------------------------------------------------------------------
 
 	return true;
 };
@@ -283,7 +271,6 @@ bool CLevel::Connect2Server(const char* options)
 void CLevel::OnConnectResult(NET_Packet*	P)
 {
 	// multiple results can be sent during connection they should be "AND-ed"
-	m_bConnectResultReceived	= true;
 	string512 ResultStr;	
 	P->r_stringZ_s				(ResultStr);
 	ClientID tmp_client_id;

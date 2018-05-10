@@ -4,8 +4,6 @@
 #include "net_server.h"
 #include "net_messages.h"
 
-//#include "../xrGameSpy/xrGameSpy_MainDefs.h"
-
 #pragma warning(push)
 #pragma warning(disable:4995)
 #include <malloc.h>
@@ -105,45 +103,14 @@ void			INetQueue::Release	()
 }
 
 //
-const u32 syncQueueSize		= 512;
-const int syncSamples		= 256;
-class ENGINE_API syncQueue
-{
-	u32				table	[syncQueueSize];
-	u32				write;
-	u32				count;
-public:
-	syncQueue()			{ clear(); }
 
-	IC void			push	(u32 value)
-	{
-		table[write++]	= value;
-		if (write == syncQueueSize)	write = 0;
-
-		if (count <= syncQueueSize)	count++;
-	}
-	IC u32*		begin	()	{ return table;			}
-	IC u32*		end		()	{ return table+count;	}
-	IC u32		size	()	{ return count;			}
-	IC void     clear	()	{ write=0; count=0;		}
-} net_DeltaArray;
-
-
-IPureClient::IPureClient(CTimer* timer): net_Statistic(timer)
+IPureClient::IPureClient(CTimer* timer)
 {
 	device_timer			= timer;
-	net_TimeDelta			= 0;
 }
 
 IPureClient::~IPureClient()
 {
-}
-
-bool IPureClient::Connect(LPCSTR)
-{
-	net_Disconnected = false;
-	net_TimeDelta = 0;
-	return true;
 }
 
 void IPureClient::Disconnect()
@@ -157,7 +124,7 @@ void IPureClient::OnMessage(void* data, u32 size)
 	NET_Packet* P = net_Queue.Create();
 
 	P->set( data, size );	
-	P->timeReceive	= timeServer_Async();//TimerAsync				(device_timer);	
+	P->timeReceive	= timeServer_Async();
 
 	u16			m_type;
 	P->r_begin	(m_type);

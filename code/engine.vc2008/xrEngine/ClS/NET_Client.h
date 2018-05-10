@@ -27,12 +27,7 @@ protected:
 	CTimer*					device_timer;
 
 protected:
-	bool					net_Disconnected;
-
 	INetQueue				net_Queue;
-	IClientStatistic		net_Statistic;
-	
-	s32						net_TimeDelta;
 
 	void					SetClientID		(ClientID const & local_client) { net_ClientID = local_client; };
 	
@@ -40,10 +35,8 @@ public:
 	IPureClient				(CTimer* tm);
 	virtual ~IPureClient	();
 	
-	bool					Connect					(LPCSTR server_name);
 	void					Disconnect				();
 
-	IC bool					net_isDisconnected		()	{ return net_Disconnected;	}
 	IC GameDescriptionData const & get_net_DescriptionData() const { return m_game_description; }
 
 	// receive
@@ -53,13 +46,11 @@ public:
 	IC void							EndProcessQueue			()	{ net_Queue.Unlock();			};//							<-
 
 	virtual void			OnMessage				(void* data, u32 size);
-	IClientStatistic&		GetStatistic			() {return  net_Statistic; }
 	ClientID const &		GetClientID				() { return net_ClientID; };
 	
 	// time management
-	IC u32					timeServer				()	{ return TimeGlobal(device_timer) + net_TimeDelta; }
-	IC u32					timeServer_Async		()	{ return TimerAsync(device_timer) + net_TimeDelta; }
-	IC u32					timeServer_Delta		()	{ return net_TimeDelta; }
+	IC u32					timeServer				()	{ return device_timer->GetElapsed_ms(); }
+	IC u32					timeServer_Async		()	{ return device_timer->GetElapsed_ms(); }
 
 private:
 	ClientID				net_ClientID;

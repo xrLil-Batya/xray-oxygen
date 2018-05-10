@@ -82,7 +82,6 @@ public:
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
     static bool					InterpolationDisabled	();
-	void						ReculcInterpolationSteps() const;
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
@@ -114,12 +113,9 @@ private:
 	void						make_NetCorrectionPrediction();
 
 	u32							m_dwDeltaUpdate;
-	u32							m_dwLastNetUpdateTime;
-	void						UpdateDeltaUpd			( u32 LastTime );
 
 	bool						Connect2Server					(const char* options);
 private:
-	bool						m_bConnectResultReceived;
 	bool						m_bConnectResult;
 	xr_string					m_sConnectResult;
 public:	

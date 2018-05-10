@@ -196,7 +196,6 @@ bool CLevel::net_start6				()
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
-			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 			
@@ -213,7 +212,6 @@ bool CLevel::net_start6				()
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
-			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 

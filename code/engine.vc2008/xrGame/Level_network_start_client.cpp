@@ -48,12 +48,9 @@ bool	CLevel::net_start_client1				()
 bool CLevel::net_start_client2()
 {
 	Server->create_direct_client();
-	//offline account creation
 
-	m_bConnectResultReceived = false;
 	ClientReceive();
 	Server->Update();
-	m_bConnectResultReceived = true;
 
     const char* clientOption = GamePersistent().GetClientOption().c_str();
 	connected_to_server = Connect2Server(clientOption);

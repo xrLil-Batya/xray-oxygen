@@ -144,7 +144,7 @@ CSE_Abstract* game_sv_GameState::spawn_end(CSE_Abstract* E, ClientID id)
 void game_sv_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 {
 	P.w_begin	(M_EVENT);
-	P.w_u32		(Level().timeServer());//Device.TimerAsync());
+	P.w_u32		(Level().timeServer());
 	P.w_u16		(type);
 	P.w_u16		(dest);
 }

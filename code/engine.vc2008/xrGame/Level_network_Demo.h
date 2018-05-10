@@ -37,7 +37,6 @@ public:
 		//string4096				m_server_options;
 		u32						m_time_global;
 		u32						m_time_server;
-		s32						m_time_delta;
 	};
 	struct	DemoPacket
 	{

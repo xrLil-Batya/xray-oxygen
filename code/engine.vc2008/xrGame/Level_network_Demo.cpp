@@ -124,7 +124,6 @@ void CLevel::SaveDemoHeader(shared_str const & server_options)
 {
 	m_demo_header.m_time_global			= Device.dwTimeGlobal;
 	m_demo_header.m_time_server			= timeServer();
-	m_demo_header.m_time_delta			= timeServer_Delta();
 	m_writer->w(&m_demo_header, sizeof(m_demo_header));
 	m_writer->w_stringZ(server_options);
 	m_demo_info_file_pos				=	(u32)m_writer->tell();

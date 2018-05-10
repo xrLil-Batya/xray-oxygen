@@ -104,7 +104,7 @@ void xrServer::client_Destroy(IClient* C)
 		{
 			NET_Packet			P;
 			P.w_begin			(M_EVENT);
-			P.w_u32				(Level().timeServer());//Device.TimerAsync());
+			P.w_u32				(Level().timeServer());
 			P.w_u16				(GE_DESTROY);
 			P.w_u16				(pS->ID);
 			SendBroadcast		(C->ID,P,net_flags(TRUE,TRUE));
