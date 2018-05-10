@@ -218,7 +218,7 @@ void CUIWindow::DetachChild(CUIWindow* pChild)
 	R_ASSERT				(it!=m_ChildWndList.end());
 	m_ChildWndList.erase	(it);
 
-	pChild->SetParent		(NULL);
+	pChild->SetParent		(nullptr);
 
 	if(pChild->IsAutoDelete())
 		xr_delete(pChild);
@@ -233,7 +233,8 @@ void CUIWindow::DetachAll()
 
 void CUIWindow::GetAbsoluteRect(Frect& r) 
 {
-	if(GetParent() == NULL){
+	if(!GetParent())
+	{
 		GetWndRect		(r);
 		return;
 	}
@@ -275,7 +276,7 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 		m_dwLastClickTime = dwCurTime;
 	}
 
-	if(GetParent()== NULL)
+	if(!GetParent())
 	{
 		if(!wndRect.in(cursor_pos))
             return false;
@@ -338,7 +339,6 @@ bool CUIWindow::OnMouseAction(float x, float y, EUIMessages mouse_action)
 						   cursor_pos.y -w->GetWndRect().top, mouse_action))return true;
 		}
 	}
-
 
 	return false;
 }
@@ -403,7 +403,7 @@ void CUIWindow::SetCapture(CUIWindow *pChildWindow, bool capture_status)
 	}
 	else
 	{
-			m_pMouseCapturer = NULL;
+			m_pMouseCapturer = nullptr;
 	}
 }
 
@@ -464,19 +464,19 @@ bool CUIWindow::OnKeyboardHold(int dik)
 
 void CUIWindow::SetKeyboardCapture(CUIWindow* pChildWindow, bool capture_status)
 {
-	if(NULL != GetParent())
+	if(GetParent())
 		GetParent()->SetKeyboardCapture(this, capture_status);
 
 	if(capture_status)
 	{
 		//оповестить дочернее окно о потере фокуса клавиатуры
-		if(NULL!=m_pKeyboardCapturer)
+		if(m_pKeyboardCapturer)
 			m_pKeyboardCapturer->SendMessage(this, WINDOW_KEYBOARD_CAPTURE_LOST);
 			
 		m_pKeyboardCapturer = pChildWindow;
 	}
 	else
-		m_pKeyboardCapturer = NULL;
+		m_pKeyboardCapturer = nullptr;
 }
 
 
@@ -484,14 +484,15 @@ void CUIWindow::SetKeyboardCapture(CUIWindow* pChildWindow, bool capture_status)
 void CUIWindow::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	//оповестить дочерние окна
-	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end()!=it; ++it)
+	for(CUIWindow* it: m_ChildWndList)
 	{
-		if((*it)->IsEnabled())
-			(*it)->SendMessage(pWnd,msg,pData);
+		if(it->IsEnabled())
+			it->SendMessage(pWnd,msg,pData);
 	}
 }
 
-CUIWindow* CUIWindow::GetCurrentMouseHandler(){
+CUIWindow* CUIWindow::GetCurrentMouseHandler()
+{
 	return GetTop()->GetChildMouseHandler();
 }
 

@@ -90,11 +90,6 @@ void CUICustomEdit::InitCustomEdit( Fvector2 pos, Fvector2 size )
 	inherited::SetWndSize	( size );
 }
 
-void CUICustomEdit::SetPasswordMode( bool mode )
-{
-	TextItemControl()->SetPasswordMode( mode );
-}
-
 void CUICustomEdit::OnFocusLost()
 {
 	inherited::OnFocusLost();

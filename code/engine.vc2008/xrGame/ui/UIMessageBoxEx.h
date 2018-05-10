@@ -14,12 +14,6 @@ public:
 	virtual void	InitMessageBox		(LPCSTR xml_template);
 	virtual void	SendMessage			(CUIWindow* pWnd, s16 msg, void* pData = NULL);
 
-	LPCSTR			GetHost				();
-	LPCSTR			GetPassword			();
-
-	void			SetTextEditURL		(LPCSTR text);
-	LPCSTR			GetTextEditURL		();
-
 	CUIWndCallback::void_function		func_on_ok;
 	CUIWndCallback::void_function		func_on_no;
 	void xr_stdcall	OnOKClicked			(CUIWindow*, void*);
