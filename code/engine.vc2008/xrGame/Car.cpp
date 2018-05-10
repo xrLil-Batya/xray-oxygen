@@ -32,19 +32,7 @@ CCar::CCar()
 	m_memory		= NULL;
 	m_driver_anim_type = 0;
 	m_bone_steer	= BI_NONE;
-	active_camera	= 0;
-	camera[ectFirst]= xr_new<CCameraFirstEye>	(this, CCameraBase::flRelativeLink|CCameraBase::flPositionRigid); 
-	camera[ectFirst]->tag	= ectFirst;
-	camera[ectFirst]->Load("car_firsteye_cam");
 
-	camera[ectChase]= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
-	camera[ectChase]->tag	= ectChase;
-	camera[ectChase]->Load("car_look_cam");
-
-	camera[ectFree]	= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
-	camera[ectFree]->tag	= ectFree;
-	camera[ectFree]->Load("car_free_cam");
-	OnCameraChange(ectFirst);
 
 	m_repairing		=false;
 
@@ -756,7 +744,9 @@ void CCar::ParseDefinitions()
 	R_ASSERT2(ini,"Car has no description !!! See ActorEditor Object - UserData");
 	CExplosive::Load(ini,"explosion");
 	//CExplosive::SetInitiator(ID());
-	m_camera_position			= ini->r_fvector3("car_definition","camera_pos");
+	m_camera_position_1st			= ini->r_fvector3("car_definition","camera_pos");
+	m_camera_position_2nd			= ini->r_fvector3("car_definition","camera_pos_2nd");
+	m_camera_position_3rd			= ini->r_fvector3("car_definition","camera_pos_3rd");
 	///////////////////////////car definition///////////////////////////////////////////////////
 	fill_wheel_vector			(ini->r_string	("car_definition","driving_wheels"),m_driving_wheels);
 	fill_wheel_vector			(ini->r_string	("car_definition","steering_wheels"),m_steering_wheels);
@@ -765,7 +755,21 @@ void CCar::ParseDefinitions()
 	fill_doors_map				(ini->r_string	("car_definition","doors"),m_doors);
 
 	///////////////////////////car properties///////////////////////////////
+	active_camera	= 0;
+	camera[ectFirst]= xr_new<CCameraFirstEye>	(this, CCameraBase::flRelativeLink|CCameraBase::flPositionRigid); 
+	camera[ectFirst]->tag	= ectFirst;
+	camera[ectFirst]->Load(ini->r_string("car_definition", "car_first_eye_cam"));
 
+	camera[ectChase]= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
+	camera[ectChase]->tag	= ectChase;
+	camera[ectChase]->Load(ini->r_string("car_definition", "car_look_cam"));
+
+	camera[ectFree]	= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
+	camera[ectFree]->tag	= ectFree;
+	camera[ectFree]->Load(ini->r_string("car_definition", "car_free_cam"));
+	OnCameraChange(ectFirst);
+	
+	
 
 	m_max_power			=		ini->r_float("car_definition","engine_power");
 	m_max_power			*=		(0.8f*1000.f);
