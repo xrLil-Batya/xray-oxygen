@@ -173,9 +173,6 @@ void xrServer::Update	()
 	if (game->sv_force_sync)	Perform_game_export();
 
 	VERIFY						(verify_entities());
-	//-----------------------------------------------------
-	
-	Flush_Clients_Buffers			();
 }
 
 u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
@@ -290,6 +287,11 @@ void xrServer::SendTo_LL(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwT
 {
 	// optimize local traffic
 	Level().OnMessage(data,size);
+}
+
+void xrServer::SendTo(ClientID ID, NET_Packet& P, u32 dwFlags, u32 dwTimeout)
+{
+    SendTo_LL(ID, P.B.data, (u32)P.B.count, dwFlags, dwTimeout);
 }
 
 void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
@@ -457,7 +459,6 @@ void xrServer::AddDelayedPacket	(NET_Packet& Packet, ClientID Sender)
 
 void xrServer::Disconnect()
 {
-	IPureServer::Disconnect();
 	SLS_Clear();
 	xr_delete(game);
 }

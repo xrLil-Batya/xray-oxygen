@@ -78,8 +78,6 @@ public:
 	virtual shared_str			name					() const = 0;
 
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client)	= 0;
-	virtual void				net_Load				( LPCSTR name )							= 0;
-	virtual void				net_Save				( LPCSTR name )							= 0;
 	virtual void				net_Stop				( );
 	virtual void				net_Update				( )										= 0;
 

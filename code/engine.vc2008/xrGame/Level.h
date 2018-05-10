@@ -88,7 +88,6 @@ public:
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnConnectRejected		();
 			bool				PostponedSpawn			(u16 id);
 private:
 	BOOL						m_bNeed_CrPr;
@@ -184,8 +183,6 @@ public:
 
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Load				( LPCSTR name );
-	virtual void				net_Save				( LPCSTR name );
 	virtual void				net_Stop				( );
 	virtual BOOL				net_Start_client		( LPCSTR name );
 	virtual void				net_Update				( );

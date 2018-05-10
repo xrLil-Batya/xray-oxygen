@@ -38,7 +38,6 @@ public:
 		u32						m_time_global;
 		u32						m_time_server;
 		s32						m_time_delta;
-		s32						m_time_delta_user;
 	};
 	struct	DemoPacket
 	{

@@ -38,7 +38,6 @@ void CLevel::remove_objects()
 		for (u32 i = 0; i < 20; ++i)
 		{
 			snd_Events.clear();
-			psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, FALSE);
 			// ugly hack for checks that update is twice on frame
 			// we need it since we do updates for checking network messages
 			++(Device.dwFrame);
@@ -121,7 +120,6 @@ void CLevel::net_Stop		()
 	game_configured				= FALSE;
 	
 	IGame_Level::net_Stop		();
-	IPureClient::Disconnect		();
 
 	if (Server) 
 	{
@@ -272,10 +270,8 @@ bool CLevel::Connect2Server(const char* options)
 
 	Msg("%c client : connection %s - <%s>", m_bConnectResult ? '*' : '!', m_bConnectResult ? "accepted" : "rejected", m_sConnectResult.c_str());
 
-	net_Syncronised = TRUE;
 	if (net_Disconnected)
 	{
-		OnConnectRejected();
 		Disconnect();
 		return false;
 	}
@@ -288,19 +284,14 @@ void CLevel::OnConnectResult(NET_Packet*	P)
 {
 	// multiple results can be sent during connection they should be "AND-ed"
 	m_bConnectResultReceived	= true;
-	u8	result					= P->r_u8();
-	u8  res1					= P->r_u8();
 	string512 ResultStr;	
 	P->r_stringZ_s				(ResultStr);
 	ClientID tmp_client_id;
 	P->r_clientID				(tmp_client_id);
 	SetClientID					(tmp_client_id);
 	
-	if (!result)
-		m_bConnectResult = false;
-	
 	m_sConnectResult			= ResultStr;
-	if (IsDemoSave() && result)
+	if (IsDemoSave())
 	{
 		P->r_u8(); //server client or not
 		shared_str server_options;
@@ -364,9 +355,4 @@ void CLevel::ClearAllObjects()
 #endif
 	};
 	ProcessGameEvents();
-};
-
-void CLevel::OnConnectRejected()
-{
-	IPureClient::OnConnectRejected();
 };

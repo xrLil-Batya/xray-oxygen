@@ -2409,8 +2409,6 @@
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
     </ClCompile>
     <ClCompile Include="Level_SLS_Default.cpp" />
-    <ClCompile Include="Level_SLS_Load.cpp" />
-    <ClCompile Include="Level_SLS_Save.cpp" />
     <ClCompile Include="Level_start.cpp" />
     <ClCompile Include="Level_Bullet_Manager.cpp" />
     <ClCompile Include="Level_bullet_manager_firetrace.cpp" />

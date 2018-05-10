@@ -923,9 +923,6 @@
     <ClCompile Include="ClS\NET_Client.cpp">
       <Filter>NetServer</Filter>
     </ClCompile>
-    <ClCompile Include="ClS\NET_Common.cpp">
-      <Filter>NetServer</Filter>
-    </ClCompile>
     <ClCompile Include="CPU\xrSkin2W_thread.cpp">
       <Filter>CPU</Filter>
     </ClCompile>

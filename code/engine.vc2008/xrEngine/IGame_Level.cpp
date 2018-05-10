@@ -139,7 +139,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 #include "../xrCore/threadpool/ttapi.h"
 #endif
 
-int		psNET_DedicatedSleep	= 5;
 void	IGame_Level::OnRender()
 {
 #ifdef _GPA_ENABLED	

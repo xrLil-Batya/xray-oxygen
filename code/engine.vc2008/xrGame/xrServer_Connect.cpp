@@ -11,7 +11,7 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionData & game_descr)
+xrServer::EConnect xrServer::Connect(shared_str &session_name)
 {
 #ifdef DEBUG
 	Msg						("* sv_Connect: %s",	*session_name);
@@ -38,13 +38,9 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionDa
 	// Options
 	if (0==game)			return ErrConnect;
 	
-    std::memset(&game_descr, 0, sizeof(game_descr));
-	xr_strcpy(game_descr.map_name, game->level_name(session_name.c_str()).c_str());
-	xr_strcpy(game_descr.map_version, game_sv_GameState::parse_level_version(session_name.c_str()).c_str());
-
 	game->Create			(session_name);
 
-	return IPureServer::Connect(*session_name, game_descr);
+	return IPureServer::Connect(*session_name);
 }
 
 
@@ -80,8 +76,6 @@ void xrServer::AttachNewClient			(IClient* CL)
 
 	// gen message
 	RequestClientDigest(CL);
-	
-	CL->m_guid[0]=0;
 }
 
 void xrServer::RequestClientDigest(IClient* CL)

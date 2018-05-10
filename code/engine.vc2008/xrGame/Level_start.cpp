@@ -135,8 +135,7 @@ bool CLevel::net_start2()
     shared_str serverOption = GamePersistent().GetServerOption();
 	if (net_start_result_total && serverOption.size())
 	{
-		GameDescriptionData game_descr;
-		if ((m_connect_server_err=Server->Connect(serverOption, game_descr))!=xrServer::ErrNoError)
+		if ((m_connect_server_err=Server->Connect(serverOption))!=xrServer::ErrNoError)
 		{
 			net_start_result_total = false;
 			Msg("! Failed to start server.");
