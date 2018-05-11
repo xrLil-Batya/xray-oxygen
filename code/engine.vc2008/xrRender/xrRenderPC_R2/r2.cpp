@@ -13,7 +13,7 @@
 
 CRender										RImplementation;
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
