@@ -54,32 +54,14 @@ CGamePersistent::CGamePersistent(void)
 
     std::memset(ambient_sound_next_time, 0, sizeof(ambient_sound_next_time));
 	
-
-	m_pUI_core					= NULL;
-	m_pMainMenu					= NULL;
-	m_intro						= NULL;
+	m_pUI_core					= nullptr;
+	m_pMainMenu					= nullptr;
+	m_intro						= nullptr;
 	m_intro_event.bind			(this, &CGamePersistent::start_logo_intro);
 #ifdef DEBUG
 	m_frame_counter				= 0;
 	m_last_stats_frame			= u32(-2);
 #endif
-	// 
-	bool bDemoMode = (0!=strstr(Core.Params,"-demomode "));
-	if (bDemoMode)
-	{
-		string256	fname;
-		LPCSTR		name	=	strstr(Core.Params,"-demomode ") + 10;
-		sscanf				(name,"%s",fname);
-		R_ASSERT2			(fname[0],"Missing filename for 'demomode'");
-		Msg					("- playing in demo mode '%s'",fname);
-		pDemoFile			=	FS.r_open	(fname);
-		Device.seqFrame.Add	(this);
-		eDemoStart			=	Engine.Event.Handler_Attach("GAME:demo",this);	
-		uTime2Change		=	0;
-	} else {
-		pDemoFile			=	NULL;
-		eDemoStart			=	NULL;
-	}
 
     m_useThirst = (0 != strstr(Core.Params, "-thrist"));
 
@@ -90,18 +72,18 @@ CGamePersistent::CGamePersistent(void)
 
 CGamePersistent::~CGamePersistent(void)
 {	
-	FS.r_close					(pDemoFile);
 	Device.seqFrame.Remove		(this);
-	Engine.Event.Handler_Detach	(eDemoStart,this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);
 }
 
 void CGamePersistent::RegisterModel(IRenderVisual* V)
 {
 	// Check types
-	switch (V->getType()){
+	switch (V->getType())
+	{
 	case MT_SKELETON_ANIM:
-	case MT_SKELETON_RIGID:{
+	case MT_SKELETON_RIGID:
+	{
 		u16 def_idx		= GMLib.GetMaterialIdx("default_object");
 		R_ASSERT2		(GMLib.GetMaterialByIdx(def_idx)->Flags.is(SGameMtl::flDynamic),"'default_object' - must be dynamic");
 		IKinematics* K	= smart_cast<IKinematics*>(V); VERIFY(K);
@@ -159,7 +141,7 @@ void CGamePersistent::Disconnect()
 	// destroy ambient particles
 	CParticlesObject::Destroy(ambient_particles);
 
-	__super::Disconnect			();
+	MySuper::Disconnect			();
 	// stop all played emitters
 	::Sound->stop_emitters		();
 	m_game_params.m_e_game_type	= eGameIDNoGame;
@@ -204,7 +186,7 @@ void CGamePersistent::WeathersUpdate()
 	if (g_pGameLevel)
 	{
 		CActor* actor				= smart_cast<CActor*>(Level().CurrentViewEntity());
-		BOOL bIndoor				= TRUE;
+		BOOL bIndoor				= true;
 		if (actor) bIndoor			= actor->renderable_ROS()->get_luminocity_hemi()<0.05f;
 
 		int data_set				= (Random.randF()<(1.f-Environment().CurrentEnv->weight))?0:1; 
@@ -259,7 +241,7 @@ void CGamePersistent::WeathersUpdate()
 			}
 
 			// start effect
-			if ((FALSE==bIndoor) && (0==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
+			if ((!bIndoor) && (0==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
 				CEnvAmbient::SEffect* eff			= env_amb->get_rnd_effect(); 
 				if (eff){
 					Environment().wind_gust_factor	= eff->wind_gust_factor;
@@ -498,14 +480,9 @@ void CGamePersistent::OnFrame	()
 	{
 #ifndef MASTER_GOLD
 		if (Level().CurrentViewEntity()) {
-			if (!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())) {
-			//	CCustomMonster	*custom_monster = smart_cast<CCustomMonster*>(Level().CurrentViewEntity());
-			//	if (custom_monster) // can be spectator in multiplayer
-			//		custom_monster->UpdateCamera();
-			}
-			else 
+			if (!(!g_actor || (g_actor->ID() != Level().CurrentViewEntity()->ID())))
 			{
-				CCameraBase* C = NULL;
+				CCameraBase* C = nullptr;
 				if (g_actor)
 				{
 					if(!Actor()->Holder())
@@ -574,26 +551,6 @@ void CGamePersistent::OnFrame	()
 	if(!Device.Paused())
 		WeathersUpdate				();
 
-	if	(0!=pDemoFile)
-	{
-		if	(Device.dwTimeGlobal>uTime2Change){
-			// Change level + play demo
-			if			(pDemoFile->elapsed()<3)	pDemoFile->seek(0);		// cycle
-
-			// Read params
-			string512			params;
-			pDemoFile->r_string	(params,sizeof(params));
-			string256			o_server, o_client, o_demo;	u32 o_time;
-			sscanf				(params,"%[^,],%[^,],%[^,],%d",o_server,o_client,o_demo,&o_time);
-
-			// Start _new level + demo
-			Engine.Event.Defer	("KERNEL:disconnect");
-			Engine.Event.Defer	("KERNEL:start",size_t(xr_strdup(_Trim(o_server))),size_t(xr_strdup(_Trim(o_client))));
-			Engine.Event.Defer	("GAME:demo",	size_t(xr_strdup(_Trim(o_demo))), u64(o_time));
-			uTime2Change		= 0xffffffff;	// Block changer until Event received
-		}
-	}
-
 #ifdef DEBUG
 	if ((m_last_stats_frame + 1) < m_frame_counter)
 		profiler().clear		();
@@ -635,15 +592,6 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		game->restart_simulator	(saved_name);
 		xr_free					(saved_name);
 		return;
-	}else
-	if(E==eDemoStart)
-	{
-		string256			cmd;
-		LPCSTR				demo	= LPCSTR(P1);
-		xr_sprintf				(cmd,"demo_play %s",demo);
-		Console->Execute	(cmd);
-		xr_free				(demo);
-		uTime2Change		= Device.TimerAsync() + u32(P2)*1000;
 	}
 }
 

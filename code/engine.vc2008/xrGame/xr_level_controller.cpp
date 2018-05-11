@@ -286,7 +286,7 @@ bool is_group_not_conflicted(_key_group, _key_group)
 
 bool is_group_matching(_key_group g1, _key_group g2)
 {
-	return ( (g1==g2) || (g1==_both) || (g2==_both) );
+	return ((g1 == g2) || (g1 == _both) || (g2 == _both));
 }
 
 bool is_binded(EGameActions _action_id, int _dik)
