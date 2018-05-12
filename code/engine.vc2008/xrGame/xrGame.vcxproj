@@ -370,6 +370,9 @@
     <ClInclude Include="ClimableObject.h" />
     <ClInclude Include="c_artefact.h" />
     <ClInclude Include="DestroyablePhysicsObject.h" />
+    <ClInclude Include="Dosimeter.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="Hit.h" />
     <ClInclude Include="IKFoot.h" />
     <ClInclude Include="IKFoot_inl.h" />
@@ -405,6 +408,9 @@
     <ClInclude Include="PhysicsSkeletonObject.h" />
     <ClInclude Include="physics_game.h" />
     <ClInclude Include="physics_world_scripted.h" />
+    <ClInclude Include="UIDosimeter.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="wrapper_abstract.h" />
     <ClInclude Include="wrapper_abstract_inline.h" />
     <ClInclude Include="action_management_config.h" />
@@ -1722,6 +1728,9 @@
     <ClCompile Include="damage_manager.cpp" />
     <ClCompile Include="death_anims_predicates.cpp" />
     <ClCompile Include="DestroyablePhysicsObject.cpp" />
+    <ClCompile Include="Dosimeter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="IKFoot.cpp" />
     <ClCompile Include="IKLimb.cpp" />
@@ -1792,6 +1801,9 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">Create</PrecompiledHeader>
+    </ClCompile>
+    <ClCompile Include="UIDosimeter.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp" />
     <ClCompile Include="visual_memory_manager.cpp">
