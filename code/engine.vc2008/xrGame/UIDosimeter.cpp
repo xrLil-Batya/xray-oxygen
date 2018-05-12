@@ -8,6 +8,7 @@
 #include "ui/UIHudStatesWnd.h"
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIXmlInit.h"
+#include "ui/UIStatic.h"
 #include "Dosimeter.h"
 
 void CUIDosimeter::construct(CDosimeter* p)
