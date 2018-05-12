@@ -1,5 +1,3 @@
-#ifndef	ParticleCustom_included
-#define	ParticleCustom_included
 #pragma once
 
 class IParticleCustom
@@ -26,5 +24,3 @@ public:
 	virtual void	SetHudMode			(BOOL b)=0;
 	virtual BOOL	GetHudMode			()=0;
 };
-
-#endif	//	ParticleCustom_included

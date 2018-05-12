@@ -1,5 +1,3 @@
-#ifndef ThunderboltRender_included
-#define ThunderboltRender_included
 #pragma once
 
 class CEffect_Thunderbolt;
@@ -12,5 +10,3 @@ public:
 
 	virtual void Render(CEffect_Thunderbolt &owner) = 0;
 };
-
-#endif	//	ThunderboltRender_included

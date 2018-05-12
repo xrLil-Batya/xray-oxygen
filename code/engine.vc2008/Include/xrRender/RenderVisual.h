@@ -1,5 +1,3 @@
-#ifndef	RenderVisual_included
-#define	RenderVisual_included
 #pragma once
 
 class IKinematics;
@@ -21,5 +19,3 @@ public:
 	virtual	IKinematicsAnimated*	dcast_PKinematicsAnimated	()				{ return 0;	}
 	virtual IParticleCustom*		dcast_ParticleCustom		()				{ return 0;	}
 };
-
-#endif	//	RenderVisual_included

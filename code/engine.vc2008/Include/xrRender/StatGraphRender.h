@@ -1,5 +1,3 @@
-#ifndef	StatGraphRender_included
-#define	StatGraphRender_included
 #pragma once
 
 class CStatGraph;
@@ -15,5 +13,3 @@ public:
 
 	virtual void OnRender(CStatGraph &owner) = 0;
 };
-
-#endif	//	StatGraphRender_included
