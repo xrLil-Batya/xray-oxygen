@@ -76,7 +76,7 @@ void R_dsgraph_structure::r_dsgraph_insert_dynamic	(dxRender_Visual *pVisual, Fv
 			temp.Matrix = *RI.val_pTransform;
 			temp.se = sh;
 
-			mapSorted.emplace_back(std::make_pair(distSQ, temp));
+			mapHUDSorted.emplace_back(std::make_pair(distSQ, temp));
 			return;
 		} 
 		else 
