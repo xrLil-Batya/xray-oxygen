@@ -63,7 +63,7 @@ void CCartridge::Load(LPCSTR section, u8 LocalAmmoType)
 
 	m_flags.set			(cfExplosive, pSettings->r_bool(section, "explosive"));
 
-	bullet_material_idx		=  GMLib.GetMaterialIdx(READ_IF_EXISTS(pSettings,r_string,section,"material","objects\bullet"));
+	bullet_material_idx		=  GMLib.GetMaterialIdx(pSettings->r_string(section,"material"));
 	VERIFY	(u16(-1)!=bullet_material_idx);
 	VERIFY	(param_s.fWallmarkSize>0);
 

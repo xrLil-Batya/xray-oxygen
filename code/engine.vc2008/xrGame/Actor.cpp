@@ -737,17 +737,7 @@ void CActor::UpdateCL	()
 		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))
 			m_bPickupMode = true;
  	}
-	if (psActorFlags.test(AF_HARDCORE))
-	{
-	psHUD_Flags.set(HUD_DRAW, false);
-	psHUD_Flags.set(HUD_CROSSHAIR, false);
-	}
-//   else
-//	{
-//	psHUD_Flags.set(HUD_CROSSHAIR, true);
-//	psHUD_Flags.set(HUD_DRAW, true);
-//	}
-	
+
 	UpdateInventoryOwner			(Device.dwTimeDelta);
 
 	if(m_feel_touch_characters>0)

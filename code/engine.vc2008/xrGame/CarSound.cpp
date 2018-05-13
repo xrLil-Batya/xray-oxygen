@@ -3,7 +3,6 @@
 #include "PHDebug.h"
 #endif
 #include "alife_space.h"
-#include "actor.h"
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "car.h"
@@ -72,7 +71,7 @@ void CCar::SCarSound::UpdateStarting()
 		
 		if(time_state_start+engine_start_delay<Device.dwTimeGlobal)
 		{
-			snd_engine.play(Actor(),sm_Looped);
+			snd_engine.play(pcar,sm_Looped);
 			UpdateDrive();
 		}
 	}
@@ -93,7 +92,7 @@ void CCar::SCarSound::UpdateStalling()
 void CCar::SCarSound::UpdateDrive()
 {
 VERIFY(!physics_world()->Processing());
-float		scale							= 0.4f+0.5f*pcar->m_current_rpm/pcar->m_torque_rpm; clamp(scale,0.5f,1.25f);
+float		scale							= 0.5f+0.5f*pcar->m_current_rpm/pcar->m_torque_rpm; clamp(scale,0.5f,1.25f);
 			snd_engine.set_frequency		(scale);
 			SetSoundPosition(snd_engine);
 }
@@ -142,7 +141,7 @@ void CCar::SCarSound::Start()
 	VERIFY(!physics_world()->Processing());
 	if(eCarSound==sndOff) SwitchOn();
 	SwitchState(sndStarting);
-	snd_engine_start.play(Actor());
+	snd_engine_start.play(pcar);
 	SetSoundPosition(snd_engine_start);
 }
 
@@ -152,7 +151,7 @@ void CCar::SCarSound::Stall()
 	if(eCarSound==sndOff)return;
 	SwitchState(sndStalling);
 	snd_engine.stop_deffered();
-	snd_engine_stop.play(Actor());
+	snd_engine_stop.play(pcar);
 	SetSoundPosition(snd_engine_stop);
 }
 
@@ -162,7 +161,7 @@ void CCar::SCarSound::Stop()
 	if(eCarSound==sndOff)return;
 	SwitchState(sndStoping);
 	snd_engine.stop_deffered();
-	snd_engine_stop.play(Actor());
+	snd_engine_stop.play(pcar);
 	SetSoundPosition(snd_engine_stop);
 }
 
@@ -171,7 +170,7 @@ void CCar::SCarSound::Drive()
 	VERIFY(!physics_world()->Processing());
 	if(eCarSound==sndOff) SwitchOn();
 	SwitchState(sndDrive);
-	if(!snd_engine._feedback())snd_engine.play(Actor(),sm_Looped);
+	if(!snd_engine._feedback())snd_engine.play(pcar,sm_Looped);
 	SetSoundPosition(snd_engine);
 }
 void CCar::SCarSound::TransmissionSwitch()
@@ -179,7 +178,7 @@ void CCar::SCarSound::TransmissionSwitch()
 	VERIFY(!physics_world()->Processing());
 	if(snd_transmission._handle()&&eCarSound!=sndOff)
 	{
-		snd_transmission.play(Actor());
+		snd_transmission.play(pcar);
 		SetSoundPosition(snd_transmission);
 	}
 }

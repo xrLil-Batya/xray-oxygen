@@ -104,20 +104,20 @@ void CWeapon::Hit(SHit* pHDS)
 	inherited::Hit(pHDS);
 }
 
-// РћР±РЅРѕРІР»РµРЅРёРµ РЅРµРѕР±С…РѕРґРёРјРѕСЃС‚Рё РІРєР»СЋС‡РµРЅРёСЏ РІС‚РѕСЂРѕРіРѕ РІСЊСЋРїРѕСЂС‚Р° +SecondVP+
-// Р’С‹Р·С‹РІР°РµС‚СЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ Р°РєС‚РёРІРЅРѕРіРѕ РѕСЂСѓР¶РёСЏ РёРіСЂРѕРєР°
+// Обновление необходимости включения второго вьюпорта +SecondVP+
+// Вызывается только для активного оружия игрока
 void CWeapon::UpdateSecondVP()
 {
 	// + CActor::UpdateCL();
 	bool b_is_active_item = (m_pInventory != NULL) && (m_pInventory->ActiveItem() == this);
-	R_ASSERT(ParentIsActor() && b_is_active_item); // Р­С‚Р° С„СѓРЅРєС†РёСЏ РґРѕР»Р¶РЅР° РІС‹Р·С‹РІР°С‚СЊСЃСЏ С‚РѕР»СЊРєРѕ РґР»СЏ РѕСЂСѓР¶РёСЏ РІ СЂСѓРєР°С… РЅР°С€РµРіРѕ РёРіСЂРѕРєР°
+	R_ASSERT(ParentIsActor() && b_is_active_item); // Эта функция должна вызываться только для оружия в руках нашего игрока
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
 
-	bool bCond_1 = m_zoom_params.m_fZoomRotationFactor > 0.05f;    // РњС‹ РґРѕР»Р¶РЅС‹ С†РµР»РёС‚СЊСЃСЏ
-	bool bCond_2 = m_zoom_params.m_fSecondVP_FovFactor > 0.0f;     // Р’ РєРѕРЅС„РёРіРµ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ РїСЂРѕРїРёСЃР°РЅ С„Р°РєС‚РѕСЂ Р·СѓРјР° (scope_lense_fov_factor) Р±РѕР»СЊС€Рµ С‡РµРј 0
-	bool bCond_3 = pActor->cam_Active() == pActor->cam_FirstEye(); // РњС‹ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РѕС‚ 1-РіРѕ Р»РёС†Р°
-	//bool bCond_4 = m_bGrenadeMode == false;                        // РњС‹ РЅРµ РґРѕР»Р¶РЅС‹ Р±С‹С‚СЊ РІ СЂРµР¶РёРјРµ РїРѕРґСЃС‚РІРѕР»СЊРЅРёРєР°
+	bool bCond_1 = m_zoom_params.m_fZoomRotationFactor > 0.05f;    // Мы должны целиться
+	bool bCond_2 = m_zoom_params.m_fSecondVP_FovFactor > 0.0f;     // В конфиге должен быть прописан фактор зума (scope_lense_fov_factor) больше чем 0
+	bool bCond_3 = pActor->cam_Active() == pActor->cam_FirstEye(); // Мы должны быть от 1-го лица
+	//bool bCond_4 = m_bGrenadeMode == false;                        // Мы не должны быть в режиме подствольника
 
 	Device.m_SecondViewport.SetSVPActive(bCond_1 && bCond_2 && bCond_3 /*&& bCond_4*/);
 }
@@ -276,11 +276,11 @@ void CWeapon::Load(LPCSTR section)
 	inherited::Load(section);
 	CShootingObject::Load(section);
 	
-	// Р—Р°РіСЂСѓР·РєР° РїР°СЂС‚РёРєР»РѕРІ РІС‹СЃС‚СЂРµР»Р°
+	// Загрузка партиклов выстрела
 	if (pSettings->line_exist(section, "flame_particles_2"))
 		m_sFlameParticles2 = pSettings->r_string(section, "flame_particles_2");
 
-	// Р—Р°РіСЂСѓР·РєР° РєР»Р°СЃСЃРѕРІ Р±РѕРµРїСЂРёРїР°СЃРѕРІ
+	// Загрузка классов боеприпасов
 	m_ammoTypes.clear(); 
 	LPCSTR S = pSettings->r_string(section,"ammo_class");
 	if (S && S[0])
@@ -294,23 +294,23 @@ void CWeapon::Load(LPCSTR section)
 		}
 	}
 
-	// Р—Р°РіСЂСѓР·РєР° С‚РµРєСѓС‰РµРіРѕ РєРѕР»РёС‡РµСЃС‚РІР° РїР°С‚СЂРѕРЅРѕРІ
+	// Загрузка текущего количества патронов
 	iAmmoElapsed = pSettings->r_s32(section, "ammo_elapsed");
 
-	// Р—Р°РіСЂСѓР·РєР° РІРјРµСЃС‚РёС‚РµР»СЊРЅРѕСЃС‚Рё РјР°РіР°Р·РёРЅР°
+	// Загрузка вместительности магазина
 	iMagazineSize = pSettings->r_s32(section, "ammo_mag_size");
 	
 	////////////////////////////////////////////////////
-	// Р”РёСЃРїРµСЂСЃРёСЏ СЃС‚СЂРµР»СЊР±С‹
+	// Дисперсия стрельбы
 
-	// РџРѕРґР±СЂР°СЃС‹РІР°РЅРёРµ РєР°РјРµСЂС‹ РІРѕ РІСЂРµРјСЏ РѕС‚РґР°С‡Рё
+	// Подбрасывание камеры во время отдачи
 	u8 rm = READ_IF_EXISTS(pSettings, r_u8, section, "cam_return", 1);
 	cam_recoil.ReturnMode = (rm == 1);
 	
 	rm = READ_IF_EXISTS(pSettings, r_u8, section, "cam_return_stop", 0);
 	cam_recoil.StopReturn = (rm == 1);
 
-	// РЎРєРѕСЂРѕСЃС‚СЊ РІРѕСЃСЃС‚Р°РЅРѕРІР»РµРЅРёСЏ РїРѕР·РёС†РёРё РєР°РјРµСЂС‹
+	// Скорость восстановления позиции камеры
 	float temp_f = 0.0f;
 	temp_f = pSettings->r_float(section, "cam_relax_speed");
 	cam_recoil.RelaxSpeed = _abs(deg2rad(temp_f));
@@ -349,8 +349,8 @@ void CWeapon::Load(LPCSTR section)
 	
 	cam_recoil.DispersionFrac = _abs(READ_IF_EXISTS(pSettings, r_float, section, "cam_dispersion_frac", 0.7f));
 
-	// РїРѕРґР±СЂР°СЃС‹РІР°РЅРёРµ РєР°РјРµСЂС‹ РІРѕ РІСЂРµРјСЏ РѕС‚РґР°С‡Рё РІ СЂРµР¶РёРјРµ zoom ==> ironsight or scope
-	// zoom_cam_recoil.Clone( cam_recoil ); ==== РЅРµР»СЊР·СЏ !!!!!!!!!!
+	// подбрасывание камеры во время отдачи в режиме zoom ==> ironsight or scope
+	// zoom_cam_recoil.Clone( cam_recoil ); ==== нельзя !!!!!!!!!!
 	zoom_cam_recoil.RelaxSpeed		= cam_recoil.RelaxSpeed;
 	zoom_cam_recoil.RelaxSpeed_AI	= cam_recoil.RelaxSpeed_AI;
 	zoom_cam_recoil.DispersionFrac	= cam_recoil.DispersionFrac;
@@ -409,16 +409,16 @@ void CWeapon::Load(LPCSTR section)
 	m_first_bullet_controller.load	(section);
 	fireDispersionConditionFactor = pSettings->r_float(section,"fire_dispersion_condition_factor");
 
-	// РњРѕРґРёС„РёРєР°С‚РѕСЂ РґР»СЏ HUD FOV РѕС‚ Р±РµРґСЂР°
+	// Модификатор для HUD FOV от бедра
     m_hud_fov_add_mod = READ_IF_EXISTS(pSettings, r_float, section, "hud_fov_addition_modifier", 0.f);
 
-	// РџР°СЂР°РјРµС‚СЂС‹ РёР·РјРµРЅРµРЅРёСЏ HUD FOV, РєРѕРіРґР° РёРіСЂРѕРє СЃС‚РѕРёС‚ РІРїР»РѕС‚РЅСѓСЋ Рє СЃС‚РµРЅРµ
+	// Параметры изменения HUD FOV, когда игрок стоит вплотную к стене
 	m_nearwall_dist_min = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_dist_min", 0.5f);
 	m_nearwall_dist_max = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_dist_max", 1.f);
 	m_nearwall_target_hud_fov = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_target_hud_fov", 0.27f);
 	m_nearwall_speed_mod = READ_IF_EXISTS(pSettings, r_float, section, "nearwall_speed_mod", 10.f);
 
-	// FOV РІС‚РѕСЂРѕРіРѕ РІСЊСЋРїРѕСЂС‚Р° РїСЂРё Р·СѓРјРµ
+	// FOV второго вьюпорта при зуме
 	m_zoom_params.m_fSecondVP_FovFactor = READ_IF_EXISTS(pSettings, r_float, section, "scope_lense_fov_factor", 0.0f);
 
 // modified by Peacemaker [17.10.08]
@@ -444,7 +444,7 @@ void CWeapon::Load(LPCSTR section)
 	m_fMinRadius = pSettings->r_float(section, "min_radius");
 	m_fMaxRadius = pSettings->r_float(section, "max_radius");
 
-	// РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РІРѕР·РјРѕР¶РЅС‹С… Р°РїРіСЂРµР№РґР°С… Рё РёС… РІРёР·СѓР°Р»РёР·Р°С†РёРё РІ РёРЅРІРµРЅС‚Р°СЂРµ
+	// информация о возможных апгрейдах и их визуализации в инвентаре
 	m_eScopeStatus = (ALife::EWeaponAddonStatus)pSettings->r_s32(section, "scope_status");
 	m_eSilencerStatus = (ALife::EWeaponAddonStatus)pSettings->r_s32(section, "silencer_status");
 	m_eGrenadeLauncherStatus = (ALife::EWeaponAddonStatus)pSettings->r_s32(section, "grenade_launcher_status");
@@ -591,7 +591,7 @@ void CWeapon::net_Destroy()
 {
 	inherited::net_Destroy();
 
-	//СѓРґР°Р»РёС‚СЊ РѕР±СЉРµРєС‚С‹ РїР°СЂС‚РёРєР»РѕРІ
+	//удалить объекты партиклов
 	StopFlameParticles();
 	StopFlameParticles2();
 	StopLight();
@@ -733,7 +733,7 @@ void CWeapon::OnEvent(NET_Packet& P, u16 type)
 			u8				state;
 			P.r_u8(state);
 			P.r_u8(m_sub_state);
-			P.r_u8(); //РћР±СЉСЏСЃРЅРёС‚Рµ РґСЏРґРµ, Р·Р°С‡РµРј СЌС‚Рѕ РЅСѓР¶РЅРѕ, РєРѕРіРґР° РјРѕР¶РЅРѕ РїСЂРѕСЃС‚Рѕ РЅРµ Р·Р°РїРёСЃС‹РІР°С‚СЊ РІ Р±СѓС„С„РµСЂ?
+			P.r_u8(); //Объясните дяде, зачем это нужно, когда можно просто не записывать в буффер?
 			u8 AmmoElapsed = P.r_u8();
 			u8 NextAmmo = P.r_u8();
 
@@ -816,7 +816,7 @@ void CWeapon::SendHiddenItem()
 		CHudItem::object().u_EventGen(P, GE_WPN_STATE_CHANGE, CHudItem::object().ID());
 		P.w_u8(u8(eHiding));
 		P.w_u8(u8(m_sub_state));
-		P.w_u8(m_ammoType); // Р РІРѕС‚ Р·Р°С‡РµРј СЌС‚Рѕ Р·Р°РїРёСЃС‹РІР°С‚СЊ?...
+		P.w_u8(m_ammoType); // И вот зачем это записывать?...
 		P.w_u8(u8(iAmmoElapsed & 0xff));
 		P.w_u8(m_set_next_ammoType_on_reload);
 		CHudItem::object().u_EventSend(P, net_flags(TRUE, TRUE, FALSE, TRUE));
@@ -837,7 +837,7 @@ void CWeapon::OnH_B_Chield()
 
 extern u32 hud_adj_mode;
 
-// TODO: СЂР°СЃС…Р°СЂРґРєРѕСЂРёС‚СЊ
+// TODO: расхардкорить
 bool CWeapon::AllowBore()
 {
 	return true;
@@ -845,17 +845,17 @@ bool CWeapon::AllowBore()
 
 void CWeapon::UpdateCL()
 {
-	// Р’СЂРµРјСЏ, С‡РµСЂРµР· РєРѕС‚РѕСЂРѕРµ "СЃРѕСЃС‚РѕСЏРЅРёРµ" РѕСЂСѓР¶РёСЏ
-	// РёР·РјРµРЅРёС‚СЃСЏ РЅР° "СЂР°СЃСЃР»Р°Р±Р»РµРЅРЅРѕРµ"
+	// Время, через которое "состояние" оружия
+	// изменится на "расслабленное"
 	int iTimeForSwitchState = 20000;
 
 	inherited::UpdateCL();
 	UpdateHUDAddonsVisibility();
 
-	//РїРѕРґСЃРІРµС‚РєР° РѕС‚ РІС‹СЃС‚СЂРµР»Р°
+	//подсветка от выстрела
 	UpdateLight();
 
-	//РЅР°СЂРёСЃРѕРІР°С‚СЊ РїР°СЂС‚РёРєР»С‹
+	//нарисовать партиклы
 	UpdateFlameParticles();
 	UpdateFlameParticles2();
 
@@ -929,17 +929,13 @@ void CWeapon::renderable_Render()
 {
 	UpdateXForm();
 
-	// РЅР°СЂРёСЃРѕРІР°С‚СЊ РїРѕРґСЃРІРµС‚РєСѓ
+	// нарисовать подсветку
 	RenderLight();
 
-	// РµСЃР»Рё РјС‹ РІ СЂРµР¶РёРјРµ СЃРЅР°Р№РїРµСЂРєРё, С‚Рѕ СЃР°Рј HUD СЂРёСЃРѕРІР°С‚СЊ РЅРµ РЅР°РґРѕ
+	// если мы в режиме снайперки, то сам HUD рисовать не надо
 	if (IsZoomed() && !IsRotatingToZoom() && ZoomTexture())
 	{
-		if(!psActorFlags.test(AF_HARDCORE))
 		psActorFlags.set(AF_ZOOM_NEW_FD, FALSE);
-		else
-		psActorFlags.set(AF_ZOOM_NEW_FD, TRUE);
-	
 		RenderHud(FALSE);
 	}
 	else
@@ -990,7 +986,7 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 	{
 		case kWPN_FIRE: 
 		{
-			//РµСЃР»Рё РѕСЂСѓР¶РёРµ С‡РµРј-С‚Рѕ Р·Р°РЅСЏС‚Рѕ, С‚Рѕ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ
+			//если оружие чем-то занято, то ничего не делать
 			{				
 				if (IsPending())		
 					return false;
@@ -1156,7 +1152,7 @@ int CWeapon::GetSuitableAmmoTotal( bool use_item_to_spawn ) const
 	if (!m_pInventory)
 		return ae_count;
 
-	// Р§С‚РѕР± РЅРµ РґРµР»Р°С‚СЊ Р»РёС€РЅРёС… РїРµСЂРµСЃС‡РµС‚РѕРІ
+	// Чтоб не делать лишних пересчетов
 	if (m_pInventory->ModifyFrame() <= m_BriefInfo_CalcFrame)
 		return ae_count + m_iAmmoCurrentTotal;
 
@@ -1239,7 +1235,7 @@ BOOL CWeapon::CheckForMisfire()
 		bMisfire = true;
 		SwitchState(eMisfire);
 
-		// РЎ РєР°Р¶РґРѕР№ РѕСЃРµС‡РєРѕР№ С‡СѓС‚РєР° "СѓР±РёРІР°РµРј" СЃС‚РІРѕР»
+		// С каждой осечкой чутка "убиваем" ствол
 		if (GetCondition() >= 0.10)
 		{
 			cm = ::Random.randF(0.01f, 0.10f);
@@ -1304,13 +1300,13 @@ std::string wpn_scope = "wpn_scope";
 std::string wpn_silencer = "wpn_silencer";
 std::string wpn_grenade_launcher = "wpn_launcher";
 
-// РўРѕР»СЊРєРѕ РґР»СЏ Р°РєС‚РѕСЂР°
+// Только для актора
 void CWeapon::UpdateHUDAddonsVisibility()
 {
 	if (!GetHUDmode())
 		return;
 
-	// РџСЂРёС†РµР»
+	// Прицел
 	if (ScopeAttachable())
 		HudItemData()->set_bone_visible(wpn_scope.c_str(), IsScopeAttached());
 
@@ -1320,7 +1316,7 @@ void CWeapon::UpdateHUDAddonsVisibility()
 		if (m_eScopeStatus == ALife::eAddonPermanent)
 			HudItemData()->set_bone_visible(wpn_scope.c_str(), TRUE, TRUE);
 
-	// Р“Р»СѓС€РёС‚РµР»СЊ
+	// Глушитель
 	if (SilencerAttachable())
 		HudItemData()->set_bone_visible(wpn_silencer.c_str(), IsSilencerAttached());
 
@@ -1330,7 +1326,7 @@ void CWeapon::UpdateHUDAddonsVisibility()
 		if (m_eSilencerStatus == ALife::eAddonPermanent)
 			HudItemData()->set_bone_visible(wpn_silencer.c_str(), TRUE, TRUE);
 
-	// РџРѕРґСЃС‚РІРѕР»СЊРЅС‹Р№ РіСЂР°РЅР°С‚РѕРјРµС‚
+	// Подствольный гранатомет
 	if (GrenadeLauncherAttachable())
 		HudItemData()->set_bone_visible(wpn_grenade_launcher.c_str(), IsGrenadeLauncherAttached());
 
@@ -1352,7 +1348,7 @@ void CWeapon::UpdateAddonsVisibility()
 
 	pWeaponVisual->CalculateBones_Invalidate();
 
-	// РџСЂРёС†РµР»
+	// Прицел
 	bone_id = pWeaponVisual->LL_BoneID(wpn_scope.c_str());
 	if (ScopeAttachable())
 	{
@@ -1370,7 +1366,7 @@ void CWeapon::UpdateAddonsVisibility()
 	if (m_eScopeStatus == ALife::eAddonDisabled && bone_id != BI_NONE && pWeaponVisual->LL_GetBoneVisible(bone_id))
 		pWeaponVisual->LL_SetBoneVisible(bone_id, FALSE, TRUE);
 
-	// Р“Р»СѓС€РёС‚РµР»СЊ
+	// Глушитель
 	bone_id = pWeaponVisual->LL_BoneID(wpn_silencer.c_str());
 	if (SilencerAttachable())
 	{
@@ -1389,7 +1385,7 @@ void CWeapon::UpdateAddonsVisibility()
 	if (m_eSilencerStatus == ALife::eAddonDisabled && bone_id != BI_NONE && pWeaponVisual->LL_GetBoneVisible(bone_id))
 		pWeaponVisual->LL_SetBoneVisible(bone_id, FALSE, TRUE);
 
-	// РџРѕРґСЃС‚РІРѕР»СЊРЅС‹Р№ РіСЂР°РЅР°С‚РѕРјРµС‚
+	// Подствольный гранатомет
 	bone_id = pWeaponVisual->LL_BoneID(wpn_grenade_launcher.c_str());
 	if (GrenadeLauncherAttachable())
 	{
@@ -1448,7 +1444,7 @@ void CWeapon::OnZoomIn()
 	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && m_zoom_params.m_pVision == NULL) 
 		m_zoom_params.m_pVision	= xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision.c_str());
 	
-	// Р’РєР»СЋС‡Р°РµРј РџРќР’
+	// Включаем ПНВ
     if (m_zoom_params.m_sUseZoomPostprocess.size() && IsScopeAttached())
     {
 		CActor *pA = smart_cast<CActor *>(H_Parent());
@@ -1473,7 +1469,7 @@ void CWeapon::OnZoomOut()
 
 	xr_delete(m_zoom_params.m_pVision);
 
-	// Р’С‹РєР»СЋС‡Р°РµРј РџРќР’
+	// Выключаем ПНВ
 	if (m_zoom_params.m_pNight_vision)
 	{
 		m_zoom_params.m_pNight_vision->Stop(100000.0f, false);
@@ -1496,7 +1492,7 @@ void CWeapon::SwitchState(u32 S)
 		CHudItem::object().u_EventGen(P, GE_WPN_STATE_CHANGE, CHudItem::object().ID());
 		P.w_u8(u8(S));
 		P.w_u8(u8(m_sub_state));
-		P.w_u8(m_ammoType); // РџРёС€РµРј, РЅРѕ РЅРµ С‡РёС‚Р°РµРј, РєР»Р°СЃСЃ
+		P.w_u8(m_ammoType); // Пишем, но не читаем, класс
 		P.w_u8(u8(iAmmoElapsed & 0xff));
 		P.w_u8(m_set_next_ammoType_on_reload);
 		CHudItem::object().u_EventSend(P, net_flags(TRUE, TRUE, FALSE, TRUE));
@@ -1918,25 +1914,25 @@ u8 CWeapon::GetCurrentHudOffsetIdx()
 	return (!b_aiming) ? 0 : 1;
 }
 
-// РџРѕР»СѓС‡РёС‚СЊ HUD FOV С‚РµРєСѓС‰РµРіРѕ РѕСЂСѓР¶РёСЏ
+// Получить HUD FOV текущего оружия
 float CWeapon::GetHudFov()
 {
-	// Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј HUD FOV РѕС‚ Р±РµРґСЂР° (СЃ СѓС‡С‘С‚РѕРј СѓРїРёСЂР°РЅРёСЏ РІ СЃС‚РµРЅС‹)
+	// Рассчитываем HUD FOV от бедра (с учётом упирания в стены)
 	if (ParentIsActor() && Level().CurrentViewEntity() == H_Parent())
 	{
-		// РџРѕР»СѓС‡Р°РµРј СЂР°СЃСЃС‚РѕСЏРЅРёРµ РѕС‚ РєР°РјРµСЂС‹ РґРѕ С‚РѕС‡РєРё РІ РїСЂРёС†РµР»Рµ
+		// Получаем расстояние от камеры до точки в прицеле
 		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 		float dist = RQ.range;
 
-		// РРЅС‚РµСЂРїРѕР»РёСЂСѓРµРј СЂР°СЃСЃС‚РѕСЏРЅРёРµ РІ РґРёР°РїР°Р·РѕРЅ РѕС‚ 0 (min) РґРѕ 1 (max)
+		// Интерполируем расстояние в диапазон от 0 (min) до 1 (max)
 		clamp(dist, m_nearwall_dist_min, m_nearwall_dist_max);
 		float fDistanceMod = ((dist - m_nearwall_dist_min) / (m_nearwall_dist_max - m_nearwall_dist_min)); // 0.f ... 1.f
 
-																										   // Р Р°СЃСЃС‡РёС‚С‹РІР°РµРј Р±Р°Р·РѕРІС‹Р№ HUD FOV РѕС‚ Р±РµРґСЂР°
+																										   // Рассчитываем базовый HUD FOV от бедра
 		float fBaseFov = psHUD_FOV_def + m_hud_fov_add_mod;
 		clamp(fBaseFov, 0.0f, FLT_MAX);
 
-		// РџР»Р°РІРЅРѕ РІС‹СЃС‡РёС‚С‹РІР°РµРј РёС‚РѕРіРѕРІС‹Р№ FOV РѕС‚ Р±РµРґСЂР°
+		// Плавно высчитываем итоговый FOV от бедра
 		float src = m_nearwall_speed_mod * Device.fTimeDelta;
 		clamp(src, 0.f, 1.f);
 
@@ -1945,16 +1941,16 @@ float CWeapon::GetHudFov()
 	}
 
 	/*
-	// Р’РѕР·РІСЂР°С‰Р°РµРј РёС‚РѕРіРѕРІС‹Р№ HUD FOV
+	// Возвращаем итоговый HUD FOV
 	if (m_zoom_params.m_fZoomRotationFactor > 0.0f)
 	{
-		// Р’ РїСЂРѕС†РµСЃСЃРµ Р·СѓРјР°
+		// В процессе зума
 		float fDiff = m_nearwall_last_hud_fov - m_zoom_params.m_fZoomHudFov;
 		return m_zoom_params.m_fZoomHudFov + (fDiff * (1 - m_zoom_params.m_fZoomRotationFactor));
 	}
 	else
 	{*/
-		// РћС‚ Р±РµРґСЂР°
+		// От бедра
 		return m_nearwall_last_hud_fov;
 	//}
 }

@@ -42,7 +42,7 @@ void draw_fps(CGameFont* pFont)
 	pFont->GetHeight();
 	pFont->SetHeightI(0.018f);
 	pFont->SetColor	(0xFFFFA917);
-	pFont->Out		(10, 10, "FPS: %0.0f",1.0f/Device.fTimeDelta-30);
+	pFont->Out		(10, 10, "FPS: %0.0f",1.0f/Device.fTimeDelta);
 	pFont->SetHeight(sz);
 	pFont->OnRender	();
 }

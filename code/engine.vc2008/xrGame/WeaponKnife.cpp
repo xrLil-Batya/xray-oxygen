@@ -66,8 +66,7 @@ void CWeaponKnife::Load	(LPCSTR section)
 #endif
 	m_NextHitDivideFactor	=	pSettings->r_float(section, "splash_hit_divide_factor");
 
-	knife_material_idx =  GMLib.GetMaterialIdx(READ_IF_EXISTS(pSettings,r_string,section,"material","objects\knife"));
-	
+	knife_material_idx =  GMLib.GetMaterialIdx(pSettings->r_string(section,"material"));
 }
 
 void CWeaponKnife::OnStateSwitch	(u32 S)

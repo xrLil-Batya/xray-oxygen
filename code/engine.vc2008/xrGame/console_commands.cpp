@@ -1748,7 +1748,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock, "ph_tri_query_ex_aabb_rate", &ph_console::ph_tri_query_ex_aabb_rate, 1.01f, 3.f);
 #endif // DEBUG
 	CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
-	CMD3(CCC_Mask, "rs_car_info", &psActorFlags, AF_CAR_INFO);
 	CMD1(CCC_JumpToLevel, "jump_to_level");
 	CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
 	CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
@@ -1757,7 +1756,6 @@ void CCC_RegisterCommands()
 	CMD1(CCC_Script, "run_script");
 	CMD1(CCC_ScriptCommand, "run_string");
 	CMD3(CCC_Mask, "rs_show_cursor_pos", &psActorFlags, AF_SHOW_CURPOS);
-	CMD3(CCC_Mask, "g_hardcore_mode", &psActorFlags, AF_HARDCORE);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
 	CMD1(CCC_Giveinfo, "g_info");
@@ -1992,12 +1990,12 @@ void CCC_RegisterCommands()
 
 	CMD4(CCC_Float, "ai_aim_predict_time", &g_aim_predict_time, 0.f, 10.f);
 
-
+#ifdef DEBUG
 	//extern BOOL g_use_new_ballistics;
 	//CMD4(CCC_Integer,	"use_new_ballistics",	&g_use_new_ballistics, 0, 1);
 	extern float g_bullet_time_factor;
 	CMD4(CCC_Float, "g_bullet_time_factor", &g_bullet_time_factor, 0.f, 10.f);
-
+#endif
 
 
 #ifdef DEBUG

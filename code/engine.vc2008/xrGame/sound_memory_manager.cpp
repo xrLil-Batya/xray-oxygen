@@ -152,7 +152,8 @@ void CSoundMemoryManager::feel_sound_new(CObject *object, int sound_type, CSound
 	update_sound_threshold	();
 
 	CEntityAlive			*entity_alive = m_object;
-
+	if (!entity_alive->g_Alive())
+		return;
 	
 	VERIFY					(_valid(sound_power));
 	if (is_sound_type(sound_type,SOUND_TYPE_WEAPON))
@@ -375,7 +376,8 @@ void CSoundMemoryManager::remove_links	(CObject *object)
 
 void CSoundMemoryManager::save	(NET_Packet &packet) const
 {
-
+	if (!m_object->g_Alive())
+		return;
 
 	packet.w_u8					((u8)objects().size());
 
@@ -415,7 +417,8 @@ void CSoundMemoryManager::save	(NET_Packet &packet) const
 
 void CSoundMemoryManager::load	(IReader &packet)
 {
-
+	if (!m_object->g_Alive())
+		return;
 
 	typedef CClientSpawnManager::CALLBACK_TYPE	CALLBACK_TYPE;
 	CALLBACK_TYPE					callback;
