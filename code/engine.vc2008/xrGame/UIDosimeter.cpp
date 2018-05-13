@@ -68,10 +68,10 @@ void CUIDosimeter::update()
     CUIArtefactDetectorBase::update();
 
 	float rad = HUD().GetGameUI()->UIMainIngameWnd->get_hud_states()->get_main_sensor_value();
-    rad *= 100000;
+    rad *= 250000;
     rad += m_noise;
-    if (rad > 9999.0f)
-        rad = 9999.0f;
+    if (rad > 250000.0f)
+        rad = 250000.0f;
     string16 s;
     sprintf_s(s, "%05.0lf", rad);
     string16 tex;
