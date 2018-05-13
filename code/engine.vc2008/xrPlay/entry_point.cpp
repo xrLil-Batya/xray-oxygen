@@ -87,7 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			return 0;
 		}
 		// Checking for SSE3
-		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
 			MessageBox(NULL,
 				"It's can affect on the stability of the game.",
@@ -96,6 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
+#ifndef RELEASE_IA32
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
 			MessageBox(NULL,
@@ -104,6 +105,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				MB_OK | MB_ICONWARNING);
 		}
 	}
+#endif
 #endif
 
 	// If we want to start launcher
