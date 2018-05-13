@@ -32,7 +32,6 @@ enum EGameActions
 	kTURN_ENGINE,
 	kSWITCH_HORN,
     kKICK,	
-	kCLOCK,
 	kWPN_1,
 	kWPN_2,
 	kWPN_3,

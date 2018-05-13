@@ -41,7 +41,6 @@ _action  actions[] = {
 	{ "switch_horn",		kSWITCH_HORN		},
 
 	{ "kick",               kKICK				},
-	{ "clock",              kCLOCK				},
 	{ "wpn_1",				kWPN_1				},
 	{ "wpn_2",				kWPN_2				},
 	{ "wpn_3",				kWPN_3				},
