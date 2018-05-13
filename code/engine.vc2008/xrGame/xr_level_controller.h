@@ -32,6 +32,7 @@ enum EGameActions
 	kTURN_ENGINE,
 	kSWITCH_HORN,
     kKICK,	
+	kCLOCK,
 	kWPN_1,
 	kWPN_2,
 	kWPN_3,
@@ -82,20 +83,11 @@ struct _keyboard
 	int			dik;
 	xr_string	key_local_name;
 };
-enum _key_group{
-	_both	=	(1<<0)			,
-	_sp		=	_both | (1<<1)	,
-};
-
-extern _key_group g_current_keygroup;
-
-bool is_group_not_conflicted(_key_group g1, _key_group g2);
 
 struct _action
 {
 	LPCSTR			action_name;
 	EGameActions	id;
-	_key_group		key_group;
 };
 
 LPCSTR			dik_to_keyname			(int _dik);
@@ -108,8 +100,6 @@ EGameActions	action_name_to_id		(LPCSTR _name);
 _action*		action_name_to_ptr		(LPCSTR _name);
 
 extern _action		actions		[];
-//extern _keyboard	keyboards	[];
-//extern xr_vector< _keyboard >	keyboards;
 
 #define bindings_count kLASTACTION
 struct _binding
