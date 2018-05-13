@@ -120,7 +120,8 @@ void CCar::vfProcessInputKey	(int iCommand, bool bPressed)
 }
 	float const base_fov	=	g_fov;
 	float const dest_fov	=	g_fov - (g_fov-30.f);
-
+//#include "../xrphysics/IPHWorld.h"
+//	float g = physics_world()->Gravity();
 void CCar::OnKeyboardPress(int cmd)
 {
 	if (Remote())								return;
@@ -139,12 +140,13 @@ void CCar::OnKeyboardPress(int cmd)
 	    OnCameraChange(ectFree);
 		break;
 		
-	case kACCEL:
-	    TransmissionUp();			
+	case kACCEL: TransmissionUp();
+
+		//if (CPHUpdateObject::IsActive())g *= 5.5f;
 		break;
 		
 	case kCROUCH:	
-	    TransmissionDown();			
+	    TransmissionDown();		
 		break;
 		
 	case kFWD:		

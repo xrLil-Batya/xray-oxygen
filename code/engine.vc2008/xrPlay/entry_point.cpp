@@ -77,31 +77,31 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// If we don't needy for a excetions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
-	if (!strstr(lpCmdLine, "-silent") && !launch)
-	{
-		// Checking for SSE2
-		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
-		{
-			return 0;
-		}
-		// Checking for SSE3
-		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
-		{
-			MessageBox(NULL,
-				"It's can affect on the stability of the game.",
-				"SSE3 isn't supported on your CPU",
-				MB_OK | MB_ICONASTERISK);
-			//#VERTVER: some part of vectors use SSE3 instructions
-		}
-		// Checking for AVX
-		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
-		{
-			MessageBox(NULL,
-				"It's can affect on the stability of the game.",
-				"AVX isn't supported on your CPU!",
-				MB_OK | MB_ICONWARNING);
-		}
-	}
+	//if (!strstr(lpCmdLine, "-silent") && !launch)
+	//{
+	//	// Checking for SSE2
+	//	if (!CPU::Info.hasFeature(CPUFeature::SSE2))
+	//	{
+	//		return 0;
+	//	}
+	//	// Checking for SSE3
+	//	if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+	//	{
+	//		MessageBox(NULL,
+	//			"It's can affect on the stability of the game.",
+	//			"SSE3 isn't supported on your CPU",
+	//			MB_OK | MB_ICONASTERISK);
+	//		//#VERTVER: some part of vectors use SSE3 instructions
+	//	}
+	//	// Checking for AVX
+	//	else if (!CPU::Info.hasFeature(CPUFeature::AVX))
+	//	{
+	//		MessageBox(NULL,
+	//			"It's can affect on the stability of the game.",
+	//			"AVX isn't supported on your CPU!",
+	//			MB_OK | MB_ICONWARNING);
+	//	}
+	//}
 
 	// If we want to start launcher
 	if (launch)
