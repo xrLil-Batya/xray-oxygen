@@ -99,8 +99,7 @@ void CHitMemoryManager::add					(float amount, const Fvector &vLocalDir, const C
 #endif // MASTER_GOLD
 
 	VERIFY						(m_hits);
-	if (!object().g_Alive())
-		return;
+
 
 	if (who && (m_object->ID() == who->ID()))
 		return;
@@ -161,8 +160,7 @@ void CHitMemoryManager::add					(const CHitObject &_hit_object)
 #endif // MASTER_GOLD
 
 	VERIFY						(m_hits);
-	if (!object().g_Alive())
-		return;
+
 
 	CHitObject					hit_object = _hit_object;
 	hit_object.m_squad_mask.set	(m_stalker->agent_manager().member().mask(m_stalker),TRUE);
@@ -253,8 +251,7 @@ void CHitMemoryManager::remove_links	(CObject *object)
 
 void CHitMemoryManager::save	(NET_Packet &packet) const
 {
-	if (!m_object->g_Alive())
-		return;
+
 
 	packet.w_u8					((u8)objects().size());
 
@@ -296,8 +293,7 @@ void CHitMemoryManager::save	(NET_Packet &packet) const
 
 void CHitMemoryManager::load	(IReader &packet)
 {
-	if (!m_object->g_Alive())
-		return;
+
 
 	typedef CClientSpawnManager::CALLBACK_TYPE	CALLBACK_TYPE;
 	CALLBACK_TYPE					callback;

@@ -16,6 +16,8 @@ enum{
 		AF_COLORED_FEEL     =(1<<13),
 		AF_SHOW_CURPOS		=(1<<14),
 		AF_ZOOM_NEW_FD		=(1<<15),
+		AF_CAR_INFO			=(1<<16),
+		AF_HARDCORE			=(1<<17),
 };
 
 extern Flags32	psActorFlags;

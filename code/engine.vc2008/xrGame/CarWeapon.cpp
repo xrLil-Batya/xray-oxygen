@@ -240,7 +240,7 @@ CHolderCustom* holder = smart_cast<CHolderCustom*>(m_object);
 	StartSmokeParticles		(m_fire_pos, zero_vel);
 //	OnShellDrop				(m_fire_pos, zero_vel);
 
-	HUD_SOUND_ITEM::PlaySound	(m_sndShot, m_fire_pos, m_object, false);
+	HUD_SOUND_ITEM::PlaySound	(m_sndShot, m_fire_pos, Actor(), false);
 }
 
 void CCarWeapon::Action				(u16 id, u32 flags)

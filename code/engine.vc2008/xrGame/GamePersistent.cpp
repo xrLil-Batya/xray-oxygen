@@ -170,7 +170,6 @@ void CGamePersistent::UpdateGameType			()
 	MySuper::UpdateGameType();
 
 	m_game_params.m_e_game_type = eGameIDSingle;
-	g_current_keygroup = _sp;
 }
 
 void CGamePersistent::OnGameEnd()

@@ -80,7 +80,7 @@ const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
 	fire_pos.y += 0.14f;
 	}
 	}
-	if (psActorFlags.test(AF_ZOOM_NEW_FD))
+	if (psActorFlags.test(AF_ZOOM_NEW_FD) || psActorFlags.test(AF_HARDCORE))
 	{
 		fire_dir = weapon->get_LastFD();
 		fire_pos = weapon->get_LastFP();
