@@ -44,6 +44,7 @@ struct _MM_ALIGN16 ray_t
 #define mulps				_mm256_mul_ps
 #define subps				_mm256_sub_ps
 #define rotatelps(ps)		_mm256_shuffle_ps((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
+#define rotatelpssse(ps)	_mm_shuffle_ps((ps),(ps), 0x39)	
 // NO ANALOG IN AVX
 #define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
 
@@ -75,9 +76,8 @@ ps_cst_plus_inf[4] = { flt_plus_inf,  flt_plus_inf,  flt_plus_inf,  flt_plus_inf
 ps_cst_minus_inf[4] = { -flt_plus_inf, -flt_plus_inf, -flt_plus_inf, -flt_plus_inf };
 
 #ifdef __AVX_USE__
-ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) 
+ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 {
-	// you may already have those values hanging around somewhere
 	// you may already have those values hanging around somewhere
 	const __m256
 		plus_inf = loadps(ps_cst_plus_inf),
@@ -104,24 +104,38 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	const __m256 filtered_l2b = maxps(l2, minus_inf);
 
 	// now that we're back on our feet, test those slabs.
-	__m256 lmax = maxps(filtered_l1a, filtered_l2a);
-	__m256 lmin = minps(filtered_l1b, filtered_l2b);
+	////////////////////////////////////////////////////
+	//__m256 lmax = maxps(filtered_l1a, filtered_l2a);
+	//__m256 lmin = minps(filtered_l1b, filtered_l2b);
+	__m128 l2a_128	= _mm256_castps256_ps128		(filtered_l2a);
+	__m128 l2b_128	= _mm256_castps256_ps128		(filtered_l2b);
+	__m128 l1a_128	= _mm256_castps256_ps128		(filtered_l1a);
+	__m128 l1b_128	= _mm256_castps256_ps128		(filtered_l1b);
+	__m128 lmax		= _mm_max_ps					(l1a_128, l2a_128);
+	__m128 lmin		= _mm_min_ps					(l1b_128, l2b_128);
+	////////////////////////////////////////////////////
 
 	// unfold back. try to hide the latency of the shufps & co.
-	const __m256 lmax0 = rotatelps(lmax);
-	const __m256 lmin0 = rotatelps(lmin);
+	const __m128 lmax0 = rotatelpssse(lmax);
+	const __m128 lmin0 = rotatelpssse(lmin);
 
-	lmax = minps(lmax, lmax0);
-	lmin = maxps(lmin, lmin0);
+	lmax = _mm_min_ps(lmax, lmax0);
+	lmin = _mm_max_ps(lmin, lmin0);
 
-	const __m256 lmax1 = _mm256_moveldup_ps(lmax);
-	const __m256 lmin1 = _mm256_moveldup_ps(lmin);
+	// _mm_movehl_ps
+	const __m128 lmax1 = muxhps(lmax, lmax);	
+	const __m128 lmin1 = muxhps(lmin, lmin);
 
-	lmax = minps(lmax, lmax1);
-	lmin = maxps(lmin, lmin1);
 
-	storeps(lmin, &dist);
-	return !!(_mm_comige_ss(m128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(m128_cast(lmax), m128_cast(lmin)));
+	lmax = _mm_min_ps(lmax, lmax1);
+	lmin = _mm_max_ps(lmin, lmin1);
+
+
+
+	storess(lmin, &dist);
+	//#VERTVER: return value must be __m128, not __m256
+	return !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax, lmin));
+
 }
 #else
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist) {

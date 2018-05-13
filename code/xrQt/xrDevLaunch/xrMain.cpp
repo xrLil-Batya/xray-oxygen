@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 30 April, 2018
+* Edited: 10 May, 2018
 * xrMain.cpp - Main source file for compilation with Qt
 * xrLaunch
 *************************************************/
@@ -35,6 +35,14 @@ xrLaunch::xrLaunch				(QWidget *parent)
 {
 	ui->setupUi(this);
 	init_xrCore();
+	if (CPUID::AMD() | CPUID::AMDelse())
+	{
+		Msg("xrDev: CPU Vendor: AMD");
+	}
+	else
+	{
+		Msg("xrDev: CPU Vendor: Intel");
+	}
 	if (!CPUID::SSE3())
 	{
 		Msg								("xrDev: unsupported instructions: SSE3, SSE4.1, AVX");

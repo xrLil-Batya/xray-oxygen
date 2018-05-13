@@ -7,24 +7,28 @@
 
 #include "xrCDB.h"
 
-using namespace		CDB;
-using namespace		Opcode;
+using namespace CDB;
+using namespace Opcode;
 
 // can you say "barebone"?
 #ifndef _MM_ALIGN16
-#	define _MM_ALIGN16	__declspec(align(16))
+#define _MM_ALIGN16	__declspec(align(16))
 #endif // _MM_ALIGN16
 
-struct	_MM_ALIGN16		vec_t	: public Fvector3	{ 
+struct	_MM_ALIGN16		vec_t	
+:	public Fvector3	
+{ 
 	float		pad; 
 };
 //static vec_t	vec_c	( float _x, float _y, float _z)	{ vec_t v; v.x=_x;v.y=_y;v.z=_z;v.pad=0; return v; }
 
-struct _MM_ALIGN16		aabb_t	{ 
+struct _MM_ALIGN16		aabb_t	
+{ 
 	vec_t		min;
 	vec_t		max;
 };
-struct _MM_ALIGN16		ray_t	{
+struct _MM_ALIGN16		ray_t	
+{
 	vec_t		pos;
 	vec_t		inv_dir;
 	vec_t		fwd_dir;
@@ -49,9 +53,9 @@ struct _MM_ALIGN16		ray_t	{
 #define mulps				_mm256_mul_ps
 #define subps				_mm256_sub_ps
 #define rotatelps(ps)		_mm256_shuffle_ps((ps),(ps), 0x39)		// a,b,c,d -> b,c,d,a
-#define rotatelpssse(ps)		_mm_shuffle_ps((ps),(ps), 0x39)	
+#define rotatelpssse(ps)	_mm_shuffle_ps((ps),(ps), 0x39)	
 // NO ANALOG IN AVX
-#define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low{a,b,c,d}|high{e,f,g,h} = {c,d,g,h}
+#define muxhps(low,high)	_mm_movehl_ps((low),(high))		// low {a,b,c,d} | high {e,f,g,h} = {c,d,g,h}
 
 
 // SSE types
@@ -85,6 +89,8 @@ static const float _MM_ALIGN16
 
 
 #ifdef __AVX_USE__
+//#VERTVER: It's working. I'll guarantee it
+////////////////////////////////////////////////
 ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 {
 	// you may already have those values hanging around somewhere
@@ -113,26 +119,36 @@ ICF bool isect_sse(const aabb_t &box, const ray_t &ray, float &dist)
 	const __m256 filtered_l2b = maxps(l2, minus_inf);
 
 	// now that we're back on our feet, test those slabs.
-	__m256 lmax = maxps(filtered_l1a, filtered_l2a);
-	__m256 lmin = minps(filtered_l1b, filtered_l2b);
+	////////////////////////////////////////////////////
+	//__m256 lmax = maxps(filtered_l1a, filtered_l2a);
+	//__m256 lmin = minps(filtered_l1b, filtered_l2b);
+	__m128 l2a_128	= _mm256_castps256_ps128		(filtered_l2a);
+	__m128 l2b_128	= _mm256_castps256_ps128		(filtered_l2b);
+	__m128 l1a_128	= _mm256_castps256_ps128		(filtered_l1a);
+	__m128 l1b_128	= _mm256_castps256_ps128		(filtered_l1b);
+	__m128 lmax		= _mm_max_ps					(l1a_128, l2a_128);
+	__m128 lmin		= _mm_min_ps					(l1b_128, l2b_128);
+	////////////////////////////////////////////////////
 
 	// unfold back. try to hide the latency of the shufps & co.
-	const __m256 lmax0 = rotatelps(lmax);
-	const __m256 lmin0 = rotatelps(lmin);
+	const __m128 lmax0 = rotatelpssse(lmax);
+	const __m128 lmin0 = rotatelpssse(lmin);
 
-	lmax = minps(lmax, lmax0);
-	lmin = maxps(lmin, lmin0);
+	lmax = _mm_min_ps(lmax, lmax0);
+	lmin = _mm_max_ps(lmin, lmin0);
 
-	const __m256 lmax1 = _mm256_moveldup_ps(lmax);
-	const __m256 lmin1 = _mm256_moveldup_ps(lmin);
-
-	lmax = minps(lmax, lmax1);
-	lmin = maxps(lmin, lmin1);
+	// _mm_movehl_ps
+	const __m128 lmax1 = muxhps(lmax, lmax);	
+	const __m128 lmin1 = muxhps(lmin, lmin);
 
 
+	lmax = _mm_min_ps(lmax, lmax1);
+	lmin = _mm_max_ps(lmin, lmin1);
 
-	storeps(lmin, &dist);
-	return !!(_mm_comige_ss(mm128_cast(lmax), _mm_setzero_ps()) & _mm_comige_ss(mm128_cast(lmax), mm128_cast(lmin)));
+
+
+	storess(lmin, &dist);
+	return !!(_mm_comige_ss(lmax, _mm_setzero_ps()) & _mm_comige_ss(lmax, lmin));
 
 }
 
@@ -215,23 +231,21 @@ public:
 	// sse
 
 
-#ifdef _AVX_USE_
+#ifdef __AVX_USE__
 
-	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, double&  dist)
+	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, float&  dist)
 	{
 		aabb_t		box;
-		__m256d CN	= _mm256_unpacklo_pd	(_mm256_load_pd			((double*)&bCenter.x),	_mm256_load_pd((double*)&bCenter.y));
-		CN			= _mm256_movedup_pd		(CN + _mm256_load_pd	((double*)&bCenter.z));
-		__m256d EX	= _mm256_unpacklo_pd	(_mm256_load_pd			((double*)&bExtents.x), _mm256_load_pd((double*)&bExtents.y));
-		EX			= _mm256_movedup_pd		(EX, _mm256_load_pd		((double*)&bExtents.z));
+		__m128 CN = _mm_unpacklo_ps(_mm_load_ss((float*)&bCenter.x), _mm_load_ss((float*)&bCenter.y));
+		CN = _mm_movelh_ps(CN, _mm_load_ss((float*)&bCenter.z));
+		__m128 EX = _mm_unpacklo_ps(_mm_load_ss((float*)&bExtents.x), _mm_load_ss((float*)&bExtents.y));
+		EX = _mm_movelh_ps(EX, _mm_load_ss((float*)&bExtents.z));
 
-		_mm256_store_pd((double*)&box.min, _mm256_sub_pd(CN, EX));
-		_mm256_store_pd((double*)&box.max, _mm256_add_pd(CN, EX));
+		_mm_store_ps((float*)&box.min, _mm_sub_ps(CN, EX));
+		_mm_store_ps((float*)&box.max, _mm_add_ps(CN, EX));
 
-		//return isect_avx(box, ray, dist);
-		return false;
+		return isect_sse(box, ray, dist);
 	}
-	
 	
 #else
 	ICF bool _box_sse(const Fvector& bCenter, const Fvector& bExtents, float&  dist)
@@ -350,17 +364,6 @@ public:
 		_mm_prefetch((char *)node->GetNeg(), _MM_HINT_NTA);
 
 		// Actual ray/aabb test
-#ifdef _AVX_USE_
-		// use AVX
-		double dd;
-		if (!_box_avx((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, dd))
-		{
-			return
-		}
-		if			(dd > rRange)		return;
-
-#else
-		// use SSE
 		float d;
 		if (!_box_sse((Fvector&)node->mAABB.mCenter, (Fvector&)node->mAABB.mExtents, d))
 		{
@@ -368,7 +371,6 @@ public:
 		}
 		if			(d  > rRange)		return;
 
-#endif
 		// 1st chield
 		if (node->HasPosLeaf())	
 			_prim((DWORD)node->GetPosPrimitive());
