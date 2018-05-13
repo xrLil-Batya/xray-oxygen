@@ -152,8 +152,6 @@ enum
 	R2FLAG_USE_NVDBT			= (1<<15),
 	R2FLAG_USE_NVSTENCIL		= (1<<16),
 
-	R2FLAG_EXP_MT_CALC			= (1<<17),
-
 	R2FLAG_SOFT_WATER			= (1<<18),	//	Igor: need restart
 	R2FLAG_SOFT_PARTICLES		= (1<<19),	//	Igor: need restart
 	R2FLAG_VOLUMETRIC_LIGHTS	= (1<<20),

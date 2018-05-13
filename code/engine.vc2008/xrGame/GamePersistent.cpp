@@ -276,16 +276,14 @@ void CGamePersistent::WeathersUpdate()
 		if (Device.fTimeGlobal>=ambient_effect_wind_start && Device.fTimeGlobal<=ambient_effect_wind_in_time && ambient_effect_wind_on)
 		{
 			float delta=ambient_effect_wind_in_time-ambient_effect_wind_start;
-			float t;
+			float t = 0;
+
 			if (delta!=0.f)
 			{
-				float cur_in=Device.fTimeGlobal-ambient_effect_wind_start;
-				t=cur_in/delta;
+				float cur_in = Device.fTimeGlobal - ambient_effect_wind_start;
+				t = cur_in / delta;
 			}
-			else
-			{
-				t=0.f;
-			}
+
 			Environment().wind_blast_current.slerp(Environment().wind_blast_start_time,Environment().wind_blast_stop_time,t);
 
 			Environment().wind_blast_direction.set(Environment().wind_blast_current.x,Environment().wind_blast_current.y,Environment().wind_blast_current.z);
@@ -296,7 +294,7 @@ void CGamePersistent::WeathersUpdate()
 		if (bIndoor || Device.dwTimeGlobal>=ambient_effect_stop_time){
 			if (ambient_particles)					ambient_particles->Stop();
 			
-			Environment().wind_gust_factor		= 0.f;
+			Environment().wind_gust_factor = 0.f;
 			
 		}
 
@@ -305,7 +303,7 @@ void CGamePersistent::WeathersUpdate()
 			Environment().wind_blast_strength_start_value=Environment().wind_strength_factor;
 			Environment().wind_blast_strength_stop_value	=0.f;
 
-			ambient_effect_wind_on=false;
+			ambient_effect_wind_on = false;
 		}
 
 		if (Device.fTimeGlobal>=ambient_effect_wind_end &&  Device.fTimeGlobal<=ambient_effect_wind_out_time)
