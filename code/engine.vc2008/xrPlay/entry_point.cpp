@@ -74,14 +74,11 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const bool launch = strstr(lpCmdLine, "-launcher");
 
 	////////////////////////////////////////////////////
-	// If we don't needy for a excetions - we can 
+	// If we don't needy for a exceptions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
-<<<<<<< HEAD
 
 #ifndef DEBUG
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 	if (!strstr(lpCmdLine, "-silent") && !launch)
 	{
 		// Checking for SSE2
@@ -90,11 +87,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			return 0;
 		}
 		// Checking for SSE3
-<<<<<<< HEAD
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
-=======
-		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 		{
 			MessageBox(NULL,
 				"It's can affect on the stability of the game.",
@@ -103,10 +96,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
-<<<<<<< HEAD
 #ifndef RELEASE_IA32
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
 			MessageBox(NULL,
@@ -115,11 +105,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				MB_OK | MB_ICONWARNING);
 		}
 	}
-<<<<<<< HEAD
 #endif
 #endif
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 
 	// If we want to start launcher
 	if (launch)
