@@ -195,8 +195,7 @@ IC bool CBlend::update_falloff( float dt )
 {
 	update_time( dt );
 	
-	//if(  dt<0.f || timeCurrent >= blendAccrue )
-		blendAmount 		-= dt*blendFalloff*blendPower;
+	blendAmount 		-= dt*blendFalloff*blendPower;
 
 	bool ret			= blendAmount<=0;
 	clamp				( blendAmount, 0.f, blendPower);

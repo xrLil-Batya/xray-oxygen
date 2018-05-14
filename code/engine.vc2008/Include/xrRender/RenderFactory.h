@@ -1,5 +1,3 @@
-#ifndef RenderFactory_included
-#define RenderFactory_included
 #pragma once
 
 class IWallMarkArray;
@@ -39,10 +37,6 @@ class IRenderFactory
 {
 public:
 #ifndef _EDITOR
-	/*
-	virtual IStatsRender* CreateStatsRender() = 0;
-	virtual void DestroyStatsRender(IStatsRender *pObject) = 0;
-	*/
 	RENDER_FACTORY_INTERFACE(UISequenceVideoItem)
 	RENDER_FACTORY_INTERFACE(UIShader)
 	RENDER_FACTORY_INTERFACE(StatGraphRender)
@@ -52,9 +46,6 @@ public:
 	RENDER_FACTORY_INTERFACE(ApplicationRender)
 	RENDER_FACTORY_INTERFACE(WallMarkArray)
 	RENDER_FACTORY_INTERFACE(StatsRender)
-#endif // _EDITOR
-
-#ifndef _EDITOR
 	RENDER_FACTORY_INTERFACE(EnvironmentRender)
 	RENDER_FACTORY_INTERFACE(EnvDescriptorMixerRender)
 	RENDER_FACTORY_INTERFACE(EnvDescriptorRender)
@@ -65,9 +56,4 @@ public:
 	RENDER_FACTORY_INTERFACE(FlareRender)
 #endif // _EDITOR
 	RENDER_FACTORY_INTERFACE(FontRender)
-protected:
-	//virtual IEnvDescriptorRender *CreateEnvDescriptorRender() = 0;
-	//virtual void DestroyEnvDescriptorRender(IEnvDescriptorRender *pObject) = 0;
 };
-
-#endif	//	RenderFactory_included

@@ -152,7 +152,7 @@ Flags32		ps_r2_ls_flags				= {
 	R2FLAG_SUN
 	| R2FLAG_EXP_DONT_TEST_UNSHADOWED 
 	| R2FLAG_USE_NVSTENCIL | R2FLAG_EXP_SPLIT_SCENE 
-	| R2FLAG_EXP_MT_CALC | R3FLAG_DYN_WET_SURF
+	| R3FLAG_DYN_WET_SURF
 	| R3FLAG_VOLUMETRIC_SMOKE
 	//| R3FLAG_MSAA 
 	//| R3FLAG_MSAA_OPT
@@ -481,48 +481,6 @@ public:
 	}
 };
 
-
-class CCC_memory_stats : public IConsole_Command
-{
-public:
-	CCC_memory_stats(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = true; };
-
-	virtual void Execute(LPCSTR args)
-	{
-		u32 m_base = 0;
-		u32 c_base = 0;
-		u32 m_lmaps = 0;
-		u32 c_lmaps = 0;
-
-		dxRenderDeviceRender::Instance().ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
-
-		Msg("memory usage mb \t \t video \t managed \t system \n");
-
-		float vb_video = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex][D3DPOOL_DEFAULT] / 1024 / 1024;
-		float vb_managed = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex][D3DPOOL_MANAGED] / 1024 / 1024;
-		float vb_system = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex][D3DPOOL_SYSTEMMEM] / 1024 / 1024;
-		Msg("vertex buffer \t \t %f \t %f \t %f ", vb_video, vb_managed, vb_system);
-
-		float ib_video = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_index][D3DPOOL_DEFAULT] / 1024 / 1024;
-		float ib_managed = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_index][D3DPOOL_MANAGED] / 1024 / 1024;
-		float ib_system = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_index][D3DPOOL_SYSTEMMEM] / 1024 / 1024;
-		Msg("index buffer \t \t %f \t %f \t %f ", ib_video, ib_managed, ib_system);
-
-		float textures_managed = (float)(m_base + m_lmaps) / 1024 / 1024;
-		Msg("textures \t \t %f \t %f \t %f ", 0.f, textures_managed, 0.f);
-
-		float rt_video = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget][D3DPOOL_DEFAULT] / 1024 / 1024;
-		float rt_managed = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget][D3DPOOL_MANAGED] / 1024 / 1024;
-		float rt_system = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget][D3DPOOL_SYSTEMMEM] / 1024 / 1024;
-		Msg("R-Targets \t \t %f \t %f \t %f ", rt_video, rt_managed, rt_system);
-
-		Msg("\nTotal \t \t %f \t %f \t %f ", vb_video + ib_video + rt_video,
-			textures_managed + vb_managed + ib_managed + rt_managed,
-			vb_system + ib_system + rt_system);
-	}
-};
-
-
 #include "r__pixel_calculator.h"
 class CCC_BuildSSA : public IConsole_Command
 {
@@ -688,7 +646,7 @@ public:
 };
 
 //	Allow real-time fog config reload
-#if	(RENDER == R_R3) || (RENDER == R_R4)
+#if	(RENDER != R_R2)
 #ifdef	DEBUG
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
@@ -871,8 +829,6 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_ssao_opt_data",				&ps_r2_ls_flags_ext,		R2FLAGEXT_SSAO_OPT_DATA);//Need restart
 	CMD3(CCC_Mask,		"r2_ssao_half_data",			&ps_r2_ls_flags_ext,		R2FLAGEXT_SSAO_HALF_DATA);//Need restart
 	CMD3(CCC_Mask,		"r2_ssao_hbao",					&ps_r2_ls_flags_ext,		R2FLAGEXT_SSAO_HBAO);//Need restart
-	CMD3(CCC_Mask,		"r4_enable_tessellation",		&ps_r2_ls_flags_ext,		R2FLAGEXT_ENABLE_TESSELLATION);//Need restart
-	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r2_ls_flags_ext,		R2FLAGEXT_WIREFRAME);//Need restart
 	CMD3(CCC_Mask,		"r2_steep_parallax",			&ps_r2_ls_flags,			R2FLAG_STEEP_PARALLAX);
 	CMD3(CCC_Mask,		"r2_detail_bump",				&ps_r2_ls_flags,			R2FLAG_DETAIL_BUMP);
 
@@ -890,33 +846,29 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Token,		"r2_shadow_map_size",			&ps_r2_smapsize,			q_smapsize_token);
 	CMD3(CCC_Mask,		"r2_soft_water",				&ps_r2_ls_flags,			R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask,		"r2_soft_particles",			&ps_r2_ls_flags,			R2FLAG_SOFT_PARTICLES);
+	CMD4(CCC_Integer,	"r2_fxaa",						&ps_r2_fxaa, 0, 1);
+	CMD4(CCC_detail_radius, "r__detail_radius",			&ps_r__detail_radius, 49, 250);
 
+#if	(RENDER != R_R2)
 	CMD3(CCC_Token,		"r3_msaa",						&ps_r3_msaa,				qmsaa_token);
 	CMD3(CCC_Mask,		"r3_gbuffer_opt",				&ps_r2_ls_flags,			R3FLAG_GBUFFER_OPT);
 	CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r2_ls_flags,			(u32)R3FLAG_USE_DX10_1);
 	CMD3(CCC_Token,		"r3_msaa_alphatest",			&ps_r3_msaa_atest,			qmsaa__atest_token);
 	CMD3(CCC_Token,		"r3_minmax_sm",					&ps_r3_minmax_sm,			qminmax_sm_token);
-
-
-
-	//	Allow real-time fog config reload
-#if	(RENDER == R_R3) || (RENDER == R_R4)
-#ifdef	DEBUG
-	CMD1(CCC_Fog_Reload,"r3_fog_reload");
-#endif	//	DEBUG
-#endif	//	(RENDER == R_R3) || (RENDER == R_R4)
-
 	CMD3(CCC_Mask,		"r3_dynamic_wet_surfaces",		&ps_r2_ls_flags,			R3FLAG_DYN_WET_SURF);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
-	
-	CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1);
-
-	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
-	CMD1(CCC_memory_stats,	"render_memory_stats" );
-	
-    CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 49, 250);
+	CMD3(CCC_Mask,		"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
+#ifdef	DEBUG
+	//	Allow real-time fog config reload
+	CMD1(CCC_Fog_Reload, "r3_fog_reload");
+#endif	//	DEBUG
+#if (RENDER == R_R4)
+	CMD3(CCC_Mask,		"r4_enable_tessellation",		&ps_r2_ls_flags_ext,		R2FLAGEXT_ENABLE_TESSELLATION); //Need restart
+	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r2_ls_flags_ext,		R2FLAGEXT_WIREFRAME);	//Need restart
+#endif
+#endif
 }
 
 void	xrRender_apply_tf		()

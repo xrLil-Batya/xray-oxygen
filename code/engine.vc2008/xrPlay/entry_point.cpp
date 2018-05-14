@@ -1,7 +1,7 @@
 ////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C) * X-RAY OXYGEN	
-// entry_point.cpp - methods for init.
-// Edited: 30 March, 2018						
+// entry_point.cpp - entry point of xrPlay
+// Edited: 13 May, 2018						
 ////////////////////////////////////////
 #include <string>
 #include <intrin.h>  
@@ -11,7 +11,10 @@
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
 #pragma comment(lib, "xrEngine.lib")
+#define MINIMUM_WIN_MEMORY	0x0a00000
+#define MAXIMUM_WIN_MEMORY	0x1000000
 #define DLL_API __declspec(dllimport)
+HINSTANCE	g_hInstance;
 ////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
@@ -47,9 +50,16 @@ DLL_API int RunApplication(char* commandLine);
 /// <summary>
 /// Main method for initialize xrEngine
 /// </summary>
-int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+
+	if (hPrevInstance)				//#VERTVER: Previous Instance can't be in WinNT 
+		return 0;
+
+	g_hInstance = hInstance;
+
 	std::string params = lpCmdLine;
+
 	try
 	{
 		// Init X-ray core
@@ -67,6 +77,11 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 	// If we don't needy for a excetions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
+<<<<<<< HEAD
+
+#ifndef DEBUG
+=======
+>>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 	if (!strstr(lpCmdLine, "-silent") && !launch)
 	{
 		// Checking for SSE2
@@ -75,7 +90,11 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 			return 0;
 		}
 		// Checking for SSE3
+<<<<<<< HEAD
+		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+=======
 		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+>>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 		{
 			MessageBox(NULL,
 				"It's can affect on the stability of the game.",
@@ -84,6 +103,10 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
+<<<<<<< HEAD
+#ifndef RELEASE_IA32
+=======
+>>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
 			MessageBox(NULL,
@@ -92,6 +115,11 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 				MB_OK | MB_ICONWARNING);
 		}
 	}
+<<<<<<< HEAD
+#endif
+#endif
+=======
+>>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 
 	// If we want to start launcher
 	if (launch)

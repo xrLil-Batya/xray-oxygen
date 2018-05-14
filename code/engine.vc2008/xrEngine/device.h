@@ -163,8 +163,6 @@ public:
 		}
 		m_pRender->SetCacheXform(mView, mProject);
 	}
-
-	void									DumpResourcesMemoryUsage() { m_pRender->ResourcesDumpMemoryUsage();}
 public:
 	// Registrators
 	CRegistrator	<pureFrame			>			seqFrameMT;
