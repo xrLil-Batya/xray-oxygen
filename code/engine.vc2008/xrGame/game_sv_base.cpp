@@ -156,16 +156,6 @@ void game_sv_GameState::u_EventSend(NET_Packet& P, u32 dwFlags)
 
 void game_sv_GameState::Update		()
 {
-	struct ping_filler
-	{
-		void operator()(IClient* client)
-		{
-			xrClientData* C = static_cast<xrClientData*>(client);
-		}
-	};
-	ping_filler tmp_functor;
-	m_server->ForEachClientDo(tmp_functor);
-	
     if (Level().game) {
         CScriptProcess				*script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
         if (script_process)

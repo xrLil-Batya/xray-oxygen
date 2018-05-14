@@ -47,7 +47,7 @@ bool	CLevel::net_start_client1				()
 
 bool CLevel::net_start_client2()
 {
-	Server->create_direct_client();
+	Server->createClient();
 
 	ClientReceive();
 	Server->Update();

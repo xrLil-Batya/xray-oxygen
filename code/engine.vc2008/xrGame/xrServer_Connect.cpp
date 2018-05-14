@@ -43,27 +43,6 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name)
 	return IPureServer::Connect(*session_name);
 }
 
-
-IClient* xrServer::new_client( SClientConnectData* cl_data )
-{
-	IClient* CL		= client_Find_Get( cl_data->clientID );
-	VERIFY( CL );
-	
-	// copy entity
-	CL->ID			= cl_data->clientID;
-	//CL->process_id	= cl_data->process_id;
-	CL->name		= cl_data->name;	//only for offline mode
-	CL->pass._set	( cl_data->pass );
-
-	NET_Packet		P;
-	P.B.count		= 0;
-	P.r_pos			= 0;
-
-	game->AddDelayedEvent( P, GAME_EVENT_CREATE_CLIENT, 0, CL->ID );
-	
-	return CL;
-}
-
 void xrServer::AttachNewClient			(IClient* CL)
 {
 	MSYS_CONFIG	msgConfig;
@@ -72,7 +51,7 @@ void xrServer::AttachNewClient			(IClient* CL)
 
     SV_Client			= CL;
 	CL->flags.bLocal	= 1;
-	SendTo_LL( SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE,TRUE,TRUE,TRUE) );
+	SendTo_LL(&msgConfig, sizeof(msgConfig));
 
 	// gen message
 	RequestClientDigest(CL);

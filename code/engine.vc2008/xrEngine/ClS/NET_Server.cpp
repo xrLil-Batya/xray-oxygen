@@ -11,7 +11,7 @@
 
 ENGINE_API ClientID BroadcastCID(0xffffffff);
 
-IClient::IClient(CTimer* timer) : stats(timer), server(nullptr)
+IClient::IClient(CTimer* timer) : server(nullptr)
 {
 	flags.bLocal = FALSE;
 	flags.bConnected = FALSE;

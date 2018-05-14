@@ -6,29 +6,6 @@
 #include "string_table.h"
 #include "../xrEngine/xr_ioconsole.h"
 
-static const u32 r_buffer_size = 131072;	//128 Kb
-void CLevel::CalculateLevelCrc32()
-{
-	void* read_buffer	= _alloca(r_buffer_size);
-	Msg("* calculating checksum of level.geom");
-	CStreamReader*		geom = FS.rs_open	("$level$","level.geom");
-	R_ASSERT2			(geom, "failed to open level.geom file");
-	u32 remaind			= (u32)geom->elapsed();
-	map_data.m_level_geom_crc32	= 0;
-	while (remaind)
-	{
-		u32 to_read = remaind;
-		if (remaind > r_buffer_size)
-		{
-			to_read = r_buffer_size;
-		}
-		geom->r(read_buffer, to_read);
-		map_data.m_level_geom_crc32 ^= crc32(read_buffer, to_read);
-		remaind = (u32)geom->elapsed();
-	}
-	FS.r_close					(geom);
-}
-
 bool CLevel::IsChecksumsEqual(u32 check_sum) const
 {
 	return check_sum == map_data.m_level_geom_crc32;

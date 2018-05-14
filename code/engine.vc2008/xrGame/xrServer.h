@@ -115,9 +115,8 @@ public:
 	void					SendConnectResult		(IClient* CL, char* ResultStr);
 	void	__stdcall		SendConfigFinished		(ClientID const & clientId);
 	void					AttachNewClient			(IClient* CL);
-protected:
-	virtual IClient*		new_client				( SClientConnectData* cl_data );
 
+protected:
 			void			RequestClientDigest					(IClient* CL);
 	virtual void			Check_BuildVersion_Success			(IClient* CL);
 
@@ -133,12 +132,10 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		(IClient* CL);
 
-	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
+	virtual void			SendTo_LL			(void* data, u32 size);
     virtual void		    SendTo(ClientID ID, NET_Packet& P, u32 dwFlags = DPNSEND_GUARANTEED, u32 dwTimeout = 0);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
 
-	virtual IClient*		client_Create		();								// create client info
-	virtual IClient*		client_Find_Get		(ClientID ID);					// Find earlier disconnected client
 	virtual void			client_Destroy		(IClient* C);					// destroy client info
 
 	// utilities
@@ -161,7 +158,7 @@ public:
 			shared_str		level_name			(const shared_str &server_options) const;
 			shared_str		level_version		(const shared_str &server_options) const;
 
-	void					create_direct_client();
+    void createClient(); // Create actor
 
 #ifdef DEBUG
 public:

@@ -128,7 +128,7 @@ void	CSoundRender_TargetA::update()
 			// (that's in the separate else block that didn't run this time).Because the source remains AL_STOPPED,
 			// the next update will still see all the buffers marked as processed and remove / refill / requeue them again.
 			// It keeps doing this and never actually restarts the source after an underrun.
-#ifndef DEBUG
+#if 0
 			ALint state;
 			A_CHK(alGetSourcei(pSource, AL_SOURCE_STATE, &state));
 			if (state == AL_STOPPED)

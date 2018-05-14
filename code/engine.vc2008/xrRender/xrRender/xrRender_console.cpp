@@ -848,7 +848,6 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Integer,	"r2_fxaa",						&ps_r2_fxaa, 0, 1);
 	CMD4(CCC_detail_radius, "r__detail_radius",			&ps_r__detail_radius, 49, 250);
 
-#if	(RENDER != R_R2)
 	CMD3(CCC_Token,		"r3_msaa",						&ps_r3_msaa,				qmsaa_token);
 	CMD3(CCC_Mask,		"r3_gbuffer_opt",				&ps_r2_ls_flags,			R3FLAG_GBUFFER_OPT);
 	CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r2_ls_flags,			(u32)R3FLAG_USE_DX10_1);
@@ -859,15 +858,15 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
 	CMD3(CCC_Mask,		"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
+#if	(RENDER == R_R3) || (RENDER == R_R4)
 #ifdef	DEBUG
 	//	Allow real-time fog config reload
 	CMD1(CCC_Fog_Reload, "r3_fog_reload");
 #endif	//	DEBUG
-#if (RENDER == R_R4)
+#endif
+
 	CMD3(CCC_Mask,		"r4_enable_tessellation",		&ps_r2_ls_flags_ext,		R2FLAGEXT_ENABLE_TESSELLATION); //Need restart
 	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r2_ls_flags_ext,		R2FLAGEXT_WIREFRAME);	//Need restart
-#endif
-#endif
 }
 
 void	xrRender_apply_tf		()

@@ -72,25 +72,6 @@ CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 }
 
 //--------------------------------------------------------------------
-IClient* xrServer::client_Create()
-{
-	return xr_new<xrClientData> ();
-}
-
-IClient* xrServer::client_Find_Get	(ClientID ID)
-{
-	DWORD dwPort			= 0;
-	//ip_address tmp_ip_address;
-
-	IClient* newCL = client_Create();
-	newCL->ID = ID;
-
-	newCL->server			= this;
-	net_players.AddNewClient(newCL);
-
-	return newCL;
-};
-
 void xrServer::client_Destroy(IClient* C)
 {
 	// Delete assosiated entity
@@ -283,53 +264,30 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	return 0;
 }
 
-void xrServer::SendTo_LL(ClientID ID, void* data, u32 size, u32 dwFlags, u32 dwTimeout)
+void xrServer::SendTo_LL(void* data, u32 size)
 {
-	// optimize local traffic
 	Level().OnMessage(data,size);
 }
 
 void xrServer::SendTo(ClientID ID, NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 {
-    SendTo_LL(ID, P.B.data, (u32)P.B.count, dwFlags, dwTimeout);
+    SendTo_LL(P.B.data, (u32)P.B.count);
 }
 
 void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
 {
-	struct ClientExcluderPredicate
-	{
-		ClientID id_to_exclude;
-		ClientExcluderPredicate(ClientID exclude) :
-			id_to_exclude(exclude)
-		{}
-		bool operator()(IClient* client)
-		{
-			xrClientData* tmp_client = static_cast<xrClientData*>(client);
-			if (client->ID == id_to_exclude)
-				return false;
-			if (!client->flags.bConnected)
-				return false;
-			if (!tmp_client->net_Accepted)
-				return false;
-			return true;
-		}
-	};
-	struct ClientSenderFunctor
-	{
-		xrServer*		m_owner;
-		void*			m_data;
-		u32				m_size;
-		u32				m_dwFlags;
-		ClientSenderFunctor(xrServer* owner, void* data, u32 size, u32 dwFlags) :
-			m_owner(owner), m_data(data), m_size(size), m_dwFlags(dwFlags)
-		{}
-		void operator()(IClient* client)
-		{
-			m_owner->SendTo_LL(client->ID, m_data, m_size, m_dwFlags);			
-		}
-	};
-	ClientSenderFunctor temp_functor(this, P.B.data, (u32)P.B.count, dwFlags);
-	net_players.ForFoundClientsDo(ClientExcluderPredicate(exclude), temp_functor);
+    if (!SV_Client)
+        return;
+    if (SV_Client->ID == exclude)
+        return;
+    if (!SV_Client->flags.bConnected)
+        return;
+
+    xrClientData* tmp_client = static_cast<xrClientData*>(SV_Client);
+    if (!tmp_client->net_Accepted)
+        return;
+
+    SendTo_LL(P.B.data, (u32)P.B.count);
 }
 //--------------------------------------------------------------------
 CSE_Abstract*	xrServer::entity_Create		(LPCSTR name)
@@ -427,13 +385,19 @@ shared_str xrServer::level_version(const shared_str &server_options) const
 	return	(game_sv_GameState::parse_level_version(server_options));
 }
 
-void xrServer::create_direct_client()
+void xrServer::createClient()
 {
-	SClientConnectData cl_data;
-	cl_data.clientID.set(1);
-	xr_strcpy(cl_data.name, "single_player");
-	cl_data.process_id = GetCurrentProcessId();
-	new_client(&cl_data);
+    IClient* CL = xr_new<xrClientData>();
+    CL->ID.set(1);
+    CL->server = this;
+    net_players.AddNewClient(CL);
+    CL->name = "single_player";
+
+    NET_Packet P;
+    P.B.count = 0;
+    P.r_pos = 0;
+
+    game->AddDelayedEvent(P, GAME_EVENT_CREATE_CLIENT, 0, CL->ID);
 }
 
 void xrServer::ProceedDelayedPackets()

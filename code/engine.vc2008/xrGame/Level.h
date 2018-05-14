@@ -169,8 +169,6 @@ protected:
 	bool	xr_stdcall			net_start_client4				();
 	bool	xr_stdcall			net_start_client5				();
 	bool	xr_stdcall			net_start_client6				();
-
-	void						CalculateLevelCrc32		();
 public:
 	bool						IsChecksumsEqual		(u32 check_sum) const;
 

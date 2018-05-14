@@ -107,7 +107,7 @@ void ALDeviceList::Enumerate()
 						m_devices.back().props.efx = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX");
 						m_devices.back().props.xram = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "EAX_RAM");
 
-						Msg("[OpenAL] EFX Support: %s", m_devices.back().props.efx ? "yes" : "no");
+						Msg("[OpenAL] device: %s, EFX Support: %s", actualDeviceName, m_devices.back().props.efx ? "yes" : "no");
 
 						m_devices.back().props.eax_unwanted = ((0 == xr_strcmp(actualDeviceName, AL_GENERIC_HARDWARE)) ||
 							(0 == xr_strcmp(actualDeviceName, AL_GENERIC_SOFTWARE)));
