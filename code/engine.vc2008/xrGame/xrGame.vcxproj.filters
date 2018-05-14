@@ -2152,6 +2152,9 @@
     <Filter Include="Core\Server\Games\server\base">
       <UniqueIdentifier>{365ed75e-e2e4-420d-aecd-9b4593b55b0e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter">
+      <UniqueIdentifier>{b715dea7-8373-4cb2-8ccc-7fba89926be7}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -6177,6 +6180,12 @@
     <ClInclude Include="game_sv_base.h">
       <Filter>Core\Server\Games\server\base</Filter>
     </ClInclude>
+    <ClInclude Include="Dosimeter.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDosimeter.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8827,6 +8836,12 @@
     </ClCompile>
     <ClCompile Include="game_sv_base.cpp">
       <Filter>Core\Server\Games\server\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Dosimeter.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClCompile>
+    <ClCompile Include="UIDosimeter.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

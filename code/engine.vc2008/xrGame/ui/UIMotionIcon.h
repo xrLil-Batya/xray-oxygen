@@ -5,9 +5,13 @@
 class CUIMotionIcon: public CUIWindow
 {
 	using inherited = CUIWindow;
+
 private:
-	CUIProgressShape m_luminosity_progress;
-	CUIProgressShape m_noise_progress;
+
+	CUIProgressBar		m_luminosity_bar;
+	CUIProgressBar		m_noise_bar;
+	CUIProgressShape 	m_luminosity_shape;
+	CUIProgressShape 	m_noise_shape;
 
 	struct _npc_visibility
 	{
