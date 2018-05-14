@@ -435,14 +435,9 @@ void CActorCondition::UpdateSatiety()
 		m_fSatiety -= m_fV_Satiety * m_fDeltaTime;
 		clamp(m_fSatiety, 0.0f, 1.0f);
 	}
-	else if (m_fSatiety <= 0.f && !GodMode() && object().g_Alive())
-	{
-		// Actor must die. (^_^)
-		object().KillEntity(object().ID());
-	}
 
 	float satiety_health_koef = (m_fSatiety - m_fSatietyCritical) / (m_fSatiety >= m_fSatietyCritical ? 1 - m_fSatietyCritical : m_fSatietyCritical);
-	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
+	if (CanBeHarmed() && !GodMode())
 	{
 		m_fDeltaHealth += m_fV_SatietyHealth * satiety_health_koef*m_fDeltaTime;
 		m_fDeltaPower += m_fV_SatietyPower * m_fSatiety*m_fDeltaTime;

@@ -104,9 +104,9 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
+      <AdditionalDependencies>vcruntimed.lib;ucrtd.lib.;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -153,7 +153,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -191,7 +191,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalOptions>lj_vm.obj %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <PreBuildEvent>
       <Command>

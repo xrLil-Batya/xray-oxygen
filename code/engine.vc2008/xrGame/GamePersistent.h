@@ -52,9 +52,7 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
 
 public:
 	ui_core*			m_pUI_core;
-	IReader*			pDemoFile;
 	u32					uTime2Change;
-	EVENT				eDemoStart;
 
     //#REFACTOR: [Giperion] enable thirst only if we want to
     bool                m_useThirst;

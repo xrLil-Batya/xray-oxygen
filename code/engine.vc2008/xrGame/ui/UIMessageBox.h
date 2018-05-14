@@ -5,7 +5,6 @@
 #include "../../xrScripts/export/script_export_space.h"
 
 class CUI3tButton;
-class CUIEditBox;
 
 class CUIMessageBox: public CUIStatic
 {
@@ -20,10 +19,7 @@ public:
 		MESSAGEBOX_OK, 
 		MESSAGEBOX_INFO,
 		MESSAGEBOX_YES_NO, 
-		MESSAGEBOX_YES_NO_CANCEL, 
-		MESSAGEBOX_DIRECT_IP, 
-		MESSAGEBOX_PASSWORD, 
-		MESSAGEBOX_RA_LOGIN, 
+		MESSAGEBOX_YES_NO_CANCEL,
 		MESSAGEBOX_QUIT_WINDOWS, 
 		MESSAGEBOX_QUIT_GAME,
 		MESSAGEBOX_YES_NO_COPY
@@ -33,15 +29,8 @@ public:
 			void Clear				();
 	virtual void SetText			(LPCSTR str);
 	virtual LPCSTR GetText			();
-	LPCSTR		 GetHost			();
-	LPCSTR		 GetPassword		();
-	LPCSTR		 GetUserPassword	();
-	void		 SetUserPasswordMode(bool);
-	void		 SetPasswordMode	(bool);
-	E_MESSAGEBOX_STYLE GetBoxStyle	()			{return m_eMessageBoxStyle;};
 
-	void		 SetTextEditURL		(LPCSTR text);
-	LPCSTR		 GetTextEditURL		();
+IC	E_MESSAGEBOX_STYLE GetBoxStyle() { return m_eMessageBoxStyle; };
 
 	virtual bool OnMouseAction			(float x, float y, EUIMessages mouse_action);
 	virtual void SendMessage		(CUIWindow *pWnd, s16 msg, void *pData);
@@ -56,14 +45,7 @@ protected:
 
 	CUIStatic*	m_UIStaticPicture;
 	CUITextWnd*	m_UIStaticText;
-	CUITextWnd*	m_UIStaticHost;
-	CUITextWnd*	m_UIStaticPass;
-	CUITextWnd*	m_UIStaticUserPass;
-	CUIEditBox* m_UIEditHost;
-	CUIEditBox* m_UIEditPass;
-	CUIEditBox* m_UIEditUserPass;
-	CUIEditBox* m_UIEditURL;
-	 
+
 	E_MESSAGEBOX_STYLE m_eMessageBoxStyle;
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

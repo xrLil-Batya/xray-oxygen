@@ -120,6 +120,7 @@
 #	include "simpledetector.h"
 #	include "elitedetector.h"
 #	include "advanceddetector.h"
+#	include "Dosimeter.h"
 #	include "zonecampfire.h"
 
 #	include "torch.h"
@@ -296,6 +297,7 @@ void CObjectFactory::register_classes	()
 	ADD(CAdvancedDetector		,CSE_ALifeItemDetector			,CLSID_DETECTOR_ADVANCED		,"device_detector_advanced");
 	ADD(CEliteDetector			,CSE_ALifeItemDetector			,CLSID_DETECTOR_ELITE			,"device_detector_elite");
 	ADD(CScientificDetector		,CSE_ALifeItemDetector			,CLSID_DETECTOR_SCIENTIFIC		,"device_detector_scientific");
+	ADD(CDosimeter              ,CSE_ALifeItem                  ,CLSID_DEVICE_DOSIMETER         ,"device_dosimeter");
 
 	// Devices
 	ADD(CTorch					,CSE_ALifeItemTorch				,CLSID_DEVICE_TORCH				,"device_torch");

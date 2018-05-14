@@ -86,17 +86,6 @@ public:
 		VERIFY(0);
 	}
 };
-class CCC_TexturesStat : public IConsole_Command
-{
-public:
-	CCC_TexturesStat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		Device.DumpResourcesMemoryUsage();
-		//Device.Resources->_DumpMemoryUsage();
-		//	TODO: move this console commant into renderer
-		//VERIFY(0);
-	}
-};
 //-----------------------------------------------------------------------
 class CCC_E_Dump : public IConsole_Command
 {
@@ -613,8 +602,6 @@ void CCC_Register()
 
 
 	CMD1(CCC_MotionsStat,	"stat_motions"		);
-	CMD1(CCC_TexturesStat,	"stat_textures"		);
-
 
 #ifdef DEBUG
 	CMD3(CCC_Mask,		"mt_particles",			&psDeviceFlags,			mtParticles);

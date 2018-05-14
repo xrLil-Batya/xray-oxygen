@@ -236,20 +236,9 @@ void dxRenderDeviceRender::ResourcesDeferredUpload()
 	Resources->DeferredUpload();
 }
 
-void dxRenderDeviceRender::ResourcesGetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
-{
-	if (Resources)
-		Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
-}
-
 void dxRenderDeviceRender::ResourcesStoreNecessaryTextures()
 {
 	dxRenderDeviceRender::Instance().Resources->StoreNecessaryTextures();
-}
-
-void dxRenderDeviceRender::ResourcesDumpMemoryUsage()
-{
-	dxRenderDeviceRender::Instance().Resources->_DumpMemoryUsage();
 }
 
 dxRenderDeviceRender::DeviceState dxRenderDeviceRender::GetDeviceState()

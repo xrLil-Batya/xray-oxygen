@@ -313,16 +313,14 @@ void CRender::reset_end()
 
 void CRender::OnFrame()
 {
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		// MT-details (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details,&CDetailManager::MT_CALC));
+	Models->DeleteQueue();
+	// MT-details (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
 
-		// MT-HOM (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
+	// MT-HOM (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
 }
 
 
@@ -336,7 +334,7 @@ void					CRender::model_Delete			(IRenderVisual* &V, BOOL bDiscard)
 { 
 	dxRender_Visual* pVisual = (dxRender_Visual*)V;
 	Models->Delete(pVisual, bDiscard);
-	V = 0;
+	V = nullptr;
 }
 IRender_DetailModel*	CRender::model_CreateDM			(IReader*	F)
 {
@@ -351,12 +349,12 @@ void					CRender::model_Delete			(IRender_DetailModel* & F)
 		CDetail*	D	= (CDetail*)F;
 		D->Unload		();
 		xr_delete		(D);
-		F				= NULL;
+		F				= nullptr;
 	}
 }
 IRenderVisual*			CRender::model_CreatePE			(LPCSTR name)	
 { 
-	PS::CPEDef*	SE			= PSLibrary.FindPED	(name);		R_ASSERT3(SE,"Particle effect doesn't exist",name);
+	PS::CPEDef*	SE			= PSLibrary.FindPED	(name);		R_ASSERT3(SE,"Particle effect [%s] doesn't exist",name);
 	return					Models->CreatePE	(SE);
 }
 IRenderVisual*			CRender::model_CreateParticles	(LPCSTR name)	
@@ -364,7 +362,7 @@ IRenderVisual*			CRender::model_CreateParticles	(LPCSTR name)
 	PS::CPEDef*	SE			= PSLibrary.FindPED	(name);
 	if (SE) return			Models->CreatePE	(SE);
 	else{
-		PS::CPGDef*	SG		= PSLibrary.FindPGD	(name);		R_ASSERT3(SG,"Particle effect or group doesn't exist",name);
+		PS::CPGDef*	SG		= PSLibrary.FindPGD	(name);		R_ASSERT3(SG,"Particle effect or group [%s] doesn't exist",name);
 		return				Models->CreatePG	(SG);
 	}
 }
