@@ -1,0 +1,16 @@
+<w>
+	<file name="ui\Dosimeter_details">
+		<texture id="green_0"	x="360"	y="0"	width="40"	height="100" />
+		<texture id="green_1"	x="0"	y="0"	width="40"	height="100" />
+		<texture id="green_2"	x="40"	y="0"	width="40"	height="100" />
+		<texture id="green_3"	x="80"	y="0"	width="40"	height="100" />
+		<texture id="green_4"	x="120"	y="0"	width="40"	height="100" />
+		<texture id="green_5"	x="160"	y="0"	width="40"	height="100" />
+		<texture id="green_6"	x="200"	y="0"	width="40"	height="100" />
+		<texture id="green_7"	x="240"	y="0"	width="40"	height="100" />
+		<texture id="green_8"	x="280"	y="0"	width="40"	height="100" />
+		<texture id="green_9"	x="320"	y="0"	width="40"	height="100" />
+		
+		<texture id="red_diod"	x="480"	y="0"	width="115"	height="100" />
+	</file>
+</w>
