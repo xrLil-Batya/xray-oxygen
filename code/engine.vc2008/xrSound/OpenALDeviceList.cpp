@@ -28,6 +28,8 @@
 #include <objbase.h>
 #pragma warning(default: 4995)
 
+const char* DeviceName;
+
 ALDeviceList::ALDeviceList()
 {
 	snd_device_id = u32(-1);
@@ -195,7 +197,10 @@ void ALDeviceList::SelectBestDevice()
 	if (GetNumDevices() == 0)
 		Msg("SOUND: Can't select device. List empty");
 	else
-		Msg("SOUND: Selected device is %s", GetDeviceName(snd_device_id));
+	{
+		DeviceName = GetDeviceName(snd_device_id);
+		Msg("SOUND: Selected device is [%s]", DeviceName);
+	}
 }
 
 /*
