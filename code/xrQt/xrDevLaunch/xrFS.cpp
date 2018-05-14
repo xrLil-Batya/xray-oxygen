@@ -18,6 +18,7 @@ _TCHAR szPath[] = _T("Software\\xrDevLaunch\\");
 _TCHAR szBuf[MAX_PATH];
 DWORD dwBufLen = MAX_PATH;
 HKEY hKey;
+static HANDLE hMutex;
 /////////////////////////////////////////
 
 
@@ -72,6 +73,9 @@ void FileSystem::createReg	(_TCHAR szString[],
 	//more safety.
 	/////////////////////////////////////////
 	_tsetlocale				(LC_ALL, _T( "English" ));
+	hMutex					= CreateMutex(NULL, 0, "cReg");
+	if (!hMutex)
+		MessageBox(NULL, "ERROR (FileSystem::createReg)", "ERROR", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
 	if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, szPath, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
 		MessageBox(NULL, "1","All methods are ready!", MB_OK | MB_ICONINFORMATION);
@@ -83,7 +87,8 @@ void FileSystem::createReg	(_TCHAR szString[],
 	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
 		MessageBox(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	LPCSTR szStringSTD = szBuf;
+	CloseHandle(hMutex);
+	//LPCSTR szStringSTD = szBuf;
 #ifdef LAUNCHER_DEBUG
 	MessageBox(NULL, szStringSTD, "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 #endif
@@ -93,11 +98,15 @@ void FileSystem::createReg	(_TCHAR szString[],
 void FileSystem::openReg	(_TCHAR szString[])
 {
 	_tsetlocale				(LC_ALL, _T( "English" ));
+	hMutex					= CreateMutex(NULL, 0, "oReg");
+	if (!hMutex)
+		MessageBox(NULL, "ERROR (FileSystem::openReg)", "ERROR", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
 	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
 		MessageBox(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	LPCSTR szStringSTD = szBuf;
+	CloseHandle(hMutex);
+	//LPCSTR szStringSTD = szBuf;
 #ifdef LAUNCHER_DEBUG
 	MessageBox(NULL, szStringSTD, "2", MB_OK | MB_ICONINFORMATION);
 #endif
@@ -108,6 +117,9 @@ void FileSystem::writeReg	(_TCHAR szString[],
 							 _TCHAR szValue[])
 {
 	_tsetlocale				(LC_ALL, _T( "English" ));
+	hMutex					= CreateMutex(NULL, 0, "wReg");
+	if (!hMutex)
+		MessageBox(NULL, "ERROR (FileSystem::writeReg)", "ERROR", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
 	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
 		MessageBox(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
@@ -117,8 +129,8 @@ void FileSystem::writeReg	(_TCHAR szString[],
 	/////////////////////////////////////////
 	if (RegCloseKey(hKey) != ERROR_SUCCESS) 
 		MessageBox(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
-
-	LPCSTR szStringSTD = szBuf;
+	CloseHandle(hMutex);
+	//LPCSTR szStringSTD = szBuf;
 #ifdef LAUNCHER_DEBUG
 	MessageBox(NULL, szBuf, "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 #endif

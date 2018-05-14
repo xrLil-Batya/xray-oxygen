@@ -33,6 +33,7 @@
 #include <QDialog>
 #include <QMessageBox>
 /////////////////////////////////////////
+#define	MAX_NUM_ARGVS	128
 #define INIT_ERROR		"Init error: "
 #define DLL_API			__declspec(dllimport)
 #define NOAWDA			1
