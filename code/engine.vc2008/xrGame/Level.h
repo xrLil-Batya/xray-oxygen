@@ -82,13 +82,11 @@ public:
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
     static bool					InterpolationDisabled	();
-	void						ReculcInterpolationSteps() const;
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnConnectRejected		();
 			bool				PostponedSpawn			(u16 id);
 private:
 	BOOL						m_bNeed_CrPr;
@@ -115,12 +113,9 @@ private:
 	void						make_NetCorrectionPrediction();
 
 	u32							m_dwDeltaUpdate;
-	u32							m_dwLastNetUpdateTime;
-	void						UpdateDeltaUpd			( u32 LastTime );
 
 	bool						Connect2Server					(const char* options);
 private:
-	bool						m_bConnectResultReceived;
 	bool						m_bConnectResult;
 	xr_string					m_sConnectResult;
 public:	
@@ -174,8 +169,6 @@ protected:
 	bool	xr_stdcall			net_start_client4				();
 	bool	xr_stdcall			net_start_client5				();
 	bool	xr_stdcall			net_start_client6				();
-
-	void						CalculateLevelCrc32		();
 public:
 	bool						IsChecksumsEqual		(u32 check_sum) const;
 
@@ -184,8 +177,6 @@ public:
 
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Load				( LPCSTR name );
-	virtual void				net_Save				( LPCSTR name );
 	virtual void				net_Stop				( );
 	virtual BOOL				net_Start_client		( LPCSTR name );
 	virtual void				net_Update				( );

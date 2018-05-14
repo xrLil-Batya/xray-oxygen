@@ -101,12 +101,10 @@ void xrServer::OnCL_Connected(IClient* _CL)
 	game->OnPlayerConnect(CL->ID);	
 }
 
-void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
+void	xrServer::SendConnectResult(IClient* CL, char* ResultStr)
 {
 	NET_Packet	P;
 	P.w_begin	(M_CLIENT_CONNECT_RESULT);
-	P.w_u8		(res);
-	P.w_u8		(res1);
 	P.w_stringZ	(ResultStr);
 	P.w_clientID(CL->ID);
 
@@ -118,12 +116,6 @@ void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
 	
 	SendTo		(CL->ID, P);
 
-	if (!res)			//need disconnect 
-	{
-		Flush_Clients_Buffers	();
-		DisconnectClient		(CL, ResultStr);
-	}
-
 	if (Level().IsDemoPlay())
 	{
 		Level().StartPlayDemo();
@@ -134,6 +126,5 @@ void	xrServer::SendConnectResult(IClient* CL, u8 res, u8 res1, char* ResultStr)
 
 void xrServer::Check_BuildVersion_Success			( IClient* CL )
 {
-	CL->flags.bVerified = TRUE;
-	SendConnectResult(CL, 1, 0, "All Ok");
+	SendConnectResult(CL, "All Ok");
 };

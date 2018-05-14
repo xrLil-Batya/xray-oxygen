@@ -135,8 +135,7 @@ bool CLevel::net_start2()
     shared_str serverOption = GamePersistent().GetServerOption();
 	if (net_start_result_total && serverOption.size())
 	{
-		GameDescriptionData game_descr;
-		if ((m_connect_server_err=Server->Connect(serverOption, game_descr))!=xrServer::ErrNoError)
+		if ((m_connect_server_err=Server->Connect(serverOption))!=xrServer::ErrNoError)
 		{
 			net_start_result_total = false;
 			Msg("! Failed to start server.");
@@ -197,7 +196,6 @@ bool CLevel::net_start6				()
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
-			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 			
@@ -214,7 +212,6 @@ bool CLevel::net_start6				()
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
-			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 

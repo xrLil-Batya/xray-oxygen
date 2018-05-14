@@ -867,12 +867,12 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
-	
+  
 	CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1);
 
 	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
 	
-    CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 49, 250);
+  CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 49, 250);
 }
 
 void	xrRender_apply_tf		()

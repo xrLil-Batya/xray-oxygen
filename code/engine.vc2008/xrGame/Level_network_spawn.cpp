@@ -72,9 +72,6 @@ void CLevel::g_cl_Spawn		(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 
 void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 {
-	// Optimization for single-player only	- minimize traffic between client and server
-	psNET_Flags.set	(NETFLAG_MINIMIZEUPDATES,TRUE);
-
 	// Client spawn
 	CObject* O = Objects.Create	(*E->s_name);
 	if (!O || (!O->net_Spawn	(E))) 

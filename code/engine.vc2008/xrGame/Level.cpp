@@ -132,7 +132,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bIn_CrPr					= false;
 	m_dwNumSteps				= 0;
 	m_dwDeltaUpdate				= u32(fixed_step*1000);
-	m_dwLastNetUpdateTime		= 0;
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
     m_level_sound_manager = xr_new<CLevelSoundManager>();
@@ -458,17 +457,9 @@ void CLevel::OnFrame()
 	BulletManager().CommitEvents		();
 	Device.Statistic->TEST0.End			();
 
-	// Client receive
-	if (net_isDisconnected())	
-	{
-		Engine.Event.Defer				("kernel:disconnect");
-		return;
-	} else {
-
-		Device.Statistic->netClient1.Begin();
-		ClientReceive					();
-		Device.Statistic->netClient1.End	();
-	}
+    Device.Statistic->netClient1.Begin();
+    ClientReceive					();
+    Device.Statistic->netClient1.End	();
 
 	ProcessGameEvents	();
 
@@ -772,30 +763,6 @@ void CLevel::make_NetCorrectionPrediction	()
 u32			CLevel::GetInterpolationSteps	()
 {
 	return lvInterpSteps;
-};
-
-void		CLevel::UpdateDeltaUpd	( u32 LastTime )
-{
-	u32 CurrentDelta = LastTime - m_dwLastNetUpdateTime;
-	if (CurrentDelta < m_dwDeltaUpdate) 
-		CurrentDelta = iFloor(float(m_dwDeltaUpdate * 10 + CurrentDelta) / 11);
-
-	m_dwLastNetUpdateTime = LastTime;
-	m_dwDeltaUpdate = CurrentDelta;
-
-	if (0 == g_cl_lvInterp) ReculcInterpolationSteps();
-	else 
-		if (g_cl_lvInterp>0)
-		{
-			lvInterpSteps = iCeil(g_cl_lvInterp / fixed_step);
-		}
-};
-
-void		CLevel::ReculcInterpolationSteps () const
-{
-	lvInterpSteps			= iFloor(float(m_dwDeltaUpdate) / (fixed_step*1000));
-	if (lvInterpSteps > 60) lvInterpSteps = 60;
-	if (lvInterpSteps < 3)	lvInterpSteps = 3;
 };
 
 bool		CLevel::InterpolationDisabled	()

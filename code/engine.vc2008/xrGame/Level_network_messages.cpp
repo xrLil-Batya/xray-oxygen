@@ -93,24 +93,6 @@ void CLevel::ClientReceive()
 			{
 				game->net_import_update	(*P);
 			}break;
-		case M_UPDATE_OBJECTS:
-			{
-				Objects.net_Import		(P);
-
-				IClientStatistic pStat = Level().GetStatistic();
-				u32 dTime = 0;
-				
-				if ((Level().timeServer() + pStat.getPing()) < P->timeReceive)
-				{
-					dTime = pStat.getPing();
-				}
-				else
-					dTime = Level().timeServer() - P->timeReceive + pStat.getPing();
-
-				u32 NumSteps = physics_world()->CalcNumSteps(dTime);
-				SetNumCrSteps(NumSteps);
-			}break;
-		//---------------------------------------------------
 		case M_SV_CONFIG_NEW_CLIENT:
 			InitializeClientGame	(*P);
 			break;
