@@ -69,7 +69,6 @@ void CUIMotionIcon::Init(Frect const& zonemap_rect)
 	xml_init.InitProgressBar	(uiXml, "noise_bar", 0, &m_noise_bar);	
 #endif
 }
-
 void CUIMotionIcon::SetNoise(float Pos)
 {
 	Pos	= clampr(Pos, 0.f, 100.f);
