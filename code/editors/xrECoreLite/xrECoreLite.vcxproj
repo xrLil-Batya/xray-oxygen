@@ -75,11 +75,12 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_USRDLL;_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -93,11 +94,12 @@
       <FunctionLevelLinking>false</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <ExceptionHandling>false</ExceptionHandling>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_USRDLL;_SECURE_SCL=0;WIN32;NDEBUG;_WINDOWS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BufferSecurityCheck>false</BufferSecurityCheck>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -110,10 +112,11 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\Include\editor;..\..\engine.vc2008\;..\..\sdk\include\;..\..\sdk\include\dx\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\xrRender\editor;..\..\engine.vc2008\;..\..\SDK\include\dx\;..\..\SDK\include\;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_SECURE_SCL=0;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
     </ClCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
