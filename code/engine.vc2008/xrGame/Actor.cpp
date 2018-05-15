@@ -974,8 +974,6 @@ void CActor::shedule_Update	(u32 DT)
 			clamp				(f_DropPower,0.f,1.f);
 		} else f_DropPower			= 0.f;
 
-		if (!Level().IsDemoPlay())
-		{		
 		mstate_wishful &=~mcAccel;
 		mstate_wishful &=~mcLStrafe;
 		mstate_wishful &=~mcRStrafe;
@@ -985,7 +983,6 @@ void CActor::shedule_Update	(u32 DT)
 		mstate_wishful &=~mcBack;
 		if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
 			mstate_wishful &=~mcCrouch;
-		}
 	}
 	else 
 	{
