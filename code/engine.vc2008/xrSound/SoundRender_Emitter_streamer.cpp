@@ -6,7 +6,7 @@
 #include "SoundRender_Emitter.h"
 #include "SoundRender_Target.h"
 
-void	CSoundRender_Emitter::fill_data(u8* _dest, u32 offset, u32 size)
+void CSoundRender_Emitter::fill_data(u8* _dest, u32 offset, u32 size)
 {
 	u32 line_size = SoundRender->cache.get_linesize();
 	u32 line = offset / line_size;
@@ -96,15 +96,9 @@ void	CSoundRender_Emitter::fill_block(void* ptr, u32 size)
 			{
 				rem = (m_cur_handle_cursor + bt_handle) - get_cursor(true);
 
-#ifdef DEBUG
-				Msg("reminder from prev source %d", rem);
-#endif // #ifdef DEBUG
 				fill_data(dest, get_cursor(false), rem);
 				move_cursor(rem);
 			}
-#ifdef DEBUG
-			Msg("recurce from next source %d", size - rem);
-#endif // #ifdef DEBUG
 			fill_block(dest + rem, size - rem);
 		}
 		else
@@ -118,12 +112,10 @@ void	CSoundRender_Emitter::fill_block(void* ptr, u32 size)
 
 u32	CSoundRender_Emitter::get_bytes_total()	const
 {
-	u32 res = owner_data->dwBytesTotal;
-	return res;
+	return owner_data->dwBytesTotal;
 }
 
 float CSoundRender_Emitter::get_length_sec() const
 {
-	float res = owner_data->get_length_sec();
-	return res;
+	return owner_data->get_length_sec();
 }

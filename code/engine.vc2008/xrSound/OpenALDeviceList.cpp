@@ -187,20 +187,21 @@ void ALDeviceList::SelectBestDevice()
 				new_device_id = i;
 			}
 		}
+
 		if (new_device_id == u32(-1))
 		{
 			R_ASSERT(GetNumDevices() != 0);
 			new_device_id = 0; //first
-		};
+		}
+
 		snd_device_id = new_device_id;
 	}
-	if (GetNumDevices() == 0)
-		Msg("SOUND: Can't select device. List empty");
-	else
+	if (GetNumDevices())
 	{
 		DeviceName = GetDeviceName(snd_device_id);
-		Msg("SOUND: Selected device is [%s]", DeviceName);
+		Msg("[SOUND]: Selected device is [%s]", DeviceName);
 	}
+	else Msg("[SOUND]: Can't select device. List empty");
 }
 
 /*

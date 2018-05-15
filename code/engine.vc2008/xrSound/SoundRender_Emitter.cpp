@@ -19,33 +19,20 @@ void CSoundRender_Emitter::set_position(const Fvector &pos)
 	bMoved = true;
 }
 
-CSoundRender_Emitter::CSoundRender_Emitter(void)
+CSoundRender_Emitter::CSoundRender_Emitter() : target(nullptr), owner_data(nullptr), smooth_volume(1.f), occluder_volume(1.f),
+		fade_volume(1.f), m_current_state(stStopped), bMoved(true), b2D(false), bStopping(false), bRewind(false), marker(0xabababab)
 {
 #ifdef DEBUG
 	static	u32 incrementalID = 0;
 	dbg_ID = ++incrementalID;
 #endif
-
-	target = nullptr;
-	//.	source						= nullptr;
-	owner_data = nullptr;
-	smooth_volume = 1.f;
-	occluder_volume = 1.f;
-	fade_volume = 1.f;
-	occluder[0].set(0, 0, 0);
-	occluder[1].set(0, 0, 0);
-	occluder[2].set(0, 0, 0);
-	m_current_state = stStopped;
+	memset(occluder, 0, sizeof(Fvector));
 	set_cursor(0);
-	bMoved = true;
-	b2D = false;
-	bStopping = false;
-	bRewind = false;
+
 	iPaused = 0;
 	fTimeStarted = 0.0f;
 	fTimeToStop = 0.0f;
 	fTimeToPropagade = 0.0f;
-	marker = 0xabababab;
 	starting_delay = 0.f;
 	priority_scale = 1.f;
 	m_cur_handle_cursor = 0;
@@ -60,15 +47,14 @@ CSoundRender_Emitter::~CSoundRender_Emitter(void)
 //////////////////////////////////////////////////////////////////////
 void CSoundRender_Emitter::Event_ReleaseOwner()
 {
-	if (!(owner_data))
-		return;
-
-	for (u32 it = 0; it < SoundRender->s_events.size(); ++it)
+	if (owner_data) for (size_t it = 0; it < SoundRender->s_events.size(); ++it)
+	{
 		if (owner_data == SoundRender->s_events[it].first)
 		{
 			SoundRender->s_events.erase(SoundRender->s_events.begin() + it);
 			it--;
 		}
+	}
 }
 
 void CSoundRender_Emitter::Event_Propagade()
