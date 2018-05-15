@@ -943,13 +943,13 @@ void CActor::shedule_Update	(u32 DT)
 		return;
 	}
 
-	clamp					(DT,0u,100u);
-	float	dt	 			=  float(DT)/1000.f;
+	clamp(DT,0u,100u);
+	float dt =  float(DT)/1000.f;
 
 	// Check controls, create accel, prelimitary setup "mstate_real"
 	
 	//----------- for E3 -----------------------------
-	if (Level().CurrentControlEntity() == this && !Level().IsDemoPlay())
+	if (Level().CurrentControlEntity() == this)
 	//------------------------------------------------
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
@@ -961,7 +961,6 @@ void CActor::shedule_Update	(u32 DT)
 		
 		// Check for game-contacts
 		Fvector C; float R;		
-		//m_PhysicMovementControl->GetBoundingSphere	(C,R);
 		
 		Center( C );
 		R = Radius();

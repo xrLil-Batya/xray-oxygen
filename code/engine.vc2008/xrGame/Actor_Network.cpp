@@ -273,10 +273,10 @@ void CActor::net_Import_Base( NET_Packet& P)
 	//---------------------------------------------
 	P.r_u8				(flags			);
 	P.r_vec3			(N.p_pos		);
-	P.r_float /*r_angle8*/			(N.o_model		);
-	P.r_float /*r_angle8*/			(N.o_torso.yaw	); 
-	P.r_float /*r_angle8*/			(N.o_torso.pitch);
-	P.r_float /*r_angle8*/			(N.o_torso.roll	); 
+	P.r_float 			(N.o_model		);
+	P.r_float 			(N.o_torso.yaw	); 
+	P.r_float 			(N.o_torso.pitch);
+	P.r_float 			(N.o_torso.roll	); 
 	
 	if (N.o_torso.roll > PI) N.o_torso.roll -= PI_MUL_2;
 
@@ -286,18 +286,6 @@ void CActor::net_Import_Base( NET_Packet& P)
 	
 	
 	//----------- for E3 -----------------------------
-	{
-		if (Level().IsDemoPlay())
-		{
-			unaffected_r_torso.yaw		= N.o_torso.yaw;
-			unaffected_r_torso.pitch	= N.o_torso.pitch;
-			unaffected_r_torso.roll		= N.o_torso.roll;
-
-			cam_Active()->yaw	= -N.o_torso.yaw;
-			cam_Active()->pitch = N.o_torso.pitch;
-		};
-	};
-	//CSE_ALifeCreatureActor
 	P.r_u16				(tmp			); N.mstate = u32(tmp);
 	P.r_sdir			(N.p_accel		);
 	P.r_sdir			(N.p_velocity	);
