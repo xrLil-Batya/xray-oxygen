@@ -137,8 +137,7 @@ namespace ECore {
 			// openFileDialog1
 			// 
 			this->openFileDialog1->FileName = L"openFileDialog1";
-			this->openFileDialog1->Filter = L"Stalker Objects (*.object)|*.object";
-			this->openFileDialog1->FilterIndex = 2;
+			this->openFileDialog1->Filter = L"Stalker Objects (*.object)|*.object|OGF (*.ogf)|*.ogf|OMF (*.omf)|*.omf";
 			this->openFileDialog1->InitialDirectory = L".\\";
 			this->openFileDialog1->RestoreDirectory = true;
 			// 

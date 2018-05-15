@@ -110,7 +110,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>false</ConformanceMode>
-      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\Include\editor;..\..\engine.vc2008\;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./;..\..\engine.vc2008\Include\editor;..\..\engine.vc2008\;..\..\sdk\include\;..\..\sdk\include\dx\</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>GameMtlLibH;GM_NON_GAME;_SECURE_SCL=0;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -118,6 +118,9 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="bone.cpp" />
+    <ClCompile Include="Ogf.cpp" />
+    <ClCompile Include="OgfV3.cpp" />
+    <ClCompile Include="OgfV4.cpp" />
     <ClCompile Include="EditMesh.cpp" />
     <ClCompile Include="EditMeshIO.cpp" />
     <ClCompile Include="EditMeshModify.cpp" />
@@ -142,6 +145,9 @@
   <ItemGroup>
     <ClInclude Include="ArbitraryList.h" />
     <ClInclude Include="bone.h" />
+    <ClInclude Include="Ogf.h" />
+    <ClInclude Include="OgfV3.h" />
+    <ClInclude Include="OgfV4.h" />
     <ClInclude Include="EditMesh.h" />
     <ClInclude Include="EditObject.h" />
     <ClInclude Include="ExportObjectOGF.h" />
