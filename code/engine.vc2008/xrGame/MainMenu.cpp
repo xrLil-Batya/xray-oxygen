@@ -14,9 +14,6 @@
 #include "string_table.h"
 #include "../xrCore/os_clipboard.h"
 
-#include "DemoInfo.h"
-#include "DemoInfo_Loader.h"
-
 #include <shellapi.h>
 #pragma comment(lib, "shell32.lib")
 

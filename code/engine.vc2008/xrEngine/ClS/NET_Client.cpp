@@ -1,8 +1,6 @@
 #include "stdafx.h"
-#include "NET_Common.h"
 #include "net_client.h"
 #include "net_server.h"
-#include "net_messages.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)

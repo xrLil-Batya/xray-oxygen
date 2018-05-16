@@ -50,7 +50,7 @@ public:
 	s32								get_option_i			(LPCSTR lst, LPCSTR name, s32 def = 0);
 	virtual		xr_vector<u16>*		get_children			(ClientID id_who);
 	void							u_EventGen				(NET_Packet& P, u16 type, u16 dest	);
-	void							u_EventSend				(NET_Packet& P, u32 dwFlags = DPNSEND_GUARANTEED);
+	void							u_EventSend				(NET_Packet& P);
 
 	// Events
 	virtual		BOOL				OnPreCreate				(CSE_Abstract* E)				{return TRUE;};

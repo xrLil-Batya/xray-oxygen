@@ -13,8 +13,6 @@ void ReplaceOwnershipHeader	(NET_Packet& P)
 
 void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time, u16 ID, BOOL bForced)
 {
-	u32 MODE			= net_flags(TRUE,TRUE, FALSE, TRUE);
-
 	u16					id_parent=ID,id_entity;
 	P.r_u16				(id_entity);
 	CSE_Abstract*		e_parent	= game->get_entity_from_eid	(id_parent);
@@ -62,9 +60,6 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time,
 	// Game allows ownership of entity
 	if (game->OnTouch	(id_parent,id_entity, bForced))
 	{
-		// Perform migration if needed
-		if (c_parent != c_entity)		PerformMigration(e_entity,c_entity,c_parent);
-
 		// Rebuild parentness
 		e_entity->ID_Parent			= id_parent;
 		e_parent->children.push_back(id_entity);
@@ -74,7 +69,7 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32 time,
 			ReplaceOwnershipHeader(P);
 		}
 		// Signal to everyone (including sender)
-		SendBroadcast		(BroadcastCID,P,MODE);
+		SendBroadcast		(BroadcastCID,P);
 	}
 
 }

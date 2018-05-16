@@ -11,5 +11,3 @@
 #pragma comment(lib, "xrCDB.lib")
 #pragma comment(lib, "dsound.lib")
 #pragma comment(lib, "sound_static.lib")
-#pragma comment(lib, "vcruntimed.lib")
-#pragma comment(lib, "ucrtd.lib")

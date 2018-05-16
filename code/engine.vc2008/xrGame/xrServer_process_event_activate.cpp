@@ -30,10 +30,7 @@ void xrServer::Process_event_activate	(NET_Packet& P, const ClientID sender, con
 
 	// Signal to everyone (including sender)
 	if (send_message)
-	{
-		DWORD MODE		= net_flags(TRUE,TRUE, FALSE, TRUE);
-		SendBroadcast	(BroadcastCID,P,MODE);
-	}
+		SendBroadcast	(BroadcastCID,P);
 	
 	return;
 }

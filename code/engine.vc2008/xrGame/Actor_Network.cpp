@@ -40,7 +40,6 @@
 #include "gamepersistent.h"
 #include "game_object_space.h"
 #include "GameTaskManager.h"
-#include "game_base_kill_type.h"
 #include "holder_custom.h"
 #include "actor_memory.h"
 #include "actor_statistic_mgr.h"
