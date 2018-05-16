@@ -1333,10 +1333,6 @@
     <ClInclude Include="debug_renderer_inline.h" />
     <ClInclude Include="GlobalFeelTouch.hpp" />
     <ClInclude Include="Level_network_map_sync.h" />
-    <ClInclude Include="DemoInfo.h" />
-    <ClInclude Include="DemoInfo_Loader.h" />
-    <ClInclude Include="Level_network_Demo.h" />
-    <ClInclude Include="Message_Filter.h" />
     <ClInclude Include="xr_level_controller.h" />
     <ClInclude Include="level_debug.h" />
     <ClInclude Include="Actor.h" />
@@ -2436,10 +2432,6 @@
     <ClCompile Include="debug_renderer.cpp" />
     <ClCompile Include="GlobalFeelTouch.cpp" />
     <ClCompile Include="Level_network_map_sync.cpp" />
-    <ClCompile Include="DemoInfo.cpp" />
-    <ClCompile Include="DemoInfo_Loader.cpp" />
-    <ClCompile Include="Level_network_Demo.cpp" />
-    <ClCompile Include="Message_Filter.cpp" />
     <ClCompile Include="xr_level_controller.cpp" />
     <ClCompile Include="level_debug.cpp" />
     <ClCompile Include="Actor.cpp">

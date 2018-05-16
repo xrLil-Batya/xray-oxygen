@@ -29,12 +29,11 @@ xrClientData::xrClientData(): IClient(Device.GetTimerGlobal())
 	Clear();
 }
 
-void	xrClientData::Clear()
+void xrClientData::Clear()
 {
-	owner									= NULL;
-	net_Ready								= FALSE;
-	net_Accepted							= FALSE;
-	net_PassUpdates							= TRUE;
+	owner = nullptr;
+	net_Ready = FALSE;
+	net_Accepted = FALSE;
 };
 
 xrServer::xrServer() : IPureServer(Device.GetTimerGlobal())
@@ -120,9 +119,6 @@ INT g_sv_SendUpdate = 0;
 
 void xrServer::Update	()
 {
-	if (Level().IsDemoPlayStarted() || Level().IsDemoPlayFinished())
-		return;								//diabling server when demo is playing
-
 	NET_Packet		Packet;
 
 	VERIFY						(verify_entities());
@@ -133,16 +129,15 @@ void xrServer::Update	()
 	game->Update						();
 
 	// spawn queue
-	u32 svT								= Device.TimerAsync();
-	while (!(q_respawn.empty() || (svT<q_respawn.begin()->timestamp)))
+	while (!(q_respawn.empty() || (Device.TimerAsync() < q_respawn.begin()->timestamp)))
 	{
 		// get
 		svs_respawn	R					= *q_respawn.begin();
 		q_respawn.erase					(q_respawn.begin());
 
 		// 
-		CSE_Abstract* E					= ID_to_entity(R.phantom);
-		E->Spawn_Write		(Packet,FALSE);
+		CSE_Abstract* E = ID_to_entity(R.phantom);
+		E->Spawn_Write(Packet,FALSE);
 		u16								ID;
 		Packet.r_begin		(ID);
 		R_ASSERT(M_SPAWN==ID);
@@ -152,11 +147,12 @@ void xrServer::Update	()
 	}
 
 	if (game->sv_force_sync)	Perform_game_export();
-
-	VERIFY						(verify_entities());
+#ifdef DEBUG
+	verify_entities()
+#endif
 }
 
-u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
+void xrServer::OnDelayedMessage(NET_Packet& P, ClientID sender)
 {
 	u16 type;
 	P.r_begin(type);
@@ -166,8 +162,9 @@ u32 xrServer::OnDelayedMessage	(NET_Packet& P, ClientID sender)			// Non-Zero me
 		IClient* tmp_client = net_players.GetFoundClient(ClientIdSearchPredicate(sender));
 		OnCL_Connected(tmp_client);
 	}
-	VERIFY(verify_entities());
-	return 0;
+#ifdef DEBUG
+	verify_entities()
+#endif
 }
 
 extern	float	g_fCatchObjectTime;
@@ -284,10 +281,10 @@ void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
         return;
 
     xrClientData* tmp_client = static_cast<xrClientData*>(SV_Client);
-    if (!tmp_client->net_Accepted)
-        return;
-
-    SendTo_LL(P.B.data, (u32)P.B.count);
+	if (tmp_client->net_Accepted)
+	{
+		SendTo_LL(P.B.data, (u32)P.B.count);
+	}
 }
 //--------------------------------------------------------------------
 CSE_Abstract*	xrServer::entity_Create		(LPCSTR name)
@@ -302,9 +299,9 @@ void xrServer::entity_Destroy(CSE_Abstract *&P)
 	m_tID_Generator.vfFreeID	(P->ID,Device.TimerAsync());
 
 	if(P->owner && P->owner->owner==P)
-		P->owner->owner		= NULL;
+		P->owner->owner		= nullptr;
 
-	P->owner = NULL;
+	P->owner = nullptr;
 	if (!ai().get_alife() || !P->m_bALifeControl)
 	{
 		F_entity_Destroy		(P);
@@ -318,7 +315,7 @@ CSE_Abstract* xrServer::GetEntity(u32 Num)
 	for (u32 C = 0; I != E; ++I, ++C)
 	{
 		if (C == Num) return I->second;
-	};
+	}
 	return nullptr;
 };
 
@@ -327,7 +324,7 @@ CSE_Abstract* xrServer::GetEntity(u32 Num)
 static	bool _ve_initialized	= false;
 static	bool _ve_use			= true;
 
-bool xrServer::verify_entities				() const
+bool xrServer::verify_entities() const
 {
 #ifdef SLOW_VERIFY_ENTITIES
 	if (!_ve_initialized) 
@@ -405,7 +402,7 @@ void xrServer::ProceedDelayedPackets()
     std::lock_guard<decltype(DelayedPackestCS)> lock(DelayedPackestCS);
 	while (!m_aDelayedPackets.empty())
 	{
-		DelayedPacket& DPacket	= *m_aDelayedPackets.begin();
+		DelayedPacket& DPacket = *m_aDelayedPackets.begin();
 		OnDelayedMessage(DPacket.Packet, DPacket.SenderID);
 		m_aDelayedPackets.pop_front();
 	}
