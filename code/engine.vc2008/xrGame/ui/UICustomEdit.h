@@ -40,8 +40,6 @@ public:
 	virtual LPCSTR	GetText			()	const;
 
 	virtual void	Enable			(bool status);
-			
-			void	SetPasswordMode	(bool mode = true);
 
 protected:
 			void				Register_callbacks();

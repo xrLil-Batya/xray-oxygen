@@ -219,40 +219,45 @@ dxRender_Visual* CModelPool::Instance_Find(LPCSTR N)
 
 dxRender_Visual* CModelPool::Create(const char* name, IReader* data)
 {
-#ifdef _EDITOR
-	if (!name||!name[0])	return 0;
-#endif
-	string_path low_name;	VERIFY	(xr_strlen(name)<sizeof(low_name));
-	xr_strcpy(low_name,name);	strlwr	(low_name);
-	if (strext(low_name))	*strext	(low_name)=0;
+	string_path low_name;
+	xr_strcpy(low_name, name);	strlwr(low_name);
+	if (strext(low_name))	*strext(low_name) = 0;
 
 	// 0. Search POOL
-	POOL_IT	it			=	Pool.find	(low_name);
-	if (it!=Pool.end())
+	POOL_IT	it = Pool.find(low_name);
+	if (it != Pool.end())
 	{
 		// 1. Instance found
-        dxRender_Visual*		Model	= it->second;
-		Model->Spawn		();
-		Pool.erase			(it);
-		return				Model;
-	} else {
-		// 1. Search for already loaded model (reference, base model)
-		dxRender_Visual* Base		= Instance_Find		(low_name);
+		dxRender_Visual* Model = it->second;
+		Model->Spawn();
 
-		if (0==Base){
+		mtPeref.lock();
+		Pool.erase(it);
+		mtPeref.unlock();
+
+		return Model;
+	}
+	else 
+	{
+		// 1. Search for already loaded model (reference, base model)
+		dxRender_Visual* Base = Instance_Find(low_name);
+
+		mtPeref.lock();
+		if (!Base) 
+		{
 			// 2. If not found
-			bAllowChildrenDuplicate	= FALSE;
-			if (data)		Base = Instance_Load(low_name,data,TRUE);
-            else			Base = Instance_Load(low_name,TRUE);
-			bAllowChildrenDuplicate	= TRUE;
-#ifdef _EDITOR
-			if (!Base)		return 0;
-#endif
+			bAllowChildrenDuplicate = FALSE;
+			if (data)		Base = Instance_Load(low_name, data, TRUE);
+			else			Base = Instance_Load(low_name, TRUE);
+			bAllowChildrenDuplicate = TRUE;
 		}
-        // 3. If found - return (cloned) reference
-        dxRender_Visual*		Model	= Instance_Duplicate(Base);
-        Registry.insert		(std::make_pair(Model,low_name) );
-        return				Model;
+		// 3. If found - return (cloned) reference
+		dxRender_Visual* Model = Instance_Duplicate(Base);
+
+		Registry.insert(std::make_pair(Model, low_name));
+		mtPeref.unlock();
+
+		return Model;
 	}
 }
 
@@ -361,22 +366,27 @@ void	CModelPool::Discard	(dxRender_Visual* &V, BOOL b_complete)
 		// Registry entry not-found - just special type of visual / particles / etc.
 		xr_delete		(V);
 	}
-	V	=	NULL;
+	V	=	nullptr;
 }
 
+#include <ppl.h>
 void CModelPool::Prefetch()
 {
-	Logging					(FALSE);
+	Logging(FALSE);
 	// prefetch visuals
 	string256 section;
-	strconcat				(sizeof(section),section,"prefetch_visuals_",g_pGamePersistent->m_game_params.m_game_type);
-	CInifile::Sect& sect	= pSettings->r_section(section);
-	for (CInifile::SectCIt I=sect.Data.begin(); I!=sect.Data.end(); I++)	{
-		const CInifile::Item& item= *I;
-		dxRender_Visual* V	= Create(item.first.c_str());
-		Delete				(V,FALSE);
-	}
-	Logging					(TRUE);
+	strconcat(sizeof(section), section, "prefetch_visuals_", g_pGamePersistent->m_game_params.m_game_type);
+	CInifile::Sect& sect = pSettings->r_section(section);
+
+	// Test parallel for
+	concurrency::parallel_for_each(sect.Data.begin(), sect.Data.end(), [this](const CInifile::Item &it)
+	{
+		dxRender_Visual* V = Create(it.first.c_str());
+		Delete(V);
+	});
+	// End
+
+	Logging(TRUE);
 }
 
 void CModelPool::ClearPool( BOOL b_complete)

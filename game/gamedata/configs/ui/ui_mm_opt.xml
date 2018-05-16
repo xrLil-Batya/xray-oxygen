@@ -218,17 +218,16 @@
         </track_mblur>
 		
         <cap_ssample x="20" y="3" width="135" height="24">
-            <text r="255" g="220" b="0" font="letterica16" align="r" vert_align="c">ui_mm_supersample</text>
+            <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_supersample</text>
         </cap_ssample>
         <track_ssample x="180" y="6" width="235" height="16" step="1" is_integer="1">
             <options_item entry="r__supersample" group="mm_opt_video_adv" depend="vid"/>
         </track_ssample>
         <combo_ssample x="180" y="0" width="235" height="20" list_length="4" always_show_scroll="0">
             <options_item entry="r3_msaa" group="mm_opt_video_adv" depend="vid"/>
-            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <list_font color="yellow" font="letterica16"/>
             <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
+	            <e color="yellow"/>
             </text_color>
         </combo_ssample>
 
@@ -281,31 +280,29 @@
         </check_r2_steep_parallax>
 		
 		<cap_r2_sun_shafts_mode x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_shafts_mode</text>
+            <text color= "yellow" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_shafts_mode</text>
         </cap_r2_sun_shafts_mode>
         <list_r2_sun_shafts_mode x="180" y="0" width="235" height="20" list_length="3" always_show_scroll="0">
             <options_item entry="r2_sunshafts_mode" group="mm_opt_video"/>
-            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <list_font color= "yellow" font="letterica16"/>
             <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
+	            <e color= "yellow"/>
             </text_color>
         </list_r2_sun_shafts_mode>
 
         <cap_r2_sun_quality x="20" y="3" width="135" height="24">
-            <text r="255" g="220" b="0" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_quality</text>
+            <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_quality</text>
         </cap_r2_sun_quality>
         <list_r2_sun_quality x="180" y="0" width="235" height="20" list_length="3">
             <options_item entry="r2_sun_quality" group="mm_opt_video" depend="vid"/>
-            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <list_font color="yellow" font="letterica16"/>
             <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
+	            <e color="yellow"/>
             </text_color>
         </list_r2_sun_quality>
 
         <cap_r3_dynamic_wet_surfaces x="20" y="3" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_r3_dynamic_wet_surfaces</text>
+            <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_r3_dynamic_wet_surfaces</text>
         </cap_r3_dynamic_wet_surfaces>
         <check_r3_dynamic_wet_surfaces x="167" y="0" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
@@ -369,66 +366,60 @@
 
 
         <cap_sun_shafts x="20" y="3" width="135" height="24">
-            <text r="255" g="220" b="0" font="letterica16" align="r" vert_align="c">ui_mm_sun_shafts</text>
+            <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_sun_shafts</text>
         </cap_sun_shafts>
         <combo_sun_shafts x="180" y="0" width="235" height="20" always_show_scroll="1">
             <options_item entry="r2_sun_shafts" group="mm_opt_video" depend="vid"/>
-            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <list_font color="yellow" font="letterica16"/>
             <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
+	            <e color="yellow"/>
             </text_color>
         </combo_sun_shafts>
 
         <cap_ao x="20" y="3" width="135" height="24">
-            <text r="200" g="34" b="34" font="letterica16" align="r" vert_align="c">ui_mm_ssao_text</text>
+            <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_ssao_text</text>
         </cap_ao>
 		<radio_tab_ao_options x="180" y="0" width="135" height="101" radio="1">
 			<options_item entry="r2_ssao_mode" group="mm_opt_video" depend="restart"/>
 			<button x="-10" y="0" width="47" height="28" id="disabled" stretch="1">
 				<text font="letterica16" vert_align="c" x="37" y="3" align="l">st_opt_off</text>
 	            <text_color>
-	                <e r="170" g="170" b="170"/>
-	                <d r="70" g="70" b="70"/>
+	                <e color="red"/>
 	            </text_color>
 			</button>
 			<button x="-10" y="25" width="47" height="28" id="default" stretch="1">
 				<text font="letterica16" vert_align="c" x="37" y="3" align="l">ui_mm_ssao</text>
 	            <text_color>
-	                <e r="170" g="170" b="170"/>
-	                <d r="70" g="70" b="70"/>
+	                <e color="red"/>
 	            </text_color>
 			</button>
 			<button x="-10" y="75" width="47" height="28" id="hbao" stretch="1">
 				<text font="letterica16" vert_align="c" x="37" y="3" align="l">ui_mm_hbao</text>
 	            <text_color>
-	                <e r="170" g="170" b="170"/>
-	                <d r="70" g="70" b="70"/>
+	                <e color="red"/>
 	            </text_color>
 			</button>
 		</radio_tab_ao_options>
 
         <cap_ssao x="20" y="3" width="135" height="24">
-            <text r="200" g="34" b="34" font="letterica16" align="r" vert_align="c">ui_mm_ssao_quality</text>
+            <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_ssao_quality</text>
         </cap_ssao>
         <combo_ssao x="180" y="0" width="235" height="20" always_show_scroll="1">
             <options_item entry="r2_ssao" group="mm_opt_video" depend="restart"/>
-            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <list_font color="red" font="letterica16"/>
             <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
+	            <e color="red"/>
             </text_color>
         </combo_ssao>
 		
         <cap_shadow_map x="20" y="3" width="135" height="24">
-            <text r="200" g="34" b="34" font="letterica16" align="r" vert_align="c">ui_mm_smap_size</text>
+            <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_smap_size</text>
         </cap_shadow_map>
         <combo_shadow_map x="180" y="0" width="235" height="20" always_show_scroll="1">
             <options_item entry="r2_ssao" group="mm_opt_video" depend="restart"/>
-            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <list_font color="red" font="letterica16"/>
             <text_color>
-	            <e r="170" g="170" b="170"/>
-	            <d r="70" g="70" b="70"/>
+	            <e color="red"/>
             </text_color>
         </combo_shadow_map>
 
@@ -449,12 +440,15 @@
         </check_soft_particles>
 
         <cap_dof x="20" y="3" width="135" height="24">
-            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
+            <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
         </cap_dof>
-        <check_dof x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r2_dof_enable" group="mm_opt_video_adv" depend="vid"/>
-        </check_dof>
+        <combo_dof x="180" y="0" width="235" height="20" always_show_scroll="1">
+	        <options_item entry="r2_dof_quality" group="mm_opt_video" depend="vid"/>
+            <list_font color="red" font="letterica16"/>
+            <text_color>
+	            <e color="red"/>
+            </text_color>
+        </combo_dof>
 		
         <cap_mblur_enabled x="20" y="3" width="135" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_mblur_enabled</text>

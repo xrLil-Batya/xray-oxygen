@@ -14,7 +14,7 @@
 #include "blenders\blender.h"
 #include "blenders\blender_recorder.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 void fix_texture_name(LPSTR fn);
 
@@ -24,7 +24,6 @@ void simplify_texture(string_path &fn)
 	{
 		if (strstr(fn, "$user")) return;
 		if (strstr(fn, "ui\\")) return;
-		if (strstr(fn, "lmap#")) return;
 		if (strstr(fn, "act\\")) return;
 		if (strstr(fn, "fx\\")) return;
 		if (strstr(fn, "glow\\")) return;

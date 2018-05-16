@@ -28,8 +28,6 @@ enum {
 	M_CLIENT_CONNECT_RESULT,
 	M_CLIENT_REQUEST_CONNECTION_DATA,
 	//-----------------------------------------------------
-	M_BULLET_CHECK_RESPOND,
-	//-----------------------------------------------------
 	M_PLAYER_FIRE,
 	//-----------------------------------------------------
 	M_SV_MAP_NAME,				//request and responce

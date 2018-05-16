@@ -224,16 +224,12 @@ void CRender::Render		()
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
-	BOOL					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
+	BOOL					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS) && !strstr(Core.Params, "-render_for_weak_systems");
 	if (o.sunstatic)		bSUN				= FALSE;
 
 	// HOM
 	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View										= 0;
-	if (!ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		HOM.Enable									();
-		HOM.Render									(ViewBase);
-	}
 
 	//******* Z-prefill calc - DEFERRER RENDERER
 	if (ps_r2_ls_flags.test(R2FLAG_ZFILL))		
@@ -508,18 +504,18 @@ void CRender::render_forward				()
 	RImplementation.o.distortion				= FALSE;				// disable distorion
 }
 
-// Ïåðåä íà÷àëîì ðåíäåðà ìèðà +SecondVP+
+// ÃÃ¥Ã°Ã¥Ã¤ Ã­Ã Ã·Ã Ã«Ã®Ã¬ Ã°Ã¥Ã­Ã¤Ã¥Ã°Ã  Ã¬Ã¨Ã°Ã  +SecondVP+
 void CRender::BeforeWorldRender() {}
 
-// Ïîñëå ðåíäåðà ìèðà è ïîñò-ýôôåêòîâ +SecondVP+
+// ÃÃ®Ã±Ã«Ã¥ Ã°Ã¥Ã­Ã¤Ã¥Ã°Ã  Ã¬Ã¨Ã°Ã  Ã¨ Ã¯Ã®Ã±Ã²-Ã½Ã´Ã´Ã¥ÃªÃ²Ã®Ã¢ +SecondVP+
 void CRender::AfterWorldRender()
 {
 	if (Device.m_SecondViewport.IsSVPFrame())
 	{
-		// Äåëàåò êîïèþ áýêáóôåðà (òåêóùåãî ýêðàíà) â ðåíäåð-òàðãåò âòîðîãî âüþïîðòà
+		// Ã„Ã¥Ã«Ã Ã¥Ã² ÃªÃ®Ã¯Ã¨Ã¾ Ã¡Ã½ÃªÃ¡Ã³Ã´Ã¥Ã°Ã  (Ã²Ã¥ÃªÃ³Ã¹Ã¥Ã£Ã® Ã½ÃªÃ°Ã Ã­Ã ) Ã¢ Ã°Ã¥Ã­Ã¤Ã¥Ã°-Ã²Ã Ã°Ã£Ã¥Ã² Ã¢Ã²Ã®Ã°Ã®Ã£Ã® Ã¢Ã¼Ã¾Ã¯Ã®Ã°Ã²Ã 
 		ID3DTexture2D* pBuffer = NULL;
 		HW.m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBuffer);
 		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, pBuffer);
-		pBuffer->Release(); // Êîððåêòíî î÷èùàåì ññûëêó íà áýêáóôåð (èíà÷å èãðà çàâèñíåò â îïöèÿõ)
+		pBuffer->Release(); // ÃŠÃ®Ã°Ã°Ã¥ÃªÃ²Ã­Ã® Ã®Ã·Ã¨Ã¹Ã Ã¥Ã¬ Ã±Ã±Ã»Ã«ÃªÃ³ Ã­Ã  Ã¡Ã½ÃªÃ¡Ã³Ã´Ã¥Ã° (Ã¨Ã­Ã Ã·Ã¥ Ã¨Ã£Ã°Ã  Ã§Ã Ã¢Ã¨Ã±Ã­Ã¥Ã² Ã¢ Ã®Ã¯Ã¶Ã¨Ã¿Ãµ)
 	}
 }

@@ -12,18 +12,17 @@
 #include "xr_object.h"
 #include "feel_sound.h"
 
-ENGINE_API	IGame_Level*	g_pGameLevel	= NULL;
+ENGINE_API	IGame_Level*	g_pGameLevel	= nullptr;
 extern	BOOL g_bLoaded;
 
 IGame_Level::IGame_Level	()
 {
 	m_pCameras					= xr_new<CCameraManager>(true);
 	g_pGameLevel				= this;
-	pLevel						= NULL;
+	pLevel						= nullptr;
 	bReady						= false;
-	pCurrentEntity				= NULL;
-	pCurrentViewEntity			= NULL;
-	Device.DumpResourcesMemoryUsage();
+	pCurrentEntity				= nullptr;
+	pCurrentViewEntity			= nullptr;
 }
 
 //#include "resourcemanager.h"
@@ -43,15 +42,8 @@ IGame_Level::~IGame_Level	()
 	Device.seqFrame.Remove		(this);
 	CCameraManager::ResetPP		();
 ///////////////////////////////////////////
-	Sound->set_geometry_occ		(NULL);
-	Sound->set_handler			(NULL);
-	Device.DumpResourcesMemoryUsage();
-
-	u32		m_base=0,c_base=0,m_lmaps=0,c_lmaps=0;
-	if (Device.m_pRender) 
-		Device.m_pRender->ResourcesGetMemoryUsage(m_base,c_base,m_lmaps,c_lmaps);
-
-	Msg		("* [ D3D ]: textures[%d K]", (m_base+m_lmaps)/1024);
+	Sound->set_geometry_occ		(nullptr);
+	Sound->set_handler			(nullptr);
 
 }
 
@@ -139,7 +131,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 #include "../xrCore/threadpool/ttapi.h"
 #endif
 
-int		psNET_DedicatedSleep	= 5;
 void	IGame_Level::OnRender()
 {
 #ifdef _GPA_ENABLED	

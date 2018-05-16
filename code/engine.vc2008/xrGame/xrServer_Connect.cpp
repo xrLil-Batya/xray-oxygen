@@ -11,7 +11,7 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionData & game_descr)
+xrServer::EConnect xrServer::Connect(shared_str &session_name)
 {
 #ifdef DEBUG
 	Msg						("* sv_Connect: %s",	*session_name);
@@ -38,34 +38,9 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionDa
 	// Options
 	if (0==game)			return ErrConnect;
 	
-    std::memset(&game_descr, 0, sizeof(game_descr));
-	xr_strcpy(game_descr.map_name, game->level_name(session_name.c_str()).c_str());
-	xr_strcpy(game_descr.map_version, game_sv_GameState::parse_level_version(session_name.c_str()).c_str());
-
 	game->Create			(session_name);
 
-	return IPureServer::Connect(*session_name, game_descr);
-}
-
-
-IClient* xrServer::new_client( SClientConnectData* cl_data )
-{
-	IClient* CL		= client_Find_Get( cl_data->clientID );
-	VERIFY( CL );
-	
-	// copy entity
-	CL->ID			= cl_data->clientID;
-	//CL->process_id	= cl_data->process_id;
-	CL->name		= cl_data->name;	//only for offline mode
-	CL->pass._set	( cl_data->pass );
-
-	NET_Packet		P;
-	P.B.count		= 0;
-	P.r_pos			= 0;
-
-	game->AddDelayedEvent( P, GAME_EVENT_CREATE_CLIENT, 0, CL->ID );
-	
-	return CL;
+	return IPureServer::Connect(*session_name);
 }
 
 void xrServer::AttachNewClient			(IClient* CL)
@@ -76,12 +51,10 @@ void xrServer::AttachNewClient			(IClient* CL)
 
     SV_Client			= CL;
 	CL->flags.bLocal	= 1;
-	SendTo_LL( SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE,TRUE,TRUE,TRUE) );
+	SendTo_LL(&msgConfig, sizeof(msgConfig));
 
 	// gen message
 	RequestClientDigest(CL);
-	
-	CL->m_guid[0]=0;
 }
 
 void xrServer::RequestClientDigest(IClient* CL)

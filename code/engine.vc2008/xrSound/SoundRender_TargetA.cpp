@@ -119,37 +119,34 @@ void	CSoundRender_TargetA::update()
 	ALint processed;
 	A_CHK(alGetSourcei(pSource, AL_BUFFERS_PROCESSED, &processed));
 
+	extern const char* DeviceName;
+	bool isOALSoft = (!!strstr(DeviceName, "OpenAL Soft"));
+
 	if (processed > 0)
 	{
-		while (processed > 0)
+		do
 		{
 			// kcat: If there's a long enough freeze and the sources underrun, they go to an AL_STOPPED state.
 			// That update function will correctly see this and remove/refill/requeue the buffers, but doesn't restart the source
 			// (that's in the separate else block that didn't run this time).Because the source remains AL_STOPPED,
 			// the next update will still see all the buffers marked as processed and remove / refill / requeue them again.
 			// It keeps doing this and never actually restarts the source after an underrun.
-#ifndef DEBUG
-			ALint state;
-			A_CHK(alGetSourcei(pSource, AL_SOURCE_STATE, &state));
-			if (state == AL_STOPPED)
+			if(isOALSoft)
 			{
-				A_CHK(alSourcePlay(pSource));
-				//                 ALint processed_new = 0;
-				//                 A_CHK(alGetSourcei(pSource, AL_BUFFERS_PROCESSED, &processed_new));
-				//                 if (processed != processed_new)
-				//                 {
-				//                     DebugBreak();
-				//                 }
+				ALint state;
+				A_CHK(alGetSourcei(pSource, AL_SOURCE_STATE, &state));
+				if (state == AL_STOPPED)
+				{
+					A_CHK(alSourcePlay(pSource));
+				}
 			}
-#endif
 
-			//
 			ALuint BufferID = 0;
 			A_CHK(alSourceUnqueueBuffers(pSource, 1, &BufferID));
 			fill_block(BufferID);
 			A_CHK(alSourceQueueBuffers(pSource, 1, &BufferID));
 			--processed;
-		}
+		} while (processed > 0);
 	}
 	else
 	{

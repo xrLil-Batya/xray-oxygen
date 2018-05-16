@@ -9,7 +9,6 @@ struct LevelMapSyncData
 	bool						m_map_loaded;
 	shared_str					m_name;				//map name that currently loaded
 	shared_str					m_map_version;		//map version that currently loaded
-	shared_str					m_map_download_url;
 	u32							m_level_geom_crc32;
 	
 

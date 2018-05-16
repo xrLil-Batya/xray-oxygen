@@ -32,19 +32,7 @@ CCar::CCar()
 	m_memory		= NULL;
 	m_driver_anim_type = 0;
 	m_bone_steer	= BI_NONE;
-	active_camera	= 0;
-	camera[ectFirst]= xr_new<CCameraFirstEye>	(this, CCameraBase::flRelativeLink|CCameraBase::flPositionRigid); 
-	camera[ectFirst]->tag	= ectFirst;
-	camera[ectFirst]->Load("car_firsteye_cam");
 
-	camera[ectChase]= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
-	camera[ectChase]->tag	= ectChase;
-	camera[ectChase]->Load("car_look_cam");
-
-	camera[ectFree]	= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
-	camera[ectFree]->tag	= ectFree;
-	camera[ectFree]->Load("car_free_cam");
-	OnCameraChange(ectFirst);
 
 	m_repairing		=false;
 
@@ -447,6 +435,7 @@ void CCar::UpdateCL()
 	}
 	
 	ASCUpdate();
+	UpdateEx			(g_fov);
 	
 	if(Owner()) 
 		return;
@@ -625,7 +614,7 @@ void CCar::detach_Actor()
 		return;
 	
 	Owner()->setVisible(1);
-	psCamInert=0.4;
+	psCamInert=0.3;
 	CHolderCustom::detach_Actor();
 	PPhysicsShell()->remove_ObjectContactCallback(ActorObstacleCallback);
 	NeutralDrive();
@@ -650,6 +639,7 @@ bool CCar::attach_Actor(CGameObject* actor)
 
 	CHolderCustom::attach_Actor(actor);
 
+	psCamInert=0.7;
 	IKinematics* K = smart_cast<IKinematics*>(Visual());
 	CInifile* ini = K->LL_UserData();
 	int id;
@@ -723,11 +713,12 @@ bool CCar::Enter(const Fvector& pos,const Fvector& dir,const Fvector& foot_pos)
 	return false;
 }
 
+
 bool CCar::Exit(const Fvector& pos,const Fvector& dir)
 {
 	xr_map<u16,SDoor>::iterator i,e;
 
-	psCamInert=0.4;
+	psCamInert=0.3;
 	i=m_doors.begin();e=m_doors.end();
 	for(;i!=e;++i)
 	{
@@ -753,7 +744,9 @@ void CCar::ParseDefinitions()
 	R_ASSERT2(ini,"Car has no description !!! See ActorEditor Object - UserData");
 	CExplosive::Load(ini,"explosion");
 	//CExplosive::SetInitiator(ID());
-	m_camera_position			= ini->r_fvector3("car_definition","camera_pos");
+	m_camera_position_1st			= ini->r_fvector3("car_definition","camera_pos");
+	m_camera_position_2nd			= ini->r_fvector3("car_definition","camera_pos_2nd");
+	m_camera_position_3rd			= ini->r_fvector3("car_definition","camera_pos_3rd");
 	///////////////////////////car definition///////////////////////////////////////////////////
 	fill_wheel_vector			(ini->r_string	("car_definition","driving_wheels"),m_driving_wheels);
 	fill_wheel_vector			(ini->r_string	("car_definition","steering_wheels"),m_steering_wheels);
@@ -762,7 +755,21 @@ void CCar::ParseDefinitions()
 	fill_doors_map				(ini->r_string	("car_definition","doors"),m_doors);
 
 	///////////////////////////car properties///////////////////////////////
+	active_camera	= 0;
+	camera[ectFirst]= xr_new<CCameraFirstEye>	(this, CCameraBase::flRelativeLink|CCameraBase::flPositionRigid); 
+	camera[ectFirst]->tag	= ectFirst;
+	camera[ectFirst]->Load(ini->r_string("car_definition", "car_first_eye_cam"));
 
+	camera[ectChase]= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
+	camera[ectChase]->tag	= ectChase;
+	camera[ectChase]->Load(ini->r_string("car_definition", "car_look_cam"));
+
+	camera[ectFree]	= xr_new<CCameraLook>		(this, CCameraBase::flKeepPitch); 
+	camera[ectFree]->tag	= ectFree;
+	camera[ectFree]->Load(ini->r_string("car_definition", "car_free_cam"));
+	OnCameraChange(ectFirst);
+	
+	
 
 	m_max_power			=		ini->r_float("car_definition","engine_power");
 	m_max_power			*=		(0.8f*1000.f);
@@ -1829,7 +1836,7 @@ void CCar::OnBeforeExplosion()
 void CCar::CarExplode()
 {
 
-	psCamInert=0.8;
+	psCamInert=0.3;
 	if(b_exploded) return;
 	CPHSkeleton::SetNotNeedSave();
 	if(m_car_weapon)m_car_weapon->Action(CCarWeapon::eWpnActivate,0);
@@ -1848,6 +1855,9 @@ void CCar::CarExplode()
 		A->detach_Vehicle();
 		if(A->g_Alive()<=0.f)A->character_physics_support()->movement()->DestroyCharacter();
 	}
+	float const base_fov = g_fov;
+	float const dest_fov = g_fov - (g_fov - 30.f);
+	g_fov = base_fov;
 
 	if(CPHDestroyable::CanDestroy())
 		CPHDestroyable::Destroy(ID(),"physic_destroyable_object");	

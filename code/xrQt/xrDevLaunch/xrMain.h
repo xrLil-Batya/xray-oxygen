@@ -1,4 +1,3 @@
-void on_actionxrEngine_2_triggered();
 /*************************************************
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
@@ -34,6 +33,7 @@ void on_actionxrEngine_2_triggered();
 #include <QDialog>
 #include <QMessageBox>
 /////////////////////////////////////////
+#define	MAX_NUM_ARGVS	128
 #define INIT_ERROR		"Init error: "
 #define DLL_API			__declspec(dllimport)
 #define NOAWDA			1

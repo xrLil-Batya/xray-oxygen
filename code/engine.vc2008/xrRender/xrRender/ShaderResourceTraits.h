@@ -1,14 +1,13 @@
 #pragma once
 
 #ifdef USE_DX11
-
-ENGINE_API bool isGraphicDebugging;
-
-#	include "ResourceManager.h"
-
+	//////////////////////////////////////////
+	#include "ResourceManager.h"
+	//////////////////////////////////////////
+	ENGINE_API BOOL isGraphicDebugging;
+	//////////////////////////////////////////
 	template<typename T>
 	struct ShaderTypeTraits;
-
 	template<>
 	struct ShaderTypeTraits<SHS>
 	{

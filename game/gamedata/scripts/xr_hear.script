@@ -51,8 +51,8 @@ function reset_hear_callback(st, section)
 		local parsed_params = utils.parse_params(value)
 		st.hear_sounds[parsed_params[1]] = st.hear_sounds[parsed_params[1]] or {}
 		st.hear_sounds[parsed_params[1]][parsed_params[2]] = {	dist = tonumber(parsed_params[3]),
-																power = tonumber(parsed_params[4]),
-																condlist = xr_logic.parse_condlist(obj, "hear_callback", "hear_callback", parsed_params[5])}
+		power = tonumber(parsed_params[4]),
+		condlist = xr_logic.parse_condlist(obj, "hear_callback", "hear_callback", parsed_params[5])}
 	end
 	local ini = st.ini
 	if not ini:section_exist(section) then
@@ -88,4 +88,3 @@ function hear_callback(obj, who_id, sound_type, sound_position, sound_power)
 		end
 	end
 end
-

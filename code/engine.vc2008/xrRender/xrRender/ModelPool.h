@@ -39,7 +39,7 @@ private:
 	BOOL						bLogging;
     BOOL						bForceDiscard;
     BOOL						bAllowChildrenDuplicate;
-
+	std::mutex					mtPeref;
 	void						Destroy	();
 public:
 								 CModelPool			();

@@ -17,6 +17,7 @@ private:
 
 	CUIStatic					m_background;
 	CUIStatic*					m_clock_wnd;
+	CUIStatic*					m_date_wnd;
 	CUIStatic					m_center;
 	CUIStatic					m_compass;
 	CUIWindow					m_clipFrame;

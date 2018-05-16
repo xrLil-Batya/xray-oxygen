@@ -63,7 +63,7 @@ bool SupportsDX10Rendering()
 bool SupportsDX11Rendering()
 {
 	// Register class
-	WNDCLASSEX wcex;
+	WNDCLASSEXA wcex;
 	std::memset(&wcex, 0, sizeof(wcex));
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpfnWndProc = DefWindowProc;
@@ -71,14 +71,14 @@ bool SupportsDX11Rendering()
 	wcex.lpszClassName = "TestDX11WindowClass";
 
 	// If class can't register
-	if (!RegisterClassEx(&wcex))
+	if (!RegisterClassExA(&wcex))
 	{
 		Msg("* DX11: failed to register window class");
 		return false;
 	}
 
 	// Create window
-	HWND hWnd = CreateWindow("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
+	HWND hWnd = CreateWindowA("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
 
 	// If window can't create
 	if (!hWnd)

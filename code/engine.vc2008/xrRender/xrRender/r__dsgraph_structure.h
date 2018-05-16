@@ -40,6 +40,7 @@ public:
 	R_dsgraph::mapHUD_T											mapHUD;
 	R_dsgraph::mapLOD_T											mapLOD;
 	R_dsgraph::mapSorted_T										mapDistort;
+	R_dsgraph::mapHUD_T											mapHUDSorted;
 
 	R_dsgraph::mapSorted_T										mapWmark;			// sorted
 	R_dsgraph::mapSorted_T										mapEmissive;

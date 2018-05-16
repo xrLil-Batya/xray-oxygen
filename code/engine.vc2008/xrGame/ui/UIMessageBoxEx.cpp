@@ -78,16 +78,6 @@ void CUIMessageBoxEx::SendMessage(CUIWindow* pWnd, s16 msg, void* pData /* = NUL
 	
 }
 
-LPCSTR CUIMessageBoxEx::GetHost()
-{
-	return m_pMessageBox->GetHost();
-}
-
-LPCSTR CUIMessageBoxEx::GetPassword()
-{
-	return m_pMessageBox->GetPassword();
-}
-
 bool CUIMessageBoxEx::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
 	if(keyboard_action==WINDOW_KEY_PRESSED)
@@ -101,14 +91,4 @@ bool CUIMessageBoxEx::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 			return CUIDialogWnd::OnKeyboardAction(dik, keyboard_action);
 	}
 	return CUIDialogWnd::OnKeyboardAction(dik, keyboard_action);
-}
-
-void  CUIMessageBoxEx::SetTextEditURL( LPCSTR text )
-{
-	m_pMessageBox->SetTextEditURL( text );
-}
-
-LPCSTR  CUIMessageBoxEx::GetTextEditURL()
-{
-	return m_pMessageBox->GetTextEditURL();
 }

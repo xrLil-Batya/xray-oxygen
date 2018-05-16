@@ -25,6 +25,13 @@
 #	include "../Include/editor/interfaces.hpp"
 #endif // #ifdef INGAME_EDITOR
 
+//Thread Id's
+extern DWORD gMainThreadId;
+extern DWORD gSecondaryThreadId;
+
+ENGINE_API bool IsMainThread();
+ENGINE_API bool IsSecondaryThread();
+
 class engine_impl;
 
 #pragma pack(push,4)
@@ -163,8 +170,6 @@ public:
 		}
 		m_pRender->SetCacheXform(mView, mProject);
 	}
-
-	void									DumpResourcesMemoryUsage() { m_pRender->ResourcesDumpMemoryUsage();}
 public:
 	// Registrators
 	CRegistrator	<pureFrame			>			seqFrameMT;

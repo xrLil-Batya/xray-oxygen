@@ -78,8 +78,6 @@ public:
 	virtual shared_str			name					() const = 0;
 
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client)	= 0;
-	virtual void				net_Load				( LPCSTR name )							= 0;
-	virtual void				net_Save				( LPCSTR name )							= 0;
 	virtual void				net_Stop				( );
 	virtual void				net_Update				( )										= 0;
 
@@ -91,21 +89,17 @@ public:
 	virtual void	_BCL		OnFrame					( void );
 	virtual void				OnRender				( void );
 
-	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name) = 0;
-	virtual void				net_StartPlayDemo		() = 0;
-
 	// Main interface
 	CObject*					CurrentEntity			( void ) const							{ return pCurrentEntity;				}
 	CObject*					CurrentViewEntity		( void ) const							{ return pCurrentViewEntity;			}
-	void						SetEntity				( CObject* O  );//							{ pCurrentEntity=pCurrentViewEntity=O;	}
-	void						SetViewEntity			( CObject* O  );//							{ pCurrentViewEntity=O;					}
+	void						SetEntity				( CObject* O  );
+	void						SetViewEntity			( CObject* O  );
 	
 	void						SoundEvent_Register		( ref_sound_data_ptr S, float range );
 	void						SoundEvent_Dispatch		( );
 	void                        SoundEvent_OnDestDestroy (Feel::Sound*);
 
 	// Loader interface
-	//ref_shader					LL_CreateShader			(int S, int T, int M, int C);
 	void						LL_CheckTextures		();
 	virtual void				SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTimeFactor) = 0;
 };

@@ -39,6 +39,7 @@ void CUIZoneMap::Init()
 	xml_init.InitStatic				(uiXml, "minimap:center",		0, &m_center);
 	
 	m_clock_wnd						= UIHelper::CreateStatic(uiXml, "minimap:clock_wnd", &m_background);
+	m_date_wnd						= UIHelper::CreateStatic(uiXml, "minimap:date_wnd", &m_background);
 
 	m_activeMap						= xr_new<CUIMiniMap>();
 	m_clipFrame.AttachChild			(m_activeMap);
@@ -88,6 +89,10 @@ void CUIZoneMap::Init()
 	rel_pos.mul				(m_background.GetWndSize());
 	m_clock_wnd->SetWndPos	(rel_pos);
 
+	rel_pos					= m_date_wnd->GetWndPos();
+	rel_pos.mul				(m_background.GetWndSize());
+	m_date_wnd->SetWndPos	(rel_pos);
+
 		xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
 		m_background.AttachChild	(&m_Counter);
 		xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
@@ -133,6 +138,8 @@ void CUIZoneMap::Update()
 	SetHeading( -h );
 
 	m_clock_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameTimeAsString( InventoryUtilities::etpTimeToMinutes ).c_str() );
+
+	m_date_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameNumDateAsString( InventoryUtilities::edpDateToDay ).c_str() );
 }
 
 void CUIZoneMap::SetHeading		(float angle)

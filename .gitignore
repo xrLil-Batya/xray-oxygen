@@ -32,5 +32,8 @@ librariesx64/
 /code/editors/xrPostprocessEditor/obj/
 /code/editors/xrSdkControls/obj/
 /code/editors/.vs/
+/code/xrQt/xrDevLaunch/GeneratedFiles/
+/code/xrQt/xrDevLaunch/debug/
+/code/xrQt/xrDevLaunch/release/
 *.db-shm
 *.db-wal
