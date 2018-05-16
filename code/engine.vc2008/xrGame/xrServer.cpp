@@ -148,7 +148,7 @@ void xrServer::Update	()
 
 	if (game->sv_force_sync)	Perform_game_export();
 #ifdef DEBUG
-	verify_entities()
+    verify_entities();
 #endif
 }
 
@@ -163,7 +163,7 @@ void xrServer::OnDelayedMessage(NET_Packet& P, ClientID sender)
 		OnCL_Connected(tmp_client);
 	}
 #ifdef DEBUG
-	verify_entities()
+    verify_entities();
 #endif
 }
 
