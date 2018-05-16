@@ -1507,9 +1507,6 @@
     <Filter Include="Core\Client\Level\LevelMapSync">
       <UniqueIdentifier>{c89035a2-847f-4cb3-b855-8de19ffa3a56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Level\LevelNetworkDemo">
-      <UniqueIdentifier>{2ae1f46b-294b-4a00-8ff6-7110eda60a6d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Level Controller">
       <UniqueIdentifier>{fb49383d-30b4-45de-950a-0e751b97ac98}</UniqueIdentifier>
     </Filter>
@@ -2151,6 +2148,9 @@
     </Filter>
     <Filter Include="Core\Server\Games\server\base">
       <UniqueIdentifier>{365ed75e-e2e4-420d-aecd-9b4593b55b0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter">
+      <UniqueIdentifier>{b715dea7-8373-4cb2-8ccc-7fba89926be7}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -4917,18 +4917,6 @@
     <ClInclude Include="Level_network_map_sync.h">
       <Filter>Core\Client\Level\LevelMapSync</Filter>
     </ClInclude>
-    <ClInclude Include="DemoInfo.h">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClInclude>
-    <ClInclude Include="DemoInfo_Loader.h">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClInclude>
-    <ClInclude Include="Level_network_Demo.h">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClInclude>
-    <ClInclude Include="Message_Filter.h">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClInclude>
     <ClInclude Include="xr_level_controller.h">
       <Filter>Core\Client\Level Controller</Filter>
     </ClInclude>
@@ -6176,6 +6164,12 @@
     </ClInclude>
     <ClInclude Include="game_sv_base.h">
       <Filter>Core\Server\Games\server\base</Filter>
+    </ClInclude>
+    <ClInclude Include="Dosimeter.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClInclude>
+    <ClInclude Include="UIDosimeter.h">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -7571,12 +7565,6 @@
     <ClCompile Include="Level_SLS_Default.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
-    <ClCompile Include="Level_SLS_Load.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
-    <ClCompile Include="Level_SLS_Save.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Level_start.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
@@ -7618,18 +7606,6 @@
     </ClCompile>
     <ClCompile Include="Level_network_map_sync.cpp">
       <Filter>Core\Client\Level\LevelMapSync</Filter>
-    </ClCompile>
-    <ClCompile Include="DemoInfo.cpp">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClCompile>
-    <ClCompile Include="DemoInfo_Loader.cpp">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClCompile>
-    <ClCompile Include="Level_network_Demo.cpp">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
-    </ClCompile>
-    <ClCompile Include="Message_Filter.cpp">
-      <Filter>Core\Client\Level\LevelNetworkDemo</Filter>
     </ClCompile>
     <ClCompile Include="xr_level_controller.cpp">
       <Filter>Core\Client\Level Controller</Filter>
@@ -8827,6 +8803,12 @@
     </ClCompile>
     <ClCompile Include="game_sv_base.cpp">
       <Filter>Core\Server\Games\server\base</Filter>
+    </ClCompile>
+    <ClCompile Include="Dosimeter.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClCompile>
+    <ClCompile Include="UIDosimeter.cpp">
+      <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

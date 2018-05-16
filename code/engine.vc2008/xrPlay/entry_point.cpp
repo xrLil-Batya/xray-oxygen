@@ -52,8 +52,10 @@ DLL_API int RunApplication(char* commandLine);
 /// </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
+
 	if (hPrevInstance)				//#VERTVER: Previous Instance can't be in WinNT 
 		return 0;
+
 	g_hInstance = hInstance;
 
 	std::string params = lpCmdLine;
@@ -72,9 +74,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	const bool launch = strstr(lpCmdLine, "-launcher");
 
 	////////////////////////////////////////////////////
-	// If we don't needy for a excetions - we can 
+	// If we don't needy for a exceptions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
+
 #ifndef DEBUG
 	if (!strstr(lpCmdLine, "-silent") && !launch)
 	{
@@ -85,23 +88,22 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		}
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
-			if (!CPU::Info.hasFeature(CPUFeature::SSE3))
-			{
-				MessageBox(NULL,
-					"It's can affect on the stability of the game.",
-					"SSE3 isn't supported on your CPU",
-					MB_OK | MB_ICONASTERISK);
-				//#VERTVER: some part of vectors use SSE3 instructions
-			}
+		{
+			MessageBox(NULL,
+				"It's can affect on the stability of the game.",
+				"SSE3 isn't supported on your CPU",
+				MB_OK | MB_ICONASTERISK);
+			//#VERTVER: some part of vectors use SSE3 instructions
+		}
 		// Checking for AVX
 #ifndef RELEASE_IA32
-			else if (!CPU::Info.hasFeature(CPUFeature::AVX))
-			{
-				MessageBox(NULL,
-					"It's can affect on the stability of the game.",
-					"AVX isn't supported on your CPU!",
-					MB_OK | MB_ICONWARNING);
-			}
+		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
+		{
+			MessageBox(NULL,
+				"It's can affect on the stability of the game.",
+				"AVX isn't supported on your CPU!",
+				MB_OK | MB_ICONWARNING);
+		}
 	}
 #endif
 #endif
@@ -121,5 +123,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CreateRendererList();
 	RunApplication(params.data());
 	return 0;
-	}
 }

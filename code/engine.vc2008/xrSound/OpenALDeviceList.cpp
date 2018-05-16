@@ -28,6 +28,8 @@
 #include <objbase.h>
 #pragma warning(default: 4995)
 
+const char* DeviceName;
+
 ALDeviceList::ALDeviceList()
 {
 	snd_device_id = u32(-1);
@@ -107,7 +109,7 @@ void ALDeviceList::Enumerate()
 						m_devices.back().props.efx = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "ALC_EXT_EFX");
 						m_devices.back().props.xram = alcIsExtensionPresent(alcGetContextsDevice(alcGetCurrentContext()), "EAX_RAM");
 
-						Msg("[OpenAL] EFX Support: %s", m_devices.back().props.efx ? "yes" : "no");
+						Msg("[OpenAL] device: %s, EFX Support: %s", actualDeviceName, m_devices.back().props.efx ? "yes" : "no");
 
 						m_devices.back().props.eax_unwanted = ((0 == xr_strcmp(actualDeviceName, AL_GENERIC_HARDWARE)) ||
 							(0 == xr_strcmp(actualDeviceName, AL_GENERIC_SOFTWARE)));
@@ -185,17 +187,21 @@ void ALDeviceList::SelectBestDevice()
 				new_device_id = i;
 			}
 		}
+
 		if (new_device_id == u32(-1))
 		{
 			R_ASSERT(GetNumDevices() != 0);
 			new_device_id = 0; //first
-		};
+		}
+
 		snd_device_id = new_device_id;
 	}
-	if (GetNumDevices() == 0)
-		Msg("SOUND: Can't select device. List empty");
-	else
-		Msg("SOUND: Selected device is %s", GetDeviceName(snd_device_id));
+	if (GetNumDevices())
+	{
+		DeviceName = GetDeviceName(snd_device_id);
+		Msg("[SOUND]: Selected device is [%s]", DeviceName);
+	}
+	else Msg("[SOUND]: Can't select device. List empty");
 }
 
 /*

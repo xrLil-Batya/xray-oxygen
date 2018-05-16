@@ -72,11 +72,8 @@ void CLevel::IR_OnMouseMove( int dx, int dy )
 {
 	if(g_bDisableAllInput)							return;
 	if (CurrentGameUI()->IR_UIOnMouseMove(dx,dy))		return;
-	if (Device.Paused() && !IsDemoPlay() 
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	return;
 
-		&& !psActorFlags.test(AF_NO_CLIP) 
-
-		)	return;
 	if (CURRENT_ENTITY())		
 	{
 		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
@@ -114,15 +111,6 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 	if(_curr==kPAUSE)
 	{
-#ifdef INGAME_EDITOR
-			if (Device.editor())	
-				return;
-#endif // INGAME_EDITOR
-
-		if (!g_block_pause && IsDemoPlay())
-		{
-				Device.Pause(!Device.Paused(), TRUE, TRUE, "li_pause_key");
-		}
 		return;
 	}
 
@@ -160,11 +148,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 
 	if ( b_ui_exist && CurrentGameUI()->IR_UIOnKeyboardPress(key)) return;
 
-	if ( Device.Paused() && !IsDemoPlay() 
-
-		&& !psActorFlags.test(AF_NO_CLIP) 
-
-		)	return;
+	if ( Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	return;
 
 	if  (game && game->OnKeyboardPress(key))	return;
 
@@ -407,11 +391,8 @@ void CLevel::IR_OnKeyboardHold(int key)
 	if (g_actor) Actor()->callback(GameObject::eOnKeyHold)(key, get_binded_action(key));//+
 
 	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardHold(key)) return;
-	if (Device.Paused() && !Level().IsDemoPlay() 
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP)) return;
 
-		&& !psActorFlags.test(AF_NO_CLIP)
-
-		) return;
 	if (CURRENT_ENTITY())		{
 		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
 		if (IR)				IR->IR_OnKeyboardHold				(get_binded_action(key));

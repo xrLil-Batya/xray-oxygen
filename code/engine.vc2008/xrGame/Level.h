@@ -25,18 +25,15 @@ class	CLevelDebug;
 class	CLevelSoundManager;
 class	CGameTaskManager;
 class	CZoneList;
-class	demo_info;
 class	CDebugRenderer;
-class 	message_filter;
 
 extern float g_fov;
 
 class CBulletManager;
 class CMapManager;
 
-class CLevel					: public IGame_Level, public IPureClient
+class CLevel : public IGame_Level, public IPureClient
 {
-	#include "Level_network_Demo.h"
 	void						ClearAllObjects			();
 private:
 #ifdef DEBUG
@@ -82,13 +79,11 @@ public:
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
     static bool					InterpolationDisabled	();
-	void						ReculcInterpolationSteps() const;
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnConnectRejected		();
 			bool				PostponedSpawn			(u16 id);
 private:
 	BOOL						m_bNeed_CrPr;
@@ -115,12 +110,9 @@ private:
 	void						make_NetCorrectionPrediction();
 
 	u32							m_dwDeltaUpdate;
-	u32							m_dwLastNetUpdateTime;
-	void						UpdateDeltaUpd			( u32 LastTime );
 
 	bool						Connect2Server					(const char* options);
 private:
-	bool						m_bConnectResultReceived;
 	bool						m_bConnectResult;
 	xr_string					m_sConnectResult;
 public:	
@@ -174,8 +166,6 @@ protected:
 	bool	xr_stdcall			net_start_client4				();
 	bool	xr_stdcall			net_start_client5				();
 	bool	xr_stdcall			net_start_client6				();
-
-	void						CalculateLevelCrc32		();
 public:
 	bool						IsChecksumsEqual		(u32 check_sum) const;
 
@@ -184,8 +174,6 @@ public:
 
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Load				( LPCSTR name );
-	virtual void				net_Save				( LPCSTR name );
 	virtual void				net_Stop				( );
 	virtual BOOL				net_Start_client		( LPCSTR name );
 	virtual void				net_Update				( );
@@ -199,9 +187,6 @@ public:
 	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
 	virtual void	_BCL		OnFrame					( void );
 	virtual void				OnRender				( );
-
-	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
-	virtual void				net_StartPlayDemo		() {} ;
 	
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);

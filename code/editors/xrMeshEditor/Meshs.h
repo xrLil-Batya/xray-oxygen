@@ -2,6 +2,7 @@
 #include <string>
 #include "xrCore/xrCore.h"
 #include "../xrECoreLite/EditObject.h"
+#include "../xrECoreLite/Ogf.h"
 
 struct Mesh
 {
