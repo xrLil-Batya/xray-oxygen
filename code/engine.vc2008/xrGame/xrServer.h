@@ -21,7 +21,6 @@ public:
 	BOOL					net_Ready;
 	BOOL					net_Accepted;
 	
-	BOOL					net_PassUpdates;
 	u32						net_LastMoveUpdateTime;
 
 							xrClientData			();
@@ -59,7 +58,7 @@ private:
 	xr_deque<DelayedPacket>		m_aDelayedPackets;
 	void						ProceedDelayedPackets	();
 	void						AddDelayedPacket		(NET_Packet& Packet, ClientID Sender);
-	u32							OnDelayedMessage		(NET_Packet& P, ClientID sender);			// Non-Zero means broadcasting with "flags" as returned
+	void						OnDelayedMessage		(NET_Packet& P, ClientID sender);
 
 private:
 	typedef 
@@ -81,7 +80,6 @@ private:
 public:
 	game_sv_GameState*		game;
 
-	void					Export_game_type		(IClient* CL);
 	void					Perform_game_export		();
 	void					PerformMigration		(CSE_Abstract* E, xrClientData* from, xrClientData* to);
 	

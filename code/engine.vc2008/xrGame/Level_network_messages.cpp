@@ -37,19 +37,10 @@ void CLevel::ClientReceive()
 {
 	m_dwRPC = 0;
 	m_dwRPS = 0;
-	
-	if (IsDemoPlayStarted())
-	{
-		SimulateServerUpdate();
-	}
 
 	StartProcessQueue();
 	for (NET_Packet* P = net_msg_Retreive(); P; P=net_msg_Retreive())
 	{
-		if (IsDemoSaveStarted())
-		{
-			SavePacket(*P);
-		}
 		//-----------------------------------------------------
 		m_dwRPC++;
 		m_dwRPS += (u32)P->B.count;
@@ -64,8 +55,7 @@ void CLevel::ClientReceive()
 				{
 					Msg ("! Unconventional M_SPAWN received : map_data[%s] | bReady[%s] | deny_m_spawn[%s]",
 						(map_data.m_map_sync_received) ? "true" : "false",
-						(bReady) ? "true" : "false",
-						deny_m_spawn ? "true" : "false");
+						(bReady) ? "true" : "false", deny_m_spawn ? "true" : "false");
 					break;
 				}
 				game_events->insert		(*P);
@@ -134,9 +124,6 @@ void CLevel::ClientReceive()
 		case M_SV_MAP_NAME:
 			{
 				map_data.ReceiveServerMapSync(*P);
-			}break;
-		case M_BULLET_CHECK_RESPOND:
-			{
 			}break;
 		}
 		net_msg_Release();

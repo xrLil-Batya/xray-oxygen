@@ -25,18 +25,15 @@ class	CLevelDebug;
 class	CLevelSoundManager;
 class	CGameTaskManager;
 class	CZoneList;
-class	demo_info;
 class	CDebugRenderer;
-class 	message_filter;
 
 extern float g_fov;
 
 class CBulletManager;
 class CMapManager;
 
-class CLevel					: public IGame_Level, public IPureClient
+class CLevel : public IGame_Level, public IPureClient
 {
-	#include "Level_network_Demo.h"
 	void						ClearAllObjects			();
 private:
 #ifdef DEBUG
@@ -190,9 +187,6 @@ public:
 	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
 	virtual void	_BCL		OnFrame					( void );
 	virtual void				OnRender				( );
-
-	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
-	virtual void				net_StartPlayDemo		() {} ;
 	
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);

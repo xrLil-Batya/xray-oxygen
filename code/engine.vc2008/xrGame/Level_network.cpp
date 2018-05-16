@@ -111,9 +111,6 @@ void CLevel::net_Stop		()
 	bReady						= false;
 	m_bGameConfigStarted		= FALSE;
 
-	if(IsDemoSave() && !IsDemoInfoSaved())
-		SaveDemoInfo();
-
 	remove_objects				();
 	
 	//WARNING ! remove_objects() uses this flag, so position of this line must e here ..
@@ -222,26 +219,23 @@ void CLevel::ClientSave()
 
 void CLevel::Send(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
 {
-	if (!IsDemoPlayStarted() && !IsDemoPlayFinished())
-	{
-		// optimize the case when server located in our memory
-
-		ClientID	_clid;
-		_clid.set(1);
-		Server->OnMessage(P, _clid);
-	}
+	ClientID _clid;
+	_clid.set(1);
+	Server->OnMessage(P, _clid);
 }
 
 void CLevel::net_Update()
 {
-	if(game_configured){
+	if(game_configured)
+	{
 		// If we have enought bandwidth - replicate client data on to server
 		Device.Statistic->netClient2.Begin	();
 		ClientSend					();
 		Device.Statistic->netClient2.End		();
 	}
 	// If server - perform server-update
-	if (Server)	{
+	if (Server)	
+	{
 		Device.Statistic->netServer.Begin();
 		Server->Update					();
 		Device.Statistic->netServer.End	();
@@ -278,13 +272,6 @@ void CLevel::OnConnectResult(NET_Packet*	P)
 	SetClientID					(tmp_client_id);
 	
 	m_sConnectResult			= ResultStr;
-	if (IsDemoSave())
-	{
-		P->r_u8(); //server client or not
-		shared_str server_options;
-		P->r_stringZ(server_options);
-		StartSaveDemo(server_options);
-	}
 };
 
 void CLevel::ClearAllObjects()
@@ -337,9 +324,6 @@ void CLevel::ClearAllObjects()
 		//-------------------------------------------------------------
 		ParentFound = true;
 		//-------------------------------------------------------------
-#ifdef DEBUG
-		Msg ("Destruction of %s[%d]", *(pObj->cNameSect()), pObj->ID());
-#endif
 	};
 	ProcessGameEvents();
 };

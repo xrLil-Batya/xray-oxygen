@@ -153,30 +153,19 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bSynchronization			= false;
 #endif	
 	//---------------------------------------------------------
-	pStatGraphR = NULL;
-	pStatGraphS = NULL;
+	pStatGraphR = nullptr;
+	pStatGraphS = nullptr;
 	//---------------------------------------------------------
 	pObjects4CrPr.clear();
 	pActors4CrPr.clear();
 	//---------------------------------------------------------
-	pCurrentControlEntity = NULL;
-
+	pCurrentControlEntity = nullptr;
 	//---------------------------------------------------------	
-	m_writer = NULL;
-	m_reader = NULL;
-	m_DemoPlay = FALSE;
-	m_DemoPlayStarted	= FALSE;
-	m_DemoPlayStoped	= FALSE;
-	m_DemoSave = FALSE;
-	m_DemoSaveStarted = FALSE;
-	m_msg_filter = nullptr;
-	m_demo_info	= nullptr;
-
-	R_ASSERT				(!g_player_hud);
-	g_player_hud			= xr_new<player_hud>();
+	R_ASSERT(!g_player_hud);
+	g_player_hud = xr_new<player_hud>();
 	g_player_hud->load_default();
 	
-	hud_zones_list			= nullptr;
+	hud_zones_list = nullptr;
 }
 
 extern CAI_Space *g_ai_space;
@@ -257,27 +246,10 @@ CLevel::~CLevel()
 	CTradeParameters::clean		();
 
 	if(g_tutorial && g_tutorial->m_pStoredInputReceiver==this)
-		g_tutorial->m_pStoredInputReceiver = NULL;
+		g_tutorial->m_pStoredInputReceiver = nullptr;
 
 	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
-		g_tutorial2->m_pStoredInputReceiver = NULL;
-
-	
-	if (IsDemoPlay())
-	{
-		StopPlayDemo();
-		if (m_reader)
-		{
-			FS.r_close			(m_reader);
-			m_reader			= NULL;
-		}
-	}
-	xr_delete(m_msg_filter);
-	xr_delete(m_demo_info);
-	if (IsDemoSave())
-	{
-		StopSaveDemo();
-	}
+		g_tutorial2->m_pStoredInputReceiver = nullptr;
 }
 
 shared_str CLevel::name() const
@@ -285,23 +257,22 @@ shared_str CLevel::name() const
 	return (map_data.m_name);
 }
 
-void CLevel::PrefetchSound		(LPCSTR name)
+void CLevel::PrefetchSound(LPCSTR name)
 {
 	// preprocess sound name
 	string_path					tmp;
-	xr_strcpy					(tmp,name);
-	xr_strlwr					(tmp);
-	if (strext(tmp))			*strext(tmp)=0;
-	shared_str	snd_name		= tmp;
+	xr_strcpy(tmp, name);
+	xr_strlwr(tmp);
+	if (strext(tmp))			*strext(tmp) = 0;
+	shared_str	snd_name = tmp;
 	// find in registry
-    auto it		= sound_registry.find(snd_name);
+	auto it = sound_registry.find(snd_name);
 	// if find failed - preload sound
-	if (it==sound_registry.end())
-		sound_registry[snd_name].create(snd_name.c_str(),st_Effect,sg_SourceType);
+	if (it == sound_registry.end())
+		sound_registry[snd_name].create(snd_name.c_str(), st_Effect, sg_SourceType);
 }
 
-BOOL		g_bDebugEvents = FALSE	;
-
+BOOL g_bDebugEvents = FALSE;
 
 void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 {
