@@ -151,7 +151,7 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Только true!
+	// Г’Г®Г«ГјГЄГ® true!
 	o.HW_smap			= true;
 	o.HW_smap_PCF       = true;
 
@@ -183,7 +183,10 @@ void					CRender::create					()
 	o.volumetricfog		= ps_r2_ls_flags.test(R3FLAG_VOLUMETRIC_SMOKE);
 	o.sjitter			= (strstr(Core.Params,"-sjitter"))?		TRUE	:FALSE	;
 	o.depth16			= (strstr(Core.Params,"-depth16"))?		TRUE	:FALSE	;
-	o.noshadows			= (strstr(Core.Params,"-noshadows"))?	TRUE	:FALSE	;
+	if (strstr(Core.Params, "-noshadows") || strstr(Core.Params, "-render_for_weak_systems"))
+		o.noshadows = TRUE;
+	else
+		o.noshadows = FALSE;
 	o.Tshadows			= (strstr(Core.Params,"-tsh"))?			TRUE	:FALSE	;
 	o.distortion_enabled= (strstr(Core.Params,"-nodistort"))?	FALSE	:TRUE	;
 	o.distortion		= o.distortion_enabled;
