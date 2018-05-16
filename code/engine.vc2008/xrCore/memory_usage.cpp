@@ -26,7 +26,7 @@ XRCORE_API void vminfo(size_t *_free, size_t *reserved, size_t *committed)
 
 XRCORE_API void log_vminfo()
 {
-	if (!!strstr(GetCommandLine(), "-memory_usage"))
+	if (!!strstr(Core.Params, "-memory_usage"))
 	{
 		size_t w_free, w_reserved, w_committed;
 		vminfo(&w_free, &w_reserved, &w_committed);
@@ -36,7 +36,7 @@ XRCORE_API void log_vminfo()
 
 u32	mem_usage_impl(u32* pBlocksUsed, u32* pBlocksFree)
 {
-	if (!!strstr(GetCommandLine(), "-memory_usage"))
+	if (!!strstr(Core.Params, "-memory_usage"))
 	{
 		_HEAPINFO hinfo;
 		int heapstatus;

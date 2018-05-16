@@ -153,7 +153,7 @@ void ALDeviceList::Enumerate()
 	{
 		GetDeviceVersion(j, &majorVersion, &minorVersion);
 	}
-	if (!strstr(GetCommandLine(), "-editor"))
+	if (!strstr(Core.Params, "-editor"))
 		CoInitializeEx(nullptr, COINIT_MULTITHREADED);
 }
 

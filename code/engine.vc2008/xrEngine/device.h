@@ -61,10 +61,6 @@ public:
 
 	float									fTimeDelta;
 	float									fTimeGlobal;
-	float									fDefaultTimeDelta;
-	float									fDefaultTimeGlobal;
-	u32										dwfDefaultTimeDelta;
-	u32										dwfDefaultTimeGlobal;
 	u32										dwTimeDelta;
 	u32										dwTimeGlobal;
 	u32										dwTimeContinual;
