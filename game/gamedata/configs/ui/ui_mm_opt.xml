@@ -440,12 +440,15 @@
         </check_soft_particles>
 
         <cap_dof x="20" y="3" width="135" height="24">
-            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
+            <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
         </cap_dof>
-        <check_dof x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r2_dof_enable" group="mm_opt_video_adv" depend="vid"/>
-        </check_dof>
+        <combo_dof x="180" y="0" width="235" height="20" always_show_scroll="1">
+	        <options_item entry="r2_dof_quality" group="mm_opt_video" depend="vid"/>
+            <list_font color="red" font="letterica16"/>
+            <text_color>
+	            <e color="red"/>
+            </text_color>
+        </combo_dof>
 		
         <cap_mblur_enabled x="20" y="3" width="135" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_mblur_enabled</text>
