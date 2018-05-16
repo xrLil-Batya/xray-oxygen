@@ -40,8 +40,6 @@
 #include "actor.h"
 #include "player_hud.h"
 #include "UI/UIGameTutorial.h"
-#include "message_filter.h"
-#include "demoinfo.h"
 #include "CustomDetector.h"
 #include "GamePersistent.h"
 
