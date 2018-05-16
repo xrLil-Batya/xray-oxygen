@@ -26,7 +26,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	paths.append				(".");
 	paths.append				("platforms");
 	QCoreApplication::setLibraryPaths	(paths);
-	_controlfp					(_PC_24, _MCW_PC);
 	if (!strstr(lpCmdLine, "-nolauncher"))
 	{
 		QApplication a				(argc, argv);

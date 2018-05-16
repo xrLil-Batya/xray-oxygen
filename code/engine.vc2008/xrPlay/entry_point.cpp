@@ -52,10 +52,8 @@ DLL_API int RunApplication(char* commandLine);
 /// </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-
 	if (hPrevInstance)				//#VERTVER: Previous Instance can't be in WinNT 
 		return 0;
-
 	g_hInstance = hInstance;
 
 	std::string params = lpCmdLine;
@@ -77,11 +75,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	// If we don't needy for a excetions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
-<<<<<<< HEAD
-
 #ifndef DEBUG
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 	if (!strstr(lpCmdLine, "-silent") && !launch)
 	{
 		// Checking for SSE2
@@ -90,36 +84,27 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			return 0;
 		}
 		// Checking for SSE3
-<<<<<<< HEAD
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
-=======
-		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
-		{
-			MessageBox(NULL,
-				"It's can affect on the stability of the game.",
-				"SSE3 isn't supported on your CPU",
-				MB_OK | MB_ICONASTERISK);
-			//#VERTVER: some part of vectors use SSE3 instructions
-		}
+			if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+			{
+				MessageBox(NULL,
+					"It's can affect on the stability of the game.",
+					"SSE3 isn't supported on your CPU",
+					MB_OK | MB_ICONASTERISK);
+				//#VERTVER: some part of vectors use SSE3 instructions
+			}
 		// Checking for AVX
-<<<<<<< HEAD
 #ifndef RELEASE_IA32
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
-		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
-		{
-			MessageBox(NULL,
-				"It's can affect on the stability of the game.",
-				"AVX isn't supported on your CPU!",
-				MB_OK | MB_ICONWARNING);
-		}
+			else if (!CPU::Info.hasFeature(CPUFeature::AVX))
+			{
+				MessageBox(NULL,
+					"It's can affect on the stability of the game.",
+					"AVX isn't supported on your CPU!",
+					MB_OK | MB_ICONWARNING);
+			}
 	}
-<<<<<<< HEAD
 #endif
 #endif
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 
 	// If we want to start launcher
 	if (launch)
@@ -136,4 +121,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CreateRendererList();
 	RunApplication(params.data());
 	return 0;
+	}
 }
