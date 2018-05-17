@@ -340,17 +340,38 @@ class CCC_VidMode : public CCC_Token
 	u32		_dummy;
 public :
 					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
-	virtual void	Execute(LPCSTR args){
+	virtual void	Execute(LPCSTR args)
+	{
 		u32 _w, _h;
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
-		if(cnt==2){
+		if(cnt==2)
+		{
 			psCurrentVidMode[0] = _w;
 			psCurrentVidMode[1] = _h;
-		}else{
+		}
+		else
+		{
 			Msg("! Wrong video mode [%s]", args);
 			return;
 		}
 	}
+
+	virtual BOOL isWideScreen ()
+	{
+		u32 _w, _h, _deltaBase;
+
+		psCurrentVidMode[0] = _w;
+		psCurrentVidMode[1] = _h;
+		_deltaBase = _w / _h;
+
+		// 1920 / 1200 = 16:10 = 1.6
+		if (_deltaBase > 1.6)	
+			return TRUE;
+		else
+			return FALSE;
+
+	}
+
 	virtual void	Status	(TStatus& S)	
 	{ 
 		xr_sprintf(S,sizeof(S),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]); 
