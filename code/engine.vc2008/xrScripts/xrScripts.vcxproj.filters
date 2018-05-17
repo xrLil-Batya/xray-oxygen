@@ -132,9 +132,6 @@
     <ClCompile Include="library_set.cpp">
       <Filter>Lua\LuaBind</Filter>
     </ClCompile>
-    <ClCompile Include="linker.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
     <ClCompile Include="lua_studio\ai_script_lua_debug.cpp">
       <Filter>Import\xrEngine\ai_script</Filter>
     </ClCompile>
