@@ -79,10 +79,10 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
-			MessageBox	(NULL,
-						"It's can affect on the stability of the game.",
-						"SSE3 isn't supported on your CPU",
-						MB_OK | MB_ICONASTERISK);
+			MessageBox(NULL,
+				"It's can affect on the stability of the game.",
+				"SSE3 isn't supported on your CPU",
+				MB_OK | MB_ICONASTERISK);
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
@@ -90,9 +90,9 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
 			MessageBox(NULL,
-					  "It's can affect on the stability of the game.",
-					  "AVX isn't supported on your CPU!",
-					  MB_OK | MB_ICONWARNING);
+				"It's can affect on the stability of the game.",
+				"AVX isn't supported on your CPU!",
+				MB_OK | MB_ICONWARNING);
 		}
 	}
 #endif
@@ -113,4 +113,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CreateRendererList();
 	RunApplication(params);
 	return 0;
+	}
 }
