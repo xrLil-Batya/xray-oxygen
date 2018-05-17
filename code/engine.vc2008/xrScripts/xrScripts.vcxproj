@@ -106,7 +106,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
       <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
-      <AdditionalDependencies>vcruntimed.lib;ucrtd.lib.;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -152,8 +152,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -192,6 +192,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -211,7 +212,6 @@
     <ClCompile Include="Export\script_token_list_script.cpp" />
     <ClCompile Include="import_ses.cpp" />
     <ClCompile Include="library_set.cpp" />
-    <ClCompile Include="linker.cpp" />
     <ClCompile Include="lmodule\lfs.c" />
     <ClCompile Include="lmodule\LuaXML.c" />
     <ClCompile Include="lmodule\marshal.c" />

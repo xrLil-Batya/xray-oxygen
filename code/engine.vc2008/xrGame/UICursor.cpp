@@ -2,7 +2,6 @@
 #include "uicursor.h"
 #include "ui/UIStatic.h"
 #include "ui/UIBtnHint.h"
-#include "../xrEngine/xr_input.h"
 #include "Actor_Flags.h"
 //#define C_DEFAULT	D3DCOLOR_XRGB(0xff,0xff,0xff)
 
@@ -108,12 +107,6 @@ void CUICursor::UpdateCursorPosition(int _dx, int _dy)
 	}
 	clamp		(vPos.x, 0.f, UI_BASE_WIDTH);
 	clamp		(vPos.y, 0.f, UI_BASE_HEIGHT);
-	
-	// Fix clip cursor in windowed mode with enabled input capture.
-	if (m_b_use_win_cursor && pInput->get_exclusive_mode())
-	{
-		SetUICursorPosition(vPos);
-	}
 }
 
 void CUICursor::SetUICursorPosition(Fvector2 pos)

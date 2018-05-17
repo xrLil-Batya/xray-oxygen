@@ -9,18 +9,15 @@ extern XRCDB_API bool *cdb_bDebug;
 
 void	SetupGPU(IRenderDeviceRender *pRender)
 {
-	// Command line
-	char *lpCmdLine		= Core.Params;
-
 	BOOL bForceGPU_SW;
 	BOOL bForceGPU_NonPure;
 	BOOL bForceGPU_REF;
 
-	if (strstr(lpCmdLine,"-gpu_sw")!=NULL)		bForceGPU_SW		= TRUE;
+	if (strstr(Core.Params,"-gpu_sw")!=NULL)		bForceGPU_SW		= TRUE;
 	else										bForceGPU_SW		= FALSE;
-	if (strstr(lpCmdLine,"-gpu_nopure")!=NULL)	bForceGPU_NonPure	= TRUE;
+	if (strstr(Core.Params,"-gpu_nopure")!=NULL)	bForceGPU_NonPure	= TRUE;
 	else										bForceGPU_NonPure	= FALSE;
-	if (strstr(lpCmdLine,"-gpu_ref")!=NULL)		bForceGPU_REF		= TRUE;
+	if (strstr(Core.Params,"-gpu_ref")!=NULL)		bForceGPU_REF		= TRUE;
 	else										bForceGPU_REF		= FALSE;
 
 	pRender->SetupGPU(bForceGPU_SW, bForceGPU_NonPure, bForceGPU_REF);

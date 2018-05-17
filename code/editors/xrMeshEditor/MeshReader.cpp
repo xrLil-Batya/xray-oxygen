@@ -66,15 +66,16 @@ System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, Syste
 				mesh = new Mesh(path);
 				break;
 			case 2: // .ogf
-				ogf = COgf::Load(path);
-				/*if (ogf) {
-					Msg("Ogf version %d", ogf->Version());
+				ogf = COgf::load(path);
+				if (ogf) 
+				{
+					Msg("Ogf version %d", ogf->version());
 				}
 				else
 				{
 					Msg("Ogf is not loaded");
 				}
-				break;*/
+				break;
 			case 3: // .omf
 				// TODO
 				break;

@@ -402,7 +402,6 @@ ENGINE_API int RunApplication(LPCSTR commandLine)
 	}
 #endif
 
-	strcat(Core.Params, commandLine);
 	//////////////////////////////////////////
 	// Title window
 	//////////////////////////////////////////
