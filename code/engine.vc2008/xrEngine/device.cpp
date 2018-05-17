@@ -393,6 +393,89 @@ void CRenderDevice::Run			()
 //	DeleteCriticalSection	(&mt_csLeave);
 }
 
+void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
+{
+    DWORD dwWindowStyle = 0;
+    DWORD dwWidth = psCurrentVidMode[0];
+    DWORD dwHeight = psCurrentVidMode[1];
+    bool bFullscreen = psDeviceFlags.is(rsFullscreen);
+
+    RECT			m_rcWindowBounds;
+    RECT				DesktopRect;
+    GetClientRect(GetDesktopWindow(), &DesktopRect);
+
+    switch (PropStyle)
+    {
+    case WPS_Windowed:
+    {
+        psDeviceFlags.set(rsFullscreen, false);
+        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+
+        SetRect(&m_rcWindowBounds, (DesktopRect.right - dwWidth) / 2,
+            (DesktopRect.bottom - dwHeight) / 2, (DesktopRect.right + dwWidth) / 2,
+            (DesktopRect.bottom + dwHeight) / 2);
+    }
+        break;
+    case WPS_WindowedBorderless:
+    {
+        psDeviceFlags.set(rsFullscreen, false);
+        dwWindowStyle = WS_VISIBLE;
+
+        SetRect(&m_rcWindowBounds, (DesktopRect.right - dwWidth) / 2,
+            (DesktopRect.bottom - dwHeight) / 2, (DesktopRect.right + dwWidth) / 2,
+            (DesktopRect.bottom + dwHeight) / 2);
+    }
+        break;
+    case WPS_FullscreenBorderless:
+    {
+        psDeviceFlags.set(rsFullscreen, false);
+
+        dwWindowStyle = WS_VISIBLE;
+
+//         SetRect(&m_rcWindowBounds, (DesktopRect.right - DevPP.BackBufferWidth) / 2,
+//             (DesktopRect.bottom - DevPP.BackBufferHeight) / 2, (DesktopRect.right + DevPP.BackBufferWidth) / 2,
+//             (DesktopRect.bottom + DevPP.BackBufferHeight) / 2);
+        m_rcWindowBounds = DesktopRect;
+    }
+        break;
+    case WPS_Fullscreen:
+    {
+        //special case
+        psDeviceFlags.set(rsFullscreen, true);
+        dwWindowStyle = WS_POPUP | WS_VISIBLE;
+    }
+        break;
+    default:
+        break;
+    }
+
+    SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle);
+    bool bNewFullscreen = psDeviceFlags.is(rsFullscreen);
+
+    if (!bNewFullscreen)
+    {
+        AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
+
+        SetWindowPos(m_hWnd,
+            HWND_NOTOPMOST,
+            m_rcWindowBounds.left,
+            m_rcWindowBounds.top,
+            (m_rcWindowBounds.right - m_rcWindowBounds.left),
+            (m_rcWindowBounds.bottom - m_rcWindowBounds.top),
+            SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
+    }
+
+    if (bFullscreen != bNewFullscreen)
+    {
+        Reset();
+    }
+    else
+    {
+        ShowCursor(FALSE);
+        SetForegroundWindow(m_hWnd);
+    }
+}
+
 u32 app_inactive_time		= 0;
 u32 app_inactive_time_start = 0;
 

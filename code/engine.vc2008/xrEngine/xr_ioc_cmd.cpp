@@ -412,6 +412,33 @@ public :
 	}
 
 };
+
+//-----------------------------------------------------------------------
+u32 ps_vid_windowtype = 1;
+xr_token vid_windowtype_token[] =
+{
+    { "windowed",               1 },
+    { "windowed_borderless",    2 },
+    { "fullscreen",             3 },
+    { "fullscreen_borderless",  4 },
+    { 0,                        0 },
+};
+
+class CCC_VidWindowType : public CCC_Token
+{
+
+public:
+    CCC_VidWindowType(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {}
+
+    virtual void Execute(LPCSTR args) override
+    {
+        CCC_Token::Execute(args);
+
+        u32 rawNewWindowType = *value;
+        Device.UpdateWindowPropStyle((WindowPropStyle)rawNewWindowType);
+    }
+};
+
 //-----------------------------------------------------------------------
 class CCC_SND_Restart : public IConsole_Command
 {
@@ -678,7 +705,8 @@ void CCC_Register()
 	CMD4(CCC_Integer,	"texture_lod",			&psTextureLOD,				0,	4	);
 
 	// General video control
-	CMD1(CCC_VidMode,	"vid_mode"				);
+	CMD1(CCC_VidMode,	    "vid_mode"		);
+    CMD3(CCC_VidWindowType, "vid_windowtype",   &ps_vid_windowtype, vid_windowtype_token);
 
 #ifdef DEBUG
 	CMD3(CCC_Token,		"vid_bpp",				&psCurrentBPP,	vid_bpp_token );

@@ -111,6 +111,7 @@ cdb_bDebug		= &bDebug;
 
 	fFOV				= 90.f;
 	fASPECT				= 1.f;
+
 	m_pRender->Create	(
 		m_hWnd,
 		dwWidth,
@@ -122,6 +123,8 @@ cdb_bDebug		= &bDebug;
 #endif // #ifdef INGAME_EDITOR
 		true
 	);
+
+    UpdateWindowPropStyle(GetCurrentWindowPropStyle());
 
 	string_path			fname; 
 	FS.update_path		(fname,"$game_data$","shaders.xr");

@@ -167,8 +167,8 @@ void CInventoryItem::DeactivateItem()
 
 void CInventoryItem::OnH_B_Independent(bool just_before_destroy)
 {
-	UpdateXForm();
 	m_ItemCurrPlace.type = eItemPlaceUndefined ;
+	UpdateXForm();
 }
 
 void CInventoryItem::OnH_A_Independent()
