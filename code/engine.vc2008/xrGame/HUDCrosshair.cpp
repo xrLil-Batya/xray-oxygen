@@ -127,21 +127,21 @@ void CHUDCrosshair::OnRender ()
 	float x_max							= x_min + cross_length;
 
 	// 0
-	UIRender->PushPoint(center.x,			center.y + x_min,	0, cross_color, 0,0);
-	UIRender->PushPoint(center.x,			center.y + x_max,	0, cross_color, 0,0);
+	UIRender->PushPoint(center.x,			center.y + x_min,	0, cross_color, 0.0f, 0.0f);
+	UIRender->PushPoint(center.x,			center.y + x_max,	0, cross_color, 0.0f, 0.0f);
 	// 1
-	UIRender->PushPoint(center.x,			center.y - x_min,	0, cross_color, 0,0);
-	UIRender->PushPoint(center.x,			center.y - x_max,	0, cross_color, 0,0);
+	UIRender->PushPoint(center.x,			center.y - x_min,	0, cross_color, 0.0f, 0.0f);
+	UIRender->PushPoint(center.x,			center.y - x_max,	0, cross_color, 0.0f, 0.0f);
 	// 2
-	UIRender->PushPoint(center.x + x_min,	center.y,			0, cross_color, 0,0);
-	UIRender->PushPoint(center.x + x_max,	center.y,			0, cross_color, 0,0);
+	UIRender->PushPoint(center.x + x_min,	center.y,			0, cross_color, 0.0f, 0.0f);
+	UIRender->PushPoint(center.x + x_max,	center.y,			0, cross_color, 0.0f, 0.0f);
 	// 3
-	UIRender->PushPoint(center.x - x_min,	center.y,			0, cross_color, 0,0);
-	UIRender->PushPoint(center.x - x_max,	center.y,			0, cross_color, 0,0);
+	UIRender->PushPoint(center.x - x_min,	center.y,			0, cross_color, 0.0f, 0.0f);
+	UIRender->PushPoint(center.x - x_max,	center.y,			0, cross_color, 0.0f, 0.0f);
 	
 	// point
-	UIRender->PushPoint(center.x-0.5f,		center.y,			0, cross_color, 0,0);
-	UIRender->PushPoint(center.x+0.5f,		center.y,			0, cross_color, 0,0);
+	UIRender->PushPoint(center.x-0.5f,		center.y,			0, cross_color, 0.0f, 0.0f);
+	UIRender->PushPoint(center.x+0.5f,		center.y,			0, cross_color, 0.0f, 0.0f);
 
 
 	// render	
