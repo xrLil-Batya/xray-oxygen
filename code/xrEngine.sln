@@ -3,6 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCDB", "engine.vc2008\xrCDB\xrCDB.vcxproj", "{A19B1DF2-82EC-4364-8BDF-85D13A1C89B5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{AE0574E2-BE4C-49B0-98A6-739176D69277} = {AE0574E2-BE4C-49B0-98A6-739176D69277}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCore", "engine.vc2008\xrCore\xrCore.vcxproj", "{A0F7D1FB-59A7-4717-A7E4-96F37E91998E}"
 EndProject
@@ -23,6 +26,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRender_R2", "engine.vc200
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrSound", "engine.vc2008\xrSound\xrSound.vcxproj", "{CCCA7859-EB86-493E-9B53-C4235F45B3C5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159} = {15CBFEFF-7965-41F5-B4E2-21E8795C9159}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRender_R3", "engine.vc2008\xrRender\xrRenderPC_R3\xrRender_R3.vcxproj", "{3F383D3C-FCD8-4170-990B-EB4833F09248}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -42,6 +48,7 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrPhysics", "engine.vc2008\xrPhysics\xrPhysics.vcxproj", "{98D24A3D-7666-4C11-9D6E-B10393CE8CBA}"
 	ProjectSection(ProjectDependencies) = postProject
 		{94A1C366-3D19-48E6-8170-4ADC2E70DF97} = {94A1C366-3D19-48E6-8170-4ADC2E70DF97}
+		{AE0574E2-BE4C-49B0-98A6-739176D69277} = {AE0574E2-BE4C-49B0-98A6-739176D69277}
 		{1BF75FEB-87DD-486C-880B-227987D191C2} = {1BF75FEB-87DD-486C-880B-227987D191C2}
 	EndProjectSection
 EndProject
@@ -59,6 +66,10 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ode", "3rd-party\ode\default.vcxproj", "{1BF75FEB-87DD-486C-880B-227987D191C2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{9A6A94C9-26FC-450C-986F-AA512F84C030}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sound_static", "SDK\sources\libogg-1.3.2\libogg_static.vcxproj", "{15CBFEFF-7965-41F5-B4E2-21E8795C9159}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OPCODE", "3rd-party\OPCODE\OPCODE.vcxproj", "{AE0574E2-BE4C-49B0-98A6-739176D69277}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -234,6 +245,26 @@ Global
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release_IA32|x64.Build.0 = Release_AI32|x64
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|x64.ActiveCfg = Release|x64
 		{1BF75FEB-87DD-486C-880B-227987D191C2}.Release|x64.Build.0 = Release|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Debug|x64.ActiveCfg = Debug|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Debug|x64.Build.0 = Debug|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Mixed|x64.ActiveCfg = Release|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Mixed|x64.Build.0 = Release|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release_AI32|x64.ActiveCfg = Release_AI32|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release_AI32|x64.Build.0 = Release_AI32|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release_IA32|x64.ActiveCfg = Release_AI32|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release_IA32|x64.Build.0 = Release_AI32|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release|x64.ActiveCfg = Release|x64
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159}.Release|x64.Build.0 = Release|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Debug|x64.ActiveCfg = Debug|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Debug|x64.Build.0 = Debug|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Mixed|x64.ActiveCfg = Release|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Mixed|x64.Build.0 = Release|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Release_AI32|x64.ActiveCfg = Release_AI32|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Release_AI32|x64.Build.0 = Release_AI32|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Release_IA32|x64.ActiveCfg = Release_AI32|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Release_IA32|x64.Build.0 = Release_AI32|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Release|x64.ActiveCfg = Release|x64
+		{AE0574E2-BE4C-49B0-98A6-739176D69277}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -241,6 +272,8 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{9E14D7B5-9D0E-4373-B076-33DD4BECDBA0} = {9A6A94C9-26FC-450C-986F-AA512F84C030}
 		{1BF75FEB-87DD-486C-880B-227987D191C2} = {9A6A94C9-26FC-450C-986F-AA512F84C030}
+		{15CBFEFF-7965-41F5-B4E2-21E8795C9159} = {9A6A94C9-26FC-450C-986F-AA512F84C030}
+		{AE0574E2-BE4C-49B0-98A6-739176D69277} = {9A6A94C9-26FC-450C-986F-AA512F84C030}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {DC8D3737-61A4-4A70-AE4C-C66D5F07767A}
