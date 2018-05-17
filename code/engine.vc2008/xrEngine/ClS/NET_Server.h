@@ -81,8 +81,6 @@ public:
 	virtual void			client_Destroy		(IClient* C)	= 0;			// destroy client info
 
 	IClient*				GetServerClient		()			{ return SV_Client; };
-	template<typename SearchPredicate>
-	IClient*				FindClient		(SearchPredicate const & predicate) { return net_players.GetFoundClient(predicate); }
 
 	//WARNING! very bad method :(
 	IClient*				GetClientByID	(ClientID clientId)					{return net_players.GetFoundClient(ClientIdSearchPredicate(clientId));};

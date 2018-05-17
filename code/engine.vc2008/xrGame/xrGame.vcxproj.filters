@@ -8216,12 +8216,6 @@
     <ClCompile Include="xrServer_perform_sls_default.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
-    <ClCompile Include="xrServer_perform_sls_load.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_sls_save.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
     <ClCompile Include="xrServer_perform_transfer.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
