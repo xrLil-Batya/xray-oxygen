@@ -64,10 +64,10 @@
     <ClCompile Include="Ogf.cpp">
       <Filter>Import</Filter>
     </ClCompile>
-    <ClCompile Include="OgfV3.cpp">
+    <ClCompile Include="OgfV4.cpp">
       <Filter>Import</Filter>
     </ClCompile>
-    <ClCompile Include="OgfV4.cpp">
+    <ClCompile Include="Omf.cpp">
       <Filter>Import</Filter>
     </ClCompile>
   </ItemGroup>
@@ -104,10 +104,13 @@
     <ClInclude Include="Ogf.h">
       <Filter>Import</Filter>
     </ClInclude>
-    <ClInclude Include="OgfV3.h">
+    <ClInclude Include="OgfV4.h">
       <Filter>Import</Filter>
     </ClInclude>
-    <ClInclude Include="OgfV4.h">
+    <ClInclude Include="Omf.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
       <Filter>Import</Filter>
     </ClInclude>
   </ItemGroup>

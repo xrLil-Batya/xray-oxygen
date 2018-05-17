@@ -14,6 +14,6 @@ class COgfV4 : public COgf
 
 public:
 
-	OgfVersion Version() const override { return OGF4_VERSION; }
+	OgfVersion version() const override { return OGF4_VERSION; }
 };
 
