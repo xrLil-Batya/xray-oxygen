@@ -17,6 +17,7 @@ uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/reso
 #if !defined(BOKEH_QUALITY)
 	#define	BOKEH_RINGS int(1)
 	#define	BOKEH_SAMPLES int(1)
+	#define BOKEH_QUALITY 1
 #elif BOKEH_QUALITY==1
     #define BOKEH_RINGS int(3)
     #define BOKEH_SAMPLES int(3)
