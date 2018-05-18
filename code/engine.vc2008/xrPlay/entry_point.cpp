@@ -97,7 +97,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 #endif
 #endif
-	}
+
 	// If we want to start launcher
 	if (strstr(lpCmdLine, "-launcher"))
 	{
@@ -113,5 +113,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CreateRendererList();
 	RunApplication(params);
 	return 0;
-
 }
