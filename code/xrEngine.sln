@@ -14,6 +14,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrGame", "engine.vc2008\xrG
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrParticles", "engine.vc2008\xrParticles\xrParticles.vcxproj", "{94A1C366-3D19-48E6-8170-4ADC2E70DF97}"
 	ProjectSection(ProjectDependencies) = postProject
+		{CCCA7859-EB86-493E-9B53-C4235F45B3C5} = {CCCA7859-EB86-493E-9B53-C4235F45B3C5}
 		{CC52E0B3-CC35-4934-9302-035B748F3F2C} = {CC52E0B3-CC35-4934-9302-035B748F3F2C}
 	EndProjectSection
 EndProject

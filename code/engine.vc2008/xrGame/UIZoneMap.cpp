@@ -107,9 +107,11 @@ void CUIZoneMap::Render			()
 {
 	if ( !visible )
 		return;
-
+if(!psActorFlags.test(AF_HARDCORE))
+{
 	m_clipFrame.Draw	();
 	m_background.Draw	();
+}
 }
 
 void CUIZoneMap::Update()

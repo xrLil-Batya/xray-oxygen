@@ -414,7 +414,7 @@ public :
 };
 
 //-----------------------------------------------------------------------
-u32 ps_vid_windowtype = 1;
+u32 ps_vid_windowtype = 4;
 xr_token vid_windowtype_token[] =
 {
     { "windowed",               1 },
