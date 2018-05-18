@@ -58,7 +58,7 @@ void CLevel::g_cl_Spawn		(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 	// Send
 	NET_Packet			P;
 	E->Spawn_Write		(P,TRUE);
-	Send				(P,net_flags(TRUE));
+	Send				(P);
 
 	// Destroy
 	F_entity_Destroy	(E);
@@ -142,7 +142,7 @@ CSE_Abstract *CLevel::spawn_item(LPCSTR section, const Fvector &position, u32 le
 	if (!return_item) {
 		NET_Packet				P;
 		abstract->Spawn_Write	(P,TRUE);
-		Send					(P,net_flags(TRUE));
+		Send					(P);
 		F_entity_Destroy		(abstract);
 		return					(0);
 	}

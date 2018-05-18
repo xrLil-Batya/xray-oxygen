@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include <dxerr/dxerr.h>
-#include "NET_Common.h"
 #include "net_server.h"
 #include <functional>
 
@@ -11,7 +10,7 @@
 
 ENGINE_API ClientID BroadcastCID(0xffffffff);
 
-IClient::IClient(CTimer* timer) : server(nullptr)
+IClient::IClient(CTimer* timer)
 {
 	flags.bLocal = FALSE;
 	flags.bConnected = FALSE;

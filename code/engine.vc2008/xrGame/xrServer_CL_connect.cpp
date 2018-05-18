@@ -10,7 +10,6 @@
 void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P)
 {
 	P.B.count = 0;
-	//xr_vector<u16>::iterator it = std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID);
 	if(std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID) != conn_spawned_ids.end())
 		return;
 	
@@ -54,7 +53,7 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 	}
 	//-----------------------------------------------------
 	E->s_flags			= save;
-	SendTo				(CL->ID,P,net_flags(TRUE,TRUE));
+	SendTo				(CL->ID,P);
 	E->net_Processed	= TRUE;
 }
 
@@ -62,7 +61,7 @@ void xrServer::SendConfigFinished(ClientID const & clientId)
 {
 	NET_Packet	P;
 	P.w_begin	(M_SV_CONFIG_FINISHED);
-	SendTo		(clientId, P, net_flags(TRUE,TRUE));
+	SendTo		(clientId, P);
 }
 
 void xrServer::SendConnectionData(IClient* _CL)
@@ -96,10 +95,9 @@ void xrServer::OnCL_Connected(IClient* _CL)
 
 	// Export Game Type
 	NET_Packet P;
-	u32 mode = net_flags(TRUE, TRUE);
 	P.w_begin(M_SV_CONFIG_NEW_CLIENT);
 	P.w_stringZ(game->type_name());
-	SendTo(CL->ID, P, mode);
+	SendTo(CL->ID, P);
 	// end
 
 	Perform_game_export();
@@ -107,24 +105,3 @@ void xrServer::OnCL_Connected(IClient* _CL)
 
 	game->OnPlayerConnect(CL->ID);	
 }
-
-void xrServer::SendConnectResult(IClient* CL, char* ResultStr)
-{
-	NET_Packet	P;
-	P.w_begin	(M_CLIENT_CONNECT_RESULT);
-	P.w_stringZ	(ResultStr);
-	P.w_clientID(CL->ID);
-
-	if (SV_Client && SV_Client == CL)
-		P.w_u8(1);
-	else
-		P.w_u8(0);
-	P.w_stringZ(GamePersistent().GetServerOption());
-	
-	SendTo(CL->ID, P);
-}
-
-void xrServer::Check_BuildVersion_Success( IClient* CL )
-{
-	SendConnectResult(CL, "All Ok");
-};

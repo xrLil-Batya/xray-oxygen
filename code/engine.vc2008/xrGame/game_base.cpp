@@ -31,8 +31,6 @@ CLASS_ID game_GameState::getCLASS_ID(LPCSTR game_type_name, bool isServer)
 
 void game_GameState::switch_Phase		(u32 new_phase)
 {
-	OnSwitchPhase(m_phase, new_phase);
-
 	m_phase				= u16(new_phase);
 	m_start_time		= Level().timeServer();
 }

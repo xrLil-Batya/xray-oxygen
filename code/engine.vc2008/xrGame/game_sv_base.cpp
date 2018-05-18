@@ -60,7 +60,6 @@ void game_sv_GameState::signal_Syncronize()
 void game_sv_GameState::net_Export_State(NET_Packet& P, ClientID to)
 {
 	// Generic
-	P.w_clientID	(to);
 	P.w_u32			(m_type);
 	P.w_u16			(m_phase);
 	P.w_u32			(m_start_time);
@@ -149,9 +148,9 @@ void game_sv_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 	P.w_u16		(dest);
 }
 
-void game_sv_GameState::u_EventSend(NET_Packet& P, u32 dwFlags)
+void game_sv_GameState::u_EventSend(NET_Packet& P)
 {
-	m_server->SendBroadcast(BroadcastCID,P,dwFlags);
+	m_server->SendBroadcast(BroadcastCID,P);
 }
 
 void game_sv_GameState::Update		()
@@ -226,16 +225,7 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 				break;
 
 			OnHit(id_src, id_dest, tNetPacket);
-			m_server->SendBroadcast		(BroadcastCID,tNetPacket,net_flags(TRUE,TRUE));
-		}break;
-	case GAME_EVENT_CREATE_CLIENT:
-		{
-			IClient* CL					= (IClient*)m_server->ID_to_client(sender);
-			VERIFY2(CL, "bad create client message GAME_EVENT_CREATE_CLIENT");
-			if ( CL == NULL ) { break; }
-			
-			CL->flags.bConnected		= TRUE;
-			m_server->AttachNewClient	(CL);
+			m_server->SendBroadcast		(BroadcastCID,tNetPacket);
 		}break;
 	default:
 		{
