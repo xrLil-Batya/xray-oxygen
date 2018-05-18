@@ -51,6 +51,7 @@ bool SupportsDX10Rendering()
 	return SUCCEEDED(hr);
 }
 
+
 bool SupportsDX11Rendering()
 {
 	// Register class
