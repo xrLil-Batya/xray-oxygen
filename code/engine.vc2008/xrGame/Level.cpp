@@ -129,7 +129,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bNeed_CrPr				= false;
 	m_bIn_CrPr					= false;
 	m_dwNumSteps				= 0;
-	m_dwDeltaUpdate				= u32(fixed_step*1000);
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
     m_level_sound_manager = xr_new<CLevelSoundManager>();
