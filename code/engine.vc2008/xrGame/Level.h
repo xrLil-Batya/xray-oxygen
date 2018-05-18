@@ -148,7 +148,6 @@ protected:
 	bool	xr_stdcall			net_start1				();
 	bool	xr_stdcall			net_start2				();
 	bool	xr_stdcall			net_start4				();
-	bool	xr_stdcall			net_start5				();
 	bool	xr_stdcall			net_start6				();
 
 	bool	xr_stdcall			net_start_client1				();

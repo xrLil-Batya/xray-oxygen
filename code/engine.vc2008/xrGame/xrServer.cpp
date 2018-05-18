@@ -64,10 +64,12 @@ xrServer::~xrServer()
 
 CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 {
-	if (0xffff==ID)				return 0;
-	xrS_entities::iterator	I	= entities.find	(ID);
-	if (entities.end()!=I)		return I->second;
-	else						return 0;
+	if (0xffff != ID)
+	{
+		xrS_entities::iterator	I = entities.find(ID);
+		if (entities.end() != I)		return I->second;
+	}
+	return nullptr;
 }
 
 //--------------------------------------------------------------------
@@ -161,9 +163,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		}break;
 	case M_SPAWN:	
 		{
-			if (CL->flags.bLocal)
-				Process_spawn		(P,sender);	
-
+			Process_spawn			(P,sender);
 			VERIFY					(verify_entities());
 		}break;
 	case M_EVENT:	
@@ -183,11 +183,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			};			
 		}break;
 	//-------------------------------------------------------------------
-	case M_CLIENTREADY:
-		{
-			game->OnPlayerConnectFinished(sender);
-			VERIFY					(verify_entities());
-		}break;
 	case M_SWITCH_DISTANCE:
 		{
 			game->switch_distance	(P,sender);
@@ -220,11 +215,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	case M_CLIENT_REQUEST_CONNECTION_DATA:
 		{
 			AddDelayedPacket(P, sender);
-		}break;
-	case M_PLAYER_FIRE:
-		{
-			if (game)
-				game->OnPlayerFire(sender, P);
 		}break;
 	}
 	VERIFY (verify_entities());
@@ -362,7 +352,6 @@ void xrServer::createClient()
 
     CL->flags.bConnected = TRUE;
     SV_Client = CL;
-    CL->flags.bLocal = 1;
 }
 
 void xrServer::ProceedDelayedPackets()

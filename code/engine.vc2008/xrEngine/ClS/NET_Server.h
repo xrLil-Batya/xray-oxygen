@@ -11,7 +11,6 @@ class ENGINE_API IClient
 public:
 	struct Flags
 	{
-		u32		bLocal		: 1;
 		u32		bConnected	: 1;
 	};
 

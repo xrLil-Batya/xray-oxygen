@@ -24,7 +24,6 @@
 #include "PHScriptCall.h"
 #include "script_engine.h"
 #include "game_cl_single.h"
-#include "game_sv_single.h"
 #include "map_manager.h"
 #include "map_spot.h"
 #include "map_location.h"
@@ -209,14 +208,13 @@ u32 get_time_minutes()
 
 void change_game_time(u32 days, u32 hours, u32 mins)
 {
-	game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
-	if(tpGame && ai().get_alife())
+	if(Level().Server->game && ai().get_alife())
 	{
 		u32 value		= days*86400+hours*3600+mins*60;
 		float fValue	= static_cast<float> (value);
 		value			*= 1000;//msec		
 		g_pGamePersistent->Environment().ChangeGameTime(fValue);
-		tpGame->alife().time_manager().change_game_time(value);
+		Level().Server->game->alife().time_manager().change_game_time(value);
 	}
 }
 

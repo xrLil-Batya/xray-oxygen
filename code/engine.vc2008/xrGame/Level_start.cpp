@@ -61,7 +61,6 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start4));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start5));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
 	
 	return net_start_result_total;
@@ -85,7 +84,7 @@ bool CLevel::net_start1				()
 		if (xr_strcmp(p.m_alife,"alife"))
 		{
 			shared_str l_ver			= game_sv_GameState::parse_level_version(serverOption);
-			map_data.m_name				= game_sv_GameState::parse_level_name(serverOption);
+			map_data.m_name				= Server->game->level_name(serverOption);
 			
 			g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
@@ -136,17 +135,6 @@ bool CLevel::net_start4				()
 	return false;
 }
 
-bool CLevel::net_start5()
-{
-	if (net_start_result_total)
-	{
-		NET_Packet		NP;
-		NP.w_begin		(M_CLIENTREADY);
-		Send			(NP);
-	}
-
-	return true;
-}
 bool CLevel::net_start6				()
 {
 	//init bullet manager
