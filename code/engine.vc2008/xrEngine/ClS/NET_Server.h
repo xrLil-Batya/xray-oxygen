@@ -1,6 +1,5 @@
 #pragma once
 #include "net_shared.h"
-#include "NET_Common.h"
 #include "NET_PlayersMonitor.h"
 
 // -----------------------------------------------------
@@ -12,7 +11,6 @@ class ENGINE_API IClient
 public:
 	struct Flags
 	{
-		u32		bLocal		: 1;
 		u32		bConnected	: 1;
 	};
 
@@ -23,8 +21,6 @@ public:
 	shared_str			name;
 
 	Flags				flags;	// local/host/normal
-	
-    IPureServer*        server;
 };
 
 
@@ -81,8 +77,6 @@ public:
 	virtual void			client_Destroy		(IClient* C)	= 0;			// destroy client info
 
 	IClient*				GetServerClient		()			{ return SV_Client; };
-	template<typename SearchPredicate>
-	IClient*				FindClient		(SearchPredicate const & predicate) { return net_players.GetFoundClient(predicate); }
 
 	//WARNING! very bad method :(
 	IClient*				GetClientByID	(ClientID clientId)					{return net_players.GetFoundClient(ClientIdSearchPredicate(clientId));};

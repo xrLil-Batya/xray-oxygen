@@ -7,7 +7,6 @@
 #include "physicobject.h"
 #include "HangingLamp.h"
 #include "../xrphysics/PhysicsShell.h"
-#include "game_sv_single.h"
 #include "level_graph.h"
 #include "../xrPhysics/ph_shell_interface.h"
 #include "script_game_object.h"
@@ -456,7 +455,7 @@ void CGameObject::spawn_supplies()
 
 				NET_Packet					P;
 				A->Spawn_Write				(P,TRUE);
-				Level().Send				(P,net_flags(TRUE));
+				Level().Send				(P);
 				F_entity_Destroy			(A);
 		}
 	}
@@ -610,9 +609,9 @@ void CGameObject::u_EventGen(NET_Packet& P, u32 type, u32 dest)
 	P.w_u16		(u16(dest&0xffff));
 }
 
-void CGameObject::u_EventSend(NET_Packet& P, u32 dwFlags )
+void CGameObject::u_EventSend(NET_Packet& P)
 {
-	Level().Send(P, dwFlags);
+	Level().Send(P);
 }
 
 #include "bolt.h"
