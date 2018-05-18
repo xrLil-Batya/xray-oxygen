@@ -72,6 +72,9 @@ bool	CLevel::synchronize_client()
 	{
 		ClientReceive();
 		Server->Update();
+
+        //Don't delete this ClientReceive(). Without that, game_configured variable will not changed
+        ClientReceive();
 	}	// if OnClient ClientReceive method called in upper invokation
 
 	return !!game_configured;
