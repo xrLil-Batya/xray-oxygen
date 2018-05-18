@@ -1422,7 +1422,7 @@ void GetZoomData(const float scope_factor, float& delta, float& min_zoom_factor)
 void CWeapon::OnZoomIn()
 {
 	m_zoom_params.m_bIsZoomModeNow = true;
-
+	psActorFlags.set(AF_ZOOM_NEW_FD, TRUE);
 	if (m_zoom_params.m_bUseDynamicZoom)
 	{
 		if (!m_fRTZoomFactor)
@@ -1458,7 +1458,7 @@ void CWeapon::OnZoomOut()
 	m_zoom_params.m_bIsZoomModeNow = false;
 	m_fRTZoomFactor = GetZoomFactor(); //store current
 	m_zoom_params.m_fCurrentZoomFactor = g_fov;
-
+	psActorFlags.set(AF_ZOOM_NEW_FD, FALSE);
 
  	GamePersistent().RestoreEffectorDOF();
 
