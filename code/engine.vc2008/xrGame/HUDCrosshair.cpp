@@ -3,7 +3,7 @@
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-
+#include "actor.h"
 #include "HUDCrosshair.h"
 //.#include "UIStaticItem.h"
 #include "ui_base.h"
@@ -108,6 +108,8 @@ void CHUDCrosshair::OnRenderFirstBulletDispertion()
 extern ENGINE_API BOOL g_bRendering; 
 void CHUDCrosshair::OnRender ()
 {
+if(!psActorFlags.test(AF_HARDCORE))
+{
 	VERIFY			(g_bRendering);
 	Fvector2		center;
 	Fvector2		scr_size;
@@ -157,4 +159,5 @@ void CHUDCrosshair::OnRender ()
 	if (g_bDrawFirstBulletCrosshair)
 		OnRenderFirstBulletDispertion();
 #endif
+}
 }
