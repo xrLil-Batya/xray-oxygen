@@ -2,6 +2,7 @@
 #include <dinput.h>
 #include "../xrEngine/xr_ioconsole.h"
 #include "entity_alive.h"
+#include "game_sv_single.h"
 #include "alife_simulator.h"
 #include "alife_simulator_header.h"
 #include "level_graph.h"
