@@ -113,5 +113,4 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	CreateRendererList();
 	RunApplication(params);
 	return 0;
-	}
 }
