@@ -35,3 +35,4 @@
 //#define POLTERGEIST_BUILD_DIE	// Old style polter dead
 //#define NUM_PARAMS_INV		// Adds progress bars in the inventory numeric value. Max value 100%. (%) - color="no_color"
 //#define MINMAP_BAR_HUD		// Adds progress bars to luminosity and noise value
+#define ARROW_VALUE_INV		// Adds arrows to inventory. Clear Sky style. For use unlock in actor_menu/_16.xml tags <arrow> and <arrow_shadow>

@@ -346,6 +346,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="0" y="45" width="40" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 		        <progress>
 	    		    <texture color="red">ui_inGame2_inventory_progress_bar</texture>
@@ -374,6 +380,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="0" y="45" width="40" height="5" horz="1" min="0" max="1" pos="0" stretch="1">
 		        <progress>
 	    		    <texture color="red">ui_inGame2_inventory_progress_bar</texture>
@@ -404,6 +416,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="23" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
@@ -419,6 +437,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="23" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
@@ -434,6 +458,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="24" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
@@ -449,6 +479,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="23" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
@@ -464,6 +500,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="23" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
@@ -479,6 +521,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="23" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
@@ -494,6 +542,12 @@
 	        <icon x="0" y="0" width="18" height="18" magnitude="100">
 		        <text y="-12" align="c" vert_align="c" font="arial14" color="ui_7"/>
 	        </icon>
+		<!--arrow x="46" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" ang_velocity="0.75">
+			<texture a="255">ui_hud2_rad01_arrow</texture>
+		</arrow>
+		<arrow_shadow x="48" y="0" width="9" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75">
+			<texture a="250">ui_hud2_rad01_arrow_shadow</texture>
+		</arrow_shadow-->
 	        <state_progress x="23" y="1" width="122" height="18" horz="1" min="0" max="1" pos="0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
