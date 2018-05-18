@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
-// RocketLauncher.cpp:	интерфейс для семейства объектов 
-//						стреляющих гранатами и ракетами
+// RocketLauncher.cpp:	ГЁГ­ГІГҐГ°ГґГҐГ©Г± Г¤Г«Гї Г±ГҐГ¬ГҐГ©Г±ГІГўГ  Г®ГЎГєГҐГЄГІГ®Гў 
+//						Г±ГІГ°ГҐГ«ГїГѕГ№ГЁГµ ГЈГ°Г Г­Г ГІГ Г¬ГЁ ГЁ Г°Г ГЄГҐГІГ Г¬ГЁ
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -59,7 +59,7 @@ void CRocketLauncher::AttachRocket(u16 rocket_id, CGameObject* parent_rocket_lau
 void CRocketLauncher::DetachRocket(u16 rocket_id, bool bLaunch)
 {
 	// Object may disappear
-	if (Level().Objects.net_Find(rocket_id) != 0)
+	if (Level().Objects.net_Find(rocket_id) == 0)
 	{
 		Msg("[RocketLauncher]: object %d is not found!", rocket_id);
 		return;
