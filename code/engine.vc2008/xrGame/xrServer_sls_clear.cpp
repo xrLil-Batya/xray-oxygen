@@ -1,5 +1,4 @@
 #include "stdafx.h"
-#include "game_sv_single.h"
 #include "alife_simulator.h"
 #include "xrServer_Objects.h"
 #include "xrServer.h"

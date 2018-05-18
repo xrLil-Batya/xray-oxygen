@@ -43,7 +43,7 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32, u16 
 	CSE_ALifeCreatureAbstract* alife_entity = smart_cast<CSE_ALifeCreatureAbstract*>(e_parent);
 
 	// Game allows ownership of entity
-	if (game->OnTouch(id_parent, id_entity, bForced))
+	game->OnTouch(id_parent, id_entity, bForced)
 	{
 		// Rebuild parentness
 		e_entity->ID_Parent			= id_parent;
@@ -54,7 +54,7 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32, u16 
 			// —пособ очень грубый, но на данный момент иного выбора нет. «аранее приношу извинени€...
 			u16 NewType = GE_OWNERSHIP_TAKE;
 			std::memcpy(&P.B.data[6], &NewType, 2);
-			// TODO: ќбъ€сните форсеру: какого хрена у ѕџ— тут 2 байта!!!
+			// TODO: Объясните форсеру: какого хрена тут 2 байта!!!
 		}
 		// Signal to everyone (including sender)
 		SendBroadcast(BroadcastCID,P);
