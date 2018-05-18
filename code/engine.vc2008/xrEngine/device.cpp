@@ -227,8 +227,11 @@ void CRenderDevice::on_idle		()
 
 	if (g_loading_events.size())
 	{
-		if (g_loading_events.front())
+        if (LOADING_EVENT& loadEvent = g_loading_events.front())
+        {
+            loadEvent();
 			g_loading_events.pop_front();
+        }
 		pApp->LoadDraw();
 		return;
 	}
@@ -264,6 +267,7 @@ void CRenderDevice::on_idle		()
 	// Release start point - allow thread to run
 	mt_csLeave.lock();
 	mt_csEnter.unlock();
+    Sleep(0);
 
 	Statistic->RenderTOTAL_Real.FrameStart	();
 	Statistic->RenderTOTAL_Real.Begin		();
