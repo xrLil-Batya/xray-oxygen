@@ -6,7 +6,7 @@
 #include "xrmessages.h"
 #include "ai_space.h"
 
-void xrServer::Perform_destroy	(CSE_Abstract* object)
+void xrServer::Perform_destroy	(CSE_Abstract* object, u32 mode)
 {
 	R_ASSERT				(object);
 	R_ASSERT				(object->ID_Parent == 0xffff);
@@ -24,7 +24,7 @@ void xrServer::Perform_destroy	(CSE_Abstract* object)
 #if defined(DEBUG)
 		verify_entities			();
 #endif
-		Perform_destroy		(child);
+		Perform_destroy		(child,mode);
 	}
 	u16						object_id = object->ID;
 	entity_Destroy			(object);
@@ -38,11 +38,12 @@ void xrServer::Perform_destroy	(CSE_Abstract* object)
 	P.w_u32					(Device.dwTimeGlobal - 2*NET_Latency);
 	P.w_u16					(GE_DESTROY);
 	P.w_u16					(object_id);
-	SendBroadcast			(BroadcastCID,P);
+	SendBroadcast			(BroadcastCID,P,mode);
 }
 
 void xrServer::SLS_Clear		()
 {
+	u32									mode = net_flags(TRUE,TRUE);
 	while (!entities.empty())
 	{
 		bool							found = false;
@@ -51,7 +52,7 @@ void xrServer::SLS_Clear		()
 			if ((*entities_it).second->ID_Parent != 0xffff)
 				continue;
 			found						= true;
-			Perform_destroy				((*entities_it).second);
+			Perform_destroy				((*entities_it).second,mode);
 			break;
 		}
 		if (!found)

@@ -42,3 +42,23 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name)
 
 	return IPureServer::Connect(*session_name);
 }
+
+void xrServer::AttachNewClient			(IClient* CL)
+{
+	MSYS_CONFIG	msgConfig;
+	msgConfig.sign1 = 0x12071980;
+	msgConfig.sign2 = 0x26111975;
+
+    SV_Client			= CL;
+	CL->flags.bLocal	= 1;
+	SendTo_LL(&msgConfig, sizeof(msgConfig));
+
+	// gen message
+	RequestClientDigest(CL);
+}
+
+void xrServer::RequestClientDigest(IClient* CL)
+{
+	Check_BuildVersion_Success(CL);
+	return;
+}

@@ -410,7 +410,7 @@ void CALifeSimulator__release(CALifeSimulator *self, CSE_Abstract *object, bool)
 	packet.w_u32(Level().timeServer());
 	packet.w_u16(GE_DESTROY);
 	packet.w_u16(object->ID);
-	Level().Send(packet);
+	Level().Send(packet, net_flags(TRUE, TRUE));
 }
 
 LPCSTR get_level_name(const CALifeSimulator *self, int level_id)

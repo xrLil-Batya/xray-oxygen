@@ -341,8 +341,11 @@ void CLevel::IR_OnKeyboardRelease(int key)
 	if (!bReady || g_bDisableAllInput	)								return;
 	if ( CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardRelease(key)) return;
 	if (game && game->OnKeyboardRelease(get_binded_action(key)) )		return;
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
-        return;
+	if (Device.Paused() 
+
+		&& !psActorFlags.test(AF_NO_CLIP)
+
+		)				return;
 
 	if (g_actor) Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));//+
 	if (CURRENT_ENTITY())		

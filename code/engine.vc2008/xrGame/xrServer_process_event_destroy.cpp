@@ -9,6 +9,7 @@
 
 void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack)
 {
+	u32 MODE = net_flags(TRUE, TRUE);
 	// Parse message
 	u16 id_dest = ID;
 
@@ -33,7 +34,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 
 	if (0xffff == parent_id && NULL == pEventPack)
 	{
-		SendBroadcast(BroadcastCID, P);
+		SendBroadcast(BroadcastCID, P, MODE);
 	}
 	else
 	{
@@ -59,7 +60,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 
 	if (NULL == pEPack && NULL != pEventPack)
 	{
-		SendBroadcast(BroadcastCID, *pEventPack);
+		SendBroadcast(BroadcastCID, *pEventPack, MODE);
 	}
 
 	// Everything OK, so perform entity-destroy

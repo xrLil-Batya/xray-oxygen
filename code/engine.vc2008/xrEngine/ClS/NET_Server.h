@@ -1,5 +1,6 @@
 #pragma once
 #include "net_shared.h"
+#include "NET_Common.h"
 #include "NET_PlayersMonitor.h"
 
 // -----------------------------------------------------
@@ -22,6 +23,8 @@ public:
 	shared_str			name;
 
 	Flags				flags;	// local/host/normal
+	
+    IPureServer*        server;
 };
 
 

@@ -23,26 +23,37 @@ class game_cl_GameState : public game_GameState, public ISheduled
 
 protected:
 	CUIGameCustom*					m_game_ui_custom;
-	bool							m_bServerControlHits;
+	bool							m_bServerControlHits;	
+
+public:
+	ClientID						local_svdpnid;
 
 private:
 				void				switch_Phase			(u32 new_phase)		{inherited::switch_Phase(new_phase);};
 protected:
 
+	virtual		void				OnSwitchPhase			(u32 old_phase, u32 new_phase);	
+
 	virtual		shared_str			shedule_Name			() const		{ return shared_str("game_cl_GameState"); };
 	virtual		float				shedule_Scale			()				{ return 1.0f;};
 	virtual		bool				shedule_Needed			()				{ return true;};
+
+				void				sv_EventSend			(NET_Packet& P);
 public:
 									game_cl_GameState		();
 	virtual							~game_cl_GameState		();
 				LPCSTR				type_name				() const {return *m_game_type_name;};
+				void				set_type_name			(LPCSTR s);
 	virtual		void				Init					(){};
 	virtual		void				net_import_state		(NET_Packet& P);
 	virtual		void				net_import_update		(NET_Packet& P);
 	virtual		void				net_import_GameTime		(NET_Packet& P);						// update GameTime only for remote clients
+	virtual		void				net_signal				(NET_Packet& P);
 
 	virtual		bool				OnKeyboardPress			(int key);
 	virtual		bool				OnKeyboardRelease		(int key);
+
+				void				OnGameMessage			(NET_Packet& P);
 
 				u32					GetPlayersCount			() const {return 1;};
 	virtual		CUIGameCustom*		createGameUI			(){return nullptr;};

@@ -1,6 +1,7 @@
 #pragma once
-#include "net_shared.h"
 
+#include "net_shared.h"
+#include "NET_Common.h"
 //==============================================================================
 class ENGINE_API INetQueue
 {
@@ -22,16 +23,21 @@ public:
 class ENGINE_API IPureClient
 {
 protected:
+	GameDescriptionData		m_game_description;
 	CTimer*					device_timer;
 
 protected:
 	INetQueue				net_Queue;
+
+	void					SetClientID		(ClientID const & local_client) { net_ClientID = local_client; };
 	
 public:
 	IPureClient				(CTimer* tm);
 	virtual ~IPureClient	();
 	
 	void					Disconnect				();
+
+	IC GameDescriptionData const & get_net_DescriptionData() const { return m_game_description; }
 
 	// receive
 	IC void							StartProcessQueue		()	{ net_Queue.Lock(); }; // WARNING ! after Start mast be End !!! <-
@@ -40,9 +46,13 @@ public:
 	IC void							EndProcessQueue			()	{ net_Queue.Unlock();			};//							<-
 
 	virtual void			OnMessage				(void* data, u32 size);
+	ClientID const &		GetClientID				() { return net_ClientID; };
 	
 	// time management
 	IC u32					timeServer				()	{ return device_timer->GetElapsed_ms(); }
 	IC u32					timeServer_Async		()	{ return device_timer->GetElapsed_ms(); }
+
+private:
+	ClientID				net_ClientID;
 };
 

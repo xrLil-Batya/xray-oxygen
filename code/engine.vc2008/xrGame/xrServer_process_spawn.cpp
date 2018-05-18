@@ -116,19 +116,19 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		E->Spawn_Write		(Packet,TRUE	);
 		if (E->s_flags.is(M_SPAWN_UPDATE))
 			E->UPDATE_Write	(Packet);
-		SendTo				(CL->ID,Packet);
+		SendTo				(CL->ID,Packet,net_flags(TRUE,TRUE));
 
 		// For everybody, except client, which contains authorative copy
 		E->Spawn_Write		(Packet,FALSE	);
 		if (E->s_flags.is(M_SPAWN_UPDATE))
 			E->UPDATE_Write	(Packet);
-		SendBroadcast		(CL->ID,Packet);
+		SendBroadcast		(CL->ID,Packet,net_flags(TRUE,TRUE));
 	} else {
 		E->Spawn_Write		(Packet,FALSE	);
 		if (E->s_flags.is(M_SPAWN_UPDATE))
 			E->UPDATE_Write	(Packet);
 		ClientID clientID;clientID.set(0);
-		SendBroadcast		(clientID, Packet);
+		SendBroadcast		(clientID, Packet, net_flags(TRUE,TRUE));
 	}
 	if (!tpExistedEntity)
 	{

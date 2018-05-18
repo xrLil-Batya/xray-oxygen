@@ -688,9 +688,9 @@ bool has_active_tutotial()
 	return (g_tutorial!=NULL);
 }
 
-void g_send(NET_Packet& P)
+void g_send(NET_Packet& P, bool bReliable = 0, bool bSequential = 1, bool bHighPriority = 0, bool bSendImmediately = 0)
 {
-	Level().Send(P);
+	Level().Send(P,net_flags(bReliable, bSequential, bHighPriority, bSendImmediately));
 }
 
 void u_event_gen(NET_Packet& P, u32 _event, u32 _dest)

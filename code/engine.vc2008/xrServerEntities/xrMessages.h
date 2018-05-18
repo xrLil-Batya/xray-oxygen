@@ -111,6 +111,7 @@ enum {
 
 enum EGameMessages {  //game_cl <----> game_sv messages
 	
+	GAME_EVENT_CREATE_CLIENT,
 	GAME_EVENT_ON_HIT,
 
 	GAME_EVENT_FORCEDWORD				= u32(-1)

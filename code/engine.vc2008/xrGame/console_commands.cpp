@@ -277,7 +277,7 @@ public:
 			NET_Packet		P;
 			P.w_begin(M_SWITCH_DISTANCE);
 			P.w_float(id1);
-			Level().Send(P);
+			Level().Send(P, net_flags(TRUE, TRUE));
 		}
 	}
 };
@@ -476,7 +476,7 @@ public:
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8		(0);
-			Level().Send		(net_packet);
+			Level().Send		(net_packet,net_flags(TRUE));
 		}else{
 			if(!valid_saved_game_name(S)){
 				Msg("! Save failed: invalid file name - %s", S);
@@ -487,7 +487,7 @@ public:
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8		(1);
-			Level().Send		(net_packet);
+			Level().Send		(net_packet,net_flags(TRUE));
 		}
 #ifdef DEBUG
 		Msg						("Game save overhead  : %f milliseconds",timer.GetElapsed_sec()*1000.f);
@@ -560,7 +560,7 @@ public:
 		NET_Packet					net_packet;
 		net_packet.w_begin			(M_LOAD_GAME);
 		net_packet.w_stringZ		(saved_game);
-		Level().Send				(net_packet);
+		Level().Send				(net_packet,net_flags(TRUE));
 	}
 	
 	virtual void fill_tips			(vecTips& tips, u32 mode)

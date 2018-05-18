@@ -109,6 +109,14 @@ private:
 	
 	void						make_NetCorrectionPrediction();
 
+	u32							m_dwDeltaUpdate;
+
+	bool						Connect2Server					(const char* options);
+private:
+	bool						m_bConnectResult;
+	xr_string					m_sConnectResult;
+public:	
+	void						OnConnectResult			(NET_Packet* P);
 public:
 	//////////////////////////////////////////////	
 	// static particles
@@ -136,8 +144,9 @@ public:
 
 protected:
 	BOOL						net_start_result_total;
+	BOOL						connected_to_server;
 	BOOL						deny_m_spawn;		//only for debug...
-    bool sended_request_connection_data;
+	BOOL						sended_request_connection_data;
 		
 	void						MakeReconnect();
 	
@@ -158,6 +167,7 @@ protected:
 	bool	xr_stdcall			net_start_client5				();
 	bool	xr_stdcall			net_start_client6				();
 public:
+	bool						IsChecksumsEqual		(u32 check_sum) const;
 
 	// sounds
 	xr_vector<ref_sound*>		static_Sounds;
@@ -165,6 +175,7 @@ public:
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
 	virtual void				net_Stop				( );
+	virtual BOOL				net_Start_client		( LPCSTR name );
 	virtual void				net_Update				( );
 
 
@@ -200,7 +211,7 @@ public:
 	void						ClientSend				(bool bForce = false);
 	void						ClientSave				();
 			u32					Objects_net_Save		(NET_Packet* _Packet, u32 start, u32 count);
-	virtual	void				Send					(NET_Packet& P);
+	virtual	void				Send					(NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
 	
 	void						g_cl_Spawn				(LPCSTR name, u8 rp, u16 flags, Fvector pos);	// only ask server
 	void						g_sv_Spawn				(CSE_Abstract* E);					// server reply/command spawning

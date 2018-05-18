@@ -16,6 +16,10 @@
 
 extern	pureFrame*				g_pNetProcessor;
 
+BOOL CLevel::net_Start_client	( LPCSTR options )
+{
+	return FALSE;
+}
 #include "string_table.h"
 bool	CLevel::net_start_client1				()
 {
@@ -45,104 +49,113 @@ bool CLevel::net_start_client2()
 {
 	Server->createClient();
 
-    // It's really needed here?
 	ClientReceive();
 	Server->Update();
-    //
 
-    Log("* client : connection accepted - <All Ok>");
+    const char* clientOption = GamePersistent().GetClientOption().c_str();
+	connected_to_server = Connect2Server(clientOption);
 
 	return true;
 }
 
 bool CLevel::net_start_client3()
 {
-    shared_str const & server_options = Server->GetConnectOptions();
+	if(connected_to_server)
+	{
+		shared_str const & server_options = Server->GetConnectOptions();
 
-    LPCSTR					level_name = name().c_str();
-    LPCSTR					level_ver = Server->level_version(server_options).c_str();
+		LPCSTR					level_name = name().c_str();
+		LPCSTR					level_ver = Server->level_version(server_options).c_str();
 
-    // Determine internal level-ID
-    int						level_id = pApp->Level_ID(level_name, level_ver, true);
-
-    map_data.m_name = level_name;
-    map_data.m_map_version = level_ver;
-    map_data.m_map_loaded = true;
-
-    deny_m_spawn = FALSE;
-    // Load level
-    R_ASSERT3(Load(level_id), "Loading failed. Level: %s", level_name);
-
+		// Determine internal level-ID
+		int						level_id = pApp->Level_ID(level_name, level_ver, true);
+		
+		map_data.m_name			= level_name;
+		map_data.m_map_version	= level_ver;
+		map_data.m_map_loaded	= true;
+		
+		deny_m_spawn = FALSE;
+		// Load level
+		R_ASSERT3(Load(level_id),"Loading failed. Level: %s", level_name);
+		map_data.m_level_geom_crc32 = 0;
+	}
 	return true;
 }
 
 bool CLevel::net_start_client4()
 {
-    // Begin spawn
-    g_pGamePersistent->SetLoadStageTitle("st_client_spawning");
-    g_pGamePersistent->LoadTitle();
+	if (connected_to_server) 
+	{
+		// Begin spawn
+		g_pGamePersistent->SetLoadStageTitle	("st_client_spawning");
+		g_pGamePersistent->LoadTitle();
 
-    // Send physics to single or multithreaded mode
+		// Send physics to single or multithreaded mode
 
-    create_physics_world(!!psDeviceFlags.test(mtPhysics), &ObjectSpace, &Objects, &Device);
+		create_physics_world(!!psDeviceFlags.test(mtPhysics), &ObjectSpace, &Objects, &Device);
 
-    R_ASSERT(physics_world());
+		R_ASSERT(physics_world());
 
-    m_ph_commander_physics_worldstep = xr_new<CPHCommander>();
-    physics_world()->set_update_callback(m_ph_commander_physics_worldstep);
+		m_ph_commander_physics_worldstep = xr_new<CPHCommander>();
+		physics_world()->set_update_callback(m_ph_commander_physics_worldstep);
 
-    physics_world()->set_default_contact_shotmark(ContactShotMark);
-    physics_world()->set_default_character_contact_shotmark(CharacterContactShotMark);
+		physics_world()->set_default_contact_shotmark(ContactShotMark);
+		physics_world()->set_default_character_contact_shotmark(CharacterContactShotMark);
 
-    VERIFY(physics_world());
+		VERIFY(physics_world());
 
-    // Send network to single or multithreaded mode
-    // *note: release version always has "mt_*" enabled
-    Device.seqFrameMT.Remove(g_pNetProcessor);
-    Device.seqFrame.Remove(g_pNetProcessor);
-    if (psDeviceFlags.test(mtNetwork))
-        Device.seqFrameMT.Add(g_pNetProcessor, REG_PRIORITY_HIGH + 2);
-    else
-        Device.seqFrame.Add(g_pNetProcessor, REG_PRIORITY_LOW - 2);
-
+		// Send network to single or multithreaded mode
+		// *note: release version always has "mt_*" enabled
+		Device.seqFrameMT.Remove(g_pNetProcessor);
+		Device.seqFrame.Remove(g_pNetProcessor);
+		if (psDeviceFlags.test(mtNetwork))	Device.seqFrameMT.Add(g_pNetProcessor, REG_PRIORITY_HIGH + 2);
+		else								Device.seqFrame.Add(g_pNetProcessor, REG_PRIORITY_LOW - 2);
+	}
 	return true;
 }
 
 bool CLevel::net_start_client5()
 {
-    // HUD, Textures
-    g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
-    g_pGamePersistent->LoadTitle();
-    Device.m_pRender->DeferredLoad(FALSE);
-    Device.m_pRender->ResourcesDeferredUpload();
-    LL_CheckTextures();
-    sended_request_connection_data = false;
-    deny_m_spawn = TRUE;
-
+	if(connected_to_server)
+	{
+		// HUD
+		// Textures
+        g_pGamePersistent->SetLoadStageTitle("st_loading_textures");
+        g_pGamePersistent->LoadTitle();
+        Device.m_pRender->DeferredLoad(FALSE);
+        Device.m_pRender->ResourcesDeferredUpload();
+        LL_CheckTextures();
+		sended_request_connection_data	= FALSE;
+		deny_m_spawn					= TRUE;
+	}
 	return true;
 }
 
 bool CLevel::net_start_client6()
 {
-    // Sync
-    if (!synchronize_map_data())
-        return false;
+	if (connected_to_server) 
+	{
+		// Sync
+		if (!synchronize_map_data())
+			return false;
 
-    if (!game_configured)
-    {
-        pApp->LoadEnd();
-        return true;
-    }
-    g_hud->Load();
-    g_hud->OnConnected();
+		if (!game_configured)
+		{
+			pApp->LoadEnd(); 
+			return true;
+		}
+		g_hud->Load						();
+		g_hud->OnConnected				();
 
-    if (game)
-        game->OnConnected();
+		if (game)
+			game->OnConnected();
 
-    g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
-    g_pGamePersistent->LoadTitle();
-    Device.PreCache(60, true, true);
-    net_start_result_total = TRUE;
+		g_pGamePersistent->SetLoadStageTitle	("st_client_synchronising");
+		g_pGamePersistent->LoadTitle		();
+		Device.PreCache						(60, true, true);
+		net_start_result_total				= TRUE;
+	}
+	else net_start_result_total				= FALSE;
 
 	pApp->LoadEnd							(); 
 	return true;

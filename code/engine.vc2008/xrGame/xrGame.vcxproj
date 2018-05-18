@@ -1559,6 +1559,7 @@
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h" />
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
+    <ClInclude Include="xrServerMapSync.h" />
     <ClInclude Include="..\xrServerEntities\DrawUtils.h" />
     <ClInclude Include="..\xrServerEntities\FastDelegate.h" />
     <ClInclude Include="..\xrServerEntities\ItemListTypes.h" />
@@ -1566,6 +1567,8 @@
     <ClInclude Include="..\xrServerEntities\WaveForm.h" />
     <ClInclude Include="..\xrServerEntities\xrEProps.h" />
     <ClInclude Include="game_base.h" />
+    <ClInclude Include="game_base_kill_type.h" />
+    <ClInclude Include="game_base_menu_events.h" />
     <ClInclude Include="..\xrServerEntities\game_base_space.h" />
     <ClInclude Include="game_cl_single.h" />
     <ClInclude Include="game_cl_base.h" />
@@ -2680,6 +2683,7 @@
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">
     </ClCompile>
+    <ClCompile Include="xrServerMapSync.cpp" />
     <ClCompile Include="game_base.cpp">
     </ClCompile>
     <ClCompile Include="game_cl_single.cpp">
@@ -2726,6 +2730,7 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
     </ClCompile>
     <ClCompile Include="xrServer_perform_GameExport.cpp" />
+    <ClCompile Include="xrServer_perform_migration.cpp" />
     <ClCompile Include="xrServer_perform_sls_default.cpp" />
     <ClCompile Include="xrServer_perform_transfer.cpp" />
     <ClCompile Include="xrServer_sls_clear.cpp" />

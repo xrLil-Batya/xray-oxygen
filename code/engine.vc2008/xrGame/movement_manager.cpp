@@ -279,7 +279,7 @@ void CMovementManager::teleport					(u32 game_vertex_id)
 	net_packet.w			(&_game_vertex_id,sizeof(_game_vertex_id));
 	net_packet.w			(&_level_vertex_id,sizeof(_level_vertex_id));
 	net_packet.w_vec3		(position);
-	Level().Send			(net_packet);
+	Level().Send			(net_packet,net_flags(TRUE,TRUE));
 }
 
 void CMovementManager::clear_path				()
