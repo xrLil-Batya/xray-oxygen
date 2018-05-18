@@ -166,32 +166,29 @@ bool CSE_ALifeDynamicObject::redundant				() const
 
 /// ---------------------------- CSE_ALifeInventoryBox ---------------------------------------------
 
-void CSE_ALifeInventoryBox::add_online(const bool &update_registries)
+void CSE_ALifeInventoryBox::add_online	(const bool &update_registries)
 {
 	CSE_ALifeDynamicObjectVisual		*object = (this);
 
 	NET_Packet					tNetPacket;
 	ClientID					clientID;
-	clientID.set(object->alife().server().GetServerClient() ? object->alife().server().GetServerClient()->ID.value() : 0);
+	clientID.set				(object->alife().server().GetServerClient() ? object->alife().server().GetServerClient()->ID.value() : 0);
 
-	for (u16 &it: object->children)
-	{
-		CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = ai().alife().objects().object(it);
+	ALife::OBJECT_IT			I = object->children.begin();
+	ALife::OBJECT_IT			E = object->children.end();
+	for ( ; I != E; ++I) {
+		CSE_ALifeDynamicObject	*l_tpALifeDynamicObject = ai().alife().objects().object(*I);
 		CSE_ALifeInventoryItem	*l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeDynamicObject);
-
-		R_ASSERT2(l_tpALifeInventoryItem, "Non inventory item object has parent?!");
-		l_tpALifeInventoryItem->base()->s_flags. or (M_SPAWN_UPDATE);
-
-		CSE_Abstract *l_tpAbstract = smart_cast<CSE_Abstract*>(l_tpALifeInventoryItem);
+		R_ASSERT2				(l_tpALifeInventoryItem,"Non inventory item object has parent?!");
+		l_tpALifeInventoryItem->base()->s_flags.or(M_SPAWN_UPDATE);
+		CSE_Abstract			*l_tpAbstract = smart_cast<CSE_Abstract*>(l_tpALifeInventoryItem);
 		object->alife().server().entity_Destroy(l_tpAbstract);
 
-		l_tpALifeDynamicObject->o_Position = object->o_Position;
-		l_tpALifeDynamicObject->m_tNodeID = object->m_tNodeID;
-
-		object->alife().server().Process_spawn(tNetPacket, clientID, FALSE, l_tpALifeInventoryItem->base());
-
-		l_tpALifeDynamicObject->s_flags.and(u16(-1) ^ M_SPAWN_UPDATE);
-		l_tpALifeDynamicObject->m_bOnline = true;
+		l_tpALifeDynamicObject->o_Position		= object->o_Position;
+		l_tpALifeDynamicObject->m_tNodeID		= object->m_tNodeID;
+		object->alife().server().Process_spawn	(tNetPacket,clientID,FALSE,l_tpALifeInventoryItem->base());
+		l_tpALifeDynamicObject->s_flags.and		(u16(-1) ^ M_SPAWN_UPDATE);
+		l_tpALifeDynamicObject->m_bOnline		= true;
 	}
 
 	CSE_ALifeDynamicObjectVisual::add_online(update_registries);

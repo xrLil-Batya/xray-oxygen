@@ -12,6 +12,7 @@
 #include "alife_simulator.h"
 #include "game_cl_base.h"
 #include "game_cl_single.h"
+#include "game_sv_single.h"
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "actor.h"
@@ -284,17 +285,20 @@ public:
 class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) 
-	{
+	virtual void Execute(LPCSTR args) {
 		if (ai().get_alife())
 		{
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
 			if (id1 < 1)
 				Msg("Invalid process time! (%d)",id1);
 			else
-				Level().Server->game->alife().set_process_time(id1);
+				tpGame->alife().set_process_time(id1);
 		}
+		else
+			Log("!Not a single player game!");
 	}
 
 };
@@ -303,29 +307,35 @@ public:
 class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) 
-	{
+	virtual void Execute(LPCSTR args) {
 		if (ai().get_alife())
 		{
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
-			Level().Server->game->alife().objects_per_update(id1);
+			tpGame->alife().objects_per_update(id1);
 		}
+		else
+			Log("!Not a single player game!");
 	}
 };
 
 class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) 
-	{
+	virtual void Execute(LPCSTR args) {
 		if (ai().get_alife())
 		{
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			VERIFY			(tpGame);
 			float id1 = 0;
 			sscanf(args ,"%f",&id1);
 			clamp(id1,.1f,1.f);
-			Level().Server->game->alife().set_switch_factor(id1);
+			tpGame->alife().set_switch_factor(id1);
 		}
+		else
+			Log		("!Not a single player game!");
 	}
 };
 

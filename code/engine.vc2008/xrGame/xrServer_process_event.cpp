@@ -271,6 +271,10 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 				SendTo(receiver->owner->ID, P);
 			}
 		}break;
+	case GEG_PLAYER_ITEM_SELL:
+		{
+			game->OnPlayer_Sell_Item(sender, P);
+		}break;
 	case GE_TELEPORT_OBJECT:
 		{
 			game->teleport_object	(P,destination);
@@ -295,7 +299,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 						
 		}break;
 	default:
-		VERIFY	(0,"Game Event not implemented!!!");
+		R_ASSERT2	(0,"Game Event not implemented!!!");
 		break;
 	}
 }
