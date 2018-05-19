@@ -33,8 +33,10 @@
 //#define NEW_ANIMS_WPN			// Enable anm_..._crouch, anm_reload_empty
 #define DEAD_BODY_WEAPON		// Enable weapons in dead stalkers
 //#define POLTERGEIST_BUILD_DIE	// Old style polter dead
-//////////////////////////////////		Inventory states value		//////////////////////////////////
-//#define NUM_PARAMS_INV		// Adds progress bars in the inventory numeric value. Max value 100%. (%) - color="no_color"
+
+/*		Inventory/HUD states value */
 //#define ARROW_VALUE_INV		// Adds arrows to inventory. Clear Sky style. For use unlock in actor_menu/_16.xml tags <arrow> and <arrow_shadow>
+#define PROGRESS_VALUE_INV		// Adds progress bars value in the inventory. COP style. Used for default values.
+//#define NUM_PARAMS_INV		// Adds progress bars in the inventory numeric value. Max value 100%. (%) - color="no_color"
 //#define SHAPE_VALUE_INV		// Adds shape progress to inventory. 
 //#define MINMAP_BAR_HUD		// Adds progress bars to luminosity and noise value

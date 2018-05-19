@@ -87,7 +87,6 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	{
 		return;
 	}
-
 	float value = 0.0f;
 	float text = 0.0f;
 #ifdef NUM_PARAMS_INV
@@ -106,9 +105,11 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	float shape_health = 0.0f;
 	float shape_rad = 0.0f;
 #endif
+#ifdef PROGRESS_VALUE_INV
 	value = actor->conditions().GetHealth();
 	value = floor(value * 55) / 55; // number of sticks in progress bar
 	m_state[stt_health]->set_progress(value);
+#endif
 #ifdef ARROW_VALUE_INV
 	arrow_health = actor->conditions().GetHealth();
 	arrow_health = floor(arrow_health * 360) / 360;
@@ -131,8 +132,10 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	text_blood = floor(text_blood * 100);
 	m_state[stt_blood]->set_text(text_blood);
 #endif
+#ifdef PROGRESS_VALUE_INV
 	value_blood = actor->conditions().BleedingSpeed();	
 	m_state[stt_blood]->set_progress(value_blood);
+#endif
 #ifdef ARROW_VALUE_INV
 	arrow_blood = actor->conditions().BleedingSpeed();
 	arrow_blood = floor(arrow_blood * 360) / 360;
@@ -163,8 +166,10 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	text_rad = floor(text_rad * 100);
 	m_state[stt_rad]->set_text(text_rad);
 #endif
+#ifdef PROGRESS_VALUE_INV
 	value_rad = actor->conditions().GetRadiation();
 	m_state[stt_rad]->set_progress(value_rad);
+#endif
 #ifdef ARROW_VALUE_INV
 	arrow_rad = actor->conditions().GetRadiation();
 	arrow_rad = floor(arrow_rad * 360) / 360;
@@ -258,12 +263,14 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 
 	if(outfit)
 	{
+#ifdef PROGRESS_VALUE_INV
 		burn_value += outfit->GetDefHitTypeProtection(ALife::eHitTypeBurn);
 		radi_value += outfit->GetDefHitTypeProtection(ALife::eHitTypeRadiation);
 		cmbn_value += outfit->GetDefHitTypeProtection(ALife::eHitTypeChemicalBurn);
 		tele_value += outfit->GetDefHitTypeProtection(ALife::eHitTypeTelepatic);
 		woun_value += outfit->GetDefHitTypeProtection(ALife::eHitTypeWound);
 		shoc_value += outfit->GetDefHitTypeProtection(ALife::eHitTypeShock);
+#endif
 #ifdef NUM_PARAMS_INV		
 		burn_text += outfit->GetDefHitTypeProtection(ALife::eHitTypeBurn);
 		radi_text += outfit->GetDefHitTypeProtection(ALife::eHitTypeRadiation);		
@@ -291,7 +298,9 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		IKinematics* ikv = smart_cast<IKinematics*>(actor->Visual());
 		VERIFY(ikv);
 		u16 spine_bone = ikv->LL_BoneID("bip01_spine");
-		fwou_value += outfit->GetBoneArmor(spine_bone)*outfit->GetCondition();					
+#ifdef PROGRESS_VALUE_INV
+		fwou_value += outfit->GetBoneArmor(spine_bone)*outfit->GetCondition();
+#endif		
 #ifdef NUM_PARAMS_INV
 		fwou_text += outfit->GetBoneArmor(spine_bone)*outfit->GetCondition();
 #endif
@@ -304,7 +313,9 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		if(!outfit->bIsHelmetAvaliable)
 		{
 			u16 spine_bone = ikv->LL_BoneID("bip01_head");
+#ifdef PROGRESS_VALUE_INV
 			fwou_value += outfit->GetBoneArmor(spine_bone)*outfit->GetCondition();
+#endif
 #ifdef NUM_PARAMS_INV
 			fwou_text += outfit->GetBoneArmor(spine_bone)*outfit->GetCondition();
 #endif
@@ -318,12 +329,14 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	}
 	if(helmet)
 	{
+#ifdef PROGRESS_VALUE_INV
 		burn_value += helmet->GetDefHitTypeProtection(ALife::eHitTypeBurn);
 		radi_value += helmet->GetDefHitTypeProtection(ALife::eHitTypeRadiation);
 		cmbn_value += helmet->GetDefHitTypeProtection(ALife::eHitTypeChemicalBurn);
 		tele_value += helmet->GetDefHitTypeProtection(ALife::eHitTypeTelepatic);
 		woun_value += helmet->GetDefHitTypeProtection(ALife::eHitTypeWound);
 		shoc_value += helmet->GetDefHitTypeProtection(ALife::eHitTypeShock);
+#endif
 #ifdef NUM_PARAMS_INV
 		burn_text += helmet->GetDefHitTypeProtection(ALife::eHitTypeBurn);
 		radi_text += helmet->GetDefHitTypeProtection(ALife::eHitTypeRadiation);
@@ -351,7 +364,9 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		IKinematics* ikv = smart_cast<IKinematics*>(actor->Visual());
 		VERIFY(ikv);
 		u16 spine_bone = ikv->LL_BoneID("bip01_head");
+#ifdef PROGRESS_VALUE_INV
 		fwou_value += helmet->GetBoneArmor(spine_bone)*helmet->GetCondition();
+#endif
 #ifdef NUM_PARAMS_INV
 		fwou_text += helmet->GetBoneArmor(spine_bone)*helmet->GetCondition();
 #endif
@@ -365,10 +380,12 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	
 //fire burn protection progress bar
 	{
-		burn_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeBurn);
 		float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeBurn);
+#ifdef PROGRESS_VALUE_INV
+		burn_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeBurn);
 		burn_value = floor(burn_value / max_power * 31) / 31; // number of sticks in progress bar
 		m_state[stt_fire]->set_progress(burn_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		burn_arrow += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeBurn);
 		burn_arrow = floor(burn_arrow / max_power * 360) / 360;
@@ -386,10 +403,12 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		}
 //radiation protection progress bar
 	{
-		radi_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeRadiation);
 		float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeRadiation);
+#ifdef PROGRESS_VALUE_INV
+		radi_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeRadiation);
 		radi_value = floor(radi_value / max_power * 31) / 31; // number of sticks in progress bar
 		m_state[stt_radia]->set_progress(radi_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		radi_arrow += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeRadiation);
 		radi_arrow = floor(radi_arrow / max_power * 360) / 360;
@@ -407,10 +426,12 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		}
 //chemical burn protection progress bar
 	{
-		cmbn_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeChemicalBurn);
 		float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeChemicalBurn);
+#ifdef PROGRESS_VALUE_INV
+		cmbn_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeChemicalBurn);
 		cmbn_value = floor(cmbn_value / max_power * 31) / 31; // number of sticks in progress bar
 		m_state[stt_acid]->set_progress(cmbn_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		cmbn_arrow += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeChemicalBurn);
 		cmbn_arrow = floor(cmbn_arrow / max_power * 360) / 360;
@@ -428,10 +449,12 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		}
 //telepatic protection progress bar
 	{
-		tele_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeTelepatic);
 		float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeTelepatic);
+#ifdef PROGRESS_VALUE_INV
+		tele_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeTelepatic);
 		tele_value = floor(tele_value / max_power * 31) / 31; // number of sticks in progress bar  
 		m_state[stt_psi]->set_progress(tele_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		tele_arrow += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeTelepatic);
 		tele_arrow = floor(tele_arrow / max_power * 360) / 360;
@@ -450,8 +473,10 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 //wound protection progress bar
 	{
 		float max_power = actor->conditions().GetMaxWoundProtection();
+#ifdef PROGRESS_VALUE_INV
 		woun_value = floor(woun_value / max_power * 31) / 31; // number of sticks in progress bar
 		m_state[stt_wound]->set_progress(woun_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		woun_arrow = floor(woun_arrow / max_power * 360) / 360;
 		m_state[stt_wound]->set_arrow(woun_arrow);
@@ -467,10 +492,12 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		}
 //shock protection progress bar
 	{
-		shoc_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeShock);
 		float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeShock);
+#ifdef PROGRESS_VALUE_INV
+		shoc_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeShock);
 		shoc_value = floor(shoc_value / max_power * 31) / 31; // number of sticks in progress bar  
 		m_state[stt_shock]->set_progress(shoc_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		shoc_arrow += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeShock);
 		shoc_arrow = floor(shoc_arrow / max_power * 360) / 360;
@@ -489,8 +516,10 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 //fire wound protection progress bar
 	{
 		float max_power = actor->conditions().GetMaxFireWoundProtection();
+#ifdef PROGRESS_VALUE_INV
 		fwou_value = floor(fwou_value / max_power * 31) / 31; // number of sticks in progress bar
 		m_state[stt_fire_wound]->set_progress(fwou_value);
+#endif
 #ifdef ARROW_VALUE_INV
 		fwou_arrow = floor(fwou_arrow / max_power * 360) / 360;
 		m_state[stt_fire_wound]->set_arrow(fwou_arrow);
@@ -506,10 +535,12 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 		}
 //power restore speed progress bar
 	{
-		rspeed_value += actor->GetRestoreSpeed(ALife::ePowerRestoreSpeed);
 		float max_power =actor->conditions().GetMaxPowerRestoreSpeed();
+#ifdef PROGRESS_VALUE_INV
+		rspeed_value += actor->GetRestoreSpeed(ALife::ePowerRestoreSpeed);
 		rspeed_value = floor(rspeed_value / max_power * 31) / 31; // number of sticks in progress bar  
 		m_state[stt_power]->set_progress(rspeed_value);//0..1
+#endif
 #ifdef ARROW_VALUE_INV
 		rspeed_arrow += actor->GetRestoreSpeed(ALife::ePowerRestoreSpeed);
 		rspeed_arrow = floor(rspeed_arrow / max_power * 360) / 360;
