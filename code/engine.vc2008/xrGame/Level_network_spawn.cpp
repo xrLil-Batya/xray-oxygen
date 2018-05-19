@@ -106,10 +106,6 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 			//*/
 		}
 	}
-
-	//---------------------------------------------------------
-	Game().OnSpawn				(O);
-	//---------------------------------------------------------
 }
 
 CSE_Abstract *CLevel::spawn_item(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item)

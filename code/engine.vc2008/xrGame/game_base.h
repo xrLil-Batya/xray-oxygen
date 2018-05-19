@@ -53,6 +53,6 @@ public:
 
 	virtual		u64					GetEnvironmentGameTime	();
 	virtual		float				GetEnvironmentGameTimeFactor		();
-				void				SetEnvironmentGameTimeFactor		(u64 GameTime, const float fTimeFactor);
+	virtual		void				SetEnvironmentGameTimeFactor		(u64 GameTime, const float fTimeFactor);
 	virtual		void				SetEnvironmentGameTimeFactor		(const float fTimeFactor);
 };

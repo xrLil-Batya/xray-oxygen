@@ -46,25 +46,27 @@ void xrServer::SLS_Clear		()
 	u32									mode = net_flags(TRUE,TRUE);
 	while (!entities.empty())
 	{
-		bool							found = false;
-		for (auto entities_it = entities.begin(); entities_it != entities.end(); ++entities_it)
+		bool found = false;
+
+		for (auto &entities_it : entities)
 		{
-			if ((*entities_it).second->ID_Parent != 0xffff)
+			if (entities_it.second->ID_Parent != 0xffff)
 				continue;
-			found						= true;
-			Perform_destroy				((*entities_it).second,mode);
+			found = true;
+			Perform_destroy(entities_it.second);
 			break;
 		}
+
 		if (!found)
 		{
-			for (auto entities_it = entities.begin(); entities_it != entities.end(); ++entities_it)
+			for (auto &entities_it : entities)
 			{
-				if (entities_it->second)
+				if (entities_it.second)
 					Msg("! ERROR: can't destroy object [%d][%s] with parent [%d]",
-						entities_it->second->ID, entities_it->second->s_name.size() ? entities_it->second->s_name.c_str() : "unknown",
-						entities_it->second->ID_Parent);
+						entities_it.second->ID, entities_it.second->s_name.size() ? entities_it.second->s_name.c_str() : "unknown",
+						entities_it.second->ID_Parent);
 				else
-					Msg("! ERROR: can't destroy entity [%d][?] with parent[?]", entities_it->first);
+					Msg("! ERROR: can't destroy entity [%d][?] with parent[?]", entities_it.first);
 
 			}
 			Msg("! ERROR: FATAL: can't delete all entities !");

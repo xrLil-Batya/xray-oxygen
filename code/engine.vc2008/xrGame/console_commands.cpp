@@ -11,8 +11,6 @@
 #include "ai_debug.h"
 #include "alife_simulator.h"
 #include "game_cl_base.h"
-#include "game_cl_single.h"
-#include "game_sv_single.h"
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "actor.h"
@@ -192,8 +190,7 @@ public:
 		CCC_Token::Execute(args);
 		if (g_pGameLevel && Level().game)
 		{
-			game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
-			game->OnDifficultyChanged	();
+			Level().game->OnDifficultyChanged	();
 		}
 	}
 	virtual void	Info	(TInfo& I)		
@@ -1514,7 +1511,6 @@ public:
 	}
 }; // CCC_InvDropAllItems
 
-#endif // DEBUG
 
 class CCC_DumpObjects : public IConsole_Command {
 public:
@@ -1525,6 +1521,7 @@ public:
 	}
 };
 
+#endif // DEBUG
 class CCC_GSCheckForUpdates : public IConsole_Command {
 public:
 	CCC_GSCheckForUpdates(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
