@@ -6,29 +6,6 @@
 #include "string_table.h"
 #include "../xrEngine/xr_ioconsole.h"
 
-static const u32 r_buffer_size = 131072;	//128 Kb
-void CLevel::CalculateLevelCrc32()
-{
-	void* read_buffer	= _alloca(r_buffer_size);
-	Msg("* calculating checksum of level.geom");
-	CStreamReader*		geom = FS.rs_open	("$level$","level.geom");
-	R_ASSERT2			(geom, "failed to open level.geom file");
-	u32 remaind			= (u32)geom->elapsed();
-	map_data.m_level_geom_crc32	= 0;
-	while (remaind)
-	{
-		u32 to_read = remaind;
-		if (remaind > r_buffer_size)
-		{
-			to_read = r_buffer_size;
-		}
-		geom->r(read_buffer, to_read);
-		map_data.m_level_geom_crc32 ^= crc32(read_buffer, to_read);
-		remaind = (u32)geom->elapsed();
-	}
-	FS.r_close					(geom);
-}
-
 bool CLevel::IsChecksumsEqual(u32 check_sum) const
 {
 	return check_sum == map_data.m_level_geom_crc32;
@@ -36,31 +13,28 @@ bool CLevel::IsChecksumsEqual(u32 check_sum) const
 
 bool CLevel::synchronize_map_data()
 {
-	if (!IsDemoSave())
-	{
-		deny_m_spawn		= FALSE;
-		map_data.m_map_sync_received	= true;
-		return synchronize_client();
-	}
-	map_data.CheckToSendMapSync	();
+	deny_m_spawn = FALSE;
+	map_data.m_map_sync_received = true;
+	return synchronize_client();
+	map_data.CheckToSendMapSync();
 
-	ClientReceive(); 
+	ClientReceive();
 
-	if ((map_data.m_wait_map_time >= 1000) && (!map_data.m_map_sync_received) && !IsDemoPlay())//about 5 seconds
+	if ((map_data.m_wait_map_time >= 1000) && (!map_data.m_map_sync_received))//about 5 seconds
 	{
 		Msg("Wait map data time out: reconnecting...");
 		MakeReconnect();
 		g_loading_events.erase(++g_loading_events.begin(), g_loading_events.end());
 		return true;
 	}
-	
+
 	if (!map_data.m_map_sync_received)
 	{
 		Sleep(5);
 		++map_data.m_wait_map_time;
 		return false;
 	}
-			
+
 	if (map_data.IsInvalidMapOrVersion())
 	{
 		Msg("! Incorect map or version, reconnecting...");
@@ -70,7 +44,7 @@ bool CLevel::synchronize_map_data()
 	}
 	if (map_data.IsInvalidClientChecksum())
 	{
-		connected_to_server	= FALSE;
+		connected_to_server = FALSE;
 		return false;	//!!!
 	}
 	return synchronize_client();
@@ -98,8 +72,11 @@ bool	CLevel::synchronize_client()
 	{
 		ClientReceive();
 		Server->Update();
+
+        //Don't delete this ClientReceive(). Without that, game_configured variable will not changed
+        ClientReceive();
 	}	// if OnClient ClientReceive method called in upper invokation
-	//Sleep(5); 
+
 	return !!game_configured;
 }
 

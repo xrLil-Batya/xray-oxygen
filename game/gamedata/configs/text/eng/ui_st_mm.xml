@@ -942,4 +942,28 @@
 	<string id="manowar_ssss">
 		<text>Mrmnwar SS</text>
 	</string>
+	<string id="ui_mm_windowtype">
+		<text>Window type</text>
+	</string>
+	<string id="windowed">
+		<text>Windowed</text>
+	</string>
+	<string id="windowed_borderless">
+		<text>Windowed (Borderless)</text>
+	</string>
+	<string id="fullscreen">
+		<text>Fullscreen</text>
+	</string>
+	<string id="fullscreen_borderless">
+		<text>Fullscreen (Borderless)</text>
+	</string>
+	<string id="ui_st_hardcore_mode">
+		<text>Hardcore mode</text>
+	</string>
+	<string id="ui_st_colored_feel">
+		<text>Colored feel items names</text>
+	</string>
+	<string id="ui_st_car_info">
+		<text>Vehicle debug info</text>
+	</string>
 </string_table>

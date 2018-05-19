@@ -180,17 +180,11 @@ void CALifeSwitchManager::try_switch_online	(CSE_ALifeDynamicObject	*I)
 #endif
 		return;
 	}
-
-	VERIFY2						(
-		(
-			ai().game_graph().vertex(I->m_tGraphID)->level_id()
-			!=
-			ai().level_graph().level_id()
-		) ||
-		!Level().Objects.net_Find(I->ID) ||
-		Level().Objects.dump_all_objects(),
-		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level",Device.dwFrame,Device.dwTimeGlobal,I->name_replace(),I->ID)
-	);
+#ifdef DEBUG
+	Level().Objects.dump_all_objects();
+#endif
+	VERIFY2((ai().game_graph().vertex(I->m_tGraphID)->level_id() != ai().level_graph().level_id()) || !Level().Objects.net_Find(I->ID),
+		make_string("frame [%d] time [%d] object [%s] with id [%d] is offline, but is on the level",Device.dwFrame,Device.dwTimeGlobal,I->name_replace(),I->ID));
 
 	I->try_switch_online		();
 
@@ -204,7 +198,8 @@ void CALifeSwitchManager::try_switch_offline(CSE_ALifeDynamicObject	*I)
 {
 	START_PROFILE("ALife/switch/try_switch_offline")
 	// checking if the object is not attached
-	if (0xffff != I->ID_Parent) {
+	if (0xffff != I->ID_Parent) 
+	{
 #ifdef DEBUG
 		// checking if parent is online too
 		CSE_ALifeCreatureAbstract	*l_tpALifeCreatureAbstract = smart_cast<CSE_ALifeCreatureAbstract*>(objects().object(I->ID_Parent));

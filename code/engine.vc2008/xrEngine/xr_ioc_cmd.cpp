@@ -340,17 +340,38 @@ class CCC_VidMode : public CCC_Token
 	u32		_dummy;
 public :
 					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
-	virtual void	Execute(LPCSTR args){
+	virtual void	Execute(LPCSTR args)
+	{
 		u32 _w, _h;
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
-		if(cnt==2){
+		if(cnt==2)
+		{
 			psCurrentVidMode[0] = _w;
 			psCurrentVidMode[1] = _h;
-		}else{
+		}
+		else
+		{
 			Msg("! Wrong video mode [%s]", args);
 			return;
 		}
 	}
+
+	virtual BOOL isWideScreen ()
+	{
+		u32 _w, _h, _deltaBase;
+
+		psCurrentVidMode[0] = _w;
+		psCurrentVidMode[1] = _h;
+		_deltaBase = _w / _h;
+
+		// 1920 / 1200 = 16:10 = 1.6
+		if (_deltaBase > 1.6)	
+			return TRUE;
+		else
+			return FALSE;
+
+	}
+
 	virtual void	Status	(TStatus& S)	
 	{ 
 		xr_sprintf(S,sizeof(S),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]); 
@@ -391,6 +412,33 @@ public :
 	}
 
 };
+
+//-----------------------------------------------------------------------
+u32 ps_vid_windowtype = 4;
+xr_token vid_windowtype_token[] =
+{
+    { "windowed",               1 },
+    { "windowed_borderless",    2 },
+    { "fullscreen",             3 },
+    { "fullscreen_borderless",  4 },
+    { 0,                        0 },
+};
+
+class CCC_VidWindowType : public CCC_Token
+{
+
+public:
+    CCC_VidWindowType(LPCSTR N, u32* V, xr_token* T) : CCC_Token(N, V, T) {}
+
+    virtual void Execute(LPCSTR args) override
+    {
+        CCC_Token::Execute(args);
+
+        u32 rawNewWindowType = *value;
+        Device.UpdateWindowPropStyle((WindowPropStyle)rawNewWindowType);
+    }
+};
+
 //-----------------------------------------------------------------------
 class CCC_SND_Restart : public IConsole_Command
 {
@@ -583,12 +631,6 @@ ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 //extern int			psSkeletonUpdate;
 extern int			rsDVB_Size;
 extern int			rsDIB_Size;
-extern int			psNET_ClientUpdate;
-extern int			psNET_ClientPending;
-extern int			psNET_ServerUpdate;
-extern int			psNET_ServerPending;
-extern int			psNET_DedicatedSleep;
-extern char			psNET_Name[32];
 extern Flags32		psEnvFlags;
 //extern float		r__dtex_range;
 
@@ -661,10 +703,10 @@ void CCC_Register()
 
 	// Texture manager	
 	CMD4(CCC_Integer,	"texture_lod",			&psTextureLOD,				0,	4	);
-	CMD4(CCC_Integer,	"net_dedicated_sleep",	&psNET_DedicatedSleep,		0,	64	);
 
 	// General video control
-	CMD1(CCC_VidMode,	"vid_mode"				);
+	CMD1(CCC_VidMode,	    "vid_mode"		);
+    CMD3(CCC_VidWindowType, "vid_windowtype",   &ps_vid_windowtype, vid_windowtype_token);
 
 #ifdef DEBUG
 	CMD3(CCC_Token,		"vid_bpp",				&psCurrentBPP,	vid_bpp_token );
@@ -675,10 +717,7 @@ void CCC_Register()
 	// Sound
 	CMD2(CCC_Float,		"snd_volume_eff",		&psSoundVEffects);
 	CMD2(CCC_Float,		"snd_volume_music",		&psSoundVMusic);
-if(strstr(Core.Params,"-snd_speed_ctrl") )
-	{
 	CMD4(CCC_Float,		"snd_speed_of_sound",	&psSpeedOfSound,0.2f,2.0f	);
-	}
 	CMD1(CCC_SND_Restart,"snd_restart"			);
 	CMD3(CCC_Mask,		"snd_acceleration",		&psSoundFlags,		ss_Hardware	);
 	CMD3(CCC_Mask,		"snd_efx",				&psSoundFlags,		ss_EFX		);

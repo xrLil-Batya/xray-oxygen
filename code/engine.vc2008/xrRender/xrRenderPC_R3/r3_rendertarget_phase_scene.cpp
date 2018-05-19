@@ -19,7 +19,7 @@ void	CRenderTarget::phase_scene_prepare()
 	//	FPS. Make check for SLI configuration.
 	if (RImplementation.o.advancedpp &&
 		(
-			ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES | R2FLAG_DOF) ||
+			ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES) || ps_r__bokeh_quality > 0 ||
 			((ps_r_sun_shafts>0) && (fValue >= 0.0001)) ||
 			(ps_r_ssao>0)
 			)

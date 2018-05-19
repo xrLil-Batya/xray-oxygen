@@ -107,35 +107,39 @@
 	            <d r="70" g="70" b="70"/>
             </text_color>
         </list_resolution>
+		
+		<cap_windowtype x="15" y="93" width="135" height="24">
+			<text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_windowtype</text>
+		</cap_windowtype>
+		<list_windowtype x="175" y="95" width="235" height="20" list_length="4" always_show_scroll="1">
+			<options_item entry="vid_windowtype" group="mm_opt_video" depend="runtime"/>
+            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <text_color>
+	            <e r="170" g="170" b="170"/>
+	            <d r="70" g="70" b="70"/>
+            </text_color>
+		</list_windowtype>
 
-        <cap_gamma x="15" y="93" width="135" height="24">
+        <cap_gamma x="15" y="123" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_gamma</text>
         </cap_gamma>
-        <track_gamma x="175" y="97" width="235" height="16">
+        <track_gamma x="175" y="127" width="235" height="16">
             <options_item entry="rs_c_gamma" group="mm_opt_video" depend="runtime"/>
         </track_gamma>
 
-        <cap_contrast x="15" y="123" width="135" height="24">
+        <cap_contrast x="15" y="153" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_contrast</text>
         </cap_contrast>
-        <track_contrast x="175" y="127" width="235" height="16">
+        <track_contrast x="175" y="157" width="235" height="16">
             <options_item entry="rs_c_contrast" group="mm_opt_video" depend="runtime"/>
           </track_contrast>
 
-          <cap_brightness x="15" y="153" width="135" height="24">
+          <cap_brightness x="15" y="183" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_brightness</text>
           </cap_brightness>
-          <track_brightness x="175" y="157" width="235" height="16">
+          <track_brightness x="175" y="187" width="235" height="16">
             <options_item entry="rs_c_brightness" group="mm_opt_video" depend="runtime"/>
         </track_brightness>
-
-        <cap_fullscreen x="15" y="183" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_fullscreen</text>
-        </cap_fullscreen>
-        <check_fullscreen x="162" y="180" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="rs_fullscreen" group="mm_opt_video" depend="vid"/>
-        </check_fullscreen>
 
 
         <btn_advanced x="338" y="322" width="108" height="24">
@@ -440,12 +444,15 @@
         </check_soft_particles>
 
         <cap_dof x="20" y="3" width="135" height="24">
-            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
+            <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
         </cap_dof>
-        <check_dof x="167" y="0" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r2_dof_enable" group="mm_opt_video_adv" depend="vid"/>
-        </check_dof>
+        <combo_dof x="180" y="0" width="235" height="20" always_show_scroll="1">
+	        <options_item entry="r2_dof_quality" group="mm_opt_video" depend="vid"/>
+            <list_font color="red" font="letterica16"/>
+            <text_color>
+	            <e color="red"/>
+            </text_color>
+        </combo_dof>
 		
         <cap_mblur_enabled x="20" y="3" width="135" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_mblur_enabled</text>
@@ -620,6 +627,32 @@
         <texture>ui_inGame2_checkbox</texture>
         <options_item entry="hud_draw" group="mm_opt_gameplay"/>
       </check_hud_draw>
+	  
+      <cap_hardcore_mode x="15" y="273" width="135" height="24">
+        <text r="270" g="70" b="70" font="letterica16" align="r" vert_align="c">ui_st_hardcore_mode</text>
+      </cap_hardcore_mode>
+      <check_hardcore_mode x="162" y="270" width="44" height="29">
+        <texture>ui_inGame2_checkbox</texture>
+        <options_item entry="g_hardcore_mode" group="mm_opt_gameplay"/>
+      </check_hardcore_mode>
+	  
+      <cap_colored_feel x="15" y="303" width="135" height="24">
+        <text r="270" g="200" b="200" font="letterica16" align="r" vert_align="c">ui_st_colored_feel</text>
+      </cap_colored_feel>
+      <check_colored_feel x="162" y="300" width="44" height="29">
+        <texture>ui_inGame2_checkbox</texture>
+        <options_item entry="g_colored_feel" group="mm_opt_gameplay"/>
+      </check_colored_feel>
+	  
+      <cap_car_info x="15" y="333" width="135" height="24">
+        <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_car_info</text>
+      </cap_car_info>
+      <check_car_info x="162" y="330" width="44" height="29">
+        <texture>ui_inGame2_checkbox</texture>
+        <options_item entry="rs_car_info" group="mm_opt_gameplay"/>
+      </check_car_info>
+	  
+
 
     </tab_gameplay>
     <tab_controls>

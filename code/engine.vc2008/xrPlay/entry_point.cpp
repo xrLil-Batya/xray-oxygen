@@ -11,10 +11,7 @@
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
 #pragma comment(lib, "xrEngine.lib")
-#define MINIMUM_WIN_MEMORY	0x0a00000
-#define MAXIMUM_WIN_MEMORY	0x1000000
 #define DLL_API __declspec(dllimport)
-HINSTANCE	g_hInstance;
 ////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
@@ -33,7 +30,7 @@ int RunXRLauncher()
 
 
 /// <summary>
-/// Return the list of parametres
+/// Return the list of parameters
 /// </summary>
 const char* GetParams()
 {
@@ -44,7 +41,7 @@ const char* GetParams()
 /// <summary>
 /// Dll import
 /// </summary>
-DLL_API int RunApplication(char* commandLine);
+DLL_API int RunApplication(LPCSTR commandLine);
 
 
 /// <summary>
@@ -52,14 +49,9 @@ DLL_API int RunApplication(char* commandLine);
 /// </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-
-	if (hPrevInstance)				//#VERTVER: Previous Instance can't be in WinNT 
-		return 0;
-
-	g_hInstance = hInstance;
-
-	std::string params = lpCmdLine;
-
+	////////////////////////////////////////////////////
+	LPCSTR params = lpCmdLine;
+	////////////////////////////////////////////////////
 	try
 	{
 		// Init X-ray core
@@ -71,18 +63,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
 	}
 
-	const bool launch = strstr(lpCmdLine, "-launcher");
-
 	////////////////////////////////////////////////////
-	// If we don't needy for a excetions - we can 
+	// If we don't needy for a exceptions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
-<<<<<<< HEAD
 
 #ifndef DEBUG
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
-	if (!strstr(lpCmdLine, "-silent") && !launch)
+	if (!strstr(lpCmdLine, "-silent") && !strstr(lpCmdLine, "-launcher"))
 	{
 		// Checking for SSE2
 		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
@@ -90,11 +77,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			return 0;
 		}
 		// Checking for SSE3
-<<<<<<< HEAD
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
-=======
-		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 		{
 			MessageBox(NULL,
 				"It's can affect on the stability of the game.",
@@ -103,10 +86,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
-<<<<<<< HEAD
 #ifndef RELEASE_IA32
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
 			MessageBox(NULL,
@@ -114,15 +94,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				"AVX isn't supported on your CPU!",
 				MB_OK | MB_ICONWARNING);
 		}
+#endif
 	}
-<<<<<<< HEAD
 #endif
-#endif
-=======
->>>>>>> parent of 31343e9e... * FIX: LtPetrov OOPS 2
 
 	// If we want to start launcher
-	if (launch)
+	if (strstr(lpCmdLine, "-launcher"))
 	{
 		const int l_res = RunXRLauncher();
 		switch (l_res)
@@ -134,6 +111,6 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	CreateRendererList();
-	RunApplication(params.data());
+	RunApplication(params);
 	return 0;
 }

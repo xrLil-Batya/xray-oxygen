@@ -2,20 +2,18 @@
 #include "player_hud.h"
 #include "HudItem.h"
 #include "ui_base.h"
-#include "actor.h"
 #include "physic_item.h"
 #include "actoreffector.h"
 #include "../xrEngine/IGame_Persistent.h"
 #include "inventory_item.h"
 #include "weapon.h"
-
+#include "actor.h"
 player_hud* g_player_hud = nullptr;
 Fvector _ancor_pos;
 Fvector _wpn_root_pos;
 
-
-static const float PITCH_OFFSET_R       = 0.017f;   // Насколько сильно ствол смещается вбок (влево) при вертикальных поворотах камеры
-static const float PITCH_OFFSET_N       = 0.012f;   // Насколько сильно ствол поднимается\опускается при вертикальных поворотах камеры
+static const float PITCH_OFFSET_R		= 0.001f;
+static const float PITCH_OFFSET_N		= 0.001f;
 static const float PITCH_OFFSET_D       = 0.02f;    // Насколько сильно ствол приближается\отдаляется при вертикальных поворотах камеры
 static const float PITCH_LOW_LIMIT      = -PI;      // Минимальное значение pitch при использовании совместно с PITCH_OFFSET_N
 static const float ORIGIN_OFFSET        = -0.05f;   // Фактор влияния инерции на положение ствола (чем меньше, тем маштабней инерция)
@@ -239,65 +237,70 @@ void hud_item_measures::load(const shared_str& sect_name, IKinematics* K)
 {
 	bool is_16x9 = UI().is_widescreen();
 	string64	_prefix;
-	xr_sprintf	(_prefix,"%s",is_16x9?"_16x9":"");
+	xr_sprintf(_prefix, "%s", is_16x9 ? "_16x9" : "");
 	string128	val_name;
 
-	strconcat					(sizeof(val_name),val_name,"hands_position",_prefix);
-	m_hands_attach[0]			= pSettings->r_fvector3(sect_name, val_name);
-	strconcat					(sizeof(val_name),val_name,"hands_orientation",_prefix);
-	m_hands_attach[1]			= pSettings->r_fvector3(sect_name, val_name);
+	strconcat(sizeof(val_name), val_name, "hands_position", _prefix);
+	m_hands_attach[0] = pSettings->r_fvector3(sect_name, val_name);
+	strconcat(sizeof(val_name), val_name, "hands_orientation", _prefix);
+	m_hands_attach[1] = pSettings->r_fvector3(sect_name, val_name);
 
-	m_item_attach[0]			= pSettings->r_fvector3(sect_name, "item_position");
-	m_item_attach[1]			= pSettings->r_fvector3(sect_name, "item_orientation");
+	m_item_attach[0] = pSettings->r_fvector3(sect_name, "item_position");
+	m_item_attach[1] = pSettings->r_fvector3(sect_name, "item_orientation");
 
 	shared_str					 bone_name;
-	m_prop_flags.set			 (e_fire_point,pSettings->line_exist(sect_name,"fire_bone"));
-	if(m_prop_flags.test(e_fire_point))
+	m_prop_flags.set(e_fire_point, pSettings->line_exist(sect_name, "fire_bone"));
+	if (m_prop_flags.test(e_fire_point))
 	{
-		bone_name				= pSettings->r_string(sect_name, "fire_bone");
-		m_fire_bone				= K->LL_BoneID(bone_name);
-		m_fire_point_offset		= pSettings->r_fvector3(sect_name, "fire_point");
-	}else
-		m_fire_point_offset.set(0,0,0);
+		bone_name = pSettings->r_string(sect_name, "fire_bone");
+		m_fire_bone = K->LL_BoneID(bone_name);
+		m_fire_point_offset = pSettings->r_fvector3(sect_name, "fire_point");
+	}
+	else
+		m_fire_point_offset.set(0, 0, 0);
 
-	m_prop_flags.set			 (e_fire_point2,pSettings->line_exist(sect_name,"fire_bone2"));
-	if(m_prop_flags.test(e_fire_point2))
+	m_prop_flags.set(e_fire_point2, pSettings->line_exist(sect_name, "fire_bone2"));
+	if (m_prop_flags.test(e_fire_point2))
 	{
-		bone_name				= pSettings->r_string(sect_name, "fire_bone2");
-		m_fire_bone2			= K->LL_BoneID(bone_name);
-		m_fire_point2_offset	= pSettings->r_fvector3(sect_name, "fire_point2");
-	}else
-		m_fire_point2_offset.set(0,0,0);
+		bone_name = pSettings->r_string(sect_name, "fire_bone2");
+		m_fire_bone2 = K->LL_BoneID(bone_name);
+		m_fire_point2_offset = pSettings->r_fvector3(sect_name, "fire_point2");
+	}
+	else
+		m_fire_point2_offset.set(0, 0, 0);
 
-	m_prop_flags.set			 (e_shell_point,pSettings->line_exist(sect_name,"shell_bone"));
-	if(m_prop_flags.test(e_shell_point))
+	m_prop_flags.set(e_shell_point, pSettings->line_exist(sect_name, "shell_bone"));
+	if (m_prop_flags.test(e_shell_point))
 	{
-		bone_name				= pSettings->r_string(sect_name, "shell_bone");
-		m_shell_bone			= K->LL_BoneID(bone_name);
-		m_shell_point_offset	= pSettings->r_fvector3(sect_name, "shell_point");
-	}else
-		m_shell_point_offset.set(0,0,0);
+		bone_name = pSettings->r_string(sect_name, "shell_bone");
+		m_shell_bone = K->LL_BoneID(bone_name);
+		m_shell_point_offset = pSettings->r_fvector3(sect_name, "shell_point");
+	}
+	else
+		m_shell_point_offset.set(0, 0, 0);
 
-	m_hands_offset[0][0].set	(0,0,0);
-	m_hands_offset[1][0].set	(0,0,0);
+	m_hands_offset[0][0].set(0, 0, 0);
+	m_hands_offset[1][0].set(0, 0, 0);
 
-	strconcat					(sizeof(val_name),val_name,"aim_hud_offset_pos",_prefix);
-	m_hands_offset[0][1]		= pSettings->r_fvector3(sect_name, val_name);
-	strconcat					(sizeof(val_name),val_name,"aim_hud_offset_rot",_prefix);
-	m_hands_offset[1][1]		= pSettings->r_fvector3(sect_name, val_name);
+	strconcat(sizeof(val_name), val_name, "aim_hud_offset_pos", _prefix);
+	m_hands_offset[0][1] = pSettings->r_fvector3(sect_name, val_name);
+	strconcat(sizeof(val_name), val_name, "aim_hud_offset_rot", _prefix);
+	m_hands_offset[1][1] = pSettings->r_fvector3(sect_name, val_name);
 
-	strconcat					(sizeof(val_name),val_name,"gl_hud_offset_pos",_prefix);
-	m_hands_offset[0][2]		= pSettings->r_fvector3(sect_name, val_name);
-	strconcat					(sizeof(val_name),val_name,"gl_hud_offset_rot",_prefix);
-	m_hands_offset[1][2]		= pSettings->r_fvector3(sect_name, val_name);
+	strconcat(sizeof(val_name), val_name, "gl_hud_offset_pos", _prefix);
+	m_hands_offset[0][2] = pSettings->r_fvector3(sect_name, val_name);
+	strconcat(sizeof(val_name), val_name, "gl_hud_offset_rot", _prefix);
+	m_hands_offset[1][2] = pSettings->r_fvector3(sect_name, val_name);
 
 
-	R_ASSERT2(pSettings->line_exist(sect_name,"fire_point")==pSettings->line_exist(sect_name,"fire_bone"),		sect_name.c_str());
-	R_ASSERT2(pSettings->line_exist(sect_name,"fire_point2")==pSettings->line_exist(sect_name,"fire_bone2"),	sect_name.c_str());
-	R_ASSERT2(pSettings->line_exist(sect_name,"shell_point")==pSettings->line_exist(sect_name,"shell_bone"),	sect_name.c_str());
+	R_ASSERT2(pSettings->line_exist(sect_name, "fire_point") == pSettings->line_exist(sect_name, "fire_bone"), sect_name.c_str());
+	R_ASSERT2(pSettings->line_exist(sect_name, "fire_point2") == pSettings->line_exist(sect_name, "fire_bone2"), sect_name.c_str());
+	R_ASSERT2(pSettings->line_exist(sect_name, "shell_point") == pSettings->line_exist(sect_name, "shell_bone"), sect_name.c_str());
 
-	m_prop_flags.set(e_16x9_mode_now,is_16x9);
-	
+	m_prop_flags.set(e_16x9_mode_now, is_16x9);
+
+
+
     //Загрузка параметров инерции
     m_inertion_params.m_pitch_offset_r = READ_IF_EXISTS(pSettings, r_float, sect_name, "pitch_offset_right", PITCH_OFFSET_R);
     m_inertion_params.m_pitch_offset_n = READ_IF_EXISTS(pSettings, r_float, sect_name, "pitch_offset_up", PITCH_OFFSET_N);
@@ -648,14 +651,14 @@ void player_hud::update_inertion(Fmatrix& trans)
         }
         else
         { // Загружаем дефолтные параметры инерции
-            inertion_data.m_pitch_offset_r = PITCH_OFFSET_R;
-            inertion_data.m_pitch_offset_n = PITCH_OFFSET_N;
-            inertion_data.m_pitch_offset_d = PITCH_OFFSET_D;
-            inertion_data.m_pitch_low_limit = PITCH_LOW_LIMIT;
-            inertion_data.m_origin_offset = ORIGIN_OFFSET;
-            inertion_data.m_origin_offset_aim = ORIGIN_OFFSET_AIM;
-            inertion_data.m_tendto_speed = TENDTO_SPEED;
-            inertion_data.m_tendto_speed_aim = TENDTO_SPEED_AIM;
+            inertion_data.m_pitch_offset_r =		PITCH_OFFSET_R;
+            inertion_data.m_pitch_offset_n =		PITCH_OFFSET_N;
+            inertion_data.m_pitch_offset_d =		PITCH_OFFSET_D;
+            inertion_data.m_pitch_low_limit =		PITCH_LOW_LIMIT;
+            inertion_data.m_origin_offset =			ORIGIN_OFFSET;
+            inertion_data.m_origin_offset_aim =		ORIGIN_OFFSET_AIM;
+            inertion_data.m_tendto_speed =			TENDTO_SPEED;
+            inertion_data.m_tendto_speed_aim =		TENDTO_SPEED_AIM;
         }
 
         // calc difference

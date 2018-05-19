@@ -151,7 +151,7 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Òîëüêî true!
+	// Ã’Ã®Ã«Ã¼ÃªÃ® true!
 	o.HW_smap			= true;
 	o.HW_smap_PCF       = true;
 
@@ -183,7 +183,10 @@ void					CRender::create					()
 	o.volumetricfog		= ps_r2_ls_flags.test(R3FLAG_VOLUMETRIC_SMOKE);
 	o.sjitter			= (strstr(Core.Params,"-sjitter"))?		TRUE	:FALSE	;
 	o.depth16			= (strstr(Core.Params,"-depth16"))?		TRUE	:FALSE	;
-	o.noshadows			= (strstr(Core.Params,"-noshadows"))?	TRUE	:FALSE	;
+	if (strstr(Core.Params, "-noshadows") || strstr(Core.Params, "-render_for_weak_systems"))
+		o.noshadows = TRUE;
+	else
+		o.noshadows = FALSE;
 	o.Tshadows			= (strstr(Core.Params,"-tsh"))?			TRUE	:FALSE	;
 	o.distortion_enabled= (strstr(Core.Params,"-nodistort"))?	FALSE	:TRUE	;
 	o.distortion		= o.distortion_enabled;
@@ -846,6 +849,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	char							c_sun_shafts	[32];
 	char							c_ssao			[32];
 	char							c_sun_quality	[32];
+    char c_bokeh_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 
@@ -1059,7 +1063,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	else
 		sh_name[len]='0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
+	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -1204,16 +1208,29 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 			sh_name[len]='0'; ++len;
 		}
    }
-   else {
+    else {
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
-   }
+    }
 
-   sh_name[len] = 0;
+    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    {
+        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        defines[def_it].Name = "BOKEH_QUALITY";
+        defines[def_it].Definition = c_bokeh_quality;
+        def_it++;
+        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+    }
+    else
+    {
+        sh_name[len] = '0'; ++len;
+    }
+
+    sh_name[len] = 0;
 
 	// finish
 	defines[def_it].Name			=	0;

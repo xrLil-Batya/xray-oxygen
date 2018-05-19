@@ -415,7 +415,6 @@
   <ItemGroup>
     <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="ClS\NET_Client.cpp" />
-    <ClCompile Include="ClS\NET_Common.cpp" />
     <ClCompile Include="ClS\NET_Server.cpp" />
     <ClCompile Include="CPU\PLC.cpp" />
     <ClCompile Include="CPU\xrCPU_Pipe.cpp" />

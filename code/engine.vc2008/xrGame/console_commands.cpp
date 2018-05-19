@@ -11,8 +11,6 @@
 #include "ai_debug.h"
 #include "alife_simulator.h"
 #include "game_cl_base.h"
-#include "game_cl_single.h"
-#include "game_sv_single.h"
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "actor.h"
@@ -49,7 +47,7 @@
 #	include "game_graph.h"
 #	include "CharacterPhysicsSupport.h"
 #endif // DEBUG
-
+#include "HudItem.h"
 string_path		g_last_saved_game;
 
 #ifdef DEBUG
@@ -192,8 +190,7 @@ public:
 		CCC_Token::Execute(args);
 		if (g_pGameLevel && Level().game)
 		{
-			game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
-			game->OnDifficultyChanged	();
+			Level().game->OnDifficultyChanged	();
 		}
 	}
 	virtual void	Info	(TInfo& I)		
@@ -1514,7 +1511,6 @@ public:
 	}
 }; // CCC_InvDropAllItems
 
-#endif // DEBUG
 
 class CCC_DumpObjects : public IConsole_Command {
 public:
@@ -1525,6 +1521,7 @@ public:
 	}
 };
 
+#endif // DEBUG
 class CCC_GSCheckForUpdates : public IConsole_Command {
 public:
 	CCC_GSCheckForUpdates(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -1748,6 +1745,7 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock, "ph_tri_query_ex_aabb_rate", &ph_console::ph_tri_query_ex_aabb_rate, 1.01f, 3.f);
 #endif // DEBUG
 	CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
+	CMD3(CCC_Mask, "rs_car_info", &psActorFlags, AF_CAR_INFO);
 	CMD1(CCC_JumpToLevel, "jump_to_level");
 	CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
 	CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
@@ -1756,6 +1754,8 @@ void CCC_RegisterCommands()
 	CMD1(CCC_Script, "run_script");
 	CMD1(CCC_ScriptCommand, "run_string");
 	CMD3(CCC_Mask, "rs_show_cursor_pos", &psActorFlags, AF_SHOW_CURPOS);
+	CMD3(CCC_Mask, "g_hardcore_mode", &psActorFlags, AF_HARDCORE);
+	CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
 	CMD1(CCC_Giveinfo, "g_info");
@@ -1990,12 +1990,10 @@ void CCC_RegisterCommands()
 
 	CMD4(CCC_Float, "ai_aim_predict_time", &g_aim_predict_time, 0.f, 10.f);
 
-#ifdef DEBUG
 	//extern BOOL g_use_new_ballistics;
 	//CMD4(CCC_Integer,	"use_new_ballistics",	&g_use_new_ballistics, 0, 1);
 	extern float g_bullet_time_factor;
 	CMD4(CCC_Float, "g_bullet_time_factor", &g_bullet_time_factor, 0.f, 10.f);
-#endif
 
 
 #ifdef DEBUG

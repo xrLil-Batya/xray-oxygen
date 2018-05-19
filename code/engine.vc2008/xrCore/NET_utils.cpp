@@ -16,9 +16,10 @@ void NET_Packet::r_seek(const u32 pos) {
     r_pos = pos;
 }
 
-void NET_Packet::r_advance(const u32 size) {
+void NET_Packet::r_advance(const u32 size) 
+{
     r_pos += size;
-    VERIFY(r_pos <= B.count);
+    R_ASSERT2(r_pos <= B.count, "NET_Packet reading error, calls > count!");
 }
 
 // reading - utilities

@@ -40,8 +40,6 @@
 #include "actor.h"
 #include "player_hud.h"
 #include "UI/UIGameTutorial.h"
-#include "message_filter.h"
-#include "demoinfo.h"
 #include "CustomDetector.h"
 #include "GamePersistent.h"
 
@@ -132,7 +130,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bIn_CrPr					= false;
 	m_dwNumSteps				= 0;
 	m_dwDeltaUpdate				= u32(fixed_step*1000);
-	m_dwLastNetUpdateTime		= 0;
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
     m_level_sound_manager = xr_new<CLevelSoundManager>();
@@ -154,30 +151,19 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bSynchronization			= false;
 #endif	
 	//---------------------------------------------------------
-	pStatGraphR = NULL;
-	pStatGraphS = NULL;
+	pStatGraphR = nullptr;
+	pStatGraphS = nullptr;
 	//---------------------------------------------------------
 	pObjects4CrPr.clear();
 	pActors4CrPr.clear();
 	//---------------------------------------------------------
-	pCurrentControlEntity = NULL;
-
+	pCurrentControlEntity = nullptr;
 	//---------------------------------------------------------	
-	m_writer = NULL;
-	m_reader = NULL;
-	m_DemoPlay = FALSE;
-	m_DemoPlayStarted	= FALSE;
-	m_DemoPlayStoped	= FALSE;
-	m_DemoSave = FALSE;
-	m_DemoSaveStarted = FALSE;
-	m_msg_filter = nullptr;
-	m_demo_info	= nullptr;
-
-	R_ASSERT				(!g_player_hud);
-	g_player_hud			= xr_new<player_hud>();
+	R_ASSERT(!g_player_hud);
+	g_player_hud = xr_new<player_hud>();
 	g_player_hud->load_default();
 	
-	hud_zones_list			= nullptr;
+	hud_zones_list = nullptr;
 }
 
 extern CAI_Space *g_ai_space;
@@ -258,27 +244,10 @@ CLevel::~CLevel()
 	CTradeParameters::clean		();
 
 	if(g_tutorial && g_tutorial->m_pStoredInputReceiver==this)
-		g_tutorial->m_pStoredInputReceiver = NULL;
+		g_tutorial->m_pStoredInputReceiver = nullptr;
 
 	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
-		g_tutorial2->m_pStoredInputReceiver = NULL;
-
-	
-	if (IsDemoPlay())
-	{
-		StopPlayDemo();
-		if (m_reader)
-		{
-			FS.r_close			(m_reader);
-			m_reader			= NULL;
-		}
-	}
-	xr_delete(m_msg_filter);
-	xr_delete(m_demo_info);
-	if (IsDemoSave())
-	{
-		StopSaveDemo();
-	}
+		g_tutorial2->m_pStoredInputReceiver = nullptr;
 }
 
 shared_str CLevel::name() const
@@ -286,23 +255,22 @@ shared_str CLevel::name() const
 	return (map_data.m_name);
 }
 
-void CLevel::PrefetchSound		(LPCSTR name)
+void CLevel::PrefetchSound(LPCSTR name)
 {
 	// preprocess sound name
 	string_path					tmp;
-	xr_strcpy					(tmp,name);
-	xr_strlwr					(tmp);
-	if (strext(tmp))			*strext(tmp)=0;
-	shared_str	snd_name		= tmp;
+	xr_strcpy(tmp, name);
+	xr_strlwr(tmp);
+	if (strext(tmp))			*strext(tmp) = 0;
+	shared_str	snd_name = tmp;
 	// find in registry
-    auto it		= sound_registry.find(snd_name);
+	auto it = sound_registry.find(snd_name);
 	// if find failed - preload sound
-	if (it==sound_registry.end())
-		sound_registry[snd_name].create(snd_name.c_str(),st_Effect,sg_SourceType);
+	if (it == sound_registry.end())
+		sound_registry[snd_name].create(snd_name.c_str(), st_Effect, sg_SourceType);
 }
 
-BOOL		g_bDebugEvents = FALSE	;
-
+BOOL g_bDebugEvents = FALSE;
 
 void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 {
@@ -311,14 +279,13 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	if (!O)	return;
 	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
-	if (!GO)		{
+	if (!GO)		
+	{
 		return;
 	}
+
 	if (type != GE_DESTROY_REJECT)
 	{
-		if (type == GE_DESTROY)
-			Game().OnDestroy(GO);
-			
 		GO->OnEvent		(P,type);
 	}
 	else 
@@ -342,7 +309,6 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 		GO->OnEvent		(P,GE_OWNERSHIP_REJECT);
 		if (ok)
 		{
-			Game().OnDestroy(GD);
 			GD->OnEvent	(P,GE_DESTROY);
 		};
 	}
@@ -458,17 +424,9 @@ void CLevel::OnFrame()
 	BulletManager().CommitEvents		();
 	Device.Statistic->TEST0.End			();
 
-	// Client receive
-	if (net_isDisconnected())	
-	{
-		Engine.Event.Defer				("kernel:disconnect");
-		return;
-	} else {
-
-		Device.Statistic->netClient1.Begin();
-		ClientReceive					();
-		Device.Statistic->netClient1.End	();
-	}
+    Device.Statistic->netClient1.Begin();
+    ClientReceive					();
+    Device.Statistic->netClient1.End	();
 
 	ProcessGameEvents	();
 
@@ -772,30 +730,6 @@ void CLevel::make_NetCorrectionPrediction	()
 u32			CLevel::GetInterpolationSteps	()
 {
 	return lvInterpSteps;
-};
-
-void		CLevel::UpdateDeltaUpd	( u32 LastTime )
-{
-	u32 CurrentDelta = LastTime - m_dwLastNetUpdateTime;
-	if (CurrentDelta < m_dwDeltaUpdate) 
-		CurrentDelta = iFloor(float(m_dwDeltaUpdate * 10 + CurrentDelta) / 11);
-
-	m_dwLastNetUpdateTime = LastTime;
-	m_dwDeltaUpdate = CurrentDelta;
-
-	if (0 == g_cl_lvInterp) ReculcInterpolationSteps();
-	else 
-		if (g_cl_lvInterp>0)
-		{
-			lvInterpSteps = iCeil(g_cl_lvInterp / fixed_step);
-		}
-};
-
-void		CLevel::ReculcInterpolationSteps () const
-{
-	lvInterpSteps			= iFloor(float(m_dwDeltaUpdate) / (fixed_step*1000));
-	if (lvInterpSteps > 60) lvInterpSteps = 60;
-	if (lvInterpSteps < 3)	lvInterpSteps = 3;
 };
 
 bool		CLevel::InterpolationDisabled	()

@@ -619,9 +619,9 @@
            <colorrole role="ButtonText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>22</red>
-              <green>81</green>
-              <blue>121</blue>
+              <red>204</red>
+              <green>204</green>
+              <blue>204</blue>
              </color>
             </brush>
            </colorrole>
@@ -639,9 +639,9 @@
            <colorrole role="ButtonText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>22</red>
-              <green>81</green>
-              <blue>121</blue>
+              <red>204</red>
+              <green>204</green>
+              <blue>204</blue>
              </color>
             </brush>
            </colorrole>
@@ -672,7 +672,7 @@
          <string>Clean buffers</string>
         </property>
         <property name="flat">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
       </item>
@@ -944,9 +944,9 @@
            <colorrole role="ButtonText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>22</red>
-              <green>81</green>
-              <blue>121</blue>
+              <red>204</red>
+              <green>204</green>
+              <blue>204</blue>
              </color>
             </brush>
            </colorrole>
@@ -1054,9 +1054,9 @@
            <colorrole role="ButtonText">
             <brush brushstyle="SolidPattern">
              <color alpha="255">
-              <red>22</red>
-              <green>81</green>
-              <blue>121</blue>
+              <red>204</red>
+              <green>204</green>
+              <blue>204</blue>
              </color>
             </brush>
            </colorrole>
@@ -1237,7 +1237,7 @@
          <bool>false</bool>
         </property>
         <property name="flat">
-         <bool>false</bool>
+         <bool>true</bool>
         </property>
        </widget>
       </item>

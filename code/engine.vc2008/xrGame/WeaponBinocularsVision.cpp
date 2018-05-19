@@ -56,108 +56,115 @@ void SBinocVisibleObj::create_default(u32 color)
 
 void SBinocVisibleObj::Draw()
 {
-	if(m_flags.test(flVisObjNotValid)) return;
+	if (!psActorFlags.test(AF_HARDCORE))
+	{
+		if (m_flags.test(flVisObjNotValid)) return;
 
-	m_lt.Draw			();
-	m_lb.Draw			();
-	m_rt.Draw			();
-	m_rb.Draw			();
+		m_lt.Draw();
+		m_lb.Draw();
+		m_rt.Draw();
+		m_rb.Draw();
+	}
 }
 
 void SBinocVisibleObj::Update()
 {
-	m_flags.set		(	flVisObjNotValid,TRUE);
-
-	if(!m_object->Visual())			return;
-
-	Fbox		b		= m_object->Visual()->getVisData().box;
-
-	Fmatrix				xform;
-	xform.mul			(Device.mFullTransform,m_object->XFORM());
-	Fvector2	mn		={flt_max,flt_max},mx={flt_min,flt_min};
-
-	for (u32 k=0; k<8; ++k){
-		Fvector p;
-		b.getpoint		(k,p);
-		xform.transform	(p);
-		mn.x			= std::min(mn.x,p.x);
-		mn.y			= std::min(mn.y,p.y);
-		mx.x			= std::max(mx.x,p.x);
-		mx.y			= std::max(mx.y,p.y);
-	}
-	static Frect screen_rect={-1.0f, -1.0f, 1.0f, 1.0f};
-
-	Frect				new_rect;
-	new_rect.lt			= mn;
-	new_rect.rb			= mx;
-
-	if( FALSE == screen_rect.intersected(new_rect) ) return;
-	if( new_rect.in(screen_rect.lt) && new_rect.in(screen_rect.rb) ) return;
-	
-	std::swap	(mn.y,mx.y);
-	mn.x		= (1.f + mn.x)/2.f * UI_BASE_WIDTH;
-	mx.x		= (1.f + mx.x)/2.f * UI_BASE_WIDTH;
-	mn.y		= (1.f - mn.y)/2.f * UI_BASE_HEIGHT;
-	mx.y		= (1.f - mx.y)/2.f * UI_BASE_HEIGHT;
-
-	if(mx.x-mn.x<RECT_SIZE)
-		mx.x = mn.x+RECT_SIZE;
-
-	if(mx.y-mn.y<RECT_SIZE)
-		mx.y = mn.y+RECT_SIZE;
-
-	if (m_flags.is(flTargetLocked))
+	if (!psActorFlags.test(AF_HARDCORE))
 	{
-		cur_rect.lt.set	(mn);
-		cur_rect.rb.set	(mx);
-	}else{
-		cur_rect.lt.x	+= (mn.x-cur_rect.lt.x)*m_upd_speed*Device.fTimeDelta;
-		cur_rect.lt.y	+= (mn.y-cur_rect.lt.y)*m_upd_speed*Device.fTimeDelta;
-		cur_rect.rb.x	+= (mx.x-cur_rect.rb.x)*m_upd_speed*Device.fTimeDelta;
-		cur_rect.rb.y	+= (mx.y-cur_rect.rb.y)*m_upd_speed*Device.fTimeDelta;
-		if (mn.similar(cur_rect.lt,2.f)&&mx.similar(cur_rect.rb,2.f)){ 
-			// target locked
-			m_flags.set(flTargetLocked,TRUE);
-			u32 clr	= subst_alpha(m_lt.GetTextureColor(),255);
+		m_flags.set(flVisObjNotValid, TRUE);
 
-			//-----------------------------------------------------
-			CActor* pActor = NULL;
-			pActor = Actor();
-			if (pActor) 
-			{
+		if (!m_object->Visual())			return;
+
+		Fbox		b = m_object->Visual()->getVisData().box;
+
+		Fmatrix				xform;
+		xform.mul(Device.mFullTransform, m_object->XFORM());
+		Fvector2	mn = { flt_max,flt_max }, mx = { flt_min,flt_min };
+
+		for (u32 k = 0; k < 8; ++k) {
+			Fvector p;
+			b.getpoint(k, p);
+			xform.transform(p);
+			mn.x = std::min(mn.x, p.x);
+			mn.y = std::min(mn.y, p.y);
+			mx.x = std::max(mx.x, p.x);
+			mx.y = std::max(mx.y, p.y);
+		}
+		static Frect screen_rect = { -1.0f, -1.0f, 1.0f, 1.0f };
+
+		Frect				new_rect;
+		new_rect.lt = mn;
+		new_rect.rb = mx;
+
+		if (FALSE == screen_rect.intersected(new_rect)) return;
+		if (new_rect.in(screen_rect.lt) && new_rect.in(screen_rect.rb)) return;
+
+		std::swap(mn.y, mx.y);
+		mn.x = (1.f + mn.x) / 2.f * UI_BASE_WIDTH;
+		mx.x = (1.f + mx.x) / 2.f * UI_BASE_WIDTH;
+		mn.y = (1.f - mn.y) / 2.f * UI_BASE_HEIGHT;
+		mx.y = (1.f - mx.y) / 2.f * UI_BASE_HEIGHT;
+
+		if (mx.x - mn.x < RECT_SIZE)
+			mx.x = mn.x + RECT_SIZE;
+
+		if (mx.y - mn.y < RECT_SIZE)
+			mx.y = mn.y + RECT_SIZE;
+
+		if (m_flags.is(flTargetLocked))
+		{
+			cur_rect.lt.set(mn);
+			cur_rect.rb.set(mx);
+		}
+		else {
+			cur_rect.lt.x += (mn.x - cur_rect.lt.x)*m_upd_speed*Device.fTimeDelta;
+			cur_rect.lt.y += (mn.y - cur_rect.lt.y)*m_upd_speed*Device.fTimeDelta;
+			cur_rect.rb.x += (mx.x - cur_rect.rb.x)*m_upd_speed*Device.fTimeDelta;
+			cur_rect.rb.y += (mx.y - cur_rect.rb.y)*m_upd_speed*Device.fTimeDelta;
+			if (mn.similar(cur_rect.lt, 2.f) && mx.similar(cur_rect.rb, 2.f)) {
+				// target locked
+				m_flags.set(flTargetLocked, TRUE);
+				u32 clr = subst_alpha(m_lt.GetTextureColor(), 255);
+
 				//-----------------------------------------------------
-
-				CInventoryOwner* our_inv_owner		= smart_cast<CInventoryOwner*>(pActor);
-				CInventoryOwner* others_inv_owner	= smart_cast<CInventoryOwner*>(m_object);
-				CBaseMonster	*monster			= smart_cast<CBaseMonster*>(m_object);
-
-				if (our_inv_owner && others_inv_owner && !monster)
+				CActor* pActor = NULL;
+				pActor = Actor();
+				if (pActor)
 				{
-					switch (RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner))
+					//-----------------------------------------------------
+
+					CInventoryOwner* our_inv_owner = smart_cast<CInventoryOwner*>(pActor);
+					CInventoryOwner* others_inv_owner = smart_cast<CInventoryOwner*>(m_object);
+					CBaseMonster	*monster = smart_cast<CBaseMonster*>(m_object);
+
+					if (our_inv_owner && others_inv_owner && !monster)
 					{
-					case ALife::eRelationTypeEnemy:
-						clr = C_ON_ENEMY; break;
-					case ALife::eRelationTypeNeutral:
-						clr = C_ON_NEUTRAL; break;
-					case ALife::eRelationTypeFriend:
-						clr = C_ON_FRIEND; break;
+						switch (RELATION_REGISTRY().GetRelationType(others_inv_owner, our_inv_owner))
+						{
+						case ALife::eRelationTypeEnemy:
+							clr = C_ON_ENEMY; break;
+						case ALife::eRelationTypeNeutral:
+							clr = C_ON_NEUTRAL; break;
+						case ALife::eRelationTypeFriend:
+							clr = C_ON_FRIEND; break;
+						}
 					}
 				}
+
+				m_lt.SetTextureColor(clr);
+				m_lb.SetTextureColor(clr);
+				m_rt.SetTextureColor(clr);
+				m_rb.SetTextureColor(clr);
 			}
-
-			m_lt.SetTextureColor	(clr);
-			m_lb.SetTextureColor	(clr);
-			m_rt.SetTextureColor	(clr);
-			m_rb.SetTextureColor	(clr);
 		}
+
+		m_lt.SetWndPos(Fvector2().set((cur_rect.lt.x), (cur_rect.lt.y)));
+		m_lb.SetWndPos(Fvector2().set((cur_rect.lt.x), (cur_rect.rb.y)));
+		m_rt.SetWndPos(Fvector2().set((cur_rect.rb.x), (cur_rect.lt.y)));
+		m_rb.SetWndPos(Fvector2().set((cur_rect.rb.x), (cur_rect.rb.y)));
+
+		m_flags.set(flVisObjNotValid, FALSE);
 	}
-
-	m_lt.SetWndPos		( Fvector2().set((cur_rect.lt.x),	(cur_rect.lt.y)) );
-	m_lb.SetWndPos		( Fvector2().set((cur_rect.lt.x),	(cur_rect.rb.y)) );
-	m_rt.SetWndPos		( Fvector2().set((cur_rect.rb.x),	(cur_rect.lt.y)) );
-	m_rb.SetWndPos		( Fvector2().set((cur_rect.rb.x),	(cur_rect.rb.y)) );
-
-	m_flags.set			(flVisObjNotValid, FALSE);
 }
 
 
@@ -173,64 +180,66 @@ CBinocularsVision::~CBinocularsVision()
 
 void CBinocularsVision::Update()
 {
-	//-----------------------------------------------------
-	const CActor* pActor = Actor();
-
-	if (!pActor) 
-		return;
-	//-----------------------------------------------------
-	const CVisualMemoryManager::VISIBLES& vVisibles = pActor->memory().visual().objects();
-
-	for(SBinocVisibleObj* it : m_active_objects)
-		it->m_flags.set					(flVisObjNotValid, TRUE) ;
-
-	for (CVisibleObject v_it : vVisibles)
+	if (!psActorFlags.test(AF_HARDCORE))
 	{
-		const CObject*	_object_			= v_it.m_object;
-		if (!pActor->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
-			continue;
+		//-----------------------------------------------------
+		const CActor* pActor = Actor();
 
-		CObject* object_ = const_cast<CObject*>(_object_);
-		
+		if (!pActor)
+			return;
+		//-----------------------------------------------------
+		const CVisualMemoryManager::VISIBLES& vVisibles = pActor->memory().visual().objects();
 
-		CEntityAlive*	EA = smart_cast<CEntityAlive*>(object_);
-		if(!EA || !EA->g_Alive())						continue;
-		
+		for (SBinocVisibleObj* it : m_active_objects)
+			it->m_flags.set(flVisObjNotValid, TRUE);
 
-		FindVisObjByObject	f				(object_);
-		VIS_OBJECTS_IT found;
-		found = std::find_if				(m_active_objects.begin(),m_active_objects.end(),f);
+		for (CVisibleObject v_it : vVisibles)
+		{
+			const CObject*	_object_ = v_it.m_object;
+			if (!pActor->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
+				continue;
 
-		if( found != m_active_objects.end())
-			(*found)->m_flags.set			(flVisObjNotValid,FALSE);
-		else{
-			m_active_objects.push_back		(xr_new<SBinocVisibleObj>() );
-			SBinocVisibleObj* new_vis_obj	= m_active_objects.back();
-			new_vis_obj->m_flags.set		(flVisObjNotValid,FALSE);
-			new_vis_obj->m_object			= object_;
-			new_vis_obj->create_default		(m_frame_color.get());
-			new_vis_obj->m_upd_speed		= m_rotating_speed;
-			
-			m_sounds.PlaySound	("found_snd", Fvector().set(0,0,0), NULL, true);
+			CObject* object_ = const_cast<CObject*>(_object_);
+
+
+			CEntityAlive*	EA = smart_cast<CEntityAlive*>(object_);
+			if (!EA || !EA->g_Alive())						continue;
+
+
+			FindVisObjByObject	f(object_);
+			VIS_OBJECTS_IT found;
+			found = std::find_if(m_active_objects.begin(), m_active_objects.end(), f);
+
+			if (found != m_active_objects.end())
+				(*found)->m_flags.set(flVisObjNotValid, FALSE);
+			else {
+				m_active_objects.push_back(xr_new<SBinocVisibleObj>());
+				SBinocVisibleObj* new_vis_obj = m_active_objects.back();
+				new_vis_obj->m_flags.set(flVisObjNotValid, FALSE);
+				new_vis_obj->m_object = object_;
+				new_vis_obj->create_default(m_frame_color.get());
+				new_vis_obj->m_upd_speed = m_rotating_speed;
+
+				m_sounds.PlaySound("found_snd", Fvector().set(0, 0, 0), NULL, true);
+			}
+		}
+		std::sort(m_active_objects.begin(), m_active_objects.end());
+
+		while (m_active_objects.size() && m_active_objects.back()->m_flags.test(flVisObjNotValid)) {
+			xr_delete(m_active_objects.back());
+			m_active_objects.pop_back();
+		}
+
+		for (SBinocVisibleObj* visObj : m_active_objects)
+		{
+			const bool bLocked = visObj->m_flags.test(flTargetLocked);
+
+			visObj->Update();
+
+			if (bLocked != visObj->m_flags.test(flTargetLocked))
+				m_sounds.PlaySound("catch_snd", Fvector().set(0, 0, 0), NULL, true);
 		}
 	}
-	std::sort								(m_active_objects.begin(), m_active_objects.end());
-
-	while(m_active_objects.size() && m_active_objects.back()->m_flags.test(flVisObjNotValid)){
-		xr_delete							(m_active_objects.back());
-		m_active_objects.pop_back			();
-	}
-
-    for (SBinocVisibleObj* visObj : m_active_objects)
-	{
-		const bool bLocked = visObj->m_flags.test(flTargetLocked);
-		
-        visObj->Update						();
-		
-		if(bLocked != visObj->m_flags.test(flTargetLocked))
-			m_sounds.PlaySound	("catch_snd", Fvector().set(0,0,0), NULL, true);
-	}
-
 }
 
 void CBinocularsVision::Draw()
