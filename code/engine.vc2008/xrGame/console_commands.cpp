@@ -1502,7 +1502,6 @@ public:
 	}
 }; // CCC_InvDropAllItems
 
-#endif // DEBUG
 
 class CCC_DumpObjects : public IConsole_Command {
 public:
@@ -1513,6 +1512,7 @@ public:
 	}
 };
 
+#endif // DEBUG
 class CCC_GSCheckForUpdates : public IConsole_Command {
 public:
 	CCC_GSCheckForUpdates(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };

@@ -45,7 +45,9 @@ void CLevel::remove_objects()
 			ClientReceive();
 			ProcessGameEvents();
 			Objects.Update(false);
+#ifdef DEBUG
 			Objects.dump_all_objects();
+#endif
 		}
 
 		if (Objects.o_count())

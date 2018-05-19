@@ -5547,16 +5547,7 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\DrawUtils.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\FastDelegate.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="..\xrServerEntities\ItemListTypes.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="PropertiesListHelper.h">
       <Filter>Core\Server\Editor</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\WaveForm.h">
