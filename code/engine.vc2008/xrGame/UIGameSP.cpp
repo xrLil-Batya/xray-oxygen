@@ -3,7 +3,7 @@
 #include "actor.h"
 #include "level.h"
 #include "../xrEngine/xr_input.h"
-
+#include "game_cl_base.h"
 #ifdef DEBUG
 #include "attachable_item.h"
 #endif
@@ -20,7 +20,7 @@
 #include "ui/UITalkWnd.h"
 #include "ui/UIMessageBox.h"
 
-CUIGameSP::CUIGameSP() : m_game_objective(NULL)
+CUIGameSP::CUIGameSP() : m_game_objective(nullptr)
 {
 	TalkMenu = xr_new<CUITalkWnd>();
 	m_game = xr_new<game_cl_GameState>();
