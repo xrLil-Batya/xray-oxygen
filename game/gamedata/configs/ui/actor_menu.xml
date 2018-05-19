@@ -323,8 +323,8 @@
 	        		<texture r="194" g="8" b="8" a="200">ui_inGame2_inventory_health_bar</texture>
 		        </progress>
 					<min_color color="red"/>
-					<middle_color color="yellow"/>
-					<max_color color="green"/>
+					<middle_color color="red"/>
+					<max_color color="red"/>
 	        </state_progress>
 		<progress_shape x="38" y="0" width="31" height="31" sector_count="360" clockwise="1" blend="0" begin_angle="2.4" end_angle="-2.4">
 				<texture>ui_char_resist_acid</texture>
@@ -362,9 +362,9 @@
 		        <progress>
 	    		    <texture color="red">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
-					<min_color color="red"/>
+					<min_color color="green"/>
 					<middle_color color="yellow"/>
-					<max_color color="green"/>
+					<max_color color="red"/>
 	        </state_progress>
 		<progress_shape x="38" y="0" width="31" height="31" sector_count="360" clockwise="1" blend="0" begin_angle="2.4" end_angle="-2.4">
 				<texture>ui_char_resist_acid</texture>
@@ -402,9 +402,9 @@
 		        <progress>
 	    		    <texture color="red">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
-					<min_color color="red"/>
+					<min_color color="green"/>
 					<middle_color color="yellow"/>
-					<max_color color="green"/>
+					<max_color color="red"/>
 	        </state_progress>	
 		<progress_shape x="38" y="0" width="31" height="31" sector_count="360" clockwise="1" blend="0" begin_angle="2.4" end_angle="-2.4">
 				<texture>ui_char_resist_acid</texture>

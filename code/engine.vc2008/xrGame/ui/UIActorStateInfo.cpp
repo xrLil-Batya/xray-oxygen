@@ -3,7 +3,7 @@
 //	Created 	: 15.02.2008
 //	Author		: Evgeniy Sokolov
 //	Description : UI actor state window class implementation
-//	Last Edit	: Unfainthful 19.05.2018
+//	Last Edit	: Unfainthful 20.05.2018
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -87,14 +87,20 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	{
 		return;
 	}
-	float value = 0.0f;
-	float text = 0.0f;
+
+	float bleeding_value = 0.0f;
+	float radiation_value = 0.0f;
+	
+#ifdef PROGRESS_VALUE_INV
+	float value_blood = 0.0f;
+	float value_health = 0.0f;
+	float value_rad = 0.0f;
+#endif
 #ifdef NUM_PARAMS_INV
 	float text_blood = 0.0f;
+	float text_health = 0.0f;
 	float text_rad = 0.0f;
 #endif
-	float value_blood = 0.0f;
-	float value_rad = 0.0f;
 #ifdef ARROW_VALUE_INV
 	float arrow_blood = 0.0f;
 	float arrow_health = 0.0f;
@@ -106,9 +112,9 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	float shape_rad = 0.0f;
 #endif
 #ifdef PROGRESS_VALUE_INV
-	value = actor->conditions().GetHealth();
-	value = floor(value * 55) / 55; // number of sticks in progress bar
-	m_state[stt_health]->set_progress(value);
+	value_health = actor->conditions().GetHealth();
+	value_health = floor(value_health * 55) / 55; // number of sticks in progress bar
+	m_state[stt_health]->set_progress(value_health);
 #endif
 #ifdef ARROW_VALUE_INV
 	arrow_health = actor->conditions().GetHealth();
@@ -116,9 +122,9 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	m_state[stt_health]->set_arrow(arrow_health);
 #endif
 #ifdef NUM_PARAMS_INV
-	text = actor->conditions().GetHealth();	
-	text = floor(value * 101); // if 100 max health is 99(maybe can fixed in game configs)
-	m_state[stt_health]->set_text(text);
+	text_health = actor->conditions().GetHealth();	
+	text_health = floor(text_health * 100); // if 100 max health is 99(maybe can fixed in game configs)
+	m_state[stt_health]->set_text(text_health);
 #endif
 #ifdef SHAPE_VALUE_INV
 	shape_health = actor->conditions().GetHealth();
@@ -146,15 +152,15 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	shape_blood = floor(shape_blood * 360) / 360;
 	m_state[stt_blood]->set_progress_shape(shape_blood);
 #endif
-	value = actor->conditions().BleedingSpeed();					
+	bleeding_value = actor->conditions().BleedingSpeed();					
 	m_state[stt_bleeding]->show_static(false, 1);
 	m_state[stt_bleeding]->show_static(false, 2);
 	m_state[stt_bleeding]->show_static(false, 3);
-	if(!fis_zero(value, EPS))
+	if(!fis_zero(bleeding_value, EPS))
 	{
-		if(value<0.35f)
+		if(bleeding_value<0.35f)
 			m_state[stt_bleeding]->show_static(true, 1);
-		else if(value<0.7f)
+		else if(bleeding_value<0.7f)
 			m_state[stt_bleeding]->show_static(true, 2);
 		else 
 			m_state[stt_bleeding]->show_static(true, 3);
@@ -180,15 +186,15 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	shape_rad = floor(shape_rad * 360) / 360;
 	m_state[stt_rad]->set_progress_shape(shape_rad);
 #endif
-	value = actor->conditions().GetRadiation();
+	radiation_value = actor->conditions().GetRadiation();
 	m_state[stt_radiation]->show_static(false, 1);
 	m_state[stt_radiation]->show_static(false, 2);
 	m_state[stt_radiation]->show_static(false, 3);
-	if(!fis_zero(value, EPS))
+	if(!fis_zero(radiation_value, EPS))
 	{
-		if(value<0.35f)
+		if(radiation_value<0.35f)
 			m_state[stt_radiation]->show_static(true, 1);
-		else if(value<0.7f)
+		else if(radiation_value<0.7f)
 			m_state[stt_radiation]->show_static(true, 2);
 		else 
 			m_state[stt_radiation]->show_static(true, 3);
@@ -207,8 +213,8 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	m_state[stt_fire_wound]->set_progress(0.0f);
 	m_state[stt_shock]->set_progress(0.0f);
 	m_state[stt_power]->set_progress(0.0f);
-	m_state[stt_power]->set_progress(0.0f);
 
+#ifdef PROGRESS_VALUE_INV
 	float burn_value = 0.0f;
 	float radi_value = 0.0f;
 	float cmbn_value = 0.0f;
@@ -217,6 +223,7 @@ void ui_actor_state_wnd::UpdateActorInfo( CInventoryOwner* owner )
 	float shoc_value = 0.0f;
 	float fwou_value = 0.0f;
 	float rspeed_value = 0.0f;
+#endif
 #ifdef NUM_PARAMS_INV
 	float burn_text = 0.0f;
 	float radi_text = 0.0f;
