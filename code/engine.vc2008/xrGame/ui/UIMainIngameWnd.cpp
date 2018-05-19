@@ -463,8 +463,10 @@ void CUIMainIngameWnd::AnimateContacts(bool b_snd)
 {
 	UIZoneMap->Counter_ResetClrAnimation();
 
-	if(b_snd)
+	if(b_snd && !psActorFlags.test(AF_HARDCORE))
 		HUD_SOUND_ITEM::PlaySound	(m_contactSnd, Fvector().set(0,0,0), 0, true );
+	else
+		HUD_SOUND_ITEM::StopSound(m_contactSnd);
 
 }
 

@@ -65,12 +65,22 @@ void CActor::g_fireParams	(const CHudItem* pHudItem, Fvector &fire_pos, Fvector 
 	CWeapon				*weapon = smart_cast<CWeapon*>(inventory().ActiveItem());
 	if(weapon)
 	{
-	if(eacFirstEye == cam_active)
+	if(eacFirstEye == cam_active && !psActorFlags.test(AF_HARDCORE) && !psActorFlags.test(AF_ZOOM_NEW_FD) || (weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom()))
 	fire_pos = Cameras().Position();
-	else
-	fire_pos		= weapon->get_LastFP();
+	if ((psActorFlags.test(AF_ZOOM_NEW_FD) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())) || (psActorFlags.test(AF_HARDCORE) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())))
+	{
+		fire_dir = weapon->get_LastFD();
+		fire_pos = weapon->get_LastFP();
 	}
-	else{
+	else
+	{
+		fire_dir = Cameras().Direction();
+	}
+	if(eacFirstEye == !cam_active && !psActorFlags.test(AF_HARDCORE) && !psActorFlags.test(AF_ZOOM_NEW_FD) || (weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom()))
+	fire_pos = weapon->get_LastFP();
+	}
+	else
+	{
 const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
 	if (pMissile)
 	{
@@ -78,15 +88,11 @@ const CMissile	*pMissile = smart_cast <const CMissile*> (pHudItem);
 	act_and_cam_pos.y    += CameraHeight();
 	fire_pos = act_and_cam_pos;
 	fire_pos.y += 0.14f;
+	fire_dir = Cameras().Direction();
 	}
 	}
-	if ((psActorFlags.test(AF_ZOOM_NEW_FD) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())) || (psActorFlags.test(AF_HARDCORE) && !(weapon->IsZoomed() && weapon->ZoomTexture() && !weapon->IsRotatingToZoom())))
-	{
-		fire_dir = weapon->get_LastFD();
-		fire_pos = weapon->get_LastFP();
-	}
-	else
-	fire_dir		= Cameras().Direction();
+		
+	
 }
 
 void CActor::g_WeaponBones	(int &L, int &R1, int &R2)
