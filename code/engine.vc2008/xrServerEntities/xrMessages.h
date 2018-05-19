@@ -15,6 +15,8 @@ enum {
 	//----------- for E3 -----------------------------
 	M_UPDATE_OBJECTS,
 	//-------------------------------------------------
+	M_CLIENTREADY,				// Client has finished to load level and are ready to play
+	
 	M_CHANGE_LEVEL,				// changing level
 	M_LOAD_GAME,
 	M_SAVE_GAME,
@@ -25,6 +27,8 @@ enum {
 	//-----------------------------------------------------
 	M_CLIENT_CONNECT_RESULT,
 	M_CLIENT_REQUEST_CONNECTION_DATA,
+	//-----------------------------------------------------
+	M_PLAYER_FIRE,
 	//-----------------------------------------------------
 	M_SV_MAP_NAME,				//request and responce
 
@@ -84,6 +88,7 @@ enum {
 	GEG_PLAYER_ITEM2BELT,
 	GEG_PLAYER_ITEM2RUCK,
 	GEG_PLAYER_ITEM_EAT,
+	GEG_PLAYER_ITEM_SELL,
 	GEG_PLAYER_ACTIVATEARTEFACT,
 
 	GEG_PLAYER_WEAPON_HIDE_STATE,
@@ -106,6 +111,7 @@ enum {
 
 enum EGameMessages {  //game_cl <----> game_sv messages
 	
+	GAME_EVENT_CREATE_CLIENT,
 	GAME_EVENT_ON_HIT,
 
 	GAME_EVENT_FORCEDWORD				= u32(-1)

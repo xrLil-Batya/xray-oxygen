@@ -524,7 +524,7 @@ void CInventory::SendActionEvent(u16 cmd, u32 flags)
 	P.w_u32					(flags);
 	P.w_s32					(pActor->GetZoomRndSeed());
 	P.w_s32					(pActor->GetShotRndSeed());
-	pActor->u_EventSend		(P);
+	pActor->u_EventSend		(P, net_flags(TRUE, TRUE, FALSE, TRUE));
 };
 
 bool CInventory::Action(u16 cmd, u32 flags) 
@@ -919,7 +919,7 @@ bool CInventory::InSlot(const CInventoryItem* pIItem) const
 {
 	if(pIItem->CurrPlace() != eItemPlaceSlot)	return false;
 
-	//VERIFY(m_slots[pIItem->CurrSlot()].m_pIItem == pIItem);
+	VERIFY(m_slots[pIItem->CurrSlot()].m_pIItem == pIItem);
 
 	return true;
 }

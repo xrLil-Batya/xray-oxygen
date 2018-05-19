@@ -30,7 +30,7 @@ int RunXRLauncher()
 
 
 /// <summary>
-/// Return the list of parametres
+/// Return the list of parameters
 /// </summary>
 const char* GetParams()
 {
@@ -94,8 +94,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				"AVX isn't supported on your CPU!",
 				MB_OK | MB_ICONWARNING);
 		}
-	}
 #endif
+	}
 #endif
 
 	// If we want to start launcher

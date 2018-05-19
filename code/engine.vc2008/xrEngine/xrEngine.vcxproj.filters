@@ -594,6 +594,12 @@
     <ClInclude Include="ClS\NET_Client.h">
       <Filter>NetServer</Filter>
     </ClInclude>
+    <ClInclude Include="ClS\NET_Common.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
+    <ClInclude Include="ClS\NET_Messages.h">
+      <Filter>NetServer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">

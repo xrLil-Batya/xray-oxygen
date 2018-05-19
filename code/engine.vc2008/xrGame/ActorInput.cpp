@@ -54,22 +54,34 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
-	if (cmd == kWPN_FIRE)
+	switch (cmd)
 	{
-		u16 slot = inventory().GetActiveSlot();
-		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
-			mstate_wishful &= ~mcSprint;
+	case kWPN_FIRE:
+		{
+			u16 slot = inventory().GetActiveSlot();
+			if(inventory().ActiveItem() && (slot==INV_SLOT_3 || slot==INV_SLOT_2) )
+				mstate_wishful &=~mcSprint;
+			//-----------------------------
+			NET_Packet P;
+			P.w_begin(M_PLAYER_FIRE); 
+			P.w_u16(ID());
+			u_EventSend(P);
+		
+		}break;
+	default:
+		{
+		}break;
 	}
 
 	if (!g_Alive()) return;
 
 	if(m_holder && kUSE != cmd)
 	{
-		m_holder->OnKeyboardPress(cmd);
-		if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_START)) return;
+		m_holder->OnKeyboardPress			(cmd);
+		if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_START))		return;
 		return;
-	}
-	else if(inventory().Action((u16)cmd, CMD_START)) return;
+	}else
+		if(inventory().Action((u16)cmd, CMD_START))					return;
 
 
 	if(psActorFlags.test(AF_NO_CLIP))
@@ -93,9 +105,16 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		if( psActorFlags.test(AF_CROUCH_TOGGLE) )
 			mstate_wishful ^= mcCrouch;
 		}break;
-	case kCAM_1:	cam_Set			(eacFirstEye);				break;
-	case kCAM_2:	cam_Set			(eacLookAt);				break;
-	case kCAM_3:	cam_Set			(eacFreeLook);				break;
+	case kCAM_1:	cam_Set			(eacFirstEye);				
+		break;
+	case kCAM_2:
+		if (!psActorFlags.test(AF_HARDCORE))
+		cam_Set			(eacLookAt);				
+		break;
+	case kCAM_3:	
+		if (!psActorFlags.test(AF_HARDCORE))
+		cam_Set			(eacFreeLook);				
+		break;
 	case kNIGHT_VISION:
 		{
 			SwitchNightVision();

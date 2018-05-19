@@ -108,7 +108,7 @@ bool CPsyDog::spawn_phantom()
 	// spawn here
 	NET_Packet					P;
 	phantom->Spawn_Write		(P,TRUE);
-	Level().Send				(P);
+	Level().Send				(P,net_flags(TRUE));
 	F_entity_Destroy			(phantom);
 
 	return true;

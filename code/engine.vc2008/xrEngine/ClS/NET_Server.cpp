@@ -1,10 +1,19 @@
 #include "stdafx.h"
+#include <dxerr/dxerr.h>
+#include "NET_Common.h"
 #include "net_server.h"
+#include <functional>
+
+#pragma warning(push)
+#pragma warning(disable:4995)
+#include <malloc.h>
+#pragma warning(pop)
 
 ENGINE_API ClientID BroadcastCID(0xffffffff);
 
-IClient::IClient(CTimer* timer)
+IClient::IClient(CTimer* timer) : server(nullptr)
 {
+	flags.bLocal = FALSE;
 	flags.bConnected = FALSE;
 }
 
@@ -23,8 +32,8 @@ IClient* IPureServer::ID_to_client(ClientID ID, bool ScanAll)
 //==============================================================================
 IPureServer::IPureServer(CTimer* timer)
 {
-	device_timer = timer;
-	SV_Client = nullptr;
+	device_timer			= timer;
+	SV_Client				= nullptr;
 }
 
 IPureServer::~IPureServer	()

@@ -1,5 +1,6 @@
 #pragma once
 #include "net_shared.h"
+#include "NET_Common.h"
 #include "NET_PlayersMonitor.h"
 
 // -----------------------------------------------------
@@ -11,6 +12,7 @@ class ENGINE_API IClient
 public:
 	struct Flags
 	{
+		u32		bLocal		: 1;
 		u32		bConnected	: 1;
 	};
 
@@ -21,6 +23,8 @@ public:
 	shared_str			name;
 
 	Flags				flags;	// local/host/normal
+	
+    IPureServer*        server;
 };
 
 

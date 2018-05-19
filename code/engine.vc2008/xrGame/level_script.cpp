@@ -206,13 +206,14 @@ u32 get_time_minutes()
 
 void change_game_time(u32 days, u32 hours, u32 mins)
 {
-	if(Level().Server->game && ai().get_alife())
+	game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+	if(tpGame && ai().get_alife())
 	{
 		u32 value		= days*86400+hours*3600+mins*60;
 		float fValue	= static_cast<float> (value);
 		value			*= 1000;//msec		
 		g_pGamePersistent->Environment().ChangeGameTime(fValue);
-		Level().Server->game->alife().time_manager().change_game_time(value);
+		tpGame->alife().time_manager().change_game_time(value);
 	}
 }
 
@@ -684,9 +685,9 @@ bool has_active_tutotial()
 	return (g_tutorial!=NULL);
 }
 
-void g_send(NET_Packet& P)
+void g_send(NET_Packet& P, bool bReliable = 0, bool bSequential = 1, bool bHighPriority = 0, bool bSendImmediately = 0)
 {
-	Level().Send(P);
+	Level().Send(P,net_flags(bReliable, bSequential, bHighPriority, bSendImmediately));
 }
 
 void u_event_gen(NET_Packet& P, u32 _event, u32 _dest)

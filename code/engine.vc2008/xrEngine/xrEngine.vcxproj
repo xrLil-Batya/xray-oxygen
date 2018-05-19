@@ -289,6 +289,8 @@
   <ItemGroup>
     <ClInclude Include="..\FrayBuildConfig.hpp" />
     <ClInclude Include="ClS\NET_Client.h" />
+    <ClInclude Include="ClS\NET_Common.h" />
+    <ClInclude Include="ClS\NET_Messages.h" />
     <ClInclude Include="ClS\NET_PlayersMonitor.h" />
     <ClInclude Include="ClS\NET_Server.h" />
     <ClInclude Include="ClS\NET_Shared.h" />

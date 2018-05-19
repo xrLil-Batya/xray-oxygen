@@ -13,7 +13,6 @@
 
 game_cl_GameState::game_cl_GameState(): cl_flags(0)
 {
-    m_game_type_name = "";
 	shedule.t_min				= 5;
 	shedule.t_max				= 20;
 	m_game_ui_custom			= nullptr;
@@ -49,6 +48,7 @@ void game_cl_GameState::net_import_GameTime		(NET_Packet& P)
 void game_cl_GameState::net_import_state (NET_Packet& P)
 {
 	// Generic
+	P.r_clientID	(local_svdpnid);
 	P.r_u32			((u32&)m_type);
 	
 	u16 ph;
@@ -73,6 +73,17 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 	net_import_GameTime (P);
 }
 
+void	game_cl_GameState::net_signal		(NET_Packet& P)
+{
+}
+
+void game_cl_GameState::OnGameMessage	(NET_Packet& P)
+{
+	VERIFY	(this && &P);
+	u32 msg	;
+	P.r_u32	(msg);
+};
+
 void game_cl_GameState::shedule_Update		(u32 dt)
 {
 	ISheduled::shedule_Update	(dt);
@@ -83,6 +94,11 @@ void game_cl_GameState::shedule_Update		(u32 dt)
 			m_game_ui_custom = CurrentGameUI();
 	} 
 };
+
+void game_cl_GameState::sv_EventSend(NET_Packet& P)
+{
+	Level().Send(P,net_flags(TRUE,TRUE));
+}
 
 bool game_cl_GameState::OnKeyboardPress(int dik)
 {
@@ -104,7 +120,11 @@ void game_cl_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 
 void game_cl_GameState::u_EventSend(NET_Packet& P)
 {
-	Level().Send(P);
+	Level().Send(P,net_flags(TRUE,TRUE));
+}
+
+void game_cl_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
+{
 }
 
 void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)
@@ -117,6 +137,10 @@ void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)
 	P.w_u16			(ID_what);
 	u_EventSend		(P);
 };
+
+void game_cl_GameState::set_type_name(LPCSTR)	
+{
+}
 
 void game_cl_GameState::OnConnected()
 {

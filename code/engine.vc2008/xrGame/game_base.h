@@ -18,6 +18,7 @@ protected:
 	string64						m_round_start_time_str;
 protected:
 	virtual		void				switch_Phase			(u32 new_phase);
+	virtual		void				OnSwitchPhase			(u32 old_phase, u32 new_phase)	{};	
 
 public:
 									game_GameState			();

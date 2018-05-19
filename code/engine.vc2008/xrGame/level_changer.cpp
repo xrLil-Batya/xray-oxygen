@@ -123,7 +123,7 @@ void CLevelChanger::feel_touch_new	(CObject *tpObject)
 		p.w			(&m_level_vertex_id,sizeof(m_level_vertex_id));
 		p.w_vec3	(m_position);
 		p.w_vec3	(m_angles);
-		Level().Send(p);
+		Level().Send(p,net_flags(TRUE));
 		return;
 	}
 	Fvector			p,r;

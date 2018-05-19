@@ -47,7 +47,7 @@
 #	include "game_graph.h"
 #	include "CharacterPhysicsSupport.h"
 #endif // DEBUG
-
+#include "HudItem.h"
 string_path		g_last_saved_game;
 
 #ifdef DEBUG
@@ -274,7 +274,7 @@ public:
 			NET_Packet		P;
 			P.w_begin(M_SWITCH_DISTANCE);
 			P.w_float(id1);
-			Level().Send(P);
+			Level().Send(P, net_flags(TRUE, TRUE));
 		}
 	}
 };
@@ -282,17 +282,20 @@ public:
 class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) 
-	{
+	virtual void Execute(LPCSTR args) {
 		if (ai().get_alife())
 		{
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
 			if (id1 < 1)
 				Msg("Invalid process time! (%d)",id1);
 			else
-				Level().Server->game->alife().set_process_time(id1);
+				tpGame->alife().set_process_time(id1);
 		}
+		else
+			Log("!Not a single player game!");
 	}
 
 };
@@ -301,29 +304,35 @@ public:
 class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) 
-	{
+	virtual void Execute(LPCSTR args) {
 		if (ai().get_alife())
 		{
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
-			Level().Server->game->alife().objects_per_update(id1);
+			tpGame->alife().objects_per_update(id1);
 		}
+		else
+			Log("!Not a single player game!");
 	}
 };
 
 class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) 
-	{
+	virtual void Execute(LPCSTR args) {
 		if (ai().get_alife())
 		{
+			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
+			VERIFY			(tpGame);
 			float id1 = 0;
 			sscanf(args ,"%f",&id1);
 			clamp(id1,.1f,1.f);
-			Level().Server->game->alife().set_switch_factor(id1);
+			tpGame->alife().set_switch_factor(id1);
 		}
+		else
+			Log		("!Not a single player game!");
 	}
 };
 
@@ -464,7 +473,7 @@ public:
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8		(0);
-			Level().Send		(net_packet);
+			Level().Send		(net_packet,net_flags(TRUE));
 		}else{
 			if(!valid_saved_game_name(S)){
 				Msg("! Save failed: invalid file name - %s", S);
@@ -475,7 +484,7 @@ public:
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8		(1);
-			Level().Send		(net_packet);
+			Level().Send		(net_packet,net_flags(TRUE));
 		}
 #ifdef DEBUG
 		Msg						("Game save overhead  : %f milliseconds",timer.GetElapsed_sec()*1000.f);
@@ -548,7 +557,7 @@ public:
 		NET_Packet					net_packet;
 		net_packet.w_begin			(M_LOAD_GAME);
 		net_packet.w_stringZ		(saved_game);
-		Level().Send				(net_packet);
+		Level().Send				(net_packet,net_flags(TRUE));
 	}
 	
 	virtual void fill_tips			(vecTips& tips, u32 mode)
@@ -1736,6 +1745,7 @@ void CCC_RegisterCommands()
 	CMD4(CCC_FloatBlock, "ph_tri_query_ex_aabb_rate", &ph_console::ph_tri_query_ex_aabb_rate, 1.01f, 3.f);
 #endif // DEBUG
 	CMD3(CCC_Mask, "g_no_clip", &psActorFlags, AF_NO_CLIP);
+	CMD3(CCC_Mask, "rs_car_info", &psActorFlags, AF_CAR_INFO);
 	CMD1(CCC_JumpToLevel, "jump_to_level");
 	CMD3(CCC_Mask, "g_god", &psActorFlags, AF_GODMODE);
 	CMD3(CCC_Mask, "g_unlimitedammo", &psActorFlags, AF_UNLIMITEDAMMO);
@@ -1744,6 +1754,8 @@ void CCC_RegisterCommands()
 	CMD1(CCC_Script, "run_script");
 	CMD1(CCC_ScriptCommand, "run_string");
 	CMD3(CCC_Mask, "rs_show_cursor_pos", &psActorFlags, AF_SHOW_CURPOS);
+	CMD3(CCC_Mask, "g_hardcore_mode", &psActorFlags, AF_HARDCORE);
+	CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
 	CMD1(CCC_Giveinfo, "g_info");
@@ -1978,12 +1990,10 @@ void CCC_RegisterCommands()
 
 	CMD4(CCC_Float, "ai_aim_predict_time", &g_aim_predict_time, 0.f, 10.f);
 
-#ifdef DEBUG
 	//extern BOOL g_use_new_ballistics;
 	//CMD4(CCC_Integer,	"use_new_ballistics",	&g_use_new_ballistics, 0, 1);
 	extern float g_bullet_time_factor;
 	CMD4(CCC_Float, "g_bullet_time_factor", &g_bullet_time_factor, 0.f, 10.f);
-#endif
 
 
 #ifdef DEBUG

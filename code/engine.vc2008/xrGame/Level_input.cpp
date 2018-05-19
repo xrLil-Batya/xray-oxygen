@@ -2,6 +2,7 @@
 #include <dinput.h>
 #include "../xrEngine/xr_ioconsole.h"
 #include "entity_alive.h"
+#include "game_sv_single.h"
 #include "alife_simulator.h"
 #include "alife_simulator_header.h"
 #include "level_graph.h"
@@ -340,8 +341,11 @@ void CLevel::IR_OnKeyboardRelease(int key)
 	if (!bReady || g_bDisableAllInput	)								return;
 	if ( CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardRelease(key)) return;
 	if (game && game->OnKeyboardRelease(get_binded_action(key)) )		return;
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
-        return;
+	if (Device.Paused() 
+
+		&& !psActorFlags.test(AF_NO_CLIP)
+
+		)				return;
 
 	if (g_actor) Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));//+
 	if (CURRENT_ENTITY())		

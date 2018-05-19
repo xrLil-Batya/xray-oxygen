@@ -62,7 +62,10 @@ bool xrServer::Process_event_reject	(NET_Packet& P, const ClientID sender, const
 
 	// Signal to everyone (including sender)
 	if (send_message)
-		SendBroadcast(BroadcastCID,P);
+	{
+		DWORD MODE		= net_flags(TRUE,TRUE, FALSE, TRUE);
+		SendBroadcast	(BroadcastCID,P,MODE);
+	}
 	
 	return				(true);
 }

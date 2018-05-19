@@ -271,7 +271,7 @@ bool CInventoryItem::Detach(const char* item_section_name, bool b_spawn_item)
 		// Send
 		NET_Packet			P;
 		D->Spawn_Write		(P,TRUE);
-		Level().Send		(P);
+		Level().Send		(P,net_flags(TRUE));
 		// Destroy
 		F_entity_Destroy	(D);
 	}

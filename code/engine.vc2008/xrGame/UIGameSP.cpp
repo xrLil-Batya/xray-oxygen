@@ -270,7 +270,7 @@ void CChangeLevelWnd::OnOk()
 	p.w_vec3(m_position);
 	p.w_vec3(m_angles);
 
-	Level().Send(p);
+	Level().Send(p, net_flags(TRUE));
 }
 
 void CChangeLevelWnd::OnCancel()
