@@ -686,8 +686,15 @@ void CCC_Register()
 	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
-	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	1.5f			);
-
+	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	2.0f			);
+	if (strstr(Core.Params,"-fog_mixer"))
+	{
+	CMD4(CCC_Float,		"rs_fog_distance",		&psFogDistance,		0.1f,	2.0f			);
+	CMD4(CCC_Float,		"rs_fog_density",		&psFogDensity,		0.0f,	10.0f			);
+	CMD4(CCC_Float,		"rs_fog_near",			&psFogNear,			0.0f,	10.0f			);
+	CMD4(CCC_Vector3,	"rs_fog_color",			&psFogColor, Fvector().set(0, 0, 0), Fvector().set(256, 256, 256));
+	CMD4(CCC_Float,		"rs_fog_far",			&psFogFar,			0.0f,	10.0f			);
+	}
 	CMD3(CCC_Mask,		"rs_cam_pos",			&psDeviceFlags,		rsCameraPos				);
 #ifdef DEBUG
 	CMD3(CCC_Mask,		"rs_occ_draw",			&psDeviceFlags,		rsOcclusionDraw			);

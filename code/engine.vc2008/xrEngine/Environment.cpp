@@ -26,6 +26,11 @@
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 ENGINE_API	float			psVisDistance	= 1.f;
+ENGINE_API	float			psFogDistance	= 1.f;
+ENGINE_API	float			psFogDensity	= 1.f;
+ENGINE_API	float			psFogNear		= 1.f;
+ENGINE_API	float			psFogFar		= 1.f;
+ENGINE_API  Fvector3		psFogColor = { 0.1f,0.1f,0.1f };
 static const float			MAX_NOISE_FREQ	= 0.03f;
 
 // real WEATHER->WFX transition time
