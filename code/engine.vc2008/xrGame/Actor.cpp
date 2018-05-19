@@ -1308,36 +1308,35 @@ void CActor::ForceTransform(const Fmatrix& m)
 	const float block_damage_time_seconds = 2.f;
 }
 
-ENGINE_API extern float		psHUD_FOV;
+ENGINE_API extern float	psHUD_FOV;
 float CActor::Radius()const
-{ 
-	float R		= inherited::Radius();
-	CWeapon* W	= smart_cast<CWeapon*>(inventory().ActiveItem());
-	if (W) R	+= W->Radius();
-	//	if (HUDview()) R *= 1.f/psHUD_FOV;
+{
+	float R = inherited::Radius();
+	CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
+	if (W) R += W->Radius();
+
 	return R;
 }
 
-bool		CActor::use_bolts				() const
+bool CActor::use_bolts() const
 {
 	return CInventoryOwner::use_bolts();
 };
 
 int		g_iCorpseRemove = 1;
 
-bool  CActor::NeedToDestroyObject() const
+bool CActor::NeedToDestroyObject() const
 {
 		return false;
 }
 
-ALife::_TIME_ID	 CActor::TimePassedAfterDeath()	const
+ALife::_TIME_ID CActor::TimePassedAfterDeath() const
 {
 	if(!g_Alive())
 		return Level().timeServer() - GetLevelDeathTime();
 	else
 		return 0;
 }
-
 
 void CActor::OnItemTake(CInventoryItem *inventory_item)
 {
@@ -1376,13 +1375,12 @@ void CActor::OnItemDropUpdate()
 {
 	CInventoryOwner::OnItemDropUpdate();
 
-	for (auto it : inventory().m_all)
+	for (PIItem &it : inventory().m_all)
 	{
 		if (!it->IsInvalid() && !attached(it))
 			attach(it);
 	}
 }
-
 
 void CActor::OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
@@ -1394,7 +1392,7 @@ void CActor::OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& p
 	CInventoryOwner::OnItemBelt(inventory_item, previous_place);
 }
 
-#define ARTEFACTS_UPDATE_TIME 0.100f
+static constexpr float ARTEFACTS_UPDATE_TIME = 0.100f;
 
 void CActor::UpdateArtefactsOnBeltAndOutfit()
 {
@@ -1558,6 +1556,7 @@ bool CActor::can_attach(const CInventoryItem *inventory_item) const
 	return true;
 }
 
+#include "game_cl_base.h"
 void CActor::OnDifficultyChanged	()
 {
 	// immunities

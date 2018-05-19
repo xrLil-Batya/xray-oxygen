@@ -137,7 +137,7 @@
 #	include "DestroyablePhysicsObject.h"
 
 #	include "game_sv_base.h"
-#	include "game_cl_single.h"
+#	include "game_cl_base.h"
 
 #	include "UIGameSP.h"
 #	include	"climableobject.h"
@@ -165,7 +165,7 @@ void CObjectFactory::register_classes	()
 	
 	add<game_sv_GameState>										(CLSID_SV_GAME_SINGLE			,"game_sv_single");
 	//Client Game type
-	add<game_cl_Single>											(CLSID_CL_GAME_SINGLE			,"game_cl_single");
+	add<game_cl_GameState>										(CLSID_CL_GAME_SINGLE			,"game_cl_single");
 	add<CUIGameSP>												(CLSID_GAME_UI_SINGLE			,"game_ui_single");
 #else // NO_XR_GAME
 	ADD(CActor					,CSE_ALifeCreatureActor			,CLSID_OBJECT_ACTOR				,"actor");

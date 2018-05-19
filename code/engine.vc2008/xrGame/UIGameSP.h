@@ -16,7 +16,7 @@ class CInventoryOwner;
 class CUIGameSP : public CUIGameCustom
 {
 private:
-	game_cl_Single * m_game;
+	game_cl_GameState * m_game;
 	typedef CUIGameCustom inherited;
 public:
 	CUIGameSP();

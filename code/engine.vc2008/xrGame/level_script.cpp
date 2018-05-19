@@ -23,7 +23,6 @@
 #include "PHCommander.h"
 #include "PHScriptCall.h"
 #include "script_engine.h"
-#include "game_cl_single.h"
 #include "map_manager.h"
 #include "map_spot.h"
 #include "map_location.h"
@@ -176,9 +175,8 @@ float get_time_factor()
 
 void set_game_difficulty(ESingleGameDifficulty dif)
 {
-	g_SingleGameDifficulty		= dif;
-	game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
-	game->OnDifficultyChanged	();
+	g_SingleGameDifficulty = dif;
+	Level().game->OnDifficultyChanged();
 }
 ESingleGameDifficulty get_game_difficulty()
 {

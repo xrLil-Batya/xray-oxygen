@@ -1567,7 +1567,6 @@
     <ClInclude Include="..\xrServerEntities\xrEProps.h" />
     <ClInclude Include="game_base.h" />
     <ClInclude Include="..\xrServerEntities\game_base_space.h" />
-    <ClInclude Include="game_cl_single.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="game_sv_event_queue.h" />
@@ -2680,8 +2679,6 @@
     <ClCompile Include="xrServer.cpp">
     </ClCompile>
     <ClCompile Include="game_base.cpp">
-    </ClCompile>
-    <ClCompile Include="game_cl_single.cpp">
     </ClCompile>
     <ClCompile Include="game_cl_base.cpp">
     </ClCompile>

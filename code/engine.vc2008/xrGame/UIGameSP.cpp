@@ -8,7 +8,6 @@
 #include "attachable_item.h"
 #endif
 
-#include "game_cl_Single.h"
 #include "xr_level_controller.h"
 #include "actorcondition.h"
 #include "../xrEngine/xr_ioconsole.h"
@@ -21,9 +20,10 @@
 #include "ui/UITalkWnd.h"
 #include "ui/UIMessageBox.h"
 
-CUIGameSP::CUIGameSP() : m_game(NULL), m_game_objective(NULL)
+CUIGameSP::CUIGameSP() : m_game_objective(NULL)
 {
 	TalkMenu = xr_new<CUITalkWnd>();
+	m_game = xr_new<game_cl_GameState>();
 	UIChangeLevelWnd = xr_new<CChangeLevelWnd>();
 }
 
@@ -47,7 +47,7 @@ void CUIGameSP::HideShownDialogs()
 void CUIGameSP::SetClGame(game_cl_GameState* g)
 {
 	inherited::SetClGame(g);
-	m_game = smart_cast<game_cl_Single*>(g);
+	m_game = smart_cast<game_cl_GameState*>(g);
 	R_ASSERT(m_game);
 }
 

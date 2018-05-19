@@ -11,7 +11,6 @@
 #include "ai_debug.h"
 #include "alife_simulator.h"
 #include "game_cl_base.h"
-#include "game_cl_single.h"
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "actor.h"
@@ -191,8 +190,7 @@ public:
 		CCC_Token::Execute(args);
 		if (g_pGameLevel && Level().game)
 		{
-			game_cl_Single* game		= smart_cast<game_cl_Single*>(Level().game); VERIFY(game);
-			game->OnDifficultyChanged	();
+			Level().game->OnDifficultyChanged	();
 		}
 	}
 	virtual void	Info	(TInfo& I)		

@@ -278,14 +278,13 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	if (!O)	return;
 	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
-	if (!GO)		{
+	if (!GO)		
+	{
 		return;
 	}
+
 	if (type != GE_DESTROY_REJECT)
 	{
-		if (type == GE_DESTROY)
-			Game().OnDestroy(GO);
-			
 		GO->OnEvent		(P,type);
 	}
 	else 
@@ -309,7 +308,6 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 		GO->OnEvent		(P,GE_OWNERSHIP_REJECT);
 		if (ok)
 		{
-			Game().OnDestroy(GD);
 			GD->OnEvent	(P,GE_DESTROY);
 		};
 	}
