@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "xrserver.h"
 #include "xrMessages.h"
-#include "game_cl_single.h"
 #include "MainMenu.h"
 #include "../xrEngine/x_ray.h"
 
@@ -12,10 +11,6 @@
 
 xrServer::EConnect xrServer::Connect(shared_str &session_name)
 {
-#ifdef DEBUG
-	Msg						("* sv_Connect: %s",	*session_name);
-#endif
-
 	// Parse options and create game
 	if (!strchr(*session_name,'/'))
 		return				ErrConnect;

@@ -7,7 +7,6 @@ class CUITradeWnd;
 class CUITalkWnd;
 class CInventory;
 
-class game_cl_Single;
 class CChangeLevelWnd;
 class CUIMessageBox;
 class CInventoryBox;

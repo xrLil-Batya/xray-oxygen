@@ -14,7 +14,6 @@
 #include "game_cl_base.h"
 #include "level.h"
 #include "level_bullet_manager.h"
-#include "game_cl_single.h"
 
 CShootingObject::CShootingObject(void)
 {
