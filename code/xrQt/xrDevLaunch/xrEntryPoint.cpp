@@ -2,35 +2,48 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 26 March, 2018
-* main.cxx - Main source file for compilation with Qt
-* int main()
+* Edited: 14 May, 2018
+* xrEntryPoint.cpp - entry point for application
+* int WINAPI WinMain()
 *************************************************/
 #include "xrMain.h"
-#ifdef __cplusplus
+
+HINSTANCE	g_hInstance;
+int			argc;
+LPSTR		argv[MAX_NUM_ARGVS];
 /***********************************************
 entry-point for application.
 ***********************************************/
-int WINAPI main(int argc, char *argv[])
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	QApplication a				(argc, argv);
-	xrLaunch LaunchWIN;
-	LaunchWIN.show				();
-	return a.exec				();
+	if (hPrevInstance)
+		return 0;
 
+	g_hInstance = hInstance;
+
+#ifndef NULL_ENTRY
+	QStringList paths			= QCoreApplication::libraryPaths();
+	paths.append				(".");
+	paths.append				("platforms");
+	QCoreApplication::setLibraryPaths	(paths);
+	if (!strstr(lpCmdLine, "-nolauncher"))
+	{
+		QApplication a				(argc, argv);
+		xrLaunch LaunchWIN;
+		LaunchWIN.show				();
+		return a.exec				();
+	}
+	else
+	{
+		DLL_API int RunApplication	(char* commandLine);
+		RunApplication				(lpCmdLine);
+	}
+	return 0;
 }
 #else
-{
-	extern "C"
-	{
-		int main();
-		int main()
-		{
-			const char* err			= "Visual C compiler doesn't supported by xrDevLaunch";
-			printf					(err);
-			Sleep					(2500);
-			return					0;
-		}
-	}
+	nCmdShow				= 1;
+	LPCSTR err				= "Visual C compiler doesn't supported by xrDevLaunch";
+	printf					(err);
+	return 0;
 }
 #endif

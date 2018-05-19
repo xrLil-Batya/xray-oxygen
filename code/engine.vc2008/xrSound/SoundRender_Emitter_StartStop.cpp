@@ -8,9 +8,6 @@
 void CSoundRender_Emitter::start(ref_sound* _owner, bool _loop, float delay)
 {
 	starting_delay = delay;
-
-	VERIFY(_owner);
-
 	owner_data = _owner->_p;
 
 	VERIFY(owner_data);
@@ -91,7 +88,6 @@ void CSoundRender_Emitter::pause(bool bVal, int id)
 
 void CSoundRender_Emitter::cancel()
 {
-	// Msg		("- %10s : %3d[%1.4f] : %s","cancel",dbg_ID,priority(),source->fname);
 	switch (m_current_state)
 	{
 	case stPlaying:

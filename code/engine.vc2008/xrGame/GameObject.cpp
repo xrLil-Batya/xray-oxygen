@@ -128,21 +128,12 @@ void CGameObject::net_Destroy	()
 	inherited::net_Destroy						();
 	setReady									(FALSE);
 	
-	if (Level().IsDemoPlayStarted() && ID() == u16(-1))
-	{
-		Msg("Destroying demo_spectator object");
-	} else
-	{
-		g_pGameLevel->Objects.net_Unregister		(this);
-	}
+	g_pGameLevel->Objects.net_Unregister		(this);
 	
 	if (this == Level().CurrentEntity())
 	{
-		if (!Level().IsDemoPlayStarted())
-		{
-			Level().SetControlEntity			(0);
-		}
-		Level().SetEntity						(0);	// do not switch !!!
+		Level().SetControlEntity(0);
+		Level().SetEntity(0);	// do not switch !!!
 	}
 
 	Level().RemoveObject_From_4CrPr(this);
@@ -229,13 +220,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	cNameSect_set					(E->s_name);
 	if (E->name_replace()[0])
 		cName_set					(E->name_replace());
-	bool demo_spectator = false;
-	
-	if (Level().IsDemoPlayStarted() && E->ID == u16(-1))
-	{
-		Msg("* Spawning demo spectator ...");
-		demo_spectator = true;
-	} 
+
 	else R_ASSERT(Level().Objects.net_Find(E->ID) == NULL);
 	
 	setID							(E->ID);
@@ -246,36 +231,22 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	VERIFY							(_valid(renderable.xform));
 	VERIFY							(!fis_zero(DET(renderable.xform)));
 	CSE_ALifeObject					*O = smart_cast<CSE_ALifeObject*>(E);
-	if (O && xr_strlen(O->m_ini_string)) {
+	if (O && xr_strlen(O->m_ini_string)) 
+	{
 #pragma warning(push)
 #pragma warning(disable:4238)
-		m_ini_file					= xr_new<CInifile>(
-			&IReader				(
-				(void*)(*(O->m_ini_string)),
-				O->m_ini_string.size()
-			),
-			FS.get_path("$game_config$")->m_Path
-		);
+		m_ini_file = xr_new<CInifile>(&IReader((void*)(*(O->m_ini_string)), O->m_ini_string.size()), FS.get_path("$game_config$")->m_Path);
 #pragma warning(pop)
 	}
 
-	m_story_id						= ALife::_STORY_ID(-1);
-	if (O)
-		m_story_id					= O->m_story_id;
+	m_story_id = ALife::_STORY_ID(-1);
+	if (O) m_story_id = O->m_story_id;
 
 	// Net params
-	setLocal						(E->s_flags.is(M_SPAWN_OBJECT_LOCAL));
-	if (Level().IsDemoPlay())
-	{
-		if (!demo_spectator)
-		{
-			setLocal(FALSE);
-		}
-	};
+	setLocal(E->s_flags.is(M_SPAWN_OBJECT_LOCAL));
 
-	setReady						(TRUE);
-	if (!demo_spectator)
-		g_pGameLevel->Objects.net_Register	(this);
+	setReady(TRUE);
+	g_pGameLevel->Objects.net_Register(this);
 
 	m_server_flags.one				();
 	if (O) {
@@ -628,7 +599,6 @@ CObject::SavedPosition CGameObject::ps_Element(u32 ID) const
 {
 	VERIFY(ID<ps_Size());
 	inherited::SavedPosition	SP	=	PositionStack[ID];
-	SP.dwTime					+=	Level().timeServer_Delta();
 	return SP;
 }
 

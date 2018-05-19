@@ -16,12 +16,6 @@
 int		g_cl_save_demo = 0;
 extern XRCORE_API bool g_allow_heap_min;
 
-shared_str CLevel::OpenDemoFile(LPCSTR demo_file_name)
-{
-	PrepareToPlayDemo(demo_file_name);
-	return m_demo_server_options;
-}
-
 BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 {
 	net_start_result_total				= TRUE;
@@ -64,28 +58,9 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	};
 
     GamePersistent().SetServerOption(op_server);
-    shared_str serverOption = GamePersistent().GetServerOption();
-	//---------------------------------------------------------------------
-	if (!IsDemoPlay())
-	{
-		LPCSTR pdemosave = strstr(op_client, "/mpdemosave=");
-		bool is_single = serverOption.size() != 0 ?
-			(strstr(serverOption.c_str(), "single") != NULL) :
-			false;
-		int save_demo = g_cl_save_demo;
-		if (pdemosave != NULL)
-		{
-			sscanf(pdemosave, "/mpdemosave=%d", &save_demo);
-		}
-		if (!is_single && save_demo)
-		{
-			PrepareToSaveDemo();
-		}
-	}
 	//---------------------------------------------------------------------------
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
-//	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start3));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start4));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start5));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
@@ -135,8 +110,7 @@ bool CLevel::net_start2()
     shared_str serverOption = GamePersistent().GetServerOption();
 	if (net_start_result_total && serverOption.size())
 	{
-		GameDescriptionData game_descr;
-		if ((m_connect_server_err=Server->Connect(serverOption, game_descr))!=xrServer::ErrNoError)
+		if ((m_connect_server_err=Server->Connect(serverOption))!=xrServer::ErrNoError)
 		{
 			net_start_result_total = false;
 			Msg("! Failed to start server.");
@@ -165,14 +139,15 @@ bool CLevel::net_start4				()
 	return false;
 }
 
-bool CLevel::net_start5				()
+bool CLevel::net_start5()
 {
 	if (net_start_result_total)
 	{
 		NET_Packet		NP;
 		NP.w_begin		(M_CLIENTREADY);
 		Send			(NP,net_flags(TRUE,TRUE));
-	};
+	}
+
 	return true;
 }
 bool CLevel::net_start6				()
@@ -183,21 +158,24 @@ bool CLevel::net_start6				()
 
 	pApp->LoadEnd				();
 
-	if(net_start_result_total){
-		if (strstr(Core.Params,"-$")) {
-			string256				buf,cmd,param;
-			sscanf					(strstr(Core.Params,"-$")+2,"%[^ ] %[^ ] ",cmd,param);
-			strconcat				(sizeof(buf),buf,cmd," ",param);
-			Console->Execute		(buf);
+	if(net_start_result_total)
+	{
+		if (strstr(Core.Params,"-$")) 
+		{
+			string256 buf,cmd,param;
+			sscanf(strstr(Core.Params,"-$")+2,"%[^ ] %[^ ] ",cmd,param);
+			strconcat(sizeof(buf),buf,cmd," ",param);
+			Console->Execute(buf);
 		}
-	}else{
-		Msg				("! Failed to start client. Check the connection or level existance.");
+	}
+	else
+	{
+		Msg("! Failed to start client. Check the connection or level existance.");
 		
-		if (!map_data.m_map_loaded && map_data.m_name.size() && m_bConnectResult)
+		if (!map_data.m_map_loaded && !map_data.m_name.size() && m_bConnectResult)
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
-			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 			
@@ -214,7 +192,6 @@ bool CLevel::net_start6				()
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
-			LPCSTR download_url = !!map_data.m_map_download_url ? map_data.m_map_download_url.c_str() : "";
 			CStringTable	st;
 			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
 
@@ -257,4 +234,3 @@ void CLevel::InitializeClientGame	(NET_Packet& P)
 	
 	R_ASSERT				(Load_GameSpecific_After ());
 }
-

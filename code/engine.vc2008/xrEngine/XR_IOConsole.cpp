@@ -745,7 +745,6 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 		{
 			name2.assign(name, in_sz);
 			if ( !stricmp( name2.c_str(), in_str ) )
-//	END
 			{
 				shared_str temp;
 				temp._set( name );
@@ -762,7 +761,7 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 		{
 			return res;
 		}
-	} // for
+	} 
 
 	// word in internal
 	for (auto commandEntry : Commands)
@@ -786,7 +785,7 @@ bool CConsole::add_internal_cmds( LPCSTR in_str, vecTipsEx& out_v )
 		{
 			return res;
 		}
-	} // for
+	} 
 
 	return res;
 }
@@ -911,5 +910,5 @@ void CConsole::select_for_filter( LPCSTR filter_str, vecTips& in_v, vecTipsEx& o
 				out_v.push_back( ts );
 			}
 		}
-	}//for
+	}
 }

@@ -374,7 +374,7 @@ struct damn_keys_filter {
 
 #include "xr_ioc_cmd.h"
 
-ENGINE_API int RunApplication(char* commandLine)
+ENGINE_API int RunApplication(LPCSTR commandLine)
 {
 	if (!IsDebuggerPresent()) 
 	{
@@ -382,7 +382,8 @@ ENGINE_API int RunApplication(char* commandLine)
 		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
 	}
 
-
+    gMainThreadId = GetCurrentThreadId();
+    Debug.set_mainThreadId(gMainThreadId);
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
 	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
@@ -401,7 +402,6 @@ ENGINE_API int RunApplication(char* commandLine)
 	}
 #endif
 
-	strcat(Core.Params, commandLine);
 	//////////////////////////////////////////
 	// Title window
 	//////////////////////////////////////////

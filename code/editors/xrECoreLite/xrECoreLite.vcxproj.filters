@@ -13,6 +13,9 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{2b5f13c8-a430-4e09-a03c-fbcd1ba5b808}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Import">
+      <UniqueIdentifier>{53f9ae25-4aec-4142-8344-2d60c2ae0ac8}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="EditMesh.cpp">
@@ -58,6 +61,15 @@
     <ClCompile Include="bone.cpp" />
     <ClCompile Include="VertCache.cpp" />
     <ClCompile Include="ogf_desc.cpp" />
+    <ClCompile Include="Ogf.cpp">
+      <Filter>Import</Filter>
+    </ClCompile>
+    <ClCompile Include="OgfV4.cpp">
+      <Filter>Import</Filter>
+    </ClCompile>
+    <ClCompile Include="Omf.cpp">
+      <Filter>Import</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="EditMesh.h">
@@ -89,5 +101,17 @@
     </ClInclude>
     <ClInclude Include="motion.h" />
     <ClInclude Include="bone.h" />
+    <ClInclude Include="Ogf.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="OgfV4.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="Omf.h">
+      <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="Object.h">
+      <Filter>Import</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

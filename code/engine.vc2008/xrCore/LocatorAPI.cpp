@@ -644,26 +644,26 @@ void CLocatorAPI::setup_fs_path(const char* fs_name, string_path &fs_path)
     *(slash + 1) = 0;
 }
 
-IReader *CLocatorAPI::setup_fs_ltx	(const char* fs_name)
+IReader *CLocatorAPI::setup_fs_ltx(const char* fs_name)
 {
-    string_path			fs_path;
+    string_path	fs_path;
     memset(fs_path, 0, sizeof(fs_path));
     searchForFsltx(fs_name, fs_path);
-    CHECK_OR_EXIT(fs_path[0] != 0, make_string("Cannot find fsltx file: \"%s\"\nCheck your working directory", fs_path));
+    CHECK_OR_EXIT(fs_path[0] != 0, make_string("Cannot find fsltx file: \"%s\"\nCheck your working directory", fs_name));
     xr_strlwr(fs_path);
     fsRoot = fs_path;
     fsRoot = std::experimental::filesystem::absolute(fsRoot);
     fsRoot = fsRoot.parent_path();
 				
-	Log				("using fs-ltx", fs_path);
+	Log("using fs-ltx", fs_path);
 
-	int			file_handle;
-	size_t				file_size;
-	IReader			*result = nullptr;
-	CHECK_OR_EXIT( file_handle_internal(fs_path, file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_path));
+	int	file_handle;
+	size_t file_size;
+	IReader *result = nullptr;
+	CHECK_OR_EXIT(file_handle_internal(fs_path, file_size, file_handle), make_string("Cannot open file \"%s\".\nCheck your working folder.", fs_name));
 
-    void			*buffer = FileDownload(fs_path, file_handle, file_size);
-	result			= new CTempReader(buffer,(int)file_size,0);
+    void *buffer = FileDownload(fs_path, file_handle, file_size);
+	result = new CTempReader(buffer, (int)file_size, 0);
 
 #ifdef DEBUG
 	if (result && m_Flags.is(flBuildCopy|flReady))

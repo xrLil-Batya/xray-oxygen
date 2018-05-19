@@ -144,7 +144,7 @@ CSE_Abstract* game_sv_GameState::spawn_end(CSE_Abstract* E, ClientID id)
 void game_sv_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 {
 	P.w_begin	(M_EVENT);
-	P.w_u32		(Level().timeServer());//Device.TimerAsync());
+	P.w_u32		(Level().timeServer());
 	P.w_u16		(type);
 	P.w_u16		(dest);
 }
@@ -156,16 +156,6 @@ void game_sv_GameState::u_EventSend(NET_Packet& P, u32 dwFlags)
 
 void game_sv_GameState::Update		()
 {
-	struct ping_filler
-	{
-		void operator()(IClient* client)
-		{
-			xrClientData* C = static_cast<xrClientData*>(client);
-		}
-	};
-	ping_filler tmp_functor;
-	m_server->ForEachClientDo(tmp_functor);
-	
     if (Level().game) {
         CScriptProcess				*script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
         if (script_process)

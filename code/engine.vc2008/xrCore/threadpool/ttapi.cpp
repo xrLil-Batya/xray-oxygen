@@ -149,7 +149,7 @@ process2:
 
 	// Check for override from command line
 	char szSearchFor[] = "-max-threads";
-	char* pszTemp = strstr(GetCommandLine(), szSearchFor);
+	char* pszTemp = strstr(Core.Params, szSearchFor);
 	size_t dwOverride = 0;
 #ifdef _M_X64
 	if (pszTemp && sscanf_s(pszTemp + strlen(szSearchFor), "%zu", &dwOverride) &&

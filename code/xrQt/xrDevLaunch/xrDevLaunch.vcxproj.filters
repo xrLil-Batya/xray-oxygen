@@ -37,16 +37,7 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="xrMain.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="aboutlauncher.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xrFS.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="xrEntryPoint.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="xrCPUID.cpp">
@@ -55,15 +46,33 @@
     <ClCompile Include="xrD3DList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="xrEntryPoint.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrFS.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="xrMain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="xrSettings.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <QtMoc Include="xrMain.h">
+    <QtMoc Include="aboutlauncher.h">
       <Filter>Header Files</Filter>
     </QtMoc>
-    <QtMoc Include="aboutlauncher.h">
+    <ClInclude Include="xrCPUID.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xrException.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="xrFS.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <QtMoc Include="xrMain.h">
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="xrSettings.h">
@@ -71,45 +80,43 @@
     </QtMoc>
   </ItemGroup>
   <ItemGroup>
+    
+    
     <CustomBuild Include="debug\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
+    
+    
+    
+    
+    <ClInclude Include="ui_aboutlauncher.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_parametersdialog.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_xrMain.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ui_xrSettings.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <QtUic Include="xrMain.ui">
+    <QtUic Include="aboutlauncher.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="parametersdialog.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-    <QtUic Include="aboutlauncher.ui">
+    <QtUic Include="xrMain.ui">
       <Filter>Form Files</Filter>
     </QtUic>
     <QtUic Include="xrSettings.ui">
       <Filter>Form Files</Filter>
     </QtUic>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="GeneratedFiles\ui_xrMain.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_parametersdialog.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="GeneratedFiles\ui_aboutlauncher.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="xrException.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="xrCPUID.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="xrFS.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

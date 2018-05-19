@@ -618,6 +618,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	char c_sun_shafts[32];
 	char c_ssao[32];
 	char c_sun_quality[32];
+    char c_bokeh_quality[32];
 
 	char sh_name[MAX_PATH] = "";
 	u32 len	= 0;
@@ -830,7 +831,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
+	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -892,7 +893,20 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	{
 		sh_name[len]='0'; ++len;
 	}
-	sh_name[len] = '\0'; // intorr: String must be null-terminated.
+
+    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    {
+        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        defines[def_it].Name = "BOKEH_QUALITY";
+        defines[def_it].Definition = c_bokeh_quality;
+        def_it++;
+        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+    }
+    else
+    {
+        sh_name[len] = '0'; ++len;
+    }
+	sh_name[len] = 0; // intorr: String must be null-terminated.
 
 	// finish
 	defines[def_it].Name			=	0;

@@ -56,8 +56,30 @@ System::Void MeshEdit::loadToolStripMenuItem_Click(System::Object^ sender, Syste
 	if (openFileDialog1->ShowDialog() == System::Windows::Forms::DialogResult::OK)
 	{
 		marshal_context context;
-		const char* tmpStr = context.marshal_as<const char*>(openFileDialog1->FileName);
-		mesh = new Mesh(tmpStr);
+		const char* path = context.marshal_as<const char*>(openFileDialog1->FileName);
+
+		COgf* ogf;
+
+		switch(openFileDialog1->FilterIndex) // TODO mark filter indexes
+		{
+			case 1: // .object
+				mesh = new Mesh(path);
+				break;
+			case 2: // .ogf
+				ogf = COgf::load(path);
+				if (ogf) 
+				{
+					Msg("Ogf version %d", ogf->version());
+				}
+				else
+				{
+					Msg("Ogf is not loaded");
+				}
+				break;
+			case 3: // .omf
+				// TODO
+				break;
+		}
 	}
 }
 

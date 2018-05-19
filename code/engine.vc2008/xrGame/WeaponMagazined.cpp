@@ -666,9 +666,6 @@ void CWeaponMagazined::switch2_Fire	()
 	m_bStopedAfterQueueFired = false;
 	m_bFireSingleShot = true;
 	m_iShotNum = 0;
-
-    if (Level().IsDemoPlay() && !IsWorking())
-		FireStart();
 }
 
 void CWeaponMagazined::switch2_Empty()

@@ -105,9 +105,16 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		if( psActorFlags.test(AF_CROUCH_TOGGLE) )
 			mstate_wishful ^= mcCrouch;
 		}break;
-	case kCAM_1:	cam_Set			(eacFirstEye);				break;
-	case kCAM_2:	cam_Set			(eacLookAt);				break;
-	case kCAM_3:	cam_Set			(eacFreeLook);				break;
+	case kCAM_1:	cam_Set			(eacFirstEye);				
+		break;
+	case kCAM_2:
+		if (!psActorFlags.test(AF_HARDCORE))
+		cam_Set			(eacLookAt);				
+		break;
+	case kCAM_3:	
+		if (!psActorFlags.test(AF_HARDCORE))
+		cam_Set			(eacFreeLook);				
+		break;
 	case kNIGHT_VISION:
 		{
 			SwitchNightVision();

@@ -25,7 +25,7 @@ public:
 	static void createAllLocalQtSettings		();
 	static int  getValueSetting					(LPCSTR szPath);
 	static void setValueSetting					(LPCSTR szPath, int value);
-	static void createReg						(_TCHAR szString[], _TCHAR szValue[]);
-	static void openReg							(_TCHAR szString[]);
-	static void writeReg						(_TCHAR szString[], _TCHAR szValue[]);
+	static void createReg						(char szString[], char szValue[]);
+	static void openReg							(char szString[]);
+	static void writeReg						(char szString[], char szValue[]);
 };

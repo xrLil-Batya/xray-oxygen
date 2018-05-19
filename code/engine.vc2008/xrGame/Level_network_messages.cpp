@@ -11,7 +11,6 @@
 #include "ai_space.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
-#include "message_filter.h"
 #include "../xrphysics/iphworld.h"
 #include "GamePersistent.h"
 
@@ -37,19 +36,10 @@ void CLevel::ClientReceive()
 {
 	m_dwRPC = 0;
 	m_dwRPS = 0;
-	
-	if (IsDemoPlayStarted())
-	{
-		SimulateServerUpdate();
-	}
 
 	StartProcessQueue();
 	for (NET_Packet* P = net_msg_Retreive(); P; P=net_msg_Retreive())
 	{
-		if (IsDemoSaveStarted())
-		{
-			SavePacket(*P);
-		}
 		//-----------------------------------------------------
 		m_dwRPC++;
 		m_dwRPS += (u32)P->B.count;
@@ -64,8 +54,7 @@ void CLevel::ClientReceive()
 				{
 					Msg ("! Unconventional M_SPAWN received : map_data[%s] | bReady[%s] | deny_m_spawn[%s]",
 						(map_data.m_map_sync_received) ? "true" : "false",
-						(bReady) ? "true" : "false",
-						deny_m_spawn ? "true" : "false");
+						(bReady) ? "true" : "false", deny_m_spawn ? "true" : "false");
 					break;
 				}
 				game_events->insert		(*P);
@@ -93,24 +82,6 @@ void CLevel::ClientReceive()
 			{
 				game->net_import_update	(*P);
 			}break;
-		case M_UPDATE_OBJECTS:
-			{
-				Objects.net_Import		(P);
-
-				IClientStatistic pStat = Level().GetStatistic();
-				u32 dTime = 0;
-				
-				if ((Level().timeServer() + pStat.getPing()) < P->timeReceive)
-				{
-					dTime = pStat.getPing();
-				}
-				else
-					dTime = Level().timeServer() - P->timeReceive + pStat.getPing();
-
-				u32 NumSteps = physics_world()->CalcNumSteps(dTime);
-				SetNumCrSteps(NumSteps);
-			}break;
-		//---------------------------------------------------
 		case M_SV_CONFIG_NEW_CLIENT:
 			InitializeClientGame	(*P);
 			break;
@@ -152,9 +123,6 @@ void CLevel::ClientReceive()
 		case M_SV_MAP_NAME:
 			{
 				map_data.ReceiveServerMapSync(*P);
-			}break;
-		case M_BULLET_CHECK_RESPOND:
-			{
 			}break;
 		}
 		net_msg_Release();

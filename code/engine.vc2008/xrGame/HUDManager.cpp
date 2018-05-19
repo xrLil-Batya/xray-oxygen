@@ -286,6 +286,19 @@ void  CHUDManager::RenderUI()
 		pFont->Out(_pos.x, _pos.y, _str);
 		pFont->OnRender();
 	}
+	if(psActorFlags.test(AF_WORKINPROGRESS))
+	{
+		CGameFont* pFont = UI().Font().pFontGraffiti19Russian;
+		pFont->SetColor(D3DCOLOR_XRGB(216, 216, 216));
+		LPCSTR _str = CStringTable().translate("Work In Progress").c_str();
+
+		Fvector2			_pos;
+		_pos.set(20,650);
+		UI().ClientToScreenScaled(_pos);
+		pFont->SetAligment(CGameFont::alLeft);
+		pFont->Out(_pos.x, _pos.y, _str);
+		pFont->OnRender();
+	}
 	}
 
 void CHUDManager::OnEvent(EVENT E, u64 P1, u64 P2)

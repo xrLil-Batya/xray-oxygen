@@ -25,6 +25,24 @@
 #	include "../Include/editor/interfaces.hpp"
 #endif // #ifdef INGAME_EDITOR
 
+//Thread Id's
+extern DWORD gMainThreadId;
+extern DWORD gSecondaryThreadId;
+
+ENGINE_API bool IsMainThread();
+ENGINE_API bool IsSecondaryThread();
+
+//for window prop control
+extern u32 ps_vid_windowtype;
+
+enum WindowPropStyle
+{
+    WPS_Windowed = 1,
+    WPS_WindowedBorderless = 2,
+    WPS_Fullscreen = 3,
+    WPS_FullscreenBorderless = 4
+};
+
 class engine_impl;
 
 #pragma pack(push,4)
@@ -227,6 +245,8 @@ public:
 	void Initialize							(void);
 	void ShutDown							(void);
 
+    void UpdateWindowPropStyle              (WindowPropStyle PropStyle);
+
 public:
 	void time_factor						(const float &time_factor)
 	{
@@ -239,6 +259,8 @@ public:
 		VERIFY					(Timer.time_factor() == TimerGlobal.time_factor());
 		return					(Timer.time_factor());
 	}
+
+    WindowPropStyle GetCurrentWindowPropStyle() const { return (WindowPropStyle)ps_vid_windowtype; };
 
 	// Multi-threading
 	std::recursive_mutex	mt_csEnter;

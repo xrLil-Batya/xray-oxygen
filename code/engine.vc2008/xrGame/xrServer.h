@@ -21,7 +21,6 @@ public:
 	BOOL					net_Ready;
 	BOOL					net_Accepted;
 	
-	BOOL					net_PassUpdates;
 	u32						net_LastMoveUpdateTime;
 
 							xrClientData			();
@@ -59,7 +58,7 @@ private:
 	xr_deque<DelayedPacket>		m_aDelayedPackets;
 	void						ProceedDelayedPackets	();
 	void						AddDelayedPacket		(NET_Packet& Packet, ClientID Sender);
-	u32							OnDelayedMessage		(NET_Packet& P, ClientID sender);			// Non-Zero means broadcasting with "flags" as returned
+	void						OnDelayedMessage		(NET_Packet& P, ClientID sender);
 
 private:
 	typedef 
@@ -81,7 +80,6 @@ private:
 public:
 	game_sv_GameState*		game;
 
-	void					Export_game_type		(IClient* CL);
 	void					Perform_game_export		();
 	void					PerformMigration		(CSE_Abstract* E, xrClientData* from, xrClientData* to);
 	
@@ -112,12 +110,11 @@ public:
 	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
 	
-	void					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
+	void					SendConnectResult		(IClient* CL, char* ResultStr);
 	void	__stdcall		SendConfigFinished		(ClientID const & clientId);
 	void					AttachNewClient			(IClient* CL);
-protected:
-	virtual IClient*		new_client				( SClientConnectData* cl_data );
 
+protected:
 			void			RequestClientDigest					(IClient* CL);
 	virtual void			Check_BuildVersion_Success			(IClient* CL);
 
@@ -133,11 +130,10 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		(IClient* CL);
 
-	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
+	virtual void			SendTo_LL			(void* data, u32 size);
+    virtual void		    SendTo(ClientID ID, NET_Packet& P, u32 dwFlags = DPNSEND_GUARANTEED, u32 dwTimeout = 0);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
 
-	virtual IClient*		client_Create		();								// create client info
-	virtual IClient*		client_Find_Get		(ClientID ID);					// Find earlier disconnected client
 	virtual void			client_Destroy		(IClient* C);					// destroy client info
 
 	// utilities
@@ -149,18 +145,16 @@ public:
 	CSE_Abstract*			ID_to_entity		(u16 ID);
 
 	// main
-	virtual EConnect		Connect				(shared_str& session_name, GameDescriptionData & game_descr);
+	virtual EConnect		Connect				(shared_str& session_name);
 	virtual void			Disconnect			();
 	virtual void			Update				();
 	void					SLS_Default			();
 	void					SLS_Clear			();
-	void					SLS_Save			(IWriter&	fs);
-	void					SLS_Load			(IReader&	fs);
 
 			shared_str		level_name			(const shared_str &server_options) const;
 			shared_str		level_version		(const shared_str &server_options) const;
 
-	void					create_direct_client();
+    void createClient(); // Create actor
 
 #ifdef DEBUG
 public:
