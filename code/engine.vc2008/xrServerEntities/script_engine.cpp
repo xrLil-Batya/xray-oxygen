@@ -267,20 +267,16 @@ void CScriptEngine::setup_auto_load		()
 	lua_gettable 						(lua(),LUA_GLOBALSINDEX); 
 	luaL_getmetatable					(lua(),"XRAY_AutoLoadMetaTable");
 	lua_setmetatable					(lua(),-2);
-	//. ??????????
-	// lua_settop							(lua(),-0);
 	
 	xray_scripts.clear();
 
 	FS_FileSet fset;
 	FS.file_list(fset, "$game_scripts$", FS_ListFiles, "*.script");
-	auto fit = fset.begin();
-	auto fit_e = fset.end();
 
-	for (; fit != fit_e; ++fit)
+	for (auto &fit : fset)
 	{
 		string_path	fn1, fn2;
-		_splitpath((*fit).name.c_str(), 0, fn1, fn2, 0);
+		_splitpath(fit.name.c_str(), 0, fn1, fn2, 0);
 
 		FS.update_path(fn1, "$game_scripts$", fn1);
 		strconcat(sizeof(fn1), fn1, fn1, fn2, ".script");
@@ -327,7 +323,6 @@ void CScriptEngine::init				()
 				lua_sethook					(lua(),lua_hook_call,	LUA_MASKLINE|LUA_MASKCALL|LUA_MASKRET,	0);
 #	endif // #ifdef DEBUG
 #endif // #ifndef USE_LUA_STUDIO
-//	lua_sethook							(lua(), lua_hook_call,	LUA_MASKLINE|LUA_MASKCALL|LUA_MASKRET,	0);
 
 	bool								save = m_reload_modules;
 	m_reload_modules					= true;
