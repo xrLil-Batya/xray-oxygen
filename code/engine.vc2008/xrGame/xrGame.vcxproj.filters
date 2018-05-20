@@ -5547,8 +5547,6 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
-    </ClInclude>
-    </ClInclude>
     <ClInclude Include="game_base.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
