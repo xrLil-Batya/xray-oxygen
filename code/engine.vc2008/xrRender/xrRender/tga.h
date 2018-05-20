@@ -2,28 +2,30 @@
 #pragma once
 
 #pragma pack(push,1)
-struct tgaImgSpecHeader{
-	u16		tgaXOrigin;
-	u16		tgaYOrigin;
-	u16		tgaXSize;
-	u16		tgaYSize;
-	BYTE	tgaDepth;
-	BYTE	tgaImgDesc;
+struct BMPImgSpecHeader
+{
+	u16		bmpXOrigin;
+	u16		bmpYOrigin;
+	u16		bmpXSize;
+	u16		bmpYSize;
+	BYTE	bmpDepth;
+	BYTE	bmpImgDesc;
 };
-struct tgaHeader{
-	BYTE	tgaIDL;
-	BYTE	tgaMapType;
-	BYTE	tgaImgType;
-	BYTE	tgaClrMapSpec[5];
-	tgaImgSpecHeader tgaImgSpec;
+struct BMPHeader
+{
+	BYTE	bmpIDL;
+	BYTE	bmpMapType;
+	BYTE	bmpImgType;
+	BYTE	bmpClrMapSpec[5];
+	BMPImgSpecHeader bmpImgSpec;
 };
 #pragma pack(pop)
 
+#define IMG_16B 0
+#define IMG_24B 1
+#define IMG_32B 2
 
-#define IMG_24B 0
-#define IMG_32B 1
-
-class TGAdesc
+class BMPdesc
 {
 public:
 	int format;
@@ -31,8 +33,8 @@ public:
 	int width,height;
 	void *data;
 public:
-	TGAdesc()	{ data = 0; };
-	~TGAdesc()	{};
+	BMPdesc()	{ data = 0; };
+	~BMPdesc()	{};
 
-	void maketga( IWriter &fs );
+	void makebmp( IWriter &fs );
 };

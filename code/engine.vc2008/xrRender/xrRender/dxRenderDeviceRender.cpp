@@ -191,7 +191,7 @@ void dxRenderDeviceRender::overdrawEnd()
 {
 #if defined(USE_DX10) || defined(USE_DX11)
 	//	TODO: DX10: Implement overdrawEnd
-	VERIFY(!"dxRenderDeviceRender::overdrawBegin not implemented.");
+	VERIFY(!"dxRenderDeviceRender::overdrawEnd not implemented.");
 #else	//	USE_DX10
 	// Set up the stencil states
 	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILZFAIL,		D3DSTENCILOP_KEEP	));
@@ -236,30 +236,15 @@ void dxRenderDeviceRender::ResourcesDeferredUpload()
 	Resources->DeferredUpload();
 }
 
-void dxRenderDeviceRender::ResourcesGetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
-{
-	if (Resources)
-		Resources->_GetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
-}
-
 void dxRenderDeviceRender::ResourcesStoreNecessaryTextures()
 {
 	dxRenderDeviceRender::Instance().Resources->StoreNecessaryTextures();
 }
 
-void dxRenderDeviceRender::ResourcesDumpMemoryUsage()
-{
-	dxRenderDeviceRender::Instance().Resources->_DumpMemoryUsage();
-}
-
 dxRenderDeviceRender::DeviceState dxRenderDeviceRender::GetDeviceState()
 {
 	HW.Validate		();
-#if defined(USE_DX10) || defined(USE_DX11)
-	//	TODO: DX10: Implement GetDeviceState
-	//	TODO: DX10: Implement DXGI_PRESENT_TEST testing
-	//VERIFY(!"dxRenderDeviceRender::overdrawBegin not implemented.");
-#else	//	USE_DX10
+#if !defined(USE_DX10) && !defined(USE_DX11)
 	HRESULT	_hr		= HW.pDevice->TestCooperativeLevel();
 	if (FAILED(_hr))
 	{
@@ -294,7 +279,11 @@ void dxRenderDeviceRender::Begin()
 	RCache.OnFrameBegin		();
 	RCache.set_CullMode		(CULL_CW);
 	RCache.set_CullMode		(CULL_CCW);
-	if (HW.Caps.SceneMode)	overdrawBegin	();
+
+#if !defined(USE_DX10) && !defined(USE_DX11)
+	if (HW.Caps.SceneMode)	
+		overdrawBegin	();
+#endif
 }
 
 void dxRenderDeviceRender::Clear()
@@ -324,7 +313,10 @@ void dxRenderDeviceRender::End()
 {
 	VERIFY	(HW.pDevice);
 
-	if (HW.Caps.SceneMode)	overdrawEnd();
+#if !defined(USE_DX10) && !defined(USE_DX11)
+	if (HW.Caps.SceneMode)	
+		overdrawEnd();
+#endif
 
 	RCache.OnFrameEnd	();
 
@@ -370,6 +362,6 @@ bool dxRenderDeviceRender::HWSupportsShaderYUV2RGB()
 
 void  dxRenderDeviceRender::OnAssetsChanged()
 {
-	Resources->m_textures_description.UnLoad();
-	Resources->m_textures_description.Load();
+    Resources->m_textures_description.UnLoad();
+    Resources->m_textures_description.Load();
 }

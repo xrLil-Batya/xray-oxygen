@@ -13,7 +13,7 @@
 
 CRender										RImplementation;
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 //////////////////////////////////////////////////////////////////////////
 class CGlow				: public IRender_Glow
@@ -313,16 +313,14 @@ void CRender::reset_end()
 
 void CRender::OnFrame()
 {
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		// MT-details (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details,&CDetailManager::MT_CALC));
+	Models->DeleteQueue();
+	// MT-details (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
 
-		// MT-HOM (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
+	// MT-HOM (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
 }
 
 
@@ -336,7 +334,7 @@ void					CRender::model_Delete			(IRenderVisual* &V, BOOL bDiscard)
 { 
 	dxRender_Visual* pVisual = (dxRender_Visual*)V;
 	Models->Delete(pVisual, bDiscard);
-	V = 0;
+	V = nullptr;
 }
 IRender_DetailModel*	CRender::model_CreateDM			(IReader*	F)
 {
@@ -351,12 +349,12 @@ void					CRender::model_Delete			(IRender_DetailModel* & F)
 		CDetail*	D	= (CDetail*)F;
 		D->Unload		();
 		xr_delete		(D);
-		F				= NULL;
+		F				= nullptr;
 	}
 }
 IRenderVisual*			CRender::model_CreatePE			(LPCSTR name)	
 { 
-	PS::CPEDef*	SE			= PSLibrary.FindPED	(name);		R_ASSERT3(SE,"Particle effect doesn't exist",name);
+	PS::CPEDef*	SE			= PSLibrary.FindPED	(name);		R_ASSERT3(SE,"Particle effect [%s] doesn't exist",name);
 	return					Models->CreatePE	(SE);
 }
 IRenderVisual*			CRender::model_CreateParticles	(LPCSTR name)	
@@ -364,7 +362,7 @@ IRenderVisual*			CRender::model_CreateParticles	(LPCSTR name)
 	PS::CPEDef*	SE			= PSLibrary.FindPED	(name);
 	if (SE) return			Models->CreatePE	(SE);
 	else{
-		PS::CPGDef*	SG		= PSLibrary.FindPGD	(name);		R_ASSERT3(SG,"Particle effect or group doesn't exist",name);
+		PS::CPGDef*	SG		= PSLibrary.FindPGD	(name);		R_ASSERT3(SG,"Particle effect or group [%s] doesn't exist",name);
 		return				Models->CreatePG	(SG);
 	}
 }
@@ -620,6 +618,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	char c_sun_shafts[32];
 	char c_ssao[32];
 	char c_sun_quality[32];
+    char c_bokeh_quality[32];
 
 	char sh_name[MAX_PATH] = "";
 	u32 len	= 0;
@@ -832,7 +831,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
+	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -894,7 +893,20 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	{
 		sh_name[len]='0'; ++len;
 	}
-	sh_name[len] = '\0'; // intorr: String must be null-terminated.
+
+    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    {
+        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        defines[def_it].Name = "BOKEH_QUALITY";
+        defines[def_it].Definition = c_bokeh_quality;
+        def_it++;
+        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+    }
+    else
+    {
+        sh_name[len] = '0'; ++len;
+    }
+	sh_name[len] = 0; // intorr: String must be null-terminated.
 
 	// finish
 	defines[def_it].Name			=	0;

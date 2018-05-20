@@ -58,7 +58,7 @@ void CLevel::g_cl_Spawn		(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 	// Send
 	NET_Packet			P;
 	E->Spawn_Write		(P,TRUE);
-	Send				(P,net_flags(TRUE));
+	Send				(P);
 
 	// Destroy
 	F_entity_Destroy	(E);
@@ -72,9 +72,6 @@ void CLevel::g_cl_Spawn		(LPCSTR name, u8 rp, u16 flags, Fvector pos)
 
 void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 {
-	// Optimization for single-player only	- minimize traffic between client and server
-	psNET_Flags.set	(NETFLAG_MINIMIZEUPDATES,TRUE);
-
 	// Client spawn
 	CObject* O = Objects.Create	(*E->s_name);
 	if (!O || (!O->net_Spawn	(E))) 
@@ -87,27 +84,16 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 	else 
 	{
 		client_spawn_manager().callback(O);
-		
-		if ((E->s_flags.is(M_SPAWN_OBJECT_LOCAL)) && 
-			(E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER)) )	
+
+		if ((E->s_flags.is(M_SPAWN_OBJECT_LOCAL)) && (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER)))
 		{
-			if (IsDemoPlayStarted())
+			if (CurrentEntity())
 			{
-				if (E->s_flags.is(M_SPAWN_OBJECT_PHANTOM))
-				{
-					SetControlEntity	(O);
-					SetEntity			(O);	//do not switch !!!
-				}
-			} else
-			{
-				if (CurrentEntity()) 
-				{
-					CGameObject* pGO = smart_cast<CGameObject*>(CurrentEntity());
-					if (pGO) pGO->On_B_NotCurrentEntity();
-				}
-				SetControlEntity	(O);
-				SetEntity			(O);	//do not switch !!!
+				CGameObject* pGO = smart_cast<CGameObject*>(CurrentEntity());
+				if (pGO) pGO->On_B_NotCurrentEntity();
 			}
+			SetControlEntity(O);
+			SetEntity(O);	//do not switch !!!
 		}
 
 		if (0xffff != E->ID_Parent)	
@@ -120,10 +106,6 @@ void CLevel::g_sv_Spawn		(CSE_Abstract* E)
 			//*/
 		}
 	}
-
-	//---------------------------------------------------------
-	Game().OnSpawn				(O);
-	//---------------------------------------------------------
 }
 
 CSE_Abstract *CLevel::spawn_item(LPCSTR section, const Fvector &position, u32 level_vertex_id, u16 parent_id, bool return_item)
@@ -156,7 +138,7 @@ CSE_Abstract *CLevel::spawn_item(LPCSTR section, const Fvector &position, u32 le
 	if (!return_item) {
 		NET_Packet				P;
 		abstract->Spawn_Write	(P,TRUE);
-		Send					(P,net_flags(TRUE));
+		Send					(P);
 		F_entity_Destroy		(abstract);
 		return					(0);
 	}

@@ -194,7 +194,8 @@ public:																																				//
 	virtual	void						SetAnimated						( bool v );
 	virtual	void						ReleaseFixed					();
 	virtual bool						isFixed							(){return !!(m_flags.test(flFixed));}
-	virtual void						applyForce						(const Fvector& dir, float val);															//aux
+	virtual void						applyForce						(const Fvector& dir, float val);
+	//called anywhere ph state influent
 	virtual void						applyForce						(float x,float y,float z);																//called anywhere ph state influent
 	virtual void						applyImpulse					(const Fvector& dir, float val);//aux
 	virtual void						applyImpulseVsMC				(const Fvector& pos,const Fvector& dir, float val);										//

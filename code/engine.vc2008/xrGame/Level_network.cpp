@@ -38,7 +38,6 @@ void CLevel::remove_objects()
 		for (u32 i = 0; i < 20; ++i)
 		{
 			snd_Events.clear();
-			psNET_Flags.set(NETFLAG_MINIMIZEUPDATES, FALSE);
 			// ugly hack for checks that update is twice on frame
 			// we need it since we do updates for checking network messages
 			++(Device.dwFrame);
@@ -46,7 +45,9 @@ void CLevel::remove_objects()
 			ClientReceive();
 			ProcessGameEvents();
 			Objects.Update(false);
+#ifdef DEBUG
 			Objects.dump_all_objects();
+#endif
 		}
 
 		if (Objects.o_count())
@@ -112,16 +113,12 @@ void CLevel::net_Stop		()
 	bReady						= false;
 	m_bGameConfigStarted		= FALSE;
 
-	if(IsDemoSave() && !IsDemoInfoSaved())
-		SaveDemoInfo();
-
 	remove_objects				();
 	
 	//WARNING ! remove_objects() uses this flag, so position of this line must e here ..
 	game_configured				= FALSE;
 	
 	IGame_Level::net_Stop		();
-	IPureClient::Disconnect		();
 
 	if (Server) 
 	{
@@ -166,7 +163,7 @@ void CLevel::ClientSend(bool bForce)
 			P.w_chunk_close8(position);
 			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
 				continue;
-			Send(P, net_flags(FALSE));
+			Send(P);
 		}
 	}
 }
@@ -217,33 +214,30 @@ void CLevel::ClientSave()
 			P.w_chunk_close16(position);
 			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
 				continue;
-			Send(P, net_flags(FALSE));
+			Send(P);
 		}
 	}
 }
 
-void CLevel::Send(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
+void CLevel::Send(NET_Packet& P)
 {
-	if (!IsDemoPlayStarted() && !IsDemoPlayFinished())
-	{
-		// optimize the case when server located in our memory
-
-		ClientID	_clid;
-		_clid.set(1);
-		Server->OnMessage(P, _clid);
-	}
+	ClientID _clid;
+	_clid.set(1);
+	Server->OnMessage(P, _clid);
 }
 
 void CLevel::net_Update()
 {
-	if(game_configured){
+	if(game_configured)
+	{
 		// If we have enought bandwidth - replicate client data on to server
 		Device.Statistic->netClient2.Begin	();
 		ClientSend					();
 		Device.Statistic->netClient2.End		();
 	}
 	// If server - perform server-update
-	if (Server)	{
+	if (Server)	
+	{
 		Device.Statistic->netServer.Begin();
 		Server->Update					();
 		Device.Statistic->netServer.End	();
@@ -259,55 +253,6 @@ struct _NetworkProcessor : public pureFrame
 }	NET_processor;
 
 pureFrame*	g_pNetProcessor	= &NET_processor;
-
-
-bool CLevel::Connect2Server(const char* options)
-{
-	m_bConnectResultReceived	= true	;
-	m_bConnectResult			= true	;
-
-	if (!Connect(options))		
-		return false;
-	//---------------------------------------------------------------------------
-
-	Msg("%c client : connection %s - <%s>", m_bConnectResult ? '*' : '!', m_bConnectResult ? "accepted" : "rejected", m_sConnectResult.c_str());
-
-	net_Syncronised = TRUE;
-	if (net_Disconnected)
-	{
-		OnConnectRejected();
-		Disconnect();
-		return false;
-	}
-	//---------------------------------------------------------------------------
-
-	return true;
-};
-
-void CLevel::OnConnectResult(NET_Packet*	P)
-{
-	// multiple results can be sent during connection they should be "AND-ed"
-	m_bConnectResultReceived	= true;
-	u8	result					= P->r_u8();
-	u8  res1					= P->r_u8();
-	string512 ResultStr;	
-	P->r_stringZ_s				(ResultStr);
-	ClientID tmp_client_id;
-	P->r_clientID				(tmp_client_id);
-	SetClientID					(tmp_client_id);
-	
-	if (!result)
-		m_bConnectResult = false;
-	
-	m_sConnectResult			= ResultStr;
-	if (IsDemoSave() && result)
-	{
-		P->r_u8(); //server client or not
-		shared_str server_options;
-		P->r_stringZ(server_options);
-		StartSaveDemo(server_options);
-	}
-};
 
 void CLevel::ClearAllObjects()
 {
@@ -359,14 +304,6 @@ void CLevel::ClearAllObjects()
 		//-------------------------------------------------------------
 		ParentFound = true;
 		//-------------------------------------------------------------
-#ifdef DEBUG
-		Msg ("Destruction of %s[%d]", *(pObj->cNameSect()), pObj->ID());
-#endif
 	};
 	ProcessGameEvents();
-};
-
-void CLevel::OnConnectRejected()
-{
-	IPureClient::OnConnectRejected();
 };

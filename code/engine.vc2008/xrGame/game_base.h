@@ -18,7 +18,6 @@ protected:
 	string64						m_round_start_time_str;
 protected:
 	virtual		void				switch_Phase			(u32 new_phase);
-	virtual		void				OnSwitchPhase			(u32 old_phase, u32 new_phase)	{};	
 
 public:
 									game_GameState			();
@@ -53,6 +52,6 @@ public:
 
 	virtual		u64					GetEnvironmentGameTime	();
 	virtual		float				GetEnvironmentGameTimeFactor		();
-				void				SetEnvironmentGameTimeFactor		(u64 GameTime, const float fTimeFactor);
+	virtual		void				SetEnvironmentGameTimeFactor		(u64 GameTime, const float fTimeFactor);
 	virtual		void				SetEnvironmentGameTimeFactor		(const float fTimeFactor);
 };

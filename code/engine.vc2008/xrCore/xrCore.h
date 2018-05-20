@@ -48,7 +48,7 @@
 #define XR_NOEXCEPT_OP(x) noexcept(x)
 #else
 	// "release"
-#if defined(_CPPUNWIND) && !defined __BORLANDC__ && !defined(_XRLAUNCHER)
+#if defined(_CPPUNWIND) && !defined __BORLANDC__ && !defined(_XRLAUNCHER) && !defined(__llvm__)
 #error Please disable exceptions...
 #endif
 #define _HAS_EXCEPTIONS		1	// STL
@@ -203,7 +203,7 @@ struct XRCORE_API xr_shortcut {
 	};
 	xr_shortcut(u8 k, BOOL a, BOOL c, BOOL s) :key(k) { ext.assign(u8((a ? flAlt : 0) | (c ? flCtrl : 0) | (s ? flShift : 0))); }
 	xr_shortcut() { ext.zero(); key = 0; }
-	bool		similar(const xr_shortcut& v)const { return ext.equal(v.ext) && (key == v.key); }
+	bool		similar(const xr_shortcut& v)const { return (ext.flags == v.ext.flags) && (key == v.key); }
 };
 #pragma pack (pop)
 

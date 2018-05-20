@@ -323,7 +323,10 @@ void CTexture::apply_normal	(u32 dwStage)	{
 
 void CTexture::Preload	()
 {
+	if (!strstr(Core.Params, "-render_for_weak_systems"))
+	{
 	m_bumpmap = DEV->m_textures_description.GetBumpName(cName);
+	}
 	m_material = DEV->m_textures_description.GetMaterial(cName);
 }
 

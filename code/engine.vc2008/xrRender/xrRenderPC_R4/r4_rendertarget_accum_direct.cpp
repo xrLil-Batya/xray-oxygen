@@ -155,7 +155,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			m_shadow.mul	(xf_project,	xf_invview);
 
 			// tsm-bias
-			if ( (SE_SUN_FAR == sub_phase) && (RImplementation.o.HW_smap) )
+			if (SE_SUN_FAR == sub_phase)
 			{
 				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
@@ -259,7 +259,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		//	Igor: draw volumetric here
 		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
-		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0))
+		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && ps_sunshafts_mode == R2SS_VOLUMETRIC)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }
@@ -392,7 +392,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			m_shadow.mul	(xf_project,	xf_invview);
 
 			// tsm-bias
-			if ( (SE_SUN_FAR == sub_phase) && (RImplementation.o.HW_smap) )
+			if (SE_SUN_FAR == sub_phase)
 			{
 				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
@@ -578,7 +578,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		//	Igor: draw volumetric here
 		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
-		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && sub_phase == SE_SUN_FAR)
+		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && sub_phase == SE_SUN_FAR && ps_sunshafts_mode == R2SS_VOLUMETRIC)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
 }
@@ -962,6 +962,9 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 	if (!need_to_render_sunshafts())
 		return;
 
+    if (ps_sunshafts_mode != R2SS_VOLUMETRIC)
+        return;
+
 	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_FAR) ) return;
 
 	phase_vol_accumulator();
@@ -978,14 +981,8 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 	//	Set correct depth surface
 	//	It's slow. Make this when shader is created
 	{
-		char*		pszSMapName;
-		BOOL		b_HW_smap	= RImplementation.o.HW_smap;
-		BOOL		b_HW_PCF	= RImplementation.o.HW_smap_PCF;
-		if (b_HW_smap)		{
-			if (b_HW_PCF)	pszSMapName = r2_RT_smap_depth;
-			else			pszSMapName = r2_RT_smap_depth;
-		}
-		else				pszSMapName = r2_RT_smap_surf;
+		char* pszSMapName = r2_RT_smap_depth;
+
 		//s_smap
 		STextureList* _T = &*Element->passes[0]->T;
 

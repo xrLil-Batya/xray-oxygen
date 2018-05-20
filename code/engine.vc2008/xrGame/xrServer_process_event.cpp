@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "xrServer.h"
-#include "game_sv_single.h"
 #include "alife_simulator.h"
 #include "xrserver_objects.h"
 #include "game_base.h"
@@ -17,7 +16,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	u32			timestamp;
 	u16			type;
 	u16			destination;
-	u32			MODE			= net_flags(TRUE,TRUE);
 
 	// correct timestamp with server-unique-time (note: direct message correction)
 	P.r_u32		(timestamp	);
@@ -52,7 +50,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	case GEG_PLAYER_ITEM2RUCK:
 	case GE_GRENADE_EXPLODE:
 		{
-		SendBroadcast			(BroadcastCID,P,MODE);
+		SendBroadcast			(BroadcastCID,P);
 		}break;
 	case GEG_PLAYER_ACTIVATEARTEFACT:
 		{
@@ -63,7 +61,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		{
 			xrClientData* CL		= ID_to_client(sender);
 			if (CL)	CL->net_Ready	= TRUE;
-			if (SV_Client) SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+			if (SV_Client) SendTo(SV_Client->ID, P);
 		}break;
 	case GE_TRADE_BUY:
 	case GE_OWNERSHIP_TAKE:
@@ -102,7 +100,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			R_ASSERT			(c_from == c_parent);						// assure client ownership of event
 
 			// Signal to everyone (including sender)
-			SendBroadcast		(BroadcastCID,P,MODE);
+			SendBroadcast		(BroadcastCID,P);
 
 			// Perfrom real destroy
 			entity_Destroy		(e_entity	);
@@ -184,7 +182,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 				P.w_clientID		(c_src->ID);
 			}
 
-			SendBroadcast			(BroadcastCID,P,MODE);
+			SendBroadcast			(BroadcastCID,P);
 
 			//////////////////////////////////////////////////////////////////////////
 			// 
@@ -193,7 +191,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			P.w_u16				(GE_KILL_SOMEONE);
 			P.w_u16				(id_src);
 			P.w_u16				(destination);
-			SendTo				(c_src->ID, P, net_flags(TRUE, TRUE));
+			SendTo				(c_src->ID, P);
 			//////////////////////////////////////////////////////////////////////////
 
 			VERIFY					(verify_entities());
@@ -202,11 +200,11 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	case GE_ADDON_ATTACH:
 	case GE_ADDON_DETACH:
 		{
-			SendBroadcast	(BroadcastCID, P, net_flags(TRUE, TRUE));
+			SendBroadcast	(BroadcastCID, P);
 		}break;
 	case GE_CHANGE_POS:
 		{			
-			SendTo		(SV_Client->ID, P, net_flags(TRUE, TRUE));
+			SendTo		(SV_Client->ID, P);
 		}break;
 	case GE_INSTALL_UPGRADE:
 		{
@@ -254,14 +252,14 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	case GEG_PLAYER_DISABLE_SPRINT:
 	case GEG_PLAYER_WEAPON_HIDE_STATE:
 		{
-			SendTo		(SV_Client->ID, P, net_flags(TRUE, TRUE));
+			SendTo		(SV_Client->ID, P);
 
 			VERIFY					(verify_entities());
 		}break;
 	case GEG_PLAYER_ACTIVATE_SLOT:
 	case GEG_PLAYER_ITEM_EAT:
 		{
-			SendTo(SV_Client->ID, P, net_flags(TRUE, TRUE));
+			SendTo(SV_Client->ID, P);
 			VERIFY					(verify_entities());
 		}break;
 	case GEG_PLAYER_USE_BOOSTER:
@@ -270,12 +268,8 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			{
 				NET_Packet tmp_packet;
 				CGameObject::u_EventGen(tmp_packet, GEG_PLAYER_USE_BOOSTER, receiver->ID);
-				SendTo(receiver->owner->ID, P, net_flags(TRUE, TRUE));
+				SendTo(receiver->owner->ID, P);
 			}
-		}break;
-	case GEG_PLAYER_ITEM_SELL:
-		{
-			game->OnPlayer_Sell_Item(sender, P);
 		}break;
 	case GE_TELEPORT_OBJECT:
 		{
@@ -301,7 +295,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 						
 		}break;
 	default:
-		R_ASSERT2	(0,"Game Event not implemented!!!");
+		VERIFY	(0,"Game Event not implemented!!!");
 		break;
 	}
 }

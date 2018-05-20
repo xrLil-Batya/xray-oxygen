@@ -31,6 +31,13 @@
 #define		r2_RT_bloom1		"$user$bloom1"			// ---
 #define		r2_RT_bloom2		"$user$bloom2"			// ---
 
+#define		r2_RT_sunshafts0	"$user$sun_shafts0"		// first rt
+#define		r2_RT_sunshafts1	"$user$sun_shafts1"		// second rt
+
+#define		r2_RT_SunShaftsMask				"$user$SunShaftsMask"
+#define		r2_RT_SunShaftsMaskSmoothed		"$user$SunShaftsMaskSmoothed"
+#define		r2_RT_SunShaftsPass0			"$user$SunShaftsPass0"
+
 #define		r2_RT_luminance_t64	"$user$lum_t64"			// --- temp
 #define		r2_RT_luminance_t8	"$user$lum_t8"			// --- temp
 

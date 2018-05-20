@@ -13,9 +13,11 @@ class CUIEditKeyBind : public CUIStatic, public CUIOptionsItem
 	_action*		m_action;
 	_keyboard*		m_keyboard;
 	_keyboard*		m_opt_backup_value;
+
 public:
 					CUIEditKeyBind			(bool bPrim);
 	virtual			~CUIEditKeyBind			();
+
 	// options item
 	virtual void	AssignProps				(const shared_str& entry, const shared_str& group);
 
@@ -37,8 +39,8 @@ public:
 
 	virtual void	SetText					(LPCSTR text);
 			void	SetEditMode				(bool b);
+
 protected:
 	void			BindAction2Key			();
-
 	bool			m_bIsEditMode;
 };

@@ -21,7 +21,6 @@ public:
 	BOOL					net_Ready;
 	BOOL					net_Accepted;
 	
-	BOOL					net_PassUpdates;
 	u32						net_LastMoveUpdateTime;
 
 							xrClientData			();
@@ -31,18 +30,10 @@ public:
 
 
 // main
-struct	svs_respawn
-{
-	u32		timestamp;
-	u16		phantom;
-};
-IC bool operator < (const svs_respawn& A, const svs_respawn& B)	{ return A.timestamp<B.timestamp; }
-
 class xrServer	: public IPureServer  
 {
 private:
 	xrS_entities				entities;
-	xr_multiset<svs_respawn>	q_respawn;
 	xr_vector<u16>				conn_spawned_ids;
 	
 	struct DelayedPacket
@@ -59,7 +50,7 @@ private:
 	xr_deque<DelayedPacket>		m_aDelayedPackets;
 	void						ProceedDelayedPackets	();
 	void						AddDelayedPacket		(NET_Packet& Packet, ClientID Sender);
-	u32							OnDelayedMessage		(NET_Packet& P, ClientID sender);			// Non-Zero means broadcasting with "flags" as returned
+	void						OnDelayedMessage		(NET_Packet& P, ClientID sender);
 
 private:
 	typedef 
@@ -81,9 +72,7 @@ private:
 public:
 	game_sv_GameState*		game;
 
-	void					Export_game_type		(IClient* CL);
 	void					Perform_game_export		();
-	void					PerformMigration		(CSE_Abstract* E, xrClientData* from, xrClientData* to);
 	
 	IC void					clear_ids				()
 	{
@@ -101,7 +90,7 @@ public:
 	void					Perform_connect_spawn	(CSE_Abstract* E, xrClientData* to, NET_Packet& P);
 	void					Perform_transfer		(NET_Packet &PR, NET_Packet &PT, CSE_Abstract* what, CSE_Abstract* from, CSE_Abstract* to);
 	void					Perform_reject			(CSE_Abstract* what, CSE_Abstract* from, int delta);
-	void					Perform_destroy			(CSE_Abstract* tpSE_Abstract, u32 mode);
+	void					Perform_destroy			(CSE_Abstract* tpSE_Abstract);
 
 	CSE_Abstract*			Process_spawn			(NET_Packet& P, ClientID sender, BOOL bSpawnWithClientsMainEntityAsParent=FALSE, CSE_Abstract* tpExistedEntity=0);
 	void					Process_update			(NET_Packet& P, ClientID sender);
@@ -112,17 +101,10 @@ public:
 	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
 	
-	void					SendConnectResult		(IClient* CL, u8 res, u8 res1, char* ResultStr);
 	void	__stdcall		SendConfigFinished		(ClientID const & clientId);
-	void					AttachNewClient			(IClient* CL);
+
 protected:
-	virtual IClient*		new_client				( SClientConnectData* cl_data );
-
-			void			RequestClientDigest					(IClient* CL);
-	virtual void			Check_BuildVersion_Success			(IClient* CL);
-
 	void					SendConnectionData		(IClient* CL);
-	void					OnProcessClientMapData	(NET_Packet& P, ClientID const & clientID);
 
 public:
 	// constr / destr
@@ -133,11 +115,10 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		(IClient* CL);
 
-	virtual void			SendTo_LL			(ClientID ID, void* data, u32 size, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
-	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED);
+	virtual void			SendTo_LL			(void* data, u32 size);
+    virtual void		    SendTo(ClientID ID, NET_Packet& P);
+	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P);
 
-	virtual IClient*		client_Create		();								// create client info
-	virtual IClient*		client_Find_Get		(ClientID ID);					// Find earlier disconnected client
 	virtual void			client_Destroy		(IClient* C);					// destroy client info
 
 	// utilities
@@ -149,18 +130,16 @@ public:
 	CSE_Abstract*			ID_to_entity		(u16 ID);
 
 	// main
-	virtual EConnect		Connect				(shared_str& session_name, GameDescriptionData & game_descr);
+	virtual EConnect		Connect				(shared_str& session_name);
 	virtual void			Disconnect			();
 	virtual void			Update				();
 	void					SLS_Default			();
 	void					SLS_Clear			();
-	void					SLS_Save			(IWriter&	fs);
-	void					SLS_Load			(IReader&	fs);
 
 			shared_str		level_name			(const shared_str &server_options) const;
 			shared_str		level_version		(const shared_str &server_options) const;
 
-	void					create_direct_client();
+    void createClient(); // Create actor
 
 #ifdef DEBUG
 public:

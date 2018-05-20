@@ -77,6 +77,16 @@ xr_token							qsun_quality_token							[ ]={
 	{ 0,							0												}
 };
 
+u32 ps_r__bokeh_quality = 0;
+xr_token qbokeh_quality_token[] = {
+    { "st_opt_off",					0 },
+    { "st_opt_low",					1 },
+    { "st_opt_medium",				2 },
+    { "st_opt_high",				3 },
+    { "st_opt_ultra",				4 },
+    { 0,							0 }
+};
+
 u32			ps_r3_msaa				=	0;			//	=	0;
 xr_token							qmsaa_token							[ ]={
 	{ "st_opt_off",					0												},
@@ -152,13 +162,12 @@ Flags32		ps_r2_ls_flags				= {
 	R2FLAG_SUN
 	| R2FLAG_EXP_DONT_TEST_UNSHADOWED 
 	| R2FLAG_USE_NVSTENCIL | R2FLAG_EXP_SPLIT_SCENE 
-	| R2FLAG_EXP_MT_CALC | R3FLAG_DYN_WET_SURF
+	| R3FLAG_DYN_WET_SURF
 	| R3FLAG_VOLUMETRIC_SMOKE
 	//| R3FLAG_MSAA 
 	//| R3FLAG_MSAA_OPT
 	| R3FLAG_GBUFFER_OPT
 	|R2FLAG_DETAIL_BUMP
-	|R2FLAG_DOF
 	|R2FLAG_SOFT_PARTICLES
 	|R2FLAG_SOFT_WATER
 	|R2FLAG_STEEP_PARALLAX
@@ -176,18 +185,18 @@ Flags32		ps_r2_ls_flags_ext			= {
 
 
 // R2-Only
-float		ps_r2_tonemap_middlegray	= 1.f;
-float		ps_r2_tonemap_adaptation	= 1.f;
-float		ps_r2_tonemap_low_lum		= 0.0001f;
-float		ps_r2_tonemap_amount		= 0.7f;
+float		ps_r2_tonemap_middlegray	= 1.3f;
+float		ps_r2_tonemap_adaptation	= 10.f;
+float		ps_r2_tonemap_low_lum		= 0.5f;
+float		ps_r2_tonemap_amount		= 1.0f;
 float		ps_r2_ls_bloom_kernel_g		= 3.f;
-float		ps_r2_ls_bloom_kernel_b		= .7f;
-float		ps_r2_ls_bloom_speed		= 100.f;
-float		ps_r2_ls_bloom_kernel_scale	= .7f; // gauss
+float		ps_r2_ls_bloom_kernel_b		= 1.0f;
+float		ps_r2_ls_bloom_speed		= 50.f;
+float		ps_r2_ls_bloom_kernel_scale	= .9f; // gauss
 float		ps_r2_ls_dsm_kernel			= .7f;
 float		ps_r2_ls_psm_kernel			= .7f;
 float		ps_r2_ls_ssm_kernel			= .7f;
-float		ps_r2_ls_bloom_threshold	= .00001f;
+float		ps_r2_ls_bloom_threshold	= .03f;
 
 float		ps_r2_df_parallax_h = 0.02f;
 float		ps_r2_df_parallax_range = 75.f;
@@ -481,48 +490,6 @@ public:
 	}
 };
 
-
-class CCC_memory_stats : public IConsole_Command
-{
-public:
-	CCC_memory_stats(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = true; };
-
-	virtual void Execute(LPCSTR args)
-	{
-		u32 m_base = 0;
-		u32 c_base = 0;
-		u32 m_lmaps = 0;
-		u32 c_lmaps = 0;
-
-		dxRenderDeviceRender::Instance().ResourcesGetMemoryUsage(m_base, c_base, m_lmaps, c_lmaps);
-
-		Msg("memory usage mb \t \t video \t managed \t system \n");
-
-		float vb_video = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex][D3DPOOL_DEFAULT] / 1024 / 1024;
-		float vb_managed = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex][D3DPOOL_MANAGED] / 1024 / 1024;
-		float vb_system = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_vertex][D3DPOOL_SYSTEMMEM] / 1024 / 1024;
-		Msg("vertex buffer \t \t %f \t %f \t %f ", vb_video, vb_managed, vb_system);
-
-		float ib_video = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_index][D3DPOOL_DEFAULT] / 1024 / 1024;
-		float ib_managed = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_index][D3DPOOL_MANAGED] / 1024 / 1024;
-		float ib_system = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_index][D3DPOOL_SYSTEMMEM] / 1024 / 1024;
-		Msg("index buffer \t \t %f \t %f \t %f ", ib_video, ib_managed, ib_system);
-
-		float textures_managed = (float)(m_base + m_lmaps) / 1024 / 1024;
-		Msg("textures \t \t %f \t %f \t %f ", 0.f, textures_managed, 0.f);
-
-		float rt_video = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget][D3DPOOL_DEFAULT] / 1024 / 1024;
-		float rt_managed = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget][D3DPOOL_MANAGED] / 1024 / 1024;
-		float rt_system = (float)HW.stats_manager.memory_usage_summary[enum_stats_buffer_type_rtarget][D3DPOOL_SYSTEMMEM] / 1024 / 1024;
-		Msg("R-Targets \t \t %f \t %f \t %f ", rt_video, rt_managed, rt_system);
-
-		Msg("\nTotal \t \t %f \t %f \t %f ", vb_video + ib_video + rt_video,
-			textures_managed + vb_managed + ib_managed + rt_managed,
-			vb_system + ib_system + rt_system);
-	}
-};
-
-
 #include "r__pixel_calculator.h"
 class CCC_BuildSSA : public IConsole_Command
 {
@@ -680,8 +647,15 @@ public:
 	}
 };
 
+class CCC_SunshaftsIntensity : public CCC_Float
+{
+public:
+    CCC_SunshaftsIntensity(LPCSTR N, float* V, float _min, float _max) : CCC_Float(N, V, _min, _max) {}
+    virtual void Save(IWriter*) {}
+};
+
 //	Allow real-time fog config reload
-#if	(RENDER == R_R3) || (RENDER == R_R4)
+#if	(RENDER != R_R2)
 #ifdef	DEBUG
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
@@ -751,10 +725,6 @@ void		xrRender_initconsole	()
 
 	CMD2(CCC_tf_Aniso,	"r__tf_aniso",			&ps_r__tf_Anisotropic		); //	{1..16}
 
-	// R1 (used in RX_rendertarget_phase_PP.cpp)
-	//CMD4(CCC_Float,		"r1_pps_u",				&ps_r1_pps_u,				-1.f,	+1.f	);
-	//CMD4(CCC_Float,		"r1_pps_v",				&ps_r1_pps_v,				-1.f,	+1.f	);
-
 	// R2
 	CMD4(CCC_Float,		"r2_ssa_lod_a",			&ps_r2_ssaLOD_A,			16,		96		);
 	CMD4(CCC_Float,		"r2_ssa_lod_b",			&ps_r2_ssaLOD_B,			32,		64		);
@@ -788,7 +758,6 @@ void		xrRender_initconsole	()
 
 #ifdef DEBUG
 	CMD3(CCC_Mask,		"r2_use_nvdbt",			&ps_r2_ls_flags,			R2FLAG_USE_NVDBT);
-	CMD3(CCC_Mask,		"r2_mt",				&ps_r2_ls_flags,			R2FLAG_EXP_MT_CALC);
 #endif // DEBUG
 
 	CMD3(CCC_Mask,		"r2_sun",				&ps_r2_ls_flags,			R2FLAG_SUN		);
@@ -841,11 +810,12 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r2_ls_depth_bias",		&ps_r2_ls_depth_bias,		-0.5,	+0.5	);
 
 	CMD4(CCC_Float,		"r2_parallax_h",		&ps_r2_df_parallax_h,		.0f,	.5f		);
-//	CMD4(CCC_Float,		"r2_parallax_range",	&ps_r2_df_parallax_range,	5.0f,	175.0f	);
 
 	CMD4(CCC_Float,		"r2_slight_fade",		&ps_r2_slight_fade,			.2f,	1.f		);
 
 	//	Igor: Depth of field
+    CMD3(CCC_Token,     "r2_dof_quality", &ps_r__bokeh_quality, qbokeh_quality_token);
+
 	tw_min.set			(-10000,-10000,0);	tw_max.set	(10000,10000,10000);
 	CMD4( CCC_Dof,		"r2_dof",		&ps_r2_dof, tw_min, tw_max);
 	CMD4( CCC_DofNear,	"r2_dof_near",	&ps_r2_dof.x, tw_min.x, tw_max.x);
@@ -854,10 +824,8 @@ void		xrRender_initconsole	()
 
 	CMD4(CCC_Float,		"r2_dof_kernel",&ps_r2_dof_kernel_size,				.0f,	10.f);
 	CMD4(CCC_Float,		"r2_dof_sky",	&ps_r2_dof_sky,						-10000.f,	10000.f);
-	CMD3(CCC_Mask,		"r2_dof_enable",&ps_r2_ls_flags,	R2FLAG_DOF);
-	
-//	float		ps_r2_dof_near			= 0.f;					// 0.f
-//	float		ps_r2_dof_focus			= 1.4f;					// 1.4f
+
+    CMD4(CCC_SunshaftsIntensity, "r__sunshafts_intensity", &ccSunshaftsIntensity, 0.f, 1.f);
 	
     CMD3(CCC_Token, "r2_sunshafts_mode", &ps_sunshafts_mode, sunshafts_mode_token);
     CMD4(CCC_Float, "r2_ss_sunshafts_length", &ps_r2_ss_sunshafts_length, .2f, 1.5f);
@@ -890,13 +858,9 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r2_soft_water",				&ps_r2_ls_flags,			R2FLAG_SOFT_WATER);
 	CMD3(CCC_Mask,		"r2_soft_particles",			&ps_r2_ls_flags,			R2FLAG_SOFT_PARTICLES);
 
-	//CMD3(CCC_Mask,		"r3_msaa",						&ps_r2_ls_flags,			R3FLAG_MSAA);
 	CMD3(CCC_Token,		"r3_msaa",						&ps_r3_msaa,				qmsaa_token);
-	//CMD3(CCC_Mask,		"r3_msaa_hybrid",				&ps_r2_ls_flags,			R3FLAG_MSAA_HYBRID);
-	//CMD3(CCC_Mask,		"r3_msaa_opt",					&ps_r2_ls_flags,			R3FLAG_MSAA_OPT);
 	CMD3(CCC_Mask,		"r3_gbuffer_opt",				&ps_r2_ls_flags,			R3FLAG_GBUFFER_OPT);
 	CMD3(CCC_Mask,		"r3_use_dx10_1",				&ps_r2_ls_flags,			(u32)R3FLAG_USE_DX10_1);
-	//CMD3(CCC_Mask,		"r3_msaa_alphatest",			&ps_r2_ls_flags,			(u32)R3FLAG_MSAA_ALPHATEST);
 	CMD3(CCC_Token,		"r3_msaa_alphatest",			&ps_r3_msaa_atest,			qmsaa__atest_token);
 	CMD3(CCC_Token,		"r3_minmax_sm",					&ps_r3_minmax_sm,			qminmax_sm_token);
 
@@ -913,13 +877,12 @@ void		xrRender_initconsole	()
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_near",	&ps_r3_dyn_wet_surf_near,	10,	70		);
 	CMD4(CCC_Float,		"r3_dynamic_wet_surfaces_far",	&ps_r3_dyn_wet_surf_far,	30,	100		);
 	CMD4(CCC_Integer,	"r3_dynamic_wet_surfaces_sm_res",&ps_r3_dyn_wet_surf_sm_res,64,	2048	);
-	
+  
 	CMD4(CCC_Integer, "r2_fxaa", &ps_r2_fxaa, 0, 1);
 
 	CMD3(CCC_Mask,			"r3_volumetric_smoke",			&ps_r2_ls_flags,			R3FLAG_VOLUMETRIC_SMOKE);
-	CMD1(CCC_memory_stats,	"render_memory_stats" );
 	
-    CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 49, 250);
+  CMD4(CCC_detail_radius, "r__detail_radius", &ps_r__detail_radius, 49, 250);
 }
 
 void	xrRender_apply_tf		()

@@ -339,8 +339,8 @@ void CDetailManager::UpdateVisibleM()
 
 void CDetailManager::Render	()
 {
-	if (0==dtFS)						return;
-	if (!psDeviceFlags.is(rsDetails))	return;
+	if (0==dtFS || !psDeviceFlags.is(rsDetails))						
+		return;
 
 	// MT
 	MT_SYNC					();

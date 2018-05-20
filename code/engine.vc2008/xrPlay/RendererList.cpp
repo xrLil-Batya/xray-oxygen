@@ -27,7 +27,7 @@ bool SupportsAdvancedRendering()
 
 	IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 	pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
-	pD3D->Release();
+	_RELEASE(pD3D);
 
 	u16 ps_ver_major = u16(u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul)) >> 8);
 
@@ -43,13 +43,14 @@ bool SupportsDX10Rendering()
 
 	HRESULT hr = m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
 
-    pFactory->Release();
-    pFactory = nullptr;
-    m_pAdapter->Release();
-    m_pAdapter = nullptr;
+	//#VERTVER: It's time to stop. It's time to stop, ok? No more.
+	//Don't. Use. nullptr. In. D3D.
+	_RELEASE(pFactory);			// it's not canon method, but OK
+	_RELEASE(m_pAdapter);
 
 	return SUCCEEDED(hr);
 }
+
 
 bool SupportsDX11Rendering()
 {

@@ -1,8 +1,6 @@
 #include "stdafx.h"
 #include "xrserver.h"
-#include "game_sv_single.h"
 #include "xrMessages.h"
-#include "game_cl_single.h"
 #include "MainMenu.h"
 #include "../xrEngine/x_ray.h"
 
@@ -11,12 +9,8 @@
 #include <malloc.h>
 #pragma warning(pop)
 
-xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionData & game_descr)
+xrServer::EConnect xrServer::Connect(shared_str &session_name)
 {
-#ifdef DEBUG
-	Msg						("* sv_Connect: %s",	*session_name);
-#endif
-
 	// Parse options and create game
 	if (!strchr(*session_name,'/'))
 		return				ErrConnect;
@@ -38,54 +32,7 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name, GameDescriptionDa
 	// Options
 	if (0==game)			return ErrConnect;
 	
-    std::memset(&game_descr, 0, sizeof(game_descr));
-	xr_strcpy(game_descr.map_name, game->level_name(session_name.c_str()).c_str());
-	xr_strcpy(game_descr.map_version, game_sv_GameState::parse_level_version(session_name.c_str()).c_str());
-
 	game->Create			(session_name);
 
-	return IPureServer::Connect(*session_name, game_descr);
-}
-
-
-IClient* xrServer::new_client( SClientConnectData* cl_data )
-{
-	IClient* CL		= client_Find_Get( cl_data->clientID );
-	VERIFY( CL );
-	
-	// copy entity
-	CL->ID			= cl_data->clientID;
-	//CL->process_id	= cl_data->process_id;
-	CL->name		= cl_data->name;	//only for offline mode
-	CL->pass._set	( cl_data->pass );
-
-	NET_Packet		P;
-	P.B.count		= 0;
-	P.r_pos			= 0;
-
-	game->AddDelayedEvent( P, GAME_EVENT_CREATE_CLIENT, 0, CL->ID );
-	
-	return CL;
-}
-
-void xrServer::AttachNewClient			(IClient* CL)
-{
-	MSYS_CONFIG	msgConfig;
-	msgConfig.sign1 = 0x12071980;
-	msgConfig.sign2 = 0x26111975;
-
-    SV_Client			= CL;
-	CL->flags.bLocal	= 1;
-	SendTo_LL( SV_Client->ID, &msgConfig, sizeof(msgConfig), net_flags(TRUE,TRUE,TRUE,TRUE) );
-
-	// gen message
-	RequestClientDigest(CL);
-	
-	CL->m_guid[0]=0;
-}
-
-void xrServer::RequestClientDigest(IClient* CL)
-{
-	Check_BuildVersion_Success(CL);
-	return;
+	return IPureServer::Connect(*session_name);
 }

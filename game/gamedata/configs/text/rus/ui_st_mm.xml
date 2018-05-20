@@ -654,4 +654,28 @@
 	<string id="manowar_ssss">
 		<text>Mrmnwar SS</text>
 	</string>
+	<string id="ui_mm_windowtype">
+		<text>Тип окна</text>
+	</string>
+	<string id="windowed">
+		<text>Оконный</text>
+	</string>
+	<string id="windowed_borderless">
+		<text>Оконный (без рамки)</text>
+	</string>
+	<string id="fullscreen">
+		<text>Полноэкранный</text>
+	</string>
+	<string id="fullscreen_borderless">
+		<text>Полноэкранный (без рамки)</text>
+	</string>
+	<string id="ui_st_hardcore_mode">
+		<text>Hardcore mode</text>
+	</string>
+	<string id="ui_st_colored_feel">
+		<text>Цвета имён предметов по классам</text>
+	</string>
+	<string id="ui_st_car_info">
+		<text>Инфо. о текущем транспорте</text>
+	</string>
 </string_table>

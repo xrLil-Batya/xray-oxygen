@@ -13,6 +13,7 @@
 
 game_cl_GameState::game_cl_GameState(): cl_flags(0)
 {
+    m_game_type_name = "";
 	shedule.t_min				= 5;
 	shedule.t_max				= 20;
 	m_game_ui_custom			= nullptr;
@@ -48,7 +49,6 @@ void game_cl_GameState::net_import_GameTime		(NET_Packet& P)
 void game_cl_GameState::net_import_state (NET_Packet& P)
 {
 	// Generic
-	P.r_clientID	(local_svdpnid);
 	P.r_u32			((u32&)m_type);
 	
 	u16 ph;
@@ -73,17 +73,6 @@ void	game_cl_GameState::net_import_update(NET_Packet& P)
 	net_import_GameTime (P);
 }
 
-void	game_cl_GameState::net_signal		(NET_Packet& P)
-{
-}
-
-void game_cl_GameState::OnGameMessage	(NET_Packet& P)
-{
-	VERIFY	(this && &P);
-	u32 msg	;
-	P.r_u32	(msg);
-};
-
 void game_cl_GameState::shedule_Update		(u32 dt)
 {
 	ISheduled::shedule_Update	(dt);
@@ -94,11 +83,6 @@ void game_cl_GameState::shedule_Update		(u32 dt)
 			m_game_ui_custom = CurrentGameUI();
 	} 
 };
-
-void game_cl_GameState::sv_EventSend(NET_Packet& P)
-{
-	Level().Send(P,net_flags(TRUE,TRUE));
-}
 
 bool game_cl_GameState::OnKeyboardPress(int dik)
 {
@@ -120,11 +104,7 @@ void game_cl_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
 
 void game_cl_GameState::u_EventSend(NET_Packet& P)
 {
-	Level().Send(P,net_flags(TRUE,TRUE));
-}
-
-void game_cl_GameState::OnSwitchPhase(u32 old_phase, u32 new_phase)
-{
+	Level().Send(P);
 }
 
 void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)
@@ -138,11 +118,113 @@ void game_cl_GameState::SendPickUpEvent(u16 ID_who, u16 ID_what)
 	u_EventSend		(P);
 };
 
-void game_cl_GameState::set_type_name(LPCSTR)	
-{
-}
-
 void game_cl_GameState::OnConnected()
 {
 	m_game_ui_custom	= CurrentGameUI();
+}
+
+#include "UIGameSP.h"
+#include "actor.h"
+#include "clsid_game.h"
+
+using namespace luabind;
+
+ESingleGameDifficulty g_SingleGameDifficulty = egdStalker;
+
+xr_token	difficulty_type_token[] = {
+	{ "gd_novice",						egdNovice },
+{ "gd_stalker",						egdStalker },
+{ "gd_veteran",						egdVeteran },
+{ "gd_master",						egdMaster },
+{ 0,							0 }
+};
+
+CUIGameCustom* game_cl_GameState::createGameUI()
+{
+	CLASS_ID clsid = CLSID_GAME_UI_SINGLE;
+	CUIGameSP* pUIGame = smart_cast<CUIGameSP*>(NEW_INSTANCE(clsid));
+	R_ASSERT(pUIGame);
+	pUIGame->Load();
+	pUIGame->SetClGame(this);
+	pUIGame->Init(0);
+	pUIGame->Init(1);
+	pUIGame->Init(2);
+	return pUIGame;
+}
+
+void game_cl_GameState::OnDifficultyChanged()
+{
+	Actor()->OnDifficultyChanged();
+}
+
+#include "ai_space.h"
+#include "alife_simulator.h"
+#include "alife_time_manager.h"
+ALife::_TIME_ID game_cl_GameState::GetGameTime()
+{
+	if (ai().get_alife() && ai().alife().initialized())
+		return(ai().alife().time_manager().game_time());
+	else
+		return(inherited::GetGameTime());
+}
+
+ALife::_TIME_ID game_cl_GameState::GetStartGameTime()
+{
+	if (ai().get_alife() && ai().alife().initialized())
+		return(ai().alife().time_manager().start_game_time());
+	else
+		return(inherited::GetStartGameTime());
+}
+
+float game_cl_GameState::GetGameTimeFactor()
+{
+	if (ai().get_alife() && ai().alife().initialized())
+		return(ai().alife().time_manager().time_factor());
+	else
+		return(inherited::GetGameTimeFactor());
+}
+
+void game_cl_GameState::SetGameTimeFactor(const float fTimeFactor)
+{
+	Level().Server->game->SetGameTimeFactor(fTimeFactor);
+}
+
+ALife::_TIME_ID game_cl_GameState::GetEnvironmentGameTime()
+{
+	if (ai().get_alife() && ai().alife().initialized())
+		return	(ai().alife().time_manager().game_time());
+	else
+		return	(inherited::GetEnvironmentGameTime());
+}
+
+float game_cl_GameState::GetEnvironmentGameTimeFactor()
+{
+	if (ai().get_alife() && ai().alife().initialized())
+		return	(ai().alife().time_manager().time_factor());
+	else
+		return	(inherited::GetEnvironmentGameTimeFactor());
+}
+
+void game_cl_GameState::SetEnvironmentGameTimeFactor(const float fTimeFactor)
+{
+	if (ai().get_alife() && ai().alife().initialized())
+		Level().Server->game->SetGameTimeFactor(fTimeFactor);
+	else
+		inherited::SetEnvironmentGameTimeFactor(fTimeFactor);
+}
+
+#pragma optimize("s",on)
+void CScriptGameDifficulty::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<enum_exporter<ESingleGameDifficulty> >("game_difficulty")
+			.enum_("game_difficulty")
+		[
+			value("novice", int(egdNovice)),
+			value("stalker", int(egdStalker)),
+			value("veteran", int(egdVeteran)),
+			value("master", int(egdMaster))
+		]
+		];
 }

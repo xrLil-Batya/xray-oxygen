@@ -17,6 +17,7 @@ TEMPLATE = app
 # deprecated API in order to know how to port your code away from it.
 DEFINES += QT_DEPRECATED_WARNINGS
 
+QMAKE_CXXFLAGS *= /std:c++17
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.
 # You can also select to disable deprecated APIs only up to a certain version of Qt.
@@ -24,22 +25,34 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
         xrMain.cpp \
-        RendererList.cpp \
-        minimal_CPUID.cpp \
-        InitLib.cpp \
-    aboutlauncher.cpp \
-    xrSettings.cpp
+        aboutlauncher.cpp \
+        xrCPUID.cpp \
+        xrD3DList.cpp \
+        xrEntryPoint.cpp \
+        xrFS.cpp \
+        xrSettings.cpp
 
 HEADERS += \
         xrMain.h \
-        minimal_CPUID.h \
-    aboutlauncher.h \
-    xrSettings.h
+        aboutlauncher.h \
+        xrSettings.h \
+        xrCPUID.h \
+        xrException.h \
+        xrFS.h \
+        xrSettings.h
 
 FORMS += \
         xrMain.ui \
         parametersdialog.ui \
-    aboutlauncher.ui \
-    xrSettings.ui
+        aboutlauncher.ui \
+        xrSettings.ui
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/../../../librariesx64/Release/ -lxrCore
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/../../../librariesx64/Debug/ -lxrCore
+
+INCLUDEPATH += $$PWD/../../engine.vc2008/xrCore
+DEPENDPATH += $$PWD/../../engine.vc2008/xrCore
+
+win32:CONFIG(release, debug|release): QMAKE_POST_LINK += $$quote(copy release\xrDevLaunch.exe ..\..\..\binaries\x64\Release\xrDevLaunch.exe $$escape_expand(\n\t))
+else:win32:CONFIG(debug, debug|release): QMAKE_POST_LINK += $$quote(copy debug\xrDevLaunch.exe ..\..\..\binaries\x64\Debug\xrDevLaunch.exe $$escape_expand(\n\t))

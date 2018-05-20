@@ -30,7 +30,9 @@ protected:
 	ESoundTypes		m_eSoundEmptyClick;
 	ESoundTypes		m_eSoundReload;
 	
+	#ifdef NEW_ANIMS_WPN
 	ESoundTypes		m_eSoundReloadEmpty;
+	#endif
 
 	bool			m_sounds_enabled;
 	// General
@@ -49,16 +51,19 @@ protected:
 	
 	virtual void	OnShot			();	
 	
+	// ўелкаем при пустом магазине
 	virtual void	OnEmptyClick	();
 
 	virtual void	OnAnimationEnd	(u32 state);
 	virtual void	OnStateSwitch	(u32 S);
 
+	// ќбновл€ем позицию звуков
 	virtual void	UpdateSounds	();
 
 	bool			TryReload		();
 
 protected:
+	// ѕерезар€дить магазин
 	virtual void	ReloadMagazine();
 			void	ApplySilencerKoeffs();
 			void	ResetSilencerKoeffs();
@@ -81,7 +86,6 @@ public:
 	
 
 	virtual	void	UpdateCL		();
-	virtual BOOL	net_Spawn		(CSE_Abstract* DC);
 	virtual void	net_Destroy		();
 	virtual void	net_Export		(NET_Packet& P);
 	virtual void	net_Import		(NET_Packet& P);
@@ -110,26 +114,35 @@ public:
 	IC		int		GetQueueSize			() const	{return m_iQueueSize;};
 	virtual bool	StopedAfterQueueFired	()			{return m_bStopedAfterQueueFired; }
 	virtual void	StopedAfterQueueFired	(bool value){m_bStopedAfterQueueFired = value; }
+
+	// “екуща€ дисперси€ (в радианах) оружи€ с учетом используемого патрона и недисперсионных пуль
 	virtual float	GetFireDispersion		(float cartridge_k, bool for_crosshair = false);
 
 protected:
 	//максимальный размер очереди, которой можно стрельнуть
 	int				m_iQueueSize;
+
 	//количество реально выстрел€ных патронов
 	int				m_iShotNum;
+
 	//после какого патрона, при непрерывной стрельбе, начинаетс€ отдача (сделано из-за јбакана)
 	int				m_iBaseDispersionedBulletsCount;
+
 	//скорость вылета патронов, на которые не вли€ет отдача (сделано из-за јбакана)
 	float			m_fBaseDispersionedBulletsSpeed;
+
 	//скорость вылета остальных патронов
 	float			m_fOldBulletSpeed;
 	Fvector			m_vStartPos, m_vStartDir;
+
 	//флаг того, что мы остановились после того как выстрел€ли
 	//ровно столько патронов, сколько было задано в m_iQueueSize
 	bool			m_bStopedAfterQueueFired;
+
 	//флаг того, что хот€ бы один выстрел мы должны сделать
 	//(даже если очень быстро нажали на курок и вызвалось FireEnd)
 	bool			m_bFireSingleShot;
+
 	//режимы стрельбы
 	bool			m_bHasDifferentFireModes;
 	xr_vector<s8>	m_aFireModes;

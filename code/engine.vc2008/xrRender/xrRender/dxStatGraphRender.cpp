@@ -179,13 +179,7 @@ void dxStatGraphRender::RenderBack(CStatGraph &owner)
 	{									
 		pv->set				(owner.lt.x,int(base_y-g_y*owner.grid_step.y*elem_factor),owner.grid_color); pv++; 	
 		pv->set				(owner.rb.x,int(base_y-g_y*owner.grid_step.y*elem_factor),owner.grid_color); pv++; 	
-	}    	
-
-
-	//    for (int g_y=1; g_y<=owner.grid.y; g_y++){
-	//	    pv->set				(owner.lt.x,iFloor(g_y*grid_offs_y+owner.lt.y),owner.grid_color); pv++; 	
-	//	    pv->set				(owner.rb.x,iFloor(g_y*grid_offs_y+owner.lt.y),owner.grid_color); pv++; 	
-	//	}
+	}
 
 	dwCount 				= u32(pv-pv_start);
 	RCache.Vertex.Unlock	(dwCount,hGeomLine->vb_stride);

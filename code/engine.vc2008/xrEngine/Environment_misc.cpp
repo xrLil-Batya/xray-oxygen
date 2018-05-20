@@ -10,6 +10,8 @@
 #include "../xrServerEntities/object_broker.h"
 #include "../xrServerEntities/LevelGameDef.h"
 
+ENGINE_API float ccSunshaftsIntensity = 0.f;
+
 void CEnvModifier::load	(IReader* fs, u32 version)
 {
 	use_flags.one					();
@@ -280,7 +282,9 @@ void CEnvDescriptor::load	(CEnvironment& environment, CInifile& config)
 	bolt_period		= (tb_id.size())?config.r_float	(m_identifier,"thunderbolt_period"):0.f;
 	bolt_duration	= (tb_id.size())?config.r_float	(m_identifier,"thunderbolt_duration"):0.f;
 	env_ambient		= config.line_exist(m_identifier,"ambient")?environment.AppendEnvAmb	(config.r_string(m_identifier,"ambient")):0;
-	m_fSunShaftsIntensity = 0.25f;
+	
+    if (config.line_exist(m_identifier.c_str(), "sun_shafts_intensity"))
+        m_fSunShaftsIntensity = config.r_float(m_identifier.c_str(), "sun_shafts_intensity");
 
 	if (config.line_exist(m_identifier,"water_intensity"))
 		m_fWaterIntensity = config.r_float(m_identifier,"water_intensity");
@@ -352,18 +356,28 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	fog_color.lerp			(A.fog_color,B.fog_color,f);
 	if(Mdf.use_flags.test(eFogColor))
 		fog_color.add(Mdf.fog_color).mul(modif_power);
-
+	if (strstr(Core.Params,"-fog_mixer"))
+	fog_density				=	(fi*A.fog_density + f*B.fog_density)*psFogDensity;
+	else
 	fog_density				=	(fi*A.fog_density + f*B.fog_density);
 	if(Mdf.use_flags.test(eFogDensity))
 	{
 		fog_density			+= Mdf.fog_density;
 		fog_density			*= modif_power;
 	}
-
+	if (strstr(Core.Params,"-fog_mixer"))
+	{
+	fog_color.set			(psFogColor);
+	fog_distance			=	(fi*A.fog_distance + f*B.fog_distance)*psFogDistance;
+	fog_near				=	(1.0f - fog_density)*0.85f * fog_distance*psFogNear;
+	fog_far					=	0.99f * fog_distance*psFogFar;
+	}
+	else
+	{
 	fog_distance			=	(fi*A.fog_distance + f*B.fog_distance);
 	fog_near				=	(1.0f - fog_density)*0.85f * fog_distance;
 	fog_far					=	0.99f * fog_distance;
-	
+	}
 	rain_density			=	fi*A.rain_density + f*B.rain_density;
 	rain_color.lerp			(A.rain_color,B.rain_color,f);
 	bolt_period				=	fi*A.bolt_period + f*B.bolt_period;
@@ -372,7 +386,11 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	wind_velocity			=	fi*A.wind_velocity + f*B.wind_velocity;
 	wind_direction			=	fi*A.wind_direction + f*B.wind_direction;
 
-	m_fSunShaftsIntensity	=	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
+    if (ccSunshaftsIntensity > 0.f)
+        m_fSunShaftsIntensity = ccSunshaftsIntensity;
+    else
+	    m_fSunShaftsIntensity =	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
+
 	m_fWaterIntensity		=	fi*A.m_fWaterIntensity + f*B.m_fWaterIntensity;
 	m_fTreeAmplitudeIntensity = fi*A.m_fTreeAmplitudeIntensity + f*B.m_fTreeAmplitudeIntensity;
     m_fDropletsIntensity	=	fi*A.m_fDropletsIntensity + f*B.m_fDropletsIntensity;

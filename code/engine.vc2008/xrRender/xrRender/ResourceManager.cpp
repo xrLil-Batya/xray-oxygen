@@ -205,9 +205,11 @@ Shader*	CResourceManager::_cpp_Create	(IBlender* B, LPCSTR s_shader, LPCSTR s_te
 	}
 
 	// Search equal in shaders array
-	for (u32 it=0; it<v_shaders.size(); it++)
-		if (S.equal(v_shaders[it]))	return v_shaders[it];
-
+	for (Shader* it : v_shaders)
+	{
+		if (S.equal(it)) 
+			return it;
+	}
 	// Create _new_ entry
 	Shader*		N			=	xr_new<Shader>(S);
 	N->dwFlags				|=	xr_resource_flagged::RF_REGISTERED;
@@ -267,8 +269,7 @@ void CResourceManager::Delete(const Shader* S)
 
 void TextureLoading(LPVOID texture)
 {
-	CTexture* tex = (CTexture*)texture;
-	tex->Load();
+	((CTexture*)texture)->Load();
 }
 
 void CResourceManager::DeferredUpload()
@@ -283,8 +284,8 @@ void CResourceManager::DeferredUpload()
 		if (m_textures.size() <= 100)
 		{
 			Msg("CResourceManager::DeferredUpload -> one thread");
-			for (auto t = m_textures.begin(); t != m_textures.end(); t++)
-				t->second->Load();
+			for (auto &t : m_textures)
+				t.second->Load();
 		}
 		else
 		{
@@ -297,46 +298,6 @@ void CResourceManager::DeferredUpload()
 		}
 	
 		Msg("texture loading time: %d", timer.GetElapsed_ms());
-	}
-}
-
-void CResourceManager::_GetMemoryUsage(u32& m_base, u32& c_base, u32& m_lmaps, u32& c_lmaps)
-{
-	m_base=c_base=m_lmaps=c_lmaps=0;
-
-	map_Texture::iterator I = m_textures.begin	();
-	map_Texture::iterator E = m_textures.end	();
-	for (; I!=E; I++)
-	{
-		u32 m = I->second->flags.MemoryUsage;
-		if (strstr(I->first,"lmap"))
-		{
-			c_lmaps	++;
-			m_lmaps	+= m;
-		} else {
-			c_base	++;
-			m_base	+= m;
-		}
-	}
-}
-void CResourceManager::_DumpMemoryUsage()
-{
-	xr_multimap<u32,std::pair<u32,shared_str>> mtex;
-
-	// sort
-	{
-		for (auto it : m_textures)
-		{
-			u32			m = it.second->flags.MemoryUsage;
-			shared_str	n = it.second->cName;
-			mtex.insert (std::make_pair(m, std::make_pair(it.second->dwReference,n) ));
-		}
-	}
-
-	// dump
-	{
-		for (auto it : mtex)
-			Msg("* %4.1f : [%4d] %s",float(it.first)/1024.f, it.second.first, it.second.second.c_str());
 	}
 }
 

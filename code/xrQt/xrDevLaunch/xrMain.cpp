@@ -2,7 +2,7 @@
 * VERTVER, 2018 (C)
 * X-RAY OXYGEN 1.7 PROJECT
 *
-* Edited: 30 April, 2018
+* Edited: 10 May, 2018
 * xrMain.cpp - Main source file for compilation with Qt
 * xrLaunch
 *************************************************/
@@ -11,13 +11,13 @@
 #ifdef __cplusplus
 #pragma comment(lib, "xrEngine.lib")
 /////////////////////////////////////////
-xrString		params;
-xrString		string_accept;
-xrString		params_list;
-xrString		params_line;
-xrString		params_string;
-xrString		params_settings;
-xrString		params_box;
+xrString		szParams;
+xrString		szStringAccept;
+xrString		szParamsList;
+xrString		szParamsLine;
+xrString		szParamsString;
+xrString		szParamsSettings;
+xrString		szParamsBox;
 FileSystem		fss;
 /////////////////////////////////////////
 void CreateRendererList			();
@@ -35,6 +35,14 @@ xrLaunch::xrLaunch				(QWidget *parent)
 {
 	ui->setupUi(this);
 	init_xrCore();
+	if (CPUID::AMD() | CPUID::AMDelse())
+	{
+		Msg("xrDev: CPU Vendor: AMD");
+	}
+	else
+	{
+		Msg("xrDev: CPU Vendor: Intel");
+	}
 	if (!CPUID::SSE3())
 	{
 		Msg								("xrDev: unsupported instructions: SSE3, SSE4.1, AVX");
@@ -135,9 +143,9 @@ void xrLaunch::add_paramsToList()
 
 	try
 	{
-		xrQString list_settings			= ui->listWidget_2->currentItem()->text();
-		params_settings					= list_settings.toLocal8Bit();
-		if (params_settings.empty()) 
+		xrQString qszListSettings			= ui->listWidget_2->currentItem()->text();
+		szParamsSettings					= qszListSettings.toLocal8Bit();
+		if (szParamsSettings.empty())
 		{
 			throw new EcxeptionOpSet		("std::string can't be nullptr",
 											OpSet::STRING_NULLPTR);
@@ -146,17 +154,17 @@ void xrLaunch::add_paramsToList()
 	}
 	catch							(const EcxeptionOpSet& ex)
 	{
-		xrConstChar opset_string;
+		xrConstChar lcOpset;
 		switch (ex.opset())
 		{
 			case OpSet::STRING_NULLPTR:
-				opset_string				= "string_nullptr";
+				lcOpset				= "string_nullptr";
 				break;
 			default:
-				opset_string				= "default";
+				lcOpset = "default";
 				break;
 		}
-			statusBar()->showMessage		(tr(ex.what(), opset_string));
+			statusBar()->showMessage		(tr(ex.what(), lcOpset));
 	}
 	catch (...)
 	{
@@ -192,9 +200,9 @@ void xrLaunch::add_stringToList()
 { 
 	try 
 	{
-		xrQString list_string			= ui->listWidget->currentItem()->text();
-		params_string					= list_string.toLocal8Bit();	//#VERTVER: Don't use here toLatin1(). Crash on Release
-		if (params_string.empty()) 
+		xrQString qszString				= ui->listWidget->currentItem()->text();
+		szParamsString					= qszString.toLocal8Bit();	//#VERTVER: Don't use here toLatin1(). Crash on Release
+		if (szParamsString.empty())
 		{
 			throw new EcxeptionOpSet	("std::string can't be nullptr",
 										OpSet::STRING_NULLPTR);
@@ -203,17 +211,17 @@ void xrLaunch::add_stringToList()
 	}
 	catch (const EcxeptionOpSet& ex)
 	{
-		xrConstChar opset_string;
+		xrConstChar lcOpset;
 		switch (ex.opset())
 		{
 			case OpSet::STRING_NULLPTR:
-				opset_string				= "string_nullptr";
+				lcOpset				= "string_nullptr";
 				break;
 			default:
-				opset_string				= "default";
+				lcOpset				= "default";
 				break;
 		}
-		statusBar()->showMessage		(tr(ex.what(), opset_string));
+		statusBar()->showMessage		(tr(ex.what(), lcOpset));
 
 	}
 	catch (...)
@@ -235,22 +243,22 @@ clean the buffers of params
 ************************************************/
 void xrLaunch::clean_buffers()
 {
-	if (!params_settings.empty() && !params_string.empty())
+	if (!szParamsSettings.empty() && !szParamsString.empty())
 	{
-		params_settings.clear			();
-		params_string.clear				();
+		szParamsSettings.clear			();
+		szParamsString.clear			();
 		statusBar()->showMessage		(tr("The string buffers were cleaned"), 2000);
 		Msg								("xrDev: The string buffers were cleaned");
 	}
-	else if (!params_settings.empty())
+	else if (!szParamsSettings.empty())
 	{ 
-		params_settings.clear			();
+		szParamsSettings.clear			();
 		statusBar()->showMessage		(tr("The string buffer was cleaned"), 2000);
 		Msg								("xrDev: The string buffer was cleaned");
 	}
-	else if (!params_string.empty())
+	else if (!szParamsString.empty())
 	{ 
-		params_string.clear				();
+		szParamsString.clear			();
 		statusBar()->showMessage		(tr("The string buffer was cleaned"), 2000);
 		Msg								("xrDev: The string buffer was cleaned");
 	}
@@ -326,18 +334,18 @@ void xrLaunch::run_xrEngine()
 			throw new EcxeptionOpSet		("Your CPU doesn't support SSE3 instructions", OpSet::SSE3);
 		}
 		QString rendered_line			= ui->lineEdit->text();
-		params_line						= rendered_line.toLocal8Bit();
+		szParamsLine					= rendered_line.toLocal8Bit();
 #ifdef DEBUG_LAUNCHER
-		xrConstChar c1					= params_line.c_str();
-		xrConstChar c2					= params_settings.c_str();
-		xrConstChar c3					= params_string.c_str();
-		xrConstChar c4					= params.c_str();
+		xrConstChar c1					= szParamsLine.c_str();
+		xrConstChar c2					= szParamsSettings.c_str();
+		xrConstChar c3					= szParamsString.c_str();
+		xrConstChar c4					= szParams.c_str();
 		MessageBox						(NULL, c1, "params_line",		MB_OK | MB_ICONINFORMATION);
 		MessageBox						(NULL, c2, "params_settings",	MB_OK | MB_ICONINFORMATION);
 		MessageBox						(NULL, c3, "params_string",		MB_OK | MB_ICONINFORMATION);
 		MessageBox						(NULL, c4, "params_string",		MB_OK | MB_ICONINFORMATION);
 #endif
-		params							= params_string + " " + params_line + " " + params_settings + " " + params_box;
+		szParams						= szParamsString + " " + szParamsLine + " " + szParamsSettings + " " + szParamsBox;
 		init_xrCore						();
 		ui->progressBar->setValue		(33);
 		Msg								("xrDev: Creating render list...");
@@ -347,7 +355,7 @@ void xrLaunch::run_xrEngine()
 		Msg								("xrDev: Loading xrEngine...");
 		statusBar()->showMessage		(tr("Loading xrEngine..."), 4000);
 		ui->progressBar->setValue		(100);
-		RunApplication					(params.data());
+		RunApplication					(szParams.data());
 #ifndef NOAWDA
 		QMessageBox::information		(this, "Awda", "Awda");
 #endif
@@ -480,7 +488,7 @@ if pressed "Accept"
 void xrDialogParam::on_buttonBox_accepted()
 {
 	xrQString Qparams				= uiDialog->lineEdit->text();
-	params_box						= Qparams.toLocal8Bit();
+	szParamsBox						= Qparams.toLocal8Bit();
 }
 
 
@@ -500,10 +508,10 @@ launch without params
 void xrLaunch::on_actionxrEngine_2_triggered()
 {
     /////////////////////////////////////////
-    params_string					= " ";
-    params_line.clear				();
-    params_settings.clear			();
-    params_box.clear				();
+    szParamsSettings				= " ";
+	szParamsLine.clear				();
+	szParamsSettings.clear			();
+	szParamsBox.clear				();
     /////////////////////////////////////////
     run_xrEngine					();
 }

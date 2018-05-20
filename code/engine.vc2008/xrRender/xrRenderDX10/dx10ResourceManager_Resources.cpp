@@ -21,7 +21,7 @@
 
 #include "../xrRender/ShaderResourceTraits.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 #ifdef USE_DX11
 	SHS*	CResourceManager::_CreateHS			(LPCSTR Name)

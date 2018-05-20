@@ -120,6 +120,7 @@
 #	include "simpledetector.h"
 #	include "elitedetector.h"
 #	include "advanceddetector.h"
+#	include "Dosimeter.h"
 #	include "zonecampfire.h"
 
 #	include "torch.h"
@@ -135,8 +136,8 @@
 #	include "PhysicsSkeletonObject.h"
 #	include "DestroyablePhysicsObject.h"
 
-#	include "game_sv_single.h"
-#	include "game_cl_single.h"
+#	include "game_sv_base.h"
+#	include "game_cl_base.h"
 
 #	include "UIGameSP.h"
 #	include	"climableobject.h"
@@ -162,9 +163,9 @@ void CObjectFactory::register_classes	()
 	add<CHUDManager>											(CLSID_HUDMANAGER				,"hud_manager");
 	//Server Game type
 	
-	add<game_sv_Single>											(CLSID_SV_GAME_SINGLE			,"game_sv_single");
+	add<game_sv_GameState>										(CLSID_SV_GAME_SINGLE			,"game_sv_single");
 	//Client Game type
-	add<game_cl_Single>											(CLSID_CL_GAME_SINGLE			,"game_cl_single");
+	add<game_cl_GameState>										(CLSID_CL_GAME_SINGLE			,"game_cl_single");
 	add<CUIGameSP>												(CLSID_GAME_UI_SINGLE			,"game_ui_single");
 #else // NO_XR_GAME
 	ADD(CActor					,CSE_ALifeCreatureActor			,CLSID_OBJECT_ACTOR				,"actor");
@@ -296,6 +297,7 @@ void CObjectFactory::register_classes	()
 	ADD(CAdvancedDetector		,CSE_ALifeItemDetector			,CLSID_DETECTOR_ADVANCED		,"device_detector_advanced");
 	ADD(CEliteDetector			,CSE_ALifeItemDetector			,CLSID_DETECTOR_ELITE			,"device_detector_elite");
 	ADD(CScientificDetector		,CSE_ALifeItemDetector			,CLSID_DETECTOR_SCIENTIFIC		,"device_detector_scientific");
+	ADD(CDosimeter              ,CSE_ALifeItem                  ,CLSID_DEVICE_DOSIMETER         ,"device_dosimeter");
 
 	// Devices
 	ADD(CTorch					,CSE_ALifeItemTorch				,CLSID_DEVICE_TORCH				,"device_torch");

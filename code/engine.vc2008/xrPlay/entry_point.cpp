@@ -1,7 +1,7 @@
 ////////////////////////////////////////
 // OXYGEN TEAM, 2018 (C) * X-RAY OXYGEN	
-// entry_point.cpp - methods for init.
-// Edited: 30 March, 2018						
+// entry_point.cpp - entry point of xrPlay
+// Edited: 13 May, 2018						
 ////////////////////////////////////////
 #include <string>
 #include <intrin.h>  
@@ -30,7 +30,7 @@ int RunXRLauncher()
 
 
 /// <summary>
-/// Return the list of parametres
+/// Return the list of parameters
 /// </summary>
 const char* GetParams()
 {
@@ -41,15 +41,17 @@ const char* GetParams()
 /// <summary>
 /// Dll import
 /// </summary>
-DLL_API int RunApplication(char* commandLine);
+DLL_API int RunApplication(LPCSTR commandLine);
 
 
 /// <summary>
 /// Main method for initialize xrEngine
 /// </summary>
-int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-	std::string params = lpCmdLine;
+	////////////////////////////////////////////////////
+	LPCSTR params = lpCmdLine;
+	////////////////////////////////////////////////////
 	try
 	{
 		// Init X-ray core
@@ -61,13 +63,13 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
 	}
 
-	const bool launch = strstr(lpCmdLine, "-launcher");
-
 	////////////////////////////////////////////////////
-	// If we don't needy for a excetions - we can 
+	// If we don't needy for a exceptions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
-	if (!strstr(lpCmdLine, "-silent") && !launch)
+
+#ifndef DEBUG
+	if (!strstr(lpCmdLine, "-silent") && !strstr(lpCmdLine, "-launcher"))
 	{
 		// Checking for SSE2
 		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
@@ -75,7 +77,7 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 			return 0;
 		}
 		// Checking for SSE3
-		if (!CPU::Info.hasFeature(CPUFeature::SSE3))
+		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
 			MessageBox(NULL,
 				"It's can affect on the stability of the game.",
@@ -84,6 +86,7 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
+#ifndef RELEASE_IA32
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
 			MessageBox(NULL,
@@ -91,10 +94,12 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 				"AVX isn't supported on your CPU!",
 				MB_OK | MB_ICONWARNING);
 		}
+#endif
 	}
+#endif
 
 	// If we want to start launcher
-	if (launch)
+	if (strstr(lpCmdLine, "-launcher"))
 	{
 		const int l_res = RunXRLauncher();
 		switch (l_res)
@@ -106,6 +111,6 @@ int WINAPI WinMain(HINSTANCE hInsttance, HINSTANCE hPrevInstance, char* lpCmdLin
 	}
 
 	CreateRendererList();
-	RunApplication(params.data());
+	RunApplication(params);
 	return 0;
 }

@@ -83,7 +83,6 @@ public:
 #endif // #ifdef DEBUG
 			void				setup_callbacks				();
 			void				load_common_scripts			();
-			bool				load_file					(LPCSTR	caScriptName, LPCSTR namespace_name);
 	IC		CScriptProcess		*script_process				(const EScriptProcessors &process_id) const;
 	IC		void				add_script_process			(const EScriptProcessors &process_id, CScriptProcess *script_process);
 			void				remove_script_process		(const EScriptProcessors &process_id);

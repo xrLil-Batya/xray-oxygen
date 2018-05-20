@@ -25,18 +25,15 @@ class	CLevelDebug;
 class	CLevelSoundManager;
 class	CGameTaskManager;
 class	CZoneList;
-class	demo_info;
 class	CDebugRenderer;
-class 	message_filter;
 
 extern float g_fov;
 
 class CBulletManager;
 class CMapManager;
 
-class CLevel					: public IGame_Level, public IPureClient
+class CLevel : public IGame_Level, public IPureClient
 {
-	#include "Level_network_Demo.h"
 	void						ClearAllObjects			();
 private:
 #ifdef DEBUG
@@ -82,13 +79,11 @@ public:
 	////////////// network ////////////////////////
 	u32							GetInterpolationSteps	();
     static bool					InterpolationDisabled	();
-	void						ReculcInterpolationSteps() const;
 	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
 	void						SetNumCrSteps			( u32 NumSteps );
 	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
-	virtual void				OnConnectRejected		();
 			bool				PostponedSpawn			(u16 id);
 private:
 	BOOL						m_bNeed_CrPr;
@@ -114,17 +109,6 @@ private:
 	
 	void						make_NetCorrectionPrediction();
 
-	u32							m_dwDeltaUpdate;
-	u32							m_dwLastNetUpdateTime;
-	void						UpdateDeltaUpd			( u32 LastTime );
-
-	bool						Connect2Server					(const char* options);
-private:
-	bool						m_bConnectResultReceived;
-	bool						m_bConnectResult;
-	xr_string					m_sConnectResult;
-public:	
-	void						OnConnectResult			(NET_Packet* P);
 public:
 	//////////////////////////////////////////////	
 	// static particles
@@ -152,9 +136,8 @@ public:
 
 protected:
 	BOOL						net_start_result_total;
-	BOOL						connected_to_server;
 	BOOL						deny_m_spawn;		//only for debug...
-	BOOL						sended_request_connection_data;
+    bool sended_request_connection_data;
 		
 	void						MakeReconnect();
 	
@@ -165,7 +148,6 @@ protected:
 	bool	xr_stdcall			net_start1				();
 	bool	xr_stdcall			net_start2				();
 	bool	xr_stdcall			net_start4				();
-	bool	xr_stdcall			net_start5				();
 	bool	xr_stdcall			net_start6				();
 
 	bool	xr_stdcall			net_start_client1				();
@@ -174,20 +156,14 @@ protected:
 	bool	xr_stdcall			net_start_client4				();
 	bool	xr_stdcall			net_start_client5				();
 	bool	xr_stdcall			net_start_client6				();
-
-	void						CalculateLevelCrc32		();
 public:
-	bool						IsChecksumsEqual		(u32 check_sum) const;
 
 	// sounds
 	xr_vector<ref_sound*>		static_Sounds;
 
 	// Starting/Loading
 	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client);
-	virtual void				net_Load				( LPCSTR name );
-	virtual void				net_Save				( LPCSTR name );
 	virtual void				net_Stop				( );
-	virtual BOOL				net_Start_client		( LPCSTR name );
 	virtual void				net_Update				( );
 
 
@@ -199,9 +175,6 @@ public:
 	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
 	virtual void	_BCL		OnFrame					( void );
 	virtual void				OnRender				( );
-
-	virtual	shared_str			OpenDemoFile			(LPCSTR demo_file_name);
-	virtual void				net_StartPlayDemo		() {} ;
 	
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
 	void						cl_Process_Spawn		(NET_Packet& P);
@@ -226,7 +199,7 @@ public:
 	void						ClientSend				(bool bForce = false);
 	void						ClientSave				();
 			u32					Objects_net_Save		(NET_Packet* _Packet, u32 start, u32 count);
-	virtual	void				Send					(NET_Packet& P, u32 dwFlags=DPNSEND_GUARANTEED, u32 dwTimeout=0);
+	virtual	void				Send					(NET_Packet& P);
 	
 	void						g_cl_Spawn				(LPCSTR name, u8 rp, u16 flags, Fvector pos);	// only ask server
 	void						g_sv_Spawn				(CSE_Abstract* E);					// server reply/command spawning

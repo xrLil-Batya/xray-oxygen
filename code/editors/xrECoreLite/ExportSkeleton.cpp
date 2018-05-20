@@ -1132,7 +1132,7 @@ bool CExportSkeleton::ExportMotionDefs(IWriter& F)
 			// verify
 			if (!motion->m_Flags.is(esmFX))
 			{
-				if (!((motion->m_BoneOrPart == BI_NONE) || (motion->m_BoneOrPart < (int)bp_lst.size()))
+				if (!((motion->m_BoneOrPart == BI_NONE) || (motion->m_BoneOrPart < (int)bp_lst.size())))
 				{
 					Msg("! Invalid Bone Part of motion: '%s'.", motion->Name());
 					bRes = false;

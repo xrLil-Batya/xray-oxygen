@@ -14,10 +14,11 @@
 #ifdef __cplusplus
 /////////////////////////////////////////
 QSettings qs("OxyTeam", "xrDevLaunch");
-_TCHAR szPath[] = _T("Software\\xrDevLaunch\\");
-_TCHAR szBuf[MAX_PATH];
+char szPath[] = "Software\\xrDevLaunch\\";
+char szBuf[MAX_PATH];
 DWORD dwBufLen = MAX_PATH;
 HKEY hKey;
+static HANDLE hMutex;
 /////////////////////////////////////////
 
 
@@ -62,8 +63,8 @@ void FileSystem::setValueSetting(LPCSTR szPath, int value)
 }
 
 
-void FileSystem::createReg	(_TCHAR szString[],
-							 _TCHAR szValue[])
+void FileSystem::createReg	(char szString[],
+							 char szValue[])
 {
 	/////////////////////////////////////////
 	//#VERTVER: for validating regedit 
@@ -71,54 +72,65 @@ void FileSystem::createReg	(_TCHAR szString[],
 	//key. That's not fastest method, but
 	//more safety.
 	/////////////////////////////////////////
-	_tsetlocale				(LC_ALL, _T( "English" ));
+	setlocale				(LC_ALL,  "English" );
+	hMutex					= CreateMutexA(NULL, 0, "cReg");
+	if (!hMutex)
+		MessageBoxA(NULL, "ERROR (FileSystem::createReg)", "ERROR", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	if (RegCreateKeyEx(HKEY_LOCAL_MACHINE, szPath, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
-		MessageBox(NULL, "1","All methods are ready!", MB_OK | MB_ICONINFORMATION);
-	if (RegSetValueEx(hKey, _T(szString), 0, REG_SZ, (BYTE*)szValue, sizeof(szValue)) != ERROR_SUCCESS) 
-		MessageBox(NULL, "2", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
+	if (RegCreateKeyExA(HKEY_LOCAL_MACHINE, szPath, 0, NULL, REG_OPTION_VOLATILE, KEY_WRITE, NULL, &hKey, NULL) != ERROR_SUCCESS)
+		MessageBoxA(NULL, "1","All methods are ready!", MB_OK | MB_ICONINFORMATION);
+	if (RegSetValueExA(hKey, szString, 0, REG_SZ, (BYTE*)szValue, sizeof(szValue)) != ERROR_SUCCESS) 
+		MessageBoxA(NULL, "2", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 	if (RegCloseKey(hKey) != ERROR_SUCCESS) 
-		MessageBox(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
+		MessageBoxA(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
-		MessageBox(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
+	if (RegGetValueA(HKEY_LOCAL_MACHINE, szPath, szString, RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
+		MessageBoxA(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	LPCSTR szStringSTD = szBuf;
+	CloseHandle(hMutex);
+	//LPCSTR szStringSTD = szBuf;
 #ifdef LAUNCHER_DEBUG
 	MessageBox(NULL, szStringSTD, "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 #endif
 }
 
 
-void FileSystem::openReg	(_TCHAR szString[])
+void FileSystem::openReg	(char szString[])
 {
-	_tsetlocale				(LC_ALL, _T( "English" ));
+	setlocale				(LC_ALL,  "English" );
+	hMutex					= CreateMutexA(NULL, 0, "oReg");
+	if (!hMutex)
+		MessageBoxA(NULL, "ERROR (FileSystem::openReg)", "ERROR", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
-		MessageBox(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
+	if (RegGetValueA(HKEY_LOCAL_MACHINE, szPath, szString, RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
+		MessageBoxA(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	LPCSTR szStringSTD = szBuf;
+	CloseHandle(hMutex);
+	//LPCSTR szStringSTD = szBuf;
 #ifdef LAUNCHER_DEBUG
 	MessageBox(NULL, szStringSTD, "2", MB_OK | MB_ICONINFORMATION);
 #endif
 }
 
 
-void FileSystem::writeReg	(_TCHAR szString[],
-							 _TCHAR szValue[])
+void FileSystem::writeReg	(char szString[],
+							 char szValue[])
 {
-	_tsetlocale				(LC_ALL, _T( "English" ));
+	setlocale				(LC_ALL,  "English" );
+	hMutex					= CreateMutexA(NULL, 0, "wReg");
+	if (!hMutex)
+		MessageBoxA(NULL, "ERROR (FileSystem::writeReg)", "ERROR", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	if (RegGetValue(HKEY_LOCAL_MACHINE, szPath, _T(szString), RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
-		MessageBox(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
+	if (RegGetValueA(HKEY_LOCAL_MACHINE, szPath, szString, RRF_RT_REG_SZ, NULL, (BYTE*)szBuf, &dwBufLen) != ERROR_SUCCESS)
+		MessageBoxA(NULL, "2", "2", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
-	if (RegSetValueEx(hKey, _T(szString), 0, REG_SZ, (BYTE*)szValue, sizeof(szValue)) != ERROR_SUCCESS) 
-		MessageBox(NULL, "2", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
+	if (RegSetValueExA(hKey, szString, 0, REG_SZ, (BYTE*)szValue, sizeof(szValue)) != ERROR_SUCCESS) 
+		MessageBoxA(NULL, "2", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 	/////////////////////////////////////////
 	if (RegCloseKey(hKey) != ERROR_SUCCESS) 
-		MessageBox(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
-
-	LPCSTR szStringSTD = szBuf;
+		MessageBoxA(NULL, "3", "All methods are ready!", MB_OK | MB_ICONINFORMATION);
+	CloseHandle(hMutex);
+	//LPCSTR szStringSTD = szBuf;
 #ifdef LAUNCHER_DEBUG
 	MessageBox(NULL, szBuf, "All methods are ready!", MB_OK | MB_ICONINFORMATION);
 #endif

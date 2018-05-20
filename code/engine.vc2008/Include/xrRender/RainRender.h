@@ -1,9 +1,6 @@
-#ifndef RainRender_included
-#define RainRender_included
 #pragma once
 
 class CEffect_Rain;
-//struct Fsphere;
 
 #include "../../xrCore/_sphere.h"
 
@@ -17,5 +14,3 @@ public:
 
 	virtual const Fsphere& GetDropBounds() const = 0;
 };
-
-#endif	//	RainRender_included

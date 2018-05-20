@@ -11,45 +11,17 @@
 #include "ai_space.h"
 #include "saved_game_wrapper.h"
 #include "level_graph.h"
-#include "message_filter.h"
 #include "../xrphysics/iphworld.h"
 #include "GamePersistent.h"
-
-extern LPCSTR map_ver_string;
-LPSTR remove_version_option(LPCSTR opt_str, LPSTR new_opt_str, u32 new_opt_str_size)
-{
-	LPCSTR temp_substr = strstr(opt_str, map_ver_string);
-	if (!temp_substr)
-	{
-		xr_strcpy(new_opt_str, new_opt_str_size, opt_str);
-		return new_opt_str;
-	}
-	strncpy_s(new_opt_str, new_opt_str_size, opt_str, static_cast<size_t>(temp_substr - opt_str - 1));
-	temp_substr = strchr(temp_substr, '/');
-	if (!temp_substr)
-		return new_opt_str;
-
-	xr_strcat(new_opt_str, new_opt_str_size, temp_substr);
-	return new_opt_str;
-}
 
 void CLevel::ClientReceive()
 {
 	m_dwRPC = 0;
 	m_dwRPS = 0;
-	
-	if (IsDemoPlayStarted())
-	{
-		SimulateServerUpdate();
-	}
 
 	StartProcessQueue();
 	for (NET_Packet* P = net_msg_Retreive(); P; P=net_msg_Retreive())
 	{
-		if (IsDemoSaveStarted())
-		{
-			SavePacket(*P);
-		}
 		//-----------------------------------------------------
 		m_dwRPC++;
 		m_dwRPS += (u32)P->B.count;
@@ -64,8 +36,7 @@ void CLevel::ClientReceive()
 				{
 					Msg ("! Unconventional M_SPAWN received : map_data[%s] | bReady[%s] | deny_m_spawn[%s]",
 						(map_data.m_map_sync_received) ? "true" : "false",
-						(bReady) ? "true" : "false",
-						deny_m_spawn ? "true" : "false");
+						(bReady) ? "true" : "false", deny_m_spawn ? "true" : "false");
 					break;
 				}
 				game_events->insert		(*P);
@@ -93,24 +64,6 @@ void CLevel::ClientReceive()
 			{
 				game->net_import_update	(*P);
 			}break;
-		case M_UPDATE_OBJECTS:
-			{
-				Objects.net_Import		(P);
-
-				IClientStatistic pStat = Level().GetStatistic();
-				u32 dTime = 0;
-				
-				if ((Level().timeServer() + pStat.getPing()) < P->timeReceive)
-				{
-					dTime = pStat.getPing();
-				}
-				else
-					dTime = Level().timeServer() - P->timeReceive + pStat.getPing();
-
-				u32 NumSteps = physics_world()->CalcNumSteps(dTime);
-				SetNumCrSteps(NumSteps);
-			}break;
-		//---------------------------------------------------
 		case M_SV_CONFIG_NEW_CLIENT:
 			InitializeClientGame	(*P);
 			break;
@@ -144,17 +97,6 @@ void CLevel::ClientReceive()
 		case M_SAVE_GAME:
 			{
 				ClientSave			();
-			}break;
-		case M_CLIENT_CONNECT_RESULT:
-			{
-				OnConnectResult(P);
-			}break;
-		case M_SV_MAP_NAME:
-			{
-				map_data.ReceiveServerMapSync(*P);
-			}break;
-		case M_BULLET_CHECK_RESPOND:
-			{
 			}break;
 		}
 		net_msg_Release();

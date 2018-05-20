@@ -24,7 +24,7 @@
 //---------------------------------------------------------------------
 ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
-ENGINE_API bool isGraphicDebugging; //#GIPERION: Graphic debugging
+ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 #ifdef SPAWN_ANTIFREEZE
 ENGINE_API bool g_bootComplete = false;
 #endif
@@ -154,14 +154,14 @@ void execUserScript				( )
 
 void slowdownthread	( void* )
 {
-//	Sleep		(30*1000);
-	for (;;)	{
-		if (Device.Statistic->fFPS<30) Sleep(1);
-		if (Device.mt_bMustExit)	return;
-		if (0==pSettings)			return;
-		if (0==Console)				return;
-		if (0==pInput)				return;
-		if (0==pApp)				return;
+	for (;;)
+	{
+		if (Device.Statistic->fFPS < 30)	Sleep(1);
+		if (Device.mt_bMustExit)		return;
+		if (!pSettings)				return;
+		if (!Console)					return;
+		if (!pInput)					return;
+		if (!pApp)					return;
 	}
 }
 void CheckPrivilegySlowdown		( )
@@ -208,48 +208,48 @@ void Startup()
 			param);
 		Console->Execute(buf);
 	}
-
+	/////////////////////////////////////////////
 	// Initialize APP
-//#ifndef DEDICATED_SERVER
-	ShowWindow( Device.m_hWnd , SW_SHOWNORMAL );
-	Device.Create				( );
-//#endif
-	LALib.OnCreate				( );
+	ShowWindow(Device.m_hWnd, SW_SHOWNORMAL);
+	/////////////////////////////////////////////
+	Device.Create				();
+	LALib.OnCreate				();
 	pApp						= xr_new<CApplication>	();
-	g_pGamePersistent			= (IGame_Persistent*)	NEW_INSTANCE (CLSID_GAME_PERSISTANT);
+	g_pGamePersistent			= (IGame_Persistent*) NEW_INSTANCE (CLSID_GAME_PERSISTANT);
 	g_SpatialSpace				= xr_new<ISpatial_DB>	();
 	g_SpatialSpacePhysic		= xr_new<ISpatial_DB>	();
-	
+	/////////////////////////////////////////////
 	// Destroy LOGO
-	DestroyWindow				(logoWindow);
-	logoWindow					= NULL;
-
+	if (!strstr(Core.Params, "-nologo")) 
+	{
+		DestroyWindow(logoWindow);
+		logoWindow = NULL;
+	}
+	/////////////////////////////////////////////
 	// Main cycle
 	Memory.mem_usage();
 	Device.Run					( );
-
+	/////////////////////////////////////////////
 	// Destroy APP
 	xr_delete					( g_SpatialSpacePhysic	);
 	xr_delete					( g_SpatialSpace		);
 	DEL_INSTANCE				( g_pGamePersistent		);
 	xr_delete					( pApp					);
 	Engine.Event.Dump			( );
-
+	/////////////////////////////////////////////
 	// Destroying
 	destroyInput();
-
-	if(!g_bBenchmark)
+	if (!g_bBenchmark)
+	{
 		destroySettings();
-
+	}
 	LALib.OnDestroy				( );
-	
-	if(!g_bBenchmark)
+	if (!g_bBenchmark)
 		destroyConsole();
 	else
 		Console->Destroy();
-
+	/////////////////////////////////////////////
 	destroySound();
-
 	destroyEngine();
 }
 
@@ -374,7 +374,7 @@ struct damn_keys_filter {
 
 #include "xr_ioc_cmd.h"
 
-ENGINE_API int RunApplication(char* commandLine)
+ENGINE_API int RunApplication(LPCSTR commandLine)
 {
 	if (!IsDebuggerPresent()) 
 	{
@@ -382,44 +382,46 @@ ENGINE_API int RunApplication(char* commandLine)
 		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
 	}
 
-
+    gMainThreadId = GetCurrentThreadId();
+    Debug.set_mainThreadId(gMainThreadId);
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
 	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
 	
-	//#WARNING: That's can affect on startup stability
 	HANDLE hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
-	if ( hCheckPresenceMutex == NULL ) {
-		// New mutex
-		hCheckPresenceMutex = CreateMutex( NULL , FALSE , STALKER_PRESENCE_MUTEX );
+	if ( hCheckPresenceMutex == NULL ) 
+	{
+		hCheckPresenceMutex = CreateMutex( NULL , FALSE , STALKER_PRESENCE_MUTEX );	// New mutex
 		if ( hCheckPresenceMutex == NULL )
-			// Shit happens
 			return 2;
-	} else {
-		// Already running
-		CloseHandle( hCheckPresenceMutex );
+	} 
+	else
+	{
+		CloseHandle( hCheckPresenceMutex );		// Already running
 		return 1;
 	}
 #endif
 
-	strcat(Core.Params, commandLine);
-
+	//////////////////////////////////////////
 	// Title window
-	logoWindow					= CreateDialog(GetModuleHandle(NULL),	MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc );
-	
-	HWND logoPicture			= GetDlgItem(logoWindow, IDC_STATIC_LOGO);
-	RECT logoRect;
-	GetWindowRect(logoPicture, &logoRect);
-
-    HWND logoInsertPos = HWND_TOPMOST;
-    if (IsDebuggerPresent())
-    {
-        logoInsertPos = HWND_NOTOPMOST;
-    }
-
-	SetWindowPos(logoWindow, logoInsertPos, 0, 0, logoRect.right - logoRect.left, logoRect.bottom - logoRect.top, SWP_NOMOVE | SWP_SHOWWINDOW);
-	UpdateWindow(logoWindow);
-
+	//////////////////////////////////////////
+	HWND logoInsertPos = HWND_TOPMOST;
+	if (IsDebuggerPresent())
+	{
+		logoInsertPos = HWND_NOTOPMOST;
+	}
+	//////////////////////////////////////////
+	if (!strstr(Core.Params, "-nologo"))
+	{
+		logoWindow					= CreateDialog(GetModuleHandle(NULL),	MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc );
+		HWND logoPicture			= GetDlgItem(logoWindow, IDC_STATIC_LOGO);
+		RECT logoRect;
+		//////////////////////////////////////////
+		GetWindowRect(logoPicture, &logoRect);
+		SetWindowPos(logoWindow, logoInsertPos, 0, 0, logoRect.right - logoRect.left, logoRect.bottom - logoRect.top, SWP_NOMOVE | SWP_SHOWWINDOW);
+		UpdateWindow(logoWindow);
+	}
+	//////////////////////////////////////////
 	// AVI
 	g_bIntroFinished			= true;
 
@@ -429,10 +431,9 @@ ENGINE_API int RunApplication(char* commandLine)
 
 	InitSettings				();
 
-    isGraphicDebugging = false;
     if (strstr(Core.Params, "-renderdebug"))
     {
-        isGraphicDebugging = true;
+        isGraphicDebugging	= TRUE;
     }
 
 	// Adjust player & computer name for Asian
@@ -697,7 +698,8 @@ void CApplication::LoadStage()
 {
 	load_stage++;
 	VERIFY(ll_dwReference);
-	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());	phase_timer.Start();
+	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());
+	phase_timer.Start();
 	
 	max_load_stage = 19;
 

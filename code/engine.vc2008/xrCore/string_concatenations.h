@@ -1,10 +1,10 @@
 #pragma once
 
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2);
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3);
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4);
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5);
-XRCORE_API char* strconcat(int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5, const char* S6);
+XRCORE_API char*					strconcat				( int dest_sz, char* dest, const char* S1, const char* S2);
+XRCORE_API char*					strconcat				( int dest_sz, char* dest, const char* S1, const char* S2, const char* S3);
+XRCORE_API char*					strconcat				( int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4);
+XRCORE_API char*					strconcat				( int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5);
+XRCORE_API char*					strconcat				( int dest_sz, char* dest, const char* S1, const char* S2, const char* S3, const char* S4, const char* S5, const char* S6);
 
 // warning: do not comment this macro, as stack overflow check is very light
 // (consumes ~1% performance of STRCONCAT macro)

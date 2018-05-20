@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////
-// RocketLauncher.cpp:	èíòåðôåéñ äëÿ ñåìåéñòâà îáúåêòîâ 
-//						ñòðåëÿþùèõ ãðàíàòàìè è ðàêåòàìè
+// RocketLauncher.cpp:	Ã¨Ã­Ã²Ã¥Ã°Ã´Ã¥Ã©Ã± Ã¤Ã«Ã¿ Ã±Ã¥Ã¬Ã¥Ã©Ã±Ã²Ã¢Ã  Ã®Ã¡ÃºÃ¥ÃªÃ²Ã®Ã¢ 
+//						Ã±Ã²Ã°Ã¥Ã«Ã¿Ã¾Ã¹Ã¨Ãµ Ã£Ã°Ã Ã­Ã Ã²Ã Ã¬Ã¨ Ã¨ Ã°Ã ÃªÃ¥Ã²Ã Ã¬Ã¨
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -43,7 +43,7 @@ void CRocketLauncher::SpawnRocket(const shared_str& rocket_section, CGameObject*
 	
 	NET_Packet			P;
 	D->Spawn_Write		(P,TRUE);
-	Level().Send		(P,net_flags(TRUE));
+	Level().Send		(P);
 	F_entity_Destroy	(D);
 }
 
@@ -59,7 +59,7 @@ void CRocketLauncher::AttachRocket(u16 rocket_id, CGameObject* parent_rocket_lau
 void CRocketLauncher::DetachRocket(u16 rocket_id, bool bLaunch)
 {
 	// Object may disappear
-	if (Level().Objects.net_Find(rocket_id) != 0)
+	if (Level().Objects.net_Find(rocket_id) == 0)
 	{
 		Msg("[RocketLauncher]: object %d is not found!", rocket_id);
 		return;

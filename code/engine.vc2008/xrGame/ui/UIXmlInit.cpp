@@ -869,11 +869,6 @@ bool CUIXmlInit::InitCustomEdit(CUIXml& xml_doc, LPCSTR path, int index, CUICust
 		}
 		pWnd->Init(max_count, num_only, read_only, file_name_mode);
 	}
-
-	if (xml_doc.ReadAttribInt(path, index, "password", 0))
-	{
-		pWnd->SetPasswordMode();
-	}
 	return true;
 }
 

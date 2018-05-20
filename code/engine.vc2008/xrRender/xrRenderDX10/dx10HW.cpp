@@ -17,7 +17,7 @@
 void	fill_vid_mode_list			(CHW* _hw);
 void	free_vid_mode_list			();
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 CHW HW;
 
@@ -159,7 +159,6 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 
 	size_t	memory = Desc.DedicatedVideoMemory;
 	Msg("* Texture memory: %d M", memory/(1024*1024));
-	updateWindowProps(m_hWnd);
 	fill_vid_mode_list(this);
 }
 
@@ -241,7 +240,6 @@ void CHW::Reset(HWND hwnd)
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
 	UpdateViews();
-	updateWindowProps(hwnd);
 }
 
 D3DFORMAT CHW::selectDepthStencil	(D3DFORMAT fTarget)
@@ -357,74 +355,6 @@ BOOL CHW::support( D3DFORMAT fmt, DWORD type, DWORD usage)
 	VERIFY(!"Implement CHW::support");
 	return TRUE;
 }
-
-void CHW::updateWindowProps(HWND m_hWnd)
-{
-	//	BOOL	bWindowed				= strstr(Core.Params,"-dedicated") ? TRUE : !psDeviceFlags.is	(rsFullscreen);
-	BOOL	bWindowed				= !psDeviceFlags.is	(rsFullscreen);
-
-	u32		dwWindowStyle			= 0;
-	// Set window properties depending on what mode were in.
-	if (bWindowed)		{
-		if (m_move_window) {
-			if (strstr(Core.Params,"-no_dialog_header"))
-				dwWindowStyle |= WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-			bool bBordersMode = strstr(Core.Params, "-draw_borders");
-			dwWindowStyle = WS_VISIBLE;
-			if (bBordersMode)
-			dwWindowStyle |= WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
-			// When moving from fullscreen to windowed mode, it is important to
-			// adjust the window size after recreating the device rather than
-			// beforehand to ensure that you get the window size you want.  For
-			// example, when switching from 640x480 fullscreen to windowed with
-			// a 1000x600 window on a 1024x768 desktop, it is impossible to set
-			// the window size to 1000x600 until after the display mode has
-			// changed to 1024x768, because windows cannot be larger than the
-			// desktop.
-
-			RECT			m_rcWindowBounds;
-			float fYOffset = 0.f;
-			BOOL			bCenter = TRUE;
-			if (strstr(Core.Params, "-no_center_screen"))	bCenter = FALSE;
-
-			if (bCenter) {
-				RECT				DesktopRect;
-
-				GetClientRect		(GetDesktopWindow(), &DesktopRect);
-				SetRect(&m_rcWindowBounds, (DesktopRect.right - m_ChainDesc.BufferDesc.Width) / 2,
-				(DesktopRect.bottom - m_ChainDesc.BufferDesc.Height) / 2,
-				(DesktopRect.right + m_ChainDesc.BufferDesc.Width) / 2,
-				(DesktopRect.bottom + m_ChainDesc.BufferDesc.Height) / 2);
-			}
-			else
-			{
-				if (bBordersMode) {
-					fYOffset = GetSystemMetrics(SM_CYCAPTION); // size of the window title bar
-				}
-					SetRect(&m_rcWindowBounds, 0, 0, m_ChainDesc.BufferDesc.Width, m_ChainDesc.BufferDesc.Height);
-				
-			};
-
-			AdjustWindowRect		(	&m_rcWindowBounds, dwWindowStyle, FALSE );
-
-			SetWindowPos			(	m_hWnd, 
-				HWND_NOTOPMOST,	
-				m_rcWindowBounds.left, 
-				m_rcWindowBounds.top + fYOffset,
-				( m_rcWindowBounds.right - m_rcWindowBounds.left ),
-				( m_rcWindowBounds.bottom - m_rcWindowBounds.top),
-				SWP_SHOWWINDOW|SWP_NOCOPYBITS|SWP_DRAWFRAME );
-		}
-	}
-	else
-	{
-		SetWindowLong			( m_hWnd, GWL_STYLE, dwWindowStyle=(WS_POPUP|WS_VISIBLE) );
-	}
-
-	ShowCursor	(FALSE);
-	SetForegroundWindow( m_hWnd );
-}
-
 
 struct _uniq_mode
 {

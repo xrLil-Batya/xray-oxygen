@@ -16,7 +16,7 @@
 
 #include "D3DX10Core.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 CRender										RImplementation;
 
@@ -151,29 +151,17 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
+	// Òîëüêî true!
 	o.HW_smap			= true;
-	o.HW_smap_PCF = o.HW_smap;
+	o.HW_smap_PCF       = true;
 
 	//	For ATI it's much faster on DX10 to use D32F format
-	if (HW.Caps.id_vendor == 0x1002)
-		o.HW_smap_FORMAT = D3DFMT_D32F_LOCKABLE;
-	else
-		o.HW_smap_FORMAT = D3DFMT_D24X8;
+	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? D3DFMT_D32F_LOCKABLE : D3DFMT_D24X8;
 
 	Msg("* HWDST/PCF supported and used");
 
 	o.fp16_filter		= true;
 	o.fp16_blend		= true;
-
-	// search for ATI formats
-	if (!o.HW_smap && (0==strstr(Core.Params,"-nodf24")) )		{
-		o.HW_smap		= HW.support	((D3DFORMAT)(MAKEFOURCC('D','F','2','4')),	D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
-		if (o.HW_smap)	{
-			o.HW_smap_FORMAT= MAKEFOURCC	('D','F','2','4');
-			o.HW_smap_PCF	= FALSE			;
-		}
-		Msg				("* DF24/F4 supported and used [%X]", o.HW_smap_FORMAT);
-	}
 
 	VERIFY2				(o.mrt && (HW.Caps.raster.dwInstructions>=256),"Hardware doesn't meet minimum feature-level");
 	if (o.mrtmixdepth)		o.albedo_wo		= FALSE	;
@@ -195,7 +183,10 @@ void					CRender::create					()
 	o.volumetricfog		= ps_r2_ls_flags.test(R3FLAG_VOLUMETRIC_SMOKE);
 	o.sjitter			= (strstr(Core.Params,"-sjitter"))?		TRUE	:FALSE	;
 	o.depth16			= (strstr(Core.Params,"-depth16"))?		TRUE	:FALSE	;
-	o.noshadows			= (strstr(Core.Params,"-noshadows"))?	TRUE	:FALSE	;
+	if (strstr(Core.Params, "-noshadows") || strstr(Core.Params, "-render_for_weak_systems"))
+		o.noshadows = TRUE;
+	else
+		o.noshadows = FALSE;
 	o.Tshadows			= (strstr(Core.Params,"-tsh"))?			TRUE	:FALSE	;
 	o.distortion_enabled= (strstr(Core.Params,"-nodistort"))?	FALSE	:TRUE	;
 	o.distortion		= o.distortion_enabled;
@@ -419,29 +410,18 @@ void CRender::reset_end()
 	// that some data is not ready in the first frame (for example device camera position)
 	m_bFirstFrameAfterReset		= true;
 }
-/*
-void CRender::OnFrame()
-{
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
-}*/
-void CRender::OnFrame()
-{
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		// MT-details (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details,&CDetailManager::MT_CALC));
 
-		// MT-HOM (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
+void CRender::OnFrame()
+{
+	Models->DeleteQueue();
+	// MT-details (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
+
+	// MT-HOM (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
 }
-
 
 // Implementation
 IRender_ObjectSpecific*	CRender::ros_create				(IRenderable* parent)				{ return xr_new<CROS_impl>();			}
@@ -869,6 +849,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	char							c_sun_shafts	[32];
 	char							c_ssao			[32];
 	char							c_sun_quality	[32];
+    char c_bokeh_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 
@@ -1082,7 +1063,7 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	else
 		sh_name[len]='0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
+	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -1227,16 +1208,29 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 			sh_name[len]='0'; ++len;
 		}
    }
-   else {
+    else {
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
-   }
+    }
 
-   sh_name[len] = 0;
+    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    {
+        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        defines[def_it].Name = "BOKEH_QUALITY";
+        defines[def_it].Definition = c_bokeh_quality;
+        def_it++;
+        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+    }
+    else
+    {
+        sh_name[len] = '0'; ++len;
+    }
+
+    sh_name[len] = 0;
 
 	// finish
 	defines[def_it].Name			=	0;
@@ -1393,7 +1387,6 @@ static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const fu
 
 static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result )
 {
-#if 1
 #ifdef DEBUG
 	LPCSTR temp					= "";
 	bool found					= false;
@@ -1421,5 +1414,4 @@ static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const 
 
 	return						false;
 #endif // #ifdef DEBUG
-#endif// #if 1
 }

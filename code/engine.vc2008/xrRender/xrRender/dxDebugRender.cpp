@@ -67,10 +67,10 @@ void dxDebugRender::add_lines		(Fvector const *vertices, u32 const &vertex_count
 
 void dxDebugRender::NextSceneMode()
 {
-//	This mode is not supported in DX10
-#ifndef	USE_DX10
-	HW.Caps.SceneMode			= (HW.Caps.SceneMode+1)%3;
-#endif	//	USE_DX10
+//	This mode is not supported in DX10 and DX11
+#if !defined(USE_DX10) && !defined(USE_DX11)
+	HW.Caps.SceneMode = (HW.Caps.SceneMode+1)%3;
+#endif
 }
 
 void dxDebugRender::ZEnable(bool bEnable)

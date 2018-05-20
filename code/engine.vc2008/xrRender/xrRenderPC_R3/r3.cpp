@@ -15,7 +15,7 @@
 
 #include "D3DX10Core.h"
 
-ENGINE_API bool isGraphicDebugging;
+ENGINE_API BOOL isGraphicDebugging;
 
 CRender										RImplementation;
 
@@ -142,31 +142,18 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
+	// Только true!
 	o.HW_smap			= true;
-	o.HW_smap_PCF		= o.HW_smap		;
-	if (o.HW_smap)		
-	{
-		//	For ATI it's much faster on DX10 to use D32F format
-		if (HW.Caps.id_vendor==0x1002)
-			o.HW_smap_FORMAT	= D3DFMT_D32F_LOCKABLE;
-		else
-			o.HW_smap_FORMAT	= D3DFMT_D24X8;
-		Msg				("* HWDST/PCF supported and used");
-	}
+	o.HW_smap_PCF		= true;
+
+	//	For ATI it's much faster on DX10 to use D32F format
+	o.HW_smap_FORMAT = (HW.Caps.id_vendor == 0x1002) ? D3DFMT_D32F_LOCKABLE : D3DFMT_D24X8;
+
+	Msg("* HWDST/PCF supported and used");
 
 	//	DX10 disabled
 	o.fp16_filter		= true;
 	o.fp16_blend		= true;
-
-	// search for ATI formats
-	if (!o.HW_smap && (0==strstr(Core.Params,"-nodf24")) )		{
-		o.HW_smap		= HW.support	((D3DFORMAT)(MAKEFOURCC('D','F','2','4')),	D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
-		if (o.HW_smap)	{
-			o.HW_smap_FORMAT= MAKEFOURCC	('D','F','2','4');
-			o.HW_smap_PCF	= FALSE			;
-		}
-		Msg				("* DF24/F4 supported and used [%X]", o.HW_smap_FORMAT);
-	}
 
 	VERIFY2				(o.mrt && (HW.Caps.raster.dwInstructions>=256),"Hardware doesn't meet minimum feature-level");
 	if (o.mrtmixdepth)		o.albedo_wo		= FALSE	;
@@ -285,12 +272,12 @@ void					CRender::create					()
 	}
 
 	// constants
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("parallax",	&binder_parallax);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("water_intensity",	&binder_water_intensity);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("sun_shafts_intensity",	&binder_sun_shafts_intensity);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("m_AlphaRef",	&binder_alpha_ref);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("pos_decompression_params",	&binder_pos_decompress_params);
-	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup	("pos_decompression_params2",	&binder_pos_decompress_params2);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("parallax", &binder_parallax);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("water_intensity", &binder_water_intensity);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("sun_shafts_intensity", &binder_sun_shafts_intensity);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("m_AlphaRef", &binder_alpha_ref);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("pos_decompression_params", &binder_pos_decompress_params);
+	dxRenderDeviceRender::Instance().Resources->RegisterConstantSetup("pos_decompression_params2", &binder_pos_decompress_params2);
 
 	c_lmaterial					= "L_material";
 	c_sbase						= "s_base";
@@ -401,16 +388,14 @@ void CRender::reset_end()
 
 void CRender::OnFrame()
 {
-	Models->DeleteQueue			();
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_MT_CALC))	{
-		// MT-details (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(Details,&CDetailManager::MT_CALC));
+	Models->DeleteQueue();
+	// MT-details (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(Details, &CDetailManager::MT_CALC));
 
-		// MT-HOM (@front)
-		Device.seqParallel.insert	(Device.seqParallel.begin(),
-			fastdelegate::FastDelegate0<>(&HOM,&CHOM::MT_RENDER));
-	}
+	// MT-HOM (@front)
+	Device.seqParallel.insert(Device.seqParallel.begin(),
+		fastdelegate::FastDelegate0<>(&HOM, &CHOM::MT_RENDER));
 }
 
 
@@ -803,13 +788,14 @@ HRESULT	CRender::shader_compile			(
 	DWORD                           Flags,
 	void*&							result)
 {
-	D3D_SHADER_MACRO				defines			[128];
-	int								def_it			= 0;
-	char							c_smapsize		[32];
-	char							c_gloss			[32];
-	char							c_sun_shafts	[32];
-	char							c_ssao			[32];
-	char							c_sun_quality	[32];
+	D3D_SHADER_MACRO defines[128];
+	int def_it = 0;
+	char c_smapsize		[32];
+	char c_gloss			[32];
+	char c_sun_shafts	[32];
+	char c_ssao			[32];
+	char c_sun_quality	[32];
+    char c_bokeh_quality[32];
 
 	char	sh_name[MAX_PATH] = "";
 	u32 len = 0;
@@ -1022,7 +1008,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DOF))
+	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -1110,19 +1096,19 @@ HRESULT	CRender::shader_compile			(
 	sh_name[len]='0'+char(o.dx10_minmax_sm!=0); ++len;
 
 	// add a #define for DX10_1 MSAA support
-   if( o.dx10_msaa )
-   {
-	   static char samples[2];
+    if( o.dx10_msaa )
+    {
+	    static char samples[2];
 
-	   defines[def_it].Name		=	"USE_MSAA";
-	   defines[def_it].Definition	=	"1";
-	   def_it						++;
+	    defines[def_it].Name		=	"USE_MSAA";
+	    defines[def_it].Definition	=	"1";
+	    def_it						++;
 
-	   defines[def_it].Name		=	"MSAA_SAMPLES";
-	   samples[0] = char(o.dx10_msaa_samples) + '0';
-	   samples[1] = 0;
-	   defines[def_it].Definition	= samples;	
-	   def_it						++;
+	    defines[def_it].Name		=	"MSAA_SAMPLES";
+	    samples[0] = char(o.dx10_msaa_samples) + '0';
+	    samples[1] = 0;
+	    defines[def_it].Definition	= samples;	
+	    def_it						++;
 
 		static char def[ 256 ];
 		if( m_MSAASample < 0 )
@@ -1136,12 +1122,12 @@ HRESULT	CRender::shader_compile			(
 		def_it						++	;
 
 
-	   if( o.dx10_msaa_opt )
-	   {
-		   defines[def_it].Name		=	"MSAA_OPTIMIZATION";
-		   defines[def_it].Definition	=	"1";
-		   def_it						++;
-	   }
+	    if( o.dx10_msaa_opt )
+	    {
+		    defines[def_it].Name		=	"MSAA_OPTIMIZATION";
+		    defines[def_it].Definition	=	"1";
+		    def_it						++;
+	    }
 
 		sh_name[len]='1'; ++len;
 		sh_name[len]='0'+char(o.dx10_msaa_samples); ++len;
@@ -1179,8 +1165,8 @@ HRESULT	CRender::shader_compile			(
 			sh_name[len]='0'; ++len;
 			sh_name[len]='0'; ++len;
 		}
-   }
-   else {
+    }
+    else {
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
@@ -1189,6 +1175,19 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'; ++len;
 		sh_name[len]='0'; ++len;
 	}
+
+    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    {
+        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        defines[def_it].Name = "BOKEH_QUALITY";
+        defines[def_it].Definition = c_bokeh_quality;
+        def_it++;
+        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+    }
+    else
+    {
+        sh_name[len] = '0'; ++len;
+    }
 
 	// finish
 	defines[def_it].Name			=	0;
@@ -1353,7 +1352,6 @@ static inline bool match_shader		( LPCSTR const debug_shader_id, LPCSTR const fu
 
 static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const full_shader_id, FS_FileSet const& file_set, string_path& result )
 {
-#if 1
 #ifdef DEBUG
 	LPCSTR temp					= "";
 	bool found					= false;
@@ -1381,5 +1379,4 @@ static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const 
 
 	return						false;
 #endif // #ifdef DEBUG
-#endif// #if 1
 }

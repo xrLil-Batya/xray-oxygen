@@ -7,7 +7,6 @@ struct XRCORE_API SBaseEffector
 	virtual ~SBaseEffector() {}
 };
 
-enum EEffectorPPType
-{
+enum EEffectorPPType {
 	ppeNext = 0,
 };

@@ -1,5 +1,6 @@
 # X-Ray Oxygen 1.7
 
+![Logo](https://pp.userapi.com/c830608/v830608826/fd611/DtQWCVM4BgU.jpg)
 X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
 
 ## Purposes
@@ -28,7 +29,7 @@ X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-16
 
 ## Contributors
 
-Team of developers and contributors:
+! Team of developers and contributors:
 
 * [ForserX](https://github.com/ForserX)
 * [Giperion](https://github.com/Giperionn)
@@ -48,8 +49,9 @@ Team of developers and contributors:
 * [v2v3v4](https://github.com/v2v3v4)
 * [acidicMercury8](https://github.com/acidicMercury8)
 * [mortany](https://github.com/mortany)
+* [Unfainthful](https://github.com/Unfainthful)
 
-Also used code of this developers and teams:
+! Also used code of this developers and teams:
 
 * [SkyLoader](https://github.com/SkyLoaderr)
 * [RayTwitty](https://github.com/RayTwitty)

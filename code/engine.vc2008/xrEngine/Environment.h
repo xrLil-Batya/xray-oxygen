@@ -366,5 +366,13 @@ public:
 
 ENGINE_API extern Flags32	psEnvFlags;
 ENGINE_API extern float		psVisDistance;
+ENGINE_API extern float		psFogDistance;
+
+ENGINE_API extern float		psFogDensity;
+ENGINE_API extern float		psFogNear;
+ENGINE_API extern float		psFogFar;
+ENGINE_API extern Fvector3	psFogColor;
+
+ENGINE_API extern float ccSunshaftsIntensity;
 
 #endif //EnvironmentH

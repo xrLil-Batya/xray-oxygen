@@ -289,8 +289,6 @@
   <ItemGroup>
     <ClInclude Include="..\FrayBuildConfig.hpp" />
     <ClInclude Include="ClS\NET_Client.h" />
-    <ClInclude Include="ClS\NET_Common.h" />
-    <ClInclude Include="ClS\NET_Messages.h" />
     <ClInclude Include="ClS\NET_PlayersMonitor.h" />
     <ClInclude Include="ClS\NET_Server.h" />
     <ClInclude Include="ClS\NET_Shared.h" />
@@ -415,7 +413,6 @@
   <ItemGroup>
     <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="ClS\NET_Client.cpp" />
-    <ClCompile Include="ClS\NET_Common.cpp" />
     <ClCompile Include="ClS\NET_Server.cpp" />
     <ClCompile Include="CPU\PLC.cpp" />
     <ClCompile Include="CPU\xrCPU_Pipe.cpp" />
