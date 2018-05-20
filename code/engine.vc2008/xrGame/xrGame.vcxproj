@@ -1563,14 +1563,11 @@
     <ClInclude Include="..\xrServerEntities\WaveForm.h" />
     <ClInclude Include="..\xrServerEntities\xrEProps.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="game_base_kill_type.h" />
-    <ClInclude Include="game_base_menu_events.h" />
     <ClInclude Include="..\xrServerEntities\game_base_space.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="game_sv_event_queue.h" />
     <ClInclude Include="xr_time.h" />
-    <ClInclude Include="game_sv_single.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="..\xrServerEntities\gametype_chooser.h" />
     <ClInclude Include="..\xrServerEntities\PropertiesListTypes.h" />
@@ -2678,7 +2675,6 @@
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp">
     </ClCompile>
-    <ClCompile Include="xrServerMapSync.cpp" />
     <ClCompile Include="game_base.cpp">
     </ClCompile>
     <ClCompile Include="game_cl_base.cpp">
@@ -2686,7 +2682,6 @@
     <ClCompile Include="game_sv_base.cpp" />
     <ClCompile Include="game_sv_event_queue.cpp" />
     <ClCompile Include="xr_time.cpp" />
-    <ClCompile Include="game_sv_single.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Abstract.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Object_Base.cpp" />
@@ -2723,7 +2718,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
     </ClCompile>
     <ClCompile Include="xrServer_perform_GameExport.cpp" />
-    <ClCompile Include="xrServer_perform_migration.cpp" />
     <ClCompile Include="xrServer_perform_sls_default.cpp" />
     <ClCompile Include="xrServer_perform_transfer.cpp" />
     <ClCompile Include="xrServer_sls_clear.cpp" />

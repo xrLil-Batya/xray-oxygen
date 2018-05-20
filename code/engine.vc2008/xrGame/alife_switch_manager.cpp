@@ -90,7 +90,7 @@ void CALifeSwitchManager::remove_online(CSE_ALifeDynamicObject *object, bool upd
 		);
 	}
 
-	server().Perform_destroy	(object,net_flags(TRUE,TRUE));
+	server().Perform_destroy	(object);
 	VERIFY						(object->children.empty());
 
 	_OBJECT_ID					object_id = object->ID;

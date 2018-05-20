@@ -1936,9 +1936,6 @@
     <Filter Include="Core\Server\Games\server">
       <UniqueIdentifier>{f176e7fa-e215-4fd6-9a03-8a8f4ddea948}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\Games\server\single">
-      <UniqueIdentifier>{780d18dd-4269-4905-896e-983cfc131fb9}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server\ID_Generator">
       <UniqueIdentifier>{a264bf85-defa-4f04-b247-118bcccc3bc0}</UniqueIdentifier>
     </Filter>
@@ -2139,9 +2136,6 @@
     </Filter>
     <Filter Include="Core\Client\Objects\Trade">
       <UniqueIdentifier>{d4634bbb-5b2b-4935-9834-0ac02849b001}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\Games\server\base">
-      <UniqueIdentifier>{365ed75e-e2e4-420d-aecd-9b4593b55b0e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter">
       <UniqueIdentifier>{b715dea7-8373-4cb2-8ccc-7fba89926be7}</UniqueIdentifier>
@@ -5553,13 +5547,9 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
+    </ClInclude>
+    </ClInclude>
     <ClInclude Include="game_base.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="game_base_kill_type.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="game_base_menu_events.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\game_base_space.h">
@@ -5567,9 +5557,6 @@
     </ClInclude>
     <ClInclude Include="game_sv_event_queue.h">
       <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
-    <ClInclude Include="game_sv_single.h">
-      <Filter>Core\Server\Games\server\single</Filter>
     </ClInclude>
     <ClInclude Include="id_generator.h">
       <Filter>Core\Server\ID_Generator</Filter>
@@ -6128,9 +6115,6 @@
     </ClInclude>
     <ClInclude Include="xr_time.h">
       <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
-    <ClInclude Include="game_sv_base.h">
-      <Filter>Core\Server\Games\server\base</Filter>
     </ClInclude>
     <ClInclude Include="Dosimeter.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
@@ -8099,17 +8083,11 @@
     <ClCompile Include="xrServer.cpp">
       <Filter>Core\Server</Filter>
     </ClCompile>
-    <ClCompile Include="xrServerMapSync.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
     <ClCompile Include="game_base.cpp">
       <Filter>Core\Server\Games</Filter>
     </ClCompile>
     <ClCompile Include="game_sv_event_queue.cpp">
       <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
-    <ClCompile Include="game_sv_single.cpp">
-      <Filter>Core\Server\Games\server\single</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp">
       <Filter>Core\Server\ServerEntities</Filter>
@@ -8175,9 +8153,6 @@
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_perform_GameExport.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_migration.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_perform_sls_default.cpp">
@@ -8761,9 +8736,6 @@
     </ClCompile>
     <ClCompile Include="xr_time.cpp">
       <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
-    <ClCompile Include="game_sv_base.cpp">
-      <Filter>Core\Server\Games\server\base</Filter>
     </ClCompile>
     <ClCompile Include="Dosimeter.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>

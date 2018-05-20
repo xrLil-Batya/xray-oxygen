@@ -163,7 +163,7 @@ void CObjectFactory::register_classes	()
 	add<CHUDManager>											(CLSID_HUDMANAGER				,"hud_manager");
 	//Server Game type
 	
-	add<game_sv_Single>											(CLSID_SV_GAME_SINGLE			,"game_sv_single");
+	add<game_sv_GameState>										(CLSID_SV_GAME_SINGLE			,"game_sv_single");
 	//Client Game type
 	add<game_cl_GameState>										(CLSID_CL_GAME_SINGLE			,"game_cl_single");
 	add<CUIGameSP>												(CLSID_GAME_UI_SINGLE			,"game_ui_single");

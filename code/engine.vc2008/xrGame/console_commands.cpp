@@ -274,7 +274,7 @@ public:
 			NET_Packet		P;
 			P.w_begin(M_SWITCH_DISTANCE);
 			P.w_float(id1);
-			Level().Send(P, net_flags(TRUE, TRUE));
+			Level().Send(P);
 		}
 	}
 };
@@ -282,20 +282,17 @@ public:
 class CCC_ALifeProcessTime : public IConsole_Command {
 public:
 	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+	virtual void Execute(LPCSTR args) 
+	{
 		if (ai().get_alife())
 		{
-			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
-			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
 			if (id1 < 1)
 				Msg("Invalid process time! (%d)",id1);
 			else
-				tpGame->alife().set_process_time(id1);
+				Level().Server->game->alife().set_process_time(id1);
 		}
-		else
-			Log("!Not a single player game!");
 	}
 
 };
@@ -304,35 +301,29 @@ public:
 class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
 public:
 	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+	virtual void Execute(LPCSTR args) 
+	{
 		if (ai().get_alife())
 		{
-			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
-			VERIFY			(tpGame);
 			int id1 = 0;
 			sscanf(args ,"%d",&id1);
-			tpGame->alife().objects_per_update(id1);
+			Level().Server->game->alife().objects_per_update(id1);
 		}
-		else
-			Log("!Not a single player game!");
 	}
 };
 
 class CCC_ALifeSwitchFactor : public IConsole_Command {
 public:
 	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+	virtual void Execute(LPCSTR args) 
+	{
 		if (ai().get_alife())
 		{
-			game_sv_Single	*tpGame = smart_cast<game_sv_Single *>(Level().Server->game);
-			VERIFY			(tpGame);
 			float id1 = 0;
 			sscanf(args ,"%f",&id1);
 			clamp(id1,.1f,1.f);
-			tpGame->alife().set_switch_factor(id1);
+			Level().Server->game->alife().set_switch_factor(id1);
 		}
-		else
-			Log		("!Not a single player game!");
 	}
 };
 
@@ -473,7 +464,7 @@ public:
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8		(0);
-			Level().Send		(net_packet,net_flags(TRUE));
+			Level().Send		(net_packet);
 		}else{
 			if(!valid_saved_game_name(S)){
 				Msg("! Save failed: invalid file name - %s", S);
@@ -484,7 +475,7 @@ public:
 			net_packet.w_begin	(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8		(1);
-			Level().Send		(net_packet,net_flags(TRUE));
+			Level().Send		(net_packet);
 		}
 #ifdef DEBUG
 		Msg						("Game save overhead  : %f milliseconds",timer.GetElapsed_sec()*1000.f);
@@ -557,7 +548,7 @@ public:
 		NET_Packet					net_packet;
 		net_packet.w_begin			(M_LOAD_GAME);
 		net_packet.w_stringZ		(saved_game);
-		Level().Send				(net_packet,net_flags(TRUE));
+		Level().Send				(net_packet);
 	}
 	
 	virtual void fill_tips			(vecTips& tips, u32 mode)
