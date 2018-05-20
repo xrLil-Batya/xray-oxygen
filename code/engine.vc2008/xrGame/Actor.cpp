@@ -146,7 +146,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
-	//��������� ������������� ����� � inventory
+	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 
 	m_pPersonWeLookingAt	= 0;
@@ -337,7 +337,7 @@ void CActor::Load	(LPCSTR section )
 	// sheduler
 	shedule.t_min				= shedule.t_max = 1;
 
-	// ��������� ��������� ��������
+	// настройки дисперсии стрельбы
 	m_fDispBase					= pSettings->r_float		(section,"disp_base"		 );
 	m_fDispBase					= deg2rad(m_fDispBase);
 
@@ -1068,11 +1068,11 @@ void CActor::shedule_Update	(u32 DT)
 			m_DangerSnd.stop();
 	}
 	
-	//���� � ������ HUD, �� ���� ������ ������ �� ��������
+	//если в режиме HUD, то сама модель актера не рисуется
 	if(!character_physics_support()->IsRemoved())
 		setVisible				(!HUDview	());
 
-	//��� ����� ����� ����� �����
+	//что актер видит перед собой
 	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
 	
 
