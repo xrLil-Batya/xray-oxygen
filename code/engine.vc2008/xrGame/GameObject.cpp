@@ -7,7 +7,7 @@
 #include "physicobject.h"
 #include "HangingLamp.h"
 #include "../xrphysics/PhysicsShell.h"
-#include "game_sv_single.h"
+#include "game_sv_base.h"
 #include "level_graph.h"
 #include "../xrPhysics/ph_shell_interface.h"
 #include "script_game_object.h"
