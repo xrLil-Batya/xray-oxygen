@@ -95,13 +95,6 @@ IC void add_contact_body_effector(dBodyID body,const dContact& c,SGameMtl* mater
 	}
 }
 
-
-
-
-
-
-
-
 IC static int CollideIntoGroup(dGeomID o1, dGeomID o2,dJointGroupID jointGroup,CPHIsland* world,const int &MAX_CONTACTS)
 {
 	const int RS= 800+10;
@@ -258,7 +251,7 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2,dJointGroupID jointGroup,C
 
         //#INFO: (Giperion): dInfinity works incorrectly (probably because all working with full 32 bit precision), so instead push a large number
         if (pushing_neg)
-            surface.mu = FLT_MAX;
+            surface.mu = std::numeric_limits<float>::infinity();
 
 		if	(do_collide && collided_contacts<MAX_CONTACTS)
 		{
