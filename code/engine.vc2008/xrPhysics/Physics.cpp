@@ -26,43 +26,43 @@ extern CPHWorld *ph_world;
 //union dInfBytes dInfinityValue = {{0,0,0x80,0x7f}};
 //PhysicsStepTimeCallback		*physics_step_time_callback				= 0;
 
-const float 		default_w_limit = 9.8174770f;//(M_PI/16.f/(fixed_step=0.02f));
-const float 		default_l_limit = 150.f;//(3.f/fixed_step=0.02f);
-const float 		default_l_scale = 1.01f;
-const float 		default_w_scale = 1.01f;
-const float			default_k_l = 0.0002f;//square resistance !!
-const float			default_k_w = 0.05f;
+const float default_w_limit = 9.8174770f;//(M_PI/16.f/(fixed_step=0.02f));
+const float default_l_limit = 150.f;//(3.f/fixed_step=0.02f);
+const float default_l_scale = 1.01f;
+const float default_w_scale = 1.01f;
+const float default_k_l = 0.0002f;//square resistance !!
+const float default_k_w = 0.05f;
 
-extern const u16	max_joint_allowed_for_exeact_integration = 30;
+extern const u16 max_joint_allowed_for_exeact_integration = 30;
 
 //base	params
 const float base_fixed_step = 0.02f;
 const float base_erp = 0.54545456f;
 const float base_cfm = 1.1363636e-006f;
 //base params
-float 			fixed_step = 0.01f;
-float 			world_cfm = CFM(SPRING_S(base_cfm, base_erp, base_fixed_step), DAMPING(base_cfm, base_erp));
-float 			world_erp = ERP(SPRING_S(base_cfm, base_erp, base_fixed_step), DAMPING(base_cfm, base_erp));
-float			world_spring = 1.0f*SPRING(world_cfm, world_erp);
-float			world_damping = 1.0f*DAMPING(world_cfm, world_erp);
+float fixed_step = 0.01f;
+float world_cfm = CFM(SPRING_S(base_cfm, base_erp, base_fixed_step), DAMPING(base_cfm, base_erp));
+float world_erp = ERP(SPRING_S(base_cfm, base_erp, base_fixed_step), DAMPING(base_cfm, base_erp));
+float world_spring = 1.0f*SPRING(world_cfm, world_erp);
+float world_damping = 1.0f*DAMPING(world_cfm, world_erp);
 
 const float			default_world_gravity = 2 * 9.81f;
 
 /////////////////////////////////////////////////////
 
-int			phIterations = 18;
-float		phTimefactor = 1.f;
-//float		phBreakCommonFactor										= 0.01f;
-//float		phRigidBreakWeaponFactor								= 1.f;
-Fbox		phBoundaries = { 1000.f,1000.f,-1000.f,-1000.f };
-//float		ph_tri_query_ex_aabb_rate								= 1.3f;
-//int			ph_tri_clear_disable_count								= 10;
-dWorldID	phWorld;
+int phIterations = 18;
+float phTimefactor = 1.f;
+//float phBreakCommonFactor										= 0.01f;
+//float phRigidBreakWeaponFactor								= 1.f;
+Fbox phBoundaries = { 1000.f,1000.f,-1000.f,-1000.f };
+//float ph_tri_query_ex_aabb_rate								= 1.3f;
+//int ph_tri_clear_disable_count								= 10;
+dWorldID phWorld;
 
 /////////////////////////////////////
-dJointGroupID	ContactGroup;
-CBlockAllocator	<dJointFeedback, 128>		ContactFeedBacks;
-CBlockAllocator	<CPHContactBodyEffector, 128> ContactEffectors;
+dJointGroupID ContactGroup;
+CBlockAllocator<dJointFeedback, 128> ContactFeedBacks;
+CBlockAllocator<CPHContactBodyEffector, 128> ContactEffectors;
 
 ///////////////////////////////////////////////////////////
 class SApplyBodyEffectorPred
@@ -81,6 +81,7 @@ public:
 IC void add_contact_body_effector(dBodyID body, const dContact& c, SGameMtl* material)
 {
 	CPHContactBodyEffector* effector = (CPHContactBodyEffector*)dBodyGetData(body);
+
 	if (effector)
 		effector->Merge(c, material);
 	else
@@ -98,16 +99,19 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 
 	static dContact contacts[RS];
 	int	collided_contacts = 0;
+
 	// get the contacts up to a maximum of N contacts
 	int n;
 
 	VERIFY(o1);
 	VERIFY(o2);
 	VERIFY(&contacts[0].geom);
+
 	n = dCollide(o1, o2, N, &contacts[0].geom, sizeof(dContact));
 
 	if (n > N - 1)
 		n = N - 1;
+
 	int i;
 
 	for (i = 0; i < n; ++i)
@@ -271,7 +275,7 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 	}
 }
 	return collided_contacts;
-		}
+}
 
 void NearCallback(CPHObject* obj1, CPHObject* obj2, dGeomID o1, dGeomID o2)
 {
