@@ -4,25 +4,24 @@
 #include "../xrScripts/export/script_export_space.h"
 
 class IPhysicsElementEx;
-class XRPHYSICS_API cphysics_element_scripted: public cphysics_game_scripted<IPhysicsElementEx>
+class XRPHYSICS_API cphysics_element_scripted : public cphysics_game_scripted<IPhysicsElementEx>
 {
 public:
-	cphysics_element_scripted(IPhysicsElementEx* imp ):cphysics_game_scripted<IPhysicsElementEx>(imp){}
+	cphysics_element_scripted(IPhysicsElementEx* imp) :cphysics_game_scripted<IPhysicsElementEx>(imp) {}
 
-	void	applyForce			( float x, float y, float z )	{ physics_impl().applyForce( x, y, z ); }
-	bool	isBreakable			( )								{ return physics_impl(). isBreakable( ); }
-	void	get_LinearVel		( Fvector& velocity )	const	{ physics_impl().get_LinearVel( velocity ); }
-	void	get_AngularVel		( Fvector& velocity )	const	{ physics_impl().get_AngularVel( velocity ); }
+	void	applyForce(float x, float y, float z) { physics_impl().applyForce(x, y, z); }
+	bool	isBreakable() { return physics_impl().isBreakable(); }
+	void	get_LinearVel(Fvector& velocity)	const { physics_impl().get_LinearVel(velocity); }
+	void	get_AngularVel(Fvector& velocity)	const { physics_impl().get_AngularVel(velocity); }
 
+	float	getMass() { return physics_impl().getMass(); }
+	float	getDensity() { return physics_impl().getDensity(); }
+	float	getVolume() { return physics_impl().getVolume(); }
 
-	float	getMass				()								{ return physics_impl().getMass	();	}
-	float	getDensity			()								{ return physics_impl().getDensity(); }
-	float	getVolume			()								{ return physics_impl().getVolume(); }
-
-	void	Fix					()								{ physics_impl().Fix();	}				
-	void	ReleaseFixed		()								{ physics_impl().ReleaseFixed(); }
-	bool	isFixed				()								{ return physics_impl().isFixed(); }
-	void	GetGlobalTransformDynamic(Fmatrix* m)		const	{ physics_impl().GetGlobalTransformDynamic( m ); }
+	void	Fix() { physics_impl().Fix(); }
+	void	ReleaseFixed() { physics_impl().ReleaseFixed(); }
+	bool	isFixed() { return physics_impl().isFixed(); }
+	void	GetGlobalTransformDynamic(Fmatrix* m)		const { physics_impl().GetGlobalTransformDynamic(m); }
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

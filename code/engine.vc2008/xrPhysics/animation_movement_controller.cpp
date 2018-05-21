@@ -87,7 +87,6 @@ void animation_movement_controller::InitalPositionBlending(const Fmatrix &to)
 		m_poses_blending.pose(m_pObjXForm, m_control_blend->timeCurrent);
 	else
 		m_pObjXForm.set(to);
-
 }
 static void get_animation_root_position(Fmatrix &pos, IKinematics* K, IKinematicsAnimated* KA, CBlend *control_blend)
 {
@@ -113,7 +112,6 @@ static void get_animation_root_position(Fmatrix &pos, IKinematics* K, IKinematic
 	keys.chanel_blend_conts[0] = 1;
 	keys.keys[0][0] = *key;
 
-
 	for (int j = 1; j < MAX_CHANNELS; ++j)
 		keys.chanel_blend_conts[j] = 0;
 
@@ -137,7 +135,6 @@ void animation_movement_controller::OnFrame()
 
 	Fmatrix obj_pos = Fmatrix().mul_43(m_startObjXForm, root_pos);
 	InitalPositionBlending(obj_pos);
-
 }
 
 void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matrix, bool local_animation)

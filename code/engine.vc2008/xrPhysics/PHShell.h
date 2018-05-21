@@ -12,297 +12,302 @@ class CPHShellSplitterHolder;
 #include "phmovestorage.h"
 #include "physics_scripted.h"
 
-
 class CPhysicsShellAnimator;
 
-
-class CPHShell: 
+class CPHShell :
 	public IPhysicsShellEx,
 	public CPHObject,
 	public cphysics_scripted
 {
-
 	friend class CPHShellSplitterHolder;
-	enum				
+	enum
 	{
-		flActive									=	1<<0,
-		flActivating								=	1<<1,
-		flRemoveCharacterCollisionAfterDisable		=	1<<2,
+		flActive = 1 << 0,
+		flActivating = 1 << 1,
+		flRemoveCharacterCollisionAfterDisable = 1 << 2,
 	};
-	s16						m_active_count;
-	Flags8					m_flags;					
-	ELEMENT_STORAGE			elements;
-	JOINT_STORAGE			joints;
+	s16 m_active_count;
+	Flags8 m_flags;
+	ELEMENT_STORAGE elements;
+	JOINT_STORAGE joints;
 	CPHShellSplitterHolder	*m_spliter_holder;
-	CPHMoveStorage			m_traced_geoms;
-
+	CPHMoveStorage m_traced_geoms;
 
 	CPhysicsShellAnimator*	m_pPhysicsShellAnimatorC;
 
 private:
 
-	virtual		IPhysicsShellHolder	*ref_object					() { return PhysicsRefObject() ;}
+	virtual		IPhysicsShellHolder	*ref_object() { return PhysicsRefObject(); }
 
 protected:
-	dSpaceID			    m_space;
-public:
-	Fmatrix					m_object_in_root;
-	CPHShell								();							
-	virtual ~CPHShell						();
-	virtual void			applyImpulseTrace		(const Fvector& pos, const Fvector& dir, float val,const u16 id);
-	virtual void			applyHit				(const Fvector& pos, const Fvector& dir, float val,const u16 id,ALife::EHitType hit_type);
+	dSpaceID m_space;
 
-	static void 	_BCL	BonesCallback				(CBoneInstance* B);
-	static void 	_BCL	StataticRootBonesCallBack	(CBoneInstance* B);
-	virtual	BoneCallbackFun* GetBonesCallback		()	{return BonesCallback ;}
-	virtual BoneCallbackFun* GetStaticObjectBonesCallback()	{ VERIFY( false ); return StataticRootBonesCallBack; }
-	virtual	void			add_Element				(IPhysicsElementEx* E);
-	virtual	void			ToAnimBonesPositions	( motion_history_state history_state );
-	virtual bool			AnimToVelocityState		(float dt, float l_limit, float a_limit );
-	virtual void			SetBonesCallbacksOverwrite(bool v);
-	void					SetPhObjectInElements	();
-	virtual	void			EnableObject			(CPHObject* obj);
-	virtual	void			DisableObject			();
-	virtual void			SetAirResistance		(dReal linear=default_k_l, dReal angular=default_k_w)
+public:
+	Fmatrix m_object_in_root;
+	CPHShell();
+	virtual ~CPHShell();
+	virtual void applyImpulseTrace(const Fvector& pos, const Fvector& dir, float val, const u16 id);
+	virtual void applyHit(const Fvector& pos, const Fvector& dir, float val, const u16 id, ALife::EHitType hit_type);
+
+	static void  __stdcall	BonesCallback(CBoneInstance* B);
+	static void  __stdcall	StataticRootBonesCallBack(CBoneInstance* B);
+	virtual	BoneCallbackFun* GetBonesCallback() { return BonesCallback; }
+	virtual BoneCallbackFun* GetStaticObjectBonesCallback() { VERIFY(false); return StataticRootBonesCallBack; }
+	virtual	void add_Element(IPhysicsElementEx* E);
+	virtual	void ToAnimBonesPositions(motion_history_state history_state);
+	virtual bool AnimToVelocityState(float dt, float l_limit, float a_limit);
+	virtual void SetBonesCallbacksOverwrite(bool v);
+	void SetPhObjectInElements();
+	virtual	void EnableObject(CPHObject* obj);
+	virtual	void DisableObject();
+	virtual void SetAirResistance(dReal linear = default_k_l, dReal angular = default_k_w)
 	{
 		xr_vector<CPHElement*>::iterator i;
-		for(i=elements.begin();elements.end()!=i;++i)
-			(*i)->SetAirResistance(linear,angular);
+		for (i = elements.begin(); elements.end() != i; ++i)
+			(*i)->SetAirResistance(linear, angular);
 	}
-	virtual void			GetAirResistance		(float& linear, float& angular)
+
+	virtual void			GetAirResistance(float& linear, float& angular)
 	{
-		(*elements.begin())->GetAirResistance(linear,angular);
+		(*elements.begin())->GetAirResistance(linear, angular);
 	}
-	virtual	void			add_Joint				(IPhysicsJoint* J);
 
-	virtual CPHIsland*		PIsland					(){return &Island();};
-	virtual void			applyImpulseTrace		(const Fvector& pos, const Fvector& dir, float val)	;
+	virtual	void add_Joint(IPhysicsJoint* J);
 
-	virtual void			Update					()	;											
+	virtual CPHIsland*		PIsland() { return &Island(); };
+	virtual void applyImpulseTrace(const Fvector& pos, const Fvector& dir, float val);
 
-	virtual void			Activate				(const Fmatrix& m0, float dt01, const Fmatrix& m2,bool disable=false);
-	virtual void			Activate				(const Fmatrix &transform,const Fvector& lin_vel,const Fvector& ang_vel,bool disable=false);
-	virtual void			Activate				(bool disable=false, bool not_set_bone_callbacks = false);
-	virtual void			Activate				(const Fmatrix& start_from, bool disable=false){};
+	virtual void Update();
 
+	virtual void Activate(const Fmatrix& m0, float dt01, const Fmatrix& m2, bool disable = false);
+	virtual void Activate(const Fmatrix &transform, const Fvector& lin_vel, const Fvector& ang_vel, bool disable = false);
+	virtual void Activate(bool disable = false, bool not_set_bone_callbacks = false);
+	virtual void Activate(const Fmatrix& start_from, bool disable = false) {};
 
-	virtual	CPhysicsShellAnimator*	PPhysicsShellAnimator(){return	m_pPhysicsShellAnimatorC;};
+	virtual	CPhysicsShellAnimator*	PPhysicsShellAnimator() { return	m_pPhysicsShellAnimatorC; };
 
 private:
-			void			activate				(bool disable);	
+	void			activate(bool disable);
 public:
-	virtual	void			Build					(bool disable=false);
-	virtual	void			RunSimulation			(bool place_current_forms=true);
-	virtual	void			net_Import				(NET_Packet& P);
-	virtual	void			net_Export				(NET_Packet& P);
-			void			PresetActive			();
-			void			AfterSetActive			();
-			void			PureActivate			();
-	virtual void			Deactivate				();
-	virtual const	CGID&	GetCLGroup				()const;
-	virtual			void	RegisterToCLGroup		(CGID g)									;
-	virtual			bool	IsGroupObject			()											;
-	virtual			void	SetIgnoreStatic			()											;
-	virtual			void	SetIgnoreDynamic		()											;
-	virtual			void	SetRagDoll				()											;
-	virtual			void	SetIgnoreRagDoll		()											;
+	virtual	void Build(bool disable = false);
+	virtual	void RunSimulation(bool place_current_forms = true);
+	virtual	void net_Import(NET_Packet& P);
+	virtual	void net_Export(NET_Packet& P);
 
-	virtual			void	CreateShellAnimator		( CInifile const * ini, LPCSTR section )											;
-	virtual			void	SetIgnoreAnimated		()											;
+	void PresetActive();
+	void AfterSetActive();
+	void PureActivate();
 
-	virtual			void	SetSmall				()											;
-	virtual			void	SetIgnoreSmall			()											;
+	virtual void Deactivate();
+	virtual const CGID&	GetCLGroup()const;
+	virtual void RegisterToCLGroup(CGID g);
+	virtual bool IsGroupObject();
+	virtual void SetIgnoreStatic();
+	virtual void SetIgnoreDynamic();
+	virtual void SetRagDoll();
+	virtual void SetIgnoreRagDoll();
 
-	virtual		const CLBits&					collide_bits								()const { return CPHObject::collide_bits();};
-	virtual		const _flags<CLClassBits>&		collide_class_bits 							()const {return CPHObject::collide_class_bits(); }																	
+	virtual void	CreateShellAnimator(CInifile const * ini, LPCSTR section);
+	virtual void	SetIgnoreAnimated();
 
-	virtual void			setMass					(float M)									;
+	virtual void	SetSmall();
+	virtual void	SetIgnoreSmall();
 
-	virtual void			setMass1				(float M)									;
-	virtual	void			setEquelInertiaForEls	(const dMass& M)							;
-	virtual	void			addEquelInertiaToEls	(const dMass& M)							;
-	virtual	void			MassAddBox				( float mass, const Fvector &full_size )	;
-	virtual float			getMass					()											;
-	virtual void			setDensity				(float M)									;
-	virtual float			getDensity				()											;
-	virtual float			getVolume				()											;
-	virtual	void			get_Extensions			(const Fvector& axis,float center_prg,float& lo_ext, float& hi_ext) const;
-	virtual void			applyForce				(const Fvector& dir, float val)				;
-	virtual void			applyForce				(float x,float y,float z)					;
-	virtual void			applyImpulse			(const Fvector& dir, float val)				;
-	virtual void	_BCL	applyGravityAccel		(const Fvector& accel);
-	virtual void			setTorque				(const Fvector& torque);
-	virtual void			setForce				(const Fvector& force);
-	virtual void			set_JointResistance		(float force)
+	virtual		const CLBits& collide_bits()const { return CPHObject::collide_bits(); };
+	virtual		const _flags<CLClassBits>& collide_class_bits()const { return CPHObject::collide_class_bits(); }
+
+	virtual void setMass(float M);
+
+	virtual void setMass1(float M);
+	virtual	void setEquelInertiaForEls(const dMass& M);
+	virtual	void addEquelInertiaToEls(const dMass& M);
+	virtual	void MassAddBox(float mass, const Fvector &full_size);
+	virtual float getMass();
+	virtual void setDensity(float M);
+	virtual float getDensity();
+	virtual float getVolume();
+	virtual	void get_Extensions(const Fvector& axis, float center_prg, float& lo_ext, float& hi_ext) const;
+	virtual void applyForce(const Fvector& dir, float val);
+	virtual void applyForce(float x, float y, float z);
+	virtual void applyImpulse(const Fvector& dir, float val);
+	virtual void	__stdcall	applyGravityAccel(const Fvector& accel);
+	virtual void setTorque(const Fvector& torque);
+	virtual void setForce(const Fvector& force);
+	virtual void set_JointResistance(float force)
 	{
-		for(auto i=joints.begin();joints.end() != i;++i)
+		for (auto i = joints.begin(); joints.end() != i; ++i)
 		{
 			(*i)->SetForce(force);
 			(*i)->SetVelocity();
 		}
 		//(*i)->SetForceAndVelocity(force);
 	}
-	virtual		void				set_DynamicLimits				(float l_limit=default_l_limit,float w_limit=default_w_limit);
-	virtual		void				set_DynamicScales				(float l_scale=default_l_scale,float w_scale=default_w_scale);
-	virtual		void				set_ContactCallback				(ContactCallbackFun* callback);
-	virtual		void				set_ObjectContactCallback		(ObjectContactCallbackFun* callback);
-	virtual		void				SetAnimated						( bool v );
-	virtual		void				add_ObjectContactCallback		(ObjectContactCallbackFun* callback);
-	virtual		void				remove_ObjectContactCallback		(ObjectContactCallbackFun* callback);
-	virtual		void				set_CallbackData				(void * cd);
-	virtual		void				*get_CallbackData				();
-	virtual		void				set_PhysicsRefObject			(IPhysicsShellHolder* ref_object);
-				IPhysicsShellHolder*PhysicsRefObject				(){ return (*elements.begin())->PhysicsRefObject(); }
-	
+	virtual void set_DynamicLimits(float l_limit = default_l_limit, float w_limit = default_w_limit);
+	virtual void set_DynamicScales(float l_scale = default_l_scale, float w_scale = default_w_scale);
+	virtual void set_ContactCallback(ContactCallbackFun* callback);
+	virtual void set_ObjectContactCallback(ObjectContactCallbackFun* callback);
+	virtual void SetAnimated(bool v);
+	virtual void add_ObjectContactCallback(ObjectContactCallbackFun* callback);
+	virtual void remove_ObjectContactCallback(ObjectContactCallbackFun* callback);
+	virtual void set_CallbackData(void * cd);
+	virtual void *get_CallbackData();
+	virtual void set_PhysicsRefObject(IPhysicsShellHolder* ref_object);
+	IPhysicsShellHolder*PhysicsRefObject() { return (*elements.begin())->PhysicsRefObject(); }
+
 	//breakbable interface
-	virtual		bool				isBreakable						();
-	virtual		bool				isFractured						();
-	virtual		CPHShellSplitterHolder*	SplitterHolder				(){return m_spliter_holder;}
-	virtual		void				SplitterHolderActivate			();
-	virtual		void				SplitterHolderDeactivate		();
-	virtual		void				SplitProcess					(PHSHELL_PAIR_VECTOR &out_shels);
-	virtual		void				BlockBreaking					(){if(m_spliter_holder)m_spliter_holder->SetUnbreakable();}
-	virtual		void				UnblockBreaking					(){if(m_spliter_holder)m_spliter_holder->SetBreakable();}
-	virtual		bool				IsBreakingBlocked				(){return m_spliter_holder&&m_spliter_holder->IsUnbreakable();}
-	///////	////////////////////////////////////////////////////////////////////////////////////////////
-	virtual		void				get_LinearVel					(Fvector& velocity) const ;
-	virtual		void				get_AngularVel					(Fvector& velocity) const ;
-	virtual		void				set_LinearVel					(const Fvector& velocity);
-	virtual		void				set_AngularVel					(const Fvector& velocity);
-	virtual		void				TransformPosition				(const Fmatrix &form, motion_history_state history_state  );
-	virtual		void				SetGlTransformDynamic			(const Fmatrix &form);
-	virtual		void				set_ApplyByGravity				(bool flag);
-	virtual		bool				get_ApplyByGravity				();
-	virtual		void				SetMaterial						(u16 m);
-	virtual		void				SetMaterial						(LPCSTR m);
-	virtual		ELEMENT_STORAGE		&Elements						(){return elements;}
-	virtual		IPhysicsElementEx		*get_Element					(u16 bone_id);
-	virtual		IPhysicsElementEx		*get_Element					(const shared_str & bone_name);
-	virtual		IPhysicsElementEx		*get_Element					(LPCSTR bone_name);
-	virtual	const IPhysicsElementEx	*get_ElementByStoreOrder		(u16 num) const;
-	virtual		IPhysicsElementEx		*get_ElementByStoreOrder		(u16 num);
-				IPhysicsElementEx		*get_PhysicsParrentElement		( u16 bone_id );
-	virtual		u16					get_ElementsNumber				()const{return (u16)elements.size();}
-	virtual		CPHSynchronize		*get_ElementSync				(u16 element);
-	virtual		u16					get_elements_number				(){return get_ElementsNumber();}
-	virtual		CPHSynchronize		*get_element_sync				(u16 element){return get_ElementSync(element);}
-	virtual		IPhysicsElementEx		*NearestToPoint					(const Fvector& point, NearestToPointCallback *cb = 0 );
-	virtual		IPhysicsJoint		*get_Joint						(u16 bone_id);
-	virtual		IPhysicsJoint		*get_Joint						(const shared_str & bone_name);
-	virtual		IPhysicsJoint		*get_Joint						(LPCSTR bone_name);
-	virtual		IPhysicsJoint		*get_JointByStoreOrder			(u16 num);
-	virtual		u16					get_JointsNumber				();
-	virtual		CODEGeom			*get_GeomByID					(u16 bone_id);
+	virtual bool isBreakable();
+	virtual bool isFractured();
+	virtual CPHShellSplitterHolder*	SplitterHolder() { return m_spliter_holder; }
+	virtual void SplitterHolderActivate();
+	virtual void SplitterHolderDeactivate();
+	virtual void SplitProcess(PHSHELL_PAIR_VECTOR &out_shels);
+	virtual void BlockBreaking() { if (m_spliter_holder)m_spliter_holder->SetUnbreakable(); }
+	virtual void UnblockBreaking() { if (m_spliter_holder)m_spliter_holder->SetBreakable(); }
+	virtual bool IsBreakingBlocked() { return m_spliter_holder && m_spliter_holder->IsUnbreakable(); }
+	///////	///////////////////////////////////////////////////////////////////////////////////////////
+	virtual	 void get_LinearVel(Fvector& velocity) const;
+	virtual	 void get_AngularVel(Fvector& velocity) const;
+	virtual	 void set_LinearVel(const Fvector& velocity);
+	virtual	 void set_AngularVel(const Fvector& velocity);
+	virtual  void TransformPosition(const Fmatrix &form, motion_history_state history_state);
+	virtual	 void SetGlTransformDynamic(const Fmatrix &form);
+	virtual	 void set_ApplyByGravity(bool flag);
+	virtual	 bool get_ApplyByGravity();
+	virtual	 void SetMaterial(u16 m);
+	virtual	 void SetMaterial(LPCSTR m);
+	virtual	 ELEMENT_STORAGE		&Elements() { return elements; }
+	virtual	 IPhysicsElementEx		*get_Element(u16 bone_id);
+	virtual	 IPhysicsElementEx		*get_Element(const shared_str & bone_name);
+	virtual	 IPhysicsElementEx		*get_Element(LPCSTR bone_name);
+	virtual	const IPhysicsElementEx	*get_ElementByStoreOrder(u16 num) const;
+	virtual	 IPhysicsElementEx		*get_ElementByStoreOrder(u16 num);
+	IPhysicsElementEx		*get_PhysicsParrentElement(u16 bone_id);
+	virtual	 u16 get_ElementsNumber()const { return (u16)elements.size(); }
+	virtual	 CPHSynchronize *get_ElementSync(u16 element);
+	virtual	 u16 get_elements_number() { return get_ElementsNumber(); }
+	virtual	 CPHSynchronize *get_element_sync(u16 element) { return get_ElementSync(element); }
+	virtual	 IPhysicsElementEx *NearestToPoint(const Fvector& point, NearestToPointCallback *cb = 0);
+	virtual	 IPhysicsJoint *get_Joint(u16 bone_id);
+	virtual	 IPhysicsJoint *get_Joint(const shared_str & bone_name);
+	virtual	 IPhysicsJoint *get_Joint(LPCSTR bone_name);
+	virtual	 IPhysicsJoint *get_JointByStoreOrder(u16 num);
+	virtual	 u16 get_JointsNumber();
+	virtual	 CODEGeom *get_GeomByID(u16 bone_id);
 
-	virtual		void				Enable							();
-	virtual		void				Disable							();
-	virtual		void				DisableCollision				();
-	virtual		void				EnableCollision					();
-	virtual		void				DisableCharacterCollision		();
-	virtual		void				SetRemoveCharacterCollLADisable	(){m_flags.set(flRemoveCharacterCollisionAfterDisable,TRUE);}
-	virtual		bool				isEnabled						()const {return CPHObject::is_active();}
-	virtual		bool				isActive						()const {return !!m_flags.test(flActive);}
-	virtual		bool				isFullActive					()const {return isActive()&&!m_flags.test(flActivating);}	
-				void				SetNotActivating				(){m_flags.set(flActivating,FALSE);}
-	IC			void				SetObjVsShellTransform			(const Fmatrix & root_transform);
-//CPHObject	 
-	virtual		void				vis_update_activate				();
-	virtual		void				vis_update_deactivate	  		();
-	virtual		void				PureStep						(float step);
-	virtual		void				CollideAll						();
-	virtual		void				PhDataUpdate					(dReal step);
-	virtual		void				PhTune							(dReal step);
-	virtual		void				InitContact						(dContact* c,bool &do_collide,u16 /*material_idx_1*/,u16 /*material_idx_2*/){};
-	virtual		void				FreezeContent					();
-	virtual		void				UnFreezeContent					();
-	virtual		void				Freeze							();
-	virtual		void				UnFreeze						();
-	virtual		void				NetInterpolationModeON			(){CPHObject::NetInterpolationON();}
-	virtual		void				NetInterpolationModeOFF			(){CPHObject::NetInterpolationOFF();}
-	virtual		void				StepFrameUpdate					(dReal step){};
-	virtual		CPHMoveStorage*		MoveStorage						(){return &m_traced_geoms;}
-	virtual		void				build_FromKinematics			(IKinematics* K,BONE_P_MAP* p_geting_map=NULL);
-	virtual		void				preBuild_FromKinematics			(IKinematics* K,BONE_P_MAP* p_geting_map);
-	virtual		void	_BCL		ActivatingBonePoses				(IKinematics &K);
-	virtual		void                ZeroCallbacks					();
-	virtual		void				ResetCallbacks					(u16 id,Flags64 &mask);
-				void				PlaceBindToElForms				();
-	virtual		void				SetCallbacks					( );
-	virtual		void				EnabledCallbacks				(BOOL val);
-	virtual		void				set_DisableParams				(const SAllDDOParams& params);
-	virtual		void				UpdateRoot						();
-	virtual		void				SmoothElementsInertia			(float k);
-	virtual		void	_BCL		InterpolateGlobalTransform		(Fmatrix* m);
-	virtual		void				InterpolateGlobalPosition		(Fvector* v);
-	virtual		void				AnimatorOnFrame					();
-	virtual		void				GetGlobalTransformDynamic		(Fmatrix* m) ;
-	virtual		void				GetGlobalPositionDynamic		(Fvector* v);
-	virtual		Fmatrix&			ObjectInRoot					(){return m_object_in_root;}
-	virtual		void				ObjectToRootForm				(const Fmatrix& form);
-	virtual		dSpaceID			dSpace							(){return m_space;}
-	virtual		void				SetTransform					(const Fmatrix& m0, motion_history_state history_state  );
+	virtual void Enable();
+	virtual void Disable();
+	virtual void DisableCollision();
+	virtual void EnableCollision();
+	virtual void DisableCharacterCollision();
+	virtual void SetRemoveCharacterCollLADisable() { m_flags.set(flRemoveCharacterCollisionAfterDisable, TRUE); }
+	virtual bool isEnabled()const { return CPHObject::is_active(); }
+	virtual bool isActive()const { return !!m_flags.test(flActive); }
+	virtual bool isFullActive()const { return isActive() && !m_flags.test(flActivating); }
 
-	virtual		void				AddTracedGeom					(u16 element=0,u16 geom=0);
-	virtual		void				SetAllGeomTraced				();
-	
-	virtual		void				ClearTracedGeoms				();
-	virtual		void				DisableGeomTrace				();
-	virtual		void				EnableGeomTrace					();
-	virtual		bool				HasTracedGeoms					(){ return !m_traced_geoms.empty(); }
+	void SetNotActivating() { m_flags.set(flActivating, FALSE); }
+	inline void SetObjVsShellTransform(const Fmatrix & root_transform);
 
-	virtual		void				SetPrefereExactIntegration		();
-	virtual		void				CutVelocity						(float l_limit,float a_limit);
-///////////	//////////////////////////////////////////////////////////////////////////////////////////
-				void				CreateSpace						()																				;
-				void				PassEndElements					(u16 from,u16 to,CPHShell *dest)												;
-				void				PassEndJoints					(u16 from,u16 to,CPHShell *dest)												;
-				void				DeleteElement					(u16 element)																	;
-				void				DeleteJoint						(u16 joint)																		;
-				u16					BoneIdToRootGeom				(u16 id)																		;
-/////////////////////////////////////////////////////////////////////////////////////////////////////
+	//CPHObject
+	virtual void vis_update_activate();
+	virtual void vis_update_deactivate();
+	virtual void PureStep(float step);
+	virtual void CollideAll();
+	virtual void PhDataUpdate(dReal step);
+	virtual void PhTune(dReal step);
+	virtual void InitContact(dContact* c, bool &do_collide, u16 /*material_idx_1*/, u16 /*material_idx_2*/) {};
+	virtual void FreezeContent();
+	virtual void UnFreezeContent();
+	virtual void Freeze();
+	virtual void UnFreeze();
+	virtual void NetInterpolationModeON() { CPHObject::NetInterpolationON(); }
+	virtual void NetInterpolationModeOFF() { CPHObject::NetInterpolationOFF(); }
+	virtual void StepFrameUpdate(dReal step) {};
+	virtual CPHMoveStorage*		MoveStorage() { return &m_traced_geoms; }
+	virtual void build_FromKinematics(IKinematics* K, BONE_P_MAP* p_geting_map = NULL);
+	virtual void preBuild_FromKinematics(IKinematics* K, BONE_P_MAP* p_geting_map);
+	virtual void	__stdcall		ActivatingBonePoses(IKinematics &K);
+	virtual void ZeroCallbacks();
+	virtual void ResetCallbacks(u16 id, Flags64 &mask);
+
+	void PlaceBindToElForms();
+
+	virtual void SetCallbacks();
+	virtual void EnabledCallbacks(BOOL val);
+	virtual void set_DisableParams(const SAllDDOParams& params);
+	virtual void UpdateRoot();
+	virtual void SmoothElementsInertia(float k);
+	virtual void	__stdcall		InterpolateGlobalTransform(Fmatrix* m);
+	virtual void InterpolateGlobalPosition(Fvector* v);
+	virtual void AnimatorOnFrame();
+	virtual void GetGlobalTransformDynamic(Fmatrix* m);
+	virtual void GetGlobalPositionDynamic(Fvector* v);
+	virtual Fmatrix& ObjectInRoot() { return m_object_in_root; }
+	virtual void ObjectToRootForm(const Fmatrix& form);
+	virtual dSpaceID dSpace() { return m_space; }
+	virtual void SetTransform(const Fmatrix& m0, motion_history_state history_state);
+
+	virtual void AddTracedGeom(u16 element = 0, u16 geom = 0);
+	virtual void SetAllGeomTraced();
+
+	virtual void ClearTracedGeoms();
+	virtual void DisableGeomTrace();
+	virtual void EnableGeomTrace();
+	virtual bool HasTracedGeoms() { return !m_traced_geoms.empty(); }
+
+	virtual void SetPrefereExactIntegration();
+	virtual void CutVelocity(float l_limit, float a_limit);
+	///////////	//////////////////////////////////////////////////////////////////////////////////////////
+	void CreateSpace();
+	void PassEndElements(u16 from, u16 to, CPHShell *dest);
+	void PassEndJoints(u16 from, u16 to, CPHShell *dest);
+	void DeleteElement(u16 element);
+	void DeleteJoint(u16 joint);
+
+	u16 BoneIdToRootGeom(u16 id);
+	/////////////////////////////////////////////////////////////////////////////////////////////////////
 protected:
-	virtual		void				get_spatial_params				()																				;
-	virtual		dGeomID				dSpacedGeom						()														{return (dGeomID)m_space;}
+	virtual void get_spatial_params();
+	virtual dGeomID dSpacedGeom() { return (dGeomID)m_space; }
 
-	virtual		void				ClearRecentlyDeactivated		()																				;
-				void				ClearCashedTries				()																				;
+	virtual void ClearRecentlyDeactivated();
+	void ClearCashedTries();
 private:
-				//breakable
-				void				setEndElementSplitter	  		()																				;
-				void				setElementSplitter		  		(u16 element_number,u16 splitter_position)										;
-				void				setEndJointSplitter	  			()																				;
-				void				AddSplitter			  			(CPHShellSplitter::EType type,u16 element,u16 joint)							;
-				void				AddSplitter			  			(CPHShellSplitter::EType type,u16 element,u16 joint,u16 position)				;
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-				void				AddElementRecursive				(IPhysicsElementEx* root_e, u16 id,Fmatrix global_parent,u16 element_number,bool *vis_check)		;
-				void				PlaceBindToElFormsRecursive		(Fmatrix parent,u16 id,u16 element,Flags64 &mask);
-				void				BonesBindCalculate				(u16 id_from=0);
-				void				BonesBindCalculateRecursive		(Fmatrix parent,u16 id);
-				void				ZeroCallbacksRecursive			(u16 id)																		;
-				void				SetCallbacksRecursive			(u16 id,u16 element)															;
-				void				ResetCallbacksRecursive			(u16 id,u16 element,Flags64 &mask)												;
-				void				SetJointRootGeom				(IPhysicsElementEx* root_e,IPhysicsJoint* J)										;
-				void				ReanableObject					()																				;
-				void				ExplosionHit					(const Fvector& pos, const Fvector& dir, float val,const u16 id)				;
-				void				ClearBreakInfo					();
-				Fmatrix&			get_animation_root_matrix		( Fmatrix& m );
-				void				update_root_transforms			();
-IC				CPHElement			&root_element					() { VERIFY( !elements.empty() ); return *(*elements.begin()); }
-	private:
-		virtual	iphysics_scripted	&get_scripted					() { return *this ;}
-	public:
-	virtual		void				dbg_draw_velocity				( float scale, u32 color );
-	virtual		void				dbg_draw_force					( float scale, u32 color );
-	virtual		void				dbg_draw_geometry				( float scale, u32 color, Flags32 flags = Flags32().assign( 0 ) ) const			;
+	//breakable
+	void setEndElementSplitter();
+	void setElementSplitter(u16 element_number, u16 splitter_position);
+	void setEndJointSplitter();
+	void AddSplitter(CPHShellSplitter::EType type, u16 element, u16 joint);
+	void AddSplitter(CPHShellSplitter::EType type, u16 element, u16 joint, u16 position);
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	void AddElementRecursive(IPhysicsElementEx* root_e, u16 id, Fmatrix global_parent, u16 element_number, bool *vis_check);
+	void PlaceBindToElFormsRecursive(Fmatrix parent, u16 id, u16 element, Flags64 &mask);
+	void BonesBindCalculate(u16 id_from = 0);
+	void BonesBindCalculateRecursive(Fmatrix parent, u16 id);
+	void ZeroCallbacksRecursive(u16 id);
+	void SetCallbacksRecursive(u16 id, u16 element);
+	void ResetCallbacksRecursive(u16 id, u16 element, Flags64 &mask);
+	void SetJointRootGeom(IPhysicsElementEx* root_e, IPhysicsJoint* J);
+	void ReanableObject();
+	void ExplosionHit(const Fvector& pos, const Fvector& dir, float val, const u16 id);
+	void ClearBreakInfo();
+	Fmatrix& get_animation_root_matrix(Fmatrix& m);
+	void update_root_transforms();
+	inline CPHElement &root_element() { VERIFY(!elements.empty()); return *(*elements.begin()); }
+
+private:
+	virtual	iphysics_scripted	&get_scripted() { return *this; }
+
+public:
+	virtual void dbg_draw_velocity(float scale, u32 color);
+	virtual void dbg_draw_force(float scale, u32 color);
+	virtual void dbg_draw_geometry(float scale, u32 color, Flags32 flags = Flags32().assign(0)) const;
 };
 
-
-IC	void	CPHShell::SetObjVsShellTransform			(const Fmatrix & root_transform)
+inline	void CPHShell::SetObjVsShellTransform(const Fmatrix & root_transform)
 {
-	m_object_in_root.set( root_transform );
-	m_object_in_root.invert( );
-	SetNotActivating( );
+	m_object_in_root.set(root_transform);
+	m_object_in_root.invert();
+	SetNotActivating();
 }
-
 
 #endif

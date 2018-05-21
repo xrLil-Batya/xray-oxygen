@@ -1,4 +1,4 @@
-#pragma once 
+#pragma once
 class ICollisionDamageInfo;
 class IDamageSource;
 //class IKinematics;
@@ -13,8 +13,8 @@ class ICollisionForm;
 class ICollisionHitCallback
 {
 public:
-	virtual	void call( IPhysicsShellHolder* obj, float min_cs, float max_cs, float &cs,float &hl, ICollisionDamageInfo* di ) = 0;
-	virtual	~ICollisionHitCallback() 	{}
+	virtual	void call(IPhysicsShellHolder* obj, float min_cs, float max_cs, float &cs, float &hl, ICollisionDamageInfo* di) = 0;
+	virtual	~ICollisionHitCallback() {}
 };
 
 enum	EDumpType
@@ -29,37 +29,36 @@ enum	EDumpType
 
 class IPhysicsShellHolder
 {
-	public:
+public:
 
-	virtual	Fmatrix&					_BCL	ObjectXFORM						()						=0;
-	virtual	Fvector&					_BCL	ObjectPosition						()						=0;
-	virtual	LPCSTR						_BCL	ObjectName							()		const			=0;
-	virtual	LPCSTR						_BCL	ObjectNameVisual					()		const			=0;
-	virtual	LPCSTR						_BCL	ObjectNameSect						()		const			=0;
-	virtual	bool						_BCL	ObjectGetDestroy					()		const			=0;
-	virtual ICollisionHitCallback*		_BCL	ObjectGetCollisionHitCallback		()						=0;
-	virtual	u16							_BCL	ObjectID							()		const			=0;
-	virtual	ICollisionForm*				_BCL	ObjectCollisionModel				()						=0;
-//	virtual	IRenderVisual*				_BCL	ObjectVisual						()						=0;
-	virtual	IKinematics*				_BCL	ObjectKinematics					()						=0;
-	virtual IDamageSource*				_BCL	ObjectCastIDamageSource				()						=0;
-	virtual	void						_BCL	ObjectProcessingDeactivate			()						=0;
-	virtual	void						_BCL	ObjectProcessingActivate			()						=0;				
-	virtual	void						_BCL	ObjectSpatialMove					()						=0;
-	virtual	IPhysicsShellEx*&				_BCL	ObjectPPhysicsShell				()						=0;
-	virtual	void						_BCL	enable_notificate					()						=0;
-	virtual bool						_BCL	has_parent_object					()						=0;
-	virtual	void						_BCL	on_physics_disable					()						=0;
-	virtual	IPHCapture*					_BCL	PHCapture							()						=0;
-	virtual	bool						_BCL	IsInventoryItem						()						=0;
-	virtual	bool						_BCL	IsActor								()						=0;
-	virtual bool						_BCL	IsStalker							()						=0;
+	virtual	Fmatrix&					__stdcall	ObjectXFORM() = 0;
+	virtual	Fvector&					__stdcall	ObjectPosition() = 0;
+	virtual	LPCSTR						__stdcall	ObjectName()		const = 0;
+	virtual	LPCSTR						__stdcall	ObjectNameVisual()		const = 0;
+	virtual	LPCSTR						__stdcall	ObjectNameSect()		const = 0;
+	virtual	bool						__stdcall	ObjectGetDestroy()		const = 0;
+	virtual ICollisionHitCallback*		__stdcall	ObjectGetCollisionHitCallback() = 0;
+	virtual	u16							__stdcall	ObjectID()		const = 0;
+	virtual	ICollisionForm*				__stdcall	ObjectCollisionModel() = 0;
+	//	virtual	IRenderVisual*				__stdcall	ObjectVisual						()						=0;
+	virtual	IKinematics*				__stdcall	ObjectKinematics() = 0;
+	virtual IDamageSource*				__stdcall	ObjectCastIDamageSource() = 0;
+	virtual	void						__stdcall	ObjectProcessingDeactivate() = 0;
+	virtual	void						__stdcall	ObjectProcessingActivate() = 0;
+	virtual	void						__stdcall	ObjectSpatialMove() = 0;
+	virtual	IPhysicsShellEx*&				__stdcall	ObjectPPhysicsShell() = 0;
+	virtual	void						__stdcall	enable_notificate() = 0;
+	virtual bool						__stdcall	has_parent_object() = 0;
+	virtual	void						__stdcall	on_physics_disable() = 0;
+	virtual	IPHCapture*					__stdcall	PHCapture() = 0;
+	virtual	bool						__stdcall	IsInventoryItem() = 0;
+	virtual	bool						__stdcall	IsActor() = 0;
+	virtual bool						__stdcall	IsStalker() = 0;
 	//virtual	void							SetWeaponHideState					( u16 State, bool bSet )=0;
-	virtual	void						_BCL	HideAllWeapons						( bool v )				=0;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
-	virtual	void						_BCL	MovementCollisionEnable				( bool enable )			=0;
-	virtual CPHSoundPlayer*				_BCL	ObjectPhSoundPlayer				()  					=0;
-	virtual	ICollisionDamageReceiver*	_BCL	ObjectPhCollisionDamageReceiver	()						=0;
-	virtual	void						_BCL BonceDamagerCallback				( float &damage_factor )=0;
-	virtual	std::string					_BCL	dump(EDumpType type) const =0;
+	virtual	void						__stdcall	HideAllWeapons(bool v) = 0;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
+	virtual	void						__stdcall	MovementCollisionEnable(bool enable) = 0;
+	virtual CPHSoundPlayer*				__stdcall	ObjectPhSoundPlayer() = 0;
+	virtual	ICollisionDamageReceiver*	__stdcall	ObjectPhCollisionDamageReceiver() = 0;
+	virtual	void						__stdcall BonceDamagerCallback(float &damage_factor) = 0;
+	virtual	std::string					__stdcall	dump(EDumpType type) const = 0;
 };
-

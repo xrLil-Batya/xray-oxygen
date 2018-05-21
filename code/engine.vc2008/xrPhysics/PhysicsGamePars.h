@@ -3,7 +3,6 @@
 extern XRPHYSICS_API float collide_volume_max;
 extern XRPHYSICS_API float collide_volume_min;
 
-
 struct XRPHYSICS_API EffectPars
 {
 	const static  float vel_cret_sound;

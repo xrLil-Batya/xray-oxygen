@@ -2,33 +2,34 @@
 #include "PHIsland.h"
 #include "physics.h"
 #include "ph_valid_ode.h"
-
-void CPHIsland::Step(dReal step)
+void	CPHIsland::Step(dReal step)
 {
-	if (m_flags.is_active())
-	{
-		if (m_flags.is_exact_integration_prefeared() && nj < max_joint_allowed_for_exeact_integration)
-			dWorldStep(DWorld(), fixed_step);
-		else
-			dWorldQuickStep(DWorld(), fixed_step);
-	}
+	if (!m_flags.is_active())
+		return;
+
+	//dWorldStepFast1	(DWorld(),	fixed_step,	phIterations/*+Random.randI(0,phIterationCycle)*/);
+	if (m_flags.is_exact_integration_prefeared() && nj < max_joint_allowed_for_exeact_integration)
+		dWorldStep(DWorld(), fixed_step);
+	else
+		dWorldQuickStep(DWorld(), fixed_step);
+	//dWorldStep(DWorld(),fixed_step);
 }
 
 void CPHIsland::Enable()
 {
-	if(!m_flags.is_active()) return;
+	if (!m_flags.is_active())
+		return;
 
-	for (dxBody *body = DWorld()->firstbody; body; body = (dxBody*)body->next)
-	{
+	for (dxBody *body = DWorld()->firstbody; body; body = (dxBody *)body->next)
 		body->flags &= ~dxBodyDisabled;
-	}
-	
 }
 void CPHIsland::Repair()
 {
-	if (!m_flags.is_active()) return;
+	if (!m_flags.is_active())
+		return;
 
-	for (dBodyID body = firstbody; body; body = (dxBody *)body->next)
+	dBodyID body;
+	for (body = firstbody; body; body = (dxBody *)body->next)
 	{
 		if (!dV_valid(dBodyGetAngularVel(body)))
 			dBodySetAngularVel(body, 0.f, 0.f, 0.f);
@@ -41,7 +42,7 @@ void CPHIsland::Repair()
 
 		if (!dQ_valid(dBodyGetQuaternion(body)))
 		{
-			dQuaternion q = { 1.f,0.f,0.f,0.f };
+			dQuaternion q = { 1.f,0.f,0.f,0.f };//dQSetIdentity(q);
 			dBodySetQuaternion(body, q);
 		}
 	}

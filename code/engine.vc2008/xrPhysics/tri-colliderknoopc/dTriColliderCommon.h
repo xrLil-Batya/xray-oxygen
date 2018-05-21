@@ -8,16 +8,16 @@ extern xr_vector<flags8> gl_cl_tries_state;
 
 inline dContactGeom* CONTACT(dContactGeom* ptr, const int stride)
 {
-    const size_t count = stride / sizeof(dContact);
-    dContact* contact = (dContact*)(uintptr_t(ptr) - uintptr_t(offsetof(dContact, geom)));
-    return &(contact[count]).geom;
+	const size_t count = stride / sizeof(dContact);
+	dContact* contact = (dContact*)(uintptr_t(ptr) - uintptr_t(offsetof(dContact, geom)));
+	return &(contact[count]).geom;
 }
 
 inline dSurfaceParameters* SURFACE(dContactGeom* ptr, const int stride)
 {
-    const size_t count = stride / sizeof(dContact);
-    dContact* contact = (dContact*)(uintptr_t(ptr) - uintptr_t(offsetof(dContact, geom)));
-    return &(contact[count]).surface;
+	const size_t count = stride / sizeof(dContact);
+	dContact* contact = (dContact*)(uintptr_t(ptr) - uintptr_t(offsetof(dContact, geom)));
+	return &(contact[count]).surface;
 }
 #define NUMC_MASK (0xffff)
 

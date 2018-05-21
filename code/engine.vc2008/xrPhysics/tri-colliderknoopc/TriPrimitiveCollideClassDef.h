@@ -26,7 +26,6 @@ public:\
 \
 };
 
-
 #define TRI_PRIMITIVE_COLIDE_CLASS_IMPLEMENT(primitive)			\
 	IC	float	dcTriListCollider::primitive##Tri:: Proj  (dxGeom* o,const dReal* normal){return m_tri_list.d##primitive##Proj(o,normal);}\
 	IC	int		dcTriListCollider::primitive##Tri:: Collide(\

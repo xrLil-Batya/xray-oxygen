@@ -7,18 +7,18 @@
 
 void CPHShell::net_Import(NET_Packet& P)
 {
-    auto i=elements.begin(),e=elements.end();
-	for(;i!=e;++i)
+	auto i = elements.begin(), e = elements.end();
+	for (; i != e; ++i)
 	{
 		(*i)->net_Import(P);
-	}	
+	}
 }
 
 void CPHShell::net_Export(NET_Packet& P)
 {
-    auto i=elements.begin(),e=elements.end();
-	for(;i!=e;++i)
+	auto i = elements.begin(), e = elements.end();
+	for (; i != e; ++i)
 	{
 		(*i)->net_Export(P);
-	}	
+	}
 }

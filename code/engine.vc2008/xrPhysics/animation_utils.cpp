@@ -4,10 +4,8 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "../xrEngine/bone.h"
 
-anim_bone_fix::anim_bone_fix()
-	: bone(nullptr), parent(nullptr), matrix(Fmatrix().identity())
+anim_bone_fix::anim_bone_fix() : bone(nullptr), parent(nullptr), matrix(Fmatrix().identity())
 {
-
 }
 anim_bone_fix::~anim_bone_fix()
 {
@@ -58,7 +56,6 @@ void anim_bone_fix::release()
 	VERIFY(bone->callback() == callback);
 	VERIFY(bone->callback_param() == this);
 	bone->reset_callback();
-
 }
 
 bool find_in_parents(const u16 bone_to_find, const u16 from_bone, IKinematics &ca)

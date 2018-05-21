@@ -33,7 +33,6 @@ enum
 	phDbgCharacterControl = 1 << 29,
 	phDbgDrawRayMotions = 1 << 30,
 	phDbgTrackObject = 1 << 31
-
 };
 ///ph_dbg_draw_mask1 ne pereputat by blin!
 enum
@@ -71,11 +70,12 @@ public:
 	virtual	const	Flags32		&ph_dbg_draw_mask()const = 0;
 	virtual	const	Flags32		&ph_dbg_draw_mask1()const = 0;
 
-
 	virtual	void DBG_DrawStatBeforeFrameStep() = 0;
 	virtual	void DBG_DrawStatAfterFrameStep() = 0;
+	//virtual	void DBG_RenderUpdate( )												=0;
 	virtual	void DBG_OpenCashedDraw() = 0;
 	virtual	void DBG_ClosedCashedDraw(u32 remove_time) = 0;
+	//virtual	void DBG_DrawPHAbstruct( SPHDBGDrawAbsract*	a )							=0;
 	virtual	void DBG_DrawPHObject(const CPHObject *obj) = 0;
 	virtual	void DBG_DrawContact(const dContact &c) = 0;
 	virtual	void DBG_DrawTri(CDB::RESULT *T, u32 c) = 0;
@@ -85,12 +85,21 @@ public:
 	virtual	void DBG_DrawOBB(const Fmatrix &m, const Fvector h, u32 c) = 0;
 	virtual	void DBG_DrawPoint(const Fvector& p, float size, u32 c) = 0;
 	virtual	void DBG_DrawMatrix(const Fmatrix &m, float size, u8 a = 255) = 0;
+	//virtual	void DBG_DrawRotationX( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
+	//virtual	void DBG_DrawRotationY( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
+	//virtual	void DBG_DrawRotationZ( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
 	virtual	void _cdecl DBG_OutText(LPCSTR s, ...) = 0;
+	//virtual	void DBG_TextOutSet( float x, float y )									=0;
+	//virtual	void DBG_TextSetColor( u32 color )										=0;
+	//virtual	void DBG_DrawBind( CObject &O )											=0;
+	//virtual	void DBG_PhysBones( CObject &O )										=0;
+	//virtual	void DBG_DrawBones( CObject &O )										=0;
 	virtual	void DBG_DrawFrameStart() = 0;
 	virtual	void PH_DBG_Render() = 0;
 	virtual	void PH_DBG_Clear() = 0;
 	virtual	LPCSTR PH_DBG_ObjectTrackName() = 0;
 
+	//virtual	bool			draw_frame								()=0;
 	virtual	u32				&dbg_tries_num() = 0;
 	virtual	u32				&dbg_saved_tries_for_active_objects() = 0;
 	virtual	u32				&dbg_total_saved_tries() = 0;
@@ -103,19 +112,17 @@ public:
 
 	virtual		float		dbg_vel_collid_damage_to_display() = 0;
 
-	virtual	void DBG_ObjAfterPhDataUpdate(CPHObject *obj) = 0;
-	virtual	void DBG_ObjBeforePhDataUpdate(CPHObject *obj) = 0;
-	virtual	void DBG_ObjAfterStep(CPHObject *obj) = 0;
-	virtual	void DBG_ObjBeforeStep(CPHObject *obj) = 0;
-	virtual	void DBG_ObjeAfterPhTune(CPHObject *obj) = 0;
-	virtual	void DBG_ObjBeforePhTune(CPHObject *obj) = 0;
-	virtual	void DBG_ObjAfterCollision(CPHObject *obj) = 0;
-	virtual	void DBG_ObjBeforeCollision(CPHObject *obj) = 0;
-
-
+	virtual		void DBG_ObjAfterPhDataUpdate(CPHObject *obj) = 0;
+	virtual		void DBG_ObjBeforePhDataUpdate(CPHObject *obj) = 0;
+	virtual		void DBG_ObjAfterStep(CPHObject *obj) = 0;
+	virtual		void DBG_ObjBeforeStep(CPHObject *obj) = 0;
+	virtual		void DBG_ObjeAfterPhTune(CPHObject *obj) = 0;
+	virtual		void DBG_ObjBeforePhTune(CPHObject *obj) = 0;
+	virtual		void DBG_ObjAfterCollision(CPHObject *obj) = 0;
+	virtual		void DBG_ObjBeforeCollision(CPHObject *obj) = 0;
 };
 
-extern XRPHYSICS_API IDebugOutput *ph_debug_output;
+extern XRPHYSICS_API	IDebugOutput	*ph_debug_output;
 
 IC	IDebugOutput	&debug_output()
 {
