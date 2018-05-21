@@ -13,21 +13,7 @@
 #include "../Include/xrRender/Kinematics.h"
 #include "PHCollideValidator.h"
 #include "../xrengine/bone.h"
-//#include "game_object_space.h"
-//#pragma warning(disable:4995)
-//#pragma warning(disable:4267)
-//#include "../../3rd-party/ode/ode/src/collision_kernel.h"
-//#pragma warning(default:4995)
-//#pragma warning(default:4267)
-///////////////////////////////////////////////////////////////
-///#pragma warning(disable:4995)
-
-//#include "../../3rd-party/ode/ode/src/joint.h"
-//#include "../../3rd-party/ode/ode/src/objects.h"
-
-//#pragma warning(default:4995)
 ///////////////////////////////////////////////////////////////////
-
 #include "ExtendedGeom.h"
 #include "PHElement.h"
 #include "PHShell.h"
@@ -929,38 +915,29 @@ void CPHShell::ResetCallbacks(u16 id,Flags64 &mask)
 
 void CPHShell::ResetCallbacksRecursive(u16 id,u16 element,Flags64 &mask)
 {
-
-	//if(elements.size()==element)	return;
 	CBoneInstance& B	= m_pKinematics->LL_GetBoneInstance(u16(id));
 	const IBoneData& bone_data= m_pKinematics->GetBoneData(u16(id));
 	const SJointIKData& joint_data=bone_data.get_IK_data();
 
-	if( mask.is(1ui64<<(u64)id) )
+	if (mask.is(1ui64 << (u64)id))
 	{
-
-		if(no_physics_shape(bone_data.get_shape())||joint_data.type==jtRigid&& element!=u16(-1))
+		if ((no_physics_shape(bone_data.get_shape()) || joint_data.type == jtRigid) && element != u16(-1))
 		{
-
 			B.set_callback(bctPhysics,0,cast_PhysicsElement(elements[element]));
 		}
 		else
 		{
-
 			element++;
 			R_ASSERT2(element<elements.size(),"Out of elements!!");
-			//if(elements.size()==element)	return;
 			B.set_callback(bctPhysics,BonesCallback,cast_PhysicsElement(elements[element]));
 			B.set_callback_overwrite(TRUE);
 		}
 	}
 
-	//for (vecBonesIt it=bone_data.children.begin(); it!=bone_data.children.end(); ++it)
-	//	ResetCallbacksRecursive((*it)->GetSelfID(),element,mask);
-	//IBoneData	&ibone_data = bone_data;
-	u16	num_children = bone_data.GetNumChildren();
-	for(u16 i = 0;i<num_children;++i)
-		ResetCallbacksRecursive(bone_data.GetChild(i).GetSelfID(),element,mask);
-		
+	for (u16 i = 0; i < bone_data.GetNumChildren(); ++i)
+	{
+		ResetCallbacksRecursive(bone_data.GetChild(i).GetSelfID(), element, mask);
+	}
 }
 
 void CPHShell::EnabledCallbacks(BOOL val)
