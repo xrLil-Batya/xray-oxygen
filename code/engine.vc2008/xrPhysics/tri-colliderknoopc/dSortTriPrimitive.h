@@ -199,7 +199,6 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide (
 #ifdef DEBUG
 		debug_output().dbg_saved_tries_for_active_objects()++;
 #endif
-		//if(ignored_tries[I-B])continue;
 		CDB::TRI* T = T_array + *I;
 		const Point vertices[3]={Point((dReal*)&V_array[T->verts[0]]),Point((dReal*)&V_array[T->verts[1]]),Point((dReal*)&V_array[T->verts[2]])};
 		if(!aabb_tri_aabb(Point(p),Point((float*)&AABB),vertices))
@@ -278,9 +277,8 @@ IC int dcTriListCollider::dSortTriPrimitiveCollide (
 						intersect=true;
 					}
 
-					if(	!b_passable &&	( b_pased || 
-							contain_pos && no_last_pos )
-						){
+					if(	!b_passable &&	( b_pased || (contain_pos && no_last_pos )))
+					{
 							dReal sidePr=primitive.Proj(o1,tri.norm);
 							tri.depth=sidePr-tri.dist;
 							if(neg_depth>tri.depth&&(!(*pushing_neg||spushing_neg)||dDOT(neg_tri.norm,tri.norm)>-M_SQRT1_2)&&(!(*pushing_b_neg||spushing_b_neg)||dDOT(b_neg_tri.norm,tri.norm)>-M_SQRT1_2))//exclude switching on opposite side &&(!*pushing_b_neg||dDOT(b_neg_tri->norm,tri.norm)>-M_SQRT1_2)

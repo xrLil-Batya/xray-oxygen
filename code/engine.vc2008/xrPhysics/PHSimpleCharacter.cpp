@@ -168,17 +168,14 @@ CPHSimpleCharacter::CPHSimpleCharacter():	m_last_environment_update ( Fvector().
 	b_any_contacts=false;
 	b_valide_ground_contact=false;
 	b_valide_wall_contact=false;
-	b_jump=false;
 	b_exist=false;
 	m_mass=70.f;
 	m_max_velocity=5.f;
-	//m_update_time=0.f;
 	b_meet_control=false;
 	b_jumping=false;
 	b_death_pos=false;
 	jump_up_velocity=6.f;
 	m_air_control_factor=0;
-	//m_capture_joint=NULL;
 	m_cap=NULL;
 	m_cap_transform=NULL;
 	dVectorSetZero(m_safe_velocity);
@@ -854,8 +851,6 @@ bool CPHSimpleCharacter::ValidateWalkOnObject()
 			(m_wall_contact_position[2]-m_ground_contact_position[2])*m_control_force[2])>0.05f &&
 			m_wall_contact_position[1]-m_ground_contact_position[1]>0.01f)
 			b_clamb_jump=true;
-
-
 	}
 
 	if(b_valide_wall_contact && (m_contact_count>1)&& b_clamb_jump)
@@ -868,15 +863,13 @@ bool CPHSimpleCharacter::ValidateWalkOnObject()
 }
 bool CPHSimpleCharacter::ValidateWalkOnMesh()
 {
-	Fvector AABB,AABB_forbid,center,center_forbid,accel_add,accel;
+	Fvector nAABB,AABB_forbid,center,center_forbid,accel_add,accel;
 	
-	AABB.x=m_radius;
-	AABB.y=m_radius;
-	AABB.z=m_radius;
+	nAABB.x=m_radius;
+	nAABB.y=m_radius;
+	nAABB.z=m_radius;
 
-	AABB_forbid.set(AABB);
-	//AABB_forbid.x*=0.7f;
-	//AABB_forbid.z*=0.7f;
+	AABB_forbid.set(nAABB);
 	AABB_forbid.y+=m_radius;
 	AABB_forbid.mul(CHWON_AABB_FB_FACTOR);
 
@@ -887,7 +880,7 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 	accel_add.mul(CHWON_ACCLEL_SHIFT/mag);
 	accel.set(accel_add);
 	accel.div(CHWON_ACCLEL_SHIFT);
-	AABB.mul(CHWON_AABB_FACTOR);
+	nAABB.mul(CHWON_AABB_FACTOR);
 	GetPosition(center);
 	center.add(accel_add);
 	center_forbid.set(center);
@@ -900,13 +893,12 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 	query.set		(center_forbid,center_forbid);
 	query.grow		(AABB_forbid				);
 	tmp.set			(center,center				);
-	tmp.grow		(AABB						);
+	tmp.grow		(nAABB);
 	query.merge		(tmp);
 	query.get_CD	(q_c,q_d);
 
 	XRC.box_options                (0);
 	XRC.box_query                  (inl_ph_world().ObjectSpace().GetStaticModel(),q_c,q_d);
-	//Fvector fv_dir;fv_dir.mul(accel,1.f/mag);
 	Fvector sd_dir;sd_dir.set(-accel.z,0,accel.x);
 	Fvector obb_fb;obb_fb.set(m_radius*0.5f,m_radius*2.f,m_radius*0.7f);
 	Fvector obb;obb.set(m_radius*0.5f,m_radius,m_radius*0.7f);
@@ -923,19 +915,15 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 	}
 #endif
 
-	//if(XRC.r_end()!=XRC.r_begin()) return false;
 	CDB::RESULT*    R_begin        = XRC.r_begin();
 	CDB::RESULT*    R_end          = XRC.r_end();
 	for (CDB::RESULT* Res=R_begin; Res!=R_end; ++Res)
 	{
 		SGameMtl* m =  GMLibrary().GetMaterialByIdx(Res->material);
 		if(m->Flags.test(SGameMtl::flPassable))continue;
-		//CDB::TRI* T = T_array + Res->id;
 		Point vertices[3]={Point((dReal*)&Res->verts[0]),Point((dReal*)&Res->verts[1]),Point((dReal*)&Res->verts[2])};
 		if(__aabb_tri(Point((float*)&center_forbid),Point((float*)&AABB_forbid),vertices))
 			{
-	
-				
 				if( test_sides(center_forbid,sd_dir,accel,obb_fb,Res->id))
 				{
 #ifdef DEBUG
@@ -948,13 +936,6 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 					return 
 						false;
 				}
-			//cast_fv(side0).sub(Res->verts[1],Res->verts[0]);
-			//cast_fv(side1).sub(Res->verts[2],Res->verts[1]);
-			//dCROSS(norm,=,side0,side1);//optimize it !!!
-			//cast_fv(norm).normalize();
-
-			//if(dDOT(norm,(float*)&accel)<-CHWON_ANG_COS) 
-		
 		}
 	}
 
@@ -964,7 +945,7 @@ bool CPHSimpleCharacter::ValidateWalkOnMesh()
 		SGameMtl* m =  GMLibrary().GetMaterialByIdx(Res->material);
 		if(m->Flags.test(SGameMtl::flPassable))continue;
 		Point vertices[3]={Point((dReal*)&Res->verts[0]),Point((dReal*)&Res->verts[1]),Point((dReal*)&Res->verts[2])};
-		if(__aabb_tri(Point((float*)&center),Point((float*)&AABB),vertices)){
+		if(__aabb_tri(Point((float*)&center),Point((float*)&nAABB),vertices)){
 			if(test_sides(center,sd_dir,accel,obb,Res->id))
 			{
 #ifdef DEBUG
@@ -996,14 +977,9 @@ void CPHSimpleCharacter::SetCamDir(const Fvector& cam_dir)
 static const float pull_force=25.f;
 void CPHSimpleCharacter::ApplyAcceleration() 
 {
-
 	dVectorSetZero(m_control_force);
-	//if(m_max_velocity<EPS) return;
 	dMass m;
 	dBodyGetMass(m_body,&m);
-
-	//if(b_jump) 
-	//	m_control_force[1]=60.f*m.mass*2.f;
 
 	if(b_lose_control) 
 	{
@@ -1019,7 +995,6 @@ void CPHSimpleCharacter::ApplyAcceleration()
 		if(m_elevator_state.NearState())m_elevator_state.GetControlDir(*(Fvector*)accel);
 		if(m_elevator_state.ClimbingState())
 		{
-			//dVectorSet(m_control_force,accel);
 			if(m_elevator_state.GetControlDir(*(Fvector*)m_control_force))
 			{
 				dVectorMul(m_control_force,m_friction_factor*m.mass*pull_force*2.f);

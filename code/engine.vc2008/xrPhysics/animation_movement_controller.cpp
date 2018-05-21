@@ -148,7 +148,6 @@ void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matri
 
 	if (stopped)
 	{
-		m_control_blend = B;
 		m_startObjXForm.set(new_matrix);
 		GetInitalPositionBlenSpeed();
 		inital_position_blending = true;
@@ -158,7 +157,7 @@ void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matri
 	else if (local_animation)
 	{
 		float blend_time = m_control_blend->timeCurrent;
-		m_control_blend->timeCurrent = m_control_blend->timeTotal - SAMPLE_SPF;//(SAMPLE_SPF+EPS);
+		m_control_blend->timeCurrent = m_control_blend->timeTotal - SAMPLE_SPF;
 		Fmatrix root;
 		animation_root_position(root);
 		m_startObjXForm.mulB_43(root);
@@ -166,11 +165,13 @@ void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matri
 	}
 
 	m_control_blend = B;
+
 	if (set_blending)
 		SetPosesBlending();
 	else
 		m_poses_blending = poses_blending(Fidentity, Fidentity, -1.f);
 }
+
 void	animation_movement_controller::DBG_verify_position_not_chaged() const
 {
 }

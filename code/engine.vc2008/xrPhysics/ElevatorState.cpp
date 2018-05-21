@@ -47,7 +47,8 @@ void CElevatorState::PhTune(float step)
 	case 	clbClimbingUp	:UpdateStClimbingUp()	;		break;					
 	case 	clbClimbingDown	:UpdateStClimbingDown()	;		break;	
 	case	clbDepart		:UpdateDepart()			;		break;
-	case	clbNoLadder		:m_ladder = NULL		;		break;		
+	case	clbNoLadder		:m_ladder = nullptr		;		break;		
+	default: break;
 	}
 
 }
@@ -291,7 +292,9 @@ bool CElevatorState::GetControlDir(Fvector& dir)
 #endif
 										ret=false;
 									}
-									break;				
+									break;		
+
+	default: break;
 	}
 	return ret;
 }
@@ -312,11 +315,6 @@ void CElevatorState::UpdateDepart()
 		if(getting_on_dist+m_character->FootRadius() > d_to_upper)
 			SwitchState(clbNearUp);
 	}
-
-	//Fvector p;m_character->GetFootCenter(p);
-	//p.sub(m_start_position);
-	//if(	p.magnitude()>depart_dist || 
-	//	Device.dwTimeGlobal-m_start_time>depart_time)
 		SwitchState(clbNoLadder);
 
 }

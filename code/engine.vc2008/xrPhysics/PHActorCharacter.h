@@ -42,15 +42,16 @@ struct TPHCharacterRestrictor : public SPHCharacterRestrictor
 static	void RestrictorCallBack	(bool& do_colide,bool bo1,dContact& c,SGameMtl* material_1,SGameMtl* material_2)
 		{
 			do_colide=false;
-			dBodyID						b1		=	dGeomGetBody(c.geom.g1);
-			dBodyID						b2		=	dGeomGetBody(c.geom.g2);
+			dBodyID						b1		= dGeomGetBody(c.geom.g1);
+			dBodyID						b2		= dGeomGetBody(c.geom.g2);
 			if(!(b1&&b2))	return;
-			dxGeomUserData				*ud1	=	retrieveGeomUserData(c.geom.g1);
-			dxGeomUserData				*ud2	=	retrieveGeomUserData(c.geom.g2);
+			dxGeomUserData				*ud1	= retrieveGeomUserData(c.geom.g1);
+			dxGeomUserData				*ud2	= retrieveGeomUserData(c.geom.g2);
 			if(!(ud1&&ud2))return;
 
-			CPHObject					*o1		=	NULL;if(ud1)o1=ud1->ph_object;
-			CPHObject					*o2		=	NULL;if(ud2)o2=ud2->ph_object;
+			CPHObject					*o1		= ud1->ph_object;
+			CPHObject					*o2		= ud2->ph_object;
+
 			if(!(o1&&o2))				return;
 			if(o1->CastType()!=CPHObject::tpCharacter||o2->CastType()!=CPHObject::tpCharacter) return;
 

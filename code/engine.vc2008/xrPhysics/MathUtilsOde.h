@@ -1,5 +1,5 @@
 #pragma once
-
+#pragma warning(push)
 #pragma warning(disable:4995)
 #pragma warning(disable:4267)
 #include "../../3rd-party/ode/include/ode/common.h"
@@ -13,7 +13,7 @@
 #include "mathutils.h"
 #include "ode_redefine.h"
 
-static const	dReal	accurate_normalize_epsilon			= 1.192092896e-05F;
+static const dReal accurate_normalize_epsilon = 1.192092896e-05F;
 
 ICF void	accurate_normalize(float* a)
 {
@@ -104,6 +104,4 @@ IC	void	dVectorInterpolate(float* res,const float* from,const float* to,float k)
 float E_NL( dBodyID b1, dBodyID b2, const dReal* norm );
 
 float E_NlS( dBodyID body, const dReal* norm, float norm_sign );//if body c.geom.g1 norm_sign + else -
-
-#pragma warning(default:4995)
-#pragma warning(default:4267)
+#pragma warning(pop)

@@ -61,8 +61,9 @@ public:
         w_u8(0);
     }
 
-    void w_stringZ(const xr_string& p) {
-        w(p.c_str() ? p.c_str() : "", p.size());
+    void w_stringZ(const xr_string& p)
+	{
+        w(p.c_str(), p.size());
         w_u8(0);
     }
     void w_fcolor(const Fcolor& v) { w(&v, sizeof(Fcolor)); }
