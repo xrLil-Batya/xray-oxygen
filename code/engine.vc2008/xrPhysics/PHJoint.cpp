@@ -41,7 +41,6 @@ void CPHJoint::SetBackRef(IPhysicsJoint** j)
 }
 void CPHJoint::CreateBall()
 {
-
 	m_joint = dJointCreateBall(0, 0);
 	Fvector pos;
 	Fmatrix first_matrix, second_matrix;
@@ -53,30 +52,29 @@ void CPHJoint::CreateBall()
 	second->GetGlobalTransformDynamic(&second_matrix);
 	pos.set(0, 0, 0);
 	switch (vs_anchor) {
-	case vs_first:first_matrix.transform_tiny(pos, anchor); break;
-	case vs_second:second_matrix.transform_tiny(pos, anchor); break;
-	case vs_global:pShell->mXFORM.transform_tiny(pos, anchor); break;
+	case vs_first:
+		first_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_second:
+		second_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_global:
+		pShell->mXFORM.transform_tiny(pos, anchor);
+		break;
 	default:NODEFAULT;
 	}
 
-
-
 	dJointAttach(m_joint, body_for_joint(first), body_for_joint(second));
 	dJointSetBallAnchor(m_joint, pos.x, pos.y, pos.z);
-
 }
-
-
 
 void CPHJoint::CreateHinge()
 {
-
 	m_joint = dJointCreateHinge(0, 0);
 
 	Fvector pos;
 	Fmatrix first_matrix, second_matrix;
 	Fvector axis;
-
 
 	CPHElement* first = (pFirst_element);
 	CPHElement* second = (pSecond_element);
@@ -87,12 +85,17 @@ void CPHJoint::CreateHinge()
 	pos.set(0, 0, 0);
 	switch (vs_anchor)
 	{
-	case vs_first:first_matrix.transform_tiny(pos, anchor); break;
-	case vs_second:second_matrix.transform_tiny(pos, anchor); break;
-	case vs_global:pShell->mXFORM.transform_tiny(pos, anchor); break;
+	case vs_first:
+		first_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_second:
+		second_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_global:
+		pShell->mXFORM.transform_tiny(pos, anchor);
+		break;
 	default:NODEFAULT;
 	}
-
 
 	axis.set(0, 0, 0);
 
@@ -111,7 +114,7 @@ void CPHJoint::CreateHinge()
 
 	dJointSetHingeParam(m_joint, dParamLoStop, lo);
 	dJointSetHingeParam(m_joint, dParamHiStop, hi);
-	if (axes[0].force>0.f) {
+	if (axes[0].force > 0.f) {
 		dJointSetHingeParam(m_joint, dParamFMax, axes[0].force);
 		dJointSetHingeParam(m_joint, dParamVel, axes[0].velocity);
 	}
@@ -121,10 +124,8 @@ void CPHJoint::CreateHinge()
 	dJointSetHingeParam(m_joint, dParamCFM, m_cfm);
 }
 
-
 void CPHJoint::CreateHinge2()
 {
-
 	m_joint = dJointCreateHinge2(0, 0);
 
 	Fvector pos;
@@ -138,9 +139,15 @@ void CPHJoint::CreateHinge2()
 	pos.set(0, 0, 0);
 	switch (vs_anchor)
 	{
-	case vs_first:first_matrix.transform_tiny(pos, anchor); break;
-	case vs_second:second_matrix.transform_tiny(pos, anchor); break;
-	case vs_global:pShell->mXFORM.transform_tiny(pos, anchor); break;
+	case vs_first:
+		first_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_second:
+		second_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_global:
+		pShell->mXFORM.transform_tiny(pos, anchor);
+		break;
 	default:NODEFAULT;
 	}
 	//////////////////////////////////////
@@ -165,14 +172,16 @@ void CPHJoint::CreateHinge2()
 	/////////////////////////////////////////////////////////
 	axis.set(0, 0, 0);
 	CalcAxis(0, axis, lo, hi, first_matrix, second_matrix, rotate);
-	if (!b1)axis.invert();//SwapLimits(lo,hi);
-	dJointSetHinge2Axis1(m_joint, axis.x, axis.y, axis.z);
 
+	if (!b1)
+		axis.invert();
+
+	dJointSetHinge2Axis1(m_joint, axis.x, axis.y, axis.z);
 
 	dJointSetHinge2Param(m_joint, dParamLoStop, lo);
 	dJointSetHinge2Param(m_joint, dParamHiStop, hi);
 
-	if (!(axes[0].force<0.f)) {
+	if (!(axes[0].force < 0.f)) {
 		dJointSetHinge2Param(m_joint, dParamFMax, axes[0].force);
 		dJointSetHinge2Param(m_joint, dParamVel, axes[0].velocity);
 	}
@@ -183,7 +192,7 @@ void CPHJoint::CreateHinge2()
 
 	dJointSetHinge2Param(m_joint, dParamLoStop2, lo);
 	dJointSetHinge2Param(m_joint, dParamHiStop2, hi);
-	if (!(axes[1].force<0.f)) {
+	if (!(axes[1].force < 0.f)) {
 		dJointSetHinge2Param(m_joint, dParamFMax2, axes[1].force);
 		dJointSetHinge2Param(m_joint, dParamVel2, axes[1].velocity);
 	}
@@ -211,16 +220,21 @@ void CPHJoint::CreateSlider()
 	second->GetGlobalTransformDynamic(&second_matrix);
 	dBodyID body2 = body_for_joint(second);
 
-
 	pos.set(0, 0, 0);
-	switch (vs_anchor) {
-	case vs_first:first_matrix.transform_tiny(pos, anchor); break;
-	case vs_second:second_matrix.transform_tiny(pos, anchor); break;
-	case vs_global:pShell->mXFORM.transform_tiny(pos, anchor); break;
+	switch (vs_anchor)
+	{
+	case vs_first:
+		first_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_second:
+		second_matrix.transform_tiny(pos, anchor);
+		break;
+	case vs_global:
+		pShell->mXFORM.transform_tiny(pos, anchor);
+		break;
 	default:NODEFAULT;
 	}
 	//////////////////////////////////////
-
 
 	m_joint = dJointCreateSlider(0, 0);
 	dJointAttach(m_joint, body1, body2);
@@ -235,8 +249,6 @@ void CPHJoint::CreateSlider()
 			axes[0].vs = vs_second;
 			axes[1].vs = vs_second;
 		}
-
-
 
 	m_joint1 = dJointCreateAMotor(0, 0);
 	dJointSetAMotorMode(m_joint1, dAMotorEuler);
@@ -267,7 +279,7 @@ void CPHJoint::CreateSlider()
 	dJointSetSliderParam(m_joint, dParamLoStop, axes[0].low);
 	dJointSetSliderParam(m_joint, dParamHiStop, axes[0].high);
 
-	if (!(axes[0].force<0.f)) {
+	if (!(axes[0].force < 0.f)) {
 		dJointSetSliderParam(m_joint, dParamFMax, axes[0].force);
 		dJointSetSliderParam(m_joint, dParamVel, axes[0].velocity);
 	}
@@ -282,16 +294,13 @@ void CPHJoint::CreateSlider()
 	dJointSetAMotorAxis(m_joint1, 0, rel, axis.x, axis.y, axis.z);
 	dJointSetAMotorParam(m_joint1, dParamLoStop, lo);
 	dJointSetAMotorParam(m_joint1, dParamHiStop, hi);
-	if (!(axes[1].force<0.f)) {
+	if (!(axes[1].force < 0.f)) {
 		dJointSetAMotorParam(m_joint1, dParamFMax, axes[1].force);
 		dJointSetAMotorParam(m_joint1, dParamVel, axes[1].velocity);
 	}
 
-
-
 	dJointSetAMotorParam(m_joint1, dParamStopERP, axes[1].erp);
 	dJointSetAMotorParam(m_joint1, dParamStopCFM, axes[1].cfm);
-
 
 	/////////////////////////////////////////////////////////////////////
 	///dJointSetAMotorParam(m_joint1,dParamFudgeFactor ,0.1f);
@@ -307,8 +316,6 @@ void CPHJoint::CreateSlider()
 #endif
 void CPHJoint::CreateFullControl()
 {
-
-
 	Fvector pos;
 	Fmatrix first_matrix, second_matrix;
 	Fvector axis;
@@ -321,9 +328,6 @@ void CPHJoint::CreateFullControl()
 	second->GetGlobalTransformDynamic(&second_matrix);
 	dBodyID body2 = body_for_joint(second);
 
-
-
-
 	pos.set(0, 0, 0);
 	switch (vs_anchor) {
 	case vs_first:first_matrix.transform_tiny(pos, anchor); break;
@@ -333,13 +337,9 @@ void CPHJoint::CreateFullControl()
 	}
 	//////////////////////////////////////
 
-
-
 	m_joint = dJointCreateBall(0, 0);
 	dJointAttach(m_joint, body1, body2);
 	dJointSetBallAnchor(m_joint, pos.x, pos.y, pos.z);
-
-
 
 	m_joint1 = dJointCreateAMotor(0, 0);
 	dJointSetAMotorMode(m_joint1, dAMotorEuler);
@@ -368,7 +368,7 @@ void CPHJoint::CreateFullControl()
 	dJointSetAMotorParam(m_joint1, dParamLoStop, lo);
 	dJointSetAMotorParam(m_joint1, dParamHiStop, hi);
 
-	if (!(axes[0].force<0.f)) {
+	if (!(axes[0].force < 0.f)) {
 		dJointSetAMotorParam(m_joint1, dParamFMax, axes[0].force);
 		dJointSetAMotorParam(m_joint1, dParamVel, axes[0].velocity);
 	}
@@ -378,7 +378,7 @@ void CPHJoint::CreateFullControl()
 	if (!body1)axis.invert();//SwapLimits(lo,hi);
 	dJointSetAMotorParam(m_joint1, dParamLoStop2, lo);
 	dJointSetAMotorParam(m_joint1, dParamHiStop2, hi);
-	if (!(axes[1].force<0.f)) {
+	if (!(axes[1].force < 0.f)) {
 		dJointSetAMotorParam(m_joint1, dParamFMax2, axes[1].force);
 		dJointSetAMotorParam(m_joint1, dParamVel2, axes[1].velocity);
 	}
@@ -389,7 +389,7 @@ void CPHJoint::CreateFullControl()
 	dJointSetAMotorAxis(m_joint1, 2, 2, axis.x, axis.y, axis.z);
 	dJointSetAMotorParam(m_joint1, dParamLoStop3, lo);
 	dJointSetAMotorParam(m_joint1, dParamHiStop3, hi);
-	if (!(axes[2].force<0.f)) {
+	if (!(axes[2].force < 0.f)) {
 		dJointSetAMotorParam(m_joint1, dParamFMax3, axes[2].force);
 		dJointSetAMotorParam(m_joint1, dParamVel3, axes[2].velocity);
 	}
@@ -411,7 +411,6 @@ void CPHJoint::CreateFullControl()
 	dJointSetAMotorParam(m_joint1, dParamCFM2, m_cfm);
 	dJointSetAMotorParam(m_joint1, dParamCFM3, m_cfm);
 }
-
 
 void CPHJoint::SetAnchor(const float x, const float y, const float z)
 {
@@ -441,7 +440,6 @@ void CPHJoint::SetAxisDir(const float x, const float y, const float z, const int
 	axes[ax].direction.set(x, y, z);
 
 	SetAxisDirDynamic(axes[ax].direction, axis_num);
-
 }
 
 void CPHJoint::SetAxisDirDynamic(const Fvector& orientation, const int axis_num)
@@ -450,7 +448,6 @@ void CPHJoint::SetAxisDirDynamic(const Fvector& orientation, const int axis_num)
 	VERIFY(axis_num <= 2);
 
 	switch (eType) {
-
 	case hinge2:
 		switch (axis_num)
 		{
@@ -462,7 +459,6 @@ void CPHJoint::SetAxisDirDynamic(const Fvector& orientation, const int axis_num)
 	case slider:
 		switch (axis_num)
 		{
-
 		case 0:		dJointSetSliderParam(m_joint, dParamFMax, axes[0].force); break;
 		case 1:		dJointSetAMotorParam(m_joint1, dParamFMax, axes[1].force); break;
 		default:	NODEFAULT;
@@ -496,7 +492,6 @@ void CPHJoint::SetAxisDirVsSecondElement(const float x, const float y, const flo
 	if (-1 == ax) return;
 	axes[ax].vs = vs_second;
 	axes[ax].direction.set(x, y, z);
-
 }
 
 void CPHJoint::SetLimits(const float low, const float high, const int axis_num)
@@ -524,8 +519,6 @@ void CPHJoint::SetLimits(const float low, const float high, const int axis_num)
 	m2.mul(m1, pSecond_element->mXFORM);
 	//m2.mul(pSecond_element->mXFORM,m1);
 
-
-
 	float zer;
 	//axis_angleB(m2,axis,zer);
 	axis_angleA(m2, axes[ax].direction, zer);
@@ -537,10 +530,8 @@ void CPHJoint::SetLimits(const float low, const float high, const int axis_num)
 		SetLimitsActive(axis_num);
 }
 
-
 CPHJoint::CPHJoint(IPhysicsJoint::enumType type, IPhysicsElementEx* first, IPhysicsElementEx* second)
 {
-
 	pShell = nullptr;
 	m_bone_id = u16(-1);
 	m_back_ref = nullptr;
@@ -582,7 +573,6 @@ CPHJoint::CPHJoint(IPhysicsJoint::enumType type, IPhysicsElementEx* first, IPhys
 		axes.push_back(axis);
 		axes.push_back(axis);
 	}
-
 }
 
 void CPHJoint::SetLimitsVsFirstElement(const float low, const float high, const  int axis_num)
@@ -671,7 +661,6 @@ void CPHJoint::GetMaxForceAndVelocity(float &force, float &velocity, int axis_nu
 	velocity = axes[axis_num].velocity;
 }
 
-
 void CPHJoint::SetForce(const float force, const int axis_num) {
 	int ax;
 	ax = axis_num;
@@ -705,11 +694,9 @@ void CPHJoint::SetForce(const float force, const int axis_num) {
 	}
 }
 
-
 void CPHJoint::SetForceActive(const int axis_num)
 {
 	switch (eType) {
-
 	case hinge2:switch (axis_num)
 	{
 	case -1:
@@ -732,8 +719,6 @@ void CPHJoint::SetForceActive(const int axis_num)
 	case hinge:					dJointSetHingeParam(m_joint, dParamFMax, axes[0].force);
 		break;
 
-
-
 	case full_control:
 		switch (axis_num) {
 		case -1:
@@ -752,7 +737,6 @@ void CPHJoint::SetVelocity(const float velocity, const int axis_num) {
 	int ax;
 	ax = axis_num;
 	LimitAxisNum(ax);
-
 
 	if (ax == -1)
 		switch (eType) {
@@ -785,7 +769,6 @@ void CPHJoint::SetVelocity(const float velocity, const int axis_num) {
 void CPHJoint::SetVelocityActive(const int axis_num)
 {
 	switch (eType) {
-
 	case hinge2:switch (axis_num)
 	{
 	case -1:
@@ -808,8 +791,6 @@ void CPHJoint::SetVelocityActive(const int axis_num)
 	case hinge:					dJointSetHingeParam(m_joint, dParamVel, axes[0].velocity);
 		break;
 
-
-
 	case full_control:
 		switch (axis_num) {
 		case -1:
@@ -825,12 +806,10 @@ void CPHJoint::SetVelocityActive(const int axis_num)
 }
 void CPHJoint::SetLoLimitDynamic(int axis_num, float limit)
 {
-
 	VERIFY(axis_num >= 0);
 	VERIFY(axis_num <= 2);
 	VERIFY(bActive);
 	switch (eType) {
-
 	case hinge2:
 		VERIFY(axis_num == 0);
 		//axes[0].low = limit;
@@ -881,15 +860,12 @@ void CPHJoint::SetLoLimitDynamic(int axis_num, float limit)
 	}
 }
 
-
 void CPHJoint::SetHiLimitDynamic(int axis_num, float limit)
 {
-
 	VERIFY(axis_num >= 0);
 	VERIFY(axis_num <= 2);
 	VERIFY(bActive);
 	switch (eType) {
-
 	case hinge2:
 		VERIFY(axis_num == 0);
 		VERIFY(m_joint);
@@ -943,7 +919,6 @@ void CPHJoint::SetHiLimitDynamic(int axis_num, float limit)
 void CPHJoint::SetLimitsActive(int axis_num)
 {
 	switch (eType) {
-
 	case hinge2:
 		switch (axis_num)
 		{
@@ -972,10 +947,8 @@ void CPHJoint::SetLimitsActive(int axis_num)
 		dJointSetHingeParam(m_joint, dParamHiStop, axes[0].high);
 		break;
 
-
-
 	case full_control:
-		switch (axis_num) 
+		switch (axis_num)
 		{
 		case -1:
 			dJointSetAMotorParam(m_joint1, dParamLoStop, axes[0].low);
@@ -1037,10 +1010,8 @@ float	CPHJoint::GetAxisAngleRate(int axis_num)
 			break;
 		}; break;
 	default: R_ASSERT2(false, "type not supported"); break;
-
 	}
 	return	ret;// body_for_joint(pFirst_element) ? ret : -
-
 }
 
 float CPHJoint::GetAxisAngle(int axis_num)
@@ -1057,14 +1028,13 @@ float CPHJoint::GetAxisAngle(int axis_num)
 		case 1: ret = dJointGetAMotorAngle(m_joint1, 0); break;
 		}; break;
 	default: R_ASSERT2(false, "type not supported"); break;
-
 	}
 	return	ret;// body_for_joint(pFirst_element) ? ret : -
 }
 
 void CPHJoint::LimitAxisNum(int &axis_num)
 {
-	if (axis_num<-1)
+	if (axis_num < -1)
 	{
 		axis_num = -1;
 		return;
@@ -1076,14 +1046,12 @@ void CPHJoint::LimitAxisNum(int &axis_num)
 	case hinge:					axis_num = 0;
 		break;
 	case slider:
-	case hinge2:				axis_num = axis_num>1 ? 1 : axis_num;
+	case hinge2:				axis_num = axis_num > 1 ? 1 : axis_num;
 		break;
 
-	case full_control:			axis_num = axis_num>2 ? 2 : axis_num;
+	case full_control:			axis_num = axis_num > 2 ? 2 : axis_num;
 		break;
-
 	}
-
 }
 
 void CPHJoint::SetAxis(const SPHAxis& axis, const int axis_num)
@@ -1182,7 +1150,7 @@ void CPHJoint::SetLimitsSDfactorsActive()
 {
 	switch (eType)
 	{
-	case hinge2:		
+	case hinge2:
 		dJointSetHinge2Param(m_joint, dParamStopERP, axes[0].erp);
 		dJointSetHinge2Param(m_joint, dParamStopCFM, axes[0].cfm);	break;
 
@@ -1191,7 +1159,7 @@ void CPHJoint::SetLimitsSDfactorsActive()
 		dJointSetHingeParam(m_joint, dParamStopERP, axes[0].erp);
 		dJointSetHingeParam(m_joint, dParamStopCFM, axes[0].cfm);	break;
 
-	case full_control:	
+	case full_control:
 		dJointSetAMotorParam(m_joint1, dParamStopERP, axes[0].erp);
 		dJointSetAMotorParam(m_joint1, dParamStopCFM, axes[0].cfm);
 		dJointSetAMotorParam(m_joint1, dParamStopERP2, axes[1].erp);
@@ -1199,12 +1167,11 @@ void CPHJoint::SetLimitsSDfactorsActive()
 		dJointSetAMotorParam(m_joint1, dParamStopERP3, axes[2].erp);
 		dJointSetAMotorParam(m_joint1, dParamStopCFM3, axes[2].cfm);	break;
 
-	case slider:		
+	case slider:
 		dJointSetSliderParam(m_joint, dParamStopERP, axes[0].erp);
 		dJointSetSliderParam(m_joint, dParamStopCFM, axes[0].cfm);
 		dJointSetAMotorParam(m_joint1, dParamStopERP, axes[1].erp);
 		dJointSetAMotorParam(m_joint1, dParamStopCFM, axes[1].cfm);	break;
-
 	}
 }
 void CPHJoint::SetAxisSDfactorsActive(int axis_num)
@@ -1219,7 +1186,7 @@ void CPHJoint::SetAxisSDfactorsActive(int axis_num)
 	case hinge:			dJointSetHingeParam(m_joint, dParamStopERP, axes[0].erp);
 		dJointSetHingeParam(m_joint, dParamStopCFM, axes[0].cfm);
 		break;
-	case full_control:	
+	case full_control:
 		switch (axis_num)
 		{
 		case 0:
@@ -1235,7 +1202,7 @@ void CPHJoint::SetAxisSDfactorsActive(int axis_num)
 			dJointSetAMotorParam(m_joint1, dParamStopCFM3, axes[2].cfm);
 			break;
 		} break;
-	case slider:		
+	case slider:
 		switch (axis_num)
 		{
 		case 0:
@@ -1272,7 +1239,6 @@ void CPHJoint::SetJointFudgefactorActive(float factor)
 		VERIFY(m_joint1);
 		dJointSetAMotorParam(m_joint1, dParamFudgeFactor, factor);
 		break;
-
 	}
 }
 
@@ -1315,19 +1281,19 @@ void CPHJoint::CalcAxis(int ax_num, Fvector& axis, float& lo, float& hi, const F
 	}
 	lo = axes[ax_num].low;
 	hi = axes[ax_num].high;
-	if (lo<-M_PI) {
+	if (lo < -M_PI) {
 		hi -= (lo + M_PI);
 		lo = -M_PI;
 	}
-	if (lo>0.f) {
+	if (lo > 0.f) {
 		hi -= lo;
 		lo = 0.f;
 	}
-	if (hi>M_PI) {
+	if (hi > M_PI) {
 		lo -= (hi - M_PI);
 		hi = M_PI;
 	}
-	if (hi<0.f) {
+	if (hi < 0.f) {
 		lo -= hi;
 		hi = 0.f;
 	}
@@ -1355,30 +1321,27 @@ void CPHJoint::CalcAxis(int ax_num, Fvector& axis, float& lo, float& hi, const F
 
 	shift_angle -= axes[ax_num].zero;
 
-	if (shift_angle>M_PI) shift_angle -= 2.f*M_PI;
-	if (shift_angle<-M_PI) shift_angle += 2.f*M_PI;
-
+	if (shift_angle > M_PI) shift_angle -= 2.f*M_PI;
+	if (shift_angle < -M_PI) shift_angle += 2.f*M_PI;
 
 	lo = axes[ax_num].low;//+shift_angle;
 	hi = axes[ax_num].high;//+shift_angle;
-	if (lo<-M_PI) {
+	if (lo < -M_PI) {
 		hi -= (lo + M_PI);
 		lo = -M_PI;
 	}
-	if (lo>0.f) {
+	if (lo > 0.f) {
 		hi -= lo;
 		lo = 0.f;
 	}
-	if (hi>M_PI) {
+	if (hi > M_PI) {
 		lo -= (hi - M_PI);
 		hi = M_PI;
 	}
-	if (hi<0.f) {
+	if (hi < 0.f) {
 		lo -= hi;
 		hi = 0.f;
 	}
-
-
 }
 
 void CPHJoint::GetLimits(float& lo_limit, float& hi_limit, int axis_num)
@@ -1386,7 +1349,6 @@ void CPHJoint::GetLimits(float& lo_limit, float& hi_limit, int axis_num)
 	LimitAxisNum(axis_num);
 	if (body_for_joint(pFirst_element))
 	{
-
 		lo_limit = axes[axis_num].low;
 		hi_limit = axes[axis_num].high;
 	}
@@ -1396,7 +1358,6 @@ void CPHJoint::GetLimits(float& lo_limit, float& hi_limit, int axis_num)
 		hi_limit = -axes[axis_num].low;
 	}
 }
-
 
 void CPHJoint::GetAxisDir(int num, Fvector& axis, eVs& vs)
 {
@@ -1411,7 +1372,6 @@ void CPHJoint::GetAxisDirDynamic(int num, Fvector& axis)
 	dVector3 result;
 	switch (eType)
 	{
-
 	case ball:;
 		return;
 
@@ -1421,22 +1381,21 @@ void CPHJoint::GetAxisDirDynamic(int num, Fvector& axis)
 
 	case hinge2:
 	{
-		if (num)	
+		if (num)
 			dJointGetHinge2Axis2(m_joint, result);
-		else	
+		else
 			dJointGetHinge2Axis1(m_joint, result);
-
 	} break;
-								
-	case full_control:			
+
+	case full_control:
 		dJointGetAMotorAxis(m_joint1, num, result);
 		break;
 
-	case slider:				
+	case slider:
 		dJointGetSliderAxis(m_joint, result);
 		break;
 
-	default:					
+	default:
 		R_ASSERT2(false, "type not supported");
 	}
 	axis.set(result[0], result[1], result[2]);
@@ -1447,7 +1406,7 @@ void CPHJoint::GetAnchorDynamic(Fvector& anchor)
 	dVector3 result;
 	switch (eType)
 	{
-	case hinge: 
+	case hinge:
 		dJointGetHingeAnchor(m_joint, result);
 		break;
 
@@ -1460,7 +1419,7 @@ void CPHJoint::GetAnchorDynamic(Fvector& anchor)
 		dJointGetBallAnchor(m_joint, result);
 		break;
 
-	case slider: 
+	case slider:
 		R_ASSERT2(false, "position of slider joint is undefinite");
 		break;
 
@@ -1471,7 +1430,7 @@ void CPHJoint::GetAnchorDynamic(Fvector& anchor)
 	anchor.set(result[0], result[1], result[2]);
 }
 
-CPHJoint::SPHAxis::SPHAxis() 
+CPHJoint::SPHAxis::SPHAxis()
 {
 	// ForserX: Don't use dInfity on x64
 	high = std::numeric_limits<float>::infinity();

@@ -6,22 +6,10 @@
 #include "PHFracture.h"
 #include "PHJointDestroyInfo.h"
 #include "PHCollideValidator.h"
-//#include "Level.h"
 #include "iphysicsshellholder.h"
 #include "PhysicsShellAnimator.h"
 #include "../Include/xrRender/Kinematics.h"
-
-///////////////////////////////////////////////////////////////
-///#pragma warning(disable:4995)
-//#include "../../3rd-party/ode/ode/src/collision_kernel.h"
-//#include "../../3rd-party/ode/ode/src/joint.h"
-//#include "../../3rd-party/ode/ode/src/objects.h"
-
-//#pragma warning(default:4995)
-///////////////////////////////////////////////////////////////////
-
 #include "ExtendedGeom.h"
-
 #include "PHElement.h"
 #include "PHShell.h"
 void CPHShell::activate(bool disable)
@@ -38,12 +26,10 @@ void CPHShell::Activate(const Fmatrix &m0, float dt01, const Fmatrix &m2, bool d
 {
 	if (isActive())
 		return;
+
 	activate(disable);
-	//	ELEMENT_I i;
+
 	mXFORM.set(m0);
-	//for(i=elements.begin();elements.end() != i;++i){
-	//	(*i)->Activate(m0,dt01, m2, disable);
-	//}
 
 	{
 		auto i = elements.begin(), e = elements.end();
@@ -69,15 +55,10 @@ void CPHShell::Activate(const Fmatrix &m0, float dt01, const Fmatrix &m2, bool d
 		SetCallbacks();
 	}
 
-	//bActive=true;
-	//bActivating=true;
 	m_flags.set(flActive, TRUE);
 	m_flags.set(flActivating, TRUE);
 	spatial_register();
-	///////////////////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////////////////
-		//mXFORM.set(m0);
-		//Activate(disable);
+
 	Fvector lin_vel;
 	lin_vel.sub(m2.c, m0.c);
 	set_LinearVel(lin_vel);
@@ -105,16 +86,9 @@ void CPHShell::Activate(const Fmatrix &transform, const Fvector& lin_vel, const 
 		SetCallbacks();
 	}
 	spatial_register();
-	//bActive=true;
-	//bActivating=true;
+
 	m_flags.set(flActivating, TRUE);
 	m_flags.set(flActive, TRUE);
-	/////////////////////////////////////////////////////////////
-	/////////////////////////////////////////////////////////////////
-		//mXFORM.set(transform);
-		//Activate(disable);
-		//set_LinearVel(lin_vel);
-		//set_AngularVel(ang_vel);
 }
 
 void CPHShell::Activate(bool disable, bool not_set_bone_callbacks /*= false*/)
@@ -204,7 +178,7 @@ void CPHShell::AfterSetActive()
 		return;
 
 	PureActivate();
-	//bActive=true;
+
 	m_flags.set(flActive, TRUE);
 	auto i = elements.begin(), e = elements.end();
 
@@ -217,7 +191,6 @@ void CPHShell::PureActivate()
 	if (isActive())
 		return;
 
-	//bActive=true;
 	m_flags.set(flActive, TRUE);
 
 	if (!CPHObject::is_active())
@@ -250,7 +223,9 @@ void CPHShell::Deactivate()
 		xr_delete<CPhysicsShellAnimator>(m_pPhysicsShellAnimatorC);
 	}
 
-	if (!isActive())return;
+	if (!isActive())
+		return;
+
 	R_ASSERT2(!ph_world->Processing(), "can not deactivate physics shell during physics processing!!!");
 	R_ASSERT2(!ph_world->IsFreezed(), "can not deactivate physics shell when ph world is freezed!!!");
 	R_ASSERT2(!CPHObject::IsFreezed(), "can not deactivate freezed !!!");
@@ -264,16 +239,11 @@ void CPHShell::Deactivate()
 		CPHObject::UnFreeze();
 		ph_world->StepTouch();
 		ph_world->UnFreeze();
-		//Fmatrix m;
-		//InterpolateGlobalTransform(&m);
 	}
 	spatial_unregister();
 
 	vis_update_activate();
-	//if(ref_object && !CPHObject::is_active() && m_active_count == 0)
-	//{
-	//	ref_object->processing_activate();
-	//}
+
 	DisableObject();
 	CPHObject::remove_from_recently_deactivated();
 
@@ -287,8 +257,7 @@ void CPHShell::Deactivate()
 		dSpaceDestroy(m_space);
 		m_space = NULL;
 	}
-	//bActive=false;
-	//bActivating=false;
+
 	m_flags.set(flActivating, FALSE);
 	m_flags.set(flActive, FALSE);
 	m_traced_geoms.clear();

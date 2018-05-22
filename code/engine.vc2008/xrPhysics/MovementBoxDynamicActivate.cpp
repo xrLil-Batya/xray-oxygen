@@ -286,49 +286,24 @@ private:
 bool ActivateBoxDynamic(IPHMovementControl* mov_control, bool character_exist, DWORD id, int num_it/*=8*/, int num_steps/*5*/, float resolve_depth/*=0.01f*/)
 {
 	/////////////////////////////////////////////////////////////////////////////
-	//m_PhysicMovementControl->ActivateBox(id);
+
 	VERIFY(mov_control);
 	VERIFY(mov_control->character());
 
 	mov_control->character()->CPHObject::activate();
 	ph_world->Freeze();
-	//UnFreeze(); //if(m_character) m_character->UnFreeze();
+
 	mov_control->character()->UnFreeze();
-
-	//saved_callback=ObjectContactCallback();
-
-	/*	ObjectContactCallbackFun* CPHMovementControl::ObjectContactCallback()
-	{
-		if(m_character)
-			return m_character->ObjectContactCallBack();
-		else return NULL;
-	}*/
 
 	saved_callback = mov_control->character()->ObjectContactCallBack();
 
-	//	SetOjectContactCallback(TestDepthCallback);
-
-		//	void		CPHMovementControl::		SetOjectContactCallback (ObjectContactCallbackFun* callback)
-		//{
-		//	if(m_character)
-		//		m_character->SetObjectContactCallback(callback);
-		//}
 	mov_control->character()->SetObjectContactCallback(TestDepthCallback);
 
-	//SetFootCallBack(TestFootDepthCallback);
-	//void		CPHMovementControl::		SetFootCallBack			(ObjectContactCallbackFun* callback)
-	//{
-	//	VERIFY(m_character);
-	//	m_character->SetWheelContactCallback(callback);
-	//}
 	mov_control->character()->SetWheelContactCallback(TestFootDepthCallback);
 
 	max_depth = 0.f;
 
 	//////////////////////////////////pars///////////////////////////////////////////
-//	int		num_it=8;
-//	int		num_steps=5;
-//	float	resolve_depth=0.01f;
 
 	if (!character_exist)
 	{
@@ -349,7 +324,6 @@ bool ActivateBoxDynamic(IPHMovementControl* mov_control, bool character_exist, D
 	dBodySetForce(mov_control->character()->get_body(), 0.f, 0.f, 0.f);
 	dBodySetLinearVel(mov_control->character()->get_body(), 0.f, 0.f, 0.f);
 
-	//Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
 	mov_control->actor_calculate(Fvector().set(0, 0, 0), Fvector().set(1, 0, 0), 0, 0, 0, 0);
 
 	CVelocityLimiter vl(mov_control->character()->get_body(), max_vel, max_vel);
@@ -364,15 +338,8 @@ bool ActivateBoxDynamic(IPHMovementControl* mov_control, bool character_exist, D
 	//////////////////////////////////////////////////////////////////////////////////////////////////////
 	for (int m = 0; 30 > m; ++m)
 	{
-		//Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
 		mov_control->actor_calculate(Fvector().set(0, 0, 0), Fvector().set(1, 0, 0), 0, 0, 0, 0);
 
-		//EnableCharacter();
-		//void		CPHMovementControl::EnableCharacter			()
-		//{
-		//	if( m_character && m_character->b_exist )
-		//		m_character->Enable();
-		//}
 		VERIFY(mov_control->character()->b_exist);
 		mov_control->character()->Enable();
 
@@ -394,11 +361,13 @@ bool ActivateBoxDynamic(IPHMovementControl* mov_control, bool character_exist, D
 		float param = fnum_steps_r * (1 + m);
 		mov_control->InterpolateBox(id, param);
 		ret = false;
-		for (int i = 0; num_it > i; ++i) {
+
+		for (int i = 0; num_it > i; ++i)
+		{
 			max_depth = 0.f;
-			//Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
+
 			mov_control->actor_calculate(Fvector().set(0, 0, 0), Fvector().set(1, 0, 0), 0, 0, 0, 0);
-			//EnableCharacter();
+
 			mov_control->character()->Enable();
 			mov_control->character()->ApplyForce(0, ph_world->Gravity()*mov_control->character()->Mass(), 0);
 			ph_world->Step();
@@ -409,7 +378,8 @@ bool ActivateBoxDynamic(IPHMovementControl* mov_control, bool character_exist, D
 				break;
 			}
 		}
-		if (!ret) break;
+		if (!ret)
+			break;
 	}
 
 	mov_control->character()->SwitchInInitContact();
@@ -418,12 +388,6 @@ bool ActivateBoxDynamic(IPHMovementControl* mov_control, bool character_exist, D
 
 	ph_world->UnFreeze();
 
-	//SetOjectContactCallback(saved_callback);
-	//void		CPHMovementControl::		SetOjectContactCallback (ObjectContactCallbackFun* callback)
-	//{
-	//	if(m_character)
-	//		m_character->SetObjectContactCallback(callback);
-	//}
 	mov_control->character()->SetObjectContactCallback(saved_callback);
 	saved_callback = 0;
 

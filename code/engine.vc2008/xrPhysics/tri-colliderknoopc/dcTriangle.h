@@ -1,9 +1,6 @@
 #pragma		once
 struct Triangle
 {
-	//dReal* v0;
-	//dReal* v1;
-	//dReal* v2;
 	dVector3 side0;
 	dVector3 side1;
 	dVector3 norm;
@@ -19,4 +16,4 @@ struct Triangle
 		dist = -dInfinity;
 #endif
 	}
-};
+	};

@@ -2,26 +2,17 @@
 #include "phactorcharacter.h"
 #include "Extendedgeom.h"
 #include "PhysicsCommon.h"
-//#include "GameObject.h"
-#include "IPhysicsShellHolder.h"
-//#include "ai/stalker/ai_stalker.h"
-//#include "Actor.h"
-#include "../xrEngine/gamemtllib.h"
-//#include "level.h"
 
-//const float JUMP_HIGHT=0.5;
+#include "IPhysicsShellHolder.h"
+
+#include "../xrEngine/gamemtllib.h"
+
 const float JUMP_UP_VELOCITY = 6.0f;//5.6f;
 const float JUMP_INCREASE_VELOCITY_RATE = 1.2f;
-//#ifdef DEBUG
-//XRPHYSICS_API BOOL use_controllers_separation = TRUE;
-//#endif
+
 CPHActorCharacter::CPHActorCharacter(bool single_game) : b_single_game(single_game)
 {
 	SetRestrictionType(rtActor);
-
-	//std::fill(m_restrictors_index,m_restrictors_index+CPHCharacter::rtNone,end(m_restrictors));
-	//m_restrictors_index[CPHCharacter::rtStalker]		=begin(m_restrictors)+0;
-	//m_restrictors_index[CPHCharacter::rtMonsterMedium]	=begin(m_restrictors)+1;
 
 	{
 		m_restrictors.resize(3);
@@ -58,7 +49,6 @@ void CPHActorCharacter::Create(dVector3 sizes)
 		GameMtlIt mi = GMLibrary().GetMaterialIt("materials\\earth_slide");
 		if (mi != GMLibrary().LastMaterial())
 			slide_material_index = u16(mi - GMLibrary().FirstMaterial());
-		//slide_material_index = GMLibrary().GetMaterialIdx("earth_slide");
 	}
 }
 void	CPHActorCharacter::ValidateWalkOn()
@@ -227,7 +217,6 @@ void CPHActorCharacter::Jump(const Fvector& accel)
 		{
 			m_elevator_state.GetJumpDir(m_acceleration, m_jump_accel);
 			m_jump_accel.mul(JUMP_UP_VELOCITY / 2.f);
-			//if(accel.square_magnitude()>EPS_L)m_jump_accel.mul(4.f);
 		}
 		else
 			m_jump_accel.set(vel[0] * JUMP_INCREASE_VELOCITY_RATE + m_acceleration.x / amag * 0.2f, jump_up_velocity,
@@ -253,7 +242,7 @@ struct SFindPredicate
 		c = ac;
 		b1 = b;
 	}
-	bool			*b1;
+	bool *b1;
 	const dContact	*c;
 	bool operator ()	(SPHCharacterRestrictor* o)
 	{
@@ -281,15 +270,8 @@ static void BigVelSeparate(dContact* c, bool &do_collide)
 		return;
 	}
 
-	//float spr	= Spring( c->surface.soft_cfm,c->surface.soft_erp);
-	//float dmp	= Damping( c->surface.soft_cfm,c->surface.soft_erp);
-	//spr *=0.001f;
-	//dmp *=10.f;
-	//float cfm	= Cfm( spr, dmp );
-	//float e		= Erp( spr, dmp );
 	c->surface.soft_cfm *= 100.f;
 	c->surface.soft_erp *= 0.1f;
-	//MulSprDmp(c->surface.soft_cfm,c->surface.soft_erp ,0.1f,10);
 
 	CPHCharacter* ch1 = static_cast<CPHCharacter*>(dat1->ph_object);
 	CPHCharacter* ch2 = static_cast<CPHCharacter*>(dat2->ph_object);
@@ -335,7 +317,6 @@ void CPHActorCharacter::InitContact(dContact* c, bool &do_collide, u16 material_
 		if (b_restrictor)
 		{
 			b_side_contact = true;
-			//MulSprDmp(c->surface.soft_cfm,c->surface.soft_erp,def_spring_rate,def_dumping_rate);
 			c->surface.mu = 0.00f;
 		}
 		else
@@ -355,7 +336,6 @@ void CPHActorCharacter::InitContact(dContact* c, bool &do_collide, u16 material_
 			do_collide = false;
 			m_friction_factor *= 0.1f;
 		}
-		//BigVelSeparate( c, do_collide );
 	}
 	else
 	{
@@ -372,7 +352,9 @@ void CPHActorCharacter::InitContact(dContact* c, bool &do_collide, u16 material_
 			}
 		}
 
-		if (do_collide)inherited::InitContact(c, do_collide, material_idx_1, material_idx_2);
+		if (do_collide)
+			inherited::InitContact(c, do_collide, material_idx_1, material_idx_2);
+
 		BigVelSeparate(c, do_collide);
 	}
 }
@@ -387,10 +369,8 @@ void CPHActorCharacter::ChooseRestrictionType(ERestrictionType my_type, float my
 	case rtStalkerSmall:
 		if (ch->ObjectRadius() > checkR)
 		{
-			//if(my_depth>0.05f)
 			ch->SetNewRestrictionType(rtStalker);
 			Enable();
-			//else ch->SetRestrictionType(rtStalker);
 #ifdef DEBUG
 			if (debug_output().ph_dbg_draw_mask1().test(ph_m1_DbgActorRestriction))
 				Msg("restriction ready to change small -> large");
@@ -409,8 +389,8 @@ void CPHActorCharacter::ChooseRestrictionType(ERestrictionType my_type, float my
 		}
 		break;
 	default:NODEFAULT;
+		}
 	}
-}
 
 void		CPHActorCharacter::update_last_material()
 {

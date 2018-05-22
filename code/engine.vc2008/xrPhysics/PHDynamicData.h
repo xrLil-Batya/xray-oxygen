@@ -25,8 +25,7 @@ private:
 	CPHInterpolation body_interpolation;
 	dGeomID geom;
 	dGeomID transform;
-	//PHDynamicData* Childs;
-	//xr_vector<PHDynamicData>  Childs;
+
 	unsigned int numOfChilds;
 	Fmatrix ZeroTransform;
 public:
@@ -38,7 +37,7 @@ public:
 	void UpdateInterpolationRecursive();
 	void InterpolateTransform(Fmatrix& transform);
 	void InterpolateTransformVsParent(Fmatrix& transform);
-	//	PHDynamicData& operator [] (unsigned int i) {return Childs[i];};
+
 	void Destroy();
 	void Create(unsigned int numOfchilds, dBodyID Body);
 	void CalculateData(void);
@@ -49,7 +48,7 @@ public:
 	void SetZeroTransform(Fmatrix& aTransform);
 	PHDynamicData(unsigned int numOfchilds, dBodyID body);
 	PHDynamicData();
-	//	virtual ~PHDynamicData();
+
 	void GetWorldMX(Fmatrix& aTransform)
 	{
 		dMatrix3 R;
@@ -64,8 +63,7 @@ public:
 		Fmatrix NormTransform, Transform;
 		dVector3 P0 = { 0,0,0,-1 };
 		Fvector Translate, Translate1;
-		//compute_final_tx(geom);
-		//dQtoR(dBodyGetQuaternion(body),R);
+
 		DMXPStoFMX(dBodyGetRotation(body), P0, NormTransform);
 		DMXPStoFMX(dGeomGetRotation(dGeomTransformGetGeom(transform)), P0, Transform);
 
@@ -77,16 +75,6 @@ public:
 		aTransform.mulA_43(NormTransform);
 		aTransform.translate_over(Translate1);
 		aTransform.mulA_43(Transform);
-
-		//	Translate.add(Translate1);
-			//transform.translate_over(Translate1);
-
-			//transform.translate_add
-			//normalTransform=oMatrix4x4(dGeomGetRotation(dGeomTransformGetGeom(geom)))*normalTransform;
-			//oMatrix4x4 meshTransform(normalTransform);
-
-			//meshTransform.PreTranslate(oVector3(dGeomGetPosition(dGeomTransformGetGeom(geom))));
-			//meshTransform.PostTranslate(oVector3(dBodyGetPosition(body)));
 	}
 	static inline void DMXPStoFMX(const dReal* R, const dReal* pos, Fmatrix& aTransform)
 	{

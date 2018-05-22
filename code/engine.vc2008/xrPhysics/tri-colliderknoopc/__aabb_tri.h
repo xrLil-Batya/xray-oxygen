@@ -22,15 +22,6 @@ public:
 	//! Destructor
 	inline ~Point() {}
 
-	//! Returns MIN(x, y, z);
-	//inline	float		Min() const		{ return MIN(x, MIN(y, z));												}
-	//! Returns MAX(x, y, z);
-	//inline	float		Max() const		{ return MAX(x, MAX(y, z));												}
-	//! TO BE DOCUMENTED
-	//inline	Point&		Min(const Point& p) { x = MIN(x, p.x); y = MIN(y, p.y); z = MIN(z, p.z);	return *this;	}
-	//! TO BE DOCUMENTED
-	//inline	Point&		Max(const Point& p) { x = MAX(x, p.x); y = MAX(y, p.y); z = MAX(z, p.z);	return *this;	}
-
 	//! Computes square magnitude
 	inline	float SquareMagnitude() const { return x * x + y * y + z * z; }
 	//! Computes magnitude
@@ -99,16 +90,6 @@ public:
 	//! Operator for Point /= float.
 	inline	Point&		operator/=(float s) { s = 1.0f / s; x *= s; y *= s; z *= s; return *this; }
 
-	// Arithmetic operators
-	//! Operator for Point Mul = Point * Matrix3x3.
-//					Point		operator*(const Matrix3x3& mat)		const;
-	//! Operator for Point Mul = Point * Matrix4x4.
-//					Point		operator*(const Matrix4x4& mat)		const;
-	//! Operator for Point *= Matrix3x3.
-///					Point&		operator*=(const Matrix3x3& mat);
-	//! Operator for Point *= Matrix4x4.
-//					Point&		operator*=(const Matrix4x4& mat);
-
 	//! Access as array
 	inline operator	const	float*() const { return &x; }
 	//! Access as array
@@ -121,8 +102,7 @@ public:
 };
 //using namespace CDB;
 using namespace Opcode;
-//typedef float*	Point;
-//typedef	dVector3 Point
+
 //! This macro quickly finds the min & max values among 3 variables
 #define FINDMINMAX(x0, x1, x2, min, max)	\
 	min = max = x0;							\
@@ -244,27 +224,18 @@ inline	bool aabb_tri_aabb(Point center, Point extents, const Point* mLeafVerts)
 	v1.x = mLeafVerts[1].x - center.x;
 	v2.x = mLeafVerts[2].x - center.x;
 
-	// First, test overlap in the {x,y,z}-directions
-	//float min,max;
-	// Find min, max of the triangle in x-direction, and test for overlap in X
-	//FINDMINMAX(v0.x, v1.x, v2.x, min, max);
-	//if(min>extents.x || max<-extents.x) return false;
 	EXITMINMAX(v0.x, v1.x, v2.x, -extents.x, extents.x)
 		// Same for Y
 		v0.y = mLeafVerts[0].y - center.y;
 	v1.y = mLeafVerts[1].y - center.y;
 	v2.y = mLeafVerts[2].y - center.y;
 
-	//FINDMINMAX(v0.y, v1.y, v2.y, min, max);
-	//if(min>extents.y || max<-extents.y) return false;
 	EXITMINMAX(v0.y, v1.y, v2.y, -extents.y, extents.y)
 		// Same for Z
 		v0.z = mLeafVerts[0].z - center.z;
 	v1.z = mLeafVerts[1].z - center.z;
 	v2.z = mLeafVerts[2].z - center.z;
 
-	//FINDMINMAX(v0.z, v1.z, v2.z, min, max);
-	//if(min>extents.z || max<-extents.z) return false;
 	EXITMINMAX(v0.z, v1.z, v2.z, -extents.z, extents.z)
 		// 2) Test if the box intersects the plane of the triangle
 		// compute plane equation of triangle: normal*x+d=0

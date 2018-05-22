@@ -7,9 +7,7 @@
 #include "../xrEngine/pure.h"
 // refs
 struct	SGameMtlPair;
-//class	CPHCommander;
-//class	CPHCondition;
-//class	CPHAction;
+
 struct	SPHNetState;
 class	CPHSynchronize;
 typedef  xr_vector<std::pair<CPHSynchronize*, SPHNetState> > V_PH_WORLD_STATE;
@@ -40,7 +38,6 @@ class CPHWorld : public	pureFrame, public IPHWorld, public cphysics_scripted, pu
 	bool b_processing;
 	bool b_exist;
 	static const u32 update_delay = 1;
-	///	dSpaceID					Space														;
 
 	CPHMesh Mesh;
 	PH_OBJECT_STORAGE m_objects;
@@ -49,7 +46,7 @@ class CPHWorld : public	pureFrame, public IPHWorld, public cphysics_scripted, pu
 	PH_UPDATE_OBJECT_STORAGE m_update_objects;
 	PH_UPDATE_OBJECT_STORAGE m_freezed_update_objects;
 	dGeomID m_motion_ray;
-	//CPHCommander				*m_commander;
+
 	IPHWorldUpdateCallbck *m_update_callback;
 	CObjectSpace *m_object_space;
 	CObjectList *m_level_objects;
@@ -137,21 +134,16 @@ public:
 	inline CObjectList &LevelObjects() { VERIFY(m_level_objects); return *m_level_objects; }
 	inline CRenderDeviceBase &Device() { VERIFY(m_device); return *m_device; }
 
-	//	void						AddCall							(CPHCondition*c,CPHAction*a);
 	virtual void OnRender();
 	virtual void __stdcall OnFrame();
 
 private:
 	void StepNumIterations(int num_it);
-
 	inline iphysics_scripted &get_scripted() { return *this; }
 	inline void set_step_time_callback(PhysicsStepTimeCallback* cb) { physics_step_time_callback = cb; }
 	inline void set_update_callback(IPHWorldUpdateCallbck* cb) { VERIFY(cb); m_update_callback = cb; }
-	//	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
-//add_to_type_list(CPHWorld)
-//#undef script_type_list
-//#define script_type_list save_type_list(CPHWorld)
+
 extern CPHWorld	*ph_world;
 
 inline CPHWorld& inl_ph_world()

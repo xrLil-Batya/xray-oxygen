@@ -168,9 +168,8 @@ void CElevatorState::UpdateStNearUp()
 	Fvector d;
 
 	if (m_ladder->InTouch(m_character) && m_character->CamDir().y<-M_PI / 20.f &&
-		//d.dotproduct(m_character->ControlAccel())<0.f&&
-		//ClimbDirection()<0.f&&
-		m_ladder->DDToPlain(m_character, d)>m_character->FootRadius() / 3.f && m_ladder->BeforeLadder(m_character, 0.1f))
+		m_ladder->DDToPlain(m_character, d) > m_character->FootRadius() / 3.f
+		&& m_ladder->BeforeLadder(m_character, 0.1f))
 	{
 		SwitchState(clbClimbingDown);
 	}
@@ -222,11 +221,6 @@ void CElevatorState::UpdateStClimbingDown()
 	m_character->GetVelocity(vel);
 	if (vel.y > EPS_S)
 		m_character->ApplyForce(0.f, -m_character->Mass()*ph_world->Gravity(), 0.f);
-
-	//if(to_ax-m_character->FootRadius()>out_dist)
-	//														SwitchState((clbNone));
-	//if(fis_zero(control_a))
-	//	m_character->ApplyForce(d,m_character->Mass());
 }
 
 void CElevatorState::UpdateStClimbingUp()
@@ -248,10 +242,6 @@ void CElevatorState::UpdateStClimbingUp()
 		SwitchState(clbNearUp);
 
 	UpdateClimbingCommon(d, to_ax, ca, control_a);
-	//if(to_ax-m_character->FootRadius()>out_dist)
-	//										SwitchState((clbNone));
-	//if(fis_zero(control_a))
-	//	m_character->ApplyForce(d,m_character->Mass());
 }
 void CElevatorState::UpdateClimbingCommon(const Fvector	&d_to_ax, float to_ax, const Fvector& control_accel, float ca)
 {
@@ -268,7 +258,7 @@ void CElevatorState::UpdateClimbingCommon(const Fvector	&d_to_ax, float to_ax, c
 		}
 #endif
 		m_character->ApplyForce(d_to_ax, m_character->Mass()*ph_world->Gravity());//
-}
+	}
 }
 bool CElevatorState::GetControlDir(Fvector& dir)
 {
@@ -278,25 +268,27 @@ bool CElevatorState::GetControlDir(Fvector& dir)
 	float dist;
 	switch (m_state)
 	{
-	case	clbDepart:
-	case	clbNoLadder:
-	case	clbNone:
+	case clbDepart:
+	case clbNoLadder:
+	case clbNone:
 		break;
-	case 	clbNearUp:
+	case clbNearUp:
 		dist = m_ladder->DDUpperP(m_character, d);
 		if (dXZDotNormalized(d, m_character->CamDir()) > look_angle_cosine &&
 			!fis_zero(dist, EPS_L) && m_character->ControlAccel().dotproduct(d) > 0.f) dir.set(d);
 		break;
-	case 	clbNearDown:
+	case clbNearDown:
 		dist = m_ladder->DDLowerP(m_character, d);
 		if (dXZDotNormalized(d, m_character->CamDir()) > look_angle_cosine &&
 			!fis_zero(dist, EPS_L) && m_character->ControlAccel().dotproduct(d) > 0.f) dir.set(d);
 		break;
-	case 	clbClimbingUp:		m_ladder->DDAxis(dir);
+	case clbClimbingUp:
+		m_ladder->DDAxis(dir);
 		m_ladder->DDToAxis(m_character, d);
 		dir.add(d); dir.normalize();
 		break;
-	case 	clbClimbingDown:		m_ladder->DDToAxis(m_character, d);
+	case clbClimbingDown:
+		m_ladder->DDToAxis(m_character, d);
 		if (m_ladder->BeforeLadder(m_character) || d.dotproduct(dir) > 0.f)
 		{
 			m_ladder->DDAxis(dir);
@@ -309,14 +301,14 @@ bool CElevatorState::GetControlDir(Fvector& dir)
 			if (debug_output().ph_dbg_draw_mask().test(phDbgLadder))
 			{
 				Msg("no c dir");
-			}
+	}
 #endif
 			ret = false;
-		}
-		break;
-	}
-	return ret;
 }
+		break;
+			}
+	return ret;
+		}
 static const float depart_dist = 2.f;
 static const u32   depart_time = 3000;
 void CElevatorState::UpdateDepart()

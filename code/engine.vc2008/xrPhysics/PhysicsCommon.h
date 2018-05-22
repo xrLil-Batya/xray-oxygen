@@ -23,15 +23,10 @@ extern float	world_erp;
 extern float	world_spring;
 extern float	world_damping;
 
-//extern const float	mass_limit										;
 extern const u16	max_joint_allowed_for_exeact_integration;
 extern	XRPHYSICS_API	const float	default_world_gravity;
 extern	XRPHYSICS_API	float phTimefactor;
 extern	XRPHYSICS_API	int phIterations;
-//extern	float		phBreakCommonFactor ;
-//extern	float		phRigidBreakWeaponFactor ;
-//extern	float		ph_tri_query_ex_aabb_rate ;
-//extern	int			ph_tri_clear_disable_count ;
 
 struct SGameMtl;
 #define ERP_S(k_p,k_d,s)		((s*(k_p)) / (((s)*(k_p)) + (k_d)))

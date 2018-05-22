@@ -33,9 +33,9 @@ class CPHObject :
 		st_recently_deactivated = (1 << 5)
 	};
 
-	CPHIsland			m_island;
-	CLBits				m_collide_bits;
-	u8					m_check_count;
+	CPHIsland m_island;
+	CLBits m_collide_bits;
+	u8 m_check_count;
 	_flags<CLClassBits>	m_collide_class_bits;
 
 public:
@@ -60,28 +60,28 @@ protected:
 
 	CPHObject*		SelfPointer() { return this; }
 public:
-	inline BOOL			IsRayMotion() { return m_flags.test(fl_ray_motions); }
-	void			IslandReinit() { m_island.Unmerge(); }
-	void			IslandStep(dReal step) { m_island.Step(step); }
-	void			MergeIsland(CPHObject* obj) { m_island.Merge(&obj->m_island); }
-	CPHIsland&		Island() { return m_island; }
-	dWorldID		DActiveWorld() { return m_island.DActiveWorld(); }
-	CPHIsland*		DActiveIsland() { return m_island.DActiveIsland(); }
-	dWorldID		DWorld() { return m_island.DWorld(); }
+	inline BOOL IsRayMotion() { return m_flags.test(fl_ray_motions); }
+	void IslandReinit() { m_island.Unmerge(); }
+	void IslandStep(dReal step) { m_island.Step(step); }
+	void MergeIsland(CPHObject* obj) { m_island.Merge(&obj->m_island); }
+	CPHIsland& Island() { return m_island; }
+	dWorldID DActiveWorld() { return m_island.DActiveWorld(); }
+	CPHIsland* DActiveIsland() { return m_island.DActiveIsland(); }
+	dWorldID DWorld() { return m_island.DWorld(); }
 
-	virtual		void FreezeContent();
-	virtual		void UnFreezeContent();
-	virtual		void EnableObject(CPHObject* obj);
-	virtual		bool DoCollideObj();
-	virtual		bool step_single(dReal	step);
+	virtual void FreezeContent();
+	virtual void UnFreezeContent();
+	virtual void EnableObject(CPHObject* obj);
+	virtual bool DoCollideObj();
+	virtual bool step_single(dReal	step);
 	void reinit_single();
 	void step_prediction(float time);
 	void step(float time);
-	virtual 	void PhDataUpdate(dReal	step) = 0;
-	virtual 	void PhTune(dReal	step) = 0;
-	virtual		void spatial_move();
-	virtual 	void InitContact(dContact* c, bool& do_collide, u16 /*material_idx_1*/, u16 /*material_idx_2*/) = 0;
-	virtual		void CutVelocity(float l_limit, float a_limit) {};
+	virtual void PhDataUpdate(dReal	step) = 0;
+	virtual void PhTune(dReal	step) = 0;
+	virtual void spatial_move();
+	virtual void InitContact(dContact* c, bool& do_collide, u16 /*material_idx_1*/, u16 /*material_idx_2*/) = 0;
+	virtual void CutVelocity(float l_limit, float a_limit) {};
 
 	void Freeze();
 	void UnFreeze();
@@ -95,21 +95,21 @@ public:
 
 	CPHObject();
 	void activate();
-	IC	bool is_active()	const { return !!m_flags.test(st_activated)/*b_activated*/; }
+	inline	bool is_active()	const { return !!m_flags.test(st_activated)/*b_activated*/; }
 	void deactivate();
 	void put_in_recently_deactivated();
 	void remove_from_recently_deactivated();
 	void check_recently_deactivated();
 	void collision_disable();
 	void collision_enable();
-	virtual		void			ClearRecentlyDeactivated() { ; }
-	virtual		void			Collide();
-	virtual		void			near_callback(CPHObject* obj) { ; }
-	virtual		void			RMotionsQuery(qResultVec	&res) { ; }
-	virtual		CPHMoveStorage*	MoveStorage() { return NULL; }
-	virtual		ECastType		CastType() { return tpNotDefinite; }
-	virtual		void			vis_update_activate() {}
-	virtual		void			vis_update_deactivate() {}
+	virtual void ClearRecentlyDeactivated() { ; }
+	virtual void Collide();
+	virtual void near_callback(CPHObject* obj) { ; }
+	virtual void RMotionsQuery(qResultVec	&res) { ; }
+	virtual CPHMoveStorage*	MoveStorage() { return NULL; }
+	virtual ECastType CastType() { return tpNotDefinite; }
+	virtual void vis_update_activate() {}
+	virtual void vis_update_deactivate() {}
 
 	virtual		IPhysicsShellHolder	*ref_object() = 0;
 
@@ -117,7 +117,7 @@ public:
 	inline _flags<CLClassBits>&		collide_class_bits() { return m_collide_class_bits; }
 	inline const CLBits& collide_bits()const { return m_collide_bits; }
 	inline const _flags<CLClassBits>&	collide_class_bits()const { return m_collide_class_bits; }
-	void			CollideDynamics();
+	void CollideDynamics();
 };
 
 DEFINE_PHITEM_LIST(CPHObject, PH_OBJECT_STORAGE, PH_OBJECT_I)

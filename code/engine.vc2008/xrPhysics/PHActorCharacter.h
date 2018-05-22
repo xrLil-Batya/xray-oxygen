@@ -8,9 +8,9 @@ struct SPHCharacterRestrictor
 	SPHCharacterRestrictor(ERestrictionType Ttype)
 	{
 		m_type = Ttype;
-		m_character = NULL;
-		m_restrictor = NULL;
-		m_restrictor_transform = NULL;
+		m_character = nullptr;
+		m_restrictor = nullptr;
+		m_restrictor_transform = nullptr;
 		m_restrictor_radius = 0.1f;
 	}
 	~SPHCharacterRestrictor()
@@ -54,13 +54,21 @@ struct TPHCharacterRestrictor : public SPHCharacterRestrictor
 		if (!(ud1&&ud2))
 			return;
 
-		CPHObject *o1 = NULL; if (ud1)o1 = ud1->ph_object;
-		CPHObject *o2 = NULL; if (ud2)o2 = ud2->ph_object;
+		CPHObject *o1 = nullptr;
+
+		if (ud1)
+			o1 = ud1->ph_object;
+
+		CPHObject *o2 = nullptr;
+
+		if (ud2)
+			o2 = ud2->ph_object;
 
 		if (!(o1&&o2))
 			return;
 
-		if (o1->CastType() != CPHObject::tpCharacter || o2->CastType() != CPHObject::tpCharacter) return;
+		if (o1->CastType() != CPHObject::tpCharacter || o2->CastType() != CPHObject::tpCharacter)
+			return;
 
 		CPHCharacter* ch1 = static_cast<CPHCharacter*>(o1);
 		CPHCharacter* ch2 = static_cast<CPHCharacter*>(o2);
@@ -79,17 +87,14 @@ struct TPHCharacterRestrictor : public SPHCharacterRestrictor
 };
 using RESRICTORS_V = xr_vector<SPHCharacterRestrictor*>;
 using RESTRICTOR_I = RESRICTORS_V::iterator;
-//typedef SPHCharacterRestrictor*		RESRICTORS_V[2];
-//typedef SPHCharacterRestrictor**	RESTRICTOR_I;
+
 inline RESTRICTOR_I begin(RESRICTORS_V& v)
 {
-	//return v;
 	return v.begin();
 }
 
 inline RESTRICTOR_I end(RESRICTORS_V& v)
 {
-	//return v+sizeof(RESRICTORS_V)/sizeof(SPHCharacterRestrictor*);
 	return v.end();
 }
 
@@ -97,9 +102,9 @@ class CPHActorCharacter : public CPHSimpleCharacter
 {
 	typedef CPHSimpleCharacter	inherited;
 
-	RESRICTORS_V		m_restrictors;
-	float				m_speed_goal;
-	bool				b_single_game;
+	RESRICTORS_V m_restrictors;
+	float m_speed_goal;
+	bool b_single_game;
 public:
 	typedef TPHCharacterRestrictor<rtStalker>			stalker_restrictor;
 	typedef TPHCharacterRestrictor<rtStalkerSmall>	stalker_small_restrictor;

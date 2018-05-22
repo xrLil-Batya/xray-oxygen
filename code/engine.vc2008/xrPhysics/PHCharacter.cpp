@@ -70,8 +70,6 @@ void CPHCharacter::get_State(SPHNetState& state)
 	state.quaternion.identity();
 	state.previous_quaternion.identity();
 	state.torque.set(0.f, 0.f, 0.f);
-	//	state.accel = GetAcceleration();
-	//	state.max_velocity = GetMaximumVelocity();
 
 	if (!b_exist)
 	{
@@ -88,10 +86,9 @@ void CPHCharacter::set_State(const SPHNetState& state)
 	SetVelocity(state.linear_vel);
 	setForce(state.force);
 
-	//	SetAcceleration(state.accel);
-	//	SetMaximumVelocity(state.max_velocity);
+	if (!b_exist)
+		return;
 
-	if (!b_exist) return;
 	if (state.enabled)
 	{
 		Enable();
@@ -112,7 +109,9 @@ void CPHCharacter::Disable()
 
 void CPHCharacter::Enable()
 {
-	if (!b_exist) return;
+	if (!b_exist)
+		return;
+
 	CPHObject::activate();
 	dBodyEnable(m_body);
 }
@@ -182,11 +181,6 @@ void	virtual_move_collide_callback(bool& do_collide, bool bo1, dContact& c, SGam
 	if (oposite_data && oposite_data->ph_ref_object == my_data->ph_ref_object)
 		return;
 
-	//if( c.geom.depth > camera_collision_sckin_depth/2.f )
-	//cam_collided = true;
-	//if( !cam_step )
-		//return;
-
 	c.surface.mu = 0;
 	c.surface.soft_cfm = 0.01f;
 	dJointID contact_joint = dJointCreateContact(0, ContactGroup, &c);//dJointCreateContactSpecial(0, ContactGroup, &c);
@@ -203,7 +197,7 @@ void	virtual_move_collide_callback(bool& do_collide, bool bo1, dContact& c, SGam
 
 void	CPHCharacter::fix_body_rotation()
 {
-	dBodyID b = get_body();//GetBody();
+	dBodyID b = get_body();
 	if (b)
 	{
 		dMatrix3 R;

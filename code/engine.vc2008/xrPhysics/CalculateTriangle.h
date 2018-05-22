@@ -1,18 +1,16 @@
 #include "ExtendedGeom.h"
 #include "MathUtils.h"
-//#include "Level.h"
+
 #include "Geometry.h"
 #include "tri-colliderknoopc/dtricollidermath.h"
-//#include "../xrengine/IGame_Level.h"
+
 #include "ode_redefine.h"
 #include "../xrcdb/xr_area.h"
-//#include "phworld.h"
+
 #pragma warning(disable:4995)
 #pragma warning(disable:4267)
 inline void GetNormal(CDB::TRI*XTri, Fvector &n, const Fvector* V_array)
 {
-	//VERIFY(g_pGameLevel);
-	//const Fvector* V_array=inl_ph_world().ObjectSpace().GetStaticVerts();
 	Fvector sd1; sd1.sub(V_array[XTri->verts[1]], V_array[XTri->verts[0]]);
 	Fvector sd2; sd2.sub(V_array[XTri->verts[2]], V_array[XTri->verts[1]]);
 	n.crossproduct(sd1, sd2);
@@ -84,9 +82,6 @@ inline bool  TriContainPoint(const dReal* v0, const dReal* v1, const dReal* v2, 
 }
 inline bool TriContainPoint(Triangle* T, const float *pos, u16 &c, const Fvector* V_array)
 {
-	//TriContainPoint(const dReal* v0,const dReal* v1,const dReal* v2,const dReal* triAx,const dReal* triSideAx0,const dReal* triSideAx1, const dReal* pos)
-	//VERIFY( g_pGameLevel );
-	//const Fvector* V_array=inl_ph_world().ObjectSpace().GetStaticVerts();
 	CDB::TRI	*XTri = T->T;
 	const float* VRT[3] = { (dReal*)&V_array[XTri->verts[0]],(dReal*)&V_array[XTri->verts[1]],(dReal*)&V_array[XTri->verts[2]] };
 	return TriContainPoint(VRT[0], VRT[1], VRT[2], T->norm, T->side0, T->side1, pos, c);
@@ -193,14 +188,6 @@ inline float DistToTri(Triangle* T, const float *pos, float *dir, float* p, ETri
 		tdist = 0.f;
 
 	return tdist;
-	//u16 c2;
-	//float tdist2=DistToFragmenton(pos,VRT[0],VRT[1],p,dir,c);
-	//u16 c3;
-	//float tdist3=DistToFragmenton(pos,VRT[0],VRT[1],p,dir,c);
-	//u16 cc;float tdist;
-	//MIN_OF(tdist1,cc=c1;tdist=tdist1,tdist2,cc=c2;tdist=tdist2,tdist3,cc=c3;tdist=tdist3);
-
-	//return _min(_min(DistToFragmenton(pos)))
 }
 #pragma warning(default:4995)
 #pragma warning(default:4267)

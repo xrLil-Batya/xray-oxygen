@@ -13,7 +13,6 @@ void CPHSplitedShell::Collide()
 {
 	///////////////////////////////
 	CollideStatic(dSpacedGeom(), CPHObject::SelfPointer());
-	//near_callback(this,0,(dGeomID)dSpace(),ph_world->GetMeshGeom());
 }
 
 void CPHSplitedShell::get_spatial_params()

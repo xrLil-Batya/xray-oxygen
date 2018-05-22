@@ -6,7 +6,7 @@
 #include "../phworld.h"
 #include "../../xrcdb/xr_area.h"
 ////////////////////////////////////////////////////////////////////////////
-IC dReal dcTriListCollider::PointSphereTest(const dReal* center, const dReal radius, const dReal* pt, dReal* norm)
+inline dReal dcTriListCollider::PointSphereTest(const dReal* center, const dReal radius, const dReal* pt, dReal* norm)
 {
 	norm[0] = center[0] - pt[0];
 	norm[1] = center[1] - pt[1];
@@ -202,8 +202,9 @@ int dcTriListCollider::dTriSphere(const dReal* v0, const dReal* v1, const dReal*
 
 	if (TriContainPoint(v0, v1, v2, triAx, triSideAx0, triSideAx1, pos))
 	{
-		ContactNormal[0] = triAx[0]; ContactNormal[1] = triAx[1]; ContactNormal[2] = triAx[2];
-		//dVector3 ContactPos={pos[0]-triAx[0]* radius,pos[1]-triAx[1]* radius,pos[2]-triAx[2]* radius};
+		ContactNormal[0] = triAx[0];
+		ContactNormal[1] = triAx[1];
+		ContactNormal[2] = triAx[2];
 	}
 	else
 	{
@@ -250,13 +251,14 @@ int dcTriListCollider::dTriSphere(const dReal* v0, const dReal* v1, const dReal*
 	Contacts->normal[1] = -ContactNormal[1];
 	Contacts->normal[2] = -ContactNormal[2];
 	Contacts->depth = Depth;
-	////////////////////
 
+	////////////////////
 	Contacts->pos[0] = pos[0] - ContactNormal[0] * radius;
 	Contacts->pos[1] = pos[1] - ContactNormal[1] * radius;
 	Contacts->pos[2] = pos[2] - ContactNormal[2] * radius;
 	Contacts->g1 = Geometry;
 	Contacts->g2 = Sphere;
+
 	((dxGeomUserData*)dGeomGetData(Sphere))->tri_material = T->T->material;
 
 	if (dGeomGetUserData(Sphere)->callback)
@@ -264,6 +266,6 @@ int dcTriListCollider::dTriSphere(const dReal* v0, const dReal* v1, const dReal*
 
 	SURFACE(Contacts, 0)->mode = T->T->material;
 	//////////////////////////////////
-	//	++OutTriCount;
+
 	return 1;
 }

@@ -5,7 +5,7 @@
 #include "dSortTriPrimitive.h"
 #include "../dCylinder/dCylinder.h"
 #include "../MathUtils.h"
-//#include "../level.h"
+
 #ifdef	DEBUG
 #include "../debug_output.h"
 #endif
@@ -21,9 +21,6 @@ dcTriListCollider::~dcTriListCollider()
 }
 
 int dCollideBP(const dxGeom* o1, const dxGeom* o2, int flags, dContactGeom *contact, int skip);	// ODE internal function
-
-//#define CONTACT(Ptr, Stride) ((dContactGeom*) (((byte*)Ptr) + (Stride)))
-//#define SURFACE(Ptr, Stride) ((dSurfaceParameters*) (((byte*)Ptr) + (Stride-sizeof(dSurfaceParameters))))
 
 int dcTriListCollider::CollideBox(dxGeom* Box, int Flags, dContactGeom* Contacts, int Stride)
 {

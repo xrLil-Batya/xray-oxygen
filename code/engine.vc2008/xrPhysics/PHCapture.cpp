@@ -6,8 +6,6 @@
 #include "Physics.h"
 #include "ExtendedGeom.h"
 
-//#include "entity_alive.h"
-//#include "phmovementcontrol.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "iphysicsshellholder.h"
 #include "../xrengine/bone.h"
@@ -15,18 +13,12 @@
 #include "mathutilsode.h"
 #include "phelement.h"
 
-//#include "characterphysicssupport.h"
 ///////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////
 IPHCapture	*phcapture_create(CPHCharacter *ch, IPhysicsShellHolder* object, NearestToPointCallback* cb /*=0*/)
 {
-	//m_capture=xr_new<CPHCapture>(m_character,
-	//							 object,
-	//							 cb
-	//							 );
 	VERIFY(ch);
-	//VERIFY( object );
-	//VERIFY( cb );
+
 	return xr_new<CPHCapture>(ch, object, cb);
 }
 IPHCapture	*phcapture_create(CPHCharacter *ch, IPhysicsShellHolder* object, u16 element)
@@ -86,10 +78,6 @@ void CPHCapture::PhTune(dReal /**step/**/)
 	if (e_state == cstFree)
 		return;
 
-	//if(!m_taget_object->PPhysicsShell())	{
-	//	b_failed=true;
-	//	return;			//. hack
-	//}
 	VERIFY(m_character && m_character->b_exist);
 	VERIFY(m_taget_object);
 	VERIFY(m_taget_object->ObjectPPhysicsShell());
@@ -142,7 +130,7 @@ void CPHCapture::PullingUpdate()
 
 	Fvector dir;
 	Fvector capture_bone_position;
-	//CObject* object=smart_cast<CObject*>(m_character->PhysicsRefObject());
+
 	capture_bone_position.set(m_capture_bone->mTransform.c);
 	m_character->PhysicsRefObject()->ObjectXFORM().transform_tiny(capture_bone_position);
 	m_taget_element->GetGlobalPositionDynamic(&dir);
@@ -213,13 +201,6 @@ void CPHCapture::PullingUpdate()
 				dJointSetAMotorAxis(m_ajoint, 2, 2, 0.f, 0.f, 1.f);
 			}
 		}
-		//float hi=-M_PI/2.f,lo=-hi;
-		//dJointSetAMotorParam(m_ajoint,dParamLoStop ,lo);
-		//dJointSetAMotorParam(m_ajoint,dParamHiStop ,hi);
-		//dJointSetAMotorParam(m_ajoint,dParamLoStop2 ,lo);
-		//dJointSetAMotorParam(m_ajoint,dParamHiStop2 ,hi);
-		//dJointSetAMotorParam(m_ajoint,dParamLoStop3 ,lo);
-		//dJointSetAMotorParam(m_ajoint,dParamHiStop3 ,hi);
 
 		dJointSetAMotorParam(m_ajoint, dParamFMax, m_capture_force*0.2f);
 		dJointSetAMotorParam(m_ajoint, dParamVel, 0.f);
@@ -243,11 +224,7 @@ void CPHCapture::PullingUpdate()
 
 		dJointSetAMotorParam(m_ajoint, dParamStopERP3, erp);
 		dJointSetAMotorParam(m_ajoint, dParamStopCFM3, cfm);
-		/////////////////////////////////////////////////////////////////////
-		///dJointSetAMotorParam(m_joint1,dParamFudgeFactor ,0.1f);
-		//dJointSetAMotorParam(m_joint1,dParamFudgeFactor2 ,0.1f);
-		//dJointSetAMotorParam(m_joint1,dParamFudgeFactor3 ,0.1f);
-		/////////////////////////////////////////////////////////////////////////////
+
 		sf = 0.1f, df = 10.f;
 		erp = ERP(world_spring*sf, world_damping*df);
 		cfm = CFM(world_spring*sf, world_damping*df);
@@ -255,15 +232,11 @@ void CPHCapture::PullingUpdate()
 		dJointSetAMotorParam(m_ajoint, dParamCFM2, cfm);
 		dJointSetAMotorParam(m_ajoint, dParamCFM3, cfm);
 
-		///////////////////////////
-
-				//dJointSetAMotorParam(m_ajoint,dParamLoStop ,0.f);
-				//dJointSetAMotorParam(m_ajoint,dParamHiStop ,0.f);
 		m_taget_element->set_LinearVel(Fvector().set(0, 0, 0));
 		m_taget_element->set_AngularVel(Fvector().set(0, 0, 0));
 
 		m_taget_element->set_DynamicLimits();
-		//m_taget_object->PPhysicsShell()->set_JointResistance()
+
 		e_state = cstCaptured;
 		return;
 	}
@@ -286,8 +259,6 @@ void CPHCapture::CapturedUpdate()
 
 	float mag = dSqrt(dDOT(m_joint_feedback.f1, m_joint_feedback.f1));
 
-	//m_back_force=m_back_force*0.999f+ ((mag<m_capture_force/5.f) ? mag : (m_capture_force/5.f))*0.001f;
-	//
 	if (b_character_feedback&&mag > m_capture_force / 2.2f)
 	{
 		float f = mag / (m_capture_force / 15.f);
@@ -295,7 +266,7 @@ void CPHCapture::CapturedUpdate()
 	}
 
 	Fvector capture_bone_position;
-	//CObject* object=smart_cast<CObject*>(m_character->PhysicsRefObject());
+
 	capture_bone_position.set(m_capture_bone->mTransform.c);
 	m_character->PhysicsRefObject()->ObjectXFORM().transform_tiny(capture_bone_position);
 	dBodySetPosition(m_body, capture_bone_position.x, capture_bone_position.y, capture_bone_position.z);
@@ -314,7 +285,6 @@ void CPHCapture::ReleasedUpdate()
 
 void CPHCapture::ReleaseInCallBack()
 {
-	//	if(!b_failed) return;
 	b_collide = true;
 }
 
@@ -331,7 +301,6 @@ void CPHCapture::object_contactCallbackFun(bool& do_colide, bool bo1, dContact& 
 	if (!l_pUD2)
 		return;
 
-	//CEntityAlive* capturer=smart_cast<CEntityAlive*>(l_pUD1->ph_ref_object);
 	IPhysicsShellHolder* capturer = (l_pUD1->ph_ref_object);
 	if (capturer)
 	{

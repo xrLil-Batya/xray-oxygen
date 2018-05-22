@@ -2,10 +2,8 @@
 #ifndef PH_CAPTURE_H
 #define PH_CAPTURE_H
 
-//#include "phobject.h"
 #include "phupdateobject.h"
-//#include "gameobject.h"
-//#include "physicsshellholder.h"
+
 #include "phisland.h"
 #include "../../3rd-party/ode/include/ode/common.h"
 #include "iphcapture.h"
@@ -43,7 +41,6 @@ protected:
 	CBoneInstance *m_capture_bone;
 	dBodyID m_body;
 	CPHIsland m_island;
-	//bool b_failed;
 	bool b_collide;
 	bool b_disabled;
 	bool b_character_feedback;

@@ -54,7 +54,7 @@ inline bool circleIntersection(const dReal* n1, const dReal* cp1, dReal r1, cons
 	B_A = B / A;
 	B_A_2 = B_A * B_A;
 	D = B_A_2 - C;
-	if (D < 0.f) '
+	if (D < 0.f)
 	{	//somewhat strange solution
 				//- it is needed to set some
 				//axis to sepparate cylinders
@@ -79,7 +79,6 @@ inline bool circleIntersection(const dReal* n1, const dReal* cp1, dReal r1, cons
 	{
 		t3 = -B_A + dSqrt(-D);
 		t4 = -B_A - dSqrt(-D);
-		//	return false;
 	}
 	else
 	{
@@ -140,13 +139,12 @@ inline bool circleIntersection(const dReal* n1, const dReal* cp1, dReal r1, cons
 		if (l2_3 < l2_4)
 			if (l1_4 < l2_3)
 			{
-				//l1_4;
 				point[0] = 0.5f*(O1[0] + O4[0]);
 				point[1] = 0.5f*(O1[1] + O4[1]);
 				point[2] = 0.5f*(O1[2] + O4[2]);
 			}
-			else {
-				//l2_3;
+			else
+			{
 				point[0] = 0.5f*(O2[0] + O3[0]);
 				point[1] = 0.5f*(O2[1] + O3[1]);
 				point[2] = 0.5f*(O2[2] + O3[2]);
@@ -154,19 +152,18 @@ inline bool circleIntersection(const dReal* n1, const dReal* cp1, dReal r1, cons
 		else
 			if (l1_4 < l2_4)
 			{
-				//l1_4;
 				point[0] = 0.5f*(O1[0] + O4[0]);
 				point[1] = 0.5f*(O1[1] + O4[1]);
 				point[2] = 0.5f*(O1[2] + O4[2]);
 			}
-			else {
-				//l2_4;
+			else
+			{
 				point[0] = 0.5f*(O2[0] + O4[0]);
 				point[1] = 0.5f*(O2[1] + O4[1]);
 				point[2] = 0.5f*(O2[2] + O4[2]);
 			}
 
-			return true;
+	return true;
 }
 
 void lineClosestApproach(const dVector3 pa, const dVector3 ua, const dVector3 pb, const dVector3 ub, dReal *alpha, dReal *beta)

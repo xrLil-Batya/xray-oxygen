@@ -5,7 +5,8 @@
 #include "../../3rd-party/ode/src/collision_kernel.h"
 #pragma warning(default:4995)
 #pragma warning(default:4267)
-struct dxGeomTransform : public dxGeom {
+struct dxGeomTransform : public dxGeom
+{
 	dxGeom *obj;		// object that is being transformed
 	int cleanup;		// 1 to destroy obj when destroyed
 	int infomode;		// 1 to put Tx geom in dContactGeom g1

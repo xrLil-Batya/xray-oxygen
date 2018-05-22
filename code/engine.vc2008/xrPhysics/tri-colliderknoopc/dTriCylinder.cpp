@@ -65,16 +65,8 @@ bool dcTriListCollider::circleLineIntersection(const dReal* cn, const dReal* cp,
 	}
 }
 
-int dcTriListCollider::dSortedTriCyl(
-	const dReal* triSideAx0, const dReal* triSideAx1,
-	const dReal* triAx,
-	//const dReal* v0,
-	//const dReal* v1,
-	//const dReal* v2,
-	CDB::TRI* T,
-	dReal dist,
-	dxGeom *o1, dxGeom *o2,
-	int flags, dContactGeom *contact, int skip)
+int dcTriListCollider::dSortedTriCyl(const dReal* triSideAx0, const dReal* triSideAx1, const dReal* triAx, CDB::TRI* T, dReal dist,
+	dxGeom *o1, dxGeom *o2, int flags, dContactGeom *contact, int skip)
 {
 	VERIFY(dGeomGetClass(o1) == dCylinderClassUser);
 
@@ -99,11 +91,7 @@ int dcTriListCollider::dSortedTriCyl(
 	//sepparation along tri plane normal;///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
 
-	//cos0=dDOT14(triAx,R+0);
 	cos1 = dFabs(dDOT14(triAx, R + 1));
-	//cos2=dDOT14(triAx,R+2);
-
-	//sin1=_sqrt(cos0*cos0+cos2*cos2);
 
 	////////////////////////
 	//another way //////////
@@ -300,7 +288,6 @@ int dcTriListCollider::dTriCyl(const dReal* v0, const dReal* v1, const dReal* v2
 	dVector3 triSideAx0 = { T->side0[0],T->side0[1],T->side0[2] }; //{v1[0]-v0[0],v1[1]-v0[1],v1[2]-v0[2]};
 	dVector3 triSideAx1 = { T->side1[0],T->side1[1],T->side1[2] }; //{v2[0]-v1[0],v2[1]-v1[1],v2[2]-v1[2]};
 	dVector3 triSideAx2 = { v0[0] - v2[0],v0[1] - v2[1],v0[2] - v2[2] };
-	//dCROSS(triAx,=,triSideAx0,triSideAx1);
 
 	int code = 0;
 
@@ -308,13 +295,8 @@ int dcTriListCollider::dTriCyl(const dReal* v0, const dReal* v1, const dReal* v2
 	////////////////////////////////////////////////////////////////////////////
 	//sepparation along tri plane normal;///////////////////////////////////////
 	////////////////////////////////////////////////////////////////////////////
-	//accurate_normalize(triAx);
 
-	//cos0=dDOT14(triAx,R+0);
 	cos1 = dFabs(dDOT14(triAx, R + 1));
-	//cos2=dDOT14(triAx,R+2);
-
-	//sin1=_sqrt(cos0*cos0+cos2*cos2);
 
 	////////////////////////
 	//another way //////////
@@ -823,6 +805,9 @@ depth##ox=sidePr-dFabs(dist##ox);\
 		CONTACT(contact, i*skip)->normal[2] = norm[2];
 		SURFACE(contact, i*skip)->mode = T->T->material;
 	}
-	if (ret&&dGeomGetUserData(o1)->callback)dGeomGetUserData(o1)->callback(T->T, contact);
+
+	if (ret&&dGeomGetUserData(o1)->callback)
+		dGeomGetUserData(o1)->callback(T->T, contact);
+
 	return ret;
 }

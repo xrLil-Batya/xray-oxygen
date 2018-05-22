@@ -49,7 +49,6 @@ int dCollideRMS(dxGeom *o1, dxGeom *o2, int flags,
 	{
 		dContactGeom *c = CONTACT(contact, skip*i);
 		c->g1 = rm->ray_ownwer;
-		//c->depth*=60.f;
 	}
 
 	return ret;
@@ -97,7 +96,6 @@ static  void dRayMotionsAABB(dxGeom *geom, dReal aabb[6])
 {
 	dxRayMotions *c = (dxRayMotions*)dGeomGetClassData(geom);
 	dGeomGetAABB(c->ray, aabb);
-	///dInfiniteAABB(geom,aabb);
 }
 
 void dGeomRayMotionDestroy(dGeomID ray)

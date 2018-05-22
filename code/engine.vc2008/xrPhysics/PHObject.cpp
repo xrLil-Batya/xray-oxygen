@@ -138,7 +138,10 @@ void CPHObject::Collide()
 	}
 	CollideDynamics();
 	///////////////////////////////
-	if (CPHCollideValidator::DoCollideStatic(*this)) CollideStatic(dSpacedGeom(), this);
+
+	if (CPHCollideValidator::DoCollideStatic(*this))
+		CollideStatic(dSpacedGeom(), this);
+
 	m_flags.set(st_dirty, FALSE);
 }
 void	CPHObject::CollideDynamics()
@@ -184,10 +187,9 @@ bool	CPHObject::step_single(dReal	step)
 	bool ret = !m_island.IsObjGroun();
 	if (ret)
 	{
-		//PhTune							(step);
 		IslandStep(step);
 		reinit_single();
-		//PhDataUpdate					(step);
+
 		spatial_move();
 		CollideDynamics();
 		ret = !m_island.IsObjGroun();

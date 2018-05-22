@@ -47,17 +47,16 @@ public:
 
 class CPHIsland : public dxWorld
 {
-	//bool						b_active				;
-	CPHIslandFlags				m_flags;
-	dxBody						*m_first_body;
-	dxJoint						*m_first_joint;
-	dxJoint						**m_joints_tail;
-	dxBody						**m_bodies_tail;
-	CPHIsland					*m_self_active;
-	int							m_nj;
-	int							m_nb;
-	static	const int			JOINTS_LIMIT = 1500;
-	static	const int			BODIES_LIMIT = 500;
+	CPHIslandFlags m_flags;
+	dxBody *m_first_body;
+	dxJoint *m_first_joint;
+	dxJoint **m_joints_tail;
+	dxBody **m_bodies_tail;
+	CPHIsland *m_self_active;
+	int m_nj;
+	int m_nb;
+	static	const int JOINTS_LIMIT = 1500;
+	static	const int BODIES_LIMIT = 500;
 public:
 	inline	bool IsObjGroun() { return	nb > m_nb; }
 
@@ -97,7 +96,6 @@ public:
 
 	inline	void Merge(CPHIsland* island)
 	{
-		//VERIFY2(b_active&&island->b_active,"no active island");
 		CPHIsland* first_island = DActiveIsland();
 		CPHIsland* second_island = island->DActiveIsland();
 
@@ -121,7 +119,7 @@ public:
 		VERIFY(!(*(first_island->m_joints_tail)));
 		VERIFY(!((!(first_island->nj)) && (first_island->firstjoint)));
 		second_island->m_self_active = first_island;
-		//second_island->b_active=false;
+
 		m_flags.merge(second_island->m_flags);
 	}
 
@@ -139,7 +137,7 @@ public:
 
 		*m_joints_tail = 0;
 		*m_bodies_tail = 0;
-		//b_active=true;
+
 		m_flags.unmerge();
 		m_self_active = this;
 		nj = m_nj;
@@ -148,7 +146,6 @@ public:
 
 	inline	void Init()
 	{
-		//b_active=true;
 		m_flags.init();
 		m_nj = nj = 0;
 		m_nb = nb = 0;

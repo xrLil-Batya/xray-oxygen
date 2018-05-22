@@ -67,10 +67,7 @@ protected:
 
 	dReal m_radius;
 	dReal m_cyl_hight;
-	///////////////////////////////////
-	//dJointID m_capture_joint;
-	//dJointFeedback m_capture_joint_feedback;
-	////////////////////////// movement
+
 	dVector3 m_control_force;
 	Fvector	 m_acceleration;
 	Fvector  m_cam_dir;
@@ -223,9 +220,6 @@ public:
 	virtual		bool		IsEnabled() { if (!b_exist)return false; return !!dBodyIsEnabled(m_body); }
 	virtual		void		GetBodyPosition(Fvector& vpos) { VERIFY(b_exist); vpos = cast_fv(dBodyGetPosition(m_body)); }
 	const Fvector		&BodyPosition()const { VERIFY(b_exist && m_body); return cast_fv(dBodyGetPosition(m_body)); }
-	//virtual		void		CaptureObject						(dBodyID body,const dReal* anchor);
-	//virtual		void		CapturedSetPosition					(const dReal* position);
-	//virtual		void		doCaptureExist						(bool&	do_exist);
 
 	virtual		void		get_State(SPHNetState&	state);
 	virtual		void		set_State(const	SPHNetState&	state);

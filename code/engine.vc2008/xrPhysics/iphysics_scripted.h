@@ -9,8 +9,6 @@ class iphysics_game_scripted
 public:
 	virtual ~iphysics_game_scripted() {};
 	virtual	iphysics_scripted	&iphysics_impl() = 0;
-	//protected:
-	//	virtual						~iphysics_game_scripted ()	=0 {}
 };
 
 class iphysics_scripted
@@ -24,7 +22,6 @@ public:
 class iphysics_scripted_class
 {
 public:
-	//virtual	~iphysics_scripted_class		()	= 0;
 	virtual	iphysics_scripted &get_scripted() = 0;
 protected:
 #ifdef _EDITOR

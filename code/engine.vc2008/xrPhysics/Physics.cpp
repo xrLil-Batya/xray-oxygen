@@ -23,8 +23,6 @@ extern CPHWorld *ph_world;
 ///////////////////////////////////////////////////////////////////
 
 #include "ExtendedGeom.h"
-//union dInfBytes dInfinityValue = {{0,0,0x80,0x7f}};
-//PhysicsStepTimeCallback		*physics_step_time_callback				= 0;
 
 const float default_w_limit = 9.8174770f;//(M_PI/16.f/(fixed_step=0.02f));
 const float default_l_limit = 150.f;//(3.f/fixed_step=0.02f);
@@ -52,11 +50,9 @@ const float default_world_gravity = 2 * 9.81f;
 
 int phIterations = 18;
 float phTimefactor = 1.f;
-//float		phBreakCommonFactor										= 0.01f;
-//float		phRigidBreakWeaponFactor								= 1.f;
+
 Fbox phBoundaries = { 1000.f,1000.f,-1000.f,-1000.f };
-//float		ph_tri_query_ex_aabb_rate								= 1.3f;
-//int			ph_tri_clear_disable_count								= 10;
+
 dWorldID phWorld;
 
 /////////////////////////////////////
@@ -128,8 +124,8 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 		u16 material_idx_2 = 0;
 
 		surface.mu = 1.f;// 5000.f;
-		surface.soft_erp = 1.f;//ERP(world_spring,world_damping);
-		surface.soft_cfm = 1.f;//CFM(world_spring,world_damping);
+		surface.soft_erp = 1.f;
+		surface.soft_cfm = 1.f;
 		surface.bounce = 0.01f;//0.1f;
 		surface.bounce_vel = 1.5f;//0.005f;
 		usr_data_1 = retrieveGeomUserData(g1);
@@ -191,8 +187,6 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 			}
 			if (material_1->Flags.test(SGameMtl::flPassable))
 				do_collide = false;
-			//	if(material_2->Flags.is(SGameMtl::flClimable))
-			//		do_collide=false;
 		}
 		if (is_tri_2)
 		{
@@ -281,9 +275,9 @@ IC static int CollideIntoGroup(dGeomID o1, dGeomID o2, dJointGroupID jointGroup,
 			world->ConnectJoint(contact_joint);
 			dJointAttach(contact_joint, dGeomGetBody(g1), dGeomGetBody(g2));
 		}
-		}
-	return collided_contacts;
 	}
+	return collided_contacts;
+}
 
 void NearCallback(CPHObject* obj1, CPHObject* obj2, dGeomID o1, dGeomID o2)
 {
@@ -312,84 +306,6 @@ void CollideStatic(dGeomID o2, CPHObject* obj2)
 
 //half square time
 
-/*
-void BodyCutForce(dBodyID body)
-{
-dReal linear_limit=l_limit;
-//applyed force
-const dReal* force=	dBodyGetForce(body);
-
-//body mass
-dMass m;
-dBodyGetMass(body,&m);
-
-//accceleration correspondent to the force
-dVector3 a={force[0]/m.mass,force[1]/m.mass,force[2]/m.mass};
-
-//current velocity
-const dReal* start_vel=dBodyGetLinearVel(body);
-
-//velocity adding during one step
-dVector3 add_vel={a[0]*fixed_step,a[1]*fixed_step,a[2]*fixed_step};
-
-//result velocity
-dVector3 vel={start_vel[0]+add_vel[0],start_vel[1]+add_vel[1],start_vel[2]+add_vel[2]};
-
-//result velocity magnitude
-dReal speed=dSqrt(dDOT(vel,vel));
-
-if(speed>linear_limit) //then we need to cut applied force
-{
-//solve the triangle - cutted velocity - current veocity - add velocity
-//to find cutted adding velocity
-
-//add_vell magnitude
-dReal add_speed=dSqrt(dDOT(add_vel,add_vel));
-
-//current velocity magnitude
-dReal start_speed=dSqrt(dDOT(start_vel,start_vel));
-
-//cosinus of the angle between vel ang add_vell
-dReal cosinus1=dFabs(dDOT(add_vel,start_vel)/start_speed/add_speed);
-
-dReal cosinus1_2=cosinus1*cosinus1;
-if(cosinus1_2>1.f)
-cosinus1_2=1.f;
-dReal cutted_add_speed;
-if(cosinus1_2==1.f)
-cutted_add_speed=linear_limit-start_speed;
-else
-{
-//sinus
-dReal sinus1_2=1.f-cosinus1_2;
-
-dReal sinus1=dSqrt(sinus1_2);
-
-//sinus of the angle between cutted velocity and adding velociity (sinus theorem)
-dReal sinus2=sinus1/linear_limit*start_speed;
-dReal sinus2_2=sinus2*sinus2;
-if(sinus2_2>1.f)sinus2_2=1.f;
-
-dReal cosinus2_2=1.f-sinus2_2;
-dReal cosinus2=dSqrt(cosinus2_2);
-
-//sinus of 180-ang1-ang2
-dReal sinus3=sinus1*cosinus2+cosinus1*sinus2;
-
-//cutted adding velocity magnitude (sinus theorem)
-
-cutted_add_speed=linear_limit/sinus1*sinus3;
-}
-//substitude force
-
-dBodyAddForce(body,
-cutted_add_speed/add_speed/fixed_step*m.mass*add_vel[0]-force[0],
-cutted_add_speed/add_speed/fixed_step*m.mass*add_vel[1]-force[1],
-cutted_add_speed/add_speed/fixed_step*m.mass*add_vel[2]-force[2]
-);
-}
-}
-*/
 //limit for angular accel
 void dBodyAngAccelFromTorqu(const dBodyID body, dReal* ang_accel, const dReal* torque) {
 	dMass m;

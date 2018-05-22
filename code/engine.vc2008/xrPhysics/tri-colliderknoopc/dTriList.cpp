@@ -18,28 +18,6 @@ dcTriListCollider* GetData(dxGeom* TriList)
 inline bool ValidateCollision(dxGeom* o1, dxGeom* o2)
 {
 	return dGeomGetUserData(o1)->b_static_colide;
-
-	/*
-
-	dxBody* b1 = dGeomGetBody(o1);
-
-	dxBody* b2 = dGeomGetBody(o2);
-
-	if (b1){
-		if (!dBodyIsEnabled(b1)){
-			b1 = 0;
-		}
-	}
-
-	if (b2){
-		if (!dBodyIsEnabled(b2)){
-			b2 = 0;
-		}
-	}
-
-	return b1 || b2;
-	*/
-	//return true;
 }
 
 int dCollideSTL(dxGeom* TriList, dxGeom* Sphere, int Flags, dContactGeom* Contact, int Stride) throw()

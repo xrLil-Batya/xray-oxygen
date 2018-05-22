@@ -12,10 +12,8 @@ inline bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const F
 
 	const Fvector &c = c_cylinder.m_center;
 	const Fvector &ax = c_cylinder.m_direction;
-	//c.set(-IM.c.dotproduct(IM.i),-IM.c.dotproduct(IM.j),-IM.c.dotproduct(IM.k));
-	//Fvector ax;ax.set(IM.i.z,IM.j.z,IM.k.z);//??
 
-//////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////
 	Fvector	v;	v.sub(c, p);
 	float	cs = dir.dotproduct(ax);
 	float	Lc = v.dotproduct(ax);
@@ -158,7 +156,6 @@ inline bool RAYvsCYLINDER(const Fcylinder& c_cylinder, const Fvector &S, const F
 
 	float sq_horde = (sq_r - sq_nearest_dist);
 
-	//float horde=_sqrt(sq_horde)					;
 	float sq_c_diff = sq_horde * sq_cos*r_sq_sin;
 	float c_diff = _sqrt(sq_c_diff);//ccc
 	float cp1 = tc - c_diff;

@@ -7,12 +7,10 @@ void	CPHIsland::Step(dReal step)
 	if (!m_flags.is_active())
 		return;
 
-	//dWorldStepFast1	(DWorld(),	fixed_step,	phIterations/*+Random.randI(0,phIterationCycle)*/);
 	if (m_flags.is_exact_integration_prefeared() && nj < max_joint_allowed_for_exeact_integration)
 		dWorldStep(DWorld(), fixed_step);
 	else
 		dWorldQuickStep(DWorld(), fixed_step);
-	//dWorldStep(DWorld(),fixed_step);
 }
 
 void CPHIsland::Enable()
@@ -42,7 +40,7 @@ void CPHIsland::Repair()
 
 		if (!dQ_valid(dBodyGetQuaternion(body)))
 		{
-			dQuaternion q = { 1.f,0.f,0.f,0.f };//dQSetIdentity(q);
+			dQuaternion q = { 1.f,0.f,0.f,0.f };
 			dBodySetQuaternion(body, q);
 		}
 	}

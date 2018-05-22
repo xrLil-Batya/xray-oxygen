@@ -3,7 +3,7 @@
 #include "phvalide.h"
 #include "mathutils.h"
 #include "iphysicsshellholder.h"
-//#include "objectdump.h"
+
 #include "..\xrCore\dump_string.h"
 
 #ifdef DEBUG
@@ -22,13 +22,6 @@ const Fbox	&ph_boundaries()
 {
 	return phBoundaries;
 }
-/*
-	Msg(" %s	\n", msg);\
-	Msg(" pos: %e,%e,%e, seems to be invalid", pos.x,pos.y,pos.z);\
-	Msg("Level box: %e,%e,%e-%e,%e,%e,",bounds.x1,bounds.y1,bounds.z1,bounds.x2,bounds.y2,bounds.z2);\
-	Msg("Object: %s",(obj->cName().c_str()));\
-	Msg("Visual: %s",(obj->cNameVisual().c_str()));\
-*/
 
 std::string dbg_valide_pos_string(const Fvector &pos, const Fbox &bounds, const IPhysicsShellHolder *obj, LPCSTR msg)
 {

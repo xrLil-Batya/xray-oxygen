@@ -19,20 +19,20 @@ class CPHJoint : public IPhysicsJoint, public cphysics_scripted
 	dJointID m_joint1;
 	IPhysicsJoint **m_back_ref;
 	CPHJointDestroyInfo *m_destroy_info;
-	float m_erp;			//joint erp
-	float m_cfm;			//joint cfm
+	float m_erp; //joint erp
+	float m_cfm; //joint cfm
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	struct SPHAxis
 	{
-		float high;						//high limit
-		float low;						//law limit
-		float zero;						//zero angle position
-		float erp;						//limit erp
-		float cfm;						//limit cfm
-		eVs vs;						//coordinate system
-		float force;						//max force
-		float velocity;						//velocity to achieve
-		Fvector direction;						//axis direction
+		float high; //high limit
+		float low; //law limit
+		float zero; //zero angle position
+		float erp; //limit erp
+		float cfm; //limit cfm
+		eVs vs; //coordinate system
+		float force; //max force
+		float velocity; //velocity to achieve
+		Fvector direction; //axis direction
 		inline 	void set_limits(float h, float l) { high = h; low = l; }
 		inline 	void set_direction(const Fvector& v) { direction.set(v); }
 		inline 	void set_direction(const float x, const float y, const float z) { direction.set(x, y, z); }
@@ -164,7 +164,7 @@ inline void own_axis(const Fmatrix& m, Fvector& axis)
 	return;
 }
 
-IC void own_axis_angle(const Fmatrix& m, Fvector& axis, float& angle)
+inline void own_axis_angle(const Fmatrix& m, Fvector& axis, float& angle)
 {
 	own_axis(m, axis);
 	Fvector ort1, ort2;
@@ -264,8 +264,5 @@ inline void axis_angleA(const Fmatrix& m, const Fvector& axis, float& angle)
 
 	if (sinus < 0.f)
 		angle = -angle;
-
-	//if(angle>M_PI) angle=angle-2.f*M_PI;
-	//if(angle<-M_PI) angle=angle+2.f*M_PI;
 }
 #endif

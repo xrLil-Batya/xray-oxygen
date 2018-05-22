@@ -3,7 +3,6 @@
 #include "dTriBox.h"
 #include "dcTriListCollider.h"
 
-
 int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSideAx1, const dReal* triAx, CDB::TRI* T,
 	dReal dist, dxGeom *o1, dxGeom *o2, int flags, dContactGeom *contact, int skip)
 {
@@ -18,9 +17,13 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 
 	// find number of contacts requested
 	int maxc = flags & NUMC_MASK;
-	if (maxc < 1) maxc = 1;
+
+	if (maxc < 1)
+		maxc = 1;
+
 	// no more than 3 contacts per box allowed
-	if (maxc > 3) maxc = 3;
+	if (maxc > 3)
+		maxc = 3;
 
 	int code = 0;
 	dReal outDepth;
@@ -33,7 +36,7 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 	signum = -1;
 	code = 0;
 
-	if (depth<0.f) return 0;
+	if (depth < 0.f) return 0;
 
 	unsigned int i;
 
@@ -72,13 +75,12 @@ int dcTriListCollider::dSortedTriBox(const dReal* triSideAx0, const dReal* triSi
 
 	///////////////////////////////////////////////////////////
 
-
 	if (maxc == 1) goto done;
 
 	// get the second and third contact points by starting from `p' and going
 	// along the two sides with the smallest projected length.
 
-	//(@slipch) it is not perfectly right for triangle collision 
+	//(@slipch) it is not perfectly right for triangle collision
 	//because it need to check if additional points are in the triangle but it seems cause no problem
 
 #define FOO(i,j,op) \
@@ -138,7 +140,7 @@ contact2_3: BAR(2, 2, 3); goto done;
 
 		   contact->depth = outDepth;
 
-		   for (i = 0; i<ret; ++i)
+		   for (i = 0; i < ret; ++i)
 		   {
 			   CONTACT(contact, i*skip)->g1 = const_cast<dxGeom*> (o2);
 			   CONTACT(contact, i*skip)->g2 = const_cast<dxGeom*> (o1);
@@ -151,7 +153,6 @@ contact2_3: BAR(2, 2, 3); goto done;
 			   dGeomGetUserData(o1)->callback(T, contact);
 
 		   return ret;
-
 }
 
 IC bool normalize_if_possible(dReal *v)
@@ -193,20 +194,14 @@ int dcTriListCollider::dTriBox(const dReal* v0, const dReal* v1, const dReal* v2
 	//sepparation along tri plane normal;
 	const dReal *triAx = T->norm;
 
-
-	dReal sidePr =
-		dFabs(dDOT14(triAx, R + 0)*hside[0]) +
-		dFabs(dDOT14(triAx, R + 1)*hside[1]) +
-		dFabs(dDOT14(triAx, R + 2)*hside[2]);
+	dReal sidePr = dFabs(dDOT14(triAx, R + 0)*hside[0]) + dFabs(dDOT14(triAx, R + 1)*hside[1]) + dFabs(dDOT14(triAx, R + 2)*hside[2]);
 
 	dReal dist = -T->dist;
-	//dist=dDOT(triAx,v0)-dDOT(triAx,p);
 	dReal depth = sidePr - dFabs(dist);
 	outDepth = depth;
-	signum = dist<0.f ? -1.f : 1.f;
+	signum = dist < 0.f ? -1.f : 1.f;
 	code = 0;
-	if (depth<0.f) return 0;
-
+	if (depth < 0.f) return 0;
 
 	bool isPdist0, isPdist1, isPdist2;
 	bool test0 = true, test1 = true, test2 = true;
@@ -216,8 +211,6 @@ int dcTriListCollider::dTriBox(const dReal* v0, const dReal* v1, const dReal* v2
 
 	dReal depth0, depth1, depth2;
 	dReal dist0, dist1, dist2;
-
-
 
 #define CMP(sd,c)	\
 if(depth0>depth1)\
@@ -267,7 +260,6 @@ else\
 					}\
 			}\
 			else return 0;
-
 
 #define TEST(sd, c) \
 \
@@ -394,7 +386,6 @@ depth##ox=sidePr-dFabs(dist##ox);\
 
 		///////////////////////////////////////////////////////////
 
-
 #define TRI_CONTAIN_POINT(pos)	{\
  dVector3 cross0, cross1, cross2;\
  dReal ds0,ds1,ds2;\
@@ -413,7 +404,6 @@ depth##ox=sidePr-dFabs(dist##ox);\
 	 dDOT(cross2,pos)-ds2>0.f) ++ret;\
 }
 		///////////////////////////////////////////////////////////
-
 
 		// get the second and third contact points by starting from `p' and going
 		// along the two sides with the smallest projected length.
@@ -439,14 +429,13 @@ depth##ox=sidePr-dFabs(dist##ox);\
   }
 		//TRI_CONTAIN_POINT(CONTACT(contact,ret*skip)->pos)
 
-		if (B1<B2)
+		if (B1 < B2)
 		{
 			BAR(0, 1, pos, depth);
-			if (B2<B3)
+			if (B2 < B3)
 			{
 				BAR(1, 2, pos, depth);
 				BAR(0, 1, prc->pos, prc->depth);
-
 			}
 			else
 			{
@@ -457,7 +446,7 @@ depth##ox=sidePr-dFabs(dist##ox);\
 		else
 		{
 			BAR(1, 2, pos, depth);
-			if (B1<B3)
+			if (B1 < B3)
 			{
 				BAR(0, 1, pos, depth);
 				BAR(1, 2, prc->pos, prc->depth);
@@ -473,7 +462,6 @@ depth##ox=sidePr-dFabs(dist##ox);\
 #undef BAR
 #undef TRI_CONTAIN_POINT
 		////////////////////////////////////////////////////////////// end (from geom.cpp dCollideBP)
-
 	}
 	else
 		if (code <= 9)
@@ -528,7 +516,7 @@ depth##ox=sidePr-dFabs(dist##ox);\
 			norm[2] = outAx[2] * signum;
 		}
 
-	if (dDOT(norm, triAx)>0.f)	return 0;
+	if (dDOT(norm, triAx) > 0.f)	return 0;
 
 	contact->pos[0] = pos[0];
 	contact->pos[1] = pos[1];
@@ -536,7 +524,7 @@ depth##ox=sidePr-dFabs(dist##ox);\
 
 	contact->depth = outDepth;
 
-	for (u32 i = 0; i<ret; ++i)
+	for (u32 i = 0; i < ret; ++i)
 	{
 		CONTACT(contact, i*skip)->g1 = const_cast<dxGeom*> (o2);
 		CONTACT(contact, i*skip)->g2 = const_cast<dxGeom*> (o1);

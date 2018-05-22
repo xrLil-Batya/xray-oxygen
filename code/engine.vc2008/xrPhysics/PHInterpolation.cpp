@@ -10,8 +10,6 @@ extern CPHWorld		*ph_world;
 CPHInterpolation::CPHInterpolation()
 {
 	m_body = NULL;
-
-	//	fTimeDelta=0.f;
 }
 
 void CPHInterpolation::SetBody(dBodyID body)
@@ -27,9 +25,10 @@ void CPHInterpolation::SetBody(dBodyID body)
 	qRotations.fill_in(fQ);
 }
 
-void CPHInterpolation::UpdatePositions() {
+void CPHInterpolation::UpdatePositions()
+{
 	VERIFY(m_body);
-	///VERIFY2(dV_valid(dBodyGetPosition(m_body)),"invalid body position in update interpolation");
+
 	qPositions.push_back(*((Fvector*)dBodyGetPosition(m_body)));
 }
 
@@ -37,7 +36,6 @@ void CPHInterpolation::UpdateRotations()
 {
 	VERIFY(m_body);
 
-	//VERIFY2(dM_valid(dBodyGetRotation(m_body)),"invalid body rotation in update interpolation");
 	const dReal* dQ = dBodyGetQuaternion(m_body);
 	Fquaternion fQ;
 	fQ.set(-dQ[0], dQ[1], dQ[2], dQ[3]);
@@ -46,10 +44,7 @@ void CPHInterpolation::UpdateRotations()
 
 void CPHInterpolation::InterpolatePosition(Fvector& pos)
 {
-	//if(!b_udating_positions)
 	pos.lerp(qPositions[0], qPositions[1], ph_world->m_frame_time / fixed_step);
-	//else
-		//pos.lerp(*bkp_pos,bk_pos,ph_world->FrameTime(b_frame_mark)/fixed_step);
 }
 
 void CPHInterpolation::InterpolateRotation(Fmatrix& rot)
@@ -57,10 +52,9 @@ void CPHInterpolation::InterpolateRotation(Fmatrix& rot)
 	Fquaternion q;
 	float	t = ph_world->m_frame_time / fixed_step;
 	VERIFY(t >= 0.f && t <= 1.f);
-	//if(!b_udating_rotations)
+
 	q.slerp(qRotations[0], qRotations[1], t);
-	//	else
-			//q.slerp(*bkp_quat,bk_quat,t);
+
 	rot.rotation(q);
 }
 
