@@ -110,7 +110,7 @@ void CPHObject::Collide()
 				continue;
 
 			dir.mul(1.f / magnitude);
-			g_SpatialSpacePhysic->q_ray(ph_world->r_spatial, 0, STYPE_PHYSIC, *from, dir, magnitude);//|ISpatial_DB::O_ONLYFIRST
+			g_SpatialSpacePhysic->q_ray(ph_world->r_spatial, 0, STYPE_PHYSIC, *from, dir, magnitude);
 #ifdef DEBUG
 			if (debug_output().ph_dbg_draw_mask().test(phDbgDrawRayMotions))
 			{

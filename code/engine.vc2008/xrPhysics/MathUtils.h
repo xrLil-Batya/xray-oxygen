@@ -362,7 +362,7 @@ struct SInertVal
 {
 	float val;
 	const	float inertion;
-	SInertVal(float inert) : inertion(inert) { R_ASSERT(inert > 0.f&&inert < 1.f); }
+	SInertVal(float inert) : inertion(inert), val(0.f) { R_ASSERT(inert > 0.f&&inert < 1.f); }
 	inline void	new_val(float new_val)
 	{
 		val = inertion * val + (1 - inertion)*new_val;

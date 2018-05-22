@@ -573,21 +573,16 @@ void CPHSimpleCharacter::PhTune(dReal step)
 	bool b_good_graund = b_valide_ground_contact && m_ground_contact_normal[1] > M_SQRT1_2;
 
 	dxGeomUserData	*ud = dGeomGetUserData(m_wheel);
+
 	if ((ud->pushing_neg || ud->pushing_b_neg) && !b_death_pos)
 	{
 		b_death_pos = true;
 
 		Fvector pos; pos.set(cast_fv(dBodyGetPosition(m_body)));
 		Fvector d; d.set(cast_fv(dBodyGetLinearVel(m_body))); d.mul(fixed_step);
+
 		pos.sub(d);
-		if (!ud->pushing_b_neg)
-		{
-			dVectorSet(m_death_position, cast_fp(pos));
-		}
-		else
-		{
-			dVectorSet(m_death_position, cast_fp(pos));
-		}
+		dVectorSet(m_death_position, cast_fp(pos));
 	}
 
 	if (b_death_pos && !(ud->pushing_neg || ud->pushing_b_neg))
@@ -595,8 +590,8 @@ void CPHSimpleCharacter::PhTune(dReal step)
 		b_death_pos = false;
 	}
 
-	CPHContactBodyEffector* contact_effector =
-		(CPHContactBodyEffector*)dBodyGetData(m_body);
+	CPHContactBodyEffector* contact_effector = (CPHContactBodyEffector*)dBodyGetData(m_body);
+
 	if (contact_effector)contact_effector->Apply();
 
 	if (!dBodyIsEnabled(m_body))
@@ -605,10 +600,7 @@ void CPHSimpleCharacter::PhTune(dReal step)
 		return;
 	}
 
-	if (m_acceleration.magnitude() > 0.1f)
-		is_control = true;
-	else
-		is_control = false;
+	is_control = m_acceleration.magnitude() > 0.1f;
 
 	b_depart = was_contact && (!is_contact);
 	b_stop_control = was_control && (!is_control);

@@ -79,39 +79,13 @@ void CPHSimpleCharacter::UpdateDynamicDamage(dContact* c, u16 obj_material_idx, 
 		Msg("cd %s -real_acceted_e %f", name, Kself + Kobj - KK);
 		Msg("cd %s -free_energy %f", name, dbg_free_energy);
 		Msg("-----------------------------------------------------------------------------------------");
-		/*
-		static float dbg_my_norm_vell=0.f;
-		static float dbg_obj_norm_vell=0.f;
-		static float dbg_my_kinetic_e=0.f;
-		static float dbg_obj_kinetic_e=0.f;
-		static float dbg_my_effective_e=0.f;
-		static float dbg_obj_effective_e=0.f;
-		static float dbg_free_energy=0.f;
-		if()
-			dbg_my_norm_vell=norm_vel;
-			dbg_obj_norm_vell=norm_obj_vel;
-			dbg_my_kinetic_e=Kself;
-			dbg_obj_kinetic_e=Kobj;
-			dbg_my_effective_e=Kself*m_collision_damage_factor;
-			dbg_obj_effective_e=Kobj*object_damage_factor;
-			dbg_free_energy=KK;
-		DBG_OutText("-----dbg obj collision damage-------");
-		DBG_OutText("my_norm_vell %f",dbg_my_norm_vell);
-		DBG_OutText("obj_norm_vell %f",dbg_obj_norm_vell);
-		DBG_OutText("my_kinetic_e %f",dbg_my_kinetic_e);
-		DBG_OutText("obj_kinetic_e %f", dbg_obj_kinetic_e);
-		DBG_OutText("my_effective_e %f",dbg_my_effective_e);
-		DBG_OutText("obj_effective_e %f",dbg_obj_effective_e);
-		DBG_OutText("free_energy %f",dbg_free_energy);
-		DBG_OutText("-----------------------------------");
-		*/
 	}
 #endif
 	if (c_vel > m_collision_damage_info.m_contact_velocity)
 	{
 		IPhysicsShellHolder* obj = bo1 ? retrieveRefObject(c->geom.g2) : retrieveRefObject(c->geom.g1);
 		VERIFY(obj);
-		if (!obj->ObjectGetDestroy())
+		if (obj && !obj->ObjectGetDestroy())
 		{
 			m_collision_damage_info.m_contact_velocity = c_vel;
 			m_collision_damage_info.m_dmc_signum = bo1 ? 1.f : -1.f;

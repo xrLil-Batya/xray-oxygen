@@ -115,85 +115,82 @@ int dcTriListCollider::dSortedTriCyl(const dReal* triSideAx0, const dReal* triSi
 	dVector3 norm;
 	unsigned int ret = 0;
 	dVector3 pos;
-	if (code == 0)
+	norm[0] = triAx[0] * signum;
+	norm[1] = triAx[1] * signum;
+	norm[2] = triAx[2] * signum;
+
+	dReal Q1 = signum * dDOT14(triAx, R + 0);
+	dReal Q2 = signum * dDOT14(triAx, R + 1);
+	dReal Q3 = signum * dDOT14(triAx, R + 2);
+	dReal factor = _sqrt(Q1*Q1 + Q3 * Q3);
+	dReal	C1, C3;
+	dReal centerDepth;//depth in the cirle centre
+	if (factor > 0.f)
 	{
-		norm[0] = triAx[0] * signum;
-		norm[1] = triAx[1] * signum;
-		norm[2] = triAx[2] * signum;
+		C1 = Q1 / factor;
+		C3 = Q3 / factor;
+	}
+	else
+	{
+		C1 = 1.f;
+		C3 = 0.f;
+	}
 
-		dReal Q1 = signum * dDOT14(triAx, R + 0);
-		dReal Q2 = signum * dDOT14(triAx, R + 1);
-		dReal Q3 = signum * dDOT14(triAx, R + 2);
-		dReal factor = _sqrt(Q1*Q1 + Q3 * Q3);
-		dReal	C1, C3;
-		dReal centerDepth;//depth in the cirle centre
-		if (factor > 0.f)
-		{
-			C1 = Q1 / factor;
-			C3 = Q3 / factor;
-		}
-		else
-		{
-			C1 = 1.f;
-			C3 = 0.f;
-		}
+	dReal A1 = radius * C1;//cosinus
+	dReal A2 = hlz * Q2;
+	dReal A3 = radius * C3;//sinus
 
-		dReal A1 = radius * C1;//cosinus
-		dReal A2 = hlz * Q2;
-		dReal A3 = radius * C3;//sinus
+	if (factor > 0.f) centerDepth = outDepth - A1 * Q1 - A3 * Q3; else centerDepth = outDepth;
 
-		if (factor > 0.f) centerDepth = outDepth - A1 * Q1 - A3 * Q3; else centerDepth = outDepth;
+	pos[0] = p[0];
+	pos[1] = p[1];
+	pos[2] = p[2];
 
-		pos[0] = p[0];
-		pos[1] = p[1];
-		pos[2] = p[2];
+	pos[0] += A2 > 0 ? hlz * R[1] : -hlz * R[1];
+	pos[1] += A2 > 0 ? hlz * R[5] : -hlz * R[5];
+	pos[2] += A2 > 0 ? hlz * R[9] : -hlz * R[9];
 
-		pos[0] += A2 > 0 ? hlz * R[1] : -hlz * R[1];
-		pos[1] += A2 > 0 ? hlz * R[5] : -hlz * R[5];
-		pos[2] += A2 > 0 ? hlz * R[9] : -hlz * R[9];
+	ret = 0;
+	contact->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
+	contact->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
+	contact->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
 
-		ret = 0;
-		contact->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
-		contact->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
-		contact->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
+	{
+		contact->depth = outDepth;
+		ret = 1;
+	}
 
-		{
-			contact->depth = outDepth;
-			ret = 1;
-		}
+	if (dFabs(Q2) > M_SQRT1_2)
+	{
+		A1 = (-C1 * M_COS_PI_3 - C3 * M_SIN_PI_3)*radius;
+		A3 = (-C3 * M_COS_PI_3 + C1 * M_SIN_PI_3)*radius;
+		CONTACT(contact, ret*skip)->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
+		CONTACT(contact, ret*skip)->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
+		CONTACT(contact, ret*skip)->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
+		CONTACT(contact, ret*skip)->depth = centerDepth + Q1 * A1 + Q3 * A3;
 
-		if (dFabs(Q2) > M_SQRT1_2)
-		{
-			A1 = (-C1 * M_COS_PI_3 - C3 * M_SIN_PI_3)*radius;
-			A3 = (-C3 * M_COS_PI_3 + C1 * M_SIN_PI_3)*radius;
-			CONTACT(contact, ret*skip)->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
-			CONTACT(contact, ret*skip)->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
-			CONTACT(contact, ret*skip)->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
-			CONTACT(contact, ret*skip)->depth = centerDepth + Q1 * A1 + Q3 * A3;
+		if (CONTACT(contact, ret*skip)->depth > 0.f)
+			++ret;
 
-			if (CONTACT(contact, ret*skip)->depth > 0.f)
-				++ret;
+		A1 = (-C1 * M_COS_PI_3 + C3 * M_SIN_PI_3)*radius;
+		A3 = (-C3 * M_COS_PI_3 - C1 * M_SIN_PI_3)*radius;
+		CONTACT(contact, ret*skip)->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
+		CONTACT(contact, ret*skip)->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
+		CONTACT(contact, ret*skip)->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
+		CONTACT(contact, ret*skip)->depth = centerDepth + Q1 * A1 + Q3 * A3;
 
-			A1 = (-C1 * M_COS_PI_3 + C3 * M_SIN_PI_3)*radius;
-			A3 = (-C3 * M_COS_PI_3 - C1 * M_SIN_PI_3)*radius;
-			CONTACT(contact, ret*skip)->pos[0] = pos[0] + A1 * R[0] + A3 * R[2];
-			CONTACT(contact, ret*skip)->pos[1] = pos[1] + A1 * R[4] + A3 * R[6];
-			CONTACT(contact, ret*skip)->pos[2] = pos[2] + A1 * R[8] + A3 * R[10];
-			CONTACT(contact, ret*skip)->depth = centerDepth + Q1 * A1 + Q3 * A3;
+		if (CONTACT(contact, ret*skip)->depth > 0.f)
+			++ret;
+	}
+	else
+	{
+		CONTACT(contact, ret*skip)->pos[0] = contact->pos[0] - 2.f*(A2 > 0 ? hlz * R[1] : -hlz * R[1]);
+		CONTACT(contact, ret*skip)->pos[1] = contact->pos[1] - 2.f*(A2 > 0 ? hlz * R[5] : -hlz * R[5]);
+		CONTACT(contact, ret*skip)->pos[2] = contact->pos[2] - 2.f*(A2 > 0 ? hlz * R[9] : -hlz * R[9]);
+		CONTACT(contact, ret*skip)->depth = outDepth - Q2 * 2.f*A2;
 
-			if (CONTACT(contact, ret*skip)->depth > 0.f)
-				++ret;
-		}
-		else
-		{
-			CONTACT(contact, ret*skip)->pos[0] = contact->pos[0] - 2.f*(A2 > 0 ? hlz * R[1] : -hlz * R[1]);
-			CONTACT(contact, ret*skip)->pos[1] = contact->pos[1] - 2.f*(A2 > 0 ? hlz * R[5] : -hlz * R[5]);
-			CONTACT(contact, ret*skip)->pos[2] = contact->pos[2] - 2.f*(A2 > 0 ? hlz * R[9] : -hlz * R[9]);
-			CONTACT(contact, ret*skip)->depth = outDepth - Q2 * 2.f*A2;
-
-			if (CONTACT(contact, ret*skip)->depth > 0.f)
-				++ret;
-		}
+		if (CONTACT(contact, ret*skip)->depth > 0.f)
+			++ret;
 	}
 
 	if ((int)ret > maxc)
@@ -463,10 +460,10 @@ int dcTriListCollider::dTriCyl(const dReal* v0, const dReal* v1, const dReal* v2
 
 				dVector3 tpos, pos;
 	if (code > 3) outDepth = pointDepth; //deepest vertex axis used if its depth less than outDepth
-	//else{
-	//bool outV0=!(testV0&&sideTestV00&&sideTestV10&&sideTestV20);
-	//bool outV1=!(testV1&&sideTestV01&&sideTestV11&&sideTestV21);
-	//bool outV2=!(testV2&&sideTestV02&&sideTestV12&&sideTestV22);
+										 //else{
+										 //bool outV0=!(testV0&&sideTestV00&&sideTestV10&&sideTestV20);
+										 //bool outV1=!(testV1&&sideTestV01&&sideTestV11&&sideTestV21);
+										 //bool outV2=!(testV2&&sideTestV02&&sideTestV12&&sideTestV22);
 	bool outV0 = true;
 	bool outV1 = true;
 	bool outV2 = true;
@@ -774,9 +771,9 @@ depth##ox=sidePr-dFabs(dist##ox);\
 			norm[2] = outAx[2] * signum;
 		}
 	}
-
 	else
-	{//7-12
+	{
+		//7-12
 		ret = 1;
 		int iv0 = (code - 7) % 3;
 		int iv1 = (iv0 + 1) % 3;
@@ -785,12 +782,12 @@ depth##ox=sidePr-dFabs(dist##ox);\
 			RETURN0;
 		SideToGlClTriState(T->T->verts[iv0], T->T->verts[iv1], T_array);
 		contact->depth = outDepth;
-		norm[0] = outAx[0] * signum;
-		norm[1] = outAx[1] * signum;
-		norm[2] = outAx[2] * signum;
-		contact->pos[0] = pos[0];
-		contact->pos[1] = pos[1];
-		contact->pos[2] = pos[2];
+
+		for (u32 it = 0; it < 3; it++)
+		{
+			norm[it] = outAx[it] * signum;
+			contact->pos[it] = pos[it];
+		}
 	}
 
 	if ((int)ret > maxc)

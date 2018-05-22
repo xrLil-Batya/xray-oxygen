@@ -10,22 +10,25 @@ CPHGeometryOwner::CPHGeometryOwner()
 	b_builded = false;
 	m_mass_center.set(0, 0, 0);
 	VERIFY(ph_world);
+	m_volume = 0.f;
 
 	contact_callback = ph_world->default_contact_shotmark();
-	object_contact_callback = NULL;
+	object_contact_callback = nullptr;
 	ul_material = GMLibrary().GetMaterialIdx("objects\\small_box");
-	m_group = NULL;
-	m_phys_ref_object = NULL;
+	m_group = nullptr;
+	m_phys_ref_object = nullptr;
 }
 
 CPHGeometryOwner::~CPHGeometryOwner()
 {
-	GEOM_I i_geom = m_geoms.begin(), e = m_geoms.end();
-	for (; i_geom != e; ++i_geom)xr_delete(*i_geom);
+	for (CODEGeom* i_geom: m_geoms)
+		xr_delete(i_geom);
+
 	m_geoms.clear();
 	DestroyGroupSpace();
 }
-void	CPHGeometryOwner::group_add(CODEGeom& g)
+
+void CPHGeometryOwner::group_add(CODEGeom& g)
 {
 	if (!m_group)
 	{
@@ -84,18 +87,17 @@ void CPHGeometryOwner::destroy()
 	if (!b_builded)
 		return;
 
-	GEOM_I i = m_geoms.begin(), e = m_geoms.end();
-	for (; i != e; ++i)
+	for (CODEGeom* i_geom : m_geoms)
 	{
-		(*i)->destroy();
+		i_geom->destroy();
 	}
 	b_builded = false;
 }
 
 void CPHGeometryOwner::set_body(dBodyID body)
 {
-	GEOM_I i = m_geoms.begin(), e = m_geoms.end();
-	for (; i != e; ++i) (*i)->set_body(body);
+	for (CODEGeom* i_geom : m_geoms)
+		i_geom->set_body(body);
 }
 
 Fvector CPHGeometryOwner::get_mc_data()
@@ -104,11 +106,10 @@ Fvector CPHGeometryOwner::get_mc_data()
 	float pv;
 	m_mass_center.set(0, 0, 0);
 	m_volume = 0.f;
-	GEOM_I i_geom = m_geoms.begin(), e = m_geoms.end();
-	for (; i_geom != e; ++i_geom)
+	for (CODEGeom* i_geom : m_geoms)
 	{
-		pv = (*i_geom)->volume();
-		s.mul((*i_geom)->local_center(), pv);
+		pv = i_geom->volume();
+		s.mul(i_geom->local_center(), pv);
 		m_volume += pv;
 		m_mass_center.add(s);
 	}
@@ -124,31 +125,31 @@ Fvector CPHGeometryOwner::get_mc_geoms()
 	mc.set(0.f, 0.f, 0.f);
 	return mc;
 }
+
 void CPHGeometryOwner::get_mc_kinematics(IKinematics* K, Fvector& mc, float& mass)
 {
 	mc.set(0.f, 0.f, 0.f);
 	mass = 0.f;
-	m_volume = 0.f;
-	GEOM_I i_geom = m_geoms.begin(), e = m_geoms.end();
-	for (; i_geom != e; ++i_geom)
+	m_volume = 0.f; 
+	for (CODEGeom* i_geom : m_geoms)
 	{
-		const IBoneData& data = K->GetBoneData((*i_geom)->bone_id());
+		const IBoneData& data = K->GetBoneData(i_geom->bone_id());
 		Fvector add;
 		mass += data.get_mass();
-		m_volume += (*i_geom)->volume();
+		m_volume += i_geom->volume();
 		add.set(data.get_center_of_mass());
 		add.mul(data.get_mass());
 		mc.add(add);
 	}
 	mc.mul(1.f / mass);
 }
+
 void CPHGeometryOwner::calc_volume_data()
 {
-	m_volume = 0.f;
-	GEOM_I i_geom = m_geoms.begin(), e = m_geoms.end();
-	for (; i_geom != e; ++i_geom)
+	m_volume = 0.f; 
+	for (CODEGeom* i_geom : m_geoms)
 	{
-		m_volume += (*i_geom)->volume();
+		m_volume += i_geom->volume();
 	}
 }
 
@@ -174,9 +175,8 @@ dGeomID CPHGeometryOwner::dSpacedGeometry()
 {
 	if (!b_builded) return 0;
 	VERIFY(m_group);
-	//if(m_group)
-	return (dGeomID)group_space();//(dGeomID)m_group;
-	//else return (*m_geoms.begin())->geometry_transform();
+
+	return (dGeomID)group_space();
 }
 
 void CPHGeometryOwner::add_Box(const Fobb&		V)
@@ -300,7 +300,7 @@ void CPHGeometryOwner::remove_ObjectContactCallback(ObjectContactCallbackFun* ca
 {
 	if (object_contact_callback == callback)
 	{
-		object_contact_callback = NULL;
+		object_contact_callback = nullptr;
 	}
 	if (!b_builded)return;
 	{
@@ -394,7 +394,7 @@ void	CPHGeometryOwner::DestroyGroupSpace()
 	if (m_group)
 	{
 		dGeomDestroy((dGeomID)m_group);
-		m_group = NULL;
+		m_group = nullptr;
 	}
 }
 struct SFindPred
@@ -418,7 +418,7 @@ CODEGeom* CPHGeometryOwner::GeomByBoneID(u16 bone_id)
 	}
 	else
 	{
-		return NULL;
+		return nullptr;
 	}
 }
 

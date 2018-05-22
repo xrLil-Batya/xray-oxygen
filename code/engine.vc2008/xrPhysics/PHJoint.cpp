@@ -558,8 +558,8 @@ CPHJoint::CPHJoint(IPhysicsJoint::enumType type, IPhysicsElementEx* first, IPhys
 	vs_anchor = vs_first;
 
 	switch (eType) {
-	case ball:;						break;
-	case hinge:					axes.push_back(axis);
+	case ball:						break;
+	case hinge:					axes.push_back(axis); 
 		break;
 	case hinge2:
 		axes.push_back(axis);
@@ -569,9 +569,11 @@ CPHJoint::CPHJoint(IPhysicsJoint::enumType type, IPhysicsElementEx* first, IPhys
 		axes.push_back(axis);
 		axes.push_back(axis2);
 		axes.push_back(axis3);
+		break;
 	case slider:
 		axes.push_back(axis);
 		axes.push_back(axis);
+		break;
 	}
 }
 
