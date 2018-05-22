@@ -95,7 +95,7 @@ struct				net_update
 	float				fHealth;
 //	float				fArmor;
 
-	net_update()	{
+	net_update()	{ //-V730
 		dwTimeStamp		= 0;
 		p_pos.set		(0,0,0);
 		p_accel.set		(0,0,0);

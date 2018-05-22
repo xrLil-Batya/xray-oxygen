@@ -7,7 +7,7 @@
 #include "../xrPhysics/mathutils.h"
 #include "../xrEngine/xr_object.h"
 
-SHit::SHit(float powerA, Fvector &dirA, CObject *whoA, u16 elementA, Fvector p_in_bone_spaceA,
+SHit::SHit(float powerA, Fvector &dirA, CObject *whoA, u16 elementA, Fvector p_in_bone_spaceA, //-V730
 	float impulseA, ALife::EHitType hit_typeA, float armor_piercingA, bool AimBullet)
 {
 	power = powerA;

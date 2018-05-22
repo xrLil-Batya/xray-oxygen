@@ -13,27 +13,18 @@ CIKFoot::CIKFoot() : m_bind_b2_to_b3(Fidentity), m_ref_bone(u16(-1)), m_foot_bon
 
 }
 
-void CIKFoot::Create(IKinematics	*K, LPCSTR section, u16 bones[4])
+void CIKFoot::Create(IKinematics *K, LPCSTR section, u16 bones[4])
 {
 	VERIFY(K);
 	m_K = K;
 
-	///defaults
+	//defaults
 	m_ref_bone = 2;
-	if (m_ref_bone == 2)
-	{
-		m_foot_normal.v.set(1, 0, 0);//2
-		m_foot_normal.bone = 2;
-		m_foot_direction.v.set(0, 0, 1);//2
-		m_foot_direction.bone = 2;
-	}
-	else
-	{
-		m_foot_normal.v.set(0, 0, -1);//3
-		m_foot_normal.bone = 3;
-		m_foot_direction.v.set(1, 0, 0);//3
-		m_foot_direction.bone = 3;
-	}
+
+	m_foot_normal.v.set(1, 0, 0);//2
+	m_foot_normal.bone = 2;
+	m_foot_direction.v.set(0, 0, 1);//2
+	m_foot_direction.bone = 2;
 
 	//load settings	
 	if (section)

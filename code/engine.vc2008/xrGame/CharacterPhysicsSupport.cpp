@@ -59,7 +59,7 @@ CCharacterPhysicsSupport::~CCharacterPhysicsSupport()
 	
 }
 
-CCharacterPhysicsSupport::CCharacterPhysicsSupport( EType atype, CEntityAlive* aentity ) 
+CCharacterPhysicsSupport::CCharacterPhysicsSupport( EType atype, CEntityAlive* aentity )  //-V730
 :	m_pPhysicsShell( aentity->PPhysicsShell( ) ),
 	m_EntityAlife( *aentity ),
 	mXFORM( aentity->XFORM( ) ),
