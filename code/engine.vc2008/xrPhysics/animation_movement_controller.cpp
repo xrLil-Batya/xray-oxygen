@@ -191,7 +191,7 @@ bool	animation_movement_controller::IsActive() const
 void animation_movement_controller::BlendDestroy(CBlend& blend)
 {
 	VERIFY(m_control_blend);
-	//Msg("deinit");
+
 	if (m_control_blend == &blend)
 		deinitialize();
 }

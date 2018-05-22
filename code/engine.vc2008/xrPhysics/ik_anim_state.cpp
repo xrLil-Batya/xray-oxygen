@@ -95,11 +95,15 @@ bool ik_anim_state::time_step_begin(IKinematicsAnimated *K, const CBlend& B, u16
 {
 	time = 0;
 	CMotionDef &m_def_cur = *K->LL_GetMotionDef(B.motionID);
+
 	if (m_def_cur.marks.size() <= limb_id || !!(m_def_cur.flags & esmIdle))
 		return false;
+
 	motion_marks& marks = m_def_cur.marks[limb_id];
+
 	if (marks.is_empty())
 		return false;
+
 	time = time_to_next_mark(B, marks);
 	VERIFY(time < FLT_MAX);
 	return true;

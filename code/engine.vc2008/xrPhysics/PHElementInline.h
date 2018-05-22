@@ -13,7 +13,7 @@ inline void CPHElement::MulB43InverceLocalForm(Fmatrix& m) const
 	m.c.add(ic);
 }
 
-inline		void	CPHElement::CalculateBoneTransform(Fmatrix &bone_transform)const
+inline void	CPHElement::CalculateBoneTransform(Fmatrix &bone_transform)const
 {
 	Fmatrix parent;
 	parent.invert(m_shell->mXFORM);
@@ -26,13 +26,6 @@ inline		void		CPHElement::ActivatingPos(const Fmatrix &BoneTransform)
 	m_flags.set(flActivating, FALSE);
 	if (!m_parent_element)
 		m_shell->SetObjVsShellTransform(BoneTransform);
-
-	//{
-	//	m_shell->m_object_in_root.set( B->mTransform );
-	//	m_shell->m_object_in_root.invert( );
-	//	m_shell->SetNotActivating( );
-	//}
-	//VERIFY2(fsimilar(DET(B->mTransform),1.f,DET_CHECK_EPS),"Bones callback returns 0 matrix");
 
 	VERIFY_RMATRIX(BoneTransform);
 	VERIFY(valid_pos(BoneTransform.c, phBoundaries));

@@ -5,7 +5,6 @@
 #include "console_vars.h"
 CPHJointDestroyInfo::CPHJointDestroyInfo(float break_force, float break_torque)
 {
-	//m_bone_id=bone_id;
 	m_sq_break_force = break_force * break_force;
 	m_sq_break_torque = break_torque * break_torque;
 	dVectorSetZero(m_joint_feedback.f1);

@@ -4,7 +4,7 @@
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "PHDynamicData.h"
-//#include "game_object_space.h"
+
 #include "IPhysicsShellHolder.h"
 #include "../xrEngine/bone.h"
 
@@ -43,6 +43,7 @@ CPhysicsShellAnimator::~CPhysicsShellAnimator()
 		dJointDestroy(i->m_anim_fixed_dJointID);
 	}
 }
+
 void	CPhysicsShellAnimator::CreateJoints(LPCSTR controled)
 {
 	IPhysicsShellHolder *obj = (*(m_pPhysicsShell->Elements().begin()))->PhysicsRefObject();
@@ -58,6 +59,7 @@ void	CPhysicsShellAnimator::CreateJoints(LPCSTR controled)
 		CreateJoint(e);
 	}
 }
+
 void	CPhysicsShellAnimator::CreateJoint(CPHElement *e)
 {
 	CPhysicsShellAnimatorBoneData PhysicsShellAnimatorBoneDataC;
@@ -68,6 +70,7 @@ void	CPhysicsShellAnimator::CreateJoint(CPHElement *e)
 	dJointSetFixed(PhysicsShellAnimatorBoneDataC.m_anim_fixed_dJointID);
 	m_bones_data.push_back(PhysicsShellAnimatorBoneDataC);
 }
+
 void CPhysicsShellAnimator::OnFrame()
 {
 	m_pPhysicsShell->Enable();
@@ -76,8 +79,7 @@ void CPhysicsShellAnimator::OnFrame()
 	{
 		Fmatrix target_obj_posFmatrixS;
 		CBoneInstance& B = m_pPhysicsShell->PKinematics()->LL_GetBoneInstance(i->m_element->m_SelfID);
-		//B.Callback_overwrite = FALSE;
-		//B.Callback = 0;
+
 #pragma todo("reset callback?")
 		B.set_callback(B.callback_type(), 0, B.callback_param(), FALSE);
 
@@ -93,5 +95,4 @@ void CPhysicsShellAnimator::OnFrame()
 		i->m_element->CPHGeometryOwner::get_mc_vs_transform(mc, target_obj_posFmatrixS);
 		dJointSetFixedQuaternionPos(i->m_anim_fixed_dJointID, target_obj_quat_dQuaternionS, &mc.x);
 	}
-	//(*(m_pPhysicsShell->Elements().begin()))->PhysicsRefObject()->XFORM().set(m_pPhysicsShell->mXFORM);
 }

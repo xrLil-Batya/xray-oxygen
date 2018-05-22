@@ -293,7 +293,7 @@ shell_root CPHShellSplitterHolder::ElementSingleSplit(const element_fracture &sp
 				IKinematics* K = m_pShell->PKinematics();
 				dVector3 safe_pos1, safe_pos2;
 				dQuaternion safe_q1, safe_q2;
-				//CPhysicsElement* el1=cast_PhysicsElement(split_elem.first),*el2=joint->PSecond_element();
+
 				VERIFY(smart_cast<CPHElement*>(joint->PSecond_element()));
 
 				CPHElement* el1 = (split_elem.first), *el2 = static_cast<CPHElement*>(joint->PSecond_element());

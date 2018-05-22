@@ -29,26 +29,20 @@ class CPHElement :
 	friend class CPHFracturesHolder;
 
 	//float						m_start_time;				//uu ->to shell ??	//aux
-	dMass						m_mass;						//e ??				//bl
-	dBodyID						m_body;						//e					//st
-	dReal						m_l_scale;					// ->to shell ??	//bl
-	dReal						m_w_scale;					// ->to shell ??	//bl
-	CPHElement					*m_parent_element;			//bool !			//bl
-	CPHShell					*m_shell;					//e					//bl
-	CPHInterpolation			m_body_interpolation;		//e					//bl
-	CPHFracturesHolder			*m_fratures_holder;			//e					//bl
+	dMass m_mass; //e ??				//bl
+	dBodyID m_body; //e					//st
+	dReal m_l_scale; // ->to shell ??	//bl
+	dReal m_w_scale; // ->to shell ??	//bl
+	CPHElement *m_parent_element; //bool !			//bl
+	CPHShell *m_shell; //e					//bl
+	CPHInterpolation m_body_interpolation; //e					//bl
+	CPHFracturesHolder *m_fratures_holder; //e					//bl
 
-	dReal						m_w_limit;					//->to shell ??		//bl
-	dReal						m_l_limit;					//->to shell ??		//bl
-//	dVector3					m_safe_position;			//e					//st
-//	dQuaternion					m_safe_quaternion;
-//	dVector3					m_safe_velocity;			//e					//st
-//	Fmatrix						m_inverse_local_transform;	//e				//bt
-	dReal						k_w;						//->to shell ??		//st
-	dReal						k_l;						//->to shell ??		//st
-	//ObjectContactCallbackFun*	temp_for_push_out;			//->to shell ??		//aux
-	//u32							push_untill;				//->to shell ??		//st
-	Flags8						m_flags;					//
+	dReal m_w_limit;					//->to shell ??		//bl
+	dReal m_l_limit;					//->to shell ??		//bl
+	dReal k_w;						//->to shell ??		//st
+	dReal k_l;						//->to shell ??		//st
+	Flags8 m_flags;					//
 	enum
 	{
 		flActive = 1 << 0,
@@ -59,9 +53,7 @@ class CPHElement :
 		flFixed = 1 << 5,
 		flAnimated = 1 << 6
 	};
-	//	bool						was_enabled_before_freeze;
-	//	bool						bUpdate;					//->to shell ??		//st
-	//	bool						b_enabled_onstep;
+
 private:
 	////////////////////////////////////////////Interpolation/////////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -69,15 +61,14 @@ private:
 	{
 		m_body_interpolation.ResetPositions();
 		m_body_interpolation.ResetRotations();
-		//bUpdate=true;
+
 		m_flags.set(flUpdate, TRUE);
 	}
-	IC	void					UpdateInterpolation()																				//interpolation called from ph update visual influent
+	inline	void					UpdateInterpolation()																				//interpolation called from ph update visual influent
 	{
-		///VERIFY(dBodyStateValide(m_body));
 		m_body_interpolation.UpdatePositions();
 		m_body_interpolation.UpdateRotations();
-		//bUpdate=true;
+
 		m_flags.set(flUpdate, TRUE);
 	}
 public:
@@ -146,7 +137,8 @@ public:																																				//
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual void						Disable();																			//
 	virtual	void						ReEnable();																			//
-	void						Enable();																			//aux
+	void								Enable();
+	//aux
 	virtual bool						isEnabled() const { return isActive() && dBodyIsEnabled(m_body); }
 	virtual	bool						isFullActive() const { return isActive() && !m_flags.test(flActivating); }
 	virtual	bool						isActive() const { return !!m_flags.test(flActive); }
@@ -156,18 +148,18 @@ public:																																				//
 ////////////////////////////////////////////////Updates///////////////////////////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	bool						AnimToVel(float dt, float l_limit, float a_limit);
-	//void						BoneGlPos								(Fmatrix &m, const CBoneInstance* B)const;
+
 	void						BoneGlPos(Fmatrix &m, const Fmatrix &BoneTransform)const;
 	void						ToBonePos(const CBoneInstance* B, motion_history_state history_state);
 	void						ToBonePos(const Fmatrix &BoneTransform, motion_history_state history_state);
-	IC		void						ActivatingPos(const Fmatrix &BoneTransform);
-	IC		void						CalculateBoneTransform(Fmatrix &bone_transform)const;
+	inline		void						ActivatingPos(const Fmatrix &BoneTransform);
+	inline		void						CalculateBoneTransform(Fmatrix &bone_transform)const;
 
 	virtual void						dbg_draw_velocity(float scale, u32 color);
 	virtual void						dbg_draw_force(float scale, u32 color);
 	virtual void						dbg_draw_geometry(float scale, u32 color, Flags32 flags = Flags32().assign(0)) const;
 	void						SetBoneCallbackOverwrite(bool v);
-	void		_BCL			BonesCallBack(CBoneInstance* B);																//called from updateCL visual influent
+	void __stdcall BonesCallBack(CBoneInstance* B);																//called from updateCL visual influent
 	void						StataticRootBonesCallBack(CBoneInstance* B);
 	void						PhDataUpdate(dReal step);																	//ph update
 	void						PhTune(dReal step);																	//ph update
@@ -198,7 +190,7 @@ public:																																				//
 	virtual void						applyImpulse(const Fvector& dir, float val);//aux
 	virtual void						applyImpulseVsMC(const Fvector& pos, const Fvector& dir, float val);										//
 	virtual void						applyImpulseVsGF(const Fvector& pos, const Fvector& dir, float val);										//
-	virtual void		_BCL			applyGravityAccel(const Fvector& accel);
+	virtual void __stdcall				applyGravityAccel(const Fvector& accel);
 	virtual void						getForce(Fvector& force);
 	virtual void						getTorque(Fvector& torque);
 	virtual void						get_LinearVel(Fvector& velocity) const;															//aux
@@ -225,11 +217,11 @@ public:																																				//
 	virtual void						GetGlobalPositionDynamic(Fvector* v);																	//
 	virtual void						cv2obj_Xfrom(const Fquaternion& q, const Fvector& pos, Fmatrix& xform);						//
 	virtual void						cv2bone_Xfrom(const Fquaternion& q, const Fvector& pos, Fmatrix& xform);						//
-	virtual void		_BCL			InterpolateGlobalTransform(Fmatrix* m);																	//called UpdateCL vis influent
+	virtual void		__stdcall			InterpolateGlobalTransform(Fmatrix* m);																	//called UpdateCL vis influent
 	virtual void						InterpolateGlobalPosition(Fvector* v);																	//aux
 	virtual void						GetGlobalTransformDynamic(Fmatrix* m) const;																	//aux
-	IC			void						InverceLocalForm(Fmatrix&);
-	IC			void						MulB43InverceLocalForm(Fmatrix&) const;
+	inline			void						InverceLocalForm(Fmatrix&);
+	inline			void						MulB43InverceLocalForm(Fmatrix&) const;
 
 	////////////////////////////////////////////////////Structure/////////////////////////////////////////////////////////////////////////////////
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -278,7 +270,7 @@ private:
 public:
 };
 
-IC CPHElement* cast_PHElement(IPhysicsElementEx* e) { return static_cast<CPHElement*>(static_cast<IPhysicsElementEx*>(e)); }
-IC CPHElement* cast_PHElement(void* e) { return static_cast<CPHElement*>(static_cast<IPhysicsElementEx*>(e)); }
-IC IPhysicsElementEx* cast_PhysicsElement(CPHElement* e) { return static_cast<IPhysicsElementEx*>(static_cast<CPHElement*>(e)); }
+inline CPHElement* cast_PHElement(IPhysicsElementEx* e) { return static_cast<CPHElement*>(static_cast<IPhysicsElementEx*>(e)); }
+inline CPHElement* cast_PHElement(void* e) { return static_cast<CPHElement*>(static_cast<IPhysicsElementEx*>(e)); }
+inline IPhysicsElementEx* cast_PhysicsElement(CPHElement* e) { return static_cast<IPhysicsElementEx*>(static_cast<CPHElement*>(e)); }
 #endif

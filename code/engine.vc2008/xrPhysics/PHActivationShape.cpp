@@ -9,7 +9,7 @@
 #include "SpaceUtils.h"
 #include "MathUtils.h"
 #include "../xrEngine/gamemtllib.h"
-//#include "Level.h"
+
 #include "PHWorld.h"
 #include "../../3rd-party/ode/src/util.h"
 
@@ -44,61 +44,6 @@ static void	ActivateTestDepthCallback(bool& do_colide, bool bo1, dContact& c, SG
 	c.surface.mu *= friction_factor;
 	c.surface.soft_cfm = cfm;
 	c.surface.soft_erp = erp;
-	/*
-
-		VERIFY(dTriListClass != dGeomGetClass(c.geom.g2));
-		bool cl_statics = (dTriListClass == dGeomGetClass(c.geom.g1));
-		VERIFY( bo1 || cl_statics );
-		CPHObject* self = static_cast<CPHObject*> ( ( (CPHActivationShape*)(PHRetrieveGeomUserData( bo1 ? c.geom.g1 : c.geom.g2 )->callback_data) ) );
-		VERIFY( self );
-
-		if( cl_statics )
-		{
-			c.surface.soft_cfm=static_cfm;
-			c.surface.soft_erp=static_erp;
-			dJointID contact_joint	= dJointCreateContactSpecial( 0, ContactGroup, &c );
-			self->DActiveIsland()->ConnectJoint(contact_joint);
-			dJointAttach(contact_joint, dGeomGetBody(c.geom.g1), dGeomGetBody(c.geom.g2));
-			do_colide = false;
-			return;
-		}
-
-		c.surface.soft_cfm=dynamic_cfm;
-		c.surface.soft_erp=dynamic_erp;
-
-		dxGeomUserData* data_oposite =  retrieveGeomUserData( bo1 ? c.geom.g2 : c.geom.g1 );
-
-		if( !data_oposite || !data_oposite->ph_object )
-			return;
-
-		CPHObject* obj1 = 0, *obj2 = 0;
-		if(bo1)
-		{
-			obj1 = self;
-			obj2 = data_oposite->ph_object;
-		} else
-		{
-			obj2 = self;
-			obj1 = data_oposite->ph_object;
-		}
-
-		do_colide = false;
-
-		VERIFY( obj1 && obj2 );
-
-		int max_contacts;
-		if( !obj1->DActiveIsland()->CanMerge(obj2->DActiveIsland(),max_contacts ) )
-			return;
-		if( max_contacts < 1 )
-			return;
-
-		dJointID contact_joint	= dJointCreateContactSpecial( 0, ContactGroup, &c );
-		obj1->DActiveIsland()->ConnectJoint(contact_joint);
-		dJointAttach			(contact_joint, dGeomGetBody(c.geom.g1), dGeomGetBody(c.geom.g2));
-
-		obj1->DActiveIsland()->Merge( obj2->DActiveIsland() );
-		obj2->EnableObject( obj1 );
-		*/
 }
 
 void	StaticEnvironment(bool& do_colide, bool bo1, dContact& c, SGameMtl* material_1, SGameMtl* material_2)
@@ -124,7 +69,7 @@ void  GetMaxDepthCallback(bool& do_colide, bool bo1, dContact& c, SGameMtl* mate
 
 	float& depth = c.geom.depth;
 	float test_depth = depth;
-	//save_max(max_depth,test_depth);
+
 	max_depth += test_depth;
 }
 
@@ -217,7 +162,7 @@ bool	CPHActivationShape::Activate(const Fvector need_size, u16 steps, float max_
 	max_depth = 0.f;
 
 	dGeomUserDataSetObjectContactCallback(m_geom, GetMaxDepthCallback);
-	//ph_world->Step();
+
 	ph_world->StepTouch();
 	u16		num_it = 15;
 	float	fnum_it = float(num_it);
@@ -256,8 +201,6 @@ bool	CPHActivationShape::Activate(const Fvector need_size, u16 steps, float max_
 	ph_world->GetState(temp_state);
 	for (int m = 0; steps > m; ++m)
 	{
-		//float param =fnum_steps_r*(1+m);
-		//InterpolateBox(id,param);
 		size.add(step_size);
 		dGeomBoxSetLengths(m_geom, size.x, size.y, size.z);
 		u16		attempts = 10;
@@ -270,7 +213,7 @@ bool	CPHActivationShape::Activate(const Fvector need_size, u16 steps, float max_
 				CHECK_POS(Position(), "pos after ph_world->Step()", false);
 				ph_world->CutVelocity(max_vel, max_a_vel);
 				CHECK_POS(Position(), "pos after CutVelocity", true);
-				//if(m==0&&i==0)ph_world->GetState(temp_state);
+
 				if (max_depth < resolve_depth)
 				{
 					ret = true;
@@ -298,7 +241,7 @@ bool	CPHActivationShape::Activate(const Fvector need_size, u16 steps, float max_
 	}
 #endif
 	return ret;
-}
+	}
 const Fvector&	CPHActivationShape::Position()
 {
 	return cast_fv(dBodyGetPosition(m_body));

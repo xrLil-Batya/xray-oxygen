@@ -10,7 +10,7 @@ CPHGeometryOwner::CPHGeometryOwner()
 	b_builded = false;
 	m_mass_center.set(0, 0, 0);
 	VERIFY(ph_world);
-	//contact_callback=ContactShotMark;//ph_world->default_contact_shotmark();
+
 	contact_callback = ph_world->default_contact_shotmark();
 	object_contact_callback = NULL;
 	ul_material = GMLibrary().GetMaterialIdx("objects\\small_box");
@@ -24,13 +24,6 @@ CPHGeometryOwner::~CPHGeometryOwner()
 	for (; i_geom != e; ++i_geom)xr_delete(*i_geom);
 	m_geoms.clear();
 	DestroyGroupSpace();
-	//if( b_builded )
-	//{
-		//VERIFY( m_group );
-		//if( m_group )
-		//	dSpaceDestroy( m_group );
-
-	//}
 }
 void	CPHGeometryOwner::group_add(CODEGeom& g)
 {
@@ -55,7 +48,7 @@ void	CPHGeometryOwner::group_remove(CODEGeom& g)
 void CPHGeometryOwner::build_Geom(CODEGeom& geom)
 {
 	geom.build(m_mass_center);
-	//geom.set_body(m_body);
+
 	geom.set_material(ul_material);
 	if (contact_callback)
 		geom.set_contact_cb(contact_callback);
@@ -65,7 +58,7 @@ void CPHGeometryOwner::build_Geom(CODEGeom& geom)
 
 	if (m_phys_ref_object)
 		geom.set_ref_object(m_phys_ref_object);
-	//VERIFY( m_group );
+
 	group_add(geom);
 }
 
@@ -81,9 +74,6 @@ void CPHGeometryOwner::build()
 	if (b_builded)
 		return;
 
-	//if(m_geoms.size()>1)//add/remove geom issues
-	//VERIFY(!m_group);
-
 	u16 geoms_size = u16(m_geoms.size());
 	for (u16 i = 0; i < geoms_size; ++i) build_Geom(i);
 	b_builded = true;
@@ -91,7 +81,9 @@ void CPHGeometryOwner::build()
 
 void CPHGeometryOwner::destroy()
 {
-	if (!b_builded) return;
+	if (!b_builded)
+		return;
+
 	GEOM_I i = m_geoms.begin(), e = m_geoms.end();
 	for (; i != e; ++i)
 	{
@@ -121,6 +113,7 @@ Fvector CPHGeometryOwner::get_mc_data()
 		m_mass_center.add(s);
 	}
 	m_mass_center.mul(1.f / m_volume);
+
 	return m_mass_center;
 }
 
@@ -220,12 +213,7 @@ void CPHGeometryOwner::add_Shape(const SBoneShape& shape, const Fmatrix& offset)
 		Fobb box = shape.box;
 		Fmatrix m;
 		m.set(offset);
-		//Fmatrix position;
-		//position.set(box.m_rotate);
-		//position.c.set(box.m_translate);
-		//position.mulA(offset);
-		//box.m_rotate.set(position);
-		//box.m_translate.set(position.c);
+
 		box.transform(box, m);
 		add_Box(box);
 		break;
@@ -353,17 +341,6 @@ u16	CPHGeometryOwner::numberOfGeoms() const
 void CPHGeometryOwner::get_Extensions(const Fvector& axis, float center_prg, float& lo_ext, float& hi_ext) const
 {
 	t_get_extensions(m_geoms, axis, center_prg, lo_ext, hi_ext);
-	/*
-	lo_ext=dInfinity;hi_ext=-dInfinity;
-	GEOM_CI i=m_geoms.begin(),e=m_geoms.end();
-	for(;i!=e;++i)
-	{
-		float temp_lo_ext,temp_hi_ext;
-		(*i)->get_Extensions(axis,center_prg,temp_lo_ext,temp_hi_ext);
-		if(lo_ext>temp_lo_ext)lo_ext=temp_lo_ext;
-		if(hi_ext<temp_hi_ext)hi_ext=temp_hi_ext;
-	}
-	*/
 }
 
 void CPHGeometryOwner::get_MaxAreaDir(Fvector& dir)
@@ -478,7 +455,7 @@ void	CPHGeometryOwner::remove_geom(CODEGeom* g)
 	VERIFY(m_group);
 	GEOM_I gi = std::find(m_geoms.begin(), m_geoms.end(), g);
 	VERIFY(gi != m_geoms.end());
-	//(*gi)->remove_from_space( m_group );
+
 	group_remove(*g);
 	m_geoms.erase(gi);
 }

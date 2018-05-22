@@ -96,7 +96,7 @@ void	CBaseDisableData::Disabling()
 
 	CheckState(m_stateL1);
 
-	if (m_count == 0)//ph_world->disable_count==dis_frames//m_count==m_frames
+	if (m_count == 0)
 	{
 		UpdateL2();
 		CheckState(m_stateL2);
@@ -114,7 +114,7 @@ void	CBaseDisableData::Disabling()
 		}
 	}
 	if (m_disabled)
-		Disable();//dBodyDisable(body);
+		Disable();
 }
 
 void	CPHDisablingBase::Reinit()
@@ -138,8 +138,8 @@ void	CPHDisablingBase::UpdateValues(const Fvector &new_pos, const Fvector &new_v
 	}
 	else
 	{
-		float			velocity_param = m_mean_velocity.UpdatePrevious(new_pos);
-		float			acceleration_param = m_mean_acceleration.UpdatePrevious(new_vel);
+		float velocity_param = m_mean_velocity.UpdatePrevious(new_pos);
+		float acceleration_param = m_mean_acceleration.UpdatePrevious(new_vel);
 		CheckState(m_stateL1, velocity_param*m_frames, acceleration_param*m_frames);
 	}
 }
@@ -180,14 +180,8 @@ void	CPHDisablingTranslational::UpdateL1()
 	dBodyID			body = get_body();
 	const	dReal	*position = dBodyGetPosition(body);
 	const	dReal	*velocity = dBodyGetLinearVel(body);
-#if	0
-	DBG_DrawLine(cast_fv(position), Fvector().add(cast_fv(position), m_mean_velocity.sum), D3DCOLOR_XRGB(255, 0, 0));
-	DBG_DrawLine(cast_fv(position), Fvector().add(cast_fv(position), m_mean_acceleration.sum), D3DCOLOR_XRGB(0, 0, 255));
-#endif
+
 	CPHDisablingBase::UpdateValues(*(Fvector*)position, *(Fvector*)velocity);
-	//float			velocity_param		=	m_mean_velocity		.Update(* (Fvector*) position)		;
-	//float			acceleration_param	=	m_mean_acceleration	.Update(* (Fvector*) velocity)		;
-	//CheckState						(m_stateL1,velocity_param*m_frames,acceleration_param*m_frames)					;
 }
 
 void CPHDisablingTranslational::set_DisableParams(const SAllDDOParams& params)
@@ -221,10 +215,6 @@ void	CPHDisablingRotational::UpdateL1()
 	vrotation.set(rotation[9], rotation[2], rotation[4]);
 
 	CPHDisablingBase::UpdateValues(vrotation, *(Fvector*)velocity);
-	//float			velocity_param		=	m_mean_velocity		.Update	(			 vrotation	)	;
-	//float			acceleration_param	=	m_mean_acceleration	.Update	(* (Fvector*) velocity	)	;
-
-	//CheckState									(m_stateL1,velocity_param,acceleration_param)		;
 }
 
 void CPHDisablingRotational::set_DisableParams(const SAllDDOParams& params)

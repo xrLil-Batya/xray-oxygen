@@ -1,5 +1,5 @@
 #pragma once
-//extern float object_damage_factor;
+
 extern XRPHYSICS_API float collide_volume_max;
 extern XRPHYSICS_API float collide_volume_min;
 

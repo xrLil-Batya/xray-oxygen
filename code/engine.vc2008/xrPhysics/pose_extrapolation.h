@@ -5,7 +5,7 @@ namespace extrapolation
 {
 	class XRPHYSICS_API pose
 	{
-		Fvector			p;
+		Fvector p;
 		Fquaternion 	r;
 	public:
 		pose & set(const Fmatrix &m);
@@ -42,7 +42,7 @@ namespace extrapolation
 
 	private:
 		static const u16 point_num = 2;
-		//typedef boost::array<pose,3>	container;
+
 		typedef CCycleConstStorage<extrapolation::point, point_num> container;
 	private:
 		u32			last_update;

@@ -58,13 +58,8 @@ type_motion* type_motion::setup(IKinematicsAnimated* k, CInifile const * ini, LP
 	{
 		LPCSTR line = ini->r_string(section, type);
 		if (!line)
-		{
-			// #ifdef	DEBUG
-			// 		if( death_anim_debug )
-			// 			Msg("death anims: load: no setings in section %s for %s", section, type );
-			// #endif
 			return this;
-		}
+
 		R_ASSERT(xr_strlen(line) < 1023);
 		const int num = _GetItemCount(line, '/');
 #ifdef	DEBUG
@@ -125,13 +120,7 @@ MotionID death_anims::motion(CEntityAlive& ea, const SHit& H, float &angle) cons
 {
 	angle = 0;
 	if (anims.empty())
-	{
-		// #ifdef	DEBUG
-		// 		if( death_anim_debug )
-		// 			Msg(" death anims: obj: %s no death motions loaded ", ea.cName().c_str() );
-		// #endif
 		return rnd_anims.motion();
-	}
 
 	MotionID m;
 	xr_vector<type_motion*>::const_iterator i = anims.begin(), e = anims.end();

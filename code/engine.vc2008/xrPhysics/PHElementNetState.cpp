@@ -25,7 +25,6 @@ void CPHElement::get_State(SPHNetState& state)
 }
 void CPHElement::set_State(const SPHNetState& state)
 {
-	//bUpdate=true;
 	m_flags.set(flUpdate, TRUE);
 	SetGlobalPositionDynamic(state.position);
 	setQuaternion(state.quaternion);
@@ -37,8 +36,9 @@ void CPHElement::set_State(const SPHNetState& state)
 	set_AngularVel(state.angular_vel);
 	setForce(state.force);
 	setTorque(state.torque);
-	if (!isActive()) return;
-#if 1
+	if (!isActive())
+		return;
+
 	if (state.enabled && !dBodyIsEnabled(m_body))
 	{
 		dBodyEnable(m_body);
@@ -49,7 +49,7 @@ void CPHElement::set_State(const SPHNetState& state)
 		m_shell->DisableObject();
 		Disable();
 	}
-#endif
+
 	CPHDisablingFull::Reinit();
 	m_flags.set(flUpdate, TRUE);
 }

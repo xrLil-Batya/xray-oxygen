@@ -10,7 +10,7 @@ struct	SGameMtl;
 class XRPHYSICS_API interactive_animation : public physics_shell_animated
 {
 	typedef	physics_shell_animated inherited;
-	CBlend					*blend;
+	CBlend *blend;
 public:
 	interactive_animation(CPhysicsShellHolder* ca, CBlend* b);
 	virtual		~interactive_animation();

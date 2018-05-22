@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "debug_output.h"
 
-static class DebugOutputEmptyImpl :
-	public	IDebugOutput
+static class DebugOutputEmptyImpl : public	IDebugOutput
 {
 	Flags32 m1;
 	Flags32 m2;
@@ -22,14 +21,14 @@ static class DebugOutputEmptyImpl :
 	virtual	void DBG_DrawStatAfterFrameStep()
 	{
 	}
-	//virtual	void DBG_RenderUpdate( )												=0;
+
 	virtual	void DBG_OpenCashedDraw()
 	{
 	}
 	virtual	void DBG_ClosedCashedDraw(u32 remove_time)
 	{
 	}
-	//virtual	void DBG_DrawPHAbstruct( SPHDBGDrawAbsract*	a )							=0;
+
 	virtual	void DBG_DrawPHObject(const CPHObject *obj)
 	{
 	}
@@ -57,17 +56,11 @@ static class DebugOutputEmptyImpl :
 	virtual	void DBG_DrawMatrix(const Fmatrix &m, float size, u8 a = 255)
 	{
 	}
-	//virtual	void DBG_DrawRotationX( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
-	//virtual	void DBG_DrawRotationY( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
-	//virtual	void DBG_DrawRotationZ( const Fmatrix &m, float ang0, float ang1, float size, u32 ac, bool solid = false, u32 tessel = 7 ) = 0;
+
 	virtual	void _cdecl DBG_OutText(LPCSTR s, ...)
 	{
 	}
-	//virtual	void DBG_TextOutSet( float x, float y )									=0;
-	//virtual	void DBG_TextSetColor( u32 color )										=0;
-	//virtual	void DBG_DrawBind( CObject &O )											=0;
-	//virtual	void DBG_PhysBones( CObject &O )										=0;
-	//virtual	void DBG_DrawBones( CObject &O )										=0;
+
 	virtual	void DBG_DrawFrameStart()
 	{
 	}
@@ -83,7 +76,6 @@ static class DebugOutputEmptyImpl :
 		return "none";
 	}
 
-	//virtual	bool			draw_frame								()=0;
 	u32 tries_num;
 	virtual	u32				&dbg_tries_num()
 	{

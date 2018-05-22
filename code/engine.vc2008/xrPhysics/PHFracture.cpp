@@ -71,16 +71,8 @@ element_fracture CPHFracturesHolder::SplitFromEnd(CPHElement* element, u16 fract
 	current_transtform.mulA_43(shell_form);
 	new_element->SetTransform(current_transtform, mh_unspecified);
 
-	//dBodyID new_element_body=new_element->get_body();
-	//dBodyAddForce(new_element_body,fract_i->m_pos_in_element[0],
-	//									  fract_i->m_pos_in_element[1],
-	//									  fract_i->m_pos_in_element[2]);
 	ApplyImpactsToElement(new_element);
 
-	//dBodyAddTorque(new_element->get_body(),fract_i->m_break_force,
-	//									   fract_i->m_break_torque,
-	//									   fract_i->m_add_torque_z);
-	//BodyCutForce(new_element_body,default_l_limit,default_w_limit);
 	element_fracture ret = std::make_pair(new_element, (CShellSplitInfo)(*fract_i));
 
 	if (m_fractures.size() - fracture > 0)
@@ -171,11 +163,6 @@ void CPHFracturesHolder::PhTune(dBodyID body)
 	//breacable joints already has their feedbacks,
 	//feedbacks for rest noncontact joints stored in m_feedbacks in runtime in this function and
 	//and killed by destructor
-
-	//int dBodyGetNumJoints (dBodyID b);
-	//dJointID dBodyGetJoint (dBodyID, int index);
-	//dJointGetType
-	//dJointTypeContact
 
 	int num = dBodyGetNumJoints(body);
 	for (int i = 0; i < num; ++i)
@@ -272,11 +259,6 @@ void CPHFracturesHolder::SubFractureMass(u16 fracture_num)
 
 CPHFracture::CPHFracture()
 {
-	//m_bone_id=bone_id;
-	//m_position.set(position);
-	//m_direction.set(direction);
-	//m_break_force=break_force;
-	//m_break_torque=break_torque;
 	m_start_geom_num = u16(-1);
 	m_end_geom_num = u16(-1);
 	m_breaked = false;
@@ -287,7 +269,7 @@ bool CPHFracture::Update(CPHElement* element)
 {
 	////itterate through impacts & calculate
 	dBodyID body = element->get_body();
-	//const Fvector& v_bodyvel=*((Fvector*)dBodyGetLinearVel(body));
+
 	CPHFracturesHolder* holder = element->FracturesHolder();
 	PH_IMPACT_STORAGE&	impacts = holder->Impacts();
 
@@ -297,13 +279,11 @@ bool CPHFracture::Update(CPHElement* element)
 	second_part_torque.set(0.f, 0.f, 0.f);
 	first_part_torque.set(0.f, 0.f, 0.f);
 
-	//const Fvector& body_local_pos=element->local_mass_Center();
 	const Fvector& body_global_pos = *(const Fvector*)dBodyGetPosition(body);
 	Fvector body_to_first, body_to_second;
 	body_to_first.set(*((const Fvector*)m_firstM.c));//,body_local_pos
 	body_to_second.set(*((const Fvector*)m_secondM.c));//,body_local_pos
-	//float body_to_first_smag=body_to_first.square_magnitude();
-	//float body_to_second_smag=body_to_second.square_magnitude();
+
 	int num = dBodyGetNumJoints(body);
 	for (int i = 0; i < num; i++)
 	{
@@ -478,14 +458,6 @@ bool CPHFracture::Update(CPHElement* element)
 	dMULTIPLY0_331((float*)&vtemp, glI1, (float*)&vtemp);
 	break_torque.sub(vtemp);
 
-	//Fvector first_in_bone,second_in_bone;
-	//first_in_bone.sub(*((const Fvector*)m_firstM.c),m_pos_in_element);
-	//second_in_bone.sub(*((const Fvector*)m_secondM.c),m_pos_in_element);
-
-	//vtemp.crossproduct(second_in_bone,second_part_force);
-	//break_torque.add(vtemp);
-	//vtemp.crossproduct(first_in_bone,first_part_force);
-	//break_torque.sub(vtemp);
 #ifdef DBG_BREAK
 	float btm_dbg = break_torque.magnitude()*ph_console::phBreakCommonFactor / torque_factor;
 #endif
@@ -509,11 +481,6 @@ bool CPHFracture::Update(CPHElement* element)
 	vtemp.mul(m_firstM.mass);
 	break_force.sub(vtemp);
 	break_force.mul(1.f / element->getMass());//element->getMass()//body->mass.mass
-
-	//vtemp.crossproduct(second_in_bone,second_part_torque);
-	//break_force.add(vtemp);
-	//vtemp.crossproduct(first_in_bone,first_part_torque);
-	//break_force.sub(vtemp);
 
 	float bfm = break_force.magnitude()*ph_console::phBreakCommonFactor;
 

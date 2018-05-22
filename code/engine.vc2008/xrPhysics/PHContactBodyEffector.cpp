@@ -15,9 +15,6 @@ void CPHContactBodyEffector::Init(dBodyID body, const dContact& contact, SGameMt
 void CPHContactBodyEffector::Merge(const dContact& contact, SGameMtl* material)
 {
 	m_recip_flotation = std::max(1.f - material->fFlotationFactor, m_recip_flotation);
-	//m_contact.geom.normal[0]+=contact.geom.normal[0];
-	//m_contact.geom.normal[1]+=contact.geom.normal[1];
-	//m_contact.geom.normal[2]+=contact.geom.normal[2];
 }
 
 void CPHContactBodyEffector::Apply()
@@ -33,12 +30,7 @@ void CPHContactBodyEffector::Apply()
 
 	if (!fis_zero(l_air))
 	{
-		dVector3 force = {
-						-linear_velocity[0] * l_air,
-						-linear_velocity[1] * l_air,
-						-linear_velocity[2] * l_air,
-						0.f
-		};
+		dVector3 force = { -linear_velocity[0] * l_air,-linear_velocity[1] * l_air,-linear_velocity[2] * l_air, 0.f };
 
 		if (!m_material->Flags.is(SGameMtl::flPassable))
 		{

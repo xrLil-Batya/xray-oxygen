@@ -74,8 +74,6 @@ pose& pose::mul(float v)
 
 pose& pose::add(const pose& pose_)
 {
-	//Fmatrix m0,m1;
-	//set( Fmatrix().mul_43( get( m0 ), p.get( m1 ) ) );
 	p.add(pose_.p);
 	r = Fquaternion().mul(r, pose_.r);
 	return  *this;

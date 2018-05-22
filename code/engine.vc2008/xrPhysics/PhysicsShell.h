@@ -6,7 +6,7 @@
 #include "PhysicsCommon.h"
 #include "icollidevalidator.h"
 #include "../xrserverentities/alife_space.h"
-//#include "script_export_space.h"
+
 #include "../xrEngine/iphysicsshell.h"
 #include "iphysics_scripted.h"
 class IPhysicsJoint;
@@ -48,7 +48,7 @@ struct physicsBone
 
 using BONE_P_MAP = xr_map<u16, physicsBone>;
 typedef const  BONE_P_MAP::iterator			BONE_P_PAIR_CIT;
-// ABSTRACT:
+
 class	IPhysicsBase;
 extern	XRPHYSICS_API void	get_box(const IPhysicsBase*	shell, const	Fmatrix& form, Fvector&	sz, Fvector&	c);
 
@@ -65,7 +65,7 @@ public:
 	virtual	const	Fmatrix		&XFORM()const { return mXFORM; }
 	virtual		void			get_xform(Fmatrix& form) const { form.set(XFORM()); }
 	virtual		void	_BCL	InterpolateGlobalTransform(Fmatrix* m) = 0;
-	//	virtual		void			GetGlobalTransformDynamic				(Fmatrix* m) const																										= 0;
+
 	virtual		void			InterpolateGlobalPosition(Fvector* v) = 0;
 
 	virtual		void			net_Import(NET_Packet& P) = 0;
@@ -91,7 +91,7 @@ public:
 	virtual		void			applyImpulse(const Fvector& dir, float val) = 0;
 	virtual		void			setTorque(const Fvector& torque) = 0;
 	virtual		void			setForce(const Fvector& force) = 0;
-	virtual		void	_BCL	applyGravityAccel(const Fvector& accel) = 0;
+	virtual		void	__stdcall	applyGravityAccel(const Fvector& accel) = 0;
 	virtual		void			SetAirResistance(float linear = default_k_l, float angular = default_k_w) = 0;
 	virtual		void			GetAirResistance(float	&linear, float &angular) = 0;
 	virtual		void			set_DynamicLimits(float l_limit = default_l_limit, float w_limit = default_w_limit) = 0;
@@ -104,8 +104,7 @@ public:
 	virtual		void			set_CallbackData(void * cd) = 0;
 	virtual		void			*get_CallbackData() = 0;
 	virtual		void			set_PhysicsRefObject(IPhysicsShellHolder* ref_object) = 0;
-	//	virtual		void			get_LinearVel							(Fvector& velocity) const																								= 0;
-	//	virtual		void			get_AngularVel							(Fvector& velocity)	const																								= 0;
+
 	virtual		void			set_LinearVel(const Fvector& velocity) = 0;
 	virtual		void			set_AngularVel(const Fvector& velocity) = 0;
 	virtual		void			TransformPosition(const Fmatrix &form, motion_history_state history_state) = 0;
@@ -163,7 +162,7 @@ public:
 	virtual		CPHFracture						&Fracture(u16 num) = 0;
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual		u16								numberOfGeoms()const = 0;
-	//	virtual				dBodyID					get_body								()																													= 0;
+
 	virtual		const	Fvector					&mass_Center()const = 0;
 	virtual		const	Fvector					&local_mass_Center() = 0;
 	virtual		float							getRadius() = 0;
@@ -176,19 +175,13 @@ public:
 	virtual		bool							isFixed() = 0;
 	////////////////////////////////////////////////////////////////IPhysicsElement////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual	const	Fmatrix						&XFORM()							const { return IPhysicsBase::XFORM(); }
-	//virtual		void		_BCL				CalculateBoneTransform					( Fmatrix &bone_transform )const																= 0;
+
 	virtual		void							GetPointVel(Fvector	 &res_vel, const Fvector & point) const = 0;
-	//	virtual			void						get_LinearVel							( Fvector& velocity )		const																					{ get_LinearVel( velocity ); }
-	//	virtual			void						get_AngularVel							( Fvector& velocity )		const																					{ get_AngularVel( velocity ); }
+
 	virtual			void						get_Box(Fvector&	sz, Fvector& c)const { return	IPhysicsBase::get_Box(sz, c); }
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual										~IPhysicsElementEx() {};
-	//	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
-
-//add_to_type_list(CPhysicsElement)
-//#undef script_type_list
-//#define script_type_list save_type_list(CPhysicsElement)
 
 XRPHYSICS_API float NonElasticCollisionEnergy(IPhysicsElementEx *e1, IPhysicsElementEx *e2, const Fvector &norm);// norm - from 2 to 1
 
@@ -271,12 +264,8 @@ public:
 	virtual		bool					IsHingeJoint() = 0;
 	virtual		void 					SetForce(const float force, const int axis_num = -1) = 0;
 	virtual		void 					SetVelocity(const float velocity = 0.f, const int axis_num = -1) = 0;
-	//	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
-//add_to_type_list(CPhysicsJoint)
-//#undef script_type_list
-//#define script_type_list save_type_list(CPhysicsJoint)
-// ABSTRACT:
+
 class CPHIsland;
 class CPhysicsShellAnimator;
 
@@ -289,12 +278,11 @@ protected:
 public:
 	IPhysicsShellHolder * dbg_obj;
 public:
-	IC					IKinematics					*PKinematics() { return m_pKinematics; }
+	inline					IKinematics					*PKinematics() { return m_pKinematics; }
 	////////////////////////////////////////////////////IPhysicsShell///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual	const		Fmatrix						&XFORM()const { return IPhysicsBase::XFORM(); }
 	virtual	const		IPhysicsElement				&Element(u16 index) const { return *get_ElementByStoreOrder(index); };
 	virtual				void						GetGlobalTransformDynamic(Fmatrix* m) = 0;
-	//virtual			u16							get_ElementsNumber							( )																const	= 0;
 
 	///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	virtual			CPhysicsShellAnimator*		PPhysicsShellAnimator() = 0;
@@ -315,7 +303,7 @@ public:
 	virtual		const _flags<CLClassBits>&		collide_class_bits()const = 0;
 	virtual			void						CreateShellAnimator(CInifile const * ini, LPCSTR section) = 0;
 	virtual			void						SetIgnoreAnimated() = 0;
-	//	virtual			bool						Animated									()																							= 0;
+
 	virtual			void						AnimatorOnFrame() = 0;
 	virtual			void						SetSmall() = 0;
 	virtual			void						SetIgnoreSmall() = 0;
@@ -373,7 +361,7 @@ public:
 	virtual			void						build_FromKinematics(IKinematics* K, BONE_P_MAP* p_geting_map = NULL) = 0;
 	virtual			void						preBuild_FromKinematics(IKinematics* K, BONE_P_MAP* p_geting_map = NULL) = 0;
 	virtual			void						Build(bool disable = false) = 0;
-	virtual			void		_BCL			ActivatingBonePoses(IKinematics &K) = 0;
+	virtual			void		__stdcall			ActivatingBonePoses(IKinematics &K) = 0;
 	virtual			void						SetMaxAABBRadius(float size) {};
 
 	virtual			void						AddTracedGeom(u16 element = 0, u16 geom = 0) = 0;
@@ -396,12 +384,7 @@ public:
 	virtual			void						ObjectToRootForm(const Fmatrix& form) = 0;
 	virtual			void						SetPrefereExactIntegration() = 0;
 	virtual										~IPhysicsShellEx();
-	//build_FromKinematics		in returns elements  & joint pointers according bone IDs;
-//	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
-//add_to_type_list(CPhysicsShell)
-//#undef script_type_list
-//#define script_type_list save_type_list(CPhysicsShell)
 
 struct dContact;
 struct SGameMtl;

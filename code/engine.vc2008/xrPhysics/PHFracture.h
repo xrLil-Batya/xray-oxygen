@@ -5,7 +5,7 @@
 
 #include "PHDefs.h"
 #include "PHImpact.h"
-//#include "ode_include.h"
+
 #include "../../3rd-party/ode/include/ode/common.h"
 #include "../../3rd-party/ode/include/ode/mass.h"
 class CPHFracture;
@@ -29,13 +29,13 @@ public:
 		sub_diapasones(m_start_jt_num, m_end_jt_num, sub.m_start_jt_num, sub.m_end_jt_num);
 	}
 protected:
-	u16				m_start_el_num;
-	u16				m_end_el_num;
-	u16				m_start_jt_num;
-	u16				m_end_jt_num;
-	u16				m_start_geom_num;
-	u16				m_end_geom_num;
-	u16				m_bone_id;
+	u16 m_start_el_num;
+	u16 m_end_el_num;
+	u16 m_start_jt_num;
+	u16 m_end_jt_num;
+	u16 m_start_geom_num;
+	u16 m_end_geom_num;
+	u16 m_bone_id;
 };
 
 class CPHFracture : public CShellSplitInfo
@@ -43,14 +43,14 @@ class CPHFracture : public CShellSplitInfo
 	friend class  CPHFracturesHolder;
 	friend class CPHElement;
 	friend class CPHShell;
-	bool			m_breaked;
-	dMass			m_firstM;
-	dMass			m_secondM;
+	bool m_breaked;
+	dMass m_firstM;
+	dMass m_secondM;
 	//when breaked m_pos_in_element-additional force m_break_force-additional torque -x additional torque-y add_torque_z - additional torque z
-	float			m_break_force;
-	float			m_break_torque;
-	Fvector			m_pos_in_element;
-	float			m_add_torque_z;
+	float m_break_force;
+	float m_break_torque;
+	Fvector m_pos_in_element;
+	float m_add_torque_z;
 	CPHFracture();
 public:
 	bool			Update(CPHElement* element);
@@ -112,9 +112,11 @@ public:
 	void				ApplyImpactsToElement(CPHElement* element);
 };
 
-IC	void sub_diapasones(u16 &from1, u16 &to1, const u16 &from0, const u16 &to0)
+inline	void sub_diapasones(u16 &from1, u16 &to1, const u16 &from0, const u16 &to0)
 {
-	if (from0 == to0 || from1 == to1 || to1 <= from0 || to1 == u16(-1)) return;
+	if (from0 == to0 || from1 == to1 || to1 <= from0 || to1 == u16(-1))
+		return;
+
 	R_ASSERT(from0 >= from1 && to0 <= to1);
 	u16 dip = to0 - from0;
 	to1 = to1 - dip;

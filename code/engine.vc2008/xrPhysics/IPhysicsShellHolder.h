@@ -1,8 +1,7 @@
 #pragma once
 class ICollisionDamageInfo;
 class IDamageSource;
-//class IKinematics;
-//class IRenderVisual;
+
 class IKinematics;
 class IPhysicsShellEx;
 class IPHCapture;
@@ -40,7 +39,7 @@ public:
 	virtual ICollisionHitCallback*		__stdcall	ObjectGetCollisionHitCallback() = 0;
 	virtual	u16							__stdcall	ObjectID()		const = 0;
 	virtual	ICollisionForm*				__stdcall	ObjectCollisionModel() = 0;
-	//	virtual	IRenderVisual*				__stdcall	ObjectVisual						()						=0;
+
 	virtual	IKinematics*				__stdcall	ObjectKinematics() = 0;
 	virtual IDamageSource*				__stdcall	ObjectCastIDamageSource() = 0;
 	virtual	void						__stdcall	ObjectProcessingDeactivate() = 0;
@@ -54,8 +53,8 @@ public:
 	virtual	bool						__stdcall	IsInventoryItem() = 0;
 	virtual	bool						__stdcall	IsActor() = 0;
 	virtual bool						__stdcall	IsStalker() = 0;
-	//virtual	void							SetWeaponHideState					( u16 State, bool bSet )=0;
-	virtual	void						__stdcall	HideAllWeapons(bool v) = 0;//(SetWeaponHideState(INV_STATE_BLOCK_ALL,true))
+
+	virtual	void						__stdcall	HideAllWeapons(bool v) = 0;
 	virtual	void						__stdcall	MovementCollisionEnable(bool enable) = 0;
 	virtual CPHSoundPlayer*				__stdcall	ObjectPhSoundPlayer() = 0;
 	virtual	ICollisionDamageReceiver*	__stdcall	ObjectPhCollisionDamageReceiver() = 0;
