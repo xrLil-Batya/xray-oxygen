@@ -40,3 +40,4 @@
 //#define NUM_PARAMS_INV		// Adds progress bars in the inventory numeric value. Max value 100%. (%) - color="no_color"
 //#define SHAPE_VALUE_INV		// Adds shape progress to inventory. 
 //#define MINMAP_BAR_HUD		// Adds progress bars to luminosity and noise value
+//#define HUD_DOSIMETER			// Adds dosimeter on hud. From Clear Sky.
