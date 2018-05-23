@@ -118,7 +118,7 @@
 		<cap_windowtype x="12" y="93" width="108" height="24">
 			<text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_windowtype</text>
 		</cap_windowtype>
-		<list_windowtype x="140" y="95" width="188" height="20" list_length="4" always_show_scroll="1">
+		<list_windowtype x="140" y="95" width="188" height="20" list_length="4" always_show_scroll="0">
 			<options_item entry="vid_windowtype" group="mm_opt_video" depend="runtime"/>
             <list_font r="170" g="170" b="170" font="letterica16"/>
             <text_color>
@@ -174,21 +174,21 @@
         <cap_fov x="16" y="3" width="108" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_fov</text>
         </cap_fov>
-        <track_fov x="144" y="6" width="188" height="16" step="0.05">
+        <track_fov x="144" y="6" width="188" height="16" step="1">
             <options_item entry="fov" group="mm_opt_video_adv"/>
         </track_fov>
 		
         <cap_hud_fov x="16" y="3" width="108" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_hud_fov</text>
         </cap_hud_fov>
-        <track_hud_fov x="144" y="6" width="188" height="16" step="0.05">
+        <track_hud_fov x="144" y="6" width="188" height="16" step="0.01">
             <options_item entry="hud_fov" group="mm_opt_video_adv"/>
         </track_hud_fov>
 		
 		<cap_dof x="16" y="3" width="108" height="24">
             <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
         </cap_dof>
-        <combo_dof x="144" y="0" width="188" height="20" always_show_scroll="1">
+        <combo_dof x="144" y="5" width="188" height="20" list_length="5" always_show_scroll="0">
 	        <options_item entry="r2_dof_quality" group="mm_opt_video" depend="vid"/>
             <list_font color="red" font="letterica16"/>
             <text_color>
@@ -252,7 +252,7 @@
         <track_ssample x="144" y="6" width="188" height="16" step="1" is_integer="1">
             <options_item entry="r__supersample" group="mm_opt_video_adv" depend="vid"/>
         </track_ssample>
-        <combo_ssample x="144" y="0" width="188" height="20" list_length="4" always_show_scroll="0">
+        <combo_ssample x="144" y="0" width="188" height="20" list_length="3" always_show_scroll="0">
             <options_item entry="r3_msaa" group="mm_opt_video_adv" depend="vid"/>
             <list_font color="yellow" font="letterica16"/>
 		    <text_color>
@@ -314,7 +314,7 @@
         <cap_r2_sun_quality x="16" y="3" width="108" height="24">
             <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_quality</text>
         </cap_r2_sun_quality>
-        <list_r2_sun_quality x="144" y="0" width="188" height="20" list_length="3">
+        <list_r2_sun_quality x="144" y="0" width="188" height="20" list_length="5" always_show_scroll="0">
             <options_item entry="r2_sun_quality" group="mm_opt_video" depend="vid"/>
             <list_font color="yellow" font="letterica16"/>
 		    <text_color>
@@ -389,7 +389,7 @@
         <cap_sun_shafts x="16" y="3" width="108" height="24">
             <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_sun_shafts</text>
         </cap_sun_shafts>
-        <combo_sun_shafts x="144" y="0" width="188" height="20" always_show_scroll="1">
+        <combo_sun_shafts x="144" y="0" width="188" height="20" always_show_scroll="0">
             <options_item entry="r2_sun_shafts" group="mm_opt_video" depend="vid"/>
             <list_font color="yellow" font="letterica16"/>
 		    <text_color>
@@ -402,20 +402,20 @@
         </cap_ao>
 		<radio_tab_ao_options x="144" y="0" width="108" height="101" radio="1">
 			<options_item entry="r2_ssao_mode" group="mm_opt_video" depend="restart"/>
-			<button x="-8" y="0" width="37" height="28" id="disabled" stretch="1">
-				<text font="letterica16" vert_align="c" x="29" y="3" align="l">st_opt_off</text>
+			<button x="-13" y="10" width="37" height="28" id="disabled" stretch="1">
+				<text font="letterica16" vert_align="c" x="40" y="5" align="l">st_opt_off</text>
 	            <text_color>
 	                <e color="red"/>
 	            </text_color>
 			</button>
-			<button x="-8" y="25" width="37" height="28" id="default" stretch="1">
-				<text font="letterica16" vert_align="c" x="29" y="3" align="l">ui_mm_ssao</text>
+			<button x="-13" y="35" width="37" height="28" id="default" stretch="1">
+				<text font="letterica16" vert_align="c" x="40" y="5" align="l">ui_mm_ssao</text>
 	            <text_color>
 	                <e color="red"/>
 	            </text_color>
 			</button>
-			<button x="-8" y="75" width="37" height="28" id="hbao" stretch="1">
-				<text font="letterica16" vert_align="c" x="29" y="3" align="l">ui_mm_hbao</text>
+			<button x="-13" y="60" width="37" height="28" id="hbao" stretch="1">
+				<text font="letterica16" vert_align="c" x="40" y="5" align="l">ui_mm_hbao</text>
 	            <text_color>
 	                <e color="red"/>
 	            </text_color>
@@ -425,7 +425,7 @@
         <cap_ssao x="16" y="3" width="108" height="24">
             <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_ssao_quality</text>
         </cap_ssao>
-        <combo_ssao x="144" y="0" width="188" height="20" always_show_scroll="1">
+        <combo_ssao x="144" y="0" width="188" height="20" list_length="5" always_show_scroll="0">
             <options_item entry="r2_ssao" group="mm_opt_video" depend="restart"/>
             <list_font color="red" font="letterica16"/>
 		    <text_color>
@@ -531,7 +531,7 @@
         <cap_snd_device x="12" y="63" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_snd_device</text>
         </cap_snd_device>
-        <list_snd_device x="140" y="65" width="188" height="20" always_show_scroll="1">
+        <list_snd_device x="140" y="65" width="188" height="20" list_length="1" always_show_scroll="0">
             <options_item entry="snd_device" group="mm_opt_sound" depend="restart"/>
             <list_font r="170" g="170" b="170" font="letterica16"/>
 		    <text_color>
@@ -561,7 +561,7 @@
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_difficulty</text>
         </cap_difficulty>
 
-        <list_difficulty x="140" y="5" width="188" height="20">
+        <list_difficulty x="140" y="5" width="188" height="20" always_show_scroll="0">
             <options_item entry="g_game_difficulty" group="mm_opt_gameplay"/>
             <list_font r="170" g="170" b="170" font="letterica16"/>
 		    <text_color>

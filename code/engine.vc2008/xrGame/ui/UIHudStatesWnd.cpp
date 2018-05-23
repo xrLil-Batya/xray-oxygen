@@ -20,12 +20,15 @@
 #include "../ai/monsters/basemonster/base_monster.h"
 #include "../PDA.h"
 #include "WeaponMagazinedWGrenade.h"
+#include "../FrayBuildConfig.hpp"
 
 CUIHudStatesWnd::CUIHudStatesWnd()
 :m_b_force_update(true),
 	m_timer_1sec(0),
 	m_last_health(0.0f),
 	m_radia_self(0.0f),
+	m_health_self(0.0f),
+	m_stamina_self(0.0f),
 	m_radia_hit(0.0f)
 {
 
@@ -112,7 +115,28 @@ void CUIHudStatesWnd::InitFromXml( CUIXml& xml, LPCSTR path )
 	m_ui_weapon_icon			= UIHelper::CreateStatic( xml, "static_wpn_icon", this );
 	m_ui_weapon_icon->SetShader( InventoryUtilities::GetEquipmentIconsShader() );
 	m_ui_weapon_icon_rect		= m_ui_weapon_icon->GetWndRect();
+#ifdef HUD_DOSIMETER
+	m_rad_shape = xr_new<CUIProgressShape>();
+	m_rad_shape->SetAutoDelete(true);
+	AttachChild( m_rad_shape );
+	CUIXmlInit::InitProgressShape( xml, "rad_shape", 0, m_rad_shape );
 
+	m_arrow_rad				= xr_new<UI_Arrow>();
+	m_arrow_rad_shadow		= xr_new<UI_Arrow>();
+	m_arrow_rad->init_from_xml( xml, "arrow_rad", this );
+	m_arrow_rad_shadow->init_from_xml( xml, "arrow_shadow_rad", this );
+#endif
+#ifdef HUD_SHAPE_VALUE
+	m_health_shape = xr_new<CUIProgressShape>();
+	m_health_shape->SetAutoDelete(true);
+	AttachChild( m_health_shape );
+	CUIXmlInit::InitProgressShape( xml, "health_shape", 0, m_health_shape );
+
+	m_stamina_shape = xr_new<CUIProgressShape>();
+	m_stamina_shape->SetAutoDelete(true);
+	AttachChild( m_stamina_shape );
+	CUIXmlInit::InitProgressShape( xml, "stamina_shape", 0, m_stamina_shape );
+#endif
 	xml.SetLocalRoot( stored_root );
 }
 
@@ -172,6 +196,7 @@ void CUIHudStatesWnd::Update()
 
 void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 {
+
 	float cur_health = actor->GetfHealth();
 	m_ui_health_bar->SetProgressPos(iCeil(cur_health * 100.0f * 35.f) / 35.f);
 	if ( _abs(cur_health - m_last_health) > m_health_blink )
@@ -186,6 +211,16 @@ void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 	{
 		m_ui_stamina_bar->m_UIProgressItem.ResetColorAnimation();
 	}
+#ifdef HUD_SHAPE_VALUE
+	m_health_self = actor->GetfHealth();
+	m_health_shape->SetPos( m_health_self );
+	
+	m_stamina_self = actor->conditions().GetPower();
+	m_stamina_shape->SetPos( m_stamina_self );
+#endif
+#ifdef HUD_DOSIMETER
+	m_rad_shape->SetPos( m_radia_self );
+#endif
 }
 
 void CUIHudStatesWnd::UpdateActiveItemInfo( CActor* actor )
@@ -285,9 +320,9 @@ void CUIHudStatesWnd::UpdateZones()
 		}
 	}
 
-
+#ifdef HUD_DOSIMETER
 	m_radia_self = actor->conditions().GetRadiation();
-	
+#endif	
 	float zone_max_power = actor->conditions().GetZoneMaxPower(ALife::infl_rad);
 	float power          = actor->conditions().GetInjuriousMaterialDamage();
 	power = power / zone_max_power;
@@ -296,8 +331,11 @@ void CUIHudStatesWnd::UpdateZones()
 	{
 		m_zone_cur_power[ALife::infl_rad] = power;
 	}
+#ifdef HUD_DOSIMETER
 	m_radia_hit = m_zone_cur_power[ALife::infl_rad];
-
+	m_arrow_rad->SetNewValue( m_radia_hit * 360);
+	m_arrow_rad_shadow->SetPos( m_arrow_rad->GetPos() );
+#endif	
 	if ( !Level().hud_zones_list )
 	{
 		return;
@@ -359,12 +397,12 @@ void CUIHudStatesWnd::UpdateZones()
 			if ( dist_to_zone < rad_zone )
 			{
 				fRelPow *= 0.3f;
-				fRelPow *= ( 2.5f - 2.0f * power ); // çâóê çàâèñèò îò ñèëû çîíû
+				fRelPow *= ( 2.5f - 2.0f * power ); // звук зависит от силы зоны
 			}
 		}
 		clamp( fRelPow, 0.0f, 1.0f );
 
-		//îïðåäåëèòü òåêóùóþ ÷àñòîòó ñðàáàòûâàíèÿ ñèãíàëà
+		//определить текущую частоту срабатывания сигнала
 		zone_info.cur_period = zone_type->freq.x + (zone_type->freq.y - zone_type->freq.x) * (fRelPow * fRelPow);
 		
 		if( zone_info.snd_time > zone_info.cur_period )
