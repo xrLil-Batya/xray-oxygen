@@ -629,8 +629,6 @@
     <ClInclude Include="agent_manager_properties_inline.h" />
     <ClInclude Include="alife_simulator.h" />
     <ClInclude Include="..\xrServerEntities\alife_space.h" />
-    <ClInclude Include="alife_interaction_manager.h" />
-    <ClInclude Include="alife_combat_manager.h" />
     <ClInclude Include="alife_simulator_base.h" />
     <ClInclude Include="alife_simulator_base_inline.h" />
     <ClInclude Include="alife_simulator_header.h" />
@@ -1894,7 +1892,6 @@
     <ClCompile Include="alife_simulator.cpp">
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\alife_space.cpp" />
-    <ClCompile Include="alife_combat_manager.cpp" />
     <ClCompile Include="alife_simulator_base.cpp">
     </ClCompile>
     <ClCompile Include="alife_simulator_base2.cpp" />

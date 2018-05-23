@@ -370,12 +370,6 @@
     <Filter Include="AI\ALife">
       <UniqueIdentifier>{7a5eac44-1f05-453a-9187-8f6e08379cf3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\ALife\interaction_manager">
-      <UniqueIdentifier>{840054a2-e9cb-4e5c-8240-738318d41d7a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\ALife\interaction_manager\combat_manager">
-      <UniqueIdentifier>{c5f74147-7732-4e9c-bab6-2fe1e3ef6870}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\ALife\simulator_base">
       <UniqueIdentifier>{8daaabae-d27c-4dac-a065-58ca13936696}</UniqueIdentifier>
     </Filter>
@@ -2807,12 +2801,6 @@
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\alife_space.h">
       <Filter>AI\ALife</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_interaction_manager.h">
-      <Filter>AI\ALife\interaction_manager</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_combat_manager.h">
-      <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
     </ClInclude>
     <ClInclude Include="alife_simulator_base.h">
       <Filter>AI\ALife\simulator_base</Filter>
@@ -6418,9 +6406,6 @@
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\alife_space.cpp">
       <Filter>AI\ALife</Filter>
-    </ClCompile>
-    <ClCompile Include="alife_combat_manager.cpp">
-      <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
     </ClCompile>
     <ClCompile Include="alife_simulator_base.cpp">
       <Filter>AI\ALife\simulator_base</Filter>

@@ -16,6 +16,9 @@
 #include "object_factory.h"
 #include "alife_object_registry.h"
 #include "../xrEngine/xr_ioconsole.h"
+#include "xrServer_Objects_ALife_Monsters.h"
+#include "alife_graph_registry.h"
+#include "alife_schedule_registry.h"
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG
@@ -39,10 +42,9 @@ void restart_all				()
 #endif // DEBUG
 }
 
-CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
-	CALifeUpdateManager			(server,alife_section),
-	CALifeInteractionManager	(server,alife_section),
-	CALifeSimulatorBase			(server,alife_section)
+CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
+	CALifeUpdateManager			(server, alife_section),
+	CALifeSimulatorBase			(server, alife_section)
 {
 	restart_all					();
 	ai().set_alife				(this);
@@ -50,14 +52,9 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	typedef IGame_Persistent::params params;
 	params						&p = g_pGamePersistent->m_game_params;
 	
-	R_ASSERT2					(
-		xr_strlen(p.m_game_or_spawn) && 
-		!xr_strcmp(p.m_alife,"alife") && 
-		!xr_strcmp(p.m_game_type,"single"),
-		"Invalid server options!"
-	);
+	R_ASSERT2(xr_strlen(p.m_game_or_spawn) && !xr_strcmp(p.m_alife,"alife") && !xr_strcmp(p.m_game_type,"single"), "Invalid server options!");
 	
-	string256					temp;
+	string256						 temp;
 	xr_strcpy						(temp,p.m_game_or_spawn);
 	xr_strcat						(temp,"/");
 	xr_strcat						(temp,p.m_game_type);
@@ -73,14 +70,12 @@ CALifeSimulator::CALifeSimulator		(xrServer *server, shared_str *command_line) :
 	load						(p.m_game_or_spawn,!xr_strcmp(p.m_new_or_load,"load") ? false : true, !xr_strcmp(p.m_new_or_load,"new"));
 }
 
-CALifeSimulator::~CALifeSimulator		()
+CALifeSimulator::~CALifeSimulator()
 {
-	VERIFY						(!ai().get_alife());
+	VERIFY(!ai().get_alife());
 
-	configs_type::iterator i	= m_configs_lru.begin();
-	configs_type::iterator const e	= m_configs_lru.end();
-	for ( ; i != e; ++i )
-		FS.r_close				( (*i).second );
+	for (auto &it: m_configs_lru)
+		FS.r_close(it.second);
 }
 
 void CALifeSimulator::destroy()
@@ -88,6 +83,28 @@ void CALifeSimulator::destroy()
 	CALifeUpdateManager::destroy();
 	VERIFY						(ai().get_alife());
 	ai().set_alife				(0);
+}
+
+void CALifeSimulator::kill_entity(CSE_ALifeMonsterAbstract *l_tpALifeMonsterAbstract, const u16 &l_tGraphID, CSE_ALifeSchedulable *schedulable)
+{
+	VERIFY(l_tpALifeMonsterAbstract->g_Alive());
+	append_item_vector(l_tpALifeMonsterAbstract->children, m_temp_item_vector);
+
+	u16 l_tGraphID1 = l_tpALifeMonsterAbstract->m_tGraphID;
+	assign_death_position(l_tpALifeMonsterAbstract, l_tGraphID, schedulable);
+	l_tpALifeMonsterAbstract->vfDetachAll();
+	R_ASSERT(l_tpALifeMonsterAbstract->children.empty());
+
+	scheduled().remove(l_tpALifeMonsterAbstract);
+
+	if (l_tpALifeMonsterAbstract->m_tGraphID != l_tGraphID1) 
+	{
+		graph().remove(l_tpALifeMonsterAbstract, l_tGraphID1);
+		graph().add(l_tpALifeMonsterAbstract, l_tpALifeMonsterAbstract->m_tGraphID);
+	}
+	CSE_ALifeInventoryItem *l_tpALifeInventoryItem = smart_cast<CSE_ALifeInventoryItem*>(l_tpALifeMonsterAbstract);
+	if (l_tpALifeInventoryItem)
+		m_temp_item_vector.push_back(l_tpALifeInventoryItem);
 }
 
 void CALifeSimulator::setup_simulator(CSE_ALifeObject *object)

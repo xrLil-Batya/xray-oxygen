@@ -931,10 +931,12 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClientServer.txt" />
     <None Include="Effects description.txt" />
     <None Include="features.txt" />
     <None Include="TODO.txt" />
+    <None Include="ClientServer.txt">
+      <Filter>NetServer</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\xrCore.natvis" />
