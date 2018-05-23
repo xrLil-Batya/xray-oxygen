@@ -367,19 +367,7 @@ inline void evalcircle(const float c[3],
 //
 void SRS::evaluate_circle(float angle, float p[3])
 {
-#if 1
 	evalcircle(c, u, v, radius, angle, p);
-#else
-	// p = o + r*cos(f)*u + r*sin(f)*v
-
-	float temp[3];
-
-	cpvector(p, c);
-	vecscalarmult(temp, u, radius*cos(angle));
-	vecadd(p, p, temp);
-	vecscalarmult(temp, v, radius*sin(angle));
-	vecadd(p, p, temp);
-#endif
 }
 
 //
