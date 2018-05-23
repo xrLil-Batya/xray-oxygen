@@ -5,9 +5,7 @@
 //	Author		: Dmitriy Iassenev, Oles Shishkovtsov, Aleksandr Maksimchuk
 //	Description : Team hierarchy holder
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "seniority_hierarchy_space.h"
 
 class CSquadHierarchyHolder;

@@ -292,6 +292,7 @@
     <ClInclude Include="ClS\NET_PlayersMonitor.h" />
     <ClInclude Include="ClS\NET_Server.h" />
     <ClInclude Include="ClS\NET_Shared.h" />
+    <ClInclude Include="date_time.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="CopyProtection.h" />
     <ClInclude Include="dedicated_server_only.h" />
@@ -418,6 +419,7 @@
     <ClCompile Include="CPU\xrCPU_Pipe.cpp" />
     <ClCompile Include="CPU\xrSkin2W.cpp" />
     <ClCompile Include="CPU\xrSkin2W_thread.cpp" />
+    <ClCompile Include="date_time.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>

@@ -5421,9 +5421,6 @@
     <ClInclude Include="InventoryBox.h">
       <Filter>Core\Client\Objects\inventory_box</Filter>
     </ClInclude>
-    <ClInclude Include="date_time.h">
-      <Filter>Core\Common\DateTime</Filter>
-    </ClInclude>
     <ClInclude Include="NET_Queue.h">
       <Filter>Core\Common\NET Shared</Filter>
     </ClInclude>
@@ -8026,9 +8023,6 @@
     </ClCompile>
     <ClCompile Include="console_commands.cpp">
       <Filter>Core\Common\Console Commands</Filter>
-    </ClCompile>
-    <ClCompile Include="date_time.cpp">
-      <Filter>Core\Common\DateTime</Filter>
     </ClCompile>
     <ClCompile Include="xrgame_dll_detach.cpp">
       <Filter>Core\Common\Dll Process Detach</Filter>
