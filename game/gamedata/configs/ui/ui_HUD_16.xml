@@ -209,12 +209,18 @@
 				<texture>ui_inGame2_Patroni_HUD_red_bar</texture>
 			</progress>
 		</progress_bar_health>
+		<health_shape x="800" y="600" width="40" height="40" sector_count="360" clockwise="1" blend="0" begin_angle="0" end_angle="-6.3">
+				<texture>ui_inGame2_Radar_blue_bar</texture>
+		</health_shape>
 
 	    <progress_bar_stamina x="885" y="670" width="113" height="10" horz="1" min="0" max="100" pos="0">
 	        <progress>
 		        <texture>ui_inGame2_Patroni_HUD_blue_bar</texture>
 	        </progress>
 	    </progress_bar_stamina>
+		<stamina_shape x="800" y="660" width="40" height="40" sector_count="360" clockwise="1" blend="0" begin_angle="0" end_angle="-6.3">
+				<texture>ui_inGame2_Radar_green_bar</texture>
+		</stamina_shape>
 
 		<static_cur_ammo x="887" y="690" width="54" height="37">
 			<text complex_mode="0" font="graffiti32" color="ui_7" align="c" vert_align="c">ammo</text>

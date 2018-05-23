@@ -27,6 +27,8 @@ CUIHudStatesWnd::CUIHudStatesWnd()
 	m_timer_1sec(0),
 	m_last_health(0.0f),
 	m_radia_self(0.0f),
+	m_health_self(0.0f),
+	m_stamina_self(0.0f),
 	m_radia_hit(0.0f)
 {
 
@@ -124,6 +126,17 @@ void CUIHudStatesWnd::InitFromXml( CUIXml& xml, LPCSTR path )
 	m_arrow_rad->init_from_xml( xml, "arrow_rad", this );
 	m_arrow_rad_shadow->init_from_xml( xml, "arrow_shadow_rad", this );
 #endif
+#ifdef HUD_SHAPE_VALUE
+	m_health_shape = xr_new<CUIProgressShape>();
+	m_health_shape->SetAutoDelete(true);
+	AttachChild( m_health_shape );
+	CUIXmlInit::InitProgressShape( xml, "health_shape", 0, m_health_shape );
+
+	m_stamina_shape = xr_new<CUIProgressShape>();
+	m_stamina_shape->SetAutoDelete(true);
+	AttachChild( m_stamina_shape );
+	CUIXmlInit::InitProgressShape( xml, "stamina_shape", 0, m_stamina_shape );
+#endif
 	xml.SetLocalRoot( stored_root );
 }
 
@@ -183,6 +196,7 @@ void CUIHudStatesWnd::Update()
 
 void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 {
+
 	float cur_health = actor->GetfHealth();
 	m_ui_health_bar->SetProgressPos(iCeil(cur_health * 100.0f * 35.f) / 35.f);
 	if ( _abs(cur_health - m_last_health) > m_health_blink )
@@ -197,6 +211,13 @@ void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 	{
 		m_ui_stamina_bar->m_UIProgressItem.ResetColorAnimation();
 	}
+#ifdef HUD_SHAPE_VALUE
+	m_health_self = actor->GetfHealth();
+	m_health_shape->SetPos( m_health_self );
+	
+	m_stamina_self = actor->conditions().GetPower();
+	m_stamina_shape->SetPos( m_stamina_self );
+#endif
 #ifdef HUD_DOSIMETER
 	m_rad_shape->SetPos( m_radia_self );
 #endif

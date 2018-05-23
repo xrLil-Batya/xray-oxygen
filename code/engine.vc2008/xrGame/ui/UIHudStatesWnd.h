@@ -36,12 +36,16 @@ private:
 
 	CUIProgressBar*		m_ui_health_bar;
 	CUIProgressBar*		m_ui_stamina_bar;
+	CUIProgressShape*	m_health_shape;
+	CUIProgressShape*	m_stamina_shape;
 
 	CUIProgressShape*	m_rad_shape;
 	UI_Arrow*			m_arrow_rad;
 	UI_Arrow*			m_arrow_rad_shadow;	
 	CUIStatic*			m_radia_damage;
 
+	float				m_health_self;
+	float				m_stamina_self;
 	float				m_last_health;
 	float				m_health_blink;
 

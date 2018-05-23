@@ -41,3 +41,4 @@
 //#define SHAPE_VALUE_INV		// Adds shape progress to inventory. 
 //#define MINMAP_BAR_HUD		// Adds progress bars to luminosity and noise value
 //#define HUD_DOSIMETER			// Adds dosimeter on hud. From Clear Sky.
+#define HUD_SHAPE_VALUE			// Adds shape progress to HUD. Health and Stamina value.
