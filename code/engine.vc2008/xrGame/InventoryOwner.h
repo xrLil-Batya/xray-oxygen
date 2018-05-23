@@ -213,7 +213,7 @@ private:
 	bool						m_deadbody_closed;
 
 public:
-	IC		CTradeParameters	&trade_parameters		() const;
+	IC		CTradeParameters	&trade_parameters		() const { return (*m_trade_parameters); }
 	virtual	LPCSTR				trade_section			() const;
 			float				deficit_factor			(const shared_str &section) const;
 			void				buy_supplies			(CInifile &ini_file, LPCSTR section);
@@ -231,5 +231,3 @@ public:
 			void				deadbody_closed			(bool status);
 	IC		bool				deadbody_closed_status	() const { return m_deadbody_closed; }
 };
-
-#include "inventory_owner_inline.h"

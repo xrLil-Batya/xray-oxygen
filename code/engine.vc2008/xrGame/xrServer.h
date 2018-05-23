@@ -148,6 +148,8 @@ public:
 #endif
 };
 
+bool is_object_valid_on_svclient(u16 id_entity);
+
 #ifdef DEBUG
 		enum e_dbg_net_Draw_Flags
 		{
@@ -166,4 +168,5 @@ public:
 		};
 extern	Flags32	dbg_net_Draw_Flags;
 #endif
+
 

@@ -2,7 +2,6 @@
 #include "xrserver.h"
 #include "xrserver_objects.h"
 #include "xrserver_objects_alife_monsters.h"
-#include "xrServer_svclient_validation.h"
 
 void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32, u16 ID, BOOL bForced)
 {

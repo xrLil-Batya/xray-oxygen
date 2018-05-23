@@ -1581,7 +1581,6 @@
     <ClInclude Include="..\xrServerEntities\script_value_container.h" />
     <ClInclude Include="..\xrServerEntities\script_value_container_impl.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
-    <ClInclude Include="xrServer_svclient_validation.h" />
     <ClInclude Include="ui_base.h" />
     <ClInclude Include="ui_defs.h" />
     <ClInclude Include="UIDialogHolder.h" />
@@ -2725,7 +2724,6 @@
     <ClCompile Include="xrServer_process_event_reject.cpp" />
     <ClCompile Include="xrServer_process_spawn.cpp" />
     <ClCompile Include="xrServer_process_update.cpp" />
-    <ClCompile Include="xrServer_svclient_validation.cpp" />
     <ClCompile Include="xrServer_CL_connect.cpp" />
     <ClCompile Include="xrServer_Connect.cpp" />
     <ClCompile Include="ui_base.cpp" />

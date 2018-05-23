@@ -30,12 +30,12 @@ CSE_ALifeItemWeapon	*CSE_ALifeAnomalousZone::tpfGetBestWeapon(ALife::EHitType &t
 
 ALife::EMeetActionType CSE_ALifeAnomalousZone::tfGetActionType(CSE_ALifeSchedulable *tpALifeSchedulable, int iGroupIndex, bool bMutualDetection)
 {
-	return						(ALife::eMeetActionTypeAttack);
+	return (ALife::eMeetActionTypeAttack);
 }
 
 bool CSE_ALifeAnomalousZone::bfActive()
 {
-	return						(false/*fis_zero(m_maxPower,EPS_L)*/ || !interactive());
+	return !interactive();
 }
 
 CSE_ALifeDynamicObject *CSE_ALifeAnomalousZone::tpfGetBestDetector()

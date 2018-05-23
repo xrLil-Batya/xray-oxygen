@@ -5589,9 +5589,6 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClInclude>
-    <ClInclude Include="xrServer_svclient_validation.h">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClInclude>
     <ClInclude Include="ui_base.h">
       <Filter>AI\AScript\ScriptClasses\UI</Filter>
     </ClInclude>
@@ -8166,9 +8163,6 @@
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_process_update.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_svclient_validation.cpp">
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_CL_connect.cpp">
