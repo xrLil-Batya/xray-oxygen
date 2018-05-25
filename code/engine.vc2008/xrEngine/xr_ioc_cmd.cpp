@@ -244,77 +244,23 @@ bool CCC_LoadCFG_custom::allow(LPCSTR cmd)
 //-----------------------------------------------------------------------
 class CCC_Start : public IConsole_Command
 {
-	void parse(LPSTR dest, LPCSTR args, LPCSTR name)
+protected:
+	std::string parse(const std::string &str)
 	{
-		dest[0]	= 0;
-		// By dsh2dhs
-		if (strstr(args, name)) 
-		{
-			std::string str = strstr(args, name) + xr_strlen(name);
-			std::regex Reg("\\(([^)]+)\\)");
-			std::smatch results;
-			if (std::regex_search(str, results, Reg))
-				strcpy(dest, results[1].str().c_str());
-		}
-	}
-
-	void protect_Name_strlwr( LPSTR str )
-	{
- 		string4096	out;
-		xr_strcpy( out, sizeof(out), str );
-		strlwr( str );
-
-		LPCSTR name_str = "name=";
-		LPCSTR name1 = strstr( str, name_str );
-		if ( !name1 || !xr_strlen( name1 ) )
-		{
-			return;
-		}
-		int begin_p = xr_strlen( str ) - xr_strlen( name1 ) + xr_strlen( name_str );
-		if ( begin_p < 1 )
-		{
-			return;
-		}
-
-		LPCSTR name2 = strchr( name1, '/' );
-		int end_p = xr_strlen( str ) - ((name2)? xr_strlen(name2) : 0);
-		if ( begin_p >= end_p )
-		{
-			return;
-		}
-		for ( int i = begin_p; i < end_p;++i )
-		{
-			str[i] = out[i];
-		}
+		std::regex Reg("\\(([^)]+)\\)");
+		std::smatch results;
+		R_ASSERT3(std::regex_search(str, results, Reg), "Failed parsing string: [%s]", str.c_str());
+		return results[1].str();
 	}
 public:
-	CCC_Start(LPCSTR N) : IConsole_Command(N)	{ 	  bLowerCaseArgs = false; };
-	virtual void Execute(LPCSTR args)
+	CCC_Start(const char* N) : IConsole_Command(N) {};
+	void Execute(const char* args) override 
 	{
-/*		if (g_pGameLevel)	{
-			Log		("! Please disconnect/unload first");
-			return;
-		}
-*/
-		string4096	op_server,op_client;
-		op_server[0] = 0;
-		op_client[0] = 0;
-		
-		parse		(op_server,args,"server");	// 1. server
-		parse		(op_client,args,"client");	// 2. client
-		
-		strlwr( op_server );
-		protect_Name_strlwr( op_client );
-
-		if(!op_client[0] && strstr(op_server,"single"))
-			xr_strcpy(op_client, "localhost");
-
-		if (g_pGameLevel)
-			Engine.Event.Defer("KERNEL:disconnect");
-		
-		Engine.Event.Defer	("KERNEL:start",u64(xr_strlen(op_server)?xr_strdup(op_server):0),u64(xr_strdup(op_client)));
+		std::string str = this->parse(args);
+		Engine.Event.Defer("KERNEL:start", u64(xr_strdup(str.c_str())), u64(xr_strdup("localhost")));
 	}
 };
+
 
 class CCC_Disconnect : public IConsole_Command
 {
@@ -369,7 +315,6 @@ public :
 			return TRUE;
 		else
 			return FALSE;
-
 	}
 
 	virtual void	Status	(TStatus& S)	

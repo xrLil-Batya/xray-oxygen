@@ -256,9 +256,9 @@ function load_dialog:load_game_internal()
 
 	if (alife() == nil) then
 		console:execute	("disconnect")
-		console:execute	("start server(" .. fname .. "/single/alife/load) client(localhost)")
+		console:execute	("start server("..fname.. "/single/alife/load)")
 	else
-		console:execute	("load " .. fname)
+		console:execute	("load "..fname)
 	end
 end
 
