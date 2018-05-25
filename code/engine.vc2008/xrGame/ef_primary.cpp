@@ -13,14 +13,11 @@
 #include "alife_simulator.h"
 #include "ef_storage.h"
 #include "ai_space.h"
-//#include "game_graph.h"
 #include "inventory.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "ef_primary.h"
 #include "alife_human_brain.h"
 #include "alife_human_object_handler.h"
-
-//#define NO_HUMAN_BRAIN
 
 IC	CLASS_ID CBaseFunction::clsid_member_item() const
 {

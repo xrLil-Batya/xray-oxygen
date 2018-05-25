@@ -1557,6 +1557,7 @@ public:
 		  CCC_Integer::Execute(args);
 	  }
 };
+
 #ifdef	DEBUG
 void DBG_CashedClear();
 class CCC_DBGDrawCashedClear : public IConsole_Command {
@@ -1565,12 +1566,9 @@ public:
 private:
 	 virtual void	Execute	(LPCSTR args)
 	 {
-		
 		 DBG_CashedClear();
 	 }
 };
-
-#endif
 
 class CCC_DbgVar : public IConsole_Command {
 public:
@@ -1596,6 +1594,7 @@ public:
 
 	}
 };
+#endif
 
 void CCC_RegisterCommands()
 {

@@ -969,19 +969,6 @@ bool CCustomMonster::update_critical_wounded	(const u16 &bone_id, const float &p
 	m_critical_wound_accumulator	+= power - m_critical_wound_decrease_quant*time_delta;
 	clamp							(m_critical_wound_accumulator,0.f,m_critical_wound_threshold);
 
-#if 0//def _DEBUG
-	Msg								(
-		"%6d [%s] update_critical_wounded: %f[%f] (%f,%f) [%f]",
-		Device.dwTimeGlobal,
-		*cName(),
-		m_critical_wound_accumulator,
-		power,
-		m_critical_wound_threshold,
-		m_critical_wound_decrease_quant,
-		time_delta
-	);
-#endif // DEBUG
-
 	m_last_hit_time					= Device.dwTimeGlobal;
 	if (m_critical_wound_accumulator < m_critical_wound_threshold)
 		return						(false);
@@ -1011,8 +998,6 @@ void draw_visiblity_rays	(CCustomMonster *self, const CObject *object, collide::
 void CCustomMonster::OnRender()
 {
 	DRender->OnFrameEnd();
-	//RCache.OnFrameEnd				();
-
 	{
 		float const radius						= .075f;
 		xr_vector<u32> const& path				= movement().level_path().path();
@@ -1098,49 +1083,6 @@ void CCustomMonster::OnRender()
 	
 	if (bDebug)
 		smart_cast<IKinematics*>(Visual())->DebugRender(XFORM());
-
-
-#if 0
-	DBG().get_text_tree().clear			();
-	debug::text_tree& text_tree		=	DBG().get_text_tree().find_or_add("ActorView");
-
-	Fvector collide_position;
-	collide::rq_results	temp_rq_results;
-	Fvector sizes			=	{ 0.2f, 0.2f, 0.2f };
-
-	for ( u32 i=0; i<2; ++i )
-	{
-		Fvector start		=	{ -8.7, 1.6, -4.67 };
-		Fvector end			=	{ -9.45, 1.3, -0.24 };
-
-		bool use_p2			=	false;
-		ai_dbg::get_var			("p2", use_p2);
-
-		if ( use_p2 ^ i )
-		{
-			start.x			+=	-1.f;
-			end.x			+=	-1.f;
-		}
-
-		Fvector velocity	=	end - start;
-		float const jump_time	=	0.3f;
-		TransferenceToThrowVel	(velocity,jump_time,physics_world()->Gravity());
-
-		bool const result	=	trajectory_intersects_geometry	(jump_time, 
-																 start,
-																 end,
-																 velocity,
-																 collide_position,
-																 this,
-																 NULL,
-																 temp_rq_results,
-																 & m_jump_picks,
-																 & m_jump_collide_tris,
-																 sizes);
-
-		text_tree.add_line(i ? "box1" : "box2", result);
-	}
-#endif // #if 0
 
 	if (m_jump_picks.size() < 1)
 		return;
