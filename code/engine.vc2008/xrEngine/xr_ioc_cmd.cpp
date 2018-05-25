@@ -283,12 +283,12 @@ public:
 };
 class CCC_VidMode : public CCC_Token
 {
-	u32		_dummy;
+	u32		_dummy, _w, _h, _deltaBase;
 public :
 					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
 	virtual void	Execute(LPCSTR args)
 	{
-		u32 _w, _h;
+	
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
 		if(cnt==2)
 		{
@@ -304,7 +304,6 @@ public :
 
 	virtual BOOL isWideScreen ()
 	{
-		u32 _w, _h, _deltaBase;
 
 		psCurrentVidMode[0] = _w;
 		psCurrentVidMode[1] = _h;
