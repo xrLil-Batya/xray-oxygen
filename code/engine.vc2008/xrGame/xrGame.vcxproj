@@ -1727,7 +1727,12 @@
     <ClCompile Include="moving_bones_snd_player.cpp" />
     <ClCompile Include="PHCollisionDamageReceiver.cpp" />
     <ClCompile Include="PHCommander.cpp" />
-    <ClCompile Include="PHDebug.cpp" />
+    <ClCompile Include="PHDebug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="PHDestroyable.cpp" />
     <ClCompile Include="PHDestroyableNotificate.cpp" />
     <ClCompile Include="PHMovementControl.cpp" />
@@ -1827,8 +1832,14 @@
     <ClCompile Include="smart_cover.cpp" />
     <ClCompile Include="smart_cover_detail.cpp" />
     <ClCompile Include="smart_cover_object.cpp" />
-    <ClCompile Include="ai_debug_variables.cpp" />
-    <ClCompile Include="dbg_draw_frustum.cpp" />
+    <ClCompile Include="ai_debug_variables.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="dbg_draw_frustum.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="debug_text_tree.cpp" />
     <ClCompile Include="ef_primary.cpp" />
     <ClCompile Include="ef_pattern.cpp" />
