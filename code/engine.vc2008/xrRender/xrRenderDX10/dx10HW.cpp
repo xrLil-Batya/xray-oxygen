@@ -60,7 +60,7 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	// TODO: DX10: Create appropriate initialization
 
 	// General - select adapter and device
-	BOOL  bWindowed			= !psDeviceFlags.is(rsFullscreen);
+	BOOL  bWindowed			= !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	m_DriverType = Caps.bForceGPU_REF ? D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE;
 
@@ -206,7 +206,7 @@ void CHW::Reset(HWND hwnd)
 {
 	DXGI_SWAP_CHAIN_DESC &cd = m_ChainDesc;
 
-	bool bWindowed = !psDeviceFlags.is(rsFullscreen);
+	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	cd.Windowed = bWindowed;
 
@@ -281,11 +281,16 @@ DXGI_RATIONAL CHW::selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 
 	res.Numerator = 60;
 	res.Denominator = 1;
-
+	
 	float	CurrentFreq = 60.0f;
 
 	if (psDeviceFlags.is(rsRefresh60hz))	
 	{
+		return res;
+	}
+	else if (psDeviceFlags.is(rsRefresh120hz))
+	{
+		res.Numerator = 120;
 		return res;
 	}
 	else
