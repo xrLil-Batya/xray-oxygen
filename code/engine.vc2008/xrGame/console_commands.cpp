@@ -127,13 +127,6 @@ public:
 	virtual void Execute(LPCSTR args) {
 		if (!g_pGameLevel) return;
 
-		//#ifndef	DEBUG
-		if (GameID() != eGameIDSingle)
-		{
-			Msg("For this game type entity-spawning is disabled.");
-			return;
-		};
-		//#endif
 
 		if (!pSettings->section_exist(args))
 		{
@@ -153,6 +146,33 @@ public:
 	}
 };
 // g_spawn 
+
+class CCC_Spawn_to_inventory : public IConsole_Command {
+public:
+	CCC_Spawn_to_inventory(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR args) {
+		if (!g_pGameLevel)
+		{
+			Log("Error: No game level!");
+			return;
+		}
+
+		if (!pSettings->section_exist(args))
+		{
+			Msg("! Section [%s] isn`t exist...", args);
+			return;
+		}
+
+		char	Name[128];	Name[0] = 0;
+		sscanf(args, "%s", Name);
+
+		Level().spawn_item(Name, Actor()->Position(), false, Actor()->ID());
+	}
+	virtual void	Info(TInfo& I)
+	{
+		strcpy(I, "name,team,squad,group");
+	}
+};
 
 class CCC_Giveinfo : public IConsole_Command {
 public:
@@ -1749,6 +1769,7 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
+	CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
 	CMD1(CCC_Giveinfo, "g_info");
 	CMD1(CCC_Disinfo, "d_info");
 
