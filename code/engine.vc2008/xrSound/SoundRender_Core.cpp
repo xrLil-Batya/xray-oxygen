@@ -6,8 +6,8 @@
 #include "SoundRender_Source.h"
 #include "SoundRender_Emitter.h"
 
-int psSoundTargets = 32;
-int psSoundCacheSizeMB = 64;
+int psSoundTargets = 256;
+int psSoundCacheSizeMB = 512;
 Flags32	psSoundFlags = { ss_Hardware | ss_EFX };
 float psSoundOcclusionScale = 0.5f;
 float psSoundCull = 0.01f;
