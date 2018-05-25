@@ -19,10 +19,6 @@ CEngine::~CEngine()
 {
 }
 
-#ifdef DEBUG
-extern void msCreate (LPCSTR name);
-#endif
-
 ENGINE_API void CEngine::Initialize(void)
 {
 	// Bind PSGP
@@ -30,10 +26,6 @@ ENGINE_API void CEngine::Initialize(void)
 
 	// Other stuff
 	Engine.Sheduler.Initialize();
-	// 
-#ifdef DEBUG
-	msCreate("game");
-#endif
 }
 
 #include "..\xrCore\threadpool\ttapi.h"
