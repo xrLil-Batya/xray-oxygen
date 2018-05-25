@@ -100,10 +100,10 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
     cameras[eacFirstEye]->Load("actor_firsteye_cam");
 
-	cameras[eacLookAt] = xr_new<CCameraLook2>(this);
+	cameras[eacLookAt] = xr_new<CCameraLook2>(this, CCameraBase::flKeepPitch);
     cameras[eacLookAt]->Load("actor_look_cam_psp");
  
-    cameras[eacFreeLook] = xr_new<CCameraLook>(this);
+    cameras[eacFreeLook] = xr_new<CCameraLook>(this, CCameraBase::flKeepPitch);
     cameras[eacFreeLook]->Load("actor_free_cam");
 
     cam_active = eacFirstEye;
