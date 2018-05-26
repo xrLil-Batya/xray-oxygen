@@ -342,10 +342,23 @@ CRenderTarget::CRenderTarget()
 				rt_Accumulator_temp.create(r2_RT_accum_temp, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 			}
 		}
+
 		// Mrmnwar SunShaft Screen Space
-		rt_SunShaftsMask.create(r2_RT_SunShaftsMask, w, h, D3DFMT_A8R8G8B8);
-		rt_SunShaftsMaskSmoothed.create(r2_RT_SunShaftsMaskSmoothed, w, h, D3DFMT_A8R8G8B8);
-		rt_SunShaftsPass0.create(r2_RT_SunShaftsPass0, w, h, D3DFMT_A8R8G8B8);
+        if (RImplementation.o.sunshaft_mrmnwar)
+        {
+            rt_SunShaftsMask.create(r2_RT_SunShaftsMask, w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsMaskSmoothed.create(r2_RT_SunShaftsMaskSmoothed, w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsPass0.create(r2_RT_SunShaftsPass0, w, h, D3DFMT_A8R8G8B8);
+            s_SunShafts.create(b_sunshafts, "r2\\SunShafts");
+        }
+
+        // RT - KD Screen space sunshafts
+        if (RImplementation.o.sunshaft_screenspace)
+        {
+            rt_sunshafts_0.create(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
+            rt_sunshafts_1.create(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
+            s_ogse_sunshafts.create(b_ogse_sunshafts, "r2\\sunshafts");
+        }
 
 		// generic(LDR) RTs
 		rt_Generic_0.create(r2_RT_generic0, w, h, D3DFMT_A8R8G8B8, 1);
@@ -358,18 +371,11 @@ CRenderTarget::CRenderTarget()
 			rt_Generic_0_r.create(r2_RT_generic0_r, w, h, D3DFMT_A8R8G8B8, SampleCount);
 			rt_Generic_1_r.create(r2_RT_generic1_r, w, h, D3DFMT_A8R8G8B8, SampleCount);
 		}
-		// RT - KD
-		rt_sunshafts_0.create(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
-		rt_sunshafts_1.create(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
 
 		//	temp: for higher quality blends
 		if (RImplementation.o.advancedpp)
 			rt_Generic_2.create(r2_RT_generic2, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 	}
-
-	// SUNSHAFTS
-	s_SunShafts.create(b_sunshafts, "r2\\SunShafts");
-	s_ogse_sunshafts.create(b_ogse_sunshafts, "r2\\sunshafts");
 
 	// OCCLUSION
 	s_occq.create(b_occq, "r2\\occq");

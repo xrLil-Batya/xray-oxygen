@@ -287,7 +287,7 @@
             <text color= "yellow" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_shafts_mode</text>
         </cap_r2_sun_shafts_mode>
         <list_r2_sun_shafts_mode x="180" y="0" width="235" height="20" list_length="3" always_show_scroll="0">
-            <options_item entry="r2_sunshafts_mode" group="mm_opt_video"/>
+            <options_item entry="r2_sunshafts_mode" group="mm_opt_video" depend="restart"/>
             <list_font color= "yellow" font="letterica16"/>
             <text_color>
 	            <e color= "yellow"/>

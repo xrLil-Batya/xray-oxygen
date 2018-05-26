@@ -228,9 +228,9 @@ void	CRenderTarget::phase_combine	()
 	}
 	else
 	{
-        if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_SCREEN_SPACE)
+        if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
             phase_ogse_sunshafts();
-		else if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_MANOWAR_SSSS)
+        else if (RImplementation.o.sunshaft_mrmnwar && ps_r_sun_shafts > 0)
             phase_SunShafts();
 
 		phase_rain_drops();

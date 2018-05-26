@@ -215,6 +215,10 @@ void					CRender::create					()
 	o.dx10_msaa			= !!ps_r3_msaa;
 	o.dx10_msaa_samples = (1 << ps_r3_msaa);
 
+    //subshafts options
+    o.sunshaft_mrmnwar      = ps_sunshafts_mode == R2SS_MANOWAR_SSSS;
+    o.sunshaft_screenspace  = ps_sunshafts_mode == R2SS_SCREEN_SPACE;
+
 	o.dx10_msaa_opt		= ps_r2_ls_flags.test(R3FLAG_MSAA_OPT);
 	o.dx10_msaa_opt		= o.dx10_msaa_opt && o.dx10_msaa && ( HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1 )
 			|| o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0);

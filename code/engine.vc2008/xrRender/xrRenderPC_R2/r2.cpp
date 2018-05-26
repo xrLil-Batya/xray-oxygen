@@ -134,6 +134,10 @@ void					CRender::create					()
 		Msg				("* HWDST/PCF supported and used");
 	}
 
+    //subshafts options
+    o.sunshaft_mrmnwar      = ps_sunshafts_mode == R2SS_MANOWAR_SSSS;
+    o.sunshaft_screenspace  = ps_sunshafts_mode == R2SS_SCREEN_SPACE;
+
 	o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 

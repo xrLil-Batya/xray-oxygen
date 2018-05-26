@@ -16,6 +16,8 @@
 #include "debug_output.h"
 #endif
 
+XRPHYSICS_API bool	IsCyliderContact(const dContact& c);
+
 class IPhysicsShellHolder;
 
 class CObjectContactCallback

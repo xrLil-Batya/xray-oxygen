@@ -453,11 +453,14 @@ void CObjectList::dump_list(Objects& v, LPCSTR reason)
 bool CObjectList::dump_all_objects()
 { 
 #ifdef DEBUG
-	dump_list(destroy_queue,"destroy_queue");
-	dump_list(objects_active,"objects_active");
-	dump_list(objects_sleeping,"objects_sleeping");
-	dump_list(m_crows[0],"m_crows[0]");
-	dump_list(m_crows[1],"m_crows[1]");
+    if (strstr(Core.Params, "-dump_list"))
+    {
+	    dump_list(destroy_queue,"destroy_queue");
+	    dump_list(objects_active,"objects_active");
+	    dump_list(objects_sleeping,"objects_sleeping");
+	    dump_list(m_crows[0],"m_crows[0]");
+	    dump_list(m_crows[1],"m_crows[1]");
+    }
 #endif
 	return false;
 }

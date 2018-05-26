@@ -1,7 +1,8 @@
 #include	"stdafx.h"
 #include	"extendedgeom.h"
 #include	"dcylinder/dcylinder.h"
-bool	IsCyliderContact(const dContact& c)
+
+XRPHYSICS_API bool	IsCyliderContact(const dContact& c)
 {
 	int geomClass = -1;
 	if (dGeomGetBody(c.geom.g1))
