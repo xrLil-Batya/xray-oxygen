@@ -6,7 +6,7 @@
 #include "VMLua.h"
 #include "luaopen.hpp"
 
-CVMLua* SCRIPT_API LVM = new CVMLua();
+CVMLua* LVM = new CVMLua();
 
 CVMLua::CVMLua()
 {
