@@ -302,6 +302,7 @@
     <ClCompile Include="lua_studio\lua_studio.cpp" />
     <ClCompile Include="lua_traceback.cpp" />
     <ClCompile Include="mslotutils.cpp" />
+    <ClCompile Include="VMLua.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\adopt_policy.hpp" />
@@ -484,6 +485,7 @@
     <ClInclude Include="lua_studio\script_debugger_messages.h" />
     <ClInclude Include="lua_traceback.hpp" />
     <ClInclude Include="mslotutils.hpp" />
+    <ClInclude Include="VMLua.h" />
     <ClInclude Include="xrScripts.h" />
   </ItemGroup>
   <ItemGroup>
