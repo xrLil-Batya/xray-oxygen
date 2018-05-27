@@ -22,7 +22,6 @@ static bool inited = false;
 static DWORD refCounter = 0;
 
 void* g_heap;
-size_t g_heap_size = CHUNK_SIZE * CHUNK_COUNT;
 char g_heapMap[CHUNK_COUNT + 1];
 char* g_firstFreeChunk;
 char* find_free(int size);
@@ -49,6 +48,9 @@ LPVOID possibleAddressesTable[] =
     0xFF000000,
 };
 
+
+char StaticBuffer[CHUNK_SIZE * CHUNK_COUNT];
+
 BOOL XR_INIT()
 {
 	if (!inited)
@@ -59,6 +61,7 @@ BOOL XR_INIT()
 
         //g_heap = xr_malloc_C(size)
 
+#if 0
         for (int i = 0; i < (sizeof(possibleAddressesTable) / sizeof(LPVOID)); ++i)
         {
             if (g_heap != NULL)
@@ -72,10 +75,15 @@ BOOL XR_INIT()
             if (g_heap < (LPVOID)0x00000000FFFFFFFFu) break;
         }
 
+
         if (g_heap > (LPVOID)0x00000000FFFFFFFFu)
         {
             DebugBreak();
         }
+#else
+        g_heap = StaticBuffer;
+        ZeroMemory(g_heap, CHUNK_SIZE * CHUNK_COUNT);
+#endif
 
         if (g_heap == NULL) return FALSE;
 		for (unsigned i = 0; i < CHUNK_COUNT; i++)
@@ -100,10 +108,10 @@ BOOL XR_INIT()
 
 void XR_DESTROYPOOL()
 {
-    if (--refCounter == 0)
-    {
-        VirtualFree(g_heap, 0, MEM_RELEASE);
-    }
+//     if (--refCounter == 0)
+//     {
+//         VirtualFree(g_heap, 0, MEM_RELEASE);
+//     }
 }
 
 void* XR_MMAP(size_t size)
