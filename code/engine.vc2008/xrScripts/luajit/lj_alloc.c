@@ -28,6 +28,9 @@
 #include "lj_arch.h"
 #include "lj_alloc.h"
 
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+
 #ifdef _M_X64
 #include "xr_pool.h"
 #endif
@@ -75,9 +78,9 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-static void INIT_MMAP(void)
+static BOOL INIT_MMAP(void)
 {
-  XR_INIT();
+  return XR_INIT();
 }
 
 /* Win64 32 bit MMAP via NtAllocateVirtualMemory. */
@@ -950,7 +953,7 @@ void *lj_alloc_create(void)
 {
   size_t tsize = DEFAULT_GRANULARITY;
   char *tbase;
-  INIT_MMAP();
+  if (!INIT_MMAP()) return NULL;
   tbase = (char *)(CALL_MMAP(tsize));
   if (tbase != CMFAIL) {
     size_t msize = pad_request(sizeof(struct malloc_state));

@@ -1,7 +1,6 @@
 // Author:	Abramcumner
 // Modifer: ForserX, Giperion
 
-#include "xr_pool.h"
 #include "lj_def.h"
 #include "lj_arch.h"
 #include "../../xrCore/xrMemory_C.h"
@@ -9,6 +8,8 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
+
+#include "xr_pool.h"
 
 #define MAX_SIZE_T		(~(size_t)0)
 #define MFAIL			((void *)(MAX_SIZE_T))
@@ -18,6 +19,7 @@
 
 #include <oxy\cboolean.h>
 static bool inited = false;
+static DWORD refCounter = 0;
 
 void* g_heap;
 size_t g_heap_size = CHUNK_SIZE * CHUNK_COUNT;
@@ -30,7 +32,7 @@ static char buf[100];
 void dump_map(void* ptr, size_t size, char c);
 #endif
 
-void XR_INIT()
+BOOL XR_INIT()
 {
 	if (!inited)
 	{
@@ -40,6 +42,7 @@ void XR_INIT()
 
         //g_heap = xr_malloc_C(size);
         g_heap =  VirtualAlloc((LPVOID)0xFF0000, g_heap_size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+        if (g_heap == NULL) return FALSE;
 		for (unsigned i = 0; i < CHUNK_COUNT; i++)
 		{
 			g_heapMap[i] = 'x';
@@ -54,12 +57,18 @@ void XR_INIT()
 #endif
 		inited = true;
 	}
+
+    ++refCounter;
+    return TRUE;
 }
 
 
 void XR_DESTROYPOOL()
 {
-    VirtualFree(g_heap, 0, MEM_RELEASE);
+    if (--refCounter == 0)
+    {
+        VirtualFree(g_heap, 0, MEM_RELEASE);
+    }
 }
 
 void* XR_MMAP(size_t size)
