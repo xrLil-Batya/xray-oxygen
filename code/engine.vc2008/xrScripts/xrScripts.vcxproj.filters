@@ -372,11 +372,11 @@
     <ClCompile Include="lmodule\lfs.c">
       <Filter>Lua\LuaEtc\LFS</Filter>
     </ClCompile>
-    <ClCompile Include="luajit\xr_pool.c">
-      <Filter>Lua\LuaJIT</Filter>
-    </ClCompile>
     <ClCompile Include="lua_traceback.cpp">
       <Filter>Lua\LuaEtc\Traceback</Filter>
+    </ClCompile>
+    <ClCompile Include="luajit\xr_pool.c">
+      <Filter>Lua\LuaJIT</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

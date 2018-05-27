@@ -1,16 +1,14 @@
 // Author:	Abramcumner
-// Modifer: ForserX
+// Modifer: ForserX, Giperion
 
 #include "xr_pool.h"
 #include "lj_def.h"
 #include "lj_arch.h"
+#include "../../xrCore/xrMemory_C.h"
 #include "../../FrayBuildConfig.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
-typedef long (*PNTAVM)(HANDLE handle, void **addr, ULONG zbits, size_t *size, ULONG alloctype, ULONG prot);
-extern PNTAVM ntavm;
 /* Number of top bits of the lower 32 bits of an address that must be zero.
 ** Apparently 0 gives us full 64 bit addresses and 1 gives us the lower 2GB.
 */
@@ -41,9 +39,11 @@ void XR_INIT()
 	{
 		g_heap = NULL;
 		size_t size = CHUNK_SIZE * CHUNK_COUNT;
-		long st = ntavm(INVALID_HANDLE_VALUE, &g_heap, NTAVM_ZEROBITS, &size,
-			MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+// 		long st = ntavm(INVALID_HANDLE_VALUE, &g_heap, NTAVM_ZEROBITS, &size,
+// 			MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
+        //g_heap = xr_malloc_C(size);
+        g_heap =  VirtualAlloc(0xFF0000, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 		for (unsigned i = 0; i < CHUNK_COUNT; i++)
 		{
 			g_heapMap[i] = 'x';

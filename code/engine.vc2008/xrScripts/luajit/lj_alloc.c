@@ -23,9 +23,6 @@
 #define lj_alloc_c
 
 /* To get the mremap prototype. Must be defined before any system includes. */
-#if defined(__linux__) && !defined(_GNU_SOURCE)
-#define _GNU_SOURCE
-#endif
 
 #include "lj_def.h"
 #include "lj_arch.h"
@@ -75,17 +72,8 @@
 
 #define IS_DIRECT_BIT		(SIZE_T_ONE)
 
-#if LJ_TARGET_WINDOWS
-
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-
-#if LJ_64
-
-/* Undocumented, but hey, that's what we all love so much about Windows. */
-typedef long (*PNTAVM)(HANDLE handle, void **addr, ULONG zbits,
-		       size_t *size, ULONG alloctype, ULONG prot);
-PNTAVM ntavm;
 
 /* Number of top bits of the lower 32 bits of an address that must be zero.
 ** Apparently 0 gives us full 64 bit addresses and 1 gives us the lower 2GB.
@@ -94,47 +82,22 @@ PNTAVM ntavm;
 
 static void INIT_MMAP(void)
 {
-  ntavm = (PNTAVM)GetProcAddress(GetModuleHandleA("ntdll.dll"),
-				 "NtAllocateVirtualMemory");
-
-#ifdef _M_X64
   XR_INIT();
-#endif
 }
 
 /* Win64 32 bit MMAP via NtAllocateVirtualMemory. */
 static LJ_AINLINE void *CALL_MMAP(size_t size)
 {
   DWORD olderr = GetLastError();
-#ifdef _M_X64
   void* ptr = XR_MMAP(size);
-  return ptr;
-#else
-  void *ptr = nullptr;
-  long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size,
-		  MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-  return st == 0 ? ptr : MFAIL;
-#endif
   SetLastError(olderr);
-
-#ifdef _M_X64
   return ptr;
-#else
-  return st == 0 ? ptr : MFAIL;
-#endif
 }
 
 /* For direct MMAP, use MEM_TOP_DOWN to minimize interference */
 static LJ_AINLINE void *DIRECT_MMAP(size_t size)
 {
 	DWORD olderr = GetLastError();
-#ifndef _M_X64
-	void *ptr = NULL;
-	long st = ntavm(INVALID_HANDLE_VALUE, &ptr, NTAVM_ZEROBITS, &size, MEM_RESERVE|MEM_COMMIT|MEM_TOP_DOWN, PAGE_READWRITE);
-	SetLastError(olderr);
-	return st == 0 ? ptr : MFAIL;
-}
-#else
 	void* ptr = XR_MMAP(size);
 	SetLastError(olderr);
 	return ptr;
@@ -148,191 +111,7 @@ static LJ_AINLINE int CALL_MUNMAP(void *_ptr, size_t size)
 	SetLastError(olderr);
 	return 0;
 }
-#endif
-#else
 
-#define INIT_MMAP()		((void)0)
-
-/* Win32 MMAP via VirtualAlloc */
-static LJ_AINLINE void *CALL_MMAP(size_t size)
-{
-  DWORD olderr = GetLastError();
-  void *ptr = VirtualAlloc(0, size, MEM_RESERVE|MEM_COMMIT, PAGE_READWRITE);
-  SetLastError(olderr);
-  return ptr ? ptr : MFAIL;
-}
-
-/* For direct MMAP, use MEM_TOP_DOWN to minimize interference */
-static LJ_AINLINE void *DIRECT_MMAP(size_t size)
-{
-  DWORD olderr = GetLastError();
-  void *ptr = VirtualAlloc(0, size, MEM_RESERVE|MEM_COMMIT|MEM_TOP_DOWN,
-			   PAGE_READWRITE);
-  SetLastError(olderr);
-  return ptr ? ptr : MFAIL;
-}
-#endif
-#ifndef _M_X64
-/* This function supports releasing coalesed segments */
-static LJ_AINLINE int CALL_MUNMAP(void *ptr, size_t size)
-{
-  DWORD olderr = GetLastError();
-  MEMORY_BASIC_INFORMATION minfo;
-  char *cptr = (char *)ptr;
-  while (size) {
-    if (VirtualQuery(cptr, &minfo, sizeof(minfo)) == 0)
-      return -1;
-    if (minfo.BaseAddress != cptr || minfo.AllocationBase != cptr ||
-	minfo.State != MEM_COMMIT || minfo.RegionSize > size)
-      return -1;
-    if (VirtualFree(cptr, 0, MEM_RELEASE) == 0)
-      return -1;
-    cptr += minfo.RegionSize;
-    size -= minfo.RegionSize;
-  }
-  SetLastError(olderr);
-  return 0;
-}
-#endif
-#else
-
-#include <errno.h>
-#include <sys/mman.h>
-
-#define MMAP_PROT		(PROT_READ|PROT_WRITE)
-#if !defined(MAP_ANONYMOUS) && defined(MAP_ANON)
-#define MAP_ANONYMOUS		MAP_ANON
-#endif
-#define MMAP_FLAGS		(MAP_PRIVATE|MAP_ANONYMOUS)
-
-#if LJ_64
-/* 64 bit mode needs special support for allocating memory in the lower 2GB. */
-
-#if defined(MAP_32BIT)
-
-#if defined(__sun__)
-#define MMAP_REGION_START	((uintptr_t)0x1000)
-#else
-/* Actually this only gives us max. 1GB in current Linux kernels. */
-#define MMAP_REGION_START	((uintptr_t)0)
-#endif
-
-static LJ_AINLINE void *CALL_MMAP(size_t size)
-{
-  int olderr = errno;
-  void *ptr = mmap((void *)MMAP_REGION_START, size, MMAP_PROT, MAP_32BIT|MMAP_FLAGS, -1, 0);
-  errno = olderr;
-  return ptr;
-}
-
-#elif LJ_TARGET_OSX || LJ_TARGET_PS4 || defined(__FreeBSD__) || defined(__FreeBSD_kernel__) || defined(__NetBSD__) || defined(__OpenBSD__) || defined(__DragonFly__) || defined(__sun__)
-
-/* OSX and FreeBSD mmap() use a naive first-fit linear search.
-** That's perfect for us. Except that -pagezero_size must be set for OSX,
-** otherwise the lower 4GB are blocked. And the 32GB RLIMIT_DATA needs
-** to be reduced to 250MB on FreeBSD.
-*/
-#if LJ_TARGET_OSX || defined(__DragonFly__)
-#define MMAP_REGION_START	((uintptr_t)0x10000)
-#elif LJ_TARGET_PS4
-#define MMAP_REGION_START	((uintptr_t)0x4000)
-#else
-#define MMAP_REGION_START	((uintptr_t)0x10000000)
-#endif
-#define MMAP_REGION_END		((uintptr_t)0x80000000)
-
-#if (defined(__FreeBSD__) || defined(__FreeBSD_kernel__)) && !LJ_TARGET_PS4
-#include <sys/resource.h>
-#endif
-
-static LJ_AINLINE void *CALL_MMAP(size_t size)
-{
-  int olderr = errno;
-  /* Hint for next allocation. Doesn't need to be thread-safe. */
-  static uintptr_t alloc_hint = MMAP_REGION_START;
-  int retry = 0;
-#if (defined(__FreeBSD__) || defined(__FreeBSD_kernel__)) && !LJ_TARGET_PS4
-  static int rlimit_modified = 0;
-  if (LJ_UNLIKELY(rlimit_modified == 0)) {
-    struct rlimit rlim;
-    rlim.rlim_cur = rlim.rlim_max = MMAP_REGION_START;
-    setrlimit(RLIMIT_DATA, &rlim);  /* Ignore result. May fail below. */
-    rlimit_modified = 1;
-  }
-#endif
-  for (;;) {
-    void *p = mmap((void *)alloc_hint, size, MMAP_PROT, MMAP_FLAGS, -1, 0);
-    if ((uintptr_t)p >= MMAP_REGION_START &&
-	(uintptr_t)p + size < MMAP_REGION_END) {
-      alloc_hint = (uintptr_t)p + size;
-      errno = olderr;
-      return p;
-    }
-    if (p != CMFAIL) munmap(p, size);
-#if defined(__sun__) || defined(__DragonFly__)
-    alloc_hint += 0x1000000;  /* Need near-exhaustive linear scan. */
-    if (alloc_hint + size < MMAP_REGION_END) continue;
-#endif
-    if (retry) break;
-    retry = 1;
-    alloc_hint = MMAP_REGION_START;
-  }
-  errno = olderr;
-  return CMFAIL;
-}
-
-#else
-
-#error "NYI: need an equivalent of MAP_32BIT for this 64 bit OS"
-
-#endif
-
-#else
-
-/* 32 bit mode is easy. */
-static LJ_AINLINE void *CALL_MMAP(size_t size)
-{
-  int olderr = errno;
-  void *ptr = mmap(NULL, size, MMAP_PROT, MMAP_FLAGS, -1, 0);
-  errno = olderr;
-  return ptr;
-}
-
-#endif
-
-#define INIT_MMAP()		((void)0)
-#define DIRECT_MMAP(s)		CALL_MMAP(s)
-
-static LJ_AINLINE int CALL_MUNMAP(void *ptr, size_t size)
-{
-  int olderr = errno;
-  int ret = munmap(ptr, size);
-  errno = olderr;
-  return ret;
-}
-
-#if LJ_TARGET_LINUX
-/* Need to define _GNU_SOURCE to get the mremap prototype. */
-static LJ_AINLINE void *CALL_MREMAP_(void *ptr, size_t osz, size_t nsz,
-				     int flags)
-{
-  int olderr = errno;
-  ptr = mremap(ptr, osz, nsz, flags);
-  errno = olderr;
-  return ptr;
-}
-
-#define CALL_MREMAP(addr, osz, nsz, mv) CALL_MREMAP_((addr), (osz), (nsz), (mv))
-#define CALL_MREMAP_NOMOVE	0
-#define CALL_MREMAP_MAYMOVE	1
-#if LJ_64
-#define CALL_MREMAP_MV		CALL_MREMAP_NOMOVE
-#else
-#define CALL_MREMAP_MV		CALL_MREMAP_MAYMOVE
-#endif
-#endif
-
-#endif
 
 #ifndef CALL_MREMAP
 #define CALL_MREMAP(addr, osz, nsz, mv) ((void)osz, MFAIL)
