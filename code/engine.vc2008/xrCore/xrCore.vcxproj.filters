@@ -521,6 +521,9 @@
     <ClInclude Include="threadpool\ttapi.h">
       <Filter>OS</Filter>
     </ClInclude>
+    <ClInclude Include="xrMemory_C.h">
+      <Filter>Memory manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="xrCore.rc">

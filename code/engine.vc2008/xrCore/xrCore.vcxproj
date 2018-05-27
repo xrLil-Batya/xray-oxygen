@@ -383,6 +383,7 @@
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="lzo_compressor.h" />
+    <ClInclude Include="xrMemory_C.h" />
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="SPPInfo.h" />
