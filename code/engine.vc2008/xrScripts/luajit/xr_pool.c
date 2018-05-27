@@ -9,10 +9,6 @@
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
-/* Number of top bits of the lower 32 bits of an address that must be zero.
-** Apparently 0 gives us full 64 bit addresses and 1 gives us the lower 2GB.
-*/
-#define NTAVM_ZEROBITS		1
 
 #define MAX_SIZE_T		(~(size_t)0)
 #define MFAIL			((void *)(MAX_SIZE_T))
@@ -24,6 +20,7 @@
 static bool inited = false;
 
 void* g_heap;
+size_t g_heap_size = CHUNK_SIZE * CHUNK_COUNT;
 char g_heapMap[CHUNK_COUNT + 1];
 char* g_firstFreeChunk;
 char* find_free(int size);
@@ -38,12 +35,11 @@ void XR_INIT()
 	if (!inited)
 	{
 		g_heap = NULL;
-		size_t size = CHUNK_SIZE * CHUNK_COUNT;
 // 		long st = ntavm(INVALID_HANDLE_VALUE, &g_heap, NTAVM_ZEROBITS, &size,
 // 			MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 
         //g_heap = xr_malloc_C(size);
-        g_heap =  VirtualAlloc(0xFF0000, size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+        g_heap =  VirtualAlloc((LPVOID)0xFF0000, g_heap_size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
 		for (unsigned i = 0; i < CHUNK_COUNT; i++)
 		{
 			g_heapMap[i] = 'x';
@@ -58,6 +54,12 @@ void XR_INIT()
 #endif
 		inited = true;
 	}
+}
+
+
+void XR_DESTROYPOOL()
+{
+    VirtualFree(g_heap, 0, MEM_RELEASE);
 }
 
 void* XR_MMAP(size_t size)

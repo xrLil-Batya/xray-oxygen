@@ -75,11 +75,6 @@
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-/* Number of top bits of the lower 32 bits of an address that must be zero.
-** Apparently 0 gives us full 64 bit addresses and 1 gives us the lower 2GB.
-*/
-#define NTAVM_ZEROBITS		1
-
 static void INIT_MMAP(void)
 {
   XR_INIT();
@@ -985,6 +980,7 @@ void lj_alloc_destroy(void *msp)
     sp = sp->next;
     CALL_MUNMAP(base, size);
   }
+  XR_DESTROYPOOL();
 }
 
 static LJ_NOINLINE void *lj_alloc_malloc(void *msp, size_t nsize)

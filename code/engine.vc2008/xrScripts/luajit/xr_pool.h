@@ -10,6 +10,7 @@
 
 
 void XR_INIT();
+void XR_DESTROYPOOL();
 void* XR_MMAP(size_t size);
 void XR_DESTROY(void* p, size_t size);
 
