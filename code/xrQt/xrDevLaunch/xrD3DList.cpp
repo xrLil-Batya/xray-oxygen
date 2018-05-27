@@ -3,7 +3,7 @@
 * X-RAY OXYGEN 1.7 PROJECT
 *
 * Edited: 26 March, 2018
-* RenderList.cpp - Checking to available render
+* xrD3DList.cpp - Checking to available render
 * CreateRendererList()
 *************************************************/
 #include "xrMain.h"
@@ -24,6 +24,7 @@
 #include <iostream>
 ///////////////////////////////////////////////
 DLL_API xr_vector<xr_token> vid_quality_token;
+#define _RELEASE(x) { if(x) { (x)->Release(); (x)=NULL; } }
 
 constexpr const char* r2_name = "xrRender_R2";
 constexpr const char* r3_name = "xrRender_R3";
@@ -36,7 +37,7 @@ bool SupportsAdvancedRendering()
 
 	IDirect3D9* pD3D = Direct3DCreate9(D3D_SDK_VERSION);
 	pD3D->GetDeviceCaps(D3DADAPTER_DEFAULT, D3DDEVTYPE_HAL, &caps);
-	pD3D->Release();
+	_RELEASE(pD3D);
 
 	u16 ps_ver_major = u16(u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul)) >> 8);
 
@@ -52,10 +53,8 @@ bool SupportsDX10Rendering()
 
 	HRESULT hr = m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
 
-	pFactory->Release();
-	pFactory = nullptr;
-	m_pAdapter->Release();
-	m_pAdapter = nullptr;
+	_RELEASE(pFactory);
+	_RELEASE(m_pAdapter);
 
 	return SUCCEEDED(hr);
 }
@@ -116,10 +115,10 @@ bool SupportsDX11Rendering()
 		&pSwapChain, &pd3dDevice,
 		&FeatureLevel, &pContext);
 
-	//#TODO: graphics pointers must delete by Release();
-	if (pContext)	pContext->Release();
-	if (pSwapChain) pSwapChain->Release();
-	if (pd3dDevice) pd3dDevice->Release();
+	
+	_RELEASE(pContext);
+	_RELEASE(pSwapChain);
+	_RELEASE(pd3dDevice);
 
 	DestroyWindow(hWnd);
 
