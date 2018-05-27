@@ -89,19 +89,13 @@ void LuaLog(LPCSTR caMessage)
 {
 	Lua::LuaOut	(Lua::eLuaMessageTypeMessage,"%s",caMessage);
 }
-void LuaError(lua_State* L)
-{
-	const char *error = lua_tostring(L, -1);
-	Debug.fatal(DEBUG_INFO, "LUA error: %s", error ? error : get_traceback(L, 1));
-}
 
 // export
 #include "../../xrScripts/VMLua.h"
 void	CResourceManager::LS_Load			()
 {
 	function		(LVM->LSVM(), "log",	LuaLog);
-
-	module			(LVM->LSVM())
+	module(LVM->LSVM())
 	[
 		class_<adopt_dx10options>("_dx10options")
 		.def("dx10_msaa_alphatest_atoc",		&adopt_dx10options::_dx10_msaa_alphatest_atoc),
