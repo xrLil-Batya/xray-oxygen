@@ -31,61 +31,15 @@ static char buf[100];
 void dump_map(void* ptr, size_t size, char c);
 #endif
 
-LPVOID possibleAddressesTable[] =
-{
-    0x11000000,
-    0x22000000,
-    0x33000000,
-    0x44000000,
-    0x55000000,
-    0x66000000,
-    0x77000000,
-    0xAA000000,
-    0xBB000000,
-    0xCC000000,
-    0xDD000000,
-    0xEE000000,
-    0xFF000000,
-};
-
-
 char StaticBuffer[CHUNK_SIZE * CHUNK_COUNT];
 
 BOOL XR_INIT()
 {
 	if (!inited)
 	{
-		g_heap = NULL;
-// 		long st = ntavm(INVALID_HANDLE_VALUE, &g_heap, NTAVM_ZEROBITS, &size,
-// 			MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-
-        //g_heap = xr_malloc_C(size)
-
-#if 0
-        for (int i = 0; i < (sizeof(possibleAddressesTable) / sizeof(LPVOID)); ++i)
-        {
-            if (g_heap != NULL)
-            {
-                VirtualFree(g_heap, 0, MEM_RELEASE);
-                g_heap = NULL;
-            }
-
-            g_heap = VirtualAlloc(possibleAddressesTable[i], g_heap_size, MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
-
-            if (g_heap < (LPVOID)0x00000000FFFFFFFFu) break;
-        }
-
-
-        if (g_heap > (LPVOID)0x00000000FFFFFFFFu)
-        {
-            DebugBreak();
-        }
-#else
         g_heap = StaticBuffer;
         ZeroMemory(g_heap, CHUNK_SIZE * CHUNK_COUNT);
-#endif
 
-        if (g_heap == NULL) return FALSE;
 		for (unsigned i = 0; i < CHUNK_COUNT; i++)
 		{
 			g_heapMap[i] = 'x';
@@ -108,6 +62,7 @@ BOOL XR_INIT()
 
 void XR_DESTROYPOOL()
 {
+    --refCounter;
 //     if (--refCounter == 0)
 //     {
 //         VirtualFree(g_heap, 0, MEM_RELEASE);
