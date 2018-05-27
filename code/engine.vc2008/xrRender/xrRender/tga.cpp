@@ -11,7 +11,7 @@ void BMPdesc::makebmp( IWriter& fs )
 	R_ASSERT(height);
 
 	BMPHeader hdr;
-    std::memset(&hdr,0,sizeof(hdr));
+    memset(&hdr, 0, sizeof(hdr));
 	hdr.bmpImgType			= 2;
 	hdr.bmpImgSpec.bmpXSize = u16(width);
 	hdr.bmpImgSpec.bmpYSize = u16(height);
