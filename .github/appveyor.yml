@@ -6,7 +6,7 @@ image: Visual Studio 2017
 configuration: Release
 platform: x64
 build:
-  project: code/xrEngine_appveyour.sln
+  project: code/xrEngine.sln
   publish_wap: true
   parallel: true
   verbosity: quiet
