@@ -165,20 +165,15 @@ bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
 		return false;
 
 	CUIDragDropListEx*	old_owner		= itm->OwnerList();
-	CUIDragDropListEx*	new_owner		= NULL;
+    CUIDragDropListEx*	new_owner       = NULL;
 	EDDListType			old_owner_type	= GetListType(old_owner);
 	
 	if(old_owner_type==iQuickSlot)
 		return false;
 
-	if(b_use_cursor_pos)
+	if(!b_use_cursor_pos)
 	{
-		new_owner						= CUIDragDropListEx::m_drag_item->BackList();
-		VERIFY							(new_owner==m_pTradeActorList);
-	}
-	else
-	{
-		new_owner						= m_pTradeActorList;
+		new_owner						    = m_pTradeActorList;
 		bool result							= (old_owner_type!=iActorBag) ? m_pActorInvOwner->inventory().Ruck(iitem) : true;
 		VERIFY								(result);
 		CUICellItem* i						= old_owner->RemoveItem(itm, (old_owner==new_owner) );
@@ -193,6 +188,8 @@ bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
 		
 		return true;
 	}
+
+    return false;
 }
 
 bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)

@@ -70,7 +70,6 @@ const shared_str GetDateAsString(ALife::_TIME_ID time, EDatePrecision datePrec, 
 const shared_str GetNumDateAsString(ALife::_TIME_ID time, EDatePrecision datePrec, char dateSeparator = ',');
 const shared_str GetTimeAsString(ALife::_TIME_ID time, ETimePrecision timePrec, char timeSeparator = ':', bool full_mode = true);
 const shared_str GetTimeAndDateAsString(ALife::_TIME_ID time);
-const shared_str Get_GameTimeAndDate_AsString();
 
 LPCSTR GetTimePeriodAsString	(LPSTR _buff, u32 buff_sz, ALife::_TIME_ID _from, ALife::_TIME_ID _to);
 // Отобразить вес, который несет (*pInvOwner)

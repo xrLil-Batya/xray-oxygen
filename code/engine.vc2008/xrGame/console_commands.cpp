@@ -1765,7 +1765,9 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ScriptCommand, "run_string");
 	CMD3(CCC_Mask, "rs_show_cursor_pos", &psActorFlags, AF_SHOW_CURPOS);
 	CMD3(CCC_Mask, "g_hardcore_mode", &psActorFlags, AF_HARDCORE);
-	CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
+    CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
+    CMD3(CCC_Mask, "rs_clearskyinterface", &psActorFlags, AF_CLEARSKYINTERFACE);
+    CMD3(CCC_Mask, "rs_showdate", &psActorFlags, AF_SHOWDATE);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
 	CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");

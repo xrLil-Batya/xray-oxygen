@@ -4824,9 +4824,6 @@
     <ClInclude Include="EffectorShot.h">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="EffectorShotX.h">
-      <Filter>Core\Client\Effectors\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="EffectorZoomInertion.h">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClInclude>
@@ -7461,9 +7458,6 @@
       <Filter>Core\Client\Effectors\Postprocess</Filter>
     </ClCompile>
     <ClCompile Include="EffectorShot.cpp">
-      <Filter>Core\Client\Effectors\Weapon</Filter>
-    </ClCompile>
-    <ClCompile Include="EffectorShotX.cpp">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClCompile>
     <ClCompile Include="EffectorZoomInertion.cpp">
