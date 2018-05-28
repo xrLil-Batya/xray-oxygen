@@ -22,10 +22,16 @@ CUIZoneMap::CUIZoneMap()
 :m_current_map_idx(u8(-1)),
 visible(true)
 {	
+    m_clock_wnd = nullptr;
+    m_date_wnd = nullptr;
+    m_activeMap = nullptr;
 }
 
 CUIZoneMap::~CUIZoneMap()
 {
+    xr_delete(m_activeMap);
+    xr_delete(m_clock_wnd);
+    xr_delete(m_date_wnd);
 }
 
 void CUIZoneMap::Init()
@@ -38,12 +44,18 @@ void CUIZoneMap::Init()
 	xml_init.InitWindow				(uiXml, "minimap:level_frame",	0, &m_clipFrame);
 	xml_init.InitStatic				(uiXml, "minimap:center",		0, &m_center);
 	
-	m_clock_wnd						= UIHelper::CreateStatic(uiXml, "minimap:clock_wnd", &m_background);
-	m_date_wnd						= UIHelper::CreateStatic(uiXml, "minimap:date_wnd", &m_background);
+	m_clock_wnd	= UIHelper::CreateStatic(uiXml, "minimap:clock_wnd", &m_background);
+    m_clock_wnd->SetAutoDelete(false);
+
+    if (psActorFlags.test(AF_SHOWDATE))
+    {
+	    m_date_wnd = UIHelper::CreateStatic(uiXml, "minimap:date_wnd", &m_background);
+        m_date_wnd->SetAutoDelete(false);
+    }
 
 	m_activeMap						= xr_new<CUIMiniMap>();
 	m_clipFrame.AttachChild			(m_activeMap);
-	m_activeMap->SetAutoDelete		(true);
+	m_activeMap->SetAutoDelete		(false);
 
 	m_activeMap->EnableHeading		(true);  
 	xml_init.InitStatic				(uiXml, "minimap:compass", 0, &m_compass);
@@ -56,21 +68,20 @@ void CUIZoneMap::Init()
 
 	Fvector2 sz_k				= m_clipFrame.GetWndSize();
 	Fvector2 sz					= sz_k;
-	{
-		float k = UI().get_current_kx();
 
-		sz.y					*= UI_BASE_HEIGHT*k;
-		sz.x					= sz.y / k;
+    float k = UI().get_current_kx();
 
-		m_clipFrame.SetWndSize	(sz);
-		
-		Fvector2 p				= m_clipFrame.GetWndPos();
-		p.mul					(UI_BASE_HEIGHT);
-		m_clipFrame.SetWndPos	(p);
-		
-		m_background.SetHeight	(m_background.GetHeight() * UI_BASE_HEIGHT);
-		m_background.SetWidth	(m_background.GetHeight() * k);
-	}
+    sz.y *= UI_BASE_HEIGHT * k;
+    sz.x = sz.y / k;
+
+    m_clipFrame.SetWndSize(sz);
+
+    Fvector2 p = m_clipFrame.GetWndPos();
+    p.mul(UI_BASE_HEIGHT);
+    m_clipFrame.SetWndPos(p);
+
+    m_background.SetHeight(m_background.GetHeight() * UI_BASE_HEIGHT);
+    m_background.SetWidth(m_background.GetHeight() * k);
 
 	Fvector2				map_center;
 	m_clipFrame.GetWndRect().getcenter(map_center);
@@ -89,29 +100,30 @@ void CUIZoneMap::Init()
 	rel_pos.mul				(m_background.GetWndSize());
 	m_clock_wnd->SetWndPos	(rel_pos);
 
-	rel_pos					= m_date_wnd->GetWndPos();
-	rel_pos.mul				(m_background.GetWndSize());
-	m_date_wnd->SetWndPos	(rel_pos);
+    if (psActorFlags.test(AF_SHOWDATE))
+    {
+	    rel_pos					= m_date_wnd->GetWndPos();
+	    rel_pos.mul				(m_background.GetWndSize());
+	    m_date_wnd->SetWndPos	(rel_pos);
+    }
 
-		xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
-		m_background.AttachChild	(&m_Counter);
-		xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
-		m_Counter.AttachChild		(&m_Counter_text);
+	xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
+	m_background.AttachChild	(&m_Counter);
+	xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
+	m_Counter.AttachChild		(&m_Counter_text);
 
-		rel_pos						= m_Counter.GetWndPos();
-		rel_pos.mul					(m_background.GetWndSize());
-		m_Counter.SetWndPos			(rel_pos);
+	rel_pos						= m_Counter.GetWndPos();
+	rel_pos.mul					(m_background.GetWndSize());
+	m_Counter.SetWndPos			(rel_pos);
 }
 
 void CUIZoneMap::Render			()
 {
-	if ( !visible )
-		return;
-if(!psActorFlags.test(AF_HARDCORE))
-{
-	m_clipFrame.Draw	();
-	m_background.Draw	();
-}
+    if (visible && !psActorFlags.test(AF_HARDCORE))
+    {
+        m_clipFrame.Draw();
+        m_background.Draw();
+    }
 }
 
 void CUIZoneMap::Update()
@@ -141,7 +153,10 @@ void CUIZoneMap::Update()
 
 	m_clock_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameTimeAsString( InventoryUtilities::etpTimeToMinutes ).c_str() );
 
-	m_date_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameNumDateAsString( InventoryUtilities::edpDateToDay ).c_str() );
+    if (psActorFlags.test(AF_SHOWDATE))
+    {
+	    m_date_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameNumDateAsString( InventoryUtilities::edpDateToDay ).c_str() );
+    }
 }
 
 void CUIZoneMap::SetHeading		(float angle)

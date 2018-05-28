@@ -19,6 +19,8 @@ enum{
 		AF_CAR_INFO			=(1<<16),
 		AF_HARDCORE			=(1<<17),
 		AF_WORKINPROGRESS	=(1<<18),
+        AF_CLEARSKYINTERFACE=(1<<19),
+        AF_SHOWDATE         =(1<<20),
 };
 
 extern Flags32	psActorFlags;

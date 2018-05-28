@@ -251,11 +251,6 @@ void CUIHudStatesWnd::UpdateActiveItemInfo( CActor* actor )
 		m_ui_weapon_ap_ammo->SetText	( m_item_info.ap_ammo.c_str() );
 		
 		m_ui_grenade->SetText	( m_item_info.grenade.c_str() );
-
-		CWeaponMagazinedWGrenade* wpn = smart_cast<CWeaponMagazinedWGrenade*>(item);
-		if(wpn && wpn->m_bGrenadeMode)
-		{
-		}
 	}
 	else
 	{
