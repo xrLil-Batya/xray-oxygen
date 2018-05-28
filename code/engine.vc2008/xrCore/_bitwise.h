@@ -76,36 +76,15 @@ IC	u64	btwCount1(u64 v)
 	return btwCount1(u32(v&u32(-1)))+btwCount1(u32(v>>u64(32)));
 }
 
-//#VERTVER: Thanks for KRodinn
-#ifdef __AVX__
- ICF int iFloor(float x) 
- {
-	__m256 float_cast = _mm256_broadcast_ss(&x);
-	__m256 floor = _mm256_floor_ps(float_cast);
-	__m256i int_cast = _mm256_cvttps_epi32(floor);
-	return _mm256_cvtsi256_si32(int_cast);
- }
-#else
 ICF int iFloor (float x) 
 {
     return (int)floor(x);
 }
-#endif
 
-#ifdef __AVX__
-ICF int iCeil(float x)
-{
-	__m256 float_cast = _mm256_broadcast_ss(&x);
-	__m256 ceil = _mm256_ceil_ps(float_cast);
-	__m256i int_cast = _mm256_cvttps_epi32(ceil);
-	return _mm256_cvtsi256_si32(int_cast);
-}
-#else
 ICF int iCeil (float x)
 {
     return (int)ceil(x);	
 }
-#endif
 
 ICF int iFloorFPU(float x) 
 {
