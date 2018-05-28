@@ -25,28 +25,10 @@
 
 const char* alife_section = "alife";
 
-extern void destroy_lua_wpn_params	();
-
-void restart_all				()
-{
-	if (strstr(Core.Params,"-keep_lua"))
-		return;
-
-	destroy_lua_wpn_params		();
-	MainMenu()->DestroyInternal	(true);
-	xr_delete					(g_object_factory);
-	//ai().script_engine().init	();
-
-#ifdef DEBUG
-	ai().moving_objects().clear	();
-#endif // DEBUG
-}
-
 CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
 	CALifeUpdateManager			(server, alife_section),
 	CALifeSimulatorBase			(server, alife_section)
 {
-	restart_all					();
 	ai().set_alife				(this);
 
 	typedef IGame_Persistent::params params;
