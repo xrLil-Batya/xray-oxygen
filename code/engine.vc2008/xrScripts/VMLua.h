@@ -31,4 +31,4 @@ private:
 	void			OpenLib();
 };
 
-extern SCRIPT_API CVMLua* LVM;
+extern SCRIPT_API CVMLua LVM;

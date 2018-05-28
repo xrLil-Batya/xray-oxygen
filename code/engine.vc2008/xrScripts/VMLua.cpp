@@ -1,6 +1,6 @@
 // Singleton LuaVM 
 // ForserX 27.05.2018 for xrOxygen
-#include <lua.hpp>
+#include "luajit/lua.hpp"
 #include <luabind/luabind.hpp>
 
 #include "../xrCore/xrCore.h"
@@ -25,7 +25,7 @@ static void* __cdecl luabind_allocator(luabind::memory_allocation_function_param
 	return		(Memory.mem_realloc(non_const_pointer, size));
 }
 
-CVMLua* LVM = new CVMLua();
+SCRIPT_API CVMLua LVM;
 
 CVMLua::CVMLua()
 {
@@ -35,7 +35,7 @@ CVMLua::CVMLua()
 	luabind::allocator_parameter = 0;
 
 	R_ASSERT2(m_virtual_machine, "Cannot initialize script virtual machine!");
-	this->OpenLib();
+	OpenLib();
 }
 
 CVMLua::~CVMLua()

@@ -9,7 +9,7 @@
 
 IC lua_State *CScriptStorage::lua()
 {
-	return LVM->LSVM();
+	return LVM.LSVM();
 }
 
 IC void CScriptStorage::current_thread(CScriptThread *thread)
