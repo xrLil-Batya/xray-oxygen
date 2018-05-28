@@ -1308,7 +1308,6 @@
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="zone_effector.h" />
     <ClInclude Include="EffectorShot.h" />
-    <ClInclude Include="EffectorShotX.h" />
     <ClInclude Include="EffectorZoomInertion.h" />
     <ClInclude Include="GamePersistent.h" />
     <ClInclude Include="Level.h" />
@@ -2237,7 +2236,6 @@
     <ClCompile Include="PostprocessAnimator.cpp" />
     <ClCompile Include="zone_effector.cpp" />
     <ClCompile Include="EffectorShot.cpp" />
-    <ClCompile Include="EffectorShotX.cpp" />
     <ClCompile Include="EffectorZoomInertion.cpp" />
     <ClCompile Include="GamePersistent.cpp" />
     <ClCompile Include="Level.cpp" />

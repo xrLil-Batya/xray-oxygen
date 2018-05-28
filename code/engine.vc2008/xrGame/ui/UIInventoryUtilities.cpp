@@ -262,18 +262,13 @@ const shared_str InventoryUtilities::GetTimeAndDateAsString(ALife::_TIME_ID time
 	return buf;
 }
 
-const shared_str InventoryUtilities::Get_GameTimeAndDate_AsString()
-{
-	return GetTimeAndDateAsString( Level().GetGameTime() );
-}
-
 //////////////////////////////////////////////////////////////////////////
 
 const shared_str InventoryUtilities::GetTimeAsString(ALife::_TIME_ID time, ETimePrecision timePrec, char timeSeparator, bool full_mode )
 {
 	string32 bufTime;
 
-    std::memset(bufTime, 0, sizeof(bufTime));
+    memset(bufTime, 0, sizeof(bufTime));
 
 	u32 year = 0, month = 0, day = 0, hours = 0, mins = 0, secs = 0, milisecs = 0;
 
@@ -335,13 +330,13 @@ const shared_str InventoryUtilities::GetDateAsString(ALife::_TIME_ID date, EDate
 	switch (datePrec)
 	{
 	case edpDateToYear:
-		xr_sprintf(bufDate, "%04i", year);
+		xr_sprintf(bufDate, "%04u", year);
 		break;
 	case edpDateToMonth:
-		xr_sprintf(bufDate, "%s %04i", month_str, year);
+		xr_sprintf(bufDate, "%s %04u", month_str, year);
 		break;
 	case edpDateToDay:
-		xr_sprintf(bufDate, "%d %s %04i", day, month_str, year);
+		xr_sprintf(bufDate, "%.2u %s %04u", day, month_str, year);
 		break;
 	default:
 		R_ASSERT(!"Unknown type of date precision");

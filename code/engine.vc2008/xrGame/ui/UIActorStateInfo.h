@@ -28,9 +28,7 @@ private:
 	{
 		stt_health = 0,
 		stt_bleeding,
-		stt_blood,
 		stt_radiation,
-		stt_rad,
 		stt_fire,
 		stt_radia,
 		stt_acid,

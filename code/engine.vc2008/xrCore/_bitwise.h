@@ -1,5 +1,6 @@
 #pragma once
 #include <cmath>
+#include <immintrin.h>
 // float values defines
 #define fdSGN	0x080000000		// mask for sign bit
 #define fdMABS  0x07FFFFFFF		// mask for absolute value (~sgn)
@@ -75,8 +76,7 @@ IC	u64	btwCount1(u64 v)
 	return btwCount1(u32(v&u32(-1)))+btwCount1(u32(v>>u64(32)));
 }
 
-
-ICF int iFloor (float x)
+ICF int iFloor (float x) 
 {
     return (int)floor(x);
 }
@@ -84,6 +84,24 @@ ICF int iFloor (float x)
 ICF int iCeil (float x)
 {
     return (int)ceil(x);	
+}
+
+ICF int iFloorFPU(float x) 
+{
+	int a = *(const int*)(&x);
+	int exponent = (127 + 31) - ((a >> 23) & 0xFF);
+	int r = (((u32)(a) << 8) | (1U << 31)) >> exponent;
+	exponent += 31 - 127;
+	{
+		int imask = (!(((((1 << (exponent))) - 1) >> 8)&a));
+		exponent -= (31 - 127) + 32;
+		exponent >>= 31;
+		a >>= 31;
+		r -= (imask&a);
+		r &= exponent;
+		r ^= a;
+		}
+	return r;
 }
 
 // Validity checks
