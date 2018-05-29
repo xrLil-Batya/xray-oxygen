@@ -4,7 +4,7 @@
 #include "shared\common.h"
 #include "shared\wmark.h"
 
-uniform float4 screen_res;
+//uniform float4 screen_res;
 uniform float4 c_sunshafts;		// x - exposure, y - density, z - sample size, w - radius
 Texture2D s_sun_shafts; // current sunshafts texture
 

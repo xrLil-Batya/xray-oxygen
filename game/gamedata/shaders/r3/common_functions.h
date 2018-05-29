@@ -43,9 +43,15 @@ float calc_fogging( float4 w_pos )
 	return dot(w_pos,fog_plane);         
 }
 
+#ifdef SM_5_0
+//Swartz27: I can't remember if all DX11 cards support doubles.
+//if not revert this.
+double2 unpack_tc_base( float2 tc, float du, float dv )
+#else
 float2 unpack_tc_base( float2 tc, float du, float dv )
+#endif
 {
-		return (tc.xy + float2	(du,dv))*(32.f/32768.f); //!Increase from 32bit to 64bit floating point
+		return (tc.xy + float2	(du,dv))*(32.f/32768.f); 
 }
 
 float3 calc_sun_r1( float3 norm_w )    
@@ -65,7 +71,11 @@ float3 calc_model_lq_lighting( float3 norm_w )
 
 float3 	unpack_normal( float3 v )	{ return 2*v-1; }
 float3 	unpack_bx2( float3 v )	{ return 2*v-1; }
-float3 	unpack_bx4( float3 v )	{ return 4*v-2; } //!reduce the amount of stretching from 4*v-2 and increase precision
+#ifdef SM_5_0
+double3 	unpack_bx4( float3 v )	{ return 4*v-2; } //Swartz27: Add "precise" to front if using DirectXCompiler (the open source one)
+#else
+float3 	unpack_bx4( float3 v )	{ return 4*v-2; } 
+#endif
 float2 	unpack_tc_lmap( float2 tc )	{ return tc*(1.f/32768.f);	} // [-1  .. +1 ] 
 float4	unpack_color( float4 c ) { return c.bgra; }
 float4	unpack_D3DCOLOR( float4 c ) { return c.bgra; }
@@ -122,51 +132,22 @@ float3	calc_reflection( float3 pos_w, float3 norm_w )
 #define USABLE_BIT_15               uint(0x80000000)
 #define MUST_BE_SET                 uint(0x40000000)   // This flag *must* be stored in the floating-point representation of the bit flag to store
 
-/*
-float2 gbuf_pack_normal( float3 norm )
-{
-   float2 res;
-
-   res = 0.5 * ( norm.xy + float2( 1, 1 ) ) ;
-   res.x *= ( norm.z < 0 ? -1.0 : 1.0 );
-
-   return res;
-}
-
-float3 gbuf_unpack_normal( float2 norm )
-{
-   float3 res;
-
-   res.xy = ( 2.0 * abs( norm ) ) - float2(1,1);
-
-   res.z = ( norm.x < 0 ? -1.0 : 1.0 ) * sqrt( abs( 1 - res.x * res.x - res.y * res.y ) );
-
-   return res;
-}
-*/
 
 // Holger Gruen AMD - I change normal packing and unpacking to make sure N.z is accessible without ALU cost
 // this help the HDAO compute shader to run more efficiently
-float2 gbuf_pack_normal( float3 norm )
+// Swartz to all: you removed HDAO, so this is better :)
+float2 gbuf_pack_normal( float3 n )
 {
-   float2 res;
-
-   res.x  = norm.z;
-   res.y  = 0.5f * ( norm.x + 1.0f ) ;
-   res.y *= ( norm.y < 0.0f ? -1.0f : 1.0f );
-
-   return res;
+	return (float2(atan2(n.y, n.x) / PI, n.z) + 1.0)*0.5;
 }
 
-float3 gbuf_unpack_normal( float2 norm )
+float3 gbuf_unpack_normal( float2 enc )
 {
-   float3 res;
-
-   res.z  = norm.x;
-   res.x  = ( 2.0f * abs( norm.y ) ) - 1.0f;
-   res.y = ( norm.y < 0 ? -1.0 : 1.0 ) * sqrt( abs( 1 - res.x * res.x - res.z * res.z ) );
-
-   return res;
+	float2 ang = enc * 2 - 1;
+	float2 scth;
+	sincos(ang.x * PI, scth.x, scth.y);
+	float2 scphi = float2(sqrt(1.0 - ang.y*ang.y), ang.y);
+	return float3(scth.y*scphi.x, scth.x*scphi.x, scphi.y);
 }
 
 float gbuf_pack_hemi_mtl( float hemi, float mtl )
@@ -234,7 +215,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
 	gbd.N = float3(0,0,0);
 
 #ifndef USE_MSAA
-	float4 P	= s_position.Sample( smp_nofilter, tc );
+	float4 P	= s_position.Load( int3( pos2d, 0 ) );
 #else
 	float4 P	= s_position.Load( int3( pos2d, 0 ), iSample );
 #endif
@@ -259,7 +240,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, float2 pos2d, int iSample 
    gbd.hemi = gbuf_unpack_hemi( P.w );
 
 #ifndef USE_MSAA
-   float4	C	= s_diffuse.Sample( smp_nofilter, tc );
+   float4	C	= s_diffuse.Load( int3( pos2d, 0 ) );
 #else
    float4	C	= s_diffuse.Load( int3( pos2d, 0 ), iSample );
 #endif
@@ -295,7 +276,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, uint iSample )
 	gbuffer_data gbd;
 
 #ifndef USE_MSAA
-	float4 P	= s_position.Sample( smp_nofilter, tc );
+	float4 P	= s_position.Load( int3( tc * pos_decompression_params2.xy, 0 ) );
 #else
    float4 P	= s_position.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
 #endif
@@ -304,7 +285,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, uint iSample )
 	gbd.mtl		= P.w;
 
 #ifndef USE_MSAA
-	float4 N	= s_normal.Sample( smp_nofilter, tc );
+	float4 N	= s_normal.Load( int3( tc * pos_decompression_params2.xy, 0 ) );
 #else
 	float4 N	= s_normal.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
 #endif
@@ -313,7 +294,7 @@ gbuffer_data gbuffer_load_data( float2 tc : TEXCOORD, uint iSample )
 	gbd.hemi	= N.w;
 
 #ifndef USE_MSAA
-	float4	C	= s_diffuse.Sample(  smp_nofilter, tc );
+	float4	C	= s_diffuse.Load( int3( tc * pos_decompression_params2.xy, 0 ) );
 #else
 	float4	C	= s_diffuse.Load( int3( tc * pos_decompression_params2.xy, 0 ), iSample );
 #endif

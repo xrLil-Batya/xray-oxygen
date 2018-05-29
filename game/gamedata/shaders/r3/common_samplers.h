@@ -44,9 +44,11 @@ sampler 	smp_material;
 #ifdef USE_MSAA
 Texture2DMS<float4, MSAA_SAMPLES>	s_position;	//	smp_nofilter or Load
 Texture2DMS<float4, MSAA_SAMPLES>	s_normal;	//	smp_nofilter or Load
+Texture2DMS<float4, MSAA_SAMPLES>	s_depth;	
 #else
 Texture2D	s_position;	//	smp_nofilter or Load
 Texture2D	s_normal;	//	smp_nofilter or Load
+Texture2D s_depth;
 #endif
 Texture2D	s_lmap;		// 2D/???cube projector lightmap
 Texture3D	s_material;	//	smp_material

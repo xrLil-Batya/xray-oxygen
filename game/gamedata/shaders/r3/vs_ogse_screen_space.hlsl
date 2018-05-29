@@ -1,7 +1,7 @@
 // By qweasdd
 #include "common.h"
 
-uniform float4 screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
+//uniform float4 screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
 
 //////////////////////////////////////////////////////////////////////////////////////////
 // Vertex
