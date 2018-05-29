@@ -1162,13 +1162,13 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
    sh_name[len]='0'+char(o.dx10_sm4_1); ++len;
 
    R_ASSERT						( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 );
-   if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
+   //if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
    {
 	   defines[def_it].Name		=	"SM_5";
 	   defines[def_it].Definition	=	"1";
 	   def_it++;
    }
-	sh_name[len]='0'+char(HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0); ++len;
+	sh_name[len]='0'; ++len;
 
    if (o.dx10_minmax_sm)
    {
@@ -1271,34 +1271,24 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	{
 		if ('v'==pTarget[0])
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_0 )
-				pTarget = "vs_4_0";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1 )
-				pTarget = "vs_4_1";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
+			if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "vs_5_0";
+			else if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_12_1 )
+				pTarget = "vs_5_1";
 		}
 		else if ('p'==pTarget[0])
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_0 )
-				pTarget = "ps_4_0";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1 )
-				pTarget = "ps_4_1";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
+			if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "ps_5_0";
+			else if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_12_1 )
+				pTarget = "ps_5_1";
 		}
 		else if ('g'==pTarget[0])		
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_0 )
-				pTarget = "gs_4_0";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1 )
-				pTarget = "gs_4_1";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "gs_5_0";
 		}
 		else if ('c'==pTarget[0])		
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "cs_5_0";
 		}
 	}
