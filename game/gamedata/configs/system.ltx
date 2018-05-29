@@ -64,7 +64,7 @@ ang_speed3  = 2.0
 
 
 [info_portions]
-;список xml файлов, содержащих info_portions
+;list of xml files containing info_portions
 files = info_portions, info_zaton, info_jupiter, info_pripyat, info_upgrades
 
 [dialogs]
@@ -75,10 +75,10 @@ files = dialogs, dialogs_zaton, dialogs_jupiter, dialogs_pripyat
 files = encyclopedia_infos
 
 [profiles]
-;список xml файлов, содержащих профили сталкеров
+;list of xml files containing stalker profiles
 files =  npc_profile
 
-;список xml файлов, содержащих описание конкретных сталкеров
+;list of xml files containing description of specific stalkers
 specific_characters_files = character_desc_general, character_desc_zaton, character_desc_pripyat, character_desc_jupiter, character_desc_underpass
 
 
@@ -156,37 +156,37 @@ max_count     = 5
 
 [bloody_marks]
 wallmarks     = wm\wm_blood_1,wm\wm_blood_2,wm\wm_blood_3
-dist        = 2.0 ;2.4  ;(м) max расстољние отлета крови
-max_size      = 0.4 ;0.3  ;(м)радиус пљтна при хите силой nominal hit по большому объекту (по маленькому *0.5)
-min_size      = 0.06      ;(м)минимальнvй радиус пљтна
-nominal_hit     = 0.5     ;величина номинального хита, при котором разлетаетсљ максимум крови (max_size)
+dist        = 2.0 ;2.4  ;(m) max bleeding distance
+max_size      = 0.4 ;0.3  ;(m) radius of a spot when hit by force of a nominal hit on a large object (on a small *0.5)
+min_size      = 0.06      ;(m) minimum spot radius
+nominal_hit     = 0.5     ;the size of the nominal hit, at which the maximum of blood splashing (max_size)
 
-;капли крови
+;drops of blood
 
 blood_drops     = wm\wm_blood_drop_1,wm\wm_blood_drop_2,wm\wm_blood_drop_3,wm\wm_blood_drop_4
-start_blood_size  = 0.4     ;размер ранv чтоб начала капать кровь
-stop_blood_size   = 0.025     ;размер ранv чтоб кровь остановилась (должно бvть меньше start_blood_size)
+start_blood_size  = 0.4     ;the size of the wound to start dripping blood
+stop_blood_size   = 0.025     ;the size of the wound to stop bleeding (should be less than start_blood_size)
 
 blood_drop_time     = 0.1     ;OBSOLETE
 blood_drop_time_min = 0.3     ;
 blood_drop_time_max = 2.0     ;
-blood_drop_size   = 0.1     ;размер капли (м) крови, котораљ упала
+blood_drop_size   = 0.1     ;the size of the drop (m) of the blood that fell
 
 
 [entity_fire_particles]
 fire_particles = damage_fx\burn_creatures
-start_burn_size = 0.0003    ;размер ожега после которого начать играть партиклv огнљ
-stop_burn_size  = 0.0001    ;размер ожега после которого остановить партиклv
-min_burn_time = 10000   ;минимальное времљ отvгрvша партиклов (даже если рана уже зажила)
+start_burn_size = 0.0003    ;the size of the burn after which start playing particle of fire
+stop_burn_size  = 0.0001    ;the size of the burn after which to stop the particle
+min_burn_time = 10000   ;the minimum playing time for particles (even if the wound has already healed)
 
 [hud_cursor]
-;все размерv в процентах от длинv экрана
-cross_length    = 0.015         ;длина "палочки" прицела
-min_radius      = 0.0         ;минимальнvй радиус прицела (при нулевой дисперсии)
-max_radius      = 1.0         ;максимальнvй радиус
-radius_lerp_speed = 0.08          ;скорость интерполљции положений прицела
-cross_color     = 0.7,0.7,0.7,0.5   ;цвет прицела
-disp_scale      = 0.08          ;масштаб прицела (относительно радиан)
+;all sizes in percent of screen length
+cross_length    = 0.015         ;the length of the "stick" of the sight
+min_radius      = 0.0         ;the minimum radius of the sight (with zero dispersion)
+max_radius      = 1.0         ;maximum radius
+radius_lerp_speed = 0.08          ;interpolation speed of sight positions
+cross_color     = 0.7,0.7,0.7,0.5   ;color of sight
+disp_scale      = 0.08          ;scale of sight (relative to radians)
 
 [hud_hitmark]
 hit_mark_texture    = ui\ui_hud_hit_mark; ui\ui_empty
@@ -355,12 +355,12 @@ $spawn               = "ai\graph point"
 ; Trade
 ;-----------------------------------------------------------------
 [trade]
-;коэффициентv изменениљ ценv при торговле в зависимости от отношениљ к персонажу
-;линейно апроксимируітсљ между значениљ
-buy_price_factor_hostile  = 1   ;коэффициент покупки при goodwill = -100
-buy_price_factor_friendly = 1   ;коэффициент покупки при goodwill = 100
-sell_price_factor_hostile = 1   ;коэффициент покупки при goodwill = -100
-sell_price_factor_friendly  = 1   ;коэффициент покупки при goodwill = 100
+;coefficient of price change in trade, depending on the relationship to the character
+;linearly approximated between the values
+buy_price_factor_hostile  = 1   ;purchase factor at goodwill = -100
+buy_price_factor_friendly = 1   ;purchase factor at goodwill = 100
+sell_price_factor_hostile = 1   ;purchase factor at goodwill = -100
+sell_price_factor_friendly  = 1   ;purchase factor at goodwill = 100
 
 
 
@@ -397,7 +397,7 @@ script_binding  = xr_zones.bind
 object_damage_factor    = 1.2f
 
 ;*****************************************
-; ++=+іLT+і- Lі+=
+; ++=+ВіLT+Ві- LВі+=
 ;*****************************************
 [stalker_names_stalker]
 name_cnt    = 104
@@ -438,7 +438,7 @@ Human             = off                     ; option for ALife Simulator
 cform                       = skeleton                    ; collision class
 class                       = SCRPTOBJ                    ; AI class
 
-;параметрv показvваниљ входљих сообений PDA в главном мені
+;parameters for displaying incoming PDA messages in the main menu
 [maingame_ui]
 pda_msgs_max_show_time = 20000
 info_msgs_max_show_time = 10000
@@ -500,12 +500,12 @@ inv_grid_width      = 2
 inv_grid_height     = 1
 inv_grid_x        = 16
 inv_grid_y        = 12
-attach_angle_offset   = -1.5708,0.1919,3.1416    ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset   = -1.5708,0.1919,3.1416    ;set in radians Angle*PI/180
 attach_position_offset  = 0.075, 0.066, 0.023
 attach_bone_name    = bip01_l_hand
 auto_attach       = false
 
-; рация для правой руки
+; Г°Г Г¶ГЁГї Г¤Г«Гї ГЇГ°Г ГўГ®Г© Г°ГіГЄГЁ
 [hand_radio_r]:identity_immunities
 GroupControlSection   = spawn_group
 discovery_dependency  =
@@ -521,7 +521,7 @@ inv_grid_width      = 2
 inv_grid_height     = 1
 inv_grid_x        = 16
 inv_grid_y        = 12
-attach_angle_offset   = 1.571,0.75,0.0    ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset   = 1.571,0.75,0.0    ;set in radians Angle*PI/180
 attach_position_offset  = 0.015, -0.084, 0.023
 attach_bone_name    = bip01_r_hand
 auto_attach       = false
@@ -648,14 +648,15 @@ shape_edge_color    = 32, 32, 32, 255
 bonce_damage_factor_for_objects = 1.
 
 [pkm_visual_memory]
-min_view_distance       = 1 ;0.4        ; коэффициент, которvй множитсљ на eye_range, в зависимости от угла
-max_view_distance       = 1 ;0.8        ; коэффициент, которvй множитсљ на eye_range, в зависимости от угла
-visibility_threshold    = 50 ;150.0       ; значение, при достижении суммой которого объект считаетсљ видимvм
+min_view_distance       = 1 ;0.4        ;coefficient, which is multiplied by eye_range, depending on the angle
+max_view_distance       = 1 ;0.8        ;coefficient, which is multiplied by eye_range, depending on the angle
+visibility_threshold    = 50 ;150.0       ;value, when the sum reaches which the object is considered visible
 always_visible_distance   = 1 ;0.1
 time_quant          = 0.00001
-decrease_value        = 0.1       ; значение, на которое уменьшаетсљ вес, если объект попал в фрустум, но отсЈксљ по каким-то причинам
+decrease_value        = 0.1       ;the value by which the weight decreases, if the object has got into a frustum, but is ripped apart 
+                                  ;for some reason
 velocity_factor         = 0.5
-luminocity_factor     = 0.5       ; фактор освеениљ (только длљ LктЈра)
+luminocity_factor     = 0.5       ;lighting factor (only for an actor)
 transparency_threshold    = 0.4       ;
 view_fov_deg        = 90
 view_aspect         = 1
