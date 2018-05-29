@@ -1,6 +1,5 @@
 #include "defines.ltx"
 #include "prefetch\prefetch.ltx"
-;#include "weathers\environment.ltx"
 #include "creatures\monsters.ltx"
 #include "creatures\stalkers.ltx"
 #include "weapons\weapons.ltx"
@@ -20,6 +19,7 @@
 #include "models\dynamic_objects.ltx"
 #include "misc\m_online_offline_group.ltx"
 #include "misc\squad_descr.ltx"
+#include "misc\capture_visuals_list.ltx"
 
 #include "misc\effectors.ltx"
 #include "creatures\helicopter.ltx"
@@ -27,30 +27,11 @@
 
 #include "creatures\game_relations.ltx"
 
-#include "mp\mp_actor.ltx"
-#include "mp\team_logo.ltx"
-#include "mp\weapons_mp\ammo_mp.ltx"
-#include "mp\weapons_mp\weapons_mp.ltx"
-#include "mp\weapons_mp\outfit_mp.ltx"
-#include "mp\weapons_mp\items_mp.ltx"
-
-;Game types
-#include "mp\SoundMessages\mp_snd_messages.ltx"
-#include "mp\SoundMessages\ahunt_snd_messages.ltx"
-#include "mp\SoundMessages\cta_snd_messages.ltx"
-#include "mp\SoundMessages\dm_snd_messages.ltx"
-#include "mp\SoundMessages\tdm_snd_messages.ltx"
-#include "mp\private_defines.ltx"
-#include "mp\deathmatch_game.ltx"
-#include "mp\teamdeathmatch_game.ltx"
-#include "mp\artefacthunt_game.ltx"
-#include "mp\capturetheartefact_game.ltx"
-#include "mp\anticheat_active_params.ltx"
-
 #include "evaluation.ltx"
 #include "fonts.ltx"
 
 #include "alife.ltx"
+
 ; SIMULATION
 #include "misc\simulation.ltx"
 
@@ -61,7 +42,6 @@
 #include "extracontent.ltx"
 #include "localization.ltx"
 #include "smart_cover.ltx"
-
 
 [zone_pick_dof]
 near    = -1500.0
@@ -84,7 +64,7 @@ ang_speed3  = 2.0
 
 
 [info_portions]
-;список xml файлов, содержаих info_portions
+;список xml файлов, содержащих info_portions
 files = info_portions, info_zaton, info_jupiter, info_pripyat, info_upgrades
 
 [dialogs]
@@ -95,10 +75,10 @@ files = dialogs, dialogs_zaton, dialogs_jupiter, dialogs_pripyat
 files = encyclopedia_infos
 
 [profiles]
-;список xml файлов, содержаих профили сталкеров и торговцев
+;список xml файлов, содержащих профили сталкеров
 files =  npc_profile
 
-;список xml файлов, содержаих описаниљ конкретнvх сталкеров и торговцев
+;список xml файлов, содержащих описание конкретных сталкеров
 specific_characters_files = character_desc_general, character_desc_zaton, character_desc_pripyat, character_desc_jupiter, character_desc_underpass
 
 
@@ -290,6 +270,7 @@ lim_pitch                = -1.5, 1.5
 lim_yaw                  = -1.0, 1.0
 rot_speed                = 3.14, 3.14, 0
 first_person_zoom		 = false
+
 [actor_free_cam]
 ;----------------
 lim_pitch                = -1.5, 1.5
@@ -297,12 +278,14 @@ lim_yaw                  = 0, 0
 lim_zoom                 = 0.4, 10
 rot_speed                = 3.14, 1.0, 10
 first_person_zoom		 = false
+
 [actor_look_cam]
 lim_pitch                = -0.7, 1
 lim_yaw                  = 0, 0
 lim_zoom                 = 1, 5
 rot_speed                = 3.14, 6.28, 10
 first_person_zoom		 = true
+
 [actor_look_cam_psp]
 lim_pitch                = -0.7, 1
 lim_yaw                  = 0, 0
@@ -318,35 +301,41 @@ lim_pitch                = -0.5, 0.5
 lim_yaw                  = -2.0, 2.0
 rot_speed                = 3.14, 1.0, 0
 first_person_zoom		 = false
+
 [car_firsteye_cam]
 lim_pitch                = -0.5, 0.3
 lim_yaw                  = -2.0, 2.0
 rot_speed                = 3.14, 1.0, 0
 first_person_zoom		 = false
+
 [car_free_cam]
 lim_pitch                = -1, 1.56 ;0, 1.56
 lim_yaw                  = 0, 0 ;0, 0
 lim_zoom                 = 1, 10 ;1, 7
 rot_speed                = 3.14, 1.0, 10 ;3.14, 1.0, 10
 first_person_zoom		 = false
+
 [car_look_cam]
 lim_pitch                = 0, 1.56
 lim_yaw                  = 0  , 0
 lim_zoom                 = 1, 7
 rot_speed                = 25, 1.0, 10
 first_person_zoom		 = true
+
 [heli_free_cam]
 lim_pitch                = -1.5, 1.5
 lim_yaw                  = 0, 0
 lim_zoom                 = 5, 25
 rot_speed                = 3.14, 1.0, 10
 first_person_zoom		 = false
+
 [heli_front_cam]
 ;lim_yaw    = -0.01,0.01
 lim_pitch                = -1.2, 1.2
 lim_yaw                  = -1.5, 1.5
 rot_speed                = 3.14, 1.5, 0
 first_person_zoom		 = false
+
 [heli_look_cam]
 lim_pitch                = 0, 1.56
 lim_yaw                  = 0, 0
@@ -357,7 +346,6 @@ first_person_zoom		 = false
 [interface]
 font_game                = font_game
 font_small               = font_small
-
 
 [graph_point]
 class                = AI_GRAPH
@@ -645,8 +633,6 @@ script_binding      = bind_camp.bind
 shape_transp_color  = 0, 0, 255, 24
 shape_edge_color    = 32, 32, 32, 255
 
-
-
 [anomal_zone]:space_restrictor
 GroupControlSection = spawn_group_zone
 $spawn          = "ai\anomal_zone"
@@ -687,104 +673,3 @@ swing_fast_amp2   = .20;0.15
 swing_fast_rot1   = 5
 swing_fast_rot2   = .5;0.75
 swing_fast_speed  = 0.5;1
-
-[ph_capture_visuals]
-
-;Список объектов которvе можно таскать.
-
-;NPC
-;actors\stalker_bandit\stalker_bandit_1
-;actors\stalker_bandit\stalker_bandit_2
-;actors\stalker_bandit\stalker_bandit_3
-;actors\stalker_bandit\stalker_bandit_3_face_1
-;actors\stalker_bandit\stalker_bandit_3_face_2
-;actors\stalker_bandit\stalker_bandit_3_mask
-;actors\stalker_bandit\stalker_bandit_4
-;actors\stalker_dolg\stalker_dolg_1
-;actors\stalker_dolg\stalker_dolg_2
-;actors\stalker_dolg\stalker_dolg_2_face_1
-;actors\stalker_dolg\stalker_dolg_2_face_2
-;actors\stalker_dolg\stalker_dolg_2_mask
-;actors\stalker_dolg\stalker_dolg_3
-;actors\stalker_dolg\stalker_dolg_4
-;actors\stalker_freedom\stalker_freedom_1
-;actors\stalker_freedom\stalker_freedom_2
-;actors\stalker_freedom\stalker_freedom_2_face_1
-;actors\stalker_freedom\stalker_freedom_2_face_2
-;actors\stalker_freedom\stalker_freedom_2_mask
-;actors\stalker_freedom\stalker_freedom_3
-;actors\stalker_freedom\stalker_freedom_4
-;actors\stalker_hero\stalker_hero_1
-;actors\stalker_hero\stalker_hero_stc_strelok
-;actors\stalker_lesnik\stalker_lesnik_1
-;actors\stalker_merc\stalker_merc_2
-;actors\stalker_merc\stalker_merc_4
-;actors\stalker_monolith\stalker_monolith_1
-;actors\stalker_monolith\stalker_monolith_2
-;actors\stalker_monolith\stalker_monolith_3
-;actors\stalker_monolith\stalker_monolith_4
-;actors\stalker_nebo\stalker_nebo_1
-;actors\stalker_nebo\stalker_nebo_2
-;actors\stalker_nebo\stalker_nebo_2_face_1
-;actors\stalker_nebo\stalker_nebo_2_face_2
-;actors\stalker_nebo\stalker_nebo_2_face_3
-;actors\stalker_nebo\stalker_nebo_2_mask
-;actors\stalker_nebo\stalker_nebo_3
-;actors\stalker_neutral\stalker_neutral_1
-;actors\stalker_neutral\stalker_neutral_2
-;actors\stalker_neutral\stalker_neutral_2_face_1
-;actors\stalker_neutral\stalker_neutral_2_face_2
-;actors\stalker_neutral\stalker_neutral_2_mask
-;actors\stalker_neutral\stalker_neutral_3
-;actors\stalker_neutral\stalker_neutral_4
-;actors\stalker_soldier\stalker_soldier_1
-;actors\stalker_soldier\stalker_soldier_2
-;actors\stalker_soldier\stalker_soldier_2_face_1
-;actors\stalker_soldier\stalker_soldier_3
-;actors\stalker_soldier\stalker_soldier_4
-;actors\stalker_trader\stalker_trader_1
-;actors\stalker_ucheniy\stalker_ucheniy_1
-;actors\stalker_zombied\stalker_zombied_1
-;actors\stalker_zombied\stalker_zombied_2
-;actors\stalker_zombied\stalker_zombied_3
-;actors\stalker_zombied\stalker_zombied_4
-
-;Monsters
-;monsters\controller\controller_1
-;monsters\controller\controller_2
-;monsters\controller\controller_3
-;monsters\controller\controller_4
-;monsters\controller\controller_dead
-;monsters\crow\crow
-;monsters\dog\dog
-;monsters\dog\dog_bulterier
-;monsters\dog\dog_bulterier_dead
-;monsters\dog\dog_dead
-;monsters\dog\dog_red
-;monsters\dog\dog_red_dead
-;monsters\dog\dog_white
-;monsters\dog\dog_white_dead
-;monsters\flesh\flesh
-;monsters\flesh\flesh_dead
-;monsters\flesh\flesh_strong
-;monsters\krovosos\krovosos
-;monsters\krovosos\krovosos_dead
-;monsters\krovosos\krovosos_strong
-;monsters\krovosos\krovosos_strong_xray
-;monsters\krovosos\krovosos_xray
-;monsters\mutant_boar\mutant_boar
-;monsters\mutant_boar\mutant_boar_dead
-;monsters\mutant_boar\mutant_boar_strong
-;monsters\poltergeist\poltergeist
-;monsters\poltergeist\poltergeist_dead
-;monsters\poltergeist\poltergeist_strong
-;monsters\pseudodog\pseudodog
-;monsters\pseudodog\pseudodog_dead
-;monsters\pseudodog\pseudodog_grey
-;monsters\pseudodog\pseudodog_grey_dead
-;monsters\rat\rat_1
-;monsters\snork\snork
-;monsters\snork\snork_dead
-;monsters\tushkano\tushkano
-;monsters\tushkano\tushkano_dead
-
