@@ -629,8 +629,6 @@
     <ClInclude Include="agent_manager_properties_inline.h" />
     <ClInclude Include="alife_simulator.h" />
     <ClInclude Include="..\xrServerEntities\alife_space.h" />
-    <ClInclude Include="alife_interaction_manager.h" />
-    <ClInclude Include="alife_combat_manager.h" />
     <ClInclude Include="alife_simulator_base.h" />
     <ClInclude Include="alife_simulator_base_inline.h" />
     <ClInclude Include="alife_simulator_header.h" />
@@ -1310,7 +1308,6 @@
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="zone_effector.h" />
     <ClInclude Include="EffectorShot.h" />
-    <ClInclude Include="EffectorShotX.h" />
     <ClInclude Include="EffectorZoomInertion.h" />
     <ClInclude Include="GamePersistent.h" />
     <ClInclude Include="Level.h" />
@@ -1521,7 +1518,6 @@
     <ClInclude Include="helicopter.h" />
     <ClInclude Include="DelayedActionFuse.h" />
     <ClInclude Include="InventoryBox.h" />
-    <ClInclude Include="date_time.h" />
     <ClInclude Include="NET_Queue.h" />
     <ClInclude Include="..\xrServerEntities\xrMessages.h" />
     <ClInclude Include="..\xrServerEntities\object_broker.h" />
@@ -1559,23 +1555,12 @@
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate_inline.h" />
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
-    <ClInclude Include="xrServerMapSync.h" />
-    <ClInclude Include="..\xrServerEntities\DrawUtils.h" />
-    <ClInclude Include="..\xrServerEntities\FastDelegate.h" />
-    <ClInclude Include="..\xrServerEntities\ItemListTypes.h" />
-    <ClInclude Include="PropertiesListHelper.h" />
-    <ClInclude Include="..\xrServerEntities\WaveForm.h" />
-    <ClInclude Include="..\xrServerEntities\xrEProps.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="game_base_kill_type.h" />
-    <ClInclude Include="game_base_menu_events.h" />
     <ClInclude Include="..\xrServerEntities\game_base_space.h" />
-    <ClInclude Include="game_cl_single.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="game_sv_event_queue.h" />
     <ClInclude Include="xr_time.h" />
-    <ClInclude Include="game_sv_single.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="..\xrServerEntities\gametype_chooser.h" />
     <ClInclude Include="..\xrServerEntities\PropertiesListTypes.h" />
@@ -1591,7 +1576,6 @@
     <ClInclude Include="..\xrServerEntities\script_value_container.h" />
     <ClInclude Include="..\xrServerEntities\script_value_container_impl.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h" />
-    <ClInclude Include="xrServer_svclient_validation.h" />
     <ClInclude Include="ui_base.h" />
     <ClInclude Include="ui_defs.h" />
     <ClInclude Include="UIDialogHolder.h" />
@@ -1742,7 +1726,12 @@
     <ClCompile Include="moving_bones_snd_player.cpp" />
     <ClCompile Include="PHCollisionDamageReceiver.cpp" />
     <ClCompile Include="PHCommander.cpp" />
-    <ClCompile Include="PHDebug.cpp" />
+    <ClCompile Include="PHDebug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="PHDestroyable.cpp" />
     <ClCompile Include="PHDestroyableNotificate.cpp" />
     <ClCompile Include="PHMovementControl.cpp" />
@@ -1759,39 +1748,24 @@
     <ClCompile Include="physics_game.cpp" />
     <ClCompile Include="physics_world_scripted.cpp" />
     <ClCompile Include="raypick.cpp" />
-    <ClCompile Include="action_base_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_action_wrapper.cpp">
-    </ClCompile>
-    <ClCompile Include="action_planner_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_action_planner_wrapper.cpp">
-    </ClCompile>
-    <ClCompile Include="action_planner_action_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_action_planner_action_wrapper.cpp">
-    </ClCompile>
-    <ClCompile Include="property_storage_script.cpp">
-    </ClCompile>
-    <ClCompile Include="property_evaluator_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_property_evaluator_wrapper.cpp">
-    </ClCompile>
+    <ClCompile Include="action_base_script.cpp" />
+    <ClCompile Include="script_action_wrapper.cpp" />
+    <ClCompile Include="action_planner_script.cpp" />
+    <ClCompile Include="script_action_planner_wrapper.cpp" />
+    <ClCompile Include="action_planner_action_script.cpp" />
+    <ClCompile Include="script_action_planner_action_wrapper.cpp" />
+    <ClCompile Include="property_storage_script.cpp" />
+    <ClCompile Include="property_evaluator_script.cpp" />
+    <ClCompile Include="script_property_evaluator_wrapper.cpp" />
     <ClCompile Include="material_manager.cpp" />
-    <ClCompile Include="memory_manager.cpp">
-    </ClCompile>
-    <ClCompile Include="memory_space_script.cpp">
-    </ClCompile>
+    <ClCompile Include="memory_manager.cpp" />
+    <ClCompile Include="memory_space_script.cpp" />
     <ClCompile Include="item_manager.cpp" />
-    <ClCompile Include="danger_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="danger_manager.cpp" />
     <ClCompile Include="danger_object.cpp" />
-    <ClCompile Include="enemy_manager.cpp">
-    </ClCompile>
-    <ClCompile Include="hit_memory_manager.cpp">
-    </ClCompile>
-    <ClCompile Include="sound_memory_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="enemy_manager.cpp" />
+    <ClCompile Include="hit_memory_manager.cpp" />
+    <ClCompile Include="sound_memory_manager.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Create</PrecompiledHeader>
@@ -1802,32 +1776,26 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp" />
-    <ClCompile Include="visual_memory_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="visual_memory_manager.cpp" />
     <ClCompile Include="visual_memory_params.cpp" />
     <ClCompile Include="vision_client.cpp" />
-    <ClCompile Include="movement_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="movement_manager.cpp" />
     <ClCompile Include="movement_manager_game.cpp" />
     <ClCompile Include="movement_manager_level.cpp" />
-    <ClCompile Include="movement_manager_patrol.cpp">
-    </ClCompile>
+    <ClCompile Include="movement_manager_patrol.cpp" />
     <ClCompile Include="movement_manager_physic.cpp" />
     <ClCompile Include="location_manager.cpp" />
     <ClCompile Include="detail_path_manager.cpp" />
     <ClCompile Include="detail_path_manager_smooth.cpp" />
-    <ClCompile Include="patrol_path_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="patrol_path_manager.cpp" />
     <ClCompile Include="restricted_object.cpp" />
-    <ClCompile Include="object_handler.cpp">
-    </ClCompile>
+    <ClCompile Include="object_handler.cpp" />
     <ClCompile Include="object_handler_planner.cpp" />
     <ClCompile Include="object_handler_planner_missile.cpp" />
     <ClCompile Include="object_handler_planner_weapon.cpp" />
     <ClCompile Include="object_actions.cpp" />
     <ClCompile Include="object_property_evaluators.cpp" />
-    <ClCompile Include="script_world_state_script.cpp">
-    </ClCompile>
+    <ClCompile Include="script_world_state_script.cpp" />
     <ClCompile Include="sight_manager.cpp" />
     <ClCompile Include="sight_manager_target.cpp" />
     <ClCompile Include="sight_action.cpp" />
@@ -1849,44 +1817,36 @@
     <ClCompile Include="moving_objects_static.cpp" />
     <ClCompile Include="moving_object.cpp" />
     <ClCompile Include="obstacles_query.cpp" />
-    <ClCompile Include="doors_door.cpp">
-    </ClCompile>
+    <ClCompile Include="doors_door.cpp" />
     <ClCompile Include="doors_actor.cpp" />
     <ClCompile Include="doors_manager.cpp" />
     <ClCompile Include="cover_manager.cpp" />
-    <ClCompile Include="cover_point_script.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_storage.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_description.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_loophole.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_action.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_transition.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_transition_animation.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_detail.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_object.cpp">
-    </ClCompile>
+    <ClCompile Include="cover_point_script.cpp" />
+    <ClCompile Include="smart_cover_storage.cpp" />
+    <ClCompile Include="smart_cover_description.cpp" />
+    <ClCompile Include="smart_cover_loophole.cpp" />
+    <ClCompile Include="smart_cover_action.cpp" />
+    <ClCompile Include="smart_cover_transition.cpp" />
+    <ClCompile Include="smart_cover_transition_animation.cpp" />
+    <ClCompile Include="smart_cover.cpp" />
+    <ClCompile Include="smart_cover_detail.cpp" />
+    <ClCompile Include="smart_cover_object.cpp" />
     <ClCompile Include="ai_debug_variables.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="dbg_draw_frustum.cpp" />
+    <ClCompile Include="dbg_draw_frustum.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="debug_text_tree.cpp" />
     <ClCompile Include="ef_primary.cpp" />
     <ClCompile Include="ef_pattern.cpp" />
     <ClCompile Include="ef_storage.cpp" />
-    <ClCompile Include="ef_storage_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ef_storage_script.cpp" />
     <ClCompile Include="agent_manager.cpp" />
     <ClCompile Include="agent_corpse_manager.cpp" />
-    <ClCompile Include="agent_enemy_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="agent_enemy_manager.cpp" />
     <ClCompile Include="agent_explosive_manager.cpp" />
     <ClCompile Include="danger_explosive.cpp" />
     <ClCompile Include="agent_location_manager.cpp" />
@@ -1897,14 +1857,10 @@
     <ClCompile Include="agent_memory_manager.cpp" />
     <ClCompile Include="agent_manager_planner.cpp" />
     <ClCompile Include="agent_manager_actions.cpp" />
-    <ClCompile Include="agent_manager_properties.cpp">
-    </ClCompile>
-    <ClCompile Include="alife_simulator.cpp">
-    </ClCompile>
+    <ClCompile Include="agent_manager_properties.cpp" />
+    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_space.cpp" />
-    <ClCompile Include="alife_combat_manager.cpp" />
-    <ClCompile Include="alife_simulator_base.cpp">
-    </ClCompile>
+    <ClCompile Include="alife_simulator_base.cpp" />
     <ClCompile Include="alife_simulator_base2.cpp" />
     <ClCompile Include="alife_simulator_header.cpp" />
     <ClCompile Include="alife_graph_registry.cpp" />
@@ -1928,18 +1884,12 @@
     <ClCompile Include="alife_surge_manager.cpp" />
     <ClCompile Include="alife_switch_manager.cpp" />
     <ClCompile Include="saved_game_wrapper.cpp" />
-    <ClCompile Include="inventory_upgrade_manager.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_upgrade_base.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_upgrade_group.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_upgrade.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_upgrade_root.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_upgrade_property.cpp">
-    </ClCompile>
+    <ClCompile Include="inventory_upgrade_manager.cpp" />
+    <ClCompile Include="inventory_upgrade_base.cpp" />
+    <ClCompile Include="inventory_upgrade_group.cpp" />
+    <ClCompile Include="inventory_upgrade.cpp" />
+    <ClCompile Include="inventory_upgrade_root.cpp" />
+    <ClCompile Include="inventory_upgrade_property.cpp" />
     <ClCompile Include="alife_anomalous_zone.cpp" />
     <ClCompile Include="alife_creature_abstract.cpp" />
     <ClCompile Include="alife_dynamic_object.cpp" />
@@ -1953,28 +1903,22 @@
     <ClCompile Include="alife_monster_movement_manager.cpp" />
     <ClCompile Include="alife_monster_detail_path_manager.cpp" />
     <ClCompile Include="alife_monster_patrol_path_manager.cpp" />
-    <ClCompile Include="alife_monster_patrol_path_manager_script.cpp">
-    </ClCompile>
+    <ClCompile Include="alife_monster_patrol_path_manager_script.cpp" />
     <ClCompile Include="alife_object.cpp" />
     <ClCompile Include="alife_online_offline_group.cpp" />
     <ClCompile Include="alife_online_offline_group_brain.cpp" />
     <ClCompile Include="alife_smart_zone.cpp" />
     <ClCompile Include="alife_trader.cpp" />
     <ClCompile Include="alife_trader_abstract.cpp" />
-    <ClCompile Include="CustomMonster.cpp">
-    </ClCompile>
+    <ClCompile Include="CustomMonster.cpp" />
     <ClCompile Include="CustomMonster_VCPU.cpp" />
-    <ClCompile Include="AI\ai_monsters_misc.cpp">
-    </ClCompile>
-    <ClCompile Include="script_binder.cpp">
-    </ClCompile>
-    <ClCompile Include="script_entity.cpp">
-    </ClCompile>
+    <ClCompile Include="AI\ai_monsters_misc.cpp" />
+    <ClCompile Include="script_binder.cpp" />
+    <ClCompile Include="script_entity.cpp" />
     <ClCompile Include="script_object.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_anim.cpp" />
-    <ClCompile Include="ai\Monsters\BaseMonster\base_monster_debug.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\BaseMonster\base_monster_debug.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_feel.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ShowIncludes>
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ShowIncludes>
@@ -1982,8 +1926,7 @@
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_misc.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_net.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_path.cpp" />
-    <ClCompile Include="ai\Monsters\BaseMonster\base_monster_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\BaseMonster\base_monster_script.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_startup.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_think.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_utils.cpp" />
@@ -1993,8 +1936,7 @@
     <ClCompile Include="ai\Monsters\monster_enemy_manager.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_bones.cpp" />
     <ClCompile Include="ai\Monsters\monster_corpse_memory.cpp" />
-    <ClCompile Include="ai\Monsters\monster_enemy_memory.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\monster_enemy_memory.cpp" />
     <ClCompile Include="ai\Monsters\monster_hit_memory.cpp" />
     <ClCompile Include="ai\Monsters\monster_sound_memory.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_squad.cpp" />
@@ -2045,131 +1987,102 @@
     <ClCompile Include="ai\Monsters\Bloodsucker\bloodsucker.cpp" />
     <ClCompile Include="ai\Monsters\Bloodsucker\bloodsucker_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Bloodsucker\bloodsucker_vampire_effector.cpp" />
-    <ClCompile Include="ai\Monsters\Bloodsucker\bloodsucker_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Bloodsucker\bloodsucker_script.cpp" />
     <ClCompile Include="ai\Monsters\Bloodsucker\bloodsucker_alien.cpp" />
     <ClCompile Include="ai\Monsters\Boar\boar.cpp" />
     <ClCompile Include="ai\Monsters\Boar\boar_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Boar\boar_script.cpp">
-    </ClCompile>
-    <ClCompile Include="AI\Crow\ai_crow.cpp">
-    </ClCompile>
-    <ClCompile Include="ai_crow_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Boar\boar_script.cpp" />
+    <ClCompile Include="AI\Crow\ai_crow.cpp" />
+    <ClCompile Include="ai_crow_script.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Burer\burer_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Burer\burer_script.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_fast_gravi.cpp" />
     <ClCompile Include="ai\Monsters\Chimera\chimera.cpp" />
     <ClCompile Include="ai\Monsters\Chimera\chimera_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Chimera\chimera_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Chimera\chimera_script.cpp" />
     <ClCompile Include="ai\Monsters\PseudoGigant\pseudo_gigant.cpp" />
     <ClCompile Include="ai\Monsters\PseudoGigant\pseudo_gigant_step_effector.cpp" />
     <ClCompile Include="ai\Monsters\PseudoGigant\pseudogigant_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\PseudoGigant\pseudogigant_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\PseudoGigant\pseudogigant_script.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_movement.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_script.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_ability.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_flame_thrower.cpp" />
     <ClCompile Include="ai\Monsters\Poltergeist\poltergeist_telekinesis.cpp" />
     <ClCompile Include="ai\Monsters\Zombie\zombie.cpp" />
     <ClCompile Include="ai\Monsters\Zombie\zombie_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Zombie\zombie_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Zombie\zombie_script.cpp" />
     <ClCompile Include="ai\Monsters\Fracture\fracture.cpp" />
     <ClCompile Include="ai\Monsters\Fracture\fracture_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Fracture\fracture_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Fracture\fracture_script.cpp" />
     <ClCompile Include="ai\Monsters\Snork\snork.cpp" />
     <ClCompile Include="ai\Monsters\Snork\snork_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Snork\snork_jump.cpp" />
-    <ClCompile Include="ai\Monsters\Snork\snork_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Snork\snork_script.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Controller\controller_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Controller\controller_script.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller_animation.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller_direction.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller_psy_hit.cpp" />
     <ClCompile Include="ai\Monsters\Controller\controller_psy_hit_effector.cpp" />
     <ClCompile Include="ai\Monsters\Cat\cat.cpp" />
     <ClCompile Include="ai\Monsters\Cat\cat_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Cat\cat_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Cat\cat_script.cpp" />
     <ClCompile Include="ai\Monsters\Tushkano\tushkano.cpp" />
     <ClCompile Include="ai\Monsters\Tushkano\tushkano_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Tushkano\tushkano_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Tushkano\tushkano_script.cpp" />
     <ClCompile Include="ai\phantom\phantom.cpp" />
     <ClCompile Include="ai\Monsters\Dog\dog.cpp" />
     <ClCompile Include="ai\Monsters\Dog\dog_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Dog\dog_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Dog\dog_script.cpp" />
     <ClCompile Include="ai\monsters\rats\ai_rat.cpp" />
     <ClCompile Include="ai\monsters\rats\ai_rat_animations.cpp" />
     <ClCompile Include="ai\monsters\rats\ai_rat_behaviour.cpp" />
-    <ClCompile Include="ai\monsters\rats\ai_rat_feel.cpp">
-    </ClCompile>
-    <ClCompile Include="ai\monsters\rats\ai_rat_fire.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\monsters\rats\ai_rat_feel.cpp" />
+    <ClCompile Include="ai\monsters\rats\ai_rat_fire.cpp" />
     <ClCompile Include="ai\monsters\rats\ai_rat_fsm.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="ai\monsters\rats\ai_rat_templates.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\monsters\rats\ai_rat_templates.cpp" />
     <ClCompile Include="rat_state_manager.cpp" />
-    <ClCompile Include="ai\monsters\rats\rat_state_activation.cpp">
-    </ClCompile>
-    <ClCompile Include="ai\monsters\rats\rat_state_initialize.cpp">
-    </ClCompile>
-    <ClCompile Include="ai\monsters\rats\rat_state_switch.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\monsters\rats\rat_state_activation.cpp" />
+    <ClCompile Include="ai\monsters\rats\rat_state_initialize.cpp" />
+    <ClCompile Include="ai\monsters\rats\rat_state_switch.cpp" />
     <ClCompile Include="rat_states.cpp" />
     <ClCompile Include="rat_state_base.cpp" />
     <ClCompile Include="ai\Monsters\Flesh\flesh.cpp" />
     <ClCompile Include="ai\Monsters\Flesh\flesh_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Flesh\flesh_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Flesh\flesh_script.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\pseudodog.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\pseudodog_psi_effector.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\pseudodog_state_manager.cpp" />
-    <ClCompile Include="ai\Monsters\Pseudodog\pseudodog_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\Monsters\Pseudodog\pseudodog_script.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_aura.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_state_manager.cpp" />
-    <ClCompile Include="Ai\Trader\ai_trader.cpp">
-    </ClCompile>
-    <ClCompile Include="ai\trader\ai_trader_script.cpp">
-    </ClCompile>
-    <ClCompile Include="ai\trader\trader_animation.cpp">
-    </ClCompile>
+    <ClCompile Include="Ai\Trader\ai_trader.cpp" />
+    <ClCompile Include="ai\trader\ai_trader_script.cpp" />
+    <ClCompile Include="ai\trader\trader_animation.cpp" />
     <ClCompile Include="Ai\Stalker\ai_stalker.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ShowIncludes>
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ShowIncludes>
     </ClCompile>
-    <ClCompile Include="Ai\Stalker\ai_stalker_script.cpp">
-    </ClCompile>
+    <ClCompile Include="Ai\Stalker\ai_stalker_script.cpp" />
     <ClCompile Include="stalker_animation_callbacks.cpp" />
     <ClCompile Include="stalker_animation_global.cpp" />
     <ClCompile Include="stalker_animation_head.cpp" />
     <ClCompile Include="stalker_animation_legs.cpp" />
     <ClCompile Include="stalker_animation_manager.cpp" />
     <ClCompile Include="stalker_animation_manager_debug.cpp" />
-    <ClCompile Include="stalker_animation_manager_update.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_animation_script.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_animation_manager_update.cpp" />
+    <ClCompile Include="stalker_animation_script.cpp" />
     <ClCompile Include="stalker_animation_torso.cpp" />
     <ClCompile Include="stalker_animation_data_storage.cpp" />
     <ClCompile Include="stalker_animation_data.cpp" />
@@ -2180,35 +2093,22 @@
     <ClCompile Include="stalker_planner.cpp" />
     <ClCompile Include="stalker_base_action.cpp" />
     <ClCompile Include="stalker_alife_planner.cpp" />
-    <ClCompile Include="stalker_alife_actions.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_alife_actions.cpp" />
     <ClCompile Include="stalker_alife_task_actions.cpp" />
     <ClCompile Include="stalker_anomaly_planner.cpp" />
-    <ClCompile Include="stalker_anomaly_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_combat_planner.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_combat_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_combat_action_base.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_kill_wounded_planner.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_kill_wounded_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_get_distance_planner.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_get_distance_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_low_cover_planner.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_low_cover_actions.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_anomaly_actions.cpp" />
+    <ClCompile Include="stalker_combat_planner.cpp" />
+    <ClCompile Include="stalker_combat_actions.cpp" />
+    <ClCompile Include="stalker_combat_action_base.cpp" />
+    <ClCompile Include="stalker_kill_wounded_planner.cpp" />
+    <ClCompile Include="stalker_kill_wounded_actions.cpp" />
+    <ClCompile Include="stalker_get_distance_planner.cpp" />
+    <ClCompile Include="stalker_get_distance_actions.cpp" />
+    <ClCompile Include="stalker_low_cover_planner.cpp" />
+    <ClCompile Include="stalker_low_cover_actions.cpp" />
     <ClCompile Include="stalker_search_planner.cpp" />
-    <ClCompile Include="stalker_search_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_danger_planner.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_search_actions.cpp" />
+    <ClCompile Include="stalker_danger_planner.cpp" />
     <ClCompile Include="stalker_danger_unknown_planner.cpp" />
     <ClCompile Include="stalker_danger_unknown_actions.cpp" />
     <ClCompile Include="stalker_danger_in_direction_planner.cpp" />
@@ -2217,161 +2117,102 @@
     <ClCompile Include="stalker_danger_grenade_actions.cpp" />
     <ClCompile Include="stalker_danger_by_sound_planner.cpp" />
     <ClCompile Include="stalker_danger_by_sound_actions.cpp" />
-    <ClCompile Include="stalker_danger_property_evaluators.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_danger_property_evaluators.cpp" />
     <ClCompile Include="stalker_death_planner.cpp" />
     <ClCompile Include="stalker_death_actions.cpp" />
-    <ClCompile Include="stalker_property_evaluators.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_property_evaluators.cpp" />
     <ClCompile Include="stalker_movement_manager_obstacles.cpp" />
     <ClCompile Include="stalker_movement_manager_obstacles_path.cpp" />
     <ClCompile Include="dynamic_obstacles_avoider.cpp" />
     <ClCompile Include="static_obstacles_avoider.cpp" />
     <ClCompile Include="restricted_object_obstacle.cpp" />
-    <ClCompile Include="stalker_movement_manager_smart_cover.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_movement_manager_smart_cover_fov_range.cpp">
-    </ClCompile>
-    <ClCompile Include="stalker_movement_manager_smart_cover_loopholes.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_animation_selector.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_animation_planner.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_planner_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_loophole_planner_actions.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_planner_target_selector.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_planner_target_provider.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_default_behaviour_planner.cpp">
-    </ClCompile>
-    <ClCompile Include="smart_cover_evaluators.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_movement_manager_smart_cover.cpp" />
+    <ClCompile Include="stalker_movement_manager_smart_cover_fov_range.cpp" />
+    <ClCompile Include="stalker_movement_manager_smart_cover_loopholes.cpp" />
+    <ClCompile Include="smart_cover_animation_selector.cpp" />
+    <ClCompile Include="smart_cover_animation_planner.cpp" />
+    <ClCompile Include="smart_cover_planner_actions.cpp" />
+    <ClCompile Include="smart_cover_loophole_planner_actions.cpp" />
+    <ClCompile Include="smart_cover_planner_target_selector.cpp" />
+    <ClCompile Include="smart_cover_planner_target_provider.cpp" />
+    <ClCompile Include="smart_cover_default_behaviour_planner.cpp" />
+    <ClCompile Include="smart_cover_evaluators.cpp" />
     <ClCompile Include="stalker_movement_manager_base.cpp" />
     <ClCompile Include="stalker_velocity_collection.cpp" />
     <ClCompile Include="stalker_velocity_holder.cpp" />
     <ClCompile Include="stalker_movement_params.cpp" />
-    <ClCompile Include="stalker_sound_data_visitor.cpp">
-    </ClCompile>
+    <ClCompile Include="stalker_sound_data_visitor.cpp" />
     <ClCompile Include="stalker_sound_data.cpp" />
     <ClCompile Include="ai_stalker_alife.cpp" />
-    <ClCompile Include="ai\stalker\ai_stalker_cover.cpp">
-    </ClCompile>
-    <ClCompile Include="ai\stalker\ai_stalker_debug.cpp">
-    </ClCompile>
+    <ClCompile Include="ai\stalker\ai_stalker_cover.cpp" />
+    <ClCompile Include="ai\stalker\ai_stalker_debug.cpp" />
     <ClCompile Include="Ai\Stalker\ai_stalker_events.cpp" />
     <ClCompile Include="Ai\Stalker\ai_stalker_feel.cpp" />
-    <ClCompile Include="Ai\Stalker\ai_stalker_fire.cpp">
-    </ClCompile>
-    <ClCompile Include="Ai\Stalker\ai_stalker_misc.cpp">
-    </ClCompile>
+    <ClCompile Include="Ai\Stalker\ai_stalker_fire.cpp" />
+    <ClCompile Include="Ai\Stalker\ai_stalker_misc.cpp" />
     <ClCompile Include="ai\stalker\ai_stalker_script_entity.cpp" />
-    <ClCompile Include="game_graph_script.cpp">
-    </ClCompile>
+    <ClCompile Include="game_graph_script.cpp" />
     <ClCompile Include="level_graph.cpp" />
     <ClCompile Include="level_graph_debug.cpp" />
-    <ClCompile Include="level_graph_debug2.cpp">
-    </ClCompile>
+    <ClCompile Include="level_graph_debug2.cpp" />
     <ClCompile Include="level_graph_vertex.cpp" />
     <ClCompile Include="patrol_path.cpp" />
     <ClCompile Include="patrol_path_storage.cpp" />
     <ClCompile Include="patrol_point.cpp" />
     <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
-    <ClCompile Include="patrol_path_params.cpp">
-    </ClCompile>
-    <ClCompile Include="patrol_path_params_script.cpp">
-    </ClCompile>
+    <ClCompile Include="patrol_path_params.cpp" />
+    <ClCompile Include="patrol_path_params_script.cpp" />
     <ClCompile Include="script_watch_action.cpp" />
     <ClCompile Include="script_animation_action.cpp" />
-    <ClCompile Include="script_animation_action_script.cpp">
-    </ClCompile>
+    <ClCompile Include="script_animation_action_script.cpp" />
     <ClCompile Include="script_sound_action.cpp" />
     <ClCompile Include="script_particle_action.cpp" />
     <ClCompile Include="script_object_action.cpp" />
-    <ClCompile Include="script_object_action_script.cpp">
-    </ClCompile>
+    <ClCompile Include="script_object_action_script.cpp" />
     <ClCompile Include="script_action_condition.cpp" />
     <ClCompile Include="script_monster_action.cpp" />
     <ClCompile Include="script_entity_action.cpp" />
-    <ClCompile Include="script_entity_action_script.cpp">
-    </ClCompile>
+    <ClCompile Include="script_entity_action_script.cpp" />
     <ClCompile Include="script_binder_object.cpp" />
-    <ClCompile Include="script_binder_object_wrapper.cpp">
-    </ClCompile>
+    <ClCompile Include="script_binder_object_wrapper.cpp" />
     <ClCompile Include="script_effector.cpp" />
-    <ClCompile Include="script_effector_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_effector_wrapper.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object2.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object3.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object4.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_inventory_owner.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_script2.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_script3.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_script_trader.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_smart_covers.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_trader.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_use.cpp">
-    </ClCompile>
-    <ClCompile Include="script_game_object_use2.cpp">
-    </ClCompile>
-    <ClCompile Include="script_hit_script.cpp">
-    </ClCompile>
+    <ClCompile Include="script_effector_script.cpp" />
+    <ClCompile Include="script_effector_wrapper.cpp" />
+    <ClCompile Include="script_game_object.cpp" />
+    <ClCompile Include="script_game_object2.cpp" />
+    <ClCompile Include="script_game_object3.cpp" />
+    <ClCompile Include="script_game_object4.cpp" />
+    <ClCompile Include="script_game_object_inventory_owner.cpp" />
+    <ClCompile Include="script_game_object_script.cpp" />
+    <ClCompile Include="script_game_object_script2.cpp" />
+    <ClCompile Include="script_game_object_script3.cpp" />
+    <ClCompile Include="script_game_object_script_trader.cpp" />
+    <ClCompile Include="script_game_object_smart_covers.cpp" />
+    <ClCompile Include="script_game_object_trader.cpp" />
+    <ClCompile Include="script_game_object_use.cpp" />
+    <ClCompile Include="script_game_object_use2.cpp" />
+    <ClCompile Include="script_hit_script.cpp" />
     <ClCompile Include="..\xrServerEntities\script_ini_file.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_ini_file_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_monster_hit_info_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_render_device_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_sound_info_script.cpp">
-    </ClCompile>
-    <ClCompile Include="ScriptXMLInit.cpp">
-    </ClCompile>
-    <ClCompile Include="key_binding_registrator_script.cpp">
-    </ClCompile>
-    <ClCompile Include="fs_registrator_script.cpp">
-    </ClCompile>
-    <ClCompile Include="console_registrator_script.cpp">
-    </ClCompile>
-    <ClCompile Include="base_client_classes_script.cpp">
-    </ClCompile>
-    <ClCompile Include="script_lanim.cpp">
-    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\script_ini_file_script.cpp" />
+    <ClCompile Include="script_monster_hit_info_script.cpp" />
+    <ClCompile Include="script_render_device_script.cpp" />
+    <ClCompile Include="script_sound_info_script.cpp" />
+    <ClCompile Include="ScriptXMLInit.cpp" />
+    <ClCompile Include="key_binding_registrator_script.cpp" />
+    <ClCompile Include="fs_registrator_script.cpp" />
+    <ClCompile Include="console_registrator_script.cpp" />
+    <ClCompile Include="base_client_classes_script.cpp" />
+    <ClCompile Include="script_lanim.cpp" />
     <ClCompile Include="script_particles.cpp" />
     <ClCompile Include="script_sound.cpp" />
-    <ClCompile Include="script_sound_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_engine.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_engine_export.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_engine_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_process.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_storage.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_thread.cpp">
-    </ClCompile>
+    <ClCompile Include="script_sound_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_engine.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_engine_export.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_engine_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_process.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_storage.cpp" />
+    <ClCompile Include="..\xrServerEntities\script_thread.cpp" />
     <ClCompile Include="..\xrServerEntities\script_stack_tracker.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
@@ -2381,8 +2222,7 @@
     <ClCompile Include="CameraFirstEye.cpp" />
     <ClCompile Include="cameralook.cpp" />
     <ClCompile Include="ActorEffector.cpp" />
-    <ClCompile Include="ActorEffector_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ActorEffector_script.cpp" />
     <ClCompile Include="EffectorBobbing.cpp" />
     <ClCompile Include="EffectorFall.cpp" />
     <ClCompile Include="ai\Monsters\ai_monster_effector.cpp">
@@ -2396,19 +2236,14 @@
     <ClCompile Include="PostprocessAnimator.cpp" />
     <ClCompile Include="zone_effector.cpp" />
     <ClCompile Include="EffectorShot.cpp" />
-    <ClCompile Include="EffectorShotX.cpp" />
     <ClCompile Include="EffectorZoomInertion.cpp" />
-    <ClCompile Include="GamePersistent.cpp">
-    </ClCompile>
-    <ClCompile Include="Level.cpp">
-    </ClCompile>
+    <ClCompile Include="GamePersistent.cpp" />
+    <ClCompile Include="Level.cpp" />
     <ClCompile Include="Level_input.cpp" />
     <ClCompile Include="Level_load.cpp" />
-    <ClCompile Include="Level_network.cpp">
-    </ClCompile>
+    <ClCompile Include="Level_network.cpp" />
     <ClCompile Include="Level_network_messages.cpp" />
-    <ClCompile Include="Level_network_spawn.cpp">
-    </ClCompile>
+    <ClCompile Include="Level_network_spawn.cpp" />
     <ClCompile Include="Level_network_start_client.cpp" />
     <ClCompile Include="level_script.cpp">
       <DisableSpecificWarnings Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">4511;4512;%(DisableSpecificWarnings)</DisableSpecificWarnings>
@@ -2425,8 +2260,7 @@
     <ClCompile Include="team_hierarchy_holder.cpp" />
     <ClCompile Include="squad_hierarchy_holder.cpp" />
     <ClCompile Include="group_hierarchy_holder.cpp" />
-    <ClCompile Include="client_spawn_manager.cpp">
-    </ClCompile>
+    <ClCompile Include="client_spawn_manager.cpp" />
     <ClCompile Include="autosave_manager.cpp" />
     <ClCompile Include="level_sounds.cpp" />
     <ClCompile Include="debug_renderer.cpp" />
@@ -2434,83 +2268,61 @@
     <ClCompile Include="Level_network_map_sync.cpp" />
     <ClCompile Include="xr_level_controller.cpp" />
     <ClCompile Include="level_debug.cpp" />
-    <ClCompile Include="Actor.cpp">
-    </ClCompile>
-    <ClCompile Include="actor_communication.cpp">
-    </ClCompile>
+    <ClCompile Include="Actor.cpp" />
+    <ClCompile Include="actor_communication.cpp" />
     <ClCompile Include="Actor_Events.cpp" />
     <ClCompile Include="Actor_Feel.cpp" />
     <ClCompile Include="actor_input_handler.cpp" />
     <ClCompile Include="Actor_Movement.cpp" />
-    <ClCompile Include="Actor_Network.cpp">
-    </ClCompile>
+    <ClCompile Include="Actor_Network.cpp" />
     <ClCompile Include="Actor_Weapon.cpp" />
     <ClCompile Include="ActorAnimation.cpp" />
     <ClCompile Include="ActorCameras.cpp" />
-    <ClCompile Include="ActorCondition.cpp">
-    </ClCompile>
+    <ClCompile Include="ActorCondition.cpp" />
     <ClCompile Include="ActorInput.cpp" />
     <ClCompile Include="ActorMountedWeapon.cpp" />
     <ClCompile Include="ActorVehicle.cpp" />
     <ClCompile Include="fire_disp_controller.cpp" />
     <ClCompile Include="actor_memory.cpp" />
     <ClCompile Include="Entity.cpp" />
-    <ClCompile Include="entity_alive.cpp">
-    </ClCompile>
+    <ClCompile Include="entity_alive.cpp" />
     <ClCompile Include="EntityCondition.cpp" />
     <ClCompile Include="hit_immunity.cpp" />
     <ClCompile Include="Wound.cpp" />
-    <ClCompile Include="GameObject.cpp">
-    </ClCompile>
+    <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="holder_custom.cpp" />
-    <ClCompile Include="holder_custom_script.cpp">
-    </ClCompile>
+    <ClCompile Include="holder_custom_script.cpp" />
     <ClCompile Include="ai_obstacle.cpp" />
     <ClCompile Include="min_obb.cpp" />
     <ClCompile Include="magic_box3.cpp" />
     <ClCompile Include="magic_minimize_1d.cpp" />
-    <ClCompile Include="UsableScriptObject.cpp">
-    </ClCompile>
-    <ClCompile Include="HangingLamp.cpp">
-    </ClCompile>
-    <ClCompile Include="InfoPortion.cpp">
-    </ClCompile>
-    <ClCompile Include="GameTask.cpp">
-    </ClCompile>
-    <ClCompile Include="GametaskManager.cpp">
-    </ClCompile>
+    <ClCompile Include="UsableScriptObject.cpp" />
+    <ClCompile Include="HangingLamp.cpp" />
+    <ClCompile Include="InfoPortion.cpp" />
+    <ClCompile Include="GameTask.cpp" />
+    <ClCompile Include="GametaskManager.cpp" />
     <ClCompile Include="encyclopedia_article.cpp" />
     <ClCompile Include="AI_PhraseDialogManager.cpp" />
     <ClCompile Include="Phrase.cpp" />
-    <ClCompile Include="PhraseDialog.cpp">
-    </ClCompile>
-    <ClCompile Include="PhraseDialog_script.cpp">
-    </ClCompile>
+    <ClCompile Include="PhraseDialog.cpp" />
+    <ClCompile Include="PhraseDialog_script.cpp" />
     <ClCompile Include="PhraseDialogManager.cpp" />
-    <ClCompile Include="PhraseScript.cpp">
-    </ClCompile>
+    <ClCompile Include="PhraseScript.cpp" />
     <ClCompile Include="game_news.cpp" />
     <ClCompile Include="actor_statistic_mgr.cpp" />
     <ClCompile Include="map_location.cpp" />
-    <ClCompile Include="map_manager.cpp">
-    </ClCompile>
-    <ClCompile Include="Inventory.cpp">
-    </ClCompile>
+    <ClCompile Include="map_manager.cpp" />
+    <ClCompile Include="Inventory.cpp" />
     <ClCompile Include="inventory_quickswitch.cpp" />
     <ClCompile Include="attachable_item.cpp" />
     <ClCompile Include="attachment_owner.cpp" />
     <ClCompile Include="eatable_item.cpp" />
     <ClCompile Include="eatable_item_object.cpp" />
-    <ClCompile Include="inventory_item.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_item_upgrade.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_item_object.cpp">
-    </ClCompile>
-    <ClCompile Include="inventory_owner_info.cpp">
-    </ClCompile>
-    <ClCompile Include="InventoryOwner.cpp">
-    </ClCompile>
+    <ClCompile Include="inventory_item.cpp" />
+    <ClCompile Include="inventory_item_upgrade.cpp" />
+    <ClCompile Include="inventory_item_object.cpp" />
+    <ClCompile Include="inventory_owner_info.cpp" />
+    <ClCompile Include="InventoryOwner.cpp" />
     <ClCompile Include="character_community.cpp" />
     <ClCompile Include="..\xrServerEntities\character_info.cpp" />
     <ClCompile Include="character_rank.cpp" />
@@ -2518,8 +2330,7 @@
     <ClCompile Include="monster_community.cpp" />
     <ClCompile Include="..\xrServerEntities\specific_character.cpp" />
     <ClCompile Include="relation_registry.cpp" />
-    <ClCompile Include="relation_registry_actions.cpp">
-    </ClCompile>
+    <ClCompile Include="relation_registry_actions.cpp" />
     <ClCompile Include="relation_registry_fights.cpp" />
     <ClCompile Include="trade_parameters.cpp" />
     <ClCompile Include="purchase_list.cpp" />
@@ -2533,57 +2344,38 @@
     <ClCompile Include="WeaponAmmo.cpp" />
     <ClCompile Include="Grenade.cpp" />
     <ClCompile Include="Missile.cpp" />
-    <ClCompile Include="Scope.cpp">
-    </ClCompile>
+    <ClCompile Include="Scope.cpp" />
     <ClCompile Include="Silencer.cpp" />
     <ClCompile Include="GrenadeLauncher.cpp" />
     <ClCompile Include="CustomRocket.cpp" />
     <ClCompile Include="ExplosiveRocket.cpp" />
     <ClCompile Include="RocketLauncher.cpp" />
-    <ClCompile Include="WeaponMagazined.cpp">
-    </ClCompile>
+    <ClCompile Include="WeaponMagazined.cpp" />
     <ClCompile Include="WeaponMagazinedWGrenade.cpp" />
-    <ClCompile Include="WeaponWalther.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponVintorez.cpp">
-    </ClCompile>
+    <ClCompile Include="WeaponWalther.cpp" />
+    <ClCompile Include="WeaponVintorez.cpp" />
     <ClCompile Include="WeaponKnife.cpp" />
-    <ClCompile Include="WeaponGroza.cpp">
-    </ClCompile>
-    <ClCompile Include="RGD5.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponVal.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponUSP45.cpp">
-    </ClCompile>
+    <ClCompile Include="WeaponGroza.cpp" />
+    <ClCompile Include="RGD5.cpp" />
+    <ClCompile Include="WeaponVal.cpp" />
+    <ClCompile Include="WeaponUSP45.cpp" />
     <ClCompile Include="Bolt.cpp" />
-    <ClCompile Include="WeaponSVU.cpp">
-    </ClCompile>
+    <ClCompile Include="WeaponSVU.cpp" />
     <ClCompile Include="WeaponRPG7.cpp" />
-    <ClCompile Include="F1.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponSVD.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponAK74.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponLR300.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponFN2000.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponHPSA.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponPM.cpp">
-    </ClCompile>
-    <ClCompile Include="WeaponBinoculars.cpp">
-    </ClCompile>
+    <ClCompile Include="F1.cpp" />
+    <ClCompile Include="WeaponSVD.cpp" />
+    <ClCompile Include="WeaponAK74.cpp" />
+    <ClCompile Include="WeaponLR300.cpp" />
+    <ClCompile Include="WeaponFN2000.cpp" />
+    <ClCompile Include="WeaponHPSA.cpp" />
+    <ClCompile Include="WeaponPM.cpp" />
+    <ClCompile Include="WeaponBinoculars.cpp" />
     <ClCompile Include="WeaponBinocularsVision.cpp" />
     <ClCompile Include="WeaponShotgun.cpp" />
-    <ClCompile Include="WeaponFORT.cpp">
-    </ClCompile>
+    <ClCompile Include="WeaponFORT.cpp" />
     <ClCompile Include="WeaponRG6.cpp" />
     <ClCompile Include="weaponBM16.cpp" />
-    <ClCompile Include="WeaponAutomaticShotgun.cpp">
-    </ClCompile>
+    <ClCompile Include="WeaponAutomaticShotgun.cpp" />
     <ClCompile Include="WeaponStatMgun.cpp" />
     <ClCompile Include="WeaponStatMgunFire.cpp" />
     <ClCompile Include="WeaponStatMgunIR.cpp" />
@@ -2596,8 +2388,7 @@
     <ClCompile Include="EliteDetector.cpp" />
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="flare.cpp" />
-    <ClCompile Include="PDA.cpp">
-    </ClCompile>
+    <ClCompile Include="PDA.cpp" />
     <ClCompile Include="antirad.cpp" />
     <ClCompile Include="BottleItem.cpp" />
     <ClCompile Include="FoodItem.cpp" />
@@ -2613,25 +2404,20 @@
     <ClCompile Include="player_hud_tune.cpp" />
     <ClCompile Include="Explosive.cpp" />
     <ClCompile Include="ExplosiveItem.cpp" />
-    <ClCompile Include="ExplosiveScript.cpp">
-    </ClCompile>
+    <ClCompile Include="ExplosiveScript.cpp" />
     <ClCompile Include="wallmark_manager.cpp" />
     <ClCompile Include="searchlight.cpp" />
-    <ClCompile Include="trade.cpp">
-    </ClCompile>
+    <ClCompile Include="trade.cpp" />
     <ClCompile Include="CustomZone.cpp" />
     <ClCompile Include="GraviZone.cpp" />
     <ClCompile Include="level_changer.cpp" />
     <ClCompile Include="Mincer.cpp" />
     <ClCompile Include="MosquitoBald.cpp" />
     <ClCompile Include="RadioactiveZone.cpp" />
-    <ClCompile Include="script_zone.cpp">
-    </ClCompile>
+    <ClCompile Include="script_zone.cpp" />
     <ClCompile Include="TorridZone.cpp" />
-    <ClCompile Include="space_restrictor.cpp">
-    </ClCompile>
-    <ClCompile Include="HairsZone.cpp">
-    </ClCompile>
+    <ClCompile Include="space_restrictor.cpp" />
+    <ClCompile Include="HairsZone.cpp" />
     <ClCompile Include="NoGravityZone.cpp" />
     <ClCompile Include="ZoneVisual.cpp" />
     <ClCompile Include="ZoneCampfire.cpp" />
@@ -2642,37 +2428,25 @@
     <ClCompile Include="CarExhaust.cpp" />
     <ClCompile Include="CarInput.cpp" />
     <ClCompile Include="CarLights.cpp" />
-    <ClCompile Include="CarScript.cpp">
-    </ClCompile>
+    <ClCompile Include="CarScript.cpp" />
     <ClCompile Include="CarSound.cpp" />
     <ClCompile Include="CarWheels.cpp" />
     <ClCompile Include="DBG_Car.cpp" />
     <ClCompile Include="CarWeapon.cpp" />
     <ClCompile Include="car_memory.cpp" />
-    <ClCompile Include="Helicopter.cpp">
-    </ClCompile>
-    <ClCompile Include="Helicopter2.cpp">
-    </ClCompile>
-    <ClCompile Include="helicopter_script.cpp">
-    </ClCompile>
-    <ClCompile Include="HelicopterMovementManager.cpp">
-    </ClCompile>
+    <ClCompile Include="Helicopter.cpp" />
+    <ClCompile Include="Helicopter2.cpp" />
+    <ClCompile Include="helicopter_script.cpp" />
+    <ClCompile Include="HelicopterMovementManager.cpp" />
     <ClCompile Include="HelicopterWeapon.cpp" />
     <ClCompile Include="DelayedActionFuse.cpp" />
-    <ClCompile Include="InventoryBox.cpp">
-    </ClCompile>
-    <ClCompile Include="console_commands.cpp">
-    </ClCompile>
-    <ClCompile Include="date_time.cpp" />
-    <ClCompile Include="xrgame_dll_detach.cpp">
-    </ClCompile>
+    <ClCompile Include="InventoryBox.cpp" />
+    <ClCompile Include="console_commands.cpp" />
+    <ClCompile Include="xrgame_dll_detach.cpp" />
     <ClCompile Include="..\xrServerEntities\object_factory.cpp" />
-    <ClCompile Include="..\xrServerEntities\object_factory_register.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\object_factory_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\object_item_script.cpp">
-    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\object_factory_register.cpp" />
+    <ClCompile Include="..\xrServerEntities\object_factory_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\object_item_script.cpp" />
     <ClCompile Include="profiler.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
@@ -2681,59 +2455,35 @@
     <ClCompile Include="random32.cpp" />
     <ClCompile Include="string_table.cpp" />
     <ClCompile Include="xrGame.cpp" />
-    <ClCompile Include="xrServer.cpp">
-    </ClCompile>
-    <ClCompile Include="xrServerMapSync.cpp" />
-    <ClCompile Include="game_base.cpp">
-    </ClCompile>
-    <ClCompile Include="game_cl_single.cpp">
-    </ClCompile>
-    <ClCompile Include="game_cl_base.cpp">
-    </ClCompile>
+    <ClCompile Include="xrServer.cpp" />
+    <ClCompile Include="game_base.cpp" />
+    <ClCompile Include="game_cl_base.cpp" />
     <ClCompile Include="game_sv_base.cpp" />
     <ClCompile Include="game_sv_event_queue.cpp" />
     <ClCompile Include="xr_time.cpp" />
-    <ClCompile Include="game_sv_single.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Abstract.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Object_Base.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script2.cpp">
-    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script2.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script2.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script3.cpp">
-    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script2.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script3.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp">
-    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrserver_objects_alife_monsters_script3.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script4.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.cpp">
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
-    </ClCompile>
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrserver_objects_alife_monsters_script3.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script4.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.cpp" />
+    <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp" />
     <ClCompile Include="xrServer_perform_GameExport.cpp" />
-    <ClCompile Include="xrServer_perform_migration.cpp" />
     <ClCompile Include="xrServer_perform_sls_default.cpp" />
-    <ClCompile Include="xrServer_perform_sls_load.cpp" />
-    <ClCompile Include="xrServer_perform_sls_save.cpp" />
     <ClCompile Include="xrServer_perform_transfer.cpp" />
     <ClCompile Include="xrServer_sls_clear.cpp" />
     <ClCompile Include="xrServer_process_event.cpp" />
@@ -2743,19 +2493,14 @@
     <ClCompile Include="xrServer_process_event_reject.cpp" />
     <ClCompile Include="xrServer_process_spawn.cpp" />
     <ClCompile Include="xrServer_process_update.cpp" />
-    <ClCompile Include="xrServer_svclient_validation.cpp" />
     <ClCompile Include="xrServer_CL_connect.cpp" />
     <ClCompile Include="xrServer_Connect.cpp" />
     <ClCompile Include="ui_base.cpp" />
     <ClCompile Include="UIDialogHolder.cpp" />
-    <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIInvUpgrade.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIInvUpgradeInfo.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIInvUpgradeProperty.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp" />
+    <ClCompile Include="ui\UIInvUpgrade.cpp" />
+    <ClCompile Include="ui\UIInvUpgradeInfo.cpp" />
+    <ClCompile Include="ui\UIInvUpgradeProperty.cpp" />
     <ClCompile Include="ui\UIPdaWnd.cpp" />
     <ClCompile Include="ui\map_hint.cpp" />
     <ClCompile Include="map_spot.cpp" />
@@ -2763,10 +2508,8 @@
     <ClCompile Include="ui\UIMapWnd.cpp" />
     <ClCompile Include="ui\UIMapWnd2.cpp" />
     <ClCompile Include="ui\UIMapWndActions.cpp" />
-    <ClCompile Include="ui\UIAchievements.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIRankingWnd.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIAchievements.cpp" />
+    <ClCompile Include="ui\UIRankingWnd.cpp" />
     <ClCompile Include="ui\UIMapLegend.cpp" />
     <ClCompile Include="ui\UISecondTaskWnd.cpp" />
     <ClCompile Include="ui\UITaskWnd.cpp" />
@@ -2774,11 +2517,9 @@
     <ClCompile Include="ui\UINewsItemWnd.cpp" />
     <ClCompile Include="ui\ui_af_params.cpp" />
     <ClCompile Include="ui\UIBoosterInfo.cpp" />
-    <ClCompile Include="ui\UIItemInfo.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIItemInfo.cpp" />
     <ClCompile Include="ui\UIOutfitInfo.cpp" />
-    <ClCompile Include="ui\UIWpnParams.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIWpnParams.cpp" />
     <ClCompile Include="ui\UICharacterInfo.cpp" />
     <ClCompile Include="ui\UITalkDialogWnd.cpp" />
     <ClCompile Include="ui\UITalkWnd.cpp" />
@@ -2791,32 +2532,27 @@
     <ClCompile Include="UIZoneMap.cpp" />
     <ClCompile Include="ui\UIOptionsItem.cpp" />
     <ClCompile Include="ui\UIOptionsManager.cpp" />
-    <ClCompile Include="ui\UIOptionsManagerScript.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIOptionsManagerScript.cpp" />
     <ClCompile Include="MainMenu.cpp" />
     <ClCompile Include="ui\MMSound.cpp" />
     <ClCompile Include="ui\UIMMShniaga.cpp" />
     <ClCompile Include="ui\UIEditKeyBind.cpp" />
     <ClCompile Include="ui\UIKeyBinding.cpp" />
     <ClCompile Include="ui\UIHelper.cpp" />
-    <ClCompile Include="ui\UIInventoryUtilities.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIInventoryUtilities.cpp" />
     <ClCompile Include="ui\UIActorMenu.cpp" />
     <ClCompile Include="ui\UIActorMenu_action.cpp" />
     <ClCompile Include="ui\UIActorMenuDeadBodySearch.cpp" />
     <ClCompile Include="ui\UIActorMenuInitialize.cpp" />
     <ClCompile Include="ui\UIActorMenuInventory.cpp" />
-    <ClCompile Include="ui\UIActorMenuTrade.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIActorMenuUpgrade.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIActorMenuTrade.cpp" />
+    <ClCompile Include="ui\UIActorMenuUpgrade.cpp" />
     <ClCompile Include="ui\UIActorStateInfo.cpp" />
     <ClCompile Include="ui\UIDebugFonts.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
     </ClCompile>
-    <ClCompile Include="ui\UIWndCallback.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIWndCallback.cpp" />
     <ClCompile Include="ui\UITextureMaster.cpp" />
     <ClCompile Include="ui\UIXmlInit.cpp" />
     <ClCompile Include="ui\xrUIXmlParser.cpp" />
@@ -2826,8 +2562,7 @@
     <ClCompile Include="ui\UIAnimatedStatic.cpp" />
     <ClCompile Include="ui\UILanimController.cpp" />
     <ClCompile Include="ui\UIStatic.cpp" />
-    <ClCompile Include="ui\UIStatic_script.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIStatic_script.cpp" />
     <ClCompile Include="UIStaticItem.cpp" />
     <ClCompile Include="ui\UIEditBox.cpp" />
     <ClCompile Include="ui\UIEditBoxEx.cpp" />
@@ -2841,8 +2576,7 @@
     <ClCompile Include="ui\UIProgressShape.cpp" />
     <ClCompile Include="ui\UITabButton.cpp" />
     <ClCompile Include="ui\UITabControl.cpp" />
-    <ClCompile Include="ui\UIScriptWnd.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIScriptWnd.cpp" />
     <ClCompile Include="ui\UI3tButton.cpp" />
     <ClCompile Include="ui\UIBtnHint.cpp" />
     <ClCompile Include="ui\UIButton.cpp" />
@@ -2873,19 +2607,14 @@
     <ClCompile Include="ui\UIListBoxItemMsgChain.cpp" />
     <ClCompile Include="HitMarker.cpp" />
     <ClCompile Include="HUDManager.cpp" />
-    <ClCompile Include="UIGameCustom.cpp">
-    </ClCompile>
-    <ClCompile Include="UIGameSP.cpp">
-    </ClCompile>
+    <ClCompile Include="UIGameCustom.cpp" />
+    <ClCompile Include="UIGameSP.cpp" />
     <ClCompile Include="HUDCrosshair.cpp" />
     <ClCompile Include="HUDTarget.cpp" />
     <ClCompile Include="UICursor.cpp" />
-    <ClCompile Include="ui\UIGameTutorial.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp">
-    </ClCompile>
-    <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
-    </ClCompile>
+    <ClCompile Include="ui\UIGameTutorial.cpp" />
+    <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp" />
+    <ClCompile Include="ui\UIGameTutorialVideoItem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\xrEngine\xrEngine.vcxproj">

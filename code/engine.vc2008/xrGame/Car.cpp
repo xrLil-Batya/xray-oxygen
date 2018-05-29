@@ -25,6 +25,7 @@
 #include "car_memory.h"
 #include "../xrphysics/IPHWorld.h"
 #include "hudmanager.h"
+#include "Actor_Flags.h"
 BONE_P_MAP CCar::bone_map=BONE_P_MAP();
 
 CCar::CCar()
@@ -433,7 +434,82 @@ void CCar::UpdateCL()
             m_car_weapon->SetParam(CCarWeapon::eWpnDesiredPos, C->vPosition.add(C->vDirection.mul(RQ.range)));
         }
 	}
-	
+	if (psActorFlags.test(AF_CAR_INFO) && m_pPhysicsShell && OwnerActor() && static_cast<CObject*>(Owner()) == Level().CurrentViewEntity())
+	{
+
+		Fvector v;
+		m_pPhysicsShell->get_LinearVel(v);
+		string32 s;
+		xr_sprintf											(s, "Speed, [%3.2f] KM/HOUR", v.magnitude() / 1000.f*3600.f); 
+		UI().Font().pFontLetterica18Russian->SetColor		(color_rgba  (0xff, 0xff, 0xff, 0xff));
+		UI().Font().pFontLetterica18Russian->OutSet			(120, 330);
+		UI().Font().pFontLetterica18Russian->SetHeightI		(0.02f);
+		UI().Font().pFontLetterica18Russian->OutNext		(s);
+		UI().Font().pFontLetterica18Russian->SetAligment	(CGameFont::alLeft);
+		UI().Font().pFontLetterica18Russian->SetColor		(D3DCOLOR_XRGB(255, !b_transmission_switching * 255, !b_transmission_switching * 255));
+		UI().Font().pFontLetterica18Russian->OutNext		("Transmission num:   [%d]", m_current_transmission_num);
+		UI().Font().pFontLetterica18Russian->SetColor		(D3DCOLOR_XRGB(255, 235, 178));
+		UI().Font().pFontLetterica18Russian->OutNext		("Gear ratio:         [%3.2f]", m_current_gear_ratio);
+		UI().Font().pFontLetterica18Russian->OutNext		("Power:             [%3.2f]", m_current_engine_power / (0.8f*1000.f));
+		UI().Font().pFontLetterica18Russian->OutNext		("RPM:              [%3.2f]", m_current_rpm / (1.f / 60.f*2.f*M_PI));
+		UI().Font().pFontLetterica18Russian->OutNext		("Wheel torque:     [%3.2f]", RefWheelCurTorque());
+		UI().Font().pFontLetterica18Russian->OutNext		("Engine torque:    [%3.2f]", EngineCurTorque());
+		UI().Font().pFontLetterica18Russian->OutNext		("Fuel:              [%3.2f]", m_fuel);
+		UI().Font().pFontLetterica18Russian->OutNext		("Position:          [%3.2f, %3.2f, %3.2f]",VPUSH(Position()));
+		UI().Font().pFontLetterica18Russian->OutNext		("Velocity:           [%3.2f]",v.magnitude());
+		UI().Font().pFontLetterica18Russian->OutNext		("Camera:           %s", active_camera);
+		UI().Font().pFontLetterica18Russian->OutNext		("--Car Stats-------");
+		UI().Font().pFontLetterica18Russian->OutNext		("Max power:               [%3.2f]",m_max_power);
+		UI().Font().pFontLetterica18Russian->OutNext		("Max RPM:                [%3.2f]",m_max_rpm);
+		UI().Font().pFontLetterica18Russian->OutNext		("Min RPM:                 [%3.2f]",m_min_rpm);
+		UI().Font().pFontLetterica18Russian->OutNext		("Power RPM:              [%3.2f]",m_power_rpm);
+		UI().Font().pFontLetterica18Russian->OutNext		("Torque RPM:             [%3.2f]",m_torque_rpm);
+		UI().Font().pFontLetterica18Russian->OutNext		("Power increment factor:  [%3.2f]",m_power_increment_factor);
+		UI().Font().pFontLetterica18Russian->OutNext		("RPM increment factor:   [%3.2f]",m_rpm_increment_factor);
+		UI().Font().pFontLetterica18Russian->OutNext		("Power decrement factor: [%3.2f]",m_power_decrement_factor);
+		UI().Font().pFontLetterica18Russian->OutNext		("RPM decrement factor:  [%3.2f]",m_rpm_decrement_factor);
+		UI().Font().pFontLetterica18Russian->OutNext		("Power neutral factor:    [%3.2f]",m_power_neutral_factor);
+		if (b_clutch)
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(D3DCOLOR_XRGB(0, 255, 0));
+			UI().Font().pFontLetterica18Russian->OutNext("CLUTCH");
+			UI().Font().pFontLetterica18Russian->SetColor(color_rgba(0xff, 0xff, 0xff, 0xff));
+		}
+		if (b_engine_on)
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(D3DCOLOR_XRGB(0, 255, 0));
+			UI().Font().pFontLetterica18Russian->OutNext("ENGINE ON");
+			UI().Font().pFontLetterica18Russian->SetColor(color_rgba(0xff, 0xff, 0xff, 0xff));
+		}
+		else
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(D3DCOLOR_XRGB(255, 0, 0));
+			UI().Font().pFontLetterica18Russian->OutNext("ENGINE OFF");
+			UI().Font().pFontLetterica18Russian->SetColor(color_rgba(0xff, 0xff, 0xff, 0xff));
+		}
+		if (b_stalling)
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(D3DCOLOR_XRGB(255, 0, 0));
+			UI().Font().pFontLetterica18Russian->OutNext("STALLING");
+			UI().Font().pFontLetterica18Russian->SetColor(color_rgba(0xff, 0xff, 0xff, 0xff));
+		}
+		if (b_starting)
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(D3DCOLOR_XRGB(255, 0, 0));
+			UI().Font().pFontLetterica18Russian->OutNext("STARTER");
+			UI().Font().pFontLetterica18Russian->SetColor(color_rgba(0xff, 0xff, 0xff, 0xff));
+		}
+		if (b_breaks)
+		{
+			UI().Font().pFontLetterica18Russian->SetColor(D3DCOLOR_XRGB(255, 0, 0));
+			UI().Font().pFontLetterica18Russian->OutNext("BREAKS");
+			UI().Font().pFontLetterica18Russian->SetColor(color_rgba(0xff, 0xff, 0xff, 0xff));
+		}
+
+
+
+	}
+
 	ASCUpdate();
 	UpdateEx			(g_fov);
 	

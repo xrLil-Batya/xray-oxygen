@@ -272,6 +272,7 @@ public:
 			if((coord[2] < min[2]) || (coord[2] > max[2]))	return rpNone;
 			return rpOriginOutside;
 		}
+#ifndef PVS_STUDIO
 		if (2==WhichPlane)
 		{
 			// 0 & 1
@@ -281,6 +282,7 @@ public:
 			if((coord[1] < min[1]) || (coord[1] > max[1]))	return rpNone;
 			return rpOriginOutside;
 		}
+#endif
 		return rpNone;
 	}
 	

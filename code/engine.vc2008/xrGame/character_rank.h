@@ -32,7 +32,7 @@ private:
 	friend inherited;
 
 public:
-	CHARACTER_RANK			():m_current_value(NO_RANK){};
+	CHARACTER_RANK			():m_current_value(NO_RANK){}; //-V730
 	~CHARACTER_RANK			(){};
 
 	void						set				(CHARACTER_RANK_VALUE);

@@ -4,7 +4,6 @@
 #include "UIMessagesWindow.h"
 #include "../UIZoneMap.h"
 
-
 #include <dinput.h>
 #include "../actor.h"
 #include "../ActorCondition.h"
@@ -25,7 +24,7 @@
 #include "../level.h"
 #include "../seniority_hierarchy_holder.h"
 
-#include "../date_time.h"
+#include "../xrEngine/date_time.h"
 #include "../xrServerEntities/xrServer_Objects_ALife_Monsters.h"
 #include "../../xrEngine/LightAnimLibrary.h"
 
@@ -463,8 +462,10 @@ void CUIMainIngameWnd::AnimateContacts(bool b_snd)
 {
 	UIZoneMap->Counter_ResetClrAnimation();
 
-	if(b_snd)
+	if(b_snd && !psActorFlags.test(AF_HARDCORE))
 		HUD_SOUND_ITEM::PlaySound	(m_contactSnd, Fvector().set(0,0,0), 0, true );
+	else
+		HUD_SOUND_ITEM::StopSound(m_contactSnd);
 
 }
 

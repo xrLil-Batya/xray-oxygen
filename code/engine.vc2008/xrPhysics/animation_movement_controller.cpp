@@ -87,7 +87,6 @@ void animation_movement_controller::InitalPositionBlending(const Fmatrix &to)
 		m_poses_blending.pose(m_pObjXForm, m_control_blend->timeCurrent);
 	else
 		m_pObjXForm.set(to);
-
 }
 static void get_animation_root_position(Fmatrix &pos, IKinematics* K, IKinematicsAnimated* KA, CBlend *control_blend)
 {
@@ -113,7 +112,6 @@ static void get_animation_root_position(Fmatrix &pos, IKinematics* K, IKinematic
 	keys.chanel_blend_conts[0] = 1;
 	keys.keys[0][0] = *key;
 
-
 	for (int j = 1; j < MAX_CHANNELS; ++j)
 		keys.chanel_blend_conts[j] = 0;
 
@@ -137,7 +135,6 @@ void animation_movement_controller::OnFrame()
 
 	Fmatrix obj_pos = Fmatrix().mul_43(m_startObjXForm, root_pos);
 	InitalPositionBlending(obj_pos);
-
 }
 
 void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matrix, bool local_animation)
@@ -148,7 +145,6 @@ void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matri
 
 	if (stopped)
 	{
-		m_control_blend = B;
 		m_startObjXForm.set(new_matrix);
 		GetInitalPositionBlenSpeed();
 		inital_position_blending = true;
@@ -158,7 +154,7 @@ void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matri
 	else if (local_animation)
 	{
 		float blend_time = m_control_blend->timeCurrent;
-		m_control_blend->timeCurrent = m_control_blend->timeTotal - SAMPLE_SPF;//(SAMPLE_SPF+EPS);
+		m_control_blend->timeCurrent = m_control_blend->timeTotal - SAMPLE_SPF;
 		Fmatrix root;
 		animation_root_position(root);
 		m_startObjXForm.mulB_43(root);
@@ -166,11 +162,13 @@ void	animation_movement_controller::NewBlend(CBlend* B, const Fmatrix &new_matri
 	}
 
 	m_control_blend = B;
+
 	if (set_blending)
 		SetPosesBlending();
 	else
 		m_poses_blending = poses_blending(Fidentity, Fidentity, -1.f);
 }
+
 void	animation_movement_controller::DBG_verify_position_not_chaged() const
 {
 }
@@ -193,7 +191,7 @@ bool	animation_movement_controller::IsActive() const
 void animation_movement_controller::BlendDestroy(CBlend& blend)
 {
 	VERIFY(m_control_blend);
-	//Msg("deinit");
+
 	if (m_control_blend == &blend)
 		deinitialize();
 }

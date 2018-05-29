@@ -9,9 +9,9 @@ class CPHPositionsPairs
 public:
 	CPHPositionsPairs(GEOM_I i)
 	{
-		geom=i;
+		geom = i;
 	}
-	void Positions(const Fvector *&p0,const Fvector *&p1);
+	void Positions(const Fvector *&p0, const Fvector *&p1);
 
 	CPHPositionsPairs& operator ++	()
 	{
@@ -32,17 +32,17 @@ public:
 
 	CPHPositionsPairs& operator =	(const CPHPositionsPairs& right)
 	{
-		geom=right.geom;
+		geom = right.geom;
 	}
 
-	bool operator ==	(const CPHPositionsPairs& right ) const
+	bool operator ==	(const CPHPositionsPairs& right) const
 	{
-		return geom==right.geom;
+		return geom == right.geom;
 	}
 
-	bool operator !=	(const CPHPositionsPairs& right ) const
+	bool operator !=	(const CPHPositionsPairs& right) const
 	{
-		return geom!=right.geom;
+		return geom != right.geom;
 	}
 };
 
@@ -51,11 +51,11 @@ class CPHMoveStorage
 	GEOM_STORAGE m_trace_geometries;
 public:
 	typedef CPHPositionsPairs iterator;
-	iterator	begin	()					{return	CPHPositionsPairs(m_trace_geometries.begin());}
-	iterator	end		()					{return	CPHPositionsPairs(m_trace_geometries.end());}
-	bool		empty	()const				{return m_trace_geometries.empty();}
-	void		add		(CODEGeom* g)		{m_trace_geometries.push_back(g);}
-	void		clear	()					{m_trace_geometries.clear();}
+	iterator	begin() { return	CPHPositionsPairs(m_trace_geometries.begin()); }
+	iterator	end() { return	CPHPositionsPairs(m_trace_geometries.end()); }
+	bool empty()const { return m_trace_geometries.empty(); }
+	void add(CODEGeom* g) { m_trace_geometries.push_back(g); }
+	void clear() { m_trace_geometries.clear(); }
 };
 
 #endif

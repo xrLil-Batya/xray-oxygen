@@ -241,25 +241,33 @@ void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 		return;
 	CPhysicsShellHolder* obj=PPhysicsShellHolder();
 	PHNETSTATE_VECTOR& saved_bones=po->saved_bones.bones;
-	VERIFY( saved_bones.size() == obj->PHGetSyncItemsNumber() );
 	
-    auto i=saved_bones.begin(),e=saved_bones.end();
 	if(obj->PPhysicsShell()&&obj->PPhysicsShell()->isActive())
 	{
 		obj->PPhysicsShell()->Disable();
 	}
 
 	if( saved_bones.size() == obj->PHGetSyncItemsNumber() )
-		for( u16 bone=0; e!=i; i++, bone++ )
+	{
+		u16 bone = 0;
+		std::all_of(saved_bones.begin(), saved_bones.end(),[&](SPHNetState state)
 		{
-			R_ASSERT(bone<obj->PHGetSyncItemsNumber());
-			obj->PHGetSyncItem(bone)->set_State(*i);
-		}
+			if (bone>=obj->PHGetSyncItemsNumber())
+			{
+				Msg("~ WARNING [%s] has different state in saved_bones[%d] PHGetSyncItemsNumber[%d] Visual[%s]", 
+					obj->Name(), saved_bones.size(), obj->PHGetSyncItemsNumber(), obj->cNameVisual().c_str());
+				return false;
+			}
+			obj->PHGetSyncItem(bone)->set_State(state);
+			bone++;
+			return true;
+		});
+	}
+
 	saved_bones.clear();
 	po->_flags.set(CSE_PHSkeleton::flSavedData,FALSE);
 	m_flags.set(CSE_PHSkeleton::flSavedData,FALSE);
 }
-
 
 void CPHSkeleton::ClearUnsplited()
 {
@@ -287,7 +295,7 @@ void CPHSkeleton::SpawnCopy()
 		// Send
 		NET_Packet			P;
 		D->Spawn_Write		(P,TRUE);
-		Level().Send		(P,net_flags(TRUE));
+		Level().Send		(P);
 		// Destroy
 		F_entity_Destroy	(D);
 	}

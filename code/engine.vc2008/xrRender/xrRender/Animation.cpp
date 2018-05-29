@@ -12,7 +12,7 @@ channels::channels()
 
 void channels::init()
 {
-	std::fill( factors, factors + max, 1.f );
+	memset(factors, 1.f, max * sizeof(*factors));
 }
 
 void channels::set_factor(u16 channel, float factor)

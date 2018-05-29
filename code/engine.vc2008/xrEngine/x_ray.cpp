@@ -374,7 +374,7 @@ struct damn_keys_filter {
 
 #include "xr_ioc_cmd.h"
 
-ENGINE_API int RunApplication(char* commandLine)
+ENGINE_API int RunApplication(LPCSTR commandLine)
 {
 	if (!IsDebuggerPresent()) 
 	{
@@ -402,7 +402,6 @@ ENGINE_API int RunApplication(char* commandLine)
 	}
 #endif
 
-	strcat(Core.Params, commandLine);
 	//////////////////////////////////////////
 	// Title window
 	//////////////////////////////////////////

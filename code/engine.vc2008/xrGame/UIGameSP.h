@@ -7,7 +7,6 @@ class CUITradeWnd;
 class CUITalkWnd;
 class CInventory;
 
-class game_cl_Single;
 class CChangeLevelWnd;
 class CUIMessageBox;
 class CInventoryBox;
@@ -16,7 +15,7 @@ class CInventoryOwner;
 class CUIGameSP : public CUIGameCustom
 {
 private:
-	game_cl_Single * m_game;
+	game_cl_GameState * m_game;
 	typedef CUIGameCustom inherited;
 public:
 	CUIGameSP();

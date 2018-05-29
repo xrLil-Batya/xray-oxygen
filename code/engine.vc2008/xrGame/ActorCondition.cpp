@@ -184,109 +184,106 @@ float CActorCondition::GetZoneMaxPower( ALife::EHitType hit_type ) const
 
 void CActorCondition::UpdateCondition()
 {
-	if (psActorFlags.test(AF_GODMODE_RT))
+	if (GodMode())
 	{
 		UpdateSatiety();
 		UpdateBoosters();
 
-        if (GamePersistent().m_useThirst)
-        {
-		    UpdateThirst();
-        }
+		if (GamePersistent().m_useThirst)
+			UpdateThirst();
 
-		m_fAlcohol += m_fV_Alcohol*m_fDeltaTime;
+		m_fAlcohol += m_fV_Alcohol * m_fDeltaTime;
 		clamp(m_fAlcohol, 0.0f, 1.0f);
+
 		CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effAlcohol);
 		if (ce)
 			RemoveEffector(m_object, effAlcohol);
 
+		return;
 	}
 
-	if (GodMode())				return;
-	if (!object().g_Alive())	return;
-	if (!object().Local() && m_object != Level().CurrentViewEntity())		return;	
-	
-	float base_weight			= object().MaxCarryWeight();
-	float cur_weight			= object().inventory().TotalWeight();
+	if (!object().g_Alive())
+		return;
 
-	if ((object().mstate_real&mcAnyMove))
+	if (!object().Local() && m_object != Level().CurrentViewEntity())
+		return;
+
+	float base_weight = object().MaxCarryWeight();
+	float cur_weight = object().inventory().TotalWeight();
+
+	if ((object().mstate_real & mcAnyMove))
 	{
-		ConditionWalk( cur_weight / base_weight,
-			isActorAccelerated( object().mstate_real,object().IsZoomAimingMode() ),
-			(object().mstate_real&mcSprint) != 0 );
+		ConditionWalk(cur_weight / base_weight,
+			isActorAccelerated(object().mstate_real, object().IsZoomAimingMode()),
+			(object().mstate_real & mcSprint) != 0);
 	}
-	else ConditionStand( cur_weight / base_weight );
-	
-		float k_max_power = 1.0f;
-		if( true )
+	else 
+		ConditionStand(cur_weight / base_weight);
+
+	float k_max_power = 1.0f + std::min(cur_weight, base_weight) / base_weight + std::max(0.0f, (cur_weight - base_weight) / 10.0f);
+
+	SetMaxPower(GetMaxPower() - m_fPowerLeakSpeed * m_fDeltaTime * k_max_power);
+
+
+
+	m_fAlcohol += m_fV_Alcohol * m_fDeltaTime;
+	clamp(m_fAlcohol, 0.0f, 1.0f);
+
+	CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effAlcohol);
+	if (m_fAlcohol > 0.01f)
+	{
+		if (!ce)
+			AddEffector(m_object, effAlcohol, "effector_alcohol", GET_KOEFF_FUNC(this, &CActorCondition::GetAlcohol));
+	}
+	else
+	{
+		if (ce)
+			RemoveEffector(m_object, effAlcohol);
+	}
+
+	string512 pp_sect_name;
+	shared_str ln = Level().name();
+	if (ln.size())
+	{
+		CEffectorPP* ppe = object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
+
+		strconcat(sizeof(pp_sect_name), pp_sect_name, "effector_psy_health", "_", *ln);
+		if (!pSettings->section_exist(pp_sect_name))
+			xr_strcpy(pp_sect_name, "effector_psy_health");
+
+		if (!fsimilar(GetPsyHealth(), 1.0f, 0.05f))
 		{
-			k_max_power = 1.0f + std::min(cur_weight, base_weight) / base_weight
-				+ std::max(0.0f, (cur_weight - base_weight) / 10.0f);
+			if (!ppe)
+				AddEffector(m_object, effPsyHealth, pp_sect_name, GET_KOEFF_FUNC(this, &CActorCondition::GetPsy));
 		}
 		else
-			k_max_power = 1.0f;
-		
-		SetMaxPower		(GetMaxPower() - m_fPowerLeakSpeed * m_fDeltaTime * k_max_power);
-	
-
-
-	m_fAlcohol		+= m_fV_Alcohol*m_fDeltaTime;
-	clamp			(m_fAlcohol,			0.0f,		1.0f);
-
-	{	
-		CEffectorCam* ce = Actor()->Cameras().GetCamEffector((ECamEffectorType)effAlcohol);
-		if	((m_fAlcohol>0.0001f && !ce) )
-				AddEffector(m_object,effAlcohol, "effector_alcohol", GET_KOEFF_FUNC(this, &CActorCondition::GetAlcohol));
-		else if(ce) RemoveEffector(m_object,effAlcohol);
-		
-		string512			pp_sect_name;
-		shared_str ln		= Level().name();
-		if(ln.size())
 		{
-			CEffectorPP* ppe	= object().Cameras().GetPPEffector((EEffectorPPType)effPsyHealth);
-			
-
-			strconcat			(sizeof(pp_sect_name),pp_sect_name, "effector_psy_health", "_", *ln);
-			if(!pSettings->section_exist(pp_sect_name))
-				xr_strcpy			(pp_sect_name, "effector_psy_health");
-
-			if	( !fsimilar(GetPsyHealth(), 1.0f, 0.05f) )
-			{
-				if(!ppe)
-				{
-					AddEffector(m_object,effPsyHealth, pp_sect_name, GET_KOEFF_FUNC(this, &CActorCondition::GetPsy));
-				}
-			}else
-			{
-				if(ppe)
-					RemoveEffector(m_object,effPsyHealth);
-			}
+			if (ppe)
+				RemoveEffector(m_object, effPsyHealth);
 		}
-//-		if(fis_zero(GetPsyHealth()))
-//-			SetHealth( 0.0f );
-	};
+	}
 
 	UpdateSatiety();
 	UpdateBoosters();
+
 	if (GamePersistent().m_useThirst && bUseThirst)
-	{
 		UpdateThirst();
-	}
 
 	inherited::UpdateCondition();
 
 	UpdateTutorialThresholds();
 
-	if(GetHealth()<0.05f && m_death_effector==NULL)
+	if (GetHealth() < 0.05f && !m_death_effector)
 	{
-		if(pSettings->section_exist("actor_death_effector"))
+		if (pSettings->section_exist("actor_death_effector"))
 			m_death_effector = xr_new<CActorDeathEffector>(this, "actor_death_effector");
 	}
-	if(m_death_effector && m_death_effector->IsActual())
-	{
-		m_death_effector->UpdateCL	();
 
-		if(!m_death_effector->IsActual())
+	if (m_death_effector && m_death_effector->IsActual())
+	{
+		m_death_effector->UpdateCL();
+
+		if (!m_death_effector->IsActual())
 			m_death_effector->Stop();
 	}
 

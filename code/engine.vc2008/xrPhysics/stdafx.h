@@ -1,9 +1,8 @@
-
 #pragma once
 
 #define	MTL_EXPORT_API
 #define ENGINE_API
-#define DLL_API		
+#define DLL_API
 #define ECORE_API
 
 #include "../xrCore/xrCore.h"
@@ -19,7 +18,7 @@
 #include "d3d9types.h"
 
 class CGameMtlLibrary;
-IC CGameMtlLibrary &GMLibrary()
+inline CGameMtlLibrary &GMLibrary()
 {
 	VERIFY(PGMLib);
 	return *PGMLib;

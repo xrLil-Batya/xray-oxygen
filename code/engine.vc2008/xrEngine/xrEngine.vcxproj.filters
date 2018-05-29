@@ -115,18 +115,6 @@
     <Filter Include="Engine\text_editor\edit_actions">
       <UniqueIdentifier>{b52f146a-c846-492c-be78-a724c4bc8c9c}</UniqueIdentifier>
     </Filter>
-    <Filter Include="RenderRef">
-      <UniqueIdentifier>{681edbdc-1817-4f68-b099-f0a81a38e242}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderRef\Execution &amp; 3D">
-      <UniqueIdentifier>{53f9dee2-70c7-4ed1-bf7b-06ba84f15a4f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderRef\Execution &amp; 3D\Visuals">
-      <UniqueIdentifier>{51ebe306-482a-4643-8c2c-f16953b5e3d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="RenderRef\Execution &amp; 3D\Visuals\Skeleton">
-      <UniqueIdentifier>{51dac9fb-ca56-44cc-b86b-4bcbe28922da}</UniqueIdentifier>
-    </Filter>
     <Filter Include="editor">
       <UniqueIdentifier>{1aa52b9f-3ee3-4a22-bb57-ac792f9abb49}</UniqueIdentifier>
     </Filter>
@@ -223,43 +211,58 @@
     <Filter Include="Device">
       <UniqueIdentifier>{0bcaaabd-28be-4fc6-aee0-5c8529d8e19e}</UniqueIdentifier>
     </Filter>
-    <Filter Include="NetServer">
-      <UniqueIdentifier>{92513ec2-b350-4a0d-b927-6ad48a38eca8}</UniqueIdentifier>
+    <Filter Include="Game API\GameTime">
+      <UniqueIdentifier>{52a2ebd5-e7e2-4baf-b02c-6a0c4297c6c2}</UniqueIdentifier>
     </Filter>
-    <Filter Include="CPU">
+    <Filter Include="Engine\CPU">
       <UniqueIdentifier>{3639cf0d-7c52-4245-ba7e-455492fb902d}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Game API\General">
+    <Filter Include="Game API\NetServer">
+      <UniqueIdentifier>{92513ec2-b350-4a0d-b927-6ad48a38eca8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Kernel">
       <UniqueIdentifier>{a111e29f-5a82-4e9d-90e3-d2f04b02d807}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\RenderRef">
+      <UniqueIdentifier>{681edbdc-1817-4f68-b099-f0a81a38e242}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\RenderRef\Execution &amp; 3D">
+      <UniqueIdentifier>{53f9dee2-70c7-4ed1-bf7b-06ba84f15a4f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals">
+      <UniqueIdentifier>{51ebe306-482a-4643-8c2c-f16953b5e3d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton">
+      <UniqueIdentifier>{51dac9fb-ca56-44cc-b86b-4bcbe28922da}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="CopyProtection.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="dedicated_server_only.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="defines.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="mp_logging.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="no_single.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="stdafx.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="trivial_encryptor.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="x_ray.h">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="IInputReceiver.h">
       <Filter>Interfaces\Input</Filter>
@@ -478,13 +481,13 @@
       <Filter>Device</Filter>
     </ClInclude>
     <ClInclude Include="Fmesh.h">
-      <Filter>RenderRef\Execution &amp; 3D\Visuals</Filter>
+      <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals</Filter>
     </ClInclude>
     <ClInclude Include="SkeletonMotionDefs.h">
-      <Filter>RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
+      <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
     </ClInclude>
     <ClInclude Include="SkeletonMotions.h">
-      <Filter>RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
+      <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
     </ClInclude>
     <ClInclude Include="engine_impl.hpp">
       <Filter>editor\engine_impl</Filter>
@@ -579,37 +582,40 @@
     <ClInclude Include="ide.hpp">
       <Filter>editor\ide</Filter>
     </ClInclude>
-    <ClInclude Include="..\FrayBuildConfig.hpp" />
-    <ClInclude Include="ShadersExternalData.h" />
-    <ClInclude Include="vis_object_data.h" />
     <ClInclude Include="ClS\NET_PlayersMonitor.h">
-      <Filter>NetServer</Filter>
+      <Filter>Game API\NetServer</Filter>
     </ClInclude>
     <ClInclude Include="ClS\NET_Server.h">
-      <Filter>NetServer</Filter>
+      <Filter>Game API\NetServer</Filter>
     </ClInclude>
     <ClInclude Include="ClS\NET_Shared.h">
-      <Filter>NetServer</Filter>
+      <Filter>Game API\NetServer</Filter>
     </ClInclude>
     <ClInclude Include="ClS\NET_Client.h">
-      <Filter>NetServer</Filter>
+      <Filter>Game API\NetServer</Filter>
     </ClInclude>
-    <ClInclude Include="ClS\NET_Common.h">
-      <Filter>NetServer</Filter>
+    <ClInclude Include="date_time.h">
+      <Filter>Game API\GameTime</Filter>
     </ClInclude>
-    <ClInclude Include="ClS\NET_Messages.h">
-      <Filter>NetServer</Filter>
+    <ClInclude Include="vis_object_data.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="ShadersExternalData.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\FrayBuildConfig.hpp">
+      <Filter>Kernel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="stdafx.cpp">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="x_ray.cpp">
-      <Filter>Game API\General</Filter>
+      <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="IInputReceiver.cpp">
       <Filter>Interfaces\Input</Filter>
@@ -782,9 +788,6 @@
     <ClCompile Include="EventAPI.cpp">
       <Filter>Engine\Core</Filter>
     </ClCompile>
-    <ClCompile Include="mailSlot.cpp">
-      <Filter>Engine\Core</Filter>
-    </ClCompile>
     <ClCompile Include="perlin.cpp">
       <Filter>Engine\Noise</Filter>
     </ClCompile>
@@ -825,10 +828,10 @@
       <Filter>Device</Filter>
     </ClCompile>
     <ClCompile Include="fmesh.cpp">
-      <Filter>RenderRef\Execution &amp; 3D\Visuals</Filter>
+      <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals</Filter>
     </ClCompile>
     <ClCompile Include="SkeletonMotions.cpp">
-      <Filter>RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
+      <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton</Filter>
     </ClCompile>
     <ClCompile Include="engine_impl.cpp">
       <Filter>editor\engine_impl</Filter>
@@ -915,34 +918,47 @@
       <Filter>editor\environment\detail</Filter>
     </ClCompile>
     <ClCompile Include="BoneEditor.cpp">
-      <Filter>RenderRef</Filter>
+      <Filter>Game API\RenderRef</Filter>
     </ClCompile>
     <ClCompile Include="ClS\NET_Server.cpp">
-      <Filter>NetServer</Filter>
+      <Filter>Game API\NetServer</Filter>
     </ClCompile>
     <ClCompile Include="ClS\NET_Client.cpp">
-      <Filter>NetServer</Filter>
+      <Filter>Game API\NetServer</Filter>
     </ClCompile>
     <ClCompile Include="CPU\xrSkin2W_thread.cpp">
-      <Filter>CPU</Filter>
+      <Filter>Engine\CPU</Filter>
     </ClCompile>
     <ClCompile Include="CPU\xrSkin2W.cpp">
-      <Filter>CPU</Filter>
+      <Filter>Engine\CPU</Filter>
     </ClCompile>
     <ClCompile Include="CPU\xrCPU_Pipe.cpp">
-      <Filter>CPU</Filter>
+      <Filter>Engine\CPU</Filter>
     </ClCompile>
     <ClCompile Include="CPU\PLC.cpp">
-      <Filter>CPU</Filter>
+      <Filter>Engine\CPU</Filter>
+    </ClCompile>
+    <ClCompile Include="date_time.cpp">
+      <Filter>Game API\GameTime</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClientServer.txt" />
-    <None Include="Effects description.txt" />
-    <None Include="features.txt" />
-    <None Include="TODO.txt" />
+    <None Include="ClientServer.txt">
+      <Filter>Game API\NetServer</Filter>
+    </None>
+    <None Include="TODO.txt">
+      <Filter>Engine</Filter>
+    </None>
+    <None Include="features.txt">
+      <Filter>Engine</Filter>
+    </None>
+    <None Include="Effects description.txt">
+      <Filter>Engine</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
-    <Natvis Include="..\xrCore.natvis" />
+    <Natvis Include="..\xrCore.natvis">
+      <Filter>Kernel</Filter>
+    </Natvis>
   </ItemGroup>
 </Project>

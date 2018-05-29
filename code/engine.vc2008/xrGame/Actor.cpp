@@ -88,7 +88,7 @@ static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
 
-Flags32			psActorFlags={AF_GODMODE_RT|AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE};
+Flags32			psActorFlags={AF_GODMODE_RT|AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE};
 int				psActorSleepTime = 1;
 
 
@@ -100,10 +100,10 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
     cameras[eacFirstEye]->Load("actor_firsteye_cam");
 
-	cameras[eacLookAt] = xr_new<CCameraLook2>(this);
+	cameras[eacLookAt] = xr_new<CCameraLook2>(this, CCameraBase::flKeepPitch);
     cameras[eacLookAt]->Load("actor_look_cam_psp");
  
-    cameras[eacFreeLook] = xr_new<CCameraLook>(this);
+    cameras[eacFreeLook] = xr_new<CCameraLook>(this, CCameraBase::flKeepPitch);
     cameras[eacFreeLook]->Load("actor_free_cam");
 
     cam_active = eacFirstEye;
@@ -146,7 +146,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	Device.seqRender.Add	(this,REG_PRIORITY_LOW);
 #endif
 
-	//��������� ������������� ����� � inventory
+	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 
 	m_pPersonWeLookingAt	= 0;
@@ -337,7 +337,7 @@ void CActor::Load	(LPCSTR section )
 	// sheduler
 	shedule.t_min				= shedule.t_max = 1;
 
-	// ��������� ��������� ��������
+	// настройки дисперсии стрельбы
 	m_fDispBase					= pSettings->r_float		(section,"disp_base"		 );
 	m_fDispBase					= deg2rad(m_fDispBase);
 
@@ -737,7 +737,8 @@ void CActor::UpdateCL	()
 		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))
 			m_bPickupMode = true;
  	}
-
+	if(psActorFlags.test(AF_HARDCORE))
+	cam_Set(eacFirstEye);
 	UpdateInventoryOwner			(Device.dwTimeDelta);
 
 	if(m_feel_touch_characters>0)
@@ -1067,11 +1068,11 @@ void CActor::shedule_Update	(u32 DT)
 			m_DangerSnd.stop();
 	}
 	
-	//���� � ������ HUD, �� ���� ������ ������ �� ��������
+	//если в режиме HUD, то сама модель актера не рисуется
 	if(!character_physics_support()->IsRemoved())
 		setVisible				(!HUDview	());
 
-	//��� ����� ����� ����� �����
+	//что актер видит перед собой
 	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
 	
 
@@ -1308,36 +1309,35 @@ void CActor::ForceTransform(const Fmatrix& m)
 	const float block_damage_time_seconds = 2.f;
 }
 
-ENGINE_API extern float		psHUD_FOV;
+ENGINE_API extern float	psHUD_FOV;
 float CActor::Radius()const
-{ 
-	float R		= inherited::Radius();
-	CWeapon* W	= smart_cast<CWeapon*>(inventory().ActiveItem());
-	if (W) R	+= W->Radius();
-	//	if (HUDview()) R *= 1.f/psHUD_FOV;
+{
+	float R = inherited::Radius();
+	CWeapon* W = smart_cast<CWeapon*>(inventory().ActiveItem());
+	if (W) R += W->Radius();
+
 	return R;
 }
 
-bool		CActor::use_bolts				() const
+bool CActor::use_bolts() const
 {
 	return CInventoryOwner::use_bolts();
 };
 
 int		g_iCorpseRemove = 1;
 
-bool  CActor::NeedToDestroyObject() const
+bool CActor::NeedToDestroyObject() const
 {
 		return false;
 }
 
-ALife::_TIME_ID	 CActor::TimePassedAfterDeath()	const
+ALife::_TIME_ID CActor::TimePassedAfterDeath() const
 {
 	if(!g_Alive())
 		return Level().timeServer() - GetLevelDeathTime();
 	else
 		return 0;
 }
-
 
 void CActor::OnItemTake(CInventoryItem *inventory_item)
 {
@@ -1376,13 +1376,12 @@ void CActor::OnItemDropUpdate()
 {
 	CInventoryOwner::OnItemDropUpdate();
 
-	for (auto it : inventory().m_all)
+	for (PIItem &it : inventory().m_all)
 	{
 		if (!it->IsInvalid() && !attached(it))
 			attach(it);
 	}
 }
-
 
 void CActor::OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place)
 {
@@ -1394,7 +1393,7 @@ void CActor::OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& p
 	CInventoryOwner::OnItemBelt(inventory_item, previous_place);
 }
 
-#define ARTEFACTS_UPDATE_TIME 0.100f
+static constexpr float ARTEFACTS_UPDATE_TIME = 0.100f;
 
 void CActor::UpdateArtefactsOnBeltAndOutfit()
 {
@@ -1558,6 +1557,7 @@ bool CActor::can_attach(const CInventoryItem *inventory_item) const
 	return true;
 }
 
+#include "game_cl_base.h"
 void CActor::OnDifficultyChanged	()
 {
 	// immunities

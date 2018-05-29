@@ -627,10 +627,8 @@ public:
 //-------------------------------------------------------------------
 // CBaseMonster's  debug template functions
 //-------------------------------------------------------------------
-
-#include "../../../ai_debug_variables.h"
-
 #ifdef DEBUG
+#include "../../../ai_debug_variables.h"
 template <class Type>
 bool   CBaseMonster::get_debug_var (pcstr var_name, OUT Type& result)
 {

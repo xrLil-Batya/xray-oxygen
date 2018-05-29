@@ -748,10 +748,12 @@ int Limb::try_singularities(int solves, float &swivel_angle, float x[])
 //
 // Assumes that either SetGoal or SetGoalPos has been called first
 //
+using flLimits = std::numeric_limits<float>;
+
 int Limb::Solve(float x[], float *new_swivel, float *new_pos)
 {
 	int success;
-	float swivel_angle = -FLT_MAX;
+	float swivel_angle = -flLimits::infinity();
 
 	x[3] = x3;
 
@@ -792,7 +794,7 @@ int Limb::Solve(float x[], float *new_swivel, float *new_pos)
 		swivel_angle = 0.0f;
 		success = SolveByAngle(swivel_angle, x);
 	}
-	VERIFY(swivel_angle != -FLT_MAX);
+	VERIFY(swivel_angle != -flLimits::infinity());
 	if (new_swivel)
 		*new_swivel = swivel_angle;
 	if (new_pos)
@@ -978,9 +980,6 @@ void Limb::ForwardKinematics(float x[7], Matrix  R)
 
 int Limb::SolveAim(float x[3], float psi_angle)
 {
-	//   if (check_limits)
-	   //printf("warning limits for solveaim not yet implemented\n");
-
 	Matrix R1;
 
 	solver.SolveAim(psi_angle, R1);

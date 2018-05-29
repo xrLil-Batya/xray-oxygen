@@ -40,7 +40,7 @@ enum EWindowAlignment{
 class CUISimpleWindow
 {
 public:
-							CUISimpleWindow		()											{m_alignment=waNone; m_wndPos.set(0,0); m_wndSize.set(0,0);}
+							CUISimpleWindow		()											{m_alignment=waNone; m_wndPos.set(0,0); m_wndSize.set(0,0);} //-V730
 
     CUISimpleWindow(const CUISimpleWindow& other) = delete;
     CUISimpleWindow& operator=(const CUISimpleWindow& other) = delete;

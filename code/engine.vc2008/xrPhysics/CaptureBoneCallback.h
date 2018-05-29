@@ -5,9 +5,9 @@
 
 struct CPHCaptureBoneCallback : public NearestToPointCallback
 {
-	virtual	bool operator() ( u16 bid )	= 0;
-	virtual	bool operator() ( IPhysicsElementEx* e )	
+	virtual	bool operator() (u16 bid) = 0;
+	virtual	bool operator() (IPhysicsElementEx* e)
 	{
-		return (*this) ( e->m_SelfID );
+		return (*this) (e->m_SelfID);
 	};
 };

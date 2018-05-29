@@ -408,7 +408,6 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="blender_rain_drops.cpp" />
     <ClCompile Include="Blender_ss.cpp" />
     <ClCompile Include="blender_sunshafts.cpp" />

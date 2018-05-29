@@ -1285,7 +1285,6 @@ IElevatorState	*CPHMovementControl::ElevatorState()
 {
 	if(!m_character || !m_character->b_exist)return NULL;
 	return m_character->ElevatorState();
-	//m_character->SetElevator()
 }
 
 
@@ -1298,7 +1297,8 @@ struct STraceBorderQParams
 	{
 		m_movement=movement		;
 	}
-	STraceBorderQParams& operator = (STraceBorderQParams& p) {VERIFY(FALSE);return p;}
+	//TODO: V790: is odd that the assignment operator takes an object by a non-constant reference and returns this object.
+	STraceBorderQParams& operator = (STraceBorderQParams& p) {VERIFY(FALSE);return p;} 
 };
 
 BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID params)

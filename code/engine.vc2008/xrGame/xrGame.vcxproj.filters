@@ -370,12 +370,6 @@
     <Filter Include="AI\ALife">
       <UniqueIdentifier>{7a5eac44-1f05-453a-9187-8f6e08379cf3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\ALife\interaction_manager">
-      <UniqueIdentifier>{840054a2-e9cb-4e5c-8240-738318d41d7a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\ALife\interaction_manager\combat_manager">
-      <UniqueIdentifier>{c5f74147-7732-4e9c-bab6-2fe1e3ef6870}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\ALife\simulator_base">
       <UniqueIdentifier>{8daaabae-d27c-4dac-a065-58ca13936696}</UniqueIdentifier>
     </Filter>
@@ -1933,17 +1927,8 @@
     <Filter Include="Core\Server\Games\client">
       <UniqueIdentifier>{5a7f36c3-d5fc-4a19-9244-e48263b88307}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\Games\client\single">
-      <UniqueIdentifier>{2db0250d-9394-47fc-8166-fd4c8b4bb3c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\Games\client\base">
-      <UniqueIdentifier>{8bf333fd-c612-4511-a5c8-6ab4ee140b0a}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Server\Games\server">
       <UniqueIdentifier>{f176e7fa-e215-4fd6-9a03-8a8f4ddea948}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\Games\server\single">
-      <UniqueIdentifier>{780d18dd-4269-4905-896e-983cfc131fb9}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Server\ID_Generator">
       <UniqueIdentifier>{a264bf85-defa-4f04-b247-118bcccc3bc0}</UniqueIdentifier>
@@ -2145,9 +2130,6 @@
     </Filter>
     <Filter Include="Core\Client\Objects\Trade">
       <UniqueIdentifier>{d4634bbb-5b2b-4935-9834-0ac02849b001}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\Games\server\base">
-      <UniqueIdentifier>{365ed75e-e2e4-420d-aecd-9b4593b55b0e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter">
       <UniqueIdentifier>{b715dea7-8373-4cb2-8ccc-7fba89926be7}</UniqueIdentifier>
@@ -2819,12 +2801,6 @@
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\alife_space.h">
       <Filter>AI\ALife</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_interaction_manager.h">
-      <Filter>AI\ALife\interaction_manager</Filter>
-    </ClInclude>
-    <ClInclude Include="alife_combat_manager.h">
-      <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
     </ClInclude>
     <ClInclude Include="alife_simulator_base.h">
       <Filter>AI\ALife\simulator_base</Filter>
@@ -4848,9 +4824,6 @@
     <ClInclude Include="EffectorShot.h">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClInclude>
-    <ClInclude Include="EffectorShotX.h">
-      <Filter>Core\Client\Effectors\Weapon</Filter>
-    </ClInclude>
     <ClInclude Include="EffectorZoomInertion.h">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClInclude>
@@ -5445,9 +5418,6 @@
     <ClInclude Include="InventoryBox.h">
       <Filter>Core\Client\Objects\inventory_box</Filter>
     </ClInclude>
-    <ClInclude Include="date_time.h">
-      <Filter>Core\Common\DateTime</Filter>
-    </ClInclude>
     <ClInclude Include="NET_Queue.h">
       <Filter>Core\Common\NET Shared</Filter>
     </ClInclude>
@@ -5559,50 +5529,14 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h">
       <Filter>Core\Server</Filter>
     </ClInclude>
-    <ClInclude Include="xrServerMapSync.h">
-      <Filter>Core\Server</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\DrawUtils.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\FastDelegate.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\ItemListTypes.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="PropertiesListHelper.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\WaveForm.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\xrEProps.h">
-      <Filter>Core\Server\Editor</Filter>
-    </ClInclude>
     <ClInclude Include="game_base.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="game_base_kill_type.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="game_base_menu_events.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\game_base_space.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
-    <ClInclude Include="game_cl_single.h">
-      <Filter>Core\Server\Games\client\single</Filter>
-    </ClInclude>
-    <ClInclude Include="game_cl_base.h">
-      <Filter>Core\Server\Games\client\base</Filter>
-    </ClInclude>
     <ClInclude Include="game_sv_event_queue.h">
       <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
-    <ClInclude Include="game_sv_single.h">
-      <Filter>Core\Server\Games\server\single</Filter>
     </ClInclude>
     <ClInclude Include="id_generator.h">
       <Filter>Core\Server\ID_Generator</Filter>
@@ -5648,9 +5582,6 @@
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
-    </ClInclude>
-    <ClInclude Include="xrServer_svclient_validation.h">
-      <Filter>Core\Server\ServerProcess</Filter>
     </ClInclude>
     <ClInclude Include="ui_base.h">
       <Filter>AI\AScript\ScriptClasses\UI</Filter>
@@ -6162,14 +6093,17 @@
     <ClInclude Include="xr_time.h">
       <Filter>Core\Server\Games\server</Filter>
     </ClInclude>
-    <ClInclude Include="game_sv_base.h">
-      <Filter>Core\Server\Games\server\base</Filter>
-    </ClInclude>
     <ClInclude Include="Dosimeter.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
     </ClInclude>
     <ClInclude Include="UIDosimeter.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClInclude>
+    <ClInclude Include="game_sv_base.h">
+      <Filter>Core\Server\Games\server</Filter>
+    </ClInclude>
+    <ClInclude Include="game_cl_base.h">
+      <Filter>Core\Server\Games\client</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -6463,9 +6397,6 @@
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\alife_space.cpp">
       <Filter>AI\ALife</Filter>
-    </ClCompile>
-    <ClCompile Include="alife_combat_manager.cpp">
-      <Filter>AI\ALife\interaction_manager\combat_manager</Filter>
     </ClCompile>
     <ClCompile Include="alife_simulator_base.cpp">
       <Filter>AI\ALife\simulator_base</Filter>
@@ -7529,9 +7460,6 @@
     <ClCompile Include="EffectorShot.cpp">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClCompile>
-    <ClCompile Include="EffectorShotX.cpp">
-      <Filter>Core\Client\Effectors\Weapon</Filter>
-    </ClCompile>
     <ClCompile Include="EffectorZoomInertion.cpp">
       <Filter>Core\Client\Effectors\Weapon</Filter>
     </ClCompile>
@@ -8090,9 +8018,6 @@
     <ClCompile Include="console_commands.cpp">
       <Filter>Core\Common\Console Commands</Filter>
     </ClCompile>
-    <ClCompile Include="date_time.cpp">
-      <Filter>Core\Common\DateTime</Filter>
-    </ClCompile>
     <ClCompile Include="xrgame_dll_detach.cpp">
       <Filter>Core\Common\Dll Process Detach</Filter>
     </ClCompile>
@@ -8126,23 +8051,11 @@
     <ClCompile Include="xrServer.cpp">
       <Filter>Core\Server</Filter>
     </ClCompile>
-    <ClCompile Include="xrServerMapSync.cpp">
-      <Filter>Core\Server</Filter>
-    </ClCompile>
     <ClCompile Include="game_base.cpp">
       <Filter>Core\Server\Games</Filter>
     </ClCompile>
-    <ClCompile Include="game_cl_single.cpp">
-      <Filter>Core\Server\Games\client\single</Filter>
-    </ClCompile>
-    <ClCompile Include="game_cl_base.cpp">
-      <Filter>Core\Server\Games\client\base</Filter>
-    </ClCompile>
     <ClCompile Include="game_sv_event_queue.cpp">
       <Filter>Core\Server\Games\server</Filter>
-    </ClCompile>
-    <ClCompile Include="game_sv_single.cpp">
-      <Filter>Core\Server\Games\server\single</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp">
       <Filter>Core\Server\ServerEntities</Filter>
@@ -8210,16 +8123,7 @@
     <ClCompile Include="xrServer_perform_GameExport.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
-    <ClCompile Include="xrServer_perform_migration.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
     <ClCompile Include="xrServer_perform_sls_default.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_sls_load.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_sls_save.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_perform_transfer.cpp">
@@ -8247,9 +8151,6 @@
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_process_update.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_svclient_validation.cpp">
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_CL_connect.cpp">
@@ -8801,14 +8702,17 @@
     <ClCompile Include="xr_time.cpp">
       <Filter>Core\Server\Games\server</Filter>
     </ClCompile>
-    <ClCompile Include="game_sv_base.cpp">
-      <Filter>Core\Server\Games\server\base</Filter>
-    </ClCompile>
     <ClCompile Include="Dosimeter.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
     </ClCompile>
     <ClCompile Include="UIDosimeter.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter</Filter>
+    </ClCompile>
+    <ClCompile Include="game_sv_base.cpp">
+      <Filter>Core\Server\Games\server</Filter>
+    </ClCompile>
+    <ClCompile Include="game_cl_base.cpp">
+      <Filter>Core\Server\Games\client</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

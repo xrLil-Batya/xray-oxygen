@@ -1,6 +1,5 @@
 #include "defines.ltx"
 #include "prefetch\prefetch.ltx"
-;#include "weathers\environment.ltx"
 #include "creatures\monsters.ltx"
 #include "creatures\stalkers.ltx"
 #include "weapons\weapons.ltx"
@@ -20,6 +19,7 @@
 #include "models\dynamic_objects.ltx"
 #include "misc\m_online_offline_group.ltx"
 #include "misc\squad_descr.ltx"
+#include "misc\capture_visuals_list.ltx"
 
 #include "misc\effectors.ltx"
 #include "creatures\helicopter.ltx"
@@ -27,30 +27,11 @@
 
 #include "creatures\game_relations.ltx"
 
-#include "mp\mp_actor.ltx"
-#include "mp\team_logo.ltx"
-#include "mp\weapons_mp\ammo_mp.ltx"
-#include "mp\weapons_mp\weapons_mp.ltx"
-#include "mp\weapons_mp\outfit_mp.ltx"
-#include "mp\weapons_mp\items_mp.ltx"
-
-;Game types
-#include "mp\SoundMessages\mp_snd_messages.ltx"
-#include "mp\SoundMessages\ahunt_snd_messages.ltx"
-#include "mp\SoundMessages\cta_snd_messages.ltx"
-#include "mp\SoundMessages\dm_snd_messages.ltx"
-#include "mp\SoundMessages\tdm_snd_messages.ltx"
-#include "mp\private_defines.ltx"
-#include "mp\deathmatch_game.ltx"
-#include "mp\teamdeathmatch_game.ltx"
-#include "mp\artefacthunt_game.ltx"
-#include "mp\capturetheartefact_game.ltx"
-#include "mp\anticheat_active_params.ltx"
-
 #include "evaluation.ltx"
 #include "fonts.ltx"
 
 #include "alife.ltx"
+
 ; SIMULATION
 #include "misc\simulation.ltx"
 
@@ -61,7 +42,6 @@
 #include "extracontent.ltx"
 #include "localization.ltx"
 #include "smart_cover.ltx"
-
 
 [zone_pick_dof]
 near    = -1500.0
@@ -84,7 +64,7 @@ ang_speed3  = 2.0
 
 
 [info_portions]
-;список xml файлов, содержаих info_portions
+;list of xml files containing info_portions
 files = info_portions, info_zaton, info_jupiter, info_pripyat, info_upgrades
 
 [dialogs]
@@ -95,10 +75,10 @@ files = dialogs, dialogs_zaton, dialogs_jupiter, dialogs_pripyat
 files = encyclopedia_infos
 
 [profiles]
-;список xml файлов, содержаих профили сталкеров и торговцев
+;list of xml files containing stalker profiles
 files =  npc_profile
 
-;список xml файлов, содержаих описаниљ конкретнvх сталкеров и торговцев
+;list of xml files containing description of specific stalkers
 specific_characters_files = character_desc_general, character_desc_zaton, character_desc_pripyat, character_desc_jupiter, character_desc_underpass
 
 
@@ -176,37 +156,37 @@ max_count     = 5
 
 [bloody_marks]
 wallmarks     = wm\wm_blood_1,wm\wm_blood_2,wm\wm_blood_3
-dist        = 2.0 ;2.4  ;(м) max расстољние отлета крови
-max_size      = 0.4 ;0.3  ;(м)радиус пљтна при хите силой nominal hit по большому объекту (по маленькому *0.5)
-min_size      = 0.06      ;(м)минимальнvй радиус пљтна
-nominal_hit     = 0.5     ;величина номинального хита, при котором разлетаетсљ максимум крови (max_size)
+dist        = 2.0 ;2.4  ;(m) max bleeding distance
+max_size      = 0.4 ;0.3  ;(m) radius of a spot when hit by force of a nominal hit on a large object (on a small *0.5)
+min_size      = 0.06      ;(m) minimum spot radius
+nominal_hit     = 0.5     ;the size of the nominal hit, at which the maximum of blood splashing (max_size)
 
-;капли крови
+;drops of blood
 
 blood_drops     = wm\wm_blood_drop_1,wm\wm_blood_drop_2,wm\wm_blood_drop_3,wm\wm_blood_drop_4
-start_blood_size  = 0.4     ;размер ранv чтоб начала капать кровь
-stop_blood_size   = 0.025     ;размер ранv чтоб кровь остановилась (должно бvть меньше start_blood_size)
+start_blood_size  = 0.4     ;the size of the wound to start dripping blood
+stop_blood_size   = 0.025     ;the size of the wound to stop bleeding (should be less than start_blood_size)
 
 blood_drop_time     = 0.1     ;OBSOLETE
 blood_drop_time_min = 0.3     ;
 blood_drop_time_max = 2.0     ;
-blood_drop_size   = 0.1     ;размер капли (м) крови, котораљ упала
+blood_drop_size   = 0.1     ;the size of the drop (m) of the blood that fell
 
 
 [entity_fire_particles]
 fire_particles = damage_fx\burn_creatures
-start_burn_size = 0.0003    ;размер ожега после которого начать играть партиклv огнљ
-stop_burn_size  = 0.0001    ;размер ожега после которого остановить партиклv
-min_burn_time = 10000   ;минимальное времљ отvгрvша партиклов (даже если рана уже зажила)
+start_burn_size = 0.0003    ;the size of the burn after which start playing particle of fire
+stop_burn_size  = 0.0001    ;the size of the burn after which to stop the particle
+min_burn_time = 10000   ;the minimum playing time for particles (even if the wound has already healed)
 
 [hud_cursor]
-;все размерv в процентах от длинv экрана
-cross_length    = 0.015         ;длина "палочки" прицела
-min_radius      = 0.0         ;минимальнvй радиус прицела (при нулевой дисперсии)
-max_radius      = 1.0         ;максимальнvй радиус
-radius_lerp_speed = 0.08          ;скорость интерполљции положений прицела
-cross_color     = 0.7,0.7,0.7,0.5   ;цвет прицела
-disp_scale      = 0.08          ;масштаб прицела (относительно радиан)
+;all sizes in percent of screen length
+cross_length    = 0.015         ;the length of the "stick" of the sight
+min_radius      = 0.0         ;the minimum radius of the sight (with zero dispersion)
+max_radius      = 1.0         ;maximum radius
+radius_lerp_speed = 0.08          ;interpolation speed of sight positions
+cross_color     = 0.7,0.7,0.7,0.5   ;color of sight
+disp_scale      = 0.08          ;scale of sight (relative to radians)
 
 [hud_hitmark]
 hit_mark_texture    = ui\ui_hud_hit_mark; ui\ui_empty
@@ -290,6 +270,7 @@ lim_pitch                = -1.5, 1.5
 lim_yaw                  = -1.0, 1.0
 rot_speed                = 3.14, 3.14, 0
 first_person_zoom		 = false
+
 [actor_free_cam]
 ;----------------
 lim_pitch                = -1.5, 1.5
@@ -297,12 +278,14 @@ lim_yaw                  = 0, 0
 lim_zoom                 = 0.4, 10
 rot_speed                = 3.14, 1.0, 10
 first_person_zoom		 = false
+
 [actor_look_cam]
 lim_pitch                = -0.7, 1
 lim_yaw                  = 0, 0
 lim_zoom                 = 1, 5
 rot_speed                = 3.14, 6.28, 10
 first_person_zoom		 = true
+
 [actor_look_cam_psp]
 lim_pitch                = -0.7, 1
 lim_yaw                  = 0, 0
@@ -318,35 +301,41 @@ lim_pitch                = -0.5, 0.5
 lim_yaw                  = -2.0, 2.0
 rot_speed                = 3.14, 1.0, 0
 first_person_zoom		 = false
+
 [car_firsteye_cam]
 lim_pitch                = -0.5, 0.3
 lim_yaw                  = -2.0, 2.0
 rot_speed                = 3.14, 1.0, 0
 first_person_zoom		 = false
+
 [car_free_cam]
 lim_pitch                = -1, 1.56 ;0, 1.56
 lim_yaw                  = 0, 0 ;0, 0
 lim_zoom                 = 1, 10 ;1, 7
 rot_speed                = 3.14, 1.0, 10 ;3.14, 1.0, 10
 first_person_zoom		 = false
+
 [car_look_cam]
 lim_pitch                = 0, 1.56
 lim_yaw                  = 0  , 0
 lim_zoom                 = 1, 7
 rot_speed                = 25, 1.0, 10
 first_person_zoom		 = true
+
 [heli_free_cam]
 lim_pitch                = -1.5, 1.5
 lim_yaw                  = 0, 0
 lim_zoom                 = 5, 25
 rot_speed                = 3.14, 1.0, 10
 first_person_zoom		 = false
+
 [heli_front_cam]
 ;lim_yaw    = -0.01,0.01
 lim_pitch                = -1.2, 1.2
 lim_yaw                  = -1.5, 1.5
 rot_speed                = 3.14, 1.5, 0
 first_person_zoom		 = false
+
 [heli_look_cam]
 lim_pitch                = 0, 1.56
 lim_yaw                  = 0, 0
@@ -358,7 +347,6 @@ first_person_zoom		 = false
 font_game                = font_game
 font_small               = font_small
 
-
 [graph_point]
 class                = AI_GRAPH
 $spawn               = "ai\graph point"
@@ -367,12 +355,12 @@ $spawn               = "ai\graph point"
 ; Trade
 ;-----------------------------------------------------------------
 [trade]
-;коэффициентv изменениљ ценv при торговле в зависимости от отношениљ к персонажу
-;линейно апроксимируітсљ между значениљ
-buy_price_factor_hostile  = 1   ;коэффициент покупки при goodwill = -100
-buy_price_factor_friendly = 1   ;коэффициент покупки при goodwill = 100
-sell_price_factor_hostile = 1   ;коэффициент покупки при goodwill = -100
-sell_price_factor_friendly  = 1   ;коэффициент покупки при goodwill = 100
+;coefficient of price change in trade, depending on the relationship to the character
+;linearly approximated between the values
+buy_price_factor_hostile  = 1   ;purchase factor at goodwill = -100
+buy_price_factor_friendly = 1   ;purchase factor at goodwill = 100
+sell_price_factor_hostile = 1   ;purchase factor at goodwill = -100
+sell_price_factor_friendly  = 1   ;purchase factor at goodwill = 100
 
 
 
@@ -409,7 +397,7 @@ script_binding  = xr_zones.bind
 object_damage_factor    = 1.2f
 
 ;*****************************************
-; ++=+іLT+і- Lі+=
+; ++=+ВіLT+Ві- LВі+=
 ;*****************************************
 [stalker_names_stalker]
 name_cnt    = 104
@@ -450,7 +438,7 @@ Human             = off                     ; option for ALife Simulator
 cform                       = skeleton                    ; collision class
 class                       = SCRPTOBJ                    ; AI class
 
-;параметрv показvваниљ входљих сообений PDA в главном мені
+;parameters for displaying incoming PDA messages in the main menu
 [maingame_ui]
 pda_msgs_max_show_time = 20000
 info_msgs_max_show_time = 10000
@@ -512,12 +500,12 @@ inv_grid_width      = 2
 inv_grid_height     = 1
 inv_grid_x        = 16
 inv_grid_y        = 12
-attach_angle_offset   = -1.5708,0.1919,3.1416    ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset   = -1.5708,0.1919,3.1416    ;set in radians Angle*PI/180
 attach_position_offset  = 0.075, 0.066, 0.023
 attach_bone_name    = bip01_l_hand
 auto_attach       = false
 
-; рация для правой руки
+; Г°Г Г¶ГЁГї Г¤Г«Гї ГЇГ°Г ГўГ®Г© Г°ГіГЄГЁ
 [hand_radio_r]:identity_immunities
 GroupControlSection   = spawn_group
 discovery_dependency  =
@@ -533,7 +521,7 @@ inv_grid_width      = 2
 inv_grid_height     = 1
 inv_grid_x        = 16
 inv_grid_y        = 12
-attach_angle_offset   = 1.571,0.75,0.0    ;устанавливаетсљ в радианах Angle*PI/180
+attach_angle_offset   = 1.571,0.75,0.0    ;set in radians Angle*PI/180
 attach_position_offset  = 0.015, -0.084, 0.023
 attach_bone_name    = bip01_r_hand
 auto_attach       = false
@@ -645,8 +633,6 @@ script_binding      = bind_camp.bind
 shape_transp_color  = 0, 0, 255, 24
 shape_edge_color    = 32, 32, 32, 255
 
-
-
 [anomal_zone]:space_restrictor
 GroupControlSection = spawn_group_zone
 $spawn          = "ai\anomal_zone"
@@ -662,14 +648,15 @@ shape_edge_color    = 32, 32, 32, 255
 bonce_damage_factor_for_objects = 1.
 
 [pkm_visual_memory]
-min_view_distance       = 1 ;0.4        ; коэффициент, которvй множитсљ на eye_range, в зависимости от угла
-max_view_distance       = 1 ;0.8        ; коэффициент, которvй множитсљ на eye_range, в зависимости от угла
-visibility_threshold    = 50 ;150.0       ; значение, при достижении суммой которого объект считаетсљ видимvм
+min_view_distance       = 1 ;0.4        ;coefficient, which is multiplied by eye_range, depending on the angle
+max_view_distance       = 1 ;0.8        ;coefficient, which is multiplied by eye_range, depending on the angle
+visibility_threshold    = 50 ;150.0       ;value, when the sum reaches which the object is considered visible
 always_visible_distance   = 1 ;0.1
 time_quant          = 0.00001
-decrease_value        = 0.1       ; значение, на которое уменьшаетсљ вес, если объект попал в фрустум, но отсЈксљ по каким-то причинам
+decrease_value        = 0.1       ;the value by which the weight decreases, if the object has got into a frustum, but is ripped apart 
+                                  ;for some reason
 velocity_factor         = 0.5
-luminocity_factor     = 0.5       ; фактор освеениљ (только длљ LктЈра)
+luminocity_factor     = 0.5       ;lighting factor (only for an actor)
 transparency_threshold    = 0.4       ;
 view_fov_deg        = 90
 view_aspect         = 1
@@ -687,104 +674,3 @@ swing_fast_amp2   = .20;0.15
 swing_fast_rot1   = 5
 swing_fast_rot2   = .5;0.75
 swing_fast_speed  = 0.5;1
-
-[ph_capture_visuals]
-
-;Список объектов которvе можно таскать.
-
-;NPC
-;actors\stalker_bandit\stalker_bandit_1
-;actors\stalker_bandit\stalker_bandit_2
-;actors\stalker_bandit\stalker_bandit_3
-;actors\stalker_bandit\stalker_bandit_3_face_1
-;actors\stalker_bandit\stalker_bandit_3_face_2
-;actors\stalker_bandit\stalker_bandit_3_mask
-;actors\stalker_bandit\stalker_bandit_4
-;actors\stalker_dolg\stalker_dolg_1
-;actors\stalker_dolg\stalker_dolg_2
-;actors\stalker_dolg\stalker_dolg_2_face_1
-;actors\stalker_dolg\stalker_dolg_2_face_2
-;actors\stalker_dolg\stalker_dolg_2_mask
-;actors\stalker_dolg\stalker_dolg_3
-;actors\stalker_dolg\stalker_dolg_4
-;actors\stalker_freedom\stalker_freedom_1
-;actors\stalker_freedom\stalker_freedom_2
-;actors\stalker_freedom\stalker_freedom_2_face_1
-;actors\stalker_freedom\stalker_freedom_2_face_2
-;actors\stalker_freedom\stalker_freedom_2_mask
-;actors\stalker_freedom\stalker_freedom_3
-;actors\stalker_freedom\stalker_freedom_4
-;actors\stalker_hero\stalker_hero_1
-;actors\stalker_hero\stalker_hero_stc_strelok
-;actors\stalker_lesnik\stalker_lesnik_1
-;actors\stalker_merc\stalker_merc_2
-;actors\stalker_merc\stalker_merc_4
-;actors\stalker_monolith\stalker_monolith_1
-;actors\stalker_monolith\stalker_monolith_2
-;actors\stalker_monolith\stalker_monolith_3
-;actors\stalker_monolith\stalker_monolith_4
-;actors\stalker_nebo\stalker_nebo_1
-;actors\stalker_nebo\stalker_nebo_2
-;actors\stalker_nebo\stalker_nebo_2_face_1
-;actors\stalker_nebo\stalker_nebo_2_face_2
-;actors\stalker_nebo\stalker_nebo_2_face_3
-;actors\stalker_nebo\stalker_nebo_2_mask
-;actors\stalker_nebo\stalker_nebo_3
-;actors\stalker_neutral\stalker_neutral_1
-;actors\stalker_neutral\stalker_neutral_2
-;actors\stalker_neutral\stalker_neutral_2_face_1
-;actors\stalker_neutral\stalker_neutral_2_face_2
-;actors\stalker_neutral\stalker_neutral_2_mask
-;actors\stalker_neutral\stalker_neutral_3
-;actors\stalker_neutral\stalker_neutral_4
-;actors\stalker_soldier\stalker_soldier_1
-;actors\stalker_soldier\stalker_soldier_2
-;actors\stalker_soldier\stalker_soldier_2_face_1
-;actors\stalker_soldier\stalker_soldier_3
-;actors\stalker_soldier\stalker_soldier_4
-;actors\stalker_trader\stalker_trader_1
-;actors\stalker_ucheniy\stalker_ucheniy_1
-;actors\stalker_zombied\stalker_zombied_1
-;actors\stalker_zombied\stalker_zombied_2
-;actors\stalker_zombied\stalker_zombied_3
-;actors\stalker_zombied\stalker_zombied_4
-
-;Monsters
-;monsters\controller\controller_1
-;monsters\controller\controller_2
-;monsters\controller\controller_3
-;monsters\controller\controller_4
-;monsters\controller\controller_dead
-;monsters\crow\crow
-;monsters\dog\dog
-;monsters\dog\dog_bulterier
-;monsters\dog\dog_bulterier_dead
-;monsters\dog\dog_dead
-;monsters\dog\dog_red
-;monsters\dog\dog_red_dead
-;monsters\dog\dog_white
-;monsters\dog\dog_white_dead
-;monsters\flesh\flesh
-;monsters\flesh\flesh_dead
-;monsters\flesh\flesh_strong
-;monsters\krovosos\krovosos
-;monsters\krovosos\krovosos_dead
-;monsters\krovosos\krovosos_strong
-;monsters\krovosos\krovosos_strong_xray
-;monsters\krovosos\krovosos_xray
-;monsters\mutant_boar\mutant_boar
-;monsters\mutant_boar\mutant_boar_dead
-;monsters\mutant_boar\mutant_boar_strong
-;monsters\poltergeist\poltergeist
-;monsters\poltergeist\poltergeist_dead
-;monsters\poltergeist\poltergeist_strong
-;monsters\pseudodog\pseudodog
-;monsters\pseudodog\pseudodog_dead
-;monsters\pseudodog\pseudodog_grey
-;monsters\pseudodog\pseudodog_grey_dead
-;monsters\rat\rat_1
-;monsters\snork\snork
-;monsters\snork\snork_dead
-;monsters\tushkano\tushkano
-;monsters\tushkano\tushkano_dead
-

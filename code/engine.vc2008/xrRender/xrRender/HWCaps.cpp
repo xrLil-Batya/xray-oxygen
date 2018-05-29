@@ -74,7 +74,7 @@ u32 GetATIGpuNum()
 	if (status!=AGS_SUCCESS)
 	{
 		Msg("! AGS: Initialization failed (%d)", status);
-		return 1;
+		return 0;
 	}
 	int crossfireGpuCount = 1;
 	status = agsGetCrossfireGPUCount(ags, &crossfireGpuCount);
@@ -93,12 +93,12 @@ u32 GetGpuNum()
 {
 	u32 res = GetNVGpuNum();
 	res = std::max(res, GetATIGpuNum());
-	res = std::max(res, 3u);
-	res = std::min(res, (u32)CHWCaps::MAX_GPUS);
 
-	//	It's vital to have at least one GPU, else
-	//	code will fail.
-	VERIFY(res>0);
+    if (res == 0)
+    {
+        Msg("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
+        res = 1;
+    }
 
 	Msg("* Starting rendering as %d-GPU.", res);
 	

@@ -221,27 +221,24 @@ pack (const unsigned short s[16],
     //  0xffff		NAN			0x8000
     //
 
+    unsigned short tMax = 0;
+
     unsigned short t[16];
 
     for (int i = 0; i < 16; ++i)
     {
 	if ((s[i] & 0x7c00) == 0x7c00)
-	    t[i] = 0x8000;
+		t[i] = 0x8000;
 	else if (s[i] & 0x8000)
-	    t[i] = ~s[i];
+		t[i] = ~s[i];
 	else
-	    t[i] = s[i] | 0x8000;
-    }
-    
-    //
-    // Find the maximum, tMax, of t[0] ... t[15].
-    //
+		t[i] = s[i] | 0x8000;
 
-    unsigned short tMax = 0;
 
-    for (int i = 0; i < 16; ++i)
+	// Find the maximum, tMax, of t[0] ... t[15].
 	if (tMax < t[i])
-	    tMax = t[i];
+            tMax = t[i];
+    }
 
     //
     // Compute a set of running differences, r[0] ... r[14]:

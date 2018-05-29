@@ -436,9 +436,9 @@ void CObjectList::relcase_unregister	(int* ID)
 
 void CObjectList::dump_list(Objects& v, LPCSTR reason)
 {
+#ifdef DEBUG
 	Objects::iterator it = v.begin();
 	Objects::iterator it_e = v.end();
-#ifdef DEBUG
 	Msg("----------------dump_list [%s]",reason);
 	for(;it!=it_e;++it)
 		Msg("%x - name [%s] ID[%d] parent[%s] getDestroy()=[%s]", 
@@ -451,12 +451,17 @@ void CObjectList::dump_list(Objects& v, LPCSTR reason)
 }
 
 bool CObjectList::dump_all_objects()
-{
-	dump_list(destroy_queue,"destroy_queue");
-	dump_list(objects_active,"objects_active");
-	dump_list(objects_sleeping,"objects_sleeping");
-	dump_list(m_crows[0],"m_crows[0]");
-	dump_list(m_crows[1],"m_crows[1]");
+{ 
+#ifdef DEBUG
+    if (strstr(Core.Params, "-dump_list"))
+    {
+	    dump_list(destroy_queue,"destroy_queue");
+	    dump_list(objects_active,"objects_active");
+	    dump_list(objects_sleeping,"objects_sleeping");
+	    dump_list(m_crows[0],"m_crows[0]");
+	    dump_list(m_crows[1],"m_crows[1]");
+    }
+#endif
 	return false;
 }
 

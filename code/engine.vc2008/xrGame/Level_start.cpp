@@ -13,7 +13,6 @@
 #include "UIGameCustom.h"
 #include "GamePersistent.h"
 
-int		g_cl_save_demo = 0;
 extern XRCORE_API bool g_allow_heap_min;
 
 BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
@@ -62,14 +61,11 @@ BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start4));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start5));
 	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
 	
 	return net_start_result_total;
 }
 
-shared_str level_version(const shared_str &server_options);
-shared_str level_name(const shared_str &server_options);
 bool CLevel::net_start1				()
 {
     shared_str serverOption = GamePersistent().GetServerOption();
@@ -88,7 +84,7 @@ bool CLevel::net_start1				()
 		if (xr_strcmp(p.m_alife,"alife"))
 		{
 			shared_str l_ver			= game_sv_GameState::parse_level_version(serverOption);
-			map_data.m_name				= game_sv_GameState::parse_level_name(serverOption);
+			map_data.m_name				= Server->game->level_name(serverOption);
 			
 			g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
@@ -139,17 +135,6 @@ bool CLevel::net_start4				()
 	return false;
 }
 
-bool CLevel::net_start5()
-{
-	if (net_start_result_total)
-	{
-		NET_Packet		NP;
-		NP.w_begin		(M_CLIENTREADY);
-		Send			(NP,net_flags(TRUE,TRUE));
-	}
-
-	return true;
-}
 bool CLevel::net_start6				()
 {
 	//init bullet manager
@@ -172,7 +157,7 @@ bool CLevel::net_start6				()
 	{
 		Msg("! Failed to start client. Check the connection or level existance.");
 		
-		if (!map_data.m_map_loaded && !map_data.m_name.size() && m_bConnectResult)
+		if (!map_data.m_map_loaded && !map_data.m_name.size())
 		{
 			LPCSTR level_id_string = NULL;
 			LPCSTR dialog_string = NULL;
@@ -186,22 +171,6 @@ bool CLevel::net_start6				()
 			DEL_INSTANCE	(g_pGameLevel);
 			Console->Execute("main_menu on");
 
-		}
-		else
-		if (map_data.IsInvalidClientChecksum())
-		{
-			LPCSTR level_id_string = NULL;
-			LPCSTR dialog_string = NULL;
-			CStringTable	st;
-			LPCSTR tmp_map_ver = !!map_data.m_map_version ? map_data.m_map_version.c_str() : "";
-
-			STRCONCAT(level_id_string, st.translate("st_level"), ":",
-				map_data.m_name.c_str(), "(", tmp_map_ver, "). ");
-			STRCONCAT(dialog_string, level_id_string, st.translate("ui_st_map_data_corrupted"));
-
-			g_pGameLevel->net_Stop();
-			DEL_INSTANCE	(g_pGameLevel);
-			Console->Execute("main_menu on");
 		}
 		else 
 		{
@@ -228,7 +197,6 @@ void CLevel::InitializeClientGame	(NET_Packet& P)
 	xr_delete(game);
 	CLASS_ID clsid			= game_GameState::getCLASS_ID(game_type_name,false);
 	game					= smart_cast<game_cl_GameState*> ( NEW_INSTANCE ( clsid ) );
-	game->set_type_name		(game_type_name);
 	game->Init				();
 	m_bGameConfigStarted	= TRUE;
 	

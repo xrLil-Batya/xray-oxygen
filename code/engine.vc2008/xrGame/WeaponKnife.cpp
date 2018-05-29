@@ -10,7 +10,6 @@
 #include "../xrEngine/gamemtllib.h"
 #include "level_bullet_manager.h"
 #include "ai_sounds.h"
-#include "game_cl_single.h"
 #include "../xrEngine/SkeletonMotions.h"
 #include "player_hud.h"
 #include "ActorEffector.h"
@@ -66,7 +65,8 @@ void CWeaponKnife::Load	(LPCSTR section)
 #endif
 	m_NextHitDivideFactor	=	pSettings->r_float(section, "splash_hit_divide_factor");
 
-	knife_material_idx =  GMLib.GetMaterialIdx(pSettings->r_string(section,"material"));
+	knife_material_idx =  GMLib.GetMaterialIdx(READ_IF_EXISTS(pSettings,r_string,section,"material","objects\\knife"));
+	
 }
 
 void CWeaponKnife::OnStateSwitch	(u32 S)

@@ -322,6 +322,9 @@
 	    	    <progress>
 	        		<texture r="194" g="8" b="8" a="200">ui_inGame2_inventory_health_bar</texture>
 		        </progress>
+					<min_color color="red"/>
+					<middle_color color="red"/>
+					<max_color color="red"/>
 	        </state_progress>
 	    </health_state>
 
@@ -350,7 +353,10 @@
 		        <progress>
 	    		    <texture color="red">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
-	        </state_progress>		
+					<min_color color="green"/>
+					<middle_color color="yellow"/>
+					<max_color color="red"/>
+	        </state_progress>	
 		</blood>
 
 	    <radiation_state x="287" y="7" width="45" height="45">
@@ -378,7 +384,10 @@
 		        <progress>
 	    		    <texture color="red">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
-	        </state_progress>		
+					<min_color color="green"/>
+					<middle_color color="yellow"/>
+					<max_color color="red"/>
+	        </state_progress>			
 		</rad>		
 
 	    <radia_sensor x="15" y="72" width="145" height="18">
@@ -393,6 +402,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </radia_sensor>
 
@@ -408,6 +420,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </acid_sensor>
 
@@ -423,6 +438,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </shock_sensor>
 
@@ -438,6 +456,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 		        </progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </fire_sensor>
 
@@ -453,6 +474,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </psi_sensor>
 
@@ -468,6 +492,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </wound_sensor>
 
@@ -483,6 +510,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </fire_wound_sensor>
 
@@ -498,6 +528,9 @@
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress>
+					<min_color color="red"/>
+					<middle_color color="yellow"/>
+					<max_color color="green"/>
 	        </state_progress>
 	    </power_sensor>
 	</actor_state_info>

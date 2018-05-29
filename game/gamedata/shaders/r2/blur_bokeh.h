@@ -16,6 +16,7 @@ https://github.com/orthecreedence/ghostie/blob/master/opengl/glsl/dof.bokeh.2.4.
 #if !defined(BOKEH_QUALITY)
 	#define	BOKEH_RINGS int(1)
 	#define	BOKEH_SAMPLES int(1)
+	#define BOKEH_QUALITY 1
 #elif BOKEH_QUALITY==1
     #define BOKEH_RINGS int(3)
     #define BOKEH_SAMPLES int(3)

@@ -11,10 +11,7 @@
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
 #pragma comment(lib, "xrEngine.lib")
-#define MINIMUM_WIN_MEMORY	0x0a00000
-#define MAXIMUM_WIN_MEMORY	0x1000000
 #define DLL_API __declspec(dllimport)
-HINSTANCE	g_hInstance;
 ////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
@@ -33,7 +30,7 @@ int RunXRLauncher()
 
 
 /// <summary>
-/// Return the list of parametres
+/// Return the list of parameters
 /// </summary>
 const char* GetParams()
 {
@@ -44,7 +41,7 @@ const char* GetParams()
 /// <summary>
 /// Dll import
 /// </summary>
-DLL_API int RunApplication(char* commandLine);
+DLL_API int RunApplication(LPCSTR commandLine);
 
 
 /// <summary>
@@ -52,14 +49,9 @@ DLL_API int RunApplication(char* commandLine);
 /// </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
-
-	if (hPrevInstance)				//#VERTVER: Previous Instance can't be in WinNT 
-		return 0;
-
-	g_hInstance = hInstance;
-
-	std::string params = lpCmdLine;
-
+	////////////////////////////////////////////////////
+	LPCSTR params = lpCmdLine;
+	////////////////////////////////////////////////////
 	try
 	{
 		// Init X-ray core
@@ -71,15 +63,13 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
 	}
 
-	const bool launch = strstr(lpCmdLine, "-launcher");
-
 	////////////////////////////////////////////////////
 	// If we don't needy for a exceptions - we can 
 	// delete exceptions with option "-silent"
 	////////////////////////////////////////////////////
 
 #ifndef DEBUG
-	if (!strstr(lpCmdLine, "-silent") && !launch)
+	if (!strstr(lpCmdLine, "-silent") && !strstr(lpCmdLine, "-launcher"))
 	{
 		// Checking for SSE2
 		if (!CPU::Info.hasFeature(CPUFeature::SSE2))
@@ -104,12 +94,12 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 				"AVX isn't supported on your CPU!",
 				MB_OK | MB_ICONWARNING);
 		}
-	}
 #endif
+	}
 #endif
 
 	// If we want to start launcher
-	if (launch)
+	if (strstr(lpCmdLine, "-launcher"))
 	{
 		const int l_res = RunXRLauncher();
 		switch (l_res)
@@ -121,6 +111,5 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 
 	CreateRendererList();
-	RunApplication(params.data());
-	return 0;
+	return RunApplication(params);
 }

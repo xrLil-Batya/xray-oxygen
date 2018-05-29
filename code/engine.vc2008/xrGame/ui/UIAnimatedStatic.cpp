@@ -98,7 +98,7 @@ void CUIAnimatedStatic::SetAnimPos(float pos){
 //-----------------------------------------------------------------------------------------
 #include "../Actor_Flags.h"
 #include "../Level.h"
-#include "../date_time.h"
+#include "../../xrEngine/date_time.h"
 #include "UITextureMaster.h"
 CUISleepStatic::CUISleepStatic():m_cur_time(0) 
 {

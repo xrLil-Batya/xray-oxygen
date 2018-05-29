@@ -14,7 +14,6 @@
 #include "game_cl_base.h"
 #include "level.h"
 #include "level_bullet_manager.h"
-#include "game_cl_single.h"
 
 CShootingObject::CShootingObject(void)
 {
@@ -372,7 +371,7 @@ void CShootingObject::StopLight			()
 
 void CShootingObject::RenderLight()
 {
-	if ( light_render && light_time>0 ) 
+	if (light_render && light_time > 0)
 	{
 		Light_Render(get_CurrentFirePoint());
 	}
@@ -380,16 +379,6 @@ void CShootingObject::RenderLight()
 
 bool CShootingObject::SendHitAllowed(CObject* pUser)
 {
-	if (Game().IsServerControlHits())
-		return true;
-
-	if (smart_cast<CActor*>(pUser))
-	{
-		if (Level().CurrentControlEntity() != pUser)
-		{
-			return false;
-		}
-	}
 	return true;
 }
 

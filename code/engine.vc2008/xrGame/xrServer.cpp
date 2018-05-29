@@ -64,10 +64,12 @@ xrServer::~xrServer()
 
 CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 {
-	if (0xffff==ID)				return 0;
-	xrS_entities::iterator	I	= entities.find	(ID);
-	if (entities.end()!=I)		return I->second;
-	else						return 0;
+	if (0xffff != ID)
+	{
+		xrS_entities::iterator	I = entities.find(ID);
+		if (entities.end() != I)		return I->second;
+	}
+	return nullptr;
 }
 
 //--------------------------------------------------------------------
@@ -87,7 +89,7 @@ void xrServer::client_Destroy(IClient* C)
 			P.w_u32				(Level().timeServer());
 			P.w_u16				(GE_DESTROY);
 			P.w_u16				(pS->ID);
-			SendBroadcast		(C->ID,P,net_flags(TRUE,TRUE));
+			SendBroadcast		(C->ID,P);
 		};
 
 		DelayedPacket pp;
@@ -111,40 +113,18 @@ void xrServer::client_Destroy(IClient* C)
 }
 
 //--------------------------------------------------------------------
-int	g_Dump_Update_Write = 0;
-
 #ifdef DEBUG
 INT g_sv_SendUpdate = 0;
 #endif
 
 void xrServer::Update	()
 {
-	NET_Packet		Packet;
-
-	VERIFY						(verify_entities());
+	VERIFY(verify_entities());
 
 	ProceedDelayedPackets();
 	// game update
 	game->ProcessDelayedEvent();
-	game->Update						();
-
-	// spawn queue
-	while (!(q_respawn.empty() || (Device.TimerAsync() < q_respawn.begin()->timestamp)))
-	{
-		// get
-		svs_respawn	R					= *q_respawn.begin();
-		q_respawn.erase					(q_respawn.begin());
-
-		// 
-		CSE_Abstract* E = ID_to_entity(R.phantom);
-		E->Spawn_Write(Packet,FALSE);
-		u16								ID;
-		Packet.r_begin		(ID);
-		R_ASSERT(M_SPAWN==ID);
-		ClientID						clientID; 
-		clientID.set(0xffff);
-		Process_spawn		(Packet,clientID);
-	}
+	game->Update();
 
 	if (game->sv_force_sync)	Perform_game_export();
 #ifdef DEBUG
@@ -158,10 +138,8 @@ void xrServer::OnDelayedMessage(NET_Packet& P, ClientID sender)
 	P.r_begin(type);
 
 	if (type == M_CLIENT_REQUEST_CONNECTION_DATA)
-	{
-		IClient* tmp_client = net_players.GetFoundClient(ClientIdSearchPredicate(sender));
-		OnCL_Connected(tmp_client);
-	}
+		OnCL_Connected(SV_Client);
+
 #ifdef DEBUG
     verify_entities();
 #endif
@@ -185,9 +163,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		}break;
 	case M_SPAWN:	
 		{
-			if (CL->flags.bLocal)
-				Process_spawn		(P,sender);	
-
+			Process_spawn			(P,sender);
 			VERIFY					(verify_entities());
 		}break;
 	case M_EVENT:	
@@ -207,11 +183,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			};			
 		}break;
 	//-------------------------------------------------------------------
-	case M_CLIENTREADY:
-		{
-			game->OnPlayerConnectFinished(sender);
-			VERIFY					(verify_entities());
-		}break;
 	case M_SWITCH_DISTANCE:
 		{
 			game->switch_distance	(P,sender);
@@ -221,7 +192,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 		{
 			if (game->change_level(P,sender))
 			{
-				SendBroadcast		(BroadcastCID,P,net_flags(TRUE,TRUE));
+				SendBroadcast		(BroadcastCID,P);
 			}
 			VERIFY					(verify_entities());
 		}break;
@@ -233,7 +204,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	case M_LOAD_GAME:
 		{
 			game->load_game			(P,sender);
-			SendBroadcast			(BroadcastCID,P,net_flags(TRUE,TRUE));
+			SendBroadcast			(BroadcastCID,P);
 			VERIFY					(verify_entities());
 		}break;
 	case M_SAVE_PACKET:
@@ -244,16 +215,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	case M_CLIENT_REQUEST_CONNECTION_DATA:
 		{
 			AddDelayedPacket(P, sender);
-		}break;
-	case M_SV_MAP_NAME:
-		{
-			xrClientData *l_pC			= ID_to_client(sender);
-			OnProcessClientMapData		(P, l_pC->ID);
-		}break;
-	case M_PLAYER_FIRE:
-		{
-			if (game)
-				game->OnPlayerFire(sender, P);
 		}break;
 	}
 	VERIFY (verify_entities());
@@ -266,12 +227,12 @@ void xrServer::SendTo_LL(void* data, u32 size)
 	Level().OnMessage(data,size);
 }
 
-void xrServer::SendTo(ClientID ID, NET_Packet& P, u32 dwFlags, u32 dwTimeout)
+void xrServer::SendTo(ClientID ID, NET_Packet& P)
 {
     SendTo_LL(P.B.data, (u32)P.B.count);
 }
 
-void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P, u32 dwFlags)
+void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
 {
     if (!SV_Client)
         return;
@@ -386,15 +347,11 @@ void xrServer::createClient()
 {
     IClient* CL = xr_new<xrClientData>();
     CL->ID.set(1);
-    CL->server = this;
     net_players.AddNewClient(CL);
     CL->name = "single_player";
 
-    NET_Packet P;
-    P.B.count = 0;
-    P.r_pos = 0;
-
-    game->AddDelayedEvent(P, GAME_EVENT_CREATE_CLIENT, 0, CL->ID);
+    CL->flags.bConnected = TRUE;
+    SV_Client = CL;
 }
 
 void xrServer::ProceedDelayedPackets()
@@ -423,3 +380,23 @@ void xrServer::Disconnect()
 	SLS_Clear();
 	xr_delete(game);
 }
+
+#include "GameObject.h"
+bool is_object_valid_on_svclient(u16 id_entity)
+{
+	CObject* tmp_obj		= Level().Objects.net_Find(id_entity);
+	if (!tmp_obj)
+		return false;
+	
+	CGameObject* tmp_gobj	= smart_cast<CGameObject*>(tmp_obj);
+	if (!tmp_gobj)
+		return false;
+
+	if (tmp_obj->getDestroy())
+		return false;
+
+	if (tmp_gobj->object_removed())
+		return false;
+	
+	return true;
+};

@@ -362,6 +362,6 @@ bool dxRenderDeviceRender::HWSupportsShaderYUV2RGB()
 
 void  dxRenderDeviceRender::OnAssetsChanged()
 {
-	Resources->m_textures_description.UnLoad();
-	Resources->m_textures_description.Load();
+    Resources->m_textures_description.UnLoad();
+    Resources->m_textures_description.Load();
 }

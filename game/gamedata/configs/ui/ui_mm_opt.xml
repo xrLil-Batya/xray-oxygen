@@ -107,35 +107,39 @@
 	            <d r="70" g="70" b="70"/>
             </text_color>
         </list_resolution>
+		
+		<cap_windowtype x="15" y="93" width="135" height="24">
+			<text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_windowtype</text>
+		</cap_windowtype>
+		<list_windowtype x="175" y="95" width="235" height="20" list_length="4" always_show_scroll="0">
+			<options_item entry="vid_windowtype" group="mm_opt_video" depend="runtime"/>
+            <list_font r="170" g="170" b="170" font="letterica16"/>
+            <text_color>
+	            <e r="170" g="170" b="170"/>
+	            <d r="70" g="70" b="70"/>
+            </text_color>
+		</list_windowtype>
 
-        <cap_gamma x="15" y="93" width="135" height="24">
+        <cap_gamma x="15" y="123" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_gamma</text>
         </cap_gamma>
-        <track_gamma x="175" y="97" width="235" height="16">
+        <track_gamma x="175" y="127" width="235" height="16">
             <options_item entry="rs_c_gamma" group="mm_opt_video" depend="runtime"/>
         </track_gamma>
 
-        <cap_contrast x="15" y="123" width="135" height="24">
+        <cap_contrast x="15" y="153" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_contrast</text>
         </cap_contrast>
-        <track_contrast x="175" y="127" width="235" height="16">
+        <track_contrast x="175" y="157" width="235" height="16">
             <options_item entry="rs_c_contrast" group="mm_opt_video" depend="runtime"/>
           </track_contrast>
 
-          <cap_brightness x="15" y="153" width="135" height="24">
+          <cap_brightness x="15" y="183" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_brightness</text>
           </cap_brightness>
-          <track_brightness x="175" y="157" width="235" height="16">
+          <track_brightness x="175" y="187" width="235" height="16">
             <options_item entry="rs_c_brightness" group="mm_opt_video" depend="runtime"/>
         </track_brightness>
-
-        <cap_fullscreen x="15" y="183" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_fullscreen</text>
-        </cap_fullscreen>
-        <check_fullscreen x="162" y="180" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="rs_fullscreen" group="mm_opt_video" depend="vid"/>
-        </check_fullscreen>
 
 
         <btn_advanced x="338" y="322" width="108" height="24">
@@ -223,7 +227,7 @@
         <track_ssample x="180" y="6" width="235" height="16" step="1" is_integer="1">
             <options_item entry="r__supersample" group="mm_opt_video_adv" depend="vid"/>
         </track_ssample>
-        <combo_ssample x="180" y="0" width="235" height="20" list_length="4" always_show_scroll="0">
+        <combo_ssample x="180" y="0" width="235" height="20" list_length="3" always_show_scroll="0">
             <options_item entry="r3_msaa" group="mm_opt_video_adv" depend="vid"/>
             <list_font color="yellow" font="letterica16"/>
             <text_color>
@@ -283,7 +287,7 @@
             <text color= "yellow" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_shafts_mode</text>
         </cap_r2_sun_shafts_mode>
         <list_r2_sun_shafts_mode x="180" y="0" width="235" height="20" list_length="3" always_show_scroll="0">
-            <options_item entry="r2_sunshafts_mode" group="mm_opt_video"/>
+            <options_item entry="r2_sunshafts_mode" group="mm_opt_video" depend="restart"/>
             <list_font color= "yellow" font="letterica16"/>
             <text_color>
 	            <e color= "yellow"/>
@@ -293,7 +297,7 @@
         <cap_r2_sun_quality x="20" y="3" width="135" height="24">
             <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_r2_sun_quality</text>
         </cap_r2_sun_quality>
-        <list_r2_sun_quality x="180" y="0" width="235" height="20" list_length="3">
+        <list_r2_sun_quality x="180" y="0" width="235" height="20" list_length="5" always_show_scroll="0">
             <options_item entry="r2_sun_quality" group="mm_opt_video" depend="vid"/>
             <list_font color="yellow" font="letterica16"/>
             <text_color>
@@ -364,11 +368,18 @@
             <options_item entry="rs_refresh_60hz" group="mm_opt_video_adv" depend="vid"/>
         </check_60hz>
 
+		<cap_120hz x="20" y="3" width="135" height="24">
+            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_120_hz</text>
+        </cap_120hz>
+        <check_120hz x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="rs_refresh_120hz" group="mm_opt_video_adv" depend="vid"/>
+        </check_120hz>
 
         <cap_sun_shafts x="20" y="3" width="135" height="24">
             <text color="yellow" font="letterica16" align="r" vert_align="c">ui_mm_sun_shafts</text>
         </cap_sun_shafts>
-        <combo_sun_shafts x="180" y="0" width="235" height="20" always_show_scroll="1">
+        <combo_sun_shafts x="180" y="0" width="235" height="20" always_show_scroll="0">
             <options_item entry="r2_sun_shafts" group="mm_opt_video" depend="vid"/>
             <list_font color="yellow" font="letterica16"/>
             <text_color>
@@ -381,20 +392,20 @@
         </cap_ao>
 		<radio_tab_ao_options x="180" y="0" width="135" height="101" radio="1">
 			<options_item entry="r2_ssao_mode" group="mm_opt_video" depend="restart"/>
-			<button x="-10" y="0" width="47" height="28" id="disabled" stretch="1">
-				<text font="letterica16" vert_align="c" x="37" y="3" align="l">st_opt_off</text>
+			<button x="-13" y="10" width="47" height="28" id="disabled" stretch="1">
+				<text font="letterica16" vert_align="c" x="50" y="5" align="l">st_opt_off</text>
 	            <text_color>
 	                <e color="red"/>
 	            </text_color>
 			</button>
-			<button x="-10" y="25" width="47" height="28" id="default" stretch="1">
-				<text font="letterica16" vert_align="c" x="37" y="3" align="l">ui_mm_ssao</text>
+			<button x="-13" y="35" width="47" height="28" id="default" stretch="1">
+				<text font="letterica16" vert_align="c" x="50" y="5" align="l">ui_mm_ssao</text>
 	            <text_color>
 	                <e color="red"/>
 	            </text_color>
 			</button>
-			<button x="-10" y="75" width="47" height="28" id="hbao" stretch="1">
-				<text font="letterica16" vert_align="c" x="37" y="3" align="l">ui_mm_hbao</text>
+			<button x="-13" y="60" width="47" height="28" id="hbao" stretch="1">
+				<text font="letterica16" vert_align="c" x="50" y="5" align="l">ui_mm_hbao</text>
 	            <text_color>
 	                <e color="red"/>
 	            </text_color>
@@ -404,7 +415,7 @@
         <cap_ssao x="20" y="3" width="135" height="24">
             <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_ssao_quality</text>
         </cap_ssao>
-        <combo_ssao x="180" y="0" width="235" height="20" always_show_scroll="1">
+        <combo_ssao x="180" y="0" width="235" height="20" list_length="5" always_show_scroll="0">
             <options_item entry="r2_ssao" group="mm_opt_video" depend="restart"/>
             <list_font color="red" font="letterica16"/>
             <text_color>
@@ -442,7 +453,7 @@
         <cap_dof x="20" y="3" width="135" height="24">
             <text color="red" font="letterica16" align="r" vert_align="c">ui_mm_dof</text>
         </cap_dof>
-        <combo_dof x="180" y="0" width="235" height="20" always_show_scroll="1">
+        <combo_dof x="180" y="0" width="235" height="20" list_length="5" always_show_scroll="0">
 	        <options_item entry="r2_dof_quality" group="mm_opt_video" depend="vid"/>
             <list_font color="red" font="letterica16"/>
             <text_color>
@@ -521,7 +532,7 @@
         <cap_snd_device x="15" y="63" width="135" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_snd_device</text>
         </cap_snd_device>
-        <list_snd_device x="175" y="65" width="235" height="20" always_show_scroll="1">
+        <list_snd_device x="175" y="65" width="235" height="20" list_length="1" always_show_scroll="0">
             <options_item entry="snd_device" group="mm_opt_sound" depend="restart"/>
             <list_font r="170" g="170" b="170" font="letterica16"/>
             <text_color>
@@ -547,83 +558,137 @@
         </check_dynamic_music>
     </tab_sound>
     <tab_gameplay>
-        <cap_difficulty x="15" y="3" width="135" height="24">
+	
+        <scroll_g x="-4" y="0" width="450" height="320"
+        right_ident="0" left_ident="0" top_indent="0" bottom_indent="0"
+        vert_interval="0" always_show_scroll="0"/>
+		
+		<templ_item width="450" height="30"/>
+		
+        <cap_difficulty x="46" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_difficulty</text>
         </cap_difficulty>
 
-        <list_difficulty x="175" y="5" width="235" height="20">
+        <list_difficulty x="173" y="5" width="255" height="20" always_show_scroll="0">
             <options_item entry="g_game_difficulty" group="mm_opt_gameplay"/>
             <list_font r="170" g="170" b="170" font="letterica16"/>
-            <text_color>
+		    <text_color>
 	            <e r="170" g="170" b="170"/>
 	            <d r="70" g="70" b="70"/>
-            </text_color>
+		    </text_color>
         </list_difficulty>
 
-        <cap_check_crosshair x="15" y="33" width="135" height="24">
+		<!-- First line -->
+		<cap_check_tips x="46" y="3" width="108" height="24">
+            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_tips</text>
+        </cap_check_tips>
+        <check_tips x="159" y="1" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="hud_info" group="mm_opt_gameplay"/>
+        </check_tips>
+		
+        <cap_check_crosshair x="285" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_show_crosshair</text>
         </cap_check_crosshair>
-        <check_crosshair x="162" y="30" width="44" height="29">
+        <check_crosshair x="398" y="1" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="hud_crosshair" group="mm_opt_gameplay"/>
         </check_crosshair>
 
-        <cap_check_dyn_crosshair x="15" y="63" width="135" height="24">
+		<!-- Second line -->
+        <cap_check_dyn_crosshair x="46" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_dyn_crosshair</text>
         </cap_check_dyn_crosshair>
-        <check_dyn_crosshair x="162" y="60" width="44" height="29">
+        <check_dyn_crosshair x="159" y="1" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="cl_dynamiccrosshair" group="mm_opt_gameplay"/>
         </check_dyn_crosshair>
 
-        <cap_check_show_weapon x="15" y="93" width="135" height="24">
+        <cap_check_show_weapon x="285" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_show_weapon</text>
         </cap_check_show_weapon>
-        <check_show_weapon x="162" y="90" width="44" height="29">
+        <check_show_weapon x="398" y="1" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="hud_weapon" group="mm_opt_gameplay"/>
         </check_show_weapon>
 
-        <cap_check_dist x="15" y="123" width="135" height="24">
+		<!-- Third line -->
+        <cap_check_dist x="46" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_crosshair_distance</text>
         </cap_check_dist>
-        <check_dist x="162" y="120" width="44" height="29">
+        <check_dist x="159" y="1" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="hud_crosshair_dist" group="mm_opt_gameplay"/>
         </check_dist>
 
-        <cap_check_tips x="15" y="153" width="135" height="24">
-            <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_tips</text>
-        </cap_check_tips>
-        <check_tips x="162" y="150" width="44" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="hud_info" group="mm_opt_gameplay"/>
-        </check_tips>
-
-        <cap_check_crouch_toggle x="15" y="183" width="135" height="24">
+        <cap_check_crouch_toggle x="285" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_crouch_toggle</text>
         </cap_check_crouch_toggle>
-        <check_crouch_toggle x="162" y="180" width="44" height="29">
+        <check_crouch_toggle x="398" y="1" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="g_crouch_toggle" group="mm_opt_gameplay"/>
         </check_crouch_toggle>
 
-        <cap_check_important_save x="15" y="213" width="135" height="24">
+		<!-- Fourth line -->
+        <cap_check_important_save x="46" y="3" width="108" height="24">
             <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_mm_important_save</text>
         </cap_check_important_save>
-        <check_important_save x="162" y="210" width="44" height="29">
+        <check_important_save x="159" y="1" width="44" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
             <options_item entry="g_important_save" group="mm_opt_gameplay"/>
         </check_important_save>
 
-      <cap_check_hud_draw x="15" y="243" width="135" height="24">
-        <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_disable_hud</text>
-      </cap_check_hud_draw>
-      <check_hud_draw x="162" y="240" width="44" height="29">
-        <texture>ui_inGame2_checkbox</texture>
-        <options_item entry="hud_draw" group="mm_opt_gameplay"/>
-      </check_hud_draw>
-
+	    <cap_check_hud_draw x="285" y="3" width="108" height="24">
+		  <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_disable_hud</text>
+	    </cap_check_hud_draw>
+	    <check_hud_draw x="398" y="1" width="44" height="29">
+		  <texture>ui_inGame2_checkbox</texture>
+		  <options_item entry="hud_draw" group="mm_opt_gameplay"/>
+	    </check_hud_draw>
+        
+	    <!-- Fifth line -->
+        <cap_hardcore_mode x="46" y="3" width="108" height="24">
+          <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_hardcore_mode</text>
+        </cap_hardcore_mode>
+        <check_hardcore_mode x="159" y="1" width="44" height="29">
+          <texture>ui_inGame2_checkbox</texture>
+          <options_item entry="g_hardcore_mode" group="mm_opt_gameplay"/>
+        </check_hardcore_mode>
+	    
+		<cap_colored_feel x="285" y="3" width="108" height="24">
+          <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_colored_feel</text>
+        </cap_colored_feel>
+        <check_colored_feel x="398" y="1" width="44" height="29">
+          <texture>ui_inGame2_checkbox</texture>
+          <options_item entry="g_colored_feel" group="mm_opt_gameplay"/>
+        </check_colored_feel>
+	    
+	    <!-- Sixth line -->
+		<cap_interface_clearsky x="46" y="3" width="108" height="24">
+          <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_clearsky_interface</text>
+        </cap_interface_clearsky>
+        <check_interface_clearsky x="159" y="1" width="44" height="29">
+          <texture>ui_inGame2_checkbox</texture>
+          <options_item entry="rs_clearskyinterface" group="mm_opt_gameplay"/>
+        </check_interface_clearsky>
+	    
+        <cap_car_info x="285" y="3" width="108" height="24">
+          <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_car_info</text>
+        </cap_car_info>
+        <check_car_info x="398" y="1" width="44" height="29">
+          <texture>ui_inGame2_checkbox</texture>
+          <options_item entry="rs_car_info" group="mm_opt_gameplay"/>
+        </check_car_info>
+	    
+	    <!-- Seventh line -->
+	    <cap_show_date x="46" y="3" width="108" height="24">
+          <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_show_date</text>
+        </cap_show_date>
+        <check_show_date x="159" y="1" width="44" height="29">
+          <texture>ui_inGame2_checkbox</texture>
+          <options_item entry="rs_showdate" group="mm_opt_gameplay"/>
+        </check_show_date>
+	  
     </tab_gameplay>
     <tab_controls>
         <cap_mousesens x="15" y="3" width="135" height="24">

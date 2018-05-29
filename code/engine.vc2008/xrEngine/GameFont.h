@@ -1,17 +1,21 @@
+/******************************************************************************************************************
+***** Authors: Lord
+***** Modifed: 20.05.2018
+***** Description: This file contain an implementation of Font Engine 
+***** Copyright: GSC, OxyGen Team 2018 (C)
+*******************************************************************************************************************/
+
 #ifndef GameFontH
 #define GameFontH
 #pragma once
-
 #include "MbHelpers.h"
-
 #include "../Include/xrRender/FontRender.h"
-
+ 
 class ENGINE_API CGameFont
 {
 	friend class dxFontRender;
 
 public:
-
 	enum EAligment
 	{
 		alLeft = 0,
@@ -28,6 +32,8 @@ private:
 		u32 c;
 		EAligment align;
 	};
+
+	//
 
 protected:
 

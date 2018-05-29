@@ -4,18 +4,6 @@
     <Filter Include="kernel">
       <UniqueIdentifier>{98db269c-1e66-46eb-85b7-e13a2ae7a105}</UniqueIdentifier>
     </Filter>
-    <Filter Include="interface">
-      <UniqueIdentifier>{9edef426-231b-408c-a9af-127d0b7bb84c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\shell">
-      <UniqueIdentifier>{02bcb03b-f6e7-4acb-a78f-b401c8dc7b02}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\character_movement">
-      <UniqueIdentifier>{1a9cf8b4-b479-4e71-858b-786319f411ff}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="interface\world">
-      <UniqueIdentifier>{dc7e7952-273c-415b-a59a-461b626b2d87}</UniqueIdentifier>
-    </Filter>
     <Filter Include="physics">
       <UniqueIdentifier>{624b815f-4482-4e68-9025-4b7a5251c481}</UniqueIdentifier>
     </Filter>
@@ -129,9 +117,6 @@
     </Filter>
     <Filter Include="physics\Base\Debug">
       <UniqueIdentifier>{46cda215-aa14-4388-88dd-b88c6b886e10}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="physics\camera_collision">
-      <UniqueIdentifier>{2f86d58c-f370-42fb-bc3e-6f01d49cd202}</UniqueIdentifier>
     </Filter>
     <Filter Include="physics\damage_receiver">
       <UniqueIdentifier>{7776da84-dfde-4757-97eb-c756e327c658}</UniqueIdentifier>

@@ -67,3 +67,21 @@ XRCORE_API bool is_stack_ptr(void* _ptr)
 	ptrdiff_t difference = (ptrdiff_t)_abs(s64(ptrdiff_t(ptr_local) - ptrdiff_t(ptr_refsound)));
 	return (difference < (512 * 1024));
 }
+
+extern "C"
+{
+    XRCORE_API void*	xr_malloc_C(size_t size)
+    {
+        return Memory.mem_alloc(size);
+    }
+
+    XRCORE_API void	xr_free_C(void* ptr)
+    {
+        Memory.mem_free(ptr);
+    }
+
+    XRCORE_API void*	xr_realloc_C(void* ptr, size_t size)
+    {
+        return Memory.mem_realloc(ptr, size);
+    }
+}

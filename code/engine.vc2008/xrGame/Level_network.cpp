@@ -45,7 +45,9 @@ void CLevel::remove_objects()
 			ClientReceive();
 			ProcessGameEvents();
 			Objects.Update(false);
+#ifdef DEBUG
 			Objects.dump_all_objects();
+#endif
 		}
 
 		if (Objects.o_count())
@@ -161,7 +163,7 @@ void CLevel::ClientSend(bool bForce)
 			P.w_chunk_close8(position);
 			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
 				continue;
-			Send(P, net_flags(FALSE));
+			Send(P);
 		}
 	}
 }
@@ -212,12 +214,12 @@ void CLevel::ClientSave()
 			P.w_chunk_close16(position);
 			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
 				continue;
-			Send(P, net_flags(FALSE));
+			Send(P);
 		}
 	}
 }
 
-void CLevel::Send(NET_Packet& P, u32 dwFlags, u32 dwTimeout)
+void CLevel::Send(NET_Packet& P)
 {
 	ClientID _clid;
 	_clid.set(1);
@@ -251,28 +253,6 @@ struct _NetworkProcessor : public pureFrame
 }	NET_processor;
 
 pureFrame*	g_pNetProcessor	= &NET_processor;
-
-
-bool CLevel::Connect2Server(const char* options)
-{
-	m_bConnectResult			= true	;
-
-	Msg("%c client : connection %s - <%s>", m_bConnectResult ? '*' : '!', m_bConnectResult ? "accepted" : "rejected", m_sConnectResult.c_str());
-
-	return true;
-};
-
-void CLevel::OnConnectResult(NET_Packet*	P)
-{
-	// multiple results can be sent during connection they should be "AND-ed"
-	string512 ResultStr;	
-	P->r_stringZ_s				(ResultStr);
-	ClientID tmp_client_id;
-	P->r_clientID				(tmp_client_id);
-	SetClientID					(tmp_client_id);
-	
-	m_sConnectResult			= ResultStr;
-};
 
 void CLevel::ClearAllObjects()
 {

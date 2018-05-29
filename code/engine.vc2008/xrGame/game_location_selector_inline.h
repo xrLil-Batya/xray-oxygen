@@ -16,7 +16,7 @@
 #define CGameLocationSelector CBaseLocationSelector<CGameGraph,_VertexEvaluator,_vertex_id_type>
 
 TEMPLATE_SPECIALIZATION
-IC	CGameLocationSelector::CBaseLocationSelector	(CRestrictedObject *object, CLocationManager *location_manager) :
+IC	CGameLocationSelector::CBaseLocationSelector	(CRestrictedObject *object, CLocationManager *location_manager) : //-V730
 	inherited	(object)
 {
 	m_location_manager				= location_manager;

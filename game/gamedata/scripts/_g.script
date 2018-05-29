@@ -842,5 +842,5 @@ function show_all_ui(show)
 	end
 end
 
-
 prefetch("lua_addition") --/ подключаем дополнительный модуль.
+prefetch("oxy_string")

@@ -54,34 +54,22 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	if (IsTalking())	return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	
-	switch (cmd)
+	if (cmd == kWPN_FIRE)
 	{
-	case kWPN_FIRE:
-		{
-			u16 slot = inventory().GetActiveSlot();
-			if(inventory().ActiveItem() && (slot==INV_SLOT_3 || slot==INV_SLOT_2) )
-				mstate_wishful &=~mcSprint;
-			//-----------------------------
-			NET_Packet P;
-			P.w_begin(M_PLAYER_FIRE); 
-			P.w_u16(ID());
-			u_EventSend(P);
-		
-		}break;
-	default:
-		{
-		}break;
+		u16 slot = inventory().GetActiveSlot();
+		if (inventory().ActiveItem() && (slot == INV_SLOT_3 || slot == INV_SLOT_2))
+			mstate_wishful &= ~mcSprint;
 	}
 
 	if (!g_Alive()) return;
 
 	if(m_holder && kUSE != cmd)
 	{
-		m_holder->OnKeyboardPress			(cmd);
-		if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_START))		return;
+		m_holder->OnKeyboardPress(cmd);
+		if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_START)) return;
 		return;
-	}else
-		if(inventory().Action((u16)cmd, CMD_START))					return;
+	}
+	else if(inventory().Action((u16)cmd, CMD_START)) return;
 
 
 	if(psActorFlags.test(AF_NO_CLIP))
@@ -105,9 +93,16 @@ void CActor::IR_OnKeyboardPress(int cmd)
 		if( psActorFlags.test(AF_CROUCH_TOGGLE) )
 			mstate_wishful ^= mcCrouch;
 		}break;
-	case kCAM_1:	cam_Set			(eacFirstEye);				break;
-	case kCAM_2:	cam_Set			(eacLookAt);				break;
-	case kCAM_3:	cam_Set			(eacFreeLook);				break;
+	case kCAM_1:	cam_Set			(eacFirstEye);				
+		break;
+	case kCAM_2:
+		if (!psActorFlags.test(AF_HARDCORE))
+		cam_Set			(eacLookAt);				
+		break;
+	case kCAM_3:	
+		if (!psActorFlags.test(AF_HARDCORE))
+		cam_Set			(eacFreeLook);				
+		break;
 	case kNIGHT_VISION:
 		{
 			SwitchNightVision();
@@ -397,12 +392,41 @@ void CActor::ActorUse()
 		return;
 	}
 
-	if(!m_pUsableObject||m_pUsableObject->nonscript_usable())
+	if (!m_pUsableObject||m_pUsableObject->nonscript_usable())
 	{
+		bool bCaptured = false;
+
+		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder*>(RQ.O);
+		u16 element = BI_NONE;
+		if (object)
+		{
+			element = (u16)RQ.element;
+
+			if (Level().IR_GetKeyState(DIK_LSHIFT))
+			{
+				bool b_allow = !!pSettings->line_exist("ph_capture_visuals", object->cNameVisual());
+				if (b_allow && !character_physics_support()->movement()->PHCapture())
+				{
+					character_physics_support()->movement()->PHCaptureObject(object, element);
+					bCaptured = true;
+				}
+
+			}
+			else if (smart_cast<CHolderCustom*>(object))
+			{
+				NET_Packet P;
+				CGameObject::u_EventGen(P, GEG_PLAYER_ATTACH_HOLDER, ID());
+				P.w_u16(object->ID());
+				CGameObject::u_EventSend(P);
+				return;
+			}
+		}
+
+
 		if (m_pPersonWeLookingAt)
 		{
-			CEntityAlive* pEntityAliveWeLookingAt =
-				smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
+			CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
 
 			VERIFY(pEntityAliveWeLookingAt);
 
@@ -419,40 +443,6 @@ void CActor::ActorUse()
 						pGameSP->StartCarBody(this, m_pPersonWeLookingAt);
 				}
 			}
-		}
-
-		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
-		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder*>(RQ.O);
-		u16 element = BI_NONE;
-		if(object) 
-			element = (u16)RQ.element;
-
-		if(object && Level().IR_GetKeyState(DIK_LSHIFT))
-		{
-			bool b_allow = !!pSettings->line_exist("ph_capture_visuals",object->cNameVisual());
-			if(b_allow && !character_physics_support()->movement()->PHCapture())
-			{
-				character_physics_support()->movement()->PHCaptureObject( object, element );
-
-			}
-
-		}
-		else if (object && smart_cast<CHolderCustom*>(object))
-		{
-			NET_Packet		P;
-			CGameObject::u_EventGen(P, GEG_PLAYER_ATTACH_HOLDER, ID());
-			P.w_u16(object->ID());
-			CGameObject::u_EventSend(P);
-			return;
-		}
-
-		//m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(object); 
-		if(m_CapmfireWeLookingAt) //Fixed
-		{
-			if(isCampFireAt)
-				m_CapmfireWeLookingAt->turn_off_script();
-			else
-				m_CapmfireWeLookingAt->turn_on_script();
 		}
 	}
 }

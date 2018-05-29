@@ -15,16 +15,6 @@
 #include "xrMain.h"
 #ifdef __cplusplus
 ////////////////////////////////////////////////////
-
-////////////////////////////////////////////////////
-//#VERTVER: What's this? OwO
-//
-//#First_role: xrPlay CPUID isn't xrCore CPUID.
-//#Second_role: use void. Always.
-//#HowToUse: 
-//if (CPUID::AMD || CPUID::AMDelse) { printf("AMD"); }
-//
-////////////////////////////////////////////////////
 class CPUID {
 	// forward declarations  
 	class CPUID_Internal;

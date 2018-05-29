@@ -3,7 +3,7 @@
 #include "UIMotionIcon.h"
 #include "UIXmlInit.h"
 #include "../FrayBuildConfig.hpp"
-
+#include "../actor.h"
 const LPCSTR MOTION_ICON_XML = "ui_HUD.xml";
 
 CUIMotionIcon* g_pMotionIcon = NULL;
@@ -69,7 +69,6 @@ void CUIMotionIcon::Init(Frect const& zonemap_rect)
 	xml_init.InitProgressBar	(uiXml, "noise_bar", 0, &m_noise_bar);	
 #endif
 }
-
 void CUIMotionIcon::SetNoise(float Pos)
 {
 	Pos	= clampr(Pos, 0.f, 100.f);
@@ -93,10 +92,15 @@ void CUIMotionIcon::SetLuminosity(float Pos)
 
 void CUIMotionIcon::Draw()
 {
+if(!psActorFlags.test(AF_HARDCORE))
+{
 	inherited::Draw();
+}
 }
 
 void CUIMotionIcon::Update()
+{
+if(!psActorFlags.test(AF_HARDCORE))
 {
 	if(m_bchanged){
 		m_bchanged = false;
@@ -129,6 +133,7 @@ void CUIMotionIcon::Update()
 		m_luminosity_bar.SetProgressPos(cur_pos);
 #endif
 	}
+}
 }
 
 void SetActorVisibility		(u16 who_id, float value)

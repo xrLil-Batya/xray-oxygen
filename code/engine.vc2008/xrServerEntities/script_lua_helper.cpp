@@ -258,16 +258,7 @@ void CDbgLuaHelper::DrawStackTrace()
 		if ( ar.source[0]=='@' )
 		{
 			szDesc[0] = '\0';
-/*			if ( ar.name )
-				xr_strcat(szDesc, ar.name);
-			xr_strcat(szDesc, ",");
-			if ( ar.namewhat )
-				xr_strcat(szDesc, ar.namewhat);
-			xr_strcat(szDesc, ",");
-			if ( ar.what )
-				xr_strcat(szDesc, ar.what);
-			xr_strcat(szDesc, ",");
-*/
+
 			if ( ar.name ){
 				xr_strcat(szDesc, ar.name);
 				xr_strcat(szDesc, " ");
@@ -277,9 +268,7 @@ void CDbgLuaHelper::DrawStackTrace()
 
 			xr_strcat(szDesc, itoa(ar.currentline,szTmp,10));
 			xr_strcat(szDesc, " ");
-
-			if ( ar.short_src )
-				xr_strcat(szDesc, ar.short_src);
+			xr_strcat(szDesc, ar.short_src);
 
 			debugger()->AddStackTrace(szDesc, ar.source+1, ar.currentline);
 		}

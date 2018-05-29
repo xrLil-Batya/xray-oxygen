@@ -174,7 +174,7 @@ void CHudItem::SendHiddenItem()
 		NET_Packet				P;
 		object().u_EventGen		(P,GE_WPN_STATE_CHANGE,object().ID());
 		P.w_u8					(u8(eHiding));
-		object().u_EventSend	(P, net_flags(TRUE, TRUE, FALSE, TRUE));
+		object().u_EventSend	(P);
 	}
 }
 
@@ -238,7 +238,7 @@ void CHudItem::OnH_B_Chield		()
 void CHudItem::OnH_B_Independent	(bool just_before_destroy)
 {
 	m_sounds.StopAllSounds	();
-	UpdateXForm				();
+	//UpdateXForm				();
 	
 	// next code was commented 
 	/*

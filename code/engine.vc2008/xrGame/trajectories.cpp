@@ -2,39 +2,20 @@
 #include "trajectories.h"
 #include "Level.h"
 #include "../xrPhysics/IPHWorld.h"
-#include "../xrGame/ai_debug_variables.h"
-
 #include "../xrCore/_vector3d_ext.h"
 
 
-static void trajectory_get_position			(Fvector &result, const Fvector &start_position, const Fvector &velocity, const Fvector &gravity, const float &time)
+static void trajectory_get_position(Fvector &result, const Fvector &start_position, const Fvector &velocity, const Fvector &gravity, const float &time)
 {
-	// result = start_position + velocity*t + gravity*t^2/2
-	result.mad(
-		start_position,
-		velocity,
-		time
-	).mad(
-		gravity,
-		_sqr(time)*.5f
-	);
+	result.mad(start_position, velocity, time).mad(gravity, _sqr(time)*.5f);
 }
 
-inline static float trajectory_max_error_time	(
-		float t0,
-		float t1
-	)
+inline static float trajectory_max_error_time(float t0, float t1)
 {
-	return					( (t1 + t0)*.5f );
+	return( (t1 + t0)*.5f );
 }
 
-static float trajectory_pick_error				(
-		float low,
-		float high,
-		const Fvector &position,
-		const Fvector &velocity,
-		const Fvector &gravity
-	)
+static float trajectory_pick_error(float low, float high, const Fvector &position, const Fvector &velocity, const Fvector &gravity)
 {
 	float					max_error_time = trajectory_max_error_time(low, high);
 	

@@ -365,7 +365,7 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 //			{
 //				NET_Packet				P;
 //				object->Spawn_Write		(P,TRUE);
-//				Level().Send			(P,net_flags(TRUE));
+//				Level().Send			(P);
 //				F_entity_Destroy		(object);
 //			}
 //		}

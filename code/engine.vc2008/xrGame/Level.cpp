@@ -21,7 +21,7 @@
 #include "script_engine_space.h"
 #include "infoportion.h"
 #include "patrol_path_storage.h"
-#include "date_time.h"
+#include "../xrEngine/date_time.h"
 #include "space_restriction_manager.h"
 #include "seniority_hierarchy_holder.h"
 #include "space_restrictor.h"
@@ -129,7 +129,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_bNeed_CrPr				= false;
 	m_bIn_CrPr					= false;
 	m_dwNumSteps				= 0;
-	m_dwDeltaUpdate				= u32(fixed_step*1000);
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
     m_level_sound_manager = xr_new<CLevelSoundManager>();
@@ -279,14 +278,13 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	if (!O)	return;
 	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
-	if (!GO)		{
+	if (!GO)		
+	{
 		return;
 	}
+
 	if (type != GE_DESTROY_REJECT)
 	{
-		if (type == GE_DESTROY)
-			Game().OnDestroy(GO);
-			
 		GO->OnEvent		(P,type);
 	}
 	else 
@@ -310,7 +308,6 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 		GO->OnEvent		(P,GE_OWNERSHIP_REJECT);
 		if (ok)
 		{
-			Game().OnDestroy(GD);
 			GD->OnEvent	(P,GE_DESTROY);
 		};
 	}

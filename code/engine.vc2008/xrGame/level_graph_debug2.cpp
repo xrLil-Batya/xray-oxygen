@@ -16,7 +16,7 @@
 #include "ai_space.h"
 #include "ui_base.h"
 #include "game_graph.h"
-#include "game_sv_single.h"
+#include "game_sv_base.h"
 #include "custommonster.h"
 #include "ai/stalker/ai_stalker.h"
 #include "xrserver_objects_alife_monsters.h"

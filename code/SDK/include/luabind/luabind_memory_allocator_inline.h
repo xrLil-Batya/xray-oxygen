@@ -86,11 +86,7 @@ void luabind::memory_allocator<T>::destroy											(pointer const p)
 template <typename T>
 typename luabind::memory_allocator<T>::size_type luabind::memory_allocator<T>::max_size			() const
 {
-	size_type		count = ((size_type)(-1))/sizeof(T);
-	if (count)
-		return		(count);
-
-	return			(1);
+	return ((size_type)(-1)) / sizeof(T);
 }
 
 namespace luabind {
