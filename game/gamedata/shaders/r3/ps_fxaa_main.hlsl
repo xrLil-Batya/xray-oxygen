@@ -22,7 +22,7 @@ float4 main (  v2p I ) : SV_Target
             tex,							// FxaaTex tex,
             tex,							// FxaaTex fxaaConsole360TexExpBiasNegOne,
             tex,							// FxaaTex fxaaConsole360TexExpBiasNegTwo,
-            rcpFrame,							// FxaaFloat2 fxaaQualityRcpFrame,
+            fxaaFrame,							// FxaaFloat2 fxaaQualityRcpFrame,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsoleRcpFrameOpt,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsoleRcpFrameOpt2,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsole360RcpFrameOpt2,

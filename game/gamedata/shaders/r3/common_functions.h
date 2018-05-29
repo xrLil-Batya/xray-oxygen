@@ -1,6 +1,6 @@
 #ifndef	common_functions_h_included
 #define	common_functions_h_included
-
+#include "configurator_defines.h"
 //	contrast function
 float Contrast(float Input, float ContrastPower)
 {
@@ -20,22 +20,14 @@ void tonemap( out float4 low, out float4 high, float3 rgb, float scale)
 
 	const float fWhiteIntensitySQR = fWhiteIntensity*fWhiteIntensity;
 
-//	low		=	(rgb/(rgb + 1)).xyzz;
 	low		=	( (rgb*(1+rgb/fWhiteIntensitySQR)) / (rgb+1) ).xyzz;
 
 	high	=	rgb.xyzz/def_hdr;	// 8x dynamic range
-
-/*
-	rgb		=	rgb*scale;
-
-	low		=	rgb.xyzz;
-	high	=	low/def_hdr;	// 8x dynamic range
-*/
 }
 
 float4 combine_bloom( float3  low, float4 high)	
 {
-        return float4( low + high*high.a, 1.h );
+        return float4(low + high * high.a, 1.h );
 }
 
 float calc_fogging( float4 w_pos )      
@@ -51,7 +43,7 @@ double2 unpack_tc_base( float2 tc, float du, float dv )
 float2 unpack_tc_base( float2 tc, float du, float dv )
 #endif
 {
-		return (tc.xy + float2	(du,dv))*(32.f/32768.f); 
+	return (tc.xy + float2	(du,dv))*(32.f/32768.f); 
 }
 
 float3 calc_sun_r1( float3 norm_w )    
@@ -83,9 +75,6 @@ float3	unpack_D3DCOLOR( float3 c ) { return c.bgr; }
 
 float3   p_hemi( float2 tc )
 {
-//	float3	t_lmh = tex2D (s_hemi, tc);
-//	float3	t_lmh = s_hemi.Sample( smp_rtlinear, tc);
-//	return	dot(t_lmh,1.h/4.h);
 	float4	t_lmh = s_hemi.Sample( smp_rtlinear, tc);
 	return	t_lmh.a;
 }

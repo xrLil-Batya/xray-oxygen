@@ -123,9 +123,7 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	HRESULT R;
 #ifdef USE_DX11
     D3D_FEATURE_LEVEL pFeatureLevels[] =
-    {
-        //D3D_FEATURE_LEVEL_12_1,
-        //D3D_FEATURE_LEVEL_12_0,                
+    {        
         D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0
     };
@@ -141,14 +139,17 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
     
     IDXGIAdapter1 * pDXGIAdapter;
     R_CHK( pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));  
-    
+
+#pragma todo("ForserX to Swartz27: Rework it code")
+    /*
     D3D11_FEATURE_DATA_D3D11_OPTIONS2 features_2;
-    R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2)));
-    features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
-    //features_2.ROVsSupported == TRUE;
-    //features_2.TypedUAVLoadAdditionalFormats == TRUE;   
-	//features_2.UnifiedMemoryArchitecture == TRUE;
-	//features_2.TiledResourcesTier == D3D11_TILED_RESOURCES_TIER_2;
+	HRESULT dxResultF2 = pDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2));
+	if (dxResultF2 == S_OK)
+	{
+		features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
+	}
+	*/
+
 	R = pDXGIDevice->SetMaximumFrameLatency(1);                                                                                
 #else
    R =  D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, 0, createDeviceFlags, &sd, &m_pSwapChain, &pDevice );
