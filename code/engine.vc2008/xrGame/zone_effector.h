@@ -4,13 +4,15 @@
 class CActor;
 class CPostprocessAnimatorLerp;
 
-class CZoneEffector {
+class CZoneEffector
+{
 	float						r_min_perc;
 	float						r_max_perc;
 	float						m_radius;
 	float						m_factor;
 	CPostprocessAnimatorLerp*	m_pp_effector;
 	shared_str					m_pp_fname;
+
 public:
 			CZoneEffector		();
 			~CZoneEffector		();
@@ -24,8 +26,6 @@ public:
 
 private:
 	void	Activate			();
-
-
 };
 
 
