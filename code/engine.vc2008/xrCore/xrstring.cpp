@@ -232,12 +232,12 @@ str_container::~str_container()
 
 //xr_string class
 
-xr_vector<xr_string> xr_string::Split(LPCSTR Str, int StrSize, char splitCh)
+xr_vector<xr_string> xr_string::Split(LPCSTR Str, size_t StrSize, char splitCh)
 {
     xr_vector<xr_string> Result;
 
-    int SubStrBeginCursor = 0;
-    for (int StrCursor = 0; StrCursor < StrSize; ++StrCursor)
+    size_t SubStrBeginCursor = 0;
+    for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
     {
         if (Str[StrCursor] == splitCh)
         {
@@ -303,6 +303,44 @@ xr_string& xr_string::operator=(const Super& other)
 xr_vector<xr_string> xr_string::Split(char splitCh)
 {
     return Split(data(), size(), splitCh);
+}
+
+
+xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
+{
+    xr_vector<xr_string> intermediateTokens;
+    xr_vector<xr_string> Result;
+
+    va_list args;
+    va_start(args, NumberOfSplits);
+
+    for (u32 i = 0; i < NumberOfSplits; ++i)
+    {
+        char splitCh = va_arg(args, char);
+        
+        //special case for first try
+        if (i == 0)
+        {
+            Result = Split(data(), size(), splitCh);
+        }
+
+        for (xr_string& str : Result)
+        {
+            xr_vector<xr_string> TokenStrResult = Split(str.data(), str.size(), splitCh);
+            intermediateTokens.insert(intermediateTokens.end(), TokenStrResult.begin(), TokenStrResult.end());
+        }
+
+        if (!intermediateTokens.empty())
+        {
+            Result.clear();
+            Result.insert(Result.begin(), intermediateTokens.begin(), intermediateTokens.end());
+            intermediateTokens.clear();
+        }
+    }
+
+    va_end(args);
+
+    return Result;
 }
 
 
