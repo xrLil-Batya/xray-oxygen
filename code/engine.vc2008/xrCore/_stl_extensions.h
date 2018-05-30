@@ -156,7 +156,7 @@ public:
         assign(InArray, ArrayLenght);
     }
 
-    static xr_vector<xr_string> Split(LPCSTR Str, int StrSize, char splitCh);
+    static xr_vector<xr_string> Split(LPCSTR Str, size_t StrSize, char splitCh);
 
     xr_vector<xr_string> Split(char splitCh);
     xr_vector<xr_string> Split(u32 NumberOfSplits, ...);
