@@ -57,7 +57,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 	std::bitset<32> f_81_EDX;
 	std::bitset<32> f_81_ECX;
 
-	std::vector<std::array<int, 4>> data;
+	xr_vector<std::array<int, 4>> data;
 	std::array<int, 4> cpui;
 
 	__cpuid(cpui.data(), 0);
