@@ -233,7 +233,7 @@ public:
 		float turn_factor;
 		vec   thrust_factor;
 
-		typedef std::vector<vec> Probes;
+		typedef xr_vector<vec> Probes;
 		Probes probes; // obstacle-scanners (vectors in local (dir,up) space)
 
 		params(float turn_factor, vec_arg thrust_factor,

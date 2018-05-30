@@ -331,6 +331,8 @@ CRenderTarget::CRenderTarget()
 		u32		w = Device.dwWidth, h = Device.dwHeight;
 		rt_Position.create					(r2_RT_P, w, h, D3DFMT_A16B16G16R16F, SampleCount);
 
+        rt_Depth.create(r2_RT_depth, w, h, D3DFMT_D24S8, SampleCount); //needed for depth prepass
+
 		if (RImplementation.o.dx10_msaa)
 			rt_MSAADepth.create				(r2_RT_MSAAdepth, w, h, D3DFMT_D24S8, SampleCount);
 

@@ -2,7 +2,7 @@
 #define LMODEL_H
 
 #include "common.h"
-
+//Swartz27 to self: Change this, not necessary anymore.
 //////////////////////////////////////////////////////////////////////////////////////////
 // Lighting formulas			// 
 float4 plight_infinity( float m, float3 pnt, float3 normal, float3 light_direction )

@@ -28,7 +28,6 @@ protected:
 	int				m_shot_numer;
 	bool			m_shot_end;
 	bool			m_first_shot;
-//	float			m_first_shot_pos;
 	
 	bool			m_actived;
 	bool			m_single_shot;
@@ -45,7 +44,6 @@ public:
 		void	Reset				();
 
 	IC	bool	IsActive			(){return m_actived;}
-//		void	SetActive			(bool Active)		{			m_actived = Active;		}
 	IC	void	StopShoting			()	{ m_shot_end = true; }
 
 		void	Update				();
@@ -68,7 +66,6 @@ class CCameraShotEffector : public CWeaponShotEffector, public CEffectorCam
 protected:
 	CActor*			m_pActor;
 public:
-//-					CCameraShotEffector	(float max_angle, float relax_speed, float max_angle_horz, float step_angle_horz, float angle_frac);
 					CCameraShotEffector	(const CameraRecoil& cam_recoil);
 	virtual			~CCameraShotEffector();
 	

@@ -9,9 +9,7 @@ https://github.com/orthecreedence/ghostie/blob/master/opengl/glsl/dof.bokeh.2.4.
 Большое спасибо за помощь SGM 3.0 Team 
 Перенес на XrOxygen - NuclearFG
 */
-
-uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
-
+#include "common.h"
 #include "ogse_config.h"
 
 #if !defined(BOKEH_QUALITY)

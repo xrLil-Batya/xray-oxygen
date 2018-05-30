@@ -123,12 +123,34 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	HRESULT R;
 #ifdef USE_DX11
     D3D_FEATURE_LEVEL pFeatureLevels[] =
-    {
+    {        
+        D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0
     };
 
-   R =  D3D11CreateDeviceAndSwapChain(0, m_DriverType, 0, createDeviceFlags, pFeatureLevels, sizeof(pFeatureLevels)/sizeof(pFeatureLevels[0]),
+    R =  D3D11CreateDeviceAndSwapChain(nullptr, m_DriverType, 0, createDeviceFlags, pFeatureLevels, sizeof(pFeatureLevels)/sizeof(pFeatureLevels[0]),
 										  D3D11_SDK_VERSION, &sd, &m_pSwapChain, &pDevice, &FeatureLevel, &pContext);
+                                          
+    D3D11_FEATURE_DATA_THREADING threadingFeature;
+    R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
+   
+    IDXGIDevice1 * pDXGIDevice;
+    R_CHK( pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
+    
+    IDXGIAdapter1 * pDXGIAdapter;
+    R_CHK( pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));  
+
+#pragma todo("ForserX to Swartz27: Rework it code")
+    /*
+    D3D11_FEATURE_DATA_D3D11_OPTIONS2 features_2;
+	HRESULT dxResultF2 = pDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2));
+	if (dxResultF2 == S_OK)
+	{
+		features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
+	}
+	*/
+
+	R = pDXGIDevice->SetMaximumFrameLatency(1);                                                                                
 #else
    R =  D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, 0, createDeviceFlags, &sd, &m_pSwapChain, &pDevice );
 
@@ -390,7 +412,7 @@ void fill_vid_mode_list(CHW* _hw)
 	VERIFY(pOutput);
 
 	UINT num = 0;
-	DXGI_FORMAT format = DXGI_FORMAT_R10G10B10A2_UNORM;// [FX to Swartz27]: D3DX11SaveTextureToMemory don't give the value 'saved'
+	DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;//Don't touch
 	UINT flags         = 0;
 
 	// Get the number of display modes available

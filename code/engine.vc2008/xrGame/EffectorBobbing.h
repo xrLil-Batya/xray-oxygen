@@ -1,5 +1,3 @@
-#ifndef _EFFECTOR_BOBBING_H
-#define _EFFECTOR_BOBBING_H
 #pragma once
 
 #include "CameraEffector.h"
@@ -21,6 +19,9 @@ class CEffectorBobbing : public CEffectorCam
 	float	m_fAmplitudeWalk;
 	float	m_fAmplitudeLimp;
 
+	float	m_fCrouchFactor;
+	float	m_fSpeedReminder;
+
 	float	m_fSpeedRun;
 	float	m_fSpeedWalk;
 	float	m_fSpeedLimp;
@@ -31,5 +32,3 @@ public:
 	virtual BOOL	ProcessCam	(SCamEffectorInfo& info);
 	void	SetState			(u32 st, bool limping, bool ZoomMode);
 };
-
-#endif //_EFFECTOR_BOBBING_H

@@ -2,7 +2,7 @@
 #define        COMMON_H
 
 #include "shared\common.h"
-
+uniform	float4		screen_res; //doesn't really belong here but fuck it
 #include "common_defines.h"
 #include "common_policies.h"
 #include "common_iostructs.h"
@@ -18,8 +18,5 @@
 #else
 #  define xmaterial float(L_material.w)
 #endif
-
-#define FXPS technique _render{pass _code{PixelShader=compile ps_3_0 main();}}
-#define FXVS technique _render{pass _code{VertexShader=compile vs_3_0 main();}}
 
 #endif

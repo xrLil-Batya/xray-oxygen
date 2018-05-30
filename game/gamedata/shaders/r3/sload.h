@@ -43,7 +43,7 @@ void UpdateTC( inout p_bumped I)
 	if (I.position.z < fParallaxStopFade)
 	{
 		const float maxSamples = 25;
-		const float minSamples = 5;
+		const float minSamples = 3; //Swartz27 to all: More min samples is more results.
 		const float fParallaxOffset = -0.013;
 
 		float3	 eye = mul (float3x3(I.M1.x, I.M2.x, I.M3.x,
@@ -141,7 +141,7 @@ surface_bumped sload_i( p_bumped I)
 	float4 	NuE	= s_bumpX.Sample( smp_base, I.tcdh);	// IN:	normal_error.height
 
 	S.base		= tbase(I.tcdh);				//	IN:  rgb.a
-	S.normal	= Nu.wzy + (NuE.xyz - 1.0h);	//	(Nu.wzyx - .5h) + (E-.5)
+	S.normal	= Nu.wzy + (NuE.xyz - 1.0f);	//	(Nu.wzyx - .5h) + (E-.5)
 	S.gloss		= Nu.x*Nu.x;					//	S.gloss = Nu.x*Nu.x;
 	S.height	= NuE.z;
 	//S.height	= 0;
@@ -183,7 +183,7 @@ surface_bumped sload_i( p_bumped I, float2 pixeloffset )
 	float4 	NuE	= s_bumpX.Sample( smp_base, I.tcdh);	// IN:	normal_error.height
 
 	S.base		= tbase(I.tcdh);				//	IN:  rgb.a
-	S.normal	= Nu.wzyx + (NuE.xyz - 1.0h);	//	(Nu.wzyx - .5h) + (E-.5)
+	S.normal	= Nu.wzyx + (NuE.xyz - 1.0f);	//	(Nu.wzyx - .5h) + (E-.5)
 	S.gloss		= Nu.x*Nu.x;					//	S.gloss = Nu.x*Nu.x;
 	S.height	= NuE.z;
 	//S.height	= 0;
