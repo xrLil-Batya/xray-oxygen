@@ -898,6 +898,11 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len]='0'; ++len;
 	}
 
+	// Puddles
+	defines[def_it].Name = "USE_PUDDLES";
+	defines[def_it].Definition = "1";
+	def_it++;
+
     if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
     {
         xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
