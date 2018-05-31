@@ -188,6 +188,9 @@ void _initialize_cpu(void)
 	if (CPU::Info.hasFeature(CPUFeature::EST))
 		xr_strcat(features, ", EST");
 
+	if (CPU::Info.hasFeature(CPUFeature::FXSR))
+		xr_strcat(features, ", FXSR");
+
 	Msg("* CPU features: %s", features);
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
 
