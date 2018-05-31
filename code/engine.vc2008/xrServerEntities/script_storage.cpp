@@ -9,7 +9,6 @@
 #include "script_storage.h"
 #include "script_thread.h"
 #include <stdarg.h>
-#include "../xrCore/doug_lea_allocator.h"
 #include "../FrayBuildConfig.hpp"
 #include "../xrScripts/luaopen.hpp"
 

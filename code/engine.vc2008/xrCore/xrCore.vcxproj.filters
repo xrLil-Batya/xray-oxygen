@@ -4,15 +4,6 @@
     <Filter Include="Memory manager">
       <UniqueIdentifier>{8aa698ec-2bd2-4827-9da8-1e2a98b5a26b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Memory manager\dlmalloc">
-      <UniqueIdentifier>{9f9af85d-d7cb-4ff9-8d9c-859a893a75eb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Memory manager\dlmalloc\allocator">
-      <UniqueIdentifier>{8438206d-1c38-4993-ba33-c1e2909b9c70}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Memory manager\dlmalloc\wrapper">
-      <UniqueIdentifier>{353ce714-1893-46b4-984f-d9133fffc4a0}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Debug core">
       <UniqueIdentifier>{b305bb8b-db4f-4663-948e-900d6550a2c6}</UniqueIdentifier>
     </Filter>
@@ -36,9 +27,6 @@
     </Filter>
     <Filter Include="Math">
       <UniqueIdentifier>{3d385d7c-ac52-4a06-8105-3fc0bffdb6ec}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Math\CPU">
-      <UniqueIdentifier>{43e61e50-6b82-48c9-9842-72591a05e3fe}</UniqueIdentifier>
     </Filter>
     <Filter Include="Math\STLext">
       <UniqueIdentifier>{149f26f8-39cc-4437-92e6-7c722fc3aefa}</UniqueIdentifier>
@@ -76,6 +64,9 @@
     <Filter Include="FS\file_stream_reader">
       <UniqueIdentifier>{4d7345dc-3247-4b52-988d-4cc4ffd82129}</UniqueIdentifier>
     </Filter>
+    <Filter Include="OS\CPU">
+      <UniqueIdentifier>{43e61e50-6b82-48c9-9842-72591a05e3fe}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="FTimer.cpp">
@@ -100,7 +91,7 @@
       <Filter>Math</Filter>
     </ClCompile>
     <ClCompile Include="cpuid.cpp">
-      <Filter>Math\CPU</Filter>
+      <Filter>OS\CPU</Filter>
     </ClCompile>
     <ClCompile Include="_std_extensions.cpp">
       <Filter>Math\Extensions</Filter>
@@ -161,15 +152,6 @@
     </ClCompile>
     <ClCompile Include="xrMemory_subst_msvc.cpp">
       <Filter>Memory manager</Filter>
-    </ClCompile>
-    <ClCompile Include="ptmalloc3\malloc.c">
-      <Filter>Memory manager\dlmalloc\allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="ptmalloc3\sysdeps\win32\win32.c">
-      <Filter>Memory manager\dlmalloc\allocator</Filter>
-    </ClCompile>
-    <ClCompile Include="doug_lea_allocator.cpp">
-      <Filter>Memory manager\dlmalloc\wrapper</Filter>
     </ClCompile>
     <ClCompile Include="xrDebugNew.cpp">
       <Filter>Debug core</Filter>
@@ -342,7 +324,7 @@
       <Filter>Math</Filter>
     </ClInclude>
     <ClInclude Include="cpuid.h">
-      <Filter>Math\CPU</Filter>
+      <Filter>OS\CPU</Filter>
     </ClInclude>
     <ClInclude Include="FixedMap.h">
       <Filter>Math\STLext</Filter>
@@ -424,15 +406,6 @@
     </ClInclude>
     <ClInclude Include="xrMemory_subst_msvc.h">
       <Filter>Memory manager</Filter>
-    </ClInclude>
-    <ClInclude Include="ptmalloc3\malloc-2.8.3.h">
-      <Filter>Memory manager\dlmalloc\allocator</Filter>
-    </ClInclude>
-    <ClInclude Include="doug_lea_allocator.h">
-      <Filter>Memory manager\dlmalloc\wrapper</Filter>
-    </ClInclude>
-    <ClInclude Include="memory_allocator_options.h">
-      <Filter>Memory manager\dlmalloc\wrapper</Filter>
     </ClInclude>
     <ClInclude Include="xrDebug.h">
       <Filter>Debug core</Filter>

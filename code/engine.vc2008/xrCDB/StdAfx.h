@@ -8,8 +8,6 @@
 #pragma once
 
 #include "../xrCore/xrCore.h"
-#include "../xrCore/doug_lea_allocator.h"
-#include "../xrCore/memory_allocator_options.h"
 #include "../../SDK/include/imdexlib/fast_dynamic_cast.hpp"
 
 #define CNEW(type)			new (xr_alloc<type>(1)) type

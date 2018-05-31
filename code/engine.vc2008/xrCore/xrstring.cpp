@@ -2,8 +2,8 @@
 #pragma hdrstop
 
 #include "xrstring.h"
-
-XRCORE_API	extern		str_container*	g_pStringContainer = nullptr;
+// @ForserX to @Giperionn: g_pStringContainer using at xrPlay.
+XRCORE_API extern str_container* g_pStringContainer = new str_container();
 
 struct str_container_impl
 {
