@@ -1,5 +1,5 @@
 #pragma once
-class IRender_Mesh;
+#include "../xrRender/fbasicvisual.h"
 #define MAX_PUDDLES 30
 
 struct SPuddle
