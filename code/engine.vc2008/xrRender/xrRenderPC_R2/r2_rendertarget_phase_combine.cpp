@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
-
+#include "r2_puddles.h"
 #include "../xrRender/dxEnvironmentRender.h"
 
 #define STENCIL_CULL 0
@@ -11,12 +11,10 @@ void CRenderTarget::DoAsyncScreenshot()
 	if (RImplementation.m_bMakeAsyncSS)
 	{
 		HRESULT hr;
-
 		IDirect3DSurface9*	pFBSrc = HW.pBaseRT;
 
 		//	SHould be async function
 		hr = HW.pDevice->GetRenderTargetData( pFBSrc, pFB );
-
 		RImplementation.m_bMakeAsyncSS = false;
 	}
 }
@@ -231,7 +229,9 @@ void	CRenderTarget::phase_combine	()
             phase_SunShafts();
 
 		phase_rain_drops();
-		phase_puddles();
+
+		if(Puddles->m_bLoaded)
+			phase_puddles();
 	}
 
 	// Combine everything + perform AA

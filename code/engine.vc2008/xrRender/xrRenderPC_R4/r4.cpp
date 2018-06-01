@@ -1102,6 +1102,10 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	else
 		sh_name[len]='0'; ++len;
 
+	defines[def_it].Name = "USE_PUDDLES";
+	defines[def_it].Definition = "1";
+	def_it++;
+
 	if (RImplementation.o.advancedpp && ps_r_sun_shafts)
 	{
 		xr_sprintf					(c_sun_shafts,"%d",ps_r_sun_shafts);
