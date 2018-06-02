@@ -50,6 +50,7 @@
 * [acidicMercury8](https://github.com/acidicMercury8)
 * [mortany](https://github.com/mortany)
 * [Unfainthful](https://github.com/Unfainthful)
+* Swartz27
 
 ! Also used code of this developers and teams:
 
