@@ -1,6 +1,6 @@
 #pragma once
+
 #include "UIDialogWnd.h"
-#include "../encyclopedia_article_defs.h"
 
 class CUI3tButton;
 class CUITabControl;

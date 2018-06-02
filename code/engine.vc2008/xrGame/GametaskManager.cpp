@@ -9,7 +9,6 @@
 #include "actor.h"
 #include "UIGameSP.h"
 #include "ui/UIPDAWnd.h"
-#include "encyclopedia_article.h"
 #include "ui/UIMapWnd.h"
 
 #pragma warning(push)
@@ -212,22 +211,14 @@ CGameTask* CGameTaskManager::ActiveTask()
 	if(!t_id.size())			return NULL;
 	return						HasGameTask( t_id, true );
 }
-/*
-void CGameTaskManager::SetActiveTask(const shared_str& id)
-{
-	g_active_task_id			= id;
-	m_flags.set					(eChanged, TRUE);
-	m_read						= true;
-}*/
 
 void CGameTaskManager::SetActiveTask(CGameTask* task)
 {
-	VERIFY( task );
-	if ( task )
+	if (task)
 	{
-		g_active_task_id		 = task->m_ID;
-		m_flags.set				(eChanged, TRUE);
-		task->m_read			= true;
+		g_active_task_id = task->m_ID;
+		m_flags.set(eChanged, TRUE);
+		task->m_read = true;
 	}
 }
 

@@ -608,7 +608,6 @@
     <ClInclude Include="agent_explosive_manager.h" />
     <ClInclude Include="agent_explosive_manager_inline.h" />
     <ClInclude Include="danger_explosive.h" />
-    <ClInclude Include="danger_explosive_inline.h" />
     <ClInclude Include="agent_location_manager.h" />
     <ClInclude Include="agent_location_manager_inline.h" />
     <ClInclude Include="danger_location.h" />
@@ -1367,8 +1366,6 @@
     <ClInclude Include="GameTask.h" />
     <ClInclude Include="GameTaskDefs.h" />
     <ClInclude Include="GametaskManager.h" />
-    <ClInclude Include="encyclopedia_article.h" />
-    <ClInclude Include="encyclopedia_article_defs.h" />
     <ClInclude Include="AI_PhraseDialogManager.h" />
     <ClInclude Include="Phrase.h" />
     <ClInclude Include="PhraseDialog.h" />
@@ -2301,7 +2298,6 @@
     <ClCompile Include="InfoPortion.cpp" />
     <ClCompile Include="GameTask.cpp" />
     <ClCompile Include="GametaskManager.cpp" />
-    <ClCompile Include="encyclopedia_article.cpp" />
     <ClCompile Include="AI_PhraseDialogManager.cpp" />
     <ClCompile Include="Phrase.cpp" />
     <ClCompile Include="PhraseDialog.cpp" />
@@ -2431,7 +2427,10 @@
     <ClCompile Include="CarScript.cpp" />
     <ClCompile Include="CarSound.cpp" />
     <ClCompile Include="CarWheels.cpp" />
-    <ClCompile Include="DBG_Car.cpp" />
+    <ClCompile Include="DBG_Car.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="CarWeapon.cpp" />
     <ClCompile Include="car_memory.cpp" />
     <ClCompile Include="Helicopter.cpp" />

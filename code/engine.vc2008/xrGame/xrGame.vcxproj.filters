@@ -2739,9 +2739,6 @@
     <ClInclude Include="danger_explosive.h">
       <Filter>AI\AGroup\agent_manager\agent_explosive_manager\danger_explosive</Filter>
     </ClInclude>
-    <ClInclude Include="danger_explosive_inline.h">
-      <Filter>AI\AGroup\agent_manager\agent_explosive_manager\danger_explosive</Filter>
-    </ClInclude>
     <ClInclude Include="agent_location_manager.h">
       <Filter>AI\AGroup\agent_manager\agent_location_manager</Filter>
     </ClInclude>
@@ -4976,12 +4973,6 @@
     </ClInclude>
     <ClInclude Include="GametaskManager.h">
       <Filter>Core\Client\Objects\tasks_info_dialogs\game tasks</Filter>
-    </ClInclude>
-    <ClInclude Include="encyclopedia_article.h">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\encyclopedia</Filter>
-    </ClInclude>
-    <ClInclude Include="encyclopedia_article_defs.h">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\encyclopedia</Filter>
     </ClInclude>
     <ClInclude Include="AI_PhraseDialogManager.h">
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
@@ -7594,9 +7585,6 @@
     </ClCompile>
     <ClCompile Include="GametaskManager.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\game tasks</Filter>
-    </ClCompile>
-    <ClCompile Include="encyclopedia_article.cpp">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\encyclopedia</Filter>
     </ClCompile>
     <ClCompile Include="AI_PhraseDialogManager.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>

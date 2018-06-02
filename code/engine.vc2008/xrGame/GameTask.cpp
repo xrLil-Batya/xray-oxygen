@@ -1,7 +1,6 @@
 #include "stdafx.h"
 #include "GameTask.h"
 #include "ui/xrUIXmlParser.h"
-#include "encyclopedia_article.h"
 #include "map_location.h"
 #include "map_spot.h"
 #include "map_manager.h"
