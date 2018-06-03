@@ -9,7 +9,7 @@
 
 class CSE_Abstract;
 
-const u32	NET_Latency		= 50;		// time in (ms)
+const u32 NET_Latency = 50;		// time in (ms)
 
 // t-defs
 typedef xr_hash_map<u16, CSE_Abstract*>	xrS_entities;
@@ -20,8 +20,6 @@ public:
 	CSE_Abstract*			owner;
 	BOOL					net_Ready;
 	BOOL					net_Accepted;
-	
-	u32						net_LastMoveUpdateTime;
 
 							xrClientData			();
 	virtual					~xrClientData			() = default;
@@ -101,7 +99,7 @@ public:
 	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
 	
-	void	__stdcall		SendConfigFinished		(ClientID const & clientId);
+	void	__stdcall		SendConfigFinished		();
 
 protected:
 	void					SendConnectionData		(IClient* CL);
@@ -115,10 +113,7 @@ public:
 	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		(IClient* CL);
 
-	virtual void			SendTo_LL			(void* data, u32 size);
-    virtual void		    SendTo(ClientID ID, NET_Packet& P);
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P);
-
 	virtual void			client_Destroy		(IClient* C);					// destroy client info
 
 	// utilities
@@ -138,8 +133,8 @@ public:
 
 			shared_str		level_name			(const shared_str &server_options) const;
 			shared_str		level_version		(const shared_str &server_options) const;
-
-    void createClient(); // Create actor
+	// Create Actor
+    void					createClient		();
 
 #ifdef DEBUG
 public:

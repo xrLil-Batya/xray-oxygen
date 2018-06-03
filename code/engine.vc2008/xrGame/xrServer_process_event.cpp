@@ -8,6 +8,7 @@
 #include "alife_object_registry.h"
 #include "xrServer_Objects_ALife_Items.h"
 #include "xrServer_Objects_ALife_Monsters.h"
+#include "Level.h"
 
 void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 {
@@ -61,7 +62,8 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		{
 			xrClientData* CL		= ID_to_client(sender);
 			if (CL)	CL->net_Ready	= TRUE;
-			if (SV_Client) SendTo(SV_Client->ID, P);
+			if (SV_Client)
+				Level().OnMessage(P.B.data, (u32)P.B.count);
 		}break;
 	case GE_TRADE_BUY:
 	case GE_OWNERSHIP_TAKE:
@@ -190,8 +192,8 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			P.w_u32				(timestamp);
 			P.w_u16				(GE_KILL_SOMEONE);
 			P.w_u16				(id_src);
-			P.w_u16				(destination);
-			SendTo				(c_src->ID, P);
+			P.w_u16				(destination); 
+			Level().OnMessage(P.B.data, (u32)P.B.count);
 			//////////////////////////////////////////////////////////////////////////
 
 			VERIFY					(verify_entities());
@@ -202,10 +204,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		{
 			SendBroadcast	(BroadcastCID, P);
 		}break;
-	case GE_CHANGE_POS:
-		{			
-			SendTo		(SV_Client->ID, P);
-		}break;
+	case GE_CHANGE_POS: Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GE_INSTALL_UPGRADE:
 		{
 			shared_str				upgrade_id;
@@ -250,25 +249,16 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		}break;
 
 	case GEG_PLAYER_DISABLE_SPRINT:
-	case GEG_PLAYER_WEAPON_HIDE_STATE:
-		{
-			SendTo		(SV_Client->ID, P);
-
-			VERIFY					(verify_entities());
-		}break;
+	case GEG_PLAYER_WEAPON_HIDE_STATE:	Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GEG_PLAYER_ACTIVATE_SLOT:
-	case GEG_PLAYER_ITEM_EAT:
-		{
-			SendTo(SV_Client->ID, P);
-			VERIFY					(verify_entities());
-		}break;
+	case GEG_PLAYER_ITEM_EAT:			Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GEG_PLAYER_USE_BOOSTER:
 		{
 			if (receiver && receiver->owner && (receiver->owner != SV_Client))
 			{
 				NET_Packet tmp_packet;
 				CGameObject::u_EventGen(tmp_packet, GEG_PLAYER_USE_BOOSTER, receiver->ID);
-				SendTo(receiver->owner->ID, P);
+				Level().OnMessage(P.B.data, (u32)P.B.count);
 			}
 		}break;
 	case GE_TELEPORT_OBJECT:

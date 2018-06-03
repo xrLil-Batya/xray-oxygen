@@ -13,13 +13,10 @@ public:
 	{
 		u32		bConnected	: 1;
 	};
-
                         IClient( CTimer* timer );
 	virtual             ~IClient() = default;
 
 	ClientID			ID;
-	shared_str			name;
-
 	Flags				flags;	// local/host/normal
 };
 

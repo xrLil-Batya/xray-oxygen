@@ -52,16 +52,16 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 		E->UPDATE_Write	(P);
 	}
 	//-----------------------------------------------------
-	E->s_flags			= save;
-	SendTo				(CL->ID,P);
-	E->net_Processed	= TRUE;
+	E->s_flags = save;
+	Level().OnMessage(P.B.data, (u32)P.B.count);
+	E->net_Processed = TRUE;
 }
 
-void xrServer::SendConfigFinished(ClientID const & clientId)
+void xrServer::SendConfigFinished()
 {
 	NET_Packet	P;
 	P.w_begin	(M_SV_CONFIG_FINISHED);
-	SendTo		(clientId, P);
+	Level().OnMessage(P.B.data, (u32)P.B.count);
 }
 
 void xrServer::SendConnectionData(IClient* _CL)
@@ -78,7 +78,7 @@ void xrServer::SendConnectionData(IClient* _CL)
 		Perform_connect_spawn(xrSe_it.second, CL, P);
 
 	// Start to send server logo and rules
-	SendConfigFinished(CL->ID);
+	SendConfigFinished();
 };
 
 void xrServer::OnCL_Connected(IClient* _CL)
@@ -97,7 +97,7 @@ void xrServer::OnCL_Connected(IClient* _CL)
 	NET_Packet P;
 	P.w_begin(M_SV_CONFIG_NEW_CLIENT);
 	P.w_stringZ(game->type_name());
-	SendTo(CL->ID, P);
+	Level().OnMessage(P.B.data, (u32)P.B.count);
 	// end
 
 	Perform_game_export();

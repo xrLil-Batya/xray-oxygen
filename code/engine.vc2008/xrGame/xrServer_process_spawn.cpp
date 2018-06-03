@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "xrServer.h"
 #include "xrserver_objects.h"
-
+#include "Level.h"
 #ifdef DEBUG
 #	include "xrserver_objects_alife_items.h"
 #endif
@@ -117,7 +117,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		pAbstractE->Spawn_Write		(Packet,TRUE	);
 		if (pAbstractE->s_flags.is(M_SPAWN_UPDATE))
 			pAbstractE->UPDATE_Write	(Packet);
-		SendTo				(CL->ID,Packet);
+		Level().OnMessage(Packet.B.data, (u32)Packet.B.count);
 
 		// For everybody, except client, which contains authorative copy
 		pAbstractE->Spawn_Write		(Packet,FALSE	);
