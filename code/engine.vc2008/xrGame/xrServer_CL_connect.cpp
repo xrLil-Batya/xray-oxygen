@@ -69,14 +69,13 @@ void xrServer::SendConnectionData(IClient* _CL)
 	conn_spawned_ids.clear();
 	xrClientData*	CL = (xrClientData*)_CL;
 	NET_Packet		P;
+
 	// Replicate current entities on to this client
-
-	for (auto &xrSe_it: entities)
-		xrSe_it.second->net_Processed = FALSE;
-
 	for (auto &xrSe_it : entities)
+	{
+		xrSe_it.second->net_Processed = FALSE;
 		Perform_connect_spawn(xrSe_it.second, CL, P);
-
+	}
 	// Start to send server logo and rules
 	SendConfigFinished();
 };
