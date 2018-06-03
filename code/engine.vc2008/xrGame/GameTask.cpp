@@ -20,15 +20,15 @@
 
 CGameTask::CGameTask()
 {
-	m_ReceiveTime			= 0;
-	m_FinishTime			= 0;
-	m_timer_finish			= 0;
-	m_Title					= NULL;
-	m_Description			= NULL;
-	m_ID					= NULL;
+	m_ReceiveTime			= 0ui64;
+	m_FinishTime			= 0ui64;
+	m_timer_finish			= 0ui64;
+	m_Title					= nullptr;
+	m_Description			= nullptr;
+	m_ID					= nullptr;
 	m_task_type				= eTaskTypeDummy;
 	m_task_state			= eTaskStateDummy;
-	m_linked_map_location	= NULL;
+	m_linked_map_location	= nullptr;
 	m_read					= false;
 }
 
@@ -290,14 +290,13 @@ void CGameTask::AddOnFailFunc_script(LPCSTR _str)
 
 void SScriptTaskHelper::init_functors(xr_vector<shared_str>& v_src, task_state_functors& v_dest)
 {
-	xr_vector<shared_str>::iterator it		= v_src.begin();
-	xr_vector<shared_str>::iterator it_e	= v_src.end();
 	v_dest.resize(v_src.size());
 
-	for(u32 idx=0 ;it!=it_e;++it,++idx)
+	for (u32 idx = 0; idx < v_src.size(); ++idx)
 	{
-			bool functor_exists		= ai().script_engine().functor(*(*it) ,v_dest[idx]);
-			if(!functor_exists)		Log("Cannot find script function described in task objective  ", *(*it));
+		bool functor_exists = ai().script_engine().functor(v_src[idx].c_str(), v_dest[idx]);
+		if (!functor_exists)	
+			Log("Cannot find script function described in task objective  ", v_src[idx].c_str());
 	}
 }
 
@@ -368,7 +367,7 @@ void CGameTask::script_register(lua_State *L)
 				.def("get_id",								&CGameTask::GetID_script						)
 				.def("set_id",								&CGameTask::SetID_script						)
 				.def("set_type",							&CGameTask::SetType_script						)
-//				.def("get_type",							&CGameTask::GetType_script						)
+				.def("get_type",							&CGameTask::GetType_script						)
 				.def("set_icon_name",						&CGameTask::SetIconName_script					)
 				.def("get_icon_name",						&CGameTask::GetIconName_script					)
 				.def("set_description",						&CGameTask::SetDescription_script				)
