@@ -31,6 +31,8 @@ public:
 			void	SetCheck				(bool b);
 			int		GetIValue				(){return m_i_val;}
 			float	GetFValue				(){return m_f_val;}
+			void	SetIValue				(int val){ m_i_val = val;}
+			void	SetFValue				(float val){ m_f_val = val;}
 			void	SetOptIBounds			(int imin, int imax);
 			void	SetOptFBounds			(float fmin, float fmax);
 protected:
