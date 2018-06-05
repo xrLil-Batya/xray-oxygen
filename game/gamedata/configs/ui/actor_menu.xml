@@ -318,7 +318,7 @@
 		        <text y="-25" align="c" vert_align="c" font="graffiti22" color="ui_7"/>
 	        </icon>
 		<hint_text delay="800">st_ui_health_sensor</hint_text>
-	        <state_progress x="0" y="0" width="214" height="16" horz="1" min="0" max="1" pos="0">
+	        <state_progress x="0" y="0" width="214" height="16" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerHealth * 55.0) / 55.0">
 	    	    <progress>
 	        		<texture r="194" g="8" b="8" a="200">ui_inGame2_inventory_health_bar</texture>
 		        </progress>

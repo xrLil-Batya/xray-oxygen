@@ -28,6 +28,12 @@
 #include "../xrServerEntities/xrServer_Object_Base.h"
 #include "UI/UIGameTutorial.h"
 
+#include "xrServer.h"
+#include "UIGameCustom.h"
+#include "ui/UIMainIngameWnd.h"
+#include "ui/UIPdaWnd.h"
+#include "../xrEngine/x_ray.h"
+
 #ifndef MASTER_GOLD
 #	include "custommonster.h"
 #endif // MASTER_GOLD
@@ -555,10 +561,7 @@ void CGamePersistent::OnFrame	()
 	UpdateDof();
 }
 
-#include "xrServer.h"
-#include "UIGameCustom.h"
-#include "ui/UIMainIngameWnd.h"
-#include "ui/UIPdaWnd.h"
+
 
 void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 {
@@ -583,6 +586,7 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		LPSTR		saved_name	= (LPSTR)(P1);
 
 		Level().remove_objects	();
+        pApp->LoadBegin();
 		Level().Server->game->restart_simulator	(saved_name);
 		xr_free (saved_name);
 		return;
