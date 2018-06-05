@@ -65,14 +65,14 @@ class CCC_DbgStrCheck : public IConsole_Command
 {
 public:
 	CCC_DbgStrCheck(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->verify(); }
+	virtual void Execute(LPCSTR args) { g_pStringContainer.verify(); }
 };
 
 class CCC_DbgStrDump : public IConsole_Command
 {
 public:
 	CCC_DbgStrDump(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->dump();}
+	virtual void Execute(LPCSTR args) { g_pStringContainer.dump();}
 };
 
 //-----------------------------------------------------------------------

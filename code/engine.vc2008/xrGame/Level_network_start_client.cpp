@@ -44,13 +44,7 @@ bool	CLevel::net_start_client1				()
 bool CLevel::net_start_client2()
 {
 	Server->createClient();
-
-    // It's really needed here?
-	Server->Update();
-	ClientReceive();
-
     Log("* client : connection accepted - <All Ok>");
-
 	return true;
 }
 

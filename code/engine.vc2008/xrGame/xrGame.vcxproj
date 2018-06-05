@@ -1708,6 +1708,7 @@
     <ClCompile Include="Dosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="game_expression_delegates.cpp" />
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="IKFoot.cpp" />
     <ClCompile Include="IKLimb.cpp" />

@@ -2,8 +2,8 @@
 #pragma hdrstop
 
 #include "xrstring.h"
-// @ForserX to @Giperionn: g_pStringContainer using at xrPlay.
-XRCORE_API extern str_container* g_pStringContainer = new str_container();
+
+XRCORE_API str_container	g_pStringContainer;
 
 struct str_container_impl
 {
@@ -244,7 +244,7 @@ xr_vector<xr_string> xr_string::Split(LPCSTR Str, size_t StrSize, char splitCh)
             //Don't create empty string
             if ((StrCursor - 1 - SubStrBeginCursor) > 0)
             {
-                Result.push_back(xr_string(&Str[SubStrBeginCursor], StrCursor - 1));
+                Result.push_back(xr_string(&Str[SubStrBeginCursor], (int)StrCursor - 1));
             }
         }
     }
@@ -346,7 +346,7 @@ xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
 
 xr_string xr_string::RemoveWhitespaces() const
 {
-    int Size = size();
+    size_t Size = size();
     if (Size == 0) return xr_string();
 
     xr_string Result;
@@ -354,7 +354,7 @@ xr_string xr_string::RemoveWhitespaces() const
 
     const char* OrigStr = data();
 
-    for (int i = 0; i < Size; ++i)
+    for (size_t i = 0; i < Size; ++i)
     {
         if (*OrigStr != ' ')
         {
@@ -377,9 +377,9 @@ bool xr_string::StartWith(LPCSTR Str) const
     return StartWith(Str, (int)StrLen);
 }
 
-bool xr_string::StartWith(LPCSTR Str, int Size) const
+bool xr_string::StartWith(LPCSTR Str, size_t Size) const
 {
-    int OurSize = size();
+    size_t OurSize = size();
 
     //String is greater then our, we can't success
     if (OurSize < Size) return false;

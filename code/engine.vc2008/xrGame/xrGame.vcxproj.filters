@@ -2134,6 +2134,9 @@
     <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter">
       <UniqueIdentifier>{b715dea7-8373-4cb2-8ccc-7fba89926be7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\Common\Expressions">
+      <UniqueIdentifier>{30ff37ac-f70f-4077-80b6-6f06c2b84d49}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="mt_config.h">
@@ -8698,6 +8701,9 @@
     </ClCompile>
     <ClCompile Include="game_cl_base.cpp">
       <Filter>Core\Server\Games\client</Filter>
+    </ClCompile>
+    <ClCompile Include="game_expression_delegates.cpp">
+      <Filter>Core\Common\Expressions</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
