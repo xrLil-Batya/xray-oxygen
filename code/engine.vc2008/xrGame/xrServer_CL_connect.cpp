@@ -71,11 +71,13 @@ void xrServer::SendConnectionData(IClient* _CL)
 	NET_Packet		P;
 
 	// Replicate current entities on to this client
+	// NOTE: Сначала зануляем везде флаг net_Processed, а потом уже коннектим. 
 	for (auto &xrSe_it : entities)
-	{
 		xrSe_it.second->net_Processed = FALSE;
+
+	for (auto &xrSe_it : entities)
 		Perform_connect_spawn(xrSe_it.second, CL, P);
-	}
+
 	// Start to send server logo and rules
 	SendConfigFinished();
 };

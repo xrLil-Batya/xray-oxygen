@@ -285,7 +285,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 						
 		}break;
 	default:
-		VERIFY	(0,"Game Event not implemented!!!");
+		VERIFY2	(0,"Game Event not implemented!!!");
 		break;
 	}
 }

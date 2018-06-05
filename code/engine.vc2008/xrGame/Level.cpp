@@ -741,7 +741,7 @@ void CLevel::SetNumCrSteps(u32 NumSteps)
 	{
 		m_dwNumSteps = NumSteps;
 
-		if (m_dwNumSteps <= 1000000)
+		if (m_dwNumSteps > 1000000)
 		{
 			m_dwNumSteps--;
 		}
