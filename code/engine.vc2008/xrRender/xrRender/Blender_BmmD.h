@@ -25,4 +25,6 @@ public:
 
 	CBlender_BmmD();
 	virtual ~CBlender_BmmD();
+private:
+	xrP_TOKEN	oTessellation;
 };

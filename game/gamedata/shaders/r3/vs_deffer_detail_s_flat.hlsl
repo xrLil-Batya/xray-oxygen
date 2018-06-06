@@ -45,4 +45,3 @@ v2p_flat 	main (v_detail v)
 
 	return O;
 }
-FXVS;

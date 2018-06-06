@@ -21,7 +21,6 @@ void xrMemory::_initialize()
 void xrMemory::_destroy()
 {
 	xr_delete(g_pSharedMemoryContainer);
-	xr_delete(g_pStringContainer);
 
 	mem_initialized = false;
 }
@@ -38,8 +37,7 @@ void xrMemory::mem_compact()
 
 	HeapCompact(GetProcessHeap(), 0);
 
-	if (g_pStringContainer)
-		g_pStringContainer->clean();
+	g_pStringContainer.clean();
 
 	if (g_pSharedMemoryContainer)
 		g_pSharedMemoryContainer->clean();

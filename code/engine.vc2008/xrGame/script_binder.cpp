@@ -98,12 +98,7 @@ BOOL CScriptBinder::net_Spawn		(CSE_Abstract* DC)
 	CSE_ALifeObject			*object = smart_cast<CSE_ALifeObject*>(abstract);
 	if (object && m_object) 
 	{
-		try {
-			return			((BOOL)m_object->net_Spawn(object));
-		}
-		catch(...) {
-			clear			();
-		}
+		return			((BOOL)m_object->net_Spawn(object));
 	}
 
 	return					(TRUE);

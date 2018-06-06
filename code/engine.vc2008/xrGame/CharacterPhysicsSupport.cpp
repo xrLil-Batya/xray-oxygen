@@ -511,12 +511,11 @@ void CCharacterPhysicsSupport::in_Hit( SHit &H, bool is_killing )
 		else return;
 	}
 
-	//is_killing = is_killing || ( m_eState==esAlive && !m_EntityAlife.g_Alive( ) );
 	if( m_EntityAlife.g_Alive( ) && is_killing && H.type( ) == ALife::eHitTypeExplosion && H.damage( ) > 70.f )
 		CPHDestroyable::Destroy( );
-	
-	if( ( !m_EntityAlife.g_Alive() || is_killing ) )
-		m_character_shell_control.set_kill_hit( H );
+
+	if ((!m_EntityAlife.g_Alive() || is_killing))
+		m_character_shell_control.set_kill_hit(H);
 
 	if(!m_pPhysicsShell && is_killing) 
 	{

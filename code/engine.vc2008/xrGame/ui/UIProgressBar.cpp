@@ -88,6 +88,12 @@ void CUIProgressBar::Update()
 		m_ProgressPos.x			+= _val;
 		UpdateProgressBar		();
 	}
+
+    if (m_expression.IsCompiled())
+    {
+        ExpressionVarVariadic Result = m_expression.ExecuteExpression();
+        SetProgressPos(Result.Flt);
+    }
 }
 
 void CUIProgressBar::Draw()

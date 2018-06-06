@@ -23,5 +23,3 @@ v2p main ( _in I )
 	O.tcJ		= I.tcJ;
  	return	O;
 }
-
-FXVS;

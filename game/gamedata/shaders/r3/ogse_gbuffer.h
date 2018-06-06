@@ -18,6 +18,8 @@
 	New buffer is smaller, than old one. Despite there are more ALU instructions for decoding & encoding position and normal I observe higher FPS.
 	Also, there is a space for storing velocity map now.
 */
+//Swartz27 to whoever added this: why? As far as I can tell it's not used
+
 #ifndef OGSE_GBUFFER_H
 #define OGSE_GBUFFER_H
 uniform float4 ogse_pos_decompression; // x - fFOV, y - fAspect, z - Zf/(Zf-Zn), w - Zn*tan(fFov/2)

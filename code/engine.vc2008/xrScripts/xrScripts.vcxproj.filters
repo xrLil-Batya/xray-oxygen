@@ -375,6 +375,7 @@
     <ClCompile Include="lua_traceback.cpp">
       <Filter>Lua\LuaEtc\Traceback</Filter>
     </ClCompile>
+    <ClCompile Include="VMLua.cpp" />
     <ClCompile Include="luajit\xr_pool.c">
       <Filter>Lua\LuaJIT</Filter>
     </ClCompile>
@@ -923,6 +924,7 @@
     <ClInclude Include="..\..\SDK\include\luabind\iterator_pair_policy.hpp">
       <Filter>Lua\LuaBind\include</Filter>
     </ClInclude>
+    <ClInclude Include="VMLua.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Export\luabind.inl">

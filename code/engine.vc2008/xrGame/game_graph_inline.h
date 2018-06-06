@@ -43,7 +43,7 @@ IC CGameGraph::CGameGraph											(const IReader &_stream)
 IC bool CGameGraph::validate() const
 {
 	//collect list of available maps
-	std::vector<_LEVEL_ID> validMapIDs;
+    xr_vector<_LEVEL_ID> validMapIDs;
 	validMapIDs.reserve(m_header.level_count());
 
 	const GameGraph::LEVEL_MAP& Levels = m_header.levels();

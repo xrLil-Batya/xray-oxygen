@@ -11,7 +11,7 @@ bool CLevel::synchronize_map_data()
 	return synchronize_client();
 }
 
-bool	CLevel::synchronize_client()
+bool CLevel::synchronize_client()
 {
     if (!sended_request_connection_data)
     {
@@ -22,17 +22,12 @@ bool	CLevel::synchronize_client()
     }
 
     deny_m_spawn = FALSE;
-	if (game_configured)
-		return true;
-
-	if (Server)
+	if (!game_configured)
 	{
-		ClientReceive();
+		//Don't delete this ClientReceive(). Without that, game_configured variable will not changed
 		Server->Update();
-
-        //Don't delete this ClientReceive(). Without that, game_configured variable will not changed
-        ClientReceive();
-	}	// if OnClient ClientReceive method called in upper invokation
+		ClientReceive();
+	}
 
 	return !!game_configured;
 }

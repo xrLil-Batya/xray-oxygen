@@ -6,7 +6,7 @@ class CObjectAnimator;
 class CEffectorController;
 class CActor;
 
-class CActorCameraManager	:public CCameraManager
+class CActorCameraManager : public CCameraManager
 {
 	typedef CCameraManager	inherited;
 
@@ -17,13 +17,13 @@ protected:
 	virtual bool			ProcessCameraEffector	(CEffectorCam* eff);
 
 public:
-							CActorCameraManager():inherited(false){}
-	virtual					~CActorCameraManager() {}
+							CActorCameraManager		() : inherited(false) {}
+	virtual					~CActorCameraManager	() {}
 
 	IC void					hud_camera_Matrix		(Fmatrix& M){M.set(m_cam_info_hud.r, m_cam_info_hud.n, m_cam_info_hud.d, m_cam_info_hud.p);}
 };
 
-typedef fastdelegate::FastDelegate0<float>		GET_KOEFF_FUNC;
+typedef fastdelegate::FastDelegate0<float> GET_KOEFF_FUNC;
 
 void AddEffector		(CActor* A, int type, const shared_str& sect_name);
 void AddEffector		(CActor* A, int type, const shared_str& sect_name, float factor);
@@ -36,23 +36,26 @@ class CEffectorController
 protected:
 	CEffectorCam*				m_ce;
 	CEffectorPP*				m_pe;
-public:
-								CEffectorController():m_ce(NULL),m_pe(NULL)	{}
-	virtual						~CEffectorController();
 
-				void			SetPP		(CEffectorPP* p)				{m_pe=p;}
-				void			SetCam		(CEffectorCam* p)				{m_ce=p;}
-	virtual		BOOL			Valid		()								{return m_ce||m_pe;};
-	virtual	float xr_stdcall	GetFactor	()								=0;
+public:
+								CEffectorController		() : m_ce(nullptr), m_pe(nullptr) {}
+	virtual						~CEffectorController	();
+
+				void			SetPP					(CEffectorPP* p)	{m_pe = p;}
+				void			SetCam					(CEffectorCam* p)	{m_ce = p;}
+	virtual		BOOL			Valid					()					{return m_ce || m_pe;};
+	virtual	float xr_stdcall	GetFactor				()					= 0;
 };
 
-class CAnimatorCamEffector :public CEffectorCam
+class CAnimatorCamEffector : public CEffectorCam
 {
 	bool				m_bCyclic;
+
 protected:
 	typedef				CEffectorCam			inherited;
 	virtual bool		Cyclic					() const		{return m_bCyclic;}
 	CObjectAnimator*							m_objectAnimator;
+
 public:
 	bool				m_bAbsolutePositioning;
 	float				m_fov;
@@ -61,57 +64,62 @@ public:
 	virtual				~CAnimatorCamEffector	();
 			void		Start					(LPCSTR fn);
 	virtual BOOL		ProcessCam				(SCamEffectorInfo& info);
-			void		SetCyclic				(bool b)				{m_bCyclic=b;}
+			void		SetCyclic				(bool b)				{m_bCyclic = b;}
 	virtual	BOOL		Valid					();
 			float		GetAnimatorLength		()						{return fLifeTime;};
 
 	virtual bool		AbsolutePositioning		()						{return m_bAbsolutePositioning;}
 };
 
-class CAnimatorCamEffectorScriptCB :public CAnimatorCamEffector 
+class CAnimatorCamEffectorScriptCB : public CAnimatorCamEffector 
 {
 	typedef 	CAnimatorCamEffector			inherited;
 
 	shared_str			cb_name;
+
 public:
-	CAnimatorCamEffectorScriptCB	(LPCSTR _cb){cb_name =_cb;};
+	CAnimatorCamEffectorScriptCB				(LPCSTR _cb)				{cb_name =_cb;};
 	virtual	BOOL		Valid					();
 	virtual BOOL		AllowProcessingIfInvalid()							{return m_bAbsolutePositioning;}
 	virtual	void		ProcessIfInvalid		(SCamEffectorInfo& info);
 };
 
-class CAnimatorCamLerpEffector :public CAnimatorCamEffector
+class CAnimatorCamLerpEffector : public CAnimatorCamEffector
 {
 protected:
 	typedef				CAnimatorCamEffector		inherited;
 	GET_KOEFF_FUNC									m_func;
+
 public:
-			void		SetFactorFunc				(GET_KOEFF_FUNC f)	{m_func=f;}
+			void		SetFactorFunc				(GET_KOEFF_FUNC f)	{m_func = f;}
 	virtual BOOL		ProcessCam					(SCamEffectorInfo& info);
 };
 
-class CAnimatorCamLerpEffectorConst :public CAnimatorCamLerpEffector
+class CAnimatorCamLerpEffectorConst : public CAnimatorCamLerpEffector
 {
 protected:
 	float				m_factor;
+
 public:
 						CAnimatorCamLerpEffectorConst	();
-	void				SetFactor						(float v)		{m_factor=v; clamp(m_factor,0.0f,1.0f);}
+	void				SetFactor						(float v)		{m_factor = v; clamp(m_factor, 0.0f, 1.0f);}
 	float	xr_stdcall	GetFactor						()				{return m_factor;}
 };
 
-class CCameraEffectorControlled :public CAnimatorCamLerpEffector
+class CCameraEffectorControlled : public CAnimatorCamLerpEffector
 {
 	CEffectorController*		m_controller;
+
 public:
 						CCameraEffectorControlled		(CEffectorController* c);
 	virtual				~CCameraEffectorControlled		();
 	virtual BOOL		Valid							();
 };
 
-class SndShockEffector:public CEffectorController
+class SndShockEffector : public CEffectorController
 {
 	typedef CEffectorController inherited;
+
 public:
 	float						m_snd_length;	//ms
 	float						m_cur_length;	//ms
@@ -119,6 +127,7 @@ public:
 	float						m_end_time;
 	float						m_life_time;
 	CActor*						m_actor;
+
 public:
 								SndShockEffector	();
 	virtual						~SndShockEffector	();
@@ -130,9 +139,9 @@ public:
 	virtual	float xr_stdcall	GetFactor			();
 };
 
-
 //////////////////////////////////////////////////////////////////////////
-class CControllerPsyHitCamEffector :public CEffectorCam {
+class CControllerPsyHitCamEffector : public CEffectorCam 
+{
 	typedef CEffectorCam inherited;
 	
 	float				m_time_total;

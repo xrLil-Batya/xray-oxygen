@@ -1,5 +1,5 @@
 //#define SM_4_1
-
+//Swartz27 todo: Change to Load (eat a dick GSC...)
 float4 sm_gather( float2 tc, int2 offset )
 {
 #ifdef SM_4_1

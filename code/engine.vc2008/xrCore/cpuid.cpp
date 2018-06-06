@@ -57,7 +57,7 @@ unsigned int query_processor_info(processor_info* pinfo)
 	std::bitset<32> f_81_EDX;
 	std::bitset<32> f_81_ECX;
 
-	std::vector<std::array<int, 4>> data;
+	xr_vector<std::array<int, 4>> data;
 	std::array<int, 4> cpui;
 
 	__cpuid(cpui.data(), 0);
@@ -153,6 +153,8 @@ unsigned int query_processor_info(processor_info* pinfo)
 		pinfo->features |= static_cast<unsigned>(CPUFeature::EST);
 	if (f_1_ECX[5])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::VMX);
+	if (f_1_EDX[24])
+		pinfo->features |= static_cast<unsigned>(CPUFeature::FXSR);
 
 	if (f_1_EDX[24])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::XFSR);

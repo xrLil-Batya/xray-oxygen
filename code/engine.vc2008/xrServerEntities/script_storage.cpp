@@ -5,12 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script Storage
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "script_storage.h"
 #include "script_thread.h"
 #include <stdarg.h>
-#include "../xrCore/doug_lea_allocator.h"
 #include "../FrayBuildConfig.hpp"
 #include "../xrScripts/luaopen.hpp"
 
@@ -53,30 +51,6 @@ const char*	file_header = 0;
 #	include "script_debugger.h"
 #endif
 
-static void* __cdecl luabind_allocator(luabind::memory_allocation_function_parameter const, void const * const pointer, size_t const size)
-{
-	if (!size)
-	{
-		void*	non_const_pointer = const_cast<LPVOID>(pointer);
-		xr_free(non_const_pointer);
-		return 0;
-	}
-
-	if (!pointer) 
-	{
-		return	(Memory.mem_alloc(size));
-	}
-
-	void*		non_const_pointer = const_cast<void*>(pointer);
-	return		(Memory.mem_realloc(non_const_pointer, size));
-}
-
-void setup_luabind_allocator()
-{
-	luabind::allocator = &luabind_allocator;
-	luabind::allocator_parameter = 0;
-}
-
 void xrScriptCrashHandler()
 {
 	Msg("Trying dump lua state");
@@ -93,35 +67,15 @@ void xrScriptCrashHandler()
 CScriptStorage::CScriptStorage()
 {
 	m_current_thread = 0;
-
-	m_virtual_machine = 0;
-
-#ifdef USE_LUA_STUDIO
-#	ifndef USE_DEBUGGER
-	static_assert(false, "Do not define USE_LUA_STUDIO macro without USE_DEBUGGER macro");
-#	endif // #ifndef USE_DEBUGGER
-#endif // #ifdef USE_LUA_STUDIO
 }
 
 CScriptStorage::~CScriptStorage()
 {
-	if (m_virtual_machine)
-		lua_close(m_virtual_machine);
-
 	Debug.set_crashhandler(nullptr);
 }
 
 void CScriptStorage::reinit()
 {
-	if (m_virtual_machine)
-		lua_close(m_virtual_machine);
-
-	m_virtual_machine = luaL_newstate();
-	R_ASSERT2(m_virtual_machine, "Cannot initialize script virtual machine!");
-
-	// initialize lua standard library functions 
-	lopen::openlua(lua());
-	// End //-----------------------------------------------
 	if (strstr(Core.Params, "-_g"))
 		file_header = file_header_new;
 	else
@@ -133,16 +87,7 @@ void CScriptStorage::reinit()
 
 int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, va_list marker)
 {
-#ifndef NO_XRGAME_SCRIPT_ENGINE
-#	ifdef DEBUG
-	if (!psAI_Flags.test(aiLua) && (tLuaMessageType != ScriptStorage::eLuaMessageTypeError))
-		return(0);
-#	endif
-#endif
-
-#ifndef PRINT_CALL_STACK
-	return		(0);
-#else // #ifdef PRINT_CALL_STACK
+#ifdef PRINT_CALL_STACK
 #	ifndef NO_XRGAME_SCRIPT_ENGINE
 	if (!psAI_Flags.test(aiLua) && (tLuaMessageType != ScriptStorage::eLuaMessageTypeError))
 		return(0);
@@ -214,6 +159,7 @@ int CScriptStorage::vscript_log(ScriptStorage::ELuaMessageType tLuaMessageType, 
 
 	return	(l_iResult);
 #endif // #ifdef PRINT_CALL_STACK
+	return		(0);
 }
 
 void CScriptStorage::dump_state()

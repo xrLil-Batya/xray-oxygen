@@ -4,7 +4,7 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-
+#include "uber_deffer.h"
 #include "blender_BmmD.h"
 
 //////////////////////////////////////////////////////////////////////
@@ -17,6 +17,8 @@ CBlender_BmmD::CBlender_BmmD	()
 	xr_strcpy				(oT2_Name,	"$null");
 	xr_strcpy				(oT2_xform,	"$null");
 	description.version	= 3;
+	oTessellation.Count         = 4;
+	oTessellation.IDselected	= 3;    
 	xr_strcpy				(oR_Name,	"detail\\detail_grnd_grass");	//"$null");
 	xr_strcpy				(oG_Name,	"detail\\detail_grnd_asphalt");	//"$null");
 	xr_strcpy				(oB_Name,	"detail\\detail_grnd_earth");	//"$null");
@@ -37,6 +39,12 @@ void	CBlender_BmmD::Save		(IWriter& fs )
 	xrPWRITE_PROP	(fs,"R2-G",				xrPID_TEXTURE,	oG_Name);
 	xrPWRITE_PROP	(fs,"R2-B",				xrPID_TEXTURE,	oB_Name);
 	xrPWRITE_PROP	(fs,"R2-A",				xrPID_TEXTURE,	oA_Name);
+	xrP_TOKEN::Item	I;
+	xrPWRITE_PROP	(fs,"Tessellation",	xrPID_TOKEN, oTessellation);
+	I.ID = 0; xr_strcpy(I.str,"NO_TESS");	fs.w(&I,sizeof(I));
+	I.ID = 1; xr_strcpy(I.str,"TESS_PN");	fs.w(&I,sizeof(I));
+	I.ID = 2; xr_strcpy(I.str,"TESS_HM");	fs.w(&I,sizeof(I));
+	I.ID = 3; xr_strcpy(I.str,"TESS_PN+HM");	fs.w(&I,sizeof(I));  
 }
 
 void	CBlender_BmmD::Load		(IReader& fs, u16 version )
@@ -62,7 +70,7 @@ void	CBlender_BmmD::Load		(IReader& fs, u16 version )
 //////////////////////////////////////////////////////////////////////////
 // R2
 //////////////////////////////////////////////////////////////////////////
-#include "uber_deffer.h"
+//#include "uber_deffer.h"
 void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
@@ -109,7 +117,6 @@ void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 //////////////////////////////////////////////////////////////////////////
 // R3
 //////////////////////////////////////////////////////////////////////////
-#include "uber_deffer.h"
 void	CBlender_BmmD::Compile	(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);

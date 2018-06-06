@@ -18,6 +18,7 @@ CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float 
 	return E;
 }
 
+#include <ppl.h>
 void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector& N)
 {
 	if (0 == bReady)
@@ -32,23 +33,22 @@ void CSoundRender_Core::update(const Fvector& P, const Fvector& D, const Fvector
 	++s_emitters_u;
 
 	// Firstly update emitters, which are now being rendered
-	for (u32 it = 0; it < s_targets.size(); ++it)
+	concurrency::parallel_for_each(s_targets.begin(), s_targets.end(),
+		[dt_sec, this](CSoundRender_Target* T)
 	{
-		CSoundRender_Target* T = s_targets[it];
 		CSoundRender_Emitter* E = T->get_emitter();
+		bool hasPriority = false;
 		if (E)
 		{
 			E->update(dt_sec);
 			E->marker = s_emitters_u;
-			E = T->get_emitter();	// update can stop itself
-			if (E)
-			{
-				T->priority = E->priority();
-				continue;
-			}
+			E = T->get_emitter();	
+
+			// update can stop itself
+			hasPriority = (bool)E;
 		}
-		T->priority = -1;
-	}
+		T->priority = hasPriority ? E->priority() : -1;
+	});
 
 	// Update emitters
 	for (u32 it = 0; it < s_emitters.size(); ++it)

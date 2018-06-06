@@ -330,7 +330,7 @@
 		<arrow_shadow x="49" y="0" width="50" height="39" heading="1" clockwise="1" begin_angle="2.4" end_angle="-2.45">
 			<texture a="250">ui_char_arrow_shadow</texture>
 		</arrow_shadow-->
-	        <state_progress x="0" y="0" width="171" height="16" horz="1" min="0" max="1" pos="0">
+	        <state_progress x="0" y="0" width="171" height="16" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerHealth * 55.0) / 55.0">
 	    	    <progress stretch="1">
 	        		<texture r="194" g="8" b="8" a="200">ui_inGame2_inventory_health_bar</texture>
 		        </progress>

@@ -4,6 +4,7 @@
 #include "level.h"
 #include "../xrEngine/xr_input.h"
 #include "game_cl_base.h"
+
 #ifdef DEBUG
 #include "attachable_item.h"
 #endif
@@ -38,10 +39,9 @@ void CUIGameSP::HideShownDialogs()
 	HideActorMenu();
 	HidePdaMenu();
 	CUIDialogWnd* mir = TopInputReceiver();
+
 	if (mir && mir == TalkMenu)
-	{
 		mir->HideDialog();
-	}
 }
 
 void CUIGameSP::SetClGame(game_cl_GameState* g)
@@ -80,7 +80,7 @@ void CUIGameSP::OnFrame()
 		{
 			RemoveCustomStatic("main_task");
 			RemoveCustomStatic("secondary_task");
-			m_game_objective = NULL;
+			m_game_objective = nullptr;
 		}
 	}
 }
@@ -113,35 +113,36 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 
 	switch (get_binded_action(dik))
 	{
-	case kACTIVE_JOBS:
-	{
-		if (!pActor->inventory_disabled())
-			ShowPdaMenu();
-		break;
-	}
-
-	case kINVENTORY:
-	{
-		if (!pActor->inventory_disabled())
-			ShowActorMenu();
-
-		break;
-	}
-
-	case kSCORES:
-		if (!pActor->inventory_disabled())
+		case kACTIVE_JOBS:
 		{
-			m_game_objective = AddCustomStatic("main_task", true);
-			CGameTask* t1 = Level().GameTaskManager().ActiveTask();
-			m_game_objective->m_static->TextItemControl()->SetTextST((t1) ? t1->m_Title.c_str() : "st_no_active_task");
+			if (!pActor->inventory_disabled() && !Actor()->HasInfo("pda_has_blocked"))
+				ShowPdaMenu();
 
-			if (t1 && t1->m_Description.c_str())
-			{
-				SDrawStaticStruct* sm2 = AddCustomStatic("secondary_task", true);
-				sm2->m_static->TextItemControl()->SetTextST(t1->m_Description.c_str());
-			}
+			break;
 		}
-		break;
+
+		case kINVENTORY:
+		{
+			if (!pActor->inventory_disabled())
+				ShowActorMenu();
+
+			break;
+		}
+
+		case kSCORES:
+			if (!pActor->inventory_disabled())
+			{
+				m_game_objective = AddCustomStatic("main_task", true);
+				CGameTask* t1 = Level().GameTaskManager().ActiveTask();
+				m_game_objective->m_static->TextItemControl()->SetTextST((t1) ? t1->m_Title.c_str() : "st_no_active_task");
+
+				if (t1 && t1->m_Description.c_str())
+				{
+					SDrawStaticStruct* sm2 = AddCustomStatic("secondary_task", true);
+					sm2->m_static->TextItemControl()->SetTextST(t1->m_Description.c_str());
+				}
+			}
+			break;
 	}
 
 	return false;
@@ -154,10 +155,8 @@ void CUIGameSP::Render()
 	attach_draw_adjust_mode();
 }
 
-void  CUIGameSP::StartTrade(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner)
+void CUIGameSP::StartTrade(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner)
 {
-	//.	if( MainInputReceiver() )	return;
-
 	m_ActorMenu->SetActor(pActorInv);
 	m_ActorMenu->SetPartner(pOtherOwner);
 
@@ -165,10 +164,8 @@ void  CUIGameSP::StartTrade(CInventoryOwner* pActorInv, CInventoryOwner* pOtherO
 	m_ActorMenu->ShowDialog(true);
 }
 
-void  CUIGameSP::StartUpgrade(CInventoryOwner* pActorInv, CInventoryOwner* pMech)
+void CUIGameSP::StartUpgrade(CInventoryOwner* pActorInv, CInventoryOwner* pMech)
 {
-	//.	if( MainInputReceiver() )	return;
-
 	m_ActorMenu->SetActor(pActorInv);
 	m_ActorMenu->SetPartner(pMech);
 
@@ -211,12 +208,7 @@ void CUIGameSP::StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //
 }
 
 extern ENGINE_API BOOL bShowPauseString;
-void CUIGameSP::ChangeLevel(GameGraph::_GRAPH_ID game_vert_id,
-	u32 level_vert_id,
-	Fvector pos,
-	Fvector ang,
-	Fvector pos2,
-	Fvector ang2,
+void CUIGameSP::ChangeLevel(GameGraph::_GRAPH_ID game_vert_id, u32 level_vert_id, Fvector pos, Fvector ang, Fvector pos2, Fvector ang2,
 	bool b_use_position_cancel,
 	const shared_str& message_str,
 	bool b_allow_change_level)
@@ -248,13 +240,17 @@ void CChangeLevelWnd::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 {
 	if (pWnd == m_messageBox)
 	{
-		if (msg == MESSAGE_BOX_YES_CLICKED)
+		switch (msg)
 		{
-			OnOk();
-		}
-		else
-			if (msg == MESSAGE_BOX_NO_CLICKED || msg == MESSAGE_BOX_OK_CLICKED)
+			case MESSAGE_BOX_YES_CLICKED:
+				OnOk();
+				break;
+
+			case MESSAGE_BOX_NO_CLICKED:
+			case MESSAGE_BOX_OK_CLICKED:
 				OnCancel();
+				break;
+		}
 	}
 	else
 		inherited::SendMessage(pWnd, msg, pData);
@@ -263,7 +259,7 @@ void CChangeLevelWnd::SendMessage(CUIWindow *pWnd, s16 msg, void *pData)
 void CChangeLevelWnd::OnOk()
 {
 	HideDialog();
-	NET_Packet								p;
+	NET_Packet p;
 	p.w_begin(M_CHANGE_LEVEL);
 	p.w(&m_game_vertex_id, sizeof(m_game_vertex_id));
 	p.w(&m_level_vertex_id, sizeof(m_level_vertex_id));
@@ -286,6 +282,7 @@ bool CChangeLevelWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	{
 		if (is_binded(kQUIT, dik))
 			OnCancel();
+
 		return true;
 	}
 
@@ -303,12 +300,12 @@ void CChangeLevelWnd::Show()
 	m_messageBox->SetText(m_message_str.c_str());
 
 	g_block_pause = true;
-	Device.Pause(TRUE, TRUE, TRUE, "CChangeLevelWnd_show");
+	Device.Pause(true, true, true, "CChangeLevelWnd_show");
 	bShowPauseString = FALSE;
 }
 
 void CChangeLevelWnd::Hide()
 {
 	g_block_pause = false;
-	Device.Pause(FALSE, TRUE, TRUE, "CChangeLevelWnd_hide");
+	Device.Pause(false, true, true, "CChangeLevelWnd_hide");
 }

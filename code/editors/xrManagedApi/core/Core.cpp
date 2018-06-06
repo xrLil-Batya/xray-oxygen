@@ -41,7 +41,7 @@ void Core::Initialize(String ^ appName, LogCallback ^ logCallback)
     Core::Initialize(appName, logCallback, false, nullptr);
 }
 
-void Core::Initialize(String ^ appName) { Core::Initialize(appName, nullptr, false, nullptr); }
+void Core::Initialize(String ^ appName) { Core::Initialize(appName, nullptr, false, "fs.ltx"); }
 void Core::Destroy() { ::Core._destroy(); }
 #pragma todo("FX to FX: Add build-info to xrCore.")
 const String ^ Core::GetBuildDate() { return msclr::interop::marshal_as<String^>( /* ::Core.GetBuildDate()); */ ""); }
