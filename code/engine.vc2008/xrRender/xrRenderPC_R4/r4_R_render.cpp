@@ -362,6 +362,20 @@ void CRender::Render		()
 		Lights_LastFrame.clear	();
 	}
 
+    // full screen pass to mark msaa-edge pixels in highest stencil bit
+    if (RImplementation.o.dx10_msaa)
+    {
+        PIX_EVENT(MARK_MSAA_EDGES);
+        Target->mark_msaa_edges();
+    }
+
+    //	TODO: DX10: Implement DX10 rain.
+    if (ps_r2_ls_flags.test(R3FLAG_DYN_WET_SURF))
+    {
+        PIX_EVENT(DEFER_RAIN);
+        render_rain();
+    }
+
 	// Directional light - fucking sun
 	if (bSUN)	
 	{
@@ -402,21 +416,7 @@ void CRender::Render		()
 		PIX_EVENT(DEFER_LIGHT_OCCQ);
 		render_lights							(LP_pending);
 	}
-   // full screen pass to mark msaa-edge pixels in highest stencil bit
-    if( RImplementation.o.dx10_msaa )
-    {
-	   PIX_EVENT( MARK_MSAA_EDGES );
-       Target->mark_msaa_edges();
-    }
-
-	//	TODO: DX10: Implement DX10 rain.
-	if (ps_r2_ls_flags.test(R3FLAG_DYN_WET_SURF))
-	{
-		PIX_EVENT(DEFER_RAIN);
-		render_rain();
-	}
-
-
+    
 	// Postprocess
 	{
 		PIX_EVENT(DEFER_LIGHT_COMBINE);

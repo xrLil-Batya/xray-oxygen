@@ -98,6 +98,7 @@ void CRender::level_Load(IReader* fs)
 	Load3DFluid();
 
 	// Puddles
+    Puddles = xr_new<CPuddles>();
 	Puddles->Load();
 
 	// HOM
