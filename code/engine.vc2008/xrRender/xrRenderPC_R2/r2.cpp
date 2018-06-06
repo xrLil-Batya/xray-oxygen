@@ -566,14 +566,14 @@ static HRESULT create_shader (
 
 	if (disasm)
 	{
-		ID3DXBuffer*	disasm	= 0;
-		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &disasm );
+		ID3DXBuffer*	pDisasm = 0;
+		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &pDisasm);
 		string_path		dname;
-		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":".ps" );
-		IWriter*		W = FS.w_open("$logs$",dname);
-		W->w			(disasm->GetBufferPointer(),disasm->GetBufferSize());
-		FS.w_close		(W);
-		_RELEASE		(disasm);
+		strconcat(sizeof(dname), dname, "disasm\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
+		IWriter*		W = FS.w_open("$logs$", dname);
+		W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
+		FS.w_close(W);
+		_RELEASE(pDisasm);
 	}
 
 	return				_result;

@@ -295,9 +295,9 @@ struct b_portal
 void CRender::LoadSectors(IReader* fs)
 {
 	// allocate memory for portals
-	u32 size = fs->find_chunk(fsL_PORTALS); 
+	size_t size = fs->find_chunk(fsL_PORTALS);
 	R_ASSERT(0==size%sizeof(b_portal));
-	u32 count = size/sizeof(b_portal);
+	size_t count = size/sizeof(b_portal);
 	Portals.resize	(count);
 	for (u32 c=0; c<count; c++)
 		Portals[c]	= xr_new<CPortal> ();
