@@ -48,6 +48,7 @@ ENGINE_API bool IsSecondaryThread()
 ENGINE_API BOOL g_bRendering = FALSE; 
 /////////////////////////////////////
 BOOL		g_bLoaded		= FALSE;
+bool		g_bL			= FALSE;
 ref_light	precache_light	= NULL;
 /////////////////////////////////////
 
@@ -79,6 +80,7 @@ BOOL CRenderDevice::Begin	()
 
 	FPU::m24r();
 	g_bRendering = TRUE;
+	g_bL = TRUE;
 #endif
 	return TRUE;
 }
@@ -321,6 +323,12 @@ void CRenderDevice::on_idle		()
 		Sleep		(1);
 }
 
+void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
+{
+	if(g_bL)
+		m_pRender->ResizeWindowProc(height, width);
+}
+
 #ifdef INGAME_EDITOR
 void CRenderDevice::message_loop_editor	()
 {
@@ -355,11 +363,28 @@ void CRenderDevice::message_loop()
     }
 }
 
+int GetNumOfDisplays()
+{
+	int sValue			= 0;
+	DISPLAY_DEVICE dc;
+	dc.cb				= sizeof(dc);
+	//////////////////////////////////////////
+	for ( int i = 0; EnumDisplayDevicesA(NULL, i, &dc, 0); ++i )
+	{
+		if (dc.StateFlags & DISPLAY_DEVICE_ACTIVE)
+			sValue++;
+	}
+	//////////////////////////////////////////
+	return sValue;
+}
+
 void CRenderDevice::Run			()
 {
-//	DUMP_PHASE;
 	g_bLoaded				= FALSE;
 	Log						("Starting engine...");
+
+	Msg						("Value of system displays: %d.", GetNumOfDisplays());
+
 	thread_name				("X-RAY Primary thread");
 
 	// Startup timers and calculate timer delta
@@ -402,13 +427,12 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     RECT	m_rcWindowBounds;
     RECT	DesktopRect;
     GetClientRect				(GetDesktopWindow(), &DesktopRect);
-
     switch (PropStyle)
     {
     case WPS_Windowed:
     {
         psDeviceFlags.set(rsFullscreen, false);
-        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX;
+        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX/* | WS_SIZEBOX */;
 
         SetRect	(&m_rcWindowBounds, 
 				(DesktopRect.right - dwWidth) / 2,

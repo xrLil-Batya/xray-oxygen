@@ -452,7 +452,7 @@ open the new window with xrEngine params (doesn't works)
 void xrLaunch::on_actionParametres_triggered()
 {
 	xrDialogParam *dlg				= new xrDialogParam;
-	dlg->show();
+	dlg->show 						();
 }
 
 
@@ -464,7 +464,7 @@ void xrLaunch::on_actionVertver_Github_triggered()
 	AboutLauncher *dlg				= new AboutLauncher;
 	dlg->setWindowFlags				(Qt::WindowStaysOnTopHint);
 	dlg->setWindowTitle				("About xrDev");
-	dlg->show();
+	dlg->show 						();
 	Msg								("xrDev: aboutlauncher loaded");
 }
 

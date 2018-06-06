@@ -4,6 +4,7 @@
 //	Copyright (C) GSC Game World - 2009
 ////////////////////////////////////////////////////////////////////////////
 
+#include "xrD3DDefs.h"
 #pragma once
 
 enum enum_stats_buffer_type	{ enum_stats_buffer_type_vertex, enum_stats_buffer_type_index, enum_stats_buffer_type_rtarget, enum_stats_buffer_type_COUNT };
