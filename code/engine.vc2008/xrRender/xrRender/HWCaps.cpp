@@ -13,7 +13,7 @@ namespace
 {
 u32 GetNVGpuNum()
 {
-	NvLogicalGpuHandle  logicalGPUs[NVAPI_MAX_LOGICAL_GPUS];
+	NvLogicalGpuHandle  logicalGPUs	[NVAPI_MAX_LOGICAL_GPUS];
 	NvU32               logicalGPUCount;
 	NvPhysicalGpuHandle physicalGPUs[NVAPI_MAX_PHYSICAL_GPUS];
 	NvU32               physicalGPUCount;
@@ -67,37 +67,37 @@ u32 GetNVGpuNum()
 
 u32 GetATIGpuNum()
 {
-	AGSContext *ags = nullptr;
-	AGSGPUInfo gpuInfo = {};
-	AGSConfiguration *config = nullptr;
-	AGSReturnCode status = agsInit(&ags, config ,&gpuInfo);
-	if (status!=AGS_SUCCESS)
+	AGSContext *ags				= nullptr;
+	AGSGPUInfo gpuInfo			= {};
+	AGSConfiguration *config	= nullptr;
+	AGSReturnCode status		= agsInit(&ags, config ,&gpuInfo);
+	if (status != AGS_SUCCESS)
 	{
-		Msg("! AGS: Initialization failed (%d)", status);
+		Msg						("! AGS: Initialization failed (%d)", status);
 		return 0;
 	}
-	int crossfireGpuCount = 1;
-	status = agsGetCrossfireGPUCount(ags, &crossfireGpuCount);
-	if (status!=AGS_SUCCESS)
+	int crossfireGpuCount		= 1;
+	status						= agsGetCrossfireGPUCount(ags, &crossfireGpuCount);
+	if (status != AGS_SUCCESS)
 	{
-		Msg("! AGS: Unable to get CrossFire GPU count (%d)", status);
-		agsDeInit(ags);
+		Msg						("! AGS: Unable to get CrossFire GPU count (%d)", status);
+		agsDeInit				(ags);
 		return 1;
 	}
-	Msg("* AGS: CrossFire GPU count: %d", crossfireGpuCount);
-	agsDeInit(ags);
+	Msg							("* AGS: CrossFire GPU count: %d", crossfireGpuCount);
+	agsDeInit					(ags);
 	return crossfireGpuCount;
 }
 
 u32 GetGpuNum()
 {
-	u32 res = GetNVGpuNum();
-	res = std::max(res, GetATIGpuNum());
+	u32 res						= GetNVGpuNum();
+	res							= std::max(res, GetATIGpuNum());
 
-    if (res == 0)
+    if (!res)
     {
-        Msg("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
-        res = 1;
+        Msg			("* Can't detect graphic card. Assuming that you have at least one (maybe from intel)");
+        res			= 1;
     }
 
 	Msg("* Starting rendering as %d-GPU.", res);
@@ -136,10 +136,16 @@ void CHWCaps::Update()
 	raster.dwInstructions		= (caps.PS20Caps.NumInstructionSlots);
 
 	// ***************** Info
-	Msg							("* GPU shading: vs(%x/%d.%d/%d), ps(%x/%d.%d/%d)",
-		caps.VertexShaderVersion,	geometry_major, geometry_minor, CAP_VERSION(geometry_major,	geometry_minor),
-		caps.PixelShaderVersion,	raster_major,	raster_minor,	CAP_VERSION(raster_major,	raster_minor)
-		);
+	Msg("* GPU shading: vs(%x/%d.%d/%d), ps(%x/%d.%d/%d)",
+		caps.VertexShaderVersion,
+		geometry_major,
+		geometry_minor,
+		CAP_VERSION(geometry_major,	geometry_minor),
+		caps.PixelShaderVersion,
+		raster_major,
+		raster_minor,
+		CAP_VERSION(raster_major,
+		raster_minor));
 
 	// *******1********** Vertex cache
 	ID3DQuery*	q_vc;
@@ -179,9 +185,12 @@ void CHWCaps::Update()
 
 	switch		(surfDESC.Format)
 	{
-	case D3DFMT_D15S1:		bStencil = TRUE;	break;
-	case D3DFMT_D24S8:		bStencil = TRUE;	break;
-	case D3DFMT_D24X4S4:	bStencil = TRUE;	break;
+		case D3DFMT_D15S1:		bStencil = TRUE;
+			break;
+		case D3DFMT_D24S8:		bStencil = TRUE;
+			break;
+		case D3DFMT_D24X4S4:	bStencil = TRUE;
+			break;
 	}
 
 	// Scissoring
@@ -231,7 +240,6 @@ void CHWCaps::Update()
 	raster.bNonPow2				= TRUE;
 	raster.bCubemap				= TRUE;
 	raster.dwMRT_count			= 4;
-	//raster.b_MRT_mixdepth		= FALSE;
 	raster.b_MRT_mixdepth		= TRUE;
 	raster.dwInstructions		= 256;
 
@@ -250,17 +258,17 @@ void CHWCaps::Update()
 	if (0==raster_major)		geometry_major=0;		// Disable VS if no PS
 
 	//
-	bTableFog			=	FALSE;
+	bTableFog			= FALSE;
 
 	// Detect if stencil available
-	bStencil			=	TRUE;
+	bStencil			= TRUE;
 
 	// Scissoring
-	bScissor	= TRUE;
+	bScissor			= TRUE;
 
 	// Stencil relative caps
-	soInc=D3DSTENCILOP_INCRSAT;
-	soDec=D3DSTENCILOP_DECRSAT;
+	soInc				= D3DSTENCILOP_INCRSAT;
+	soDec				= D3DSTENCILOP_DECRSAT;
 	dwMaxStencilValue=(1<<8)-1;
 
 	// DEV INFO

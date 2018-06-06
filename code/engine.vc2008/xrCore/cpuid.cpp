@@ -154,6 +154,8 @@ unsigned int query_processor_info(processor_info* pinfo)
 	if (f_1_ECX[5])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::VMX);
 
+	if (f_1_EDX[24])
+		pinfo->features |= static_cast<unsigned>(CPUFeature::XFSR);
 	// SSE
 	if (f_1_EDX[25])
 		pinfo->features |= static_cast<unsigned>(CPUFeature::SSE);
