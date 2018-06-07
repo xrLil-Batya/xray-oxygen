@@ -44,4 +44,5 @@
 //#define HUD_SHAPE_VALUE		// Adds shape progress to HUD. Health and Stamina value.
 
 /* True Stalker */
-#define HOLD_PICKUP_OFF			// Selection of subjects one by one.
+//#define HOLD_PICKUP_OFF			// Selection of subjects one by one.
+//#define ACTOR_RUCK				// Ruck slot to Actor Inventory.
