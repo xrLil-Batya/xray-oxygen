@@ -598,6 +598,11 @@ CMapSpotPointer* CMapLocation::GetSpotPointer(CMapSpot* sp)
 	return NULL;
 }
 
+Fvector2 CMapLocation::SpotSize() const 
+{ 
+	return m_level_spot->GetWndSize(); 
+}
+
 CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 {
 	R_ASSERT(sp);

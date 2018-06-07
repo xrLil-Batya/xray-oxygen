@@ -356,7 +356,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\..\True Stalker [Dec 2017]\xrGame\ui\UIPdaSpot.h" />
+    <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="..\xrServerEntities\script_callStack.h" />
     <ClInclude Include="..\xrServerEntities\script_debugger.h" />
     <ClInclude Include="..\xrServerEntities\script_debugger_threads.h" />
@@ -1692,7 +1692,7 @@
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\True Stalker [Dec 2017]\xrGame\ui\UIPdaSpot.cpp" />
+    <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="..\xrServerEntities\script_callStack.cpp" />
     <ClCompile Include="..\xrServerEntities\script_debugger.cpp" />
     <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />

@@ -94,7 +94,7 @@ public:
 	void					DisableSpot						()					{m_flags.set(eSpotEnabled,FALSE);};
 	virtual void			UpdateMiniMap					(CUICustomMap* map);
 	virtual void			UpdateLevelMap					(CUICustomMap* map);
-	Fvector2				SpotSize						() const			{ return m_level_spot->GetWndSize(); };
+	Fvector2				SpotSize						() const;
 
 	Fvector2				CalcPosition					();
 	const Fvector2&			CalcDirection					();
