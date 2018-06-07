@@ -38,3 +38,5 @@ librariesx64/
 *.db-shm
 *.db-wal
 *.lib
+*.psess
+*.vspx
