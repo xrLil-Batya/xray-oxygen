@@ -171,18 +171,20 @@ void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 void CUIActorMenu::Show(bool status)
 {
-	inherited::Show							(status);
-	if(status)
+	inherited::Show(status);
+	if (status)
 	{
-		SetMenuMode							(m_currMenuMode);
-		PlaySnd								(eSndOpen);
-		m_ActorStateInfo->UpdateActorInfo	(m_pActorInvOwner);
-	}else
-	{
-		PlaySnd								(eSndClose);
-		SetMenuMode							(mmUndefined);
+		SetMenuMode(m_currMenuMode);
+		PlaySnd(eSndOpen);
+		m_ActorStateInfo->UpdateActorInfo(m_pActorInvOwner);
 	}
-	m_ActorStateInfo->Show					(status);
+	else
+	{
+		PlaySnd(eSndClose);
+		SetMenuMode(mmUndefined);
+		Actor()->RepackAmmo();
+	}
+	m_ActorStateInfo->Show(status);
 }
 
 void CUIActorMenu::Draw()

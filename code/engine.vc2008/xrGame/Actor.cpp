@@ -715,13 +715,11 @@ float CActor::currentFOV()
 
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());	
 
-	if (pWeapon &&
-		pWeapon->IsZoomed() && 
-		( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture()) )
-		 )
+	if (pWeapon && pWeapon->IsZoomed() && ( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture())))
 	{
 		return pWeapon->GetZoomFactor() * (0.75f);
-	}else
+	}
+	else
 	{
 		return g_fov;
 	}
@@ -731,14 +729,16 @@ static bool bLook_cam_fp_zoom = false;
 
 void CActor::UpdateCL	()
 {
-	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver())
- 	{
+#ifdef HOLD_PICKUP_OFF
+	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && !CurrentGameUI()->TopInputReceiver())
+	{
 		int dik = get_action_dik(kUSE, 0), dik2 = get_action_dik(kUSE, 1);
 		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))
 			m_bPickupMode = true;
- 	}
-	if(psActorFlags.test(AF_HARDCORE))
-	cam_Set(eacFirstEye);
+	}
+#endif
+	if (psActorFlags.test(AF_HARDCORE))
+		cam_Set(eacFirstEye);
 	UpdateInventoryOwner			(Device.dwTimeDelta);
 
 	if(m_feel_touch_characters>0)
@@ -1715,4 +1715,65 @@ void CActor::script_register(lua_State *L)
 		class_<CLevelChanger, CGameObject>("CLevelChanger")
 		.def(constructor<>())
 		];
+}
+
+void CActor::RepackAmmo()
+{
+	xr_vector<CWeaponAmmo*>  _ammo;
+
+	// заполняем массив неполными пачками
+	for (PIItem &_pIItem : inventory().m_ruck)
+	{
+		CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*>(_pIItem);
+		if (pAmmo && pAmmo->m_boxCurr < pAmmo->m_boxSize) _ammo.push_back(pAmmo);
+	}
+
+	while (!_ammo.empty())
+	{
+		shared_str asect = _ammo[0]->cNameSect(); // текущая секция
+		u16 box_size = _ammo[0]->m_boxSize; // размер пачки
+
+		u32 cnt = 0;
+		u16 cart_cnt = 0;
+
+		// считаем кол=во патронов текущей секции
+		for (CWeaponAmmo* ammo: _ammo)
+		{
+			if (asect == ammo->cNameSect())
+			{
+				cnt = cnt + ammo->m_boxCurr;
+				cart_cnt++;
+			}
+		}
+
+		// если больше одной неполной пачки, то перепаковываем
+		if (cart_cnt > 1)
+		{
+			for (CWeaponAmmo* ammo : _ammo)
+			{
+				if (asect == ammo->cNameSect())
+				{
+					if (cnt > 0)
+					{
+						if (cnt > box_size)
+						{
+							ammo->m_boxCurr = box_size;
+							cnt = cnt - box_size;
+						}
+						else
+						{
+							ammo->m_boxCurr = (u16)cnt;
+							cnt = 0;
+						}
+					}
+					else
+					{
+						ammo->DestroyObject();
+					}
+				}
+			}
+		}
+		//чистим массив от обработанных пачек
+		_ammo.erase(std::remove_if(_ammo.begin(), _ammo.end(), [asect](CWeaponAmmo* a) { return a->cNameSect() == asect; }) , _ammo.end());
+	}
 }
