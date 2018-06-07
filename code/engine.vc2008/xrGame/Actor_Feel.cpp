@@ -17,6 +17,7 @@
 #include "Level.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
+#include "ZoneCampfire.h"
 
 #define PICKUP_INFO_COLOR 0xFFFFA916
 
@@ -43,10 +44,11 @@ BOOL CActor::feel_touch_contact		(CObject *O)
 
 	if(inventory_owner && inventory_owner != smart_cast<CInventoryOwner*>(this))
 	{
-		//CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
-		//if(sh&&sh->character_physics_support()) m_feel_touch_characters++;
 		return TRUE;
 	}
+
+	CZoneCampfire* camp = smart_cast<CZoneCampfire*>(O);
+	if (camp) return TRUE;
 
 	return		(FALSE);
 }
@@ -119,7 +121,7 @@ void CActor::PickupModeUpdate()
 {
 	if(!m_bPickupMode)				return; // kUSE key pressed
 
-	//ïîäáèðàíèå îáúåêòà
+	// подбирание объекта
 	if(	m_pObjectWeLookingAt									&& 
 		m_pObjectWeLookingAt->cast_inventory_item()				&& 
 		m_pObjectWeLookingAt->cast_inventory_item()->Useful()	&&
@@ -136,12 +138,32 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
-	for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
+	for(CObject* obj: feel_touch)
 	{
 		Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
 		act_and_cam_pos.y    += CameraHeight();
-		if (CanPickItem(frustum, act_and_cam_pos, *it)) 
-			PickupInfoDraw(*it);
+		if (CanPickItem(frustum, act_and_cam_pos, obj)) 
+			PickupInfoDraw(obj);
+	}
+
+	m_CapmfireWeLookingAt = nullptr;
+	for (CObject* obj : feel_touch)
+	{
+		CZoneCampfire* camp = smart_cast<CZoneCampfire*>(obj);
+		if (camp)
+		{
+			Fvector dir, to;
+			camp->Center(to);
+			dir.sub(to, Device.vCameraPosition);
+			float dist = dir.magnitude();
+			float range = dir.normalize().dotproduct(Device.vCameraDirection);
+			if (dist < 1.6f && range > 0.95f)
+			{
+				m_CapmfireWeLookingAt = camp;
+				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
+				return;
+			}
+		}
 	}
 }
 

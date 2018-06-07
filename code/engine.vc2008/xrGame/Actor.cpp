@@ -367,7 +367,7 @@ void CActor::Load	(LPCSTR section )
 	m_sInventoryItemUseAction		= "inventory_item_use";
 	m_sInventoryBoxUseAction		= "inventory_box_use";
 	m_sCampfireIgniteAction			= "campfire_ignite";
-	m_sCampfireExtinguishAction = "campfire_extinguish";
+	m_sCampfireExtinguishAction		= "campfire_extinguish";
 	//---------------------------------------------------------------------
 	m_sHeadShotParticle	= READ_IF_EXISTS(pSettings,r_string,section,"HeadShotParticle",0);
 	
@@ -1086,7 +1086,6 @@ void CActor::shedule_Update	(u32 DT)
 		m_pInvBoxWeLookingAt = smart_cast<CInventoryBox*>(game_object);
 		m_pPersonWeLookingAt = smart_cast<CInventoryOwner*>(game_object);
 		m_pVehicleWeLookingAt = smart_cast<CHolderCustom*>(game_object);
-		m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(game_object);
 		CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(game_object);
 
 		if (m_pUsableObject && m_pUsableObject->tip_text())
@@ -1114,19 +1113,6 @@ void CActor::shedule_Update	(u32 DT)
 				m_sDefaultObjAction = m_sCarCharacterUseAction;
 			else if (m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() && m_pObjectWeLookingAt->cast_inventory_item()->CanTake())
 				m_sDefaultObjAction = m_sInventoryItemUseAction;
-			else if (m_CapmfireWeLookingAt)
-			{
-				if (m_CapmfireWeLookingAt->is_on())
-				{
-					isCampFireAt = true;
-					m_sDefaultObjAction = m_sCampfireExtinguishAction;
-				}
-				else
-				{
-					isCampFireAt = false;
-					m_sDefaultObjAction = m_sCampfireIgniteAction;
-				}
-			}
 			else
 				m_sDefaultObjAction = NULL;
 		}
@@ -1139,7 +1125,6 @@ void CActor::shedule_Update	(u32 DT)
 		m_pObjectWeLookingAt	= nullptr;
 		m_pVehicleWeLookingAt	= nullptr;
 		m_pInvBoxWeLookingAt	= nullptr;
-		m_CapmfireWeLookingAt	= nullptr;
 	}
 
 	UpdateArtefactsOnBeltAndOutfit				();
