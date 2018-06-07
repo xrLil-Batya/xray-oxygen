@@ -343,6 +343,8 @@ public:
 	CGameObject*			ObjectWeLookingAt			() {return m_pObjectWeLookingAt;}
 	CInventoryOwner*		PersonWeLookingAt			() {return m_pPersonWeLookingAt;}
 	LPCSTR					GetDefaultActionForObject	() {return *m_sDefaultObjAction;}
+	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
+
 protected:
 	CUsableScriptObject*	m_pUsableObject;
 	// Person we're looking at

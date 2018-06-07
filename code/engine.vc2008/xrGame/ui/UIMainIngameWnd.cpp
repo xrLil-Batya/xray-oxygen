@@ -327,11 +327,11 @@ void CUIMainIngameWnd::RenderQuickInfos()
 
 	// подсказка для костра
 	static CZoneCampfire* pZone = nullptr;
-	if (pZone != pActor->CampfireWeLookingAt())
+	if (pZone != pActor->CapmfireWeLookingAt())
 	{
 		UIStaticQuickHelp->SetTextST(actor_action);
 		UIStaticQuickHelp->ResetColorAnimation();
-		pZone = pActor->CampfireWeLookingAt();
+		pZone = pActor->CapmfireWeLookingAt();
 	}
 
 	if(NULL!=actor_action)
