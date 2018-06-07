@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Level script export
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "level.h"
 #include "actor.h"
@@ -36,7 +35,6 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "hudmanager.h"
 #include "raypick.h"
-
 
 using namespace luabind;
  bool single_game()
@@ -96,6 +94,13 @@ CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 		return		(0);
 }
 #endif
+
+CScriptGameObject* GetTargetObj()
+{
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+	CGameObject* pObjectWeLookingAt = smart_cast<CGameObject*>(RQ.O);
+	return pObjectWeLookingAt ? pObjectWeLookingAt->lua_game_object() : 0;
+}
 
 CScriptGameObject *get_object_by_id(u16 id)
 {
@@ -884,8 +889,8 @@ void CLevel::script_register(lua_State *L)
 		def("remove_complex_effector",			&remove_complex_effector),
 		
 		def("vertex_id",						&vertex_id),
-
-		def("game_id",							&GameID)
+		def("game_id",							&GameID), 
+		def("get_target_obj",					&GetTargetObj)
 	],
 	
 	module(L,"actor_stats")
