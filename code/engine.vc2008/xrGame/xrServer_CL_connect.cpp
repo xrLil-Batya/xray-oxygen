@@ -7,7 +7,7 @@
 #include "GamePersistent.h"
 
 
-void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P)
+void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P, bool bHardProcessed)
 {
 	P.B.count = 0;
 	if(std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID) != conn_spawned_ids.end())
@@ -15,13 +15,23 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Pack
 	
 	conn_spawned_ids.push_back(E->ID);
 	
-	if (E->net_Processed)						return;
-	if (E->s_flags.is(M_SPAWN_OBJECT_PHANTOM))	return;
+	if (bHardProcessed)
+	{
+		E->net_Processed = true;
+	}
+	else if (E->net_Processed)
+	{
+		return;
+	}
 
+	if (E->s_flags.is(M_SPAWN_OBJECT_PHANTOM))	return;
 
 	// Connectivity order
 	CSE_Abstract* Parent = ID_to_entity	(E->ID_Parent);
-	if (Parent)		Perform_connect_spawn	(Parent,CL,P);
+	if (Parent)
+	{
+		Perform_connect_spawn(Parent, CL, P, bHardProcessed);
+	}
 
 	// Process
 	Flags16			save = E->s_flags;
@@ -71,12 +81,8 @@ void xrServer::SendConnectionData(IClient* _CL)
 	NET_Packet		P;
 
 	// Replicate current entities on to this client
-	// NOTE: Сначала зануляем везде флаг net_Processed, а потом уже коннектим. 
 	for (auto &xrSe_it : entities)
-		xrSe_it.second->net_Processed = FALSE;
-
-	for (auto &xrSe_it : entities)
-		Perform_connect_spawn(xrSe_it.second, CL, P);
+		Perform_connect_spawn(xrSe_it.second, CL, P, true);
 
 	// Start to send server logo and rules
 	SendConfigFinished();
