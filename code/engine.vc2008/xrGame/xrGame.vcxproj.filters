@@ -6099,6 +6099,9 @@
     <ClInclude Include="game_cl_base.h">
       <Filter>Core\Server\Games\client</Filter>
     </ClInclude>
+    <ClInclude Include="ActorRuck.h">
+      <Filter>Core\Client\Objects\actor</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8704,6 +8707,9 @@
     </ClCompile>
     <ClCompile Include="game_expression_delegates.cpp">
       <Filter>Core\Common\Expressions</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorRuck.cpp">
+      <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

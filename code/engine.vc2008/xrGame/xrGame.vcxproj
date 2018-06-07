@@ -361,6 +361,7 @@
     <ClInclude Include="..\xrServerEntities\script_debugger_threads.h" />
     <ClInclude Include="..\xrServerEntities\script_lua_helper.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
+    <ClInclude Include="ActorRuck.h" />
     <ClInclude Include="animation_script_callback.h" />
     <ClInclude Include="BreakableObject.h" />
     <ClInclude Include="CharacterPhysicsSupport.h" />
@@ -1695,6 +1696,7 @@
     <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />
     <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
+    <ClCompile Include="ActorRuck.cpp" />
     <ClCompile Include="animation_script_callback.cpp" />
     <ClCompile Include="BreakableObject.cpp" />
     <ClCompile Include="CharacterPhysicsSupport.cpp" />
