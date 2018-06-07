@@ -49,13 +49,12 @@ void CUIActorMenu::InitInventoryMode()
 	m_pInventoryDetectorList->Show		(true);
 	m_pInventoryPistolList->Show		(true);
 	m_pInventoryAutomaticList->Show		(true);
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList->Show			(true);
-#endif
-
-
+	
+#ifdef NEW_SLOTS
     m_pInventoryKnifeList->Show         (true);
     m_pInventoryBinocularList->Show     (true);
+#endif
+	
 	m_pQuickSlot->Show					(true);
 	m_pTrashList->Show					(true);
 	m_RightDelimiter->Show				(false);
@@ -240,11 +239,10 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		m_pInventoryBeltList,
 		m_pInventoryPistolList,
 		m_pInventoryAutomaticList,
-		m_pInventoryKnifeList,
-		m_pInventoryBinocularList,
-#ifdef ACTOR_RUCK
-		m_pInventoryRuckList,
-#endif		
+#ifdef NEW_SLOTS
+    m_pInventoryKnifeList,
+    m_pInventoryBinocularList,
+#endif
 		m_pInventoryOutfitList,
 		m_pInventoryHelmetList,
 		m_pInventoryDetectorList,
@@ -400,13 +398,12 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	//Slots
 	InitCellForSlot				(INV_SLOT_2);
 	InitCellForSlot				(INV_SLOT_3);
-
-#ifdef ACTOR_RUCK
-	InitCellForSlot(RUCK_SLOT);
-#endif
-
+	
+#ifdef NEW_SLOTS
     InitCellForSlot             (KNIFE_SLOT);
     InitCellForSlot             (BINOCULAR_SLOT);
+#endif
+	
 	InitCellForSlot				(OUTFIT_SLOT);
 	InitCellForSlot				(DETECTOR_SLOT);
 	InitCellForSlot				(GRENADE_SLOT);
@@ -667,12 +664,7 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 			return m_pInventoryAutomaticList;
 			break;
 
-#ifdef ACTOR_RUCK
-		case RUCK_SLOT:
-			return m_pInventoryRuckList;
-			break;
-#endif
-
+#ifdef NEW_SLOTS
 		case KNIFE_SLOT: 
 		    return m_pInventoryKnifeList;
 			break;
@@ -680,6 +672,7 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 		case BINOCULAR_SLOT: 
 		    return m_pInventoryBinocularList; 
 			break;
+#endif
 			
 		case OUTFIT_SLOT:
 			return m_pInventoryOutfitList;
@@ -1035,19 +1028,13 @@ void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 	const char* act_str = nullptr;
 
 	if (pBottleItem)
-	{
 		act_str = "st_drink";
-	}
 	else if (pEatableItem)
 	{
 		if (pMedkit || pAntirad)
-		{
 			act_str = "st_use";
-		}
 		else
-		{
 			act_str = "st_eat";
-		}
 	}
 
 	if (pSettings->line_exist(item->object().cNameSect().c_str(), "st_use_action_name"))

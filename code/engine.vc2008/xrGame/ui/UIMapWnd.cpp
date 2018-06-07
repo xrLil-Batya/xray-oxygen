@@ -24,7 +24,8 @@
 #include "UIListBoxItem.h"
 #include "UIPdaSpot.h"
 
-CUIMapWnd* g_map_wnd = NULL; // quick temporary solution -(
+CUIMapWnd* g_map_wnd = nullptr; // quick temporary solution -(
+
 CUIMapWnd* GetMapWnd()
 {
 	return g_map_wnd;
@@ -32,29 +33,28 @@ CUIMapWnd* GetMapWnd()
 
 CUIMapWnd::CUIMapWnd()
 {
-	m_tgtMap				= NULL;
-	m_GlobalMap				= NULL;
-	m_view_actor			= false;
-	m_prev_actor_pos.set	(0,0);
-	m_currentZoom			= 1.0f;
-	m_map_location_hint		= NULL;
-	m_map_move_step			= 10.0f;
-	m_scroll_mode			= false;
-	m_nav_timing			= Device.dwTimeGlobal;
-	hint_wnd				= NULL;
-	g_map_wnd				= this;
-	m_UserSpotWnd			= NULL;
-	m_cur_location			= NULL;
+	m_tgtMap = nullptr;
+	m_GlobalMap = nullptr;
+	m_view_actor = false;
+	m_prev_actor_pos.set(0, 0);
+	m_currentZoom = 1.0f;
+	m_map_location_hint = nullptr;
+	m_map_move_step = 10.0f;
+	m_scroll_mode = false;
+	m_nav_timing = Device.dwTimeGlobal;
+	hint_wnd = nullptr;
+	g_map_wnd = this;
+	m_UserSpotWnd = nullptr;
+	m_cur_location = nullptr;
 }
 
 CUIMapWnd::~CUIMapWnd()
 {
-	delete_data( m_ActionPlanner );
-	delete_data( m_GameMaps );
-	delete_data( m_map_location_hint );
-	g_map_wnd				= NULL;
+	delete_data(m_ActionPlanner);
+	delete_data(m_GameMaps);
+	delete_data(m_map_location_hint);
+	g_map_wnd = nullptr;
 }
-
 
 void CUIMapWnd::Init(LPCSTR xml_name, LPCSTR start_from)
 {
@@ -485,6 +485,40 @@ void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 				break;
 			}
 		}
+	}
+}
+
+void CUIMapWnd::ActivatePropertiesBox(CUIWindow* w)
+{
+	m_UIPropertiesBox->RemoveAll();
+
+	CMapSpot* sp = smart_cast<CMapSpot*>(w);
+	if (!sp)
+	{
+		Msg("qweasdd: CUIMapWnd::ActivatePropertiesBox sp is not exist!");
+		return;
+	}
+
+	m_cur_location = sp->MapLocation();
+
+	if (sp->MapLocation()->IsUserDefined())
+	{
+		Msg("qweasdd: CUIMapWnd::ActivatePropertiesBox, register prop boxes. ln = %s", m_cur_location->GetLevelName().c_str());
+		m_UIPropertiesBox->AddItem("st_pda_change_spot_hint", nullptr, MAP_CHANGE_SPOT_HINT_ACT);
+		m_UIPropertiesBox->AddItem("st_pda_delete_spot", nullptr, MAP_REMOVE_SPOT_ACT);
+	}
+
+	if (m_UIPropertiesBox->GetItemsCount() > 0)
+	{
+		m_UIPropertiesBox->AutoUpdateSize();
+
+		Fvector2 cursor_pos;
+		Frect vis_rect;
+
+		GetAbsoluteRect(vis_rect);
+		cursor_pos = GetUICursor().GetCursorPosition();
+		cursor_pos.sub(vis_rect.lt);
+		m_UIPropertiesBox->Show(vis_rect, cursor_pos);
 	}
 }
 

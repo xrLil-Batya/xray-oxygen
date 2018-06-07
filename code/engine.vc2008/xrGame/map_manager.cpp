@@ -110,6 +110,19 @@ CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 	return l;
 }
 
+CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const shared_str& level_name, Fvector position, u16 *id)
+{
+	Msg("map_manager: AddUserLocation START!");
+	u16 _id = Level().Server->PerformIDgen(0xffff);
+	(*id) = _id;
+	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), *id);
+	l->InitUserSpot(level_name, position);
+	Locations().push_back(SLocationKey(spot_type, _id));
+	Locations().back().location = l;
+	Msg("map_manager: AddUserLocation FINISH!");
+	return l;
+}
+
 CMapLocation* CMapManager::AddRelationLocation(CInventoryOwner* pInvOwner)
 {
 	if(!Level().CurrentViewEntity())return NULL;

@@ -21,6 +21,8 @@
 #include "ui/UITalkWnd.h"
 #include "ui/UIMessageBox.h"
 
+#include "../../xrServerEntities/script_engine.h"
+
 CUIGameSP::CUIGameSP() : m_game_objective(nullptr)
 {
 	TalkMenu = xr_new<CUITalkWnd>();
@@ -116,7 +118,13 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 		case kACTIVE_JOBS:
 		{
 			if (!pActor->inventory_disabled() && !Actor()->HasInfo("pda_has_blocked"))
+			{
+				luabind::functor<void> f;
+				if (ai().script_engine().functor("oxy_callbacks.Pda_Activate", f))
+					f();
+
 				ShowPdaMenu();
+			}
 
 			break;
 		}
@@ -142,6 +150,7 @@ bool CUIGameSP::IR_UIOnKeyboardPress(int dik)
 					sm2->m_static->TextItemControl()->SetTextST(t1->m_Description.c_str());
 				}
 			}
+
 			break;
 	}
 

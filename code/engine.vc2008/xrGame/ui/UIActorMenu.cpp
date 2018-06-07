@@ -296,10 +296,9 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 #ifdef ACTOR_RUCK
 	if (l == m_pInventoryRuckList)			return iActorSlot;
 #endif
-#ifdef NEW_SLOTS
+
     if (l == m_pInventoryKnifeList)         return iActorSlot;
     if (l == m_pInventoryBinocularList)     return iActorSlot;
-#endif
 	
 	if (l == m_pTradeActorBagList)			return iActorBag;
 	if (l == m_pTradeActorList)			    return iActorTrade;
@@ -470,10 +469,10 @@ void CUIActorMenu::clear_highlight_lists()
 #ifdef ACTOR_RUCK
 	m_RuckSlotHighlight->Show(false);
 #endif
-#ifdef NEW_SLOTS
+
     m_KnifeSlotHighlight->Show(false);
     m_BinocularSlotHighlight->Show(false);
-#endif
+
 	
 	for(u8 i=0; i<4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
@@ -520,7 +519,6 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	CArtefact* artefact = smart_cast<CArtefact*>(item);
     u32 item_slot = item->BaseSlot();
 	
-#ifdef NEW_SLOTS
     if (item_slot == BINOCULAR_SLOT)
     {
         m_BinocularSlotHighlight->Show(true);
@@ -531,7 +529,6 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
         m_KnifeSlotHighlight->Show(true);
         return;
     }
-#endif
 	
 	if (item_slot == INV_SLOT_2 || item_slot == INV_SLOT_3)
 	{
@@ -859,10 +856,9 @@ void CUIActorMenu::ClearAllLists()
 #ifdef ACTOR_RUCK
 	m_pInventoryRuckList->ClearAll(true);
 #endif
-#ifdef NEW_SLOTS
+
     m_pInventoryKnifeList->ClearAll             (true);
     m_pInventoryBinocularList->ClearAll         (true);
-#endif
 	
 	m_pQuickSlot->ClearAll						(true);
 

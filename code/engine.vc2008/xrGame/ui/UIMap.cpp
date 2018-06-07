@@ -550,12 +550,24 @@ void CUILevelMap::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 		case MAP_SHOW_HINT:
 		{
 			CMapSpot* sp = smart_cast<CMapSpot*>(pWnd);
-			if (sp) MapWnd()->ShowHintSpot(sp);
+			if (sp) 
+				MapWnd()->ShowHintSpot(sp);
 		} break;
-		case MAP_HIDE_HINT:		MapWnd()->HideHint(pWnd); break;
-		case MAP_SELECT_SPOT:	MapWnd()->SpotSelected(pWnd); break;
-		case MAP_SELECT_SPOT2:	MapWnd()->ActivatePropertiesBox(pWnd); break;
-		default: break;
+
+		case MAP_HIDE_HINT:		
+			MapWnd()->HideHint(pWnd); 
+			break;
+
+		case MAP_SELECT_SPOT:	
+			MapWnd()->SpotSelected(pWnd); 
+			break;
+
+		case MAP_SELECT_SPOT2:	
+			MapWnd()->ActivatePropertiesBox(pWnd); 
+			break;
+
+		default: 
+			break;
 	}
 }
 

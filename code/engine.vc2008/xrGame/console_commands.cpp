@@ -459,68 +459,82 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 
 #include "UIGameCustom.h"
 
-class CCC_ALifeSave : public IConsole_Command {
+class CCC_ALifeSave : public IConsole_Command
+{
 public:
-	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR args) {
-		
-		if(!g_actor || !Actor()->g_Alive())
+
+		if (!g_actor || !Actor()->g_Alive())
 		{
 			Msg("cannot make saved game because actor is dead :(");
 			return;
 		}
 
-		string_path				S, S1;
-		S[0]					= 0;
-		strncpy_s				(S, sizeof(S), args, _MAX_PATH - 1 );
-		
+		if (Actor()->HasInfo("cant_game_save_now"))
+		{
+			SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+			_s->wnd()->TextItemControl()->SetText(CStringTable().translate("st_cant_game_save_now").c_str());
+			return;
+		}
+
+		string_path	S, S1;
+		S[0] = 0;
+		strncpy_s(S, sizeof(S), args, _MAX_PATH - 1);
+
 #ifdef DEBUG
-		CTimer					timer;
-		timer.Start				();
+		CTimer timer;
+		timer.Start();
 #endif
-		if (!xr_strlen(S)){
-			strconcat			(sizeof(S),S,Core.UserName," - ","quicksave");
-			NET_Packet			net_packet;
-			net_packet.w_begin	(M_SAVE_GAME);
+
+		if (!xr_strlen(S)) 
+		{
+			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
+			NET_Packet net_packet;
+			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
-			net_packet.w_u8		(0);
-			Level().Send		(net_packet);
-		}else{
-			if(!valid_saved_game_name(S)){
+			net_packet.w_u8(0);
+			Level().Send(net_packet);
+		}
+		else 
+		{
+			if (!valid_saved_game_name(S))
+			{
 				Msg("! Save failed: invalid file name - %s", S);
 				return;
 			}
 
-			NET_Packet			net_packet;
-			net_packet.w_begin	(M_SAVE_GAME);
+			NET_Packet net_packet;
+			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
-			net_packet.w_u8		(1);
-			Level().Send		(net_packet);
+			net_packet.w_u8(1);
+			Level().Send(net_packet);
 		}
 #ifdef DEBUG
-		Msg						("Game save overhead  : %f milliseconds",timer.GetElapsed_sec()*1000.f);
+		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
 #endif
-		SDrawStaticStruct* _s		= CurrentGameUI()->AddCustomStatic("game_saved", true);
-		LPSTR						save_name;
-		STRCONCAT					(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
+		SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+		LPSTR save_name;
+		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
 		_s->wnd()->TextItemControl()->SetText(save_name);
 
-		xr_strcat				(S,".dds");
-		FS.update_path			(S1,"$game_saves$",S);
-		
-#ifdef DEBUG
-		timer.Start				();
-#endif
-		MainMenu()->Screenshot		(IRender_interface::SM_FOR_GAMESAVE,S1);
+		xr_strcat(S, ".dds");
+		FS.update_path(S1, "$game_saves$", S);
 
 #ifdef DEBUG
-		Msg						("Screenshot overhead : %f milliseconds",timer.GetElapsed_sec()*1000.f);
+		timer.Start();
 #endif
+		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, S1);
+
+#ifdef DEBUG
+		Msg("Screenshot overhead : %f milliseconds", timer.GetElapsed_sec() * 1000.f);
+#endif
+
 	}//virtual void Execute
 
-	virtual void fill_tips			(vecTips& tips, u32 mode)
+	virtual void fill_tips(vecTips& tips, u32 mode)
 	{
-		get_files_list				(tips, "$game_saves$", SAVE_EXTENSION);
+		get_files_list(tips, "$game_saves$", SAVE_EXTENSION);
 	}
 
 };//CCC_ALifeSave

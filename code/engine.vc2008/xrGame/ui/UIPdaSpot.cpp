@@ -14,7 +14,7 @@
 CUIPdaSpot::CUIPdaSpot()
 {
 	m_mainWnd = false;
-	m_levelName = NULL;
+	m_levelName = nullptr;
 	m_position = Fvector();
 
 	m_spotID = u16(-1);
@@ -23,26 +23,23 @@ CUIPdaSpot::CUIPdaSpot()
 	InitControls();
 }
 
-CUIPdaSpot::~CUIPdaSpot()
-{
-}
+CUIPdaSpot::~CUIPdaSpot() {}
 
 void CUIPdaSpot::Init(u16 spot_id, LPCSTR level_name, Fvector pos, bool main_wnd)
 {
 	m_mainWnd = main_wnd;
 	m_levelName = level_name;
 	m_position = pos;
-	if (!m_mainWnd)
-		m_spotID = spot_id;
-	else
-		m_spotID = u16(-1);
+	m_spotID = m_mainWnd ? u16(-1) : spot_id;
 
 	if (!m_mainWnd)
 	{
 		CMapLocation* ml = Level().MapManager().GetMapLocation(m_spotType, m_spotID);
-		if (!ml) return;
+		if (!ml) 
+			return;
+
 		m_editBox->SetText(ml->GetHint());
-		ml->HighlightSpot(true, color_rgba(255, 36, 0, 255));
+		ml->HighlightSpot(true, Fcolor().set(255.f, 36.f, 0.f, 255.f));
 	}
 }
 
@@ -67,7 +64,8 @@ void CUIPdaSpot::InitControls()
 
 void CUIPdaSpot::OnAdd(CUIWindow* ui, void* d)
 {
-	CMapLocation* ml = Level().MapManager().AddUserLocation(m_spotType, m_levelName, m_position);
+	u16 id = 0;
+	CMapLocation* ml = Level().MapManager().AddUserLocation(m_spotType, m_levelName, m_position, &id);
 	ml->SetHint(m_editBox->GetText());
 	ml->SetSerializable(true);
 
@@ -102,8 +100,10 @@ void CUIPdaSpot::Exit()
 	if (!m_mainWnd)
 	{
 		CMapLocation* ml = Level().MapManager().GetMapLocation(m_spotType, m_spotID);
-		if (!ml) return;
-		ml->HighlightSpot(false, color_rgba(0,0,0,0)/*(0.f, 0.f, 0.f, 0.f)*/);
+		if (!ml) 
+			return;
+
+		ml->HighlightSpot(false, Fcolor().set(0.f, 0.f, 0.f, 0.f));
 	}
 
 	m_mainWnd = false;
@@ -120,14 +120,14 @@ bool CUIPdaSpot::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
 	switch (dik)
 	{
-	case DIK_ESCAPE:
-	{
-		if (IsShown())
+		case DIK_ESCAPE:
 		{
-			Exit();
-			return true;
-		}
-	}break;
+			if (IsShown())
+			{
+				Exit();
+				return true;
+			}
+		} break;
 	}
 
 	return base_class::OnKeyboardAction(dik, keyboard_action);
