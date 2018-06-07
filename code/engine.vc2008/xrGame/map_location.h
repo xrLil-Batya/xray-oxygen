@@ -24,6 +24,7 @@ enum ELocationFlags
 	eSpotEnabled		= (1<<5),
 	eCollidable			= (1<<6),
 	eHintEnabled		= (1<<7),
+	eUserDefined		= (1<<8),
 };
 
 protected:
@@ -82,6 +83,7 @@ public:
 	const CMapSpot*			LevelMapSpot					()					{return m_level_spot;}
 	const CMiniMapSpot*		MiniMapSpot						()					{return m_minimap_spot;}
 
+	IC bool					IsUserDefined					() const			{ return !!m_flags.test(eUserDefined); }
 	IC bool					PointerEnabled					()					{return SpotEnabled() && !!m_flags.test(ePointerEnabled);};
 	IC void					EnablePointer					()					{m_flags.set(ePointerEnabled,TRUE);};
 	IC void					DisablePointer					()					{m_flags.set(ePointerEnabled,FALSE);};
@@ -92,8 +94,9 @@ public:
 	void					DisableSpot						()					{m_flags.set(eSpotEnabled,FALSE);};
 	virtual void			UpdateMiniMap					(CUICustomMap* map);
 	virtual void			UpdateLevelMap					(CUICustomMap* map);
+	Fvector2				SpotSize						() const			{ return m_level_spot->GetWndSize(); };
 
-	void					CalcPosition					();
+	Fvector2				CalcPosition					();
 	const Fvector2&			CalcDirection					();
 	IC const shared_str&	GetLevelName					()	{return m_cached.m_LevelName;}
 	const Fvector2&			GetPosition						()	{return m_cached.m_Position;}

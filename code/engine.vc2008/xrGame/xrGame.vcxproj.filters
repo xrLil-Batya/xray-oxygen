@@ -6102,6 +6102,9 @@
     <ClInclude Include="ActorRuck.h">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\..\True Stalker [Dec 2017]\xrGame\ui\UIPdaSpot.h">
+      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8710,6 +8713,9 @@
     </ClCompile>
     <ClCompile Include="ActorRuck.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\True Stalker [Dec 2017]\xrGame\ui\UIPdaSpot.cpp">
+      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

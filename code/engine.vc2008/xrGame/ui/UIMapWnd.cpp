@@ -19,8 +19,10 @@
 #include "UIHint.h"
 #include "map_hint.h"
 #include "uicursor.h"
-
-#include "../../xrEngine/xr_input.h"		//remove me !!!
+#include "../xrServerEntities/script_engine.h"
+#include "UIPropertiesBox.h"
+#include "UIListBoxItem.h"
+#include "UIPdaSpot.h"
 
 CUIMapWnd* g_map_wnd = NULL; // quick temporary solution -(
 CUIMapWnd* GetMapWnd()
@@ -41,6 +43,8 @@ CUIMapWnd::CUIMapWnd()
 	m_nav_timing			= Device.dwTimeGlobal;
 	hint_wnd				= NULL;
 	g_map_wnd				= this;
+	m_UserSpotWnd			= NULL;
+	m_cur_location			= NULL;
 }
 
 CUIMapWnd::~CUIMapWnd()
@@ -169,6 +173,17 @@ void CUIMapWnd::Init(LPCSTR xml_name, LPCSTR start_from)
 	m_ActionPlanner			= xr_new<CMapActionPlanner>();
 	m_ActionPlanner->setup	(this);
 	m_view_actor			= true;
+
+	m_UIPropertiesBox = xr_new<CUIPropertiesBox>();
+	m_UIPropertiesBox->SetAutoDelete(true);
+	m_UIPropertiesBox->InitPropertiesBox(Fvector2().set(0, 0), Fvector2().set(300, 300));
+	AttachChild(m_UIPropertiesBox);
+	m_UIPropertiesBox->Hide();
+	m_UIPropertiesBox->SetWindowName("property_box");
+
+	m_UserSpotWnd = xr_new<CUIPdaSpot>();
+	m_UserSpotWnd->SetAutoDelete(true);
+	AttachChild(m_UserSpotWnd);
 }
 
 void CUIMapWnd::Show(bool status)
@@ -208,6 +223,7 @@ void CUIMapWnd::Show(bool status)
 		InventoryUtilities::SendInfoToActor("ui_pda_map_local");
 	}
 	HideCurHint();
+	m_UserSpotWnd->Exit();
 }
 
 void CUIMapWnd::Activated()
@@ -374,6 +390,7 @@ bool CUIMapWnd::OnKeyboardAction				(int dik, EUIMessages keyboard_action)
 	return inherited::OnKeyboardAction	(dik, keyboard_action);
 }
 
+#include "../xrEngine/xr_input.h"
 bool CUIMapWnd::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
 	if ( inherited::OnMouseAction(x,y,mouse_action))
@@ -449,6 +466,26 @@ bool CUIMapWnd::UpdateZoom( bool b_zoom_in )
 void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
+	if (pWnd == m_UIPropertiesBox && msg == PROPERTY_CLICKED && m_UIPropertiesBox->GetClickedItem())
+	{
+		switch (m_UIPropertiesBox->GetClickedItem()->GetTAG())
+		{
+			// Кликнули по кнопке изменить название метки
+			case MAP_CHANGE_SPOT_HINT_ACT: 
+			{
+				ShowSettingsWindow(m_cur_location->ObjectID(), m_cur_location->GetLastPosition(), m_cur_location->GetLevelName());
+				m_cur_location = NULL;
+				break;
+			}
+			// Кликнули по кнопке удалить метку
+			case MAP_REMOVE_SPOT_ACT: 
+			{
+				Level().MapManager().RemoveMapLocation(m_cur_location);
+				m_cur_location = NULL;
+				break;
+			}
+		}
+	}
 }
 
 CUICustomMap* CUIMapWnd::GetMapByIdx(u16 idx)
@@ -675,4 +712,73 @@ void CUIMapWnd::SpotSelected( CUIWindow* w )
 	{
 		Level().GameTaskManager().SetActiveTask( t );
 	}
+}
+
+// qweasdd: Following functions from Lost Alpha 
+//Alun: Correct now. All you need is relative mouse position to absolute pos of uilevelmap, then remove widescreen scale on X before local-to-world convert
+bool CUIMapWnd::ConvertCursorPosToMap(Fvector* return_position, CUIGlobalMap* curr_map)
+{
+	Fvector2 cursor_pos = GetUICursor().GetCursorPosition();
+	Frect box_rect;
+	curr_map->GetAbsoluteRect(box_rect);
+	if (!box_rect.in(cursor_pos))
+		return false;
+
+	cursor_pos.sub(box_rect.lt);
+
+	Frect bound_rect = curr_map->BoundRect();
+	bound_rect.lt.x /= UI().get_current_kx();
+	bound_rect.rb.x /= UI().get_current_kx();
+	return_position->x = bound_rect.lt.x + cursor_pos.x / (box_rect.width() / bound_rect.width());
+	return_position->y = 0.f;
+	return_position->z = bound_rect.height() + bound_rect.lt.y - cursor_pos.y / (box_rect.height() / bound_rect.height());
+
+	return true;
+}
+
+void CUIMapWnd::ShowSettingsWindow(u16 id, Fvector pos, shared_str levelName)
+{
+	m_UserSpotWnd->Init(id, levelName.c_str(), pos, false);
+	m_UserSpotWnd->ShowDialog(true);
+}
+
+CMapLocation* CUIMapWnd::UnderSpot(Fvector RealPosition, CUIGlobalMap* curr_map)
+{
+	Fvector2 RealPositionXZ;
+	RealPositionXZ.set(RealPosition.x, RealPosition.z);
+
+	Locations Spots = Level().MapManager().Locations();
+
+	Fvector2 m_position_on_map;
+	Fvector2 m_position_mouse = curr_map->ConvertRealToLocal(RealPositionXZ, false);
+	float TargetLocationDistance = 100.0f;
+	CMapLocation* ml = NULL;
+
+	for (auto it = Spots.begin(); it != Spots.end(); ++it)
+	{
+		if ((*it).location->IsUserDefined())
+		{
+			m_position_on_map = curr_map->ConvertRealToLocal((*it).location->CalcPosition(), false);
+
+			float distance = m_position_on_map.distance_to(m_position_mouse);
+
+			Fvector2 FvectorSize = (*it).location->SpotSize();
+			float size = (FvectorSize.x + FvectorSize.y) / 2;
+
+			if ((distance < size) && (distance < TargetLocationDistance))
+			{
+				TargetLocationDistance = distance;
+				ml = (*it).location;
+
+			}
+		}
+	}
+
+	return ml;
+}
+
+void CUIMapWnd::CreateSpotWindow(Fvector RealPosition, shared_str map_name)
+{
+	m_UserSpotWnd->Init(u16(-1), map_name.c_str(), RealPosition, true);
+	m_UserSpotWnd->ShowDialog(true);
 }

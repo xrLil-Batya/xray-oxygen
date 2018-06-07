@@ -214,31 +214,41 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		DisableSpot();
 }
 
-void CMapLocation::CalcPosition()
+Fvector2 CMapLocation::CalcPosition() 
 {
-	if(m_flags.test( ePosToActor) && Level().CurrentEntity())
+	if (IsUserDefined())
+		return m_cached.m_Position;
+
+	Fvector2 pos;
+	pos.set(0.0f, 0.0f);
+
+	if (m_flags.test(ePosToActor) && Level().CurrentEntity())
 	{
-		m_position_global		= Level().CurrentEntity()->Position();
-		m_cached.m_Position.set	(m_position_global.x, m_position_global.z);
-		return;
+		m_position_global = Level().CurrentEntity()->Position();
+		pos.set(m_position_global.x, m_position_global.z);
+		m_cached.m_Position = pos;
+		return pos;
 	}
 
-	CObject* pObject =  Level().Objects.net_Find(m_objectID);
-	if(!pObject)
+	CObject* pObject = Level().Objects.net_Find(m_objectID);
+	if (!pObject)
 	{
-		if(m_owner_se_object)
+		if (m_owner_se_object)
 		{
-			m_position_global		= m_owner_se_object->draw_level_position();
-			m_cached.m_Position.set	(m_position_global.x, m_position_global.z);
+			m_position_global = m_owner_se_object->draw_level_position();
+			pos.set(m_position_global.x, m_position_global.z);
 		}
-	
-	}else
-	{
-		m_position_global			= pObject->Position();
-		m_cached.m_Position.set		(m_position_global.x, m_position_global.z);
-	}
-}
 
+	}
+	else
+	{
+		m_position_global = pObject->Position();
+		pos.set(m_position_global.x, m_position_global.z);
+	}
+
+	m_cached.m_Position = pos;
+	return m_cached.m_Position;
+}
 const Fvector2& CMapLocation::CalcDirection()
 {
 	if(Level().CurrentViewEntity()&&Level().CurrentViewEntity()->ID()==m_objectID )
@@ -410,19 +420,7 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp )
 			xr_vector<u32>::reverse_iterator it_e = map_point_path.rend();
 
 			xr_vector<CLevelChanger*>::iterator lit = g_lchangers.begin();
-			//xr_vector<CLevelChanger*>::iterator lit_e = g_lchangers.end();
 			bool bDone						= false;
-			//for(; (it!=it_e)&&(!bDone) ;++it){
-			//	for(lit=g_lchangers.begin();lit!=lit_e; ++lit){
-
-			//		if((*it)==(*lit)->ai_location().game_vertex_id() )
-			//		{
-			//			bDone = true;
-			//			break;
-			//		}
-
-			//	}
-			//}
 			static bool bbb = false;
 			if(!bDone&&bbb)
 			{
