@@ -470,16 +470,18 @@ void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	{
 		switch (m_UIPropertiesBox->GetClickedItem()->GetTAG())
 		{
-			// Кликнули по кнопке изменить название метки
+			// Click on the button 'change spot name'
 			case MAP_CHANGE_SPOT_HINT_ACT: 
 			{
 				ShowSettingsWindow(m_cur_location->ObjectID(), m_cur_location->GetLastPosition(), m_cur_location->GetLevelName());
+                m_cur_location = nullptr;
 				break;
 			}
-			// Кликнули по кнопке удалить метку
+			// Click on the button 'remove spot'
 			case MAP_REMOVE_SPOT_ACT: 
 			{
 				Level().MapManager().RemoveMapLocation(m_cur_location);
+                m_cur_location = nullptr;
 				break;
 			}
 		}
@@ -492,11 +494,11 @@ void CUIMapWnd::ActivatePropertiesBox(CUIWindow* w)
 
 	CMapSpot* sp = smart_cast<CMapSpot*>(w);
 	if (!sp)
-	{
 		return;
-	}
 
 	m_cur_location = sp->MapLocation();
+    if (!m_cur_location)
+        return;
 
 	if (sp->MapLocation()->IsUserDefined())
 	{

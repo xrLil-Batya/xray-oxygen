@@ -69,6 +69,9 @@ void SLocationKey::load(IReader &stream)
 
 void SLocationKey::destroy()
 {
+    if (location && location->IsUserDefined())
+        Level().Server->FreeID(object_id, 0);
+
 	delete_data(location);
 }
 
@@ -120,15 +123,13 @@ CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 	return l;
 }
 
-CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const shared_str& level_name, Fvector position, u16 *id)
+CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const shared_str& level_name, Fvector position)
 {
 	u16 _id = Level().Server->PerformIDgen(0xffff);
-	(*id) = _id;
-	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), *id);
+	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), _id, true);
 	l->InitUserSpot(level_name, position);
 	Locations().push_back(SLocationKey(spot_type, _id));
 	Locations().back().location = l;
-
 	return l;
 }
 

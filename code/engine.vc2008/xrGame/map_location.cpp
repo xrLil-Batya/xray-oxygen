@@ -293,6 +293,9 @@ Fvector2 CMapLocation::CalcPosition()
 }
 const Fvector2& CMapLocation::CalcDirection()
 {
+    if (IsUserDefined())
+        return m_cached.m_Direction;
+
 	if(Level().CurrentViewEntity()&&Level().CurrentViewEntity()->ID()==m_objectID )
 	{
 		m_cached.m_Direction.set(Device.vCameraDirection.x,Device.vCameraDirection.z);
@@ -414,16 +417,19 @@ void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp )
 
 		Frect wnd_rect = sp->GetWndRect();
 
-		if (map->IsRectVisible(wnd_rect) && !IsUserDefined())
+		if (map->IsRectVisible(wnd_rect))
 		{
-			//update heading if needed
-			if (sp->Heading() && !sp->GetConstHeading())
-			{
-				Fvector2 dir_global = CalcDirection();
-				float h = dir_global.getH();
-				float h_ = map->GetHeading() + h;
-				sp->SetHeading(h_);
-			}
+            if (!IsUserDefined())
+            {
+                //update heading if needed
+                if (sp->Heading() && !sp->GetConstHeading())
+                {
+                    Fvector2 dir_global = CalcDirection();
+                    float h = dir_global.getH();
+                    float h_ = map->GetHeading() + h;
+                    sp->SetHeading(h_);
+                }
+            }
 			map->AttachChild(sp);
 		}
 
