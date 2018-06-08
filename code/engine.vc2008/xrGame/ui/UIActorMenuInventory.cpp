@@ -1027,37 +1027,10 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
-	CEatableItem* pEatableItem = smart_cast<CEatableItem*>(item);
-	CBottleItem* pBottleItem = smart_cast<CBottleItem*>(item);
-	CMedkit* pMedkit = smart_cast<CMedkit*>(item);
-	CAntirad* pAntirad = smart_cast<CAntirad*>(item);
+	const char* act_str = READ_IF_EXISTS(pSettings, r_string, item->object().cNameSect().c_str(), "st_use_action_name", "st_use");
 
-	const char* act_str = nullptr;
-
-	if (pBottleItem)
-	{
-		act_str = "st_drink";
-	}
-	else if (pEatableItem)
-	{
-		if (pMedkit || pAntirad)
-		{
-			act_str = "st_use";
-		}
-		else
-		{
-			act_str = "st_eat";
-		}
-	}
-
-	if (pSettings->line_exist(item->object().cNameSect().c_str(), "st_use_action_name"))
-		act_str = pSettings->r_string(item->object().cNameSect().c_str(), "st_use_action_name");
-
-	if (act_str)
-	{
-		m_UIPropertiesBox->AddItem(act_str, nullptr, INVENTORY_EAT_ACTION);
-		b_show = true;
-	}
+	m_UIPropertiesBox->AddItem(act_str, nullptr, INVENTORY_EAT_ACTION);
+	b_show = true;
 }
 
 void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)
