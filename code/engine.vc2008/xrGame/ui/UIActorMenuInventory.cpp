@@ -16,16 +16,14 @@
 #include "UIMainIngameWnd.h"
 #include "UIGameCustom.h"
 #include "eatable_item_object.h"
-
+#include "../FoodItem.h"
 #include "../silencer.h"
 #include "../scope.h"
 #include "../grenadelauncher.h"
 #include "../Artefact.h"
 #include "../eatable_item.h"
-#include "../BottleItem.h"
 #include "../WeaponMagazined.h"
 #include "../Medkit.h"
-#include "../Antirad.h"
 #include "../CustomOutfit.h"
 #include "../ActorHelmet.h"
 #include "../UICursor.h"
@@ -133,7 +131,7 @@ void CUIActorMenu::SendEvent_Item_Eat(PIItem pItem, u16 recipient)
 void CUIActorMenu::SendEvent_Item_Drop(PIItem pItem, u16 recipient)
 {
 	R_ASSERT(pItem->parent_id()==recipient);
-	//pItem->SetDropManual			(TRUE);
+
 	NET_Packet					P;
 	pItem->object().u_EventGen	(P,GE_OWNERSHIP_REJECT,pItem->parent_id());
 	P.w_u16						(pItem->object().ID());
@@ -704,38 +702,32 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 	return NULL;
 }
 
-bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
+bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 {
-	if ( !cell_itm )
+	if (!cell_itm)
 	{
 		return false;
 	}
-	PIItem item	= (PIItem)cell_itm->m_pData;
 
-	CBottleItem*	pBottleItem		= smart_cast<CBottleItem*>	(item);
-	CMedkit*		pMedkit			= smart_cast<CMedkit*>		(item);
-	CAntirad*		pAntirad		= smart_cast<CAntirad*>		(item);
-	CEatableItem*	pEatableItem	= smart_cast<CEatableItem*>	(item);
+	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
-	if ( !(pMedkit || pAntirad || pEatableItem || pBottleItem) )
+	if (!item || !item->Useful())
 	{
 		return false;
 	}
-	if ( !item->Useful() )
-	{
-		return false;
-	}
+
 	u16 recipient = m_pActorInvOwner->object_id();
-	if ( item->parent_id() != recipient )
+	if (item->parent_id() != recipient)
 	{
-		cell_itm->OwnerList()->RemoveItem( cell_itm, false );
+		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 	}
 
-	SendEvent_Item_Eat		( item, recipient );
-	PlaySnd					( eItemUse );
-	SetCurrentItem			( NULL );
+	SendEvent_Item_Eat(item, recipient);
+	PlaySnd(eItemUse);
+	SetCurrentItem(NULL);
 	return true;
 }
+
 
 bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 {
@@ -1027,10 +1019,14 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
-	const char* act_str = READ_IF_EXISTS(pSettings, r_string, item->object().cNameSect().c_str(), "st_use_action_name", "st_use");
+	if (dynamic_cast<CFoodItem*>(item))
+	{
+		const char* act_str = READ_IF_EXISTS(pSettings, r_string, item->object().cNameSect().c_str(), "st_use_action_name", "st_use");
 
-	m_UIPropertiesBox->AddItem(act_str, nullptr, INVENTORY_EAT_ACTION);
-	b_show = true;
+		m_UIPropertiesBox->AddItem(act_str, nullptr, INVENTORY_EAT_ACTION);
+		b_show = true;
+	}
+	else b_show = false;
 }
 
 void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)

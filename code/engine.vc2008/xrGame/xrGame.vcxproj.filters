@@ -5295,12 +5295,6 @@
     <ClInclude Include="PdaMsg.h">
       <Filter>Core\Client\Objects\items &amp; weapons\PDA &amp; information</Filter>
     </ClInclude>
-    <ClInclude Include="antirad.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClInclude>
-    <ClInclude Include="BottleItem.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClInclude>
     <ClInclude Include="FoodItem.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClInclude>
@@ -6102,9 +6096,7 @@
     <ClInclude Include="ActorRuck.h">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\..\True Stalker [Dec 2017]\xrGame\ui\UIPdaSpot.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA</Filter>
-    </ClInclude>
+    <ClInclude Include="ui\UIPdaSpot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -7856,12 +7848,6 @@
     <ClCompile Include="PDA.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\PDA &amp; information</Filter>
     </ClCompile>
-    <ClCompile Include="antirad.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
-    <ClCompile Include="BottleItem.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
     <ClCompile Include="FoodItem.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClCompile>
@@ -8714,9 +8700,7 @@
     <ClCompile Include="ActorRuck.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\True Stalker [Dec 2017]\xrGame\ui\UIPdaSpot.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA</Filter>
-    </ClCompile>
+    <ClCompile Include="ui\UIPdaSpot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">
