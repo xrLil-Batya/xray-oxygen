@@ -804,59 +804,54 @@ void CActor::UpdateCL	()
 			}
 		}			
 
-		if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
+		if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 		{
 			float fire_disp_full = pWeapon->GetFireDispersion(true, true);
 			m_fdisp_controller.SetDispertion(fire_disp_full);
-			
+
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
-			if (!Device.m_SecondViewport.IsSVPFrame()) //+SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
-				 HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
+			//+SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
+			if (!Device.m_SecondViewport.IsSVPFrame()) 
+				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
 #ifdef DEBUG
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
-			
-			BOOL B = ! ((mstate_real & mcLookout) && false);
+			BOOL B = !((mstate_real & mcLookout) && false);
 
-			psHUD_Flags.set( HUD_WEAPON_RT, B );
-
+			psHUD_Flags.set(HUD_WEAPON_RT, B);
 			B = B && pWeapon->show_crosshair();
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, B);
 
-			psHUD_Flags.set( HUD_CROSSHAIR_RT2, B );
-			
-
-			
-			psHUD_Flags.set( HUD_DRAW_RT,		pWeapon->show_indicators() );
+			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
 			pWeapon->UpdateSecondVP();
 		}
 
 	}
-   else
-    {
-        if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
-        {
-            HUD().SetCrosshairDisp(0.f);
-            HUD().ShowCrosshair(false);
-			
-			//Alun: Switch back to third-person if was forced
-			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
-			{
-				cam_Set(eacLookAt);
-				bLook_cam_fp_zoom = false;
-			}
+	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
+	{
+		HUD().SetCrosshairDisp(0.f);
+		HUD().ShowCrosshair(false);
 
-			Device.m_SecondViewport.SetSVPActive(false);
-        }
-    }
-	float	cs_min		= pSettings->r_float	(cNameSect(),"ph_crash_speed_min"	);
-	float	cs_max		= pSettings->r_float	(cNameSect(),"ph_crash_speed_max"	);
-	if(psActorFlags.test(AF_GODMODE_RT || AF_GODMODE || AF_NO_CLIP))
-	character_physics_support()->movement()->SetCrashSpeeds	(8000,9000);
+		//Alun: Switch back to third-person if was forced
+		if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+		{
+			cam_Set(eacLookAt);
+			bLook_cam_fp_zoom = false;
+		}
+
+		Device.m_SecondViewport.SetSVPActive(false);
+	}
+
+	float cs_min = pSettings->r_float(cNameSect(), "ph_crash_speed_min");
+	float cs_max = pSettings->r_float(cNameSect(), "ph_crash_speed_max");
+
+	if (psActorFlags.test(AF_GODMODE_RT || AF_GODMODE || AF_NO_CLIP))
+		character_physics_support()->movement()->SetCrashSpeeds(8000, 9000);
 	else
-	character_physics_support()->movement()->SetCrashSpeeds	(cs_min,cs_max);
+		character_physics_support()->movement()->SetCrashSpeeds(cs_min, cs_max);
 	
 	UpdateDefferedMessages();
 

@@ -299,7 +299,7 @@ bool CChangeLevelWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 }
 
 bool g_block_pause = false;
-void CChangeLevelWnd::Show()
+void CChangeLevelWnd::ShowDialog(bool bDoHideIndicators)
 {
 	m_messageBox->InitMessageBox(m_b_allow_change_level ? "message_box_change_level" : "message_box_change_level_disabled");
 	SetWndPos(m_messageBox->GetWndPos());
@@ -311,10 +311,13 @@ void CChangeLevelWnd::Show()
 	g_block_pause = true;
 	Device.Pause(true, true, true, "CChangeLevelWnd_show");
 	bShowPauseString = FALSE;
+
+	inherited::ShowDialog(bDoHideIndicators);
 }
 
-void CChangeLevelWnd::Hide()
+void CChangeLevelWnd::HideDialog()
 {
 	g_block_pause = false;
 	Device.Pause(false, true, true, "CChangeLevelWnd_hide");
+	inherited::HideDialog();
 }
