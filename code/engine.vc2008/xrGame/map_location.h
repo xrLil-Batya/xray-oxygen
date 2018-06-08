@@ -72,7 +72,7 @@ protected :
 	CMapSpotPointer*		GetSpotPointer					(CMapSpot* sp);
 	CMapSpot*				GetSpotBorder					(CMapSpot* sp);
 public:
-							CMapLocation					(LPCSTR type, u16 object_id);
+							CMapLocation					(LPCSTR type, u16 object_id, bool is_user_loc = false);
 	virtual					~CMapLocation					();
 	virtual void			destroy							();
 

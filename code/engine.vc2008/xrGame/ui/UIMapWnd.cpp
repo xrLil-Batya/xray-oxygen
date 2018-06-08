@@ -474,14 +474,12 @@ void CUIMapWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 			case MAP_CHANGE_SPOT_HINT_ACT: 
 			{
 				ShowSettingsWindow(m_cur_location->ObjectID(), m_cur_location->GetLastPosition(), m_cur_location->GetLevelName());
-				m_cur_location = NULL;
 				break;
 			}
 			// Кликнули по кнопке удалить метку
 			case MAP_REMOVE_SPOT_ACT: 
 			{
 				Level().MapManager().RemoveMapLocation(m_cur_location);
-				m_cur_location = NULL;
 				break;
 			}
 		}
@@ -495,7 +493,6 @@ void CUIMapWnd::ActivatePropertiesBox(CUIWindow* w)
 	CMapSpot* sp = smart_cast<CMapSpot*>(w);
 	if (!sp)
 	{
-		Msg("qweasdd: CUIMapWnd::ActivatePropertiesBox sp is not exist!");
 		return;
 	}
 
@@ -503,7 +500,6 @@ void CUIMapWnd::ActivatePropertiesBox(CUIWindow* w)
 
 	if (sp->MapLocation()->IsUserDefined())
 	{
-		Msg("qweasdd: CUIMapWnd::ActivatePropertiesBox, register prop boxes. ln = %s", m_cur_location->GetLevelName().c_str());
 		m_UIPropertiesBox->AddItem("st_pda_change_spot_hint", nullptr, MAP_CHANGE_SPOT_HINT_ACT);
 		m_UIPropertiesBox->AddItem("st_pda_delete_spot", nullptr, MAP_REMOVE_SPOT_ACT);
 	}
@@ -750,7 +746,7 @@ void CUIMapWnd::SpotSelected( CUIWindow* w )
 
 // qweasdd: Following functions from Lost Alpha 
 //Alun: Correct now. All you need is relative mouse position to absolute pos of uilevelmap, then remove widescreen scale on X before local-to-world convert
-bool CUIMapWnd::ConvertCursorPosToMap(Fvector* return_position, CUIGlobalMap* curr_map)
+bool CUIMapWnd::ConvertCursorPosToMap(Fvector* return_position, CUICustomMap* curr_map)
 {
 	Fvector2 cursor_pos = GetUICursor().GetCursorPosition();
 	Frect box_rect;
@@ -776,7 +772,7 @@ void CUIMapWnd::ShowSettingsWindow(u16 id, Fvector pos, shared_str levelName)
 	m_UserSpotWnd->ShowDialog(true);
 }
 
-CMapLocation* CUIMapWnd::UnderSpot(Fvector RealPosition, CUIGlobalMap* curr_map)
+CMapLocation* CUIMapWnd::UnderSpot(Fvector RealPosition, CUICustomMap* curr_map)
 {
 	Fvector2 RealPositionXZ;
 	RealPositionXZ.set(RealPosition.x, RealPosition.z);
@@ -786,7 +782,7 @@ CMapLocation* CUIMapWnd::UnderSpot(Fvector RealPosition, CUIGlobalMap* curr_map)
 	Fvector2 m_position_on_map;
 	Fvector2 m_position_mouse = curr_map->ConvertRealToLocal(RealPositionXZ, false);
 	float TargetLocationDistance = 100.0f;
-	CMapLocation* ml = NULL;
+	CMapLocation* ml = nullptr;
 
 	for (auto it = Spots.begin(); it != Spots.end(); ++it)
 	{

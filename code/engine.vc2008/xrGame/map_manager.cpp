@@ -41,6 +41,7 @@ void SLocationKey::save(IWriter &stream)
 	stream.w		(&object_id,sizeof(object_id));
 
 	stream.w_stringZ(spot_type);
+	stream.w_u8(location->IsUserDefined() ? 1 : 0);
 	stream.w_u8		(0);
 	location->save	(stream);
 }
@@ -50,9 +51,18 @@ void SLocationKey::load(IReader &stream)
 	stream.r		(&object_id,sizeof(object_id));
 
 	stream.r_stringZ(spot_type);
+	u8	bUserDefined = stream.r_u8();
 	stream.r_u8		();
 
-	location  = xr_new<CMapLocation>(*spot_type, object_id);
+	if (bUserDefined)
+	{
+		Level().Server->PerformIDgen(object_id);
+		location = xr_new<CMapLocation>(*spot_type, object_id, true);
+	}
+	else
+	{
+		location = xr_new<CMapLocation>(*spot_type, object_id);
+	}
 
 	location->load	(stream);
 }
@@ -112,14 +122,13 @@ CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 
 CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const shared_str& level_name, Fvector position, u16 *id)
 {
-	Msg("map_manager: AddUserLocation START!");
 	u16 _id = Level().Server->PerformIDgen(0xffff);
 	(*id) = _id;
 	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), *id);
 	l->InitUserSpot(level_name, position);
 	Locations().push_back(SLocationKey(spot_type, _id));
 	Locations().back().location = l;
-	Msg("map_manager: AddUserLocation FINISH!");
+
 	return l;
 }
 

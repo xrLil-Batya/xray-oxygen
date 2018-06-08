@@ -261,22 +261,6 @@ bool CUIGlobalMap::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
 	if (inherited::OnMouseAction(x, y, mouse_action)) return true;
 
-	if (mouse_action == WINDOW_LBUTTON_DB_CLICK)
-	{
-		Fvector RealPosition;
-
-		if (MapWnd()->ConvertCursorPosToMap(&RealPosition, this))
-		{
-			CMapLocation* _mapLoc = MapWnd()->UnderSpot(RealPosition, this);
-
-			if (_mapLoc == NULL)
-			{
-				MapWnd()->CreateSpotWindow(RealPosition, MapName());
-				return true;
-			}
-		}
-
-	}
 	if (mouse_action == WINDOW_MOUSE_MOVE && (FALSE == pInput->iGetAsyncBtnState(0)))
 	{
 		if (MapWnd())
@@ -530,6 +514,21 @@ bool CUILevelMap::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	if (inherited::OnMouseAction(x,y,mouse_action))	return true;
 	if (MapWnd()->GlobalMap()->Locked())		return true;
 
+	if (mouse_action == WINDOW_LBUTTON_DB_CLICK)
+	{
+		Fvector RealPosition;
+
+		if (MapWnd()->ConvertCursorPosToMap(&RealPosition, this))
+		{
+			CMapLocation* _mapLoc = MapWnd()->UnderSpot(RealPosition, this);
+
+			if (_mapLoc == NULL)
+			{
+				MapWnd()->CreateSpotWindow(RealPosition, MapName());
+				return true;
+			}
+		}
+	}
 	if(mouse_action==WINDOW_MOUSE_MOVE && (FALSE==pInput->iGetAsyncBtnState(0)) )
 	{
 		if( MapWnd() )

@@ -91,9 +91,9 @@ public:
 	void						MoveScrollV		( float dy );
 	void						MoveScrollH		( float dx );
 	// qweasdd: from lost alpha
-	bool						ConvertCursorPosToMap(Fvector*, CUIGlobalMap*);
+	bool						ConvertCursorPosToMap(Fvector*, CUICustomMap*);
 	void						CreateSpotWindow(Fvector, shared_str);
-	CMapLocation*				UnderSpot(Fvector RealPosition, CUIGlobalMap*);
+	CMapLocation*				UnderSpot(Fvector RealPosition, CUICustomMap*);
 	//-qweasdd
 	void 						ActivatePropertiesBox(CUIWindow* w);
 public:

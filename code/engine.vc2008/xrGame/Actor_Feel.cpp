@@ -138,23 +138,22 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 #ifdef HOLD_PICKUP_OFF
-	bool m_bPickupMode = false;
+	bool bPickupMode = false;
 	if (g_Alive() && Level().CurrentViewEntity() == this) 
 	{
 		if (CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver()) 
 		{
 			int dik = get_action_dik(kUSE, 0);
 			if (dik && pInput->iGetAsyncKeyState(dik))
-				m_bPickupMode = true;
+				bPickupMode = true;
 
 			dik = get_action_dik(kUSE, 1);
 			if (dik && pInput->iGetAsyncKeyState(dik))
-				m_bPickupMode = true;
+				bPickupMode = true;
 		}
 	}
+	if (bPickupMode)
 #endif
-
-	if (m_bPickupMode)
 	{
 		for (CObject* obj : feel_touch)
 		{

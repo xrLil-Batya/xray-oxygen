@@ -30,28 +30,33 @@
 #include "Inventory.h"
 //#include "CustomMonster.h"
 
-CMapLocation::CMapLocation(LPCSTR type, u16 object_id)
+CMapLocation::CMapLocation(LPCSTR type, u16 object_id, bool is_user_loc)
 {
 	m_flags.zero			();
 
-	m_level_spot			= NULL;
-	m_level_spot_pointer	= NULL;
-	m_minimap_spot			= NULL;
-	m_minimap_spot_pointer	= NULL;
-	m_complex_spot			= NULL;
-	m_complex_spot_pointer	= NULL;
+	m_level_spot			= nullptr;
+	m_level_spot_pointer	= nullptr;
+	m_minimap_spot			= nullptr;
+	m_minimap_spot_pointer	= nullptr;
+	m_complex_spot			= nullptr;
+	m_complex_spot_pointer	= nullptr;
 
-	m_level_map_spot_border	= NULL;
-	m_mini_map_spot_border	= NULL;
-	m_complex_spot_border	= NULL;
+	m_level_map_spot_border	= nullptr;
+	m_mini_map_spot_border	= nullptr;
+	m_complex_spot_border	= nullptr;
 
-	m_level_map_spot_border_na = NULL;
-	m_mini_map_spot_border_na = NULL;
-	m_complex_spot_border_na = NULL;
+	m_level_map_spot_border_na	= nullptr;
+	m_mini_map_spot_border_na	= nullptr;
+	m_complex_spot_border_na	= nullptr;
+
+	if (is_user_loc)
+	{
+		m_flags.set(eUserDefined, TRUE);
+	}
 
 	m_objectID				= object_id;
 	m_actual_time			= 0;
-	m_owner_se_object		= (ai().get_alife()) ? ai().alife().objects().object(m_objectID,true) : NULL;
+	m_owner_se_object		= (ai().get_alife() && !IsUserDefined()) ? ai().alife().objects().object(m_objectID,true) : NULL;
 	m_flags.set				(eHintEnabled, TRUE);
 	LoadSpot				(type, false);
 	
@@ -317,6 +322,9 @@ const Fvector2& CMapLocation::CalcDirection()
 
 void CMapLocation::CalcLevelName()
 {
+	if (IsUserDefined())
+		return;
+
 	if(m_owner_se_object && ai().get_game_graph())
 	{
 		if(m_cached.m_graphID != m_owner_se_object->m_tGraphID)
@@ -359,8 +367,10 @@ bool CMapLocation::Update()
 
 		CalcPosition();
 	}
+	else if (IsUserDefined())
+		m_cached.m_Actuality = true;
 	else
-		m_cached.m_Actuality			= false;
+		m_cached.m_Actuality = false;
 
 	m_cached.m_updatedFrame				= Device.dwFrame;
 	return								m_cached.m_Actuality;
@@ -371,85 +381,85 @@ xr_vector<u32> map_point_path;
 
 void CMapLocation::UpdateSpot(CUICustomMap* map, CMapSpot* sp )
 {
-	if( map->MapName() == GetLevelName() )
+	if (map->MapName() == GetLevelName())
 	{
-		bool b_alife = !!ai().get_alife();
-
-		if ( b_alife && m_flags.test(eHideInOffline) && !m_owner_se_object->m_bOnline && m_owner_se_object->m_flags.test(CSE_ALifeObject::flVisibleForMap) == FALSE)
-			return;
-
+		if (!IsUserDefined())
 		{
-			CGameTask* ml_task = Level().GameTaskManager().HasGameTask(this, true);
-			if (ml_task)
-			{
-				CGameTask* active_task = Level().GameTaskManager().ActiveTask();
-				bool border_show = (ml_task == active_task);
-				if (m_minimap_spot)
-					m_minimap_spot->show_static_border(border_show);
-				if (m_level_spot)
-					m_level_spot->show_static_border(border_show);
-				if (m_complex_spot)
-					m_complex_spot->show_static_border(border_show);
-			}
+			bool b_alife = !!ai().get_alife();
+
+			if (b_alife && m_flags.test(eHideInOffline) && !m_owner_se_object->m_bOnline
+				&& !m_owner_se_object->m_flags.test(CSE_ALifeObject::flVisibleForMap))
+				return;
+		}
+
+		CGameTask* ml_task = Level().GameTaskManager().HasGameTask(this, true);
+		if (ml_task)
+		{
+			CGameTask* active_task = Level().GameTaskManager().ActiveTask();
+			bool border_show = (ml_task == active_task);
+			if (m_minimap_spot)
+				m_minimap_spot->show_static_border(border_show);
+			if (m_level_spot)
+				m_level_spot->show_static_border(border_show);
+			if (m_complex_spot)
+				m_complex_spot->show_static_border(border_show);
 		}
 
 		//update spot position
-		Fvector2 position	= GetPosition();
+		Fvector2 position = GetPosition();
 
-		m_position_on_map	= map->ConvertRealToLocal(position, (map->Heading())?false:true); //for visibility calculating
+		m_position_on_map = map->ConvertRealToLocal(position, (map->Heading()) ? false : true); //for visibility calculating
 
-		sp->SetWndPos		(m_position_on_map);
+		sp->SetWndPos(m_position_on_map);
 
-		Frect wnd_rect		= sp->GetWndRect();
+		Frect wnd_rect = sp->GetWndRect();
 
-		if ( map->IsRectVisible(wnd_rect) ) 
+		if (map->IsRectVisible(wnd_rect) && !IsUserDefined())
 		{
 			//update heading if needed
-			if( sp->Heading() && !sp->GetConstHeading() )
+			if (sp->Heading() && !sp->GetConstHeading())
 			{
 				Fvector2 dir_global = CalcDirection();
 				float h = dir_global.getH();
-				float h_ = map->GetHeading()+h;
-				sp->SetHeading( h_ );
+				float h_ = map->GetHeading() + h;
+				sp->SetHeading(h_);
 			}
-			map->AttachChild	(sp);
+			map->AttachChild(sp);
 		}
 
-			CMapSpot* s = GetSpotBorder( sp );
-			if (s)
-			{
-				s->SetWndPos(sp->GetWndPos());
-				map->AttachChild(s);
-			}
-
-		bool b_pointer =( GetSpotPointer(sp) && map->NeedShowPointer(wnd_rect));
-
-		if(map->Heading())
+		CMapSpot* s = GetSpotBorder(sp);
+		if (s)
 		{
-			m_position_on_map	= map->ConvertRealToLocal(position, true); //for drawing
-			sp->SetWndPos		(m_position_on_map);
+			s->SetWndPos(sp->GetWndPos());
+			map->AttachChild(s);
 		}
 
-		if(b_pointer)
-			UpdateSpotPointer( map, GetSpotPointer(sp) );
+		bool b_pointer = (GetSpotPointer(sp) && map->NeedShowPointer(wnd_rect));
+
+		if (map->Heading())
+		{
+			m_position_on_map = map->ConvertRealToLocal(position, true); //for drawing
+			sp->SetWndPos(m_position_on_map);
+		}
+
+		if (b_pointer)
+			UpdateSpotPointer(map, GetSpotPointer(sp));
 	}
 	else if ( Level().name() == map->MapName() && GetSpotPointer(sp) )
 	{
-		GameGraph::_GRAPH_ID		dest_graph_id;
+		GameGraph::_GRAPH_ID dest_graph_id;
 
-		dest_graph_id		= m_owner_se_object->m_tGraphID;
+		if (!IsUserDefined())
+			dest_graph_id = m_owner_se_object->m_tGraphID;
+		else
+			dest_graph_id = m_cached.m_graphID;
 
 		map_point_path.clear();
 
 		VERIFY( Actor() );
 		GraphEngineSpace::CGameVertexParams		params(Actor()->locations().vertex_types(),flt_max);
-		bool res = ai().graph_engine().search(
-			ai().game_graph(),
-			Actor()->ai_location().game_vertex_id(),
-			dest_graph_id,
-			&map_point_path,
-			params
-			);
+		bool res = ai().graph_engine().search(ai().game_graph(), 
+							Actor()->ai_location().game_vertex_id(), dest_graph_id, &map_point_path, params);
 
 		if ( res )
 		{
@@ -600,6 +610,13 @@ void CMapLocation::save(IWriter &stream)
 	stream.w_stringZ(m_hint);
 	stream.w_u32	(m_flags.flags);
 	stream.w_stringZ(m_owner_task_id);
+
+	if (IsUserDefined())
+	{
+		save_data(m_cached.m_LevelName, stream);
+		save_data(m_cached.m_Position, stream);
+		save_data(m_cached.m_graphID, stream);
+	}
 }
 
 void CMapLocation::load(IReader &stream)
@@ -611,6 +628,15 @@ void CMapLocation::load(IReader &stream)
 
 	stream.r_stringZ(str);
 	m_owner_task_id	= str.c_str();
+	if (IsUserDefined())
+	{
+		load_data(m_cached.m_LevelName, stream);
+		load_data(m_cached.m_Position, stream);
+		load_data(m_cached.m_graphID, stream);
+
+		m_position_on_map = m_cached.m_Position;
+		m_position_global.set(m_position_on_map.x, 0.f, m_position_on_map.y);
+	}
 }
 
 void CMapLocation::SetHint(const shared_str& hint)		

@@ -729,7 +729,7 @@ static bool bLook_cam_fp_zoom = false;
 
 void CActor::UpdateCL	()
 {
-#ifdef HOLD_PICKUP_OFF
+#ifndef HOLD_PICKUP_OFF
 	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && !CurrentGameUI()->TopInputReceiver())
 	{
 		int dik = get_action_dik(kUSE, 0), dik2 = get_action_dik(kUSE, 1);
@@ -741,7 +741,7 @@ void CActor::UpdateCL	()
 		cam_Set(eacFirstEye);
 	UpdateInventoryOwner			(Device.dwTimeDelta);
 
-	if(m_feel_touch_characters>0)
+	if (m_feel_touch_characters > 0)
 	{
 		for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 		{
