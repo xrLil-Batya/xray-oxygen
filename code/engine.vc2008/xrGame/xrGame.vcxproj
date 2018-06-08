@@ -1475,7 +1475,6 @@
     <ClInclude Include="pda_space.h" />
     <ClInclude Include="PdaMsg.h" />
     <ClInclude Include="FoodItem.h" />
-    <ClInclude Include="medkit.h" />
     <ClInclude Include="ActorHelmet.h" />
     <ClInclude Include="BoneProtections.h" />
     <ClInclude Include="CustomOutfit.h" />
@@ -2389,7 +2388,6 @@
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="PDA.cpp" />
     <ClCompile Include="FoodItem.cpp" />
-    <ClCompile Include="medkit.cpp" />
     <ClCompile Include="ActorHelmet.cpp" />
     <ClCompile Include="BoneProtections.cpp" />
     <ClCompile Include="CustomOutfit.cpp" />

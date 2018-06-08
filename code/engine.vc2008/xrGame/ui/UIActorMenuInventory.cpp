@@ -23,7 +23,6 @@
 #include "../Artefact.h"
 #include "../eatable_item.h"
 #include "../WeaponMagazined.h"
-#include "../Medkit.h"
 #include "../CustomOutfit.h"
 #include "../ActorHelmet.h"
 #include "../UICursor.h"

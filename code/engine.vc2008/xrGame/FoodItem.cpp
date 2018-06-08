@@ -24,12 +24,12 @@ void CFoodItem::Load(LPCSTR section)
 			m_sBreakParticles = pSettings->r_string(section, "break_particles");
 		}
 
-		if (bHasBreakSnd = pSettings->line_exist(section, "break_sound"))
-		{
-			sndBreaking.create(pSettings->r_string(section, "break_sound"), st_Effect, sg_SourceType);
-		}
-
 		bIsBottele = true;
+	}
+
+	if (bHasBreakSnd = pSettings->line_exist(section, "break_sound"))
+	{
+		sndBreaking.create(pSettings->r_string(section, "break_sound"), st_Effect, sg_SourceType);
 	}
 }
 
