@@ -140,6 +140,7 @@ float		ps_r__WallmarkTTL			= 50.f	;
 float		ps_r__WallmarkSHIFT			= 0.0001f;
 float		ps_r__WallmarkSHIFT_V		= 0.0001f;
 
+float		ps_r__Detail_height 		= 1.f;
 float		ps_r__GLOD_ssa_start		= 256.f	;
 float		ps_r__GLOD_ssa_end			=  64.f	;
 float		ps_r__LOD					=  0.75f	;
