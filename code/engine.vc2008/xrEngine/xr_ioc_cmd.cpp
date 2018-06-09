@@ -65,14 +65,14 @@ class CCC_DbgStrCheck : public IConsole_Command
 {
 public:
 	CCC_DbgStrCheck(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->verify(); }
+	virtual void Execute(LPCSTR args) { g_pStringContainer.verify(); }
 };
 
 class CCC_DbgStrDump : public IConsole_Command
 {
 public:
 	CCC_DbgStrDump(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->dump();}
+	virtual void Execute(LPCSTR args) { g_pStringContainer.dump();}
 };
 
 //-----------------------------------------------------------------------
@@ -244,77 +244,23 @@ bool CCC_LoadCFG_custom::allow(LPCSTR cmd)
 //-----------------------------------------------------------------------
 class CCC_Start : public IConsole_Command
 {
-	void parse(LPSTR dest, LPCSTR args, LPCSTR name)
+protected:
+	std::string parse(const std::string &str)
 	{
-		dest[0]	= 0;
-		// By dsh2dhs
-		if (strstr(args, name)) 
-		{
-			std::string str = strstr(args, name) + xr_strlen(name);
-			std::regex Reg("\\(([^)]+)\\)");
-			std::smatch results;
-			if (std::regex_search(str, results, Reg))
-				strcpy(dest, results[1].str().c_str());
-		}
-	}
-
-	void protect_Name_strlwr( LPSTR str )
-	{
- 		string4096	out;
-		xr_strcpy( out, sizeof(out), str );
-		strlwr( str );
-
-		LPCSTR name_str = "name=";
-		LPCSTR name1 = strstr( str, name_str );
-		if ( !name1 || !xr_strlen( name1 ) )
-		{
-			return;
-		}
-		int begin_p = xr_strlen( str ) - xr_strlen( name1 ) + xr_strlen( name_str );
-		if ( begin_p < 1 )
-		{
-			return;
-		}
-
-		LPCSTR name2 = strchr( name1, '/' );
-		int end_p = xr_strlen( str ) - ((name2)? xr_strlen(name2) : 0);
-		if ( begin_p >= end_p )
-		{
-			return;
-		}
-		for ( int i = begin_p; i < end_p;++i )
-		{
-			str[i] = out[i];
-		}
+		std::regex Reg("\\(([^)]+)\\)");
+		std::smatch results;
+		R_ASSERT3(std::regex_search(str, results, Reg), "Failed parsing string: [%s]", str.c_str());
+		return results[1].str();
 	}
 public:
-	CCC_Start(LPCSTR N) : IConsole_Command(N)	{ 	  bLowerCaseArgs = false; };
-	virtual void Execute(LPCSTR args)
+	CCC_Start(const char* N) : IConsole_Command(N) {};
+	void Execute(const char* args) override 
 	{
-/*		if (g_pGameLevel)	{
-			Log		("! Please disconnect/unload first");
-			return;
-		}
-*/
-		string4096	op_server,op_client;
-		op_server[0] = 0;
-		op_client[0] = 0;
-		
-		parse		(op_server,args,"server");	// 1. server
-		parse		(op_client,args,"client");	// 2. client
-		
-		strlwr( op_server );
-		protect_Name_strlwr( op_client );
-
-		if(!op_client[0] && strstr(op_server,"single"))
-			xr_strcpy(op_client, "localhost");
-
-		if (g_pGameLevel)
-			Engine.Event.Defer("KERNEL:disconnect");
-		
-		Engine.Event.Defer	("KERNEL:start",u64(xr_strlen(op_server)?xr_strdup(op_server):0),u64(xr_strdup(op_client)));
+		std::string str = this->parse(args);
+		Engine.Event.Defer("KERNEL:start", u64(xr_strdup(str.c_str())), u64(xr_strdup("localhost")));
 	}
 };
+
 
 class CCC_Disconnect : public IConsole_Command
 {
@@ -337,12 +283,12 @@ public:
 };
 class CCC_VidMode : public CCC_Token
 {
-	u32		_dummy;
+	u32		_dummy, _w, _h;
 public :
 					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
 	virtual void	Execute(LPCSTR args)
-	{
-		u32 _w, _h;
+	{ 
+	
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
 		if(cnt==2)
 		{
@@ -356,20 +302,19 @@ public :
 		}
 	}
 
-	virtual BOOL isWideScreen ()
+	virtual bool isWideScreen ()
 	{
-		u32 _w, _h, _deltaBase;
+		u32 uWidth, uHeight, _deltaBase;
 
-		psCurrentVidMode[0] = _w;
-		psCurrentVidMode[1] = _h;
-		_deltaBase = _w / _h;
+		uHeight = psCurrentVidMode[0];
+		uWidth = psCurrentVidMode[0];
+		_deltaBase = uWidth / uHeight;
 
 		// 1920 / 1200 = 16:10 = 1.6
 		if (_deltaBase > 1.6)	
-			return TRUE;
+			return true;
 		else
-			return FALSE;
-
+			return false;
 	}
 
 	virtual void	Status	(TStatus& S)	
@@ -685,6 +630,7 @@ void CCC_Register()
 //	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);
 	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
+	CMD3(CCC_Mask,		"rs_refresh_120hz",		&psDeviceFlags,		rsRefresh120hz			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
 	CMD4(CCC_Float,		"rs_vis_distance",		&psVisDistance,		0.4f,	2.0f			);
 	if (strstr(Core.Params,"-fog_mixer"))
@@ -728,8 +674,8 @@ void CCC_Register()
 	CMD1(CCC_SND_Restart,"snd_restart"			);
 	CMD3(CCC_Mask,		"snd_acceleration",		&psSoundFlags,		ss_Hardware	);
 	CMD3(CCC_Mask,		"snd_efx",				&psSoundFlags,		ss_EFX		);
-	CMD4(CCC_Integer,	"snd_targets",			&psSoundTargets,	4,32		);
-	CMD4(CCC_Integer,	"snd_cache_size",		&psSoundCacheSizeMB,4,32		);
+	CMD4(CCC_Integer,	"snd_targets",			&psSoundTargets,	4,256		);
+	CMD4(CCC_Integer,	"snd_cache_size",		&psSoundCacheSizeMB,4,512		);
 
 #ifdef DEBUG
 	CMD3(CCC_Mask,		"snd_stats",			&g_stats_flags,		st_sound	);

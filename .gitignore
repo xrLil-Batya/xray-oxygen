@@ -19,6 +19,7 @@
 *.aps
 *.db
 *.tmp
+*.cache
 
 binaries/
 intermediatex64/
@@ -37,3 +38,6 @@ librariesx64/
 /code/xrQt/xrDevLaunch/release/
 *.db-shm
 *.db-wal
+*.lib
+*.psess
+*.vspx

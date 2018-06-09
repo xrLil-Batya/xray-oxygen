@@ -5,36 +5,44 @@
 #include "../xrEngine/CameraBase.h"
 #include "ActorEffector.h"
 #include "CharacterPhysicsSupport.h"
+#include "holder_custom.h"
 
 bool CActor::use_MountedWeapon(CHolderCustom* object)
 {
-/*
 	CHolderCustom* wpn	=object;
-	if(m_holder){
-		if(!wpn||(m_holder==wpn)){
+	if (m_holder)
+	{
+		if (!wpn || (m_holder == wpn))
+		{
 			m_holder->detach_Actor();
 			character_physics_support()->movement()->CreateCharacter();
-			m_holder=NULL;
+			m_holder = nullptr;
 		}
 		return true;
-	}else{
+	}
+	else
+	{
 		if(wpn){
 			Fvector center;	Center(center);
-			if(wpn->Use(Device.vCameraPosition, Device.vCameraDirection,center)){
-				if(wpn->attach_Actor(this)){
+			if(wpn->Use(Device.vCameraPosition, Device.vCameraDirection,center))
+			{
+				if(wpn->attach_Actor(this))
+				{
 					// destroy actor character
 					character_physics_support()->movement()->DestroyCharacter();
-					PickupModeOff();
-					m_holder=wpn;
-					if (pCamBobbing){
+//					PickupModeOff();
+					m_bPickupMode = false;
+					m_holder = wpn;
+					if (pCamBobbing)
+					{
 						Cameras().RemoveCamEffector(eCEBobbing);
-						pCamBobbing = NULL;
+						pCamBobbing = nullptr;
 					}
 					return true;
 				}
 			}
 		}
 	}
-*/
+
 	return false;
 }

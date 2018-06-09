@@ -206,6 +206,10 @@ void					CRender::create					()
 	o.dx10_msaa			= !!ps_r3_msaa;
 	o.dx10_msaa_samples = (1 << ps_r3_msaa);
 
+    //subshafts options
+    o.sunshaft_mrmnwar      = ps_sunshafts_mode == R2SS_MANOWAR_SSSS;
+    o.sunshaft_screenspace  = ps_sunshafts_mode == R2SS_SCREEN_SPACE;
+
 	o.dx10_msaa_opt		= ps_r2_ls_flags.test(R3FLAG_MSAA_OPT);
 	o.dx10_msaa_opt		= o.dx10_msaa_opt && o.dx10_msaa && ( HW.pDevice1 != 0 );
 
@@ -343,7 +347,7 @@ void CRender::reset_begin()
 	}
 	
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details->Unload();
 		xr_delete(Details);
@@ -372,7 +376,7 @@ void CRender::reset_end()
 	Target						=	xr_new<CRenderTarget>	();
 
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details = xr_new<CDetailManager>();
 		Details->Load();
@@ -1094,6 +1098,10 @@ HRESULT	CRender::shader_compile			(
 		def_it++;
 	}
 	sh_name[len]='0'+char(o.dx10_minmax_sm!=0); ++len;
+
+	defines[def_it].Name = "USE_PUDDLES";
+	defines[def_it].Definition = "1";
+	def_it++;
 
 	// add a #define for DX10_1 MSAA support
     if( o.dx10_msaa )

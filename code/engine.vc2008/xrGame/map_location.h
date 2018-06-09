@@ -24,6 +24,7 @@ enum ELocationFlags
 	eSpotEnabled		= (1<<5),
 	eCollidable			= (1<<6),
 	eHintEnabled		= (1<<7),
+	eUserDefined		= (1<<8),
 };
 
 protected:
@@ -71,7 +72,7 @@ protected :
 	CMapSpotPointer*		GetSpotPointer					(CMapSpot* sp);
 	CMapSpot*				GetSpotBorder					(CMapSpot* sp);
 public:
-							CMapLocation					(LPCSTR type, u16 object_id);
+							CMapLocation					(LPCSTR type, u16 object_id, bool is_user_loc = false);
 	virtual					~CMapLocation					();
 	virtual void			destroy							();
 
@@ -82,18 +83,23 @@ public:
 	const CMapSpot*			LevelMapSpot					()					{return m_level_spot;}
 	const CMiniMapSpot*		MiniMapSpot						()					{return m_minimap_spot;}
 
+	IC bool					IsUserDefined					() const			{ return !!m_flags.test(eUserDefined); }
 	IC bool					PointerEnabled					()					{return SpotEnabled() && !!m_flags.test(ePointerEnabled);};
 	IC void					EnablePointer					()					{m_flags.set(ePointerEnabled,TRUE);};
-	IC void					DisablePointer					()					{m_flags.set(ePointerEnabled,FALSE);};
+	IC void					DisablePointer					()					{ m_flags.set(ePointerEnabled, FALSE); };
+	void					InitUserSpot					(const shared_str& level_name, const Fvector& pos);
+	void					HighlightSpot					(bool state, const Fcolor& color);
 
 	IC bool					Collidable						() const			{return !!m_flags.test(eCollidable);}
 	IC bool					SpotEnabled						()					{return !!m_flags.test(eSpotEnabled);};
 	void					EnableSpot						()					{m_flags.set(eSpotEnabled,TRUE);};
 	void					DisableSpot						()					{m_flags.set(eSpotEnabled,FALSE);};
+
 	virtual void			UpdateMiniMap					(CUICustomMap* map);
 	virtual void			UpdateLevelMap					(CUICustomMap* map);
+	Fvector2				SpotSize						() const;
 
-	void					CalcPosition					();
+	Fvector2				CalcPosition					();
 	const Fvector2&			CalcDirection					();
 	IC const shared_str&	GetLevelName					()	{return m_cached.m_LevelName;}
 	const Fvector2&			GetPosition						()	{return m_cached.m_Position;}

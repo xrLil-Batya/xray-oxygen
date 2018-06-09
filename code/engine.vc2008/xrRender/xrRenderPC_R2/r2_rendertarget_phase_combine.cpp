@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
-
+#include "r2_puddles.h"
 #include "../xrRender/dxEnvironmentRender.h"
 
 #define STENCIL_CULL 0
@@ -11,12 +11,10 @@ void CRenderTarget::DoAsyncScreenshot()
 	if (RImplementation.m_bMakeAsyncSS)
 	{
 		HRESULT hr;
-
 		IDirect3DSurface9*	pFBSrc = HW.pBaseRT;
 
 		//	SHould be async function
 		hr = HW.pDevice->GetRenderTargetData( pFBSrc, pFB );
-
 		RImplementation.m_bMakeAsyncSS = false;
 	}
 }
@@ -65,23 +63,20 @@ void	CRenderTarget::phase_combine	()
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
 
 	// draw skybox
-	if (1)
-	{
-		RCache.set_ColorWriteEnable					();
-		CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	FALSE				));
-		g_pGamePersistent->Environment().RenderSky	();
+	RCache.set_ColorWriteEnable					();
+	CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	FALSE				));
+	g_pGamePersistent->Environment().RenderSky	();
 
-		//	Igor: Render clouds before compine without Z-test
-		//	to avoid siluets. HOwever, it's a bit slower process.
-		g_pGamePersistent->Environment().RenderClouds	();
-		CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	TRUE				));
+	//	Igor: Render clouds before compine without Z-test
+	//	to avoid siluets. HOwever, it's a bit slower process.
+	g_pGamePersistent->Environment().RenderClouds	();
+	CHK_DX(HW.pDevice->SetRenderState			( D3DRS_ZENABLE,	TRUE				));
+	
+	RCache.set_Stencil					(TRUE,D3DCMP_LESSEQUAL,0x01,0xff,0x00);	// stencil should be >= 1
+	if (RImplementation.o.nvstencil)	{
+		u_stencil_optimize				(FALSE);
+		RCache.set_ColorWriteEnable		();
 	}
-
-		RCache.set_Stencil					(TRUE,D3DCMP_LESSEQUAL,0x01,0xff,0x00);	// stencil should be >= 1
-		if (RImplementation.o.nvstencil)	{
-			u_stencil_optimize				(FALSE);
-			RCache.set_ColorWriteEnable		();
-		}
 
 	// calc m-blur matrices
 	Fmatrix		m_previous, m_current;
@@ -228,12 +223,15 @@ void	CRenderTarget::phase_combine	()
 	}
 	else
 	{
-        if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_SCREEN_SPACE)
+        if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
             phase_ogse_sunshafts();
-		else if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_MANOWAR_SSSS)
+        else if (RImplementation.o.sunshaft_mrmnwar && ps_r_sun_shafts > 0)
             phase_SunShafts();
 
 		phase_rain_drops();
+
+		if(Puddles->m_bLoaded)
+			phase_puddles();
 	}
 
 	// Combine everything + perform AA

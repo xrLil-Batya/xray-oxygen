@@ -215,7 +215,7 @@ CRenderTarget::CRenderTarget		()
 	b_rain_drops                    = xr_new<CBlender_rain_drops>           ();
 	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
 	b_sunshafts						= xr_new<CBlender_ss>					();
-    b_ogse_sunshafts = xr_new<CBlender_sunshafts>();
+    b_ogse_sunshafts				= xr_new<CBlender_sunshafts>();
 
 	//	NORMAL
 	{
@@ -246,18 +246,27 @@ CRenderTarget::CRenderTarget		()
 			}
 		}
 
-		rt_SunShaftsMask.create					(r2_RT_SunShaftsMask,w,h,D3DFMT_A8R8G8B8		);
-		rt_SunShaftsMaskSmoothed.create			(r2_RT_SunShaftsMaskSmoothed,w,h,D3DFMT_A8R8G8B8);
-		rt_SunShaftsPass0.create				(r2_RT_SunShaftsPass0,w,h,D3DFMT_A8R8G8B8		);
+        // Mrmnwar SunShaft Screen Space
+        if (RImplementation.o.sunshaft_mrmnwar)
+        {
+            rt_SunShaftsMask.create(r2_RT_SunShaftsMask, w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsMaskSmoothed.create(r2_RT_SunShaftsMaskSmoothed, w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsPass0.create(r2_RT_SunShaftsPass0, w, h, D3DFMT_A8R8G8B8);
+            s_SunShafts.create(b_sunshafts, "r2\\SunShafts");
+        }
+
+        // RT - KD Screen space sunshafts
+        if (RImplementation.o.sunshaft_screenspace)
+        {
+            rt_sunshafts_0.create(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
+            rt_sunshafts_1.create(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
+            s_ogse_sunshafts.create(b_ogse_sunshafts, "r2\\sunshafts");
+        }
 
 		// generic(LDR) RTs
 		rt_Generic_0.create			(r2_RT_generic0,w,h,D3DFMT_A8R8G8B8		);
 		rt_Generic_1.create			(r2_RT_generic1,w,h,D3DFMT_A8R8G8B8		);
 		rt_secondVP.create          (r2_RT_secondVP, w, h, D3DFMT_A8R8G8B8);
-
-        // RT - KD
-        rt_sunshafts_0.create(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
-        rt_sunshafts_1.create(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
 
 		//	temp: for higher quality blends
 		if (RImplementation.o.advancedpp)
@@ -267,17 +276,12 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	// FLARES
-	s_flare.create("effects\\flare", "fx\\lenslare");
-
-	// SUNSHAFTS
-	s_SunShafts.create				(b_sunshafts,	"r2\\SunShafts");
-    s_ogse_sunshafts.create			(b_ogse_sunshafts, "r2\\sunshafts");
-	
+	s_flare.create					("effects\\flare", "fx\\lenslare");
 	// RAIN DROPS
 	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
-
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
+	s_water.create					("effects\\puddles", "water\\water_water");
 
 	// DIRECT (spot)
 	D3DFORMAT						depth_format	= (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
@@ -637,12 +641,13 @@ CRenderTarget::~CRenderTarget	()
 	_RELEASE					(rt_smap_ZB);
 
 	// Jitter
-	for (int it=0; it<TEX_jitter_count; it++)	{
-		t_noise	[it]->surface_set	(NULL);
+	for (u32 it = 0; it < TEX_jitter_count; it++) 
+	{
+		t_noise[it]->surface_set(nullptr);
 #ifdef DEBUG
-		_SHOW_REF("t_noise_surf[it]",t_noise_surf[it]);
+		_SHOW_REF("t_noise_surf[it]", t_noise_surf[it]);
 #endif // DEBUG
-		_RELEASE					(t_noise_surf[it]);
+		_RELEASE(t_noise_surf[it]);
 	}
 
 	// 

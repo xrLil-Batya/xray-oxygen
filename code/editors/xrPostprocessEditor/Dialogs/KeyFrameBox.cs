@@ -11,7 +11,7 @@ namespace xrPostprocessEditor
 {
     public partial class KeyFrameBox : UserControl
     {
-        private float kf_coef;
+        private decimal kf_coef;
 
         public event EventHandler SelectedIndexChanged;
         public event EventHandler AddButtonClick;
@@ -33,7 +33,7 @@ namespace xrPostprocessEditor
         {
             InitializeComponent();
             // Работаем по мотивам ПЫС, нужен коэф для названий в ListBox
-            kf_coef = 0f;
+            kf_coef = 0;
 
             // Завезём обработчики событий
             AddButtonClick += OnAddButtonClick;
@@ -52,7 +52,6 @@ namespace xrPostprocessEditor
             {
                 int size = lbKeyFrames.Items.Count - 1;
                 lbKeyFrames.Items.RemoveAt(size);
-                kf_coef -= 0.1f;
             }
             catch(Exception)
             {
@@ -66,18 +65,18 @@ namespace xrPostprocessEditor
         public void OnClearButtonClick(object sender, EventArgs e)
         {
             lbKeyFrames.Items.Clear();
-            kf_coef = 0f;
+            kf_coef = 0;
         }
 
         public void OnAddButtonClick(object sender, EventArgs e)
         {
-            kf_coef += 0.1f;
+            kf_coef = numKeyFrameTime.Value;
             lbKeyFrames.Items.Add(kf_coef.ToString());
         }
 
         private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e) => SelectedIndexChanged?.Invoke(this, e);
 
-        private void BtnAdd_Click(object sender, EventArgs e) => AddButtonClick?.Invoke(this, e);
+        public void BtnAdd_Click(object sender, EventArgs e) => AddButtonClick?.Invoke(this, e);
 
         private void BtnRemove_Click(object sender, EventArgs e) => RemoveButtonClick?.Invoke(this, e);
 

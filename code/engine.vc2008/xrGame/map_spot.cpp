@@ -98,6 +98,11 @@ bool CMapSpot::OnMouseDown( int mouse_btn )
 		}
 		return false;
 	}
+    else if (mouse_btn == MOUSE_2)
+    {
+        GetMessageTarget()->SendMessage(this, MAP_SELECT_SPOT2);
+        return true;
+    }
 	else
 	{
 		return false;
@@ -322,20 +327,10 @@ void CComplexMapSpot::Update()
 	if ( m_last_delay > 310 )
 	{
 		m_last_delay = 0;
-		if ( Level().GetGameTime() > m_timer_finish )
+		if ( Level().GetGameTime() <= m_timer_finish && !m_infinity_time)
 		{
-			/*if ( !m_infinity_time )
-			{
-				MapLocation()->DisableSpot();
-			}*/
-		}
-		else
-		{
-			if ( !m_infinity_time )
-			{
-				ALife::_TIME_ID dt = m_timer_finish - Level().GetGameTime();
-				m_timer->TextItemControl()->SetText( GetTimeAsString( dt, InventoryUtilities::etpTimeToMinutes, ':', false ).c_str() );
-			}
+			ALife::_TIME_ID dt = m_timer_finish - Level().GetGameTime();
+			m_timer->TextItemControl()->SetText( GetTimeAsString( dt, InventoryUtilities::etpTimeToMinutes, ':', false ).c_str() );
 		}
 	}
 

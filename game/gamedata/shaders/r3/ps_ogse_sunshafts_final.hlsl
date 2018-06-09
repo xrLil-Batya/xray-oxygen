@@ -4,7 +4,7 @@
 #include "shared\common.h"
 #include "shared\wmark.h"
 
-uniform float4 screen_res;
+//uniform float4 screen_res;
 uniform float4 c_sunshafts;		// x - exposure, y - density
 uniform float3 L_sun_dir_e;
 

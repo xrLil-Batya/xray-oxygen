@@ -16,27 +16,60 @@ CUIDragDropReferenceList::CUIDragDropReferenceList()
 {
 	AddCallbackStr("cell_item_reference", WINDOW_LBUTTON_DB_CLICK, CUIWndCallback::void_function(this, &CUIDragDropReferenceList::OnItemDBClick));
 }
+
 CUIDragDropReferenceList::~CUIDragDropReferenceList()
 {
 }
+
 void CUIDragDropReferenceList::Initialize()
 {
-	for(int i=0; i<m_container->CellsCapacity().x; i++)
-	{
-		m_references.push_back(xr_new<CUIStatic>());
-		Fvector2 pos = Fvector2().set((m_container->CellSize().x+m_container->CellsSpacing().x)*i,0);
-		m_references.back()->SetAutoDelete(true);
-		m_references.back()->SetWndPos(pos);
-		m_references.back()->SetWndSize(Fvector2().set(m_container->CellSize().x, m_container->CellSize().y));
-		AttachChild(m_references.back());
-		m_references.back()->SetWindowName("cell_item_reference");
-		Register(m_references.back());
-	}
+	Fvector2 pos;
+	Fvector2 size;
+	size.set(m_container->CellSize().x, m_container->CellSize().y);
+
+	//0
+	m_references.push_back(xr_new<CUIStatic>());
+	pos.set(0, 0);
+	m_references.back()->SetAutoDelete(true);
+	m_references.back()->SetWndPos(pos);
+	m_references.back()->SetWndSize(size);
+	AttachChild(m_references.back());
+	m_references.back()->SetWindowName("cell_item_reference");
+	Register(m_references.back());
+	//1
+	m_references.push_back(xr_new<CUIStatic>());
+	pos.set(m_container->CellSize().x + m_container->CellsSpacing().x, 0);
+	m_references.back()->SetAutoDelete(true);
+	m_references.back()->SetWndPos(pos);
+	m_references.back()->SetWndSize(size);
+	AttachChild(m_references.back());
+	m_references.back()->SetWindowName("cell_item_reference");
+	Register(m_references.back());
+	//2
+	m_references.push_back(xr_new<CUIStatic>());
+	pos.set(0, m_container->CellSize().y + m_container->CellsSpacing().y);
+	m_references.back()->SetAutoDelete(true);
+	m_references.back()->SetWndPos(pos);
+	m_references.back()->SetWndSize(size);
+	AttachChild(m_references.back());
+	m_references.back()->SetWindowName("cell_item_reference");
+	Register(m_references.back());
+	//3
+	m_references.push_back(xr_new<CUIStatic>());
+	pos.set(m_container->CellSize().x + m_container->CellsSpacing().x, m_container->CellSize().y + m_container->CellsSpacing().y);
+	m_references.back()->SetAutoDelete(true);
+	m_references.back()->SetWndPos(pos);
+	m_references.back()->SetWndSize(size);
+	AttachChild(m_references.back());
+	m_references.back()->SetWindowName("cell_item_reference");
+	Register(m_references.back());
 }
+
 void CUIDragDropReferenceList::SetItem(CUICellItem* itm)
 {
 	inherited::SetItem(itm);
 }
+
 void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Fvector2 abs_pos)
 {
 	const Ivector2 dest_cell_pos = m_container->PickCell(abs_pos);
@@ -54,7 +87,7 @@ void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Fvector2 abs_pos)
 }
 void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Ivector2 cell_pos)
 {
-	CUIStatic* ref = m_references[cell_pos.x];
+	CUIStatic* ref = m_references[cell_pos.x + 2 * cell_pos.y];;
 	ref->SetShader(itm->GetShader());
 	ref->SetTextureRect(itm->GetTextureRect());
 	ref->TextureOn();
@@ -70,12 +103,13 @@ void CUIDragDropReferenceList::SetItem(CUICellItem* itm, Ivector2 cell_pos)
 		itm->SetOwnerList(this);
 	}
 }
+
 CUICellItem* CUIDragDropReferenceList::RemoveItem(CUICellItem* itm, bool force_root)
 {
 	Ivector2 vec2 = m_container->GetItemPos(itm);
 	if(vec2.x!=-1&&vec2.y!=-1)
 	{
-		u8 index = u8(vec2.x);
+		u8 index = u8(vec2.x + 2 * vec2.y);
 		xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], "");
 		m_references[index]->SetTextureColor(color_rgba(255,255,255,0));
 	}
@@ -85,7 +119,7 @@ CUICellItem* CUIDragDropReferenceList::RemoveItem(CUICellItem* itm, bool force_r
 
 void CUIDragDropReferenceList::LoadItemTexture(LPCSTR section, Ivector2 cell_pos)
 {
-	CUIStatic* ref = m_references[cell_pos.x];
+	CUIStatic* ref = m_references[cell_pos.x + 2 * cell_pos.y];
 	ref->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 	Frect texture_rect;
 	texture_rect.x1	= pSettings->r_float(section, "inv_grid_x")		*INV_GRID_WIDTH;
@@ -110,26 +144,36 @@ void CUIDragDropReferenceList::ReloadReferences(CInventoryOwner* pActor)
 	m_container->ClearAll(true);
 	m_selected_item	= NULL;
 
-	for(u8 i=0; i<m_container->CellsCapacity().x; i++)
+	for (u8 i = 0; i < 4; i++) 
 	{
 		CUIStatic* ref = m_references[i];
 		LPCSTR item_name = ACTOR_DEFS::g_quick_use_slots[i];
-		if(item_name && xr_strlen(item_name))
+		Ivector2 vec;
+
+		switch (i)
+		{
+			case 0: vec.set(0, 0); break;
+			case 1: vec.set(1, 0); break;
+			case 2: vec.set(0, 1); break;
+			case 3: vec.set(1, 1); break;
+		}
+
+		if (item_name && xr_strlen(item_name))
 		{
 			PIItem itm = pActor->inventory().GetAny(item_name);
-			if(itm)
+			if (itm) 
 			{
-				SetItem(create_cell_item(itm), Ivector2().set(i, 0));
+				SetItem(create_cell_item(itm), vec);
 			}
-			else
+			else 
 			{
-				LoadItemTexture(item_name, Ivector2().set(i, 0));
-				ref->SetTextureColor(color_rgba(255,255,255,100));
+				LoadItemTexture(item_name, vec);
+				ref->SetTextureColor(color_rgba(255, 255, 255, 100));
 			}
 		}
-		else
+		else 
 		{
-			ref->SetTextureColor(color_rgba(255,255,255,0));
+			ref->SetTextureColor(color_rgba(255, 255, 255, 0));
 		}
 	}
 }
@@ -145,8 +189,16 @@ void CUIDragDropReferenceList::OnItemDBClick(CUIWindow* w, void* pData)
 		if(actor)
 		{
 			PIItem itm = actor->inventory().GetAny(ACTOR_DEFS::g_quick_use_slots[index]);
-			if(itm)
-				inherited::RemoveItem(GetCellAt(Ivector2().set(index, 0)).m_item, false);
+			if(itm) 
+			{
+				switch (index)
+				{
+				case 0: inherited::RemoveItem(GetCellAt(Ivector2().set(0, 0)).m_item, false); break;
+				case 1: inherited::RemoveItem(GetCellAt(Ivector2().set(1, 0)).m_item, false); break;
+				case 2: inherited::RemoveItem(GetCellAt(Ivector2().set(0, 1)).m_item, false); break;
+				case 3: inherited::RemoveItem(GetCellAt(Ivector2().set(1, 1)).m_item, false); break;
+				}
+			}
 		}
 		xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], "");
 		(*it)->SetTextureColor(color_rgba(255,255,255,0));
@@ -182,10 +234,12 @@ void CUIDragDropReferenceList::OnItemDrop(CUIWindow* w, void* pData)
 			Ivector2 vec2 = m_container->GetItemPos(itm);
 			if(vec2.x!=-1&&vec2.y!=-1)
 			{
-				u8 index = u8(vec2.x);
-				shared_str tmp = ACTOR_DEFS::g_quick_use_slots[vec.x];
-				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[vec.x], ACTOR_DEFS::g_quick_use_slots[index]);
+				u8 index = u8(vec2.x + 2 * vec2.y);
+
+				shared_str tmp = ACTOR_DEFS::g_quick_use_slots[vec.x + 2 * vec.y];
+				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[vec.x + 2 * vec.y], ACTOR_DEFS::g_quick_use_slots[index]);
 				xr_strcpy(ACTOR_DEFS::g_quick_use_slots[index], tmp.c_str());
+
 				ReloadReferences(actor);
 				return;
 			}

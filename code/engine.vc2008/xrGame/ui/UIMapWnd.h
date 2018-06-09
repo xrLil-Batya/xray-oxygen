@@ -1,8 +1,6 @@
 #pragma once
-
 #include "UIWindow.h"
 #include "UIWndCallback.h"
-
 class CUICustomMap;
 class CUIGlobalMap;
 class CUIFrameWindow;
@@ -16,6 +14,9 @@ class CMapSpot;
 class CGameTask;
 class CUIXml;
 class UIHint;
+class CUIPropertiesBox;
+class CUIPdaSpot;
+class CUILevelMap;
 
 using GameMaps = xr_map<shared_str, CUICustomMap*>;
 
@@ -89,7 +90,12 @@ public:
 
 	void						MoveScrollV		( float dy );
 	void						MoveScrollH		( float dx );
-
+	// qweasdd: from lost alpha
+	bool						ConvertCursorPosToMap(Fvector*, CUICustomMap*);
+	void						CreateSpotWindow(Fvector, shared_str);
+	CMapLocation*				UnderSpot(Fvector RealPosition, CUICustomMap*);
+	//-qweasdd
+	void 						ActivatePropertiesBox(CUIWindow* w);
 public:
 	CUICustomMap*				m_tgtMap;
 	Fvector2					m_tgtCenter;
@@ -99,6 +105,11 @@ protected:
 	void						init_xml_nav			(CUIXml& xml);
 	void						ShowHint				(bool extra = false);
 	void						Activated				();
+	
+	CUIPropertiesBox*			m_UIPropertiesBox;
+	CUIPdaSpot*					m_UserSpotWnd;
+	CMapLocation*				m_cur_location;
+	void						ShowSettingsWindow		(u16 id, Fvector position, shared_str levelName);
 
 public:
 								CUIMapWnd				();

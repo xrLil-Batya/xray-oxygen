@@ -45,23 +45,34 @@ void	resptrcode_geom::create			(D3DVERTEXELEMENT9* decl, ID3DVertexBuffer* vb, I
 //////////////////////////////////////////////////////////////////////
 BOOL SPass::equal(const SPass& other)
 {
-	if (state		!= other.state)		return FALSE;
-	if (ps			!= other.ps)			return FALSE;
-	if (vs			!= other.vs)			return FALSE;
+	if (state != other.state)		
+		return FALSE;
+	if (ps != other.ps)			
+		return FALSE;
+	if (vs != other.vs)			
+		return FALSE;
 #if defined(USE_DX10) || defined(USE_DX11)
-	if (gs			!= other.gs)			return FALSE;
+	if (gs != other.gs)			
+		return FALSE;
 #	ifdef USE_DX11
-	if (hs			!= other.hs)			return FALSE;
-	if (ds			!= other.ds)			return FALSE;
-	if (cs			!= other.cs)			return FALSE;
+	if (hs != other.hs)			
+		return FALSE;
+	if (ds != other.ds)			
+		return FALSE;
+	if (cs != other.cs)			
+		return FALSE;
 #	endif
 #endif	//	USE_DX10
-	if (constants	!= other.constants)		return FALSE;	// is this nessesary??? (ps+vs already combines)
+	if (constants != other.constants)		
+		return FALSE;	// is this nessesary??? (ps+vs already combines)
 
-	if (T != other.T)					return FALSE;
-	if (C != other.C)					return FALSE;
+	if (T != other.T)					
+		return FALSE;
+	if (C != other.C)					
+		return FALSE;
 #ifdef _EDITOR
-	if (M != other.M)					return FALSE;
+	if (M != other.M)					
+		return FALSE;
 #endif
 	return TRUE;
 }
@@ -69,7 +80,7 @@ BOOL SPass::equal(const SPass& other)
 //
 ShaderElement::ShaderElement()
 {
-	flags.iPriority		= 1;
+	flags.iPriority		= TRUE;
 	flags.bStrictB2F	= FALSE;
 	flags.bEmissive		= FALSE;
 	flags.bDistort		= FALSE;
@@ -78,22 +89,31 @@ ShaderElement::ShaderElement()
 
 BOOL ShaderElement::equal	(ShaderElement& S)
 {
-	if (flags.iPriority		!= S.flags.iPriority)	return FALSE;
-	if (flags.bStrictB2F	!= S.flags.bStrictB2F)	return FALSE;
-	if (flags.bEmissive		!= S.flags.bEmissive)	return FALSE;
-	if (flags.bWmark		!= S.flags.bWmark)		return FALSE;
-	if (flags.bDistort		!= S.flags.bDistort)	return FALSE;
-	if (passes.size() != S.passes.size())			return FALSE;
+	if (flags.iPriority	!= S.flags.iPriority)	
+		return FALSE;
+	if (flags.bStrictB2F != S.flags.bStrictB2F)	
+		return FALSE;
+	if (flags.bEmissive != S.flags.bEmissive)	
+		return FALSE;
+	if (flags.bWmark != S.flags.bWmark)		
+		return FALSE;
+	if (flags.bDistort != S.flags.bDistort)	
+		return FALSE;
+	if (passes.size() != S.passes.size())			
+		return FALSE;
 	for (u32 p=0; p<passes.size(); p++)
-		if (passes[p] != S.passes[p])				return FALSE;
+		if (passes[p] != S.passes[p])				
+			return FALSE;
 	return TRUE;
 }
 
 BOOL ShaderElement::equal	(ShaderElement* S)
 {	
-	if (0==S && 0==this)	return TRUE;
-	if (0==S || 0==this)	return FALSE;
-	return	equal	(*S);	
+	if (!S && !this)	
+		return TRUE;
+	if (!S || !this)	
+		return FALSE;
+	return	equal(*S);	
 }
 
 //

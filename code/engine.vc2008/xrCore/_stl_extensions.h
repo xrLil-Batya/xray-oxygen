@@ -9,9 +9,9 @@ class xalloc {
 public:
     using size_type = size_t;
     using difference_type = ptrdiff_t;
-    using pointer = T*;
+    using pointer = T * ;
     using const_pointer = const T*;
-    using reference = T&;
+    using reference = T & ;
     using const_reference = const T&;
     using value_type = T;
 
@@ -78,22 +78,22 @@ bool operator!=(const xalloc<T>&, const xalloc<Other>&) {
 
 namespace std {
 
-template <class Tp1, class Tp2>
-xalloc<Tp2>& __stl_alloc_rebind(xalloc<Tp1>& a, const Tp2*) {
-    return (xalloc<Tp2>&)(a);
-}
+    template <class Tp1, class Tp2>
+    xalloc<Tp2>& __stl_alloc_rebind(xalloc<Tp1>& a, const Tp2*) {
+        return (xalloc<Tp2>&)(a);
+    }
 
-template <class Tp1, class Tp2>
-xalloc<Tp2> __stl_alloc_create(xalloc<Tp1>&, const Tp2*) {
-    return xalloc<Tp2>();
-}
+    template <class Tp1, class Tp2>
+    xalloc<Tp2> __stl_alloc_create(xalloc<Tp1>&, const Tp2*) {
+        return xalloc<Tp2>();
+    }
 
 } // namespace std
 
-// string(char)
-using xr_string = std::basic_string<char, std::char_traits<char>, xalloc<char>>;
+  // string(char)
+  //using xr_string = std::basic_string<char, std::char_traits<char>, xalloc<char>>;
 
-// vector
+  // vector
 template <typename T, typename allocator = xalloc<T>>
 using xr_vector = std::vector<T, allocator>;
 
@@ -131,8 +131,53 @@ template <typename K, class V, class P = std::less<K>, typename allocator = xall
 using xr_multimap = std::multimap<K, V, P, allocator>;
 
 template <typename K, class V, class Traits = std::equal_to<K>,
-          typename allocator = xalloc<std::pair<const K, V>>>
-using xr_hash_map = std::unordered_map<K, V, std::hash<K>, Traits, allocator>;
+    typename allocator = xalloc<std::pair<const K, V>>>
+    using xr_hash_map = std::unordered_map<K, V, std::hash<K>, Traits, allocator>;
+
+class XRCORE_API xr_string : public std::basic_string<char, std::char_traits<char>, xalloc<char>>
+{
+public:
+    typedef std::basic_string<char, std::char_traits<char>, xalloc<char>> Super;
+
+    xr_string(LPCSTR Str);
+    xr_string(LPCSTR Str, int Size);
+    xr_string(const xr_string& other);
+    xr_string(const xr_string&& other);
+    xr_string(const Super&& other);
+    xr_string();
+
+    xr_string& operator=(LPCSTR Str);
+    xr_string& operator=(const xr_string& other);
+    xr_string& operator=(const Super& other);
+
+    template <size_t ArrayLenght>
+    xr_string(char* (&InArray)[ArrayLenght])
+    {
+        assign(InArray, ArrayLenght);
+    }
+
+    static xr_vector<xr_string> Split(LPCSTR Str, size_t StrSize, char splitCh);
+
+    xr_vector<xr_string> Split(char splitCh);
+    xr_vector<xr_string> Split(u32 NumberOfSplits, ...);
+
+    bool StartWith(const xr_string& Other) const;
+    bool StartWith(LPCSTR Str) const;
+    bool StartWith(LPCSTR Str, size_t Size) const;
+    xr_string RemoveWhitespaces() const;
+};
+
+namespace std {
+    template<>
+    class hash<xr_string> {
+    public:
+        size_t operator()(const xr_string &s) const
+        {
+            std::hash<xr_string::Super> hashFn;
+            return hashFn(s);
+        }
+    };
+}
 
 struct pred_str {
     bool operator()(const char* x, const char* y) const { return std::strcmp(x, y) < 0; }
@@ -157,5 +202,5 @@ using boolVec = xr_vector<bool>;
 using Fvector2Vec = xr_vector<Fvector2>;
 
 template <typename K, class V, class Hasher = std::hash<K>, class Traits = std::equal_to<K>,
-	typename allocator = xalloc<std::pair<const K, V>>>
-	using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;
+    typename allocator = xalloc<std::pair<const K, V>>>
+    using xr_unordered_map = std::unordered_map<K, V, Hasher, Traits, allocator>;

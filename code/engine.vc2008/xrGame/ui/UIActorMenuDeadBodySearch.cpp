@@ -17,6 +17,8 @@
 #include "../InventoryBox.h"
 #include "../string_table.h"
 #include "../ai/monsters/BaseMonster/base_monster.h"
+#include "../../FrayBuildConfig.hpp"
+#include "../xrEngine/xr_input.h"
 
 void move_item_from_to (u16 from_id, u16 to_id, u16 what_id)
 {
@@ -132,52 +134,54 @@ void CUIActorMenu::DeInitDeadBodySearchMode() const
 
 bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 {
-	if ( m_pPartnerInvOwner )
+	if (m_pPartnerInvOwner)
 	{
-		if ( !m_pPartnerInvOwner->deadbody_can_take_status() )
+		if (!m_pPartnerInvOwner->deadbody_can_take_status() || smart_cast<CBaseMonster*>(m_pPartnerInvOwner))
 		{
 			return false;
 		}
 	}
 	else // box
 	{
-		if ( !m_pInvBox->can_take() )
+		if (!m_pInvBox->can_take())
 		{
 			return false;
 		}
 	}
-	PIItem quest_item					= (PIItem)itm->m_pData;
-	if(quest_item->IsQuestItem())
+	PIItem quest_item = (PIItem)itm->m_pData;
+	if (quest_item->IsQuestItem())
 		return false;
 
-	CUIDragDropListEx*	old_owner		= itm->OwnerList();
-	CUIDragDropListEx*	new_owner		= nullptr;
+	CUIDragDropListEx*	old_owner = itm->OwnerList();
+	CUIDragDropListEx*	new_owner = nullptr;
 
-	if(b_use_cursor_pos)
+	if (b_use_cursor_pos)
 	{
-		new_owner						= CUIDragDropListEx::m_drag_item->BackList();
-		VERIFY							(new_owner==m_pDeadBodyBagList);
-	}else
-		new_owner						= m_pDeadBodyBagList;
-	
-	CUICellItem* i						= old_owner->RemoveItem(itm, (old_owner==new_owner) );
+		new_owner = CUIDragDropListEx::m_drag_item->BackList();
+		VERIFY(new_owner == m_pDeadBodyBagList);
+	}
+	else new_owner = m_pDeadBodyBagList;
 
-	if(b_use_cursor_pos)
-		new_owner->SetItem				(i,old_owner->GetDragItemPosition());
+	CUICellItem* i = old_owner->RemoveItem(itm, (old_owner == new_owner));
+
+	if (b_use_cursor_pos)
+		new_owner->SetItem(i, old_owner->GetDragItemPosition());
 	else
-		new_owner->SetItem				(i);
+		new_owner->SetItem(i);
 
-	PIItem iitem						= (PIItem)i->m_pData;
+	PIItem iitem = (PIItem)i->m_pData;
 
-	if ( m_pPartnerInvOwner )
+	if (m_pPartnerInvOwner)
 	{
-		move_item_from_to				(m_pActorInvOwner->object_id(), m_pPartnerInvOwner->object_id(), iitem->object_id());
+		move_item_from_to(m_pActorInvOwner->object_id(), m_pPartnerInvOwner->object_id(), iitem->object_id());
 	}
 	else // box
 	{
-		move_item_from_to				(m_pActorInvOwner->object_id(), m_pInvBox->ID(), iitem->object_id());
+		move_item_from_to(m_pActorInvOwner->object_id(), m_pInvBox->ID(), iitem->object_id());
 	}
-	
+#ifdef MULTITRANSFER
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToDeadBodyBag(itm, b_use_cursor_pos);
+#endif
 	UpdateDeadBodyBag();
 	return true;
 }

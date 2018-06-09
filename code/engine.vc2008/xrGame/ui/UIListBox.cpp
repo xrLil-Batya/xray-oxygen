@@ -358,7 +358,6 @@ struct CUIListBoxItemMsgChainWrapper : public CUIListBoxItemMsgChain, public lua
 	CUIListBoxItemMsgChainWrapper(float h) : CUIListBoxItemMsgChain(h) {}
 };
 
-
 #pragma optimize("s",on)
 void CUIListBox::script_register(lua_State *L)
 {
@@ -372,6 +371,7 @@ void CUIListBox::script_register(lua_State *L)
 			.def("GetSize", &CUIListBox::GetSize)
 			.def("GetSelectedItem", &CUIListBox::GetSelectedItem)
 			.def("GetSelectedIndex", &CUIListBox::GetSelectedIDX)
+			.def("SetSelectedIndex", &CUIListBox::SetSelectedIDX)
 
 			.def("GetItemByIndex", &CUIListBox::GetItemByIDX)
 			.def("GetItem", &CUIListBox::GetItem)

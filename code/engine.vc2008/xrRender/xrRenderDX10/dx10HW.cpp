@@ -21,7 +21,7 @@ ENGINE_API BOOL isGraphicDebugging;
 
 CHW HW;
 
-CHW::CHW() : m_pAdapter(0), pDevice(NULL), m_move_window(true)
+CHW::CHW() : m_pAdapter(NULL), pDevice(NULL), m_move_window(true)	// NULL cuz it's struct
 {
 	Device.seqAppActivate.Add(this);
 	Device.seqAppDeactivate.Add(this);
@@ -40,11 +40,11 @@ void CHW::CreateD3D()
 	IDXGIFactory1 * pFactory;
 	R_CHK( CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory)) );
 
-	m_bUsePerfhud = false;
+	m_bUsePerfhud			= false;
 
-	pFactory->EnumAdapters1(0, &m_pAdapter);
+	pFactory->EnumAdapters1	(0, &m_pAdapter);
 
-	pFactory->Release();
+	_RELEASE				(pFactory);
 }
 
 void CHW::DestroyD3D()
@@ -56,11 +56,10 @@ void CHW::DestroyD3D()
 void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 {
 	m_move_window			= move_window;
-	CreateD3D();
-	// TODO: DX10: Create appropriate initialization
+	CreateD3D				();
 
 	// General - select adapter and device
-	BOOL  bWindowed			= !psDeviceFlags.is(rsFullscreen);
+	BOOL bWindowed			= !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	m_DriverType = Caps.bForceGPU_REF ? D3D_DRIVER_TYPE_REFERENCE : D3D_DRIVER_TYPE_HARDWARE;
 
@@ -80,12 +79,12 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	D3DFORMAT&	fDepth	= Caps.fDepth;
 
 	//	HACK: DX10: Embed hard target format.
-	fTarget = D3DFMT_X8R8G8B8;	//	No match in DX10. D3DFMT_A8B8G8R8->DXGI_FORMAT_R8G8B8A8_UNORM
+	fTarget = D3DFMT_X8R8G8B8;			//	No match in DX10. D3DFMT_A8B8G8R8->DXGI_FORMAT_R8G8B8A8_UNORM
 	fDepth = selectDepthStencil(fTarget);
 	
 	// Set up the presentation parameters
 	DXGI_SWAP_CHAIN_DESC	&sd	= m_ChainDesc;
-    std::memset(&sd,0,sizeof(sd));
+	memset(&sd, 0, sizeof(sd));		// обнуление в крови
 
 	selectResolution	(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
@@ -123,12 +122,34 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 	HRESULT R;
 #ifdef USE_DX11
     D3D_FEATURE_LEVEL pFeatureLevels[] =
-    {
+    {        
+        D3D_FEATURE_LEVEL_11_1,
         D3D_FEATURE_LEVEL_11_0
     };
 
-   R =  D3D11CreateDeviceAndSwapChain(0, m_DriverType, 0, createDeviceFlags, pFeatureLevels, sizeof(pFeatureLevels)/sizeof(pFeatureLevels[0]),
+    R =  D3D11CreateDeviceAndSwapChain(nullptr, m_DriverType, 0, createDeviceFlags, pFeatureLevels, sizeof(pFeatureLevels)/sizeof(pFeatureLevels[0]),
 										  D3D11_SDK_VERSION, &sd, &m_pSwapChain, &pDevice, &FeatureLevel, &pContext);
+                                          
+    D3D11_FEATURE_DATA_THREADING threadingFeature;
+    R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
+   
+    IDXGIDevice1 * pDXGIDevice;
+    R_CHK( pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
+    
+    IDXGIAdapter1 * pDXGIAdapter;
+    R_CHK( pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));  
+
+#pragma todo("ForserX to Swartz27: Rework it code")
+    /*
+    D3D11_FEATURE_DATA_D3D11_OPTIONS2 features_2;
+	HRESULT dxResultF2 = pDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2));
+	if (dxResultF2 == S_OK)
+	{
+		features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
+	}
+	*/
+
+	R = pDXGIDevice->SetMaximumFrameLatency(1);                                                                                
 #else
    R =  D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, 0, createDeviceFlags, &sd, &m_pSwapChain, &pDevice );
 
@@ -206,7 +227,7 @@ void CHW::Reset(HWND hwnd)
 {
 	DXGI_SWAP_CHAIN_DESC &cd = m_ChainDesc;
 
-	bool bWindowed = !psDeviceFlags.is(rsFullscreen);
+	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	cd.Windowed = bWindowed;
 
@@ -249,19 +270,44 @@ D3DFORMAT CHW::selectDepthStencil	(D3DFORMAT fTarget)
 	return D3DFMT_D24S8;
 }
 
+void CHW::ResizeWindowProc(WORD h, WORD w)
+{
+#if 0
+	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
+	///////////////////////////////////////
+	if (bWindowed)
+	{
+		DXGI_SWAP_CHAIN_DESC &cd			= m_ChainDesc;
+		DXGI_MODE_DESC	&desc				= m_ChainDesc.BufferDesc;
+		HRESULT R;
+		///////////////////////////////////////
+		memset								(&cd,	0, sizeof(DXGI_SWAP_CHAIN_DESC));	// sc to NULL
+		memset								(&desc, 0, sizeof(DXGI_MODE_DESC));
+		///////////////////////////////////////
+		desc.Width							= w;
+		desc.Height							= h;
+		desc.RefreshRate.Numerator			= 60;
+		desc.RefreshRate.Denominator		= 1;
+		m_pSwapChain->SetFullscreenState	(FALSE, 0);
+		CHK_DX						(m_pSwapChain->ResizeTarget(&desc));
+	}
+#endif
+}
+
+
 void CHW::selectResolution( u32 &dwWidth, u32 &dwHeight, BOOL bWindowed )
 {
 	fill_vid_mode_list			(this);
 
-	if(bWindowed)
+	if (bWindowed)
 	{
 		dwWidth		= psCurrentVidMode[0];
 		dwHeight	= psCurrentVidMode[1];
 	}
-	else //check
+	else
 	{
-		string64					buff;
-		xr_sprintf					(buff,sizeof(buff),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]);
+		string64 buff;
+		xr_sprintf(buff,sizeof(buff),"%dx%d",psCurrentVidMode[0],psCurrentVidMode[1]);
 
 		if(_ParseItem(buff,vid_mode_token)==u32(-1)) //not found
 		{ //select safe
@@ -281,11 +327,16 @@ DXGI_RATIONAL CHW::selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 
 	res.Numerator = 60;
 	res.Denominator = 1;
-
+	
 	float	CurrentFreq = 60.0f;
 
 	if (psDeviceFlags.is(rsRefresh60hz))	
 	{
+		return res;
+	}
+	else if (psDeviceFlags.is(rsRefresh120hz))
+	{
+		res.Numerator = 120;
 		return res;
 	}
 	else
@@ -376,7 +427,9 @@ void free_vid_mode_list()
 
 void fill_vid_mode_list(CHW* _hw)
 {
-	if(vid_mode_token != NULL)		return;
+	if(vid_mode_token != NULL)		
+		return;
+
 	xr_vector<LPCSTR>	_tmp;
 	xr_vector<DXGI_MODE_DESC>	modes;
 
@@ -385,7 +438,7 @@ void fill_vid_mode_list(CHW* _hw)
 	VERIFY(pOutput);
 
 	UINT num = 0;
-	DXGI_FORMAT format = DXGI_FORMAT_R10G10B10A2_UNORM;// [FX to Swartz27]: D3DX11SaveTextureToMemory don't give the value 'saved'
+	DXGI_FORMAT format = DXGI_FORMAT_R8G8B8A8_UNORM;//Don't touch
 	UINT flags         = 0;
 
 	// Get the number of display modes available
@@ -469,6 +522,6 @@ void CHW::UpdateViews()
 	R = pDevice->CreateDepthStencilView( pDepthStencil, NULL, &pBaseZB );
 	R_CHK(R);
 
-	pDepthStencil->Release();
+	_RELEASE(pDepthStencil);
 }
 #endif

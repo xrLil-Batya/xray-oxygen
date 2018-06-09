@@ -12,7 +12,6 @@
 #include "InfoPortion.h"
 #include "PhraseDialog.h"
 #include "GameTask.h"
-#include "encyclopedia_article.h"
 
 #include "character_info.h"
 #include "specific_character.h"
@@ -44,8 +43,6 @@ void init_game_globals()
 {
 	CreateUIGeom									();
 	InitHudSoundSettings							();
-//		CInfoPortion::InitInternal					();
-//.		CEncyclopediaArticle::InitInternal			();
 	CPhraseDialog::InitInternal					    ();
 	InventoryUtilities::CreateShaders			    ();
 	CCharacterInfo::InitInternal					();

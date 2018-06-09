@@ -94,10 +94,8 @@ protected:
 	CUIDragDropListEx*			m_pInventoryOutfitList;
 	CUIDragDropListEx*			m_pInventoryHelmetList;
 	
-	#ifdef NEW_SLOTS
-	    CUIDragDropListEx*          m_pInventoryKnifeList;
-	    CUIDragDropListEx*          m_pInventoryBinocularList;
-	#endif
+    CUIDragDropListEx*          m_pInventoryKnifeList;
+    CUIDragDropListEx*          m_pInventoryBinocularList;
 	
 	CUIDragDropListEx*			m_pInventoryDetectorList;
 	CUIDragDropListEx*			m_pInventoryBagList;
@@ -108,7 +106,9 @@ protected:
 	CUIDragDropListEx*			m_pTradePartnerList;
 	CUIDragDropListEx*			m_pDeadBodyBagList;
 	CUIDragDropListEx*			m_pTrashList;
-
+#ifdef ACTOR_RUCK
+	CUIDragDropListEx*			m_pInventoryRuckList;
+#endif
 	enum						{e_af_count = 5};
 	CUIStatic*					m_belt_list_over[e_af_count];
 	CUIStatic*					m_HelmetOver;
@@ -117,11 +117,12 @@ protected:
 	CUIStatic*					m_InvSlot3Highlight;
 	CUIStatic*					m_HelmetSlotHighlight;
 	CUIStatic*					m_OutfitSlotHighlight;
-	
-	#ifdef NEW_SLOTS
-	    CUIStatic*                  m_KnifeSlotHighlight;
-	    CUIStatic*                  m_BinocularSlotHighlight;
-	#endif
+#ifdef ACTOR_RUCK
+	CUIStatic*					m_RuckSlotHighlight;
+#endif
+
+    CUIStatic*                  m_KnifeSlotHighlight;
+    CUIStatic*                  m_BinocularSlotHighlight;
 	
 	CUIStatic*					m_DetectorSlotHighlight;
 	CUIStatic*					m_QuickSlotsHighlight[4];

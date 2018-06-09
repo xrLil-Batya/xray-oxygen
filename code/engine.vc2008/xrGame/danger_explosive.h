@@ -5,17 +5,14 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Danger explosive class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "gameobject.h"
 #include "explosive.h"
 
-class CExplosive;
-class CGameObject;
 class CAI_Stalker;
 
-class CDangerExplosive {
+class CDangerExplosive 
+{
 public:
 	const CExplosive	*m_grenade;
 	const CGameObject	*m_game_object;
@@ -23,9 +20,7 @@ public:
 	u32					m_time;
 
 public:
-	IC					CDangerExplosive	(const CExplosive *grenade, const CGameObject *game_object, CAI_Stalker *reactor, u32 time);
-	IC	bool			operator==			(const CExplosive *grenade) const;
+						CDangerExplosive	(const CExplosive *grenade, const CGameObject *game_object, CAI_Stalker *reactor, u32 time);
+	IC	bool			operator==			(const CExplosive *grenade) const { return (m_grenade == grenade); }
 		bool			operator==			(const u16 &id) const;
 };
-
-#include "danger_explosive_inline.h"

@@ -343,6 +343,8 @@ public:
 	CGameObject*			ObjectWeLookingAt			() {return m_pObjectWeLookingAt;}
 	CInventoryOwner*		PersonWeLookingAt			() {return m_pPersonWeLookingAt;}
 	LPCSTR					GetDefaultActionForObject	() {return *m_sDefaultObjAction;}
+	CZoneCampfire*			CapmfireWeLookingAt			() {return m_CapmfireWeLookingAt;}
+
 protected:
 	CUsableScriptObject*	m_pUsableObject;
 	// Person we're looking at
@@ -592,7 +594,7 @@ public:
 
 	virtual void			RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shader &IndShader);
 	virtual void			RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color);
-
+			void			RepackAmmo				();
 	//////////////////////////////////////////////////////////////////////////
 	// Controlled Routines
 	//////////////////////////////////////////////////////////////////////////

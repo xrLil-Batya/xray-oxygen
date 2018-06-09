@@ -1,20 +1,15 @@
 // Author:	Abramcumner
-// Modifer: ForserX
+// Modifer: ForserX, Giperion
 
-#include "xr_pool.h"
 #include "lj_def.h"
 #include "lj_arch.h"
+#include "../../xrCore/xrMemory_C.h"
 #include "../../FrayBuildConfig.hpp"
 
 #define WIN32_LEAN_AND_MEAN
 #include <windows.h>
 
-typedef long (*PNTAVM)(HANDLE handle, void **addr, ULONG zbits, size_t *size, ULONG alloctype, ULONG prot);
-extern PNTAVM ntavm;
-/* Number of top bits of the lower 32 bits of an address that must be zero.
-** Apparently 0 gives us full 64 bit addresses and 1 gives us the lower 2GB.
-*/
-#define NTAVM_ZEROBITS		1
+#include "xr_pool.h"
 
 #define MAX_SIZE_T		(~(size_t)0)
 #define MFAIL			((void *)(MAX_SIZE_T))
@@ -24,6 +19,7 @@ extern PNTAVM ntavm;
 
 #include <oxy\cboolean.h>
 static bool inited = false;
+static DWORD refCounter = 0;
 
 void* g_heap;
 char g_heapMap[CHUNK_COUNT + 1];
@@ -35,14 +31,14 @@ static char buf[100];
 void dump_map(void* ptr, size_t size, char c);
 #endif
 
-void XR_INIT()
+char StaticBuffer[CHUNK_SIZE * CHUNK_COUNT];
+
+BOOL XR_INIT()
 {
 	if (!inited)
 	{
-		g_heap = NULL;
-		size_t size = CHUNK_SIZE * CHUNK_COUNT;
-		long st = ntavm(INVALID_HANDLE_VALUE, &g_heap, NTAVM_ZEROBITS, &size,
-			MEM_RESERVE | MEM_COMMIT, PAGE_READWRITE);
+        g_heap = StaticBuffer;
+        ZeroMemory(g_heap, CHUNK_SIZE * CHUNK_COUNT);
 
 		for (unsigned i = 0; i < CHUNK_COUNT; i++)
 		{
@@ -58,6 +54,19 @@ void XR_INIT()
 #endif
 		inited = true;
 	}
+
+    ++refCounter;
+    return TRUE;
+}
+
+
+void XR_DESTROYPOOL()
+{
+    --refCounter;
+//     if (--refCounter == 0)
+//     {
+//         VirtualFree(g_heap, 0, MEM_RELEASE);
+//     }
 }
 
 void* XR_MMAP(size_t size)

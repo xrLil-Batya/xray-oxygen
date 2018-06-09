@@ -87,26 +87,29 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4530;4100;4714;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>../../../binaries/$(TargetName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
-      <SubSystem>Windows</SubSystem>
+      <MapFileName>
+      </MapFileName>
+      <SubSystem>NotSet</SubSystem>
+      <LargeAddressAware>true</LargeAddressAware>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
-      <LinkTimeCodeGeneration>Default</LinkTimeCodeGeneration>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <BaseAddress>0x34000000</BaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -132,7 +135,7 @@
       <FloatingPointModel>Fast</FloatingPointModel>
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4530;4100;4714;4127;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>
@@ -143,7 +146,6 @@
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>../../../binaries/$(TargetName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
       <OptimizeReferences>true</OptimizeReferences>
@@ -154,6 +156,8 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <BaseAddress>0x34000000</BaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -174,7 +178,7 @@
       <PrecompiledHeader>NotUsing</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
       <WarningLevel>Level3</WarningLevel>
-      <DebugInformationFormat>None</DebugInformationFormat>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
       <DisableSpecificWarnings>4100;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>
@@ -184,7 +188,6 @@
     <Link>
       <OutputFile>$(OutDir)$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <ProgramDatabaseFile>../../../../binaries/$(TargetName).pdb</ProgramDatabaseFile>
       <GenerateMapFile>false</GenerateMapFile>
       <SubSystem>Windows</SubSystem>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
@@ -193,6 +196,8 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalOptions>lj_vm.obj /LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>xrCore.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <BaseAddress>0x34000000</BaseAddress>
+      <FixedBaseAddress>true</FixedBaseAddress>
     </Link>
     <PreBuildEvent>
       <Command>
@@ -302,6 +307,7 @@
     <ClCompile Include="lua_studio\lua_studio.cpp" />
     <ClCompile Include="lua_traceback.cpp" />
     <ClCompile Include="mslotutils.cpp" />
+    <ClCompile Include="VMLua.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\SDK\include\luabind\adopt_policy.hpp" />
@@ -484,6 +490,7 @@
     <ClInclude Include="lua_studio\script_debugger_messages.h" />
     <ClInclude Include="lua_traceback.hpp" />
     <ClInclude Include="mslotutils.hpp" />
+    <ClInclude Include="VMLua.h" />
     <ClInclude Include="xrScripts.h" />
   </ItemGroup>
   <ItemGroup>

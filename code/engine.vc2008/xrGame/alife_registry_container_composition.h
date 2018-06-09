@@ -10,11 +10,9 @@
 
 #include "InfoPortionDefs.h"
 #include "PdaMsg.h"
-#include "encyclopedia_article_defs.h"
 
 #include "character_info_defs.h"
 #include "relation_registry_defs.h"
-
 
 #include "gametaskdefs.h"
 #include "game_news.h"
@@ -24,8 +22,6 @@
 
 #pragma warning(push)
 #pragma warning(disable:4005)
-
-//#include "alife_abstract_registry.h"
 
 template <typename _index_type, typename _data_type>
 class CALifeAbstractRegistry;
@@ -41,18 +37,6 @@ typedef CALifeAbstractRegistry<u16, RELATION_DATA > CRelationRegistry;
 add_to_registry_type_list(CRelationRegistry)
 #define character_relations define_constant(CRelationRegistry) 
 #define registry_type_list save_registry_type_list(CRelationRegistry)
-
-////для актеров, список персонажей с которыми были разговоры
-//typedef CALifeAbstractRegistry<u16, TALK_CONTACT_VECTOR > CKnownContactsRegistry;
-//add_to_registry_type_list(CKnownContactsRegistry)
-//#define known_contacts define_constant(CKnownContactsRegistry) 
-//#define registry_type_list save_registry_type_list(CKnownContactsRegistry)
-//
-////список статей энциклопедии, которые знает актер
-//typedef CALifeAbstractRegistry<u16, ARTICLE_VECTOR > CEncyclopediaRegistry;
-//add_to_registry_type_list(CEncyclopediaRegistry)
-//#define encyclopedia_articles define_constant(CEncyclopediaRegistry) 
-//#define registry_type_list save_registry_type_list(CEncyclopediaRegistry)
 
 //список новостей полученных актером, состоит из новостей симуляции и сюжетных (скриптованых) новостей 
 typedef CALifeAbstractRegistry<u16, GAME_NEWS_VECTOR > CGameNewsRegistry;

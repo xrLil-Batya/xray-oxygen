@@ -19,6 +19,7 @@
 #include "../../../visual_memory_manager.h"
 #include "ActorEffector.h"
 #include "../../../ActorCondition.h"
+#include "../../../../FrayBuildConfig.hpp"
 
 void SetActorVisibility(u16 who, float value);
 
@@ -386,8 +387,9 @@ void CPoltergeist::Die(CObject* who)
 
 	inherited::Die				(who);
 	Energy::disable				();
-
+#ifndef POLTER_SHOW_DEAD
 	ability()->on_die			();
+#endif
 }
 
 void CPoltergeist::Hit(SHit* pHDS)

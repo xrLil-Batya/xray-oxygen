@@ -257,14 +257,30 @@ void	CUICustomMap::SendMessage			(CUIWindow* pWnd, s16 msg, void* pData)
 	CUIWndCallback::OnEvent(pWnd, msg, pData);
 }
 
-bool CUIGlobalMap::OnMouseAction	(float x, float y, EUIMessages mouse_action)
+bool CUIGlobalMap::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
-	if(inherited::OnMouseAction(x,y,mouse_action)) return true;
-	if(mouse_action==WINDOW_MOUSE_MOVE && (FALSE==pInput->iGetAsyncBtnState(0)))
+	if (inherited::OnMouseAction(x, y, mouse_action)) return true;
+
+    if (mouse_action == WINDOW_LBUTTON_DB_CLICK)
+    {
+        Fvector RealPosition;
+
+        if (MapWnd()->ConvertCursorPosToMap(&RealPosition, this))
+        {
+            CMapLocation* _mapLoc = MapWnd()->UnderSpot(RealPosition, this);
+            if (_mapLoc == nullptr)
+            {
+                MapWnd()->CreateSpotWindow(RealPosition, MapName());
+                return true;
+            }
+        }
+    }
+
+	if (mouse_action == WINDOW_MOUSE_MOVE && (FALSE == pInput->iGetAsyncBtnState(0)))
 	{
-		if( MapWnd() )
+		if (MapWnd())
 		{
-			MapWnd()->Hint	(MapName());
+			MapWnd()->Hint(MapName());
 			return			true;
 		}
 	}
@@ -513,6 +529,21 @@ bool CUILevelMap::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	if (inherited::OnMouseAction(x,y,mouse_action))	return true;
 	if (MapWnd()->GlobalMap()->Locked())		return true;
 
+	if (mouse_action == WINDOW_LBUTTON_DB_CLICK)
+	{
+		Fvector RealPosition;
+
+		if (MapWnd()->ConvertCursorPosToMap(&RealPosition, this))
+		{
+			CMapLocation* _mapLoc = MapWnd()->UnderSpot(RealPosition, this);
+
+			if (_mapLoc == NULL)
+			{
+				MapWnd()->CreateSpotWindow(RealPosition, MapName());
+				return true;
+			}
+		}
+	}
 	if(mouse_action==WINDOW_MOUSE_MOVE && (FALSE==pInput->iGetAsyncBtnState(0)) )
 	{
 		if( MapWnd() )
@@ -528,21 +559,30 @@ void CUILevelMap::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	inherited::SendMessage(pWnd, msg, pData);
 
-	if(msg==MAP_SHOW_HINT)
+	switch (msg)
 	{
-		CMapSpot* sp			= smart_cast<CMapSpot*>(pWnd);
-		VERIFY					(sp);
-		if ( sp )
+		case MAP_SHOW_HINT:
 		{
-			MapWnd()->ShowHintSpot( sp );
-		}
-	}else
-	if(msg==MAP_HIDE_HINT)
-	{
-		MapWnd()->HideHint	(pWnd);
-	}else
-	if(msg==MAP_SELECT_SPOT)
-		MapWnd()->SpotSelected	(pWnd);
+			CMapSpot* sp = smart_cast<CMapSpot*>(pWnd);
+			if (sp) 
+				MapWnd()->ShowHintSpot(sp);
+		} break;
+
+		case MAP_HIDE_HINT:		
+			MapWnd()->HideHint(pWnd); 
+			break;
+
+		case MAP_SELECT_SPOT:	
+			MapWnd()->SpotSelected(pWnd); 
+			break;
+
+		case MAP_SELECT_SPOT2:	
+			MapWnd()->ActivatePropertiesBox(pWnd); 
+			break;
+
+		default: 
+			break;
+	}
 }
 
 void CUILevelMap::OnFocusLost()

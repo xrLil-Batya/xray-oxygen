@@ -4,7 +4,6 @@
 #include "UIMessagesWindow.h"
 #include "../UIZoneMap.h"
 
-
 #include <dinput.h>
 #include "../actor.h"
 #include "../ActorCondition.h"
@@ -25,7 +24,7 @@
 #include "../level.h"
 #include "../seniority_hierarchy_holder.h"
 
-#include "../date_time.h"
+#include "../xrEngine/date_time.h"
 #include "../xrServerEntities/xrServer_Objects_ALife_Monsters.h"
 #include "../../xrEngine/LightAnimLibrary.h"
 
@@ -325,6 +324,15 @@ void CUIMainIngameWnd::RenderQuickInfos()
 	static CGameObject *pObject			= NULL;
 	LPCSTR actor_action					= pActor->GetDefaultActionForObject();
 	UIStaticQuickHelp->Show				(NULL!=actor_action);
+
+	// подсказка для костра
+	static CZoneCampfire* pZone = nullptr;
+	if (pZone != pActor->CapmfireWeLookingAt())
+	{
+		UIStaticQuickHelp->SetTextST(actor_action);
+		UIStaticQuickHelp->ResetColorAnimation();
+		pZone = pActor->CapmfireWeLookingAt();
+	}
 
 	if(NULL!=actor_action)
 	{

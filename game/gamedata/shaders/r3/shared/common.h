@@ -19,11 +19,6 @@ cbuffer	dynamic_transforms
 	uniform	float4 			dt_params;	//	Detail params
 }
 
-cbuffer	shader_params
-{
-	float	m_AlphaRef;
-}
-
 cbuffer	static_globals
 {
 	uniform float3x4	m_V;

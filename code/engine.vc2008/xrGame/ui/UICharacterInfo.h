@@ -60,8 +60,7 @@ public:
 
 	void				InitCharacter			(u16 id);
 	void				ClearInfo				();
-	void				InitCharacterMP			(LPCSTR player_name, LPCSTR player_icon );
-
+	void				SetActorIcon			();
 	virtual void		Update					();
 
 	u16					OwnerID					()	const	{	return m_ownerID;	}
@@ -74,4 +73,5 @@ public:
 
 	static	bool		get_actor_community		(shared_str* our, shared_str* enemy);
 	static	bool		ignore_community		(shared_str const& check_community);
+	void				InitMonsterCharacter	(shared_str monster_tex_name);
 };

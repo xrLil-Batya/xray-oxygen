@@ -61,8 +61,8 @@ void anim_bone_fix::release()
 bool find_in_parents(const u16 bone_to_find, const u16 from_bone, IKinematics &ca)
 {
 	const u16 root = ca.LL_GetBoneRoot();
-	u16 bi = from_bone;
-	for (; bi != root && bi != BI_NONE; )
+	
+	for (u16 bi = from_bone; bi != root && bi != BI_NONE; )
 	{
 		const CBoneData &bd = ca.LL_GetData(bi);
 		if (bi == bone_to_find)

@@ -99,13 +99,15 @@ void CUIActorMenu::Construct()
 	m_OutfitSlotHighlight		= UIHelper::CreateStatic(uiXml, "outfit_slot_highlight", this);
 	m_OutfitSlotHighlight		->Show(false);
 	
-	#ifdef NEW_SLOTS
-	    m_KnifeSlotHighlight        = UIHelper::CreateStatic(uiXml, "knife_slot_highlight", this);
-        m_KnifeSlotHighlight        ->Show(false);
-	    m_BinocularSlotHighlight    = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this); //--#SM+#--
-        m_BinocularSlotHighlight    ->Show(false);
-	#endif
+    m_KnifeSlotHighlight        = UIHelper::CreateStatic(uiXml, "knife_slot_highlight", this);
+    m_KnifeSlotHighlight        ->Show(false);
+    m_BinocularSlotHighlight    = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this);
+    m_BinocularSlotHighlight    ->Show(false);
 
+#ifdef ACTOR_RUCK
+    m_RuckSlotHighlight			= UIHelper::CreateStatic(uiXml, "ruck_slot_highlight", this);
+    m_RuckSlotHighlight			->Show(false);
+#endif
 	m_DetectorSlotHighlight		= UIHelper::CreateStatic(uiXml, "detector_slot_highlight", this);
 	m_DetectorSlotHighlight		->Show(false);
 	m_QuickSlotsHighlight[0]	= UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
@@ -114,8 +116,24 @@ void CUIActorMenu::Construct()
 	m_ArtefactSlotsHighlight[0]	->Show(false);
 
 	Fvector2 pos;
-	pos								= m_QuickSlotsHighlight[0]->GetWndPos();
-	float dx						= uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dx", 24.0f);
+	pos							= m_QuickSlotsHighlight[0]->GetWndPos();
+	float dx					= uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dx", 24.0f);
+
+#ifdef VERTICAL_BELT
+	float dyh = uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dy", 24.0f);
+
+	m_QuickSlotsHighlight[1] = UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
+	m_QuickSlotsHighlight[1]->SetWndPos(Fvector2().set(pos.x + dx, pos.y));
+	m_QuickSlotsHighlight[1]->Show(false);
+
+	m_QuickSlotsHighlight[2] = UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
+	m_QuickSlotsHighlight[2]->SetWndPos(Fvector2().set(pos.x, pos.y + dyh));
+	m_QuickSlotsHighlight[2]->Show(false);
+
+	m_QuickSlotsHighlight[3] = UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
+	m_QuickSlotsHighlight[3]->SetWndPos(Fvector2().set(pos.x + dx, pos.y + dyh));
+	m_QuickSlotsHighlight[3]->Show(false);
+#else
 	for(u8 i=1;i<4;i++)
 	{
 		pos.x						+= dx;
@@ -123,11 +141,18 @@ void CUIActorMenu::Construct()
 		m_QuickSlotsHighlight[i]	->SetWndPos(pos);
 		m_QuickSlotsHighlight[i]	->Show(false);
 	}
+#endif
 	pos								= m_ArtefactSlotsHighlight[0]->GetWndPos();
 	dx								= uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dx", 24.0f);
+#ifdef VERTICAL_BELT
+	float dy						= uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dy", 0.0f);
+#endif
 	for(u8 i=1;i<e_af_count;i++)
 	{
 		pos.x						+= dx;
+#ifdef VERTICAL_BELT
+		pos.y += dy;
+#endif
 		m_ArtefactSlotsHighlight[i]	= UIHelper::CreateStatic(uiXml, "artefact_slot_highlight", this);
 		m_ArtefactSlotsHighlight[i]	->SetWndPos(pos);
 		m_ArtefactSlotsHighlight[i]	->Show(false);
@@ -140,11 +165,13 @@ void CUIActorMenu::Construct()
 	m_pInventoryDetectorList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_detector", this);
 	m_pInventoryPistolList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
 	m_pInventoryAutomaticList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_automatic", this);
-	
-	#ifdef NEW_SLOTS
-	    m_pInventoryKnifeList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_knife", this);
-	    m_pInventoryBinocularList   = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
-	#endif
+
+#ifdef ACTOR_RUCK
+	m_pInventoryRuckList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
+#endif
+
+    m_pInventoryKnifeList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_knife", this);
+    m_pInventoryBinocularList   = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
 
 	m_pTradeActorBagList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade_bag", this);
 	m_pTradeActorList			= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_actor_trade", this);
@@ -161,9 +188,15 @@ void CUIActorMenu::Construct()
 	m_belt_list_over[0]			= UIHelper::CreateStatic(uiXml, "belt_list_over", this);
 	pos							= m_belt_list_over[0]->GetWndPos();
 	dx							= uiXml.ReadAttribFlt("belt_list_over", 0, "dx", 10.0f);
+#ifdef VERTICAL_BELT
+	dy = uiXml.ReadAttribFlt("belt_list_over", 0, "dy", 0.0f);
+#endif
 	for ( u8 i = 1; i < e_af_count; ++i )
 	{
-		pos.x					+= dx;
+		pos.x += dx;
+#ifdef VERTICAL_BELT
+		pos.y += dy;
+#endif
 		m_belt_list_over[i]		= UIHelper::CreateStatic(uiXml, "belt_list_over", this);
 		m_belt_list_over[i]->SetWndPos( pos );
 	}
@@ -243,11 +276,13 @@ void CUIActorMenu::Construct()
 	BindDragDropListEvents				(m_pInventoryHelmetList);	
 	BindDragDropListEvents				(m_pInventoryDetectorList);
 	
-	#ifdef NEW_SLOTS
-	    BindDragDropListEvents              (m_pInventoryKnifeList);
-	    BindDragDropListEvents              (m_pInventoryBinocularList);
-	#endif
-	
+    BindDragDropListEvents              (m_pInventoryKnifeList);
+    BindDragDropListEvents              (m_pInventoryBinocularList);
+
+#ifdef ACTOR_RUCK
+	BindDragDropListEvents				(m_pInventoryRuckList);
+#endif
+
 	BindDragDropListEvents				(m_pInventoryBagList);
 	BindDragDropListEvents				(m_pTradeActorBagList);
 	BindDragDropListEvents				(m_pTradeActorList);

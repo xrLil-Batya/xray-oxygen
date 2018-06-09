@@ -35,7 +35,7 @@ void CRenderDevice::initialize_editor	()
 
 PROTECT_API void CRenderDevice::Initialize			()
 {
-	Log("Initializing Engine...");
+	Log							("Initializing Engine...");
 	TimerGlobal.Start			();
 	TimerMM.Start				();
 
@@ -74,7 +74,7 @@ PROTECT_API void CRenderDevice::Initialize			()
         }
 
         // Create the render window
-		m_hWnd = CreateWindowEx(wndStyle,
+		m_hWnd = CreateWindowExA(wndStyle,
 								wndclass, "X-Ray Oxygen", m_dwWindowStyle,
                                /*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
                                (rc.right-rc.left), (rc.bottom-rc.top), 0L,
@@ -85,14 +85,5 @@ PROTECT_API void CRenderDevice::Initialize			()
     m_dwWindowStyle = GetWindowLong( m_hWnd, GWL_STYLE );
     GetWindowRect	( m_hWnd, &m_rcWindowBounds );
     GetClientRect	( m_hWnd, &m_rcWindowClient );
-
-	/*
-	if (strstr(lpCmdLine,"-gpu_sw")!=NULL)		HW.Caps.bForceGPU_SW		= TRUE;
-	else										HW.Caps.bForceGPU_SW		= FALSE;
-	if (strstr(lpCmdLine,"-gpu_nopure")!=NULL)	HW.Caps.bForceGPU_NonPure	= TRUE;
-	else										HW.Caps.bForceGPU_NonPure	= FALSE;
-	if (strstr(lpCmdLine,"-gpu_ref")!=NULL)		HW.Caps.bForceGPU_REF		= TRUE;
-	else										HW.Caps.bForceGPU_REF		= FALSE;
-	*/
 }
 

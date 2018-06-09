@@ -21,7 +21,6 @@ void xrMemory::_initialize()
 void xrMemory::_destroy()
 {
 	xr_delete(g_pSharedMemoryContainer);
-	xr_delete(g_pStringContainer);
 
 	mem_initialized = false;
 }
@@ -38,8 +37,7 @@ void xrMemory::mem_compact()
 
 	HeapCompact(GetProcessHeap(), 0);
 
-	if (g_pStringContainer)
-		g_pStringContainer->clean();
+	g_pStringContainer.clean();
 
 	if (g_pSharedMemoryContainer)
 		g_pSharedMemoryContainer->clean();
@@ -66,4 +64,22 @@ XRCORE_API bool is_stack_ptr(void* _ptr)
 	void* ptr_local = &local_value;
 	ptrdiff_t difference = (ptrdiff_t)_abs(s64(ptrdiff_t(ptr_local) - ptrdiff_t(ptr_refsound)));
 	return (difference < (512 * 1024));
+}
+
+extern "C"
+{
+    XRCORE_API void*	xr_malloc_C(size_t size)
+    {
+        return Memory.mem_alloc(size);
+    }
+
+    XRCORE_API void	xr_free_C(void* ptr)
+    {
+        Memory.mem_free(ptr);
+    }
+
+    XRCORE_API void*	xr_realloc_C(void* ptr, size_t size)
+    {
+        return Memory.mem_realloc(ptr, size);
+    }
 }

@@ -30,6 +30,29 @@ CHW::~CHW()
 {
 }
 
+void CHW::ResizeWindowProc(WORD h, WORD w)
+{
+#if 0
+	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
+	///////////////////////////////////////
+	if (bWindowed)
+	{
+		DXGI_SWAP_CHAIN_DESC &cd = m_ChainDesc;
+		DXGI_MODE_DESC	&desc = m_ChainDesc.BufferDesc;
+		HRESULT R;
+		///////////////////////////////////////
+		memset(&cd, 0, sizeof(DXGI_SWAP_CHAIN_DESC));	// sc to NULL
+		memset(&desc, 0, sizeof(DXGI_MODE_DESC));
+		///////////////////////////////////////
+		desc.Width = w;
+		desc.Height = h;
+		desc.RefreshRate.Numerator = 60;
+		desc.RefreshRate.Denominator = 1;
+		m_pSwapChain->SetFullscreenState(FALSE, 0);
+		CHK_DX(m_pSwapChain->ResizeTarget(&desc));
+	}
+#endif
+}
 void CHW::Reset		(HWND hwnd)
 {
 #ifdef DEBUG
@@ -38,8 +61,7 @@ void CHW::Reset		(HWND hwnd)
 	_RELEASE			(pBaseZB);
 	_RELEASE			(pBaseRT);
 
-	bool	bWindowed		= TRUE;
-	bWindowed		= !psDeviceFlags.is	(rsFullscreen);
+	bool bWindowed = strstr(Core.Params, "-editor") || !psDeviceFlags.is(rsFullscreen);
 
 	selectResolution		(DevPP.BackBufferWidth, DevPP.BackBufferHeight, bWindowed);
 	// Windoze
@@ -50,13 +72,14 @@ void CHW::Reset		(HWND hwnd)
 	if(!bWindowed)		DevPP.FullScreen_RefreshRateInHz	= selectRefresh	(DevPP.BackBufferWidth,DevPP.BackBufferHeight,Caps.fTarget);
 	else				DevPP.FullScreen_RefreshRateInHz	= D3DPRESENT_RATE_DEFAULT;
 
-	while(TRUE)
+	while(true)
 	{
 		HRESULT _hr							= HW.pDevice->Reset	(&DevPP);
 		if (SUCCEEDED(_hr))					break;
 		Msg		("! ERROR: [%dx%d]: %s",DevPP.BackBufferWidth,DevPP.BackBufferHeight,Debug.error2string(_hr));
 		Sleep	(100);
 	}
+
 	R_CHK				(pDevice->GetRenderTarget			(0,&pBaseRT));
 	R_CHK				(pDevice->GetDepthStencilSurface	(&pBaseZB));
 #ifdef DEBUG
@@ -162,9 +185,7 @@ void		CHW::CreateDevice		(HWND m_hWnd, bool move_window)
 	m_move_window			= move_window;
 	CreateD3D				();
 
-	BOOL  bWindowed			= TRUE;
-	
-	bWindowed			    = !psDeviceFlags.is(rsFullscreen);
+	BOOL  bWindowed			= !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
 	DevAdapter				= D3DADAPTER_DEFAULT;
 	DevT					= Caps.bForceGPU_REF?D3DDEVTYPE_REF:D3DDEVTYPE_HAL;
@@ -379,7 +400,8 @@ u32 CHW::selectGPU ()
 
 u32 CHW::selectRefresh(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt)
 {
-	if (psDeviceFlags.is(rsRefresh60hz))	return D3DPRESENT_RATE_DEFAULT;
+	if (psDeviceFlags.is(rsRefresh60hz) || psDeviceFlags.is(rsRefresh120hz))
+		return D3DPRESENT_RATE_DEFAULT;
 	else
 	{
 		u32 selected	= D3DPRESENT_RATE_DEFAULT;

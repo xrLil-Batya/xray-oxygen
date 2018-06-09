@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
-
+#include "r2_puddles.h"
 #include "../xrRender/dxEnvironmentRender.h"
 
 #define STENCIL_CULL 0
@@ -277,29 +277,27 @@ void	CRenderTarget::phase_combine	()
         RCache.set_Stencil(FALSE);
     }   
 
+    // PP enabled ?
+    //	Render to RT texture to be able to copy RT even in windowed mode.
+    //BOOL	PP_Complex = u_need_PP() | (BOOL)RImplementation.m_bMakeAsyncSS;
+    //#GIPERION: WTF IS HOLGER HACK?!!!
+    //HOLGER HACK
+    BOOL	PP_Complex = TRUE;
+
 	// RAIN DROPS AND OTHER
-	if (_menu_pp)
+	if (!_menu_pp)
 	{
+        if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
+            phase_ogse_sunshafts();
+        else if (RImplementation.o.sunshaft_mrmnwar && ps_r_sun_shafts > 0)
+            phase_SunShafts();
 
+        phase_rain_drops();
+
+		if (Puddles->m_bLoaded)
+			phase_puddles();
 	}
-	else
-	{
-		if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_SCREEN_SPACE)
-			phase_ogse_sunshafts();
-		else if (ps_r_sun_shafts > 0 && ps_sunshafts_mode == R2SS_MANOWAR_SSSS)
-			phase_SunShafts();
 
-		phase_rain_drops();
-	}
-
-   
-	// PP enabled ?
-	//	Render to RT texture to be able to copy RT even in windowed mode.
-	BOOL	PP_Complex		= u_need_PP	() | (BOOL)RImplementation.m_bMakeAsyncSS;
-	if (_menu_pp)			PP_Complex	= FALSE;
-
-   // HOLGER - HACK
-   PP_Complex = TRUE;
 
 	// Combine everything + perform AA
    if( RImplementation.o.dx10_msaa )

@@ -147,10 +147,10 @@ void xrLaunch::add_paramsToList()
 		szParamsSettings					= qszListSettings.toLocal8Bit();
 		if (szParamsSettings.empty())
 		{
-			throw new EcxeptionOpSet		("std::string can't be nullptr",
-											OpSet::STRING_NULLPTR);
+			throw new EcxeptionOpSet			("std::string can't be nullptr",
+												OpSet::STRING_NULLPTR);
 		}
-		statusBar()->showMessage		(tr("Added to settings buffer"), 2000);
+		statusBar()->showMessage			(tr("Added to settings buffer"), 2000);
 	}
 	catch							(const EcxeptionOpSet& ex)
 	{
@@ -158,10 +158,10 @@ void xrLaunch::add_paramsToList()
 		switch (ex.opset())
 		{
 			case OpSet::STRING_NULLPTR:
-				lcOpset				= "string_nullptr";
+				lcOpset								= "string_nullptr";
 				break;
 			default:
-				lcOpset = "default";
+				lcOpset								= "default";
 				break;
 		}
 			statusBar()->showMessage		(tr(ex.what(), lcOpset));
@@ -204,8 +204,8 @@ void xrLaunch::add_stringToList()
 		szParamsString					= qszString.toLocal8Bit();	//#VERTVER: Don't use here toLatin1(). Crash on Release
 		if (szParamsString.empty())
 		{
-			throw new EcxeptionOpSet	("std::string can't be nullptr",
-										OpSet::STRING_NULLPTR);
+			throw new EcxeptionOpSet		("std::string can't be nullptr",
+											OpSet::STRING_NULLPTR);
 		}
 		statusBar()->showMessage		(tr("Added to string buffer"), 2000);
 	}
@@ -215,10 +215,10 @@ void xrLaunch::add_stringToList()
 		switch (ex.opset())
 		{
 			case OpSet::STRING_NULLPTR:
-				lcOpset				= "string_nullptr";
+				lcOpset							= "string_nullptr";
 				break;
 			default:
-				lcOpset				= "default";
+				lcOpset							= "default";
 				break;
 		}
 		statusBar()->showMessage		(tr(ex.what(), lcOpset));
@@ -285,12 +285,10 @@ void xrLaunch::init_xrCore()
 	{
 		if (!CPUID::SSE3()) 
 		{
-			throw new EcxeptionOpSet	("Your CPU doesn't support SSE3 instructions",
-										OpSet::SSE3);
+			throw new EcxeptionOpSet		("Your CPU doesn't support SSE3 instructions",
+											OpSet::SSE3);
 		}
 		// Init X-ray core
-
-		
 		statusBar()->showMessage		(tr("Loading xrCore..."));
 		Msg								("xrDev: Loading xrCore...");
 		Debug._initialize				(false);
@@ -302,21 +300,21 @@ void xrLaunch::init_xrCore()
 	{
 		switch (ex.opset())
 		{
-		case OpSet::SSE3:
-			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
-			QMessageBox::critical			(this, INIT_ERROR, ex.what());
-			break;
-		default:
-			statusBar()->showMessage		(tr(INIT_ERROR, ex.what()));
-			QMessageBox::critical			(this, INIT_ERROR, ex.what());
-			break;
+			case OpSet::SSE3:
+				statusBar()->showMessage			(tr(INIT_ERROR, ex.what()));
+				QMessageBox::critical				(this, INIT_ERROR, ex.what());
+				break;
+			default:
+				statusBar()->showMessage			(tr(INIT_ERROR, ex.what()));
+				QMessageBox::critical				(this, INIT_ERROR, ex.what());
+				break;
 		}
 	}
 	catch (...)
 	{
 		Msg								("xrDev: Engine init error (Unknown Error)");
-		statusBar()->showMessage		(tr(INIT_ERROR, "Engine init error (Unknown Error)"));
-		QMessageBox::critical			(this, INIT_ERROR, "Engine init error (Unknown Error)");
+		statusBar()->showMessage		(tr(	INIT_ERROR, "Engine init error (Unknown Error)"));
+		QMessageBox::critical			(this,	INIT_ERROR, "Engine init error (Unknown Error)");
 	}
 }
 
@@ -454,7 +452,7 @@ open the new window with xrEngine params (doesn't works)
 void xrLaunch::on_actionParametres_triggered()
 {
 	xrDialogParam *dlg				= new xrDialogParam;
-	dlg->show();
+	dlg->show 						();
 }
 
 
@@ -466,7 +464,7 @@ void xrLaunch::on_actionVertver_Github_triggered()
 	AboutLauncher *dlg				= new AboutLauncher;
 	dlg->setWindowFlags				(Qt::WindowStaysOnTopHint);
 	dlg->setWindowTitle				("About xrDev");
-	dlg->show();
+	dlg->show 						();
 	Msg								("xrDev: aboutlauncher loaded");
 }
 

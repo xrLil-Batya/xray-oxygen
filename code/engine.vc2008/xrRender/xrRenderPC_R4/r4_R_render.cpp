@@ -12,7 +12,10 @@ IC	bool	pred_sp_sort	(ISpatial*	_1, ISpatial* _2)
 	float	d2		= _2->spatial.sphere.P.distance_to_sqr	(Device.vCameraPosition);
 	return	d1<d2	;
 }
-
+//Swartz27 to all: Switched from Deffered Lighting
+//to deffered shading for two reasons:
+//1) It's faster (proof is in the pudding)
+//2) It makes PBR easier to add
 void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 {
 	PIX_EVENT(render_main);
@@ -231,36 +234,8 @@ void CRender::Render		()
 	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	View										= 0;
 
-	//******* Z-prefill calc - DEFERRER RENDERER
-	if (ps_r2_ls_flags.test(R2FLAG_ZFILL))		
-	{
-		PIX_EVENT(DEFER_Z_FILL);
-		Device.Statistic->RenderCALC.Begin			();
-		float		z_distance	= ps_r2_zfill		;
-		Fmatrix		m_zfill, m_project				;
-		m_project.build_projection	(
-			deg2rad(Device.fFOV), 
-			Device.fASPECT, VIEWPORT_NEAR, 
-			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
-		m_zfill.mul	(m_project,Device.mView);
-		r_pmask										(true,false);	// enable priority "0"
-		set_Recorder								(NULL)		;
-		phase										= PHASE_SMAP;
-		render_main									(m_zfill,false)	;
-		r_pmask										(true,false);	// disable priority "1"
-		Device.Statistic->RenderCALC.End				( )			;
-
-		// flush
-		Target->phase_scene_prepare					();
-		RCache.set_ColorWriteEnable					(FALSE);
-		r_dsgraph_render_graph						(0);
-		RCache.set_ColorWriteEnable					( );
-	} 
-	else 
-	{
-		Target->phase_scene_prepare					();
-	}
-
+	Target->phase_scene_prepare					();
+    RCache.set_ZB( RImplementation.Target->rt_Depth->pZRT ); //depth prepass
 	//*******
 	// Sync point
 	Device.Statistic->RenderDUMP_Wait_S.Begin	();
@@ -297,8 +272,6 @@ void CRender::Render		()
 	BOOL	split_the_scene_to_minimize_wait		= FALSE;
 	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
 
-	//******* Main render :: PART-0	-- first
-	if (!split_the_scene_to_minimize_wait)
 	{
 		PIX_EVENT(DEFER_PART0_NO_SPLIT);
 
@@ -310,15 +283,6 @@ void CRender::Render		()
 		if(Details)	Details->Render				();
 		Target->phase_scene_end					();
 	} 
-	else 
-	{
-		PIX_EVENT(DEFER_PART0_SPLIT);
-
-		// level, SPLIT
-		Target->phase_scene_begin				();
-		r_dsgraph_render_graph					(0);
-		Target->disable_aniso					();
-	}
 
 	//******* Occlusion testing of volume-limited light-sources
 	Target->phase_occq							();
@@ -366,17 +330,6 @@ void CRender::Render		()
 	LP_normal.sort							();
 	LP_pending.sort							();
 
-   //******* Main render :: PART-1 (second)
-	if (split_the_scene_to_minimize_wait)	
-	{
-		PIX_EVENT(DEFER_PART1_SPLIT);
-		// level
-		Target->phase_scene_begin				();
-		r_dsgraph_render_hud					();
-		r_dsgraph_render_lods					(true,true);
-		if(Details)	Details->Render				();
-		Target->phase_scene_end					();
-	}
 
 	if (g_hud && g_hud->RenderActiveItemUIQuery())
 	{
@@ -409,19 +362,19 @@ void CRender::Render		()
 		Lights_LastFrame.clear	();
 	}
 
-   // full screen pass to mark msaa-edge pixels in highest stencil bit
-   if( RImplementation.o.dx10_msaa )
-   {
-	   PIX_EVENT( MARK_MSAA_EDGES );
-      Target->mark_msaa_edges();
-   }
+    // full screen pass to mark msaa-edge pixels in highest stencil bit
+    if (RImplementation.o.dx10_msaa)
+    {
+        PIX_EVENT(MARK_MSAA_EDGES);
+        Target->mark_msaa_edges();
+    }
 
-	//	TODO: DX10: Implement DX10 rain.
-	if (ps_r2_ls_flags.test(R3FLAG_DYN_WET_SURF))
-	{
-		PIX_EVENT(DEFER_RAIN);
-		render_rain();
-	}
+    //	TODO: DX10: Implement DX10 rain.
+    if (ps_r2_ls_flags.test(R3FLAG_DYN_WET_SURF))
+    {
+        PIX_EVENT(DEFER_RAIN);
+        render_rain();
+    }
 
 	// Directional light - fucking sun
 	if (bSUN)	
@@ -455,22 +408,15 @@ void CRender::Render		()
 		RCache.set_CullMode					(CULL_CCW);
 		RCache.set_ColorWriteEnable			();
 		RImplementation.r_dsgraph_render_emissive();
-	}
 
-	// Lighting, non dependant on OCCQ
-	{
-		PIX_EVENT(DEFER_LIGHT_NO_OCCQ);
-		Target->phase_accumulator				();
+		PIX_EVENT(DEFER_LIGHT_NO_OCCQ);        
 		HOM.Disable								();
-		render_lights							(LP_normal);
-	}
-
-	// Lighting, dependant on OCCQ
-	{
+		render_lights							(LP_normal);  
+        
 		PIX_EVENT(DEFER_LIGHT_OCCQ);
 		render_lights							(LP_pending);
 	}
-
+    
 	// Postprocess
 	{
 		PIX_EVENT(DEFER_LIGHT_COMBINE);

@@ -31,18 +31,15 @@ CSoundPlayer::~CSoundPlayer			()
 	clear							();
 }
 
-void CSoundPlayer::clear			()
+void CSoundPlayer::clear()
 {
-	m_sounds.clear					();
-	
-	xr_vector<CSoundSingle>::iterator	I = m_playing_sounds.begin();
-	xr_vector<CSoundSingle>::iterator	E = m_playing_sounds.end();
-	for ( ; I != E; ++I)
-		(*I).destroy				();
+	m_sounds.clear();
 
-	m_playing_sounds.clear			();
+	for (CSoundSingle &it : m_playing_sounds)
+		it.destroy();
 
-	m_sound_mask					= 0;
+	m_playing_sounds.clear();
+	m_sound_mask = 0;
 }
 
 void CSoundPlayer::reinit			()
@@ -172,10 +169,9 @@ void CSoundPlayer::play				(u32 internal_type, u32 max_start_time, u32 min_start
 	SOUND_COLLECTIONS::iterator	I = m_sounds.find(internal_type);
 	VERIFY						(m_sounds.end() != I);
 	CSoundCollectionParamsFull	&sound = (*I).second.first;
-	if ((*I).second.second->m_sounds.empty()) {
-#ifdef DEBUG
-		Msg						("- There are no sounds in sound collection \"%s\" with internal type %d (sound_script = %d)",*sound.m_sound_prefix,internal_type,StalkerSpace::eStalkerSoundScript);
-#endif
+
+	if ((*I).second.second->m_sounds.empty()) 
+	{
 		return;
 	}
 
@@ -187,21 +183,7 @@ void CSoundPlayer::play				(u32 internal_type, u32 max_start_time, u32 min_start
 	R_ASSERT					  (sound_single.m_bone_id != BI_NONE);
 
 	sound_single.m_sound		= xr_new<ref_sound>();
-	/**
-	sound_single.m_sound->clone	(
-		*(*I).second.second->m_sounds[
-			id == u32(-1)
-			?
-			(*I).second.second->random(
-				(*I).second.second->m_sounds.size()
-			)
-			:
-			id
-		],
-		st_Effect,
-		sg_SourceType
-	);
-	/**/
+
 	sound_single.m_sound->clone	(
 		(*I).second.second->random(id),
 		st_Effect,
@@ -265,10 +247,6 @@ CSoundPlayer::CSoundCollection::CSoundCollection	(const CSoundCollectionParams &
 			}
 		}
 	}
-#ifdef DEBUG
-	if (m_sounds.empty())
-		Msg								("- There are no sounds with prefix %s",*params.m_sound_prefix);
-#endif
 }
 
 CSoundPlayer::CSoundCollection::~CSoundCollection	()

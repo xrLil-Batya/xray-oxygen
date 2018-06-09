@@ -23,41 +23,43 @@ CScriptIniFile *get_game_ini()
 }
 #endif // XRGAME_EXPORTS
 
-bool r_line(CScriptIniFile *self, LPCSTR S, int L,	luabind::internal_string &N, luabind::internal_string &V)
+bool r_line(CScriptIniFile *self, const char* S, int L, luabind::internal_string &N, luabind::internal_string &V)
 {
-	THROW3			(self->section_exist(S),"Cannot find section",S);
-	THROW2			((int)self->line_count(S) > L,"Invalid line number");
-	
-	N				= "";
-	V				= "";
-	
-	LPCSTR			n,v;
-	bool			result = !!self->r_line(S,L,&n,&v);
-	if (!result)
-		return		(false);
+	THROW3(self->section_exist(S), "Cannot find section", S);
+	THROW2((int)self->line_count(S) > L, "Invalid line number");
 
-	N				= n;
-	if (v)
-		V			= v;
-	return			(true);
+	N = "";
+	V = "";
+
+	const char* n, *v;
+	bool result = !!self->r_line(S, L, &n, &v);
+	if (!result)
+		return (false);
+
+	N = n;
+	if (v) V = v;
+
+	return (true);
 }
 
 #pragma warning(push)
 #pragma warning(disable:4238)
-CScriptIniFile *create_ini_file	(LPCSTR ini_string)
+CScriptIniFile *create_ini_file	(const char* ini_string)
 {
-	return			(
-		(CScriptIniFile*)
-		xr_new<CInifile>(
-			&IReader			(
-				(void*)ini_string,
-				xr_strlen(ini_string)
-			),
-			FS.get_path("$game_config$")->m_Path
-		)
-	);
+	return (CScriptIniFile*) new CInifile(&IReader((void*)ini_string, xr_strlen(ini_string)), FS.get_path("$game_config$")->m_Path);
 }
 #pragma warning(pop)
+
+void iterate_sections(CScriptIniFile *pself, luabind::functor<void> functor)
+{
+	if (functor.is_valid())
+	{
+		std::for_each(pself->sections().begin(), pself->sections().end(), [&](CInifile::Sect* section)
+		{
+			functor(pself, section->Name.c_str());
+		});
+	}
+}
 
 #pragma optimize("s",on)
 void CScriptIniFile::script_register(lua_State *L)
@@ -65,7 +67,7 @@ void CScriptIniFile::script_register(lua_State *L)
 	module(L)
 	[
 		class_<CScriptIniFile>("ini_file")
-			.def(					constructor<LPCSTR>())
+			.def(					constructor<const char*>())
 			.def("section_exist",	&CScriptIniFile::section_exist	)
 			.def("line_exist",		&CScriptIniFile::line_exist		)
 			.def("r_clsid",			&CScriptIniFile::r_clsid		)
@@ -78,12 +80,13 @@ void CScriptIniFile::script_register(lua_State *L)
 			.def("r_s32",			&CScriptIniFile::r_s32)
 			.def("r_float",			&CScriptIniFile::r_float)
 			.def("r_vector",		&CScriptIniFile::r_fvector3)
+			.def("iterate_sections",&iterate_sections)
 			.def("r_line",			&::r_line, out_value<4>() + out_value<5>()),
 
-		def("system_ini",			&get_system_ini),
 #ifdef XRGAME_EXPORTS
 		def("game_ini",				&get_game_ini),
 #endif // XRGAME_EXPORTS
+		def("system_ini",			&get_system_ini),
 		def("create_ini_file",		&create_ini_file, adopt<result>())
 	];
 }

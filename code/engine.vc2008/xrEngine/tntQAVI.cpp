@@ -202,6 +202,7 @@ BOOL CAviPlayerCustom::Load (char* fname)
 		return FALSE;
 	}
 
+	// ПЫС очень любили DWORD'ы... Настолько вот сильно.
 	if( mmckinfoSubchunk.cksize != (DWORD)mmioRead( hmmioFile, (HPSTR)m_pMovieData, mmckinfoSubchunk.cksize ) ) {
 
 		xr_free( m_pMovieData );	m_pMovieData	= NULL;

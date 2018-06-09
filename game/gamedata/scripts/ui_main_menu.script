@@ -178,7 +178,7 @@ function main_menu:StartGame()
 		console:execute	("disconnect")
 	end
 	device():pause(false)
-	console:execute("start server(all/single/alife/new) client(localhost)")
+	console:execute("start server(all/single/alife/new)")
 	console:execute("main_menu off")
 end
 

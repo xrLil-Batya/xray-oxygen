@@ -2,7 +2,7 @@
 #include "ogse_config.h"
 #include "ogse_functions.h"
 
-uniform float4 screen_res;
+//uniform float4 screen_res;
 
 
 float4 main(p_screen I) : SV_Target

@@ -670,12 +670,21 @@
 		<text>Полноэкранный (без рамки)</text>
 	</string>
 	<string id="ui_st_hardcore_mode">
-		<text>Hardcore mode</text>
+		<text>Режим "Хардкор"</text>
 	</string>
 	<string id="ui_st_colored_feel">
-		<text>Цвета имён предметов по классам</text>
+		<text>Цвета предметов по классам</text>
 	</string>
 	<string id="ui_st_car_info">
 		<text>Инфо. о текущем транспорте</text>
+	</string>
+	<string id="ui_st_clearsky_interface">
+		<text>Интерфейс Clear Sky</text>
+	</string>
+	<string id="ui_st_show_date">
+		<text>Дата под миникартой</text>
+	</string>
+	<string id="ui_mm_120_hz">
+		<text>Частота 120Гц</text>
 	</string>
 </string_table>

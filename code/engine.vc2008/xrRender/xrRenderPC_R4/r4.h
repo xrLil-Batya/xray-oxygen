@@ -71,6 +71,10 @@ public:
 		u32		HW_smap				: 1;
 		u32		HW_smap_PCF			: 1;
 
+        //Sunshafts
+        u32     sunshaft_mrmnwar    : 1;
+        u32     sunshaft_screenspace: 1;
+
 		u32		HW_smap_FORMAT		: 32;
 
 		u32		nvdbt				: 1;
@@ -340,6 +344,7 @@ public:
 	virtual void					rmNear						();
 	virtual void					rmFar						();
 	virtual void					rmNormal					();
+	virtual void					ResizeWindowProc			(WORD h, WORD w);
 	virtual u32                     active_phase                () { return phase; };
 
 	// Constructor/destructor/loader

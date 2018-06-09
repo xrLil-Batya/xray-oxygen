@@ -26,7 +26,7 @@
 #include "autosave_manager.h"
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
-#include "date_time.h"
+#include "../xrEngine/date_time.h"
 #include "UIGameSP.h"
 #include "ui/UIActorMenu.h"
 #include "ui/UIStatic.h"
@@ -127,13 +127,6 @@ public:
 	virtual void Execute(LPCSTR args) {
 		if (!g_pGameLevel) return;
 
-		//#ifndef	DEBUG
-		if (GameID() != eGameIDSingle)
-		{
-			Msg("For this game type entity-spawning is disabled.");
-			return;
-		};
-		//#endif
 
 		if (!pSettings->section_exist(args))
 		{
@@ -153,6 +146,33 @@ public:
 	}
 };
 // g_spawn 
+
+class CCC_Spawn_to_inventory : public IConsole_Command {
+public:
+	CCC_Spawn_to_inventory(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR args) {
+		if (!g_pGameLevel)
+		{
+			Log("Error: No game level!");
+			return;
+		}
+
+		if (!pSettings->section_exist(args))
+		{
+			Msg("! Section [%s] isn`t exist...", args);
+			return;
+		}
+
+		char	Name[128];	Name[0] = 0;
+		sscanf(args, "%s", Name);
+
+		Level().spawn_item(Name, Actor()->Position(), false, Actor()->ID());
+	}
+	virtual void	Info(TInfo& I)
+	{
+		strcpy(I, "name,team,squad,group");
+	}
+};
 
 class CCC_Giveinfo : public IConsole_Command {
 public:
@@ -439,68 +459,82 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 
 #include "UIGameCustom.h"
 
-class CCC_ALifeSave : public IConsole_Command {
+class CCC_ALifeSave : public IConsole_Command
+{
 public:
-	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
+	CCC_ALifeSave(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = true; };
 	virtual void Execute(LPCSTR args) {
-		
-		if(!g_actor || !Actor()->g_Alive())
+
+		if (!g_actor || !Actor()->g_Alive())
 		{
 			Msg("cannot make saved game because actor is dead :(");
 			return;
 		}
 
-		string_path				S, S1;
-		S[0]					= 0;
-		strncpy_s				(S, sizeof(S), args, _MAX_PATH - 1 );
-		
+		if (Actor()->HasInfo("cant_game_save_now"))
+		{
+			SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+			_s->wnd()->TextItemControl()->SetText(CStringTable().translate("st_cant_game_save_now").c_str());
+			return;
+		}
+
+		string_path	S, S1;
+		S[0] = 0;
+		strncpy_s(S, sizeof(S), args, _MAX_PATH - 1);
+
 #ifdef DEBUG
-		CTimer					timer;
-		timer.Start				();
+		CTimer timer;
+		timer.Start();
 #endif
-		if (!xr_strlen(S)){
-			strconcat			(sizeof(S),S,Core.UserName," - ","quicksave");
-			NET_Packet			net_packet;
-			net_packet.w_begin	(M_SAVE_GAME);
+
+		if (!xr_strlen(S)) 
+		{
+			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
+			NET_Packet net_packet;
+			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
-			net_packet.w_u8		(0);
-			Level().Send		(net_packet);
-		}else{
-			if(!valid_saved_game_name(S)){
+			net_packet.w_u8(0);
+			Level().Send(net_packet);
+		}
+		else 
+		{
+			if (!valid_saved_game_name(S))
+			{
 				Msg("! Save failed: invalid file name - %s", S);
 				return;
 			}
 
-			NET_Packet			net_packet;
-			net_packet.w_begin	(M_SAVE_GAME);
+			NET_Packet net_packet;
+			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
-			net_packet.w_u8		(1);
-			Level().Send		(net_packet);
+			net_packet.w_u8(1);
+			Level().Send(net_packet);
 		}
 #ifdef DEBUG
-		Msg						("Game save overhead  : %f milliseconds",timer.GetElapsed_sec()*1000.f);
+		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
 #endif
-		SDrawStaticStruct* _s		= CurrentGameUI()->AddCustomStatic("game_saved", true);
-		LPSTR						save_name;
-		STRCONCAT					(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
+		SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+		LPSTR save_name;
+		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
 		_s->wnd()->TextItemControl()->SetText(save_name);
 
-		xr_strcat				(S,".dds");
-		FS.update_path			(S1,"$game_saves$",S);
-		
-#ifdef DEBUG
-		timer.Start				();
-#endif
-		MainMenu()->Screenshot		(IRender_interface::SM_FOR_GAMESAVE,S1);
+		xr_strcat(S, ".dds");
+		FS.update_path(S1, "$game_saves$", S);
 
 #ifdef DEBUG
-		Msg						("Screenshot overhead : %f milliseconds",timer.GetElapsed_sec()*1000.f);
+		timer.Start();
 #endif
+		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, S1);
+
+#ifdef DEBUG
+		Msg("Screenshot overhead : %f milliseconds", timer.GetElapsed_sec() * 1000.f);
+#endif
+
 	}//virtual void Execute
 
-	virtual void fill_tips			(vecTips& tips, u32 mode)
+	virtual void fill_tips(vecTips& tips, u32 mode)
 	{
-		get_files_list				(tips, "$game_saves$", SAVE_EXTENSION);
+		get_files_list(tips, "$game_saves$", SAVE_EXTENSION);
 	}
 
 };//CCC_ALifeSave
@@ -1152,7 +1186,6 @@ public:
 		float				time_factor = (float)atof(args);
 		clamp				(time_factor,EPS,1000.f);
 		Device.time_factor	(time_factor);
-		if(strstr(&Core.Params[0],"-snd_speed_ctrl") )
 		    psSpeedOfSound	= time_factor;
 	}
 	virtual void	Status			(TStatus &S)
@@ -1537,6 +1570,7 @@ public:
 		  CCC_Integer::Execute(args);
 	  }
 };
+
 #ifdef	DEBUG
 void DBG_CashedClear();
 class CCC_DBGDrawCashedClear : public IConsole_Command {
@@ -1545,12 +1579,9 @@ public:
 private:
 	 virtual void	Execute	(LPCSTR args)
 	 {
-		
 		 DBG_CashedClear();
 	 }
 };
-
-#endif
 
 class CCC_DbgVar : public IConsole_Command {
 public:
@@ -1575,6 +1606,22 @@ public:
 		}
 
 	}
+};
+#endif
+
+// Change weather immediately
+class CCC_SetWeather : public IConsole_Command
+{
+public:
+    CCC_SetWeather(LPCSTR N) : IConsole_Command(N) {};
+    virtual void Execute(LPCSTR args)
+    {
+        if (!xr_strlen(args))
+            return;
+
+        if (!Device.editor())
+            g_pGamePersistent->Environment().SetWeather(args, true);
+    }
 };
 
 void CCC_RegisterCommands()
@@ -1746,15 +1793,21 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ScriptCommand, "run_string");
 	CMD3(CCC_Mask, "rs_show_cursor_pos", &psActorFlags, AF_SHOW_CURPOS);
 	CMD3(CCC_Mask, "g_hardcore_mode", &psActorFlags, AF_HARDCORE);
-	CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
+    CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
+    CMD3(CCC_Mask, "rs_clearskyinterface", &psActorFlags, AF_CLEARSKYINTERFACE);
+    CMD3(CCC_Mask, "rs_showdate", &psActorFlags, AF_SHOWDATE);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
+	CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
 	CMD1(CCC_Giveinfo, "g_info");
 	CMD1(CCC_Disinfo, "d_info");
-
 	CMD3(CCC_Mask, "g_autopickup", &psActorFlags, AF_AUTOPICKUP);
 	CMD3(CCC_Mask, "g_dynamic_music", &psActorFlags, AF_DYNAMIC_MUSIC);
 	CMD3(CCC_Mask, "g_important_save", &psActorFlags, AF_IMPORTANT_SAVE);
+
+	CMD3(CCC_Mask, "ts_get_object_params", &psActorFlags, AF_GET_OBJECT_PARAMS);
+	CMD3(CCC_Mask, "ts_show_boss_health", &psActorFlags, AF_SHOW_BOSS_HEALTH);
+
 
 #ifdef DEBUG
 
@@ -2017,4 +2070,6 @@ void CCC_RegisterCommands()
 	CMD3(CCC_String, "slot_3", g_quick_use_slots[3], 32);
 
 	CMD4(CCC_Integer, "keypress_on_start", &g_keypress_on_start, 0, 1);
+
+    CMD1(CCC_SetWeather, "set_weather");
 }

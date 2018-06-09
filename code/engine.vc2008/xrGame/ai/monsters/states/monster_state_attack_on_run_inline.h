@@ -432,7 +432,9 @@ void   ATTACK_ON_RUN_STATE::select_prepare_fallback_target ()
 	m_target								=	ai().level_graph().vertex_position(m_target_vertex);
 }
 
+#ifdef DEBUG
 #include "../../../ai_debug_variables.h"
+#endif
 
 TEMPLATE_SIGNATURE
 void   ATTACK_ON_RUN_STATE::update_try_min_time ()

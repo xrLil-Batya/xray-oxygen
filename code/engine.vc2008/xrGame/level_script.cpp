@@ -17,7 +17,7 @@
 #include "game_cl_base.h"
 #include "UIGameCustom.h"
 #include "UI/UIDialogWnd.h"
-#include "date_time.h"
+#include "../xrEngine/date_time.h"
 #include "ai_space.h"
 #include "level_graph.h"
 #include "PHCommander.h"
@@ -55,6 +55,16 @@ bool IsDynamicMusic()
 bool IsImportantSave()
 {
 	return !!psActorFlags.test(AF_IMPORTANT_SAVE);
+}
+
+bool IsGetObjParams()
+{
+	return !!psActorFlags.test(AF_GET_OBJECT_PARAMS);
+}
+
+bool IsShowBossHealth()
+{
+	return !!psActorFlags.test(AF_SHOW_BOSS_HEALTH);
 }
 
 #ifdef DEBUG
@@ -931,7 +941,9 @@ void CLevel::script_register(lua_State *L)
 
 		def("command_line",						&command_line),
 		def("IsDynamicMusic",					&IsDynamicMusic),
-		def("IsImportantSave",					&IsImportantSave)
+		def("IsImportantSave",					&IsImportantSave),
+		def("IsGetObjParams",					&IsGetObjParams),
+		def("IsShowBossHealth",					&IsShowBossHealth)
 	];
 
 	module(L,"relation_registry")

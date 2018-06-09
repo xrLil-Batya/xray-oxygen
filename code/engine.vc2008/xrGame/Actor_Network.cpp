@@ -416,28 +416,23 @@ void	CActor::net_Import_Physic_proceed	( )
 
 BOOL CActor::net_Spawn(CSE_Abstract* DC)
 {
-	// Alpet
-    //pApp->LoadBegin();
-// 	g_pGamePersistent->SetLoadStageTitle("st_actor_netspawn");
-// 	g_pGamePersistent->LoadTitle();
-	// End
-	
 	m_holder_id = ALife::_OBJECT_ID(-1);
 	m_feel_touch_characters = 0;
 	m_snd_noise = 0.0f;
 	m_sndShockEffector = NULL;
-	/*	m_followers			= NULL;*/
+
 	if (m_pPhysicsShell)
 	{
 		m_pPhysicsShell->Deactivate();
 		xr_delete(m_pPhysicsShell);
-	};
+	}
+
 	//force actor to be local on server client
 	CSE_Abstract			*e = (CSE_Abstract*)(DC);
 	CSE_ALifeCreatureActor	*E = smart_cast<CSE_ALifeCreatureActor*>(e);
 	E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);	
 
-	if (E->s_flags.test(M_SPAWN_OBJECT_LOCAL) && E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
+	if (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 		g_actor = this;
 
 	VERIFY(!m_pActorEffector);
