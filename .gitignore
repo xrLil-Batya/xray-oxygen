@@ -19,6 +19,7 @@
 *.aps
 *.db
 *.tmp
+*.cache
 
 binaries/
 intermediatex64/
@@ -40,4 +41,3 @@ librariesx64/
 *.lib
 *.psess
 *.vspx
-code/3rd-party/FreeImage/FreeImage/Wrapper/FreeImage.NET/cs/Samples/Sample 02 - Multipaged bitmaps/obj/x64/Release/Sample 02 - Multipaged bitmaps.csproj.CoreCompileInputs.cache
