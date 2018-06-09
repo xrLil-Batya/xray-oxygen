@@ -7,6 +7,9 @@
 
 #pragma once
 
+#include "DockPanels.h"
+
+ 
 namespace OxySDK
 {
 	using namespace System;
@@ -15,7 +18,8 @@ namespace OxySDK
 	using namespace System::Windows::Forms;
 	using namespace System::Data;
 	using namespace System::Drawing;
-
+	using namespace WeifenLuo::WinFormsUI;
+	
 	public ref class LE_Form : public System::Windows::Forms::Form
 	{
 	public:
@@ -23,15 +27,20 @@ namespace OxySDK
 		{
 			InitializeComponent();
 		}
-
+	
 	protected:
 		~LE_Form()
 		{
 			if (components)
 			{
+			
 				delete components;
 			}
 		}
+	
+	private: 
+
+
 	private: System::Windows::Forms::MenuStrip^  menuStrip1;
 	protected:
 	private: System::Windows::Forms::ToolStripMenuItem^  projectToolStripMenuItem;
@@ -42,8 +51,12 @@ namespace OxySDK
 	private: System::Windows::Forms::ToolStripMenuItem^  somethingElse2ToolStripMenuItem;
 	private: System::Windows::Forms::StatusStrip^  statusStrip1;
 	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
-	private: System::Windows::Forms::Panel^  RenderPanel;
-	private: System::Windows::Forms::Panel^  panel1;
+	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
+	private: WeifenLuo::WinFormsUI::DockPanel^  dockMain;
+
+
+
+
 
 	private:
 		System::ComponentModel::Container ^components;
@@ -60,14 +73,14 @@ namespace OxySDK
 			this->somethingElse2ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
 			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
-			this->RenderPanel = (gcnew System::Windows::Forms::Panel());
-			this->panel1 = (gcnew System::Windows::Forms::Panel());
+			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
+			this->dockMain = (gcnew WeifenLuo::WinFormsUI::DockPanel());
 			this->menuStrip1->SuspendLayout();
 			this->statusStrip1->SuspendLayout();
 			this->SuspendLayout();
-			//
+			// 
 			// menuStrip1
-			//
+			// 
 			this->menuStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->projectToolStripMenuItem,
 					this->somethingElseToolStripMenuItem, this->somethingElse2ToolStripMenuItem
@@ -77,9 +90,9 @@ namespace OxySDK
 			this->menuStrip1->Size = System::Drawing::Size(1028, 24);
 			this->menuStrip1->TabIndex = 0;
 			this->menuStrip1->Text = L"menuStrip1";
-			//
+			// 
 			// projectToolStripMenuItem
-			//
+			// 
 			this->projectToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(3) {
 				this->newFileToolStripMenuItem,
 					this->settingsToolStripMenuItem, this->quitToolStripMenuItem
@@ -87,77 +100,68 @@ namespace OxySDK
 			this->projectToolStripMenuItem->Name = L"projectToolStripMenuItem";
 			this->projectToolStripMenuItem->Size = System::Drawing::Size(56, 20);
 			this->projectToolStripMenuItem->Text = L"Project";
-			//
+			// 
 			// newFileToolStripMenuItem
-			//
+			// 
 			this->newFileToolStripMenuItem->Name = L"newFileToolStripMenuItem";
 			this->newFileToolStripMenuItem->Size = System::Drawing::Size(119, 22);
 			this->newFileToolStripMenuItem->Text = L"New File";
-			//
+			// 
 			// settingsToolStripMenuItem
-			//
+			// 
 			this->settingsToolStripMenuItem->Name = L"settingsToolStripMenuItem";
 			this->settingsToolStripMenuItem->Size = System::Drawing::Size(119, 22);
 			this->settingsToolStripMenuItem->Text = L"Settings";
-			//
+			// 
 			// quitToolStripMenuItem
-			//
+			// 
 			this->quitToolStripMenuItem->Name = L"quitToolStripMenuItem";
 			this->quitToolStripMenuItem->Size = System::Drawing::Size(119, 22);
 			this->quitToolStripMenuItem->Text = L"Quit";
-			//
+			// 
 			// somethingElseToolStripMenuItem
-			//
+			// 
 			this->somethingElseToolStripMenuItem->Name = L"somethingElseToolStripMenuItem";
 			this->somethingElseToolStripMenuItem->Size = System::Drawing::Size(100, 20);
 			this->somethingElseToolStripMenuItem->Text = L"Something else";
-			//
+			// 
 			// somethingElse2ToolStripMenuItem
-			//
+			// 
 			this->somethingElse2ToolStripMenuItem->Name = L"somethingElse2ToolStripMenuItem";
 			this->somethingElse2ToolStripMenuItem->Size = System::Drawing::Size(109, 20);
 			this->somethingElse2ToolStripMenuItem->Text = L"Something else 2";
-			//
+			// 
 			// statusStrip1
-			//
+			// 
 			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripStatusLabel1 });
 			this->statusStrip1->Location = System::Drawing::Point(0, 653);
 			this->statusStrip1->Name = L"statusStrip1";
 			this->statusStrip1->Size = System::Drawing::Size(1028, 22);
 			this->statusStrip1->TabIndex = 1;
 			this->statusStrip1->Text = L"statusStrip1";
-			//
+			// 
 			// toolStripStatusLabel1
-			//
+			// 
 			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
 			this->toolStripStatusLabel1->Size = System::Drawing::Size(118, 17);
 			this->toolStripStatusLabel1->Text = L"toolStripStatusLabel1";
-
-			//
-			// RenderPanel
-			//
-			this->RenderPanel->Anchor = System::Windows::Forms::AnchorStyles::Left;
-			this->RenderPanel->Location = System::Drawing::Point(12, 41);
-			this->RenderPanel->Name = L"RenderPanel";
-			this->RenderPanel->Size = System::Drawing::Size(743, 594);
-			this->RenderPanel->TabIndex = 2;
-			//
-			// panel1
-			//
-			this->panel1->Anchor = static_cast<System::Windows::Forms::AnchorStyles>((System::Windows::Forms::AnchorStyles::Bottom | System::Windows::Forms::AnchorStyles::Right));
-			this->panel1->BackColor = System::Drawing::SystemColors::ActiveCaption;
-			this->panel1->Location = System::Drawing::Point(795, 400);
-			this->panel1->Name = L"panel1";
-			this->panel1->Size = System::Drawing::Size(200, 100);
-			this->panel1->TabIndex = 3;
-			//
+			// 
+			// dockMain
+			// 
+			this->dockMain->ActiveAutoHideContent = nullptr;
+			this->dockMain->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::World));
+			this->dockMain->Location = System::Drawing::Point(0, 299);
+			this->dockMain->Name = L"dockMain";
+			this->dockMain->Size = System::Drawing::Size(1028, 354);
+			this->dockMain->TabIndex = 3;
+			// 
 			// LE_Form
-			//
+			// 
 			this->AutoScaleDimensions = System::Drawing::SizeF(6, 13);
 			this->AutoScaleMode = System::Windows::Forms::AutoScaleMode::Font;
+			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(1028, 675);
-			this->Controls->Add(this->panel1);
-			this->Controls->Add(this->RenderPanel);
+			this->Controls->Add(this->dockMain);
 			this->Controls->Add(this->statusStrip1);
 			this->Controls->Add(this->menuStrip1);
 			this->MainMenuStrip = this->menuStrip1;
@@ -169,6 +173,7 @@ namespace OxySDK
 			this->statusStrip1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
+
 		}
 #pragma endregion
 	};
