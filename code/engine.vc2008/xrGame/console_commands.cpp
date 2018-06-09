@@ -1802,10 +1802,13 @@ void CCC_RegisterCommands()
 	CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
 	CMD1(CCC_Giveinfo, "g_info");
 	CMD1(CCC_Disinfo, "d_info");
-
 	CMD3(CCC_Mask, "g_autopickup", &psActorFlags, AF_AUTOPICKUP);
 	CMD3(CCC_Mask, "g_dynamic_music", &psActorFlags, AF_DYNAMIC_MUSIC);
 	CMD3(CCC_Mask, "g_important_save", &psActorFlags, AF_IMPORTANT_SAVE);
+
+	CMD3(CCC_Mask, "ts_get_object_params", &psActorFlags, AF_GET_OBJECT_PARAMS);
+	CMD3(CCC_Mask, "ts_show_boss_health", &psActorFlags, AF_SHOW_BOSS_HEALTH);
+
 
 #ifdef DEBUG
 
