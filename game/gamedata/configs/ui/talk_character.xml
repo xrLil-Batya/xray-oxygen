@@ -1,0 +1,24 @@
+<w>
+	<icon x="7" y="4" width="187" height="130" stretch="1"/>
+	<icon_over x="6" y="4" width="187" height="130" stretch="1">
+		<texture>ui_actor_overlay</texture>
+	</icon_over>
+
+	<name_static x="16" y="144" width="190" height="20">
+		<text font="graffiti22" color="ui_6"  complex_mode="0"/>
+	</name_static>
+
+	<rank_icon           x="17" y="23" width="46" height="47"/>
+	<commumity_icon      x="15" y="73" width="48" height="48" stretch="1"/>
+    <commumity_icon_over x="15" y="73" width="48" height="48">
+    	<texture>ui_fraction_overlay</texture>
+	</commumity_icon_over>
+
+	<community_caption x="16" y="164" width="80" height="15">
+	</community_caption>
+	<community_static x="16" y="164" width="110" height="15">
+		<text align="l" font="letterica16" color="ui_9"/>
+	</community_static>
+
+</w>
+
