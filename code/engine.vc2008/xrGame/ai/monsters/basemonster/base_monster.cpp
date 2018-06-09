@@ -42,7 +42,7 @@
 #include "../../../../xrServerEntities/script_engine.h"
 
 #include "../anti_aim_ability.h"
-
+#include "../../FrayBuildConfig.hpp"
 // Lain: added 
 #include "../../../level_debug.h"
 #include "../../../../xrEngine/xrLevel.h"
@@ -752,6 +752,9 @@ DLL_Pure *CBaseMonster::_construct	()
 	
 	inherited::_construct		();
 	CStepManager::_construct	();
+#ifdef MONSTER_INV
+	CInventoryOwner::_construct();
+#endif
 	return						(this);
 }
 
@@ -880,9 +883,49 @@ void CBaseMonster::OnEvent(NET_Packet& P, u16 type)
 {
 	inherited::OnEvent			(P,type);
 
-	u16			id;
+#ifdef MONSTER_INV
+	CInventoryOwner::OnEvent(P, type);
+#endif
+
+	u16 id;
 	switch (type)
 	{
+#ifdef MONSTER_INV
+	case GE_TRADE_BUY:
+	case GE_OWNERSHIP_TAKE:
+	{
+		P.r_u16(id);
+		CObject		*O = Level().Objects.net_Find(id);
+		VERIFY(O);
+
+		CGameObject			*GO = smart_cast<CGameObject*>(O);
+		CInventoryItem		*pIItem = smart_cast<CInventoryItem*>(GO);
+		VERIFY(inventory().CanTakeItem(pIItem));
+		pIItem->m_ItemCurrPlace.type = eItemPlaceRuck;
+
+		O->H_SetParent(this);
+		inventory().Take(GO, true, true);
+		break;
+	}
+	case GE_TRADE_SELL:
+	case GE_OWNERSHIP_REJECT:
+	{
+		P.r_u16(id);
+		CObject* O = Level().Objects.net_Find(id);
+		VERIFY(O);
+
+		bool just_before_destroy = !P.r_eof() && P.r_u8();
+		bool dont_create_shell = (type == GE_TRADE_SELL) || just_before_destroy;
+
+		O->SetTmpPreDestroy(just_before_destroy);
+		if (inventory().DropItem(smart_cast<CGameObject*>(O), dont_create_shell, dont_create_shell) && !O->getDestroy())
+		{
+			feel_touch_deny(O, 2000);
+		}
+		break;
+	}
+#endif
+
 	case GE_KILL_SOMEONE:
 		P.r_u16		(id);
 		CObject* O	= Level().Objects.net_Find	(id);

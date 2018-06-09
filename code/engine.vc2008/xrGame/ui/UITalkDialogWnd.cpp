@@ -14,8 +14,9 @@
 #include "../actor.h"
 #include "../alife_registry_wrappers.h"
 #include "dinput.h"
+#include "../../FrayBuildConfig.hpp"
 
-#define				TALK_XML				"talk.xml"
+#define TALK_XML "talk.xml"
 
 CUITalkDialogWnd::CUITalkDialogWnd()
 	:	m_pNameTextFont		(NULL)
@@ -35,7 +36,19 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	CUIXmlInit					ml_init;
 
 	CUIXmlInit::InitWindow		(*m_uiXml, "main", 0, this);
+#ifdef SOC_TALK_WND
+	CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
+	CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
 
+	UIOurIcon.AttachChild(&UICharacterInfoLeft);
+	UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
+
+	UIOthersIcon.AttachChild(&UICharacterInfoRight);
+	UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
+
+	AttachChild(&UIOurIcon);
+	AttachChild(&UIOthersIcon);
+#endif
 	//Ответы
 	UIAnswersList				= xr_new<CUIScrollView>();
 	UIAnswersList->SetAutoDelete(true);
@@ -209,6 +222,9 @@ void CUITalkDialogWnd::AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR textu
 
 void CUITalkDialogWnd::SetOsoznanieMode(bool b)
 {
+	UIOurIcon.Show(!b);
+	UIOthersIcon.Show(!b);
+
 	UIAnswersList->Show	(!b);
 
 	UIToTradeButton.Show(!b);

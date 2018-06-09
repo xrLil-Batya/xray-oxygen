@@ -1068,21 +1068,25 @@ void CActor::shedule_Update	(u32 DT)
 		setVisible				(!HUDview	());
 
 	//что актер видит перед собой
-	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
-	
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 
 	float fAcquistionRange = cam_active == eacFirstEye ? 2.0f : 3.0f;
 	if (!input_external_handler_installed() && RQ.O && RQ.O->getVisible() && RQ.range < fAcquistionRange)
 	{
 		m_pObjectWeLookingAt = smart_cast<CGameObject*>(RQ.O);
 
-		CGameObject						*game_object = smart_cast<CGameObject*>(RQ.O);
-		m_pUsableObject = smart_cast<CUsableScriptObject*>(game_object);
-		m_pInvBoxWeLookingAt = smart_cast<CInventoryBox*>(game_object);
-		m_pPersonWeLookingAt = smart_cast<CInventoryOwner*>(game_object);
-		m_pVehicleWeLookingAt = smart_cast<CHolderCustom*>(game_object);
-		CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(game_object);
+		CGameObject *game_object	 = smart_cast<CGameObject*>(RQ.O);
+		m_pUsableObject				 = smart_cast<CUsableScriptObject*>(game_object);
+		m_pInvBoxWeLookingAt		 = smart_cast<CInventoryBox*>(game_object);
+		m_pPersonWeLookingAt		 = smart_cast<CInventoryOwner*>(game_object);
+		m_pVehicleWeLookingAt		 = smart_cast<CHolderCustom*>(game_object);
+		CEntityAlive* pEntityAlive   = smart_cast<CEntityAlive*>(game_object);
 
+#ifdef MONSTER_INV
+		if (smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
+			m_sDefaultObjAction = m_sDeadCharacterUseAction;
+		else
+#endif
 		if (m_pUsableObject && m_pUsableObject->tip_text())
 		{
 			m_sDefaultObjAction = CStringTable().translate(m_pUsableObject->tip_text());

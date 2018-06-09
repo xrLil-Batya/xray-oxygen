@@ -2008,9 +2008,6 @@
     <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsItem">
       <UniqueIdentifier>{f1c34a70-e43e-4966-b6d0-b964b7b45460}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsConsoleCommands">
-      <UniqueIdentifier>{9bea0bd6-d456-41c8-9ba9-cb3cda9cb4cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AScript\ScriptClasses\UI\Common\MainMenu">
       <UniqueIdentifier>{5470b9a9-25f9-4ded-a58c-be802998b8aa}</UniqueIdentifier>
     </Filter>

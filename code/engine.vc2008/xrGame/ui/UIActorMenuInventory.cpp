@@ -551,7 +551,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 	}
 }
 
-
+#include "../xrEngine/xr_input.h"
 bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 {
 	PIItem	iitem						= (PIItem)itm->m_pData;
@@ -589,6 +589,9 @@ bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 		{
 			ColorizeItem( itm, !CanMoveToPartner( iitem ) );
 		}
+#ifdef MULTITRANSFER
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToBag(itm, (old_owner == new_owner));
+#endif
 		return true;
 	}
 	return false;
@@ -1220,7 +1223,13 @@ void CUIActorMenu::UpdateOutfit()
 	m_HelmetOver->Show(!outfit->bIsHelmetAvaliable);
 	
 	Ivector2 afc;
-	afc.set(af_count, 1);
+#ifdef VERTICAL_BELT
+	afc.x = 1;
+	afc.y = af_count;
+#else
+	afc.x = af_count; // 1;
+	afc.y = 1;        // af_count;
+#endif
 
 	m_pInventoryBeltList->SetCellsCapacity(afc);
 

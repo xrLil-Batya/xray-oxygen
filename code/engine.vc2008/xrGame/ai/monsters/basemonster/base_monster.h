@@ -1,30 +1,25 @@
 #pragma once
-
 #include "../../../CustomMonster.h"
-
 #include "../monster_enemy_memory.h"
 #include "../monster_corpse_memory.h"
 #include "../monster_sound_memory.h"
 #include "../monster_hit_memory.h"
-
 #include "../monster_enemy_manager.h"
 #include "../monster_corpse_manager.h"
-
 #include "../../../step_manager.h"
 #include "../monster_event_manager.h"
 #include "../melee_checker.h"
 #include "../monster_morale.h"
-
 #include "../control_manager.h"
 #include "../control_sequencer.h"
-
 #include "../ai_monster_utils.h"
-
 #include "../control_manager_custom.h"
 #include "../ai_monster_shared_data.h"
 #include "../monster_sound_defs.h"
-
 #include "../monster_aura.h"
+
+#include "InventoryOwner.h"
+#include "Inventory.h"
 
 class CCharacterPhysicsSupport;
 class CMonsterCorpseCoverEvaluator;
@@ -55,7 +50,7 @@ namespace debug { class text_tree; }
 
 class anti_aim_ability;
 
-class CBaseMonster : public CCustomMonster, public CStepManager
+class CBaseMonster : public CCustomMonster, public CStepManager, public CInventoryOwner
 {
 	typedef	CCustomMonster								inherited;
 	

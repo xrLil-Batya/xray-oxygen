@@ -15,12 +15,12 @@
 #include "uistatic.h"
 #include "UIScrollView.h"
 
-
 #include "../alife_simulator.h"
 #include "../ai_space.h"
 #include "../alife_object_registry.h"
 #include "../xrServer.h"
 #include "../../xrServerEntities/xrServer_Objects_ALife_Monsters.h"
+#include "../../FrayBuildConfig.hpp"
 
 using namespace InventoryUtilities;
 
@@ -132,6 +132,19 @@ void CUICharacterInfo::InitCharacterInfo(CUIXml* xml_doc, LPCSTR node_str)
 	InitCharacterInfo			(pos, size, xml_doc);
 	xml_doc->SetLocalRoot		(stored_root);
 }
+
+#ifdef MONSTER_INV
+void CUICharacterInfo::InitMonsterCharacter(shared_str monster_tex_name)
+{
+	if (m_icons[eIcon])
+	{
+		m_icons[eIcon]->InitTexture(monster_tex_name.c_str());
+		m_icons[eIcon]->SetStretchTexture(true);
+		m_icons[eIcon]->SetTextureColor(m_deadbody_color); // (color_argb(255, 255, 160, 160));
+		m_icons[eIcon]->Show(true);
+	}
+}
+#endif
 
 void CUICharacterInfo::InitCharacter(u16 id)
 {
@@ -337,13 +350,14 @@ void CUICharacterInfo::SetActorIcon()
 	luabind::functor<LPCSTR>	functor;
 	if (!ai().script_engine().functor("ts_utils.get_actor_icon", functor))
 	{
-		Msg("can't find function 'ts_utils.get_actor_icon'");
+		Msg("can't find function 'oxy_callbacks.get_actor_icon'");
 	}
 	else
 		icon_name = functor();
 
 	m_texture_name = icon_name;
-	if (m_icons[eIcon]) {
+	if (m_icons[eIcon])
+	{
 		m_icons[eIcon]->InitTexture(m_texture_name.c_str());
 	}
 }

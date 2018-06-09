@@ -37,6 +37,7 @@
 #include "UIPropertiesBox.h"
 #include "UIMainIngameWnd.h"
 #include "../Trade.h"
+#include "../ActorRuck.h"
 
 #include "../../FrayBuildConfig.hpp"
 
@@ -56,16 +57,30 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 {
 	R_ASSERT			(!IsShown());
 	m_pPartnerInvOwner	= io;
-	if ( m_pPartnerInvOwner )
+	if (m_pPartnerInvOwner)
 	{
-		if (m_pPartnerInvOwner->use_simplified_visual() ) 
+#ifdef MONSTER_INV
+		CBaseMonster* monster = smart_cast<CBaseMonster*>(m_pPartnerInvOwner);
+		if (monster || m_pPartnerInvOwner->use_simplified_visual())
+		{
 			m_PartnerCharacterInfo->ClearInfo();
-		else 
-			m_PartnerCharacterInfo->InitCharacter( m_pPartnerInvOwner->object_id() );
-
-		SetInvBox( NULL );
-	}else
-		m_PartnerCharacterInfo->ClearInfo();
+			if (monster)
+			{
+				shared_str monster_tex_name = pSettings->r_string(monster->cNameSect(), "icon");
+				m_PartnerCharacterInfo->InitMonsterCharacter(monster_tex_name);
+			}
+		}
+		else
+			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
+#else
+		if (m_pPartnerInvOwner->use_simplified_visual())
+			m_PartnerCharacterInfo->ClearInfo();
+		else
+			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
+#endif
+		SetInvBox(nullptr);
+	}
+	else m_PartnerCharacterInfo->ClearInfo();
 }
 
 void CUIActorMenu::SetInvBox(CInventoryBox* box)
@@ -86,25 +101,15 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 	
 	if ( mode != m_currMenuMode )
 	{
+		if (!mmUndefined) m_ActorCharacterInfo->SetActorIcon();
 		switch(m_currMenuMode)
 		{
-		case mmUndefined:
-			break;
-		case mmInventory:
-			DeInitInventoryMode();
-			break;
-		case mmTrade:
-			DeInitTradeMode();
-			break;
-		case mmUpgrade:
-			DeInitUpgradeMode();
-			break;
-		case mmDeadBodySearch:
-			DeInitDeadBodySearchMode();
-			break;
-		default:
-			R_ASSERT(0);
-			break;
+			case mmUndefined:		break;
+			case mmInventory:		DeInitInventoryMode(); break;
+			case mmTrade:			DeInitTradeMode(); break;
+			case mmUpgrade:			DeInitUpgradeMode(); break;
+			case mmDeadBodySearch:	DeInitDeadBodySearchMode(); break;
+			default: R_ASSERT(0); break;
 		}
 
 		CurrentGameUI()->UIMainIngameWnd->ShowZoneMap(false);
@@ -112,43 +117,16 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		m_currMenuMode = mode;
 		switch(mode)
 		{
-		case mmUndefined:
-#ifdef DEBUG
-			Msg("* now is Undefined mode");
-#endif // #ifdef DEBUG
-			ResetMode();
-			break;
-		case mmInventory:
-			InitInventoryMode();
-#ifdef DEBUG
-			Msg("* now is Inventory mode");
-#endif // #ifdef DEBUG
-			break;
-		case mmTrade:
-			InitTradeMode();
-#ifdef DEBUG
-			Msg("* now is Trade mode");
-#endif // #ifdef DEBUG
-			break;
-		case mmUpgrade:
-			InitUpgradeMode();
-#ifdef DEBUG
-			Msg("* now is Upgrade mode");
-#endif // #ifdef DEBUG
-			break;
-		case mmDeadBodySearch:
-			InitDeadBodySearchMode();
-#ifdef DEBUG
-			Msg("* now is DeadBodySearch mode");
-#endif // #ifdef DEBUG
-			break;
-		default:
-			R_ASSERT(0);
-			break;
+			case mmUndefined:		ResetMode(); break;
+			case mmInventory:		InitInventoryMode(); break;
+			case mmTrade:			InitTradeMode(); break;
+			case mmUpgrade:			InitUpgradeMode(); break;
+			case mmDeadBodySearch:	InitDeadBodySearchMode(); break;
+			default: R_ASSERT(0); break;
 		}
 		UpdateConditionProgressBars();
 		CurModeToScript();
-	}//if
+	}
 
 	if ( m_pActorInvOwner )
 	{
@@ -572,11 +550,17 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-		for(u8 i=0; i<cap.x; i++)
+#ifdef VERTICAL_BELT
+		for (u8 i = 0; i<cap.y; i++)
+#else
+		for (u8 i = 0; i < cap.x; i++)
+#endif
 			m_ArtefactSlotsHighlight[i]->Show(true);
 		return;
 	}
 }
+
+#include "../WeaponKnife.h"
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
@@ -585,6 +569,12 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 		return;
 	}
 	highlight_item_slot(cell_item);
+
+	// не подсвечивать потроны для ножа
+	if (smart_cast<CWeaponKnife*>(item))
+	{
+		return;
+	}
 
 	switch ( m_currMenuMode )
 	{
