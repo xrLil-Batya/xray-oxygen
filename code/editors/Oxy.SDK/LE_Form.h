@@ -26,6 +26,19 @@ namespace OxySDK
 		LE_Form(void)
 		{
 			InitializeComponent();
+
+
+			d = gcnew DockForms::FormContent();
+			d->TabText = "¬кладка 1";
+			d->Show(dockMain, DockState::DockRight);
+
+			f = gcnew DockForms::FormContent();
+			f->TabText = "–ендер ‘орма";
+			f->Show(dockMain, DockState::Document);
+
+			a = gcnew DockForms::FormContent();
+			a->TabText = "¬кладка 2";
+			a->Show(dockMain, DockState::DockRight);
 		}
 	
 	protected:
@@ -35,11 +48,16 @@ namespace OxySDK
 			{
 			
 				delete components;
+				delete d;
+				delete f;
+				delete a;
 			}
 		}
 	
 	private: 
-
+		DockForms::FormContent ^d;
+		DockForms::FormContent ^f;
+		DockForms::FormContent ^a;
 
 	private: System::Windows::Forms::MenuStrip^  menuStrip1;
 	protected:
@@ -49,8 +67,8 @@ namespace OxySDK
 	private: System::Windows::Forms::ToolStripMenuItem^  quitToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  somethingElseToolStripMenuItem;
 	private: System::Windows::Forms::ToolStripMenuItem^  somethingElse2ToolStripMenuItem;
-	private: System::Windows::Forms::StatusStrip^  statusStrip1;
-	private: System::Windows::Forms::ToolStripStatusLabel^  toolStripStatusLabel1;
+
+
 	private: System::ComponentModel::BackgroundWorker^  backgroundWorker1;
 	private: WeifenLuo::WinFormsUI::DockPanel^  dockMain;
 
@@ -71,12 +89,9 @@ namespace OxySDK
 			this->quitToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->somethingElseToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->somethingElse2ToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
-			this->statusStrip1 = (gcnew System::Windows::Forms::StatusStrip());
-			this->toolStripStatusLabel1 = (gcnew System::Windows::Forms::ToolStripStatusLabel());
 			this->backgroundWorker1 = (gcnew System::ComponentModel::BackgroundWorker());
 			this->dockMain = (gcnew WeifenLuo::WinFormsUI::DockPanel());
 			this->menuStrip1->SuspendLayout();
-			this->statusStrip1->SuspendLayout();
 			this->SuspendLayout();
 			// 
 			// menuStrip1
@@ -131,28 +146,14 @@ namespace OxySDK
 			this->somethingElse2ToolStripMenuItem->Size = System::Drawing::Size(109, 20);
 			this->somethingElse2ToolStripMenuItem->Text = L"Something else 2";
 			// 
-			// statusStrip1
-			// 
-			this->statusStrip1->Items->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->toolStripStatusLabel1 });
-			this->statusStrip1->Location = System::Drawing::Point(0, 653);
-			this->statusStrip1->Name = L"statusStrip1";
-			this->statusStrip1->Size = System::Drawing::Size(1028, 22);
-			this->statusStrip1->TabIndex = 1;
-			this->statusStrip1->Text = L"statusStrip1";
-			// 
-			// toolStripStatusLabel1
-			// 
-			this->toolStripStatusLabel1->Name = L"toolStripStatusLabel1";
-			this->toolStripStatusLabel1->Size = System::Drawing::Size(118, 17);
-			this->toolStripStatusLabel1->Text = L"toolStripStatusLabel1";
-			// 
 			// dockMain
 			// 
 			this->dockMain->ActiveAutoHideContent = nullptr;
+			this->dockMain->Dock = System::Windows::Forms::DockStyle::Fill;
 			this->dockMain->Font = (gcnew System::Drawing::Font(L"Segoe UI", 12, System::Drawing::FontStyle::Regular, System::Drawing::GraphicsUnit::World));
-			this->dockMain->Location = System::Drawing::Point(0, 299);
+			this->dockMain->Location = System::Drawing::Point(0, 24);
 			this->dockMain->Name = L"dockMain";
-			this->dockMain->Size = System::Drawing::Size(1028, 354);
+			this->dockMain->Size = System::Drawing::Size(1028, 651);
 			this->dockMain->TabIndex = 3;
 			// 
 			// LE_Form
@@ -162,15 +163,13 @@ namespace OxySDK
 			this->BackColor = System::Drawing::Color::White;
 			this->ClientSize = System::Drawing::Size(1028, 675);
 			this->Controls->Add(this->dockMain);
-			this->Controls->Add(this->statusStrip1);
 			this->Controls->Add(this->menuStrip1);
+			this->IsMdiContainer = true;
 			this->MainMenuStrip = this->menuStrip1;
 			this->Name = L"LE_Form";
 			this->Text = L"LE_Form";
 			this->menuStrip1->ResumeLayout(false);
 			this->menuStrip1->PerformLayout();
-			this->statusStrip1->ResumeLayout(false);
-			this->statusStrip1->PerformLayout();
 			this->ResumeLayout(false);
 			this->PerformLayout();
 

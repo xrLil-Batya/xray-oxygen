@@ -9,12 +9,11 @@
 namespace OxySDK
 {
 	/* Reductions:
-
-	
 	*/
 
 	public ref class RenderPanel : System::Windows::Forms::UserControl
 	{
-
+	private:
+		bool bRenderCreated = false;
 	};
 }
