@@ -1807,6 +1807,8 @@ void CCC_RegisterCommands()
 
 	CMD3(CCC_Mask, "ts_get_object_params", &psActorFlags, AF_GET_OBJECT_PARAMS);
 	CMD3(CCC_Mask, "ts_show_boss_health", &psActorFlags, AF_SHOW_BOSS_HEALTH);
+	CMD3(CCC_Mask, "g_right_shoulder", &psActorFlags, AF_RIGHT_SHOULDER);
+	CMD3(CCC_Mask, "g_fp2_zoom_forced", &psActorFlags, AF_FP2ZOOM_FORCED);
 
 
 #ifdef DEBUG

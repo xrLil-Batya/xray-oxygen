@@ -23,6 +23,8 @@ enum{
         AF_SHOWDATE				=(1<<20),
 		AF_GET_OBJECT_PARAMS	=(1<<21),
 		AF_SHOW_BOSS_HEALTH		=(1<<22),
+		AF_RIGHT_SHOULDER		=(1<<23),
+		AF_FP2ZOOM_FORCED		=(1<<24),
 };
 
 extern Flags32	psActorFlags;

@@ -778,32 +778,62 @@ void CActor::UpdateCL	()
 	}
 	if(pWeapon )
 	{
-		if(pWeapon->IsZoomed())
+		if (!psActorFlags.test(AF_FP2ZOOM_FORCED))
 		{
-			float full_fire_disp = pWeapon->GetFireDispersion(true);
-
-			CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
-			if(S) 
-				S->SetParams(full_fire_disp);
-
-			SetZoomAimingMode		(true);
-			//Alun: Force switch to first-person for zooming
-			if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+			if (pWeapon->IsZoomed())
 			{
-				cam_Set(eacFirstEye);
-				bLook_cam_fp_zoom = true;
-			}			
+				float full_fire_disp = pWeapon->GetFireDispersion(true);
+
+				CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
+				if (S)
+					S->SetParams(full_fire_disp);
+
+				SetZoomAimingMode(true);
+				//Alun: Force switch to first-person for zooming
+				if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+				{
+					cam_Set(eacFirstEye);
+					bLook_cam_fp_zoom = true;
+				}
+			}
+			else
+			{
+				//Alun: Switch back to third-person if was forced
+				if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+				{
+					cam_Set(eacLookAt);
+					bLook_cam_fp_zoom = false;
+				}
+			}
 		}
 		else
 		{
-			//Alun: Switch back to third-person if was forced
-			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+			if (pWeapon->IsZoomed() && pWeapon->IsScopeAttached())
 			{
-				cam_Set(eacLookAt);
-				bLook_cam_fp_zoom = false;
-			}
-		}			
+				float full_fire_disp = pWeapon->GetFireDispersion(true);
 
+				CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
+				if (S)
+					S->SetParams(full_fire_disp);
+
+				SetZoomAimingMode(true);
+
+				if (!bLook_cam_fp_zoom && g_Alive() && Level().CurrentViewEntity() == this && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+				{
+					Actor()->IR_OnKeyboardPress(kCAM_1);
+					bLook_cam_fp_zoom = true;
+				}
+				else
+				{
+
+					if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
+					{
+						Actor()->IR_OnKeyboardPress(kCAM_2);
+						bLook_cam_fp_zoom = false;
+					}
+				}
+			}
+		}
 		if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 		{
 			float fire_disp_full = pWeapon->GetFireDispersion(true, true);
