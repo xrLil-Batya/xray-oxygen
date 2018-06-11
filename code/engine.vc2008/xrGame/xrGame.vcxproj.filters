@@ -4593,9 +4593,6 @@
     <ClInclude Include="patrol_path_params.h">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
     </ClInclude>
-    <ClInclude Include="patrol_path_params_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
-    </ClInclude>
     <ClInclude Include="script_watch_action.h">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClInclude>
@@ -7248,9 +7245,6 @@
     <ClCompile Include="patrol_path_params.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
     </ClCompile>
-    <ClCompile Include="patrol_path_params_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
-    </ClCompile>
     <ClCompile Include="script_watch_action.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClCompile>
@@ -7291,9 +7285,6 @@
       <Filter>AI\AScript\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
     </ClCompile>
     <ClCompile Include="script_effector.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
-    </ClCompile>
-    <ClCompile Include="script_effector_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
     </ClCompile>
     <ClCompile Include="script_effector_wrapper.cpp">
@@ -7551,9 +7542,6 @@
     <ClCompile Include="holder_custom.cpp">
       <Filter>Core\Client\Objects\base\GameObject\Holder</Filter>
     </ClCompile>
-    <ClCompile Include="holder_custom_script.cpp">
-      <Filter>Core\Client\Objects\base\GameObject\Holder</Filter>
-    </ClCompile>
     <ClCompile Include="ai_obstacle.cpp">
       <Filter>Core\Client\Objects\base\GameObject\ai_obstacle</Filter>
     </ClCompile>
@@ -7588,9 +7576,6 @@
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
     </ClCompile>
     <ClCompile Include="PhraseDialog.cpp">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
-    </ClCompile>
-    <ClCompile Include="PhraseDialog_script.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
     </ClCompile>
     <ClCompile Include="PhraseDialogManager.cpp">
@@ -8551,9 +8536,6 @@
       <Filter>GamePhysics</Filter>
     </ClCompile>
     <ClCompile Include="CharacterPhysicsSupport.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="PhysicObject_script.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
     <ClCompile Include="PhysicObject.cpp">

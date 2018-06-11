@@ -1232,7 +1232,6 @@
     <ClInclude Include="script_movement_action.h" />
     <ClInclude Include="script_movement_action_inline.h" />
     <ClInclude Include="patrol_path_params.h" />
-    <ClInclude Include="patrol_path_params_inline.h" />
     <ClInclude Include="script_watch_action.h" />
     <ClInclude Include="script_watch_action_inline.h" />
     <ClInclude Include="script_animation_action.h" />
@@ -1741,7 +1740,6 @@
     <ClCompile Include="PHSkeleton.cpp" />
     <ClCompile Include="PHSoundPlayer.cpp" />
     <ClCompile Include="PhysicObject.cpp" />
-    <ClCompile Include="PhysicObject_script.cpp" />
     <ClCompile Include="PhysicsShellHolder.cpp" />
     <ClCompile Include="PhysicsSkeletonObject.cpp" />
     <ClCompile Include="physics_game.cpp" />
@@ -2155,8 +2153,14 @@
     <ClCompile Include="ai\stalker\ai_stalker_script_entity.cpp" />
     <ClCompile Include="game_graph_script.cpp" />
     <ClCompile Include="level_graph.cpp" />
-    <ClCompile Include="level_graph_debug.cpp" />
-    <ClCompile Include="level_graph_debug2.cpp" />
+    <ClCompile Include="level_graph_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="level_graph_debug2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="level_graph_vertex.cpp" />
     <ClCompile Include="patrol_path.cpp" />
     <ClCompile Include="patrol_path_storage.cpp" />
@@ -2164,7 +2168,6 @@
     <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
     <ClCompile Include="patrol_path_params.cpp" />
-    <ClCompile Include="patrol_path_params_script.cpp" />
     <ClCompile Include="script_watch_action.cpp" />
     <ClCompile Include="script_animation_action.cpp" />
     <ClCompile Include="script_animation_action_script.cpp" />
@@ -2179,7 +2182,6 @@
     <ClCompile Include="script_binder_object.cpp" />
     <ClCompile Include="script_binder_object_wrapper.cpp" />
     <ClCompile Include="script_effector.cpp" />
-    <ClCompile Include="script_effector_script.cpp" />
     <ClCompile Include="script_effector_wrapper.cpp" />
     <ClCompile Include="script_game_object.cpp" />
     <ClCompile Include="script_game_object2.cpp" />
@@ -2293,7 +2295,6 @@
     <ClCompile Include="Wound.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="holder_custom.cpp" />
-    <ClCompile Include="holder_custom_script.cpp" />
     <ClCompile Include="ai_obstacle.cpp" />
     <ClCompile Include="min_obb.cpp" />
     <ClCompile Include="magic_box3.cpp" />
@@ -2306,7 +2307,6 @@
     <ClCompile Include="AI_PhraseDialogManager.cpp" />
     <ClCompile Include="Phrase.cpp" />
     <ClCompile Include="PhraseDialog.cpp" />
-    <ClCompile Include="PhraseDialog_script.cpp" />
     <ClCompile Include="PhraseDialogManager.cpp" />
     <ClCompile Include="PhraseScript.cpp" />
     <ClCompile Include="game_news.cpp" />
