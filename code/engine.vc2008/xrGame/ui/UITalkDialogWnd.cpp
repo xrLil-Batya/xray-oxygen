@@ -222,9 +222,10 @@ void CUITalkDialogWnd::AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR textu
 
 void CUITalkDialogWnd::SetOsoznanieMode(bool b)
 {
+#ifdef SOC_TALK_WND
 	UIOurIcon.Show(!b);
 	UIOthersIcon.Show(!b);
-
+#endif
 	UIAnswersList->Show	(!b);
 
 	UIToTradeButton.Show(!b);
