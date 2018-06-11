@@ -14,6 +14,7 @@
 #include "../../xrEngine/environment.h"
 
 #include "dxRenderDeviceRender.h"
+#include "../../xrEngine/Rain.h"
 
 // matrices
 #define	BIND_DECLARE(xf)	\
@@ -317,10 +318,23 @@ class cl_screen_params : public R_constant_setup
 };
 static cl_screen_params binder_screen_params;
 
+class cl_rain_params : public R_constant_setup {
+    u32			marker;
+    Fvector4	result;
+    virtual void setup(R_constant* C) {
+        if (marker != Device.dwFrame) {
+            result.set(*rain_params);
+        }
+        RCache.set_c(C, result);
+    }
+};
+static cl_rain_params binder_rain_params;
+
 // Standart constant-binding
 void	CBlender_Compile::SetMapping	()
 {
     r_Constant("ogse_c_screen", &binder_screen_params);
+    r_Constant("ogse_c_rain", &binder_rain_params);
 
 	// matrices
 	r_Constant				("m_W",				&binder_w);

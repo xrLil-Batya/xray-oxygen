@@ -1,18 +1,18 @@
 #include "common.h"
 
-struct   vf
+struct vf
 {
-        float4         hpos        :         POSITION        ;
-      float2  tbase        :        TEXCOORD0        ;  // base
-           float2         tnorm0        :        TEXCOORD1        ;  // nm0
-           float2         tnorm1        :        TEXCOORD2        ;  // nm1
-        half3         M1                :        TEXCOORD3        ;
-        half3         M2                :        TEXCOORD4        ;
-        half3         M3                :        TEXCOORD5        ;
-        half3        v2point        :        TEXCOORD6        ;
-	float4      tctexgen    :         TEXCOORD7        ;
-           half4        c0                :          COLOR0                ;
-//        float          fog        :         FOG                ;
+	float4 hpos  	: POSITION        ;
+	float2 tbase  	: TEXCOORD0        ;  // base
+	float2 tnorm0  	: TEXCOORD1        ;  // nm0
+	float2 tnorm1  	: TEXCOORD2        ;  // nm1
+	half3 M1       	: TEXCOORD3        ;
+	half3 M2       	: TEXCOORD4        ;
+	half3 M3       	: TEXCOORD5        ;
+	half3 v2point  	: TEXCOORD6        ;
+	float4 tctexgen : TEXCOORD7        ;
+	half4 c0       	: COLOR0                ;
+//	float fog      	: FOG                ;
 };
 
 uniform sampler2D	s_nmap;
@@ -23,27 +23,6 @@ uniform sampler2D	s_leaves;
 #if defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
 half3	water_intensity;
 #endif	//	defined(USE_SOFT_WATER) && defined(NEED_SOFT_WATER)
-
-////////////////////////////////////////////////////////////////////////////////
-// Pixel
-/*
-half4   main         ( v2p I )  : COLOR
-{
-
-        half4        t_base                = tex2D   (s_base,I.tbase);
-        half3        t_env                = texCUBE  (s_env, I.tenv);
-
-        half3        refl                = lerp    (t_env,t_base,I.c0.a);
-        half3        color                = lerp    (refl, t_base,t_base.a);
-        half3        final                = color*I.c0*2  ;
-
-        half        alpha_shift        = saturate(.5-I.c0.a);
-        half        alpha_add        = alpha_shift*alpha_shift;
-        half        alpha                = t_base.a;
-        // out
-  return  half4   (final,   t_base.a );  //t_base.a + (1-I.c0.a));  //half4  (final, t_base.a );
-}
-*/
 
 half4   main( vf I )          : COLOR
 {
@@ -57,13 +36,6 @@ half4   main( vf I )          : COLOR
 	half3	v2point	= normalize (I.v2point);
 	half3	vreflect= reflect(v2point, Nw);
 			vreflect.y= vreflect.y*2-1;     // fake remapping
-/*	//	true remapping. Slow.
-	half3 vreflectabs = abs(vreflect);
-	half vreflectmax = max( vreflectabs.x, max(vreflectabs.y, vreflectabs.z));
-	vreflect /= vreflectmax;
-	if (vreflect.y<0.99)
-		vreflect.y = vreflect.y*2-1;
-*/
 
 	half3	env0	= texCUBE (s_env0, vreflect);
 	half3	env1	= texCUBE (s_env1, vreflect);
@@ -119,12 +91,8 @@ half4   main( vf I )          : COLOR
 	alpha		= lerp(alpha, leaves.a, leaves.a*fLeavesFactor);
 
 #endif	//	USE_SOFT_WATER
-
 	return  half4   (final, alpha*I.c0.a*I.c0.a )                ;
-
 #else	//	NEED_SOFT_WATER
-
-        return  half4   (final, 1 )                ;
-
+	return  half4   (final, 1 )                ;
 #endif	//	NEED_SOFT_WATER
 }
