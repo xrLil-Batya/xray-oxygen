@@ -50,7 +50,7 @@ namespace debug { class text_tree; }
 
 class anti_aim_ability;
 
-class CBaseMonster : public CCustomMonster, public CStepManager, public CInventoryOwner
+class CBaseMonster : public CCustomMonster, public CStepManager
 {
 	typedef	CCustomMonster								inherited;
 	
@@ -71,7 +71,7 @@ public:
 	virtual CScriptEntity*				cast_script_entity			()	{return this;}
 	virtual CBaseMonster*				cast_base_monster			()	{return this;}
 
-	virtual CInventoryOwner*			cast_inventory_owner		() {return this;}
+	//virtual CInventoryOwner*			cast_inventory_owner		() {return this;}
 	virtual bool						unlimited_ammo				() {return false;}
 	virtual CGameObject*				cast_game_object			() {return this;}
 
