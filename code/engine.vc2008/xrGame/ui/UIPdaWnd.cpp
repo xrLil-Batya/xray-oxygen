@@ -27,6 +27,8 @@
 #include "UIRankingWnd.h"
 #include "UILogsWnd.h"
 
+#include "../../xrServerEntities/script_engine.h"
+
 #define PDA_XML		"pda.xml"
 
 u32 g_pda_info_state = 0;
@@ -172,13 +174,18 @@ void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 		m_pActiveDialog = pUILogsWnd;
 	}
 
-	R_ASSERT						(m_pActiveDialog);
-	UIMainPdaFrame->AttachChild		(m_pActiveDialog);
-	m_pActiveDialog->Show			(true);
+	luabind::functor<void> functor;
 
-	if ( UITabControl->GetActiveId() != section )
+	if (ai().script_engine().functor("oxy_callbacks.Pda_SetActiveSubdialog", functor))
+		functor(section.c_str());
+
+	R_ASSERT(m_pActiveDialog);
+	UIMainPdaFrame->AttachChild(m_pActiveDialog);
+	m_pActiveDialog->Show(true);
+
+	if (UITabControl->GetActiveId() != section)
 	{
-		UITabControl->SetActiveTab( section );
+		UITabControl->SetActiveTab(section);
 	}
 	m_sActiveSection = section;
 	SetActiveCaption();
@@ -302,13 +309,19 @@ void RearrangeTabButtons(CUITabControl* pTab)
 
 bool CUIPdaWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 {
-	if ( is_binded(kACTIVE_JOBS, dik) )
+	if (is_binded(kACTIVE_JOBS, dik))
 	{
-		if ( WINDOW_KEY_PRESSED == keyboard_action )
+		if (WINDOW_KEY_PRESSED == keyboard_action)
+		{
+			luabind::functor<void> f;
+			if (ai().script_engine().functor("oxy_callbacks.Pda_Deactivate", f))
+				f();
+
 			HideDialog();
+		}
 
 		return true;
-	}	
+	}
 
-	return inherited::OnKeyboardAction(dik,keyboard_action);
+	return inherited::OnKeyboardAction(dik, keyboard_action);
 }

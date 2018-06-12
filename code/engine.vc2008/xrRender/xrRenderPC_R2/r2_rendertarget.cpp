@@ -215,7 +215,7 @@ CRenderTarget::CRenderTarget		()
 	b_rain_drops                    = xr_new<CBlender_rain_drops>           ();
 	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
 	b_sunshafts						= xr_new<CBlender_ss>					();
-    b_ogse_sunshafts = xr_new<CBlender_sunshafts>();
+    b_ogse_sunshafts				= xr_new<CBlender_sunshafts>();
 
 	//	NORMAL
 	{
@@ -276,13 +276,12 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	// FLARES
-	s_flare.create("effects\\flare", "fx\\lenslare");
-
+	s_flare.create					("effects\\flare", "fx\\lenslare");
 	// RAIN DROPS
 	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
-
 	// OCCLUSION
 	s_occq.create					(b_occq,		"r2\\occq");
+	s_water.create					("effects\\puddles", "water\\water_water");
 
 	// DIRECT (spot)
 	D3DFORMAT						depth_format	= (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
@@ -642,12 +641,13 @@ CRenderTarget::~CRenderTarget	()
 	_RELEASE					(rt_smap_ZB);
 
 	// Jitter
-	for (int it=0; it<TEX_jitter_count; it++)	{
-		t_noise	[it]->surface_set	(NULL);
+	for (u32 it = 0; it < TEX_jitter_count; it++) 
+	{
+		t_noise[it]->surface_set(nullptr);
 #ifdef DEBUG
-		_SHOW_REF("t_noise_surf[it]",t_noise_surf[it]);
+		_SHOW_REF("t_noise_surf[it]", t_noise_surf[it]);
 #endif // DEBUG
-		_RELEASE					(t_noise_surf[it]);
+		_RELEASE(t_noise_surf[it]);
 	}
 
 	// 

@@ -88,7 +88,7 @@ static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
 
-Flags32			psActorFlags={AF_GODMODE_RT|AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE};
+Flags32			psActorFlags={AF_GODMODE_RT|AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
 int				psActorSleepTime = 1;
 
 
@@ -367,7 +367,7 @@ void CActor::Load	(LPCSTR section )
 	m_sInventoryItemUseAction		= "inventory_item_use";
 	m_sInventoryBoxUseAction		= "inventory_box_use";
 	m_sCampfireIgniteAction			= "campfire_ignite";
-	m_sCampfireExtinguishAction = "campfire_extinguish";
+	m_sCampfireExtinguishAction		= "campfire_extinguish";
 	//---------------------------------------------------------------------
 	m_sHeadShotParticle	= READ_IF_EXISTS(pSettings,r_string,section,"HeadShotParticle",0);
 	
@@ -715,13 +715,11 @@ float CActor::currentFOV()
 
 	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());	
 
-	if (pWeapon &&
-		pWeapon->IsZoomed() && 
-		( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture()) )
-		 )
+	if (pWeapon && pWeapon->IsZoomed() && ( !pWeapon->ZoomTexture() || (!pWeapon->IsRotatingToZoom() && pWeapon->ZoomTexture())))
 	{
 		return pWeapon->GetZoomFactor() * (0.75f);
-	}else
+	}
+	else
 	{
 		return g_fov;
 	}
@@ -731,17 +729,19 @@ static bool bLook_cam_fp_zoom = false;
 
 void CActor::UpdateCL	()
 {
-	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver())
- 	{
+#ifndef HOLD_PICKUP_OFF
+	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && !CurrentGameUI()->TopInputReceiver())
+	{
 		int dik = get_action_dik(kUSE, 0), dik2 = get_action_dik(kUSE, 1);
 		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))
 			m_bPickupMode = true;
- 	}
-	if(psActorFlags.test(AF_HARDCORE))
-	cam_Set(eacFirstEye);
+	}
+#endif
+	if (psActorFlags.test(AF_HARDCORE))
+		cam_Set(eacFirstEye);
 	UpdateInventoryOwner			(Device.dwTimeDelta);
 
-	if(m_feel_touch_characters>0)
+	if (m_feel_touch_characters > 0)
 	{
 		for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 		{
@@ -778,85 +778,110 @@ void CActor::UpdateCL	()
 	}
 	if(pWeapon )
 	{
-		if(pWeapon->IsZoomed())
+		if (!psActorFlags.test(AF_FP2ZOOM_FORCED))
 		{
-			float full_fire_disp = pWeapon->GetFireDispersion(true);
-
-			CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
-			if(S) 
-				S->SetParams(full_fire_disp);
-
-			SetZoomAimingMode		(true);
-			//Alun: Force switch to first-person for zooming
-			if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+			if (pWeapon->IsZoomed())
 			{
-				cam_Set(eacFirstEye);
-				bLook_cam_fp_zoom = true;
-			}			
+				float full_fire_disp = pWeapon->GetFireDispersion(true);
+
+				CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
+				if (S)
+					S->SetParams(full_fire_disp);
+
+				SetZoomAimingMode(true);
+				//Alun: Force switch to first-person for zooming
+				if (!bLook_cam_fp_zoom && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+				{
+					cam_Set(eacFirstEye);
+					bLook_cam_fp_zoom = true;
+				}
+			}
+			else
+			{
+				//Alun: Switch back to third-person if was forced
+				if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+				{
+					cam_Set(eacLookAt);
+					bLook_cam_fp_zoom = false;
+				}
+			}
 		}
 		else
 		{
-			//Alun: Switch back to third-person if was forced
-			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+			if (pWeapon->IsZoomed() && pWeapon->IsScopeAttached())
 			{
-				cam_Set(eacLookAt);
-				bLook_cam_fp_zoom = false;
-			}
-		}			
+				float full_fire_disp = pWeapon->GetFireDispersion(true);
 
-		if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
+				CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
+				if (S)
+					S->SetParams(full_fire_disp);
+
+				SetZoomAimingMode(true);
+
+				if (!bLook_cam_fp_zoom && g_Alive() && Level().CurrentViewEntity() == this && cam_active == eacLookAt && cam_Active()->m_look_cam_fp_zoom == true)
+				{
+					Actor()->IR_OnKeyboardPress(kCAM_1);
+					bLook_cam_fp_zoom = true;
+				}
+				else
+				{
+
+					if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
+					{
+						Actor()->IR_OnKeyboardPress(kCAM_2);
+						bLook_cam_fp_zoom = false;
+					}
+				}
+			}
+		}
+		if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 		{
 			float fire_disp_full = pWeapon->GetFireDispersion(true, true);
 			m_fdisp_controller.SetDispertion(fire_disp_full);
-			
+
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
-			if (!Device.m_SecondViewport.IsSVPFrame()) //+SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
-				 HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
+			//+SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
+			if (!Device.m_SecondViewport.IsSVPFrame()) 
+				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
 #ifdef DEBUG
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
-			
-			BOOL B = ! ((mstate_real & mcLookout) && false);
+			BOOL B = !((mstate_real & mcLookout) && false);
 
-			psHUD_Flags.set( HUD_WEAPON_RT, B );
-
+			psHUD_Flags.set(HUD_WEAPON_RT, B);
 			B = B && pWeapon->show_crosshair();
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, B);
 
-			psHUD_Flags.set( HUD_CROSSHAIR_RT2, B );
-			
-
-			
-			psHUD_Flags.set( HUD_DRAW_RT,		pWeapon->show_indicators() );
+			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
 			pWeapon->UpdateSecondVP();
 		}
 
 	}
-   else
-    {
-        if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
-        {
-            HUD().SetCrosshairDisp(0.f);
-            HUD().ShowCrosshair(false);
-			
-			//Alun: Switch back to third-person if was forced
-			if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
-			{
-				cam_Set(eacLookAt);
-				bLook_cam_fp_zoom = false;
-			}
+	else if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
+	{
+		HUD().SetCrosshairDisp(0.f);
+		HUD().ShowCrosshair(false);
 
-			Device.m_SecondViewport.SetSVPActive(false);
-        }
-    }
-	float	cs_min		= pSettings->r_float	(cNameSect(),"ph_crash_speed_min"	);
-	float	cs_max		= pSettings->r_float	(cNameSect(),"ph_crash_speed_max"	);
-	if(psActorFlags.test(AF_GODMODE_RT || AF_GODMODE || AF_NO_CLIP))
-	character_physics_support()->movement()->SetCrashSpeeds	(8000,9000);
+		//Alun: Switch back to third-person if was forced
+		if (bLook_cam_fp_zoom && cam_active == eacFirstEye)
+		{
+			cam_Set(eacLookAt);
+			bLook_cam_fp_zoom = false;
+		}
+
+		Device.m_SecondViewport.SetSVPActive(false);
+	}
+
+	float cs_min = pSettings->r_float(cNameSect(), "ph_crash_speed_min");
+	float cs_max = pSettings->r_float(cNameSect(), "ph_crash_speed_max");
+
+	if (psActorFlags.test(AF_GODMODE_RT || AF_GODMODE || AF_NO_CLIP))
+		character_physics_support()->movement()->SetCrashSpeeds(8000, 9000);
 	else
-	character_physics_support()->movement()->SetCrashSpeeds	(cs_min,cs_max);
+		character_physics_support()->movement()->SetCrashSpeeds(cs_min, cs_max);
 	
 	UpdateDefferedMessages();
 
@@ -1073,22 +1098,25 @@ void CActor::shedule_Update	(u32 DT)
 		setVisible				(!HUDview	());
 
 	//что актер видит перед собой
-	collide::rq_result& RQ				= HUD().GetCurrentRayQuery();
-	
+	collide::rq_result& RQ = HUD().GetCurrentRayQuery();
 
 	float fAcquistionRange = cam_active == eacFirstEye ? 2.0f : 3.0f;
 	if (!input_external_handler_installed() && RQ.O && RQ.O->getVisible() && RQ.range < fAcquistionRange)
 	{
 		m_pObjectWeLookingAt = smart_cast<CGameObject*>(RQ.O);
 
-		CGameObject						*game_object = smart_cast<CGameObject*>(RQ.O);
-		m_pUsableObject = smart_cast<CUsableScriptObject*>(game_object);
-		m_pInvBoxWeLookingAt = smart_cast<CInventoryBox*>(game_object);
-		m_pPersonWeLookingAt = smart_cast<CInventoryOwner*>(game_object);
-		m_pVehicleWeLookingAt = smart_cast<CHolderCustom*>(game_object);
-		m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(game_object);
-		CEntityAlive* pEntityAlive = smart_cast<CEntityAlive*>(game_object);
+		CGameObject *game_object	 = smart_cast<CGameObject*>(RQ.O);
+		m_pUsableObject				 = smart_cast<CUsableScriptObject*>(game_object);
+		m_pInvBoxWeLookingAt		 = smart_cast<CInventoryBox*>(game_object);
+		m_pPersonWeLookingAt		 = smart_cast<CInventoryOwner*>(game_object);
+		m_pVehicleWeLookingAt		 = smart_cast<CHolderCustom*>(game_object);
+		CEntityAlive* pEntityAlive   = smart_cast<CEntityAlive*>(game_object);
 
+#ifdef MONSTER_INV
+		if (smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
+			m_sDefaultObjAction = m_sDeadCharacterUseAction;
+		else
+#endif
 		if (m_pUsableObject && m_pUsableObject->tip_text())
 		{
 			m_sDefaultObjAction = CStringTable().translate(m_pUsableObject->tip_text());
@@ -1114,19 +1142,6 @@ void CActor::shedule_Update	(u32 DT)
 				m_sDefaultObjAction = m_sCarCharacterUseAction;
 			else if (m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() && m_pObjectWeLookingAt->cast_inventory_item()->CanTake())
 				m_sDefaultObjAction = m_sInventoryItemUseAction;
-			else if (m_CapmfireWeLookingAt)
-			{
-				if (m_CapmfireWeLookingAt->is_on())
-				{
-					isCampFireAt = true;
-					m_sDefaultObjAction = m_sCampfireExtinguishAction;
-				}
-				else
-				{
-					isCampFireAt = false;
-					m_sDefaultObjAction = m_sCampfireIgniteAction;
-				}
-			}
 			else
 				m_sDefaultObjAction = NULL;
 		}
@@ -1139,7 +1154,6 @@ void CActor::shedule_Update	(u32 DT)
 		m_pObjectWeLookingAt	= nullptr;
 		m_pVehicleWeLookingAt	= nullptr;
 		m_pInvBoxWeLookingAt	= nullptr;
-		m_CapmfireWeLookingAt	= nullptr;
 	}
 
 	UpdateArtefactsOnBeltAndOutfit				();
@@ -1730,4 +1744,65 @@ void CActor::script_register(lua_State *L)
 		class_<CLevelChanger, CGameObject>("CLevelChanger")
 		.def(constructor<>())
 		];
+}
+
+void CActor::RepackAmmo()
+{
+	xr_vector<CWeaponAmmo*>  _ammo;
+
+	// заполняем массив неполными пачками
+	for (PIItem &_pIItem : inventory().m_ruck)
+	{
+		CWeaponAmmo* pAmmo = smart_cast<CWeaponAmmo*>(_pIItem);
+		if (pAmmo && pAmmo->m_boxCurr < pAmmo->m_boxSize) _ammo.push_back(pAmmo);
+	}
+
+	while (!_ammo.empty())
+	{
+		shared_str asect = _ammo[0]->cNameSect(); // текущая секция
+		u16 box_size = _ammo[0]->m_boxSize; // размер пачки
+
+		u32 cnt = 0;
+		u16 cart_cnt = 0;
+
+		// считаем кол=во патронов текущей секции
+		for (CWeaponAmmo* ammo: _ammo)
+		{
+			if (asect == ammo->cNameSect())
+			{
+				cnt = cnt + ammo->m_boxCurr;
+				cart_cnt++;
+			}
+		}
+
+		// если больше одной неполной пачки, то перепаковываем
+		if (cart_cnt > 1)
+		{
+			for (CWeaponAmmo* ammo : _ammo)
+			{
+				if (asect == ammo->cNameSect())
+				{
+					if (cnt > 0)
+					{
+						if (cnt > box_size)
+						{
+							ammo->m_boxCurr = box_size;
+							cnt = cnt - box_size;
+						}
+						else
+						{
+							ammo->m_boxCurr = (u16)cnt;
+							cnt = 0;
+						}
+					}
+					else
+					{
+						ammo->DestroyObject();
+					}
+				}
+			}
+		}
+		//чистим массив от обработанных пачек
+		_ammo.erase(std::remove_if(_ammo.begin(), _ammo.end(), [asect](CWeaponAmmo* a) { return a->cNameSect() == asect; }) , _ammo.end());
+	}
 }

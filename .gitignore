@@ -19,6 +19,7 @@
 *.aps
 *.db
 *.tmp
+*.cache
 
 binaries/
 intermediatex64/
@@ -38,3 +39,5 @@ librariesx64/
 *.db-shm
 *.db-wal
 *.lib
+*.psess
+*.vspx

@@ -27,7 +27,7 @@ namespace xrPostprocessEditor
             }
         }
 
-        private EditorEngine engine;
+        public static EditorEngine engine;
         private readonly string defaultEffectName = "untitled";
         private string effectName;
         private ChannelDesc[] chInfo;
@@ -62,7 +62,9 @@ namespace xrPostprocessEditor
             }
             SetCurrentEffectName(defaultEffectName);
             foreach (var ch in chInfo)
+            {
                 ch.List.SelectedIndexChanged += (s, e) => ch.Update((s as KeyFrameBox).SelectedIndex);
+            }
         }
 
         Color ConvertColor(ColorF value)
@@ -121,7 +123,7 @@ namespace xrPostprocessEditor
             tbColorMappingTexture.Text = value.Texture;
         }
         
-        public void Initialize(EditorEngine engine) { this.engine = engine; }
+        public void Initialize(EditorEngine nEngine) { engine = nEngine; }
 
         private void CopyKeyFrames(ChannelDesc dst, ChannelDesc src)
         {

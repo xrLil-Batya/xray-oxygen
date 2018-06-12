@@ -8,9 +8,7 @@
 
 #include "stdafx.h"
 
-#ifdef DEBUG
 #ifndef AI_COMPILER
-
 #include "level_graph.h"
 #include "level.h"
 #include "game_base_space.h"
@@ -694,4 +692,3 @@ void CLevelGraph::draw_game_graph	()
 }
 
 #endif // AI_COMPILER
-#endif // DEBUG

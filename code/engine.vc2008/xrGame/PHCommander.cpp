@@ -24,7 +24,7 @@ bool CPHCall::obsolete()
 
 void CPHCall::check()
 {
-	if(m_condition->is_true() && m_action)
+	if(m_condition && m_condition->is_true() && m_action)
 	{
 		m_action->run();
 	}

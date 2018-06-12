@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "../../xrEngine/igame_persistent.h"
 #include "../../xrEngine/environment.h"
-
+#include "r2_puddles.h"
 #include "../xrRender/dxEnvironmentRender.h"
 
 #define STENCIL_CULL 0
@@ -293,6 +293,9 @@ void	CRenderTarget::phase_combine	()
             phase_SunShafts();
 
         phase_rain_drops();
+
+		if (Puddles->m_bLoaded)
+			phase_puddles();
 	}
 
 

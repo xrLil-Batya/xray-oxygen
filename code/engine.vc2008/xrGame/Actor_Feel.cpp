@@ -17,6 +17,8 @@
 #include "Level.h"
 #include "clsid_game.h"
 #include "hudmanager.h"
+#include "ZoneCampfire.h"
+#include "../FrayBuildConfig.hpp"
 
 #define PICKUP_INFO_COLOR 0xFFFFA916
 
@@ -43,10 +45,11 @@ BOOL CActor::feel_touch_contact		(CObject *O)
 
 	if(inventory_owner && inventory_owner != smart_cast<CInventoryOwner*>(this))
 	{
-		//CPhysicsShellHolder* sh=smart_cast<CPhysicsShellHolder*>(O);
-		//if(sh&&sh->character_physics_support()) m_feel_touch_characters++;
 		return TRUE;
 	}
+
+	CZoneCampfire* camp = smart_cast<CZoneCampfire*>(O);
+	if (camp) return TRUE;
 
 	return		(FALSE);
 }
@@ -94,54 +97,91 @@ ICF static BOOL info_trace_callback(collide::rq_result& result, LPVOID params)
 
 BOOL CActor::CanPickItem(const CFrustum& frustum, const Fvector& from, CObject* item)
 {
-	if(!item->getVisible())
+	if (!item->getVisible())
 		return FALSE;
 
-	BOOL	bOverlaped		= FALSE;
-	Fvector dir,to; 
-	item->Center			(to);
-	float range				= dir.sub(to,from).magnitude();
-	if (range>0.25f)
+	BOOL	bOverlaped = FALSE;
+	Fvector dir, to;
+	item->Center(to);
+	float range = dir.sub(to, from).magnitude();
+	if (range > 0.25f)
 	{
-		if (frustum.testSphere_dirty(to,item->Radius()))
+		if (frustum.testSphere_dirty(to, item->Radius()))
 		{
-			dir.div						(range);
+			dir.div(range);
 			collide::ray_defs			RD(from, dir, range, CDB::OPT_CULL, collide::rqtBoth);
-			VERIFY						(!fis_zero(RD.dir.square_magnitude()));
-			RQR.r_clear					();
+			VERIFY(!fis_zero(RD.dir.square_magnitude()));
+			RQR.r_clear();
 			Level().ObjectSpace.RayQuery(RQR, RD, (collide::rq_callback*)info_trace_callback, &bOverlaped, nullptr, item);
 		}
 	}
 	return !bOverlaped;
 }
 
+#include "..\xrEngine\xr_input.h"
 void CActor::PickupModeUpdate()
 {
+#ifndef HOLD_PICKUP_OFF
 	if(!m_bPickupMode)				return; // kUSE key pressed
 
-	//ïîäáèðàíèå îáúåêòà
-	if(	m_pObjectWeLookingAt									&& 
-		m_pObjectWeLookingAt->cast_inventory_item()				&& 
-		m_pObjectWeLookingAt->cast_inventory_item()->Useful()	&&
-		m_pUsableObject											&& 
-		!m_pUsableObject->nonscript_usable()					&&
-		!Level().m_feel_deny.is_object_denied(m_pObjectWeLookingAt) )
+	// подбирание объекта
+	if(m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() &&  m_pObjectWeLookingAt->cast_inventory_item()->Useful() &&
+		m_pUsableObject && !m_pUsableObject->nonscript_usable() && !Level().m_feel_deny.is_object_denied(m_pObjectWeLookingAt))
 	{
 		m_pUsableObject->use(this);
 		Game().SendPickUpEvent(ID(), m_pObjectWeLookingAt->ID());
 	}
+#endif
 
 	feel_touch_update	(Position(), m_fPickupInfoRadius);
 	
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
-
-	for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
+#ifdef HOLD_PICKUP_OFF
+	bool bPickupMode = false;
+	if (g_Alive() && Level().CurrentViewEntity() == this) 
 	{
-		Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
-		act_and_cam_pos.y    += CameraHeight();
-		if (CanPickItem(frustum, act_and_cam_pos, *it)) 
-			PickupInfoDraw(*it);
+		if (CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver()) 
+		{
+			int dik = get_action_dik(kUSE, 0);
+			if (dik && pInput->iGetAsyncKeyState(dik))
+				bPickupMode = true;
+
+			dik = get_action_dik(kUSE, 1);
+			if (dik && pInput->iGetAsyncKeyState(dik))
+				bPickupMode = true;
+		}
+	}
+	if (bPickupMode)
+#endif
+	{
+		for (CObject* obj : feel_touch)
+		{
+			Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
+			act_and_cam_pos.y += CameraHeight();
+			if (CanPickItem(frustum, act_and_cam_pos, obj))
+				PickupInfoDraw(obj);
+		}
+	}
+
+	m_CapmfireWeLookingAt = nullptr;
+	for (CObject* obj : feel_touch)
+	{
+		CZoneCampfire* camp = smart_cast<CZoneCampfire*>(obj);
+		if (camp)
+		{
+			Fvector dir, to;
+			camp->Center(to);
+			dir.sub(to, Device.vCameraPosition);
+			float dist = dir.magnitude();
+			float range = dir.normalize().dotproduct(Device.vCameraDirection);
+			if (dist < 1.6f && range > 0.95f)
+			{
+				m_CapmfireWeLookingAt = camp;
+				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
+				return;
+			}
+		}
 	}
 }
 
@@ -225,8 +265,11 @@ void	CActor::PickupModeUpdate_COD	()
 		if(pUsableObject && (!m_pUsableObject))
 			pUsableObject->use(this);
 
-		//ïîäáèðàíèå îáúåêòà
+		//подбирание объекта
 		Game().SendPickUpEvent(ID(), pNearestItem->object().ID());
+#ifdef HOLD_PICKUP_OFF
+		m_bPickupMode = false;
+#endif
 	}
 };
 

@@ -280,7 +280,8 @@ void CRender::reset_begin()
 	reset_frame = Device.dwFrame;
 
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) 
+												  || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details->Unload();
 		xr_delete(Details);
@@ -302,7 +303,8 @@ void CRender::reset_end()
 	Target						=	xr_new<CRenderTarget>	();
 
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)
+												  || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details = xr_new<CDetailManager>();
 		Details->Load();
@@ -566,14 +568,14 @@ static HRESULT create_shader (
 
 	if (disasm)
 	{
-		ID3DXBuffer*	disasm	= 0;
-		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &disasm );
+		ID3DXBuffer*	pDisasm = 0;
+		D3DXDisassembleShader(LPDWORD(buffer), FALSE, 0, &pDisasm);
 		string_path		dname;
-		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":".ps" );
-		IWriter*		W = FS.w_open("$logs$",dname);
-		W->w			(disasm->GetBufferPointer(),disasm->GetBufferSize());
-		FS.w_close		(W);
-		_RELEASE		(disasm);
+		strconcat(sizeof(dname), dname, "disasm\\", file_name, ('v' == pTarget[0]) ? ".vs" : ".ps");
+		IWriter*		W = FS.w_open("$logs$", dname);
+		W->w(pDisasm->GetBufferPointer(), pDisasm->GetBufferSize());
+		FS.w_close(W);
+		_RELEASE(pDisasm);
 	}
 
 	return				_result;
@@ -897,6 +899,11 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	{
 		sh_name[len]='0'; ++len;
 	}
+
+	// Puddles
+	defines[def_it].Name = "USE_PUDDLES";
+	defines[def_it].Definition = "1";
+	def_it++;
 
     if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
     {

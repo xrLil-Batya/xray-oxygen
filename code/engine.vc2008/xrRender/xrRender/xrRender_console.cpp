@@ -124,6 +124,7 @@ extern float		r__dtex_range;
 //int		ps_r__Supersample			= 1		;
 int			ps_r__LightSleepFrames		= 10	;
 
+float		ps_current_detail_height	= 1.f;
 float		ps_r__Detail_l_ambient		= 0.9f	;
 float		ps_r__Detail_l_aniso		= 0.25f	;
 float		ps_r__Detail_density		= 0.3f	;
@@ -139,6 +140,7 @@ float		ps_r__WallmarkTTL			= 50.f	;
 float		ps_r__WallmarkSHIFT			= 0.0001f;
 float		ps_r__WallmarkSHIFT_V		= 0.0001f;
 
+float		ps_r__Detail_height 		= 1.f;
 float		ps_r__GLOD_ssa_start		= 256.f	;
 float		ps_r__GLOD_ssa_end			=  64.f	;
 float		ps_r__LOD					=  0.75f	;
@@ -842,6 +844,7 @@ void		xrRender_initconsole	()
 	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r2_ls_flags_ext,		R2FLAGEXT_WIREFRAME);//Need restart
 	CMD3(CCC_Mask,		"r2_steep_parallax",			&ps_r2_ls_flags,			R2FLAG_STEEP_PARALLAX);
 	CMD3(CCC_Mask,		"r2_detail_bump",				&ps_r2_ls_flags,			R2FLAG_DETAIL_BUMP);
+	CMD4(CCC_Float,		"r__detail_height",				&ps_r__Detail_height,		1, 2);
 
 	CMD3(CCC_Token,		"r2_sun_quality",				&ps_r_sun_quality,			qsun_quality_token);
 	

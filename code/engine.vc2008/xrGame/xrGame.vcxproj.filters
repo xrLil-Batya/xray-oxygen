@@ -2008,9 +2008,6 @@
     <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsItem">
       <UniqueIdentifier>{f1c34a70-e43e-4966-b6d0-b964b7b45460}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsConsoleCommands">
-      <UniqueIdentifier>{9bea0bd6-d456-41c8-9ba9-cb3cda9cb4cf}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AScript\ScriptClasses\UI\Common\MainMenu">
       <UniqueIdentifier>{5470b9a9-25f9-4ded-a58c-be802998b8aa}</UniqueIdentifier>
     </Filter>
@@ -2133,6 +2130,9 @@
     </Filter>
     <Filter Include="Core\Client\Objects\items &amp; weapons\Devices\Detectors\Dosimeter">
       <UniqueIdentifier>{b715dea7-8373-4cb2-8ccc-7fba89926be7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Core\Common\Expressions">
+      <UniqueIdentifier>{30ff37ac-f70f-4077-80b6-6f06c2b84d49}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -2737,9 +2737,6 @@
       <Filter>AI\AGroup\agent_manager\agent_explosive_manager</Filter>
     </ClInclude>
     <ClInclude Include="danger_explosive.h">
-      <Filter>AI\AGroup\agent_manager\agent_explosive_manager\danger_explosive</Filter>
-    </ClInclude>
-    <ClInclude Include="danger_explosive_inline.h">
       <Filter>AI\AGroup\agent_manager\agent_explosive_manager\danger_explosive</Filter>
     </ClInclude>
     <ClInclude Include="agent_location_manager.h">
@@ -4596,9 +4593,6 @@
     <ClInclude Include="patrol_path_params.h">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
     </ClInclude>
-    <ClInclude Include="patrol_path_params_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
-    </ClInclude>
     <ClInclude Include="script_watch_action.h">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClInclude>
@@ -4977,12 +4971,6 @@
     <ClInclude Include="GametaskManager.h">
       <Filter>Core\Client\Objects\tasks_info_dialogs\game tasks</Filter>
     </ClInclude>
-    <ClInclude Include="encyclopedia_article.h">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\encyclopedia</Filter>
-    </ClInclude>
-    <ClInclude Include="encyclopedia_article_defs.h">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\encyclopedia</Filter>
-    </ClInclude>
     <ClInclude Include="AI_PhraseDialogManager.h">
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
     </ClInclude>
@@ -5301,16 +5289,7 @@
     <ClInclude Include="PdaMsg.h">
       <Filter>Core\Client\Objects\items &amp; weapons\PDA &amp; information</Filter>
     </ClInclude>
-    <ClInclude Include="antirad.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClInclude>
-    <ClInclude Include="BottleItem.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClInclude>
     <ClInclude Include="FoodItem.h">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClInclude>
-    <ClInclude Include="medkit.h">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClInclude>
     <ClInclude Include="ActorHelmet.h">
@@ -6105,6 +6084,10 @@
     <ClInclude Include="game_cl_base.h">
       <Filter>Core\Server\Games\client</Filter>
     </ClInclude>
+    <ClInclude Include="ActorRuck.h">
+      <Filter>Core\Client\Objects\actor</Filter>
+    </ClInclude>
+    <ClInclude Include="ui\UIPdaSpot.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -7262,9 +7245,6 @@
     <ClCompile Include="patrol_path_params.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
     </ClCompile>
-    <ClCompile Include="patrol_path_params_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
-    </ClCompile>
     <ClCompile Include="script_watch_action.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClCompile>
@@ -7305,9 +7285,6 @@
       <Filter>AI\AScript\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
     </ClCompile>
     <ClCompile Include="script_effector.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
-    </ClCompile>
-    <ClCompile Include="script_effector_script.cpp">
       <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
     </ClCompile>
     <ClCompile Include="script_effector_wrapper.cpp">
@@ -7565,9 +7542,6 @@
     <ClCompile Include="holder_custom.cpp">
       <Filter>Core\Client\Objects\base\GameObject\Holder</Filter>
     </ClCompile>
-    <ClCompile Include="holder_custom_script.cpp">
-      <Filter>Core\Client\Objects\base\GameObject\Holder</Filter>
-    </ClCompile>
     <ClCompile Include="ai_obstacle.cpp">
       <Filter>Core\Client\Objects\base\GameObject\ai_obstacle</Filter>
     </ClCompile>
@@ -7595,9 +7569,6 @@
     <ClCompile Include="GametaskManager.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\game tasks</Filter>
     </ClCompile>
-    <ClCompile Include="encyclopedia_article.cpp">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\encyclopedia</Filter>
-    </ClCompile>
     <ClCompile Include="AI_PhraseDialogManager.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
     </ClCompile>
@@ -7605,9 +7576,6 @@
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
     </ClCompile>
     <ClCompile Include="PhraseDialog.cpp">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
-    </ClCompile>
-    <ClCompile Include="PhraseDialog_script.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\dialogs</Filter>
     </ClCompile>
     <ClCompile Include="PhraseDialogManager.cpp">
@@ -7859,16 +7827,7 @@
     <ClCompile Include="PDA.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\PDA &amp; information</Filter>
     </ClCompile>
-    <ClCompile Include="antirad.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
-    <ClCompile Include="BottleItem.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
     <ClCompile Include="FoodItem.cpp">
-      <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
-    </ClCompile>
-    <ClCompile Include="medkit.cpp">
       <Filter>Core\Client\Objects\items &amp; weapons\Food &amp; Drugs</Filter>
     </ClCompile>
     <ClCompile Include="ActorHelmet.cpp">
@@ -7965,9 +7924,6 @@
       <Filter>Core\Client\Objects\vehicles\Car</Filter>
     </ClCompile>
     <ClCompile Include="CarDoors.cpp">
-      <Filter>Core\Client\Objects\vehicles\Car</Filter>
-    </ClCompile>
-    <ClCompile Include="CarExhaust.cpp">
       <Filter>Core\Client\Objects\vehicles\Car</Filter>
     </ClCompile>
     <ClCompile Include="CarInput.cpp">
@@ -8582,9 +8538,6 @@
     <ClCompile Include="CharacterPhysicsSupport.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="PhysicObject_script.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicObject.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
@@ -8714,6 +8667,13 @@
     <ClCompile Include="game_cl_base.cpp">
       <Filter>Core\Server\Games\client</Filter>
     </ClCompile>
+    <ClCompile Include="game_expression_delegates.cpp">
+      <Filter>Core\Common\Expressions</Filter>
+    </ClCompile>
+    <ClCompile Include="ActorRuck.cpp">
+      <Filter>Core\Client\Objects\actor</Filter>
+    </ClCompile>
+    <ClCompile Include="ui\UIPdaSpot.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

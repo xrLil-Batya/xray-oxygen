@@ -234,6 +234,9 @@
     <ClCompile Include="threadpool\ttapi_oxygen.cpp">
       <Filter>OS</Filter>
     </ClCompile>
+    <ClCompile Include="XMLCore\Expression.cpp">
+      <Filter>Xml</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -496,6 +499,9 @@
     </ClInclude>
     <ClInclude Include="xrMemory_C.h">
       <Filter>Memory manager</Filter>
+    </ClInclude>
+    <ClInclude Include="XMLCore\Expression.h">
+      <Filter>Xml</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

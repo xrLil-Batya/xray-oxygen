@@ -37,6 +37,24 @@
     <Filter Include="Application\Kernel\Launcher\Editors\Particle Editor">
       <UniqueIdentifier>{5f9f62a1-9d9b-4a43-8b98-3a117a5b0be7}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Others\Kernel\Splash Screen">
+      <UniqueIdentifier>{e1493784-d472-43ed-87fe-d1e9bc466d4d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Controls">
+      <UniqueIdentifier>{f46be969-f432-4142-ab84-aab2a4f442f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Kernel\Level Editor">
+      <UniqueIdentifier>{1573ed8e-8887-4587-b07f-4f77faa5d926}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Kernel\Actor Editor">
+      <UniqueIdentifier>{6a48c4dd-b3c0-46d9-ac41-7cb84665472c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Kernel\Shader Editor">
+      <UniqueIdentifier>{06cdc472-9cf8-45db-9cd8-7b1be04a58c3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Modules\Kernel\Particle Editor">
+      <UniqueIdentifier>{f96fe192-d4ee-442f-9320-b7e86ca8e813}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="LE_Form.cpp">
@@ -54,8 +72,24 @@
     <ClInclude Include="Launcher.h">
       <Filter>Application\Kernel\Launcher</Filter>
     </ClInclude>
+    <ClInclude Include="DockPanels.h">
+      <Filter>Modules\Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderViewLE.h">
+      <Filter>Modules\Kernel\Level Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="ObjectViewLE.h">
+      <Filter>Modules\Kernel\Level Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="StatusStripLE.h">
+      <Filter>Modules\Kernel\Level Editor</Filter>
+    </ClInclude>
+    <ClInclude Include="RenderPanel.h">
+      <Filter>Modules\Controls</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Launcher.resx" />
+    <EmbeddedResource Include="LE_Form.resx" />
   </ItemGroup>
 </Project>

@@ -28,7 +28,6 @@
 /* xrGame */
 #define WPN_AUTORELOAD			// Enable autoreload
 //#define DYNAMIC_SUN_MOVEMENT 	// Use dynamic sun movement
-//#define NEW_SLOTS				// Add knife slot and binocular slot in inventory
 //#define ASPAWN_CROW			// Spawn crows over actor
 //#define NEW_ANIMS_WPN			// Enable anm_..._crouch, anm_reload_empty
 #define DEAD_BODY_WEAPON		// Enable weapons in dead stalkers
@@ -42,3 +41,13 @@
 //#define MINMAP_BAR_HUD		// Adds progress bars to luminosity and noise value
 //#define HUD_DOSIMETER			// Adds dosimeter on hud. From Clear Sky.
 //#define HUD_SHAPE_VALUE		// Adds shape progress to HUD. Health and Stamina value.
+
+/* True Stalker */
+//#define HOLD_PICKUP_OFF		// Selection of subjects one by one.
+//#define ACTOR_RUCK			// Ruck slot to Actor Inventory.
+//#define PSEUDOGIG_JUMP_NOHIT	// Disabling hit on pseudogigant jump.
+//#define POLTER_SHOW_DEAD		// Showing poltergeist particle if polter dead.
+#define MULTITRANSFER			// Multi transfer to actor
+//#define SOC_TALK_WND			// Left and Right talkers icons
+//#define MONSTER_INV			// Inventory on Monsted dead body
+//#define VERTICAL_BELT			// Verticals belt slots

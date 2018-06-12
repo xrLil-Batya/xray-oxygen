@@ -283,23 +283,10 @@ void CSoundRender_Core::set_geometry_env(IReader* I)
 
 	hdrCFORM realCform;
 	geom->r(&realCform, sizeof(hdrCFORM));
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-	//if (realCform.version != CFORM_CURRENT_VERSION)														 //
-	//{																									 //
-	//	hdrCFORM_4 oldCform;																			 //
-	//	geom->r(&oldCform, sizeof(hdrCFORM_4));															 //
-																										 //
-	R_ASSERT2(realCform.version == CFORM_CURRENT_VERSION || realCform.version == 4, "Incorrect level.cform! xrOxygen supports ver.4 and ver.5.");  //
-																										 //																									 //
-	//	vertcount = oldCform.vertcount;																	 //
-	//	facecount = oldCform.facecount;																	 //
-	//}																									 //
-	//else																								 //
-	//{																									 //
-	//	vertcount = realCform.vertcount;																 //
-	//	facecount = realCform.facecount;																 //
-	//}																									 //
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	R_ASSERT2(realCform.version == CFORM_CURRENT_VERSION || realCform.version == 4, 
+				"Incorrect level.cform! xrOxygen supports ver.4 and ver.5.");  //
+
 	Fvector* verts = (Fvector*)geom->pointer();
 	CDB::TRI* tris = (CDB::TRI*)(verts + realCform.vertcount);
 	geom_ENV = new CDB::MODEL();

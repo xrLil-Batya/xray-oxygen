@@ -50,37 +50,6 @@ void CRenderDevice::_Create	(LPCSTR shName)
 	dwFrame						= 0;
 }
 
-/*
-void CRenderDevice::Create	() 
-{
-	if (b_is_Ready)		return;		// prevent double call
-	Statistic			= xr_new<CStats>();
-	Log					("Starting RENDER device...");
-
-#ifdef _EDITOR
-	psCurrentVidMode[0]	= dwWidth;
-	psCurrentVidMode[1] = dwHeight;
-#endif
-
-	HW.CreateDevice		(m_hWnd);
-	dwWidth				= HW.DevPP.BackBufferWidth	;
-	dwHeight			= HW.DevPP.BackBufferHeight	;
-	fWidth_2			= float(dwWidth/2)			;
-	fHeight_2			= float(dwHeight/2)			;
-	fFOV				= 90.f;
-	fASPECT				= 1.f;
-
-	string_path			fname; 
-	FS.update_path		(fname,"$game_data$","shaders.xr");
-
-	//////////////////////////////////////////////////////////////////////////
-	Resources			= xr_new<CResourceManager>		();
-	_Create				(fname);
-
-	PreCache			(0);
-}
-*/
-
 void CRenderDevice::ConnectToRender()
 {
 	if (!m_pRender)

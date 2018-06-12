@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "xrserver.h"
 #include "xrmessages.h"
+#include "Level.h"
 
 void xrServer::Perform_game_export	()
 {
@@ -11,7 +12,7 @@ void xrServer::Perform_game_export	()
     NET_Packet P;
     P.w_begin(M_SV_CONFIG_GAME);
     game->net_Export_State(P, SV_Client->ID);
-    SendTo(SV_Client->ID, P);
+	Level().OnMessage(P.B.data, (u32)P.B.count);
 
 	game->sv_force_sync	= FALSE;
 }

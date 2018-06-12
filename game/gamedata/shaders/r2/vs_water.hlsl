@@ -30,55 +30,72 @@ struct   vf
         float          fog        :         FOG                ;
 };
 
+uniform float4 ogse_c_rain; // x - rmap dist, y - flood level, z - wet level, w - rain intensity
+uniform float4 c_depth;
 vf main(v_vert v)
 {
-        vf                 o;
+	vf o;
 
-        float4         P         = v.P        ;                // world
-        float3         NN         = unpack_normal        (v.N)        ;
-                P         = watermove        (P)        ;
+	float4 P = v.P;                // world
+	
+#if defined(USE_PUDDLES) && defined(NEED_PUDDLES)
+	P.xyz = mul(m_W, P);
+	float speed = PUDDLES_GROW_SPEED;
+	P.y += saturate(ogse_c_rain.x*ogse_c_rain.w*speed)*c_depth.x;
+	P.w = 1.f;
+#endif
 
-        o.v2point        = P-eye_position        ;
-        o.tbase                = unpack_tc_base        (v.uv,v.T.w,v.B.w);                // copy tc
-        o.tnorm0        = watermove_tc                 (o.tbase*W_DISTORT_BASE_TILE_0, P.xz, W_DISTORT_AMP_0);
-        o.tnorm1        = watermove_tc                 (o.tbase*W_DISTORT_BASE_TILE_1, P.xz, W_DISTORT_AMP_1);
+	float3 NN = unpack_normal(v.N);
+    P = watermove(P)        ;
 
+    o.v2point = P - eye_position;
+	
+#if defined(USE_PUDDLES) && defined(NEED_PUDDLES)
+	o.tbase = v.uv;
+	float3 N = v.N.xyz; 
+	float3 T = v.T.xyz;
+	float3 B = v.B.xyz;        
+#else 
+    o.tbase = unpack_tc_base(v.uv,v.T.w,v.B.w); // copy tc
+	float3 N = unpack_bx2(v.N.xyz); // just scale (assume normal in the -.5f, .5f)
+	float3 T = unpack_bx2(v.T.xyz); //
+	float3 B = unpack_bx2(v.B.xyz); //
+#endif
+	
+    o.tnorm0 = watermove_tc(o.tbase*W_DISTORT_BASE_TILE_0, P.xz, W_DISTORT_AMP_0);
+    o.tnorm1 = watermove_tc(o.tbase*W_DISTORT_BASE_TILE_1, P.xz, W_DISTORT_AMP_1);
 
-        // Calculate the 3x3 transform from tangent space to eye-space
-        // TangentToEyeSpace = object2eye * tangent2object
-        //                     = object2eye * transpose(object2tangent) (since the inverse of a rotation is its transpose)
-        float3          N         = unpack_bx2(v.N);        // just scale (assume normal in the -.5f, .5f)
-        float3          T         = unpack_bx2(v.T);        //
-        float3          B         = unpack_bx2(v.B);        //
-        float3x3 xform        = mul        ((float3x3)m_W, float3x3(
+	// Calculate the 3x3 transform from tangent space to eye-space
+	// TangentToEyeSpace = object2eye * tangent2object
+	//                   = object2eye * transpose(object2tangent) (since the inverse of a rotation is its transpose)
+	float3x3 xform = mul((float3x3)m_W, float3x3(
                                                 T.x,B.x,N.x,
                                                 T.y,B.y,N.y,
                                                 T.z,B.z,N.z
-                                ));
-        // The pixel shader operates on the bump-map in [0..1] range
-        // Remap this range in the matrix, anyway we are pixel-shader limited :)
-        // ...... [ 2  0  0  0]
-        // ...... [ 0  2  0  0]
-        // ...... [ 0  0  2  0]
-        // ...... [-1 -1 -1  1]
-        // issue: strange, but it's slower :(
-        // issue: interpolators? dp4? VS limited? black magic?
+						));
+	// The pixel shader operates on the bump-map in [0..1] range
+	// Remap this range in the matrix, anyway we are pixel-shader limited :)
+	// ...... [ 2  0  0  0]
+	// ...... [ 0  2  0  0]
+	// ...... [ 0  0  2  0]
+	// ...... [-1 -1 -1  1]
+	// issue: strange, but it's slower :(
+	// issue: interpolators? dp4? VS limited? black magic?
 
-        // Feed this transform to pixel shader
-        o.M1                 = xform        [0];
-        o.M2                 = xform        [1];
-        o.M3                 = xform        [2];
+	// Feed this transform to pixel shader
+	o.M1 = xform[0];
+	o.M2 = xform[1];
+	o.M3 = xform[2];
 
-        float3         L_rgb         = v.color.xyz;                                                // precalculated RGB lighting
-        float3         L_hemi         = v_hemi(N)*v.N.w;                                        // hemisphere
-        float3         L_sun         = v_sun(N)*v.color.w;                                        // sun
-        float3         L_final        = L_rgb + L_hemi + L_sun + L_ambient;
-                // L_final        = v.N.w        + L_ambient;
+	float3 L_rgb 	= v.color.xyz;                                                // precalculated RGB lighting
+	float3 L_hemi 	= v_hemi(N) * v.N.w;                                        // hemisphere
+	float3 L_sun 	= v_sun(N) * v.color.w;                                        // sun
+	float3 L_final 	= L_rgb + L_hemi + L_sun + L_ambient;
 
-        o.hpos                 = mul                        (m_VP, P);                        // xform, input in world coords
-		o.fog       = saturate(calc_fogging  (v.P));
+	o.hpos                 = mul                        (m_VP, P);                        // xform, input in world coords
+	o.fog = saturate(calc_fogging  (v.P));
 
-		o.c0		= float4		(L_final,o.fog);
+	o.c0 = float4		(L_final,o.fog);
 
 //	Igor: for additional depth dest
 #ifdef	USE_SOFT_WATER

@@ -84,10 +84,10 @@ void ui_actor_state_wnd::UpdateActorInfo(CInventoryOwner* owner)
 
     float value = 0.0f;
 
-    value = actor->conditions().GetHealth();
-    value = floor(value * 55) / 55; // number of sticks in progress bar
-                                    // show bleeding icon
-    m_state[stt_health]->set_progress(value);
+//     value = actor->conditions().GetHealth();
+//     value = floor(value * 55) / 55; // number of sticks in progress bar
+//                                     // show bleeding icon
+//     m_state[stt_health]->set_progress(value);
     value = actor->conditions().BleedingSpeed();
     m_state[stt_bleeding]->show_static(false, 1);
     m_state[stt_bleeding]->show_static(false, 2);

@@ -32,7 +32,6 @@
 #include "../ai_monster_squad_manager.h"
 #include "../monster_home.h"
 
-#ifdef DEBUG
 CBaseMonster::SDebugInfo CBaseMonster::show_debug_info()
 {
 	if (!g_Alive()) return SDebugInfo();
@@ -911,5 +910,3 @@ void   CBaseMonster::add_debug_info (debug::text_tree& root_s)
 		current_sound_s.add_line(status);
 	}
 }
-
-#endif

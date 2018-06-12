@@ -2,7 +2,6 @@
 #include "ps_fxaa.hlsl"
 
 Texture2D 	s_base0;
-//uniform float4		screen_res;	
 
 struct	v2p 
 {
@@ -12,8 +11,7 @@ struct	v2p
 
 float4 main (  v2p I ) : SV_Target
 {
-    float2 fxaaFrame;
-    s_base0.GetDimensions(fxaaFrame.x, fxaaFrame.y);
+    float2 fxaaFrame = float2(1.0/screen_res.x, 1.0/screen_res.y);
 
     FxaaTex tex = { smp_rtlinear, s_base0 };
 

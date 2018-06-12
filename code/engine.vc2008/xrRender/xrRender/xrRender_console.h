@@ -64,6 +64,8 @@ extern ECORE_API	float		ps_r2_ssaLOD_A;
 extern ECORE_API	float		ps_r2_ssaLOD_B;
 extern ECORE_API	float		ps_r2_tf_Mipbias;
 
+extern ECORE_API	float		ps_current_detail_height;
+
 // R2-specific
 extern ECORE_API Flags32		ps_r2_ls_flags;				// r2-only
 extern ECORE_API Flags32		ps_r2_ls_flags_ext;

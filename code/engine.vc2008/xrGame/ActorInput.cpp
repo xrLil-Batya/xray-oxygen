@@ -36,7 +36,6 @@
 #include "ZoneCampfire.h"
 
 extern u32 hud_adj_mode;
-extern bool isCampFireAt;
 
 void CActor::IR_OnKeyboardPress(int cmd)
 {
@@ -434,7 +433,7 @@ void CActor::ActorUse()
 				TryToTalk();
 			else
 			{
-				//������ ���� ��������� � ������ single
+				// Only single
 				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
 				if (pGameSP)
 				{
@@ -444,6 +443,15 @@ void CActor::ActorUse()
 				}
 			}
 		}
+	}
+	// переключение костра при юзании
+	if (m_CapmfireWeLookingAt)
+	{
+		if (m_CapmfireWeLookingAt->is_on())
+			m_CapmfireWeLookingAt->turn_off_script();
+		else
+			m_CapmfireWeLookingAt->turn_on_script();
+		return;
 	}
 }
 

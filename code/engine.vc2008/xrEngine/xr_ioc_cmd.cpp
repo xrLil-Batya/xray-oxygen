@@ -65,14 +65,14 @@ class CCC_DbgStrCheck : public IConsole_Command
 {
 public:
 	CCC_DbgStrCheck(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->verify(); }
+	virtual void Execute(LPCSTR args) { g_pStringContainer.verify(); }
 };
 
 class CCC_DbgStrDump : public IConsole_Command
 {
 public:
 	CCC_DbgStrDump(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) { g_pStringContainer->dump();}
+	virtual void Execute(LPCSTR args) { g_pStringContainer.dump();}
 };
 
 //-----------------------------------------------------------------------
@@ -283,11 +283,11 @@ public:
 };
 class CCC_VidMode : public CCC_Token
 {
-	u32		_dummy, _w, _h, _deltaBase;
+	u32		_dummy, _w, _h;
 public :
 					CCC_VidMode(LPCSTR N) : CCC_Token(N, &_dummy, NULL) { bEmptyArgsHandled = FALSE; };
 	virtual void	Execute(LPCSTR args)
-	{
+	{ 
 	
 		int cnt = sscanf		(args,"%dx%d",&_w,&_h);
 		if(cnt==2)
@@ -302,18 +302,19 @@ public :
 		}
 	}
 
-	virtual BOOL isWideScreen ()
+	virtual bool isWideScreen ()
 	{
+		u32 uWidth, uHeight, _deltaBase;
 
-		psCurrentVidMode[0] = _w;
-		psCurrentVidMode[1] = _h;
-		_deltaBase = _w / _h;
+		uHeight = psCurrentVidMode[0];
+		uWidth = psCurrentVidMode[0];
+		_deltaBase = uWidth / uHeight;
 
 		// 1920 / 1200 = 16:10 = 1.6
 		if (_deltaBase > 1.6)	
-			return TRUE;
+			return true;
 		else
-			return FALSE;
+			return false;
 	}
 
 	virtual void	Status	(TStatus& S)	

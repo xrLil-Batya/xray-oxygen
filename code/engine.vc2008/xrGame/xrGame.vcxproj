@@ -356,11 +356,13 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="..\xrServerEntities\script_callStack.h" />
     <ClInclude Include="..\xrServerEntities\script_debugger.h" />
     <ClInclude Include="..\xrServerEntities\script_debugger_threads.h" />
     <ClInclude Include="..\xrServerEntities\script_lua_helper.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
+    <ClInclude Include="ActorRuck.h" />
     <ClInclude Include="animation_script_callback.h" />
     <ClInclude Include="BreakableObject.h" />
     <ClInclude Include="CharacterPhysicsSupport.h" />
@@ -608,7 +610,6 @@
     <ClInclude Include="agent_explosive_manager.h" />
     <ClInclude Include="agent_explosive_manager_inline.h" />
     <ClInclude Include="danger_explosive.h" />
-    <ClInclude Include="danger_explosive_inline.h" />
     <ClInclude Include="agent_location_manager.h" />
     <ClInclude Include="agent_location_manager_inline.h" />
     <ClInclude Include="danger_location.h" />
@@ -1231,7 +1232,6 @@
     <ClInclude Include="script_movement_action.h" />
     <ClInclude Include="script_movement_action_inline.h" />
     <ClInclude Include="patrol_path_params.h" />
-    <ClInclude Include="patrol_path_params_inline.h" />
     <ClInclude Include="script_watch_action.h" />
     <ClInclude Include="script_watch_action_inline.h" />
     <ClInclude Include="script_animation_action.h" />
@@ -1367,8 +1367,6 @@
     <ClInclude Include="GameTask.h" />
     <ClInclude Include="GameTaskDefs.h" />
     <ClInclude Include="GametaskManager.h" />
-    <ClInclude Include="encyclopedia_article.h" />
-    <ClInclude Include="encyclopedia_article_defs.h" />
     <ClInclude Include="AI_PhraseDialogManager.h" />
     <ClInclude Include="Phrase.h" />
     <ClInclude Include="PhraseDialog.h" />
@@ -1475,10 +1473,7 @@
     <ClInclude Include="PDA.h" />
     <ClInclude Include="pda_space.h" />
     <ClInclude Include="PdaMsg.h" />
-    <ClInclude Include="antirad.h" />
-    <ClInclude Include="BottleItem.h" />
     <ClInclude Include="FoodItem.h" />
-    <ClInclude Include="medkit.h" />
     <ClInclude Include="ActorHelmet.h" />
     <ClInclude Include="BoneProtections.h" />
     <ClInclude Include="CustomOutfit.h" />
@@ -1693,11 +1688,13 @@
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="..\xrServerEntities\script_callStack.cpp" />
     <ClCompile Include="..\xrServerEntities\script_debugger.cpp" />
     <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />
     <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
+    <ClCompile Include="ActorRuck.cpp" />
     <ClCompile Include="animation_script_callback.cpp" />
     <ClCompile Include="BreakableObject.cpp" />
     <ClCompile Include="CharacterPhysicsSupport.cpp" />
@@ -1711,6 +1708,7 @@
     <ClCompile Include="Dosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="game_expression_delegates.cpp" />
     <ClCompile Include="Hit.cpp" />
     <ClCompile Include="IKFoot.cpp" />
     <ClCompile Include="IKLimb.cpp" />
@@ -1742,7 +1740,6 @@
     <ClCompile Include="PHSkeleton.cpp" />
     <ClCompile Include="PHSoundPlayer.cpp" />
     <ClCompile Include="PhysicObject.cpp" />
-    <ClCompile Include="PhysicObject_script.cpp" />
     <ClCompile Include="PhysicsShellHolder.cpp" />
     <ClCompile Include="PhysicsSkeletonObject.cpp" />
     <ClCompile Include="physics_game.cpp" />
@@ -1918,7 +1915,10 @@
     <ClCompile Include="script_object.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster.cpp" />
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_anim.cpp" />
-    <ClCompile Include="ai\Monsters\BaseMonster\base_monster_debug.cpp" />
+    <ClCompile Include="ai\Monsters\BaseMonster\base_monster_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ai\Monsters\BaseMonster\base_monster_feel.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ShowIncludes>
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ShowIncludes>
@@ -2153,8 +2153,14 @@
     <ClCompile Include="ai\stalker\ai_stalker_script_entity.cpp" />
     <ClCompile Include="game_graph_script.cpp" />
     <ClCompile Include="level_graph.cpp" />
-    <ClCompile Include="level_graph_debug.cpp" />
-    <ClCompile Include="level_graph_debug2.cpp" />
+    <ClCompile Include="level_graph_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="level_graph_debug2.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="level_graph_vertex.cpp" />
     <ClCompile Include="patrol_path.cpp" />
     <ClCompile Include="patrol_path_storage.cpp" />
@@ -2162,7 +2168,6 @@
     <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
     <ClCompile Include="patrol_path_params.cpp" />
-    <ClCompile Include="patrol_path_params_script.cpp" />
     <ClCompile Include="script_watch_action.cpp" />
     <ClCompile Include="script_animation_action.cpp" />
     <ClCompile Include="script_animation_action_script.cpp" />
@@ -2177,7 +2182,6 @@
     <ClCompile Include="script_binder_object.cpp" />
     <ClCompile Include="script_binder_object_wrapper.cpp" />
     <ClCompile Include="script_effector.cpp" />
-    <ClCompile Include="script_effector_script.cpp" />
     <ClCompile Include="script_effector_wrapper.cpp" />
     <ClCompile Include="script_game_object.cpp" />
     <ClCompile Include="script_game_object2.cpp" />
@@ -2291,7 +2295,6 @@
     <ClCompile Include="Wound.cpp" />
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="holder_custom.cpp" />
-    <ClCompile Include="holder_custom_script.cpp" />
     <ClCompile Include="ai_obstacle.cpp" />
     <ClCompile Include="min_obb.cpp" />
     <ClCompile Include="magic_box3.cpp" />
@@ -2301,11 +2304,9 @@
     <ClCompile Include="InfoPortion.cpp" />
     <ClCompile Include="GameTask.cpp" />
     <ClCompile Include="GametaskManager.cpp" />
-    <ClCompile Include="encyclopedia_article.cpp" />
     <ClCompile Include="AI_PhraseDialogManager.cpp" />
     <ClCompile Include="Phrase.cpp" />
     <ClCompile Include="PhraseDialog.cpp" />
-    <ClCompile Include="PhraseDialog_script.cpp" />
     <ClCompile Include="PhraseDialogManager.cpp" />
     <ClCompile Include="PhraseScript.cpp" />
     <ClCompile Include="game_news.cpp" />
@@ -2389,10 +2390,7 @@
     <ClCompile Include="Torch.cpp" />
     <ClCompile Include="flare.cpp" />
     <ClCompile Include="PDA.cpp" />
-    <ClCompile Include="antirad.cpp" />
-    <ClCompile Include="BottleItem.cpp" />
     <ClCompile Include="FoodItem.cpp" />
-    <ClCompile Include="medkit.cpp" />
     <ClCompile Include="ActorHelmet.cpp" />
     <ClCompile Include="BoneProtections.cpp" />
     <ClCompile Include="CustomOutfit.cpp" />
@@ -2425,13 +2423,15 @@
     <ClCompile Include="CarCameras.cpp" />
     <ClCompile Include="CarDamageParticles.cpp" />
     <ClCompile Include="CarDoors.cpp" />
-    <ClCompile Include="CarExhaust.cpp" />
     <ClCompile Include="CarInput.cpp" />
     <ClCompile Include="CarLights.cpp" />
     <ClCompile Include="CarScript.cpp" />
     <ClCompile Include="CarSound.cpp" />
     <ClCompile Include="CarWheels.cpp" />
-    <ClCompile Include="DBG_Car.cpp" />
+    <ClCompile Include="DBG_Car.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="CarWeapon.cpp" />
     <ClCompile Include="car_memory.cpp" />
     <ClCompile Include="Helicopter.cpp" />

@@ -182,6 +182,17 @@ float CActorCondition::GetZoneMaxPower( ALife::EHitType hit_type ) const
 	return GetZoneMaxPower( iz_type );
 }
 
+float CActorCondition::GetBoosterValueByType(EBoostParams type) const
+{
+    auto BoostInfluenceIter = m_booster_influences.find(type);
+    if (BoostInfluenceIter != m_booster_influences.end())
+    {
+        BoostInfluenceIter->second.fBoostValue;
+    }
+
+    return 0.0f;
+}
+
 void CActorCondition::UpdateCondition()
 {
 	if (GodMode())

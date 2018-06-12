@@ -304,6 +304,7 @@
     </ClCompile>
     <ClCompile Include="threadpool\ttapi.cpp" />
     <ClCompile Include="threadpool\ttapi_oxygen.cpp" />
+    <ClCompile Include="XMLCore\Expression.cpp" />
     <ClCompile Include="xrAPI.cpp" />
     <ClCompile Include="XMLCore\tinyxml.cpp" />
     <ClCompile Include="XMLCore\xrXMLParser.cpp" />
@@ -362,6 +363,7 @@
     <ClInclude Include="envelope.h" />
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="lzo_compressor.h" />
+    <ClInclude Include="XMLCore\Expression.h" />
     <ClInclude Include="xrMemory_C.h" />
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="resource.h" />

@@ -14,7 +14,6 @@
 #include "inventory.h"
 #include "pda.h"
 #include "eatable_item.h"
-#include "medkit.h"
 #include "weapon.h"
 #include "Grenade.h"
 #include "customdetector.h"

@@ -46,7 +46,7 @@ public:
 	void				verify			();
 	u32					stat_economy	();
 };
-XRCORE_API	extern		str_container*	g_pStringContainer;
+XRCORE_API	extern		str_container	g_pStringContainer;
 
 //////////////////////////////////////////////////////////////////////////
 class shared_str
@@ -57,7 +57,7 @@ protected:
 	// ref-counting
 	void				_dec		()								{	if (0==p_) return;	p_->dwReference--; 	if (0==p_->dwReference)	p_=0;						}
 public:
-	void				_set		(str_c rhs) 					{	str_value* v = g_pStringContainer->dock(rhs); if (0!=v) v->dwReference++; _dec(); p_ = v;	}
+	void				_set		(str_c rhs) 					{	str_value* v = g_pStringContainer.dock(rhs); if (0!=v) v->dwReference++; _dec(); p_ = v;	}
 	void				_set		(shared_str const &rhs)			{	str_value* v = rhs.p_; if (0!=v) v->dwReference++; _dec(); p_ = v;							}
 
 	const str_value*	_get		()	const						{	return p_;	}

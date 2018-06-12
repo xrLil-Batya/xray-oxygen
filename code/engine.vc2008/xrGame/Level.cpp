@@ -509,9 +509,7 @@ void CLevel::OnRender()
 #ifdef DEBUG
 	draw_wnds_rects();
 	physics_world()->OnRender	();
-#endif // DEBUG
 
-#ifdef DEBUG
 	if (ai().get_level_graph())
 		ai().level_graph().render();
 
@@ -574,10 +572,9 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->SetHeight	(8.0f);
 		//---------------------------------------------------------------------
 	}
-#endif
 
-#ifdef DEBUG
-	if (bDebug) {
+	if (bDebug) 
+	{
 		DBG().draw_object_info				();
 		DBG().draw_text						();
 		DBG().draw_level_info				();
@@ -726,40 +723,44 @@ void CLevel::make_NetCorrectionPrediction	()
 	pActors4CrPr.clear();
 };
 
-u32			CLevel::GetInterpolationSteps	()
+u32 CLevel::GetInterpolationSteps	()
 {
 	return lvInterpSteps;
 };
 
-bool		CLevel::InterpolationDisabled	()
+bool CLevel::InterpolationDisabled	()
 {
 	return g_cl_lvInterp < 0; 
 };
 
-void				CLevel::SetNumCrSteps		( u32 NumSteps )
+void CLevel::SetNumCrSteps(u32 NumSteps)
 {
 	m_bNeed_CrPr = true;
-	if (m_dwNumSteps > NumSteps) return;
-	m_dwNumSteps = NumSteps;
-	if (m_dwNumSteps > 1000000)
+
+	if (m_dwNumSteps <= NumSteps)
 	{
-		VERIFY(0);
+		m_dwNumSteps = NumSteps;
+
+		if (m_dwNumSteps > 1000000)
+		{
+			m_dwNumSteps--;
+		}
 	}
-};
+}
 
 ALife::_TIME_ID CLevel::GetStartGameTime()
 {
-	return			(game->GetStartGameTime());
+	return(game->GetStartGameTime());
 }
 
 ALife::_TIME_ID CLevel::GetGameTime()
 {
-	return			(game->GetGameTime());
+	return(game->GetGameTime());
 }
 
 ALife::_TIME_ID CLevel::GetEnvironmentGameTime()
 {
-	return			(game->GetEnvironmentGameTime());
+	return(game->GetEnvironmentGameTime());
 }
 
 u8 CLevel::GetDayTime() 

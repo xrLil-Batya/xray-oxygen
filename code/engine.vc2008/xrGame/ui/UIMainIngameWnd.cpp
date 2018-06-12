@@ -325,6 +325,15 @@ void CUIMainIngameWnd::RenderQuickInfos()
 	LPCSTR actor_action					= pActor->GetDefaultActionForObject();
 	UIStaticQuickHelp->Show				(NULL!=actor_action);
 
+	// подсказка для костра
+	static CZoneCampfire* pZone = nullptr;
+	if (pZone != pActor->CapmfireWeLookingAt())
+	{
+		UIStaticQuickHelp->SetTextST(actor_action);
+		UIStaticQuickHelp->ResetColorAnimation();
+		pZone = pActor->CapmfireWeLookingAt();
+	}
+
 	if(NULL!=actor_action)
 	{
 		if(stricmp(actor_action,UIStaticQuickHelp->GetText()))

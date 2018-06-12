@@ -516,7 +516,7 @@ local emun_on_console = 0.5 -- mrnmwar
 
 function actor_binder:key_press(key, act)
 	if key == DIK_keys.DIK_F5 then
-	    oxygen_quicksaves.save()
+	    oxy_quicksaves.save()
 	end
 	if key == DIK_keys.DIK_NUMPAD3 then
 	    local hud_draw = get_console():get_string("hud_draw")

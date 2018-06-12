@@ -373,7 +373,7 @@ void CRender::reset_begin()
 	}
 	/////////////////////////////////////////////
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details->Unload();
 		xr_delete(Details);
@@ -403,7 +403,7 @@ void CRender::reset_end()
 	Target = xr_new<CRenderTarget>();
 	/////////////////////////////////////////////
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details = xr_new<CDetailManager>();
 		Details->Load();
@@ -600,6 +600,12 @@ void					CRender::rmNormal			()
 	HW.pContext->RSSetViewports(1, &VP);
 	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
+
+void					CRender::ResizeWindowProc(WORD h, WORD w)
+{
+	HW.ResizeWindowProc(h, w);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -1101,6 +1107,10 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	}
 	else
 		sh_name[len]='0'; ++len;
+
+	defines[def_it].Name = "USE_PUDDLES";
+	defines[def_it].Definition = "1";
+	def_it++;
 
 	if (RImplementation.o.advancedpp && ps_r_sun_shafts)
 	{
