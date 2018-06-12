@@ -206,8 +206,8 @@ public:
 	virtual	bool				use_simplified_visual	() const {return (false);};
 
 private:
-	CTradeParameters			*m_trade_parameters;
-	CPurchaseList				*m_purchase_list;
+	CTradeParameters			*m_trade_parameters = nullptr;
+	CPurchaseList				*m_purchase_list = nullptr;
 	BOOL						m_need_osoznanie_mode;
 	bool						m_deadbody_can_take;
 	bool						m_deadbody_closed;
