@@ -556,8 +556,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	psHUD_Flags.set(HUD_WEAPON_RT, TRUE);
 	psHUD_Flags.set(HUD_WEAPON_RT2, TRUE);
 	
-    //pApp->LoadEnd();
-
 	return TRUE;
 }
 

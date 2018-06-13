@@ -572,7 +572,7 @@ lzo1x_999_compress_internal ( const lzo_bytep in , lzo_uint  in_len,
     if (max_lazy <= 0)
         max_lazy = 32;
     /* stop searching for longer matches than this one */
-    if (nice_length <= 0)
+    if (nice_length < 0)
         nice_length = 0;
     /* don't search more positions than this */
     if (max_chain <= 0)
@@ -594,8 +594,8 @@ lzo1x_999_compress_internal ( const lzo_bytep in , lzo_uint  in_len,
     r = init_match(c,swd,dict,dict_len,flags);
     if (r != 0)
         return r;
-    if (max_chain > 0)
-        swd->max_chain = max_chain;
+
+    swd->max_chain = max_chain;
     if (nice_length > 0)
         swd->nice_length = nice_length;
 

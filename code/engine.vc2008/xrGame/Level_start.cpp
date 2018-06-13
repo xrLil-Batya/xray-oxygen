@@ -13,91 +13,64 @@
 #include "UIGameCustom.h"
 #include "GamePersistent.h"
 
-extern XRCORE_API bool g_allow_heap_min;
-
-BOOL CLevel::net_Start	( LPCSTR op_server, LPCSTR op_client )
+BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
 {
-	net_start_result_total				= TRUE;
+	net_start_result_total = TRUE;
 
-	pApp->LoadBegin				();
+	pApp->LoadBegin();
 
-	string64	player_name;
-	xr_strcpy( player_name, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName );
-	
-	VERIFY( xr_strlen(player_name) );
+	string64 player_name;
+	xr_strcpy(player_name, xr_strlen(Core.UserName) ? Core.UserName : Core.CompName);
 
-	//make Client Name if options doesn't have it
-	LPCSTR	NameStart	= strstr(op_client,"/name=");
-	if (!NameStart)
-	{
-		string512 tmp;
-		xr_strcpy(tmp, op_client);
-		xr_strcat(tmp, "/name=");
-		xr_strcat(tmp, player_name);
-        GamePersistent().SetClientOption(tmp);
-	} else {
-		string1024	ret="";
-		LPCSTR		begin	= NameStart + xr_strlen("/name="); 
-		sscanf			(begin, "%[^/]",ret);
-		if (!xr_strlen(ret))
-		{
-			string1024 tmpstr;
-			xr_strcpy(tmpstr, op_client);
-			*(strstr(tmpstr, "name=")+5) = 0;
-			xr_strcat(tmpstr, player_name);
-			const char* ptmp = strstr(strstr(op_client, "name="), "/");
-			if (ptmp)
-				xr_strcat(tmpstr, ptmp);
-            GamePersistent().SetClientOption(tmpstr);
-		}
-		else
-		{
-            GamePersistent().SetClientOption(op_client);
-		};		
-	};
+	VERIFY(xr_strlen(player_name));
 
-    GamePersistent().SetServerOption(op_server);
+	//make Client Name if options
+	string512 tmp;
+	xr_strcpy(tmp, op_client);
+	xr_strcat(tmp, "/name=");
+	xr_strcat(tmp, player_name);
+
+	// Send options to GamePersistent
+	GamePersistent().SetClientOption(tmp);
+	GamePersistent().SetServerOption(op_server);
 	//---------------------------------------------------------------------------
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start1));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start2));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start4));
-	g_loading_events.push_back	(LOADING_EVENT(this,&CLevel::net_start6));
-	
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start1));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start2));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start4));
+	g_loading_events.push_back(LOADING_EVENT(this, &CLevel::net_start6));
+
 	return net_start_result_total;
 }
 
-bool CLevel::net_start1				()
+// Start client and server
+bool CLevel::net_start1()
 {
     shared_str serverOption = GamePersistent().GetServerOption();
-	// Start client and server if need it
-	if (serverOption.size())
+
+	g_pGamePersistent->SetLoadStageTitle("st_server_starting");
+	g_pGamePersistent->LoadTitle();
+
+	IGame_Persistent::params &p = g_pGamePersistent->m_game_params;
+	// Connect
+	Server = xr_new<xrServer>();
+
+	if (xr_strcmp(p.m_alife, "alife"))
 	{
-		g_pGamePersistent->SetLoadStageTitle("st_server_starting");
-		g_pGamePersistent->LoadTitle();
-
-		typedef IGame_Persistent::params params;
-		params							&p = g_pGamePersistent->m_game_params;
-		// Connect
-		Server							= xr_new<xrServer>();
+		shared_str l_ver = game_sv_GameState::parse_level_version(serverOption);
+		map_data.m_name = Server->game->level_name(serverOption);
 		
+		g_pGamePersistent->LoadTitle(true, map_data.m_name);
 
-		if (xr_strcmp(p.m_alife,"alife"))
+		int id = pApp->Level_ID(map_data.m_name.c_str(), l_ver.c_str(), true);
+
+		if (id<0)
 		{
-			shared_str l_ver			= game_sv_GameState::parse_level_version(serverOption);
-			map_data.m_name				= Server->game->level_name(serverOption);
-			
-			g_pGamePersistent->LoadTitle(true, map_data.m_name);
-
-			int							id = pApp->Level_ID(map_data.m_name.c_str(), l_ver.c_str(), true);
-
-			if (id<0) {
-				Log						("Can't find level: ",map_data.m_name.c_str());
-				net_start_result_total	= FALSE;
-				return true;
-			}
+			Log("Can't find level: ",map_data.m_name.c_str());
+			net_start_result_total	= FALSE;
+			return true;
 		}
-	} else g_allow_heap_min = false;
-	
+	}
+
 	return true;
 }
 

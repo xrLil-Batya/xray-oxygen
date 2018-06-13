@@ -288,15 +288,14 @@ IReader* open_chunk(void* ptr, u32 ID)
 	return 0;
 };
 
-
+#ifndef PVS_STUDIO // IReader* hdr: is not a memory leak
 void CLocatorAPI::LoadArchive(archive& A, const char* entrypoint)
 {
 	// Create base path
-	string_path					fs_entry_point;
-	fs_entry_point[0]			= 0;
+	string_path fs_entry_point;
+	fs_entry_point[0] = 0;
 	if(A.header)
 	{
-
 		shared_str read_path	= A.header->r_string("header","entry_point");
 		if(0==stricmp(read_path.c_str(),"gamedata"))
 		{
@@ -305,7 +304,6 @@ void CLocatorAPI::LoadArchive(archive& A, const char* entrypoint)
 			if(P!=pathes.end())
 			{
 				FS_Path* root			= P->second;
-//				R_ASSERT3				(root, "path not found ", read_path.c_str());
 				xr_strcpy				(fs_entry_point, sizeof(fs_entry_point), root->m_Path);
 			}
 			xr_strcat					(fs_entry_point,"gamedata\\");
@@ -375,11 +373,9 @@ void CLocatorAPI::LoadArchive(archive& A, const char* entrypoint)
 
 		Register		(full,A.vfs_idx,crc,ptr,size_real,size_compr,0);
 	}
-	hdr->close			();
-
-//	if(g_temporary_stuff_subst)
-//		g_temporary_stuff		= g_temporary_stuff_subst;
+	hdr->close();
 }
+#endif
 
 void CLocatorAPI::archive::open()
 {
