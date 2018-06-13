@@ -397,34 +397,6 @@ void CAI_Crow::net_Export	(NET_Packet& P)					// export to server
 	P.w_u8				(u8(g_Group()));
 }
 //---------------------------------------------------------------------
-void CAI_Crow::net_Import	(NET_Packet& P)
-{
-	R_ASSERT			(Remote());
-
-	float health;
-	P.r_float			(health);
-	SetfHealth			(health);
-
-	P.r_u32				();
-	P.r_u8				();
-
-	P.r_vec3			(Position());
-	
-	float				yaw, pitch, bank = 0, roll = 0;
-	
-	P.r_float 			(yaw);
-	P.r_float 			(yaw);
-	P.r_float 			(pitch);
-	P.r_float 			(roll);
-
-	id_Team				= P.r_u8();
-	id_Squad			= P.r_u8();
-	id_Group			= P.r_u8();
-
-	XFORM().setHPB		(yaw,pitch,bank);
-	VERIFY2				( valid_pos( Position() ), dbg_valide_pos_string(Position(),this," CAI_Crow::net_Import	(NET_Packet& P)") );
-}
-//---------------------------------------------------------------------
 void CAI_Crow::HitSignal	(float /**HitAmount/**/, Fvector& /**local_dir/**/, CObject* who, s16 /**element/**/)
 {
 	//bool				first_time = !!g_Alive(); 

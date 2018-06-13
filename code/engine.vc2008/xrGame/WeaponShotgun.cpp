@@ -249,20 +249,6 @@ void	CWeaponShotgun::net_Export	(NET_Packet& P)
 	}
 }
 
-void	CWeaponShotgun::net_Import	(NET_Packet& P)
-{
-	inherited::net_Import(P);	
-	u8 AmmoCount = P.r_u8();
-	for (u32 i=0; i<AmmoCount; i++)
-	{
-		u8 LocalAmmoType = P.r_u8();
-		if (i>=m_magazine.size()) continue;
-		CCartridge& l_cartridge = *(m_magazine.begin()+i);
-		if (LocalAmmoType == l_cartridge.m_LocalAmmoType) continue;
-		l_cartridge.Load( m_ammoTypes[LocalAmmoType].c_str(), LocalAmmoType );
-	}
-}
-
 using namespace luabind;
 #include "WeaponAutomaticShotgun.h"
 

@@ -115,7 +115,6 @@ public:
 	virtual void			OnCL_Connected		();
 
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P);
-	virtual void			client_Destroy		(CClient* C);					// destroy client info
 
 	// utilities
 	CSE_Abstract*			entity_Create		(LPCSTR name);

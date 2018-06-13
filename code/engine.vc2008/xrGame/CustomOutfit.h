@@ -66,7 +66,6 @@ public:
 
 	virtual BOOL			net_Spawn				(CSE_Abstract* DC);
 	virtual void			net_Export				(NET_Packet& P);
-	virtual void			net_Import				(NET_Packet& P);
 			void			ApplySkinModel			(CActor* pActor, bool bDress, bool bHUDOnly);
 			void			ReloadBonesProtection	();
 			void			AddBonesProtection		(LPCSTR bones_section);

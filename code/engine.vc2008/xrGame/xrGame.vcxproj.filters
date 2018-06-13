@@ -5514,9 +5514,6 @@
     <ClInclude Include="..\xrServerEntities\game_base_space.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
-    <ClInclude Include="game_sv_event_queue.h">
-      <Filter>Core\Server\Games\server</Filter>
-    </ClInclude>
     <ClInclude Include="id_generator.h">
       <Filter>Core\Server\ID_Generator</Filter>
     </ClInclude>
@@ -8009,9 +8006,6 @@
     </ClCompile>
     <ClCompile Include="game_base.cpp">
       <Filter>Core\Server\Games</Filter>
-    </ClCompile>
-    <ClCompile Include="game_sv_event_queue.cpp">
-      <Filter>Core\Server\Games\server</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp">
       <Filter>Core\Server\ServerEntities</Filter>

@@ -212,38 +212,6 @@ void CCustomMonster::net_Export(NET_Packet& P)					// export to server
 	P.w_u8					(u8(g_Group()));
 }
 
-void CCustomMonster::net_Import(NET_Packet& P)
-{
-	R_ASSERT				(Remote());
-	net_update				N;
-
-	u8 flags;
-
-	float health;
-	P.r_float				(health);
-	SetfHealth				(health);
-
-	P.r_u32					(N.dwTimeStamp);
-	P.r_u8					(flags);
-	P.r_vec3				(N.p_pos);
-	P.r_float /*r_angle8*/				(N.o_model);
-	P.r_float /*r_angle8*/				(N.o_torso.yaw);
-	P.r_float /*r_angle8*/				(N.o_torso.pitch);
-	P.r_float /*r_angle8*/				(N.o_torso.roll	);
-
-	id_Team					= P.r_u8();
-	id_Squad				= P.r_u8();
-	id_Group				= P.r_u8();
-
-	if (NET.empty() || (NET.back().dwTimeStamp<N.dwTimeStamp))	{
-		NET.push_back			(N);
-		NET_WasInterpolating	= TRUE;
-	}
-
-	setVisible				(TRUE);
-	setEnabled				(TRUE);
-}
-
 void CCustomMonster::shedule_Update	( u32 DT )
 {
 	VERIFY				(!g_Alive() || processing_enabled());

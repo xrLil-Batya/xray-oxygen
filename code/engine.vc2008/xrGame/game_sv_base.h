@@ -4,12 +4,10 @@
 #include "alife_space.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrCore/client_id.h"
-#include "game_sv_event_queue.h"
 #include "alife_simulator.h"
 
 class CSE_Abstract;
 class xrServer;
-class GameEventQueue;
 
 class	game_sv_GameState	: public game_GameState
 {
@@ -19,7 +17,6 @@ public:
 	BOOL							sv_force_sync;
 protected:
 	xrServer*						m_server;
-	GameEventQueue*					m_event_queue;
 	CALifeSimulator					*m_alife_simulator;
 
 	//Events
@@ -39,22 +36,11 @@ public:
 #ifdef DEBUG
 	virtual		void				OnRender				();
 #endif
-	
-				CSE_Abstract*		spawn_begin				(LPCSTR N);
-				CSE_Abstract*		spawn_end				(CSE_Abstract* E, ClientID id);
-
-	// Utilities
-	s32								get_option_i			(LPCSTR lst, LPCSTR name, s32 def = 0);
-	virtual		xr_vector<u16>*		get_children			(ClientID id_who);
-	void							u_EventGen				(NET_Packet& P, u16 type, u16 dest	);
-	void							u_EventSend				(NET_Packet& P);
 
 	// Events
 	virtual		void				OnCreate				(u16 id_who);
 	virtual		void				OnTouch					(u16 eid_who, u16 eid_target, BOOL bForced = FALSE);			// TRUE=allow ownership, FALSE=denied
 	virtual		void				OnDetach				(u16 eid_who, u16 eid_target);
-
-	virtual		void				OnDestroyObject			(u16 eid_who);			
 
 	// Main
 	virtual		void				Create					(shared_str& options);
@@ -67,11 +53,6 @@ public:
 	virtual		void				save_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		void				switch_distance			(NET_Packet &net_packet, ClientID sender);
-
-				void				AddDelayedEvent			(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
-				void				ProcessDelayedEvent		();
-				//this method will delete all events for entity that already not exist (in case when player was kicked)
-				void				CleanDelayedEventFor	(u16 id_entity_victim);
 
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
 	virtual		void				add_restriction			(NET_Packet &packet, u16 id);

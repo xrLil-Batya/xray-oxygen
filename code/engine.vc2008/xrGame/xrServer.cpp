@@ -17,6 +17,10 @@
 #include "ui/UIInventoryUtilities.h"
 
 #include "../FrayBuildConfig.hpp"
+#include "script_process.h"
+#include "ai_space.h"
+#include "script_engine.h"
+#include "script_engine_space.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -45,7 +49,6 @@ xrServer::xrServer()
 
 xrServer::~xrServer()
 {
-    client_Destroy(SV_Client);
 	entities.clear();
     xr_delete(SV_Client);
 }
@@ -73,19 +76,6 @@ CClient* xrServer::ID_to_client(ClientID ID, bool ScanAll)
 }
 
 //--------------------------------------------------------------------
-void xrServer::client_Destroy(CClient* C)
-{
-	if (SV_Client)
-	{
-        CSE_Abstract* pOwner = SV_Client->owner;
-		if (pOwner)
-		{
-			game->CleanDelayedEventFor(pOwner->ID);
-		}
-	}
-}
-
-//--------------------------------------------------------------------
 #ifdef DEBUG
 INT g_sv_SendUpdate = 0;
 #endif
@@ -94,11 +84,16 @@ void xrServer::Update	()
 {
 	VERIFY(verify_entities());
 
+    if (Level().game) {
+        CScriptProcess* script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
+        if (script_process)
+            script_process->update();
+    }
 	// game update
-	game->ProcessDelayedEvent();
 	game->Update();
 
-	if (game->sv_force_sync)	Perform_game_export();
+	if (game->sv_force_sync)
+        Perform_game_export();
 #ifdef DEBUG
     verify_entities();
 #endif

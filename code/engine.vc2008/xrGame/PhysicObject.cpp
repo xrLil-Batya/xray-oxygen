@@ -459,43 +459,6 @@ void CPhysicObject::net_Export(NET_Packet& P)
 	return;
 };
 
-void CPhysicObject::net_Export_PH_Params(NET_Packet& P, SPHNetState& State, mask_num_items&	num_items)
-{
-	P.w_vec3(State.force);
-	P.w_vec3(State.torque);
-	P.w_vec3(State.position);
-
-	float magnitude = _sqrt(State.quaternion.magnitude());
-	if (fis_zero(magnitude))
-	{
-		magnitude = 1;
-		State.quaternion.x = 0.f;
-		State.quaternion.y = 0.f;
-		State.quaternion.z = 1.f;
-		State.quaternion.w = 0.f;
-	}
-
-	P.w_float(State.quaternion.x);
-	P.w_float(State.quaternion.y);
-	P.w_float(State.quaternion.z);
-	P.w_float(State.quaternion.w);
-
-	if (!(num_items.mask & CSE_ALifeObjectPhysic::inventory_item_angular_null))
-	{
-		P.w_float(State.angular_vel.x);
-		P.w_float(State.angular_vel.y);
-		P.w_float(State.angular_vel.z);
-	}
-
-	if (!(num_items.mask & CSE_ALifeObjectPhysic::inventory_item_linear_null))
-	{
-		P.w_float(State.linear_vel.x);
-		P.w_float(State.linear_vel.y);
-		P.w_float(State.linear_vel.z);
-	}
-}
-
-
 void CPhysicObject::net_Import(NET_Packet& P)
 {
 	u8							NumItems = 0;
@@ -510,7 +473,6 @@ void CPhysicObject::net_Import(NET_Packet& P)
 	net_update_PItem			N;
 	N.dwTimeStamp = Device.dwTimeGlobal;
 
-	net_Import_PH_Params(P, N, num_items);
 	////////////////////////////////////////////
 	P.r_u8();	// freezed or not..
 
@@ -519,6 +481,9 @@ void CPhysicObject::net_Import(NET_Packet& P)
 	{
 		return;
 	}
+
+    //std::string dbgStr = make_string("CPhysicObject::net_Import, wtf?, %u, %u", P.r_tell(), P.w_tell());
+    //VERIFY2(false, dbgStr.c_str());
 
 	net_updatePhData				*p = NetSync();
 
@@ -535,40 +500,6 @@ void CPhysicObject::net_Import(NET_Packet& P)
 		m_activated = true;
 	}
 };
-
-void CPhysicObject::net_Import_PH_Params(NET_Packet& P, net_update_PItem& N, mask_num_items& num_items)
-{
-	P.r_vec3(N.State.force);
-	P.r_vec3(N.State.torque);
-	P.r_vec3(N.State.position);
-
-	P.r_float(N.State.quaternion.x);
-	P.r_float(N.State.quaternion.y);
-	P.r_float(N.State.quaternion.z);
-	P.r_float(N.State.quaternion.w);
-
-	N.State.enabled = num_items.mask & CSE_ALifeObjectPhysic::inventory_item_state_enabled;
-	if (!(num_items.mask & CSE_ALifeObjectPhysic::inventory_item_angular_null)) {
-		N.State.angular_vel.x = P.r_float();
-		N.State.angular_vel.y = P.r_float();
-		N.State.angular_vel.z = P.r_float();
-	}
-	else
-		N.State.angular_vel.set(0.f, 0.f, 0.f);
-
-	if (!(num_items.mask & CSE_ALifeObjectPhysic::inventory_item_linear_null)) {
-		N.State.linear_vel.x = P.r_float();
-		N.State.linear_vel.y = P.r_float();
-		N.State.linear_vel.z = P.r_float();
-	}
-	else
-		N.State.linear_vel.set(0.f, 0.f, 0.f);
-	//Msg("Import N.State.linear_vel.y:%4.6f",N.State.linear_vel.y);
-
-	N.State.previous_position = N.State.position;
-	N.State.previous_quaternion = N.State.quaternion;
-}
-
 
 //-----------
 
@@ -604,12 +535,6 @@ void CPhysicObject::PH_A_CrPr()
 		PPhysicsShell()->get_ElementByStoreOrder(0)->Fix();
 		PPhysicsShell()->SetIgnoreStatic();
 	}
-};
-
-void CPhysicObject::CalculateInterpolationParams()
-{
-	if (this->m_pPhysicsShell)
-		this->m_pPhysicsShell->NetInterpolationModeON();
 };
 
 void CPhysicObject::Interpolate()

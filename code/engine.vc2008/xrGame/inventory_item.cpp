@@ -29,16 +29,8 @@
 
 #define ITEM_REMOVE_TIME		30000
 
-net_updateInvData* CInventoryItem::NetSync()			
-{
-	if(!m_net_updateData) 
-		m_net_updateData = xr_new<net_updateInvData>();
-	return m_net_updateData;
-}
-
 CInventoryItem::CInventoryItem() 
 {
-	m_net_updateData	= NULL;
 	m_flags.set			(Fbelt,FALSE);
 	m_flags.set			(Fruck,TRUE);
 	m_flags.set			(FRuckDefault,TRUE);
@@ -66,8 +58,6 @@ CInventoryItem::CInventoryItem()
 
 CInventoryItem::~CInventoryItem() 
 {
-	delete_data			(m_net_updateData);
-
 #ifndef MASTER_GOLD
 	bool B_GOOD			= (	!m_pInventory || 
 							(std::find(	m_pInventory->m_all.begin(),m_pInventory->m_all.end(), this)==m_pInventory->m_all.end()) );
@@ -326,113 +316,6 @@ void CInventoryItem::save(NET_Packet &packet)
 	u8 _num_items			= (u8)object().PHGetSyncItemsNumber(); 
 	packet.w_u8				(_num_items);
 	object().PHSaveState	(packet);
-}
-
-void CInventoryItem::net_Import			(NET_Packet& P) 
-{	
-    u8							NumItems = 0;
-    NumItems = P.r_u8();
-    if (!NumItems)
-        return;
-
-    mask_inv_num_items			num_items;
-    num_items.common = NumItems;
-    NumItems = num_items.num_items;
-
-    net_update_IItem			N;
-    N.dwTimeStamp = Device.dwTimeGlobal;
-
-    net_Import_PH_Params(P, N, num_items);
-    ////////////////////////////////////////////
-    P.r_u8();	//active (not freezed ot not)
-
-    if (this->cast_game_object()->Local())
-        return;
-
-    net_updateInvData				*p = NetSync();
-    Level().AddObject_To_Objects4CrPr(m_object);
-    p->NET_IItem.push_back(N);
-
-    while (p->NET_IItem.size() > 2)
-        p->NET_IItem.pop_front();
-	
-    if (!m_activated)
-    {
-#ifdef DEBUG
-        Msg("Activating object [%d] before interpolation starts", object().ID());
-#endif // #ifdef DEBUG
-        object().processing_activate();
-        m_activated = true;
-    }
-};
-
-void CInventoryItem::net_Import_PH_Params(NET_Packet& P, net_update_IItem& N, mask_inv_num_items& num_items)
-{
-	P.r_vec3					(N.State.force);
-	P.r_vec3					(N.State.torque);
-	P.r_vec3					(N.State.position);
-
-	P.r_float(N.State.quaternion.x);
-	P.r_float(N.State.quaternion.y);
-	P.r_float(N.State.quaternion.z);
-	P.r_float(N.State.quaternion.w);
-
-
-
-	N.State.enabled				= num_items.mask & CSE_ALifeInventoryItem::inventory_item_state_enabled;
-	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_angular_null)) 
-	{
-		N.State.angular_vel.x	= P.r_float();
-		N.State.angular_vel.y	= P.r_float();
-		N.State.angular_vel.z	= P.r_float();
-	}
-	else
-		N.State.angular_vel.set	(0.f,0.f,0.f);
-
-	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_linear_null)) 
-	{
-		N.State.linear_vel.x	= P.r_float();
-		N.State.linear_vel.y	= P.r_float();
-		N.State.linear_vel.z	= P.r_float();
-	}
-	else N.State.linear_vel.set	(0.f,0.f,0.f);
-	
-	N.State.previous_position	= N.State.position;
-	N.State.previous_quaternion	= N.State.quaternion;
-}
-
-void CInventoryItem::net_Export_PH_Params(NET_Packet& P, SPHNetState& State, mask_inv_num_items&	num_items)
-{
-	P.w_vec3				(State.force);
-	P.w_vec3				(State.torque);
-	P.w_vec3				(State.position);
-	float					magnitude = _sqrt(State.quaternion.magnitude());
-	if (fis_zero(magnitude)) 
-	{
-		magnitude			= 1;
-		State.quaternion.x	= 0.f;
-		State.quaternion.y	= 0.f;
-		State.quaternion.z	= 1.f;
-		State.quaternion.w	= 0.f;
-	}
-	P.w_float			(State.quaternion.x);
-	P.w_float			(State.quaternion.y);
-	P.w_float			(State.quaternion.z);
-	P.w_float			(State.quaternion.w);
-
-	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_angular_null)) 
-	{
-		P.w_float		(State.angular_vel.x);
-		P.w_float		(State.angular_vel.y);
-		P.w_float		(State.angular_vel.z);
-	}
-
-	if (!(num_items.mask & CSE_ALifeInventoryItem::inventory_item_linear_null)) 
-	{
-		P.w_float		(State.linear_vel.x);
-		P.w_float		(State.linear_vel.y);
-		P.w_float		(State.linear_vel.z);
-	}
 }
 
 void CInventoryItem::net_Export(NET_Packet& P)

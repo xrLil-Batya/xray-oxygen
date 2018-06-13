@@ -115,7 +115,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
             if (e_src)
                 SendBroadcast(BroadcastCID, P);
-			//game->AddDelayedEvent(P,GAME_EVENT_ON_HIT, 0, ClientID() );
 		} break;
 	case GE_ASSIGN_KILLER: {
 		u16							id_src;
