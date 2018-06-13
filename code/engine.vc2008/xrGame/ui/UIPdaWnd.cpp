@@ -175,7 +175,6 @@ void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 	}
 
 	luabind::functor<void> functor;
-
 	if (ai().script_engine().functor("oxy_callbacks.Pda_SetActiveSubdialog", functor))
 		functor(section.c_str());
 

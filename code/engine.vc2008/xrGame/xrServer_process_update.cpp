@@ -4,7 +4,7 @@
 
 void xrServer::Process_update(NET_Packet& P, ClientID sender)
 {
-	xrClientData* CL = ID_to_client(sender);
+    CClient* CL = ID_to_client(sender);
 	if(!CL) return;
 
 	// while has information
@@ -38,9 +38,7 @@ void xrServer::Process_update(NET_Packet& P, ClientID sender)
 
 void xrServer::Process_save(NET_Packet& P, ClientID sender)
 {
-	xrClientData* CL = ID_to_client(sender);
-	R_ASSERT2(CL, "Process_save client not found");
-	CL->net_Ready = TRUE;
+	R_ASSERT2(SV_Client, "Process_save client not found");
 
 	// while has information
 	while (!P.r_eof())

@@ -109,7 +109,6 @@ bool CLevel::net_start_client5()
     Device.m_pRender->DeferredLoad(FALSE);
     Device.m_pRender->ResourcesDeferredUpload();
     LL_CheckTextures();
-    sended_request_connection_data = false;
     deny_m_spawn = TRUE;
 
 	return true;

@@ -34,5 +34,6 @@ xrServer::EConnect xrServer::Connect(shared_str &session_name)
 	
 	game->Create			(session_name);
 
-	return IPureServer::Connect(*session_name);
+    connect_options = session_name;
+	return ErrNoError;
 }

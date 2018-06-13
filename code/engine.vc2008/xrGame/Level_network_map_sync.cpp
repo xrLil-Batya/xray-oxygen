@@ -13,19 +13,14 @@ bool CLevel::synchronize_map_data()
 
 bool CLevel::synchronize_client()
 {
-    if (!sended_request_connection_data)
-    {
-        NET_Packet P;
-        P.w_begin(M_CLIENT_REQUEST_CONNECTION_DATA);
-        Send(P);
-        sended_request_connection_data = true;
-    }
-
     deny_m_spawn = FALSE;
 	if (!game_configured)
 	{
 		//Don't delete this ClientReceive(). Without that, game_configured variable will not changed
+        ClientReceive();
+        Server->OnCL_Connected();
 		Server->Update();
+
 		ClientReceive();
 	}
 

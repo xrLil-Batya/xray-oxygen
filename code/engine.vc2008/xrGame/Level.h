@@ -137,7 +137,6 @@ public:
 protected:
 	BOOL						net_start_result_total;
 	BOOL						deny_m_spawn;		//only for debug...
-    bool sended_request_connection_data;
 		
 	void						MakeReconnect();
 	

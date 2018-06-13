@@ -7,7 +7,7 @@
 #include "GamePersistent.h"
 
 
-void xrServer::Perform_connect_spawn(CSE_Abstract* E, xrClientData* CL, NET_Packet& P, bool bHardProcessed)
+void xrServer::Perform_connect_spawn(CSE_Abstract* E, CClient* CL, NET_Packet& P, bool bHardProcessed)
 {
 	P.B.count = 0;
 	if(std::find(conn_spawned_ids.begin(), conn_spawned_ids.end(), E->ID) != conn_spawned_ids.end())
@@ -74,24 +74,22 @@ void xrServer::SendConfigFinished()
 	Level().OnMessage(P.B.data, (u32)P.B.count);
 }
 
-void xrServer::SendConnectionData(IClient* _CL)
+void xrServer::SendConnectionData(CClient* _CL)
 {
 	conn_spawned_ids.clear();
-	xrClientData*	CL = (xrClientData*)_CL;
-	NET_Packet		P;
+	NET_Packet P;
 
 	// Replicate current entities on to this client
 	for (auto &xrSe_it : entities)
-		Perform_connect_spawn(xrSe_it.second, CL, P, true);
+		Perform_connect_spawn(xrSe_it.second, _CL, P, true);
 
 	// Start to send server logo and rules
 	SendConfigFinished();
 };
 
-void xrServer::OnCL_Connected(IClient* _CL)
+void xrServer::OnCL_Connected()
 {
-	xrClientData* CL = (xrClientData*)_CL;
-
+    CClient* CL = SV_Client;
 	if (!CL)
 	{
 		Msg("! ERROR: Player state not created - incorect message sequence!");

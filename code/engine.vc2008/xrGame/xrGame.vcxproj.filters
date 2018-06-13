@@ -1285,150 +1285,6 @@
     <Filter Include="AI\ANavigation\PatrolPaths\PatrolPoint">
       <UniqueIdentifier>{9da4c601-e34d-41ce-ace0-d842fe5f35a6}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript">
-      <UniqueIdentifier>{da9093fb-4327-4e70-a199-dca809da7566}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses">
-      <UniqueIdentifier>{4328bb05-745d-4a24-afbd-796fa8c5b3f0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions">
-      <UniqueIdentifier>{c45d5cf8-1f6a-4f81-96ba-53991c53b142}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_abstract_action">
-      <UniqueIdentifier>{1f3702ef-9676-4a78-8742-bf9a794ecc38}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_movement_action">
-      <UniqueIdentifier>{7ae683e8-aef1-4a99-9c5a-5542dc98dcd2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params">
-      <UniqueIdentifier>{808c386e-81bf-41c1-83a8-0bde2680f870}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_watch_action">
-      <UniqueIdentifier>{4aa7ae6e-b70d-4d9c-8f5c-6477841e6e4b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\acript_animation_action">
-      <UniqueIdentifier>{55f9474b-5992-453a-aee3-c5069361d6c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_sound_action">
-      <UniqueIdentifier>{f6fc3bb9-1a28-45ff-98ee-ccc475182c2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_particle_action">
-      <UniqueIdentifier>{7c9cb8fe-913e-46e8-b1ca-55b19589ea7d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_object_action">
-      <UniqueIdentifier>{f5eeabdc-5c0b-4721-af35-59a604284097}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_action_condition">
-      <UniqueIdentifier>{951c930b-a257-48ce-9e78-456c10bd2bf9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_monster_action">
-      <UniqueIdentifier>{b2dc3055-4b1a-4fc6-86c9-200059eeeea7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptActions\script_entity_action">
-      <UniqueIdentifier>{efda73b1-1065-4475-af0c-fbf08a0fc0da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptBinderObject">
-      <UniqueIdentifier>{6ab47a9c-41ed-484a-9bb2-37470f5e6e89}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper">
-      <UniqueIdentifier>{8f717d08-8a1c-47c1-b441-d6a188ee4fce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptEffector">
-      <UniqueIdentifier>{e0fa3c82-fdfa-402f-b1b9-41b256b32663}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper">
-      <UniqueIdentifier>{7df2f4ed-1613-4ee7-b5e0-d1ed96f09043}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptFlags">
-      <UniqueIdentifier>{0cd2a53f-0143-4db8-954d-633e3261d2e1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptFmatrix">
-      <UniqueIdentifier>{3fcd40d7-b7ae-4a25-aafe-2e627d79a715}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptFvector">
-      <UniqueIdentifier>{2f00ade5-ab6b-451b-a58b-40dd09d1de93}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptGameObject">
-      <UniqueIdentifier>{f307c9f5-9f1f-430d-9fb7-324d166aa5e0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptHit">
-      <UniqueIdentifier>{f6771c5c-2fbb-419b-8474-20689312c335}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptIniFile">
-      <UniqueIdentifier>{b61bf444-919b-4c7c-b7bc-60e08af6d6e5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptIniFile\ScriptTokenList">
-      <UniqueIdentifier>{5c0a7829-e0ed-4d2b-812f-341bf2cad81d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptIniFile\ScriptRTokenList">
-      <UniqueIdentifier>{ae6f0e8a-a90c-4a8c-8bbd-851ecdb12499}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptMonsterHitInfo">
-      <UniqueIdentifier>{b88c2bed-e728-4125-852b-e23203ab4967}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptNetPacket">
-      <UniqueIdentifier>{ca45616e-d5cc-4cc7-a4b3-250477f05fbb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptRenderDevice">
-      <UniqueIdentifier>{ff9226ff-fc8b-444a-9107-023eda1641fb}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptSoundInfo">
-      <UniqueIdentifier>{dbee127a-3c60-4944-8b08-b3c38b2752d8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptSoundType">
-      <UniqueIdentifier>{7081fab6-8695-41b5-bbd5-ebb51226def3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI">
-      <UniqueIdentifier>{41d31c7b-6bf7-4930-bf64-fc4ecc40d084}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\KeyBindings">
-      <UniqueIdentifier>{2d315c85-08a1-4979-8358-79514405b0a0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptReader">
-      <UniqueIdentifier>{1b69b038-85ab-41ed-b2ce-309b2cc880a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptFS">
-      <UniqueIdentifier>{a3f61b06-36f3-4c64-9d2c-8c4fee69e390}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\Console">
-      <UniqueIdentifier>{f4ca386b-e35f-48be-90cc-c47156417a99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\BaseClientClasses">
-      <UniqueIdentifier>{fcf888e4-ffe0-4bb7-a58e-87c71872fe03}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptCallbackEx">
-      <UniqueIdentifier>{e9f9aaec-d8a2-42bd-9605-4bc75dba3e7a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptLAnim">
-      <UniqueIdentifier>{af2c7057-c6ae-492f-b49d-6e414c09ec9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptFcolor">
-      <UniqueIdentifier>{09acbd2b-be6a-42b7-bcef-324f125b9d0e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptParticles">
-      <UniqueIdentifier>{36e72721-560a-45b7-88bb-0f3d349c1097}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\ScriptSound">
-      <UniqueIdentifier>{3654ab94-4b14-4ba7-be65-738bc84072d5}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptDebugger">
-      <UniqueIdentifier>{4897e4dc-7ff7-4404-831b-5b7e01c89872}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptEngine">
-      <UniqueIdentifier>{f6a26eee-11a8-4afe-9c22-019f8c33024c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptProcess">
-      <UniqueIdentifier>{9bba9825-9d42-4e9f-907f-b90f023477b4}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptStorage">
-      <UniqueIdentifier>{a8aac730-448c-4f79-be31-292077bb57a9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptThread">
-      <UniqueIdentifier>{27230a6f-19e3-48a4-9d1a-7a19cb3f9fb1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptThread\ScriptStackTracker">
-      <UniqueIdentifier>{81427c0a-554c-422d-b537-38f170281e7d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\ASound">
       <UniqueIdentifier>{5902e640-63ae-4bd4-a709-a76205014797}</UniqueIdentifier>
     </Filter>
@@ -1963,156 +1819,6 @@
     <Filter Include="Core\Server\ServerConnect">
       <UniqueIdentifier>{da77a547-a6e5-4fd7-8b22-22b7827af41f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common">
-      <UniqueIdentifier>{0a88ac1d-653a-4ba9-b9f2-62f82c0e2824}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\InventoryWnd">
-      <UniqueIdentifier>{456452e9-9df5-4a13-b769-de8e45a032f6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade">
-      <UniqueIdentifier>{c73571ac-db45-4d2a-8a24-788af39562c9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA">
-      <UniqueIdentifier>{3e07a440-9156-422c-ac24-312ee00e148d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA\MAP">
-      <UniqueIdentifier>{a5fed39d-925d-4dbb-abae-7938fa8c9e2d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings">
-      <UniqueIdentifier>{534507d3-88fb-4a1c-84c1-53123c1c0323}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA\Tasks">
-      <UniqueIdentifier>{dd786d1f-32b4-42cb-a367-70c2272a42b6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA\FactionWar">
-      <UniqueIdentifier>{7608920a-0ba0-4d67-b5a1-5c9a3a332da6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA\logs">
-      <UniqueIdentifier>{21c14bde-1175-4db6-a270-c1646521f0ed}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\PDA\logs\News">
-      <UniqueIdentifier>{53e4caab-e6c9-4689-b2c9-e34d13a6918b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\ui-item-infos">
-      <UniqueIdentifier>{898da138-0561-483b-9105-4c3237c6f889}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\ui-item-infos\CharacterInfo">
-      <UniqueIdentifier>{e5821b31-d455-438a-9ef1-c96d1be10501}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\TALK">
-      <UniqueIdentifier>{43bd6d8c-f4ef-4f6e-800d-839a14525a4c}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MainIngame">
-      <UniqueIdentifier>{d2493ff5-f2f9-46da-8808-1f6107794d1e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\OptionsItem">
-      <UniqueIdentifier>{f1c34a70-e43e-4966-b6d0-b964b7b45460}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MainMenu">
-      <UniqueIdentifier>{5470b9a9-25f9-4ded-a58c-be802998b8aa}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\MainMenu\KeyBinding">
-      <UniqueIdentifier>{c3c69ef4-560a-4613-83f9-5a4eb67a4940}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\InventoryUtilities">
-      <UniqueIdentifier>{c098af61-c1f4-44e1-9869-ba0afcc2ea57}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\Inventory">
-      <UniqueIdentifier>{82267d97-0fe9-46bd-bfee-3b3200b40571}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Common\_Debug Fonts">
-      <UniqueIdentifier>{b2f4a4d7-65da-42f2-b400-39b220c90088}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows">
-      <UniqueIdentifier>{0f9640ce-8748-4cd1-a8eb-05024c8592c7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\XML">
-      <UniqueIdentifier>{cafd4b04-4aa9-494e-9810-ed600fb4b3da}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\MessageBox">
-      <UniqueIdentifier>{0cbc4948-ef06-46d1-b9cc-5113085b1596}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox">
-      <UniqueIdentifier>{0b4c5e8b-bdd6-4280-8a91-7a8de56c656a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Static">
-      <UniqueIdentifier>{b22c05df-6572-4506-87b9-8e0780cfc136}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\EditBox">
-      <UniqueIdentifier>{02c23e1a-309a-4e7c-9c12-2245e49e8d9a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB">
-      <UniqueIdentifier>{c5a0e2ee-fa3a-4d30-ae3b-46b35de61fce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Windows">
-      <UniqueIdentifier>{41c50b76-b1de-43d1-9c16-414fc609b4e2}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar">
-      <UniqueIdentifier>{d0e93438-f8ff-4ed8-b43e-4f16a0febec9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\TabControl">
-      <UniqueIdentifier>{9af042b2-e133-45b4-887a-28e4890b2040}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd">
-      <UniqueIdentifier>{43f7cc8e-8aab-473a-a752-11be673caa87}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Buttons">
-      <UniqueIdentifier>{dc38828d-ab9e-46fc-b99c-2d63ee24dc9b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ComboBox">
-      <UniqueIdentifier>{7f789a45-71a2-47d4-80b0-957c6eac5058}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground">
-      <UniqueIdentifier>{46371946-e69f-49b7-b15f-ae58db5fcf18}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\TrackBar">
-      <UniqueIdentifier>{c083d8e3-0a3c-490e-ba14-cc8e2889566e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Frames">
-      <UniqueIdentifier>{38640158-7ccd-4bc4-b64f-605485c22f99}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScrollView">
-      <UniqueIdentifier>{79993693-d0de-43ad-bd01-bfabbae4d7c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Lines">
-      <UniqueIdentifier>{f0d26ef5-0f8e-4dbc-9550-3e680d8241a1}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\DragDrop">
-      <UniqueIdentifier>{b8915ebe-4e94-44f2-9c8e-6c4396725e3f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar">
-      <UniqueIdentifier>{3a8be6c3-fa40-4df6-a016-abcbd7c6385b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\SpinBox">
-      <UniqueIdentifier>{ade0d7ce-ec6e-42af-a09e-2c4b39ef94d7}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\arrow">
-      <UniqueIdentifier>{4c5bc68e-0765-45e5-ade7-f64f3d54d6c0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\Hint">
-      <UniqueIdentifier>{73d91344-b947-4c04-b470-5bf431a841f3}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\UIWindows\ListBox">
-      <UniqueIdentifier>{13c4e79b-a05b-44d7-a956-730d2b08f660}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\HUD">
-      <UniqueIdentifier>{bc9409d4-eef7-4de5-b2bd-59afddd0622d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes">
-      <UniqueIdentifier>{90bbd4a6-ba17-4626-b4cc-9180ef1696ce}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\GameCustom">
-      <UniqueIdentifier>{a5a78873-068b-48e8-aad6-5fe507880e23}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\GameTypes\Single">
-      <UniqueIdentifier>{182d8983-2f82-4bca-8862-b745a3c3e06d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Cursor">
-      <UniqueIdentifier>{b4ef4989-5d15-4d43-8fd2-8ac9bae443a6}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="AI\AScript\ScriptClasses\UI\Tutorial">
-      <UniqueIdentifier>{cd1e1319-6678-430f-83ce-93757956c15d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\actor\memory">
       <UniqueIdentifier>{6abdee0d-6c56-49e2-b5e8-a42c04c6ec7d}</UniqueIdentifier>
     </Filter>
@@ -2133,6 +1839,300 @@
     </Filter>
     <Filter Include="Core\Common\Expressions">
       <UniqueIdentifier>{30ff37ac-f70f-4077-80b6-6f06c2b84d49}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine">
+      <UniqueIdentifier>{da9093fb-4327-4e70-a199-dca809da7566}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses">
+      <UniqueIdentifier>{4328bb05-745d-4a24-afbd-796fa8c5b3f0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions">
+      <UniqueIdentifier>{c45d5cf8-1f6a-4f81-96ba-53991c53b142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action">
+      <UniqueIdentifier>{1f3702ef-9676-4a78-8742-bf9a794ecc38}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_movement_action">
+      <UniqueIdentifier>{7ae683e8-aef1-4a99-9c5a-5542dc98dcd2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params">
+      <UniqueIdentifier>{808c386e-81bf-41c1-83a8-0bde2680f870}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_watch_action">
+      <UniqueIdentifier>{4aa7ae6e-b70d-4d9c-8f5c-6477841e6e4b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\acript_animation_action">
+      <UniqueIdentifier>{55f9474b-5992-453a-aee3-c5069361d6c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_sound_action">
+      <UniqueIdentifier>{f6fc3bb9-1a28-45ff-98ee-ccc475182c2b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_particle_action">
+      <UniqueIdentifier>{7c9cb8fe-913e-46e8-b1ca-55b19589ea7d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_object_action">
+      <UniqueIdentifier>{f5eeabdc-5c0b-4721-af35-59a604284097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_action_condition">
+      <UniqueIdentifier>{951c930b-a257-48ce-9e78-456c10bd2bf9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_monster_action">
+      <UniqueIdentifier>{b2dc3055-4b1a-4fc6-86c9-200059eeeea7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_entity_action">
+      <UniqueIdentifier>{efda73b1-1065-4475-af0c-fbf08a0fc0da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptBinderObject">
+      <UniqueIdentifier>{6ab47a9c-41ed-484a-9bb2-37470f5e6e89}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper">
+      <UniqueIdentifier>{8f717d08-8a1c-47c1-b441-d6a188ee4fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptEffector">
+      <UniqueIdentifier>{e0fa3c82-fdfa-402f-b1b9-41b256b32663}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptEffector\ScriptEffectorWrapper">
+      <UniqueIdentifier>{7df2f4ed-1613-4ee7-b5e0-d1ed96f09043}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptFlags">
+      <UniqueIdentifier>{0cd2a53f-0143-4db8-954d-633e3261d2e1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptFmatrix">
+      <UniqueIdentifier>{3fcd40d7-b7ae-4a25-aafe-2e627d79a715}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptFvector">
+      <UniqueIdentifier>{2f00ade5-ab6b-451b-a58b-40dd09d1de93}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptGameObject">
+      <UniqueIdentifier>{f307c9f5-9f1f-430d-9fb7-324d166aa5e0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptHit">
+      <UniqueIdentifier>{f6771c5c-2fbb-419b-8474-20689312c335}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptIniFile">
+      <UniqueIdentifier>{b61bf444-919b-4c7c-b7bc-60e08af6d6e5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptIniFile\ScriptTokenList">
+      <UniqueIdentifier>{5c0a7829-e0ed-4d2b-812f-341bf2cad81d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptIniFile\ScriptRTokenList">
+      <UniqueIdentifier>{ae6f0e8a-a90c-4a8c-8bbd-851ecdb12499}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptMonsterHitInfo">
+      <UniqueIdentifier>{b88c2bed-e728-4125-852b-e23203ab4967}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptNetPacket">
+      <UniqueIdentifier>{ca45616e-d5cc-4cc7-a4b3-250477f05fbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptRenderDevice">
+      <UniqueIdentifier>{ff9226ff-fc8b-444a-9107-023eda1641fb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptSoundInfo">
+      <UniqueIdentifier>{dbee127a-3c60-4944-8b08-b3c38b2752d8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptSoundType">
+      <UniqueIdentifier>{7081fab6-8695-41b5-bbd5-ebb51226def3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI">
+      <UniqueIdentifier>{41d31c7b-6bf7-4930-bf64-fc4ecc40d084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common">
+      <UniqueIdentifier>{0a88ac1d-653a-4ba9-b9f2-62f82c0e2824}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryWnd">
+      <UniqueIdentifier>{456452e9-9df5-4a13-b769-de8e45a032f6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade">
+      <UniqueIdentifier>{c73571ac-db45-4d2a-8a24-788af39562c9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA">
+      <UniqueIdentifier>{3e07a440-9156-422c-ac24-312ee00e148d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA\MAP">
+      <UniqueIdentifier>{a5fed39d-925d-4dbb-abae-7938fa8c9e2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings">
+      <UniqueIdentifier>{534507d3-88fb-4a1c-84c1-53123c1c0323}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks">
+      <UniqueIdentifier>{dd786d1f-32b4-42cb-a367-70c2272a42b6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA\FactionWar">
+      <UniqueIdentifier>{7608920a-0ba0-4d67-b5a1-5c9a3a332da6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA\logs">
+      <UniqueIdentifier>{21c14bde-1175-4db6-a270-c1646521f0ed}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\PDA\logs\News">
+      <UniqueIdentifier>{53e4caab-e6c9-4689-b2c9-e34d13a6918b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\ui-item-infos">
+      <UniqueIdentifier>{898da138-0561-483b-9105-4c3237c6f889}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\ui-item-infos\CharacterInfo">
+      <UniqueIdentifier>{e5821b31-d455-438a-9ef1-c96d1be10501}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\TALK">
+      <UniqueIdentifier>{43bd6d8c-f4ef-4f6e-800d-839a14525a4c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainIngame">
+      <UniqueIdentifier>{d2493ff5-f2f9-46da-8808-1f6107794d1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\OptionsItem">
+      <UniqueIdentifier>{f1c34a70-e43e-4966-b6d0-b964b7b45460}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainMenu">
+      <UniqueIdentifier>{5470b9a9-25f9-4ded-a58c-be802998b8aa}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding">
+      <UniqueIdentifier>{c3c69ef4-560a-4613-83f9-5a4eb67a4940}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities">
+      <UniqueIdentifier>{c098af61-c1f4-44e1-9869-ba0afcc2ea57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\Inventory">
+      <UniqueIdentifier>{82267d97-0fe9-46bd-bfee-3b3200b40571}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts">
+      <UniqueIdentifier>{b2f4a4d7-65da-42f2-b400-39b220c90088}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows">
+      <UniqueIdentifier>{0f9640ce-8748-4cd1-a8eb-05024c8592c7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\XML">
+      <UniqueIdentifier>{cafd4b04-4aa9-494e-9810-ed600fb4b3da}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox">
+      <UniqueIdentifier>{0cbc4948-ef06-46d1-b9cc-5113085b1596}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox">
+      <UniqueIdentifier>{0b4c5e8b-bdd6-4280-8a91-7a8de56c656a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Static">
+      <UniqueIdentifier>{b22c05df-6572-4506-87b9-8e0780cfc136}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\EditBox">
+      <UniqueIdentifier>{02c23e1a-309a-4e7c-9c12-2245e49e8d9a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\EditBox\customEB">
+      <UniqueIdentifier>{c5a0e2ee-fa3a-4d30-ae3b-46b35de61fce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Windows">
+      <UniqueIdentifier>{41c50b76-b1de-43d1-9c16-414fc609b4e2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar">
+      <UniqueIdentifier>{d0e93438-f8ff-4ed8-b43e-4f16a0febec9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\TabControl">
+      <UniqueIdentifier>{9af042b2-e133-45b4-887a-28e4890b2040}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd">
+      <UniqueIdentifier>{43f7cc8e-8aab-473a-a752-11be673caa87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Buttons">
+      <UniqueIdentifier>{dc38828d-ab9e-46fc-b99c-2d63ee24dc9b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ComboBox">
+      <UniqueIdentifier>{7f789a45-71a2-47d4-80b0-957c6eac5058}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground">
+      <UniqueIdentifier>{46371946-e69f-49b7-b15f-ae58db5fcf18}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar">
+      <UniqueIdentifier>{c083d8e3-0a3c-490e-ba14-cc8e2889566e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Frames">
+      <UniqueIdentifier>{38640158-7ccd-4bc4-b64f-605485c22f99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView">
+      <UniqueIdentifier>{79993693-d0de-43ad-bd01-bfabbae4d7c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Lines">
+      <UniqueIdentifier>{f0d26ef5-0f8e-4dbc-9550-3e680d8241a1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop">
+      <UniqueIdentifier>{b8915ebe-4e94-44f2-9c8e-6c4396725e3f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar">
+      <UniqueIdentifier>{3a8be6c3-fa40-4df6-a016-abcbd7c6385b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox">
+      <UniqueIdentifier>{ade0d7ce-ec6e-42af-a09e-2c4b39ef94d7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\arrow">
+      <UniqueIdentifier>{4c5bc68e-0765-45e5-ade7-f64f3d54d6c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\Hint">
+      <UniqueIdentifier>{73d91344-b947-4c04-b470-5bf431a841f3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\UIWindows\ListBox">
+      <UniqueIdentifier>{13c4e79b-a05b-44d7-a956-730d2b08f660}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\HUD">
+      <UniqueIdentifier>{bc9409d4-eef7-4de5-b2bd-59afddd0622d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\GameTypes">
+      <UniqueIdentifier>{90bbd4a6-ba17-4626-b4cc-9180ef1696ce}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\GameTypes\GameCustom">
+      <UniqueIdentifier>{a5a78873-068b-48e8-aad6-5fe507880e23}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\GameTypes\Single">
+      <UniqueIdentifier>{182d8983-2f82-4bca-8862-b745a3c3e06d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Cursor">
+      <UniqueIdentifier>{b4ef4989-5d15-4d43-8fd2-8ac9bae443a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\UI\Tutorial">
+      <UniqueIdentifier>{cd1e1319-6678-430f-83ce-93757956c15d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\KeyBindings">
+      <UniqueIdentifier>{2d315c85-08a1-4979-8358-79514405b0a0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptReader">
+      <UniqueIdentifier>{1b69b038-85ab-41ed-b2ce-309b2cc880a6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptFS">
+      <UniqueIdentifier>{a3f61b06-36f3-4c64-9d2c-8c4fee69e390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\Console">
+      <UniqueIdentifier>{f4ca386b-e35f-48be-90cc-c47156417a99}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\BaseClientClasses">
+      <UniqueIdentifier>{fcf888e4-ffe0-4bb7-a58e-87c71872fe03}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptCallbackEx">
+      <UniqueIdentifier>{e9f9aaec-d8a2-42bd-9605-4bc75dba3e7a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptLAnim">
+      <UniqueIdentifier>{af2c7057-c6ae-492f-b49d-6e414c09ec9e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptFcolor">
+      <UniqueIdentifier>{09acbd2b-be6a-42b7-bcef-324f125b9d0e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptParticles">
+      <UniqueIdentifier>{36e72721-560a-45b7-88bb-0f3d349c1097}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptClasses\ScriptSound">
+      <UniqueIdentifier>{3654ab94-4b14-4ba7-be65-738bc84072d5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptDebugger">
+      <UniqueIdentifier>{4897e4dc-7ff7-4404-831b-5b7e01c89872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptEngine">
+      <UniqueIdentifier>{f6a26eee-11a8-4afe-9c22-019f8c33024c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptProcess">
+      <UniqueIdentifier>{9bba9825-9d42-4e9f-907f-b90f023477b4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptStorage">
+      <UniqueIdentifier>{a8aac730-448c-4f79-be31-292077bb57a9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptThread">
+      <UniqueIdentifier>{27230a6f-19e3-48a4-9d1a-7a19cb3f9fb1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ScriptEngine\ScriptThread\ScriptStackTracker">
+      <UniqueIdentifier>{81427c0a-554c-422d-b537-38f170281e7d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -4567,211 +4567,211 @@
       <Filter>AI\ANavigation\PatrolPaths\PatrolPoint</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_export_macroses.h">
-      <Filter>AI\AScript</Filter>
+      <Filter>ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_export_space.h">
-      <Filter>AI\AScript</Filter>
+      <Filter>ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_space_forward.h">
-      <Filter>AI\AScript</Filter>
+      <Filter>ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="script_bind_macroses.h">
-      <Filter>AI\AScript\ScriptClasses</Filter>
+      <Filter>ScriptEngine\ScriptClasses</Filter>
     </ClInclude>
     <ClInclude Include="script_abstract_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_abstract_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action</Filter>
     </ClInclude>
     <ClInclude Include="script_abstract_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_abstract_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action</Filter>
     </ClInclude>
     <ClInclude Include="script_movement_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action</Filter>
     </ClInclude>
     <ClInclude Include="script_movement_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action</Filter>
     </ClInclude>
     <ClInclude Include="patrol_path_params.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
     </ClInclude>
     <ClInclude Include="script_watch_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClInclude>
     <ClInclude Include="script_watch_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClInclude>
     <ClInclude Include="script_animation_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\acript_animation_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\acript_animation_action</Filter>
     </ClInclude>
     <ClInclude Include="script_animation_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\acript_animation_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\acript_animation_action</Filter>
     </ClInclude>
     <ClInclude Include="script_sound_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_sound_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_sound_action</Filter>
     </ClInclude>
     <ClInclude Include="script_sound_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_sound_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_sound_action</Filter>
     </ClInclude>
     <ClInclude Include="script_particle_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClInclude>
     <ClInclude Include="script_particle_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClInclude>
     <ClInclude Include="script_object_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_object_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_object_action</Filter>
     </ClInclude>
     <ClInclude Include="script_object_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_object_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_object_action</Filter>
     </ClInclude>
     <ClInclude Include="script_action_condition.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_action_condition</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_action_condition</Filter>
     </ClInclude>
     <ClInclude Include="script_action_condition_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_action_condition</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_action_condition</Filter>
     </ClInclude>
     <ClInclude Include="script_monster_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_monster_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_monster_action</Filter>
     </ClInclude>
     <ClInclude Include="script_monster_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_monster_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_monster_action</Filter>
     </ClInclude>
     <ClInclude Include="script_entity_action.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_entity_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_entity_action</Filter>
     </ClInclude>
     <ClInclude Include="script_entity_action_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_entity_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_entity_action</Filter>
     </ClInclude>
     <ClInclude Include="script_binder_object.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptBinderObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptBinderObject</Filter>
     </ClInclude>
     <ClInclude Include="script_binder_object_wrapper.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
     </ClInclude>
     <ClInclude Include="script_effector.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptEffector</Filter>
     </ClInclude>
     <ClInclude Include="script_effector_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptEffector</Filter>
     </ClInclude>
     <ClInclude Include="script_effector_wrapper.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
     </ClInclude>
     <ClInclude Include="script_effector_wrapper_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
     </ClInclude>
     <ClInclude Include="script_game_object.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClInclude>
     <ClInclude Include="script_hit.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptHit</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptHit</Filter>
     </ClInclude>
     <ClInclude Include="script_hit_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptHit</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptHit</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_ini_file.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptIniFile</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_ini_file_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptIniFile</Filter>
     </ClInclude>
     <ClInclude Include="script_monster_hit_info.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptMonsterHitInfo</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptMonsterHitInfo</Filter>
     </ClInclude>
     <ClInclude Include="script_render_device.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptRenderDevice</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptRenderDevice</Filter>
     </ClInclude>
     <ClInclude Include="script_sound_info.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptSoundInfo</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSoundInfo</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_sound_type.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptSoundType</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSoundType</Filter>
     </ClInclude>
     <ClInclude Include="script_ui_registrator.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="ScriptXMLInit.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="key_binding_registrator.h">
-      <Filter>AI\AScript\ScriptClasses\KeyBindings</Filter>
+      <Filter>ScriptEngine\ScriptClasses\KeyBindings</Filter>
     </ClInclude>
     <ClInclude Include="fs_registrator.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptFS</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptFS</Filter>
     </ClInclude>
     <ClInclude Include="console_registrator.h">
-      <Filter>AI\AScript\ScriptClasses\Console</Filter>
+      <Filter>ScriptEngine\ScriptClasses\Console</Filter>
     </ClInclude>
     <ClInclude Include="base_client_classes.h">
-      <Filter>AI\AScript\ScriptClasses\BaseClientClasses</Filter>
+      <Filter>ScriptEngine\ScriptClasses\BaseClientClasses</Filter>
     </ClInclude>
     <ClInclude Include="base_client_classes_wrappers.h">
-      <Filter>AI\AScript\ScriptClasses\BaseClientClasses</Filter>
+      <Filter>ScriptEngine\ScriptClasses\BaseClientClasses</Filter>
     </ClInclude>
     <ClInclude Include="script_callback_ex.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptCallbackEx</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptCallbackEx</Filter>
     </ClInclude>
     <ClInclude Include="script_callback_ex_generators.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptCallbackEx</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptCallbackEx</Filter>
     </ClInclude>
     <ClInclude Include="script_callback_ex_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptCallbackEx</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptCallbackEx</Filter>
     </ClInclude>
     <ClInclude Include="script_callback_ex_nonvoid.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptCallbackEx</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptCallbackEx</Filter>
     </ClInclude>
     <ClInclude Include="script_callback_ex_void.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptCallbackEx</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptCallbackEx</Filter>
     </ClInclude>
     <ClInclude Include="script_lanim.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptLAnim</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptLAnim</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_fcolor.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptFcolor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptFcolor</Filter>
     </ClInclude>
     <ClInclude Include="script_particles.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptParticles</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptParticles</Filter>
     </ClInclude>
     <ClInclude Include="script_sound.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
     </ClInclude>
     <ClInclude Include="script_sound_inline.h">
-      <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_engine.h">
-      <Filter>AI\AScript\ScriptEngine</Filter>
+      <Filter>ScriptEngine\ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_engine_inline.h">
-      <Filter>AI\AScript\ScriptEngine</Filter>
+      <Filter>ScriptEngine\ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_engine_space.h">
-      <Filter>AI\AScript\ScriptEngine</Filter>
+      <Filter>ScriptEngine\ScriptEngine</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_process.h">
-      <Filter>AI\AScript\ScriptProcess</Filter>
+      <Filter>ScriptEngine\ScriptProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_process_inline.h">
-      <Filter>AI\AScript\ScriptProcess</Filter>
+      <Filter>ScriptEngine\ScriptProcess</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_storage.h">
-      <Filter>AI\AScript\ScriptStorage</Filter>
+      <Filter>ScriptEngine\ScriptStorage</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_storage_inline.h">
-      <Filter>AI\AScript\ScriptStorage</Filter>
+      <Filter>ScriptEngine\ScriptStorage</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_storage_space.h">
-      <Filter>AI\AScript\ScriptStorage</Filter>
+      <Filter>ScriptEngine\ScriptStorage</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_thread.h">
-      <Filter>AI\AScript\ScriptThread</Filter>
+      <Filter>ScriptEngine\ScriptThread</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_thread_inline.h">
-      <Filter>AI\AScript\ScriptThread</Filter>
+      <Filter>ScriptEngine\ScriptThread</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_stack_tracker.h">
-      <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
+      <Filter>ScriptEngine\ScriptThread\ScriptStackTracker</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_stack_tracker_inline.h">
-      <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
+      <Filter>ScriptEngine\ScriptThread\ScriptStackTracker</Filter>
     </ClInclude>
     <ClInclude Include="ai_space.h">
       <Filter>AI\ASpace</Filter>
@@ -5563,361 +5563,361 @@
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClInclude>
     <ClInclude Include="ui_base.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="ui_defs.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="UIDialogHolder.h">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryUpgradeWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInvUpgrade.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInvUpgradeInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInvUpgradeProperty.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA</Filter>
     </ClInclude>
     <ClInclude Include="ui\map_hint.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClInclude>
     <ClInclude Include="map_spot.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMap.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapWndActions.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapWndActionsSpace.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIAchievements.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIRankingWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMapLegend.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISecondTaskWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITaskWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILogsWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\logs</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\logs</Filter>
     </ClInclude>
     <ClInclude Include="ui\UINewsItemWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\logs\News</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\logs\News</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_af_params.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBoosterInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIItemInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOutfitInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWpnParams.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICharacterInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos\CharacterInfo</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos\CharacterInfo</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITalkDialogWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TALK</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\TALK</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITalkWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TALK</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\TALK</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIHudStatesWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMainIngameWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessagesWindow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMoneyIndicator.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMotionIcon.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaMsgListItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="UIZoneMap.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptionsItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptionsManager.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIOptionsManagerScript.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
     </ClInclude>
     <ClInclude Include="MainMenu.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
     </ClInclude>
     <ClInclude Include="ui\MMSound.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMMShniaga.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditKeyBind.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIKeyBinding.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIHelper.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryUtilities</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInventoryUtilities.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryUtilities</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIActorMenu.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIActorStateInfo.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDebugFonts.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\_Debug Fonts</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts</Filter>
     </ClInclude>
     <ClInclude Include="callback_info.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\uiabstract.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessages.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWndCallback.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITextureMaster.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIXmlInit.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClInclude>
     <ClInclude Include="ui\xrUIXmlParser.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessageBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIMessageBoxEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPropertiesBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIAnimatedStatic.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILanimController.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIStatic.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="UIStaticItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditBoxEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICustomEdit.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDialogWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrameLineWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFrameWindow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIWindow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDoubleProgressBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIProgressBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIProgressShape.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITabButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITabControl.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScriptWnd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\uiscriptwnd_script.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
     </ClInclude>
     <ClInclude Include="ui\UI3tButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIBtnHint.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICheckButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIRadioButton.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIComboBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ComboBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UI_IB_Static.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIInteractiveBackground.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
     </ClInclude>
     <ClInclude Include="ui\UITrackBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollView.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILine.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UILines.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\uilinestd.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISubLine.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellCustomItems.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICellItemFactory.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDragDropListEx.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIDragDropReferenceList.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIFixedScrollBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollBar.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIScrollBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
     </ClInclude>
     <ClInclude Include="ui\UICustomSpin.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISpinNum.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UISpinText.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\ui_arrow.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\arrow</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\arrow</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIHint.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Hint</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Hint</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListBox.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListBoxItem.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIListBoxItemMsgChain.h">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClInclude>
     <ClInclude Include="HitMarker.h">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClInclude>
     <ClInclude Include="HUDManager.h">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClInclude>
     <ClInclude Include="UIGameCustom.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\GameCustom</Filter>
     </ClInclude>
     <ClInclude Include="UIGameSP.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Single</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\Single</Filter>
     </ClInclude>
     <ClInclude Include="HUDCrosshair.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="HUDTarget.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="UICursor.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIGameTutorial.h">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_debugger_threads.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_callStack.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_lua_helper.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\script_debugger.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Core\Client\Objects\actor</Filter>
@@ -7237,163 +7237,163 @@
       <Filter>AI\ANavigation\PatrolPaths\PatrolPoint</Filter>
     </ClCompile>
     <ClCompile Include="script_abstract_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_abstract_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action</Filter>
     </ClCompile>
     <ClCompile Include="script_movement_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action</Filter>
     </ClCompile>
     <ClCompile Include="patrol_path_params.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action\patrol_path_params</Filter>
     </ClCompile>
     <ClCompile Include="script_watch_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_watch_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_watch_action</Filter>
     </ClCompile>
     <ClCompile Include="script_animation_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\acript_animation_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\acript_animation_action</Filter>
     </ClCompile>
     <ClCompile Include="script_animation_action_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\acript_animation_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\acript_animation_action</Filter>
     </ClCompile>
     <ClCompile Include="script_sound_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_sound_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_sound_action</Filter>
     </ClCompile>
     <ClCompile Include="script_particle_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_particle_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClCompile>
     <ClCompile Include="script_object_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_object_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_object_action</Filter>
     </ClCompile>
     <ClCompile Include="script_object_action_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_object_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_object_action</Filter>
     </ClCompile>
     <ClCompile Include="script_action_condition.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_action_condition</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_action_condition</Filter>
     </ClCompile>
     <ClCompile Include="script_monster_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_monster_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_monster_action</Filter>
     </ClCompile>
     <ClCompile Include="script_entity_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_entity_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_entity_action</Filter>
     </ClCompile>
     <ClCompile Include="script_entity_action_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptActions\script_entity_action</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_entity_action</Filter>
     </ClCompile>
     <ClCompile Include="script_binder_object.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptBinderObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptBinderObject</Filter>
     </ClCompile>
     <ClCompile Include="script_binder_object_wrapper.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptBinderObject\ScriptBinderObjectWrapper</Filter>
     </ClCompile>
     <ClCompile Include="script_effector.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptEffector</Filter>
     </ClCompile>
     <ClCompile Include="script_effector_wrapper.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptEffector\ScriptEffectorWrapper</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object2.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object3.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object4.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_inventory_owner.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_script2.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_script3.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_script_trader.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_smart_covers.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_trader.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_use.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_game_object_use2.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptGameObject</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptGameObject</Filter>
     </ClCompile>
     <ClCompile Include="script_hit_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptHit</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptHit</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_ini_file.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptIniFile</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_ini_file_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptIniFile</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptIniFile</Filter>
     </ClCompile>
     <ClCompile Include="script_monster_hit_info_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptMonsterHitInfo</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptMonsterHitInfo</Filter>
     </ClCompile>
     <ClCompile Include="script_render_device_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptRenderDevice</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptRenderDevice</Filter>
     </ClCompile>
     <ClCompile Include="script_sound_info_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptSoundInfo</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSoundInfo</Filter>
     </ClCompile>
     <ClCompile Include="ScriptXMLInit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="key_binding_registrator_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\KeyBindings</Filter>
+      <Filter>ScriptEngine\ScriptClasses\KeyBindings</Filter>
     </ClCompile>
     <ClCompile Include="fs_registrator_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptFS</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptFS</Filter>
     </ClCompile>
     <ClCompile Include="console_registrator_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\Console</Filter>
+      <Filter>ScriptEngine\ScriptClasses\Console</Filter>
     </ClCompile>
     <ClCompile Include="base_client_classes_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\BaseClientClasses</Filter>
+      <Filter>ScriptEngine\ScriptClasses\BaseClientClasses</Filter>
     </ClCompile>
     <ClCompile Include="script_lanim.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptLAnim</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptLAnim</Filter>
     </ClCompile>
     <ClCompile Include="script_particles.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptParticles</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptParticles</Filter>
     </ClCompile>
     <ClCompile Include="script_sound.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
     </ClCompile>
     <ClCompile Include="script_sound_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\ScriptSound</Filter>
+      <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_engine.cpp">
-      <Filter>AI\AScript\ScriptEngine</Filter>
+      <Filter>ScriptEngine\ScriptEngine</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp">
-      <Filter>AI\AScript\ScriptEngine</Filter>
+      <Filter>ScriptEngine\ScriptEngine</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_engine_script.cpp">
-      <Filter>AI\AScript\ScriptEngine</Filter>
+      <Filter>ScriptEngine\ScriptEngine</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_process.cpp">
-      <Filter>AI\AScript\ScriptProcess</Filter>
+      <Filter>ScriptEngine\ScriptProcess</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_storage.cpp">
-      <Filter>AI\AScript\ScriptStorage</Filter>
+      <Filter>ScriptEngine\ScriptStorage</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_thread.cpp">
-      <Filter>AI\AScript\ScriptThread</Filter>
+      <Filter>ScriptEngine\ScriptThread</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_stack_tracker.cpp">
-      <Filter>AI\AScript\ScriptThread\ScriptStackTracker</Filter>
+      <Filter>ScriptEngine\ScriptThread\ScriptStackTracker</Filter>
     </ClCompile>
     <ClCompile Include="ai_sounds.cpp">
       <Filter>AI\ASound</Filter>
@@ -8116,370 +8116,370 @@
       <Filter>Core\Server\ServerConnect</Filter>
     </ClCompile>
     <ClCompile Include="ui_base.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="UIDialogHolder.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgrade.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgradeInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInvUpgradeProperty.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA</Filter>
     </ClCompile>
     <ClCompile Include="ui\map_hint.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClCompile>
     <ClCompile Include="map_spot.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMap.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapWnd2.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapWndActions.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\MAP</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\MAP</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIAchievements.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIRankingWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Statistics &amp; Rankings</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMapLegend.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISecondTaskWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITaskWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\Tasks</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\Tasks</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILogsWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\logs</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\logs</Filter>
     </ClCompile>
     <ClCompile Include="ui\UINewsItemWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\PDA\logs\News</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\PDA\logs\News</Filter>
     </ClCompile>
     <ClCompile Include="ui\ui_af_params.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBoosterInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIItemInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOutfitInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWpnParams.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICharacterInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\ui-item-infos\CharacterInfo</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\ui-item-infos\CharacterInfo</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITalkDialogWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TALK</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\TALK</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITalkWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\TALK</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\TALK</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIHudStatesWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMainIngameWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessagesWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMoneyIndicator.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMotionIcon.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaMsgListItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="UIZoneMap.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptionsItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptionsManager.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIOptionsManagerScript.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\OptionsItem</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\OptionsItem</Filter>
     </ClCompile>
     <ClCompile Include="MainMenu.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
     </ClCompile>
     <ClCompile Include="ui\MMSound.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMMShniaga.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditKeyBind.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIKeyBinding.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainMenu\KeyBinding</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIHelper.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryUtilities</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIInventoryUtilities.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\InventoryUtilities</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryUtilities</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenu.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenu_action.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenuDeadBodySearch.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenuInitialize.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenuInventory.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenuTrade.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorMenuUpgrade.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIActorStateInfo.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\Inventory</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\Inventory</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDebugFonts.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\_Debug Fonts</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWndCallback.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITextureMaster.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIXmlInit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClCompile>
     <ClCompile Include="ui\xrUIXmlParser.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\XML</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessageBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIMessageBoxEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\MessageBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\MessageBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPropertiesBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIAnimatedStatic.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILanimController.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatic.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIStatic_script.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="UIStaticItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Static</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditBoxEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICustomEdit.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\EditBox\customEB</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDialogWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrameLineWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFrameWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIWindow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Windows</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Windows</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDoubleProgressBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIProgressBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIProgressShape.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ProgressBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITabControl.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TabControl</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TabControl</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScriptWnd.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScriptWnd</Filter>
     </ClCompile>
     <ClCompile Include="ui\UI3tButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIBtnHint.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICheckButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIRadioButton.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Buttons</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Buttons</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIComboBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ComboBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ComboBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UI_IB_Static.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\InteractiveBackground</Filter>
     </ClCompile>
     <ClCompile Include="ui\UITrackBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\TrackBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\TrackBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollView.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollView</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollView</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILine.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UILines.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISubLine.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Lines</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Lines</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellCustomItems.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICellItemFactory.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDragDropListEx.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIDragDropReferenceList.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\DragDrop</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\DragDrop</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIFixedScrollBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollBar.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIScrollBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ScrollBar</Filter>
     </ClCompile>
     <ClCompile Include="ui\UICustomSpin.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISpinNum.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UISpinText.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\SpinBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\SpinBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\ui_arrow.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\arrow</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\arrow</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIHint.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\Hint</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Hint</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBox.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBoxItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIListBoxItemMsgChain.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\UIWindows\ListBox</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\ListBox</Filter>
     </ClCompile>
     <ClCompile Include="HitMarker.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
     <ClCompile Include="HUDManager.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
     <ClCompile Include="UIGameCustom.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\GameCustom</Filter>
     </ClCompile>
     <ClCompile Include="UIGameSP.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Single</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\Single</Filter>
     </ClCompile>
     <ClCompile Include="HUDCrosshair.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="HUDTarget.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="UICursor.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorial.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialSimpleItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_callStack.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\script_debugger.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
+      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>
+      <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
     </ClCompile>
     <ClCompile Include="Actor.cpp">
       <Filter>Core\Client\Objects\actor</Filter>

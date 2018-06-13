@@ -42,7 +42,7 @@ CSE_Abstract*		game_sv_GameState::get_entity_from_eid		(u16 id)
 
 xr_vector<u16>* game_sv_GameState::get_children(ClientID id)
 {
-	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
+    CClient*	C	= m_server->ID_to_client	(id);
 	if (0==C)			return 0;
 	CSE_Abstract* E	= C->owner;
 	if (0==E)			return 0;
@@ -93,11 +93,6 @@ void game_sv_GameState::net_Export_GameTime(NET_Packet& P)
 
 
 void game_sv_GameState::OnPlayerConnect			(ClientID /**id_who/**/)
-{
-	signal_Syncronize	();
-}
-
-void game_sv_GameState::OnPlayerDisconnect		(ClientID id_who, LPSTR, u16 )
 {
 	signal_Syncronize	();
 }

@@ -347,17 +347,11 @@ bool CUICharacterInfo::ignore_community( shared_str const& check_community )
 void CUICharacterInfo::SetActorIcon()
 {
 	shared_str icon_name = "ui_inGame2_Hero";
-	luabind::functor<LPCSTR>	functor;
-	if (!ai().script_engine().functor("ts_utils.get_actor_icon", functor))
-	{
-		Msg("can't find function 'oxy_callbacks.get_actor_icon'");
-	}
-	else
+	luabind::functor<LPCSTR> functor;
+	if (ai().script_engine().functor("ts_utils.get_actor_icon", functor))
 		icon_name = functor();
 
 	m_texture_name = icon_name;
 	if (m_icons[eIcon])
-	{
 		m_icons[eIcon]->InitTexture(m_texture_name.c_str());
-	}
 }

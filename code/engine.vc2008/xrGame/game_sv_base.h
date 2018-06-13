@@ -5,7 +5,6 @@
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrCore/client_id.h"
 #include "game_sv_event_queue.h"
-#include "../xrEngine/ClS/NET_Server.h"
 #include "alife_simulator.h"
 
 class CSE_Abstract;
@@ -27,7 +26,6 @@ protected:
 	virtual		void				OnEvent					(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender );
 public:
 	virtual		void				OnPlayerConnect			(ClientID id_who);
-	virtual		void				OnPlayerDisconnect		(ClientID id_who, LPSTR Name, u16 GameID);
 
 public:
 									game_sv_GameState		();
