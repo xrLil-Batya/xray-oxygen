@@ -39,7 +39,12 @@ void CSoundRender_CoreA::_initialize(int stage)
 	R_ASSERT(snd_device_id >= 0 && snd_device_id < pDeviceList->GetNumDevices());
 	const ALDeviceDesc& deviceDesc = pDeviceList->GetDeviceDesc(snd_device_id);
 	// OpenAL device
-	pDevice = alcOpenDevice(deviceDesc.name);
+    // alcOpenDevice can fail without any visible reason. Just try several times
+    for (DWORD i = 0; i < 100; ++i)
+    {
+	    pDevice = alcOpenDevice(deviceDesc.name);
+        if (pDevice != nullptr) break;
+    }
 
 	if (pDevice == nullptr)
 	{

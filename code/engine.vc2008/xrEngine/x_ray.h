@@ -33,7 +33,7 @@ private:
 
 	int						load_stage;
 
-	u32						ll_dwReference;
+	u32						dwLoadReference;
 private:
 	EVENT					eQuit;
 	EVENT					eStart;

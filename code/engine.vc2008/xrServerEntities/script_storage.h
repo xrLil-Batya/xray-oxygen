@@ -34,6 +34,7 @@ class CScriptStorage
 private:
 	CScriptThread				*m_current_thread	;
 	BOOL						m_jit				;
+    std::set<void*>             m_dumpedObjList;
 
 public:
 protected:

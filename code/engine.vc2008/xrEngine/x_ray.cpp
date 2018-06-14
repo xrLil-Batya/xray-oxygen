@@ -510,7 +510,7 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 
 CApplication::CApplication()
 {
-	ll_dwReference	= 0;
+	dwLoadReference	= 0;
 
 	max_load_stage = 0;
 
@@ -634,8 +634,8 @@ extern	ENGINE_API BOOL g_appLoaded = FALSE;
 
 void CApplication::LoadBegin()
 {
-	ll_dwReference++;
-	if (1==ll_dwReference)	
+	dwLoadReference++;
+	if (1==dwLoadReference)	
 	{
 		g_appLoaded			= FALSE;
 #ifdef SPAWN_ANTIFREEZE
@@ -651,8 +651,9 @@ void CApplication::LoadBegin()
 
 void CApplication::LoadEnd()
 {
-	ll_dwReference--;
-	if (0 == ll_dwReference)
+    VERIFY(dwLoadReference != 0);
+	dwLoadReference--;
+	if (0 == dwLoadReference)
 	{
 		g_appLoaded = TRUE;
 	}
@@ -690,7 +691,7 @@ void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 void CApplication::LoadStage()
 {
 	load_stage++;
-	VERIFY(ll_dwReference);
+	VERIFY(dwLoadReference);
 	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());
 	phase_timer.Start();
 	
