@@ -77,7 +77,6 @@ public:
 	u32					eye_pp_timestamp;
 	Fvector				m_tEyeShift;
 	float				m_fEyeShiftYaw;
-	BOOL				NET_WasExtrapolating;
 
 	Fvector				tWatchDirection;
 
@@ -110,8 +109,6 @@ public:
 	};
 	xr_deque<net_update>	NET;
 	net_update				NET_Last;
-	BOOL					NET_WasInterpolating;	// previous update was by interpolation or by extrapolation
-	u32						NET_Time;				// server time of last update
 //------------------------------
 
 	virtual BOOL		feel_touch_on_contact	(CObject *);

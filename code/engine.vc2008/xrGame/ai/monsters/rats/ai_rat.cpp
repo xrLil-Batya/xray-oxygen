@@ -574,24 +574,6 @@ BOOL CAI_Rat::UsedAI_Locations()
 	return					(TRUE);
 }
 
-void CAI_Rat::make_Interpolation ()
-{
-	inherited::make_Interpolation();
-	CEatableItem::make_Interpolation();
-}
-
-void CAI_Rat::PH_B_CrPr			()
-{
-	inherited::PH_B_CrPr		();
-	CEatableItem::PH_B_CrPr		();
-}
-
-void CAI_Rat::PH_I_CrPr			()
-{
-	inherited::PH_I_CrPr		();
-	CEatableItem::PH_I_CrPr		();
-}
-
 #ifdef DEBUG
 void CAI_Rat::PH_Ch_CrPr		()
 {
@@ -599,13 +581,6 @@ void CAI_Rat::PH_Ch_CrPr		()
 	CEatableItem::PH_Ch_CrPr	();
 }
 #endif
-
-
-void CAI_Rat::PH_A_CrPr			()
-{
-	inherited::PH_A_CrPr		();
-	CEatableItem::PH_A_CrPr		();
-}
 
 void CAI_Rat::create_physic_shell()
 {

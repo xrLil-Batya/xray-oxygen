@@ -487,7 +487,6 @@ void CPhysicObject::net_Import(NET_Packet& P)
 
 	net_updatePhData				*p = NetSync();
 
-	Level().AddObject_To_Objects4CrPr(this);
 	p->NET_IItem.push_back(N);
 
 	while (p->NET_IItem.size() > 2)
@@ -502,40 +501,6 @@ void CPhysicObject::net_Import(NET_Packet& P)
 };
 
 //-----------
-
-
-void CPhysicObject::PH_B_CrPr()
-{
-};
-void CPhysicObject::PH_I_CrPr()		// actions & operations between two phisic prediction steps
-{
-};
-void CPhysicObject::PH_A_CrPr()
-{
-	if (m_just_after_spawn)
-	{
-		VERIFY(Visual());
-		IKinematics *K = Visual()->dcast_PKinematics();
-		VERIFY(K);
-		if (!PPhysicsShell())
-		{
-			return;
-		}
-		if (!PPhysicsShell()->isFullActive())
-		{
-			K->CalculateBones_Invalidate();
-			K->CalculateBones(TRUE);
-		}
-		PPhysicsShell()->GetGlobalTransformDynamic(&XFORM());
-		K->CalculateBones_Invalidate();
-		K->CalculateBones(TRUE);
-		spatial_move();
-		m_just_after_spawn = false;
-
-		PPhysicsShell()->get_ElementByStoreOrder(0)->Fix();
-		PPhysicsShell()->SetIgnoreStatic();
-	}
-};
 
 void CPhysicObject::Interpolate()
 {

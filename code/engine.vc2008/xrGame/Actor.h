@@ -385,7 +385,6 @@ public:
 	void					g_cl_CheckControls		(u32 mstate_wf, Fvector &vControlAccel, float &Jump, float dt);
 	void					g_cl_ValidateMState		(float dt, u32 mstate_wf);
 	void					g_cl_Orientate			(u32 mstate_rl, float dt);
-	void					g_sv_Orientate			(u32 mstate_rl, float dt);
 	void					g_Orientate				(u32 mstate_rl, float dt);
 	bool					g_LadderOrient			() ;
 //	void					UpdateMotionIcon		(u32 mstate_rl);
@@ -494,7 +493,6 @@ protected:
 public:
 	virtual BOOL						net_Spawn			( CSE_Abstract* DC);
 	virtual void						net_Export			( NET_Packet& P);				// export to server
-	virtual void						net_Import			( NET_Packet& P);				// import from server
 	virtual void						net_Destroy			();
 	virtual BOOL						net_Relevant		();//	{ return getSVU() | getLocal(); };		// relevant for export to server
 	virtual	void						net_Relcase			( CObject* O );					//
@@ -507,16 +505,6 @@ public:
 protected:
 	xr_deque<net_update>	NET;
 	Fvector					NET_SavedAccel;
-	net_update				NET_Last;
-	BOOL					NET_WasInterpolating;	// previous update was by interpolation or by extrapolation
-	u32						NET_Time;				// server time of last update
-
-	//---------------------------------------------
-	void					net_Import_Base				( NET_Packet& P);
-	void					net_Import_Physic			( NET_Packet& P);
-	void					net_Import_Base_proceed		( );
-	void					net_Import_Physic_proceed	( );
-	//---------------------------------------------
 
 	////////////////////////////////////////////////////////////////////////////
 	virtual	bool			can_validate_position_on_spawn	(){return false;}
@@ -559,10 +547,6 @@ protected:
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
 	//---------------------------------------------
-	void					CalculateInterpolationParams();
-	//---------------------------------------------
-	virtual void			make_Interpolation ();
-	//---------------------------------------------
 #ifdef DEBUG
 	virtual void			OnRender_Network();
 #endif
@@ -575,9 +559,6 @@ public:
 			void			g_Physics		(Fvector& accel, float jump, float dt);
 	virtual void			ForceTransform	(const Fmatrix &m);
 			void			SetPhPosition	(const Fmatrix& pos);
-	virtual void			PH_B_CrPr		(); // actions & operations before physic correction-prediction steps
-	virtual void			PH_I_CrPr		(); // actions & operations after correction before prediction steps
-	virtual void			PH_A_CrPr		(); // actions & operations after phisic correction-prediction steps
 	virtual void			MoveActor		(Fvector NewPos, Fvector NewDir);
 
 	virtual void			SpawnAmmoForWeapon		(CInventoryItem *pIItem);

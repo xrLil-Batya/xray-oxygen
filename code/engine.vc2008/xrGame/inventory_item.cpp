@@ -170,7 +170,6 @@ void CInventoryItem::OnH_A_Independent()
 
 void CInventoryItem::OnH_B_Chield()
 {
-	Level().RemoveObject_From_4CrPr(m_object);
 }
 
 void CInventoryItem::OnH_A_Chield()
@@ -342,35 +341,6 @@ void CInventoryItem::load(IReader &packet)
 	object().PHLoadState(packet);
 	object().PPhysicsShell()->Disable();
 }
-
-void CInventoryItem::PH_A_CrPr		()
-{
-	if (m_just_after_spawn)
-	{
-		VERIFY(object().Visual());
-		IKinematics *K = object().Visual()->dcast_PKinematics();
-		VERIFY( K );
-		if (!object().PPhysicsShell())
-		{
-			Msg("! ERROR: PhysicsShell is NULL, object [%s][%d]", object().cName().c_str(), object().ID());
-			VERIFY2(0, "physical shell is NULL");
-			return;
-		}
-		if(!object().PPhysicsShell()->isFullActive())
-		{
-			K->CalculateBones_Invalidate();
-			K->CalculateBones(TRUE);
-		}
-		object().PPhysicsShell()->GetGlobalTransformDynamic(&object().XFORM());
-		K->CalculateBones_Invalidate();
-		K->CalculateBones(TRUE);
-		object().spatial_move();
-		m_just_after_spawn = false;
-		
-		object().PPhysicsShell()->get_ElementByStoreOrder(0)->Fix();
-		object().PPhysicsShell()->SetIgnoreStatic	();	
-	}
-};
 
 void CInventoryItem::Interpolate()
 {

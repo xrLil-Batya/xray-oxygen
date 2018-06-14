@@ -57,10 +57,6 @@
 extern CUISequencer * g_tutorial;
 extern CUISequencer * g_tutorial2;
 
-
-float		g_cl_lvInterp		= 0.1;
-u32			lvInterpSteps		= 0;
-
 #ifdef SPAWN_ANTIFREEZE
 ENGINE_API bool	g_bootComplete;
 
@@ -126,9 +122,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	m_game_task_manager			= xr_new<CGameTaskManager>();
 
 //----------------------------------------------------
-	m_bNeed_CrPr				= false;
-	m_bIn_CrPr					= false;
-	m_dwNumSteps				= 0;
 	m_seniority_hierarchy_holder= xr_new<CSeniorityHierarchyHolder>();
 
     m_level_sound_manager = xr_new<CLevelSoundManager>();
@@ -152,9 +145,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	//---------------------------------------------------------
 	pStatGraphR = nullptr;
 	pStatGraphS = nullptr;
-	//---------------------------------------------------------
-	pObjects4CrPr.clear();
-	pActors4CrPr.clear();
 	//---------------------------------------------------------
 	pCurrentControlEntity = nullptr;
 	//---------------------------------------------------------	
@@ -224,9 +214,6 @@ CLevel::~CLevel()
 	xr_delete					(m_ph_commander);
 	xr_delete					(m_ph_commander_scripts);
 	//-----------------------------------------------------------
-	pObjects4CrPr.clear();
-	pActors4CrPr.clear();
-
 	ai().unload					();
 	//-----------------------------------------------------------	
 #ifdef DEBUG	
@@ -429,9 +416,6 @@ void CLevel::OnFrame()
 
 	ProcessGameEvents	();
 
-
-	if (m_bNeed_CrPr) make_NetCorrectionPrediction();
-
 	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
 
     if (Device.dwPrecacheFrame == 0)
@@ -567,7 +551,6 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->SetColor	(0xffff0000);
 
 		UI().Font().pFontStat->OutNext			("Server Objects:      [%d]", Objects.o_count());
-		UI().Font().pFontStat->OutNext			("Interpolation Steps: [%d]", Level().GetInterpolationSteps());
 
 		UI().Font().pFontStat->SetHeight	(8.0f);
 		//---------------------------------------------------------------------
@@ -616,135 +599,6 @@ void CLevel::OnEvent(EVENT E, u64 P1, u64 /**P2/**/)
 		char	Name[128];	Name[0]=0;
 		sscanf	(LPCSTR(P1),"%s", Name);
 		Level().g_cl_Spawn	(Name,0xff, M_SPAWN_OBJECT_LOCAL, Fvector().set(0,0,0));
-	}
-}
-
-void	CLevel::AddObject_To_Objects4CrPr	(CGameObject* pObj)
-{
-	if (!pObj) return;
-	for	(auto OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
-	{
-		if (*OIt == pObj) return;
-	}
-	pObjects4CrPr.push_back(pObj);
-
-}
-void	CLevel::AddActor_To_Actors4CrPr		(CGameObject* pActor)
-{
-	if (!pActor) return;
-	if (!smart_cast<CActor*>(pActor)) return;
-	for	(auto AIt = pActors4CrPr.begin(); AIt != pActors4CrPr.end(); AIt++)
-	{
-		if (*AIt == pActor) return;
-	}
-	pActors4CrPr.push_back(pActor);
-}
-
-void	CLevel::RemoveObject_From_4CrPr		(CGameObject* pObj)
-{
-	if (!pObj) return;
-	
-    auto OIt = std::find(pObjects4CrPr.begin(), pObjects4CrPr.end(), pObj);
-	if (OIt != pObjects4CrPr.end())
-	{
-		pObjects4CrPr.erase(OIt);
-	}
-
-    auto AIt = std::find(pActors4CrPr.begin(), pActors4CrPr.end(), pObj);
-	if (AIt != pActors4CrPr.end())
-	{
-		pActors4CrPr.erase(AIt);
-	}
-}
-
-void CLevel::make_NetCorrectionPrediction	()
-{
-	m_bNeed_CrPr	= false;
-	m_bIn_CrPr		= true;
-	u64 NumPhSteps = physics_world()->StepsNum();
-	physics_world()->StepsNum() -= m_dwNumSteps;
-	if(ph_console::g_bDebugDumpPhysicsStep&&m_dwNumSteps>10)
-	{
-		Msg("!!!TOO MANY PHYSICS STEPS FOR CORRECTION PREDICTION = %d !!!",m_dwNumSteps);
-		m_dwNumSteps = 10;
-	};
-//////////////////////////////////////////////////////////////////////////////////
-	physics_world()->Freeze();
-
-	//setting UpdateData and determining number of PH steps from last received update
-	for	(auto OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
-	{
-		CGameObject* pObj = *OIt;
-		if (!pObj) continue;
-		pObj->PH_B_CrPr();
-	};
-//////////////////////////////////////////////////////////////////////////////////
-	//first prediction from "delivered" to "real current" position
-	//making enought PH steps to calculate current objects position based on their updated state	
-	
-	for (u32 i =0; i<m_dwNumSteps; i++)	
-	{
-		physics_world()->Step();
-
-		for	(auto AIt = pActors4CrPr.begin(); AIt != pActors4CrPr.end(); AIt++)
-		{
-			CGameObject* pActor = *AIt;
-			if (!pActor || pActor->CrPr_IsActivated()) continue;
-			pActor->PH_B_CrPr();
-		};
-	};
-//////////////////////////////////////////////////////////////////////////////////
-	for	(auto OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
-	{
-		CGameObject* pObj = *OIt;
-		if (!pObj) continue;
-		pObj->PH_I_CrPr();
-	};
-//////////////////////////////////////////////////////////////////////////////////
-	if (!InterpolationDisabled())
-	{
-		for (u32 i =0; i<lvInterpSteps; i++)	//second prediction "real current" to "future" position
-			physics_world()->Step();
-		//////////////////////////////////////////////////////////////////////////////////
-		for	(auto OIt = pObjects4CrPr.begin(); OIt != pObjects4CrPr.end(); OIt++)
-		{
-			CGameObject* pObj = *OIt;
-			if (!pObj) continue;
-			pObj->PH_A_CrPr();
-		};
-	};
-	physics_world()->UnFreeze();
-
-	physics_world()->StepsNum() = NumPhSteps;
-	m_dwNumSteps = 0;
-	m_bIn_CrPr = false;
-
-	pObjects4CrPr.clear();
-	pActors4CrPr.clear();
-};
-
-u32 CLevel::GetInterpolationSteps	()
-{
-	return lvInterpSteps;
-};
-
-bool CLevel::InterpolationDisabled	()
-{
-	return g_cl_lvInterp < 0; 
-};
-
-void CLevel::SetNumCrSteps(u32 NumSteps)
-{
-	m_bNeed_CrPr = true;
-
-	if (m_dwNumSteps <= NumSteps)
-	{
-		m_dwNumSteps = NumSteps;
-
-		if (m_dwNumSteps > 1000000)
-		{
-			m_dwNumSteps--;
-		}
 	}
 }
 

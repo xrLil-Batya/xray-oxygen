@@ -141,7 +141,6 @@ void CCustomMonster::reinit		()
 	m_dwLastUpdateTime			= 0xffffffff;
 	m_tEyeShift.set				(0,0,0);
 	m_fEyeShiftYaw				= 0.f;
-	NET_WasExtrapolating		= FALSE;
 
 	//////////////////////////////////////////////////////////////////////////
 	// Critical Wounds
@@ -355,8 +354,6 @@ void CCustomMonster::UpdateCL	()
 		NET_Last		= N;
 	}
 	else {
-		// OK.	interpolation
-		NET_WasExtrapolating		= FALSE;
 		// Search 2 keyframes for interpolation
 		int select		= -1;
 		for (u32 id=0; id<NET.size()-1; ++id)
@@ -381,10 +378,6 @@ void CCustomMonster::UpdateCL	()
 				if (!bfScriptAnimation())
 					SelectAnimation	(XFORM().k,movement().detail().direction(),movement().speed());
 			}
-
-			// Signal, that last time we used interpolation
-			NET_WasInterpolating	= TRUE;
-			NET_Time				= dwTime;
 		}
 	}
 	STOP_PROFILE

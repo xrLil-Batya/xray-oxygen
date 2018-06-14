@@ -63,7 +63,6 @@ public:
 public:
 			CPhysicObject(void);
 	virtual ~CPhysicObject(void);
-	//virtual void						make_Interpolation	(); // interpolation from last visible to corrected position/rotation
 	virtual	void						Interpolate();
 			float						interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current);
 
@@ -83,9 +82,6 @@ public:
 	virtual void						net_Export						(NET_Packet& P);
 	virtual void						net_Import						(NET_Packet& P);
 
-	virtual void						PH_B_CrPr						();					// actions & operations before physic correction-prediction steps
-	virtual void						PH_I_CrPr						();					// actions & operations after correction before prediction steps
-	virtual void						PH_A_CrPr						();					// actions & operations after phisic correction-prediction steps
 protected:
 	virtual void						SpawnInitPhysics				(CSE_Abstract	*D)																;
 	virtual void						RunStartupAnim					(CSE_Abstract	*D)																;
