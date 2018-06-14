@@ -31,4 +31,4 @@ private:
 	void			OpenLib();
 };
 
-extern SCRIPT_API CVMLua LVM;
+SCRIPT_API void setup_luabind_allocator();

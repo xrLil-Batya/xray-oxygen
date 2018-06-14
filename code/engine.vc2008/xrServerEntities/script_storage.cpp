@@ -67,15 +67,20 @@ void xrScriptCrashHandler()
 CScriptStorage::CScriptStorage()
 {
 	m_current_thread = 0;
+    luaVM = nullptr;
 }
 
 CScriptStorage::~CScriptStorage()
 {
+    xr_delete(luaVM);
 	Debug.set_crashhandler(nullptr);
 }
 
 void CScriptStorage::reinit()
 {
+    xr_delete(luaVM);
+    luaVM = xr_new<CVMLua>();
+
 	if (strstr(Core.Params, "-_g"))
 		file_header = file_header_new;
 	else

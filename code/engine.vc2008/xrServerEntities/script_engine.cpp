@@ -310,7 +310,6 @@ void CScriptEngine::init				()
 	}
 #endif // #ifdef USE_LUA_STUDIO
 
-	//luabind::open						(lua());
 	setup_callbacks						();
 	export_classes						(lua());
 	setup_auto_load						();
