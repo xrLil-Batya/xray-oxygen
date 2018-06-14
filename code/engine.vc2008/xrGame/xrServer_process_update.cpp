@@ -2,10 +2,9 @@
 #include "xrServer.h"
 #include "xrServer_Objects.h"
 
-void xrServer::Process_update(NET_Packet& P, ClientID sender)
+void xrServer::Process_update(NET_Packet& P)
 {
-    CClient* CL = ID_to_client(sender);
-	if(!CL) return;
+	if (!SV_Client) return;
 
 	// while has information
 	while (!P.r_eof())
@@ -29,7 +28,7 @@ void xrServer::Process_update(NET_Packet& P, ClientID sender)
 				string16 tmp;
 				CLSID2TEXT(E->m_tClassID, tmp);
 				Debug.fatal(DEBUG_INFO, "Beer from the creator of '%s'; initiator: 0x%08x, r_tell() = %d, pos = %d, objectID = %d",
-					tmp, CL->ID.value(), P.r_tell(), _pos, E->ID);
+					tmp, SV_Client->ID.value(), P.r_tell(), _pos, E->ID);
 			}
 		}
 		else P.r_advance	(size);

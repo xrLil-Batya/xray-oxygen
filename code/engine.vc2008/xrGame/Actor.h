@@ -503,14 +503,11 @@ public:
 	virtual void						net_Save			(NET_Packet& P)																	;
 	virtual	BOOL						net_SaveRelevant	()																				;
 protected:
-	xr_deque<net_update>	NET;
 	Fvector					NET_SavedAccel;
 
 	////////////////////////////////////////////////////////////////////////////
 	virtual	bool			can_validate_position_on_spawn	(){return false;}
 	///////////////////////////////////////////////////////
-	// апдайт с данными физики
-	xr_deque<net_update_A>	NET_A;
 	
 	//---------------------------------------------
 	/// spline coeff /////////////////////

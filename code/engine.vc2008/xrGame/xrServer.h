@@ -92,7 +92,7 @@ public:
 	void					Perform_destroy			(CSE_Abstract* tpSE_Abstract);
 
 	CSE_Abstract*			Process_spawn			(NET_Packet& P, ClientID sender, BOOL bSpawnWithClientsMainEntityAsParent=FALSE, CSE_Abstract* tpExistedEntity=0);
-	void					Process_update			(NET_Packet& P, ClientID sender);
+	void					Process_update			(NET_Packet& P);
 	void					Process_save			(NET_Packet& P, ClientID sender);
 	void					Process_event			(NET_Packet& P, ClientID sender);
 	void					Process_event_ownership	(NET_Packet& P, ClientID sender, u32 time, u16 ID, BOOL bForced = FALSE);
@@ -111,7 +111,7 @@ public:
 	virtual ~xrServer		();
 
 	// extended functionality
-	virtual u32				OnMessage			(NET_Packet& P, ClientID sender);	// Non-Zero means broadcasting with "flags" as returned
+	virtual u32				OnMessage			(NET_Packet& P);	// Non-Zero means broadcasting with "flags" as returned
 	virtual void			OnCL_Connected		();
 
 	virtual	void			SendBroadcast		(ClientID exclude, NET_Packet& P);

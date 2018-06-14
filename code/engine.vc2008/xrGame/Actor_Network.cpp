@@ -562,11 +562,6 @@ void	CActor::ChangeVisual			( shared_str NewVisual )
 	Visual()->dcast_PKinematics()->CalculateBones(TRUE);
 };
 
-void ACTOR_DEFS::net_update::lerp(ACTOR_DEFS::net_update& A, ACTOR_DEFS::net_update& B, float f)
-{
-#pragma todo("[FX]: Remove me!")
-}
-
 void CActor::save(NET_Packet &output_packet)
 {
 	inherited::save(output_packet);

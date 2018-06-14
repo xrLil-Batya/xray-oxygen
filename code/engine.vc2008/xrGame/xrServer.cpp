@@ -89,8 +89,6 @@ void xrServer::Update	()
         if (script_process)
             script_process->update();
     }
-	// game update
-	game->Update();
 
 	if (game->sv_force_sync)
         Perform_game_export();
@@ -99,18 +97,18 @@ void xrServer::Update	()
 #endif
 }
 
-u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
+u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "flags" as returned
 {
 	u16 type;
 	P.r_begin(type);
 
-    CClient* CL = ID_to_client(sender);
+    ClientID sender = SV_Client->ID;
 
 	switch (type)
 	{
 	case M_UPDATE:	
 		{
-			Process_update			(P,sender);						// No broadcast
+			Process_update			(P);						// No broadcast
 		}break;
 	case M_SPAWN:	
 		{
@@ -128,7 +126,7 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 				tmpP.B.count		= P.r_u8();
 				P.r					(&tmpP.B.data, tmpP.B.count);
 
-				OnMessage			(tmpP, sender);
+				OnMessage			(tmpP);
 			};			
 		}break;
 	//-------------------------------------------------------------------
@@ -165,8 +163,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
 {
     if (!SV_Client)
-        return;
-    if (SV_Client->ID == exclude)
         return;
     if (!SV_Client->flags.bConnected)
         return;
