@@ -193,13 +193,6 @@ void CWeaponAmmo::net_Export(NET_Packet& P)
 	P.w_u16					(m_boxCurr);
 }
 
-void CWeaponAmmo::net_Import(NET_Packet& P) 
-{
-	inherited::net_Import	(P);
-
-	P.r_u16					(m_boxCurr);
-}
-
 CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) const
 {
 	VERIFY					(inventory);

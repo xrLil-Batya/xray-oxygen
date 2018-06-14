@@ -40,7 +40,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 		NET_Packet	tmpP;
 		if (0xffff != parent_id && Process_event_reject(P, sender, time, parent_id, ID, false))
 		{
-			game->u_EventGen(tmpP, GE_OWNERSHIP_REJECT, parent_id);
+            CGameObject::u_EventGen(tmpP, GE_OWNERSHIP_REJECT, parent_id);
 			tmpP.w_u16(id_dest);
 			tmpP.w_u8(1);
 
@@ -50,8 +50,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 			pEventPack->w(&tmpP.B.data, tmpP.B.count);
 		};
 
-		if (game)
-			game->u_EventGen(tmpP, GE_DESTROY, id_dest);
+	    CGameObject::u_EventGen(tmpP, GE_DESTROY, id_dest);
 
 		pEventPack->w_u8(u8(tmpP.B.count));
 		pEventPack->w(&tmpP.B.data, tmpP.B.count);
@@ -73,8 +72,6 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 		if (ai().alife().objects().object(id_dest, true))
 			game->alife().release(e_dest, false);
 	}
-
-	game->OnDestroyObject(e_dest->ID);
 
 	entity_Destroy(e_dest);
 }

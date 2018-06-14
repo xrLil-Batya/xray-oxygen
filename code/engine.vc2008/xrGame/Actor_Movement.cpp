@@ -501,25 +501,6 @@ void CActor::g_cl_Orientate	(u32 mstate_rl, float dt)
 	}
 }
 
-void CActor::g_sv_Orientate(u32 /**mstate_rl/**/, float /**dt/**/)
-{
-	r_model_yaw		= NET_Last.o_model;
-
-	r_torso.yaw		=	unaffected_r_torso.yaw;
-	r_torso.pitch	=	unaffected_r_torso.pitch;
-	r_torso.roll	=	unaffected_r_torso.roll;
-
-	CWeaponMagazined *pWM = smart_cast<CWeaponMagazined*>(inventory().GetActiveSlot() != NO_ACTIVE_SLOT ? 
-		inventory().ItemFromSlot(inventory().GetActiveSlot()) : NULL);
-	if (pWM && pWM->GetCurrentFireMode() == 1/* && eacFirstEye != cam_active*/)
-	{
-		Fvector dangle = weapon_recoil_last_delta();
-		r_torso.yaw		+=	dangle.y;
-		r_torso.pitch	+=	dangle.x;
-		r_torso.roll	+=	dangle.z;
-	}
-}
-
 bool isActorAccelerated(u32 mstate, bool ZoomMode) 
 {
 	bool res = false;

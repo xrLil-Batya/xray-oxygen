@@ -221,9 +221,7 @@ void CLevel::ClientSave()
 
 void CLevel::Send(NET_Packet& P)
 {
-	ClientID _clid;
-	_clid.set(1);
-	Server->OnMessage(P, _clid);
+	Server->OnMessage(P);
 }
 
 void CLevel::net_Update()

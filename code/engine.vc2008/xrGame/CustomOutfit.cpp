@@ -47,14 +47,6 @@ void CCustomOutfit::net_Export(NET_Packet& P)
 	P.w_float_q8			(GetCondition(),0.0f,1.0f);
 }
 
-void CCustomOutfit::net_Import(NET_Packet& P)
-{
-	inherited::net_Import	(P);
-	float _cond;
-	P.r_float_q8			(_cond,0.0f,1.0f);
-	SetCondition			(_cond);
-}
-
 void CCustomOutfit::OnH_A_Chield()
 {
 	inherited::OnH_A_Chield();

@@ -189,15 +189,10 @@ protected:
 	shared_str					m_icon_name;
 
 public:
-	virtual void				make_Interpolation	()			{};
-	virtual void				PH_B_CrPr			() {}; // actions & operations before physic correction-prediction steps
-	virtual void				PH_I_CrPr			() {}; // actions & operations after correction before prediction steps
 #ifdef DEBUG
 	virtual void				PH_Ch_CrPr			() {}; // 
 #endif
-	virtual void				PH_A_CrPr			(); // actions & operations after phisic correction-prediction steps
 
-	virtual void				net_Import			(NET_Packet& P);					// import from server
 	virtual void				net_Export			(NET_Packet& P);					// export to server
 
 public:
@@ -213,11 +208,6 @@ public:
 
 
 	virtual void				UpdateXForm	();
-			
-protected:
-	net_updateInvData*				m_net_updateData;
-	net_updateInvData*				NetSync						();
-	void						CalculateInterpolationParams();
 
 public:
 	virtual BOOL				net_Spawn				(CSE_Abstract* DC);
@@ -302,9 +292,6 @@ protected:
 
 	template <typename T>
 	IC static bool	process_if_exists_set		( LPCSTR section, LPCSTR name, T (CInifile::*method)(LPCSTR, LPCSTR)const, T& value, bool test );
-
-	void								net_Export_PH_Params			(NET_Packet& P, SPHNetState& State, mask_inv_num_items&	num_items);
-	void								net_Import_PH_Params			(NET_Packet& P, net_update_IItem& N, mask_inv_num_items& num_items);
 
 	bool								m_just_after_spawn;
 	bool								m_activated;

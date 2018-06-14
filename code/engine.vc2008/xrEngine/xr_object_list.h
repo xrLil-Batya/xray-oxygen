@@ -56,7 +56,6 @@ public:
 	void						net_Unregister		( CObject*		O		);
 
 	u32							net_Export			( NET_Packet*	P,		u32 _start, u32 _count	);	// return next start
-	void						net_Import			( NET_Packet*	P		);
 
 	ICF CObject*				net_Find			( u16 ID				) const
 	{

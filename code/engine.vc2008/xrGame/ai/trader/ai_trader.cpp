@@ -150,18 +150,6 @@ void CAI_Trader::net_Export		(NET_Packet& P)
 	//	P.w_u32							(m_dwMoney);
 }
 
-void CAI_Trader::net_Import		(NET_Packet& P)
-{
-	R_ASSERT						(Remote());
-
-	float							fDummy;
-	P.r_float						(fDummy);
-	set_money						( P.r_u32(), false );
-
-	setVisible						(TRUE);
-	setEnabled						(TRUE);
-}
-
 void CAI_Trader::OnEvent		(NET_Packet& P, u16 type)
 {
 	inherited::OnEvent			(P,type);

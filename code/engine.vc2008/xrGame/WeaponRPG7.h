@@ -25,7 +25,6 @@ public:
 			void UpdateMissileVisibility	();
 	virtual void UnloadMagazine				(bool spawn_ammo = true);
 
-	virtual void net_Import			( NET_Packet& P);				// import from server
 protected:
 	virtual void LaunchGrenade	(const Fvector& P, const Fvector& D);
 	virtual bool AllowBore		();

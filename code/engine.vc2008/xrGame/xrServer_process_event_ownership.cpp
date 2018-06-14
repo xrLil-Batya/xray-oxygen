@@ -32,9 +32,9 @@ void xrServer::Process_event_ownership(NET_Packet& P, ClientID sender, u32, u16 
 
 	if (0xffff != e_entity->ID_Parent)	return;
 
-	xrClientData*		c_parent		= e_parent->owner;
-	xrClientData*		c_entity		= e_entity->owner;
-	xrClientData*		c_from			= ID_to_client	(sender);
+    CClient*		c_parent		= e_parent->owner;
+    CClient*		c_entity		= e_entity->owner;
+    CClient*		c_from			= ID_to_client	(sender);
 
 	if ((GetServerClient() != c_from) && (c_parent != c_from))
 		return;

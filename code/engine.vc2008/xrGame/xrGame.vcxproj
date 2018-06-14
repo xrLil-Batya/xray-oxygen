@@ -1554,7 +1554,6 @@
     <ClInclude Include="..\xrServerEntities\game_base_space.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
-    <ClInclude Include="game_sv_event_queue.h" />
     <ClInclude Include="xr_time.h" />
     <ClInclude Include="id_generator.h" />
     <ClInclude Include="..\xrServerEntities\gametype_chooser.h" />
@@ -2459,7 +2458,6 @@
     <ClCompile Include="game_base.cpp" />
     <ClCompile Include="game_cl_base.cpp" />
     <ClCompile Include="game_sv_base.cpp" />
-    <ClCompile Include="game_sv_event_queue.cpp" />
     <ClCompile Include="xr_time.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Factory.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Abstract.cpp" />

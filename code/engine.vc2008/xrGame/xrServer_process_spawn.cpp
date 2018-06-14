@@ -9,7 +9,7 @@
 CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpawnWithClientsMainEntityAsParent, CSE_Abstract* tpExistedEntity)
 {
 	// create server entity
-	xrClientData* CL	= ID_to_client	(sender);
+    CClient* CL	= ID_to_client	(sender);
 	CSE_Abstract*	pAbstractE	= tpExistedEntity;
 	if (!pAbstractE)
 	{
@@ -43,7 +43,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	// check if we can assign entity to some client
 	if (!CL)
 	{
-		CL	= (xrClientData*)SV_Client;
+		CL	= SV_Client;
 	}
 
 	// check for respawn-capability and create phantom as needed

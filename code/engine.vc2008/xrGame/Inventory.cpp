@@ -117,10 +117,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	pIItem->m_pInventory				= this;
 	pIItem->SetDropManual				(FALSE);
 	pIItem->AllowTrade					();
-	//if net_Import for pObj arrived then the pObj will pushed to CrPr list (correction prediction)
-	//usually net_Import arrived for objects that not has a parent object..
-	//for unknown reason net_Import arrived for object that has a parent, so correction prediction schema will crash
-	Level().RemoveObject_From_4CrPr		(pObj);
+
 #ifdef DEAD_BODY_WEAPON
 	u16 actor_id = Level().CurrentEntity()->ID();
 

@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "net_client.h"
-#include "net_server.h"
 
 #pragma warning(push)
 #pragma warning(disable:4995)
