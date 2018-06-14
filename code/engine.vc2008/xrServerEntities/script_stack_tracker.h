@@ -27,5 +27,3 @@ public:
 			void				script_hook				(lua_State *L, lua_Debug *dbg);
 			void				print_stack				(lua_State *L);
 };
-
-#include "script_stack_tracker_inline.h"

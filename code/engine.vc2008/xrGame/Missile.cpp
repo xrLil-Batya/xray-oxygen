@@ -449,17 +449,12 @@ void CMissile::OnMotionMark(u32 state, const motion_marks& M)
 
 void CMissile::Throw() 
 {
-#ifndef MASTER_GOLD
-	Msg("throw [%d]", Device.dwFrame);
-#endif // #ifndef MASTER_GOLD
 	VERIFY								(smart_cast<CEntity*>(H_Parent()));
 	setup_throw_params					();
 	
 	m_fake_missile->m_throw_direction	= m_throw_direction;
 	m_fake_missile->m_throw_matrix		= m_throw_matrix;
-//.	m_fake_missile->m_throw				= true;
-//.	Msg("fm %d",m_fake_missile->ID());
-		
+
 	CInventoryOwner						*inventory_owner = smart_cast<CInventoryOwner*>(H_Parent());
 	VERIFY								(inventory_owner);
 	if (inventory_owner->use_default_throw_force())

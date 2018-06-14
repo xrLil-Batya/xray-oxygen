@@ -5,39 +5,33 @@
 string_path target_folder;
 string_path new_folder, old_folder;
 
-struct file_comparer{
-	enum modes{eDontCheckFileAge=1, eDontCheckCRC=2, eDontCheckBinary=4, eDontCheckFileSize=8};
-	Flags32		m_flags;
-	string_path m_short_name;
-	string_path m_full_name;
-	CLocatorAPI* m_fs_new;
-	CLocatorAPI* m_fs_old;
-	IReader*	 m_freader;
-	u32			m_crc32;
-	u32			m_file_size;
+struct file_comparer
+{
+	enum modes{eDontCheckFileAge= 1 << 0, eDontCheckCRC= 1 << 1, eDontCheckBinary= 1 << 2, eDontCheckFileSize= 1 << 3};
+	Flags32			m_flags;
+	string_path		m_short_name;
+	string_path		m_full_name;
+	CLocatorAPI*	m_fs_new;
+	CLocatorAPI*	m_fs_old;
+	IReader*		m_freader;
+	u32				m_crc32;
+	u32				m_file_size;
 
-	file_comparer(char* c, CLocatorAPI* fs1, CLocatorAPI* fs2, Flags32 flag ){
-		m_flags = flag;
-		m_fs_new=fs1;
-		m_fs_old=fs2;
-		m_freader=0;
-		m_crc32=0;
-//		xr_strcpy(m_short_name,c+xr_strlen(arget_folder)+1);
+	file_comparer(char* c, CLocatorAPI* fs1, CLocatorAPI* fs2, Flags32 flag): 
+		m_flags(flag), m_fs_new(fs1), m_fs_old(fs2), m_freader(nullptr), m_crc32(0)
+	{
 		xr_strcpy(m_full_name,c);
 
 		const CLocatorAPI::file* f = m_fs_new->exist("$target_folder$",m_full_name);
-		if(f)
-			m_file_size = f->size_real;
+		if(f) m_file_size = f->size_real;
 	}
 
-	bool operator ()(char* o){
+	bool operator ()(char* o)
+	{
 		//compare file names
 		int eq = xr_strcmp(m_full_name,o);
-		if(0!=eq)
-			return false;
-		
+		if(0!=eq) return false;
 
-		
 		if( !m_flags.test(eDontCheckFileSize) ){
 			//compare file size
 			const CLocatorAPI::file* f = m_fs_old->exist("$target_folder$",o);
@@ -99,7 +93,6 @@ int ProcessDifference()
 	CLocatorAPI* FS_new = nullptr;
 	CLocatorAPI* FS_old = nullptr;
 	
-
 	xr_vector<char*>*	file_list_old		= nullptr;
 	xr_vector<char*>*	folder_list_old		= nullptr;
 
@@ -136,34 +129,32 @@ int ProcessDifference()
 	xr_vector<LPCSTR> target_file_list;
 	target_file_list.reserve(file_list_new->size());
 
-	for(u32 i=0; i<file_list_new->size();++i)
+	for(size_t i=0; i<file_list_new->size();++i)
 	{
 		file_comparer fc(file_list_new->at(i),FS_new, FS_old,_flags);
 		xr_vector<char*>::iterator it = std::find_if(file_list_old->begin(),file_list_old->end(),fc);
-		if(it != file_list_old->end()){
+
+		if(it != file_list_old->end())
+		{
 			printf("skip file %s\n",file_list_new->at(i));
-		}else
-			target_file_list.push_back(file_list_new->at(i));
+		}
+		else target_file_list.push_back(file_list_new->at(i));
 	}
 
 	string_path out_path;
-	string_path stats;
-	u32 total = target_file_list.size();
-	for(u32 i=0; i<total; ++i)
+	for (const char* file: target_file_list)
 	{
-		LPCSTR fn = target_file_list[i];
-		xr_sprintf(stats,"%d of %d (%3.1f%%)", i, total, 100.0f*((float)i/(float)total));
-		SetConsoleTitle		(stats);
-
-		strconcat(sizeof(out_path),out_path,target_folder,"\\",fn);
+		strconcat(sizeof(out_path),out_path,target_folder,"\\", file);
 		createPath(out_path);
-		IReader* r = FS_new->r_open("$target_folder$",fn);
+
+		IReader* r = FS_new->r_open("$target_folder$", file);
 		IWriter* w = FS_old->w_open(out_path);
+
 		w->w(r->pointer(),r->length());
+
 		FS_new->r_close(r);
 		FS_old->w_close(w);
 	}
-
 
 	FS_new->file_list_close(file_list_new);
 	FS_new->file_list_close(folder_list_new);

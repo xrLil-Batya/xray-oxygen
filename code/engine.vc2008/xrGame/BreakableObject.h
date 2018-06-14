@@ -45,13 +45,13 @@ public:
 	virtual void	net_Export			(NET_Packet& P);
 	virtual void	net_Import			(NET_Packet& P);
 	virtual BOOL	UsedAI_Locations	();
+
 private:
 	void			Init				();
 	void			CreateUnbroken		();
 	void			CreateBroken		();
 	void			DestroyUnbroken		();
 	void			ActivateBroken		();
-	void			Split				();
 	void			Break				();
 	void			ApplyExplosion		(const Fvector &dir,float impulse);
 	void			CheckHitBreak		(float power,ALife::EHitType hit_type);

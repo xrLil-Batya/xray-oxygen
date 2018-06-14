@@ -101,36 +101,11 @@ IC	void CSQuadTree::insert		(_object_type *object)
 
 		distance		*= .5f;
 		u32				index = neighbour_index(object->position(),center,distance);
+		VERIFY			(index < 4);
 		
 		node			= (*node)->m_neighbours + index;
 	}
 	STOP_PROFILE
-}
-
-TEMPLATE_SPECIALIZATION
-IC	_object_type *CSQuadTree::find	(const Fvector &position)
-{
-	Fvector				center = m_center;
-	float				distance = m_radius;
-	CQuadNode			*node = m_root;
-	for (int depth = 0; ; ++depth) {
-		if (!node)
-			return		(0);
-
-		distance		*= .5f;
-		u32				index = neighbour_index(position,center,distance);
-
-		if (depth == m_max_depth) {
-			CListItem	*leaf = ((CListItem*)((void*)(node)));
-			for ( ; leaf; leaf = leaf->m_next)
-				if (leaf->m_object->position().similar(position))
-					return	(leaf->m_object);
-			return		(0);
-		}
-
-		node			= node->m_neighbours[index];
-	}
-	NODEFAULT;
 }
 
 TEMPLATE_SPECIALIZATION
@@ -161,6 +136,7 @@ IC	void CSQuadTree::nearest	(const Fvector &position, float radius, xr_vector<_o
 	distance		*= .5f;
 	Fvector			next_center = center;
 	u32				index = neighbour_index(position,next_center,distance);
+	VERIFY			(index < 4);
 	if (_abs(position.z - center.z) < radius) {
 		if (_abs(position.x - center.x) < radius) {
 			if (_sqr(position.z - center.z) + _sqr(position.x - center.x) < _sqr(radius)) {
@@ -233,14 +209,15 @@ IC	_object_type *CSQuadTree::remove		(const _object_type *object, CQuadNode *&no
 {
 	VERIFY			(node);
 	if (depth == m_max_depth) {
-		CListItem	*leaf = ((CListItem*)((void*)(node)));
+		CListItem	*&node_leaf = ((CListItem*&)((void*&)(node)));
+		CListItem	*leaf = ((CListItem*)((void*&)(node)));
 		CListItem	*leaf_prev = 0;
 		for ( ; leaf; leaf_prev = leaf, leaf = leaf->m_next)
 			if (leaf->m_object == object) {
 				if (!leaf_prev)
-					node = 0;
+					node_leaf	= leaf->m_next;
 				else
-					leaf_prev->m_next = leaf->m_next;
+					leaf_prev->m_next	= leaf->m_next;
 				_object_type	*_object = leaf->m_object;
 				m_list_items->remove(leaf);
 				--m_leaf_count;
@@ -251,6 +228,7 @@ IC	_object_type *CSQuadTree::remove		(const _object_type *object, CQuadNode *&no
 
 	distance		*= .5f;
 	u32				index = neighbour_index(object->position(),center,distance);
+	VERIFY			(index < 4);
 	_object_type	*_object = remove(object,node->m_neighbours[index],center,distance,depth + 1);
 	if (node->m_neighbours[index] || node->m_neighbours[0] || node->m_neighbours[1] || node->m_neighbours[2] || node->m_neighbours[3])
 		return		(_object);
@@ -278,7 +256,7 @@ IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, CQuadNode *node, in
 }
 
 TEMPLATE_SPECIALIZATION
-IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, bool clear = true) const
+IC	void CSQuadTree::all		(xr_vector<_object_type*> &objects, bool clear) const
 {
 	if (clear)
 		objects.clear			();

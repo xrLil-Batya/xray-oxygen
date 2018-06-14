@@ -5,9 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Implementation of the A* (a-star) algorithm
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "vertex_path.h"
 #include "data_storage_constructor.h"
 #include "dijkstra.h"
@@ -115,7 +113,7 @@ protected:
 		_data_storage_constructor,
 		_iteration_type
 	>											inherited;
-	typedef typename CDataStorage::CGraphVertex CGraphVertex;
+	typedef typename inherited::CGraphVertex CGraphVertex;
 	typedef typename CGraphVertex::_dist_type	_dist_type;
 	typedef typename CGraphVertex::_index_type	_index_type;
 

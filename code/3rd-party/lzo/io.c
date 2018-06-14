@@ -45,8 +45,8 @@ LZO_PUBLIC(lzo_uint)
 lzo_fread(LZO_FILEP ff, lzo_voidp s, lzo_uint len)
 {
     FILE *f = (FILE *) ff;
-#if 1 && (LZO_UINT_MAX <= SIZE_T_MAX)
-	return fread(s,1,len,f);
+#if LZO_UINT_MAX <= SIZE_T_MAX
+	return (lzo_uint)fread(s, 1ui64, len, f);
 #else
 	lzo_byte *p = (lzo_byte *) s;
 	lzo_uint l = 0;
@@ -76,8 +76,8 @@ LZO_PUBLIC(lzo_uint)
 lzo_fwrite(LZO_FILEP ff, const lzo_voidp s, lzo_uint len)
 {
     FILE *f = (FILE *) ff;
-#if 1 && (LZO_UINT_MAX <= SIZE_T_MAX)
-	return fwrite(s,1,len,f);
+#if LZO_UINT_MAX <= SIZE_T_MAX
+	return (lzo_uint)fwrite(s,1ui64,len,f);
 #else
 	const lzo_byte *p = (const lzo_byte *) s;
 	lzo_uint l = 0;
