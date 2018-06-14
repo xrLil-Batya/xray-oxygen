@@ -37,3 +37,5 @@ librariesx64/
 /code/xrQt/xrDevLaunch/release/
 *.db-shm
 *.db-wal
+game/gamedata_/
+game/gamedata/configs/coordinates.ltx

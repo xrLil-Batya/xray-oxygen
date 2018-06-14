@@ -28,7 +28,7 @@ public:
 };
 
 // Window
-enum EWindowAlignment{
+enum EWindowAlignment {
 	waNone		=0,
 	waLeft		=1,
 	waRight		=2,

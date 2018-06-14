@@ -78,6 +78,9 @@ public:
 	void			RegisterPPDraw(CUIWindow* w);
 	void			UnregisterPPDraw(CUIWindow* w);
 
+	u32				GetEngineBuild();
+	const char*		GetEngineBuildDate();
+
 IC	const char*		GetGSVer() { return "1.7f"; };
 	virtual void	OnDeviceReset();
 };

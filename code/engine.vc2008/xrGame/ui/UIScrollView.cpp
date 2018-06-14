@@ -382,17 +382,19 @@ float CUIScrollView::GetDesiredChildWidth(){
 		return GetWidth() - m_rightIndent - m_leftIndent;
 }
 
-float CUIScrollView::GetHorizIndent(){
+float CUIScrollView::GetHorizIndent()
+{
 	return m_rightIndent + m_leftIndent;
 }
 
-float CUIScrollView::GetVertIndent(){
+float CUIScrollView::GetVertIndent()
+{
 	return m_upIndent + m_downIndent;
 }
 
-void CUIScrollView::SetSelected			(CUIWindow* w)
+void CUIScrollView::SetSelected(CUIWindow* w)
 {
-	if(!m_flags.test(eItemsSelectabe)) 
+	if (!m_flags.test(eItemsSelectabe)) 
 		return;
 
 	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)

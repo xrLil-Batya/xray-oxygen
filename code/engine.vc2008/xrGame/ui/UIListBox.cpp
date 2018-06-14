@@ -6,27 +6,29 @@
 
 CUIListBox::CUIListBox()
 {
-	m_pFont					= NULL;
-	m_flags.set				(eItemsSelectabe, TRUE);
+	m_pFont = NULL;
+	m_flags.set(eItemsSelectabe, TRUE);
 
-	m_def_item_height		 = 20;
-	m_text_color			= 0xff000000;
+	m_def_item_height = 20;
+	m_text_color = 0xff000000;
 
-	m_bImmediateSelection	= false;
+	m_bImmediateSelection = false;
 
-	SetFixedScrollBar		(false);
-	InitScrollView			();
+	SetFixedScrollBar(false);
+	InitScrollView();
 }
 
-void CUIListBox::SetSelectionTexture(LPCSTR texture){
+void CUIListBox::SetSelectionTexture(LPCSTR texture)
+{
 	m_selection_texture = texture;
 }
 
 bool CUIListBox::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
-	if(CUIWindow::OnMouseAction(x,y,mouse_action)) return true;
+	if (CUIWindow::OnMouseAction(x, y, mouse_action)) return true;
 
-	switch (mouse_action){
+	switch (mouse_action)
+	{
 		case WINDOW_MOUSE_WHEEL_UP:
 			m_VScrollBar->TryScrollDec();
 			return true;
@@ -42,47 +44,47 @@ bool CUIListBox::OnMouseAction(float x, float y, EUIMessages mouse_action)
 #include "../string_table.h"
 CUIListBoxItem* CUIListBox::AddTextItem(LPCSTR text)
 {
-	CUIListBoxItem* pItem			= AddItem();
+	CUIListBoxItem* item = AddItem();
 
-	pItem->SetWndSize				(Fvector2().set(GetDesiredChildWidth(), m_def_item_height));
-	pItem->SetTextColor				(m_text_color);
-	pItem->SetText					(CStringTable().translate(text).c_str());
-	pItem->GetTextItem()->SetWidth	(GetDesiredChildWidth());
-	return							pItem;
+	item->SetWndSize(Fvector2().set(GetDesiredChildWidth(), m_def_item_height));
+	item->SetTextColor(m_text_color);
+	item->SetText(CStringTable().translate(text).c_str());
+	item->GetTextItem()->SetWidth(GetDesiredChildWidth());
+	return item;
 }
 
-CUIListBoxItem*  CUIListBox::AddItem()
+CUIListBoxItem* CUIListBox::AddItem()
 {
-	CUIListBoxItem* item		= xr_new<CUIListBoxItem>(m_def_item_height);
-	item->InitFrameLineWnd		(Fvector2().set(0,0), Fvector2().set(GetDesiredChildWidth()-5, m_def_item_height));
-	item->GetTextItem()->SetWidth	(GetDesiredChildWidth());
-	item->SetWidth					(GetDesiredChildWidth());
+	CUIListBoxItem* item = xr_new<CUIListBoxItem>(m_def_item_height);
+	item->InitFrameLineWnd(Fvector2().set(0, 0), Fvector2().set(GetDesiredChildWidth() - 5, m_def_item_height));
+	item->GetTextItem()->SetWidth(GetDesiredChildWidth());
+	item->SetWidth(GetDesiredChildWidth());
 
-	if(m_selection_texture.size())
-		item->InitTexture		(m_selection_texture.c_str(), "hud\\default");
+	if (m_selection_texture.size())
+		item->InitTexture(m_selection_texture.c_str(), "hud\\default");
 	else
-        item->InitDefault		();
+        item->InitDefault();
 
-	item->SetFont				(GetFont());
-	item->SetSelected			(false);
-	item->SetMessageTarget		(this);
-	AddWindow					(item, true);
-	return						item;
+	item->SetFont(GetFont());
+	item->SetSelected(false);
+	item->SetMessageTarget(this);
+	AddWindow(item, true);
+	return item;
 }
 
 void CUIListBox::AddExistingItem(CUIListBoxItem* item)
 {
-	item->InitFrameLineWnd		(Fvector2().set(0,0), Fvector2().set(GetDesiredChildWidth()-5, m_def_item_height));
-	item->SetWidth				(GetDesiredChildWidth());
+	item->InitFrameLineWnd(Fvector2().set(0, 0), Fvector2().set(GetDesiredChildWidth() - 5, m_def_item_height));
+	item->SetWidth(GetDesiredChildWidth());
 
-	if(m_selection_texture.size())
-		item->InitTexture		(m_selection_texture.c_str(), "hud\\default");
+	if (m_selection_texture.size())
+		item->InitTexture(m_selection_texture.c_str(), "hud\\default");
 	else
-        item->InitDefault		();
+        item->InitDefault();
 
-	item->SetSelected			(false);
-	item->SetMessageTarget		(this);
-	AddWindow					(item, true);
+	item->SetSelected(false);
+	item->SetMessageTarget(this);
+	AddWindow(item, true);
 }
 
 void CUIListBox::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
@@ -106,41 +108,40 @@ void CUIListBox::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 	CUIScrollView::SendMessage(pWnd, msg, pData);
 }
 
-
 CUIListBoxItem* CUIListBox::GetSelectedItem()
 {
-	CUIWindow* w	=	GetSelected();
+	CUIWindow* w = GetSelected();
 
-	if(w)
+	if (w)
 		return smart_cast<CUIListBoxItem*>(w);
 	else
 		return NULL;
-
 }
 
 LPCSTR CUIListBox::GetSelectedText()
 {
-	CUIWindow* w	=	GetSelected();
+	CUIWindow* w = GetSelected();
 
-	if(w)
+	if (w)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(w);
 		return item->GetText();
-	}else
+	}
+	else
 		return NULL;
 }
 
 u32 CUIListBox::GetSelectedIDX()
 {
-	u32			_idx	= 0;
-	CUIWindow*	w		= GetSelected();
+	u32	_idx = 0;
+	CUIWindow* w = GetSelected();
 
-	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
+	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end() != it; ++it)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
 		if (item)
 		{
-			if(*it==w)
+			if (*it==w)
 				return _idx;
 
 			++_idx;
@@ -151,7 +152,7 @@ u32 CUIListBox::GetSelectedIDX()
 
 LPCSTR CUIListBox::GetText(int idx)
 {
-	if(idx==-1) return NULL;
+	if (idx==-1) return NULL;
 
 	CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(GetItem(idx));
 	return item->GetText();
@@ -159,23 +160,23 @@ LPCSTR CUIListBox::GetText(int idx)
 
 void CUIListBox::MoveSelectedUp()
 {
-	CUIWindow* w			= GetSelected();
-	if(!w)					return;
+	CUIWindow* w = GetSelected();
+	if (!w) return;
 
-	WINDOW_LIST::reverse_iterator it		= m_pad->GetChildWndList().rbegin();
-	WINDOW_LIST::reverse_iterator it_e		= m_pad->GetChildWndList().rend();
-	WINDOW_LIST::reverse_iterator it_prev	= it;
+	WINDOW_LIST::reverse_iterator it = m_pad->GetChildWndList().rbegin();
+	WINDOW_LIST::reverse_iterator it_e = m_pad->GetChildWndList().rend();
+	WINDOW_LIST::reverse_iterator it_prev = it;
 
-	for(; it!=it_e; ++it)
+	for(; it != it_e; ++it)
 	{
-		if(*it==w)
+		if (*it == w)
 		{
-			it_prev				= it;
+			it_prev	= it;
 			++it_prev;
-			if(it_prev==it_e)	break;
+			if (it_prev == it_e) break;
 
-			std::swap			(*it, *it_prev);
-			ForceUpdate			();
+			std::swap(*it, *it_prev);
+			ForceUpdate();
 			break;
 		}
 
@@ -184,23 +185,24 @@ void CUIListBox::MoveSelectedUp()
 
 void CUIListBox::MoveSelectedDown()
 {
-	CUIWindow* w			= GetSelected();
-	if(!w)					return;
+	CUIWindow* w = GetSelected();
+	if (!w)	return;
 //.	R_ASSERT(!m_flags.test(CUIScrollView::eMultiSelect));
-	WINDOW_LIST_it it		= m_pad->GetChildWndList().begin();
-	WINDOW_LIST_it it_e		= m_pad->GetChildWndList().end();
+	WINDOW_LIST_it it = m_pad->GetChildWndList().begin();
+	WINDOW_LIST_it it_e = m_pad->GetChildWndList().end();
 	WINDOW_LIST_it it_next;
 
 	for(; it!=it_e; ++it)
 	{
-		if(*it==w){
-		it_next				= it;
-		++it_next;
-		if(it_next==it_e)	break;
+		if (*it == w)
+		{
+			it_next	= it;
+			++it_next;
+			if (it_next == it_e) break;
 
-		std::swap			(*it, *it_next);
-		ForceUpdate			();
-		break;
+			std::swap(*it, *it_next);
+			ForceUpdate();
+			break;
 		}
 	}
 }
@@ -224,13 +226,15 @@ int CUIListBox::GetIdxByTAG(u32 tag_val)
 {
 	int result = -1;
 
-	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
+	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end() != it; ++it)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
 		if (item)
 		{
-			if(result==-1)	result=0;
-			else			++result;
+			if (result == -1)	
+				result = 0;
+			else
+				++result;
 
 			if (item->GetTAG() == tag_val)
 				break;
@@ -241,7 +245,7 @@ int CUIListBox::GetIdxByTAG(u32 tag_val)
 
 CUIListBoxItem* CUIListBox::GetItemByTAG(u32 tag_val)
 {
-	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
+	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end() != it; ++it)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
 		if (item)
@@ -257,7 +261,7 @@ CUIListBoxItem* CUIListBox::GetItemByTAG(u32 tag_val)
 CUIListBoxItem* CUIListBox::GetItemByIDX(int idx)
 {
 	int _idx = 0;
-	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
+	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end() != it; ++it)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
 		if (item)
@@ -272,7 +276,7 @@ CUIListBoxItem* CUIListBox::GetItemByIDX(int idx)
 
 CUIListBoxItem* CUIListBox::GetItemByText(LPCSTR txt)
 {
-	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
+	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end() != it; ++it)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
 		if (item)
@@ -284,7 +288,6 @@ CUIListBoxItem* CUIListBox::GetItemByText(LPCSTR txt)
 	}
 	return nullptr;
 }
-
 
 void CUIListBox::SetItemHeight(float h)
 {
@@ -316,11 +319,10 @@ CGameFont* CUIListBox::GetFont()
 	return m_pFont;
 }
 
-
 float CUIListBox::GetLongestLength()
 {
 	float len = 0;
-	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end()!=it; ++it)
+	for(WINDOW_LIST_it it = m_pad->GetChildWndList().begin(); m_pad->GetChildWndList().end() != it; ++it)
 	{
 		CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(*it);
 		if (item)
@@ -347,7 +349,6 @@ void CUIListBox::SetImmediateSelection(bool f)
 
 using namespace luabind;
 
-
 struct CUIListBoxItemWrapper : public CUIListBoxItem, public luabind::wrap_base
 {
 	CUIListBoxItemWrapper(float h) :CUIListBoxItem(h) {}
@@ -370,9 +371,9 @@ void CUIListBox::script_register(lua_State *L)
 			.def("ShowSelectedItem", &CUIListBox::Show)
 			.def("RemoveAll", &CUIListBox::Clear)
 			.def("GetSize", &CUIListBox::GetSize)
+			.def("GetItemHeight", &CUIListBox::GetItemHeight)
 			.def("GetSelectedItem", &CUIListBox::GetSelectedItem)
 			.def("GetSelectedIndex", &CUIListBox::GetSelectedIDX)
-
 			.def("GetItemByIndex", &CUIListBox::GetItemByIDX)
 			.def("GetItem", &CUIListBox::GetItem)
 			.def("RemoveItem", &CUIListBox::RemoveWindow)

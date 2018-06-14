@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<string_table>
+	<string id="ui_cheat_additional">
+		<text>Дополнительные</text>
+	</string>	
+	<string id="ui_cheat_weather">
+		<text>Погода</text>
+	</string>	
+	<string id="ui_cheat_community">
+		<text>Группировки</text>
+	</string>
+	<string id="ui_cheat_infos">
+		<text>Инфопорции</text>
+	</string>
+	<string id="ui_cheat_surge">
+		<text>Выброс</text>
+	</string>
+	<string id="ui_cheat_demo_record">
+		<text>Demo Record</text>
+	</string>
+	<string id="ui_cheat_god">
+		<text>God Mode</text>
+	</string>
+	<string id="ui_cheat_unlimited_ammo">
+		<text>Беск. патроны</text>
+	</string>
+	<string id="ui_cheat_no_clip">
+		<text>No clip</text>
+	</string>
+	<string id="ui_cheat_money">
+		<text>Деньги:</text>
+	</string>
+	<string id="ui_cheat_time">
+		<text>Время</text>
+	</string>
+	<string id="ui_cheat_apply">
+		<text>Применить</text>
+	</string>
+	<string id="ui_cheat_teleport">
+		<text>Телепортация</text>
+	</string>
+	<string id="ui_cheat_actor_position">
+		<text>Позиция игрока</text>
+	</string>
+	<string id="ui_cheat_save">
+		<text>Сохранить</text>
+	</string>
+	<string id="ui_cheat_teleport_five">
+		<text>На 5м. вперед</text>
+	</string>
+	<string id="ui_cheat_jump">
+		<text>Перейти</text>
+	</string>
+	<string id="ui_cheat_spawner">
+		<text>Спавнер</text>
+	</string>
+	<string id="ui_cheat_stalkers">
+		<text>НПС</text>
+	</string>
+	<string id="ui_cheat_monsters">
+		<text>Мутанты</text>
+	</string>
+	<string id="ui_cheat_weapons">
+		<text>Оружие</text>
+	</string>
+	<string id="ui_cheat_addons">
+		<text>Аддоны</text>
+	</string>
+	<string id="ui_cheat_ammo">
+		<text>Аммуниция</text>
+	</string>
+	<string id="ui_cheat_artefacts">
+		<text>Артефакты</text>
+	</string>
+	<string id="ui_cheat_outfits">
+		<text>Броня</text>
+	</string>
+	<string id="ui_cheat_quest_items">
+		<text>Квестовые</text>
+	</string>
+	<string id="ui_cheat_other">
+		<text>Разное</text>
+	</string>
+	<string id="ui_cheat_vehicles">
+		<text>Транспорт</text>
+	</string>
+	<string id="ui_cheat_objects">
+		<text>Объекты</text>
+	</string>
+	<string id="ui_cheat_squads">
+		<text>Сквады</text>
+	</string>
+	<string id="ui_cheat_anomalies">
+		<text>Аномалии</text>
+	</string>
+	<string id="ui_cheat_distance">
+		<text>Дистанция</text>
+	</string>
+	<string id="ui_cheat_extends">
+		<text>Расширенные</text>
+	</string>
+	<string id="ui_cheat_fov">
+		<text>Fov</text>
+	</string>
+	<string id="ui_cheat_hud_fov">
+		<text>Hud</text>
+	</string>
+</string_table>

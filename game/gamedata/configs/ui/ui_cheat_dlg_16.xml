@@ -1,0 +1,182 @@
+<w>
+	<form x="20" y="225" width="260" height="232" stretch="1">
+		<texture>ui_inGame2_cheat_background</texture>
+		<auto_static x="5" y="5">
+			<text font="graffiti19">ui_cheat_additional</text>
+		</auto_static>
+		<combo_box x="5" y="25" width="170" height="16">
+			<list_font r="170" g="170" b="170" font="letterica16"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</combo_box>
+        <items_list_frame x="5" y="45" width="170" height="110">
+            <texture>ui_inGame2_servers_list_frame</texture>
+        </items_list_frame>
+		<items_list x="5" y="45" width="170" height="110" item_height="18" always_show_scroll="0" can_select="1" bottom_indent="1.5"/> <!--right_ident="2"-->
+		<surge_button x="177" y="25" width="80" height="20">
+	        <texture>ui_inGame2_button</texture>
+	        <text font="letterica16">ui_cheat_surge</text>
+	    </surge_button>
+		<demo_record_button x="177" y="45" width="80" height="20">
+	        <texture>ui_inGame2_button</texture>
+	        <text font="letterica16">ui_cheat_demo_record</text>
+	    </demo_record_button>
+		<god_check_box x="170" y="65" width="24" height="22">
+			<texture>ui_inGame2_checkbox</texture>
+			<options_item entry="g_god" group="cheat_option"/>
+			<text x="-24" y="2" font="letterica16">ui_cheat_god</text>
+        </god_check_box>
+		<unlimited_ammo_check_box x="170" y="85" width="24" height="22">
+	        <texture>ui_inGame2_checkbox</texture>
+			<options_item entry="g_unlimitedammo" group="cheat_option"/>
+			<text x="-24" y="2" font="letterica16">ui_cheat_unlimited_ammo</text>
+        </unlimited_ammo_check_box>
+		<no_clip_check_box x="170" y="105" width="24" height="22">
+	        <texture>ui_inGame2_checkbox</texture>
+			<options_item entry="g_no_clip" group="cheat_option"/>
+			<text x="-24" y="2" font="letterica16">ui_cheat_no_clip</text>
+        </no_clip_check_box>
+		<money_value x="5" y="155">
+			<text font="letterica16">ui_cheat_money</text>
+		</money_value>
+		<money_minus_button x="5" y="170" width="15" height="20">
+			<texture>ui_inGame2_button</texture>
+	        <text font="letterica16">–</text>
+	    </money_minus_button>
+		<money_plus_button x="21" y="170" width="15" height="20">
+			<texture>ui_inGame2_button</texture>
+	        <text font="letterica16">+</text>
+	    </money_plus_button>
+		<money_coefficient_spinner x="38" y="170" width="30" height="20">
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</money_coefficient_spinner>
+		<auto_static x="68" y="174">
+			<text font="arial14" r="170" g="170" b="170">x1000</text>
+		</auto_static>
+		<auto_static x="5" y="192">
+			<text font="letterica16">ui_cheat_time</text>
+		</auto_static>
+		<hours_edit_box x="5" y="208" width="31" height="20">
+			<texture>ui_inGame2_edit_box_1</texture>		
+			<text x="2" r="170" g="170" b="170" font="letterica16"/>
+	    </hours_edit_box>
+		<apply_button x="38" y="208" width="80" height="20">
+			<texture>ui_inGame2_button</texture>
+			<text font="letterica16">ui_cheat_apply</text>
+		</apply_button>
+	</form>
+	
+	<teleport x="20" y="20" width="260" height="200" stretch="1">
+		<texture a="170">ui_inGame2_cheat_background</texture>
+		<auto_static x="5" y="5">
+			<text font="graffiti19">ui_cheat_teleport</text>
+		</auto_static>
+		<level_combo_box x="5" y="25" width="170" height="20">
+			<list_font r="170" g="170" b="170" font="letterica16"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</level_combo_box>
+		<x_edit_box x="5" y="45" width="53" height="20">
+			<texture>ui_inGame2_edit_box_1</texture>		
+			<text x="2" r="170" g="170" b="170" font="letterica16" vert_align="c"/>
+	    </x_edit_box>
+		<y_edit_box x="63.5" y="45" width="53" height="20">
+			<texture>ui_inGame2_edit_box_1</texture>		
+			<text x="2" r="170" g="170" b="170" font="letterica16" vert_align="c"/>
+	    </y_edit_box>
+		<z_edit_box x="122" y="45" width="53" height="20">
+			<texture>ui_inGame2_edit_box_1</texture>		
+			<text x="2" r="170" g="170" b="170" font="letterica16" vert_align="c"/>
+	    </z_edit_box>
+		<name_edit_box x="5" y="65" width="170" height="20">
+			<texture>ui_inGame2_edit_box_1</texture>		
+			<text x="2" r="170" g="170" b="170" font="letterica16" vert_align="c"/>
+	    </name_edit_box>
+		<coordinates_list_frame x="5" y="85" width="170" height="110">
+            <texture>ui_inGame2_servers_list_frame</texture>
+        </coordinates_list_frame>
+		<coordinates_list x="5" y="85" width="170" height="110" item_height="18" always_show_scroll="0" can_select="1" bottom_indent="1.5"/>
+		<jump_button x="176" y="25" width="80" height="20">
+			<texture>ui_inGame2_button</texture>
+			<text font="letterica16">ui_cheat_jump</text>
+		</jump_button>
+		<actor_position_button x="176" y="45" width="80" height="20">
+			<texture>ui_inGame2_button</texture>
+			<text font="letterica16">ui_cheat_actor_position</text>
+		</actor_position_button>
+		<save_button x="176" y="65" width="80" height="20">
+			<texture>ui_inGame2_button</texture>
+			<text font="letterica16">ui_cheat_save</text>
+		</save_button>
+		<teleport_button x="176" y="85" width="80" height="20">
+			<texture>ui_inGame2_button</texture>
+			<text font="letterica16">ui_cheat_teleport</text>
+		</teleport_button>
+		<teleport_five_button x="176" y="105" width="80" height="20">
+			<texture>ui_inGame2_button</texture>
+			<text font="letterica16">ui_cheat_teleport_five</text>
+		</teleport_five_button>
+	</teleport>
+	
+	<spawner x="285" y="20" width="260" height="200" stretch="1">
+		<texture a="170">ui_inGame2_cheat_background</texture>
+		<auto_static x="5" y="5">
+			<text font="graffiti19">ui_cheat_spawner</text>
+		</auto_static>
+		<auto_static x="5" y="25" width="62" height="55" stretch="1">
+			<texture>ui_inGame2_picture_window</texture>
+		</auto_static>
+		<icon x="6" y="26" width="60" height="53" stretch="1">
+		    <texture width="256" height="256">ui\ui_noise</texture>
+	    </icon>
+		<combo_box x="68" y="25" width="188" height="20">
+			<list_font r="170" g="170" b="170" font="letterica16"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</combo_box>
+		<auto_static x="68" y="45">
+			<text font="letterica16">ui_cheat_distance</text>
+		</auto_static>
+		<distance_spinner x="68" y="60" width="30" height="20">
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</distance_spinner>
+		<items_list_frame x="5" y="80" width="250.5" height="115">
+            <texture>ui_inGame2_servers_list_frame</texture>
+        </items_list_frame>
+		<items_list x="5" y="80" width="250.5" height="115" item_height="18" always_show_scroll="0" can_select="1" bottom_indent="1.5"/> <!--right_ident="2"-->
+	</spawner>
+	
+	<extends x="550" y="20" width="220" height="200" stretch="1">
+		<texture a="170">ui_inGame2_cheat_background</texture>
+		<auto_static x="5" y="5">
+			<text font="graffiti19">ui_cheat_extends</text>
+		</auto_static>
+		
+		<auto_static x="5" y="25">
+			<text font="letterica16">ui_cheat_fov</text>
+		</auto_static>
+		<fov_track_bar x="5" y="40" width="190" height="16">
+            <options_item entry="fov" group="cheat_option"/>
+        </fov_track_bar>
+		<fov_value x="200" y="40">
+			<text font="letterica16"/>
+		</fov_value>
+		
+		<auto_static x="5" y="60">
+			<text font="letterica16">ui_cheat_hud_fov</text>
+		</auto_static>
+		<hud_fov_track_bar x="5" y="75" width="190" height="16">
+            <options_item entry="hud_fov" group="cheat_option"/>
+        </hud_fov_track_bar>
+		<hud_fov_value x="200" y="75">
+			<text font="letterica16"/>
+		</hud_fov_value>
+	</extends>
+</w>
