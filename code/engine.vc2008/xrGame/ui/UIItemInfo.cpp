@@ -24,6 +24,7 @@
 #include "../ActorHelmet.h"
 #include "../eatable_item.h"
 #include "UICellItem.h"
+#include "../WeaponKnife.h"
 
 extern const LPCSTR g_inventory_upgrade_xml;
 
@@ -278,7 +279,10 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 			UIDesc->AddWindow(pItem, true);
 		}
 		TryAddConditionInfo(*pInvItem, pCompareItem);
-		TryAddWpnInfo(*pInvItem, pCompareItem);
+
+		if (!smart_cast<CWeaponKnife*>(pInvItem))
+			TryAddWpnInfo(*pInvItem, pCompareItem);
+
 		TryAddArtefactInfo(pInvItem->object().cNameSect());
 		TryAddOutfitInfo(*pInvItem, pCompareItem);
 		TryAddUpgradeInfo(*pInvItem);

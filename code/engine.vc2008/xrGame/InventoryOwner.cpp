@@ -51,8 +51,8 @@ CInventoryOwner::CInventoryOwner			()
 
 DLL_Pure *CInventoryOwner::_construct		()
 {
-	m_trade_parameters			= 0;
-	m_purchase_list				= 0;
+	m_trade_parameters			= nullptr;
+	m_purchase_list				= nullptr;
 
 	return						(smart_cast<DLL_Pure*>(this));
 }

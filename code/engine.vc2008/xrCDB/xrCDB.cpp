@@ -5,12 +5,6 @@
 #pragma hdrstop
 #include "xrCDB.h"
 
-#ifdef USE_ARENA_ALLOCATOR
-static const u32	s_arena_size = (128 + 16) * 1024 * 1024;
-static char			s_fake_array[s_arena_size];
-doug_lea_allocator	g_collision_allocator(s_fake_array, s_arena_size, "collision");
-#endif // #ifdef USE_ARENA_ALLOCATOR
-
 namespace Opcode {
 #	include "../../3rd-party/OPCODE/Opcode.h"
 #	include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"

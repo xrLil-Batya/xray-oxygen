@@ -966,4 +966,13 @@
 	<string id="ui_st_car_info">
 		<text>Vehicle debug info</text>
 	</string>
+	<string id="ui_st_clearsky_interface">
+		<text>Clear Sky interface</text>
+	</string>
+	<string id="ui_st_show_date">
+		<text>Date under minimap</text>
+	</string>
+	<string id="ui_mm_120_hz">
+		<text>Frequency 120Hz</text>
+	</string>
 </string_table>

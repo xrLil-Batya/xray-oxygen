@@ -37,6 +37,7 @@
 #include "UIPropertiesBox.h"
 #include "UIMainIngameWnd.h"
 #include "../Trade.h"
+#include "../ActorRuck.h"
 
 #include "../../FrayBuildConfig.hpp"
 
@@ -56,16 +57,30 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 {
 	R_ASSERT			(!IsShown());
 	m_pPartnerInvOwner	= io;
-	if ( m_pPartnerInvOwner )
+	if (m_pPartnerInvOwner)
 	{
-		if (m_pPartnerInvOwner->use_simplified_visual() ) 
+#ifdef MONSTER_INV
+		CBaseMonster* monster = smart_cast<CBaseMonster*>(m_pPartnerInvOwner);
+		if (monster || m_pPartnerInvOwner->use_simplified_visual())
+		{
 			m_PartnerCharacterInfo->ClearInfo();
-		else 
-			m_PartnerCharacterInfo->InitCharacter( m_pPartnerInvOwner->object_id() );
-
-		SetInvBox( NULL );
-	}else
-		m_PartnerCharacterInfo->ClearInfo();
+			if (monster)
+			{
+				shared_str monster_tex_name = pSettings->r_string(monster->cNameSect(), "icon");
+				m_PartnerCharacterInfo->InitMonsterCharacter(monster_tex_name);
+			}
+		}
+		else
+			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
+#else
+		if (m_pPartnerInvOwner->use_simplified_visual())
+			m_PartnerCharacterInfo->ClearInfo();
+		else
+			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
+#endif
+		SetInvBox(nullptr);
+	}
+	else m_PartnerCharacterInfo->ClearInfo();
 }
 
 void CUIActorMenu::SetInvBox(CInventoryBox* box)
@@ -86,25 +101,15 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 	
 	if ( mode != m_currMenuMode )
 	{
+		if (!mmUndefined) m_ActorCharacterInfo->SetActorIcon();
 		switch(m_currMenuMode)
 		{
-		case mmUndefined:
-			break;
-		case mmInventory:
-			DeInitInventoryMode();
-			break;
-		case mmTrade:
-			DeInitTradeMode();
-			break;
-		case mmUpgrade:
-			DeInitUpgradeMode();
-			break;
-		case mmDeadBodySearch:
-			DeInitDeadBodySearchMode();
-			break;
-		default:
-			R_ASSERT(0);
-			break;
+			case mmUndefined:		break;
+			case mmInventory:		DeInitInventoryMode(); break;
+			case mmTrade:			DeInitTradeMode(); break;
+			case mmUpgrade:			DeInitUpgradeMode(); break;
+			case mmDeadBodySearch:	DeInitDeadBodySearchMode(); break;
+			default: R_ASSERT(0); break;
 		}
 
 		CurrentGameUI()->UIMainIngameWnd->ShowZoneMap(false);
@@ -112,43 +117,16 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		m_currMenuMode = mode;
 		switch(mode)
 		{
-		case mmUndefined:
-#ifdef DEBUG
-			Msg("* now is Undefined mode");
-#endif // #ifdef DEBUG
-			ResetMode();
-			break;
-		case mmInventory:
-			InitInventoryMode();
-#ifdef DEBUG
-			Msg("* now is Inventory mode");
-#endif // #ifdef DEBUG
-			break;
-		case mmTrade:
-			InitTradeMode();
-#ifdef DEBUG
-			Msg("* now is Trade mode");
-#endif // #ifdef DEBUG
-			break;
-		case mmUpgrade:
-			InitUpgradeMode();
-#ifdef DEBUG
-			Msg("* now is Upgrade mode");
-#endif // #ifdef DEBUG
-			break;
-		case mmDeadBodySearch:
-			InitDeadBodySearchMode();
-#ifdef DEBUG
-			Msg("* now is DeadBodySearch mode");
-#endif // #ifdef DEBUG
-			break;
-		default:
-			R_ASSERT(0);
-			break;
+			case mmUndefined:		ResetMode(); break;
+			case mmInventory:		InitInventoryMode(); break;
+			case mmTrade:			InitTradeMode(); break;
+			case mmUpgrade:			InitUpgradeMode(); break;
+			case mmDeadBodySearch:	InitDeadBodySearchMode(); break;
+			default: R_ASSERT(0); break;
 		}
 		UpdateConditionProgressBars();
 		CurModeToScript();
-	}//if
+	}
 
 	if ( m_pActorInvOwner )
 	{
@@ -171,18 +149,20 @@ void CUIActorMenu::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 
 void CUIActorMenu::Show(bool status)
 {
-	inherited::Show							(status);
-	if(status)
+	inherited::Show(status);
+	if (status)
 	{
-		SetMenuMode							(m_currMenuMode);
-		PlaySnd								(eSndOpen);
-		m_ActorStateInfo->UpdateActorInfo	(m_pActorInvOwner);
-	}else
-	{
-		PlaySnd								(eSndClose);
-		SetMenuMode							(mmUndefined);
+		SetMenuMode(m_currMenuMode);
+		PlaySnd(eSndOpen);
+		m_ActorStateInfo->UpdateActorInfo(m_pActorInvOwner);
 	}
-	m_ActorStateInfo->Show					(status);
+	else
+	{
+		PlaySnd(eSndClose);
+		SetMenuMode(mmUndefined);
+		Actor()->RepackAmmo();
+	}
+	m_ActorStateInfo->Show(status);
 }
 
 void CUIActorMenu::Draw()
@@ -291,11 +271,12 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 	if (l == m_pInventoryOutfitList)		return iActorSlot;
 	if (l == m_pInventoryHelmetList)		return iActorSlot;
 	if (l == m_pInventoryDetectorList)		return iActorSlot;
+#ifdef ACTOR_RUCK
+	if (l == m_pInventoryRuckList)			return iActorSlot;
+#endif
 
-	#ifdef NEW_SLOTS
-	    if (l == m_pInventoryKnifeList)         return iActorSlot;
-        if (l == m_pInventoryBinocularList)     return iActorSlot;
-	#endif
+    if (l == m_pInventoryKnifeList)         return iActorSlot;
+    if (l == m_pInventoryBinocularList)     return iActorSlot;
 	
 	if (l == m_pTradeActorBagList)			return iActorBag;
 	if (l == m_pTradeActorList)			    return iActorTrade;
@@ -463,11 +444,13 @@ void CUIActorMenu::clear_highlight_lists()
 	m_HelmetSlotHighlight->Show(false);
 	m_OutfitSlotHighlight->Show(false);
 	m_DetectorSlotHighlight->Show(false);
-	
-	#ifdef NEW_SLOTS
-	    m_KnifeSlotHighlight->Show(false);
-	    m_BinocularSlotHighlight->Show(false);
-	#endif
+#ifdef ACTOR_RUCK
+	m_RuckSlotHighlight->Show(false);
+#endif
+
+    m_KnifeSlotHighlight->Show(false);
+    m_BinocularSlotHighlight->Show(false);
+
 	
 	for(u8 i=0; i<4; i++)
 		m_QuickSlotsHighlight[i]->Show(false);
@@ -496,6 +479,7 @@ void CUIActorMenu::clear_highlight_lists()
 	}
 	m_highlight_clear = true;
 }
+
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
 	PIItem item = (PIItem)cell_item->m_pData;
@@ -513,18 +497,16 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 	CArtefact* artefact = smart_cast<CArtefact*>(item);
     u32 item_slot = item->BaseSlot();
 	
-	#ifdef NEW_SLOTS
-        if (item_slot == BINOCULAR_SLOT)
-        {
-            m_BinocularSlotHighlight->Show(true);
-            return;
-        }
-        if (item_slot == KNIFE_SLOT)
-        {
-            m_KnifeSlotHighlight->Show(true);
-            return;
-        }
-	#endif
+    if (item_slot == BINOCULAR_SLOT)
+    {
+        m_BinocularSlotHighlight->Show(true);
+        return;
+    }
+    if (item_slot == KNIFE_SLOT)
+    {
+        m_KnifeSlotHighlight->Show(true);
+        return;
+    }
 	
 	if (item_slot == INV_SLOT_2 || item_slot == INV_SLOT_3)
 	{
@@ -568,11 +550,17 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-		for(u8 i=0; i<cap.x; i++)
+#ifdef VERTICAL_BELT
+		for (u8 i = 0; i<cap.y; i++)
+#else
+		for (u8 i = 0; i < cap.x; i++)
+#endif
 			m_ArtefactSlotsHighlight[i]->Show(true);
 		return;
 	}
 }
+
+#include "../WeaponKnife.h"
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
@@ -581,6 +569,12 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 		return;
 	}
 	highlight_item_slot(cell_item);
+
+	// не подсвечивать потроны для ножа
+	if (smart_cast<CWeaponKnife*>(item))
+	{
+		return;
+	}
 
 	switch ( m_currMenuMode )
 	{
@@ -848,11 +842,13 @@ void CUIActorMenu::ClearAllLists()
 	m_pInventoryDetectorList->ClearAll			(true);
 	m_pInventoryPistolList->ClearAll			(true);
 	m_pInventoryAutomaticList->ClearAll			(true);
-	
-	#ifdef NEW_SLOTS
-	    m_pInventoryKnifeList->ClearAll             (true);
-	    m_pInventoryBinocularList->ClearAll         (true);
-	#endif
+
+#ifdef ACTOR_RUCK
+	m_pInventoryRuckList->ClearAll(true);
+#endif
+
+    m_pInventoryKnifeList->ClearAll             (true);
+    m_pInventoryBinocularList->ClearAll         (true);
 	
 	m_pQuickSlot->ClearAll						(true);
 

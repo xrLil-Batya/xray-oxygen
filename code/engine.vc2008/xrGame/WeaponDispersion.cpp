@@ -11,7 +11,6 @@
 
 #include "actoreffector.h"
 #include "effectorshot.h"
-#include "EffectorShotX.h"
 
 
 //возвращает 1, если оружие в отличном состоянии и >1 если повреждено

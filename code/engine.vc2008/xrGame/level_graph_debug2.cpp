@@ -8,9 +8,7 @@
 
 #include "stdafx.h"
 
-#ifdef DEBUG
 #ifndef AI_COMPILER
-
 #include "level_graph.h"
 #include "../xrEngine/customhud.h"
 #include "ai_space.h"
@@ -373,4 +371,3 @@ void CLevelGraph::draw_debug_node()
 #endif
 
 #endif // AI_COMPILER
-#endif // DEBUG

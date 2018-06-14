@@ -1,5 +1,6 @@
 #include "stdafx.h"
 #include "r3.h"
+#include "r2_puddles.h"
 #include "../xrRender/ResourceManager.h"
 #include "../xrRender/fbasicvisual.h"
 #include "../../xrEngine/fmesh.h"
@@ -94,10 +95,14 @@ void CRender::level_Load(IReader* fs)
 	LoadSectors					(fs);
 
 	// 3D Fluid
-	Load3DFluid					();
+	Load3DFluid();
+
+	// Puddles
+    Puddles = xr_new<CPuddles>();
+	Puddles->Load();
 
 	// HOM
-	HOM.Load					();
+	HOM.Load();
 
 	// Lights
 	g_pGamePersistent->SetLoadStageTitle("st_loading_lights");
@@ -105,7 +110,7 @@ void CRender::level_Load(IReader* fs)
 	LoadLights					(fs);
 
 	// End
-	pApp->LoadEnd				();
+	pApp->LoadEnd();
 
 	// sanity-clear
 	lstLODs.clear				();
@@ -122,6 +127,9 @@ void CRender::level_Unload()
 	if (!b_loaded)				return;
 
 	u32 I;
+
+	// Unload
+	Puddles->Unload();
 
 	// HOM
 	HOM.Unload				();

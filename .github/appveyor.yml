@@ -6,17 +6,15 @@ image: Visual Studio 2017
 configuration: Release
 platform: x64
 build:
-  project: code/xrEngine_appveyour.sln
+  project: code/xrEngine.sln
   publish_wap: true
   parallel: true
   verbosity: quiet
 after_build:
 - cmd: >-
-    cd game\
+    copy code\SDK\binaries\x64\amd_ags_x64.dll game\bins\
     
-    copy ..\code\SDK\binaries\x64\amd_ags_x64.dll bins\
-    
-    cd ..\binaries\x64\Release
+    cd binaries\x64\Release
     
     copy *.dll ..\..\..\game\bins
     

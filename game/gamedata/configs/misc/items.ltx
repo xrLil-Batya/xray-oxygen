@@ -10,6 +10,7 @@ description			= default
 inv_name			= default
 inv_name_short		= default
 inv_weight			= 0.01
+st_use_action_name	= st_use
 
 inv_grid_width		= 1
 inv_grid_height		= 1
@@ -57,6 +58,7 @@ boost_fire_wound_immunity	= 0.0
 $spawn 				= "food and drugs\bread"
 visual				= dynamics\devices\dev_bred\dev_bred.ogf
 description			= st_bread_descr
+st_use_action_name	= st_eat
 
 inv_name			= st_bread
 inv_name_short		= st_bread
@@ -88,6 +90,7 @@ use_sound			= interface\inv_food
 $spawn 				= "food and drugs\kolbasa"
 visual				= dynamics\devices\dev_kolbasa\dev_kolbasa.ogf
 description			= st_kolbasa_descr
+st_use_action_name	= st_eat
 
 inv_name			= st_kolbasa
 inv_name_short		= st_kolbasa
@@ -119,6 +122,7 @@ use_sound			= interface\inv_food
 $spawn 				= "food and drugs\conserva"
 visual				= dynamics\devices\dev_conserv\dev_conserv.ogf
 description			= st_conserva_descr
+st_use_action_name	= st_eat
 
 inv_name			= st_conserva
 inv_name_short		= st_conserva
@@ -148,11 +152,13 @@ angle_offset			 = 1.570790,1.570790,3.92699
 use_sound			= interface\inv_food
 
 [vodka]:booster
-class				= S_BOTTL
+class				= S_FOOD
 $spawn 				= "food and drugs\vodka"
 cform				= skeleton
 visual				= dynamics\devices\dev_vodka\dev_vodka.ogf
 description			= st_vodka_descr
+st_use_action_name	= st_drink
+bottle_item			= true
 
 inv_name			= st_vodka
 inv_name_short		= st_vodka
@@ -460,6 +466,7 @@ visual				= dynamics\equipments\medical\drug_psy_blockade.ogf
 inv_name			= st_drug_psy_blockade
 inv_name_short		= st_drug_psy_blockade
 description			= st_drug_psy_blockade_descr
+st_use_action_name	= st_drink
 
 inv_grid_width		= 1
 inv_grid_height		= 1
@@ -526,72 +533,6 @@ cost				= 1000
 
 use_sound			= interface\inv_pills
 
-;boosters below are not used for now
-;[health_restore_booster]:booster
-;$spawn 					= "food and drugs\health_restore_booster"
-;boost_time				= 20.0
-;boost_health_restore	= 0.1
-;
-;[max_weight_booster]:booster
-;$spawn 				= "food and drugs\max_weight_booster"
-;boost_time			= 20.0
-;boost_max_weight	= 100.0
-;
-;[wound_immunity_booster]:booster
-;$spawn 					= "food and drugs\wound_immunity_booster"
-;boost_time				= 20.0
-;boost_wound_immunity	= 1
-;
-;[telepat_immunity_booster]:booster
-;$spawn 					= "food and drugs\telepat_immunity_booster"
-;boost_time				= 20.0
-;boost_telepat_immunity	= 1
-;
-;[chemburn_immunity_booster]:booster
-;$spawn 					= "food and drugs\chemburn_immunity_booster"
-;boost_time				= 20.0
-;boost_chemburn_immunity	= 1
-;
-;[radiation_restore_booster]:booster
-;$spawn 					= "food and drugs\radiation_restore_booster"
-;boost_time				= 20.0
-;boost_radiation_restore	= 0.1
-;
-;[shock_immunity_booster]:booster
-;$spawn 					= "food and drugs\shock_immunity_booster"
-;boost_time				= 20.0
-;boost_shock_immunity	= 1
-;
-;[power_restore_booster]:booster
-;$spawn 				= "food and drugs\power_restore_booster"
-;boost_time			= 20.0
-;boost_power_restore	= 0.1
-;
-;[bleeding_restore_booster]:booster
-;$spawn 					= "food and drugs\bleeding_restore_booster"
-;boost_time				= 20.0
-;boost_bleeding_restore	= 0.1
-;
-;[burn_immunity_booster]:booster
-;$spawn 				= "food and drugs\burn_immunity_booster"
-;boost_time			= 20.0
-;boost_burn_immunity	= 1
-;
-;[explosion_immunity_booster]:booster
-;$spawn 						= "food and drugs\explosion_immunity_booster"
-;boost_time					= 20.0
-;boost_explosion_immunity	= 1
-;
-;[fire_wound_immunity_booster]:booster
-;$spawn 						= "food and drugs\fire_wound_immunity_booster"
-;boost_time					= 20.0
-;boost_fire_wound_immunity	= 1
-;
-;[strike_immunity_booster]:booster
-;$spawn 					= "food and drugs\strike_immunity_booster"
-;boost_time				= 20.0
-;boost_strike_immunity	= 1
-;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;;	DEVICES
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;

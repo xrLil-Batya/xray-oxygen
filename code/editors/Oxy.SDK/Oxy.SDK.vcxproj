@@ -129,6 +129,9 @@
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
+    <Reference Include="WeifenLuo.WinFormsUI.Docking">
+      <HintPath>..\..\SDK\binaries\WeifenLuo.WinFormsUI.Docking.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Launcher.cpp" />
@@ -136,12 +139,17 @@
     <ClCompile Include="Source.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="DockPanels.h" />
     <ClInclude Include="Launcher.h">
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="LE_Form.h">
       <FileType>CppForm</FileType>
     </ClInclude>
+    <ClInclude Include="ObjectViewLE.h" />
+    <ClInclude Include="RenderPanel.h" />
+    <ClInclude Include="RenderViewLE.h" />
+    <ClInclude Include="StatusStripLE.h" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Launcher.resx">

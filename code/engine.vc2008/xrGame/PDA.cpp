@@ -184,32 +184,13 @@ void CPda::save(NET_Packet &output_packet)
 void CPda::load(IReader &input_packet)
 {
 	inherited::load	(input_packet);
-	load_data		(m_sFullName, input_packet);
+	load_data(m_sFullName, input_packet);
 }
 
 CObject* CPda::GetOwnerObject()
 {
-	return				Level().Objects.net_Find(GetOriginalOwnerID());
+	return Level().Objects.net_Find(GetOriginalOwnerID());
 }
-/* remove must
-LPCSTR		CPda::Name				()
-{
-	if( !m_SpecificChracterOwner.size() )
-		return inherited::Name();
-
-	if(m_sFullName.empty())
-	{
-		m_sFullName.assign(inherited::Name());
-		
-		CSpecificCharacter spec_char;
-		spec_char.Load(m_SpecificChracterOwner);
-		m_sFullName += " ";
-		m_sFullName += xr_string(spec_char.Name());
-	}
-	
-	return m_sFullName.c_str();
-}
-*/
 
 CPda* CPda::GetPdaFromOwner(CObject* owner)
 {

@@ -85,7 +85,29 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
-	MessageBox(nullptr, message.c_str(), "X-ray error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+
+	MessageBoxA(nullptr, message.c_str(), "X-ray error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+
+	DEBUG_INVOKE;
+
+	TerminateProcess(GetCurrentProcess(), 1);
+}
+
+void xrDebug::do_exit(const std::string &message, const std::string &message2)
+{
+	FlushLog();
+	// we've give a fuck
+	/////////////////////////////////////////////////
+	std::string szMsg = "Expression: "	+
+						message			+ 
+						"\n"			+
+						"Description: "	+
+						message2		+
+						"."				+
+						"\n"			+
+						"For more information check log.";
+	/////////////////////////////////////////////////
+	MessageBoxA(nullptr, szMsg.c_str(), "X-ray error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 
 	DEBUG_INVOKE;
 
@@ -117,7 +139,7 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit("Please, see log-file for details.");
+	do_exit(expression, description);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
 
@@ -195,7 +217,7 @@ int out_of_memory_handler(size_t size)
 		Memory.mem_compact();
 
 		u32					process_heap = mem_usage_impl();
-		int					eco_strings = g_pStringContainer->stat_economy();
+		int					eco_strings = g_pStringContainer.stat_economy();
 		int					eco_smem = g_pSharedMemoryContainer->stat_economy();
 		Msg("* [X-ray]: Process heap[%d K]", process_heap / 1024);
 		Msg("* [X-ray]: Economy: strings[%d K], smem[%d K]", eco_strings / 1024, eco_smem);

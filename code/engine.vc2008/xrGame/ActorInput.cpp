@@ -36,7 +36,6 @@
 #include "ZoneCampfire.h"
 
 extern u32 hud_adj_mode;
-extern bool isCampFireAt;
 
 void CActor::IR_OnKeyboardPress(int cmd)
 {
@@ -392,12 +391,41 @@ void CActor::ActorUse()
 		return;
 	}
 
-	if(!m_pUsableObject||m_pUsableObject->nonscript_usable())
+	if (!m_pUsableObject||m_pUsableObject->nonscript_usable())
 	{
+		bool bCaptured = false;
+
+		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
+		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder*>(RQ.O);
+		u16 element = BI_NONE;
+		if (object)
+		{
+			element = (u16)RQ.element;
+
+			if (Level().IR_GetKeyState(DIK_LSHIFT))
+			{
+				bool b_allow = !!pSettings->line_exist("ph_capture_visuals", object->cNameVisual());
+				if (b_allow && !character_physics_support()->movement()->PHCapture())
+				{
+					character_physics_support()->movement()->PHCaptureObject(object, element);
+					bCaptured = true;
+				}
+
+			}
+			else if (smart_cast<CHolderCustom*>(object))
+			{
+				NET_Packet P;
+				CGameObject::u_EventGen(P, GEG_PLAYER_ATTACH_HOLDER, ID());
+				P.w_u16(object->ID());
+				CGameObject::u_EventSend(P);
+				return;
+			}
+		}
+
+
 		if (m_pPersonWeLookingAt)
 		{
-			CEntityAlive* pEntityAliveWeLookingAt =
-				smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
+			CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
 
 			VERIFY(pEntityAliveWeLookingAt);
 
@@ -405,7 +433,7 @@ void CActor::ActorUse()
 				TryToTalk();
 			else
 			{
-				//������ ���� ��������� � ������ single
+				// Only single
 				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
 				if (pGameSP)
 				{
@@ -415,40 +443,15 @@ void CActor::ActorUse()
 				}
 			}
 		}
-
-		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
-		CPhysicsShellHolder* object = smart_cast<CPhysicsShellHolder*>(RQ.O);
-		u16 element = BI_NONE;
-		if(object) 
-			element = (u16)RQ.element;
-
-		if(object && Level().IR_GetKeyState(DIK_LSHIFT))
-		{
-			bool b_allow = !!pSettings->line_exist("ph_capture_visuals",object->cNameVisual());
-			if(b_allow && !character_physics_support()->movement()->PHCapture())
-			{
-				character_physics_support()->movement()->PHCaptureObject( object, element );
-
-			}
-
-		}
-		else if (object && smart_cast<CHolderCustom*>(object))
-		{
-			NET_Packet		P;
-			CGameObject::u_EventGen(P, GEG_PLAYER_ATTACH_HOLDER, ID());
-			P.w_u16(object->ID());
-			CGameObject::u_EventSend(P);
-			return;
-		}
-
-		//m_CapmfireWeLookingAt = smart_cast<CZoneCampfire*>(object); 
-		if(m_CapmfireWeLookingAt) //Fixed
-		{
-			if(isCampFireAt)
-				m_CapmfireWeLookingAt->turn_off_script();
-			else
-				m_CapmfireWeLookingAt->turn_on_script();
-		}
+	}
+	// переключение костра при юзании
+	if (m_CapmfireWeLookingAt)
+	{
+		if (m_CapmfireWeLookingAt->is_on())
+			m_CapmfireWeLookingAt->turn_off_script();
+		else
+			m_CapmfireWeLookingAt->turn_on_script();
+		return;
 	}
 }
 

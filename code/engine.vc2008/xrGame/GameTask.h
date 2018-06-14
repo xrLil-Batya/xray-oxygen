@@ -1,6 +1,4 @@
 #pragma once
-
-#include "encyclopedia_article_defs.h"
 #include "GameTaskDefs.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../../sdk/include/luabind/functor.hpp"
@@ -79,10 +77,10 @@ public:
 	shared_str				m_ID;
 	shared_str				m_Title;
 	shared_str				m_Description;
-	ALife::_TIME_ID			m_ReceiveTime;
-	ALife::_TIME_ID			m_FinishTime;
-	ALife::_TIME_ID			m_TimeToComplete;
-	ALife::_TIME_ID			m_timer_finish;
+	u64						m_ReceiveTime;
+	u64						m_FinishTime;
+	u64						m_TimeToComplete;
+	u64						m_timer_finish;
 	u32						m_priority;
 	bool					m_read;
 
@@ -104,7 +102,7 @@ public:
 	void					SetPriority_script		(int _prio)					{m_priority	= _prio;}
 	int						GetPriority_script		()							{return m_priority;}
 	void					SetType_script			(int t)						{m_task_type = (ETaskType)t;}
-
+	int						GetType_script			()							{ return int(m_task_type); }
 	LPCSTR					GetID_script			()							{return m_ID.c_str();}
 	void					SetID_script			(LPCSTR _id)				{m_ID = _id;}
 	void					SetDescription_script	(LPCSTR _desc)				{m_Description = _desc;}

@@ -384,6 +384,8 @@ CRenderTarget::CRenderTarget		()
 	// RAIN DROPS
 	s_rain_drops.create				(b_rain_drops,	"r2\\sgm_rain_drops");
 
+	// Puddles
+	s_water.create					("effects\\puddles", "water\\water_water");
 	// DIRECT (spot)
 	D3DFORMAT						depth_format	= (D3DFORMAT)RImplementation.o.HW_smap_FORMAT;
 

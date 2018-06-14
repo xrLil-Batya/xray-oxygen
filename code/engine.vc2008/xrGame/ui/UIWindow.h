@@ -3,6 +3,7 @@
 #include "UIMessages.h"
 #include "../../xrScripts/export/script_export_space.h"
 #include "uiabstract.h"
+#include "../xrCore/XMLCore/Expression.h"
 
 template <typename T, typename allocator = xalloc<T>>
 using ui_list = xr_list<T, allocator>; // xr_vector<T, allocator>;
@@ -114,6 +115,9 @@ public:
 	
 	IC bool					GetCustomDraw		() const					{return m_bCustomDraw;}
 	IC void					SetCustomDraw		(bool b) 					{m_bCustomDraw = b;}
+
+    // Expression that provide data for this widget
+    CExpression             m_expression;
 
 protected:
 	IC void					SafeRemoveChild(CUIWindow* child)				{WINDOW_LIST_it it = std::find(m_ChildWndList.begin(),m_ChildWndList.end(),child); if(it!=m_ChildWndList.end())m_ChildWndList.erase(it);};

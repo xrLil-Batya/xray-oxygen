@@ -32,10 +32,10 @@
 #include "../control_animation_base.h"
 #include "../monster_velocity_space.h"
 #include "../anti_aim_ability.h"
+#include "../../FrayBuildConfig.hpp"
 
 namespace detail
 {
-
 namespace base_monster
 {
 	const float feel_enemy_who_just_hit_max_distance	=	20;
@@ -224,9 +224,14 @@ steering_behaviour::manager*   CBaseMonster::get_steer_manager ()
 void CBaseMonster::reload	(LPCSTR section)
 {
 	CCustomMonster::reload		(section);
-	
+
 	if (!CCustomMonster::use_simplified_visual())
 		CStepManager::reload	(section);
+
+#ifdef MONSTER_INV
+	CInventoryOwner::reload(section);
+	inventory().SetSlotsUseful(false);
+#endif
 
 	movement().reload	(section);
 
@@ -265,6 +270,10 @@ void CBaseMonster::reload	(LPCSTR section)
 void CBaseMonster::reinit()
 {
 	inherited::reinit					();
+
+#ifdef MONSTER_INV
+	CInventoryOwner::reinit();
+#endif 
 
 	EnemyMemory.clear					();
 	SoundMemory.clear					();
@@ -327,6 +336,12 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return(FALSE);
 
+#ifdef MONSTER_INV
+	CHARACTER_COMMUNITY community;
+	community.set("monster");
+	CInventoryOwner::SetCommunity(community.index());
+#endif
+
 	CSE_Abstract							*e	= (CSE_Abstract*)(DC);
 	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != u32(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
@@ -342,35 +357,6 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	control().update_frame();
 	control().update_schedule();
 
-	// spawn inventory item
-//	if (ai().get_alife()) {
-//		
-//		CSE_ALifeMonsterBase					*se_monster = smart_cast<CSE_ALifeMonsterBase*>(ai().alife().objects().object(ID()));
-//		VERIFY									(se_monster);
-//
-//		if (se_monster->m_flags.is(CSE_ALifeMonsterBase::flNeedCheckSpawnItem)) {
-//			float prob = Random.randF();
-//			if ((prob < m_spawn_probability) || fsimilar(m_spawn_probability,1.f)) 
-//				se_monster->m_flags.set(CSE_ALifeMonsterBase::flSkipSpawnItem, FALSE);
-//
-//			se_monster->m_flags.set(CSE_ALifeMonsterBase::flNeedCheckSpawnItem, FALSE);
-//		}
-//
-//		if (!se_monster->m_flags.is(CSE_ALifeMonsterBase::flSkipSpawnItem)) {
-//			CSE_Abstract	*object = Level().spawn_item (m_item_section,Position(),ai_location().level_vertex_id(),ID(),true);
-//			CSE_ALifeObject	*alife_object = smart_cast<CSE_ALifeObject*>(object);
-//			if (alife_object)
-//				alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,FALSE);
-//
-//			{
-//				NET_Packet				P;
-//				object->Spawn_Write		(P,TRUE);
-//				Level().Send			(P);
-//				F_entity_Destroy		(object);
-//			}
-//		}
-//	}
-
 	return(TRUE);
 }
 
@@ -380,9 +366,12 @@ void CBaseMonster::net_Destroy()
 	if (m_controlled) m_controlled->on_destroy	();
 	if (StateMan) StateMan->critical_finalize	();
 
-	inherited::net_Destroy				();
-	
-	m_pPhysics_support->in_NetDestroy	();
+	inherited::net_Destroy();
+
+#ifdef MONSTER_INV
+	CInventoryOwner::net_Destroy();
+#endif
+	m_pPhysics_support->in_NetDestroy();
 
 	monster_squad().remove_member		((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);
 

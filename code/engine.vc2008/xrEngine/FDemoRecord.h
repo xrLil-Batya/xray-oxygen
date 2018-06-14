@@ -1,6 +1,3 @@
-#if !defined(AFX_FDEMORECORD_H__D7638760_FB61_11D3_B4E3_4854E82A090D__INCLUDED_)
-#define AFX_FDEMORECORD_H__D7638760_FB61_11D3_B4E3_4854E82A090D__INCLUDED_
-
 #pragma once
 
 #include "iinputreceiver.h"
@@ -29,10 +26,10 @@ private:
 	Fvector		m_vVelocity;
 	Fvector		m_vAngularVelocity;
 
-	BOOL		m_bMakeCubeMap;
-	BOOL		m_bMakeScreenshot;
+	bool		m_bMakeCubeMap;
+	bool		m_bMakeScreenshot;
 	int			m_iLMScreenshotFragment;
-	BOOL		m_bMakeLevelMap;
+	bool		m_bMakeLevelMap;
 
 	float		m_fSpeed0;
 	float		m_fSpeed1;
@@ -49,7 +46,7 @@ private:
 	void		RecordKey				();
 	void		MakeCubemap				();
 	void		MakeScreenshot			();
-	void		MakeLevelMapScreenshot	(BOOL bHQ);
+	void		MakeLevelMapScreenshot	(bool bHQ);
 public:
 				CDemoRecord				(const char *name, float life_time=60*60*1000);
 	virtual		~CDemoRecord();
@@ -62,8 +59,6 @@ public:
 	virtual BOOL ProcessCam				(SCamEffectorInfo& info);
 	static	void SetGlobalPosition		( const Fvector &p ) { g_position.p.set(p), g_position.set_position= true; }
 	static	void GetGlobalPosition		( Fvector &p ) { p.set( g_position.p ); }
-	BOOL		 m_b_redirect_input_to_level;
+	bool		 m_b_redirect_input_to_level;
 	virtual void OnRender				();
 };
-
-#endif // !defined(AFX_FDEMORECORD_H__D7638760_FB61_11D3_B4E3_4854E82A090D__INCLUDED_)

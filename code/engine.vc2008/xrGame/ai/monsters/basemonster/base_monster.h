@@ -1,30 +1,26 @@
 #pragma once
-
 #include "../../../CustomMonster.h"
-
 #include "../monster_enemy_memory.h"
 #include "../monster_corpse_memory.h"
 #include "../monster_sound_memory.h"
 #include "../monster_hit_memory.h"
-
 #include "../monster_enemy_manager.h"
 #include "../monster_corpse_manager.h"
-
 #include "../../../step_manager.h"
 #include "../monster_event_manager.h"
 #include "../melee_checker.h"
 #include "../monster_morale.h"
-
 #include "../control_manager.h"
 #include "../control_sequencer.h"
-
 #include "../ai_monster_utils.h"
-
 #include "../control_manager_custom.h"
 #include "../ai_monster_shared_data.h"
 #include "../monster_sound_defs.h"
-
 #include "../monster_aura.h"
+
+#include "InventoryOwner.h"
+#include "Inventory.h"
+#include "../../FrayBuildConfig.hpp"
 
 class CCharacterPhysicsSupport;
 class CMonsterCorpseCoverEvaluator;
@@ -55,7 +51,12 @@ namespace debug { class text_tree; }
 
 class anti_aim_ability;
 
-class CBaseMonster : public CCustomMonster, public CStepManager
+class CBaseMonster : 
+	public CCustomMonster, 
+	public CStepManager
+#ifdef MONSTER_INV
+	, CInventoryOwner
+#endif
 {
 	typedef	CCustomMonster								inherited;
 	
@@ -66,7 +67,7 @@ public:
 public:
 	virtual	Feel::Sound*				dcast_FeelSound				()	{ return this;	}
 	virtual	CCharacterPhysicsSupport*	character_physics_support	()	{return m_pPhysics_support;}
-	virtual const	CCharacterPhysicsSupport*	character_physics_support()const{return m_pPhysics_support;}
+	virtual const CCharacterPhysicsSupport*	character_physics_support()const{return m_pPhysics_support;}
 	virtual CPHDestroyable*				ph_destroyable				();
 	virtual CEntityAlive*				cast_entity_alive			()	{return this;}
 	virtual CEntity*					cast_entity					()	{return this;}
@@ -76,6 +77,10 @@ public:
 	virtual CScriptEntity*				cast_script_entity			()	{return this;}
 	virtual CBaseMonster*				cast_base_monster			()	{return this;}
 
+#ifdef MONSTER_INV
+	virtual CInventoryOwner*			cast_inventory_owner		() {return this;}
+	virtual bool						unlimited_ammo				() {return false;}
+#endif
 	virtual CGameObject*				cast_game_object			() {return this;}
 
 public:
@@ -147,12 +152,8 @@ public:
 
 	virtual bool			IsTalkEnabled					() {return false;}
 
-	virtual void			HitEntity						(const CEntity *	pEntity, 
-															 float 				fDamage, 
-															 float 				impulse, 
-															 Fvector &			dir, 
-															 ALife::EHitType	hit_type = ALife::eHitTypeWound,
-															 bool				draw_hit_marks = true);
+	virtual void			HitEntity						(const CEntity* pEntity, float fDamage, float impulse, Fvector &dir, 
+															 ALife::EHitType hit_type = ALife::eHitTypeWound, bool draw_hit_marks = true);
 
 	virtual	void			HitEntityInJump					(const CEntity *pEntity) {}
 

@@ -67,7 +67,7 @@ public:
 	IC void				BoostRadiationProtection	(const float value);
 	IC void				BoostTelepaticProtection	(const float value);
 	IC void				BoostChemicalBurnProtection	(const float value);
-	BOOSTER_MAP			GetCurBoosterInfluences		() {return m_booster_influences;};
+	BOOSTER_MAP&		GetCurBoosterInfluences		() {return m_booster_influences;};
 
 	// хромание при потере сил и здоровья
 	virtual	bool		IsLimping					() const;
@@ -115,6 +115,8 @@ public:
 	
 	float	GetZoneMaxPower							(ALife::EInfluenceType type) const;
 	float	GetZoneMaxPower							(ALife::EHitType hit_type) const;
+
+    float   GetBoosterValueByType                   (EBoostParams type) const;
 
 	bool	DisableSprint							(SHit* pHDS);
 	bool	PlayHitSound							(SHit* pHDS);

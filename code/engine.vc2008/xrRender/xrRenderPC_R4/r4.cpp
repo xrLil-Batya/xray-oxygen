@@ -373,7 +373,7 @@ void CRender::reset_begin()
 	}
 	/////////////////////////////////////////////
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details->Unload();
 		xr_delete(Details);
@@ -403,7 +403,7 @@ void CRender::reset_end()
 	Target = xr_new<CRenderTarget>();
 	/////////////////////////////////////////////
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
 	{
 		Details = xr_new<CDetailManager>();
 		Details->Load();
@@ -600,6 +600,12 @@ void					CRender::rmNormal			()
 	HW.pContext->RSSetViewports(1, &VP);
 	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
+
+void					CRender::ResizeWindowProc(WORD h, WORD w)
+{
+	HW.ResizeWindowProc(h, w);
+}
+
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
@@ -1102,6 +1108,10 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	else
 		sh_name[len]='0'; ++len;
 
+	defines[def_it].Name = "USE_PUDDLES";
+	defines[def_it].Definition = "1";
+	def_it++;
+
 	if (RImplementation.o.advancedpp && ps_r_sun_shafts)
 	{
 		xr_sprintf					(c_sun_shafts,"%d",ps_r_sun_shafts);
@@ -1162,13 +1172,13 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
    sh_name[len]='0'+char(o.dx10_sm4_1); ++len;
 
    R_ASSERT						( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 );
-   if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
+   //if( HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0 )
    {
 	   defines[def_it].Name		=	"SM_5";
 	   defines[def_it].Definition	=	"1";
 	   def_it++;
    }
-	sh_name[len]='0'+char(HW.FeatureLevel>=D3D_FEATURE_LEVEL_11_0); ++len;
+	sh_name[len]='0'; ++len;
 
    if (o.dx10_minmax_sm)
    {
@@ -1271,34 +1281,24 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	{
 		if ('v'==pTarget[0])
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_0 )
-				pTarget = "vs_4_0";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1 )
-				pTarget = "vs_4_1";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
+			if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "vs_5_0";
+			else if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_12_1 )
+				pTarget = "vs_5_1";
 		}
 		else if ('p'==pTarget[0])
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_0 )
-				pTarget = "ps_4_0";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1 )
-				pTarget = "ps_4_1";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
+			if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "ps_5_0";
+			else if( HW.FeatureLevel >= D3D_FEATURE_LEVEL_12_1 )
+				pTarget = "ps_5_1";
 		}
 		else if ('g'==pTarget[0])		
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_0 )
-				pTarget = "gs_4_0";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_10_1 )
-				pTarget = "gs_4_1";
-			else if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "gs_5_0";
 		}
 		else if ('c'==pTarget[0])		
 		{
-			if( HW.FeatureLevel == D3D_FEATURE_LEVEL_11_0 )
 				pTarget = "cs_5_0";
 		}
 	}

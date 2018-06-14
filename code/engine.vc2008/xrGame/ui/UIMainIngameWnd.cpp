@@ -325,6 +325,15 @@ void CUIMainIngameWnd::RenderQuickInfos()
 	LPCSTR actor_action					= pActor->GetDefaultActionForObject();
 	UIStaticQuickHelp->Show				(NULL!=actor_action);
 
+	// подсказка для костра
+	static CZoneCampfire* pZone = nullptr;
+	if (pZone != pActor->CapmfireWeLookingAt())
+	{
+		UIStaticQuickHelp->SetTextST(actor_action);
+		UIStaticQuickHelp->ResetColorAnimation();
+		pZone = pActor->CapmfireWeLookingAt();
+	}
+
 	if(NULL!=actor_action)
 	{
 		if(stricmp(actor_action,UIStaticQuickHelp->GetText()))
@@ -884,7 +893,7 @@ void CUIMainIngameWnd::DrawMainIndicatorsForInventory()
 	m_ui_hud_states->DrawZoneIndicators();
 }
 
-void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBooster> influences)
+void CUIMainIngameWnd::UpdateBoosterIndicators(const xr_map<EBoostParams, SBooster>& influences)
 {
 	m_ind_boost_psy->Show(false);
 	m_ind_boost_radia->Show(false);

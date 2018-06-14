@@ -273,3 +273,4 @@ public:
 #define	_BGCL			__stdcall
 
 extern XRCORE_API xrCore Core;
+extern XRCORE_API bool   gModulesLoaded;

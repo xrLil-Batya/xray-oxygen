@@ -38,7 +38,9 @@ enum class CPUFeature: unsigned
 	AES				= 1 << 20,
 	EST				= 1 << 21,
 	VMX				= 1 << 22,
-	AMD				= 1 << 23
+	AMD				= 1 << 23,
+	XFSR			= 1 << 24, 
+	FXSR			= 1 << 25 // NOTE: Merge commit. Remove it later, please
 };
 
 struct XRCORE_API processor_info 

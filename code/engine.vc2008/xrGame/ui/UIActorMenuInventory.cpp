@@ -16,16 +16,13 @@
 #include "UIMainIngameWnd.h"
 #include "UIGameCustom.h"
 #include "eatable_item_object.h"
-
+#include "../FoodItem.h"
 #include "../silencer.h"
 #include "../scope.h"
 #include "../grenadelauncher.h"
 #include "../Artefact.h"
 #include "../eatable_item.h"
-#include "../BottleItem.h"
 #include "../WeaponMagazined.h"
-#include "../Medkit.h"
-#include "../Antirad.h"
 #include "../CustomOutfit.h"
 #include "../ActorHelmet.h"
 #include "../UICursor.h"
@@ -49,12 +46,13 @@ void CUIActorMenu::InitInventoryMode()
 	m_pInventoryDetectorList->Show		(true);
 	m_pInventoryPistolList->Show		(true);
 	m_pInventoryAutomaticList->Show		(true);
-	
-#ifdef NEW_SLOTS
+#ifdef ACTOR_RUCK
+	m_pInventoryRuckList->Show			(true);
+#endif
+
+
     m_pInventoryKnifeList->Show         (true);
     m_pInventoryBinocularList->Show     (true);
-#endif
-	
 	m_pQuickSlot->Show					(true);
 	m_pTrashList->Show					(true);
 	m_RightDelimiter->Show				(false);
@@ -132,7 +130,7 @@ void CUIActorMenu::SendEvent_Item_Eat(PIItem pItem, u16 recipient)
 void CUIActorMenu::SendEvent_Item_Drop(PIItem pItem, u16 recipient)
 {
 	R_ASSERT(pItem->parent_id()==recipient);
-	//pItem->SetDropManual			(TRUE);
+
 	NET_Packet					P;
 	pItem->object().u_EventGen	(P,GE_OWNERSHIP_REJECT,pItem->parent_id());
 	P.w_u16						(pItem->object().ID());
@@ -239,10 +237,11 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		m_pInventoryBeltList,
 		m_pInventoryPistolList,
 		m_pInventoryAutomaticList,
-#ifdef NEW_SLOTS
-    m_pInventoryKnifeList,
-    m_pInventoryBinocularList,
-#endif
+		m_pInventoryKnifeList,
+		m_pInventoryBinocularList,
+#ifdef ACTOR_RUCK
+		m_pInventoryRuckList,
+#endif		
 		m_pInventoryOutfitList,
 		m_pInventoryHelmetList,
 		m_pInventoryDetectorList,
@@ -398,12 +397,13 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	//Slots
 	InitCellForSlot				(INV_SLOT_2);
 	InitCellForSlot				(INV_SLOT_3);
-	
-#ifdef NEW_SLOTS
+
+#ifdef ACTOR_RUCK
+	InitCellForSlot(RUCK_SLOT);
+#endif
+
     InitCellForSlot             (KNIFE_SLOT);
     InitCellForSlot             (BINOCULAR_SLOT);
-#endif
-	
 	InitCellForSlot				(OUTFIT_SLOT);
 	InitCellForSlot				(DETECTOR_SLOT);
 	InitCellForSlot				(GRENADE_SLOT);
@@ -551,7 +551,7 @@ bool CUIActorMenu::ToSlot(CUICellItem* itm, bool force_place, u16 slot_id)
 	}
 }
 
-
+#include "../xrEngine/xr_input.h"
 bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 {
 	PIItem	iitem						= (PIItem)itm->m_pData;
@@ -589,6 +589,9 @@ bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 		{
 			ColorizeItem( itm, !CanMoveToPartner( iitem ) );
 		}
+#ifdef MULTITRANSFER
+	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToBag(itm, (old_owner == new_owner));
+#endif
 		return true;
 	}
 	return false;
@@ -664,7 +667,12 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 			return m_pInventoryAutomaticList;
 			break;
 
-#ifdef NEW_SLOTS
+#ifdef ACTOR_RUCK
+		case RUCK_SLOT:
+			return m_pInventoryRuckList;
+			break;
+#endif
+
 		case KNIFE_SLOT: 
 		    return m_pInventoryKnifeList;
 			break;
@@ -672,7 +680,6 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 		case BINOCULAR_SLOT: 
 		    return m_pInventoryBinocularList; 
 			break;
-#endif
 			
 		case OUTFIT_SLOT:
 			return m_pInventoryOutfitList;
@@ -697,38 +704,32 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 	return NULL;
 }
 
-bool CUIActorMenu::TryUseItem( CUICellItem* cell_itm )
+bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 {
-	if ( !cell_itm )
+	if (!cell_itm)
 	{
 		return false;
 	}
-	PIItem item	= (PIItem)cell_itm->m_pData;
 
-	CBottleItem*	pBottleItem		= smart_cast<CBottleItem*>	(item);
-	CMedkit*		pMedkit			= smart_cast<CMedkit*>		(item);
-	CAntirad*		pAntirad		= smart_cast<CAntirad*>		(item);
-	CEatableItem*	pEatableItem	= smart_cast<CEatableItem*>	(item);
+	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
-	if ( !(pMedkit || pAntirad || pEatableItem || pBottleItem) )
+	if (!item || !item->Useful())
 	{
 		return false;
 	}
-	if ( !item->Useful() )
-	{
-		return false;
-	}
+
 	u16 recipient = m_pActorInvOwner->object_id();
-	if ( item->parent_id() != recipient )
+	if (item->parent_id() != recipient)
 	{
-		cell_itm->OwnerList()->RemoveItem( cell_itm, false );
+		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 	}
 
-	SendEvent_Item_Eat		( item, recipient );
-	PlaySnd					( eItemUse );
-	SetCurrentItem			( NULL );
+	SendEvent_Item_Eat(item, recipient);
+	PlaySnd(eItemUse);
+	SetCurrentItem(NULL);
 	return true;
 }
+
 
 bool CUIActorMenu::ToQuickSlot(CUICellItem* itm)
 {
@@ -1020,33 +1021,14 @@ void CUIActorMenu::PropertiesBoxForAddon( PIItem item, bool& b_show )
 
 void CUIActorMenu::PropertiesBoxForUsing(PIItem item, bool& b_show)
 {
-	CEatableItem* pEatableItem = smart_cast<CEatableItem*>(item);
-	CBottleItem* pBottleItem = smart_cast<CBottleItem*>(item);
-	CMedkit* pMedkit = smart_cast<CMedkit*>(item);
-	CAntirad* pAntirad = smart_cast<CAntirad*>(item);
+	if (dynamic_cast<CFoodItem*>(item))
+	{
+		const char* act_str = READ_IF_EXISTS(pSettings, r_string, item->object().cNameSect().c_str(), "st_use_action_name", "st_use");
 
-	const char* act_str = nullptr;
-
-	if (pBottleItem)
-	{
-		act_str = "st_drink";
-	}
-	else if (pEatableItem)
-	{
-		if (pMedkit || pAntirad)
-		{
-			act_str = "st_use";
-		}
-		else
-		{
-			act_str = "st_eat";
-		}
-	}
-	if (act_str)
-	{
-		m_UIPropertiesBox->AddItem(act_str, NULL, INVENTORY_EAT_ACTION);
+		m_UIPropertiesBox->AddItem(act_str, nullptr, INVENTORY_EAT_ACTION);
 		b_show = true;
 	}
+	else b_show = false;
 }
 
 void CUIActorMenu::PropertiesBoxForPlaying(PIItem item, bool& b_show)
@@ -1241,7 +1223,13 @@ void CUIActorMenu::UpdateOutfit()
 	m_HelmetOver->Show(!outfit->bIsHelmetAvaliable);
 	
 	Ivector2 afc;
-	afc.set(af_count, 1);
+#ifdef VERTICAL_BELT
+	afc.x = 1;
+	afc.y = af_count;
+#else
+	afc.x = af_count; // 1;
+	afc.y = 1;        // af_count;
+#endif
 
 	m_pInventoryBeltList->SetCellsCapacity(afc);
 

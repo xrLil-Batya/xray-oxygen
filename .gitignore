@@ -19,6 +19,7 @@
 *.aps
 *.db
 *.tmp
+*.cache
 
 binaries/
 intermediatex64/
@@ -37,5 +38,12 @@ librariesx64/
 /code/xrQt/xrDevLaunch/release/
 *.db-shm
 *.db-wal
+
 game/gamedata_/
 game/gamedata/configs/coordinates.ltx
+
+*.lib
+
+*.psess
+
+*.vspx

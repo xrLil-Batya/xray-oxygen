@@ -16,7 +16,8 @@ enum{
 	DETECTOR_SLOT,	// detector
 	TORCH_SLOT,		// torch
 	ARTEFACT_SLOT,	// artefact
-	HELMET_SLOT,
+	HELMET_SLOT,	// helmet
+	RUCK_SLOT,		//backpack
 	LAST_SLOT		= HELMET_SLOT
 };
 

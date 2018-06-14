@@ -148,28 +148,24 @@ void xrServer::OnDelayedMessage(NET_Packet& P, ClientID sender)
 extern	float	g_fCatchObjectTime;
 u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broadcasting with "flags" as returned
 {
-	u16			type;
-	P.r_begin	(type);
+	u16 type;
+	P.r_begin(type);
 
-	VERIFY							(verify_entities());
-	xrClientData* CL				= ID_to_client(sender);
+	xrClientData* CL = ID_to_client(sender);
 
 	switch (type)
 	{
 	case M_UPDATE:	
 		{
 			Process_update			(P,sender);						// No broadcast
-			VERIFY					(verify_entities());
 		}break;
 	case M_SPAWN:	
 		{
 			Process_spawn			(P,sender);
-			VERIFY					(verify_entities());
 		}break;
 	case M_EVENT:	
 		{
 			Process_event			(P,sender);
-			VERIFY					(verify_entities());
 		}break;
 	case M_EVENT_PACK:
 		{
@@ -186,7 +182,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	case M_SWITCH_DISTANCE:
 		{
 			game->switch_distance	(P,sender);
-			VERIFY					(verify_entities());
 		}break;
 	case M_CHANGE_LEVEL:
 		{
@@ -194,23 +189,19 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 			{
 				SendBroadcast		(BroadcastCID,P);
 			}
-			VERIFY					(verify_entities());
 		}break;
 	case M_SAVE_GAME:
 		{
 			game->save_game			(P,sender);
-			VERIFY					(verify_entities());
 		}break;
 	case M_LOAD_GAME:
 		{
 			game->load_game			(P,sender);
 			SendBroadcast			(BroadcastCID,P);
-			VERIFY					(verify_entities());
 		}break;
 	case M_SAVE_PACKET:
 		{
 			Process_save			(P,sender);
-			VERIFY					(verify_entities());
 		}break;
 	case M_CLIENT_REQUEST_CONNECTION_DATA:
 		{
@@ -220,16 +211,6 @@ u32 xrServer::OnMessage(NET_Packet& P, ClientID sender)			// Non-Zero means broa
 	VERIFY (verify_entities());
 
 	return 0;
-}
-
-void xrServer::SendTo_LL(void* data, u32 size)
-{
-	Level().OnMessage(data,size);
-}
-
-void xrServer::SendTo(ClientID ID, NET_Packet& P)
-{
-    SendTo_LL(P.B.data, (u32)P.B.count);
 }
 
 void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
@@ -244,7 +225,7 @@ void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
     xrClientData* tmp_client = static_cast<xrClientData*>(SV_Client);
 	if (tmp_client->net_Accepted)
 	{
-		SendTo_LL(P.B.data, (u32)P.B.count);
+		Level().OnMessage(P.B.data, (u32)P.B.count);
 	}
 }
 //--------------------------------------------------------------------
@@ -345,13 +326,10 @@ shared_str xrServer::level_version(const shared_str &server_options) const
 
 void xrServer::createClient()
 {
-    IClient* CL = xr_new<xrClientData>();
-    CL->ID.set(1);
-    net_players.AddNewClient(CL);
-    CL->name = "single_player";
-
-    CL->flags.bConnected = TRUE;
-    SV_Client = CL;
+	SV_Client = xr_new<xrClientData>();
+	SV_Client->ID.set(1);
+    net_players.AddNewClient(SV_Client);
+	SV_Client->flags.bConnected = TRUE;
 }
 
 void xrServer::ProceedDelayedPackets()

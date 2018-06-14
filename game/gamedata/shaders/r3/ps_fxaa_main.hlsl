@@ -2,7 +2,6 @@
 #include "ps_fxaa.hlsl"
 
 Texture2D 	s_base0;
-uniform float4		screen_res;	
 
 struct	v2p 
 {
@@ -12,15 +11,16 @@ struct	v2p
 
 float4 main (  v2p I ) : SV_Target
 {
-	float2 rcpFrame = float2(1.0/screen_res.x, 1.0/screen_res.y);
-	FxaaTex tex = { smp_rtlinear, s_base0};
+    float2 fxaaFrame = float2(1.0/screen_res.x, 1.0/screen_res.y);
+
+    FxaaTex tex = { smp_rtlinear, s_base0 };
 
 	return FxaaPixelShader(I.Tex0,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsolePosPos,
             tex,							// FxaaTex tex,
             tex,							// FxaaTex fxaaConsole360TexExpBiasNegOne,
             tex,							// FxaaTex fxaaConsole360TexExpBiasNegTwo,
-            rcpFrame,							// FxaaFloat2 fxaaQualityRcpFrame,
+            fxaaFrame,							// FxaaFloat2 fxaaQualityRcpFrame,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsoleRcpFrameOpt,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsoleRcpFrameOpt2,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsole360RcpFrameOpt2,

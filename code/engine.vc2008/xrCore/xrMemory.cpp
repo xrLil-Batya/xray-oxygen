@@ -7,9 +7,6 @@
 xrMemory Memory;
 bool mem_initialized = false;
 
-//fake fix of memory corruptions in multiplayer game :(
-XRCORE_API bool g_allow_heap_min = true;
-
 void xrMemory::_initialize()
 {
 	stat_calls = 0;
@@ -21,7 +18,6 @@ void xrMemory::_initialize()
 void xrMemory::_destroy()
 {
 	xr_delete(g_pSharedMemoryContainer);
-	xr_delete(g_pStringContainer);
 
 	mem_initialized = false;
 }
@@ -33,13 +29,11 @@ void xrMemory::mem_compact()
 	RegFlushKey(HKEY_CLASSES_ROOT);
 	RegFlushKey(HKEY_CURRENT_USER);
 
-	if (g_allow_heap_min)
-		_heapmin();
+	_heapmin();
 
 	HeapCompact(GetProcessHeap(), 0);
 
-	if (g_pStringContainer)
-		g_pStringContainer->clean();
+	g_pStringContainer.clean();
 
 	if (g_pSharedMemoryContainer)
 		g_pSharedMemoryContainer->clean();

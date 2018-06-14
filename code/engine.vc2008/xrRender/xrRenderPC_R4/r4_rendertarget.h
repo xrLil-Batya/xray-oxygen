@@ -180,17 +180,19 @@ private:
 	ID3DIndexBuffer*		g_accum_volumetric_ib;
 
 	// Bloom
-	ref_geom					g_bloom_build;
-	ref_geom					g_bloom_filter;
+	ref_geom				g_bloom_build;
+	ref_geom				g_bloom_filter;
 	ref_shader				s_bloom_dbg_1;
 	ref_shader				s_bloom_dbg_2;
 	ref_shader				s_bloom;
    ref_shader				s_bloom_msaa;
-	float							f_bloom_factor;
+	float					f_bloom_factor;
 
 	// Luminance
-	ref_shader			s_luminance;
-	float						f_luminance_adapt;
+	ref_shader				s_luminance;
+	float					f_luminance_adapt;
+
+	ref_shader				s_water;
 
 	// Combine
     ref_geom				g_KD;
@@ -277,6 +279,7 @@ public:
 	void						phase_vol_accumulator	();
 	void						phase_SunShafts			();
 	void						phase_ogse_sunshafts	();
+	void						phase_puddles			();
 	void						shadow_direct			(light* L, u32 dls_phase);
 
 	//	Generates min/max sm

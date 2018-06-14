@@ -43,9 +43,11 @@ public:
 	shared_str			m_ClickedQuestionID;
 
 	//список вопросов, которые мы можем задавать персонажу
-
 	CUI3tButton			UIToTradeButton;
 
+	//информация о персонажах 
+	CUIStatic			UIOurIcon;
+	CUIStatic			UIOthersIcon;
 	CUICharacterInfo	UICharacterInfoLeft;
 	CUICharacterInfo	UICharacterInfoRight;
 
@@ -62,6 +64,7 @@ public:
 private:
 	CUIScrollView*			UIQuestionsList;
 	CUIScrollView*			UIAnswersList;
+
 
 	// шрифт и цвет текста с именем персонажа
 	CGameFont			*m_pNameTextFont;

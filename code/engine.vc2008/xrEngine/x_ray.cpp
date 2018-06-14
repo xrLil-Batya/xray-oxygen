@@ -73,9 +73,7 @@ ENGINE_API void InitSettings	()
 {
 	string_path					fname; 
 	FS.update_path				(fname,"$game_config$","system.ltx");
-#ifdef DEBUG
-	Msg							("Updated path to system.ltx is %s", fname);
-#endif // #ifdef DEBUG
+
 	pSettings					= xr_new<CInifile>	(fname,TRUE);
 	CHECK_OR_EXIT				(0!=pSettings->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 
@@ -85,6 +83,7 @@ ENGINE_API void InitSettings	()
 	pGameIni					= xr_new<CInifile>	(fname,TRUE);
 	CHECK_OR_EXIT				(0!=pGameIni->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 }
+
 ENGINE_API void InitConsole	()
 {
 	Console = xr_new<CConsole>();
@@ -511,7 +510,7 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 
 CApplication::CApplication()
 {
-	ll_dwReference	= 0;
+	dwLoadReference	= 0;
 
 	max_load_stage = 0;
 
@@ -630,38 +629,33 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	}
 }
 
-static	CTimer	phase_timer		;
-extern	ENGINE_API BOOL			g_appLoaded = FALSE;
+static	CTimer	phase_timer;
+extern	ENGINE_API BOOL g_appLoaded = FALSE;
 
-void CApplication::LoadBegin	()
+void CApplication::LoadBegin()
 {
-	ll_dwReference++;
-	if (1==ll_dwReference)	{
-
+	dwLoadReference++;
+	if (1==dwLoadReference)	
+	{
 		g_appLoaded			= FALSE;
 #ifdef SPAWN_ANTIFREEZE
 		g_bootComplete		= false;
 #endif
-#ifndef DEDICATED_SERVER
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
 		m_pRender->LoadBegin();
-#endif
 		phase_timer.Start	();
 		load_stage			= 0;
-
 	}
 }
 
-void CApplication::LoadEnd		()
+void CApplication::LoadEnd()
 {
-	ll_dwReference--;
-	if (0==ll_dwReference)		{
-		Msg						("* phase time: %d ms",phase_timer.GetElapsed_ms());
-		Msg						("* phase cmem: %d K", Memory.mem_usage()/1024);
-		//Console->Execute		("stat_memory");
-		g_appLoaded				= TRUE;
-//		DUMP_PHASE;
+    VERIFY(dwLoadReference != 0);
+	dwLoadReference--;
+	if (0 == dwLoadReference)
+	{
+		g_appLoaded = TRUE;
 	}
 }
 
@@ -697,7 +691,7 @@ void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 void CApplication::LoadStage()
 {
 	load_stage++;
-	VERIFY(ll_dwReference);
+	VERIFY(dwLoadReference);
 	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());
 	phase_timer.Start();
 	
