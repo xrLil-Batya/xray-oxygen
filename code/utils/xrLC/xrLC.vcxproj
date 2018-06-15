@@ -318,9 +318,6 @@
     <ClCompile Include="xrLight.cpp" />
     <ClCompile Include="xrOptimizeCFORM_qslim.cpp" />
     <ClCompile Include="xrPhase_AdaptiveHT.cpp" />
-    <ClCompile Include="xrPhase_AdaptiveHT_qslim.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-    </ClCompile>
     <ClCompile Include="xrPhase_GI.cpp" />
     <ClCompile Include="xrPhase_MergeGeometry.cpp" />
     <ClCompile Include="xrPhase_MergeLM.cpp" />
@@ -336,7 +333,6 @@
     <ClCompile Include="xrSaveLights.cpp" />
     <ClCompile Include="xrSaveOGF.cpp" />
     <ClCompile Include="xrSectors.cpp" />
-    <ClCompile Include="xrT_Junction.cpp" />
     <ClCompile Include="fmesh.cpp" />
     <ClCompile Include="OGF_CalculateTB.cpp" />
     <ClCompile Include="OGF_Face.cpp" />
@@ -348,6 +344,7 @@
     <ClCompile Include="xrMU_Model_export_geometry.cpp" />
     <ClCompile Include="xrMU_Model_export_OGF.cpp" />
     <ClCompile Include="net.cpp" />
+    <ClCompile Include="xrT_Junction.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc" />

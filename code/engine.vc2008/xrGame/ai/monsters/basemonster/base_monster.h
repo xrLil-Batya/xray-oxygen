@@ -20,6 +20,7 @@
 
 #include "InventoryOwner.h"
 #include "Inventory.h"
+#include "../../FrayBuildConfig.hpp"
 
 class CCharacterPhysicsSupport;
 class CMonsterCorpseCoverEvaluator;
@@ -50,7 +51,12 @@ namespace debug { class text_tree; }
 
 class anti_aim_ability;
 
-class CBaseMonster : public CCustomMonster, public CStepManager
+class CBaseMonster : 
+	public CCustomMonster, 
+	public CStepManager
+#ifdef MONSTER_INV
+	, CInventoryOwner
+#endif
 {
 	typedef	CCustomMonster								inherited;
 	
@@ -61,7 +67,7 @@ public:
 public:
 	virtual	Feel::Sound*				dcast_FeelSound				()	{ return this;	}
 	virtual	CCharacterPhysicsSupport*	character_physics_support	()	{return m_pPhysics_support;}
-	virtual const	CCharacterPhysicsSupport*	character_physics_support()const{return m_pPhysics_support;}
+	virtual const CCharacterPhysicsSupport*	character_physics_support()const{return m_pPhysics_support;}
 	virtual CPHDestroyable*				ph_destroyable				();
 	virtual CEntityAlive*				cast_entity_alive			()	{return this;}
 	virtual CEntity*					cast_entity					()	{return this;}
@@ -71,8 +77,10 @@ public:
 	virtual CScriptEntity*				cast_script_entity			()	{return this;}
 	virtual CBaseMonster*				cast_base_monster			()	{return this;}
 
-	//virtual CInventoryOwner*			cast_inventory_owner		() {return this;}
+#ifdef MONSTER_INV
+	virtual CInventoryOwner*			cast_inventory_owner		() {return this;}
 	virtual bool						unlimited_ammo				() {return false;}
+#endif
 	virtual CGameObject*				cast_game_object			() {return this;}
 
 public:
@@ -144,12 +152,8 @@ public:
 
 	virtual bool			IsTalkEnabled					() {return false;}
 
-	virtual void			HitEntity						(const CEntity *	pEntity, 
-															 float 				fDamage, 
-															 float 				impulse, 
-															 Fvector &			dir, 
-															 ALife::EHitType	hit_type = ALife::eHitTypeWound,
-															 bool				draw_hit_marks = true);
+	virtual void			HitEntity						(const CEntity* pEntity, float fDamage, float impulse, Fvector &dir, 
+															 ALife::EHitType hit_type = ALife::eHitTypeWound, bool draw_hit_marks = true);
 
 	virtual	void			HitEntityInJump					(const CEntity *pEntity) {}
 

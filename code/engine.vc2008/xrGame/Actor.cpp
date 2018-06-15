@@ -620,14 +620,9 @@ void CActor::Die(CObject* who)
 	mstate_real &= ~mcAnyMove;
 
 	xr_delete(m_sndShockEffector);
-
-	luabind::functor<LPCSTR> lua_function;
-	R_ASSERT2(ai().script_engine().functor<LPCSTR>("sk_actor_death.is_killed", lua_function), "Can't call lua function!");
-
-	lua_function();
 }
 
-void	CActor::SwitchOutBorder(bool new_border_state)
+void CActor::SwitchOutBorder(bool new_border_state)
 {
 	if(new_border_state)
 		callback(GameObject::eExitLevelBorder)(lua_game_object());
@@ -636,7 +631,7 @@ void	CActor::SwitchOutBorder(bool new_border_state)
 	m_bOutBorder=new_border_state;
 }
 
-void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
+void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 {
 	// Correct accel
 	Fvector		accel;

@@ -38,27 +38,25 @@ extern "C" {
 		abstract				= 0;
 	}
 };
-extern void setup_luabind_allocator();
+
 int APIENTRY DllMain (HANDLE module_handle, DWORD call_reason, LPVOID reserved)
 {
 	switch (call_reason) {
-		case DLL_PROCESS_ATTACH: {
-//			g_temporary_stuff			= &trivial_encryptor::decode;
-
+		case DLL_PROCESS_ATTACH: 
+		{
 			Debug._initialize			(false);
  			Core._initialize			("xrSE_Factory", 0, TRUE,"fsfactory.ltx");
 			string_path					SYSTEM_LTX;
 			FS.update_path				(SYSTEM_LTX,"$game_config$","system.ltx");
 			pSettings					= xr_new<CInifile>(SYSTEM_LTX);
 
-			setup_luabind_allocator		();
-
 			CCharacterInfo::InitInternal					();
 			CSpecificCharacter::InitInternal				();
 
 			break;
 		}
-		case DLL_PROCESS_DETACH: {
+		case DLL_PROCESS_DETACH:
+		{
 			CCharacterInfo::DeleteSharedData				();
 			CCharacterInfo::DeleteIdToIndexData				();
 			CSpecificCharacter::DeleteSharedData			();

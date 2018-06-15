@@ -278,25 +278,25 @@ xr_string::xr_string(const Super&& other)
 }
 
 xr_string::xr_string(LPCSTR Str)
+    : Super(Str)
 {
-    assign(Str);
 }
 
 xr_string& xr_string::operator=(LPCSTR Str)
 {
-    assign(Str);
-    return *this;
+    Super::operator=(Str);
+     return *this;
 }
 
 xr_string& xr_string::operator=(const xr_string& other)
 {
-    assign(other);
+    Super::operator=(other);
     return *this;
 }
 
 xr_string& xr_string::operator=(const Super& other)
 {
-    assign(other);
+    Super::operator=(other);
     return *this;
 }
 

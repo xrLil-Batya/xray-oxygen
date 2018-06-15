@@ -313,7 +313,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 
 using namespace luabind;
 
-CMainMenu*	MainMenu();
+CMainMenu* MainMenu();
 
 #pragma optimize("s",on)
 void UIRegistrator::script_register(lua_State *L)
@@ -344,6 +344,8 @@ void UIRegistrator::script_register(lua_State *L)
 			value("alCenter", int(CGameFont::alCenter))
 		],
 		class_<CMainMenu>("CMainMenu")
+		.def("GetEngineBuild", &CMainMenu::GetEngineBuild)
+		.def("GetEngineBuildDate", &CMainMenu::GetEngineBuildDate)
 		.def("GetGSVer", &CMainMenu::GetGSVer)
 		];
 

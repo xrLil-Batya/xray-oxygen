@@ -507,7 +507,11 @@ private:
         }
         else // realloc the buffer
         {
-            m_buffer = (T*)::realloc(m_buffer, sizeof(T) * m_buffer_size);
+			void* buff_alloc = (T*)::realloc(m_buffer, sizeof(T) * m_buffer_size);
+			if (buff_alloc)
+				m_buffer = (T*)buff_alloc;
+			else
+				Debug.fatal(DEBUG_INFO, "Error buffer allocated.");
         }
     }
 

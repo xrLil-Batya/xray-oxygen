@@ -51,9 +51,7 @@ class Image_DXTC
 
 private:
     void DecompressDXT1();
-    void DecompressDXT2();
     void DecompressDXT3();
-    void DecompressDXT4();
     void DecompressDXT5();
     void DecodePixelFormat(LPSTR strPixelFormat, DDS_PIXELFORMAT* pddpf);
     void AllocateDecompBytes();

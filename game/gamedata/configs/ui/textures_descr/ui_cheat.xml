@@ -1,0 +1,5 @@
+<w>
+	<file name="ui\ui_cheat_background">
+		<texture id="ui_inGame2_cheat_background" x="360" y="0" width="40" height="100" />
+	</file>
+</w>

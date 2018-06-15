@@ -30,17 +30,16 @@ void CUICheckButton::Update()
 		m_pDependControl->Enable(GetCheck());
 }
 
-
 void CUICheckButton::SetCurrentOptValue()
 {
 	CUIOptionsItem::SetCurrentOptValue();
-	SetCheck						(GetOptBoolValue());
+	SetCheck(GetOptBoolValue());
 }
 
 void CUICheckButton::SaveOptValue()
 {
-	CUIOptionsItem::SaveOptValue	();
-	SaveOptBoolValue				(GetCheck());
+	CUIOptionsItem::SaveOptValue();
+	SaveOptBoolValue(GetCheck());
 }
 
 void CUICheckButton::SaveBackUpOptValue()
@@ -56,29 +55,28 @@ bool CUICheckButton::IsChangedOptValue() const
 
 void CUICheckButton::UndoOptValue()
 {
-	SetCheck		(m_opt_backup_value);
+	SetCheck(m_opt_backup_value);
 	CUIOptionsItem::UndoOptValue();
 }
 
-
 void CUICheckButton::InitCheckButton(Fvector2 pos, Fvector2 size, LPCSTR texture_name)
 {
-	InitButton				(pos, size);
-	InitTexture2			(texture_name);
-	TextItemControl()->m_wndPos.set	(pos);
-	TextItemControl()->m_wndSize.set	(Fvector2().set(size.x,m_background->Get(S_Enabled)->GetStaticItem()->GetSize().y));
+	InitButton(pos, size);
+	InitTexture2(texture_name);
+	TextItemControl()->m_wndPos.set(pos);
+	TextItemControl()->m_wndSize.set(Fvector2().set(size.x, m_background->Get(S_Enabled)->GetStaticItem()->GetSize().y));
 }
 
 void CUICheckButton::InitTexture2(LPCSTR texture_name)
 {
 	CUI3tButton::InitTexture(texture_name); // "ui_checker"
 	Frect r = m_background->Get(S_Enabled)->GetStaticItem()->GetTextureRect();
-	TextItemControl()->m_TextOffset.x	= TextItemControl()->m_TextOffset.x + r.width();
+	TextItemControl()->m_TextOffset.x = TextItemControl()->m_TextOffset.x + r.width();
 }
 
 void CUICheckButton::OnFocusLost()
 {
-	if(m_eButtonState==BUTTON_PUSHED && pInput->iGetAsyncBtnState(0))
+	if (m_eButtonState == BUTTON_PUSHED && pInput->iGetAsyncBtnState(0))
 		return;
 
 	inherited::OnFocusLost();
@@ -89,14 +87,14 @@ void CUICheckButton::OnFocusReceive()
 	inherited::OnFocusReceive();
 }
 
-void CUICheckButton::Show( bool status )
+void CUICheckButton::Show(bool status)
 {
-	inherited::Show( status );
+	inherited::Show(status);
 }
 
-bool CUICheckButton::OnMouseDown( int mouse_btn )
+bool CUICheckButton::OnMouseDown(int mouse_btn)
 {
-	if (mouse_btn==MOUSE_1)
+	if (mouse_btn == MOUSE_1)
 	{
 		if (GetButtonState() == BUTTON_NORMAL)
 			SetButtonState(BUTTON_PUSHED);
@@ -107,8 +105,7 @@ bool CUICheckButton::OnMouseDown( int mouse_btn )
 	return true;
 }
 
-bool CUICheckButton::OnMouseAction( float x, float y, EUIMessages mouse_action )
+bool CUICheckButton::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
 	return CUIWindow::OnMouseAction(x,y,mouse_action);
 }
-

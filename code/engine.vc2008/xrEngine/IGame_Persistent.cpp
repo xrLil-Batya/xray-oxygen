@@ -93,20 +93,19 @@ void IGame_Persistent::PreStart		(LPCSTR op)
 		OnGameEnd					();
 	}
 }
-void IGame_Persistent::Start		(LPCSTR op)
+void IGame_Persistent::Start(LPCSTR op)
 {
-	string256						prev_type;
-	xr_strcpy							(prev_type,m_game_params.m_game_type);
+	string256 prev_type;
+	xr_strcpy (prev_type,m_game_params.m_game_type);
 	m_game_params.parse_cmd_line	(op);
 	// change game type
-	if ((0!=xr_strcmp(prev_type,m_game_params.m_game_type))) 
+	if (xr_strcmp(prev_type,m_game_params.m_game_type))
 	{
 		if (*m_game_params.m_game_type)
-			OnGameStart					();
-#ifndef _EDITOR
+			OnGameStart();
+
 		if(g_hud)
-			DEL_INSTANCE			(g_hud);
-#endif            
+			DEL_INSTANCE(g_hud);
 	}
 	else UpdateGameType();
 

@@ -6,7 +6,7 @@ class CUIStatic;
 
 class CUIListBoxItem : public CUIFrameLineWnd, public CUISelectable
 {
-	typedef				CUIFrameLineWnd inherited;
+	using inherited = CUIFrameLineWnd; // C++11 style
 public:
 						CUIListBoxItem			(float height);
 
@@ -23,7 +23,7 @@ public:
 		CUITextWnd*		AddTextField			(LPCSTR txt, float width);
 		CUIStatic*		AddIconField			(float width);
 
-		CUITextWnd*		GetTextItem				(){return m_text;}
+		CUITextWnd*		GetTextItem				() { return m_text; }
 
 		//TextControl
 		void			SetText					(LPCSTR txt);

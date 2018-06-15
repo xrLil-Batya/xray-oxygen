@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="windows-1251" ?>
+<w>
+	<background width="1024" height="768">
+		<auto_static x="253" y="250" width="269" height="176" stretch="1">
+			<texture x="1" y="1" width="335" height="174">ui\video_window</texture>
+		</auto_static>
+		<auto_static x="102" y="0" width="819" height="768" stretch="1">
+			<texture>ui_inGame2_opt_background</texture>
+		</auto_static>
+		<auto_static x="0" y="0" width="102" height="768" stretch="1">
+		    <texture>ui_inGame2_opt_left_widepanel</texture>
+	    </auto_static>
+	    <auto_static x="921" y="0" width="103" height="768" stretch="1">
+		    <texture>ui_inGame2_opt_right_widepanel</texture>
+	    </auto_static>
+	</background>
+	
+	<form x="255" y="174" width="560" height="460" stretch="1">
+		<texture>ui_inGame2_main_window_small</texture>
+		
+	    <auto_static x="0" y="10" width="560" height="30">
+		    <text font="graffiti32" align="c">ui_debug_options</text>
+	    </auto_static>
+		
+		<auto_frameline x="5" y="45" width="549" height="1" vertical="0">
+			<texture>ui_inGame2_pda_line_horizontal</texture>
+		</auto_frameline>
+		<auto_frameline x="5" y="69" width="549" height="1" vertical="0">
+			<texture>ui_inGame2_pda_line_horizontal</texture>
+		</auto_frameline>
+		<auto_frameline x="150" y="10" width="1" height="403" vertical="1">
+			<texture>ui_inGame2_pda_line_vertical</texture>
+		</auto_frameline>
+		<auto_frameline x="410" y="10" width="1" height="403" vertical="1">
+			<texture>ui_inGame2_pda_line_vertical</texture>
+		</auto_frameline>
+		<auto_frameline x="280" y="69" width="1" height="344" vertical="1">
+			<texture>ui_inGame2_pda_line_vertical</texture>
+		</auto_frameline>
+
+		<debug_check_box x="122" y="19" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</debug_check_box>
+		
+		<auto_static x="0" y="48" width="134" height="24">
+			<text r="170" g="170" b="170" font="letterica18" align="r" vert_align="c">ui_debug_log_title</text>
+		</auto_static>
+		
+		<console_check_box x="122" y="70" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_console</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</console_check_box>
+		
+		<news_check_box x="122" y="90" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_news</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</news_check_box>
+		
+		<printf_check_box x="122" y="110" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_printf</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</printf_check_box>
+		
+		<abort_check_box x="122" y="130" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_abort</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</abort_check_box>
+		
+		<check_save_load_check_box x="122" y="150" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_check_save_load</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</check_save_load_check_box>
+		
+		<auto_static x="0" y="48" width="560" height="24">
+			<text r="170" g="170" b="170" font="letterica18" align="c" vert_align="c">ui_debug_scripts_title</text>
+		</auto_static>
+
+		<script_check_box_1 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_1>
+		<script_check_box_2 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_2>
+		<script_check_box_3 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_3>
+		<script_check_box_4 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_4>
+		<script_check_box_5 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_5>
+		<script_check_box_6 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_6>
+		<script_check_box_7 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_7>
+		<script_check_box_8 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_8>
+		<script_check_box_9 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_9>
+		<script_check_box_10 x="0" y="0" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c"/>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</script_check_box_10>
+		
+		<debug_info_check_box x="499" y="19" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_info</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</debug_info_check_box>
+		
+		<auto_static x="450" y="48" width="148" height="24">
+			<text r="170" g="170" b="170" font="letterica18" align="l" vert_align="c">ui_debug_other</text>
+		</auto_static>
+		
+		<debug_info_full_check_box x="499" y="70" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_info_full</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</debug_info_full_check_box>
+		<debug_info_target_check_box x="499" y="90" width="35" height="29">
+			<texture>ui_inGame2_checkbox</texture>
+			<text x="-71" y="3" font="letterica16" align="r" vert_align="c">ui_debug_info_target</text>
+			<text_color>
+				<e r="170" g="170" b="170"/>
+			</text_color>
+		</debug_info_target_check_box>
+		
+		<close_button x="30" y="424" width="100" height="28">
+			<text font="letterica18">ui_debug_close</text>
+			<texture>ui_inGame2_Mp_bigbuttone</texture>
+		</close_button>
+	</form>
+</w>

@@ -597,10 +597,7 @@ bool CInventoryOwner::use_default_throw_force	()
 
 float CInventoryOwner::missile_throw_force		() 
 {
-	NODEFAULT;
-#ifdef DEBUG
-	return						(0.f);
-#endif
+	return (0.f);
 }
 
 bool CInventoryOwner::use_throw_randomness		()

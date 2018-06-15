@@ -50,6 +50,7 @@ DLL_API int RunApplication(LPCSTR commandLine);
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	////////////////////////////////////////////////////
+    gModulesLoaded = true;
 	LPCSTR params = lpCmdLine;
 	////////////////////////////////////////////////////
 	try

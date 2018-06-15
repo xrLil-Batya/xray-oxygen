@@ -139,8 +139,11 @@ void HUD_SOUND_COLLECTION::PlaySound(	LPCSTR alias,
 										bool looped,
 										u8 index)
 {
-	for(HUD_SOUND_ITEM it : m_sound_items)
-		if(it.m_b_exclusive) HUD_SOUND_ITEM::StopSound	(it);
+    for (HUD_SOUND_ITEM& it : m_sound_items)
+    {
+		if(it.m_b_exclusive)
+            HUD_SOUND_ITEM::StopSound (it);
+    }
 
 
 	HUD_SOUND_ITEM* snd_item		= FindSoundItem(alias, true);

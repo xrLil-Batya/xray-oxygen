@@ -761,6 +761,6 @@ void CExpression::SetCompileError(LPCSTR reason) const
 
 void CExpression::FlushCompileError()
 {
-    delete[] m_dbgCompileError;
+    delete m_dbgCompileError;
     m_dbgCompileError = nullptr;
 }

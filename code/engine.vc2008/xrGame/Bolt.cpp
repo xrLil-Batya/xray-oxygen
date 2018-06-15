@@ -7,7 +7,7 @@
 
 CBolt::CBolt(void) 
 {
-	m_thrower_id				=u16(-1);
+	m_thrower_id = u16(-1);
 }
 
 CBolt::~CBolt(void) 
@@ -39,39 +39,21 @@ bool CBolt::Useful() const
 bool CBolt::Action(u16 cmd, u32 flags) 
 {
 	if(inherited::Action(cmd, flags)) return true;
-/*
-	switch(cmd) 
-	{
-	case kDROP:
-		{
-			if(flags&CMD_START) 
-			{
-				m_throw = false;
-				if(State() == MS_IDLE) State(MS_THREATEN);
-			} 
-			else if(State() == MS_READY || State() == MS_THREATEN) 
-			{
-				m_throw = true; 
-				if(State() == MS_READY) State(MS_THROW);
-			}
-		} 
-		return true;
-	}
-*/
 	return false;
 }
 
-void CBolt::activate_physic_shell	()
+void CBolt::activate_physic_shell()
 {
-	inherited::activate_physic_shell	();
-	m_pPhysicsShell->SetAirResistance	(.0001f);
+	inherited::activate_physic_shell();
+	m_pPhysicsShell->SetAirResistance(.0001f);
 }
 
-void CBolt::SetInitiator			(u16 id)
+void CBolt::SetInitiator(u16 id)
 {
 	m_thrower_id=id;
 }
-u16	CBolt::Initiator				()
+
+u16	CBolt::Initiator()
 {
 	return m_thrower_id;
 }

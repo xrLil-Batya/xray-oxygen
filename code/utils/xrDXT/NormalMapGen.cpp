@@ -562,7 +562,9 @@ int DXTCompressBump(LPCSTR out_name, u8* T_height_gloss, u8* T_normal_map,
     pSrc->Initialize(w, h, NVI_A8_R8_G8_B8, T_height_gloss);
     pSrc->AverageRGBToAlpha();
     // stage 0
+#ifndef PVS_STUDIO
     pitch = w*4;
+#endif
 #ifdef XR_DXT_DBG_BUMP_STAGES_DIR
     tga_save(XR_DXT_DBG_BUMP_STAGES_DIR"\\0-height-gloss.tga", w, h, T_height_gloss, true);
 #endif
@@ -700,7 +702,9 @@ int DXTCompressBump(LPCSTR out_name, u8* T_height_gloss, u8* T_normal_map,
         }
         delete img;
     }
-    delete pSrc;
+
+    pSrc->~NVI_Image();
+
     if (gloss_power < 0.1f)
     {
         res = -1000;
