@@ -101,7 +101,6 @@ Comments:
 #define nothing     {}
 
 // @@ extract more of these from ulCommon.h
-typedef unsigned short		USHORT;
 typedef unsigned short		ushort;
 
 #endif
