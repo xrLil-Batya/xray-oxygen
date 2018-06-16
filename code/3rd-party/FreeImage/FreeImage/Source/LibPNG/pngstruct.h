@@ -28,7 +28,7 @@
    /* We must ensure that zlib uses 'const' in declarations. */
 #  define ZLIB_CONST
 #endif
-#include "../../3rd-party/zlib/zlib.h"
+#include "../../../../zlib/zlib.h"
 #ifdef const
    /* zlib.h sometimes #defines const to nothing, undo this. */
 #  undef const
@@ -477,7 +477,7 @@ struct png_struct_def
    png_bytep big_prev_row;
 
 /* New member added in libpng-1.5.7 */
-   void (*read_filter[PNG_FILTER_VALUE_LAST-1])(png_row_infop row_info,
+   void (*read_filter[4])(png_row_infop row_info,
       png_bytep row, png_const_bytep prev_row);
 
 #ifdef PNG_READ_SUPPORTED

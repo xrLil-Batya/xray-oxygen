@@ -47,3 +47,4 @@ game/gamedata/configs/coordinates.ltx
 *.psess
 
 *.vspx
+/intermediateWin32/nvtt/Release/*.res
