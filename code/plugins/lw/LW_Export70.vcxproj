@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectName>LW_Export_2015</ProjectName>
     <ProjectGuid>{F573DE85-0866-4775-955F-6C3241D2AE70}</ProjectGuid>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -46,9 +47,13 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
+    <TargetName>xray_export</TargetName>
+    <TargetExt>.p</TargetExt>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
+    <TargetName>xray_export</TargetName>
+    <TargetExt>.p</TargetExt>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <Midl>
@@ -85,9 +90,7 @@
     </ResourceCompile>
     <Link>
       <AdditionalDependencies>xrECoreLite.lib;odbc32.lib;odbccp32.lib;lw_server.lib;lwo.lib;xrCore.lib;WildMagic.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)xray_export.p</OutputFile>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>;../../SDK/Libraries/x64;$(xrLib);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Server\serv.def</ModuleDefinitionFile>
       <ProgramDatabaseFile>
       </ProgramDatabaseFile>
@@ -132,10 +135,8 @@
     </ResourceCompile>
     <Link>
       <AdditionalOptions>/MACHINE:I386 %(AdditionalOptions)</AdditionalOptions>
-      <AdditionalDependencies>odbc32.lib;odbccp32.lib;lw_serverd.lib;xrCoreStaticd.lib;xrECoreLite.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <OutputFile>$(OutDir)xray_export.p</OutputFile>
+      <AdditionalDependencies>xrECoreLite.lib;odbc32.lib;odbccp32.lib;lw_server.lib;lwo.lib;xrCore.lib;WildMagic.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <AdditionalLibraryDirectories>Server/$(Configuration)/; ../../../../Libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <ModuleDefinitionFile>Server\serv.def</ModuleDefinitionFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <ProgramDatabaseFile>$(OutDir)xray_export.pdb</ProgramDatabaseFile>

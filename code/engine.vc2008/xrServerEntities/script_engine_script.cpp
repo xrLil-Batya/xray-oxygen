@@ -23,8 +23,7 @@ void ErrorLog(LPCSTR caMessage)
 	
 #ifdef USE_DEBUGGER
 #	ifndef USE_LUA_STUDIO
-		if (ai().script_engine().debugger())
-		{
+		if( ai().script_engine().debugger() ){
 			ai().script_engine().debugger()->Write(caMessage);
 		}
 #	endif // #ifndef USE_LUA_STUDIO
@@ -47,22 +46,22 @@ void FlushLogs()
 
 void verify_if_thread_is_running()
 {
-	THROW2(ai().script_engine().current_thread(), "coroutine.yield() is called outside the LUA thread!");
+	THROW2	(ai().script_engine().current_thread(),"coroutine.yield() is called outside the LUA thread!");
 }
 
 bool is_editor()
 {
 #ifdef XRGAME_EXPORTS
-	return false;
+	return		(false);
 #else
-	return true;
+	return		(true);
 #endif
 }
 
 #ifdef XRGAME_EXPORTS
 CRenderDevice *get_device()
 {
-	return &Device;
+	return		(&Device);
 }
 #endif
 
@@ -127,10 +126,10 @@ struct profile_timer_script
 		accumulator += finish - start_time;
 	}
 
-	float time() const 
+	decltype(auto) time() const 
 	{
 		using namespace std::chrono;
-		return float(duration_cast<milliseconds>(accumulator).count()) * 1000000.f;
+		return duration_cast<microseconds>(accumulator).count();
 	}
 };
 
@@ -143,11 +142,11 @@ IC	profile_timer_script operator+(const profile_timer_script &portion0, const pr
 }
 
 #ifdef XRGAME_EXPORTS
-ICF	u32	script_time_global() { return Device.dwTimeGlobal; }
-ICF	u32	script_time_global_async() { return Device.TimerAsync_MMT(); }
+ICF	u32	script_time_global	()	{ return Device.dwTimeGlobal; }
+ICF	u32	script_time_global_async	()	{ return Device.TimerAsync_MMT(); }
 #else
-ICF	u32	script_time_global() { return NULL; }
-ICF	u32	script_time_global_async() { return NULL; }
+ICF	u32	script_time_global	()	{ return NULL; }
+ICF	u32	script_time_global_async	()	{ return NULL; }
 #endif+
 
 #ifdef XRGAME_EXPORTS
@@ -173,8 +172,7 @@ void CScriptEngine::script_register(lua_State *L)
 			.def("time",&profile_timer_script::time)
 	];
 
-	function	(L, "log",								((void(*)(const char*)) &Log)); // Added ViHtarb 30.05.2018
-    function    (L, "to_log",                           import_ses::LuaLog); // TODO: is this need?
+    function    (L, "to_log",                           import_ses::LuaLog);
 	function	(L,	"error_log",						ErrorLog);
 	function	(L,	"flush",							FlushLogs);
 	function	(L,	"prefetch",							prefetch_module);
