@@ -10,7 +10,7 @@
 #include "../xrEngine/xr_ioconsole.h"
 #include "MainMenu.h"
 #include "string_table.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "GamePersistent.h"
 
 BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
@@ -156,8 +156,8 @@ bool CLevel::net_start6				()
 		return true;
 	}
 
-	if (CurrentGameUI())
-		CurrentGameUI()->OnConnected();
+	if (GameUI())
+		GameUI()->OnConnected();
 
 	return true;
 }

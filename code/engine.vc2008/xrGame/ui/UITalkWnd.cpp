@@ -5,7 +5,7 @@
 
 #include "../actor.h"
 #include "../trade.h"
-#include "../UIGameSP.h"
+#include "../UIGame.h"
 #include "../PDA.h"
 #include "../../xrServerEntities/character_info.h"
 #include "../level.h"
@@ -22,32 +22,30 @@
 
 CUITalkWnd::CUITalkWnd()
 {
-	m_pActor				= NULL;
+	m_pActor = nullptr;
 
-	m_pOurInvOwner			= NULL;
-	m_pOthersInvOwner		= NULL;
+	m_pOurInvOwner = nullptr;
+	m_pOthersInvOwner = nullptr;
 
-	m_pOurDialogManager		= NULL;
-	m_pOthersDialogManager	= NULL;
-	ToTopicMode				();
-	InitTalkWnd				();
+	m_pOurDialogManager = nullptr;
+	m_pOthersDialogManager = nullptr;
+	ToTopicMode();
+	InitTalkWnd();
 
 	m_bNeedToUpdateQuestions = false;
 	b_disable_break = false;
 	m_bInitState = false;
 }
 
-CUITalkWnd::~CUITalkWnd()
-{
-}
+CUITalkWnd::~CUITalkWnd() {}
 
 void CUITalkWnd::InitTalkWnd()
 {
 	inherited::SetWndRect(Frect().set(0, 0, UI_BASE_WIDTH, UI_BASE_HEIGHT));
 
-	UITalkDialogWnd			= xr_new<CUITalkDialogWnd>();
+	UITalkDialogWnd = xr_new<CUITalkDialogWnd>();
 	UITalkDialogWnd->SetAutoDelete(true);
-	AttachChild				(UITalkDialogWnd);
+	AttachChild(UITalkDialogWnd);
 	UITalkDialogWnd->m_pParent = this;
 	UITalkDialogWnd->InitTalkDialogWnd();
 }
@@ -55,8 +53,9 @@ void CUITalkWnd::InitTalkWnd()
 void CUITalkWnd::InitTalkDialog()
 {
 	m_pActor = Actor();
-	if (m_pActor && !m_pActor->IsTalking()) 
+	if (m_pActor && !m_pActor->IsTalking())
 		return;
+
 	m_bInitState = true;
 	m_pOurInvOwner = smart_cast<CInventoryOwner*>(m_pActor);
 	m_pOthersInvOwner = m_pActor->GetTalkPartner();
@@ -65,19 +64,19 @@ void CUITalkWnd::InitTalkDialog()
 	m_pOthersDialogManager = smart_cast<CPhraseDialogManager*>(m_pOthersInvOwner);
 
 	//имена собеседников
-	UITalkDialogWnd->UICharacterInfoLeft.InitCharacter		(m_pOurInvOwner->object_id());
-	UITalkDialogWnd->UICharacterInfoRight.InitCharacter		(m_pOthersInvOwner->object_id());
+	UITalkDialogWnd->UICharacterInfoLeft.InitCharacter(m_pOurInvOwner->object_id());
+	UITalkDialogWnd->UICharacterInfoRight.InitCharacter(m_pOthersInvOwner->object_id());
 
 	//очистить лог сообщений
 	UITalkDialogWnd->ClearAll();
 
-	InitOthersStartDialog					();
-	NeedUpdateQuestions						();
-	Update									();
+	InitOthersStartDialog();
+	NeedUpdateQuestions();
+	Update();
 
-	UITalkDialogWnd->mechanic_mode			= m_pOthersInvOwner->SpecificCharacter().upgrade_mechanic();
-	UITalkDialogWnd->SetOsoznanieMode		(m_pOthersInvOwner->NeedOsoznanieMode());
-	UITalkDialogWnd->Show					();
+	UITalkDialogWnd->mechanic_mode = m_pOthersInvOwner->SpecificCharacter().upgrade_mechanic();
+	UITalkDialogWnd->SetOsoznanieMode(m_pOthersInvOwner->NeedOsoznanieMode());
+	UITalkDialogWnd->Show();
 	UITalkDialogWnd->UpdateButtonsLayout(b_disable_break, m_pOthersInvOwner->IsTradeEnabled());
 
 	m_bInitState = false;
@@ -86,18 +85,19 @@ void CUITalkWnd::InitTalkDialog()
 void CUITalkWnd::InitOthersStartDialog()
 {
 	m_pOthersDialogManager->UpdateAvailableDialogs(m_pOurDialogManager);
-	if(!m_pOthersDialogManager->AvailableDialogs().empty())
+	if (!m_pOthersDialogManager->AvailableDialogs().empty())
 	{
 		m_pCurrentDialog = m_pOthersDialogManager->AvailableDialogs().front();
 		m_pOthersDialogManager->InitDialog(m_pOurDialogManager, m_pCurrentDialog);
-		
+
 		//сказать фразу
 		CStringTable stbl;
 		AddAnswer(m_pCurrentDialog->GetPhraseText("0"), m_pOthersInvOwner->Name());
 		m_pOthersDialogManager->SayPhrase(m_pCurrentDialog, "0");
 
 		//если диалог завершился, перейти в режим выбора темы
-		if(!m_pCurrentDialog || m_pCurrentDialog->IsFinished()) ToTopicMode();
+		if (!m_pCurrentDialog || m_pCurrentDialog->IsFinished()) 
+			ToTopicMode();
 	}
 }
 
@@ -329,23 +329,13 @@ void CUITalkWnd::AddAnswer(const shared_str& text, LPCSTR SpeakerName)
 
 void CUITalkWnd::SwitchToTrade()
 {
-	if ( m_pOurInvOwner->IsTradeEnabled() && m_pOthersInvOwner->IsTradeEnabled() )
-	{
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( pGameSP )
-		{
-			pGameSP->StartTrade	(m_pOurInvOwner, m_pOthersInvOwner);
-		} // pGameSP
-	}
+	if (m_pOurInvOwner->IsTradeEnabled() && m_pOthersInvOwner->IsTradeEnabled())
+		GameUI()->StartTrade(m_pOurInvOwner, m_pOthersInvOwner);
 }
 
 void CUITalkWnd::SwitchToUpgrade()
 {
-	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-	if ( pGameSP )
-	{
-		pGameSP->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
-	}
+	GameUI()->StartUpgrade(m_pOurInvOwner, m_pOthersInvOwner);
 }
 
 bool CUITalkWnd::OnKeyboardAction(int dik, EUIMessages keyboard_action)

@@ -19,7 +19,7 @@
 #include "../../../game_object_space.h"
 #include "../../../ai_monster_space.h"
 #include "../control_animation_base.h"
-#include "../../../UIGameCustom.h"
+#include "../../../UIGame.h"
 #include "../../../UI/UIStatic.h"
 #include "../../../ai_object_location.h"
 #include "../../../profiler.h"
@@ -107,7 +107,7 @@ void CBaseMonster::HitEntity(const CEntity *pEntity, float fDamage, float impuls
 		if (pEntityNC == Actor() && draw_hit_marks) {
 			START_PROFILE("BaseMonster/Animation/HitEntity");
 
-			SDrawStaticStruct* s = CurrentGameUI()->AddCustomStatic("monster_claws", false);
+			SDrawStaticStruct* s = GameUI()->AddCustomStatic("monster_claws", false);
 			
 			float h1,p1;
 			Device.vCameraDirection.getHP	(h1,p1);

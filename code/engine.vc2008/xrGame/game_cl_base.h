@@ -3,16 +3,16 @@
 #include "../xrCore/client_id.h"
 #include "WeaponAmmo.h"
 
-class	NET_Packet;
-class	CGameObject;
-class	CUIGameCustom;
-class	CUI;
-class	CUIDialogWnd;
+class NET_Packet;
+class CGameObject;
+class CUIGame;
+class CUI;
+class CUIDialogWnd;
 
-struct SZoneMapEntityData{
+struct SZoneMapEntityData {
 	Fvector	pos;
 	u32		color;
-	SZoneMapEntityData(){pos.set(.0f,.0f,.0f);color = 0xff00ff00;}
+	SZoneMapEntityData() { pos.set(.0f, .0f, .0f); color = 0xff00ff00; }
 };
 
 class game_cl_GameState : public game_GameState, public ISheduled
@@ -22,7 +22,7 @@ class game_cl_GameState : public game_GameState, public ISheduled
 	u16								cl_flags;
 
 protected:
-	CUIGameCustom*					m_game_ui_custom;
+	CUIGame*						m_game_ui_custom;
 	bool							m_bServerControlHits;
 
 private:
@@ -44,8 +44,8 @@ public:
 	virtual		bool				OnKeyboardPress			(int key);
 	virtual		bool				OnKeyboardRelease		(int key);
 
-	virtual		CUIGameCustom*		createGameUI			();
-	virtual		void				SetGameUI				(CUIGameCustom* pUI){ m_game_ui_custom = pUI;};
+	virtual		CUIGame*			createGameUI			();
+	virtual		void				SetGameUI				(CUIGame* pUI) { m_game_ui_custom = pUI; };
 
 	virtual		void				shedule_Update			(u32 dt);
 

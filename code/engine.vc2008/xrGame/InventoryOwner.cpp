@@ -262,17 +262,16 @@ void CInventoryOwner::StartTalk(CInventoryOwner* talk_partner, bool start_trade)
 	m_pTalkPartner = talk_partner;
 
 }
-#include "UIGameSP.h"
+#include "UIGame.h"
 #include "ui\UITalkWnd.h"
 
 void CInventoryOwner::StopTalk()
 {
-	m_pTalkPartner			= NULL;
-	m_bTalking				= false;
+	m_pTalkPartner = nullptr;
+	m_bTalking = false;
 
-	CUIGameSP* ui_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-	if(ui_sp && ui_sp->TalkMenu->IsShown())
-		ui_sp->TalkMenu->Stop();
+	if (GameUI()->TalkMenu->IsShown())
+		GameUI()->TalkMenu->Stop();
 }
 
 bool CInventoryOwner::IsTalking()
@@ -289,11 +288,7 @@ void CInventoryOwner::StopTrading()
 {
 	m_bTrading = false;
 
-	CUIGameSP* ui_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-	if ( ui_sp )
-	{
-		ui_sp->HideActorMenu();
-	}
+	GameUI()->HideActorMenu();
 }
 
 bool CInventoryOwner::IsTrading()

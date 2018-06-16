@@ -14,7 +14,7 @@
 #include "UIPropertiesBox.h"
 #include "UIListBoxItem.h"
 #include "UIMainIngameWnd.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "eatable_item_object.h"
 #include "../FoodItem.h"
 #include "../silencer.h"
@@ -59,8 +59,8 @@ void CUIActorMenu::InitInventoryMode()
 
 	InitInventoryContents				(m_pInventoryBagList);
 
-	VERIFY( CurrentGameUI() );
-	CurrentGameUI()->UIMainIngameWnd->ShowZoneMap(true);
+	VERIFY(GameUI());
+	GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
 void CUIActorMenu::DeInitInventoryMode()

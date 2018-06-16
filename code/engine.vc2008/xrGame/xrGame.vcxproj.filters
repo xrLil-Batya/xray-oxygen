@@ -1456,12 +1456,6 @@
     <Filter Include="Core\Client\Effectors\Weapon">
       <UniqueIdentifier>{46174fa1-d36d-48b7-b998-79a85bc87d6a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Effects">
-      <UniqueIdentifier>{55edd0e9-39ff-429e-95bb-a82b132bb01a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Effects\Core">
-      <UniqueIdentifier>{f931c9ab-a7f7-4dda-b290-4b64c05e8f64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Game Persistent">
       <UniqueIdentifier>{3df95dce-70f0-461e-a55d-3599e483be2a}</UniqueIdentifier>
     </Filter>
@@ -5889,11 +5883,8 @@
     <ClInclude Include="HUDManager.h">
       <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="UIGameCustom.h">
+    <ClInclude Include="UIGame.h">
       <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClInclude>
-    <ClInclude Include="UIGameSP.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Single</Filter>
     </ClInclude>
     <ClInclude Include="HUDCrosshair.h">
       <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>
@@ -8442,11 +8433,8 @@
     <ClCompile Include="HUDManager.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="UIGameCustom.cpp">
+    <ClCompile Include="UIGame.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClCompile>
-    <ClCompile Include="UIGameSP.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\Single</Filter>
     </ClCompile>
     <ClCompile Include="HUDCrosshair.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Cursor</Filter>

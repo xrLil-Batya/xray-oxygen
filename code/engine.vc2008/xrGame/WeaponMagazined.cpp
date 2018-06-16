@@ -12,7 +12,7 @@
 #include "ActorEffector.h"
 #include "EffectorZoomInertion.h"
 #include "xr_level_controller.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "object_broker.h"
 #include "string_table.h"
 #include "ui/UIXmlInit.h"
@@ -159,7 +159,7 @@ void CWeaponMagazined::FireStart()
 	{
 		// Выводим актору статик с иконкой сломанного оружия
 		if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()) )
-			CurrentGameUI()->AddCustomStatic("gun_jammed",true);
+			GameUI()->AddCustomStatic("gun_jammed",true);
 
 		// Щелкаем 
 		OnEmptyClick();
@@ -397,7 +397,7 @@ void CWeaponMagazined::OnStateSwitch(u32 S)
 			break;
 		case eMisfire:
 			if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()))
-				CurrentGameUI()->AddCustomStatic("gun_jammed", true);
+				GameUI()->AddCustomStatic("gun_jammed", true);
 			break;
 		case eMagEmpty:
 			switch2_Empty();

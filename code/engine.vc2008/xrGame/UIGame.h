@@ -6,6 +6,9 @@
 #include "gametype_chooser.h"
 #include "UIDialogHolder.h"
 #include "../xrEngine/CustomHUD.h"
+#include "UIGame.h"
+#include "ui/UIDialogWnd.h"
+#include "game_graph_space.h"
 
 // refs
 class CUI;
@@ -20,6 +23,14 @@ class CUIPdaWnd;
 struct KillMessageStruct;
 class CUIMainIngameWnd;
 class CUIMessagesWindow;
+
+class CUITradeWnd;
+class CUITalkWnd;
+class CInventory;
+class CChangeLevelWnd;
+class CUIMessageBox;
+class CInventoryBox;
+class CInventoryOwner;
 
 struct SDrawStaticStruct :public IPureDestroyableObject
 {
@@ -62,29 +73,33 @@ typedef xr_vector<SGameWeathers> GAME_WEATHERS;
 typedef xr_vector<SGameWeathers>::iterator GAME_WEATHERS_IT;
 typedef xr_vector<SGameWeathers>::const_iterator GAME_WEATHERS_CIT;
 
-class CUIGameCustom :public DLL_Pure, public CDialogHolder
+class CUIGame : public DLL_Pure, public CDialogHolder
 {
+private:
+	game_cl_GameState* m_game;
+
 protected:
-	CUIWindow * m_window;
-	CUIXml *m_msgs_xml;
+	CUIWindow* m_window;
+	CUIXml* m_msgs_xml;
 	typedef xr_vector<SDrawStaticStruct*> st_vec;
 	typedef st_vec::iterator st_vec_it;
 	st_vec m_custom_statics;
 
-	CUIActorMenu *m_ActorMenu;
-	CUIPdaWnd *m_PdaMenu;
+	CUIActorMenu* m_ActorMenu;
+	CUIPdaWnd* m_PdaMenu;
 
 	bool m_bShowGameIndicators;
 
 public:
-	CUIMainIngameWnd * UIMainIngameWnd;
-	CUIMessagesWindow *m_pMessagesWnd;
+	CUIMainIngameWnd* UIMainIngameWnd;
+	CUIMessagesWindow* m_pMessagesWnd;
 
 	virtual void SetClGame(game_cl_GameState* g);
+	virtual bool IR_UIOnKeyboardPress(int dik);
 	virtual void OnInventoryAction(PIItem item, u16 action_type);
 
-	CUIGameCustom();
-	virtual ~CUIGameCustom();
+	CUIGame();
+	virtual ~CUIGame();
 
 	virtual	void Init(int stage) {};
 
@@ -93,6 +108,17 @@ public:
 
 	inline CUIActorMenu& ActorMenu() const { return *m_ActorMenu; }
 	inline CUIPdaWnd& PdaMenu() const { return *m_PdaMenu; }
+
+	void StartTalk(bool disable_break);
+	void StartTrade(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner);
+	void StartUpgrade(CInventoryOwner* pActorInv, CInventoryOwner* pMech);
+	void StartCarBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner);
+	void StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox);
+	void ChangeLevel(GameGraph::_GRAPH_ID game_vert_id, u32 level_vert_id, Fvector pos, Fvector ang, Fvector pos2, Fvector ang2, bool b, const shared_str& message, bool b_allow_change_level);
+
+	CUITalkWnd* TalkMenu;
+	CChangeLevelWnd* UIChangeLevelWnd;
+	SDrawStaticStruct* m_game_objective;
 
 	bool ShowActorMenu();
 	void HideActorMenu();
@@ -106,7 +132,7 @@ public:
 	void ShowCrosshair(bool b) { psHUD_Flags.set(HUD_CROSSHAIR_RT, b); }
 	bool CrosshairShown() { return !!psHUD_Flags.test(HUD_CROSSHAIR_RT); }
 
-	virtual void HideShownDialogs() {};
+	virtual void HideShownDialogs();
 
 	SDrawStaticStruct*	AddCustomStatic(LPCSTR id, bool bSingleInstance);
 	SDrawStaticStruct*	GetCustomStatic(LPCSTR id);
@@ -128,6 +154,6 @@ public:
 	void enable_fake_indicators(bool enable);
 
 	DECLARE_SCRIPT_REGISTER_FUNCTION
-}; // class CUIGameCustom
+};
 
-extern CUIGameCustom* CurrentGameUI();
+extern CUIGame* GameUI();

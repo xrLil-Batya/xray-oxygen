@@ -13,7 +13,7 @@
 #include "../PDA.h"
 #include "../xrServerEntities/character_info.h"
 #include "../inventory.h"
-#include "../UIGameSP.h"
+#include "../UIGame.h"
 #include "../weaponmagazined.h"
 #include "../missile.h"
 #include "../Grenade.h"
@@ -352,8 +352,8 @@ void CUIMainIngameWnd::ReceiveNews(GAME_NEWS_DATA* news)
 {
 	VERIFY(news->texture_name.size());
 
-	CurrentGameUI()->m_pMessagesWnd->AddIconedPdaMessage(news);
-	CurrentGameUI()->UpdatePda();
+	GameUI()->m_pMessagesWnd->AddIconedPdaMessage(news);
+	GameUI()->UpdatePda();
 }
 
 void CUIMainIngameWnd::SetWarningIconColorUI(CUIStatic* s, const u32 cl)
@@ -577,7 +577,7 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		return;
 
 	UpdateQuickSlots();
-	CurrentGameUI()->PdaMenu().UpdateRankingWnd();
+	GameUI()->PdaMenu().UpdateRankingWnd();
 
 	u8 flags = 0;
 	flags |= LA_CYCLIC;

@@ -4,18 +4,18 @@
 #include "HitMarker.h"
 
 class CHUDTarget;
-class CUIGameCustom;
+class CUIGame;
 
-class CHUDManager :
-	public CCustomHUD
+class CHUDManager : public CCustomHUD
 {
 	friend class CUI;
+
 private:
-	//.	CUI*					pUI;
-	CUIGameCustom * pUIGame;
+	CUIGame* pUIGame;
 	CHitMarker HitMarker;
 	CHUDTarget* m_pHUDTarget;
 	bool b_online;
+
 public:
 	CHUDManager();
 	virtual ~CHUDManager();
@@ -28,7 +28,7 @@ public:
 
 	virtual void RenderUI();
 
-	CUIGameCustom* GetGameUI() { return pUIGame; }
+	CUIGame* GetGameUI() { return pUIGame; }
 
 	void HitMarked(int idx, float power, const Fvector& dir);
 	bool AddGrenade_ForMark(CGrenade* grn);

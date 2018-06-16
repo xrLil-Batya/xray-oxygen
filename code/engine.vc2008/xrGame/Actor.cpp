@@ -20,7 +20,7 @@
 #include "character_info.h"
 #include "CustomOutfit.h"
 #include "actorcondition.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "../xrphysics/matrix_utils.h"
 #include "clsid_game.h"
 #include "Grenade.h"
@@ -613,7 +613,7 @@ void CActor::Die(CObject* who)
     m_BloodSnd.stop();
     m_DangerSnd.stop();
 
-	CurrentGameUI()->HideShownDialogs();
+	GameUI()->HideShownDialogs();
 	start_tutorial("game_over");
 
 	mstate_wishful &= ~mcAnyMove;
@@ -725,7 +725,7 @@ static bool bLook_cam_fp_zoom = false;
 void CActor::UpdateCL	()
 {
 #ifndef HOLD_PICKUP_OFF
-	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && !CurrentGameUI()->TopInputReceiver())
+	if (g_Alive() && Level().CurrentViewEntity() == this && GameUI() && !GameUI()->TopInputReceiver())
 	{
 		int dik = get_action_dik(kUSE, 0), dik2 = get_action_dik(kUSE, 1);
 		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))

@@ -12,7 +12,7 @@
 #include "hit.h"
 #include "PHDestroyable.h"
 #include "Car.h"
-#include "UIGameSP.h"
+#include "UIGame.h"
 #include "inventory.h"
 #include "level.h"
 #include "game_cl_base.h"
@@ -164,12 +164,12 @@ void CActor::IR_OnKeyboardPress(int cmd)
 				{
 					inventory().Eat				(itm);
 					
-					SDrawStaticStruct* _s		= CurrentGameUI()->AddCustomStatic("item_used", true);
+					SDrawStaticStruct* _s		= GameUI()->AddCustomStatic("item_used", true);
 					string1024					str;
 					strconcat					(sizeof(str),str,*CStringTable().translate("st_item_used"),": ", itm->NameItem());
 					_s->wnd()->TextItemControl()->SetText(str);
 					
-					CurrentGameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
+					GameUI()->ActorMenu().m_pQuickSlot->ReloadReferences(this);
 				}
 			}
 		}break;
@@ -369,29 +369,29 @@ void CActor::ActorUse()
 {
 	if (m_holder)
 	{
-		CGameObject*	GO			= smart_cast<CGameObject*>(m_holder);
-		NET_Packet		P;
-		CGameObject::u_EventGen		(P, GEG_PLAYER_DETACH_HOLDER, ID());
-		P.w_u16						(GO->ID());
-		CGameObject::u_EventSend	(P);
+		CGameObject* GO = smart_cast<CGameObject*>(m_holder);
+		NET_Packet P;
+		CGameObject::u_EventGen(P, GEG_PLAYER_DETACH_HOLDER, ID());
+		P.w_u16(GO->ID());
+		CGameObject::u_EventSend(P);
 		return;
 	}
-				
-	if(character_physics_support()->movement()->PHCapture())
+
+	if (character_physics_support()->movement()->PHCapture())
 		character_physics_support()->movement()->PHReleaseObject();
 
-	if(m_pUsableObject && NULL==m_pObjectWeLookingAt->cast_inventory_item())
+	if (m_pUsableObject && !m_pObjectWeLookingAt->cast_inventory_item())
 		m_pUsableObject->use(this);
-	
+
 	if (m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable())
 	{
-		CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-		if (pGameSP && !m_pInvBoxWeLookingAt->closed()) //single
-			pGameSP->StartCarBody(this, m_pInvBoxWeLookingAt);
+		if (!m_pInvBoxWeLookingAt->closed())
+			GameUI()->StartCarBody(this, m_pInvBoxWeLookingAt);
+
 		return;
 	}
 
-	if (!m_pUsableObject||m_pUsableObject->nonscript_usable())
+	if (!m_pUsableObject || m_pUsableObject->nonscript_usable())
 	{
 		bool bCaptured = false;
 
@@ -410,7 +410,6 @@ void CActor::ActorUse()
 					character_physics_support()->movement()->PHCaptureObject(object, element);
 					bCaptured = true;
 				}
-
 			}
 			else if (smart_cast<CHolderCustom*>(object))
 			{
@@ -422,7 +421,6 @@ void CActor::ActorUse()
 			}
 		}
 
-
 		if (m_pPersonWeLookingAt)
 		{
 			CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
@@ -433,26 +431,15 @@ void CActor::ActorUse()
 				TryToTalk();
 			else
 			{
-				// Only single
-				CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-				if (pGameSP)
-				{
-					if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie() &&
-						pEntityAliveWeLookingAt->GetLevelDeathTime() + 3000 < Device.dwTimeGlobal)
-						pGameSP->StartCarBody(this, m_pPersonWeLookingAt);
-				}
+				if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
+					GameUI()->StartCarBody(this, m_pPersonWeLookingAt);
 			}
 		}
 	}
+
 	// переключение костра при юзании
 	if (m_CapmfireWeLookingAt)
-	{
-		if (m_CapmfireWeLookingAt->is_on())
-			m_CapmfireWeLookingAt->turn_off_script();
-		else
-			m_CapmfireWeLookingAt->turn_on_script();
-		return;
-	}
+		m_CapmfireWeLookingAt->is_on() ? m_CapmfireWeLookingAt->turn_off_script() : m_CapmfireWeLookingAt->turn_on_script();
 }
 
 BOOL CActor::HUDview() const

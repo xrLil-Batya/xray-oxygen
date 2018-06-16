@@ -13,7 +13,7 @@
 #include "actor.h"
 #include "level.h"
 #include "../xrEngine/date_time.h"
-#include "uigamesp.h"
+#include "UIGame.h"
 #include "restricted_object.h"
 #include "script_engine.h"
 #include "attachable_item.h"
@@ -73,13 +73,8 @@ void  CScriptGameObject::AddIconedTalkMessage(LPCSTR caption, LPCSTR text, LPCST
 
 void _AddIconedTalkMessage(LPCSTR caption, LPCSTR text, LPCSTR texture_name, LPCSTR templ_name)
 {
-	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-	if(!pGameSP) return;
-
-	if(pGameSP->TalkMenu->IsShown())
-	{
-		pGameSP->TalkMenu->AddIconedMessage( caption, text, texture_name, templ_name ? templ_name : "iconed_answer_item" );
-	}
+	if (GameUI()->TalkMenu->IsShown())
+		GameUI()->TalkMenu->AddIconedMessage( caption, text, texture_name, templ_name ? templ_name : "iconed_answer_item" );
 }
 
 void _give_news	(LPCSTR caption, LPCSTR news, LPCSTR texture_name, int delay, int show_time, int type);
@@ -701,42 +696,36 @@ void CScriptGameObject::SetGameTaskState	(ETaskState state, LPCSTR task_id)
 
 //////////////////////////////////////////////////////////////////////////
 
-void  CScriptGameObject::SwitchToTrade		()
+void CScriptGameObject::SwitchToTrade()
 {
-	CActor* pActor = smart_cast<CActor*>(&object());	if(!pActor) return;
+	CActor* pActor = smart_cast<CActor*>(&object());	
 
-	//только если находимся в режиме single
-	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-	if(!pGameSP) return;
+	if (!pActor) 
+		return;
 
-	if(pGameSP->TalkMenu->IsShown())
-	{
-		pGameSP->TalkMenu->SwitchToTrade();
-	}
+	if (GameUI()->TalkMenu->IsShown())
+		GameUI()->TalkMenu->SwitchToTrade();
 }
 
-void  CScriptGameObject::SwitchToUpgrade		()
+void CScriptGameObject::SwitchToUpgrade()
 {
-	CActor* pActor = smart_cast<CActor*>(&object());	if(!pActor) return;
+	CActor* pActor = smart_cast<CActor*>(&object());	
 
-	//только если находимся в режиме single
-	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-	if(!pGameSP) return;
+	if (!pActor) 
+		return;
 
-	if(pGameSP->TalkMenu->IsShown())
-	{
-		pGameSP->TalkMenu->SwitchToUpgrade();
-	}
+	if (GameUI()->TalkMenu->IsShown())
+		GameUI()->TalkMenu->SwitchToUpgrade();
 }
 
-void  CScriptGameObject::SwitchToTalk		()
+void CScriptGameObject::SwitchToTalk()
 {
 	R_ASSERT("switch_to_talk called ;)");
 }
 
 void CScriptGameObject::AllowBreakTalkDialog(bool b)
 {
-	CInventoryOwner* inv_owner = smart_cast<CInventoryOwner*>(&object());	
+	CInventoryOwner* inv_owner = smart_cast<CInventoryOwner*>(&object());
 	VERIFY(inv_owner);
 	inv_owner->bDisableBreakDialog = !b;
 }

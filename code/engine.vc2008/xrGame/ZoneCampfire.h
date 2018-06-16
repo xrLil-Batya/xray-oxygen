@@ -25,7 +25,7 @@ public:
 
 				void		turn_on_script				();
 				void		turn_off_script				();
-				bool		is_on						();
+				bool		is_on						() { return m_turned_on; }
 	virtual		void		shedule_Update				(u32	dt	);
 	DECLARE_SCRIPT_REGISTER_FUNCTION
 };

@@ -1680,8 +1680,7 @@
     <ClInclude Include="ui\UIListBoxItemMsgChain.h" />
     <ClInclude Include="HitMarker.h" />
     <ClInclude Include="HUDManager.h" />
-    <ClInclude Include="UIGameCustom.h" />
-    <ClInclude Include="UIGameSP.h" />
+    <ClInclude Include="UIGame.h" />
     <ClInclude Include="HUDCrosshair.h" />
     <ClInclude Include="HUDTarget.h" />
     <ClInclude Include="UICursor.h" />
@@ -2607,8 +2606,7 @@
     <ClCompile Include="ui\UIListBoxItemMsgChain.cpp" />
     <ClCompile Include="HitMarker.cpp" />
     <ClCompile Include="HUDManager.cpp" />
-    <ClCompile Include="UIGameCustom.cpp" />
-    <ClCompile Include="UIGameSP.cpp" />
+    <ClCompile Include="UIGame.cpp" />
     <ClCompile Include="HUDCrosshair.cpp" />
     <ClCompile Include="HUDTarget.cpp" />
     <ClCompile Include="UICursor.cpp" />

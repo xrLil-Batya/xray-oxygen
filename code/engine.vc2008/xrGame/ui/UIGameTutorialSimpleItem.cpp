@@ -6,11 +6,12 @@
 #include "object_broker.h"
 #include "../../xrEngine/xr_input.h"
 #include "../xr_level_controller.h"
-#include "../UIGameSp.h"
+#include "../UIGame.h"
 #include "../level.h"
 #include "UIPdaWnd.h"
 #include "UIActorMenu.h"
 #include "UITalkWnd.h"
+#include "level_changer.h"
 #include "../MainMenu.h"
 #include "../../xrServerEntities/script_engine.h"
 #include "../ai_space.h"
@@ -214,20 +215,11 @@ void CUISequenceSimpleItem::Update()
 
 	if (g_pGameLevel && (!m_pda_section || 0 == xr_strlen(m_pda_section)))
 	{
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-
-		if (ui_game_sp)
-		{
-			if (ui_game_sp->PdaMenu().IsShown() ||
-				ui_game_sp->ActorMenu().IsShown() ||
-				ui_game_sp->TalkMenu->IsShown() ||
-				ui_game_sp->UIChangeLevelWnd->IsShown() ||
-				(MainMenu()->IsActive() && !m_owner->m_flags.test(CUISequencer::etsOverMainMenu))
-				)
+		if (GameUI()->PdaMenu().IsShown() || GameUI()->ActorMenu().IsShown() || GameUI()->TalkMenu->IsShown() || GameUI()->UIChangeLevelWnd->IsShown() ||
+			(MainMenu()->IsActive() && !m_owner->m_flags.test(CUISequencer::etsOverMainMenu)))
 				m_UIWindow->Show(false);
 			else
 				m_UIWindow->Show(true);
-		}
 	}
 	if (m_desired_cursor_pos.x && m_desired_cursor_pos.y)
 		GetUICursor().SetUICursorPosition(m_desired_cursor_pos);
@@ -241,15 +233,15 @@ void CUISequenceSimpleItem::Start()
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
 	{
-		Device.Pause(TRUE, TRUE, FALSE, "simpleitem_start");
+		Device.Pause(true, true, false, "simpleitem_start");
 		bShowPauseString = FALSE;
 	}
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		Device.Pause(FALSE, TRUE, FALSE, "simpleitem_start");
+		Device.Pause(false, true, false, "simpleitem_start");
 
 	if (m_flags.test(etiNeedPauseSound))
-		Device.Pause(TRUE, FALSE, TRUE, "simpleitem_start");
+		Device.Pause(true, false, true, "simpleitem_start");
 
 	if (m_desired_cursor_pos.x && m_desired_cursor_pos.y)
 		GetUICursor().SetUICursorPosition(m_desired_cursor_pos);
@@ -257,39 +249,35 @@ void CUISequenceSimpleItem::Start()
 	m_owner->MainWnd()->AttachChild(m_UIWindow);
 
 	if (m_sound._handle())
-		m_sound.play(NULL, sm_2D);
+		m_sound.play(nullptr, sm_2D);
 
 	if (g_pGameLevel)
 	{
 		bool bShowPda = false;
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-
-		if (!ui_game_sp)
-			return;
 
 		if (!stricmp(m_pda_section, "pda_tasks"))
 		{
-			ui_game_sp->PdaMenu().SetActiveSubdialog("eptTasks");
+			GameUI()->PdaMenu().SetActiveSubdialog("eptTasks");
 			bShowPda = true;
 		}
 		else if (!stricmp(m_pda_section, "pda_ranking"))
 		{
-			ui_game_sp->PdaMenu().SetActiveSubdialog("eptRanking");
+			GameUI()->PdaMenu().SetActiveSubdialog("eptRanking");
 			bShowPda = true;
 		}
 		else if (!stricmp(m_pda_section, "pda_logs"))
 		{
-			ui_game_sp->PdaMenu().SetActiveSubdialog("eptLogs");
+			GameUI()->PdaMenu().SetActiveSubdialog("eptLogs");
 			bShowPda = true;
 		}
 		else if (!stricmp(m_pda_section, "pda_show_second_task_wnd"))
 		{
-			ui_game_sp->PdaMenu().Show_SecondTaskWnd(true);
+			GameUI()->PdaMenu().Show_SecondTaskWnd(true);
 			bShowPda = true;
 		}
 
-		if ((!ui_game_sp->PdaMenu().IsShown() && bShowPda) || (ui_game_sp->PdaMenu().IsShown() && !bShowPda))
-			ui_game_sp->PdaMenu().HideDialog();
+		if ((!GameUI()->PdaMenu().IsShown() && bShowPda) || (GameUI()->PdaMenu().IsShown() && !bShowPda))
+			GameUI()->PdaMenu().HideDialog();
 	}
 }
 
@@ -304,20 +292,18 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 	m_sound.stop();
 
 	if (m_flags.test(etiNeedPauseOn) && !m_flags.test(etiStoredPauseState))
-		Device.Pause(FALSE, TRUE, FALSE, "simpleitem_stop");
+		Device.Pause(false, false, false, "simpleitem_stop");
 
 	if (m_flags.test(etiNeedPauseOff) && m_flags.test(etiStoredPauseState))
-		Device.Pause(TRUE, TRUE, FALSE, "simpleitem_stop");
+		Device.Pause(true, true, false, "simpleitem_stop");
 
 	if (m_flags.test(etiNeedPauseSound))
-		Device.Pause(FALSE, FALSE, TRUE, "simpleitem_stop");
+		Device.Pause(false, false, true, "simpleitem_stop");
 
 	if (g_pGameLevel)
 	{
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>(CurrentGameUI());
-
-		if (ui_game_sp && ui_game_sp->PdaMenu().IsShown())
-			ui_game_sp->PdaMenu().HideDialog();
+		if (GameUI()->PdaMenu().IsShown())
+			GameUI()->PdaMenu().HideDialog();
 	}
 	inherited::Stop();
 	return true;
@@ -358,18 +344,23 @@ void CUISequenceSimpleItem::OnKeyboardPress(int dik)
 void CUISequenceSimpleItem::OnMousePress(int btn)
 {
 	int dik = 0;
+
 	switch (btn)
 	{
-	case 0:
-		dik = MOUSE_1;
-		break;
-	case 1:
-		dik = MOUSE_2;
-		break;
-	case 2:
-		dik = MOUSE_3;
-		break;
-	default: return;
+		case 0:
+			dik = MOUSE_1;
+			break;
+
+		case 1:
+			dik = MOUSE_2;
+			break;
+
+		case 2:
+			dik = MOUSE_3;
+			break;
+
+		default: 
+			return;
 	}
 	OnKeyboardPress(dik);
 }

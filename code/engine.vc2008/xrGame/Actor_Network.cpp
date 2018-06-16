@@ -31,7 +31,7 @@
 
 #include "actor_anim_defs.h"
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "ui/UIPdaWnd.h"
 #include "ui/UITaskWnd.h"
 

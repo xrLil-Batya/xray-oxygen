@@ -7,7 +7,7 @@
 #include "map_manager.h"
 #include "map_location.h"
 #include "actor.h"
-#include "UIGameSP.h"
+#include "UIGame.h"
 #include "ui/UIPDAWnd.h"
 #include "ui/UIMapWnd.h"
 
@@ -105,18 +105,11 @@ CGameTask*	CGameTaskManager::GiveGameTaskToActor(CGameTask* t, u32 timeToComplet
 
 	t->OnArrived					();
 
-	//CGameTask* active_task			= ActiveTask();
-
-	//if ( (active_task == NULL) || (active_task->m_priority < t->m_priority) )
-	//{
-	//	SetActiveTask( t );
-	//}
-
 	SetActiveTask( t );
 
 	//установить флажок необходимости прочтения тасков в PDA
-	if ( CurrentGameUI() )
-		CurrentGameUI()->UpdatePda();
+	if (GameUI())
+		GameUI()->UpdatePda();
 
 	t->ChangeStateCallback();
 
@@ -135,8 +128,8 @@ void CGameTaskManager::SetTaskState(CGameTask* t, ETaskState state)
 		g_active_task_id = "";
 	}
 
-	if ( CurrentGameUI() )
-		CurrentGameUI()->UpdatePda();
+	if (GameUI())
+		GameUI()->UpdatePda();
 }
 
 void CGameTaskManager::SetTaskState(const shared_str& id, ETaskState state)

@@ -27,7 +27,7 @@
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
 #include "../xrEngine/date_time.h"
-#include "UIGameSP.h"
+#include "UIGame.h"
 #include "ui/UIActorMenu.h"
 #include "ui/UIStatic.h"
 #include "zone_effector.h"
@@ -457,7 +457,7 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 	FS.m_Flags.set( CLocatorAPI::flNeedCheck, FALSE );
 }
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 
 class CCC_ALifeSave : public IConsole_Command
 {
@@ -473,7 +473,7 @@ public:
 
 		if (Actor()->HasInfo("cant_game_save_now"))
 		{
-			SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+			SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 			_s->wnd()->TextItemControl()->SetText(CStringTable().translate("st_cant_game_save_now").c_str());
 			return;
 		}
@@ -513,7 +513,7 @@ public:
 #ifdef DEBUG
 		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
 #endif
-		SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 		LPSTR save_name;
 		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
 		_s->wnd()->TextItemControl()->SetText(save_name);
@@ -1490,12 +1490,8 @@ public:
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( !ui_game_sp )
-		{
-			return;
-		}
-		PIItem item = ui_game_sp->ActorMenu().get_upgrade_item();
+
+		PIItem item = GameUI()->ActorMenu().get_upgrade_item();
 		if ( item )
 		{
 			item->log_upgrades();
@@ -1510,27 +1506,23 @@ public:
 class CCC_InvDropAllItems : public IConsole_Command
 {
 public:
-	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute( LPCSTR args )
+	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args)
 	{
-		if ( !g_pGameLevel )
+		if (!g_pGameLevel)
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( !ui_game_sp )
-		{
-			return;
-		}
+
 		int d = 0;
-		sscanf( args, "%d", &d );
-		if ( ui_game_sp->ActorMenu().DropAllItemsFromRuck( d == 1 ) )
+		sscanf(args, "%d", &d);
+		if (GameUI()->ActorMenu().DropAllItemsFromRuck(d == 1))
 		{
-			Msg( "- All items from ruck of Actor is dropping now." );
+			Msg("- All items from ruck of Actor is dropping now.");
 		}
 		else
 		{
-			Msg( "! ActorMenu is not in state `Inventory`" );
+			Msg("! ActorMenu is not in state `Inventory`");
 		}
 	}
 }; // CCC_InvDropAllItems

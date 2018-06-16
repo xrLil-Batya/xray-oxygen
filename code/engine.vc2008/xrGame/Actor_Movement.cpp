@@ -7,7 +7,7 @@
 #include "xrMessages.h"
 
 #include "level.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "string_table.h"
 #include "actorcondition.h"
 #include "game_cl_base.h"
@@ -574,7 +574,7 @@ bool CActor::CanMove()
 	{
 		if(mstate_wishful&mcAnyMove)
 		{
-			CurrentGameUI()->AddCustomStatic("cant_walk", true);
+			GameUI()->AddCustomStatic("cant_walk", true);
 		}
 		return false;
 	}else
@@ -582,7 +582,7 @@ bool CActor::CanMove()
 	{
 		if(mstate_wishful&mcAnyMove)
 		{
-			CurrentGameUI()->AddCustomStatic("cant_walk_weight", true);
+			GameUI()->AddCustomStatic("cant_walk_weight", true);
 		}
 		return false;
 	
