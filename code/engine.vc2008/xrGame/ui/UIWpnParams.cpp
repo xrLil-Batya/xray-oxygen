@@ -37,8 +37,7 @@ SLuaWpnParams* g_lua_wpn_params = NULL;
 
 void destroy_lua_wpn_params()
 {
-	if(g_lua_wpn_params)
-		xr_delete(g_lua_wpn_params);
+	xr_delete(g_lua_wpn_params);
 }
 
 // =====================================================================

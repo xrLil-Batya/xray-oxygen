@@ -493,6 +493,12 @@ function CActorBinder:on_key_press(key)
 	--  OXY  -------------------------
 	event("KeyPress"):trigger({key = key})
 	--  OXY  ------------------------
+	if key == DIK_keys.DIK_F5 then
+
+		oxy_quicksaves.save()
+
+	end
+
 end
 ----------------------------------------------------------------------------------------------------
 function CActorBinder:on_key_release(key)

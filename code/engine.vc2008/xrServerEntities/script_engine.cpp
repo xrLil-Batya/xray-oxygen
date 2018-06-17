@@ -206,31 +206,16 @@ void lua_cast_failed					(lua_State *L, LUABIND_TYPE_INFO info)
 
 void CScriptEngine::setup_callbacks		()
 {
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if( debugger() )
-			debugger()->PrepareLuaBind	();
-#	endif // #ifndef USE_LUA_STUDIO
+#pragma todo("FX to All: Restore it")
+#if 0
+ #if !XRAY_EXCEPTIONS
+ 		luabind::set_error_callback		(CScriptEngine::lua_error);
+ #endif
+
+ #if !XRAY_EXCEPTIONS
+ 	luabind::set_cast_failed_callback	(lua_cast_failed);
+ #endif
 #endif
-
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if (!debugger() || !debugger()->Active() ) 
-#	endif // #ifndef USE_LUA_STUDIO
-#endif
-	{
-// #if !XRAY_EXCEPTIONS
-// 		luabind::set_error_callback		(CScriptEngine::lua_error);
-// #endif
-
-#ifndef MASTER_GOLD
-		luabind::set_pcall_callback		(CScriptEngine::lua_pcall_failed);
-#endif // MASTER_GOLD
-	}
-
-// #if !XRAY_EXCEPTIONS
-// 	luabind::set_cast_failed_callback	(lua_cast_failed);
-// #endif
 	lua_atpanic							(lua(),CScriptEngine::lua_panic);
 }
 
@@ -289,45 +274,15 @@ extern void export_classes(lua_State *L);
 
 void CScriptEngine::init				()
 {
-#ifdef USE_LUA_STUDIO
-	bool lua_studio_connected = !!m_lua_studio_world;
-	if (lua_studio_connected)
-		m_lua_studio_world->remove		(lua());
-#endif // #ifdef USE_LUA_STUDIO
-
 	CScriptStorage::reinit				();
 
-#ifdef USE_LUA_STUDIO
-	if (m_lua_studio_world || strstr(Core.Params, "-lua_studio")) {
-		if (!lua_studio_connected)
-			try_connect_to_debugger		();
-		else 
-		{
-			dojitcmd					(lua(), "debug=2");
-			dojitcmd					(lua(), "off");
-			m_lua_studio_world->add		(lua());
-		}
-	}
-#endif // #ifdef USE_LUA_STUDIO
-
-	//luabind::open						(lua());
 	setup_callbacks						();
 	export_classes						(lua());
 	setup_auto_load						();
 
-#ifndef USE_LUA_STUDIO
-#	ifdef DEBUG
-#		if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-			if( !debugger() || !debugger()->Active()  )
-#		endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-				lua_sethook					(lua(),lua_hook_call,	LUA_MASKLINE|LUA_MASKCALL|LUA_MASKRET,	0);
-#	endif // #ifdef DEBUG
-#endif // #ifndef USE_LUA_STUDIO
-
 	bool								save = m_reload_modules;
 	m_reload_modules					= true;
 	process_file_if_exists				("_g",false);
-
 	m_reload_modules					= save;
 
 	register_script_classes				();
@@ -366,11 +321,12 @@ void CScriptEngine::load_common_scripts()
 		LPCSTR			caScriptString = l_tpIniFile->r_string("common","script");
 		u32				n = _GetItemCount(caScriptString);
 		string256		I;
-		for (u32 i=0; i<n; ++i) {
+		for (u32 i=0; i<n; ++i) 
+		{
 			process_file(_GetItem(caScriptString,i,I));
 			xr_strcat	(I,"_initialize");
-			if (object("_G",I,LUA_TFUNCTION)) {
-//				lua_dostring			(lua(),xr_strcat(I,"()"));
+			if (object("_G",I,LUA_TFUNCTION)) 
+			{
 				luabind::functor<void>	f;
 				R_ASSERT				(functor(I,f));
 				f						();
@@ -401,8 +357,6 @@ void CScriptEngine::process_file_if_exists	(LPCSTR file_name, bool warn_if_not_e
 
 	if (warn_if_not_exist)
 		Msg("Variable %s not found; No script by this name exists, either.", file_name);
-
-    return;
 }
 
 void CScriptEngine::process_file	(LPCSTR file_name)
