@@ -310,6 +310,7 @@
       <AdditionalIncludeDirectories>../../src/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NVTT_EXPORTS;NVTT_SHARED=1;__SSE2__;__SSE__;__MMX__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <ImportLibrary>$(xrSDKLib)$(TargetName).lib</ImportLibrary>
@@ -321,6 +322,7 @@
       <AdditionalIncludeDirectories>../../src/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>NVTT_EXPORTS;NVTT_SHARED=1;__SSE2__;__SSE__;__MMX__;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Link>
       <ImportLibrary>$(xrSDKLib)$(TargetName).lib</ImportLibrary>

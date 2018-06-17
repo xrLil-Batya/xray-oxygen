@@ -188,6 +188,7 @@
       <WarningLevel>Level3</WarningLevel>
       <DebugInformationFormat>
       </DebugInformationFormat>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
     </ClCompile>
     <Lib>
       <AdditionalDependencies>nvtt.lib;nvcore.lib;nvimage.lib%(AdditionalDependencies)</AdditionalDependencies>

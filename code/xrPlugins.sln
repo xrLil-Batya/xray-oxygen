@@ -42,6 +42,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd party", "3rd party", "{33E654F3-58B6-45F1-9AE7-A488FFA13709}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrRE", "plugins\xray_re\xray_re.vcxproj", "{7ADF7F28-CC62-489D-81EB-B4922F0611CB}"
+	ProjectSection(ProjectDependencies) = postProject
+		{1AEB7681-57D8-48EE-813D-5C41CC38B647} = {1AEB7681-57D8-48EE-813D-5C41CC38B647}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nvtt", "3rd-party\nvtt\vc12\nvtt\nvtt.vcxproj", "{1AEB7681-57D8-48EE-813D-5C41CC38B647}"
 	ProjectSection(ProjectDependencies) = postProject
