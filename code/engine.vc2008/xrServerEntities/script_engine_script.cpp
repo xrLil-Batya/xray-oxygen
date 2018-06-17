@@ -126,10 +126,10 @@ struct profile_timer_script
 		accumulator += finish - start_time;
 	}
 
-	decltype(auto) time() const 
+	float time() const 
 	{
 		using namespace std::chrono;
-		return duration_cast<microseconds>(accumulator).count();
+		return (float)duration_cast<microseconds>(accumulator).count();
 	}
 };
 

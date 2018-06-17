@@ -157,9 +157,10 @@ function motivator_binder:net_destroy()
 	xrs_dyn_music.npc_table[self.object:id()] = nil
 
 	xr_combat_ignore.fighting_with_actor_npcs[self.object:id()] = nil
---	xrs_dyn_music.stop_combat(self.object:id())
 	xr_sound.stop_sounds_by_id(self.object:id())
-	if self.st and self.st.active_scheme then
+	if self.st then
+		event("NpcDestroy"):trigger({oBinder=self, oObj=self.object})
+		if self.st.active_scheme then
 			xr_logic.issue_event(self.object, self.st[self.st.active_scheme], "net_destroy", self.object)
 		end
 	end
