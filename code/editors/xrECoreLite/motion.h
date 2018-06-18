@@ -48,7 +48,7 @@ using BoneMotionVec = xr_vector<st_BoneMotion>;
 using BoneMotionIt = BoneVec::iterator;
 
 //--------------------------------------------------------------------------
-class ENGINE_API CCustomMotion
+class ECORE_API CCustomMotion
 {
 protected:
 	enum EMotionType
@@ -126,7 +126,7 @@ public:
 };
 
 //--------------------------------------------------------------------------
-class ENGINE_API COMotion : public CCustomMotion
+class ECORE_API COMotion : public CCustomMotion
 {
 	CEnvelope *envs[ctMaxChannel];
 public:
@@ -174,7 +174,7 @@ enum ESMFlags
 	esmUseWeaponBone = 1 << 7,
 };
 
-class ENGINE_API CSMotion : public CCustomMotion
+class ECORE_API CSMotion : public CCustomMotion
 {
 	BoneMotionVec	bone_mots;
 
@@ -260,7 +260,7 @@ public:
 	float Frame() { return t_current; }
 };
 
-class ENGINE_API CClip
+class ECORE_API CClip
 {
 public:
 	struct AnimItem

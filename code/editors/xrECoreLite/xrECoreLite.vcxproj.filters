@@ -57,10 +57,6 @@
     <ClCompile Include="GameMtlLib.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="motion.cpp" />
-    <ClCompile Include="bone.cpp" />
-    <ClCompile Include="VertCache.cpp" />
-    <ClCompile Include="ogf_desc.cpp" />
     <ClCompile Include="Ogf.cpp">
       <Filter>Import</Filter>
     </ClCompile>
@@ -69,6 +65,24 @@
     </ClCompile>
     <ClCompile Include="Omf.cpp">
       <Filter>Import</Filter>
+    </ClCompile>
+    <ClCompile Include="motion.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="bone.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="VertCache.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="ogf_desc.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp">
+      <Filter>Engine</Filter>
+    </ClCompile>
+    <ClCompile Include="FBasicVisual.cpp">
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -99,8 +113,6 @@
     <ClInclude Include="GameMtlLib.h">
       <Filter>Engine</Filter>
     </ClInclude>
-    <ClInclude Include="motion.h" />
-    <ClInclude Include="bone.h" />
     <ClInclude Include="Ogf.h">
       <Filter>Import</Filter>
     </ClInclude>
@@ -112,6 +124,18 @@
     </ClInclude>
     <ClInclude Include="Object.h">
       <Filter>Import</Filter>
+    </ClInclude>
+    <ClInclude Include="motion.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="bone.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h">
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="FBasicVisual.h">
+      <Filter>Engine</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

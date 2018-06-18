@@ -1,6 +1,4 @@
 /*********************************************************************NVMH4****
-Path:
-File:
 Copyright NVIDIA Corporation 2003
 TO THE MAXIMUM EXTENT PERMITTED BY APPLICABLE LAW, THIS SOFTWARE IS PROVIDED
 *AS IS* AND NVIDIA AND ITS SUPPLIERS DISCLAIM ALL WARRANTIES, EITHER EXPRESS
@@ -19,12 +17,8 @@ map in the beginning.  Note: I tried this and didn't see a real perf improvement
 - I'd like to provide a non c++ standard library interface, probably
 a simple c interface for all those simple c folks. or the
 old nvMeshMender interface for all those using it already
-
 */
-#include "stdafx.h"
-#ifdef _CLR_MANAGER
 #include "xrCore\xrCore.h"
-#endif
 #include "assert.h"
 #include "nvMeshMender.h"
 

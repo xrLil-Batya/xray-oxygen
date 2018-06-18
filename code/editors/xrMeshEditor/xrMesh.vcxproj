@@ -90,13 +90,11 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="MeshEditor.cpp" />
     <ClCompile Include="MeshReader.cpp" />
     <ClCompile Include="Meshs.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="BoneEditor.h">
       <FileType>CppForm</FileType>
     </ClInclude>

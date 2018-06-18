@@ -4,11 +4,7 @@
 	* Description:
 	* Copyright:
 */
-
-#include "xrCore/xrCore.h"
-#pragma hdrstop
-#define ECORE_API
-#define ENGINE_API
+#include "files_list.hpp"
 #include "motion.h"
 #include "xrCore/envelope.h"
 
