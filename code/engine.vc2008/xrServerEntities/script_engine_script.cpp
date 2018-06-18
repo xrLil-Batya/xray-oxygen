@@ -9,7 +9,6 @@
 #include "stdafx.h"
 #include "script_engine.h"
 #include "ai_space.h"
-#include "script_debugger.h"
 #include "../xrScripts/import_ses.hpp"
 
 using namespace luabind;
@@ -17,22 +16,6 @@ using namespace luabind;
 void ErrorLog(LPCSTR caMessage)
 {
 	ai().script_engine().error_log("%s",caMessage);
-#ifdef PRINT_CALL_STACK
-	ai().script_engine().dump_state();
-#endif // #ifdef PRINT_CALL_STACK
-	
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if( ai().script_engine().debugger() ){
-			ai().script_engine().debugger()->Write(caMessage);
-		}
-#	endif // #ifndef USE_LUA_STUDIO
-#endif // #ifdef USE_DEBUGGER
-
-#ifdef DEBUG
-		bool lua_studio_connected = !!ai().script_engine().debugger();
-		if (!lua_studio_connected)
-#endif //#ifdef DEBUG
 	R_ASSERT2(false, caMessage);
 }
 

@@ -7,7 +7,6 @@
 #include "xrMessages.h"
 #include "xrserver.h"
 #include "level.h"
-#include "script_debugger.h"
 #include "ai_debug.h"
 #include "alife_simulator.h"
 #include "game_cl_base.h"
@@ -775,66 +774,6 @@ public:
 	}
 };
 
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-class CCC_ScriptDbg : public IConsole_Command {
-public:
-	CCC_ScriptDbg(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) {
-		
-		if(strstr(cName,"script_debug_break")==cName ){
-		
-		CScriptDebugger* d = ai().script_engine().debugger();
-		if(d){
-			if(d->Active())
-				d->initiateDebugBreak();
-			else
-				Msg("Script debugger not active.");
-		}else
-			Msg("Script debugger not present.");
-		}
-		else if(strstr(cName,"script_debug_stop")==cName ){
-			ai().script_engine().stopDebugger();
-		}
-		else if(strstr(cName,"script_debug_restart")==cName ){
-			ai().script_engine().restartDebugger();
-		};
-	};
-	
-
-	virtual void	Info	(TInfo& I)		
-	{
-		if(strstr(cName,"script_debug_break")==cName )
-			xr_strcpy(I,"initiate script debugger [DebugBreak] command"); 
-
-		else if(strstr(cName,"script_debug_stop")==cName )
-			xr_strcpy(I,"stop script debugger activity"); 
-
-		else if(strstr(cName,"script_debug_restart")==cName )
-			xr_strcpy(I,"restarts script debugger or start if no script debugger presents"); 
-	}
-};
-#endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-
-#if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-class CCC_ScriptLuaStudioConnect : public IConsole_Command {
-public:
-	CCC_ScriptLuaStudioConnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
-	{
-		ai().script_engine().try_connect_to_debugger	();
-	};
-};
-
-class CCC_ScriptLuaStudioDisconnect : public IConsole_Command {
-public:
-	CCC_ScriptLuaStudioDisconnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
-	{
-		ai().script_engine().disconnect_from_debugger	();
-	};
-};
-#endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-
 class CCC_DumpInfos : public IConsole_Command {
 public:
 	CCC_DumpInfos	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -1037,12 +976,10 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 		  float				step_count = (float)atof(args);
-#ifndef		DEBUG
+#ifndef DEBUG
 		  clamp				(step_count,50.f,200.f);
 #endif
-		  //IPHWorld::SetStep(1.f/step_count);
 		  ph_console::ph_step_time = 1.f/step_count;
-		  //physics_world()->SetStep(1.f/step_count);
 		  if(physics_world())
 			 physics_world()->SetStep(ph_console::ph_step_time);
 	  }
@@ -1143,22 +1080,23 @@ public:
 				return;
 			}
 
-			string4096		S;
-			shared_str		m_script_name = "console command";
-			xr_sprintf			(S,"%s\n",args);
-			int				l_iErrorCode = luaL_loadbuffer(ai().script_engine().lua(),S,xr_strlen(S),"@console_command");
-			if (!l_iErrorCode) {
+			string4096 S;
+			shared_str m_script_name = "console command";
+			xr_sprintf(S,"%s\n",args);
+			int l_iErrorCode = luaL_loadbuffer(ai().script_engine().lua(),S,xr_strlen(S),"@console_command");
+			if (!l_iErrorCode) 
+			{
 				l_iErrorCode = lua_pcall(ai().script_engine().lua(),0,0,0);
-				if (l_iErrorCode) {
+				if (l_iErrorCode) 
+				{
 					ai().script_engine().print_output	(ai().script_engine().lua(),*m_script_name,l_iErrorCode);
-					ai().script_engine().on_error		(ai().script_engine().lua());
 					return;
 				}
 			}
 
 			ai().script_engine().print_output	(ai().script_engine().lua(),*m_script_name,l_iErrorCode);
 		}
-	}//void	Execute
+	}
 
 	virtual void Status( TStatus& S )
 	{
@@ -1739,16 +1677,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Integer, "ai_dbg_inactive_time", &g_AI_inactive_time, 0, 1000000);
 
 	CMD1(CCC_DebugNode, "ai_dbg_node");
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-	CMD1(CCC_ScriptDbg, "script_debug_break");
-	CMD1(CCC_ScriptDbg, "script_debug_stop");
-	CMD1(CCC_ScriptDbg, "script_debug_restart");
-#endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-
-#if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-	CMD1(CCC_ScriptLuaStudioConnect, "lua_studio_connect");
-	CMD1(CCC_ScriptLuaStudioDisconnect, "lua_studio_disconnect");
-#endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 
 	CMD1(CCC_ShowMonsterInfo, "ai_monster_info");
 	CMD1(CCC_DebugFonts, "debug_fonts");

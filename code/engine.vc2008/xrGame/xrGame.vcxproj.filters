@@ -1411,9 +1411,6 @@
     <Filter Include="AI\AScript\ScriptClasses\ScriptSound">
       <UniqueIdentifier>{3654ab94-4b14-4ba7-be65-738bc84072d5}</UniqueIdentifier>
     </Filter>
-    <Filter Include="AI\AScript\ScriptDebugger">
-      <UniqueIdentifier>{4897e4dc-7ff7-4404-831b-5b7e01c89872}</UniqueIdentifier>
-    </Filter>
     <Filter Include="AI\AScript\ScriptEngine">
       <UniqueIdentifier>{f6a26eee-11a8-4afe-9c22-019f8c33024c}</UniqueIdentifier>
     </Filter>
@@ -5898,18 +5895,6 @@
     <ClInclude Include="ui\UIGameTutorial.h">
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
     </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_callStack.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_lua_helper.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger.h">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClInclude>
@@ -8453,18 +8438,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_callStack.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_debugger.cpp">
-      <Filter>AI\AScript\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp">
       <Filter>AI\AScript\ScriptClasses\UI\Common\MainIngame</Filter>

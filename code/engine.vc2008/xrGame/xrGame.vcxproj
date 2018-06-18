@@ -357,10 +357,6 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="ui\UIPdaSpot.h" />
-    <ClInclude Include="..\xrServerEntities\script_callStack.h" />
-    <ClInclude Include="..\xrServerEntities\script_debugger.h" />
-    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h" />
-    <ClInclude Include="..\xrServerEntities\script_lua_helper.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
     <ClInclude Include="ActorRuck.h" />
     <ClInclude Include="animation_script_callback.h" />
@@ -1688,10 +1684,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui\UIPdaSpot.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_callStack.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_debugger.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp" />
-    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
     <ClCompile Include="ActorRuck.cpp" />
     <ClCompile Include="animation_script_callback.cpp" />
