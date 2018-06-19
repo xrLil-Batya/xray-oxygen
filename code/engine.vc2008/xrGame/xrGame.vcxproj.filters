@@ -1312,12 +1312,6 @@
     <Filter Include="Core\Client\Effectors\Weapon">
       <UniqueIdentifier>{46174fa1-d36d-48b7-b998-79a85bc87d6a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Effects">
-      <UniqueIdentifier>{55edd0e9-39ff-429e-95bb-a82b132bb01a}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Effects\Core">
-      <UniqueIdentifier>{f931c9ab-a7f7-4dda-b290-4b64c05e8f64}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Game Persistent">
       <UniqueIdentifier>{3df95dce-70f0-461e-a55d-3599e483be2a}</UniqueIdentifier>
     </Filter>
@@ -5886,11 +5880,8 @@
     <ClInclude Include="HUDManager.h">
       <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="UIGameCustom.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClInclude>
-    <ClInclude Include="UIGameSP.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\Single</Filter>
+    <ClInclude Include="UIGame.h">
+      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
     </ClInclude>
     <ClInclude Include="HUDCrosshair.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
@@ -5903,18 +5894,6 @@
     </ClInclude>
     <ClInclude Include="ui\UIGameTutorial.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger_threads.h">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_callStack.h">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_lua_helper.h">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\script_debugger.h">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClInclude>
     <ClInclude Include="Actor.h">
       <Filter>Core\Client\Objects\actor</Filter>
@@ -8436,11 +8415,8 @@
     <ClCompile Include="HUDManager.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="UIGameCustom.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClCompile>
-    <ClCompile Include="UIGameSP.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\GameTypes\Single</Filter>
+    <ClCompile Include="UIGame.cpp">
+      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
     </ClCompile>
     <ClCompile Include="HUDCrosshair.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
@@ -8459,18 +8435,6 @@
     </ClCompile>
     <ClCompile Include="ui\UIGameTutorialVideoItem.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Tutorial</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_debugger_threads.cpp">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_callStack.cpp">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_lua_helper.cpp">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\script_debugger.cpp">
-      <Filter>ScriptEngine\ScriptDebugger</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIGameLog.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\MainIngame</Filter>
@@ -8509,9 +8473,6 @@
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
     <ClCompile Include="ActorInput.cpp">
-      <Filter>Core\Client\Objects\actor</Filter>
-    </ClCompile>
-    <ClCompile Include="ActorMountedWeapon.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
     <ClCompile Include="ActorVehicle.cpp">

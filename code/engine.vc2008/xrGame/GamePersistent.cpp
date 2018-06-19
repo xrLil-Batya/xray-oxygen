@@ -29,7 +29,7 @@
 #include "UI/UIGameTutorial.h"
 
 #include "xrServer.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIPdaWnd.h"
 #include "../xrEngine/x_ray.h"
@@ -570,11 +570,11 @@ void CGamePersistent::OnEvent(EVENT E, u64 P1, u64 P2)
 		if (Device.Paused())
 			Device.Pause		(FALSE, TRUE, TRUE, "eQuickLoad");
 		
-		if(CurrentGameUI())
+		if (GameUI())
 		{
-			CurrentGameUI()->HideShownDialogs();
-			CurrentGameUI()->UIMainIngameWnd->reset_ui();
-			CurrentGameUI()->PdaMenu().Reset();
+			GameUI()->HideShownDialogs();
+			GameUI()->UIMainIngameWnd->reset_ui();
+			GameUI()->PdaMenu().Reset();
 		}
 
 		if(g_tutorial)
@@ -732,8 +732,8 @@ void CGamePersistent::UpdateDof()
 #include "ui\uimainingamewnd.h"
 void CGamePersistent::OnSectorChanged(int sector)
 {
-	if(CurrentGameUI())
-		CurrentGameUI()->UIMainIngameWnd->OnSectorChanged(sector);
+	if (GameUI())
+		GameUI()->UIMainIngameWnd->OnSectorChanged(sector);
 }
 
 void CGamePersistent::OnAssetsChanged()

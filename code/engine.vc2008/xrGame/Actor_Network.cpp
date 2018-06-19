@@ -31,7 +31,7 @@
 
 #include "actor_anim_defs.h"
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "ui/UIPdaWnd.h"
 #include "ui/UITaskWnd.h"
 
@@ -387,8 +387,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	psHUD_Flags.set(HUD_WEAPON_RT, TRUE);
 	psHUD_Flags.set(HUD_WEAPON_RT2, TRUE);
 	
-    //pApp->LoadEnd();
-
 	return TRUE;
 }
 

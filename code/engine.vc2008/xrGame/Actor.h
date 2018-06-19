@@ -76,7 +76,7 @@ class	CActor:
 {
 	friend class CActorCondition;
 private:
-	typedef CEntityAlive	inherited;
+	typedef CEntityAlive inherited;
 public:
 										CActor				();
 	virtual								~CActor				();
@@ -110,26 +110,21 @@ public:
 			float						m_snd_noise;
 #ifdef DEBUG
 	virtual void						OnRender			();
-
+	void								DumpTasks();
 #endif
+	virtual bool						OnReceiveInfo		(shared_str info_id) const;
+	virtual void						OnDisableInfo		(shared_str info_id) const;
 
-
-public:
-	virtual bool OnReceiveInfo		(shared_str info_id) const;
-	virtual void OnDisableInfo		(shared_str info_id) const;
-
-	virtual void	 NewPdaContact		(CInventoryOwner*);
+	virtual void						NewPdaContact		(CInventoryOwner*);
 	virtual void	 LostPdaContact		(CInventoryOwner*);
 
-#ifdef DEBUG
-	void			 DumpTasks();
-#endif
-
-struct SDefNewsMsg{
+	struct SDefNewsMsg
+	{
 		GAME_NEWS_DATA*	news_data;
 		u32				time;
 		bool operator < (const SDefNewsMsg& other) const {return time>other.time;}
 	};
+
 	xr_vector<SDefNewsMsg> m_defferedMessages;
 	void UpdateDefferedMessages();	
 public:	
@@ -148,32 +143,31 @@ public:
 
 public:
 	//PhraseDialogManager
-	virtual void ReceivePhrase				(DIALOG_SHARED_PTR& phrase_dialog);
-	virtual void UpdateAvailableDialogs		(CPhraseDialogManager* partner);
-	virtual void TryToTalk					();
-			bool OnDialogSoundHandlerStart	(CInventoryOwner *inv_owner, LPCSTR phrase);
-			bool OnDialogSoundHandlerStop	(CInventoryOwner *inv_owner);
+	virtual void						ReceivePhrase				(DIALOG_SHARED_PTR& phrase_dialog);
+	virtual void						UpdateAvailableDialogs		(CPhraseDialogManager* partner);
+	virtual void						TryToTalk					();
+			bool						OnDialogSoundHandlerStart	(CInventoryOwner *inv_owner, LPCSTR phrase);
+			bool						OnDialogSoundHandlerStop	(CInventoryOwner *inv_owner);
 
 
-	virtual void reinit			();
-	virtual void reload			(LPCSTR section);
-	virtual bool use_bolts		() const;
+	virtual void						reinit			();
+	virtual void						reload			(LPCSTR section);
+	virtual bool						use_bolts		() const;
 
-	virtual void OnItemTake		(CInventoryItem *inventory_item);
+	virtual void						OnItemTake		(CInventoryItem *inventory_item);
 	
-	virtual void OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
-	virtual void OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
+	virtual void						OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
+	virtual void						OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
 	
-	virtual void OnItemDrop		(CInventoryItem *inventory_item, bool just_before_destroy);
-	virtual void OnItemDropUpdate ();
+	virtual void						OnItemDrop		(CInventoryItem *inventory_item, bool just_before_destroy);
+	virtual void						OnItemDropUpdate();
 
 	virtual void						Die				(CObject* who);
 	virtual	void						Hit				(SHit* pHDS);
 	virtual	void						PHHit			(SHit &H);
+			void						HitMark			(float P, Fvector dir, CObject* who, s16 element, Fvector position_in_bone_space, float impulse,  ALife::EHitType hit_type);
 	virtual void						HitSignal		(float P, Fvector &vLocalDir,	CObject* who, s16 element);
-			void						HitSector		(CObject* who, CObject* weapon);
-			void						HitMark			(float P, Fvector dir,			CObject* who, s16 element, Fvector position_in_bone_space, float impulse,  ALife::EHitType hit_type);
-
+	
 			void						Feel_Grenade_Update( float rad );
 
 	virtual float						GetMass				() ;
@@ -188,19 +182,18 @@ public:
 	virtual bool						NeedToDestroyObject()  const;
 	virtual ALife::_TIME_ID				TimePassedAfterDeath() const;
 
-
 public:
 
 	//свойства артефактов
-	virtual void		UpdateArtefactsOnBeltAndOutfit();
-			float		HitArtefactsOnBelt		(float hit_power, ALife::EHitType hit_type);
-			float		GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type);
+	virtual void						UpdateArtefactsOnBeltAndOutfit();
+			float						HitArtefactsOnBelt		(float hit_power, ALife::EHitType hit_type);
+			float						GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type);
 
 protected:
 	//звук тяжелого дыхания
-	ref_sound			m_HeavyBreathSnd;
-	ref_sound			m_BloodSnd;
-	ref_sound			m_DangerSnd;
+	ref_sound				m_HeavyBreathSnd;
+	ref_sound				m_BloodSnd;
+	ref_sound				m_DangerSnd;
 
 protected:
 	// Death

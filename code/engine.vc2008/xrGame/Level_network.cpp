@@ -13,7 +13,7 @@
 #include "stalker_animation_data_storage.h"
 #include "client_spawn_manager.h"
 #include "seniority_hierarchy_holder.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "string_table.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
@@ -98,10 +98,10 @@ void CLevel::net_Stop		()
 {
 	Msg							("- Disconnect");
 
-	if(CurrentGameUI())
+	if (GameUI())
 	{
-		CurrentGameUI()->HideShownDialogs();
-		CurrentGameUI()->PdaMenu().Reset();
+		GameUI()->HideShownDialogs();
+		GameUI()->PdaMenu().Reset();
 	}
 
 	if(g_tutorial && !g_tutorial->Persistent())

@@ -17,13 +17,15 @@
 
 // Extern
 #if defined(HAVE_JPEG)
-extern "C" {
-#	include <jpeglib.h>
+extern "C" 
+{
+#	include "..\..\FreeImage\FreeImage\Source\LibJPEG\jpeglib.h"
 }
 #endif
 
 #if defined(HAVE_PNG)
-#	include <png.h>
+#	include "..\..\FreeImage\FreeImage\Source\LibPNG\png.h"
+#	include "..\..\FreeImage\FreeImage\Source\LibPNG\pngstruct.h"
 #endif
 
 #if defined(HAVE_TIFF)
@@ -602,7 +604,6 @@ Image * nv::ImageIO::loadPSD(Stream & s)
 static void user_read_data(png_structp png_ptr, png_bytep data, png_size_t length)
 {
 	nvDebugCheck(png_ptr != NULL);
-	
 	Stream * s = (Stream *)png_ptr->io_ptr;
 	s->serialize(data, (int)length);
 	
@@ -610,7 +611,6 @@ static void user_read_data(png_structp png_ptr, png_bytep data, png_size_t lengt
 		png_error(png_ptr, "Read Error");
 	}
 }
-
 
 Image * nv::ImageIO::loadPNG(Stream & s)
 {

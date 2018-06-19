@@ -16,6 +16,9 @@ XRCORE_API		xrCore	Core;
 XRCORE_API		u32		build_id;
 XRCORE_API		const char*	build_date;
 
+//indicate that we reach WinMain, and all static variables are initialized
+XRCORE_API		bool	gModulesLoaded = false;
+
 
 static u32	init_counter	= 0;
 void compute_build_id();

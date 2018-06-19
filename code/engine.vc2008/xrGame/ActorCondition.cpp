@@ -17,7 +17,7 @@
 
 #include "PDA.h"
 #include "ai/monsters/basemonster/base_monster.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIStatic.h"
 
@@ -318,7 +318,7 @@ void CActorCondition::UpdateBoosters()
 	}
 
 	if(m_object == Level().CurrentViewEntity())
-		CurrentGameUI()->UIMainIngameWnd->UpdateBoosterIndicators(m_booster_influences);
+		GameUI()->UIMainIngameWnd->UpdateBoosterIndicators(m_booster_influences);
 }
 
 void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()

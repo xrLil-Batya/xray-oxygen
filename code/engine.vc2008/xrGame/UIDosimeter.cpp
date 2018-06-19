@@ -2,7 +2,7 @@
 #include "ui_base.h"
 #include "UIDosimeter.h"
 #include "HUDManager.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "Level.h"
 #include "player_hud.h"
 #include "ui/UIHudStatesWnd.h"

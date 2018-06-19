@@ -2,7 +2,7 @@
 #include "build.h"
 #include "OGF_Face.h"
 #include "vbm.h"
-//#include "std_classes.h"
+
 #include "../xrlc_light/lightmap.h"
 #include "../xrlc_light/xrface.h"
 

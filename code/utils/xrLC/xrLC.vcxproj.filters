@@ -195,9 +195,6 @@
     <ClCompile Include="xrPhase_AdaptiveHT.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
-    <ClCompile Include="xrPhase_AdaptiveHT_qslim.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
-    </ClCompile>
     <ClCompile Include="xrPhase_GI.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
@@ -232,9 +229,6 @@
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
     <ClCompile Include="xrSectors.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
-    </ClCompile>
-    <ClCompile Include="xrT_Junction.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
     <ClCompile Include="fmesh.cpp">
@@ -276,6 +270,9 @@
     </ClCompile>
     <ClCompile Include="..\common\NvMender2003\NVMeshMender4.cpp">
       <Filter>External\NV_Mender2003</Filter>
+    </ClCompile>
+    <ClCompile Include="xrT_Junction.cpp">
+      <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

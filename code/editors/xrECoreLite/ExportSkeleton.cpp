@@ -17,7 +17,6 @@ const f32 KEY_QuantI = 1.f / KEY_Quant;
 #ifdef _LW_EXPORT
 #	undef AnsiString
 #	undef ref_shader
-#	define ECORE_API
 #endif
 
 #define ref_geom void*

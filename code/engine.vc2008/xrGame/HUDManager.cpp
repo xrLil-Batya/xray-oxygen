@@ -8,7 +8,7 @@
 #include "MainMenu.h"
 #include "grenade.h"
 #include "Car.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "UICursor.h"
 #include "string_table.h"
 #include "game_cl_base.h"
@@ -17,7 +17,7 @@
 #include "phdebug.h"
 #endif
 
-extern CUIGameCustom*	CurrentGameUI() { return HUD().GetGameUI(); }
+extern CUIGame* GameUI() { return HUD().GetGameUI(); }
 
 CFontManager::CFontManager()
 {
@@ -122,11 +122,9 @@ void CFontManager::OnDeviceReset()
 	InitializeFonts();
 }
 
-//--------------------------------------------------------------------
-CHUDManager::CHUDManager() : pUIGame(NULL), m_pHUDTarget(xr_new<CHUDTarget>())
-{
-}
-//--------------------------------------------------------------------
+
+CHUDManager::CHUDManager() : pUIGame(nullptr), m_pHUDTarget(xr_new<CHUDTarget>()) {}
+
 CHUDManager::~CHUDManager()
 {
 	OnDisconnected();
@@ -138,7 +136,7 @@ CHUDManager::~CHUDManager()
 	xr_delete(m_pHUDTarget);
 }
 
-//--------------------------------------------------------------------
+
 void CHUDManager::OnFrame()
 {
 	if (!psHUD_Flags.is(HUD_DRAW_RT2))
@@ -152,7 +150,6 @@ void CHUDManager::OnFrame()
 
 	m_pHUDTarget->CursorOnFrame();
 }
-//--------------------------------------------------------------------
 
 ENGINE_API extern float psHUD_FOV;
 

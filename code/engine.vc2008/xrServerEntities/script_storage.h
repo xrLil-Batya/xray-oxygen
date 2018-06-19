@@ -12,11 +12,6 @@
 
 class CScriptThread;
 
-#ifndef MASTER_GOLD
-#	define USE_DEBUGGER
-#	define USE_LUA_STUDIO
-#endif // #ifndef MASTER_GOLD
-
 #ifdef XRGAME_EXPORTS
 #	ifndef MASTER_GOLD
 #		define PRINT_CALL_STACK
@@ -35,16 +30,13 @@ private:
     CVMLua* luaVM;
 	CScriptThread				*m_current_thread	;
 	BOOL						m_jit				;
+    std::set<void*>             m_dumpedObjList;
 
 public:
 protected:
-	static	int					vscript_log					(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, va_list marker);
 			bool				parse_namespace				(const char* caNamespaceName, LPSTR b, u32 const b_size, LPSTR c, u32 const c_size);
 			bool				do_file						(const char*	caScriptName, const char* caNameSpaceName);
 			void				reinit						();
-#ifdef PRINT_CALL_STACK
-	CMemoryWriter				m_output;
-#endif // #ifdef PRINT_CALL_STACK
 
 public:
 			void				dump_state					();
@@ -63,7 +55,6 @@ public:
 	static	int		__cdecl		script_log					(ELuaMessageType message,	const char*	caFormat, ...);
 	static	bool				print_output				(lua_State *L, const char*	caScriptName, int iErorCode = 0, const char* caErrorText = "see call_stack for details!");
 	static	void				print_error					(lua_State *L,		int		iErrorCode);
-	virtual	void				on_error					(lua_State *L) = 0;
 			void LogTable (lua_State *l, const char* S, int level);
 			void LogVariable (lua_State * l, const char* name, int level, bool bOpenTable);
 

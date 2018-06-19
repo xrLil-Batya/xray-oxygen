@@ -14,7 +14,7 @@
 #include "inventory.h"
 #include "game_base_space.h"
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "actorEffector.h"
 #include "CustomOutfit.h"
 #include "ActorHelmet.h"

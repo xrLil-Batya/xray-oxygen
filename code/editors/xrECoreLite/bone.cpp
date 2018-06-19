@@ -4,12 +4,7 @@
 	* Description:
 	* Copyright:
 */
-
-#include "xrCore/xrCore.h"
-#pragma hdrstop
-#define ECORE_API
-#define ENGINE_API
-
+#include "files_list.hpp"
 #include "bone.h"
 #include "xrCore/envelope.h"
 
@@ -177,22 +172,6 @@ void CBone::LoadData(IReader& F)
 
 	R_ASSERT(F.find_chunk(BONE_CHUNK_SHAPE));
 
-	//	F.r(&shape.type, sizeof(u16));
-	//	F.r(&shape.flags, sizeof(Flags16));
-	//
-	//	F.r(&shape.box.m_rotate, sizeof(Fmatrix33) + 4);
-	//	F.r(&shape.box.m_translate, sizeof(Fvector));
-	//
-	//	F.r(&shape.box.m_halfsize, sizeof(Fvector));
-	//
-	//	F.r(&shape.sphere, sizeof(Fsphere));
-	// //   F.r(&shape.cylinder,sizeof(Fcylinder));
-	//	F.r(&shape.cylinder.m_center, sizeof(Fvector) + 4);
-	//	F.r(&shape.cylinder.m_direction, sizeof(Fvector));
-	//
-	//	F.r(&shape.cylinder.m_height, sizeof(float));
-	//	F.r(&shape.cylinder.m_radius, sizeof(float));
-
 	F.r(&shape, sizeof(SBoneShape) + 8);
 
 	if (F.find_chunk(BONE_CHUNK_FLAGS))
@@ -232,7 +211,6 @@ void CBone::CopyData(CBone* bone)
 	center_of_mass = bone->center_of_mass;
 }
 
-#define ECORE_API
 #include "../../engine.vc2008/xrCDB/xrCDB.h"
 #include "../../engine.vc2008/xrSound/Sound.h"
 #include "GameMtlLib.h"

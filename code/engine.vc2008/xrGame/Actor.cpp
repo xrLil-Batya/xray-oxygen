@@ -20,7 +20,7 @@
 #include "character_info.h"
 #include "CustomOutfit.h"
 #include "actorcondition.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "../xrphysics/matrix_utils.h"
 #include "clsid_game.h"
 #include "Grenade.h"
@@ -446,14 +446,6 @@ void	CActor::Hit(SHit* pHDS)
 	m_hit_slowmo = conditions().HitSlowmo(pHDS);
 
 	//---------------------------------------------------------------
-	if ((Level().CurrentViewEntity() == this) &&
-		(HDS.hit_type == ALife::eHitTypeFireWound))
-	{
-		CObject* pLastHitter = Level().Objects.net_Find(m_iLastHitterID);
-		CObject* pLastHittingWeapon = Level().Objects.net_Find(m_iLastHittingWeaponID);
-		HitSector(pLastHitter, pLastHittingWeapon);
-	}
-
 	if ((mstate_real&mcSprint) && Level().CurrentControlEntity() == this && conditions().DisableSprint(pHDS))
 	{
 		bool const is_special_burn_hit_2_self = (pHDS->who == this) && (pHDS->boneID == BI_NONE) &&
@@ -475,102 +467,80 @@ void	CActor::Hit(SHit* pHDS)
 	if (GodMode())
 	{
 		HDS.power = 0.0f;
-		inherited::Hit(&HDS);
-		return;
 	}
 	else
 	{
 		HDS.power = hit_power;
 		HDS.add_wound = true;
-		inherited::Hit(&HDS);
 	}
+	inherited::Hit(&HDS);
 }
 
 void CActor::HitMark(float P, Fvector dir, CObject* who_object, s16 element, Fvector position_in_bone_space, float impulse, ALife::EHitType hit_type_)
 {
 	if (g_Alive() && Local() && (Level().CurrentEntity() == this))
 	{
-		HUD().HitMarked				(0, P, dir);
+		HUD().HitMarked(0, P, dir);
 
-		CEffectorCam* ce			= Cameras().GetCamEffector((ECamEffectorType)effFireHit);
-		if( ce )					return;
+		CEffectorCam* ce = Cameras().GetCamEffector((ECamEffectorType)effFireHit);
+		if (ce)					return;
 
-		int id						= -1;
-		Fvector						cam_pos,cam_dir,cam_norm;
-		cam_Active()->Get			(cam_pos,cam_dir,cam_norm);
-		cam_dir.normalize_safe		();
-		dir.normalize_safe			();
+		int id = -1;
+		Fvector						cam_pos, cam_dir, cam_norm;
+		cam_Active()->Get(cam_pos, cam_dir, cam_norm);
+		cam_dir.normalize_safe();
+		dir.normalize_safe();
 
-		float ang_diff				= angle_difference	(cam_dir.getH(), dir.getH());
+		float ang_diff = angle_difference(cam_dir.getH(), dir.getH());
 		Fvector						cp;
-		cp.crossproduct				(cam_dir,dir);
-		bool bUp					=(cp.y>0.0f);
+		cp.crossproduct(cam_dir, dir);
+		bool bUp = (cp.y > 0.0f);
 
 		Fvector cross;
-		cross.crossproduct			(cam_dir, dir);
-		VERIFY						(ang_diff>=0.0f && ang_diff<=PI);
+		cross.crossproduct(cam_dir, dir);
+		VERIFY(ang_diff >= 0.0f && ang_diff <= PI);
 
 		float _s1 = PI_DIV_8;
 		float _s2 = _s1 + PI_DIV_4;
 		float _s3 = _s2 + PI_DIV_4;
 		float _s4 = _s3 + PI_DIV_4;
 
-		if ( ang_diff <= _s1 )
-		{
-			id = 2;
-		}
-		else if ( ang_diff > _s1 && ang_diff <= _s2 )
-		{
-			id = (bUp)?5:7;
-		}
-		else if ( ang_diff > _s2 && ang_diff <= _s3 )
-		{
-			id = (bUp)?3:1;
-		}
-		else if ( ang_diff > _s3 && ang_diff <= _s4 )
-		{
-			id = (bUp)?4:6;
-		}
-		else if( ang_diff > _s4 )
-		{
-			id = 0;
-		}
-		else
-		{
-			VERIFY(0);
-		}
+		if (ang_diff <= _s1) id = 2;
+		else if (ang_diff > _s1 && ang_diff <= _s2) id = (bUp) ? 5 : 7;
+		else if (ang_diff > _s2 && ang_diff <= _s3) id = (bUp) ? 3 : 1;
+		else if (ang_diff > _s3 && ang_diff <= _s4) id = (bUp) ? 4 : 6;
+		else if (ang_diff > _s4) id = 0;
 
 		string64 sect_name;
-		xr_sprintf( sect_name, "effector_fire_hit_%d", id );
-		AddEffector( this, effFireHit, sect_name, P * 0.001f );
-
-	}//if hit_type
+		xr_sprintf(sect_name, "effector_fire_hit_%d", id);
+		AddEffector(this, effFireHit, sect_name, P * 0.001f);
+	}
 }
 
 void CActor::HitSignal(float perc, Fvector& vLocalDir, CObject* who, s16 element)
 {
-	if (g_Alive()) 
+	if (g_Alive())
 	{
-
 		// check damage bone
 		Fvector D;
-		XFORM().transform_dir(D,vLocalDir);
+		XFORM().transform_dir(D, vLocalDir);
 
 		float	yaw, pitch;
-		D.getHP(yaw,pitch);
+		D.getHP(yaw, pitch);
 		IRenderVisual *pV = Visual();
 		IKinematicsAnimated *tpKinematics = smart_cast<IKinematicsAnimated*>(pV);
 		IKinematics *pK = smart_cast<IKinematics*>(pV);
 		VERIFY(tpKinematics);
 #pragma todo("Dima to Dima : forward-back bone impulse direction has been determined incorrectly!")
-		MotionID motion_ID = m_anims->m_normal.m_damage[iFloor(pK->LL_GetBoneInstance(element).get_param(1) + (angle_difference(r_model_yaw + r_model_yaw_delta,yaw) <= PI_DIV_2 ? 0 : 1))];
-		float power_factor = perc/100.f; clamp(power_factor,0.f,1.f);
+		MotionID motion_ID = m_anims->m_normal.m_damage[iFloor(pK->LL_GetBoneInstance(element).get_param(1) + (angle_difference(r_model_yaw + r_model_yaw_delta, yaw) <= PI_DIV_2 ? 0 : 1))];
+		float power_factor = perc / 100.f; clamp(power_factor, 0.f, 1.f);
 		VERIFY(motion_ID.valid());
-		tpKinematics->PlayFX(motion_ID,power_factor);
+		tpKinematics->PlayFX(motion_ID, power_factor);
 
 		callback(GameObject::eHit)(lua_game_object(), perc, vLocalDir, smart_cast<const CGameObject*>(who)->lua_game_object(), element);
 	}
 }
+
 void start_tutorial(LPCSTR name);
 void CActor::Die(CObject* who)
 {
@@ -591,7 +561,7 @@ void CActor::Die(CObject* who)
 					grenade->DropGrenade();
 				else
 					item_in_slot->SetDropManual(TRUE);
-			};
+			}
 			continue;
 		}
 		else
@@ -613,21 +583,16 @@ void CActor::Die(CObject* who)
     m_BloodSnd.stop();
     m_DangerSnd.stop();
 
-	CurrentGameUI()->HideShownDialogs();
+	GameUI()->HideShownDialogs();
 	start_tutorial("game_over");
 
 	mstate_wishful &= ~mcAnyMove;
 	mstate_real &= ~mcAnyMove;
 
 	xr_delete(m_sndShockEffector);
-
-	luabind::functor<LPCSTR> lua_function;
-	R_ASSERT2(ai().script_engine().functor<LPCSTR>("sk_actor_death.is_killed", lua_function), "Can't call lua function!");
-
-	lua_function();
 }
 
-void	CActor::SwitchOutBorder(bool new_border_state)
+void CActor::SwitchOutBorder(bool new_border_state)
 {
 	if(new_border_state)
 		callback(GameObject::eExitLevelBorder)(lua_game_object());
@@ -636,7 +601,7 @@ void	CActor::SwitchOutBorder(bool new_border_state)
 	m_bOutBorder=new_border_state;
 }
 
-void CActor::g_Physics			(Fvector& _accel, float jump, float dt)
+void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 {
 	// Correct accel
 	Fvector		accel;
@@ -730,7 +695,7 @@ static bool bLook_cam_fp_zoom = false;
 void CActor::UpdateCL	()
 {
 #ifndef HOLD_PICKUP_OFF
-	if (g_Alive() && Level().CurrentViewEntity() == this && CurrentGameUI() && !CurrentGameUI()->TopInputReceiver())
+	if (g_Alive() && Level().CurrentViewEntity() == this && GameUI() && !GameUI()->TopInputReceiver())
 	{
 		int dik = get_action_dik(kUSE, 0), dik2 = get_action_dik(kUSE, 1);
 		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))

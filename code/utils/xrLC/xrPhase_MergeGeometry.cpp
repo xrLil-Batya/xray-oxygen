@@ -3,9 +3,9 @@
 #include "build.h"
 #include "../xrlc_light/xrface.h"
 
-extern void Detach		(vecFace* S);
+extern void Detach(vecFace* S);
 
-IC BOOL	FaceEqual		(Face* F1, Face* F2)
+IC BOOL	FaceEqual(Face* F1, Face* F2)
 {
 	if (F1->dwMaterial  != F2->dwMaterial)		return FALSE;
 	if (F1->tc.size()	!= F2->tc.size())		return FALSE;
@@ -13,7 +13,7 @@ IC BOOL	FaceEqual		(Face* F1, Face* F2)
 	return TRUE;
 }
 
-BOOL	NeedMerge		(vecFace& subdiv, Fbox& bb_base)
+BOOL NeedMerge (vecFace& subdiv, Fbox& bb_base)
 {
 	// 1. Amount of polygons
 	if (subdiv.size()>=u32(3*c_SS_HighVertLimit/4))	return FALSE;
@@ -80,9 +80,6 @@ IC BOOL	ValidateMerge	(u32 f1, const Fbox& bb_base, const Fbox& bb_base_orig, u3
 	Fvector sz;		merge.getsize	(sz);
 	Fvector orig1;	bb_base_orig.getsize(orig1);
 	Fvector orig2;	bb.getsize		(orig2);
-//	if (sz.x>(4*c_SS_maxsize/3))			return FALSE;	// Don't exceed limits (4/3 GEOM)
-//	if (sz.y>(4*c_SS_maxsize/3))			return FALSE;
-//	if (sz.z>(4*c_SS_maxsize/3))			return FALSE;
 
 	if (!ValidateMergeLinearSize(sz, orig1, orig2, 0))	return FALSE;	// Don't exceed limits (4/3 GEOM)
 	if (!ValidateMergeLinearSize(sz, orig1, orig2, 1))	return FALSE;
@@ -241,27 +238,28 @@ void FindBestMergeCandidate_threads( u32* selected ,  float* selected_volume , u
 	}
 }
 
-void FindBestMergeCandidate( u32* selected ,  float* selected_volume , u32 split , u32 split_size , vecFace* subdiv , Fbox* bb_base_orig , Fbox* bb_base )
+void FindBestMergeCandidate(u32* selected, float* selected_volume, u32 split, u32 split_size, vecFace* subdiv, Fbox* bb_base_orig, Fbox* bb_base)
 {
-	for ( u32 test = split ; test < split_size ; test++ ) {
+	for (u32 test = split; test < split_size; test++) 
+	{
 		Fbox bb;
 		float volume;
-		vecFace& TEST = *( g_XSplit[test] );
+		vecFace& TEST = *(g_XSplit[test]);
 
-		if ( ! FaceEqual( subdiv->front() , TEST.front() ) )
+		if (!FaceEqual(subdiv->front(), TEST.front()))
 			continue;
-		if ( ! NeedMerge( TEST , bb ) )
+		if (!NeedMerge(TEST, bb))
 			continue;
-		if ( ! ValidateMerge( subdiv->size() , *bb_base , *bb_base_orig , TEST.size() , bb , volume ) )
+		if (!ValidateMerge(subdiv->size(), *bb_base, *bb_base_orig, (u32)TEST.size(), bb, volume))
 			continue;
 
-		if ( volume < *selected_volume) {
+		if (volume < *selected_volume) 
+		{
 			*selected = test;
-			*selected_volume	= volume;
+			*selected_volume = volume;
 		}
 	}
 }
-
 
 void CBuild::xrPhase_MergeGeometry	()
 {
@@ -275,7 +273,8 @@ void CBuild::xrPhase_MergeGeometry	()
 		bool		bb_base_orig_inited = false;
 		Fbox		bb_base_orig;
 		Fbox		bb_base;
-		while (NeedMerge(subdiv,bb_base)) {
+		while (NeedMerge(subdiv,bb_base))
+		{
 			//	Save original AABB for later tests
 			if (!bb_base_orig_inited)
 			{

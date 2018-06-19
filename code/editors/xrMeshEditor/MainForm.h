@@ -26,6 +26,7 @@ namespace ECore {
 	private: System::Windows::Forms::ListBox^  BonesList;
 	private: System::Windows::Forms::ToolStripMenuItem^  bonesListToolStripMenuItem;
 	private: System::Windows::Forms::SaveFileDialog^  saveFileDialog1;
+	private: System::Windows::Forms::ToolStripMenuItem^  newToolStripMenuItem;
 	public:
 
 	public:
@@ -94,6 +95,7 @@ namespace ECore {
 			this->bonesListToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->helpToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->saveFileDialog1 = (gcnew System::Windows::Forms::SaveFileDialog());
+			this->newToolStripMenuItem = (gcnew System::Windows::Forms::ToolStripMenuItem());
 			this->groupBox1->SuspendLayout();
 			this->menuStrip1->SuspendLayout();
 			this->SuspendLayout();
@@ -155,7 +157,10 @@ namespace ECore {
 			// 
 			// filesToolStripMenuItem
 			// 
-			this->filesToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(1) { this->meshToolStripMenuItem });
+			this->filesToolStripMenuItem->DropDownItems->AddRange(gcnew cli::array< System::Windows::Forms::ToolStripItem^  >(2) {
+				this->meshToolStripMenuItem,
+					this->newToolStripMenuItem
+			});
 			this->filesToolStripMenuItem->Name = L"filesToolStripMenuItem";
 			this->filesToolStripMenuItem->Size = System::Drawing::Size(42, 20);
 			this->filesToolStripMenuItem->Text = L"Files";
@@ -167,13 +172,13 @@ namespace ECore {
 					this->saveToolStripMenuItem, this->exportToolStripMenuItem
 			});
 			this->meshToolStripMenuItem->Name = L"meshToolStripMenuItem";
-			this->meshToolStripMenuItem->Size = System::Drawing::Size(103, 22);
+			this->meshToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->meshToolStripMenuItem->Text = L"Mesh";
 			// 
 			// loadToolStripMenuItem
 			// 
 			this->loadToolStripMenuItem->Name = L"loadToolStripMenuItem";
-			this->loadToolStripMenuItem->Size = System::Drawing::Size(107, 22);
+			this->loadToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->loadToolStripMenuItem->Text = L"Load";
 			this->loadToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::loadToolStripMenuItem_Click);
 			// 
@@ -184,7 +189,7 @@ namespace ECore {
 					this->xRayAnimLibraryToolStripMenuItem
 			});
 			this->saveToolStripMenuItem->Name = L"saveToolStripMenuItem";
-			this->saveToolStripMenuItem->Size = System::Drawing::Size(107, 22);
+			this->saveToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->saveToolStripMenuItem->Text = L"Save";
 			// 
 			// xRayObjectToolStripMenuItem
@@ -206,26 +211,26 @@ namespace ECore {
 					this->xRayAnimGameToolStripMenuItem, this->xRayAnimSDKToolStripMenuItem
 			});
 			this->exportToolStripMenuItem->Name = L"exportToolStripMenuItem";
-			this->exportToolStripMenuItem->Size = System::Drawing::Size(107, 22);
+			this->exportToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->exportToolStripMenuItem->Text = L"Export";
 			// 
 			// xRayIngameToolStripMenuItem
 			// 
 			this->xRayIngameToolStripMenuItem->Name = L"xRayIngameToolStripMenuItem";
-			this->xRayIngameToolStripMenuItem->Size = System::Drawing::Size(166, 22);
+			this->xRayIngameToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->xRayIngameToolStripMenuItem->Text = L"X-Ray inGame";
 			this->xRayIngameToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::xRayIngameToolStripMenuItem_Click);
 			// 
 			// xRayAnimGameToolStripMenuItem
 			// 
 			this->xRayAnimGameToolStripMenuItem->Name = L"xRayAnimGameToolStripMenuItem";
-			this->xRayAnimGameToolStripMenuItem->Size = System::Drawing::Size(166, 22);
+			this->xRayAnimGameToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->xRayAnimGameToolStripMenuItem->Text = L"X-Ray animGame";
 			// 
 			// xRayAnimSDKToolStripMenuItem
 			// 
 			this->xRayAnimSDKToolStripMenuItem->Name = L"xRayAnimSDKToolStripMenuItem";
-			this->xRayAnimSDKToolStripMenuItem->Size = System::Drawing::Size(166, 22);
+			this->xRayAnimSDKToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->xRayAnimSDKToolStripMenuItem->Text = L"X-Ray animSDK";
 			// 
 			// toolsToolStripMenuItem
@@ -241,14 +246,14 @@ namespace ECore {
 			// gameMaterialsToolStripMenuItem
 			// 
 			this->gameMaterialsToolStripMenuItem->Name = L"gameMaterialsToolStripMenuItem";
-			this->gameMaterialsToolStripMenuItem->Size = System::Drawing::Size(153, 22);
+			this->gameMaterialsToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->gameMaterialsToolStripMenuItem->Text = L"GameMaterials";
 			this->gameMaterialsToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::gameMaterialsToolStripMenuItem_Click);
 			// 
 			// bonesListToolStripMenuItem
 			// 
 			this->bonesListToolStripMenuItem->Name = L"bonesListToolStripMenuItem";
-			this->bonesListToolStripMenuItem->Size = System::Drawing::Size(153, 22);
+			this->bonesListToolStripMenuItem->Size = System::Drawing::Size(180, 22);
 			this->bonesListToolStripMenuItem->Text = L"Bones list";
 			this->bonesListToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::bonesListToolStripMenuItem_Click);
 			// 
@@ -257,6 +262,13 @@ namespace ECore {
 			this->helpToolStripMenuItem->Name = L"helpToolStripMenuItem";
 			this->helpToolStripMenuItem->Size = System::Drawing::Size(44, 20);
 			this->helpToolStripMenuItem->Text = L"Help";
+			// 
+			// newToolStripMenuItem
+			// 
+			this->newToolStripMenuItem->Name = L"newToolStripMenuItem";
+			this->newToolStripMenuItem->Size = System::Drawing::Size(180, 22);
+			this->newToolStripMenuItem->Text = L"New";
+			this->newToolStripMenuItem->Click += gcnew System::EventHandler(this, &MeshEdit::newToolStripMenuItem_Click);
 			// 
 			// MeshEdit
 			// 
@@ -290,5 +302,6 @@ namespace ECore {
 	private: System::Void gameMaterialsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void BonesList_SelectedIndexChanged(System::Object^  sender, System::EventArgs^  e);
 	private: System::Void bonesListToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
+	private: System::Void newToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e);
 };
 }

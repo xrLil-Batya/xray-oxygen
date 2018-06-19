@@ -7,7 +7,6 @@
 #include "xrMessages.h"
 #include "xrserver.h"
 #include "level.h"
-#include "script_debugger.h"
 #include "ai_debug.h"
 #include "alife_simulator.h"
 #include "game_cl_base.h"
@@ -27,7 +26,7 @@
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
 #include "../xrEngine/date_time.h"
-#include "UIGameSP.h"
+#include "UIGame.h"
 #include "ui/UIActorMenu.h"
 #include "ui/UIStatic.h"
 #include "zone_effector.h"
@@ -70,7 +69,6 @@ extern	int		g_dwInputUpdateDelta	;
 #ifdef DEBUG
 extern	BOOL	g_ShowAnimationInfo		;
 #endif // DEBUG
-extern	BOOL	g_bShowHitSectors		;
 extern	ESingleGameDifficulty g_SingleGameDifficulty;
 extern	BOOL	g_show_wnd_rect2			;
 //-----------------------------------------------------------
@@ -457,7 +455,7 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 	FS.m_Flags.set( CLocatorAPI::flNeedCheck, FALSE );
 }
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 
 class CCC_ALifeSave : public IConsole_Command
 {
@@ -473,7 +471,7 @@ public:
 
 		if (Actor()->HasInfo("cant_game_save_now"))
 		{
-			SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+			SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 			_s->wnd()->TextItemControl()->SetText(CStringTable().translate("st_cant_game_save_now").c_str());
 			return;
 		}
@@ -515,7 +513,7 @@ public:
 #ifdef DEBUG
 		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
 #endif
-		SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 		LPSTR save_name;
 		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
 		_s->wnd()->TextItemControl()->SetText(save_name);
@@ -777,66 +775,6 @@ public:
 	}
 };
 
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-class CCC_ScriptDbg : public IConsole_Command {
-public:
-	CCC_ScriptDbg(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) {
-		
-		if(strstr(cName,"script_debug_break")==cName ){
-		
-		CScriptDebugger* d = ai().script_engine().debugger();
-		if(d){
-			if(d->Active())
-				d->initiateDebugBreak();
-			else
-				Msg("Script debugger not active.");
-		}else
-			Msg("Script debugger not present.");
-		}
-		else if(strstr(cName,"script_debug_stop")==cName ){
-			ai().script_engine().stopDebugger();
-		}
-		else if(strstr(cName,"script_debug_restart")==cName ){
-			ai().script_engine().restartDebugger();
-		};
-	};
-	
-
-	virtual void	Info	(TInfo& I)		
-	{
-		if(strstr(cName,"script_debug_break")==cName )
-			xr_strcpy(I,"initiate script debugger [DebugBreak] command"); 
-
-		else if(strstr(cName,"script_debug_stop")==cName )
-			xr_strcpy(I,"stop script debugger activity"); 
-
-		else if(strstr(cName,"script_debug_restart")==cName )
-			xr_strcpy(I,"restarts script debugger or start if no script debugger presents"); 
-	}
-};
-#endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-
-#if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-class CCC_ScriptLuaStudioConnect : public IConsole_Command {
-public:
-	CCC_ScriptLuaStudioConnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
-	{
-		ai().script_engine().try_connect_to_debugger	();
-	};
-};
-
-class CCC_ScriptLuaStudioDisconnect : public IConsole_Command {
-public:
-	CCC_ScriptLuaStudioDisconnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
-	{
-		ai().script_engine().disconnect_from_debugger	();
-	};
-};
-#endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-
 class CCC_DumpInfos : public IConsole_Command {
 public:
 	CCC_DumpInfos	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -1039,12 +977,10 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 		  float				step_count = (float)atof(args);
-#ifndef		DEBUG
+#ifndef DEBUG
 		  clamp				(step_count,50.f,200.f);
 #endif
-		  //IPHWorld::SetStep(1.f/step_count);
 		  ph_console::ph_step_time = 1.f/step_count;
-		  //physics_world()->SetStep(1.f/step_count);
 		  if(physics_world())
 			 physics_world()->SetStep(ph_console::ph_step_time);
 	  }
@@ -1145,22 +1081,23 @@ public:
 				return;
 			}
 
-			string4096		S;
-			shared_str		m_script_name = "console command";
-			xr_sprintf			(S,"%s\n",args);
-			int				l_iErrorCode = luaL_loadbuffer(ai().script_engine().lua(),S,xr_strlen(S),"@console_command");
-			if (!l_iErrorCode) {
+			string4096 S;
+			shared_str m_script_name = "console command";
+			xr_sprintf(S,"%s\n",args);
+			int l_iErrorCode = luaL_loadbuffer(ai().script_engine().lua(),S,xr_strlen(S),"@console_command");
+			if (!l_iErrorCode) 
+			{
 				l_iErrorCode = lua_pcall(ai().script_engine().lua(),0,0,0);
-				if (l_iErrorCode) {
+				if (l_iErrorCode) 
+				{
 					ai().script_engine().print_output	(ai().script_engine().lua(),*m_script_name,l_iErrorCode);
-					ai().script_engine().on_error		(ai().script_engine().lua());
 					return;
 				}
 			}
 
 			ai().script_engine().print_output	(ai().script_engine().lua(),*m_script_name,l_iErrorCode);
 		}
-	}//void	Execute
+	}
 
 	virtual void Status( TStatus& S )
 	{
@@ -1492,12 +1429,8 @@ public:
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( !ui_game_sp )
-		{
-			return;
-		}
-		PIItem item = ui_game_sp->ActorMenu().get_upgrade_item();
+
+		PIItem item = GameUI()->ActorMenu().get_upgrade_item();
 		if ( item )
 		{
 			item->log_upgrades();
@@ -1512,27 +1445,23 @@ public:
 class CCC_InvDropAllItems : public IConsole_Command
 {
 public:
-	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute( LPCSTR args )
+	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args)
 	{
-		if ( !g_pGameLevel )
+		if (!g_pGameLevel)
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( !ui_game_sp )
-		{
-			return;
-		}
+
 		int d = 0;
-		sscanf( args, "%d", &d );
-		if ( ui_game_sp->ActorMenu().DropAllItemsFromRuck( d == 1 ) )
+		sscanf(args, "%d", &d);
+		if (GameUI()->ActorMenu().DropAllItemsFromRuck(d == 1))
 		{
-			Msg( "- All items from ruck of Actor is dropping now." );
+			Msg("- All items from ruck of Actor is dropping now.");
 		}
 		else
 		{
-			Msg( "! ActorMenu is not in state `Inventory`" );
+			Msg("! ActorMenu is not in state `Inventory`");
 		}
 	}
 }; // CCC_InvDropAllItems
@@ -1749,16 +1678,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Integer, "ai_dbg_inactive_time", &g_AI_inactive_time, 0, 1000000);
 
 	CMD1(CCC_DebugNode, "ai_dbg_node");
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-	CMD1(CCC_ScriptDbg, "script_debug_break");
-	CMD1(CCC_ScriptDbg, "script_debug_stop");
-	CMD1(CCC_ScriptDbg, "script_debug_restart");
-#endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-
-#if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-	CMD1(CCC_ScriptLuaStudioConnect, "lua_studio_connect");
-	CMD1(CCC_ScriptLuaStudioDisconnect, "lua_studio_disconnect");
-#endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 
 	CMD1(CCC_ShowMonsterInfo, "ai_monster_info");
 	CMD1(CCC_DebugFonts, "debug_fonts");

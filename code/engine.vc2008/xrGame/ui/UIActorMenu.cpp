@@ -2,7 +2,7 @@
 #include "UIActorMenu.h"
 #include "UIActorStateInfo.h"
 #include "../actor.h"
-#include "../uigamesp.h"
+#include "../UiGame.h"
 #include "../inventory.h"
 #include "../inventory_item.h"
 #include "../InventoryBox.h"
@@ -96,39 +96,74 @@ void CUIActorMenu::SetInvBox(CInventoryBox* box)
 
 void CUIActorMenu::SetMenuMode(EMenuMode mode)
 {
-	SetCurrentItem( NULL );
-	m_hint_wnd->set_text( NULL );
-	
-	if ( mode != m_currMenuMode )
+	SetCurrentItem(nullptr);
+	m_hint_wnd->set_text(nullptr);
+
+	if (mode != m_currMenuMode)
 	{
-		if (!mmUndefined) m_ActorCharacterInfo->SetActorIcon();
-		switch(m_currMenuMode)
+		if (!mmUndefined) 
+			m_ActorCharacterInfo->SetActorIcon();
+
+		switch (m_currMenuMode)
 		{
-			case mmUndefined:		break;
-			case mmInventory:		DeInitInventoryMode(); break;
-			case mmTrade:			DeInitTradeMode(); break;
-			case mmUpgrade:			DeInitUpgradeMode(); break;
-			case mmDeadBodySearch:	DeInitDeadBodySearchMode(); break;
-			default: R_ASSERT(0); break;
+			case mmUndefined:		
+				break;
+
+			case mmInventory:		
+				DeInitInventoryMode(); 
+				break;
+
+			case mmTrade:			
+				DeInitTradeMode(); 
+				break;
+
+			case mmUpgrade:			
+				DeInitUpgradeMode(); 
+				break;
+
+			case mmDeadBodySearch:	
+				DeInitDeadBodySearchMode(); 
+				break;
+
+			default: 
+				R_ASSERT(0); 
+				break;
 		}
 
-		CurrentGameUI()->UIMainIngameWnd->ShowZoneMap(false);
+		GameUI()->UIMainIngameWnd->ShowZoneMap(false);
 
 		m_currMenuMode = mode;
-		switch(mode)
+		switch (mode)
 		{
-			case mmUndefined:		ResetMode(); break;
-			case mmInventory:		InitInventoryMode(); break;
-			case mmTrade:			InitTradeMode(); break;
-			case mmUpgrade:			InitUpgradeMode(); break;
-			case mmDeadBodySearch:	InitDeadBodySearchMode(); break;
-			default: R_ASSERT(0); break;
+			case mmUndefined:
+				ResetMode(); 
+				break;
+
+			case mmInventory:		
+				InitInventoryMode();
+				break;
+
+			case mmTrade:			
+				InitTradeMode(); 
+				break;
+
+			case mmUpgrade:			
+				InitUpgradeMode(); 
+				break;
+
+			case mmDeadBodySearch:	
+				InitDeadBodySearchMode(); 
+				break;
+
+			default: 
+				R_ASSERT(0); 
+				break;
 		}
 		UpdateConditionProgressBars();
 		CurModeToScript();
 	}
 
-	if ( m_pActorInvOwner )
+	if (m_pActorInvOwner)
 	{
 		UpdateOutfit();
 		UpdateActor();
@@ -167,53 +202,59 @@ void CUIActorMenu::Show(bool status)
 
 void CUIActorMenu::Draw()
 {
-	if (psHUD_Flags.is(HUD_DRAW)) {
-	    CurrentGameUI()->UIMainIngameWnd->DrawZoneMap();
+	if (psHUD_Flags.is(HUD_DRAW)) 
+	{
+	    GameUI()->UIMainIngameWnd->DrawZoneMap();
 	    m_hint_wnd->Draw();
-		CurrentGameUI()->UIMainIngameWnd->DrawMainIndicatorsForInventory();
+		GameUI()->UIMainIngameWnd->DrawMainIndicatorsForInventory();
 	}
 
-	inherited::Draw	();
+	inherited::Draw();
 	m_ItemInfo->Draw();
 }
 
 void CUIActorMenu::Update()
-{	
-	{ // all mode
-		m_last_time = Device.dwTimeGlobal;
-		m_ActorStateInfo->UpdateActorInfo( m_pActorInvOwner );
-	}
+{
+	m_last_time = Device.dwTimeGlobal;
+	m_ActorStateInfo->UpdateActorInfo(m_pActorInvOwner);
 
-	switch ( m_currMenuMode )
+	switch (m_currMenuMode)
 	{
-	case mmUndefined:
-		break;
-	case mmInventory:
+		case mmUndefined:
+			break;
+
+		case mmInventory:
 		{
-			CurrentGameUI()->UIMainIngameWnd->UpdateZoneMap();
+			GameUI()->UIMainIngameWnd->UpdateZoneMap();
 			break;
 		}
-	case mmTrade:
+
+		case mmTrade:
 		{
-			if(m_pPartnerInvOwner->inventory().ModifyFrame() != m_trade_partner_inventory_state)
-				InitPartnerInventoryContents	();
-			CheckDistance					();
+			if (m_pPartnerInvOwner->inventory().ModifyFrame() != m_trade_partner_inventory_state)
+				InitPartnerInventoryContents();
+			CheckDistance();
 			break;
 		}
-	case mmUpgrade:
+
+		case mmUpgrade:
 		{
 			UpdateUpgradeItem();
 			CheckDistance();
 			break;
 		}
-	case mmDeadBodySearch:
+
+		case mmDeadBodySearch:
 		{
 			CheckDistance();
 			break;
 		}
-	default: R_ASSERT(0); break;
+
+		default: 
+			R_ASSERT(0); 
+			break;
 	}
-	
+
 	inherited::Update();
 	m_ItemInfo->Update();
 	m_hint_wnd->Update();
@@ -221,16 +262,18 @@ void CUIActorMenu::Update()
 
 bool CUIActorMenu::StopAnyMove()  // true = актёр не идёт при открытом меню
 {
-	switch ( m_currMenuMode )
+	switch (m_currMenuMode)
 	{
-	case mmInventory:
-		return false;
-	case mmUndefined:
-	case mmTrade:
-	case mmUpgrade:
-	case mmDeadBodySearch:
-		return true;
+		case mmInventory:
+			return false;
+
+		case mmUndefined:
+		case mmTrade:
+		case mmUpgrade:
+		case mmDeadBodySearch:
+			return true;
 	}
+
 	return true;
 }
 

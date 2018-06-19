@@ -61,10 +61,9 @@ void CPuddles::Load()
 		mesh->vCount = data->r_u32();
 		u32 vStride = D3DXGetFVFVertexSize(fvf);
 
-		u32		dwUsage = D3DUSAGE_WRITEONLY;
 		VERIFY(NULL == mesh->p_rm_Vertices);
 
-		R_CHK(dx10BufferUtils::CreateVertexBuffer(&mesh->p_rm_Vertices, data->pointer(), dwUsage, mesh->vCount*vStride));
+		R_CHK(dx10BufferUtils::CreateVertexBuffer(&mesh->p_rm_Vertices, data->pointer(), mesh->vCount*vStride));
 
 		R_ASSERT(data->find_chunk(OGF_INDICES));
 		mesh->iBase = 0;
@@ -72,7 +71,7 @@ void CPuddles::Load()
 		mesh->dwPrimitives = mesh->iCount / 3;
 
 		VERIFY(NULL == mesh->p_rm_Indices);
-		R_CHK(dx10BufferUtils::CreateVertexBuffer(&mesh->p_rm_Indices, data->pointer(), dwUsage, mesh->iCount * 2));
+		R_CHK(dx10BufferUtils::CreateVertexBuffer(&mesh->p_rm_Indices, data->pointer(), mesh->iCount * 2));
 
 		mesh->rm_geom.create(vFormat, mesh->p_rm_Vertices, mesh->p_rm_Indices);
 	}

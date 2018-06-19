@@ -15,7 +15,7 @@
 #include "client_spawn_manager.h"
 #include "../xrEngine/igame_persistent.h"
 #include "game_cl_base.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "UI/UIDialogWnd.h"
 #include "../xrEngine/date_time.h"
 #include "ai_space.h"
@@ -324,45 +324,47 @@ CClientSpawnManager	&get_client_spawn_manager()
 
 void add_dialog_to_render(CUIDialogWnd* pDialog)
 {
-	CurrentGameUI()->AddDialogToRender(pDialog);
+	GameUI()->AddDialogToRender(pDialog);
 }
 
 void remove_dialog_to_render(CUIDialogWnd* pDialog)
 {
-	CurrentGameUI()->RemoveDialogToRender(pDialog);
+	GameUI()->RemoveDialogToRender(pDialog);
 }
 
 void hide_indicators()
 {
-	if(CurrentGameUI())
+	if (GameUI())
 	{
-		CurrentGameUI()->HideShownDialogs();
-		CurrentGameUI()->ShowGameIndicators(false);
-		CurrentGameUI()->ShowCrosshair(false);
+		GameUI()->HideShownDialogs();
+		GameUI()->ShowGameIndicators(false);
+		GameUI()->ShowCrosshair(false);
 	}
-	psActorFlags.set(AF_GODMODE_RT, TRUE);
+
+	psActorFlags.set(AF_GODMODE_RT, true);
 }
 
 void hide_indicators_safe()
 {
-	if(CurrentGameUI())
+	if (GameUI())
 	{
-		CurrentGameUI()->ShowGameIndicators(false);
-		CurrentGameUI()->ShowCrosshair(false);
-
-		CurrentGameUI()->OnExternalHideIndicators();
+		GameUI()->ShowGameIndicators(false);
+		GameUI()->ShowCrosshair(false);
+		GameUI()->OnExternalHideIndicators();
 	}
-	psActorFlags.set(AF_GODMODE_RT, TRUE);
+
+	psActorFlags.set(AF_GODMODE_RT, true);
 }
 
 void show_indicators()
 {
-	if(CurrentGameUI())
+	if (GameUI())
 	{
-		CurrentGameUI()->ShowGameIndicators(true);
-		CurrentGameUI()->ShowCrosshair(true);
+		GameUI()->ShowGameIndicators(true);
+		GameUI()->ShowCrosshair(true);
 	}
-	psActorFlags.set(AF_GODMODE_RT, FALSE);
+
+	psActorFlags.set(AF_GODMODE_RT, true);
 }
 
 void show_weapon(bool b)

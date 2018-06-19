@@ -4,11 +4,10 @@
 #include "object_broker.h"
 #include "UIStatic.h"
 
-CUIListBoxItem::CUIListBoxItem(float height)
-:m_text(NULL),tag(u32(-1))
+CUIListBoxItem::CUIListBoxItem(float height):m_text(NULL), tag(u32(-1))
 {
-	SetHeight		(height);
-	m_text			= AddTextField("---", 10.0f);
+	SetHeight(height);
+	m_text = AddTextField("---", 10.0f);
 }
 
 void CUIListBoxItem::SetTAG(u32 value)
@@ -23,10 +22,10 @@ u32 CUIListBoxItem::GetTAG()
 
 void CUIListBoxItem::Draw()
 {
-	if(m_bSelected)
+	if (m_bSelected)
 		DrawElements();
 
-	CUIWindow::Draw	();
+	CUIWindow::Draw();
 }
 
 void CUIListBoxItem::OnFocusReceive()
@@ -47,7 +46,7 @@ void CUIListBoxItem::SetFont(CGameFont* F)
 
 CGameFont* CUIListBoxItem::GetFont()
 {
-	return (m_text)?m_text->GetFont():NULL;
+	return (m_text) ? m_text->GetFont() : NULL;
 }
 
 bool CUIListBoxItem::OnMouseDown(int mouse_btn)
@@ -58,7 +57,8 @@ bool CUIListBoxItem::OnMouseDown(int mouse_btn)
 		GetMessageTarget()->SendMessage(this, LIST_ITEM_SELECT, &tag);
 		GetMessageTarget()->SendMessage(this, LIST_ITEM_CLICKED, &tag);
 		return true;
-	}else
+	}
+	else
 		return false;
 }
 
@@ -69,45 +69,45 @@ void CUIListBoxItem::SetTextColor(u32 color)
 
 u32 CUIListBoxItem::GetTextColor()
 {
-	return (m_text)?m_text->GetTextColor():0xffffffff;
+	return (m_text) ? m_text->GetTextColor() : 0xffffffff;
 }
 
 float CUIListBoxItem::FieldsLength() const
 {
-	if(m_ChildWndList.empty())
+	if (m_ChildWndList.empty())
 		return 0.0f;
 
 	float len = 0.0f;
 
-	CUIWindow* w	= m_ChildWndList.back();
-	len				+= w->GetWndPos().x + w->GetWidth();
+	CUIWindow* w = m_ChildWndList.back();
+	len += w->GetWndPos().x + w->GetWidth();
 	return len;
 }
 
 CUIStatic* CUIListBoxItem::AddIconField(float width)
 {
-	CUIStatic* st			= xr_new<CUIStatic>();
-	st->SetAutoDelete		(true);
-	st->SetWndPos			(Fvector2().set(FieldsLength(),0.0f));
-	st->SetWndSize			(Fvector2().set(width, GetHeight()));
-	AttachChild				(st);
-	return					st;
+	CUIStatic* st = xr_new<CUIStatic>();
+	st->SetAutoDelete(true);
+	st->SetWndPos(Fvector2().set(FieldsLength(), 0.0f));
+	st->SetWndSize(Fvector2().set(width, GetHeight()));
+	AttachChild(st);
+	return st;
 }
 
 CUITextWnd* CUIListBoxItem::AddTextField(LPCSTR txt, float width)
 {
-	CUITextWnd* st			= xr_new<CUITextWnd>();
-	st->SetAutoDelete		(true);
-	st->SetWndPos			(Fvector2().set(FieldsLength(),0.0f));
-	st->SetWndSize			(Fvector2().set(width, GetHeight()));
+	CUITextWnd* st = xr_new<CUITextWnd>();
+	st->SetAutoDelete(true);
+	st->SetWndPos(Fvector2().set(FieldsLength(), 0.0f));
+	st->SetWndSize(Fvector2().set(width, GetHeight()));
 
-	AttachChild				(st);
+	AttachChild(st);
 
-	st->SetFont				(GetFont());
-	st->SetTextColor		(GetTextColor());
-	st->SetText				(txt);	
-	st->SetVTextAlignment	(valCenter);	
-	return							st;
+	st->SetFont(GetFont());
+	st->SetTextColor(GetTextColor());
+	st->SetText(txt);	
+	st->SetVTextAlignment(valCenter);	
+	return st;
 }
 
 void CUIListBoxItem::SetData(void* data)

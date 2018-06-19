@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UIDialogHolder.h"
 #include "ui/UIDialogWnd.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "UICursor.h"
 #include "level.h"
 #include "actor.h"
@@ -55,13 +55,13 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 		bool b = !!psHUD_Flags.test(HUD_CROSSHAIR_RT);
 		m_input_receivers.back().m_flags.set(recvItem::eCrosshair, b);
 
-		b = CurrentGameUI()->GameIndicatorsShown();
+		b = GameUI()->GameIndicatorsShown();
 		m_input_receivers.back().m_flags.set(recvItem::eIndicators, b);
 
 		if (bDoHideIndicators)
 		{
 			psHUD_Flags.set(HUD_CROSSHAIR_RT, FALSE);
-			CurrentGameUI()->ShowGameIndicators(false);
+			GameUI()->ShowGameIndicators(false);
 		}
 	}
 	pDialog->SetHolder(this);
@@ -97,16 +97,16 @@ void CDialogHolder::StopMenu(CUIDialogWnd* pDialog)
 			bool b = !!m_input_receivers.back().m_flags.test(recvItem::eCrosshair);
 			psHUD_Flags.set(HUD_CROSSHAIR_RT, b);
 			b = !!m_input_receivers.back().m_flags.test(recvItem::eIndicators);
-			CurrentGameUI()->ShowGameIndicators(b);
+			GameUI()->ShowGameIndicators(b);
 		}
 
-		SetMainInputReceiver(NULL, false);
+		SetMainInputReceiver(nullptr, false);
 	}
 	else
 		SetMainInputReceiver(pDialog, true);
 
 	RemoveDialogToRender(pDialog);
-	pDialog->SetHolder(NULL);
+	pDialog->SetHolder(nullptr);
 
 	if (!TopInputReceiver() || !TopInputReceiver()->NeedCursor())
 		GetUICursor().Hide();
@@ -164,8 +164,8 @@ void  CDialogHolder::OnExternalHideIndicators()
 	xr_vector<recvItem>::iterator it_e = m_input_receivers.end();
 	for (; it != it_e; ++it)
 	{
-		(*it).m_flags.set(recvItem::eIndicators, FALSE);
-		(*it).m_flags.set(recvItem::eCrosshair, FALSE);
+		(*it).m_flags.set(recvItem::eIndicators, false);
+		(*it).m_flags.set(recvItem::eCrosshair, false);
 	}
 }
 
@@ -174,8 +174,8 @@ CUIDialogWnd* CDialogHolder::TopInputReceiver()
 	if (!m_input_receivers.empty())
 		return m_input_receivers.back().m_item;
 
-	return NULL;
-};
+	return nullptr;
+}
 
 void CDialogHolder::SetMainInputReceiver(CUIDialogWnd* ir, bool _find_remove)
 {

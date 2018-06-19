@@ -26,9 +26,8 @@
 const char* alife_section = "alife";
 extern void destroy_lua_wpn_params();
 
-CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
-	CALifeUpdateManager			(server, alife_section),
-	CALifeSimulatorBase			(server, alife_section)
+CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) : 
+	CALifeUpdateManager(server, alife_section), CALifeSimulatorBase(server, alife_section)
 {
     if (strstr(Core.Params, "-keep_lua"))
     {
@@ -45,24 +44,24 @@ CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
 	ai().set_alife				(this);
 
 	typedef IGame_Persistent::params params;
-	params						&p = g_pGamePersistent->m_game_params;
+	params &p = g_pGamePersistent->m_game_params;
 	
 	R_ASSERT2(xr_strlen(p.m_game_or_spawn) && !xr_strcmp(p.m_alife,"alife") && !xr_strcmp(p.m_game_type,"single"), "Invalid server options!");
 	
-	string256						 temp;
-	xr_strcpy						(temp,p.m_game_or_spawn);
-	xr_strcat						(temp,"/");
-	xr_strcat						(temp,p.m_game_type);
-	xr_strcat						(temp,"/");
-	xr_strcat						(temp,p.m_alife);
+	string256 temp;
+	xr_strcpy(temp,p.m_game_or_spawn);
+	xr_strcat(temp,"/");
+	xr_strcat(temp,p.m_game_type);
+	xr_strcat(temp,"/");
+	xr_strcat(temp,p.m_alife);
     GamePersistent().SetServerOption(temp);
 	
-	LPCSTR						start_game_callback = pSettings->r_string(alife_section,"start_game_callback");
-	luabind::functor<void>		functor;
-	R_ASSERT2					(ai().script_engine().functor(start_game_callback,functor),"failed to get start game callback");
-	functor						();
+	LPCSTR start_game_callback = pSettings->r_string(alife_section,"start_game_callback");
+	luabind::functor<void> functor;
+	R_ASSERT2(ai().script_engine().functor(start_game_callback,functor),"failed to get start game callback");
+	functor();
 
-	load						(p.m_game_or_spawn,!xr_strcmp(p.m_new_or_load,"load") ? false : true, !xr_strcmp(p.m_new_or_load,"new"));
+	load(p.m_game_or_spawn,!xr_strcmp(p.m_new_or_load,"load") ? false : true, !xr_strcmp(p.m_new_or_load,"new"));
 }
 
 CALifeSimulator::~CALifeSimulator()

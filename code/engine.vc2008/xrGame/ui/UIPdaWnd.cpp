@@ -7,7 +7,7 @@
 #include "UIInventoryUtilities.h"
 
 #include "../level.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 
 #include "UIStatic.h"
 #include "UIFrameWindow.h"
@@ -135,7 +135,7 @@ void CUIPdaWnd::Show(bool status)
 	}else
 	{
 		InventoryUtilities::SendInfoToActor	("ui_pda_hide");
-		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
+		GameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
 		m_pActiveDialog->Show				(false);
 		g_btnHint->Discard					();
 		g_statHint->Discard					();

@@ -8,8 +8,7 @@
 #include	"tss.h"
 #include	"blenders\blender.h"
 #include	"blenders\blender_recorder.h"
-#include	"../../xrScripts/lua_studio/ai_script_space.h"
-#include	"../../xrScripts/lua_studio/ai_script_lua_extension.h"
+#include	<luabind\luabind.hpp>
 #include	"luabind/return_reference_to_policy.hpp"
 #include	"dxRenderDeviceRender.h"
 #include "../../xrScripts/lua_traceback.hpp"
@@ -75,7 +74,7 @@ public:
 
 void LuaLog(LPCSTR caMessage)
 {
-	Lua::LuaOut	(Lua::eLuaMessageTypeMessage,"%s",caMessage);
+	Log(caMessage);
 }
 void LuaError(lua_State* L)
 {
@@ -158,8 +157,10 @@ void CResourceManager::LS_Load()
 		if		(0==namesp[0])			xr_strcpy	(namesp,"_G");
 		strconcat						(sizeof(fn),fn,::Render->getShaderPath(),(*folder)[it]);
 		FS.update_path					(fn,"$game_shaders$",fn);
-		try {
-			Script::bfLoadFileIntoNamespace	(luaVM->LSVM(),fn,namesp,true);
+        
+		try
+		{
+			luaVM->LoadFileIntoNamespace(fn, namesp, true);
 		} catch (...)
 		{
 			Log(lua_tostring(luaVM->LSVM(),-1));
@@ -180,11 +181,9 @@ BOOL	CResourceManager::_lua_HasShader	(LPCSTR s_shader)
 		undercorated[i]=('\\'==s_shader[i])?'_':s_shader[i];
 
 #ifdef _EDITOR
-	return Script::bfIsObjectPresent(luaVM->LSVM(),undercorated,"editor",LUA_TFUNCTION);
+	return LVM.IsObjectPresent(undercorated,"editor",LUA_TFUNCTION);
 #else
-	return	Script::bfIsObjectPresent(luaVM->LSVM(),undercorated,"normal",LUA_TFUNCTION)		||
-			Script::bfIsObjectPresent(luaVM->LSVM(),undercorated,"l_special",LUA_TFUNCTION)
-			;
+	return	luaVM->IsObjectPresent(undercorated,"normal",LUA_TFUNCTION) || luaVM->IsObjectPresent(undercorated,"l_special",LUA_TFUNCTION);
 #endif
 }
 
@@ -210,7 +209,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	C.detail_scaler		= NULL;
 
 	// Compile element	(LOD0 - HQ)
-	if (Script::bfIsObjectPresent(luaVM->LSVM(),s_shader,"normal_hq",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"normal_hq",LUA_TFUNCTION))
 	{
 		// Analyze possibility to detail this shader
 		C.iElement			= 0;
@@ -219,7 +218,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 		if (C.bDetail)		S.E[0]	= C._lua_Compile(s_shader,"normal_hq");
 		else				S.E[0]	= C._lua_Compile(s_shader,"normal");
 	} else {
-		if (Script::bfIsObjectPresent(luaVM->LSVM(),s_shader,"normal",LUA_TFUNCTION))
+		if (luaVM->IsObjectPresent(s_shader,"normal",LUA_TFUNCTION))
 		{
 			C.iElement			= 0;
 			C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
@@ -228,7 +227,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element	(LOD1)
-	if (Script::bfIsObjectPresent(luaVM->LSVM(),s_shader,"normal",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"normal",LUA_TFUNCTION))
 	{
 		C.iElement			= 1;
 		C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
@@ -236,7 +235,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element
-	if (Script::bfIsObjectPresent(luaVM->LSVM(),s_shader,"l_point",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"l_point",LUA_TFUNCTION))
 	{
 		C.iElement			= 2;
 		C.bDetail			= FALSE;
@@ -244,7 +243,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element
-	if (Script::bfIsObjectPresent(luaVM->LSVM(),s_shader,"l_spot",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"l_spot",LUA_TFUNCTION))
 	{
 		C.iElement			= 3;
 		C.bDetail			= FALSE;
@@ -252,7 +251,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element
-	if (Script::bfIsObjectPresent(luaVM->LSVM(),s_shader,"l_special",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"l_special",LUA_TFUNCTION))
 	{
 		C.iElement			= 4;
 		C.bDetail			= FALSE;

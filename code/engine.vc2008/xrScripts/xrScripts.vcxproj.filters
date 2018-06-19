@@ -31,18 +31,6 @@
     <Filter Include="Import\LuaCore">
       <UniqueIdentifier>{ab044b2c-b584-4848-9ec2-c76139638f5a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Import\xrEngine">
-      <UniqueIdentifier>{737a768d-d593-445c-a5a8-f1e7938e0a49}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Import\xrEngine\ai_script">
-      <UniqueIdentifier>{3e3e15c0-cf8d-449e-9955-bae29f98dd74}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Import\xrEngine\AScripts">
-      <UniqueIdentifier>{97f6bc7b-c3fa-4a90-96e8-7124e3c7dece}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Import\xrEngine\LuaStudio">
-      <UniqueIdentifier>{7112c23b-e166-4e17-8b7f-4a0805e497f1}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Lua\LuaJIT\source">
       <UniqueIdentifier>{f184226d-bc2e-4733-b96c-5328ef9c5b3c}</UniqueIdentifier>
     </Filter>
@@ -132,17 +120,8 @@
     <ClCompile Include="library_set.cpp">
       <Filter>Lua\LuaBind</Filter>
     </ClCompile>
-    <ClCompile Include="lua_studio\ai_script_lua_debug.cpp">
-      <Filter>Import\xrEngine\ai_script</Filter>
-    </ClCompile>
-    <ClCompile Include="lua_studio\ai_script_lua_extension.cpp">
-      <Filter>Import\xrEngine\ai_script</Filter>
-    </ClCompile>
     <ClCompile Include="mslotutils.cpp">
       <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="lua_studio\lua_studio.cpp">
-      <Filter>Import\xrEngine\LuaStudio</Filter>
     </ClCompile>
     <ClCompile Include="import_ses.cpp">
       <Filter>Import\LuaCore</Filter>
@@ -615,23 +594,8 @@
     <ClInclude Include="xrScripts.h">
       <Filter>Core</Filter>
     </ClInclude>
-    <ClInclude Include="lua_studio\ai_script_lua_extension.h">
-      <Filter>Import\xrEngine\ai_script</Filter>
-    </ClInclude>
-    <ClInclude Include="lua_studio\ai_script_lua_space.h">
-      <Filter>Import\xrEngine\ai_script</Filter>
-    </ClInclude>
-    <ClInclude Include="lua_studio\ai_script_space.h">
-      <Filter>Import\xrEngine\ai_script</Filter>
-    </ClInclude>
-    <ClInclude Include="lua_studio\script_debugger_messages.h">
-      <Filter>Import\xrEngine\AScripts</Filter>
-    </ClInclude>
     <ClInclude Include="mslotutils.hpp">
       <Filter>Core</Filter>
-    </ClInclude>
-    <ClInclude Include="lua_studio\lua_studio.h">
-      <Filter>Import\xrEngine\LuaStudio</Filter>
     </ClInclude>
     <ClInclude Include="import_ses.hpp">
       <Filter>Import\LuaCore</Filter>

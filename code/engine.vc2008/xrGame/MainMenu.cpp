@@ -20,7 +20,14 @@
 
 extern bool b_shniaganeed_pp;
 
-CMainMenu*	MainMenu() { return (CMainMenu*)g_pGamePersistent->m_pMainMenu; };
+static char* month_id[12] = {
+	"Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"
+};
+
+XRCORE_API u32 build_id;
+XRCORE_API const char* build_date;
+
+CMainMenu*	MainMenu() { return (CMainMenu*) g_pGamePersistent->m_pMainMenu; };
 //----------------------------------------------------------------------------------
 #define INIT_MSGBOX(_box, _template)	{ _box = xr_new<CUIMessageBoxEx>(); _box->InitMessageBox(_template);}
 //----------------------------------------------------------------------------------
@@ -76,8 +83,7 @@ void CMainMenu::ReadTextureInfo()
 
 }
 
-extern ENGINE_API BOOL	bShowPauseString;
-
+extern ENGINE_API BOOL bShowPauseString;
 void CMainMenu::Activate(bool bActivate)
 {
 	if (!!m_Flags.test(flActive) == bActivate)		return;
@@ -202,31 +208,31 @@ void CMainMenu::OnDeviceReset()
 
 //IInputReceiver
 static int mouse_button_2_key[] = { MOUSE_1,MOUSE_2,MOUSE_3, MOUSE_4, MOUSE_5, MOUSE_6, MOUSE_7, MOUSE_8 };
-void	CMainMenu::IR_OnMousePress(int btn)
+void CMainMenu::IR_OnMousePress(int btn)
 {
 	if (IsActive())
 		IR_OnKeyboardPress(mouse_button_2_key[btn]);
 };
 
-void	CMainMenu::IR_OnMouseRelease(int btn)
+void CMainMenu::IR_OnMouseRelease(int btn)
 {
 	if (IsActive())
 		IR_OnKeyboardRelease(mouse_button_2_key[btn]);
 };
 
-void	CMainMenu::IR_OnMouseHold(int btn)
+void CMainMenu::IR_OnMouseHold(int btn)
 {
 	if (IsActive())
 		IR_OnKeyboardHold(mouse_button_2_key[btn]);
 };
 
-void	CMainMenu::IR_OnMouseMove(int x, int y)
+void CMainMenu::IR_OnMouseMove(int x, int y)
 {
 	if (IsActive())
 		CDialogHolder::IR_UIOnMouseMove(x, y);
 };
 
-void	CMainMenu::IR_OnMouseStop(int x, int y)
+void CMainMenu::IR_OnMouseStop(int x, int y)
 {
 };
 
@@ -249,13 +255,13 @@ void CMainMenu::IR_OnKeyboardPress(int dik)
 	}
 }
 
-void	CMainMenu::IR_OnKeyboardRelease(int dik)
+void CMainMenu::IR_OnKeyboardRelease(int dik)
 {
 	if (IsActive())
 		CDialogHolder::IR_UIOnKeyboardRelease(dik);
 };
 
-void	CMainMenu::IR_OnKeyboardHold(int dik)
+void CMainMenu::IR_OnKeyboardHold(int dik)
 {
 	if (IsActive())
 		CDialogHolder::IR_UIOnKeyboardHold(dik);
@@ -272,7 +278,6 @@ bool CMainMenu::OnRenderPPUI_query()
 {
 	return IsActive() && !m_Flags.test(flGameSaveScreenshot) && b_shniaganeed_pp;
 }
-
 
 extern void draw_wnds_rects();
 void CMainMenu::OnRender()
@@ -353,7 +358,6 @@ void CMainMenu::OnDeviceCreate()
 {
 }
 
-
 void CMainMenu::Screenshot(IRender_interface::ScreenshotMode mode, LPCSTR name)
 {
 	if (mode != IRender_interface::SM_FOR_GAMESAVE)
@@ -412,3 +416,46 @@ void CMainMenu::OnRenderPPUI_PP()
  	}
  	UI().pp_stop();
  }
+
+u32 CMainMenu::GetEngineBuild()
+{
+	return build_id;
+}
+
+const char* CMainMenu::GetEngineBuildDate()
+{
+	static string256 buffer;
+
+	int	days;
+	int	months = 0;
+	int	years;
+	string16 month;
+	sscanf(build_date, "%s %d %d", month, &days, &years);
+
+	string16 days_s;
+	string16 months_s;
+
+	for (int i = 0; i < 12; i++) {
+		if (_stricmp(month_id[i], month))
+			continue;
+
+		months = i;
+		break;
+	}
+
+	months++; // correcting month number
+
+	if (days < 10)
+		xr_sprintf(days_s, "0%d", days);
+	else
+		xr_sprintf(days_s, "%d", days);
+
+	if (months < 10)
+		xr_sprintf(months_s, "0%d", months);
+	else
+		xr_sprintf(months_s, "%d", months);
+
+	xr_sprintf(buffer, "%s.%s.%d", days_s, months_s, years);
+
+	return buffer;
+}

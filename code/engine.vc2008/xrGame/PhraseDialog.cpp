@@ -191,7 +191,7 @@ int	 CPhraseDialog::Priority()
 	return data()->m_iPriority;
 }
 
-#include "uigamesp.h"
+#include "UIGame.h"
 #include "HUDManager.h"
 
 void CPhraseDialog::Load(shared_str dialog_id)

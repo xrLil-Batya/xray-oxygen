@@ -1,7 +1,7 @@
 #include "MainForm.h"
 #include "xrCore/xrCore.h"
 #include "xrCore/fs_internal.h"
-#define ECORE_API
+#define ECORE_API __declspec(dllimport)
 #define ENGINE_API
 #include "Meshs.h"
 #pragma comment(lib, "xrECoreLite.lib")
@@ -17,6 +17,11 @@ using msclr::interop::marshal_context;
 System::Void MeshEdit::MeshEdit_Load(System::Object^  sender, System::EventArgs^  e)
 {
 	GEMLib.Load();
+}
+
+System::Void MeshEdit::newToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)
+{
+	mesh->mesh = nullptr;
 }
 
 System::Void MeshEdit::gameMaterialsToolStripMenuItem_Click(System::Object^  sender, System::EventArgs^  e)

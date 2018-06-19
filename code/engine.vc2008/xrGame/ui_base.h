@@ -1,7 +1,7 @@
 #pragma once
 
 class CUICursor;
-class CUIGameCustom;
+class CUIGame;
 
 #include "ui_defs.h"
 
@@ -98,4 +98,4 @@ public:
 
 extern CUICursor& GetUICursor();
 extern ui_core& UI();
-extern CUIGameCustom* CurrentGameUI();
+extern CUIGame* GameUI();

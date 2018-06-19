@@ -348,7 +348,7 @@ void CUICharacterInfo::SetActorIcon()
 {
 	shared_str icon_name = "ui_inGame2_Hero";
 	luabind::functor<LPCSTR> functor;
-	if (ai().script_engine().functor("ts_utils.get_actor_icon", functor))
+	if (ai().script_engine().functor("oxy_callbacks.get_actor_icon", functor))
 		icon_name = functor();
 
 	m_texture_name = icon_name;

@@ -16,7 +16,7 @@
 #include "ai_space.h"
 #include "entitycondition.h"
 #include "game_base_space.h"
-#include "uigamecustom.h"
+#include "UIGame.h"
 #include "clsid_game.h"
 #include "../FrayBuildConfig.hpp"
 
@@ -201,20 +201,20 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	VERIFY								(pIItem->CurrPlace() != eItemPlaceUndefined);
 
 
-	if( CurrentGameUI() )
+	if (GameUI())
 	{
 		CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
 
 		if (Level().CurrentViewEntity() == pActor_owner)
 		{
-			CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+			GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 		}
-		else if(CurrentGameUI()->ActorMenu().GetMenuMode()==mmDeadBodySearch)
+		else if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
 		{
-			if(m_pOwner==CurrentGameUI()->ActorMenu().GetPartner())
-				CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+			if (m_pOwner == GameUI()->ActorMenu().GetPartner())
+				GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 		}
-	};
+	}
 }
 
 bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont_create_shell) 
@@ -295,13 +295,14 @@ bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont
 	InvalidateState					();
 	m_drop_last_frame				= true;
 
-	if( CurrentGameUI() )
+	if (GameUI())
 	{
 		CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
 
 		if (Level().CurrentViewEntity() == pActor_owner)
-			CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_REJECT);
-	};
+			GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_REJECT);
+	}
+
 	pObj->H_SetParent(0, dont_create_shell);
 	return							true;
 }

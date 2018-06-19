@@ -4,9 +4,9 @@
 	* Description:
 	* Copyright:
 */
-
-#define ENGINE_API
-#include "xrCore/xrCore.h"
+#include "files_list.hpp"
+#undef ENGINE_API
+#define ENGINE_API ECORE_API
 #include "xrEngine/Fmesh.h"
 
 void ogf_desc::Load(IReader& F)

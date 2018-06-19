@@ -252,7 +252,6 @@ void CUIComboBox::Update()
 			Device.seqRender.Add		(this, 3);
 		}
 	}
-
 }
 
 void CUIComboBox::OnFocusLost()
@@ -350,6 +349,7 @@ void CUIComboBox::script_register(lua_State *L)
 				.def(constructor<>())
 				.def("SetVertScroll", &CUIComboBox::SetVertScroll)
 				.def("SetListLength", &CUIComboBox::SetListLength)
+				.def("SetSelectedItem", &CUIComboBox::SetItemIDX)
 				.def("CurrentID", &CUIComboBox::CurrentID)
 				.def("disable_id", &CUIComboBox::disable_id)
 				.def("enable_id", &CUIComboBox::enable_id)

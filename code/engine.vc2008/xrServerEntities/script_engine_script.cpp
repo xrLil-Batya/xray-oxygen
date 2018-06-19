@@ -9,7 +9,6 @@
 #include "stdafx.h"
 #include "script_engine.h"
 #include "ai_space.h"
-#include "script_debugger.h"
 #include "../xrScripts/import_ses.hpp"
 
 using namespace luabind;
@@ -17,22 +16,6 @@ using namespace luabind;
 void ErrorLog(LPCSTR caMessage)
 {
 	ai().script_engine().error_log("%s",caMessage);
-#ifdef PRINT_CALL_STACK
-	ai().script_engine().dump_state();
-#endif // #ifdef PRINT_CALL_STACK
-	
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if( ai().script_engine().debugger() ){
-			ai().script_engine().debugger()->Write(caMessage);
-		}
-#	endif // #ifndef USE_LUA_STUDIO
-#endif // #ifdef USE_DEBUGGER
-
-#ifdef DEBUG
-		bool lua_studio_connected = !!ai().script_engine().debugger();
-		if (!lua_studio_connected)
-#endif //#ifdef DEBUG
 	R_ASSERT2(false, caMessage);
 }
 
@@ -129,7 +112,7 @@ struct profile_timer_script
 	float time() const 
 	{
 		using namespace std::chrono;
-		return float(duration_cast<milliseconds>(accumulator).count()) * 1000000.f;
+		return (float)duration_cast<microseconds>(accumulator).count();
 	}
 };
 
@@ -171,8 +154,9 @@ void CScriptEngine::script_register(lua_State *L)
 			.def("stop",&profile_timer_script::stop)
 			.def("time",&profile_timer_script::time)
 	];
-
-    function    (L, "to_log",                           import_ses::LuaLog);
+	
+    function    (L, "to_log",							(void(*)(const char*)) &Log);
+    function    (L, "log",								(void(*)(const char*)) &Log);
 	function	(L,	"error_log",						ErrorLog);
 	function	(L,	"flush",							FlushLogs);
 	function	(L,	"prefetch",							prefetch_module);

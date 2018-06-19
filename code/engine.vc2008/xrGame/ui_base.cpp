@@ -299,7 +299,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 #include "script_ui_registrator.h"
 #include "MainMenu.h"
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "UI/UIScriptWnd.h"
 #include "UI/UIButton.h"
 #include "UI/UIProgressBar.h"
@@ -313,7 +313,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 
 using namespace luabind;
 
-CMainMenu*	MainMenu();
+CMainMenu* MainMenu();
 
 #pragma optimize("s",on)
 void UIRegistrator::script_register(lua_State *L)
@@ -331,7 +331,7 @@ void UIRegistrator::script_register(lua_State *L)
 	CUIPropertiesBox::script_register(L);
 	CUIOptionsManagerScript::script_register(L);
 	CScriptXmlInit::script_register(L);
-	CUIGameCustom::script_register(L);
+	CUIGame::script_register(L);
 
 	module(L)
 		[
@@ -344,6 +344,8 @@ void UIRegistrator::script_register(lua_State *L)
 			value("alCenter", int(CGameFont::alCenter))
 		],
 		class_<CMainMenu>("CMainMenu")
+		.def("GetEngineBuild", &CMainMenu::GetEngineBuild)
+		.def("GetEngineBuildDate", &CMainMenu::GetEngineBuildDate)
 		.def("GetGSVer", &CMainMenu::GetGSVer)
 		];
 

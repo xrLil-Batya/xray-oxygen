@@ -23,7 +23,7 @@
 #include "../location_manager.h"
 #include "../player_hud.h"
 #include "UIMainIngameWnd.h"
-#include "../UIGameCustom.h"
+#include "../UIGame.h"
 
 #include "../Actor.h"
 #include "../ActorCondition.h"
@@ -137,7 +137,7 @@ void ui_actor_state_wnd::UpdateActorInfo(CInventoryOwner* owner)
     float shoc_value = 0.0f;
     float fwou_value = 0.0f;
 
-    CEntityCondition::BOOSTER_MAP cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
+    CEntityCondition::BOOSTER_MAP& cur_booster_influences = actor->conditions().GetCurBoosterInfluences();
     CEntityCondition::BOOSTER_MAP::const_iterator it;
     it = cur_booster_influences.find(eBoostRadiationProtection);
     if (it != cur_booster_influences.end())
@@ -260,12 +260,11 @@ void ui_actor_state_wnd::update_round_states(CActor* actor, ALife::EHitType hit_
 
 void ui_actor_state_wnd::UpdateHitZone()
 {
-    CUIHudStatesWnd* wnd = CurrentGameUI()->UIMainIngameWnd->get_hud_states(); //некрасиво слишком
-    VERIFY(wnd);
+    CUIHudStatesWnd* wnd = GameUI()->UIMainIngameWnd->get_hud_states();
+
     if (!wnd)
-    {
         return;
-    }
+
     wnd->UpdateZones();
 }
 

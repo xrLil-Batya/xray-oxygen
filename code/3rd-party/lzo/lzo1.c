@@ -220,28 +220,24 @@ lzo1_decompress  ( const lzo_byte *in , lzo_uint  in_len,
 	ip = in;
 	while (ip < ip_end)
 	{
-		t = *ip++;	/* get marker */
+		t = *ip++; /* get marker */
 
-		if (t < R0MIN)			/* a literal run */
+		if (t < R0MIN) /* a literal run */
 		{
-			if (t == 0)				/* a R0 literal run */
+			if (t == 0) /* a R0 literal run */
 			{
 				t = *ip++;
-				if (t >= R0FAST - R0MIN)			/* a long R0 run */
+				if (t >= R0FAST - R0MIN) /* a long R0 run */
 				{
 					t -= R0FAST - R0MIN;
 					if (t == 0)
 						t = R0FAST;
 					else
 					{
-#if 0
-						t = 256u << ((unsigned) t);
-#else
 						/* help the optimizer */
 						lzo_uint tt = 256;
 						do tt <<= 1; while (--t > 0);
 						t = tt;
-#endif
 					}
 					MEMCPY8_DS(op,ip,t);
 					continue;
@@ -272,7 +268,7 @@ lzo1_decompress  ( const lzo_byte *in , lzo_uint  in_len,
 		}
 	}
 
-	*out_len = op - out;
+	*out_len = (lzo_uint)(op - out);
 
 	/* the next line is the only check in the decompressor ! */
 	return (ip == ip_end ? LZO_E_OK :
