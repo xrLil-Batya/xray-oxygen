@@ -63,15 +63,20 @@ void xrScriptCrashHandler()
 CScriptStorage::CScriptStorage()
 {
 	m_current_thread = 0;
+    luaVM = nullptr;
 }
 
 CScriptStorage::~CScriptStorage()
 {
+    xr_delete(luaVM);
 	Debug.set_crashhandler(nullptr);
 }
 
 void CScriptStorage::reinit()
 {
+    xr_delete(luaVM);
+    luaVM = xr_new<CVMLua>();
+
 	if (strstr(Core.Params, "-_g"))
 		file_header = file_header_new;
 	else
@@ -527,10 +532,6 @@ void CScriptStorage::print_error(lua_State *L, int iErrorCode)
 #ifdef DEBUG
 void CScriptStorage::flush_log()
 {
-    if (xr_strlen(lua_log_file_name) > 0)
-    {
-	    m_output.save_to(lua_log_file_name);
-    }
 }
 #endif // DEBUG
 

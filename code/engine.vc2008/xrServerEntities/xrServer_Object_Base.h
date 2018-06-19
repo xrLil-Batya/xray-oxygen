@@ -15,7 +15,7 @@
 #include "../xrCore/client_id.h"
 
 class NET_Packet;
-class xrClientData;
+class CClient;
 class CSE_ALifeGroupAbstract;
 class CSE_ALifeSchedulable;
 class CSE_ALifeInventoryItem;
@@ -72,7 +72,7 @@ public:
 	u16								ID;				// internal ID
 	u16								ID_Parent;		// internal ParentID, 0xffff means no parent
 	u16								ID_Phantom;		// internal PhantomID, 0xffff means no phantom
-	xrClientData*					owner;
+    CClient*					owner;
 
 	// spawn data
 	shared_str						s_name;

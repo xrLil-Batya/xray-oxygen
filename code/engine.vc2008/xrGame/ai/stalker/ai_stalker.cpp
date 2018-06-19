@@ -681,52 +681,6 @@ void CAI_Stalker::net_Export		(NET_Packet& P)
 	P.w_stringZ						(m_sStartDialog);
 }
 
-void CAI_Stalker::net_Import		(NET_Packet& P)
-{
-	R_ASSERT						(Remote());
-	net_update						N;
-
-	u8 flags;
-
-	P.r_float						();
-	set_money						( P.r_u32(), false );
-
-	float health;
-	P.r_float			(health);
-	SetfHealth			(health);
-//	fEntityHealth = health;
-
-	P.r_u32							(N.dwTimeStamp);
-	P.r_u8							(flags);
-	P.r_vec3						(N.p_pos);
-	P.r_float /*r_angle8*/						(N.o_model);
-	P.r_float /*r_angle8*/						(N.o_torso.yaw);
-	P.r_float /*r_angle8*/						(N.o_torso.pitch);
-	P.r_float /*r_angle8*/						(N.o_torso.roll	);
-	id_Team							= P.r_u8();
-	id_Squad						= P.r_u8();
-	id_Group						= P.r_u8();
-
-
-	GameGraph::_GRAPH_ID				graph_vertex_id = movement().game_dest_vertex_id();
-	P.r								(&graph_vertex_id,		sizeof(GameGraph::_GRAPH_ID));
-	graph_vertex_id					= ai_location().game_vertex_id();
-	P.r								(&graph_vertex_id,		sizeof(GameGraph::_GRAPH_ID));
-
-	if (NET.empty() || (NET.back().dwTimeStamp<N.dwTimeStamp))	{
-		NET.push_back				(N);
-		NET_WasInterpolating		= TRUE;
-	}
-
-	P.r_float						();
-	P.r_float						();
-
-	P.r_stringZ						(m_sStartDialog);
-
-	setVisible						(TRUE);
-	setEnabled						(TRUE);
-}
-
 void CAI_Stalker::update_object_handler	()
 {
 	if (!g_Alive())

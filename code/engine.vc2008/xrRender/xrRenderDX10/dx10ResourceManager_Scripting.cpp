@@ -90,40 +90,41 @@ void LuaLog(LPCSTR caMessage)
 #include "../../xrScripts/VMLua.h"
 void	CResourceManager::LS_Load()
 {
-	function(LVM.LSVM(), "log", LuaLog);
-	module(LVM.LSVM())
-		[
-			class_<adopt_dx10options>("_dx10options")
-			.def("dx10_msaa_alphatest_atoc", &adopt_dx10options::_dx10_msaa_alphatest_atoc),
+    luaVM = xr_new<CVMLua>();
+	function(luaVM->LSVM(), "log",	LuaLog);
+	module(luaVM->LSVM())
+	[
+		class_<adopt_dx10options>("_dx10options")
+		.def("dx10_msaa_alphatest_atoc",		&adopt_dx10options::_dx10_msaa_alphatest_atoc),
 
-			class_<adopt_dx10sampler>("_dx10sampler"),
+		class_<adopt_dx10sampler>("_dx10sampler"),
 
-			class_<adopt_compiler>("_compiler")
-				.def(constructor<const adopt_compiler&>())
-				.def("begin", &adopt_compiler::_pass, return_reference_to<1>())
-				.def("begin", &adopt_compiler::_passgs, return_reference_to<1>())
-				.def("sorting", &adopt_compiler::_options, return_reference_to<1>())
-				.def("emissive", &adopt_compiler::_o_emissive, return_reference_to<1>())
-				.def("distort", &adopt_compiler::_o_distort, return_reference_to<1>())
-				.def("wmark", &adopt_compiler::_o_wmark, return_reference_to<1>())
-				.def("fog", &adopt_compiler::_fog, return_reference_to<1>())
-				.def("zb", &adopt_compiler::_ZB, return_reference_to<1>())
-				.def("blend", &adopt_compiler::_blend, return_reference_to<1>())
-				.def("aref", &adopt_compiler::_aref, return_reference_to<1>())
-				//	For compatibility only
-				.def("dx10color_write_enable", &adopt_compiler::_dx10color_write_enable, return_reference_to<1>())
-				.def("color_write_enable", &adopt_compiler::_dx10color_write_enable, return_reference_to<1>())
-				.def("dx10texture", &adopt_compiler::_dx10texture, return_reference_to<1>())
-				.def("dx10stencil", &adopt_compiler::_dx10Stencil, return_reference_to<1>())
-				.def("dx10stencil_ref", &adopt_compiler::_dx10StencilRef, return_reference_to<1>())
-				.def("dx10atoc", &adopt_compiler::_dx10ATOC, return_reference_to<1>())
-				.def("dx10zfunc", &adopt_compiler::_dx10ZFunc, return_reference_to<1>())
+		class_<adopt_compiler>("_compiler")
+			.def(								constructor<const adopt_compiler&>())
+			.def("begin",						&adopt_compiler::_pass			,return_reference_to<1>())
+			.def("begin",						&adopt_compiler::_passgs		,return_reference_to<1>())
+			.def("sorting",						&adopt_compiler::_options		,return_reference_to<1>())
+			.def("emissive",					&adopt_compiler::_o_emissive	,return_reference_to<1>())
+			.def("distort",						&adopt_compiler::_o_distort		,return_reference_to<1>())
+			.def("wmark",						&adopt_compiler::_o_wmark		,return_reference_to<1>())
+			.def("fog",							&adopt_compiler::_fog			,return_reference_to<1>())
+			.def("zb",							&adopt_compiler::_ZB			,return_reference_to<1>())
+			.def("blend",						&adopt_compiler::_blend			,return_reference_to<1>())
+			.def("aref",						&adopt_compiler::_aref			,return_reference_to<1>())
+			//	For compatibility only
+			.def("dx10color_write_enable",		&adopt_compiler::_dx10color_write_enable,return_reference_to<1>())
+			.def("color_write_enable",			&adopt_compiler::_dx10color_write_enable,return_reference_to<1>())
+			.def("dx10texture",					&adopt_compiler::_dx10texture	,return_reference_to<1>())
+			.def("dx10stencil",					&adopt_compiler::_dx10Stencil	,return_reference_to<1>())
+			.def("dx10stencil_ref",				&adopt_compiler::_dx10StencilRef,return_reference_to<1>())
+			.def("dx10atoc",					&adopt_compiler::_dx10ATOC		,return_reference_to<1>())
+			.def("dx10zfunc",					&adopt_compiler::_dx10ZFunc		,return_reference_to<1>())			
 
-			.def("dx10sampler", &adopt_compiler::_dx10sampler)	// returns sampler-object
-			.def("dx10Options", &adopt_compiler::_dx10Options),	// returns options-object			
+			.def("dx10sampler",					&adopt_compiler::_dx10sampler		)	// returns sampler-object
+			.def("dx10Options",					&adopt_compiler::_dx10Options		),	// returns options-object			
 
 
-			class_<adopt_blend>("blend")
+		class_<adopt_blend>("blend")
 			.enum_("blend")
 			[
 				value("zero", int(D3DBLEND_ZERO)),
@@ -187,11 +188,11 @@ void	CResourceManager::LS_Load()
 
 		try
 		{
-			LVM.LoadFileIntoNamespace(fn, namesp, true);
+			luaVM->LoadFileIntoNamespace(fn, namesp, true);
 		}
 		catch (...)
 		{
-			Log(lua_tostring(LVM.LSVM(), -1));
+			Log(lua_tostring(luaVM->LSVM(), -1));
 		}
 	}
 	FS.file_list_close(folder);
@@ -199,6 +200,7 @@ void	CResourceManager::LS_Load()
 
 void	CResourceManager::LS_Unload			()
 {
+    xr_delete(luaVM);
 }
 
 BOOL CResourceManager::_lua_HasShader	(LPCSTR s_shader)
@@ -207,7 +209,7 @@ BOOL CResourceManager::_lua_HasShader	(LPCSTR s_shader)
 	for (int i=0, l=xr_strlen(s_shader)+1; i<l; i++)
 		undercorated[i]=('\\'==s_shader[i])?'_':s_shader[i];
 
-	return LVM.IsObjectPresent(undercorated,"normal",LUA_TFUNCTION) || LVM.IsObjectPresent(undercorated,"l_special",LUA_TFUNCTION);
+	return luaVM->IsObjectPresent(undercorated,"normal",LUA_TFUNCTION) || luaVM->IsObjectPresent(undercorated,"l_special",LUA_TFUNCTION);
 }
 
 Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
@@ -232,7 +234,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	C.detail_scaler		= NULL;
 
 	// Compile element	(LOD0 - HQ)
-	if (LVM.IsObjectPresent(s_shader,"normal_hq",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"normal_hq",LUA_TFUNCTION))
 	{
 		// Analyze possibility to detail this shader
 		C.iElement			= 0;
@@ -241,7 +243,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 		if (C.bDetail)		S.E[0]	= C._lua_Compile(s_shader,"normal_hq");
 		else				S.E[0]	= C._lua_Compile(s_shader,"normal");
 	}
-	else if (LVM.IsObjectPresent(s_shader, "normal", LUA_TFUNCTION))
+	else if (luaVM->IsObjectPresent(s_shader, "normal", LUA_TFUNCTION))
 	{
 		C.iElement = 0;
 		C.bDetail = dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0], C.detail_texture, C.detail_scaler);
@@ -249,7 +251,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element	(LOD1)
-	if (LVM.IsObjectPresent(s_shader,"normal",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"normal",LUA_TFUNCTION))
 	{
 		C.iElement			= 1;
 		C.bDetail			= dxRenderDeviceRender::Instance().Resources->m_textures_description.GetDetailTexture(C.L_textures[0],C.detail_texture,C.detail_scaler);
@@ -257,7 +259,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element
-	if (LVM.IsObjectPresent(s_shader,"l_point",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"l_point",LUA_TFUNCTION))
 	{
 		C.iElement			= 2;
 		C.bDetail			= FALSE;
@@ -265,7 +267,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element
-	if (LVM.IsObjectPresent(s_shader,"l_spot",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"l_spot",LUA_TFUNCTION))
 	{
 		C.iElement			= 3;
 		C.bDetail			= FALSE;
@@ -273,7 +275,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 	}
 
 	// Compile element
-	if (LVM.IsObjectPresent(s_shader,"l_special",LUA_TFUNCTION))
+	if (luaVM->IsObjectPresent(s_shader,"l_special",LUA_TFUNCTION))
 	{
 		C.iElement			= 4;
 		C.bDetail			= FALSE;
@@ -302,7 +304,8 @@ ShaderElement*		CBlender_Compile::_lua_Compile	(LPCSTR namesp, LPCSTR name)
 	LPCSTR				t_1		= (L_textures.size() > 1)	? *L_textures[1] : "null";
 	LPCSTR				t_d		= detail_texture			? detail_texture : "null" ;
 
-	object				shader	= get_globals(LVM.LSVM())[namesp];
+    CVMLua* LSVM = dxRenderDeviceRender::Instance().Resources->luaVM;
+	object				shader	= get_globals(LSVM->LSVM())[namesp];
 	functor<void>		element	= object_cast<functor<void> >(shader[name]);
 	bool				bFirstPass = false;
 	adopt_compiler		ac		= adopt_compiler(this, bFirstPass);

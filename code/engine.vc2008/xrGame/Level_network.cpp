@@ -111,7 +111,6 @@ void CLevel::net_Stop		()
 		g_tutorial2->Stop();
 
 	bReady						= false;
-	m_bGameConfigStarted		= FALSE;
 
 	remove_objects				();
 	
@@ -221,9 +220,7 @@ void CLevel::ClientSave()
 
 void CLevel::Send(NET_Packet& P)
 {
-	ClientID _clid;
-	_clid.set(1);
-	Server->OnMessage(P, _clid);
+	Server->OnMessage(P);
 }
 
 void CLevel::net_Update()

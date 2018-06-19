@@ -1228,14 +1228,6 @@ void CWeaponMagazined::net_Export(NET_Packet& P)
 	P.w_u8(u8(m_iCurFireMode & 0x00ff));
 }
 
-void CWeaponMagazined::net_Import(NET_Packet& P)
-{
-	inherited::net_Import(P);
-
-	m_iCurFireMode = P.r_u8();
-	SetQueueSize(GetCurrentFireMode());
-}
-
 #include "string_table.h"
 bool CWeaponMagazined::GetBriefInfo(II_BriefInfo& info)
 {

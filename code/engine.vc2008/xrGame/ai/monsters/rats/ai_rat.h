@@ -366,7 +366,6 @@ public:
 	virtual BOOL				net_Spawn				(CSE_Abstract* DC);
 	virtual void				net_Destroy				();
 	virtual void				net_Export				(NET_Packet& P);
-	virtual void				net_Import				(NET_Packet& P);
 	virtual void				HitSignal				(float amount, Fvector& vLocalDir, CObject* who, s16 element);
 	virtual void				Die						(CObject* who);
 	virtual void				Load					(LPCSTR section);
@@ -411,13 +410,9 @@ public:
 		return					(inherited::Orientation());
 	};
 public:
-	virtual void				make_Interpolation		();
-	virtual void				PH_B_CrPr				(); // actions & operations before physic correction-prediction steps
-	virtual void				PH_I_CrPr				(); // actions & operations after correction before prediction steps
 #ifdef DEBUG
 	virtual void				PH_Ch_CrPr				(); // 
 #endif
-	virtual void				PH_A_CrPr				(); // actions & operations after phisic correction-prediction steps
 	virtual void				OnH_A_Chield			();
 	virtual void				create_physic_shell		();
 	virtual void				setup_physic_shell		();

@@ -76,7 +76,7 @@
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
     <PreBuildEventUseInBuild>false</PreBuildEventUseInBuild>
     <PreLinkEventUseInBuild>false</PreLinkEventUseInBuild>
-    <PostBuildEventUseInBuild>false</PostBuildEventUseInBuild>
+    <PostBuildEventUseInBuild>true</PostBuildEventUseInBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
     <CustomBuildAfterTargets>Build</CustomBuildAfterTargets>
@@ -289,9 +289,6 @@
   <ItemGroup>
     <ClInclude Include="..\FrayBuildConfig.hpp" />
     <ClInclude Include="ClS\NET_Client.h" />
-    <ClInclude Include="ClS\NET_PlayersMonitor.h" />
-    <ClInclude Include="ClS\NET_Server.h" />
-    <ClInclude Include="ClS\NET_Shared.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="CopyProtection.h" />
@@ -414,7 +411,6 @@
   <ItemGroup>
     <ClCompile Include="BoneEditor.cpp" />
     <ClCompile Include="ClS\NET_Client.cpp" />
-    <ClCompile Include="ClS\NET_Server.cpp" />
     <ClCompile Include="CPU\PLC.cpp" />
     <ClCompile Include="CPU\xrCPU_Pipe.cpp" />
     <ClCompile Include="CPU\xrSkin2W.cpp" />
@@ -535,7 +531,6 @@
     <ClCompile Include="editor_environment_detail.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClientServer.txt" />
     <None Include="Effects description.txt" />
     <None Include="features.txt" />
     <None Include="TODO.txt" />

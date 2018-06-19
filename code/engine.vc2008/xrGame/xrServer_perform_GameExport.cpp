@@ -5,8 +5,7 @@
 
 void xrServer::Perform_game_export	()
 {
-    xrClientData* CL = (xrClientData*)SV_Client;
-    if (!CL->net_Accepted)
+    if (!SV_Client->net_Accepted)
         return;
 
     NET_Packet P;

@@ -107,7 +107,6 @@ bool CLevel::net_start_client5()
     Device.m_pRender->DeferredLoad(FALSE);
     Device.m_pRender->ResourcesDeferredUpload();
     LL_CheckTextures();
-    sended_request_connection_data = false;
     deny_m_spawn = TRUE;
 
 	return true;
@@ -116,7 +115,7 @@ bool CLevel::net_start_client5()
 bool CLevel::net_start_client6()
 {
     // Sync
-    if (!synchronize_map_data())
+    if (!synchronize_client())
         return false;
 
     if (game_configured)

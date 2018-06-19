@@ -25,6 +25,12 @@ static void* __cdecl luabind_allocator(luabind::memory_allocation_function_param
 	return		(Memory.mem_realloc(non_const_pointer, size));
 }
 
+void setup_luabind_allocator()
+{
+    luabind::allocator = &luabind_allocator;
+    luabind::allocator_parameter = 0;
+}
+
 bool CVMLua::CreateNamespaceTable(LPCSTR caNamespaceName)
 {
 	lua_pushstring(m_virtual_machine, "_G");
@@ -67,16 +73,11 @@ bool CVMLua::CreateNamespaceTable(LPCSTR caNamespaceName)
 	return			(true);
 }
 
-SCRIPT_API CVMLua LVM;
-
 CVMLua::CVMLua()
 {
 	m_virtual_machine = luaL_newstate();
-
-	luabind::allocator = &luabind_allocator;
-	luabind::allocator_parameter = 0;
-
 	R_ASSERT2(m_virtual_machine, "Cannot initialize script virtual machine!");
+
 	OpenLib();
 }
 

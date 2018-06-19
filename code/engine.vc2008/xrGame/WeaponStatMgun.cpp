@@ -154,17 +154,6 @@ void CWeaponStatMgun::net_Export(NET_Packet& P)	// export to server
 	save_data						(m_destEnemyDir, P);
 }
 
-void CWeaponStatMgun::net_Import(NET_Packet& P)	// import from server
-{
-	inheritedPH::net_Import			(P);
-	u8 state = P.r_u8();
-	load_data						(m_destEnemyDir, P);
-
-	if(TRUE==IsWorking()&&!state)			FireEnd		();
-	if(FALSE==IsWorking()&&state)			FireStart	();
-
-}
-
 void CWeaponStatMgun::UpdateCL()
 {
 	inheritedPH::UpdateCL			();

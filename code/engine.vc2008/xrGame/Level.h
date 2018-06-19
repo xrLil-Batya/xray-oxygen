@@ -64,9 +64,6 @@ protected:
 	EVENT						eEnvironment;
 	EVENT						eEntitySpawn;
 	//---------------------------------------------
-	CStatGraph					*pStatGraphS;
-	u32							m_dwSPC;	//SendedPacketsCount
-	u32							m_dwSPS;	//SendedPacketsSize
 	CStatGraph					*pStatGraphR;
 	u32							m_dwRPC;	//ReceivedPacketsCount
 	u32							m_dwRPS;	//ReceivedPacketsSize
@@ -77,37 +74,16 @@ public:
 	CLevelDebug					*m_level_debug; // level debugger
 #endif
 	////////////// network ////////////////////////
-	u32							GetInterpolationSteps	();
-    static bool					InterpolationDisabled	();
-	u32							GetNumCrSteps			() const	{return m_dwNumSteps; };
-	void						SetNumCrSteps			( u32 NumSteps );
-	bool						In_NetCorrectionPrediction	() {return m_bIn_CrPr;};
 
 	virtual void				OnMessage				(void* data, u32 size);
 			bool				PostponedSpawn			(u16 id);
 private:
-	BOOL						m_bNeed_CrPr;
-	u32							m_dwNumSteps;
-	bool						m_bIn_CrPr;
-
-	using OBJECTS_LIST = xr_vector<CGameObject*>;
-
-	OBJECTS_LIST				pObjects4CrPr;
-	OBJECTS_LIST				pActors4CrPr;
-
 	CObject*					pCurrentControlEntity;
 	xrServer::EConnect			m_connect_server_err;
 public:
-	void						AddObject_To_Objects4CrPr	(CGameObject* pObj);
-	void						AddActor_To_Actors4CrPr		(CGameObject* pActor);
-
-	void						RemoveObject_From_4CrPr		(CGameObject* pObj);	
 
 	CObject*					CurrentControlEntity	( void ) const		{ return pCurrentControlEntity; }
 	void						SetControlEntity		( CObject* O  )		{ pCurrentControlEntity=O; }
-private:
-	
-	void						make_NetCorrectionPrediction();
 
 public:
 	//////////////////////////////////////////////	
@@ -116,7 +92,6 @@ public:
 	POVec						m_StaticParticles;
 
 	game_cl_GameState			*game;
-	BOOL						m_bGameConfigStarted;
 	BOOL						game_configured;
 	NET_Queue_Event				*game_events;
 	xr_deque<CSE_Abstract*>		game_spawn_queue;
@@ -137,12 +112,10 @@ public:
 protected:
 	BOOL						net_start_result_total;
 	BOOL						deny_m_spawn;		//only for debug...
-    bool sended_request_connection_data;
 		
 	void						MakeReconnect();
 	
 	LevelMapSyncData			map_data;
-	bool						synchronize_map_data	();
 	bool						synchronize_client		();
 
 	bool	xr_stdcall			net_start1				();

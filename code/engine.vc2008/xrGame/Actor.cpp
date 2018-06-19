@@ -975,24 +975,6 @@ void CActor::shedule_Update	(u32 DT)
 		if( !psActorFlags.test(AF_CROUCH_TOGGLE) )
 			mstate_wishful &=~mcCrouch;
 	}
-	else 
-	{
-		make_Interpolation();
-		if (NET.size())
-		{
-			g_sv_Orientate				(mstate_real,dt			);
-			g_Orientate					(mstate_real,dt			);
-			g_Physics					(NET_SavedAccel,NET_Jump,dt	);			
-			if (!m_bInInterpolation)
-				g_cl_ValidateMState			(dt,mstate_wishful);
-			g_SetAnimation				(mstate_real);
-			
-			set_state_box(NET_Last.mstate);
-
-
-		}	
-		mstate_old = mstate_real;
-	}
 	NET_Jump = 0;
 
 	inherited::shedule_Update(DT);

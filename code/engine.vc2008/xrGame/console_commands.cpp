@@ -489,10 +489,11 @@ public:
 		{
 			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
 			NET_Packet net_packet;
-			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8(0);
-			Level().Send(net_packet);
+            if (ai().get_alife())
+                Level().Server->game->alife().save(net_packet);
+			//Level().Send(net_packet);
 		}
 		else 
 		{
@@ -503,10 +504,11 @@ public:
 			}
 
 			NET_Packet net_packet;
-			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8(1);
-			Level().Send(net_packet);
+            if (ai().get_alife())
+                Level().Server->game->alife().save(net_packet);
+			//Level().Send(net_packet);
 		}
 #ifdef DEBUG
 		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);

@@ -6,6 +6,7 @@
 #include	"shader.h"
 #include	"tss_def.h"
 #include	"TextureDescrManager.h"
+#include "../../xrScripts/VMLua.h"
 // refs
 struct		lua_State;
 
@@ -83,6 +84,7 @@ private:
 public:
 	CTextureDescrMngr									m_textures_description;
 	xr_vector<std::pair<shared_str,R_constant_setup*> >	v_constant_setup;
+    CVMLua*											    luaVM;
 	BOOL												bDeferredLoad;
 private:
 	void							LS_Load				();

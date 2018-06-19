@@ -481,11 +481,6 @@ void CCar::net_Export(NET_Packet& P)
 	inherited::net_Export(P);
 }
 
-void CCar::net_Import(NET_Packet& P)
-{
-	inherited::net_Import(P);
-}
-
 void CCar::OnHUDDraw(CCustomHUD* /**hud*/)
 {
 #ifdef DEBUG
