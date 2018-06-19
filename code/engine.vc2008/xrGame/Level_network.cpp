@@ -111,7 +111,6 @@ void CLevel::net_Stop		()
 		g_tutorial2->Stop();
 
 	bReady						= false;
-	m_bGameConfigStarted		= FALSE;
 
 	remove_objects				();
 	

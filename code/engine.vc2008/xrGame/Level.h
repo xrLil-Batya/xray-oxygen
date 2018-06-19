@@ -64,9 +64,6 @@ protected:
 	EVENT						eEnvironment;
 	EVENT						eEntitySpawn;
 	//---------------------------------------------
-	CStatGraph					*pStatGraphS;
-	u32							m_dwSPC;	//SendedPacketsCount
-	u32							m_dwSPS;	//SendedPacketsSize
 	CStatGraph					*pStatGraphR;
 	u32							m_dwRPC;	//ReceivedPacketsCount
 	u32							m_dwRPS;	//ReceivedPacketsSize
@@ -95,7 +92,6 @@ public:
 	POVec						m_StaticParticles;
 
 	game_cl_GameState			*game;
-	BOOL						m_bGameConfigStarted;
 	BOOL						game_configured;
 	NET_Queue_Event				*game_events;
 	xr_deque<CSE_Abstract*>		game_spawn_queue;
@@ -120,7 +116,6 @@ protected:
 	void						MakeReconnect();
 	
 	LevelMapSyncData			map_data;
-	bool						synchronize_map_data	();
 	bool						synchronize_client		();
 
 	bool	xr_stdcall			net_start1				();

@@ -117,7 +117,7 @@ bool CLevel::net_start_client5()
 bool CLevel::net_start_client6()
 {
     // Sync
-    if (!synchronize_map_data())
+    if (!synchronize_client())
         return false;
 
     if (!game_configured)

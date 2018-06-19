@@ -116,7 +116,7 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 		}break;
 	case M_EVENT:	
 		{
-			Process_event			(P,sender);
+			Process_event			(P);
 		}break;
 	case M_EVENT_PACK:
 		{
@@ -132,7 +132,7 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 	//-------------------------------------------------------------------
 	case M_SWITCH_DISTANCE:
 		{
-			game->switch_distance	(P,sender);
+			game->switch_distance	(P);
 		}break;
 	case M_CHANGE_LEVEL:
 		{
@@ -152,7 +152,7 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 		}break;
 	case M_SAVE_PACKET:
 		{
-			Process_save			(P,sender);
+			Process_save(P);
 		}break;
 	}
 	VERIFY (verify_entities());
@@ -163,6 +163,8 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 void xrServer::SendBroadcast(ClientID exclude, NET_Packet& P)
 {
     if (!SV_Client)
+        return;
+    if (SV_Client->ID == exclude)
         return;
     if (!SV_Client->flags.bConnected)
         return;

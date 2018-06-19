@@ -110,7 +110,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 
 	spawn_events				= xr_new<NET_Queue_Event>();
 	game_configured				= FALSE;
-	m_bGameConfigStarted		= FALSE;
 	m_connect_server_err		= xrServer::ErrNoError;
 
 	eEnvironment				= Engine.Event.Handler_Attach	("LEVEL:Environment",this);
@@ -144,7 +143,6 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 #endif	
 	//---------------------------------------------------------
 	pStatGraphR = nullptr;
-	pStatGraphS = nullptr;
 	//---------------------------------------------------------
 	pCurrentControlEntity = nullptr;
 	//---------------------------------------------------------	
@@ -209,7 +207,6 @@ CLevel::~CLevel()
 	xr_delete					(m_pBulletManager);
 	//-----------------------------------------------------------
 	xr_delete					(pStatGraphR);
-	xr_delete					(pStatGraphS);
 	//-----------------------------------------------------------
 	xr_delete					(m_ph_commander);
 	xr_delete					(m_ph_commander_scripts);

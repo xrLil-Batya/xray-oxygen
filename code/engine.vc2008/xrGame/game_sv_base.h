@@ -39,7 +39,7 @@ public:
 
 	// Events
 	virtual		void				OnCreate				(u16 id_who);
-	virtual		void				OnTouch					(u16 eid_who, u16 eid_target, BOOL bForced = FALSE);			// TRUE=allow ownership, FALSE=denied
+	virtual		void				OnTouch					(u16 eid_who, u16 eid_target);			// TRUE=allow ownership, FALSE=denied
 	virtual		void				OnDetach				(u16 eid_who, u16 eid_target);
 
 	// Main
@@ -52,7 +52,7 @@ public:
 	virtual		bool				change_level			(NET_Packet &net_packet, ClientID sender);
 	virtual		void				save_game				(NET_Packet &net_packet, ClientID sender);
 	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
-	virtual		void				switch_distance			(NET_Packet &net_packet, ClientID sender);
+	virtual		void				switch_distance			(NET_Packet &net_packet);
 
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
 	virtual		void				add_restriction			(NET_Packet &packet, u16 id);

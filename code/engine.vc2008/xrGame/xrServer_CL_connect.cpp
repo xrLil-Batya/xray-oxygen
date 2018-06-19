@@ -89,14 +89,13 @@ void xrServer::SendConnectionData(CClient* _CL)
 
 void xrServer::OnCL_Connected()
 {
-    CClient* CL = SV_Client;
-	if (!CL)
+	if (!SV_Client)
 	{
 		Msg("! ERROR: Player state not created - incorect message sequence!");
 		return;
 	}
 
-	CL->net_Accepted = TRUE;
+    SV_Client->net_Accepted = TRUE;
 
 	// Export Game Type
 	NET_Packet P;
@@ -106,7 +105,7 @@ void xrServer::OnCL_Connected()
 	// end
 
 	Perform_game_export();
-	SendConnectionData(CL);
+	SendConnectionData(SV_Client);
 
-	game->OnPlayerConnect(CL->ID);	
+	game->OnPlayerConnect(SV_Client->ID);
 }

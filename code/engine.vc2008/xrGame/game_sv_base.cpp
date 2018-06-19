@@ -149,7 +149,7 @@ bool game_sv_GameState::load_game (NET_Packet &net_packet, ClientID sender)
 	return (alife().load_game(*game_name, true));
 }
 
-void game_sv_GameState::switch_distance(NET_Packet &net_packet, ClientID sender)
+void game_sv_GameState::switch_distance(NET_Packet &net_packet)
 {
 	if (ai().get_alife())
 		alife().set_switch_distance(net_packet.r_float());
@@ -329,7 +329,7 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 	pApp->LoadEnd();
 }
 
-void game_sv_GameState::OnTouch(u16 eid_who, u16 eid_what, BOOL bForced)
+void game_sv_GameState::OnTouch(u16 eid_who, u16 eid_what)
 {
 	CSE_Abstract*		e_who = get_entity_from_eid(eid_who);		VERIFY(e_who);
 	CSE_Abstract*		e_what = get_entity_from_eid(eid_what);	VERIFY(e_what);

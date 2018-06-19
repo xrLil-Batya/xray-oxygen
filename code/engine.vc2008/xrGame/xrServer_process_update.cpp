@@ -35,7 +35,7 @@ void xrServer::Process_update(NET_Packet& P)
 	}
 }
 
-void xrServer::Process_save(NET_Packet& P, ClientID sender)
+void xrServer::Process_save(NET_Packet& P)
 {
 	R_ASSERT2(SV_Client, "Process_save client not found");
 

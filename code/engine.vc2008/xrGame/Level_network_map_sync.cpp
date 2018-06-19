@@ -5,14 +5,9 @@
 #include "string_table.h"
 #include "../xrEngine/xr_ioconsole.h"
 
-bool CLevel::synchronize_map_data()
-{
-	map_data.m_map_sync_received = true;
-	return synchronize_client();
-}
-
 bool CLevel::synchronize_client()
 {
+    map_data.m_map_sync_received = true;
     deny_m_spawn = FALSE;
 	if (!game_configured)
 	{
