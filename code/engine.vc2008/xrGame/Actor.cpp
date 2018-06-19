@@ -88,7 +88,7 @@ static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
 
-Flags32			psActorFlags={AF_GODMODE_RT|AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
+Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
 int				psActorSleepTime = 1;
 
 
@@ -843,7 +843,7 @@ void CActor::UpdateCL	()
 	float cs_min = pSettings->r_float(cNameSect(), "ph_crash_speed_min");
 	float cs_max = pSettings->r_float(cNameSect(), "ph_crash_speed_max");
 
-	if (psActorFlags.test(AF_GODMODE_RT || AF_GODMODE || AF_NO_CLIP))
+	if (psActorFlags.test(AF_GODMODE || AF_NO_CLIP))
 		character_physics_support()->movement()->SetCrashSpeeds(8000, 9000);
 	else
 		character_physics_support()->movement()->SetCrashSpeeds(cs_min, cs_max);
@@ -987,7 +987,7 @@ void CActor::shedule_Update	(u32 DT)
 
 	if(this==Level().CurrentControlEntity())
 	{
-		if(conditions().IsLimping() && g_Alive() && !psActorFlags.test(AF_GODMODE_RT))
+		if(conditions().IsLimping() && g_Alive())
 		{
 			if(!m_HeavyBreathSnd._feedback())	m_HeavyBreathSnd.play_at_pos(this, Fvector().set(0,ACTOR_HEIGHT,0), sm_Looped | sm_2D);
 			else								m_HeavyBreathSnd.set_position(Fvector().set(0,ACTOR_HEIGHT,0));

@@ -340,8 +340,6 @@ void hide_indicators()
 		GameUI()->ShowGameIndicators(false);
 		GameUI()->ShowCrosshair(false);
 	}
-
-	psActorFlags.set(AF_GODMODE_RT, true);
 }
 
 void hide_indicators_safe()
@@ -352,8 +350,6 @@ void hide_indicators_safe()
 		GameUI()->ShowCrosshair(false);
 		GameUI()->OnExternalHideIndicators();
 	}
-
-	psActorFlags.set(AF_GODMODE_RT, true);
 }
 
 void show_indicators()
@@ -363,8 +359,6 @@ void show_indicators()
 		GameUI()->ShowGameIndicators(true);
 		GameUI()->ShowCrosshair(true);
 	}
-
-	psActorFlags.set(AF_GODMODE_RT, true);
 }
 
 void show_weapon(bool b)

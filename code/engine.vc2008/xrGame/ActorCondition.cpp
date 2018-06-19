@@ -23,7 +23,7 @@
 
 BOOL GodMode()	
 {  
-	return psActorFlags.test(AF_GODMODE|AF_GODMODE_RT); 
+	return psActorFlags.test(AF_GODMODE); 
 }
 
 CActorCondition::CActorCondition(CActor *object) :
@@ -460,7 +460,7 @@ void CActorCondition::UpdateThirst()
 	}
 
 	float thirst_health_koef = (m_fThirst - m_fThirstCritical) / (m_fThirst >= m_fThirstCritical ? 1 - m_fThirstCritical : m_fThirstCritical);
-	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
+	if (CanBeHarmed())
 	{
 		m_fDeltaHealth += m_fV_ThirstHealth*thirst_health_koef*m_fDeltaTime;
 		m_fDeltaPower += m_fV_ThirstPower*m_fThirst*m_fDeltaTime;
