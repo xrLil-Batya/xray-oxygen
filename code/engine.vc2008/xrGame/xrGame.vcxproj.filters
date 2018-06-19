@@ -8478,9 +8478,6 @@
     <ClCompile Include="ActorInput.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
-    <ClCompile Include="ActorMountedWeapon.cpp">
-      <Filter>Core\Client\Objects\actor</Filter>
-    </ClCompile>
     <ClCompile Include="ActorVehicle.cpp">
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
