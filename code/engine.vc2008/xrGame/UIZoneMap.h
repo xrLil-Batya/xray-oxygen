@@ -31,6 +31,8 @@ public:
 
 	void						Init			();
 
+    void                        ConditionalInitDateWidget();
+
 	void						Render			();
 	void						Update			();
 

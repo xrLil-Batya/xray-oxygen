@@ -309,6 +309,7 @@
     <ClCompile Include="XMLCore\tinyxml.cpp" />
     <ClCompile Include="XMLCore\xrXMLParser.cpp" />
     <ClCompile Include="xrCore.cpp" />
+    <ClCompile Include="xrMemoryDebug.cpp" />
     <ClCompile Include="_compressed_normal.cpp" />
     <ClCompile Include="_math.cpp" />
     <ClCompile Include="_sphere.cpp" />
@@ -364,6 +365,7 @@
     <ClInclude Include="FTimer.h" />
     <ClInclude Include="lzo_compressor.h" />
     <ClInclude Include="XMLCore\Expression.h" />
+    <ClInclude Include="xrMemoryDebug.h" />
     <ClInclude Include="xrMemory_C.h" />
     <ClInclude Include="PostprocessAnimator.h" />
     <ClInclude Include="resource.h" />

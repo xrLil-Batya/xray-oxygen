@@ -30,17 +30,17 @@
 
 		<background width="0.30" height="0.30" stretch="1" alignment="c">
 			<texture>ui_inGame2_Radar_main_window</texture>
-		<auto_static x="10" y="210" width="70" height="20" stretch="1">
-			<texture>ui_item_count_back</texture>
-		</auto_static>
 		</background>
 
-	    <clock_wnd x="0.15" y="0.86" width="39" height="16" alignment="c">
+	    <clock_wnd x="0.15" y="0.87" width="39" height="16" alignment="c">
 	        <text x="0" y="0" font="letterica16" color="ui_7" align="c" vert_align="c"/>
 	    </clock_wnd>
 
 	    <date_wnd>
-			<text x="15" y="215" font="arial14" color="ui_7"/>
+			<text x="12" y="216.5" font="letterica16" color="ui_7"/>
+			<auto_static x="10" y="213" width="80" height="20" stretch="1">
+				<texture>ui_inGame2_date</texture>
+			</auto_static>
 	    </date_wnd>
 
 		<compass x="0.15" y="0.11" width="9" height="30" heading="1" alignment="c">
