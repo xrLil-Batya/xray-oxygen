@@ -1,135 +1,101 @@
---[[ -----------------------------------------------------------------------------------------------
- File       : _g.script
- Description: global space
- Copyright  : 2004 © GSC Game World
- Author     : GSC Game World
- Last edit  : 03.11.2014 (Viнt@rь)
---]] -----------------------------------------------------------------------------------------------
---/											  Variables
---]] -----------------------------------------------------------------------------------------------
-prefetch("_s_utils")
+---------------------------------------------------------------
+-- // LuaJIT 
+if (jit == nil) then profiler.setup_hook() end
+-- // Math::Random init 
+math.randomseed(os.time())
+---------------------------------------------------------------
+function empty	(container)
+	if (type(container) == "function") then
+		for i in container do
+			return	(false)
+		end
+		return		(true)
+	end
+	assert			(type(container) == "table")
+	if (container[1] ~= nil) then
+		return		(false)
+	end
+	for i,j in pairs(container) do
+		return		(false)
+	end
+	return			(true)
+end
+---------------------------------------------------------------
 
 schemes = {} -- соответствие схем модулям
-stypes = {} -- типы схем
+stypes = {} -- типv схем
 
-dev_debug = false
-sim_debug = false
-mus_vol = 0
-amb_vol = 0
-
-local monster_classes = {}
-local stalker_classes = {}
-local weapon_classes = {}
-local artefact_classes = {}
-local outfit_classes = {}
-local item_classes = {}
-
-local scripts_to_print = {
-	["stalker_generic"] = true,
-	["xr_smartcover"] = true,
-	["xr_logic"] = true,
-	["xr_conditions"] = true,
-	["xr_cover"] = true,
-	["xr_motivator"] = true,
-	["xr_walker"] = true,
-	["xr_camper"] = true,
-	["xr_kamp"] = true,
-	["restrictor_manager"] = true,
-	["sim_board"] = true,
-	["sim_faction"] = true,
-	["post_combat_idle"] = true,
-	["xr_death"] = true,
-	["xr_sound"] = true,
-	["utils"] = true,
-	["treasure_manager"] = true,
-	["object_collection"] = true,
-	["se_actor"] = true,
-	["smart_terrain"] = true,
-	["bind_physic_object"] = true,
-	["bind_heli"] = true,
-	["bind_anomaly_zone"] = true,
-	["bind_stalker"] = true,
-	["state_mgr_animation"] = true,
-	["se_stalker"] = true,
-	["db"] = true,
-	["sim_squad_generic"] = true,
-	["sim_squad_scripted"] = true,
-	["se_smart_cover"] = true,
-	["se_monster"] = true,
-	["dialog_manager"] = true,
-	["xr_combat_ignore"] = true,
-	["xr_remark"] = true,
-	["cover_manager"] = true,
-	["xr_danger"] = true,
-	["task_manager"] = true,
-	["task_objects"] = true
-}
---]] -----------------------------------------------------------------------------------------------
---/											Debug Functions
---]] -----------------------------------------------------------------------------------------------
-function printf(fmt, ...)
-	--if _printf then
-	--	_printf(fmt, ...)
-	--end
-end
-
--- Крешнуть игру (после вывода сообщения об ошибке в лог)
-function abort(fmt, ...)
-	if _abort then
-		_abort(fmt, ...)
-	end
-end
-
--- выводит в лог стэк вызова функций.
-function callstack()
-	if debug then
-		log(debug.traceback(2))
-	end
-end
---]] -----------------------------------------------------------------------------------------------
---/											Functions
---]] -----------------------------------------------------------------------------------------------
---[[
---	Загружает схему из файла на диске и активирует в мотиваторе.
---	Здесь:
---		filename - имя файла, в котором реализована схема, без расширения
---		scheme - имя схем
---]]
+-- іагружает схему из файла на диске и активирует в мотиваторе.
+-- ідесь:
+-- 	filename - имя файла, в котором реализована схема, без расширения
+-- 	scheme - имя схем
 function load_scheme(filename, scheme, stype)
 	schemes[scheme] = filename
 	stypes[scheme] = stype
 end
 
-if not time_global then
-	time_global = function() return device():time_global() end
+----------------------------------------------------------------------
+dev_debug 		= false
+sim_debug 		= false
+mus_vol 		= 0
+amb_vol 		= 0
+ScriptDebug		= string.find(command_line(), "-debug_mode")
+----------------------------------------------------------------------
+local scripts_to_print =	{
+	["stalker_generic"] = true, ["xr_smartcover"] = true, 	["xr_logic"] = true, 	 ["sim_squad_scripted"] = true,
+	["xr_cover"] = true, 		["xr_motivator"] = true, 	["xr_walker"] = true, 	 ["restrictor_manager"] = true,
+	["xr_kamp"] = true, 		["xr_camper"] = true,		["sim_board"] = true, 	 ["sim_squad_generic"] = true,
+	["post_combat_idle"] = true,["xr_death"] = true, 		["xr_sound"] = true, 	 ["treasure_manager"] = true,
+	["utils"] = true,			["se_actor"] = true, 	 	["smart_terrain"] = true,["object_collection"] = true,
+	["task_objects"] = true,	["bind_heli"] = true, 		["bind_stalker"] = true, ["bind_anomaly_zone"] = true,
+	["se_stalker"] = true, 		["db"] = true, 		 		["xr_danger"] = true,	 ["state_mgr_animation"] = true,
+	["task_manager"] = true,	["se_smart_cover"] = true,  ["se_monster"] = true,   ["dialog_manager"] = true,
+	["xr_remark"] = true, 		["cover_manager"] = true,	["sim_faction"] = true,	 ["xr_combat_ignore"] = true, 
+	["xr_conditions"] = true, 	["bind_physic_object"] = true
+}
+----------------------------------------------------------------------
+--// LuaScriptDebugger
+function log(mess, ...)
+	if ScriptDebug then
+		to_log(mess, ...)
+	end
 end
+--// Use to_log for print log
+----------------------------------------------------------------------
+function has_alife_info(info)
+ local sim = alife()
+  return sim and sim:has_info(0, info)
+end
+----------------------------------------------------------------------
 
-if not jit then profiler.setup_hook() end
-
-function empty(container)
-	if type(container) == "function" then
-		for i in container do
-			return false
+function printf(fmt,...)
+	if ScriptDebug then
+		local is_g = 0
+		local result = fmt
+		if debug == nil then
+			log(string.format(fmt,...))
+			return
 		end
-		return true
+		local info_table = debug.getinfo(2)
+		local script_name = string.gsub(info_table.short_src, "%.script", "")
+		script_name = string.gsub(script_name, "gamedata\\scripts\\", "")
+
+		if scripts_to_print[script_name] == false then return end
+
+		script_name,is_g = string.gsub(script_name, "_g", "")
+		if is_g == 0 then
+			result = script_name..":("..info_table.currentline.."):"..fmt
+		end
+		log(string.format(result,...))
 	end
-	
-	assert(type(container) == "table")
-	
-	if container[1] then
-		return false
-	end
-	
-	for i, j in pairs(container) do
-		return false
-	end
-	
-	return true
 end
+
+----------------------------------------------------------------------
+if nil == time_global then time_global = function () return device():time_global() end end
 
 function wait_game(time_to_wait)
 	verify_if_thread_is_running()
-	if not time_to_wait then
+	if (time_to_wait == nil) then
 		coroutine.yield()
 	else
 		local time_to_stop = game.time() + time_to_wait
@@ -141,7 +107,7 @@ end
 
 function wait(time_to_wait)
 	verify_if_thread_is_running()
-	if not time_to_wait then
+	if (time_to_wait == nil) then
 		coroutine.yield()
 	else
 		local time_to_stop = time_global() + time_to_wait
@@ -151,80 +117,79 @@ function wait(time_to_wait)
 	end
 end
 
-function action(obj, ...)
+function action(obj,...)
 	local arg = {...}
 	local act = entity_action()
 	local i = 1
 	while true do
-		if arg[i] then
+		if (arg[i] ~= nil) then
 			act:set_action(arg[i])
 		else
 			break
 		end
 		i = i + 1
 	end
-	if obj then
-		obj:command(act, false)
+	if (obj ~= nil) then
+		obj:command(act,false)
 	end
-	return entity_action(act)
+	return  entity_action(act)
 end
 
-function action_first(obj, ...)
+function action_first(obj,...)
 	local arg = {...}
 	local act = entity_action()
 	local i = 1
 	while true do
-		if arg[i] then
+		if (arg[i] ~= nil) then
 			act:set_action(arg[i])
 		else
 			break
 		end
 		i = i + 1
 	end
-	if obj then
-		obj:command(act, true)
+	if (obj ~= nil) then
+		obj:command(act,true)
 	end
-	return entity_action(act)
+	return  entity_action(act)
 end
 
-function round(value)
-	local min = math.floor(value)
+function round (value)
+	local min = math.floor (value)
 	local max = min + 1
 	if value - min > max - value then return max end
 	return min
 end
 
+
 function distance_between(obj1, obj2)
 	return obj1:position():distance_to(obj2:position())
 end
 
--- eсли один объект nil, например нет актера, то считаем, что он далеко
+-- +сли один объект nil, например нет актера, то считаем, что он далеко
 function distance_between_safe(obj1, obj2)
-	if not obj1 or not obj2 then return 100000 end
+	if(obj1 == nil or obj2 == nil) then return 100000 end
 	return obj1:position():distance_to(obj2:position())
 end
 
-local aa = nil
--- проверка на инфопоршни, даже если игрока не существует
-function has_alife_info(info_id)
-	if not aa then return false end
-	return aa:has_info(0, info_id)
+--' іроверка на инфопоршнv, даже если игрока не существует
+-- Пример: has_info("что-то")
+function has_info(info)
+	return db.actor and db.actor:has_info(info)
 end
-
-function reset_action(npc, script_name)
-	if npc:get_script() then
-		 npc:script(false, script_name)
+function reset_action (npc, script_name)
+	if npc:get_script () then
+		 npc:script (false, script_name)
 	end
-	npc:script(true, script_name)
+	npc:script (true, script_name)
 end
 
---]] -----------------------------------------------------------------------------------------------
---/								Functions and variables added by Zmey
---]] -----------------------------------------------------------------------------------------------
--- константа, которую использовать в местах, где нужно задать неограниченное время действия
+--------------------------------------------------
+-- Functions and variables added by Zmey
+--------------------------------------------------
+-- іонстанта, которуі использовать в местах, где нужно задать неограниченное время действия
 time_infinite = 100000000
 
--- если в данный момент выполняется какое-то действие, прерывает его и отключает скриптовый режим
+-- +сли в даннvй момент вvполняется какое-то действие, прерvвает его и отклічает скриптовvй режим
 function interrupt_action(who, script_name)
 	if who:get_script() then
 		who:script(false, script_name)
@@ -238,47 +203,54 @@ function random_choice(...)
 end
 
 function if_then_else(cond, if_true, if_false)
-	return cond and if_true or if_false
+	if cond then
+		return if_true
+	end
+	return if_false
 end
 
-function set_current_time(hour, min, sec)
-	local current_time_factor = level.get_time_factor()
-	local current_time = game.time()
-	local c_day = math.floor(current_time / 86400000)
+
+function set_current_time (hour, min, sec)
+	local current_time_factor = level.get_time_factor ()
+	printf ("Need time : %d:%d:%d", hour, min, sec)
+	local current_time = game.time ()
+	local c_day = math.floor (current_time / 86400000)
 	local c_time = current_time - c_day * 86400000
 	local n_time = (sec + min * 60 + hour * 3600) * 1000
 
 	if c_time > n_time then c_day = c_day + 1 end
 	n_time = n_time + c_day * 86400000
-	level.set_time_factor(10000)
-	while game.time() < n_time do wait() end
-	level.set_time_factor(current_time_factor)
+	level.set_time_factor (10000)
+	while game.time () < n_time do wait () end
+	level.set_time_factor (current_time_factor)
 end
 
-function random_number(min_value, max_value)
-	math.randomseed(device():time_global())
-	if not min_value and not max_value then
-		return math.random()
+function random_number (min_value, max_value)
+	if min_value == nil and max_value == nil then
+		return math.random ()
 	else
-		return math.random(min_value, max_value)
+		return math.random (min_value, max_value)
 	end
 end
 
-function parse_names(s)
+
+function parse_names( s )
 	local t = {}
-	for name in string.gfind(s, "([%w_\\]+)%p*") do
+	for name in string.gfind( s, "([%w_\\]+)%p*" ) do
 		--for name in string.gfind( s, "%s*([^%,]+)%s*" ) do
-		table.insert(t, name)
+		table.insert( t, name )
 	end
 	return t
 end
 
-function parse_key_value(s)
+function parse_key_value( s )
 	local t = {}
-	if not s then return nil end
+	if s == nil then
+		return nil
+	end
 	local key, nam = nil, nil
-	for name in string.gfind(s, "([%w_\\]+)%p*") do
-		if not key then
+	for name in string.gfind( s, "([%w_\\]+)%p*" ) do
+		if key == nil then
 			key = name
 		else
 			t[key] = name
@@ -288,10 +260,10 @@ function parse_key_value(s)
 	return t
 end
 
-function parse_nums(s)
+function parse_nums( s )
 	local t = {}
-	for entry in string.gfind(s, "([%-%d%.]+)%,*") do
-		table.insert(t, tonumber(entry))
+	for entry in string.gfind( s, "([%-%d%.]+)%,*" ) do
+		table.insert( t, tonumber( entry ) )
 	end
 	return t
 end
@@ -302,150 +274,135 @@ function is_object_online(obj_id)
 end
 
 function get_clsid(npc)
-	if not npc then return nil end
+	if npc == nil then return nil end
 	return npc:clsid()
 end
 
--- Вычисляет yaw в радианах
-function yaw(v1, v2)
-	return math.acos(((v1.x * v2.x) + (v1.z * v2.z)) / (math.sqrt(v1.x * v1.x + v1.z * v1.z) * math.sqrt(v2.x * v2.x + v2.z * v2.z)))
+--Tvчисляет yaw в радианах
+function yaw( v1, v2 )
+	return  math.acos( ( (v1.x*v2.x) + (v1.z*v2.z ) ) / ( math.sqrt(v1.x*v1.x + v1.z*v1.z ) * math.sqrt(v2.x*v2.x + v2.z*v2.z ) ) )
 end
-function yaw_degree(v1, v2)
-	return (math.acos(((v1.x * v2.x) + (v1.z * v2.z)) / (math.sqrt(v1.x * v1.x + v1.z * v1.z) * math.sqrt(v2.x * v2.x + v2.z * v2.z))) * 57.2957)
+function yaw_degree( v1, v2 )
+	return  (math.acos( ( (v1.x*v2.x) + (v1.z*v2.z ) ) / ( math.sqrt(v1.x*v1.x + v1.z*v1.z ) * math.sqrt(v2.x*v2.x + v2.z*v2.z ) ) ) * 57.2957)
 end
-function yaw_degree3d(v1, v2)
-	return (math.acos((v1.x * v2.x + v1.y * v2.y + v1.z * v2.z) / (math.sqrt(v1.x * v1.x + v1.y * v1.y + v1.z * v1.z) * math.sqrt(v2.x * v2.x + v2.y * v2.y + v2.z * v2.z))) * 57.2957)
+function yaw_degree3d( v1, v2 )
+	return  (math.acos((v1.x*v2.x + v1.y*v2.y + v1.z*v2.z)/(math.sqrt(v1.x*v1.x + v1.y*v1.y + v1.z*v1.z )*math.sqrt(v2.x*v2.x + v2.y*v2.y + v2.z*v2.z)))*57.2957)
 end
 function vector_cross(v1, v2)
 	return vector():set(v1.y  * v2.z  - v1.z  * v2.y, v1.z  * v2.x  - v1.x  * v2.z, v1.x  * v2.y  - v1.y  * v2.x)
 end
 
--- Поворачивает вектор вокруг оси y против часовой стрелке.
+--Поворачивает вектор вокруг оси y против часовой стрелки.
 function vector_rotate_y(v, angle)
 	angle = angle * 0.017453292519943295769236907684886
-	local c = math.cos(angle)
-	local s = math.sin(angle)
-	return vector():set(v.x * c - v.z * s, v.y, v.x * s + v.z * c)
+	local c = math.cos (angle)
+	local s = math.sin (angle)
+	return vector ():set (v.x * c - v.z * s, v.y, v.x * s + v.z * c)
 end
 
 -- очистка таблицы.
-function clear_table(t)
-	while #t > 0 do
-		table.remove(t, #t)
+function clear_table (t) --\ Теперь чистит любые таблицы
+	for key, val in pairs(t) do
+		t[key] = nil
 	end
 end
 
 function stop_play_sound(obj)
-	if obj:alive() then -- == true 
+	if obj:alive() == true then
 		obj:set_sound_mask(-1)
 		obj:set_sound_mask(0)
 	end
 end
 
 -- Печатает таблицу как дерево.
-function print_table(table, title)
-	title = title or ""
-	for k, v in pairs(table) do
+function print_table(table, subs)
+	local sub
+	if subs ~= nil then
+		sub = subs
+	else
+		sub = ""
+	end
+	for k,v in pairs(table) do
 		if type(v) == "table" then
-			printf(title .. ".%s:", tostring(k))
-			print_table(v, title .. "    ")
+			printf(sub.."%s:", tostring(k))
+			print_table(v, sub.."    ")
 		elseif type(v) == "function" then
-			printf(title .. "%s:function", tostring(k))
+			printf(sub.."%s:function", tostring(k))
 		elseif type(v) == "userdata" then
-			printf(title .. "%s:userdata", tostring(k))
+			printf(sub.."%s:userdata", tostring(k))
 		elseif type(v) == "boolean" then
-			if v then
-				if type(k) ~= "userdata" then
-					printf(title .. "%s:true", tostring(k))
-				else
-					printf(title .. "userdata:true")
-				end
-			else
-				if type(k) ~= "userdata" then
-					printf(title .. "%s:false", tostring(k))
-				else
-					printf(title .. "userdata:false")
-				end
-			end
+					if v == true then
+							if(type(k)~="userdata") then
+									printf(sub.."%s:true", tostring(k))
+							else
+									printf(sub.."userdata:true")
+							end
+					else
+							if(type(k)~="userdata") then
+									printf(sub.."%s:false", tostring(k))
+							else
+									printf(sub.."userdata:false")
+							end
+					end
 		else
-			if v then
-				printf(title .. "%s:%s", tostring(k), v)
+			if v ~= nil then
+				printf(sub.."%s:%s", tostring(k),v)
 			else
-				printf(title .. "%s:nil", tostring(k), v)
+				printf(sub.."%s:nil", tostring(k),v)
 			end
 		end
 	end
 end
-
-function store_table(table, title)
-	title = title or ""
-	_log(title .. "{")
-	for k, v in pairs(table) do
+function store_table(table, subs)
+	local sub
+	if subs ~= nil then
+		sub = subs
+	else
+		sub = ""
+	end
+	printf(sub.."{")
+	for k,v in pairs(table) do
 		if type(v) == "table" then
-			_log(title .. ".%s = ", tostring(k))
-			store_table(v, title .. "    ")
+			printf(sub.."%s = ", tostring(k))
+			store_table(v, sub.."    ")
 		elseif type(v) == "function" then
-			_log(title .. ".%s = \"func\",", tostring(k))
-		elseif type(v) == "userdata" then
-			_log(title .. ".%s = \"userdata\",", tostring(k))
+			printf(sub.."%s = \"func\",", tostring(k))
+			elseif type(v) == "userdata" then
+					printf(sub.."%s = \"userdata\",", tostring(k))
 		elseif type(v) == "string" then
-			_log(title .. ".%s = \"%s\",", tostring(k), tostring(v))
+			printf(sub.."%s = \"%s\",", tostring(k), tostring(v))
 		else
-			_log(title .. ".%s = %s,", tostring(k), tostring(v))
+			printf(sub.."%s = %s,", tostring(k), tostring(v))
 		end
 	end
-	_log(title .. "},")
+	printf(sub.."},")
 end
 
 -------------------------------------------------------------------------------------------
-function IsMonster(object, class_id)
-	class_id = class_id or get_clsid(object)
-	return monster_classes[class_id] == true
+local monster_classes = {}
+local stalker_classes = {}
+local weapon_classes = {}
+local artefact_classes = {}
+
+function IsMonster (object, class_id)
+		local id = class_id or get_clsid(object)
+		return monster_classes[id] == true
 end
-function IsStalker(object, class_id)
-	class_id = class_id or get_clsid(object)
-	return stalker_classes[class_id] == true
-end
-function IsWeapon(object, class_id)
-	class_id = class_id or get_clsid(object)
-	return weapon_classes[class_id] == true
-end
-function IsArtefact(object, class_id)
-	class_id = class_id or get_clsid(object)
-	return artefact_classes[class_id] == true
-end
-function IsOutfit(object, class_id)
-	class_id = class_id or get_clsid(object)
-	return outfit_classes[class_id] == true
-end
-function IsItem(object, class_id)
-	class_id = class_id or get_clsid(object)
-	return item_classes[class_id] == true
+function IsStalker (object, class_id)
+		local id = class_id or get_clsid(object)
+		return stalker_classes[id] == true
 end
 
--- @deprecated Use IsWeapon instead
 function isWeapon(object, class_id)
-	--log("~ isWeapon deprecated use IsWeapon instead")
-	return IsWeapon(object, class_id)
+	local id = class_id or get_clsid(object)
+	return weapon_classes[id] == true
 end
 
--- @deprecated Use IsArtefact instead
 function isArtefact(object, class_id)
-	--log("~ isArtefact deprecated use IsArtefact instead")
-	return IsArtefact(object, class_id)
+		local id = class_id or get_clsid(object)
+	return artefact_classes[id] == true
 end
 
--- @deprecated Use IsOutfit instead
-function isOutfit(object, class_id)
-	--log("~ isOutfit deprecated use IsOutfit instead")
-	return IsOutfit(object, class_id)
-end
-
--- @deprecated Use IsItem instead
-function isItem(object, class_id)
-	--log("~ isItem deprecated use IsItem instead")
-	return IsItem(object, class_id)
-end
 
 -------------------------------------------------------------------------------------------
 function get_object_community(obj)
@@ -456,14 +413,14 @@ function get_object_community(obj)
 	end
 end
 
-function character_community(obj)
+function character_community (obj)
 	if IsStalker(obj) then
 		return obj:character_community()
 	end
 	return "monster"
 end
 
-function alife_character_community(obj)
+function alife_character_community (obj)
 	if IsStalker(obj, obj:clsid()) then
 		return obj:community()
 	end
@@ -471,26 +428,41 @@ function alife_character_community(obj)
 end
 
 -- получить геймобжект по стори_айди.
-function level_object_by_sid(sid)
+function level_object_by_sid( sid )
 	local sim = alife()
 	if sim then
-		local s_obj = sim:story_object(sid)
-		if s_obj then
-			return level.object_by_id(se_obj.id)
+		local se_obj = sim:story_object( sid )
+		if se_obj then
+			return level.object_by_id( se_obj.id )
 		end
 	end
 	return nil
 end
 -- Получить айдишник обьекта по стори айди.
-function id_by_sid(sid)
+function id_by_sid( sid )
 	local sim = alife()
 	if sim then
-		local se_obj = sim:story_object(sid)
+		local se_obj = sim:story_object( sid )
 		if se_obj then
 			return se_obj.id
 		end
 	end
 	return nil
+end
+
+-- Крешнуть игру (после вывода сообщения об ошибке в лог)
+function abort(fmt, ...)
+	local reason = string.format(fmt, ...)
+	
+    if db.actor ~= nil then
+	    news_manager.send_tip(db.actor, "Произошла критическая ошибка, подробности в логе.", nil, nil, nil)
+	end
+	
+	if ScriptDebug then
+	    to_log("!Call abort, reason: "..reason)
+	else
+	    error_log("!Call abort, reason: "..reason)
+	end
 end
 
 function set_inactivate_input_time(delta)
@@ -499,22 +471,33 @@ function set_inactivate_input_time(delta)
 	level.disable_input()
 end
 
+-- іринимает: позициі положения, позициі куда смотреть, время сна в минутах.
+--[[
+function set_sleep_relocate(point, look, timeout)
+	db.storage[db.actor:id()].sleep_relocate_time = game.get_game_time()
+	db.storage[db.actor:id()].sleep_relocate_idle = timeout*60
+	db.storage[db.actor:id()].sleep_relocate_point = point
+	db.storage[db.actor:id()].sleep_relocate_look = look
+end
+]]--
+
 -- проверяет целую часть числа на нечетность
-function odd(x)
-	return math.floor(x * 0.5) * 2 == math.floor(x)
+function odd( x )
+	return math.floor( x * 0.5 ) * 2 == math.floor( x )
 end
 
--- находится ли NPC во фруструме игрока
+--' находится ли NPC во фруструме игрока
 function npc_in_actor_frustrum(npc)
 	local actor_dir = device().cam_dir
 	--local actor_dir = db.actor:direction()
 	local npc_dir = npc:position():sub(db.actor:position())
 	local yaw = yaw_degree3d(actor_dir, npc_dir)
+	printf("YAW %s", tostring(yaw))
 	return yaw < 35
 end
 
 function start_game_callback()
-	aa = alife()
+	alife()
 
 	squad_community_by_behaviour = {
 		["stalker"]							= "stalker",
@@ -526,9 +509,6 @@ function start_game_callback()
 		["killer"]							= "killer",
 		["zombied"]							= "zombied",
 		["monolith"]						= "monolith",
-		--["csky"]							= "csky",
-		--["arena_enemy"]						= "arena_enemy",
-		--["arena_friend"]					= "arena_friend",
 		["monster"]							= "monster",
 		["monster_predatory_day"]			= "monster",
 		["monster_predatory_night"]			= "monster",
@@ -537,91 +517,57 @@ function start_game_callback()
 		["monster_zombied_night"]			= "monster",
 		["monster_special"]					= "monster"
 	}
-
+	
 	monster_classes = {
-		[clsid.bloodsucker_s] 				= true,
-		[clsid.boar_s] 						= true,
-		[clsid.dog_s] 						= true,
-		[clsid.flesh_s] 					= true,
-		[clsid.pseudodog_s] 				= true,
-		[clsid.burer_s] 					= true,
-		[clsid.chimera_s] 					= true,
-		[clsid.controller_s] 				= true,
-		--[clsid.fracture_s] 				= true,
-		[clsid.poltergeist_s] 				= true,
-		[clsid.gigant_s] 					= true,
-		--[clsid.zombie_s] 					= true,
-		[clsid.snork_s] 					= true,
-		[clsid.tushkano_s] 					= true,
-		[clsid.psy_dog_s] 					= true,
-		[clsid.psy_dog_phantom_s] 			= true
-	}
+		[clsid.bloodsucker_s] 			= true,
+		[clsid.boar_s] 					= true,
+		[clsid.dog_s] 					= true,
+		[clsid.flesh_s] 				= true,
+		[clsid.pseudodog_s] 			= true,
+		[clsid.burer_s] 				= true,
+--		[clsid.cat_s] 					= true,
+		[clsid.chimera_s] 				= true,
+		[clsid.controller_s] 			= true,
+--		[clsid.fracture_s] 				= true,
+		[clsid.poltergeist_s] 			= true,
+		[clsid.gigant_s] 				= true,
+--		[clsid.zombie_s] 				= true,
+		[clsid.snork_s] 				= true,
+		[clsid.tushkano_s] 				= true,
+		[clsid.psy_dog_s] 				= true,
+		[clsid.psy_dog_phantom_s] 		= true}
 
 	stalker_classes = {
-		[clsid.script_actor] 				= true,
-		[clsid.script_stalker] 				= true
-	}
+		[clsid.script_actor] 			= true,
+		[clsid.script_stalker] 			= true}
 
 	weapon_classes = {
-		[clsid.wpn_vintorez_s] 				= true,
-		[clsid.wpn_ak74_s] 					= true,
-		[clsid.wpn_lr300_s] 				= true,
-		[clsid.wpn_hpsa_s] 					= true,
-		[clsid.wpn_pm_s] 					= true,
-		[clsid.wpn_shotgun_s] 				= true,
-		[clsid.wpn_auto_shotgun_s]			= true,
-		[clsid.wpn_bm16_s] 					= true,
-		[clsid.wpn_svd_s] 					= true,
-		[clsid.wpn_svu_s] 					= true,
-		[clsid.wpn_rg6_s] 					= true,
-		[clsid.wpn_rpg7_s] 					= true,
-		[clsid.wpn_val_s] 					= true,
-		[clsid.wpn_walther_s] 				= true,
-		[clsid.wpn_usp45_s] 				= true,
-		[clsid.wpn_groza_s] 				= true,
-		[clsid.wpn_knife_s] 				= true,
-		[clsid.wpn_grenade_f1_s] 			= true,
-		[clsid.wpn_grenade_rgd5_s] 			= true,
-		[clsid.wpn_grenade_launcher] 		= true,
-		[clsid.wpn_grenade_fake] 			= true
-	}
+		[clsid.wpn_vintorez_s] 			= true,
+		[clsid.wpn_ak74_s] 				= true,
+		[clsid.wpn_lr300_s] 			= true,
+		[clsid.wpn_hpsa_s] 				= true,
+		[clsid.wpn_pm_s] 				= true,
+		[clsid.wpn_shotgun_s] 			= true,
+		[clsid.wpn_auto_shotgun_s]		= true,
+		[clsid.wpn_bm16_s] 				= true,
+		[clsid.wpn_svd_s] 				= true,
+		[clsid.wpn_svu_s] 				= true,
+		[clsid.wpn_rg6_s] 				= true,
+		[clsid.wpn_rpg7_s] 				= true,
+		[clsid.wpn_val_s] 				= true,
+		[clsid.wpn_walther_s] 			= true,
+		[clsid.wpn_usp45_s] 			= true,
+		[clsid.wpn_groza_s] 			= true,
+		[clsid.wpn_knife_s] 			= true,
+		[clsid.wpn_grenade_f1_s] 		= true,
+		[clsid.wpn_grenade_rgd5_s] 		= true,
+		[clsid.wpn_grenade_launcher] 	= true,
+		[clsid.wpn_grenade_fake] 		= true}
 
 	artefact_classes = {
-		--[clsid.art_bast_artefact] 		= true,
-		--[clsid.art_black_drops] 			= true,
-		--[clsid.art_dummy] 				= true,
-		--[clsid.art_electric_ball] 		= true,
-		--[clsid.art_faded_ball] 			= true,
-		--[clsid.art_galantine] 			= true,
-		--[clsid.art_gravi] 				= true,
-		--[clsid.art_gravi_black] 			= true,
-		--[clsid.art_mercury_ball] 			= true,
-		--[clsid.art_needles] 				= true,
-		--[clsid.art_rusty_hair] 			= true,
-		--[clsid.art_thorn] 				= true,
-		--[clsid.art_zuda] 					= true,
-		[clsid.artefact] 					= true
-		--[clsid.artefact_s] 				= true
-	}
-		
-	outfit_classes = {
-		--[clsid.equ_exo]					= true,
-		--[clsid.equ_military]				= true,
-		--[clsid.equ_scientific]			= true,
-		--[clsid.equ_stalker_s]				= true,
-		--[clsid.helmet]					= true
-	}
-		
-	item_classes = {
-		--[clsid.obj_antirad_s]				= true,
-		--[clsid.obj_attachable]			= true,
-		--[clsid.obj_bandage_s]				= true,
-		--[clsid.obj_bottle_s]				= true,
-		--[clsid.obj_explosive_s]			= true,
-		--[clsid.obj_food_s]				= true,
-		--[clsid.obj_medkit_s]				= true
-	}
-		
+		[clsid.artefact] 				= true}
+
+	printf("start_game_callback called")
 	
 	smart_names.init_smart_names_table()
 	task_manager.clear_task_manager()
@@ -631,55 +577,61 @@ function start_game_callback()
 	xr_s.init()
 	sim_objects.clear()
 	sim_board.clear()
-	sr_light.clean_up()
+	sr_light.clean_up ()
 	pda.add_quick_slot_items_on_game_start()
 	-- Tестирование оптимизации
 	--local test_object = test_object.test_object_class()
 	--test_object:test()
-	--  OXY  -------------------------
-		debug_values = GetIniSection("debug_values", "mod_configs.ltx", "bool")
-		debug_scripts = GetIniSection("debug_scripts", "mod_configs.ltx")
-		_s.InitModules()
-	--  OXY  -------------------------
 end
 
--- Усталость
+--' Lсталость
 function on_actor_critical_power()
+
 end
 
 function on_actor_critical_max_power()
 end
 
--- Кровотечение
+--' іровотечение
 function on_actor_bleeding()
+
 end
 
 function on_actor_satiety()
 end
 
--- Радиация
+function on_actor_thirst()
+end
+
+--' іадиация
 function on_actor_radiation()
+
 end
 
--- Заклинило оружие
+--' іаклинило оружие
 function on_actor_weapon_jammed()
+
 end
 
--- не может ходить изза веса
+--' не может ходить изза веса
 function on_actor_cant_walk_weight()
+
 end
 
--- пси воздействие
+--' пси воздействие
 function on_actor_psy()
 end
 
+-- Выдача инфо
+-- give_info("что-то")
 function give_info(info)
-	db.actor:give_info_portion(info)
+	return db.actor and db.actor:give_info_portion(info)
 end
-function disable_info(info)
-	if has_alife_info(info) then
-		db.actor:disable_info_portion(info)
-	end
+
+-- Удаление инфо
+-- disable_info("что-то")
+function disable_info(info) 
+	return db.actor and db.actor:disable_info_portion(info)
 end
 
 function create_ammo(section, position, lvi, gvi, pid, num)
@@ -697,15 +649,37 @@ function create_ammo(section, position, lvi, gvi, pid, num)
 	return t
 end
 
-quest_section = {} -- TODO check for use
+ammo_section = {}
+ammo_section["ammo_9x18_fmj"]		= true
+ammo_section["ammo_9x18_pmm"]		= true
+ammo_section["ammo_9x19_fmj"]		= true
+ammo_section["ammo_9x19_pbp"]		= true
+ammo_section["ammo_5.45x39_fmj"]	= true
+ammo_section["ammo_5.45x39_ap"]		= true
+ammo_section["ammo_5.56x45_ss190"]	= true
+ammo_section["ammo_5.56x45_ap"]		= true
+ammo_section["ammo_5.7x28_fmj"]		= true
+ammo_section["ammo_5.7x28_ap"]		= true
+ammo_section["ammo_7.62x54_7h1"]	= true
+ammo_section["ammo_9x39_pab9"]		= true
+ammo_section["ammo_gauss"]			= true
+ammo_section["ammo_9x39_ap"]		= true
+ammo_section["ammo_11.43x23_fmj"]	= true
+ammo_section["ammo_11.43x23_hydro"]	= true
+ammo_section["ammo_12x70_buck"]		= true
+ammo_section["ammo_12x76_zhekan"]	= true
+ammo_section["ammo_pkm_100"]		= true
+
+quest_section = {}
 -- преобразует строку в соответствии со значением
-function get_param_string(src_string, obj)
+function get_param_string(src_string , obj)
+	printf("src_string is [%s] obj name is [%s]", tostring(src_string), obj:name())
 	local script_ids = db.script_ids[obj:id()]
 	local out_string, num = string.gsub(src_string, "%$script_id%$", tostring(script_ids))
 	if num > 0 then
-		return out_string, true
+		return out_string , true
 	else
-		return src_string, false
+		return src_string , false
 	end
 end
 
@@ -716,74 +690,88 @@ function set_save_marker(p, mode, check, prefix)
 
 	-- определяем ключ маркера.
 	local result = ""
-	result = result .. "_" .. prefix
+--	if debug ~= nil then
+--		local info_table = debug.getinfo(2)
+--		local script_name = string.gsub(info_table.short_src, "%.script", "")
+--		script_name = string.gsub(script_name, "gamedata\\scripts\\", "")
+--		result = script_name
+--	end
 
-	if check then
-		if not save_markers[result] then
+--	if prefix ~= nil then
+		result = result .. "_" .. prefix
+--	end
+
+	if check == true then
+		if save_markers[result] == nil then
 			abort("Trying to check without marker %s", result)
 		end
 
 		if mode == "save" then
 			local dif = p:w_tell() - save_markers[result]
-			printf(result .. ": SAVE DIF: %s", dif)
+			printf(result..": SAVE DIF: %s", dif)
 			if dif >= 8000 then
 				printf("WARNING! may be this is problem save point")
 			end
 			if dif >= 10240 then
---				abort("You are saving too much")
+			    printf("You are saving too much!")
 			end
 			p:w_u16(dif)
 		else
 			local c_dif = p:r_tell() - save_markers[result]
 			local dif = p:r_u16()
-			 if dif ~= c_dif then
+			if dif ~= c_dif then
 			 	abort("INCORRECT LOAD [%s].[%s][%s]", result, dif, c_dif)
-			 else
-			 	printf(result .. ": LOAD DIF: %s", dif)
-			 end
+			else
+			 	printf(result..": LOAD DIF: %s", dif)
+			end
 		end
 		return
 	end
 
 	if mode == "save" then
-		printf(result .. ": set save marker: %s", p:w_tell())
+		printf(result..": set save marker: %s", p:w_tell())
 		save_markers[result] = p:w_tell()
 		if p:w_tell() > 16000 then
 			abort("You are saving too much")
 		end
 	else
-		printf(result .. ": set load marker: %s", p:r_tell())
+		printf(result..": set load marker: %s", p:r_tell())
 		save_markers[result] = p:r_tell()
 	end
 
 end
 -- переводит вектор в строку.
-function vec_to_str(vector)
-	if not vector then return "nil" end
+function vec_to_str (vector)
+	if vector == nil then return "nil" end
 	return string.format("[%s:%s:%s]", vector.x, vector.y, vector.z)
 end
-
+-- выводит в лог стэк вызова функций.
+function callstack()
+	if debug ~= nil then
+		log(debug.traceback(2))
+	end
+end
 -- меняет team:squad:group обьекта.
 function change_team_squad_group(se_obj, team, squad, group)
 	local cl_obj = db.storage[se_obj.id] and db.storage[se_obj.id].object
-	if cl_obj then
+	if cl_obj ~= nil then
 		cl_obj:change_team(team, squad, group)
 	else
 		se_obj.team = team
 		se_obj.squad = squad
 		se_obj.group = group
 	end
+	printf("_G:TSG: [%s][%s][%s]", tostring(se_obj.team), tostring(se_obj.squad), tostring(se_obj.group))
 end
-
--- Story_ID -------------------------------------------------------------
-function add_story_object(obj_id, story_obj_id)
-	story_objects.get_story_objects_registry():register(obj_id, story_obj_id)
+--     Story_ID -------------------------------------------------------------
+function add_story_object(obj_id , story_obj_id)
+	story_objects.get_story_objects_registry():register(obj_id , story_obj_id)
 end
 
 function get_story_object(story_obj_id)
 	local obj_id = story_objects.get_story_objects_registry():get(story_obj_id)
-	if not obj_id then return nil end
-	return (db.storage[obj_id] and db.storage[obj_id].object) or (level and level.object_by_id(obj_id))
+	if obj_id == nil then return nil end
+	return (db.storage[obj_id] and db.storage[obj_id].object) or (level ~= nil and level.object_by_id(obj_id))
 end
 
 function get_object_story_id(obj_id)
@@ -802,10 +790,10 @@ function unregister_story_id(story_id)
 	story_objects.get_story_objects_registry():unregister_by_story_id(story_id)
 end
 
--- Story_ID -------------------------------------------------------------
+-----------------------------------------------------------------------------------------------
 -- Получить сквад обьекта!!!!!
 function get_object_squad(object)
-	if not object then abort("You are trying to get squad_object from NIL object!!!") end
+	if object == nil then abort("You are trying to get squad_object from NIL object!!!") end
 	local obj_id = nil
 	if type(object.id) == "function" then
 		obj_id = object:id()
@@ -824,7 +812,7 @@ function get_story_squad(story_id)
 	return squad_id and alife():object(squad_id)
 end
 
--- Проверка по временному интервалу.
+--Проверка по временному интервалу.
 function in_time_interval(val1, val2)
 	local game_hours = level.get_time_hours()
 	if val1 >= val2 then
@@ -835,261 +823,24 @@ function in_time_interval(val1, val2)
 end
 
 function show_all_ui(show)
-	local hud = get_hud()
-	if show then
-		level.show_indicators()
+		local hud = get_hud()
+	if(show) then
+			level.show_indicators()
 --	    db.actor:restore_weapon()
-		db.actor:disable_hit_marks(false)
-		hud:show_messages()
+			db.actor:disable_hit_marks(false)
+			hud:show_messages()
 	else
-		if db.actor:is_talking() then
-			db.actor:stop_talk()
-		end
-		level.hide_indicators_safe()
-		hud:HideActorMenu()
-		hud:HidePdaMenu()
-		hud:hide_messages()
+			if db.actor:is_talking() then
+					db.actor:stop_talk()
+			end
+			level.hide_indicators_safe()
+			hud:HideActorMenu()
+			hud:HidePdaMenu()
+			hud:hide_messages()
 --	    db.actor:hide_weapon()
-		db.actor:disable_hit_marks(true)
+			db.actor:disable_hit_marks(true)
 	end
 end
 
---]] -----------------------------------------------------------------------------------------------
---/								Global Functions for OXY
---]] -----------------------------------------------------------------------------------------------
---[[---------------------------------------------------------------
---// 						Ini
---]]---------------------------------------------------------------
---[[
---	Read***(section, line, ini)
---	функции предназначены для чтения значений
---	@param	string	section имя секции
---	@param	string	line 	имя строки
---	@param	string	ini 	ini file
--- 	@return	boolen/string/number/vector
---]]
-function ReadBool(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_bool(section, line)
-end
-
-function ReadString(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_string(section, line)
-end
-
-function ReadStringWq(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_string_wq(section, line)
-end
-
-function ReadFloat(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_float(section, line)
-end
-
-function ReadVector(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_vector(section, line)
-end
-
-function ReadNum(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_u32(section, line)
-end
-
-function ReadLine(section, line, ini)
-	if not ini then ini = system_ini() end
-	return ini:r_line(section, line, "", nil)
-end
-
---[[
---	Проверка существования секции в файле
---	@param	string	section имя секции
---	@param	string	ini  	ini file
--- 	@return	boolen
---]]
-function IsSectionExist(section, ini)
-	if not ini then ini = system_ini() end
-	return ini:section_exist(section)
-end
-
---[[
---	функции предназначены для получения значений
---	@param	string	section имя секции
---	@param	string	line 	имя строки
---	@param	string	ini  	ini file
--- 	@return	boolen
---]]
-function IsLineExist(section, line, ini)
-	if not ini then ini = system_ini() end
-	local exist = ini:line_exist(section, line)
-	if not exist then
-		log(string.format("~ line [%s] not exist in section [%s]", line, section))
-	end
-	return exist
-end
-
---[[
---	функции предназначены для получения значений
---	@param	string	section имя секции
---	@param	string	ini  	ini file
--- 	@return	boolen
---]]
-function GetLineCount(section, ini)
-	if not ini then ini = system_ini() end
-	return ini:line_count(section)
-end
-
---[[
---	@param	string section имя секции(через system_ini())
--- 	@return	string/number
---]]
-function GetItemName(section)
-	if IsLineExist(section, "inv_name") then
-		return ReadString(section, "inv_name")
-	end
-end
-
-function GetItemDescription(section)
-	if IsLineExist(section, "description") then
-		return ReadString(section, "description")
-	end
-end
-
-function GetItemIconX(section)
-	if IsLineExist(section, "inv_grid_x") then
-		return ReadNum(section, "inv_grid_x")
-	end
-end
-
-function GetItemIconY(section)
-	if IsLineExist(section, "inv_grid_y") then
-		return ReadNum(section, "inv_grid_y")
-	end
-end
-
-function GetItemIconWidth(section)
-	if IsLineExist(section, "inv_grid_width") then
-		return ReadNum(section, "inv_grid_width")
-	end
-end
-
-function GetItemIconHeight(section)
-	if IsLineExist(section, "inv_grid_height") then
-		return ReadNum(section, "inv_grid_height")
-	end
-end
-
-function GetItemWeight(section)
-	if IsLineExist(section, "inv_weight") then
-		return ReadFloat(section, "inv_weight")
-	end
-end
-
-function GetItemCost(section)
-	if IsLineExist(section, "cost") then
-		return ReadNum(section, "cost")
-	end
-end
-
-function GetItemSlot(section)
-	if IsLineExist(section, "slot") then
-		return ReadNum(section, "slot")
-	end
-end
-
-function GetItemBoxSize(section)
-	if IsLineExist(section, "box_size") then
-		return ReadNum(section, "box_size")
-	end
-end
-
-function GetItemBoostTime(section)
-	if IsLineExist(section, "boost_time") then
-		return ReadFloat(section, "boost_time")
-	end
-end
-
---]] -----------------------------------------------------------------------------------------------
---/											DBG Function
---]] -----------------------------------------------------------------------------------------------
-function CheckDebugScripts()
-	local debug_scripts = GetIniSection("debug_scripts", "mod_configs.ltx")
-	local exist_msg, error_msg
-	for i = 1, #debug_scripts do
-		local exist = true
-		if not getFS():exist("$game_scripts$", debug_scripts[i] .. ".script") then
-			if debug_scripts[i] ~= "_dbg" then
-				exist_msg = "File gamedata\\scripts\\" .. debug_scripts[i] .. ".script" .. " not exist!!!"
-				exist = false
-			end
-		end
-		if exist and not _G[debug_scripts[i]] then
-			error_msg = "Script " .. debug_scripts[i] .. " contains syntax errors!!!"
-		end
-	end
-	return {exist_msg, error_msg}
-end
-
---[[
--- 	Получает ini секцию в таблицу, с заданым типом
--- 	@param	string	section	название секции в ини файле.
--- 	@param	table 	...		(путь)Имя файла/Тип таблици(оба параметра не обязательны).
--- 	@return	table
---
---	TODO после завершения отладки перетащить!!!!!!
---]]
-function GetIniSection(section, ...)
-	local return_table = {}
-	local args = {...}
-	local ltx, return_type
-	if next(args) then
-		for i = 1, 2 do
-			if tostring(args[i]):match('(.+)%.(%w+)') then
-				ltx = ini_file(args[i])
-			else
-				return_type = args[i]
-			end
-		end
-	end
-	ltx = ltx or system_ini()
-	if IsSectionExist(section, ltx) then
-		local res, key, value, s
-		if return_type then s = "" end
-		for i = 0, GetLineCount(section, ltx) - 1 do
-			res, key, value = ltx:r_line(section, i, "", s)
-			key = tostring(key)
-			if return_type == nil then 									-- в таблицу только одиночные значения
-				table.insert(return_table, key)
-			elseif return_type == "matrix" then 						-- матрица
-				table.insert(return_table, {key, value})
-			elseif return_type == "string" then 						-- таблица со строками
-				return_table[key] = value
-			elseif return_type == "number" then 						-- таблица с числами
-				return_table[key] = tonumber(value)
-			elseif return_type == "true" and return_type == value then 	-- таблица с true
-				return_table[key] = true
-			elseif return_type == "bool" then							-- таблица с bool
-				if value and (value == true or value == "true") then
-					return_table[key] = true
-				else
-					return_table[key] = false
-				end
-			end
-		end
-		return return_table
-	end
-end
-
--- проверка запущена ли игра
--- deprecated Use IsGameStarted instead
-function CheckGameRun()
-	log("~ CheckGameRun is deprecated use IsGameStarted instead")
-	return IsGameStarted()
-end
-
--- Зпущена ли игра 
-function IsGameStarted()
-	return level.present() and db.actor and db.actor:alive()
-end
+prefetch("lua_addition") --/ подключаем дополнительный модуль.
+prefetch("oxy_string")
