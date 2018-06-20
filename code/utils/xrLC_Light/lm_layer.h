@@ -1,6 +1,28 @@
 #pragma once
 #include "base_color.h"
 
+struct XRLC_LIGHT_API LightpointRequest
+{
+    u32 X;
+    u32 Y;
+
+    Fvector Position;
+    Fvector Normal;
+
+    void* FaceToSkip;
+
+    LightpointRequest(u32 InX, u32 InY, Fvector InPosition, Fvector InNormal, void* InFaceToSkip)
+    {
+        X = InX;
+        Y = InY;
+
+        Position = InPosition;
+        Normal = InNormal;
+
+        FaceToSkip = InFaceToSkip;
+    }
+};
+
 const u16 BORDER = 1;
 class INetReader;
 struct XRLC_LIGHT_API  lm_layer
@@ -10,6 +32,7 @@ struct XRLC_LIGHT_API  lm_layer
 	xr_vector<base_color>	surface;
 	xr_vector<u8>			marker;
 
+    xr_vector <LightpointRequest> SurfaceLightRequests;
 public:
 	void					create			(u32 w, u32 h)
 	{

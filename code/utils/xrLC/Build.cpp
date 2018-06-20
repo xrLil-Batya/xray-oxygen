@@ -190,6 +190,7 @@ void CBuild::Run	(LPCSTR P)
 	CalcNormals					();
 	Phase("Building normals...");
 
+    //#TODO: LC Redux don't use that collision database anymore. But i remove it, when decide cut off old system support
 	//****************************************** Collision DB
 	//should be after normals, so that double-sided faces gets separated
 	FPU::m64r					();
@@ -214,12 +215,12 @@ void CBuild::Run	(LPCSTR P)
 	}
 	
 	//****************************************** GLOBAL-RayCast model
-	FPU::m64r					();
-	Msg("%s", "Building rcast-CFORM model...");
-	mem_Compact					();
-	Light_prepare				();
-	BuildRapid					(TRUE);
-	Phase("Building rcast-CFORM model...");
+    //FPU::m64r					();
+    //Msg("%s", "Building rcast-CFORM model...");
+    //mem_Compact					();
+    //Light_prepare				();
+    //BuildRapid					(TRUE);
+	//Phase("Building rcast-CFORM model...");
 
 	//****************************************** GLOBAL-ILLUMINATION
 	if (g_build_options.b_radiosity)			

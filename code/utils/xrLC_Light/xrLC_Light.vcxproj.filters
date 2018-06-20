@@ -69,6 +69,9 @@
     <Filter Include="do_light">
       <UniqueIdentifier>{d7b85aad-48bc-4ddc-b7cd-1e4ebfe72bda}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Light\Lights\HardwareCode">
+      <UniqueIdentifier>{55774a83-4c49-4549-9e3a-382b135beb79}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -325,6 +328,12 @@
     </ClInclude>
     <ClInclude Include="..\Shader_xrLC.h" />
     <ClInclude Include="..\common\le_engine_communicate.hpp" />
+    <ClInclude Include="xrHardwareLight.h">
+      <Filter>Light\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="xrRayDefinition.h">
+      <Filter>Light\Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -582,5 +591,13 @@
     <ClCompile Include="..\..\SDK\include\hxgrid\Interface\hxGridInterface.cpp">
       <Filter>Light\Net</Filter>
     </ClCompile>
+    <ClCompile Include="xrHardwareLight.cpp">
+      <Filter>Light\Lights</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightPoint.cu">
+      <Filter>Light\Lights\HardwareCode</Filter>
+    </None>
   </ItemGroup>
 </Project>

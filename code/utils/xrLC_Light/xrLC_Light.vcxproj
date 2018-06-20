@@ -161,6 +161,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\common\le_engine_communicate.hpp" />
+    <ClInclude Include="xrHardwareLight.h" />
+    <ClInclude Include="xrRayDefinition.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrLC_Light.h" />
@@ -259,6 +261,7 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="xrHardwareLight.cpp" />
     <ClCompile Include="xrLC_Light.cpp" />
     <ClCompile Include="xrThread.cpp" />
     <ClCompile Include="MeshStaic.cpp" />
@@ -367,6 +370,9 @@
       <Project>{ebf9b543-0830-4866-9b48-dc0740e87e8a}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="LightPoint.cu" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

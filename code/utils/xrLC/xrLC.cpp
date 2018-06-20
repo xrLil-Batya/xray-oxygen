@@ -62,6 +62,7 @@ void Startup(char* lpCmdLine)
 	strlwr(cmd);
 	if (strstr(cmd, "-?") || strstr(cmd, "-h") || !strstr(cmd, "-f"))
 														{ Help(); return; }
+    if (strstr(cmd, "-hardware_light"))					g_build_options.b_optix_accel = true;
 	if (strstr(cmd, "-o"))								bModifyOptions	= TRUE;
 	if (strstr(cmd, "-gi"))								g_build_options.b_radiosity		= true;
 	if (strstr(cmd, "-noise"))							g_build_options.b_noise			= true;

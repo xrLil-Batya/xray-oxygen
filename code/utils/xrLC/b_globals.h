@@ -29,10 +29,11 @@ struct SBuildOptions
 	bool b_skipinvalid;
 	bool b_notessellation;
 	bool b_mxthread;
+    bool b_optix_accel;
 
 	u32	 Priority;
 	SBuildOptions() :	b_radiosity(false), b_noise(false), b_net_light(false), 
-						b_skipinvalid(true), b_notessellation(false), b_mxthread(false)
+						b_skipinvalid(true), b_notessellation(false), b_mxthread(false), b_optix_accel(false)
 	{
 		Priority = 2;
 	}

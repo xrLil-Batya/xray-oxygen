@@ -14,152 +14,160 @@ std::recursive_mutex	task_CS;
 
 xr_vector<int>		task_pool;
 
-class CLMThread		: public CThread
+class CLMThread : public CThread
 {
 private:
-	HASH			H;
-	CDB::COLLIDER	DB;
-	base_lighting	LightsSelected;
+    HASH			H;
+    CDB::COLLIDER	DB;
+    base_lighting	LightsSelected;
 public:
-	CLMThread	(u32 ID) : CThread(ID)
-	{
-		// thMonitor= TRUE;
-		thMessages	= FALSE;
-	}
+    CLMThread(u32 ID) : CThread(ID)
+    {
+        // thMonitor= TRUE;
+        thMessages = FALSE;
+    }
 
-	virtual void	Execute()
-	{
-		CDeflector* D	= 0;
+    virtual void	Execute()
+    {
+        CDeflector* D = 0;
 
-		for (;;) 
-		{
-			// Get task
+        for (;;)
+        {
+            // Get task
+            task_CS.lock();
+            thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
+            if (task_pool.empty())
             {
-                std::lock_guard<decltype(task_CS)> lock(task_CS);
-                thProgress = 1.f - float(task_pool.size()) / float(lc_global_data()->g_deflectors().size());
-                if (task_pool.empty()) return;
-
-                D = lc_global_data()->g_deflectors()[task_pool.back()];
-                task_pool.pop_back();
+                task_CS.unlock();
+                return;
             }
 
-			// Perform operation
-			try {
-				D->Light	(&DB,&LightsSelected,H);
-			} catch (...)
-			{
-				clMsg("* ERROR: CLMThread::Execute - light");
-			}
-		}
-	}
+            int DeflectorID = task_pool.back();
+            D = lc_global_data()->g_deflectors()[DeflectorID];
+            task_pool.pop_back();
+            task_CS.unlock();
+
+            // Perform operation
+            try {
+                D->Light(&DB, &LightsSelected, H);
+            }
+            catch (...)
+            {
+                clMsg("* ERROR: CLMThread::Execute - light");
+            }
+        }
+    }
 };
 
-#include <random>
 
-void CBuild::LMapsLocal()
+
+
+
+
+
+void	CBuild::LMapsLocal()
 {
-	FPU::m64r();
-	mem_Compact();
+    mem_Compact();
 
-	// Randomize deflectors
-#ifndef NET_CMP
-	std::shuffle(lc_global_data()->g_deflectors().begin(), lc_global_data()->g_deflectors().end(), std::mt19937(std::random_device()()));
-#endif
 
-#ifndef NET_CMP	
-	for (u32 dit = 0; dit < lc_global_data()->g_deflectors().size(); dit++)
-		task_pool.push_back(dit);
-#else
-	task_pool.push_back(14);
-	task_pool.push_back(16);
-#endif
-	// Main process (4 threads)
-	Status("Lighting...");
-	CThreadManager threads;
+    for (u32 dit = 0; dit<lc_global_data()->g_deflectors().size(); dit++)
+        task_pool.push_back(dit);
 
-	u32 thNUM = CPU::Info.n_threads;
 
-	if (!g_build_options.b_mxthread)
-	{
-		clMsg("Max threading lighting: off...");
-		thNUM--;
-	}
+    Status("Lighting...");
+    CThreadManager	threads;
 
-	CTimer start_time;	
-	start_time.Start();
-
-	for (u32 L = 0; L < thNUM; L++)
-	{
-		threads.start(xr_new<CLMThread>(L));
-	}
-
-	threads.wait(500);
-	clMsg("%f seconds", start_time.GetElapsed_sec());
+    u32	thNUM = 1;
+    if (!g_build_options.b_optix_accel)
+    {
+        thNUM = CPU::ID.n_threads - 1;
+    }
+    //u32	thNUM = 5;
+    CTimer	start_time;	start_time.Start();
+    for (int L = 0; L<thNUM; L++)	threads.start(xr_new<CLMThread>(L));
+    threads.wait(500);
+    clMsg("%f seconds", start_time.GetElapsed_sec());
 }
 
-void	CBuild::LMaps					()
-{
-	Msg("%s \n", "");
-		//****************************************** Lmaps
-	//DeflectorsStats ();
-#ifndef NET_CMP
-	if(g_build_options.b_net_light)
 
-		//net_light ();
-		lc_net::net_lightmaps ();
-	else{
-		LMapsLocal();
-	}
+//routine enabled, when using new hardware light feature
+void	CBuild::LMapsRedux()
+{
+    mem_Compact();
+
+
+    //new system not multithreaded... but using some handmade tricks to speedup coputation process
+    Status("Lighting...");
+
+    for (u32 dit = 0; dit < lc_global_data()->g_deflectors().size(); dit++)
+        task_pool.push_back(dit);
+
+    //pick deflectors, until reaching ray quota
+
+
+}
+
+void	CBuild::LMaps()
+{
+    //****************************************** Lmaps
+    Phase("LIGHT: LMaps...");
+    //DeflectorsStats ();
+#ifndef NET_CMP
+    if (g_build_options.b_net_light)
+
+        //net_light ();
+        lc_net::net_lightmaps();
+    else {
+        LMapsLocal();
+    }
 #else
-	create_net_task_manager();
-	get_net_task_manager()->create_global_data_write(pBuild->path);
-	LMapsLocal();
-	get_net_task_manager()->run();
-	destroy_net_task_manager();
-	//net_light ();
+    create_net_task_manager();
+    get_net_task_manager()->create_global_data_write(pBuild->path);
+    LMapsLocal();
+    get_net_task_manager()->run();
+    destroy_net_task_manager();
+    //net_light ();
 #endif
-	Phase("LIGHT: LMaps...");
+
 }
 void XRLC_LIGHT_API ImplicitNetWait();
 void CBuild::Light()
 {
-	//****************************************** Implicit
-	{
-		FPU::m64r		();
-		Msg("%s \n", "LIGHT: Implicit...");
-		mem_Compact		();
-		ImplicitLighting();
-	}
-	Phase("LIGHT: Implicit...");
-	LMaps		();
+    //****************************************** Implicit
+    {
+        Phase("LIGHT: Implicit...");
+        mem_Compact();
+        ImplicitLighting();
+    }
+
+    LMaps();
 
 
-	//****************************************** Vertex
-	FPU::m64r		();
-	Msg("%s \n", "LIGHT: Vertex...");
-	mem_Compact		();
+    //****************************************** Vertex
+    Phase("LIGHT: Vertex...");
+    mem_Compact();
 
-	LightVertex		();
+    LightVertex();
 
-	ImplicitNetWait();
-	WaitMuModelsLocalCalcLightening();
-	lc_net::get_task_manager().wait_all();
-	//	get_task_manager().wait_all();
-	lc_net::get_task_manager().release();
-	Phase("LIGHT: Vertex...");
-//
-	//****************************************** Merge LMAPS
-	{
-		FPU::m64r		();
-		Msg("%s \n", "LIGHT: Merging lightmaps...");
-		mem_Compact		();
+    //
 
-		xrPhase_MergeLM	();
-		Phase("LIGHT: Merging lightmaps...");
-	}
+
+    ImplicitNetWait();
+    WaitMuModelsLocalCalcLightening();
+    lc_net::get_task_manager().wait_all();
+    //	get_task_manager().wait_all();
+    lc_net::get_task_manager().release();
+    //
+    //****************************************** Merge LMAPS
+    {
+        Phase("LIGHT: Merging lightmaps...");
+        mem_Compact();
+
+        xrPhase_MergeLM();
+    }
 }
 
-void CBuild::LightVertex	()
+void CBuild::LightVertex()
 {
-	::LightVertex(!!g_build_options.b_net_light);
+    ::LightVertex(!!g_build_options.b_net_light);
 }
