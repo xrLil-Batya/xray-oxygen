@@ -1290,7 +1290,6 @@
     <ClInclude Include="..\xrServerEntities\script_stack_tracker_inline.h" />
     <ClInclude Include="ai_space.h" />
     <ClInclude Include="ai_space_inline.h" />
-    <ClInclude Include="bone_utils.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="CameraFirstEye.h" />
     <ClInclude Include="cameralook.h" />
@@ -2261,7 +2260,12 @@
     <ClCompile Include="GlobalFeelTouch.cpp" />
     <ClCompile Include="Level_network_map_sync.cpp" />
     <ClCompile Include="xr_level_controller.cpp" />
-    <ClCompile Include="level_debug.cpp" />
+    <ClCompile Include="level_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="Actor.cpp" />
     <ClCompile Include="actor_communication.cpp" />
     <ClCompile Include="Actor_Events.cpp" />

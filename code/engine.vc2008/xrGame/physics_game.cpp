@@ -17,6 +17,7 @@
 
 #include "../Include/xrRender/FactoryPtr.h"
 #include "../Include/xrRender/WallMarkArray.h"
+#pragma warning(disable: 4267)
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 static const float PARTICLE_EFFECT_DIST=70.f;
@@ -117,30 +118,20 @@ private:
 	}
 };
 
-//class CPHLiquidParticlesComparer :
-//	public CPHReqComparerV
-//{
-//	virtual bool			compare							(const	CPHReqComparerV* v)					const	{return v->compare(this);}
-//	virtual bool			compare							(const	CPHOnesConditionSelfCmpTrue* v)		const	{return true;}
-//	
-//};
-
 class CPHWallMarksCall :
 	public CPHAction
 {
-	//ref_shader pWallmarkShader;
 	wm_shader pWallmarkShader;
 	Fvector pos;
 	CDB::TRI* T;
 public:
-	//CPHWallMarksCall(const Fvector &p,CDB::TRI* Tri,ref_shader s)
 	CPHWallMarksCall(const Fvector &p,CDB::TRI* Tri,const wm_shader &s)
 	{
 		pWallmarkShader=s;
 		pos.set(p);
 		T=Tri;
 	}
-	virtual void 			run								()
+	virtual void run()
 	{
 		//добавить отметку на материале
 		::Render->add_StaticWallmark(pWallmarkShader,pos, 
@@ -150,49 +141,27 @@ public:
 	virtual bool 			obsolete						()const{return false;}
 };
 
-static void play_object( dxGeomUserData* data, SGameMtlPair* mtl_pair, const dContactGeom* c )
+static void play_object(dxGeomUserData* data, SGameMtlPair* mtl_pair, const dContactGeom* c)
 {
-						VERIFY( data );
-						VERIFY( mtl_pair );
-						VERIFY( c );
-						
-						CPHSoundPlayer* sp=NULL;
-#ifdef	DEBUG
-						__try{
-							sp=data->ph_ref_object->ObjectPhSoundPlayer();
-						}
-						__except(EXCEPTION_EXECUTE_HANDLER){
-							Msg( "data->ph_ref_object: %p ", data->ph_ref_object );
-							Msg( "data: %p ", data );
-							Msg( "materials: %s ", mtl_pair->dbg_Name() );
-							FlushLog();
-							FATAL( "bad data->ph_ref_object" );
-						}
-#else
-						sp=data->ph_ref_object->ObjectPhSoundPlayer();
-#endif
-						if(sp)
-							sp->Play(mtl_pair,*(Fvector*)c->pos);
+	VERIFY(data);
+	VERIFY(mtl_pair);
+	VERIFY(c);
+
+	CPHSoundPlayer* sp = data->ph_ref_object->ObjectPhSoundPlayer();
+	if (sp)
+		sp->Play(mtl_pair, *(Fvector*)c->pos);
 
 }
+
 template<class Pars>
 IC bool play_liquid_particle_criteria(dxGeomUserData &data, float vel_cret )
 {
-
 	if(  vel_cret > Pars::vel_cret_particles )
 		return true;
 
 	bool controller = !!data.ph_object && data.ph_object->CastType() == CPHObject::tpCharacter;
 
 	return  !controller && vel_cret>Pars::vel_cret_particles / 4.f;
-
-	
-	//return false;
-	//if( !data.ph_ref_object || !data.ph_ref_object->ObjectPPhysicsShell() )
-	//	return false;
-	//if( data.ph_ref_object->ObjectPPhysicsShell()->HasTracedGeoms() )
-	//	return false;
-
 }
 
 
@@ -217,31 +186,8 @@ void play_particles(float vel_cret, dxGeomUserData* data,  const dContactGeom* c
 }
 
 template<class Pars>
-void  TContactShotMark(CDB::TRI* T,dContactGeom* c)
+void TContactShotMark(CDB::TRI* T,dContactGeom* c)
 {
-	
-	
-	//dBodyID b=dGeomGetBody(c->g1);
-	//dxGeomUserData* data =0;
-	//bool b_invert_normal=false;
-	//if(!b) 
-	//{
-	//	b=dGeomGetBody(c->g2);
-	//	data=dGeomGetUserData(c->g2);
-	//	b_invert_normal=true;
-	//}
-	//else
-	//{
-	//	data=dGeomGetUserData(c->g1);
-	//}
-	//if(!b) 
-	//	return;
-
-	//dVector3 vel;
-	//dMass m;
-	//dBodyGetMass(b,&m);
-	//dBodyGetPointVel(b,c->pos[0],c->pos[1],c->pos[2],vel);
-	//float vel_cret=_abs(dDOT(vel,c->normal))* _sqrt(m.mass);
 	dxGeomUserData* data	=0;
 	float vel_cret			=0;
 	bool b_invert_normal	=false;
@@ -256,12 +202,9 @@ void  TContactShotMark(CDB::TRI* T,dContactGeom* c)
 		SGameMtlPair* mtl_pair		= GMLib.GetMaterialPair(T->material,data->material);
 		if(mtl_pair)
 		{
-			//if(vel_cret>Pars.vel_cret_wallmark && !mtl_pair->CollideMarks.empty())
 			if(vel_cret>Pars::vel_cret_wallmark && !mtl_pair->m_pCollideMarks->empty())
 			{
-				//ref_shader pWallmarkShader = mtl_pair->CollideMarks[::Random.randI(0,mtl_pair->CollideMarks.size())];
 				wm_shader WallmarkShader = mtl_pair->m_pCollideMarks->GenerateWallmark();
-				//ref_shader pWallmarkShader = mtl_pair->CollideMarks[::Random.randI(0,mtl_pair->CollideMarks.size())];
 				Level().ph_commander().add_call(xr_new<CPHOnesCondition>(),xr_new<CPHWallMarksCall>( *((Fvector*)c->pos),T,WallmarkShader));
 			}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

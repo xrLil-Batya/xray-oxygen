@@ -375,8 +375,9 @@ typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 
 LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
-	Log("* ####[UNHANDLED EXCEPTION]####");
-	Log("* X-Ray Oxygen crash handler ver. 1.2.f");
+	Log("[FAIL] Type: UNHANDLED EXCEPTION");
+	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.2.01f");
+	Log("[FAIL] Report: To https://discord.gg/NAp6ZtX");
 
 #ifdef AWDA
 	MessageBox(NULL, "awda", "awda", MB_OK | MB_ICONASTERISK);
@@ -432,8 +433,11 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 			timestamp(t_stemp);
 
 			FS.update_path(szDumpPath, "$dump$", "");
+			if(!FS.path_exist(szDumpPath))
+			{
+				createPath(szDumpPath);
+			}
 
-//			xr_strcpy(szDumpPath, "logs\\");
 			xr_strcat(szDumpPath, Core.ApplicationName);
 			xr_strcat(szDumpPath, "_");
 			xr_strcat(szDumpPath, Core.UserName);

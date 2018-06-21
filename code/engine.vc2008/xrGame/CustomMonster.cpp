@@ -1,9 +1,7 @@
 // CustomMonster.cpp: implementation of the CCustomMonster class.
 //
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
-#include "ai_debug.h"
 #include "CustomMonster.h"
 #include "ai_space.h"
 #include "xrserver_objects_alife_monsters.h"
@@ -42,10 +40,11 @@
 // Lain: added
 #include "../xrEngine/IGame_Level.h"
 #include "../xrCore/_vector3d_ext.h"
-#include "debug_text_tree.h"
 #include "../xrPhysics/IPHWorld.h"
 
 #ifdef DEBUG
+#	include "ai_debug.h"
+#	include "debug_text_tree.h"
 #	include "debug_renderer.h"
 #   include "../xrPhysics/animation_movement_controller.h"
 #endif // DEBUG

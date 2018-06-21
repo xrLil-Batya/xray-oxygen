@@ -266,7 +266,7 @@ void loophole_action::initialize		()
 	LPCSTR animation_id			= "idle";
 	typedef smart_cover::loophole::Animations ActionAnimations;
 	ActionAnimations const		&animations = object().movement().current_params().cover_loophole()->action_animations(m_action_id, animation_id);
-	m_animation					= animations[m_random.randI(animations.size())];
+	m_animation					= animations[m_random.randI((u32)animations.size())];
 }
 
 void loophole_action::execute			()
@@ -344,7 +344,7 @@ void transition::initialize				()
 
 	typedef smart_cover::loophole::TransitionData TransitionData;
 	TransitionData const		&animations = object().movement().current_params().cover_loophole()->transition_animations(m_action_from, m_action_to);
-	m_animation					= animations[m_random.randI(animations.size())];
+	m_animation					= animations[m_random.randI((u32)animations.size())];
 }
 
 void transition::finalize				()
@@ -432,7 +432,7 @@ void loophole_fire::execute				()
 
 	typedef smart_cover::loophole::Animations Animations;
 	Animations const			&animations = object().movement().current_params().cover_loophole()->action_animations(m_action_id, animation_id);
-	m_animation					= animations[m_random.randI(animations.size())];
+	m_animation					= animations[m_random.randI((u32)animations.size())];
 
 	setup_sight					(false);
 }

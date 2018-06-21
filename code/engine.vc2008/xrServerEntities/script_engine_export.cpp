@@ -5,11 +5,13 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script Engine export
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#pragma warning(push)
+#pragma warning(disable: 4275)
 #define SCRIPT_REGISTRATOR
 #include "../xrScripts/export/script_export_space.h"
 #include "script_engine_export.h"
+#pragma warning(pop)
 
 #pragma optimize("s",on)
 template <typename TList> struct Register

@@ -11,7 +11,9 @@
 #include "../../../actor.h"
 
 // Lain: added
+#ifdef DEBUG
 #include "../../../debug_text_tree.h"
+#endif
 #include "../../../memory_manager.h"
 #include "../../../visual_memory_manager.h"
 #include "../../../sound_memory_manager.h"

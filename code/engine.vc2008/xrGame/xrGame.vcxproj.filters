@@ -4773,9 +4773,6 @@
     <ClInclude Include="ai_space_inline.h">
       <Filter>AI\ASpace</Filter>
     </ClInclude>
-    <ClInclude Include="bone_utils.h">
-      <Filter>Core</Filter>
-    </ClInclude>
     <ClInclude Include="CameraFirstEye.h">
       <Filter>Core\Client\Cameras</Filter>
     </ClInclude>
@@ -5880,9 +5877,6 @@
     <ClInclude Include="HUDManager.h">
       <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClInclude>
-    <ClInclude Include="UIGame.h">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClInclude>
     <ClInclude Include="HUDCrosshair.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClInclude>
@@ -6064,6 +6058,7 @@
       <Filter>Core\Client\Objects\actor</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIPdaSpot.h" />
+    <ClInclude Include="UIGame.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8415,9 +8410,6 @@
     <ClCompile Include="HUDManager.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\HUD</Filter>
     </ClCompile>
-    <ClCompile Include="UIGame.cpp">
-      <Filter>AI\AScript\ScriptClasses\UI\GameTypes\GameCustom</Filter>
-    </ClCompile>
     <ClCompile Include="HUDCrosshair.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Cursor</Filter>
     </ClCompile>
@@ -8629,6 +8621,7 @@
       <Filter>Core\Client\Objects\actor</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIPdaSpot.cpp" />
+    <ClCompile Include="UIGame.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

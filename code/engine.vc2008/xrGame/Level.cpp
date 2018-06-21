@@ -12,7 +12,6 @@
 #include "game_cl_base.h"
 #include "entity_alive.h"
 #include "ai_space.h"
-#include "ai_debug.h"
 #include "ShootingObject.h"
 #include "GameTaskManager.h"
 #include "Level_Bullet_Manager.h"
@@ -45,14 +44,18 @@
 
 #include "../xrphysics/iphworld.h"
 #include "../xrphysics/console_vars.h"
-#include "level_debug.h"
 #include "ai/stalker/ai_stalker.h"
 #include "debug_renderer.h"
 #include "physicobject.h"
-#include "phdebug.h"
-#include "debug_text_tree.h"
 
 #include "../FrayBuildConfig.hpp"
+
+#ifdef DEBUG
+#	include "ai_debug.h"
+#	include "phdebug.h"
+#	include "debug_text_tree.h"
+#	include "level_debug.h"
+#endif
 
 extern CUISequencer * g_tutorial;
 extern CUISequencer * g_tutorial2;
