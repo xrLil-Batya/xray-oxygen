@@ -5,10 +5,10 @@ $npc			 			= on						; option for Level Editor
 $prefetch 					= 8
 scheduled            		= off              	; option for ALife Simulator
 cform                    	= skeleton
-class                    	= WP_PM
+class                    	= W_WMAGAZ
 description					= st_wpn_fort_descr
 ef_weapon_type			  	= 5
-
+launch_speed = 0
 ;-----------------------------------------------------------------------------
 cost					= 600
 inv_weight				= 0.83
@@ -28,27 +28,26 @@ rpm_empty_click 	 		= 120
 
 hud                      	= wpn_fort_hud
 
-use_aim_bullet				= false		;ГЏГ®Г¤Г¤ГҐГ°Г¦ГЁГўГ ГҐГІГ±Гї Г«ГЁ ГЇГҐГ°ГўГ Гї Г±ГіГЇГЇГҐГ° ГЇГіГ«Гї
+use_aim_bullet				= false		;Поддерживается ли первая суппер пуля
 time_to_aim					= 1.0
 
-misfire_probability        = 0.005 ;ГўГҐГ°Г®ГїГІГ­Г®Г±ГІГј Г®Г±ГҐГ·ГЄГЁ ГЇГ°ГЁ Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®Г¬ ГЁГ§Г­Г®Г±ГҐ  !!!old - now not working
-;ГЁГ§Г­Г®ГёГҐГ­Г­Г®Г±ГІГј, ГЇГ°ГЁ ГЄГ®ГІГ®Г°Г®Г© ГЇГ®ГїГўГ«ГїГҐГІГ±Гї ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ
+misfire_probability        = 0.005 ;вероятность осечки при максимальном износе  !!!old - now not working
+;изношенность, при которой появляется шанс осечки
 misfire_start_condition		= 0.6
-;ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГј ГЇГ°ГЁ ГЄГ®ГІГ®Г°Г®Г© ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ Г±ГІГ Г­Г®ГўГЁГІГ±Гї ГЄГ®Г­Г±ГІГ Г­ГІГ­Г»Г¬
+;изношеность при которой шанс осечки становится константным
 misfire_end_condition		= 0.1
-;ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ ГЇГ°ГЁ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЎГ®Г«ГјГёГҐ Г·ГҐГ¬ misfireStartCondition
+;шанс осечки при изношености больше чем misfireStartCondition
 misfire_start_prob	     	= 0.0075
-;ГёГ Г­Г± Г®Г±ГҐГ·ГЄГЁ ГЇГ°ГЁ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЎГ®Г«ГјГёГҐ Г·ГҐГ¬ misfireEndCondition
+;шанс осечки при изношености больше чем misfireEndCondition
 misfire_end_prob	     	= 0.075
-;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГҐ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЇГ°ГЁ Г®Г¤ГЁГ­Г®Г·Г­Г®Г¬ ГўГ»Г±ГІГ°ГҐГ«ГҐ
+;увеличение изношености при одиночном выстреле
 condition_shot_dec      	= 0.0036
-;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГҐ ГЁГ§Г­Г®ГёГҐГ­Г®Г±ГІГЁ ГЇГ°ГЁ ГўГ»Г±ГІГ°ГҐГ«ГҐ Г®Г·ГҐГ°ГҐГ¤ГјГѕ
+;увеличение изношености при выстреле очередью
 condition_queue_shot_dec	= 0.0036
 
 ammo_elapsed		 	= 12
 ammo_mag_size		 	= 12
 ammo_class		 		= ammo_9x18_fmj, ammo_9x18_pmm
-fire_modes              = 1
 hand_dependence		 	= 1
 single_handed			= 1
 
@@ -56,20 +55,20 @@ single_handed			= 1
 zoom_dof				= -1000, 1.0, 1000
 reload_dof				= 0.0, 0.5, 5, 1.7
 
-;-Г¤ГЁГ±ГЇГҐГ°Г±ГЁГї-----------------------------------------------------------------------------
-;ГЎГ Г§Г®ГўГ Гї Г¤ГЁГ±ГЇГҐГ°Г±ГЁГї
-fire_dispersion_base	= 0.22 ;0.18  ;ГіГЈГ®Г« (Гў ГЈГ°Г Г¤ГіГ±Г Гµ) ГЎГ Г§Г®ГўГ®Г© Г¤ГЁГ±ГЇГҐГ°Г±ГЁГЁ Г®Г°ГіГ¦ГЁГї (Г®Г°ГіГ¦ГЁГї Г§Г Г¦Г ГІГ®ГЈГ® Гў ГІГЁГ±ГЄГ Гµ)
+;-дисперсия-----------------------------------------------------------------------------
+;базовая дисперсия
+fire_dispersion_base	= 0.22 ;0.18  ;угол (в градусах) базовой дисперсии оружия (оружия зажатого в тисках)
 control_inertion_factor = 1.0
 crosshair_inertion		= 2.75
 
-;Г®ГІГ¤Г Г·Г 
+;отдача
 cam_return				= 0
-cam_relax_speed         = 8	;Г±ГЄГ®Г°Г®Г±ГІГј ГўГ®Г§ГўГ°Г ГІГ  Гў ГЁГ±ГµГ®Г¤Г­Г®ГҐ ГЇГ®Г«Г®Г¦ГҐГ­ГЁГҐ
+cam_relax_speed         = 8	;скорость возврата в исходное положение
 cam_relax_speed_ai      = 360
-cam_dispersion          = 0.9	;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГї ГіГЈГ«Г  (Гў ГЈГ°Г Г¤ГіГ±Г Гµ) Г± ГЄГ Г¦Г¤Г»Г¬ ГўГ»Г±ГІГ°ГҐГ«Г®Г¬
-cam_dispersion_inc		= 0.9	;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁe cam_dispersion Г± ГЄГ Г¦Г¤Г»Г¬ ГўГ»Г±ГІГ°ГҐГ«Г®Г¬
-cam_dispersion_frac		= 1.0	;Г±ГІГўГ®Г« ГЎГіГ¤ГҐГІ ГЇГ®Г¤Г»Г¬Г ГІГјГ±Гї Г­Г  cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
-cam_max_angle			= 5.0	;Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г»Г© ГіГЈГ®Г« Г®ГІГ¤Г Г·ГЁ
+cam_dispersion          = 0.9	;увеличения угла (в градусах) с каждым выстрелом
+cam_dispersion_inc		= 0.9	;увеличениe cam_dispersion с каждым выстрелом
+cam_dispersion_frac		= 1.0	;ствол будет подыматься на cam_dispersion*cam_dispersion_frac +- cam_dispersion*(1-cam_dispersion_frac)
+cam_max_angle			= 5.0	;максимальный угол отдачи
 cam_max_angle_horz		= 5.0	;(degree) maximum shot horizontal degree
 cam_step_angle_horz		= 1.0	;(degree) size of step camera moved in horizontal position while shooting
 
@@ -79,11 +78,11 @@ PDM_disp_accel_factor 		= 1.1
 PDM_disp_crouch	 			= 1.0
 PDM_disp_crouch_no_acc 		= 1.0
 
-fire_dispersion_condition_factor = 10	;ГіГўГҐГ«ГЁГ·ГҐГ­ГЁГҐ Г¤ГЁГ±ГЇГҐГ°Г±ГЁГЁ Гў ГЇГ°Г®Г¶ГҐГ­ГІГ Гµ ГЇГ°ГЁ Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®Г¬ ГЁГ§Г­Г®Г±ГҐ
+fire_dispersion_condition_factor = 10	;увеличение дисперсии в процентах при максимальном износе
 
 ;------------------------------------------------------------------------------
-holder_range_modifier	= 1.0               ; ГўГ® Г±ГЄГ®Г«ГјГЄГ® Г°Г Г§ ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГІГ±Гї eye_range
-holder_fov_modifier		= 1.0              ; ГўГ® Г±ГЄГ®Г«ГјГЄГ® Г°Г Г§ ГіГўГҐГ«ГЁГ·ГЁГўГ ГҐГІГ±Гї eye_fov
+holder_range_modifier	= 1.0               ; во сколько раз увеличивается eye_range
+holder_fov_modifier		= 1.0              ; во сколько раз увеличивается eye_fov
 
 hit_probability_gd_novice	= 0.80
 hit_probability_gd_stalker	= 0.80
@@ -157,7 +156,7 @@ zoom_enabled					= true
 zoom_rotate_time				= 0.25
 scope_zoom_factor	    		= 55
 
-;Г§ГўГіГЄГЁ
+;звуки
 snd_draw							= weapons\fort_draw
 snd_holster						= weapons\generic_holster
 snd_shoot						= weapons\n_fort_shot
@@ -256,7 +255,7 @@ aim_hud_offset_pos_16x9				= -0.170499,0.074000,0.000000
 aim_hud_offset_rot_16x9				= 0.035000,0.057500,0.010000
 
 ;-----------------------------------------------------------------------------
-; Г“Г­ГЁГЄГ Г«ГјГ­Г»ГҐ
+; Уникальные
 ;-----------------------------------------------------------------------------
 [wpn_fort_snag]:wpn_fort
 $spawn                  	= "weapons\wpn_fort_snag"		; option for Level Editor

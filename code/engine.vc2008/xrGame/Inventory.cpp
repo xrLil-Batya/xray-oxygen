@@ -807,37 +807,35 @@ float CInventory::CalcTotalWeight()
 
 u32 CInventory::dwfGetSameItemCount(LPCSTR caSection, bool SearchAll)
 {
-	u32			l_dwCount = 0;
+	u32 l_dwCount = 0;
 	TIItemContainer	&l_list = SearchAll ? m_all : m_ruck;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : l_list)
 	{
-		PIItem	l_pIItem = *l_it;
 		if (!xr_strcmp(l_pIItem->object().cNameSect(), caSection))
             ++l_dwCount;
 	}
 	
 	return		(l_dwCount);
 }
-u32		CInventory::dwfGetGrenadeCount(LPCSTR caSection, bool SearchAll)
+
+#include "Grenade.h"
+u32 CInventory::dwfGetGrenadeCount(LPCSTR caSection, bool SearchAll)
 {
-	u32			l_dwCount = 0;
+	u32 l_dwCount = 0;
 	TIItemContainer	&l_list = SearchAll ? m_all : m_ruck;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : l_list)
 	{
-		PIItem	l_pIItem = *l_it;
-		if (l_pIItem->object().CLS_ID == CLSID_GRENADE_F1 || l_pIItem->object().CLS_ID == CLSID_GRENADE_RGD5)
+		if (dynamic_cast<CGrenade*>(l_pIItem->cast_game_object()))
 			++l_dwCount;
 	}
 
-	return		(l_dwCount);
+	return (l_dwCount);
 }
 
 bool CInventory::bfCheckForObject(ALife::_OBJECT_ID tObjectID)
 {
-	TIItemContainer	&l_list = m_all;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : m_all)
 	{
-		PIItem	l_pIItem = *l_it;
 		if (l_pIItem->object().ID() == tObjectID)
 			return(true);
 	}
@@ -846,14 +844,12 @@ bool CInventory::bfCheckForObject(ALife::_OBJECT_ID tObjectID)
 
 CInventoryItem *CInventory::get_object_by_id(ALife::_OBJECT_ID tObjectID)
 {
-	TIItemContainer	&l_list = m_all;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : m_all)
 	{
-		PIItem	l_pIItem = *l_it;
 		if (l_pIItem->object().ID() == tObjectID)
-			return	(l_pIItem);
+			return (l_pIItem);
 	}
-	return		(0);
+	return (0);
 }
 
 //скушать предмет 

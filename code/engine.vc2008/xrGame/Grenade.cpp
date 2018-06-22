@@ -12,7 +12,6 @@
 #include "game_cl_base.h"
 #include "xrserver_objects_alife.h"
 
-#define GRENADE_REMOVE_TIME		30000
 const float default_grenade_detonation_threshold_hit=100;
 CGrenade::CGrenade(void) 
 {
@@ -37,7 +36,7 @@ void CGrenade::Load(LPCSTR section)
 	if(pSettings->line_exist(section,"grenade_remove_time"))
 		m_dwGrenadeRemoveTime = pSettings->r_u32(section,"grenade_remove_time");
 	else
-		m_dwGrenadeRemoveTime = GRENADE_REMOVE_TIME;
+		m_dwGrenadeRemoveTime = 30000ui64;
 	m_grenade_detonation_threshold_hit=READ_IF_EXISTS(pSettings,r_float,section,"detonation_threshold_hit",default_grenade_detonation_threshold_hit);
 }
 
@@ -178,7 +177,7 @@ void CGrenade::Throw()
 	if (pGrenade) 
 	{
 		pGrenade->set_destroy_time(m_dwDestroyTimeMax);
-//установить ID того кто кинул гранату
+		//установить ID того кто кинул гранату
 		pGrenade->SetInitiator( H_Parent()->ID() );
 	}
 	inherited::Throw			();
@@ -384,4 +383,16 @@ bool CGrenade::GetBriefInfo( II_BriefInfo& info )
 	xr_sprintf( stmp, "%d", ThisGrenadeCount );
 	info.cur_ammo._set( stmp );
 	return true;
+}
+
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CGrenade::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CGrenade, CGameObject>("CGrenade")
+			.def(constructor<>())
+		];
 }

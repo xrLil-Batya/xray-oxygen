@@ -48,48 +48,17 @@
 #define CLSID_OBJECT_LIFT			MK_CLSID('O','_','L','I','F','T',' ',' ')
 
 // Artefacts
-#define CLSID_AF_MERCURY_BALL		MK_CLSID('A','F','_','M','B','A','L','L')
-#define CLSID_AF_GRAVI				MK_CLSID('A','F','_','G','R','A','V','I')
-#define CLSID_AF_BLACKDROPS			MK_CLSID('A','F','_','B','D','R','O','P')
-#define CLSID_AF_NEEDLES			MK_CLSID('A','F','_','N','E','E','D','L')
-#define CLSID_AF_BAST				MK_CLSID('A','F','_','B','A','S','T',' ')
-#define CLSID_AF_BLACK_GRAVI		MK_CLSID('A','F','_','B','G','R','A','V')
-#define CLSID_AF_DUMMY				MK_CLSID('A','F','_','D','U','M','M','Y')
-#define CLSID_AF_ZUDA				MK_CLSID('A','F','_','Z','U','D','A',' ')
-#define CLSID_AF_THORN				MK_CLSID('A','F','_','T','H','O','R','N')
-#define CLSID_AF_FADED_BALL			MK_CLSID('A','F','_','F','B','A','L','L')
-#define CLSID_AF_ELECTRIC_BALL		MK_CLSID('A','F','_','E','B','A','L','L')
-#define CLSID_AF_RUSTY_HAIR			MK_CLSID('A','F','_','R','H','A','I','R')
-#define CLSID_AF_GALANTINE			MK_CLSID('A','F','_','G','A','L','A','N')
-#define CLSID_AF_CTA				MK_CLSID('A','F','_','C','T','A',' ',' ')
-
 #define CLSID_ARTEFACT				MK_CLSID('A','R','T','E','F','A','C','T')
 
 // Weapons
-#define CLSID_OBJECT_W_M134			MK_CLSID('W','_','M','1','3','4',' ',' ')
-#define CLSID_OBJECT_W_FN2000		MK_CLSID('W','_','F','N','2','0','0','0')
-#define CLSID_OBJECT_W_AK74			MK_CLSID('W','_','A','K','7','4',' ',' ')
-#define CLSID_OBJECT_W_LR300		MK_CLSID('W','_','L','R','3','0','0',' ')
-#define CLSID_OBJECT_W_HPSA			MK_CLSID('W','_','H','P','S','A',' ',' ')
-#define CLSID_OBJECT_W_PM			MK_CLSID('W','_','P','M',' ',' ',' ',' ')
-#define CLSID_OBJECT_W_FORT			MK_CLSID('W','_','F','O','R','T',' ',' ')
 #define CLSID_OBJECT_W_BINOCULAR	MK_CLSID('W','_','B','I','N','O','C',' ')
 #define CLSID_OBJECT_W_SHOTGUN		MK_CLSID('W','_','S','H','O','T','G','N')
 #define CLSID_OBJECT_W_ASHOTGUN		MK_CLSID('W','_','A','S','H','T','G','N')
-//  [8/15/2006]
 #define CLSID_OBJECT_W_MAGAZINED	MK_CLSID('W','_','W','M','A','G','A','Z')
-//  [8/15/2006]
-//  [8/17/2006]
 #define CLSID_OBJECT_W_MAGAZWGL		MK_CLSID('W','_','W','M','A','G','G','L')
-//  [8/17/2006]
 #define CLSID_OBJECT_W_SVD			MK_CLSID('W','_','S','V','D',' ',' ',' ')
-#define CLSID_OBJECT_W_SVU			MK_CLSID('W','_','S','V','U',' ',' ',' ')
 #define CLSID_OBJECT_W_RPG7			MK_CLSID('W','_','R','P','G','7',' ',' ')
-#define CLSID_OBJECT_W_VAL			MK_CLSID('W','_','V','A','L',' ',' ',' ')
 #define CLSID_OBJECT_W_VINTOREZ		MK_CLSID('W','_','V','I','N','T',' ',' ')
-#define CLSID_OBJECT_W_WALTHER		MK_CLSID('W','_','W','A','L','T','H','R')
-#define CLSID_OBJECT_W_USP45		MK_CLSID('W','_','U','S','P','4','5',' ')
-#define CLSID_OBJECT_W_GROZA		MK_CLSID('W','_','G','R','O','Z','A',' ')
 #define CLSID_OBJECT_W_KNIFE		MK_CLSID('W','_','K','N','I','F','E',' ')
 #define CLSID_OBJECT_W_BM16			MK_CLSID('W','_','B','M','1','6',' ',' ')
 #define CLSID_OBJECT_W_RG6			MK_CLSID('W','_','R','G','6',' ',' ',' ')
@@ -174,11 +143,7 @@
 // Inventory items
 #define CLSID_IITEM_BOLT			MK_CLSID('I','I','_','B','O','L','T',' ')
 
-#define CLSID_IITEM_MEDKIT			MK_CLSID('I','I','_','M','E','D','K','I')
-#define CLSID_IITEM_BANDAGE			MK_CLSID('I','I','_','B','A','N','D','G')
 #define CLSID_IITEM_FOOD			MK_CLSID('I','I','_','F','O','O','D',' ')
-#define CLSID_IITEM_BOTTLE			MK_CLSID('I','I','_','B','O','T','T','L')
-#define CLSID_IITEM_ANTIRAD			MK_CLSID('I','I','_','A','N','T','I','R')
 #define CLSID_IITEM_EXPLOSIVE		MK_CLSID('I','I','_','E','X','P','L','O')
 
 // Info Document
@@ -186,16 +151,10 @@
 
 #define CLSID_IITEM_ATTACH			MK_CLSID('I','I','_','A','T','T','C','H')
 
-
 // Grenades
-#define CLSID_GRENADE_F1			MK_CLSID('G','_','F','1',' ',' ',' ',' ')
+#define CLSID_GRENADE				MK_CLSID('G','R','E','N','A','D','E',' ')
 #define CLSID_OBJECT_G_RPG7			MK_CLSID('G','_','R','P','G','7',' ',' ')
-#define CLSID_GRENADE_RGD5			MK_CLSID('G','_','R','G','D','5',' ',' ')
 #define CLSID_OBJECT_G_FAKE			MK_CLSID('G','_','F','A','K','E',' ',' ')
-
-//---------------------------------------------------------------------------------
-#define CLSID_OBJECT_PLAYERS_BAG	MK_CLSID('M','P','_','P','L','B','A','G')
-//---------------------------------------------------------------------------------
 
 // Equipment
 #define CLSID_EQUIPMENT_SIMPLE		MK_CLSID('E','Q','U','_','S','M','P','L')
