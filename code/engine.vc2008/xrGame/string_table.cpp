@@ -15,6 +15,7 @@ void CStringTable::Destroy	()
 {
 	xr_delete(pData);
 }
+
 void CStringTable::rescan()
 {
 	if(NULL != pData)	return;
@@ -26,45 +27,80 @@ void CStringTable::Init		()
 {
 	if(NULL != pData) return;
     
-	pData				= xr_new<STRING_TABLE_DATA>();
+	pData = xr_new<STRING_TABLE_DATA>();
 	
 	//имя языка, если не задано (NULL), то первый <text> в <string> в XML
 	pData->m_sLanguage	= pSettings->r_string("string_table", "language");
 
-
 //---
 	FS_FileSet fset;
-	string_path			files_mask;
-	xr_sprintf				(files_mask, "text\\%s\\*.xml",pData->m_sLanguage.c_str());
-	FS.file_list		(fset, "$game_config$", FS_ListFiles, files_mask);
-    auto fit	= fset.begin();
-    auto fit_e	= fset.end();
+	string_path files_mask;
+	xr_sprintf(files_mask, "text\\%s\\*.xml",pData->m_sLanguage.c_str());
+	FS.file_list(fset, "$game_config$", FS_ListFiles, files_mask);
 
-	for( ;fit!=fit_e; ++fit)
+	for (FS_File File : fset)
 	{
-    	string_path		fn, ext;
-        _splitpath		((*fit).name.c_str(), 0, 0, fn, ext);
-		xr_strcat			(fn, ext);
+		string_path fn, ext;
+		_splitpath(File.name.c_str(), 0, 0, fn, ext);
+		xr_strcat(fn, ext);
 
-		Load			(fn);
+		Load(fn);
 	}
-#ifdef DEBUG
-	Msg("StringTable: loaded %d files", fset.size());
-#endif // #ifdef DEBUG
 //---
+	ReparseKeyBindings();
+}
+
+void CStringTable::ReInit(EGameLanguage lang)
+{
+	if (pData != nullptr)
+	{
+		Destroy();
+		pData = xr_new<STRING_TABLE_DATA>();
+	}
+
+	LPCSTR languageStr;
+
+	switch (lang)
+	{
+	case eglRussian:
+		languageStr = "rus";
+		break;
+	case eglEnglish:
+		languageStr = "eng";
+		break;
+	default:
+		VERIFY2(false, "Unsupported language!");
+		break;
+	}
+	pData->m_sLanguage = languageStr;
+
+	FS_FileSet fset;
+	string_path			files_mask;
+	xr_sprintf(files_mask, "text\\%s\\*.xml", languageStr);
+	FS.file_list(fset, "$game_config$", FS_ListFiles, files_mask);
+
+	for (FS_File File: fset)
+	{
+		string_path fn, ext;
+		_splitpath(File.name.c_str(), 0, 0, fn, ext);
+		xr_strcat(fn, ext);
+
+		Load(fn);
+	}
+
 	ReparseKeyBindings();
 }
 
 void CStringTable::Load	(LPCSTR xml_file_full)
 {
-	CUIXml						uiXml;
-	string_path					_s;
-	strconcat					(sizeof(_s),_s, "text\\", pData->m_sLanguage.c_str() );
+	CUIXml uiXml;
+	string_path _s;
+	strconcat (sizeof(_s),_s, "text\\", pData->m_sLanguage.c_str() );
 
-	uiXml.Load					(CONFIG_PATH, _s, xml_file_full);
+	uiXml.Load(CONFIG_PATH, _s, xml_file_full);
 
 	//общий список всех записей таблицы в файле
-	int string_num = uiXml.GetNodesNum		(uiXml.GetRoot(), "string");
+	int string_num = uiXml.GetNodesNum(uiXml.GetRoot(), "string");
 
 	for(int i=0; i<string_num; ++i)
 	{

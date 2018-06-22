@@ -55,7 +55,7 @@ string_path		g_last_saved_game;
 
 extern	u64		g_qwStartGameTime;
 extern	u64		g_qwEStartGameTime;
-
+extern  EGameLanguage g_Language;
 ENGINE_API
 extern  float   psHUD_FOV_def;
 extern	float	psSqueezeVelocity;
@@ -197,6 +197,25 @@ public:
 		if (actor)
 			actor->OnDisableInfo(info_id);
 
+	}
+};
+
+class CCC_GameLanguage : public CCC_Token 
+{
+public:
+	CCC_GameLanguage(LPCSTR N) : CCC_Token(N, (u32*)&g_Language, language_type_token) {};
+	virtual void Execute(LPCSTR args) 
+	{
+		CCC_Token::Execute(args);
+
+		MainMenu()->Activate(false);
+		Msg("[GAME] Game language changed!");
+		CStringTable().ReInit(g_Language);
+		MainMenu()->Activate(true);
+	}
+	virtual void Info(TInfo& I)
+	{
+		xr_strcpy(I, "Game language");
 	}
 };
 
@@ -1561,6 +1580,7 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "g_crouch_toggle", &psActorFlags, AF_CROUCH_TOGGLE);
 	CMD3(CCC_Mask, "g_colored_feel", &psActorFlags, AF_COLORED_FEEL);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");
+	CMD1(CCC_GameLanguage, "g_game_languages");
 
 	CMD3(CCC_Mask, "g_backrun", &psActorFlags, AF_RUN_BACKWARD);
 

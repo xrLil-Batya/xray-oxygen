@@ -89,9 +89,12 @@ enum ESingleGameDifficulty
 	egdCount,
 	egd_force_u32 = u32(-1)
 };
-
+enum EGameLanguage;
 extern ESingleGameDifficulty g_SingleGameDifficulty;
+extern EGameLanguage g_Language;
+
 xr_token		difficulty_type_token[];
+xr_token		language_type_token[];
 
 typedef enum_exporter<ESingleGameDifficulty> CScriptGameDifficulty;
 add_to_type_list(CScriptGameDifficulty)

@@ -11,6 +11,14 @@
 #include "UI/UIDialogWnd.h"
 #include "string_table.h"
 
+EGameLanguage g_Language = EGameLanguage::eglRussian;
+
+xr_token language_type_token[] = 
+{
+	{ "Русский", 0 },
+	{ "English", 1 }
+};
+
 game_cl_GameState::game_cl_GameState() : cl_flags(0)
 {
 	m_game_type_name = "";
