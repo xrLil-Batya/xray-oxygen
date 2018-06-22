@@ -80,7 +80,7 @@
 #	include "bolt.h"
 #	include "fooditem.h"
 #	include "explosiveitem.h"
-
+#	include "Grenade.h"
 #	include "infodocument.h"
 #	include "attachable_item.h"
 
@@ -254,7 +254,6 @@ void CObjectFactory::register_classes	()
 	ADD(CSmartZone				,CSE_ALifeSmartZone				,CLSID_SMART_ZONE				,"smart_zone");
 	ADD(CTorridZone				,CSE_ALifeTorridZone			,CLSID_Z_TORRID					,"torrid_zone");
 	ADD(CSpaceRestrictor		,CSE_ALifeSpaceRestrictor		,CLSID_SPACE_RESTRICTOR			,"space_restrictor");
-//.	ADD(CAmebaZone				,CSE_ALifeZoneVisual			,CLSID_Z_AMEBA					,"ameba_zone");
 	ADD(CNoGravityZone			,CSE_ALifeAnomalousZone			,CLSID_Z_NOGRAVITY				,"nogravity_zone");
 	ADD(CZoneCampfire			,CSE_ALifeAnomalousZone			,CLSID_Z_CAMPFIRE				,"zone_campfire");
 	// Detectors

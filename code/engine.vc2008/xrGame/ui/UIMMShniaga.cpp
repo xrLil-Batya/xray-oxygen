@@ -47,7 +47,6 @@ CUIMMShniaga::~CUIMMShniaga()
 
 	delete_data(m_buttons);
 	delete_data(m_buttons_new);
-	delete_data(m_buttons_new_network);
 }
 
 extern CActor* g_actor;
@@ -57,36 +56,35 @@ void CUIMMShniaga::InitShniaga(CUIXml& xml_doc, LPCSTR path)
 	string256 _path;
 
 	CUIXmlInit::InitWindow(xml_doc, path, 0, this);
-	strconcat				(sizeof(_path),_path,path,":shniaga:magnifire");
-	CUIXmlInit::InitStatic(xml_doc, _path,0,m_magnifier); 
-	m_mag_pos				= m_magnifier->GetWndPos().x;
-	strconcat				(sizeof(_path),_path,path,":shniaga");
-	CUIXmlInit::InitStatic(xml_doc, _path,0,m_shniaga);
-	strconcat				(sizeof(_path),_path,path,":buttons_region");
-	CUIXmlInit::InitScrollView(xml_doc, _path,0,m_view);
-	strconcat				(sizeof(_path),_path,path,":shniaga:magnifire:y_offset");
-	m_offset = xml_doc.ReadFlt(_path,0,0);
+	strconcat(sizeof(_path), _path, path, ":shniaga:magnifire");
+	CUIXmlInit::InitStatic(xml_doc, _path, 0, m_magnifier);
+	m_mag_pos = m_magnifier->GetWndPos().x;
+	strconcat(sizeof(_path), _path, path, ":shniaga");
+	CUIXmlInit::InitStatic(xml_doc, _path, 0, m_shniaga);
+	strconcat(sizeof(_path), _path, path, ":buttons_region");
+	CUIXmlInit::InitScrollView(xml_doc, _path, 0, m_view);
+	strconcat(sizeof(_path), _path, path, ":shniaga:magnifire:y_offset");
+	m_offset = xml_doc.ReadFlt(_path, 0, 0);
 
-	if (!g_pGameLevel || !g_pGameLevel->bReady) 
+	if (!g_pGameLevel || !g_pGameLevel->bReady)
 	{
 		if (!*g_last_saved_game || !CSavedGameWrapper::valid_saved_game(g_last_saved_game))
-			CreateList		(m_buttons, xml_doc, "menu_main");
+			CreateList(m_buttons, xml_doc, "menu_main");
 		else
-			CreateList		(m_buttons, xml_doc, "menu_main_last_save");
+			CreateList(m_buttons, xml_doc, "menu_main_last_save");
 
-		CreateList			(m_buttons_new,			xml_doc, "menu_new_game");
+		CreateList(m_buttons_new, xml_doc, "menu_new_game");
 	}
 	else
 	{
-		VERIFY			(Actor());
+		VERIFY(Actor());
 		if (g_actor && !Actor()->g_Alive())
-			CreateList	(m_buttons, xml_doc, "menu_main_single_dead");
+			CreateList(m_buttons, xml_doc, "menu_main_single_dead");
 		else
-			CreateList	(m_buttons, xml_doc, "menu_main_single");
+			CreateList(m_buttons, xml_doc, "menu_main_single");
 	}
-	CreateList			(m_buttons_new_network, xml_doc, "menu_network_game");
 
-    ShowMain				();
+	ShowMain();
 
 	m_sound->Init(xml_doc, "menu_sound");
 	m_sound->music_Play();
@@ -139,22 +137,13 @@ void CUIMMShniaga::CreateList(xr_vector<CUITextWnd*>& lst, CUIXml& xml_doc, LPCS
 void CUIMMShniaga::SetPage		(enum_page_id page_id, LPCSTR xml_file, LPCSTR xml_path)
 {
 	VERIFY(m_page != page_id);
-	xr_vector<CUITextWnd*>*		lst = NULL;
+	xr_vector<CUITextWnd*>* lst = nullptr;
 	switch (page_id)
 	{
-	case epi_main:
-		{
-			lst = &m_buttons;
-		}break;
-	case epi_new_game:
-		{
-			lst = &m_buttons_new;
-		}break;
-	case epi_new_network_game:
-		{
-			lst = &m_buttons_new_network;
-		}break;
-	};//switch (page_id)
+	case epi_main:		lst = &m_buttons; break;
+	case epi_new_game:	lst = &m_buttons_new; break;
+	}
+
 	delete_data		(*lst);
 	
 	CUIXml tmp_xml;
@@ -162,25 +151,14 @@ void CUIMMShniaga::SetPage		(enum_page_id page_id, LPCSTR xml_file, LPCSTR xml_p
 	CreateList		(*lst, tmp_xml, xml_path);
 }
 
-void CUIMMShniaga::ShowPage		(enum_page_id page_id)
+void CUIMMShniaga::ShowPage(enum_page_id page_id)
 {
 	switch (page_id)
 	{
-	case epi_main:
-		{
-			ShowMain();
-		}break;
-	case epi_new_game:
-		{
-			ShowNewGame();
-		}break;
-	case epi_new_network_game:
-		{
-			ShowNetworkGame();
-		}break;
-	};//switch (page_id)
+	case epi_main: ShowMain(); break;
+	case epi_new_game: ShowNewGame(); break;
+	}
 }
-
 
 void CUIMMShniaga::ShowMain()
 {
@@ -196,25 +174,11 @@ void CUIMMShniaga::ShowNewGame()
 {
 	m_page = epi_new_game;
     m_view->Clear();
-	for (u32 i = 0; i<m_buttons_new.size(); i++)
+	for (size_t i = 0; i<m_buttons_new.size(); i++)
 		m_view->AddWindow(m_buttons_new[i], false);
 
 	SelectBtn(m_buttons_new[0]);
 }
-
-void CUIMMShniaga::ShowNetworkGame()
-{
-	m_page = epi_new_network_game;
-    m_view->Clear();
-
-	for (u32	i = 0,
-				count = m_buttons_new_network.size(); i < count; ++i)
-	{
-		m_view->AddWindow(m_buttons_new_network[i], false);
-	}
-	SelectBtn(m_buttons_new_network[0]);
-}
-
 
 bool CUIMMShniaga::IsButton(CUIWindow* st)
 {
@@ -226,10 +190,6 @@ bool CUIMMShniaga::IsButton(CUIWindow* st)
 		if (m_buttons_new[i] == st)
 			return true;
 
-	for (u32 i = 0, count = m_buttons_new_network.size(); i<count; ++i)
-		if (m_buttons_new_network[i] == st)
-			return true;
-
 	return false;
 }
 
@@ -237,13 +197,10 @@ void CUIMMShniaga::SendMessage(CUIWindow* pWnd, s16 msg, void* pData){
 	CUIWindow::SendMessage(pWnd, msg, pData);
 	if (IsButton(pWnd))
 	{
-		switch (msg)
+		if (msg == WINDOW_FOCUS_RECEIVED)
 		{
-			case WINDOW_FOCUS_RECEIVED:
-				SelectBtn(pWnd);
-				break;
+			SelectBtn(pWnd);
 		}
-
 	}
 }
 
@@ -256,8 +213,6 @@ void CUIMMShniaga::SelectBtn(int btn)
         m_selected = m_buttons[btn];
 	else if (epi_new_game == m_page)
 		m_selected = m_buttons_new[btn];
-	else if (epi_new_network_game == m_page)
-		m_selected = m_buttons_new_network[btn];
 	
 	m_selected_btn = btn;
 	ProcessEvent(E_Begin);
@@ -268,27 +223,10 @@ void CUIMMShniaga::SelectBtn(CUIWindow* btn)
 	R_ASSERT(m_page >= 0);
 	for (int i = 0; i<(int)m_buttons.size(); ++i)
 	{
-		if (0 == m_page)
+		switch (m_page)
 		{
-			if (m_buttons[i] == btn)
-			{
-				SelectBtn(i);
-				return;
-			}
-		}else if (1 == m_page)
-		{
-			if (m_buttons_new[i] == btn)
-			{
-				SelectBtn(i);
-				return;
-			}
-		}else if (2 == m_page)
-		{
-			if (m_buttons_new_network[i] == btn)
-			{
-				SelectBtn(i);
-				return;
-			}
+		case epi_main: if (m_buttons[i] == btn) { SelectBtn(i); return; }
+		case epi_new_game: if (m_buttons_new[i] == btn) { SelectBtn(i); return; }
 		}
 	}	
 }
@@ -302,12 +240,11 @@ void CUIMMShniaga::Update()
 {
 	if (m_start_time > Device.dwTimeContinual - m_run_time)
 	{
-
 		Fvector2 pos = m_shniaga->GetWndPos();
 		pos.y = this->pos(m_origin, m_destination, Device.dwTimeContinual - m_start_time);
 		m_shniaga->SetWndPos(pos);		
-	}else
-		ProcessEvent(E_Stop);
+	}
+	else ProcessEvent(E_Stop);
 
 	if (m_start_time > Device.dwTimeContinual - m_run_time*10/100)
 		ProcessEvent(E_Finilize);
@@ -315,14 +252,11 @@ void CUIMMShniaga::Update()
 	ProcessEvent(E_Update);
 		
 	CUIWindow::Update();
-
-	
 }
 
 
 bool CUIMMShniaga::OnMouseAction(float x, float y, EUIMessages mouse_action)
 {
-	
 	Fvector2 pos = UI().GetUICursor().GetCursorPosition();
     Frect r;
 	m_magnifier->GetAbsoluteRect(r);
@@ -334,7 +268,8 @@ bool CUIMMShniaga::OnMouseAction(float x, float y, EUIMessages mouse_action)
 	return CUIWindow::OnMouseAction(x,y,mouse_action);
 }
 
-void CUIMMShniaga::OnBtnClick(){
+void CUIMMShniaga::OnBtnClick()
+{
 	if (0 == xr_strcmp("btn_new_game", m_selected->WindowName()))
 		ShowNewGame();
 	else if (0 == xr_strcmp("btn_new_back", m_selected->WindowName()))
@@ -377,14 +312,12 @@ bool CUIMMShniaga::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 int CUIMMShniaga::BtnCount()
 {
 	R_ASSERT(-1);
-	if (m_page == 0)
-        return (int)m_buttons.size();
-	else if (m_page == 1)
-		return (int)m_buttons_new.size();
-	else if (m_page == 2)
-		return (int)m_buttons_new_network.size();
-	else 
-		return -1;
+	switch (m_page)
+	{
+	case epi_main:		return (int)m_buttons.size();
+	case epi_new_game:  return (int)m_buttons_new.size();
+	default: return		-1;
+	}
 }
 
 float CUIMMShniaga::pos(float x1, float x2, u32 t)

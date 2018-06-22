@@ -62,8 +62,8 @@ private:
 
 protected:
 	virtual	void			UpdateXForm							()		{ CMissile::UpdateXForm(); };
-public:
 
+public:
 	virtual BOOL			UsedAI_Locations					();
 	virtual CExplosive		*cast_explosive						()	{return this;}
 	virtual CMissile		*cast_missile						()	{return this;}
@@ -76,4 +76,9 @@ public:
 																{ m_destroy_callback = callback; }
 private:
 	destroy_callback		m_destroy_callback;
+public:
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
+add_to_type_list(CGrenade)
+#undef script_type_list
+#define script_type_list save_type_list(CGrenade)

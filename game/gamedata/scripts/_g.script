@@ -498,7 +498,6 @@ end
 
 function start_game_callback()
 	alife()
-
 	squad_community_by_behaviour = {
 		["stalker"]							= "stalker",
 		["bandit"]							= "bandit",
@@ -540,30 +539,23 @@ function start_game_callback()
 	stalker_classes = {
 		[clsid.script_actor] 			= true,
 		[clsid.script_stalker] 			= true}
-
+		
 	weapon_classes = {
 		[clsid.wpn_vintorez_s] 			= true,
-		[clsid.wpn_ak74_s] 				= true,
-		[clsid.wpn_lr300_s] 			= true,
-		[clsid.wpn_hpsa_s] 				= true,
-		[clsid.wpn_pm_s] 				= true,
 		[clsid.wpn_shotgun_s] 			= true,
 		[clsid.wpn_auto_shotgun_s]		= true,
 		[clsid.wpn_bm16_s] 				= true,
 		[clsid.wpn_svd_s] 				= true,
-		[clsid.wpn_svu_s] 				= true,
 		[clsid.wpn_rg6_s] 				= true,
 		[clsid.wpn_rpg7_s] 				= true,
-		[clsid.wpn_val_s] 				= true,
-		[clsid.wpn_walther_s] 			= true,
-		[clsid.wpn_usp45_s] 			= true,
-		[clsid.wpn_groza_s] 			= true,
 		[clsid.wpn_knife_s] 			= true,
-		[clsid.wpn_grenade_f1_s] 		= true,
-		[clsid.wpn_grenade_rgd5_s] 		= true,
+		[clsid.wpn_wmaggl] 				= true,
+		[clsid.wpn_wmagaz] 				= true,
+		[clsid.wpn_grenade] 			= true,
 		[clsid.wpn_grenade_launcher] 	= true,
-		[clsid.wpn_grenade_fake] 		= true}
-
+		[clsid.wpn_grenade_fake] 		= true
+		}
+		
 	artefact_classes = {
 		[clsid.artefact] 				= true}
 
@@ -579,9 +571,6 @@ function start_game_callback()
 	sim_board.clear()
 	sr_light.clean_up ()
 	pda.add_quick_slot_items_on_game_start()
-	-- Tестирование оптимизации
-	--local test_object = test_object.test_object_class()
-	--test_object:test()
 end
 
 --' Lсталость
