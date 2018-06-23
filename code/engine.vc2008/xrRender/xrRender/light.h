@@ -33,7 +33,7 @@ public:
 	float			m_volumetric_quality;
 	float			m_volumetric_intensity;
 	float			m_volumetric_distance;
-
+	float			virtual_size;
 #ifndef ENGINE_BUILD
 	float			falloff;			// precalc to make light equal to zero at light range
 	float	        attenuation0;		// Constant attenuation		
@@ -120,7 +120,7 @@ public:
 	virtual void	set_rotation			(const Fvector& D, const Fvector& R);
 	virtual void	set_cone				(float angle);
 	virtual void	set_range				(float R);
-	virtual void	set_virtual_size		(float R)						{};
+	virtual void	set_virtual_size		(float R)						{ virtual_size = R; };
 	virtual void	set_color				(const Fcolor& C)				{ color.set(C);				}
 	virtual void	set_color				(float r, float g, float b)		{ color.set(r,g,b,1);		}
 	virtual void	set_texture				(LPCSTR name);
