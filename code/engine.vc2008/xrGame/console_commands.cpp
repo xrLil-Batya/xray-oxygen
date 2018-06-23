@@ -55,6 +55,7 @@ string_path		g_last_saved_game;
 
 extern	u64		g_qwStartGameTime;
 extern	u64		g_qwEStartGameTime;
+
 extern  EGameLanguage g_Language;
 ENGINE_API
 extern  float   psHUD_FOV_def;
@@ -258,67 +259,84 @@ public:
 };
 #endif // DEBUG
 
-class CCC_ALifeTimeFactor : public IConsole_Command {
+class CCC_ALifeTimeFactor : public IConsole_Command
+{
 public:
-	CCC_ALifeTimeFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+	CCC_ALifeTimeFactor(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!g_pGameLevel)
+			return;
+
 		float id1 = 0.0f;
-		sscanf(args ,"%f",&id1);
+		sscanf(args, "%f", &id1);
 		if (id1 < EPS_L)
-			Msg("Invalid time factor! (%.4f)",id1);
-		else {
+			Msg("Invalid time factor! (%.4f)", id1);
+		else
 			Level().SetGameTimeFactor(id1);
-		}
 	}
 	
-	virtual void	Save	(IWriter *F)	{};
-	virtual void	Status	(TStatus& S)
+	virtual void	Save(IWriter *F) {};
+	virtual void	Status(TStatus& S)
 	{	
-		if ( !g_pGameLevel )	return;
+		if (!g_pGameLevel)
+			return;
 
 		float v = Level().GetGameTimeFactor();
-		xr_sprintf	(S,sizeof(S),"%3.5f", v);
-		while	(xr_strlen(S) && ('0'==S[xr_strlen(S)-1]))	S[xr_strlen(S)-1] = 0;
+		xr_sprintf(S, sizeof(S), "%3.5f", v);
+		while (xr_strlen(S) && ('0' == S[xr_strlen(S) - 1]))
+			S[xr_strlen(S) - 1] = 0;
 	}
-	virtual void	Info	(TInfo& I)
+	virtual void	Info(TInfo& I)
 	{	
+		if (!g_pGameLevel)
+			return;
+
 		float v = Level().GetGameTimeFactor();
-		xr_sprintf(I,sizeof(I)," value = %3.5f", v);
+		xr_sprintf(I, sizeof(I), " value = %3.5f", v);
 	}
 	virtual void	fill_tips(vecTips& tips, u32 mode)
 	{
+		if (!g_pGameLevel)
+			return;
+
 		float v = Level().GetGameTimeFactor();
 
-		TStatus  str;
-		xr_sprintf( str, sizeof(str), "%3.5f  (current)  [0.0,1000.0]", v );
-		tips.push_back( str );
-		IConsole_Command::fill_tips( tips, mode );
+		TStatus str;
+		xr_sprintf(str, sizeof(str), "%3.5f  (current)  [0.0,1000.0]", v);
+		tips.push_back(str);
+		IConsole_Command::fill_tips(tips, mode);
 	}
 };
 
 class CCC_ALifeSwitchDistance : public IConsole_Command 
 {
 public:
-	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N) { };
 
 	virtual void Execute(LPCSTR args)
 	{
-		float id1 = 0.0f;
-		sscanf(args, "%f", &id1);
-		if (id1 < 2.0f)
-			Msg("Invalid online distance! (%.4f)", id1);
-		else {
-			NET_Packet		P;
-			P.w_begin(M_SWITCH_DISTANCE);
-			P.w_float(id1);
-			Level().Send(P);
+		if (ai().get_alife())
+		{
+			float id1 = 0.0f;
+			sscanf(args, "%f", &id1);
+			if (id1 < 2.0f)
+				Msg("Invalid online distance! (%.4f)", id1);
+			else
+			{
+				NET_Packet		P;
+				P.w_begin(M_SWITCH_DISTANCE);
+				P.w_float(id1);
+				Level().Send(P);
+			}
 		}
 	}
 };
 
-class CCC_ALifeProcessTime : public IConsole_Command {
+class CCC_ALifeProcessTime : public IConsole_Command
+{
 public:
-	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) 
 	{
 		if (ai().get_alife())
@@ -335,9 +353,10 @@ public:
 };
 
 
-class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
+class CCC_ALifeObjectsPerUpdate : public IConsole_Command
+{
 public:
-	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) 
 	{
 		if (ai().get_alife())
@@ -349,9 +368,10 @@ public:
 	}
 };
 
-class CCC_ALifeSwitchFactor : public IConsole_Command {
+class CCC_ALifeSwitchFactor : public IConsole_Command
+{
 public:
-	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) 
 	{
 		if (ai().get_alife())
@@ -372,14 +392,19 @@ public:
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) 
 	{
-		Console->Hide	();
+		if (g_pGameLevel)
+		{
+			Console->Hide();
 
-		LPSTR			fn_; 
-		STRCONCAT		(fn_, args, ".xrdemo");
-		string_path		fn;
-		FS.update_path	(fn, "$game_saves$", fn_);
+			LPSTR			fn_;
+			STRCONCAT(fn_, args, ".xrdemo");
+			string_path		fn;
+			FS.update_path(fn, "$game_saves$", fn_);
 
-		g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoRecord> (fn));
+			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoRecord>(fn));
+		}
+		else
+			Msg("! There are no level(s) started");
 	}
 };
 
@@ -403,28 +428,27 @@ Fvector CCC_DemoRecordSetPos::p = {0,0,0};
 class CCC_DemoPlay : public IConsole_Command
 {
 public:
-	CCC_DemoPlay(LPCSTR N) : 
-	  IConsole_Command(N) 
-	  { bEmptyArgsHandled = TRUE; };
-	  virtual void Execute(LPCSTR args) 
-	  {
+	CCC_DemoPlay(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args)
+	{
 		if (g_pGameLevel)
 		{
-			Console->Hide			();
-			string_path			fn;
-			u32		loops	=	0;
-			LPSTR		comma	=	strchr(const_cast<LPSTR>(args),',');
+			Console->Hide();
+			string_path fn;
+			u32 loops = 0;
+			LPSTR comma = strchr(const_cast<LPSTR>(args), ',');
 			if (comma)
 			{
-				loops			=	atoi	(comma+1);
-				*comma		=	0;	//. :)
+				loops = atoi(comma + 1);
+				*comma = 0;	//. :)
 			}
-			strconcat			(sizeof(fn),fn, args, ".xrdemo");
-			FS.update_path	(fn, "$game_saves$", fn);
-			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
+			strconcat(sizeof(fn), fn, args, ".xrdemo");
+			FS.update_path(fn, "$game_saves$", fn);
+			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay>(fn, 1.0f, loops));
 		}
-		else Msg("! There are no level(s) started");
-	  }
+		else 
+			Msg("! There are no level(s) started");
+	}
 };
 
 // helper functions --------------------------------------------
@@ -1321,11 +1345,15 @@ struct CCC_DbgBullets : public CCC_Integer {
 #include "Inventory.h"
 class CCC_TuneAttachableItem : public IConsole_Command
 {
-public		:
-	CCC_TuneAttachableItem(LPCSTR N):IConsole_Command(N){};
-	virtual void	Execute	(LPCSTR args)
+public:
+	CCC_TuneAttachableItem(LPCSTR N) :IConsole_Command(N) {};
+	virtual void Execute(LPCSTR args)
 	{
-		if( CAttachableItem::m_dbgItem){
+		if (!g_pGameLevel)
+			return;
+
+		if (CAttachableItem::m_dbgItem)
+		{
 			CAttachableItem::m_dbgItem = NULL;	
 			Msg("CCC_TuneAttachableItem switched to off");
 			return;

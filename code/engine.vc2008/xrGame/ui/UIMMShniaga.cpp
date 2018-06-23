@@ -221,14 +221,29 @@ void CUIMMShniaga::SelectBtn(int btn)
 void CUIMMShniaga::SelectBtn(CUIWindow* btn)
 {
 	R_ASSERT(m_page >= 0);
-	for (int i = 0; i<(int)m_buttons.size(); ++i)
+	switch (m_page)
 	{
-		switch (m_page)
+	case epi_main:
+		for (size_t i = 0; i < m_buttons.size(); ++i)
 		{
-		case epi_main: if (m_buttons[i] == btn) { SelectBtn(i); return; }
-		case epi_new_game: if (m_buttons_new[i] == btn) { SelectBtn(i); return; }
+			if (m_buttons[i] == btn)
+			{ 
+				SelectBtn((int)i); 
+				return; 
+			}
 		}
-	}	
+		break;
+	case epi_new_game:
+		for (size_t i = 0; i < m_buttons_new.size(); ++i)
+		{
+			if (m_buttons_new[i] == btn)
+			{
+				SelectBtn((int)i);
+				return;
+			}
+		}
+		break;
+	}
 }
 
 void CUIMMShniaga::Draw()
