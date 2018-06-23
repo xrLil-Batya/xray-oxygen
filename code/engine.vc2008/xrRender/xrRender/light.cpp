@@ -26,6 +26,7 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	m_volumetric_distance	= 1;
 
 	frame_render	= 0;
+	virtual_size	= .1f;
 
     std::memset(omnipart,0,sizeof(omnipart));
 	s_spot			= NULL;
@@ -271,13 +272,16 @@ static	Fvector cmDir[6]	= {{1.f,0.f,0.f}, {-1.f,0.f,0.f},{0.f,1.f,0.f}, {0.f,-1.
 
 void	light::export_		(light_Package& package)
 {
-	if (flags.bShadow)			{
-		switch (flags.type)	{
+	if (flags.bShadow)			
+	{
+		switch (flags.type)	
+		{
 			case IRender_Light::POINT:
 				{
 					// tough: create/update 6 shadowed lights
 					if (0==omnipart[0])	for (int f=0; f<6; f++)	omnipart[f] = xr_new<light> ();
-					for (int f=0; f<6; f++)	{
+					for (int f=0; f<6; f++)	
+					{
 						light*	L			= omnipart[f];
 						Fvector				R;
 						R.crossproduct		(cmNorm[f],cmDir[f]);
@@ -292,7 +296,8 @@ void	light::export_		(light_Package& package)
 						L->spatial.sector	= spatial.sector;	//. dangerous?
 						L->s_spot			= s_spot	;
 						L->s_point			= s_point	;
-						
+
+						L->set_virtual_size(virtual_size);
 						// Holger - do we need to export msaa stuff as well ?
 #if	(RENDER!=R_R2)
 						if( RImplementation.o.dx10_msaa )
@@ -309,7 +314,6 @@ void	light::export_		(light_Package& package)
 							}
 						}
 #endif
-
 						//	Igor: add volumetric support
 						L->set_volumetric(flags.bVolumetric);
 						L->set_volumetric_quality(m_volumetric_quality);
@@ -324,8 +328,11 @@ void	light::export_		(light_Package& package)
 				package.v_shadowed.push_back			(this);
 				break;
 		}
-	}	else	{
-		switch (flags.type)	{
+	}	
+	else	
+	{
+		switch (flags.type)	
+		{
 			case IRender_Light::POINT:		package.v_point.push_back	(this);	break;
 			case IRender_Light::SPOT:		package.v_spot.push_back	(this);	break;
 		}
