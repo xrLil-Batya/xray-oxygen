@@ -208,11 +208,12 @@ public:
 	virtual void Execute(LPCSTR args) 
 	{
 		CCC_Token::Execute(args);
-
-		MainMenu()->Activate(false);
+		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
+			MainMenu()->Activate(false);
 		Msg("[GAME] Game language changed!");
 		CStringTable().ReInit(g_Language);
-		MainMenu()->Activate(true);
+		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
+			MainMenu()->Activate(true);
 	}
 	virtual void Info(TInfo& I)
 	{
