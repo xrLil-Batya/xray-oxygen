@@ -12,7 +12,7 @@
 #include "ai_space.h"
 #include "level.h"
 #include "xrMessages.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "Actor.h"
 #include "MainMenu.h"
 

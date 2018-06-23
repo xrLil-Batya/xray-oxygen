@@ -322,8 +322,8 @@ public:
 	virtual void				Update						();
 	virtual void				Show						(bool status);
 
-	virtual bool				OnKeyboardAction					(int dik, EUIMessages keyboard_action);
-	virtual bool				OnMouseAction						(float x, float y, EUIMessages mouse_action);
+	virtual bool				OnKeyboardAction			(int dik, EUIMessages keyboard_action);
+	virtual bool				OnMouseAction				(float x, float y, EUIMessages mouse_action);
 
 	void						CallMessageBoxYesNo			(LPCSTR text);
 	void						CallMessageBoxOK			(LPCSTR text);
@@ -331,7 +331,6 @@ public:
 	void		xr_stdcall		OnMesBoxNo					(CUIWindow*, void*);
 
 	void						OnInventoryAction			(PIItem pItem, u16 action_type);
-	void						ShowRepairButton			(bool status);
 	bool						SetInfoCurUpgrade			(Upgrade_type* upgrade_type, CInventoryItem* inv_item );
 	void						SeparateUpgradeItem			();
 	PIItem						get_upgrade_item			();

@@ -5,8 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script game object script export
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#pragma warning(push)
+#pragma warning(disable: 4275)
 #include "script_game_object.h"
 #include "alife_space.h"
 #include "script_entity_space.h"
@@ -32,6 +33,7 @@
 #include "ZoneCampfire.h"
 #include "physicobject.h"
 #include "artefact.h"
+#pragma warning(pop)
 
 using namespace luabind;
 

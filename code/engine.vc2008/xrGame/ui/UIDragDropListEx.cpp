@@ -786,8 +786,13 @@ u32 CUICellContainer::GetCellsInRange(const Irect& rect, UI_CELLS_VEC& res)
 	for (int x = rect.x1; x <= rect.x2; ++x)
 		for (int y = rect.y1; y <= rect.y2; ++y)
 			res.push_back(GetCellAt(Ivector2().set(x, y)));
+	// Wtf? 
+	// std::unique(res.begin(), res.end());
 
-	std::unique(res.begin(), res.end());
+	// Maybe:
+	xr_vector<CUICell>::iterator last = std::unique(res.begin(), res.end());
+	res.erase(last, res.end());
+
 	return (u32)res.size();
 }
 

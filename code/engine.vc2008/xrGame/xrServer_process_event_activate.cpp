@@ -2,7 +2,7 @@
 #include "xrserver.h"
 #include "xrserver_objects.h"
 
-void xrServer::Process_event_activate(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message)
+void xrServer::Process_event_activate(NET_Packet& P, const u16 id_parent, const u16 id_entity)
 {
 	// Parse message
 	CSE_Abstract*		e_parent = game->get_entity_from_eid(id_parent);
@@ -13,7 +13,7 @@ void xrServer::Process_event_activate(NET_Packet& P, const ClientID sender, cons
 
 	xr_delete(e_parent);
 
-	if (0xffff != e_entity->ID_Parent && send_message)
+	if (0xffff != e_entity->ID_Parent)
 	{
 		// Signal to everyone (including sender)
 		SendBroadcast(BroadcastCID, P);

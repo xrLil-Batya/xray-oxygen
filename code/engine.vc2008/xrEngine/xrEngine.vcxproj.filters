@@ -582,15 +582,6 @@
     <ClInclude Include="ide.hpp">
       <Filter>editor\ide</Filter>
     </ClInclude>
-    <ClInclude Include="ClS\NET_PlayersMonitor.h">
-      <Filter>Game API\NetServer</Filter>
-    </ClInclude>
-    <ClInclude Include="ClS\NET_Server.h">
-      <Filter>Game API\NetServer</Filter>
-    </ClInclude>
-    <ClInclude Include="ClS\NET_Shared.h">
-      <Filter>Game API\NetServer</Filter>
-    </ClInclude>
     <ClInclude Include="ClS\NET_Client.h">
       <Filter>Game API\NetServer</Filter>
     </ClInclude>
@@ -920,9 +911,6 @@
     <ClCompile Include="BoneEditor.cpp">
       <Filter>Game API\RenderRef</Filter>
     </ClCompile>
-    <ClCompile Include="ClS\NET_Server.cpp">
-      <Filter>Game API\NetServer</Filter>
-    </ClCompile>
     <ClCompile Include="ClS\NET_Client.cpp">
       <Filter>Game API\NetServer</Filter>
     </ClCompile>
@@ -943,9 +931,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <None Include="ClientServer.txt">
-      <Filter>Game API\NetServer</Filter>
-    </None>
     <None Include="TODO.txt">
       <Filter>Engine</Filter>
     </None>

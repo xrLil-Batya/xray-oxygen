@@ -17,13 +17,13 @@
 
 #include "PDA.h"
 #include "ai/monsters/basemonster/base_monster.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIStatic.h"
 
 BOOL GodMode()	
 {  
-	return psActorFlags.test(AF_GODMODE|AF_GODMODE_RT); 
+	return psActorFlags.test(AF_GODMODE); 
 }
 
 CActorCondition::CActorCondition(CActor *object) :
@@ -318,7 +318,7 @@ void CActorCondition::UpdateBoosters()
 	}
 
 	if(m_object == Level().CurrentViewEntity())
-		CurrentGameUI()->UIMainIngameWnd->UpdateBoosterIndicators(m_booster_influences);
+		GameUI()->UIMainIngameWnd->UpdateBoosterIndicators(m_booster_influences);
 }
 
 void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
@@ -460,7 +460,7 @@ void CActorCondition::UpdateThirst()
 	}
 
 	float thirst_health_koef = (m_fThirst - m_fThirstCritical) / (m_fThirst >= m_fThirstCritical ? 1 - m_fThirstCritical : m_fThirstCritical);
-	if (CanBeHarmed() && !psActorFlags.test(AF_GODMODE_RT))
+	if (CanBeHarmed())
 	{
 		m_fDeltaHealth += m_fV_ThirstHealth*thirst_health_koef*m_fDeltaTime;
 		m_fDeltaPower += m_fV_ThirstPower*m_fThirst*m_fDeltaTime;

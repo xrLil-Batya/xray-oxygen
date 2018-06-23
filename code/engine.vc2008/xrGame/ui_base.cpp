@@ -299,7 +299,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 #include "script_ui_registrator.h"
 #include "MainMenu.h"
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "UI/UIScriptWnd.h"
 #include "UI/UIButton.h"
 #include "UI/UIProgressBar.h"
@@ -331,7 +331,7 @@ void UIRegistrator::script_register(lua_State *L)
 	CUIPropertiesBox::script_register(L);
 	CUIOptionsManagerScript::script_register(L);
 	CScriptXmlInit::script_register(L);
-	CUIGameCustom::script_register(L);
+	CUIGame::script_register(L);
 
 	module(L)
 		[

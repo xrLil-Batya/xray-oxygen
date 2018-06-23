@@ -32,7 +32,7 @@ void CLevel::ClientReceive()
 		{
 		case M_SPAWN:			
 			{
-				if (!bReady) //!m_bGameConfigStarted || 
+				if (!bReady)
 				{
 					Msg ("! Unconventional M_SPAWN received : map_data[%s] | bReady[%s] | deny_m_spawn[%s]",
 						(map_data.m_map_sync_received) ? "true" : "false",

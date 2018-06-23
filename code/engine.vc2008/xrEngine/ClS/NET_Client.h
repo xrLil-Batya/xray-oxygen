@@ -1,5 +1,4 @@
 #pragma once
-#include "net_shared.h"
 
 //==============================================================================
 class ENGINE_API INetQueue

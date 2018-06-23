@@ -11,29 +11,6 @@ class ENGINE_API CCustomHUD;
 class ENGINE_API ISpatial;
 namespace Feel { class ENGINE_API Sound; }
 
-class ENGINE_API CServerInfo
-{
-private:
-	struct SItem_ServerInfo
-	{
-		string128	name;
-		u32			color;
-	};
-	enum { max_item = 15 };
-	svector<SItem_ServerInfo,max_item>	data;
-
-public:
-	u32		Size()			{ return data.size(); }
-	void	ResetData()		{ data.clear(); }
-
-	void	AddItem( shared_str& name_,	LPCSTR value_, u32 color_ = RGB(255,255,255) );
-
-	IC SItem_ServerInfo&	operator[] ( u32 id ) { VERIFY( id < max_item ); return data[id]; }
-
-	CServerInfo() {};
-	~CServerInfo() {};
-};
-
 //-----------------------------------------------------------------------------------------------------------
 class ENGINE_API	IGame_Level	:
 	public DLL_Pure,
@@ -106,23 +83,3 @@ public:
 
 //-----------------------------------------------------------------------------------------------------------
 extern ENGINE_API	IGame_Level*	g_pGameLevel;
-
-template <typename _class_type>
-	void relcase_register	(_class_type *self, void (xr_stdcall _class_type::* function_to_bind)(CObject*))
-	{
-		g_pGameLevel->Objects.relcase_register	(
-			CObjectList::RELCASE_CALLBACK (
-				self,
-				function_to_bind)
-		);
-	}
-
-template <typename _class_type>
-	void relcase_unregister	(_class_type *self, void (xr_stdcall _class_type::* function_to_bind)(CObject*))
-	{
-		g_pGameLevel->Objects.relcase_unregister	(
-			CObjectList::RELCASE_CALLBACK (
-				self,
-				function_to_bind)
-		);
-	}

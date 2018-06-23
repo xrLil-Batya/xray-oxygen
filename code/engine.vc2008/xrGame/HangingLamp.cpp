@@ -390,11 +390,6 @@ void CHangingLamp::net_Export(NET_Packet& P)
 	VERIFY					(Local());
 }
 
-void CHangingLamp::net_Import(NET_Packet& P)
-{
-	VERIFY					(Remote());
-}
-
 BOOL CHangingLamp::UsedAI_Locations()
 {
 	return					(FALSE);

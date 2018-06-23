@@ -172,21 +172,6 @@ void	IGame_Level::OnFrame		( )
 }
 // ==================================================================================================
 
-void CServerInfo::AddItem(shared_str& name_, LPCSTR value_, u32 color_)
-{
-	SItem_ServerInfo it;
-
-	xr_strcpy(it.name, name_.c_str());
-	xr_strcat(it.name, " = ");
-	xr_strcat(it.name, value_);
-	it.color = color_;
-
-	if (data.size() < max_item)
-	{
-		data.push_back(it);
-	}
-}
-
 void IGame_Level::SetEntity( CObject* O  )
 {
 	if (pCurrentEntity)

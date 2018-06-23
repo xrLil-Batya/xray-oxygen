@@ -21,7 +21,7 @@
 #include "../ai/monsters/BaseMonster/base_monster.h"
 #include "../ai_space.h"
 #include "../../xrServerEntities/script_engine.h"
-#include "../UIGameSP.h"
+#include "../UIGame.h"
 #include "UITalkWnd.h"
 #include "../../FrayBuildConfig.hpp"
 // -------------------------------------------------
@@ -145,16 +145,11 @@ void CUIActorMenu::DeInitTradeMode()
 	m_trade_buy_button->Show		(false);
 	m_trade_sell_button->Show		(false);
 
-	if(!CurrentGameUI())
+	if(!GameUI())
 		return;
-	//только если находимся в режиме single
-	CUIGameSP* pGameSP = smart_cast<CUIGameSP*>(CurrentGameUI());
-	if(!pGameSP) return;
 
-	if(pGameSP->TalkMenu->IsShown())
-	{
-		pGameSP->TalkMenu->NeedUpdateQuestions();
-	}
+	if(GameUI()->TalkMenu->IsShown())
+		GameUI()->TalkMenu->NeedUpdateQuestions();
 }
 
 #include "../xrEngine/xr_input.h"

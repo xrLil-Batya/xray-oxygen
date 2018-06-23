@@ -176,18 +176,15 @@ void CAI_Space::patrol_path_storage		(IReader &stream)
 	m_patrol_path_storage->load		(stream);
 }
 
-void CAI_Space::set_alife				(CALifeSimulator *alife_simulator)
+void CAI_Space::set_alife(CALifeSimulator *alife_simulator)
 {
-	VERIFY					((!m_alife_simulator && alife_simulator) || (m_alife_simulator && !alife_simulator));
-	m_alife_simulator		= alife_simulator;
+	m_alife_simulator = alife_simulator;
 
-	VERIFY					(!alife_simulator || !m_game_graph);
 	if (alife_simulator)
 		return;
 
-	VERIFY					(m_game_graph);
-	m_game_graph			= 0;
-	xr_delete				(m_graph_engine);
+	m_game_graph = nullptr;
+	xr_delete(m_graph_engine);
 }
 
 void CAI_Space::game_graph				(CGameGraph *game_graph)

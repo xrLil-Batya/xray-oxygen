@@ -5,7 +5,6 @@
     <EmbeddedResource Include="BoneEditor.resx" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\utils\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="MeshEditor.cpp">
       <Filter>Interface</Filter>
     </ClCompile>
@@ -18,7 +17,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="MainForm.h" />
-    <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="BoneEditor.h" />
     <ClInclude Include="Meshs.h">
       <Filter>Mesh</Filter>

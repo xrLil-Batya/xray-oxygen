@@ -16,7 +16,7 @@
 
 #include "actor.h"
 #include "huditem.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "UI/UIDialogWnd.h"
 #include "../xrEngine/xr_input.h"
 #include "saved_game_wrapper.h"
@@ -44,7 +44,9 @@ void CLevel::IR_OnMouseWheel( int direction )
 {
 	if(	g_bDisableAllInput	) return;
 
-	if (CurrentGameUI()->IR_UIOnMouseWheel(direction)) return;
+	if (GameUI()->IR_UIOnMouseWheel(direction)) 
+		return;
+
 	if( Device.Paused()
 
 		&& !psActorFlags.test(AF_NO_CLIP) 
@@ -70,7 +72,7 @@ void CLevel::IR_OnMouseHold(int btn)
 void CLevel::IR_OnMouseMove( int dx, int dy )
 {
 	if(g_bDisableAllInput)							return;
-	if (CurrentGameUI()->IR_UIOnMouseMove(dx,dy))		return;
+	if (GameUI()->IR_UIOnMouseMove(dx,dy))		return;
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	return;
 
 	if (CURRENT_ENTITY())		
@@ -94,9 +96,9 @@ extern float g_separate_radius;
 #include "script_game_object.h"
 #include "game_object_space.h"
 
-void CLevel::IR_OnKeyboardPress	(int key)
+void CLevel::IR_OnKeyboardPress(int key)
 {
-	if(Device.dwPrecacheFrame)
+	if (Device.dwPrecacheFrame)
 		return;
 
 #ifdef INGAME_EDITOR
@@ -104,91 +106,99 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		return;
 #endif // #ifdef INGAME_EDITOR
 
-	bool b_ui_exist = (!!CurrentGameUI());
+	bool b_ui_exist = (!!GameUI());
 
 	EGameActions _curr = get_binded_action(key);
 
-	if(_curr==kPAUSE)
-	{
+	if (_curr == kPAUSE)
 		return;
-	}
 
 	if (g_bDisableAllInput)
-	{
 		return;
-	}
-	if (g_actor) Actor()->callback(GameObject::eOnKeyPress)(key, _curr);//+
-	switch ( _curr ) 
-	{
-	case kSCREENSHOT:
-		Render->Screenshot();
-		return;
-		break;
 
-	case kCONSOLE:
-		Console->Show				();
-		return;
-		break;
+	if (g_actor) 
+		Actor()->callback(GameObject::eOnKeyPress)(key, _curr);
 
-	case kQUIT: 
+	switch (_curr)
+	{
+		case kSCREENSHOT:
+			Render->Screenshot();
+			return;
+			break;
+
+		case kCONSOLE:
+			Console->Show();
+			return;
+			break;
+
+		case kQUIT:
 		{
-			if(b_ui_exist && CurrentGameUI()->TopInputReceiver() )
+			if (b_ui_exist && GameUI()->TopInputReceiver())
 			{
-					if(CurrentGameUI()->IR_UIOnKeyboardPress(key))	return;//special case for mp and main_menu
-					CurrentGameUI()->TopInputReceiver()->HideDialog();
-			}else
+				if (GameUI()->IR_UIOnKeyboardPress(key))	
+					return; //special case for mp and main_menu
+
+				GameUI()->TopInputReceiver()->HideDialog();
+			}
+			else
 			{
 				Console->Execute("main_menu");
-			}return;
-		}break;
-	};
+			} 
+			return;
+		}
+		break;
+	}
 
-	if ( !bReady || !b_ui_exist )			return;
+	if (!bReady || !b_ui_exist)			
+		return;
 
-	if ( b_ui_exist && CurrentGameUI()->IR_UIOnKeyboardPress(key)) return;
+	if (b_ui_exist && GameUI()->IR_UIOnKeyboardPress(key)) 
+		return;
 
-	if ( Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	return;
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))	
+		return;
 
-	if  (game && game->OnKeyboardPress(key))	return;
+	if (game && game->OnKeyboardPress(key))	
+		return;
 
 #ifndef MASTER_GOLD
 	switch (key) {
-	case DIK_DIVIDE: 
+	case DIK_DIVIDE:
 	{
 		if (!Server)
 			break;
 
-		SetGameTimeFactor			(g_fTimeFactor);
+		SetGameTimeFactor(g_fTimeFactor);
 
 #ifdef DEBUG
-		if(!m_bEnvPaused)
+		if (!m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
 #else //DEBUG
 		SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
 #endif //DEBUG
-		
-		break;	
+
+		break;
 	}
-	case DIK_MULTIPLY: 
+	case DIK_MULTIPLY:
 	{
 		if (!Server)
 			break;
 
-		SetGameTimeFactor			(1000.f);
+		SetGameTimeFactor(1000.f);
 #ifdef DEBUG
-		if(!m_bEnvPaused)
+		if (!m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 1000.f);
 #else //DEBUG
 		SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 1000.f);
 #endif //DEBUG
-		
+
 		break;
 	}
 #ifdef DEBUG
-	case DIK_SUBTRACT:{
+	case DIK_SUBTRACT: {
 		if (!Server)
 			break;
-		if(m_bEnvPaused)
+		if (m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
 		else
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 0.00001f);
@@ -197,20 +207,20 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		break;
 	}
 #endif //DEBUG
-	case DIK_NUMPAD5: 
+	case DIK_NUMPAD5:
+	{
+		if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
 		{
-			if(!pInput->iGetAsyncKeyState(DIK_LSHIFT))
-			{
-				Console->Hide	();
-				Console->Execute("demo_record 1");
-			}
+			Console->Hide();
+			Console->Execute("demo_record 1");
 		}
-		break;
+	}
+	break;
 
 #ifdef DEBUG
 
 	case DIK_RETURN: {
-		bDebug	= !bDebug;
+		bDebug = !bDebug;
 		return;
 	}
 	case DIK_BACK:
@@ -225,15 +235,15 @@ void CLevel::IR_OnKeyboardPress	(int key)
 			break;
 
 		bool bOk = false;
-		u32 i=0, j, n=Objects.o_count();
+		u32 i = 0, j, n = Objects.o_count();
 		if (pCurrentEntity)
-			for ( ; i<n; ++i)
+			for (; i < n; ++i)
 				if (Objects.o_get_by_iterator(i) == pCurrentEntity)
 					break;
 		if (i < n) {
 			j = i;
 			bOk = false;
-			for (++i; i <n; ++i) {
+			for (++i; i < n; ++i) {
 				CEntityAlive* tpEntityAlive = smart_cast<CEntityAlive*>(Objects.o_get_by_iterator(i));
 				if (tpEntityAlive) {
 					bOk = true;
@@ -241,7 +251,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 				}
 			}
 			if (!bOk)
-				for (i = 0; i <j; ++i) {
+				for (i = 0; i < j; ++i) {
 					CEntityAlive* tpEntityAlive = smart_cast<CEntityAlive*>(Objects.o_get_by_iterator(i));
 					if (tpEntityAlive) {
 						bOk = true;
@@ -252,7 +262,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 				CObject *tpObject = CurrentEntity();
 				CObject *__I = Objects.o_get_by_iterator(i);
 				CObject **I = &__I;
-				
+
 				SetEntity(*I);
 				if (tpObject != *I)
 				{
@@ -262,11 +272,11 @@ void CLevel::IR_OnKeyboardPress	(int key)
 				}
 				if (tpObject)
 				{
-					Engine.Sheduler.Unregister	(tpObject);
-					Engine.Sheduler.Register	(tpObject, TRUE);
+					Engine.Sheduler.Unregister(tpObject);
+					Engine.Sheduler.Register(tpObject, TRUE);
 				};
-				Engine.Sheduler.Unregister	(*I);
-				Engine.Sheduler.Register	(*I, TRUE);
+				Engine.Sheduler.Unregister(*I);
+				Engine.Sheduler.Register(*I, TRUE);
 
 				CActor* pActor = smart_cast<CActor*> (*I);
 				if (pActor)
@@ -274,7 +284,7 @@ void CLevel::IR_OnKeyboardPress	(int key)
 					pActor->inventory().Items_SetCurrentEntityHud(true);
 
 					CHudItem* pHudItem = smart_cast<CHudItem*>(pActor->inventory().ActiveItem());
-					if (pHudItem) 
+					if (pHudItem)
 					{
 						pHudItem->OnStateSwitch(pHudItem->GetState());
 					}
@@ -283,23 +293,23 @@ void CLevel::IR_OnKeyboardPress	(int key)
 		}
 		return;
 	}
-	// Lain: added
-	case DIK_F5: 
+				 // Lain: added
+	case DIK_F5:
 	{
-		if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
+		if (CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
 		{
-			DBG().log_debug_info();			
+			DBG().log_debug_info();
 		}
 		break;
 	}
 
-	case MOUSE_1: 
+	case MOUSE_1:
 	{
 		if (pInput->iGetAsyncKeyState(DIK_LALT)) {
 			if (smart_cast<CActor*>(CurrentEntity()))
-				try_change_current_entity	();
+				try_change_current_entity();
 			else
-				restore_actor				();
+				restore_actor();
 			return;
 		}
 		break;
@@ -307,10 +317,10 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	/**/
 #endif
 #ifdef DEBUG
-	case DIK_F9:{
+	case DIK_F9: {
 		break;
 	}
-		return;
+				 return;
 #endif // DEBUG
 	}
 #endif // MASTER_GOLD
@@ -318,63 +328,75 @@ void CLevel::IR_OnKeyboardPress	(int key)
 	if (bindConsoleCmds.execute(key))
 		return;
 
-	if (CURRENT_ENTITY())		
+	if (CURRENT_ENTITY())
 	{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
-		if (IR)				IR->IR_OnKeyboardPress(get_binded_action(key));
+		IInputReceiver*	IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		if (IR)				
+			IR->IR_OnKeyboardPress(get_binded_action(key));
 	}
 
 
 #ifdef DEBUG
-		CObject *obj = CurrentEntity();
-		if (obj) {
-			CBaseMonster *monster = smart_cast<CBaseMonster *>(obj);
-			if (monster) 
-				monster->debug_on_key(key);
-		}
+	CObject *obj = CurrentEntity();
+	if (obj) 
+	{
+		CBaseMonster *monster = smart_cast<CBaseMonster *>(obj);
+		if (monster)
+			monster->debug_on_key(key);
+	}
 #endif
 }
 
 void CLevel::IR_OnKeyboardRelease(int key)
 {
-	if (!bReady || g_bDisableAllInput	)								return;
-	if ( CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardRelease(key)) return;
-	if (game && game->OnKeyboardRelease(get_binded_action(key)) )		return;
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
-        return;
+	if (!bReady || g_bDisableAllInput)								
+		return;
 
-	if (g_actor) Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));//+
-	if (CURRENT_ENTITY())		
+	if (GameUI() && GameUI()->IR_UIOnKeyboardRelease(key)) 
+		return;
+
+	if (game && game->OnKeyboardRelease(get_binded_action(key)))		
+		return;
+
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
+		return;
+
+	if (g_actor) 
+		Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));
+
+	if (CURRENT_ENTITY())
 	{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
-		if (IR)				IR->IR_OnKeyboardRelease			(get_binded_action(key));
+		IInputReceiver* IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		if (IR)				
+			IR->IR_OnKeyboardRelease(get_binded_action(key));
 	}
 }
 
 void CLevel::IR_OnKeyboardHold(int key)
 {
-	if(g_bDisableAllInput) return;
+	if (g_bDisableAllInput) 
+		return;
 
 #ifdef DEBUG
 	// Lain: added
-	if ( key == DIK_UP )
+	if (key == DIK_UP)
 	{
 		static u32 time = Device.dwTimeGlobal;
-		if ( Device.dwTimeGlobal - time > 20 )
+		if (Device.dwTimeGlobal - time > 20)
 		{
-			if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()) )
+			if (CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
 			{
 				DBG().debug_info_up();
 				time = Device.dwTimeGlobal;
 			}
 		}
 	}
-	else if ( key == DIK_DOWN )
+	else if (key == DIK_DOWN)
 	{
 		static u32 time = Device.dwTimeGlobal;
-		if ( Device.dwTimeGlobal - time > 20 )
+		if (Device.dwTimeGlobal - time > 20)
 		{
-			if ( CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()) )
+			if (CBaseMonster* pBM = smart_cast<CBaseMonster*>(CurrentEntity()))
 			{
 				DBG().debug_info_down();
 				time = Device.dwTimeGlobal;
@@ -384,14 +406,20 @@ void CLevel::IR_OnKeyboardHold(int key)
 
 #endif // DEBUG
 
-	if (g_actor) Actor()->callback(GameObject::eOnKeyHold)(key, get_binded_action(key));//+
+	if (g_actor) 
+		Actor()->callback(GameObject::eOnKeyHold)(key, get_binded_action(key));
 
-	if (CurrentGameUI() && CurrentGameUI()->IR_UIOnKeyboardHold(key)) return;
-	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP)) return;
+	if (GameUI() && GameUI()->IR_UIOnKeyboardHold(key)) 
+		return;
 
-	if (CURRENT_ENTITY())		{
-		IInputReceiver*		IR	= smart_cast<IInputReceiver*>	(smart_cast<CGameObject*>(CURRENT_ENTITY()));
-		if (IR)				IR->IR_OnKeyboardHold				(get_binded_action(key));
+	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP)) 
+		return;
+
+	if (CURRENT_ENTITY()) 
+	{
+		IInputReceiver*	IR = smart_cast<IInputReceiver*>(smart_cast<CGameObject*>(CURRENT_ENTITY()));
+		if (IR)			
+			IR->IR_OnKeyboardHold(get_binded_action(key));
 	}
 }
 
@@ -409,25 +437,26 @@ void CLevel::IR_OnActivate()
 			{
 
 				EGameActions action = get_binded_action(i);
-				switch (action) {
-				case kFWD:
-				case kBACK:
-				case kL_STRAFE:
-				case kR_STRAFE:
-				case kLEFT:
-				case kRIGHT:
-				case kUP:
-				case kDOWN:
-				case kCROUCH:
-				case kACCEL:
-				case kL_LOOKOUT:
-				case kR_LOOKOUT:
-				case kWPN_FIRE:
+				switch (action) 
 				{
-					IR_OnKeyboardPress(i);
-				}break;
-				};
-			};
+					case kFWD:
+					case kBACK:
+					case kL_STRAFE:
+					case kR_STRAFE:
+					case kLEFT:
+					case kRIGHT:
+					case kUP:
+					case kDOWN:
+					case kCROUCH:
+					case kACCEL:
+					case kL_LOOKOUT:
+					case kR_LOOKOUT:
+					case kWPN_FIRE:
+					{
+						IR_OnKeyboardPress(i);
+					} break;
+				}
+			}
 		}
 	}
 }

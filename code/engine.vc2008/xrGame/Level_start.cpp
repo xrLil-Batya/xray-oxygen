@@ -10,7 +10,7 @@
 #include "../xrEngine/xr_ioconsole.h"
 #include "MainMenu.h"
 #include "string_table.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "GamePersistent.h"
 
 BOOL CLevel::net_Start(LPCSTR op_server, LPCSTR op_client)
@@ -156,8 +156,8 @@ bool CLevel::net_start6				()
 		return true;
 	}
 
-	if (CurrentGameUI())
-		CurrentGameUI()->OnConnected();
+	if (GameUI())
+		GameUI()->OnConnected();
 
 	return true;
 }
@@ -173,7 +173,6 @@ void CLevel::InitializeClientGame	(NET_Packet& P)
 	CLASS_ID clsid			= game_GameState::getCLASS_ID(game_type_name,false);
 	game					= smart_cast<game_cl_GameState*> ( NEW_INSTANCE ( clsid ) );
 	game->Init				();
-	m_bGameConfigStarted	= TRUE;
 	
 	R_ASSERT				(Load_GameSpecific_After ());
 }

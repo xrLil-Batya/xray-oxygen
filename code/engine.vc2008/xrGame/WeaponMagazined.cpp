@@ -12,7 +12,7 @@
 #include "ActorEffector.h"
 #include "EffectorZoomInertion.h"
 #include "xr_level_controller.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "object_broker.h"
 #include "string_table.h"
 #include "ui/UIXmlInit.h"
@@ -159,7 +159,7 @@ void CWeaponMagazined::FireStart()
 	{
 		// Выводим актору статик с иконкой сломанного оружия
 		if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()) )
-			CurrentGameUI()->AddCustomStatic("gun_jammed",true);
+			GameUI()->AddCustomStatic("gun_jammed",true);
 
 		// Щелкаем 
 		OnEmptyClick();
@@ -397,7 +397,7 @@ void CWeaponMagazined::OnStateSwitch(u32 S)
 			break;
 		case eMisfire:
 			if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()))
-				CurrentGameUI()->AddCustomStatic("gun_jammed", true);
+				GameUI()->AddCustomStatic("gun_jammed", true);
 			break;
 		case eMagEmpty:
 			switch2_Empty();
@@ -1226,14 +1226,6 @@ void CWeaponMagazined::net_Export(NET_Packet& P)
 	inherited::net_Export(P);
 
 	P.w_u8(u8(m_iCurFireMode & 0x00ff));
-}
-
-void CWeaponMagazined::net_Import(NET_Packet& P)
-{
-	inherited::net_Import(P);
-
-	m_iCurFireMode = P.r_u8();
-	SetQueueSize(GetCurrentFireMode());
 }
 
 #include "string_table.h"

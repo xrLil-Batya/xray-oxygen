@@ -106,47 +106,14 @@ void CObjectScript::script_register		(lua_State *L)
 			.def(constructor<>())
 			.def("_construct",			&CGameObject::_construct,&CGameObjectWrapper::_construct_static)
 			.def("Visual",				&CGameObject::Visual)
-/*
-			.def("spatial_register",	&CGameObject::spatial_register,	&CGameObjectWrapper::spatial_register_static)
-			.def("spatial_unregister",	&CGameObject::spatial_unregister,	&CGameObjectWrapper::spatial_unregister_static)
-			.def("spatial_move",		&CGameObject::spatial_move,		&CGameObjectWrapper::spatial_move_static)
-			.def("spatial_sector_point",&CGameObject::spatial_sector_point,&CGameObjectWrapper::spatial_sector_point_static)
-			.def("dcast_FeelSound",		&CGameObject::dcast_FeelSound,		&CGameObjectWrapper::dcast_FeelSound_static)
-			.def("dcast_Light",			&CGameObject::dcast_Light,			&CGameObjectWrapper::dcast_Light_static)
-*/
-//			.def("shedule_Scale",		&CGameObject::shedule_Scale,		&CGameObjectWrapper::shedule_Scale_static)
-//			.def("shedule_Update",		&CGameObject::shedule_Update,		&CGameObjectWrapper::shedule_Update_static)
-
-//			.def("renderable_Render"		,&CGameObject::renderable_Render,&CGameObjectWrapper::renderable_Render_static)
-//			.def("renderable_ShadowGenerate",&CGameObject::renderable_ShadowGenerate,&CGameObjectWrapper::renderable_ShadowGenerate_static)
-//			.def("renderable_ShadowReceive",&CGameObject::renderable_ShadowReceive,&CGameObjectWrapper::renderable_ShadowReceive_static)
 
 			.def("net_Export",			&CGameObject::net_Export,		&CGameObjectWrapper::net_Export_static)
-			.def("net_Import",			&CGameObject::net_Import,		&CGameObjectWrapper::net_Import_static)
 			.def("net_Spawn",			&CGameObject::net_Spawn,	&CGameObjectWrapper::net_Spawn_static)
 
 			.def("use",					&CGameObject::use,	&CGameObjectWrapper::use_static)
 
-//			.def("setVisible",			&CGameObject::setVisible)
 			.def("getVisible",			&CGameObject::getVisible)
 			.def("getEnabled",			&CGameObject::getEnabled)
-//			.def("setEnabled",			&CGameObject::setEnabled)
-
-//		,class_<CPhysicsShellHolder,CGameObject>("CPhysicsShellHolder")
-//			.def(constructor<>())
-
-//		,class_<CEntity,CPhysicsShellHolder,CEntityWrapper>("CEntity")
-//			.def(constructor<>())
-//			.def("HitSignal",&CEntity::HitSignal,&CEntityWrapper::HitSignal_static)
-//			.def("HitImpulse",&CEntity::HitImpulse,&CEntityWrapper::HitImpulse_static)
-
-//		,class_<CEntityAlive,CEntity>("CEntityAlive")
-//			.def(constructor<>())
-
-//		,class_<CCustomMonster,CEntityAlive>("CCustomMonster")
-//			.def(constructor<>())
-
-//		,class_<CAI_Stalker,CCustomMonster>("CAI_Stalker")
 	];
 }
 
@@ -182,23 +149,3 @@ void CBlendScript::script_register		(lua_State *L)
 			//			.def(constructor<>())
 		];
 }
-
-/*
-void IKinematicsScript::script_register		(lua_State *L)
-{
-	module(L)
-		[
-			class_<IKinematics, FHierrarhyVisual>("IKinematics")
-			//			.def(constructor<>())
-		];
-}
-
-void FHierrarhyVisualScript::script_register		(lua_State *L)
-{
-	module(L)
-		[
-			class_<FHierrarhyVisual, IRenderVisual>("FHierrarhyVisual")
-			//			.def(constructor<>())
-		];
-}
-*/

@@ -8,7 +8,6 @@
 #include "EditMesh.h"
 #ifdef _LW_EXPORT
 #	undef AnsiString
-#	define ECORE_API
 #endif
 
 #define ref_geom void*

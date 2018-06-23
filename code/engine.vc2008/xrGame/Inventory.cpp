@@ -16,7 +16,7 @@
 #include "ai_space.h"
 #include "entitycondition.h"
 #include "game_base_space.h"
-#include "uigamecustom.h"
+#include "UIGame.h"
 #include "clsid_game.h"
 #include "../FrayBuildConfig.hpp"
 
@@ -117,10 +117,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	pIItem->m_pInventory				= this;
 	pIItem->SetDropManual				(FALSE);
 	pIItem->AllowTrade					();
-	//if net_Import for pObj arrived then the pObj will pushed to CrPr list (correction prediction)
-	//usually net_Import arrived for objects that not has a parent object..
-	//for unknown reason net_Import arrived for object that has a parent, so correction prediction schema will crash
-	Level().RemoveObject_From_4CrPr		(pObj);
+
 #ifdef DEAD_BODY_WEAPON
 	u16 actor_id = Level().CurrentEntity()->ID();
 
@@ -204,20 +201,20 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	VERIFY								(pIItem->CurrPlace() != eItemPlaceUndefined);
 
 
-	if( CurrentGameUI() )
+	if (GameUI())
 	{
 		CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
 
 		if (Level().CurrentViewEntity() == pActor_owner)
 		{
-			CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+			GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 		}
-		else if(CurrentGameUI()->ActorMenu().GetMenuMode()==mmDeadBodySearch)
+		else if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
 		{
-			if(m_pOwner==CurrentGameUI()->ActorMenu().GetPartner())
-				CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+			if (m_pOwner == GameUI()->ActorMenu().GetPartner())
+				GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 		}
-	};
+	}
 }
 
 bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont_create_shell) 
@@ -298,13 +295,14 @@ bool CInventory::DropItem(CGameObject *pObj, bool just_before_destroy, bool dont
 	InvalidateState					();
 	m_drop_last_frame				= true;
 
-	if( CurrentGameUI() )
+	if (GameUI())
 	{
 		CObject* pActor_owner = smart_cast<CObject*>(m_pOwner);
 
 		if (Level().CurrentViewEntity() == pActor_owner)
-			CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_REJECT);
-	};
+			GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_REJECT);
+	}
+
 	pObj->H_SetParent(0, dont_create_shell);
 	return							true;
 }
@@ -809,37 +807,35 @@ float CInventory::CalcTotalWeight()
 
 u32 CInventory::dwfGetSameItemCount(LPCSTR caSection, bool SearchAll)
 {
-	u32			l_dwCount = 0;
+	u32 l_dwCount = 0;
 	TIItemContainer	&l_list = SearchAll ? m_all : m_ruck;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : l_list)
 	{
-		PIItem	l_pIItem = *l_it;
 		if (!xr_strcmp(l_pIItem->object().cNameSect(), caSection))
             ++l_dwCount;
 	}
 	
 	return		(l_dwCount);
 }
-u32		CInventory::dwfGetGrenadeCount(LPCSTR caSection, bool SearchAll)
+
+#include "Grenade.h"
+u32 CInventory::dwfGetGrenadeCount(LPCSTR caSection, bool SearchAll)
 {
-	u32			l_dwCount = 0;
+	u32 l_dwCount = 0;
 	TIItemContainer	&l_list = SearchAll ? m_all : m_ruck;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : l_list)
 	{
-		PIItem	l_pIItem = *l_it;
-		if (l_pIItem->object().CLS_ID == CLSID_GRENADE_F1 || l_pIItem->object().CLS_ID == CLSID_GRENADE_RGD5)
+		if (dynamic_cast<CGrenade*>(l_pIItem->cast_game_object()))
 			++l_dwCount;
 	}
 
-	return		(l_dwCount);
+	return (l_dwCount);
 }
 
 bool CInventory::bfCheckForObject(ALife::_OBJECT_ID tObjectID)
 {
-	TIItemContainer	&l_list = m_all;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : m_all)
 	{
-		PIItem	l_pIItem = *l_it;
 		if (l_pIItem->object().ID() == tObjectID)
 			return(true);
 	}
@@ -848,14 +844,12 @@ bool CInventory::bfCheckForObject(ALife::_OBJECT_ID tObjectID)
 
 CInventoryItem *CInventory::get_object_by_id(ALife::_OBJECT_ID tObjectID)
 {
-	TIItemContainer	&l_list = m_all;
-	for(TIItemContainer::iterator l_it = l_list.begin(); l_list.end() != l_it; ++l_it) 
+	for (PIItem l_pIItem : m_all)
 	{
-		PIItem	l_pIItem = *l_it;
 		if (l_pIItem->object().ID() == tObjectID)
-			return	(l_pIItem);
+			return (l_pIItem);
 	}
-	return		(0);
+	return (0);
 }
 
 //скушать предмет 

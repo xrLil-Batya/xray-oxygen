@@ -62,10 +62,7 @@ void dxRainRender::Copy(IRainRender &_in)
 void dxRainRender::Render(CEffect_Rain &owner)
 {
 	float	factor				= g_pGamePersistent->Environment().CurrentEnv->rain_density;
-#ifdef _EDITOR
-    if (factor<EPS_L)			return;
-#else
-
+#ifndef _EDITOR
     rain_timers->Update(true, false);
     //rain params update
     {
@@ -78,12 +75,8 @@ void dxRainRender::Render(CEffect_Rain &owner)
             + lerp<float>(0, saturate(rain_timers->timer.y / 20.f), saturate(rain_timers->timer.y));
         rain_params->w = factor;
     }
-    //if (rain_params->x > EPS) phase_rmap();
-    //Msg("rain_params: %f, %f, %f, %f", rain_params->x, rain_params->y, rain_params->z, rain_params->w);
-
-    if (factor<EPS_L)
-        return;
 #endif
+    if (factor<EPS_L) return;
 
   	u32 desired_items			= iFloor	(0.5f*(1.f+factor)*float(max_desired_items));
 	// visual

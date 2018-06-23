@@ -162,7 +162,7 @@ function save_dialog:OnButton_ok_clicked()
 	-- prepare message box
 
 	-- Get file name
-	self.new_save = self.editbox:GetText()--self.editbox:GetText():clear():gsub( '[%(%)]*', "" ):trim() --Вырезаем неподдерживаемые FS символы и пробелы по краям -- commented ViHtarb 14.06.2018
+	self.new_save = self.editbox:GetText():clear():gsub( '[%(%)]*', "" ):trim() --Вырезаем неподдерживаемые FS символы и пробелы по краям
 
 	-- check for empty name
 	if string.len(self.new_save) == 0 then

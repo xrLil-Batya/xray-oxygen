@@ -9,7 +9,6 @@
 #include "stdafx.h"
 #include "script_engine.h"
 #include "ai_space.h"
-#include "script_debugger.h"
 #include "../xrScripts/import_ses.hpp"
 
 using namespace luabind;
@@ -17,23 +16,6 @@ using namespace luabind;
 void ErrorLog(LPCSTR caMessage)
 {
 	ai().script_engine().error_log("%s",caMessage);
-#ifdef PRINT_CALL_STACK
-	ai().script_engine().dump_state();
-#endif // #ifdef PRINT_CALL_STACK
-	
-#ifdef USE_DEBUGGER
-#	ifndef USE_LUA_STUDIO
-		if (ai().script_engine().debugger())
-		{
-			ai().script_engine().debugger()->Write(caMessage);
-		}
-#	endif // #ifndef USE_LUA_STUDIO
-#endif // #ifdef USE_DEBUGGER
-
-#ifdef DEBUG
-		bool lua_studio_connected = !!ai().script_engine().debugger();
-		if (!lua_studio_connected)
-#endif //#ifdef DEBUG
 	R_ASSERT2(false, caMessage);
 }
 
@@ -47,22 +29,22 @@ void FlushLogs()
 
 void verify_if_thread_is_running()
 {
-	THROW2(ai().script_engine().current_thread(), "coroutine.yield() is called outside the LUA thread!");
+	THROW2	(ai().script_engine().current_thread(),"coroutine.yield() is called outside the LUA thread!");
 }
 
 bool is_editor()
 {
 #ifdef XRGAME_EXPORTS
-	return false;
+	return		(false);
 #else
-	return true;
+	return		(true);
 #endif
 }
 
 #ifdef XRGAME_EXPORTS
 CRenderDevice *get_device()
 {
-	return &Device;
+	return		(&Device);
 }
 #endif
 
@@ -130,7 +112,7 @@ struct profile_timer_script
 	float time() const 
 	{
 		using namespace std::chrono;
-		return float(duration_cast<milliseconds>(accumulator).count()) * 1000000.f;
+		return (float)duration_cast<microseconds>(accumulator).count();
 	}
 };
 
@@ -143,11 +125,11 @@ IC	profile_timer_script operator+(const profile_timer_script &portion0, const pr
 }
 
 #ifdef XRGAME_EXPORTS
-ICF	u32	script_time_global() { return Device.dwTimeGlobal; }
-ICF	u32	script_time_global_async() { return Device.TimerAsync_MMT(); }
+ICF	u32	script_time_global	()	{ return Device.dwTimeGlobal; }
+ICF	u32	script_time_global_async	()	{ return Device.TimerAsync_MMT(); }
 #else
-ICF	u32	script_time_global() { return NULL; }
-ICF	u32	script_time_global_async() { return NULL; }
+ICF	u32	script_time_global	()	{ return NULL; }
+ICF	u32	script_time_global_async	()	{ return NULL; }
 #endif+
 
 #ifdef XRGAME_EXPORTS
@@ -172,9 +154,9 @@ void CScriptEngine::script_register(lua_State *L)
 			.def("stop",&profile_timer_script::stop)
 			.def("time",&profile_timer_script::time)
 	];
-
-	function	(L, "log",								((void(*)(const char*)) &Log)); // Added ViHtarb 30.05.2018
-    function    (L, "to_log",                           import_ses::LuaLog); // TODO: is this need?
+	
+    function    (L, "to_log",							(void(*)(const char*)) &Log);
+    function    (L, "log",								(void(*)(const char*)) &Log);
 	function	(L,	"error_log",						ErrorLog);
 	function	(L,	"flush",							FlushLogs);
 	function	(L,	"prefetch",							prefetch_module);

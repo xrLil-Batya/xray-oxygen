@@ -76,7 +76,7 @@ class	CActor:
 {
 	friend class CActorCondition;
 private:
-	typedef CEntityAlive	inherited;
+	typedef CEntityAlive inherited;
 public:
 										CActor				();
 	virtual								~CActor				();
@@ -110,26 +110,21 @@ public:
 			float						m_snd_noise;
 #ifdef DEBUG
 	virtual void						OnRender			();
-
+	void								DumpTasks();
 #endif
+	virtual bool						OnReceiveInfo		(shared_str info_id) const;
+	virtual void						OnDisableInfo		(shared_str info_id) const;
 
-
-public:
-	virtual bool OnReceiveInfo		(shared_str info_id) const;
-	virtual void OnDisableInfo		(shared_str info_id) const;
-
-	virtual void	 NewPdaContact		(CInventoryOwner*);
+	virtual void						NewPdaContact		(CInventoryOwner*);
 	virtual void	 LostPdaContact		(CInventoryOwner*);
 
-#ifdef DEBUG
-	void			 DumpTasks();
-#endif
-
-struct SDefNewsMsg{
+	struct SDefNewsMsg
+	{
 		GAME_NEWS_DATA*	news_data;
 		u32				time;
 		bool operator < (const SDefNewsMsg& other) const {return time>other.time;}
 	};
+
 	xr_vector<SDefNewsMsg> m_defferedMessages;
 	void UpdateDefferedMessages();	
 public:	
@@ -148,32 +143,31 @@ public:
 
 public:
 	//PhraseDialogManager
-	virtual void ReceivePhrase				(DIALOG_SHARED_PTR& phrase_dialog);
-	virtual void UpdateAvailableDialogs		(CPhraseDialogManager* partner);
-	virtual void TryToTalk					();
-			bool OnDialogSoundHandlerStart	(CInventoryOwner *inv_owner, LPCSTR phrase);
-			bool OnDialogSoundHandlerStop	(CInventoryOwner *inv_owner);
+	virtual void						ReceivePhrase				(DIALOG_SHARED_PTR& phrase_dialog);
+	virtual void						UpdateAvailableDialogs		(CPhraseDialogManager* partner);
+	virtual void						TryToTalk					();
+			bool						OnDialogSoundHandlerStart	(CInventoryOwner *inv_owner, LPCSTR phrase);
+			bool						OnDialogSoundHandlerStop	(CInventoryOwner *inv_owner);
 
 
-	virtual void reinit			();
-	virtual void reload			(LPCSTR section);
-	virtual bool use_bolts		() const;
+	virtual void						reinit			();
+	virtual void						reload			(LPCSTR section);
+	virtual bool						use_bolts		() const;
 
-	virtual void OnItemTake		(CInventoryItem *inventory_item);
+	virtual void						OnItemTake		(CInventoryItem *inventory_item);
 	
-	virtual void OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
-	virtual void OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
+	virtual void						OnItemRuck		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
+	virtual void						OnItemBelt		(CInventoryItem *inventory_item, const SInvItemPlace& previous_place);
 	
-	virtual void OnItemDrop		(CInventoryItem *inventory_item, bool just_before_destroy);
-	virtual void OnItemDropUpdate ();
+	virtual void						OnItemDrop		(CInventoryItem *inventory_item, bool just_before_destroy);
+	virtual void						OnItemDropUpdate();
 
 	virtual void						Die				(CObject* who);
 	virtual	void						Hit				(SHit* pHDS);
 	virtual	void						PHHit			(SHit &H);
+			void						HitMark			(float P, Fvector dir, CObject* who, s16 element, Fvector position_in_bone_space, float impulse,  ALife::EHitType hit_type);
 	virtual void						HitSignal		(float P, Fvector &vLocalDir,	CObject* who, s16 element);
-			void						HitSector		(CObject* who, CObject* weapon);
-			void						HitMark			(float P, Fvector dir,			CObject* who, s16 element, Fvector position_in_bone_space, float impulse,  ALife::EHitType hit_type);
-
+	
 			void						Feel_Grenade_Update( float rad );
 
 	virtual float						GetMass				() ;
@@ -188,19 +182,18 @@ public:
 	virtual bool						NeedToDestroyObject()  const;
 	virtual ALife::_TIME_ID				TimePassedAfterDeath() const;
 
-
 public:
 
 	//свойства артефактов
-	virtual void		UpdateArtefactsOnBeltAndOutfit();
-			float		HitArtefactsOnBelt		(float hit_power, ALife::EHitType hit_type);
-			float		GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type);
+	virtual void						UpdateArtefactsOnBeltAndOutfit();
+			float						HitArtefactsOnBelt		(float hit_power, ALife::EHitType hit_type);
+			float						GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type);
 
 protected:
 	//звук тяжелого дыхания
-	ref_sound			m_HeavyBreathSnd;
-	ref_sound			m_BloodSnd;
-	ref_sound			m_DangerSnd;
+	ref_sound				m_HeavyBreathSnd;
+	ref_sound				m_BloodSnd;
+	ref_sound				m_DangerSnd;
 
 protected:
 	// Death
@@ -385,7 +378,6 @@ public:
 	void					g_cl_CheckControls		(u32 mstate_wf, Fvector &vControlAccel, float &Jump, float dt);
 	void					g_cl_ValidateMState		(float dt, u32 mstate_wf);
 	void					g_cl_Orientate			(u32 mstate_rl, float dt);
-	void					g_sv_Orientate			(u32 mstate_rl, float dt);
 	void					g_Orientate				(u32 mstate_rl, float dt);
 	bool					g_LadderOrient			() ;
 //	void					UpdateMotionIcon		(u32 mstate_rl);
@@ -494,7 +486,6 @@ protected:
 public:
 	virtual BOOL						net_Spawn			( CSE_Abstract* DC);
 	virtual void						net_Export			( NET_Packet& P);				// export to server
-	virtual void						net_Import			( NET_Packet& P);				// import from server
 	virtual void						net_Destroy			();
 	virtual BOOL						net_Relevant		();//	{ return getSVU() | getLocal(); };		// relevant for export to server
 	virtual	void						net_Relcase			( CObject* O );					//
@@ -505,24 +496,11 @@ public:
 	virtual void						net_Save			(NET_Packet& P)																	;
 	virtual	BOOL						net_SaveRelevant	()																				;
 protected:
-	xr_deque<net_update>	NET;
 	Fvector					NET_SavedAccel;
-	net_update				NET_Last;
-	BOOL					NET_WasInterpolating;	// previous update was by interpolation or by extrapolation
-	u32						NET_Time;				// server time of last update
-
-	//---------------------------------------------
-	void					net_Import_Base				( NET_Packet& P);
-	void					net_Import_Physic			( NET_Packet& P);
-	void					net_Import_Base_proceed		( );
-	void					net_Import_Physic_proceed	( );
-	//---------------------------------------------
 
 	////////////////////////////////////////////////////////////////////////////
 	virtual	bool			can_validate_position_on_spawn	(){return false;}
 	///////////////////////////////////////////////////////
-	// апдайт с данными физики
-	xr_deque<net_update_A>	NET_A;
 	
 	//---------------------------------------------
 	/// spline coeff /////////////////////
@@ -559,10 +537,6 @@ protected:
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
 	//---------------------------------------------
-	void					CalculateInterpolationParams();
-	//---------------------------------------------
-	virtual void			make_Interpolation ();
-	//---------------------------------------------
 #ifdef DEBUG
 	virtual void			OnRender_Network();
 #endif
@@ -575,9 +549,6 @@ public:
 			void			g_Physics		(Fvector& accel, float jump, float dt);
 	virtual void			ForceTransform	(const Fmatrix &m);
 			void			SetPhPosition	(const Fmatrix& pos);
-	virtual void			PH_B_CrPr		(); // actions & operations before physic correction-prediction steps
-	virtual void			PH_I_CrPr		(); // actions & operations after correction before prediction steps
-	virtual void			PH_A_CrPr		(); // actions & operations after phisic correction-prediction steps
 	virtual void			MoveActor		(Fvector NewPos, Fvector NewDir);
 
 	virtual void			SpawnAmmoForWeapon		(CInventoryItem *pIItem);

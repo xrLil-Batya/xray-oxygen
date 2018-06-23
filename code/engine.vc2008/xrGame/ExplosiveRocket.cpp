@@ -90,48 +90,6 @@ void  CExplosiveRocket::OnEvent (NET_Packet& P, u16 type)
 	inherited::OnEvent(P,type);
 }
 
-
-void CExplosiveRocket::make_Interpolation ()
-{
-	inherited::make_Interpolation();
-}
-
-void CExplosiveRocket::PH_B_CrPr			()
-{
-	inherited::PH_B_CrPr		();
-}
-
-void CExplosiveRocket::PH_I_CrPr			()
-{
-	inherited::PH_I_CrPr		();
-}
-
-void CExplosiveRocket::PH_A_CrPr			()
-{
-	if (m_just_after_spawn)
-	{
-		CPhysicsShellHolder& obj = CInventoryItem::object();
-		VERIFY(obj.Visual());
-		IKinematics *K = obj.Visual()->dcast_PKinematics();
-		VERIFY( K );
-		if (!obj.PPhysicsShell())
-		{
-			Msg("! ERROR: PhysicsShell is NULL, object [%s][%d]", obj.cName().c_str(), obj.ID());
-			return;
-		}
-		if(!obj.PPhysicsShell()->isFullActive())
-		{
-			K->CalculateBones_Invalidate();
-			K->CalculateBones(TRUE);
-		}
-		obj.PPhysicsShell()->GetGlobalTransformDynamic(&obj.XFORM());
-		K->CalculateBones_Invalidate();
-		K->CalculateBones(TRUE);
-		obj.spatial_move();
-		m_just_after_spawn = false;
-	}
-}
-
 #ifdef DEBUG
 void CExplosiveRocket::PH_Ch_CrPr			()
 {

@@ -10,13 +10,15 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "Level.h"
 
-void xrServer::Process_event	(NET_Packet& P, ClientID sender)
+void xrServer::Process_event	(NET_Packet& P)
 {
 	VERIFY					(verify_entities());
 
 	u32			timestamp;
 	u16			type;
 	u16			destination;
+
+    ClientID sender = SV_Client->ID;
 
 	// correct timestamp with server-unique-time (note: direct message correction)
 	P.r_u32		(timestamp	);
@@ -25,7 +27,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 	P.r_u16		(type		);
 	P.r_u16		(destination);
 
-	CSE_Abstract*	receiver	= game->get_entity_from_eid	(destination);
+	CSE_Abstract* receiver = game->get_entity_from_eid(destination);
 	if (receiver)	
 	{
 		R_ASSERT(receiver->owner);
@@ -35,12 +37,6 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 	switch		(type)
 	{
-	case GE_GAME_EVENT:
-		{
-			u16		game_event_type;
-			P.r_u16(game_event_type);
-			game->AddDelayedEvent(P,game_event_type,timestamp,sender);
-		}break;
 	case GE_INFO_TRANSFER:
 	case GE_WPN_STATE_CHANGE:
 	case GE_ZONE_STATE_CHANGE:
@@ -55,25 +51,18 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 		}break;
 	case GEG_PLAYER_ACTIVATEARTEFACT:
 		{
-			Process_event_activate	(P,sender,timestamp,destination,P.r_u16(), true);
+			Process_event_activate	(P,destination,P.r_u16());
 			break;
 		};
 	case GE_INV_ACTION:
 		{
-			xrClientData* CL		= ID_to_client(sender);
-			if (CL)	CL->net_Ready	= TRUE;
 			if (SV_Client)
 				Level().OnMessage(P.B.data, (u32)P.B.count);
 		}break;
 	case GE_TRADE_BUY:
 	case GE_OWNERSHIP_TAKE:
 		{
-			Process_event_ownership	(P,sender,timestamp,destination);
-			VERIFY					(verify_entities());
-		}break;
-	case GE_OWNERSHIP_TAKE_MP_FORCED:
-		{
-			Process_event_ownership	(P,sender,timestamp,destination,TRUE);
+			Process_event_ownership	(P, destination);
 			VERIFY					(verify_entities());
 		}break;
 	case GE_TRADE_SELL:
@@ -95,11 +84,12 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			P.r_u16				(id_entity);
 			CSE_Abstract*		e_parent	= receiver;	// кто забирает (для своих нужд)
 			CSE_Abstract*		e_entity	= game->get_entity_from_eid	(id_entity);	// кто отдает
-			if (!e_entity)		break;
-			if (0xffff != e_entity->ID_Parent)	break;						// this item already taken
-			xrClientData*		c_parent	= e_parent->owner;
-			xrClientData*		c_from		= ID_to_client	(sender);
-			R_ASSERT			(c_from == c_parent);						// assure client ownership of event
+			if (!e_entity)
+                break;
+			if (0xffff != e_entity->ID_Parent)
+                break;						// this item already taken
+            CClient* c_parent	= e_parent->owner;
+			R_ASSERT(SV_Client == c_parent);						// assure client ownership of event
 
 			// Signal to everyone (including sender)
 			SendBroadcast		(BroadcastCID,P);
@@ -118,7 +108,11 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 				P.B.count -= 4;
 				P.w_u32(sender.value());
 			};
-			game->AddDelayedEvent(P,GAME_EVENT_ON_HIT, 0, ClientID() );
+            u16 id_src = P.r_u16();
+            CSE_Abstract* e_src = game->get_entity_from_eid(id_src);
+
+            if (e_src)
+                SendBroadcast(BroadcastCID, P);
 		} break;
 	case GE_ASSIGN_KILLER: {
 		u16							id_src;
@@ -147,10 +141,8 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			// Parse message
 			u16					id_dest		=	destination, id_src;
 			P.r_u16				(id_src);
-
-
-			xrClientData *l_pC	= ID_to_client(sender);
-			VERIFY				(game && l_pC);
+            
+			VERIFY				(game && SV_Client);
 
 			CSE_Abstract*		e_dest		= receiver;	// кто умер
 			// this is possible when hit event is sent before destroy event
@@ -160,7 +152,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 			CSE_Abstract* e_src = game->get_entity_from_eid(id_src);	// кто убил
 			if (!e_src) 
 			{
-				xrClientData* C = (xrClientData*)game->get_client(id_src);
+                CClient* C = (CClient*)game->get_client(id_src);
 				if (C) e_src = C->owner;
 			};
 
@@ -172,7 +164,7 @@ void xrServer::Process_event	(NET_Packet& P, ClientID sender)
 
 			game->on_death		(e_dest,e_src);
 
-			xrClientData*		c_src		= e_src->owner;				// клиент, чей юнит убил
+            CClient*		c_src		= e_src->owner;				// клиент, чей юнит убил
 
 			if (c_src->owner->ID == id_src) {
 				// Main unit

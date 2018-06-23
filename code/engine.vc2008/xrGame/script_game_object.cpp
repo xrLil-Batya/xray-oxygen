@@ -5,8 +5,9 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script game object class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
+#pragma warning(push)
+#pragma warning(disable: 4275)
 #include "script_game_object.h"
 #include "script_entity_action.h"
 #include "ai_space.h"
@@ -38,6 +39,7 @@
 #include "smart_cover.h"
 #include "smart_cover_description.h"
 #include "../xrPhysics/physics_shell_scripted.h"
+#pragma warning(pop)
 
 class CScriptBinderObject;
 

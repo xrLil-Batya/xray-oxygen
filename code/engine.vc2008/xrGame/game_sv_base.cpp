@@ -10,7 +10,6 @@
 #include "alife_graph_registry.h"
 #include "alife_time_manager.h"
 #include "ai_space.h"
-#include "game_sv_event_queue.h"
 #include "../xrEngine/XR_IOConsole.h"
 #include "../xrEngine/xr_ioc_cmd.h"
 #include "string_table.h"
@@ -36,25 +35,6 @@ void* game_sv_GameState::get_client (u16 id) //if exist
 CSE_Abstract*		game_sv_GameState::get_entity_from_eid		(u16 id)
 {
 	return				m_server->ID_to_entity(id);
-}
-
-// Utilities
-
-xr_vector<u16>* game_sv_GameState::get_children(ClientID id)
-{
-	xrClientData*	C	= (xrClientData*)m_server->ID_to_client	(id);
-	if (0==C)			return 0;
-	CSE_Abstract* E	= C->owner;
-	if (0==E)			return 0;
-	return	&(E->children);
-}
-
-s32 game_sv_GameState::get_option_i(LPCSTR lst, LPCSTR name, s32 def)
-{
-	string64		op;
-	strconcat		(sizeof(op),op,"/",name,"=");
-	if (strstr(lst,op))	return atoi	(strstr(lst,op)+xr_strlen(op));
-	else				return def;
 }
 
 void game_sv_GameState::signal_Syncronize()
@@ -97,11 +77,6 @@ void game_sv_GameState::OnPlayerConnect			(ClientID /**id_who/**/)
 	signal_Syncronize	();
 }
 
-void game_sv_GameState::OnPlayerDisconnect		(ClientID id_who, LPSTR, u16 )
-{
-	signal_Syncronize	();
-}
-
 void game_sv_GameState::Create(shared_str &options)
 {
 	// loading scripts
@@ -127,44 +102,6 @@ void game_sv_GameState::Create(shared_str &options)
 
 }
 
-//-----------------------------------------------------------
-CSE_Abstract* game_sv_GameState::spawn_begin(LPCSTR N)
-{
-	CSE_Abstract*	A	=   F_entity_Create(N);	R_ASSERT(A);	// create SE
-	A->s_name			=   N;									// ltx-def
-	A->s_RP				=	0xFE;								// use supplied
-	A->ID				=	0xffff;								// server must generate ID
-	A->ID_Parent		=	0xffff;								// no-parent
-	A->ID_Phantom		=	0xffff;								// no-phantom
-	A->RespawnTime		=	0;									// no-respawn
-	return A;
-}
-
-CSE_Abstract* game_sv_GameState::spawn_end(CSE_Abstract* E, ClientID id)
-{
-	NET_Packet						P;
-	u16								skip_header;
-	E->Spawn_Write					(P,TRUE);
-	P.r_begin						(skip_header);
-	CSE_Abstract* N = m_server->Process_spawn	(P,id);
-	F_entity_Destroy				(E);
-
-	return N;
-}
-
-void game_sv_GameState::u_EventGen(NET_Packet& P, u16 type, u16 dest)
-{
-	P.w_begin	(M_EVENT);
-	P.w_u32		(Level().timeServer());
-	P.w_u16		(type);
-	P.w_u16		(dest);
-}
-
-void game_sv_GameState::u_EventSend(NET_Packet& P)
-{
-	m_server->SendBroadcast(BroadcastCID,P);
-}
-
 void game_sv_GameState::Update		()
 {
     if (Level().game) {
@@ -174,15 +111,10 @@ void game_sv_GameState::Update		()
     }
 }
 
-void game_sv_GameState::OnDestroyObject(u16 eid_who)
-{
-}
-
 game_sv_GameState::game_sv_GameState()
 {
 	VERIFY(g_pGameLevel);
 	m_server = Level().Server;
-	m_event_queue = xr_new<GameEventQueue>();
 	m_alife_simulator = nullptr;
 	m_type = eGameIDSingle;
 }
@@ -190,7 +122,6 @@ game_sv_GameState::game_sv_GameState()
 game_sv_GameState::~game_sv_GameState()
 {
 	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorGame);
-	xr_delete(m_event_queue);
 	delete_data(m_alife_simulator);
 }
 
@@ -218,7 +149,7 @@ bool game_sv_GameState::load_game (NET_Packet &net_packet, ClientID sender)
 	return (alife().load_game(*game_name, true));
 }
 
-void game_sv_GameState::switch_distance(NET_Packet &net_packet, ClientID sender)
+void game_sv_GameState::switch_distance(NET_Packet &net_packet)
 {
 	if (ai().get_alife())
 		alife().set_switch_distance(net_packet.r_float());
@@ -235,56 +166,6 @@ void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, Cli
 		if (e_src)
 			m_server->SendBroadcast(BroadcastCID, tNetPacket);
 	}
-}
-
-void game_sv_GameState::AddDelayedEvent(NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
-{
-	m_event_queue->Create(tNetPacket, type, time, sender);
-}
-
-void game_sv_GameState::ProcessDelayedEvent		()
-{
-	GameEvent* ge = nullptr;
-	while ((ge = m_event_queue->Retreive()) != 0) 
-	{
-		OnEvent(ge->P,ge->type,ge->time,ge->sender);
-		m_event_queue->Release();
-	}
-}
-
-class EventDeleterPredicate
-{
-private:
-	u16 id_entity_victim;
-public:
-	EventDeleterPredicate()
-	{
-		id_entity_victim = u16(-1);
-	}
-
-	EventDeleterPredicate(u16 id_entity)
-	{
-		id_entity_victim = id_entity;
-	}
-
-	inline bool __stdcall PredicateDelVictim(GameEvent* const ge)
-	{
-		return false;
-	}
-	bool __stdcall PredicateForAll(GameEvent* const ge)
-	{
-		Msg("- Erasing [%d] event before start.", ge->type);
-		return true;
-	}
-
-};
-
-void game_sv_GameState::CleanDelayedEventFor(u16 id_entity_victim)
-{
-	EventDeleterPredicate event_deleter(id_entity_victim);
-	m_event_queue->EraseEvents(
-		fastdelegate::MakeDelegate(&event_deleter, &EventDeleterPredicate::PredicateDelVictim)
-	);
 }
 
 void game_sv_GameState::teleport_object	(NET_Packet &packet, u16 id)
@@ -448,7 +329,7 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 	pApp->LoadEnd();
 }
 
-void game_sv_GameState::OnTouch(u16 eid_who, u16 eid_what, BOOL bForced)
+void game_sv_GameState::OnTouch(u16 eid_who, u16 eid_what)
 {
 	CSE_Abstract*		e_who = get_entity_from_eid(eid_who);		VERIFY(e_who);
 	CSE_Abstract*		e_what = get_entity_from_eid(eid_what);	VERIFY(e_what);

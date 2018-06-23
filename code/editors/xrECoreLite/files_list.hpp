@@ -1,8 +1,8 @@
 #pragma once
 #include <xrCore/xrCore.h>
 
-#define ECORE_API
-#define ENGINE_API /* __declspec(dllimport) */
+#define ECORE_API __declspec(dllexport)
+#define ENGINE_API __declspec(dllimport)
 // Flexible vertex format bits
 //
 #define D3DFVF_RESERVED0        0x001

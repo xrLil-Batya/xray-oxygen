@@ -92,10 +92,10 @@ bool   ATTACK_ON_RUN_STATE::check_control_start_conditions	(ControlCom::EControl
 
 	return true;
 }
-
+#ifdef DEBUG
 #include "../../../level_debug.h"
 #include "../../../debug_text_tree.h"
-
+#endif
 TEMPLATE_SIGNATURE
 void   ATTACK_ON_RUN_STATE::set_movement_phaze (phaze const new_phaze)
 {

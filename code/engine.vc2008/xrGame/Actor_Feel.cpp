@@ -9,7 +9,7 @@
 #include "customzone.h"
 #include "../xrEngine/gamemtllib.h"
 #include "ui/UIMainIngameWnd.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "Grenade.h"
 #include "WeaponRPG7.h"
 #include "ExplosiveRocket.h"
@@ -141,7 +141,7 @@ void CActor::PickupModeUpdate()
 	bool bPickupMode = false;
 	if (g_Alive() && Level().CurrentViewEntity() == this) 
 	{
-		if (CurrentGameUI() && NULL == CurrentGameUI()->TopInputReceiver()) 
+		if (GameUI() && !GameUI()->TopInputReceiver()) 
 		{
 			int dik = get_action_dik(kUSE, 0);
 			if (dik && pInput->iGetAsyncKeyState(dik))
@@ -193,9 +193,9 @@ void	CActor::PickupModeUpdate_COD	()
 		
 	if (!g_Alive()) 
 	{
-		CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
+		GameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
 		return;
-	};
+	}
 	
 	CFrustum						frustum;
 	frustum.CreateFromMatrix		(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
@@ -257,7 +257,7 @@ void	CActor::PickupModeUpdate_COD	()
 				pNearestItem = NULL;
 	}
 
-	CurrentGameUI()->UIMainIngameWnd->SetPickUpItem(pNearestItem);
+	GameUI()->UIMainIngameWnd->SetPickUpItem(pNearestItem);
 
 	if (pNearestItem && m_bPickupMode && !m_pPersonWeLookingAt)
 	{

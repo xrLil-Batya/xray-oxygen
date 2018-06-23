@@ -228,7 +228,7 @@
         <cap_detail_radius x="16" y="3" width="108" height="24">
             <text r="200" g="34" b="34" font="letterica16" align="r" vert_align="c">ui_mm_detail_radius</text>
         </cap_detail_radius>
-        <track_detail_radius x="144" y="6" width="188" height="16" step="100">
+        <track_detail_radius x="144" y="6" width="188" height="16" step="10" is_integer="1">
             <options_item entry="r__detail_radius" group="mm_opt_video_adv"/>
         </track_detail_radius>
 

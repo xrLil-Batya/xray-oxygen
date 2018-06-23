@@ -7,7 +7,7 @@
 #include "UIInventoryUtilities.h"
 
 #include "../level.h"
-#include "UIGameCustom.h"
+#include "UIGame.h"
 
 #include "UIStatic.h"
 #include "UIFrameWindow.h"
@@ -135,7 +135,7 @@ void CUIPdaWnd::Show(bool status)
 	}else
 	{
 		InventoryUtilities::SendInfoToActor	("ui_pda_hide");
-		CurrentGameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
+		GameUI()->UIMainIngameWnd->SetFlashIconState_(CUIMainIngameWnd::efiPdaTask, false);
 		m_pActiveDialog->Show				(false);
 		g_btnHint->Discard					();
 		g_statHint->Discard					();
@@ -175,7 +175,6 @@ void CUIPdaWnd::SetActiveSubdialog(const shared_str& section)
 	}
 
 	luabind::functor<void> functor;
-
 	if (ai().script_engine().functor("oxy_callbacks.Pda_SetActiveSubdialog", functor))
 		functor(section.c_str());
 

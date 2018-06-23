@@ -270,33 +270,6 @@ u32	CObjectList::net_Export			(NET_Packet* _Packet,	u32 start, u32 max_object_si
 	return	start+1;
 }
 
-int	g_Dump_Import_Obj = 0;
-
-void CObjectList::net_Import		(NET_Packet* Packet)
-{
-	if (g_Dump_Import_Obj) Msg("---- net_import --- ");
-
-	while (!Packet->r_eof())
-	{
-		u16 ID;		Packet->r_u16	(ID);
-		u8  size;	Packet->r_u8	(size);
-		CObject* P  = net_Find		(ID);
-		if (P)		
-		{
-
-			u32 rsize = Packet->r_tell();			
-			
-			P->net_Import	(*Packet);
-
-			if (g_Dump_Import_Obj) Msg("* %s : %d - %d", *(P->cNameSect()), size, Packet->r_tell() - rsize);
-
-		}
-		else		Packet->r_advance(size);
-	}
-
-	if (g_Dump_Import_Obj) Msg("------------------- ");
-}
-
 void CObjectList::Load		()
 {
 	R_ASSERT				(objects_active.empty() && destroy_queue.empty() && objects_sleeping.empty());

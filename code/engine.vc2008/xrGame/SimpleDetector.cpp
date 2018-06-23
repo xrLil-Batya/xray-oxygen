@@ -103,7 +103,6 @@ void CUIArtefactDetectorSimple::Flash(bool bOn, float fRelPower)
 {
 	if(!m_parent->HudItemData())	return;
 
-
 	IKinematics* K		= m_parent->HudItemData()->m_model;
 	R_ASSERT			(K);
 	if(bOn)

@@ -14,7 +14,7 @@
 #include "inventory.h"
 #include "game_base_space.h"
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 #include "actorEffector.h"
 #include "CustomOutfit.h"
 #include "ActorHelmet.h"
@@ -478,26 +478,6 @@ void CTorch::net_Export			(NET_Packet& P)
 //	Msg("CTorch::net_export - NV[%d]", m_bNightVisionOn);
 }
 
-void CTorch::net_Import			(NET_Packet& P)
-{
-	inherited::net_Import		(P);
-	
-	BYTE F = P.r_u8();
-	bool new_m_switched_on				= !!(F & eTorchActive);
-	bool new_m_bNightVisionOn			= !!(F & eNightVisionActive);
-
-	if (new_m_switched_on != m_switched_on)			Switch						(new_m_switched_on);
-	if (new_m_bNightVisionOn != m_bNightVisionOn)	
-	{
-//		Msg("CTorch::net_Import - NV[%d]", new_m_bNightVisionOn);
-
-		const CActor *pA = smart_cast<const CActor *>(H_Parent());
-		if (pA)
-		{
-			SwitchNightVision			(new_m_bNightVisionOn);
-		}
-	}
-}
 bool  CTorch::can_be_attached		() const
 {
 	const CActor *pA = smart_cast<const CActor *>(H_Parent());

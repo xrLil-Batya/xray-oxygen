@@ -162,9 +162,7 @@ void CTextConsole::Initialize()
 	CreateLogWnd();
 
 	ShowWindow( m_hConsoleWnd, SW_SHOW );
-	UpdateWindow( m_hConsoleWnd );	
-
-	m_server_info.ResetData();
+	UpdateWindow( m_hConsoleWnd );
 }
 
 void CTextConsole::Destroy()

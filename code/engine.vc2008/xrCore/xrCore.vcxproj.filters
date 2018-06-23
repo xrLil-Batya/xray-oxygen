@@ -237,6 +237,9 @@
     <ClCompile Include="XMLCore\Expression.cpp">
       <Filter>Xml</Filter>
     </ClCompile>
+    <ClCompile Include="xrMemoryDebug.cpp">
+      <Filter>Memory manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">
@@ -502,6 +505,9 @@
     </ClInclude>
     <ClInclude Include="XMLCore\Expression.h">
       <Filter>Xml</Filter>
+    </ClInclude>
+    <ClInclude Include="xrMemoryDebug.h">
+      <Filter>Memory manager</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

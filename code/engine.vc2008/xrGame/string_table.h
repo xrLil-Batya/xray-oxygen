@@ -2,6 +2,13 @@
 // string_table.h:		таблица строк используемых в игре
 //////////////////////////////////////////////////////////////////////////
 #pragma once
+
+enum EGameLanguage
+{
+	eglRussian = 0,
+	eglEnglish = 1
+};
+
 using STRING_TABLE_MAP = xr_map<shared_str, shared_str>;
 
 struct STRING_TABLE_DATA
@@ -22,6 +29,7 @@ public:
 	static void					Destroy					();
 	
 	shared_str					translate				(const shared_str& str_id)		const;
+			void				ReInit					(EGameLanguage lang);
 			void				rescan					();
 
 	static	void				ReparseKeyBindings		();

@@ -8,7 +8,6 @@ enum{
 		AF_AUTOPICKUP			=(1<<5),
 		AF_PSP					=(1<<6),
 		AF_DYNAMIC_MUSIC		=(1<<7),
-		AF_GODMODE_RT			=(1<<8),
 		AF_IMPORTANT_SAVE		=(1<<9),
 		AF_CROUCH_TOGGLE		=(1<<10),
 		AF_RELOADONSPRINT		=(1<<11),

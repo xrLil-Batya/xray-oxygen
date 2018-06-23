@@ -37,6 +37,7 @@ BOOL WINAPI DllMain(HINSTANCE hinstDLL,ULONG fdwReason,LPVOID lpvReserved)
 	{
 		controlsInit = TRUE;
 		Core._initialize("S.T.A.L.K.E.R.Plugin", ELogCallback, FALSE);
+		Core.SetPluginMode();
 		FS._initialize(CLocatorAPI::flScanAppRoot, NULL, "xray_path.ltx");
 		FPU::m64r(); // нужно чтобы макс не сбрасывал контрольки в 0
 
@@ -82,7 +83,6 @@ __declspec( dllexport ) ClassDesc* LibClassDesc(int i) {
 	}
 }
 
-
 __declspec( dllexport ) ULONG LibVersion() 
 {
 	return VERSION_3DSMAX; 
@@ -94,11 +94,6 @@ __declspec( dllexport ) int LibInitialize(void)
 }
 
 __declspec( dllexport ) int LibShutdown(void)
-{
-	return 1;
-}
-
-__declspec( dllexport ) int LibNumberClasses()
 {
 	return 1;
 }

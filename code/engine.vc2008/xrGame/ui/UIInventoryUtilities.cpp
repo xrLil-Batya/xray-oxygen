@@ -367,7 +367,7 @@ const shared_str InventoryUtilities::GetNumDateAsString(ALife::_TIME_ID date, ED
 		xr_sprintf(bufDate, "%s %04i", month_str, year);
 		break;
 	case edpDateToDay:
-		xr_sprintf(bufDate, "%d %s %04i", day, month_str, year);
+		xr_sprintf(bufDate, "%.2d.%s.%04i", day, month_str, year);
 		break;
 	default:
 		R_ASSERT(!"Unknown type of date precision");

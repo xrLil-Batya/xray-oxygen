@@ -7,7 +7,6 @@
 #include "xrMessages.h"
 #include "xrserver.h"
 #include "level.h"
-#include "script_debugger.h"
 #include "ai_debug.h"
 #include "alife_simulator.h"
 #include "game_cl_base.h"
@@ -27,7 +26,7 @@
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
 #include "../xrEngine/date_time.h"
-#include "UIGameSP.h"
+#include "UIGame.h"
 #include "ui/UIActorMenu.h"
 #include "ui/UIStatic.h"
 #include "zone_effector.h"
@@ -57,6 +56,7 @@ string_path		g_last_saved_game;
 extern	u64		g_qwStartGameTime;
 extern	u64		g_qwEStartGameTime;
 
+extern  EGameLanguage g_Language;
 ENGINE_API
 extern  float   psHUD_FOV_def;
 extern	float	psSqueezeVelocity;
@@ -70,7 +70,6 @@ extern	int		g_dwInputUpdateDelta	;
 #ifdef DEBUG
 extern	BOOL	g_ShowAnimationInfo		;
 #endif // DEBUG
-extern	BOOL	g_bShowHitSectors		;
 extern	ESingleGameDifficulty g_SingleGameDifficulty;
 extern	BOOL	g_show_wnd_rect2			;
 //-----------------------------------------------------------
@@ -202,6 +201,26 @@ public:
 	}
 };
 
+class CCC_GameLanguage : public CCC_Token 
+{
+public:
+	CCC_GameLanguage(LPCSTR N) : CCC_Token(N, (u32*)&g_Language, language_type_token) {};
+	virtual void Execute(LPCSTR args) 
+	{
+		CCC_Token::Execute(args);
+		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
+			MainMenu()->Activate(false);
+		Msg("[GAME] Game language changed!");
+		CStringTable().ReInit(g_Language);
+		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
+			MainMenu()->Activate(true);
+	}
+	virtual void Info(TInfo& I)
+	{
+		xr_strcpy(I, "Game language");
+	}
+};
+
 // console commands
 class CCC_GameDifficulty : public CCC_Token {
 public:
@@ -241,67 +260,84 @@ public:
 };
 #endif // DEBUG
 
-class CCC_ALifeTimeFactor : public IConsole_Command {
+class CCC_ALifeTimeFactor : public IConsole_Command
+{
 public:
-	CCC_ALifeTimeFactor(LPCSTR N) : IConsole_Command(N)  { };
-	virtual void Execute(LPCSTR args) {
+	CCC_ALifeTimeFactor(LPCSTR N) : IConsole_Command(N) { };
+	virtual void Execute(LPCSTR args) 
+	{
+		if (!g_pGameLevel)
+			return;
+
 		float id1 = 0.0f;
-		sscanf(args ,"%f",&id1);
+		sscanf(args, "%f", &id1);
 		if (id1 < EPS_L)
-			Msg("Invalid time factor! (%.4f)",id1);
-		else {
+			Msg("Invalid time factor! (%.4f)", id1);
+		else
 			Level().SetGameTimeFactor(id1);
-		}
 	}
 	
-	virtual void	Save	(IWriter *F)	{};
-	virtual void	Status	(TStatus& S)
+	virtual void	Save(IWriter *F) {};
+	virtual void	Status(TStatus& S)
 	{	
-		if ( !g_pGameLevel )	return;
+		if (!g_pGameLevel)
+			return;
 
 		float v = Level().GetGameTimeFactor();
-		xr_sprintf	(S,sizeof(S),"%3.5f", v);
-		while	(xr_strlen(S) && ('0'==S[xr_strlen(S)-1]))	S[xr_strlen(S)-1] = 0;
+		xr_sprintf(S, sizeof(S), "%3.5f", v);
+		while (xr_strlen(S) && ('0' == S[xr_strlen(S) - 1]))
+			S[xr_strlen(S) - 1] = 0;
 	}
-	virtual void	Info	(TInfo& I)
+	virtual void	Info(TInfo& I)
 	{	
+		if (!g_pGameLevel)
+			return;
+
 		float v = Level().GetGameTimeFactor();
-		xr_sprintf(I,sizeof(I)," value = %3.5f", v);
+		xr_sprintf(I, sizeof(I), " value = %3.5f", v);
 	}
 	virtual void	fill_tips(vecTips& tips, u32 mode)
 	{
+		if (!g_pGameLevel)
+			return;
+
 		float v = Level().GetGameTimeFactor();
 
-		TStatus  str;
-		xr_sprintf( str, sizeof(str), "%3.5f  (current)  [0.0,1000.0]", v );
-		tips.push_back( str );
-		IConsole_Command::fill_tips( tips, mode );
+		TStatus str;
+		xr_sprintf(str, sizeof(str), "%3.5f  (current)  [0.0,1000.0]", v);
+		tips.push_back(str);
+		IConsole_Command::fill_tips(tips, mode);
 	}
 };
 
 class CCC_ALifeSwitchDistance : public IConsole_Command 
 {
 public:
-	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeSwitchDistance(LPCSTR N) : IConsole_Command(N) { };
 
 	virtual void Execute(LPCSTR args)
 	{
-		float id1 = 0.0f;
-		sscanf(args, "%f", &id1);
-		if (id1 < 2.0f)
-			Msg("Invalid online distance! (%.4f)", id1);
-		else {
-			NET_Packet		P;
-			P.w_begin(M_SWITCH_DISTANCE);
-			P.w_float(id1);
-			Level().Send(P);
+		if (ai().get_alife())
+		{
+			float id1 = 0.0f;
+			sscanf(args, "%f", &id1);
+			if (id1 < 2.0f)
+				Msg("Invalid online distance! (%.4f)", id1);
+			else
+			{
+				NET_Packet		P;
+				P.w_begin(M_SWITCH_DISTANCE);
+				P.w_float(id1);
+				Level().Send(P);
+			}
 		}
 	}
 };
 
-class CCC_ALifeProcessTime : public IConsole_Command {
+class CCC_ALifeProcessTime : public IConsole_Command
+{
 public:
-	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeProcessTime(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) 
 	{
 		if (ai().get_alife())
@@ -318,9 +354,10 @@ public:
 };
 
 
-class CCC_ALifeObjectsPerUpdate : public IConsole_Command {
+class CCC_ALifeObjectsPerUpdate : public IConsole_Command
+{
 public:
-	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeObjectsPerUpdate(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) 
 	{
 		if (ai().get_alife())
@@ -332,9 +369,10 @@ public:
 	}
 };
 
-class CCC_ALifeSwitchFactor : public IConsole_Command {
+class CCC_ALifeSwitchFactor : public IConsole_Command
+{
 public:
-	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N)  { };
+	CCC_ALifeSwitchFactor(LPCSTR N) : IConsole_Command(N) { };
 	virtual void Execute(LPCSTR args) 
 	{
 		if (ai().get_alife())
@@ -355,14 +393,19 @@ public:
 	CCC_DemoRecord(LPCSTR N) : IConsole_Command(N) {};
 	virtual void Execute(LPCSTR args) 
 	{
-		Console->Hide	();
+		if (g_pGameLevel)
+		{
+			Console->Hide();
 
-		LPSTR			fn_; 
-		STRCONCAT		(fn_, args, ".xrdemo");
-		string_path		fn;
-		FS.update_path	(fn, "$game_saves$", fn_);
+			LPSTR			fn_;
+			STRCONCAT(fn_, args, ".xrdemo");
+			string_path		fn;
+			FS.update_path(fn, "$game_saves$", fn_);
 
-		g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoRecord> (fn));
+			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoRecord>(fn));
+		}
+		else
+			Msg("! There are no level(s) started");
 	}
 };
 
@@ -386,28 +429,27 @@ Fvector CCC_DemoRecordSetPos::p = {0,0,0};
 class CCC_DemoPlay : public IConsole_Command
 {
 public:
-	CCC_DemoPlay(LPCSTR N) : 
-	  IConsole_Command(N) 
-	  { bEmptyArgsHandled = TRUE; };
-	  virtual void Execute(LPCSTR args) 
-	  {
+	CCC_DemoPlay(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args)
+	{
 		if (g_pGameLevel)
 		{
-			Console->Hide			();
-			string_path			fn;
-			u32		loops	=	0;
-			LPSTR		comma	=	strchr(const_cast<LPSTR>(args),',');
+			Console->Hide();
+			string_path fn;
+			u32 loops = 0;
+			LPSTR comma = strchr(const_cast<LPSTR>(args), ',');
 			if (comma)
 			{
-				loops			=	atoi	(comma+1);
-				*comma		=	0;	//. :)
+				loops = atoi(comma + 1);
+				*comma = 0;	//. :)
 			}
-			strconcat			(sizeof(fn),fn, args, ".xrdemo");
-			FS.update_path	(fn, "$game_saves$", fn);
-			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay> (fn, 1.0f, loops));
+			strconcat(sizeof(fn), fn, args, ".xrdemo");
+			FS.update_path(fn, "$game_saves$", fn);
+			g_pGameLevel->Cameras().AddCamEffector(xr_new<CDemoPlay>(fn, 1.0f, loops));
 		}
-		else Msg("! There are no level(s) started");
-	  }
+		else 
+			Msg("! There are no level(s) started");
+	}
 };
 
 // helper functions --------------------------------------------
@@ -457,7 +499,7 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 	FS.m_Flags.set( CLocatorAPI::flNeedCheck, FALSE );
 }
 
-#include "UIGameCustom.h"
+#include "UIGame.h"
 
 class CCC_ALifeSave : public IConsole_Command
 {
@@ -473,7 +515,7 @@ public:
 
 		if (Actor()->HasInfo("cant_game_save_now"))
 		{
-			SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+			SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 			_s->wnd()->TextItemControl()->SetText(CStringTable().translate("st_cant_game_save_now").c_str());
 			return;
 		}
@@ -491,10 +533,11 @@ public:
 		{
 			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
 			NET_Packet net_packet;
-			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8(0);
-			Level().Send(net_packet);
+            if (ai().get_alife())
+                Level().Server->game->alife().save(net_packet);
+			//Level().Send(net_packet);
 		}
 		else 
 		{
@@ -505,15 +548,16 @@ public:
 			}
 
 			NET_Packet net_packet;
-			net_packet.w_begin(M_SAVE_GAME);
 			net_packet.w_stringZ(S);
 			net_packet.w_u8(1);
-			Level().Send(net_packet);
+            if (ai().get_alife())
+                Level().Server->game->alife().save(net_packet);
+			//Level().Send(net_packet);
 		}
 #ifdef DEBUG
 		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
 #endif
-		SDrawStaticStruct* _s = CurrentGameUI()->AddCustomStatic("game_saved", true);
+		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 		LPSTR save_name;
 		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
 		_s->wnd()->TextItemControl()->SetText(save_name);
@@ -775,66 +819,6 @@ public:
 	}
 };
 
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-class CCC_ScriptDbg : public IConsole_Command {
-public:
-	CCC_ScriptDbg(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args) {
-		
-		if(strstr(cName,"script_debug_break")==cName ){
-		
-		CScriptDebugger* d = ai().script_engine().debugger();
-		if(d){
-			if(d->Active())
-				d->initiateDebugBreak();
-			else
-				Msg("Script debugger not active.");
-		}else
-			Msg("Script debugger not present.");
-		}
-		else if(strstr(cName,"script_debug_stop")==cName ){
-			ai().script_engine().stopDebugger();
-		}
-		else if(strstr(cName,"script_debug_restart")==cName ){
-			ai().script_engine().restartDebugger();
-		};
-	};
-	
-
-	virtual void	Info	(TInfo& I)		
-	{
-		if(strstr(cName,"script_debug_break")==cName )
-			xr_strcpy(I,"initiate script debugger [DebugBreak] command"); 
-
-		else if(strstr(cName,"script_debug_stop")==cName )
-			xr_strcpy(I,"stop script debugger activity"); 
-
-		else if(strstr(cName,"script_debug_restart")==cName )
-			xr_strcpy(I,"restarts script debugger or start if no script debugger presents"); 
-	}
-};
-#endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-
-#if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-class CCC_ScriptLuaStudioConnect : public IConsole_Command {
-public:
-	CCC_ScriptLuaStudioConnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
-	{
-		ai().script_engine().try_connect_to_debugger	();
-	};
-};
-
-class CCC_ScriptLuaStudioDisconnect : public IConsole_Command {
-public:
-	CCC_ScriptLuaStudioDisconnect(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR args)
-	{
-		ai().script_engine().disconnect_from_debugger	();
-	};
-};
-#endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-
 class CCC_DumpInfos : public IConsole_Command {
 public:
 	CCC_DumpInfos	(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
@@ -1037,12 +1021,10 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 		  float				step_count = (float)atof(args);
-#ifndef		DEBUG
+#ifndef DEBUG
 		  clamp				(step_count,50.f,200.f);
 #endif
-		  //IPHWorld::SetStep(1.f/step_count);
 		  ph_console::ph_step_time = 1.f/step_count;
-		  //physics_world()->SetStep(1.f/step_count);
 		  if(physics_world())
 			 physics_world()->SetStep(ph_console::ph_step_time);
 	  }
@@ -1143,22 +1125,23 @@ public:
 				return;
 			}
 
-			string4096		S;
-			shared_str		m_script_name = "console command";
-			xr_sprintf			(S,"%s\n",args);
-			int				l_iErrorCode = luaL_loadbuffer(ai().script_engine().lua(),S,xr_strlen(S),"@console_command");
-			if (!l_iErrorCode) {
+			string4096 S;
+			shared_str m_script_name = "console command";
+			xr_sprintf(S,"%s\n",args);
+			int l_iErrorCode = luaL_loadbuffer(ai().script_engine().lua(),S,xr_strlen(S),"@console_command");
+			if (!l_iErrorCode) 
+			{
 				l_iErrorCode = lua_pcall(ai().script_engine().lua(),0,0,0);
-				if (l_iErrorCode) {
+				if (l_iErrorCode) 
+				{
 					ai().script_engine().print_output	(ai().script_engine().lua(),*m_script_name,l_iErrorCode);
-					ai().script_engine().on_error		(ai().script_engine().lua());
 					return;
 				}
 			}
 
 			ai().script_engine().print_output	(ai().script_engine().lua(),*m_script_name,l_iErrorCode);
 		}
-	}//void	Execute
+	}
 
 	virtual void Status( TStatus& S )
 	{
@@ -1363,11 +1346,15 @@ struct CCC_DbgBullets : public CCC_Integer {
 #include "Inventory.h"
 class CCC_TuneAttachableItem : public IConsole_Command
 {
-public		:
-	CCC_TuneAttachableItem(LPCSTR N):IConsole_Command(N){};
-	virtual void	Execute	(LPCSTR args)
+public:
+	CCC_TuneAttachableItem(LPCSTR N) :IConsole_Command(N) {};
+	virtual void Execute(LPCSTR args)
 	{
-		if( CAttachableItem::m_dbgItem){
+		if (!g_pGameLevel)
+			return;
+
+		if (CAttachableItem::m_dbgItem)
+		{
 			CAttachableItem::m_dbgItem = NULL;	
 			Msg("CCC_TuneAttachableItem switched to off");
 			return;
@@ -1490,12 +1477,8 @@ public:
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( !ui_game_sp )
-		{
-			return;
-		}
-		PIItem item = ui_game_sp->ActorMenu().get_upgrade_item();
+
+		PIItem item = GameUI()->ActorMenu().get_upgrade_item();
 		if ( item )
 		{
 			item->log_upgrades();
@@ -1510,27 +1493,23 @@ public:
 class CCC_InvDropAllItems : public IConsole_Command
 {
 public:
-	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N)	{ bEmptyArgsHandled = TRUE; };
-	virtual void Execute( LPCSTR args )
+	CCC_InvDropAllItems(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; };
+	virtual void Execute(LPCSTR args)
 	{
-		if ( !g_pGameLevel )
+		if (!g_pGameLevel)
 		{
 			return;
 		}
-		CUIGameSP* ui_game_sp = smart_cast<CUIGameSP*>( CurrentGameUI() );
-		if ( !ui_game_sp )
-		{
-			return;
-		}
+
 		int d = 0;
-		sscanf( args, "%d", &d );
-		if ( ui_game_sp->ActorMenu().DropAllItemsFromRuck( d == 1 ) )
+		sscanf(args, "%d", &d);
+		if (GameUI()->ActorMenu().DropAllItemsFromRuck(d == 1))
 		{
-			Msg( "- All items from ruck of Actor is dropping now." );
+			Msg("- All items from ruck of Actor is dropping now.");
 		}
 		else
 		{
-			Msg( "! ActorMenu is not in state `Inventory`" );
+			Msg("! ActorMenu is not in state `Inventory`");
 		}
 	}
 }; // CCC_InvDropAllItems
@@ -1630,6 +1609,7 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "g_crouch_toggle", &psActorFlags, AF_CROUCH_TOGGLE);
 	CMD3(CCC_Mask, "g_colored_feel", &psActorFlags, AF_COLORED_FEEL);
 	CMD1(CCC_GameDifficulty, "g_game_difficulty");
+	CMD1(CCC_GameLanguage, "g_game_languages");
 
 	CMD3(CCC_Mask, "g_backrun", &psActorFlags, AF_RUN_BACKWARD);
 
@@ -1747,16 +1727,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Integer, "ai_dbg_inactive_time", &g_AI_inactive_time, 0, 1000000);
 
 	CMD1(CCC_DebugNode, "ai_dbg_node");
-#if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-	CMD1(CCC_ScriptDbg, "script_debug_break");
-	CMD1(CCC_ScriptDbg, "script_debug_stop");
-	CMD1(CCC_ScriptDbg, "script_debug_restart");
-#endif // #if defined(USE_DEBUGGER) && !defined(USE_LUA_STUDIO)
-
-#if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
-	CMD1(CCC_ScriptLuaStudioConnect, "lua_studio_connect");
-	CMD1(CCC_ScriptLuaStudioDisconnect, "lua_studio_disconnect");
-#endif // #if defined(USE_DEBUGGER) && defined(USE_LUA_STUDIO)
 
 	CMD1(CCC_ShowMonsterInfo, "ai_monster_info");
 	CMD1(CCC_DebugFonts, "debug_fonts");

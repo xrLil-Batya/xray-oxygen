@@ -302,9 +302,6 @@
     <ClCompile Include="luajit\lj_vmevent.c" />
     <ClCompile Include="luajit\lj_vmmath.c" />
     <ClCompile Include="luajit\xr_pool.c" />
-    <ClCompile Include="lua_studio\ai_script_lua_debug.cpp" />
-    <ClCompile Include="lua_studio\ai_script_lua_extension.cpp" />
-    <ClCompile Include="lua_studio\lua_studio.cpp" />
     <ClCompile Include="lua_traceback.cpp" />
     <ClCompile Include="mslotutils.cpp" />
     <ClCompile Include="VMLua.cpp" />
@@ -483,11 +480,6 @@
     <ClInclude Include="luajit\lualib.h" />
     <ClInclude Include="luajit\xr_pool.h" />
     <ClInclude Include="luaopen.hpp" />
-    <ClInclude Include="lua_studio\ai_script_lua_extension.h" />
-    <ClInclude Include="lua_studio\ai_script_lua_space.h" />
-    <ClInclude Include="lua_studio\ai_script_space.h" />
-    <ClInclude Include="lua_studio\lua_studio.h" />
-    <ClInclude Include="lua_studio\script_debugger_messages.h" />
     <ClInclude Include="lua_traceback.hpp" />
     <ClInclude Include="mslotutils.hpp" />
     <ClInclude Include="VMLua.h" />

@@ -8,6 +8,7 @@
 #include "../../Editors/xrECoreLite/EditObject.h"
 #include "../lw_shared/LW_ShaderDef.h"
 #include "../../Editors/xrECoreLite/EditMesh.h"
+#include "../utils/Shader_xrLC.h"
 
 extern "C" {
 #include "lwo2.h"
@@ -61,10 +62,12 @@ bool CEditableObject::Import_LWO(const char* fn, bool bNeedOptimize)
             // surfaces
             st_lwSurface* Isf=0;
             {
+				Shader_xrLC_LIB PlShaderXRLC;
+				PlShaderXRLC.Load("shaders_xrlc.xr");
+
                 int i=0;
-//                UI->ProgressStart(I->nsurfs,"Check surf:");
-                for (Isf=I->surf; Isf; Isf=Isf->next){
-//                    UI->ProgressUpdate(i);
+                for (Isf=I->surf; Isf; Isf=Isf->next)
+				{
                     Isf->alpha_mode=i; // перетираем для внутренних целей !!!
                     CSurface* Osf = xr_new<CSurface>();
                     m_Surfaces.push_back(Osf);
@@ -86,16 +89,18 @@ bool CEditableObject::Import_LWO(const char* fn, bool bNeedOptimize)
 					//	ELog.Msg(mtError,"CEditableObject: Render shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", en_name.c_str(), Osf->_Name());
 	                //    en_name = "default";
 					//}
-					//if (!Device.ShaderXRLC.Get(lc_name.c_str()))
-					//{
-					//	ELog.Msg(mtError,"CEditableObject: Compiler shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", lc_name.c_str(), Osf->_Name());
-	                //    lc_name = "default";
-					//}
-					//if (!GMLib.GetMaterial(gm_name.c_str()))
-					//{
-					//	ELog.Msg(mtError,"CEditableObject: Game material '%s' - can't find in library.\nUsing 'default' material on surface '%s'.", lc_name.c_str(), Osf->_Name());
-	                //    gm_name = "default";
-					//}
+
+					if (PlShaderXRLC.Get(lc_name.c_str()))
+					{
+						ELog.Msg(mtError,"CEditableObject: Compiler shader '%s' - can't find in library.\nUsing 'default' shader on surface '%s'.", lc_name.c_str(), Osf->_Name());
+	                    lc_name = "default";
+					}
+
+					if (!GEMLib.GetMaterial(gm_name.c_str()))
+					{
+						ELog.Msg(mtError,"CEditableObject: Game material '%s' - can't find in library.\nUsing 'default' material on surface '%s'.", lc_name.c_str(), Osf->_Name());
+	                    gm_name = "default";
+					}
 
                     // fill texture layers
                     int cidx;

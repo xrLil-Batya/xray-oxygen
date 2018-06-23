@@ -47,11 +47,7 @@ void CUIZoneMap::Init()
 	m_clock_wnd	= UIHelper::CreateStatic(uiXml, "minimap:clock_wnd", &m_background);
     m_clock_wnd->SetAutoDelete(false);
 
-    if (psActorFlags.test(AF_SHOWDATE))
-    {
-	    m_date_wnd = UIHelper::CreateStatic(uiXml, "minimap:date_wnd", &m_background);
-        m_date_wnd->SetAutoDelete(false);
-    }
+    //Giperion: Date widget initialized in update() (ConditionalInitDateWidget()). Option can be enabled/disabled in runtime
 
 	m_activeMap						= xr_new<CUIMiniMap>();
 	m_clipFrame.AttachChild			(m_activeMap);
@@ -100,13 +96,6 @@ void CUIZoneMap::Init()
 	rel_pos.mul				(m_background.GetWndSize());
 	m_clock_wnd->SetWndPos	(rel_pos);
 
-    if (psActorFlags.test(AF_SHOWDATE))
-    {
-	    rel_pos					= m_date_wnd->GetWndPos();
-	    rel_pos.mul				(m_background.GetWndSize());
-	    m_date_wnd->SetWndPos	(rel_pos);
-    }
-
 	xml_init.InitStatic			(uiXml, "minimap:static_counter", 0, &m_Counter);
 	m_background.AttachChild	(&m_Counter);
 	xml_init.InitTextWnd		(uiXml, "minimap:static_counter:text_static", 0, &m_Counter_text);
@@ -115,6 +104,32 @@ void CUIZoneMap::Init()
 	rel_pos						= m_Counter.GetWndPos();
 	rel_pos.mul					(m_background.GetWndSize());
 	m_Counter.SetWndPos			(rel_pos);
+}
+
+void CUIZoneMap::ConditionalInitDateWidget()
+{
+    if (psActorFlags.test(AF_SHOWDATE))
+    {
+        if (m_date_wnd == nullptr)
+        {
+            CUIXml uiXml;
+            uiXml.Load(CONFIG_PATH, UI_PATH, "ui_HUD.xml");
+            m_date_wnd = UIHelper::CreateStatic(uiXml, "minimap:date_wnd", &m_background);
+            m_date_wnd->SetAutoDelete(false);
+
+            Fvector2 rel_pos;
+            rel_pos = m_date_wnd->GetWndPos();
+            rel_pos.mul(m_background.GetWndSize());
+            m_date_wnd->SetWndPos(rel_pos);
+        }
+    }
+    else
+    {
+        if (m_date_wnd != nullptr)
+        {
+            xr_delete(m_date_wnd);
+        }
+    }
 }
 
 void CUIZoneMap::Render			()
@@ -153,6 +168,7 @@ void CUIZoneMap::Update()
 
 	m_clock_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameTimeAsString( InventoryUtilities::etpTimeToMinutes ).c_str() );
 
+    ConditionalInitDateWidget();
     if (psActorFlags.test(AF_SHOWDATE))
     {
 	    m_date_wnd->TextItemControl()->SetText( InventoryUtilities::GetGameNumDateAsString( InventoryUtilities::edpDateToDay ).c_str() );

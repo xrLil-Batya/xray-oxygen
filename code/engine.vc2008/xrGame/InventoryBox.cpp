@@ -7,7 +7,7 @@
 #include "script_callback_ex.h"
 #include "script_game_object.h"
 #include "ui/UIActorMenu.h"
-#include "uigamecustom.h"
+#include "UIGame.h"
 #include "inventory_item.h"
 
 CInventoryBox::CInventoryBox()
@@ -40,14 +40,14 @@ void CInventoryBox::OnEvent(NET_Packet& P, u16 type)
 
 			CInventoryItem *pIItem	= smart_cast<CInventoryItem*>(itm);
 			VERIFY					(pIItem);
-			if( CurrentGameUI() )
+			if (GameUI())
 			{
-				if(CurrentGameUI()->ActorMenu().GetMenuMode()==mmDeadBodySearch)
+				if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
 				{
-					if(this==CurrentGameUI()->ActorMenu().GetInvBox())
-						CurrentGameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
+					if (this == GameUI()->ActorMenu().GetInvBox())
+						GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 				}
-			};
+			}
 		}break;
 
 	case GE_TRADE_SELL:

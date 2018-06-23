@@ -9,7 +9,7 @@
 #include "../../xrServerEntities/script_engine.h"
 #include "../ai_space.h"
 #include "../../xrEngine/xr_ioconsole.h"
-#include "../UIGameCustom.h"
+#include "../UIGame.h"
 #include "UIActorMenu.h"
 #include "UIPdaWnd.h"
 
@@ -404,16 +404,17 @@ void CUISequencer::IR_OnKeyboardPress(int dik)
 		return;
 	}
 
-	if (binded && CurrentGameUI())
+	if (binded && GameUI())
 	{
-		if (CurrentGameUI()->ActorMenu().IsShown())
+		if (GameUI()->ActorMenu().IsShown())
 		{
-			CurrentGameUI()->HideActorMenu();
+			GameUI()->HideActorMenu();
 			return;
 		}
-		if (CurrentGameUI()->PdaMenu().IsShown())
+
+		if (GameUI()->PdaMenu().IsShown())
 		{
-			CurrentGameUI()->HidePdaMenu();
+			GameUI()->HidePdaMenu();
 			return;
 		}
 		Console->Execute("main_menu");

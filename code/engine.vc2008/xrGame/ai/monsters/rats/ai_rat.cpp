@@ -363,44 +363,6 @@ void CAI_Rat::net_Export(NET_Packet& P)
 	CEatableItem::net_Export(P);
 }
 
-void CAI_Rat::net_Import(NET_Packet& P)
-{
-	R_ASSERT				(Remote());
-	net_update				N;
-
-	u8 flags;
-
-	float health;
-	P.r_float			(health);
-	SetfHealth			(health);	
-	
-	P.r_u32					(N.dwTimeStamp);
-	P.r_u8					(flags);
-	P.r_vec3				(N.p_pos);
-	P.r_angle8				(N.o_model);
-	P.r_angle8				(N.o_torso.yaw);
-	P.r_angle8				(N.o_torso.pitch);
-	P.r_angle8				(N.o_torso.roll	);
-	id_Team					= P.r_u8();
-	id_Squad				= P.r_u8();
-	id_Group				= P.r_u8();
-
-	GameGraph::_GRAPH_ID		t;
-	P.r						(&t,				sizeof(t));
-	P.r						(&t,				sizeof(t));
-	ai_location().game_vertex	(t);
-
-	if (NET.empty() || (NET.back().dwTimeStamp<N.dwTimeStamp))	{
-		NET.push_back			(N);
-		NET_WasInterpolating	= TRUE;
-	}
-
-	setVisible				(TRUE);
-	setEnabled				(TRUE);
-
-	CEatableItem::net_Import(P);
-}
-
 void CAI_Rat::CreateSkeleton(){
 
 	if (!Visual())
@@ -612,24 +574,6 @@ BOOL CAI_Rat::UsedAI_Locations()
 	return					(TRUE);
 }
 
-void CAI_Rat::make_Interpolation ()
-{
-	inherited::make_Interpolation();
-	CEatableItem::make_Interpolation();
-}
-
-void CAI_Rat::PH_B_CrPr			()
-{
-	inherited::PH_B_CrPr		();
-	CEatableItem::PH_B_CrPr		();
-}
-
-void CAI_Rat::PH_I_CrPr			()
-{
-	inherited::PH_I_CrPr		();
-	CEatableItem::PH_I_CrPr		();
-}
-
 #ifdef DEBUG
 void CAI_Rat::PH_Ch_CrPr		()
 {
@@ -637,13 +581,6 @@ void CAI_Rat::PH_Ch_CrPr		()
 	CEatableItem::PH_Ch_CrPr	();
 }
 #endif
-
-
-void CAI_Rat::PH_A_CrPr			()
-{
-	inherited::PH_A_CrPr		();
-	CEatableItem::PH_A_CrPr		();
-}
 
 void CAI_Rat::create_physic_shell()
 {
