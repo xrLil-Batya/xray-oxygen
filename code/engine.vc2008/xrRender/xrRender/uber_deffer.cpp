@@ -147,8 +147,9 @@ void	uber_deffer	(CBlender_Compile& C, bool hq, LPCSTR _vspec, LPCSTR _pspec, BO
 			C.i_dx10Address(stage, D3DTADDRESS_WRAP);
 			C.i_dx10FilterAnizo(stage, TRUE);
 		}
-		if (ps_r2_ls_flags_ext.test(R2FLAGEXT_WIREFRAME))
+		if (ps_r4_flags.test(R4_FLAG_WIREFRAME))
 			C.R().SetRS(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
+
 		C.r_dx10Texture		("s_tbump",		fnameA);
 		C.r_dx10Texture		("s_tbumpX",		fnameB);	// should be before base bump
 		if (bHasDetailBump)
@@ -313,7 +314,7 @@ void uber_shadow(CBlender_Compile& C, LPCSTR _vspec)
 			C.i_dx10Address(stage, D3DTADDRESS_WRAP);
 			C.i_dx10FilterAnizo(stage, TRUE);
 		}
-		if (ps_r2_ls_flags_ext.test(R2FLAGEXT_WIREFRAME))
+		if (ps_r4_flags.test(R4_FLAG_WIREFRAME))
 			C.R().SetRS(D3DRS_FILLMODE, D3DFILL_WIREFRAME);
 	}
 	else

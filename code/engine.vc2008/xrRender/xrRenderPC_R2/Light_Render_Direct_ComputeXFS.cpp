@@ -52,7 +52,7 @@ void CLight_Compute_XFORM_and_VIS::compute_xf_spot	(light* L)
 	float	factor2				= powf	(duel_dot,	1.f/4.f);		// difficult to fast-change this -> visible
 	float	factor3				= powf	(sizefactor,1.f/4.f);		// this shouldn't make much difference
 	float	factor4				= powf	(widefactor,1.f/2.f);		// make it linear ???
-	float	factor				= ps_r2_ls_squality * factor0 * factor1 * factor2 * factor3 * factor4;
+	float	factor				= ps_r_ls_squality * factor0 * factor1 * factor2 * factor3 * factor4;
 	
 	// final size calc
 	u32 _size					= iFloor( factor * SMAP_adapt_optimal );

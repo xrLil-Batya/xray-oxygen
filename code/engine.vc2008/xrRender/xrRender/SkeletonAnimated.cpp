@@ -10,8 +10,8 @@
 #ifdef DEBUG
 #include	"../../xrcore/dump_string.h"
 #endif
-extern int	psSkeletonUpdate;
-using	namespace animation;
+
+using namespace animation;
 //////////////////////////////////////////////////////////////////////////
 // BoneInstance methods
 void		CBlendInstance::construct()

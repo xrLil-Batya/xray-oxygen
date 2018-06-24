@@ -221,7 +221,7 @@ void CRender::Render		()
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
-	bool					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
+	bool					bSUN				= ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
 	if (o.sunstatic)		bSUN				= false;
 
 	// HOM
@@ -229,11 +229,11 @@ void CRender::Render		()
 	View										= 0;
 
 	//******* Z-prefill calc - DEFERRER RENDERER
-	if (ps_r2_ls_flags.test(R2FLAG_ZFILL))		
+	if (ps_r_flags.test(R_FLAG_ZFILL))		
 	{
 		PIX_EVENT(DEFER_Z_FILL);
 		Device.Statistic->RenderCALC.Begin			();
-		float		z_distance	= ps_r2_zfill		;
+		float		z_distance	= ps_r_zfill		;
 		Fmatrix		m_zfill, m_project				;
 		m_project.build_projection	(
 			deg2rad(Device.fFOV), 
@@ -268,7 +268,7 @@ void CRender::Render		()
 		HRESULT	hr							= S_FALSE;
 		while	((hr=GetData (q_sync_point[q_sync_count], &result,sizeof(result)))==S_FALSE) 
 		{
-			if (!SwitchToThread())			Sleep(ps_r2_wait_sleep);
+			if (!SwitchToThread())			Sleep(ps_r_wait_sleep);
 			if (T.GetElapsed_ms() > 500)	{
 				result	= FALSE;
 				break;
@@ -291,8 +291,7 @@ void CRender::Render		()
 	r_pmask										(true,false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End			();
 
-	bool	split_the_scene_to_minimize_wait	= false;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait = true;
+	bool split_the_scene_to_minimize_wait = ps_r_flags.test(R_FLAG_EXP_SPLIT_SCENE);
 
 	//******* Main render :: PART-0	-- first
 	if (!split_the_scene_to_minimize_wait)
@@ -415,7 +414,7 @@ void CRender::Render		()
    }
 
 	//	TODO: DX10: Implement DX10 rain.
-	if (ps_r2_ls_flags.test(R3FLAG_DYN_WET_SURF))
+	if (ps_r3_flags.test(R3_FLAG_DYN_WET_SURF))
 	{
 		PIX_EVENT(DEFER_RAIN);
 		render_rain();
@@ -426,7 +425,7 @@ void CRender::Render		()
 	{
 		PIX_EVENT(DEFER_SUN);
 		RImplementation.stats.l_visible		++;
-		if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (!ps_r_flags.is(R_FLAG_SUN_OLD))
 			render_sun_cascades					();
 		else
 		{

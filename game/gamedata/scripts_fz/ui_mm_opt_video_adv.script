@@ -5,7 +5,7 @@ r2		= 2
 r2.5	= 3
 r3		= 4
 r4		= 5
-Команда називається r2_ssao. Для DX10 і DX11 потрібно додати нову опцію - st_opt_ultra, але лише коли r2_ssao_mode==hdao.
+Команда називається r_ssao. Для DX10 і DX11 потрібно додати нову опцію - st_opt_ultra, але лише коли r_ssao_mode==hdao.
 ]]
 class "opt_video_adv" (CUIWindow)
 function opt_video_adv:__init() super()
@@ -159,27 +159,27 @@ function opt_video_adv:InitControls(x, y, xml, handler)
 
     -- Детальный рельеф
 	_st = xml:InitStatic("video_adv:templ_item", nil)
-	xml:InitStatic("video_adv:cap_r2_detail_bump", _st)
-	ctl = xml:InitCheck("video_adv:check_r2_detail_bump", _st)
+	xml:InitStatic("video_adv:cap_r_detail_bump", _st)
+	ctl = xml:InitCheck("video_adv:check_r_detail_bump", _st)
 	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
 
     -- Steep parallax
 	_st = xml:InitStatic("video_adv:templ_item", nil)
-	xml:InitStatic("video_adv:cap_r2_steep_parallax", _st)
-	ctl = xml:InitCheck("video_adv:check_r2_steep_parallax", _st)
+	xml:InitStatic("video_adv:cap_r_steep_parallax", _st)
+	ctl = xml:InitCheck("video_adv:check_r_steep_parallax", _st)
 	table.insert(handler.m_preconditions, {func=mode_ge_25, control=_st})
 	
 	--/ SS Sunshafts
 	_st = xml:InitStatic("video_adv:templ_item", nil)
-	xml:InitStatic("video_adv:cap_r2_sun_shafts_mode", _st)
-	ctl = xml:InitComboBox("video_adv:list_r2_sun_shafts_mode", _st)
+	xml:InitStatic("video_adv:cap_r_sun_shafts_mode", _st)
+	ctl = xml:InitComboBox("video_adv:list_r_sun_shafts_mode", _st)
 	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
 	--/ SS Sunshafts
 
 	-- Качество солнца
 	_st = xml:InitStatic("video_adv:templ_item", nil)
-	xml:InitStatic("video_adv:cap_r2_sun_quality", _st)
-	ctl = xml:InitComboBox("video_adv:list_r2_sun_quality", _st)
+	xml:InitStatic("video_adv:cap_r_sun_quality", _st)
+	ctl = xml:InitComboBox("video_adv:list_r_sun_quality", _st)
 	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
 
 	-- Качество солнечных лучей (саншафтов)
@@ -225,8 +225,8 @@ function opt_video_adv:InitControls(x, y, xml, handler)
 	
 	-- Тени от солнца
 	_st = xml:InitStatic("video_adv:templ_item", nil)
-	xml:InitStatic("video_adv:cap_r2_sun", _st)
-	ctl = xml:InitCheck("video_adv:check_r2_sun", _st)
+	xml:InitStatic("video_adv:cap_r_sun", _st)
+	ctl = xml:InitCheck("video_adv:check_r_sun", _st)
 	table.insert(handler.m_preconditions, {func=mode_ge_2, control=_st})
 	
 	-- Тени от травы

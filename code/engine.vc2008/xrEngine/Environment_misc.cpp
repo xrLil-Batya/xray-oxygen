@@ -10,7 +10,7 @@
 #include "../xrServerEntities/object_broker.h"
 #include "../xrServerEntities/LevelGameDef.h"
 
-ENGINE_API float ccSunshaftsIntensity = 0.f;
+float ps_r_sunshafts_intensity = 0.f;
 
 void CEnvModifier::load	(IReader* fs, u32 version)
 {
@@ -386,8 +386,8 @@ void CEnvDescriptorMixer::lerp	(CEnvironment* , CEnvDescriptor& A, CEnvDescripto
 	wind_velocity			=	fi*A.wind_velocity + f*B.wind_velocity;
 	wind_direction			=	fi*A.wind_direction + f*B.wind_direction;
 
-    if (ccSunshaftsIntensity > 0.f)
-        m_fSunShaftsIntensity = ccSunshaftsIntensity;
+    if (ps_r_sunshafts_intensity > 0.f)
+        m_fSunShaftsIntensity = ps_r_sunshafts_intensity;
     else
 	    m_fSunShaftsIntensity =	fi*A.m_fSunShaftsIntensity + f*B.m_fSunShaftsIntensity;
 

@@ -227,7 +227,7 @@ void CRender::Render		()
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
 	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
-	BOOL					bSUN				= ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS) && !strstr(Core.Params, "-render_for_weak_systems");
+	BOOL					bSUN				= ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS) && !strstr(Core.Params, "-render_for_weak_systems");
 	if (o.sunstatic)		bSUN				= FALSE;
 
 	// HOM
@@ -246,7 +246,7 @@ void CRender::Render		()
 		HRESULT	hr							= S_FALSE;
 		while	((hr=GetData (q_sync_point[q_sync_count], &result,sizeof(result)))==S_FALSE) 
 		{
-			if (!SwitchToThread())			Sleep(ps_r2_wait_sleep);
+			if (!SwitchToThread())			Sleep(ps_r_wait_sleep);
 			if (T.GetElapsed_ms() > 500)	{
 				result	= FALSE;
 				break;
@@ -269,8 +269,7 @@ void CRender::Render		()
 	r_pmask										(true,false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End			();
 
-	BOOL	split_the_scene_to_minimize_wait		= FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
+	BOOL split_the_scene_to_minimize_wait = (ps_r_flags.test(R_FLAG_EXP_SPLIT_SCENE));
 
 	{
 		PIX_EVENT(DEFER_PART0_NO_SPLIT);
@@ -370,7 +369,7 @@ void CRender::Render		()
     }
 
     //	TODO: DX10: Implement DX10 rain.
-    if (ps_r2_ls_flags.test(R3FLAG_DYN_WET_SURF))
+    if (ps_r3_flags.test(R3_FLAG_DYN_WET_SURF))
     {
         PIX_EVENT(DEFER_RAIN);
         render_rain();
@@ -381,7 +380,7 @@ void CRender::Render		()
 	{
 		PIX_EVENT(DEFER_SUN);
 		RImplementation.stats.l_visible		++;
-		if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (!ps_r_flags.is(R_FLAG_SUN_OLD))
 			render_sun_cascades					();
 		else
 		{

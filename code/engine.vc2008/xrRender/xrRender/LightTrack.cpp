@@ -175,7 +175,7 @@ void	CROS_impl::update	(IRenderable* O)
 			
 			//multiply intensity on attenuation and accumulate result in hemi cube face
 			float koef = (lights[lit].color.r + lights[lit].color.g + lights[lit].color.b) / 3.0f * a
-						* ps_r2_dhemi_light_scale;
+						* ps_r_dhemi_light_scale;
 			
 			accum_hemi(hemi_cube_light, dir, koef);
 
@@ -186,14 +186,14 @@ void	CROS_impl::update	(IRenderable* O)
 
 		const float	minHemiValue = 1/255.f;
 
-		float	hemi_light = (lacc.x + lacc.y + lacc.z)/3.0f * ps_r2_dhemi_light_scale;
+		float	hemi_light = (lacc.x + lacc.y + lacc.z)/3.0f * ps_r_dhemi_light_scale;
 
 		hemi_value += hemi_light;
 		hemi_value = std::max(hemi_value, minHemiValue);
 
 		for (size_t i = 0; i < NUM_FACES; ++i)
 		{
-			hemi_cube[i] += hemi_cube_light[i]*(1-ps_r2_dhemi_light_flow) + ps_r2_dhemi_light_flow*hemi_cube_light[(i+NUM_FACES/2)%NUM_FACES];
+			hemi_cube[i] += hemi_cube_light[i]*(1-ps_r_dhemi_light_flow) + ps_r_dhemi_light_flow*hemi_cube_light[(i+NUM_FACES/2)%NUM_FACES];
 			hemi_cube[i] = std::max(hemi_cube[i], minHemiValue);
 		}
 
@@ -259,7 +259,7 @@ void 	CROS_impl::smart_update(IRenderable* O)
 	}
 }		
 
-extern float ps_r2_lt_smooth;
+extern float ps_r_dhemi_light_smooth;
 
 // hemi & sun: update and smooth
 void	CROS_impl::update_smooth	(IRenderable* O)
@@ -271,7 +271,7 @@ void	CROS_impl::update_smooth	(IRenderable* O)
 
 	smart_update(O);
 
-	float	l_f				=	Device.fTimeDelta*ps_r2_lt_smooth;
+	float	l_f				=	Device.fTimeDelta*ps_r_dhemi_light_smooth;
 	clamp	(l_f,0.f,1.f)	;
 	float	l_i				=	1.f-l_f							;
 	hemi_smooth				=	hemi_value*l_f + hemi_smooth*l_i;
@@ -301,10 +301,10 @@ void CROS_impl::calc_sky_hemi_value(Fvector& position, CObject* _object)
 	if	(MODE & IRender_ObjectSpecific::TRACE_HEMI)	
 	{
 	
-		sky_rays_uptodate	+= ps_r2_dhemi_count;
+		sky_rays_uptodate	+= ps_r_dhemi_count;
 		sky_rays_uptodate	= std::min(sky_rays_uptodate, lt_hemisamples);
 
-		for (u32 it = 0; it < (u32)ps_r2_dhemi_count; it++) {
+		for (u32 it = 0; it < (u32)ps_r_dhemi_count; it++) {
 			u32	sample = 0;
 			if (result_count < lt_hemisamples) { sample = result_count; result_count++; }
 			else { sample = (result_iterator%lt_hemisamples); result_iterator++; }
@@ -319,13 +319,13 @@ void CROS_impl::calc_sky_hemi_value(Fvector& position, CObject* _object)
 	int		_pass			=	0;
 	for (int it=0; it<result_count; it++)	if (result[it])	_pass	++;
 	hemi_value				=	float	(_pass)/float(result_count?result_count:1);
-	hemi_value				*=	ps_r2_dhemi_sky_scale;
+	hemi_value				*=	ps_r_dhemi_sky_scale;
 
 	for (int it=0; it<result_count; it++)
 	{
 		if (result[it])
 		{
-			accum_hemi(hemi_cube, Fvector3().set(hdir[it][0], hdir[it][1], hdir[it][2]), ps_r2_dhemi_sky_scale);
+			accum_hemi(hemi_cube, Fvector3().set(hdir[it][0], hdir[it][1], hdir[it][2]), ps_r_dhemi_sky_scale);
 		}
 	}
 }

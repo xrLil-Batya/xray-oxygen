@@ -120,7 +120,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	}
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -132,9 +132,9 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		RCache.set_CullMode					(CULL_NONE);
 		RCache.set_ColorWriteEnable			()	;
 
-		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
+		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r2_sun_depth_near_bias):ps_r2_sun_depth_far_bias;
+		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -156,7 +156,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
+				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44	(bias_t);
 			}
@@ -207,13 +207,15 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		
 		// nv-DBT
 		float zMin,zMax;
-		if (SE_SUN_NEAR==sub_phase)	{
+		if (SE_SUN_NEAR == sub_phase)
+		{
 			zMin = 0;
-			zMax = ps_r2_sun_near;
-		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
-			zMin = ps_r2_sun_near;
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_near;
+		}
+		else
+		{
+			zMin = ps_r_sun_near;
+			zMax = ps_r_sun_far;
 		}
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
 		zMin = center_pt.z	;
@@ -257,7 +259,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
       }
 
 		//	Igor: draw volumetric here
-		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
+		//if (ps_r_flags.test(R2FLAG_SUN_SHAFTS))
 		if ( RImplementation.o.advancedpp && (ps_r_sun_shafts>0))
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
@@ -356,7 +358,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	}
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -368,9 +370,9 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		RCache.set_CullMode					(CULL_CCW); //******************************************************************
 		RCache.set_ColorWriteEnable			()	;
 
-		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
+		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-//		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r2_sun_depth_near_bias):ps_r2_sun_depth_far_bias;
+//		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -392,7 +394,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
+				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44	(bias_t);
 			}
@@ -491,13 +493,15 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		// nv-DBT
 		float zMin,zMax;
-		if (SE_SUN_NEAR==sub_phase)	{
+		if (SE_SUN_NEAR == sub_phase)
+		{
 			zMin = 0;
-			zMax = ps_r2_sun_near;
-		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
-			zMin = ps_r2_sun_near;
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_near;
+		}
+		else
+		{
+			zMin = ps_r_sun_near;
+			zMax = ps_r_sun_far;
 		}
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
 		zMin = center_pt.z	;
@@ -506,19 +510,20 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		zMax = center_pt.z	;
 
 		// Enable Z function only for near and middle cascades, the far one is restricted by only stencil.
-		if( (SE_SUN_NEAR==sub_phase || SE_SUN_MIDDLE==sub_phase) )
+		if ((SE_SUN_NEAR == sub_phase || SE_SUN_MIDDLE == sub_phase))
 			RCache.set_ZFunc(D3DCMP_GREATEREQUAL);
- 		else
-			if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING))
+		else
+		{
+			if (!ps_r_flags.is(R_FLAG_SUN_ZCULLING))
 				RCache.set_ZFunc(D3DCMP_ALWAYS);
 			else
 				RCache.set_ZFunc(D3DCMP_LESS);
-
+		}
 
 		u32 st_mask = 0xFE;
 		_D3DSTENCILOP st_pass = D3DSTENCILOP_ZERO;
 
-		if( sub_phase == SE_SUN_FAR )
+		if (sub_phase == SE_SUN_FAR)
 		{
 			st_mask = 0x00;
 			st_pass = D3DSTENCILOP_KEEP;
@@ -541,14 +546,15 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			{
 				RCache.set_Element	(s_accum_direct_msaa[0]->E[uiElementIndex]);
 
-				if( (SE_SUN_NEAR==sub_phase || SE_SUN_MIDDLE==sub_phase) )
+				if ((SE_SUN_NEAR==sub_phase || SE_SUN_MIDDLE==sub_phase))
 					RCache.set_ZFunc(D3DCMP_GREATEREQUAL);
 				else
-					if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING))
+				{
+					if (!ps_r_flags.is(R_FLAG_SUN_ZCULLING))
 						RCache.set_ZFunc(D3DCMP_ALWAYS);
 					else
 						RCache.set_ZFunc(D3DCMP_LESS);
-
+				}
 
 				RCache.set_Stencil	(TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,st_mask, D3DSTENCILOP_KEEP, st_pass, D3DSTENCILOP_KEEP);
 				RCache.set_CullMode	(CULL_NONE	);
@@ -563,10 +569,12 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 					if( (SE_SUN_NEAR==sub_phase || SE_SUN_MIDDLE==sub_phase) )
 						RCache.set_ZFunc(D3DCMP_GREATEREQUAL);
 					else
-						if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING))
+					{
+						if (!ps_r_flags.is(R_FLAG_SUN_ZCULLING))
 							RCache.set_ZFunc(D3DCMP_ALWAYS);
 						else
 							RCache.set_ZFunc(D3DCMP_LESS);
+					}
 
 					RCache.set_Stencil	      (TRUE,D3DCMP_EQUAL,dwLightMarkerID|0x80,0xff,st_mask, D3DSTENCILOP_KEEP, st_pass, D3DSTENCILOP_KEEP);
 					RCache.set_CullMode		   (CULL_NONE	);
@@ -579,7 +587,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		}
 
 		//	Igor: draw volumetric here
-		//if (ps_r2_ls_flags.test(R2FLAG_SUN_SHAFTS))
+		//if (ps_r_flags.test(R2FLAG_SUN_SHAFTS))
 		if ( RImplementation.o.advancedpp&&(ps_r_sun_shafts>0) && sub_phase == SE_SUN_FAR)
 			accum_direct_volumetric	(sub_phase, Offset, m_shadow);
 	}
@@ -745,7 +753,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	}
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -760,10 +768,10 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 
 		// texture adjustment matrix
 		float			fTexelOffs			= (.5f / float(RImplementation.o.smapsize));
-		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
+		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 
 		//	TODO: DX10: Remove this when fix inverse culling for far region
-		float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_bias:-ps_r2_sun_depth_far_bias;
+		float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_bias:-ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -783,7 +791,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
+				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44	(bias_t);
 			}
@@ -876,7 +884,7 @@ void CRenderTarget::accum_direct_lum	()
 	L_dir.normalize				();
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -963,7 +971,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 	if (!need_to_render_sunshafts())
 		return;
 
-    if (ps_sunshafts_mode != R2SS_VOLUMETRIC)
+    if (ps_r_sunshafts_mode != SS_VOLUMETRIC)
         return;
 
 	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_FAR) ) return;
@@ -1027,13 +1035,15 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 		// nv-DBT
 		float zMin,zMax;
-		if (SE_SUN_NEAR==sub_phase)	{
+		if (SE_SUN_NEAR == sub_phase)
+		{
 			zMin = 0;
-			zMax = ps_r2_sun_near;
-		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_near;
+		}
+		else
+		{
 			zMin = 0; /////*****************************************************************************************
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_far;
 		}
 
 		RCache.set_c("volume_range", zMin, zMax, 0, 0);

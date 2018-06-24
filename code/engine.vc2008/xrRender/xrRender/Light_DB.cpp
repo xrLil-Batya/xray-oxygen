@@ -153,7 +153,7 @@ void			CLight_DB::add_light		(light* L)
 	if (Device.dwFrame==L->frame_render)	return;
 	L->frame_render							=	Device.dwFrame		;
 	if (RImplementation.o.noshadows)		L->flags.bShadow		= FALSE;
-	if (L->flags.bStatic && !ps_r2_ls_flags.test(R2FLAG_R1LIGHTS))	return;
+	if (L->flags.bStatic && !ps_r_flags.test(R_FLAG_R1LIGHTS))	return;
 	L->export_								(package);
 }
 
@@ -203,7 +203,7 @@ void			CLight_DB::Update			()
 		sun_original->set_range		(600.f);
 		sun_adapted->set_rotation	(AD, _sun_adapted->right	);
 		sun_adapted->set_position	(AP		);
-		sun_adapted->set_color		(E.sun_color.x*ps_r2_sun_lumscale,E.sun_color.y*ps_r2_sun_lumscale,E.sun_color.z*ps_r2_sun_lumscale);
+		sun_adapted->set_color		(E.sun_color.x*ps_r_sun_lumscale,E.sun_color.y*ps_r_sun_lumscale,E.sun_color.z*ps_r_sun_lumscale);
 		sun_adapted->set_range		(600.f	);
 		
 		if (!::Render->is_sun_static())

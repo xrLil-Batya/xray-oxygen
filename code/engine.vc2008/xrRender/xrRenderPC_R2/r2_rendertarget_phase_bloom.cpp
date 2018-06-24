@@ -110,8 +110,8 @@ void CRenderTarget::phase_bloom	()
 		RCache.Vertex.Unlock		(4,g_bloom_build->vb_stride);
 
 		// Perform combine (all scalers must account for 4 samples + final diffuse multiply);
-		float s						= ps_r2_ls_bloom_threshold;											// scale
-		f_bloom_factor				= .9f*f_bloom_factor + .1f*ps_r2_ls_bloom_speed*Device.fTimeDelta;	// speed
+		float s						= ps_r_ls_bloom_threshold;											// scale
+		f_bloom_factor				= .9f*f_bloom_factor + .1f*ps_r_ls_bloom_speed*Device.fTimeDelta;	// speed
 		RCache.set_Element			(s_bloom->E[0]);
 		RCache.set_c				("b_params", s,s,s,	f_bloom_factor);
 		RCache.set_Geometry			(g_bloom_build		);
@@ -121,13 +121,13 @@ void CRenderTarget::phase_bloom	()
 	// Capture luminance values
 	phase_luminance					( );
 
-	if (ps_r2_ls_flags.test(R2FLAG_FASTBLOOM))
+	if (ps_r_flags.test(R_FLAG_FASTBLOOM))
 	{
 		// FAST FILTER
 		float	_w					= BLOOM_size_X;
 		float	_h					= BLOOM_size_Y;
-		float	ddw					= (1.f/_w)*ps_r2_ls_bloom_kernel_b;
-		float	ddh					= (1.f/_h)*ps_r2_ls_bloom_kernel_b;
+		float	ddw					= (1.f/_w)*ps_r_ls_bloom_kernel_b;
+		float	ddh					= (1.f/_h)*ps_r_ls_bloom_kernel_b;
 		Fvector2	p0;	p0.set		(.5f/_w, .5f/_h);
 		Fvector2	p1;	p1.set		((_w+.5f)/_w, (_h+.5f)/_h );
 
@@ -220,8 +220,8 @@ void CRenderTarget::phase_bloom	()
 
 			// Perform filtering
 			Fvector4	w0,w1;
-			float		kernel			= ps_r2_ls_bloom_kernel_g;
-			CalcGauss_wave				(w0,w1,kernel,kernel/3.f,ps_r2_ls_bloom_kernel_scale);
+			float		kernel			= ps_r_ls_bloom_kernel_g;
+			CalcGauss_wave				(w0,w1,kernel,kernel/3.f,ps_r_ls_bloom_kernel_scale);
 			u_setrt						(rt_Bloom_2,NULL,NULL,NULL);		// No need for ZBuffer at all
 			RCache.set_Element			(s_bloom->E[1]);
 			RCache.set_ca				("weight", 0,			w0);
@@ -300,8 +300,8 @@ void CRenderTarget::phase_bloom	()
 
 			// Perform filtering
 			Fvector4	w0,w1;
-			float		kernel			= ps_r2_ls_bloom_kernel_g	* float(Device.dwHeight)/float(Device.dwWidth);
-			CalcGauss_wave				(w0,w1,kernel,kernel/3.f,ps_r2_ls_bloom_kernel_scale);
+			float		kernel			= ps_r_ls_bloom_kernel_g	* float(Device.dwHeight)/float(Device.dwWidth);
+			CalcGauss_wave				(w0,w1,kernel,kernel/3.f,ps_r_ls_bloom_kernel_scale);
 			u_setrt						(rt_Bloom_1,NULL,NULL,NULL);				// No need for ZBuffer at all
 			RCache.set_Element			(s_bloom->E[2]);
 			RCache.set_ca				("weight", 0,			w0);

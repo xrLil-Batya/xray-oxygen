@@ -4,8 +4,6 @@
 
 #include 	"SkeletonCustom.h"
 
-extern int	psSkeletonUpdate;
-
 #ifdef DEBUG
 void check_kinematics(CKinematics* _k, LPCSTR s);
 #endif
@@ -41,10 +39,10 @@ void CKinematics::CalculateBones			(BOOL bForceExact)
 	VERIFY( LL_GetBonesVisible()!=0 );
 	// Calculate BOXes/Spheres if needed
 	UCalc_Visibox++; 
-	if (UCalc_Visibox>=psSkeletonUpdate) 
+	if (UCalc_Visibox>= ps_r_SkeletonUpdate)
 	{
 		// mark
-		UCalc_Visibox		= -(::Random.randI(psSkeletonUpdate-1));
+		UCalc_Visibox		= -(::Random.randI(ps_r_SkeletonUpdate - 1));
 
 		// the update itself
 		Fbox	Box; Box.invalidate();

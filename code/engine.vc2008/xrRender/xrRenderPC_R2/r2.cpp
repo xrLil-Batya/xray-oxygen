@@ -57,7 +57,7 @@ static class cl_parallax		: public R_constant_setup
 {
 	virtual void setup	(R_constant* C)
 	{
-		float h			=	ps_r2_df_parallax_h;
+		float h			=	ps_r_df_parallax_h;
 		RCache.set_c	(C,h,-h/2.f,1.f/r_dtex_range,1.f/r_dtex_range);
 	}
 }	binder_parallax;
@@ -112,7 +112,7 @@ void					CRender::create					()
 	m_skinning			= -1;
 
 	// hardware
-	o.smapsize			= ps_r2_smapsize;
+	o.smapsize			= ps_r_smapsize;
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
@@ -135,8 +135,8 @@ void					CRender::create					()
 	}
 
     //subshafts options
-    o.sunshaft_mrmnwar      = ps_sunshafts_mode == R2SS_MANOWAR_SSSS;
-    o.sunshaft_screenspace  = ps_sunshafts_mode == R2SS_SCREEN_SPACE;
+    o.sunshaft_mrmnwar      = ps_r_sunshafts_mode == SS_MANOWAR_SS;
+    o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 
 	o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
@@ -205,11 +205,11 @@ void					CRender::create					()
 	o.distortion		= o.distortion_enabled;
 	o.disasm			= (strstr(Core.Params,"-disasm"))?		TRUE	:FALSE	;
 	o.forceskinw		= (strstr(Core.Params,"-skinw"))?		TRUE	:FALSE	;
-	
-	o.ssao_blur_on		= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_BLUR) && ps_r_ssao != 0;
-	o.ssao_opt_data		= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_OPT_DATA) && (ps_r_ssao != 0);
-	o.ssao_half_data	= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
-	o.ssao_hbao			= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_HBAO) && (ps_r_ssao != 0);
+
+	o.ssao_blur_on		= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR) && ps_r_ssao != 0;
+	o.ssao_opt_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA) && (ps_r_ssao != 0);
+	o.ssao_half_data	= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
+	o.ssao_hbao			= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO) && (ps_r_ssao != 0);
 	
 	if ((HW.Caps.id_vendor==0x1002)&&(HW.Caps.id_device<=0x72FF))	
 	{
@@ -240,7 +240,6 @@ void					CRender::create					()
 	for (u32 i=0; i<HW.Caps.iGPUNum; ++i)
 		R_CHK						(HW.pDevice->CreateQuery(D3DQUERYTYPE_EVENT,&q_sync_point[i]));
 
-	xrRender_apply_tf			();
 	::PortalTraverser.initialize();
 }
 
@@ -280,8 +279,8 @@ void CRender::reset_begin()
 	reset_frame = Device.dwFrame;
 
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) 
-												  || (ps_r__Detail_height != ps_current_detail_height)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r_Detail_density != ps_current_detail_density) 
+												  || (ps_r_Detail_height != ps_current_detail_height)))
 	{
 		Details->Unload();
 		xr_delete(Details);
@@ -303,14 +302,12 @@ void CRender::reset_end()
 	Target						=	xr_new<CRenderTarget>	();
 
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density)
-												  || (ps_r__Detail_height != ps_current_detail_height)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r_Detail_density != ps_current_detail_density)
+												  || (ps_r_Detail_height != ps_current_detail_height)))
 	{
 		Details = xr_new<CDetailManager>();
 		Details->Load();
 	}	
-	
-	xrRender_apply_tf			();
 
 	// Set this flag true to skip the first render frame,
 	// that some data is not ready in the first frame (for example device camera position)
@@ -702,12 +699,12 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	}
 	sh_name[len]='0'+char(o.Tshadows); ++len;
 
-	if (ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
+	if (ps_r_flags.test(R_FLAG_MBLUR)) {
 		defines[def_it].Name		=	"USE_MBLUR";
 		defines[def_it].Definition	=	"1";
 		def_it						++	;
 	}
-	sh_name[len]='0'+char(ps_r2_ls_flags.test(R2FLAG_MBLUR)); ++len;
+	sh_name[len]='0'+char(ps_r_flags.test(R_FLAG_MBLUR)); ++len;
 
 	if (o.sunfilter)		{
 		defines[def_it].Name		=	"USE_SUNFILTER";
@@ -813,7 +810,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	sh_name[len]='0'+char(4==m_skinning); ++len;
 	
 	//	Igor: need restart options
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER))
+	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_SOFT_WATER))
 	{
 		defines[def_it].Name		=	"USE_SOFT_WATER";
 		defines[def_it].Definition	=	"1";
@@ -825,7 +822,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES))
+	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_SOFT_PARTICLES))
 	{
 		defines[def_it].Name		=	"USE_SOFT_PARTICLES";
 		defines[def_it].Definition	=	"1";
@@ -837,7 +834,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+	if (RImplementation.o.advancedpp && ps_r_bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -888,7 +885,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_STEEP_PARALLAX))
+	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_STEEP_PARALLAX))
 	{
 		defines[def_it].Name		=	"ALLOW_STEEPPARALLAX";
 		defines[def_it].Definition	=	"1";
@@ -905,13 +902,13 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	defines[def_it].Definition = "1";
 	def_it++;
 
-    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    if (RImplementation.o.advancedpp && ps_r_bokeh_quality > 0)
     {
-        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        xr_sprintf(c_bokeh_quality, "%d", ps_r_bokeh_quality);
         defines[def_it].Name = "BOKEH_QUALITY";
         defines[def_it].Definition = c_bokeh_quality;
         def_it++;
-        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+        sh_name[len] = '0' + char(ps_r_bokeh_quality); ++len;
     }
     else
     {
