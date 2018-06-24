@@ -10,9 +10,9 @@ class CInventorySlot
 {									
 public:
 							CInventorySlot		();
-	virtual					~CInventorySlot		();
+	virtual					~CInventorySlot		() {};
 
-	bool					CanBeActivated		() const;
+	bool					CanBeActivated		() const { return (m_bAct); };
 
 	PIItem					m_pIItem;
 	bool					m_bPersistent;
@@ -37,7 +37,7 @@ class CInventory
 {				
 public:
 							CInventory			();
-	virtual					~CInventory			();
+	virtual					~CInventory			() {};
 
 	float 					TotalWeight			() const;
 	float 					CalcTotalWeight		();
