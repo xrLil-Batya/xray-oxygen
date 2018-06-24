@@ -95,7 +95,7 @@
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
     <PreBuildEvent>
-      <Command>"$(xrSDKBins)nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -x cu  -I..\..\engine.vc2008\xrCore\XMLCore -I../../sdk/include/dx/ -I../../sdk/include/ -I..\..\engine.vc2008\xrQSlim\src -I../../sdk/include/optix/ -I../../sdk/include/cuda/ -I$(xrIncl)  -G   --keep-dir $(Platform)\$(Configuration) -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DFORCE_NO_EXCEPTIONS -D_USE_MATH_DEFINES -DWIN32 -DDEBUG -D_WINDOWS -D_USRDLL -DXRLC_LIGHT_EXPORTS -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_VC80_UPGRADE=0x0710 -DWIN32 -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MD " -o $(IntermediateOutputPath)LightPoint.cu.obj "$(ProjectDir)LightPoint.cu"</Command>
+      <Command>nvcc.exe -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -x cu  -I..\..\engine.vc2008\xrCore\XMLCore -I../../sdk/include/dx/ -I../../sdk/include/ -I..\..\engine.vc2008\xrQSlim\src -I../../sdk/include/optix/ -I../../sdk/include/cuda/ -I$(xrIncl)  -G   --keep-dir $(Platform)\$(Configuration) -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DFORCE_NO_EXCEPTIONS -D_USE_MATH_DEFINES -DWIN32 -DDEBUG -D_WINDOWS -D_USRDLL -DXRLC_LIGHT_EXPORTS -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_VC80_UPGRADE=0x0710 -DWIN32 -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MD " -o $(IntermediateOutputPath)LightPoint.cu.obj "$(ProjectDir)LightPoint.cu"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -137,7 +137,7 @@
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
     <PreBuildEvent>
-      <Command>"$(xrSDKBins)nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -x cu  -I..\..\engine.vc2008\xrCore\XMLCore -I../../sdk/include/dx/ -I../../sdk/include/ -I..\..\engine.vc2008\xrQSlim\src -I../../sdk/include/optix/ -I../../sdk/include/cuda/ -I$(xrIncl)  -G   --keep-dir $(Platform)\$(Configuration) -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DFORCE_NO_EXCEPTIONS -D_USE_MATH_DEFINES -DWIN32 -DDEBUG -D_WINDOWS -D_USRDLL -DXRLC_LIGHT_EXPORTS -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_VC80_UPGRADE=0x0710 -DWIN32 -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MD " -o $(IntermediateOutputPath)LightPoint.cu.obj "$(ProjectDir)LightPoint.cu"</Command>
+      <Command>nvcc.exe -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -x cu  -I..\..\engine.vc2008\xrCore\XMLCore -I../../sdk/include/dx/ -I../../sdk/include/ -I..\..\engine.vc2008\xrQSlim\src -I../../sdk/include/optix/ -I../../sdk/include/cuda/ -I$(xrIncl)  -G   --keep-dir $(Platform)\$(Configuration) -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DFORCE_NO_EXCEPTIONS -D_USE_MATH_DEFINES -DWIN32 -DDEBUG -D_WINDOWS -D_USRDLL -DXRLC_LIGHT_EXPORTS -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_VC80_UPGRADE=0x0710 -DWIN32 -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MD " -o $(IntermediateOutputPath)LightPoint.cu.obj "$(ProjectDir)LightPoint.cu"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">
@@ -179,7 +179,7 @@
       <TargetMachinePlatform>64</TargetMachinePlatform>
     </CudaCompile>
     <PreBuildEvent>
-      <Command>"$(xrSDKBins)nvcc.exe" -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -x cu  -I..\..\engine.vc2008\xrCore\XMLCore -I../../sdk/include/dx/ -I../../sdk/include/ -I..\..\engine.vc2008\xrQSlim\src -I../../sdk/include/optix/ -I../../sdk/include/cuda/ -I$(xrIncl)  -G   --keep-dir $(Platform)\$(Configuration) -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DFORCE_NO_EXCEPTIONS -D_USE_MATH_DEFINES -DWIN32 -DDEBUG -D_WINDOWS -D_USRDLL -DXRLC_LIGHT_EXPORTS -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_VC80_UPGRADE=0x0710 -DWIN32 -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MD " -o $(IntermediateOutputPath)LightPoint.cu.obj "$(ProjectDir)LightPoint.cu"</Command>
+      <Command>nvcc.exe -gencode=arch=compute_30,code=\"sm_30,compute_30\" --use-local-env -x cu  -I..\..\engine.vc2008\xrCore\XMLCore -I../../sdk/include/dx/ -I../../sdk/include/ -I..\..\engine.vc2008\xrQSlim\src -I../../sdk/include/optix/ -I../../sdk/include/cuda/ -I$(xrIncl)  -G   --keep-dir $(Platform)\$(Configuration) -maxrregcount=0  --machine 64 --compile -cudart static  -g   -DFORCE_NO_EXCEPTIONS -D_USE_MATH_DEFINES -DWIN32 -DDEBUG -D_WINDOWS -D_USRDLL -DXRLC_LIGHT_EXPORTS -D_SECURE_SCL=0 -D_ITERATOR_DEBUG_LEVEL=0 -D_VC80_UPGRADE=0x0710 -DWIN32 -D_WINSOCK_DEPRECATED_NO_WARNINGS -D_CRT_SECURE_NO_WARNINGS -D_WINDLL -D_MBCS -Xcompiler "/EHsc /W3 /nologo /Od /FS /Zi /RTC1 /MD " -o $(IntermediateOutputPath)LightPoint.cu.obj "$(ProjectDir)LightPoint.cu"</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
