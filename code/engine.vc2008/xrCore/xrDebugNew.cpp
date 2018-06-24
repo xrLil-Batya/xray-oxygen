@@ -86,7 +86,7 @@ void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
 
-	if(MessageBoxA(nullptr, message.c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST | MB_ICONERROR | MB_SYSTEMMODAL) == IDOK) 
+	if(MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK) 
 	{
 		DEBUG_INVOKE;
 		TerminateProcess(GetCurrentProcess(), 1);
