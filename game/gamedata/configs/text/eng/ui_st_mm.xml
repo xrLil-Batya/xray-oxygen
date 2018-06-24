@@ -588,19 +588,19 @@
 	<string id="ui_mm_quit_windows_message">
 		<text>Are you sure you want to exit to Windows?</text>
 	</string>
-	<string id="ui_mm_r2_detail_bump">
+	<string id="ui_mm_r_detail_bump">
 		<text>Detail bump</text>
 	</string>
-	<string id="ui_mm_r2_steep_parallax">
+	<string id="ui_mm_r_steep_parallax">
 		<text>Steep parallax</text>
 	</string>
-	<string id="ui_mm_r2_sun">
+	<string id="ui_mm_r_sun">
 		<text>Sun shadow</text>
 	</string>
-	<string id="ui_mm_r2_sun_details">
+	<string id="ui_mm_r_sun_details">
 		<text>Grass shadow</text>
 	</string>
-	<string id="ui_mm_r2_sun_quality">
+	<string id="ui_mm_r_sun_quality">
 		<text>Sun quality</text>
 	</string>
 	<string id="ui_mm_r3_DX10_1">
@@ -930,7 +930,7 @@
 	<string id="ui_mm_confirm_changes">
 		<text>Apply changes? All changes will be reverted in</text>
 	</string>
-	<string id="ui_mm_r2_sun_shafts_mode">
+	<string id="ui_mm_r_sun_shafts_mode">
 		<text>Sunshafts mode</text>
 	</string>
 	<string id="volumetric">

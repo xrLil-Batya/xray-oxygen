@@ -93,7 +93,7 @@ void	CBlender_Compile::_cpp_Compile	(ShaderElement* _SH)
 
 #ifndef _EDITOR
 		//	Detect the alowance of detail bump usage here.
-		if (  !(RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_DETAIL_BUMP) ) )
+		if (  !(RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_DETAIL_BUMP) ) )
 		{
 			bDetail_Diffuse |= bDetail_Bump;
 			bDetail_Bump = false;

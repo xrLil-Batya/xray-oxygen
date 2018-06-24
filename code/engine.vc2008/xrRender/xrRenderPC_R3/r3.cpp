@@ -68,7 +68,7 @@ static class cl_parallax		: public R_constant_setup
 {
 	virtual void setup	(R_constant* C)
 	{
-		float h			=	ps_r2_df_parallax_h;
+		float h			=	ps_r_df_parallax_h;
 		RCache.set_c	(C,h,-h/2.f,1.f/r_dtex_range,1.f/r_dtex_range);
 	}
 }	binder_parallax;
@@ -138,7 +138,7 @@ void					CRender::create					()
 	m_MSAASample		= -1;
 
 	// hardware
-	o.smapsize			= ps_r2_smapsize;
+	o.smapsize			= ps_r_smapsize;
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
@@ -173,7 +173,7 @@ void					CRender::create					()
 	//.	o.sunstatic			= (strstr(Core.Params,"-sunstatic"))?	TRUE	:FALSE	;
 	o.sunstatic			= r2_sun_static;
 	o.advancedpp		= r2_advanced_pp;
-	o.volumetricfog		= ps_r2_ls_flags.test(R3FLAG_VOLUMETRIC_SMOKE);
+	o.volumetricfog		= ps_r3_flags.test(R3_FLAG_VOLUMETRIC_SMOKE);
 	o.sjitter			= (strstr(Core.Params,"-sjitter"))?		TRUE	:FALSE	;
 	o.depth16			= (strstr(Core.Params,"-depth16"))?		TRUE	:FALSE	;
 	o.noshadows			= (strstr(Core.Params,"-noshadows"))?	TRUE	:FALSE	;
@@ -183,23 +183,24 @@ void					CRender::create					()
 	o.disasm			= (strstr(Core.Params,"-disasm"))?		TRUE	:FALSE	;
 	o.forceskinw		= (strstr(Core.Params,"-skinw"))?		TRUE	:FALSE	;
 
-	o.ssao_blur_on		= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_BLUR) && (ps_r_ssao != 0);
-	o.ssao_opt_data		= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_OPT_DATA) && (ps_r_ssao != 0);
-	o.ssao_half_data	= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
-	o.ssao_hbao			= ps_r2_ls_flags_ext.test(R2FLAGEXT_SSAO_HBAO) && (ps_r_ssao != 0);
+	o.ssao_blur_on		= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR) && (ps_r_ssao != 0);
+	o.ssao_opt_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA) && (ps_r_ssao != 0);
+	o.ssao_half_data	= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
+	o.ssao_hbao			= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO) && (ps_r_ssao != 0);
 
-	//	TODO: fix hbao shader to allow to perform per-subsample effect!
+	// TODO: fix hbao shader to allow to perform per-subsample effect!
 	o.hbao_vectorized = false;
 	
-    if( o.ssao_hbao)
+    if (o.ssao_hbao)
 	{
 		if (HW.Caps.id_vendor==0x1002)
 			o.hbao_vectorized = true;
+
 		o.ssao_opt_data = true;
 	}
 
-	o.dx10_sm4_1		= ps_r2_ls_flags.test((u32)R3FLAG_USE_DX10_1);
-	o.dx10_sm4_1		= o.dx10_sm4_1 && ( HW.pDevice1 != 0 );
+	o.dx10_sm4_1		= ps_r3_flags.test(R3_FLAG_USE_DX10_1);
+	o.dx10_sm4_1		= o.dx10_sm4_1 && (HW.pDevice1 != 0);
 
 	//	MSAA option dependencies
 
@@ -207,19 +208,19 @@ void					CRender::create					()
 	o.dx10_msaa_samples = (1 << ps_r3_msaa);
 
     //subshafts options
-    o.sunshaft_mrmnwar      = ps_sunshafts_mode == R2SS_MANOWAR_SSSS;
-    o.sunshaft_screenspace  = ps_sunshafts_mode == R2SS_SCREEN_SPACE;
+    o.sunshaft_mrmnwar      = ps_r_sunshafts_mode == SS_MANOWAR_SS;
+    o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 
-	o.dx10_msaa_opt		= ps_r2_ls_flags.test(R3FLAG_MSAA_OPT);
+	o.dx10_msaa_opt		= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt		= o.dx10_msaa_opt && o.dx10_msaa && ( HW.pDevice1 != 0 );
 
-	//o.dx10_msaa_hybrid	= ps_r2_ls_flags.test(R3FLAG_MSAA_HYBRID);
-	o.dx10_msaa_hybrid	= ps_r2_ls_flags.test((u32)R3FLAG_USE_DX10_1);
-	o.dx10_msaa_hybrid	&= !o.dx10_msaa_opt && o.dx10_msaa && ( HW.pDevice1 != 0) ;
+	//o.dx10_msaa_hybrid	= ps_r3_flags.test(R3FLAG_MSAA_HYBRID);
+	o.dx10_msaa_hybrid	= ps_r3_flags.test(R3_FLAG_USE_DX10_1);
+	o.dx10_msaa_hybrid	&= !o.dx10_msaa_opt && o.dx10_msaa && (HW.pDevice1 != 0);
 
 	//	Allow alpha test MSAA for DX10.0
 
-	//o.dx10_msaa_alphatest= ps_r2_ls_flags.test((u32)R3FLAG_MSAA_ALPHATEST);
+	//o.dx10_msaa_alphatest= ps_r3_flags.test(R3FLAG_MSAA_ALPHATEST);
 	//o.dx10_msaa_alphatest= o.dx10_msaa_alphatest && o.dx10_msaa;
 
 	//o.dx10_msaa_alphatest_atoc= (o.dx10_msaa_alphatest && !o.dx10_msaa_opt && !o.dx10_msaa_hybrid);
@@ -241,7 +242,7 @@ void					CRender::create					()
 		}
 	}
 
-	o.dx10_gbuffer_opt	= ps_r2_ls_flags.test(R3FLAG_GBUFFER_OPT);
+	o.dx10_gbuffer_opt	= ps_r3_flags.test(R3_FLAG_GBUFFER_OPT);
 
 	o.dx10_minmax_sm = ps_r3_minmax_sm;
 	o.dx10_minmax_sm_screenarea_threshold = 1600*1200;
@@ -305,7 +306,6 @@ void					CRender::create					()
 		R_CHK(HW.pDevice->CreateQuery(&qdesc,&q_sync_point[i]));
 	q_sync_point[0]->End();
 
-	xrRender_apply_tf			();
 	::PortalTraverser.initialize();
 	FluidManager.Initialize( 70, 70, 70 );
 	FluidManager.SetScreenSize(Device.dwWidth, Device.dwHeight);
@@ -347,7 +347,7 @@ void CRender::reset_begin()
 	}
 	
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_current_detail_density != ps_r_Detail_density) || (ps_current_detail_height != ps_r_Detail_height)))
 	{
 		Details->Unload();
 		xr_delete(Details);
@@ -376,13 +376,12 @@ void CRender::reset_end()
 	Target						=	xr_new<CRenderTarget>	();
 
 	// KD: let's reload details while changed details options on vid_restart
-	if (b_loaded && ((dm_current_size != dm_size) || (ps_r__Detail_density != ps_current_detail_density) || (ps_r__Detail_height != ps_current_detail_height)))
+	if (b_loaded && ((dm_current_size != dm_size) || (ps_r_Detail_density != ps_current_detail_density) || (ps_r_Detail_height != ps_current_detail_height)))
 	{
 		Details = xr_new<CDetailManager>();
 		Details->Load();
 	}	
 	
-	xrRender_apply_tf			();
 	FluidManager.SetScreenSize(Device.dwWidth, Device.dwHeight);
 
 	// Set this flag true to skip the first render frame,
@@ -870,12 +869,12 @@ HRESULT	CRender::shader_compile			(
 	}
 	sh_name[len]='0'+char(o.Tshadows); ++len;
 
-	if (ps_r2_ls_flags.test(R2FLAG_MBLUR)) {
+	if (ps_r_flags.test(R_FLAG_MBLUR)) {
 		defines[def_it].Name		=	"USE_MBLUR";
 		defines[def_it].Definition	=	"1";
 		def_it						++	;
 	}
-	sh_name[len]='0'+char(ps_r2_ls_flags.test(R2FLAG_MBLUR)); ++len;
+	sh_name[len]='0'+char(ps_r_flags.test(R_FLAG_MBLUR)); ++len;
 
 	if (o.sunfilter)		{
 		defines[def_it].Name		=	"USE_SUNFILTER";
@@ -988,7 +987,7 @@ HRESULT	CRender::shader_compile			(
 	sh_name[len]='0'+char(4==m_skinning); ++len;
 
 	//	Igor: need restart options
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_WATER))
+	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_SOFT_WATER))
 	{
 		defines[def_it].Name		=	"USE_SOFT_WATER";
 		defines[def_it].Definition	=	"1";
@@ -1000,7 +999,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_SOFT_PARTICLES))
+	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_SOFT_PARTICLES))
 	{
 		defines[def_it].Name		=	"USE_SOFT_PARTICLES";
 		defines[def_it].Definition	=	"1";
@@ -1012,7 +1011,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+	if (RImplementation.o.advancedpp && ps_r_bokeh_quality > 0)
 	{
 		defines[def_it].Name		=	"USE_DOF";
 		defines[def_it].Definition	=	"1";
@@ -1063,7 +1062,7 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'; ++len;
 	}
 
-	if (RImplementation.o.advancedpp && ps_r2_ls_flags.test(R2FLAG_STEEP_PARALLAX))
+	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_STEEP_PARALLAX))
 	{
 		defines[def_it].Name		=	"ALLOW_STEEPPARALLAX";
 		defines[def_it].Definition	=	"1";
@@ -1184,13 +1183,13 @@ HRESULT	CRender::shader_compile			(
 		sh_name[len]='0'; ++len;
 	}
 
-    if (RImplementation.o.advancedpp && ps_r__bokeh_quality > 0)
+    if (RImplementation.o.advancedpp && ps_r_bokeh_quality > 0)
     {
-        xr_sprintf(c_bokeh_quality, "%d", ps_r__bokeh_quality);
+        xr_sprintf(c_bokeh_quality, "%d", ps_r_bokeh_quality);
         defines[def_it].Name = "BOKEH_QUALITY";
         defines[def_it].Definition = c_bokeh_quality;
         def_it++;
-        sh_name[len] = '0' + char(ps_r__bokeh_quality); ++len;
+        sh_name[len] = '0' + char(ps_r_bokeh_quality); ++len;
     }
     else
     {

@@ -13,7 +13,7 @@ BOOL	tri_vs_sphere_intersect			(Fvector& SC, float R, Fvector& v0, Fvector& v1, 
 void CRenderTarget::enable_dbt_bounds		(light* L)
 {
 	if (!RImplementation.o.nvdbt)					return;
-	if (!ps_r2_ls_flags.test(R2FLAG_USE_NVDBT))		return;
+	if (!ps_r_flags.test(R_FLAG_USE_NVDBT))		return;
 
 	u32	mask		= 0xffffffff;
 	EFC_Visible vis	= RImplementation.ViewBase.testSphere(L->spatial.sphere.P,L->spatial.sphere.R*1.01f,mask);
@@ -38,7 +38,7 @@ void CRenderTarget::enable_dbt_bounds		(light* L)
 BOOL	CRenderTarget::u_DBT_enable	(float zMin, float zMax)
 {
 	if (!RImplementation.o.nvdbt)					return	FALSE;
-	if (!ps_r2_ls_flags.test(R2FLAG_USE_NVDBT))		return	FALSE;
+	if (!ps_r_flags.test(R_FLAG_USE_NVDBT))		return	FALSE;
 
 	// enable cheat
 	HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_X,MAKEFOURCC('N','V','D','B'));
@@ -50,7 +50,7 @@ BOOL	CRenderTarget::u_DBT_enable	(float zMin, float zMax)
 
 void	CRenderTarget::u_DBT_disable	()
 {
-	if (RImplementation.o.nvdbt && ps_r2_ls_flags.test(R2FLAG_USE_NVDBT))	
+	if (RImplementation.o.nvdbt && ps_r_flags.test(R_FLAG_USE_NVDBT))	
 		HW.pDevice->SetRenderState(D3DRS_ADAPTIVETESS_X,0);
 }
 

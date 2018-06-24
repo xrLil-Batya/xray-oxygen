@@ -9,7 +9,7 @@ IC bool		pred_LI			(const light_indirect& A, const light_indirect& B)
 void	light::gi_generate	()
 {
 	indirect.clear		();
-	indirect_photons	= ps_r2_ls_flags.test(R2FLAG_GI)?ps_r2_GI_photons:0;
+	indirect_photons	= ps_r_flags.test(R_FLAG_GI)?ps_r_GI_photons:0;
 
 	CRandom				random;
 	random.seed			(0x12071980);
@@ -40,7 +40,7 @@ void	light::gi_generate	()
 		LI.P.mad			(position,dir,R->range);
 		LI.D.reflect		(dir,TN);
 		LI.E				= dot * (1-R->range/range);
-		if (LI.E < ps_r2_GI_clip)				continue;
+		if (LI.E < ps_r_GI_clip)				continue;
 		LI.S				= spatial.sector;	//. BUG
 
 		indirect.push_back	(LI);
@@ -53,7 +53,7 @@ void	light::gi_generate	()
 
 	// normalize
 	if (indirect.size())	{
-		float	target_E		=	ps_r2_GI_refl;
+		float	target_E		=	ps_r_GI_refl;
 		float	total_E			=	0;
 		for (u32 it=0; it<indirect.size(); it++)
 			total_E				+=	indirect[it].E;

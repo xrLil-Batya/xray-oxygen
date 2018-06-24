@@ -573,16 +573,14 @@ public		:
 ENGINE_API float psHUD_FOV_def = 0.45f;
 ENGINE_API float psHUD_FOV = psHUD_FOV_def;
 
-//extern int			psSkeletonUpdate;
 extern int			rsDVB_Size;
 extern int			rsDIB_Size;
 extern Flags32		psEnvFlags;
-//extern float		r__dtex_range;
 
 extern int			g_ErrorLineCount;
 
 ENGINE_API int			ps_always_active			= 0;
-ENGINE_API int			ps_r__Supersample			= 1;
+
 void CCC_Register()
 {
 	// General
@@ -623,10 +621,9 @@ void CCC_Register()
 #endif
 	CMD3(CCC_Mask,		"rs_draw_fps",			&psDeviceFlags,		rsDrawFPS				);
 	// Render device states
-	CMD4(CCC_Integer,	"r__supersample",		&ps_r__Supersample,			1,		4		);
-	CMD3(CCC_Mask,		"rs_detail",			&psDeviceFlags,		rsDetails	);
+	CMD3(CCC_Mask,		"rs_detail",			&psDeviceFlags,		rsDetails				);
 
-	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync				);
+	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
 //	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);
 	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
@@ -645,7 +642,6 @@ void CCC_Register()
 #ifdef DEBUG
 	CMD3(CCC_Mask,		"rs_occ_draw",			&psDeviceFlags,		rsOcclusionDraw			);
 	CMD3(CCC_Mask,		"rs_occ_stats",			&psDeviceFlags,		rsOcclusionStats		);
-	//CMD4(CCC_Integer,	"rs_skeleton_update",	&psSkeletonUpdate,	2,		128	);
 #endif // DEBUG
 	CMD4(CCC_Float,		"rs_near_plane", &view_port_near_koef,				0.01, 5.0);
 	CMD2(CCC_Gamma,		"rs_c_gamma"			,&ps_gamma			);

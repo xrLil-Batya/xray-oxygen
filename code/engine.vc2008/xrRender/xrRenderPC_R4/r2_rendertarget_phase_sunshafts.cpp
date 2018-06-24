@@ -25,8 +25,8 @@ void	CRenderTarget::phase_ogse_sunshafts()
 
     Fvector4 params = { 0,0,0,0 };
     params.x = 1.f;//env.m_fSunShaftsIntensity;
-    params.y = ps_r2_ss_sunshafts_length;
-    params.w = ps_r2_ss_sunshafts_radius;
+    params.y = ps_r_ss_sunshafts_length;
+    params.w = ps_r_ss_sunshafts_radius;
 
     //***MASK GENERATION***
     /*

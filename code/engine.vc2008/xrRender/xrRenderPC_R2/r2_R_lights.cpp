@@ -110,6 +110,8 @@ void	CRender::render_lights(light_Package& LP)
 				RCache.set_xform_view(L->X.S.view);
 				RCache.set_xform_project(L->X.S.project);
 				r_dsgraph_render_graph(0);
+				if (ps_r_flags.test(R_FLAG_DETAIL_SHADOW))
+					Details->Render();
 				L->X.S.transluent = FALSE;
 				if (bSpecial) {
 					L->X.S.transluent = TRUE;
@@ -159,7 +161,7 @@ void	CRender::render_lights(light_Package& LP)
 				render_indirect(L_spot_s[it]);
 			}
 
-			if (RImplementation.o.advancedpp && ps_r2_ls_flags.is(R2FLAG_VOLUMETRIC_LIGHTS))
+			if (RImplementation.o.advancedpp && ps_r_flags.is(R_FLAG_VOLUMETRIC_LIGHTS))
 				for (u32 it = 0; it<L_spot_s.size(); it++)
 					Target->accum_volumetric(L_spot_s[it]);
 
@@ -197,7 +199,7 @@ void	CRender::render_lights(light_Package& LP)
 
 void	CRender::render_indirect(light* L)
 {
-	if (!ps_r2_ls_flags.test(R2FLAG_GI))	return;
+	if (!ps_r_flags.test(R_FLAG_GI))	return;
 
 	light									LIGEN;
 	LIGEN.set_type(IRender_Light::REFLECTED);
@@ -212,7 +214,7 @@ void	CRender::render_indirect(light* L)
 
 		// energy and color
 		float	LIE = LE * LI.E;
-		if (LIE < ps_r2_GI_clip)		continue;
+		if (LIE < ps_r_GI_clip)		continue;
 		Fvector T; T.set(L->color.r, L->color.g, L->color.b).mul(LI.E);
 		LIGEN.set_color(T.x, T.y, T.z);
 

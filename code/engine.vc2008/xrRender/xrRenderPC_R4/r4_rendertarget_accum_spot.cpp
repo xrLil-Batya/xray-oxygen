@@ -80,8 +80,8 @@ void CRenderTarget::accum_spot	(light* L)
 		float			view_dim			= float(L->X.S.size-2)/smapsize;
 		float			view_sx				= float(L->X.S.posX+1)/smapsize;
 		float			view_sy				= float(L->X.S.posY+1)/smapsize;
-		float			fRange				= float(1.f)*ps_r2_ls_depth_scale;
-		float			fBias				= ps_r2_ls_depth_bias;
+		float			fRange				= float(1.f)*ps_r_ls_depth_scale;
+		float			fBias				= ps_r_ls_depth_bias;
 		Fmatrix			m_TexelAdjust		= {
 			view_dim/2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dim/2.f,							0.0f,		0.0f,
@@ -278,8 +278,8 @@ void CRenderTarget::accum_volumetric(light* L)
 		float			view_dim			= float(L->X.S.size-2)/smapsize;
 		float			view_sx				= float(L->X.S.posX+1)/smapsize;
 		float			view_sy				= float(L->X.S.posY+1)/smapsize;
-		float			fRange				= float(1.f)*ps_r2_ls_depth_scale;
-		float			fBias				= ps_r2_ls_depth_bias;
+		float			fRange				= float(1.f)*ps_r_ls_depth_scale;
+		float			fBias				= ps_r_ls_depth_bias;
 		Fmatrix			m_TexelAdjust		= {
 			view_dim/2.f,							0.0f,									0.0f,		0.0f,
 			0.0f,									-view_dim/2.f,							0.0f,		0.0f,

@@ -76,7 +76,7 @@ void	CRenderTarget::phase_combine	()
 	RCache.set_Stencil	( FALSE		);
 
 	BOOL	split_the_scene_to_minimize_wait			= FALSE;
-	if (ps_r2_ls_flags.test(R2FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
+	if (ps_r_flags.test(R_FLAG_EXP_SPLIT_SCENE))	split_the_scene_to_minimize_wait=TRUE;
 
 	// draw skybox
 	if (1)
@@ -102,7 +102,7 @@ void	CRenderTarget::phase_combine	()
 		m_previous.mul		(m_saved_viewproj,m_invview);
 		m_current.set		(Device.mProject)		;
 		m_saved_viewproj.set(Device.mFullTransform)	;
-		float	scale		= ps_r2_mblur/2.f;
+		float	scale		= ps_r_mblur/2.f;
 		m_blur_scale.set	(scale,-scale).div(12.f);
 	}
 
@@ -115,14 +115,14 @@ void	CRenderTarget::phase_combine	()
 		CEnvDescriptorMixer& envdesc= *g_pGamePersistent->Environment().CurrentEnv		;
 		const float minamb			= 0.001f;
 		Fvector4	ambclr			= { std::max(envdesc.ambient.x*2,minamb),	std::max(envdesc.ambient.y*2,minamb),			std::max(envdesc.ambient.z*2,minamb),	0	};
-					ambclr.mul		(ps_r2_sun_lumscale_amb);
+					ambclr.mul		(ps_r_sun_lumscale_amb);
 
 		Fvector4	envclr			= { envdesc.hemi_color.x*2+EPS,	envdesc.hemi_color.y*2+EPS,	envdesc.hemi_color.z*2+EPS,	envdesc.weight					};
 
 		Fvector4	fogclr			= { envdesc.fog_color.x,	envdesc.fog_color.y,	envdesc.fog_color.z,		0	};
-					envclr.x		*= 2*ps_r2_sun_lumscale_hemi; 
-					envclr.y		*= 2*ps_r2_sun_lumscale_hemi; 
-					envclr.z		*= 2*ps_r2_sun_lumscale_hemi;
+					envclr.x		*= 2*ps_r_sun_lumscale_hemi; 
+					envclr.y		*= 2*ps_r_sun_lumscale_hemi; 
+					envclr.z		*= 2*ps_r_sun_lumscale_hemi;
 		Fvector4	sunclr,sundir;
 
 		float		fSSAONoise = 2.0f;
@@ -275,7 +275,8 @@ void	CRenderTarget::phase_combine	()
     RCache.set_Stencil(FALSE);
 
     //FXAA
-    if (ps_r2_fxaa){
+    if (ps_r_fxaa)
+	{
         PIX_EVENT(FXAA);
         phase_fxaa();
         RCache.set_Stencil(FALSE);
@@ -347,7 +348,7 @@ void	CRenderTarget::phase_combine	()
 		//	Set up variable
 		Fvector2	vDofKernel;
 		vDofKernel.set(0.5f / Device.dwWidth, 0.5f / Device.dwHeight);
-		vDofKernel.mul(ps_r2_dof_kernel_size);
+		vDofKernel.mul(ps_r_dof_kernel_size);
 
 		// Draw COLOR
 		if (!RImplementation.o.dx10_msaa)
@@ -363,8 +364,8 @@ void	CRenderTarget::phase_combine	()
 		RCache.set_c("m_blur", m_blur_scale.x, m_blur_scale.y, 0, 0);
 		Fvector3					dof;
 		g_pGamePersistent->GetCurrentDof(dof);
-		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r2_dof_sky);
-		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r2_dof_kernel_size, 0);
+		RCache.set_c("dof_params", dof.x, dof.y, dof.z, ps_r_dof_sky);
+		RCache.set_c("dof_kernel", vDofKernel.x, vDofKernel.y, ps_r_dof_kernel_size, 0);
 
 		RCache.set_Geometry(g_aa_AA);
 		RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);

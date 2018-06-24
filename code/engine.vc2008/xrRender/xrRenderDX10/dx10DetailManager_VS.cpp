@@ -66,11 +66,11 @@ void CDetailManager::hw_Render()
 	RCache.set_Geometry		(hw_Geom);
 
 	// Wave0
-	float		scale			=	1.f/float(quant);
-	Fvector4	wave;
-	Fvector4	consts;
-	consts.set				(scale,		scale,		ps_r__Detail_l_aniso,	ps_r__Detail_l_ambient);
-	wave.set				(1.f/5.f,		1.f/7.f,	1.f/3.f,	m_time_pos);
+	float scale	= 1.f/float(quant);
+	Fvector4 wave;
+	Fvector4 consts;
+	consts.set	(scale,	scale, ps_r_Detail_l_aniso,	ps_r_Detail_l_ambient);
+	wave.set	(1.f/5.f, 1.f/7.f, 1.f/3.f,	m_time_pos);
 	hw_Render_dump(consts, wave.div(PI_MUL_2), dir1, 1, 0);
 
 	// Wave1
@@ -194,11 +194,6 @@ void CDetailManager::hw_Render_dump(const Fvector4 &consts, const Fvector4 &wave
 					RCache.Render				(D3DPT_TRIANGLELIST,vOffset,0,dwCNT_verts,iOffset,dwCNT_prims);
 					RCache.stat.r.s_details.add	(dwCNT_verts);
 				}
-				const bool isSunDetails = ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS);
-				if ((isSunDetails && (RImplementation.PHASE_SMAP == RImplementation.phase))										// phase smap with shadows
-					|| (isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase) && (!RImplementation.is_sun()))	// phase normal with shadows without sun
-					|| (!isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase)))								// phase normal without shadows
-					vis.clear();
 			}
 		}
 		vOffset		+=	hw_BatchSize * Object.number_vertices;

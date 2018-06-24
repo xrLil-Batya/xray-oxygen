@@ -9,8 +9,6 @@ const	float	tweak_COP_initial_offs			= 1200.f	;
 const	float	tweak_ortho_xform_initial_offs	= 1000.f	;	//. ?
 const	float	tweak_guaranteed_range			= 20.f		;	//. ?
 
-float			OLES_SUN_LIMIT_27_01_07			= 100.f		;
-
 const	float	MAP_SIZE_START					= 6.f		;
 const	float	MAP_GROW_FACTOR					= 4.f		;
  
@@ -315,7 +313,7 @@ void CRender::render_sun				()
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
-		float _far_	= min(OLES_SUN_LIMIT_27_01_07, g_pGamePersistent->Environment().CurrentEnv->far_plane);
+		float _far_	= min(ps_r_sun_far, g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,_far_);
 
 		//VIEWPORT_NEAR
@@ -414,7 +412,7 @@ void CRender::render_sun				()
 	r_dsgraph_render_subspace					(cull_sector, &cull_frustum, cull_xform, cull_COP, TRUE);
 
 	// IGNORE PORTALS
-	if	(ps_r2_ls_flags.test(R2FLAG_SUN_IGNORE_PORTALS))
+	if	(ps_r_flags.test(R_FLAG_SUN_IGNORE_PORTALS))
 	{
 		for		(u32 s=0; s<Sectors.size(); s++)
 		{
@@ -437,11 +435,11 @@ void CRender::render_sun				()
 	float m_fCosGamma = m_lightDir.x * m_View._13	+
 						m_lightDir.y * m_View._23	+
 						m_lightDir.z * m_View._33	;
-	float m_fTSM_Delta= ps_r2_sun_tsm_projection;
+	float m_fTSM_Delta= ps_r_sun_tsm_projection;
 
 	// Compute REAL sheared xform based on receivers/casters information
 	FPU::m64r			();
-	if	( _abs(m_fCosGamma) < 0.99f && ps_r2_ls_flags.test(R2FLAG_SUN_TSM))
+	if	( _abs(m_fCosGamma) < 0.99f && ps_r_flags.test(R_FLAG_SUN_TSM))
 	{
 		//  get the near and the far plane (points) in eye space.
 		D3DXVECTOR3 frustumPnts[8];
@@ -635,7 +633,7 @@ void CRender::render_sun				()
 	FPU::m24r				();
 
 	// perform "refit" or "focusing" on relevant
-	if	(ps_r2_ls_flags.test(R2FLAG_SUN_FOCUS))
+	if	(ps_r_flags.test(R_FLAG_SUN_FOCUS))
 	{
 		FPU::m64r				();
 
@@ -669,8 +667,8 @@ void CRender::render_sun				()
 		b_receivers		= view_clipper.clipped_AABB	(s_receivers,xform);
 		Fmatrix	x_project, x_full, x_full_inverse;
 		{
-			//x_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,ps_r2_sun_near,ps_r2_sun_near+tweak_guaranteed_range);
-			x_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,ps_r2_sun_near+tweak_guaranteed_range);
+			//x_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,ps_r_sun_near,ps_r_sun_near+tweak_guaranteed_range);
+			x_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near+tweak_guaranteed_range);
 			x_full.mul					(x_project,Device.mView);
 			D3DXMatrixInverse			((D3DXMATRIX*)&x_full_inverse,0,(D3DXMATRIX*)&x_full);
 		}
@@ -764,7 +762,7 @@ void CRender::render_sun_near	()
 	// calculate view-frustum bounds in world space
 	Fmatrix	ex_project, ex_full, ex_full_inverse;
 	{
-		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,ps_r2_sun_near); 
+		ex_project.build_projection	(deg2rad(Device.fFOV/* *Device.fASPECT*/),Device.fASPECT,VIEWPORT_NEAR,ps_r_sun_near); 
 		ex_full.mul					(ex_project,Device.mView);
 		D3DXMatrixInverse			((D3DXMATRIX*)&ex_full_inverse,0,(D3DXMATRIX*)&ex_full);
 	}
@@ -918,7 +916,7 @@ void CRender::render_sun_near	()
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	
 			r_dsgraph_render_graph				(0)	;
-			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))	
+			if (ps_r_flags.test(R_FLAG_DETAIL_SHADOW))	
 				Details->Render					()	;
 			fuckingsun->X.D.transluent			= FALSE;
 			if (bSpecial)						{
@@ -1228,7 +1226,7 @@ void CRender::render_sun_cascade ( u32 cascade_ind )
 			RCache.set_xform_view				(Fidentity					);
 			RCache.set_xform_project			(fuckingsun->X.D.combine	);	
 			r_dsgraph_render_graph				(0)	;
-			if (ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS))	
+			if (ps_r_flags.test(R_FLAG_DETAIL_SHADOW))	
 				Details->Render					()	;
 			fuckingsun->X.D.transluent			= FALSE;
 			if (bSpecial)						{

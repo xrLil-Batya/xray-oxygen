@@ -6,7 +6,7 @@ void CRenderTarget::phase_fxaa()
     u32 Offset = 0;
     float _w = float(Device.dwWidth);
     float _h = float(Device.dwHeight);
-    float du = ps_r1_pps_u, dv = ps_r1_pps_v;
+    float du = ps_r_pps_u, dv = ps_r_pps_v;
 
     u_setrt(rt_Generic, 0, NULL, HW.pBaseZB);
 

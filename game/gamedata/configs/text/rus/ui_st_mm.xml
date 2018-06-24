@@ -144,7 +144,7 @@
 	<string id="ui_mm_mblur">
 		<text>Коэф. Moution Blur'a</text>
 	</string>
-	<string id="ui_mm_r2_rain_drops_debug_control">
+	<string id="ui_mm_r_rain_drops_debug_control">
 		<text>Кол-во капель на экране</text>
 	</string>
 	<string id="ui_mm_detail_density">
@@ -276,19 +276,19 @@
 	<string id="ui_mm_quit_windows_message">
 		<text>Вы действительно хотите выйти в Windows?</text>
 	</string>
-	<string id="ui_mm_r2_detail_bump">
+	<string id="ui_mm_r_detail_bump">
 		<text>Детальный рельеф</text>
 	</string>
-	<string id="ui_mm_r2_steep_parallax">
+	<string id="ui_mm_r_steep_parallax">
 		<text>Steep parallax</text>
 	</string>
-	<string id="ui_mm_r2_sun">
+	<string id="ui_mm_r_sun">
 		<text>Тени от солнца</text>
 	</string>
 	<string id="ui_mm_sun_details">
 		<text>Тени от травы</text>
 	</string>
-	<string id="ui_mm_r2_sun_quality">
+	<string id="ui_mm_r_sun_quality">
 		<text>Качество солнца</text>
 	</string>
 	<string id="ui_mm_smap_size">
@@ -642,7 +642,7 @@
 	<string id="ui_mm_confirm_changes">
 		<text>Применить сделанные изменения? Все изменения будут отменены через</text>
 	</string>
-	<string id="ui_mm_r2_sun_shafts_mode">
+	<string id="ui_mm_r_sun_shafts_mode">
 		<text>Тип лучей</text>
 	</string>
 	<string id="volumetric">

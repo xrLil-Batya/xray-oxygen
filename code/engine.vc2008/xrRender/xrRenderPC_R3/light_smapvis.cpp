@@ -17,7 +17,7 @@ void smapvis::invalidate()
 {
 	state = state_counting;
 	testQ_V = 0;
-	frame_sleep = Device.dwFrame + ps_r__LightSleepFrames;
+	frame_sleep = Device.dwFrame + ps_r_LightSleepFrames;
 	invisible.clear();
 }
 
