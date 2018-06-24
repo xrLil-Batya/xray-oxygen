@@ -7,7 +7,7 @@
 #include "xrLC_GlobalData.h"
 #include "light_point.h"
 #include "base_color.h"
-#include <cuda_runtime.h>
+#include "cuda_runtime.h"
 
 
 
@@ -97,9 +97,9 @@ xrHardwareLight::~xrHardwareLight()
 	if (GlobalData		!= nullptr)		delete GlobalData;
 	if (VertNormalBuffer != nullptr)	delete VertNormalBuffer;
 
-	CDBVertexesBuffer.freeMem();
-	CDBTrisIndexBuffer.freeMem();
-	CDBTrisAdditionBuffer.freeMem();
+	CDBVertexesBuffer.free();
+	CDBTrisIndexBuffer.free();
+	CDBTrisAdditionBuffer.free();
 }
 
 
@@ -141,8 +141,8 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 		OptimizedMeshTris.push_back(indx);
 
 		TrisAdditionInfo AdditionInfo;
-
-		base_Face& FaceRef = Tris.GetFace_Unsafe();
+        
+        base_Face& FaceRef = *(base_Face*)&Tris.dummy;
 		const Shader_xrLC& TrisShader = FaceRef.Shader();
 		AdditionInfo.CastShadow = !!TrisShader.flags.bLIGHT_CastShadow;
 

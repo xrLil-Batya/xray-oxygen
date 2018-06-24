@@ -3,7 +3,9 @@
 //xrLC Redux project
 //OBJ Exporter for light debugging
 
-DEFINE_MAP(const Vertex*, DWORD, VertexIndexMap, VertexIndexMapValue)
+typedef xr_map<const Vertex*, DWORD> VertexIndexMap;
+
+//DEFINE_MAP(const Vertex*, DWORD, VertexIndexMap, VertexIndexMapValue)
 class PLYExporter
 {
 public:

@@ -18,7 +18,7 @@ map in the beginning.  Note: I tried this and didn't see a real perf improvement
 a simple c interface for all those simple c folks. or the
 old nvMeshMender interface for all those using it already
 */
-#include "xrCore\xrCore.h"
+#include "stdafx.h"
 #include "assert.h"
 #include "nvMeshMender.h"
 

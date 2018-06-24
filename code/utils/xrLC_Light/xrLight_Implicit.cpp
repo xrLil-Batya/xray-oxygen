@@ -222,22 +222,8 @@ void	ImplicitExecute::Execute(net_task_callback *net_callback)
 
 
 
-void ImplicitLightingExec(BOOL b_net);
+void ImplicitLightingExec(BOOL b_net, u32 thCount);
 void ImplicitLightingTreadNetExec(void *p);
-void ImplicitLighting(BOOL b_net)
-{
-    if (g_params().m_quality == ebqDraft)
-    {
-        return;
-    }
-    if (!b_net)
-    {
-        ImplicitLightingExec(FALSE);
-        return;
-    }
-    thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
-
-}
 std::recursive_mutex implicit_net_lock;
 void XRLC_LIGHT_API ImplicitNetWait()
 {
@@ -378,4 +364,23 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
     calculator.clear();
     if (b_net)
         inlc_global_data()->clear_build_textures_surface();
+}
+
+void ImplicitLightingTreadNetExec(void *p)
+{
+    std::lock_guard<std::recursive_mutex> lock(implicit_net_lock);
+    ImplicitLightingExec(TRUE, 2);
+}
+
+void ImplicitLighting(BOOL b_net, u32 thCount)
+{
+    if (g_params().m_quality != ebqDraft)
+    {
+        if (!b_net)
+        {
+            ImplicitLightingExec(FALSE, thCount);
+            return;
+        }
+        thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
+    }
 }

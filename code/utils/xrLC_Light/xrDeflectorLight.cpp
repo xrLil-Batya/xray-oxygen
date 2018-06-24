@@ -10,7 +10,7 @@
 #include "xrface.h"
 #include "net_task.h"
 #include "xrRayDefinition.h"
-#include <cuda_runtime.h>
+#include "cuda_runtime.h"
 #include "putil\Buffer.h"
 #include "xrHardwareLight.h"
 //const	u32	rms_discard			= 8;

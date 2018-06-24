@@ -7,7 +7,7 @@
 #include "../xrLC_Light/xrface.h"
 
 #include "../../xrcdb/xrcdb.h"
-#include "../../common/face_smoth_flags.h"
+#include "face_smoth_flags.h"
 #include "../xrLC_Light/xrThread.h"
 
 #include "../xrLC_Light/xrHardwareLight.h"

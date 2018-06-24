@@ -11,11 +11,10 @@ const char* CachedNewLine = "\r\n";
 
 DWORD GetVertexID(const Vertex* Vert, VertexIndexMap& VertexIndexes)
 {
-	VertexIndexMapValue Iter = VertexIndexes.find(Vert);
+	auto Iter = VertexIndexes.find(Vert);
 	if (Iter == VertexIndexes.end()) return -1;
 	return Iter->second;
 }
-
 
 
 void PLYExporter::ExportAsPly(xr_string FileName, vecVertex& Vertices, vecFace& Faces)

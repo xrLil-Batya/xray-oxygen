@@ -80,7 +80,7 @@ void	CBuild::LMapsLocal()
     u32	thNUM = 1;
     if (!g_build_options.b_optix_accel)
     {
-        thNUM = CPU::ID.n_threads - 1;
+        thNUM = CPU::Info.n_threads - 1;
     }
     //u32	thNUM = 5;
     CTimer	start_time;	start_time.Start();

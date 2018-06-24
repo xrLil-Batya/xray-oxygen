@@ -7,7 +7,7 @@
 #define __CUDACC__
 #endif
 
-#include <cuda_runtime.h>
+#include "cuda_runtime.h"
 #include "../../xrCore/_types.h"
 #include "xrRayDefinition.h"
 #include "light_point.h"
