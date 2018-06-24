@@ -14,9 +14,9 @@ void CCameraLook::Load(LPCSTR section)
 {
 	inherited::Load		(section);
 	style				= csLookAt;
-	lim_zoom			= pSettings->r_fvector2	(section,"lim_zoom");
-	dist				= (lim_zoom[0]+lim_zoom[1])*0.5f;
-	prev_d				= 0;
+	lim_zoom			= pSettings->r_fvector2(section,"lim_zoom");
+	dist				= (lim_zoom[0] + lim_zoom[1])*0.5f;
+	prev_d				= 0.0f;
 	m_look_cam_fp_zoom = pSettings->r_bool(section, "first_person_zoom");	
 }
 
@@ -33,27 +33,28 @@ void CCameraLook::Update(Fvector& point, Fvector& /**noise_dangle/**/)
 	vDirection.set		(mR.k);
 	vNormal.set			(mR.j);
 
-	if (m_Flags.is(flRelativeLink)){
+	if (m_Flags.is(flRelativeLink))
+	{
 		parent->XFORM().transform_dir(vDirection);
 		parent->XFORM().transform_dir(vNormal);
 	}
 	UpdateDistance		(point);
 }
 
-void CCameraLook::UpdateDistance( Fvector& point )
+void CCameraLook::UpdateDistance(Fvector& point)
 {
-	Fvector				vDir;
-	collide::rq_result	R;
+	Fvector vDir;
+	vDir.invert(vDirection);
 
-	float				covariance = VIEWPORT_NEAR*6.f;
-	vDir.invert			(vDirection);
-	g_pGameLevel->ObjectSpace.RayPick( point, vDir, dist+covariance, collide::rqtBoth, R, parent);
+	collide::rq_result R;
+	float covariance = VIEWPORT_NEAR * 6.0f;
+	g_pGameLevel->ObjectSpace.RayPick(point, vDir, dist + covariance, collide::rqtBoth, R, parent);
 
-	float d				= psCamSlideInert*prev_d+(1.f-psCamSlideInert)*(R.range-covariance);
+	float d = psCamSlideInert * prev_d + (1.0f - psCamSlideInert)*(R.range - covariance);
 	prev_d = d;
 	
-	vPosition.mul		(vDirection,-d-VIEWPORT_NEAR);
-	vPosition.add		(point);
+	vPosition.mul(vDirection, -d - VIEWPORT_NEAR);
+	vPosition.add(point);
 }
 
 void CCameraLook::Move( int cmd, float val, float factor)
@@ -92,9 +93,9 @@ void CCameraLook::OnActivate( CCameraBase* old_cam )
 int cam_dik = DIK_LSHIFT;
 
 Fvector CCameraLook2::m_cam_offset;
-void CCameraLook2::OnActivate( CCameraBase* old_cam )
+void CCameraLook2::OnActivate(CCameraBase* old_cam)
 {
-	CCameraLook::OnActivate( old_cam );
+	CCameraLook::OnActivate(old_cam);
 }
 
 void CCameraLook2::Update(Fvector& point, Fvector&)
@@ -103,45 +104,49 @@ void CCameraLook2::Update(Fvector& point, Fvector&)
 		m_cam_offset = Fvector().set(-0.400f, 0.2f, 0.0f);
 	else
 		m_cam_offset = Fvector().set(0.314f, 0.2f, 0.0f);
-	if(!m_locked_enemy)
-	{//autoaim
-		if( pInput->iGetAsyncKeyState(cam_dik) )
+
+	// autoaim
+	if (!m_locked_enemy)
+	{
+		if (pInput->iGetAsyncKeyState(cam_dik))
 		{
 			const CVisualMemoryManager::VISIBLES& vVisibles = Actor()->memory().visual().objects();
 			CVisualMemoryManager::VISIBLES::const_iterator v_it = vVisibles.begin();
-			float _nearest_dst	= flt_max;
+			float nearest_dst = flt_max;
 
-			for (; v_it!=vVisibles.end(); ++v_it)
+			for (; v_it != vVisibles.end(); ++v_it)
 			{
-				const CObject*	_object_			= (*v_it).m_object;
-				if (!Actor()->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))	continue;
+				const CObject* _object_ = (*v_it).m_object;
+				if (!Actor()->memory().visual().visible_now(smart_cast<const CGameObject*>(_object_)))
+					continue;
 
 				CObject* object_ = const_cast<CObject*>(_object_);
-				
 
-				CEntityAlive*	EA					= smart_cast<CEntityAlive*>(object_);
-				if(!EA || !EA->g_Alive())			continue;
+				CEntityAlive* EA = smart_cast<CEntityAlive*>(object_);
+				if (!EA || !EA->g_Alive())
+					continue;
 				
-				float d = object_->Position().distance_to_xz(Actor()->Position());
-				if( !m_locked_enemy || d<_nearest_dst)
+				float dst = object_->Position().distance_to_xz(Actor()->Position());
+				if (!m_locked_enemy || dst < nearest_dst)
 				{
-					m_locked_enemy	= object_;
-					_nearest_dst	= d;
+					m_locked_enemy = object_;
+					nearest_dst	= dst;
 				}
 			}
-//.			if(m_locked_enemy) Msg("enemy is %s", *m_locked_enemy->cNameSect() );
-		}
-	}else
-	{
-		if( !pInput->iGetAsyncKeyState(cam_dik) ){
-			m_locked_enemy	= NULL;
-//.			Msg				("enemy is NILL");
+//.			if (m_locked_enemy)
+//.				Msg("enemy is %s", *m_locked_enemy->cNameSect());
 		}
 	}
-
-	if(m_locked_enemy)
-		UpdateAutoAim	();
-
+	else
+	{
+		if (!pInput->iGetAsyncKeyState(cam_dik))
+		{
+			m_locked_enemy = NULL;
+//.			Msg("enemy is NILL");
+		}
+		else
+			UpdateAutoAim();
+	}
 
 	Fmatrix mR;
 	mR.setHPB						(-yaw,-pitch,-roll);
@@ -155,43 +160,25 @@ void CCameraLook2::Update(Fvector& point, Fvector&)
 	Fvector _off					= m_cam_offset;
 	a_xform.transform_tiny			(_off);
 	vPosition.set					(_off);
-	Fvector				vDir;
-	collide::rq_result	R;
 
-
-	float				covariance = VIEWPORT_NEAR*6.f;
-	vDir.invert			(vDirection);
-	g_pGameLevel->ObjectSpace.RayPick( _off, vDir, dist+covariance, collide::rqtBoth, R, parent);
-
-
-
-
-
-
-	float d				= psCamSlideInert*prev_d+(1.f-psCamSlideInert)*(R.range-covariance);
-	prev_d = d;
-
-
-	
-	vPosition.mul		(vDirection,-d-VIEWPORT_NEAR);
-	vPosition.add		(_off);
+	UpdateDistance					(_off);
 }
 
 void CCameraLook2::UpdateAutoAim()
 {
-	Fvector								_dest_point;
+	Fvector _dest_point;
 	m_locked_enemy->Center				(_dest_point);
 	_dest_point.y						+= 0.2f;
 
-	Fvector								_dest_dir;
+	Fvector _dest_dir;
 	_dest_dir.sub						(_dest_point, vPosition);
 	
-	Fmatrix								_m;
+	Fmatrix _m;
 	_m.identity							();
 	_m.k.normalize_safe					(_dest_dir);
 	Fvector::generate_orthonormal_basis	(_m.k, _m.j, _m.i);
 
-	Fvector								xyz;
+	Fvector xyz;
 	_m.getXYZi							(xyz);
 
 	yaw				= angle_inertion_var(	yaw,xyz.y,
@@ -209,16 +196,21 @@ void CCameraLook2::UpdateAutoAim()
 
 void CCameraLook2::Load(LPCSTR section)
 {
-	CCameraLook::Load		(section);
-	m_cam_offset 				= 				Fvector().set(0.314f,0.2f,0.0f);
-	dist						= 				1.4f;
+	CCameraLook::Load(section);
+	m_cam_offset = Fvector().set(0.314f, 0.2f, 0.0f);
+	dist = 1.4f;
+	prev_d = 0.0f;
+
 	// hide aimbot hack at release
-	m_autoaim_inertion_yaw		= 				Fvector2().set( 0.0f, 0.0f);
-	m_autoaim_inertion_pitch	= 				Fvector2().set( 0.0f, 0.0f);
 	if (strstr(Core.Params,"-dbg")) 
 	{
-	m_autoaim_inertion_yaw		= 				pSettings->r_fvector2	(section,"autoaim_speed_y");
-	m_autoaim_inertion_pitch	= 				pSettings->r_fvector2	(section,"autoaim_speed_x");
-	}					
-	m_look_cam_fp_zoom 			= 				pSettings->r_bool(section, "first_person_zoom");	
+		m_autoaim_inertion_yaw		= pSettings->r_fvector2	(section, "autoaim_speed_y");
+		m_autoaim_inertion_pitch	= pSettings->r_fvector2	(section, "autoaim_speed_x");
+	}
+	else
+	{
+		m_autoaim_inertion_yaw		= Fvector2().set(0.0f, 0.0f);
+		m_autoaim_inertion_pitch	= Fvector2().set(0.0f, 0.0f);
+	}
+	m_look_cam_fp_zoom = pSettings->r_bool(section, "first_person_zoom");	
 }
