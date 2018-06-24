@@ -9,7 +9,6 @@ enum {
 
 	M_SV_CONFIG_NEW_CLIENT,
 	M_SV_CONFIG_GAME,
-	M_SV_CONFIG_FINISHED,
 
 	M_EVENT,					// Game Event
 	//----------- for E3 -----------------------------

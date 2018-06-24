@@ -58,7 +58,7 @@ public:
 	virtual		void				add_restriction			(NET_Packet &packet, u16 id);
 	virtual		void				remove_restriction		(NET_Packet &packet, u16 id);
 	virtual		void				remove_all_restrictions	(NET_Packet &packet, u16 id);
-	virtual		bool				custom_sls_default		() {return !!m_alife_simulator;};
+
 	virtual		void				sls_default				();
 	virtual		shared_str			level_name				(const shared_str &server_options) const;
 	

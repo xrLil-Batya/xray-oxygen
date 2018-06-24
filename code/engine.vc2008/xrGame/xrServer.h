@@ -86,7 +86,7 @@ public:
 		return				(m_tID_Generator.vfFreeID(ID, time));
 	}
 
-	void					Perform_connect_spawn	(CSE_Abstract* E, CClient* to, NET_Packet& P, bool bHardProcessed = false);
+	void					Perform_connect_spawn	(CSE_Abstract* E, CClient* to, NET_Packet& P);
 	void					Perform_transfer		(NET_Packet &PR, NET_Packet &PT, CSE_Abstract* what, CSE_Abstract* from, CSE_Abstract* to);
 	void					Perform_reject			(CSE_Abstract* what, CSE_Abstract* from, int delta);
 	void					Perform_destroy			(CSE_Abstract* tpSE_Abstract);
@@ -99,8 +99,6 @@ public:
 	bool					Process_event_reject	(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message = true);
 	void					Process_event_destroy	(NET_Packet& P, ClientID sender, u32 time, u16 ID, NET_Packet* pEPack);
 	void					Process_event_activate	(NET_Packet& P, const u16 id_parent, const u16 id_entity);
-	
-	void	__stdcall		SendConfigFinished		();
 
 protected:
 	void					SendConnectionData		(CClient* CL);
@@ -128,7 +126,7 @@ public:
 	virtual EConnect		Connect				(shared_str& session_name);
 	virtual void			Disconnect			();
 	virtual void			Update				();
-	void					SLS_Default			();
+
 	void					SLS_Clear			();
 
 			shared_str		level_name			(const shared_str &server_options) const;
