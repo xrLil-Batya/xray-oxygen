@@ -21,19 +21,17 @@ protected:
 	float			m_delta_h;
 	Fvector2		m_prev_hp;
 	bool			m_switched_on;
-	float           torch_mode;
+	int				torch_mode;
 	float           range;
 	float           range_o;
-	float           range2;
-	float           range_o2;
+	float           range_2;
+	float           range_o_2;
 	float           glow_radius;
-	float           glow_radius2;
+	float           glow_radius_2;
 	ref_light		light_render;
 	ref_light		light_omni;
 	ref_glow		glow_render;
 	Fvector			m_focus;
-private:
-	inline	bool	can_use_dynamic_lights	();
 
 public:
 					CTorch					();
@@ -50,6 +48,7 @@ public:
 	virtual void	UpdateCL				();
 
 			void	SwitchTorchMode			();
+			void	SwitchSoundPlay			();
 			void	Switch					();
 			void	Switch					(bool light_on);
 			bool	torch_active			() const;

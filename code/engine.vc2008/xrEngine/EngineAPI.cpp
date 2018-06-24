@@ -70,7 +70,7 @@ void CEngineAPI::InitializeRenderer()
 		hRender			= LoadLibrary		(r4_name);
 		if (0==hRender)	
 		{
-			// try to load R1
+			// try to load R4
 			Msg			("! ...Failed - incompatible hardware/pre-Vista OS.");
 			psDeviceFlags.set	(rsR3, true);
 		}
@@ -85,7 +85,7 @@ void CEngineAPI::InitializeRenderer()
 		hRender			= LoadLibrary		(r3_name);
 		if (0==hRender)	
 		{
-			// try to load R1
+			// try to load R3
 			Msg			("! ...Failed - incompatible hardware/pre-Vista OS.");
 			psDeviceFlags.set	(rsR2, true);
 		}
