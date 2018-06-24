@@ -42,6 +42,7 @@ cbuffer	static_globals
 	uniform float4 		pos_decompression_params2;
 
 //	uniform float4		screen_res;		// Screen resolution (x-Width,y-Height, zw - 1/resolution)
+	uniform float4		parallax;
 
 	// Глобальные параметры шейдеров --#SM+#--
 	uniform float4x4	m_script_params; 

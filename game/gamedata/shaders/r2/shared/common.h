@@ -6,10 +6,10 @@
 #ifndef SHARED_COMMON_H
 #define SHARED_COMMON_H
 //
-uniform half3x4	        m_W;
-uniform half3x4	        m_V;
+uniform half3x4		m_W;
+uniform half3x4		m_V;
 uniform half4x4 	m_P;
-uniform half3x4	        m_WV;
+uniform half3x4		m_WV;
 uniform half4x4 	m_VP;
 uniform half4x4 	m_WVP;
 uniform float4x4 	m_texgen;
@@ -28,6 +28,7 @@ uniform half3		eye_direction;
 uniform half3		eye_normal;
 uniform	float4 		dt_params;
 uniform float4		screen_res;
+uniform float4		parallax;
 // Глобальные параметры шейдеров --#SM+#--
 uniform float4x4	m_script_params; 
 uniform	half4		m_hud_params;	// zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL

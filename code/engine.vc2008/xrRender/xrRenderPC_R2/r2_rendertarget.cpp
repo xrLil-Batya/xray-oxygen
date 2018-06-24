@@ -276,7 +276,7 @@ CRenderTarget::CRenderTarget		()
 	}
 
 	// FLARES
-	s_flare.create					("effects\\flare", "fx\\lenslare");
+	s_flare.create					("effects\\lensflare", "shaders\\fx_lensflare");
 	// RAIN DROPS
 	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
 	// OCCLUSION

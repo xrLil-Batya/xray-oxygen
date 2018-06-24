@@ -130,14 +130,14 @@ void CActor::g_cl_ValidateMState(float dt, u32 mstate_wf)
 
 	if (this == Level().CurrentControlEntity())
 	{
-		bool bOnClimbNow			= !!(mstate_real&mcClimb);
-		bool bOnClimbOld			= !!(mstate_old&mcClimb);
+		bool bOnClimbNow = !!(mstate_real&mcClimb);
+		bool bOnClimbOld = !!(mstate_old&mcClimb);
 
-		if (bOnClimbNow != bOnClimbOld )
+		if (bOnClimbNow != bOnClimbOld)
 		{
-			SetWeaponHideState		(INV_STATE_LADDER, bOnClimbNow );
-		};
-	};
+			SetWeaponHideState(INV_STATE_BLOCK_ALL, bOnClimbNow);
+		}
+	}
 };
 
 void CActor::g_cl_CheckControls(u32 mstate_wf, Fvector &vControlAccel, float &Jump, float dt)

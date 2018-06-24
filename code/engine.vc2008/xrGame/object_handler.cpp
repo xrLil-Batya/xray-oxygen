@@ -295,14 +295,6 @@ void CObjectHandler::detach				(CInventoryItem *inventory_item)
 	inherited::detach			(inventory_item);
 }
 
-extern Flags32 g_uCommonFlags;
-
-bool CObjectHandler::can_use_dynamic_lights	()
-{	
-	// flAiUseTorchDynamicLights == 1
-	return						(!!g_uCommonFlags.test(1));
-}
-
 void CObjectHandler::set_inertia		(const CWeapon &weapon, const u32 &action_id, const u32 &aim_time) const
 {
 	typedef CObjectHandlerPlanner::CSActionBase	operator_type;

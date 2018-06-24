@@ -23,8 +23,7 @@ void fix_texture_name(LPSTR fn)
 		*_ext = 0;
 }
 
-  ENGINE_API int g_current_renderer;
-  ENGINE_API bool is_enough_address_space_available();
+ENGINE_API bool is_enough_address_space_available();
 
 int get_texture_load_lod(LPCSTR fn)
 {
@@ -42,7 +41,7 @@ int get_texture_load_lod(LPCSTR fn)
 		if( strstr(fn, it->first.c_str()) )
 		{
 			if(psTextureLOD<1) {
-				if ( enough_address_space_available || (g_current_renderer < 2) )
+				if (enough_address_space_available)
 					return 0;
 				else
 					return 1;
@@ -55,11 +54,9 @@ int get_texture_load_lod(LPCSTR fn)
 		}
 	}
 
-	if(psTextureLOD<2) {
-//		if ( enough_address_space_available || (g_current_renderer < 2) )
+	if (psTextureLOD < 2) 
+	{
 			return 0;
-//		else
-//			return 1;
 	}
 	else
 	if(psTextureLOD<4)
