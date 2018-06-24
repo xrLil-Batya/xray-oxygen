@@ -82,7 +82,6 @@ private:
 			void					set_inertia				(const CWeapon &weapon, const u32 &action_id, const u32 &aim_time) const;
 
 public:
-	virtual bool					can_use_dynamic_lights	();
 			void					aim_time				(const CWeapon &weapon, const u32 &aim_time) const;
 			u32						aim_time				(const CWeapon &weapon) const;
 };
