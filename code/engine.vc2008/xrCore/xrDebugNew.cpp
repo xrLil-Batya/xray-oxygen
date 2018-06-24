@@ -86,11 +86,11 @@ void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
 
-	MessageBoxA(nullptr, message.c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST | MB_ICONERROR | MB_SYSTEMMODAL);
-
-	DEBUG_INVOKE;
-
-	TerminateProcess(GetCurrentProcess(), 1);
+	if(MessageBoxA(nullptr, message.c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST | MB_ICONERROR | MB_SYSTEMMODAL) == IDOK) 
+	{
+		DEBUG_INVOKE;
+		TerminateProcess(GetCurrentProcess(), 1);
+	}
 }
 
 void xrDebug::do_exit(const std::string &message, const std::string &message2)
@@ -232,7 +232,6 @@ extern const char* log_name();
 XRCORE_API string_path g_bug_report_file;
 
 typedef LONG WINAPI UnhandledExceptionFilterType(struct _EXCEPTION_POINTERS *pExceptionInfo);
-//typedef LONG(__stdcall *PFNCHFILTFN) (EXCEPTION_POINTERS * pExPtrs);
 
 static UnhandledExceptionFilterType	*previous_filter = 0;
 
