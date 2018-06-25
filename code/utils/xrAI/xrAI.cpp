@@ -9,12 +9,9 @@
 #include "xr_graph_merge.h"
 #include "game_spawn_constructor.h"
 #include "xrCrossTable.h"
-//#include "path_test.h"
 #include "game_graph_builder.h"
 #include <mmsystem.h>
 #include "spawn_patcher.h"
-
-//#pragma comment(linker,"/STACK:0x800000,0x400000")
 
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -25,19 +22,10 @@
 #pragma comment(lib,"xrCore.LIB")
 
 extern LPCSTR LEVEL_GRAPH_NAME;
+LevelCompilerLoggerWindow &Logger = *(new LevelCompilerLoggerWindow());
 
 extern void	xrCompiler			(LPCSTR name, bool draft_mode, bool pure_covers, LPCSTR out_name);
-extern void logThread			(void *dummy);
-extern volatile BOOL bClose;
-extern void test_smooth_path	(LPCSTR name);
-extern void test_hierarchy		(LPCSTR name);
-extern void	xrConvertMaps		();
-extern void	test_goap			();
-extern void	smart_cover			(LPCSTR name);
-extern void	verify_level_graph	(LPCSTR name, bool verbose);
-//extern void connectivity_test	(LPCSTR);
-extern void compare_graphs		(LPCSTR level_name);
-extern void test_levels			();
+extern void	verify_level_graph(LPCSTR name, bool verbose);
 
 static const char* h_str = 
 	"The following keys are supported / required:\n"
@@ -52,7 +40,6 @@ void Help()
 {	MessageBox(0,h_str,"Command line options",MB_OK|MB_ICONINFORMATION); }
 
 string_path INI_FILE;
-extern  HWND logWindow;
 extern LPCSTR GAME_CONFIG;
 
 extern void clear_temp_folder	();
@@ -153,32 +140,40 @@ void Startup(LPSTR     lpCmdLine)
 	if (strstr(cmd,"-o"))								bModifyOptions = TRUE;
 
 	// Give a LOG-thread a chance to startup
-	InitCommonControls	();
-	Sleep				(150);
-	thread_spawn		(logThread,	"log-update", 1024*1024,0);
-	while				(!logWindow)	Sleep		(150);
+	Logger.Initialize("xrAI");	
+	u32 dwStartupTime	= timeGetTime();
+	execute(cmd);
 	
-	u32					dwStartupTime	= timeGetTime();
-	execute				(cmd);
-	// Show statistic
-	char				stats[256];
-	extern				std::string make_time(u32 sec);
-	extern				HWND logWindow;
-	u32					dwEndTime = timeGetTime();
-	xr_sprintf				(stats,"Time elapsed: %s",make_time((dwEndTime-dwStartupTime)/1000).c_str());
-	if (!strstr(cmd, "-silent"))
-	MessageBox			(logWindow,stats,"Congratulation!",MB_OK|MB_ICONINFORMATION);
-
-	bClose				= TRUE;
-	FlushLog			();
-	Sleep				(500);
+	char stats[256];
+	u32 dwEndTime = timeGetTime();
+	xr_sprintf(stats, "Time elapsed: %s", make_time((dwEndTime - dwStartupTime) / 1000).c_str());
+	Logger.Success(stats);
+	FlushLog();
+	Logger.Destroy();
 }
 
 #include "factory_api.h"
-
 #include "quadtree.h"
+#include "../xrInterface/cl_cast.hpp"
 
-void buffer_vector_test		();
+void buffer_vector_test();
+
+CThread::LogFunc ProxyMsg = cdecl_cast([](const char* format, ...) {
+	va_list args;
+	va_start(args, format);
+	Logger.clMsgV(format, args);
+	va_end(args);
+});
+
+CThreadManager::ReportStatusFunc ProxyStatus = cdecl_cast([](const char* format, ...) {
+	va_list args;
+	va_start(args, format);
+	Logger.StatusV(format, args);
+	va_end(args);
+});
+
+CThreadManager::ReportProgressFunc ProxyProgress = cdecl_cast([](float progress) { Logger.Progress(progress); });
+
 
 int APIENTRY WinMain(HINSTANCE hInstance,
                      HINSTANCE hPrevInstance,
@@ -189,23 +184,7 @@ int APIENTRY WinMain(HINSTANCE hInstance,
 	Core._initialize		("xrai",0);
 
 	buffer_vector_test		();
-
-//	HMODULE					hFactory;
-//	LPCSTR					g_name	= "xrSE_Factory.dll";
-//	Log						("Loading DLL:",g_name);
-//	hFactory				= LoadLibrary	(g_name);
-//	if (0==hFactory)		R_CHK			(GetLastError());
-//	R_ASSERT2				(hFactory,"Factory DLL raised exception during loading or there is no factory DLL at all");
-//#ifdef _M_X64
-//	create_entity =		(Factory_Create*)  GetProcAddress(hFactory, "create_entity");		//R_ASSERT(create_entity);
-//	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory, "destroy_entity");		//R_ASSERT(destroy_entity);
-//#else
-//	create_entity =		(Factory_Create*)  GetProcAddress(hFactory,"_create_entity@4");		R_ASSERT(create_entity);
-//	destroy_entity =	(Factory_Destroy*) GetProcAddress(hFactory,"_destroy_entity@4");	R_ASSERT(destroy_entity);
-//#endif
 	Startup					(lpCmdLine);
-
-//	FreeLibrary				(hFactory);
 
 	Core._destroy			();
 
@@ -217,7 +196,6 @@ CSE_Abstract *F_entity_Create(LPCSTR section)
 	ISE_Abstract	*i = create_entity(section);
 	CSE_Abstract	*j = smart_cast<CSE_Abstract*>(i);
 	return			(j);
-//	return nullptr;
 }
 
 void F_entity_Destroy(CSE_Abstract *&i)

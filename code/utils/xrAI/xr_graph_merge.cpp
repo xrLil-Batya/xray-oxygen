@@ -522,14 +522,10 @@ void fill_needed_levels	(LPSTR levels, xr_vector<LPCSTR> &result)
 	}
 }
 
-CGraphMerger::CGraphMerger(
-		LPCSTR game_graph_id,
-		LPCSTR name,
-		bool rebuild
-	)
+CGraphMerger::CGraphMerger(LPCSTR game_graph_id, LPCSTR name, bool rebuild)
 {
 	// load all the graphs
-	Phase("Processing level graphs");
+	Logger.Phase("Processing level graphs");
 	
 	CInifile *Ini = xr_new<CInifile>(INI_FILE);
 	if (!Ini->section_exist("levels"))
@@ -595,7 +591,7 @@ CGraphMerger::CGraphMerger(
 	
 	R_ASSERT2(tpGraphs.size(), "empty [levels] section in configs!");
 	
-	Phase("Adding interconnection points");
+	Logger.Phase("Adding interconnection points");
 	{
 		auto				I = tpGraphs.begin();
 		auto				E = tpGraphs.end();
@@ -650,7 +646,7 @@ CGraphMerger::CGraphMerger(
 	///////////////////////////////////////////////////
 	
 	// save all the graphs
-	Phase("Saving graph being merged");
+	Logger.Phase("Saving graph being merged");
 	CMemoryWriter				F;
 	tGraphHeader.m_version		= XRAI_CURRENT_VERSION;
 	VERIFY						(dwOffset < (u32(1) << (8*sizeof(GameGraph::_GRAPH_ID))));
@@ -704,7 +700,7 @@ CGraphMerger::CGraphMerger(
 	F.save_to						(l_caFileName);
 
 	// free all the graphs
-	Phase("Freeing resources being allocated");
+	Logger.Phase("Freeing resources being allocated");
 	{
 		auto				I = tpGraphs.begin();
 		auto				E = tpGraphs.end();

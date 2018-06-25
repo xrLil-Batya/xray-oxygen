@@ -60,41 +60,23 @@ void	mem_Optimize	()
 	Msg("* Memory usage: %d M",Memory.mem_usage()/(1024*1024));
 }
 
-void xrCompiler	(LPCSTR name, bool draft_mode, bool pure_covers, LPCSTR out_name)
+void xrCompiler(LPCSTR name, bool draft_mode, bool pure_covers, LPCSTR out_name)
 {
-	Phase		("Loading level...");
-	xrLoad		(name,draft_mode);
+	Logger.Phase("Loading level...");
+	xrLoad(name, draft_mode);
 	mem_Optimize();
 
-//	Phase("Building nodes...");
-//	xrBuildNodes();
-//	Msg("%d nodes created",int(g_nodes.size()));
-//	mem_Optimize();
-//	
-//	Phase("Smoothing nodes...");
-//	xrSmoothNodes();
-//	mem_Optimize();
-	
-	if (!draft_mode) {
-		Phase("Lighting nodes...");
-		xrLight		();
-		//	xrDisplay	();
+	if (!draft_mode)
+	{
+		Logger.Phase("Lighting nodes...");
 		mem_Optimize();
 
-		Phase("Calculating coverage...");
-		xrCover		(pure_covers);
+		Logger.Phase("Calculating coverage...");
+		xrCover(pure_covers);
 		mem_Optimize();
 	}
 	/////////////////////////////////////
-
-//	Phase("Palettizing cover values...");
-//	xrPalettizeCovers();
-//	mem_Optimize();
-
-//	Phase("Visualizing nodes...");
-//	xrDisplay	();
-
-	Phase("Saving nodes...");
-	xrSaveNodes	(name,out_name);
+	Logger.Phase("Saving nodes...");
+	xrSaveNodes(name, out_name);
 	mem_Optimize();
 }
