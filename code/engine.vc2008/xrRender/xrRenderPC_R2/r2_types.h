@@ -20,8 +20,6 @@
 #define		r2_RT_SunShaftsMaskSmoothed		"$user$SunShaftsMaskSmoothed"
 #define		r2_RT_SunShaftsPass0			"$user$SunShaftsPass0"
 
-#define		r2_RT_flares		"$user$flares" // KD lensflares
-
 #define		r2_RT_sunshafts0	"$user$sun_shafts0"		// first rt
 #define		r2_RT_sunshafts1	"$user$sun_shafts1"		// second rt
 

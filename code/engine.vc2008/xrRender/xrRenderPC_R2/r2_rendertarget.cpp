@@ -271,12 +271,8 @@ CRenderTarget::CRenderTarget		()
 		//	temp: for higher quality blends
 		if (RImplementation.o.advancedpp)
 			rt_Generic_2.create			(r2_RT_generic2,w,h,D3DFMT_A16B16G16R16F);
-
-		rt_flares.create(r2_RT_flares, (w / 2), (h / 2), D3DFMT_A8R8G8B8);
 	}
 
-	// FLARES
-	s_flare.create					("effects\\lensflare", "shaders\\fx_lensflare");
 	// RAIN DROPS
 	s_rain_drops.create             (b_rain_drops,  "r2\\sgm_rain_drops");
 	// OCCLUSION
@@ -435,7 +431,6 @@ CRenderTarget::CRenderTarget		()
 		g_combine.create					(FVF::F_TL,		RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_2UV.create				(FVF::F_TL2uv,	RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_cuboid.create				(FVF::F_L,	RCache.Vertex.Buffer(), RCache.Index.Buffer());
-		g_flare.create                      (FVF::F_LIT, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 		u32 fvf_aa_blur				= D3DFVF_XYZRHW|D3DFVF_TEX4|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3);
 		g_aa_blur.create			(fvf_aa_blur,	RCache.Vertex.Buffer(), RCache.QuadIB);
