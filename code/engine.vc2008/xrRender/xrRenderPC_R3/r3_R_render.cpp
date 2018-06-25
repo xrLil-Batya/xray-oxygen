@@ -220,7 +220,7 @@ void CRender::Render		()
 
 	// Configure
 	RImplementation.o.distortion				= FALSE;		// disable distorion
-	Fcolor					sun_color			= ((light*)Lights.sun_adapted._get())->color;
+	Fcolor					sun_color			= ((light*)Lights.sun._get())->color;
 	bool					bSUN				= ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS);
 	if (o.sunstatic)		bSUN				= false;
 
