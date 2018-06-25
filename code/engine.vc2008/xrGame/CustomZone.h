@@ -68,6 +68,11 @@ public:
 				float	GetMaxPower						()							{return m_fMaxPower;}
 				void	SetMaxPower						(float p)					{m_fMaxPower = p;}
 
+				// volumetric light
+				float				volumetric_distance;
+				float				volumetric_intensity;
+				float				volumetric_quality;
+
 	//вычисление силы хита в зависимости от расстояния до центра зоны
 	//относительный размер силы (от 0 до 1)
 				float	RelativePower					(float dist, float nearest_shape_radius);

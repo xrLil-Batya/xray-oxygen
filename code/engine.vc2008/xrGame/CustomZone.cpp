@@ -262,16 +262,21 @@ void CCustomZone::Load(LPCSTR section)
 	}
 
 	//загрузить параметры idle подсветки
-	m_zone_flags.set(eIdleLight,	pSettings->r_bool (section, "idle_light"));
-	if( m_zone_flags.test(eIdleLight) )
+	m_zone_flags.set(eIdleLight, pSettings->r_bool(section, "idle_light"));
+	if (m_zone_flags.test(eIdleLight))
 	{
-		m_fIdleLightRange		= pSettings->r_float(section,"idle_light_range");
-		LPCSTR light_anim		= pSettings->r_string(section,"idle_light_anim");
-		m_pIdleLAnim			= LALib.FindItem(light_anim);
-		m_fIdleLightHeight		= pSettings->r_float(section,"idle_light_height");
-		m_zone_flags.set(eIdleLightVolumetric,pSettings->r_bool (section, "idle_light_volumetric") );
-		m_zone_flags.set(eIdleLightShadow,pSettings->r_bool (section, "idle_light_shadow") );
-		m_zone_flags.set(eIdleLightR1,pSettings->r_bool (section, "idle_light_r1") );
+		m_fIdleLightRange = pSettings->r_float(section, "idle_light_range");
+		LPCSTR light_anim = pSettings->r_string(section, "idle_light_anim");
+		m_pIdleLAnim = LALib.FindItem(light_anim);
+		m_fIdleLightHeight = pSettings->r_float(section, "idle_light_height");
+		m_zone_flags.set(eIdleLightVolumetric, pSettings->r_bool(section, "idle_light_volumetric"));
+		m_zone_flags.set(eIdleLightShadow, pSettings->r_bool(section, "idle_light_shadow"));
+		m_zone_flags.set(eIdleLightR1, pSettings->r_bool(section, "idle_light_r1"));
+
+		// Загрузка параметров для волуметрик-луча;
+		volumetric_distance = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_distance", 0.80);
+		volumetric_intensity = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_intensity", 0.40);
+		volumetric_quality = READ_IF_EXISTS(pSettings, r_float, section, "volumetric_quality", 1.0);
 	}
 
 	bool use = !!READ_IF_EXISTS(pSettings, r_bool, section, "use_secondary_hit", false);
@@ -319,8 +324,13 @@ BOOL CCustomZone::net_Spawn(CSE_Abstract* DC)
 		m_pIdleLight = ::Render->light_create();
 		m_pIdleLight->set_shadow(!!m_zone_flags.test(eIdleLightShadow));
 
-		if(m_zone_flags.test(eIdleLightVolumetric))
-			m_pIdleLight->set_volumetric		(true);
+		if (m_zone_flags.test(eIdleLightVolumetric))
+		{
+			m_pIdleLight->set_volumetric(true);
+			m_pIdleLight->set_volumetric_distance(volumetric_distance);
+			m_pIdleLight->set_volumetric_intensity(volumetric_intensity);
+			m_pIdleLight->set_volumetric_quality(volumetric_quality);
+		}
 	}
 	else
 		m_pIdleLight = NULL;
