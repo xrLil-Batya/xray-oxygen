@@ -10,8 +10,8 @@
 #pragma managed(push, off)
 #endif
 #include "../xrInterface/cl_cast.hpp"
-#include "../xrInterface/LevelCompilerLoggerConsole.hpp"
-ILevelCompilerLogger& Logger = LevelCompilerLoggerConsole();
+
+ILevelCompilerLogger& Logger = LevelCompilerLoggerWindow::instance();
 
 CThread::LogFunc ProxyMsg = cdecl_cast(
 	[](const char *format, ...)
