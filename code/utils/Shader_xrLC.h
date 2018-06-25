@@ -140,7 +140,7 @@ IC void post_process_materials(const Shader_xrLC_LIB &shaders, const xr_vector<b
 		else {
 			int id = shaders.GetID(shader_compile[M.shader_xrlc].name);
 			if (id<0) {
-				clMsg("ERROR: Shader '%s' not found in library", shader_compile[M.shader].name);
+				Logger.clMsg("ERROR: Shader '%s' not found in library", shader_compile[M.shader].name);
 				R_ASSERT(id >= 0);
 			}
 			M.reserved = u16(id);

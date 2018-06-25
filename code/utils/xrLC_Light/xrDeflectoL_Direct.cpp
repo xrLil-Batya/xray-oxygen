@@ -1,7 +1,4 @@
 #include "stdafx.h"
-//#include "build.h"
-//#include "std_classes.h"
-#include "xrThread.h"
 #include "xrdeflector.h"
 #include "xrlc_globaldata.h"
 #include "light_point.h"
@@ -25,7 +22,6 @@ void CDeflector::L_Direct_Edge(CDB::COLLIDER* DB, base_lighting* LightsSelected,
     int	dv = iCeil(_abs(size.y) / texel_size);
     int steps = std::max(du, dv);
     if (steps <= 0)	return;
-
 
     for (int I = 0; I <= steps; I++)
     {
@@ -132,7 +128,7 @@ void CDeflector::L_Direct(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH
                                     Fcount += 1;
                                 }
                                 catch (...) {
-                                    clMsg("* ERROR (CDB). Recovered. ");
+                                    Logger.clMsg("* ERROR (CDB). Recovered. ");
                                 }
                             }
                             break;
@@ -141,7 +137,7 @@ void CDeflector::L_Direct(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH
                 }
             }
             catch (...) {
-                clMsg("* ERROR (Light). Recovered. ");
+                Logger.clMsg("* ERROR (Light). Recovered. ");
             }
             //we finalize later
             if (!xrHardwareLight::IsEnabled())
@@ -174,7 +170,7 @@ void CDeflector::L_Direct(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH
         }
         catch (...)
         {
-            clMsg("* ERROR (Edge). Recovered. ");
+            Logger.clMsg("* ERROR (Edge). Recovered. ");
         }
     }
 

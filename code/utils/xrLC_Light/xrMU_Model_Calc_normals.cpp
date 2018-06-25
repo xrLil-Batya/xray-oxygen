@@ -106,6 +106,6 @@ void xrMU_Model::calc_normals()
 	for (v_faces_it it = m_faces.begin(); it!=m_faces.end(); it++)
 		(*it)->flags.bSplitted = FALSE;
 
-	clMsg("%5s %d vertices duplicated","-",m_vertices.size()-Vcount);
+	Logger.clMsg("%5s %d vertices duplicated","-",m_vertices.size()-Vcount);
 }
 */

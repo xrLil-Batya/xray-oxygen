@@ -2,7 +2,6 @@
 #include "build.h"
 
 #include "../xrlc_light/xrdeflector.h"
-#include "../xrlc_light/xrThread.h"
 #include "../xrLC_Light/xrLC_GlobalData.h"
 #include "../xrLC_Light/xrLightVertex.h"
 
@@ -21,7 +20,7 @@ private:
     CDB::COLLIDER	DB;
     base_lighting	LightsSelected;
 public:
-    CLMThread(u32 ID) : CThread(ID)
+    CLMThread(u32 ID) : CThread(ID, ProxyMsg)
     {
         // thMonitor= TRUE;
         thMessages = FALSE;
@@ -53,29 +52,21 @@ public:
             }
             catch (...)
             {
-                clMsg("* ERROR: CLMThread::Execute - light");
+                Logger.clMsg("* ERROR: CLMThread::Execute - light");
             }
         }
     }
 };
 
-
-
-
-
-
-
-void	CBuild::LMapsLocal()
+void CBuild::LMapsLocal()
 {
     mem_Compact();
-
 
     for (u32 dit = 0; dit<lc_global_data()->g_deflectors().size(); dit++)
         task_pool.push_back(dit);
 
-
-    Status("Lighting...");
-    CThreadManager	threads;
+    Logger.Status("Lighting...");
+    CThreadManager	threads(ProxyStatus, ProxyProgress);
 
     u32	thNUM = 1;
     if (!g_build_options.b_optix_accel)
@@ -86,18 +77,16 @@ void	CBuild::LMapsLocal()
     CTimer	start_time;	start_time.Start();
     for (int L = 0; L<thNUM; L++)	threads.start(xr_new<CLMThread>(L));
     threads.wait(500);
-    clMsg("%f seconds", start_time.GetElapsed_sec());
+    Logger.clMsg("%f seconds", start_time.GetElapsed_sec());
 }
 
-
 //routine enabled, when using new hardware light feature
-void	CBuild::LMapsRedux()
+void CBuild::LMapsRedux()
 {
     mem_Compact();
 
-
     //new system not multithreaded... but using some handmade tricks to speedup coputation process
-    Status("Lighting...");
+    Logger.Status("Lighting...");
 
     for (u32 dit = 0; dit < lc_global_data()->g_deflectors().size(); dit++)
         task_pool.push_back(dit);
@@ -110,7 +99,7 @@ void	CBuild::LMapsRedux()
 void	CBuild::LMaps()
 {
     //****************************************** Lmaps
-    Phase("LIGHT: LMaps...");
+    Logger.Phase("LIGHT: LMaps...");
     //DeflectorsStats ();
 #ifndef NET_CMP
     if (g_build_options.b_net_light)
@@ -135,7 +124,7 @@ void CBuild::Light()
 {
     //****************************************** Implicit
     {
-        Phase("LIGHT: Implicit...");
+        Logger.Phase("LIGHT: Implicit...");
         mem_Compact();
         ImplicitLighting();
     }
@@ -144,7 +133,7 @@ void CBuild::Light()
 
 
     //****************************************** Vertex
-    Phase("LIGHT: Vertex...");
+    Logger.Phase("LIGHT: Vertex...");
     mem_Compact();
 
     LightVertex();
@@ -160,7 +149,7 @@ void CBuild::Light()
     //
     //****************************************** Merge LMAPS
     {
-        Phase("LIGHT: Merging lightmaps...");
+        Logger.Phase("LIGHT: Merging lightmaps...");
         mem_Compact();
 
         xrPhase_MergeLM();

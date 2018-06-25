@@ -65,7 +65,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FORCE_NO_EXCEPTIONS;_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_USRDLL;XRLC_LIGHT_EXPORTS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -106,7 +106,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRLC_LIGHT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -149,7 +149,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRLC_LIGHT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -190,7 +190,6 @@
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="stdafx.h" />
     <ClInclude Include="xrLC_Light.h" />
-    <ClInclude Include="xrThread.h" />
     <ClInclude Include="hash2D.h" />
     <ClInclude Include="vector_clear.h" />
     <ClInclude Include="xrLC_GlobalData.h" />
@@ -287,7 +286,6 @@
     </ClCompile>
     <ClCompile Include="xrHardwareLight.cpp" />
     <ClCompile Include="xrLC_Light.cpp" />
-    <ClCompile Include="xrThread.cpp" />
     <ClCompile Include="MeshStaic.cpp" />
     <ClCompile Include="xrLC_GlobalData.cpp" />
     <ClCompile Include="file_compress.cpp" />
@@ -382,14 +380,6 @@
     <ClCompile Include="xrLightDoNet.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\xrCDB\xrCDB.vcxproj">
-      <Project>{a19b1df2-82ec-4364-8bdf-85d13a1c89b5}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\..\xrCore\xrCore.vcxproj">
-      <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
     <ProjectReference Include="..\xrDXT\DXT.vcxproj">
       <Project>{ebf9b543-0830-4866-9b48-dc0740e87e8a}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>

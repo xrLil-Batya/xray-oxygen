@@ -75,7 +75,7 @@
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/;../../sdk/include/dx;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/;../../sdk/include/dx;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -130,7 +130,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/;../../sdk/include/dx;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/;../../sdk/include/dx;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -191,7 +191,7 @@
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>true</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/;../../sdk/include/dx;</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/;../../sdk/include/dx;..\..\engine.vc2008\</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -241,8 +241,6 @@
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="StdAfx.h" />
-    <ClInclude Include="resource.h" />
-    <ClInclude Include="cl_log.h" />
     <ClInclude Include="std_classes.h" />
   </ItemGroup>
   <ItemGroup>
@@ -252,10 +250,6 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">Create</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="xrDO_Light.cpp" />
-    <ClCompile Include="cl_log.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resource.rc" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\xrLC_LightStab\xrLC_LightStab.vcxproj">

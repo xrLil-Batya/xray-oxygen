@@ -8,60 +8,58 @@
 #include "lcnet_task_manager.h"
 #include "xrlc_globaldata.h"
 #include "mu_light_net.h"
-#include "xrThread.h"
 
-bool					global_compile_data_initialized = false;
-bool					base_global_compile_data_initialized = false;
-CThreadManager			cl_data_prepare;
-std::recursive_mutex		wait_lock;
-void		SetBaseGlobalCompileDataInitialized( );
-class NetCompileDetaPrepare	: public CThread
+bool global_compile_data_initialized = false;
+bool base_global_compile_data_initialized = false;
+CThreadManager cl_data_prepare(ProxyStatus, ProxyProgress);
+std::recursive_mutex wait_lock;
+
+void SetBaseGlobalCompileDataInitialized();
+
+class NetCompileDetaPrepare : public CThread
 {
-
 public:
-	NetCompileDetaPrepare	( ) : CThread( 0 )	{	thMessages	= FALSE;	}
+	NetCompileDetaPrepare() : CThread(0, ProxyMsg) { thMessages = FALSE; }
 private:
-	virtual void	Execute	()
+	virtual void	Execute()
 	{
-		SetBaseGlobalCompileDataInitialized( );
-		SetGlobalCompileDataInitialized( );
+		SetBaseGlobalCompileDataInitialized();
+		SetGlobalCompileDataInitialized();
 	}
-
 };
 
-
-void		RunNetCompileDataPrepare( )
+void RunNetCompileDataPrepare()
 {
-	cl_data_prepare.start( xr_new<NetCompileDetaPrepare>() );
-	SartupNetTaskManager( );//.
+	cl_data_prepare.start(xr_new<NetCompileDetaPrepare>());
+	SartupNetTaskManager();
 }
 
-void		WaitNetCompileDataPrepare( )
+void WaitNetCompileDataPrepare( )
 {
-	for(;;)
+	while (true)
 	{
 		Sleep(1000);
 		bool inited = false;
+
 		wait_lock.lock();
-		//cl_data_prepare.wait();
 		inited = global_compile_data_initialized;
 		wait_lock.unlock();
-		if(inited)
-			break;
+
+		if (inited) break;
 	}
 }
-void		WaitNetBaseCompileDataPrepare( )//to do refactoring
+void WaitNetBaseCompileDataPrepare( )//to do refactoring
 {
-	for(;;)
+	while (true)
 	{
 		Sleep(1000);
 		bool inited = false;
+
 		wait_lock.lock();
-		//cl_data_prepare.wait();
 		inited = base_global_compile_data_initialized;
 		wait_lock.unlock();
-		if(inited)
-			break;
+
+		if(inited) break;
 	}
 }
 
@@ -73,21 +71,19 @@ void		SetBaseGlobalCompileDataInitialized( )
 	base_global_compile_data_initialized = true;
 }
 
-void		SetGlobalCompileDataInitialized( )
+void SetGlobalCompileDataInitialized()
 {
-	
 	lc_net::globals().get<lc_net::gl_cl_data>().init();
-	clLog( "mem usage before collision model destroy: %u", Memory.mem_usage() );
-	inlc_global_data()->destroy_rcmodel	();
+	Logger.clLog("mem usage before collision model destroy: %u", Memory.mem_usage());
+	inlc_global_data()->destroy_rcmodel();
 	Memory.mem_compact();
-	clLog( "mem usage after collision model destroy: %u", Memory.mem_usage() );
-//	inlc_global_data()->clear_build_textures_surface();
-    std::lock_guard<decltype(wait_lock)> lock(wait_lock);
-		//cl_data_prepare.wait();
+	Logger.clLog("mem usage after collision model destroy: %u", Memory.mem_usage());
+
+	std::lock_guard<decltype(wait_lock)> lock(wait_lock);
 	global_compile_data_initialized = true;
 }
 
-void		SartupNetTaskManager( )
+void SartupNetTaskManager( )
 {
 	lc_net::get_task_manager().startup();
 }
@@ -98,9 +94,7 @@ u32 CalcAllTranslucency();
 void		SetGlobalLightmapsDataInitialized( )
 {
 	WaitNetCompileDataPrepare( );
-//
 	vertises_has_lighting = CalcAllTranslucency();
-//
 	lc_net::globals().get<lc_net::gl_lm_data>().init();
 	
 }

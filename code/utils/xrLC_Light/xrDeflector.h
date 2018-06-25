@@ -1,5 +1,4 @@
 #pragma once
-
 #include "xrfacedefs.h"
 #include "base_color.h"
 #include "lm_layer.h"
@@ -9,14 +8,13 @@
 #include "xrdeflectordefs.h"
 #include "execute_statistics.h"
 #include "xrRayDefinition.h"
-class  base_lighting;
+
+class base_lighting;
 class net_task_callback;
-class CDeflector;
-//extern XRLC_LIGHT_API CDeflector*		Deflector		;
 class execute_statistics;
+
 class XRLC_LIGHT_API CDeflector
 {
-
 public:
     net_task_callback * _net_session;
     xr_vector<UVtri>			UVpolys;
@@ -28,8 +26,6 @@ public:
 public:
 
     CDeflector();
-    //public:
-    //						CDeflector					(CDeflector** g_defl)	{ CDeflector(); Deflector = this ;}
     ~CDeflector();
     static	CDeflector*		read_create();
 

@@ -14,7 +14,7 @@ void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 {
 	IReader*	O	= F.open_chunk(chunk);
 	u32		count	= O?(O->length()/sizeof(T)):0;
-	clMsg			("* %16s: %d",name,count);
+	Logger.clMsg			("* %16s: %d",name,count);
 	if (count)  
 	{
 		dest.reserve(count);
@@ -56,7 +56,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	shaders().Load			(sh_name);
 
 	//*******
-	Status					("Vertices...");
+	Logger.Status					("Vertices...");
 	{
 		F = fs.open_chunk		(EB_Vertices);
 		u32 v_count			=	F->length()/sizeof(b_vertex);
@@ -69,13 +69,13 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 			pV->N.set			(0,0,0);
 			scene_bb.modify		(pV->P);
 		}
-		Progress			(p_total+=p_cost);
-		clMsg				("* %16s: %d","vertices",lc_global_data()->g_vertices().size());
+		Logger.Progress			(p_total+=p_cost);
+		Logger.clMsg				("* %16s: %d","vertices",lc_global_data()->g_vertices().size());
 		F->close			();
 	}
 
 	//*******
-	Status					("Faces...");
+	Logger.Status					("Faces...");
 	{
 		F = fs.open_chunk		(EB_Faces);
 		R_ASSERT				(F);
@@ -113,8 +113,8 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				Debug.fatal	(DEBUG_INFO,"* ERROR: Can't process face #%d",i);
 			}
 		}
-		Progress			(p_total+=p_cost);
-		clMsg				("* %16s: %d","faces",lc_global_data()->g_faces().size());
+		Logger.Progress			(p_total+=p_cost);
+		Logger.clMsg				("* %16s: %d","faces",lc_global_data()->g_faces().size());
 		F->close			();
 
 		if(g_using_smooth_groups)
@@ -143,12 +143,12 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 			if (!g_build_options.b_skipinvalid)
 				Debug.fatal(DEBUG_INFO, "* FATAL: %d invalid faces. Compilation aborted", InvalideFaces());
 			else
-				clMsg("%d is invalid faces.", InvalideFaces());
+				Logger.clMsg("%d is invalid faces.", InvalideFaces());
 		}
 	}
 
 	//*******
-	Status	("Models and References");
+	Logger.Status	("Models and References");
 	F = fs.open_chunk		(EB_MU_models);
 	if (F)
 	{
@@ -171,7 +171,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	}
 
 	//*******
-	Status	("Other transfer...");
+	Logger.Status	("Other transfer...");
 	transfer("materials",	materials(),		fs,		EB_Materials);
 	transfer("shaders",		shader_render,		fs,		EB_Shaders_Render);
 	transfer("shaders_xrlc",shader_compile,		fs,		EB_Shaders_Compile);
@@ -182,7 +182,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	// Load lights=
 	omp_set_num_threads(8);
 
-	Status	("Loading lights...");
+	Logger.Status	("Loading lights...");
 	{
 		xr_vector<R_Layer>			L_layers;
 		xr_vector<BYTE>				L_control_data;
@@ -268,9 +268,9 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				L_static().rgb			= TEST.lights;
 			}
 		}
-		clMsg	("*lighting*: HEMI:   %d lights",L_static().hemi.size());
-		clMsg	("*lighting*: SUN:    %d lights",L_static().sun.size());
-		clMsg	("*lighting*: STATIC: %d lights",L_static().rgb.size());
+		Logger.clMsg	("*lighting*: HEMI:   %d lights",L_static().hemi.size());
+		Logger.clMsg	("*lighting*: SUN:    %d lights",L_static().sun.size());
+		Logger.clMsg	("*lighting*: STATIC: %d lights",L_static().rgb.size());
 		R_ASSERT(L_static().hemi.size());
 		R_ASSERT(L_static().sun.size());
 		R_ASSERT(L_static().rgb.size());
@@ -280,7 +280,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	}
 	
 	// process textures
-	Status("Processing textures...");
+	Logger.Status("Processing textures...");
 	{
 		Surface_Init();
 		F = fs.open_chunk(EB_Textures);
@@ -288,7 +288,7 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 		
 		for (u32 t=0; t<tex_count; t++)
 		{
-			Progress		(float(t)/float(tex_count));
+			Logger.Progress		(float(t)/float(tex_count));
 
 			help_b_texture		TEX;
 			F->r(&TEX, sizeof(TEX));
@@ -313,16 +313,16 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 			{
 				string_path			th_name;
 				FS.update_path	(th_name,"$game_textures$",strconcat(sizeof(th_name),th_name,N,".thm"));
-				clMsg			("processing: %s",th_name);
+				Logger.clMsg			("processing: %s",th_name);
 				IReader* THM	= FS.r_open(th_name); 
 				if (!THM)
 					{
-						clMsg("cannot find thm: %s", th_name);
+						Logger.clMsg("cannot find thm: %s", th_name);
 						is_thm_fatal = true;
 						continue;
 					}
 				else
-						clMsg("processing: %s", th_name);
+						Logger.clMsg("processing: %s", th_name);
 
 				// version
 				u32 version = 0;
@@ -350,13 +350,13 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				{
 					if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted) || g_build_options.b_radiosity)
 					{
-						clMsg		("- loading: %s",N);
+						Logger.clMsg		("- loading: %s",N);
 						u32			w=0, h=0;
 						BT.pSurface		=	Surface_Load(N,w,h);
 						BT.THM.SetHasSurface(TRUE);
 						if (!BT.pSurface)
 						{
-							clMsg("Can't load surface %s", th_name);
+							Logger.clMsg("Can't load surface %s", th_name);
 							is_surface_fatal = true;
 							continue;
 						}
@@ -379,16 +379,16 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 	}
 
 	// post-process materials
-	Status	("Post-process materials...");
+	Logger.Status	("Post-process materials...");
 	post_process_materials( shaders(), shader_compile, materials() );
 
-	Progress(p_total+=p_cost);
+	Logger.Progress(p_total+=p_cost);
 
 	// Parameter block
     std::memcpy(&g_params(),&Params,sizeof(b_params));
 
 	// 
-	clMsg	("* sizes: V(%d),F(%d)",sizeof(Vertex),sizeof(Face));
+	Logger.clMsg	("* sizes: V(%d),F(%d)",sizeof(Vertex),sizeof(Face));
 }
 
 

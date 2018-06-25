@@ -1,16 +1,10 @@
-#ifndef	_LCNET_TASK_MANAGER_H_
-#define	_LCNET_TASK_MANAGER_H_
+#pragma once
 #include "hxgrid/Interface/IAgent.h"
 #include "hxgrid/Interface/hxgridinterface.h"
 #include "lightstab_interface.h"
 namespace	lc_net
 {
-	
 	#include "hxgrid/Interface/IAgent.h"
-//interface IGenericStream;
-
-
-
 	class	net_execution;
 	class	exec_pool;
 
@@ -50,12 +44,12 @@ virtual bool			run_task		(	 IAgent* agent,
 		exec_pool				*run( LPCSTR name_pool );
 		void					add_task( net_execution* task );
 		void					startup();
-		void					progress( u32 task );
+		void					Progress( u32 task );
 	private:
 		void					release_user( );
 		void					create_user( );
 		void					user_init_thread( );
-//static	void					release_user_thread_proc( void *_this );
+
 static	void					user_thread_proc( void *_this );
 	public:
 		void					wait_all();
@@ -65,4 +59,3 @@ static	void					user_thread_proc( void *_this );
 
 	XRLC_LIGHT_API  task_manager &get_task_manager();
 };
-#endif

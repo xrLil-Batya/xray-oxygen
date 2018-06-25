@@ -4,12 +4,6 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{53249e6c-9376-4ce4-bdba-9cd066d91c47}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Kernel\Res">
-      <UniqueIdentifier>{b0e27ec3-5695-4208-ab22-ffbf9c54cb59}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Kernel\Log">
-      <UniqueIdentifier>{0d817a32-5ee7-4b22-93e2-7d8a142fe129}</UniqueIdentifier>
-    </Filter>
     <Filter Include="CDB">
       <UniqueIdentifier>{14116abd-cbb0-446e-990b-3aa28f3ca223}</UniqueIdentifier>
     </Filter>
@@ -44,12 +38,6 @@
     </ClInclude>
     <ClInclude Include="StdAfx.h">
       <Filter>Kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="resource.h">
-      <Filter>Kernel\Res</Filter>
-    </ClInclude>
-    <ClInclude Include="cl_log.h">
-      <Filter>Kernel\Log</Filter>
     </ClInclude>
     <ClInclude Include="cl_intersect.h">
       <Filter>CDB</Filter>
@@ -152,9 +140,6 @@
     </ClCompile>
     <ClCompile Include="xrLC.cpp">
       <Filter>Kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="cl_log.cpp">
-      <Filter>Kernel\Log</Filter>
     </ClCompile>
     <ClCompile Include="NV_Library\NvTriStrip.cpp">
       <Filter>External\NV_Strips</Filter>
@@ -274,10 +259,5 @@
     <ClCompile Include="xrT_Junction.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
     </ClCompile>
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="resource.rc">
-      <Filter>Kernel\Res</Filter>
-    </ResourceCompile>
   </ItemGroup>
 </Project>

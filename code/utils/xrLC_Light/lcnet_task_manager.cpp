@@ -18,23 +18,19 @@ namespace	lc_net{
 		return g_task_manager;
 	}
 
-
 	XRLC_LIGHT_API net_task_interface *g_net_task_interface = &g_task_manager;
 
 	void __cdecl Finalize(IGenericStream* inStream)
 	{
-	
-		get_task_manager().receive_result( inStream );
-		//inStream->Clear();
-	 }
+		get_task_manager().receive_result(inStream);
+	}
 
-	task_manager:: task_manager( ):
-	 _user(0), tasks_completed( 0 ), current_pool( 0 ), 
-	start( 0 ), session_id( DWORD(-1) ), _release( false )
+	task_manager::task_manager() :
+		_user(0), tasks_completed(0), current_pool(0),
+		start(0), session_id(DWORD(-1)), _release(false)
 	{
-		for(u8 i = 0; i < num_pools; ++i )
-			 pools[i] = 0;
-		//create_global_data_write("");
+		for (u8 i = 0; i < num_pools; ++i)
+			pools[i] = 0;
 	}
 
 	bool	task_manager::initialize_session( DWORD _session_id )
@@ -49,29 +45,25 @@ namespace	lc_net{
 			ret = (session_id == _session_id);
 		return ret;
 	}
-	void	task_manager::		receive_result( IGenericStream* inStream )
+	void	task_manager::receive_result(IGenericStream* inStream)
 	{
-		u8 pool_id  ( u8(-1) );
-		//u32 task_id ( u32(-1) ), type_id ( u32(-1)  );
-
-		read_task_pool( inStream, pool_id );
-		pools[pool_id]->receive_result( inStream );
-		
+		u8 pool_id(u8(-1));
+		read_task_pool(inStream, pool_id);
+		pools[pool_id]->receive_result(inStream);
 	}
 
-
-	void		task_manager::	send_task		( IGridUser& user, u32 id  )
+	void task_manager::send_task(IGridUser& user, u32 id)
 	{
-		
+
 	}
 
-	void		task_manager::	send_result		( u8 pool_id, IGenericStream* outStream,  net_execution &e )
+	void task_manager::send_result(u8 pool_id, IGenericStream* outStream, net_execution &e)
 	{
-		write_task_pool( outStream, pool_id );
-		pools[pool_id]->send_result( outStream, e );
+		write_task_pool(outStream, pool_id);
+		pools[pool_id]->send_result(outStream, e);
 	}
 
-	net_execution* task_manager::	receive_task	( u8 &pool_id, IAgent* agent, DWORD sessionId, IGenericStream* inStream  )
+	net_execution* task_manager::receive_task( u8 &pool_id, IAgent* agent, DWORD sessionId, IGenericStream* inStream  )
 	{
 		//u8 pool_id  ( u8(-1) );
 		read_task_pool( inStream, pool_id );
@@ -144,11 +136,7 @@ namespace	lc_net{
 					++num_running;
 			if( num_running == 0 )
 				break;
-					
 		}
-		//R_ASSERT(_user);
-		//_user->WaitForCompletion();
-		//release();
 	}
 	exec_pool	*task_manager::run( LPCSTR name_pool )
 	{
@@ -172,20 +160,16 @@ namespace	lc_net{
 		return pools[lrun]; 
 		
 	}
-	void task_manager::progress( u32 task )
+	void task_manager::Progress( u32 task )
 	{
 		u32 l_completed = 0;
 		log_lock.lock();
 		++tasks_completed;
 		l_completed = tasks_completed;
 		log_lock.unlock();
-		Progress(float(l_completed)/float(start));
+		Logger.Progress(float(l_completed)/float(start));
 	}
 
-//	void task_manager::release_user_thread_proc(void *_this )
-//	{
-//		((task_manager*)_this)->release_user();
-//	}
 	void	task_manager::user_thread_proc( void *_this )
 	{
 		((task_manager*)_this)->user_init_thread( );
@@ -198,8 +182,6 @@ namespace	lc_net{
 			return;
 
 		R_ASSERT( _user );
-		//_user->CancelTasks();
-		//_user->Release();
 		_user = 0;
 		for(u8 i = 0; i < num_pools; ++i )
 			xr_delete( pools[i] );
@@ -211,9 +193,6 @@ namespace	lc_net{
 				R_ASSERT( !(pools[i]) || !(pools[i]->is_running()) );
         std::lock_guard<decltype(init_lock)> lock(init_lock);
 		_release = true;
-	//	thread_spawn	(task_manager::release_user_thread_proc,"release-user",1024*1024,this);
-
-
 	}
 
 	void	task_manager::add_task( net_execution* task )
@@ -225,8 +204,4 @@ namespace	lc_net{
 		
 		pools[current_pool]->add_task(task);
 	}
-
-	
-
-
 };

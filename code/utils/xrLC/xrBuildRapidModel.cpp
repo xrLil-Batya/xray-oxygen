@@ -43,7 +43,7 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 
 	
 	lc_global_data()->destroy_rcmodel();
-	Status			("Converting faces...");
+	Logger.Status			("Converting faces...");
 	for				(u32 fit=0; fit<lc_global_data()->g_faces().size(); fit++)	lc_global_data()->g_faces()[fit]->flags.bProcessed = false;
 
 	xr_vector<Face*>			adjacent_vec;
@@ -57,7 +57,7 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		const Shader_xrLC&	SH		= F->Shader();
 		if (!SH.flags.bLIGHT_CastShadow)					continue;
 
-		Progress	(float(it-lc_global_data()->g_faces().begin())/float(lc_global_data()->g_faces().size()));
+		Logger.Progress	(float(it-lc_global_data()->g_faces().begin())/float(lc_global_data()->g_faces().size()));
 
 		// Collect
 		adjacent_vec.clear	();
@@ -95,13 +95,13 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	}
 
 	// Export references
-	if (bSaveForOtherCompilers)		Phase	("Building rcast-CFORM-mu model...");
-	Status					("Models...");
+	if (bSaveForOtherCompilers)		Logger.Phase	("Building rcast-CFORM-mu model...");
+	Logger.Status					("Models...");
 	for (u32 ref=0; ref<mu_refs().size(); ref++)
 		mu_refs()[ref]->export_cform_rcast	(CL);
 
 	// "Building tree..
-	Status					("Building search tree...");
+	Logger.Status					("Building search tree...");
 	lc_global_data()->create_rcmodel( CL );
 
 	extern void SaveAsSMF			(LPCSTR fname, CDB::CollectorPacked& CL);
@@ -118,7 +118,7 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 	// Saving for AI/DO usage
 	if (bSaveForOtherCompilers)
 	{
-		Status					("Saving...");
+		Logger.Status					("Saving...");
 		string_path				fn;
 
 		xr_vector<b_rc_face>	rc_faces;

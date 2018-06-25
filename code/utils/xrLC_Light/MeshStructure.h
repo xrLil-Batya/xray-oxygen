@@ -293,30 +293,30 @@ IC void isolate_vertices(BOOL bProgress, xr_vector<typeVertex*> &vertices)
 {
 	if (bProgress)
 	{
-		Status("Isolating vertices...");
+		Logger.Status("Isolating vertices...");
 	}
 
 	const size_t verts_old = vertices.size();
 	for (size_t it = 0; it < verts_old; ++it)
 	{
 		if (bProgress)
-			Progress(float(it) / float(verts_old));
+			Logger.Progress(float(it) / float(verts_old));
 
 		if (vertices[it] && vertices[it]->m_adjacents.empty())
 			_destroy_vertex(vertices[it], false);
 	}
 	VERIFY(verts_old == vertices.size());
 
-	xr_vector<typeVertex*>::iterator	_end = std::remove(vertices.begin(), vertices.end(), (typeVertex*)0);
+	auto _end = std::remove(vertices.begin(), vertices.end(), (typeVertex*)0);
 
 	vertices.erase(_end, vertices.end());
 	Memory.mem_compact();
 
 	if (bProgress)
-		Progress(1.f);
+		Logger.Progress(1.f);
 
 	size_t _count = verts_old - vertices.size();
 
 	if (_count)
-		clMsg("::compact:: %d verts removed", _count);
+		Logger.clMsg("::compact:: %d verts removed", _count);
 }

@@ -142,7 +142,7 @@ struct b_params
 	u16			m_quality;
 	u16			u_reserved;
 
-	// Progressive
+	// Logger.Progressive
 	float		f_reserved[6];
 
 	void SaveLTX(CInifile& ini)

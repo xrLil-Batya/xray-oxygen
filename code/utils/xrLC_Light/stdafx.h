@@ -5,11 +5,13 @@
 #pragma once
 #pragma warning (disable:4661)
 #include "xrLC_Light.h"
-void __cdecl	clMsg( const char *format, ...);
-void __cdecl	clLog( const char *format, ...);
-void __cdecl	Status( const char *format, ...);
-void			Progress	( const float F );
-void			Phase		( LPCSTR phase_name );
+#include "../xrInterface/xrThread.hpp"
+#include "../xrInterface/LevelCompilerLoggerWindow.hpp"
+
+extern ILevelCompilerLogger& Logger;
+extern CThread::LogFunc ProxyMsg;
+extern CThreadManager::ReportStatusFunc ProxyStatus;
+extern CThreadManager::ReportProgressFunc ProxyProgress;
 // TODO: reference additional headers your program requires here
 
 #ifdef DEBUG

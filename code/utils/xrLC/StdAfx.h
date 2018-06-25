@@ -3,7 +3,13 @@
 //      are changed infrequently
 //
 #pragma once
+#include "../xrInterface/LevelCompilerLoggerWindow.hpp"
+#include "../xrInterface/xrThread.hpp"
 
+extern ILevelCompilerLogger& Logger;
+extern CThread::LogFunc ProxyMsg;
+extern CThreadManager::ReportStatusFunc ProxyStatus;
+extern CThreadManager::ReportProgressFunc ProxyProgress;
 #include "../xrLC_Light/xrLC_Light.h"
 
 #define ENGINE_API				// fake, to enable sharing with engine
@@ -13,5 +19,4 @@
 #define XR_EPROPS_API
 #include "../../xrcore/clsid.h"
 #include "defines.h"
-#include "cl_log.h"
 #include "b_globals.h"

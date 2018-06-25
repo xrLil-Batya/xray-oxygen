@@ -9,7 +9,6 @@
 #include "lcnet_task_manager.h"
 #include "net_exec_pool.h"
 
-//#include "light_point.h"
 bool GetTranslucency(const Vertex* V,float &v_trans );
 u32		vertises_has_lighting = u32(-1);
 u32 CalcAllTranslucency()
@@ -33,35 +32,33 @@ u32 CalcAllTranslucency()
 	return end_translucency;
 }
 
-namespace lc_net{
-void RunLightVertexNet()
+namespace lc_net 
 {
-	//u32 size = CalcAllTranslucency();
-	R_ASSERT( vertises_has_lighting!=u32(-1) );
+	void RunLightVertexNet()
+	{
+		R_ASSERT(vertises_has_lighting != u32(-1));
 
-	u32 size = vertises_has_lighting;
-	const u32	vertex_light_task_number = 2048;
-	const u32	task_size = size/vertex_light_task_number;
-	const u32	rest_size = size%vertex_light_task_number;
-	if( task_size!=0 )
-		for( u32 i = 0; i < vertex_light_task_number; ++i )
+		u32 size = vertises_has_lighting;
+		const u32	vertex_light_task_number = 2048;
+		const u32	task_size = size / vertex_light_task_number;
+		const u32	rest_size = size % vertex_light_task_number;
+		if (task_size != 0)
+			for (u32 i = 0; i < vertex_light_task_number; ++i)
+			{
+				tnet_execution_base< et_vertex_light > *el = execution_factory.create<et_vertex_light>();
+				el->implementation().construct(i*task_size, (i + 1)*task_size);
+				get_task_manager().add_task(el);
+			}
+		if (rest_size != 0)
 		{
 			tnet_execution_base< et_vertex_light > *el = execution_factory.create<et_vertex_light>();
-			el->implementation( ).construct( i*task_size, (i+1)*task_size );
-			get_task_manager().add_task( el );
+			el->implementation().construct(vertex_light_task_number*task_size, vertex_light_task_number*task_size + rest_size);
+			get_task_manager().add_task(el);
 		}
-	if( rest_size != 0 )
-	{
-		tnet_execution_base< et_vertex_light > *el = execution_factory.create<et_vertex_light>();
-		el->implementation( ).construct( vertex_light_task_number*task_size, vertex_light_task_number*task_size+rest_size );
-		get_task_manager().add_task( el );
-	}
 
-	exec_pool *pool = get_task_manager().run( "Net Vertex Lighting" );
-	if(pool)
-		pool->wait();
-	
-	//get_task_manager().wait_all();
-}
+		exec_pool *pool = get_task_manager().run("Net Vertex Lighting");
+		if (pool)
+			pool->wait();
+	}
 }
 

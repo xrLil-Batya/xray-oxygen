@@ -10,7 +10,7 @@ void transfer(const char *name, xr_vector<T> &dest, IReader& F, u32 chunk)
 {
 	IReader*	O	= F.open_chunk(chunk);
 	u32		count	= O?(O->length()/sizeof(T)):0;
-	clMsg			("* %16s: %d",name,count);
+	Logger.clMsg			("* %16s: %d",name,count);
 	if (count)  
 	{
 		dest.reserve(count);
@@ -120,14 +120,14 @@ void global_claculation_data::xrLoad()
 		transfer("shaders_xrlc",g_shader_compile,		*fs,		EB_Shaders_Compile);
 		post_process_materials( *g_shaders_xrlc, g_shader_compile, g_materials );
 		// process textures
-		Status			("Processing textures...");
+		Logger.Status			("Processing textures...");
 		{
 			Surface_Init		();
 			F = fs->open_chunk	(EB_Textures);
 			u32 tex_count = F->length() / sizeof(help_b_texture);
 			for (u32 t=0; t<tex_count; t++)
 			{
-				Progress		(float(t)/float(tex_count));
+				Logger.Progress		(float(t)/float(tex_count));
 				
 				help_b_texture	TEX;
 				F->r(&TEX, sizeof(TEX));
@@ -154,7 +154,7 @@ void global_claculation_data::xrLoad()
 					IReader* THM			= FS.r_open("$game_textures$",N);
 					if (!THM) 
 					{
-						clMsg("can't find thm: %s", N);
+						Logger.clMsg("can't find thm: %s", N);
 						is_thm_missing = true;
 						continue;
 						
@@ -185,14 +185,14 @@ void global_claculation_data::xrLoad()
 					{
 						if (BT.bHasAlpha || BT.THM.flags.test(STextureParams::flImplicitLighted))
 						{
-							clMsg		("- loading: %s",N);
+							Logger.clMsg		("- loading: %s",N);
 							u32			w=0, h=0;
 							BT.pSurface		= Surface_Load(N,w,h);
 							BT.THM.SetHasSurface(TRUE);
 							
 							if (!BT.pSurface)
 							{
-								clMsg("can't find tga texture: %s", N);
+								Logger.clMsg("can't find tga texture: %s", N);
 								is_tga_missing = true;
 								continue;
 							}

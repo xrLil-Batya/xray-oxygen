@@ -10,9 +10,7 @@
 #pragma comment(lib,"xrCDB.lib")
 #pragma comment(lib,"xrCore.lib")
 #pragma comment(lib,"xrLC_Light.lib")
-
-extern void logThread			(void *dummy);
-extern volatile BOOL bClose;
+#pragma comment(lib, "xrLCUtil.lib")
 
 static const char* h_str = 
 	"The following keys are supported / required:\n"
@@ -24,54 +22,73 @@ static const char* h_str =
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
 
-void Help()
-{	MessageBox(0,h_str,"Command line options",MB_OK|MB_ICONINFORMATION); }
+inline void Help()
+{	
+	MessageBox(0,h_str,"Command line options",MB_OK|MB_ICONINFORMATION);
+}
 
-void Startup(LPSTR     lpCmdLine)
+#include "../xrInterface/cl_cast.hpp"
+
+ILevelCompilerLogger& Logger = LevelCompilerLoggerWindow::instance();
+
+CThread::LogFunc ProxyMsg = cdecl_cast([](const char* format, ...) 
 {
-	char cmd[512],name[256];
+	va_list args;
+	va_start(args, format);
+	Logger.clMsgV(format, args);
+	va_end(args);
+});
 
-	bool bNet = false;
-	bool noRgb = false;
-	bool noSun = false;
+CThreadManager::ReportStatusFunc ProxyStatus = cdecl_cast([](const char* format, ...) 
+{
+	va_list args;
+	va_start(args, format);
+	Logger.StatusV(format, args);
+	va_end(args);
+});
 
-	xr_strcpy(cmd,lpCmdLine);
+CThreadManager::ReportProgressFunc ProxyProgress = cdecl_cast([](float progress) { Logger.Progress(progress); });
+
+void Startup(LPSTR lpCmdLine)
+{
+	char cmd[512], name[256];
+	xr_strcpy(cmd, lpCmdLine);
 	strlwr(cmd);
-	if (strstr(cmd,"-?") || strstr(cmd,"-h"))			{ Help(); return; }
-	if (strstr(cmd,"-f")==0)							{ Help(); return; }
-	if (strstr(cmd,"-net"))								bNet = true;
-	if (strstr(cmd, "-norgb"))							noRgb = true;
-	if (strstr(cmd, "-nosun"))							noSun = true;
+
+	if (strstr(cmd, "-?") || strstr(cmd, "-h") || strstr(cmd, "-f") == 0)
+	{
+		Help();
+		return;
+	}
+
+	bool bNet = (strstr(cmd, "-net"));
+	bool noRgb = (strstr(cmd, "-norgb"));
+	bool noSun = (strstr(cmd, "-nosun"));
+
+	// Load project
+	name[0] = 0; 
+	sscanf(strstr(cmd, "-f") + 2, "%s", name);
 
 	// Give a LOG-thread a chance to startup
-	InitCommonControls	();
-	thread_spawn		(logThread,	"log-update", 1024*1024,0);
-	Sleep				(150);
-	
-	// Load project
-	name[0]=0; sscanf	(strstr(cmd,"-f")+2,"%s",name);
+	string256 temp;
+	xr_sprintf(temp, "%s - Detail Compiler", name);
+	Logger.Initialize(temp);
 
-	extern  HWND logWindow;
-	string256			temp;
-	xr_sprintf			(temp, "%s - Detail Compiler", name);
-	SetWindowText		(logWindow, temp);
-	
-	FS.get_path			("$level$")->_set	(name);
+	FS.get_path("$level$")->_set(name);
 
-	CTimer				dwStartupTime; dwStartupTime.Start();
+	CTimer dwStartupTime;
+	dwStartupTime.Start();
 
 	xrCompileDO(bNet, noRgb, noSun);
 
 	// Show statistic
-	char	stats[256];
-	extern	std::string make_time(u32 sec);
-	xr_sprintf				(stats,"Time elapsed: %s",make_time((dwStartupTime.GetElapsed_ms())/1000).c_str());
+	char stats[256];
+	xr_sprintf(stats, "Time elapsed: %s", make_time((dwStartupTime.GetElapsed_ms()) / 1000).c_str());
 
-	if (!strstr(cmd,"-silent"))
-		MessageBox		(logWindow,stats,"Congratulation!",MB_OK|MB_ICONINFORMATION);
+	if (!strstr(cmd, "-silent"))
+		Logger.Success(stats);
 
-	bClose				= TRUE;
-	Sleep				(500);
+	Logger.Destroy();
 }
 
 int APIENTRY WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)

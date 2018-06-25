@@ -106,7 +106,7 @@ xrHardwareLight::~xrHardwareLight()
 
 void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightings, xr_vector<b_BuildTexture>& Textures)
 {
-	Progress(0.0f);
+	Logger.Progress(0.0f);
 	_IsEnabled = true;
 	cudaError_t DebugErr = cudaError_t::cudaSuccess;
 	vecFace& Polygons = inlc_global_data()->g_faces();
@@ -169,7 +169,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 	OptimizedModel.Tris					= CDBTrisIndexBuffer.ptr();
 	OptimizedModel.TrianglesAdditionInfo	= CDBTrisAdditionBuffer.ptr();
 
-	Progress(0.1f);
+	Logger.Progress(0.1f);
 
 	//ORIGINAL MODEL
 #if 0
@@ -179,14 +179,14 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 
 	GetLevelIndices(LevelVertexesData, Polygons, LevelIndices, LevelVertexData);
 	
-	//at this moment our progress bar is on 0.6
+	//at this moment our Logger.Progress bar is on 0.6
 	TrisBuffer		 = new Buffer<PolyIndexes>	 (LevelIndices.size(),			   RTP_BUFFER_TYPE_CUDA_LINEAR, UNLOCKED);
 	VertBuffer		 = new Buffer<Fvector>		 (LevelVertexesData.size(),		   RTP_BUFFER_TYPE_CUDA_LINEAR, UNLOCKED);
 	VertNormalBuffer = new Buffer<HardwareVector>(LevelVertexesData.size(),		   RTP_BUFFER_TYPE_CUDA_LINEAR, UNLOCKED);
 
 	DebugErr = cudaMemcpy(TrisBuffer->ptr(), LevelIndices.data(), LevelIndices.size() * sizeof(PolyIndexes), cudaMemcpyHostToDevice);
 	DebugErr = cudaMemcpy(VertBuffer->ptr(), LevelVertexData.data(), LevelVertexData.size() * sizeof(HardwareVector), cudaMemcpyHostToDevice);
-	Progress(0.65f);
+	Logger.Progress(0.65f);
 	
 	//load Vertex normals
 	xr_vector <HardwareVector> VertexNormals;
@@ -210,7 +210,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 #endif
 
 
-	Progress(0.7f);
+	Logger.Progress(0.7f);
 	//OPTIX INIT
 
 	LevelIndixes = PrimeContext->createBufferDesc(RTP_BUFFER_FORMAT_INDICES_INT3, RTP_BUFFER_TYPE_CUDA_LINEAR, CDBTrisIndexBuffer.ptr());
@@ -223,7 +223,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 	LevelModel->setTriangles(LevelIndixes, LevelVertexes);
 	LevelModel->update(0);
 
-	Progress(0.75f);
+	Logger.Progress(0.75f);
 
 
 	{
@@ -255,7 +255,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 			TextureDescription.push_back(TexDesc);
 
 			float CurrentStageProgress = float(TextureID) / float(OverallTextures);
-			Progress(0.75f + (0.2f * CurrentStageProgress));
+			Logger.Progress(0.75f + (0.2f * CurrentStageProgress));
 		}
 
 		TextureBuffer = new Buffer<xrHardwareTexture>(Textures.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, UNLOCKED);
@@ -264,7 +264,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 
 	}
 
-	Progress(0.95f);
+	Logger.Progress(0.95f);
 	//###LIGHT INFO
 
 	int RGBSize  = Lightings.rgb.size();
@@ -307,7 +307,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 
 	DebugErr = cudaMemcpy(GlobalData->ptr(), &StructGlobalData, sizeof(xrHardwareLCGlobalData), cudaMemcpyHostToDevice);
 	CheckCudaErr(DebugErr);
-	Progress(1.0f);
+	Logger.Progress(1.0f);
 }
 
 void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr_vector<base_color_c>& OutHits)
@@ -315,7 +315,7 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 	//We use all static light in our calculations for now
 	if (InRays.size() == 0)
 	{
-		clMsg("! PerformRaycast: Invoked without rays...");
+		Logger.clMsg("! PerformRaycast: Invoked without rays...");
 		return;
 	}
 
@@ -351,8 +351,8 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 
 	if (MaxRaysPerPoint == 0)
 	{
-		clMsg("! PerformRaycast invoked, but no lights can be accepted");
-		clMsg("All static lights RGB: %d Sun: %d Hemi: %d", AllLights.rgb.size(), AllLights.sun.size(), AllLights.hemi.size());
+		Logger.clMsg("! PerformRaycast invoked, but no lights can be accepted");
+		Logger.clMsg("All static lights RGB: %d Sun: %d Hemi: %d", AllLights.rgb.size(), AllLights.sun.size(), AllLights.hemi.size());
 		return;
 	}
 
@@ -407,7 +407,7 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 		}
 		pItStatusBuffer++;
 	}
-	//Status("%d rays optimized out", MaxPotentialRays - AliveRaysIndexes.size());
+	//Logger.Status("%d rays optimized out", MaxPotentialRays - AliveRaysIndexes.size());
 	if (AliveRaysIndexes.size() == 0)
 	{
 		//all rays are optimized
@@ -519,7 +519,7 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 
 void xrHardwareLight::PerformAdaptiveHT()
 {
-	Progress(0.0f);
+	Logger.Progress(0.0f);
 	cudaError_t DebugErr = cudaError_t::cudaSuccess;
 
 	vecVertex& LevelVertexData = inlc_global_data()->g_vertices();
@@ -534,11 +534,11 @@ void xrHardwareLight::PerformAdaptiveHT()
 		RayRequest NewRequest{ Vert->P, Vert->N, nullptr };
 		AdaptiveHTRays.push_back(NewRequest);
 	}
-	Progress(0.1f);
+	Logger.Progress(0.1f);
 
 	xr_vector<base_color_c> FinalColors;
 	PerformRaycast(AdaptiveHTRays, LP_dont_rgb + LP_dont_sun, FinalColors);
-	Progress(0.9f);
+	Logger.Progress(0.9f);
 
 	for (int VertexIndex = 0; VertexIndex < OverallVertexes; ++VertexIndex)
 	{
@@ -549,7 +549,7 @@ void xrHardwareLight::PerformAdaptiveHT()
 		Vert->C._set(VertexColor);
 	}
 
-	Progress(1.0f);
+	Logger.Progress(1.0f);
 }
 
 float xrHardwareLight::GetEnergyFromSelectedLight(xr_vector<int>& RGBLightIndexes, xr_vector<int>& SunLightIndexes, xr_vector<int>& HemiLightIndexes)
@@ -592,7 +592,7 @@ xr_vector<Fvector> xrHardwareLight::GetDebugGPUHitData()
 
 void xrHardwareLight::GetLevelIndices(vecVertex& InLevelVertices, vecFace& InLevelFaces, xr_vector <PolyIndexes>& OutLevelIndices, xr_vector<HardwareVector>& OutLevelVertexes)
 {
-	//display progress
+	//display Logger.Progress
 
 	OutLevelVertexes.reserve(InLevelVertices.size());
 	OutLevelIndices.reserve(InLevelFaces.size() * 3);
@@ -608,7 +608,7 @@ void xrHardwareLight::GetLevelIndices(vecVertex& InLevelVertices, vecFace& InLev
 		IndexMap.insert(std::pair<Vertex*, int>(Vert, VertexIndex));
 
 		float CurrentStageProgress = float(VertexIndex) / float(OverallLevelIndexes);
-		Progress(0.1f + (0.2f * CurrentStageProgress));
+		Logger.Progress(0.1f + (0.2f * CurrentStageProgress));
 	}
 
 	//from 0.3 to 0.6
@@ -632,7 +632,7 @@ void xrHardwareLight::GetLevelIndices(vecVertex& InLevelVertices, vecFace& InLev
 		OutLevelIndices.push_back(FaceIndexes);
 
 		float CurrentStageProgress = float(FaceIndex) / float(OverallFaceIndexes);
-		Progress(0.3f + (0.3f * CurrentStageProgress));
+		Logger.Progress(0.3f + (0.3f * CurrentStageProgress));
 	}
 }
 
@@ -640,7 +640,7 @@ void xrHardwareLight::CheckCudaError(cudaError_t ErrorCode)
 {
 	if (ErrorCode != cudaError::cudaSuccess)
 	{
-		clMsg(" [xrHardwareLight]: One of the call return non successful cuda error %d", ErrorCode);
+		Logger.clMsg(" [xrHardwareLight]: One of the call return non successful cuda error %d", ErrorCode);
 	}
 }
 

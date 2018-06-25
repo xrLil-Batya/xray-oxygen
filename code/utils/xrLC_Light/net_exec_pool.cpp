@@ -10,8 +10,6 @@
 #include "lcnet_task_manager.h"
 #define LOG_ALL_NET_TASKS
 
-
-
 LPCSTR make_time	( string64 &buf, float fsec )
 {
 	//char		buf[64];
@@ -89,29 +87,17 @@ namespace lc_net
 		e->receive_result(inStream);
 		//xr_delete( e );
 		execution_factory.destroy(e);
-		_task_manager.progress(id);
+		_task_manager.Progress(id);
 #ifdef	LOG_ALL_NET_TASKS
-		clMsg("%s received task : %d", _name, id);
-
-		//Progress( float( tasks_completed )/float( size ) );
-		clMsg("num task complited : %d , num task left %d  (task num %d)", l_completed, size - l_completed, size);
+		Logger.clMsg("%s received task : %d", _name, id);
+		Logger.clMsg("num task complited : %d , num task left %d  (task num %d)", l_completed, size - l_completed, size);
 #endif		
 		R_ASSERT(l_completed <= size);
 		if (l_completed == size)
 		{
 			string64 buf;
-			clLog(" %s, calculation complited", _name);
-			//clMsg	("%f %s calculation seconds",start_time.GetElapsed_sec(), _name );
-
-			clLog("%s %s calculation time", make_time(buf, start_time.GetElapsed_sec()), _name);
-			//Status	("%s %s calculation time",make_time( buf,start_time.GetElapsed_sec() ), _name );
-
-			//xr_sprintf( buf, "%s %s calculation time",make_time( buf,start_time.GetElapsed_sec() ), _name ); 
-			//Phase( buf );
-//		}
-
-//		if( l_completed == size )
-//		{
+			Logger.clLog(" %s, calculation complited", _name);
+			Logger.clLog("%s %s calculation time", make_time(buf, start_time.GetElapsed_sec()), _name);
 			execution_factory.free_pool(type);
 			std::lock_guard<decltype(run_lock)> lock(run_lock);
 			_running = false;
@@ -165,7 +151,7 @@ namespace lc_net
 		VERIFY(e != 0);
 		write_task_caption(outStream, id, e->type());
 #ifdef	LOG_ALL_NET_TASKS		
-		clMsg(" %s, send task : %d", _name, id);
+		Logger.clMsg(" %s, send task : %d", _name, id);
 		//
 #endif
 

@@ -62,10 +62,6 @@
     <Filter Include="Light\LightVertex">
       <UniqueIdentifier>{8a5fb230-7158-4558-9754-025ce296f937}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav</Extensions>
-    </Filter>
     <Filter Include="do_light">
       <UniqueIdentifier>{d7b85aad-48bc-4ddc-b7cd-1e4ebfe72bda}</UniqueIdentifier>
     </Filter>
@@ -81,9 +77,6 @@
       <Filter>kernel</Filter>
     </ClInclude>
     <ClInclude Include="xrLC_Light.h">
-      <Filter>kernel</Filter>
-    </ClInclude>
-    <ClInclude Include="xrThread.h">
       <Filter>kernel</Filter>
     </ClInclude>
     <ClInclude Include="hash2D.h">
@@ -340,9 +333,6 @@
       <Filter>kernel</Filter>
     </ClCompile>
     <ClCompile Include="xrLC_Light.cpp">
-      <Filter>kernel</Filter>
-    </ClCompile>
-    <ClCompile Include="xrThread.cpp">
       <Filter>kernel</Filter>
     </ClCompile>
     <ClCompile Include="MeshStaic.cpp">
