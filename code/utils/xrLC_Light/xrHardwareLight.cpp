@@ -142,7 +142,7 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 
 		TrisAdditionInfo AdditionInfo;
         
-        base_Face& FaceRef = *(base_Face*)&Tris.dummy;
+        base_Face& FaceRef = *(base_Face*)Tris.dummy;
 		const Shader_xrLC& TrisShader = FaceRef.Shader();
 		AdditionInfo.CastShadow = !!TrisShader.flags.bLIGHT_CastShadow;
 
