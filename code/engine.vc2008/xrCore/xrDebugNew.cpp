@@ -86,11 +86,11 @@ void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
 
-	MessageBoxA(nullptr, message.c_str(), "X-ray error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
-
-	DEBUG_INVOKE;
-
-	TerminateProcess(GetCurrentProcess(), 1);
+	if(MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK) 
+	{
+		DEBUG_INVOKE;
+		TerminateProcess(GetCurrentProcess(), 1);
+	}
 }
 
 void xrDebug::do_exit(const std::string &message, const std::string &message2)
@@ -107,7 +107,7 @@ void xrDebug::do_exit(const std::string &message, const std::string &message2)
 						"\n"			+
 						"For more information check log.";
 	/////////////////////////////////////////////////
-	MessageBoxA(nullptr, szMsg.c_str(), "X-ray error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+	MessageBoxA(nullptr, szMsg.c_str(), "X-Ray Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
 
 	DEBUG_INVOKE;
 
@@ -139,7 +139,7 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(expression, description);
+	do_exit(assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
 
@@ -232,7 +232,6 @@ extern const char* log_name();
 XRCORE_API string_path g_bug_report_file;
 
 typedef LONG WINAPI UnhandledExceptionFilterType(struct _EXCEPTION_POINTERS *pExceptionInfo);
-//typedef LONG(__stdcall *PFNCHFILTFN) (EXCEPTION_POINTERS * pExPtrs);
 
 static UnhandledExceptionFilterType	*previous_filter = 0;
 

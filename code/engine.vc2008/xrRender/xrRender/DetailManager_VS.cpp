@@ -203,7 +203,7 @@ void CDetailManager::hw_Render()
 	Fvector4	wave;
 	//wave.set				(1.f/5.f,		1.f/7.f,	1.f/3.f,	RDEVICE.fTimeGlobal*swing_current.speed);
 	wave.set				(1.f/5.f,		1.f/7.f,	1.f/3.f,	m_time_pos);
-	RCache.set_c			(&*hwc_consts,	scale,		scale,		ps_r__Detail_l_aniso,	ps_r__Detail_l_ambient);				// consts
+	RCache.set_c			(&*hwc_consts,	scale,		scale,		ps_r_Detail_l_aniso,	ps_r_Detail_l_ambient);				// consts
 	RCache.set_c			(&*hwc_wave,	wave.div(PI_MUL_2));	// wave
 	RCache.set_c			(&*hwc_wind,	dir1);																					// wind-dir
 	hw_Render_dump			(&*hwc_array,	1, 0, c_hdr );
@@ -302,12 +302,7 @@ void	CDetailManager::hw_Render_dump		(ref_constant x_array, u32 var_id, u32 lod_
 				RCache.get_ConstantCache_Vertex().get_array_f().dirty	(c_base,c_base+dwBatch*4);
 				RCache.Render				(D3DPT_TRIANGLELIST,vOffset,0,dwCNT_verts,iOffset,dwCNT_prims);
 				RCache.stat.r.s_details.add	(dwCNT_verts);
-			}     
-			const bool isSunDetails = ps_r2_ls_flags.test(R2FLAG_SUN_DETAILS);
-			if ((isSunDetails && (RImplementation.PHASE_SMAP == RImplementation.phase))										// phase smap with shadows
-				|| (isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase) && (!RImplementation.is_sun()))	// phase normal with shadows without sun
-				|| (!isSunDetails && (RImplementation.PHASE_NORMAL == RImplementation.phase)))								// phase normal without shadows
-				vis.clear();
+			}
 		}
 		vOffset		+=	hw_BatchSize * Object.number_vertices;
 		iOffset		+=	hw_BatchSize * Object.number_indices;

@@ -13,7 +13,6 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	flags.bShadow	= false;
 	flags.bVolumetric = false;
 	flags.bHudMode	= false;
-	flags.bFlare = true;
 	position.set	(0,-1000,0);
 	direction.set	(0,-1,0);
 	right.set		(0,0,0);
@@ -36,7 +35,6 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	vis.query_order	= 0;
 	vis.visible		= true;
 	vis.pending		= false;
-	fBlend          = 0;
 }
 
 light::~light()
@@ -292,7 +290,6 @@ void	light::export_		(light_Package& package)
 						L->set_cone			(PI_DIV_2);
 						L->set_range		(range);
 						L->set_color		(color);
-						L->set_flare        (flags.bFlare);
 						L->spatial.sector	= spatial.sector;	//. dangerous?
 						L->s_spot			= s_spot	;
 						L->s_point			= s_point	;
@@ -348,13 +345,13 @@ void	light::set_attenuation_params	(float a0, float a1, float a2, float fo)
 }
 
 
-extern float		r_ssaGLOD_start,	r_ssaGLOD_end;
-extern float		ps_r2_slight_fade;
-float	light::get_LOD					()
+extern float r_ssaGLOD_start, r_ssaGLOD_end;
+extern float ps_r_ls_fade;
+float light::get_LOD()
 {
 	if	(!flags.bShadow)	return 1;
 	float	distSQ			= Device.vCameraPosition.distance_to_sqr(spatial.sphere.P)+EPS;
-	float	ssa				= ps_r2_slight_fade * spatial.sphere.R/distSQ;
+	float	ssa				= ps_r_ls_fade * spatial.sphere.R/distSQ;
 	float	lod				= _sqrt(clampr((ssa - r_ssaGLOD_end)/(r_ssaGLOD_start-r_ssaGLOD_end),0.f,1.f));
 	return	lod	;
 }

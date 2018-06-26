@@ -373,6 +373,6 @@ ENGINE_API extern float		psFogNear;
 ENGINE_API extern float		psFogFar;
 ENGINE_API extern Fvector3	psFogColor;
 
-ENGINE_API extern float ccSunshaftsIntensity;
+ENGINE_API extern float ps_r_sunshafts_intensity;
 
 #endif //EnvironmentH

@@ -208,10 +208,16 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
 
                 if (!allow_include_func || allow_include_func(fn))
                 {
-                    IReader* I = FS.r_open(fn);
-                    R_ASSERT3(I, "Can't find include file:", inc_name);
-                    Load(I, inc_path, allow_include_func);
-                    FS.r_close(I);
+                    IReader* pReader = FS.r_open(fn);
+
+					if (!pReader)
+					{
+						Debug.fatal(DEBUG_INFO, "Can't find include file:", inc_name);
+						continue;
+					}
+
+                    Load(pReader, inc_path, allow_include_func);
+                    FS.r_close(pReader);
                 }
             }
         } else if (str[0] && (str[0] == '[')) // new section ?
@@ -220,12 +226,16 @@ void CInifile::Load(IReader* F, LPCSTR path, allow_include_func_t allow_include_
             if (Current) {
                 // store previous section
                 auto I = std::lower_bound(DATA.begin(), DATA.end(), *Current->Name, sect_pred);
-                if ((I != DATA.end()) && ((*I)->Name == Current->Name))
-                    Debug.fatal(DEBUG_INFO, "Duplicate section '%s' found.", *Current->Name);
+				if ((I != DATA.end()) && ((*I)->Name == Current->Name))
+				{
+					Debug.fatal(DEBUG_INFO, "Duplicate section '%s' found.", *Current->Name);
+					continue;
+				}
                 DATA.insert(I, Current);
             }
             Current = xr_new<Sect>();
             Current->Name = 0;
+
             // start new section
             R_ASSERT3(strchr(str, ']'), "Bad ini section found: ", str);
             LPCSTR inherited_names = strstr(str, "]:");

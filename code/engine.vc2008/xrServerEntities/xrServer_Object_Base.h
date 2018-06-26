@@ -63,7 +63,6 @@ private:
 
 public:
 	BOOL							net_Ready;
-	BOOL							net_Processed;	// Internal flag for connectivity-graph
 	
 	u16								m_wVersion;
 	u16								m_script_version;

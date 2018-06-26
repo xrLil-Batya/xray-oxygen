@@ -43,10 +43,7 @@ void CLevel::ClientReceive()
 				if (g_bDebugEvents)		ProcessGameEvents();
 			}
 			break;
-		case M_EVENT:
-			game_events->insert		(*P);
-			if (g_bDebugEvents)		ProcessGameEvents();
-			break;
+		case M_EVENT: game_events->insert(*P); if (g_bDebugEvents) ProcessGameEvents(); break;
 		case M_EVENT_PACK:
 			{
 				NET_Packet	tmpP;
@@ -64,40 +61,28 @@ void CLevel::ClientReceive()
 			{
 				game->net_import_update	(*P);
 			}break;
-		case M_SV_CONFIG_NEW_CLIENT:
-			InitializeClientGame	(*P);
-			break;
-		case M_SV_CONFIG_GAME:
-			game->net_import_state(*P);
-			break;
-		case M_SV_CONFIG_FINISHED:
-			{
-				game_configured			= TRUE;
-			}break;
+		case M_SV_CONFIG_NEW_CLIENT: InitializeClientGame	(*P); break;
+		case M_SV_CONFIG_GAME: game->net_import_state(*P); break;
 		case M_LOAD_GAME:
 		case M_CHANGE_LEVEL:
 			{
 				if(m_type==M_LOAD_GAME)
 				{
-					string256						saved_name;
-					P->r_stringZ_s					(saved_name);
+					string256 saved_name;
+					P->r_stringZ_s (saved_name);
 					if(xr_strlen(saved_name) && ai().get_alife())
 					{
-						CSavedGameWrapper			wrapper(saved_name);
+						CSavedGameWrapper wrapper(saved_name);
 						if (wrapper.level_id() == ai().level_graph().level_id()) 
 						{
 							Engine.Event.Defer	("Game:QuickLoad", size_t(xr_strdup(saved_name)), 0);
-
 							break;
 						}
 					}
 				}
 				MakeReconnect();
 			}break;
-		case M_SAVE_GAME:
-			{
-				ClientSave			();
-			}break;
+		case M_SAVE_GAME: ClientSave(); break;
 		}
 		net_msg_Release();
 	}	

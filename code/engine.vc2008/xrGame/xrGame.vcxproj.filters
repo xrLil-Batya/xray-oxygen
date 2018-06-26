@@ -7360,9 +7360,6 @@
     <ClCompile Include="level_script.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
-    <ClCompile Include="Level_SLS_Default.cpp">
-      <Filter>Core\Client\Level</Filter>
-    </ClCompile>
     <ClCompile Include="Level_start.cpp">
       <Filter>Core\Client\Level</Filter>
     </ClCompile>
@@ -7928,9 +7925,6 @@
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_perform_GameExport.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_sls_default.cpp">
       <Filter>Core\Server\ServerPerform</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_perform_transfer.cpp">

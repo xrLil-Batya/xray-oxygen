@@ -87,7 +87,7 @@ void	CRenderTarget::phase_SunShafts	()
 	
 	// Draw COLOR
 	RCache.set_Element			(s_SunShafts->E[2]);
-	RCache.set_c				("SSParams",ps_prop_ss_sample_step_phase0,ps_prop_ss_radius,0,0);
+	RCache.set_c				("SSParams",ps_r_prop_ss_sample_step_phase0,ps_r_prop_ss_radius,0,0);
 	RCache.set_Geometry			(g_aa_AA);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 	
@@ -110,7 +110,7 @@ void	CRenderTarget::phase_SunShafts	()
 	
 	// Draw COLOR
 	RCache.set_Element			(s_SunShafts->E[3]);
-	RCache.set_c				("SSParams",ps_prop_ss_sample_step_phase1,ps_prop_ss_radius,0,0);
+	RCache.set_c				("SSParams",ps_r_prop_ss_sample_step_phase1,ps_r_prop_ss_radius,0,0);
 	RCache.set_Geometry			(g_aa_AA);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 	
@@ -133,7 +133,7 @@ void	CRenderTarget::phase_SunShafts	()
 	
 	// Draw COLOR
 	RCache.set_Element			(s_SunShafts->E[5]);
-	RCache.set_c				("SSParamsDISPLAY",ps_prop_ss_intensity,ps_prop_ss_blend,0,0);	
+	RCache.set_c				("SSParamsDISPLAY",ps_r_prop_ss_intensity,ps_r_prop_ss_blend,0,0);	
 	RCache.set_Geometry			(g_aa_AA);
 	RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 	

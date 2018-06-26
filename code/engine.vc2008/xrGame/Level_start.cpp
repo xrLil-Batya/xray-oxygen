@@ -85,14 +85,14 @@ bool CLevel::net_start2()
 			Msg("! Failed to start server.");
 			return true;
 		}
-		Server->SLS_Default		();
-		map_data.m_name			= Server->level_name(serverOption);
+		Server->game->sls_default();
+		map_data.m_name = Server->level_name(serverOption);
 		g_pGamePersistent->LoadTitle(true, map_data.m_name);
 	}
 	return true;
 }
 
-bool CLevel::net_start4				()
+bool CLevel::net_start4()
 {
 	if(!net_start_result_total) return true;
 

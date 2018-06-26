@@ -205,7 +205,7 @@ public:
 		VERIFY				(T);
 		float	mtl			= T->m_material;
 #ifdef	DEBUG
-		if (ps_r2_ls_flags.test(R2FLAG_GLOBALMATERIAL))	mtl=ps_r2_gmaterial;
+		if (ps_r_flags.test(R_FLAG_GLOBALMATERIAL))	mtl=ps_r_gmaterial;
 #endif
 		RCache.hemi.set_material (o_hemi,o_sun,0,(mtl+.5f)/4.f);
 		RCache.hemi.set_pos_faces(o_hemi_cube[CROS_impl::CUBE_FACE_POS_X],
@@ -218,8 +218,8 @@ public:
 	inline bool is_sun()
 	{
 		if (o.sunstatic) return false;
-		Fcolor sun_color = ((light*)Lights.sun_adapted._get())->color;
-		return (ps_r2_ls_flags.test(R2FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS));
+		Fcolor sun_color = ((light*)Lights.sun._get())->color;
+		return (ps_r_flags.test(R_FLAG_SUN) && (u_diffuse2s(sun_color.r,sun_color.g,sun_color.b)>EPS));
 	}
 public:
 	// feature level

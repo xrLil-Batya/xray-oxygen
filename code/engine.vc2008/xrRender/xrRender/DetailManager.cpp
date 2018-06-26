@@ -20,7 +20,6 @@
 #   include <xmmintrin.h>
 #endif
 
-u32 reset_frame = 0;
 
 const float dbgOffset			= 0.f;
 const int	dbgItems			= 128;
@@ -95,8 +94,8 @@ CDetailManager::CDetailManager	()
 	dm_cache1_line = dm_current_cache1_line;
 	dm_cache_size = dm_current_cache_size;
 	dm_fade = dm_current_fade;
-	ps_r__Detail_density = ps_current_detail_density;
-	ps_current_detail_height = ps_r__Detail_height;
+	ps_current_detail_density = ps_r_Detail_density;
+	ps_current_detail_height = ps_r_Detail_height;
 	cache_level1 = (CacheSlot1**)Memory.mem_alloc(dm_cache1_line * sizeof(CacheSlot1*));
 	for (u32 i = 0; i < dm_cache1_line; ++i)
 	{
@@ -226,9 +225,9 @@ void CDetailManager::UpdateVisibleM()
 	so we should use saved frustrum from render interface */
 	CFrustum View = RImplementation.ViewBase;
 
- 	CFrustum	View_old;
- 	Fmatrix		Viewm_old = RDEVICE.mFullTransform;
- 	View_old.CreateFromMatrix		(Viewm_old, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
+// 	CFrustum	View_old;
+// 	Fmatrix		Viewm_old = RDEVICE.mFullTransform;
+// 	View_old.CreateFromMatrix		(Viewm_old, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
 	
 	float fade_limit			= dm_fade;	fade_limit=fade_limit*fade_limit;
 	float fade_start			= 1.f;		fade_start=fade_start*fade_start;
@@ -367,7 +366,6 @@ void CDetailManager::Render	()
 void __stdcall	CDetailManager::MT_CALC		()
 {
 #ifndef _EDITOR
-	if (reset_frame == Device.dwFrame)	return; // !!! ogse
 	if (0==RImplementation.Details)		return;	// possibly deleted
 	if (0==dtFS)						return;
 	if (!psDeviceFlags.is(rsDetails))	return;

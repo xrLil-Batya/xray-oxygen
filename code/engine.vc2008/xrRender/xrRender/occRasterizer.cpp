@@ -159,7 +159,7 @@ void occRasterizer::propagade	()
 void occRasterizer::on_dbg_render()
 {
 #if DEBUG
-	if( !ps_r2_ls_flags_ext.is(R_FLAGEXT_HOM_DEPTH_DRAW) )
+	if (!ps_r_flags.is(R_FLAG_HOM_DEPTH_DRAW))
 	{
 		dbg_HOM_draw_initialized = false;
 		return;

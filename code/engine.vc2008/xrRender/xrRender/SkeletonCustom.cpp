@@ -8,7 +8,6 @@
 #ifndef _EDITOR
 #include	"../../xrEngine/Render.h"
 #endif
-int			psSkeletonUpdate	= 32;
 
 #ifndef _EDITOR
 #include "../../xrServerEntities/smart_cast.h"
@@ -372,7 +371,7 @@ void CKinematics::Copy(dxRender_Visual *P)
 void CKinematics::CalculateBones_Invalidate	()
 {	
 	UCalc_Time		= 0x0; 
-	UCalc_Visibox	= psSkeletonUpdate;		
+	UCalc_Visibox	= ps_r_SkeletonUpdate;
 }
 
 void CKinematics::Spawn			()

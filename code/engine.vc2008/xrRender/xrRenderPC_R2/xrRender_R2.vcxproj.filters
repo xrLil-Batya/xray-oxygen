@@ -1148,9 +1148,6 @@
     <ClCompile Include="blender_fxaa.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
-    <ClCompile Include="r2_rendertarget_render_flare.cpp">
-      <Filter>Core_Target</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_rain_drops.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>

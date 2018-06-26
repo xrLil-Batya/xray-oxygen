@@ -40,9 +40,8 @@
 #		include "alife_simulator.h"
 #	endif // #ifdef XRGAME_EXPORTS
 #endif
-
+#pragma warning(disable: 4273)
 __declspec(dllimport) unsigned short script_server_object_version();
-
 
 ////////////////////////////////////////////////////////////////////////////
 // CPureServerObject

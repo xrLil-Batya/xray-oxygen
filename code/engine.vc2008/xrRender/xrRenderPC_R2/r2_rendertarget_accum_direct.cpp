@@ -38,7 +38,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	}
 
 	// *** assume accumulator setted up ***
-	light*			fuckingsun			= (light*)RImplementation.Lights.sun_adapted._get()	;
+	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
 
 	// Common calc for quad-rendering
 	u32		Offset;
@@ -84,7 +84,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 	}
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -99,10 +99,10 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 
 		// texture adjustment matrix
 		float			fTexelOffs			= (.5f / float(RImplementation.o.smapsize));
-		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
-		//float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_bias:ps_r2_sun_depth_far_bias;
+		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
+		//float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_bias:ps_r_sun_depth_far_bias;
 		//	Use this when triangle culling is not inverted.
-		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r2_sun_depth_near_bias):ps_r2_sun_depth_far_bias;
+		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -124,7 +124,7 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 			// tsm-bias
 			if ( (SE_SUN_FAR == sub_phase) && (RImplementation.o.HW_smap) )
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
+				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44	(bias_t);
 			}
@@ -175,13 +175,15 @@ void CRenderTarget::accum_direct		(u32 sub_phase)
 		
 		// nv-DBT
 		float zMin,zMax;
-		if (SE_SUN_NEAR==sub_phase)	{
+		if (SE_SUN_NEAR==sub_phase)
+		{
 			zMin = 0;
-			zMax = ps_r2_sun_near;
-		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
-			zMin = ps_r2_sun_near;
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_near;
+		}
+		else
+		{
+			zMin = ps_r_sun_near;
+			zMax = ps_r_sun_far;
 		}
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
 		zMin = center_pt.z	;
@@ -232,7 +234,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	}
 
 	// *** assume accumulator setted up ***
-	light*			fuckingsun			= (light*)RImplementation.Lights.sun_adapted._get()	;
+	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
 
 	// Common calc for quad-rendering
 	u32		Offset;
@@ -278,7 +280,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 	}
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -293,9 +295,9 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		// texture adjustment matrix
 		float			fTexelOffs			= (0.5f / float(RImplementation.o.smapsize));
-		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
+		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
 		//	Use this when triangle culling is not inverted.
-//		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r2_sun_depth_near_bias):ps_r2_sun_depth_far_bias;
+//		float			fBias				= (SE_SUN_NEAR==sub_phase)?(-ps_r_sun_depth_near_bias):ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -317,7 +319,7 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 			// tsm-bias
 			if ( (SE_SUN_FAR == sub_phase) && (RImplementation.o.HW_smap) )
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
+				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44	(bias_t);
 			}
@@ -414,13 +416,15 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 
 		// nv-DBT
 		float zMin,zMax;
-		if (SE_SUN_NEAR==sub_phase)	{
+		if (SE_SUN_NEAR==sub_phase)
+		{
 			zMin = 0;
-			zMax = ps_r2_sun_near;
-		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
-			zMin = ps_r2_sun_near;
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_near;
+		}
+		else
+		{
+			zMin = ps_r_sun_near;
+			zMax = ps_r_sun_far;
 		}
 		center_pt.mad(Device.vCameraPosition,Device.vCameraDirection,zMin);	Device.mFullTransform.transform	(center_pt);
 		zMin = center_pt.z	;
@@ -437,12 +441,13 @@ void CRenderTarget::accum_direct_cascade	( u32 sub_phase, Fmatrix& xform, Fmatri
 		// Enable Z function only for near and middle cascades, the far one is restricted by only stencil.
 		if( (SE_SUN_NEAR==sub_phase || SE_SUN_MIDDLE==sub_phase) )
 			HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_GREATEREQUAL);
- 		else
-			if( !ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_ZCULLING))
+		else
+		{
+			if (!ps_r_flags.is(R_FLAG_SUN_ZCULLING))
 				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_ALWAYS);
 			else
 				HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESS);
-
+		}
 
 		// Fetch4 : enable
 		if (RImplementation.o.HW_smap_FETCH4)	{
@@ -518,7 +523,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	u_setrt								(rt_Generic_0,NULL,NULL,HW.pBaseZB);
 
 	// *** assume accumulator setted up ***
-	light*			fuckingsun			= (light*)RImplementation.Lights.sun_adapted._get()	;
+	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
 
 	// Common calc for quad-rendering
 	u32		Offset;
@@ -567,7 +572,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 	}
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -582,8 +587,8 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 
 		// texture adjustment matrix
 		float			fTexelOffs			= (.5f / float(RImplementation.o.smapsize));
-		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_scale:ps_r2_sun_depth_far_scale;
-		float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r2_sun_depth_near_bias:ps_r2_sun_depth_far_bias;
+		float			fRange				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_scale:ps_r_sun_depth_far_scale;
+		float			fBias				= (SE_SUN_NEAR==sub_phase)?ps_r_sun_depth_near_bias:ps_r_sun_depth_far_bias;
 		Fmatrix			m_TexelAdjust		= 
 		{
 			0.5f,				0.0f,				0.0f,			0.0f,
@@ -603,7 +608,7 @@ void CRenderTarget::accum_direct_f		(u32 sub_phase)
 			// tsm-bias
 			if (SE_SUN_FAR == sub_phase)
 			{
-				Fvector		bias;	bias.mul		(L_dir,ps_r2_sun_tsm_bias);
+				Fvector		bias;	bias.mul		(L_dir,ps_r_sun_tsm_bias);
 				Fmatrix		bias_t;	bias_t.translate(bias);
 				m_shadow.mulB_44	(bias_t);
 			}
@@ -646,7 +651,7 @@ void CRenderTarget::accum_direct_lum	()
 	phase_accumulator					();
 
 	// *** assume accumulator setted up ***
-	light*			fuckingsun			= (light*)RImplementation.Lights.sun_adapted._get()	;
+	light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
 
 	// Common calc for quad-rendering
 	u32		Offset;
@@ -666,7 +671,7 @@ void CRenderTarget::accum_direct_lum	()
 	L_dir.normalize				();
 
 	// recalculate d_Z, to perform depth-clipping
-	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r2_sun_near);
+	Fvector	center_pt;			center_pt.mad	(Device.vCameraPosition,Device.vCameraDirection,ps_r_sun_near);
 	Device.mFullTransform.transform(center_pt)	;
 	d_Z							= center_pt.z	;
 
@@ -719,7 +724,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 {
 	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_MIDDLE) && (sub_phase!=SE_SUN_FAR) ) return;
 
-	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts && ps_sunshafts_mode == R2SS_VOLUMETRIC))
+	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts && ps_r_sunshafts_mode == SS_VOLUMETRIC))
 		return;
 
 	{
@@ -749,7 +754,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 		STextureList* _T = &*s_accum_direct_volumetric_cascade->E[0]->passes[0]->T;
 		
-		if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (ps_r_flags.is(R_FLAG_SUN_OLD))
 			_T = &*s_accum_direct_volumetric->E[0]->passes[0]->T;
 
 		STextureList::iterator	_it		= _T->begin	();
@@ -771,13 +776,13 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 	{
 
 		// *** assume accumulator setted up ***
-		light*			fuckingsun			= (light*)RImplementation.Lights.sun_adapted._get()	;
+		light*			fuckingsun			= (light*)RImplementation.Lights.sun._get()	;
 
 		// Common constants (light-related)
 		Fvector		L_clr;
 		L_clr.set					(fuckingsun->color.r,fuckingsun->color.g,fuckingsun->color.b);
 		
-		if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (ps_r_flags.is(R_FLAG_SUN_OLD))
 			RCache.set_Element			(s_accum_direct_volumetric->E[0]);
 		else
 		{
@@ -798,17 +803,19 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 
 		// nv-DBT
 		float zMin,zMax;
-		if (SE_SUN_NEAR==sub_phase)	{
+		if (SE_SUN_NEAR==sub_phase)
+		{
 			zMin = 0;
-			zMax = ps_r2_sun_near;
-		} else {
-			extern float	OLES_SUN_LIMIT_27_01_07;
-			if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
-				zMin = ps_r2_sun_near;
+			zMax = ps_r_sun_near;
+		}
+		else
+		{
+			if (ps_r_flags.is(R_FLAG_SUN_OLD))
+				zMin = ps_r_sun_near;
 			else
 				zMin = 0;
 
-			zMax = OLES_SUN_LIMIT_27_01_07;
+			zMax = ps_r_sun_far;
 		}
 
 		RCache.set_c("volume_range", zMin, zMax, 0, 0);
@@ -843,7 +850,7 @@ void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, co
 			HW.pDevice->SetSamplerState	( 0, D3DSAMP_MIPMAPLODBIAS, FOURCC_GET4 );
 		}
 
-		if( ps_r2_ls_flags_ext.is(R2FLAGEXT_SUN_OLD))
+		if (ps_r_flags.is(R_FLAG_SUN_OLD))
 			RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,4,0,2);
 		else
 			RCache.Render				(D3DPT_TRIANGLELIST,Offset,0,8,0,16);

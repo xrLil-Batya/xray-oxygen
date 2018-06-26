@@ -37,7 +37,6 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
 		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
-		C.r_Sampler_clf     ("s_flares",        r2_RT_flares);
 
 		C.r_End				();
 		break;
@@ -48,7 +47,6 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
 		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
-		C.r_Sampler_clf     ("s_flares",        r2_RT_flares);
 		C.r_End				();
 		break;
 	case 3:	// aa-edge-detection + AA :) + DISTORTION
@@ -58,7 +56,6 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
 		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
-		C.r_Sampler_clf     ("s_flares",        r2_RT_flares);
 		C.r_End				();
 		break;
 	case 4:	// non-AA + DISTORTION
@@ -68,7 +65,6 @@ void	CBlender_combine::Compile(CBlender_Compile& C)
 		C.r_Sampler_clf		("s_image",			r2_RT_generic0);
 		C.r_Sampler_clf		("s_bloom",			r2_RT_bloom1);
 		C.r_Sampler_clf		("s_distort",		r2_RT_generic1);
-		C.r_Sampler_clf     ("s_flares",        r2_RT_flares);
 		C.r_End				();
 		break;
 	case 5:	// post-processing

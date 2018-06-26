@@ -101,7 +101,7 @@ struct	FTreeVisual_setup
 		dwFrame					= Device.dwFrame;
 
 		// Calc wind-vector3, scale
-		float	tm_rot			= PI_MUL_2*Device.fTimeGlobal/ps_r__Tree_w_rot;
+		float tm_rot			= PI_MUL_2*Device.fTimeGlobal/ps_r_Tree_w_rot;
 
   		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
  		float fValue = E.m_fTreeAmplitudeIntensity;
@@ -111,7 +111,7 @@ struct	FTreeVisual_setup
 		scale					= 1.f/float(FTreeVisual_quant);
         
 		// setup constants
-		wave.set				(ps_r__Tree_Wave.x,	ps_r__Tree_Wave.y,	ps_r__Tree_Wave.z,	Device.fTimeGlobal*ps_r__Tree_w_speed);			// wave
+		wave.set				(ps_r_Tree_Wave.x,	ps_r_Tree_Wave.y,	ps_r_Tree_Wave.z,	Device.fTimeGlobal*ps_r_Tree_w_speed);			// wave
 		wave.div				(PI_MUL_2);
 	}
 };
@@ -126,7 +126,7 @@ void FTreeVisual::Render	(float LOD)
 	xform_v.mul_43(RCache.get_xform_view(),xform);
 	RCache.tree.set_m_xform_v(xform_v); // matrix
 
-	float s = ps_r__Tree_SBC;
+	float s = ps_r_Tree_SBC;
 	RCache.tree.set_m_xform	(xform);														// matrix
 	RCache.tree.set_consts	(tvs.scale,tvs.scale,0,0);									// consts/scale
 	RCache.tree.set_wave	(tvs.wave);													// wave
