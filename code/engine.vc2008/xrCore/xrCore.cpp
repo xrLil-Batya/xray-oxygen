@@ -70,6 +70,9 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		xr_FS = new CLocatorAPI();
 		xr_EFS = new EFS_Utils();
+
+        compute_build_id();
+        Msg("xrCore build %d, %s\n", build_id, build_date);
 	}
 	if (init_fs)
 	{
@@ -87,9 +90,6 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 			flags |= CLocatorAPI::flDumpFileActivity;
 #endif
 		FS._initialize(flags, 0, fs_fname);
-
-		compute_build_id();
-		Msg("xrCore build %d, %s\n", build_id, build_date);
 
 		EFS._initialize();
 	}
