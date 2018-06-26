@@ -33,7 +33,7 @@ void LevelCompilerLoggerWindow::Destroy()
 
 void LevelCompilerLoggerWindow::LogThreadProc(void* context)
 {
-	auto ptr = static_cast<LevelCompilerLoggerWindow*>(context);
+    LevelCompilerLoggerWindow* ptr = static_cast<LevelCompilerLoggerWindow*>(context);
 	ptr->LogThreadProc();
 }
 
@@ -70,7 +70,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 	hwPhaseTime = GetDlgItem(logWindow, IDC_PHASE_TIME);
 	SendMessage(hwProgress, PBM_SETRANGE, 0, MAKELPARAM(0, 1000));
 	SendMessage(hwProgress, PBM_SETPOS, 0, 0);
-	Msg("\"LevelBuilder v4.1\" beta build\nCompilation date: %s\n", __DATE__);
+	Msg("\"LevelBuilder v5.0\" alpha build\nCompilation date: %s\n", __DATE__);
 	{
 		char tmpbuf[128];
 		Msg("Startup time: %s", _strtime(tmpbuf));
@@ -166,7 +166,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 void LevelCompilerLoggerWindow::ProcessMessages()
 {
 	MSG msg;
-	if (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
+	while (PeekMessage(&msg, NULL, 0, 0, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
