@@ -58,7 +58,7 @@ void Startup(char* lpCmdLine)
 	xr_strcpy(cmd, lpCmdLine);
 	strlwr(cmd);
 
-	if (strstr(cmd, "-?") || strstr(cmd, "-h") || !strstr(cmd, "-f"))
+	if (strstr(cmd, "-?") || !strstr(cmd, "-f"))
 	{
 		Help();
 		return;
