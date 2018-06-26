@@ -75,7 +75,7 @@ void CBuild::LMapsLocal()
     }
     //u32	thNUM = 5;
     CTimer	start_time;	start_time.Start();
-    for (int L = 0; L<thNUM; L++)	threads.start(xr_new<CLMThread>(L));
+    for (u32 L = 0; L<thNUM; L++)	threads.start(xr_new<CLMThread>(L));
     threads.wait(500);
     Logger.clMsg("%f seconds", start_time.GetElapsed_sec());
 }

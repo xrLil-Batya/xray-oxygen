@@ -22,7 +22,7 @@
 #pragma comment(lib,"xrCore.LIB")
 
 extern LPCSTR LEVEL_GRAPH_NAME;
-LevelCompilerLoggerWindow &Logger = *(new LevelCompilerLoggerWindow());
+LevelCompilerLoggerWindow &Logger = LevelCompilerLoggerWindow::instance();
 
 extern void	xrCompiler			(LPCSTR name, bool draft_mode, bool pure_covers, LPCSTR out_name);
 extern void	verify_level_graph(LPCSTR name, bool verbose);

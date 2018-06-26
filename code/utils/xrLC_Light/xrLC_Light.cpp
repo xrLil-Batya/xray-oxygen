@@ -11,9 +11,9 @@
 #endif
 #include "../xrInterface/cl_cast.hpp"
 
-ILevelCompilerLogger& Logger = LevelCompilerLoggerWindow::instance();
+XRLC_LIGHT_API LevelCompilerLoggerWindow& Logger = LevelCompilerLoggerWindow::instance();
 
-CThread::LogFunc ProxyMsg = cdecl_cast(
+XRLC_LIGHT_API CThread::LogFunc ProxyMsg = cdecl_cast(
 	[](const char *format, ...)
 {
 	va_list args;
@@ -23,7 +23,7 @@ CThread::LogFunc ProxyMsg = cdecl_cast(
 }
 );
 
-CThreadManager::ReportStatusFunc ProxyStatus = cdecl_cast(
+XRLC_LIGHT_API CThreadManager::ReportStatusFunc ProxyStatus = cdecl_cast(
 	[](const char *format, ...)
 {
 	va_list args;
@@ -33,7 +33,7 @@ CThreadManager::ReportStatusFunc ProxyStatus = cdecl_cast(
 }
 );
 
-CThreadManager::ReportProgressFunc ProxyProgress = cdecl_cast(
+XRLC_LIGHT_API CThreadManager::ReportProgressFunc ProxyProgress = cdecl_cast(
 	[](float progress)
 { Logger.Progress(progress); }
 );

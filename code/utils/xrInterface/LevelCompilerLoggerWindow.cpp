@@ -101,19 +101,21 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 		BOOL bWasChanges = FALSE;
 		char tbuf[256];
 
-		if (LogSize != LogFile->size())
 		{
 			std::lock_guard<decltype(csLog)> lock(csLog);
-			bWasChanges = TRUE;
-			for (; LogSize < LogFile->size(); LogSize++)
+			if (LogSize != LogFile->size())
 			{
-				const char* S = *(*LogFile)[LogSize];
-				if (!S)
-					S = "";
-				SendMessage(hwLog, LB_ADDSTRING, 0, (LPARAM)S);
+				bWasChanges = TRUE;
+				for (; LogSize < LogFile->size(); LogSize++)
+				{
+					const char* S = *(*LogFile)[LogSize];
+					if (!S)
+						S = "";
+					SendMessage(hwLog, LB_ADDSTRING, 0, (LPARAM)S);
+				}
+				SendMessage(hwLog, LB_SETTOPINDEX, LogSize - 1, 0);
+				FlushLog();
 			}
-			SendMessage(hwLog, LB_SETTOPINDEX, LogSize - 1, 0);
-			FlushLog();
 		}
 
 		if (_abs(PrSave - progress) > EPS_L)
@@ -213,7 +215,7 @@ void LevelCompilerLoggerWindow::StatusV(const char* format, va_list args)
 {
 	char buf[1024];
 	vsprintf(buf, format, args);
-	csLog.unlock();
+	csLog.lock();
 	xr_strcpy(status, buf);
 	bStatusChange = true;
 	Msg("    | %s", buf);

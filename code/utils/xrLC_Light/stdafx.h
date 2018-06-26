@@ -8,10 +8,10 @@
 #include "../xrInterface/xrThread.hpp"
 #include "../xrInterface/LevelCompilerLoggerWindow.hpp"
 
-extern ILevelCompilerLogger& Logger;
-extern CThread::LogFunc ProxyMsg;
-extern CThreadManager::ReportStatusFunc ProxyStatus;
-extern CThreadManager::ReportProgressFunc ProxyProgress;
+extern XRLC_LIGHT_API LevelCompilerLoggerWindow& Logger;
+extern XRLC_LIGHT_API CThread::LogFunc ProxyMsg;
+extern XRLC_LIGHT_API CThreadManager::ReportStatusFunc ProxyStatus;
+extern XRLC_LIGHT_API CThreadManager::ReportProgressFunc ProxyProgress;
 // TODO: reference additional headers your program requires here
 
 #ifdef DEBUG
