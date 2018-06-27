@@ -18,6 +18,7 @@
 #include "object_broker.h"
 #include "alife_simulator_base.h"
 #include "../xrEngine/x_ray.h"
+#include "ui/UILoadingScreen.h"
 
 //-----------------------------------------------------------------
 BOOL	net_sv_control_hit	= FALSE		;
@@ -318,12 +319,11 @@ void game_sv_GameState::restart_simulator(LPCSTR saved_game_name)
 	xr_strcpy(g_pGamePersistent->m_game_params.m_game_or_spawn, saved_game_name);
 	xr_strcpy(g_pGamePersistent->m_game_params.m_new_or_load, "load");
 
-	pApp->ls_header[0] = '\0';
-	pApp->ls_tip_number[0] = '\0';
-	pApp->ls_tip[0] = '\0';
+	pApp->SetLoadingScreen(new UILoadingScreen());
 	pApp->LoadBegin();
 	m_alife_simulator = xr_new<CALifeSimulator>(&server(), &options);
 	g_pGamePersistent->SetLoadStageTitle("st_client_synchronising");
+	pApp->LoadForceFinish();
 	g_pGamePersistent->LoadTitle();
 	Device.PreCache(60, true, true);
 	pApp->LoadEnd();

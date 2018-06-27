@@ -15,7 +15,6 @@ class dxRenderFactory : public IRenderFactory
 	RENDER_FACTORY_DECLARE(ConsoleRender)
 	RENDER_FACTORY_DECLARE(RenderDeviceRender)
 	RENDER_FACTORY_DECLARE(ObjectSpaceRender)
-	RENDER_FACTORY_DECLARE(ApplicationRender)
 	RENDER_FACTORY_DECLARE(WallMarkArray)
 	RENDER_FACTORY_DECLARE(StatsRender)
 #endif // _EDITOR

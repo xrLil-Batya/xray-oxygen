@@ -33,6 +33,7 @@
 #include "ui/UIMainIngameWnd.h"
 #include "ui/UIPdaWnd.h"
 #include "../xrEngine/x_ray.h"
+#include "ui/UILoadingScreen.h"
 
 #ifndef MASTER_GOLD
 #	include "custommonster.h"
@@ -80,6 +81,12 @@ CGamePersistent::~CGamePersistent(void)
 {	
 	Device.seqFrame.Remove		(this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);
+}
+
+void CGamePersistent::PreStart(LPCSTR op)
+{
+	pApp->SetLoadingScreen(new UILoadingScreen());
+	IGame_Persistent::PreStart(op);
 }
 
 void CGamePersistent::RegisterModel(IRenderVisual* V)

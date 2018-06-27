@@ -18,7 +18,6 @@
 #endif // _EDITOR
 
 #include "dxFontRender.h"
-#include "dxApplicationRender.h"
 #include "dxWallMarkArray.h"
 #include "dxStatsRender.h"
 #include "dxUISequenceVideoItem.h"
@@ -43,7 +42,6 @@ dxRenderFactory RenderFactoryImpl;
 	RENDER_FACTORY_IMPLEMENT(ConsoleRender)
 	RENDER_FACTORY_IMPLEMENT(RenderDeviceRender)
 	RENDER_FACTORY_IMPLEMENT(ObjectSpaceRender)
-	RENDER_FACTORY_IMPLEMENT(ApplicationRender)
 	RENDER_FACTORY_IMPLEMENT(WallMarkArray)
 	RENDER_FACTORY_IMPLEMENT(StatsRender)
     RENDER_FACTORY_IMPLEMENT(ThunderboltRender)

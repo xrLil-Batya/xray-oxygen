@@ -5981,6 +5981,9 @@
     </ClInclude>
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="UIGame.h" />
+    <ClInclude Include="ui\UILoadingScreen.h">
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8499,6 +8502,9 @@
     </ClCompile>
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="UIGame.cpp" />
+    <ClCompile Include="ui\UILoadingScreen.cpp">
+      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">
