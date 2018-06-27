@@ -37,7 +37,7 @@
 	    </clock_wnd>
 
 	    <date_wnd>
-			<text x="12" y="216.5" font="letterica16" color="ui_7"/>
+			<text x="51" y="224" font="letterica16" color="ui_7" align="c" vert_align="c"/>
 			<auto_static x="10" y="213" width="80" height="20" stretch="1">
 				<texture>ui_inGame2_date</texture>
 			</auto_static>
