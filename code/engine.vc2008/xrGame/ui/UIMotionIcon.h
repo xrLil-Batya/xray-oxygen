@@ -7,8 +7,6 @@ class CUIMotionIcon: public CUIWindow
 	using inherited = CUIWindow;
 
 private:
-	CUIProgressBar		m_luminosity_bar;
-	CUIProgressBar		m_noise_bar;
 	CUIProgressShape 	m_luminosity_shape;
 	CUIProgressShape 	m_noise_shape;
 
