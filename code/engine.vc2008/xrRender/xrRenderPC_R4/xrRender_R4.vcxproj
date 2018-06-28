@@ -356,8 +356,6 @@
     <ClInclude Include="..\xrRender\dxLensFlareRender.h" />
     <ClInclude Include="..\..\Include\xrRender\LensFlareRender.h" />
     <ClInclude Include="..\..\Include\xrRender\FactoryPtr.h" />
-    <ClInclude Include="..\..\Include\xrRender\ApplicationRender.h" />
-    <ClInclude Include="..\xrRender\dxApplicationRender.h" />
     <ClInclude Include="..\xrRender\dxRainRender.h" />
     <ClInclude Include="..\..\Include\xrRender\RainRender.h" />
     <ClInclude Include="..\xrRender\dxThunderboltRender.h" />
@@ -590,7 +588,6 @@
     <ClCompile Include="..\xrRender\stats_manager.cpp" />
     <ClCompile Include="..\xrRender\dxRenderFactory.cpp" />
     <ClCompile Include="..\xrRender\dxLensFlareRender.cpp" />
-    <ClCompile Include="..\xrRender\dxApplicationRender.cpp" />
     <ClCompile Include="..\xrRender\dxRainRender.cpp" />
     <ClCompile Include="..\xrRender\dxThunderboltRender.cpp" />
     <ClCompile Include="..\xrRender\dxEnvironmentRender.cpp" />

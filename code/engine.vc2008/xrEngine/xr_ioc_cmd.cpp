@@ -578,6 +578,7 @@ extern int			rsDIB_Size;
 extern Flags32		psEnvFlags;
 
 extern int			g_ErrorLineCount;
+extern int			ps_rs_loading_stages;
 
 ENGINE_API int			ps_always_active			= 0;
 
@@ -649,6 +650,7 @@ void CCC_Register()
 	CMD2(CCC_Gamma,		"rs_c_contrast"			,&ps_contrast		);
 //	CMD4(CCC_Integer,	"rs_vb_size",			&rsDVB_Size,		32,		4096);
 //	CMD4(CCC_Integer,	"rs_ib_size",			&rsDIB_Size,		32,		4096);
+	CMD4(CCC_Integer,	"rs_loadingstages",		&ps_rs_loading_stages,		0, 1);
 
 	// Texture manager	
 	CMD4(CCC_Integer,	"texture_lod",			&psTextureLOD,				0,	4	);

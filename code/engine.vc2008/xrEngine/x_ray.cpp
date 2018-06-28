@@ -8,6 +8,7 @@
 #include "stdafx.h"
 #include "igame_level.h"
 #include "igame_persistent.h"
+#include "ILoadingScreen.h"
 #include "xr_input.h"
 #include "xr_ioconsole.h"
 #include "x_ray.h"
@@ -535,10 +536,7 @@ CApplication::CApplication()
 	Console->Show				( );
 
 	// App Title
-//	app_title[ 0 ] = '\0';
-	ls_header[ 0 ] = '\0';
-	ls_tip_number[ 0 ] = '\0';
-	ls_tip[ 0 ] = '\0';
+	loadingScreen = nullptr;
 }
 
 CApplication::~CApplication()
@@ -562,6 +560,7 @@ CApplication::~CApplication()
 }
 
 extern CRenderDevice Device;
+ENGINE_API int ps_rs_loading_stages = 0;
 
 void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 {
@@ -601,9 +600,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 	} 
 	else if (E==eDisconnect) 
 	{
-		ls_header[0] = '\0';
-		ls_tip_number[0] = '\0';
-		ls_tip[0] = '\0';
 
 		if (g_pGameLevel) 
 		{
@@ -643,7 +639,6 @@ void CApplication::LoadBegin()
 #endif
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
-		m_pRender->LoadBegin();
 		phase_timer.Start	();
 		load_stage			= 0;
 	}
@@ -659,12 +654,24 @@ void CApplication::LoadEnd()
 	}
 }
 
-void CApplication::destroy_loading_shaders()
+void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
 {
-	m_pRender->destroy_loading_shaders();
+	if (loadingScreen)
+		{
+		Log("! Trying to create new loading screen, but there is already one..");
+		DestroyLoadingScreen();
+		}
+
+		loadingScreen = newScreen;
+
 #ifdef SPAWN_ANTIFREEZE
 	g_bootComplete = true;
 #endif
+}
+
+void CApplication::DestroyLoadingScreen()
+{
+	xr_delete(loadingScreen);
 }
 
 ENGINE_API void CApplication::LoadDraw		()
@@ -677,20 +684,25 @@ ENGINE_API void CApplication::LoadDraw		()
 	Device.End					();
 }
 
+void CApplication::LoadForceFinish()
+{
+	if (loadingScreen)
+		loadingScreen->ForceFinish();
+}
+
 void CApplication::SetLoadStageTitle(const char* _ls_title)
 {
-	xr_strcpy(ls_title, _ls_title);
+	if (ps_rs_loading_stages && loadingScreen)
+		 loadingScreen->SetStageTitle(_ls_title);
 }
 
 void CApplication::LoadTitleInt(LPCSTR str1, LPCSTR str2, LPCSTR str3)
 {
-	xr_strcpy(ls_header, str1);
-	xr_strcpy(ls_tip_number, str2);
-	xr_strcpy(ls_tip, str3);
+	if (loadingScreen)
+		loadingScreen->SetStageTip(str1, str2, str3);
 }
 void CApplication::LoadStage()
 {
-	load_stage++;
 	VERIFY(dwLoadReference);
 	Msg("* phase time: %d ms",phase_timer.GetElapsed_ms());
 	phase_timer.Start();
@@ -698,6 +710,8 @@ void CApplication::LoadStage()
 	max_load_stage = 19;
 
 	LoadDraw();
+
+	++load_stage;
 }
 
 void CApplication::LoadSwitch	()
@@ -796,8 +810,8 @@ void CApplication::Level_Set(u32 L)
 		}
 	}
 
-	if (path[0])
-		m_pRender->setLevelLogo(path);
+	if (path[0] && loadingScreen)
+		loadingScreen->SetLevelLogo(path);
 
 }
 
@@ -871,5 +885,6 @@ void CApplication::LoadAllArchives()
 #pragma optimize("g", off)
 void CApplication::load_draw_internal()
 {
-	m_pRender->load_draw_internal(*this);
+	if (loadingScreen)
+		loadingScreen->Update(load_stage, max_load_stage);
 }

@@ -694,7 +694,6 @@ void xrRender_initconsole()
 {
 	CMD3(CCC_Preset,	"_preset",				&ps_Preset,	qpreset_token					);
 
-	CMD4(CCC_Integer,	"rs_loadingstages",		&ps_rs_loading_stages,		0,		1		);
 	CMD4(CCC_Integer,	"rs_skeleton_update",	&ps_r_SkeletonUpdate,		2,		128		);
 #ifdef DEBUG
 	CMD1(CCC_DumpResources,	"dump_resources");

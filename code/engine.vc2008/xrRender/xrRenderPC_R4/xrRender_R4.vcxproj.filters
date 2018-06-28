@@ -109,9 +109,6 @@
     <Filter Include="Interfase implementations\FactoryPtr">
       <UniqueIdentifier>{f8140e0c-6bbd-4f58-93e4-e98b02a9f21a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Interfase implementations\ApplicationRender">
-      <UniqueIdentifier>{8b2aa2f1-0d87-4cc9-9ae4-ebfc30c1df35}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Interfase implementations\RainRender">
       <UniqueIdentifier>{c3cbb48e-a94c-4c80-8af6-4e9ee080a131}</UniqueIdentifier>
     </Filter>
@@ -575,12 +572,6 @@
     </ClInclude>
     <ClInclude Include="..\..\Include\xrRender\FactoryPtr.h">
       <Filter>Interfase implementations\FactoryPtr</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\Include\xrRender\ApplicationRender.h">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrRender\dxApplicationRender.h">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\dxRainRender.h">
       <Filter>Interfase implementations\RainRender</Filter>
@@ -1237,9 +1228,6 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\dxLensFlareRender.cpp">
       <Filter>Interfase implementations\LensFlare</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrRender\dxApplicationRender.cpp">
-      <Filter>Interfase implementations\ApplicationRender</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\dxRainRender.cpp">
       <Filter>Interfase implementations\RainRender</Filter>

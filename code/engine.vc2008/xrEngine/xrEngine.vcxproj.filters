@@ -597,6 +597,9 @@
     <ClInclude Include="..\FrayBuildConfig.hpp">
       <Filter>Kernel</Filter>
     </ClInclude>
+    <ClInclude Include="ILoadingScreen.h">
+      <Filter>Interfaces\Render</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">

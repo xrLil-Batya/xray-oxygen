@@ -356,6 +356,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="ui\UILoadingScreen.h" />
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
     <ClInclude Include="ActorRuck.h" />
@@ -1668,6 +1669,7 @@
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="ui\UILoadingScreen.cpp" />
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
     <ClCompile Include="ActorRuck.cpp" />

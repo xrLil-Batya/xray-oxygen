@@ -10,21 +10,10 @@
 	<luminosity_shape x="10" y="10" width="10" height="10" alignment="c" stretch="1" sector_count="240" clockwise="1" begin_angle="-0.227" end_angle="0.835" blend="0">
 		<texture>ui_inGame2_Radar_green_bar</texture>
 	</luminosity_shape>
-	<luminosity_bar x="40" y="-50" width="50" height="10" horz="1" min="0" max="100" pos="0">
-		<progress>
-			<texture>ui_inGame2_Patroni_HUD_red_bar</texture>
-		</progress>
-	</luminosity_bar>
 
 	<noise_shape x="10" y="10" width="10" height="10" stretch="1" alignment="c" sector_count="240" clockwise="0" begin_angle="3.365" end_angle="4.37" blend="0">
 		<texture>ui_inGame2_Radar_blue_bar</texture>
 	</noise_shape>
-
-	<noise_bar x="55" y="165" width="40" height="10" horz="1" min="0" max="100" pos="0">
-		<progress>
-			<texture>ui_inGame2_Patroni_HUD_blue_bar</texture>
-		</progress>
-	</noise_bar>
 
 <!-- zone_map.xml -->
 	<minimap>
@@ -39,7 +28,7 @@
 	    </clock_wnd>
 
 	    <date_wnd>
-			<text x="12" y="216.5" font="letterica16" color="ui_7"/>
+			<text x="36" y="223" font="letterica16" color="ui_7" align="c" vert_align="c"/>
 			<auto_static x="5" y="213" width="60" height="20">
 				<texture>ui_inGame2_date</texture>
 			</auto_static>
@@ -62,9 +51,6 @@
 
 <!-- maingame_16.xml -->
   <main x="0" y="0" width="1024" height="768">
-    <_auto_static x="512" y="384" width="115" height="115" alignment="c" stretch="1" heading="1" xform_anim="xfrom_rotate_3sec" xform_anim_cyclic="1">
-      <texture>ui_icons_newPDA_Crclbig_h</texture>
-    </_auto_static>
   </main>
 
 	<quick_info x="1" y="670" width="1022" height="50" complex_mode="1" light_anim="ui_btn_hint"  la_cyclic="0" la_texture="0" la_text="1" la_alpha="1">
@@ -193,24 +179,14 @@
 		<back x="841" y="635" width="178" height="121" stretch="1">
 			<texture>ui_inGame2_Patroni_HUD_main_window</texture>
 		</back>
-<!--Dosimeter Clear Sky style-->
-		<rad_shape x="880" y="600" width="80" height="96" sector_count="36" clockwise="1" blend="0" begin_angle="0.75" end_angle="-0.75">
-				<texture color="green">ui_inGame2_Radar_green_bar</texture>
-		</rad_shape>
-		<arrow_rad x="900" y="580" width="8" height="97" heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.75" stretch="1">
-			<texture a="255">ui_hud2_rad01_arrow</texture>
-		</arrow_rad>
-		<arrow_shadow_rad heading="1" clockwise="1" begin_angle="0.75" end_angle="-0.8" ang_velocity="0.75" stretch="1">
-			<texture>ui_hud2_rad01_arrow_shadow</texture>
-		</arrow_shadow_rad>
-<!--Dosimeter Clear Sky style-->	
-		<progress_bar_health x="885" y="648" width="113" height="16" horz="1" min="0" max="100" pos="0">
+	
+		<progress_bar_health x="885" y="648" width="113" height="16" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerHealth * 55.0) / 55.0">
 			<progress>
 				<texture>ui_inGame2_Patroni_HUD_red_bar</texture>
 			</progress>
 		</progress_bar_health>
 
-	    <progress_bar_stamina x="885" y="670" width="113" height="10" horz="1" min="0" max="100" pos="0">
+	    <progress_bar_stamina x="885" y="670" width="113" height="10" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerPower * 55.0) / 55.0">
 	        <progress>
 		        <texture>ui_inGame2_Patroni_HUD_blue_bar</texture>
 	        </progress>

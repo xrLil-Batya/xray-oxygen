@@ -290,6 +290,7 @@
     <ClInclude Include="..\FrayBuildConfig.hpp" />
     <ClInclude Include="ClS\NET_Client.h" />
     <ClInclude Include="date_time.h" />
+    <ClInclude Include="ILoadingScreen.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="CopyProtection.h" />
     <ClInclude Include="dedicated_server_only.h" />
