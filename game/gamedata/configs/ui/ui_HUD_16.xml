@@ -51,9 +51,6 @@
 
 <!-- maingame_16.xml -->
   <main x="0" y="0" width="1024" height="768">
-    <_auto_static x="512" y="384" width="115" height="115" alignment="c" stretch="1" heading="1" xform_anim="xfrom_rotate_3sec" xform_anim_cyclic="1">
-      <texture>ui_icons_newPDA_Crclbig_h</texture>
-    </_auto_static>
   </main>
 
 	<quick_info x="1" y="670" width="1022" height="50" complex_mode="1" light_anim="ui_btn_hint"  la_cyclic="0" la_texture="0" la_text="1" la_alpha="1">
@@ -183,13 +180,13 @@
 			<texture>ui_inGame2_Patroni_HUD_main_window</texture>
 		</back>
 	
-		<progress_bar_health x="885" y="648" width="113" height="16" horz="1" min="0" max="100" pos="0">
+		<progress_bar_health x="885" y="648" width="113" height="16" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerHealth * 55.0) / 55.0">
 			<progress>
 				<texture>ui_inGame2_Patroni_HUD_red_bar</texture>
 			</progress>
 		</progress_bar_health>
 
-	    <progress_bar_stamina x="885" y="670" width="113" height="10" horz="1" min="0" max="100" pos="0">
+	    <progress_bar_stamina x="885" y="670" width="113" height="10" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerPower * 55.0) / 55.0">
 	        <progress>
 		        <texture>ui_inGame2_Patroni_HUD_blue_bar</texture>
 	        </progress>

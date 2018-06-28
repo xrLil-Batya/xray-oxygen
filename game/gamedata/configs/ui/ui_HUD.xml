@@ -179,13 +179,13 @@
 			<texture>ui_inGame2_Patroni_HUD_main_window</texture>
 		</back>
 
-		<progress_bar_health x="852" y="649" width="138" height="16" horz="1" min="0" max="100" pos="0">
+		<progress_bar_health x="852" y="649" width="138" height="16" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerHealth * 55.0) / 55.0">
 			<progress>
 				<texture>ui_inGame2_Patroni_HUD_red_bar</texture>
 			</progress>
 		</progress_bar_health>
 
-	    <progress_bar_stamina x="852" y="672" width="138" height="10" horz="1" min="0" max="100" pos="0">
+	    <progress_bar_stamina x="852" y="672" width="138" height="10" horz="1" min="0" max="1" pos="0" expression="floor(fltPlayerPower * 55.0) / 55.0">
 	        <progress>
 		        <texture>ui_inGame2_Patroni_HUD_blue_bar</texture>
 	        </progress>

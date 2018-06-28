@@ -26,8 +26,8 @@ CUIHudStatesWnd::CUIHudStatesWnd()
 	m_timer_1sec(0),
 	m_last_health(0.0f),
 	m_radia_self(0.0f),
-	m_health_self(0.0f),
-	m_stamina_self(0.0f),
+//	m_health_self(0.0f),
+//	m_stamina_self(0.0f),
 	m_radia_hit(0.0f)
 {
 
@@ -175,20 +175,20 @@ void CUIHudStatesWnd::Update()
 void CUIHudStatesWnd::UpdateHealth( CActor* actor )
 {
 
-	float cur_health = actor->GetfHealth();
-	m_ui_health_bar->SetProgressPos(iCeil(cur_health * 100.0f * 35.f) / 35.f);
-	if ( _abs(cur_health - m_last_health) > m_health_blink )
-	{
-		m_last_health = cur_health;
-		m_ui_health_bar->m_UIProgressItem.ResetColorAnimation();
-	}
+//	float cur_health = actor->GetfHealth();
+//	m_ui_health_bar->SetProgressPos(iCeil(cur_health * 100.0f * 35.f) / 35.f);
+//	if ( _abs(cur_health - m_last_health) > m_health_blink )
+//	{
+//		m_last_health = cur_health;
+//		m_ui_health_bar->m_UIProgressItem.ResetColorAnimation();
+//	}
 	
-	float cur_stamina = actor->conditions().GetPower();
-	m_ui_stamina_bar->SetProgressPos(iCeil(cur_stamina * 100.0f * 35.f) / 35.f);
-	if ( !actor->conditions().IsCantSprint() )
-	{
-		m_ui_stamina_bar->m_UIProgressItem.ResetColorAnimation();
-	}
+//	float cur_stamina = actor->conditions().GetPower();
+//	m_ui_stamina_bar->SetProgressPos(iCeil(cur_stamina * 100.0f * 35.f) / 35.f);
+//	if ( !actor->conditions().IsCantSprint() )
+//	{
+//		m_ui_stamina_bar->m_UIProgressItem.ResetColorAnimation();
+//	}
 }
 
 void CUIHudStatesWnd::UpdateActiveItemInfo( CActor* actor )
