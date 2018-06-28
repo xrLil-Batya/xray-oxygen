@@ -75,6 +75,14 @@ float _sign(const float& v)
 void CUIProgressBar::Update()
 {
 	inherited::Update();
+
+    if (m_expression.IsCompiled())
+    {
+        ExpressionVarVariadic Result = m_expression.ExecuteExpression();
+        m_ProgressPos.y = Result.Flt;
+        clamp(m_ProgressPos.y, m_MinPos, m_MaxPos);
+    }
+
 	if(!fsimilar(m_ProgressPos.x, m_ProgressPos.y))
 	{
 		if( fsimilar(m_MaxPos,m_MinPos) ) m_MaxPos	+= EPS;	//hack ^(
@@ -88,12 +96,6 @@ void CUIProgressBar::Update()
 		m_ProgressPos.x			+= _val;
 		UpdateProgressBar		();
 	}
-
-    if (m_expression.IsCompiled())
-    {
-        ExpressionVarVariadic Result = m_expression.ExecuteExpression();
-        SetProgressPos(Result.Flt);
-    }
 }
 
 void CUIProgressBar::Draw()
