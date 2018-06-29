@@ -109,8 +109,6 @@ LPCSTR GetPlayerName()			{ return g_actor->Name();								}
 float GetPlayerHealth()			{ return g_actor->conditions().GetHealth();				}
 float GetPlayerPower()			{ return g_actor->conditions().GetPower();				}
 
-float GetZoneMaxPowereHitTypeBurn() { return g_actor->conditions().GetZoneMaxPower(ALife::eHitTypeBurn);}
-
 void RegisterExpressionDelegates ()
 {
     //Actor outfit protections
