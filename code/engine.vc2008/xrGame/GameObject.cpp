@@ -145,7 +145,6 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 	switch (type)
 	{
 	case GE_HIT:
-	case GE_HIT_STATISTIC:
 		{
 			SHit	HDS;
 			HDS.PACKET_TYPE = type;
@@ -158,15 +157,6 @@ void CGameObject::OnEvent		(NET_Packet& P, u16 type)
 				Msg("! ERROR: hitter object [%d] is NULL on client.", HDS.whoID);
 			}
 			//-------------------------------------------------------
-			switch (HDS.PACKET_TYPE)
-			{
-			case GE_HIT_STATISTIC:
-				{
-				}break;
-			default:
-				{
-				}break;
-			}
 			SetHitInfo(Hitter, Weapon, HDS.bone(), HDS.p_in_bone_space, HDS.dir);
 			Hit				(&HDS);
 		}

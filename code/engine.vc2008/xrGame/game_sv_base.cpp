@@ -185,43 +185,28 @@ void game_sv_GameState::teleport_object	(NET_Packet &packet, u16 id)
 	alife().teleport_object(id, game_vertex_id, level_vertex_id, position);
 }
 
-void game_sv_GameState::add_restriction	(NET_Packet &packet, u16 id)
+void game_sv_GameState::add_restriction(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id)
 {
-	if (!ai().get_alife())
-		return;
-
-	ALife::_OBJECT_ID		restriction_id;
-	packet.r(&restriction_id, sizeof(restriction_id));
-
-	RestrictionSpace::ERestrictorTypes	restriction_type;
-	packet.r(&restriction_type, sizeof(restriction_type));
-
-	alife().add_restriction(id, restriction_id, restriction_type);
+	if (ai().get_alife())
+	{
+		alife().add_restriction(id, restriction_id, type);
+	}
 }
 
-void game_sv_GameState::remove_restriction(NET_Packet &packet, u16 id)
+void game_sv_GameState::remove_restriction(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id)
 {
-	if (!ai().get_alife())
-		return;
-
-	ALife::_OBJECT_ID		restriction_id;
-	packet.r(&restriction_id, sizeof(restriction_id));
-
-	RestrictionSpace::ERestrictorTypes	restriction_type;
-	packet.r(&restriction_type, sizeof(restriction_type));
-
-	alife().remove_restriction(id, restriction_id, restriction_type);
+	if (ai().get_alife())
+	{
+		alife().remove_restriction(id, restriction_id, type);
+	}
 }
 
-void game_sv_GameState::remove_all_restrictions	(NET_Packet &packet, u16 id)
+void game_sv_GameState::remove_all_restrictions(RestrictionSpace::ERestrictorTypes type, u16 id)
 {
-	if (!ai().get_alife())
-		return;
-
-	RestrictionSpace::ERestrictorTypes	restriction_type;
-	packet.r(&restriction_type, sizeof(restriction_type));
-
-	alife().remove_all_restrictions(id, restriction_type);
+	if (ai().get_alife())
+	{
+		alife().remove_all_restrictions(id, type);
+	}
 }
 
 shared_str game_sv_GameState::level_name(const shared_str &server_options) const

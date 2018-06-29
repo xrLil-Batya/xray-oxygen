@@ -70,12 +70,6 @@ void CActor::OnEvent(NET_Packet& P, u16 type)
 			
 			CGameObject * GO = smart_cast<CGameObject*>(Obj);
 			
-#ifdef MP_LOGGING
-			string64 act;
-			xr_strcpy( act, (type == GE_TRADE_SELL)? "sells" : "rejects" );
-			Msg("--- Actor [%d][%s]  %s  [%d][%s]", ID(), Name(), act, GO->ID(), GO->cNameSect().c_str());
-#endif // MP_LOGGING
-			
 			VERIFY( GO->H_Parent() );
 			if ( !GO->H_Parent() )
 			{
