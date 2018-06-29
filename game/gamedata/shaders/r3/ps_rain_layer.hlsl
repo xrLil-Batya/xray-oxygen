@@ -3,7 +3,7 @@
 #include "shadow.h"
 
 
-float3x4 m_sunmask;	// ortho-projection
+
 Texture2D	s_water;
 
 
