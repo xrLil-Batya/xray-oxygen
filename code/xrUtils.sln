@@ -9,6 +9,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "DXT", "utils\xrDXT\DXT.vcxp
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrAI", "utils\xrAI\xrAI.vcxproj", "{EA5932F3-02FE-4AD3-89E8-7072DC465D25}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B90BDC22-A891-4B33-B562-29D701F65DBD} = {B90BDC22-A891-4B33-B562-29D701F65DBD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCompress", "utils\xrCompress\xrCompress.vcxproj", "{EF76867B-6EB8-4DC0-A1D6-E964FAD6FC7B}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -16,6 +19,9 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrCompress", "utils\xrCompr
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrDO_Light", "utils\xrDO_Light\xrDO_Light.vcxproj", "{B730F54D-1199-481A-AAD0-5DB684E067C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B90BDC22-A891-4B33-B562-29D701F65DBD} = {B90BDC22-A891-4B33-B562-29D701F65DBD}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrLC", "utils\xrLC\xrLC.vcxproj", "{A4ABD75E-825B-4D09-B3B2-2709682E40C8}"
 	ProjectSection(ProjectDependencies) = postProject

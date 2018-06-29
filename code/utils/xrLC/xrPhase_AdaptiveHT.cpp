@@ -258,7 +258,7 @@ void CBuild::xrPhase_AdaptiveHT()
 		pVert8->C._set(Color);
 
 		//must be signed int, not unsigned
-		int VertexCountBefore = VertexBuffer.size();
+		int VertexCountBefore = (int)VertexBuffer.size();
 
 		VertexBuffer.push_back(pVert1);
 		VertexBuffer.push_back(pVert2);
