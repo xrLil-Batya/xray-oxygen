@@ -49,35 +49,14 @@ void xrServer::Process_event	(NET_Packet& P)
 		{
 		SendBroadcast			(BroadcastCID,P);
 		}break;
-	case GEG_PLAYER_ACTIVATEARTEFACT:
-		{
-			Process_event_activate	(P,destination,P.r_u16());
-			break;
-		};
-	case GE_INV_ACTION:
-		{
-			if (SV_Client)
-				Level().OnMessage(P.B.data, (u32)P.B.count);
-		}break;
+	case GEG_PLAYER_ACTIVATEARTEFACT: 	Process_event_activate(P,destination,P.r_u16()); break;
+	case GE_INV_ACTION: 				if (SV_Client) Level().OnMessage(P.B.data, (u32)P.B.count); break;
 	case GE_TRADE_BUY:
-	case GE_OWNERSHIP_TAKE:
-		{
-			Process_event_ownership	(P, destination);
-			VERIFY					(verify_entities());
-		}break;
+	case GE_OWNERSHIP_TAKE: 			Process_event_ownership	(P, destination); break;
 	case GE_TRADE_SELL:
 	case GE_OWNERSHIP_REJECT:
-	case GE_LAUNCH_ROCKET:
-		{
-			Process_event_reject	(P,sender,timestamp,destination,P.r_u16());
-			VERIFY					(verify_entities());
-		}break;
-	case GE_DESTROY:
-		{
-			Process_event_destroy	(P,sender,timestamp,destination, NULL);
-			VERIFY					(verify_entities());
-		}
-		break;
+	case GE_LAUNCH_ROCKET: 				Process_event_reject(P,sender,timestamp,destination,P.r_u16()); break;
+	case GE_DESTROY: 					Process_event_destroy(P,sender,timestamp,destination, NULL); break;
 	case GE_TRANSFER_AMMO:
 		{
 			u16					id_entity;
@@ -241,9 +220,10 @@ void xrServer::Process_event	(NET_Packet& P)
 		}break;
 
 	case GEG_PLAYER_DISABLE_SPRINT:
-	case GEG_PLAYER_WEAPON_HIDE_STATE:	Level().OnMessage(P.B.data, (u32)P.B.count); break;
+	case GEG_PLAYER_WEAPON_HIDE_STATE:
 	case GEG_PLAYER_ACTIVATE_SLOT:
 	case GEG_PLAYER_ITEM_EAT:			Level().OnMessage(P.B.data, (u32)P.B.count); break;
+	case GE_TELEPORT_OBJECT: 			game->teleport_object(P,destination); break;
 	case GEG_PLAYER_USE_BOOSTER:
 		{
 			if (receiver && receiver->owner && (receiver->owner != SV_Client))
@@ -253,28 +233,11 @@ void xrServer::Process_event	(NET_Packet& P)
 				Level().OnMessage(P.B.data, (u32)P.B.count);
 			}
 		}break;
-	case GE_TELEPORT_OBJECT:
-		{
-			game->teleport_object	(P,destination);
-		}break;
-	case GE_ADD_RESTRICTION:
-		{
-			game->add_restriction	(P,destination);
-		}break;
-	case GE_REMOVE_RESTRICTION:
-		{
-			game->remove_restriction(P,destination);
-		}break;
-	case GE_REMOVE_ALL_RESTRICTIONS:
-		{
-			game->remove_all_restrictions(P,destination);
-		}break;
 	case GE_MONEY:
 		{
 			CSE_Abstract				*e_dest = receiver;
 			CSE_ALifeTraderAbstract*	pTa = smart_cast<CSE_ALifeTraderAbstract*>(e_dest);
 			pTa->m_dwMoney				= P.r_u32();
-						
 		}break;
 	default:
 		VERIFY2	(0,"Game Event not implemented!!!");

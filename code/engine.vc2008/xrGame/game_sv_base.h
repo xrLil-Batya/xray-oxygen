@@ -55,9 +55,9 @@ public:
 	virtual		void				switch_distance			(NET_Packet &net_packet);
 
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
-	virtual		void				add_restriction			(NET_Packet &packet, u16 id);
-	virtual		void				remove_restriction		(NET_Packet &packet, u16 id);
-	virtual		void				remove_all_restrictions	(NET_Packet &packet, u16 id);
+	virtual		void				add_restriction			(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id);
+	virtual		void				remove_restriction		(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id);
+	virtual		void				remove_all_restrictions	(RestrictionSpace::ERestrictorTypes type, u16 id);
 
 	virtual		void				sls_default				();
 	virtual		shared_str			level_name				(const shared_str &server_options) const;
