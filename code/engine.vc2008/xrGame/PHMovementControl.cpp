@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "phmovementcontrol.h"
 
-#include "../xrEngine/cl_intersect.h"
+#include "../xrCDB/cl_intersect.h"
 #include "../xrserverentities/alife_space.h"
 
 #include "../xrphysics/phCharacter.h"
@@ -1309,7 +1309,7 @@ BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID 
 	if(result.O){
 		return true;
 	}else{
-		//ïîëó÷èòü òðåóãîëüíèê è óçíàòü åãî ìàòåðèàë
+		//Ð¿Ð¾Ð»ÑƒÑ‡Ð¸Ñ‚ÑŒ Ñ‚Ñ€ÐµÑƒÐ³Ð¾Ð»ÑŒÐ½Ð¸Ðº Ð¸ ÑƒÐ·Ð½Ð°Ñ‚ÑŒ ÐµÐ³Ð¾ Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»
 		T				= Level().ObjectSpace.GetStaticTris()+result.element;
 		mtl_idx			= T->material;
 	}

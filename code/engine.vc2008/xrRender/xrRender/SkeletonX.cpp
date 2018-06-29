@@ -19,6 +19,7 @@
 #include "SkeletonCustom.h"
 #include "../../xrEngine/fmesh.h"
 #include "../../xrEngine/CPU/xrCPU_Pipe.h"
+#include "../../xrCDB/cl_intersect.h"
 
 shared_str	s_bones_array_const;
 
@@ -415,7 +416,6 @@ void 	get_pos_bones(const vertBoned4W &vert, Fvector& p, CKinematics* Parent )
 //-----------------------------------------------------------------------------------------------------
 // Wallmarks
 //-----------------------------------------------------------------------------------------------------
-#include "cl_intersect.h"
 BOOL	CSkeletonX::_PickBoneSoft1W	(IKinematics::pick_result &r, float dist, const Fvector& S, const Fvector& D, u16* indices, CBoneData::FacesVec& faces)
 {
 		return pick_bone<vertBoned1W>( Vertices1W, Parent, r, dist, S, D, indices, faces);

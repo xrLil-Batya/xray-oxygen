@@ -15,6 +15,8 @@
 #include "../../Include/xrAPI/xrAPI.h"
 #endif
 
+#include "../../xrCDB/cl_intersect.h"
+
 std::recursive_mutex	UCalc_Mutex;
 
 //////////////////////////////////////////////////////////////////////
@@ -525,7 +527,6 @@ void CKinematics::EnumBoneVertices	(SEnumVerticesCallback &C, u16 bone_id)
 	for ( u32 i=0; i<children.size(); i++ )
 		LL_GetChild( i )->EnumBoneVertices( C, bone_id );
 }
-#include "cl_intersect.h"
 
 using OBBVec = xr_vector<Fobb>;
 

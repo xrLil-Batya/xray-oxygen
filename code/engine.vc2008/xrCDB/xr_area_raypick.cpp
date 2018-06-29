@@ -1,9 +1,9 @@
 #include "stdafx.h"
 #include "xr_area.h"
 #include "ispatial.h"
+#include "cl_intersect.h"
 #include "../xrengine/xr_collide_form.h"
 #include "../xrengine/xr_object.h"
-#include "../xrengine/cl_intersect.h"
 #include "d3d9types.h"
 #ifdef	DEBUG
 static bool _cdb_bDebug = false;

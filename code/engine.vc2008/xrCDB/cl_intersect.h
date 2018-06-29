@@ -1,6 +1,4 @@
-//---------------------------------------------------------------------------
-#ifndef intersectH
-#define intersectH
+#pragma once
 
 namespace CDB
 {
@@ -45,14 +43,14 @@ namespace CDB
 			if (det < EPS)
 				return false;
 
-			tvec.sub(C, *p[0]);							// calculate distance from vert0 to ray origin
+			tvec.sub(C, *p[0]);					// calculate distance from vert0 to ray origin
 			u = tvec.dotproduct(pvec);			// calculate U parameter and test bounds
 
 			if (u < 0.0 || u > det)
 				return false;
 
-			qvec.crossproduct(tvec, edge1);				// prepare to test V parameter
-			v = D.dotproduct(qvec);			// calculate V parameter and test bounds
+			qvec.crossproduct(tvec, edge1);		// prepare to test V parameter
+			v = D.dotproduct(qvec);				// calculate V parameter and test bounds
 
 			if (v < 0.0 || u + v > det)
 				return false;
@@ -64,19 +62,19 @@ namespace CDB
 			v *= inv_det;
 		}
 		else
-		{											// the non-culling branch
+		{										// the non-culling branch
 			if (det > -EPS && det < EPS)
 				return false;
 
 			inv_det = 1.0f / det;
-			tvec.sub(C, *p[0]);							// calculate distance from vert0 to ray origin
+			tvec.sub(C, *p[0]);					// calculate distance from vert0 to ray origin
 			u = tvec.dotproduct(pvec)*inv_det;	// calculate U parameter and test bounds
 
 			if (u < 0.0f || u > 1.0f)
 				return false;
 
-			qvec.crossproduct(tvec, edge1);				// prepare to test V parameter
-			v = D.dotproduct(qvec)*inv_det;	// calculate V parameter and test bounds
+			qvec.crossproduct(tvec, edge1);		// prepare to test V parameter
+			v = D.dotproduct(qvec)*inv_det;		// calculate V parameter and test bounds
 
 			if (v < 0.0f || u + v > 1.0f)
 				return false;
@@ -103,14 +101,14 @@ namespace CDB
 			if (det < EPS)
 				return false;
 
-			tvec.sub(C, p[0]);							// calculate distance from vert0 to ray origin
+			tvec.sub(C, p[0]);					// calculate distance from vert0 to ray origin
 			u = tvec.dotproduct(pvec);			// calculate U parameter and test bounds
 
 			if (u < 0.0f || u > det)
 				return false;
 
-			qvec.crossproduct(tvec, edge1);				// prepare to test V parameter
-			v = D.dotproduct(qvec);			// calculate V parameter and test bounds
+			qvec.crossproduct(tvec, edge1);		// prepare to test V parameter
+			v = D.dotproduct(qvec);				// calculate V parameter and test bounds
 
 			if (v < 0.0f || u + v > det)
 				return false;
@@ -122,19 +120,19 @@ namespace CDB
 			v *= inv_det;
 		}
 		else
-		{											// the non-culling branch
+		{										// the non-culling branch
 			if (det > -EPS && det < EPS)
 				return false;
 
 			inv_det = 1.0f / det;
-			tvec.sub(C, p[0]);							// calculate distance from vert0 to ray origin
+			tvec.sub(C, p[0]);					// calculate distance from vert0 to ray origin
 			u = tvec.dotproduct(pvec)*inv_det;	// calculate U parameter and test bounds
 
 			if (u < 0.0f || u > 1.0f)
 				return false;
 
-			qvec.crossproduct(tvec, edge1);				// prepare to test V parameter
-			v = D.dotproduct(qvec)*inv_det;	// calculate V parameter and test bounds
+			qvec.crossproduct(tvec, edge1);		// prepare to test V parameter
+			v = D.dotproduct(qvec)*inv_det;		// calculate V parameter and test bounds
 
 			if (v < 0.0f || u + v > 1.0f)
 				return false;
@@ -894,6 +892,4 @@ namespace CDB
 		return true;
 	}
 	//----------------------------------------------------------------------------
-};
-
-#endif
+}

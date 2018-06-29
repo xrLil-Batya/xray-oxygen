@@ -88,9 +88,6 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{d158ee0c-a594-4b02-92f2-286d9afd76de}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Collision Core">
-      <UniqueIdentifier>{9e6e2fd0-0d85-42e9-8a7f-f29a23eb33ae}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Console">
       <UniqueIdentifier>{7a4f13ec-5100-4600-8870-155f26d1228d}</UniqueIdentifier>
     </Filter>
@@ -440,9 +437,6 @@
     </ClInclude>
     <ClInclude Include="std_classes.h">
       <Filter>Engine</Filter>
-    </ClInclude>
-    <ClInclude Include="cl_intersect.h">
-      <Filter>Engine\Collision Core</Filter>
     </ClInclude>
     <ClInclude Include="XR_IOConsole.h">
       <Filter>Engine\Console</Filter>
