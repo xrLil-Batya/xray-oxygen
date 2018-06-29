@@ -6,6 +6,9 @@
 #include "IGame_Persistent.h"
 #include "render.h"
 #include "xr_object.h"
+#include "psapi.h"
+#include <Wbemidl.h>
+#include <comdef.h>
 
 #include "../Include/xrRender/DrawUtils.h"
 
@@ -302,6 +305,39 @@ void CStats::Show()
         pFont->SetHeight(sz);
 		pFont->OnRender					();
 	};
+
+	if (psDeviceFlags.test(rsHWInfo))
+	{
+		// init all variables
+		MEMORYSTATUSEX mem;
+		PROCESS_MEMORY_COUNTERS_EX pmc;
+		SYSTEM_INFO sysInfo;
+		
+		// Getting info about memory
+		mem.dwLength = sizeof(MEMORYSTATUSEX);
+		GlobalMemoryStatusEx((&mem));
+	
+		INT AvailableMem = (((INT)(mem.ullAvailPhys)) / 1024 * 1024);	// how much phys mem available
+		INT AvailablePageFileMem =((((INT)(mem.ullAvailPageFile)) / 1024 * 1024));	// how much pagefile mem available
+
+		// Getting info by request
+		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(PROCESS_MEMORY_COUNTERS_EX));
+		GetSystemInfo(&sysInfo);
+
+		INT PageFileMemUsed = (((INT)(pmc.PagefileUsage)) / 1024 * 1024);
+
+		pmc.cb = sizeof(PROCESS_MEMORY_COUNTERS_EX);
+
+		// Just skip it. Okey?
+
+#ifdef DEBUG 
+		// Getting min and max address of memory
+		DWORD MinAppAddress = ((DWORD)(sysInfo.lpMinimumApplicationAddress));
+		DWORD MaxAppAddress = ((DWORD)(sysInfo.lpMaximumApplicationAddress));
+#endif
+
+		//#TODO: display all variables
+	}
 	
 	if( psDeviceFlags.test(rsCameraPos) ){
 		_draw_cam_pos					(pFont);

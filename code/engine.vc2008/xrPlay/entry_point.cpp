@@ -43,7 +43,6 @@ const char* GetParams()
 /// </summary>
 DLL_API int RunApplication(LPCSTR commandLine);
 
-
 /// <summary>
 /// Main method for initialize xrEngine
 /// </summary>

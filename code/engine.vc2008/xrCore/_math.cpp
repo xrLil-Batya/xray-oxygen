@@ -86,13 +86,14 @@ namespace CPU
 
 	typedef struct _PROCESSOR_POWER_INFORMATION
 	{
-		unsigned long Number;
-		unsigned long MaxMhz;
-		unsigned long CurrentMhz;
-		unsigned long MhzLimit;
-		unsigned long MaxIdleState;
-		unsigned long CurrentIdleState;
+		ULONG Number;
+		ULONG MaxMhz;
+		ULONG CurrentMhz;
+		ULONG MhzLimit;
+		ULONG MaxIdleState;
+		ULONG CurrentIdleState;
 	} PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
+
 	u64 getProcessorFrequency(u32 logicalProcessorCount)
 	{
 		PROCESSOR_POWER_INFORMATION* pInfo = reinterpret_cast<PROCESSOR_POWER_INFORMATION*> (alloca(sizeof(PROCESSOR_POWER_INFORMATION) * logicalProcessorCount));
@@ -110,23 +111,20 @@ bool g_initialize_cpu_called = false;
 //------------------------------------------------------------------------------------
 void _initialize_cpu(void)
 {
-	////////////////////////////////////////////////
-	//#VERTVER: We're don't needy for vendor string:
-	//modelName has full name of your
-	////////////////////////////////////////////////
-	if (CPU::Info.hasFeature(CPUFeature::AMD))
-	{
-		Msg("* Vendor CPU: AMD");
-	}
+	std::string vendor;
+
+	if (CPU::Info.isAmd)
+		vendor = "AMD";
 	else
-	{
-		Msg("* Vendor CPU: Intel");
-	}
-	////////////////////////////////////////////////
+		vendor = "Intel";
+
+	Msg(("* Vendor CPU: " + vendor).c_str());
+
 	Msg("* Detected CPU: %s", CPU::Info.modelName);
 
 	string256	features;
 	xr_strcpy(features, sizeof(features), "RDTSC");
+	
 	if (CPU::Info.hasFeature(CPUFeature::MMX))
 		xr_strcat(features, ", MMX");
 
@@ -162,11 +160,10 @@ void _initialize_cpu(void)
 
 	if (CPU::Info.hasFeature(CPUFeature::AVX))
 		xr_strcat(features, ", AVX");
-
-	//#NOTE: Compiler doesn't use AVX now
 #ifdef __AVX__
 	else Debug.do_exit("X-Ray x64 using AVX anyway!");
 #endif
+
 	if (CPU::Info.hasFeature(CPUFeature::AVX2))
 		xr_strcat(features, ", AVX2");
 
@@ -228,25 +225,23 @@ void debug_on_thread_spawn();
 void _initialize_cpu_thread()
 {
 	debug_on_thread_spawn();
+
 	// fpu & sse
 	if (Core.PluginMode)
 		FPU::m64r();
 	else
 		FPU::m24r();
 
-	if (CPU::Info.hasFeature(CPUFeature::SSE))
+	_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
+	if (_denormals_are_zero_supported)
 	{
-		_mm_set_flush_zero_mode(_MM_FLUSH_ZERO);
-		if (_denormals_are_zero_supported)
+		__try
 		{
-			__try
-			{
-				_mm_set_denormals_zero_mode(_MM_DENORMALS_ZERO);
-			}
-			__except (EXCEPTION_EXECUTE_HANDLER)
-			{
-				_denormals_are_zero_supported = false;
-			}
+			_mm_set_denormals_zero_mode(_MM_DENORMALS_ZERO);
+		}
+		__except (EXCEPTION_EXECUTE_HANDLER)
+		{
+			_denormals_are_zero_supported = false;
 		}
 	}
 }
