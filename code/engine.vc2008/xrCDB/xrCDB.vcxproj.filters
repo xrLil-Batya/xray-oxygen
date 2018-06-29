@@ -4,7 +4,7 @@
     <Filter Include="Kernel">
       <UniqueIdentifier>{12e54459-b724-4b28-a507-d6ad9575f736}</UniqueIdentifier>
     </Filter>
-    <Filter Include="engine">
+    <Filter Include="Engine">
       <UniqueIdentifier>{3a9a52a3-2965-4ed7-a3ba-d24d195d41ee}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
@@ -31,31 +31,31 @@
       <Filter>Kernel</Filter>
     </ClCompile>
     <ClCompile Include="ISpatial.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ISpatial_q_box.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ISpatial_q_frustum.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ISpatial_q_ray.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="ISpatial_verify.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="xr_area.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="xr_area_query.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="xr_area_raypick.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
     <ClCompile Include="xrXRC.cpp">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -69,16 +69,19 @@
       <Filter>Kernel</Filter>
     </ClInclude>
     <ClInclude Include="ISpatial.h">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="xr_area.h">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="xr_collide_defs.h">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
     </ClInclude>
     <ClInclude Include="xrXRC.h">
-      <Filter>engine</Filter>
+      <Filter>Engine</Filter>
+    </ClInclude>
+    <ClInclude Include="cl_intersect.h">
+      <Filter>Kernel</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
