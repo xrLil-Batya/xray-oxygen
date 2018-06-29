@@ -8,9 +8,9 @@ struct v2p_TLxxx
 
 ////////////////////////////////////////////////////////////////////////////////////////// 
 // Vertex 
-v2p_TL main(v_TL I) 
+v2p_TLxxx main(v_TL I) 
 { 
-	v2p_TL O; 
+	v2p_TLxxx O; 
 	
 	O.HPos = I.P; 
 	O.Tex0 = I.Tex0; 
