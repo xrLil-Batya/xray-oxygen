@@ -75,10 +75,14 @@ u32 crc32(const void* P, u32 len)
 	// Perform the algorithm on each character
 	// in the string, using the lookup table values.
 	while (len--)
-		ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
-
+	{
+		if (CPU::Info.hasFeature(CPUFeature::SSE42))
+			ulCRC = _mm_crc32_u8(ulCRC, *buffer);
+		else
+			ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
+	}
 	// Exclusive OR the result with the beginning value.
-	return ulCRC ^ 0xffffffff;
+	return ulCRC ^ 0xFFFFFFFF;
 }
 
 u32 crc32(const void* P, u32 len, u32 starting_crc)
@@ -89,16 +93,21 @@ u32 crc32(const void* P, u32 len, u32 starting_crc)
 	u8* buffer = (u8*)P;
 
 	while (len--)
-		ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
+	{
+		if (CPU::Info.hasFeature(CPUFeature::SSE42))
+			ulCRC = _mm_crc32_u8(ulCRC, *buffer);
+		else
+			ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
+	}
 
-	return ulCRC ^ 0xffffffff;
+	return ulCRC ^ 0xFFFFFFFF;
 }
 
 u32 path_crc32(const char* path, u32 len)
 {
 	Crc32Initializer::init();
 
-	u32 ulCRC = 0xffffffff;
+	u32 ulCRC = 0xFFFFFFFF;
 	u8* buffer = (u8*)path;
 
 	while (len--)
@@ -106,11 +115,14 @@ u32 path_crc32(const char* path, u32 len)
 		const u8 c = *buffer;
 		if (c != '/' && c != '\\')
 		{
-			ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer];
+			if (CPU::Info.hasFeature(CPUFeature::SSE42))
+				ulCRC = _mm_crc32_u8(ulCRC, *buffer); 
+			else
+				ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
 		}
 
 		++buffer;
 	}
 
-	return ulCRC ^ 0xffffffff;
+	return ulCRC ^ 0xFFFFFFFF;
 }
