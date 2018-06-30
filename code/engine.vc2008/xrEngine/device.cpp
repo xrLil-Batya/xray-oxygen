@@ -281,6 +281,7 @@ void CRenderDevice::on_idle		()
 			if (psDeviceFlags.test(rsCameraPos) 
 				|| psDeviceFlags.test(rsStatistic)
 				|| psDeviceFlags.test(rsDrawFPS)
+				|| psDeviceFlags.test(rsHWInfo)
 				|| Statistic->errors.size())
 			{
 					Statistic->Show();

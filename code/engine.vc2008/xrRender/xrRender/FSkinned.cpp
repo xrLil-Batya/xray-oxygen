@@ -17,6 +17,7 @@
 #include "../xrRenderDX10/dx10BufferUtils.h"
 
 #include "../../xrEngine/EnnumerateVertices.h"
+#include "../../xrCDB/cl_intersect.h"
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -665,8 +666,6 @@ void CSkeletonX_ext::_Load_hw	(Fvisual& V, void *	_verts_)
 //-----------------------------------------------------------------------------------------------------
 // Wallmarks
 //-----------------------------------------------------------------------------------------------------
-#include "cl_intersect.h"
-
 #ifdef	DEBUG
 
 template	< typename vertex_type >

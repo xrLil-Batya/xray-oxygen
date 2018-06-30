@@ -621,6 +621,7 @@ void CCC_Register()
 	CMD3(CCC_Mask,		"rs_render_dynamics",	&psDeviceFlags,		rsDrawDynamic			);
 #endif
 	CMD3(CCC_Mask,		"rs_draw_fps",			&psDeviceFlags,		rsDrawFPS				);
+	CMD3(CCC_Mask,		"rs_hw_stats",			&psDeviceFlags,		rsHWInfo				);
 	// Render device states
 	CMD3(CCC_Mask,		"rs_detail",			&psDeviceFlags,		rsDetails				);
 

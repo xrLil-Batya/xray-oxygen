@@ -27,12 +27,12 @@ static bool bException = false;
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
-	char*				buffer_base = assertion_info;
-	char*				buffer = assertion_info;
+	char* buffer_base = assertion_info;
+	char* buffer = assertion_info;
 	int assertion_size = (int)assertion_info_size;
-	const char*				endline = "\n";
-	const char*				prefix = "[error]";
-	bool				extended_description = (description && !argument0 && strchr(description, '\n'));
+	const char*	endline = "\n";
+	const char*	prefix = "[error]";
+	bool extended_description = (description && !argument0 && strchr(description, '\n'));
 	buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sFATAL ERROR%s%s", endline, endline, endline);
 
 	for (int i = 0; i < 2; ++i) 
@@ -42,10 +42,13 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 		buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sFile          : %s%s", prefix, file, endline);
 		buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sLine          : %d%s", prefix, line, endline);
 
-		if (extended_description) {
+		if (extended_description) 
+		{
 			buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%s%s%s", endline, description, endline);
-			if (argument0) {
-				if (argument1) {
+			if (argument0) 
+			{
+				if (argument1) 
+				{
 					buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%s%s", argument0, endline);
 					buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%s%s", argument1, endline);
 				}
@@ -53,10 +56,13 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 					buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%s%s", argument0, endline);
 			}
 		}
-		else {
+		else 
+		{
 			buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sDescription   : %s%s", prefix, description, endline);
-			if (argument0) {
-				if (argument1) {
+			if (argument0) 
+			{
+				if (argument1) 
+				{
 					buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sArgument 0    : %s%s", prefix, argument0, endline);
 					buffer += xr_sprintf(buffer, assertion_size - u32(buffer - buffer_base), "%sArgument 1    : %s%s", prefix, argument1, endline);
 				}
@@ -86,7 +92,7 @@ void xrDebug::do_exit(const std::string &message)
 {
 	FlushLog();
 
-	if(MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK) 
+	if (MessageBoxA(NULL, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK) 
 	{
 		DEBUG_INVOKE;
 		TerminateProcess(GetCurrentProcess(), 1);
@@ -96,8 +102,7 @@ void xrDebug::do_exit(const std::string &message)
 void xrDebug::do_exit(const std::string &message, const std::string &message2)
 {
 	FlushLog();
-	// we've give a fuck
-	/////////////////////////////////////////////////
+
 	std::string szMsg = "Expression: "	+
 						message			+ 
 						"\n"			+
@@ -105,13 +110,13 @@ void xrDebug::do_exit(const std::string &message, const std::string &message2)
 						message2		+
 						"."				+
 						"\n"			+
-						"For more information check log.";
-	/////////////////////////////////////////////////
-	MessageBoxA(nullptr, szMsg.c_str(), "X-Ray Error", MB_OK | MB_ICONERROR | MB_SYSTEMMODAL);
+						"\n Do you want to interrupt the game?";
 
-	DEBUG_INVOKE;
-
-	TerminateProcess(GetCurrentProcess(), 1);
+	if (MessageBoxA(NULL, szMsg.c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK)
+	{
+		DEBUG_INVOKE;
+		TerminateProcess(GetCurrentProcess(), 1);
+	}
 }
 
 void xrDebug::backend(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)
@@ -407,14 +412,14 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 		{
 			const char dbgHelpStr[] = "DBGHELP.DLL";
 			xr_strcpy(pSlash + 1, sizeof(dbgHelpStr), dbgHelpStr);
-			hDll = ::LoadLibrary(szDbgHelpPath);
+			hDll = LoadLibraryA(szDbgHelpPath);
 		}
 	}
 
 	if (!hDll)
 	{
 		// load any version we can
-		hDll = ::LoadLibrary("DBGHELP.DLL");
+		hDll = LoadLibraryA("DBGHELP.DLL");
 	}
 
 	LPCTSTR szResult = NULL;
@@ -445,18 +450,18 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 			xr_strcat(szDumpPath, ".mdmp");
 
 			// create the file
-			HANDLE hFile = ::CreateFile(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+			HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			if (INVALID_HANDLE_VALUE == hFile)
 			{
 				// try to place into current directory
 				MoveMemory(szDumpPath, szDumpPath + 5, strlen(szDumpPath));
-				hFile = ::CreateFile(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+				hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			}
 			if (hFile != INVALID_HANDLE_VALUE)
 			{
 				_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
 
-				ExInfo.ThreadId = ::GetCurrentThreadId();
+				ExInfo.ThreadId = GetCurrentThreadId();
 				ExInfo.ExceptionPointers = pExceptionInfo;
 				ExInfo.ClientPointers = NULL;
 
@@ -472,10 +477,12 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 					do
 					{
 						const char* logFileName = log_name();
-						if (logFileName == nullptr) break;
+
+						if (logFileName == nullptr) 
+							break;
 
 						// Don't use X-Ray FS - it can be corrupted at this point
-						HANDLE hLogFile = CreateFile(logFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+						HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 						if (hLogFile == INVALID_HANDLE_VALUE) break;
 
 						LARGE_INTEGER FileSize;
@@ -520,8 +527,9 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 				MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
 				MINIDUMP_USER_STREAM LogFileUserStream;
 
-				std::memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
-				std::memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
+				memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
+				memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
+
 				if (logFileContent != nullptr)
 				{
 					UserStreamsInfo.UserStreamCount = 1;
@@ -543,7 +551,7 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 					xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d)", szDumpPath, GetLastError());
 					szResult = szScratch;
 				}
-				::CloseHandle(hFile);
+				CloseHandle(hFile);
 			}
 			else
 			{

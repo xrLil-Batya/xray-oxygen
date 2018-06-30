@@ -14,7 +14,7 @@ struct str_container_impl
     str_container_impl()
     {
         num_docs = 0;
-        std::memset(buffer, 0, sizeof(buffer));
+		ZeroMemory(buffer, sizeof(buffer));
     }
 
     str_value*       find(str_value* value, const char* str)

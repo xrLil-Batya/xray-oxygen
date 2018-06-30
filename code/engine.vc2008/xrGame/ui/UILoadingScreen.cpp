@@ -16,9 +16,9 @@
 extern ENGINE_API int ps_rs_loading_stages;
 
 UILoadingScreen::UILoadingScreen()
- : loadingLogo(nullptr), loadingProgress(nullptr),
-loadingStage(nullptr), loadingHeader(nullptr),
-loadingTipNumber(nullptr), loadingTip(nullptr)
+ :  loadingLogo(nullptr), loadingProgress(nullptr),
+    loadingStage(nullptr), loadingHeader(nullptr),
+    loadingTipNumber(nullptr), loadingTip(nullptr)
  {
 	UILoadingScreen::Initialize();
  }
@@ -45,14 +45,14 @@ void UILoadingScreen::Update(const int stagesCompleted, const int stagesTotal)
 	if (loadingProgress->GetProgressPos() < progress)
 		 loadingProgress->SetProgressPos(progress);
 	
-		if (ps_rs_loading_stages)
-		{
-		char buf[5];
-		xr_sprintf(buf, "%.0f%%", loadingProgress->GetProgressPos());
-		loadingProgressPercent->TextItemControl()->SetText(buf);
-		}
+	if (ps_rs_loading_stages)
+	{
+        char buf[5];
+        xr_sprintf(buf, "%.0f%%", loadingProgress->GetProgressPos());
+        loadingProgressPercent->TextItemControl()->SetText(buf);
+	}
 	
-		CUIWindow::Update();
+	CUIWindow::Update();
 	Draw();
  }
 
