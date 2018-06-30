@@ -99,8 +99,8 @@ public:
 	double cpuBefore;
 	double cpuLoad = cpuBefore;
 #ifdef DEBUG
-	DWORD MinAppAddress;
-	DWORD MaxAppAddress;
+	LPVOID MinAppAddress;
+    LPVOID MaxAppAddress;
 #endif
 
 	void			Show			(void);
