@@ -12,6 +12,8 @@ uniform	float4		screen_res; //doesn't really belong here but fuck it
 
 // #define USE_SUPER_SPECULAR
 
+#define USE_SUNMASK
+
 
 #ifdef        USE_R2_STATIC_SUN
 #  define xmaterial float(1.0h/4.h)

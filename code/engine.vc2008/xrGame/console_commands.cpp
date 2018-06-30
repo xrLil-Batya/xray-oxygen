@@ -1597,6 +1597,11 @@ public:
         if (!Device.editor())
             g_pGamePersistent->Environment().SetWeather(args, true);
     }
+
+	virtual void fill_tips(vecTips& tips, u32 mode)
+	{
+		get_files_list(tips, "$game_weathers$", ".ltx");
+	}
 };
 
 void CCC_RegisterCommands()

@@ -39,13 +39,13 @@ enum class CPUFeature: unsigned
 	EST				= 1 << 21,
 	VMX				= 1 << 22,
 	AMD				= 1 << 23,
-	XFSR			= 1 << 24, 
-	FXSR			= 1 << 25 // NOTE: Merge commit. Remove it later, please
+	XFSR			= 1 << 24
 };
 
 struct XRCORE_API processor_info 
 {
 	processor_info();
+	FILETIME prevSysIdle, prevSysKernel, prevSysUser;
 
 	unsigned char family;	// family of the processor, eg. Intel_Pentium_Pro is family 6 processor
 	unsigned char model;	// model of processor, eg. Intel_Pentium_Pro is model 1 of family 6 processor
@@ -70,5 +70,8 @@ struct XRCORE_API processor_info
 	{
 		return (features & static_cast<unsigned>(feature));
 	}
+
+	int getCPULoad(double &val);
+
 
 };

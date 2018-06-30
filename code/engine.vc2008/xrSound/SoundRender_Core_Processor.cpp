@@ -1,11 +1,11 @@
 #include "stdafx.h"
 #pragma hdrstop
 
-#include "cl_intersect.h"
 #include "SoundRender_Core.h"
 #include "SoundRender_Emitter.h"
 #include "SoundRender_Target.h"
 #include "SoundRender_Source.h"
+#include "../xrCDB/cl_intersect.h"
 
 CSoundRender_Emitter*	CSoundRender_Core::i_play(ref_sound* S, bool _loop, float delay)
 {

@@ -7,6 +7,7 @@
 //#define JIT_OXY_MEMPOOL_DEBUG	// Memory debbuging for 'X-Ray Mempool for LuaJIT'
 #endif
 //#define SLOW_VERIFY_ENTITIES	// Very slow verifing every entity on every game update
+//#define MEM_DEBUG				// Debbuging memory allocator
 
 /* Memory */
 #define LOW_TEXTURES_SIZE		// Reduces the size of textures in 2 times.

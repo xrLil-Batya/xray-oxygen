@@ -267,7 +267,7 @@ xr_string	_ListToSequence(const SStringVec& lst)
 xr_string& _TrimLeft(xr_string& str)
 {
 	const char* b = str.c_str();
-	const char* p = str.c_str();
+	const char* p = b;
 
 	while (*p && (u8(*p) <= u8(' ')))
 		p++;
@@ -284,7 +284,7 @@ xr_string& _TrimRight(xr_string& str)
 	size_t l = str.length();
 	if (l)
 	{
-		const char* p = str.c_str() + l - 1;
+		const char* p = b + l - 1;
 
 		while ((p != b) && (u8(*p) <= u8(' ')))
 			p--;

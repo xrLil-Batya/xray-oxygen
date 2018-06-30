@@ -70,7 +70,6 @@ function register(object_factory)
 	cs_register	(object_factory, "CHelmet",  					"se_item.se_helmet",					"E_HLMET",			"equ_helmet_s")
 
 	-- WEAPONS ----------------------------------------------------------------------------------------------------------------------------
-	cs_register	(object_factory, "CWeaponMagazinedWGrenade",	"se_item.se_weapon_magazined_w_gl",		"WP_AUTOGRN",		"wpn_wmaggl_s")
 	cs_register	(object_factory, "CWeaponMagazined",			"se_item.se_weapon_magazined",			"WP_MAGAZ",			"wpn_magazined_s")
 	cs_register	(object_factory, "CWeaponBinoculars",			"se_item.se_weapon_magazined",			"WP_BINOC",			"wpn_binocular_s")
 	cs_register	(object_factory, "CWeaponKnife",				"se_item.se_weapon",					"WP_KNIFE",			"wpn_knife_s")
