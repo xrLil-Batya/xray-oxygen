@@ -9,6 +9,7 @@
 #include "psapi.h"
 #include <Wbemidl.h>
 #include <comdef.h>
+#include <timeapi.h>
 
 #include "../Include/xrRender/DrawUtils.h"
 
@@ -317,26 +318,55 @@ void CStats::Show()
 		mem.dwLength = sizeof(MEMORYSTATUSEX);
 		GlobalMemoryStatusEx((&mem));
 	
-		INT AvailableMem = (((INT)(mem.ullAvailPhys)) / 1024 * 1024);	// how much phys mem available
-		INT AvailablePageFileMem =((((INT)(mem.ullAvailPageFile)) / 1024 * 1024));	// how much pagefile mem available
+		AvailableMem = (FLOAT)mem.ullAvailPhys;	// how much phys mem available
+		AvailableMem /= (1024 * 1024);	
+		AvailablePageFileMem = (FLOAT)mem.ullAvailPageFile;	// how much pagefile mem available
+		AvailablePageFileMem /= (1024 * 1024);
 
 		// Getting info by request
 		GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(PROCESS_MEMORY_COUNTERS_EX));
 		GetSystemInfo(&sysInfo);
+	
+		PageFileMemUsedByApp = (FLOAT)pmc.PagefileUsage;
+		PageFileMemUsedByApp /= (1024 * 1024);
 
-		INT PageFileMemUsed = (((INT)(pmc.PagefileUsage)) / 1024 * 1024);
-
-		pmc.cb = sizeof(PROCESS_MEMORY_COUNTERS_EX);
-
+		// Counting CPU load
+		if ((Core.dwFrame % 25) == 0)
+		{
+			CPU::Info.getCPULoad(cpuLoad);
+			cpuBefore = cpuLoad;
+		}
 		// Just skip it. Okey?
+		pFont->SetHeightI(0.018f);
 
+		if (AvailableMem < 512 && AvailablePageFileMem < 1596)
+			pFont->SetColor(DebugTextColor::DTC_RED);
+		else if (AvailableMem < 768 && AvailablePageFileMem < 2048)
+			pFont->SetColor(DebugTextColor::DTC_YELLOW);
+		else 
+			pFont->SetColor(DebugTextColor::DTC_GREEN);
+
+		// Draw all your stuff
+		pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);
+		pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);
+		pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);
+		if (cpuLoad > 90.0)
+			pFont->SetColor(DebugTextColor::DTC_RED);
+		else if (cpuLoad > 70.0)
+			pFont->SetColor(DebugTextColor::DTC_YELLOW);
+		else
+			pFont->SetColor(DebugTextColor::DTC_GREEN);
+		pFont->Out(10, 70, "CPU_LOAD: %0.0f", cpuLoad);
 #ifdef DEBUG 
+		
 		// Getting min and max address of memory
-		DWORD MinAppAddress = ((DWORD)(sysInfo.lpMinimumApplicationAddress));
-		DWORD MaxAppAddress = ((DWORD)(sysInfo.lpMaximumApplicationAddress));
-#endif
-
-		//#TODO: display all variables
+		MinAppAddress = (DWORD)sysInfo.lpMinimumApplicationAddress;
+		MaxAppAddress = (DWORD)sysInfo.lpMaximumApplicationAddress;
+		pFont->SetColor(0xFFF9F9F9)
+		pFont->Out(10, 85, "MIN_ADDRESS: %u", lpMinimumApplicationAddress);
+		pFont->Out(10, 100, "MAX_ADDRESS: %u", lpMaximumApplicationAddress);
+#endif	
+		pFont->OnRender();
 	}
 	
 	if( psDeviceFlags.test(rsCameraPos) ){
@@ -415,6 +445,8 @@ void CStats::Show()
 
 		g_SpatialSpacePhysic->stat_insert.FrameStart();
 		g_SpatialSpacePhysic->stat_remove.FrameStart();
+
+	
 	}
 	dwSND_Played = dwSND_Allocated = 0;
 	Particles_starting = Particles_active = Particles_destroy = 0;
