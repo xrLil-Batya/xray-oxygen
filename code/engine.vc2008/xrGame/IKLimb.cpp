@@ -1153,6 +1153,9 @@ void 	CIKLimb::BonesCallback0(CBoneInstance* B)
 {
 	SCalculateData* D = (SCalculateData*)B->callback_param();
 	VERIFY(D);
+	if (!D)
+		return;
+
 	float	const	*x = D->m_angles;
 	Fmatrix			bm;
 	ang_evaluate(bm, x);
@@ -1175,6 +1178,9 @@ void 	CIKLimb::BonesCallback0(CBoneInstance* B)
 void 	CIKLimb::BonesCallback1(CBoneInstance* B)
 {
 	SCalculateData	*D = (SCalculateData*)B->callback_param();
+	VERIFY(D);
+	if (!D)
+		return;
 
 	float	const	*x = D->m_angles;
 	Fmatrix 		bm;
@@ -1188,6 +1194,9 @@ void 	CIKLimb::BonesCallback1(CBoneInstance* B)
 void 	CIKLimb::BonesCallback2(CBoneInstance* B)
 {
 	SCalculateData	*D = (SCalculateData*)B->callback_param();
+	VERIFY(D);
+	if (!D)
+		return;
 
 	float	const	*x = D->m_angles;
 	Fmatrix 		bm;
