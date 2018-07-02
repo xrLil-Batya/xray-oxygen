@@ -112,8 +112,10 @@ void CTextureDescrMngr::LoadTHM(LPCSTR initial, map_TD &s_texture_details, map_C
 
 void CTextureDescrMngr::Load()
 {
+	TH_LoadTHM* lvltex = new TH_LoadTHM({ "$level_textures$", m_texture_details, m_detail_scalers });
 	TH_LoadTHM* gtex = new TH_LoadTHM({ "$game_textures$", m_texture_details, m_detail_scalers });
 	TH_LoadTHM* lvl = new TH_LoadTHM({ "$level$", m_texture_details, m_detail_scalers });
+	thread_spawn(LoadTHMThread, "X-Ray THM Loader 0", 0, lvltex);
 	thread_spawn(LoadTHMThread, "X-Ray THM Loader 1", 0, gtex);
 	thread_spawn(LoadTHMThread, "X-Ray THM Loader 2", 0, lvl);
 	Sleep(5);
