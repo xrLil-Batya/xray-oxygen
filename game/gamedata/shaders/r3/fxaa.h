@@ -1,5 +1,3 @@
-#include "common.h"
-
 #define FXAA_PC 1
 #ifdef SM_5
 #define FXAA_HLSL_5 1
@@ -7,7 +5,7 @@
 #define FXAA_HLSL_4 1
 #endif
 #define FXAA_QUALITY__PRESET 39
-#define FXAA_GREEN_AS_LUMA 1
+#define FXAA_GREEN_AS_LUMA 0
 
 /*--------------------------------------------------------------------------*/
 #ifndef FXAA_PC_CONSOLE
@@ -689,11 +687,15 @@ FxaaFloat4 FxaaPixelShader(
     FxaaBool earlyExit = range < rangeMaxClamped;
 /*--------------------------------------------------------------------------*/
     if(earlyExit)
+	{
         #if (FXAA_DISCARD == 1)
             FxaaDiscard;
         #else
             return rgbyM;
         #endif
+	}
+	else
+	{
 /*--------------------------------------------------------------------------*/
     #if (FXAA_GATHER4_ALPHA == 0)
         FxaaFloat lumaNW = FxaaLuma(FxaaTexOff(tex, posM, FxaaInt2(-1,-1), fxaaQualityRcpFrame.xy));
@@ -992,6 +994,7 @@ FxaaFloat4 FxaaPixelShader(
     #else
         return FxaaFloat4(FxaaTexTop(tex, posM).xyz, lumaM);
     #endif
+	}
 }
 /*==========================================================================*/
 #endif
