@@ -283,6 +283,7 @@ void	CRenderTarget::phase_combine	()
 		if (ps_r_fxaa)
 		{
 			PIX_EVENT(FXAA);
+			phase_fxaa();
 		}
 
         if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
