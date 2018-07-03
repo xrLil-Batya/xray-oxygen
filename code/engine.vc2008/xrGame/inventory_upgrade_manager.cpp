@@ -159,58 +159,47 @@ bool Manager::item_upgrades_exist( shared_str const& item_id )
 void Manager::load_all_inventory()
 {
 	LPCSTR items_section = "upgraded_inventory";
-	
-	VERIFY2( pSettings->section_exist( items_section ), make_string( "Section [%s] does not exist !", items_section ) );
-	VERIFY2( pSettings->line_count( items_section ),    make_string( "Section [%s] is empty !",       items_section ) );
 
-	if ( g_upgrades_log == 1 )
+	VERIFY2(pSettings->section_exist(items_section), make_string("Section [%s] does not exist !", items_section));
+	VERIFY2(pSettings->line_count(items_section), make_string("Section [%s] is empty !", items_section));
+
+	if (g_upgrades_log == 1)
 	{
-		Msg( "# Inventory upgrade manager is loaded." );
+		Msg("# Inventory upgrade manager is loaded.");
 	}
 
-	CInifile::Sect&		inv_section = pSettings->r_section( items_section );
-	CInifile::SectIt_	ib = inv_section.Data.begin();
-	CInifile::SectIt_	ie = inv_section.Data.end();
-	for ( ; ib != ie ; ++ib )
+	CInifile::Sect& inv_section = pSettings->r_section(items_section);
+	for (CInifile::Item itm: inv_section.Data)
 	{
-		shared_str root_id( (*ib).first );
-//		if ( !item_upgrades_exist( root_id ) ) continue;
-		item_upgrades_exist( root_id );
-		add_root( root_id );
+		shared_str root_id(itm.first);
+		item_upgrades_exist(root_id);
+		add_root(root_id);
 	}
 
-	if ( g_upgrades_log == 1 )
+	if (g_upgrades_log == 1)
 	{
-		Msg( "# Upgrades of inventory items loaded." );
+		Msg("# Upgrades of inventory items loaded.");
 	}
-
-	/*
-	float low, high; ///? <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
-	LPCSTR param = "cost";
-	compute_range( param, low ,high );
-	Msg( "Parameter <%s> min = %.3f, max = %.3f", param, low, high );
-	*/
 }
 
 void Manager::load_all_properties()
 {
 	LPCSTR properties_section = "upgrades_properties";
 
-	VERIFY2( pSettings->section_exist( properties_section ), make_string( "Section [%s] does not exist !", properties_section ) );
-	VERIFY2( pSettings->line_count( properties_section ),    make_string( "Section [%s] is empty !",       properties_section ) );
+	VERIFY2(pSettings->section_exist(properties_section), make_string("Section [%s] does not exist !", properties_section));
+	VERIFY2(pSettings->line_count(properties_section), make_string("Section [%s] is empty !", properties_section));
 
-	CInifile::Sect&		inv_section = pSettings->r_section( properties_section );
-	CInifile::SectIt_	ib = inv_section.Data.begin();
-	CInifile::SectIt_	ie = inv_section.Data.end();
-	for ( ; ib != ie ; ++ib )
+	CInifile::Sect& inv_section = pSettings->r_section(properties_section);
+
+	for (CInifile::Item itm : inv_section.Data)
 	{
-		shared_str property_id( (*ib).first );
-		add_property( property_id );
+		shared_str property_id(itm.first);
+		add_property(property_id);
 	}
 
-	if ( g_upgrades_log == 1 )
+	if (g_upgrades_log == 1)
 	{
-		Msg( "# Upgrades properties of inventory itmes loaded." );
+		Msg("# Upgrades properties of inventory itmes loaded.");
 	}
 }
 

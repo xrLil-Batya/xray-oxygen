@@ -41,34 +41,24 @@ manager::~manager			()
 
 void manager::load			()
 {
-	string_path				file_name;
-	CInifile*				config =
-		xr_new<CInifile>(
-			FS.update_path(
-				file_name,
-				"$game_config$",
-				"environment\\effects.ltx"
-			),
-			TRUE,
-			TRUE,
-			FALSE
-		);
+	string_path file_name;
+	CInifile* config = xr_new<CInifile>(FS.update_path(file_name, "$game_config$", "environment\\effects.ltx"), TRUE, TRUE, FALSE);
 
-	VERIFY					(m_effects.empty());
+	VERIFY(m_effects.empty());
 
-	typedef CInifile::Root	sections_type;
-	sections_type&			sections = config->sections();
-	m_effects.reserve		(sections.size());
-	sections_type::const_iterator	i = sections.begin();
-	sections_type::const_iterator	e = sections.end();
-	for ( ; i != e; ++i) {
-		effect*				object = xr_new<effect>(*this, (*i)->Name);
-		object->load		(*config);
-		object->fill		(m_collection);
-		m_effects.push_back	(object);
+	typedef CInifile::Root sections_type;
+	sections_type& sections = config->sections();
+	m_effects.reserve(sections.size());
+
+	for (auto it: sections)
+	{
+		effect* object = xr_new<effect>(*this, it.second->Name);
+		object->load(*config);
+		object->fill(m_collection);
+		m_effects.push_back(object);
 	}
 
-	xr_delete				(config);
+	xr_delete(config);
 }
 
 void manager::save			()

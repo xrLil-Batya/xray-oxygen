@@ -28,17 +28,12 @@ ENGINE_API bool is_enough_address_space_available();
 int get_texture_load_lod(LPCSTR fn)
 {
 	CInifile::Sect& sect	= pSettings->r_section("reduce_lod_texture_list");
-	CInifile::SectCIt it_	= sect.Data.begin();
-	CInifile::SectCIt it_e_	= sect.Data.end();
-
-	CInifile::SectCIt it	= it_;
-	CInifile::SectCIt it_e	= it_e_;
 
 	static bool enough_address_space_available = is_enough_address_space_available();
 
-	for(;it!=it_e;++it)
+	for(CInifile::Item Itm: sect.Data)
 	{
-		if( strstr(fn, it->first.c_str()) )
+		if( strstr(fn, Itm.first.c_str()) )
 		{
 			if(psTextureLOD<1) {
 				if (enough_address_space_available)

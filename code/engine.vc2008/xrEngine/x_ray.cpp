@@ -76,13 +76,11 @@ ENGINE_API void InitSettings	()
 	FS.update_path				(fname,"$game_config$","system.ltx");
 
 	pSettings					= xr_new<CInifile>	(fname,TRUE);
-	CHECK_OR_EXIT				(0!=pSettings->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
+	CHECK_OR_EXIT				(!pSettings->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 
-	CInifile::allow_include_func_t	tmp_functor;
-	tmp_functor.bind([](LPCSTR) { return true; });
 	FS.update_path				(fname,"$game_config$","game.ltx");
 	pGameIni					= xr_new<CInifile>	(fname,TRUE);
-	CHECK_OR_EXIT				(0!=pGameIni->section_count(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
+	CHECK_OR_EXIT				(!pGameIni->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
 }
 
 ENGINE_API void InitConsole	()

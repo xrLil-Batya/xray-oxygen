@@ -386,7 +386,7 @@ void CBaseMonster::net_Destroy()
 	else if (ltx->line_exist(section,name)) var = ltx->method(section,name);\
 }
 
-void CBaseMonster::settings_read(CInifile const * ini, LPCSTR section, SMonsterSettings &data)
+void CBaseMonster::settings_read(CInifile* ini, LPCSTR section, SMonsterSettings &data)
 {
 	READ_SETTINGS(data.m_fSoundThreshold, "SoundThreshold", r_float, ini, section);
 
@@ -506,19 +506,13 @@ void CBaseMonster::load_critical_wound_bones()
 
 void CBaseMonster::fill_bones_body_parts	(LPCSTR body_part, CriticalWoundType wound_type)
 {
-	LPCSTR					body_parts_section = pSettings->r_string(cNameSect(),body_part);
+	LPCSTR body_parts_section = pSettings->r_string(cNameSect(),body_part);
 
-	IKinematics				*kinematics	= smart_cast<IKinematics*>(Visual());
-	VERIFY					(kinematics);
+	IKinematics *kinematics	= smart_cast<IKinematics*>(Visual());
+	VERIFY(kinematics);
 
-	CInifile::Sect			&body_part_section = pSettings->r_section(body_parts_section);
-	CInifile::SectCIt		I = body_part_section.Data.begin();
-	CInifile::SectCIt		E = body_part_section.Data.end();
-	for ( ; I != E; ++I)
-		m_bones_body_parts.insert	(
-			std::make_pair(
-				kinematics->LL_BoneID((*I).first),
-				u32(wound_type)
-			)
-		);
+	CInifile::Sect &body_part_section = pSettings->r_section(body_parts_section);
+	
+	for(CInifile::Item itm: body_part_section.Data)
+		m_bones_body_parts.insert(std::make_pair(kinematics->LL_BoneID(itm.first), u32(wound_type)));
 }

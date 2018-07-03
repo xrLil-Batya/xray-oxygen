@@ -69,7 +69,7 @@ void manager::load			()
 	sections_type::const_iterator	i = sections.begin();
 	sections_type::const_iterator	e = sections.end();
 	for ( ; i != e; ++i) {
-		channel*			object = xr_new<channel>(*this, (*i)->Name);
+		channel*			object = xr_new<channel>(*this, (*i).second->Name);
 		object->load		(*config);
 		object->fill		(m_collection);
 		m_channels.push_back(object);

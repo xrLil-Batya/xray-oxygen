@@ -1653,11 +1653,9 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Float, "fov", &g_fov, 5.0f, 120.0f);
 
 	// Demo
-#if 1
 	CMD1(CCC_DemoPlay, "demo_play");
 	CMD1(CCC_DemoRecord, "demo_record");
 	CMD1(CCC_DemoRecordSetPos, "demo_set_cam_position");
-#endif
 
 #ifndef MASTER_GOLD
 	CMD3(CCC_Mask, "ai_obstacles_avoiding", &psAI_Flags, aiObstaclesAvoiding);

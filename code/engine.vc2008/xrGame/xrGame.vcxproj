@@ -352,7 +352,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>LinkVerbose</ShowProgress>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -389,7 +389,6 @@
     <ClInclude Include="moving_bones_snd_player.h" />
     <ClInclude Include="mt_config.h" />
     <ClInclude Include="damage_manager.h" />
-    <ClInclude Include="damage_manager_inline.h" />
     <ClInclude Include="DamageSource.h" />
     <ClInclude Include="PHCollisionDamageReceiver.h" />
     <ClInclude Include="PHCommander.h" />

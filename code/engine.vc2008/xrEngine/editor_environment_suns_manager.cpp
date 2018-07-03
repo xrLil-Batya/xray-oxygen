@@ -54,51 +54,28 @@ manager::~manager			()
 
 void manager::load			()
 {
-	string_path				file_name;
-	CInifile*				config =
-		xr_new<CInifile>(
-			FS.update_path(
-				file_name,
-				"$game_config$",
-				"environment\\suns.ltx"
-			),
-			TRUE,
-			TRUE,
-			FALSE
-		);
+	string_path file_name;
+	CInifile* config = xr_new<CInifile>(FS.update_path(file_name, "$game_config$", "environment\\suns.ltx"), TRUE, TRUE, FALSE);
 
 	typedef CInifile::Root	sections_type;
-	sections_type&			sections = config->sections();
-	m_suns.reserve			(sections.size());
-	sections_type::const_iterator	i = sections.begin();
-	sections_type::const_iterator	e = sections.end();
-	for ( ; i != e; ++i)
-		add					(*config, (*i)->Name);
+	sections_type& sections = config->sections();
+	m_suns.reserve(sections.size());
 
-	xr_delete				(config);
+	for (auto it: sections)
+		add(*config, it.second->Name);
+
+	xr_delete(config);
 }
 
-void manager::save			()
+void manager::save()
 {
-	string_path				file_name;
-	CInifile*				config =
-		xr_new<CInifile>(
-			FS.update_path(
-				file_name,
-				"$game_config$",
-				"environment\\suns.ltx"
-			),
-			FALSE,
-			FALSE,
-			TRUE
-		);
+	string_path file_name;
+	CInifile* config = xr_new<CInifile>(FS.update_path(file_name, "$game_config$", "environment\\suns.ltx"), FALSE, FALSE, TRUE);
 
-	container_type::const_iterator	i = m_suns.begin();
-	container_type::const_iterator	e = m_suns.end();
-	for ( ; i != e; ++i)
-		(*i)->save			(*config);
+	for (suns::sun* pSun: m_suns)
+		pSun->save(*config);
 
-	xr_delete				(config);
+	xr_delete(config);
 }
 
 void manager::add			(CInifile& config, shared_str const& section)

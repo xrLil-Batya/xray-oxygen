@@ -37,8 +37,8 @@ player_hud_motion* player_hud_motion_container::find_motion(const shared_str& na
 void player_hud_motion_container::load(IKinematicsAnimated* model, const shared_str& sect)
 {
 	CInifile::Sect& _sect		= pSettings->r_section(sect);
-	CInifile::SectCIt _b		= _sect.Data.begin();
-	CInifile::SectCIt _e		= _sect.Data.end();
+	auto _b		= _sect.Data.begin();
+	auto _e		= _sect.Data.end();
 	player_hud_motion* pm		= NULL;
 	
 	string512					buff;
