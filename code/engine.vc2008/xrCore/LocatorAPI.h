@@ -174,7 +174,7 @@ public:
 
     bool                        getFileName         (LPCSTR path, string512& outFilename);
 	
-	char*						curr_season;
+	char*						curr_season = nullptr;
 	char*						get_season_folder(char* fname);
 
 };
