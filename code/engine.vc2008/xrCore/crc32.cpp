@@ -77,7 +77,7 @@ u32 crc32(const void* P, u32 len)
 	while (len--)
 	{
 		if (CPU::Info.hasFeature(CPUFeature::SSE42))
-			ulCRC = _mm_crc32_u8(ulCRC, *buffer);
+            ulCRC = (ulCRC >> 8) ^ _mm_crc32_u8((ulCRC & 0xFF), *buffer++);
 		else
 			ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
 	}
@@ -95,7 +95,7 @@ u32 crc32(const void* P, u32 len, u32 starting_crc)
 	while (len--)
 	{
 		if (CPU::Info.hasFeature(CPUFeature::SSE42))
-			ulCRC = _mm_crc32_u8(ulCRC, *buffer);
+			ulCRC = (ulCRC >> 8) ^ _mm_crc32_u8((ulCRC & 0xFF), *buffer++);
 		else
 			ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
 	}
@@ -116,7 +116,7 @@ u32 path_crc32(const char* path, u32 len)
 		if (c != '/' && c != '\\')
 		{
 			if (CPU::Info.hasFeature(CPUFeature::SSE42))
-				ulCRC = _mm_crc32_u8(ulCRC, *buffer); 
+                ulCRC = (ulCRC >> 8) ^ _mm_crc32_u8((ulCRC & 0xFF), *buffer++);
 			else
 				ulCRC = (ulCRC >> 8) ^ crc32_table[(ulCRC & 0xFF) ^ *buffer++];
 		}

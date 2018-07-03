@@ -263,9 +263,6 @@ void CUIMainIngameWnd::Draw()
 	UIMotionIcon->SetNoise((s16)(0xffff&iFloor(pActor->m_snd_noise*100)));
 
 	UIMotionIcon->Draw();
-
-
-	UIZoneMap->visible = true;
 	UIZoneMap->Render();
 
 	bool tmp = UIMotionIcon->IsShown();
@@ -568,6 +565,12 @@ void CUIMainIngameWnd::DrawZoneMap()
 void CUIMainIngameWnd::UpdateZoneMap() 
 { 
 	UIZoneMap->Update(); 
+}
+
+CUIZoneMap* CUIMainIngameWnd::GetZoneMap()
+{
+    R_ASSERT2(UIZoneMap != nullptr, "Zone map is not created yet");
+    return UIZoneMap;
 }
 
 void CUIMainIngameWnd::UpdateMainIndicators()

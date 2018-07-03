@@ -781,8 +781,12 @@ void CApplication::Level_Set(u32 L)
 {
 	if (L >= Levels.size())	return;
 	char* lvl_fld = FS.get_season_folder(Levels[L].folder);
-	Msg("level load from %s", lvl_fld);
-	FS.get_path("$level$")->_set(lvl_fld);
+
+    if (lvl_fld != nullptr)
+    {
+        Msg("level load from %s", lvl_fld);
+        FS.get_path("$level$")->_set(lvl_fld);
+    }
 
 	static string_path			path;
 

@@ -606,8 +606,6 @@ void  CUIMiniMap::Draw()
 	u32 color					= m_UIStaticItem.GetTextureColor();
 	float angle					= GetHeading();
 
-
-
 	float kx =	UI().get_current_kx();
 
 	// clip poly

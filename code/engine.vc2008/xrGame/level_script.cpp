@@ -36,6 +36,11 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "hudmanager.h"
 #include "raypick.h"
+#include "HUDManager.h"
+#include "UIZoneMap.h"
+#include "ui/UIMainIngameWnd.h"
+#include "ui/UIMap.h"
+#include "ui/UIMotionIcon.h"
 
 
 using namespace luabind;
@@ -711,6 +716,19 @@ void spawn_section(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 P
 	Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
 }
 
+void show_minimap(bool bShow)
+{
+    CUIGame* GameUI = HUD().GetGameUI();
+    //CUIZoneMap* ZoneMap = GameUI->UIMainIngameWnd->GetZoneMap();
+    GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
+    if (g_pMotionIcon != nullptr)
+    {
+        g_pMotionIcon->bVisible = bShow;
+    }
+//     CUIMiniMap* MinimapWnd = ZoneMap->GetMinimap();
+//     MinimapWnd->SetVisible(bShow);
+}
+
 //ability to get the target game_object at crosshair
 CScriptGameObject* g_get_target_obj()
 {
@@ -1009,7 +1027,7 @@ void CLevel::script_register(lua_State *L)
 	    def("has_active_tutorial",	&has_active_tutotial),
 	    def("translate_string",		&translate_string),
 	    def("set_season",			&supertest),
-	    def("get_season",			&get_season)
-
+	    def("get_season",			&get_season),
+        def("show_minimap",         &show_minimap)
 	];
 }
