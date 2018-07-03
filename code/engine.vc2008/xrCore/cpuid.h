@@ -53,6 +53,7 @@ struct XRCORE_API processor_info
 
 	bool isAmd;				// AMD flag
 	bool isIntel;			// IntelCore flag
+	bool isVia;				// VIA flag
 	char vendor[32];
 	char modelName[64];
 

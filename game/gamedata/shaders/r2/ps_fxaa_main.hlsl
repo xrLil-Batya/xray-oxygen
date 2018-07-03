@@ -1,36 +1,34 @@
 #include "common.h"
-#include "ps_fxaa.hlsl"
+#include "fxaa.h"
 
-uniform sampler2D s_base0;
-//uniform float4		screen_res;	
-
-struct	v2p 
+struct v2p 
 {
-	float2 	tc0	: TEXCOORD0;
-	float4 	HPos	: POSITION;	 
+	half4 	HPos : POSITION;
+	half2 	tc0	 : TEXCOORD0;
 };
 
-float4 main (  v2p I ) : COLOR
+half4 main (v2p I) : COLOR
 {
-	float2 rcpFrame = float2(1.0/screen_res.x, 1.0/screen_res.y);
-	//FxaaTex tex = s_base0;
-
-	return FxaaPixelShader(I.tc0,
+	half4 img = FxaaPixelShader(
+			I.tc0,									// FxaaFloat2 pos,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsolePosPos,
-            s_base0,							// FxaaTex tex,
-            s_base0,							// FxaaTex fxaaConsole360TexExpBiasNegOne,
-            s_base0,							// FxaaTex fxaaConsole360TexExpBiasNegTwo,
-            rcpFrame,							// FxaaFloat2 fxaaQualityRcpFrame,
+            s_image,								// FxaaTex tex,
+            s_image,								// FxaaTex fxaaConsole360TexExpBiasNegOne,
+            s_image,								// FxaaTex fxaaConsole360TexExpBiasNegTwo,
+            screen_res.zw,							// FxaaFloat2 fxaaQualityRcpFrame,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsoleRcpFrameOpt,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsoleRcpFrameOpt2,
             FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f),		// FxaaFloat4 fxaaConsole360RcpFrameOpt2,
             0.35f,									// FxaaFloat fxaaQualitySubpix,
             0.125f,									// FxaaFloat fxaaQualityEdgeThreshold,
-            0.0f,//0.0625f,								// FxaaFloat fxaaQualityEdgeThresholdMin,
+            0.0f,//0.0625f,							// FxaaFloat fxaaQualityEdgeThresholdMin,
             0.0f,									// FxaaFloat fxaaConsoleEdgeSharpness,
             0.0f,									// FxaaFloat fxaaConsoleEdgeThreshold,
             0.0f,									// FxaaFloat fxaaConsoleEdgeThresholdMin,
-            FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f)		// FxaaFloat fxaaConsole360ConstDir,
+            FxaaFloat4(0.0f, 0.0f, 0.0f, 0.0f)		// FxaaFloat4 fxaaConsole360ConstDir,
             );
 	
+	img.w = 1.0f;
+	
+	return saturate(img);
 }

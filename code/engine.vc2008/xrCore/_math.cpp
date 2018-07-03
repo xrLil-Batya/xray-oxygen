@@ -115,8 +115,10 @@ void _initialize_cpu(void)
 
 	if (CPU::Info.isAmd)
 		vendor = "AMD";
-	else
+	else if (CPU::Info.isIntel)
 		vendor = "Intel";
+	else
+		vendor = "VIA";
 
 	Msg("* Vendor CPU: %s", vendor);
 
