@@ -151,7 +151,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -211,7 +211,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -280,7 +280,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
@@ -351,7 +351,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
@@ -1348,12 +1348,6 @@
     <ClInclude Include="holder_custom.h" />
     <ClInclude Include="ai_obstacle.h" />
     <ClInclude Include="ai_obstacle_inline.h" />
-    <ClInclude Include="magic_box3.h" />
-    <ClInclude Include="magic_box3_inline.h" />
-    <ClInclude Include="magic_minimize_nd.h" />
-    <ClInclude Include="magic_minimize_nd_inline.h" />
-    <ClInclude Include="magic_minimize_1d.h" />
-    <ClInclude Include="magic_minimize_1d_inline.h" />
     <ClInclude Include="UsableScriptObject.h" />
     <ClInclude Include="HangingLamp.h" />
     <ClInclude Include="InfoPortion.h" />
@@ -2279,9 +2273,6 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="holder_custom.cpp" />
     <ClCompile Include="ai_obstacle.cpp" />
-    <ClCompile Include="min_obb.cpp" />
-    <ClCompile Include="magic_box3.cpp" />
-    <ClCompile Include="magic_minimize_1d.cpp" />
     <ClCompile Include="UsableScriptObject.cpp" />
     <ClCompile Include="HangingLamp.cpp" />
     <ClCompile Include="InfoPortion.cpp" />
