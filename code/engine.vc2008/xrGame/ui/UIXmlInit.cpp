@@ -42,6 +42,7 @@ extern int keyname_to_dik(LPCSTR);
 #define LETTERICA25_FONT_NAME	"letterica25"
 
 #define ELECTRON18_FONT_NAME	"electron18"
+#define ROBOTO16_FONT_NAME		"roboto16"
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -788,6 +789,10 @@ bool CUIXmlInit::InitFont(CUIXml &xml_doc, LPCSTR path, int index, u32 &color, C
 		else if (!xr_strcmp(font_name, ELECTRON18_FONT_NAME))
 		{
 			pFnt = UI().Font().pFontElectron18;
+		}
+		else if (!xr_strcmp(font_name, ROBOTO16_FONT_NAME))
+		{
+			pFnt = UI().Font().pFontRoboto16;
 		}
 		else if (!xr_strcmp(font_name, DI_FONT_NAME))
 		{

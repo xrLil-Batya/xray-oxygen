@@ -688,6 +688,14 @@
           <texture>ui_inGame2_checkbox</texture>
           <options_item entry="rs_showdate" group="mm_opt_gameplay"/>
         </check_show_date>
+
+		<cap_loadingscreen_custom x="285" y="3" width="108" height="24">
+          <text r="170" g="170" b="170" font="letterica16" align="r" vert_align="c">ui_st_loadingscreen_custom</text>
+        </cap_loadingscreen_custom>
+        <check_loadingscreen_custom x="398" y="1" width="44" height="29">
+          <texture>ui_inGame2_checkbox</texture>
+          <options_item entry="rs_loadingstages" group="mm_opt_gameplay"/>
+        </check_loadingscreen_custom>
 	  
     </tab_gameplay>
     <tab_controls>

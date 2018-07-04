@@ -687,4 +687,7 @@
 	<string id="ui_mm_120_hz">
 		<text>Частота 120Гц</text>
 	</string>
+	<string id="ui_st_loadingscreen_custom">
+		<text>Загрузочный экран V.2</text>
+	</string>
 </string_table>

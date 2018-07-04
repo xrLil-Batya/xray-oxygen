@@ -17,6 +17,7 @@ class CApplication;
 class UILoadingScreen : public ILoadingScreen, public CUIWindow
 {
 	CUIStatic* loadingProgressBackground;
+	CUIStatic* engineVersion;
 	CUIStatic* loadingLogo;
 	CUIStatic* loadingProgressPercent;
 
