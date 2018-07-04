@@ -383,7 +383,7 @@
 
 	    <acid_sensor x="12" y="100" width="116" height="18">
 		<hint_text delay="800">ui_inv_outfit_chemical_burn_protection</hint_text>
-	        <state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0">
+	        <state_progress x="19" y="1" width="98" height="18" horz="1" min="0" max="1" pos="0" expression="floor(fltActorOutfitChemicalBurnProtection + fltActorHelmetChemicalBurnProtection + fltActorBoostChemicalBurnProtection + fltArtefactsChemicalBurnProtection  / fltZoneMaxPowerChemicalBurnProtection * 31.0) / 31.0">
 		        <progress>
 	    		    <texture r="142" g="149" b="149">ui_inGame2_inventory_progress_bar</texture>
 	        	</progress stretch="1">

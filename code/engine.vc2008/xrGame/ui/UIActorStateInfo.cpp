@@ -201,10 +201,10 @@ void ui_actor_state_wnd::UpdateActorInfo(CInventoryOwner* owner)
     }
     //chemical burn protection progress bar
     {
-        cmbn_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeChemicalBurn);
-        float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeChemicalBurn);
-        cmbn_value = floor(cmbn_value / max_power * 31) / 31; // number of sticks in progress bar
-        m_state[stt_acid]->set_progress(cmbn_value);//0..1
+//         cmbn_value += actor->GetProtection_ArtefactsOnBelt(ALife::eHitTypeChemicalBurn);
+//         float max_power = actor->conditions().GetZoneMaxPower(ALife::eHitTypeChemicalBurn);
+//         cmbn_value = floor(cmbn_value / max_power * 31) / 31; // number of sticks in progress bar
+//         m_state[stt_acid]->set_progress(cmbn_value);//0..1
     }
     //telepatic protection progress bar
     {
