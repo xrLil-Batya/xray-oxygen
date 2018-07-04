@@ -560,9 +560,10 @@ void CEnvironment::load_weathers		()
 
 		env.reserve					(sections.size());
 
-		for (CInifile::Sect* it: sections) {
-			CEnvDescriptor*			object = create_descriptor(it->Name, config);
-			env.push_back			(object);
+		for (auto &it: sections) 
+		{
+			CEnvDescriptor* object = create_descriptor(it.second->Name, config);
+			env.push_back(object);
 		}
 
 		CInifile::Destroy			(config);
@@ -615,9 +616,9 @@ void CEnvironment::load_weather_effects	()
 		env.reserve					(sections.size() + 2);
 		env.push_back				(create_descriptor("00:00:00", false));
 
-		for (CInifile::Sect* section : sections) 
+		for (auto &section : sections) 
 		{
-			CEnvDescriptor*			object = create_descriptor(section->Name, config);
+			CEnvDescriptor*			object = create_descriptor(section.second->Name, config);
 			env.push_back			(object);
 		}
 
@@ -631,11 +632,9 @@ void CEnvironment::load_weather_effects	()
 	FS.file_list_close				(pfile_list);
 
 	// sorting weather envs
-	auto _I=WeatherFXs.begin();
-	auto _E=WeatherFXs.end();
-	for (; _I!=_E; _I++){
-		R_ASSERT3	(_I->second.size()>1,"Environment in weather must >=2",*_I->first);
-		std::sort	(_I->second.begin(),_I->second.end(),sort_env_etl_pred);
+	for (auto it: WeatherFXs){
+		R_ASSERT3	(it.second.size() > 1,"Environment in weather must >=2", it.first.c_str());
+		std::sort	(it.second.begin(), it.second.end(), sort_env_etl_pred);
 	}
 }
 
@@ -645,7 +644,6 @@ void CEnvironment::load		()
 		create_mixer		();
 
 	m_pRender->OnLoad();
-	//tonemap					= Device.Resources->_CreateTexture("$user$tonemap");	//. hack
 	if (!eff_Rain)    		eff_Rain 		= xr_new<CEffect_Rain>();
 	if (!eff_LensFlare)		eff_LensFlare 	= xr_new<CLensFlare>();
 	if (!eff_Thunderbolt)	eff_Thunderbolt	= xr_new<CEffect_Thunderbolt>();

@@ -10,7 +10,7 @@
 #include "ai_rat.h"
 #include "../../ai_monsters_misc.h"
 #include "../../../game_graph.h"
-#include "../../../magic_box3.h"
+#include "../../../../../3rd-party/min_obb/magic_box3.h"
 #include "../../../../Include/xrRender/RenderVisual.h"
 #include "../../../ai_object_location.h"
 #include "../../../level_graph.h"

@@ -16,10 +16,7 @@ enum {
 	//-------------------------------------------------
 	M_CHANGE_LEVEL,				// changing level
 	M_LOAD_GAME,
-	M_SAVE_GAME,
-	M_SAVE_PACKET,
 
-	M_SWITCH_DISTANCE,
 	M_EVENT_PACK,					// Pack of M_EVENT
 	//-----------------------------------------------------
 	M_CLIENT_CONNECT_RESULT,

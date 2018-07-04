@@ -59,6 +59,7 @@ public:
 		void			ShowZoneMap(bool status);
 		void			DrawZoneMap();
 		void			UpdateZoneMap();
+        CUIZoneMap*     GetZoneMap();
 
 		void			DrawMainIndicatorsForInventory();
 	

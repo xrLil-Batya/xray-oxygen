@@ -94,7 +94,7 @@ int				psActorSleepTime = 1;
 
 CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 {
-	game_news_registry		= xr_new<CGameNewsRegistryWrapper		>();
+	game_news_registry = xr_new< CGameNewsRegistryWrapper >();
 	// Cameras
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);
     cameras[eacFirstEye]->Load("actor_firsteye_cam");
@@ -111,7 +111,6 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	fCurAVelocity = 0.0f;
 	// Раскачка
 	pCamBobbing = 0;
-
 
 	r_torso.yaw				= 0;
 	r_torso.pitch			= 0;

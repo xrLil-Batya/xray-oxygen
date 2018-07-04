@@ -14,7 +14,6 @@
 #include "script_zone.h"
 #include "object_handler.h"
 #include "script_hit.h"
-#pragma todo("Dima to Dima : find out why user defined conversion operators work incorrect")
 #include "../Include/xrRender/Kinematics.h"
 #include "pda.h"
 #include "InfoPortion.h"

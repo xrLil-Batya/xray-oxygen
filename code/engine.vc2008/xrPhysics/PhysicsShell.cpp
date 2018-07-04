@@ -183,7 +183,7 @@ IPhysicsShellEx*	P_build_SimpleShell(IPhysicsShellHolder* obj, float mass, bool 
 	return pPhysicsShell;
 }
 
-void ApplySpawnIniToPhysicShell(CInifile const * ini, IPhysicsShellEx* physics_shell, bool fixed)
+void ApplySpawnIniToPhysicShell(CInifile* ini, IPhysicsShellEx* physics_shell, bool fixed)
 {
 	if (!ini)
 		return;

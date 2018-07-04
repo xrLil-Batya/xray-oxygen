@@ -74,8 +74,9 @@ unsigned int query_processor_info(processor_info* pinfo)
 	*reinterpret_cast<int*>(pinfo->vendor + 4) = data[0][3];
 	*reinterpret_cast<int*>(pinfo->vendor + 8) = data[0][2];
 
-	pinfo->isAmd = std::strncmp(pinfo->vendor, "AuthenticAMD", 12) == NULL;
-	pinfo->isIntel = !pinfo->isAmd;
+	pinfo->isAmd = strncmp(pinfo->vendor, "AuthenticAMD", 12) == NULL;
+	pinfo->isIntel = strncmp(pinfo->vendor, "GenuineIntel", 12) == NULL;
+	pinfo->isVia = strncmp(pinfo->vendor, "CentaurHauls", 12) == NULL;		// It's really commons?
 
 	// load bitset with flags for function 0x00000001
 	if (nIds >= 1)

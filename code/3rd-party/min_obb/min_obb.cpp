@@ -1,13 +1,11 @@
-#include "stdafx.h"
+#include <xrCore.h>
 #include "magic_box3.h"
 #include "magic_minimize_nd.h"
 
 class PointArray
 {
 public:
-    PointArray (int iQuantity, const Fvector* akPoint)
-        :
-        m_akPoint(akPoint)
+    PointArray (int iQuantity, const Fvector* akPoint) : m_akPoint(akPoint)
     {
         m_iQuantity = iQuantity;
     }
@@ -16,7 +14,7 @@ public:
     const Fvector* m_akPoint;
 };
 
-static void FromAxisAngle(Fmatrix &self, const Fvector& rkAxis, float fRadians)
+static void FromAxisAngle(Fmatrix &self, const Fvector& rkAxis, float fRadians) noexcept
 {
     float fCos = _cos(fRadians);
     float fSin = _sin(fRadians);
@@ -45,15 +43,13 @@ static void FromAxisAngle(Fmatrix &self, const Fvector& rkAxis, float fRadians)
 
 static Fvector GetColumn(Fmatrix &self, const u32 &index)
 {
-	switch (index) {
+	switch (index) 
+	{
 		case 0 : return(Fvector().set(self._11,self._21,self._31));
 		case 1 : return(Fvector().set(self._12,self._22,self._32));
 		case 2 : return(Fvector().set(self._13,self._23,self._33));
 		default : NODEFAULT;
 	}
-#ifdef DEBUG
-	return	(Fvector().set(flt_max,flt_max,flt_max));
-#endif // DEBUG
 }
 
 //----------------------------------------------------------------------------

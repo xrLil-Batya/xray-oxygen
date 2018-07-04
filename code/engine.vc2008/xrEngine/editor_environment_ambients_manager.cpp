@@ -62,17 +62,12 @@ void manager::load			()
 	typedef CInifile::Root	sections_type;
 	sections_type&			sections = m_manager.m_ambients_config->sections();
 	m_ambients.reserve		(sections.size());
-	sections_type::const_iterator	i = sections.begin();
-	sections_type::const_iterator	e = sections.end();
-	for ( ; i != e; ++i) {
-		ambient*			object = xr_new<ambient>(*this, (*i)->Name);
-		object->load		(
-			*m_manager.m_ambients_config,
-			*m_manager.m_sound_channels_config,
-			*m_manager.m_effects_config,
-			(*i)->Name
-		);
-		object->fill		(m_collection);
+
+	for (auto it: sections) 
+	{
+		ambient* object = xr_new<ambient>(*this, it.second->Name);
+		object->load(*m_manager.m_ambients_config, *m_manager.m_sound_channels_config, *m_manager.m_effects_config, it.second->Name);
+		object->fill(m_collection);
 		m_ambients.push_back(object);
 	}
 }

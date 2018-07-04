@@ -105,7 +105,7 @@ void manager::load_thunderbolts		()
 	sections_type::const_iterator	i = sections.begin();
 	sections_type::const_iterator	e = sections.end();
 	for ( ; i != e; ++i) {
-		thunderbolt*				object = xr_new<thunderbolt>(this, (*i)->Name);
+		thunderbolt*				object = xr_new<thunderbolt>(this, (*i).second->Name);
 		object->load				(*config);
 		object->fill				(m_environment, m_thunderbolt_collection);
 		m_thunderbolts.push_back	(object);
@@ -160,7 +160,7 @@ void manager::load_collections		()
 	sections_type::const_iterator	i = sections.begin();
 	sections_type::const_iterator	e = sections.end();
 	for ( ; i != e; ++i) {
-		collection*					object = xr_new<collection>(*this, (*i)->Name);
+		collection*					object = xr_new<collection>(*this, (*i).second->Name);
 		object->load				(*config);
 		object->fill				(m_thunderbolt_collection);
 		m_collections.push_back		(object);

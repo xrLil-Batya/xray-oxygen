@@ -68,7 +68,7 @@ void CCartridge::Load(LPCSTR section, u8 LocalAmmoType)
 	VERIFY	(param_s.fWallmarkSize>0);
 
 	m_InvShortName			= //CStringTable().translate
-			( pSettings->r_stringStd(section, "inv_name_short"));
+			( pSettings->r_string(section, "inv_name_short"));
 }
 
 CWeaponAmmo::CWeaponAmmo(void) 

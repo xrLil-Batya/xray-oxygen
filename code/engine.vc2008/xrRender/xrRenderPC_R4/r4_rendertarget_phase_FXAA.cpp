@@ -8,16 +8,45 @@ void CRenderTarget::phase_fxaa()
     float _h = float(Device.dwHeight);
     float du = ps_r_pps_u, dv = ps_r_pps_v;
 
-    u_setrt(rt_Generic, 0, NULL, HW.pBaseZB);
+	Fvector2 p0, p1;
+	p0.set(0.5f/_w, 0.5f/_h);
+	p1.set((_w+0.5f)/_w, (_h+0.5f)/_h);
 
-    FVF::V* pv = (FVF::V*)	RCache.Vertex.Lock(4, g_fxaa->vb_stride, Offset);
-    pv->set(du + 0, dv + float(_h), 0, 0, 1);	pv++;
-    pv->set(du + 0, dv + 0, 0, 0, 0);	pv++;
-    pv->set(du + float(_w), dv + float(_h), 0, 1, 1);	pv++;
-    pv->set(du + float(_w), dv + 0, 0, 1, 0);	pv++;
+	struct v_simple
+	{
+		Fvector4	p;
+		Fvector2	uv0;
+	};
+
+	// Luminance pass //////////////////////////////////
+    u_setrt(rt_Generic, 0, NULL, HW.pBaseZB);
+	RCache.set_CullMode	(CULL_NONE);
+	RCache.set_Stencil	(FALSE);
+ 
+	v_simple* pv = (v_simple*)RCache.Vertex.Lock(4, g_fxaa->vb_stride, Offset);
+    pv->p.set(du + EPS,			dv + _h + EPS,	EPS, 1.0f); pv->uv0.set(p0.x, p1.y);   pv++;
+    pv->p.set(du + EPS,			dv + EPS,		EPS, 1.0f); pv->uv0.set(p0.x, p0.y);   pv++;
+    pv->p.set(du + _w + EPS,	dv + _h + EPS,	EPS, 1.0f); pv->uv0.set(p1.x, p1.y);   pv++;
+    pv->p.set(du + _w + EPS,	dv + EPS,		EPS, 1.0f); pv->uv0.set(p1.x, p0.y);   pv++;
     RCache.Vertex.Unlock(4, g_fxaa->vb_stride);
-   
+
     RCache.set_Element(s_fxaa->E[0]);
+    RCache.set_Geometry(g_fxaa);
+    RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+      
+	// Main pass //////////////////////////////////
+	u_setrt(rt_Generic, 0, NULL, HW.pBaseZB);
+	RCache.set_CullMode	(CULL_NONE);
+	RCache.set_Stencil	(FALSE);
+ 
+    pv = (v_simple*)RCache.Vertex.Lock(4, g_fxaa->vb_stride, Offset);
+    pv->p.set(du + EPS,			dv + _h + EPS,	EPS, 1.0f); pv->uv0.set(p0.x, p1.y);   pv++;
+    pv->p.set(du + EPS,			dv + EPS,		EPS, 1.0f); pv->uv0.set(p0.x, p0.y);   pv++;
+    pv->p.set(du + _w + EPS,	dv + _h + EPS,	EPS, 1.0f); pv->uv0.set(p1.x, p1.y);   pv++;
+    pv->p.set(du + _w + EPS,	dv + EPS,		EPS, 1.0f); pv->uv0.set(p1.x, p0.y);   pv++;
+    RCache.Vertex.Unlock(4, g_fxaa->vb_stride);
+
+    RCache.set_Element(s_fxaa->E[1]);
     RCache.set_Geometry(g_fxaa);
     RCache.Render(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 

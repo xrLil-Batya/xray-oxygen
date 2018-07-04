@@ -95,6 +95,7 @@ public:
 	FLOAT AvailableMem;
 	FLOAT AvailablePageFileMem;
 	FLOAT PageFileMemUsedByApp;
+	FLOAT PhysMemoryUsedPercent;
 
 	double cpuBefore;
 	double cpuLoad = cpuBefore;

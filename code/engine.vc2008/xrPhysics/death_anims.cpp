@@ -8,7 +8,7 @@ rnd_motion::rnd_motion()
 {
 }
 
-rnd_motion*	rnd_motion::setup(IKinematicsAnimated* k, LPCSTR s)
+rnd_motion*	rnd_motion::setup(IKinematicsAnimated* k, const char* s)
 {
 	VERIFY(k);
 	VERIFY(s);
@@ -46,17 +46,17 @@ XRPHYSICS_API xr_token motion_dirs[] = {
 		{ 0,						0	}
 };
 
-void type_motion::set_motion(IKinematicsAnimated* k, u16 id_motion, LPCSTR dir_anim)
+void type_motion::set_motion(IKinematicsAnimated* k, u16 id_motion, const char* dir_anim)
 {
 	anims[id_motion] = xr_new<rnd_motion>()->setup(k, dir_anim);
 }
 
-type_motion* type_motion::setup(IKinematicsAnimated* k, CInifile const * ini, LPCSTR section, LPCSTR type)
+type_motion* type_motion::setup(IKinematicsAnimated* k, CInifile * ini, const char* section, const char* type)
 {
 	anims.resize(dirs_number, 0);
 	if (ini->line_exist(section, type))
 	{
-		LPCSTR line = ini->r_string(section, type);
+		const char* line = ini->r_string(section, type);
 		if (!line)
 			return this;
 

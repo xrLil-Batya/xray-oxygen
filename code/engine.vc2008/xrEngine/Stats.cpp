@@ -320,45 +320,45 @@ void CStats::Show()
 		    mem.dwLength = sizeof(MEMORYSTATUSEX);
 		    GlobalMemoryStatusEx((&mem));
 	
-		    AvailableMem = (FLOAT)mem.ullAvailPhys;	// how much phys mem available
+		    AvailableMem = (DOUBLE)mem.ullAvailPhys;	// how much phys mem available
 		    AvailableMem /= (1024 * 1024);	
-		    AvailablePageFileMem = (FLOAT)mem.ullAvailPageFile;	// how much pagefile mem available
+		    AvailablePageFileMem = (DOUBLE)mem.ullAvailPageFile;	// how much pagefile mem available
 		    AvailablePageFileMem /= (1024 * 1024);
 
 		    // Getting info by request
 		    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(PROCESS_MEMORY_COUNTERS_EX));
 		    GetSystemInfo(&sysInfo);
 	
-		    PageFileMemUsedByApp = (FLOAT)pmc.PagefileUsage;
+			PhysMemoryUsedPercent = (FLOAT)mem.dwMemoryLoad;
+			PageFileMemUsedByApp = (FLOAT)pmc.PagefileUsage;
 		    PageFileMemUsedByApp /= (1024 * 1024);
 
 		    // Counting CPU load
-
             CPU::Info.getCPULoad(cpuLoad);
             cpuBefore = cpuLoad;
-		    // Just skip it. Okey?
         }
 
         pFont->SetHeightI(0.018f);
 
-        if (AvailableMem < 512 && AvailablePageFileMem < 1596)
+        if (AvailableMem < 512 || AvailablePageFileMem < 1596)
             pFont->SetColor(DebugTextColor::DTC_RED);
-        else if (AvailableMem < 768 && AvailablePageFileMem < 2048)
+        else if (AvailableMem < 768 || AvailablePageFileMem < 2048)
             pFont->SetColor(DebugTextColor::DTC_YELLOW);
         else
             pFont->SetColor(DebugTextColor::DTC_GREEN);
 
         // Draw all your stuff
-        pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);
-        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);
-        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);
-        if (cpuLoad > 90.0)
+        pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);				// Physical memory available
+        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Page file memory available
+        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physicall memory used by app
+        if (cpuLoad > 80.0 || PhysMemoryUsedPercent > 80.0)
             pFont->SetColor(DebugTextColor::DTC_RED);
-        else if (cpuLoad > 70.0)
+        else if (cpuLoad > 60.0 || PhysMemoryUsedPercent > 60.0)
             pFont->SetColor(DebugTextColor::DTC_YELLOW);
         else
             pFont->SetColor(DebugTextColor::DTC_GREEN);
-        pFont->Out(10, 70, "CPU_LOAD: %0.0f", cpuLoad);
+		pFont->Out(10, 70, "CPU_LOAD: %0.0f", cpuLoad);							// CPU load
+		pFont->Out(10, 85, "MEM_USED: %0.0f", PhysMemoryUsedPercent);			// Total Phys. memory load (%)
         pFont->OnRender();
 	}
 	

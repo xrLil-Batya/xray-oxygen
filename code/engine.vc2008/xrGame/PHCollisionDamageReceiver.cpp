@@ -22,14 +22,13 @@ void CPHCollisionDamageReceiver::Init()
 	if(ini->section_exist("collision_damage"))
 	{
 		
-		CInifile::Sect& data		= ini->r_section("collision_damage");
-		for (CInifile::SectCIt I=data.Data.begin(); I!=data.Data.end(); I++){
-			const CInifile::Item& item	= *I;
-			u16 index				= K->LL_BoneID(*item.first); 
+		CInifile::Sect& data = ini->r_section("collision_damage");
+		for (CInifile::Item item : data.Data)
+		{
+			u16 index = K->LL_BoneID(*item.first); 
 			R_ASSERT3(index != BI_NONE, "Wrong bone name", *item.first);
 			BoneInsert(index,float(atof(*item.second)));
 			CODEGeom* og= sh->PPhysicsShell()->get_GeomByID(index);
-			//R_ASSERT3(og, "collision damage bone has no physics collision", *item.first);
 			if(og)
 				og->add_obj_contact_cb(DamageReceiverCollisionCallback);
 		}

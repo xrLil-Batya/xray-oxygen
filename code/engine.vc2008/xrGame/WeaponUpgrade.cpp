@@ -112,8 +112,6 @@ bool CWeapon::install_upgrade_disp( LPCSTR section, bool test )
 	result |= process_if_exists( section, "PDM_disp_crouch",        &CInifile::r_float, m_pdm.m_fPDM_disp_crouch,        test );
 	result |= process_if_exists( section, "PDM_disp_crouch_no_acc", &CInifile::r_float, m_pdm.m_fPDM_disp_crouch_no_acc, test );
 
-//	result |= process_if_exists( section, "misfire_probability", &CInifile::r_float, misfireProbability,       test );
-//	result |= process_if_exists( section, "misfire_condition_k", &CInifile::r_float, misfireConditionK,        test );
 	result |= process_if_exists( section, "condition_shot_dec",			&CInifile::r_float, conditionDecreasePerShot,		test );
 	result |= process_if_exists( section, "condition_queue_shot_dec",	&CInifile::r_float, conditionDecreasePerQueueShot,	test );
 	result |= process_if_exists( section, "misfire_start_condition",	&CInifile::r_float, misfireStartCondition,			test );
@@ -121,7 +119,7 @@ bool CWeapon::install_upgrade_disp( LPCSTR section, bool test )
 	result |= process_if_exists( section, "misfire_start_prob",			&CInifile::r_float, misfireStartProbability,		test );
 	result |= process_if_exists( section, "misfire_end_prob",			&CInifile::r_float, misfireEndProbability,			test );
 
-	BOOL value = m_zoom_params.m_bZoomEnabled;
+	bool value = m_zoom_params.m_bZoomEnabled;
 	bool result2 = process_if_exists_set( section, "zoom_enabled", &CInifile::r_bool, value, test );
 	if ( result2 && !test )
 	{
@@ -136,8 +134,8 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 {
 	bool result = false;
 
-	std::string	s_sHitPower;
-	bool result2 = process_if_exists_set( section, "hit_power", &CInifile::r_string_wbStd, s_sHitPower, test );
+	shared_str s_sHitPower;
+	bool result2 = process_if_exists_set( section, "hit_power", &CInifile::r_string_wb, s_sHitPower, test );
 	if ( result2 && !test )
 	{
 		string32 buffer;
@@ -152,7 +150,7 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 	result |= result2;
 
 	std::string	s_sHitPowerCritical;
-	result2 = process_if_exists_set( section, "hit_power_critical", &CInifile::r_string_wbStd, s_sHitPower, test );
+	result2 = process_if_exists_set( section, "hit_power_critical", &CInifile::r_string_wb, s_sHitPower, test );
 	if ( result2 && !test )
 	{
 		string32 buffer;
@@ -169,21 +167,13 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 	result |= process_if_exists( section, "hit_impulse",  &CInifile::r_float, fHitImpulse,         test );
 	result |= process_if_exists( section, "bullet_speed", &CInifile::r_float, m_fStartBulletSpeed, test );
 
-	/*	
-	silencer_hit_power           = 0.55, 0.55, 0.55, 0.55
-	silencer_hit_impulse         = 120
-	silencer_fire_distance       = 600
-	silencer_bullet_speed        = 310
-	*/
-
 	result |= process_if_exists_set( section, "use_aim_bullet",  &CInifile::r_bool, m_bUseAimBullet, test );
 	if ( m_bUseAimBullet ) // first super bullet
 	{
 		result |= process_if_exists( section, "time_to_aim",  &CInifile::r_float, m_fTimeToAim, test );
 	}
 
-//	LPCSTR weapon_section = cNameSect().c_str(); 
-	float rpm =	60.0f/fOneShotTime;//pSettings->r_float( weapon_section, "rpm" ); // fOneShotTime * 60.0f;
+	float rpm =	60.0f/fOneShotTime;
 	result2 = process_if_exists( section, "rpm", &CInifile::r_float, rpm, test );
 	if ( result2 && !test )
 	{
@@ -199,7 +189,6 @@ bool CWeapon::install_upgrade_hit( LPCSTR section, bool test )
 bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 {
 	bool result = false;
-	//LPCSTR weapon_section = cNameSect().c_str(); 
 
 	// 0 - no addon // 1 - permanent // 2 - attachable
 	int temp_int = (int)m_eScopeStatus;

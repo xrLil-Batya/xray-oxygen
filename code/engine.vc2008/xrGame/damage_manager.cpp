@@ -23,12 +23,12 @@ CDamageManager::~CDamageManager			()
 
 DLL_Pure *CDamageManager::_construct	()
 {
-	m_object				= smart_cast<CObject*>(this);
-	VERIFY					(m_object);
-	return					(m_object);
+	m_object = smart_cast<CObject*>(this);
+	VERIFY(m_object);
+	return m_object;
 }
 
-void CDamageManager::reload				(LPCSTR section, CInifile const * ini)
+void CDamageManager::reload(LPCSTR section, CInifile* ini)
 {
 	m_default_hit_factor	= 1.f;
 	m_default_wound_factor	= 1.f;
@@ -54,7 +54,7 @@ void CDamageManager::reload				(LPCSTR section, CInifile const * ini)
 	}
 }
 
-void CDamageManager::reload(LPCSTR section, LPCSTR line, CInifile const * ini)
+void CDamageManager::reload(LPCSTR section, LPCSTR line, CInifile* ini)
 {
 	if (ini && ini->section_exist(section) && ini->line_exist(section,line)) 
 		reload(ini->r_string(section,line),ini);	
@@ -79,16 +79,19 @@ void CDamageManager::load_section(LPCSTR section, CInifile const * ini)
 	string32				buffer;
 	IKinematics				*kinematics = smart_cast<IKinematics*>(m_object->Visual());
 	CInifile::Sect			&damages = ini->r_section(section);
-	for (CInifile::SectCIt i=damages.Data.begin(); damages.Data.end() != i; ++i) {
-		if (xr_strcmp(*(*i).first,"default")) { // read all except default line
-			VERIFY					(m_object);
-			int						bone = kinematics->LL_BoneID(i->first);
-			R_ASSERT2				(BI_NONE != bone, *(*i).first);
-			CBoneInstance			&bone_instance = kinematics->LL_GetBoneInstance(u16(bone));
-			bone_instance.set_param	(0,(float)atof(_GetItem(*(*i).second,0,buffer)));
-			bone_instance.set_param	(1,(float)atoi(_GetItem(*(*i).second,1,buffer)));
-			bone_instance.set_param	(2,(float)atof(_GetItem(*(*i).second,2,buffer)));
-			bone_instance.set_param(3, (float)atof(_GetItem(*(*i).second, (_GetItemCount(*(*i).second) < 4) ? 0 : 3, buffer)));
+	for (CInifile::Item it: damages.Data)
+	{
+		if (xr_strcmp(it.first.c_str(),"default"))
+		{
+			// read all except default line
+			VERIFY (m_object);
+			int bone = kinematics->LL_BoneID(it.first);
+			R_ASSERT2(BI_NONE != bone, it.first.c_str());
+			CBoneInstance &bone_instance = kinematics->LL_GetBoneInstance(u16(bone));
+			bone_instance.set_param	(0,(float)atof(_GetItem(it.second.c_str(),0,buffer)));
+			bone_instance.set_param	(1,(float)atoi(_GetItem(it.second.c_str(),1,buffer)));
+			bone_instance.set_param	(2,(float)atof(_GetItem(it.second.c_str(),2,buffer)));
+			bone_instance.set_param(3, (float)atof(_GetItem(it.second.c_str(), (_GetItemCount(it.second.c_str()) < 4) ? 0 : 3, buffer)));
 
 			if(!bone && (fis_zero(bone_instance.get_param(0)) || fis_zero(bone_instance.get_param(2)) ) ){
 				string256 error_str;
