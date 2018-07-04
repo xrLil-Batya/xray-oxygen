@@ -187,7 +187,7 @@ float CActorCondition::GetBoosterValueByType(EBoostParams type) const
     auto BoostInfluenceIter = m_booster_influences.find(type);
     if (BoostInfluenceIter != m_booster_influences.end())
     {
-        BoostInfluenceIter->second.fBoostValue;
+        return BoostInfluenceIter->second.fBoostValue;
     }
 
     return 0.0f;

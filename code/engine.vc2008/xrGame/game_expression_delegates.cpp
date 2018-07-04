@@ -37,7 +37,7 @@ float GetHelmet##protectionType##Protection() \
     CHelmet* helmet = smart_cast<CHelmet*>(itm); \
     if (helmet != nullptr) \
     { \
-        helmet->GetDefHitTypeProtection(ALife::protectionType); \
+        return helmet->GetDefHitTypeProtection(ALife::protectionType); \
     } \
     return 0.0f; \
 }
