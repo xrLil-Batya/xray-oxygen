@@ -12,6 +12,8 @@
 #include "../../xrEngine/x_ray.h"
 #include "../../xrEngine/GameFont.h"
 #include "UIHelper.h"
+#include "MainMenu.h"
+#include "Actor_Flags.h"
 
 extern ENGINE_API int ps_rs_loading_stages;
 
@@ -37,6 +39,12 @@ void UILoadingScreen::Initialize()
 	loadingHeader				= UIHelper::CreateStatic(uiXml, "loading_header", this);
 	loadingTipNumber			= UIHelper::CreateStatic(uiXml, "loading_tip_number", this);
 	loadingTip					= UIHelper::CreateStatic(uiXml, "loading_tip", this);
+
+	if(ps_rs_loading_stages)
+	{ 
+		engineVersion = UIHelper::CreateStatic(uiXml, "engine_version", this);
+		engineVersion->TextItemControl()->SetText(MainMenu()->GetGSVer());
+	}
  }
 
 void UILoadingScreen::Update(const int stagesCompleted, const int stagesTotal)
