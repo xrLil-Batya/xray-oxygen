@@ -167,15 +167,15 @@ public:
 	float GetHudFov();
 
 	//для отоброажения иконок апгрейдов в интерфейсе
-	int	GetScopeX() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_x");}
-	int	GetScopeY() {return pSettings->r_s32Std(m_scopes[m_cur_scope], "scope_y");}
+	int	GetScopeX() {return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_x");}
+	int	GetScopeY() {return pSettings->r_s32(m_scopes[m_cur_scope].c_str(), "scope_y");}
 	int	GetSilencerX() {return m_iSilencerX;}
 	int	GetSilencerY() {return m_iSilencerY;}
 	int	GetGrenadeLauncherX() {return m_iGrenadeLauncherX;}
 	int	GetGrenadeLauncherY() {return m_iGrenadeLauncherY;}
 
 	const std::string& GetGrenadeLauncherName	() const{return m_sGrenadeLauncherName;}
-	const std::string GetScopeName				() const{return pSettings->r_stringStd(m_scopes[m_cur_scope], "scope_name");}
+	const std::string GetScopeName				() const{return pSettings->r_string(m_scopes[m_cur_scope].c_str(), "scope_name");}
 	const std::string& GetSilencerName			() const{return m_sSilencerName;}
 
 	IC void	ForceUpdateAmmo						()		{ m_BriefInfo_CalcFrame = 0; }
@@ -222,7 +222,7 @@ protected:
 		
 		Fvector			m_ZoomDof;
 		Fvector4		m_ReloadDof;
-		BOOL			m_bUseDynamicZoom;
+		bool			m_bUseDynamicZoom;
 		shared_str		m_sUseZoomPostprocess;
 		shared_str		m_sUseBinocularVision;
 		CBinocularsVision*		m_pVision;
@@ -462,7 +462,7 @@ protected:
 public:
 	xr_vector<shared_str>	m_ammoTypes;
 
-	using SCOPES_VECTOR = xr_vector<std::string>;
+	using SCOPES_VECTOR = xr_vector<xr_string>;
 	SCOPES_VECTOR			m_scopes;
 	u8						m_cur_scope;
 

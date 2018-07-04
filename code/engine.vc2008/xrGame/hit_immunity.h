@@ -18,8 +18,8 @@ public:
 						CHitImmunity	();
 	virtual				~CHitImmunity	();
 
-			void		LoadImmunities	(LPCSTR section, CInifile const * ini);
-			void		AddImmunities	(LPCSTR section, CInifile const * ini);
+			void		LoadImmunities	(LPCSTR section, CInifile* ini);
+			void		AddImmunities	(LPCSTR section, CInifile* ini);
 			float		GetHitImmunity	(ALife::EHitType hit_type) const				{return m_HitImmunityKoefs[hit_type];}
 			float		AffectHit		(float power, ALife::EHitType hit_type) const	{return power*GetHitImmunity(hit_type);}
 };

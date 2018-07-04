@@ -29,6 +29,10 @@ private:
 	float						cur_pos;
 
 public:
+
+    bool                    bVisible;
+
+public:
 	virtual					~CUIMotionIcon		();
 							CUIMotionIcon		();
 	virtual	void			Update				();
@@ -39,3 +43,5 @@ public:
 			void			SetActorVisibility	(u16 who_id, float value);
 			void			ResetVisibility		();
 };
+
+extern CUIMotionIcon* g_pMotionIcon;

@@ -24,15 +24,13 @@ void fix_texture_name(LPSTR fn)
 int get_texture_load_lod(LPCSTR fn)
 {
 	CInifile::Sect& sect = pSettings->r_section("reduce_lod_texture_list");
-	CInifile::SectCIt it = sect.Data.begin();
-	CInifile::SectCIt it_e = sect.Data.end();
 
 	ENGINE_API bool is_enough_address_space_available();
 	static bool enough_address_space_available = is_enough_address_space_available();
 
-	for (; it != it_e; ++it)
+	for (CInifile::Item Itm: sect.Data)
 	{
-		if (strstr(fn, it->first.c_str()))
+		if (strstr(fn, Itm.first.c_str()))
 		{
 			if (psTextureLOD < 1) {
 				if (enough_address_space_available)
@@ -148,8 +146,9 @@ ID3DBaseTexture*	CRender::texture_load(LPCSTR fRName, u32& ret_msize, bool bStag
 	xr_strcpy(fname,fRName); //. andy if (strext(fname)) *strext(fname)=0;
 	fix_texture_name		(fname);
 	IReader* S				= NULL;
-	if (!FS.exist(fn,"$game_textures$",	fname,	".dds")	&& strstr(fname,"_bump"))	goto _BUMP_from_base;
-	if (FS.exist(fn,"$level$",			fname,	".dds"))							goto _DDS;
+	if (!FS.exist(fn, "$game_textures$", fname, ".dds") && (!FS.exist(fn, "$level_textures$", fname, ".dds")) && strstr(fname,"_bump"))	goto _BUMP_from_base;
+	if (FS.exist(fn, "$level_textures$", fname, ".dds"))								goto _DDS;
+	if (FS.exist(fn, "$level$", fname,	".dds"))								goto _DDS;
 	if (FS.exist(fn,"$game_saves$",		fname,	".dds"))							goto _DDS;
 	if (FS.exist(fn,"$game_textures$",	fname,	".dds"))							goto _DDS;
 

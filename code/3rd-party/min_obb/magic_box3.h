@@ -1,6 +1,7 @@
 #pragma once
 
-class MagicBox3 {
+class MagicBox3 
+{
 public:
 					MagicBox3		();
 					MagicBox3		(const Fmatrix &m, const Fvector &half_size);

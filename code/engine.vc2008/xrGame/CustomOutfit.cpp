@@ -305,7 +305,7 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 				ApplySkinModel(pActor, true, false);
 	}
 	
-	BOOL value;
+	bool value;
 	result2 = process_if_exists_set( section, "helmet_avaliable", &CInifile::r_bool, value, test);
 	if (result2 && !test)
 	{

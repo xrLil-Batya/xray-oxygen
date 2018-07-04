@@ -860,7 +860,7 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 {
 	R_ASSERT		(_path);
 	VERIFY			(flags);
-	// ïğîâåğèòü íóæíî ëè ïåğåñêàíèğîâàòü ïóòè
+	// Ã¯Ã°Ã®Ã¢Ã¥Ã°Ã¨Ã²Ã¼ Ã­Ã³Ã¦Ã­Ã® Ã«Ã¨ Ã¯Ã¥Ã°Ã¥Ã±ÃªÃ Ã­Ã¨Ã°Ã®Ã¢Ã Ã²Ã¼ Ã¯Ã³Ã²Ã¨
 	check_pathes	();
 
 	string_path		N;
@@ -919,7 +919,7 @@ int CLocatorAPI::file_list(FS_FileSet& dest, const char* path, u32 flags, const 
 {
 	R_ASSERT		(path);
 	VERIFY			(flags);
-	// ïğîâåğèòü íóæíî ëè ïåğåñêàíèğîâàòü ïóòè
+	// Ã¯Ã°Ã®Ã¢Ã¥Ã°Ã¨Ã²Ã¼ Ã­Ã³Ã¦Ã­Ã® Ã«Ã¨ Ã¯Ã¥Ã°Ã¥Ã±ÃªÃ Ã­Ã¨Ã°Ã®Ã¢Ã Ã²Ã¼ Ã¯Ã³Ã²Ã¨
     check_pathes	();
                
 	string_path		N;
@@ -1211,7 +1211,7 @@ void CLocatorAPI::copy_file_to_build	(T *&r, const char* source_name)
 
 bool CLocatorAPI::check_for_file	(const char* path, const char* _fname, string_path& fname, const file *&desc)
 {
-	// ïğîâåğèòü íóæíî ëè ïåğåñêàíèğîâàòü ïóòè
+	// Ã¯Ã°Ã®Ã¢Ã¥Ã°Ã¨Ã²Ã¼ Ã­Ã³Ã¦Ã­Ã® Ã«Ã¨ Ã¯Ã¥Ã°Ã¥Ã±ÃªÃ Ã­Ã¨Ã°Ã®Ã¢Ã Ã²Ã¼ Ã¯Ã³Ã²Ã¨
     check_pathes			();
 
 	// correct path
@@ -1326,7 +1326,7 @@ void	CLocatorAPI::w_close(IWriter* &S)
 
 CLocatorAPI::files_it CLocatorAPI::file_find_it(const char* fname)
 {
-	// ïğîâåğèòü íóæíî ëè ïåğåñêàíèğîâàòü ïóòè
+	// Ã¯Ã°Ã®Ã¢Ã¥Ã°Ã¨Ã²Ã¼ Ã­Ã³Ã¦Ã­Ã® Ã«Ã¨ Ã¯Ã¥Ã°Ã¥Ã±ÃªÃ Ã­Ã¨Ã°Ã®Ã¢Ã Ã²Ã¼ Ã¯Ã³Ã²Ã¨
     check_pathes();
 
 	file			desc_f;
@@ -1495,7 +1495,7 @@ const char* CLocatorAPI::update_path(string_path& dest, const char* initial, con
 
 u32 CLocatorAPI::get_file_age(const char* nm)
 {
-	// ïğîâåğèòü íóæíî ëè ïåğåñêàíèğîâàòü ïóòè
+	// Ã¯Ã°Ã®Ã¢Ã¥Ã°Ã¨Ã²Ã¼ Ã­Ã³Ã¦Ã­Ã® Ã«Ã¨ Ã¯Ã¥Ã°Ã¥Ã±ÃªÃ Ã­Ã¨Ã°Ã®Ã¢Ã Ã²Ã¼ Ã¯Ã³Ã²Ã¨
     check_pathes	();
 
 	files_it I 		= file_find_it(nm);
@@ -1652,4 +1652,32 @@ BOOL CLocatorAPI::can_modify_file(const char* path, const char* name)
 	string_path			temp;       
     update_path			(temp,path,name);
 	return can_modify_file(temp);
+}
+
+
+char* CLocatorAPI::get_season_folder(char* fname)
+{ 
+	if ((curr_season) && (strlen(curr_season) > 0) && (strcmp(curr_season, "default") != 0))
+	{
+		string_path lvl_tx, myfn, dpath;
+		strconcat(sizeof(lvl_tx), lvl_tx, "textures_", curr_season, "\\");
+		this->get_path("$level_textures$")->_set(lvl_tx);
+		this->update_path(myfn, "$level_textures$", "");
+		this->rescan_path(myfn, TRUE);
+
+		char w_fname[128];
+		strcpy(w_fname, fname);
+		w_fname[strlen(w_fname) - 1] = 0;
+		strconcat(sizeof(w_fname), dpath, w_fname, "_", curr_season, "\\");
+		if (this->exist("$game_levels$", dpath))
+		{
+			fld_curr_season = dpath;
+			return	fld_curr_season;
+		}
+		this->get_path("$level_textures$")->_set("textures_default//");
+		
+		return fname;
+	}
+	this->get_path("$level_textures$")->_set("textures_default//");
+	return fname;
 }

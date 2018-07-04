@@ -95,9 +95,8 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 	{
 		bone_mask = 0;
 		CInifile::Sect& data = ini->r_section("particle_bones");
-		for (CInifile::SectCIt I = data.Data.begin(); I != data.Data.end(); ++I)
+		for (const CInifile::Item& item : data.Data)
 		{
-			const CInifile::Item& item = *I;
 			u16 index = K->LL_BoneID(*item.first);
 			R_ASSERT3(index != BI_NONE, "Particles bone not found", *item.first);
 			Fvector offs;
@@ -113,6 +112,7 @@ void CParticlesPlayer::LoadParticles(IKinematics* K)
 		m_Bones.push_back(SBoneInfo(K->LL_GetBoneRoot(), Fvector().set(0, 0, 0)));
 	}
 }
+
 //уничтожение партиклов на net_Destroy
 void	CParticlesPlayer::net_DestroyParticles()
 {

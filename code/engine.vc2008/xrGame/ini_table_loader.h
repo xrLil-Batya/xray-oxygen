@@ -93,8 +93,6 @@ CSIni_Table::~CIni_Table	()
 TEMPLATE_SPECIALIZATION
 typename CSIni_Table::ITEM_TABLE& CSIni_Table::table	()
 {
-//	T_INI_LOADER::InitIdToIndex ();
-
 	if(m_pTable)
 		return *m_pTable;
 
@@ -111,17 +109,17 @@ typename CSIni_Table::ITEM_TABLE& CSIni_Table::table	()
 
 	R_ASSERT3(table_ini.Data.size() == table_size, "wrong size for table in section", table_sect);
 
-	for (CInifile::SectCIt i = table_ini.Data.begin(); table_ini.Data.end() != i; ++i)
+	for (CInifile::Item it : table_ini.Data)
 	{
-		T_INI_LOADER::index_type cur_index = T_INI_LOADER::IdToIndex((*i).first, type_max<T_INI_LOADER::index_type>);
+		T_INI_LOADER::index_type cur_index = T_INI_LOADER::IdToIndex(it.first, type_max<T_INI_LOADER::index_type>);
 
 		if(type_max<T_INI_LOADER::index_type> == cur_index)
-			Debug.fatal(DEBUG_INFO,"wrong community %s in section [%s]", (*i).first, table_sect);
+			Debug.fatal(DEBUG_INFO,"wrong community %s in section [%s]", it.first, table_sect);
 
 		(*m_pTable)[cur_index].resize(cur_table_width);
 		for(std::size_t j=0; j<cur_table_width; j++)
 		{
-			(*m_pTable)[cur_index][j] = convert<typename T_ITEM>(_GetItem(*(*i).second,(int)j,buffer));
+			(*m_pTable)[cur_index][j] = convert<typename T_ITEM>(_GetItem(it.second.c_str(),(int)j,buffer));
 		}
 	}
 

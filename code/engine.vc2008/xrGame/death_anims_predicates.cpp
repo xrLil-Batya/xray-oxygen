@@ -274,11 +274,10 @@ class	type_motion6: public type_motion
 	}
 };
 
-void death_anims::setup		( IKinematicsAnimated* k, LPCSTR section, CInifile const * ini )
+void death_anims::setup		( IKinematicsAnimated* k, LPCSTR section, CInifile* ini )
 {
 	clear();
-//	if( !ini )
-//			return;
+
 	VERIFY( k );
 	VERIFY( section );
 	VERIFY( ini );

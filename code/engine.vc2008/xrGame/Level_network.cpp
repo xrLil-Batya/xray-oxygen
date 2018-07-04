@@ -204,7 +204,6 @@ void CLevel::ClientSave()
 		if (pGO && !pGO->getDestroy() && pGO->net_SaveRelevant())
 		{
 			NET_Packet P;
-			P.w_begin(M_SAVE_PACKET);
 
 			P.w_u16(pGO->ID());
 			P.w_chunk_open16(position);
@@ -213,7 +212,7 @@ void CLevel::ClientSave()
 			P.w_chunk_close16(position);
 			if (max_objects_size >= (NET_PacketSizeLimit - P.w_tell()))
 				continue;
-			Send(P);
+			Server->Process_save(P);
 		}
 	}
 }

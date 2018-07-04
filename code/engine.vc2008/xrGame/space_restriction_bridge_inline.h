@@ -24,38 +24,26 @@ template <typename T>
 IC	u32	CSpaceRestrictionBridge::accessible_nearest	(T const& restriction, const Fvector &position, Fvector &result, bool out_restriction)
 {
     T& hack_ref = const_cast<T&> (restriction);
-#pragma todo("Dima to Dima : _Warning : this place can be optimized in case of a slowdown")
 	VERIFY							(initialized());
 	VERIFY							(!hack_ref->border().empty());
 	VERIFY							(!hack_ref->accessible_neighbour_border(hack_ref,out_restriction).empty());
 
 	float							min_dist_sqr = flt_max;
 	u32								selected = u32(-1);
-	xr_vector<u32>::const_iterator	I = hack_ref->accessible_neighbour_border(hack_ref,out_restriction).begin();
-	xr_vector<u32>::const_iterator	E = hack_ref->accessible_neighbour_border(hack_ref,out_restriction).end();
-	for ( ; I != E; ++I) {
-		VERIFY2						(
-			ai().level_graph().valid_vertex_id(*I),
-			make_string(
-				"%d",
-				*I
-			)
-		);
-		float						distance_sqr = ai().level_graph().vertex_position(*I).distance_to_sqr(position);
-		if (distance_sqr < min_dist_sqr) {
+
+	for (u32 it: hack_ref->accessible_neighbour_border(hack_ref, out_restriction)) 
+	{
+		VERIFY2(ai().level_graph().valid_vertex_id(it), make_string("%d", it));
+		float distance_sqr = ai().level_graph().vertex_position(it).distance_to_sqr(position);
+
+		if (distance_sqr < min_dist_sqr) 
+		{
 			min_dist_sqr			= distance_sqr;
-			selected				= *I;
+			selected				= it;
 		}
 	}
-	VERIFY2							(
-		ai().level_graph().valid_vertex_id(selected),
-		make_string(
-			"vertex_id[%d], object[%s], position[%f][%f][%f]",
-			selected,
-			*name(),
-			VPUSH(position)
-		)
-	);
+	VERIFY2(ai().level_graph().valid_vertex_id(selected),
+		make_string( "vertex_id[%d], object[%s], position[%f][%f][%f]", selected, name().c_str(), VPUSH(position)));
 
 	{
 		min_dist_sqr = flt_max;
