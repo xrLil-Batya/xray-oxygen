@@ -321,10 +321,7 @@ public:
 				Msg("Invalid online distance! (%.4f)", id1);
 			else
 			{
-				NET_Packet		P;
-				P.w_begin(M_SWITCH_DISTANCE);
-				P.w_float(id1);
-				Level().Send(P);
+				Level().Server->game->switch_distance(id1);
 			}
 		}
 	}
@@ -520,20 +517,11 @@ public:
 		S[0] = 0;
 		strncpy_s(S, sizeof(S), args, _MAX_PATH - 1);
 
-#ifdef DEBUG
-		CTimer timer;
-		timer.Start();
-#endif
-
 		if (!xr_strlen(S)) 
 		{
 			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
-			NET_Packet net_packet;
-			net_packet.w_stringZ(S);
-			net_packet.w_u8(0);
             if (ai().get_alife())
-                Level().Server->game->alife().save(net_packet);
-			//Level().Send(net_packet);
+                Level().Server->game->alife().save(S, false);
 		}
 		else 
 		{
@@ -543,16 +531,10 @@ public:
 				return;
 			}
 
-			NET_Packet net_packet;
-			net_packet.w_stringZ(S);
-			net_packet.w_u8(1);
             if (ai().get_alife())
-                Level().Server->game->alife().save(net_packet);
-			//Level().Send(net_packet);
+                Level().Server->game->alife().save(S, true);
 		}
-#ifdef DEBUG
-		Msg("Game save overhead  : %f milliseconds", timer.GetElapsed_sec()*1000.f);
-#endif
+
 		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 		LPSTR save_name;
 		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
@@ -561,16 +543,9 @@ public:
 		xr_strcat(S, ".dds");
 		FS.update_path(S1, "$game_saves$", S);
 
-#ifdef DEBUG
-		timer.Start();
-#endif
 		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, S1);
 
-#ifdef DEBUG
-		Msg("Screenshot overhead : %f milliseconds", timer.GetElapsed_sec() * 1000.f);
-#endif
-
-	}//virtual void Execute
+	}
 
 	virtual void fill_tips(vecTips& tips, u32 mode)
 	{
