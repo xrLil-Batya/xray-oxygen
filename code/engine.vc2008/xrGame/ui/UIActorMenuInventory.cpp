@@ -58,9 +58,6 @@ void CUIActorMenu::InitInventoryMode()
 	m_RightDelimiter->Show				(false);
 
 	InitInventoryContents				(m_pInventoryBagList);
-
-	VERIFY(GameUI());
-	GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
 void CUIActorMenu::DeInitInventoryMode()

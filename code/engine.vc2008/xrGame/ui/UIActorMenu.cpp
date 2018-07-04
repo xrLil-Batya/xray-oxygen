@@ -113,6 +113,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		default: R_ASSERT(0); break;
 		}
 
+        //Hide zone map, show this in ResetMode()
 		GameUI()->UIMainIngameWnd->ShowZoneMap(false);
 
 		m_currMenuMode = mode;
@@ -807,6 +808,7 @@ void CUIActorMenu::ResetMode()
 	m_pMouseCapturer			= NULL;
 	m_UIPropertiesBox->Hide		();
 	SetCurrentItem				(NULL);
+    GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
 void CUIActorMenu::UpdateActorMP()

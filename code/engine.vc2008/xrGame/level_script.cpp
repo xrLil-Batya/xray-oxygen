@@ -719,14 +719,11 @@ void spawn_section(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 P
 void show_minimap(bool bShow)
 {
     CUIGame* GameUI = HUD().GetGameUI();
-    //CUIZoneMap* ZoneMap = GameUI->UIMainIngameWnd->GetZoneMap();
     GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
     if (g_pMotionIcon != nullptr)
     {
         g_pMotionIcon->bVisible = bShow;
     }
-//     CUIMiniMap* MinimapWnd = ZoneMap->GetMinimap();
-//     MinimapWnd->SetVisible(bShow);
 }
 
 //ability to get the target game_object at crosshair
