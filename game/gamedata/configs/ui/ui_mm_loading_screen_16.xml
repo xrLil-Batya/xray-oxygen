@@ -11,10 +11,11 @@
 		<auto_static x="920" y="0" width="104" height="768" stretch="1">
 			<texture>ui_mm_loading_right_widepanel</texture>
 		</auto_static>
-		<auto_static x="610" y="120">
-			<text color="gray" font="electron18">X-Ray Oxygen x64 v1.7f</text>
-		</auto_static>
 	</background>
+	
+	<engine_version x="610" y="120">
+			<text color="gray" font="electron18"/>
+	</engine_version>
 
 	<loading_logo x="104" y="173" width="816" height="512" stretch="1"/>			<!-- Картинка загружаемого уровня-->
 
@@ -22,7 +23,7 @@
 		<texture color="black" a="255">ui_mm_loading_progress_bar</texture>
 	</loading_progress_background>
 
-	<loading_progress x="310" y="599" width="405" height="4" horz="1" min="0" max="100" pos="0" inertion="5.0">
+	<loading_progress x="310" y="599" width="405" height="40" mode="from_center" min="0" max="100" pos="0" inertion="5.0">
 		<progress>
 			<texture>ui_mm_loading_progress_bar</texture>							<!-- Прогресс бар загрузки-->
 		</progress>
