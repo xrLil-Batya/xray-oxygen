@@ -55,7 +55,6 @@ ref_light	precache_light	= NULL;
 
 BOOL CRenderDevice::Begin	()
 {
-#ifndef DEDICATED_SERVER
 	switch (m_pRender->GetDeviceState())
 	{
 	case IRenderDeviceRender::dsOK:
@@ -81,7 +80,7 @@ BOOL CRenderDevice::Begin	()
 	FPU::m24r();
 	g_bRendering = TRUE;
 	g_bL = TRUE;
-#endif
+
 	return TRUE;
 }
 
@@ -96,8 +95,6 @@ extern void CheckPrivilegySlowdown();
 
 void CRenderDevice::End		(void)
 {
-
-#ifndef DEDICATED_SERVER
 #ifdef INGAME_EDITOR
 	bool load_finished = false;
 #endif // #ifdef INGAME_EDITOR
@@ -146,7 +143,6 @@ void CRenderDevice::End		(void)
 		if (load_finished && m_editor)
 			m_editor->on_load_finished();
 #	endif // #ifdef INGAME_EDITOR
-#endif
 }
 
 
@@ -187,9 +183,7 @@ void CRenderDevice::PreCache	(u32 amount, bool b_draw_loadscreen, bool b_wait_us
 {
 	if (m_pRender->GetForceGPU_REF()) 
 		amount = NULL; 
-#ifdef DEDICATED_SERVER
-	amount = NULL;
-#endif
+
 	dwPrecacheFrame	= dwPrecacheTotal = amount;
 	if (amount && !precache_light && g_pGameLevel && g_loading_events.empty()) {
 		precache_light					= ::Render->light_create();
@@ -206,9 +200,6 @@ void CRenderDevice::PreCache	(u32 amount, bool b_draw_loadscreen, bool b_wait_us
 	}
 }
 
-
-int g_svDedicateServerUpdateReate		= 100;
-
 ENGINE_API xr_list<LOADING_EVENT>			g_loading_events;
 
 void CRenderDevice::on_idle		()
@@ -219,9 +210,6 @@ void CRenderDevice::on_idle		()
 		return;
 	}
 
-#ifdef DEDICATED_SERVER
-	u32 FrameStartTime = TimerGlobal.GetElapsed_ms();
-#endif
 	if (psDeviceFlags.test(rsStatistic))	
 		g_bEnableStatGather	= TRUE;
 	else									
@@ -309,16 +297,6 @@ void CRenderDevice::on_idle		()
 		Device.seqParallel.clear	();
 		seqFrameMT.Process					(rp_Frame);
 	}
-
-#ifdef DEDICATED_SERVER
-	u32 FrameEndTime = TimerGlobal.GetElapsed_ms();
-	u32 FrameTime = (FrameEndTime - FrameStartTime);
-	u32 DSUpdateDelta = 1000/g_svDedicateServerUpdateReate;
-	if (FrameTime < DSUpdateDelta)
-	{
-		Sleep(DSUpdateDelta - FrameTime);
-	}
-#endif
 
 	if (!b_is_Active)
 		Sleep		(1);
@@ -564,8 +542,6 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 
 	if (g_bBenchmark)	return;
 
-#ifndef DEDICATED_SERVER	
-
 	if(bOn)
 	{
 		if(!Paused())						
@@ -613,9 +589,6 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 			}
 		}
 	}
-
-#endif
-
 }
 
 BOOL CRenderDevice::Paused()
