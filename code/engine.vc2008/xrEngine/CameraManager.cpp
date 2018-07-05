@@ -159,10 +159,10 @@ void CCameraManager::OnEffectorReleased(SBaseEffector* e)
 
 void CCameraManager::UpdateFromCamera(const CCameraBase* C)
 {
-    Update(C->vPosition, C->vDirection, C->vNormal, C->f_fov, C->f_aspect, g_pGamePersistent->Environment().CurrentEnv->far_plane, C->m_Flags.flags);
+    Update(C->vPosition, C->vDirection, C->vNormal, C->f_fov, C->f_aspect, g_pGamePersistent->Environment().CurrentEnv->far_plane, C->m_Flags.flags, C->style, C->GetParent());
 }
 
-void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N, float fFOV_Dest, float fASPECT_Dest, float fFAR_Dest, u32 flags)
+void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N, float fFOV_Dest, float fASPECT_Dest, float fFAR_Dest, u32 flags, ECameraStyle style, CObject* parent)
 {
 #ifdef DEBUG
     if (!Device.Paused()) {
@@ -197,6 +197,8 @@ void CCameraManager::Update(const Fvector& P, const Fvector& D, const Fvector& N
     m_cam_info.fFar = m_cam_info.fFar * dst + fFAR_Dest * src;
     m_cam_info.fAspect = m_cam_info.fAspect * dst + (fASPECT_Dest * aspect) * src;
     m_cam_info.dont_apply = false;
+	m_cam_info.style = style;
+	m_cam_info.parent = parent;
 
     UpdateCamEffectors();
 
@@ -306,13 +308,13 @@ void CCameraManager::ApplyDevice(float _viewport_near)
     Device.fASPECT = m_cam_info.fAspect;
 
 	//+SecondVP+
-	// Пересчитываем FOV для второго вьюпорта [Recalculate scene FOV for SecondVP frame]
+	// РџРµСЂРµСЃС‡РёС‚С‹РІР°РµРј FOV РґР»СЏ РІС‚РѕСЂРѕРіРѕ РІСЊСЋРїРѕСЂС‚Р° [Recalculate scene FOV for SecondVP frame]
 	if (Device.m_SecondViewport.IsSVPFrame())
 	{
-		// Для второго вьюпорта FOV выставляем здесь
+		// Р”Р»СЏ РІС‚РѕСЂРѕРіРѕ РІСЊСЋРїРѕСЂС‚Р° FOV РІС‹СЃС‚Р°РІР»СЏРµРј Р·РґРµСЃСЊ
 		Device.fFOV *= g_pGamePersistent->m_pGShaderConstants.hud_params.y;
 
-		// Предупреждаем что мы изменили настройки камеры
+		// РџСЂРµРґСѓРїСЂРµР¶РґР°РµРј С‡С‚Рѕ РјС‹ РёР·РјРµРЅРёР»Рё РЅР°СЃС‚СЂРѕР№РєРё РєР°РјРµСЂС‹
 		Device.m_SecondViewport.m_bCamReady = true;
 	}
 	else
