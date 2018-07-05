@@ -82,4 +82,6 @@ SCamEffectorInfo::SCamEffectorInfo()
 	fAspect				= 1.f;
 	dont_apply			= false;
 	affected_on_hud		= true;
+	style				= ECameraStyle::cs_forcedword;
+	parent				= nullptr;
 }
