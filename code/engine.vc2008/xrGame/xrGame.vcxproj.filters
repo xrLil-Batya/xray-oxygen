@@ -2853,6 +2853,9 @@
     <ClInclude Include="alife_storage_manager.h">
       <Filter>AI\ALife\update_manager\storage_manager</Filter>
     </ClInclude>
+    <ClInclude Include="alife_storage_manager_inline.h">
+      <Filter>AI\ALife\update_manager\storage_manager</Filter>
+    </ClInclude>
     <ClInclude Include="alife_surge_manager.h">
       <Filter>AI\ALife\update_manager\surge_manager</Filter>
     </ClInclude>
@@ -7898,6 +7901,12 @@
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_process_event_destroy.cpp">
+      <Filter>Core\Server\ServerProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="xrServer_process_event_ownership.cpp">
+      <Filter>Core\Server\ServerProcess</Filter>
+    </ClCompile>
+    <ClCompile Include="xrServer_process_event_reject.cpp">
       <Filter>Core\Server\ServerProcess</Filter>
     </ClCompile>
     <ClCompile Include="xrServer_process_spawn.cpp">

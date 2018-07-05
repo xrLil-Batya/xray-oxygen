@@ -52,6 +52,7 @@ xrServer::~xrServer()
 	entities.clear();
     xr_delete(SV_Client);
 }
+
 //--------------------------------------------------------------------
 CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 {
@@ -73,7 +74,12 @@ CClient* xrServer::ID_to_client(ClientID ID, bool ScanAll)
     }
     return nullptr;
 }
+
 //--------------------------------------------------------------------
+#ifdef DEBUG
+INT g_sv_SendUpdate = 0;
+#endif
+
 void xrServer::Update	()
 {
 	VERIFY(verify_entities());
@@ -86,8 +92,9 @@ void xrServer::Update	()
 
 	if (game->sv_force_sync)
         Perform_game_export();
-
-	VERIFY(verify_entities());
+#ifdef DEBUG
+    verify_entities();
+#endif
 }
 
 u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "flags" as returned
@@ -95,25 +102,58 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 	u16 type;
 	P.r_begin(type);
 
+    ClientID sender = SV_Client->ID;
+
 	switch (type)
 	{
-		case M_EVENT_PACK:
+	case M_UPDATE:	
+		{
+			Process_update			(P);						// No broadcast
+		}break;
+	case M_SPAWN:	
+		{
+			Process_spawn			(P,sender);
+		}break;
+	case M_EVENT:	
+		{
+			Process_event			(P);
+		}break;
+	case M_EVENT_PACK:
 		{
 			NET_Packet	tmpP;
 			while (!P.r_eof())
 			{
-				tmpP.B.count = P.r_u8();
-				P.r(&tmpP.B.data, tmpP.B.count);
+				tmpP.B.count		= P.r_u8();
+				P.r					(&tmpP.B.data, tmpP.B.count);
 
-				OnMessage(tmpP);
-			};
+				OnMessage			(tmpP);
+			};			
 		}break;
-		//-------------------------------------------------------------------
-		case M_UPDATE:			Process_update(P); break;
-		case M_SPAWN:			Process_spawn(P, SV_Client->ID); break;
-		case M_EVENT:			Process_event(P); break;
-		case M_CHANGE_LEVEL:	if (game->change_level(P)) SendBroadcast(BroadcastCID,P); break;
-		case M_LOAD_GAME:		game->load_game(P); SendBroadcast(BroadcastCID,P); break;
+	//-------------------------------------------------------------------
+	case M_SWITCH_DISTANCE:
+		{
+			game->switch_distance	(P);
+		}break;
+	case M_CHANGE_LEVEL:
+		{
+			if (game->change_level(P,sender))
+			{
+				SendBroadcast		(BroadcastCID,P);
+			}
+		}break;
+	case M_SAVE_GAME:
+		{
+			game->save_game			(P,sender);
+		}break;
+	case M_LOAD_GAME:
+		{
+			game->load_game			(P,sender);
+			SendBroadcast			(BroadcastCID,P);
+		}break;
+	case M_SAVE_PACKET:
+		{
+			Process_save(P);
+		}break;
 	}
 	VERIFY (verify_entities());
 
@@ -155,6 +195,7 @@ void xrServer::entity_Destroy(CSE_Abstract *&P)
 		F_entity_Destroy		(P);
 	}
 }
+
 //--------------------------------------------------------------------
 CSE_Abstract* xrServer::GetEntity(u32 Num)
 {
@@ -167,6 +208,7 @@ CSE_Abstract* xrServer::GetEntity(u32 Num)
 };
 
 #ifdef DEBUG
+
 static	bool _ve_initialized	= false;
 static	bool _ve_use			= true;
 
@@ -259,97 +301,4 @@ bool is_object_valid_on_svclient(u16 id_entity)
 		return false;
 	
 	return true;
-}
-
-void xrServer::Process_event_ownership(NET_Packet& P, u16 ID)
-{
-	u16 id_parent = ID, id_entity;
-	P.r_u16(id_entity);
-	CSE_Abstract* e_parent = game->get_entity_from_eid(id_parent);
-	CSE_Abstract* e_entity = game->get_entity_from_eid(id_entity);
-
-	if (!e_parent) 
-	{
-		Msg("! ERROR on ownership: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
-		return;
-	}
-	if (!e_entity) 
-	{
-		return;
-	}
-
-	if (!is_object_valid_on_svclient(id_parent))
-	{
-		Msg("! ERROR on ownership: parent object is not valid on sv client. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame);
-		return;
-	}
-
-	if (!is_object_valid_on_svclient(id_entity))
-	{
-		Msg("! ERROR on ownership: entity object is not valid on sv client. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame);
-		return;
-	}
-
-	if (0xffff != e_entity->ID_Parent)
-		return;
-
-	// Game allows ownership of entity
-	game->OnTouch(id_parent, id_entity);
-
-	// Rebuild parentness
-	e_entity->ID_Parent = id_parent;
-	e_parent->children.push_back(id_entity);
-
-	// Signal to everyone (including sender)
-	SendBroadcast(BroadcastCID, P);
-}
-
-bool xrServer::Process_event_reject(NET_Packet& P, const ClientID sender, const u32 time, const u16 id_parent, const u16 id_entity, bool send_message)
-{
-	// Parse message
-	CSE_Abstract*		e_parent = game->get_entity_from_eid(id_parent);
-	CSE_Abstract*		e_entity = game->get_entity_from_eid(id_entity);
-
-	VERIFY2(e_entity, make_string("entity not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame).c_str());
-	if (!e_entity) {
-		Msg("! ERROR on rejecting: entity not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
-		return false;
-	}
-
-	VERIFY2(e_parent, make_string("parent not found. parent_id = [%d], entity_id = [%d], frame = [%d]", id_parent, id_entity, Device.dwFrame).c_str());
-	if (!e_parent) {
-		Msg("! ERROR on rejecting: parent not found. parent_id = [%d], entity_id = [%d], frame = [%d].", id_parent, id_entity, Device.dwFrame);
-		return false;
-	}
-
-	xr_vector<u16>& C = e_parent->children;
-	xr_vector<u16>::iterator c = std::find(C.begin(), C.end(), id_entity);
-	if (c == C.end())
-	{
-		Msg("! ERROR: SV: can't find children [%d] of parent [%d]", id_entity, e_parent);
-		return false;
-	}
-
-	if (0xffff == e_entity->ID_Parent)
-	{
-		return (false);
-	}
-
-	if (e_entity->ID_Parent != id_parent)
-	{
-		Msg("! ERROR: e_entity->ID_Parent = [%d]  parent = [%d][%s]  entity_id = [%d]  frame = [%d]",
-			e_entity->ID_Parent, id_parent, e_parent->name_replace(), id_entity, Device.dwFrame);
-		//it can't be !!!
-	}
-
-	game->OnDetach(id_parent, id_entity);
-
-	e_entity->ID_Parent = 0xffff;
-	C.erase(c);
-
-	// Signal to everyone (including sender)
-	if (send_message)
-		SendBroadcast(BroadcastCID, P);
-
-	return (true);
-}
+};
