@@ -1,17 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace xrPostprocessEditor
 {
-    public partial class KeyFrameBox : UserControl
+    public partial class KeyFrameBox
     {
-        private decimal kf_coef;
+        private decimal _kfCoef;
 
         public event EventHandler SelectedIndexChanged;
         public event EventHandler AddButtonClick;
@@ -19,21 +13,21 @@ namespace xrPostprocessEditor
         public event EventHandler ClearButtonClick;
         public event EventHandler KeyFrameTimeChanged;
 
-        public ContextMenu CopyMenu { get { return btnCopyFrom.Menu; } }
+        public ContextMenu CopyMenu => btnCopyFrom.Menu;
 
-        public ListBox.ObjectCollection Items { get { return lbKeyFrames.Items; } }
+        public ListBox.ObjectCollection Items => lbKeyFrames.Items;
 
         public int SelectedIndex
         {
-            get { return lbKeyFrames.SelectedIndex; }
-            set { lbKeyFrames.SelectedIndex = value; }
+            get => lbKeyFrames.SelectedIndex;
+            set => lbKeyFrames.SelectedIndex = value;
         }
 
         public KeyFrameBox()
         {
             InitializeComponent();
             // Работаем по мотивам ПЫС, нужен коэф для названий в ListBox
-            kf_coef = 0;
+            _kfCoef = 0;
 
             // Завезём обработчики событий
             AddButtonClick += OnAddButtonClick;
@@ -65,13 +59,13 @@ namespace xrPostprocessEditor
         public void OnClearButtonClick(object sender, EventArgs e)
         {
             lbKeyFrames.Items.Clear();
-            kf_coef = 0;
+            _kfCoef = 0;
         }
 
         public void OnAddButtonClick(object sender, EventArgs e)
         {
-            kf_coef = numKeyFrameTime.Value;
-            lbKeyFrames.Items.Add(kf_coef.ToString());
+            _kfCoef = numKeyFrameTime.Value;
+            lbKeyFrames.Items.Add(_kfCoef.ToString());
         }
 
         private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e) => SelectedIndexChanged?.Invoke(this, e);
