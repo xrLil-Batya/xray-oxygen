@@ -881,29 +881,6 @@ bool CInventory::Eat(PIItem pIItem)
 	return			true;
 }
 
-bool CInventory::ClientEat(PIItem pIItem)
-{
-	CEatableItem* pItemToEat = smart_cast<CEatableItem*>(pIItem);
-	if ( !pItemToEat )			return false;
-
-	CEntityAlive *entity_alive = smart_cast<CEntityAlive*>(m_pOwner);
-	if ( !entity_alive )		return false;
-
-	CInventoryOwner* IO	= smart_cast<CInventoryOwner*>(entity_alive);
-	if ( !IO )					return false;
-	
-	CInventory* pInventory = pItemToEat->m_pInventory;
-	if ( !pInventory || pInventory != this )	return false;
-	if ( pInventory != IO->m_inventory )		return false;
-	if ( pItemToEat->object().H_Parent()->ID() != entity_alive->ID() )		return false;
-	
-	NET_Packet						P;
-	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM_EAT, pIItem->parent_id());
-	P.w_u16							(pIItem->object().ID());
-	CGameObject::u_EventSend		(P);
-	return true;
-}
-
 bool CInventory::InSlot(const CInventoryItem* pIItem) const
 {
 	if(pIItem->CurrPlace() != eItemPlaceSlot)	return false;

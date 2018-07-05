@@ -104,7 +104,6 @@ public:
 	PIItem					GetItemFromInventory(LPCSTR caItemName);
 
 	bool					Eat					(PIItem pIItem);
-	bool					ClientEat			(PIItem pIItem);
 
 	IC u16					GetActiveSlot		() const			{return m_iActiveSlot;}
 	
