@@ -1,7 +1,5 @@
 // xrServer.cpp: implementation of the xrServer class.
-//
 //////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "xrServer.h"
 #include "xrMessages.h"
@@ -140,10 +138,6 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 			{
 				SendBroadcast		(BroadcastCID,P);
 			}
-		}break;
-	case M_SAVE_GAME:
-		{
-			game->save_game			(P,sender);
 		}break;
 	case M_LOAD_GAME:
 		{
