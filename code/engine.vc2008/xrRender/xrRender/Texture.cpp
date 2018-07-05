@@ -290,10 +290,10 @@ ID3DBaseTexture*	CRender::texture_load(LPCSTR fRName, u32& ret_msize)
 	xr_strcpy(fname,fRName); //. andy if (strext(fname)) *strext(fname)=0;
 	fix_texture_name		(fname);
 	IReader* S				= NULL;
-	//if (FS.exist(fn,"$game_textures$",fname,	".dds")	&& strstr(fname,"_bump"))	goto _BUMP;
-	if (!FS.exist(fn, "$game_textures$", fname, ".dds") && (!FS.exist(fn, "$level_textures$", fname, ".dds")) && strstr(fname,"_bump"))	goto _BUMP_from_base;
-	if (FS.exist(fn, "$level_textures$", fname, ".dds"))								goto _DDS;
-	if (FS.exist(fn, "$level$", fname,	".dds"))								goto _DDS;
+
+	if (!FS.exist(fn, "$game_textures$", fname, ".dds") && strstr(fname,"_bump"))	goto _BUMP_from_base;
+	if (FS.exist(fn, "$level_textures$", fname, ".dds"))							goto _DDS;
+	if (FS.exist(fn, "$level$", fname,	".dds"))									goto _DDS;
 	if (FS.exist(fn,"$game_saves$",		fname,	".dds"))							goto _DDS;
 	if (FS.exist(fn,"$game_textures$",	fname,	".dds"))							goto _DDS;
 
