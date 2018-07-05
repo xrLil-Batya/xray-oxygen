@@ -39,7 +39,6 @@
 //#define ACTOR_RUCK			// Ruck slot to Actor Inventory.
 //#define PSEUDOGIG_JUMP_NOHIT	// Disabling hit on pseudogigant jump.
 //#define POLTER_SHOW_DEAD		// Showing poltergeist particle if polter dead.
-#define MULTITRANSFER			// Multi transfer to actor
 //#define SOC_TALK_WND			// Left and Right talkers icons
 //#define MONSTER_INV			// Inventory on Monsted dead body
 //#define VERTICAL_BELT			// Verticals belt slots

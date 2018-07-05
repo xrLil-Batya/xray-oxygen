@@ -23,7 +23,6 @@
 #include "../../xrServerEntities/script_engine.h"
 #include "../UIGame.h"
 #include "UITalkWnd.h"
-#include "../../FrayBuildConfig.hpp"
 // -------------------------------------------------
 
 void CUIActorMenu::InitTradeMode()
@@ -153,40 +152,57 @@ void CUIActorMenu::DeInitTradeMode()
 }
 
 #include "../xrEngine/xr_input.h"
-bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool b_use_cursor_pos)
+bool CUIActorMenu::ToActorTrade(CUICellItem* itm, bool bUseCursorPos)
 {
-	PIItem	iitem						= (PIItem)itm->m_pData;
-	if (!CanMoveToPartner( iitem ))
-		return false;
+    PIItem	ItemDataClass = (PIItem)itm->m_pData;
+    if (!CanMoveToPartner(ItemDataClass))
+    {
+        return false;
+    }
 
-	CUIDragDropListEx*	old_owner		= itm->OwnerList();
-    CUIDragDropListEx*	new_owner       = NULL;
-	EDDListType			old_owner_type	= GetListType(old_owner);
-	
-	if(old_owner_type==iQuickSlot)
-		return false;
+    CUIDragDropListEx*	oldOwner = itm->OwnerList();
+    CUIDragDropListEx*	newOwner = nullptr;
+    EDDListType			oldOwnerType = GetListType(oldOwner);
+    if (oldOwnerType == iQuickSlot)
+        return false;
 
-	if(!b_use_cursor_pos)
-	{
-		new_owner						    = m_pTradeActorList;
-		bool result							= (old_owner_type!=iActorBag) ? m_pActorInvOwner->inventory().Ruck(iitem) : true;
-		VERIFY								(result);
-		CUICellItem* i						= old_owner->RemoveItem(itm, (old_owner==new_owner) );
+    if (bUseCursorPos)
+    {
+        newOwner = CUIDragDropListEx::m_drag_item->BackList();
+        VERIFY(newOwner == m_pTradeActorList);
+    }
+    else
+    {
+        newOwner = m_pTradeActorList;
+    }
 
-		if(b_use_cursor_pos)
-			new_owner->SetItem				(i,old_owner->GetDragItemPosition());
-		else
-			new_owner->SetItem				(i);
-		
-		if (old_owner_type != iActorBag)
-			SendEvent_Item2Ruck				(iitem, m_pActorInvOwner->object_id());
+    // If it's not from actor inventory (means that item can be from weapon slot and holded), 
+    // we need take off this weapon or equipment
+    bool result = (oldOwnerType != iActorBag) ? m_pActorInvOwner->inventory().Ruck(ItemDataClass) : true;
 
-#ifdef MULTITRANSFER
-		if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToActorTrade(itm, b_use_cursor_pos);
-#endif
-		return true;
-	}
-    return false;
+    VERIFY(result);
+    CUICellItem* i = oldOwner->RemoveItem(itm, (oldOwner == newOwner));
+
+    if (bUseCursorPos)
+    {
+        newOwner->SetItem(i, oldOwner->GetDragItemPosition());
+    }
+    else
+    {
+        newOwner->SetItem(i);
+    }
+
+    if (oldOwnerType != iActorBag)
+    {
+        SendEvent_Item2Ruck(ItemDataClass, m_pActorInvOwner->object_id());
+    }
+
+    if (i != itm && pInput->iGetAsyncKeyState(DIK_LCONTROL))
+    {
+        return ToActorTrade(itm, bUseCursorPos);
+    }
+
+    return true;
 }
 
 bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
