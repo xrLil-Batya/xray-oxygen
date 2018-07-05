@@ -49,9 +49,10 @@ public:
 	virtual		void				net_Export_Update		(NET_Packet& P, ClientID id_to, ClientID id);		// just incremental update for specific client
 	virtual		void				net_Export_GameTime		(NET_Packet& P);						// update GameTime only for remote clients
 
-	virtual		bool				change_level			(NET_Packet &net_packet);
-	virtual		bool				load_game				(NET_Packet &net_packetû);
-	virtual		void				switch_distance			(float dis);
+	virtual		bool				change_level			(NET_Packet &net_packet, ClientID sender);
+	virtual		void				save_game				(NET_Packet &net_packet, ClientID sender);
+	virtual		bool				load_game				(NET_Packet &net_packet, ClientID sender);
+	virtual		void				switch_distance			(NET_Packet &net_packet);
 
 	virtual		void				teleport_object			(NET_Packet &packet, u16 id);
 	virtual		void				add_restriction			(RestrictionSpace::ERestrictorTypes type, u16 restriction_id, u16 id);

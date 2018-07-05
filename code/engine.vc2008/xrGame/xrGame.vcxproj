@@ -664,6 +664,7 @@
     <ClInclude Include="alife_update_manager.h" />
     <ClInclude Include="alife_update_manager_inline.h" />
     <ClInclude Include="alife_storage_manager.h" />
+    <ClInclude Include="alife_storage_manager_inline.h" />
     <ClInclude Include="alife_surge_manager.h" />
     <ClInclude Include="alife_surge_manager_inline.h" />
     <ClInclude Include="alife_switch_manager.h" />
@@ -2447,6 +2448,8 @@
     <ClCompile Include="xrServer_process_event.cpp" />
     <ClCompile Include="xrServer_process_event_activate.cpp" />
     <ClCompile Include="xrServer_process_event_destroy.cpp" />
+    <ClCompile Include="xrServer_process_event_ownership.cpp" />
+    <ClCompile Include="xrServer_process_event_reject.cpp" />
     <ClCompile Include="xrServer_process_spawn.cpp" />
     <ClCompile Include="xrServer_process_update.cpp" />
     <ClCompile Include="xrServer_CL_connect.cpp" />

@@ -5,6 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : ALife Simulator storage manager
 ////////////////////////////////////////////////////////////////////////////
+
 #include "stdafx.h"
 #include "alife_storage_manager.h"
 #include "alife_simulator_header.h"
@@ -27,12 +28,6 @@ XRCORE_API string_path g_bug_report_file;
 using namespace ALife;
 
 extern string_path g_last_saved_game;
-
-CALifeStorageManager::CALifeStorageManager(xrServer *server, LPCSTR section) : inherited(server, section)
-{
-	m_section = section;
-	xr_strcpy(m_save_name, "");
-}
 
 CALifeStorageManager::~CALifeStorageManager	()
 {
@@ -133,63 +128,79 @@ void CALifeStorageManager::load	(void *buffer, const u32 &buffer_size, LPCSTR fi
 	Level().autosave_manager().on_game_loaded	();
 }
 
-bool CALifeStorageManager::load(LPCSTR save_name_no_check)
+bool CALifeStorageManager::load	(LPCSTR save_name_no_check)
 {
-	LPCSTR game_saves_path = FS.get_path("$game_saves$")->m_Path;
+	LPCSTR game_saves_path		= FS.get_path("$game_saves$")->m_Path;
 
 	string_path					save_name;
-	strncpy_s(save_name, sizeof(save_name), save_name_no_check, sizeof(save_name) - 5 - xr_strlen(SAVE_EXTENSION) - xr_strlen(game_saves_path));
+	strncpy_s					(save_name, sizeof(save_name), save_name_no_check, sizeof(save_name)-5-xr_strlen(SAVE_EXTENSION)-xr_strlen(game_saves_path));
 
 	CTimer						timer;
-	timer.Start();
+	timer.Start					();
 
 	string_path					save;
-	xr_strcpy(save, m_save_name);
+	xr_strcpy					(save,m_save_name);
 	if (!save_name) {
 		if (!xr_strlen(m_save_name))
-			R_ASSERT2(false, "There is no file name specified!");
+			R_ASSERT2			(false,"There is no file name specified!");
 	}
 	else
 	{
-		strconcat(sizeof(m_save_name), m_save_name, save_name, SAVE_EXTENSION);
+		strconcat				(sizeof(m_save_name), m_save_name, save_name, SAVE_EXTENSION);
 	}
 	string_path					file_name;
-	FS.update_path(file_name, "$game_saves$", m_save_name);
+	FS.update_path				(file_name,"$game_saves$",m_save_name);
 
-	xr_strcpy(g_last_saved_game, save_name);
-	xr_strcpy(g_bug_report_file, file_name);
+	xr_strcpy					(g_last_saved_game, save_name);
+	xr_strcpy					(g_bug_report_file, file_name);
 
 	IReader						*stream;
-	stream = FS.r_open(file_name);
+	stream						= FS.r_open(file_name);
 	if (!stream) {
-		Msg("* Cannot find saved game %s", file_name);
-		xr_strcpy(m_save_name, save);
+		Msg						("* Cannot find saved game %s",file_name);
+		xr_strcpy				(m_save_name,save);
 		return					(false);
 	}
 
-	CHECK_OR_EXIT(CSavedGameWrapper::valid_saved_game(*stream), make_string("%s\nSaved game version mismatch or saved game is corrupted", file_name));
+	CHECK_OR_EXIT				(CSavedGameWrapper::valid_saved_game(*stream),make_string("%s\nSaved game version mismatch or saved game is corrupted",file_name));
 
 	string512					temp;
-	strconcat(sizeof(temp), temp, CStringTable().translate("st_loading_saved_game").c_str(), " \"", save_name, SAVE_EXTENSION, "\"");
+	strconcat					(sizeof(temp),temp,CStringTable().translate("st_loading_saved_game").c_str()," \"",save_name,SAVE_EXTENSION,"\"");
 
 	pApp->SetLoadStageTitle(temp);
-	g_pGamePersistent->LoadTitle();
+	//pApp->LoadStage();
+    g_pGamePersistent->LoadTitle();
 
-	unload();
-	reload(m_section);
+	unload						();
+	reload						(m_section);
 
 	u32							source_count = stream->r_u32();
 	void						*source_data = xr_malloc(source_count);
-	rtc_decompress(source_data, source_count, stream->pointer(), stream->length() - 3 * sizeof(u32));
-	FS.r_close(stream);
-	load(source_data, source_count, file_name);
-	xr_free(source_data);
+	rtc_decompress				(source_data,source_count,stream->pointer(),stream->length() - 3*sizeof(u32));
+	FS.r_close					(stream);
+	load						(source_data, source_count, file_name);
+	xr_free						(source_data);
 
-	groups().on_after_game_load();
+	groups().on_after_game_load	();
 
-	VERIFY(graph().actor());
+	VERIFY						(graph().actor());
+	
+	Msg							("* Game %s is successfully loaded from file '%s' (%.3fs)",save_name, file_name,timer.GetElapsed_sec());
 
-	Msg("* Game %s is successfully loaded from file '%s' (%.3fs)", save_name, file_name, timer.GetElapsed_sec());
+	return						(true);
+}
 
-	return (true);
+void CALifeStorageManager::save	(NET_Packet &net_packet)
+{
+	prepare_objects_for_save	();
+
+	shared_str					game_name;
+	net_packet.r_stringZ		(game_name);
+	save						(*game_name,!!net_packet.r_u8());
+}
+
+void CALifeStorageManager::prepare_objects_for_save	()
+{
+	Level().ClientSend			(true);
+	Level().ClientSave			();
 }

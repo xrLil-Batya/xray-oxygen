@@ -155,6 +155,12 @@ bool CALifeUpdateManager::change_level	(NET_Packet &net_packet)
 	if (m_changing_level)
 		return						(false);
 
+//	prepare_objects_for_save		();
+	// we couldn't use prepare_objects_for_save since we need 
+	// get updates from client 
+	// then change actor server entity 
+	// then call client net_Save 
+	// then restore actor server entity 
 	Level().ClientSend				(true);
 
 	m_changing_level				= true;
@@ -254,32 +260,39 @@ void CALifeUpdateManager::new_game			(LPCSTR save_name)
 
 void CALifeUpdateManager::load			(LPCSTR game_name, bool no_assert, bool new_only)
 {
-	g_pGamePersistent->SetLoadStageTitle("st_loading_alife_simulator");
-	g_pGamePersistent->LoadTitle();
+	g_pGamePersistent->SetLoadStageTitle	("st_loading_alife_simulator");
+	g_pGamePersistent->LoadTitle		();
 
-	xr_strcpy(g_last_saved_game,game_name);
+#ifdef DEBUG
+	Memory.mem_compact					();
+	u32									memory_usage = Memory.mem_usage();
+#endif
 
-	if (new_only || !CALifeStorageManager::load(game_name))
-	{
-		R_ASSERT3(new_only || no_assert && xr_strlen(game_name),"Cannot find the specified saved game ",game_name);
-		new_game(game_name);
+	xr_strcpy								(g_last_saved_game,game_name);
+
+	if (new_only || !CALifeStorageManager::load(game_name)) {
+		R_ASSERT3						(new_only || no_assert && xr_strlen(game_name),"Cannot find the specified saved game ",game_name);
+		new_game						(game_name);
 	}
 
 	if(g_pGameLevel)
 		Level().OnAlifeSimulatorLoaded();
 
-	g_pGamePersistent->SetLoadStageTitle("st_server_connecting");
-	g_pGamePersistent->LoadTitle(true, g_pGameLevel->name());
+#ifdef DEBUG
+	Msg									("* Loading alife simulator is successfully completed (%7.3f Mb)",float(Memory.mem_usage() - memory_usage)/1048576.0);
+#endif
+	g_pGamePersistent->SetLoadStageTitle	("st_server_connecting");
+	g_pGamePersistent->LoadTitle		(true, g_pGameLevel->name());
 }
 
-void CALifeUpdateManager::reload(LPCSTR section)
+void CALifeUpdateManager::reload		(LPCSTR section)
 {
-	CALifeSimulatorBase::reload(section);
-	set_process_time((int)m_max_process_time);
-	objects_per_update(m_objects_per_update);
+	CALifeSimulatorBase::reload			(section);
+	set_process_time					((int)m_max_process_time);
+	objects_per_update					(m_objects_per_update);
 }
 
-bool CALifeUpdateManager::load_game(LPCSTR game_name, bool no_assert)
+bool CALifeUpdateManager::load_game		(LPCSTR game_name, bool no_assert)
 {
 	{
 		string_path				temp,file_name;

@@ -126,7 +126,7 @@ game_sv_GameState::~game_sv_GameState()
 	delete_data(m_alife_simulator);
 }
 
-bool game_sv_GameState::change_level (NET_Packet &net_packet)
+bool game_sv_GameState::change_level (NET_Packet &net_packet, ClientID sender)
 {
 	if (ai().get_alife())
 		return (alife().change_level(net_packet));
@@ -134,7 +134,13 @@ bool game_sv_GameState::change_level (NET_Packet &net_packet)
 		return (true);
 }
 
-bool game_sv_GameState::load_game (NET_Packet &net_packet)
+void game_sv_GameState::save_game (NET_Packet &net_packet, ClientID sender)
+{
+	if (ai().get_alife())
+		alife().save(net_packet);
+}
+
+bool game_sv_GameState::load_game (NET_Packet &net_packet, ClientID sender)
 {
 	if (!ai().get_alife())
 		return true;
@@ -144,10 +150,10 @@ bool game_sv_GameState::load_game (NET_Packet &net_packet)
 	return (alife().load_game(*game_name, true));
 }
 
-void game_sv_GameState::switch_distance(float dis)
+void game_sv_GameState::switch_distance(NET_Packet &net_packet)
 {
 	if (ai().get_alife())
-		alife().set_switch_distance(dis);
+		alife().set_switch_distance(net_packet.r_float());
 }
 
 void game_sv_GameState::OnEvent (NET_Packet &tNetPacket, u16 type, u32 time, ClientID sender )
