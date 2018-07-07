@@ -106,7 +106,7 @@ void CStringTable::Load	(LPCSTR xml_file_full)
 	{
 		LPCSTR string_name = uiXml.ReadAttrib(uiXml.GetRoot(), "string", i, "id", NULL);
 
-		VERIFY3(pData->m_StringTable.find(string_name) == pData->m_StringTable.end(), "duplicate string table id", string_name);
+		VERIFY4(pData->m_StringTable.find(string_name) == pData->m_StringTable.end(), "duplicate string table id", string_name, uiXml.m_xml_file_name);
 
 		LPCSTR string_text		= uiXml.Read(uiXml.GetRoot(), "string:text", i,  NULL);
 		shared_str str_val		= ParseLine(string_text, string_name, true);

@@ -55,7 +55,7 @@ class CBaseMonster :
 	public CCustomMonster, 
 	public CStepManager
 #ifdef MONSTER_INV
-	, CInventoryOwner
+	, public CInventoryOwner
 #endif
 {
 	typedef	CCustomMonster								inherited;
