@@ -1,5 +1,4 @@
-#ifndef __V3D__
-#define __V3D__
+#pragma once
 
 // Inline call
 #ifndef IC
@@ -19,6 +18,11 @@ public:
 	// access operators
 	ICF	T&			operator[] (int i)					{ return *((T*)this + i); }
 	ICF	T&			operator[] (int i)	const			{ return *((T*)this + i); }
+
+	IC SelfRef		operator += (SelfCRef v)			{ return add(v); }
+	IC SelfRef		operator -= (SelfCRef v)			{ return sub(v); }
+	IC SelfRef		operator *= (SelfCRef v)			{ return mul(v); }
+	IC SelfRef		operator /= (SelfCRef v)			{ return div(v); }
 
 	ICF	SelfRef	set(T _x, T _y, T _z)					
     { 
@@ -536,5 +540,3 @@ aa2_largest:	// aa2 is largest
 }
 IC BOOL	exact_normalize	(Fvector3& a)	{	return exact_normalize(&a.x);	}
 #pragma warning(pop)
-
-#endif

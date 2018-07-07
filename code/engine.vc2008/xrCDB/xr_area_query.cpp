@@ -2,8 +2,6 @@
 #include "xr_area.h"
 #include "frustum.h"
 
-#include "../xrCore/_vector3d_ext.h"
-
 using namespace	collide;
 
 bool CObjectSpace::BoxQuery	(Fvector const & 		box_center, 

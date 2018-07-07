@@ -2,7 +2,6 @@
 #include "trajectories.h"
 #include "Level.h"
 #include "../xrPhysics/IPHWorld.h"
-#include "../xrCore/_vector3d_ext.h"
 
 
 static void trajectory_get_position(Fvector &result, const Fvector &start_position, const Fvector &velocity, const Fvector &gravity, const float &time)

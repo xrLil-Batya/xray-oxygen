@@ -22,7 +22,6 @@
 #include "../../../xr_level_controller.h"
 #include "../../../weapon.h"
 
-#include "../../../../xrCore/_vector3d_ext.h"
 #include "../control_direction_base.h"
 
 bool CBurer::can_scan = true;
@@ -342,12 +341,12 @@ void CBurer::UpdateGraviObject()
 	// draw particle
 	CParticlesObject* ps = CParticlesObject::Create(particle_gravi_wave,TRUE);
 
-	// âû÷èñëèòü ïîçèöèþ è íàïðàâëåííîñòü ïàðòèêëà
+	// Ð²Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ Ð¸ Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ð¾ÑÑ‚ÑŒ Ð¿Ð°Ñ€Ñ‚Ð¸ÐºÐ»Ð°
 	Fmatrix pos; 
 	pos.identity();
 	pos.k.set(dir);
 	Fvector::generate_orthonormal_basis_normalized(pos.k,pos.j,pos.i);
-	// óñòàíîâèòü ïîçèöèþ
+	// ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ
 	pos.translate_over(m_gravi_object.cur_pos);
 
 	ps->UpdateParent(pos, zero_vel);
@@ -368,7 +367,7 @@ void CBurer::UpdateGraviObject()
 		obj->m_pPhysicsShell->applyImpulse(dir,m_gravi.impulse_to_objects * obj->m_pPhysicsShell->getMass());
 	}
 
-	// èãðàòü çâóê
+	// Ð¸Ð³Ñ€Ð°Ñ‚ÑŒ Ð·Ð²ÑƒÐº
 	Fvector snd_pos = m_gravi_object.cur_pos;
 	snd_pos.y += 0.5f;
 	if (sound_gravi_wave._feedback())		{
@@ -425,12 +424,12 @@ void	CBurer::Hit								(SHit* pHDS)
 		 pHDS->hit_type == ALife::eHitTypeFireWound	&& 
 		 Device.dwFrame != last_hit_frame				) 
 	{
-		// âû÷èñëèòü ïîçèöèþ è íàïðàâëåííîñòü ïàðòèêëà
+		// Ð²Ñ‹Ñ‡Ð¸ÑÐ»Ð¸Ñ‚ÑŒ Ð¿Ð¾Ð·Ð¸Ñ†Ð¸ÑŽ Ð¸ Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ð¾ÑÑ‚ÑŒ Ð¿Ð°Ñ€Ñ‚Ð¸ÐºÐ»Ð°
 		Fmatrix pos; 
 		//CParticlesPlayer::MakeXFORM(this,element,Fvector().set(0.f,0.f,1.f),p_in_object_space,pos);
 		CParticlesPlayer::MakeXFORM					(this,pHDS->bone(),pHDS->dir,pHDS->p_in_bone_space,pos);
 
-		// óñòàíîâèòü particles
+		// ÑƒÑÑ‚Ð°Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ particles
 		CParticlesObject* ps					=	CParticlesObject::Create(particle_fire_shield,TRUE);
 		
 		ps->UpdateParent							(pos,Fvector().set(0.f,0.f,0.f));

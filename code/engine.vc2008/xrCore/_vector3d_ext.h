@@ -1,5 +1,4 @@
-#ifndef VECTOR3D_EXT_INCLUDED
-#define VECTOR3D_EXT_INCLUDED
+#pragma once
 
 #include "_vector3d.h"
 
@@ -165,5 +164,3 @@ Fvector   rotate_point (Fvector const&	point, float const angle)
   													  0,
 													  point.x*sin_alpha + point.z*cos_alpha);
 }
-
-#endif // VECTOR3D_EXT_INCLUDED
