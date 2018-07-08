@@ -46,6 +46,7 @@ namespace xrPostprocessEditor
                 new ChannelDesc(tpColorMapping, kfbColorMapping, PostProcessParamType.ColorMappingInfluence,
                     "Color mapping", UpdateColorMapping)
             };
+
             for (int kfbIndex = 0; kfbIndex < _chInfo.Length; kfbIndex++)
             {
                 var dstChannel = _chInfo[kfbIndex];
@@ -122,8 +123,15 @@ namespace xrPostprocessEditor
             nslColorMappingInfluence.Value = (decimal)value.Influence;
             tbColorMappingTexture.Text = value.Texture;
         }
-        
-        public void Initialize(EditorEngine nEngine) { Engine = nEngine; }
+
+        public void Initialize(EditorEngine nEngine)
+        {
+            Engine = nEngine;
+
+            Engine.ErrorOccuredEvent += Engine_ErrorOccuredEvent;
+        }
+
+        private void Engine_ErrorOccuredEvent(string message) => MessageBox.Show(message);
 
         private void CopyKeyFrames(ChannelDesc dst, ChannelDesc src)
         {
