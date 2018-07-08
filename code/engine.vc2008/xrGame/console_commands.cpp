@@ -37,6 +37,8 @@
 #include "cameralook.h"
 #include "character_hit_animations_params.h"
 #include "inventory_upgrade_manager.h"
+#include "../xrCore/FS.h"
+#include "../xrCore/LocatorAPI.h"
 
 #include "ai_debug_variables.h"
 #include "../xrphysics/console_vars.h"
@@ -2029,4 +2031,15 @@ void CCC_RegisterCommands()
     CMD1(CCC_SetWeather, "set_weather");
 
     CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
+}
+
+
+void LoadGameExtraFeatures()
+{
+    string_path configFilePath;
+    FS.update_path(configFilePath, "$game_config$", "GameExtra.ltx");
+
+    string_path cmdLoadCfg;
+    strconcat(sizeof(cmdLoadCfg), cmdLoadCfg, "cfg_load", " ", configFilePath);
+    Console->Execute(cmdLoadCfg);
 }

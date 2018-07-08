@@ -377,7 +377,7 @@ public:
 class ENGINE_API CCC_LoadCFG : public IConsole_Command
 {
 public:
-	virtual bool	allow			(LPCSTR cmd)	{return true;};
+	virtual bool	allow			(LPCSTR cmd)	{return cmd[0] != ';';};
 					CCC_LoadCFG		(LPCSTR N);
 	virtual void	Execute			(LPCSTR args);
 };
