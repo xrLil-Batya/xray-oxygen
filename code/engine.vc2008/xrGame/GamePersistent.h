@@ -7,6 +7,15 @@ class CParticlesObject;
 class CUISequencer;
 class ui_core;
 
+/// Extra features, that previously was in FRayBuildConfig.h. Can be enabled by console commands
+/// Should be here, to make this global
+enum OxygenExtraFeatures
+{
+    GAME_EXTRA_RUCK = (1 << 0),
+
+};
+extern Flags32 g_extraFeatures;
+
 class CGamePersistent: public IGame_Persistent, public IEventReceiver
 {
 	// ambient particles

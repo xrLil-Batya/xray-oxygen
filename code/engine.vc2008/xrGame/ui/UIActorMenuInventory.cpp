@@ -46,10 +46,11 @@ void CUIActorMenu::InitInventoryMode()
 	m_pInventoryDetectorList->Show		(true);
 	m_pInventoryPistolList->Show		(true);
 	m_pInventoryAutomaticList->Show		(true);
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList->Show			(true);
-#endif
 
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList->Show(true);
+    }
 
     m_pInventoryKnifeList->Show         (true);
     m_pInventoryBinocularList->Show     (true);
@@ -236,9 +237,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		m_pInventoryAutomaticList,
 		m_pInventoryKnifeList,
 		m_pInventoryBinocularList,
-#ifdef ACTOR_RUCK
 		m_pInventoryRuckList,
-#endif		
 		m_pInventoryOutfitList,
 		m_pInventoryHelmetList,
 		m_pInventoryDetectorList,
@@ -395,9 +394,10 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	InitCellForSlot				(INV_SLOT_2);
 	InitCellForSlot				(INV_SLOT_3);
 
-#ifdef ACTOR_RUCK
-	InitCellForSlot(RUCK_SLOT);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+	    InitCellForSlot(RUCK_SLOT);
+    }
 
     InitCellForSlot             (KNIFE_SLOT);
     InitCellForSlot             (BINOCULAR_SLOT);
@@ -664,11 +664,19 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 			return m_pInventoryAutomaticList;
 			break;
 
-#ifdef ACTOR_RUCK
 		case RUCK_SLOT:
-			return m_pInventoryRuckList;
+        {
+            if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+            {
+                return m_pInventoryRuckList;
+
+            }
+            else
+            {
+                return nullptr;
+            }
+        }
 			break;
-#endif
 
 		case KNIFE_SLOT: 
 		    return m_pInventoryKnifeList;

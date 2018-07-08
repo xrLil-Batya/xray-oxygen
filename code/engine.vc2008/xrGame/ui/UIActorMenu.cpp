@@ -255,9 +255,7 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 	if (l == m_pInventoryOutfitList)		return iActorSlot;
 	if (l == m_pInventoryHelmetList)		return iActorSlot;
 	if (l == m_pInventoryDetectorList)		return iActorSlot;
-#ifdef ACTOR_RUCK
 	if (l == m_pInventoryRuckList)			return iActorSlot;
-#endif
 
     if (l == m_pInventoryKnifeList)         return iActorSlot;
     if (l == m_pInventoryBinocularList)     return iActorSlot;
@@ -400,9 +398,11 @@ void CUIActorMenu::clear_highlight_lists()
 	m_HelmetSlotHighlight->Show(false);
 	m_OutfitSlotHighlight->Show(false);
 	m_DetectorSlotHighlight->Show(false);
-#ifdef ACTOR_RUCK
-	m_RuckSlotHighlight->Show(false);
-#endif
+
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_RuckSlotHighlight->Show(false);
+    }
 
     m_KnifeSlotHighlight->Show(false);
     m_BinocularSlotHighlight->Show(false);
@@ -772,9 +772,10 @@ void CUIActorMenu::ClearAllLists()
 	m_pInventoryPistolList->ClearAll			(true);
 	m_pInventoryAutomaticList->ClearAll			(true);
 
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList->ClearAll(true);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList->ClearAll(true);
+    }
 
     m_pInventoryKnifeList->ClearAll             (true);
     m_pInventoryBinocularList->ClearAll         (true);

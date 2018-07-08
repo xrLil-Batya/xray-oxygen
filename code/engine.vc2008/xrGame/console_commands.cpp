@@ -115,6 +115,8 @@ extern float	dbg_imotion_draw_velocity_scale;
 #endif
 int g_AI_inactive_time = 0;
 
+Flags32 g_extraFeatures;
+
 // g_spawn
 class CCC_Spawn : public IConsole_Command {
 public:
@@ -2025,4 +2027,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Integer, "keypress_on_start", &g_keypress_on_start, 0, 1);
 
     CMD1(CCC_SetWeather, "set_weather");
+
+    CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
 }

@@ -104,10 +104,11 @@ void CUIActorMenu::Construct()
     m_BinocularSlotHighlight    = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this);
     m_BinocularSlotHighlight    ->Show(false);
 
-#ifdef ACTOR_RUCK
-    m_RuckSlotHighlight			= UIHelper::CreateStatic(uiXml, "ruck_slot_highlight", this);
-    m_RuckSlotHighlight			->Show(false);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_RuckSlotHighlight = UIHelper::CreateStatic(uiXml, "ruck_slot_highlight", this);
+        m_RuckSlotHighlight->Show(false);
+    }
 	m_DetectorSlotHighlight		= UIHelper::CreateStatic(uiXml, "detector_slot_highlight", this);
 	m_DetectorSlotHighlight		->Show(false);
 	m_QuickSlotsHighlight[0]	= UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
@@ -166,9 +167,10 @@ void CUIActorMenu::Construct()
 	m_pInventoryPistolList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
 	m_pInventoryAutomaticList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_automatic", this);
 
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
+    }
 
     m_pInventoryKnifeList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_knife", this);
     m_pInventoryBinocularList   = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
@@ -279,9 +281,10 @@ void CUIActorMenu::Construct()
     BindDragDropListEvents              (m_pInventoryKnifeList);
     BindDragDropListEvents              (m_pInventoryBinocularList);
 
-#ifdef ACTOR_RUCK
-	BindDragDropListEvents				(m_pInventoryRuckList);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        BindDragDropListEvents(m_pInventoryRuckList);
+    }
 
 	BindDragDropListEvents				(m_pInventoryBagList);
 	BindDragDropListEvents				(m_pTradeActorBagList);

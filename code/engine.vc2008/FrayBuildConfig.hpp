@@ -36,7 +36,6 @@
 
 /* True Stalker */
 //#define HOLD_PICKUP_OFF		// Selection of subjects one by one.
-//#define ACTOR_RUCK			// Ruck slot to Actor Inventory.
 //#define PSEUDOGIG_JUMP_NOHIT	// Disabling hit on pseudogigant jump.
 //#define POLTER_SHOW_DEAD		// Showing poltergeist particle if polter dead.
 //#define SOC_TALK_WND			// Left and Right talkers icons
