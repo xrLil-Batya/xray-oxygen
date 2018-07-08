@@ -299,7 +299,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					++i;
 				}
 				CUICellItem*		ci   = NULL;
-				if(GetMenuMode()==mmDeadBodySearch && FindItemInList(m_pDeadBodyBagList, pItem, ci))
+				if(GetMenuMode()==mmDeadBodySearch && FindItemInList(lst_to_add, pItem, ci))
 					break;
 
 				if ( !b_already )
@@ -658,55 +658,38 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 	{
 		case INV_SLOT_2:
 			return m_pInventoryPistolList;
-			break;
-
 		case INV_SLOT_3:
 			return m_pInventoryAutomaticList;
-			break;
-
 		case RUCK_SLOT:
         {
             if (g_extraFeatures.is(GAME_EXTRA_RUCK))
             {
                 return m_pInventoryRuckList;
-
             }
             else
             {
                 return nullptr;
             }
         }
-			break;
-
 		case KNIFE_SLOT: 
 		    return m_pInventoryKnifeList;
-			break;
-			
 		case BINOCULAR_SLOT: 
 		    return m_pInventoryBinocularList; 
-			break;
-			
 		case OUTFIT_SLOT:
 			return m_pInventoryOutfitList;
-			break;
-
 		case HELMET_SLOT:
 			return m_pInventoryHelmetList;
-			break;
-
 		case DETECTOR_SLOT:
 			return m_pInventoryDetectorList;
-			break;
-
 		case GRENADE_SLOT://fake
 			if ( m_currMenuMode == mmTrade )
 			{
 				return m_pTradeActorBagList;
 			}
 			return m_pInventoryBagList;
-			break;
+        default:
+            return NULL;
 	};
-	return NULL;
 }
 
 bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
