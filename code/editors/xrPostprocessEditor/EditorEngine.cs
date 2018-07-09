@@ -1,7 +1,5 @@
 ﻿using System;
-using System.IO;
 using System.Runtime.ExceptionServices;
-using System.Runtime.InteropServices;
 using XRay.ManagedApi.Core;
 
 namespace xrPostprocessEditor

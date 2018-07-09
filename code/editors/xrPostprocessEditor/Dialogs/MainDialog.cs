@@ -61,11 +61,10 @@ namespace xrPostprocessEditor
                     dstChannel.List.CopyMenu.MenuItems.Add(item);
                 }
             }
+
             SetCurrentEffectName(DefaultEffectName);
-            foreach (var ch in _chInfo)
-            {
-                ch.List.SelectedIndexChanged += (s, e) => ch.Update(((KeyFrameBox) s).SelectedIndex);
-            }
+
+            SetUpHandlers();
         }
 
         Color ConvertColor(ColorF value)
@@ -208,6 +207,15 @@ namespace xrPostprocessEditor
                 dlg.Filter = "Post-process effects (.ppe)|*.ppe|All Files (*.*)|*.*";
                 if (dlg.ShowDialog() == DialogResult.OK)
                     Engine.SaveEffect(dlg.FileName);
+            }
+        }
+        
+        private void SetUpHandlers()
+        {
+            foreach (var ch in _chInfo)
+            {
+                ch.List.SelectedIndexChanged += (s, e) => ch.Update(((ListBox) s).SelectedIndex);
+                ch.List.AddTimeKeyEvent += (sender, keyTime) => Engine.CreateKey(ch.Type, (float) keyTime);
             }
         }
     }
