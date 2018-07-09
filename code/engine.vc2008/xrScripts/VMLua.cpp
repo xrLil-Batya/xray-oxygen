@@ -101,7 +101,7 @@ void CVMLua::OpenLib()
 	lopen::openlua(m_virtual_machine);
 	// FX to ALL: Add anothres namespace into this function
 	luabind::open(m_virtual_machine);
-    luabind::set_error_callback(CVMLua::luabind_onerror);
+    //luabind::set_error_callback(CVMLua::luabind_onerror);
 }
 
 void CVMLua::Add(AddFun pFun)
