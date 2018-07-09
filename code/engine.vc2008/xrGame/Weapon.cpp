@@ -135,18 +135,12 @@ void CWeapon::UpdateXForm()
 	// Get access to entity and its visual
 	CEntityAlive* E = smart_cast<CEntityAlive*>(H_Parent());
 	
-	if (!E)
-		return;
+    if (!E) return;
 
 	const CInventoryOwner *parent = smart_cast<const CInventoryOwner*>(E);
-	if (parent && parent->use_simplified_visual())
-		return;
+    if (parent && parent->use_simplified_visual()) return;
 
-#ifdef DEAD_BODY_WEAPON
-	if (!m_can_be_strapped_rifle)
-#endif
-		if (parent->attached(this))
-			return;
+    if (!m_can_be_strapped_rifle && parent->attached(this)) return;
 
 	IKinematics* V = smart_cast<IKinematics*>(E->Visual());
 	VERIFY(V);
@@ -180,13 +174,14 @@ void CWeapon::UpdateXForm()
 	E->g_WeaponBones(boneL, boneR, boneR2);
 #endif
 
-	if (boneR == -1)
+	if (boneR == (u16(-1)))
 		return;
 
 	if ((HandDependence() == hd1Hand) || (GetState() == eReload) || (!E->g_Alive()))
 		boneL = boneR2;
 
 	V->CalculateBones();
+
 	Fmatrix& mL	= V->LL_GetTransform(u16(boneL));
 	Fmatrix& mR = V->LL_GetTransform(u16(boneR));
 
