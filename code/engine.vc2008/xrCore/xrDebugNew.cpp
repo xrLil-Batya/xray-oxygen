@@ -155,10 +155,9 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 
 const char* xrDebug::error2string(long code)
 {
-	char* desc_storage = nullptr;
-	FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
-
-	return desc_storage;
+    static	string1024	desc_storage;
+    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
+    return desc_storage;
 }
 
 void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
