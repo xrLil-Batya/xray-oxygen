@@ -49,6 +49,8 @@
 #	include "CharacterPhysicsSupport.h"
 #endif // DEBUG
 #include "HudItem.h"
+#include "../xrEngine/xr_ioc_cmd_ex.h"
+
 string_path		g_last_saved_game;
 
 #ifdef DEBUG
@@ -56,17 +58,15 @@ string_path		g_last_saved_game;
 #endif // #ifdef DEBUG
 
 extern	u64		g_qwStartGameTime;
-extern	u64		g_qwEStartGameTime;
+extern 	u32 	hud_adj_mode;
 
 extern  EGameLanguage g_Language;
-ENGINE_API
-extern  float   psHUD_FOV_def;
+ENGINE_API extern  float   psHUD_FOV_def;
 extern	float	psSqueezeVelocity;
 extern	int		psLUA_GCSTEP;
 
 extern	int		x_m_x;
 extern	int		x_m_z;
-extern	BOOL	net_cl_inputguaranteed	;
 extern	BOOL	net_sv_control_hit		;
 extern	int		g_dwInputUpdateDelta	;
 #ifdef DEBUG
@@ -960,19 +960,7 @@ public:
 			}
 			ph_dbg_draw_mask1.set(ph_m1_DbgTrackObject,TRUE);
 			PH_DBG_SetTrackObject();
-			//CObject* O= Level().Objects.FindObjectByName(args);
-			//if(O)
-			//{
-			//	PH_DBG_SetTrackObject(*(O->cName()));
-			//	ph_dbg_draw_mask1.set(ph_m1_DbgTrackObject,TRUE);
-			//}
-
 		}
-	
-	//virtual void	Info	(TInfo& I)		
-	//{
-	//	xr_strcpy(I,"restart game fast"); 
-	//}
 };
 #endif
 
@@ -984,7 +972,6 @@ public:
 	  virtual void	Execute	(LPCSTR args)
 	  {
 		  CCC_Integer::Execute	(args);
-		 // dWorldSetQuickStepNumIterations(NULL,phIterations);
 		  if( physics_world() )
 				 physics_world()->StepNumIterations( phIterations );
 	  }
@@ -1512,8 +1499,7 @@ public:
 			Msg("! ActorMenu is not in state `Inventory`");
 		}
 	}
-}; // CCC_InvDropAllItems
-
+};
 
 class CCC_DumpObjects : public IConsole_Command {
 public:
@@ -1524,33 +1510,6 @@ public:
 	}
 };
 
-#endif // DEBUG
-class CCC_GSCheckForUpdates : public IConsole_Command {
-public:
-	CCC_GSCheckForUpdates(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = true; };
-	virtual void Execute(LPCSTR)
-	{
-	}
-};
-
-
-
-class CCC_Net_SV_GuaranteedPacketMode : public CCC_Integer {
-protected:
-	int		*value_blin;
-public:
-	CCC_Net_SV_GuaranteedPacketMode(LPCSTR N, int* V, int _min=0, int _max=2) :
-	  CCC_Integer(N,V,_min,_max),
-		  value_blin(V)
-	  {};
-
-	  virtual void	Execute	(LPCSTR args)
-	  {
-		  CCC_Integer::Execute(args);
-	  }
-};
-
-#ifdef	DEBUG
 void DBG_CashedClear();
 class CCC_DBGDrawCashedClear : public IConsole_Command {
 public:
@@ -1697,25 +1656,16 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "ai_draw_game_graph_objects", &psAI_Flags, aiDrawGameGraphObjects);
 	CMD3(CCC_Mask, "ai_draw_game_graph_real_pos", &psAI_Flags, aiDrawGameGraphRealPos);
 
-
 	CMD3(CCC_Mask, "ai_nil_object_access", &psAI_Flags, aiNilObjectAccess);
 
 	CMD3(CCC_Mask, "ai_draw_visibility_rays", &psAI_Flags, aiDrawVisibilityRays);
 	CMD3(CCC_Mask, "ai_animation_stats", &psAI_Flags, aiAnimationStats);
 
-	/////////////////////////////////////////////HIT ANIMATION////////////////////////////////////////////////////
-	//float						power_factor				= 2.f;
-	//float						rotational_power_factor		= 3.f;
-	//float						side_sensitivity_threshold	= 0.2f;
-	//float						anim_channel_factor			= 3.f;
-
+	// HIT ANIMATION
 	CMD4(CCC_Float, "hit_anims_power", &ghit_anims_params.power_factor, 0.0f, 100.0f);
 	CMD4(CCC_Float, "hit_anims_rotational_power", &ghit_anims_params.rotational_power_factor, 0.0f, 100.0f);
 	CMD4(CCC_Float, "hit_anims_side_sensitivity_threshold", &ghit_anims_params.side_sensitivity_threshold, 0.0f, 10.0f);
 	CMD4(CCC_Float, "hit_anims_channel_factor", &ghit_anims_params.anim_channel_factor, 0.0f, 100.0f);
-	//float	block_blend					= 0.1f;
-	//float	reduce_blend				= 0.5f;
-	//float	reduce_power_factor			= 0.5f;
 	CMD4(CCC_Float, "hit_anims_block_blend", &ghit_anims_params.block_blend, 0.f, 1.f);
 	CMD4(CCC_Float, "hit_anims_reduce_blend", &ghit_anims_params.reduce_blend, 0.f, 1.f);
 	CMD4(CCC_Float, "hit_anims_reduce_blend_factor", &ghit_anims_params.reduce_power_factor, 0.0f, 1.0f);
@@ -1908,7 +1858,6 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Vector3, "psp_cam_offset", &CCameraLook2::m_cam_offset, Fvector().set(-1000, -1000, -1000), Fvector().set(1000, 1000, 1000));
 #endif // MASTER_GOLD
 
-	CMD1(CCC_GSCheckForUpdates, "check_for_updates");
 #ifdef DEBUG
 	CMD1(CCC_Crash, "crash");
 	CMD1(CCC_DumpObjects, "dump_all_objects");
@@ -1921,21 +1870,12 @@ void CCC_RegisterCommands()
 	CMD4(CCC_Integer, "dbg_imotion_draw_skeleton", &dbg_imotion_draw_skeleton, FALSE, TRUE);
 	CMD4(CCC_Float, "dbg_imotion_draw_velocity_scale", &dbg_imotion_draw_velocity_scale, 0.0001f, 100.0f);
 
-	CMD4(CCC_Integer, "show_wnd_rect_all", &g_show_wnd_rect2, 0, 1);
-	CMD4(CCC_Integer, "dbg_show_ani_info", &g_ShowAnimationInfo, 0, 1);
 	CMD4(CCC_Integer, "dbg_dump_physics_step", &ph_console::g_bDebugDumpPhysicsStep, 0, 1);
 	CMD1(CCC_InvUpgradesHierarchy, "inv_upgrades_hierarchy");
 	CMD1(CCC_InvUpgradesCurItem, "inv_upgrades_cur_item");
 	CMD4(CCC_Integer, "inv_upgrades_log", &g_upgrades_log, 0, 1);
 	CMD1(CCC_InvDropAllItems, "inv_drop_all_items");
 
-	extern float	dbg_text_height_scale;
-	CMD4(CCC_FloatBlock, "dbg_text_height_scale", &dbg_text_height_scale, 0.2f, 5.f);
-#endif
-
-
-
-#ifdef DEBUG
 	CMD1(CCC_DumpInfos, "dump_infos");
 	CMD1(CCC_DumpTasks, "dump_tasks");
 	CMD1(CCC_DumpMap, "dump_map");
@@ -1950,68 +1890,45 @@ void CCC_RegisterCommands()
 	CMD1(CCC_StartTimeSingle, "start_time_single");
 	CMD4(CCC_TimeFactorSingle, "time_factor_single", &g_fTimeFactor, 0.f, 1000.0f);
 	CMD4(CCC_Vector3, "psp_cam_offset", &CCameraLook2::m_cam_offset, Fvector().set(-1000, -1000, -1000), Fvector().set(1000, 1000, 1000));
-#endif // MASTER_GOLD
-
-	CMD1(CCC_GSCheckForUpdates, "check_for_updates");
-#ifdef DEBUG
-	CMD1(CCC_Crash, "crash");
-	CMD1(CCC_DumpObjects, "dump_all_objects");
-	CMD3(CCC_String, "stalker_death_anim", dbg_stalker_death_anim, 32);
-	CMD4(CCC_Integer, "death_anim_debug", &death_anim_debug, FALSE, TRUE);
-	CMD4(CCC_Integer, "death_anim_velocity", &b_death_anim_velocity, FALSE, TRUE);
-	CMD4(CCC_Integer, "dbg_imotion_draw_velocity", &dbg_imotion_draw_velocity, FALSE, TRUE);
-	CMD4(CCC_Integer, "dbg_imotion_collide_debug", &dbg_imotion_collide_debug, FALSE, TRUE);
-
-	CMD4(CCC_Integer, "dbg_imotion_draw_skeleton", &dbg_imotion_draw_skeleton, FALSE, TRUE);
-	CMD4(CCC_Float, "dbg_imotion_draw_velocity_scale", &dbg_imotion_draw_velocity_scale, 0.0001f, 100.0f);
-
-	CMD4(CCC_Integer, "show_wnd_rect_all", &g_show_wnd_rect2, 0, 1);
-	CMD4(CCC_Integer, "dbg_show_ani_info", &g_ShowAnimationInfo, 0, 1);
-	CMD4(CCC_Integer, "dbg_dump_physics_step", &ph_console::g_bDebugDumpPhysicsStep, 0, 1);
-	CMD1(CCC_InvUpgradesHierarchy, "inv_upgrades_hierarchy");
-	CMD1(CCC_InvUpgradesCurItem, "inv_upgrades_cur_item");
-	CMD4(CCC_Integer, "inv_upgrades_log", &g_upgrades_log, 0, 1);
-	CMD1(CCC_InvDropAllItems, "inv_drop_all_items");
-
-	extern BOOL dbg_moving_bones_snd_player;
-	CMD4(CCC_Integer, "dbg_bones_snd_player", &dbg_moving_bones_snd_player, FALSE, TRUE);
 #endif
-	CMD4(CCC_Float, "con_sensitive", &g_console_sensitive, 0.01f, 1.0f);
-	CMD4(CCC_Integer, "wpn_aim_toggle", &b_toggle_weapon_aim, 0, 1);
-	//	CMD4(CCC_Integer,	"hud_old_style",			&g_old_style_ui_hud, 0, 1);
+
+	CMD4(CCC_Float, "con_sensitive",     &g_console_sensitive, 0.01f, 1.0f);
+	CMD4(CCC_Integer, "wpn_aim_toggle",  &b_toggle_weapon_aim, 0, 1);
+//	CMD4(CCC_Integer,	"hud_old_style", &g_old_style_ui_hud, 0, 1);
 
 #ifdef DEBUG
 	CMD4(CCC_Float, "ai_smart_cover_animation_speed_factor", &g_smart_cover_animation_speed_factor, .1f, 10.f);
 	CMD4(CCC_Float, "air_resistance_epsilon", &air_resistance_epsilon, .0f, 1.f);
+
+	CMD4(CCC_Integer, "show_wnd_rect_all", &g_show_wnd_rect2, 0, 1);
+	CMD4(CCC_Integer, "dbg_show_ani_info", &g_ShowAnimationInfo, 0, 1);
+
+	extern BOOL dbg_moving_bones_snd_player;
+	CMD4(CCC_Integer, "dbg_bones_snd_player", &dbg_moving_bones_snd_player, FALSE, TRUE);
 #endif // #ifdef DEBUG
 
-	CMD4(CCC_Integer, "g_sleep_time", &psActorSleepTime, 1, 24);
+	CMD4(CCC_Integer, 	"g_sleep_time", 		&psActorSleepTime, 1, 24);
+	CMD4(CCC_Integer, 	"ai_use_old_vision", 	&g_ai_use_old_vision, 0, 1);
+	CMD4(CCC_Float, 	"ai_aim_predict_time", 	&g_aim_predict_time, 0.f, 10.f);
 
-	CMD4(CCC_Integer, "ai_use_old_vision", &g_ai_use_old_vision, 0, 1);
-
-	CMD4(CCC_Float, "ai_aim_predict_time", &g_aim_predict_time, 0.f, 10.f);
-
-	//extern BOOL g_use_new_ballistics;
-	//CMD4(CCC_Integer,	"use_new_ballistics",	&g_use_new_ballistics, 0, 1);
 	extern float g_bullet_time_factor;
 	CMD4(CCC_Float, "g_bullet_time_factor", &g_bullet_time_factor, 0.f, 10.f);
 
 
 #ifdef DEBUG
 	extern BOOL g_ai_dbg_sight;
-	CMD4(CCC_Integer, "ai_dbg_sight", &g_ai_dbg_sight, 0, 1);
-
 	extern BOOL g_ai_aim_use_smooth_aim;
+
+	CMD4(CCC_Integer, "ai_dbg_sight", &g_ai_dbg_sight, 0, 1);
 	CMD4(CCC_Integer, "ai_aim_use_smooth_aim", &g_ai_aim_use_smooth_aim, 0, 1);
 #endif // #ifdef DEBUG
 
 	extern float g_ai_aim_min_speed;
-	CMD4(CCC_Float, "ai_aim_min_speed", &g_ai_aim_min_speed, 0.f, 10.f*PI);
-
 	extern float g_ai_aim_min_angle;
-	CMD4(CCC_Float, "ai_aim_min_angle", &g_ai_aim_min_angle, 0.f, 10.f*PI);
-
 	extern float g_ai_aim_max_angle;
+
+	CMD4(CCC_Float, "ai_aim_min_speed", &g_ai_aim_min_speed, 0.f, 10.f*PI);
+	CMD4(CCC_Float, "ai_aim_min_angle", &g_ai_aim_min_angle, 0.f, 10.f*PI);
 	CMD4(CCC_Float, "ai_aim_max_angle", &g_ai_aim_max_angle, 0.f, 10.f*PI);
 
 #ifdef DEBUG
@@ -2028,9 +1945,10 @@ void CCC_RegisterCommands()
 
 	CMD4(CCC_Integer, "keypress_on_start", &g_keypress_on_start, 0, 1);
 
-    CMD1(CCC_SetWeather, "set_weather");
-
-    CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
+	// Oxy:
+	CMD1(CCC_SetWeather, "set_weather");
+	CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
+	CMD4(CCC_U32, "hud_adjust_mode", &hud_adj_mode, 0, 5); /// adjust mode support
 }
 
 

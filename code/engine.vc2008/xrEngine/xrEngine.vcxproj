@@ -291,6 +291,7 @@
     <ClInclude Include="ClS\NET_Client.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="ILoadingScreen.h" />
+    <ClInclude Include="xr_ioc_cmd_ex.h" />
     <ClInclude Include="_d3d_extensions.h" />
     <ClInclude Include="defines.h" />
     <ClInclude Include="mp_logging.h" />
