@@ -9,7 +9,7 @@
 
 * Update third party APIs used in original X-Ray 1.6.02
 * Correction of X-Ray errors
-* Remove unnecessary, obsolete and dead code
+* Remove unnecessary, obsolete and dead code 
 * Make modkit
 
 ## Downloads
