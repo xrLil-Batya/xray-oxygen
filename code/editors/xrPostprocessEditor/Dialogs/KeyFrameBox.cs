@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace xrPostprocessEditor
@@ -7,8 +8,11 @@ namespace xrPostprocessEditor
     public partial class KeyFrameBox
     {
         public delegate void KeyFrameEventHandler(object sender, decimal keyTime);
+        public delegate void KeyFrameErrorHandler(string message);
 
         public event KeyFrameEventHandler AddTimeKeyEvent;
+        public event KeyFrameErrorHandler ErrorOccuredEvent;
+
         public event EventHandler SelectedIndexChanged;
         public event EventHandler RemoveButtonClick;
         public event EventHandler ClearButtonClick;
@@ -26,7 +30,6 @@ namespace xrPostprocessEditor
         public KeyFrameBox()
         {
             InitializeComponent();
-            // Работаем по мотивам ПЫС, нужен коэф для названий в ListBox
 
             RemoveButtonClick += OnRemoveButtonClick;
             ClearButtonClick += OnClearButtonClick;
@@ -34,15 +37,15 @@ namespace xrPostprocessEditor
 
         public void OnRemoveButtonClick(object sender, EventArgs e)
         {
-            try
+            if (lbKeyFrames.Items.Count != 0)
             {
                 int size = lbKeyFrames.Items.Count - 1;
                 lbKeyFrames.Items.RemoveAt(size);
+
+                return;
             }
-            catch(Exception)
-            {
-                MessageBox.Show("KeyFrames is empty!");
-            }
+            
+            ErrorOccuredEvent?.Invoke("KeyFrame is empty.");
         }
 
         public void OnClearButtonClick(object sender, EventArgs e)
@@ -53,9 +56,17 @@ namespace xrPostprocessEditor
         public void BtnAdd_Click(object sender, EventArgs e)
         {
             decimal keyTime = numKeyFrameTime.Value;
-            lbKeyFrames.Items.Add(keyTime.ToString(CultureInfo.InvariantCulture));
+            var keyTimeString = keyTime.ToString(CultureInfo.InvariantCulture);
 
-            AddTimeKeyEvent?.Invoke(this, keyTime);
+            if (!VerifyKeyTime(keyTime))
+            {
+                lbKeyFrames.Items.Add(keyTimeString);
+                AddTimeKeyEvent?.Invoke(this, keyTime);
+
+                return;
+            }
+
+            ErrorOccuredEvent?.Invoke("This time is already exists in the frame list.");
         }
 
         private void BtnRemove_Click(object sender, EventArgs e) => RemoveButtonClick?.Invoke(this, e);
@@ -66,5 +77,12 @@ namespace xrPostprocessEditor
 
         private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e) =>
             SelectedIndexChanged?.Invoke(sender, e);
+
+        private bool VerifyKeyTime(decimal newKeyTime)
+        {
+            var items = lbKeyFrames.Items.Cast<string>();
+
+            return items.Contains(newKeyTime.ToString(CultureInfo.InvariantCulture));
+        }
     }
 }

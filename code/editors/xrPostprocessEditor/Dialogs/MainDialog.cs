@@ -216,6 +216,7 @@ namespace xrPostprocessEditor
             {
                 ch.List.SelectedIndexChanged += (s, e) => ch.Update(((ListBox) s).SelectedIndex);
                 ch.List.AddTimeKeyEvent += (sender, keyTime) => Engine.CreateKey(ch.Type, (float) keyTime);
+                ch.List.ErrorOccuredEvent += message => MessageBox.Show(message);
             }
         }
     }
