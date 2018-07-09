@@ -40,6 +40,7 @@ private:
 	bool			CreateNamespaceTable(LPCSTR caNamespaceName);
 	bool			LoadBuffer(LPCSTR caBuffer, size_t tSize, LPCSTR caScriptName, LPCSTR caNameSpaceName);
 	bool			DoFile(LPCSTR caScriptName, LPCSTR caNameSpaceName, bool bCall);
+    static void     luabind_onerror(lua_State* lua);
 };
 
 SCRIPT_API void setup_luabind_allocator();
