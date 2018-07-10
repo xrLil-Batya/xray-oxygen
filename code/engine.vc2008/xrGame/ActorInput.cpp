@@ -419,20 +419,18 @@ void CActor::ActorUse()
 				CGameObject::u_EventSend(P);
 				return;
 			}
-		}
-
-		if (m_pPersonWeLookingAt)
-		{
-			CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
-
-			VERIFY(pEntityAliveWeLookingAt);
-
-			if (pEntityAliveWeLookingAt->g_Alive())
-				TryToTalk();
-			else
+			else if (m_pPersonWeLookingAt)
 			{
-				if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
-					GameUI()->StartCarBody(this, m_pPersonWeLookingAt);
+				CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
+				VERIFY(pEntityAliveWeLookingAt);
+
+				if (pEntityAliveWeLookingAt->g_Alive())
+					TryToTalk();
+				else
+				{
+					if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
+						GameUI()->StartCarBody(this, m_pPersonWeLookingAt);
+				}
 			}
 		}
 	}
