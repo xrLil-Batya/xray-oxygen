@@ -46,6 +46,7 @@ namespace xrPostprocessEditor
         public void CreateKey(PostProcessParamType paramType, float time)
         {
             PostProcessParamBase param = _animator.GetParam(paramType);
+
             try
             {
                 switch (paramType)
@@ -94,6 +95,14 @@ namespace xrPostprocessEditor
             finally
             {
                 param.Dispose();
+            }
+        }
+
+        public void RemoveKey(PostProcessParamType paramType, float time)
+        {
+            using (PostProcessParamBase param = _animator.GetParam(paramType))
+            {
+                param.DeleteValue(time);
             }
         }
 

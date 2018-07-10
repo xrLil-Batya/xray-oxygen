@@ -11,10 +11,10 @@ namespace xrPostprocessEditor
         public delegate void KeyFrameErrorHandler(string message);
 
         public event KeyFrameEventHandler AddTimeKeyEvent;
+        public event KeyFrameEventHandler RemoveTimeKeyEvent;
         public event KeyFrameErrorHandler ErrorOccuredEvent;
 
         public event EventHandler SelectedIndexChanged;
-        public event EventHandler RemoveButtonClick;
         public event EventHandler ClearButtonClick;
 
         public ContextMenu CopyMenu => btnCopyFrom.Menu;
@@ -31,21 +31,7 @@ namespace xrPostprocessEditor
         {
             InitializeComponent();
 
-            RemoveButtonClick += OnRemoveButtonClick;
             ClearButtonClick += OnClearButtonClick;
-        }
-
-        public void OnRemoveButtonClick(object sender, EventArgs e)
-        {
-            if (lbKeyFrames.Items.Count != 0)
-            {
-                int size = lbKeyFrames.Items.Count - 1;
-                lbKeyFrames.Items.RemoveAt(size);
-
-                return;
-            }
-            
-            ErrorOccuredEvent?.Invoke("KeyFrame is empty.");
         }
 
         public void OnClearButtonClick(object sender, EventArgs e)
@@ -69,14 +55,34 @@ namespace xrPostprocessEditor
             ErrorOccuredEvent?.Invoke("This time is already exists in the frame list.");
         }
 
-        private void BtnRemove_Click(object sender, EventArgs e) => RemoveButtonClick?.Invoke(this, e);
+        private void BtnRemove_Click(object sender, EventArgs e)
+        {
+            if (lbKeyFrames.Items.Count != 0)
+            {
+                int index = lbKeyFrames.SelectedIndex;
+                decimal keyTime = decimal.Parse(lbKeyFrames.SelectedItem.ToString());
+
+                RemoveTimeKeyEvent?.Invoke(this, keyTime);
+
+                lbKeyFrames.Items.RemoveAt(index);
+
+                return;
+            }
+
+            ErrorOccuredEvent?.Invoke("KeyFrame is empty.");
+        }
 
         private void BtnClear_Click(object sender, EventArgs e) => ClearButtonClick?.Invoke(this, e);
 
         private void NumKeyFrameTime_ValueChanged(object sender, EventArgs e) { }
 
-        private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e) =>
-            SelectedIndexChanged?.Invoke(sender, e);
+        private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lbKeyFrames.SelectedItem != null)
+            {
+                SelectedIndexChanged?.Invoke(sender, e);
+            }
+        }
 
         private bool VerifyKeyTime(decimal newKeyTime)
         {
