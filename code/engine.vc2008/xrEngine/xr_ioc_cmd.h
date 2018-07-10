@@ -299,7 +299,7 @@ public
 
 };
 
-class ENGINE_API	CCC_Integer : public IConsole_Command
+class ENGINE_API CCC_Integer : public IConsole_Command
 {
 protected	:
 	int*			value;
