@@ -242,7 +242,7 @@ namespace xrPostprocessEditor
             this.cpBC.MaximumSize = new System.Drawing.Size(9000, 144);
             this.cpBC.MinimumSize = new System.Drawing.Size(256, 144);
             this.cpBC.Name = "cpBC";
-            this.cpBC.Size = new System.Drawing.Size(264, 144);
+            this.cpBC.Size = new System.Drawing.Size(381, 144);
             this.cpBC.TabIndex = 0;
             this.cpBC.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.cpBC.Value = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
@@ -304,7 +304,7 @@ namespace xrPostprocessEditor
             this.cpGC.MaximumSize = new System.Drawing.Size(9000, 144);
             this.cpGC.MinimumSize = new System.Drawing.Size(256, 144);
             this.cpGC.Name = "cpGC";
-            this.cpGC.Size = new System.Drawing.Size(264, 144);
+            this.cpGC.Size = new System.Drawing.Size(381, 144);
             this.cpGC.TabIndex = 0;
             this.cpGC.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.cpGC.Value = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
@@ -366,7 +366,7 @@ namespace xrPostprocessEditor
             this.nslDualityX.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslDualityX.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslDualityX.Name = "nslDualityX";
-            this.nslDualityX.Size = new System.Drawing.Size(150, 21);
+            this.nslDualityX.Size = new System.Drawing.Size(250, 21);
             this.nslDualityX.TabIndex = 9;
             // 
             // lDualityY
@@ -385,7 +385,7 @@ namespace xrPostprocessEditor
             this.nslDualityY.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslDualityY.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslDualityY.Name = "nslDualityY";
-            this.nslDualityY.Size = new System.Drawing.Size(150, 21);
+            this.nslDualityY.Size = new System.Drawing.Size(250, 21);
             this.nslDualityY.TabIndex = 7;
             // 
             // lDualityX
@@ -465,7 +465,7 @@ namespace xrPostprocessEditor
             this.nslNoiseFPS.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslNoiseFPS.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseFPS.Name = "nslNoiseFPS";
-            this.nslNoiseFPS.Size = new System.Drawing.Size(150, 21);
+            this.nslNoiseFPS.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseFPS.TabIndex = 14;
             // 
             // nslNoiseIntensity
@@ -475,7 +475,7 @@ namespace xrPostprocessEditor
             this.nslNoiseIntensity.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslNoiseIntensity.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseIntensity.Name = "nslNoiseIntensity";
-            this.nslNoiseIntensity.Size = new System.Drawing.Size(150, 21);
+            this.nslNoiseIntensity.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseIntensity.TabIndex = 13;
             // 
             // lNoiseGrain
@@ -494,7 +494,7 @@ namespace xrPostprocessEditor
             this.nslNoiseGrain.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslNoiseGrain.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseGrain.Name = "nslNoiseGrain";
-            this.nslNoiseGrain.Size = new System.Drawing.Size(150, 21);
+            this.nslNoiseGrain.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseGrain.TabIndex = 11;
             // 
             // lNoiseIntensity
@@ -561,7 +561,7 @@ namespace xrPostprocessEditor
             this.nslBlur.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslBlur.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslBlur.Name = "nslBlur";
-            this.nslBlur.Size = new System.Drawing.Size(150, 21);
+            this.nslBlur.Size = new System.Drawing.Size(250, 21);
             this.nslBlur.TabIndex = 18;
             // 
             // lBlur
@@ -630,7 +630,7 @@ namespace xrPostprocessEditor
             this.nslColorMappingInfluence.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslColorMappingInfluence.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslColorMappingInfluence.Name = "nslColorMappingInfluence";
-            this.nslColorMappingInfluence.Size = new System.Drawing.Size(150, 21);
+            this.nslColorMappingInfluence.Size = new System.Drawing.Size(250, 21);
             this.nslColorMappingInfluence.TabIndex = 16;
             // 
             // lColorMappingInfluence
