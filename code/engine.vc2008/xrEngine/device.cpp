@@ -403,7 +403,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     DWORD	dwHeight			= psCurrentVidMode[1];
     bool	bFullscreen			= psDeviceFlags.is(rsFullscreen);
 
-    RECT	m_rcWindowBounds;
+    RECT	WindowBounds;
     RECT	DesktopRect;
     GetClientRect				(GetDesktopWindow(), &DesktopRect);
     switch (PropStyle)
@@ -413,7 +413,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         psDeviceFlags.set(rsFullscreen, false);
         dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX/* | WS_SIZEBOX */;
 
-        SetRect	(&m_rcWindowBounds, 
+        SetRect	(&WindowBounds,
 				(DesktopRect.right - dwWidth) / 2,
 				(DesktopRect.bottom - dwHeight) / 2,
 				(DesktopRect.right + dwWidth) / 2,
@@ -425,7 +425,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         psDeviceFlags.set(rsFullscreen, false);
         dwWindowStyle = WS_VISIBLE;
 
-        SetRect	(&m_rcWindowBounds,
+        SetRect	(&WindowBounds,
 				(DesktopRect.right - dwWidth) / 2,
 				(DesktopRect.bottom - dwHeight) / 2, 
 				(DesktopRect.right + dwWidth) / 2,
@@ -438,7 +438,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 
         dwWindowStyle = WS_VISIBLE;
 		///////////////////////////////////////
-        m_rcWindowBounds = DesktopRect;
+        WindowBounds = DesktopRect;
     }
         break;
     case WPS_Fullscreen:
@@ -458,14 +458,14 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 
     if (!bNewFullscreen)
     {
-        AdjustWindowRect(&m_rcWindowBounds, dwWindowStyle, FALSE);
+        AdjustWindowRect(&WindowBounds, dwWindowStyle, FALSE);
 
         SetWindowPos	(m_hWnd,
 						HWND_NOTOPMOST,
-						m_rcWindowBounds.left,
-						m_rcWindowBounds.top,
-						(m_rcWindowBounds.right - m_rcWindowBounds.left),
-						(m_rcWindowBounds.bottom - m_rcWindowBounds.top),
+                        WindowBounds.left,
+                        WindowBounds.top,
+						(WindowBounds.right - WindowBounds.left),
+						(WindowBounds.bottom - WindowBounds.top),
 						SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
     }
 
@@ -538,6 +538,9 @@ ENGINE_API BOOL bShowPauseString = TRUE;
 
 void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 {
+#ifdef DEBUG
+    Msg("* [MSG] PAUSE bOn[%s], bTimer[%s], bSound[%s], reason: %s", bOn ? "true" : "false", bTimer ? "true" : "false", bSound ? "true" : "false", reason);
+#endif
 	static int snd_emitters_ = -1;
 
 	if (g_bBenchmark)	return;

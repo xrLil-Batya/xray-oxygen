@@ -139,7 +139,7 @@ void xrDebug::backend(const char *expression, const char *description, const cha
     //Sometimes if we crashed not in main thread, we can stuck at ShowWindow
     if (GetCurrentThreadId() == m_mainThreadId)
     {
-	    ShowWindow(wnd, SW_MINIMIZE);
+	    ShowWindow(wnd, SW_HIDE);
     }
 	while (ShowCursor(TRUE) < 0);
 
@@ -147,9 +147,13 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 	do_exit(assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-
-	//THIS IS FINE!
-	DebugBreak();
+    do_exit2(assertion_info, ignore_always);
+    
+    //And we should show window again, damn pause manager
+    if (GetCurrentThreadId() == m_mainThreadId)
+    {
+        ShowWindow(wnd, SW_SHOW);
+    }
 #endif
 }
 
@@ -158,6 +162,27 @@ const char* xrDebug::error2string(long code)
     static	string1024	desc_storage;
     FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
     return desc_storage;
+}
+
+
+void xrDebug::do_exit2(const std::string& message, bool& ignore_always)
+{
+    int MsgRet = MessageBox(NULL, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+
+    switch (MsgRet)
+    {
+    case IDABORT:
+        DebugBreak();
+        ExitProcess(1);
+        break;
+    case IDIGNORE:
+        ignore_always = true;
+        break;
+    case IDRETRY:
+    default:
+        DebugBreak();
+        break;
+    }
 }
 
 void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)

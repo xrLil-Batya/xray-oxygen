@@ -26,6 +26,7 @@
 ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
+ENGINE_API BOOL g_appLoaded = FALSE;
 #ifdef SPAWN_ANTIFREEZE
 ENGINE_API bool g_bootComplete = false;
 #endif
@@ -624,7 +625,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 }
 
 static	CTimer	phase_timer;
-extern	ENGINE_API BOOL g_appLoaded = FALSE;
 
 void CApplication::LoadBegin()
 {

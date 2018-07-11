@@ -11,6 +11,7 @@
 #include "specific_character.h"
 #include "alife_registry_wrappers.h"
 #include "../xrServerEntities/script_engine.h"
+#include "ai/monsters/basemonster/base_monster.h"
 
 
 CPda::CPda(void)						
@@ -89,6 +90,9 @@ void CPda::feel_touch_new(CObject* O)
 {
 	if ( CInventoryOwner* pNewContactInvOwner = smart_cast<CInventoryOwner*>(O) )
 	{
+        // Don't display monsters as PDA contacts, they don't have PDA
+        if (smart_cast<CBaseMonster*>(O) != nullptr) return;
+
 		CInventoryOwner* pOwner	=	smart_cast<CInventoryOwner*>( H_Parent() );VERIFY(pOwner);
 		pOwner->NewPdaContact		(pNewContactInvOwner);
 	}

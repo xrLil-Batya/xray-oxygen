@@ -151,8 +151,6 @@ public:
 private:
     // Main objects used for creating and rendering the 3D scene
     u32										m_dwWindowStyle;
-    RECT									m_rcWindowBounds;
-    RECT									m_rcWindowClient;
 
 	CTimer									TimerMM;
 
