@@ -8,34 +8,33 @@ namespace XRay.SdkControls
     public sealed partial class ColorPicker : UserControl
     {
         public delegate void ColorChangedEventHandler(object sender, Color color);
+        public event ColorChangedEventHandler ColorChanged;
 
-        private bool hexadecimal;
-        private bool ignoreOnChanged = false;
-        private bool alphaEnabled = true;
-        private HorizontalAlignment textAlignment = HorizontalAlignment.Left;
+        private bool _hexadecimal;
+        private bool _ignoreOnChanged;
+        private bool _alphaEnabled = true;
+        private HorizontalAlignment _textAlignment = HorizontalAlignment.Left;
         
         public ColorPicker()
         {
             InitializeComponent();
         }
 
-        public event ColorChangedEventHandler ColorChanged;
-
         public Color Value
         {
-            get { return pbColor.ColorSample; }
+            get => pbColor.ColorSample;
             set
             {
                 if (pbColor.ColorSample == value)
                     return;
-                ignoreOnChanged = true;
-                if (alphaEnabled)
+                _ignoreOnChanged = true;
+                if (_alphaEnabled)
                     nslAlpha.Value = value.A;
                 nslRed.Value = value.R;
                 nslGreen.Value = value.G;
                 nslBlue.Value = value.B;
                 pbColor.ColorSample = value;
-                ignoreOnChanged = false;
+                _ignoreOnChanged = false;
                 UpdateColor();
             }
         }
@@ -47,19 +46,19 @@ namespace XRay.SdkControls
 
         public bool AlphaEnabled
         {
-            get { return alphaEnabled; }
+            get => _alphaEnabled;
             set
             {
-                if (alphaEnabled == value)
+                if (_alphaEnabled == value)
                     return;
-                alphaEnabled = value;
-                ignoreOnChanged = true;
+                _alphaEnabled = value;
+                _ignoreOnChanged = true;
                 nslAlpha.Value = nslAlpha.Maximum;
-                ignoreOnChanged = false;
+                _ignoreOnChanged = false;
                 UpdateColor();
-                lAlpha.Visible = alphaEnabled;
-                nslAlpha.Visible = alphaEnabled;
-                int delta = (alphaEnabled ? 1 : -1)*27;
+                lAlpha.Visible = _alphaEnabled;
+                nslAlpha.Visible = _alphaEnabled;
+                int delta = (_alphaEnabled ? 1 : -1)*27;
                 Point loc = chkHexadecimal.Location;
                 loc.Y += delta;
                 chkHexadecimal.Location = loc;
@@ -68,12 +67,12 @@ namespace XRay.SdkControls
 
         public bool Hexadecimal
         {
-            get { return hexadecimal; }
+            get => _hexadecimal;
             set
             {
-                if (hexadecimal == value)
+                if (_hexadecimal == value)
                     return;
-                hexadecimal = value;
+                _hexadecimal = value;
                 chkHexadecimal.Checked = value;
                 nslRed.Hexadecimal = value;
                 nslGreen.Hexadecimal = value;
@@ -84,12 +83,12 @@ namespace XRay.SdkControls
 
         public HorizontalAlignment TextAlign
         {
-            get { return textAlignment; }
+            get => _textAlignment;
             set
             {
-                if (textAlignment == value)
+                if (_textAlignment == value)
                     return;
-                textAlignment = value;
+                _textAlignment = value;
                 nslAlpha.TextAlign = value;
                 nslRed.TextAlign = value;
                 nslGreen.TextAlign = value;
@@ -110,13 +109,13 @@ namespace XRay.SdkControls
 
         private void OnColorChanged()
         {
-            if (!ignoreOnChanged && ColorChanged != null)
-                ColorChanged(this, Value);
+            if (!_ignoreOnChanged)
+                ColorChanged?.Invoke(this, Value);
         }
 
         private void UpdateColor()
         {
-            if (ignoreOnChanged)
+            if (_ignoreOnChanged)
                 return;
             var newColor = Color.FromArgb(
                 Convert.ToInt32(nslAlpha.Value),

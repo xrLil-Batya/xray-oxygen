@@ -18,7 +18,7 @@ namespace XRay.SdkControls
 
         public decimal Value
         {
-            get { return numSpinner.Value; }
+            get => numSpinner.Value;
             set
             {
                 numSpinner.Value = value;
@@ -28,7 +28,7 @@ namespace XRay.SdkControls
 
         public decimal Minimum
         {
-            get { return numSpinner.Minimum; }
+            get => numSpinner.Minimum;
             set
             {
                 numSpinner.Minimum = value;
@@ -38,7 +38,7 @@ namespace XRay.SdkControls
 
         public decimal Maximum
         {
-            get { return numSpinner.Maximum; }
+            get => numSpinner.Maximum;
             set
             {
                 numSpinner.Maximum = value;
@@ -48,26 +48,26 @@ namespace XRay.SdkControls
 
         public bool Hexadecimal
         {
-            get { return numSpinner.Hexadecimal; }
-            set { numSpinner.Hexadecimal = value; }
+            get => numSpinner.Hexadecimal;
+            set => numSpinner.Hexadecimal = value;
         }
 
         public HorizontalAlignment TextAlign
         {
-            get { return numSpinner.TextAlign; }
-            set { numSpinner.TextAlign = value; }
+            get => numSpinner.TextAlign;
+            set => numSpinner.TextAlign = value;
         }
 
         public int DecimalPlaces
         {
-            get { return numSpinner.DecimalPlaces; }
-            set { numSpinner.DecimalPlaces = value; }
+            get => numSpinner.DecimalPlaces;
+            set => numSpinner.DecimalPlaces = value;
         }
 
         public int SliderPrecision
         {
-            get { return trackBar.Maximum; }
-            set { trackBar.Maximum = value; }
+            get => trackBar.Maximum;
+            set => trackBar.Maximum = value;
         }
         
         /// <summary>
@@ -75,8 +75,8 @@ namespace XRay.SdkControls
         /// </summary>
         public int TickFrequency
         {
-            get { return trackBar.TickFrequency; }
-            set { trackBar.TickFrequency = value; }
+            get => trackBar.TickFrequency;
+            set => trackBar.TickFrequency = value;
         }
 
         /// <summary>
@@ -84,13 +84,13 @@ namespace XRay.SdkControls
         /// </summary>
         public TickStyle TickStyle
         {
-            get { return trackBar.TickStyle; }
-            set { trackBar.TickStyle = value; }
+            get => trackBar.TickStyle;
+            set => trackBar.TickStyle = value;
         }
 
         public int SpinnerWidth
         {
-            get { return numSpinner.Width; }
+            get => numSpinner.Width;
             set
             {
                 var minSpinnerWidth = numSpinner.MinimumSize.Width;
@@ -115,7 +115,7 @@ namespace XRay.SdkControls
 
         public override Size MinimumSize
         {
-            get { return base.MinimumSize; }
+            get => base.MinimumSize;
             set
             {
                 var minWidth = numSpinner.MinimumSize.Width+trackBar.MinimumSize.Width;
@@ -127,8 +127,7 @@ namespace XRay.SdkControls
         
         private void OnValueChanged()
         {
-            if (ValueChanged != null)
-                ValueChanged(this, null);
+            ValueChanged?.Invoke(this, null);
         }
 
         private decimal SliderPos

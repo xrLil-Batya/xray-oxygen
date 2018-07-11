@@ -1,18 +1,11 @@
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
-using System.Data;
-using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace XRay.SdkControls
 {
     public sealed partial class NumericSpinner : UserControl
     {
-        bool ignoreOnChanged;
-
         public NumericSpinner() => InitializeComponent();
 
         public event EventHandler ValueChanged;
@@ -59,7 +52,7 @@ namespace XRay.SdkControls
             /*get { return trackBar.Maximum; }
             set { trackBar.Maximum = value; }*/
         }
-        public bool IgnoreOnChanged { get => ignoreOnChanged; set => ignoreOnChanged = value; }
+        public bool IgnoreOnChanged { get; set; }
 
         private void OnValueChanged() => ValueChanged?.Invoke(this, null);
 

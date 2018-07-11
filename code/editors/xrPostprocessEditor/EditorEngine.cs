@@ -102,6 +102,7 @@ namespace xrPostprocessEditor
         {
             using (PostProcessParamBase param = _animator.GetParam(paramType))
             {
+
                 param.DeleteValue(time);
             }
         }
