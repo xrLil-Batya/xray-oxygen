@@ -68,6 +68,8 @@ namespace xrPostprocessEditor
             this.tpBlur = new System.Windows.Forms.TabPage();
             this.tlpBlur = new System.Windows.Forms.TableLayoutPanel();
             this.pnBlur = new System.Windows.Forms.Panel();
+            this.nslBlur = new XRay.SdkControls.NumericSlider();
+            this.lBlur = new System.Windows.Forms.Label();
             this.kfbBlur = new xrPostprocessEditor.KeyFrameBox();
             this.tpColorMapping = new System.Windows.Forms.TabPage();
             this.tlpColorMapping = new System.Windows.Forms.TableLayoutPanel();
@@ -86,8 +88,6 @@ namespace xrPostprocessEditor
             this.miLoad = new System.Windows.Forms.ToolStripMenuItem();
             this.miSave = new System.Windows.Forms.ToolStripMenuItem();
             this.pbDrawingSurface = new System.Windows.Forms.PictureBox();
-            this.nslBlur = new XRay.SdkControls.NumericSlider();
-            this.lBlur = new System.Windows.Forms.Label();
             this.tabEffects.SuspendLayout();
             this.tpAC.SuspendLayout();
             this.tlpAC.SuspendLayout();
@@ -191,7 +191,7 @@ namespace xrPostprocessEditor
             this.cpAC.MaximumSize = new System.Drawing.Size(9000, 144);
             this.cpAC.MinimumSize = new System.Drawing.Size(256, 144);
             this.cpAC.Name = "cpAC";
-            this.cpAC.Size = new System.Drawing.Size(264, 144);
+            this.cpAC.Size = new System.Drawing.Size(381, 144);
             this.cpAC.TabIndex = 0;
             this.cpAC.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.cpAC.Value = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
@@ -554,6 +554,25 @@ namespace xrPostprocessEditor
             this.pnBlur.Size = new System.Drawing.Size(419, 181);
             this.pnBlur.TabIndex = 2;
             // 
+            // nslBlur
+            // 
+            this.nslBlur.BackColor = System.Drawing.SystemColors.Window;
+            this.nslBlur.Location = new System.Drawing.Point(55, 9);
+            this.nslBlur.MaximumSize = new System.Drawing.Size(9000, 21);
+            this.nslBlur.MinimumSize = new System.Drawing.Size(64, 0);
+            this.nslBlur.Name = "nslBlur";
+            this.nslBlur.Size = new System.Drawing.Size(150, 21);
+            this.nslBlur.TabIndex = 18;
+            // 
+            // lBlur
+            // 
+            this.lBlur.AutoSize = true;
+            this.lBlur.Location = new System.Drawing.Point(3, 11);
+            this.lBlur.Name = "lBlur";
+            this.lBlur.Size = new System.Drawing.Size(40, 13);
+            this.lBlur.TabIndex = 17;
+            this.lBlur.Text = "Radius";
+            // 
             // kfbBlur
             // 
             this.kfbBlur.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -738,25 +757,6 @@ namespace xrPostprocessEditor
             this.pbDrawingSurface.Size = new System.Drawing.Size(614, 170);
             this.pbDrawingSurface.TabIndex = 3;
             this.pbDrawingSurface.TabStop = false;
-            // 
-            // nslBlur
-            // 
-            this.nslBlur.BackColor = System.Drawing.SystemColors.Window;
-            this.nslBlur.Location = new System.Drawing.Point(55, 9);
-            this.nslBlur.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslBlur.MinimumSize = new System.Drawing.Size(64, 0);
-            this.nslBlur.Name = "nslBlur";
-            this.nslBlur.Size = new System.Drawing.Size(150, 21);
-            this.nslBlur.TabIndex = 18;
-            // 
-            // lBlur
-            // 
-            this.lBlur.AutoSize = true;
-            this.lBlur.Location = new System.Drawing.Point(3, 11);
-            this.lBlur.Name = "lBlur";
-            this.lBlur.Size = new System.Drawing.Size(40, 13);
-            this.lBlur.TabIndex = 17;
-            this.lBlur.Text = "Radius";
             // 
             // MainDialog
             // 
