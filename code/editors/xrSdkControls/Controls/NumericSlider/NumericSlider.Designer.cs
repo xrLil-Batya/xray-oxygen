@@ -40,7 +40,7 @@
             this.numSpinner.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
             this.numSpinner.Location = new System.Drawing.Point(212, 0);
             this.numSpinner.Maximum = new decimal(new int[] {
-            10,
+            255,
             0,
             0,
             0});
