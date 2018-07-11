@@ -362,34 +362,12 @@ namespace xrPostprocessEditor
             // nslDualityX
             // 
             this.nslDualityX.BackColor = System.Drawing.SystemColors.Window;
-            this.nslDualityX.DecimalPlaces = 2;
-            this.nslDualityX.Hexadecimal = false;
             this.nslDualityX.Location = new System.Drawing.Point(55, 9);
-            this.nslDualityX.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslDualityX.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslDualityX.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
             this.nslDualityX.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslDualityX.Name = "nslDualityX";
             this.nslDualityX.Size = new System.Drawing.Size(150, 21);
-            this.nslDualityX.SliderPrecision = 100;
-            this.nslDualityX.SpinnerWidth = 54;
             this.nslDualityX.TabIndex = 9;
-            this.nslDualityX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslDualityX.TickFrequency = 25;
-            this.nslDualityX.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslDualityX.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             // 
             // lDualityY
             // 
@@ -403,34 +381,12 @@ namespace xrPostprocessEditor
             // nslDualityY
             // 
             this.nslDualityY.BackColor = System.Drawing.SystemColors.Window;
-            this.nslDualityY.DecimalPlaces = 2;
-            this.nslDualityY.Hexadecimal = false;
             this.nslDualityY.Location = new System.Drawing.Point(55, 36);
-            this.nslDualityY.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslDualityY.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslDualityY.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
             this.nslDualityY.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslDualityY.Name = "nslDualityY";
             this.nslDualityY.Size = new System.Drawing.Size(150, 21);
-            this.nslDualityY.SliderPrecision = 100;
-            this.nslDualityY.SpinnerWidth = 54;
             this.nslDualityY.TabIndex = 7;
-            this.nslDualityY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslDualityY.TickFrequency = 25;
-            this.nslDualityY.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslDualityY.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             // 
             // lDualityX
             // 
@@ -505,66 +461,22 @@ namespace xrPostprocessEditor
             // nslNoiseFPS
             // 
             this.nslNoiseFPS.BackColor = System.Drawing.SystemColors.Window;
-            this.nslNoiseFPS.DecimalPlaces = 2;
-            this.nslNoiseFPS.Hexadecimal = false;
             this.nslNoiseFPS.Location = new System.Drawing.Point(55, 63);
-            this.nslNoiseFPS.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
             this.nslNoiseFPS.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslNoiseFPS.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslNoiseFPS.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseFPS.Name = "nslNoiseFPS";
             this.nslNoiseFPS.Size = new System.Drawing.Size(150, 21);
-            this.nslNoiseFPS.SliderPrecision = 100;
-            this.nslNoiseFPS.SpinnerWidth = 54;
             this.nslNoiseFPS.TabIndex = 14;
-            this.nslNoiseFPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslNoiseFPS.TickFrequency = 25;
-            this.nslNoiseFPS.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslNoiseFPS.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             // 
             // nslNoiseIntensity
             // 
             this.nslNoiseIntensity.BackColor = System.Drawing.SystemColors.Window;
-            this.nslNoiseIntensity.DecimalPlaces = 2;
-            this.nslNoiseIntensity.Hexadecimal = false;
             this.nslNoiseIntensity.Location = new System.Drawing.Point(55, 9);
-            this.nslNoiseIntensity.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslNoiseIntensity.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslNoiseIntensity.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslNoiseIntensity.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseIntensity.Name = "nslNoiseIntensity";
             this.nslNoiseIntensity.Size = new System.Drawing.Size(150, 21);
-            this.nslNoiseIntensity.SliderPrecision = 100;
-            this.nslNoiseIntensity.SpinnerWidth = 54;
             this.nslNoiseIntensity.TabIndex = 13;
-            this.nslNoiseIntensity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslNoiseIntensity.TickFrequency = 25;
-            this.nslNoiseIntensity.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslNoiseIntensity.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             // 
             // lNoiseGrain
             // 
@@ -578,34 +490,12 @@ namespace xrPostprocessEditor
             // nslNoiseGrain
             // 
             this.nslNoiseGrain.BackColor = System.Drawing.SystemColors.Window;
-            this.nslNoiseGrain.DecimalPlaces = 2;
-            this.nslNoiseGrain.Hexadecimal = false;
             this.nslNoiseGrain.Location = new System.Drawing.Point(55, 36);
-            this.nslNoiseGrain.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
             this.nslNoiseGrain.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslNoiseGrain.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
             this.nslNoiseGrain.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseGrain.Name = "nslNoiseGrain";
             this.nslNoiseGrain.Size = new System.Drawing.Size(150, 21);
-            this.nslNoiseGrain.SliderPrecision = 100;
-            this.nslNoiseGrain.SpinnerWidth = 54;
             this.nslNoiseGrain.TabIndex = 11;
-            this.nslNoiseGrain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslNoiseGrain.TickFrequency = 25;
-            this.nslNoiseGrain.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslNoiseGrain.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
             // 
             // lNoiseIntensity
             // 
@@ -717,34 +607,12 @@ namespace xrPostprocessEditor
             // nslColorMappingInfluence
             // 
             this.nslColorMappingInfluence.BackColor = System.Drawing.SystemColors.Window;
-            this.nslColorMappingInfluence.DecimalPlaces = 2;
-            this.nslColorMappingInfluence.Hexadecimal = false;
             this.nslColorMappingInfluence.Location = new System.Drawing.Point(55, 9);
-            this.nslColorMappingInfluence.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslColorMappingInfluence.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslColorMappingInfluence.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslColorMappingInfluence.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslColorMappingInfluence.Name = "nslColorMappingInfluence";
             this.nslColorMappingInfluence.Size = new System.Drawing.Size(150, 21);
-            this.nslColorMappingInfluence.SliderPrecision = 100;
-            this.nslColorMappingInfluence.SpinnerWidth = 54;
             this.nslColorMappingInfluence.TabIndex = 16;
-            this.nslColorMappingInfluence.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslColorMappingInfluence.TickFrequency = 25;
-            this.nslColorMappingInfluence.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslColorMappingInfluence.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             // 
             // lColorMappingInfluence
             // 
@@ -874,34 +742,12 @@ namespace xrPostprocessEditor
             // nslBlur
             // 
             this.nslBlur.BackColor = System.Drawing.SystemColors.Window;
-            this.nslBlur.DecimalPlaces = 2;
-            this.nslBlur.Hexadecimal = false;
             this.nslBlur.Location = new System.Drawing.Point(55, 9);
-            this.nslBlur.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslBlur.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslBlur.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslBlur.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslBlur.Name = "nslBlur";
             this.nslBlur.Size = new System.Drawing.Size(150, 21);
-            this.nslBlur.SliderPrecision = 100;
-            this.nslBlur.SpinnerWidth = 54;
             this.nslBlur.TabIndex = 18;
-            this.nslBlur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslBlur.TickFrequency = 25;
-            this.nslBlur.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslBlur.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             // 
             // lBlur
             // 
