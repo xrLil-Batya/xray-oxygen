@@ -82,7 +82,7 @@
             // chkHexadecimal
             // 
             this.chkHexadecimal.AutoSize = true;
-            this.chkHexadecimal.Location = new System.Drawing.Point(3, 115);
+            this.chkHexadecimal.Location = new System.Drawing.Point(3, 120);
             this.chkHexadecimal.Name = "chkHexadecimal";
             this.chkHexadecimal.Size = new System.Drawing.Size(87, 17);
             this.chkHexadecimal.TabIndex = 13;
@@ -93,7 +93,7 @@
             // 
             this.tbHexColor.CharacterCasing = System.Windows.Forms.CharacterCasing.Upper;
             this.tbHexColor.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.tbHexColor.Location = new System.Drawing.Point(167, 113);
+            this.tbHexColor.Location = new System.Drawing.Point(113, 116);
             this.tbHexColor.Margin = new System.Windows.Forms.Padding(0, 3, 3, 3);
             this.tbHexColor.MaxLength = 8;
             this.tbHexColor.Name = "tbHexColor";
@@ -105,7 +105,7 @@
             // lHexColor
             // 
             this.lHexColor.AutoSize = true;
-            this.lHexColor.Location = new System.Drawing.Point(150, 116);
+            this.lHexColor.Location = new System.Drawing.Point(96, 119);
             this.lHexColor.Name = "lHexColor";
             this.lHexColor.Size = new System.Drawing.Size(14, 13);
             this.lHexColor.TabIndex = 15;
@@ -118,7 +118,7 @@
             this.pbColor.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("pbColor.BackgroundImage")));
             this.pbColor.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.pbColor.ColorSample = System.Drawing.Color.Empty;
-            this.pbColor.Location = new System.Drawing.Point(149, 9);
+            this.pbColor.Location = new System.Drawing.Point(274, 9);
             this.pbColor.Name = "pbColor";
             this.pbColor.Size = new System.Drawing.Size(98, 98);
             this.pbColor.TabIndex = 8;
@@ -133,8 +133,13 @@
             this.nslRed.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslRed.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslRed.Name = "nslRed";
-            this.nslRed.Size = new System.Drawing.Size(128, 21);
+            this.nslRed.Size = new System.Drawing.Size(253, 21);
             this.nslRed.TabIndex = 16;
+            this.nslRed.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // nslGreen
             // 
@@ -145,8 +150,13 @@
             this.nslGreen.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslGreen.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslGreen.Name = "nslGreen";
-            this.nslGreen.Size = new System.Drawing.Size(128, 21);
+            this.nslGreen.Size = new System.Drawing.Size(253, 21);
             this.nslGreen.TabIndex = 17;
+            this.nslGreen.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // nslBlue
             // 
@@ -157,8 +167,13 @@
             this.nslBlue.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslBlue.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslBlue.Name = "nslBlue";
-            this.nslBlue.Size = new System.Drawing.Size(128, 21);
+            this.nslBlue.Size = new System.Drawing.Size(253, 21);
             this.nslBlue.TabIndex = 18;
+            this.nslBlue.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // nslAlpha
             // 
@@ -169,8 +184,13 @@
             this.nslAlpha.MaximumSize = new System.Drawing.Size(9000, 21);
             this.nslAlpha.MinimumSize = new System.Drawing.Size(100, 21);
             this.nslAlpha.Name = "nslAlpha";
-            this.nslAlpha.Size = new System.Drawing.Size(128, 21);
+            this.nslAlpha.Size = new System.Drawing.Size(253, 21);
             this.nslAlpha.TabIndex = 19;
+            this.nslAlpha.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // ColorPicker
             // 
@@ -192,7 +212,7 @@
             this.MaximumSize = new System.Drawing.Size(9000, 144);
             this.MinimumSize = new System.Drawing.Size(256, 144);
             this.Name = "ColorPicker";
-            this.Size = new System.Drawing.Size(256, 144);
+            this.Size = new System.Drawing.Size(381, 144);
             this.ResumeLayout(false);
             this.PerformLayout();
 

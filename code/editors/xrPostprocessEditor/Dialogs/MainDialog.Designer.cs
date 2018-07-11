@@ -185,7 +185,6 @@ namespace xrPostprocessEditor
             // 
             this.cpAC.AlphaEnabled = false;
             this.cpAC.BackColor = System.Drawing.SystemColors.Window;
-            this.cpAC.Hexadecimal = false;
             this.cpAC.Location = new System.Drawing.Point(0, 0);
             this.cpAC.Margin = new System.Windows.Forms.Padding(0);
             this.cpAC.MaximumSize = new System.Drawing.Size(9000, 144);
@@ -236,7 +235,6 @@ namespace xrPostprocessEditor
             // 
             this.cpBC.AlphaEnabled = false;
             this.cpBC.BackColor = System.Drawing.SystemColors.Window;
-            this.cpBC.Hexadecimal = false;
             this.cpBC.Location = new System.Drawing.Point(0, 0);
             this.cpBC.Margin = new System.Windows.Forms.Padding(0);
             this.cpBC.MaximumSize = new System.Drawing.Size(9000, 144);
@@ -298,7 +296,6 @@ namespace xrPostprocessEditor
             // 
             this.cpGC.AlphaEnabled = true;
             this.cpGC.BackColor = System.Drawing.SystemColors.Window;
-            this.cpGC.Hexadecimal = false;
             this.cpGC.Location = new System.Drawing.Point(0, 0);
             this.cpGC.Margin = new System.Windows.Forms.Padding(0);
             this.cpGC.MaximumSize = new System.Drawing.Size(9000, 144);
@@ -368,6 +365,11 @@ namespace xrPostprocessEditor
             this.nslDualityX.Name = "nslDualityX";
             this.nslDualityX.Size = new System.Drawing.Size(250, 21);
             this.nslDualityX.TabIndex = 9;
+            this.nslDualityX.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // lDualityY
             // 
@@ -387,6 +389,11 @@ namespace xrPostprocessEditor
             this.nslDualityY.Name = "nslDualityY";
             this.nslDualityY.Size = new System.Drawing.Size(250, 21);
             this.nslDualityY.TabIndex = 7;
+            this.nslDualityY.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // lDualityX
             // 
@@ -467,6 +474,11 @@ namespace xrPostprocessEditor
             this.nslNoiseFPS.Name = "nslNoiseFPS";
             this.nslNoiseFPS.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseFPS.TabIndex = 14;
+            this.nslNoiseFPS.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // nslNoiseIntensity
             // 
@@ -477,6 +489,11 @@ namespace xrPostprocessEditor
             this.nslNoiseIntensity.Name = "nslNoiseIntensity";
             this.nslNoiseIntensity.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseIntensity.TabIndex = 13;
+            this.nslNoiseIntensity.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // lNoiseGrain
             // 
@@ -496,6 +513,11 @@ namespace xrPostprocessEditor
             this.nslNoiseGrain.Name = "nslNoiseGrain";
             this.nslNoiseGrain.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseGrain.TabIndex = 11;
+            this.nslNoiseGrain.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // lNoiseIntensity
             // 
@@ -563,6 +585,11 @@ namespace xrPostprocessEditor
             this.nslBlur.Name = "nslBlur";
             this.nslBlur.Size = new System.Drawing.Size(250, 21);
             this.nslBlur.TabIndex = 18;
+            this.nslBlur.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // lBlur
             // 
@@ -632,6 +659,11 @@ namespace xrPostprocessEditor
             this.nslColorMappingInfluence.Name = "nslColorMappingInfluence";
             this.nslColorMappingInfluence.Size = new System.Drawing.Size(250, 21);
             this.nslColorMappingInfluence.TabIndex = 16;
+            this.nslColorMappingInfluence.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
             // 
             // lColorMappingInfluence
             // 

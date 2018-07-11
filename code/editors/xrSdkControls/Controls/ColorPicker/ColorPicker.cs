@@ -10,8 +10,6 @@ namespace XRay.SdkControls
         public delegate void ColorChangedEventHandler(object sender, Color color);
         public event ColorChangedEventHandler ColorChanged;
 
-        private bool _hexadecimal;
-        private bool _ignoreOnChanged;
         private bool _alphaEnabled = true;
         private HorizontalAlignment _textAlignment = HorizontalAlignment.Left;
 
@@ -24,17 +22,17 @@ namespace XRay.SdkControls
             {
                 if (pbColor.ColorSample == value)
                     return;
-                _ignoreOnChanged = true;
+
                 if (_alphaEnabled)
                 {
+                    nslAlpha.Value = value.A;
                 }
 
-                //    nslAlpha.Value = value.A;
-                //nslRed.Value = value.R;
-                //nslGreen.Value = value.G;
-                //nslBlue.Value = value.B;
+                nslRed.Value = value.R;
+                nslGreen.Value = value.G;
+                nslBlue.Value = value.B;
+
                 pbColor.ColorSample = value;
-                _ignoreOnChanged = false;
                 UpdateColor();
             }
         }
@@ -44,35 +42,10 @@ namespace XRay.SdkControls
             get => _alphaEnabled;
             set
             {
-                if (_alphaEnabled == value)
-                    return;
                 _alphaEnabled = value;
-                _ignoreOnChanged = true;
-                //nslAlpha.Value = nslAlpha.Maximum;
-                _ignoreOnChanged = false;
-                UpdateColor();
-                lAlpha.Visible = _alphaEnabled;
-                nslAlpha.Visible = _alphaEnabled;
-                int delta = (_alphaEnabled ? 1 : -1) * 27;
-                Point loc = chkHexadecimal.Location;
-                loc.Y += delta;
-                chkHexadecimal.Location = loc;
-            }
-        }
-
-        public bool Hexadecimal
-        {
-            get => _hexadecimal;
-            set
-            {
-                if (_hexadecimal == value)
-                    return;
-                _hexadecimal = value;
-                chkHexadecimal.Checked = value;
-                //nslRed.Hexadecimal = value;
-                //nslGreen.Hexadecimal = value;
-                //nslBlue.Hexadecimal = value;
-                //nslAlpha.Hexadecimal = value;
+                nslAlpha.Visible = value;
+                lAlpha.Visible = value;
+                nslAlpha.Value = value ? byte.MinValue : byte.MaxValue;
             }
         }
 
@@ -94,33 +67,29 @@ namespace XRay.SdkControls
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             nslRed.ValueChanged += (obj, args) => UpdateColor();
             nslGreen.ValueChanged += (obj, args) => UpdateColor();
             nslBlue.ValueChanged += (obj, args) => UpdateColor();
             nslAlpha.ValueChanged += (obj, args) => UpdateColor();
-            chkHexadecimal.CheckedChanged += (obj, args) => Hexadecimal = chkHexadecimal.Checked;
-            UpdateColor();
-        }
 
-        private void OnColorChanged()
-        {
-            if (!_ignoreOnChanged)
-                ColorChanged?.Invoke(this, Value);
+            UpdateColor();
         }
 
         private void UpdateColor()
         {
-            //if (_ignoreOnChanged)
-            //    return;
-            //var newColor = Color.FromArgb(
-            //    Convert.ToInt32(nslAlpha.Value),
-            //    Convert.ToInt32(nslRed.Value),
-            //    Convert.ToInt32(nslGreen.Value),
-            //    Convert.ToInt32(nslBlue.Value));
-            //if (pbColor.ColorSample == newColor)
-            //    return;
-            //pbColor.ColorSample = newColor;
-            OnColorChanged();
+            var newColor = Color.FromArgb(
+                Convert.ToInt32(nslAlpha.Value),
+                Convert.ToInt32(nslRed.Value),
+                Convert.ToInt32(nslGreen.Value),
+                Convert.ToInt32(nslBlue.Value));
+
+            if (pbColor.ColorSample == newColor)
+                return;
+
+            pbColor.ColorSample = newColor;
+
+            ColorChanged?.Invoke(this, newColor);
         }
     }
 }
