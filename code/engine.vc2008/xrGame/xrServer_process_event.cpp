@@ -9,6 +9,7 @@
 #include "xrServer_Objects_ALife_Items.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "Level.h"
+#include "string_table.h"
 
 void xrServer::Process_event	(NET_Packet& P)
 {
@@ -239,6 +240,18 @@ void xrServer::Process_event	(NET_Packet& P)
 			CSE_ALifeTraderAbstract*	pTa = smart_cast<CSE_ALifeTraderAbstract*>(e_dest);
 			pTa->m_dwMoney				= P.r_u32();
 		}break;
+	case GE_INV_OWNER_SETNAME:
+	{
+		shared_str name;
+		P.r_stringZ(name);
+		CSE_ALifeTraderAbstract* iowner = smart_cast<CSE_ALifeTraderAbstract*>(receiver);
+		if (!iowner)
+		{
+			break;
+		}
+		iowner->m_character_name = *(CStringTable().translate(name));
+	}break;
+	
 	default:
 		VERIFY2	(0,"Game Event not implemented!!!");
 		break;

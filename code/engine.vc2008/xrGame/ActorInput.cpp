@@ -218,6 +218,9 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 		{
 		case kJUMP:		mstate_wishful &=~mcJump;		break;
 		case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop();				break;
+#ifdef HOLD_PICKUP_OFF
+		case kUSE: 		m_bPickupMode = false;
+#endif
 		}
 	}
 }
@@ -376,7 +379,9 @@ void CActor::ActorUse()
 		CGameObject::u_EventSend(P);
 		return;
 	}
-
+#ifdef HOLD_PICKUP_OFF
+	m_bPickupMode = true;
+#endif
 	if (character_physics_support()->movement()->PHCapture())
 		character_physics_support()->movement()->PHReleaseObject();
 

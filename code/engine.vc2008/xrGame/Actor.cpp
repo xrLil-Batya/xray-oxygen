@@ -871,8 +871,9 @@ void CActor::UpdateCL	()
 	
 	if(IsFocused())
 		g_player_hud->update			(trans);
-
+#ifndef HOLD_PICKUP_OFF
 	m_bPickupMode=false;
+#endif
 }
 
 float	NET_Jump = 0;

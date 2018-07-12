@@ -636,3 +636,13 @@ void CInventoryOwner::deadbody_closed( bool status )
 	P.w_u8( (m_deadbody_closed)? 1 : 0 );
 	CGameObject::u_EventSend( P );
 }
+
+void CInventoryOwner::set_name(LPCSTR name)
+{
+	m_game_name = name;
+
+	NET_Packet P;
+	CGameObject::u_EventGen(P, GE_INV_OWNER_SETNAME, object_id());
+	P.w_stringZ(name);
+	CGameObject::u_EventSend(P);
+}

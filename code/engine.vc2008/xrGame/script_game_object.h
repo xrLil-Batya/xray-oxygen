@@ -372,7 +372,8 @@ public:
 			
 			float				GetSympathy			();
 			void				SetSympathy			(float sympathy);
-
+			void				set_actor_name		(LPCSTR name);
+			
 			int					GetCommunityGoodwill_obj( LPCSTR community );
 			void				SetCommunityGoodwill_obj( LPCSTR community, int goodwill );
 			

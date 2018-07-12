@@ -782,6 +782,15 @@ CScriptGameObject* get_view_entity_script()
 	return pGameObject->lua_game_object();
 }
 
+void iterate_online_objects(luabind::functor<bool> functor)
+{
+	for (u16 i=0; i < 0xffff; i++) 
+	{
+		CGameObject		*pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(i));
+		if (pGameObject && functor(pGameObject->lua_game_object())) return;
+	}
+}
+
 void set_view_entity_script(CScriptGameObject* go)
 {
 	CObject* o = smart_cast<CObject*>(&go->object());
@@ -913,9 +922,9 @@ void CLevel::script_register(lua_State *L)
 
 		def("add_complex_effector",				&add_complex_effector),
 		def("remove_complex_effector",			&remove_complex_effector),
+		def("iterate_online_objects", 			&iterate_online_objects),
 		
 		def("vertex_id",						&vertex_id),
-
 		def("game_id",							&GameID)
 	],
 	

@@ -217,7 +217,7 @@ class_<CScriptGameObject> script_register_game_object1(class_<CScriptGameObject>
 		.def("deadbody_closed_status",		&CScriptGameObject::deadbody_closed_status)
 		.def("deadbody_can_take",			&CScriptGameObject::deadbody_can_take)
 		.def("deadbody_can_take_status",	&CScriptGameObject::deadbody_can_take_status)
-
+		.def("set_actor_name", 				&CScriptGameObject::set_actor_name)
 		.def("can_select_weapon",			(bool (CScriptGameObject::*)() const)&CScriptGameObject::can_select_weapon)
 		.def("can_select_weapon",			(void (CScriptGameObject::*)(bool))&CScriptGameObject::can_select_weapon)
 		// searchlight
