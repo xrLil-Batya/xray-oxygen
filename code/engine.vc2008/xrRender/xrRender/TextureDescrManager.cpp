@@ -144,7 +144,7 @@ void CTextureDescrMngr::Load()
 	thread_spawn(LoadTHMThread, "X-Ray THM Loader 0", 0, lvltex);
 	thread_spawn(LoadTHMThread, "X-Ray THM Loader 1", 0, gtex);
 	thread_spawn(LoadTHMThread, "X-Ray THM Loader 2", 0, lvl);
-	Sleep(5);
+	//Sleep(5);
 //	LoadTHM("$game_textures$");
 //	LoadTHM("$level$");
 }
