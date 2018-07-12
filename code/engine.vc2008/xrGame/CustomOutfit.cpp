@@ -385,7 +385,7 @@ void CCustomOutfit::script_register(lua_State *L)
 			.def(constructor<>()),
 
 		class_<CHelmet, CGameObject>("CHelmet")
-			.def(constructor<>())
+			.def(constructor<>()),
 			
 		class_<CActorRuck, CGameObject>("CActorRuck")
 			.def(constructor<>())
