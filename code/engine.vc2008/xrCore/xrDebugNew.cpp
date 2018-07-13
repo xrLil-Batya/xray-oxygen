@@ -88,14 +88,14 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
-void xrDebug::do_exit(const std::string &message)
+void xrDebug::do_exit(HWND hWnd, const std::string &message)
 {
 	FlushLog();
 
-	if (MessageBoxA(NULL, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK) 
+	if (MessageBoxA(hWnd, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
-		TerminateProcess(GetCurrentProcess(), 1);
+        ExitProcess(1);
 	}
 }
 
@@ -112,10 +112,10 @@ void xrDebug::do_exit(const std::string &message, const std::string &message2)
 						"\n"			+
 						"\n Do you want to interrupt the game?";
 
-	if (MessageBoxA(NULL, szMsg.c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK)
+	if (MessageBoxA(NULL, szMsg.c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
-		TerminateProcess(GetCurrentProcess(), 1);
+        ExitProcess(1);
 	}
 }
 
@@ -144,7 +144,7 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(assertion_info);
+	do_exit(wnd, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
     do_exit2(assertion_info, ignore_always);
