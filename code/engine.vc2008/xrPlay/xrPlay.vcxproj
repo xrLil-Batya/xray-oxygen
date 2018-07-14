@@ -88,11 +88,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="AssemblyInfo.cxx" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="IParser.cpp" />
     <ClCompile Include="RendererList.cpp" />
-    <ClCompile Include="xrLauncherWnd.cpp" />
+    <ClCompile Include="xrLauncherWnd.cxx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="splash_xrcs_en.bmp" />
