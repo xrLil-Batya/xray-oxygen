@@ -48,3 +48,5 @@ game/gamedata/configs/coordinates.ltx
 
 *.vspx
 /intermediateWin32/nvtt/Release/*.res
+code/engine.vc2008/xrCore/GitParser/GitParser.exe
+code/engine.vc2008/xrCore/oxy_version.h
