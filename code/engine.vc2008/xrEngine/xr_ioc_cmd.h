@@ -77,7 +77,11 @@ public		:
 	  value(V),
 	  mask(M)
 	{};
-	  const BOOL GetValue()const{ return value->test(mask); }
+
+    virtual ~CCC_Mask()
+    {}
+
+	const BOOL GetValue()const{ return value->test(mask); }
 	virtual void	Execute	(LPCSTR args)
 	{
 		if (EQ(args,"on"))			value->set(mask,TRUE);
@@ -98,6 +102,23 @@ public		:
 		tips.push_back( str );
 	}
 
+};
+
+class CCC_MaskNoSave : public CCC_Mask
+{
+public:
+
+    CCC_MaskNoSave(LPCSTR N, Flags32* V, u32 M)
+        : CCC_Mask(N, V, M)
+    {}
+
+    virtual ~CCC_MaskNoSave()
+    {}
+    virtual void Save(IWriter *F) override
+    {
+        // Don't save
+        ;
+    }
 };
 
 class ENGINE_API	CCC_ToggleMask : public IConsole_Command

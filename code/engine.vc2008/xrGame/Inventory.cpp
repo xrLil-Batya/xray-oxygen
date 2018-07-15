@@ -18,11 +18,7 @@
 #include "game_base_space.h"
 #include "UIGame.h"
 #include "clsid_game.h"
-#include "../FrayBuildConfig.hpp"
-
-#ifdef DEAD_BODY_WEAPON
 #include "ai/stalker/ai_stalker.h"
-#endif
 
 #include "player_hud.h"
 
@@ -101,7 +97,6 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	pIItem->SetDropManual(FALSE);
 	pIItem->AllowTrade();
 
-#ifdef DEAD_BODY_WEAPON
 	u16 actor_id = Level().CurrentEntity()->ID();
 
 	if (GetOwner()->object_id() == actor_id && this->m_pOwner->object_id() == actor_id)		//actors inventory
@@ -114,7 +109,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		}
 
 	}
-#endif
+
 	m_all.push_back(pIItem);
 
 	if (!strict_placement)
@@ -1038,7 +1033,7 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 				items_container.push_back(pIItem);
 		}
 	}
-#ifdef DEAD_BODY_WEAPON
+
 	CAI_Stalker* pOwner = smart_cast<CAI_Stalker*>(m_pOwner);
 	if (pOwner && !pOwner->g_Alive())
 	{
@@ -1053,9 +1048,7 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 			}
 		}
 	}
-	else 
-#endif
-	if (m_bSlotsUseful)
+	else if (m_bSlotsUseful)
 	{
 		u16 I = FirstSlot();
 		u16 E = LastSlot();

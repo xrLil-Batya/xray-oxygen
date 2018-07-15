@@ -413,7 +413,6 @@ void CInput::MouseUpdate()
 		}
 	}
 
-#ifdef CHECK_MOUSE_STATE
 	DIMOUSESTATE2 MouseState;
 	hr = pMouse->GetDeviceState(sizeof(MouseState), &MouseState);
 
@@ -437,7 +436,6 @@ void CInput::MouseUpdate()
 		RecheckMouseButtonFunc(1);
 		RecheckMouseButtonFunc(2);
 	}
-#endif
 	
 	for (u32 i = 0; i < 3; i++)
 		if (mouseState[i] && mouse_prev[i])

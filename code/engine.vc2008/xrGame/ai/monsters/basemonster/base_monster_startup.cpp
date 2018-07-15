@@ -228,10 +228,8 @@ void CBaseMonster::reload	(LPCSTR section)
 	if (!CCustomMonster::use_simplified_visual())
 		CStepManager::reload	(section);
 
-#ifdef MONSTER_INV
 	CInventoryOwner::reload(section);
 	inventory().SetSlotsUseful(false);
-#endif
 
 	movement().reload	(section);
 
@@ -271,9 +269,7 @@ void CBaseMonster::reinit()
 {
 	inherited::reinit					();
 
-#ifdef MONSTER_INV
 	CInventoryOwner::reinit();
-#endif 
 
 	EnemyMemory.clear					();
 	SoundMemory.clear					();
@@ -362,9 +358,7 @@ void CBaseMonster::net_Destroy()
 
 	inherited::net_Destroy();
 
-#ifdef MONSTER_INV
 	CInventoryOwner::net_Destroy();
-#endif
 	m_pPhysics_support->in_NetDestroy();
 
 	monster_squad().remove_member		((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);

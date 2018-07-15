@@ -254,11 +254,7 @@ void CPseudoGigant::on_threaten_execute()
 	CActor *pA = const_cast<CActor *>(smart_cast<const CActor *>(EnemyMan.get_enemy()));
 	if (!pA) return;
 
-#ifdef PSEUDOGIG_JUMP_NOHIT
 	if (pA->is_jump()) return;
-#else
-	if ((pA->MovingState() & ACTOR_DEFS::mcJump) != 0) return;
-#endif
 
 	float dist_to_enemy = pA->Position().distance_to(Position());
 	float			hit_value;

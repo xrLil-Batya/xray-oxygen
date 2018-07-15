@@ -27,9 +27,6 @@ ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
-#ifdef SPAWN_ANTIFREEZE
-ENGINE_API bool g_bootComplete = false;
-#endif
 
 #ifdef MASTER_GOLD
 #	define NO_MULTI_INSTANCES
@@ -645,9 +642,6 @@ void CApplication::LoadBegin()
 	if (1==dwLoadReference)	
 	{
 		g_appLoaded			= FALSE;
-#ifdef SPAWN_ANTIFREEZE
-		g_bootComplete		= false;
-#endif
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
 		phase_timer.Start	();
@@ -668,16 +662,12 @@ void CApplication::LoadEnd()
 void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
 {
 	if (loadingScreen)
-		{
-		Log("! Trying to create new loading screen, but there is already one..");
-		DestroyLoadingScreen();
-		}
+    {
+        Log("! Trying to create new loading screen, but there is already one..");
+        DestroyLoadingScreen();
+    }
 
-		loadingScreen = newScreen;
-
-#ifdef SPAWN_ANTIFREEZE
-	g_bootComplete = true;
-#endif
+	loadingScreen = newScreen;
 }
 
 void CApplication::DestroyLoadingScreen()
