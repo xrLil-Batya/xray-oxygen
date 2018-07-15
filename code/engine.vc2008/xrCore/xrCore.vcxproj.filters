@@ -228,9 +228,6 @@
     <ClCompile Include="DebugCore\dxerr.cpp">
       <Filter>Debug core</Filter>
     </ClCompile>
-    <ClCompile Include="threadpool\ttapi.cpp">
-      <Filter>OS</Filter>
-    </ClCompile>
     <ClCompile Include="threadpool\ttapi_oxygen.cpp">
       <Filter>OS</Filter>
     </ClCompile>

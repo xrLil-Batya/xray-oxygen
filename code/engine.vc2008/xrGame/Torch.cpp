@@ -355,7 +355,6 @@ void CTorch::UpdateCL()
 			offset.mad(M.j, TORCH_OFFSET.y);
 			offset.mad(M.k, TORCH_OFFSET.z);
 			light_render->set_position(offset);
-			light_render->set_volumetric(false);
 
 			offset = M.c;
 			offset.mad(M.i, OMNI_OFFSET.x);

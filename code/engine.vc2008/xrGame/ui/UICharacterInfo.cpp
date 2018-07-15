@@ -133,7 +133,6 @@ void CUICharacterInfo::InitCharacterInfo(CUIXml* xml_doc, LPCSTR node_str)
 	xml_doc->SetLocalRoot		(stored_root);
 }
 
-#ifdef MONSTER_INV
 void CUICharacterInfo::InitMonsterCharacter(shared_str monster_tex_name)
 {
 	if (m_icons[eIcon])
@@ -144,7 +143,6 @@ void CUICharacterInfo::InitMonsterCharacter(shared_str monster_tex_name)
 		m_icons[eIcon]->Show(true);
 	}
 }
-#endif
 
 void CUICharacterInfo::InitCharacter(u16 id)
 {

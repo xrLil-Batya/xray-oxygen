@@ -68,15 +68,15 @@ void CHudItem::renderable_Render()
 			CInventoryOwner	*owner = smart_cast<CInventoryOwner*>(object().H_Parent());
 			VERIFY			(owner);
 			CInventoryItem	*self = smart_cast<CInventoryItem*>(this);
-#ifdef DEAD_BODY_WEAPON
 			if (item().BaseSlot() != INV_SLOT_3)
 			{
 				if (owner->attached(self))
 					on_renderable_Render();
 			} 
-			else 
-#endif
-				on_renderable_Render();
+            else
+            {
+                on_renderable_Render();
+            }
 		}
 	}
 }

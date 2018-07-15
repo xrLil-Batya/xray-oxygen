@@ -121,17 +121,14 @@ void CStalkerActionDead::execute		()
 		if (I == TORCH_SLOT)
 			continue;
 		
-#ifdef DEAD_BODY_WEAPON
 		if (I != INV_SLOT_3)
 			continue;
-#endif
 		PIItem item = object().inventory().ItemFromSlot(I);
 		if(!item)
 			continue;
 
 		if (I == object().inventory().GetActiveSlot())
 		{
-#ifdef DEAD_BODY_WEAPON
 			CWeapon	*weapon = smart_cast<CWeapon*>(object().inventory().ActiveItem());
             if (weapon)
 				if (weapon->strapped_mode())
@@ -143,10 +140,6 @@ void CStalkerActionDead::execute		()
  					item->SetDropManual(TRUE);
  					continue;
 				}
-#else
- 			item->SetDropManual(TRUE);
- 			continue;
-#endif
 		}
 		object().inventory().Ruck		(item);
 	}

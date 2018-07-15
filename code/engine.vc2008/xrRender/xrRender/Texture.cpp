@@ -90,10 +90,6 @@ IC void	Reduce				(int& w, int& h, int& l, int& skip)
 {
 	while ((l>1) && skip)
 	{
-#ifdef LOW_TEXTURES_SIZE
-		w /= 2;
-		h /= 2;
-#endif
 		l--;
 		skip--;
 	}
