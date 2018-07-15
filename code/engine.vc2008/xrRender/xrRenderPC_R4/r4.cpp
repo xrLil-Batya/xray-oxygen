@@ -597,12 +597,6 @@ void					CRender::rmNormal			()
 	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
-void					CRender::ResizeWindowProc(WORD h, WORD w)
-{
-	HW.ResizeWindowProc(h, w);
-}
-
-
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////

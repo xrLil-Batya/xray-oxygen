@@ -28,23 +28,7 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			result			= 1;
 			return			(true);
 		}
-							/*case WM_SIZING:
-							{
-								if (result = TRUE)
-									bool windowActive = false;
-								else
-									bool windowActive = true;
-							}*/
-		//case WM_SIZE : 
-		//{
-		//	if (windowActive)
-		//	{
-		//		WORD height = HIWORD(lParam);
-		//		WORD width = LOWORD(lParam);
 
-		//		//Device.ResizeProc(height, width);
-		//	}
-		//}
 		case WM_SYSCOMMAND : {
 #ifdef INGAME_EDITOR
 			if (editor())
