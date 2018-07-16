@@ -136,7 +136,7 @@ float   angle_between_vectors (Fvector const v1, Fvector const v2)
 {
 	float const mag1	=	v1.magnitude();
 	float const mag2	=	v2.magnitude();
-	float const epsilon	=	1e-6;
+	float const epsilon	=	1e-6f;
 	if ( mag1 < epsilon || mag2 < epsilon )
 	{
 		return 0.f;

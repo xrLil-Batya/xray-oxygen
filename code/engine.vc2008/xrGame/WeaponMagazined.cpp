@@ -170,12 +170,12 @@ void CWeaponMagazined::FireEnd()
 {
 	inherited::FireEnd();
 
-#ifdef WPN_AUTORELOAD
-	CActor *actor = smart_cast<CActor*>(H_Parent());
-	if (m_pInventory && !iAmmoElapsed && actor && GetState() != eReload) 
-		Reload();
-#endif
-	
+    if (g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
+    {
+        CActor *actor = smart_cast<CActor*>(H_Parent());
+        if (m_pInventory && !iAmmoElapsed && actor && GetState() != eReload)
+            Reload();
+    }
 }
 
 void CWeaponMagazined::Reload() 

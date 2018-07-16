@@ -1211,13 +1211,16 @@ void CUIActorMenu::UpdateOutfit()
 	m_HelmetOver->Show(!outfit->bIsHelmetAvaliable);
 	
 	Ivector2 afc;
-#ifdef VERTICAL_BELT
-	afc.x = 1;
-	afc.y = af_count;
-#else
-	afc.x = af_count; // 1;
-	afc.y = 1;        // af_count;
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        afc.x = 1;
+        afc.y = af_count;
+    }
+    else
+    {
+        afc.x = af_count;
+        afc.y = 1;
+    }
 
 	m_pInventoryBeltList->SetCellsCapacity(afc);
 

@@ -45,8 +45,16 @@ game/gamedata/configs/coordinates.ltx
 *.lib
 
 *.psess
+<<<<<<< HEAD
 
 *.vspx
 /intermediateWin32/nvtt/Release/*.res
 
 *.bat
+=======
+
+*.vspx
+/intermediateWin32/nvtt/Release/*.res
+code/engine.vc2008/xrCore/GitParser/GitParser.exe
+code/engine.vc2008/xrCore/oxy_version.h
+>>>>>>> upstream/master

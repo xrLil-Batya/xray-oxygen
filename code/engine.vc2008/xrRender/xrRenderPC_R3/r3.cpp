@@ -208,7 +208,6 @@ void					CRender::create					()
 	o.dx10_msaa_samples = (1 << ps_r3_msaa);
 
     //subshafts options
-    o.sunshaft_mrmnwar      = ps_r_sunshafts_mode == SS_MANOWAR_SS;
     o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 
 	o.dx10_msaa_opt		= ps_r3_flags.test(R3_FLAG_MSAA_OPT);

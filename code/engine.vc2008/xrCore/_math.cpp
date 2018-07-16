@@ -337,13 +337,14 @@ void __cdecl thread_entry(void*	_params)
 	entry(arglist);
 }
 
-void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist)
+HANDLE thread_spawn(thread_t* entry, const char* name, unsigned stack, void* arglist)
 {
     THREAD_STARTUP* startup = new THREAD_STARTUP();
 	startup->entry = entry;
 	startup->name = (char*)name;
 	startup->args = arglist;
-	_beginthread(thread_entry, stack, startup);
+    uintptr_t hThread = _beginthread(thread_entry, stack, startup);
+	return reinterpret_cast<HANDLE> (hThread);
 }
 
 void spline1(float t, Fvector *p, Fvector *ret)

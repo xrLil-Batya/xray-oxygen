@@ -231,8 +231,7 @@ void					CRender::create()
 	o.dx10_msaa				= !!ps_r3_msaa;
 	o.dx10_msaa_samples		= (1 << ps_r3_msaa);
 	/////////////////////////////////////////////
-	//subshafts options
-	o.sunshaft_mrmnwar		= ps_r_sunshafts_mode == SS_MANOWAR_SS;
+	// sunshafts options
 	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
 	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
@@ -352,19 +351,18 @@ void CRender::reset_begin()
 	// Update incremental shadowmap-visibility solver
 	// BUG-ID: 10646
 	{
-		u32 it = 0;
 		/////////////////////////////////////////////
-		for (it=0; it<Lights_LastFrame.size(); it++)	
+		for (u32 i = 0; i<Lights_LastFrame.size(); i++)
 		{
-			if (!Lights_LastFrame[it])	
+			if (!Lights_LastFrame[i])	
 				continue;
 			try 
 			{
-				Lights_LastFrame[it]->svis.resetoccq ()	;
+				Lights_LastFrame[i]->svis.resetoccq ()	;
 			} 
 			catch (...)
 			{
-				Msg	("! Failed to flush-OCCq on light [%d] %X",it,*(u32*)(&Lights_LastFrame[it]));
+				Msg	("! Failed to flush-OCCq on light [%d] %X",i,*(u32*)(&Lights_LastFrame[i]));
 			}
 		}
 		/////////////////////////////////////////////
@@ -598,12 +596,6 @@ void					CRender::rmNormal			()
 	HW.pContext->RSSetViewports(1, &VP);
 	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
-
-void					CRender::ResizeWindowProc(WORD h, WORD w)
-{
-	HW.ResizeWindowProc(h, w);
-}
-
 
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

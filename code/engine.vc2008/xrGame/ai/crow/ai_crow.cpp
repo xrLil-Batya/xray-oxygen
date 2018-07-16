@@ -166,14 +166,6 @@ BOOL CAI_Crow::net_Spawn(CSE_Abstract* DC)
 		processing_activate();
 		CreateSkeleton();
 	}
-#ifdef ASPAWN_CROW
-	Fvector new_pos = Actor()->Position();
-	new_pos.x += ::Random.randF(-50.0f, 50.0f);
-	new_pos.y += ::Random.randF(20.0f, 50.0f);
-	new_pos.z += ::Random.randF(-50.0f, 50.0f);
-
-	Position().set(new_pos);
-#endif
 
 	VERIFY2( valid_pos( Position() ), dbg_valide_pos_string(Position(),this,"CAI_Crow::net_Spawn") );
 	return inh;

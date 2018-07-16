@@ -452,10 +452,13 @@ void CUIGame::StartTalk(bool disable_break)
 	TalkMenu->ShowDialog(true);
 }
 
-void CUIGame::StartCarBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner) //Deadbody search
+void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner) //Deadbody search
 {
 	if (TopInputReceiver())
 		return;
+
+    // Don't allow search monster's if that feature disabled
+    if (!g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY)) return;
 
 	m_ActorMenu->SetActor(pActorInv);
 	m_ActorMenu->SetPartner(pOtherOwner);
@@ -464,7 +467,7 @@ void CUIGame::StartCarBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOw
 	m_ActorMenu->ShowDialog(true);
 }
 
-void CUIGame::StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search
+void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search
 {
 	if (TopInputReceiver())
 		return;

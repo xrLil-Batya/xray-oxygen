@@ -59,7 +59,6 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 	m_pPartnerInvOwner	= io;
 	if (m_pPartnerInvOwner)
 	{
-#ifdef MONSTER_INV
 		CBaseMonster* monster = smart_cast<CBaseMonster*>(m_pPartnerInvOwner);
 		if (monster || m_pPartnerInvOwner->use_simplified_visual())
 		{
@@ -72,12 +71,6 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 		}
 		else
 			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
-#else
-		if (m_pPartnerInvOwner->use_simplified_visual())
-			m_PartnerCharacterInfo->ClearInfo();
-		else
-			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
-#endif
 		SetInvBox(nullptr);
 	}
 	else m_PartnerCharacterInfo->ClearInfo();
@@ -279,9 +272,9 @@ CUIDragDropListEx* CUIActorMenu::GetListByType(EDDListType t)
 	switch (t)
 	{
 	case iActorBag: return (m_currMenuMode == mmTrade) ? m_pTradeActorBagList : m_pInventoryBagList; break;
-	case iDeadBodyBag: return m_pDeadBodyBagList; break;
-	case iActorBelt: return m_pInventoryBeltList; break;
-	default: R_ASSERT("invalid call"); break;
+	case iDeadBodyBag: return m_pDeadBodyBagList;
+    case iActorBelt: return m_pInventoryBeltList;
+	default: R_ASSERT("invalid call"); return m_pDeadBodyBagList;
 	}
 }
 
@@ -500,18 +493,20 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 			m_QuickSlotsHighlight[i]->Show(true);
 		return;
 	}
+
 	if(artefact)
 	{
 		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iActorBelt)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-#ifdef VERTICAL_BELT
-		for (u8 i = 0; i<cap.y; i++)
-#else
-		for (u8 i = 0; i < cap.x; i++)
-#endif
-			m_ArtefactSlotsHighlight[i]->Show(true);
+        for (u8 i = 0; i < cap.y; i++)
+        {
+            for (u8 i = 0; i < cap.x; i++)
+            {
+			    m_ArtefactSlotsHighlight[i]->Show(true);
+            }
+        }
 		return;
 	}
 }
@@ -810,13 +805,6 @@ void CUIActorMenu::ResetMode()
 	m_UIPropertiesBox->Hide		();
 	SetCurrentItem				(NULL);
     GameUI()->UIMainIngameWnd->ShowZoneMap(true);
-}
-
-void CUIActorMenu::UpdateActorMP()
-{
-	m_ActorCharacterInfo->ClearInfo();
-	m_ActorMoney->SetText("");
-	return;
 }
 
 bool CUIActorMenu::CanSetItemToList(PIItem item, CUIDragDropListEx* l, u16& ret_slot)

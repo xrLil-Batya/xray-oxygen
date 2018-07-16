@@ -75,33 +75,6 @@ IC u32 GetPowerOf2Plus1	(u32 v)
 	while (v) {v>>=1; cnt++; };
 	return cnt;
 }
-IC void	Reduce				(int& w, int& h, int& l, int& skip)
-{
-	while ((l>1) && skip)
-	{
-		w /= 2;
-		h /= 2;
-		l -= 1;
-
-		skip--;
-	}
-	if (w<1)	w=1;
-	if (h<1)	h=1;
-}
-
-IC void	Reduce(UINT& w, UINT& h, int l, int skip)
-{
-	while ((l>1) && skip)
-	{
-		w /= 2;
-		h /= 2;
-		l -= 1;
-
-		skip--;
-	}
-	if (w<1)	w=1;
-	if (h<1)	h=1;
-}
 
 void				TW_Save	(ID3DTexture2D* T, LPCSTR name, LPCSTR prefix, LPCSTR postfix)
 {
@@ -223,16 +196,10 @@ _DDS_2D:
 			D3DX10_IMAGE_LOAD_INFO LoadInfo;
 #endif
 
-#ifdef R34_USE_FIRSTMIPLEVEL
 			LoadInfo.FirstMipLevel = img_loaded_lod;
-#endif
 			LoadInfo.Width	= IMG.Width;
 			LoadInfo.Height	= IMG.Height;
 
-#ifndef R34_USE_FIRSTMIPLEVEL
-			if (img_loaded_lod)
-				Reduce(LoadInfo.Width, LoadInfo.Height, IMG.MipLevels, img_loaded_lod);
-#endif
 			if (bStaging)
 			{
 				LoadInfo.Usage = D3D_USAGE_STAGING;
