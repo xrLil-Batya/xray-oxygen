@@ -282,6 +282,7 @@ public:
 	}
 public:
 			void xr_stdcall		on_idle				();
+			void				ResizeProc			(DWORD height, DWORD width);
 			bool xr_stdcall		on_message			(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &result);
 
 private:
