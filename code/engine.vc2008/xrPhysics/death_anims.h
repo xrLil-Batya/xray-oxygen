@@ -49,7 +49,7 @@ private:
 	void set_motion(IKinematicsAnimated* k, u16 motion_id, LPCSTR dir_anim);
 	void clear();
 public:
-	static	edirection	dir(CEntityAlive& ea, const SHit& H, float &angle);
+	static	edirection	dir(CObject& ea, const SHit& H, float &angle);
 private:
 	xr_vector<rnd_motion*>		anims;
 };
