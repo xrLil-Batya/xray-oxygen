@@ -99,7 +99,7 @@
       <LanguageStandard>stdcpplatest</LanguageStandard>
     </ClCompile>
     <Link>
-      <AdditionalOptions>/ignore:4248 %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
       <AdditionalDependencies>
       </AdditionalDependencies>
       <AdditionalLibraryDirectories>..\..\sdk\libraries;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
@@ -108,7 +108,7 @@
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
-      <ImportLibrary>..\..\..\libraries\$(ProjectName).lib</ImportLibrary>
+      <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -138,6 +138,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
       <AssemblyDebug>true</AssemblyDebug>
+      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -167,6 +168,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(ProjectName).lib</ImportLibrary>
       <AssemblyDebug>true</AssemblyDebug>
+      <AdditionalOptions>/ignore:4248 /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -422,11 +424,10 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\xrCore\xrCore.vcxproj">
-      <Project>{a0f7d1fb-59a7-4717-a7e4-96f37e91998e}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
+    <ProjectReference Include="..\xrManagedApi\xrManagedApi.vcxproj">
+      <Project>{55b0e2ca-e27a-47fc-bc92-21abdc1044f5}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\xrSdkControls\xrSdkControls.csproj">
+    <ProjectReference Include="..\xrSdkControls\xrSDKControls.csproj">
       <Project>{e9dc16a3-d0fa-4924-af6e-f6fdf3ea0661}</Project>
     </ProjectReference>
   </ItemGroup>

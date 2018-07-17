@@ -349,8 +349,8 @@ void CStats::Show()
 
         // Draw all your stuff
         pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);				// Physical memory available
-        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Page file memory available
-        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physicall memory used by app
+        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Pagefile memory available
+        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physical memory used by app
         if (cpuLoad > 80.0 || PhysMemoryUsedPercent > 80.0)
             pFont->SetColor(DebugTextColor::DTC_RED);
         else if (cpuLoad > 60.0 || PhysMemoryUsedPercent > 60.0)

@@ -196,9 +196,7 @@ void CActor::IR_OnMouseWheel(int direction)
 void CActor::IR_OnKeyboardRelease(int cmd)
 {
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
-
 	if (Remote())	return;
-
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 
 	if (g_Alive())	
@@ -207,17 +205,18 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 		{
 			m_holder->OnKeyboardRelease(cmd);
 			
-			if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_STOP))		return;
+			if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_STOP)) return;
 			return;
-		}else
+		}
+        else
+        {
 			if(inventory().Action((u16)cmd, CMD_STOP))		return;
-
-
+        }
 
 		switch(cmd)
 		{
-		case kJUMP:		mstate_wishful &=~mcJump;		break;
-		case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop();				break;
+		    case kJUMP:		mstate_wishful &=~mcJump;		break;
+		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
 		}
 	}
 }
@@ -377,6 +376,9 @@ void CActor::ActorUse()
 		return;
 	}
 
+    // Pickup item
+    PickupModeUpdate_COD(true);
+
 	if (character_physics_support()->movement()->PHCapture())
 		character_physics_support()->movement()->PHReleaseObject();
 
@@ -386,7 +388,7 @@ void CActor::ActorUse()
 	if (m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable())
 	{
 		if (!m_pInvBoxWeLookingAt->closed())
-			GameUI()->StartCarBody(this, m_pInvBoxWeLookingAt);
+			GameUI()->StartSearchBody(this, m_pInvBoxWeLookingAt);
 
 		return;
 	}
@@ -419,20 +421,18 @@ void CActor::ActorUse()
 				CGameObject::u_EventSend(P);
 				return;
 			}
-		}
-
-		if (m_pPersonWeLookingAt)
-		{
-			CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
-
-			VERIFY(pEntityAliveWeLookingAt);
-
-			if (pEntityAliveWeLookingAt->g_Alive())
-				TryToTalk();
-			else
+			else if (m_pPersonWeLookingAt)
 			{
-				if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
-					GameUI()->StartCarBody(this, m_pPersonWeLookingAt);
+				CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
+				VERIFY(pEntityAliveWeLookingAt);
+
+				if (pEntityAliveWeLookingAt->g_Alive())
+					TryToTalk();
+				else
+				{
+					if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
+						GameUI()->StartSearchBody(this, m_pPersonWeLookingAt);
+				}
 			}
 		}
 	}

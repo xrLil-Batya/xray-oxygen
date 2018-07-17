@@ -26,9 +26,7 @@
 ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
-#ifdef SPAWN_ANTIFREEZE
-ENGINE_API bool g_bootComplete = false;
-#endif
+ENGINE_API BOOL g_appLoaded = FALSE;
 
 #ifdef MASTER_GOLD
 #	define NO_MULTI_INSTANCES
@@ -38,13 +36,13 @@ ENGINE_API bool g_bootComplete = false;
 // 2446363
 // umbt@ukr.net
 //////////////////////////////////////////////////////////////////////////
-struct _SoundProcessor	: public pureFrame
+struct _SoundProcessor : public pureFrame
 {
-	virtual void	_BCL	OnFrame	( )
+	virtual void _BCL OnFrame()
 	{
 		Device.Statistic->Sound.Begin();
-		::Sound->update				(Device.vCameraPosition,Device.vCameraDirection,Device.vCameraTop);
-		Device.Statistic->Sound.End	();
+		::Sound->update(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+		Device.Statistic->Sound.End();
 	}
 }	SoundProcessor;
 
@@ -66,21 +64,22 @@ ENGINE_API	string_path		g_sLaunchWorkingFolder;
 void InitEngine()
 {
 	Engine.Initialize();
-	while (!g_bIntroFinished)	Sleep(100);
+	while (!g_bIntroFinished)	
+		Sleep(100);
 	Device.Initialize();
 }
 
 ENGINE_API void InitSettings	()
 {
-	string_path					fname; 
-	FS.update_path				(fname,"$game_config$","system.ltx");
+	string_path fname;
+	FS.update_path(fname, "$game_config$", "system.ltx");
 
-	pSettings					= xr_new<CInifile>	(fname,TRUE);
-	CHECK_OR_EXIT				(!pSettings->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
+	pSettings = xr_new<CInifile>(fname, TRUE);
+	CHECK_OR_EXIT(!pSettings->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.", fname));
 
-	FS.update_path				(fname,"$game_config$","game.ltx");
-	pGameIni					= xr_new<CInifile>	(fname,TRUE);
-	CHECK_OR_EXIT				(!pGameIni->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.",fname));
+	FS.update_path(fname, "$game_config$", "game.ltx");
+	pGameIni = xr_new<CInifile>(fname, TRUE);
+	CHECK_OR_EXIT(!pGameIni->sections().empty(), make_string("Cannot find file %s.\nReinstalling application may fix this problem.", fname));
 }
 
 ENGINE_API void InitConsole	()
@@ -114,40 +113,40 @@ ENGINE_API void InitSound1()
 	CSound_manager_interface::_create(0);
 }
 
-ENGINE_API void InitSound2		()
+ENGINE_API void InitSound2()
 {
 	CSound_manager_interface::_create(1);
 }
 
 inline void destroySound()
 {
-	CSound_manager_interface::_destroy( );
+	CSound_manager_interface::_destroy();
 }
 
 void destroySettings()
 {
-	CInifile** s				= (CInifile**)(&pSettings);
-	xr_delete					( *s		);
-	xr_delete					( pGameIni		);
+	CInifile** s = (CInifile**)(&pSettings);
+	xr_delete(*s);
+	xr_delete(pGameIni);
 }
 
-void destroyConsole	()
+void destroyConsole()
 {
-	Console->Execute			("cfg_save");
-	Console->Destroy			();
-	xr_delete					(Console);
+	Console->Execute("cfg_save");
+	Console->Destroy();
+	xr_delete(Console);
 }
 
-void destroyEngine	()
+void destroyEngine()
 {
-	Device.Destroy				( );
-	Engine.Destroy				( );
+	Device.Destroy();
+	Engine.Destroy();
 }
 
-void execUserScript				( )
+void execUserScript()
 {
-	Console->Execute			("default_controls");
-	Console->ExecuteScript		(Console->ConfigFile);
+	Console->Execute("default_controls");
+	Console->ExecuteScript(Console->ConfigFile);
 }
 
 void slowdownthread	( void* )
@@ -155,23 +154,25 @@ void slowdownthread	( void* )
 	for (;;)
 	{
 		if (Device.Statistic->fFPS < 30)	Sleep(1);
-		if (Device.mt_bMustExit)		return;
-		if (!pSettings)				return;
-		if (!Console)					return;
-		if (!pInput)					return;
-		if (!pApp)					return;
+		if (Device.mt_bMustExit)			return;
+		if (!pSettings)						return;
+		if (!Console)						return;
+		if (!pInput)						return;
+		if (!pApp)							return;
 	}
 }
 void CheckPrivilegySlowdown		( )
 {
 #ifdef DEBUG
-	if	(strstr(Core.Params,"-slowdown"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
+	if (strstr(Core.Params, "-slowdown"))
+	{
+		thread_spawn(slowdownthread, "slowdown", 0, 0);
 	}
-	if	(strstr(Core.Params,"-slowdown2x"))	{
-		thread_spawn(slowdownthread,"slowdown",0,0);
-		thread_spawn(slowdownthread,"slowdown",0,0);
-	}
+	if (strstr(Core.Params, "-slowdown2x"))
+	{
+		thread_spawn(slowdownthread, "slowdown", 0, 0);
+		thread_spawn(slowdownthread, "slowdown", 0, 0);
+}
 #endif // DEBUG
 }
 
@@ -183,12 +184,14 @@ void Startup()
 
 	// ...command line for auto start
 	{
-		LPCSTR	pStartup			= strstr				(Core.Params,"-start ");
-		if (pStartup)				Console->Execute		(pStartup+1);
+		LPCSTR	pStartup = strstr(Core.Params, "-start ");
+		if (pStartup)				
+			Console->Execute(pStartup + 1);
 	}
 	{
-		LPCSTR	pStartup			= strstr				(Core.Params,"-load ");
-		if (pStartup)				Console->Execute		(pStartup+1);
+		LPCSTR	pStartup = strstr(Core.Params, "-load ");
+		if (pStartup)				
+			Console->Execute(pStartup + 1);
 	}
 
 	if (strstr(Core.Params, "-$"))
@@ -210,15 +213,15 @@ void Startup()
 	// Initialize APP
 	ShowWindow(Device.m_hWnd, SW_SHOWNORMAL);
 	/////////////////////////////////////////////
-	Device.Create				();
-	LALib.OnCreate				();
-	pApp						= xr_new<CApplication>	();
-	g_pGamePersistent			= (IGame_Persistent*) NEW_INSTANCE (CLSID_GAME_PERSISTANT);
-	g_SpatialSpace				= xr_new<ISpatial_DB>	();
-	g_SpatialSpacePhysic		= xr_new<ISpatial_DB>	();
+	Device.Create();
+	LALib.OnCreate();
+	pApp = xr_new<CApplication>();
+	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
+	g_SpatialSpace = xr_new<ISpatial_DB>();
+	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
 	/////////////////////////////////////////////
 	// Destroy LOGO
-	if (!strstr(Core.Params, "-nologo")) 
+	if (!strstr(Core.Params, "-nologo"))
 	{
 		DestroyWindow(logoWindow);
 		logoWindow = NULL;
@@ -226,14 +229,14 @@ void Startup()
 	/////////////////////////////////////////////
 	// Main cycle
 	Memory.mem_usage();
-	Device.Run					( );
+	Device.Run();
 	/////////////////////////////////////////////
 	// Destroy APP
-	xr_delete					( g_SpatialSpacePhysic	);
-	xr_delete					( g_SpatialSpace		);
-	DEL_INSTANCE				( g_pGamePersistent		);
-	xr_delete					( pApp					);
-	Engine.Event.Dump			( );
+	xr_delete(g_SpatialSpacePhysic);
+	xr_delete(g_SpatialSpace);
+	DEL_INSTANCE(g_pGamePersistent);
+	xr_delete(pApp);
+	Engine.Event.Dump();
 	/////////////////////////////////////////////
 	// Destroying
 	destroyInput();
@@ -241,7 +244,7 @@ void Startup()
 	{
 		destroySettings();
 	}
-	LALib.OnDestroy				( );
+	LALib.OnDestroy();
 	if (!g_bBenchmark)
 		destroyConsole();
 	else
@@ -253,18 +256,19 @@ void Startup()
 
 static INT_PTR CALLBACK logDlgProc(HWND hw, UINT msg, WPARAM wp, LPARAM lp)
 {
-	switch( msg ){
-		case WM_DESTROY:
-			break;
-		case WM_CLOSE:
-			DestroyWindow( hw );
-			break;
-		case WM_COMMAND:
-			if( LOWORD(wp)==IDCANCEL )
-				DestroyWindow( hw );
-			break;
-		default:
-			return FALSE;
+	switch (msg) 
+	{
+	case WM_DESTROY:
+		break;
+	case WM_CLOSE:
+		DestroyWindow(hw);
+		break;
+	case WM_COMMAND:
+		if (LOWORD(wp) == IDCANCEL)
+			DestroyWindow(hw);
+		break;
+	default:
+		return FALSE;
 	}
 	return TRUE;
 }
@@ -275,7 +279,8 @@ extern void	testbed	(void);
 #define dwFilterKeysStructSize sizeof( FILTERKEYS )
 #define dwToggleKeysStructSize sizeof( TOGGLEKEYS )
 
-struct damn_keys_filter {
+struct damn_keys_filter 
+{
 	BOOL bScreenSaverState;
 
 	// Sticky & Filter & Toggle keys
@@ -284,83 +289,86 @@ struct damn_keys_filter {
 	FILTERKEYS FilterKeysStruct;
 	TOGGLEKEYS ToggleKeysStruct;
 
-	DWORD dwStickyKeysFlags,
-		dwFilterKeysFlags,
-		dwToggleKeysFlags;
+	DWORD dwStickyKeysFlags, dwFilterKeysFlags, dwToggleKeysFlags;
 
-	damn_keys_filter	()
+	damn_keys_filter()
 	{
 		// Screen saver stuff
 		bScreenSaverState = FALSE;
 
 		// Saveing current state
-		SystemParametersInfo( SPI_GETSCREENSAVEACTIVE , 0 , ( PVOID ) &bScreenSaverState , 0 );
+		SystemParametersInfoA(SPI_GETSCREENSAVEACTIVE, 0, (PVOID)&bScreenSaverState, 0);
 
-		if (bScreenSaverState)
-			// Disable screensaver
-			SystemParametersInfo(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, 0);
+		if (bScreenSaverState)		
+			SystemParametersInfoA(SPI_SETSCREENSAVEACTIVE, FALSE, NULL, 0);		// Disable screensaver
 
 		dwStickyKeysFlags = 0;
 		dwFilterKeysFlags = 0;
 		dwToggleKeysFlags = 0;
 
-		std::memset(&StickyKeysStruct, 0, dwStickyKeysStructSize);
-		std::memset(&FilterKeysStruct, 0, dwFilterKeysStructSize);
-		std::memset(&ToggleKeysStruct, 0, dwToggleKeysStructSize);
+		ZeroMemory(&StickyKeysStruct, dwStickyKeysStructSize);
+		ZeroMemory(&FilterKeysStruct, dwFilterKeysStructSize);
+		ZeroMemory(&ToggleKeysStruct, dwToggleKeysStructSize);
 
 		StickyKeysStruct.cbSize = dwStickyKeysStructSize;
 		FilterKeysStruct.cbSize = dwFilterKeysStructSize;
 		ToggleKeysStruct.cbSize = dwToggleKeysStructSize;
 
 		// Saving current state
-		SystemParametersInfo( SPI_GETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
-		SystemParametersInfo( SPI_GETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
-		SystemParametersInfo( SPI_GETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
+		SystemParametersInfoA(SPI_GETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
+		SystemParametersInfoA(SPI_GETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
+		SystemParametersInfoA(SPI_GETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
 
-		if ( StickyKeysStruct.dwFlags & SKF_AVAILABLE ) {
+		if ( StickyKeysStruct.dwFlags & SKF_AVAILABLE ) 
+		{
 			// Disable StickyKeys feature
 			dwStickyKeysFlags = StickyKeysStruct.dwFlags;
 			StickyKeysStruct.dwFlags = 0;
-			SystemParametersInfo( SPI_SETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
 		}
 
-		if ( FilterKeysStruct.dwFlags & FKF_AVAILABLE ) {
+		if ( FilterKeysStruct.dwFlags & FKF_AVAILABLE ) 
+		{
 			// Disable FilterKeys feature
 			dwFilterKeysFlags = FilterKeysStruct.dwFlags;
 			FilterKeysStruct.dwFlags = 0;
-			SystemParametersInfo( SPI_SETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
 		}
 
-		if ( ToggleKeysStruct.dwFlags & TKF_AVAILABLE ) {
+		if ( ToggleKeysStruct.dwFlags & TKF_AVAILABLE ) 
+		{
 			// Disable FilterKeys feature
 			dwToggleKeysFlags = ToggleKeysStruct.dwFlags;
 			ToggleKeysStruct.dwFlags = 0;
-			SystemParametersInfo( SPI_SETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
 		}
 	}
 
 	~damn_keys_filter	()
 	{
-		if ( bScreenSaverState )
+		if (bScreenSaverState)
 			// Restoring screen saver
-			SystemParametersInfo( SPI_SETSCREENSAVEACTIVE , TRUE , NULL , 0 );
+			SystemParametersInfoA(SPI_SETSCREENSAVEACTIVE, TRUE, NULL, 0);
 
-		if ( dwStickyKeysFlags) {
+		if (dwStickyKeysFlags) 
+		{
 			// Restore StickyKeys feature
 			StickyKeysStruct.dwFlags = dwStickyKeysFlags;
-			SystemParametersInfo( SPI_SETSTICKYKEYS , dwStickyKeysStructSize , ( PVOID ) &StickyKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETSTICKYKEYS, dwStickyKeysStructSize, (PVOID)&StickyKeysStruct, 0);
 		}
 
-		if ( dwFilterKeysFlags ) {
+		if (dwFilterKeysFlags) 
+		{
 			// Restore FilterKeys feature
 			FilterKeysStruct.dwFlags = dwFilterKeysFlags;
-			SystemParametersInfo( SPI_SETFILTERKEYS , dwFilterKeysStructSize , ( PVOID ) &FilterKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETFILTERKEYS, dwFilterKeysStructSize, (PVOID)&FilterKeysStruct, 0);
 		}
 
-		if ( dwToggleKeysFlags ) {
+		if (dwToggleKeysFlags) 
+		{
 			// Restore FilterKeys feature
 			ToggleKeysStruct.dwFlags = dwToggleKeysFlags;
-			SystemParametersInfo( SPI_SETTOGGLEKEYS , dwToggleKeysStructSize , ( PVOID ) &ToggleKeysStruct , 0 );
+			SystemParametersInfoA(SPI_SETTOGGLEKEYS, dwToggleKeysStructSize, (PVOID)&ToggleKeysStruct, 0);
 		}
 
 	}
@@ -374,28 +382,28 @@ struct damn_keys_filter {
 
 ENGINE_API int RunApplication(LPCSTR commandLine)
 {
-	if (!IsDebuggerPresent()) 
+	if (!IsDebuggerPresent())
 	{
 		size_t HeapFragValue = 2;
 		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
 	}
 
-    gMainThreadId = GetCurrentThreadId();
-    Debug.set_mainThreadId(gMainThreadId);
+	gMainThreadId = GetCurrentThreadId();
+	Debug.set_mainThreadId(gMainThreadId);
 	// Check for another instance
 #ifdef NO_MULTI_INSTANCES
-	#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
-	
-	HANDLE hCheckPresenceMutex = OpenMutex( READ_CONTROL , FALSE ,  STALKER_PRESENCE_MUTEX );
-	if ( hCheckPresenceMutex == NULL ) 
+#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
+
+	HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
+	if (hCheckPresenceMutex == NULL)
 	{
-		hCheckPresenceMutex = CreateMutex( NULL , FALSE , STALKER_PRESENCE_MUTEX );	// New mutex
-		if ( hCheckPresenceMutex == NULL )
+		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
+		if (hCheckPresenceMutex == NULL)
 			return 2;
-	} 
+	}
 	else
 	{
-		CloseHandle( hCheckPresenceMutex );		// Already running
+		CloseHandle(hCheckPresenceMutex);		// Already running
 		return 1;
 	}
 #endif
@@ -411,55 +419,52 @@ ENGINE_API int RunApplication(LPCSTR commandLine)
 	//////////////////////////////////////////
 	if (!strstr(Core.Params, "-nologo"))
 	{
-		logoWindow					= CreateDialog(GetModuleHandle(NULL),	MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc );
-		HWND logoPicture			= GetDlgItem(logoWindow, IDC_STATIC_LOGO);
+		logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc);
+		HWND logoPicture = GetDlgItem(logoWindow, IDC_STATIC_LOGO);
 		RECT logoRect;
 		//////////////////////////////////////////
 		GetWindowRect(logoPicture, &logoRect);
-		SetWindowPos(logoWindow, logoInsertPos, 0, 0, logoRect.right - logoRect.left, logoRect.bottom - logoRect.top, SWP_NOMOVE | SWP_SHOWWINDOW);
+		SetWindowPos(logoWindow, logoInsertPos, 0,
+					 0, logoRect.right - logoRect.left,
+					 logoRect.bottom - logoRect.top,
+					 SWP_NOMOVE | SWP_SHOWWINDOW);
 		UpdateWindow(logoWindow);
 	}
 	//////////////////////////////////////////
 	// AVI
-	g_bIntroFinished			= true;
+	g_bIntroFinished = true;
 
-	g_sLaunchOnExit_app[0]		= 0;
-	g_sLaunchOnExit_params[0]	= 0;
+	g_sLaunchOnExit_app[0] = 0;
+	g_sLaunchOnExit_params[0] = 0;
 
 
-	InitSettings				();
+	InitSettings();
 
-    if (strstr(Core.Params, "-renderdebug"))
-    {
-        isGraphicDebugging	= TRUE;
-    }
+	if (strstr(Core.Params, "-renderdebug"))
+	{
+		isGraphicDebugging = TRUE;
+	}
 
 	// Adjust player & computer name for Asian
-	if ( pSettings->line_exist( "string_table" , "no_native_input" ) ) {
-			xr_strcpy( Core.UserName , sizeof( Core.UserName ) , "Player" );
-			xr_strcpy( Core.CompName , sizeof( Core.CompName ) , "Computer" );
+	if (pSettings->line_exist("string_table", "no_native_input")) 
+	{
+		xr_strcpy(Core.UserName, sizeof(Core.UserName), "Player");
+		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
 
 	{
-		FPU::m24r				();
-		InitEngine				();
-		InitInput				();
-		InitConsole				();
+		FPU::m24r();
+		InitEngine();
+		InitInput();
+		InitConsole();
 
-		Engine.External.Initialize	( );
+		Engine.External.Initialize();
 
-		//Console->Execute			("stat_memory");
-
-		/////////////////////////////////////////////
-		// Exeption debug
-		///xrCore* crash_me = nullptr;
-		///crash_me->SetPluginMode();
-
-		Startup	 					( );
-		Core._destroy				( );
+		Startup();
+		Core._destroy();
 #ifdef NO_MULTI_INSTANCES		
 		// Delete application presence mutex
-		CloseHandle( hCheckPresenceMutex );
+		CloseHandle(hCheckPresenceMutex);
 #endif
 	}
 	return 0;
@@ -467,15 +472,18 @@ ENGINE_API int RunApplication(LPCSTR commandLine)
 
 LPCSTR _GetFontTexName (LPCSTR section)
 {
-	static char* tex_names[]={"texture800","texture","texture1600"};
-	int def_idx		= 1;//default 1024x768
+	static char* tex_names[] = { "texture800","texture","texture1600" };
+	int def_idx		= 1;	//default 1024x768
 	int idx			= def_idx;
 
 	u32 h = Device.dwHeight;
 
-	if(h<=600)		idx = 0;
-	else if(h<1024)	idx = 1;
-	else 			idx = 2;
+	if (h <= 600)		
+		idx = 0;
+	else if (h < 1024)	
+		idx = 1;
+	else 			
+		idx = 2;
 	
 	while(idx>=0)
 	{
@@ -491,19 +499,22 @@ void _InitializeFont(CGameFont*& F, LPCSTR section, u32 flags)
 	LPCSTR font_tex_name = _GetFontTexName(section);
 	R_ASSERT(font_tex_name);
 
-	LPCSTR sh_name = pSettings->r_string(section,"shader");
-	if(!F){
-		F = xr_new<CGameFont> (sh_name, font_tex_name, flags);
-	}else
+	LPCSTR sh_name = pSettings->r_string(section, "shader");
+	if (!F) 
+	{
+		F = xr_new<CGameFont>(sh_name, font_tex_name, flags);
+	}
+	else
 		F->Initialize(sh_name, font_tex_name);
 
-	if (pSettings->line_exist(section,"size")){
-		float sz = pSettings->r_float(section,"size");
+	if (pSettings->line_exist(section, "size")) 
+	{
+		float sz = pSettings->r_float(section, "size");
 		if (flags&CGameFont::fsDeviceIndependent)	F->SetHeightI(sz);
 		else										F->SetHeight(sz);
 	}
-	if (pSettings->line_exist(section,"interval"))
-		F->SetInterval(pSettings->r_fvector2(section,"interval"));
+	if (pSettings->line_exist(section, "interval"))
+		F->SetInterval(pSettings->r_fvector2(section, "interval"));
 
 }
 
@@ -539,21 +550,21 @@ CApplication::CApplication()
 
 CApplication::~CApplication()
 {
-	Console->Hide				( );
+	Console->Hide();
 
 	// font
-	xr_delete					( pFontSystem		);
+	xr_delete(pFontSystem);
 
-	Device.seqFrameMT.Remove	(&SoundProcessor);
-	Device.seqFrame.Remove		(this);
+	Device.seqFrameMT.Remove(&SoundProcessor);
+	Device.seqFrame.Remove(this);
 
 
 	// events
-	Engine.Event.Handler_Detach	(eConsole,this);
-	Engine.Event.Handler_Detach	(eDisconnect,this);
-	Engine.Event.Handler_Detach	(eStartLoad,this);
-	Engine.Event.Handler_Detach	(eStart,this);
-	Engine.Event.Handler_Detach	(eQuit,this);
+	Engine.Event.Handler_Detach(eConsole, this);
+	Engine.Event.Handler_Detach(eDisconnect, this);
+	Engine.Event.Handler_Detach(eStartLoad, this);
+	Engine.Event.Handler_Detach(eStart, this);
+	Engine.Event.Handler_Detach(eQuit, this);
 	
 }
 
@@ -562,7 +573,7 @@ ENGINE_API int ps_rs_loading_stages = 0;
 
 void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 {
-	if (E==eQuit)
+	if (E == eQuit)
 	{
 		PostQuitMessage	(0);
 		
@@ -572,7 +583,7 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 			xr_free(Levels[i].name);
 		}
 	}
-	else if(E==eStart) 
+	else if(E == eStart) 
 	{
 		LPSTR		op_server		= LPSTR	(P1);
 		LPSTR		op_client		= LPSTR	(P2);
@@ -624,7 +635,6 @@ void CApplication::OnEvent(EVENT E, u64 P1, u64 P2)
 }
 
 static	CTimer	phase_timer;
-extern	ENGINE_API BOOL g_appLoaded = FALSE;
 
 void CApplication::LoadBegin()
 {
@@ -632,9 +642,6 @@ void CApplication::LoadBegin()
 	if (1==dwLoadReference)	
 	{
 		g_appLoaded			= FALSE;
-#ifdef SPAWN_ANTIFREEZE
-		g_bootComplete		= false;
-#endif
 		_InitializeFont		(pFontSystem,"ui_font_letterica18_russian",0);
 
 		phase_timer.Start	();
@@ -655,16 +662,12 @@ void CApplication::LoadEnd()
 void CApplication::SetLoadingScreen(ILoadingScreen* newScreen)
 {
 	if (loadingScreen)
-		{
-		Log("! Trying to create new loading screen, but there is already one..");
-		DestroyLoadingScreen();
-		}
+    {
+        Log("! Trying to create new loading screen, but there is already one..");
+        DestroyLoadingScreen();
+    }
 
-		loadingScreen = newScreen;
-
-#ifdef SPAWN_ANTIFREEZE
-	g_bootComplete = true;
-#endif
+	loadingScreen = newScreen;
 }
 
 void CApplication::DestroyLoadingScreen()

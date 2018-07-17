@@ -17,7 +17,6 @@ void xrLauncherWnd::CPUTest()
 	{
 		this->label2->Text = L"SSE3 and AVX instructions aren't found. That may be affect on stability.";
 		this->label2->ForeColor = System::Drawing::Color::Red;
-		//#NOTE: SSE3 has come before AVX
 	}
 	else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 	{
@@ -94,10 +93,14 @@ void xrLauncherWnd::Init()
 	launch = new config(user_data, true);
 
 	// Radiobox init
-	if		(launch->get_value("global", "render") == "-r2.5")	radioButton3->Checked = true;
-	else if (launch->get_value("global", "render") == "-r3")	radioButton4->Checked = true;
-	else if (launch->get_value("global", "render") == "-r4")	radioButton5->Checked = true;
-	else														radioButton2->Checked = true;
+	if (launch->get_value("global", "render") == "-r2.5")
+		radioButton3->Checked = true;
+	else if (launch->get_value("global", "render") == "-r3")	
+		radioButton4->Checked = true;
+	else if (launch->get_value("global", "render") == "-r4")	
+		radioButton5->Checked = true;
+	else														
+		radioButton2->Checked = true;
 
 	// Command line init
 	const std::string cmd = launch->get_value("global", "cmdline");

@@ -260,7 +260,6 @@ bool CActor::use_MountedWeapon(CHolderCustom* object)
 			{
 				// destroy actor character
 				character_physics_support()->movement()->DestroyCharacter();
-				m_bPickupMode = false;
 				m_holder = wpn;
 				if (pCamBobbing)
 				{

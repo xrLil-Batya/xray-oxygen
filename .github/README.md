@@ -1,8 +1,10 @@
 # X-Ray Oxygen 1.7
 
 ![Logo](https://pp.userapi.com/c830608/v830608826/fd611/DtQWCVM4BgU.jpg)
-[![Build status](https://ci.appveyor.com/api/projects/status/dw0x0lu5vkge4pa5/branch/master?svg=true)](https://ci.appveyor.com/project/ForserX/cpuid/branch/master) X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
-
+[![Build status](https://ci.appveyor.com/api/projects/status/dt2q9gjuxi2q9i6v/branch/master?svg=true)](https://ci.appveyor.com/project/xrOxygen/xray-oxygen/branch/master) X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
+```lua
+xrOxygen is an Amateur project that uses experimental C++ Fitch, has no special restrictions on changing the engine and tries to bring something new to the usual modding.
+```
 * [Stable branch](https://github.com/xrOxygen/xray-oxygen/tree/master) | [Dev branch](https://github.com/xrOxygen/xray-oxygen/tree/ox_dev) | [PhysX branch](https://github.com/xrOxygen/xray-oxygen/tree/PhysX)
 
 ## Purposes

@@ -43,9 +43,7 @@ bool SupportsDX10Rendering()
 
 	HRESULT hr = m_pAdapter->CheckInterfaceSupport(__uuidof(ID3D10Device), 0);
 
-	//#VERTVER: It's time to stop. It's time to stop, ok? No more.
-	//Don't. Use. nullptr. In. D3D.
-	_RELEASE(pFactory);			// it's not canon method, but OK
+	_RELEASE(pFactory);			
 	_RELEASE(m_pAdapter);
 
 	return SUCCEEDED(hr);
@@ -56,19 +54,19 @@ bool SupportsDX11Rendering()
 {
 	// Register class
 	WNDCLASSEX wcex;
-	std::memset(&wcex, 0, sizeof(wcex));
+	ZeroMemory(&wcex, sizeof(wcex));
 	wcex.cbSize = sizeof(WNDCLASSEX);
 	wcex.lpfnWndProc = DefWindowProc;
-	wcex.hInstance = GetModuleHandle(NULL);
+	wcex.hInstance = GetModuleHandle(NULL);		//#VERTVER: wat?
 	wcex.lpszClassName = "TestDX11WindowClass";
-	if (!RegisterClassEx(&wcex))
+	if (!RegisterClassExA(&wcex))
 	{
 		Log("* DX11: failed to register window class");
 		return false;
 	}
 
 	// Create window
-	HWND hWnd = CreateWindow("TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
+	HWND hWnd = CreateWindowExA(0L, "TestDX11WindowClass", "", WS_OVERLAPPEDWINDOW, CW_USEDEFAULT, CW_USEDEFAULT,
 		CW_USEDEFAULT, CW_USEDEFAULT, NULL, NULL, NULL, NULL);
 
 	if (!hWnd)
@@ -78,7 +76,7 @@ bool SupportsDX11Rendering()
 	}
 
 	DXGI_SWAP_CHAIN_DESC sd;
-	std::memset(&sd, 0, sizeof(sd));
+	ZeroMemory(&sd, sizeof(sd));
 	sd.BufferCount = 1;
 	sd.BufferDesc.Width = 800;
 	sd.BufferDesc.Height = 600;
@@ -109,7 +107,7 @@ bool SupportsDX11Rendering()
 	_RELEASE(pContext);
 
 	DestroyWindow(hWnd);
-	UnregisterClass("TestDX11WindowClass", GetModuleHandle(NULL));
+	UnregisterClassA("TestDX11WindowClass", GetModuleHandle(NULL));
 
 	return SUCCEEDED(hr);
 }
@@ -149,7 +147,7 @@ void CreateRendererList()
 	modes.emplace_back(xr_token(nullptr, -1));
 
 	Msg("Available render modes[%d]:", modes.size());
-	for (auto& mode : modes)
+	for (xr_token& mode : modes)
 		if (mode.name)
 			Log(mode.name);
 

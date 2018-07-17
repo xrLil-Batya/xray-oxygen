@@ -163,7 +163,7 @@ void _initialize_cpu(void)
 	if (CPU::Info.hasFeature(CPUFeature::AVX))
 		xr_strcat(features, ", AVX");
 #ifdef __AVX__
-	else Debug.do_exit("X-Ray x64 using AVX anyway!");
+	else Debug.do_exit(NULL, "X-Ray x64 using AVX anyway!");
 #endif
 
 	if (CPU::Info.hasFeature(CPUFeature::AVX2))
@@ -337,15 +337,14 @@ void __cdecl thread_entry(void*	_params)
 	entry(arglist);
 }
 
-void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist)
+HANDLE thread_spawn(thread_t* entry, const char* name, unsigned stack, void* arglist)
 {
-	Debug._initialize(false);
-
-	auto* startup = new THREAD_STARTUP();
+    THREAD_STARTUP* startup = new THREAD_STARTUP();
 	startup->entry = entry;
 	startup->name = (char*)name;
 	startup->args = arglist;
-	_beginthread(thread_entry, stack, startup);
+    uintptr_t hThread = _beginthread(thread_entry, stack, startup);
+	return reinterpret_cast<HANDLE> (hThread);
 }
 
 void spline1(float t, Fvector *p, Fvector *ret)

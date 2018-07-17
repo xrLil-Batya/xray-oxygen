@@ -88,15 +88,19 @@ void xrDebug::gather_info(const char *expression, const char *description, const
 	os_clipboard::copy_to_clipboard(assertion_info);
 }
 
-void xrDebug::do_exit(const std::string &message)
+void xrDebug::do_exit(HWND hWnd, const std::string &message)
 {
 	FlushLog();
 
-	if (MessageBoxA(NULL, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK) 
+	if (MessageBoxA(hWnd, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
-		TerminateProcess(GetCurrentProcess(), 1);
+        ExitProcess(1);
 	}
+#ifdef AWDA
+	// Пусть тут хранится
+	MessageBoxA(NULL, "awda", "awda", MB_OK | MB_ICONASTERISK);
+#endif
 }
 
 void xrDebug::do_exit(const std::string &message, const std::string &message2)
@@ -112,21 +116,21 @@ void xrDebug::do_exit(const std::string &message, const std::string &message2)
 						"\n"			+
 						"\n Do you want to interrupt the game?";
 
-	if (MessageBoxA(NULL, szMsg.c_str(), "X-Ray Error", MB_OKCANCEL | MB_TOPMOST) == IDOK)
+	if (MessageBoxA(NULL, szMsg.c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
-		TerminateProcess(GetCurrentProcess(), 1);
+        ExitProcess(1);
 	}
 }
 
-void xrDebug::backend(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, bool &ignore_always)
+void xrDebug::backend(const char* expression, const char* description, const char* argument0, const char* argument1, const char* file, int line, const char* function, bool &ignore_always)
 {
 	static std::recursive_mutex CS;
 	std::lock_guard<decltype(CS)> lock(CS);
 
 	error_after_dialog = true;
 
-	string4096			assertion_info;
+	string4096 assertion_info;
 
 	gather_info(expression, description, argument0, argument1, file, line, function, assertion_info, sizeof(assertion_info));
 
@@ -136,28 +140,53 @@ void xrDebug::backend(const char *expression, const char *description, const cha
 	HWND wnd = GetActiveWindow();
 	if (!wnd) wnd = GetForegroundWindow();
 
-    //Sometimes if we crashed not in main thread, we can stuck at ShowWindow
+    // Sometimes if we crashed not in main thread, we can stuck at ShowWindow
     if (GetCurrentThreadId() == m_mainThreadId)
     {
-	    ShowWindow(wnd, SW_MINIMIZE);
+	    ShowWindow(wnd, SW_HIDE);
     }
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(assertion_info);
+	do_exit(wnd, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-
-	//THIS IS FINE!
-	DebugBreak();
+    do_exit2(assertion_info, ignore_always);
+    
+    // And we should show window again, damn pause manager
+    if (GetCurrentThreadId() == m_mainThreadId)
+    {
+        ShowWindow(wnd, SW_SHOW);
+    }
 #endif
 }
 
 const char* xrDebug::error2string(long code)
 {
     static	string1024	desc_storage;
-    FormatMessage(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
+    FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
     return desc_storage;
+}
+
+
+void xrDebug::do_exit2(const std::string& message, bool& ignore_always)
+{
+    int MsgRet = MessageBox(NULL, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+
+    switch (MsgRet)
+    {
+    case IDABORT:
+		DEBUG_INVOKE;	// int 3 more faster than DebugBreak()
+        ExitProcess(1);
+        break;
+    case IDIGNORE:
+        ignore_always = true;
+        break;
+    case IDRETRY:
+    default:
+		DEBUG_INVOKE;
+        break;
+    }
 }
 
 void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
@@ -318,6 +347,11 @@ IC void floating_point_handler(int signal)
 	handler_base("Floating point error");
 }
 
+IC void segment_violation(int signal)
+{
+	handler_base("Segment violation error");
+}
+
 IC void illegal_instruction_handler(int signal)
 {
 	//#VERTVER: We're using xrCore CPUID cuz it's more faster then another
@@ -335,7 +369,6 @@ IC void illegal_instruction_handler(int signal)
 	}
 }
 
-
 IC void termination_handler(int signal)
 {
 	handler_base("Termination with exit code 3");
@@ -343,14 +376,13 @@ IC void termination_handler(int signal)
 
 void debug_on_thread_spawn()
 {
-	//::set_terminate(_terminate);
-
 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
 	signal(SIGABRT, abort_handler);
 	signal(SIGABRT_COMPAT, abort_handler);
 	signal(SIGFPE, floating_point_handler);
 	signal(SIGILL, illegal_instruction_handler);
-	signal(SIGINT, 0);
+	signal(SIGSEGV, segment_violation);
+	signal(SIGINT, NULL);
 	signal(SIGTERM, termination_handler);
 
 	_set_invalid_parameter_handler(&invalid_parameter_handler);
@@ -381,10 +413,6 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 	Log("[FAIL] Type: UNHANDLED EXCEPTION");
 	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.2.01f");
 	Log("[FAIL] Report: To https://discord.gg/NAp6ZtX");
-
-#ifdef AWDA
-	MessageBox(NULL, "awda", "awda", MB_OK | MB_ICONASTERISK);
-#endif
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
 	if (pCrashHandler != nullptr)

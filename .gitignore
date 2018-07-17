@@ -20,6 +20,13 @@
 *.db
 *.tmp
 *.cache
+*.lib
+*.psess
+*.vspx
+*.res
+*.db-shm
+*.db-wal
+*.bat
 
 binaries/
 intermediatex64/
@@ -36,15 +43,8 @@ librariesx64/
 /code/xrQt/xrDevLaunch/GeneratedFiles/
 /code/xrQt/xrDevLaunch/debug/
 /code/xrQt/xrDevLaunch/release/
-*.db-shm
-*.db-wal
+code/engine.vc2008/xrCore/GitParser/GitParser.exe
+code/engine.vc2008/xrCore/oxy_version.h
 
 game/gamedata_/
 game/gamedata/configs/coordinates.ltx
-
-*.lib
-
-*.psess
-
-*.vspx
-/intermediateWin32/nvtt/Release/*.res

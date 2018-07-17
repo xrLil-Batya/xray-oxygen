@@ -121,49 +121,19 @@ BOOL CActor::CanPickItem(const CFrustum& frustum, const Fvector& from, CObject* 
 #include "..\xrEngine\xr_input.h"
 void CActor::PickupModeUpdate()
 {
-#ifndef HOLD_PICKUP_OFF
-	if(!m_bPickupMode)				return; // kUSE key pressed
-
-	// подбирание объекта
-	if(m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() &&  m_pObjectWeLookingAt->cast_inventory_item()->Useful() &&
-		m_pUsableObject && !m_pUsableObject->nonscript_usable() && !Level().m_feel_deny.is_object_denied(m_pObjectWeLookingAt))
-	{
-		m_pUsableObject->use(this);
-		Game().SendPickUpEvent(ID(), m_pObjectWeLookingAt->ID());
-	}
-#endif
-
 	feel_touch_update	(Position(), m_fPickupInfoRadius);
-	
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
-#ifdef HOLD_PICKUP_OFF
-	bool bPickupMode = false;
-	if (g_Alive() && Level().CurrentViewEntity() == this) 
-	{
-		if (GameUI() && !GameUI()->TopInputReceiver()) 
-		{
-			int dik = get_action_dik(kUSE, 0);
-			if (dik && pInput->iGetAsyncKeyState(dik))
-				bPickupMode = true;
 
-			dik = get_action_dik(kUSE, 1);
-			if (dik && pInput->iGetAsyncKeyState(dik))
-				bPickupMode = true;
-		}
-	}
-	if (bPickupMode)
-#endif
-	{
-		for (CObject* obj : feel_touch)
-		{
-			Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
-			act_and_cam_pos.y += CameraHeight();
-			if (CanPickItem(frustum, act_and_cam_pos, obj))
-				PickupInfoDraw(obj);
-		}
-	}
+    for (CObject* obj : feel_touch)
+    {
+        Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
+        act_and_cam_pos.y += CameraHeight();
+        if (CanPickItem(frustum, act_and_cam_pos, obj))
+            PickupInfoDraw(obj);
+    }
 
+    //#TEMP: !!!
 	m_CapmfireWeLookingAt = nullptr;
 	for (CObject* obj : feel_touch)
 	{
@@ -187,7 +157,7 @@ void CActor::PickupModeUpdate()
 
 #include "../xrEngine/CameraBase.h"
 BOOL	g_b_COD_PickUpMode = TRUE;
-void	CActor::PickupModeUpdate_COD	()
+void CActor::PickupModeUpdate_COD(bool bDoPickup)
 {
 	if (Level().CurrentViewEntity() != this || !g_b_COD_PickUpMode) return;
 		
@@ -239,37 +209,46 @@ void	CActor::PickupModeUpdate_COD	()
 		};
 	}
 
-	if(pNearestItem)
-	{
-		CFrustum					frustum;
-		frustum.CreateFromMatrix	(Device.mFullTransform,FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
-		if (!CanPickItem(frustum, act_and_cam_pos, &pNearestItem->object()))
-			pNearestItem = NULL;
-	}
-	if (pNearestItem && pNearestItem->cast_game_object())
-	{
-		if (Level().m_feel_deny.is_object_denied(pNearestItem->cast_game_object()))
-				pNearestItem = NULL;
-	}
-	if (pNearestItem && pNearestItem->cast_game_object())
-	{
-		if(!pNearestItem->cast_game_object()->getVisible())
-				pNearestItem = NULL;
-	}
+    auto GetNearestPickableItem = [this, &act_and_cam_pos](CInventoryItem* InPickableItem) -> CInventoryItem*
+    {
+        if (CGameObject* pNearestGameObject = InPickableItem->cast_game_object())
+        {
+            CFrustum					frustum;
+            frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB | FRUSTUM_P_FAR);
+            if (!CanPickItem(frustum, act_and_cam_pos, &InPickableItem->object()))
+            {
+                return nullptr;
+            }
 
-	GameUI()->UIMainIngameWnd->SetPickUpItem(pNearestItem);
+            if (!pNearestGameObject->getVisible() || Level().m_feel_deny.is_object_denied(pNearestGameObject))
+            {
+                return nullptr;
+            }
 
-	if (pNearestItem && m_bPickupMode && !m_pPersonWeLookingAt)
+            return InPickableItem;
+        }
+
+        return nullptr;
+    };
+
+    CInventoryItem* ValidatedPickableItem = nullptr;
+    if (pNearestItem != nullptr)
+    {
+        ValidatedPickableItem = GetNearestPickableItem(pNearestItem);
+    }
+
+    // Update HUD - show pickable item
+	GameUI()->UIMainIngameWnd->SetPickUpItem(ValidatedPickableItem);
+
+    // Do pickup if we allowed and have pickable item (and don't look at person)
+	if (bDoPickup && ValidatedPickableItem && !m_pPersonWeLookingAt)
 	{
-		CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(pNearestItem);
-		if(pUsableObject && (!m_pUsableObject))
-			pUsableObject->use(this);
+        CUsableScriptObject*	pUsableObject = smart_cast<CUsableScriptObject*>(ValidatedPickableItem);
+        if (pUsableObject && (!m_pUsableObject))
+            pUsableObject->use(this);
 
-		//подбирание объекта
-		Game().SendPickUpEvent(ID(), pNearestItem->object().ID());
-#ifdef HOLD_PICKUP_OFF
-		m_bPickupMode = false;
-#endif
+        //подбирание объекта
+        Game().SendPickUpEvent(ID(), ValidatedPickableItem->object().ID());
 	}
 };
 

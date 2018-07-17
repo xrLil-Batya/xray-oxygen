@@ -74,5 +74,4 @@ struct XRCORE_API processor_info
 
 	int getCPULoad(double &val);
 
-
 };

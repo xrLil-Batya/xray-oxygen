@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+using System.Runtime.ExceptionServices;
 using XRay.ManagedApi.Core;
 
 namespace xrPostprocessEditor
@@ -21,29 +19,34 @@ namespace xrPostprocessEditor
 
     public class EditorEngine : IDisposable
     {
-        private BasicPostProcessAnimator animator;
+        private BasicPostProcessAnimator _animator;
+
+        public delegate void ErrorHandler(string message);
+
+        public event ErrorHandler ErrorOccuredEvent;
 
         public EditorEngine()
         {
-            animator = new BasicPostProcessAnimator(0, false);
+            _animator = new BasicPostProcessAnimator(0, false);
         }
 
         public void Dispose()
         {
-            if (animator == null)
+            if (_animator == null)
                 return;
-            animator.Dispose();
-            animator = null;
+            _animator.Dispose();
+            _animator = null;
         }
 
         public PostProcessParamBase GetParam(PostProcessParamType paramType)
         {
-            return animator.GetParam(paramType);
+            return _animator.GetParam(paramType);
         }
         
         public void CreateKey(PostProcessParamType paramType, float time)
         {
-            PostProcessParamBase param = animator.GetParam(paramType);
+            PostProcessParamBase param = _animator.GetParam(paramType);
+
             try
             {
                 switch (paramType)
@@ -61,23 +64,23 @@ namespace xrPostprocessEditor
                         param.AddValue(time, 0.0f, 1);
                         param.AddValue(time, 0.0f, 2);
                         param.Dispose();
-                        param = animator.GetParam(PostProcessParamType.GrayValue);
+                        param = _animator.GetParam(PostProcessParamType.GrayValue);
                         param.AddValue(time, 0.0f, 0);
                         break;
                     case PostProcessParamType.DualityH:
                         param.AddValue(time, 0.44f, 0);
                         param.Dispose();
-                        param = animator.GetParam(PostProcessParamType.DualityV);
+                        param = _animator.GetParam(PostProcessParamType.DualityV);
                         param.AddValue(time, 0.44f, 0);
                         // 2 components
                         break;
                     case PostProcessParamType.NoiseIntensity:
                         param.AddValue(time, 0.33f, 0);
                         param.Dispose();
-                        param = animator.GetParam(PostProcessParamType.NoiseGrain);
+                        param = _animator.GetParam(PostProcessParamType.NoiseGrain);
                         param.AddValue(time, 0.11f, 0);
                         param.Dispose();
-                        param = animator.GetParam(PostProcessParamType.NoiseFps);
+                        param = _animator.GetParam(PostProcessParamType.NoiseFps);
                         param.AddValue(time, 1.0f, 0);
                         break;
                     case PostProcessParamType.Blur:
@@ -95,121 +98,151 @@ namespace xrPostprocessEditor
             }
         }
 
+        public void RemoveKey(PostProcessParamType paramType, float time)
+        {
+            using (PostProcessParamBase param = _animator.GetParam(paramType))
+            {
+                param.DeleteValue(time);
+            }
+        }
+
         public ColorF GetAddColor(int keyIndex)
         {
-            ColorF result;
-            float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.AddColor))
+            ColorF result = default(ColorF);
+
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.AddColor))
             {
-                time = param.GetKeyTime(keyIndex);
-                result.a = 0;
-                param.GetValue(time, out result.r, 0);
-                param.GetValue(time, out result.g, 1);
-                param.GetValue(time, out result.b, 2);
+                float time = param.GetKeyTime(keyIndex);
+
+                SafetyGetValue(param, ref result, time);
             }
             return result;
         }
 
         public ColorF GetBaseColor(int keyIndex)
         {
-            ColorF result;
-            float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.BaseColor))
+            ColorF result = default(ColorF);
+
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.BaseColor))
             {
-                time = param.GetKeyTime(keyIndex);
-                result.a = 0;
-                param.GetValue(time, out result.r, 0);
-                param.GetValue(time, out result.g, 1);
-                param.GetValue(time, out result.b, 2);
+                float time = param.GetKeyTime(keyIndex);
+                
+                SafetyGetValue(param, ref result, time);
             }
             return result;
         }
 
         public ColorF GetGrayColor(int keyIndex)
         {
-            ColorF result;
+            ColorF result = default(ColorF);
+
             float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.GrayColor))
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.GrayColor))
             {
-                time = param.GetKeyTime(keyIndex);                
-                param.GetValue(time, out result.r, 0);
-                param.GetValue(time, out result.g, 1);
-                param.GetValue(time, out result.b, 2);
+                time = param.GetKeyTime(keyIndex);   
+                
+                SafetyGetValue(param, ref result, time);
             }
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.GrayValue))
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.GrayValue))
             {
-                param.GetValue(time, out result.a, 0);
+                SafetyGetValue(param, time, ref result.a, keyIndex);
             }
             return result;
         }
 
         public Vector2F GetDuality(int keyIndex)
         {
-            Vector2F result;
+            Vector2F result = default(Vector2F);
+
             float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.DualityH))
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.DualityH))
             {
                 time = param.GetKeyTime(keyIndex);
-                param.GetValue(time, out result.x, 0);
+                SafetyGetValue(param, time, ref result.x, 0);
             }
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.DualityV))
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.DualityV))
             {
-                param.GetValue(time, out result.y, 0);
+                SafetyGetValue(param, time, ref result.y, 0);
             }
             return result;
         }
 
         public NoiseParams GetNoise(int keyIndex)
         {
-            NoiseParams result;
+            NoiseParams result = default(NoiseParams);
             float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.NoiseIntensity))
+
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.NoiseIntensity))
             {
                 time = param.GetKeyTime(keyIndex);
-                param.GetValue(time, out result.Intensity, 0);
+                SafetyGetValue(param, time, ref result.Intensity, 0);
             }
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.NoiseGrain))
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.NoiseGrain))
             {
-                param.GetValue(time, out result.Grain, 0);
+                SafetyGetValue(param, time, ref result.Grain, 0);
             }
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.NoiseFps))
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.NoiseFps))
             {
-                param.GetValue(time, out result.FPS, 0);
+                SafetyGetValue(param, time, ref result.FPS, 0);
             }
             return result;
         }
 
         public float GetBlur(int keyIndex)
         {
-            float result;
-            float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.Blur))
+            float result = 0;
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.Blur))
             {
-                time = param.GetKeyTime(keyIndex);
-                param.GetValue(time, out result, 0);
+                float time = param.GetKeyTime(keyIndex);
+
+                SafetyGetValue(param, time, ref result, 0);
             }
             return result;
         }
 
         public ColorMappingParams GetColorMapping(int keyIndex)
         {
-            ColorMappingParams result;
-            float time;
-            using (PostProcessParamBase param = animator.GetParam(PostProcessParamType.ColorMappingInfluence))
+            ColorMappingParams result = default(ColorMappingParams);
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.ColorMappingInfluence))
             {
-                time = param.GetKeyTime(keyIndex);
-                param.GetValue(time, out result.Influence, 0);
+                float time = param.GetKeyTime(keyIndex);
+
+                SafetyGetValue(param, time, ref result.Influence, 0);
             }
-            result.Texture = animator.PPInfo.ColorMappingGradient1;
+            result.Texture = _animator.PPInfo.ColorMappingGradient1;
             return result;
         }
 
-        public void Reset() { animator.Create(); }
+        public void Reset() { _animator.Create(); }
 
-        public void LoadEffect(string fileName) { animator.Load(fileName, false); }
+        public void LoadEffect(string fileName) { _animator.Load(fileName, false); }
 
-        public void SaveEffect(string fileName) { animator.Save(fileName); }
+        public void SaveEffect(string fileName) { _animator.Save(fileName); }
 
-        public float EffectDuration { get { return animator.Length; } }
+        public float EffectDuration => _animator.Length;
+
+        //#Collector: Really bad idea, just temporary mock.
+
+        [HandleProcessCorruptedStateExceptions]
+        private void SafetyGetValue(PostProcessParamBase param, float time, ref float value, int index)
+        {
+            try
+            {
+                param.GetValue(time, out value, index);
+            }
+            catch (AccessViolationException e)
+            {
+                ErrorOccuredEvent?.Invoke(e.Message);
+            }
+        }
+
+        private void SafetyGetValue(PostProcessParamBase param, ref ColorF color, float time)
+        {
+            color.a = 0;
+
+            SafetyGetValue(param, time, ref color.r, 0);
+            SafetyGetValue(param, time, ref color.g, 1);
+            SafetyGetValue(param, time, ref color.b, 2);
+        }
     }
 }

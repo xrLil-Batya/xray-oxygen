@@ -16,12 +16,12 @@ IC	CSpaceRestrictionAbstract::CSpaceRestrictionAbstract						()
 
 IC	const xr_vector<u32> &CSpaceRestrictionAbstract::border						()
 {
-	if (!initialized())
-		initialize									();
+    if (!initialized())
+    {
+		initialize ();
+    }
 
-	THROW											(initialized());
-	THROW3											(!m_border.empty(),"Space restrictor has no border!",*name());
-	return											(m_border);
+	return (m_border);
 }
 
 IC	bool CSpaceRestrictionAbstract::initialized									() const

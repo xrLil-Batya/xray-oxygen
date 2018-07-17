@@ -37,6 +37,14 @@ struct TH_LoadTHM
     static std::mutex s_texture_details_protector;
 	map_CS &s_detail_scalers;
     static std::mutex s_detail_scalers_protector;
+
+    FS_FileSet flist;
+
+    TH_LoadTHM(LPCSTR InInitial, map_TD& InTextureDetails, map_CS& InDetailScalers)
+        : initial(InInitial), s_texture_details(InTextureDetails), s_detail_scalers(InDetailScalers)
+    {
+        FS.file_list(flist, initial, FS_ListFiles, "*.thm");
+    }
 };
 
 std::mutex TH_LoadTHM::s_texture_details_protector;
@@ -45,14 +53,11 @@ std::mutex TH_LoadTHM::s_detail_scalers_protector;
 void CTextureDescrMngr::LoadTHMThread(void* args)
 {
 	TH_LoadTHM* p = (TH_LoadTHM*)args;
-	LoadTHM(p->initial, p->s_texture_details, p->s_detail_scalers);
+	LoadTHM(p->flist, p->initial, p->s_texture_details, p->s_detail_scalers);
 }
 
-void CTextureDescrMngr::LoadTHM(LPCSTR initial, map_TD &s_texture_details, map_CS &s_detail_scalers)
+void CTextureDescrMngr::LoadTHM(FS_FileSet& flist, LPCSTR initial, map_TD &s_texture_details, map_CS &s_detail_scalers)
 {
-	FS_FileSet				flist;
-	FS.file_list			(flist, initial, FS_ListFiles, "*.thm");
-
 	STextureParams			tp;
 	string_path				fn;
 	for(const FS_File &fs_iter: flist)
@@ -138,15 +143,28 @@ void CTextureDescrMngr::LoadTHM(LPCSTR initial, map_TD &s_texture_details, map_C
 
 void CTextureDescrMngr::Load()
 {
-	TH_LoadTHM* lvltex = new TH_LoadTHM({ "$level_textures$", m_texture_details, m_detail_scalers });
-	TH_LoadTHM* gtex = new TH_LoadTHM({ "$game_textures$", m_texture_details, m_detail_scalers });
-	TH_LoadTHM* lvl = new TH_LoadTHM({ "$level$", m_texture_details, m_detail_scalers });
-	thread_spawn(LoadTHMThread, "X-Ray THM Loader 0", 0, lvltex);
-	thread_spawn(LoadTHMThread, "X-Ray THM Loader 1", 0, gtex);
-	thread_spawn(LoadTHMThread, "X-Ray THM Loader 2", 0, lvl);
-	Sleep(5);
-//	LoadTHM("$game_textures$");
-//	LoadTHM("$level$");
+	TH_LoadTHM lvltex( "$level_textures$", m_texture_details, m_detail_scalers );
+	TH_LoadTHM gtex( "$game_textures$", m_texture_details, m_detail_scalers );
+	TH_LoadTHM lvl( "$level$", m_texture_details, m_detail_scalers );
+
+    std::vector<HANDLE> hThreads;
+    hThreads.reserve(3);
+
+    auto StartLoadTHMThreadLambda = [&hThreads](TH_LoadTHM& ThmLoader, LPCSTR ThreadName)
+    {
+        if (!ThmLoader.flist.empty())
+        {
+            HANDLE hThread = thread_spawn(LoadTHMThread, ThreadName, 0, &ThmLoader);
+            hThreads.push_back(hThread);
+        }
+    };
+
+    StartLoadTHMThreadLambda(lvltex, "X-Ray THM Loader 0");
+    StartLoadTHMThreadLambda(gtex, "X-Ray THM Loader 1");
+    StartLoadTHMThreadLambda(lvl, "X-Ray THM Loader 2");
+
+    DWORD dwWaitResult = WaitForMultipleObjects((DWORD)hThreads.size(), hThreads.data(), TRUE, INFINITE);
+    R_ASSERT(dwWaitResult != WAIT_FAILED);
 }
 
 void CTextureDescrMngr::UnLoad()
