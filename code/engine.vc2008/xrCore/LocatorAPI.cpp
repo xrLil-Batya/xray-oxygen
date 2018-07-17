@@ -96,29 +96,28 @@ void _register_open_file(T* _r, const char* _fname)
 }
 
 template <typename T>
+struct eq_pointer;
+
+template <> struct eq_pointer<IReader>{
+	IReader* _val;
+	eq_pointer(IReader* p):_val(p){}
+	bool operator () (_open_file& itm){
+		return ( _val==itm._reader );
+	}
+};
+
+template <> struct eq_pointer<CStreamReader>{
+	CStreamReader* _val;
+	eq_pointer(CStreamReader* p):_val(p){}
+	bool operator () (_open_file& itm){
+		return ( _val==itm._stream_reader );
+	}
+};
+
+template <typename T>
 void _unregister_open_file(T* _r)
 {
-	struct eq_pointer_ir
-	{
-		IReader* _val;
-		eq_pointer_ir(IReader* p):_val(p){}
-		bool operator () (_open_file& itm)
-		{
-			return ( _val==itm._reader );
-		}
-	};
-
-	struct eq_pointer_isr
-	{
-		CStreamReader* _val;
-		eq_pointer_isr(CStreamReader* p):_val(p){}
-		bool operator () (_open_file& itm)
-		{
-			return ( _val==itm._stream_reader );
-		}
-	};
-
-	auto it = std::find_if(g_open_files.begin(), g_open_files.end(), std::is_same<T, CStreamReader*>::value ? eq_pointer_isr(_r) : eq_pointer_ir(_r));
+	xr_vector<_open_file>::iterator it = std::find_if(g_open_files.begin(), g_open_files.end(), eq_pointer<T>(_r) );
 	VERIFY(it != g_open_files.end());
 	_open_file&	_of = *it;
 	_of._reader = nullptr;
