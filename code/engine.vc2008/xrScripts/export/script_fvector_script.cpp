@@ -12,7 +12,8 @@
 using namespace luabind;
 
 #pragma optimize("s", on)
-void CScriptFvector::script_register(lua_State* L) {
+void CScriptFvector::script_register(lua_State* L)
+{
     module(
         L)[class_<Fvector>("vector")
                .def_readwrite("x", &Fvector::x)
@@ -43,7 +44,8 @@ void CScriptFvector::script_register(lua_State* L) {
                .def("min", (Fvector & (Fvector::*)(const Fvector&, const Fvector&))(&Fvector::min),							return_reference_to<1>())
                .def("max", (Fvector & (Fvector::*)(const Fvector&))(&Fvector::max),											return_reference_to<1>())
                .def("max", (Fvector & (Fvector::*)(const Fvector&, const Fvector&))(&Fvector::max),							return_reference_to<1>())
-               .def("abs", &Fvector::abs,																					return_reference_to<1>())
+               .def("abs", (Fvector & (Fvector::*)())(&Fvector::abs),														return_reference_to<1>())
+		       .def("abs", (Fvector & (Fvector::*)(const Fvector&))(&Fvector::abs),											return_reference_to<1>())
                .def("similar", &Fvector::similar)
                .def("set_length", &Fvector::set_length,																		return_reference_to<1>())
                .def("align", &Fvector::align,																				return_reference_to<1>())
