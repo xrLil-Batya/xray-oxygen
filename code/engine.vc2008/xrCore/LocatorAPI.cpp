@@ -98,17 +98,27 @@ void _register_open_file(T* _r, const char* _fname)
 template <typename T>
 void _unregister_open_file(T* _r)
 {
-	auto eq_pointer_ir = [_r](_open_file& itm)
+	struct eq_pointer_ir
 	{
-		return (_r == itm._stream_reader);
+		IReader* _val;
+		eq_pointer(IReader* p):_val(p){}
+		bool operator () (_open_file& itm)
+		{
+			return ( _val==itm._reader );
+		}
 	};
 
-	auto eq_pointer_isr = [_r](_open_file& itm)
+	struct eq_pointer_isr
 	{
-			return (_r == itm._reader);
+		CStreamReader* _val;
+		eq_pointer(CStreamReader* p):_val(p){}
+		bool operator () (_open_file& itm)
+		{
+			return ( _val==itm._stream_reader );
+		}
 	};
 
-	auto it = std::find_if(g_open_files.begin(), g_open_files.end(), std::is_same<T, CStreamReader*>::value ? eq_pointer_isr : eq_pointer_ir);
+	auto it = std::find_if(g_open_files.begin(), g_open_files.end(), std::is_same<T, CStreamReader*>::value ? eq_pointer_isr(_r) : eq_pointer_ir(_r));
 	VERIFY(it != g_open_files.end());
 	_open_file&	_of = *it;
 	_of._reader = nullptr;
