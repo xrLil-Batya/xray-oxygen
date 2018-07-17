@@ -56,7 +56,6 @@ ShaderElement* CRender::rimp_select_sh_dynamic	(dxRender_Visual *pVisual,
 	return pVisual->shader->E[id]._get();
 }
 
-=======
 void CRender::OnSinglethreaded(void)
 {
     Models->DeleteQueue();
