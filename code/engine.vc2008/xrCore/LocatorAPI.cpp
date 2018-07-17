@@ -101,7 +101,7 @@ void _unregister_open_file(T* _r)
 	struct eq_pointer_ir
 	{
 		IReader* _val;
-		eq_pointer(IReader* p):_val(p){}
+		eq_pointer_ir(IReader* p):_val(p){}
 		bool operator () (_open_file& itm)
 		{
 			return ( _val==itm._reader );
@@ -111,7 +111,7 @@ void _unregister_open_file(T* _r)
 	struct eq_pointer_isr
 	{
 		CStreamReader* _val;
-		eq_pointer(CStreamReader* p):_val(p){}
+		eq_pointer_isr(CStreamReader* p):_val(p){}
 		bool operator () (_open_file& itm)
 		{
 			return ( _val==itm._stream_reader );
