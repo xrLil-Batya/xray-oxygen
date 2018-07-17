@@ -28,21 +28,6 @@
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
 /////////////////////////////////////
-DWORD gMainThreadId = 0xFFFFFFFF;
-DWORD gSecondaryThreadId = 0xFFFFFFFF;
-/////////////////////////////////////
-
-
-ENGINE_API bool IsMainThread()
-{
-    return GetCurrentThreadId() == gMainThreadId;
-}
-
-ENGINE_API bool IsSecondaryThread()
-{
-    return GetCurrentThreadId() == gSecondaryThreadId;
-}
-
 DWORD gMainThreadId      = 0xFFFFFFFF;
 DWORD gSecondaryThreadId = 0xFFFFFFFF;
 DWORD gRenderThreadId    = 0xFFFFFFFF;
