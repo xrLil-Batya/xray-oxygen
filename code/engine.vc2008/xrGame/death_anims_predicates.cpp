@@ -11,7 +11,7 @@
 #include "CharacterPhysicsSupport.h"
 #include "../xrPhysics/animation_utils.h"
 
-Fvector& global_hit_position( Fvector &gp, CEntityAlive& ea, const SHit& H )
+Fvector& global_hit_position( Fvector &gp, CObject& ea, const SHit& H )
 {
 	VERIFY( ea.Visual() );
 	IKinematics	*K = ea.Visual( )->dcast_PKinematics( );
@@ -20,9 +20,11 @@ Fvector& global_hit_position( Fvector &gp, CEntityAlive& ea, const SHit& H )
 	ea.XFORM().transform_tiny( gp );
 	return gp;
 }
+
 #pragma warning(push)
 #pragma warning(disable: 4273)
-type_motion::edirection	type_motion::dir(CEntityAlive& ea, const SHit& H, float& angle)
+
+type_motion::edirection	type_motion::dir(CObject& ea, const SHit& H, float& angle)
 {
 	Fvector dir = H.direction();
 	dir.y = 0;
