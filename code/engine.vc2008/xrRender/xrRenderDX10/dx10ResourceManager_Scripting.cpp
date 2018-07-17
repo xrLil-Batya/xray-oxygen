@@ -295,6 +295,7 @@ Shader*	CResourceManager::_lua_Create		(LPCSTR d_shader, LPCSTR s_textures)
 
 ShaderElement*		CBlender_Compile::_lua_Compile	(LPCSTR namesp, LPCSTR name)
 {
+    xrCriticalSectionGuard guard(&compileGuard);
 	ShaderElement		E;
 	SH =				&E;
 	RS.Invalidate		();

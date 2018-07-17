@@ -35,6 +35,7 @@ CInventoryItem::CInventoryItem()
 	m_flags.set			(Fruck,TRUE);
 	m_flags.set			(FRuckDefault,TRUE);
 	m_pInventory		= NULL;
+    m_UpdateXFormsSheduled = true;
 
 	SetDropManual		(FALSE);
 
@@ -157,6 +158,7 @@ void CInventoryItem::DeactivateItem()
 
 void CInventoryItem::OnH_B_Independent(bool just_before_destroy)
 {
+    SheduleUpdateXForm();
 	m_ItemCurrPlace.type = eItemPlaceUndefined ;
 	UpdateXForm();
 }
@@ -424,6 +426,7 @@ void CInventoryItem::activate_physic_shell()
 
 void CInventoryItem::UpdateXForm	()
 {
+    VERIFY(IsRenderThread());
 	if (!object().H_Parent())	return;
 
 	// Get access to entity and its visual
@@ -474,6 +477,11 @@ void CInventoryItem::UpdateXForm	()
 	}
 
 	object().Position().set(mRes.c);
+}
+
+void CInventoryItem::InvokeUpdateXForm()
+{
+    UpdateXForm();
 }
 
 #ifdef DEBUG
@@ -561,6 +569,11 @@ bool CInventoryItem::IsNecessaryItem(CInventoryItem* item)
 {
 	return IsNecessaryItem(item->object().cNameSect());
 };
+
+void CInventoryItem::SheduleUpdateXForm()
+{
+    InterlockedExchange(&m_UpdateXFormsSheduled, TRUE);
+}
 
 BOOL CInventoryItem::IsInvalid() const
 {

@@ -56,6 +56,12 @@ ShaderElement* CRender::rimp_select_sh_dynamic	(dxRender_Visual *pVisual,
 	return pVisual->shader->E[id]._get();
 }
 
+=======
+void CRender::OnSinglethreaded(void)
+{
+    Models->DeleteQueue();
+}
+
 //////////////////////////////////////////////////////////////////////////
 ShaderElement* CRender::rimp_select_sh_static	(dxRender_Visual *pVisual,
 												float cdist_sq)
@@ -148,7 +154,8 @@ extern ENGINE_API BOOL r2_advanced_pp;	//	advanced post process and effects
 // Just two static storage
 void					CRender::create()
 {
-	Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 0x12345678);
+    Device.seqFrame.Add(this, REG_PRIORITY_HIGH + 0x12345678);
+    Device.seqSinglethreaded.Add(this, REG_PRIORITY_HIGH + 0x12345678);
 
 	m_skinning		= -1;
 	m_MSAASample	= -1;

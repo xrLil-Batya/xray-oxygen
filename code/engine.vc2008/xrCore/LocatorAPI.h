@@ -109,7 +109,6 @@ private:
 	IC		T					*r_open_impl		(const char* path, const char* _fname);
 
 private:
-			void				setup_fs_path		(const char* fs_name, string_path &fs_path);
 			IReader				*setup_fs_ltx		(const char* fs_name);
 			char*				fld_curr_season;
 

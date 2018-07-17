@@ -66,6 +66,8 @@
     </Filter>
     <Filter Include="OS\CPU">
       <UniqueIdentifier>{43e61e50-6b82-48c9-9842-72591a05e3fe}</UniqueIdentifier>
+    <Filter Include="Threads">
+      <UniqueIdentifier>{4648ad28-6771-4ca8-a387-a7c5a8b2bad9}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
@@ -236,6 +238,8 @@
     </ClCompile>
     <ClCompile Include="xrMemoryDebug.cpp">
       <Filter>Memory manager</Filter>
+    <ClCompile Include="xrThreadUtils.cpp">
+      <Filter>Threads</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -505,6 +509,8 @@
     </ClInclude>
     <ClInclude Include="xrMemoryDebug.h">
       <Filter>Memory manager</Filter>
+    <ClInclude Include="xrThreadUtils.h">
+      <Filter>Threads</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

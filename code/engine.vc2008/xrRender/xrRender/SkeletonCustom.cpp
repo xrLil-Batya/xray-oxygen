@@ -87,10 +87,10 @@ void CKinematics::DebugRender(Fmatrix& XFORM)
 
 CKinematics::CKinematics()
 {
+    InitializeCriticalSection(&updateGuard);
 #ifdef DEBUG
 	dbg_single_use_marker		= FALSE;
 #endif
-
 	m_is_original_lod = false;
 }
 
@@ -112,6 +112,8 @@ CKinematics::~CKinematics	()
 
 		xr_delete(m_lod);
 	}
+
+    DeleteCriticalSection(&updateGuard);
 }
 
 void	CKinematics::IBoneInstances_Create()
@@ -602,6 +604,7 @@ void CKinematics::AddWallmark(const Fmatrix* parent_xform, const Fvector3& start
 	}
 
 	// find similar wm
+    wallmarksGuard.Enter();
 	for (u32 wm_idx=0; wm_idx<wallmarks.size(); wm_idx++){
 		intrusive_ptr<CSkeletonWallmark>& wm = wallmarks[wm_idx];		
 		if (wm->Similar(shader,cp,0.02f)){ 
@@ -635,12 +638,14 @@ void CKinematics::AddWallmark(const Fmatrix* parent_xform, const Fvector3& start
 	}
 
 	wallmarks.push_back		(wm);
+    wallmarksGuard.Leave();
 }
 
 static const float LIFE_TIME=30.f;
 
 void CKinematics::CalculateWallmarks()
 {
+    xrCriticalSectionGuard guard(&wallmarksGuard);
 	if (!wallmarks.empty()&&(wm_frame!=RDEVICE.dwFrame)){
 		wm_frame			= RDEVICE.dwFrame;
 		bool need_remove	= false; 
@@ -747,6 +752,7 @@ void CKinematics::RenderWallmark(intrusive_ptr<CSkeletonWallmark> wm, FVF::LIT* 
 
 void CKinematics::ClearWallmarks()
 {
+    xrCriticalSectionGuard guard(&wallmarksGuard);
 	wallmarks.clear ();
 }
 

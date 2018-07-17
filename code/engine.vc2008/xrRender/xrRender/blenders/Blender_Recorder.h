@@ -23,6 +23,8 @@ public:
 	BOOL				bUseSteepParallax;
 	int					iElement;
 
+    static xrCriticalSection compileGuard;
+
 public:
 	CSimulator			RS;
 	IBlender*			BT;

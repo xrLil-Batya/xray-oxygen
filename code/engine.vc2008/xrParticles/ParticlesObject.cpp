@@ -148,41 +148,30 @@ void CParticlesObject::shedule_Update(u32 _dt)
 	inherited::shedule_Update(_dt);
 
 	// Update
-	if (m_bDead)
-		return;
-
-	u32 dt = Device.dwTimeGlobal - dwLastTime;
-	if (dt)
-	{
-		if (0)
-		{//.psDeviceFlags.test(mtParticles))	{    //. AlexMX comment this line// NO UNCOMMENT - DON'T WORK PROPERLY
-			mt_dt = dt;
-			fastdelegate::FastDelegate0<>		delegate(this, &CParticlesObject::PerformAllTheWork_mt);
-			Device.seqParallel.push_back(delegate);
-		}
-		else
-		{
-			mt_dt = 0;
-			IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-			V->OnFrame(dt);
-		}
-
-		dwLastTime = Device.dwTimeGlobal;
-	}
+	if (m_bDead) 
+		return; // Don't update for dead object
+	
 	UpdateSpatial();
 }
 
 void CParticlesObject::PerformAllTheWork(u32 _dt)
 {
 	// Update
-	u32 dt = Device.dwTimeGlobal - dwLastTime;
-	if (dt)
-	{
-		IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
-		V->OnFrame(dt);
-		dwLastTime = Device.dwTimeGlobal;
-	}
-	UpdateSpatial();
+    //#GIPERION: Rewrite this method
+    if (IsRenderThread())
+    {
+        u32 dt = Device.dwTimeGlobal - dwLastTime;
+        if (dt)
+		{
+            IParticleCustom* V = imdexlib::fast_dynamic_cast<IParticleCustom*>(renderable.visual); VERIFY(V);
+            V->OnFrame(dt);
+            dwLastTime = Device.dwTimeGlobal;
+        }
+    }
+    else
+    {
+	    UpdateSpatial();
+    }
 }
 
 void CParticlesObject::PerformAllTheWork_mt()

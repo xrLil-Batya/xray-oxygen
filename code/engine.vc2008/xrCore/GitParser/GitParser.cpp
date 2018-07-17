@@ -72,6 +72,7 @@ int main()
 	HeaderString << "#define _BRANCH " << "\"" << BranchName << "\"" << std::endl;
 	HeaderString << "#define _HASH " << "\"" << hash << "\"" << std::endl;
 #endif
+
 	std::ofstream Writter("oxy_version.h");
 	Writter.write(HeaderString.str().c_str(), HeaderString.str().size());
 	Writter.close();

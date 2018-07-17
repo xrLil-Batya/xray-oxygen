@@ -486,6 +486,7 @@ void CGamePersistent::OnFrame	()
 	if(!g_pGameLevel)			return;
 	if(!g_pGameLevel->bReady)	return;
 
+#if 0
 	if(Device.Paused())
 	{
 #ifndef MASTER_GOLD
@@ -552,14 +553,16 @@ void CGamePersistent::OnFrame	()
 		}
 #endif // MASTER_GOLD
 	}
+#endif
 
+#error (Move to RenderThread)
     // Update sun before updating other enviroment settings
     if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
     {
         if (!::Render->is_sun_static())
             Environment().calculate_dynamic_sun_dir();
     }
-
+#error (End region)
 	MySuper::OnFrame			();
 
 	if(!Device.Paused())

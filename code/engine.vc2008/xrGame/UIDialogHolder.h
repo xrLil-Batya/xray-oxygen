@@ -30,6 +30,7 @@ class CDialogHolder :public pureFrame
 	xr_vector<recvItem> m_input_receivers;
 	xr_vector<dlgItem> m_dialogsToRender;
 	xr_vector<dlgItem> m_dialogsToRender_new;
+    xrCriticalSection m_dialogsToRenderGuard;
 	bool m_b_in_update;
 
 	void StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators);

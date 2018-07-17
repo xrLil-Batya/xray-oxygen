@@ -283,7 +283,6 @@ dxRender_Visual* CModelPool::CreateChild(LPCSTR name, IReader* data)
 extern  BOOL ENGINE_API g_bRendering; 
 void	CModelPool::DeleteInternal	(dxRender_Visual* &V, BOOL bDiscard)
 {
-	VERIFY					(!g_bRendering);
     if (!V)					return;
 	V->Depart				();
 	if (bDiscard||bForceDiscard){
@@ -306,12 +305,8 @@ void	CModelPool::DeleteInternal	(dxRender_Visual* &V, BOOL bDiscard)
 void	CModelPool::Delete		(dxRender_Visual* &V, BOOL bDiscard)
 {
 	if (NULL==V)				return;
-	if (g_bRendering){
-		VERIFY					(!bDiscard);
-		ModelsToDelete.push_back(V);
-	} else {
-		DeleteInternal			(V,bDiscard);
-	}	
+    VERIFY(!bDiscard);
+    ModelsToDelete.push_back(V);
 	V							=	NULL;
 }
 

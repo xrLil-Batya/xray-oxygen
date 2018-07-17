@@ -27,28 +27,29 @@ CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::FindParticles(con
 
 CParticlesPlayer::SParticlesInfo* CParticlesPlayer::SBoneInfo::AppendParticles(CObject* object, const shared_str& ps_name)
 {
-	SParticlesInfo* pi = FindParticles(ps_name);
+	SParticlesInfo* pInfo = FindParticles(ps_name);
 
-	if (pi)
-		return pi;
+	if (pInfo)
+		return pInfo;
 
 	particles.push_back(SParticlesInfo());
-	pi = &particles.back();
-	pi->ps = CParticlesObject::Create(*ps_name, FALSE);
-
-	return pi;
+	pInfo = &particles.back();
+	pInfo->ps = CParticlesObject::Create(*ps_name, FALSE);
+    VERIFY(pInfo->ps);
+	
+	return pInfo;
 }
 
 void CParticlesPlayer::SBoneInfo::StopParticles(const shared_str& ps_name, bool bDestroy)
 {
-	SParticlesInfo* pi = FindParticles(ps_name);
+	SParticlesInfo* pInfo = FindParticles(ps_name);
 
-	if (pi)
+	if (pInfo)
 	{
 		if (!bDestroy)
-			pi->ps->Stop();
+			pInfo->ps->Stop();
 		else
-			CParticlesObject::Destroy(pi->ps);
+			CParticlesObject::Destroy(pInfo->ps);
 	}
 }
 

@@ -11,6 +11,9 @@
 
 #include "..\dxRenderDeviceRender.h"
 
+
+xrCriticalSection CBlender_Compile::compileGuard;
+
 static int ParseName(LPCSTR N)
 {
 	if (0==xr_strcmp(N,"$null"))	return -1;
@@ -113,6 +116,7 @@ void	CBlender_Compile::_cpp_Compile	(ShaderElement* _SH)
 	// Compile
 	BT->Compile		(*this);
 }
+
 
 void	CBlender_Compile::SetParams		(int iPriority, bool bStrictB2F)
 {

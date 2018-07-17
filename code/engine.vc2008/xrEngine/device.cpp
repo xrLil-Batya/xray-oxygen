@@ -43,6 +43,24 @@ ENGINE_API bool IsSecondaryThread()
     return GetCurrentThreadId() == gSecondaryThreadId;
 }
 
+DWORD gMainThreadId      = 0xFFFFFFFF;
+DWORD gSecondaryThreadId = 0xFFFFFFFF;
+DWORD gRenderThreadId    = 0xFFFFFFFF;
+
+ENGINE_API bool IsMainThread()
+{
+    return GetCurrentThreadId() == gMainThreadId;
+}
+
+ENGINE_API bool IsSecondaryThread()
+{
+    return GetCurrentThreadId() == gSecondaryThreadId;
+}
+
+ENGINE_API bool IsRenderThread()
+{
+    return GetCurrentThreadId() == gRenderThreadId;
+}
 
 /////////////////////////////////////
 ENGINE_API BOOL g_bRendering = FALSE; 
@@ -143,11 +161,13 @@ void CRenderDevice::End		(void)
 		if (load_finished && m_editor)
 			m_editor->on_load_finished();
 #	endif // #ifdef INGAME_EDITOR
+#	endif
 }
 
 
 volatile u32	mt_Thread_marker		= 0x12345678;
-void 			mt_Thread	(void *ptr)	
+volatile u32 mt_Thread_marker = 0x12345678;
+void mt_Thread(void *ptr)	
 {
     gSecondaryThreadId = GetCurrentThreadId();
 
@@ -176,6 +196,61 @@ void 			mt_Thread	(void *ptr)
 		// returns sync signal to device
 		Device.mt_csLeave.unlock();
 	}
+}
+
+void mt_render(void* ptr)
+{
+    gRenderThreadId = GetCurrentThreadId();
+    while (true)
+    {
+        Device.cs_RenderEnter.lock();
+
+        if (Device.mt_bRenderMustExit) {
+            Device.cs_RenderEnter.unlock();					// Important!!!
+            return;
+        }
+        if (Device.b_is_Active) {
+            if (Device.Begin()) {
+                //Calculate camera matrices
+                // Precache
+                if (Device.dwPrecacheFrame)
+                {
+                    float factor = float(Device.dwPrecacheFrame) / float(Device.dwPrecacheTotal);
+                    float angle = PI_MUL_2 * factor;
+                    Device.vCameraDirection.set(_sin(angle), 0, _cos(angle));	Device.vCameraDirection.normalize();
+                    Device.vCameraTop.set(0, 1, 0);
+                    Device.vCameraRight.crossproduct(Device.vCameraTop, Device.vCameraDirection);
+
+                    Device.mView.build_camera_dir(Device.vCameraPosition, Device.vCameraDirection, Device.vCameraTop);
+                }
+
+                // Matrices
+                Device.mFullTransform.mul(Device.mProject, Device.mView);
+                Device.m_pRender->SetCacheXform(Device.mView, Device.mProject);
+                D3DXMatrixInverse((D3DXMATRIX*)&Device.mInvFullTransform, 0, (D3DXMATRIX*)&Device.mFullTransform);
+
+                Device.vCameraPosition_saved = Device.vCameraPosition;
+                Device.mFullTransform_saved = Device.mFullTransform;
+                Device.mView_saved = Device.mView;
+                Device.mProject_saved = Device.mProject;
+
+                //BEGIN RENDER THREAD SEQUENCE
+                if (!Device.Paused() || Device.dwPrecacheFrame)
+                {
+                    g_pGamePersistent->Environment().OnFrame();
+                }
+
+                Device.seqRender.Process(rp_Render);
+
+                Device.End();
+            }
+        }
+        Device.cs_RenderEnter.unlock();
+
+        Device.cs_RenderLeave.lock();
+        // returns sync signal to device
+        Device.cs_RenderLeave.unlock();
+    }
 }
 
 #include "igame_level.h"
@@ -227,30 +302,10 @@ void CRenderDevice::on_idle		()
 	}
 	else
 	{
+        cs_RenderLeave.lock();
+        cs_RenderEnter.unlock();
 		FrameMove();
 	}
-
-	// Precache
-	if (dwPrecacheFrame)
-	{
-		float factor					= float(dwPrecacheFrame)/float(dwPrecacheTotal);
-		float angle						= PI_MUL_2 * factor;
-		vCameraDirection.set			(_sin(angle),0,_cos(angle));	vCameraDirection.normalize	();
-		vCameraTop.set					(0,1,0);
-		vCameraRight.crossproduct		(vCameraTop,vCameraDirection);
-
-		mView.build_camera_dir			(vCameraPosition,vCameraDirection,vCameraTop);
-	}
-
-	// Matrices
-	mFullTransform.mul			(mProject,mView);
-	m_pRender->SetCacheXform(mView, mProject);
-	D3DXMatrixInverse			((D3DXMATRIX*)&mInvFullTransform, 0, (D3DXMATRIX*)&mFullTransform);
-
-	vCameraPosition_saved	= vCameraPosition;
-	mFullTransform_saved	= mFullTransform;
-	mView_saved				= mView;
-	mProject_saved			= mProject;
 
 	// *** Resume threads
 	// Capture end point - thread must run only ONE cycle
@@ -259,35 +314,13 @@ void CRenderDevice::on_idle		()
 	mt_csEnter.unlock();
     Sleep(0);
 
-	Statistic->RenderTOTAL_Real.FrameStart	();
-	Statistic->RenderTOTAL_Real.Begin		();
-	if (b_is_Active)							
-	{
-		if (Begin())				
-		{
-			seqRender.Process(rp_Render);
-			if (psDeviceFlags.test(rsCameraPos) 
-				|| psDeviceFlags.test(rsStatistic)
-				|| psDeviceFlags.test(rsDrawFPS)
-				|| psDeviceFlags.test(rsHWInfo)
-				|| Statistic->errors.size())
-			{
-					Statistic->Show();
-			}
-
-			//	Present goes here
-			End										();
-		}
-	}
-	Statistic->RenderTOTAL_Real.End();
-	Statistic->RenderTOTAL_Real.FrameEnd();
-	Statistic->RenderTOTAL.accum			= Statistic->RenderTOTAL_Real.accum;
-
 	// *** Suspend threads
 	// Capture startup point
 	// Release end point - allow thread to wait for startup point
 	mt_csEnter.lock();
 	mt_csLeave.unlock();
+    cs_RenderEnter.lock();
+    cs_RenderLeave.unlock();
 
 	// Ensure, that second thread gets chance to execute anyway
 	if (dwFrame!=mt_Thread_marker)			
@@ -295,8 +328,11 @@ void CRenderDevice::on_idle		()
 		for (u32 pit=0; pit<Device.seqParallel.size(); pit++)
 			Device.seqParallel[pit]();
 		Device.seqParallel.clear	();
-		seqFrameMT.Process					(rp_Frame);
+		seqFrameMT.Process(rp_Frame);
 	}
+
+    //Lastly, execute functions, that cannot be executed while several threads running
+    Device.seqSinglethreaded.Process(rp_Singlethreaded);
 
 	if (!b_is_Active)
 		Sleep		(1);
@@ -378,20 +414,25 @@ void CRenderDevice::Run			()
 	}
 
 	// Start all threads
-	mt_csEnter.lock				();
-	mt_bMustExit				= FALSE;
-	thread_spawn				(mt_Thread, "X-RAY Secondary thread", 0, 0);
+	mt_csEnter.lock();
+    cs_RenderEnter.lock();
+	mt_bMustExit = FALSE;
+    mt_bRenderMustExit = FALSE;
+	thread_spawn(mt_Thread,"X-RAY Secondary thread",0,0);
+	thread_spawn(mt_render,"X-RAY Render thread",0,0);
 
 	// Message cycle
 	seqAppStart.Process			(rp_AppStart);
 	m_pRender->ClearTarget		();
 	message_loop				();
-
+    mt_bRenderMustExit = TRUE;
 	seqAppEnd.Process		(rp_AppEnd);
 
 	// Stop Balance-Thread
 	mt_bMustExit			= TRUE;
 	mt_csEnter.unlock		();
+	
+    cs_RenderEnter.unlock();
 	while (mt_bMustExit)	
 		Sleep(0);
 }
@@ -507,6 +548,7 @@ void CRenderDevice::FrameMove()
 		float fPreviousFrameTime = Timer.GetElapsed_sec(); Timer.Start();	// previous frame
 		fTimeDelta = 0.1f * fTimeDelta + 0.9f*fPreviousFrameTime;			// smooth random system activity - worst case ~7% error
         Statistic->fRawFrameDeltaTime = fTimeDelta;                         // copy unmodified fTimeDelta, for statistic purpose
+		
 		if (fTimeDelta>.1f)    
 			fTimeDelta = .1f;							// limit to 15fps minimum
 
@@ -548,33 +590,29 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 	if(bOn)
 	{
 		if(!Paused())						
-			bShowPauseString				= 
+			bShowPauseString = 
 #ifdef INGAME_EDITOR
 				editor() ? FALSE : 
-#endif 
-#ifdef DEBUG
-				!xr_strcmp(reason, "li_pause_key_no_clip")?	FALSE:
-#endif
+#endif // #ifdef INGAME_EDITOR
 				TRUE;
 
 		if( bTimer && (!g_pGamePersistent || g_pGamePersistent->CanBePaused()) )
 		{
-			g_pauseMngr.Pause				(TRUE);
-#ifdef DEBUG
-			if(!xr_strcmp(reason, "li_pause_key_no_clip"))
-				TimerGlobal.Pause				(FALSE);
-#endif 
+			g_pauseMngr.Pause(TRUE);
 		}
 	
-		if (bSound && ::Sound) {
+		if (bSound && ::Sound) 
+		{
 			snd_emitters_ =					::Sound->pause_emitters(true);
 		}
-	}else
+	}
+    else
 	{
 		if( bTimer && g_pauseMngr.Paused() )
 		{
 			fTimeDelta						= EPS_S + EPS_S;
 			g_pauseMngr.Pause				(FALSE);
+            Msg("UNPAUSE!");
 		}
 		
 		if(bSound)
@@ -582,13 +620,6 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 			if(snd_emitters_>0) // avoid crash
 			{
 				snd_emitters_ =				::Sound->pause_emitters(false);
-#ifdef DEBUG
-//				Log("snd_emitters_[false]",snd_emitters_);
-#endif // DEBUG
-			}else {
-#ifdef DEBUG
-				Log("Sound->pause_emitters underflow");
-#endif // DEBUG
 			}
 		}
 	}

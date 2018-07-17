@@ -117,7 +117,6 @@ void CWeapon::UpdateSecondVP()
 	bool bCond_1 = m_zoom_params.m_fZoomRotationFactor > 0.05f;    // Мы должны целиться
 	bool bCond_2 = m_zoom_params.m_fSecondVP_FovFactor > 0.0f;     // В конфиге должен быть прописан фактор зума (scope_lense_fov_factor) больше чем 0
 	bool bCond_3 = pActor->cam_Active() == pActor->cam_FirstEye(); // Мы должны быть от 1-го лица
-	//bool bCond_4 = m_bGrenadeMode == false;                        // Мы не должны быть в режиме подствольника
 
 	Device.m_SecondViewport.SetSVPActive(bCond_1 && bCond_2 && bCond_3 /*&& bCond_4*/);
 }
@@ -127,6 +126,7 @@ void CWeapon::UpdateXForm()
 	if (Device.dwFrame == dwXF_Frame)
 		return;
 
+    VERIFY(IsRenderThread());
 	dwXF_Frame = Device.dwFrame;
 
 	if (!H_Parent())
@@ -691,7 +691,9 @@ void CWeapon::OnH_B_Independent(bool just_before_destroy)
 	m_strapped_mode = false;
 	m_strapped_mode_rifle = false;
 	m_zoom_params.m_bIsZoomModeNow = false;
-	UpdateXForm();
+	
+    SheduleUpdateXForm();
+	
 	m_nearwall_last_hud_fov = psHUD_FOV_def;
 }
 
@@ -749,6 +751,11 @@ void CWeapon::SendHiddenItem()
 	}
 }
 
+void CWeapon::UpdateCLRender()
+{
+    UpdateFireDependencies();
+    CInventoryItemObject::UpdateCLRender();
+}
 
 void CWeapon::OnH_B_Chield()
 {

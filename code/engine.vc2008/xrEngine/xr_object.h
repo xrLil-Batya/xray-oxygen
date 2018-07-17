@@ -71,6 +71,7 @@ public:
 	u32									dbg_update_cl;
 	u32									dwFrame_UpdateCL;
 	u32									dwFrame_AsCrow;
+    u32                                 dwFrame_UpdateCLRender;
 
 	// Crow-MODE
     ICF	void							DBGGetProps			(ObjectProperties &p ) const { p = Props; }
@@ -167,6 +168,7 @@ virtual	const IObjectPhysicsCollision	*physics_collision	()					{ return  0; }
 	virtual void						renderable_Render	();
 
 	virtual void						UpdateCL			();									// Called each frame, so no need for dt
+	virtual void						UpdateCLRender		();									// Called each frame, so no need for dt
 	virtual BOOL						net_Spawn			(CSE_Abstract* data);
 	virtual void						net_Destroy			();
 	virtual void						net_Export			(NET_Packet& P) {};					// export to server

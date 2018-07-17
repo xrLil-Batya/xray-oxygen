@@ -97,6 +97,11 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 			if (spatial->spatial.type & STYPE_LIGHTSOURCE)		{
 				// lightsource
 				light*			L				= (light*)	(spatial->dcast_Light());
+                //#GIPERION: Figure out WTF!
+                if (L == nullptr)
+                {
+                    continue;
+                }
 				VERIFY							(L);
 				float	lod		= L->get_LOD	();
 				if (lod>EPS_L)	{
@@ -115,6 +120,11 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 				{
 					// renderable
 					IRenderable*	renderable		= spatial->dcast_Renderable	();
+                    //#GIPERION: Figure out WTF!
+                    if (renderable == nullptr)
+                    {
+                        continue;
+                    }
 					VERIFY							(renderable);
 
 					// Occlusion
@@ -195,6 +205,7 @@ void CRender::render_menu	()
 extern u32 g_r;
 void CRender::Render		()
 {
+    VERIFY(IsRenderThread());
 	PIX_EVENT(CRender_Render);
 
 	g_r						= 1;

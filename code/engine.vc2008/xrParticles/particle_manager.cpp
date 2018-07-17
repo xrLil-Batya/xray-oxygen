@@ -159,6 +159,8 @@ void CParticleManager::Update(int effect_id, int alist_id, float dt)
 	ParticleEffect* pe = GetEffectPtr(effect_id);
 	ParticleActions* pa = GetActionListPtr(alist_id);
 
+    if (!pe || !pa) return;
+
 	VERIFY(pa);
 	VERIFY(pe);
 
@@ -229,8 +231,15 @@ void CParticleManager::SetCallback(int effect_id, OnBirthParticleCB b, OnDeadPar
 void CParticleManager::GetParticles(int effect_id, Particle*& particles, u32& cnt)
 {
 	ParticleEffect *pe = GetEffectPtr(effect_id);
-	particles = pe->particles;
-	cnt = pe->p_count;
+	
+    if (pe == nullptr)
+    {
+        particles = nullptr;
+        cnt = 0;
+        return;
+    }
+    particles		= pe->particles;
+    cnt				= pe->p_count;
 }
 u32	CParticleManager::GetParticlesCount(int effect_id)
 {
@@ -341,24 +350,31 @@ ParticleAction* CParticleManager::CreateAction(PActionEnum type)
 	pa->type = type;
 	return pa;
 }
+
 u32 CParticleManager::LoadActions(int alist_id, IReader& R)
 {
 	// Execute the specified action list.
 	ParticleActions* pa = GetActionListPtr(alist_id);
 	VERIFY(pa);
-	pa->clear();
-	if (R.length())
+	
+    pa->lock();
+    pa->clear();
+    if (R.length())
 	{
-		u32 cnt = R.r_u32();
-		for (u32 k = 0; k < cnt; ++k)
+        u32 cnt = R.r_u32();
+        for (u32 k=0; k<cnt; k++)
 		{
-			ParticleAction* act = CreateAction((PActionEnum)R.r_u32());
-			act->Load(R);
-			pa->append(act);
-		}
-	}
-	return pa->size();
+            ParticleAction* act	= CreateAction((PActionEnum)R.r_u32());
+            act->Load(R);
+            pa->append(act);
+        }
+    }
+
+    int RetSize = pa->size();
+    pa->unlock();
+    return RetSize;
 }
+
 void CParticleManager::SaveActions(int alist_id, IWriter& W)
 {
 	// Execute the specified action list.

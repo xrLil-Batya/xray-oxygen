@@ -4,15 +4,9 @@
 // ZNear - always 0.0f
 // ZFar  - always 1.0f
 
-//class	ENGINE_API	CResourceManager;
-//class	ENGINE_API	CGammaControl;
-
 #include "pure.h"
-//#include "hw.h"
 #include "../xrcore/ftimer.h"
 #include "stats.h"
-//#include "shader.h"
-//#include "R_Backend.h"
 
 #define VIEWPORT_NEAR  0.05f
 
@@ -27,6 +21,7 @@
 
 //Thread Id's
 extern DWORD gMainThreadId;
+extern DWORD gRenderThreadId;
 extern DWORD gSecondaryThreadId;
 
 ENGINE_API bool IsMainThread();
@@ -42,6 +37,8 @@ enum WindowPropStyle
     WPS_Fullscreen = 3,
     WPS_FullscreenBorderless = 4
 };
+
+ENGINE_API bool IsRenderThread();
 
 class engine_impl;
 
@@ -109,7 +106,8 @@ public:
 	CRegistrator	<pureAppStart		>			seqAppStart;
 	CRegistrator	<pureAppEnd			>			seqAppEnd;
 	CRegistrator	<pureFrame			>			seqFrame;
-	CRegistrator	<pureScreenResolutionChanged>	seqResolutionChanged;
+    CRegistrator	<pureScreenResolutionChanged>	seqResolutionChanged;
+    CRegistrator	<pureSinglethreaded >	        seqSinglethreaded;
 
 	HWND									m_hWnd;
 //	CStats*									Statistic;
@@ -263,7 +261,11 @@ public:
 	// Multi-threading
 	std::recursive_mutex	mt_csEnter;
 	std::recursive_mutex	mt_csLeave;
-	volatile BOOL		mt_bMustExit;
+
+    std::recursive_mutex	cs_RenderEnter;
+    std::recursive_mutex	cs_RenderLeave;
+    volatile BOOL		mt_bMustExit;
+    volatile BOOL		mt_bRenderMustExit;
 
 	ICF		void			remove_from_seq_parallel	(const fastdelegate::FastDelegate0<> &delegate)
 	{

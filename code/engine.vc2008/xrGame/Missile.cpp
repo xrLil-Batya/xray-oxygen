@@ -152,6 +152,7 @@ void CMissile::OnH_A_Chield()
 
 void CMissile::OnH_B_Independent(bool just_before_destroy) 
 {
+    SheduleUpdateXForm();
 	inherited::OnH_B_Independent(just_before_destroy);
 
 	if (!just_before_destroy) 
@@ -339,6 +340,7 @@ void CMissile::UpdateXForm	()
 {
 	if (Device.dwFrame!=dwXF_Frame)
 	{
+        VERIFY(IsRenderThread());
 		dwXF_Frame			= Device.dwFrame;
 
 		if (0==H_Parent())	return;

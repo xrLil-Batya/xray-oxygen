@@ -712,20 +712,17 @@ void CActor::UpdateCL	()
 		m_holder->UpdateEx( currentFOV() );
 
 	m_snd_noise -= 0.3f*Device.fTimeDelta;
-
-	inherited::UpdateCL				();
-	m_pPhysics_support->in_UpdateCL	();
+	
+	inherited::UpdateCL();
 
 	if (g_Alive() && m_bPickupMode)
-		PickupModeUpdate	();	
+		PickupModeUpdate();	
 
     // If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
 	PickupModeUpdate_COD(m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
 
 	SetZoomAimingMode		(false);
 	CWeapon* pWeapon		= smart_cast<CWeapon*>(inventory().ActiveItem());	
-
-	cam_Update(float(Device.dwTimeDelta)/1000.0f, currentFOV());
 
 	if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
 	{
@@ -864,6 +861,12 @@ void CActor::UpdateCL	()
 	
 	if(IsFocused())
 		g_player_hud->update			(trans);
+}
+
+void CActor::UpdateCLRender()
+{
+    m_pPhysics_support->in_UpdateCL();
+    cam_Update(float(Device.dwTimeDelta) / 1000.0f, currentFOV());
 }
 
 float	NET_Jump = 0;
