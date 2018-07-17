@@ -302,6 +302,12 @@ void CRenderDevice::on_idle		()
 		Sleep		(1);
 }
 
+void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
+{
+	if(g_bL)
+		m_pRender->ResizeWindowProc(height, width);
+}
+
 #ifdef INGAME_EDITOR
 void CRenderDevice::message_loop_editor	()
 {

@@ -275,6 +275,7 @@ protected:
 	bool						TryUseItem					(CUICellItem* cell_itm);
 	bool						ToQuickSlot					(CUICellItem* itm);
 
+	void						UpdateActorMP				();
 	void						UpdateOutfit				();
 	void						MoveArtefactsToBag			();
 	bool						TryActiveSlot				(CUICellItem* itm);

@@ -270,6 +270,31 @@ D3DFORMAT CHW::selectDepthStencil	(D3DFORMAT fTarget)
 	return D3DFMT_D24S8;
 }
 
+void CHW::ResizeWindowProc(WORD h, WORD w)
+{
+#if 0
+	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
+	///////////////////////////////////////
+	if (bWindowed)
+	{
+		DXGI_SWAP_CHAIN_DESC &cd			= m_ChainDesc;
+		DXGI_MODE_DESC	&desc				= m_ChainDesc.BufferDesc;
+		HRESULT R;
+		///////////////////////////////////////
+		memset								(&cd,	0, sizeof(DXGI_SWAP_CHAIN_DESC));	// sc to NULL
+		memset								(&desc, 0, sizeof(DXGI_MODE_DESC));
+		///////////////////////////////////////
+		desc.Width							= w;
+		desc.Height							= h;
+		desc.RefreshRate.Numerator			= 60;
+		desc.RefreshRate.Denominator		= 1;
+		m_pSwapChain->SetFullscreenState	(FALSE, 0);
+		CHK_DX						(m_pSwapChain->ResizeTarget(&desc));
+	}
+#endif
+}
+
+
 void CHW::selectResolution( u32 &dwWidth, u32 &dwHeight, BOOL bWindowed )
 {
 	fill_vid_mode_list			(this);
