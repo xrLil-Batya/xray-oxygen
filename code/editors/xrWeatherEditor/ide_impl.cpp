@@ -69,12 +69,12 @@ bool ide_impl::idle				() const
 
 HWND ide_impl::main_handle		()
 {
-	return				((HWND)m_window->Handle.ToInt32());
+	return				((HWND)m_window->Handle.ToInt64());
 }
 
 HWND ide_impl::view_handle		()
 {
-	return				((HWND)m_window->view().draw_handle().ToInt32());
+	return				((HWND)m_window->view().draw_handle().ToInt64());
 }
 
 void ide_impl::run				()

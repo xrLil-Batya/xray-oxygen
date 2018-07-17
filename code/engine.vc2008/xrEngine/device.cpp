@@ -453,7 +453,9 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         break;
     }
 
-    SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle);
+	if(!strstr(Core.Params, "-editor"))
+		SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle);
+
     bool bNewFullscreen = psDeviceFlags.is(rsFullscreen);
 
     if (!bNewFullscreen)

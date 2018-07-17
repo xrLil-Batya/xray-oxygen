@@ -252,8 +252,10 @@ void CEnvironment::ChangeGameTime(float game_time)
 void CEnvironment::SetGameTime(float game_time, float time_factor)
 {
 #ifndef _EDITOR
-	if (m_paused) {
-		g_pGameLevel->SetEnvironmentGameTimeFactor	(iFloor(fGameTime*1000.f), fTimeFactor);
+	if (m_paused) 
+	{
+		if(g_pGameLevel)
+			g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(fGameTime*1000.f), fTimeFactor);
 		return;
 	}
 #endif
@@ -272,31 +274,34 @@ float CEnvironment::NormalizeTime(float tm)
 
 void CEnvironment::SetWeather(shared_str name, bool forced)
 {
-//.	static BOOL bAlready = FALSE;
-//.	if(bAlready)	return;
-	if (name.size())	{
-//.		bAlready = TRUE;
-        auto it		= WeatherCycles.find(name);
+	if (name.size())	
+	{
+        auto it	= WeatherCycles.find(name);
 		if (it == WeatherCycles.end())
 		{
 			Msg("! Invalid weather name: %s", name.c_str());
 			return;
 		}
-        R_ASSERT3			(it!=WeatherCycles.end(),"Invalid weather name.",*name);
-		CurrentCycleName	= it->first;
-		if (forced)			{Invalidate();			}
-		if (!bWFX){
+        R_ASSERT3(it!=WeatherCycles.end(),"Invalid weather name.",*name);
+		CurrentCycleName = it->first;
+		if (forced)		
+		{
+			Invalidate();			
+		}
+
+		if (!bWFX)
+		{
 			CurrentWeather		= &it->second;
 			CurrentWeatherName	= it->first;
 		}
-		if (forced)			{SelectEnvs(fGameTime);	}
-#ifdef WEATHER_LOGGING
-		Msg					("Starting Cycle: %s [%s]",*name,forced?"forced":"deferred");
-#endif
-    }else{
-#ifndef _EDITOR
+		if (forced)			
+		{
+			SelectEnvs(fGameTime);	
+	}
+    }
+	else
+	{
 		FATAL				("! Empty weather name");
-#endif
     }
 }
 
