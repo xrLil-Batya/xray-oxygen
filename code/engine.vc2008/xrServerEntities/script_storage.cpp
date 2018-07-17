@@ -124,27 +124,27 @@ void CScriptStorage::dump_state()
 	reentrantGuard = false;
 }
 
-void CScriptStorage::LogTable(lua_State *l, LPCSTR S, int level)
+void CScriptStorage::LogTable(lua_State *l, const char* S, int level, int index /*= -1*/)
 {
-	if (!lua_istable(l, -1))
+	if (!lua_istable(l, index))
 		return;
 
 	lua_pushnil(l);  /* first key */
-	while (lua_next(l, -2) != 0) {
+	while (lua_next(l, index - 1) != 0) {
 		char sname[256];
 		char sFullName[256];
-		xr_sprintf(sname, "%s", lua_tostring(l, -2));
+		xr_sprintf(sname, "%s", lua_tostring(l, index - 1));
 		xr_sprintf(sFullName, "%s.%s", S, sname);
-		LogVariable(l, sFullName, level + 1, false);
+		LogVariable(l, sFullName, level + 1, false, index);
 
 		lua_pop(l, 1);  /* removes `value'; keeps `key' for next iteration */
 	}
 }
 
-void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable)
+void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, bool bOpenTable, int index /*= -1*/)
 {
 	const char * type;
-	int ntype = lua_type(l, -1);
+	int ntype = lua_type(l, index);
 	type = lua_typename(l, ntype);
 
 	char tabBuffer[32] = { 0 };
@@ -155,22 +155,22 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 	switch (ntype)
 	{
 	case LUA_TNUMBER:
-		xr_sprintf(value, "%f", lua_tonumber(l, -1));
+		xr_sprintf(value, "%f", lua_tonumber(l, index));
 		break;
 
 	case LUA_TBOOLEAN:
-		xr_sprintf(value, "%s", lua_toboolean(l, -1) ? "true" : "false");
+		xr_sprintf(value, "%s", lua_toboolean(l, index) ? "true" : "false");
 		break;
 
 	case LUA_TSTRING:
-		xr_sprintf(value, "%.127s", lua_tostring(l, -1));
+		xr_sprintf(value, "%.127s", lua_tostring(l, index));
 		break;
 
 	case LUA_TTABLE:
 		if (bOpenTable)
 		{
 			Msg("%s Table: %s", tabBuffer, name);
-			LogTable(l, name, level + 1);
+			LogTable(l, name, level + 1, index);
 			return;
 		}
 		else
@@ -181,7 +181,7 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 
 	case LUA_TUSERDATA: 
 	{
-		luabind::detail::object_rep* obj = static_cast<luabind::detail::object_rep*>(lua_touserdata(l, -1));
+		luabind::detail::object_rep* obj = static_cast<luabind::detail::object_rep*>(lua_touserdata(l, index));
 
         // Skip already dumped object
         if (m_dumpedObjList.find(obj) != m_dumpedObjList.end()) return;
@@ -191,13 +191,21 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 		{
 			r.get(l);
 			Msg("%s Userdata: %s", tabBuffer, name);
-			LogTable(l, name, level + 1);
+			LogTable(l, name, level + 1, index);
 			lua_pop(l, 1); //Remove userobject
 			return;
 		}
 		else
 		{
-			xr_strcpy(value, "[not available]");
+            // Dump class and element pointer if available
+            if (const luabind::detail::class_rep* objectClass = obj->crep())
+            {
+                xr_sprintf(value, "(%s): %p", objectClass->name(), obj->ptr());
+            }
+            else
+            {
+			    xr_strcpy(value, "[not available]");
+            }
 		}
 	}
 		break;
@@ -208,6 +216,11 @@ void CScriptStorage::LogVariable(lua_State * l, const char* name, int level, boo
 	}
 
 	Msg("%s %s %s : %s", tabBuffer, type, name, value);
+}
+
+void CScriptStorage::ClearDumpedObjects()
+{
+    m_dumpedObjList.clear();
 }
 
 int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
