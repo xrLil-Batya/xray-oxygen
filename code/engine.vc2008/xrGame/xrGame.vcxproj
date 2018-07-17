@@ -1674,7 +1674,6 @@
     <ClCompile Include="ClimableObject.cpp" />
     <ClCompile Include="c_artefact.cpp" />
     <ClCompile Include="damage_manager.cpp" />
-    <ClCompile Include="death_anims_predicates.cpp" />
     <ClCompile Include="DestroyablePhysicsObject.cpp" />
     <ClCompile Include="Dosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

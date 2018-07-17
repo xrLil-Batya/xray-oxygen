@@ -44,7 +44,7 @@ public:
 	virtual				~type_motion();
 	type_motion	*setup(IKinematicsAnimated* k, CInifile * ini, LPCSTR section, LPCSTR type);
 	MotionID	motion(edirection dr)	const;
-	virtual	bool		predicate(CEntityAlive& ea, const SHit& H, MotionID &m, float &angle) const = 0;
+	virtual	bool		predicate(CObject& ea, const SHit& H, MotionID &m, float &angle) const = 0;
 private:
 	void set_motion(IKinematicsAnimated* k, u16 motion_id, LPCSTR dir_anim);
 	void clear();
@@ -61,7 +61,7 @@ public:
 	~death_anims();
 	void setup(IKinematicsAnimated* k, LPCSTR section, CInifile* ini);
 	void clear();
-	MotionID motion(CEntityAlive& ea, const SHit& H, float& angle)	const;
+	MotionID motion(CObject& ea, const SHit& H, float& angle)	const;
 
 private:
 	static const u16		types_number = 7;

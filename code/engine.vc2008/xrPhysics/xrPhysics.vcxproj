@@ -323,11 +323,13 @@
     <ClInclude Include="CaptureBoneCallback.h" />
     <ClInclude Include="DamagableItem.h" />
     <ClInclude Include="death_anims.h" />
+    <ClInclude Include="ICharacterPhysicsSupport.h" />
     <ClInclude Include="ik_anim_state.h" />
     <ClInclude Include="ik_calculate_state.h" />
     <ClInclude Include="ik_collide_data.h" />
     <ClInclude Include="ik_object_shift.h" />
     <ClInclude Include="interactive_animation.h" />
+    <ClInclude Include="IPhysicalWeaponObject.h" />
     <ClInclude Include="PhysicsGamePars.h" />
     <ClInclude Include="physics_element_scripted.h" />
     <ClInclude Include="physics_joint_scripted.h" />

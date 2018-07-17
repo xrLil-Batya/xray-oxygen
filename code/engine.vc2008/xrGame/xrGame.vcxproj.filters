@@ -8347,9 +8347,6 @@
     <ClCompile Include="PHDebug.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="death_anims_predicates.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
     <ClCompile Include="animation_script_callback.cpp">
       <Filter>AI</Filter>
     </ClCompile>

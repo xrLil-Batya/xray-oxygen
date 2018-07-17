@@ -1,6 +1,6 @@
 #pragma once
-
-#include "../xrphysics/PhysicsShell.h"
+#include "../xrPhysics/IPhysicalWeaponObject.h"
+#include "../xrPhysics/PhysicsShell.h"
 #include "weaponammo.h"
 #include "PHShellCreator.h"
 
@@ -24,10 +24,8 @@ class CParticlesObject;
 class CUIWindow;
 class CBinocularsVision;
 class CNightVisionEffector;
-class Magazine;
 
-class CWeapon : public CHudItemObject,
-				public CShootingObject
+class CWeapon : public CHudItemObject, public CShootingObject, public IWeaponObject
 {
 private:
 	typedef CHudItemObject inherited;
@@ -66,7 +64,7 @@ public:
 	virtual void			OnH_A_Chield		();
 	virtual void			OnH_B_Independent	(bool just_before_destroy);
 	virtual void			OnH_A_Independent	();
-	virtual void			OnEvent				(NET_Packet& P, u16 type);// {inherited::OnEvent(P,type);}
+	virtual void			OnEvent				(NET_Packet& P, u16 type);
 
 	virtual	void			Hit					(SHit* pHDS);
 
@@ -138,7 +136,7 @@ protected:
 	virtual bool			AllowBore		();
 public:
 			bool IsGrenadeLauncherAttached	() const;
-			bool IsScopeAttached			() const;
+	virtual bool IsScopeAttached			() const;
 			bool IsSilencerAttached			() const;
 
 	virtual bool GrenadeLauncherAttachable();
@@ -239,7 +237,7 @@ public:
 	virtual	void			ZoomDec				();
 	virtual void			OnZoomIn			();
 	virtual void			OnZoomOut			();
-	IC		bool			IsZoomed			()	const		{return m_zoom_params.m_bIsZoomModeNow;};
+	virtual	bool			IsZoomed			()	const		{return m_zoom_params.m_bIsZoomModeNow;};
 	CUIWindow*				ZoomTexture			();	
 
 

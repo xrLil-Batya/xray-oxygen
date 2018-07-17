@@ -369,7 +369,9 @@
     <ClCompile Include="PhysicsGamePars.cpp">
       <Filter>Client</Filter>
     </ClCompile>
-    <ClCompile Include="ActorCameraCollision.cpp" />
+    <ClCompile Include="ActorCameraCollision.cpp">
+      <Filter>Client</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h">
@@ -693,6 +695,14 @@
     <ClInclude Include="PhysicsGamePars.h">
       <Filter>Client</Filter>
     </ClInclude>
-    <ClInclude Include="ActorCameraCollision.h" />
+    <ClInclude Include="ICharacterPhysicsSupport.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="IPhysicalWeaponObject.h">
+      <Filter>physics</Filter>
+    </ClInclude>
+    <ClInclude Include="ActorCameraCollision.h">
+      <Filter>Client</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

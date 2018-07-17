@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../xrCDB/ispatial.h"
 #include "isheduled.h"
 #include "irenderable.h"
@@ -13,7 +12,7 @@ class	ENGINE_API	IRender_ObjectSpecific;
 class	ENGINE_API	CCustomHUD;
 class	NET_Packet	;
 class	CSE_Abstract;
-
+class   ICharacterPhysicsSupport;
 //-----------------------------------------------------------------------------------------------------------
 #define CROW_RADIUS		(30.f)
 #define CROW_RADIUS2	(60.f)
@@ -126,8 +125,8 @@ public:
 	virtual		IRenderable*			dcast_Renderable	()					{ return this;						}
 	virtual void						OnChangeVisual		()					{ }
 	virtual		IPhysicsShell			*physics_shell		()					{ return  0; }
-
-virtual	const IObjectPhysicsCollision	*physics_collision	()					{ return  0; }
+	virtual	ICharacterPhysicsSupport*	character_physics_support()				{ return nullptr; }
+	virtual	const IObjectPhysicsCollision	*physics_collision	()					{ return  0; }
 	// Name management
 	ICF shared_str						cName				()			const	{ return NameObject;				}
 	void								cName_set			(shared_str N);
