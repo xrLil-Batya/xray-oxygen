@@ -146,11 +146,9 @@ void CRenderDevice::End		(void)
 		if (load_finished && m_editor)
 			m_editor->on_load_finished();
 #	endif // #ifdef INGAME_EDITOR
-#	endif
 }
 
 
-volatile u32	mt_Thread_marker		= 0x12345678;
 volatile u32 mt_Thread_marker = 0x12345678;
 void mt_Thread(void *ptr)	
 {
@@ -159,15 +157,17 @@ void mt_Thread(void *ptr)
 	while (true) 
 	{
 		// waiting for Device permission to execute
-		Device.mt_csEnter.lock	();
+		Device.mt_csEnter.lock();
 
-		if (Device.mt_bMustExit) {
-			Device.mt_bMustExit = FALSE;				// Important!!!
-			Device.mt_csEnter.unlock();					// Important!!!
+		if (Device.mt_bMustExit) 
+		{
+			// Important!!!
+			Device.mt_bMustExit = FALSE; 
+			Device.mt_csEnter.unlock();
 			return;
 		}
 		// we has granted permission to execute
-		mt_Thread_marker			= Device.dwFrame;
+		mt_Thread_marker = Device.dwFrame;
  
 		for (u32 pit=0; pit<Device.seqParallel.size(); pit++)
 			Device.seqParallel[pit]();
@@ -177,9 +177,6 @@ void mt_Thread(void *ptr)
 		// now we give control to device - signals that we are ended our work
 		Device.mt_csEnter.unlock();
 		// waits for device signal to continue - to start again
-		Device.mt_csLeave.lock();
-		// returns sync signal to device
-		Device.mt_csLeave.unlock();
 	}
 }
 
@@ -190,12 +187,16 @@ void mt_render(void* ptr)
     {
         Device.cs_RenderEnter.lock();
 
-        if (Device.mt_bRenderMustExit) {
-            Device.cs_RenderEnter.unlock();					// Important!!!
+        if (Device.mt_bRenderMustExit) 
+		{
+			// Important!!!
+            Device.cs_RenderEnter.unlock();
             return;
         }
-        if (Device.b_is_Active) {
-            if (Device.Begin()) {
+        if (Device.b_is_Active) 
+		{
+            if (Device.Begin()) 
+			{
                 //Calculate camera matrices
                 // Precache
                 if (Device.dwPrecacheFrame)
@@ -231,10 +232,6 @@ void mt_render(void* ptr)
             }
         }
         Device.cs_RenderEnter.unlock();
-
-        Device.cs_RenderLeave.lock();
-        // returns sync signal to device
-        Device.cs_RenderLeave.unlock();
     }
 }
 
