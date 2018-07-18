@@ -1,7 +1,6 @@
 #pragma once
 
 #include "game_base.h"
-#include "alife_space.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrCore/client_id.h"
 #include "alife_simulator.h"

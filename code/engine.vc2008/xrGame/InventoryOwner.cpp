@@ -11,7 +11,7 @@
 #include "script_engine.h"
 #include "AI_PhraseDialogManager.h"
 #include "level.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "PhraseDialog.h"
 #include "xrserver.h"
 #include "xrServer_Objects_ALife_Monsters.h"

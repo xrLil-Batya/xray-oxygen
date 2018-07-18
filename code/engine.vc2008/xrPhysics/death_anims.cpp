@@ -7,7 +7,9 @@
 #include "ICharacterPhysicsSupport.h"
 #include "../Include/xrRender/KinematicsAnimated.h"
 #include "../Include/xrRender/Kinematics.h"
-#include "../xrGame/Hit.h"
+
+#define THROW(a)
+#include "../xrGame/CharacterPhysicsSupport.h"
 
 BOOL death_anim_debug = FALSE;
 
@@ -212,7 +214,7 @@ class	type_motion0 : public type_motion
 		if (!is_bone_head(*K, H.bone()))
 			return false;
 
-		ICharacterPhysicsSupport* chs = pEntity.character_physics_support();
+		CCharacterPhysicsSupport* chs = pEntity.character_physics_support();
 		if (!chs || chs->Type() == ICharacterPhysicsSupport::etBitting)
 			return false;
 

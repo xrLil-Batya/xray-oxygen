@@ -1341,7 +1341,6 @@
     <ClInclude Include="entity_alive_inline.h" />
     <ClInclude Include="EntityCondition.h" />
     <ClInclude Include="hit_immunity.h" />
-    <ClInclude Include="hit_immunity_space.h" />
     <ClInclude Include="Wound.h" />
     <ClInclude Include="game_object_space.h" />
     <ClInclude Include="GameObject.h" />
@@ -1527,7 +1526,6 @@
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="..\xrServerEntities\game_base_space.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="xr_time.h" />

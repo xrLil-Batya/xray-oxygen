@@ -10,14 +10,14 @@ public:
 	virtual bool	IsScopeAttached	() const = 0;
 };
 
-class IWeaponShotgun : public IWeaponObject
+class IWeaponShotgun
 {
 public:
-	virtual ~IWeaponShotgun()= default;
+	virtual ~IWeaponShotgun() = default;
 };
 
 class IExplosive
 {
 public:
-	virtual ~IExplosive();
+	virtual ~IExplosive() = default;
 };

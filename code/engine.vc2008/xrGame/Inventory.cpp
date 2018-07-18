@@ -15,7 +15,7 @@
 #include "level.h"
 #include "ai_space.h"
 #include "entitycondition.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "UIGame.h"
 #include "clsid_game.h"
 #include "ai/stalker/ai_stalker.h"

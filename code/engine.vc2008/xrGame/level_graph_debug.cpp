@@ -11,7 +11,7 @@
 #ifndef AI_COMPILER
 #include "level_graph.h"
 #include "level.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "xrserver_objects_alife_monsters.h"
 #include "alife_simulator.h"
 #include "alife_graph_registry.h"

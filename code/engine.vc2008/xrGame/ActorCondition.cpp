@@ -5,7 +5,7 @@
 #include "inventory.h"
 #include "level.h"
 #include "sleepeffector.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "xrserver.h"
 #include "ai_space.h"
 #include "script_callback_ex.h"

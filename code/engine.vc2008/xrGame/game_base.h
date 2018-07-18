@@ -1,7 +1,6 @@
 #pragma once
-#include "game_base_space.h"
-#include "alife_space.h"
-#include "gametype_chooser.h"
+#include "../xrServerEntities/alife_space.h"
+#include "../xrServerEntities/gametype_chooser.h"
 #pragma pack(push,1)
 class NET_Packet;
 
@@ -54,4 +53,11 @@ public:
 	virtual		float				GetEnvironmentGameTimeFactor		();
 	virtual		void				SetEnvironmentGameTimeFactor		(u64 GameTime, const float fTimeFactor);
 	virtual		void				SetEnvironmentGameTimeFactor		(const float fTimeFactor);
+};
+
+enum EGamePhases
+{
+	GAME_PHASE_NONE = 0,
+	GAME_PHASE_INPROGRESS,
+	GAME_PHASE_FORCEDWORD = u32(-1)
 };

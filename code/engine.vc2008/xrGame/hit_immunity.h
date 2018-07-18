@@ -1,11 +1,13 @@
 // hit_immunity.h: класс для тех объектов, которые поддерживают
 //				   коэффициенты иммунитета для разных типов хитов
 //////////////////////////////////////////////////////////////////////
-
 #pragma once
+#include "../xrServerEntities/alife_space.h"
 
-#include "alife_space.h"
-#include "hit_immunity_space.h"
+namespace HitImmunity
+{
+	using HitTypeSVec = svector<float, ALife::eHitTypeMax>;
+};
 
 class CHitImmunity
 {

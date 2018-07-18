@@ -305,7 +305,7 @@ void CStats::Show()
         pFont->Out(10, 10, FPSFormat, fLastDisplayedFPS);
         pFont->SetHeight(sz);
 		pFont->OnRender					();
-	};
+	}
 
 	if (psDeviceFlags.test(rsHWInfo))
 	{
@@ -320,17 +320,17 @@ void CStats::Show()
 		    mem.dwLength = sizeof(MEMORYSTATUSEX);
 		    GlobalMemoryStatusEx((&mem));
 	
-		    AvailableMem = (DOUBLE)mem.ullAvailPhys;	// how much phys mem available
+		    AvailableMem = (float)mem.ullAvailPhys;	// how much phys mem available
 		    AvailableMem /= (1024 * 1024);	
-		    AvailablePageFileMem = (DOUBLE)mem.ullAvailPageFile;	// how much pagefile mem available
+		    AvailablePageFileMem = (float)mem.ullAvailPageFile;	// how much pagefile mem available
 		    AvailablePageFileMem /= (1024 * 1024);
 
 		    // Getting info by request
 		    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(PROCESS_MEMORY_COUNTERS_EX));
 		    GetSystemInfo(&sysInfo);
 	
-			PhysMemoryUsedPercent = (FLOAT)mem.dwMemoryLoad;
-			PageFileMemUsedByApp = (FLOAT)pmc.PagefileUsage;
+			PhysMemoryUsedPercent = (float)mem.dwMemoryLoad;
+			PageFileMemUsedByApp = (float)pmc.PagefileUsage;
 		    PageFileMemUsedByApp /= (1024 * 1024);
 
 		    // Counting CPU load
