@@ -74,7 +74,15 @@ CScriptStorage::~CScriptStorage()
 
 void CScriptStorage::reinit()
 {
-    xr_delete(luaVM);
+	try
+	{
+		xr_delete(luaVM);
+	}
+	catch (...)
+	{
+		Msg("[ERROR] Error lua vm closed...");
+	}
+
     luaVM = xr_new<CVMLua>();
 
 	if (strstr(Core.Params, "-_g"))
