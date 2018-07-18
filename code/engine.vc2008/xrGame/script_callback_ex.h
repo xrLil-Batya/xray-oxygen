@@ -117,12 +117,12 @@ public:
                 ai().script_engine().print_output(ai().script_engine().lua(), "", 2);
             }
         }
-#if XRAY_EXCEPTIONS
-        catch (luabind::error& e) 
-		{
-                ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
-        }
-#endif
+// #if XRAY_EXCEPTIONS
+//         catch (luabind::error& e) 
+// 		{
+//                 ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
+//         }
+// #endif
         catch (...) {
             const_cast<CScriptCallbackEx<return_type>*>(this)->clear();
         }
@@ -145,12 +145,12 @@ public:
                 ai().script_engine().print_output(ai().script_engine().lua(), "", 2);
             }
         }
-#if XRAY_EXCEPTIONS
-        catch (luabind::error& e) 
-		{
-                ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
-        }
-#endif
+// #if XRAY_EXCEPTIONS
+//         catch (luabind::error& e) 
+// 		{
+//                 ai().script_engine().print_output((e.state()) ? e.state() : ai().script_engine().lua(), "", LUA_ERRRUN);
+//         }
+// #endif
         catch (...) {
             const_cast<CScriptCallbackEx<return_type>*>(this)->clear();
         }

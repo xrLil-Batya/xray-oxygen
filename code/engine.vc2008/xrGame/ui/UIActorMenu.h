@@ -106,9 +106,7 @@ protected:
 	CUIDragDropListEx*			m_pTradePartnerList;
 	CUIDragDropListEx*			m_pDeadBodyBagList;
 	CUIDragDropListEx*			m_pTrashList;
-#ifdef ACTOR_RUCK
 	CUIDragDropListEx*			m_pInventoryRuckList;
-#endif
 	enum						{e_af_count = 5};
 	CUIStatic*					m_belt_list_over[e_af_count];
 	CUIStatic*					m_HelmetOver;
@@ -117,9 +115,7 @@ protected:
 	CUIStatic*					m_InvSlot3Highlight;
 	CUIStatic*					m_HelmetSlotHighlight;
 	CUIStatic*					m_OutfitSlotHighlight;
-#ifdef ACTOR_RUCK
 	CUIStatic*					m_RuckSlotHighlight;
-#endif
 
     CUIStatic*                  m_KnifeSlotHighlight;
     CUIStatic*                  m_BinocularSlotHighlight;

@@ -1439,7 +1439,7 @@ void CPHShell::SetIgnoreRagDoll()
 }
 
 //Делает данный физический объек анимированным 
-void CPHShell::CreateShellAnimator(CInifile const * ini, LPCSTR section)
+void CPHShell::CreateShellAnimator(CInifile* ini, LPCSTR section)
 {
 	//Для фильтра коллизий относим данный объект к классу анимированных
 	CPHCollideValidator::SetAnimatedClass(*this);

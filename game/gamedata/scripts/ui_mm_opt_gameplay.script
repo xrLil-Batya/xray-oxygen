@@ -77,7 +77,10 @@ function opt_gameplay:InitControls(x, y, xml, handler)
 	_st = xml:InitStatic("tab_gameplay:templ_item", nil)
 	xml:InitStatic("tab_gameplay:cap_show_date",   _st)				
 	xml:InitCheck("tab_gameplay:check_show_date",	_st)			--show date
+	xml:InitStatic("tab_gameplay:cap_loadingscreen_custom",		_st)
+	xml:InitCheck("tab_gameplay:check_loadingscreen_custom",	_st)--Loading Screen V.2
 	self.scroll_g:AddWindow(_st, true)
+	
 	
 
 end

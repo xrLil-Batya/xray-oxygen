@@ -22,8 +22,12 @@ u32 ps_r_sunshafts_mode = 0;
 xr_token sunshafts_mode_token[] = 
 {
     { "volumetric",		SS_VOLUMETRIC	},
-    { "screen_space",	SS_SCREEN_SPACE },
-    { "manowar_ssss",	SS_MANOWAR_SS	},
+	{ "screen_space",	SS_SCREEN_SPACE },
+#if defined(USE_DX10) || defined(USE_DX11)
+	//#TODO: Refactor all render and make mrmnwar rays
+#else
+	{ "manowar_ssss",	SS_MANOWAR_SS },
+#endif
     { 0,				0 }
 };
 
@@ -241,7 +245,7 @@ xr_token qmsaa_token[] =
 	{ "st_opt_off",		0	},
 	{ "2x",				1	},
 	{ "4x",				2	},
-//	{ "8x",				3	},
+	{ "8x",				3	},
 	{ 0,				0	}
 };
 

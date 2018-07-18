@@ -59,7 +59,6 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 	m_pPartnerInvOwner	= io;
 	if (m_pPartnerInvOwner)
 	{
-#ifdef MONSTER_INV
 		CBaseMonster* monster = smart_cast<CBaseMonster*>(m_pPartnerInvOwner);
 		if (monster || m_pPartnerInvOwner->use_simplified_visual())
 		{
@@ -72,12 +71,6 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 		}
 		else
 			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
-#else
-		if (m_pPartnerInvOwner->use_simplified_visual())
-			m_PartnerCharacterInfo->ClearInfo();
-		else
-			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
-#endif
 		SetInvBox(nullptr);
 	}
 	else m_PartnerCharacterInfo->ClearInfo();
@@ -113,6 +106,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		default: R_ASSERT(0); break;
 		}
 
+        //Hide zone map, show this in ResetMode()
 		GameUI()->UIMainIngameWnd->ShowZoneMap(false);
 
 		m_currMenuMode = mode;
@@ -254,9 +248,7 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 	if (l == m_pInventoryOutfitList)		return iActorSlot;
 	if (l == m_pInventoryHelmetList)		return iActorSlot;
 	if (l == m_pInventoryDetectorList)		return iActorSlot;
-#ifdef ACTOR_RUCK
 	if (l == m_pInventoryRuckList)			return iActorSlot;
-#endif
 
     if (l == m_pInventoryKnifeList)         return iActorSlot;
     if (l == m_pInventoryBinocularList)     return iActorSlot;
@@ -280,9 +272,9 @@ CUIDragDropListEx* CUIActorMenu::GetListByType(EDDListType t)
 	switch (t)
 	{
 	case iActorBag: return (m_currMenuMode == mmTrade) ? m_pTradeActorBagList : m_pInventoryBagList; break;
-	case iDeadBodyBag: return m_pDeadBodyBagList; break;
-	case iActorBelt: return m_pInventoryBeltList; break;
-	default: R_ASSERT("invalid call"); break;
+	case iDeadBodyBag: return m_pDeadBodyBagList;
+    case iActorBelt: return m_pInventoryBeltList;
+	default: R_ASSERT("invalid call"); return m_pDeadBodyBagList;
 	}
 }
 
@@ -399,9 +391,11 @@ void CUIActorMenu::clear_highlight_lists()
 	m_HelmetSlotHighlight->Show(false);
 	m_OutfitSlotHighlight->Show(false);
 	m_DetectorSlotHighlight->Show(false);
-#ifdef ACTOR_RUCK
-	m_RuckSlotHighlight->Show(false);
-#endif
+
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_RuckSlotHighlight->Show(false);
+    }
 
     m_KnifeSlotHighlight->Show(false);
     m_BinocularSlotHighlight->Show(false);
@@ -499,18 +493,20 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 			m_QuickSlotsHighlight[i]->Show(true);
 		return;
 	}
+
 	if(artefact)
 	{
 		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iActorBelt)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-#ifdef VERTICAL_BELT
-		for (u8 i = 0; i<cap.y; i++)
-#else
-		for (u8 i = 0; i < cap.x; i++)
-#endif
-			m_ArtefactSlotsHighlight[i]->Show(true);
+        for (u8 i = 0; i < cap.y; i++)
+        {
+            for (u8 i = 0; i < cap.x; i++)
+            {
+			    m_ArtefactSlotsHighlight[i]->Show(true);
+            }
+        }
 		return;
 	}
 }
@@ -771,9 +767,10 @@ void CUIActorMenu::ClearAllLists()
 	m_pInventoryPistolList->ClearAll			(true);
 	m_pInventoryAutomaticList->ClearAll			(true);
 
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList->ClearAll(true);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList->ClearAll(true);
+    }
 
     m_pInventoryKnifeList->ClearAll             (true);
     m_pInventoryBinocularList->ClearAll         (true);
@@ -807,6 +804,7 @@ void CUIActorMenu::ResetMode()
 	m_pMouseCapturer			= NULL;
 	m_UIPropertiesBox->Hide		();
 	SetCurrentItem				(NULL);
+    GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
 void CUIActorMenu::UpdateActorMP()

@@ -1,5 +1,3 @@
-#ifndef _VECTOR4_H
-#define _VECTOR4_H
 #pragma once
 
 template <class T>
@@ -13,6 +11,11 @@ public:
 
 	IC	T&			operator[] (int i)					{ return *((T*)this + i); }
 	IC	T&			operator[] (int i)	const			{ return *((T*)this + i); }
+
+	IC SelfRef		operator += (SelfCRef v)			{ return add(v); }
+	IC SelfRef		operator -= (SelfCRef v)			{ return sub(v); }
+	IC SelfRef		operator *= (SelfCRef v)			{ return mul(v); }
+	IC SelfRef		operator /= (SelfCRef v)			{ return div(v); }
 
 	IC	SelfRef 	set(T _x, T _y, T _z, T _w=1)		{ x=_x;		y=_y;		z=_z;		w=_w;		return *this; }
 	IC	SelfRef		set(const Self& v)					{ x=v.x;	y=v.y;		z=v.z;		w=v.w;		return *this; }
@@ -69,5 +72,3 @@ typedef							_vector4<s32>		Ivector4;
 
 template <class T>
 BOOL	_valid			(const _vector4<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y) && _valid((T)v.z) && _valid((T)v.w);	}
-
-#endif

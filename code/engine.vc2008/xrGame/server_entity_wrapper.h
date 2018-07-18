@@ -21,8 +21,6 @@ public:
 	virtual					~CServerEntityWrapper	();	
 	virtual	void			save					(IWriter &stream);
 	virtual	void			load					(IReader &stream);
-			void			save_update				(IWriter &stream);
-			void			load_update				(IReader &stream);
 	IC		CSE_Abstract	&object					() const;
 };
 

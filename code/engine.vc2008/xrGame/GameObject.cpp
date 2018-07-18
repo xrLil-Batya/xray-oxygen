@@ -25,11 +25,9 @@
 #include "../xrphysics/MathUtils.h"
 #include "game_level_cross_table.h"
 #include "ai_obstacle.h"
-#include "magic_box3.h"
 #include "../xrphysics/animation_movement_controller.h"
 #include "../xrengine/xr_collide_form.h"
 #include "../FrayBuildConfig.hpp"
-extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);
 
 #pragma warning(push)
 #pragma warning(disable:4995)
@@ -39,6 +37,9 @@ extern MagicBox3 MagicMinBox (int iQuantity, const Fvector* akPoint);
 #ifdef DEBUG
 #	include "debug_renderer.h"
 #	include "PHDebug.h"
+#	include "../../3rd-party/min_obb/magic_box3.h"
+
+extern MagicBox3 MagicMinBox(int iQuantity, const Fvector* akPoint);
 #endif
 
 CGameObject::CGameObject		()
@@ -896,9 +897,6 @@ IC	bool similar						(const Fmatrix &_0, const Fmatrix &_1, const float &epsilon
 void CGameObject::UpdateCL			()
 {
 	inherited::UpdateCL				();
-	
-//	if (!is_ai_obstacle())
-//		return;
 	
 	if (H_Parent())
 		return;

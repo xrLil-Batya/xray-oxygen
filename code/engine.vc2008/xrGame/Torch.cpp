@@ -12,7 +12,7 @@
 #include "../xrEngine/camerabase.h"
 #include "../xrengine/xr_collide_form.h"
 #include "inventory.h"
-#include "game_base_space.h"
+#include "game_base.h"
 
 #include "UIGame.h"
 #include "actorEffector.h"

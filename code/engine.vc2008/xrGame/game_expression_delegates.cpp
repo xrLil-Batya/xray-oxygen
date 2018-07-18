@@ -37,7 +37,7 @@ float GetHelmet##protectionType##Protection() \
     CHelmet* helmet = smart_cast<CHelmet*>(itm); \
     if (helmet != nullptr) \
     { \
-        helmet->GetDefHitTypeProtection(ALife::protectionType); \
+        return helmet->GetDefHitTypeProtection(ALife::protectionType); \
     } \
     return 0.0f; \
 }
@@ -108,6 +108,7 @@ LPCSTR GetPlayerName()			{ return g_actor->Name();								}
 
 float GetPlayerHealth()			{ return g_actor->conditions().GetHealth();				}
 float GetPlayerPower()			{ return g_actor->conditions().GetPower();				}
+float GetPlayerRestoreSpeed()	{ return g_actor->GetRestoreSpeed(ALife::ePowerRestoreSpeed) / g_actor->conditions().GetMaxPowerRestoreSpeed();;}
 
 void RegisterExpressionDelegates ()
 {
@@ -165,5 +166,6 @@ void RegisterExpressionDelegates ()
     g_uiExpressionMgr.RegisterVariable("strPlayerName",								GetPlayerName);
     g_uiExpressionMgr.RegisterVariable("fltPlayerHealth",							GetPlayerHealth);
 	g_uiExpressionMgr.RegisterVariable("fltPlayerPower",							GetPlayerPower);
+	g_uiExpressionMgr.RegisterVariable("fltPlayerRestoreSpeed",						GetPlayerRestoreSpeed);
 
 }

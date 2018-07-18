@@ -143,6 +143,7 @@ void CUIZoneMap::Render			()
 
 void CUIZoneMap::Update()
 {
+    if (!visible) return; //Don't update, if we hided
 	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 	if ( !pActor ) return;
 
@@ -253,4 +254,10 @@ void CUIZoneMap::OnSectorChanged(int sector)
 void CUIZoneMap::Counter_ResetClrAnimation()
 {
 	m_Counter_text.ResetColorAnimation();
+}
+
+CUIMiniMap* CUIZoneMap::GetMinimap()
+{
+    R_ASSERT2(m_activeMap, "Minimap is not created yet!");
+    return m_activeMap;
 }

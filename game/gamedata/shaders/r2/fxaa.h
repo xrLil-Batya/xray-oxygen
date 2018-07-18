@@ -1,9 +1,7 @@
-#include "common.h"
-
 #define FXAA_PC 1
 #define FXAA_HLSL_3 1
 #define FXAA_QUALITY__PRESET 39
-#define FXAA_GREEN_AS_LUMA 1
+#define FXAA_GREEN_AS_LUMA 0
 
 /*--------------------------------------------------------------------------*/
 #ifndef FXAA_PC_CONSOLE

@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{200652A6-043E-4634-8837-87983B3BD5E0}</ProjectGuid>
     <RootNamespace>xrGame</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup>
@@ -107,9 +107,9 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;LUABIND_NO_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -151,7 +151,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -211,7 +211,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -230,7 +230,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;LUABIND_NO_EXCEPTIONS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -280,7 +280,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
@@ -351,8 +351,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <ShowProgress>LinkVerbose</ShowProgress>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -389,7 +389,6 @@
     <ClInclude Include="moving_bones_snd_player.h" />
     <ClInclude Include="mt_config.h" />
     <ClInclude Include="damage_manager.h" />
-    <ClInclude Include="damage_manager_inline.h" />
     <ClInclude Include="DamageSource.h" />
     <ClInclude Include="PHCollisionDamageReceiver.h" />
     <ClInclude Include="PHCommander.h" />
@@ -1342,19 +1341,12 @@
     <ClInclude Include="entity_alive_inline.h" />
     <ClInclude Include="EntityCondition.h" />
     <ClInclude Include="hit_immunity.h" />
-    <ClInclude Include="hit_immunity_space.h" />
     <ClInclude Include="Wound.h" />
     <ClInclude Include="game_object_space.h" />
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="holder_custom.h" />
     <ClInclude Include="ai_obstacle.h" />
     <ClInclude Include="ai_obstacle_inline.h" />
-    <ClInclude Include="magic_box3.h" />
-    <ClInclude Include="magic_box3_inline.h" />
-    <ClInclude Include="magic_minimize_nd.h" />
-    <ClInclude Include="magic_minimize_nd_inline.h" />
-    <ClInclude Include="magic_minimize_1d.h" />
-    <ClInclude Include="magic_minimize_1d_inline.h" />
     <ClInclude Include="UsableScriptObject.h" />
     <ClInclude Include="HangingLamp.h" />
     <ClInclude Include="InfoPortion.h" />
@@ -1534,7 +1526,6 @@
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="..\xrServerEntities\game_base_space.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="xr_time.h" />
@@ -1681,7 +1672,6 @@
     <ClCompile Include="ClimableObject.cpp" />
     <ClCompile Include="c_artefact.cpp" />
     <ClCompile Include="damage_manager.cpp" />
-    <ClCompile Include="death_anims_predicates.cpp" />
     <ClCompile Include="DestroyablePhysicsObject.cpp" />
     <ClCompile Include="Dosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
@@ -2280,9 +2270,6 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="holder_custom.cpp" />
     <ClCompile Include="ai_obstacle.cpp" />
-    <ClCompile Include="min_obb.cpp" />
-    <ClCompile Include="magic_box3.cpp" />
-    <ClCompile Include="magic_minimize_1d.cpp" />
     <ClCompile Include="UsableScriptObject.cpp" />
     <ClCompile Include="HangingLamp.cpp" />
     <ClCompile Include="InfoPortion.cpp" />

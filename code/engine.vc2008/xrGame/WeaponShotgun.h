@@ -2,7 +2,7 @@
 #include "WeaponMagazined.h"
 #include "../xrScripts/export/script_export_space.h"
 
-class CWeaponShotgun :	public CWeaponMagazined
+class CWeaponShotgun :	public CWeaponMagazined, public IWeaponShotgun
 {
 	typedef CWeaponMagazined inherited;
 public:

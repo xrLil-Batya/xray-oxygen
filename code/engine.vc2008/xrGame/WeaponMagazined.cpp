@@ -170,12 +170,12 @@ void CWeaponMagazined::FireEnd()
 {
 	inherited::FireEnd();
 
-#ifdef WPN_AUTORELOAD
-	CActor *actor = smart_cast<CActor*>(H_Parent());
-	if (m_pInventory && !iAmmoElapsed && actor && GetState() != eReload) 
-		Reload();
-#endif
-	
+    if (g_extraFeatures.is(GAME_EXTRA_WEAPON_AUTORELOAD))
+    {
+        CActor *actor = smart_cast<CActor*>(H_Parent());
+        if (m_pInventory && !iAmmoElapsed && actor && GetState() != eReload)
+            Reload();
+    }
 }
 
 void CWeaponMagazined::Reload() 
@@ -788,10 +788,10 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 	// Прицел
 	if (pScope && m_eScopeStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope) == 0)
 	{
-        auto it = m_scopes.begin();
-		for (; it != m_scopes.end(); it++)
+		for (xr_string it : m_scopes)
 		{
-			if (pSettings->r_stringStd((*it), "scope_name") == pIItem->object().cNameSect().c_str())
+			shared_str scop_name = pSettings->r_string_wb(it.c_str(), "scope_name");
+			if (scop_name == pIItem->object().cNameSect())
 				return true;
 		}
 		return false;
@@ -801,7 +801,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 			return true;
 	// Подствольный гранатомет
 	else if (pGrenadeLauncher && m_eGrenadeLauncherStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
-		(m_sGrenadeLauncherName == pIItem->object().cNameSect().c_str()))
+		(m_sGrenadeLauncherName == std::string(pIItem->object().cNameSect().c_str())))
 			return true;
 	else
 		return inherited::CanAttach(pIItem);
@@ -812,10 +812,10 @@ bool CWeaponMagazined::CanDetach(const char* item_section_name)
 	// Прицел
 	if (m_eScopeStatus == ALife::eAddonAttachable && 0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope))
 	{
-		auto it = m_scopes.begin();
-		for (; it != m_scopes.end(); it++)
+		for (xr_string it : m_scopes)
 		{
-			if (pSettings->r_stringStd((*it), "scope_name") == item_section_name)
+			shared_str scope = pSettings->r_string_wb(it.c_str(), "scope_name");
+			if (scope.equal(item_section_name))
 				return true;
 		}
 		return false;
@@ -825,7 +825,7 @@ bool CWeaponMagazined::CanDetach(const char* item_section_name)
         return true;
 	// Подствольный гранатомет
 	else if(m_eGrenadeLauncherStatus == ALife::eAddonAttachable && 0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) &&
-	    (m_sGrenadeLauncherName == item_section_name))
+	    (m_sGrenadeLauncherName._Equal(item_section_name)))
 			return true;
 	else
 		return inherited::CanDetach(item_section_name);
@@ -842,10 +842,10 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 	// Прицел
 	if (pScope && m_eScopeStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope) == 0)
 	{
-		auto it = m_scopes.begin();
-		for (; it != m_scopes.end(); it++)
+		
+		for (auto it = m_scopes.begin(); it != m_scopes.end(); it++)
 		{
-			if (pSettings->r_stringStd((*it), "scope_name") == pIItem->object().cNameSect())
+			if (pIItem->object().cNameSect().equal(pSettings->r_string_wb((*it).c_str(), "scope_name")))
 				m_cur_scope = u8(it - m_scopes.begin());
 		}
 
@@ -887,10 +887,9 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 bool CWeaponMagazined::DetachScope(const char* item_section_name, bool b_spawn_item)
 {
 	bool detached = false;
-    auto it = m_scopes.begin();
-	for (; it != m_scopes.end(); it++)
+	for (xr_string it : m_scopes)
 	{
-		LPCSTR iter_scope_name = pSettings->r_stringStd((*it), "scope_name");
+		LPCSTR iter_scope_name = pSettings->r_string(it.c_str(), "scope_name");
 		if (!xr_strcmp(iter_scope_name, item_section_name))
 		{
 			m_cur_scope = NULL;
@@ -958,8 +957,8 @@ void CWeaponMagazined::InitAddons()
 	{
 		if (m_eScopeStatus == ALife::eAddonAttachable)
 		{
-			shared_str scope_tex_name = pSettings->r_stringStd(GetScopeName().c_str(), "scope_texture");
-			m_zoom_params.m_fScopeZoomFactor = pSettings->r_floatStd(GetScopeName(), "scope_zoom_factor");
+			shared_str scope_tex_name = pSettings->r_string(GetScopeName().c_str(), "scope_texture");
+			m_zoom_params.m_fScopeZoomFactor = pSettings->r_float(GetScopeName().c_str(), "scope_zoom_factor");
 			m_zoom_params.m_bUseDynamicZoom = READ_IF_EXISTS(pSettings, r_bool, GetScopeName().c_str(), "scope_dynamic_zoom", false);
 
 			try

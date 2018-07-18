@@ -76,6 +76,7 @@ public:
 	str_c				operator*	() const						{	return p_ ? p_->value : nullptr;			}
 	bool				operator!	() const						{	return p_ == 0;								}
 	char				operator[]	(size_t id)						{	return p_->value[id];						}
+	bool				operator==	(shared_str const &rhs)			{	return _get() == rhs._get();				}
 
 	str_c				c_str		() const						{	return p_ ? p_->value : nullptr;			}
 	char*				data		() const						{	return p_ ? p_->value : nullptr;			}
@@ -114,5 +115,14 @@ IC int	xr_strcmp		(const shared_str & a, const shared_str & b) throw()    {
 IC void	xr_strlwr		(xr_string& src)									{ for(xr_string::iterator it=src.begin(); it!=src.end(); it++) *it=xr_string::value_type(tolower(*it));}
 IC void	xr_strlwr		(shared_str& src)									{ if (*src){char* lp=xr_strdup(*src); xr_strlwr(lp); src=lp; xr_free(lp);} }
 
+namespace std
+{
+  template<> struct hash<shared_str> 
+  {
+    std::size_t operator() ( const shared_str &s ) const 
+	{
+      return std::hash<std::string>{}( s.c_str() );
+    }
+  };
+}
 #pragma pack(pop)
-

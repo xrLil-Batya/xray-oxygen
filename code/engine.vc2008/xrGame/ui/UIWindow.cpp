@@ -676,7 +676,10 @@ CGameFont* GetFontElectron18()
 {
 	return mngr().pFontElectron18;
 }
-
+CGameFont* GetFontRoboto16()
+{
+	return mngr().pFontRoboto16;
+}
 
 int GetARGB(u16 a, u16 r, u16 g, u16 b)
 {

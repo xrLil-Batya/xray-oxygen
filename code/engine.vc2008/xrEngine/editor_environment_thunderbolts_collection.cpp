@@ -60,15 +60,14 @@ void collection::load					(CInifile& config)
 {
 	CInifile::Sect&				items = config.r_section(section);
 	m_ids.reserve				(items.Data.size());
-	typedef CInifile::Items		items_type;
-	items_type::const_iterator	i = items.Data.begin();
-	items_type::const_iterator	e = items.Data.end();
-	for ( ; i != e; ++i) {
-		thunderbolt_id*			object = xr_new<thunderbolt_id>(m_manager, (*i).first);
+
+	for (auto &it: items.Data)
+	{
+		thunderbolt_id*			object = xr_new<thunderbolt_id>(m_manager, it.first);
 		object->fill			(m_collection);
 		m_ids.push_back			(object);
 
-		palette.push_back		(m_manager.description(config, (*i).first));
+		palette.push_back		(m_manager.description(config, it.first));
 	}
 }
 

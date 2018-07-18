@@ -12,13 +12,15 @@
 #include "../../xrEngine/x_ray.h"
 #include "../../xrEngine/GameFont.h"
 #include "UIHelper.h"
+#include "MainMenu.h"
+#include "Actor_Flags.h"
 
 extern ENGINE_API int ps_rs_loading_stages;
 
 UILoadingScreen::UILoadingScreen()
- : loadingLogo(nullptr), loadingProgress(nullptr),
-loadingStage(nullptr), loadingHeader(nullptr),
-loadingTipNumber(nullptr), loadingTip(nullptr)
+ :  loadingLogo(nullptr), loadingProgress(nullptr),
+    loadingStage(nullptr), loadingHeader(nullptr),
+    loadingTipNumber(nullptr), loadingTip(nullptr)
  {
 	UILoadingScreen::Initialize();
  }
@@ -37,6 +39,12 @@ void UILoadingScreen::Initialize()
 	loadingHeader				= UIHelper::CreateStatic(uiXml, "loading_header", this);
 	loadingTipNumber			= UIHelper::CreateStatic(uiXml, "loading_tip_number", this);
 	loadingTip					= UIHelper::CreateStatic(uiXml, "loading_tip", this);
+
+	if(ps_rs_loading_stages)
+	{ 
+		engineVersion = UIHelper::CreateStatic(uiXml, "engine_version", this);
+		engineVersion->TextItemControl()->SetText(MainMenu()->GetGSVer());
+	}
  }
 
 void UILoadingScreen::Update(const int stagesCompleted, const int stagesTotal)
@@ -45,14 +53,14 @@ void UILoadingScreen::Update(const int stagesCompleted, const int stagesTotal)
 	if (loadingProgress->GetProgressPos() < progress)
 		 loadingProgress->SetProgressPos(progress);
 	
-		if (ps_rs_loading_stages)
-		{
-		char buf[5];
-		xr_sprintf(buf, "%.0f%%", loadingProgress->GetProgressPos());
-		loadingProgressPercent->TextItemControl()->SetText(buf);
-		}
+	if (ps_rs_loading_stages)
+	{
+        char buf[5];
+        xr_sprintf(buf, "%.0f%%", loadingProgress->GetProgressPos());
+        loadingProgressPercent->TextItemControl()->SetText(buf);
+	}
 	
-		CUIWindow::Update();
+	CUIWindow::Update();
 	Draw();
  }
 

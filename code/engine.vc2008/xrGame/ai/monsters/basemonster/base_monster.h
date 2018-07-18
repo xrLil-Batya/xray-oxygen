@@ -53,10 +53,8 @@ class anti_aim_ability;
 
 class CBaseMonster : 
 	public CCustomMonster, 
-	public CStepManager
-#ifdef MONSTER_INV
-	, CInventoryOwner
-#endif
+	public CStepManager, 
+    public CInventoryOwner
 {
 	typedef	CCustomMonster								inherited;
 	
@@ -77,10 +75,8 @@ public:
 	virtual CScriptEntity*				cast_script_entity			()	{return this;}
 	virtual CBaseMonster*				cast_base_monster			()	{return this;}
 
-#ifdef MONSTER_INV
 	virtual CInventoryOwner*			cast_inventory_owner		() {return this;}
 	virtual bool						unlimited_ammo				() {return false;}
-#endif
 	virtual CGameObject*				cast_game_object			() {return this;}
 
 public:
@@ -252,7 +248,7 @@ public:
 	ref_smem<SMonsterSettings>	m_base_settings;
 	ref_smem<SMonsterSettings>	m_current_settings;
 	
-	void						settings_read			(CInifile const *ini, LPCSTR section, SMonsterSettings &data);
+	void						settings_read			(CInifile* ini, LPCSTR section, SMonsterSettings &data);
 	void						settings_load			(LPCSTR section);
 	void						settings_overrides		();
 

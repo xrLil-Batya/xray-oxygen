@@ -2,6 +2,7 @@
 #include "igame_level.h"
 #include "xr_ioconsole.h"
 #include "xr_ioc_cmd.h"
+#include "xr_ioc_cmd_ex.h"
 #include "cameramanager.h"
 #include "environment.h"
 #include "xr_input.h"
@@ -474,7 +475,7 @@ public:
 	}
 
 };
-#ifndef DEDICATED_SERVER
+
 class CCC_soundDevice : public CCC_Token
 {
 	typedef CCC_Token inherited;
@@ -510,7 +511,6 @@ public:
 		inherited::Save			(F);
 	}
 };
-#endif
 //-----------------------------------------------------------------------
 class CCC_ExclusiveMode : public IConsole_Command {
 private:
@@ -621,6 +621,7 @@ void CCC_Register()
 	CMD3(CCC_Mask,		"rs_render_dynamics",	&psDeviceFlags,		rsDrawDynamic			);
 #endif
 	CMD3(CCC_Mask,		"rs_draw_fps",			&psDeviceFlags,		rsDrawFPS				);
+	CMD3(CCC_Mask,		"rs_hw_stats",			&psDeviceFlags,		rsHWInfo				);
 	// Render device states
 	CMD3(CCC_Mask,		"rs_detail",			&psDeviceFlags,		rsDetails				);
 
@@ -698,9 +699,8 @@ void CCC_Register()
 
 	CMD1(CCC_r2,		"renderer"				);
 
-#ifndef DEDICATED_SERVER
 	CMD1(CCC_soundDevice, "snd_device"			);
-#endif
+
 	//psSoundRolloff	= pSettings->r_float	("sound","rolloff");		clamp(psSoundRolloff,			EPS_S,	2.f);
 	psSoundOcclusionScale	= pSettings->r_float	("sound","occlusion_scale");clamp(psSoundOcclusionScale,	0.1f,	.5f);
 
@@ -712,12 +712,6 @@ void CCC_Register()
 #endif
 
 	CMD1(CCC_ExclusiveMode,		"input_exclusive_mode");
-
-	extern int g_svTextConsoleUpdateRate;
-	CMD4(CCC_Integer, "sv_console_update_rate", &g_svTextConsoleUpdateRate, 1, 100);
-
-	extern int g_svDedicateServerUpdateReate;
-	CMD4(CCC_Integer, "sv_dedicated_server_update_rate", &g_svDedicateServerUpdateReate, 1, 1000);
 
 	CMD1(CCC_HideConsole,		"hide");
 

@@ -16,15 +16,16 @@ class CApplication;
 
 class UILoadingScreen : public ILoadingScreen, public CUIWindow
 {
-	CUIStatic * loadingProgressBackground;
-	CUIProgressBar * loadingProgress;
-	CUIStatic * loadingLogo;
-	CUIStatic * loadingProgressPercent;
+	CUIStatic* loadingProgressBackground;
+	CUIStatic* engineVersion;
+	CUIStatic* loadingLogo;
+	CUIStatic* loadingProgressPercent;
 
-	CUIStatic * loadingStage;
-	CUIStatic * loadingHeader;
-	CUIStatic * loadingTipNumber;
-	CUIStatic * loadingTip;
+    CUIStatic* loadingStage;
+    CUIStatic* loadingHeader;
+    CUIStatic* loadingTipNumber;
+    CUIStatic* loadingTip;
+	CUIProgressBar* loadingProgress;
 
 public:
 	UILoadingScreen();

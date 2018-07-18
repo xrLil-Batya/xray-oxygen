@@ -36,6 +36,11 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "hudmanager.h"
 #include "raypick.h"
+#include "HUDManager.h"
+#include "UIZoneMap.h"
+#include "ui/UIMainIngameWnd.h"
+#include "ui/UIMap.h"
+#include "ui/UIMotionIcon.h"
 
 
 using namespace luabind;
@@ -711,6 +716,16 @@ void spawn_section(LPCSTR sSection, Fvector3 vPosition, u32 LevelVertexID, u16 P
 	Level().spawn_item(sSection, vPosition, LevelVertexID, ParentID, bReturnItem);
 }
 
+void show_minimap(bool bShow)
+{
+    CUIGame* GameUI = HUD().GetGameUI();
+    GameUI->UIMainIngameWnd->ShowZoneMap(bShow);
+    if (g_pMotionIcon != nullptr)
+    {
+        g_pMotionIcon->bVisible = bShow;
+    }
+}
+
 //ability to get the target game_object at crosshair
 CScriptGameObject* g_get_target_obj()
 {
@@ -767,6 +782,15 @@ CScriptGameObject* get_view_entity_script()
 	return pGameObject->lua_game_object();
 }
 
+void iterate_online_objects(luabind::functor<bool> functor)
+{
+	for (u16 i=0; i < 0xffff; i++) 
+	{
+		CGameObject		*pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(i));
+		if (pGameObject && functor(pGameObject->lua_game_object())) return;
+	}
+}
+
 void set_view_entity_script(CScriptGameObject* go)
 {
 	CObject* o = smart_cast<CObject*>(&go->object());
@@ -777,6 +801,16 @@ void set_view_entity_script(CScriptGameObject* go)
 xrTime get_start_time()
 {
 	return (xrTime(Level().GetStartGameTime()));
+}
+
+void supertest(LPCSTR sname)
+{
+	FS.curr_season = (char*) sname;
+}
+
+char* get_season()
+{
+	return (FS.curr_season);
 }
 
 #pragma optimize("s",on)
@@ -888,9 +922,9 @@ void CLevel::script_register(lua_State *L)
 
 		def("add_complex_effector",				&add_complex_effector),
 		def("remove_complex_effector",			&remove_complex_effector),
+		def("iterate_online_objects", 			&iterate_online_objects),
 		
 		def("vertex_id",						&vertex_id),
-
 		def("game_id",							&GameID)
 	],
 	
@@ -997,7 +1031,9 @@ void CLevel::script_register(lua_State *L)
 	    def("start_tutorial",		&start_tutorial),
 	    def("stop_tutorial",		&stop_tutorial),
 	    def("has_active_tutorial",	&has_active_tutotial),
-	    def("translate_string",		&translate_string)
-
+	    def("translate_string",		&translate_string),
+	    def("set_season",			&supertest),
+	    def("get_season",			&get_season),
+        def("show_minimap",         &show_minimap)
 	];
 }

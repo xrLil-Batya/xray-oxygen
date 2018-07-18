@@ -82,7 +82,6 @@ void CLevel::ClientReceive()
 				}
 				MakeReconnect();
 			}break;
-		case M_SAVE_GAME: ClientSave(); break;
 		}
 		net_msg_Release();
 	}	

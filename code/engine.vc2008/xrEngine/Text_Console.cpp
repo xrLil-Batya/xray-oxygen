@@ -4,7 +4,6 @@
 
 extern char const * const		ioc_prompt;
 extern char const * const		ch_cursor;
-int g_svTextConsoleUpdateRate = 1;
 
 CTextConsole::CTextConsole()
 {
@@ -185,7 +184,7 @@ void CTextConsole::Destroy()
 	DestroyWindow( m_hConsoleWnd );
 }
 
-void CTextConsole::OnRender() {} //disable ÑConsole::OnRender()
+void CTextConsole::OnRender() {} //disable Ð¡Console::OnRender()
 
 void CTextConsole::OnPaint()
 {

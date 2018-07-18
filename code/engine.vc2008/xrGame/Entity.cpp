@@ -24,7 +24,8 @@ const u32 BODY_REMOVE_TIME = 600000;
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
-CEntity::CEntity(): m_registered_member(false)
+CEntity::CEntity(): m_registered_member(false),
+    id_Team(0), id_Squad(0), id_Group(0)
 {
 }
 

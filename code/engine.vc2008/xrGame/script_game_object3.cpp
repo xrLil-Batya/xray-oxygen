@@ -1106,3 +1106,10 @@ bool CScriptGameObject::is_weapon_going_to_be_strapped	( CScriptGameObject const
 
 	return									stalker->is_weapon_going_to_be_strapped	( &object->object() );
 }
+
+void CScriptGameObject::set_actor_name(LPCSTR name)
+{
+	CInventoryOwner* pIO = smart_cast<CInventoryOwner*>(&object());
+	if (!pIO) return;
+	pIO->set_name(name);
+}

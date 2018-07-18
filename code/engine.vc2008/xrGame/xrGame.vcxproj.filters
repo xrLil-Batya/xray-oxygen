@@ -1384,18 +1384,6 @@
     <Filter Include="Core\Client\Objects\base\GameObject\ai_obstacle">
       <UniqueIdentifier>{92c7e47d-973a-4b37-8dea-4af469aa1add}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Objects\base\GameObject\ai_obstacle\min_obb">
-      <UniqueIdentifier>{0c8901b5-6dd2-4310-8fb4-6b096f4f4d76}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_box">
-      <UniqueIdentifier>{b5e22fa7-ada2-4d16-9609-82da9647e445}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_minimize_nd">
-      <UniqueIdentifier>{79fd4376-e940-42ba-a669-b4a6039395b0}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\minimize_1d">
-      <UniqueIdentifier>{989c7332-cd93-457b-b5d2-ecb2749eafce}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\base\UsableScriptObject">
       <UniqueIdentifier>{a92b184c-c491-432e-ac31-d2b886e85e7c}</UniqueIdentifier>
     </Filter>
@@ -2095,9 +2083,6 @@
       <Filter>AI</Filter>
     </ClInclude>
     <ClInclude Include="damage_manager.h">
-      <Filter>AI\AComponents\DamageManager</Filter>
-    </ClInclude>
-    <ClInclude Include="damage_manager_inline.h">
       <Filter>AI\AComponents\DamageManager</Filter>
     </ClInclude>
     <ClInclude Include="DamageSource.h">
@@ -4860,9 +4845,6 @@
     <ClInclude Include="hit_immunity.h">
       <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClInclude>
-    <ClInclude Include="hit_immunity_space.h">
-      <Filter>Core\Client\Objects\base\EntityCondition</Filter>
-    </ClInclude>
     <ClInclude Include="Wound.h">
       <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClInclude>
@@ -4880,24 +4862,6 @@
     </ClInclude>
     <ClInclude Include="ai_obstacle_inline.h">
       <Filter>Core\Client\Objects\base\GameObject\ai_obstacle</Filter>
-    </ClInclude>
-    <ClInclude Include="magic_box3.h">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_box</Filter>
-    </ClInclude>
-    <ClInclude Include="magic_box3_inline.h">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_box</Filter>
-    </ClInclude>
-    <ClInclude Include="magic_minimize_nd.h">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_minimize_nd</Filter>
-    </ClInclude>
-    <ClInclude Include="magic_minimize_nd_inline.h">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_minimize_nd</Filter>
-    </ClInclude>
-    <ClInclude Include="magic_minimize_1d.h">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\minimize_1d</Filter>
-    </ClInclude>
-    <ClInclude Include="magic_minimize_1d_inline.h">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\minimize_1d</Filter>
     </ClInclude>
     <ClInclude Include="UsableScriptObject.h">
       <Filter>Core\Client\Objects\base\UsableScriptObject</Filter>
@@ -5422,9 +5386,6 @@
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="game_base.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\game_base_space.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
     <ClInclude Include="id_generator.h">
@@ -7438,15 +7399,6 @@
     <ClCompile Include="ai_obstacle.cpp">
       <Filter>Core\Client\Objects\base\GameObject\ai_obstacle</Filter>
     </ClCompile>
-    <ClCompile Include="min_obb.cpp">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb</Filter>
-    </ClCompile>
-    <ClCompile Include="magic_box3.cpp">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\magic_box</Filter>
-    </ClCompile>
-    <ClCompile Include="magic_minimize_1d.cpp">
-      <Filter>Core\Client\Objects\base\GameObject\ai_obstacle\min_obb\minimize_1d</Filter>
-    </ClCompile>
     <ClCompile Include="UsableScriptObject.cpp">
       <Filter>Core\Client\Objects\base\UsableScriptObject</Filter>
     </ClCompile>
@@ -8387,9 +8339,6 @@
       <Filter>GamePhysics</Filter>
     </ClCompile>
     <ClCompile Include="PHDebug.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="death_anims_predicates.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
     <ClCompile Include="animation_script_callback.cpp">

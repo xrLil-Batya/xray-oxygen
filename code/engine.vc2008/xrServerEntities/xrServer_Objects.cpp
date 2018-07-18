@@ -8,7 +8,7 @@
 
 #include "stdafx.h"
 #include "xrServer_Objects.h"
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 
 ////////////////////////////////////////////////////////////////////////////
 // CSE_Shape

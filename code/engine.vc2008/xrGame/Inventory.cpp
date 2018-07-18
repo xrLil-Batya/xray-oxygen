@@ -15,14 +15,10 @@
 #include "level.h"
 #include "ai_space.h"
 #include "entitycondition.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "UIGame.h"
 #include "clsid_game.h"
-#include "../FrayBuildConfig.hpp"
-
-#ifdef DEAD_BODY_WEAPON
 #include "ai/stalker/ai_stalker.h"
-#endif
 
 #include "player_hud.h"
 
@@ -101,7 +97,6 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 	pIItem->SetDropManual(FALSE);
 	pIItem->AllowTrade();
 
-#ifdef DEAD_BODY_WEAPON
 	u16 actor_id = Level().CurrentEntity()->ID();
 
 	if (GetOwner()->object_id() == actor_id && this->m_pOwner->object_id() == actor_id)		//actors inventory
@@ -114,7 +109,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		}
 
 	}
-#endif
+
 	m_all.push_back(pIItem);
 
 	if (!strict_placement)
@@ -881,29 +876,6 @@ bool CInventory::Eat(PIItem pIItem)
 	return			true;
 }
 
-bool CInventory::ClientEat(PIItem pIItem)
-{
-	CEatableItem* pItemToEat = smart_cast<CEatableItem*>(pIItem);
-	if ( !pItemToEat )			return false;
-
-	CEntityAlive *entity_alive = smart_cast<CEntityAlive*>(m_pOwner);
-	if ( !entity_alive )		return false;
-
-	CInventoryOwner* IO	= smart_cast<CInventoryOwner*>(entity_alive);
-	if ( !IO )					return false;
-	
-	CInventory* pInventory = pItemToEat->m_pInventory;
-	if ( !pInventory || pInventory != this )	return false;
-	if ( pInventory != IO->m_inventory )		return false;
-	if ( pItemToEat->object().H_Parent()->ID() != entity_alive->ID() )		return false;
-	
-	NET_Packet						P;
-	CGameObject::u_EventGen			(P, GEG_PLAYER_ITEM_EAT, pIItem->parent_id());
-	P.w_u16							(pIItem->object().ID());
-	CGameObject::u_EventSend		(P);
-	return true;
-}
-
 bool CInventory::InSlot(const CInventoryItem* pIItem) const
 {
 	if(pIItem->CurrPlace() != eItemPlaceSlot)	return false;
@@ -1061,7 +1033,7 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 				items_container.push_back(pIItem);
 		}
 	}
-#ifdef DEAD_BODY_WEAPON
+
 	CAI_Stalker* pOwner = smart_cast<CAI_Stalker*>(m_pOwner);
 	if (pOwner && !pOwner->g_Alive())
 	{
@@ -1076,9 +1048,7 @@ void  CInventory::AddAvailableItems(TIItemContainer& items_container, bool for_t
 			}
 		}
 	}
-	else 
-#endif
-	if (m_bSlotsUseful)
+	else if (m_bSlotsUseful)
 	{
 		u16 I = FirstSlot();
 		u16 E = LastSlot();

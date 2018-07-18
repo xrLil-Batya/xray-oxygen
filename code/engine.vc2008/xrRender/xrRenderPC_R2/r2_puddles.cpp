@@ -23,14 +23,17 @@ void CPuddles::Load()
 	{
 		size = sects.size();
 		R_ASSERT2(size <= MAX_PUDDLES, "there are too mush puddles for level (max 30)");
-		for (u32 i = 0; i < size; ++i)
+
+		size_t it = 0;
+		for (const auto &pairIt : sects)
 		{
-			const shared_str sect = sects[i]->Name;
-			SPuddle* point = &(points[i]);
+			const shared_str sect = pairIt.first;
+			SPuddle* point = &(points[it]);
 			point->P.set(ini.r_fvector3(sect, "center"));
 			point->max_depth = ini.r_float(sect, "max_depth");
 			point->radius = ini.r_float(sect, "radius");
 			point->make_xform();
+			it++;
 		}
 		m_bLoaded = true;
 	}

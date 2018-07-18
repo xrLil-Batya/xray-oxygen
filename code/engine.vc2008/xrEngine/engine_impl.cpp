@@ -92,25 +92,31 @@ LPCSTR engine_impl::value				(shared_str const& value)
 	return			(value.c_str());
 }
 
-void engine_impl::weather				(LPCSTR value)
+void engine_impl::weather(LPCSTR value)
 {
 	if (!g_pGamePersistent)
 		return;
 
-	shared_str						new_weather_id = value;
-	CEnvironment&					environment = g_pGamePersistent->Environment();
+	shared_str new_weather_id = value;
+	CEnvironment& environment = g_pGamePersistent->Environment();
 	if (environment.CurrentWeatherName._get() == new_weather_id._get())
 		return;
 
 	typedef CEnvironment::EnvsMap	EnvsMap;
-	EnvsMap const&					weathers = environment.WeatherCycles;
-	EnvsMap::const_iterator			i = weathers.find(value);
+	EnvsMap const& weathers = environment.WeatherCycles;
+	EnvsMap::const_iterator i = weathers.find(value);
 	if (i == weathers.end())
 		return;
 
-	float const game_time						= g_pGamePersistent->Environment().GetGameTime();
-	environment.SetWeather						(value, true);
-	g_pGameLevel->SetEnvironmentGameTimeFactor	(iFloor(game_time), environment.fTimeFactor);
+	float const game_time = g_pGamePersistent->Environment().GetGameTime();
+	environment.SetWeather(value, true);
+
+	if (g_pGameLevel)
+	{
+		// FX: Позволим редактору погоды выставить редактируемую погоду, даже если он не на уровне
+		g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(game_time), environment.fTimeFactor);
+	}
+
 	g_pGamePersistent->Environment().SelectEnvs	(game_time);
 }
 

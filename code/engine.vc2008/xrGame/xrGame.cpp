@@ -35,6 +35,7 @@ extern "C" {
 void CCC_RegisterCommands	();
 void setup_luabind_allocator();
 void RegisterExpressionDelegates();
+void LoadGameExtraFeatures();
 
 BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 {
@@ -42,6 +43,10 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 		case DLL_PROCESS_ATTACH: {
 			// register console commands
 			CCC_RegisterCommands();
+
+            // Load cfg with extra game features. Should be early as possible - some features requires early initialization
+            LoadGameExtraFeatures();
+
 			// keyboard binding
 			CCC_RegisterInput	();
 
@@ -52,6 +57,7 @@ BOOL APIENTRY DllMain(HANDLE hModule, u32 ul_reason_for_call, LPVOID lpReserved)
 #ifdef DEBUG
 			g_profiler			= xr_new<CProfiler>();
 #endif
+
 			break;
 		}
 

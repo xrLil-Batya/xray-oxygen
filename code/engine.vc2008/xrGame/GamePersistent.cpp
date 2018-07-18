@@ -7,11 +7,11 @@
 #include "profiler.h"
 #include "MainMenu.h"
 #include "UICursor.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "level.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "stalker_animation_data_storage.h"
 #include "stalker_velocity_holder.h"
 
@@ -552,6 +552,14 @@ void CGamePersistent::OnFrame	()
 		}
 #endif // MASTER_GOLD
 	}
+
+    // Update sun before updating other enviroment settings
+    if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
+    {
+        if (!::Render->is_sun_static())
+            Environment().calculate_dynamic_sun_dir();
+    }
+
 	MySuper::OnFrame			();
 
 	if(!Device.Paused())

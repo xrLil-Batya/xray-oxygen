@@ -13,6 +13,7 @@ CUIMotionIcon::CUIMotionIcon()
 	m_bchanged		= false;
 	m_luminosity	= 0.0f;
 	cur_pos			= 0.f;
+    bVisible        = true;
 }
 
 CUIMotionIcon::~CUIMotionIcon()
@@ -71,10 +72,10 @@ void CUIMotionIcon::SetLuminosity(float Pos)
 
 void CUIMotionIcon::Draw()
 {
-if(!psActorFlags.test(AF_HARDCORE))
-{
-	inherited::Draw();
-}
+    if (bVisible && !psActorFlags.test(AF_HARDCORE))
+    {
+        inherited::Draw();
+    }
 }
 
 void CUIMotionIcon::Update()

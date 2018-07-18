@@ -14,12 +14,12 @@ XRCORE_API CRandom Random;
 
 typedef struct _PROCESSOR_POWER_INFORMATION
 {
-	ULONG Number;
-	ULONG MaxMhz;
-	ULONG CurrentMhz;
-	ULONG MhzLimit;
-	ULONG MaxIdleState;
-	ULONG CurrentIdleState;
+	DWORD Number;
+	DWORD MaxMhz;
+	DWORD CurrentMhz;
+	DWORD MhzLimit;
+	DWORD MaxIdleState;
+	DWORD CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
 
 namespace FPU
@@ -111,14 +111,16 @@ bool g_initialize_cpu_called = false;
 //------------------------------------------------------------------------------------
 void _initialize_cpu(void)
 {
-	std::string vendor;
+	const char* vendor;
 
 	if (CPU::Info.isAmd)
 		vendor = "AMD";
-	else
+	else if (CPU::Info.isIntel)
 		vendor = "Intel";
+	else
+		vendor = "VIA";
 
-	Msg(("* Vendor CPU: " + vendor).c_str());
+	Msg("* Vendor CPU: %s", vendor);
 
 	Msg("* Detected CPU: %s", CPU::Info.modelName);
 
@@ -161,7 +163,7 @@ void _initialize_cpu(void)
 	if (CPU::Info.hasFeature(CPUFeature::AVX))
 		xr_strcat(features, ", AVX");
 #ifdef __AVX__
-	else Debug.do_exit("X-Ray x64 using AVX anyway!");
+	else Debug.do_exit(NULL, "X-Ray x64 using AVX anyway!");
 #endif
 
 	if (CPU::Info.hasFeature(CPUFeature::AVX2))
@@ -185,8 +187,8 @@ void _initialize_cpu(void)
 	if (CPU::Info.hasFeature(CPUFeature::EST))
 		xr_strcat(features, ", EST");
 
-	if (CPU::Info.hasFeature(CPUFeature::FXSR))
-		xr_strcat(features, ", FXSR");
+	if (CPU::Info.hasFeature(CPUFeature::XFSR))
+		xr_strcat(features, ", XFSR");
 
 	Msg("* CPU features: %s", features);
 	Msg("* CPU cores/threads: %d/%d \n", CPU::Info.n_cores, CPU::Info.n_threads);
@@ -246,6 +248,47 @@ void _initialize_cpu_thread()
 	}
 }
 
+unsigned long long SubtractTimes(const FILETIME one, const FILETIME two)
+{ 
+	LARGE_INTEGER a, b;
+	a.LowPart = one.dwLowDateTime;
+	a.HighPart = one.dwHighDateTime;
+
+	b.LowPart = two.dwLowDateTime;
+	b.HighPart = two.dwHighDateTime;
+
+	return a.QuadPart - b.QuadPart;
+}
+
+int processor_info::getCPULoad(double &val)
+{
+	FILETIME sysIdle, sysKernel, sysUser;
+	// sysKernel include IdleTime
+	if (GetSystemTimes(&sysIdle, &sysKernel, &sysUser) == 0) // GetSystemTimes func FAILED return value is zero;
+		return 0;
+
+	if (prevSysIdle.dwLowDateTime != 0 && prevSysIdle.dwHighDateTime != 0)
+	{
+		DWORDLONG sysIdleDiff, sysKernelDiff, sysUserDiff;
+		sysIdleDiff = SubtractTimes(sysIdle, prevSysIdle);
+		sysKernelDiff = SubtractTimes(sysKernel, prevSysKernel);
+		sysUserDiff = SubtractTimes(sysUser, prevSysUser);
+
+		DWORDLONG sysTotal = sysKernelDiff + sysUserDiff;
+		DWORDLONG kernelTotal = sysKernelDiff - sysIdleDiff; // kernelTime - IdleTime = kernelTime, because sysKernel include IdleTime
+
+		if (sysTotal > 0) // sometimes kernelTime > idleTime
+			val = (double)(((kernelTotal + sysUserDiff) * 100.0) / sysTotal);
+	}
+
+	prevSysIdle = sysIdle;
+	prevSysKernel = sysKernel;
+	prevSysUser = sysUser;
+
+	return 1;
+}
+
+
 // threading API
 #pragma pack(push,8)
 struct THREAD_NAME
@@ -294,15 +337,14 @@ void __cdecl thread_entry(void*	_params)
 	entry(arglist);
 }
 
-void thread_spawn(thread_t*	entry, const char*	name, unsigned	stack, void* arglist)
+HANDLE thread_spawn(thread_t* entry, const char* name, unsigned stack, void* arglist)
 {
-	Debug._initialize(false);
-
-	auto* startup = new THREAD_STARTUP();
+    THREAD_STARTUP* startup = new THREAD_STARTUP();
 	startup->entry = entry;
 	startup->name = (char*)name;
 	startup->args = arglist;
-	_beginthread(thread_entry, stack, startup);
+    uintptr_t hThread = _beginthread(thread_entry, stack, startup);
+	return reinterpret_cast<HANDLE> (hThread);
 }
 
 void spline1(float t, Fvector *p, Fvector *ret)
