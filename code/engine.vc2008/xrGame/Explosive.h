@@ -1,22 +1,21 @@
 // Explosive.h: интерфейс для взврывающихся объектов
 //
 //////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "../xrEngine/Render.h"
 #include "../xrEngine/feel_touch.h"
 #include "inventory_item.h"
 #include "ai_sounds.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrphysics/DamageSource.h"
+#include "../xrphysics/IPhysicalWeaponObject.h"
 #include "wallmark_manager.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
+
 class IRender_Light;
 using BLASTED_OBJECTS_V = xr_vector<CPhysicsShellHolder*>;
-class CExplosive : 
-	public IDamageSource
+class CExplosive : public IDamageSource, public IExplosive
 {
 private:
 	collide::rq_results			rq_storage;

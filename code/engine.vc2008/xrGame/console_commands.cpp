@@ -1947,7 +1947,7 @@ void CCC_RegisterCommands()
 
 	// Oxy:
 	CMD1(CCC_SetWeather, "set_weather");
-	CMD3(CCC_MaskNoSave, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
+	CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
     CMD3(CCC_MaskNoSave, "game_extra_monster_inventory", &g_extraFeatures, GAME_EXTRA_MONSTER_INVENTORY);
     CMD3(CCC_MaskNoSave, "game_extra_spawn_antifreeze", &g_extraFeatures, GAME_EXTRA_SPAWN_ANTIFREEZE);
     CMD3(CCC_MaskNoSave, "game_extra_weapon_autoreload", &g_extraFeatures, GAME_EXTRA_WEAPON_AUTORELOAD);

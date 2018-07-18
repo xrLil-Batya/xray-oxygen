@@ -4845,9 +4845,6 @@
     <ClInclude Include="hit_immunity.h">
       <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClInclude>
-    <ClInclude Include="hit_immunity_space.h">
-      <Filter>Core\Client\Objects\base\EntityCondition</Filter>
-    </ClInclude>
     <ClInclude Include="Wound.h">
       <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClInclude>
@@ -5389,9 +5386,6 @@
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="game_base.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\game_base_space.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
     <ClInclude Include="id_generator.h">
@@ -8345,9 +8339,6 @@
       <Filter>GamePhysics</Filter>
     </ClCompile>
     <ClCompile Include="PHDebug.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
-    <ClCompile Include="death_anims_predicates.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
     <ClCompile Include="animation_script_callback.cpp">

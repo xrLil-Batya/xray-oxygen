@@ -1,4 +1,8 @@
 #pragma once
+namespace ALife
+{
+	enum EHitType;
+}
 
 struct SHit
 {

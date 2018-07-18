@@ -54,27 +54,29 @@ public:
 
 	virtual shared_str			name					() const = 0;
 
-	virtual BOOL				net_Start				( LPCSTR op_server, LPCSTR op_client)	= 0;
-	virtual void				net_Stop				( );
-	virtual void				net_Update				( )										= 0;
+	virtual BOOL				net_Start				(LPCSTR op_server, LPCSTR op_client)	= 0;
+	virtual void				net_Stop				();
+	virtual void				net_Update				()										= 0;
 
-	virtual BOOL				Load					( u32 dwNum );
-	virtual BOOL				Load_GameSpecific_Before( )										{ return TRUE; };		// before object loading
-	virtual BOOL				Load_GameSpecific_After	( )										{ return TRUE; };		// after object loading
-	virtual void				Load_GameSpecific_CFORM	( CDB::TRI* T, u32 count )				= 0;
+	virtual BOOL				Load					(u32 dwNum);
+	virtual BOOL				Load_GameSpecific_Before()										{ return TRUE; };		// before object loading
+	virtual BOOL				Load_GameSpecific_After	()										{ return TRUE; };		// after object loading
+	virtual void				Load_GameSpecific_CFORM	(CDB::TRI* T, u32 count)				= 0;
 
-	virtual void	_BCL		OnFrame					( void );
-	virtual void				OnRender				( void );
+	virtual void	_BCL		OnFrame					(void);
+	virtual void				OnRender				(void);
 
 	// Main interface
-	CObject*					CurrentEntity			( void ) const							{ return pCurrentEntity;				}
-	CObject*					CurrentViewEntity		( void ) const							{ return pCurrentViewEntity;			}
-	void						SetEntity				( CObject* O  );
-	void						SetViewEntity			( CObject* O  );
+	CObject*					CurrentEntity			(void) const							{ return pCurrentEntity;				}
+	CObject*					CurrentViewEntity		(void) const							{ return pCurrentViewEntity;			}
+	CObject*					CurrentControlEntity	(void) const							{ return nullptr;			}
+
+	void						SetEntity				(CObject* O);
+	void						SetViewEntity			(CObject* O);
 	
-	void						SoundEvent_Register		( ref_sound_data_ptr S, float range );
-	void						SoundEvent_Dispatch		( );
-	void                        SoundEvent_OnDestDestroy (Feel::Sound*);
+	void						SoundEvent_Register		(ref_sound_data_ptr S, float range);
+	void						SoundEvent_Dispatch		();
+	void                        SoundEvent_OnDestDestroy(Feel::Sound*);
 
 	// Loader interface
 	void						LL_CheckTextures		();

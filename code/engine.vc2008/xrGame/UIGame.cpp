@@ -28,6 +28,7 @@
 #include "../xrEngine/xr_ioconsole.h"
 #include "../xrEngine/x_ray.h"
 #include "../../xrServerEntities/script_engine.h"
+#include "ai\monsters\basemonster\base_monster.h"
 
 #include "attachable_item.h"
 
@@ -457,14 +458,15 @@ void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryOwner* pOthe
 	if (TopInputReceiver())
 		return;
 
-    // Don't allow search monster's if that feature disabled
-    if (!g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY)) return;
+	// Don't allow search monster's if that feature disabled
+	if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) || !smart_cast<CBaseMonster*>(pOtherOwner))
+	{
+		m_ActorMenu->SetActor(pActorInv);
+		m_ActorMenu->SetPartner(pOtherOwner);
 
-	m_ActorMenu->SetActor(pActorInv);
-	m_ActorMenu->SetPartner(pOtherOwner);
-
-	m_ActorMenu->SetMenuMode(mmDeadBodySearch);
-	m_ActorMenu->ShowDialog(true);
+		m_ActorMenu->SetMenuMode(mmDeadBodySearch);
+		m_ActorMenu->ShowDialog(true);
+	}
 }
 
 void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search

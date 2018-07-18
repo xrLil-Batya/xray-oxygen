@@ -351,7 +351,7 @@ void CCustomDetector::TurnDetectorInternal(bool b)
 	}
 }
 
-#include "game_base_space.h"
+#include "game_base.h"
 void CCustomDetector::UpdateNightVisionMode(bool b_on)
 {
 }

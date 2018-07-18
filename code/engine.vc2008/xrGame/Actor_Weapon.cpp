@@ -14,7 +14,7 @@
 #include "EffectorShot.h"
 #include "WeaponMagazined.h"
 #include "Grenade.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "Artefact.h"
 
 static const float VEL_MAX = 10.f;

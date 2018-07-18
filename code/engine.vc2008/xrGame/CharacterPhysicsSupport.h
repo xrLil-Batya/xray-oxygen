@@ -1,14 +1,15 @@
-
 #pragma once
-#include "alife_space.h"
+#include "../xrServerEntities/alife_space.h"
 #include "Entity_Alive.h"
 #include "PHSoundPlayer.h"
 #include "Phdestroyable.h"
 #include "../xrPhysics/death_anims.h"
 #include "../xrPhysics/animation_utils.h"
+#include "PHMovementControl.h"
 #include "PHSkeleton.h"
 #include "character_hit_animations.h"
 #include "character_shell_control.h"
+
 class IPhysicsShellEx;
 class CPHMovementControl;
 class CIKLimbsController;
@@ -19,29 +20,27 @@ class CODEGeom;
 class IPhysicsElementEx;
 class activating_character_delay;
 
-class CCharacterPhysicsSupport :
-	public CPHSkeleton,
-	public CPHDestroyable
+class CCharacterPhysicsSupport : /* public ICharacterPhysicsSupport ,*/ public CPHSkeleton, public CPHDestroyable
 {
 public:
-enum EType
-{
-	etActor,
-	etStalker,
-	etBitting
-};
+	enum EType
+	{
+		etActor,
+		etStalker,
+		etBitting,
+		etEmpty
+	};
 
-enum EState
-{
-	esDead,
-	esAlive,
-	esRemoved
-};
-
+	enum EState
+	{
+		esDead,
+		esAlive,
+		esRemoved
+	};
 private:
-	EType								m_eType;
-	EState								m_eState;
-	Flags8								m_flags;
+	EType							m_eType;
+	EState							m_eState;
+	Flags8							m_flags;
 	enum Fags 
 	{
 		fl_death_anim_on			=1<<0,
@@ -82,35 +81,22 @@ private:
 	u32									m_hit_valide_time;
 	u32									m_physics_shell_animated_time_destroy;
 public:
-EType Type( )
-	{
-		return m_eType;
-	}
+	IC EType Type( ) { return m_eType; }
 private:
-EState STate( )
-	{
-		return m_eState;
-	}
-void	SetState( EState astate )
-	{
-		m_eState = astate;
-	}
-IC	bool isDead( )
-	{
-		return m_eState==esDead;
-	}
-IC	bool isAlive( )
-	{
-		return !m_pPhysicsShell;
-	}
+	EState STate() { return m_eState; }
+	void	SetState(EState astate) { m_eState = astate; }
+	IC	bool isDead() { return m_eState == esDead; }
+	IC	bool isAlive() { return !m_pPhysicsShell; }
 protected:
 virtual void							SpawnInitPhysics				( CSE_Abstract	*D )																									;
 virtual CPhysicsShellHolder*			PPhysicsShellHolder				( )	{ return m_EntityAlife.PhysicsShellHolder( ); }	
 
 virtual bool							CanRemoveObject					( );
+
 public:
+virtual		const Fvector				MovementVelocity				( ) { return m_PhysicMovementControl->GetVelocity(); }
 IC		CPHMovementControl				*movement						( )	{ return m_PhysicMovementControl; }
-IC	const	CPHMovementControl			*movement						( ) const{ return m_PhysicMovementControl; }
+IC		const CPHMovementControl		*movement						( ) const{ return m_PhysicMovementControl; }
 IC		CPHSoundPlayer					*ph_sound_player				( )	{ return &m_ph_sound_player; }
 IC		CIKLimbsController				*ik_controller					( )	{ return m_ik_controller; }
 		bool							interactive_motion				( ) ;
