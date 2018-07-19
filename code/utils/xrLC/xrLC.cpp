@@ -5,6 +5,7 @@
 #include "build.h"
 #include "../xrLC_Light/xrLC_GlobalData.h"
 #include "../xrInterface/cl_cast.hpp"
+#include "../xrInterface/UIParams.hpp"
 
 #pragma comment(lib,"comctl32.lib")
 #pragma comment(lib,"d3dx9.lib")
@@ -42,6 +43,31 @@ static const char* h_str =
 	"-f<NAME>		 == compile level in GameData\\Levels\\<NAME>\\\n"
 	"\n"
 	"NOTE: The last key is required for any functionality\n";
+
+void WinShutdown()
+{
+	HANDLE hToken;
+	TOKEN_PRIVILEGES tkp;
+
+	// Get a token for this process. 
+	if (!OpenProcessToken(GetCurrentProcess(), TOKEN_ADJUST_PRIVILEGES | TOKEN_QUERY, &hToken))
+		return;
+
+	// Get the LUID for the shutdown privilege. 
+	LookupPrivilegeValue(NULL, SE_SHUTDOWN_NAME, &tkp.Privileges[0].Luid);
+
+	tkp.PrivilegeCount = 1;  // one privilege to set    
+	tkp.Privileges[0].Attributes = SE_PRIVILEGE_ENABLED;
+
+	// Get the shutdown privilege for this process.
+	AdjustTokenPrivileges(hToken, FALSE, &tkp, 0, (PTOKEN_PRIVILEGES)NULL, 0);
+
+	if (GetLastError() != ERROR_SUCCESS)
+		return;
+
+	// Shut down the system and force all applications to close. 
+	ExitWindowsEx(EWX_SHUTDOWN | EWX_FORCE, SHTDN_REASON_MAJOR_OPERATINGSYSTEM | SHTDN_REASON_MINOR_UPGRADE | SHTDN_REASON_FLAG_PLANNED);
+}
 
 inline void Help()
 {
@@ -163,9 +189,16 @@ void Startup(char* lpCmdLine)
 	xr_sprintf(inf, "Time elapsed: %s", make_time(dwEndTime / 1000).c_str());
 	Logger.clMsg("Build succesful!\n%s", inf);
 
-	if (!strstr(cmd, "-silent"))
+	if (!strstr(cmd, "-silent") && !pUIParams->isShutDown)
+	{
 		Logger.Success(inf);
+	}
+
+	delete pUIParams;
 	Logger.Destroy();
+
+	if (pUIParams->isShutDown)
+		WinShutdown();
 }
 
 int APIENTRY WinMain(HINSTANCE hInst, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)

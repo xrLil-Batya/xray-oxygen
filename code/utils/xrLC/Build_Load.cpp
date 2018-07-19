@@ -327,7 +327,6 @@ void CBuild::Load	(const b_params& Params, const IReader& _in_FS)
 				// version
 				u32 version = 0;
 				R_ASSERT2(THM->r_chunk(THM_CHUNK_VERSION,&version),th_name);
-				// if( version!=THM_CURRENT_VERSION )	FATAL	("Unsupported version of THM file.");
 
 				// analyze thumbnail information
 				R_ASSERT2(THM->find_chunk(THM_CHUNK_TEXTUREPARAM),th_name);

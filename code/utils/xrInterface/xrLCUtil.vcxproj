@@ -127,6 +127,7 @@
     <ClInclude Include="LevelCompilerLoggerConsole.hpp" />
     <ClInclude Include="LevelCompilerLoggerWindow.hpp" />
     <ClInclude Include="pch.hpp" />
+    <ClInclude Include="UIParams.hpp" />
     <ClInclude Include="xrThread.hpp" />
     <ClInclude Include="xrLCUtil.hpp" />
     <ClInclude Include="resource.h" />

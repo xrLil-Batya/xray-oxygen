@@ -7,6 +7,7 @@ private:
 	bool initialized = false;
 	HWND logWindow = 0;
 	HWND hwLog = 0;
+	HWND hwShutdown = 0;
 	HWND hwProgress = 0;
 	HWND hwInfo = 0;
 	HWND hwStage = 0;

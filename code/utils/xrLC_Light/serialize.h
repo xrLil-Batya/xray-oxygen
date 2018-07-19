@@ -13,7 +13,7 @@ void r_pod_vector( INetReader	&r, xr_vector<T> & v )
 template<typename T>
 void w_pod_vector( IWriter	&w, const xr_vector<T> & v )
 {
-	u32 cnt	= v.size();
+	u32 cnt	= (u32)v.size();
 	w.w_u32( cnt );
 	w.w(&*v.begin(),cnt*sizeof( T ));
 }
@@ -162,17 +162,17 @@ private:
 
 	void write( IWriter &w ) const 
 	{
-		xr_vector<T*>::const_iterator i = vec.begin(), e =  vec.end();
-		w.w_u32(vec.size());
-		for( ;i!= e; ++i )
-				(*i)->write(w);
+		xr_vector<T*>::const_iterator i = vec.begin(), e = vec.end();
+		w.w_u32((u32)vec.size());
+		for (; i != e; ++i)
+			(*i)->write(w);
 	}
 
 	void	write	( IWriter &w, const T* f ) const
 	{
-		u32 id = t_serialize::get_id(  f, vec );
-		
-		w.w_u32( id );
+		u32 id = t_serialize::get_id(f, vec);
+
+		w.w_u32(id);
 	}
 
 	void	write_ref( IWriter &w,const xr_vector<T*>& ref_vec ) const

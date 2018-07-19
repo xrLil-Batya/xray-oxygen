@@ -51,7 +51,7 @@ namespace lc_net
 		read_task_caption(inStream, id, type);
 
 		//xr_vector<u32>::iterator it =std::find( pool.begin(), pool.end(), id );
-		const u32 size = pool.size();
+		const u32 size = (u32)pool.size();
 
 		R_ASSERT(_start != u32(-1));
 		R_ASSERT(_end != u32(-1));

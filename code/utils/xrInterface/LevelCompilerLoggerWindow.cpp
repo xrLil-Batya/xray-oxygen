@@ -5,6 +5,9 @@
 #include <time.h>
 #include <mmsystem.h>
 #include <CommCtrl.h>
+#include "UIParams.hpp"
+
+UIParams* pUIParams = nullptr;
 
 LevelCompilerLoggerWindow::LevelCompilerLoggerWindow()
 {
@@ -63,6 +66,7 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 	SetWindowPos(logWindow, HWND_NOTOPMOST, 0, 0, 0, 0, SWP_NOMOVE | SWP_NOSIZE | SWP_SHOWWINDOW);
 	hwLog = GetDlgItem(logWindow, IDC_LOG);
 	hwProgress = GetDlgItem(logWindow, IDC_PROGRESS);
+	hwShutdown = GetDlgItem(logWindow, IDC_CHECK2);
 	hwInfo = GetDlgItem(logWindow, IDC_INFO);
 	hwStage = GetDlgItem(logWindow, IDC_STAGE);
 	hwTime = GetDlgItem(logWindow, IDC_TIMING);
@@ -75,18 +79,20 @@ void LevelCompilerLoggerWindow::LogThreadProc()
 		char tmpbuf[128];
 		Msg("Startup time: %s", _strtime(tmpbuf));
 	}
-	BOOL bHighPriority = FALSE;
+
 	string256 u_name;
 	unsigned long u_size = sizeof(u_name) - 1;
 	GetUserName(u_name, &u_size);
 	xr_strlwr(u_name);
-	if (!xr_strcmp(u_name, "oles") || !xr_strcmp(u_name, "alexmx"))
-		bHighPriority = TRUE;
+
+	pUIParams = new UIParams();
 	// Main cycle
 	u32 LogSize = 0;
 	float PrSave = 0;
 	while (true)
 	{
+		pUIParams->isShutDown = !!Button_GetCheck(hwShutdown) == BST_CHECKED;
+
 		SetPriorityClass(GetCurrentProcess(), IDLE_PRIORITY_CLASS);
 		// transfer data
 		while (!csLog.try_lock())

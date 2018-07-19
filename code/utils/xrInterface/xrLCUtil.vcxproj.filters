@@ -49,6 +49,7 @@
       <Filter>Log</Filter>
     </ClInclude>
     <ClInclude Include="xrLCUtil.hpp" />
+    <ClInclude Include="UIParams.hpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="resource.rc">

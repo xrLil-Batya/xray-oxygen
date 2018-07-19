@@ -21,7 +21,7 @@ namespace lc_net
 
 	static u32 get_next(u32 from, float &f_weight_per_task)
 	{
-		u32 size = inlc_global_data()->g_deflectors().size();
+		u32 size = (u32)inlc_global_data()->g_deflectors().size();
 		R_ASSERT(from < size);
 		float weight = 0;
 

@@ -381,7 +381,7 @@ __global__ void ProcessHits(xrHardwareLCGlobalData* GlobalData, Ray* RayBuffer, 
 	int LinearLightIndex = 0;
 	GetLightTypeAndIndex(GlobalData, CurrentRayForSurface, CheckRGB, CheckSun, CheckHemi, LightType, LinearLightIndex);
 
-	R_Light& LightSource = GlobalData->LightData[LinearLightIndex];
+	R_Light& pLightSource = GlobalData->LightData[LinearLightIndex];
 	//get energy from current hit
 
 	GetEnergyFromHit(GlobalData, OurHit, OurColor);

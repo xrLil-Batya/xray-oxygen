@@ -5,10 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Weight Fitting Algorithm
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "fitter.h"
 #include <functional>
+#pragma warning(disable: 4244)
 
 IC REAL dfEvaluation(REAL &A, REAL &C, REAL &D)
 {
