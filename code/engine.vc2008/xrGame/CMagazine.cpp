@@ -4,6 +4,11 @@
 
 CMagazine::CMagazine()
 {
+	m_iAmmoCurrentTotal = 0;
+
+	iAmmoElapsed = -1;
+	iMagazineSize = -1;
+	m_ammoType = 0;
 }
 
 

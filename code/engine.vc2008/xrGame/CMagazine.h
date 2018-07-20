@@ -22,6 +22,9 @@ public:
 	float					GetMagazineWeight(const decltype(m_magazine)& mag) const;
 
 protected:
+
+	mutable int				m_iAmmoCurrentTotal;
+
 	// “екущее количество патронов в магазине оружи€
 	int iAmmoElapsed;
 

@@ -453,7 +453,7 @@ protected:
 	
 
 	//для подсчета в GetSuitableAmmoTotal
-	mutable int				m_iAmmoCurrentTotal;
+	
 	mutable u32				m_BriefInfo_CalcFrame;	//кадр на котором просчитали кол-во патронов
 	bool					m_bAmmoWasSpawned;
 

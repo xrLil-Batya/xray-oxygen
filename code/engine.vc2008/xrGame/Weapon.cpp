@@ -50,12 +50,11 @@ CWeapon::CWeapon()
 	m_Offset.identity		();
 	m_StrapOffset.identity	();
 
-	m_iAmmoCurrentTotal		= 0;
+	
 	m_BriefInfo_CalcFrame	= 0;
 
-	iAmmoElapsed			= -1;
-	iMagazineSize			= -1;
-	m_ammoType				= 0;
+	
+	
 
 	eHandDependence			= hdNone;
 
