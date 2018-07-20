@@ -44,6 +44,8 @@ public:
 	adopt_sampler&			_fmag_none		()						{ if (C) C->i_Filter_Mag(stage,D3DTEXF_NONE);										return *this;	}
 	adopt_sampler&			_fmag_point		()						{ if (C) C->i_Filter_Mag(stage,D3DTEXF_POINT);										return *this;	}
 	adopt_sampler&			_fmag_linear	()						{ if (C) C->i_Filter_Mag(stage,D3DTEXF_LINEAR);										return *this;	}
+	adopt_sampler&			_f_gaussian		()						{ if (C) C->i_Filter	(stage,D3DTEXF_GAUSSIANQUAD,  D3DTEXF_LINEAR,  D3DTEXF_GAUSSIANQUAD);	return *this;	}
+	adopt_sampler&			_f_pyramidal	()						{ if (C) C->i_Filter	(stage,D3DTEXF_PYRAMIDALQUAD, D3DTEXF_LINEAR, D3DTEXF_PYRAMIDALQUAD);	return *this;	}
 };																																							
 																																							
 // wrapper																																					
@@ -113,6 +115,8 @@ void CResourceManager::LS_Load()
 			.def("fmip_linear",					&adopt_sampler::_fmip_linear	,return_reference_to<1>())
 			.def("fmag_none",					&adopt_sampler::_fmag_none		,return_reference_to<1>())
 			.def("fmag_point",					&adopt_sampler::_fmag_point		,return_reference_to<1>())
+			.def("f_gaussian",					&adopt_sampler::_f_gaussian		,return_reference_to<1>())
+			.def("f_pyramidal",					&adopt_sampler::_f_pyramidal	,return_reference_to<1>())
 			.def("fmag_linear",					&adopt_sampler::_fmag_linear	,return_reference_to<1>()),
 
 		class_<adopt_compiler>("_compiler")
