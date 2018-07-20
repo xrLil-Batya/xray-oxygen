@@ -85,7 +85,7 @@ IC bool RayPick(CDB::COLLIDER& DB, Fvector& P, Fvector& D, float r, R_Light& L)
 
 float getLastRP_Scale(CDB::COLLIDER* DB, R_Light& L)//, Face* skip)
 {
-	u32	tris_count		= DB->r_count();
+	u32	tris_count		= (u32)DB->r_count();
 	float	scale		= 1.f;
 	Fvector B;
 

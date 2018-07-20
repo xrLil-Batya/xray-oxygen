@@ -186,9 +186,9 @@ void CDeflector::L_Direct(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH
 
         //pack that shit in to task, but remember order
         xr_vector <RayRequest> RayRequests;
-        u32 SurfaceCount = layer.SurfaceLightRequests.size();
+        size_t SurfaceCount = layer.SurfaceLightRequests.size();
         RayRequests.reserve(SurfaceCount);
-        for (int SurfaceID = 0; SurfaceID < SurfaceCount; ++SurfaceID)
+        for (size_t SurfaceID = 0; SurfaceID < SurfaceCount; ++SurfaceID)
         {
             LightpointRequest& LRequest = layer.SurfaceLightRequests[SurfaceID];
             RayRequests.push_back(RayRequest{ LRequest.Position, LRequest.Normal, LRequest.FaceToSkip });
@@ -203,7 +203,7 @@ void CDeflector::L_Direct(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH
         //all that we must remember - we have fucking jitter. And that we don't have much time, because we have tons of that shit
         //#TODO: Invoke several threads!
         u32 SurfaceRequestCursor = 0;
-        u32 AlmostMaxSurfaceLightRequest = layer.SurfaceLightRequests.size() - 1;
+        u32 AlmostMaxSurfaceLightRequest = (u32)layer.SurfaceLightRequests.size() - 1;
         for (u32 V = 0; V < lm.height; V++)
         {
             for (u32 U = 0; U < lm.width; U++)

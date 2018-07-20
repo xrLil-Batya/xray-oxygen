@@ -22,11 +22,9 @@ namespace lc_net{
 	exec_pool *base_models_pool = 0;
 	void RunRefModelsNet( )
 	{
-			
-
 			SetRefModelLightDataInitialized();
 
-			const u32	num_tasks	= inlc_global_data()->mu_refs().size();
+			const u32	num_tasks	= (u32)inlc_global_data()->mu_refs().size();
 			if( num_tasks == 0 )
 			{
 				SetMuModelsLocalCalcLighteningCompleted();
@@ -41,8 +39,6 @@ namespace lc_net{
 			
 			ref_models_pool = get_task_manager().run( "Net Models Lighting" );
 			SetMuModelsLocalCalcLighteningCompleted();
-
-			
 	}
 	void WaitRefModelsNet()
 	{

@@ -44,7 +44,7 @@ void r_vector( INetReader	&r, xr_vector<T> & v )
 template<typename T>
 void w_vector( IWriter	&w, const xr_vector<T> & v )
 {
-	u32 cnt	= v.size();
+	u32 cnt	= (u32)v.size();
 	w.w_u32( cnt );
 	xr_vector<T>::const_iterator i= v.begin(), e = v.end();
 	for(;i!=e;++i)
