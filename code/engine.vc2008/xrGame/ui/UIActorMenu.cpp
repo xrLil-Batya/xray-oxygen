@@ -433,9 +433,13 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
 	PIItem item = (PIItem)cell_item->m_pData;
 	if(!item)
-		return;
+		return;	
 
 	if(CUIDragDropListEx::m_drag_item)
+		return;
+
+	if (!item->m_pInventory 
+		|| !item->GetIconName() )
 		return;
 
 	CWeapon* weapon = smart_cast<CWeapon*>(item);
@@ -478,8 +482,17 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		m_DetectorSlotHighlight->Show(true);
 		return;
 	}
+
+
+		
+	
+	
+
+	
+	
 	CObject*	pObj = smart_cast<CObject*>		(item);
-	shared_str	section_name = pObj->cNameSect();
+	shared_str section_name = pObj->cNameSect();
+	
 	if(eatable)
 	{
 	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
@@ -519,7 +532,15 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 	{
 		return;
 	}
+
+	if (!item->m_pInventory 
+		|| !item->GetIconName()  )
+		return;
+
 	highlight_item_slot(cell_item);
+
+
+	
 
 	// не подсвечивать потроны для ножа
 	if (smart_cast<CWeaponKnife*>(item))
