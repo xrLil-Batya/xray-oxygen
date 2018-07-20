@@ -500,13 +500,12 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-        for (u8 i = 0; i < cap.y; i++)
-        {
-            for (u8 i = 0; i < cap.x; i++)
-            {
-			    m_ArtefactSlotsHighlight[i]->Show(true);
-            }
-        }
+		const int CallPos = g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS) ? cap.y : cap.x;
+
+		for (u8 i = 0; i < CallPos; i++)
+		{
+			m_ArtefactSlotsHighlight[i]->Show(true);
+		}
 		return;
 	}
 }
