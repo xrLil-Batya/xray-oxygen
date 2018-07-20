@@ -551,14 +551,20 @@ void					CRender::rmNormal			()
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it : SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear();
 }
 
 #include "../../xrEngine/GameFont.h"

@@ -594,7 +594,6 @@ void					CRender::rmNormal			()
 	D3D_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
 
 	HW.pContext->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
 void					CRender::ResizeWindowProc(WORD h, WORD w)
@@ -606,14 +605,20 @@ void					CRender::ResizeWindowProc(WORD h, WORD w)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it : SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear();
 }
 
 #include "../../xrEngine/GameFont.h"
