@@ -125,7 +125,7 @@
 		inline_						const node*		GetNodes()		const	{ return mNodes;					}	\
 		/* Stats */																									\
 		override(AABBOptimizedTree)	uqword			GetUsedBytes()	const	{ return mNbNodes*sizeof(node);		}	\
-		private:																									\
+		protected:																									\
 									node*			mNodes;
 
 	typedef		bool				(*GenericWalkingCallback)	(const void* current, void* user_data);

@@ -57,6 +57,7 @@
     <ClCompile Include="xrXRC.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
+    <ClCompile Include="CDB_Model.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frustum.h">
@@ -83,5 +84,6 @@
     <ClInclude Include="cl_intersect.h">
       <Filter>Kernel</Filter>
     </ClInclude>
+    <ClInclude Include="CDB_Model.h" />
   </ItemGroup>
 </Project>
