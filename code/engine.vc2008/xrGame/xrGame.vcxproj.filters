@@ -5945,6 +5945,7 @@
     <ClInclude Include="ui\UILoadingScreen.h">
       <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
+    <ClInclude Include="CMagazine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8454,6 +8455,7 @@
     <ClCompile Include="ui\UILoadingScreen.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
+    <ClCompile Include="CMagazine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">
