@@ -59,14 +59,87 @@ bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
 	return true;
 }
 
+////////////////////////
+// CDB_OptimizeTree
+
+CDB_OptimizeTree::CDB_OptimizeTree()
+{
+	// Base constructor
+}
+
 void CDB_OptimizeTree::Store(IWriter * pWriter)
 {
 	pWriter->w_s64(mNbNodes);
 	pWriter->w(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
+#if 0
+	pWriter->w_float(mNodes->mAABB.mCenter.x);
+	pWriter->w_float(mNodes->mAABB.mCenter.y);
+	pWriter->w_float(mNodes->mAABB.mCenter.z);
+
+	pWriter->w_float(mNodes->mAABB.mExtents.x);
+	pWriter->w_float(mNodes->mAABB.mExtents.y);
+	pWriter->w_float(mNodes->mAABB.mExtents.z);
+
+	pWriter->w_s64(mNodes->mNegData);
+	pWriter->w_s64(mNodes->mPosData);
+#endif
 }
 
-CDB_OptimizeTree::CDB_OptimizeTree() : Opcode::AABBNoLeafTree()
+bool CDB_OptimizeTree::Restore(IReader * pReader)
 {
+	// Read nodes
+	mNbNodes = pReader->r_s64();
+	mNodes = xr_alloc<Opcode::AABBNoLeafNode>(mNbNodes);
+	if (!mNodes)
+		return false;
+
+	ZeroMemory(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
+#if 0
+	// Read mAABB
+	mNodes->mAABB.mCenter.x = pReader->r_float();
+	mNodes->mAABB.mCenter.y = pReader->r_float();
+	mNodes->mAABB.mCenter.z = pReader->r_float();
+
+	mNodes->mAABB.mExtents.x = pReader->r_float();
+	mNodes->mAABB.mExtents.y = pReader->r_float();
+	mNodes->mAABB.mExtents.z = pReader->r_float();
+
+	// Read pos and neg data
+	mNodes->mNegData = pReader->r_s64();
+	mNodes->mPosData = pReader->r_s64();
+#endif
+	pReader->r(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
+	// Validate Pos and Neg data
+	uqword oldbase = 0, newbase = (uqword)mNodes;
+	
+	if (!mNodes[0].HasPosLeaf())
+	{
+		// Positive non-leaf node
+		oldbase = mNodes[0].mPosData - sizeof(Opcode::AABBNoLeafNode);
+	}
+	else if (!mNodes[0].HasNegLeaf())
+	{
+		// Negative non-leaf node
+		oldbase = mNodes[0].mNegData - sizeof(Opcode::AABBNoLeafNode);
+	}
+
+	for (uqword CurID = 0; CurID < mNbNodes; ++CurID)
+	{
+		Opcode::AABBNoLeafNode& node = mNodes[CurID];
+
+		// Positive non-leaf node
+		if (!mNodes[0].HasPosLeaf())
+		{
+			node.mPosData = newbase + (node.mPosData - oldbase);
+		}
+
+		// Negative non-leaf node
+		if (!mNodes[0].HasNegLeaf()) 
+		{
+			node.mNegData = newbase + (node.mNegData - oldbase);
+		}
+	}
+	return true;
 }
 
 bool CDB_OptimizeTree::Build(Opcode::AABBTree* tree)
@@ -90,44 +163,7 @@ bool CDB_OptimizeTree::Build(Opcode::AABBTree* tree)
 	// Build the tree
 	uqword CurID = 1;
 	Opcode::_BuildNoLeafTree(mNodes, 0, CurID, tree);
-	ASSERT(CurID == mNbNodes);
+	R_ASSERT(CurID == mNbNodes);
 
-	return true;
-}
-
-bool CDB_OptimizeTree::Restore(IReader * pReader)
-{
-	// Read nodes
-	mNbNodes = pReader->r_s64();
-	mNodes = xr_alloc<Opcode::AABBNoLeafNode>(mNbNodes);
-	if (!mNodes)
-		return false;
-
-	ZeroMemory(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
-	pReader->r(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
-
-	uintptr_t oldbase = 0, newbase = (uintptr_t)mNodes;
-
-	if (!mNodes[0].HasPosLeaf())// Positive non-leaf node
-	{
-		oldbase = mNodes[0].mPosData - sizeof(Opcode::AABBNoLeafNode);
-	}
-	else if (!mNodes[0].HasNegLeaf())// Negative non-leaf node
-	{
-		oldbase = mNodes[0].mNegData - sizeof(Opcode::AABBNoLeafNode);
-	}
-
-	for (udword i = 0; i < mNbNodes; ++i)
-	{
-		Opcode::AABBNoLeafNode& node = mNodes[i];
-		if (!mNodes[0].HasPosLeaf()) // Positive non-leaf node
-		{
-			node.mPosData = newbase + (node.mPosData - oldbase);
-		}
-		if (!mNodes[0].HasNegLeaf()) // Negative non-leaf node
-		{
-			node.mPosData = newbase + (node.mPosData - oldbase);
-		}
-	}
 	return true;
 }

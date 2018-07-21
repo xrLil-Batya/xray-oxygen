@@ -9,6 +9,9 @@ public:
 	bool Restore(IReader* pReader);
 
 	bool Build	(Opcode::AABBTree* tree);
+
+private:
+	void BuildVolume(Opcode::AABBNoLeafNode* linear, const uqword box_id, uqword& current_id);
 };
 
 class CDB_Model: public Opcode::Model

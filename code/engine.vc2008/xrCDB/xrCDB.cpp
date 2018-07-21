@@ -125,6 +125,8 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache,
 	{
 		tree = xr_new<CDB_Model>();
 		tree->Restore((IReader*)pCache);
+
+		__debugbreak();
 		return;
 	}
 
