@@ -144,21 +144,17 @@ void CBuild::BuildRapid		(BOOL bSaveForOtherCompilers)
 		strconcat(sizeof(fn), fn, pBuild->path, "build.rc_faces");
 		IWriter* Faces_FS = FS.w_open(fn);
 		Faces_FS->open_chunk(0);
-#ifdef _M_X64
 		for (auto &it : rc_faces)
 		{
 			Faces_FS->w_u16(it.reserved);
 			Faces_FS->w_u16(it.dwMaterial);
 			Faces_FS->w_u32(it.dwMaterialGame);
-			//Faces_FS->w_float(it.t[0].x);
-			//Faces_FS->w_float(it.t[0].y);
+			
 			Faces_FS->w_fvector2(it.t[0]);
 			Faces_FS->w_fvector2(it.t[1]);
 			Faces_FS->w_fvector2(it.t[2]);
 		}
-#else
-		Faces_FS->w(&*rc_faces.begin(), rc_faces.size() * sizeof(b_rc_face));
-#endif
+		
 		Faces_FS->close_chunk();
 		FS.w_close(Faces_FS);
 	}

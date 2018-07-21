@@ -19,7 +19,6 @@
 // Include Guard
 #ifndef __OPC_OPTIMIZEDTREE_H__
 #define __OPC_OPTIMIZEDTREE_H__
-
 	//! Common interface for a node of an implicit tree
 	#define IMPLEMENT_IMPLICIT_NODE(base_class, volume)														\
 		public:																								\
@@ -203,4 +202,5 @@
 						Point				mExtentsCoeff;
 	};
 
+	void _BuildNoLeafTree(AABBNoLeafNode* linear, const uqword box_id, uqword& current_id, const AABBTreeNode* current_node);
 #endif // __OPC_OPTIMIZEDTREE_H__
