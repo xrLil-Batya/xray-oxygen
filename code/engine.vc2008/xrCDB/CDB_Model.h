@@ -13,8 +13,6 @@ public:
 
 class CDB_Model: public Opcode::Model
 {
-protected:
-	CDB_OptimizeTree* pTree;
 public:
 	void Store	(IWriter* pWriter);
 	void Restore(IReader* pReader);
@@ -22,4 +20,8 @@ public:
 public:
 	CDB_Model	();
 	bool Build	(const Opcode::OPCODECREATE& create);
+IC  CDB_OptimizeTree*	GetTree() { return pTree; }
+
+protected:
+    CDB_OptimizeTree * pTree;
 };

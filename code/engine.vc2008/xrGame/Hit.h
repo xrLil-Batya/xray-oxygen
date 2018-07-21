@@ -10,7 +10,7 @@ struct SHit
 		float impulseA, ALife::EHitType hit_typeA, float armor_piercingA/*=0.0f*/, bool AimBullet/*=false*/);
 
 	SHit										();	
-	bool				is_valide				()		const	;	
+IC  bool				is_valide()		                const   { return hit_type != ALife::eHitTypeMax; }
 	void				invalidate				()				;
 IC	float				damage					()		const	{VERIFY(is_valide());return power;}
 IC	const Fvector		&direction				()		const	{VERIFY(is_valide());return dir;}

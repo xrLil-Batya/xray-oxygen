@@ -3,7 +3,7 @@
 #include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
 #include "../../3rd-party/OPCODE/Opcode.h"
 
-CDB_Model::CDB_Model() : Opcode::Model()
+CDB_Model::CDB_Model()
 {
 	pTree = new CDB_OptimizeTree();
 }
