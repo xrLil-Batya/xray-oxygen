@@ -695,9 +695,9 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 {
 	if (!cell_itm)
+	{
 		return false;
-	
-
+	}
 
 	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
