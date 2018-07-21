@@ -301,6 +301,17 @@ half Contrast(half Input, half ContrastPower)
      return Output;
 }
 
+half4 proj2screen(half4 Project)
+{
+	half4	Screen;
+			Screen.x = (Project.x + Project.w) * 0.5h;
+			Screen.y = (Project.w - Project.y) * 0.5h;
+			Screen.z = Project.z;
+			Screen.w = Project.w;
+			
+	return Screen;
+}
+
 #define FXPS technique _render{pass _code{PixelShader=compile ps_3_0 main();}}
 #define FXVS technique _render{pass _code{VertexShader=compile vs_3_0 main();}}
 

@@ -13,8 +13,9 @@
 #include "blender_ssao.h"
 #include "blender_rain_drops.h"
 #include "blender_fxaa.h"
-#include "blender_ss.h"
-#include "blender_sunshafts.h"
+#include "blender_smaa.h"
+#include "blender_ssss_mrmnwar.h"
+#include "blender_ssss_ogse.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -214,8 +215,9 @@ CRenderTarget::CRenderTarget		()
 	b_combine						= xr_new<CBlender_combine>				();
 	b_rain_drops                    = xr_new<CBlender_rain_drops>           ();
 	b_fxaa                          = xr_new<CBlender_FXAA>                 ();
-	b_sunshafts						= xr_new<CBlender_ss>					();
-    b_ogse_sunshafts				= xr_new<CBlender_sunshafts>();
+	b_smaa                          = xr_new<CBlender_SMAA>                 ();
+	b_ssss_mrmnwar					= xr_new<CBlender_ssss_mrmnwar>			();
+	b_ssss_ogse						= xr_new<CBlender_ssss_ogse>			();
 
 	//	NORMAL
 	{
@@ -247,20 +249,20 @@ CRenderTarget::CRenderTarget		()
 		}
 
         // Mrmnwar SunShaft Screen Space
-        if (RImplementation.o.sunshaft_mrmnwar)
+//		if (RImplementation.o.sunshaft_mrmnwar)
         {
-            rt_SunShaftsMask.create(r2_RT_SunShaftsMask, w, h, D3DFMT_A8R8G8B8);
-            rt_SunShaftsMaskSmoothed.create(r2_RT_SunShaftsMaskSmoothed, w, h, D3DFMT_A8R8G8B8);
-            rt_SunShaftsPass0.create(r2_RT_SunShaftsPass0, w, h, D3DFMT_A8R8G8B8);
-            s_SunShafts.create(b_sunshafts, "r2\\SunShafts");
+            rt_SunShaftsMask.create			(r2_RT_SunShaftsMask,			w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsMaskSmoothed.create	(r2_RT_SunShaftsMaskSmoothed,	w, h, D3DFMT_A8R8G8B8);
+            rt_SunShaftsPass0.create		(r2_RT_SunShaftsPass0,			w, h, D3DFMT_A8R8G8B8);
+            s_ssss_mrmnwar.create			(b_ssss_mrmnwar);
         }
 
         // RT - KD Screen space sunshafts
-        if (RImplementation.o.sunshaft_screenspace)
+//		if (RImplementation.o.sunshaft_screenspace)
         {
-            rt_sunshafts_0.create(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
-            rt_sunshafts_1.create(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
-            s_ogse_sunshafts.create(b_ogse_sunshafts, "r2\\sunshafts");
+            rt_sunshafts_0.create			(r2_RT_sunshafts0, w, h, D3DFMT_A8R8G8B8);
+            rt_sunshafts_1.create			(r2_RT_sunshafts1, w, h, D3DFMT_A8R8G8B8);
+            s_ssss_ogse.create				(b_ssss_ogse);
         }
 
 		// generic(LDR) RTs
@@ -360,12 +362,25 @@ CRenderTarget::CRenderTarget		()
 		f_bloom_factor				= 0.5f;
 	}
 
-	// FXAA
-    s_fxaa.create(b_fxaa, "r2\\fxaa");
-	u32 fvf_fxaa = D3DFVF_XYZRHW | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0);
-    g_fxaa.create(fvf_fxaa, RCache.Vertex.Buffer(), RCache.QuadIB);
+	// Postrprocess anti-aliasing
+	{
+		u32	w = Device.dwWidth, h = Device.dwHeight;
+
+		// FXAA
+		s_fxaa.create(b_fxaa);
+
+		// SMAA
+		rt_prev_frame0.create		(r2_RT_prev_frame0,		w, h, D3DFMT_A8R8G8B8);
+		rt_smaa_edgetex.create		(r2_RT_smaa_edgetex,	w, h, D3DFMT_A8R8G8B8);
+		rt_smaa_blendtex.create		(r2_RT_smaa_blendtex,	w, h, D3DFMT_A8R8G8B8);
+
+		u32 fvf_smaa = D3DFVF_XYZRHW | D3DFVF_TEX5 | D3DFVF_TEXCOORDSIZE2(0) | D3DFVF_TEXCOORDSIZE4(1) | D3DFVF_TEXCOORDSIZE4(2) | D3DFVF_TEXCOORDSIZE4(3) | D3DFVF_TEXCOORDSIZE4(4);
+		g_smaa.create(fvf_smaa, RCache.Vertex.Buffer(), RCache.QuadIB);
+
+		s_smaa.create(b_smaa);
+	}
 	
-	//HBAO
+	// HBAO
 	if (RImplementation.o.ssao_opt_data)
 	{
 		u32		w = 0;
@@ -439,9 +454,6 @@ CRenderTarget::CRenderTarget		()
 
 		u32 fvf_aa_AA				= D3DFVF_XYZRHW|D3DFVF_TEX7|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3)|D3DFVF_TEXCOORDSIZE2(4)|D3DFVF_TEXCOORDSIZE4(5)|D3DFVF_TEXCOORDSIZE4(6);
 		g_aa_AA.create				(fvf_aa_AA,		RCache.Vertex.Buffer(), RCache.QuadIB);
-
-        u32 fvf_KD = D3DFVF_XYZRHW | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0);
-        g_KD.create(fvf_KD, RCache.Vertex.Buffer(), RCache.QuadIB);
 
 		t_envmap_0.create			(r2_T_envs0);
 		t_envmap_1.create			(r2_T_envs1);
@@ -664,11 +676,12 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete					(b_accum_direct			);
 	xr_delete					(b_accum_direct_cascade	);
 	xr_delete                   (b_fxaa                 );
+	xr_delete                   (b_smaa                 );
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
 	xr_delete                   (b_rain_drops           );
-	xr_delete					(b_sunshafts			);
-    xr_delete                   (b_ogse_sunshafts       );
+	xr_delete					(b_ssss_mrmnwar			);
+    xr_delete                   (b_ssss_ogse			);
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)
@@ -707,15 +720,50 @@ void CRenderTarget::increment_light_marker()
 
 bool CRenderTarget::need_to_render_sunshafts()
 {
-	if ( ! (RImplementation.o.advancedpp && ps_r_sun_shafts) )
+	if (!RImplementation.o.advancedpp || ps_r_sun_shafts == 0)
 		return false;
 
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fSunShaftsIntensity;
-		//	TODO: add multiplication by sun color here
-		if (fValue<0.0001) return false;
-	}
+	light* sun = (light*)RImplementation.Lights.sun._get();
+	CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
+	Fcolor sun_color = sun->color;
+	float fValue = E.m_fSunShaftsIntensity * u_diffuse2s(sun_color.r, sun_color.g, sun_color.b);
+	if (fValue < EPS)
+		return false;
 
 	return true;
+}
+
+void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+{
+	float d_Z	= EPS_S;
+	float d_W	= 1.0f;
+	u32	C		= color_rgba(255, 255, 255, 255);
+	Fvector2 p0, p1;
+	p0.set(0.5f/w, 0.5f/h);
+	p1.set((w+0.5f)/w, (h+0.5f)/h);
+
+    u_setrt				(rt, nullptr, nullptr, HW.pBaseZB);
+	RCache.set_CullMode	(CULL_NONE);
+	RCache.set_Stencil	(FALSE);
+ 
+	FVF::TL* pv = (FVF::TL*)RCache.Vertex.Lock(4, g_combine->vb_stride, Offset);
+	pv->set(0, h, d_Z, d_W, C, p0.x, p1.y); pv++;
+	pv->set(0, 0, d_Z, d_W, C, p0.x, p0.y); pv++;
+	pv->set(w, h, d_Z, d_W, C, p1.x, p1.y); pv++;
+	pv->set(w, 0, d_Z, d_W, C, p1.x, p0.y); pv++;
+	RCache.Vertex.Unlock(4, g_combine->vb_stride);
+
+    RCache.set_Element(sh);
+	if (consts)
+	{
+		for (const auto &C : *consts)
+			RCache.set_c(C.first, *C.second);
+	}
+    RCache.set_Geometry	(g_combine);
+    RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
+}
+
+void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+{
+	render_screen_quad(w, h, Offset, rt_Generic_0, sh, bCopyRT, consts);
 }

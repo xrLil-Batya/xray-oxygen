@@ -722,17 +722,10 @@ void CRenderTarget::accum_direct_lum	()
 
 void CRenderTarget::accum_direct_volumetric	(u32 sub_phase, const u32 Offset, const Fmatrix &mShadow)
 {
-	if ( (sub_phase!=SE_SUN_NEAR) && (sub_phase!=SE_SUN_MIDDLE) && (sub_phase!=SE_SUN_FAR) ) return;
+	if ((sub_phase != SE_SUN_NEAR) && (sub_phase != SE_SUN_MIDDLE) && (sub_phase != SE_SUN_FAR)) return;
 
-	if (!(RImplementation.o.advancedpp && ps_r_sun_shafts && ps_r_sunshafts_mode == SS_VOLUMETRIC))
+	if (!need_to_render_sunshafts() || ps_r_sunshafts_mode != SS_VOLUMETRIC)
 		return;
-
-	{
-		CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
-		float fValue = E.m_fSunShaftsIntensity;
-		//	TODO: add multiplication by sun color here
-		if (fValue<0.0001) return;
-	}
 
 	phase_vol_accumulator();
 

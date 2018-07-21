@@ -561,9 +561,6 @@
 	<string id="ui_mm_novice">
 		<text>Rookie</text>
 	</string>
-	<string id="ui_mm_npc_torch">
-		<text>NPC flashlights</text>
-	</string>
 	<string id="ui_mm_options">
 		<text>OPTIONS</text>
 	</string>
@@ -672,8 +669,17 @@
 	<string id="ui_mm_supersample">
 		<text>Antialiasing</text>
 	</string>
-	<string id="ui_mm_switch_torch">
-		<text>AI uses flashlights</text>
+	<string id="ui_mm_aa_mode">
+		<text>Antialiasing</text>
+	</string>
+	<string id="st_opt_fxaa">
+		<text>FXAA</text>
+	</string>
+	<string id="st_opt_smaa">
+		<text>SMAA</text>
+	</string>
+	<string id="ui_mm_rain_drops">
+		<text>Rain drops on lens</text>
 	</string>
 	<string id="ui_mm_texture_quality">
 		<text>Texture detail</text>
@@ -936,11 +942,11 @@
 	<string id="volumetric">
 		<text>Volumetric</text>
 	</string>
-	<string id="screen_space">
-		<text>Screen Space</text>
+	<string id="ss_ogse">
+		<text>Screen space (OGSE)</text>
 	</string>
-	<string id="manowar_ssss">
-		<text>Mrmnwar SS</text>
+	<string id="ss_manowar">
+		<text>Screen space (Mrmnwar)</text>
 	</string>
 	<string id="ui_mm_windowtype">
 		<text>Window type</text>
