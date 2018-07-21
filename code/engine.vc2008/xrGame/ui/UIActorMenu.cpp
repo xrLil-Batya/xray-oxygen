@@ -170,6 +170,7 @@ void CUIActorMenu::Draw()
 	}
 
 	inherited::Draw();
+
 	m_ItemInfo->Draw();
 }
 
@@ -431,19 +432,20 @@ void CUIActorMenu::clear_highlight_lists()
 
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
+	
+
 	PIItem item = (PIItem)cell_item->m_pData;
-	if(!item)
+
+	if (!item
+		|| !item->m_pInventory
+		|| !item->m_name || item->m_name == ""
+		|| !item->m_section_id || item->m_section_id == "")
 		return;
+
 
 	if(CUIDragDropListEx::m_drag_item)
 		return;
 
-	CWeapon* weapon = smart_cast<CWeapon*>(item);
-	CHelmet* helmet = smart_cast<CHelmet*>(item);
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(item);
-	CCustomDetector* detector = smart_cast<CCustomDetector*>(item);
-	CEatableItem* eatable = smart_cast<CEatableItem*>(item);
-	CArtefact* artefact = smart_cast<CArtefact*>(item);
     u32 item_slot = item->BaseSlot();
 	
     if (item_slot == BINOCULAR_SLOT)
@@ -478,29 +480,33 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		m_DetectorSlotHighlight->Show(true);
 		return;
 	}
-	CObject*	pObj = smart_cast<CObject*>		(item);
-	shared_str	section_name = pObj->cNameSect();
-	if(eatable)
+
+	CObject* pObj = item->cast_game_object();
+	shared_str section_name = pObj->cNameSect();
+
+	if (smart_cast<CEatableItem*>(item))
 	{
-	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
-	    if (!CanSwitchToFastSlot)
-		    return;
-		
-		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iQuickSlot)
+		bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
+		if (!CanSwitchToFastSlot)
 			return;
 
-		for(u8 i=0; i<4; i++)
+		if (cell_item->OwnerList() && GetListType(cell_item->OwnerList()) == iQuickSlot)
+			return;
+
+		for (u8 i = 0; i < 4; i++)
 			m_QuickSlotsHighlight[i]->Show(true);
 		return;
 	}
 
-	if(artefact)
+	if(smart_cast<CArtefact*>(item->cast_game_object()))
 	{
 		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iActorBelt)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-        for (u8 i = 0; i < cap.y; i++)
+
+		int CallPos = g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS) ? cap.y : cap.x;
+        for (u8 i = 0; i < CallPos; i++)
         {
             for (u8 i = 0; i < cap.x; i++)
             {
@@ -515,13 +521,14 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
-	if ( !item )
-	{
+
+	// Object != nullptr everyone
+	if (!item || !item->m_pInventory || item->m_name.equal("") || !item->m_section_id.c_str())
 		return;
-	}
+
 	highlight_item_slot(cell_item);
 
-	// не подсвечивать потроны для ножа
+	// не подсвечивать патроны для ножа
 	if (smart_cast<CWeaponKnife*>(item))
 	{
 		return;

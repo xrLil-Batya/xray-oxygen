@@ -393,7 +393,8 @@ void CInventoryOwner::LostPdaContact	(CInventoryOwner* pInvOwner)
 //для работы с relation system
 u16 CInventoryOwner::object_id	()  const
 {
-	return smart_cast<const CGameObject*>(this)->ID();
+	const CGameObject* pObject = smart_cast<const CGameObject*>(this);
+	return pObject ? pObject->ID() : u16(-1);
 }
 
 

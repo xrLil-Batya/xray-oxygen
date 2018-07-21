@@ -692,12 +692,11 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 	};
 }
 
+#include "UIActorStateInfo.h"
 bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 {
-	if (!cell_itm)
-	{
+	if (!cell_itm)	
 		return false;
-	}
 
 	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
@@ -712,9 +711,11 @@ bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 	}
 
+	// Send to Actor fell
 	SendEvent_Item_Eat(item, recipient);
 	PlaySnd(eItemUse);
 	SetCurrentItem(NULL);
+
 	return true;
 }
 

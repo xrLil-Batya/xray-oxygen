@@ -620,15 +620,15 @@ void CUICellContainer::PlaceItemAtPos(CUICellItem* itm, Ivector2& cell_pos)
 
 CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 {
-	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end()!=it; ++it)
+	for (CUIWindow* pWND: m_ChildWndList)
 	{
-		CUICellItem* i		= (CUICellItem*)(*it);
-		
-		if(i->HasChild(itm))
+		CUICellItem* i = (CUICellItem*)(pWND);
+
+		if (i->HasChild(itm))
 		{
-			CUICellItem* iii	= i->PopChild(itm);
-			R_ASSERT			(0==iii->ChildsCount());
-			return				iii;
+			CUICellItem* pCellItm = i->PopChild(itm);
+			R_ASSERT(0 == pCellItm->ChildsCount());
+			return				pCellItm;
 		}
 	}
 
