@@ -112,15 +112,13 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 	// Validate Pos and Neg data
 	uqword oldbase = 0, newbase = (uqword)mNodes;
 	
-	if (!mNodes[0].HasPosLeaf())
+	if (!mNodes[0].HasPosLeaf() || !mNodes[0].HasNegLeaf())
 	{
-		// Positive non-leaf node
 		oldbase = mNodes[0].mPosData - sizeof(Opcode::AABBNoLeafNode);
 	}
-	else if (!mNodes[0].HasNegLeaf())
+	else
 	{
-		// Negative non-leaf node
-		oldbase = mNodes[0].mNegData - sizeof(Opcode::AABBNoLeafNode);
+		R_ASSERT2(false, "Error reading mPos or mNeg!");
 	}
 
 	for (uqword CurID = 0; CurID < mNbNodes; ++CurID)
