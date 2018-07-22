@@ -203,9 +203,9 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 
 	if (IsTalking())
 	{
-		//если наш собеседник перестал говорить с нами,
+		//если наш собеседник перестал говорить с нами или умер,
 		//то и нам нечего ждать.
-		if (!m_pTalkPartner->IsTalking())
+		if (!m_pTalkPartner->IsTalking() || !m_pTalkPartner->is_alive())
 		{
 			StopTalk();
 		}
