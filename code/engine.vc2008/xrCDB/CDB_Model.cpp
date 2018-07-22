@@ -10,14 +10,14 @@ CDB_Model::CDB_Model()
 
 void CDB_Model::Store(IWriter* writer)
 {
-	writer->w_u64(this->mModelCode);
-	this->pTree->Store(writer);
+	writer->w_u64(mModelCode);
+	pTree->Store(writer);
 }
 
 void CDB_Model::Restore(IReader* reader)
 {
-	this->mModelCode = reader->r_u64();
-	this->pTree->Restore(reader);
+	mModelCode = reader->r_u64();
+	pTree->Restore(reader);
 }
 
 bool CDB_Model::Build(const Opcode::OPCODECREATE& create)
@@ -126,13 +126,13 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 		Opcode::AABBNoLeafNode& node = mNodes[CurID];
 
 		// Positive non-leaf node
-		if (!mNodes[0].HasPosLeaf())
+		if (!node.HasPosLeaf())
 		{
 			node.mPosData = newbase + (node.mPosData - oldbase);
 		}
 
 		// Negative non-leaf node
-		if (!mNodes[0].HasNegLeaf()) 
+		if (!node.HasNegLeaf())
 		{
 			node.mNegData = newbase + (node.mNegData - oldbase);
 		}
