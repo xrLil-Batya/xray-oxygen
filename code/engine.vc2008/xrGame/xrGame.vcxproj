@@ -152,6 +152,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -212,6 +213,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -282,6 +284,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -353,9 +356,11 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CMagazine.h" />
     <ClInclude Include="ui\UILoadingScreen.h" />
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
@@ -1660,6 +1665,7 @@
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CMagazine.cpp" />
     <ClCompile Include="ui\UILoadingScreen.cpp" />
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />

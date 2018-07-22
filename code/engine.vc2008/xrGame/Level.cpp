@@ -360,7 +360,7 @@ void CLevel::ProcessGameEvents()
 				}break;
 			default:
 				{
-					VERIFY(0);
+					R_ASSERT(0);
 				}break;
 			}			
 		}

@@ -346,14 +346,6 @@
             <options_item entry="r_ls_fade" group="mm_opt_video_adv"/>
         </track_light_distance>
 
-        <cap_npc_torch x="16" y="3" width="108" height="24">
-            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_npc_torch</text>
-        </cap_npc_torch>
-        <check_npc_torch x="133" y="0" width="35" stretch="1" height="29">
-	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="ai_use_torch_dynamic_lights" group="mm_opt_video_adv"/>
-        </check_npc_torch>
-
         <cap_particles_distance x="16" y="3" width="108" height="24">
             <text r="255" g="220" b="0" font="letterica16" align="r" vert_align="c">ui_mm_sun_quality</text>
         </cap_particles_distance>
@@ -361,13 +353,24 @@
             <options_item entry="r_ls_squality" group="mm_opt_video_adv"/>
         </track_particles_distance>
 		
-		<cap_fxaa x="16" y="3" width="108" height="24">
-            <text r="200" g="34" b="34" font="letterica16" align="r" vert_align="c">FXAA</text>
-        </cap_fxaa>
-        <check_fxaa x="133" y="0" width="35" stretch="1" height="29">
+        <cap_rain_drops x="16" y="3" width="108" height="24">
+            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_rain_drops</text>
+        </cap_rain_drops>
+        <check_rain_drops x="133" y="0" width="35" stretch="1" height="29">
 	        <texture>ui_inGame2_checkbox</texture>
-            <options_item entry="r_fxaa" group="mm_opt_video_adv" depend="vid"/>
-        </check_fxaa>
+            <options_item entry="r_rain_droplets" group="mm_opt_video_adv"/>
+        </check_rain_drops>
+		
+		<cap_aa_mode x="16" y="3" width="108" height="24">
+            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_aa_mode</text>
+        </cap_aa_mode>
+        <combo_aa_mode x="144" y="0" width="188" height="20" list_length="5" always_show_scroll="0">
+            <options_item entry="r_aa_mode" group="mm_opt_video"/>
+            <list_font r="34" g="179" b="34" font="letterica16"/>
+            <text_color>
+	            <e r="34" g="179" b="34"/>
+            </text_color>
+        </combo_aa_mode>
 		
         <cap_vsync x="16" y="3" width="108" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_vsync</text>

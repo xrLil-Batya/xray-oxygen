@@ -688,16 +688,15 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 			}
 			return m_pInventoryBagList;
         default:
-            return NULL;
+            return nullptr;
 	};
 }
 
+#include "UIActorStateInfo.h"
 bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 {
-	if (!cell_itm)
-	{
+	if (!cell_itm)	
 		return false;
-	}
 
 	PIItem item = dynamic_cast<CFoodItem*>((PIItem)cell_itm->m_pData);
 
@@ -706,15 +705,25 @@ bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 		return false;
 	}
 
-	u16 recipient = m_pActorInvOwner->object_id();
-	if (item->parent_id() != recipient)
+	bool bRemoveObjectUse = false;
+
+	u16 ActorInventoryID = m_pActorInvOwner->object_id();
+	if (item->parent_id() != ActorInventoryID)
+	{
+		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
+		bRemoveObjectUse = true;
+	}
+
+	// Send event to Actor fell
+	SendEvent_Item_Eat(item, ActorInventoryID);
+	PlaySnd(eItemUse);
+	SetCurrentItem(nullptr);
+
+	if (!bRemoveObjectUse)
 	{
 		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 	}
 
-	SendEvent_Item_Eat(item, recipient);
-	PlaySnd(eItemUse);
-	SetCurrentItem(NULL);
 	return true;
 }
 

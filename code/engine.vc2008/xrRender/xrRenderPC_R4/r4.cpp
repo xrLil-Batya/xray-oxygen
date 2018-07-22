@@ -232,7 +232,7 @@ void					CRender::create()
 	o.dx10_msaa_samples		= (1 << ps_r3_msaa);
 	/////////////////////////////////////////////
 	// sunshafts options
-	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
+//	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
 	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt			= o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)

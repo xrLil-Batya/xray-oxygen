@@ -46,16 +46,16 @@ MODEL::~MODEL()
 
 struct	BTHREAD_params
 {
-	MODEL*				M;
-	Fvector*			V;
-	int					Vcnt;
-	TRI*				T;
-	int					Tcnt;
-	void*				pCache;
-	bool				isCacheReader;
-	build_callback*		BC;
-	void*				BCP;
-    bool                rebuildTrisRequired;
+	MODEL*			M;
+	Fvector*		V;
+	int				Vcnt;
+	TRI*			T;
+	int				Tcnt;
+	void*			pCache;
+	bool			isCacheReader;
+	build_callback*	BC;
+	void*			BCP;
+    bool            rebuildTrisRequired;
 };
 
 void MODEL::build_thread(void *params)
@@ -90,22 +90,6 @@ void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isC
 
 void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isCacheReader, build_callback* bc, void* bcp, bool rebuildTrisRequired)
 {
-    IReader* cacheFileReader = (IReader*)pCache;
-
-    struct AutoCloseCacheFile
-    {
-        AutoCloseCacheFile(IReader* InCacheFileReader)
-            : CacheFileReader(InCacheFileReader)
-        {}
-
-        ~AutoCloseCacheFile()
-        {
-            FS.r_close(CacheFileReader);
-        }
-
-        IReader* CacheFileReader;
-    } AutoCloser(cacheFileReader);
-
 	// verts
 	verts_count = Vcnt;
 	verts = CALLOC(Fvector, verts_count);
@@ -139,20 +123,16 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache,
 	// Release data pointers
 	status = S_BUILD;
 
-    auto TryRestoreFromCacheLambda = [this, cacheFileReader, isCacheReader]() -> bool
-    {
-        if (cacheFileReader && isCacheReader)
-        {
-            tree = xr_new<CDB_Model>();
-            return tree->Restore(cacheFileReader);
-        }
-
-        Msg("* Level collision DB cache missing, rebuilding...");
-        return false;
-    };
-
-    // Try restore from cache. If successfull - don't rebuild collision DB
-    if (TryRestoreFromCacheLambda()) return;
+	// Try restore from cache. If successfull - don't rebuild collision DB
+	if (pCache && isCacheReader)
+	{
+		IReader* pReader = (IReader*)(pCache);
+		tree = xr_new<CDB_Model>();
+		if (tree->Restore(pReader))
+			return;
+		else
+			Msg("* Level collision DB cache missing, rebuilding...");
+	}
 
 	// Allocate temporary "OPCODE" tris + convert tris to 'pointer' form
 	u32* temp_tris = CALLOC(u32, tris_count * 3);
@@ -194,10 +174,13 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache,
 		xr_free(temp_tris);
 		return;
 	}
-
-	if (tree && pCache && !isCacheReader)
+	
+	// Write cache
+	if (pCache && !isCacheReader)
 	{
-		tree->Store((IWriter*)pCache);
+		IWriter* pWritter = (IWriter*)(pCache);
+		tree->Store(pWritter);
+		FS.w_close(pWritter);
 	}
 
 	// Free temporary tris

@@ -13,16 +13,16 @@ void CBlender_FXAA::Compile(CBlender_Compile& C)
     switch (C.iElement)
     {
     case 0: // luminance pass
-        C.r_Pass		("ogse_screen_space", "fxaa_luma", FALSE, FALSE, FALSE);
+        C.r_Pass		("stub_screen_space", "fxaa_luma", FALSE, FALSE, FALSE);
         C.r_dx10Texture	("s_image", r2_RT_generic0);
         C.r_dx10Sampler	("smp_rtlinear");
-        C.r_End();
+        C.r_End			();
         break;
     case 1: // main pass
-        C.r_Pass		("ogse_screen_space", "fxaa_main", FALSE, FALSE, FALSE);
+        C.r_Pass		("stub_screen_space", "fxaa_main", FALSE, FALSE, FALSE);
         C.r_dx10Texture	("s_image", r2_RT_generic0);
         C.r_dx10Sampler	("smp_rtlinear");
-        C.r_End();
+        C.r_End			();
         break;
     }
 }

@@ -50,12 +50,11 @@ CWeapon::CWeapon()
 	m_Offset.identity		();
 	m_StrapOffset.identity	();
 
-	m_iAmmoCurrentTotal		= 0;
+	
 	m_BriefInfo_CalcFrame	= 0;
 
-	iAmmoElapsed			= -1;
-	iMagazineSize			= -1;
-	m_ammoType				= 0;
+	
+	
 
 	eHandDependence			= hdNone;
 
@@ -1941,20 +1940,3 @@ u32 CWeapon::Cost() const
 	return res;
 }
 
-float CWeapon::GetMagazineWeight(const decltype(CWeapon::m_magazine)& mag) const
-{
-    float res = 0;
-    const char* last_type = nullptr;
-    float last_ammo_weight = 0;
-    for (auto& c : mag)
-    {
-        // Usually ammos in mag have same type, use this fact to improve performance
-        if (last_type != c.m_ammoSect.c_str())
-        {
-            last_type = c.m_ammoSect.c_str();
-            last_ammo_weight = c.Weight();
-        }
-        res += last_ammo_weight;
-    }
-    return res;
-}

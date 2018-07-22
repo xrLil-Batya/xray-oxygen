@@ -313,63 +313,50 @@ void CUIDragDropListEx::Compact()
 	}
 }
 
-
-void CUIDragDropListEx::Draw()
-{
-	inherited::Draw				();
-
-	if(0 && bDebug){
-		CGameFont* F		= UI().Font().pFontDI;
-		F->SetAligment		(CGameFont::alCenter);
-		F->SetHeightI		(0.02f);
-		F->OutSetI			(0.f,-0.5f);
-		F->SetColor			(0xffffffff);
-		Ivector2			pt = m_container->PickCell(GetUICursor().GetCursorPosition());
-		F->OutNext			("%d-%d",pt.x, pt.y);
-	};
-
-}
-
 void CUIDragDropListEx::Update()
 {
-	inherited::Update			();
+	inherited::Update();
 
-	if( m_drag_item ){
+	if (m_drag_item) 
+	{
 		Frect	wndRect;
 		GetAbsoluteRect(wndRect);
-		Fvector2 cp			= GetUICursor().GetCursorPosition();
-		if(wndRect.in(cp)){
-			if(NULL==m_drag_item->BackList())
+		Fvector2 cp = GetUICursor().GetCursorPosition();
+		if (wndRect.in(cp)) 
+		{
+			if (!m_drag_item->BackList())
 				m_drag_item->SetBackList(this);
-		}else
-			if( this==m_drag_item->BackList() )
-				m_drag_item->SetBackList(NULL);
+		}
+		else if (this == m_drag_item->BackList())
+		{
+			m_drag_item->SetBackList(NULL);
+		}
 	}
 }
 
 void CUIDragDropListEx::ReinitScroll()
 {
-		float h1 = m_container->GetWndSize().y;
-		float h2 = GetWndSize().y;
-		VERIFY						(_valid(h1));
-		VERIFY						(_valid(h2));
-		float dh = h1-h2;
-		m_vScrollBar->Show			( (dh > 0) || m_flags.test(flAlwaysShowScroll) );
-		m_vScrollBar->Enable		( (dh > 0) || m_flags.test(flAlwaysShowScroll) );
+	float h1 = m_container->GetWndSize().y;
+	float h2 = GetWndSize().y;
+	VERIFY(_valid(h1));
+	VERIFY(_valid(h2));
+	float dh = h1 - h2;
+	m_vScrollBar->Show	( (dh > 0) || m_flags.test(flAlwaysShowScroll) );
+	m_vScrollBar->Enable( (dh > 0) || m_flags.test(flAlwaysShowScroll) );
 
-		if ( dh < 0 )
-		{
-			m_vScrollBar->SetRange	(0, 0);
-		}
-		else
-		{
-			m_vScrollBar->SetRange	(0, iFloor(dh));
-		}
-		m_vScrollBar->SetScrollPos	(0);
-		m_vScrollBar->SetStepSize	(CellSize().y/3);
-		m_vScrollBar->SetPageSize	(1);
+	if (dh < 0)
+	{
+		m_vScrollBar->SetRange(0, 0);
+	}
+	else
+	{
+		m_vScrollBar->SetRange(0, iFloor(dh));
+	}
+	m_vScrollBar->SetScrollPos(0);
+	m_vScrollBar->SetStepSize(CellSize().y / 3);
+	m_vScrollBar->SetPageSize(1);
 
-		m_container->SetWndPos		(Fvector2().set(0,0));
+	m_container->SetWndPos(Fvector2().set(0, 0));
 }
 
 bool CUIDragDropListEx::OnMouseAction(float x, float y, EUIMessages mouse_action)
@@ -620,15 +607,15 @@ void CUICellContainer::PlaceItemAtPos(CUICellItem* itm, Ivector2& cell_pos)
 
 CUICellItem* CUICellContainer::RemoveItem(CUICellItem* itm, bool force_root)
 {
-	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end()!=it; ++it)
+	for (CUIWindow* pWND: m_ChildWndList)
 	{
-		CUICellItem* i		= (CUICellItem*)(*it);
-		
-		if(i->HasChild(itm))
+		CUICellItem* i = (CUICellItem*)(pWND);
+
+		if (i->HasChild(itm))
 		{
-			CUICellItem* iii	= i->PopChild(itm);
-			R_ASSERT			(0==iii->ChildsCount());
-			return				iii;
+			CUICellItem* pCellItm = i->PopChild(itm);
+			R_ASSERT(0 == pCellItm->ChildsCount());
+			return				pCellItm;
 		}
 	}
 

@@ -46,8 +46,8 @@ public:
 	IBlender*					b_ssao_msaa[8];
 	IBlender*					b_fxaa;
 	IBlender*					b_rain_drops;
-	IBlender*					b_sunshafts;
-	IBlender*					b_ogse_sunshafts;
+	IBlender*					b_ssss_mrmnwar;
+    IBlender*					b_ssss_ogse;
 
 #ifdef DEBUG
 	struct		dbg_line_t		{
@@ -121,8 +121,8 @@ private:
 	ref_shader					s_occq;
 
 	// SUNSHAFTS
-	ref_shader					s_SunShafts;
-	ref_shader					s_ogse_sunshafts;
+	ref_shader					s_ssss_mrmnwar;
+	ref_shader					s_ssss_ogse;
 
 	// RAIN DROPS
 	ref_shader					s_rain_drops;
@@ -195,7 +195,6 @@ private:
 	ref_shader				s_water;
 
 	// Combine
-    ref_geom				g_KD;
 	ref_geom				g_combine;
 	ref_geom				g_combine_VP;		// xy=p,zw=tc
 	ref_geom				g_combine_2UV;
@@ -261,8 +260,8 @@ public:
 	BOOL						u_need_PP				();
 	bool						u_need_CM				();
 
-	void						phase_rain_drops        ();
-    void						phase_fxaa              ();	
+	void						PhaseSSSS				();
+	void						PhaseRainDrops			();
 	void						phase_scene_prepare		();
 	void						phase_scene_begin		();
 	void						phase_scene_end			();
@@ -277,9 +276,11 @@ public:
 	void						phase_smap_spot_tsh		(light* L);
 	void						phase_accumulator		();
 	void						phase_vol_accumulator	();
-	void						phase_SunShafts			();
-	void						phase_ogse_sunshafts	();
 	void						phase_puddles			();
+	void						PhaseAA					();
+	void						ProcessFXAA				();
+	void						ProcessSMAA				();
+
 	void						shadow_direct			(light* L, u32 dls_phase);
 
 	//	Generates min/max sm
@@ -354,4 +355,7 @@ public:
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{}
 	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{}
 #endif
+	private:
+		void					render_screen_quad		(u32 w, u32 h, u32 &Offset, ref_rt &rt, ref_selement &sh, bool bCopyRT = false, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
+		void					render_screen_quad		(u32 w, u32 h, u32 &Offset,				ref_selement &sh, bool bCopyRT = false, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
 };
