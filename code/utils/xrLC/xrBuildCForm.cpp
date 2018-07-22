@@ -153,16 +153,14 @@ void CBuild::BuildCForm	()
 
 	// Data
 	MFS->w			(CL.getV(), CL.getVS() * sizeof(Fvector));
-#ifdef _M_X64
+	
 	for (size_t i = 0; i < CL.getTS(); ++i)
 	{
 		CDB::TRI *tri = reinterpret_cast<CDB::TRI*>(&CL.getT()[i]);
 		MFS->w(&(tri->verts[0]), 12);
 		MFS->w_u32(tri->dummy_low);
 	}
-#else
-	MFS->w			(CL.getT(),CL.getTS()*sizeof(CDB::TRI));
-#endif
+	
 	// Clear pDeflector (it is stored in the same memory space with dwMaterialGame)
 	for (vecFaceIt I=lc_global_data()->g_faces().begin(); I!=lc_global_data()->g_faces().end(); I++)
 	{

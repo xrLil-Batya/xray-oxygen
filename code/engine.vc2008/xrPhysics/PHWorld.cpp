@@ -41,26 +41,6 @@ void	__stdcall	destroy_physics_world()
 	xr_delete(ph_world);
 }
 
-CObjectSpace* __stdcall create_object_space()
-{
-	//CFileReader* fr =	xr_new<CFileReader>("D:/STALKER/resources/gamedata/levels/stohe_selo/level.cform");
-	CFileReader* fr = xr_new<CFileReader>("ActorEditorLevel.cform");
-	CObjectSpace* os = xr_new<CObjectSpace>();
-	g_SpatialSpace = xr_new<ISpatial_DB>();
-	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	os->Load(fr, 0);
-	//xr_delete(fr);
-	return os;
-}
-CObjectSpace*	__stdcall	mesh_create_object_space(Fvector* verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback)
-{
-	CObjectSpace* os = xr_new<CObjectSpace>();
-	g_SpatialSpace = xr_new<ISpatial_DB>();
-	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	os->Create(verts, tris, H, build_callback);
-	return os;
-}
-
 void __stdcall	set_mtl_lib(CGameMtlLibrary * l)
 {
 	PGMLib = l;
@@ -104,7 +84,7 @@ static struct sempty_update_callback : public IPHWorldUpdateCallbck
 	void phys_shell_relcase(IPhysicsShellEx* sh) {};
 } empty_update_callback;
 
-CPHWorld::CPHWorld() : // IPHWorldUpdateCallbck		*_update_callback
+CPHWorld::CPHWorld() : 
 	m_update_callback(&empty_update_callback),
 	m_default_contact_shotmark(0),
 	m_default_character_contact_shotmark(0),
