@@ -1,14 +1,13 @@
 // xrCDB.cpp : Defines the entry point for the DLL application.
-//
-
 #include "stdafx.h"
 #pragma hdrstop
 #include "xrCDB.h"
 
+#include "../FrayBuildConfig.hpp"
 #include "../../3rd-party/OPCODE/Opcode.h"
 #include "../../3rd-party/OPCODE/OPC_TreeBuilders.h"
 #include "../../3rd-party/OPCODE/OPC_Model.h"
-#include "CDB_Model.h"
+#include "xrCDB_Model.h"
 
 using namespace CDB;
 using namespace Opcode;
@@ -78,12 +77,15 @@ void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isC
 	const unsigned cpu_thrd = CPU::Info.n_threads;
 
 	BTHREAD_params P = { this, V, Vcnt, T, Tcnt, pCache, isCacheReader, bc, bcp, rebuildTrisRequired };
+#ifdef CD_BUILDER_DEBUG
 	build_thread((void*)&P);
-	//thread_spawn(build_thread, "CDB-construction", 0, &P);
-	//while (S_INIT == status)
-	//{
-	//	Sleep(5);
-	//}
+#else
+	thread_spawn(build_thread, "CDB-construction", 0, &P);
+	while (S_INIT == status)
+	{
+		Sleep(5);
+	}
+#endif
 }
 
 void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isCacheReader, build_callback* bc, void* bcp, bool rebuildTrisRequired)
