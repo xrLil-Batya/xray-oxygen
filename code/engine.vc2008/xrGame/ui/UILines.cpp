@@ -213,7 +213,7 @@ void CUILines::ParseText(bool force)
 	} else
 	{
 		float max_width							= m_wndSize.x;
-		u32 sbl_cnt								= line->m_subLines.size();
+		u32 sbl_cnt								= (u32)line->m_subLines.size();
 		CUILine									tmp_line;
 		string4096								buff;
 		float curr_width						= 0.0f;
@@ -399,7 +399,7 @@ void CUILines::Draw(float x, float y)
 		float height	= m_pFont->CurrentHeight_();
 		UI().ClientToScreenScaledHeight(height);
 
-		u32 size		= m_lines.size();
+		u32 size		= (u32)m_lines.size();
 
 		m_pFont->SetAligment((CGameFont::EAligment)m_eTextAlign);
 		for (int i=0; i<(int)size; i++)
