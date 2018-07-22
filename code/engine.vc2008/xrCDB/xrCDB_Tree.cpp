@@ -22,6 +22,7 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
     if (pReader->elapsed() < sizeof(s64))
     {
         Msg("* Level collision cache file DB missing mNbNodes");
+		FS.r_close(pReader);
         return false;
     }
 	mNbNodes = pReader->r_s64();
@@ -29,6 +30,7 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
     if (pReader->elapsed() < mNbNodes * sizeof(Opcode::AABBNoLeafNode))
     {
         Msg("* Level collision DB cache file don't have enough nodes");
+		FS.r_close(pReader);
         return false;
     }
 	mNodes = xr_alloc<Opcode::AABBNoLeafNode>(mNbNodes);
@@ -65,6 +67,7 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 			node.mNegData = newbase + (node.mNegData - oldbase);
 		}
 	}
+	FS.r_close(pReader);
 	return true;
 }
 
