@@ -84,7 +84,6 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 	if (pReaderCache && pReaderCache->length() > 4 && pReaderCache->r_u32() == crc)
 	{
 		Create(verts, tris, realCform, build_callback, pReaderCache);
-		FS.r_close(pReaderCache);
 	}
 	else
 	{

@@ -90,6 +90,22 @@ void MODEL::build(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isC
 
 void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache, bool isCacheReader, build_callback* bc, void* bcp, bool rebuildTrisRequired)
 {
+    IReader* cacheFileReader = (IReader*)pCache;
+
+    struct AutoCloseCacheFile
+    {
+        AutoCloseCacheFile(IReader* InCacheFileReader)
+            : CacheFileReader(InCacheFileReader)
+        {}
+
+        ~AutoCloseCacheFile()
+        {
+            FS.r_close(CacheFileReader);
+        }
+
+        IReader* CacheFileReader;
+    } AutoCloser(cacheFileReader);
+
 	// verts
 	verts_count = Vcnt;
 	verts = CALLOC(Fvector, verts_count);
@@ -123,12 +139,20 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache,
 	// Release data pointers
 	status = S_BUILD;
 
-	if (pCache && isCacheReader)
-	{
-		tree = xr_new<CDB_Model>();
-		tree->Restore((IReader*)pCache);
-		return;
-	}
+    auto TryRestoreFromCacheLambda = [this, cacheFileReader, isCacheReader]() -> bool
+    {
+        if (cacheFileReader && isCacheReader)
+        {
+            tree = xr_new<CDB_Model>();
+            return tree->Restore(cacheFileReader);
+        }
+
+        Msg("* Level collision DB cache missing, rebuilding...");
+        return false;
+    };
+
+    // Try restore from cache. If successfull - don't rebuild collision DB
+    if (TryRestoreFromCacheLambda()) return;
 
 	// Allocate temporary "OPCODE" tris + convert tris to 'pointer' form
 	u32* temp_tris = CALLOC(u32, tris_count * 3);
@@ -159,6 +183,8 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache,
 	OPCC.mQuantized = false;
 	OPCC.mNoLeaf = true;
 
+    // Can be not nullptr, since we can fail restoring from cache file
+    xr_delete(tree);
 	tree = CNEW(CDB_Model)();
 	
 	if (!tree->Build(OPCC)) 
