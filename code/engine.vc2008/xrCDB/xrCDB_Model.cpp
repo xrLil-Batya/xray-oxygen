@@ -14,10 +14,16 @@ void CDB_Model::Store(IWriter* writer)
 	pTree->Store(writer);
 }
 
-void CDB_Model::Restore(IReader* reader)
+bool CDB_Model::Restore(IReader* reader)
 {
+    if (reader->elapsed() < sizeof(u64))
+    {
+        Msg("* Level Collision DB cache file missing model code!");
+        return false;
+    }
 	mModelCode = reader->r_u64();
-	pTree->Restore(reader);
+
+	return pTree->Restore(reader);
 }
 
 bool CDB_Model::Build(const Opcode::OPCODECREATE& create)

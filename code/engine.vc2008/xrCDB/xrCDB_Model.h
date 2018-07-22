@@ -5,7 +5,7 @@ class CDB_Model: public Opcode::Model
 {
 public:
 	void Store	(IWriter* pWriter);
-	void Restore(IReader* pReader);
+	bool Restore(IReader* pReader);
 
 public:
 	CDB_Model	();

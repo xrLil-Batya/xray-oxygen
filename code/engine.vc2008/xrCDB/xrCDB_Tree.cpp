@@ -19,7 +19,18 @@ void CDB_OptimizeTree::Store(IWriter * pWriter)
 bool CDB_OptimizeTree::Restore(IReader * pReader)
 {
 	// Read nodes
+    if (pReader->elapsed() < sizeof(s64))
+    {
+        Msg("* Level collision cache file DB missing mNbNodes");
+        return false;
+    }
 	mNbNodes = pReader->r_s64();
+
+    if (pReader->elapsed() < mNbNodes * sizeof(Opcode::AABBNoLeafNode))
+    {
+        Msg("* Level collision DB cache file don't have enough nodes");
+        return false;
+    }
 	mNodes = xr_alloc<Opcode::AABBNoLeafNode>(mNbNodes);
 	R_ASSERT2(mNodes, "Error alloc for cform cache...");
 
