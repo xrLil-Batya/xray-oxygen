@@ -200,7 +200,14 @@ void	CResourceManager::LS_Load()
 
 void	CResourceManager::LS_Unload			()
 {
-    xr_delete(luaVM);
+	try
+	{
+		xr_delete(luaVM);
+	}
+	catch (...)
+	{
+		Msg("[ERROR] Error lua vm closed...");
+	}
 }
 
 BOOL CResourceManager::_lua_HasShader	(LPCSTR s_shader)

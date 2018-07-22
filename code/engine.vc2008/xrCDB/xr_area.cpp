@@ -62,46 +62,54 @@ IC int   CObjectSpace::GetNearest(xr_vector<CObject*>&	q_nearest, ICollisionForm
 }
 
 //----------------------------------------------------------------------
-
-
 void CObjectSpace::Load(CDB::build_callback build_callback)
 {
-	Load("$level$", "level.cform", build_callback);
-}
+	IReader *F = FS.r_open("$level$", "level.cform");
+	R_ASSERT2(F, "Level cform not found!");
 
-void CObjectSpace::Load(const char* path, const char* fname, CDB::build_callback build_callback)
-{
-	IReader *F = FS.r_open(path, fname);
-	R_ASSERT(F);
-	Load(F, build_callback);
-}
+	// Cache for cform
+	u32 crc = crc32(F->pointer(), F->length());
+	const char* LevelName= std::string((FS.get_path("$level$")->m_Add) + std::string("cform.cache")).c_str();
 
-void CObjectSpace::Load(IReader* F, CDB::build_callback build_callback)
-{
+	IReader* pReaderCache = FS.r_open("$level_cache$", LevelName);
+
 	hdrCFORM realCform;
 	F->r(&realCform, sizeof(hdrCFORM));
-	
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
-	//if (realCform.version != CFORM_CURRENT_VERSION)													///
-	//{																									///
-	//	hdrCFORM_4 oldCform;																			///
-	//	F->r(&oldCform, sizeof(hdrCFORM_4));															///
-	R_ASSERT2(realCform.version == CFORM_CURRENT_VERSION || realCform.version == 4, "Incorrect level.cform! xrOxygen supports ver.4 and ver.5."); ///
-	//																									///
-	//	realCform.aabb = oldCform.aabb;																	///
-	//	realCform.facecount = oldCform.facecount;														///
-	//	realCform.vertcount = oldCform.vertcount;														///
-	//}																									///
-	///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	R_ASSERT2(realCform.version == CFORM_CURRENT_VERSION, "Incorrect level.cform! xrOxygen supports ver.4 and ver.5.");
+
 	Fvector* verts = (Fvector*)F->pointer();
 	CDB::TRI* tris = (CDB::TRI*)(verts + realCform.vertcount);
-	Create(verts, tris, realCform, build_callback);
+
+	if (pReaderCache && pReaderCache->length() > 4 && pReaderCache->r_u32() == crc)
+	{
+		Create(verts, tris, realCform, build_callback, pReaderCache);
+		FS.r_close(pReaderCache);
+	}
+	else
+	{
+		if (pReaderCache) FS.r_close(pReaderCache);
+		IWriter* pWriterChace = FS.w_open("$level_cache$", LevelName);
+		R_ASSERT(pWriterChace);
+		pWriterChace->w_u32(crc);
+		Create(verts, tris, realCform, build_callback, pWriterChace);
+		FS.w_close(pWriterChace);
+	}
+
 	FS.r_close(F);
 }
 
-void CObjectSpace::Create(Fvector*	verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback)
+void CObjectSpace::Create(Fvector* verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback, IReader* pFS)
 {
-	Static.build(verts, H.vertcount, tris, H.facecount, build_callback);
+	Static.build(verts, H.vertcount, tris, H.facecount, pFS, true, build_callback);
+	m_BoundingVolume.set(H.aabb);
+	g_SpatialSpace->initialize(m_BoundingVolume);
+	g_SpatialSpacePhysic->initialize(m_BoundingVolume);
+}
+
+void CObjectSpace::Create(Fvector* verts, CDB::TRI* tris, const hdrCFORM &H, CDB::build_callback build_callback, IWriter* pFS)
+{
+	Static.build(verts, H.vertcount, tris, H.facecount, pFS, false, build_callback);
 	m_BoundingVolume.set(H.aabb);
 	g_SpatialSpace->initialize(m_BoundingVolume);
 	g_SpatialSpacePhysic->initialize(m_BoundingVolume);

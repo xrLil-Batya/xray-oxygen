@@ -2,6 +2,7 @@
 #pragma hdrstop
 
 #include "xrCDB.h"
+#include "xrCDB_Model.h"
 
 using namespace CDB;
 using namespace Opcode;

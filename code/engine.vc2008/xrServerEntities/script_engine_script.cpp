@@ -61,6 +61,13 @@ void Lua_CrashGame()
 	*pSuicidePtr = 42;
 }
 
+void Lua_Object_Info()
+{
+    CScriptEngine& scriptEngine = ai().script_engine();
+    scriptEngine.LogVariable(scriptEngine.lua(), "[lua_object_info]", 1, true, 1);
+    scriptEngine.ClearDumpedObjects();
+}
+
 void prefetch_module(LPCSTR file_name)
 {
 	ai().script_engine().process_file(file_name);
@@ -167,6 +174,7 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L, "time_global_async",				script_time_global_async);
     function    (L, "debuggerTrigger",                  Lua_DebugBreak);
     function    (L, "crashGame",						Lua_CrashGame);
+    function    (L, "lua_object_info",                  Lua_Object_Info);
 	//function	(L, "LoadModule", load_modules);
 #ifdef XRGAME_EXPORTS
 	function	(L,	"device",							get_device);
