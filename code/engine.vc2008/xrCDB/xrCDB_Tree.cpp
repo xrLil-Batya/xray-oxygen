@@ -21,7 +21,7 @@ bool CDB_OptimizeTree::Restore(IReader * pReader)
 	// Read nodes
 	mNbNodes = pReader->r_s64();
 	mNodes = xr_alloc<Opcode::AABBNoLeafNode>(mNbNodes);
-	R_ASSERT2(mNodes, "Error alloc for cform cache...")
+	R_ASSERT2(mNodes, "Error alloc for cform cache...");
 
 	ZeroMemory(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
 	pReader->r(mNodes, mNbNodes * sizeof(Opcode::AABBNoLeafNode));
