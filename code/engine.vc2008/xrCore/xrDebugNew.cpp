@@ -347,14 +347,15 @@ IC void floating_point_handler(int signal)
 	handler_base("Floating point error");
 }
 
+#ifdef DEBUG
 IC void segment_violation(int signal)
 {
 	handler_base("Segment violation error");
 }
+#endif
 
 IC void illegal_instruction_handler(int signal)
 {
-	//#VERTVER: We're using xrCore CPUID cuz it's more faster then another
 	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
 	{
 		handler_base("SSE4.1 and AVX instructions isn't legal on your CPU");
@@ -381,7 +382,9 @@ void debug_on_thread_spawn()
 	signal(SIGABRT_COMPAT, abort_handler);
 	signal(SIGFPE, floating_point_handler);
 	signal(SIGILL, illegal_instruction_handler);
+#ifdef DEBUG
 	signal(SIGSEGV, segment_violation);
+#endif
 	signal(SIGINT, NULL);
 	signal(SIGTERM, termination_handler);
 
