@@ -520,20 +520,21 @@ public:
 			return;
 		}
 
-		string_path	S, S1;
-		S[0] = 0;
-		strncpy_s(S, sizeof(S), args, _MAX_PATH - 1);
+        string_path	GameSaveName = { 0 };
+        string_path screenshotForSavePath = { 0 };
+
+        xr_strcpy(GameSaveName, args);
 
 #ifdef DEBUG
 		CTimer timer;
 		timer.Start();
 #endif
 
-		if (!xr_strlen(S)) 
+		if (!xr_strlen(GameSaveName)) 
 		{
-			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
+            xr_sprintf(GameSaveName, "%s - quicksave", Core.UserName);
 			NET_Packet net_packet;
-			net_packet.w_stringZ(S);
+			net_packet.w_stringZ(GameSaveName);
 			net_packet.w_u8(0);
             if (ai().get_alife())
                 Level().Server->game->alife().save(net_packet);
@@ -541,14 +542,14 @@ public:
 		}
 		else 
 		{
-			if (!valid_saved_game_name(S))
+			if (!valid_saved_game_name(GameSaveName))
 			{
-				Msg("! Save failed: invalid file name - %s", S);
+				Msg("! Save failed: invalid file name - %s", GameSaveName);
 				return;
 			}
 
 			NET_Packet net_packet;
-			net_packet.w_stringZ(S);
+			net_packet.w_stringZ(GameSaveName);
 			net_packet.w_u8(1);
             if (ai().get_alife())
                 Level().Server->game->alife().save(net_packet);
@@ -559,16 +560,16 @@ public:
 #endif
 		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 		LPSTR save_name;
-		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
+		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", GameSaveName);
 		_s->wnd()->TextItemControl()->SetText(save_name);
 
-		xr_strcat(S, ".dds");
-		FS.update_path(S1, "$game_saves$", S);
+		xr_strcat(GameSaveName, ".dds");
+		FS.update_path(screenshotForSavePath, "$game_saves$", GameSaveName);
 
 #ifdef DEBUG
 		timer.Start();
 #endif
-		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, S1);
+		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, screenshotForSavePath);
 
 #ifdef DEBUG
 		Msg("Screenshot overhead : %f milliseconds", timer.GetElapsed_sec() * 1000.f);
@@ -589,7 +590,7 @@ public:
 	virtual void Execute( LPCSTR args )
 	{
 		string_path				saved_game;
-		strncpy_s				(saved_game, sizeof(saved_game), args, _MAX_PATH - 1 );
+        xr_strcpy(saved_game, args);
 
 		if (!ai().get_alife()) {
 			Log						("! ALife simulator has not been started yet");
@@ -597,8 +598,7 @@ public:
 		}
 
 		if (!xr_strlen(saved_game)) {
-			Log						("! Specify file name!");
-			return;
+            xr_sprintf(saved_game, "%s - quicksave", Core.UserName);
 		}
 
 		if (!CSavedGameWrapper::saved_game_exist(saved_game)) {
@@ -1969,4 +1969,6 @@ void LoadGameExtraFeatures()
     string_path cmdLoadCfg;
     strconcat(sizeof(cmdLoadCfg), cmdLoadCfg, "cfg_load", " ", configFilePath);
     Console->Execute(cmdLoadCfg);
+
+    Msg("Extra feature mask: %u", g_extraFeatures.get());
 }

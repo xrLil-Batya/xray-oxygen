@@ -22,7 +22,7 @@ CScriptBinderObjectWrapper::~CScriptBinderObjectWrapper ()
 
 void CScriptBinderObjectWrapper::reinit					()
 {
-	luabind::call_member<void>		(this,"reinit");
+    luabind::call_member<void>(this, "reinit");
 }
 
 void CScriptBinderObjectWrapper::reinit_static			(CScriptBinderObject *script_binder_object)

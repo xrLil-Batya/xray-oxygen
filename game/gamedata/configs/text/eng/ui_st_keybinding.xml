@@ -121,7 +121,7 @@
 		<text>Strafe right</text>
 	</string>
 	<string id="kb_scores">
-		<text>Points</text>
+		<text>Current task</text>
 	</string>
 	<string id="kb_screenshot">
 		<text>Screenshot</text>

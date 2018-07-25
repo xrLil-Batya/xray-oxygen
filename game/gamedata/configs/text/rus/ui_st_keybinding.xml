@@ -124,7 +124,7 @@
 		<text>Шаг вправо</text>
 	</string>
 	<string id="kb_scores">
-		<text>Очки</text>
+		<text>Текущее задание</text>
 	</string>
 	<string id="kb_screenshot">
 		<text>Скриншот</text>

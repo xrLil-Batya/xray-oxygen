@@ -102,7 +102,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		case mmInventory: DeInitInventoryMode(); break;
 		case mmTrade: DeInitTradeMode(); break;
 		case mmUpgrade: DeInitUpgradeMode(); break;
-		case mmDeadBodySearch: DeInitDeadBodySearchMode(); break;
+		case mmDeadBodyOrContainerSearch: DeInitDeadBodySearchMode(); break;
 		default: R_ASSERT(0); break;
 		}
 
@@ -116,7 +116,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		case mmInventory: InitInventoryMode(); break;
 		case mmTrade: InitTradeMode(); break;
 		case mmUpgrade: InitUpgradeMode(); break;
-		case mmDeadBodySearch: InitDeadBodySearchMode(); break;
+		case mmDeadBodyOrContainerSearch: InitDeadBodySearchMode(); break;
 		default: R_ASSERT(0); break;
 		}
 		UpdateConditionProgressBars();
@@ -183,7 +183,7 @@ void CUIActorMenu::Update()
 	{
 		case mmUndefined: break;
 		case mmInventory: GameUI()->UIMainIngameWnd->UpdateZoneMap(); break;
-		case mmDeadBodySearch: CheckDistance(); break;
+		case mmDeadBodyOrContainerSearch: CheckDistance(); break;
 
 		case mmTrade:
 		{
@@ -373,7 +373,7 @@ void CUIActorMenu::UpdateItemsPlace()
 	case mmInventory: break;
 	case mmTrade: UpdatePrices(); break;
 	case mmUpgrade: SetupUpgradeItem(); break;
-	case mmDeadBodySearch: UpdateDeadBodyBag(); break;
+	case mmDeadBodyOrContainerSearch: UpdateDeadBodyBag(); break;
 	default: R_ASSERT(0); break;
 	}
 
@@ -423,7 +423,7 @@ void CUIActorMenu::clear_highlight_lists()
 		break;
 	case mmUpgrade:
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		m_pDeadBodyBagList->clear_select_armament();
 		break;
 	}
@@ -432,16 +432,10 @@ void CUIActorMenu::clear_highlight_lists()
 
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
-	
-
 	PIItem item = (PIItem)cell_item->m_pData;
 
-	if (!item
-		|| !item->m_pInventory
-		|| !item->m_name || item->m_name == ""
-		|| !item->m_section_id || item->m_section_id == "")
+    if (!item)
 		return;
-
 
 	if(CUIDragDropListEx::m_drag_item)
 		return;
@@ -522,8 +516,8 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
 
-	// Object != nullptr everyone
-	if (!item || !item->m_pInventory || item->m_name.equal("") || !item->m_section_id.c_str())
+    // Check if object is active, name and section is valid. Inventory can be nullptr, because this can be container (not dead body, or trader)
+	if (!item || item->m_name.equal(""))
 		return;
 
 	highlight_item_slot(cell_item);
@@ -551,7 +545,7 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 			highlight_armament( item, m_pTradePartnerList );
 			break;
 		}
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		{
 			highlight_armament( item, m_pInventoryBagList );
 			highlight_armament( item, m_pDeadBodyBagList );

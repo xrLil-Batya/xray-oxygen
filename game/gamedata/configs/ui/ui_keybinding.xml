@@ -52,6 +52,7 @@
 	</group>
 	<group name="kb_grp_common">
 		<command id="kb_pause"						exe="pause"/>
+		<command id="kb_scores"						exe="scores"/>
 		<command id="kb_use"						  exe="use"/>			
 		<command id="kb_screenshot"				exe="screenshot"/>
 		<command id="kb_quit"						  exe="quit"/>
@@ -59,5 +60,7 @@
 		<command id="kcam_1"					exe="cam_1"/>
 		<command id="kcam_2"					exe="cam_2"/>
 		<command id="kcam_3"					exe="cam_3"/>
+		<command id="ui_mm_save_game"			exe="quick_save"/>
+		<command id="ui_mm_load_game"			exe="quick_load"/>
 	</group>
 </keybingidg>

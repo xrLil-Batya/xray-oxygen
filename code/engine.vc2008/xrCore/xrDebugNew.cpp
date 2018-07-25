@@ -290,6 +290,10 @@ typedef int(__cdecl * _PNH)(size_t);
 
 IC void handler_base(const char* reason_string)
 {
+    if (crashhandler* handlerFuncPtr = Debug.get_crashhandler())
+    {
+        handlerFuncPtr();
+    }
 	bool alw_ignored = false;
 	Debug.backend("Error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
 }
@@ -377,16 +381,16 @@ IC void termination_handler(int signal)
 
 void debug_on_thread_spawn()
 {
-	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
-	signal(SIGABRT, abort_handler);
-	signal(SIGABRT_COMPAT, abort_handler);
+// 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
+ 	signal(SIGABRT, abort_handler);
+// 	signal(SIGABRT_COMPAT, abort_handler);
 	signal(SIGFPE, floating_point_handler);
 	signal(SIGILL, illegal_instruction_handler);
-#ifdef DEBUG
-	signal(SIGSEGV, segment_violation);
-#endif
-	signal(SIGINT, NULL);
-	signal(SIGTERM, termination_handler);
+// #ifdef DEBUG
+// 	signal(SIGSEGV, segment_violation);
+// #endif
+// 	signal(SIGINT, NULL);
+// 	signal(SIGTERM, termination_handler);
 
 	_set_invalid_parameter_handler(&invalid_parameter_handler);
 
