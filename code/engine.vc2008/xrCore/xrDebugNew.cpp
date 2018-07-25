@@ -22,6 +22,8 @@
 
 XRCORE_API	xrDebug		Debug;
 
+string_path DumpFilePath = { 0 };
+
 static bool error_after_dialog = false;
 static bool bException = false;
 
@@ -351,13 +353,6 @@ IC void floating_point_handler(int signal)
 	handler_base("Floating point error");
 }
 
-#ifdef DEBUG
-IC void segment_violation(int signal)
-{
-	handler_base("Segment violation error");
-}
-#endif
-
 IC void illegal_instruction_handler(int signal)
 {
 	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
@@ -381,16 +376,9 @@ IC void termination_handler(int signal)
 
 void debug_on_thread_spawn()
 {
-// 	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
  	signal(SIGABRT, abort_handler);
-// 	signal(SIGABRT_COMPAT, abort_handler);
 	signal(SIGFPE, floating_point_handler);
 	signal(SIGILL, illegal_instruction_handler);
-// #ifdef DEBUG
-// 	signal(SIGSEGV, segment_violation);
-// #endif
-// 	signal(SIGINT, NULL);
-// 	signal(SIGTERM, termination_handler);
 
 	_set_invalid_parameter_handler(&invalid_parameter_handler);
 
@@ -408,6 +396,17 @@ void xrDebug::_initialize(const bool &dedicated)
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
 }
 
+
+void xrDebug::_initializeAfterFS()
+{
+    FS.update_path(DumpFilePath, "$dump$", "");
+    if (!FS.path_exist(DumpFilePath))
+    {
+        createPath(DumpFilePath);
+    }
+}
+
+
 // based on dbghelp.h
 typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, MINIDUMP_TYPE DumpType,
 	CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
@@ -418,7 +417,7 @@ typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("[FAIL] Type: UNHANDLED EXCEPTION");
-	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.2.01f");
+	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.3f");
 	Log("[FAIL] Report: To https://discord.gg/NAp6ZtX");
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
@@ -463,32 +462,31 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
 		if (pDump)
 		{
-			string_path szDumpPath;
-			string_path szScratch;
-			string64 t_stemp;
+            string_path szDumpPath = { 0 };
+            string_path szFilename = { 0 };
+			string_path szScratch  = { 0 };
+			string64 t_stemp       = { 0 };
 
 			// work out a good place for the dump file
 			timestamp(t_stemp);
+            xr_strcat(szDumpPath, DumpFilePath); // can be empty, if we crash before FS was initialized
 
-			FS.update_path(szDumpPath, "$dump$", "");
-			if(!FS.path_exist(szDumpPath))
-			{
-				createPath(szDumpPath);
-			}
-
-			xr_strcat(szDumpPath, Core.ApplicationName);
-			xr_strcat(szDumpPath, "_");
-			xr_strcat(szDumpPath, Core.UserName);
-			xr_strcat(szDumpPath, "_");
-			xr_strcat(szDumpPath, t_stemp);
-			xr_strcat(szDumpPath, ".mdmp");
+			xr_strcat(szFilename, Core.ApplicationName);
+			xr_strcat(szFilename, "_");
+			xr_strcat(szFilename, Core.UserName);
+			xr_strcat(szFilename, "_");
+			xr_strcat(szFilename, t_stemp);
+			xr_strcat(szFilename, ".mdmp");
+            
+            xr_strcat(szDumpPath, szFilename);
 
 			// create the file
 			HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			if (INVALID_HANDLE_VALUE == hFile)
 			{
 				// try to place into current directory
-				MoveMemory(szDumpPath, szDumpPath + 5, strlen(szDumpPath));
+                ZeroMemory(szDumpPath, sizeof(szDumpPath));
+                xr_strcat(szDumpPath, szFilename);
 				hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 			}
 			if (hFile != INVALID_HANDLE_VALUE)

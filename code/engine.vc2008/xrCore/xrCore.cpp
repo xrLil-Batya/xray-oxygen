@@ -88,6 +88,9 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 #endif
 		FS._initialize(flags, 0, fs_fname);
 
+        // FS is valid at this point, signal to debug system
+        Debug._initializeAfterFS();
+
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
 		Msg("xrOxygen Version: branch[%s], commit[%s]", _BRANCH, _HASH); 
