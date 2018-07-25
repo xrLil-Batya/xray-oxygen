@@ -27,6 +27,8 @@ string_path DumpFilePath = { 0 };
 static bool error_after_dialog = false;
 static bool bException = false;
 
+LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo);
+
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
 	char* buffer_base = assertion_info;
@@ -297,6 +299,10 @@ IC void handler_base(const char* reason_string)
         handlerFuncPtr();
     }
 	bool alw_ignored = false;
+    if (!IsDebuggerPresent())
+    {
+        WriteMinidump(NULL);
+    }
 	Debug.backend("Error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
 }
 
@@ -414,7 +420,190 @@ typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFi
 	CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
 	);
 
-LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
+LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
+{
+    // Flush, after crashhandler. We include log file in a minidump
+    FlushLog();
+
+    long retval = EXCEPTION_CONTINUE_SEARCH;
+    bException = true;
+
+    // firstly see if dbghelp.dll is around and has the function we need
+    // look next to the EXE first, as the one in System32 might be old
+    // (e.g. Windows 2000)
+    HMODULE hDll = NULL;
+    string_path szDbgHelpPath;
+
+    if (GetModuleFileName(NULL, szDbgHelpPath, _MAX_PATH))
+    {
+        char* pSlash = strchr(szDbgHelpPath, '\\');
+        if (pSlash)
+        {
+            const char dbgHelpStr[] = "DBGHELP.DLL";
+            xr_strcpy(pSlash + 1, sizeof(dbgHelpStr), dbgHelpStr);
+            hDll = LoadLibraryA(szDbgHelpPath);
+        }
+    }
+
+    if (!hDll)
+    {
+        // load any version we can
+        hDll = LoadLibraryA("DBGHELP.DLL");
+    }
+
+    LPCTSTR szResult = NULL;
+
+    if (hDll)
+    {
+        MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
+        if (pDump)
+        {
+            string_path szDumpPath = { 0 };
+            string_path szFilename = { 0 };
+            string_path szScratch = { 0 };
+            string64 t_stemp = { 0 };
+
+            // work out a good place for the dump file
+            timestamp(t_stemp);
+            xr_strcat(szDumpPath, DumpFilePath); // can be empty, if we crash before FS was initialized
+
+            xr_strcat(szFilename, Core.ApplicationName);
+            xr_strcat(szFilename, "_");
+            xr_strcat(szFilename, Core.UserName);
+            xr_strcat(szFilename, "_");
+            xr_strcat(szFilename, t_stemp);
+            xr_strcat(szFilename, ".mdmp");
+
+            xr_strcat(szDumpPath, szFilename);
+
+            // create the file
+            HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+            if (INVALID_HANDLE_VALUE == hFile)
+            {
+                // try to place into current directory
+                ZeroMemory(szDumpPath, sizeof(szDumpPath));
+                xr_strcat(szDumpPath, szFilename);
+                hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+            }
+            if (hFile != INVALID_HANDLE_VALUE)
+            {
+                _MINIDUMP_EXCEPTION_INFORMATION ExInfo;
+
+                ExInfo.ThreadId = GetCurrentThreadId();
+                ExInfo.ExceptionPointers = pExceptionInfo;
+                ExInfo.ClientPointers = NULL;
+
+                // write the dump
+                MINIDUMP_TYPE dump_flags = MINIDUMP_TYPE(MiniDumpNormal | MiniDumpFilterMemory | MiniDumpScanMemory);
+
+                //try include LogFile
+                char* logFileContent = nullptr;
+                DWORD logFileContentSize = 0;
+
+                __try
+                {
+                    do
+                    {
+                        const char* logFileName = log_name();
+
+                        if (logFileName == nullptr)
+                            break;
+
+                        // Don't use X-Ray FS - it can be corrupted at this point
+                        HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+                        if (hLogFile == INVALID_HANDLE_VALUE) break;
+
+                        LARGE_INTEGER FileSize;
+                        bool bResult = (bool)GetFileSizeEx(hLogFile, &FileSize);
+                        if (!bResult)
+                        {
+                            CloseHandle(hLogFile);
+                            break;
+                        }
+
+                        logFileContent = (char*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.LowPart);
+                        if (logFileContent == nullptr)
+                        {
+                            CloseHandle(hLogFile);
+                            break;
+                        }
+
+                        logFileContentSize = FileSize.LowPart;
+
+                        DWORD TotalBytesReaded = 0;
+
+                        do
+                        {
+                            DWORD BytesReaded = 0;
+                            bResult = (bool)ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, NULL);
+                            if (!bResult)
+                            {
+                                CloseHandle(hLogFile);
+                                break;
+                            }
+                            TotalBytesReaded += BytesReaded;
+                        } while (TotalBytesReaded < FileSize.LowPart);
+
+                        CloseHandle(hLogFile);
+                    } while (false);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER)
+                {
+                    // better luck next time
+                }
+
+                MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
+                MINIDUMP_USER_STREAM LogFileUserStream;
+
+                memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
+                memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
+
+                if (logFileContent != nullptr)
+                {
+                    UserStreamsInfo.UserStreamCount = 1;
+                    LogFileUserStream.Buffer = logFileContent;
+                    LogFileUserStream.BufferSize = logFileContentSize;
+                    LogFileUserStream.Type = MINIDUMP_STREAM_TYPE::CommentStreamA;
+                    UserStreamsInfo.UserStreamArray = &LogFileUserStream;
+                }
+
+                BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, dump_flags, &ExInfo, &UserStreamsInfo, NULL);
+                if (bOK)
+                {
+                    xr_sprintf(szScratch, "Saved dump file to '%s'", szDumpPath);
+                    szResult = szScratch;
+                    retval = EXCEPTION_EXECUTE_HANDLER;
+                }
+                else
+                {
+                    xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d)", szDumpPath, GetLastError());
+                    szResult = szScratch;
+                }
+                CloseHandle(hFile);
+            }
+            else
+            {
+                xr_sprintf(szScratch, "Failed to create dump file '%s' (error %d)", szDumpPath, GetLastError());
+                szResult = szScratch;
+            }
+        }
+        else
+        {
+            szResult = "DBGHELP.DLL too old";
+        }
+    }
+    else
+    {
+        szResult = "DBGHELP.DLL not found";
+    }
+
+    Log(szResult);
+    FlushLog();
+
+    return retval;
+}
+
+LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("[FAIL] Type: UNHANDLED EXCEPTION");
 	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.3f");
@@ -426,183 +615,5 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 		pCrashHandler();
 	}
 
-	// Flush, after crashhandler. We include log file in a minidump
-	FlushLog();
-
-	long retval = EXCEPTION_CONTINUE_SEARCH;
-	bException = true;
-
-	// firstly see if dbghelp.dll is around and has the function we need
-	// look next to the EXE first, as the one in System32 might be old
-	// (e.g. Windows 2000)
-	HMODULE hDll = NULL;
-	string_path szDbgHelpPath;
-
-	if (GetModuleFileName(NULL, szDbgHelpPath, _MAX_PATH))
-	{
-		char* pSlash = strchr(szDbgHelpPath, '\\');
-		if (pSlash)
-		{
-			const char dbgHelpStr[] = "DBGHELP.DLL";
-			xr_strcpy(pSlash + 1, sizeof(dbgHelpStr), dbgHelpStr);
-			hDll = LoadLibraryA(szDbgHelpPath);
-		}
-	}
-
-	if (!hDll)
-	{
-		// load any version we can
-		hDll = LoadLibraryA("DBGHELP.DLL");
-	}
-
-	LPCTSTR szResult = NULL;
-
-	if (hDll)
-	{
-		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
-		if (pDump)
-		{
-            string_path szDumpPath = { 0 };
-            string_path szFilename = { 0 };
-			string_path szScratch  = { 0 };
-			string64 t_stemp       = { 0 };
-
-			// work out a good place for the dump file
-			timestamp(t_stemp);
-            xr_strcat(szDumpPath, DumpFilePath); // can be empty, if we crash before FS was initialized
-
-			xr_strcat(szFilename, Core.ApplicationName);
-			xr_strcat(szFilename, "_");
-			xr_strcat(szFilename, Core.UserName);
-			xr_strcat(szFilename, "_");
-			xr_strcat(szFilename, t_stemp);
-			xr_strcat(szFilename, ".mdmp");
-            
-            xr_strcat(szDumpPath, szFilename);
-
-			// create the file
-			HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-			if (INVALID_HANDLE_VALUE == hFile)
-			{
-				// try to place into current directory
-                ZeroMemory(szDumpPath, sizeof(szDumpPath));
-                xr_strcat(szDumpPath, szFilename);
-				hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-			}
-			if (hFile != INVALID_HANDLE_VALUE)
-			{
-				_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
-
-				ExInfo.ThreadId = GetCurrentThreadId();
-				ExInfo.ExceptionPointers = pExceptionInfo;
-				ExInfo.ClientPointers = NULL;
-
-				// write the dump
-				MINIDUMP_TYPE dump_flags = MINIDUMP_TYPE(MiniDumpNormal | MiniDumpFilterMemory | MiniDumpScanMemory);
-
-				//try include LogFile
-				char* logFileContent = nullptr;
-				DWORD logFileContentSize = 0;
-
-				__try
-				{
-					do
-					{
-						const char* logFileName = log_name();
-
-						if (logFileName == nullptr) 
-							break;
-
-						// Don't use X-Ray FS - it can be corrupted at this point
-						HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-						if (hLogFile == INVALID_HANDLE_VALUE) break;
-
-						LARGE_INTEGER FileSize;
-						bool bResult = (bool)GetFileSizeEx(hLogFile, &FileSize);
-						if (!bResult)
-						{
-							CloseHandle(hLogFile);
-							break;
-						}
-
-						logFileContent = (char*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.LowPart);
-						if (logFileContent == nullptr) 
-						{
-							CloseHandle(hLogFile);
-							break;
-						}
-
-						logFileContentSize = FileSize.LowPart;
-
-						DWORD TotalBytesReaded = 0;
-
-						do 
-						{
-							DWORD BytesReaded = 0;
-							bResult = (bool)ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, NULL);
-							if (!bResult)
-							{
-								CloseHandle(hLogFile);
-								break;
-							}
-							TotalBytesReaded += BytesReaded;
-						} while (TotalBytesReaded < FileSize.LowPart);
-
-						CloseHandle(hLogFile);
-					} while (false);
-				}
-				__except (EXCEPTION_EXECUTE_HANDLER)
-				{
-					// better luck next time
-				}
-
-				MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
-				MINIDUMP_USER_STREAM LogFileUserStream;
-
-				memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
-				memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
-
-				if (logFileContent != nullptr)
-				{
-					UserStreamsInfo.UserStreamCount = 1;
-					LogFileUserStream.Buffer = logFileContent;
-					LogFileUserStream.BufferSize = logFileContentSize;
-					LogFileUserStream.Type = MINIDUMP_STREAM_TYPE::CommentStreamA;
-					UserStreamsInfo.UserStreamArray = &LogFileUserStream;
-				}
-
-				BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, dump_flags, &ExInfo, &UserStreamsInfo, NULL);
-				if (bOK)
-				{
-					xr_sprintf(szScratch, "Saved dump file to '%s'", szDumpPath);
-					szResult = szScratch;
-					retval = EXCEPTION_EXECUTE_HANDLER;
-				}
-				else
-				{
-					xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d)", szDumpPath, GetLastError());
-					szResult = szScratch;
-				}
-				CloseHandle(hFile);
-			}
-			else
-			{
-				xr_sprintf(szScratch, "Failed to create dump file '%s' (error %d)", szDumpPath, GetLastError());
-				szResult = szScratch;
-			}
-		}
-		else
-		{
-			szResult = "DBGHELP.DLL too old";
-		}
-	}
-	else
-	{
-		szResult = "DBGHELP.DLL not found";
-	}
-
-	Log(szResult);
-	FlushLog();
-
-	return retval;
+    return WriteMinidump(pExceptionInfo);
 }

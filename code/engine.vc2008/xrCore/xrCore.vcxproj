@@ -129,7 +129,7 @@
       <AdditionalDependencies>dbghelp.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PreBuildEvent>
-      <Command>echo parsing git...
+      <Command>echo ### Parsing git... ###
 start GitParser\GitParser.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -185,7 +185,7 @@ start GitParser\GitParser.exe</Command>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
     <PreBuildEvent>
-      <Command>echo parsing git...
+      <Command>echo ### Parsing git... ###
 start GitParser\GitParser.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -241,7 +241,7 @@ start GitParser\GitParser.exe</Command>
       <ImportLibrary>$(xrLib)..\Release\$(TargetName).lib</ImportLibrary>
     </Link>
     <PreBuildEvent>
-      <Command>echo parsing git...
+      <Command>echo ### Parsing git... ###
 start GitParser\GitParser.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
@@ -298,7 +298,7 @@ start GitParser\GitParser.exe</Command>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
     </Link>
     <PreBuildEvent>
-      <Command>echo parsing git...
+      <Command>echo ### Parsing git... ###
 start GitParser\GitParser.exe</Command>
     </PreBuildEvent>
   </ItemDefinitionGroup>
