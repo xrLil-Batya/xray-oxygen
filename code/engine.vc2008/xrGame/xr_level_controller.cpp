@@ -71,6 +71,8 @@ _action  actions[] = {
 	{ "quick_save",			kQUICK_SAVE			},
 	{ "quick_load",			kQUICK_LOAD			},
 
+	{ "dev_noclip",			kDEV_NOCLIP			},
+
 	{ nullptr, 				kLASTACTION			}
 };
 

@@ -234,8 +234,14 @@ void CScriptStorage::ClearDumpedObjects()
 int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
 	va_list marker;
+    string2048 buf;
 	va_start(marker, caFormat);
-	Msg(caFormat, marker);
+    int sz = _vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
+    buf[sz] = '\0';
+    if (sz > 0)
+    {
+        Log(buf);
+    }
 	va_end(marker);
 
 	return 0;

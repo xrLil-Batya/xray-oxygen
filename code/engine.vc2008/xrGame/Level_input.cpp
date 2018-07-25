@@ -121,12 +121,10 @@ void CLevel::IR_OnKeyboardPress(int key)
 		case kSCREENSHOT:
 			Render->Screenshot();
 			return;
-			break;
 
 		case kCONSOLE:
 			Console->Show();
 			return;
-			break;
 
 		case kQUIT:
 		{
@@ -157,6 +155,23 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 	if (game && game->OnKeyboardPress(key))	
 		return;
+
+    // developer actions
+    if (GamePersistent().IsDeveloperMode())
+    {
+        switch (_curr)
+        {
+        case kDEV_NOCLIP:
+            if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
+            {
+                Console->Hide();
+                Console->Execute("demo_record 1");
+            }
+            break;
+        default:
+            break;
+        }
+    }
 
 #ifdef DEBUG
 	switch (key) {
@@ -194,15 +209,6 @@ void CLevel::IR_OnKeyboardPress(int key)
 		m_bEnvPaused = !m_bEnvPaused;
 		break;
 	}
-	case DIK_NUMPAD5:
-	{
-		if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
-		{
-			Console->Hide();
-			Console->Execute("demo_record 1");
-		}
-	}
-	break;
 
 	case DIK_RETURN: {
 		bDebug = !bDebug;

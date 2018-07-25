@@ -63,4 +63,7 @@
 		<command id="ui_mm_save_game"			exe="quick_save"/>
 		<command id="ui_mm_load_game"			exe="quick_load"/>
 	</group>
+	<group name="kb_grp_developer">
+		<command id="kb_dev_noclip"				exe="dev_noclip"/>
+	</group>
 </keybingidg>

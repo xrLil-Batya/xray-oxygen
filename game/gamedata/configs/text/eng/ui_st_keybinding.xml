@@ -132,7 +132,6 @@
 	<string id="kb_torch">
 		<text>Flashlight</text>
 	</string>
-
 	<string id="kb_up">
 		<text>Up</text>
 	</string>
@@ -204,5 +203,11 @@
 	</string>
 	<string id="kb_switch_horn">
 		<text>Horn</text>
-	</string>	
+	</string>
+	<string id="kb_grp_developer">
+		<text>Developer</text>
+	</string>
+	<string id="kb_dev_noclip">
+		<text>Noclip mode</text>
+	</string>
 </string_table>

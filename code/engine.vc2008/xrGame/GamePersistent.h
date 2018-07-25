@@ -38,6 +38,7 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
 	bool				ambient_effect_wind_on;
 
 	bool				m_bPickableDOF;
+    bool                m_developerMode;
 
 	CUISequencer*		m_intro;
 	EVENT				eQuickLoad;
@@ -117,6 +118,8 @@ public:
     shared_str          GetClientOption() const;
     void                SetServerOption(const char* str);
     void                SetClientOption(const char* str);
+
+    bool                IsDeveloperMode() const;
 };
 
 IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent); }

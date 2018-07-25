@@ -39,6 +39,12 @@ void CVMLua::luabind_onerror(lua_State* lua)
         Msg("! LUA ERROR: %s", luaError);
         lua_pop(lua, 1);
     }
+
+    //#HACK: Invoke crash handler manually for now
+    if (crashhandler* CrashHanlderFunc = Debug.get_crashhandler())
+    {
+        CrashHanlderFunc();
+    }
 }
 
 bool CVMLua::CreateNamespaceTable(LPCSTR caNamespaceName)

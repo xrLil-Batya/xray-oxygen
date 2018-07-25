@@ -204,4 +204,10 @@
 	<string id="kb_switch_horn">
 		<text>Гудок</text>
 	</string>	
+	<string id="kb_grp_developer">
+		<text>Разработчик</text>
+	</string>
+	<string id="kb_dev_noclip">
+		<text>Режим призрака</text>
+	</string>
 </string_table>
