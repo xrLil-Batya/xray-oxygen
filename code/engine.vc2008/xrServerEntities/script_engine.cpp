@@ -22,19 +22,9 @@ extern Flags32 psAI_Flags;
 
 #include "../xrScripts/luaopen.hpp"
 
- #define DEF_LUA_ERROR_TEMPLATE(L)                  \
-print_output( L, "[" __FUNCTION__ "]", LUA_ERRRUN ); \
-FATAL( "[%s]: %s", __FUNCTION__, lua_isstring( L, -1 ) ? lua_tostring( L, -1 ) : "" );
-
-#define ASSERT_FMT(expr, ...) do { \
-	if (!(expr)) \
-		FATAL(__VA_ARGS__); \
-} while(0)
-
-
 int CScriptEngine::lua_panic(lua_State* L) {
-	DEF_LUA_ERROR_TEMPLATE(L)
-		 return 0;
+    ReportLuaError(L);
+	return 0;
 }
 
 /*
@@ -79,7 +69,7 @@ void CScriptEngine::lua_error(lua_State *L)
 #endif
 */
 
-	DEF_LUA_ERROR_TEMPLATE(L)
+    ReportLuaError(L);
 }
 #endif
 
@@ -95,11 +85,18 @@ int  CScriptEngine::lua_pcall_failed(lua_State *L)
 		lua_pop(L, 1);
 	return (LUA_ERRRUN);
 	*/
-	DEF_LUA_ERROR_TEMPLATE(L)
-		if (lua_isstring(L, -1))
-			lua_pop(L, 1);
+    ReportLuaError(L);
+    if (lua_isstring(L, -1))
+        lua_pop(L, 1);
 	return LUA_ERRRUN;
 
+}
+
+void CScriptEngine::ReportLuaError(lua_State* L)
+{
+    print_output(L, "[" __FUNCTION__ "]", LUA_ERRRUN);
+    Msg("! [%s]: %s", __FUNCTION__, lua_isstring(L, -1) ? lua_tostring(L, -1) : "");
+    FATAL("Lua critical error, check last log message");
 }
 
 #ifdef LUABIND_NO_EXCEPTIONS
@@ -325,7 +322,11 @@ void CScriptEngine::register_script_classes()
 	*/
 
 	luabind::functor<void> result;
-	ASSERT_FMT(functor("class_registrator.register", result), "[%s] Cannot load class_registrator!", __FUNCTION__);
+    if (!functor("class_registrator.register", result))
+    {
+        Msg("[%s] Cannot load class_registrator!", __FUNCTION__);
+        FATAL("Can't load class_registrator, or error while registering script class");
+    }
 	result(const_cast<CObjectFactory*>(&object_factory()));
 }
 

@@ -44,14 +44,27 @@ void CScriptBinder::clear			()
 
 void CScriptBinder::reinit			()
 {
-	if (m_object) {
-		try {
-			m_object->reinit	();
-		}
-		catch(...) {
-			clear			();
-		}
-	}
+// 	if (m_object) {
+// 		try {
+// 			m_object->reinit	();
+// 		}
+// 		catch(...) {
+// 			clear			();
+// 		}
+// 	}
+
+    if (m_object)
+    {
+        __try
+        {
+            m_object->reinit();
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+            ai().script_engine().dump_state();
+            clear();
+        }
+    }
 }
 
 void CScriptBinder::Load			(LPCSTR section)

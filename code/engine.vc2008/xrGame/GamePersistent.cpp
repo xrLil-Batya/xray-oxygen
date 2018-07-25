@@ -47,6 +47,7 @@ using MySuper = IGame_Persistent;
 
 CGamePersistent::CGamePersistent(void)
 {
+    m_developerMode             = (0 != strstr(Core.Params, "-developer"));
 	m_bPickableDOF				= false;
 	m_game_params.m_e_game_type	= eGameIDNoGame;
 	ambient_effect_next_time	= 0;
@@ -779,4 +780,9 @@ void CGamePersistent::SetClientOption(const char* str)
     VERIFY(str);
     Msg("New client option: %s", str);
     m_ClientOptions = str;
+}
+
+bool CGamePersistent::IsDeveloperMode() const
+{
+    return m_developerMode;
 }

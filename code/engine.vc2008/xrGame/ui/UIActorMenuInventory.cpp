@@ -299,7 +299,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					++i;
 				}
 				CUICellItem*		ci   = NULL;
-				if(GetMenuMode()==mmDeadBodySearch && FindItemInList(lst_to_add, pItem, ci))
+				if(GetMenuMode()==mmDeadBodyOrContainerSearch && FindItemInList(lst_to_add, pItem, ci))
 					break;
 
 				if ( !b_already )
@@ -693,7 +693,7 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 }
 
 #include "UIActorStateInfo.h"
-bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
+bool CUIActorMenu::TryUseFoodItem(CUICellItem* cell_itm)
 {
 	if (!cell_itm)	
 		return false;
@@ -705,24 +705,14 @@ bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
 		return false;
 	}
 
-	bool bRemoveObjectUse = false;
-
 	u16 ActorInventoryID = m_pActorInvOwner->object_id();
-	if (item->parent_id() != ActorInventoryID)
-	{
-		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
-		bRemoveObjectUse = true;
-	}
 
 	// Send event to Actor fell
 	SendEvent_Item_Eat(item, ActorInventoryID);
 	PlaySnd(eItemUse);
 	SetCurrentItem(nullptr);
 
-	if (!bRemoveObjectUse)
-	{
-		cell_itm->OwnerList()->RemoveItem(cell_itm, false);
-	}
+    cell_itm->OwnerList()->RemoveItem(cell_itm, false);
 
 	return true;
 }
@@ -780,7 +770,7 @@ void CUIActorMenu::TryHidePropertiesBox()
 void CUIActorMenu::ActivatePropertiesBox()
 {
 	TryHidePropertiesBox();
-	if ( !(m_currMenuMode == mmInventory || m_currMenuMode == mmDeadBodySearch || m_currMenuMode == mmUpgrade) )
+	if ( !(m_currMenuMode == mmInventory || m_currMenuMode == mmDeadBodyOrContainerSearch || m_currMenuMode == mmUpgrade) )
 	{
 		return;
 	}
@@ -795,7 +785,7 @@ void CUIActorMenu::ActivatePropertiesBox()
 	m_UIPropertiesBox->RemoveAll();
 	bool b_show = false;
 
-	if ( m_currMenuMode == mmInventory || m_currMenuMode == mmDeadBodySearch)
+	if ( m_currMenuMode == mmInventory || m_currMenuMode == mmDeadBodyOrContainerSearch)
 	{
 		PropertiesBoxForSlots( item, b_show );
 		PropertiesBoxForWeapon( cell_item, item, b_show );
@@ -1081,7 +1071,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	case INVENTORY_TO_SLOT_ACTION:	ToSlot( cell_item, true, item->BaseSlot() );		break;
 	case INVENTORY_TO_BELT_ACTION:	ToBelt( cell_item, false );		break;
 	case INVENTORY_TO_BAG_ACTION:	ToBag ( cell_item, false );		break;
-	case INVENTORY_EAT_ACTION:		TryUseItem( cell_item ); 		break;
+	case INVENTORY_EAT_ACTION:		TryUseFoodItem( cell_item ); 		break;
 	case INVENTORY_DROP_ACTION:
 		{
 			void* d = m_UIPropertiesBox->GetClickedItem()->GetData();
@@ -1099,7 +1089,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		{
 			PIItem item = CurrentIItem(); // temporary storing because of AttachAddon is setting curiitem to NULL
 			AttachAddon((PIItem)(m_UIPropertiesBox->GetClickedItem()->GetData()));
-			if(m_currMenuMode==mmDeadBodySearch)
+			if(m_currMenuMode==mmDeadBodyOrContainerSearch)
 				RemoveItemFromList(m_pDeadBodyBagList, item);
 			
 			break;

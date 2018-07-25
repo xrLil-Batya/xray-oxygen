@@ -317,11 +317,7 @@ float processor_info::MTCPULoad()
 		m_dwTickCount[dwCpu] = 0;
 	}
 
-	float fltCpuUsage;
-	//for (DWORD dwCpu = 0; dwCpu < m_dwNumberOfProcessors; dwCpu++)
-	//{
 	return CalcMPCPULoad(1);
-	//}
 }
 
 //#TODO: Return max value of float

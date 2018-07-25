@@ -803,16 +803,6 @@ xrTime get_start_time()
 	return (xrTime(Level().GetStartGameTime()));
 }
 
-void supertest(LPCSTR sname)
-{
-	FS.curr_season = (char*) sname;
-}
-
-char* get_season()
-{
-	return (FS.curr_season);
-}
-
 #pragma optimize("s",on)
 void CLevel::script_register(lua_State *L)
 {
@@ -1032,8 +1022,6 @@ void CLevel::script_register(lua_State *L)
 	    def("stop_tutorial",		&stop_tutorial),
 	    def("has_active_tutorial",	&has_active_tutotial),
 	    def("translate_string",		&translate_string),
-	    def("set_season",			&supertest),
-	    def("get_season",			&get_season),
         def("show_minimap",         &show_minimap)
 	];
 }

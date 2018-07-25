@@ -967,20 +967,6 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 			}
 			else 
 				return false;
-
-		case kWPN_ZOOM_INC:
-		case kWPN_ZOOM_DEC:
-			if (IsZoomEnabled() && IsZoomed())
-			{
-				if (cmd == kWPN_ZOOM_INC)  
-					ZoomInc();
-				else
-					ZoomDec();
-
-				return true;
-			}
-			else
-				return false;
 	}
 	return false;
 }

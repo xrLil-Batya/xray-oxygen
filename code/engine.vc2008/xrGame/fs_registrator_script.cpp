@@ -153,14 +153,6 @@ LPCSTR get_file_age_str(CLocatorAPI* fs, LPCSTR nm)
 	return asctime( newtime );
 }
 
-void set_new_dir(LPCSTR path, LPCSTR new_path, int Recurse)
-{
-	FS.get_path(path)->_set(new_path); 
-	string_path			fname;
-	FS.update_path(fname, path, "");
-	FS.rescan_path(fname, Recurse);
-}
-
 #pragma optimize("s",on)
 void fs_registrator::script_register(lua_State *L)
 {
@@ -246,8 +238,7 @@ void fs_registrator::script_register(lua_State *L)
 
 			.def("file_list_open",						&file_list_open_script)
 			.def("file_list_open",						&file_list_open_script_2)
-			.def("file_list_open_ex",					&file_list_open_ex)
-			.def("set_new_dir",						&set_new_dir),
+			.def("file_list_open_ex",					&file_list_open_ex),
 
 		def("getFS",									getFS)
 	];

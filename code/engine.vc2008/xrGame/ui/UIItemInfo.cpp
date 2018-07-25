@@ -185,10 +185,13 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 
 	PIItem pInvItem = (PIItem)pCellItem->m_pData;
 	m_pInvItem = pInvItem;
-	Enable(NULL != m_pInvItem);
-	if (!m_pInvItem
-		|| !m_pInvItem->m_pInventory)
-		return;
+
+    if (m_pInvItem == nullptr)
+    {
+        Enable(false);
+        return;
+    }
+    Enable(true);
 
 	Fvector2				pos;	pos.set(0.0f, 0.0f);
 	string256				str;

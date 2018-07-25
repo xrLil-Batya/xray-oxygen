@@ -984,4 +984,7 @@
 	<string id="ui_st_loadingscreen_custom">
 		<text>Loading Screen V.2</text>
 	</string>
+	<string id="ui_mm_language">
+		<text>Language</text>
+	</string>
 </string_table>

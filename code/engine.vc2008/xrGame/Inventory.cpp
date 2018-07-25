@@ -192,7 +192,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		{
 			GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 		}
-		else if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
+		else if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodyOrContainerSearch)
 		{
 			if (m_pOwner == GameUI()->ActorMenu().GetPartner())
 				GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
@@ -549,23 +549,6 @@ bool CInventory::Action(u16 cmd, u32 flags)
 			if (flags & CMD_START)
 			{
 				ActiveWeapon(slot);
-			}
-		} break;
-
-		case kARTEFACT:
-		{
-		    b_send_event = true;
-
-			if (flags & CMD_START)
-			{
-                if(GetActiveSlot() == ARTEFACT_SLOT && ActiveItem())
-				{
-					Activate(NO_ACTIVE_SLOT);
-				}
-				else 
-				{
-					Activate(ARTEFACT_SLOT);
-				}
 			}
 		} break;
 	}
