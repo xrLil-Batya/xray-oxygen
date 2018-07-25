@@ -779,17 +779,11 @@ void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
 	xr_strcat(dest, sizeof(dest), "_");
 	xr_strcat(dest, sizeof(dest), itoa(num+1, buff, 10));
 }
-
+ 
 void CApplication::Level_Set(u32 L)
 {
-	if (L >= Levels.size())	return;
-	char* lvl_fld = FS.get_season_folder(Levels[L].folder);
-
-    if (lvl_fld != nullptr)
-    {
-        Msg("level load from %s", lvl_fld);
-        FS.get_path("$level$")->_set(lvl_fld);
-    }
+    if (L >= Levels.size())	return;
+    FS.get_path("$level$")->_set(Levels[L].folder);
 
 	static string_path			path;
 
