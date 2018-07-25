@@ -696,4 +696,7 @@
 	<string id="ui_st_loadingscreen_custom">
 		<text>«агрузочный экран V.2</text>
 	</string>
+	<string id="ui_mm_language">
+		<text>язык</text>
+	</string>
 </string_table>
