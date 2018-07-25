@@ -247,7 +247,7 @@ void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 		obj->PPhysicsShell()->Disable();
 	}
 	
-	if (bone>=obj->PHGetSyncItemsNumber())
+	if (saved_bones.size() == obj->PHGetSyncItemsNumber())
 	{
 		u16 bone = 0;
 		for(SPHNetState state : saved_bones)
