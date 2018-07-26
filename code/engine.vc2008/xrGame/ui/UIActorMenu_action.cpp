@@ -99,6 +99,7 @@ bool CUIActorMenu::OnItemDrop(CUICellItem* itm)
 				return true;
 			}
 			SendEvent_Item_Drop		(CurrentIItem(), m_pActorInvOwner->object_id());
+			itm->OwnerList()->RemoveItem(itm, false);
 			SetCurrentItem			(NULL);
 		}break;
 	case iActorSlot:
