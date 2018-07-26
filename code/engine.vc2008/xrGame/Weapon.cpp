@@ -1454,13 +1454,16 @@ void CWeapon::reload(LPCSTR section)
 		m_addon_holder_fov_modifier = m_holder_fov_modifier;
 	}
 
-	Fvector pos, ypr;
-	pos	= pSettings->r_fvector3(section, "position");
-	ypr	= pSettings->r_fvector3(section, "orientation");
-	ypr.mul(PI / 180.f);
 
-	m_Offset.setHPB(ypr.x, ypr.y, ypr.z);
-	m_Offset.translate_over(pos);
+	{
+		Fvector pos, ypr;
+		pos	= pSettings->r_fvector3(section, "position");
+		ypr	= pSettings->r_fvector3(section, "orientation");
+		ypr.mul(PI / 180.f);
+
+		m_Offset.setHPB(ypr.x, ypr.y, ypr.z);
+		m_Offset.translate_over(pos);
+	}
 
 	m_StrapOffset = m_Offset;
 	if (pSettings->line_exist(section, "strap_position") && pSettings->line_exist(section, "strap_orientation")) 

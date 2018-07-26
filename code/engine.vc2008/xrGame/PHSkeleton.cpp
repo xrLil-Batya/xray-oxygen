@@ -246,22 +246,24 @@ void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 	{
 		obj->PPhysicsShell()->Disable();
 	}
-	
-	if (saved_bones.size() == obj->PHGetSyncItemsNumber())
+
+	if( saved_bones.size() == obj->PHGetSyncItemsNumber() )
 	{
 		u16 bone = 0;
-		for(SPHNetState state : saved_bones)
+		std::all_of(saved_bones.begin(), saved_bones.end(),[&](SPHNetState state)
 		{
+			if (bone>=obj->PHGetSyncItemsNumber())
+			{
+				Msg("~ WARNING [%s] has different state in saved_bones[%d] PHGetSyncItemsNumber[%d] Visual[%s]", 
+					obj->Name(), saved_bones.size(), obj->PHGetSyncItemsNumber(), obj->cNameVisual().c_str());
+				return false;
+			}
 			obj->PHGetSyncItem(bone)->set_State(state);
 			bone++;
-		}
+			return true;
+		});
 	}
-	else
-	{
-		Msg("~ WARNING [%s] has different state in saved_bones[%d] PHGetSyncItemsNumber[%d] Visual[%s]", 
-			obj->Name(), saved_bones.size(), obj->PHGetSyncItemsNumber(), obj->cNameVisual().c_str());
-	}
-	
+
 	saved_bones.clear();
 	po->_flags.set(CSE_PHSkeleton::flSavedData,FALSE);
 	m_flags.set(CSE_PHSkeleton::flSavedData,FALSE);

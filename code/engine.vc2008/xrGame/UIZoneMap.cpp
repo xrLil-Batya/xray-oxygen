@@ -143,7 +143,6 @@ void CUIZoneMap::Render			()
 
 void CUIZoneMap::Update()
 {
-	SetupCurrentMap();
     if (!visible) return; //Don't update, if we hided
 	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 	if ( !pActor ) return;
@@ -199,7 +198,7 @@ bool CUIZoneMap::ZoomOut()
 {
 	return true;
 }
-extern float minimap_zoom_factor;
+
 void CUIZoneMap::SetupCurrentMap()
 {
 	m_activeMap->Initialize			(Level().name(), "hud\\default");
@@ -209,7 +208,7 @@ void CUIZoneMap::SetupCurrentMap()
 	m_activeMap->WorkingArea().set	(r);
 	
 	Fvector2						wnd_size;
-	float zoom_factor				= float(m_clipFrame.GetWidth())/100.0f * minimap_zoom_factor;
+	float zoom_factor				= float(m_clipFrame.GetWidth())/100.0f;
 
 	LPCSTR ln						= Level().name().c_str();
 	if(	pGameIni->section_exist(ln) )

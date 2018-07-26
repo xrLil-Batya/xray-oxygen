@@ -537,14 +537,13 @@ void CWeaponMagazinedWGrenade::PlayAnimReload()
 	{
 #ifdef NEW_ANIMS_WPN
    	    if(iAmmoElapsed == 0)
-		{
-			PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
-		}	    
+	    {
+		    PlayHUDMotion("anm_reload_empty_w_gl", TRUE, this, GetState());
+	    }
 	    else
-		{
-			PlayHUDMotion("anm_reload_empty_w_gl", TRUE, this, GetState());
-		}
-	    
+	    {
+ 		    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
+	    }
 #else
 	    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
 #endif
@@ -589,24 +588,27 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 
 			if(m_bGrenadeMode)
 			{
-				switch (act_state)
-				{
-				case 0: PlayHUDMotion("anm_idle_g", FALSE, NULL, GetState()); break;
-				case 1: PlayHUDMotion("anm_idle_sprint_g", TRUE, NULL, GetState()); break;
-				case 2: PlayHUDMotion("anm_idle_moving_g", TRUE, NULL, GetState());	break;
+				if(act_state == 0)
+					PlayHUDMotion("anm_idle_g", FALSE, NULL, GetState());
+				else if (act_state ==1 )
+					PlayHUDMotion("anm_idle_sprint_g", TRUE, NULL,GetState());
+				else if (act_state == 2)
+					PlayHUDMotion("anm_idle_moving_g", TRUE, NULL,GetState());
 #ifdef NEW_ANIMS_WPN
-				case 3: PlayHUDMotion("anm_idle_moving_crouch_g", TRUE, NULL, GetState()); break;
+				else if (act_state == 3)
+					PlayHUDMotion("anm_idle_moving_crouch_g", TRUE, NULL,GetState());
 #endif
-				}
-			}
-			else
+
+			}else
 			{
-				switch (act_state)
-				{
-				case 0: PlayHUDMotion("anm_idle_w_gl", FALSE, NULL, GetState()); break;
-				case 1: PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, NULL, GetState()); break;
-				case 2: PlayHUDMotion("anm_idle_moving_w_gl", TRUE, NULL, GetState());	break;
-				}
+				if(act_state==0)
+					PlayHUDMotion("anm_idle_w_gl", FALSE, NULL, GetState());
+				else
+				if(act_state==1)
+					PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, NULL,GetState());
+				else
+				if(act_state==2)
+					PlayHUDMotion("anm_idle_moving_w_gl", TRUE, NULL,GetState());
 			}
 		
 		}

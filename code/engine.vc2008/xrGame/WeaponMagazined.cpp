@@ -79,7 +79,7 @@ void CWeaponMagazined::Load	(LPCSTR section)
 	m_sounds.LoadSound(section,"snd_reload", "sndReload"		    , true, m_eSoundReload		);
 	
 #ifdef NEW_ANIMS_WPN
-	m_sounds.LoadSound(section,"snd_reload_fast", "sndReloadEmpty"	, true, m_eSoundReloadEmpty	);
+	m_sounds.LoadSound(section,"snd_reload_empty", "sndReloadEmpty"	, true, m_eSoundReloadEmpty	);
 #endif
 	
 	m_sSndShotCurrent = "sndShot";
@@ -180,10 +180,8 @@ void CWeaponMagazined::FireEnd()
 
 void CWeaponMagazined::Reload() 
 {
-	bool CurrentAmmoOnMagazine = !!iAmmoElapsed;
 	inherited::Reload();
 	TryReload();
-	iAmmoElapsed += CurrentAmmoOnMagazine;
 }
 
 bool CWeaponMagazined::TryReload() 
@@ -201,28 +199,25 @@ bool CWeaponMagazined::TryReload()
 		if (IsMisfire() && iAmmoElapsed)
 		{
 			SetPending(TRUE);
-			SwitchState(eReload);
+			SwitchState(eReload); 
 			return true;
 		}
 
 		if (m_pCurrentAmmo || unlimited_ammo())  
 		{
 			SetPending(TRUE);
-			SwitchState(eReload);
+			SwitchState(eReload); 
 			return true;
 		}
-		else
+		else for (u8 i = 0; i < u8(m_ammoTypes.size()); ++i) 
 		{
-			for (u8 i = 0; i < u8(m_ammoTypes.size()); ++i)
-			{
-				m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str()));
-				if (m_pCurrentAmmo)
-				{
-					m_set_next_ammoType_on_reload = i;
-					SetPending(TRUE);
-					SwitchState(eReload);
-					return true;
-				}
+			m_pCurrentAmmo = smart_cast<CWeaponAmmo*>(m_pInventory->GetAny( m_ammoTypes[i].c_str()));
+			if (m_pCurrentAmmo) 
+			{ 
+				m_set_next_ammoType_on_reload = i; 
+				SetPending(TRUE);
+				SwitchState(eReload);
+				return true;
 			}
 		}
 	}
@@ -689,9 +684,9 @@ void CWeaponMagazined::PlayReloadSound()
 #ifdef NEW_ANIMS_WPN
 	{
 		if (iAmmoElapsed == 0)
-			PlaySound("sndReload", get_LastFP());
-		else
 			PlaySound("sndReloadEmpty", get_LastFP());
+		else
+			PlaySound("sndReload", get_LastFP());
 	}
 #else 
 		PlaySound("sndReload", get_LastFP());
@@ -1071,9 +1066,9 @@ void CWeaponMagazined::PlayAnimReload()
 	
 #ifdef NEW_ANIMS_WPN
 	if (iAmmoElapsed == 0)
-		PlayHUDMotion("anm_reload", TRUE, this, GetState());
+		PlayHUDMotion("anm_reload_empty", TRUE, this, GetState());
 	else
-		PlayHUDMotion("anm_reload_fast", TRUE, this, GetState());
+		PlayHUDMotion("anm_reload", TRUE, this, GetState());
 #else 
 	PlayHUDMotion("anm_reload", TRUE, this, GetState());
 #endif
@@ -1344,8 +1339,8 @@ bool CWeaponMagazined::install_upgrade_impl(LPCSTR section, bool test)
 		result |= result2;
 
 #ifdef NEW_ANIMS_WPN
-	result2 = process_if_exists_set(section, "snd_reload_fast", &CInifile::r_string, str, test);
-	if (result2 && !test) { m_sounds.LoadSound(section, "snd_reload_fast", "sndReloadEmpty", true, m_eSoundReloadEmpty); }
+	result2 = process_if_exists_set(section, "snd_reload_empty", &CInifile::r_string, str, test);
+	if (result2 && !test) { m_sounds.LoadSound(section, "snd_reload_empty", "sndReloadEmpty", true, m_eSoundReloadEmpty); }
 		result |= result2;
 #endif
 
