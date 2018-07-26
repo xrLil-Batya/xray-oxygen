@@ -4,6 +4,10 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 15.0.27130.2036
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrWeatherEditor", "editors\xrWeatherEditor\editor.vcxproj", "{492D3DFE-9068-4E7E-A008-7C2420A651C0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661} = {E9DC16A3-D0FA-4924-AF6E-F6FDF3EA0661}
+		{55B0E2CA-E27A-47FC-BC92-21ABDC1044F5} = {55B0E2CA-E27A-47FC-BC92-21ABDC1044F5}
+	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "xrManagedAPI", "editors\xrManagedApi\xrManagedApi.vcxproj", "{55B0E2CA-E27A-47FC-BC92-21ABDC1044F5}"
 	ProjectSection(ProjectDependencies) = postProject

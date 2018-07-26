@@ -609,10 +609,7 @@ float CActor::MaxWalkWeight() const
 }
 
 #include "artefact.h"
-#include "../FrayBuildConfig.hpp"
-#ifdef ACTOR_RUCK
-#	include "ActorRuck.h"
-#endif
+#include "ActorRuck.h"
 
 float CActor::get_additional_weight() const
 {
@@ -624,10 +621,11 @@ float CActor::get_additional_weight() const
 		res += outfit->m_additional_weight;
 	}
 
-#ifdef ACTOR_RUCK
-	CActorRuck* pAR = smart_cast<CActorRuck*>(inventory().ItemFromSlot(RUCK_SLOT));
-	if (pAR) res += pAR->AdditionalInventoryWeight();
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        CActorRuck* pAR = smart_cast<CActorRuck*>(inventory().ItemFromSlot(RUCK_SLOT));
+        if (pAR) res += pAR->AdditionalInventoryWeight();
+    }
 
 	for (TIItemContainer::const_iterator it = inventory().m_belt.begin();
 		inventory().m_belt.end() != it; ++it)

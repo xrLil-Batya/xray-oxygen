@@ -29,7 +29,7 @@
 //#include "../xrphysics/phvalidevalues.h"
 #include "../xrphysics/iActivationShape.h"
 #include "../xrphysics/iphworld.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "profiler.h"
 
 #include "../Include/xrRender/Kinematics.h"

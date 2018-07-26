@@ -7,6 +7,22 @@ class CParticlesObject;
 class CUISequencer;
 class ui_core;
 
+/// Extra features, that previously was in FRayBuildConfig.h. Can be enabled by console commands
+/// Should be here, to make this global
+enum OxygenExtraFeatures : size_t
+{
+    GAME_EXTRA_RUCK                             = (1 << 0),
+    GAME_EXTRA_MONSTER_INVENTORY                = (1 << 1),
+    GAME_EXTRA_SPAWN_ANTIFREEZE                 = (1 << 2),
+    GAME_EXTRA_WEAPON_AUTORELOAD                = (1 << 3),
+    GAME_EXTRA_DYNAMIC_SUN                      = (1 << 4),
+    GAME_EXTRA_HOLD_TO_PICKUP                   = (1 << 5),
+    GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD    = (1 << 6),
+    GAME_EXTRA_SOC_WND                          = (1 << 7),
+    GAME_EXTRA_VERTICAL_BELTS                   = (1 << 8),
+};
+extern Flags32 g_extraFeatures;
+
 class CGamePersistent: public IGame_Persistent, public IEventReceiver
 {
 	// ambient particles
@@ -22,6 +38,7 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
 	bool				ambient_effect_wind_on;
 
 	bool				m_bPickableDOF;
+    bool                m_developerMode;
 
 	CUISequencer*		m_intro;
 	EVENT				eQuickLoad;
@@ -101,6 +118,8 @@ public:
     shared_str          GetClientOption() const;
     void                SetServerOption(const char* str);
     void                SetClientOption(const char* str);
+
+    bool                IsDeveloperMode() const;
 };
 
 IC CGamePersistent&		GamePersistent()		{ return *((CGamePersistent*) g_pGamePersistent); }

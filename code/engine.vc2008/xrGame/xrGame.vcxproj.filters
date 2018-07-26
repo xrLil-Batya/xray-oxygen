@@ -4845,9 +4845,6 @@
     <ClInclude Include="hit_immunity.h">
       <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClInclude>
-    <ClInclude Include="hit_immunity_space.h">
-      <Filter>Core\Client\Objects\base\EntityCondition</Filter>
-    </ClInclude>
     <ClInclude Include="Wound.h">
       <Filter>Core\Client\Objects\base\EntityCondition</Filter>
     </ClInclude>
@@ -5389,9 +5386,6 @@
       <Filter>Core\Server</Filter>
     </ClInclude>
     <ClInclude Include="game_base.h">
-      <Filter>Core\Server\Games</Filter>
-    </ClInclude>
-    <ClInclude Include="..\xrServerEntities\game_base_space.h">
       <Filter>Core\Server\Games</Filter>
     </ClInclude>
     <ClInclude Include="id_generator.h">
@@ -5951,6 +5945,7 @@
     <ClInclude Include="ui\UILoadingScreen.h">
       <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClInclude>
+    <ClInclude Include="CMagazine.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="damage_manager.cpp">
@@ -8347,9 +8342,6 @@
     <ClCompile Include="PHDebug.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="death_anims_predicates.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
     <ClCompile Include="animation_script_callback.cpp">
       <Filter>AI</Filter>
     </ClCompile>
@@ -8463,6 +8455,7 @@
     <ClCompile Include="ui\UILoadingScreen.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI</Filter>
     </ClCompile>
+    <ClCompile Include="CMagazine.cpp" />
   </ItemGroup>
   <ItemGroup>
     <CustomBuildStep Include="ai\monsters\chimera\chimera_attack_state.h">

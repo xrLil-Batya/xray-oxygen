@@ -59,7 +59,6 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 	m_pPartnerInvOwner	= io;
 	if (m_pPartnerInvOwner)
 	{
-#ifdef MONSTER_INV
 		CBaseMonster* monster = smart_cast<CBaseMonster*>(m_pPartnerInvOwner);
 		if (monster || m_pPartnerInvOwner->use_simplified_visual())
 		{
@@ -72,12 +71,6 @@ void CUIActorMenu::SetPartner(CInventoryOwner* io)
 		}
 		else
 			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
-#else
-		if (m_pPartnerInvOwner->use_simplified_visual())
-			m_PartnerCharacterInfo->ClearInfo();
-		else
-			m_PartnerCharacterInfo->InitCharacter(m_pPartnerInvOwner->object_id());
-#endif
 		SetInvBox(nullptr);
 	}
 	else m_PartnerCharacterInfo->ClearInfo();
@@ -109,7 +102,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		case mmInventory: DeInitInventoryMode(); break;
 		case mmTrade: DeInitTradeMode(); break;
 		case mmUpgrade: DeInitUpgradeMode(); break;
-		case mmDeadBodySearch: DeInitDeadBodySearchMode(); break;
+		case mmDeadBodyOrContainerSearch: DeInitDeadBodySearchMode(); break;
 		default: R_ASSERT(0); break;
 		}
 
@@ -123,7 +116,7 @@ void CUIActorMenu::SetMenuMode(EMenuMode mode)
 		case mmInventory: InitInventoryMode(); break;
 		case mmTrade: InitTradeMode(); break;
 		case mmUpgrade: InitUpgradeMode(); break;
-		case mmDeadBodySearch: InitDeadBodySearchMode(); break;
+		case mmDeadBodyOrContainerSearch: InitDeadBodySearchMode(); break;
 		default: R_ASSERT(0); break;
 		}
 		UpdateConditionProgressBars();
@@ -177,6 +170,7 @@ void CUIActorMenu::Draw()
 	}
 
 	inherited::Draw();
+
 	m_ItemInfo->Draw();
 }
 
@@ -189,7 +183,7 @@ void CUIActorMenu::Update()
 	{
 		case mmUndefined: break;
 		case mmInventory: GameUI()->UIMainIngameWnd->UpdateZoneMap(); break;
-		case mmDeadBodySearch: CheckDistance(); break;
+		case mmDeadBodyOrContainerSearch: CheckDistance(); break;
 
 		case mmTrade:
 		{
@@ -255,9 +249,7 @@ EDDListType CUIActorMenu::GetListType(CUIDragDropListEx* l)
 	if (l == m_pInventoryOutfitList)		return iActorSlot;
 	if (l == m_pInventoryHelmetList)		return iActorSlot;
 	if (l == m_pInventoryDetectorList)		return iActorSlot;
-#ifdef ACTOR_RUCK
 	if (l == m_pInventoryRuckList)			return iActorSlot;
-#endif
 
     if (l == m_pInventoryKnifeList)         return iActorSlot;
     if (l == m_pInventoryBinocularList)     return iActorSlot;
@@ -281,9 +273,9 @@ CUIDragDropListEx* CUIActorMenu::GetListByType(EDDListType t)
 	switch (t)
 	{
 	case iActorBag: return (m_currMenuMode == mmTrade) ? m_pTradeActorBagList : m_pInventoryBagList; break;
-	case iDeadBodyBag: return m_pDeadBodyBagList; break;
-	case iActorBelt: return m_pInventoryBeltList; break;
-	default: R_ASSERT("invalid call"); break;
+	case iDeadBodyBag: return m_pDeadBodyBagList;
+    case iActorBelt: return m_pInventoryBeltList;
+	default: R_ASSERT("invalid call"); return m_pDeadBodyBagList;
 	}
 }
 
@@ -381,7 +373,7 @@ void CUIActorMenu::UpdateItemsPlace()
 	case mmInventory: break;
 	case mmTrade: UpdatePrices(); break;
 	case mmUpgrade: SetupUpgradeItem(); break;
-	case mmDeadBodySearch: UpdateDeadBodyBag(); break;
+	case mmDeadBodyOrContainerSearch: UpdateDeadBodyBag(); break;
 	default: R_ASSERT(0); break;
 	}
 
@@ -400,9 +392,11 @@ void CUIActorMenu::clear_highlight_lists()
 	m_HelmetSlotHighlight->Show(false);
 	m_OutfitSlotHighlight->Show(false);
 	m_DetectorSlotHighlight->Show(false);
-#ifdef ACTOR_RUCK
-	m_RuckSlotHighlight->Show(false);
-#endif
+
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_RuckSlotHighlight->Show(false);
+    }
 
     m_KnifeSlotHighlight->Show(false);
     m_BinocularSlotHighlight->Show(false);
@@ -429,7 +423,7 @@ void CUIActorMenu::clear_highlight_lists()
 		break;
 	case mmUpgrade:
 		break;
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		m_pDeadBodyBagList->clear_select_armament();
 		break;
 	}
@@ -439,18 +433,13 @@ void CUIActorMenu::clear_highlight_lists()
 void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 {
 	PIItem item = (PIItem)cell_item->m_pData;
-	if(!item)
+
+    if (!item)
 		return;
 
 	if(CUIDragDropListEx::m_drag_item)
 		return;
 
-	CWeapon* weapon = smart_cast<CWeapon*>(item);
-	CHelmet* helmet = smart_cast<CHelmet*>(item);
-	CCustomOutfit* outfit = smart_cast<CCustomOutfit*>(item);
-	CCustomDetector* detector = smart_cast<CCustomDetector*>(item);
-	CEatableItem* eatable = smart_cast<CEatableItem*>(item);
-	CArtefact* artefact = smart_cast<CArtefact*>(item);
     u32 item_slot = item->BaseSlot();
 	
     if (item_slot == BINOCULAR_SLOT)
@@ -485,33 +474,39 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		m_DetectorSlotHighlight->Show(true);
 		return;
 	}
-	CObject*	pObj = smart_cast<CObject*>		(item);
-	shared_str	section_name = pObj->cNameSect();
-	if(eatable)
+
+	CObject* pObj = item->cast_game_object();
+	shared_str section_name = pObj->cNameSect();
+
+	if (smart_cast<CEatableItem*>(item))
 	{
-	bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
-	    if (!CanSwitchToFastSlot)
-		    return;
-		
-		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iQuickSlot)
+		bool CanSwitchToFastSlot = READ_IF_EXISTS(pSettings, r_bool, section_name, "can_switch_to_fast_slot", true);
+		if (!CanSwitchToFastSlot)
 			return;
 
-		for(u8 i=0; i<4; i++)
+		if (cell_item->OwnerList() && GetListType(cell_item->OwnerList()) == iQuickSlot)
+			return;
+
+		for (u8 i = 0; i < 4; i++)
 			m_QuickSlotsHighlight[i]->Show(true);
 		return;
 	}
-	if(artefact)
+
+	if(smart_cast<CArtefact*>(item->cast_game_object()))
 	{
 		if(cell_item->OwnerList() && GetListType(cell_item->OwnerList())==iActorBelt)
 			return;
 
 		Ivector2 cap = m_pInventoryBeltList->CellsCapacity();
-#ifdef VERTICAL_BELT
-		for (u8 i = 0; i<cap.y; i++)
-#else
-		for (u8 i = 0; i < cap.x; i++)
-#endif
-			m_ArtefactSlotsHighlight[i]->Show(true);
+
+		int CallPos = g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS) ? cap.y : cap.x;
+        for (u8 i = 0; i < CallPos; i++)
+        {
+            for (u8 i = 0; i < cap.x; i++)
+            {
+			    m_ArtefactSlotsHighlight[i]->Show(true);
+            }
+        }
 		return;
 	}
 }
@@ -520,13 +515,14 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 {
 	PIItem item = (PIItem)cell_item->m_pData;
-	if ( !item )
-	{
+
+    // Check if object is active, name and section is valid. Inventory can be nullptr, because this can be container (not dead body, or trader)
+	if (!item || item->m_name.equal(""))
 		return;
-	}
+
 	highlight_item_slot(cell_item);
 
-	// не подсвечивать потроны для ножа
+	// не подсвечивать патроны для ножа
 	if (smart_cast<CWeaponKnife*>(item))
 	{
 		return;
@@ -549,7 +545,7 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 			highlight_armament( item, m_pTradePartnerList );
 			break;
 		}
-	case mmDeadBodySearch:
+	case mmDeadBodyOrContainerSearch:
 		{
 			highlight_armament( item, m_pInventoryBagList );
 			highlight_armament( item, m_pDeadBodyBagList );
@@ -772,9 +768,10 @@ void CUIActorMenu::ClearAllLists()
 	m_pInventoryPistolList->ClearAll			(true);
 	m_pInventoryAutomaticList->ClearAll			(true);
 
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList->ClearAll(true);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList->ClearAll(true);
+    }
 
     m_pInventoryKnifeList->ClearAll             (true);
     m_pInventoryBinocularList->ClearAll         (true);

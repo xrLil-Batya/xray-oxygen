@@ -116,20 +116,15 @@ void CLevel::IR_OnKeyboardPress(int key)
 	if (g_bDisableAllInput)
 		return;
 
-	if (g_actor) 
-		Actor()->callback(GameObject::eOnKeyPress)(key, _curr);
-
 	switch (_curr)
 	{
 		case kSCREENSHOT:
 			Render->Screenshot();
 			return;
-			break;
 
 		case kCONSOLE:
 			Console->Show();
 			return;
-			break;
 
 		case kQUIT:
 		{
@@ -161,7 +156,24 @@ void CLevel::IR_OnKeyboardPress(int key)
 	if (game && game->OnKeyboardPress(key))	
 		return;
 
-#ifndef MASTER_GOLD
+    // developer actions
+    if (GamePersistent().IsDeveloperMode())
+    {
+        switch (_curr)
+        {
+        case kDEV_NOCLIP:
+            if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
+            {
+                Console->Hide();
+                Console->Execute("demo_record 1");
+            }
+            break;
+        default:
+            break;
+        }
+    }
+
+#ifdef DEBUG
 	switch (key) {
 	case DIK_DIVIDE:
 	{
@@ -170,12 +182,8 @@ void CLevel::IR_OnKeyboardPress(int key)
 
 		SetGameTimeFactor(g_fTimeFactor);
 
-#ifdef DEBUG
 		if (!m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
-#else //DEBUG
-		SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), g_fTimeFactor);
-#endif //DEBUG
 
 		break;
 	}
@@ -185,16 +193,11 @@ void CLevel::IR_OnKeyboardPress(int key)
 			break;
 
 		SetGameTimeFactor(1000.f);
-#ifdef DEBUG
 		if (!m_bEnvPaused)
 			SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 1000.f);
-#else //DEBUG
-		SetEnvironmentGameTimeFactor(GetEnvironmentGameTime(), 1000.f);
-#endif //DEBUG
 
 		break;
 	}
-#ifdef DEBUG
 	case DIK_SUBTRACT: {
 		if (!Server)
 			break;
@@ -206,18 +209,6 @@ void CLevel::IR_OnKeyboardPress(int key)
 		m_bEnvPaused = !m_bEnvPaused;
 		break;
 	}
-#endif //DEBUG
-	case DIK_NUMPAD5:
-	{
-		if (!pInput->iGetAsyncKeyState(DIK_LSHIFT))
-		{
-			Console->Hide();
-			Console->Execute("demo_record 1");
-		}
-	}
-	break;
-
-#ifdef DEBUG
 
 	case DIK_RETURN: {
 		bDebug = !bDebug;
@@ -315,15 +306,8 @@ void CLevel::IR_OnKeyboardPress(int key)
 		break;
 	}
 	/**/
-#endif
-#ifdef DEBUG
-	case DIK_F9: {
-		break;
 	}
-				 return;
 #endif // DEBUG
-	}
-#endif // MASTER_GOLD
 
 	if (bindConsoleCmds.execute(key))
 		return;
@@ -360,9 +344,6 @@ void CLevel::IR_OnKeyboardRelease(int key)
 
 	if (Device.Paused() && !psActorFlags.test(AF_NO_CLIP))
 		return;
-
-	if (g_actor) 
-		Actor()->callback(GameObject::eOnKeyRelease)(key, get_binded_action(key));
 
 	if (CURRENT_ENTITY())
 	{
@@ -405,9 +386,6 @@ void CLevel::IR_OnKeyboardHold(int key)
 	}
 
 #endif // DEBUG
-
-	if (g_actor) 
-		Actor()->callback(GameObject::eOnKeyHold)(key, get_binded_action(key));
 
 	if (GameUI() && GameUI()->IR_UIOnKeyboardHold(key)) 
 		return;

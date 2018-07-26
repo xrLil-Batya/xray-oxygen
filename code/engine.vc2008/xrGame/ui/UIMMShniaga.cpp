@@ -6,7 +6,7 @@
 #include "UIScrollView.h"
 #include "UIXmlInit.h"
 #include "MMsound.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "../level.h"
 #include "object_broker.h"
 #include <math.h>

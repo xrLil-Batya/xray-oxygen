@@ -63,11 +63,7 @@ extern ENGINE_API CInifile *pGameIni;
 #pragma comment( lib, "dxguid.lib"	 )
 #endif
 #pragma comment( lib, "sound_static.lib")
-
-#ifndef DEBUG
-#	define LUABIND_NO_ERROR_CHECKING
-#endif
-
+ 
 #define LUABIND_DONT_COPY_STRINGS
 
 #define READ_IF_EXISTS(ltx,method,section,name,default_value)\

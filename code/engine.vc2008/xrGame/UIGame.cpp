@@ -28,6 +28,7 @@
 #include "../xrEngine/xr_ioconsole.h"
 #include "../xrEngine/x_ray.h"
 #include "../../xrServerEntities/script_engine.h"
+#include "ai\monsters\basemonster\base_monster.h"
 
 #include "attachable_item.h"
 
@@ -452,19 +453,23 @@ void CUIGame::StartTalk(bool disable_break)
 	TalkMenu->ShowDialog(true);
 }
 
-void CUIGame::StartCarBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner) //Deadbody search
+void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryOwner* pOtherOwner) //Deadbody search
 {
 	if (TopInputReceiver())
 		return;
 
-	m_ActorMenu->SetActor(pActorInv);
-	m_ActorMenu->SetPartner(pOtherOwner);
+	// Don't allow search monster's if that feature disabled
+	if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) || !smart_cast<CBaseMonster*>(pOtherOwner))
+	{
+		m_ActorMenu->SetActor(pActorInv);
+		m_ActorMenu->SetPartner(pOtherOwner);
 
-	m_ActorMenu->SetMenuMode(mmDeadBodySearch);
-	m_ActorMenu->ShowDialog(true);
+		m_ActorMenu->SetMenuMode(mmDeadBodyOrContainerSearch);
+		m_ActorMenu->ShowDialog(true);
+	}
 }
 
-void CUIGame::StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search
+void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //Deadbody search
 {
 	if (TopInputReceiver())
 		return;
@@ -473,7 +478,7 @@ void CUIGame::StartCarBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) //De
 	m_ActorMenu->SetInvBox(pBox);
 	VERIFY(pBox);
 
-	m_ActorMenu->SetMenuMode(mmDeadBodySearch);
+	m_ActorMenu->SetMenuMode(mmDeadBodyOrContainerSearch);
 	m_ActorMenu->ShowDialog(true);
 }
 

@@ -40,7 +40,8 @@ enum {
 	GE_DESTROY,					// authorative client request for entity-destroy
 	GE_DESTROY_REJECT,			// GE_DESTROY + GE_OWNERSHIP_REJECT
 	GE_TELEPORT_OBJECT,
-
+	GE_INV_OWNER_SETNAME,
+	
 	GE_BUY,
 	GE_INFO_TRANSFER,			//transfer _new_ info on PDA
 	

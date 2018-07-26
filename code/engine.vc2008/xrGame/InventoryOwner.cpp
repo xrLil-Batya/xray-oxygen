@@ -11,7 +11,7 @@
 #include "script_engine.h"
 #include "AI_PhraseDialogManager.h"
 #include "level.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "PhraseDialog.h"
 #include "xrserver.h"
 #include "xrServer_Objects_ALife_Monsters.h"
@@ -203,9 +203,9 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 
 	if (IsTalking())
 	{
-		//если наш собеседник перестал говорить с нами,
+		//если наш собеседник перестал говорить с нами или умер,
 		//то и нам нечего ждать.
-		if (!m_pTalkPartner->IsTalking())
+		if (!m_pTalkPartner->IsTalking() || !m_pTalkPartner->is_alive())
 		{
 			StopTalk();
 		}
@@ -301,10 +301,10 @@ void CInventoryOwner::renderable_Render		()
 {
 	if (inventory().ActiveItem())
 		inventory().ActiveItem()->renderable_Render();
-#ifdef DEAD_BODY_WEAPON
+
 	if (inventory().ItemFromSlot(INV_SLOT_3))
 		inventory().ItemFromSlot(INV_SLOT_3)->renderable_Render();
-#endif
+
 	CAttachmentOwner::renderable_Render();
 }
 
@@ -393,7 +393,8 @@ void CInventoryOwner::LostPdaContact	(CInventoryOwner* pInvOwner)
 //для работы с relation system
 u16 CInventoryOwner::object_id	()  const
 {
-	return smart_cast<const CGameObject*>(this)->ID();
+	const CGameObject* pObject = smart_cast<const CGameObject*>(this);
+	return pObject ? pObject->ID() : u16(-1);
 }
 
 
@@ -635,4 +636,14 @@ void CInventoryOwner::deadbody_closed( bool status )
 	P.w_u8( (m_deadbody_can_take)? 1 : 0 );
 	P.w_u8( (m_deadbody_closed)? 1 : 0 );
 	CGameObject::u_EventSend( P );
+}
+
+void CInventoryOwner::set_name(LPCSTR name)
+{
+	m_game_name = name;
+
+	NET_Packet P;
+	CGameObject::u_EventGen(P, GE_INV_OWNER_SETNAME, object_id());
+	P.w_stringZ(name);
+	CGameObject::u_EventSend(P);
 }

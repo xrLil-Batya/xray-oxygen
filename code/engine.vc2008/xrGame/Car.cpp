@@ -684,15 +684,23 @@ void CCar::ParseDefinitions()
 	CExplosive::Load(ini, "explosion");
 
 	m_camera_position_1st = ini->r_fvector3("car_definition", "camera_pos");
-	m_camera_position_2nd = ini->r_fvector3("car_definition", "camera_pos_2nd");
-	m_camera_position_3rd = ini->r_fvector3("car_definition", "camera_pos_3rd");
+
+    if (ini->line_exist("car_definition", "camera_pos_2nd"))
+    {
+	    m_camera_position_2nd = ini->r_fvector3("car_definition", "camera_pos_2nd");
+    }
+
+    if (ini->line_exist("car_definition", "camera_pos_3rd"))
+    {
+        m_camera_position_3rd = ini->r_fvector3("car_definition", "camera_pos_3rd");
+    }
 	///////////////////////////car definition///////////////////////////////////////////////////
 	fill_wheel_vector(ini->r_string("car_definition", "driving_wheels"), m_driving_wheels);
 	fill_wheel_vector(ini->r_string("car_definition", "steering_wheels"), m_steering_wheels);
 	fill_wheel_vector(ini->r_string("car_definition", "breaking_wheels"), m_breaking_wheels);
 	fill_exhaust_vector(ini->r_string("car_definition", "exhausts"), m_exhausts);
 	fill_doors_map(ini->r_string("car_definition", "doors"), m_doors);
-
+     
 	///////////////////////////car properties///////////////////////////////
 	active_camera = 0;
 	camera[ectFirst] = xr_new<CCameraFirstEye>(this, CCameraBase::flRelativeLink | CCameraBase::flPositionRigid);

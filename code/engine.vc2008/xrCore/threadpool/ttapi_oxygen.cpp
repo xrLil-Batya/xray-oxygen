@@ -2,8 +2,6 @@
 #include "../../FrayBuildConfig.hpp"
 #include "ttapi.h"
 
-#ifdef NEW_TTAPI
-#define USE_EVENT_SYSTEM
 
 PTP_POOL hPool = nullptr;
 PTP_CLEANUP_GROUP hCleanupEnv = nullptr;
@@ -79,6 +77,7 @@ void TTAPI ttapi_RunAllWorkers()
 
 void NTAPI ttapi_worker_threadentry(PTP_CALLBACK_INSTANCE Instance, PVOID Context, PTP_WORK Work)
 {
+    thread_name("XRay_TTAPI_Child");
 	ttapi_ThreadParams* pParams = (ttapi_ThreadParams*)Context;
 	pParams->Func(pParams->FuncParams);
 	delete pParams;
@@ -97,4 +96,3 @@ void TTAPI ttapi_example2_taskentry(LPVOID param)
 	InterlockedIncrement(pCounter);
 }
 
-#endif

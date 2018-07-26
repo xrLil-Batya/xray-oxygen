@@ -2,6 +2,7 @@
 #include "igame_level.h"
 #include "xr_ioconsole.h"
 #include "xr_ioc_cmd.h"
+#include "xr_ioc_cmd_ex.h"
 #include "cameramanager.h"
 #include "environment.h"
 #include "xr_input.h"

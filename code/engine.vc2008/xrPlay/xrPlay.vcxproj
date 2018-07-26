@@ -18,7 +18,7 @@
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{131A9895-FE16-417A-8C41-16A5994A6D13}</ProjectGuid>
     <RootNamespace>xrPlay</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
@@ -65,7 +65,7 @@
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
       <AdditionalIncludeDirectories Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">../../sdk/include/dx;../../sdk/include/;</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">DEBUG;_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release|x64'">_XRLAUNCHER;_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <PreprocessorDefinitions Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">RELEASE_IA32;_XRLAUNCHER;_CLR_MANAGER;_ITERATOR_DEBUG_LEVEL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExceptionHandling>
@@ -78,7 +78,7 @@
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</MultiProcessorCompilation>
       <MultiProcessorCompilation Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</MultiProcessorCompilation>
-      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MultiThreadedDebugDLL</RuntimeLibrary>
+      <RuntimeLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <LinkTimeCodeGeneration Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Default</LinkTimeCodeGeneration>
@@ -88,11 +88,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="AssemblyInfo.cpp" />
+    <ClCompile Include="AssemblyInfo.cxx" />
     <ClCompile Include="entry_point.cpp" />
     <ClCompile Include="IParser.cpp" />
     <ClCompile Include="RendererList.cpp" />
-    <ClCompile Include="xrLauncherWnd.cpp" />
+    <ClCompile Include="xrLauncherWnd.cxx" />
   </ItemGroup>
   <ItemGroup>
     <Image Include="splash_xrcs_en.bmp" />

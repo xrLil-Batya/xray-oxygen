@@ -7,11 +7,11 @@
 #include "profiler.h"
 #include "MainMenu.h"
 #include "UICursor.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "level.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "stalker_animation_data_storage.h"
 #include "stalker_velocity_holder.h"
 
@@ -47,6 +47,7 @@ using MySuper = IGame_Persistent;
 
 CGamePersistent::CGamePersistent(void)
 {
+    m_developerMode             = (0 != strstr(Core.Params, "-developer"));
 	m_bPickableDOF				= false;
 	m_game_params.m_e_game_type	= eGameIDNoGame;
 	ambient_effect_next_time	= 0;
@@ -552,6 +553,14 @@ void CGamePersistent::OnFrame	()
 		}
 #endif // MASTER_GOLD
 	}
+
+    // Update sun before updating other enviroment settings
+    if (g_extraFeatures.is(GAME_EXTRA_DYNAMIC_SUN))
+    {
+        if (!::Render->is_sun_static())
+            Environment().calculate_dynamic_sun_dir();
+    }
+
 	MySuper::OnFrame			();
 
 	if(!Device.Paused())
@@ -771,4 +780,9 @@ void CGamePersistent::SetClientOption(const char* str)
     VERIFY(str);
     Msg("New client option: %s", str);
     m_ClientOptions = str;
+}
+
+bool CGamePersistent::IsDeveloperMode() const
+{
+    return m_developerMode;
 }

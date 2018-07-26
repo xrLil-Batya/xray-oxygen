@@ -692,14 +692,6 @@ static bool bLook_cam_fp_zoom = false;
 
 void CActor::UpdateCL	()
 {
-#ifndef HOLD_PICKUP_OFF
-	if (g_Alive() && Level().CurrentViewEntity() == this && GameUI() && !GameUI()->TopInputReceiver())
-	{
-		int dik = get_action_dik(kUSE, 0), dik2 = get_action_dik(kUSE, 1);
-		if ((dik && pInput->iGetAsyncKeyState(dik)) || (dik2 && pInput->iGetAsyncKeyState(dik2)))
-			m_bPickupMode = true;
-	}
-#endif
 	if (psActorFlags.test(AF_HARDCORE))
 		cam_Set(eacFirstEye);
 	UpdateInventoryOwner			(Device.dwTimeDelta);
@@ -715,6 +707,7 @@ void CActor::UpdateCL	()
 			}
 		}
 	}
+
 	if(m_holder)
 		m_holder->UpdateEx( currentFOV() );
 
@@ -723,11 +716,11 @@ void CActor::UpdateCL	()
 	inherited::UpdateCL				();
 	m_pPhysics_support->in_UpdateCL	();
 
-
-	if (g_Alive()) 
+	if (g_Alive() && m_bPickupMode)
 		PickupModeUpdate	();	
 
-	PickupModeUpdate_COD();
+    // If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
+	PickupModeUpdate_COD(m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
 
 	SetZoomAimingMode		(false);
 	CWeapon* pWeapon		= smart_cast<CWeapon*>(inventory().ActiveItem());	
@@ -871,8 +864,6 @@ void CActor::UpdateCL	()
 	
 	if(IsFocused())
 		g_player_hud->update			(trans);
-
-	m_bPickupMode=false;
 }
 
 float	NET_Jump = 0;
@@ -1057,12 +1048,11 @@ void CActor::shedule_Update	(u32 DT)
 		m_pVehicleWeLookingAt		 = smart_cast<CHolderCustom*>(game_object);
 		CEntityAlive* pEntityAlive   = smart_cast<CEntityAlive*>(game_object);
 
-#ifdef MONSTER_INV
-		if (smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
-			m_sDefaultObjAction = m_sDeadCharacterUseAction;
-		else
-#endif
-		if (m_pUsableObject && m_pUsableObject->tip_text())
+        if (g_extraFeatures.is(GAME_EXTRA_MONSTER_INVENTORY) && smart_cast<CBaseMonster*>(game_object) && !pEntityAlive->g_Alive())
+        {
+            m_sDefaultObjAction = m_sDeadCharacterUseAction;
+        }
+        else if (m_pUsableObject && m_pUsableObject->tip_text())
 		{
 			m_sDefaultObjAction = CStringTable().translate(m_pUsableObject->tip_text());
 		}

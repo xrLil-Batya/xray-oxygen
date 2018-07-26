@@ -10,7 +10,7 @@
 #include "xr_level_controller.h"
 #include "level.h"
 #include "object_broker.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "../xrphysics/MathUtils.h"
 #include "player_hud.h"
 #include "../FrayBuildConfig.hpp"

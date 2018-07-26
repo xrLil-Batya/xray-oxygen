@@ -60,7 +60,16 @@ IC	const CObjectItemAbstract &CObjectFactory::item	(const CLASS_ID &clsid) const
 {
 	actualize			();
 	const_iterator		I = std::lower_bound(clsids().begin(),clsids().end(),clsid,CObjectItemPredicate());
-	VERIFY				((I != clsids().end()) && ((*I)->clsid() == clsid));
+    if (!((I != clsids().end()) && ((*I)->clsid() == clsid)))
+    {
+        char* pClsid = (char*)&clsid;
+        char Tag[9] = {0};
+        std::reverse_copy(pClsid, pClsid + 8, Tag);
+
+        string64 ErrorMsg = {0};
+        xr_sprintf(ErrorMsg, "ClassID %s is not registered", Tag);
+        FATAL(ErrorMsg);
+    }
 	return				(**I);
 }
 #else

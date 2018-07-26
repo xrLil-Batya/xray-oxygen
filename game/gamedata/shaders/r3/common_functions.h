@@ -1,6 +1,18 @@
 #ifndef	common_functions_h_included
 #define	common_functions_h_included
 #include "configurator_defines.h"
+
+float4 proj2screen(float4 Project)
+{
+	float4	Screen;
+			Screen.x = (Project.x + Project.w) * 0.5f;
+			Screen.y = (Project.w - Project.y) * 0.5f;
+			Screen.z = Project.z;
+			Screen.w = Project.w;
+			
+	return Screen;
+}
+
 //	contrast function
 float Contrast(float Input, float ContrastPower)
 {

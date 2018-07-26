@@ -34,6 +34,7 @@
 #include "hudmanager.h"
 #include "Weapon.h"
 #include "ZoneCampfire.h"
+#include "../xrEngine/XR_IOConsole.h"
 
 extern u32 hud_adj_mode;
 
@@ -112,18 +113,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			SwitchTorch();
 			break;
 		}
-		
-	case kTORCH_MODE:
-		{
-			SwitchTorchMode();
-			break;
-		}
 
-	case kKICK:
-	    {
-		    Actor_kick();
-		    break;
-        }
 	case kDETECTOR:
 		{
 			PIItem det_active					= inventory().ItemFromSlot(DETECTOR_SLOT);
@@ -173,6 +163,13 @@ void CActor::IR_OnKeyboardPress(int cmd)
 				}
 			}
 		}break;
+
+    case kQUICK_SAVE:
+        Console->Execute("save");
+        break;
+    case kQUICK_LOAD:
+        Console->Execute("load");
+        break;
 	}
 }
 
@@ -184,8 +181,7 @@ void CActor::IR_OnMouseWheel(int direction)
 		return;
 	}
 
-	if(inventory().Action( (direction>0)? (u16)kWPN_ZOOM_DEC:(u16)kWPN_ZOOM_INC , CMD_START)) return;
-
+    if (inventory().Action(kWPN_ZOOM, (direction > 0) ? WeaponActionFlags::CMD_IN : WeaponActionFlags::CMD_OUT)) return;
 
 	if (direction>0)
 		OnNextWeaponSlot				();
@@ -196,9 +192,7 @@ void CActor::IR_OnMouseWheel(int direction)
 void CActor::IR_OnKeyboardRelease(int cmd)
 {
 	if(hud_adj_mode && pInput->iGetAsyncKeyState(DIK_LSHIFT))	return;
-
 	if (Remote())	return;
-
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 
 	if (g_Alive())	
@@ -207,17 +201,18 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 		{
 			m_holder->OnKeyboardRelease(cmd);
 			
-			if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_STOP))		return;
+			if(m_holder->allowWeapon() && inventory().Action((u16)cmd, CMD_STOP)) return;
 			return;
-		}else
+		}
+        else
+        {
 			if(inventory().Action((u16)cmd, CMD_STOP))		return;
-
-
+        }
 
 		switch(cmd)
 		{
-		case kJUMP:		mstate_wishful &=~mcJump;		break;
-		case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop();				break;
+		    case kJUMP:		mstate_wishful &=~mcJump;		break;
+		    case kDROP:		if(GAME_PHASE_INPROGRESS == Game().Phase()) g_PerformDrop(); break;
 		}
 	}
 }
@@ -261,9 +256,6 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	case kUP:
 	case kDOWN: 
 		cam_Active()->Move( (cmd==kUP) ? kDOWN : kUP, 0, LookFactor);									break;
-	case kCAM_ZOOM_IN: 
-	case kCAM_ZOOM_OUT: 
-		cam_Active()->Move(cmd);												break;
 	case kLEFT:
 	case kRIGHT:
 		if (eacFreeLook!=cam_active) cam_Active()->Move(cmd, 0, LookFactor);	break;
@@ -377,6 +369,9 @@ void CActor::ActorUse()
 		return;
 	}
 
+    // Pickup item
+    PickupModeUpdate_COD(true);
+
 	if (character_physics_support()->movement()->PHCapture())
 		character_physics_support()->movement()->PHReleaseObject();
 
@@ -386,7 +381,7 @@ void CActor::ActorUse()
 	if (m_pInvBoxWeLookingAt && m_pInvBoxWeLookingAt->nonscript_usable())
 	{
 		if (!m_pInvBoxWeLookingAt->closed())
-			GameUI()->StartCarBody(this, m_pInvBoxWeLookingAt);
+			GameUI()->StartSearchBody(this, m_pInvBoxWeLookingAt);
 
 		return;
 	}
@@ -419,20 +414,18 @@ void CActor::ActorUse()
 				CGameObject::u_EventSend(P);
 				return;
 			}
-		}
-
-		if (m_pPersonWeLookingAt)
-		{
-			CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
-
-			VERIFY(pEntityAliveWeLookingAt);
-
-			if (pEntityAliveWeLookingAt->g_Alive())
-				TryToTalk();
-			else
+			else if (m_pPersonWeLookingAt)
 			{
-				if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
-					GameUI()->StartCarBody(this, m_pPersonWeLookingAt);
+				CEntityAlive* pEntityAliveWeLookingAt = smart_cast<CEntityAlive*>(m_pPersonWeLookingAt);
+				VERIFY(pEntityAliveWeLookingAt);
+
+				if (pEntityAliveWeLookingAt->g_Alive())
+					TryToTalk();
+				else
+				{
+					if (!m_pPersonWeLookingAt->deadbody_closed_status() && pEntityAliveWeLookingAt->AlreadyDie())
+						GameUI()->StartSearchBody(this, m_pPersonWeLookingAt);
+				}
 			}
 		}
 	}
@@ -480,12 +473,7 @@ void	CActor::OnNextWeaponSlot()
 	{
 		if (inventory().ItemFromSlot(SlotsToCheck[i]))
 		{
-			if (SlotsToCheck[i] == ARTEFACT_SLOT) 
-			{
-				IR_OnKeyboardPress(kARTEFACT);
-			}
-			else
-				IR_OnKeyboardPress(kWPN_1 + i);
+            IR_OnKeyboardPress(kWPN_1 + i);
 			return;
 		}
 	}
@@ -515,12 +503,7 @@ void	CActor::OnPrevWeaponSlot()
 	{
 		if (inventory().ItemFromSlot(SlotsToCheck[i]))
 		{
-			if (SlotsToCheck[i] == ARTEFACT_SLOT) 
-			{
-				IR_OnKeyboardPress(kARTEFACT);
-			}
-			else
-				IR_OnKeyboardPress(kWPN_1 + i);
+            IR_OnKeyboardPress(kWPN_1 + i);
 			return;
 		}
 	}
@@ -627,65 +610,6 @@ void CActor::SwitchTorchMode()
 		}
 	}
 }
-
-void CActor::Actor_kick()
-{
-	CGameObject *O = ObjectWeLookingAt();
-	if (O)
-	{
-		CEntityAlive *EA = smart_cast<CEntityAlive*>(O);
-		if (EA && EA->g_Alive())
-			return;
-
-		static float kick_impulse = READ_IF_EXISTS(pSettings, r_float, "actor", "kick_impulse", 250.f);
-		Fvector dir = Direction();
-		dir.y = sin(15.f * PI / 180.f);
-		dir.normalize();
-		float mass_f = 1.f;
-		CPhysicsShellHolder *sh = smart_cast<CPhysicsShellHolder*>(O);
-		if (sh)
-			mass_f = sh->GetMass();
-
-		PIItem itm = smart_cast<PIItem>(O);
-		if (itm)
-			mass_f = itm->Weight();
-
-		CInventoryOwner *io = smart_cast<CInventoryOwner*> (O);
-		if (io)
-			mass_f += io->inventory().TotalWeight();
-
-		if (mass_f < 1)
-			mass_f = 1;
-
-
-		u16 bone_id = 0;
-		collide::rq_result& RQ = HUD().GetCurrentRayQuery();
-		if (RQ.O == O && RQ.element != 0xffff)
-			bone_id = (u16)RQ.element;
-
-		clamp<float>(mass_f, 0.1f, 100.f); // ограничить параметры хита
-
-		Fvector h_pos = O->Position();
-		SHit hit = SHit(0.001f * mass_f, dir, this, bone_id, h_pos, kick_impulse, ALife::eHitTypeStrike, 0.f, false);
-		O->Hit(&hit);
-		if (EA)
-		{
-			static float alive_kick_power = 3.f;
-			float real_imp = kick_impulse / mass_f;
-			dir.mul(pow(real_imp, alive_kick_power));
-			EA->character_physics_support()->movement()->AddControlVel(dir);
-			EA->character_physics_support()->movement()->ApplyImpulse(dir.normalize(), kick_impulse * alive_kick_power);
-		}
-
-		conditions().ConditionJump(mass_f / 50);
-		if (mass_f > 5)
-		{
-			hit.boneID = 0;  // пока не ¤сно, куда лушче √√ ударить (в ногу надо?)
-			this->Hit(&hit); // сила действи¤ равна силе противодействи¤
-		}
-	}
-}
-
 
 void CActor::NoClipFly(int cmd)
 {

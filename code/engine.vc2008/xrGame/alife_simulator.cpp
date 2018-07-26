@@ -29,17 +29,14 @@ extern void destroy_lua_wpn_params();
 CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) : 
 	CALifeUpdateManager(server, alife_section), CALifeSimulatorBase(server, alife_section)
 {
-    if (strstr(Core.Params, "-keep_lua"))
-    {
-        destroy_lua_wpn_params();
-        MainMenu()->DestroyInternal(true);
-        xr_delete(g_object_factory);
-        ai().script_engine().init();
+    destroy_lua_wpn_params();
+    MainMenu()->DestroyInternal(true);
+    xr_delete(g_object_factory);
+    ai().script_engine().init();
 
 #ifdef DEBUG
-        ai().moving_objects().clear();
+    ai().moving_objects().clear();
 #endif // DEBUG
-    }
 
 	ai().set_alife				(this);
 
@@ -60,14 +57,14 @@ CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
 	luabind::functor<void> functor;
 	R_ASSERT2(ai().script_engine().functor(start_game_callback,functor),"Failed to get start game callback");
 
-	try
-	{
+// 	try
+// 	{
 		functor();
-	}
-	catch (luabind::error err)
-	{
-		R_ASSERT3(false, "Failed call start game callback. %s", err.what());
-	}
+// 	}
+// 	catch (luabind::error err)
+// 	{
+// 		R_ASSERT3(false, "Failed call start game callback. %s", err.what());
+// 	}
 
 	load(p.m_game_or_spawn,!xr_strcmp(p.m_new_or_load,"load") ? false : true, !xr_strcmp(p.m_new_or_load,"new"));
 }

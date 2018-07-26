@@ -19,7 +19,7 @@
 #include "actor.h"
 #ifdef DEBUG
 #include "PHDebug.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #endif
 
 #define CHOOSE_MAX(x,inst_x,y,inst_y,z,inst_z)\

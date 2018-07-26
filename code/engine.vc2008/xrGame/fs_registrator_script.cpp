@@ -24,7 +24,7 @@ class FS_file_list{
 	xr_vector<LPSTR>*	m_p;
 public :
 				FS_file_list	(xr_vector<LPSTR>* p):m_p(p)	{ }
-	u32			Size			()								{ return m_p->size();}
+	u32			Size			()								{ return (u32)m_p->size();}
 	LPCSTR		GetAt			(u32 idx)						{ return m_p->at(idx);}
 	void		Free			()								{ FS.file_list_close(m_p);};
 };
@@ -92,7 +92,7 @@ public:
 	};
 	FS_file_list_ex		(LPCSTR path, u32 flags, LPCSTR mask);
 
-	u32			Size()						{return m_file_items.size();}
+	u32			Size()						{return (u32)m_file_items.size();}
 	FS_item		GetAt(u32 idx)				{return m_file_items[idx];}
 	void		Sort(u32 flags);
 };
@@ -151,14 +151,6 @@ LPCSTR get_file_age_str(CLocatorAPI* fs, LPCSTR nm)
 	struct tm *newtime;
 	newtime = localtime( &t );
 	return asctime( newtime );
-}
-
-void set_new_dir(LPCSTR path, LPCSTR new_path, int Recurse)
-{
-	FS.get_path(path)->_set(new_path); 
-	string_path			fname;
-	FS.update_path(fname, path, "");
-	FS.rescan_path(fname, Recurse);
 }
 
 #pragma optimize("s",on)
@@ -246,8 +238,7 @@ void fs_registrator::script_register(lua_State *L)
 
 			.def("file_list_open",						&file_list_open_script)
 			.def("file_list_open",						&file_list_open_script_2)
-			.def("file_list_open_ex",					&file_list_open_ex)
-			.def("set_new_dir",						&set_new_dir),
+			.def("file_list_open_ex",					&file_list_open_ex),
 
 		def("getFS",									getFS)
 	];

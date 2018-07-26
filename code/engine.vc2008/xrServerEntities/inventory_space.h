@@ -1,7 +1,12 @@
 #pragma once
 
-#define CMD_START	(1<<0)
-#define CMD_STOP	(1<<1)
+enum WeaponActionFlags
+{
+    CMD_START = 1<<0,
+    CMD_STOP  = 1<<1,
+    CMD_IN    = 1<<2,
+    CMD_OUT   = 1<<3
+};
 
 enum{
 	NO_ACTIVE_SLOT	= 0,
@@ -18,7 +23,7 @@ enum{
 	ARTEFACT_SLOT,	// artefact
 	HELMET_SLOT,	// helmet
 	RUCK_SLOT,		//backpack
-	LAST_SLOT		= HELMET_SLOT
+	LAST_SLOT		= RUCK_SLOT
 };
 
 #define RUCK_HEIGHT			280

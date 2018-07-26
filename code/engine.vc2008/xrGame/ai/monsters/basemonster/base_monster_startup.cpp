@@ -228,10 +228,8 @@ void CBaseMonster::reload	(LPCSTR section)
 	if (!CCustomMonster::use_simplified_visual())
 		CStepManager::reload	(section);
 
-#ifdef MONSTER_INV
 	CInventoryOwner::reload(section);
 	inventory().SetSlotsUseful(false);
-#endif
 
 	movement().reload	(section);
 
@@ -271,9 +269,7 @@ void CBaseMonster::reinit()
 {
 	inherited::reinit					();
 
-#ifdef MONSTER_INV
 	CInventoryOwner::reinit();
-#endif 
 
 	EnemyMemory.clear					();
 	SoundMemory.clear					();
@@ -336,12 +332,6 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	if (!inherited::net_Spawn(DC))
 		return(FALSE);
 
-#ifdef MONSTER_INV
-	CHARACTER_COMMUNITY community;
-	community.set("monster");
-	CInventoryOwner::SetCommunity(community.index());
-#endif
-
 	CSE_Abstract							*e	= (CSE_Abstract*)(DC);
 	R_ASSERT2								(ai().get_level_graph() && ai().get_cross_table() && (ai().level_graph().level_id() != u32(-1)),"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 	monster_squad().register_member			((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(), this);
@@ -368,9 +358,7 @@ void CBaseMonster::net_Destroy()
 
 	inherited::net_Destroy();
 
-#ifdef MONSTER_INV
 	CInventoryOwner::net_Destroy();
-#endif
 	m_pPhysics_support->in_NetDestroy();
 
 	monster_squad().remove_member		((u8)g_Team(),(u8)g_Squad(),(u8)g_Group(),this);

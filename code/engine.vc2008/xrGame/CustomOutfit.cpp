@@ -373,7 +373,7 @@ void CCustomOutfit::AddBonesProtection(LPCSTR bones_section)
 	if ( parent && parent->Visual() && m_BonesProtectionSect.size() )
 		m_boneProtection->add(bones_section, smart_cast<IKinematics*>( parent->Visual() ) );
 }
-
+#include "ActorRuck.h"
 using namespace luabind;
 
 #pragma optimize("s",on)
@@ -385,6 +385,9 @@ void CCustomOutfit::script_register(lua_State *L)
 			.def(constructor<>()),
 
 		class_<CHelmet, CGameObject>("CHelmet")
+			.def(constructor<>()),
+			
+		class_<CActorRuck, CGameObject>("CActorRuck")
 			.def(constructor<>())
 	];
 }

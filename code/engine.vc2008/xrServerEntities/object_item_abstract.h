@@ -15,10 +15,14 @@
 
 class CObjectItemAbstract {
 protected:
-	CLASS_ID									m_clsid;
+    CLASS_ID									m_clsid;
 	shared_str									m_script_clsid;
 
 public:
+#ifdef DEBUG
+    char								        m_clsidAsString[9];
+#endif
+
 	IC											CObjectItemAbstract	(const CLASS_ID &clsid, LPCSTR script_clsid);
 	IC		const CLASS_ID						&clsid				() const;
 	IC		shared_str							script_clsid		() const;

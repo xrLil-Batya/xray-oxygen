@@ -1,87 +1,94 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Drawing;
-using System.Data;
+using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace xrPostprocessEditor
 {
-    public partial class KeyFrameBox : UserControl
+    public partial class KeyFrameBox
     {
-        private decimal kf_coef;
+        public delegate void KeyFrameEventHandler(object sender, decimal keyTime);
+        public delegate void KeyFrameErrorHandler(string message);
+
+        public event KeyFrameEventHandler AddTimeKeyEvent;
+        public event KeyFrameEventHandler RemoveTimeKeyEvent;
+        public event KeyFrameErrorHandler ErrorOccuredEvent;
 
         public event EventHandler SelectedIndexChanged;
-        public event EventHandler AddButtonClick;
-        public event EventHandler RemoveButtonClick;
         public event EventHandler ClearButtonClick;
-        public event EventHandler KeyFrameTimeChanged;
 
-        public ContextMenu CopyMenu { get { return btnCopyFrom.Menu; } }
+        public ContextMenu CopyMenu => btnCopyFrom.Menu;
 
-        public ListBox.ObjectCollection Items { get { return lbKeyFrames.Items; } }
+        public ListBox.ObjectCollection Items => lbKeyFrames.Items;
 
         public int SelectedIndex
         {
-            get { return lbKeyFrames.SelectedIndex; }
-            set { lbKeyFrames.SelectedIndex = value; }
+            get => lbKeyFrames.SelectedIndex;
+            set => lbKeyFrames.SelectedIndex = value;
         }
 
         public KeyFrameBox()
         {
             InitializeComponent();
-            // Работаем по мотивам ПЫС, нужен коэф для названий в ListBox
-            kf_coef = 0;
 
-            // Завезём обработчики событий
-            AddButtonClick += OnAddButtonClick;
-            SelectedIndexChanged += OnSelectedIndexChanged;
-            RemoveButtonClick += OnRemoveButtonClick;
             ClearButtonClick += OnClearButtonClick;
-            KeyFrameTimeChanged += OnKeyFrameTimeChanged;
         }
-        public void OnSelectedIndexChanged(object sender, EventArgs e)
-        {
-            // Временно, для тестов
-        }
-        public void OnRemoveButtonClick(object sender, EventArgs e)
-        {
-            try
-            {
-                int size = lbKeyFrames.Items.Count - 1;
-                lbKeyFrames.Items.RemoveAt(size);
-            }
-            catch(Exception)
-            {
-                MessageBox.Show("KeyFrames is empty!");
-            }
-        }
-        public void OnKeyFrameTimeChanged(object sender, EventArgs e)
-        {
 
-        }
         public void OnClearButtonClick(object sender, EventArgs e)
         {
             lbKeyFrames.Items.Clear();
-            kf_coef = 0;
         }
 
-        public void OnAddButtonClick(object sender, EventArgs e)
+        public void BtnAdd_Click(object sender, EventArgs e)
         {
-            kf_coef = numKeyFrameTime.Value;
-            lbKeyFrames.Items.Add(kf_coef.ToString());
+            decimal keyTime = numKeyFrameTime.Value;
+            var keyTimeString = keyTime.ToString(CultureInfo.InvariantCulture);
+
+            if (!VerifyKeyTime(keyTime))
+            {
+                lbKeyFrames.Items.Add(keyTimeString);
+                AddTimeKeyEvent?.Invoke(this, keyTime);
+
+                return;
+            }
+
+            ErrorOccuredEvent?.Invoke("This time is already exists in the frame list.");
         }
 
-        private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e) => SelectedIndexChanged?.Invoke(this, e);
+        private void BtnRemove_Click(object sender, EventArgs e)
+        {
+            if (lbKeyFrames.Items.Count != 0)
+            {
+                int index = lbKeyFrames.SelectedIndex;
+                decimal keyTime = decimal.Parse(lbKeyFrames.SelectedItem.ToString());
 
-        public void BtnAdd_Click(object sender, EventArgs e) => AddButtonClick?.Invoke(this, e);
+                RemoveTimeKeyEvent?.Invoke(this, keyTime);
 
-        private void BtnRemove_Click(object sender, EventArgs e) => RemoveButtonClick?.Invoke(this, e);
+                lbKeyFrames.Items.RemoveAt(index);
+
+                return;
+            }
+
+            ErrorOccuredEvent?.Invoke("KeyFrame is empty.");
+        }
 
         private void BtnClear_Click(object sender, EventArgs e) => ClearButtonClick?.Invoke(this, e);
 
-        private void NumKeyFrameTime_ValueChanged(object sender, EventArgs e) => KeyFrameTimeChanged?.Invoke(this, e);
+        private void NumKeyFrameTime_ValueChanged(object sender, EventArgs e) { }
+
+        private void LbKeyFrames_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lbKeyFrames.SelectedItem != null)
+            {
+                SelectedIndexChanged?.Invoke(sender, e);
+            }
+        }
+
+        private bool VerifyKeyTime(decimal newKeyTime)
+        {
+            var items = lbKeyFrames.Items.Cast<string>();
+
+            return items.Contains(newKeyTime.ToString(CultureInfo.InvariantCulture));
+        }
     }
 }

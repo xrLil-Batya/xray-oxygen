@@ -248,7 +248,6 @@ protected:
 	bool					use_Vehicle				(CHolderCustom* object);
 	bool					use_MountedWeapon		(CHolderCustom* object);
 	void					ActorUse				();
-	void					Actor_kick              ();	
 
 protected:
 	BOOL					m_bAnimTorsoPlayed;
@@ -276,6 +275,9 @@ public:
 	MotionID				m_current_legs;
 	MotionID				m_current_torso;
 	MotionID				m_current_head;
+
+    //режим подбирания предметов
+    bool					m_bPickupMode;
 
 	// callback на анимации модели актера
 	void					SetCallbacks		();
@@ -359,8 +361,6 @@ protected:
 	shared_str				m_sCampfireIgniteAction;	// qweasdd
 	shared_str				m_sCampfireExtinguishAction; 
 
-	//режим подбирания предметов
-	bool					m_bPickupMode;
 	//расстояние (в метрах) на котором актер чувствует гранату (любую)
 	float					m_fFeelGrenadeRadius;
 	float					m_fFeelGrenadeTime; 	//время гранаты (сек) после которого актер чувствует гранату
@@ -369,7 +369,7 @@ protected:
 
 	void					PickupModeUpdate	();
 	void					PickupInfoDraw		(CObject* object);
-	void					PickupModeUpdate_COD ();
+	void PickupModeUpdate_COD (bool bDoPickup);
 
 	//////////////////////////////////////////////////////////////////////////
 	// Motions (передвижения актрера)

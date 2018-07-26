@@ -44,14 +44,27 @@ void CScriptBinder::clear			()
 
 void CScriptBinder::reinit			()
 {
-	if (m_object) {
-		try {
-			m_object->reinit	();
-		}
-		catch(...) {
-			clear			();
-		}
-	}
+// 	if (m_object) {
+// 		try {
+// 			m_object->reinit	();
+// 		}
+// 		catch(...) {
+// 			clear			();
+// 		}
+// 	}
+
+    if (m_object)
+    {
+        __try
+        {
+            m_object->reinit();
+        }
+        __except (EXCEPTION_EXECUTE_HANDLER)
+        {
+            ai().script_engine().dump_state();
+            clear();
+        }
+    }
 }
 
 void CScriptBinder::Load			(LPCSTR section)
@@ -131,9 +144,21 @@ void CScriptBinder::shedule_Update	(u32 time_delta)
 		try {
 			m_object->shedule_Update	(time_delta);
 		}
-		catch(...) {
-			clear			();
-		}
+// 		catch(luabind::error e) 
+//         {
+//             lua_State* lua =  e.state();
+//             if (lua_isstring(lua, -1))
+//             {
+//                 const char* luaError = lua_tostring(lua, -1);
+//                 Msg("! LUA ERROR: %s", luaError);
+//                 lua_pop(lua, 1);
+//             }
+// 			clear			();
+// 		}
+        catch (...)
+        {
+            clear();
+        }
 	}
 }
 

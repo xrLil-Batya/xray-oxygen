@@ -240,33 +240,11 @@ void	CCar::OnKeyboardHold(int cmd)
 
 	switch(cmd)
 	{
-	case kCAM_ZOOM_IN: 
-	case kCAM_ZOOM_OUT: 
 	case kUP:
 	case kDOWN:
 	case kLEFT:
 	case kRIGHT:	active_camera->Move(cmd);	break;
-/*
-	case kFWD:		
-		if (ectFree==active_camera->tag)	active_camera->Move(kUP);
-		else								m_vCamDeltaHP.y += active_camera->rot_speed.y*Device.fTimeDelta;
-		break;
-	case kBACK:		
-		if (ectFree==active_camera->tag)	active_camera->Move(kDOWN);
-		else								m_vCamDeltaHP.y -= active_camera->rot_speed.y*Device.fTimeDelta;
-		break;
-	case kL_STRAFE: 
-		if (ectFree==active_camera->tag)	active_camera->Move(kLEFT);
-		else								m_vCamDeltaHP.x -= active_camera->rot_speed.x*Device.fTimeDelta;
-		break;
-	case kR_STRAFE: 
-		if (ectFree==active_camera->tag)	active_camera->Move(kRIGHT);
-		else								m_vCamDeltaHP.x += active_camera->rot_speed.x*Device.fTimeDelta;
-		break;
-*/
 	}
-//	clamp(m_vCamDeltaHP.x, -PI_DIV_2,	PI_DIV_2);
-//	clamp(m_vCamDeltaHP.y, active_camera->lim_pitch.x,	active_camera->lim_pitch.y);
 }
 void CCar::Action(u16 id, u32 flags)
 {

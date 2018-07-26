@@ -305,7 +305,7 @@ void CStats::Show()
         pFont->Out(10, 10, FPSFormat, fLastDisplayedFPS);
         pFont->SetHeight(sz);
 		pFont->OnRender					();
-	};
+	}
 
 	if (psDeviceFlags.test(rsHWInfo))
 	{
@@ -320,17 +320,17 @@ void CStats::Show()
 		    mem.dwLength = sizeof(MEMORYSTATUSEX);
 		    GlobalMemoryStatusEx((&mem));
 	
-		    AvailableMem = (DOUBLE)mem.ullAvailPhys;	// how much phys mem available
+		    AvailableMem = (float)mem.ullAvailPhys;	// how much phys mem available
 		    AvailableMem /= (1024 * 1024);	
-		    AvailablePageFileMem = (DOUBLE)mem.ullAvailPageFile;	// how much pagefile mem available
+		    AvailablePageFileMem = (float)mem.ullAvailPageFile;	// how much pagefile mem available
 		    AvailablePageFileMem /= (1024 * 1024);
 
 		    // Getting info by request
 		    GetProcessMemoryInfo(GetCurrentProcess(), (PROCESS_MEMORY_COUNTERS*)&pmc, sizeof(PROCESS_MEMORY_COUNTERS_EX));
 		    GetSystemInfo(&sysInfo);
 	
-			PhysMemoryUsedPercent = (FLOAT)mem.dwMemoryLoad;
-			PageFileMemUsedByApp = (FLOAT)pmc.PagefileUsage;
+			PhysMemoryUsedPercent = (float)mem.dwMemoryLoad;
+			PageFileMemUsedByApp = (float)pmc.PagefileUsage;
 		    PageFileMemUsedByApp /= (1024 * 1024);
 
 		    // Counting CPU load
@@ -349,8 +349,8 @@ void CStats::Show()
 
         // Draw all your stuff
         pFont->Out(10, 25, "MEM_AVAILABLE: %0.0fMB", AvailableMem);				// Physical memory available
-        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Page file memory available
-        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physicall memory used by app
+        pFont->Out(10, 40, "PAGE_AVAILABLE: %0.0fMB", AvailablePageFileMem);	// Pagefile memory available
+        pFont->Out(10, 55, "PAGE_APPUSED: %0.0fMB", PageFileMemUsedByApp);		// Physical memory used by app
         if (cpuLoad > 80.0 || PhysMemoryUsedPercent > 80.0)
             pFont->SetColor(DebugTextColor::DTC_RED);
         else if (cpuLoad > 60.0 || PhysMemoryUsedPercent > 60.0)

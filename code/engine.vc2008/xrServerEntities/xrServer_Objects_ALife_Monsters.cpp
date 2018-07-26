@@ -261,8 +261,7 @@ void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue* sender)
 
 
 #ifdef XRGAME_EXPORTS
-
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 #include "Level.h"
 
 #endif

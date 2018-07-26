@@ -401,14 +401,16 @@ void CActor::net_Destroy	()
 	
 	Level().MapManager		().OnObjectDestroyNotify(ID());
 
-#pragma todo("Dima to MadMax : do not comment inventory owner net_Destroy!!!")
 	CInventoryOwner::net_Destroy();
 	cam_UnsetLadder();	
 	character_physics_support()->movement()->DestroyCharacter();
-	if(m_pPhysicsShell)			{
+
+	if(m_pPhysicsShell)			
+	{
 		m_pPhysicsShell->Deactivate();
 		xr_delete<IPhysicsShellEx>(m_pPhysicsShell);
-	};
+	}
+
 	m_pPhysics_support->in_NetDestroy	();
 
 	xr_delete		(m_sndShockEffector);

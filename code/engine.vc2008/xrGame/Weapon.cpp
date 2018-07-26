@@ -50,12 +50,11 @@ CWeapon::CWeapon()
 	m_Offset.identity		();
 	m_StrapOffset.identity	();
 
-	m_iAmmoCurrentTotal		= 0;
+	
 	m_BriefInfo_CalcFrame	= 0;
 
-	iAmmoElapsed			= -1;
-	iMagazineSize			= -1;
-	m_ammoType				= 0;
+	
+	
 
 	eHandDependence			= hdNone;
 
@@ -135,18 +134,12 @@ void CWeapon::UpdateXForm()
 	// Get access to entity and its visual
 	CEntityAlive* E = smart_cast<CEntityAlive*>(H_Parent());
 	
-	if (!E)
-		return;
+    if (!E) return;
 
 	const CInventoryOwner *parent = smart_cast<const CInventoryOwner*>(E);
-	if (parent && parent->use_simplified_visual())
-		return;
+    if (parent && parent->use_simplified_visual()) return;
 
-#ifdef DEAD_BODY_WEAPON
-	if (!m_can_be_strapped_rifle)
-#endif
-		if (parent->attached(this))
-			return;
+    if (!m_can_be_strapped_rifle && parent->attached(this)) return;
 
 	IKinematics* V = smart_cast<IKinematics*>(E->Visual());
 	VERIFY(V);
@@ -154,7 +147,6 @@ void CWeapon::UpdateXForm()
 	// Get matrices
 	int	boneL = -1, boneR = -1, boneR2 = -1;
 	
-#ifdef DEAD_BODY_WEAPON
 	if ((m_strap_bone0_id == -1 || m_strap_bone1_id == -1) && m_can_be_strapped_rifle)
 	{
 		m_strap_bone0_id = V->LL_BoneID(m_strap_bone0);
@@ -176,17 +168,15 @@ void CWeapon::UpdateXForm()
 		if (m_strapped_mode_rifle)
 			m_strapped_mode_rifle = false;
 	}
-#else
-	E->g_WeaponBones(boneL, boneR, boneR2);
-#endif
 
-	if (boneR == -1)
+	if (boneR == (u16(-1)))
 		return;
 
 	if ((HandDependence() == hd1Hand) || (GetState() == eReload) || (!E->g_Alive()))
 		boneL = boneR2;
 
 	V->CalculateBones();
+
 	Fmatrix& mL	= V->LL_GetTransform(u16(boneL));
 	Fmatrix& mR = V->LL_GetTransform(u16(boneR));
 
@@ -899,14 +889,10 @@ void CWeapon::SetDefaults()
 void CWeapon::UpdatePosition(const Fmatrix& trans)
 {
 	Position().set(trans.c);
-#ifdef DEAD_BODY_WEAPON
 	if (m_strapped_mode || m_strapped_mode_rifle)
 		XFORM().mul(trans, m_StrapOffset);
 	else
 		XFORM().mul(trans, m_Offset);
-#else
-	XFORM().mul(trans, m_strapped_mode ? m_StrapOffset : m_Offset);
-#endif
 	VERIFY(!fis_zero(DET(renderable.xform)));
 }
 
@@ -944,56 +930,50 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 		case kWPN_ZOOM:
 			if (IsZoomEnabled())
 			{
-				if (b_toggle_weapon_aim)
-				{
-					if (flags&CMD_START)
-					{
-						if (!IsZoomed())
-						{
-							if (!IsPending())
-							{
-								if(GetState() != eIdle)
-									SwitchState(eIdle);
+                switch (flags)
+                {
+                case CMD_START:
+                    if (!IsZoomed())
+                    {
+                        if (!IsPending())
+                        {
+                            if (GetState() != eIdle)
+                                SwitchState(eIdle);
+                            OnZoomIn();
+                        }
+                    }
+                    else if (!b_toggle_weapon_aim)
+                    {
+                        OnZoomOut();
+                    }
+                    break;
+                case CMD_IN:
+                    if (!IsZoomEnabled() || !IsZoomed())
+                    {
+                        return false;
+                    }
 
-								OnZoomIn();
-							}
-						}
-						else
-							OnZoomOut();
-					}
-				}
-				else
-				{
-					if(flags&CMD_START)
-					{
-						if (!IsZoomed() && !IsPending())
-						{
-							if (GetState() != eIdle)
-								SwitchState(eIdle);
-							OnZoomIn();
-						}
-					}
-					else 
-						if (IsZoomed())
-							OnZoomOut();
-				}
+                    ZoomInc();
+                    break;
+                case CMD_OUT:
+                    if (!IsZoomEnabled() || !IsZoomed())
+                    {
+                        return false;
+                    }
+
+                    ZoomDec();
+                    break;
+                default:
+                    if (!b_toggle_weapon_aim)
+                    {
+                        if (IsZoomed())
+                            OnZoomOut();
+                    }
+                    break;
+                }
 				return true;
 			}
 			else 
-				return false;
-
-		case kWPN_ZOOM_INC:
-		case kWPN_ZOOM_DEC:
-			if (IsZoomEnabled() && IsZoomed())
-			{
-				if (cmd == kWPN_ZOOM_INC)  
-					ZoomInc();
-				else
-					ZoomDec();
-
-				return true;
-			}
-			else
 				return false;
 	}
 	return false;
@@ -1954,20 +1934,3 @@ u32 CWeapon::Cost() const
 	return res;
 }
 
-float CWeapon::GetMagazineWeight(const decltype(CWeapon::m_magazine)& mag) const
-{
-    float res = 0;
-    const char* last_type = nullptr;
-    float last_ammo_weight = 0;
-    for (auto& c : mag)
-    {
-        // Usually ammos in mag have same type, use this fact to improve performance
-        if (last_type != c.m_ammoSect.c_str())
-        {
-            last_type = c.m_ammoSect.c_str();
-            last_ammo_weight = c.Weight();
-        }
-        res += last_ammo_weight;
-    }
-    return res;
-}

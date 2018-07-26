@@ -231,9 +231,8 @@ void					CRender::create()
 	o.dx10_msaa				= !!ps_r3_msaa;
 	o.dx10_msaa_samples		= (1 << ps_r3_msaa);
 	/////////////////////////////////////////////
-	//subshafts options
-	o.sunshaft_mrmnwar		= ps_r_sunshafts_mode == SS_MANOWAR_SS;
-	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
+	// sunshafts options
+//	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
 	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt			= o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)
@@ -352,19 +351,18 @@ void CRender::reset_begin()
 	// Update incremental shadowmap-visibility solver
 	// BUG-ID: 10646
 	{
-		u32 it = 0;
 		/////////////////////////////////////////////
-		for (it=0; it<Lights_LastFrame.size(); it++)	
+		for (u32 i = 0; i<Lights_LastFrame.size(); i++)
 		{
-			if (!Lights_LastFrame[it])	
+			if (!Lights_LastFrame[i])	
 				continue;
 			try 
 			{
-				Lights_LastFrame[it]->svis.resetoccq ()	;
+				Lights_LastFrame[i]->svis.resetoccq ()	;
 			} 
 			catch (...)
 			{
-				Msg	("! Failed to flush-OCCq on light [%d] %X",it,*(u32*)(&Lights_LastFrame[it]));
+				Msg	("! Failed to flush-OCCq on light [%d] %X",i,*(u32*)(&Lights_LastFrame[i]));
 			}
 		}
 		/////////////////////////////////////////////
@@ -596,7 +594,6 @@ void					CRender::rmNormal			()
 	D3D_VIEWPORT VP		= {0,0,(float)T->get_width(),(float)T->get_height(),0,1.f };
 
 	HW.pContext->RSSetViewports(1, &VP);
-	//CHK_DX				(HW.pDevice->SetViewport(&VP));
 }
 
 void					CRender::ResizeWindowProc(WORD h, WORD w)
@@ -608,14 +605,20 @@ void					CRender::ResizeWindowProc(WORD h, WORD w)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it : SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear();
 }
 
 #include "../../xrEngine/GameFont.h"

@@ -60,11 +60,6 @@ void SHit::invalidate()
 	add_wound				= false									;
 }
 
-bool SHit::is_valide() const
-{
-	return hit_type!=ALife::eHitTypeMax;
-}
-
 void	SHit::GenHeader				(u16 PacketType, u16 ID)
 {
 	DestID = ID;

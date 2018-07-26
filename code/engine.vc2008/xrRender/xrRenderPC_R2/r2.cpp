@@ -134,10 +134,6 @@ void					CRender::create					()
 		Msg				("* HWDST/PCF supported and used");
 	}
 
-    //subshafts options
-    o.sunshaft_mrmnwar      = ps_r_sunshafts_mode == SS_MANOWAR_SS;
-    o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
-
 	o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
 	o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 
@@ -477,6 +473,13 @@ CRender::CRender()
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it: SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear(); 
 }
 
 #include "../../xrEngine/GameFont.h"

@@ -3,6 +3,9 @@
 #include "key_binding_registrator.h"
 #include "xr_level_controller.h"
 
+//#REFACTOR: Key binding in Lua at current state (25.07.18) is prohibited. The reason - it's should go through action system
+//not direct key handling
+
 using namespace luabind;
 
 int dik_to_bind(int dik){
@@ -35,10 +38,7 @@ void key_binding_registrator::script_register(lua_State *L)
 				value("kCAM_1",						int(kCAM_1)),
 				value("kCAM_2",						int(kCAM_2)),
 				value("kCAM_3",						int(kCAM_3)),
-				value("kCAM_ZOOM_IN",				int(kCAM_ZOOM_IN)),
-				value("kCAM_ZOOM_OUT",				int(kCAM_ZOOM_OUT)),
 				value("kTORCH",						int(kTORCH)),
-				value("kTORCH_MODE",				int(kTORCH_MODE)),
 				value("kNIGHT_VISION",				int(kNIGHT_VISION)),
 				value("kWPN_1",						int(kWPN_1)),
 				value("kWPN_2",						int(kWPN_2)),

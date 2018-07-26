@@ -585,6 +585,9 @@
     <ClInclude Include="ILoadingScreen.h">
       <Filter>Interfaces\Render</Filter>
     </ClInclude>
+    <ClInclude Include="xr_ioc_cmd_ex.h">
+      <Filter>Game API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">

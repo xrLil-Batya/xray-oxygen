@@ -36,19 +36,23 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	CUIXmlInit					ml_init;
 
 	CUIXmlInit::InitWindow		(*m_uiXml, "main", 0, this);
-#ifdef SOC_TALK_WND
-	CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
-	CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
 
-	UIOurIcon.AttachChild(&UICharacterInfoLeft);
-	UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
+    // Display character icons on left and right side of dialog screen, line in Shadow of Chernobyl
+    if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
+    {
+        CUIXmlInit::InitStatic(*m_uiXml, "right_character_icon", 0, &UIOurIcon);
+        CUIXmlInit::InitStatic(*m_uiXml, "left_character_icon", 0, &UIOthersIcon);
 
-	UIOthersIcon.AttachChild(&UICharacterInfoRight);
-	UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
+        UIOurIcon.AttachChild(&UICharacterInfoLeft);
+        UICharacterInfoLeft.InitCharacterInfo(Fvector2().set(0, 0), UIOurIcon.GetWndSize(), "talk_character.xml");
 
-	AttachChild(&UIOurIcon);
-	AttachChild(&UIOthersIcon);
-#endif
+        UIOthersIcon.AttachChild(&UICharacterInfoRight);
+        UICharacterInfoRight.InitCharacterInfo(Fvector2().set(0, 0), UIOthersIcon.GetWndSize(), "talk_character.xml");
+
+        AttachChild(&UIOurIcon);
+        AttachChild(&UIOthersIcon);
+    }
+
 	//Ответы
 	UIAnswersList				= xr_new<CUIScrollView>();
 	UIAnswersList->SetAutoDelete(true);
@@ -222,10 +226,12 @@ void CUITalkDialogWnd::AddIconedAnswer(LPCSTR caption, LPCSTR text, LPCSTR textu
 
 void CUITalkDialogWnd::SetOsoznanieMode(bool b)
 {
-#ifdef SOC_TALK_WND
-	UIOurIcon.Show(!b);
-	UIOthersIcon.Show(!b);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_SOC_WND))
+    {
+        UIOurIcon.Show(!b);
+        UIOthersIcon.Show(!b);
+    }
+
 	UIAnswersList->Show	(!b);
 
 	UIToTradeButton.Show(!b);

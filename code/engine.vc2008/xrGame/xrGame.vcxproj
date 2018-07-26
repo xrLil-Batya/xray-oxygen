@@ -21,7 +21,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{200652A6-043E-4634-8837-87983B3BD5E0}</ProjectGuid>
     <RootNamespace>xrGame</RootNamespace>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup>
@@ -79,8 +79,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
-    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
@@ -91,8 +89,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
-    <OutDir>$(xrBinOut)..\Release\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
+    <OutDir>$(SolutionDir)..\binaries\$(Platform)\Release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -107,9 +105,9 @@
       <FavorSizeOrSpeed>Neither</FavorSizeOrSpeed>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;DEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;MSVC;_SECURE_SCL=0;LUABIND_NO_EXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>false</StringPooling>
-      <ExceptionHandling>Sync</ExceptionHandling>
+      <ExceptionHandling>Async</ExceptionHandling>
       <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
@@ -152,6 +150,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -212,6 +211,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -230,7 +230,7 @@
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
       <WholeProgramOptimization>false</WholeProgramOptimization>
       <AdditionalIncludeDirectories>../xrServerEntities;../../sdk/include/;./;../xrScripts/Export;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
-      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRGAME_EXPORTS;dSINGLE;MSVC;LUABIND_NO_EXCEPTIONS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -282,6 +282,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -353,9 +354,11 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CMagazine.h" />
     <ClInclude Include="ui\UILoadingScreen.h" />
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
@@ -1341,7 +1344,6 @@
     <ClInclude Include="entity_alive_inline.h" />
     <ClInclude Include="EntityCondition.h" />
     <ClInclude Include="hit_immunity.h" />
-    <ClInclude Include="hit_immunity_space.h" />
     <ClInclude Include="Wound.h" />
     <ClInclude Include="game_object_space.h" />
     <ClInclude Include="GameObject.h" />
@@ -1527,7 +1529,6 @@
     <ClInclude Include="xrServer.h" />
     <ClInclude Include="..\xrServerEntities\xrServer_Space.h" />
     <ClInclude Include="game_base.h" />
-    <ClInclude Include="..\xrServerEntities\game_base_space.h" />
     <ClInclude Include="game_cl_base.h" />
     <ClInclude Include="game_sv_base.h" />
     <ClInclude Include="xr_time.h" />
@@ -1662,6 +1663,7 @@
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CMagazine.cpp" />
     <ClCompile Include="ui\UILoadingScreen.cpp" />
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
@@ -1674,7 +1676,6 @@
     <ClCompile Include="ClimableObject.cpp" />
     <ClCompile Include="c_artefact.cpp" />
     <ClCompile Include="damage_manager.cpp" />
-    <ClCompile Include="death_anims_predicates.cpp" />
     <ClCompile Include="DestroyablePhysicsObject.cpp" />
     <ClCompile Include="Dosimeter.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>

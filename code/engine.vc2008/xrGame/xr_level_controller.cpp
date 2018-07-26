@@ -29,30 +29,23 @@ _action  actions[] = {
 	{ "cam_1",				kCAM_1				},
 	{ "cam_2",				kCAM_2				},
 	{ "cam_3",				kCAM_3				},
-	{ "cam_zoom_in",		kCAM_ZOOM_IN		},
-	{ "cam_zoom_out",		kCAM_ZOOM_OUT		},
 
 	{ "torch",				kTORCH				},
-	{ "torch_mode",			kTORCH_MODE			},
 	{ "night_vision",		kNIGHT_VISION		},
 	{ "show_detector",		kDETECTOR			},
 
 	{ "turn_engine",		kTURN_ENGINE		},
 	{ "switch_horn",		kSWITCH_HORN		},
 
-	{ "kick",               kKICK				},
 	{ "wpn_1",				kWPN_1				},
 	{ "wpn_2",				kWPN_2				},
 	{ "wpn_3",				kWPN_3				},
 	{ "wpn_4",				kWPN_4				},
 	{ "wpn_5",				kWPN_5				},
 	{ "wpn_6",				kWPN_6				},
-	{ "artefact",			kARTEFACT			},
 	{ "wpn_next",			kWPN_NEXT			},
 	{ "wpn_fire",			kWPN_FIRE			},
 	{ "wpn_zoom",			kWPN_ZOOM			},
-	{ "wpn_zoom_inc",		kWPN_ZOOM_INC		},
-	{ "wpn_zoom_dec",		kWPN_ZOOM_DEC		},
 	{ "wpn_reload",			kWPN_RELOAD			},
 	{ "wpn_func",			kWPN_FUNC			},
 	{ "wpn_firemode_prev",	kWPN_FIREMODE_PREV	},
@@ -75,9 +68,10 @@ _action  actions[] = {
 	{ "quick_use_3",		kQUICK_USE_3		},
 	{ "quick_use_4",		kQUICK_USE_4		},
 
-	#pragma todo("Petrurbator: rework this!")
 	{ "quick_save",			kQUICK_SAVE			},
 	{ "quick_load",			kQUICK_LOAD			},
+
+	{ "dev_noclip",			kDEV_NOCLIP			},
 
 	{ nullptr, 				kLASTACTION			}
 };
