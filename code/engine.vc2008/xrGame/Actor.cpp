@@ -409,6 +409,10 @@ void	CActor::Hit(SHit* pHDS)
 	}
 #endif // DEBUG
 
+	/*if (HDS.hit_type == ALife::eHitTypeFireWound)
+	{
+		Msg("[ACTOR] Bullet dist: [%f] bullet speed: [%f] ", HDS.BulletFlightDist, HDS.BulletFlightSpeed);
+	}*/
 	bool bPlaySound = true;
 	if (!g_Alive()) bPlaySound = false;
 
