@@ -475,6 +475,9 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		return;
 	}
 
+	if (!item->m_pInventory)
+		return;
+
 	CObject* pObj = item->cast_game_object();
 	shared_str section_name = pObj->cNameSect();
 

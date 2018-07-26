@@ -103,6 +103,8 @@ void CUIActorMenu::SendEvent_Item2Belt(PIItem pItem, u16 recipient)
 
 void CUIActorMenu::SendEvent_Item2Ruck(PIItem pItem, u16 recipient)
 {
+	if (!pItem->m_pInventory)
+		return;
 	if(pItem->parent_id()!=recipient)
 		move_item_from_to			(pItem->parent_id(), recipient, pItem->object_id());
 
@@ -127,8 +129,8 @@ void CUIActorMenu::SendEvent_Item_Eat(PIItem pItem, u16 recipient)
 
 void CUIActorMenu::SendEvent_Item_Drop(PIItem pItem, u16 recipient)
 {
-	R_ASSERT(pItem->parent_id()==recipient);
-
+	R_ASSERT(pItem->parent_id() == recipient);
+	
 	NET_Packet					P;
 	pItem->object().u_EventGen	(P,GE_OWNERSHIP_REJECT,pItem->parent_id());
 	P.w_u16						(pItem->object().ID());
@@ -140,15 +142,17 @@ void CUIActorMenu::DropAllCurrentItem()
 {
 	if ( CurrentIItem() && !CurrentIItem()->IsQuestItem() )
 	{
+		CUICellItem*	itm;
 		u32 const cnt = CurrentItem()->ChildsCount();
 		for( u32 i = 0; i < cnt; ++i )
 		{
-			CUICellItem*	itm  = CurrentItem()->PopChild(NULL);
-			PIItem			iitm = (PIItem)itm->m_pData;
-			SendEvent_Item_Drop( iitm, m_pActorInvOwner->object_id() );
+			itm  = CurrentItem()->PopChild(NULL);
+			PIItem			iitm = (PIItem)itm->m_pData;			
+			SendEvent_Item_Drop( iitm, m_pActorInvOwner->object_id() );			
 		}
 
 		SendEvent_Item_Drop( CurrentIItem(), m_pActorInvOwner->object_id() );
+		itm->Show(false);
 	}
 	SetCurrentItem								(NULL);
 }
@@ -1074,14 +1078,18 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	case INVENTORY_EAT_ACTION:		TryUseFoodItem( cell_item ); 		break;
 	case INVENTORY_DROP_ACTION:
 		{
+			if (!item->m_pInventory)
+				return;
 			void* d = m_UIPropertiesBox->GetClickedItem()->GetData();
 			if ( d == (void*)33 )
 			{
 				DropAllCurrentItem();
+				cell_item->OwnerList()->RemoveItem(cell_item, false);
 			}
 			else
 			{
 				SendEvent_Item_Drop( item, m_pActorInvOwner->object_id() );
+				cell_item->OwnerList()->RemoveItem(cell_item, false);
 			}
 			break;
 		}

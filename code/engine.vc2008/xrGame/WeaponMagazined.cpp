@@ -186,10 +186,10 @@ void CWeaponMagazined::FireEnd()
 
 void CWeaponMagazined::Reload() 
 {
-	bool CurrentAmmoOnMagazine = !!iAmmoElapsed;
+	
 	inherited::Reload();
 	TryReload();
-	iAmmoElapsed += CurrentAmmoOnMagazine;
+	
 }
 
 bool CWeaponMagazined::TryReload() 
