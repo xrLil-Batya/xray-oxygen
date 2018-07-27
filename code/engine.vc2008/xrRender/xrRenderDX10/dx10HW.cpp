@@ -54,8 +54,8 @@ void CHW::CreateD3D()
 	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &g_dm.sys_mode);
 
 	// Init pAdapter
-	IDXGIFactory1 * pFactory;
-	R_CHK(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory)));
+	IDXGIFactory4 * pFactory;
+	R_CHK(CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)(&pFactory)));
 
 	m_bUsePerfhud = false;
 
@@ -100,13 +100,13 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	// Set up the presentation parameters
 	DXGI_SWAP_CHAIN_DESC	&sd = m_ChainDesc;
-	memset(&sd, 0, sizeof(sd));		// обнуление в крови
+	memset(&sd, 0, sizeof(sd));		// Г®ГЎГ­ГіГ«ГҐГ­ГЁГҐ Гў ГЄГ°Г®ГўГЁ
 
 	selectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //Prep for HDR10; breaks nothing
-	sd.BufferCount = 1;
+	sd.BufferCount = 2; //Double buffering
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
@@ -139,6 +139,8 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 #ifdef USE_DX11
 	D3D_FEATURE_LEVEL pFeatureLevels[] =
 	{
+		D3D_FEATURE_LEVEL_12_1,		
+		D3D_FEATURE_LEVEL_12_0,		
 		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0
 	};
@@ -149,11 +151,11 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	D3D11_FEATURE_DATA_THREADING threadingFeature;
 	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
 
-	IDXGIDevice1 * pDXGIDevice;
-	R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
+	IDXGIDevice3 * pDXGIDevice;
+	R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
 
-	IDXGIAdapter1 * pDXGIAdapter;
-	R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));
+	IDXGIAdapter3 * pDXGIAdapter;
+	R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter3), (void **)&pDXGIAdapter));
 
 #pragma todo("ForserX to Swartz27: Rework it code")
 	/*
@@ -390,7 +392,7 @@ DXGI_RATIONAL CHW::selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 					res = desc.RefreshRate;
 				}
 
-				// выбрать по умолчанию частоту десктопа.
+				// ГўГ»ГЎГ°Г ГІГј ГЇГ® ГіГ¬Г®Г«Г·Г Г­ГЁГѕ Г·Г Г±ГІГ®ГІГі Г¤ГҐГ±ГЄГІГ®ГЇГ .
 				if (TempFreq == g_dm.sys_mode.dmDisplayFrequency)
 				{
 					res = desc.RefreshRate;
