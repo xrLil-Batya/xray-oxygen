@@ -181,6 +181,8 @@ void CActor::IR_OnMouseWheel(int direction)
 		return;
 	}
 
+    if (inventory().Action(kWPN_ZOOM, (direction > 0) ? WeaponActionFlags::CMD_IN : WeaponActionFlags::CMD_OUT)) return;
+
 	if (direction>0)
 		OnNextWeaponSlot				();
 	else
