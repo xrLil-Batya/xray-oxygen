@@ -1091,6 +1091,8 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 				SendEvent_Item_Drop( item, m_pActorInvOwner->object_id() );
 				cell_item->OwnerList()->RemoveItem(cell_item, false);
 			}
+
+			cell_item->OwnerList()->RemoveItem(cell_item, false);
 			break;
 		}
 	case INVENTORY_ATTACH_ADDON:

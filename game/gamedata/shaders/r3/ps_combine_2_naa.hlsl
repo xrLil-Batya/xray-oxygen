@@ -1,5 +1,5 @@
 #include "common.h"
-#include "mblur.h"
+//#include "mblur.h"
 #include "dof.h"
 /*
 struct 	v2p
@@ -89,8 +89,9 @@ c2_out main( v2p_aa_AA I )
 	
 //			img 	= mblur		(center,tex2D(s_position,I.tc0),img.rgb);
 //			img 	= mblur( center, s_position.Sample( smp_nofilter, tc0), img.rgb);
-			img 	= mblur( center, ( gbd ).P, img.rgb);
-
+			//img 	= mblur( center, ( gbd ).P, img.rgb);
+//MatthewKush to all: Until motion blur fix is implemented from Lost Alpha, might as well
+//disable motion blur to help with performance.
 #ifdef 	USE_DISTORT
  	float3	blurred	= bloom*def_hdr	;
 			img		= lerp	(img,blurred,distort.z);

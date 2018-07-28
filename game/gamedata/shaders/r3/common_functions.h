@@ -76,7 +76,7 @@ float3 calc_model_lq_lighting( float3 norm_w )
 float3 	unpack_normal( float3 v )	{ return 2*v-1; }
 float3 	unpack_bx2( float3 v )	{ return 2*v-1; }
 #ifdef SM_5_0
-double3 	unpack_bx4( float3 v )	{ return 4*v-2; } //Swartz27: Add "precise" to front if using DirectXCompiler (the open source one)
+[precise] double3 unpack_bx4( float3 v ) { return 4*v-2; } 
 #else
 float3 	unpack_bx4( float3 v )	{ return 4*v-2; } 
 #endif

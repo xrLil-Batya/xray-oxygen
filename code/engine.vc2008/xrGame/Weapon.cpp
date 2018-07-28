@@ -930,39 +930,47 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 		case kWPN_ZOOM:
 			if (IsZoomEnabled())
 			{
-				if (b_toggle_weapon_aim)
-				{
-					if (flags&CMD_START)
-					{
-						if (!IsZoomed())
-						{
-							if (!IsPending())
-							{
-								if(GetState() != eIdle)
-									SwitchState(eIdle);
+                switch (flags)
+                {
+                case CMD_START:
+                    if (!IsZoomed())
+                    {
+                        if (!IsPending())
+                        {
+                            if (GetState() != eIdle)
+                                SwitchState(eIdle);
+                            OnZoomIn();
+                        }
+                    }
+                    else if (!b_toggle_weapon_aim)
+                    {
+                        OnZoomOut();
+                    }
+                    break;
+                case CMD_IN:
+                    if (!IsZoomEnabled() || !IsZoomed())
+                    {
+                        return false;
+                    }
 
-								OnZoomIn();
-							}
-						}
-						else
-							OnZoomOut();
-					}
-				}
-				else
-				{
-					if(flags&CMD_START)
-					{
-						if (!IsZoomed() && !IsPending())
-						{
-							if (GetState() != eIdle)
-								SwitchState(eIdle);
-							OnZoomIn();
-						}
-					}
-					else 
-						if (IsZoomed())
-							OnZoomOut();
-				}
+                    ZoomInc();
+                    break;
+                case CMD_OUT:
+                    if (!IsZoomEnabled() || !IsZoomed())
+                    {
+                        return false;
+                    }
+
+                    ZoomDec();
+                    break;
+                default:
+                    if (!b_toggle_weapon_aim)
+                    {
+                        if (IsZoomed())
+                            OnZoomOut();
+                    }
+                    break;
+                }
 				return true;
 			}
 			else 
