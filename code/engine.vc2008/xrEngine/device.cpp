@@ -305,7 +305,7 @@ void CRenderDevice::on_idle		()
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
 	if(g_bL)
-		m_pRender->ResizeWindowProc(height, width);
+		m_pRender->ResizeWindowProc((WORD)height, (WORD)width);
 }
 
 #ifdef INGAME_EDITOR

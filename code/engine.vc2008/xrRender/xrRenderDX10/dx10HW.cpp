@@ -6,6 +6,7 @@
 
 #pragma warning(disable:4995)
 #include <d3dx9.h>
+#include <dxgi1_4.h>
 #pragma warning(default:4995)
 #include "../xrRender/HW.h"
 #include "../../xrEngine/XR_IOConsole.h"
@@ -95,18 +96,18 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	D3DFORMAT&	fDepth = Caps.fDepth;
 
 	//	HACK: DX10: Embed hard target format.
-	fTarget = D3DFMT_X8R8G8B8;			//	No match in DX10. D3DFMT_A8B8G8R8->DXGI_FORMAT_R8G8B8A8_UNORM
+	fTarget = D3DFMT_X8R8G8B8;
 	fDepth = selectDepthStencil(fTarget);
 
 	// Set up the presentation parameters
-	DXGI_SWAP_CHAIN_DESC	&sd = m_ChainDesc;
-	memset(&sd, 0, sizeof(sd));		// îáíóëåíèå â êðîâè
+	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
+	memset(&sd, 0, sizeof(sd));	
 
 	selectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
 	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //Prep for HDR10; breaks nothing
-	sd.BufferCount = 2; //Double buffering
+	sd.BufferCount = 2; // Double buffering
 
 	// Multisample
 	sd.SampleDesc.Count = 1;

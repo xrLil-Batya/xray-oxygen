@@ -48,8 +48,8 @@ public:
 #endif
 
 //	Variables section
-#if defined(USE_DX11)	//	USE_DX10
 public:
+#if defined(USE_DX11)	//	USE_DX10
 	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D11Device*			pDevice;	//	combine with DX9 pDevice via typedef
 	ID3D11DeviceContext*    pContext;	//	combine with DX9 pDevice via typedef
@@ -59,12 +59,11 @@ public:
 
 	CHWCaps					Caps;
 
-	D3D_DRIVER_TYPE		m_DriverType;	//	DevT equivalent
+	D3D_DRIVER_TYPE			m_DriverType;	//	DevT equivalent
 	DXGI_SWAP_CHAIN_DESC	m_ChainDesc;	//	DevPP equivalent
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
 #elif defined(USE_DX10)
-public:
 	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D10Device1*       	pDevice1;	//	combine with DX9 pDevice via typedef
 	ID3D10Device*        	pDevice;	//	combine with DX9 pDevice via typedef
@@ -81,9 +80,6 @@ public:
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
 #else
-
-public:
-
 	IDirect3D9* 			pD3D;		// D3D
 	IDirect3DDevice9*		pDevice;	// render device
 
