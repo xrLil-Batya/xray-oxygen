@@ -363,6 +363,14 @@
             <options_item entry="rs_v_sync" group="mm_opt_video_adv" depend="vid"/>
         </check_vsync>
 
+		<cap_triple_buffering x="20" y="3" width="135" height="24">
+            <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_triple_buffering</text>
+        </cap_triple_buffering>
+        <check_triple_buffering x="167" y="0" width="44" height="29">
+	        <texture>ui_inGame2_checkbox</texture>
+            <options_item entry="rs_triple_buffering" group="mm_opt_video_adv" depend="vid"/>
+        </check_triple_buffering>
+		
         <cap_60hz x="20" y="3" width="135" height="24">
             <text r="34" g="179" b="34" font="letterica16" align="r" vert_align="c">ui_mm_60_hz</text>
         </cap_60hz>

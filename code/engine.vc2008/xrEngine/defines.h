@@ -14,7 +14,7 @@ enum: unsigned long
 	rsClearBB						= (1<<1),
 	rsVSync							= (1<<2),
 	rsWireframe						= (1<<3),
-	rsOcclusion						= (1<<4),
+	rsTripleBuffering				= (1<<4),
 	rsStatistic						= (1<<5),
 	rsDetails						= (1<<6),
 	rsRefresh60hz					= (1<<7),
@@ -42,8 +42,7 @@ enum: unsigned long
 };
 
 ENGINE_API extern	u32			psCurrentVidMode[];
-ENGINE_API extern	u32			psCurrentBPP		;
-ENGINE_API extern	Flags32		psDeviceFlags		;
+ENGINE_API extern	Flags32		psDeviceFlags;
 
 // game path definition
 #define _game_data_				"$game_data$"

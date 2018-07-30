@@ -29,13 +29,17 @@ public:
 
 	void					Reset					(HWND hw);
 
-	void					selectResolution		(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed);
-	D3DFORMAT				selectDepthStencil		(D3DFORMAT);
+	void					SelectResolution		(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed);
+	D3DFORMAT				SelectFmtTarget			();
+	D3DFORMAT				SelectFmtDepthStencil	(D3DFORMAT);
 	void					ResizeWindowProc		(WORD h, WORD w);
-	u32						selectPresentInterval	();
-	u32						selectGPU				();
-	u32						selectRefresh			(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
-	BOOL					support					(D3DFORMAT fmt, DWORD type, DWORD usage);
+	u32						SelectPresentInterval	();
+	u32						SelectGPU				();
+	u32						SelectRefresh			(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
+	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
+
+	void					FillVidModeList			();
+	void					FreeVidModeList			();
 
 #ifdef DEBUG
 #if defined(USE_DX10) || defined(USE_DX11)
@@ -98,7 +102,7 @@ public:
 #endif
 #if defined(USE_DX10) || defined(USE_DX11)
 	void			UpdateViews();
-	DXGI_RATIONAL	selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
+	DXGI_RATIONAL	SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
 
 	virtual	void	OnAppActivate();
 	virtual void	OnAppDeactivate();

@@ -13,22 +13,52 @@ void dxRenderDeviceRender::Copy(IRenderDeviceRender &_in)
 	*this = *(dxRenderDeviceRender*)&_in;
 }
 
-void dxRenderDeviceRender::setGamma(float fGamma)
+float dxRenderDeviceRender::GetGamma() const
 {
-	m_Gamma.Gamma(fGamma);
+	return m_Gamma.GetGamma();
 }
 
-void dxRenderDeviceRender::setBrightness(float fGamma)
+float dxRenderDeviceRender::GetBrightness() const
 {
-	m_Gamma.Brightness(fGamma);
+	return m_Gamma.GetBrightness();
 }
 
-void dxRenderDeviceRender::setContrast(float fGamma)
+float dxRenderDeviceRender::GetContrast() const
 {
-	m_Gamma.Contrast(fGamma);
+	return m_Gamma.GetContrast();
 }
 
-void dxRenderDeviceRender::updateGamma()
+Fvector dxRenderDeviceRender::GetBalance() const
+{
+	return m_Gamma.GetBalance();
+}
+
+void dxRenderDeviceRender::SetGamma(float val)
+{
+	m_Gamma.SetGamma(val);
+}
+
+void dxRenderDeviceRender::SetBrightness(float val)
+{
+	m_Gamma.SetBrightness(val);
+}
+
+void dxRenderDeviceRender::SetContrast(float val)
+{
+	m_Gamma.SetContrast(val);
+}
+
+void dxRenderDeviceRender::SetBalance(float r, float g, float b)
+{
+	m_Gamma.SetBalance(r, g, b);
+}
+
+void dxRenderDeviceRender::SetBalance(Fvector &C)
+{
+	m_Gamma.SetBalance(C);
+}
+
+void dxRenderDeviceRender::UpdateGamma()
 {
 	m_Gamma.Update();
 }
@@ -324,11 +354,11 @@ void dxRenderDeviceRender::End()
 	DoAsyncScreenshot();
 
 #if defined(USE_DX10) || defined(USE_DX11)
-	if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ Íå âûâîäèì êàäð èç âòîðîãî âüþïîðòà íà ýêðàí (íà ïðàêòèêå ó íàñ ýêðàííàÿ êàðòèíêà îáíîâëÿåòñÿ ìèíèìóì â äâà ðàçà ðåæå) [don't flush image into display for SecondVP-frame]
+	if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ ÐÐµ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ ÐºÐ°Ð´Ñ€ Ð¸Ð· Ð²Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾ Ð²ÑŒÑŽÐ¿Ð¾Ñ€Ñ‚Ð° Ð½Ð° ÑÐºÑ€Ð°Ð½ (Ð½Ð° Ð¿Ñ€Ð°ÐºÑ‚Ð¸ÐºÐµ Ñƒ Ð½Ð°Ñ ÑÐºÑ€Ð°Ð½Ð½Ð°Ñ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ° Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÑ‚ÑÑ Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼ Ð² Ð´Ð²Ð° Ñ€Ð°Ð·Ð° Ñ€ÐµÐ¶Ðµ) [don't flush image into display for SecondVP-frame]
 		HW.m_pSwapChain->Present(psDeviceFlags.test(rsVSync) ? 1 : 0, 0);
 #else	//	USE_DX10
 	CHK_DX(HW.pDevice->EndScene());
-	if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ Íå âûâîäèì êàäð èç âòîðîãî âüþïîðòà íà ýêðàí (íà ïðàêòèêå ó íàñ ýêðàííàÿ êàðòèíêà îáíîâëÿåòñÿ ìèíèìóì â äâà ðàçà ðåæå) [don't flush image into display for SecondVP-frame]
+	if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ ÐÐµ Ð²Ñ‹Ð²Ð¾Ð´Ð¸Ð¼ ÐºÐ°Ð´Ñ€ Ð¸Ð· Ð²Ñ‚Ð¾Ñ€Ð¾Ð³Ð¾ Ð²ÑŒÑŽÐ¿Ð¾Ñ€Ñ‚Ð° Ð½Ð° ÑÐºÑ€Ð°Ð½ (Ð½Ð° Ð¿Ñ€Ð°ÐºÑ‚Ð¸ÐºÐµ Ñƒ Ð½Ð°Ñ ÑÐºÑ€Ð°Ð½Ð½Ð°Ñ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÐ° Ð¾Ð±Ð½Ð¾Ð²Ð»ÑÐµÑ‚ÑÑ Ð¼Ð¸Ð½Ð¸Ð¼ÑƒÐ¼ Ð² Ð´Ð²Ð° Ñ€Ð°Ð·Ð° Ñ€ÐµÐ¶Ðµ) [don't flush image into display for SecondVP-frame]
 		HW.pDevice->Present(NULL, NULL, NULL, NULL);
 #endif	//	USE_DX10
 }

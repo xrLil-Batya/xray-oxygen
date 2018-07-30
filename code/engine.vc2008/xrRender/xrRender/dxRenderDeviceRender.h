@@ -23,10 +23,17 @@ public:
 	virtual void	Copy(IRenderDeviceRender &_in);
 
 	//	Gamma correction functions
-	virtual void	setGamma(float fGamma);
-	virtual void	setBrightness(float fGamma);
-	virtual void	setContrast(float fGamma);
-	virtual void	updateGamma();
+	virtual float	GetGamma		() const;
+	virtual float	GetBrightness	() const;
+	virtual float	GetContrast		() const;
+	virtual Fvector	GetBalance		() const;
+
+	virtual void	SetGamma		(float val);
+	virtual void	SetBrightness	(float val);
+	virtual void	SetContrast		(float val);
+	virtual void	SetBalance		(float r, float g, float b);
+	virtual void	SetBalance		(Fvector &C);
+	virtual void	UpdateGamma		();
 
 	//	Destroy
 	virtual void	OnDeviceDestroy( BOOL bKeepTextures);

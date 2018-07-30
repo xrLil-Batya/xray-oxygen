@@ -25,7 +25,7 @@ light::light		(void)	: ISpatial(g_SpatialSpace)
 	m_volumetric_distance	= 1;
 
 	frame_render	= 0;
-	virtual_size	= .1f;
+	virtual_size	= 0.1f;
 
     std::memset(omnipart,0,sizeof(omnipart));
 	s_spot			= NULL;
