@@ -294,7 +294,6 @@ void CUIMainIngameWnd::Update()
 		return;
 
 	UIZoneMap->Update();
-
 	UpdatePickUpItem();
 
 	if (Device.dwFrame % 10)
@@ -530,7 +529,6 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 
 void CUIMainIngameWnd::OnConnected()
 {
-	UIZoneMap->SetupCurrentMap();
 	if ( m_ui_hud_states )
 	{
 		m_ui_hud_states->on_connected();
