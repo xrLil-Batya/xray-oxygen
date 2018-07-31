@@ -143,7 +143,6 @@ protected:
 	float m_fV_ThirstHealth;
 	float m_fThirstCritical;
 	
-	bool bUseThirst;
 //--
 	float m_fPowerLeakSpeed;
 

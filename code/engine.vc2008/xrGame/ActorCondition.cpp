@@ -277,7 +277,7 @@ void CActorCondition::UpdateCondition()
 	UpdateSatiety();
 	UpdateBoosters();
 
-	if (g_extraFeatures.is(GAME_EXTRA_THIRST) && bUseThirst)
+	if (g_extraFeatures.is(GAME_EXTRA_THIRST))
 		UpdateThirst();
 
 	inherited::UpdateCondition();
@@ -775,7 +775,6 @@ void CActorCondition::UpdateTutorialThresholds()
 
     if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
-        bUseThirst = pSettings->r_bool("actor_condition", "use_thirst");
         _cThirst = pSettings->r_float("tutorial_conditions_thresholds", "thirst");
     }
 	
@@ -810,7 +809,7 @@ void CActorCondition::UpdateTutorialThresholds()
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_satiety");
 	}
-	if(g_extraFeatures.is(GAME_EXTRA_THIRST) && bUseThirst)
+	if(g_extraFeatures.is(GAME_EXTRA_THIRST))
 	{
 		if (b && !m_condition_flags.test(eCriticalThirstReached) && GetThirst()<_cThirst) {
 			m_condition_flags.set(eCriticalThirstReached, TRUE);
