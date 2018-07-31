@@ -123,7 +123,7 @@ void CHWCaps::Update()
 	geometry.dwRegisters		= cnt;
 	geometry.dwInstructions		= 256;
 	geometry.dwClipPlanes		= std::min((u32)caps.MaxUserClipPlanes,(u32)15);
-	geometry.bVTF				= (geometry_major>=3) && HW.support(D3DFMT_R32F,D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_VERTEXTEXTURE);
+	geometry.bVTF				= (geometry_major>=3) && HW.IsFormatSupported(D3DFMT_R32F,D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_VERTEXTEXTURE);
 
 	// ***************** PIXEL processing
 	raster_major				= u16 ( u32(u32(caps.PixelShaderVersion)&u32(0xf << 8ul))>>8 );

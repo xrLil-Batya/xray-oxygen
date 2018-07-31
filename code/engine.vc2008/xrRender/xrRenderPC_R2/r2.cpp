@@ -118,7 +118,7 @@ void					CRender::create					()
 
 	// Check for NULL render target support
 	D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
-	o.nullrt			= HW.support	(nullrt,			D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
+	o.nullrt			= HW.IsFormatSupported(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
 
 	if (o.nullrt)		{
 		Msg				("* NULLRT supported and used");
@@ -127,19 +127,19 @@ void					CRender::create					()
 
 	// SMAP / DST
 	o.HW_smap_FETCH4	= FALSE;
-	o.HW_smap			= HW.support	(D3DFMT_D24X8,			D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
+	o.HW_smap			= HW.IsFormatSupported(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 	o.HW_smap_PCF		= o.HW_smap		;
 	if (o.HW_smap)		{
 		o.HW_smap_FORMAT	= D3DFMT_D24X8;
 		Msg				("* HWDST/PCF supported and used");
 	}
 
-	o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
-	o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
+	o.fp16_filter		= HW.IsFormatSupported(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER);
+	o.fp16_blend		= HW.IsFormatSupported(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 
 	// search for ATI formats
 	if (!o.HW_smap && (0==strstr(Core.Params,"-nodf24")) )		{
-		o.HW_smap		= HW.support	((D3DFORMAT)(MAKEFOURCC('D','F','2','4')),	D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
+		o.HW_smap		= HW.IsFormatSupported((D3DFORMAT)(MAKEFOURCC('D','F','2','4')), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 		if (o.HW_smap)	{
 			o.HW_smap_FORMAT= MAKEFOURCC	('D','F','2','4');
 			o.HW_smap_PCF	= FALSE			;
@@ -175,7 +175,7 @@ void					CRender::create					()
 	if (strstr(Core.Params,"-nonvs"))		o.nvstencil	= FALSE;
 
 	// nv-dbt
-	o.nvdbt				= HW.support	((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
+	o.nvdbt				= HW.IsFormatSupported((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
 	if (o.nvdbt)		Msg	("* NV-DBT supported and used");
 
 	// gloss

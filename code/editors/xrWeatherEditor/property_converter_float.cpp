@@ -67,12 +67,17 @@ Object^ property_converter_float::ConvertFrom(ITypeDescriptorContext^ context, C
 	if (!value)
 		return(inherited::ConvertFrom(context, culture, value));
 
+	String^ string = dynamic_cast<String^>(value);
+
+	// Replace dot with comma for correct convertation if needed
+	string = string->Replace('.', ',');
+
 	try 
 	{
-		return( float::Parse(dynamic_cast<String^>(value)) );
+		return(float::Parse(string));
 	}
 	catch(...) 
 	{
-        throw gcnew ArgumentException("Can not convert '" + value + "' to float");
+        throw gcnew ArgumentException("Can not convert '" + string + "' to float");
 	}
 }

@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma warning(disable: 4366)
 #include "xrstring.h"
 
 XRCORE_API str_container	g_pStringContainer;
@@ -56,8 +56,8 @@ struct str_container_impl
                     *current = value->next;
                     xr_free(value);
                 }
-                else
-                    current = &value->next;
+                else current = &value->next;
+#pragma todo("ForserX to Giperion: Результат применения унарного оператора '&' может быть невыровненным")
             }
         }
     }

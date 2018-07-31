@@ -1,8 +1,20 @@
 #include "stdafx.h"
 #include "xr_effgamma.h"
 
-#if defined(USE_DX10) || defined(USE_DX11)
+CGammaControl::CGammaControl() : fGamma(1.0f), fBrightness(1.0f), fContrast(1.0f)
+{
+	SetBalance(1.0f, 1.0f, 1.0f);
+}
 
+void CGammaControl::GetIP(float& G, float &B, float& C, Fvector& Balance)
+{
+	G = fGamma;
+	B = fBrightness;
+	C = fContrast;
+	Balance.set(cBalance);
+}
+
+#if defined(USE_DX10) || defined(USE_DX11)
 void CGammaControl::Update() 
 {
 	if (HW.pDevice) 
@@ -44,9 +56,9 @@ void CGammaControl::GenLUT( const DXGI_GAMMA_CONTROL_CAPABILITIES &GC, DXGI_GAMM
 
 		c = GC.MinConvertedValue + c*DeltaCV;
 
-		G.GammaCurve[i].Red = c*cBalance.r;
-		G.GammaCurve[i].Green = c*cBalance.g;
-		G.GammaCurve[i].Blue = c*cBalance.b;
+		G.GammaCurve[i].Red = c*cBalance.x;
+		G.GammaCurve[i].Green = c*cBalance.y;
+		G.GammaCurve[i].Blue = c*cBalance.z;
 
 		clamp(G.GammaCurve[i].Red, GC.MinConvertedValue, GC.MaxConvertedValue);
 		clamp(G.GammaCurve[i].Green, GC.MinConvertedValue, GC.MaxConvertedValue);
@@ -81,10 +93,9 @@ void CGammaControl::GenLUT(D3DGAMMARAMP &G)
 	for (u32 i = 0; i < 256; i++)
 	{
 		float c = (C + .5f)*powf(i / 255.f, og)*65535.f + (B - 0.5f)*32768.f - C * 32768.f + 16384.f;
-		G.red[i] = clr2gamma(c*cBalance.r);
-		G.green[i] = clr2gamma(c*cBalance.g);
-		G.blue[i] = clr2gamma(c*cBalance.b);
+		G.red[i] = clr2gamma(c*cBalance.x);
+		G.green[i] = clr2gamma(c*cBalance.y);
+		G.blue[i] = clr2gamma(c*cBalance.z);
 	}
 }
-
 #endif	//	USE_DX10

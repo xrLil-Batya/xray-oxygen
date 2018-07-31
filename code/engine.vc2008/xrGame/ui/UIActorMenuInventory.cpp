@@ -1078,14 +1078,18 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	case INVENTORY_EAT_ACTION:		TryUseFoodItem( cell_item ); 		break;
 	case INVENTORY_DROP_ACTION:
 		{
+			if (!item->m_pInventory)
+				return;
 			void* d = m_UIPropertiesBox->GetClickedItem()->GetData();
 			if ( d == (void*)33 )
 			{
 				DropAllCurrentItem();
+				cell_item->OwnerList()->RemoveItem(cell_item, false);
 			}
 			else
 			{
 				SendEvent_Item_Drop( item, m_pActorInvOwner->object_id() );
+				cell_item->OwnerList()->RemoveItem(cell_item, false);
 			}
 
 			cell_item->OwnerList()->RemoveItem(cell_item, false);
