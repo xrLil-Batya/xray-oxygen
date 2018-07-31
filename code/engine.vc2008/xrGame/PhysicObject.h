@@ -90,7 +90,6 @@ protected:
 	virtual	void						InitServerObject				(CSE_Abstract	*po)															;
 	virtual void						PHObjectPositionUpdate			()																				;
 
-	net_updatePhData*						NetSync							();
 	net_updatePhData*						m_net_updateData;
 	
 	enum EIIFlags{				Fdrop				=(1<<0),

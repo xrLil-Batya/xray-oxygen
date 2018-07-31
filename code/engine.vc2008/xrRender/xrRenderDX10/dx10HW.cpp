@@ -3,7 +3,7 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-
+#include <VersionHelpers.h>
 #pragma warning(disable:4995)
 #include <d3dx9.h>
 #include <dxgi1_4.h>
@@ -51,14 +51,37 @@ void CHW::CreateD3D()
 	g_dm.sys_mode.dmDriverExtra = sizeof(g_dm.sm_buffer);
 	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &g_dm.sys_mode);
 
-	// Init pAdapter
-	IDXGIFactory1 * pFactory;
-	R_CHK(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory)));
-
 	m_bUsePerfhud = false;
 
-	pFactory->EnumAdapters1(0, &m_pAdapter);
-	_RELEASE(pFactory);
+	// Init pAdapter
+	if (IsWindows10OrGreater())
+	{
+		IDXGIFactory4 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
+	else if (IsWindows8Point1OrGreater())
+	{
+		IDXGIFactory3 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory3), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
+	else if (IsWindows8OrGreater())
+	{
+		IDXGIFactory2 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory2), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
+	else
+	{
+		IDXGIFactory1 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
 }
 
 void CHW::DestroyD3D()
@@ -95,16 +118,16 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	SelectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
-	sd.BufferDesc.Format	= DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
-	sd.BufferCount			= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
+	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
 
 	// Multisample
-	sd.SampleDesc.Count		= 1;
-	sd.SampleDesc.Quality	= 0;
+	sd.SampleDesc.Count = 1;
+	sd.SampleDesc.Quality = 0;
 
-	sd.SwapEffect			= DXGI_SWAP_EFFECT_DISCARD;
-	sd.OutputWindow			= m_hWnd;
-	sd.Windowed				= bWindowed;
+	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+	sd.OutputWindow = m_hWnd;
+	sd.Windowed = bWindowed;
 	sd.BufferDesc.RefreshRate = SelectRefresh(sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
 
 	//	Additional set up
@@ -122,8 +145,6 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 #ifdef USE_DX11
 	D3D_FEATURE_LEVEL pFeatureLevels[] =
 	{
-		//D3D_FEATURE_LEVEL_12_1,		
-		//D3D_FEATURE_LEVEL_12_0,		
 		D3D_FEATURE_LEVEL_11_1,
 		D3D_FEATURE_LEVEL_11_0
 	};
@@ -134,23 +155,36 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	D3D11_FEATURE_DATA_THREADING threadingFeature;
 	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
 
-	IDXGIDevice1 * pDXGIDevice;
-	R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
-
-	IDXGIAdapter1 * pDXGIAdapter;
-	R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));
-
-#pragma todo("ForserX to Swartz27: Rework it code")
-	/*
-	D3D11_FEATURE_DATA_D3D11_OPTIONS2 features_2;
-	HRESULT dxResultF2 = pDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2));
-	if (dxResultF2 == S_OK)
+	if (IsWindows10OrGreater())
 	{
-	features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
-	}
-	*/
+		IDXGIDevice3 * pDXGIDevice;
+		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
 
-	R = pDXGIDevice->SetMaximumFrameLatency(1);
+		IDXGIAdapter3 * pDXGIAdapter;
+		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter3), (void **)&pDXGIAdapter));
+
+		R = pDXGIDevice->SetMaximumFrameLatency(1);
+	}
+	else if (IsWindows8OrGreater())
+	{
+		IDXGIDevice2 * pDXGIDevice;
+		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
+
+		IDXGIAdapter2 * pDXGIAdapter;
+		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter2), (void **)&pDXGIAdapter));
+
+		R = pDXGIDevice->SetMaximumFrameLatency(1);
+	}
+	else
+	{
+		IDXGIDevice1 * pDXGIDevice;
+		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
+
+		IDXGIAdapter1 * pDXGIAdapter;
+		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));
+
+		R = pDXGIDevice->SetMaximumFrameLatency(1);
+	}
 #else
 	R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, 0, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
 

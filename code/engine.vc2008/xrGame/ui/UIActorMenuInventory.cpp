@@ -1081,19 +1081,17 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			if (!item->m_pInventory)
 				return;
 			void* d = m_UIPropertiesBox->GetClickedItem()->GetData();
-			if ( d == (void*)33 )
+			if (d == (void*)33)
 			{
 				DropAllCurrentItem();
-				cell_item->OwnerList()->RemoveItem(cell_item, false);
 			}
 			else
 			{
-				SendEvent_Item_Drop( item, m_pActorInvOwner->object_id() );
-				cell_item->OwnerList()->RemoveItem(cell_item, false);
+				SendEvent_Item_Drop(item, m_pActorInvOwner->object_id());
 			}
 
 			cell_item->OwnerList()->RemoveItem(cell_item, false);
-			break;
+		break;
 		}
 	case INVENTORY_ATTACH_ADDON:
 		{
@@ -1196,7 +1194,7 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	SetCurrentItem( NULL );
 	UpdateItemsPlace();
 	UpdateConditionProgressBars();
-}//ProcessPropertiesBoxClicked
+}
 
 void CUIActorMenu::UpdateOutfit()
 {
