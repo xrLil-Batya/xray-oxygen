@@ -96,21 +96,16 @@ CScriptGameObject *tpfGetActor()
 	else
 		return	(0);
 }
+#endif
 
 CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 {
-	static bool first_time = true;
-	if (first_time)
-		ai().script_engine().script_log(eLuaMessageTypeError,"Do not use level.object function!");
-	first_time = false;
-	
-	CGameObject		*l_tpGameObject	= smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
+	CGameObject		*l_tpGameObject = smart_cast<CGameObject*>(Level().Objects.FindObjectByName(caObjectName));
 	if (l_tpGameObject)
 		return		(l_tpGameObject->lua_game_object());
 	else
 		return		(0);
 }
-#endif
 
 CScriptGameObject *get_object_by_id(u16 id)
 {
@@ -803,6 +798,16 @@ xrTime get_start_time()
 	return (xrTime(Level().GetStartGameTime()));
 }
 
+u8 get_level_id(CLevelGraph *graph) 
+{ 
+	return graph->level_id(); 
+}
+
+u32 get_vertex_count(CLevelGraph *graph)
+{ 
+	return graph->header().vertex_count(); 
+}
+
 #pragma optimize("s",on)
 void CLevel::script_register(lua_State *L)
 {
@@ -815,6 +820,11 @@ void CLevel::script_register(lua_State *L)
 
 	module(L,"level")
 	[
+		class_<CLevelGraph>("CLevelGraph")
+			.def(constructor<>())
+			.property("level_id", &get_level_id)
+			.property("vertices_count", &get_vertex_count),
+
 		def("u_event_gen", &u_event_gen), //Send events via packet
 		def("u_event_send", &u_event_send),
 	    def("send", &g_send),
@@ -831,8 +841,8 @@ void CLevel::script_register(lua_State *L)
 		
 		// obsolete\deprecated
 		def("object_by_id",						get_object_by_id),
-#ifdef DEBUG
 		def("debug_object",						get_object_by_name),
+#ifdef DEBUG
 		def("debug_actor",						tpfGetActor),
 		def("check_object",						check_object),
 #endif
