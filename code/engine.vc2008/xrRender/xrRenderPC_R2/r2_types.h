@@ -48,7 +48,7 @@
 
 #define		r2_jitter			"$user$jitter_"			// --- dither
 #define		r2_jitter_mipped	"$user$jitter_mipped"			// --- dither
-#define		r2_sunmask			"sunmask"
+#define		r2_sunmask			"shaders\\sunmask"
 
 // SMAA
 #define		r2_RT_smaa_edgetex	"$user$smaa_edgetex"
