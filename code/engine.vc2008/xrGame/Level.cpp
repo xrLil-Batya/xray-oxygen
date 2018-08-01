@@ -418,7 +418,7 @@ void CLevel::OnFrame()
 
 	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
 
-    if (Device.dwPrecacheFrame == 0)
+    if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
         GameTaskManager().UpdateTasks();
 
 	// Inherited update
@@ -435,8 +435,14 @@ void CLevel::OnFrame()
 #endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
-	CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-	if (levelScript) levelScript->update();
+	auto ScriptThreadFun = []()
+	{
+		thread_name("X-Ray: Level Script Update");
+		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+		if (levelScript) levelScript->update();
+	};
+
+	std::thread ScriptThread(ScriptThreadFun);
 
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
@@ -458,7 +464,9 @@ void CLevel::OnFrame()
 
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
-	};
+	}
+
+	ScriptThread.join();
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -485,10 +493,10 @@ void CLevel::OnRender()
 	if (!game)
 		return;
 
+	HUD().RenderUI();
 	Game().OnRender();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
-	HUD().RenderUI();
 
 #ifdef DEBUG
 	draw_wnds_rects();

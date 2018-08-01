@@ -449,18 +449,18 @@ void CRender::render_forward				()
 	RImplementation.o.distortion				= FALSE;				// disable distorion
 }
 
-// Ïåðåä íà÷àëîì ðåíäåðà ìèðà +SecondVP+
+// Перед началом рендера мира +SecondVP+
 void CRender::BeforeWorldRender() {}
 
-// Ïîñëå ðåíäåðà ìèðà è ïîñò-ýôôåêòîâ +SecondVP+
+// После рендера мира и пост-эффектов +SecondVP+
 void CRender::AfterWorldRender()
 {
 	if (Device.m_SecondViewport.IsSVPFrame())
 	{
-		// Äåëàåò êîïèþ áýêáóôåðà (òåêóùåãî ýêðàíà) â ðåíäåð-òàðãåò âòîðîãî âüþïîðòà
+		// Делает копию бэкбуфера (текущего экрана) в рендер-таргет второго вьюпорта
 		ID3DTexture2D* pBuffer = NULL;
 		HW.m_pSwapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), (LPVOID*)&pBuffer);
 		HW.pContext->CopyResource(Target->rt_secondVP->pSurface, pBuffer);
-		pBuffer->Release(); // Êîððåêòíî î÷èùàåì ññûëêó íà áýêáóôåð (èíà÷å èãðà çàâèñíåò â îïöèÿõ)
+		pBuffer->Release(); // Корректно очищаем ссылку на бэкбуфер (иначе игра зависнет в опциях)
 	}
 }

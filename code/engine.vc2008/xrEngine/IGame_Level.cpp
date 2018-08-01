@@ -126,22 +126,10 @@ BOOL IGame_Level::Load			(u32 dwNum)
 #include "../xrCore/threadpool/ttapi.h"
 #endif
 
-void	IGame_Level::OnRender()
+void IGame_Level::OnRender()
 {
-#ifdef _GPA_ENABLED	
-	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
-	TAL_CreateID(rtID);
-	TAL_BeginNamedVirtualTaskWithID("GameRenderFrame", rtID);
-	TAL_Parami("Frame#", Device.dwFrame);
-	TAL_EndVirtualTask();
-#endif // _GPA_ENABLED
-
     Render->Calculate();
     Render->Render();
-
-#ifdef _GPA_ENABLED	
-	TAL_RetireID(rtID);
-#endif // _GPA_ENABLED
 }
 
 void	IGame_Level::OnFrame		( ) 

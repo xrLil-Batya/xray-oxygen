@@ -87,12 +87,9 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 	}
 	else
 	{
-		if (pReaderCache) FS.r_close(pReaderCache);
 		IWriter* pWriterChace = FS.w_open("$level_cache$", LevelName);
-		R_ASSERT(pWriterChace);
 		pWriterChace->w_u32(crc);
 		Create(verts, tris, realCform, build_callback, pWriterChace);
-//		FS.w_close(pWriterChace);
 	}
 
 	FS.r_close(F);

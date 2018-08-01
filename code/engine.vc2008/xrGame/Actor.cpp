@@ -694,49 +694,56 @@ float CActor::currentFOV()
 
 static bool bLook_cam_fp_zoom = false;
 
-void CActor::UpdateCL	()
+void CActor::UpdateCL()
 {
 	if (psActorFlags.test(AF_HARDCORE))
 		cam_Set(eacFirstEye);
-	UpdateInventoryOwner			(Device.dwTimeDelta);
+
+	auto InventoryThreadFun = [this]()
+	{
+		thread_name("X-Ray: Inventory Thread");
+		UpdateInventoryOwner(Device.dwTimeDelta);
+	};
+	std::thread InventoryThread(InventoryThreadFun);
 
 	if (m_feel_touch_characters > 0)
 	{
-		for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
+		for (xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
 		{
 			CPhysicsShellHolder	*sh = smart_cast<CPhysicsShellHolder*>(*it);
-			if(sh&&sh->character_physics_support())
+			if (sh&&sh->character_physics_support())
 			{
 				sh->character_physics_support()->movement()->UpdateObjectBox(character_physics_support()->movement()->PHCharacter());
 			}
 		}
 	}
 
-	if(m_holder)
-		m_holder->UpdateEx( currentFOV() );
+	if (m_holder)
+		m_holder->UpdateEx(currentFOV());
 
 	m_snd_noise -= 0.3f*Device.fTimeDelta;
 
-	inherited::UpdateCL				();
-	m_pPhysics_support->in_UpdateCL	();
+	inherited::UpdateCL();
+	m_pPhysics_support->in_UpdateCL();
+	InventoryThread.join();
 
 	if (g_Alive() && m_bPickupMode)
-		PickupModeUpdate	();	
+		PickupModeUpdate();
 
-    // If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
+	// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
 	PickupModeUpdate_COD(m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
 
-	SetZoomAimingMode		(false);
-	CWeapon* pWeapon		= smart_cast<CWeapon*>(inventory().ActiveItem());	
+	SetZoomAimingMode(false);
+	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
 
-	cam_Update(float(Device.dwTimeDelta)/1000.0f, currentFOV());
+	cam_Update(float(Device.dwTimeDelta) / 1000.0f, currentFOV());
 
-	if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
+	if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 	{
-		psHUD_Flags.set( HUD_CROSSHAIR_RT2, true );
-		psHUD_Flags.set( HUD_DRAW_RT, true );
+		psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
+		psHUD_Flags.set(HUD_DRAW_RT, true);
 	}
-	if(pWeapon )
+	if (pWeapon)
 	{
 		if (!psActorFlags.test(AF_FP2ZOOM_FORCED))
 		{
@@ -802,7 +809,7 @@ void CActor::UpdateCL	()
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
 			//+SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
-			if (!Device.m_SecondViewport.IsSVPFrame()) 
+			if (!Device.m_SecondViewport.IsSVPFrame())
 				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
@@ -842,21 +849,21 @@ void CActor::UpdateCL	()
 		character_physics_support()->movement()->SetCrashSpeeds(8000, 9000);
 	else
 		character_physics_support()->movement()->SetCrashSpeeds(cs_min, cs_max);
-	
+
 	UpdateDefferedMessages();
 
-	if (g_Alive()) 
-		CStepManager::update(this==Level().CurrentViewEntity());
+	if (g_Alive())
+		CStepManager::update(this == Level().CurrentViewEntity());
 
-	spatial.type |=STYPE_REACTTOSOUND;
+	spatial.type |= STYPE_REACTTOSOUND;
 
-	if(m_sndShockEffector)
+	if (m_sndShockEffector)
 	{
 		if (this == Level().CurrentViewEntity())
 		{
 			m_sndShockEffector->Update();
 
-			if(!m_sndShockEffector->InWork() || !g_Alive())
+			if (!m_sndShockEffector->InWork() || !g_Alive())
 				xr_delete(m_sndShockEffector);
 		}
 		else
@@ -864,10 +871,10 @@ void CActor::UpdateCL	()
 	}
 	Fmatrix							trans;
 
-	Cameras().hud_camera_Matrix			(trans);
-	
-	if(IsFocused())
-		g_player_hud->update			(trans);
+	Cameras().hud_camera_Matrix(trans);
+
+	if (IsFocused())
+		g_player_hud->update(trans);
 }
 
 float	NET_Jump = 0;
@@ -930,11 +937,8 @@ void CActor::shedule_Update	(u32 DT)
 	clamp(DT,0u,100u);
 	float dt =  float(DT)/1000.f;
 
-	// Check controls, create accel, prelimitary setup "mstate_real"
-	
 	//----------- for E3 -----------------------------
 	if (Level().CurrentControlEntity() == this)
-	//------------------------------------------------
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
 		g_cl_Orientate			(mstate_real,dt);
