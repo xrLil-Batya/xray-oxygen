@@ -38,7 +38,7 @@ namespace xrPostprocessEditor
             _chInfo = new[]
             {
                 new ChannelDesc(tpAC, kfbAC, PostProcessParamType.AddColor, UpdateAddColor),
-                new ChannelDesc(tpBC, kfbBC, PostProcessParamType.BaseColor, UpdateBC),
+                new ChannelDesc(tpBC, kfbBC, PostProcessParamType.BaseColor, UpdateBaseColor),
                 new ChannelDesc(tpGC, kfbGC, PostProcessParamType.GrayColor, UpdateGC),
                 new ChannelDesc(tpDuality, kfbDuality, PostProcessParamType.DualityH, UpdateDuality),
                 new ChannelDesc(tpNoise, kfbNoise, PostProcessParamType.NoiseIntensity, UpdateNoise),
@@ -84,7 +84,7 @@ namespace xrPostprocessEditor
             cpAC.Value = ConvertColor(value);
         }
 
-        private void UpdateBC(int keyIndex)
+        private void UpdateBaseColor(int keyIndex)
         {
             ColorF value = Engine.GetBaseColor(keyIndex);
             cpBC.Value = ConvertColor(value);
@@ -236,6 +236,7 @@ namespace xrPostprocessEditor
             }
 
             cpAC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.AddColor, color);
+            cpBC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.BaseColor, color);
         }
 
         private void UpdateEngineValue(PostProcessParamType paramType, Color color)
