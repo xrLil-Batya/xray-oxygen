@@ -37,19 +37,19 @@
 #	include "location_manager.h"
 #endif
 
-void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile const * ini, LPCSTR section)
+void setup_location_types_section(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile* ini, LPCSTR section)
 {
 	VERIFY3							(ini->section_exist(section),"cannot open section",section);
 	GameGraph::STerrainPlace		terrain_mask;
 	terrain_mask.tMask.resize		(GameGraph::LOCATION_TYPE_COUNT);
 
 	CInifile::Sect& sect			= ini->r_section(section);
-	CInifile::SectCIt				I = sect.Data.begin();
-	CInifile::SectCIt				E = sect.Data.end();
-	for ( ; I != E; ++I) {
-		LPCSTR						S = *(*I).first;
-		string16					I;
-		u32							N = _GetItemCount(S);
+
+	for (CInifile::Item Itm : sect.Data) 
+	{
+		LPCSTR S = Itm.first.c_str();
+		string16 I;
+		u32 N = _GetItemCount(S);
 		
 		if (N != GameGraph::LOCATION_TYPE_COUNT)
 			continue;
@@ -93,7 +93,7 @@ void setup_location_types_line(GameGraph::TERRAIN_VECTOR &m_vertex_types, LPCSTR
 	}
 }
 
-void setup_location_types(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile const * ini, LPCSTR string)
+void setup_location_types(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile * ini, LPCSTR string)
 {
 	m_vertex_types.clear			();
 	if (ini->section_exist(string) && ini->line_count(string))
@@ -103,24 +103,17 @@ void setup_location_types(GameGraph::TERRAIN_VECTOR &m_vertex_types, CInifile co
 }
 
 //////////////////////////////////////////////////////////////////////////
-
 //возможное отклонение от значения репутации
 //заданого в профиле и для конкретного персонажа
 #define REPUTATION_DELTA	10
 #define RANK_DELTA			10
 
-
-//////////////////////////////////////////////////////////////////////////
-
 using namespace ALife;
-
 ////////////////////////////////////////////////////////////////////////////
 // CSE_ALifeTraderAbstract
 ////////////////////////////////////////////////////////////////////////////
 CSE_ALifeTraderAbstract::CSE_ALifeTraderAbstract(LPCSTR caSection)
 {
-//	m_fCumulativeItemMass		= 0.f;
-//	m_iCumulativeItemVolume		= 0;
 	m_dwMoney					= 0;
 	if (pSettings->line_exist(caSection, "money"))
 		m_dwMoney 				= pSettings->r_u32(caSection, "money");
@@ -143,12 +136,11 @@ CSE_ALifeTraderAbstract::CSE_ALifeTraderAbstract(LPCSTR caSection)
 
 CSE_Abstract *CSE_ALifeTraderAbstract::init	()
 {
-	string4096					S;
-	//xr_sprintf						(S,"%s\r\n[game_info]\r\nname_id = default\r\n",!*base()->m_ini_string ? "" : *base()->m_ini_string);
-	xr_sprintf						(S,"%s\r\n[game_info]\r\n",!*base()->m_ini_string ? "" : *base()->m_ini_string);
-	base()->m_ini_string		= S;
+	string4096 S;
+	xr_sprintf(S,"%s\r\n[game_info]\r\n",!*base()->m_ini_string ? "" : *base()->m_ini_string);
+	base()->m_ini_string = S;
 
-	return						(base());
+	return (base());
 }
 
 CSE_ALifeTraderAbstract::~CSE_ALifeTraderAbstract()
@@ -166,7 +158,6 @@ void CSE_ALifeTraderAbstract::STATE_Write	(NET_Packet &tNetPacket)
 	tNetPacket.w_stringZ		(s);
 #endif
 	tNetPacket.w_u32			(m_trader_flags.get());
-//	tNetPacket.w_s32			(m_iCharacterProfile);
 	tNetPacket.w_stringZ		(m_sCharacterProfile);
 
 #ifdef XRGAME_EXPORTS
@@ -270,8 +261,7 @@ void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue* sender)
 
 
 #ifdef XRGAME_EXPORTS
-
-#include "game_base_space.h"
+#include "../xrGame/game_base.h"
 #include "Level.h"
 
 #endif
@@ -615,7 +605,6 @@ void CSE_ALifeTrader::FillProps				(LPCSTR _pref, PropItemVec& items)
 CSE_ALifeCustomZone::CSE_ALifeCustomZone	(LPCSTR caSection) : CSE_ALifeSpaceRestrictor(caSection)
 {
 	m_owner_id					= u32(-1);
-//	m_maxPower					= pSettings->r_float(caSection,"min_start_power");
 	if (pSettings->line_exist(caSection,"hit_type"))
 		m_tHitType				= ALife::g_tfString2HitType(pSettings->r_string(caSection,"hit_type"));
 	else

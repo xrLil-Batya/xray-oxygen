@@ -684,15 +684,23 @@ void CCar::ParseDefinitions()
 	CExplosive::Load(ini, "explosion");
 
 	m_camera_position_1st = ini->r_fvector3("car_definition", "camera_pos");
-	m_camera_position_2nd = ini->r_fvector3("car_definition", "camera_pos_2nd");
-	m_camera_position_3rd = ini->r_fvector3("car_definition", "camera_pos_3rd");
+
+    if (ini->line_exist("car_definition", "camera_pos_2nd"))
+    {
+	    m_camera_position_2nd = ini->r_fvector3("car_definition", "camera_pos_2nd");
+    }
+
+    if (ini->line_exist("car_definition", "camera_pos_3rd"))
+    {
+        m_camera_position_3rd = ini->r_fvector3("car_definition", "camera_pos_3rd");
+    }
 	///////////////////////////car definition///////////////////////////////////////////////////
 	fill_wheel_vector(ini->r_string("car_definition", "driving_wheels"), m_driving_wheels);
 	fill_wheel_vector(ini->r_string("car_definition", "steering_wheels"), m_steering_wheels);
 	fill_wheel_vector(ini->r_string("car_definition", "breaking_wheels"), m_breaking_wheels);
 	fill_exhaust_vector(ini->r_string("car_definition", "exhausts"), m_exhausts);
 	fill_doors_map(ini->r_string("car_definition", "doors"), m_doors);
-
+     
 	///////////////////////////car properties///////////////////////////////
 	active_camera = 0;
 	camera[ectFirst] = xr_new<CCameraFirstEye>(this, CCameraBase::flRelativeLink | CCameraBase::flPositionRigid);
@@ -915,10 +923,10 @@ void CCar::Init()
 	if (ini->section_exist("damage_items"))
 	{
 		CInifile::Sect& data = ini->r_section("damage_items");
-		for (CInifile::SectCIt I = data.Data.begin(); I != data.Data.end(); I++) {
-			const CInifile::Item& item = *I;
+		for (CInifile::Item item : data.Data)
+		{
 			u16 index = pKinematics->LL_BoneID(*item.first);
-			R_ASSERT3(index != BI_NONE, "Wrong bone name", *item.first);
+			R_ASSERT3(index != BI_NONE, "Wrong bone name", item.first.c_str());
 			xr_map   <u16, SWheel>::iterator i = m_wheels_map.find(index);
 
 			if (i != m_wheels_map.end())

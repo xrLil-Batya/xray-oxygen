@@ -10,7 +10,7 @@
 #include "xr_level_controller.h"
 #include "level.h"
 #include "object_broker.h"
-#include "game_base_space.h"
+#include "game_base.h"
 #include "../xrphysics/MathUtils.h"
 #include "player_hud.h"
 #include "../FrayBuildConfig.hpp"
@@ -486,7 +486,7 @@ void CWeaponMagazinedWGrenade::InitAddons()
 	{
 		if(IsGrenadeLauncherAttached())
 		{
-			CRocketLauncher::m_fLaunchSpeed = pSettings->r_floatStd(m_sGrenadeLauncherName,"grenade_vel");
+			CRocketLauncher::m_fLaunchSpeed = pSettings->r_float(m_sGrenadeLauncherName.c_str(),"grenade_vel");
 		}
 	}
 }

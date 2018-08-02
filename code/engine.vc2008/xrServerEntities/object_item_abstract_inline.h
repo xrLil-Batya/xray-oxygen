@@ -15,6 +15,11 @@ IC	CObjectItemAbstract::CObjectItemAbstract	(const CLASS_ID &clsid, LPCSTR scrip
 	m_clsid				(clsid),
 	m_script_clsid		(script_clsid)
 {
+#ifdef DEBUG
+    ZeroMemory(m_clsidAsString, 9);
+    char* pClsid = (char*)&m_clsid;
+    std::reverse_copy(pClsid, pClsid + 8, m_clsidAsString);
+#endif
 }
 
 IC	const CLASS_ID &CObjectItemAbstract::clsid	() const

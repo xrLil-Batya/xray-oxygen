@@ -149,7 +149,7 @@ float CHelmet::GetBoneArmor(s16 element)
 	return m_boneProtection->getBoneArmor(element);
 }
 
-bool CHelmet::install_upgrade_impl( LPCSTR section, bool test )
+bool CHelmet::install_upgrade_impl( const char* section, bool test )
 {
 	bool result = inherited::install_upgrade_impl( section, test );
 

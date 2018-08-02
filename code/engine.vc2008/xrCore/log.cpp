@@ -18,6 +18,8 @@ size_t cached_log = 0;
 xr_vector<shared_str>*		LogFile			= NULL;
 static LogCallback			LogCB			= 0;
 
+inline const size_t FlushTreshold = 32768;
+
 void FlushLog()
 {
 	try
@@ -55,7 +57,6 @@ void AddOne(const char *split)
 
 	shared_str temp = shared_str(split);
 	LogFile->push_back(temp);
-#ifdef	LOG_TIME_PRECISE 
 	if (LogWriter)
 	{
 		switch (*split)
@@ -67,28 +68,21 @@ void AddOne(const char *split)
 			break;
 		}
 
-		char buf[64];
-		//SYSTEMTIME lt;
-		//GetLocalTime(&lt);
+        string256 buf;
+        SYSTEMTIME localTime;
+        GetLocalTime(&localTime);
+        int bufSize = xr_sprintf(buf, "[%hu.%hu.%hu %hu.%hu.%hu]", localTime.wDay, localTime.wMonth, localTime.wYear, localTime.wHour, localTime.wMinute, localTime.wSecond);
 
 		sprintf_s(buf, 64, "[%s %s] ", Core.UserDate, Core.UserTime);
 		LogWriter->w_printf("%s%s\r\n", buf, split);
-		cached_log += xr_strlen(buf);
+		cached_log += bufSize;
 		cached_log += xr_strlen(split) + 2;
-#else
-		time_t t = time(NULL);
-		tm* ti = localtime(&t);
-
-		strftime(buf, 64, "[%x %X]\t", ti);
-
-		LogWriter->wprintf("%s %s\r\n", buf, split);
-#endif
-		if (force_flush_log || cached_log >= 32768)
+        if (force_flush_log || cached_log >= FlushTreshold)
+        {
 			FlushLog();
+            cached_log = 0;
+        }
 
-		//-RvP
-
-		//exec CallBack
 		if (LogExecCB&&LogCB)LogCB(split);
 	}
 

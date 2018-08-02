@@ -366,10 +366,9 @@ void CPoltergeist::net_Destroy()
 
 	ability()->on_destroy();
 }
-#include "../FrayBuildConfig.hpp"
+
 void CPoltergeist::Die(CObject* who)
 {
-#ifdef POLTERGEIST_BUILD_DIE
  	if (m_tele && state_invisible) 
 	{
  		setVisible(true);
@@ -383,13 +382,13 @@ void CPoltergeist::Die(CObject* who)
  		} 
 		else Position() = m_current_position;
  	}
-#endif
 
 	inherited::Die				(who);
 	Energy::disable				();
-#ifndef POLTER_SHOW_DEAD
-	ability()->on_die			();
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD))
+    {
+        ability()->on_die();
+    }
 }
 
 void CPoltergeist::Hit(SHit* pHDS)

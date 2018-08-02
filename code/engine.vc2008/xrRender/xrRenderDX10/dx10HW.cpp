@@ -170,7 +170,7 @@ void CHW::CreateDevice( HWND m_hWnd, bool move_window )
 							 "Please try to restart the game.\n"
 							 "CreateDevice returned 0x%08x", R);
 		FlushLog();
-		Debug.do_exit("Failed to initialize graphics hardware.\nPlease try to restart the game.");
+        FATAL("Failed to initialize graphics hardware.\nPlease try to restart the game.");
 	};
 	R_CHK(R);
 

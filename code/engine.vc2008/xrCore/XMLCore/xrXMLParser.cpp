@@ -88,8 +88,10 @@ void CXml::Load(const char* path, const char* xml_filename)
 
 	if (m_Doc.Error())
 	{
-		std::string Error = "XML file: " + std::string(m_xml_file_name) + "value: " + m_Doc.Value() + "errDescr " + m_Doc.ErrorName();
-		Debug.fatal(DEBUG_INFO, Error.c_str());
+        string4096 ErrorInfo = { 0 };
+        m_Doc.DumpError(ErrorInfo, xml_filename);
+
+        Debug.fatal(DEBUG_INFO, ErrorInfo);
 	}
 
 	m_root = m_Doc.FirstChildElement();

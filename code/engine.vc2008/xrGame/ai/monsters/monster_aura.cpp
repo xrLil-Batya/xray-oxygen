@@ -75,7 +75,7 @@ float   monster_aura::calculate () const
 	return								(power < max_power) ? power : max_power;
 }
 
-void   monster_aura::load_from_ini (CInifile const* ini, pcstr const section, bool enable_for_dead_default)
+void   monster_aura::load_from_ini (CInifile* ini, pcstr const section, bool enable_for_dead_default)
 {
 	using namespace						detail;
 	char* pp_effector_name_string	=	NULL;

@@ -1,5 +1,4 @@
-#ifndef __V2D__
-#define __V2D__
+#pragma once
 
 template <class T>
 struct _vector2 
@@ -11,6 +10,11 @@ public:
 	typedef const Self&	SelfCRef;
 public:
 	T x,y;
+
+	IC SelfRef operator += (SelfCRef v)				{ return add(v); }
+	IC SelfRef operator -= (SelfCRef v)				{ return sub(v); }
+	IC SelfRef operator *= (SelfCRef v)				{ return mul(v); }
+	IC SelfRef operator /= (SelfCRef v)				{ return div(v); }
 
 	IC SelfRef set(float _u, float _v)				{ x=T(_u); y=T(_v);				return *this;	}
 	IC SelfRef set(double _u, double _v)			{ x=T(_u); y=T(_v);				return *this;	}
@@ -116,5 +120,3 @@ typedef _vector2<int>		Ivector2;
 
 template <class T>
 BOOL	_valid			(const _vector2<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y);	}
-
-#endif

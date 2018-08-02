@@ -70,3 +70,4 @@ public:
 };
 
 extern ENGINE_API	CApplication*	pApp;
+extern ENGINE_API   BOOL g_appLoaded;

@@ -301,7 +301,7 @@ public:
 	virtual			void						SetIgnoreRagDoll() = 0;
 	virtual		const CLBits&					collide_bits()const = 0;
 	virtual		const _flags<CLClassBits>&		collide_class_bits()const = 0;
-	virtual			void						CreateShellAnimator(CInifile const * ini, LPCSTR section) = 0;
+	virtual			void						CreateShellAnimator(CInifile* ini, LPCSTR section) = 0;
 	virtual			void						SetIgnoreAnimated() = 0;
 
 	virtual			void						AnimatorOnFrame() = 0;
@@ -402,7 +402,7 @@ XRPHYSICS_API	IPhysicsShellEx*				P_build_Shell(IPhysicsShellHolder* obj, bool n
 extern "C" XRPHYSICS_API	IPhysicsShellEx*		__stdcall		P_build_Shell(IPhysicsShellHolder* obj, bool not_active_state, BONE_P_MAP* bone_map = 0, bool not_set_bone_callbacks = false);
 
 XRPHYSICS_API	IPhysicsShellEx*				P_build_SimpleShell(IPhysicsShellHolder* obj, float mass, bool not_active_state);
-XRPHYSICS_API	void						ApplySpawnIniToPhysicShell(CInifile const * ini, IPhysicsShellEx* physics_shell, bool fixed);
+XRPHYSICS_API	void						ApplySpawnIniToPhysicShell(CInifile * ini, IPhysicsShellEx* physics_shell, bool fixed);
 void						fix_bones(LPCSTR	fixed_bones, IPhysicsShellEx* shell);
 
 extern "C" XRPHYSICS_API	void	__stdcall			destroy_physics_shell(IPhysicsShellEx* &p);

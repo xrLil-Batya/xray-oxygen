@@ -1,6 +1,5 @@
 #include "stdafx.h"
 #include "../xrPlay/resource.h"
-#include "dedicated_server_only.h"
 
 #ifdef INGAME_EDITOR
 #	include "../include/editor/ide.hpp"
@@ -33,7 +32,7 @@ void CRenderDevice::initialize_editor	()
 }
 #endif // #ifdef INGAME_EDITOR
 
-PROTECT_API void CRenderDevice::Initialize			()
+void CRenderDevice::Initialize			()
 {
 	Log							("Initializing Engine...");
 	TimerGlobal.Start			();
@@ -83,7 +82,5 @@ PROTECT_API void CRenderDevice::Initialize			()
 
     // Save window properties
     m_dwWindowStyle = GetWindowLong( m_hWnd, GWL_STYLE );
-    GetWindowRect	( m_hWnd, &m_rcWindowBounds );
-    GetClientRect	( m_hWnd, &m_rcWindowClient );
 }
 

@@ -104,10 +104,11 @@ void CUIActorMenu::Construct()
     m_BinocularSlotHighlight    = UIHelper::CreateStatic(uiXml, "binocular_slot_highlight", this);
     m_BinocularSlotHighlight    ->Show(false);
 
-#ifdef ACTOR_RUCK
-    m_RuckSlotHighlight			= UIHelper::CreateStatic(uiXml, "ruck_slot_highlight", this);
-    m_RuckSlotHighlight			->Show(false);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_RuckSlotHighlight = UIHelper::CreateStatic(uiXml, "ruck_slot_highlight", this);
+        m_RuckSlotHighlight->Show(false);
+    }
 	m_DetectorSlotHighlight		= UIHelper::CreateStatic(uiXml, "detector_slot_highlight", this);
 	m_DetectorSlotHighlight		->Show(false);
 	m_QuickSlotsHighlight[0]	= UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
@@ -117,42 +118,48 @@ void CUIActorMenu::Construct()
 
 	Fvector2 pos;
 	pos							= m_QuickSlotsHighlight[0]->GetWndPos();
-	float dx					= uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dx", 24.0f);
 
-#ifdef VERTICAL_BELT
-	float dyh = uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dy", 24.0f);
+	float dx = uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dx", 24.0f);
+    float dy = 0.0f;
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        dy = uiXml.ReadAttribFlt("quick_slot_highlight", 0, "dy", 24.0f);
+    }
 
-	m_QuickSlotsHighlight[1] = UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
-	m_QuickSlotsHighlight[1]->SetWndPos(Fvector2().set(pos.x + dx, pos.y));
-	m_QuickSlotsHighlight[1]->Show(false);
+    const Fvector2 VerticalSlotsPositions[] =
+    {
+        { pos.x + dx, pos.y },
+        { pos.x, pos.y + dy },
+        { pos.x + dx, pos.y + dy }
+    };
 
-	m_QuickSlotsHighlight[2] = UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
-	m_QuickSlotsHighlight[2]->SetWndPos(Fvector2().set(pos.x, pos.y + dyh));
-	m_QuickSlotsHighlight[2]->Show(false);
-
-	m_QuickSlotsHighlight[3] = UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
-	m_QuickSlotsHighlight[3]->SetWndPos(Fvector2().set(pos.x + dx, pos.y + dyh));
-	m_QuickSlotsHighlight[3]->Show(false);
-#else
-	for(u8 i=1;i<4;i++)
+	for(int i = 1; i < 4; i++)
 	{
-		pos.x						+= dx;
+        if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+        {
+            pos.set(VerticalSlotsPositions[i]);
+        }
+        else
+        {
+		    pos.x += dx;
+        }
 		m_QuickSlotsHighlight[i]	= UIHelper::CreateStatic(uiXml, "quick_slot_highlight", this);
 		m_QuickSlotsHighlight[i]	->SetWndPos(pos);
 		m_QuickSlotsHighlight[i]	->Show(false);
 	}
-#endif
-	pos								= m_ArtefactSlotsHighlight[0]->GetWndPos();
-	dx								= uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dx", 24.0f);
-#ifdef VERTICAL_BELT
-	float dy						= uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dy", 0.0f);
-#endif
+
+	pos = m_ArtefactSlotsHighlight[0]->GetWndPos();
+	dx = uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dx", 24.0f);
+    dy = 0.0f;
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        dy = uiXml.ReadAttribFlt("artefact_slot_highlight", 0, "dy", 0.0f);
+    }
+
 	for(u8 i=1;i<e_af_count;i++)
 	{
-		pos.x						+= dx;
-#ifdef VERTICAL_BELT
+		pos.x += dx;
 		pos.y += dy;
-#endif
 		m_ArtefactSlotsHighlight[i]	= UIHelper::CreateStatic(uiXml, "artefact_slot_highlight", this);
 		m_ArtefactSlotsHighlight[i]	->SetWndPos(pos);
 		m_ArtefactSlotsHighlight[i]	->Show(false);
@@ -166,9 +173,10 @@ void CUIActorMenu::Construct()
 	m_pInventoryPistolList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_pistol", this);
 	m_pInventoryAutomaticList	= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_automatic", this);
 
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList		= UIHelper::CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_ruck", this);
+    }
 
     m_pInventoryKnifeList       = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_knife", this);
     m_pInventoryBinocularList   = UIHelper::CreateDragDropListEx(uiXml, "dragdrop_binocular", this);
@@ -187,16 +195,16 @@ void CUIActorMenu::Construct()
 
 	m_belt_list_over[0]			= UIHelper::CreateStatic(uiXml, "belt_list_over", this);
 	pos							= m_belt_list_over[0]->GetWndPos();
-	dx							= uiXml.ReadAttribFlt("belt_list_over", 0, "dx", 10.0f);
-#ifdef VERTICAL_BELT
-	dy = uiXml.ReadAttribFlt("belt_list_over", 0, "dy", 0.0f);
-#endif
+	dx = uiXml.ReadAttribFlt("belt_list_over", 0, "dx", 10.0f);
+    dy = 0.0f;
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+	    dy = uiXml.ReadAttribFlt("belt_list_over", 0, "dy", 0.0f);
+    }
 	for ( u8 i = 1; i < e_af_count; ++i )
 	{
 		pos.x += dx;
-#ifdef VERTICAL_BELT
 		pos.y += dy;
-#endif
 		m_belt_list_over[i]		= UIHelper::CreateStatic(uiXml, "belt_list_over", this);
 		m_belt_list_over[i]->SetWndPos( pos );
 	}
@@ -279,9 +287,10 @@ void CUIActorMenu::Construct()
     BindDragDropListEvents              (m_pInventoryKnifeList);
     BindDragDropListEvents              (m_pInventoryBinocularList);
 
-#ifdef ACTOR_RUCK
-	BindDragDropListEvents				(m_pInventoryRuckList);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        BindDragDropListEvents(m_pInventoryRuckList);
+    }
 
 	BindDragDropListEvents				(m_pInventoryBagList);
 	BindDragDropListEvents				(m_pTradeActorBagList);

@@ -60,7 +60,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 	catch (...)
 	{
-		MessageBox(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONWARNING);
+		MessageBoxA(NULL, "Can't load xrCore!", "Init error", MB_OK | MB_ICONHAND);
 	}
 
 	////////////////////////////////////////////////////
@@ -79,7 +79,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
-			MessageBox(NULL,
+			MessageBoxA(NULL,
 				"It's can affect on the stability of the game.",
 				"SSE3 isn't supported on your CPU",
 				MB_OK | MB_ICONASTERISK);
@@ -89,7 +89,7 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 #ifndef RELEASE_IA32
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
-			MessageBox(NULL,
+			MessageBoxA(NULL,
 				"It's can affect on the stability of the game.",
 				"AVX isn't supported on your CPU!",
 				MB_OK | MB_ICONWARNING);

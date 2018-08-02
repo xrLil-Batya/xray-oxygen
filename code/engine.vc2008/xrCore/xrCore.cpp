@@ -2,10 +2,10 @@
 //
 #include "stdafx.h"
 #pragma hdrstop
-
 #include <mmsystem.h>
 #include <objbase.h>
 #include "../FrayBuildConfig.hpp"
+#include "oxy_version.h"
 #pragma comment(lib,"winmm.lib")
 
 #ifdef DEBUG
@@ -20,7 +20,7 @@ XRCORE_API		const char*	build_date;
 XRCORE_API		bool	gModulesLoaded = false;
 
 
-static u32	init_counter	= 0;
+static u32	init_counter = 0;
 void compute_build_id();
 
 #include "DateTime.hpp"
@@ -90,6 +90,7 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		compute_build_id();
 		Msg("xrCore build %d, %s\n", build_id, build_date);
+		Msg("xrOxygen Version: branch[%s], commit[%s]", _BRANCH, _HASH); 
 
 		EFS._initialize();
 	}

@@ -2058,8 +2058,8 @@ namespace tinyxml2
 		return errorName;
 	}
 
-	void XMLDocument::PrintError() const
-	{
+	void XMLDocument::DumpError(string4096& OutBuffer, LPCSTR strXmlFilename /*= nullptr*/) const
+    {
 		if (Error())
 		{
 			static const int LEN = 20;
@@ -2067,16 +2067,16 @@ namespace tinyxml2
 			char buf2[LEN] = { 0 };
 
 			if (_errorStr1)
-				TIXML_SNPRINTF(buf1, LEN, "%s", _errorStr1);
+                xr_sprintf(buf1, LEN, "%s", _errorStr1);
 
 			if (_errorStr2)
-				TIXML_SNPRINTF(buf2, LEN, "%s", _errorStr2);
+                xr_sprintf(buf2, LEN, "%s", _errorStr2);
 
 			// Should check INT_MIN <= _errorID && _errorId <= INT_MAX, but that
 			// causes a clang "always true" -Wtautological-constant-out-of-range-compare warning
 			TIXMLASSERT(0 <= _errorID && XML_ERROR_COUNT - 1 <= INT_MAX);
-			printf("XMLDocument error id=%d '%s' str1=%s str2=%s\n",
-				static_cast<int>(_errorID), ErrorName(), buf1, buf2);
+            xr_sprintf(OutBuffer, "XMLDocument error id=%d '%s' str1=%s str2=%s file: %s\n",
+                static_cast<int>(_errorID), ErrorName(), buf1, buf2, strXmlFilename ? strXmlFilename : "");
 		}
 	}
 

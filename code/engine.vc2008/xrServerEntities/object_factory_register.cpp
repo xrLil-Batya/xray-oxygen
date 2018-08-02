@@ -129,6 +129,8 @@
 #	include "InventoryBox.h"
 
 #	include "smart_cover_object.h"
+
+#	include "ActorRuck.h"
 #endif // NO_XR_GAME
 
 #ifndef NO_XR_GAME
@@ -283,4 +285,6 @@ void CObjectFactory::register_classes	()
 
 	ADD(CInventoryBox			,CSE_ALifeInventoryBox			,CLSID_INVENTORY_BOX			,"inventory_box");
 	ADD(smart_cover::object		,CSE_SmartCover					,TEXT2CLSID("SMRTCOVR")			,"smart_cover");
+	
+	ADD(CActorRuck				,CSE_ALifeItem					,CLSID_EQUIPMENT_RUCK			,"equ_ruck");
 }

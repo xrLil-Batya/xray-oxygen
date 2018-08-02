@@ -134,17 +134,6 @@ void CDemoPlay::stat_Stop	()
 		rfps_middlepoint		/= float(stat_table.size()-1);
 	}
 
-	/*
-	for (u32	it=1; it<stat_table.size(); it++)
-	{
-		float	fps	= 1.f / stat_table[it];
-		if		(fps<rfps_min)	rfps_min = fps;
-		if		(fps>rfps_max)	rfps_max = fps;
-		rfps_middlepoint	+=	fps;
-	}
-	rfps_middlepoint		/= float(stat_table.size()-1);
-	*/
-
 	Msg("* [DEMO] FPS: average[%f], min[%f], max[%f], middle[%f]",rfps_average,rfps_min,rfps_max,rfps_middlepoint);
 
 	if(g_bBenchmark)
@@ -157,22 +146,22 @@ void CDemoPlay::stat_Stop	()
 			xr_strcpy	(fname,sizeof(fname),"benchmark.result");
 
 
-		FS.update_path		(fname,"$app_data_root$",fname);
-		CInifile			res		(fname,FALSE,FALSE,TRUE);
-		res.w_float			("general","renderer",	9.f,									"dx-level required"		);
-		res.w_float			("general","min",		rfps_min,								"absolute minimum"		);
-		res.w_float			("general","max",		rfps_max,								"absolute maximum"		);
-		res.w_float			("general","average",	rfps_average,							"average for this run"	);
-		res.w_float			("general","middle",	rfps_middlepoint,						"per-frame middle-point");
-		for (u32	it=1; it<stat_table.size(); it++)
+		FS.update_path(fname, "$app_data_root$", fname);
+		CInifile res(fname,FALSE,FALSE,TRUE);
+		res.w_float("general", "renderer", 9.f);
+		res.w_float("general", "min", rfps_min);
+		res.w_float("general", "max", rfps_max);
+		res.w_float("general", "average", rfps_average);
+		res.w_float("general", "middle", rfps_middlepoint);
+		for (u32 it = 1; it < stat_table.size(); it++)
 		{
-			string32		id;
-			xr_sprintf		(id,sizeof(id),"%7d",it);
+			string32 id;
+			xr_sprintf(id,sizeof(id),"%7d",it);
 			for (u32 c=0; id[c]; c++) if (' '==id[c]) id[c] = '0';
-			res.w_float		("per_frame_stats",	id, 1.f / stat_table[it]);
+			res.w_float("per_frame_stats",	id, 1.f / stat_table[it]);
 		}
 
-		Console->Execute	("quit");
+		Console->Execute("quit");
 	}
 }
 

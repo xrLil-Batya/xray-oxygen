@@ -46,10 +46,11 @@ void CUIActorMenu::InitInventoryMode()
 	m_pInventoryDetectorList->Show		(true);
 	m_pInventoryPistolList->Show		(true);
 	m_pInventoryAutomaticList->Show		(true);
-#ifdef ACTOR_RUCK
-	m_pInventoryRuckList->Show			(true);
-#endif
 
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+        m_pInventoryRuckList->Show(true);
+    }
 
     m_pInventoryKnifeList->Show         (true);
     m_pInventoryBinocularList->Show     (true);
@@ -58,9 +59,6 @@ void CUIActorMenu::InitInventoryMode()
 	m_RightDelimiter->Show				(false);
 
 	InitInventoryContents				(m_pInventoryBagList);
-
-	VERIFY(GameUI());
-	GameUI()->UIMainIngameWnd->ShowZoneMap(true);
 }
 
 void CUIActorMenu::DeInitInventoryMode()
@@ -239,9 +237,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 		m_pInventoryAutomaticList,
 		m_pInventoryKnifeList,
 		m_pInventoryBinocularList,
-#ifdef ACTOR_RUCK
 		m_pInventoryRuckList,
-#endif		
 		m_pInventoryOutfitList,
 		m_pInventoryHelmetList,
 		m_pInventoryDetectorList,
@@ -303,7 +299,7 @@ void CUIActorMenu::OnInventoryAction(PIItem pItem, u16 action_type)
 					++i;
 				}
 				CUICellItem*		ci   = NULL;
-				if(GetMenuMode()==mmDeadBodySearch && FindItemInList(m_pDeadBodyBagList, pItem, ci))
+				if(GetMenuMode()==mmDeadBodySearch && FindItemInList(lst_to_add, pItem, ci))
 					break;
 
 				if ( !b_already )
@@ -398,9 +394,10 @@ void CUIActorMenu::InitInventoryContents(CUIDragDropListEx* pBagList)
 	InitCellForSlot				(INV_SLOT_2);
 	InitCellForSlot				(INV_SLOT_3);
 
-#ifdef ACTOR_RUCK
-	InitCellForSlot(RUCK_SLOT);
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+    {
+	    InitCellForSlot(RUCK_SLOT);
+    }
 
     InitCellForSlot             (KNIFE_SLOT);
     InitCellForSlot             (BINOCULAR_SLOT);
@@ -661,47 +658,38 @@ CUIDragDropListEx* CUIActorMenu::GetSlotList(u16 slot_idx)
 	{
 		case INV_SLOT_2:
 			return m_pInventoryPistolList;
-			break;
-
 		case INV_SLOT_3:
 			return m_pInventoryAutomaticList;
-			break;
-
-#ifdef ACTOR_RUCK
 		case RUCK_SLOT:
-			return m_pInventoryRuckList;
-			break;
-#endif
-
+        {
+            if (g_extraFeatures.is(GAME_EXTRA_RUCK))
+            {
+                return m_pInventoryRuckList;
+            }
+            else
+            {
+                return nullptr;
+            }
+        }
 		case KNIFE_SLOT: 
 		    return m_pInventoryKnifeList;
-			break;
-			
 		case BINOCULAR_SLOT: 
 		    return m_pInventoryBinocularList; 
-			break;
-			
 		case OUTFIT_SLOT:
 			return m_pInventoryOutfitList;
-			break;
-
 		case HELMET_SLOT:
 			return m_pInventoryHelmetList;
-			break;
-
 		case DETECTOR_SLOT:
 			return m_pInventoryDetectorList;
-			break;
-
 		case GRENADE_SLOT://fake
 			if ( m_currMenuMode == mmTrade )
 			{
 				return m_pTradeActorBagList;
 			}
 			return m_pInventoryBagList;
-			break;
+        default:
+            return NULL;
 	};
-	return NULL;
 }
 
 bool CUIActorMenu::TryUseItem(CUICellItem* cell_itm)
@@ -1223,13 +1211,16 @@ void CUIActorMenu::UpdateOutfit()
 	m_HelmetOver->Show(!outfit->bIsHelmetAvaliable);
 	
 	Ivector2 afc;
-#ifdef VERTICAL_BELT
-	afc.x = 1;
-	afc.y = af_count;
-#else
-	afc.x = af_count; // 1;
-	afc.y = 1;        // af_count;
-#endif
+    if (g_extraFeatures.is(GAME_EXTRA_VERTICAL_BELTS))
+    {
+        afc.x = 1;
+        afc.y = af_count;
+    }
+    else
+    {
+        afc.x = af_count;
+        afc.y = 1;
+    }
 
 	m_pInventoryBeltList->SetCellsCapacity(afc);
 

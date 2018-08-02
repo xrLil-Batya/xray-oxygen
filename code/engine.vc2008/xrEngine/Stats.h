@@ -92,6 +92,18 @@ public:
 	CStatTimer	TEST2;				// debug counter
 	CStatTimer	TEST3;				// debug counter
 
+	FLOAT AvailableMem;
+	FLOAT AvailablePageFileMem;
+	FLOAT PageFileMemUsedByApp;
+	FLOAT PhysMemoryUsedPercent;
+
+	double cpuBefore;
+	double cpuLoad = cpuBefore;
+#ifdef DEBUG
+	LPVOID MinAppAddress;
+    LPVOID MaxAppAddress;
+#endif
+
 	void			Show			(void);
 	virtual void 	OnRender		();
 	void			OnDeviceCreate	(void);

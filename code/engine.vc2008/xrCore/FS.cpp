@@ -57,9 +57,9 @@ XRCORE_API void dump_file_mappings	()
 //---------------------------------------------------
 void createPath(const std::string_view path)
 {
-	const auto lastSepPos = path.find_last_of('\\');
+	const size_t lastSepPos = path.find_last_of('\\');
     // TODO [imdex]: remove in 15.3
-    const auto foldersPath = (lastSepPos != std::string_view::npos) ? path.substr(0, lastSepPos) : path;
+    const std::string_view foldersPath = (lastSepPos != std::string_view::npos) ? path.substr(0, lastSepPos) : path;
     std::error_code e;
 	std::experimental::filesystem::create_directories(std::experimental::filesystem::path(foldersPath.begin(), foldersPath.end()), e);
     (void)e;
@@ -183,7 +183,7 @@ void IWriter::open_chunk(const u32 type) {
 void IWriter::close_chunk() {
     VERIFY(!chunk_pos.empty());
 
-    const auto pos = tell();
+    const size_t pos = tell();
     seek(chunk_pos.top());
     w_u32(pos - chunk_pos.top() - 4);
     seek(pos);
@@ -234,7 +234,7 @@ void IWriter::w_sdir(const Fvector& D) {
 IReader* IReader::open_chunk(const u32 ID) {
     bool bCompressed;
 
-    const auto dwSize = find_chunk(ID, &bCompressed);
+    const size_t dwSize = find_chunk(ID, &bCompressed);
     if (dwSize != 0) {
         if (bCompressed) {
             u8* dest;

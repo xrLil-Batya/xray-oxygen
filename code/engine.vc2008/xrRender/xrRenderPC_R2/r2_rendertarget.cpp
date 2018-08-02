@@ -360,8 +360,10 @@ CRenderTarget::CRenderTarget		()
 		f_bloom_factor				= 0.5f;
 	}
 
-    s_fxaa.create(b_fxaa, "r3\\fxaa");
-    g_fxaa.create(FVF::F_V, RCache.Vertex.Buffer(), RCache.QuadIB);	
+	// FXAA
+    s_fxaa.create(b_fxaa, "r2\\fxaa");
+	u32 fvf_fxaa = D3DFVF_XYZRHW | D3DFVF_TEX1 | D3DFVF_TEXCOORDSIZE2(0);
+    g_fxaa.create(fvf_fxaa, RCache.Vertex.Buffer(), RCache.QuadIB);
 	
 	//HBAO
 	if (RImplementation.o.ssao_opt_data)

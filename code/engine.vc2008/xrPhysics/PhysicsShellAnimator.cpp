@@ -8,7 +8,7 @@
 #include "IPhysicsShellHolder.h"
 #include "../xrEngine/bone.h"
 
-CPhysicsShellAnimator::CPhysicsShellAnimator(IPhysicsShellEx* _pPhysicsShell, CInifile const* ini, LPCSTR section) : m_pPhysicsShell(_pPhysicsShell)
+CPhysicsShellAnimator::CPhysicsShellAnimator(IPhysicsShellEx* _pPhysicsShell, CInifile* ini, LPCSTR section) : m_pPhysicsShell(_pPhysicsShell)
 {
 	VERIFY(ini->section_exist(section));
 	IPhysicsShellHolder *obj = (*(_pPhysicsShell->Elements().begin()))->PhysicsRefObject();
