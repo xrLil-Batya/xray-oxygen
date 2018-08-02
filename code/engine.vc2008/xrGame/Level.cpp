@@ -513,8 +513,10 @@ void CLevel::OnRender()
 	if (stalker)
 		stalker->OnRender	();
 
-	if (bDebug)	{
-		for (u32 I=0; I < Level().Objects.o_count(); I++) {
+	if (bDebug)	
+	{
+		for (u32 I=0; I < Level().Objects.o_count(); I++) 
+		{
 			CObject*	_O		= Level().Objects.o_get_by_iterator(I);
 
 			CAI_Stalker*		stalker = smart_cast<CAI_Stalker*>(_O);
@@ -561,11 +563,8 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->OutNext			("Server Objects:      [%d]", Objects.o_count());
 
 		UI().Font().pFontStat->SetHeight	(8.0f);
-		//---------------------------------------------------------------------
-	}
 
-	if (bDebug) 
-	{
+		//---------------------------------------------------------------------
 		DBG().draw_object_info				();
 		DBG().draw_text						();
 		DBG().draw_level_info				();
