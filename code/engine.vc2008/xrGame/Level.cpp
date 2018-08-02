@@ -360,7 +360,7 @@ void CLevel::ProcessGameEvents()
 				}break;
 			default:
 				{
-					VERIFY(0);
+					R_ASSERT(0);
 				}break;
 			}			
 		}
@@ -418,7 +418,7 @@ void CLevel::OnFrame()
 
 	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
 
-    if (Device.dwPrecacheFrame == 0)
+    if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
         GameTaskManager().UpdateTasks();
 
 	// Inherited update
@@ -435,8 +435,14 @@ void CLevel::OnFrame()
 #endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
-	CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-	if (levelScript) levelScript->update();
+	auto ScriptThreadFun = []()
+	{
+		thread_name("X-Ray: Level Script Update");
+		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+		if (levelScript) levelScript->update();
+	};
+
+	std::thread ScriptThread(ScriptThreadFun);
 
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
@@ -458,7 +464,9 @@ void CLevel::OnFrame()
 
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
-	};
+	}
+
+	ScriptThread.join();
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -485,10 +493,10 @@ void CLevel::OnRender()
 	if (!game)
 		return;
 
+	HUD().RenderUI();
 	Game().OnRender();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
-	HUD().RenderUI();
 
 #ifdef DEBUG
 	draw_wnds_rects();
@@ -505,8 +513,10 @@ void CLevel::OnRender()
 	if (stalker)
 		stalker->OnRender	();
 
-	if (bDebug)	{
-		for (u32 I=0; I < Level().Objects.o_count(); I++) {
+	if (bDebug)	
+	{
+		for (u32 I=0; I < Level().Objects.o_count(); I++) 
+		{
 			CObject*	_O		= Level().Objects.o_get_by_iterator(I);
 
 			CAI_Stalker*		stalker = smart_cast<CAI_Stalker*>(_O);
@@ -553,11 +563,8 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->OutNext			("Server Objects:      [%d]", Objects.o_count());
 
 		UI().Font().pFontStat->SetHeight	(8.0f);
-		//---------------------------------------------------------------------
-	}
 
-	if (bDebug) 
-	{
+		//---------------------------------------------------------------------
 		DBG().draw_object_info				();
 		DBG().draw_text						();
 		DBG().draw_level_info				();

@@ -6,6 +6,7 @@
 // XRCDB_API functions as being imported from a DLL, wheras this DLL sees symbols
 // defined with this macro as being exported.
 #include "../xrCore/xrCore.h"
+
 #ifdef XRCDB_EXPORTS
 #	define XRCDB_API __declspec(dllexport)
 #else
@@ -18,8 +19,8 @@
 #endif
 
 // forward declarations
-namespace Opcode { class Model; }
 class CFrustum;
+class CDB_Model;
 
 #pragma pack(push,8)
 namespace CDB
@@ -120,7 +121,7 @@ namespace CDB
 #ifndef _CLR_MANAGER
 		mutable std::recursive_mutex		cs;
 #endif
-		Opcode::Model*	tree;
+		CDB_Model*				tree;
 		u32						status;		// 0=ready, 1=init, 2=building
 
 		// tris
@@ -150,10 +151,10 @@ namespace CDB
 			}
 		}
 
-		static	void			build_thread	(void*);
-		void build_internal (Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
-		void build (Fvector* V, int Vcnt, TRI* T, int Tcnt, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
-		size_t					memory			();
+		static	void build_thread	(void*);
+				void build_internal	(Fvector* V, int Vcnt, TRI* T, int Tcnt, void *pCache = nullptr, bool isCacheReader = false, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
+				void build			(Fvector* V, int Vcnt, TRI* T, int Tcnt, void *pCache = nullptr, bool isCacheReader = false, build_callback* bc=nullptr, void* bcp=nullptr, bool rebuildTrisRequired = true);
+		size_t		 memory			();
 	};
 
 	// Collider result
@@ -274,11 +275,6 @@ namespace CDB
 		u32					VPack		( const Fvector& V);
 	public:
 		CollectorPacked	(const Fbox &bb, int apx_vertices=5000, int apx_faces=5000);
-
-		//		__declspec(noinline) CollectorPacked &operator=	(const CollectorPacked &object)
-		//		{
-		//			verts
-		//		}
 
 		void				add_face	( const Fvector& v0, const Fvector& v1, const Fvector& v2, u16 material, u16 sector, u32 flags );
 		void				add_face_D	( const Fvector& v0, const Fvector& v1, const Fvector& v2, size_t dummy , u32 flags );

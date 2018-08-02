@@ -30,7 +30,6 @@ IGame_Level::IGame_Level	()
 IGame_Level::~IGame_Level	()
 {
 	if(strstr(Core.Params,"-nes_texture_storing") )
-		//Device.Resources->StoreNecessaryTextures();
 		Device.m_pRender->ResourcesStoreNecessaryTextures();
 	xr_delete					( pLevel		);
 
@@ -94,7 +93,6 @@ BOOL IGame_Level::Load			(u32 dwNum)
 	g_pGamePersistent->SetLoadStageTitle	("st_loading_cform");
 	g_pGamePersistent->LoadTitle	();
 	ObjectSpace.Load			( build_callback );
-	//Sound->set_geometry_occ		( &Static );
 	Sound->set_geometry_occ		(ObjectSpace.GetStaticModel	());
 	Sound->set_handler			( _sound_event );
 
@@ -107,14 +105,11 @@ BOOL IGame_Level::Load			(u32 dwNum)
 
 	// Render-level Load
 	Render->level_Load			(LL_Stream);
-	// tscreate.FrameEnd			();
-	// Msg						("* S-CREATE: %f ms, %d times",tscreate.result,tscreate.count);
 
 	// Objects
 	g_pGamePersistent->Environment().mods_load	();
 	R_ASSERT					(Load_GameSpecific_Before());
 	Objects.Load				();
-//. ANDY	R_ASSERT					(Load_GameSpecific_After ());
 
 	// Done
 	FS.r_close					( LL_Stream );
@@ -131,22 +126,10 @@ BOOL IGame_Level::Load			(u32 dwNum)
 #include "../xrCore/threadpool/ttapi.h"
 #endif
 
-void	IGame_Level::OnRender()
+void IGame_Level::OnRender()
 {
-#ifdef _GPA_ENABLED	
-	TAL_ID rtID = TAL_MakeID(1, Core.dwFrame, 0);
-	TAL_CreateID(rtID);
-	TAL_BeginNamedVirtualTaskWithID("GameRenderFrame", rtID);
-	TAL_Parami("Frame#", Device.dwFrame);
-	TAL_EndVirtualTask();
-#endif // _GPA_ENABLED
-
     Render->Calculate();
     Render->Render();
-
-#ifdef _GPA_ENABLED	
-	TAL_RetireID(rtID);
-#endif // _GPA_ENABLED
 }
 
 void	IGame_Level::OnFrame		( ) 

@@ -287,6 +287,7 @@ void CUICellItem::SetCustomDraw(ICustomDrawCellItem* c)
 	if (m_custom_draw)
 		xr_delete(m_custom_draw);
 	m_custom_draw = c;
+
 }
 
 // -------------------------------------------------------------------------------------------------

@@ -29,13 +29,17 @@ public:
 
 	void					Reset					(HWND hw);
 
-	void					selectResolution		(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed);
-	D3DFORMAT				selectDepthStencil		(D3DFORMAT);
+	void					SelectResolution		(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed);
+	D3DFORMAT				SelectFmtTarget			();
+	D3DFORMAT				SelectFmtDepthStencil	(D3DFORMAT);
 	void					ResizeWindowProc		(WORD h, WORD w);
-	u32						selectPresentInterval	();
-	u32						selectGPU				();
-	u32						selectRefresh			(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
-	BOOL					support					(D3DFORMAT fmt, DWORD type, DWORD usage);
+	u32						SelectPresentInterval	();
+	u32						SelectGPU				();
+	u32						SelectRefresh			(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt);
+	bool					IsFormatSupported		(D3DFORMAT fmt, DWORD type, DWORD usage);
+
+	void					FillVidModeList			();
+	void					FreeVidModeList			();
 
 #ifdef DEBUG
 #if defined(USE_DX10) || defined(USE_DX11)
@@ -48,8 +52,8 @@ public:
 #endif
 
 //	Variables section
-#if defined(USE_DX11)	//	USE_DX10
 public:
+#if defined(USE_DX11)	//	USE_DX10
 	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D11Device*			pDevice;	//	combine with DX9 pDevice via typedef
 	ID3D11DeviceContext*    pContext;	//	combine with DX9 pDevice via typedef
@@ -59,12 +63,11 @@ public:
 
 	CHWCaps					Caps;
 
-	D3D_DRIVER_TYPE		m_DriverType;	//	DevT equivalent
+	D3D_DRIVER_TYPE			m_DriverType;	//	DevT equivalent
 	DXGI_SWAP_CHAIN_DESC	m_ChainDesc;	//	DevPP equivalent
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
 #elif defined(USE_DX10)
-public:
 	IDXGIAdapter1*			m_pAdapter;	//	pD3D equivalent
 	ID3D10Device1*       	pDevice1;	//	combine with DX9 pDevice via typedef
 	ID3D10Device*        	pDevice;	//	combine with DX9 pDevice via typedef
@@ -81,9 +84,6 @@ public:
 	bool					m_bUsePerfhud;
 	D3D_FEATURE_LEVEL		FeatureLevel;
 #else
-
-public:
-
 	IDirect3D9* 			pD3D;		// D3D
 	IDirect3DDevice9*		pDevice;	// render device
 
@@ -102,7 +102,7 @@ public:
 #endif
 #if defined(USE_DX10) || defined(USE_DX11)
 	void			UpdateViews();
-	DXGI_RATIONAL	selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
+	DXGI_RATIONAL	SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt);
 
 	virtual	void	OnAppActivate();
 	virtual void	OnAppDeactivate();

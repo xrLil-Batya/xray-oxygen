@@ -124,7 +124,7 @@
 		<text>Шаг вправо</text>
 	</string>
 	<string id="kb_scores">
-		<text>Очки</text>
+		<text>Текущее задание</text>
 	</string>
 	<string id="kb_screenshot">
 		<text>Скриншот</text>
@@ -204,4 +204,10 @@
 	<string id="kb_switch_horn">
 		<text>Гудок</text>
 	</string>	
+	<string id="kb_grp_developer">
+		<text>Разработчик</text>
+	</string>
+	<string id="kb_dev_noclip">
+		<text>Режим призрака</text>
+	</string>
 </string_table>

@@ -6,6 +6,7 @@
 #pragma warning(pop)
 
 #include "xrCDB.h"
+#include "xrCDB_Model.h"
 
 using namespace CDB;
 using namespace Opcode;
@@ -394,9 +395,8 @@ void COLLIDER::ray_query(const MODEL *m_def, const Fvector& r_start, const Fvect
 	m_def->syncronize();
 
 	// Get nodes
-	const AABBNoLeafNode* N = ((const AABBNoLeafTree*)m_def->tree->GetTree())->GetNodes();
+	const AABBNoLeafNode* N = ((const CDB_OptimizeTree*)m_def->tree->GetTree())->GetNodes();
 
-	if (!N) __debugbreak();
 	r_clear();
 
 	// Binary dispatcher

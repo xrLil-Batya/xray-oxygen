@@ -55,10 +55,6 @@ public:
 		u32		HW_smap_PCF			: 1;
 		u32		HW_smap_FETCH4		: 1;
 
-        //Sunshafts
-        u32     sunshaft_mrmnwar     : 1;
-        u32     sunshaft_screenspace : 1;
-
 		u32		HW_smap_FORMAT		: 32;
 
 		u32		nvstencil			: 1;
@@ -306,8 +302,8 @@ public:
 	virtual void					ScreenshotAsyncBegin		();
 	virtual void					ScreenshotAsyncEnd			(CMemoryWriter& memory_writer);
 	virtual void	_BCL			OnFrame						();
-	virtual void                    BeforeWorldRender           (); // +SecondVP+ Вызывается перед началом рендера мира и пост-эффектов
-	virtual void                    AfterWorldRender            ();  // +SecondVP+ Вызывается после рендера мира и перед UI
+	virtual void                    BeforeWorldRender           (); // +SecondVP+ Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРµСЂРµРґ РЅР°С‡Р°Р»РѕРј СЂРµРЅРґРµСЂР° РјРёСЂР° Рё РїРѕСЃС‚-СЌС„С„РµРєС‚РѕРІ
+	virtual void                    AfterWorldRender            ();  // +SecondVP+ Р’С‹Р·С‹РІР°РµС‚СЃСЏ РїРѕСЃР»Рµ СЂРµРЅРґРµСЂР° РјРёСЂР° Рё РїРµСЂРµРґ UI
 
 	// Render mode
 	virtual void					rmNear						();

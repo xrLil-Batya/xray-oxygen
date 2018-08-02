@@ -192,7 +192,7 @@ void CInventory::Take(CGameObject *pObj, bool bNotActivate, bool strict_placemen
 		{
 			GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
 		}
-		else if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodySearch)
+		else if (GameUI()->ActorMenu().GetMenuMode() == mmDeadBodyOrContainerSearch)
 		{
 			if (m_pOwner == GameUI()->ActorMenu().GetPartner())
 				GameUI()->OnInventoryAction(pIItem, GE_OWNERSHIP_TAKE);
@@ -551,23 +551,6 @@ bool CInventory::Action(u16 cmd, u32 flags)
 				ActiveWeapon(slot);
 			}
 		} break;
-
-		case kARTEFACT:
-		{
-		    b_send_event = true;
-
-			if (flags & CMD_START)
-			{
-                if(GetActiveSlot() == ARTEFACT_SLOT && ActiveItem())
-				{
-					Activate(NO_ACTIVE_SLOT);
-				}
-				else 
-				{
-					Activate(ARTEFACT_SLOT);
-				}
-			}
-		} break;
 	}
 
 	return false;
@@ -846,41 +829,43 @@ CInventoryItem *CInventory::get_object_by_id(ALife::_OBJECT_ID tObjectID)
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 #include "script_game_object.h"
+
 bool CInventory::Eat(PIItem pIItem)
 {
 	//устанаовить съедобна ли вещь
 	CEatableItem* pItemToEat = smart_cast<CEatableItem*>(pIItem);
-	if ( !pItemToEat )			return false;
+	if (!pItemToEat)			return false;
 
 	CEntityAlive *entity_alive = smart_cast<CEntityAlive*>(m_pOwner);
-	if ( !entity_alive )		return false;
+	if (!entity_alive)		return false;
 
-	CInventoryOwner* IO	= smart_cast<CInventoryOwner*>(entity_alive);
-	if ( !IO )					return false;
-	
+	CInventoryOwner* IO = smart_cast<CInventoryOwner*>(entity_alive);
+	if (!IO)					return false;
+
 	CInventory* pInventory = pItemToEat->m_pInventory;
-	if ( !pInventory || pInventory != this )	return false;
-	if ( pInventory != IO->m_inventory )		return false;
-	if ( pItemToEat->object().H_Parent()->ID() != entity_alive->ID() )		return false;
-	
+
+	if (!pInventory || pInventory != this)	return false;
+	if (pInventory != IO->m_inventory)		return false;
+	if (pItemToEat->object().H_Parent()->ID() != entity_alive->ID())		return false;
+
 	if (!pItemToEat->UseBy(entity_alive))
 		return false;
 
 	Actor()->callback(GameObject::eUseObject)((smart_cast<CGameObject*>(pIItem))->lua_game_object());
 
-	if(pItemToEat->Empty())
+	// If porsion_num > 0
+	if (pItemToEat->Empty())
 	{
 		pIItem->SetDropManual(TRUE);
 		return		false;
 	}
+
 	return			true;
 }
 
 bool CInventory::InSlot(const CInventoryItem* pIItem) const
 {
 	if(pIItem->CurrPlace() != eItemPlaceSlot)	return false;
-
-	//VERIFY(m_slots[pIItem->CurrSlot()].m_pIItem == pIItem);
 
 	return true;
 }

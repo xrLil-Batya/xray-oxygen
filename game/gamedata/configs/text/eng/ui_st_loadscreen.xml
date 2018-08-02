@@ -3,33 +3,6 @@
 	<string id="ls_header">
 		<text>100 ZONE SURVIVAL TIPS</text>
 	</string>
-	<string id="ls_mp_tip_16">
-		<text>Shooting an enemy in the eye will result in an instant kill, regardless of his armor level.</text>
-	</string>
-	<string id="ls_mp_tip_19">
-		<text>The AC-96/2 has a unique two round burst firing mode. In this mode, both bullets in a burst will hit the same spot.</text>
-	</string>
-	<string id="ls_mp_tip_21">
-		<text>Double-barreled shotguns can be used to fire both barrels almost simultaneously.</text>
-	</string>
-	<string id="ls_mp_tip_25">
-		<text>Don't underestimate pistols. They provide considerable stopping power and can be very effective against poorly armored targets.</text>
-	</string>
-	<string id="ls_mp_tip_32">
-		<text>Sniper rifles are ideal for eliminating enemies from a distance, thanks to their flatness and accuracy characteristics. They are less effective at close range.</text>
-	</string>
-	<string id="ls_mp_tip_33">
-		<text>Firing on the move is considerably less accurate than when you are standing still or crouching.</text>
-	</string>
-	<string id="ls_mp_tip_34">
-		<text>Weapons and protective suits will wear out quickly in the harsh conditions of the Zone. Worn-out weapons are less accurate and prone to misfire, while suits will not protect you as well.</text>
-	</string>
-	<string id="ls_mp_tip_54">
-		<text>To make a screenshot, press "$$ACTION_SCREENSHOT$$".</text>
-	</string>
-	<string id="ls_mp_tip_9">
-		<text>The artifact or the player carrying it is shown on the minimap. If the artifact is far away, an arrow on the minimap will indicate its direction.</text>
-	</string>
 	<string id="ls_tip_37">
 		<text>The AC-96/2 has a unique two round burst firing mode. In this mode, both bullets in a burst will hit the same spot.</text>
 	</string>
@@ -306,138 +279,6 @@
 	<string id="ls_tip_11">
 		<text>You can unload the weapons you find to get more ammo. To do this, right-click on the weapon in your backpack and select the appropriate action from the context menu.</text>
 	</string>
-	<string id="ls_mp_tip_1">
-		<text>Killing enemies and acquiring artifacts earns you points required to increase your rank. When your rank increases, you will gain access to new weapons, armor and equipment.</text>
-	</string>
-	<string id="ls_mp_tip_11">
-		<text>Smoke grenades are used to steal the artifact or create cover.</text>
-	</string>
-	<string id="ls_mp_tip_13">
-		<text>The left part of the buy menu contains five tabs, from the top down: pistols, main weapons, equipment, ammunition and medical supplies. Selecting the required tab shows you the range of items available at your rank.</text>
-	</string>
-	<string id="ls_mp_tip_14">
-		<text>The buy menu on the right-hand side of the screen contains four quick buy slots. Pressing the disk icon saves the loadout, while pressing the relevant number will load that loadout. The fourth slot is used to automatically save the last loadout purchased.</text>
-	</string>
-	<string id="ls_mp_tip_15">
-		<text>If you have more than one weapon, you can switch between them by repeatedly pressing "$$ACTION_WPN_3$$".</text>
-	</string>
-	<string id="ls_mp_tip_17">
-		<text>An artifact can be activated to create an anomaly. To do this take the artifact out by pressing "$$ACTION_ARTEFACT$$" and holding "$$ACTION_WPN_FIRE$$". The anomaly which appears is equally dangerous to enemies and the player who created it.</text>
-	</string>
-	<string id="ls_mp_tip_18">
-		<text>A scientific suit will help you survive in anomalies and radioactive areas.</text>
-	</string>
-	<string id="ls_mp_tip_2">
-		<text>ARTIFACT HUNT: In order to win, you must bring a certain number of artifacts to your base.</text>
-	</string>
-	<string id="ls_mp_tip_20">
-		<text>To detach a silencer, scope or underbarrel grenade launcher from your weapon, right-click on the weapon in your backpack and select the appropriate action from the context menu.</text>
-	</string>
-	<string id="ls_mp_tip_22">
-		<text>If you want to move with minimal noise, press "$$ACTION_ACCEL$$" to walk or "$$ACTION_CROUCH$$" to crouch.</text>
-	</string>
-	<string id="ls_mp_tip_23">
-		<text>Shotguns are close-combat weapons. The further your enemy is from you, the less effective they are.</text>
-	</string>
-	<string id="ls_mp_tip_24">
-		<text>When taking cover from small arms fire, make sure to get behind something solid. Unlike concrete walls, wooden boards and sheet metal don't make for very safe cover.</text>
-	</string>
-	<string id="ls_mp_tip_26">
-		<text>Headshots do critical damage and are fatal for most enemies.</text>
-	</string>
-	<string id="ls_mp_tip_27">
-		<text>Accelerated movement, jumping and wounds significantly reduce your endurance.</text>
-	</string>
-	<string id="ls_mp_tip_28">
-		<text>You can adjust how far you throw a grenade by holding "$$ACTION_WPN_ZOOM$$".</text>
-	</string>
-	<string id="ls_mp_tip_29">
-		<text>Enemies can and will use grenades. When you see the grenade indicator, leave the kill zone immediately.</text>
-	</string>
-	<string id="ls_mp_tip_3">
-		<text>DEATHMATCH: Get the most kill points to win.</text>
-	</string>
-	<string id="ls_mp_tip_30">
-		<text>Speeding up before you jump allows you to leap over big gaps and cracks.</text>
-	</string>
-	<string id="ls_mp_tip_31">
-		<text>Key indicators that show your health and endurance are located in the bottom right-hand corner of the screen.</text>
-	</string>
-	<string id="ls_mp_tip_35">
-		<text>The minimap shows the direction of the artifact. If the arrow is pointing up, the artifact is above your current position; if the arrow is pointing down, it is below you.</text>
-	</string>
-	<string id="ls_mp_tip_36">
-		<text>You can collect enemy backpacks to gain additional cash. Excess equipment can be sold at the base.</text>
-	</string>
-	<string id="ls_mp_tip_37">
-		<text>You should cover the artifact-carrying member of your team at all costs.</text>
-	</string>
-	<string id="ls_mp_tip_38">
-		<text>Use grenades to attack enemies in cover. Keep in mind the grenades blast radius to avoid hurting friendly fighters.</text>
-	</string>
-	<string id="ls_mp_tip_39">
-		<text>xrOxygen use AVX.</text>
-	</string>
-	<string id="ls_mp_tip_4">
-		<text>I'm add this tip later.</text>
-	</string>
-	<string id="ls_mp_tip_40">
-		<text>Multiplayer is death.</text>
-	</string>
-	<string id="ls_mp_tip_41">
-		<text>I'm add this tip later.</text>
-	</string>
-	<string id="ls_mp_tip_42">
-		<text>To respawn press "$$ACTION_JUMP$$" once the waiting period has ended.</text>
-	</string>
-	<string id="ls_mp_tip_43">
-		<text>I'm add this tip later.</text>
-	</string>
-	<string id="ls_mp_tip_44">
-		<text>I'm add this tip later.</text>
-	</string>
-	<string id="ls_mp_tip_45">
-		<text>Running is the fastest way of moving, but also the most tiring. Press "$$ACTION_SPRINT_TOGGLE$$" to run.</text>
-	</string>
-	<string id="ls_mp_tip_46">
-		<text>Firing while aiming is more accurate than shooting from the hip. To aim, press "$$ACTION_WPN_ZOOM$$".</text>
-	</string>
-	<string id="ls_mp_tip_47">
-		<text>If you have an underbarrel grenade launcher, you can switch between it and the normal firing mode by pressing "$$ACTION_WPN_FUNC$$".</text>
-	</string>
-	<string id="ls_mp_tip_48">
-		<text>If you have several types of ammo for your current weapon, you can switch between them by pressing "$$ACTION_WPN_NEXT$$".</text>
-	</string>
-	<string id="ls_mp_tip_49">
-		<text>To reload your weapon before your magazine is empty, press "$$ACTION_WPN_RELOAD$$".</text>
-	</string>
-	<string id="ls_mp_tip_5">
-		<text>CAPTURE THE ARTIFACT: In order to win, you must bring a certain number of enemy artifacts to your base.</text>
-	</string>
-	<string id="ls_mp_tip_50">
-		<text>To discard your current weapon, press "$$ACTION_DROP$$".</text>
-	</string>
-	<string id="ls_mp_tip_51">
-		<text>To look in your backpack, press "$$ACTION_INVENTORY$$".</text>
-	</string>
-	<string id="ls_mp_tip_52">
-		<text>Most weapons have several firing modes. To switch between firing modes, press "$$ACTION_WPN_FIREMODE_NEXT$$" or "$$ACTION_WPN_FIREMODE_PREV$$".</text>
-	</string>
-	<string id="ls_mp_tip_53">
-		<text>Some places are impossible to pass through even when crouching. To crouch as low as you can, press and hold "$$ACTION_CROUCH$$" and "$$ACTION_ACCEL$$" simultaneously.</text>
-	</string>
-	<string id="ls_mp_tip_55">
-		<text>To look around a corner, press "$$ACTION_LLOOKOUT$$" or "$$ACTION_RLOOKOUT$$". You cannot fire while looking around a corner.</text>
-	</string>
-	<string id="ls_mp_tip_6">
-		<text>CAPTURE THE ARTIFACT: To return a stolen artifact to your base, you need to kill the enemy carrying it and pick it up by pressing "$$ACTION_USE$$".</text>
-	</string>
-	<string id="ls_mp_tip_7">
-		<text>I'm add this tip later.</text>
-	</string>
-	<string id="ls_mp_tip_8">
-		<text>You cannot run while carrying the artifact.</text>
-	</string>
 	<string id="ls_tip_100">
 		<text>To look in your backpack, press "$$ACTION_INVENTORY$$".</text>
 	</string>
@@ -461,12 +302,6 @@
 	</string>
 	<string id="ls_tip_51">
 		<text>Firing accuracy suffers considerably when you're on the move. Stand still or crouch to improve it.</text>
-	</string>
-	<string id="ls_mp_tip_10">
-		<text>This energy drink temporarily speeds up energy recovery, allowing you to sprint for longer.</text>
-	</string>
-	<string id="ls_mp_tip_12">
-		<text>You have unlimited ammo when playing in Deathmatch mode.</text>
 	</string>
 	<string id="ls_tip_16">
 		<text>One of the most common threats in the Zone is radiation. Serious exposure will harm your health and can be terminal if not treated adequately.</text>

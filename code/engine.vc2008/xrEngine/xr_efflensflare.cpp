@@ -2,15 +2,11 @@
 #pragma hdrstop
 
 #include "xr_efflensflare.h"
-
 #include "igame_persistent.h"
 #include "Environment.h"
-//#include "SkeletonCustom.h"
-//	Instead of SkeletonCustom:
 #include "bone.h"
 #include "../Include/xrRender/Kinematics.h"
 #include "../xrCDB/cl_intersect.h"
-
 #include "../xrServerEntities/object_broker.h"
 
 #ifdef _EDITOR
@@ -24,8 +20,6 @@
 
 #define FAR_DIST g_pGamePersistent->Environment().CurrentEnv->far_plane
 
-//#define MAX_Flares	24
-//////////////////////////////////////////////////////////////////////////////
 // Globals ///////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 #define BLEND_INC_SPEED 8.0f
@@ -401,50 +395,7 @@ void CLensFlare::OnFrame(shared_str id)
 
 	fVisResult *= (1.0f/MAX_RAYS);
 
-	//blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
 	blend_lerp(fBlend,fVisResult,BLEND_DEC_SPEED,Device.fTimeDelta);
-
-	/*
-	CObject*	o_main		= g_pGameLevel->CurrentViewEntity();
-	STranspParam TP			(&m_ray_cache,Device.vCameraPosition,vSunDir,1000.f,EPS_L);
-	collide::ray_defs RD	(TP.P,TP.D,TP.f,CDB::OPT_CULL,collide::rqtBoth);
-	if (m_ray_cache.result&&m_ray_cache.similar(TP.P,TP.D,TP.f)){
-		// similar with previous query == 0
-		TP.vis				= 0.f;
-	}else{
-		float _u,_v,_range;
-		if (CDB::TestRayTri(TP.P,TP.D,m_ray_cache.verts,_u,_v,_range,false)&&(_range>0 && _range<TP.f)){
-			TP.vis			= 0.f;
-		}else{
-			// cache outdated. real query.
-			r_dest.r_clear	();
-			if (g_pGameLevel->ObjectSpace.RayQuery	(r_dest,RD,material_callback,&TP,NULL,o_main))
-				m_ray_cache.result = FALSE			;
-		}
-	}
-
-	blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
-	*/
-/*
-	CObject*	o_main		= g_pGameLevel->CurrentViewEntity();
-	STranspParam TP			(this,Device.vCameraPosition,vSunDir,1000.f,EPS_L);
-	collide::ray_defs RD	(TP.P,TP.D,TP.f,CDB::OPT_CULL,collide::rqtBoth);
-	if (m_ray_cache.result&&m_ray_cache.similar(TP.P,TP.D,TP.f)){
-		// similar with previous query == 0
-		TP.vis				= 0.f;
-	}else{
-		float _u,_v,_range;
-		if (CDB::TestRayTri(TP.P,TP.D,m_ray_cache.verts,_u,_v,_range,false)&&(_range>0 && _range<TP.f)){
-			TP.vis			= 0.f;
-		}else{
-			// cache outdated. real query.
-			r_dest.r_clear	();
-			if (g_pGameLevel->ObjectSpace.RayQuery	(r_dest,RD,material_callback,&TP,NULL,o_main))
-				m_ray_cache.result = FALSE			;
-		}
-	}
-	blend_lerp(fBlend,TP.vis,BLEND_DEC_SPEED,Device.fTimeDelta);
-*/
 #endif
 	clamp( fBlend, 0.0f, 1.0f );
 
@@ -476,92 +427,6 @@ void CLensFlare::Render(BOOL bSun, BOOL bFlares, BOOL bGradient)
 	VERIFY				(m_Current);
 
 	m_pRender->Render(*this, bSun, bFlares, bGradient);
-
-	/*
-	Fcolor				dwLight;
-	Fcolor				color;
-	Fvector				vec, vecSx, vecSy;
-	Fvector				vecDx, vecDy;
-
-	dwLight.set							( LightColor );
-	svector<ref_shader,MAX_Flares>		_2render;
-
-	u32									VS_Offset;
-	FVF::LIT *pv						= (FVF::LIT*) RCache.Vertex.Lock(MAX_Flares*4,hGeom.stride(),VS_Offset);
-
-	float 	fDistance		= FAR_DIST*0.75f;
-
-	if (bSun){
-    	if (m_Current->m_Flags.is(CLensFlareDescriptor::flSource)){
-            vecSx.mul			(vecX, m_Current->m_Source.fRadius*fDistance);
-            vecSy.mul			(vecY, m_Current->m_Source.fRadius*fDistance);
-            if (m_Current->m_Source.ignore_color) 	color.set(1.f,1.f,1.f,1.f);
-            else									color.set(dwLight);
-	        color.a				*= m_StateBlend;
-            u32 c				= color.get();
-            pv->set				(vecLight.x+vecSx.x-vecSy.x, vecLight.y+vecSx.y-vecSy.y, vecLight.z+vecSx.z-vecSy.z, c, 0, 0); pv++;
-            pv->set				(vecLight.x+vecSx.x+vecSy.x, vecLight.y+vecSx.y+vecSy.y, vecLight.z+vecSx.z+vecSy.z, c, 0, 1); pv++;
-            pv->set				(vecLight.x-vecSx.x-vecSy.x, vecLight.y-vecSx.y-vecSy.y, vecLight.z-vecSx.z-vecSy.z, c, 1, 0); pv++;
-            pv->set				(vecLight.x-vecSx.x+vecSy.x, vecLight.y-vecSx.y+vecSy.y, vecLight.z-vecSx.z+vecSy.z, c, 1, 1); pv++;
-            _2render.push_back	(m_Current->m_Source.hShader);
-        }
-	}
-	if (fBlend>=EPS_L)
-	{
-		if(bFlares){
-			vecDx.normalize		(vecAxis);
-			vecDy.crossproduct	(vecDx, vecDir);
-	    	if (m_Current->m_Flags.is(CLensFlareDescriptor::flFlare)){
-                for (CLensFlareDescriptor::FlareIt it=m_Current->m_Flares.begin(); it!=m_Current->m_Flares.end(); it++){
-                    CLensFlareDescriptor::SFlare&	F = *it;
-                    vec.mul				(vecAxis, F.fPosition);
-                    vec.add				(vecCenter);
-                    vecSx.mul			(vecDx, F.fRadius*fDistance);
-                    vecSy.mul			(vecDy, F.fRadius*fDistance);
-                    float    cl			= F.fOpacity * fBlend * m_StateBlend;
-                    color.set			( dwLight );
-                    color.mul_rgba		( cl );
-                    u32 c				= color.get();
-                    pv->set				(vec.x+vecSx.x-vecSy.x, vec.y+vecSx.y-vecSy.y, vec.z+vecSx.z-vecSy.z, c, 0, 0); pv++;
-                    pv->set				(vec.x+vecSx.x+vecSy.x, vec.y+vecSx.y+vecSy.y, vec.z+vecSx.z+vecSy.z, c, 0, 1); pv++;
-                    pv->set				(vec.x-vecSx.x-vecSy.x, vec.y-vecSx.y-vecSy.y, vec.z-vecSx.z-vecSy.z, c, 1, 0); pv++;
-                    pv->set				(vec.x-vecSx.x+vecSy.x, vec.y-vecSx.y+vecSy.y, vec.z-vecSx.z+vecSy.z, c, 1, 1); pv++;
-                    _2render.push_back	(it->hShader);
-                }
-            }
-		}
-		// gradient
-		if (bGradient&&(fGradientValue>=EPS_L)){
-            if (m_Current->m_Flags.is(CLensFlareDescriptor::flGradient)){
-                vecSx.mul			(vecX, m_Current->m_Gradient.fRadius*fGradientValue*fDistance);
-                vecSy.mul			(vecY, m_Current->m_Gradient.fRadius*fGradientValue*fDistance);
-
-                color.set			( dwLight );
-                color.mul_rgba		( fGradientValue*m_StateBlend );
-
-                u32 c				= color.get	();
-                pv->set				(vecLight.x+vecSx.x-vecSy.x, vecLight.y+vecSx.y-vecSy.y, vecLight.z+vecSx.z-vecSy.z, c, 0, 0); pv++;
-                pv->set				(vecLight.x+vecSx.x+vecSy.x, vecLight.y+vecSx.y+vecSy.y, vecLight.z+vecSx.z+vecSy.z, c, 0, 1); pv++;
-                pv->set				(vecLight.x-vecSx.x-vecSy.x, vecLight.y-vecSx.y-vecSy.y, vecLight.z-vecSx.z-vecSy.z, c, 1, 0); pv++;
-                pv->set				(vecLight.x-vecSx.x+vecSy.x, vecLight.y-vecSx.y+vecSy.y, vecLight.z-vecSx.z+vecSy.z, c, 1, 1); pv++;
-                _2render.push_back	(m_Current->m_Gradient.hShader);
-            }
-		}
-	}
-	RCache.Vertex.Unlock	(_2render.size()*4,hGeom.stride());
-
-	RCache.set_xform_world	(Fidentity);
-	RCache.set_Geometry		(hGeom);
-	for (u32 i=0; i<_2render.size(); i++)
-	{
-    	if (_2render[i])
-		{
-			u32						vBase	= i*4+VS_Offset;
-			RCache.set_Shader		(_2render[i]);
-			RCache.Render			(D3DPT_TRIANGLELIST,vBase, 0,4,0,2);
-	    }
-	}
-	*/
 }
 
 shared_str CLensFlare::AppendDef(CEnvironment& environment, CInifile* pIni, LPCSTR sect)
@@ -577,7 +442,6 @@ shared_str CLensFlare::AppendDef(CEnvironment& environment, CInifile* pIni, LPCS
 void CLensFlare::OnDeviceCreate()
 {
 	// VS
-	//hGeom.create		(FVF::F_LIT,RCache.Vertex.Buffer(),RCache.QuadIB);
 	m_pRender->OnDeviceCreate();
 
 	// palette

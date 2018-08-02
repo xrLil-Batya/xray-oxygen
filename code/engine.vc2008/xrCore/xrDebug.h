@@ -12,6 +12,7 @@ private:
 
 public:
 	void			_initialize			(const bool &dedicated);
+    void            _initializeAfterFS();
 	void			_destroy			();
 	
 public:

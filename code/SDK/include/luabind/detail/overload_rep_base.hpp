@@ -28,10 +28,14 @@
 namespace luabind { namespace detail
 {
 	// this class represents a specific overload of a member-function.
+    template class LUABIND_API std::function<int(lua_State*)>;
+
 	struct LUABIND_API overload_rep_base
 	{
 #if !defined(LUABIND_NO_ERROR_CHECKING)
-		overload_rep_base(): m_get_signature_fun(nullptr), allocator(), m_match_fun(std::allocator_arg_t(), allocator), m_arity(-1) {}
+		overload_rep_base(): m_get_signature_fun(nullptr), m_arity(-1), m_match_fun(nullptr) 
+        {
+        }
 #else
         overload_rep_base(): m_match_fun(), m_arity(-1) {}
 #endif
@@ -75,10 +79,7 @@ namespace luabind { namespace detail
 		get_sig_ptr m_get_signature_fun;
 #endif
 
-#pragma warning(push)
-#pragma warning(disable:4251)
 		match_fun_t m_match_fun;
-#pragma warning(pop)
 		int m_arity;
 	};
 

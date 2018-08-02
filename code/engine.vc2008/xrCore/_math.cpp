@@ -22,6 +22,15 @@ typedef struct _PROCESSOR_POWER_INFORMATION
 	DWORD CurrentIdleState;
 } PROCESSOR_POWER_INFORMATION, *PPROCESSOR_POWER_INFORMATION;
 
+typedef struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
+{
+	LARGE_INTEGER	IdleTime;
+	LARGE_INTEGER	KernelTime;
+	LARGE_INTEGER	UserTime;
+	LARGE_INTEGER	Reserved1[2];
+	ULONG			Reserved2;
+} SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION;
+
 namespace FPU
 {
 	//  огда-нибудь можно будет задавать точность дл€ float в х64...
@@ -286,6 +295,71 @@ int processor_info::getCPULoad(double &val)
 	prevSysUser = sysUser;
 
 	return 1;
+}
+
+float processor_info::MTCPULoad()
+{
+	m_dwNumberOfProcessors = 0;
+	m_pNtQuerySystemInformation = NULL;
+
+	SYSTEM_INFO info;
+	GetSystemInfo(&info);
+
+	m_dwNumberOfProcessors = info.dwNumberOfProcessors;
+
+	//#VERTVER: NtQuerySystemInformation now is depricated
+	m_pNtQuerySystemInformation = (NTQUERYSYSTEMINFORMATION)GetProcAddress(GetModuleHandle("NTDLL"), "NtQuerySystemInformation");
+
+	for (DWORD dwCpu = 0; dwCpu < MAX_CPU; dwCpu++)
+	{
+		m_idleTime[dwCpu].QuadPart = 0;
+		m_fltCpuUsage[dwCpu] = FLT_MAX;
+		m_dwTickCount[dwCpu] = 0;
+	}
+
+	return CalcMPCPULoad(1);
+}
+
+//#TODO: Return max value of float
+float processor_info::CalcMPCPULoad(DWORD dwCPU)
+{
+	if (!m_pNtQuerySystemInformation)
+		return FLT_MAX;
+
+	if (dwCPU >= m_dwNumberOfProcessors)
+		return FLT_MAX;
+
+
+	DWORD dwTickCount = GetTickCount();
+	//get standard timer tick count
+
+		SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION info[MAX_CPU];
+
+		if (SUCCEEDED(m_pNtQuerySystemInformation(SystemProcessorPerformanceInformation, &info, sizeof(info), NULL)))
+			//query CPU usage
+		{
+			if (m_idleTime[dwCPU].QuadPart)
+				//ensure that this function was already called at least once
+				//and we have the previous idle time value
+			{
+				m_fltCpuUsage[dwCPU] = 100.0f - 0.01f * (info[dwCPU].IdleTime.QuadPart - m_idleTime[dwCPU].QuadPart) / (dwTickCount - m_dwTickCount[dwCPU]);
+				//calculate new CPU usage value by estimating amount of time
+				//CPU was in idle during the last second
+
+				//clip calculated CPU usage to [0-100] range to filter calculation non-ideality
+
+				if (m_fltCpuUsage[dwCPU] < 0.0f)
+					m_fltCpuUsage[dwCPU] = 0.0f;
+
+				if (m_fltCpuUsage[dwCPU] > 100.0f)
+					m_fltCpuUsage[dwCPU] = 100.0f;
+			}
+
+			m_idleTime[dwCPU] = info[dwCPU].IdleTime;
+			//save new idle time for specified CPU
+		}
+
+	return m_fltCpuUsage[dwCPU];
 }
 
 

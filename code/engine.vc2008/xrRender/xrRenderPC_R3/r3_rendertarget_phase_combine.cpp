@@ -279,19 +279,26 @@ void	CRenderTarget::phase_combine	()
 	// RAIN DROPS AND OTHER
 	if (!_menu_pp)
 	{
-		// FXAA
-		if (ps_r_fxaa)
+		// Posprocess anti-aliasing
+		if (ps_r_pp_aa_mode > 0)
 		{
-			PIX_EVENT(FXAA);
-			phase_fxaa();
+			PIX_EVENT(phase_pp_aa);
+			PhaseAA();
 		}
 
-        if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
-            phase_ogse_sunshafts();
-        else if (RImplementation.o.sunshaft_mrmnwar && ps_r_sun_shafts > 0)
-            phase_SunShafts();
+		// Screen space sunshafts
+		if (need_to_render_sunshafts())
+		{
+			PIX_EVENT(phase_ss_ss);
+			PhaseSSSS();
+		}
 
-        phase_rain_drops();
+		// Rain drops on screen
+		if (ps_r_flags.test(R_FLAG_RAIN_DROPS))
+		{
+			PIX_EVENT(phase_rain_drops);
+			PhaseRainDrops();
+		}
 
 		if (Puddles->m_bLoaded)
 			phase_puddles();

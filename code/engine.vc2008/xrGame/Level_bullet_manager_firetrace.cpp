@@ -302,6 +302,10 @@ void CBulletManager::DynamicObjectHit	(CBulletManager::_event& E)
 		Hit.whoID			= E.bullet.parent_id;
 		Hit.weaponID		= E.bullet.weapon_id;
 		Hit.BulletID		= E.bullet.m_dwID;
+		Hit.BulletFlightSpeed = E.bullet.speed;
+		Hit.BulletFlightDist = E.bullet.fly_dist;
+
+		//Msg("[BULLET_MANAGER] Bullet dist: [%f] bullet speed: [%f] ", Hit.BulletFlightDist, Hit.BulletFlightSpeed);
 
 		NET_Packet			np;
 		Hit.Write_Packet	(np);

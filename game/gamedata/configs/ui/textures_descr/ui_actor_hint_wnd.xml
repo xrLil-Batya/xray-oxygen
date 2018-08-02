@@ -51,26 +51,37 @@
 	    <texture id="ui_inGame2_circle_hunger_yellow" x="11" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_hunger_orange" x="11" y="927" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_hunger_red" x="11" y="969" width="33" height="35" />
+		
+		<texture id="ui_inGame2_circle_thirst_green" x="873" y="983" width="33" height="35" />
+	    <texture id="ui_inGame2_circle_thirst_yellow" x="920" y="983" width="33" height="35" />
+	    <texture id="ui_inGame2_circle_thirst_orange" x="967" y="983" width="33" height="35" />
+	    <texture id="ui_inGame2_circle_thirst_red" x="967" y="983" width="33" height="35" />
+				
 	    <texture id="ui_inGame2_circle_bloodloose_green" x="593" y="983" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_bloodloose_yellow" x="58" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_bloodloose_orange" x="58" y="927" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_bloodloose_red" x="58" y="969" width="33" height="35" />
+		
 	    <texture id="ui_inGame2_circle_Overweight_green" x="641" y="983" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Overweight_yellow" x="106" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Overweight_orange" x="106" y="927" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Overweight_red" x="106" y="969" width="33" height="35" />
+		
 	    <texture id="ui_inGame2_circle_Gunbroken_green" x="688" y="983" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Gunbroken_yellow" x="153" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Gunbroken_orange" x="153" y="927" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Gunbroken_red" x="153" y="969" width="33" height="35" />
+		
 	    <texture id="ui_inGame2_circle_Helmetbroken_green" x="735" y="983" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Helmetbroken_yellow" x="200" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Helmetbroken_orange" x="200" y="927" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Helmetbroken_red" x="200" y="969" width="33" height="35" />
+		
 	    <texture id="ui_inGame2_circle_Armorbroken_green" x="782" y="983" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Armorbroken_yellow" x="247" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Armorbroken_orange" x="247" y="927" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_Armorbroken_red" x="247" y="969" width="33" height="35" />
+		
 	    <texture id="ui_inGame2_circle_radiation_green" x="826" y="983" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_radiation_yellow" x="291" y="886" width="33" height="35" />
 	    <texture id="ui_inGame2_circle_radiation_orange" x="291" y="927" width="33" height="35" />
@@ -79,18 +90,24 @@
 	    <texture id="ui_inGame2_triangle_Radiation_yellow" x="419" y="817" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Radiation_orange" x="419" y="857" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Radiation_red" x="419" y="899" width="37" height="33" />
+		
 	    <texture id="ui_inGame2_triangle_Fire_yellow" x="379" y="817" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Fire_orange" x="379" y="857" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Fire_red" x="379" y="899" width="37" height="33" />
+		
 	    <texture id="ui_inGame2_triangle_Biological_yellow" x="459" y="817" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Biological_orange" x="459" y="857" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Biological_red" x="459" y="899" width="37" height="33" />
+		
 	    <texture id="ui_inGame2_triangle_Psy_yellow" x="339" y="817" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Psy_orange" x="339" y="857" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Psy_red" x="339" y="899" width="37" height="33" />
 	    <texture id="ui_inGame2_triangle_Psy_green" x="339" y="725" width="37" height="33" />
+		
 	    <texture id="ui_inGame2_triangle_Fire_green" x="379" y="725" width="37" height="33" />
+		
 	    <texture id="ui_inGame2_triangle_Radiation_green" x="419" y="725" width="37" height="33" />
+		
 	    <texture id="ui_inGame2_triangle_Biological_green" x="459" y="725" width="37" height="33" />
 
 	    <texture id="ui_inGame2_shield_Psy" x="342" y="958" width="31" height="41" />

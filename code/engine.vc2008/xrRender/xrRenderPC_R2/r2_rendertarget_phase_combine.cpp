@@ -216,20 +216,19 @@ void	CRenderTarget::phase_combine	()
 	}
 	else
 	{
-		// FXAA
-		if (ps_r_fxaa)
-		{
-			phase_fxaa();
-		}
+		// Posprocess anti-aliasing
+		if (ps_r_pp_aa_mode > 0)
+			PhaseAA();
 
-        if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
-            phase_ogse_sunshafts();
-        else if (RImplementation.o.sunshaft_mrmnwar && ps_r_sun_shafts > 0)
-            phase_SunShafts();
+		// Screen space sunshafts
+		if (need_to_render_sunshafts())
+			PhaseSSSS();
 
-		phase_rain_drops();
+		// Rain drops on screen
+		if (ps_r_flags.test(R_FLAG_RAIN_DROPS))
+			PhaseRainDrops();
 
-		if(Puddles->m_bLoaded)
+		if (Puddles->m_bLoaded)
 			phase_puddles();
 	}
 

@@ -89,7 +89,7 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fSprintK					= pSettings->r_float(section,"sprint_k");
 	
 
-	//порог силы и здоровья меньше которого актер начинает хромать
+	//РїРѕСЂРѕРі СЃРёР»С‹ Рё Р·РґРѕСЂРѕРІСЊСЏ РјРµРЅСЊС€Рµ РєРѕС‚РѕСЂРѕРіРѕ Р°РєС‚РµСЂ РЅР°С‡РёРЅР°РµС‚ С…СЂРѕРјР°С‚СЊ
 	m_fLimpingHealthBegin		= pSettings->r_float(section,	"limping_health_begin");
 	m_fLimpingHealthEnd			= pSettings->r_float(section,	"limping_health_end");
 	R_ASSERT					(m_fLimpingHealthBegin<=m_fLimpingHealthEnd);
@@ -116,9 +116,9 @@ void CActorCondition::LoadCondition(LPCSTR entity_section)
 	m_fV_SatietyPower			= pSettings->r_float(section,"satiety_power_v");
 	m_fV_SatietyHealth			= pSettings->r_float(section,"satiety_health_v");
 
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
-        m_fThirstCritical = pSettings->r_float(section, "thrist_critical");
+        m_fThirstCritical = pSettings->r_float(section, "thirst_critical");
         clamp(m_fThirstCritical, 0.0f, 1.0f);
         m_fV_Thirst = pSettings->r_float(section, "thirst_v");
         m_fV_ThirstPower = pSettings->r_float(section, "thirst_power_v");
@@ -200,7 +200,7 @@ void CActorCondition::UpdateCondition()
 		UpdateSatiety();
 		UpdateBoosters();
 
-		if (GamePersistent().m_useThirst)
+		if (g_extraFeatures.is(GAME_EXTRA_THIRST))
 			UpdateThirst();
 
 		m_fAlcohol += m_fV_Alcohol * m_fDeltaTime;
@@ -277,7 +277,7 @@ void CActorCondition::UpdateCondition()
 	UpdateSatiety();
 	UpdateBoosters();
 
-	if (GamePersistent().m_useThirst && bUseThirst)
+	if (g_extraFeatures.is(GAME_EXTRA_THIRST))
 		UpdateThirst();
 
 	inherited::UpdateCondition();
@@ -478,7 +478,7 @@ void CActorCondition::PowerHit(float power, bool apply_outfit)
 	m_fPower			-=	apply_outfit ? HitPowerEffect(power) : power;
 	clamp					(m_fPower, 0.f, 1.f);
 }
-//weight - "удельный" вес от 0..1
+//weight - "СѓРґРµР»СЊРЅС‹Р№" РІРµСЃ РѕС‚ 0..1
 void CActorCondition::ConditionJump(float weight)
 {
 	float power			=	m_fJumpPower;
@@ -553,7 +553,7 @@ void CActorCondition::save(NET_Packet &output_packet)
 	save_data			(m_condition_flags, output_packet);
 	save_data			(m_fSatiety, output_packet);
 
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    save_data			(m_fThirst, output_packet);
     }
@@ -561,7 +561,7 @@ void CActorCondition::save(NET_Packet &output_packet)
 	save_data			(m_curr_medicine_influence.fHealth, output_packet);
 	save_data			(m_curr_medicine_influence.fPower, output_packet);
 	save_data			(m_curr_medicine_influence.fSatiety, output_packet);
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    save_data			(m_curr_medicine_influence.fThirst, output_packet);
     }
@@ -588,7 +588,7 @@ void CActorCondition::load(IReader &input_packet)
 	load_data			(m_fAlcohol, input_packet);
 	load_data			(m_condition_flags, input_packet);
 	load_data			(m_fSatiety, input_packet);
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    load_data			(m_fThirst, input_packet);
     }
@@ -596,7 +596,7 @@ void CActorCondition::load(IReader &input_packet)
 	load_data			(m_curr_medicine_influence.fHealth, input_packet);
 	load_data			(m_curr_medicine_influence.fPower, input_packet);
 	load_data			(m_curr_medicine_influence.fSatiety, input_packet);
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    load_data			(m_curr_medicine_influence.fThirst, input_packet);
     }
@@ -773,9 +773,8 @@ void CActorCondition::UpdateTutorialThresholds()
 	static float _cSatiety			= pSettings->r_float("tutorial_conditions_thresholds","satiety");
     static float _cThirst           = 0.0f;
 
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
-        bUseThirst = pSettings->r_bool("actor_condition", "use_thirst");
         _cThirst = pSettings->r_float("tutorial_conditions_thresholds", "thirst");
     }
 	
@@ -810,7 +809,7 @@ void CActorCondition::UpdateTutorialThresholds()
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_satiety");
 	}
-	if(GamePersistent().m_useThirst && bUseThirst)
+	if(g_extraFeatures.is(GAME_EXTRA_THIRST))
 	{
 		if (b && !m_condition_flags.test(eCriticalThirstReached) && GetThirst()<_cThirst) {
 			m_condition_flags.set(eCriticalThirstReached, TRUE);

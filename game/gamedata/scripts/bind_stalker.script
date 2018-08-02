@@ -81,9 +81,6 @@ function actor_binder:net_destroy()
 	self.object:set_callback(callback.level_border_exit, nil)
 	self.object:set_callback(callback.take_item_from_box, nil)
 	self.object:set_callback(callback.use_object, nil)
-	self.object:set_callback(callback.on_key_press, nil)
-	self.object:set_callback(callback.on_key_release, nil)
-	self.object:set_callback(callback.on_key_hold, nil)
 
 	log("--------->"..tostring(_G.amb_vol))
 	log("--------->"..tostring(_G.mus_vol))
@@ -119,9 +116,6 @@ function actor_binder:reinit()
 	self.object:set_callback(callback.task_state, self.task_callback, self)
 	self.object:set_callback(callback.take_item_from_box, self.take_item_from_box, self)
 	self.object:set_callback(callback.use_object, self.use_inventory_item, self)
-	self.object:set_callback(callback.on_key_press, self.on_key_press, self)
-	self.object:set_callback(callback.on_key_release, self.on_key_release, self)
-	self.object:set_callback(callback.on_key_hold, self.on_key_hold, self)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:take_item_from_box(box, item)
@@ -510,30 +504,7 @@ function actor_binder:check_mutant_hunter_achievement()
 	end
 
 end
-----------------------------------------------------------------------------------------------------------------------
--- [[ Key Actions ]] --
-local emun_on_console = 0.5 -- mrnmwar
 
-function actor_binder:on_key_press(key, act)
-	if key == DIK_keys.DIK_F5 then
-	    oxy_quicksaves.save()
-	end
-	if key == DIK_keys.DIK_NUMPAD3 then
-	    local hud_draw = get_console():get_string("hud_draw")
-		if hud_draw == "on" then
-		    get_console():execute("hud_draw off")
-		else
-		    get_console():execute("hud_draw on")
-		end
-	end
-end
-
-function actor_binder:on_key_release(key, act)
-end
-
-function actor_binder:on_key_hold(key, act)
-end
-----------------------------------------------------------------------------------------------------------------------
 function check_for_weapon_hide_by_zones()
 	for k,v in pairs(weapon_hide) do
 		if v == true then

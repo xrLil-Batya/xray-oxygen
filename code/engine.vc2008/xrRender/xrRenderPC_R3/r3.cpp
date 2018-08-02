@@ -142,7 +142,7 @@ void					CRender::create					()
 	o.mrt				= (HW.Caps.raster.dwMRT_count >= 3);
 	o.mrtmixdepth		= (HW.Caps.raster.b_MRT_mixdepth);
 
-	// Только true!
+	// РўРѕР»СЊРєРѕ true!
 	o.HW_smap			= true;
 	o.HW_smap_PCF		= true;
 
@@ -208,7 +208,7 @@ void					CRender::create					()
 	o.dx10_msaa_samples = (1 << ps_r3_msaa);
 
     //subshafts options
-    o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
+//	o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 
 	o.dx10_msaa_opt		= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt		= o.dx10_msaa_opt && o.dx10_msaa && ( HW.pDevice1 != 0 );
@@ -551,14 +551,20 @@ void					CRender::rmNormal			()
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-CRender::CRender()
-:m_bFirstFrameAfterReset(false)
+CRender::CRender() :m_bFirstFrameAfterReset(false)
 {
 	init_cacades();
 }
 
 CRender::~CRender()
 {
+	for (FSlideWindowItem it : SWIs)
+	{
+		xr_free(it.sw);
+		it.sw = nullptr;
+		it.count = 0;
+	}
+	SWIs.clear();
 }
 
 #include "../../xrEngine/GameFont.h"

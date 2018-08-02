@@ -105,13 +105,13 @@ public:
 	virtual void			load					(IReader &input_packet);
 //	IC		float const&	Satiety					()	{ return m_fSatiety; }
 	IC		float const&	V_Satiety				()	{ return m_fV_Satiety; }
-	IC		float const&    V_Thrist				()	{ return m_fV_Thirst; }
+	IC		float const&    V_Thirst				()	{ return m_fV_Thirst; }
 	IC		float const&	V_SatietyPower			()	{ return m_fV_SatietyPower; }
 	IC		float const&	V_SatietyHealth			()	{ return m_fV_SatietyHealth; }
 	IC		float const&	SatietyCritical			()	{ return m_fSatietyCritical; }
 	IC		float const&	ThirstCritical			()	{ return m_fThirstCritical; }
-	IC		float const&	V_ThristPower			()  { return m_fV_ThirstPower; }
-	IC		float const&	V_ThristHealth			()  { return m_fV_ThirstHealth; }
+	IC		float const&	V_ThirstPower			()  { return m_fV_ThirstPower; }
+	IC		float const&	V_ThirstHealth			()  { return m_fV_ThirstHealth; }
 	
 	float	GetZoneMaxPower							(ALife::EInfluenceType type) const;
 	float	GetZoneMaxPower							(ALife::EHitType hit_type) const;
@@ -143,7 +143,6 @@ protected:
 	float m_fV_ThirstHealth;
 	float m_fThirstCritical;
 	
-	bool bUseThirst;
 //--
 	float m_fPowerLeakSpeed;
 

@@ -39,7 +39,7 @@
 #include "inventory_upgrade_manager.h"
 #include "../xrCore/FS.h"
 #include "../xrCore/LocatorAPI.h"
-
+#include "uizonemap.h"
 #include "ai_debug_variables.h"
 #include "../xrphysics/console_vars.h"
 #ifdef DEBUG
@@ -56,7 +56,7 @@ string_path		g_last_saved_game;
 #ifdef DEBUG
 	extern float air_resistance_epsilon;
 #endif // #ifdef DEBUG
-
+float minimap_zoom_factor =1.0f;
 extern	u64		g_qwStartGameTime;
 extern 	u32 	hud_adj_mode;
 
@@ -208,12 +208,12 @@ public:
 	virtual void Execute(LPCSTR args) 
 	{
 		CCC_Token::Execute(args);
-		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
-			MainMenu()->Activate(false);
+// 		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
+// 			MainMenu()->Activate(false);
 		Msg("[GAME] Game language changed!");
 		CStringTable().ReInit(g_Language);
-		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
-			MainMenu()->Activate(true);
+// 		if (g_pGamePersistent && g_pGamePersistent->m_pMainMenu)
+// 			MainMenu()->Activate(true);
 	}
 	virtual void Info(TInfo& I)
 	{
@@ -520,20 +520,21 @@ public:
 			return;
 		}
 
-		string_path	S, S1;
-		S[0] = 0;
-		strncpy_s(S, sizeof(S), args, _MAX_PATH - 1);
+        string_path	GameSaveName = { 0 };
+        string_path screenshotForSavePath = { 0 };
+
+        xr_strcpy(GameSaveName, args);
 
 #ifdef DEBUG
 		CTimer timer;
 		timer.Start();
 #endif
 
-		if (!xr_strlen(S)) 
+		if (!xr_strlen(GameSaveName)) 
 		{
-			strconcat(sizeof(S), S, Core.UserName, " - ", "quicksave");
+            xr_sprintf(GameSaveName, "%s - quicksave", Core.UserName);
 			NET_Packet net_packet;
-			net_packet.w_stringZ(S);
+			net_packet.w_stringZ(GameSaveName);
 			net_packet.w_u8(0);
             if (ai().get_alife())
                 Level().Server->game->alife().save(net_packet);
@@ -541,14 +542,14 @@ public:
 		}
 		else 
 		{
-			if (!valid_saved_game_name(S))
+			if (!valid_saved_game_name(GameSaveName))
 			{
-				Msg("! Save failed: invalid file name - %s", S);
+				Msg("! Save failed: invalid file name - %s", GameSaveName);
 				return;
 			}
 
 			NET_Packet net_packet;
-			net_packet.w_stringZ(S);
+			net_packet.w_stringZ(GameSaveName);
 			net_packet.w_u8(1);
             if (ai().get_alife())
                 Level().Server->game->alife().save(net_packet);
@@ -559,16 +560,16 @@ public:
 #endif
 		SDrawStaticStruct* _s = GameUI()->AddCustomStatic("game_saved", true);
 		LPSTR save_name;
-		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", S);
+		STRCONCAT(save_name, CStringTable().translate("st_game_saved").c_str(), ": ", GameSaveName);
 		_s->wnd()->TextItemControl()->SetText(save_name);
 
-		xr_strcat(S, ".dds");
-		FS.update_path(S1, "$game_saves$", S);
+		xr_strcat(GameSaveName, ".dds");
+		FS.update_path(screenshotForSavePath, "$game_saves$", GameSaveName);
 
 #ifdef DEBUG
 		timer.Start();
 #endif
-		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, S1);
+		MainMenu()->Screenshot(IRender_interface::SM_FOR_GAMESAVE, screenshotForSavePath);
 
 #ifdef DEBUG
 		Msg("Screenshot overhead : %f milliseconds", timer.GetElapsed_sec() * 1000.f);
@@ -589,7 +590,7 @@ public:
 	virtual void Execute( LPCSTR args )
 	{
 		string_path				saved_game;
-		strncpy_s				(saved_game, sizeof(saved_game), args, _MAX_PATH - 1 );
+        xr_strcpy(saved_game, args);
 
 		if (!ai().get_alife()) {
 			Log						("! ALife simulator has not been started yet");
@@ -597,8 +598,7 @@ public:
 		}
 
 		if (!xr_strlen(saved_game)) {
-			Log						("! Specify file name!");
-			return;
+            xr_sprintf(saved_game, "%s - quicksave", Core.UserName);
 		}
 
 		if (!CSavedGameWrapper::saved_game_exist(saved_game)) {
@@ -1727,7 +1727,7 @@ void CCC_RegisterCommands()
 	CMD3(CCC_Mask, "g_autopickup", &psActorFlags, AF_AUTOPICKUP);
 	CMD3(CCC_Mask, "g_dynamic_music", &psActorFlags, AF_DYNAMIC_MUSIC);
 	CMD3(CCC_Mask, "g_important_save", &psActorFlags, AF_IMPORTANT_SAVE);
-
+	CMD4(CCC_Float, "rs_minimap_zoom_factor", &minimap_zoom_factor, 0.01, 5.0);
 	CMD3(CCC_Mask, "ts_get_object_params", &psActorFlags, AF_GET_OBJECT_PARAMS);
 	CMD3(CCC_Mask, "ts_show_boss_health", &psActorFlags, AF_SHOW_BOSS_HEALTH);
 	CMD3(CCC_Mask, "g_right_shoulder", &psActorFlags, AF_RIGHT_SHOULDER);
@@ -1947,7 +1947,7 @@ void CCC_RegisterCommands()
 
 	// Oxy:
 	CMD1(CCC_SetWeather, "set_weather");
-	CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
+	CMD3(CCC_MaskNoSave, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
     CMD3(CCC_MaskNoSave, "game_extra_monster_inventory", &g_extraFeatures, GAME_EXTRA_MONSTER_INVENTORY);
     CMD3(CCC_MaskNoSave, "game_extra_spawn_antifreeze", &g_extraFeatures, GAME_EXTRA_SPAWN_ANTIFREEZE);
     CMD3(CCC_MaskNoSave, "game_extra_weapon_autoreload", &g_extraFeatures, GAME_EXTRA_WEAPON_AUTORELOAD);
@@ -1956,6 +1956,7 @@ void CCC_RegisterCommands()
     CMD3(CCC_MaskNoSave, "game_extra_polter_show_particles_on_dead", &g_extraFeatures, GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD);
     CMD3(CCC_MaskNoSave, "game_extra_soc_talk_wnd", &g_extraFeatures, GAME_EXTRA_SOC_WND);
     CMD3(CCC_MaskNoSave, "game_extra_vertical_belts", &g_extraFeatures, GAME_EXTRA_VERTICAL_BELTS);
+    CMD3(CCC_MaskNoSave, "game_extra_thirst", &g_extraFeatures, GAME_EXTRA_THIRST);
 	CMD4(CCC_U32, "hud_adjust_mode", &hud_adj_mode, 0, 5); /// adjust mode support
 }
 
@@ -1969,4 +1970,6 @@ void LoadGameExtraFeatures()
     string_path cmdLoadCfg;
     strconcat(sizeof(cmdLoadCfg), cmdLoadCfg, "cfg_load", " ", configFilePath);
     Console->Execute(cmdLoadCfg);
+
+    Msg("Extra feature mask: %u", g_extraFeatures.get());
 }

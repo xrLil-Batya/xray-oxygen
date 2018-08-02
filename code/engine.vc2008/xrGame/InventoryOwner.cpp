@@ -203,9 +203,9 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 
 	if (IsTalking())
 	{
-		//если наш собеседник перестал говорить с нами,
+		//если наш собеседник перестал говорить с нами или умер,
 		//то и нам нечего ждать.
-		if (!m_pTalkPartner->IsTalking())
+		if (!m_pTalkPartner->IsTalking() || !m_pTalkPartner->is_alive())
 		{
 			StopTalk();
 		}
@@ -393,7 +393,8 @@ void CInventoryOwner::LostPdaContact	(CInventoryOwner* pInvOwner)
 //для работы с relation system
 u16 CInventoryOwner::object_id	()  const
 {
-	return smart_cast<const CGameObject*>(this)->ID();
+	const CGameObject* pObject = smart_cast<const CGameObject*>(this);
+	return pObject ? pObject->ID() : u16(-1);
 }
 
 
