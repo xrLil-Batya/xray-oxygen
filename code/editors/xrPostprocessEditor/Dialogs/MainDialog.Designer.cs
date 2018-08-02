@@ -68,6 +68,8 @@ namespace xrPostprocessEditor
             this.tpBlur = new System.Windows.Forms.TabPage();
             this.tlpBlur = new System.Windows.Forms.TableLayoutPanel();
             this.pnBlur = new System.Windows.Forms.Panel();
+            this.nslBlur = new XRay.SdkControls.NumericSlider();
+            this.lBlur = new System.Windows.Forms.Label();
             this.kfbBlur = new xrPostprocessEditor.KeyFrameBox();
             this.tpColorMapping = new System.Windows.Forms.TabPage();
             this.tlpColorMapping = new System.Windows.Forms.TableLayoutPanel();
@@ -86,8 +88,6 @@ namespace xrPostprocessEditor
             this.miLoad = new System.Windows.Forms.ToolStripMenuItem();
             this.miSave = new System.Windows.Forms.ToolStripMenuItem();
             this.pbDrawingSurface = new System.Windows.Forms.PictureBox();
-            this.nslBlur = new XRay.SdkControls.NumericSlider();
-            this.lBlur = new System.Windows.Forms.Label();
             this.tabEffects.SuspendLayout();
             this.tpAC.SuspendLayout();
             this.tlpAC.SuspendLayout();
@@ -185,13 +185,12 @@ namespace xrPostprocessEditor
             // 
             this.cpAC.AlphaEnabled = false;
             this.cpAC.BackColor = System.Drawing.SystemColors.Window;
-            this.cpAC.Hexadecimal = false;
             this.cpAC.Location = new System.Drawing.Point(0, 0);
             this.cpAC.Margin = new System.Windows.Forms.Padding(0);
             this.cpAC.MaximumSize = new System.Drawing.Size(9000, 144);
             this.cpAC.MinimumSize = new System.Drawing.Size(256, 144);
             this.cpAC.Name = "cpAC";
-            this.cpAC.Size = new System.Drawing.Size(264, 144);
+            this.cpAC.Size = new System.Drawing.Size(381, 144);
             this.cpAC.TabIndex = 0;
             this.cpAC.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.cpAC.Value = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
@@ -236,13 +235,12 @@ namespace xrPostprocessEditor
             // 
             this.cpBC.AlphaEnabled = false;
             this.cpBC.BackColor = System.Drawing.SystemColors.Window;
-            this.cpBC.Hexadecimal = false;
             this.cpBC.Location = new System.Drawing.Point(0, 0);
             this.cpBC.Margin = new System.Windows.Forms.Padding(0);
             this.cpBC.MaximumSize = new System.Drawing.Size(9000, 144);
             this.cpBC.MinimumSize = new System.Drawing.Size(256, 144);
             this.cpBC.Name = "cpBC";
-            this.cpBC.Size = new System.Drawing.Size(264, 144);
+            this.cpBC.Size = new System.Drawing.Size(381, 144);
             this.cpBC.TabIndex = 0;
             this.cpBC.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.cpBC.Value = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
@@ -298,13 +296,12 @@ namespace xrPostprocessEditor
             // 
             this.cpGC.AlphaEnabled = true;
             this.cpGC.BackColor = System.Drawing.SystemColors.Window;
-            this.cpGC.Hexadecimal = false;
             this.cpGC.Location = new System.Drawing.Point(0, 0);
             this.cpGC.Margin = new System.Windows.Forms.Padding(0);
             this.cpGC.MaximumSize = new System.Drawing.Size(9000, 144);
             this.cpGC.MinimumSize = new System.Drawing.Size(256, 144);
             this.cpGC.Name = "cpGC";
-            this.cpGC.Size = new System.Drawing.Size(264, 144);
+            this.cpGC.Size = new System.Drawing.Size(381, 144);
             this.cpGC.TabIndex = 0;
             this.cpGC.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
             this.cpGC.Value = System.Drawing.Color.FromArgb(((int)(((byte)(127)))), ((int)(((byte)(127)))), ((int)(((byte)(127)))));
@@ -362,29 +359,12 @@ namespace xrPostprocessEditor
             // nslDualityX
             // 
             this.nslDualityX.BackColor = System.Drawing.SystemColors.Window;
-            this.nslDualityX.DecimalPlaces = 2;
-            this.nslDualityX.Hexadecimal = false;
             this.nslDualityX.Location = new System.Drawing.Point(55, 9);
-            this.nslDualityX.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslDualityX.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslDualityX.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
             this.nslDualityX.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslDualityX.Name = "nslDualityX";
-            this.nslDualityX.Size = new System.Drawing.Size(150, 21);
-            this.nslDualityX.SliderPrecision = 100;
-            this.nslDualityX.SpinnerWidth = 54;
+            this.nslDualityX.Size = new System.Drawing.Size(250, 21);
             this.nslDualityX.TabIndex = 9;
-            this.nslDualityX.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslDualityX.TickFrequency = 25;
-            this.nslDualityX.TickStyle = System.Windows.Forms.TickStyle.None;
             this.nslDualityX.Value = new decimal(new int[] {
             0,
             0,
@@ -403,29 +383,12 @@ namespace xrPostprocessEditor
             // nslDualityY
             // 
             this.nslDualityY.BackColor = System.Drawing.SystemColors.Window;
-            this.nslDualityY.DecimalPlaces = 2;
-            this.nslDualityY.Hexadecimal = false;
             this.nslDualityY.Location = new System.Drawing.Point(55, 36);
-            this.nslDualityY.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslDualityY.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslDualityY.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            -2147483648});
             this.nslDualityY.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslDualityY.Name = "nslDualityY";
-            this.nslDualityY.Size = new System.Drawing.Size(150, 21);
-            this.nslDualityY.SliderPrecision = 100;
-            this.nslDualityY.SpinnerWidth = 54;
+            this.nslDualityY.Size = new System.Drawing.Size(250, 21);
             this.nslDualityY.TabIndex = 7;
-            this.nslDualityY.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslDualityY.TickFrequency = 25;
-            this.nslDualityY.TickStyle = System.Windows.Forms.TickStyle.None;
             this.nslDualityY.Value = new decimal(new int[] {
             0,
             0,
@@ -505,31 +468,14 @@ namespace xrPostprocessEditor
             // nslNoiseFPS
             // 
             this.nslNoiseFPS.BackColor = System.Drawing.SystemColors.Window;
-            this.nslNoiseFPS.DecimalPlaces = 2;
-            this.nslNoiseFPS.Hexadecimal = false;
             this.nslNoiseFPS.Location = new System.Drawing.Point(55, 63);
-            this.nslNoiseFPS.Maximum = new decimal(new int[] {
-            1000,
-            0,
-            0,
-            0});
             this.nslNoiseFPS.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslNoiseFPS.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslNoiseFPS.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseFPS.Name = "nslNoiseFPS";
-            this.nslNoiseFPS.Size = new System.Drawing.Size(150, 21);
-            this.nslNoiseFPS.SliderPrecision = 100;
-            this.nslNoiseFPS.SpinnerWidth = 54;
+            this.nslNoiseFPS.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseFPS.TabIndex = 14;
-            this.nslNoiseFPS.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslNoiseFPS.TickFrequency = 25;
-            this.nslNoiseFPS.TickStyle = System.Windows.Forms.TickStyle.None;
             this.nslNoiseFPS.Value = new decimal(new int[] {
-            1,
+            0,
             0,
             0,
             0});
@@ -537,29 +483,12 @@ namespace xrPostprocessEditor
             // nslNoiseIntensity
             // 
             this.nslNoiseIntensity.BackColor = System.Drawing.SystemColors.Window;
-            this.nslNoiseIntensity.DecimalPlaces = 2;
-            this.nslNoiseIntensity.Hexadecimal = false;
             this.nslNoiseIntensity.Location = new System.Drawing.Point(55, 9);
-            this.nslNoiseIntensity.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslNoiseIntensity.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslNoiseIntensity.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslNoiseIntensity.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslNoiseIntensity.Name = "nslNoiseIntensity";
-            this.nslNoiseIntensity.Size = new System.Drawing.Size(150, 21);
-            this.nslNoiseIntensity.SliderPrecision = 100;
-            this.nslNoiseIntensity.SpinnerWidth = 54;
+            this.nslNoiseIntensity.Size = new System.Drawing.Size(250, 21);
             this.nslNoiseIntensity.TabIndex = 13;
-            this.nslNoiseIntensity.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslNoiseIntensity.TickFrequency = 25;
-            this.nslNoiseIntensity.TickStyle = System.Windows.Forms.TickStyle.None;
             this.nslNoiseIntensity.Value = new decimal(new int[] {
             0,
             0,
@@ -578,34 +507,17 @@ namespace xrPostprocessEditor
             // nslNoiseGrain
             // 
             this.nslNoiseGrain.BackColor = System.Drawing.SystemColors.Window;
-            this.nslNoiseGrain.DecimalPlaces = 2;
-            this.nslNoiseGrain.Hexadecimal = false;
             this.nslNoiseGrain.Location = new System.Drawing.Point(55, 36);
-            this.nslNoiseGrain.Maximum = new decimal(new int[] {
-            1000,
+            this.nslNoiseGrain.MaximumSize = new System.Drawing.Size(9000, 21);
+            this.nslNoiseGrain.MinimumSize = new System.Drawing.Size(64, 0);
+            this.nslNoiseGrain.Name = "nslNoiseGrain";
+            this.nslNoiseGrain.Size = new System.Drawing.Size(250, 21);
+            this.nslNoiseGrain.TabIndex = 11;
+            this.nslNoiseGrain.Value = new decimal(new int[] {
+            0,
             0,
             0,
             0});
-            this.nslNoiseGrain.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslNoiseGrain.Minimum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
-            this.nslNoiseGrain.MinimumSize = new System.Drawing.Size(64, 0);
-            this.nslNoiseGrain.Name = "nslNoiseGrain";
-            this.nslNoiseGrain.Size = new System.Drawing.Size(150, 21);
-            this.nslNoiseGrain.SliderPrecision = 100;
-            this.nslNoiseGrain.SpinnerWidth = 54;
-            this.nslNoiseGrain.TabIndex = 11;
-            this.nslNoiseGrain.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslNoiseGrain.TickFrequency = 25;
-            this.nslNoiseGrain.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslNoiseGrain.Value = new decimal(new int[] {
-            1,
-            0,
-            0,
-            131072});
             // 
             // lNoiseIntensity
             // 
@@ -664,6 +576,30 @@ namespace xrPostprocessEditor
             this.pnBlur.Size = new System.Drawing.Size(419, 181);
             this.pnBlur.TabIndex = 2;
             // 
+            // nslBlur
+            // 
+            this.nslBlur.BackColor = System.Drawing.SystemColors.Window;
+            this.nslBlur.Location = new System.Drawing.Point(55, 9);
+            this.nslBlur.MaximumSize = new System.Drawing.Size(9000, 21);
+            this.nslBlur.MinimumSize = new System.Drawing.Size(64, 0);
+            this.nslBlur.Name = "nslBlur";
+            this.nslBlur.Size = new System.Drawing.Size(250, 21);
+            this.nslBlur.TabIndex = 18;
+            this.nslBlur.Value = new decimal(new int[] {
+            0,
+            0,
+            0,
+            0});
+            // 
+            // lBlur
+            // 
+            this.lBlur.AutoSize = true;
+            this.lBlur.Location = new System.Drawing.Point(3, 11);
+            this.lBlur.Name = "lBlur";
+            this.lBlur.Size = new System.Drawing.Size(40, 13);
+            this.lBlur.TabIndex = 17;
+            this.lBlur.Text = "Radius";
+            // 
             // kfbBlur
             // 
             this.kfbBlur.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -717,29 +653,12 @@ namespace xrPostprocessEditor
             // nslColorMappingInfluence
             // 
             this.nslColorMappingInfluence.BackColor = System.Drawing.SystemColors.Window;
-            this.nslColorMappingInfluence.DecimalPlaces = 2;
-            this.nslColorMappingInfluence.Hexadecimal = false;
             this.nslColorMappingInfluence.Location = new System.Drawing.Point(55, 9);
-            this.nslColorMappingInfluence.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
             this.nslColorMappingInfluence.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslColorMappingInfluence.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
             this.nslColorMappingInfluence.MinimumSize = new System.Drawing.Size(64, 0);
             this.nslColorMappingInfluence.Name = "nslColorMappingInfluence";
-            this.nslColorMappingInfluence.Size = new System.Drawing.Size(150, 21);
-            this.nslColorMappingInfluence.SliderPrecision = 100;
-            this.nslColorMappingInfluence.SpinnerWidth = 54;
+            this.nslColorMappingInfluence.Size = new System.Drawing.Size(250, 21);
             this.nslColorMappingInfluence.TabIndex = 16;
-            this.nslColorMappingInfluence.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslColorMappingInfluence.TickFrequency = 25;
-            this.nslColorMappingInfluence.TickStyle = System.Windows.Forms.TickStyle.None;
             this.nslColorMappingInfluence.Value = new decimal(new int[] {
             0,
             0,
@@ -870,47 +789,6 @@ namespace xrPostprocessEditor
             this.pbDrawingSurface.Size = new System.Drawing.Size(614, 170);
             this.pbDrawingSurface.TabIndex = 3;
             this.pbDrawingSurface.TabStop = false;
-            // 
-            // nslBlur
-            // 
-            this.nslBlur.BackColor = System.Drawing.SystemColors.Window;
-            this.nslBlur.DecimalPlaces = 2;
-            this.nslBlur.Hexadecimal = false;
-            this.nslBlur.Location = new System.Drawing.Point(55, 9);
-            this.nslBlur.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nslBlur.MaximumSize = new System.Drawing.Size(9000, 21);
-            this.nslBlur.Minimum = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            this.nslBlur.MinimumSize = new System.Drawing.Size(64, 0);
-            this.nslBlur.Name = "nslBlur";
-            this.nslBlur.Size = new System.Drawing.Size(150, 21);
-            this.nslBlur.SliderPrecision = 100;
-            this.nslBlur.SpinnerWidth = 54;
-            this.nslBlur.TabIndex = 18;
-            this.nslBlur.TextAlign = System.Windows.Forms.HorizontalAlignment.Right;
-            this.nslBlur.TickFrequency = 25;
-            this.nslBlur.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.nslBlur.Value = new decimal(new int[] {
-            0,
-            0,
-            0,
-            0});
-            // 
-            // lBlur
-            // 
-            this.lBlur.AutoSize = true;
-            this.lBlur.Location = new System.Drawing.Point(3, 11);
-            this.lBlur.Name = "lBlur";
-            this.lBlur.Size = new System.Drawing.Size(40, 13);
-            this.lBlur.TabIndex = 17;
-            this.lBlur.Text = "Radius";
             // 
             // MainDialog
             // 

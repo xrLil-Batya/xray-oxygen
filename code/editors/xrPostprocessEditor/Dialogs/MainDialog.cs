@@ -98,28 +98,28 @@ namespace xrPostprocessEditor
         private void UpdateDuality(int keyIndex)
         {
             Vector2F value = Engine.GetDuality(keyIndex);
-            nslDualityX.Value = (decimal)value.x;
-            nslDualityY.Value = (decimal)value.y;
+            //nslDualityX.Value = (decimal)value.x;
+            //nslDualityY.Value = (decimal)value.y;
         }
 
         private void UpdateNoise(int keyIndex)
         {
             NoiseParams value = Engine.GetNoise(keyIndex);
-            nslNoiseIntensity.Value = (decimal)value.Intensity;
-            nslNoiseGrain.Value = (decimal)value.Grain;
-            nslNoiseFPS.Value = (decimal)value.FPS;
+            //nslNoiseIntensity.Value = (decimal)value.Intensity;
+            //nslNoiseGrain.Value = (decimal)value.Grain;
+            //nslNoiseFPS.Value = (decimal)value.FPS;
         }
 
         private void UpdateBlur(int keyIndex)
         {
             float value = Engine.GetBlur(keyIndex);
-            nslBlur.Value = (decimal)value;
+            //nslBlur.Value = (decimal)value;
         }
 
         private void UpdateColorMapping(int keyIndex)
         {
             ColorMappingParams value = Engine.GetColorMapping(keyIndex);
-            nslColorMappingInfluence.Value = (decimal)value.Influence;
+            //nslColorMappingInfluence.Value = (decimal)value.Influence;
             tbColorMappingTexture.Text = value.Texture;
         }
 
@@ -209,7 +209,7 @@ namespace xrPostprocessEditor
                     Engine.SaveEffect(dlg.FileName);
             }
         }
-        
+
         private void SetUpHandlers()
         {
             foreach (var ch in _chInfo)

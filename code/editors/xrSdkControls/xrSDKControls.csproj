@@ -99,6 +99,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ColorPicker\ColorExtensions.cs" />
+    <Compile Include="Controls\Interfaces\IIncrementable.cs" />
+    <Compile Include="Controls\Interfaces\IMouseListener.cs" />
+    <Compile Include="Controls\Interfaces\IProperty.cs" />
+    <Compile Include="Controls\Interfaces\IPropertyContainer.cs" />
     <Compile Include="Controls\NumericSlider\NumericSlider.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -117,11 +122,8 @@
     <Compile Include="Controls\ColorSampleBox.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Include="Controls\NumericSpinner\NumericSpinner.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Compile Include="Controls\NumericSpinner\NumericSpinner.designer.cs">
-      <DependentUpon>NumericSpinner.cs</DependentUpon>
+    <Compile Include="Controls\PropertyGrid.cs">
+      <SubType>Component</SubType>
     </Compile>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Properties\Resources.Designer.cs">
@@ -141,9 +143,6 @@
     <EmbeddedResource Include="Controls\NumericSlider\NumericSlider.resx">
       <DependentUpon>NumericSlider.cs</DependentUpon>
       <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Controls\NumericSpinner\NumericSpinner.resx">
-      <DependentUpon>NumericSpinner.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
