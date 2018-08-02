@@ -81,17 +81,16 @@ public:
 	CPHWorld& operator=(const CPHWorld& other) = delete;
 	virtual ~CPHWorld() {};
 
-	//IC	dSpaceID					GetSpace						()			{return Space;}	;
-	inline	bool Exist() { return b_exist; }
-	void Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDeviceBase* dv);
-	void SetGravity(float	g);
-	inline  float Gravity() { return m_gravity; }
-	void AddObject(CPHObject* object);
-	void AddUpdateObject(CPHUpdateObject* object);
-	void AddRecentlyDisabled(CPHObject* object);
-	void RemoveFromRecentlyDisabled(PH_OBJECT_I i);
-	void RemoveObject(PH_OBJECT_I i);
-	void RemoveUpdateObject(PH_UPDATE_OBJECT_I i);
+	inline	bool	Exist() { return b_exist; }
+	void			Create(CObjectSpace * os, CObjectList *lo, CRenderDeviceBase* dv);
+	void			SetGravity(float	g);
+	inline  float	Gravity() { return m_gravity; }
+	void			AddObject(CPHObject* object);
+	void			AddUpdateObject(CPHUpdateObject* object);
+	void			AddRecentlyDisabled(CPHObject* object);
+	void			RemoveFromRecentlyDisabled(PH_OBJECT_I i);
+	void			RemoveObject(PH_OBJECT_I i);
+	void			RemoveUpdateObject(PH_UPDATE_OBJECT_I i);
 
 	inline dGeomID GetMeshGeom() { return Mesh.GetGeom(); }
 	inline	dGeomID GetMotionRayGeom() { return m_motion_ray; }

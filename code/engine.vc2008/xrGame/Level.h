@@ -124,7 +124,6 @@ protected:
 	bool	xr_stdcall			net_start6				();
 
 	bool	xr_stdcall			net_start_client1				();
-	bool	xr_stdcall			net_start_client2				();
 	bool	xr_stdcall			net_start_client3				();
 	bool	xr_stdcall			net_start_client4				();
 	bool	xr_stdcall			net_start_client5				();
@@ -222,10 +221,10 @@ protected:
 public:
 	CMapManager&			MapManager					() const 	{return *m_map_manager;}
 	CGameTaskManager&		GameTaskManager				() const	{return *m_game_task_manager;}
-	void					OnAlifeSimulatorLoaded		();
-	void					OnAlifeSimulatorUnLoaded	();
-	//работа с пулями
+	void					ResetLevel					();
+	
 protected:	
+	//работа с пулями
 	CBulletManager*		m_pBulletManager;
 public:
 	IC CBulletManager&	BulletManager() {return	*m_pBulletManager;}

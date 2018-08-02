@@ -65,23 +65,23 @@ void CALifeSimulatorBase::destroy			()
 	unload						();
 }
 
-void CALifeSimulatorBase::unload			()
+void CALifeSimulatorBase::unload()
 {
-	xr_delete					(m_objects);
-	xr_delete					(m_header);
-	xr_delete					(m_time_manager);
-	xr_delete					(m_spawns);
-	xr_delete					(m_graph_objects);
-	xr_delete					(m_scheduled);
-	xr_delete					(m_story_objects);
-	xr_delete					(m_smart_terrains);
-	xr_delete					(m_groups);
-	xr_delete					(m_registry_container);
-	xr_delete					(m_upgrade_manager);
-	m_initialized				= false;
+	xr_delete(m_objects);
+	xr_delete(m_header);
+	xr_delete(m_time_manager);
+	xr_delete(m_spawns);
+	xr_delete(m_graph_objects);
+	xr_delete(m_scheduled);
+	xr_delete(m_story_objects);
+	xr_delete(m_smart_terrains);
+	xr_delete(m_groups);
+	xr_delete(m_registry_container);
+	xr_delete(m_upgrade_manager);
+	m_initialized = false;
 
-	if(g_pGameLevel)
-		Level().OnAlifeSimulatorUnLoaded();
+	if (g_pGameLevel)
+		Level().ResetLevel();
 }
 
 void CALifeSimulatorBase::reload			(LPCSTR section)

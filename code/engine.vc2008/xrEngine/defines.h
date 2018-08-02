@@ -26,11 +26,6 @@ enum: unsigned long
 	rsOcclusionDraw					= (1<<12),
 	rsOcclusionStats				= (1<<13),
 
-	mtSound							= (1<<14),
-	mtPhysics						= (1<<15),
-	mtNetwork						= (1<<16),
-	mtParticles						= (1<<17),
-
 	rsCameraPos						= (1<<18),
 	rsRefresh120hz					= (1<<19),
 	rsR2							= (1<<20),

@@ -334,23 +334,23 @@ void UIRegistrator::script_register(lua_State *L)
 	CUIGame::script_register(L);
 
 	module(L)
+	[
+		class_<CGameFont>("CGameFont")
+		.enum_("EAligment")
 		[
-
-			class_<CGameFont>("CGameFont")
-			.enum_("EAligment")
-		[
-			value("alLeft", int(CGameFont::alLeft)),
-			value("alRight", int(CGameFont::alRight)),
-			value("alCenter", int(CGameFont::alCenter))
+			value("alLeft",		u32(CGameFont::alLeft)),
+			value("alRight",	u32(CGameFont::alRight)),
+			value("alCenter",	u32(CGameFont::alCenter))
 		],
+
 		class_<CMainMenu>("CMainMenu")
-		.def("GetEngineBuild", &CMainMenu::GetEngineBuild)
-		.def("GetEngineBuildDate", &CMainMenu::GetEngineBuildDate)
-		.def("GetGSVer", &CMainMenu::GetGSVer)
-		];
+			.def("GetEngineBuild",		&CMainMenu::GetEngineBuild)
+			.def("GetEngineBuildDate",	&CMainMenu::GetEngineBuildDate)
+			.def("GetGSVer",			&CMainMenu::GetGSVer)
+	];
 
 	module(L, "main_menu")
-		[
-			def("get_main_menu", &MainMenu)
-		];
+	[
+		def("get_main_menu", &MainMenu)
+	];
 }

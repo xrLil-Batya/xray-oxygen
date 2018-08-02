@@ -295,7 +295,6 @@ public :
 		{
 			psCurrentVidMode[0] = _w;
 			psCurrentVidMode[1] = _h;
-			//Device.UpdateWindowPropStyle((WindowPropStyle)ps_vid_windowtype);
 		}
 		else
 		{
@@ -308,7 +307,7 @@ public :
 	{
 		u32 uWidth = psCurrentVidMode[0];
 		u32 uHeight = psCurrentVidMode[1];
-		float deltaBase = uWidth / uHeight;
+		float deltaBase = (float)uWidth / (float)uHeight;
 
 		// 1920 / 1200 = 16:10 = 1.6
 		if (deltaBase > 1.6f)
