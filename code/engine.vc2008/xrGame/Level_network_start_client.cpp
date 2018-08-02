@@ -36,7 +36,6 @@ bool CLevel::net_start_client1()
 	pApp->SetLoadStageTitle(temp);
 	pApp->LoadStage();
 
-	Server->createClient();
 	return true;
 }
 

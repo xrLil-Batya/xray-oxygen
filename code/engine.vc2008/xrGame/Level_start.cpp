@@ -99,6 +99,7 @@ bool CLevel::net_start4()
 	g_loading_events.pop_front();
 
     pApp->LoadBegin();
+	Server->createClient();
 
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client6));
 	g_loading_events.push_front	(LOADING_EVENT(this,&CLevel::net_start_client5));
