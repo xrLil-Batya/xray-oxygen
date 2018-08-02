@@ -209,7 +209,7 @@ namespace xrPostprocessEditor
                     Engine.SaveEffect(dlg.FileName);
             }
         }
-        
+
         private void SetUpHandlers()
         {
             foreach (var ch in _chInfo)

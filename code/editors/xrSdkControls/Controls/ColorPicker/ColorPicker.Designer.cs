@@ -135,6 +135,7 @@
             this.nslRed.Name = "nslRed";
             this.nslRed.Size = new System.Drawing.Size(253, 21);
             this.nslRed.TabIndex = 16;
+            this.nslRed.Tag = "red";
             this.nslRed.Value = new decimal(new int[] {
             0,
             0,
@@ -152,6 +153,7 @@
             this.nslGreen.Name = "nslGreen";
             this.nslGreen.Size = new System.Drawing.Size(253, 21);
             this.nslGreen.TabIndex = 17;
+            this.nslGreen.Tag = "green";
             this.nslGreen.Value = new decimal(new int[] {
             0,
             0,
@@ -169,6 +171,7 @@
             this.nslBlue.Name = "nslBlue";
             this.nslBlue.Size = new System.Drawing.Size(253, 21);
             this.nslBlue.TabIndex = 18;
+            this.nslBlue.Tag = "blue";
             this.nslBlue.Value = new decimal(new int[] {
             0,
             0,
@@ -186,6 +189,7 @@
             this.nslAlpha.Name = "nslAlpha";
             this.nslAlpha.Size = new System.Drawing.Size(253, 21);
             this.nslAlpha.TabIndex = 19;
+            this.nslAlpha.Tag = "alpha";
             this.nslAlpha.Value = new decimal(new int[] {
             0,
             0,

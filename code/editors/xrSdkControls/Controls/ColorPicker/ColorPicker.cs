@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using XRay.SdkControls.Controls.ColorPicker;
 
 namespace XRay.SdkControls
 {
@@ -8,6 +9,7 @@ namespace XRay.SdkControls
     public sealed partial class ColorPicker : UserControl
     {
         public delegate void ColorChangedEventHandler(object sender, Color color);
+
         public event ColorChangedEventHandler ColorChanged;
 
         private bool _alphaEnabled = true;
@@ -23,17 +25,21 @@ namespace XRay.SdkControls
                 if (pbColor.ColorSample == value)
                     return;
 
-                if (_alphaEnabled)
-                {
-                    nslAlpha.Value = value.A;
-                }
+                byte alphaValue = _alphaEnabled ? value.A : byte.MaxValue;
 
+                nslAlpha.Value = alphaValue;
                 nslRed.Value = value.R;
                 nslGreen.Value = value.G;
                 nslBlue.Value = value.B;
 
-                pbColor.ColorSample = value;
-                UpdateColor();
+                // XXX collectioner: dirty hardcode. Should be changed
+                pbColor.ColorSample =
+                    Color.FromArgb(
+                        alphaValue,
+                        value.R,
+                        value.G,
+                        value.B);
+                //UpdateColor();
             }
         }
 
@@ -45,7 +51,7 @@ namespace XRay.SdkControls
                 _alphaEnabled = value;
                 nslAlpha.Visible = value;
                 lAlpha.Visible = value;
-                nslAlpha.Value = value ? byte.MinValue : byte.MaxValue;
+                nslAlpha.Value = byte.MaxValue;
             }
         }
 
@@ -68,28 +74,26 @@ namespace XRay.SdkControls
         {
             base.OnLoad(e);
 
-            nslRed.ValueChanged += (obj, args) => UpdateColor();
-            nslGreen.ValueChanged += (obj, args) => UpdateColor();
-            nslBlue.ValueChanged += (obj, args) => UpdateColor();
-            nslAlpha.ValueChanged += (obj, args) => UpdateColor();
-
-            UpdateColor();
+            SubscribeOnSliderEvents();
         }
 
-        private void UpdateColor()
+        private void SubscribeOnSliderEvents()
         {
-            var newColor = Color.FromArgb(
-                Convert.ToInt32(nslAlpha.Value),
-                Convert.ToInt32(nslRed.Value),
-                Convert.ToInt32(nslGreen.Value),
-                Convert.ToInt32(nslBlue.Value));
+            foreach (var control in Controls)
+            {
+                if (control is NumericSlider slider)
+                {
+                    slider.ValueChanged += UpdateColor;
+                }
+            }
+        }
 
-            if (pbColor.ColorSample == newColor)
-                return;
+        private void UpdateColor(object sender, decimal value)
+        {
+            if (!(sender is NumericSlider slider)) return;
+            var currentColor = pbColor.ColorSample;
 
-            pbColor.ColorSample = newColor;
-
-            ColorChanged?.Invoke(this, newColor);
+            pbColor.ColorSample = currentColor.SetColorChannel(slider.Tag.ToString(), Convert.ToByte(value));
         }
     }
 }

@@ -99,6 +99,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\ColorPicker\ColorExtensions.cs" />
     <Compile Include="Controls\Interfaces\IIncrementable.cs" />
     <Compile Include="Controls\Interfaces\IMouseListener.cs" />
     <Compile Include="Controls\Interfaces\IProperty.cs" />

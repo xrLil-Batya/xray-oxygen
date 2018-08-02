@@ -5,9 +5,11 @@ namespace XRay.SdkControls
 {
     public sealed partial class NumericSlider : UserControl
     {
-        public delegate void SliderValueChanged(decimal value);
+        private bool _isClicked;
 
-        public event EventHandler ValueChanged;
+        public delegate void SliderValueChanged(object sender, decimal value);
+        public event SliderValueChanged TemporaryValueChanged;
+        public event SliderValueChanged ValueChanged;
 
         public decimal Value
         {
@@ -20,19 +22,36 @@ namespace XRay.SdkControls
         }
 
         public NumericSlider() => InitializeComponent();
+
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+
             numSpinner.ValueChanged += (obj, args) =>
             {
-                trackBar.Value = (int) numSpinner.Value; 
-                ValueChanged?.Invoke(this, null);
+                trackBar.Value = (int) numSpinner.Value;
+                ValueChanged?.Invoke(this, numSpinner.Value);
+            };
+
+            trackBar.MouseDown += (s, args) => { _isClicked = true; };
+
+            trackBar.MouseUp += (s, args) =>
+            {
+                if (!_isClicked)
+                {
+                    return;
+                }
+
+                _isClicked = false;
+
+                ValueChanged?.Invoke(this, trackBar.Value);
             };
 
             trackBar.Scroll += (sender, args) =>
             {
                 numSpinner.Value = trackBar.Value;
-                ValueChanged?.Invoke(this, null);
+
+                TemporaryValueChanged?.Invoke(this, numSpinner.Value);
             };
         }
     }
