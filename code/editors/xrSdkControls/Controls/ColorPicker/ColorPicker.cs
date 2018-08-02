@@ -9,7 +9,6 @@ namespace XRay.SdkControls
     public sealed partial class ColorPicker : UserControl
     {
         public delegate void ColorChangedEventHandler(object sender, Color color);
-
         public event ColorChangedEventHandler ColorChanged;
 
         private bool _alphaEnabled = true;
@@ -22,8 +21,8 @@ namespace XRay.SdkControls
             get => pbColor.ColorSample;
             set
             {
-                if (pbColor.ColorSample == value)
-                    return;
+                //if (pbColor.ColorSample == value)
+                //    return;
 
                 byte alphaValue = _alphaEnabled ? value.A : byte.MaxValue;
 
@@ -39,7 +38,6 @@ namespace XRay.SdkControls
                         value.R,
                         value.G,
                         value.B);
-                //UpdateColor();
             }
         }
 
@@ -81,14 +79,21 @@ namespace XRay.SdkControls
         {
             foreach (var control in Controls)
             {
-                if (control is NumericSlider slider)
-                {
-                    slider.ValueChanged += UpdateColor;
-                }
+                if (!(control is NumericSlider slider)) continue;
+
+                slider.TemporaryValueChanged += UpdateColorSample;
+                slider.ValueChanged += UpdateColor;
             }
         }
 
         private void UpdateColor(object sender, decimal value)
+        {
+            UpdateColorSample(sender, value);
+
+            ColorChanged?.Invoke(this, pbColor.ColorSample);
+        }
+
+        private void UpdateColorSample(object sender, decimal value)
         {
             if (!(sender is NumericSlider slider)) return;
             var currentColor = pbColor.ColorSample;

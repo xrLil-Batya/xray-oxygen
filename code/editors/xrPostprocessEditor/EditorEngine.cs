@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Runtime.ExceptionServices;
 using XRay.ManagedApi.Core;
 
@@ -97,6 +98,18 @@ namespace xrPostprocessEditor
             using (PostProcessParamBase param = _animator.GetParam(paramType))
             {
                 param.DeleteValue(time);
+            }
+        }
+
+        public void UpdateAddColor(int keyIndex, Color color)
+        {
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.AddColor))
+            {
+                float time = param.GetKeyTime(keyIndex);
+
+                param.UpdateValue(time, color.R, 0);
+                param.UpdateValue(time, color.G, 1);
+                param.UpdateValue(time, color.B, 2);
             }
         }
 

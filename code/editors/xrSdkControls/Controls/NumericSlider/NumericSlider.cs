@@ -11,6 +11,7 @@ namespace XRay.SdkControls
         public event SliderValueChanged TemporaryValueChanged;
         public event SliderValueChanged ValueChanged;
 
+        // XXX collectioner: Setting new value causes the event to revert. Need to deal with it.
         public decimal Value
         {
             get => trackBar.Value;
@@ -30,10 +31,13 @@ namespace XRay.SdkControls
             numSpinner.ValueChanged += (obj, args) =>
             {
                 trackBar.Value = (int) numSpinner.Value;
+                
+                if (_isClicked) return;
+
                 ValueChanged?.Invoke(this, numSpinner.Value);
             };
 
-            trackBar.MouseDown += (s, args) => { _isClicked = true; };
+            trackBar.MouseDown += (s, args) => _isClicked = true;
 
             trackBar.MouseUp += (s, args) =>
             {
