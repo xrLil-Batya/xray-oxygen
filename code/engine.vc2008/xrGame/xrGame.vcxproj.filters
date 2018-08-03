@@ -6842,9 +6842,6 @@
     <ClCompile Include="stalker_animation_manager_update.cpp">
       <Filter>AI\AMonsters\humans\stalker\AnimationManager</Filter>
     </ClCompile>
-    <ClCompile Include="stalker_animation_script.cpp">
-      <Filter>AI\AMonsters\humans\stalker\AnimationManager</Filter>
-    </ClCompile>
     <ClCompile Include="stalker_animation_torso.cpp">
       <Filter>AI\AMonsters\humans\stalker\AnimationManager</Filter>
     </ClCompile>
