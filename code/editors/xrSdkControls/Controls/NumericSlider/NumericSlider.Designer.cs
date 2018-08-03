@@ -28,60 +28,50 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.trackBar = new System.Windows.Forms.TrackBar();
             this.numSpinner = new System.Windows.Forms.NumericUpDown();
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
+            this.trackBar = new System.Windows.Forms.TrackBar();
             ((System.ComponentModel.ISupportInitialize)(this.numSpinner)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).BeginInit();
             this.SuspendLayout();
-            // 
-            // trackBar
-            // 
-            this.trackBar.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
-            | System.Windows.Forms.AnchorStyles.Right)));
-            this.trackBar.AutoSize = false;
-            this.trackBar.BackColor = System.Drawing.SystemColors.Window;
-            this.trackBar.Location = new System.Drawing.Point(0, -1);
-            this.trackBar.Margin = new System.Windows.Forms.Padding(3, 3, 0, 3);
-            this.trackBar.Minimum = 0;
-            this.trackBar.Maximum = 100;
-            this.trackBar.MinimumSize = new System.Drawing.Size(32, 0);
-            this.trackBar.Name = "trackBar";
-            this.trackBar.Size = new System.Drawing.Size(212, 23);
-            this.trackBar.SmallChange = 16;
-            this.trackBar.TabIndex = 4;
-            this.trackBar.TabStop = false;
-            this.trackBar.TickFrequency = 64;
-            this.trackBar.TickStyle = System.Windows.Forms.TickStyle.None;
             // 
             // numSpinner
             // 
             this.numSpinner.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.numSpinner.Font = new System.Drawing.Font("Tahoma", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(204)));
-            this.numSpinner.Hexadecimal = false;
-            this.numSpinner.Increment = 1;
             this.numSpinner.Location = new System.Drawing.Point(212, 0);
-            this.numSpinner.Maximum = 10;
-            this.numSpinner.Minimum = 0;
+            this.numSpinner.Maximum = new decimal(new int[] {
+            255,
+            0,
+            0,
+            0});
             this.numSpinner.MinimumSize = new System.Drawing.Size(32, 0);
             this.numSpinner.Name = "numSpinner";
             this.numSpinner.Size = new System.Drawing.Size(44, 21);
             this.numSpinner.TabIndex = 0;
-            this.numSpinner.Value = 0;
+            // 
+            // trackBar
+            // 
+            this.trackBar.Location = new System.Drawing.Point(3, 0);
+            this.trackBar.Maximum = 255;
+            this.trackBar.Name = "trackBar";
+            this.trackBar.Size = new System.Drawing.Size(203, 45);
+            this.trackBar.TabIndex = 1;
             // 
             // NumericSlider
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.SystemColors.Window;
-            this.Controls.Add(this.numSpinner);
             this.Controls.Add(this.trackBar);
+            this.Controls.Add(this.numSpinner);
             this.MaximumSize = new System.Drawing.Size(9000, 21);
             this.MinimumSize = new System.Drawing.Size(64, 21);
             this.Name = "NumericSlider";
             this.Size = new System.Drawing.Size(256, 21);
-            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numSpinner)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.trackBar)).EndInit();
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
