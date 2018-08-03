@@ -39,7 +39,7 @@ namespace xrPostprocessEditor
             {
                 new ChannelDesc(tpAC, kfbAC, PostProcessParamType.AddColor, UpdateAddColor),
                 new ChannelDesc(tpBC, kfbBC, PostProcessParamType.BaseColor, UpdateBaseColor),
-                new ChannelDesc(tpGC, kfbGC, PostProcessParamType.GrayColor, UpdateGC),
+                new ChannelDesc(tpGC, kfbGC, PostProcessParamType.GrayColor, UpdateGrayColor),
                 new ChannelDesc(tpDuality, kfbDuality, PostProcessParamType.DualityH, UpdateDuality),
                 new ChannelDesc(tpNoise, kfbNoise, PostProcessParamType.NoiseIntensity, UpdateNoise),
                 new ChannelDesc(tpBlur, kfbBlur, PostProcessParamType.Blur, UpdateBlur),
@@ -90,7 +90,7 @@ namespace xrPostprocessEditor
             cpBC.Value = ConvertColor(value);
         }
 
-        private void UpdateGC(int keyIndex)
+        private void UpdateGrayColor(int keyIndex)
         {
             ColorF value = Engine.GetGrayColor(keyIndex);
             cpGC.Value = ConvertColor(value);
@@ -237,6 +237,7 @@ namespace xrPostprocessEditor
 
             cpAC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.AddColor, color);
             cpBC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.BaseColor, color);
+            cpGC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.GrayColor, color);
         }
 
         private void UpdateEngineValue(PostProcessParamType paramType, Color color)
@@ -244,12 +245,12 @@ namespace xrPostprocessEditor
             var channel = _chInfo.First(ch => ch.Type == paramType);
             if (channel.SelectedKey == -1) return;
 
-            UpdateEngineValue(channel.SelectedKey, color);
+            UpdateEngineValue(channel.SelectedKey, paramType, color);
         }
 
-        private void UpdateEngineValue(int keyTimeIdx, Color value)
+        private void UpdateEngineValue(int keyTimeIdx, PostProcessParamType paramType, Color value)
         {
-            Engine.UpdateAddColor(keyTimeIdx, value);
+            Engine.UpdateColorValue(keyTimeIdx, paramType, value);
         }
     }
 }
