@@ -1,0 +1,505 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{ED09C434-4581-302D-BE05-B61A938ED2AE}</ProjectGuid>
+    <RootNamespace>xrLevelEditor</RootNamespace>
+    <Keyword>Qt4VSv1.0</Keyword>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>release\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <IntermediateDirectory>release\</IntermediateDirectory>
+    <PrimaryOutput>xrLevelEditor</PrimaryOutput>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <PlatformToolset>v141</PlatformToolset>
+    <OutputDirectory>debug\</OutputDirectory>
+    <ATLMinimizesCRunTimeLibraryUsage>false</ATLMinimizesCRunTimeLibraryUsage>
+    <CharacterSet>NotSet</CharacterSet>
+    <ConfigurationType>Application</ConfigurationType>
+    <IntermediateDirectory>debug\</IntermediateDirectory>
+    <PrimaryOutput>xrLevelEditor</PrimaryOutput>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <PropertyGroup Condition="'$(QtMsBuild)'=='' or !Exists('$(QtMsBuild)\qt.targets')">
+    <QtMsBuild>$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.props')">
+    <Import Project="$(QtMsBuild)\qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">xrLevelEditor</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</IgnoreImportLibrary>
+    <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</LinkIncremental>
+    <OutDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\</OutDir>
+    <IntDir Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(Platform)\$(Configuration)\</IntDir>
+    <TargetName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">xrLevelEditor</TargetName>
+    <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;release;\include;$(QTDIR)\mkspecs\win32-msvc;$(ProjectDir)\src;I:\oxyl\xray-oxygen\code\engine.vc2008\xrCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>release\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <Optimization>MaxSpeed</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmain.lib;shell32.lib;$(QTDIR)\lib\Qt5Quick.lib;$(QTDIR)\lib\Qt5Gui.lib;$(QTDIR)\lib\Qt5Qml.lib;$(QTDIR)\lib\Qt5Network.lib;$(QTDIR)\lib\Qt5Core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;C:\utils\my_sql\my_sql\lib;C:\utils\postgresql\pgsql\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <LinkIncremental>false</LinkIncremental>
+      <OutputFile>$(OutDir)\xrLevelEditor.exe</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;QT_DEPRECATED_WARNINGS;QT_NO_DEBUG;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <QtRcc>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <InitFuncName>qml</InitFuncName>
+      <Compression>default</Compression>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+    </QtRcc>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <AdditionalIncludeDirectories>.\GeneratedFiles\$(ConfigurationName);.\GeneratedFiles;.;$(QTDIR)\include;$(QTDIR)\include\QtQuick;$(QTDIR)\include\QtGui;$(QTDIR)\include\QtANGLE;$(QTDIR)\include\QtQml;$(QTDIR)\include\QtNetwork;$(QTDIR)\include\QtCore;debug;\include;$(QTDIR)\mkspecs\win32-msvc;$(ProjectDir)\src;I:\oxyl\xray-oxygen\code\engine.vc2008\xrCore;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalOptions>-Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 %(AdditionalOptions)</AdditionalOptions>
+      <AssemblerListingLocation>debug\</AssemblerListingLocation>
+      <BrowseInformation>false</BrowseInformation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DisableSpecificWarnings>4577;4467;%(DisableSpecificWarnings)</DisableSpecificWarnings>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <ObjectFileName>$(IntDir)</ObjectFileName>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessToFile>false</PreprocessToFile>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <WarningLevel>Level3</WarningLevel>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <ProgramDataBaseFileName>$(IntDir)vc$(PlatformToolsetVersion).pdb</ProgramDataBaseFileName>
+    </ClCompile>
+    <Link>
+      <AdditionalDependencies>$(QTDIR)\lib\qtmaind.lib;shell32.lib;$(QTDIR)\lib\Qt5Quickd.lib;$(QTDIR)\lib\Qt5Guid.lib;$(QTDIR)\lib\Qt5Qmld.lib;$(QTDIR)\lib\Qt5Networkd.lib;$(QTDIR)\lib\Qt5Cored.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>$(QTDIR)\lib;C:\utils\my_sql\my_sql\lib;C:\utils\postgresql\pgsql\lib;$(QTDIR)\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalOptions>"/MANIFESTDEPENDENCY:type='win32' name='Microsoft.Windows.Common-Controls' version='6.0.0.0' publicKeyToken='6595b64144ccf1df' language='*' processorArchitecture='*'" %(AdditionalOptions)</AdditionalOptions>
+      <DataExecutionPrevention>true</DataExecutionPrevention>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <IgnoreImportLibrary>true</IgnoreImportLibrary>
+      <OutputFile>$(OutDir)\xrLevelEditor.exe</OutputFile>
+      <RandomizedBaseAddress>true</RandomizedBaseAddress>
+      <SubSystem>Windows</SubSystem>
+      <SuppressStartupBanner>true</SuppressStartupBanner>
+    </Link>
+    <Midl>
+      <DefaultCharType>Unsigned</DefaultCharType>
+      <EnableErrorChecks>None</EnableErrorChecks>
+      <WarningLevel>0</WarningLevel>
+    </Midl>
+    <ResourceCompile>
+      <PreprocessorDefinitions>_WINDOWS;UNICODE;_UNICODE;WIN32;WIN64;QT_DEPRECATED_WARNINGS;QT_QUICK_LIB;QT_GUI_LIB;QT_QML_LIB;QT_NETWORK_LIB;QT_CORE_LIB;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ResourceCompile>
+    <QtRcc>
+      <QTDIR>$(QTDIR)</QTDIR>
+      <InputFile>%(FullPath)</InputFile>
+      <OutputFile>.\GeneratedFiles\qrc_%(Filename).cpp</OutputFile>
+      <InitFuncName>qml</InitFuncName>
+      <Compression>default</Compression>
+      <ExecutionDescription>Rcc'ing %(Identity)...</ExecutionDescription>
+    </QtRcc>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="src\Edit\AppendObjectInfoForm.cpp" />
+    <ClCompile Include="src\BottomBar.cpp" />
+    <ClCompile Include="src\Edit\Builder.cpp" />
+    <ClCompile Include="src\Edit\BuilderCF.cpp" />
+    <ClCompile Include="src\Edit\BuilderCore.cpp" />
+    <ClCompile Include="src\Edit\BuilderGame.cpp" />
+    <ClCompile Include="src\Edit\BuilderLODs.cpp" />
+    <ClCompile Include="src\Edit\BuilderLTX.cpp" />
+    <ClCompile Include="src\Edit\BuilderOGF.cpp" />
+    <ClCompile Include="src\Edit\BuilderRemote.cpp" />
+    <ClCompile Include="src\Edit\Cursor3D.cpp" />
+    <ClCompile Include="src\Edit\Custom2DProjector.cpp" />
+    <ClCompile Include="src\Edit\CustomObject.cpp" />
+    <ClCompile Include="src\Edit\CustomObjectAnimation.cpp" />
+    <ClCompile Include="src\Edit\CustomObjectLE.cpp" />
+    <ClCompile Include="src\DOOneColor.cpp" />
+    <ClCompile Include="src\DOShuffle.cpp" />
+    <ClCompile Include="src\Edit\ELight.cpp" />
+    <ClCompile Include="src\Edit\ELight_IO.cpp" />
+    <ClCompile Include="src\Edit\ELight_props.cpp" />
+    <ClCompile Include="src\Edit\EParticlesObject.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools_Controls.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools_Export.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools_Generate.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools_MotionSimulator.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools_Pick.cpp" />
+    <ClCompile Include="src\Edit\ESceneAIMapTools_Render.cpp" />
+    <ClCompile Include="src\Edit\ESceneControlsCustom.cpp" />
+    <ClCompile Include="src\Edit\ESceneCustomMTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneCustomMToolsControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneCustomOTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneCustomOToolsFactory.cpp" />
+    <ClCompile Include="src\Edit\ESceneCustomOToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneDOTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneDOTools_Controls.cpp" />
+    <ClCompile Include="src\Edit\ESceneDOTools_Generate.cpp" />
+    <ClCompile Include="src\Edit\ESceneDOTools_Pick.cpp" />
+    <ClCompile Include="src\Edit\ESceneDummyTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneFogVolumeTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneGlowTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneGlowToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneGroupControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneGroupTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneGroupToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneLightTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneLightToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneObjectControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneObjectTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneObjectToolsExportBreakable.cpp" />
+    <ClCompile Include="src\Edit\ESceneObjectToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneObjectTools_.cpp" />
+    <ClCompile Include="src\Edit\ESceneObjectTools__.cpp" />
+    <ClCompile Include="src\Edit\EScenePSControls.cpp" />
+    <ClCompile Include="src\Edit\EScenePSTools.cpp" />
+    <ClCompile Include="src\Edit\EScenePSToolsIO.cpp" />
+    <ClCompile Include="src\Edit\EScenePortalControls.cpp" />
+    <ClCompile Include="src\Edit\EScenePortalTools.cpp" />
+    <ClCompile Include="src\Edit\EScenePortalToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneSectorControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneSectorTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneSectorToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneShapeControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneShapeTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneShapeToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneSoundEnvTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneSoundEnvToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneSoundSrcTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneSoundSrcToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneSpawnControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneSpawnTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneSpawnToolsIO.cpp" />
+    <ClCompile Include="src\Edit\ESceneWallmarkControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneWallmarkTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneWayControls.cpp" />
+    <ClCompile Include="src\Edit\ESceneWayTools.cpp" />
+    <ClCompile Include="src\Edit\ESceneWayToolsIO.cpp" />
+    <ClCompile Include="src\Edit\EShape.cpp" />
+    <ClCompile Include="src\Edit\ESound_Environment.cpp" />
+    <ClCompile Include="src\Edit\ESound_Source.cpp" />
+    <ClCompile Include="src\EditLibrary.cpp" />
+    <ClCompile Include="src\EditLightAnim.cpp" />
+    <ClCompile Include="src\Edit\EditObjectExportLWO.cpp" />
+    <ClCompile Include="src\Edit\FS2.cpp" />
+    <ClCompile Include="src\FrameAIMap.cpp" />
+    <ClCompile Include="src\FrameDetObj.cpp" />
+    <ClCompile Include="src\FrameEmitter.cpp" />
+    <ClCompile Include="src\FrameFogVol.cpp" />
+    <ClCompile Include="src\FrameGroup.cpp" />
+    <ClCompile Include="src\FrameLight.cpp" />
+    <ClCompile Include="src\FrameObject.cpp" />
+    <ClCompile Include="src\FramePS.cpp" />
+    <ClCompile Include="src\FramePortal.cpp" />
+    <ClCompile Include="src\FrameSector.cpp" />
+    <ClCompile Include="src\FrameShape.cpp" />
+    <ClCompile Include="src\FrameSpawn.cpp" />
+    <ClCompile Include="src\FrameWayPoint.cpp" />
+    <ClCompile Include="src\FrmDBXpacker.cpp" />
+    <ClCompile Include="src\Edit\GeometryPartExtractor.cpp" />
+    <ClCompile Include="src\Edit\GroupObject.cpp" />
+    <ClCompile Include="src\Edit\GroupObjectUtils.cpp" />
+    <ClCompile Include="src\LEClipEditor.cpp" />
+    <ClCompile Include="src\LEPhysics.cpp" />
+    <ClCompile Include="src\LeftBar.cpp" />
+    <ClCompile Include="src\LevelEditor.cpp" />
+    <ClCompile Include="src\Edit\LevelPreferences.cpp" />
+    <ClCompile Include="src\ObjectList.cpp" />
+    <ClCompile Include="src\PropertiesEObject.cpp" />
+    <ClCompile Include="src\RightForm.cpp" />
+    <ClCompile Include="src\Edit\SceneIO.cpp" />
+    <ClCompile Include="src\Edit\SceneObject.cpp" />
+    <ClCompile Include="src\Edit\SceneObjectIO.cpp" />
+    <ClCompile Include="src\Edit\ScenePick.cpp" />
+    <ClCompile Include="src\Edit\SceneRender.cpp" />
+    <ClCompile Include="src\Edit\SceneSelection.cpp" />
+    <ClCompile Include="src\Edit\SceneSnap.cpp" />
+    <ClCompile Include="src\Edit\SceneSummaryInfo.cpp" />
+    <ClCompile Include="src\Edit\SceneUndo.cpp" />
+    <ClCompile Include="src\Edit\SceneUtil.cpp" />
+    <ClCompile Include="src\Edit\Scene_Tools.cpp" />
+    <ClCompile Include="src\ShaderFunction.cpp" />
+    <ClCompile Include="src\Edit\SoundManager_LE.cpp" />
+    <ClCompile Include="src\Edit\SpawnPoint.cpp" />
+    <ClCompile Include="src\Splash.cpp" />
+    <ClCompile Include="src\TopBar.cpp" />
+    <ClCompile Include="src\Edit\UI_LevelMain.cpp" />
+    <ClCompile Include="src\Edit\UI_LevelTools.cpp" />
+    <ClCompile Include="src\Edit\WayPoint.cpp" />
+    <ClCompile Include="src\Edit\glow.cpp" />
+    <ClCompile Include="src\iniStreamImpl.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Edit\portal.cpp" />
+    <ClCompile Include="src\Edit\portalutils.cpp" />
+    <ClCompile Include="src\previewimage.cpp" />
+    <ClCompile Include="src\Edit\scene.cpp" />
+    <ClCompile Include="src\Edit\sector.cpp" />
+    <ClCompile Include="src\stdafx.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="src\Edit\AppendObjectInfoForm.h" />
+    <ClInclude Include="src\BottomBar.h" />
+    <ClInclude Include="src\Edit\Builder.h" />
+    <ClInclude Include="src\Edit\Cursor3D.h" />
+    <ClInclude Include="src\Edit\Custom2DProjector.h" />
+    <ClInclude Include="src\Edit\CustomObject.h" />
+    <ClInclude Include="src\DOOneColor.h" />
+    <ClInclude Include="src\DOShuffle.h" />
+    <ClInclude Include="src\Edit\ELight.h" />
+    <ClInclude Include="src\Edit\ELight_def.h" />
+    <ClInclude Include="src\Edit\EParticlesObject.h" />
+    <ClInclude Include="src\Edit\ESceneAIMapControls.h" />
+    <ClInclude Include="src\Edit\ESceneAIMapTools.h" />
+    <ClInclude Include="src\Edit\ESceneAIMapTools_Export.h" />
+    <ClInclude Include="src\Edit\ESceneClassList.h" />
+    <ClInclude Include="src\Edit\ESceneControlsCustom.h" />
+    <ClInclude Include="src\Edit\ESceneCustomMTools.h" />
+    <ClInclude Include="src\Edit\ESceneCustomOTools.h" />
+    <ClInclude Include="src\Edit\ESceneDOTools.h" />
+    <ClInclude Include="src\Edit\ESceneDummyTools.h" />
+    <ClInclude Include="src\Edit\ESceneFogVolumeTools.h" />
+    <ClInclude Include="src\Edit\ESceneGlowTools.h" />
+    <ClInclude Include="src\Edit\ESceneGroupControls.h" />
+    <ClInclude Include="src\Edit\ESceneGroupTools.h" />
+    <ClInclude Include="src\Edit\ESceneLightTools.h" />
+    <ClInclude Include="src\Edit\ESceneObjectControls.h" />
+    <ClInclude Include="src\Edit\ESceneObjectTools.h" />
+    <ClInclude Include="src\Edit\EScenePSControls.h" />
+    <ClInclude Include="src\Edit\EScenePSTools.h" />
+    <ClInclude Include="src\Edit\EScenePortalControls.h" />
+    <ClInclude Include="src\Edit\EScenePortalTools.h" />
+    <ClInclude Include="src\Edit\ESceneSectorControls.h" />
+    <ClInclude Include="src\Edit\ESceneSectorTools.h" />
+    <ClInclude Include="src\Edit\ESceneShapeControls.h" />
+    <ClInclude Include="src\Edit\ESceneShapeTools.h" />
+    <ClInclude Include="src\Edit\ESceneSoundEnvTools.h" />
+    <ClInclude Include="src\Edit\ESceneSoundSrcTools.h" />
+    <ClInclude Include="src\Edit\ESceneSpawnControls.h" />
+    <ClInclude Include="src\Edit\ESceneSpawnTools.h" />
+    <ClInclude Include="src\Edit\ESceneWallmarkControls.h" />
+    <ClInclude Include="src\Edit\ESceneWallmarkTools.h" />
+    <ClInclude Include="src\Edit\ESceneWayControls.h" />
+    <ClInclude Include="src\Edit\ESceneWayTools.h" />
+    <ClInclude Include="src\Edit\EShape.h" />
+    <ClInclude Include="src\Edit\ESound_Environment.h" />
+    <ClInclude Include="src\Edit\ESound_Source.h" />
+    <ClInclude Include="src\EditLibrary.h" />
+    <ClInclude Include="src\EditLightAnim.h" />
+    <ClInclude Include="src\Edit\FS2.h" />
+    <ClInclude Include="src\FrameAIMap.h" />
+    <ClInclude Include="src\FrameDetObj.h" />
+    <ClInclude Include="src\FrameEmitter.h" />
+    <ClInclude Include="src\FrameFogVol.h" />
+    <ClInclude Include="src\FrameGroup.h" />
+    <ClInclude Include="src\FrameLight.h" />
+    <ClInclude Include="src\FrameObject.h" />
+    <ClInclude Include="src\FramePS.h" />
+    <ClInclude Include="src\FramePortal.h" />
+    <ClInclude Include="src\FrameSector.h" />
+    <ClInclude Include="src\FrameShape.h" />
+    <ClInclude Include="src\FrameSpawn.h" />
+    <ClInclude Include="src\FrameWayPoint.h" />
+    <ClInclude Include="src\FrmDBXpacker.h" />
+    <ClInclude Include="src\Edit\GeometryPartExtractor.h" />
+    <ClInclude Include="src\Edit\GroupObject.h" />
+    <ClInclude Include="src\LEClipEditor.h" />
+    <ClInclude Include="src\LeftBar.h" />
+    <ClInclude Include="src\Edit\LevelPreferences.h" />
+    <ClInclude Include="src\ObjectList.h" />
+    <ClInclude Include="src\PropertiesEObject.h" />
+    <ClInclude Include="src\RightForm.h" />
+    <ClInclude Include="src\Edit\SceneGraph.h" />
+    <ClInclude Include="src\Edit\SceneObject.h" />
+    <ClInclude Include="src\Edit\SceneSummaryInfo.h" />
+    <ClInclude Include="src\ShaderFunction.h" />
+    <ClInclude Include="src\Engine\ShapeData.h" />
+    <ClInclude Include="src\Edit\SoundManager_LE.h" />
+    <ClInclude Include="src\Edit\SpawnPoint.h" />
+    <ClInclude Include="src\Splash.h" />
+    <ClInclude Include="src\TopBar.h" />
+    <ClInclude Include="src\Edit\UI_LevelMain.h" />
+    <ClInclude Include="src\Edit\UI_LevelTools.h" />
+    <ClInclude Include="src\Edit\WayPoint.h" />
+    <ClInclude Include="src\Engine\communicate.h" />
+    <ClInclude Include="src\Edit\glow.h" />
+    <ClInclude Include="src\iniStreamImpl.h" />
+    <ClInclude Include="src\lephysics.h" />
+    <ClInclude Include="src\Edit\lwchunks.h" />
+    <ClInclude Include="src\main.h" />
+    <ClInclude Include="src\mesh_data.h" />
+    <ClInclude Include="src\Edit\portal.h" />
+    <ClInclude Include="src\Edit\portalutils.h" />
+    <ClInclude Include="src\previewimage.h" />
+    <ClInclude Include="src\Edit\scene.h" />
+    <ClInclude Include="src\Edit\sector.h" />
+    <ClInclude Include="src\stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <CustomBuild Include="debug\moc_predefs.h.cbt">
+      <FileType>Document</FileType>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -Zi -MDd -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;debug\moc_predefs.h</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Generate moc_predefs.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">debug\moc_predefs.h;%(Outputs)</Outputs>
+    </CustomBuild>
+    <CustomBuild Include="release\moc_predefs.h.cbt">
+      <FileType>Document</FileType>
+      <AdditionalInputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">$(QTDIR)\mkspecs\features\data\dummy.cpp;%(AdditionalInputs)</AdditionalInputs>
+      <Command Condition="'$(Configuration)|$(Platform)'=='Release|x64'">cl -Bx"$(QTDIR)\bin\qmake.exe" -nologo -Zc:wchar_t -FS -Zc:rvalueCast -Zc:inline -Zc:strictStrings -Zc:throwingNew -Zc:referenceBinding -O2 -MD -W3 -w34100 -w34189 -w44996 -w44456 -w44457 -w44458 -wd4577 -wd4467 -E $(QTDIR)\mkspecs\features\data\dummy.cpp 2&gt;NUL &gt;release\moc_predefs.h</Command>
+      <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
+      <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+    </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="main.qml" />
+    <QtRcc Include="qml.qrc">
+    </QtRcc>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="src\Edit\AppendObjectInfoForm.ddp" />
+    <None Include="src\Edit\AppendObjectInfoForm.dfm" />
+    <None Include="src\BottomBar.ddp" />
+    <None Include="src\BottomBar.dfm" />
+    <None Include="src\DOOneColor.ddp" />
+    <None Include="src\DOOneColor.dfm" />
+    <None Include="src\DOShuffle.ddp" />
+    <None Include="src\DOShuffle.dfm" />
+    <None Include="src\EditLibrary.ddp" />
+    <None Include="src\EditLibrary.dfm" />
+    <None Include="src\EditLightAnim.ddp" />
+    <None Include="src\EditLightAnim.dfm" />
+    <None Include="src\FrameAIMap.ddp" />
+    <None Include="src\FrameAIMap.dfm" />
+    <None Include="src\FrameDetObj.ddp" />
+    <None Include="src\FrameDetObj.dfm" />
+    <None Include="src\FrameEmitter.ddp" />
+    <None Include="src\FrameEmitter.dfm" />
+    <None Include="src\FrameFogVol.ddp" />
+    <None Include="src\FrameFogVol.dfm" />
+    <None Include="src\FrameGroup.ddp" />
+    <None Include="src\FrameGroup.dfm" />
+    <None Include="src\FrameLight.ddp" />
+    <None Include="src\FrameLight.dfm" />
+    <None Include="src\FrameObject.ddp" />
+    <None Include="src\FrameObject.dfm" />
+    <None Include="src\FramePS.ddp" />
+    <None Include="src\FramePS.dfm" />
+    <None Include="src\FramePortal.ddp" />
+    <None Include="src\FramePortal.dfm" />
+    <None Include="src\FrameSector.ddp" />
+    <None Include="src\FrameSector.dfm" />
+    <None Include="src\FrameShape.ddp" />
+    <None Include="src\FrameShape.dfm" />
+    <None Include="src\FrameSpawn.ddp" />
+    <None Include="src\FrameSpawn.dfm" />
+    <None Include="src\FrameWayPoint.ddp" />
+    <None Include="src\FrameWayPoint.dfm" />
+    <None Include="src\FrmDBXpacker.ddp" />
+    <None Include="src\FrmDBXpacker.dfm" />
+    <None Include="src\LEClipEditor.ddp" />
+    <None Include="src\LEClipEditor.dfm" />
+    <None Include="src\LeftBar.ddp" />
+    <None Include="src\LeftBar.dfm" />
+    <None Include="src\LevelEditor.bpr" />
+    <None Include="src\LevelEditor.res" />
+    <None Include="src\LevelEditor.todo" />
+    <None Include="src\ObjectList.ddp" />
+    <None Include="src\ObjectList.dfm" />
+    <None Include="src\PropertiesEObject.ddp" />
+    <None Include="src\PropertiesEObject.dfm" />
+    <None Include="src\RightForm.dfm" />
+    <None Include="src\ShaderFunction.dfm" />
+    <None Include="src\Splash.dfm" />
+    <None Include="src\TopBar.ddp" />
+    <None Include="src\TopBar.dfm" />
+    <None Include="src\main.ddp" />
+    <None Include="src\main.dfm" />
+    <None Include="src\previewimage.ddp" />
+    <None Include="src\previewimage.dfm" />
+    <None Include="src\resource.res" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xrLevelEditor.rc" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties UicDir=".\GeneratedFiles" RccDir=".\GeneratedFiles" Qt5Version_x0020_x64="msvc2017_64" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
