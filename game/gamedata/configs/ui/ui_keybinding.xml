@@ -65,5 +65,9 @@
 	</group>
 	<group name="kb_grp_developer">
 		<command id="kb_dev_noclip"				exe="dev_noclip"/>
+		<command id="kb_dev_action1"			exe="dev_action1"/>
+		<command id="kb_dev_action2"			exe="dev_action2"/>
+		<command id="kb_dev_action3"			exe="dev_action3"/>
+		<command id="kb_dev_action4"			exe="dev_action4"/>
 	</group>
 </keybingidg>

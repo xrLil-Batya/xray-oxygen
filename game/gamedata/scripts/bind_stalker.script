@@ -81,6 +81,9 @@ function actor_binder:net_destroy()
 	self.object:set_callback(callback.level_border_exit, nil)
 	self.object:set_callback(callback.take_item_from_box, nil)
 	self.object:set_callback(callback.use_object, nil)
+	self.object:set_callback(callback.on_action_press, 	 nil)
+	self.object:set_callback(callback.on_action_release, nil)
+	self.object:set_callback(callback.on_action_hold,    nil)
 
 	log("--------->"..tostring(_G.amb_vol))
 	log("--------->"..tostring(_G.mus_vol))
@@ -116,6 +119,10 @@ function actor_binder:reinit()
 	self.object:set_callback(callback.task_state, self.task_callback, self)
 	self.object:set_callback(callback.take_item_from_box, self.take_item_from_box, self)
 	self.object:set_callback(callback.use_object, self.use_inventory_item, self)
+	
+	self.object:set_callback(callback.on_action_press, 	 self.on_action_press, self)
+	self.object:set_callback(callback.on_action_release, self.on_action_release, self)
+	self.object:set_callback(callback.on_action_hold,    self.on_action_hold, self)
 end
 ----------------------------------------------------------------------------------------------------------------------
 function actor_binder:take_item_from_box(box, item)
@@ -504,6 +511,22 @@ function actor_binder:check_mutant_hunter_achievement()
 	end
 
 end
+
+----------------------------------------------------------------------------------------------------------------------
+-- [[ Key Actions ]] --
+
+function actor_binder:on_action_press(key)
+end
+
+function actor_binder:on_action_release(key)
+	-- if (key == key_bindings.kDEV_ACTION1) then
+		-- debuggerTrigger()
+	-- end
+end
+
+function actor_binder:on_action_hold(key)
+end
+----------------------------------------------------------------------------------------------------------------------
 
 function check_for_weapon_hide_by_zones()
 	for k,v in pairs(weapon_hide) do
