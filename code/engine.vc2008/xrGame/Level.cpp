@@ -100,6 +100,21 @@ bool CLevel::PostponedSpawn(u16 id)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+void mtLevelScriptUpdater(void* pCLevel)
+{
+	CLevel* pLevel = reinterpret_cast<CLevel*>(pCLevel);
+	while (true)
+	{
+		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
+		if (Device.mt_bMustExit) return;
+
+		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+		if (levelScript) levelScript->update();
+
+		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
+	}
+}
+
 CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 {
 	g_bDebugEvents				= strstr(Core.Params,"-debug_ge")?TRUE:FALSE;
@@ -149,12 +164,18 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	g_player_hud->load_default();
 	
 	hud_zones_list = nullptr;
+
+	m_mtScriptUpdaterEventStart = CreateEvent(NULL, FALSE, FALSE, NULL);
+	m_mtScriptUpdaterEventEnd = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	thread_spawn(mtLevelScriptUpdater, "X-Ray: Level Script Update", 0, this);
 }
 
 extern CAI_Space *g_ai_space;
 
 CLevel::~CLevel()
 {
+	SetEvent(m_mtScriptUpdaterEventStart);
 	xr_delete(g_player_hud);
 	delete_data(hud_zones_list);
 	hud_zones_list = NULL;
@@ -228,6 +249,8 @@ CLevel::~CLevel()
 
 	if (g_tutorial2 && g_tutorial2->m_pStoredInputReceiver == this)
 		g_tutorial2->m_pStoredInputReceiver = nullptr;
+	CloseHandle(m_mtScriptUpdaterEventStart);
+	CloseHandle(m_mtScriptUpdaterEventEnd);
 }
 
 shared_str CLevel::name() const
@@ -431,14 +454,8 @@ void CLevel::OnFrame()
 #endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
-	auto ScriptThreadFun = []()
-	{
-		thread_name("X-Ray: Level Script Update");
-		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-		if (levelScript) levelScript->update();
-	};
-
-	std::thread ScriptThread(ScriptThreadFun);
+	ResetEvent(m_mtScriptUpdaterEventEnd);
+	SetEvent(m_mtScriptUpdaterEventStart);
 
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
@@ -462,7 +479,7 @@ void CLevel::OnFrame()
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
 	}
 
-	ScriptThread.join();
+	WaitForSingleObject(m_mtScriptUpdaterEventEnd, INFINITE);
 }
 
 int		psLUA_GCSTEP					= 10			;

@@ -1099,8 +1099,8 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			
 			switch(m_currMenuMode)
 			{
-				case mmInventory: RemoveItemFromList(m_pDeadBodyBagList, item); break;
-				case mmDeadBodyOrContainerSearch: RemoveItemFromList(m_pInventoryBagList, item); break;
+				case mmInventory: RemoveItemFromList(m_pInventoryBagList, item); break;
+				case mmDeadBodyOrContainerSearch: RemoveItemFromList(m_pDeadBodyBagList, item); break;
 			}
 
 			break;

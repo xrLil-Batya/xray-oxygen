@@ -233,9 +233,7 @@ bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToPartnerTrade(itm, b_use_cursor_pos);
-#endif
 	UpdatePrices();
 	return true;
 }
@@ -259,9 +257,7 @@ bool CUIActorMenu::ToPartnerTradeBag(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToPartnerTradeBag(itm, b_use_cursor_pos);
-#endif
 	return true;
 }
 
@@ -502,20 +498,6 @@ void CUIActorMenu::TransferItems( CUIDragDropListEx* pSellList, CUIDragDropListE
 		CUICellItem* cell_item = pSellList->RemoveItem( pSellList->GetItemIdx(0), false );
 		PIItem item = (PIItem)cell_item->m_pData;
 		pTrade->TransferItem( item, bBuying );
-		
-		if ( bBuying )
-		{
-			SInvItemPlace	pl;
-			pl.type		= eItemPlaceRuck;
-			if ( pTrade->pThis.inv_owner->CInventoryOwner::AllowItemToTrade( item, pl ) )
-			{
-				pBuyList->SetItem( cell_item );
-			}
-		}
-		else
-		{
-			pBuyList->SetItem( cell_item );
-		}
 	}
 	pTrade->pThis.inv_owner->set_money(    pTrade->pThis.inv_owner->get_money(),    true );
 	pTrade->pPartner.inv_owner->set_money( pTrade->pPartner.inv_owner->get_money(), true );
