@@ -607,15 +607,9 @@ void CCC_Register()
 	CMD1(CCC_MotionsStat,	"stat_motions"		);
 
 #ifdef DEBUG
-	CMD3(CCC_Mask,		"mt_particles",			&psDeviceFlags,			mtParticles);
-
 	CMD1(CCC_DbgStrCheck,	"dbg_str_check"		);
 	CMD1(CCC_DbgStrDump,	"dbg_str_dump"		);
 
-	CMD3(CCC_Mask,		"mt_sound",				&psDeviceFlags,			mtSound);
-	CMD3(CCC_Mask,		"mt_physics",			&psDeviceFlags,			mtPhysics);
-	CMD3(CCC_Mask,		"mt_network",			&psDeviceFlags,			mtNetwork);
-	
 	// Events
 	CMD1(CCC_E_Dump,	"e_list"				);
 	CMD1(CCC_E_Signal,	"e_signal"				);
