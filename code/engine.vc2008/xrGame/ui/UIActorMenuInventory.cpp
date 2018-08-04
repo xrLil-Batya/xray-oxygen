@@ -590,9 +590,7 @@ bool CUIActorMenu::ToBag(CUICellItem* itm, bool b_use_cursor_pos)
 		{
 			ColorizeItem( itm, !CanMoveToPartner( iitem ) );
 		}
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToBag(itm, (old_owner == new_owner));
-#endif
 		return true;
 	}
 	return false;
@@ -1095,11 +1093,16 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 		}
 	case INVENTORY_ATTACH_ADDON:
 		{
-			PIItem item = CurrentIItem(); // temporary storing because of AttachAddon is setting curiitem to NULL
+			// temporary storing because of AttachAddon is setting curiitem to NULL
+			PIItem item = CurrentIItem();
 			AttachAddon((PIItem)(m_UIPropertiesBox->GetClickedItem()->GetData()));
-			if(m_currMenuMode==mmDeadBodyOrContainerSearch)
-				RemoveItemFromList(m_pDeadBodyBagList, item);
 			
+			switch(m_currMenuMode)
+			{
+				case mmInventory: RemoveItemFromList(m_pDeadBodyBagList, item); break;
+				case mmDeadBodyOrContainerSearch: RemoveItemFromList(m_pInventoryBagList, item); break;
+			}
+
 			break;
 		}
 	case INVENTORY_DETACH_SCOPE_ADDON:

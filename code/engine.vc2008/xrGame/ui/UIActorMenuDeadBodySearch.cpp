@@ -179,9 +179,7 @@ bool CUIActorMenu::ToDeadBodyBag(CUICellItem* itm, bool b_use_cursor_pos)
 	{
 		move_item_from_to(m_pActorInvOwner->object_id(), m_pInvBox->ID(), iitem->object_id());
 	}
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToDeadBodyBag(itm, b_use_cursor_pos);
-#endif
 	UpdateDeadBodyBag();
 	return true;
 }
