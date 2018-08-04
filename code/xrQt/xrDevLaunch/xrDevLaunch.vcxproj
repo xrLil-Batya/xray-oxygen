@@ -14,7 +14,7 @@
     <ProjectGuid>{1805BE7B-8E87-395F-A3DC-56D7691D8611}</ProjectGuid>
     <RootNamespace>xrDevLaunch</RootNamespace>
     <Keyword>Qt4VSv1.0</Keyword>
-    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.17134.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">

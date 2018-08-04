@@ -1947,7 +1947,7 @@ void CCC_RegisterCommands()
 
 	// Oxy:
 	CMD1(CCC_SetWeather, "set_weather");
-	CMD3(CCC_Mask, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
+	CMD3(CCC_MaskNoSave, "game_extra_ruck", &g_extraFeatures, GAME_EXTRA_RUCK);
     CMD3(CCC_MaskNoSave, "game_extra_monster_inventory", &g_extraFeatures, GAME_EXTRA_MONSTER_INVENTORY);
     CMD3(CCC_MaskNoSave, "game_extra_spawn_antifreeze", &g_extraFeatures, GAME_EXTRA_SPAWN_ANTIFREEZE);
     CMD3(CCC_MaskNoSave, "game_extra_weapon_autoreload", &g_extraFeatures, GAME_EXTRA_WEAPON_AUTORELOAD);
@@ -1956,6 +1956,7 @@ void CCC_RegisterCommands()
     CMD3(CCC_MaskNoSave, "game_extra_polter_show_particles_on_dead", &g_extraFeatures, GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD);
     CMD3(CCC_MaskNoSave, "game_extra_soc_talk_wnd", &g_extraFeatures, GAME_EXTRA_SOC_WND);
     CMD3(CCC_MaskNoSave, "game_extra_vertical_belts", &g_extraFeatures, GAME_EXTRA_VERTICAL_BELTS);
+    CMD3(CCC_MaskNoSave, "game_extra_thirst", &g_extraFeatures, GAME_EXTRA_THIRST);
 	CMD4(CCC_U32, "hud_adjust_mode", &hud_adj_mode, 0, 5); /// adjust mode support
 }
 

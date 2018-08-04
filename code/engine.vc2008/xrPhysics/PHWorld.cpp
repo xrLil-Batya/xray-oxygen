@@ -26,13 +26,12 @@ IPHWorld * __stdcall physics_world()
 	return ph_world;
 }
 
-void	__stdcall create_physics_world(bool mt, CObjectSpace *os, CObjectList *lo, CRenderDeviceBase *dv)
-//IPHWorldUpdateCallbck &commander,
+void __stdcall create_physics_world(CObjectSpace *os, CObjectList *lo, CRenderDeviceBase *dv)
 {
-	ph_world = xr_new<CPHWorld>(); //&commander
+	ph_world = xr_new<CPHWorld>();
 	VERIFY(os);
 	VERIFY(dv);
-	ph_world->Create(mt, os, lo, dv);
+	ph_world->Create(os, lo, dv);
 }
 
 void	__stdcall	destroy_physics_world()
@@ -125,7 +124,7 @@ void CPHWorld::SetStep(float s)
 		ph_world->m_frame_time = frame_time;
 	}
 }
-void CPHWorld::Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDeviceBase *dv)
+void CPHWorld::Create(CObjectSpace * os, CObjectList *lo, CRenderDeviceBase *dv)
 {
 	LoadParams();
 	dWorldID phWorld = 0;
@@ -133,14 +132,9 @@ void CPHWorld::Create(bool mt, CObjectSpace * os, CObjectList *lo, CRenderDevice
 	m_level_objects = lo;
 	m_device = dv;
 
-	Device().AddSeqFrame(this, mt);
-
-#ifdef ODE_SLOW_SOLVER
-#else
+	Device().AddSeqFrame(this, true);
 
 	dWorldSetAutoEnableDepthSF1(phWorld, 100000000);
-
-#endif
 	ContactGroup = dJointGroupCreate(0);
 	dWorldSetGravity(phWorld, 0, -Gravity(), 0);//-2.f*9.81f
 	Mesh.Create(0, phWorld);

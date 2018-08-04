@@ -27,6 +27,8 @@
 ENGINE_API extern float psHUD_FOV;
 ENGINE_API extern float psHUD_FOV_def;
 
+
+
 CUIXml* pWpnScopeXml = nullptr;
 
 void createWpnScopeXML()
@@ -47,7 +49,9 @@ CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 	m_eSoundReload				= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
 
 #ifdef NEW_ANIMS_WPN
-	m_eSoundReloadEmpty			= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
+	m_eSoundReloadFast			= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
+	m_eSoundReloadBoltOnly		= ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING | eSoundType);
+
 #endif	
 
 	m_sounds_enabled			= true;
@@ -79,7 +83,9 @@ void CWeaponMagazined::Load	(LPCSTR section)
 	m_sounds.LoadSound(section,"snd_reload", "sndReload"		    , true, m_eSoundReload		);
 	
 #ifdef NEW_ANIMS_WPN
-	m_sounds.LoadSound(section,"snd_reload_fast", "sndReloadEmpty"	, true, m_eSoundReloadEmpty	);
+	m_sounds.LoadSound(section,"snd_reload_fast", "sndReloadFast"	, true, m_eSoundReloadFast	);
+	m_sounds.LoadSound(section,"snd_reload_bolt_only", "sndReloadBoltOnly", true, m_eSoundReloadBoltOnly);
+
 #endif
 	
 	m_sSndShotCurrent = "sndShot";
@@ -180,10 +186,10 @@ void CWeaponMagazined::FireEnd()
 
 void CWeaponMagazined::Reload() 
 {
-	bool CurrentAmmoOnMagazine = !!iAmmoElapsed;
+	
 	inherited::Reload();
 	TryReload();
-	iAmmoElapsed += CurrentAmmoOnMagazine;
+	
 }
 
 bool CWeaponMagazined::TryReload() 
@@ -480,7 +486,8 @@ void CWeaponMagazined::UpdateSounds()
 	m_sounds.SetPosition("sndReload", P);
 
 #ifdef NEW_ANIMS_WPN
-	m_sounds.SetPosition("sndReloadEmpty", P);
+	m_sounds.SetPosition("sndReloadFast", P);
+	m_sounds.SetPosition("sndReloadBoltOnly", P);
 #endif
 }
 
@@ -688,10 +695,13 @@ void CWeaponMagazined::PlayReloadSound()
 	if (m_sounds_enabled)
 #ifdef NEW_ANIMS_WPN
 	{
-		if (iAmmoElapsed == 0)
-			PlaySound("sndReload", get_LastFP());
+		if (!bBulletInBarrel && iAmmoElapsed > 0)
+			PlaySound("sndReloadBoltOnly", get_LastFP());		
+		else if(iAmmoElapsed == 0)
+			PlaySound("sndReload", get_LastFP());			
 		else
-			PlaySound("sndReloadEmpty", get_LastFP());
+			PlaySound("sndReloadFast", get_LastFP());
+
 	}
 #else 
 		PlaySound("sndReload", get_LastFP());
@@ -1070,7 +1080,9 @@ void CWeaponMagazined::PlayAnimReload()
 	VERIFY(GetState() == eReload);
 	
 #ifdef NEW_ANIMS_WPN
-	if (iAmmoElapsed == 0)
+	if (!bBulletInBarrel && iAmmoElapsed > 0)
+		PlayHUDMotion("anm_reload_bolt_only", TRUE, this, GetState());
+	else if	(iAmmoElapsed == 0)
 		PlayHUDMotion("anm_reload", TRUE, this, GetState());
 	else
 		PlayHUDMotion("anm_reload_fast", TRUE, this, GetState());
@@ -1345,8 +1357,13 @@ bool CWeaponMagazined::install_upgrade_impl(LPCSTR section, bool test)
 
 #ifdef NEW_ANIMS_WPN
 	result2 = process_if_exists_set(section, "snd_reload_fast", &CInifile::r_string, str, test);
-	if (result2 && !test) { m_sounds.LoadSound(section, "snd_reload_fast", "sndReloadEmpty", true, m_eSoundReloadEmpty); }
+	if (result2 && !test) { m_sounds.LoadSound(section, "snd_reload_fast", "sndReloadFast", true, m_eSoundReloadEmpty); }
 		result |= result2;
+
+	result2 = process_if_exists_set(section, "snd_reload_bolt_only", &CInifile::r_string, str, test);
+	if (result2 && !test) { m_sounds.LoadSound(section, "snd_reload_bolt_only", "sndReloadBoltOnly", true, m_eSoundReloadEmpty); }
+	result |= result2;
+
 #endif
 
 	if (m_eSilencerStatus == ALife::eAddonAttachable || m_eSilencerStatus == ALife::eAddonPermanent)

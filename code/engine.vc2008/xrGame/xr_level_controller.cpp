@@ -72,6 +72,10 @@ _action  actions[] = {
 	{ "quick_load",			kQUICK_LOAD			},
 
 	{ "dev_noclip",			kDEV_NOCLIP			},
+	{ "dev_action1",		kDEV_ACTION1		},
+	{ "dev_action2",		kDEV_ACTION2		},
+	{ "dev_action3",		kDEV_ACTION3		},
+	{ "dev_action4",		kDEV_ACTION4		},
 
 	{ nullptr, 				kLASTACTION			}
 };

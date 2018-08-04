@@ -3,9 +3,10 @@
 
 #include "stdafx.h"
 #pragma hdrstop
-
+#include <VersionHelpers.h>
 #pragma warning(disable:4995)
 #include <d3dx9.h>
+#include <dxgi1_4.h>
 #pragma warning(default:4995)
 #include "../xrRender/HW.h"
 #include "../../xrEngine/XR_IOConsole.h"
@@ -13,9 +14,6 @@
 
 #include "StateManager\dx10SamplerStateCache.h"
 #include "StateManager\dx10StateCache.h"
-
-void	fill_vid_mode_list(CHW* _hw);
-void	free_vid_mode_list();
 
 struct DM1024
 {
@@ -53,14 +51,37 @@ void CHW::CreateD3D()
 	g_dm.sys_mode.dmDriverExtra = sizeof(g_dm.sm_buffer);
 	EnumDisplaySettings(NULL, ENUM_CURRENT_SETTINGS, &g_dm.sys_mode);
 
-	// Init pAdapter
-	IDXGIFactory1 * pFactory;
-	R_CHK(CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory)));
-
 	m_bUsePerfhud = false;
 
-	pFactory->EnumAdapters1(0, &m_pAdapter);
-	_RELEASE(pFactory);
+	// Init pAdapter
+	if (IsWindows10OrGreater())
+	{
+		IDXGIFactory4 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory4), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
+	else if (IsWindows8Point1OrGreater())
+	{
+		IDXGIFactory3 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory3), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
+	else if (IsWindows8OrGreater())
+	{
+		IDXGIFactory2 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory2), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
+	else
+	{
+		IDXGIFactory1 * pFactory;
+		CreateDXGIFactory1(__uuidof(IDXGIFactory1), (void**)(&pFactory));
+		pFactory->EnumAdapters1(0, &m_pAdapter);
+		_RELEASE(pFactory);
+	}
 }
 
 void CHW::DestroyD3D()
@@ -90,23 +111,15 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	Caps.id_vendor = Desc.VendorId;
 	Caps.id_device = Desc.DeviceId;
 
-	// Select back-buffer & depth-stencil format
-	D3DFORMAT&	fTarget = Caps.fTarget;
-	D3DFORMAT&	fDepth = Caps.fDepth;
-
-	//	HACK: DX10: Embed hard target format.
-	fTarget = D3DFMT_X8R8G8B8;			//	No match in DX10. D3DFMT_A8B8G8R8->DXGI_FORMAT_R8G8B8A8_UNORM
-	fDepth = selectDepthStencil(fTarget);
-
 	// Set up the presentation parameters
-	DXGI_SWAP_CHAIN_DESC	&sd = m_ChainDesc;
-	memset(&sd, 0, sizeof(sd));		// обнуление в крови
+	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
+	memset(&sd, 0, sizeof(sd));
 
-	selectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
+	SelectResolution(sd.BufferDesc.Width, sd.BufferDesc.Height, bWindowed);
 
 	//	TODO: DX10: implement dynamic format selection
-	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; //Prep for HDR10; breaks nothing
-	sd.BufferCount = 1;
+	sd.BufferDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM; // Prep for HDR10; breaks nothing
+	sd.BufferCount = psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
 
 	// Multisample
 	sd.SampleDesc.Count = 1;
@@ -115,14 +128,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	sd.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 	sd.OutputWindow = m_hWnd;
 	sd.Windowed = bWindowed;
-
-	if (bWindowed)
-	{
-		sd.BufferDesc.RefreshRate.Numerator = 60;
-		sd.BufferDesc.RefreshRate.Denominator = 1;
-	}
-	else
-		sd.BufferDesc.RefreshRate = selectRefresh(sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
+	sd.BufferDesc.RefreshRate = SelectRefresh(sd.BufferDesc.Width, sd.BufferDesc.Height, sd.BufferDesc.Format);
 
 	//	Additional set up
 	UINT createDeviceFlags = 0;
@@ -149,34 +155,49 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 	D3D11_FEATURE_DATA_THREADING threadingFeature;
 	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
 
-	IDXGIDevice1 * pDXGIDevice;
-	R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
-
-	IDXGIAdapter1 * pDXGIAdapter;
-	R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));
-
-#pragma todo("ForserX to Swartz27: Rework it code")
-	/*
-	D3D11_FEATURE_DATA_D3D11_OPTIONS2 features_2;
-	HRESULT dxResultF2 = pDevice->CheckFeatureSupport(D3D11_FEATURE_D3D11_OPTIONS2, &features_2, sizeof(features_2));
-	if (dxResultF2 == S_OK)
+	if (IsWindows10OrGreater())
 	{
-	features_2.ConservativeRasterizationTier >= D3D11_CONSERVATIVE_RASTERIZATION_TIER_1;
-	}
-	*/
+		IDXGIDevice3 * pDXGIDevice;
+		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice3), (void **)&pDXGIDevice));
 
-	R = pDXGIDevice->SetMaximumFrameLatency(1);
+		IDXGIAdapter3 * pDXGIAdapter;
+		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter3), (void **)&pDXGIAdapter));
+
+		R = pDXGIDevice->SetMaximumFrameLatency(1);
+	}
+	else if (IsWindows8OrGreater())
+	{
+		IDXGIDevice2 * pDXGIDevice;
+		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice2), (void **)&pDXGIDevice));
+
+		IDXGIAdapter2 * pDXGIAdapter;
+		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter2), (void **)&pDXGIAdapter));
+
+		R = pDXGIDevice->SetMaximumFrameLatency(1);
+	}
+	else
+	{
+		IDXGIDevice1 * pDXGIDevice;
+		R_CHK(pDevice->QueryInterface(__uuidof(IDXGIDevice1), (void **)&pDXGIDevice));
+
+		IDXGIAdapter1 * pDXGIAdapter;
+		R_CHK(pDXGIDevice->GetParent(__uuidof(IDXGIAdapter1), (void **)&pDXGIAdapter));
+
+		R = pDXGIDevice->SetMaximumFrameLatency(1);
+	}
 #else
 	R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, 0, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
 
 	pContext = pDevice;
 	FeatureLevel = D3D_FEATURE_LEVEL_10_0;
-	if (!FAILED(R))
+	if (SUCCEEDED(R))
 	{
-		D3DX10GetFeatureLevel1(pDevice, &pDevice1);
-		FeatureLevel = D3D_FEATURE_LEVEL_10_1;
+		if (SUCCEEDED(D3DX10GetFeatureLevel1(pDevice, &pDevice1)))
+		{
+			FeatureLevel = D3D_FEATURE_LEVEL_10_1;
+			pContext1 = pDevice1;
+		}
 	}
-	pContext1 = pDevice1;
 #endif
 
 	if (FAILED(R))
@@ -196,7 +217,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 
 	size_t	memory = Desc.DedicatedVideoMemory;
 	Msg("* Texture memory: %d M", memory / (1024 * 1024));
-	fill_vid_mode_list(this);
+	FillVidModeList();
 }
 
 void CHW::DestroyDevice()
@@ -232,7 +253,7 @@ void CHW::DestroyDevice()
 	DestroyD3D();
 
 #ifndef _EDITOR
-	free_vid_mode_list();
+	FreeVidModeList();
 #endif
 }
 
@@ -241,25 +262,19 @@ void CHW::DestroyDevice()
 //////////////////////////////////////////////////////////////////////
 void CHW::Reset(HWND hwnd)
 {
-	DXGI_SWAP_CHAIN_DESC &cd = m_ChainDesc;
+	DXGI_SWAP_CHAIN_DESC &sd = m_ChainDesc;
 
 	bool bWindowed = !psDeviceFlags.is(rsFullscreen) || strstr(Core.Params, "-editor");
 
-	cd.Windowed = bWindowed;
+	sd.Windowed		= bWindowed;
+	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
 
 	m_pSwapChain->SetFullscreenState(!bWindowed, 0);
 
 	DXGI_MODE_DESC	&desc = m_ChainDesc.BufferDesc;
 
-	selectResolution(desc.Width, desc.Height, bWindowed);
-
-	if (bWindowed)
-	{
-		desc.RefreshRate.Numerator = 60;
-		desc.RefreshRate.Denominator = 1;
-	}
-	else
-		desc.RefreshRate = selectRefresh(desc.Width, desc.Height, desc.Format);
+	SelectResolution(desc.Width, desc.Height, bWindowed);
+	desc.RefreshRate = SelectRefresh(desc.Width, desc.Height, desc.Format);
 
 	CHK_DX(m_pSwapChain->ResizeTarget(&desc));
 
@@ -270,20 +285,13 @@ void CHW::Reset(HWND hwnd)
 	_RELEASE(pBaseRT);
 
 	CHK_DX(m_pSwapChain->ResizeBuffers(
-		cd.BufferCount,
+		sd.BufferCount,
 		desc.Width,
 		desc.Height,
 		desc.Format,
 		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
 
 	UpdateViews();
-}
-
-D3DFORMAT CHW::selectDepthStencil(D3DFORMAT fTarget)
-{
-	// R3 hack
-#pragma todo("R3 need to specify depth format")
-	return D3DFMT_D24S8;
 }
 
 void CHW::ResizeWindowProc(WORD h, WORD w)
@@ -311,9 +319,9 @@ void CHW::ResizeWindowProc(WORD h, WORD w)
 }
 
 
-void CHW::selectResolution(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed)
+void CHW::SelectResolution(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed)
 {
-	fill_vid_mode_list(this);
+	FillVidModeList();
 
 	if (bWindowed)
 	{
@@ -337,7 +345,7 @@ void CHW::selectResolution(u32 &dwWidth, u32 &dwHeight, BOOL bWindowed)
 }
 
 //	TODO: DX10: check if we need these
-DXGI_RATIONAL CHW::selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
+DXGI_RATIONAL CHW::SelectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 {
 	DXGI_RATIONAL	res;
 
@@ -390,7 +398,7 @@ DXGI_RATIONAL CHW::selectRefresh(u32 dwWidth, u32 dwHeight, DXGI_FORMAT fmt)
 					res = desc.RefreshRate;
 				}
 
-				// выбрать по умолчанию частоту десктопа.
+				// Select desktop frequency
 				if (TempFreq == g_dm.sys_mode.dmDisplayFrequency)
 				{
 					res = desc.RefreshRate;
@@ -422,10 +430,10 @@ void CHW::OnAppDeactivate()
 }
 
 
-BOOL CHW::support(D3DFORMAT fmt, DWORD type, DWORD usage)
+bool CHW::IsFormatSupported(D3DFORMAT fmt, DWORD type, DWORD usage)
 {
 	VERIFY(!"Implement CHW::support");
-	return TRUE;
+	return true;
 }
 
 struct _uniq_mode
@@ -436,7 +444,7 @@ struct _uniq_mode
 };
 
 #ifndef _EDITOR
-void free_vid_mode_list()
+void CHW::FreeVidModeList()
 {
 	for (int i = 0; vid_mode_token[i].name; i++)
 	{
@@ -446,7 +454,7 @@ void free_vid_mode_list()
 	vid_mode_token = NULL;
 }
 
-void fill_vid_mode_list(CHW* _hw)
+void CHW::FillVidModeList()
 {
 	if (vid_mode_token != NULL)
 		return;
@@ -455,7 +463,7 @@ void fill_vid_mode_list(CHW* _hw)
 	xr_vector<DXGI_MODE_DESC>	modes;
 
 	IDXGIOutput *pOutput;
-	_hw->m_pAdapter->EnumOutputs(0, &pOutput);
+	m_pAdapter->EnumOutputs(0, &pOutput);
 	VERIFY(pOutput);
 
 	UINT num = 0;

@@ -153,7 +153,6 @@
       <LargeAddressAware>true</LargeAddressAware>
       <OptimizeReferences>true</OptimizeReferences>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
-      <LinkTimeCodeGeneration>UseLinkTimeCodeGeneration</LinkTimeCodeGeneration>
       <RandomizedBaseAddress>false</RandomizedBaseAddress>
       <DataExecutionPrevention>
       </DataExecutionPrevention>
@@ -407,6 +406,7 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseAA.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
@@ -455,7 +455,6 @@
     <ClCompile Include="..\xrRender\Light_DB.cpp" />
     <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="..\xrRender\Light_Package.cpp" />
-    <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="light_smapvis.cpp" />
     <ClCompile Include="light_vis.cpp" />
     <ClCompile Include="..\xrRender\LightTrack.cpp" />

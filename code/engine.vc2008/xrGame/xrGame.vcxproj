@@ -1275,7 +1275,6 @@
     <ClInclude Include="script_callback_ex_nonvoid.h" />
     <ClInclude Include="script_callback_ex_void.h" />
     <ClInclude Include="script_lanim.h" />
-    <ClInclude Include="..\xrServerEntities\script_fcolor.h" />
     <ClInclude Include="script_particles.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
@@ -2055,9 +2054,11 @@
     <ClCompile Include="stalker_animation_head.cpp" />
     <ClCompile Include="stalker_animation_legs.cpp" />
     <ClCompile Include="stalker_animation_manager.cpp" />
-    <ClCompile Include="stalker_animation_manager_debug.cpp" />
+    <ClCompile Include="stalker_animation_manager_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="stalker_animation_manager_update.cpp" />
-    <ClCompile Include="stalker_animation_script.cpp" />
     <ClCompile Include="stalker_animation_torso.cpp" />
     <ClCompile Include="stalker_animation_data_storage.cpp" />
     <ClCompile Include="stalker_animation_data.cpp" />
@@ -2185,7 +2186,6 @@
     <ClCompile Include="script_lanim.cpp" />
     <ClCompile Include="script_particles.cpp" />
     <ClCompile Include="script_sound.cpp" />
-    <ClCompile Include="script_sound_script.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_script.cpp" />

@@ -82,12 +82,13 @@ u16	GetSpawnInfo(NET_Packet &P, u16 &parent_id)
 
 bool CLevel::PostponedSpawn(u16 id)
 {
-	for (auto it = spawn_events->queue.begin(); it != spawn_events->queue.end(); ++it)
+	for (NET_Event& pEvent: spawn_events->queue)
 	{
-		const NET_Event& E = *it;
 		NET_Packet P;
-		if (M_SPAWN != E.ID) continue;
-		E.implication(P);
+		if (M_SPAWN != pEvent.ID) 
+			continue;
+
+		pEvent.implication(P);
 		u16 parent_id;
 		if (id == GetSpawnInfo(P, parent_id))
 			return true;
@@ -98,6 +99,21 @@ bool CLevel::PostponedSpawn(u16 id)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
+
+void mtLevelScriptUpdater(void* pCLevel)
+{
+	CLevel* pLevel = reinterpret_cast<CLevel*>(pCLevel);
+	while (true)
+	{
+		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
+		if (Device.mt_bMustExit) return;
+
+		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+		if (levelScript) levelScript->update();
+
+		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
+	}
+}
 
 CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 {
@@ -132,15 +148,12 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 #ifdef DEBUG
     m_level_debug = xr_new<CLevelDebug>();
     m_bEnvPaused = false;
+	m_bSynchronization = false;
 #endif
 	
-	m_ph_commander						= xr_new<CPHCommander>();
-	m_ph_commander_scripts				= xr_new<CPHCommander>();
-	//m_ph_commander_physics_worldstep	= xr_new<CPHCommander>();
-		
-#ifdef DEBUG
-	m_bSynchronization			= false;
-#endif	
+	m_ph_commander = xr_new<CPHCommander>();
+	m_ph_commander_scripts = xr_new<CPHCommander>();
+
 	//---------------------------------------------------------
 	pStatGraphR = nullptr;
 	//---------------------------------------------------------
@@ -151,20 +164,26 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	g_player_hud->load_default();
 	
 	hud_zones_list = nullptr;
+
+	m_mtScriptUpdaterEventStart = CreateEvent(NULL, FALSE, FALSE, NULL);
+	m_mtScriptUpdaterEventEnd = CreateEvent(NULL, TRUE, FALSE, NULL);
+
+	thread_spawn(mtLevelScriptUpdater, "X-Ray: Level Script Update", 0, this);
 }
 
 extern CAI_Space *g_ai_space;
 
 CLevel::~CLevel()
 {
-	xr_delete					(g_player_hud);
-	delete_data					(hud_zones_list);
-	hud_zones_list				= NULL;
+	SetEvent(m_mtScriptUpdaterEventStart);
+	xr_delete(g_player_hud);
+	delete_data(hud_zones_list);
+	hud_zones_list = NULL;
 
-	Msg							("- Destroying level");
-	
-	Engine.Event.Handler_Detach	(eEntitySpawn,	this);
-	Engine.Event.Handler_Detach	(eEnvironment,	this);
+	Msg("- Destroying level");
+
+	Engine.Event.Handler_Detach(eEntitySpawn, this);
+	Engine.Event.Handler_Detach(eEnvironment, this);
 
 	if (physics_world())
 	{
@@ -173,64 +192,65 @@ CLevel::~CLevel()
 	}
 
 	// destroy PSs
-	for (CParticlesObject* &p_it: m_StaticParticles)
+	for (CParticlesObject* &p_it : m_StaticParticles)
 		CParticlesObject::Destroy(p_it);
 
-	m_StaticParticles.clear		();
+	m_StaticParticles.clear();
 
 	// Unload sounds
 	// unload prefetched sounds
-	sound_registry.clear		();
+	sound_registry.clear();
 
 	// unload static sounds
-	for (u32 i=0; i<static_Sounds.size(); ++i){
+	for (u32 i = 0; i < static_Sounds.size(); ++i) {
 		static_Sounds[i]->destroy();
-		xr_delete				(static_Sounds[i]);
+		xr_delete(static_Sounds[i]);
 	}
-	static_Sounds.clear			();
+	static_Sounds.clear();
 
-	xr_delete					(m_level_sound_manager);
-	xr_delete					(m_space_restriction_manager);
-	xr_delete					(m_seniority_hierarchy_holder);
-	xr_delete					(m_client_spawn_manager);
-	xr_delete					(m_autosave_manager);
-	xr_delete					(m_debug_renderer);
+	xr_delete(m_level_sound_manager);
+	xr_delete(m_space_restriction_manager);
+	xr_delete(m_seniority_hierarchy_holder);
+	xr_delete(m_client_spawn_manager);
+	xr_delete(m_autosave_manager);
+	xr_delete(m_debug_renderer);
 
-    ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
-	xr_delete					(game);
-	xr_delete					(game_events);
+	xr_delete(game);
+	xr_delete(game_events);
 
 
 	//by Dandy
 	//destroy bullet manager
-	xr_delete					(m_pBulletManager);
+	xr_delete(m_pBulletManager);
 	//-----------------------------------------------------------
-	xr_delete					(pStatGraphR);
+	xr_delete(pStatGraphR);
 	//-----------------------------------------------------------
-	xr_delete					(m_ph_commander);
-	xr_delete					(m_ph_commander_scripts);
+	xr_delete(m_ph_commander);
+	xr_delete(m_ph_commander_scripts);
 	//-----------------------------------------------------------
-	ai().unload					();
+	ai().unload();
 	//-----------------------------------------------------------	
 #ifdef DEBUG	
-	xr_delete					(m_level_debug);
+	xr_delete(m_level_debug);
 #endif
 	//-----------------------------------------------------------
-	xr_delete					(m_map_manager);
-	delete_data					(m_game_task_manager);
-//	xr_delete					(m_pFogOfWarMngr);
-	
+	xr_delete(m_map_manager);
+	delete_data(m_game_task_manager);
+
 	// here we clean default trade params
 	// because they should be new for each saved/loaded game
 	// and I didn't find better place to put this code in
-	CTradeParameters::clean		();
+	CTradeParameters::clean();
 
-	if(g_tutorial && g_tutorial->m_pStoredInputReceiver==this)
+	if (g_tutorial && g_tutorial->m_pStoredInputReceiver == this)
 		g_tutorial->m_pStoredInputReceiver = nullptr;
 
-	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
+	if (g_tutorial2 && g_tutorial2->m_pStoredInputReceiver == this)
 		g_tutorial2->m_pStoredInputReceiver = nullptr;
+	CloseHandle(m_mtScriptUpdaterEventStart);
+	CloseHandle(m_mtScriptUpdaterEventEnd);
 }
 
 shared_str CLevel::name() const
@@ -257,8 +277,7 @@ BOOL g_bDebugEvents = FALSE;
 
 void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 {
-	//			Msg				("--- event[%d] for [%d]",type,dest);
-	CObject*	 O	= Objects.net_Find	(dest);
+	CObject* O = Objects.net_Find(dest);
 	if (!O)	return;
 	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
@@ -418,7 +437,7 @@ void CLevel::OnFrame()
 
 	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
 
-    if (Device.dwPrecacheFrame == 0)
+    if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
         GameTaskManager().UpdateTasks();
 
 	// Inherited update
@@ -435,8 +454,8 @@ void CLevel::OnFrame()
 #endif
 	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
 
-	CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-	if (levelScript) levelScript->update();
+	ResetEvent(m_mtScriptUpdaterEventEnd);
+	SetEvent(m_mtScriptUpdaterEventStart);
 
 	m_ph_commander->update				();
 	m_ph_commander_scripts->update		();
@@ -458,7 +477,9 @@ void CLevel::OnFrame()
 
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
-	};
+	}
+
+	WaitForSingleObject(m_mtScriptUpdaterEventEnd, INFINITE);
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -485,10 +506,10 @@ void CLevel::OnRender()
 	if (!game)
 		return;
 
+	HUD().RenderUI();
 	Game().OnRender();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
-	HUD().RenderUI();
 
 #ifdef DEBUG
 	draw_wnds_rects();
@@ -505,8 +526,10 @@ void CLevel::OnRender()
 	if (stalker)
 		stalker->OnRender	();
 
-	if (bDebug)	{
-		for (u32 I=0; I < Level().Objects.o_count(); I++) {
+	if (bDebug)	
+	{
+		for (u32 I=0; I < Level().Objects.o_count(); I++) 
+		{
 			CObject*	_O		= Level().Objects.o_get_by_iterator(I);
 
 			CAI_Stalker*		stalker = smart_cast<CAI_Stalker*>(_O);
@@ -553,11 +576,8 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->OutNext			("Server Objects:      [%d]", Objects.o_count());
 
 		UI().Font().pFontStat->SetHeight	(8.0f);
-		//---------------------------------------------------------------------
-	}
 
-	if (bDebug) 
-	{
+		//---------------------------------------------------------------------
 		DBG().draw_object_info				();
 		DBG().draw_text						();
 		DBG().draw_level_info				();
@@ -670,13 +690,7 @@ void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTim
 	game->SetEnvironmentGameTimeFactor(GameTime, fTimeFactor);
 }
 
-void CLevel::OnAlifeSimulatorUnLoaded()
-{
-	MapManager().ResetStorage();
-	GameTaskManager().ResetStorage();
-}
-
-void CLevel::OnAlifeSimulatorLoaded()
+void CLevel::ResetLevel()
 {
 	MapManager().ResetStorage();
 	GameTaskManager().ResetStorage();
@@ -687,6 +701,7 @@ u32	GameID()
 	return Game().Type();
 }
 
+// -------------------------------------------------------------------------------------------------
 CZoneList* CLevel::create_hud_zones_list()
 {
 	hud_zones_list = xr_new<CZoneList>();
@@ -694,15 +709,13 @@ CZoneList* CLevel::create_hud_zones_list()
 	return hud_zones_list;
 }
 
-// -------------------------------------------------------------------------------------------------
-
-BOOL CZoneList::feel_touch_contact( CObject* O )
+BOOL CZoneList::feel_touch_contact(CObject* O)
 {
-	TypesMapIt it	= m_TypesMap.find(O->cNameSect());
-	bool res		= ( it != m_TypesMap.end() );
+	TypesMapIt it = m_TypesMap.find(O->cNameSect());
+	bool res = (it != m_TypesMap.end());
 
 	CCustomZone *pZone = smart_cast<CCustomZone*>(O);
-	if ( pZone && !pZone->IsEnabled() )
+	if (pZone && !pZone->IsEnabled())
 	{
 		res = false;
 	}

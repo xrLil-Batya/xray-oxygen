@@ -655,7 +655,7 @@ void SMedicineInfluenceValues::Load(const shared_str& sect)
 	fHealth			= pSettings->r_float(sect.c_str(), "eat_health");
 	fPower			= pSettings->r_float(sect.c_str(), "eat_power");
 	fSatiety		= pSettings->r_float(sect.c_str(), "eat_satiety");
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    fThirst			= pSettings->r_float(sect.c_str(), "eat_thirst");
     }

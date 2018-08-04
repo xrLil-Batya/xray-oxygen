@@ -303,19 +303,17 @@ public :
 		}
 	}
 
-	virtual bool isWideScreen ()
+	virtual bool isWideScreen()
 	{
-		u32 uWidth, uHeight, _deltaBase;
-
-		uHeight = psCurrentVidMode[0];
-		uWidth = psCurrentVidMode[0];
-		_deltaBase = uWidth / uHeight;
+		u32 uWidth = psCurrentVidMode[0];
+		u32 uHeight = psCurrentVidMode[1];
+		float deltaBase = (float)uWidth / (float)uHeight;
 
 		// 1920 / 1200 = 16:10 = 1.6
-		if (_deltaBase > 1.6)	
+		if (deltaBase > 1.6f)
 			return true;
-		else
-			return false;
+
+		return false;
 	}
 
 	virtual void	Status	(TStatus& S)	
@@ -396,56 +394,70 @@ public:
 };
 
 //-----------------------------------------------------------------------
-float	ps_gamma=1.f,ps_brightness=1.f,ps_contrast=1.f;
+float ps_gamma = 1.0f;
+float ps_brightness = 1.0f;
+float ps_contrast = 1.0f;
 class CCC_Gamma : public CCC_Float
 {
 public:
-	CCC_Gamma	(LPCSTR N, float* V) : CCC_Float(N,V,0.5f,1.5f)	{}
+	CCC_Gamma(LPCSTR N, float* V) : CCC_Float(N, V, 0.5f, 1.5f) {}
 
 	virtual void Execute(LPCSTR args)
 	{
-		CCC_Float::Execute		(args);
-		//Device.Gamma.Gamma		(ps_gamma);
-		Device.m_pRender->setGamma(ps_gamma);
-		//Device.Gamma.Brightness	(ps_brightness);
-		Device.m_pRender->setBrightness(ps_brightness);
-		//Device.Gamma.Contrast	(ps_contrast);
-		Device.m_pRender->setContrast(ps_contrast);
-		//Device.Gamma.Update		();
-		Device.m_pRender->updateGamma();
+		CCC_Float::Execute(args);
+
+		Device.m_pRender->SetGamma		(ps_gamma);
+		Device.m_pRender->SetBrightness	(ps_brightness);
+		Device.m_pRender->SetContrast	(ps_contrast);
+		Device.m_pRender->UpdateGamma	();
+	}
+};
+
+Fvector3 ps_c_balance = { 1.0f, 1.0f, 1.0f };
+class CCC_ColorBalance : public CCC_Vector3
+{
+public:
+	CCC_ColorBalance(LPCSTR N, Fvector* V) : CCC_Vector3(N, V, Fvector().set(0.5f, 0.5f, 0.5f), Fvector().set(1.5f, 1.5f, 1.5f)) {}
+
+	virtual void Execute(LPCSTR args)
+	{
+		CCC_Vector3::Execute(args);
+
+		Device.m_pRender->SetBalance	(ps_c_balance);
+		Device.m_pRender->UpdateGamma	();
 	}
 };
 
 ENGINE_API BOOL r2_sun_static = TRUE;
 ENGINE_API BOOL r2_advanced_pp = FALSE;	//	advanced post process and effects
 
-u32	renderer_value	= 3;
+u32	renderer_value = 3;
 u32 isLoaded = 2;
-//void fill_render_mode_list();
-//void free_render_mode_list();
+extern bool g_bRendererForced;
 
-class CCC_r2 : public CCC_Token
+class CCC_Renderer : public CCC_Token
 {
 	typedef CCC_Token inherited;
 public:
-	CCC_r2(LPCSTR N) :inherited(N, &renderer_value, NULL) {renderer_value = 3; };
-	virtual			~CCC_r2	()
+	CCC_Renderer(LPCSTR N) : inherited(N, &renderer_value, NULL)
 	{
-		//free_render_mode_list();
+		renderer_value = 3; 
+	};
+	virtual ~CCC_Renderer()
+	{
 	}
 	virtual void	Execute(LPCSTR args)
 	{
-		//fill_render_mode_list	();
 		//	vid_quality_token must be already created!
 		if (isLoaded != 1)
 		{
-		tokens = vid_quality_token.data();
+			tokens = vid_quality_token.data();
 
-		inherited::Execute(args);
+			inherited::Execute(args);
 
-		//	0 - r1
-		//	1..3 - r2
-		//	4 - r3
+			//	0 - r1
+			//	1..3 - r2
+			//	4 - r3
 			psDeviceFlags.set(rsR2, ((renderer_value > 0) && renderer_value < 4));
 			psDeviceFlags.set(rsR3, (renderer_value == 4));
 			psDeviceFlags.set(rsR4, (renderer_value >= 5));
@@ -456,22 +468,21 @@ public:
 
 			isLoaded--;
 		}
-		else isLoaded = 16;
+		else
+			isLoaded = 16;
 	}
 
 	virtual void	Save	(IWriter *F)	
 	{
-		//fill_render_mode_list	();
-		tokens					= vid_quality_token.data();
-		if( !strstr(Core.Params, "-r2") )
-		{
+		tokens = vid_quality_token.data();
+
+		if (!g_bRendererForced)
 			inherited::Save(F);
-		}
 	}
 	virtual xr_token* GetToken()
 	{
-		tokens					= vid_quality_token.data();
-		return					inherited::GetToken();
+		tokens = vid_quality_token.data();
+		return inherited::GetToken();
 	}
 
 };
@@ -596,25 +607,15 @@ void CCC_Register()
 	CMD1(CCC_MotionsStat,	"stat_motions"		);
 
 #ifdef DEBUG
-	CMD3(CCC_Mask,		"mt_particles",			&psDeviceFlags,			mtParticles);
-
 	CMD1(CCC_DbgStrCheck,	"dbg_str_check"		);
 	CMD1(CCC_DbgStrDump,	"dbg_str_dump"		);
 
-	CMD3(CCC_Mask,		"mt_sound",				&psDeviceFlags,			mtSound);
-	CMD3(CCC_Mask,		"mt_physics",			&psDeviceFlags,			mtPhysics);
-	CMD3(CCC_Mask,		"mt_network",			&psDeviceFlags,			mtNetwork);
-	
 	// Events
 	CMD1(CCC_E_Dump,	"e_list"				);
 	CMD1(CCC_E_Signal,	"e_signal"				);
 
 	CMD3(CCC_Mask,		"rs_wireframe",			&psDeviceFlags,		rsWireframe);
 	CMD3(CCC_Mask,		"rs_clear_bb",			&psDeviceFlags,		rsClearBB);
-	CMD3(CCC_Mask,		"rs_occlusion",			&psDeviceFlags,		rsOcclusion);
-
-
-	//CMD4(CCC_Float,		"r__dtex_range",		&r__dtex_range,		5,		175	);
 
 //	CMD3(CCC_Mask,		"rs_constant_fps",		&psDeviceFlags,		rsConstantFPS			);
 	CMD3(CCC_Mask,		"rs_render_statics",	&psDeviceFlags,		rsDrawStatic			);
@@ -625,9 +626,10 @@ void CCC_Register()
 	// Render device states
 	CMD3(CCC_Mask,		"rs_detail",			&psDeviceFlags,		rsDetails				);
 
+	CMD3(CCC_Mask,		"rs_triple_buffering",	&psDeviceFlags,		rsTripleBuffering		);
 	CMD3(CCC_Mask,		"rs_v_sync",			&psDeviceFlags,		rsVSync					);
 //	CMD3(CCC_Mask,		"rs_disable_objects_as_crows",&psDeviceFlags,	rsDisableObjectsAsCrows	);
-	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
+//	CMD3(CCC_Mask,		"rs_fullscreen",		&psDeviceFlags,		rsFullscreen			);
 	CMD3(CCC_Mask,		"rs_refresh_60hz",		&psDeviceFlags,		rsRefresh60hz			);
 	CMD3(CCC_Mask,		"rs_refresh_120hz",		&psDeviceFlags,		rsRefresh120hz			);
 	CMD3(CCC_Mask,		"rs_stats",				&psDeviceFlags,		rsStatistic				);
@@ -649,6 +651,7 @@ void CCC_Register()
 	CMD2(CCC_Gamma,		"rs_c_gamma"			,&ps_gamma			);
 	CMD2(CCC_Gamma,		"rs_c_brightness"		,&ps_brightness		);
 	CMD2(CCC_Gamma,		"rs_c_contrast"			,&ps_contrast		);
+	CMD2(CCC_ColorBalance, "rs_c_balance"		,&ps_c_balance		);
 //	CMD4(CCC_Integer,	"rs_vb_size",			&rsDVB_Size,		32,		4096);
 //	CMD4(CCC_Integer,	"rs_ib_size",			&rsDIB_Size,		32,		4096);
 	CMD4(CCC_Integer,	"rs_loadingstages",		&ps_rs_loading_stages,		0, 1);
@@ -657,14 +660,9 @@ void CCC_Register()
 	CMD4(CCC_Integer,	"texture_lod",			&psTextureLOD,				0,	4	);
 
 	// General video control
-	CMD1(CCC_VidMode,	    "vid_mode"		);
+	CMD1(CCC_VidMode,	    "vid_mode"			);
     CMD3(CCC_VidWindowType, "vid_windowtype",   &ps_vid_windowtype, vid_windowtype_token);
-
-#ifdef DEBUG
-	CMD3(CCC_Token,		"vid_bpp",				&psCurrentBPP,	vid_bpp_token );
-#endif // DEBUG
-
-	CMD1(CCC_VID_Reset, "vid_restart"			);
+	CMD1(CCC_VID_Reset,		"vid_restart"		);
 	
 	// Sound
 	CMD2(CCC_Float,		"snd_volume_eff",		&psSoundVEffects);
@@ -697,7 +695,7 @@ void CCC_Register()
 	//CMD2(CCC_Float,		"cam_slide_inert",		&psCamSlideInert);
 	CMD4(CCC_Integer,	"always_active",		&ps_always_active,	0,	1);
 
-	CMD1(CCC_r2,		"renderer"				);
+	CMD1(CCC_Renderer,	"renderer"				);
 
 	CMD1(CCC_soundDevice, "snd_device"			);
 

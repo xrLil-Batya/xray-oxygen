@@ -35,6 +35,7 @@
 #include "Weapon.h"
 #include "ZoneCampfire.h"
 #include "../xrEngine/XR_IOConsole.h"
+#include "script_callback_ex.h"
 
 extern u32 hud_adj_mode;
 
@@ -76,6 +77,19 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	{
 		NoClipFly(cmd);
 		return;
+	}
+
+	// Dev actions should work only if we on developer mode (-developer)
+	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+	{
+		if (GamePersistent().IsDeveloperMode())
+		{
+			callback(GameObject::eOnActionPress)(cmd);
+		}
+	}
+	else
+	{
+		callback(GameObject::eOnActionPress)(cmd);
 	}
 
 	switch(cmd)
@@ -197,6 +211,19 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 
 	if (g_Alive())	
 	{
+		// Dev actions should work only if we on developer mode (-developer)
+		if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+		{
+			if (GamePersistent().IsDeveloperMode())
+			{
+				callback(GameObject::eOnActionRelease)(cmd);
+			}
+		}
+		else
+		{
+			callback(GameObject::eOnActionRelease)(cmd);
+		}
+
 		if(m_holder)
 		{
 			m_holder->OnKeyboardRelease(cmd);
@@ -235,6 +262,18 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	if (Remote() || !g_Alive())					return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	if (IsTalking())							return;
+
+	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+	{
+		if (GamePersistent().IsDeveloperMode())
+		{
+			callback(GameObject::eOnActionHold)(cmd);
+		}
+	}
+	else
+	{
+		callback(GameObject::eOnActionHold)(cmd);
+	}
 
 	if(m_holder)
 	{

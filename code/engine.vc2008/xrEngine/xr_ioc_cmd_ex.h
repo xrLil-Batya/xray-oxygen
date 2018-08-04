@@ -12,7 +12,7 @@ public:
 	
 	virtual void	Execute(const char* args)
 	{
-		int v = atoi(args);
+		u32 v = (u32)atoi(args);
 		if (v<min || v>max) InvalidSyntax();
 		else *value = v;
 	}

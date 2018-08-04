@@ -210,4 +210,16 @@
 	<string id="kb_dev_noclip">
 		<text>Режим призрака</text>
 	</string>
+	<string id="kb_dev_action1">
+		<text>Действие разработчика 1</text>
+	</string>
+	<string id="kb_dev_action2">
+		<text>Действие разработчика 2</text>
+	</string>
+	<string id="kb_dev_action3">
+		<text>Действие разработчика 3</text>
+	</string>
+	<string id="kb_dev_action4">
+		<text>Действие разработчика 4</text>
+	</string>
 </string_table>

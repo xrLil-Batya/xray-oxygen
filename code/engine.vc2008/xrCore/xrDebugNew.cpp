@@ -96,7 +96,7 @@ void xrDebug::do_exit(HWND hWnd, const std::string &message)
 {
 	FlushLog();
 
-	if (MessageBoxA(hWnd, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
+	if (MessageBoxA(0, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
         ExitProcess(1);
@@ -155,7 +155,7 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	do_exit(wnd, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-    do_exit2(assertion_info, ignore_always);
+    do_exit2(wnd, assertion_info, ignore_always);
     
     // And we should show window again, damn pause manager
     if (GetCurrentThreadId() == m_mainThreadId)
@@ -173,9 +173,9 @@ const char* xrDebug::error2string(long code)
 }
 
 
-void xrDebug::do_exit2(const std::string& message, bool& ignore_always)
+void xrDebug::do_exit2(HWND hwnd, const std::string& message, bool& ignore_always)
 {
-    int MsgRet = MessageBox(NULL, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
 
     switch (MsgRet)
     {

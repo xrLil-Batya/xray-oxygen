@@ -605,11 +605,20 @@ void CArtefact::script_register(lua_State *L)
 {
 	module(L)
 	[
-		class_<CArtefact			,CGameObject>("CArtefact")
+		class_<CArtefact, CGameObject>("CArtefact")
+		.def_readwrite("can_spawn_zone",			&CArtefact::m_bCanSpawnZone)
+		.def_readwrite("health_restore_speed",		&CArtefact::m_fHealthRestoreSpeed)
+		.def_readwrite("radiation_restore_speed",	&CArtefact::m_fRadiationRestoreSpeed)
+		.def_readwrite("satiety_restore_speed",		&CArtefact::m_fSatietyRestoreSpeed)
+		.def_readwrite("power_restore_speed",		&CArtefact::m_fPowerRestoreSpeed)
+		.def_readwrite("bleeding_restore_speed",	&CArtefact::m_fBleedingRestoreSpeed)
+		.def_readwrite("additional_inventory_weight", &CArtefact::m_additional_weight)
+
 		.def(						constructor<>() )
 		.def("FollowByPath",		&CArtefact::FollowByPath)
 		.def("SwitchVisibility",	&CArtefact::SwitchVisibility)
 		.def("GetAfRank",			&CArtefact::GetAfRank),
+
 
         class_<C_Arterfact, CArtefact>("C_Artefact").def(constructor<>())
 	];

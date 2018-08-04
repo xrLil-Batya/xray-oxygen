@@ -445,63 +445,27 @@ bool CPhysicObject::is_ai_obstacle() const
 }
 
 // network synchronization ----------------------------
-#pragma todo("Remove me!")
-net_updatePhData* CPhysicObject::NetSync()
-{
-	if (!m_net_updateData)
-		m_net_updateData = xr_new<net_updatePhData>();
-	return m_net_updateData;
-}
-
 void CPhysicObject::net_Export(NET_Packet& P)
 {
 	P.w_u8(0);
 	return;
-};
+}
 
 void CPhysicObject::net_Import(NET_Packet& P)
 {
-	u8							NumItems = 0;
-	NumItems = P.r_u8();
-	if (!NumItems)
-		return;
-
-	CSE_ALifeObjectPhysic::mask_num_items				num_items;
-	num_items.common = NumItems;
-	NumItems = num_items.num_items;
-
-	net_update_PItem			N;
-	N.dwTimeStamp = Device.dwTimeGlobal;
-
-	////////////////////////////////////////////
-	P.r_u8();	// freezed or not..
-
-
-	if (this->cast_game_object()->Local())
+	u8 NumItems = P.r_u8();
+	if (NumItems)
 	{
-		return;
+		CSE_ALifeObjectPhysic::mask_num_items num_items;
+		num_items.common = NumItems;
+		NumItems = num_items.num_items;
+
+		////////////////////////////////////////////
+		P.r_u8();	// freezed or not..
 	}
-
-    //std::string dbgStr = make_string("CPhysicObject::net_Import, wtf?, %u, %u", P.r_tell(), P.w_tell());
-    //VERIFY2(false, dbgStr.c_str());
-
-	net_updatePhData				*p = NetSync();
-
-	p->NET_IItem.push_back(N);
-
-	while (p->NET_IItem.size() > 2)
-	{
-		p->NET_IItem.pop_front();
-	}
-	if (!m_activated)
-	{
-		processing_activate();
-		m_activated = true;
-	}
-};
+}
 
 //-----------
-
 void CPhysicObject::Interpolate()
 {
 }

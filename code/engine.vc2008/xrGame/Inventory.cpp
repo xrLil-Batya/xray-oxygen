@@ -798,7 +798,7 @@ u32 CInventory::dwfGetGrenadeCount(LPCSTR caSection, bool SearchAll)
 	TIItemContainer	&l_list = SearchAll ? m_all : m_ruck;
 	for (PIItem l_pIItem : l_list)
 	{
-		if (dynamic_cast<CGrenade*>(l_pIItem->cast_game_object()))
+		if (l_pIItem->object().CLS_ID == CLSID_GRENADE)
 			++l_dwCount;
 	}
 

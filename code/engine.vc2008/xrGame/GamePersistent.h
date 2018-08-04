@@ -20,6 +20,7 @@ enum OxygenExtraFeatures : size_t
     GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD    = (1 << 6),
     GAME_EXTRA_SOC_WND                          = (1 << 7),
     GAME_EXTRA_VERTICAL_BELTS                   = (1 << 8),
+	GAME_EXTRA_THIRST							= (1 << 9),
 };
 extern Flags32 g_extraFeatures;
 
@@ -70,10 +71,6 @@ class CGamePersistent: public IGame_Persistent, public IEventReceiver
 public:
 	ui_core*			m_pUI_core;
 	u32					uTime2Change;
-
-    //#REFACTOR: [Giperion] enable thirst only if we want to
-    bool                m_useThirst;
-
 
 						CGamePersistent			();
 	virtual				~CGamePersistent		();

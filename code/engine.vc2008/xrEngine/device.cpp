@@ -108,7 +108,7 @@ void CRenderDevice::End		(void)
 #ifdef INGAME_EDITOR
 			load_finished = true;
 #endif 
-			m_pRender->updateGamma();
+			m_pRender->UpdateGamma();
 
 			if(precache_light) 
 				precache_light->set_active(false);
@@ -305,7 +305,7 @@ void CRenderDevice::on_idle		()
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
 	if(g_bL)
-		m_pRender->ResizeWindowProc(height, width);
+		m_pRender->ResizeWindowProc((WORD)height, (WORD)width);
 }
 
 #ifdef INGAME_EDITOR
@@ -471,7 +471,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 						SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
     }
 
-    if (bFullscreen != bNewFullscreen)
+    if (Device.b_is_Ready && bFullscreen != bNewFullscreen)
     {
         Reset();
     }

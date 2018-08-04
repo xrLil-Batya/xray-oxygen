@@ -553,12 +553,12 @@ bool CUICellContainer::AddSimilar(CUICellItem* itm)
 
 CUICellItem* CUICellContainer::FindSimilar(CUICellItem* itm)
 {
-	for(WINDOW_LIST_it it = m_ChildWndList.begin(); m_ChildWndList.end()!=it; ++it)
+	for(CUIWindow* pWND : m_ChildWndList)
 	{
 #ifdef DEBUG
-		CUICellItem* i = smart_cast<CUICellItem*>(*it);
+		CUICellItem* i = smart_cast<CUICellItem*>(pWND);
 #else
-		CUICellItem* i = (CUICellItem*)(*it);
+		CUICellItem* i = (CUICellItem*)(pWND);
 #endif
 		R_ASSERT		(i!=itm);
 		if(i->EqualTo(itm))

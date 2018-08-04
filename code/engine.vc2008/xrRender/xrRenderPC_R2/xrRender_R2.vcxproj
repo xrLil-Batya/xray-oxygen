@@ -389,6 +389,7 @@
     <ClInclude Include="..\..\Include\xrRender\UISequenceVideoItem.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseAA.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
@@ -437,7 +438,6 @@
     <ClCompile Include="..\xrRender\Light_DB.cpp" />
     <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="..\xrRender\Light_Package.cpp" />
-    <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="light_smapvis.cpp" />
     <ClCompile Include="light_vis.cpp" />
     <ClCompile Include="..\xrRender\LightTrack.cpp" />
