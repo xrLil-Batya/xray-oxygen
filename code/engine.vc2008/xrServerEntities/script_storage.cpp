@@ -94,7 +94,6 @@ void CScriptStorage::reinit()
 	Debug.set_crashhandler(xrScriptCrashHandler);
 }
 
-
 void CScriptStorage::dump_state()
 {
 	static bool reentrantGuard = false;
@@ -381,13 +380,13 @@ bool CScriptStorage::load_file_into_namespace(const char* caScriptName, const ch
 
 bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 {
-	int						start = lua_gettop(lua());
+	int start = lua_gettop(lua());
 	lua_pushstring(lua(), "_G");
 	lua_rawget(lua(), LUA_GLOBALSINDEX);
 
-	string256				S2;
- 	xr_strcpy				(S2,N);
- 	char*					S = S2;
+	string256 S2;
+ 	xr_strcpy (S2,N);
+ 	char* S = S2;
 	for (;;) {
 		if (!xr_strlen(S))
 		{

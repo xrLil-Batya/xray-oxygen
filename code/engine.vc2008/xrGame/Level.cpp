@@ -108,6 +108,13 @@ void mtLevelScriptUpdater(void* pCLevel)
 		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
 		if (Device.mt_bMustExit) return;
 
+		// Disable objects
+		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
+
+		Fvector temp_vector;
+		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
+
+		// Call level script
 		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
 		if (levelScript) levelScript->update();
 
@@ -249,6 +256,7 @@ CLevel::~CLevel()
 
 	if (g_tutorial2 && g_tutorial2->m_pStoredInputReceiver == this)
 		g_tutorial2->m_pStoredInputReceiver = nullptr;
+
 	CloseHandle(m_mtScriptUpdaterEventStart);
 	CloseHandle(m_mtScriptUpdaterEventEnd);
 }
@@ -316,72 +324,70 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	}
 };
 
+static std::recursive_mutex MutexGameEventsLock;
+
 void CLevel::ProcessGameEvents()
 {
+	// Threadsafe for ProcessGameEvents
+	std::lock_guard<std::recursive_mutex> guard(MutexGameEventsLock);
+
 	// Game events
+	NET_Packet			P;
+	u32 svT = timeServer() - NET_Latency;
+	if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
 	{
-		NET_Packet			P;
-		u32 svT				= timeServer()-NET_Latency;
-        if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
-        {
-            while (spawn_events->available(svT))
-            {
-                u16 ID, dest, type;
-                spawn_events->get(ID, dest, type, P);
-                game_events->insert(P);
-            }
-        }
-        u32 avail_time = 5;
-        u32 elps = Device.frame_elapsed();
-        if (elps < 30)
-            avail_time = 33 - elps;
+		while (spawn_events->available(svT))
+		{
+			u16 ID, dest, type;
+			spawn_events->get(ID, dest, type, P);
+			game_events->insert(P);
+		}
+	}
+	u32 avail_time = 5;
+	u32 elps = Device.frame_elapsed();
+	if (elps < 30)
+		avail_time = 33 - elps;
 
-        u32 work_limit = elps + avail_time;
-		
-        while (game_events->available(svT))
-        {
-            u16 ID, dest, type;
-            game_events->get(ID, dest, type, P);
+	u32 work_limit = elps + avail_time;
 
-            if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
-            {
-                if (g_appLoaded && M_EVENT == ID && PostponedSpawn(dest))
-                {
-                    spawn_events->insert(P);
-                    continue;
-                }
-                if (g_appLoaded && M_SPAWN == ID && Device.frame_elapsed() > work_limit)
-                {
-                    u16 parent_id;
-                    GetSpawnInfo(P, parent_id);
-                    if (parent_id < 0xffff)
-                    {
-                        if (!spawn_events->available(svT))
-                            Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());
+	while (game_events->available(svT))
+	{
+		u16 ID, dest, type;
+		game_events->get(ID, dest, type, P);
 
-                        spawn_events->insert(P);
-                        continue;
-                    }
-                }
-            }
-
-			switch (ID)
+		if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
+		{
+			if (g_appLoaded && M_EVENT == ID && PostponedSpawn(dest))
 			{
-			case M_SPAWN:
+				spawn_events->insert(P);
+				continue;
+			}
+			if (g_appLoaded && M_SPAWN == ID && Device.frame_elapsed() > work_limit)
+			{
+				u16 parent_id;
+				GetSpawnInfo(P, parent_id);
+				if (parent_id < 0xffff)
 				{
-					u16 dummy16;
-					P.r_begin(dummy16);
-					cl_Process_Spawn(P);
-				}break;
-			case M_EVENT:
-				{
-					cl_Process_Event(dest, type, P);
-				}break;
-			default:
-				{
-					R_ASSERT(0);
-				}break;
-			}			
+					if (!spawn_events->available(svT))
+						Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());
+
+					spawn_events->insert(P);
+					continue;
+				}
+			}
+		}
+
+		switch (ID)
+		{
+		case M_SPAWN:
+		{
+			u16 dummy16;
+			P.r_begin(dummy16);
+			cl_Process_Spawn(P);
+		}break;
+
+		case M_EVENT:	cl_Process_Event(dest, type, P); break;
+		default:		R_ASSERT(0); break;
 		}
 	}
 }
@@ -413,35 +419,29 @@ void CLevel::MakeReconnect()
 	}
 }
 
+#include "Inventory.h"
 void CLevel::OnFrame()
 {
-#ifdef DEBUG
-	 DBG_RenderUpdate( );
-#endif // #ifdef DEBUG
-
-	Fvector	temp_vector;
-	m_feel_deny.feel_touch_update		(temp_vector, 0.f);
-
-	psDeviceFlags.set(rsDisableObjectsAsCrows,false);
+	ResetEvent(m_mtScriptUpdaterEventEnd);
+	SetEvent(m_mtScriptUpdaterEventStart);
 
 	// commit events from bullet manager from prev-frame
-	Device.Statistic->TEST0.Begin		();
-	BulletManager().CommitEvents		();
-	Device.Statistic->TEST0.End			();
+	BulletManager().CommitEvents();
+	ClientReceive();
 
-    Device.Statistic->netClient1.Begin();
-    ClientReceive					();
-    Device.Statistic->netClient1.End	();
-
-	ProcessGameEvents	();
+	// Update game events
+	ProcessGameEvents();
+#ifdef DEBUG
+	DBG_RenderUpdate();
+#endif // #ifdef DEBUG
 
 	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
 
-    if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
-        GameTaskManager().UpdateTasks();
+	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
+		GameTaskManager().UpdateTasks();
 
 	// Inherited update
-	inherited::OnFrame		();
+	inherited::OnFrame();
 
 #ifdef DEBUG
 	// Draw client/server stats
@@ -450,28 +450,22 @@ void CLevel::OnFrame()
 		if (pStatGraphR)
 			xr_delete(pStatGraphR);
 	}
-	g_pGamePersistent->Environment().m_paused		= m_bEnvPaused;
+	g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
 #endif
-	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
+	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
-	ResetEvent(m_mtScriptUpdaterEventEnd);
-	SetEvent(m_mtScriptUpdaterEventStart);
 
-	m_ph_commander->update				();
-	m_ph_commander_scripts->update		();
-
-	//  
-	Device.Statistic->TEST0.Begin		();
-	BulletManager().CommitRenderSet		();
-	Device.Statistic->TEST0.End			();
+	m_ph_commander->update();
+	m_ph_commander_scripts->update();
+	BulletManager().CommitRenderSet();
 
 	// update static sounds
-    Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
+	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
 	// deffer LUA-GC-STEP
-    Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
+	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
 	//-----------------------------------------------------
 	if (pStatGraphR)
-	{	
+	{
 		static	float fRPC_Mult = 10.0f;
 		static	float fRPS_Mult = 1.0f;
 

@@ -1597,8 +1597,6 @@ void CCC_RegisterCommands()
 	CMD1(CCC_ALifeObjectsPerUpdate, "al_objects_per_update");		// set process time
 	CMD1(CCC_ALifeSwitchFactor, "al_switch_factor");		// set switch factor
 
-
-
 	CMD3(CCC_Mask, "hud_weapon", &psHUD_Flags, HUD_WEAPON);
 	CMD3(CCC_Mask, "hud_info", &psHUD_Flags, HUD_INFO);
 	CMD3(CCC_Mask, "hud_draw", &psHUD_Flags, HUD_DRAW);
