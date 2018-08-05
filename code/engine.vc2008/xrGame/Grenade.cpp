@@ -14,8 +14,7 @@
 
 const float default_grenade_detonation_threshold_hit=100;
 CGrenade::CGrenade(void) 
-{
-	m_flags.set(FUsingCondition, FALSE);
+{	
 	m_destroy_callback.clear();
 	m_eSoundCheckout = ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING);
 }
