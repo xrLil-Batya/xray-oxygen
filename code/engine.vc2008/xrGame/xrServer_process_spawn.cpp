@@ -9,7 +9,6 @@
 CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpawnWithClientsMainEntityAsParent, CSE_Abstract* tpExistedEntity)
 {
 	// create server entity
-    CClient* CL	= ID_to_client	(sender);
 	CSE_Abstract*	pAbstractE	= tpExistedEntity;
 	if (!pAbstractE)
 	{
@@ -41,10 +40,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	}
 
 	// check if we can assign entity to some client
-	if (!CL)
-	{
-		CL	= SV_Client;
-	}
+	CClient* CL	= SV_Client;
 
 	// check for respawn-capability and create phantom as needed
 	if (pAbstractE->RespawnTime && (0xffff== pAbstractE->ID_Phantom))
@@ -88,13 +84,13 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	}
 
 	// PROCESS NAME; Name this entity
-	if (CL && (pAbstractE->s_flags.is(M_SPAWN_OBJECT_ASPLAYER)))
+	if (pAbstractE->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 	{
 		CL->owner = pAbstractE;
 	}
 
 	// PROCESS RP;	 3D position/orientation
-	pAbstractE->s_RP					= 0xFE;	// Use supplied
+	pAbstractE->s_RP = 0xFE;	// Use supplied
 
 	// Parent-Connect
 	if (!tpExistedEntity) {

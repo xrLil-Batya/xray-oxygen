@@ -119,7 +119,6 @@ public:
 	void					entity_Destroy		(CSE_Abstract *&P);
 	CSE_Abstract*			GetEntity			(u32 Num);
 
-    CClient*			    ID_to_client(ClientID ID, bool ScanAll = false);
 	CSE_Abstract*			ID_to_entity		(u16 ID);
 
 	// main
