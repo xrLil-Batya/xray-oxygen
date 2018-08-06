@@ -21,6 +21,7 @@ namespace xrPostprocessEditor
     public class EditorEngine : IDisposable
     {
         private BasicPostProcessAnimator _animator;
+        private const int DefaultValueIdx = 0;
 
         public delegate void ErrorHandler(string message);
 
@@ -119,6 +120,16 @@ namespace xrPostprocessEditor
             using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.GrayValue))
             {
                 param.UpdateValue(time, color.A, 0);
+            }
+        }
+
+        public void UpdateValue(int keyIndex, PostProcessParamType type, decimal value)
+        {
+            using (PostProcessParamBase param = _animator.GetParam(type))
+            {
+                float time = param.GetKeyTime(keyIndex);
+
+                param.UpdateValue(time, (float) value, DefaultValueIdx);
             }
         }
 

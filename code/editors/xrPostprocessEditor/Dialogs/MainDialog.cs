@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
@@ -8,6 +9,19 @@ namespace xrPostprocessEditor
 {
     public partial class MainDialog
     {
+        // XXX collectioner: Temporary mock, should be refactoring
+        private static readonly Dictionary<PostProcessParamType, List<PostProcessParamType>> TypesRelationships =
+            new Dictionary<PostProcessParamType, List<PostProcessParamType>>
+            {
+                {
+                    PostProcessParamType.DualityH, new List<PostProcessParamType>
+                    {
+                        PostProcessParamType.DualityH,
+                        PostProcessParamType.DualityV
+                    }
+                }
+            };
+
         private class ChannelDesc
         {
             public int SelectedKey = DefaultUnselectedIndex;
@@ -99,8 +113,8 @@ namespace xrPostprocessEditor
         private void UpdateDuality(int keyIndex)
         {
             Vector2F value = Engine.GetDuality(keyIndex);
-            //nslDualityX.Value = (decimal)value.x;
-            //nslDualityY.Value = (decimal)value.y;
+            nslDualityX.Value = (decimal)value.x;
+            nslDualityY.Value = (decimal)value.y;
         }
 
         private void UpdateNoise(int keyIndex)
@@ -238,6 +252,9 @@ namespace xrPostprocessEditor
             cpAC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.AddColor, color);
             cpBC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.BaseColor, color);
             cpGC.ColorChanged += (s, color) => UpdateEngineValue(PostProcessParamType.GrayColor, color);
+
+            nslDualityX.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityH, value);
+            nslDualityY.ValueChanged += (s, value) => UpdateEngineValue(PostProcessParamType.DualityV, value);
         }
 
         private void UpdateEngineValue(PostProcessParamType paramType, Color color)
@@ -245,12 +262,24 @@ namespace xrPostprocessEditor
             var channel = _chInfo.First(ch => ch.Type == paramType);
             if (channel.SelectedKey == -1) return;
 
-            UpdateEngineValue(channel.SelectedKey, paramType, color);
+            Engine.UpdateColorValue(channel.SelectedKey, paramType, color);
         }
 
-        private void UpdateEngineValue(int keyTimeIdx, PostProcessParamType paramType, Color value)
+        // XXX collectioner: Refactor this fucking shit!
+        private void UpdateEngineValue(PostProcessParamType paramType, decimal value)
         {
-            Engine.UpdateColorValue(keyTimeIdx, paramType, value);
+            KeyValuePair<PostProcessParamType, List<PostProcessParamType>> relationPair =
+                TypesRelationships.FirstOrDefault(item => item.Value.Contains(paramType));
+
+            PostProcessParamType searchedType =
+                relationPair.Equals(default(KeyValuePair<PostProcessParamType, List<PostProcessParamType>>))
+                    ? paramType
+                    : relationPair.Key;
+
+            ChannelDesc channel = _chInfo.FirstOrDefault(ch => ch.Type == searchedType);
+            if (channel == null || channel.SelectedKey == -1) return;
+
+            Engine.UpdateValue(channel.SelectedKey, paramType, value);
         }
     }
 }
