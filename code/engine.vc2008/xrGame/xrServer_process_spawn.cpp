@@ -84,7 +84,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	}
 
 	// PROCESS NAME; Name this entity
-	if (pAbstractE->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
+	if (CL && pAbstractE->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 	{
 		CL->owner = pAbstractE;
 	}
