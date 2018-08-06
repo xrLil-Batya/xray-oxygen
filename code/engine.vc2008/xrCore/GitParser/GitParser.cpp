@@ -16,7 +16,7 @@ std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) no
 	std::string temp_str = Str;
 
 	size_t SubStrBeginCursor = 0;
-	size_t Len;
+	size_t Len = 0;
 	for (size_t StrCursor = 0; StrCursor < StrSize; ++StrCursor)
 	{
 		if (Str[StrCursor] == splitCh)
@@ -39,7 +39,7 @@ std::vector<std::string> Split(std::string Str, size_t StrSize, char splitCh) no
 int main()
 {
 #ifndef APPVEYOR
-	std::ifstream *Reader;
+	std::ifstream *Reader = nullptr;
 	std::string PathFile = "../../../.git/";
 
 	// Получаем ветку
