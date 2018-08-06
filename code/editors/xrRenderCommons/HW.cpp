@@ -405,7 +405,7 @@ u32 CHW::selectRefresh(u32 dwWidth, u32 dwHeight, D3DFORMAT fmt)
 		u32 count = pD3D->GetAdapterModeCount(DevAdapter, fmt);
 		for (u32 I = 0; I < count; ++I)
 		{
-			D3DDISPLAYMODE	Mode;
+			D3DDISPLAYMODE Mode;
 			pD3D->EnumAdapterModes(DevAdapter, fmt, I, &Mode);
 			if (Mode.Width == dwWidth && Mode.Height == dwHeight)
 			{

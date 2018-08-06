@@ -49,11 +49,11 @@ void bwdithermap	(int levels, int magic[16][16])
 	*/
 
     float	magicfact = (N - 1) / 16;
-    for ( int i = 0; i < 4; i++ )
-		for ( int j = 0; j < 4; j++ )
-			for ( int k = 0; k < 4; k++ )
-				for ( int l = 0; l < 4; l++ )
-					magic[4*k+i][4*l+j] =
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			for (int k = 0; k < 4; k++)
+				for (int l = 0; l < 4; l++)
+					magic[4 * k + i][4 * l + j] =
 					(int)(0.5 + magic4x4[i][j] * magicfact +
 					(magic4x4[k][l] / 16.) * magicfact);
 }
@@ -110,7 +110,7 @@ CDetailManager::CDetailManager	()
 
 	cache_pool = (Slot *)Memory.mem_alloc(dm_cache_size * sizeof(Slot));
 	for (u32 i = 0; i < dm_cache_size; ++i)
-		new (&(cache_pool[i])) Slot();	
+		new (&(cache_pool[i])) Slot();
 	
 }
 

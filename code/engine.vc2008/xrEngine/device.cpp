@@ -15,6 +15,7 @@
 /////////////////////////////////////
 #include "x_ray.h"
 #include "render.h"
+#include "XR_IOConsole.h"
 /////////////////////////////////////
 #ifdef INGAME_EDITOR
 #include "../include/editor/ide.hpp"
@@ -304,8 +305,10 @@ void CRenderDevice::on_idle		()
 
 void CRenderDevice::ResizeProc(DWORD height, DWORD  width)
 {
-	if(g_bL)
-		m_pRender->ResizeWindowProc((WORD)height, (WORD)width);
+	std::string buf = "vid_mode " + std::to_string(width) + "x" + std::to_string(height);
+	Console->Execute(buf.c_str());
+
+	m_pRender->Reset(m_hWnd, dwWidth, dwHeight, fWidth_2, fHeight_2);
 }
 
 #ifdef INGAME_EDITOR
@@ -411,7 +414,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     case WPS_Windowed:
     {
         psDeviceFlags.set(rsFullscreen, false);
-        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX/* | WS_SIZEBOX */;
+        dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
 
         SetRect	(&WindowBounds,
 				(DesktopRect.right - dwWidth) / 2,
