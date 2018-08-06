@@ -112,6 +112,7 @@ public:
 	IC float				GetPsyHealth			() const			{return m_fPsyHealth;}
 	IC float				GetSatiety				() const			{return 1.0f;}
 	IC float				GetThirst				() const			{return 1.0f;}
+	IC float                GetAlcohol              () const            {return 0.0f;}
 
 	IC float 				GetEntityMorale			() const			{return m_fEntityMorale;}
 
