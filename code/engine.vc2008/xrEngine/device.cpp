@@ -604,6 +604,16 @@ BOOL CRenderDevice::Paused()
 	return g_pauseMngr.Paused();
 };
 
+void CRenderDevice::ProcessSingleMessage()
+{
+	MSG		msg;
+	if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+	{
+		TranslateMessage(&msg);
+		DispatchMessage(&msg);
+	}
+}
+
 void CRenderDevice::OnWM_Activate(WPARAM wParam, LPARAM lParam)
 {
 	u16 fActive						= LOWORD(wParam);

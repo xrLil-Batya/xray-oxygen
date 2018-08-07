@@ -106,7 +106,7 @@ void mtLevelScriptUpdater(void* pCLevel)
 	while (true)
 	{
 		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
-		if (Device.mt_bMustExit) return;
+		if (g_pGameLevel != pLevel) return;
 
 		// Disable objects
 		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
@@ -182,6 +182,7 @@ extern CAI_Space *g_ai_space;
 
 CLevel::~CLevel()
 {
+	g_pGameLevel = nullptr;
 	SetEvent(m_mtScriptUpdaterEventStart);
 	xr_delete(g_player_hud);
 	delete_data(hud_zones_list);
@@ -473,7 +474,17 @@ void CLevel::OnFrame()
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
 	}
 
-	WaitForSingleObject(m_mtScriptUpdaterEventEnd, INFINITE);
+	// Level Script Updater thread can issue a exception. But it require to process one message from HWND message queue, otherwise, Level script can't show error message
+	DWORD WaitResult = WAIT_TIMEOUT;
+
+ 	do
+ 	{
+ 		WaitResult = WaitForSingleObject(m_mtScriptUpdaterEventEnd, 66); // update message box with 15 fps
+ 		if (WaitResult == WAIT_TIMEOUT)
+ 		{
+ 			Device.ProcessSingleMessage();
+ 		}
+ 	} while (WaitResult == WAIT_TIMEOUT);
 }
 
 int		psLUA_GCSTEP					= 10			;

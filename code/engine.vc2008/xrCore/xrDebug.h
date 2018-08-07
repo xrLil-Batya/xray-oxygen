@@ -62,5 +62,6 @@ std::string make_string(const char* format, const Args&... args)
 }
 
 extern XRCORE_API	xrDebug		Debug;
+extern XRCORE_API   HWND		gGameWindow;
 
 #include "xrDebug_macros.h"

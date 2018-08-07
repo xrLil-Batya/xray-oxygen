@@ -160,6 +160,9 @@ private:
 public:
 	LRESULT									MsgProc		(HWND,UINT,WPARAM,LPARAM);
 
+	// Get single WinAPI message and process it
+	void									ProcessSingleMessage();
+
 	u32										dwPrecacheTotal;
 
 	float									fWidth_2, fHeight_2;

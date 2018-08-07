@@ -97,7 +97,7 @@ static void MtSecondActorUpdate(void* pActorPointer)
 	{
 		WaitForSingleObject(pActor->MtSecondUpdaterEventStart, INFINITE);
 
-		if (Device.mt_bMustExit) return;
+		if (pActorPointer != g_actor) return;
 
 		// Update hardcode mode
 		if (psActorFlags.test(AF_HARDCORE))
@@ -854,7 +854,16 @@ void CActor::UpdateCL()
 
 		Device.m_SecondViewport.SetSVPActive(false);
 	}
-	WaitForSingleObject(MtSecondUpdaterEventEnd, INFINITE);
+
+	DWORD WaitResult = WAIT_TIMEOUT;
+	do
+	{
+		WaitResult = WaitForSingleObject(MtSecondUpdaterEventEnd, 66); // update message box with 15 fps
+		if (WaitResult == WAIT_TIMEOUT)
+		{
+			Device.ProcessSingleMessage();
+		}
+	} while (WaitResult == WAIT_TIMEOUT);
 
 	float cs_min = pSettings->r_float(cNameSect(), "ph_crash_speed_min");
 	float cs_max = pSettings->r_float(cNameSect(), "ph_crash_speed_max");
