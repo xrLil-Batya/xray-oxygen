@@ -8,6 +8,14 @@ private:
 	float	fContrast;
 	Fvector	cBalance;
 
+#if defined(USE_DX10) || defined(USE_DX11)
+	DXGI_GAMMA_CONTROL_CAPABILITIES GC;
+	DXGI_GAMMA_CONTROL G;
+	IDXGIOutput* pOutput;
+#else
+	D3DGAMMARAMP G;
+#endif
+
 public:
 				CGammaControl	();
 
@@ -15,20 +23,21 @@ public:
 	IC	void	SetBalance		(float r, float g, float b)		{ cBalance.set(r, g, b); }
 	IC	void	SetBalance		(Fvector &C)					{ SetBalance(C.x, C.y, C.z); }
 
+#if defined(USE_DX10) || defined(USE_DX11)
+	IC DXGI_GAMMA_CONTROL	GetLUT() const { return G; }
+#else
+	IC D3DGAMMARAMP			GetLUT() const { return G; }
+#endif
 	IC	float	GetGamma		() const						{ return fGamma; }
 	IC	float	GetBrightness	() const						{ return fBrightness; }
 	IC	float	GetContrast		() const						{ return fContrast; }
-	IC	void	SetGamma		(float G)						{ fGamma = G; }
-	IC	void	SetBrightness	(float B)						{ fBrightness = B; }
-	IC	void	SetContrast		(float C)						{ fContrast	= C; }
+	IC	void	SetGamma		(float val)						{ fGamma = val; }
+	IC	void	SetBrightness	(float val)						{ fBrightness = val; }
+	IC	void	SetContrast		(float val)						{ fContrast	= val; }
 
 		void	GetIP			(float& G, float &B, float& C, Fvector& Balance);
 		void	Update			();
 
 private:
-#if defined(USE_DX10) || defined(USE_DX11)
-		void	GenLUT			(const DXGI_GAMMA_CONTROL_CAPABILITIES &GC, DXGI_GAMMA_CONTROL &G);
-#else	//	USE_DX10
-		void	GenLUT			(D3DGAMMARAMP &G);
-#endif	//	USE_DX10
+		void	GenLUT			();
 };

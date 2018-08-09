@@ -698,6 +698,16 @@ public:
 #endif	//	DEBUG
 #endif	//	(RENDER == R_R3) || (RENDER == R_R4)
 
+class CCC_SaveGammaLUT : public IConsole_Command
+{
+public:
+	CCC_SaveGammaLUT(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; }
+	virtual void Execute(LPCSTR args)
+	{
+		RImplementation.Target->SaveGammaLUT();
+	}
+};
+
 //-----------------------------------------------------------------------
 void xrRender_initconsole()
 {
@@ -707,6 +717,8 @@ void xrRender_initconsole()
 #ifdef DEBUG
 	CMD1(CCC_DumpResources,	"dump_resources");
 #endif
+
+	CMD1(CCC_SaveGammaLUT, "r_dbg_save_gamma_lut");
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);

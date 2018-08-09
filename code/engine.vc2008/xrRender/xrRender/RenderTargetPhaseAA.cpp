@@ -2,15 +2,19 @@
 
 void CRenderTarget::ProcessFXAA()
 {
-	u32 Offset = 0;
 	float _w = float(Device.dwWidth);
 	float _h = float(Device.dwHeight);
 
 	// Luminance pass
-	render_screen_quad(_w, _h, Offset, s_fxaa->E[0]);
+	RenderScreenQuad(_w, _h, rt_Generic_0, s_fxaa->E[0]);
 
 	// Main pass
-	render_screen_quad(_w, _h, Offset, s_fxaa->E[1], true);
+#if defined(USE_DX10) || defined(USE_DX11)
+	RenderScreenQuad(_w, _h, rt_Generic, s_fxaa->E[1]);
+	HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
+#else
+	RenderScreenQuad(_w, _h, rt_Generic_0, s_fxaa->E[1]);
+#endif
 }
 
 void CRenderTarget::ProcessSMAA()

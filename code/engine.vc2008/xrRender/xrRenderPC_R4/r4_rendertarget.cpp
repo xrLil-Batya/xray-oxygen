@@ -17,6 +17,7 @@
 #include "blender_rain_drops.h"
 #include "blender_ssss_mrmnwar.h"
 #include "blender_ssss_ogse.h"
+#include "blender_gamma.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -294,6 +295,7 @@ CRenderTarget::CRenderTarget()
 	b_rain_drops					= xr_new<CBlender_rain_drops>			();
 	b_ssss_mrmnwar					= xr_new<CBlender_ssss_mrmnwar>			();
 	b_ssss_ogse						= xr_new<CBlender_ssss_ogse>			();
+	b_gamma							= xr_new<CBlender_gamma>				();
 
 	if (RImplementation.o.dx10_msaa)
 	{
@@ -660,6 +662,13 @@ CRenderTarget::CRenderTarget()
 		t_envmap_1.create				(r2_T_envs1);
 	}
 
+	// Gamma correction 
+	{
+		// RT, used as look up table
+		rt_GammaLUT.create			(r2_RT_gamma_lut, 256, 1, D3DFMT_A8R8G8B8);
+		s_gamma.create				(b_gamma);
+	}
+
 	// Build textures
 	{
 		// Testure for async sreenshots
@@ -984,6 +993,7 @@ CRenderTarget::~CRenderTarget()
 	}
 	xr_delete							(b_accum_mask);
 	xr_delete							(b_occq);
+	xr_delete							(b_gamma);
 }
 
 void CRenderTarget::reset_light_marker(bool bResetStencil)
@@ -1059,13 +1069,14 @@ bool CRenderTarget::use_minmax_sm_this_frame()
 
 }
 
-void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
+	u32 Offset	= 0;
 	float d_Z	= EPS_S;
 	float d_W	= 1.0f;
-	u32	C		= color_rgba(255, 255, 255, 255);
+	u32	C		= color_rgba(0, 0, 0, 255);
 
-    u_setrt				(rt, nullptr, nullptr, HW.pBaseZB);
+    u_setrt				(w, h, rt, nullptr, nullptr, HW.pBaseZB);
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(FALSE);
  
@@ -1084,12 +1095,9 @@ void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, re
 	}
     RCache.set_Geometry	(g_combine);
     RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-
-	if (bCopyRT && rt == rt_Generic)
-		HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
 }
 
-void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ref_rt &rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
-	render_screen_quad(w, h, Offset, rt_Generic, sh, bCopyRT, consts);
+	RenderScreenQuad(w, h, rt->pRT, sh, consts);
 }
