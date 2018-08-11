@@ -149,8 +149,40 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		D3D_FEATURE_LEVEL_11_0
 	};
 
-	R = D3D11CreateDeviceAndSwapChain(nullptr, m_DriverType, 0, createDeviceFlags, pFeatureLevels, sizeof(pFeatureLevels) / sizeof(pFeatureLevels[0]),
-		D3D11_SDK_VERSION, &sd, &m_pSwapChain, &pDevice, &FeatureLevel, &pContext);
+	R = D3D11CreateDeviceAndSwapChain(
+		NULL,
+		m_DriverType,
+		NULL,
+		createDeviceFlags,
+		pFeatureLevels,
+		sizeof(pFeatureLevels) / sizeof(pFeatureLevels[0]),
+		D3D11_SDK_VERSION,
+		&sd,
+		&m_pSwapChain,
+		&pDevice,
+		&FeatureLevel,
+		&pContext
+	);
+
+	if (FAILED(R))
+	{
+
+		R_CHK(D3D11CreateDeviceAndSwapChain(
+			NULL,
+			m_DriverType,
+			NULL,
+			createDeviceFlags,
+			&pFeatureLevels[1],
+			sizeof(pFeatureLevels) / sizeof(pFeatureLevels[0] - 1),
+			D3D11_SDK_VERSION,
+			&sd,
+			&m_pSwapChain,
+			&pDevice,
+			&FeatureLevel,
+			&pContext
+			)
+		);
+	}
 
 	D3D11_FEATURE_DATA_THREADING threadingFeature;
 	R_CHK(pDevice->CheckFeatureSupport(D3D11_FEATURE_THREADING, &threadingFeature, sizeof(threadingFeature)));
@@ -186,7 +218,7 @@ void CHW::CreateDevice(HWND m_hWnd, bool move_window)
 		R = pDXGIDevice->SetMaximumFrameLatency(1);
 	}
 #else
-	R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, 0, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
+	R = D3DX10CreateDeviceAndSwapChain(m_pAdapter, m_DriverType, NULL, createDeviceFlags, &sd, &m_pSwapChain, &pDevice);
 
 	pContext = pDevice;
 	FeatureLevel = D3D_FEATURE_LEVEL_10_0;
@@ -269,7 +301,7 @@ void CHW::Reset(HWND hwnd)
 	sd.Windowed		= bWindowed;
 	sd.BufferCount	= psDeviceFlags.test(rsTripleBuffering) ? 2 : 1;
 
-	m_pSwapChain->SetFullscreenState(!bWindowed, 0);
+	m_pSwapChain->SetFullscreenState(!bWindowed, NULL);
 
 	DXGI_MODE_DESC	&desc = m_ChainDesc.BufferDesc;
 
@@ -289,7 +321,9 @@ void CHW::Reset(HWND hwnd)
 		desc.Width,
 		desc.Height,
 		desc.Format,
-		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH));
+		DXGI_SWAP_CHAIN_FLAG_ALLOW_MODE_SWITCH
+		)
+	);
 
 	UpdateViews();
 }
