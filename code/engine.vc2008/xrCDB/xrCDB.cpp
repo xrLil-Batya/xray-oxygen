@@ -28,10 +28,10 @@ bool APIENTRY DllMain(HANDLE hModule, u32  ul_reason_for_call, LPVOID lpReserved
 // Model building
 MODEL::MODEL()
 {
-	tree = 0;
-	tris = 0;
+	tree = nullptr;
+	tris = nullptr;
 	tris_count = 0;
-	verts = 0;
+	verts = nullptr;
 	verts_count = 0;
 	status = S_INIT;
 }
@@ -185,7 +185,6 @@ void MODEL::build_internal(Fvector* V, int Vcnt, TRI* T, int Tcnt, void* pCache,
 
 	// Free temporary tris
 	xr_free(temp_tris);
-	return;
 }
 
 size_t MODEL::memory()
@@ -216,7 +215,7 @@ COLLIDER::~COLLIDER()
 
 RESULT& COLLIDER::r_add()
 {
-	rd.push_back(RESULT());
+	rd.emplace_back();
 	return rd.back();
 }
 

@@ -1654,9 +1654,6 @@
     <Filter Include="Core\Common\Console Commands">
       <UniqueIdentifier>{fed61a6f-3144-47c0-b297-6f3626b8520a}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Common\DateTime">
-      <UniqueIdentifier>{d52d9fe2-24ff-498d-bded-0d0b1f3084e4}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Common\Dll Process Detach">
       <UniqueIdentifier>{d4d6cd6d-4820-47aa-92c5-4652d0af0a91}</UniqueIdentifier>
     </Filter>

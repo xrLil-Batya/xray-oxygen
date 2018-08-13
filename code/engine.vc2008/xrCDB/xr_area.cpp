@@ -39,7 +39,7 @@ int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*
 	// Iterate
 	for (ISpatial* it: q_spatial) {
 		CObject* O = it->dcast_CObject();
-		if (0 == O)				continue;
+		if (nullptr == O)				continue;
 		if (O == ignore_object)	continue;
 		Fsphere mS = { O->spatial.sphere.P, O->spatial.sphere.R };
 		if (Q.intersect(mS))	q_nearest.push_back(O);

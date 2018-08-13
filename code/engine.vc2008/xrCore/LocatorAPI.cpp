@@ -68,7 +68,7 @@ struct eq_fname_free{
 	shared_str _val;
 	eq_fname_free(shared_str s){_val = s;}
 	bool operator () (_open_file& itm){
-		return ( _val==itm._fn && itm._reader==NULL);
+		return ( _val==itm._fn && itm._reader==nullptr);
 	}
 };
 
@@ -76,7 +76,7 @@ struct eq_fname_check{
 	shared_str _val;
 	eq_fname_check(shared_str s){_val = s;}
 	bool operator () (_open_file& itm){
-		return ( _val==itm._fn && itm._reader!=NULL);
+		return ( _val==itm._fn && itm._reader!=nullptr);
 	}
 };
 
@@ -138,7 +138,7 @@ void _unregister_open_file(T* _r)
 	xr_vector<_open_file>::iterator it	= std::find_if(g_open_files.begin(), g_open_files.end(), eq_pointer<T>(_r) );
 	VERIFY								(it!=g_open_files.end());
 	_open_file&	_of						= *it;
-	_of._reader							= NULL;
+	_of._reader							= nullptr;
 	//_lock.Leave				();
 }
 
@@ -153,7 +153,7 @@ XRCORE_API void _dump_open_files(int mode)
 		for(; it!=it_e; ++it)
 		{
 			_open_file& _of = *it;
-			if(_of._reader!=NULL)
+			if(_of._reader!=nullptr)
 			{
 				if(!bShow)
 					Log("----opened files");
@@ -168,7 +168,7 @@ XRCORE_API void _dump_open_files(int mode)
 		for(it = g_open_files.begin(); it!=it_e; ++it)
 		{
 			_open_file& _of = *it;
-			if(_of._reader==NULL)
+			if(_of._reader==nullptr)
 				Msg("[%d] fname:%s", _of._used ,_of._fn.c_str());
 		}
 	}
@@ -236,7 +236,7 @@ void CLocatorAPI::Register		(const char* name, u32 vfs, u32 crc, u32 ptr, u32 si
 	string_path			folder;
 	while (temp[0]) 
 	{
-		_splitpath		(temp, path, folder, 0, 0 );
+		_splitpath		(temp, path, folder, nullptr, nullptr );
         xr_strcat			(path,folder);
 		if (!exist(path))	
 		{
@@ -259,19 +259,19 @@ IReader* open_chunk(void* ptr, u32 ID)
 	BOOL			res;
 	u32				dwType, dwSize;
 	DWORD			read_byte;
-	u32 pt			= SetFilePointer(ptr,0,0,FILE_BEGIN); VERIFY(pt!=INVALID_SET_FILE_POINTER);
+	u32 pt			= SetFilePointer(ptr,0,nullptr,FILE_BEGIN); VERIFY(pt!=INVALID_SET_FILE_POINTER);
 	while (true){
-		res			= ReadFile	(ptr,&dwType,4,&read_byte,0); 
+		res			= ReadFile	(ptr,&dwType,4,&read_byte,nullptr); 
 		if(read_byte==0)
-			return NULL;
+			return nullptr;
 
-		res			= ReadFile	(ptr,&dwSize,4,&read_byte,0); 
+		res			= ReadFile	(ptr,&dwSize,4,&read_byte,nullptr); 
 		if(read_byte==0)
-			return NULL;
+			return nullptr;
 
 		if ((dwType&(~CFS_CompressMark)) == ID) {
 			u8* src_data	= xr_alloc<u8>(dwSize);
-			res				= ReadFile	(ptr,src_data,dwSize,&read_byte,0); VERIFY(res&&(read_byte==dwSize));
+			res				= ReadFile	(ptr,src_data,dwSize,&read_byte,nullptr); VERIFY(res&&(read_byte==dwSize));
 			if (dwType&CFS_CompressMark) {
 				BYTE*			dest;
 				unsigned		dest_sz;
@@ -281,11 +281,11 @@ IReader* open_chunk(void* ptr, u32 ID)
 			} else 
 				return new CTempReader(src_data,dwSize,0);
 		} else { 
-			pt		= SetFilePointer(ptr,dwSize,0,FILE_CURRENT); 
-			if (pt==INVALID_SET_FILE_POINTER) return 0;
+			pt		= SetFilePointer(ptr,dwSize,nullptr,FILE_CURRENT); 
+			if (pt==INVALID_SET_FILE_POINTER) return nullptr;
 		}
 	}
-	return 0;
+	return nullptr;
 };
 
 #ifndef PVS_STUDIO // IReader* hdr: is not a memory leak
@@ -383,20 +383,20 @@ void CLocatorAPI::archive::open()
 	if(hSrcFile && hSrcMap)
 		return;
 
-	hSrcFile		= CreateFile(*path, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, 0, OPEN_EXISTING, 0, 0);
+	hSrcFile		= CreateFile(*path, GENERIC_READ, FILE_SHARE_READ|FILE_SHARE_WRITE, nullptr, OPEN_EXISTING, 0, nullptr);
 	R_ASSERT		(hSrcFile!=INVALID_HANDLE_VALUE);
-	hSrcMap			= CreateFileMapping	(hSrcFile, 0, PAGE_READONLY, 0, 0, 0);
+	hSrcMap			= CreateFileMapping	(hSrcFile, nullptr, PAGE_READONLY, 0, 0, nullptr);
 	R_ASSERT		(hSrcMap!=INVALID_HANDLE_VALUE);
-	size			= GetFileSize(hSrcFile,0);
+	size			= GetFileSize(hSrcFile,nullptr);
 	R_ASSERT		(size>0);
 }
 
 void CLocatorAPI::archive::close()
 {
 	CloseHandle		(hSrcMap);
-	hSrcMap			= NULL;
+	hSrcMap			= nullptr;
 	CloseHandle		(hSrcFile);
-	hSrcFile		= NULL;
+	hSrcFile		= nullptr;
 }
 
 void CLocatorAPI::ProcessArchive(const char* _path)
@@ -408,7 +408,7 @@ void CLocatorAPI::ProcessArchive(const char* _path)
         if (it.path == path)
             return;
 
-	m_archives.push_back		(archive());
+	m_archives.emplace_back		();
 	archive& A					= m_archives.back();
 	A.vfs_idx					= (u32)m_archives.size()-1;
 	A.path						= path;
@@ -513,8 +513,7 @@ bool ignore_name(const char* _name)
 // be interpolated by FindNextFile()
 
 bool ignore_path(const char* _path){
-	HANDLE h = CreateFile( _path, 0, 0, NULL, OPEN_EXISTING,
-		FILE_ATTRIBUTE_READONLY | FILE_FLAG_NO_BUFFERING, NULL);
+	HANDLE h = CreateFile( _path, 0, 0, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_READONLY | FILE_FLAG_NO_BUFFERING, nullptr);
 
 	if (h!=INVALID_HANDLE_VALUE)
 	{
@@ -688,14 +687,14 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 
 	// append application path
 	if (m_Flags.is(flScanAppRoot))
-		append_path	("$app_root$",Core.ApplicationPath,0,FALSE);
+		append_path	("$app_root$",Core.ApplicationPath,nullptr,FALSE);
 
 
 	//-----------------------------------------------------------
 	// append application data path
 	// target folder 
 	if (m_Flags.is(flTargetFolderOnly))
-		append_path		("$target_folder$",target_folder,0,TRUE);
+		append_path		("$target_folder$",target_folder,nullptr,TRUE);
 	else
 	{
 	IReader			*pFSltx = setup_fs_ltx(fs_name);
@@ -735,9 +734,9 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 			xr_strlwr			(id);
 
 			xr_strlwr			(root);
-			lp_add				=(cnt>=4)?xr_strlwr(add):0;
-			lp_def				=(cnt>=5)?def:0;
-			lp_capt				=(cnt>=6)?capt:0;
+			lp_add				=(cnt>=4)?xr_strlwr(add):nullptr;
+			lp_def				=(cnt>=5)?def:nullptr;
+			lp_capt				=(cnt>=6)?capt:nullptr;
 			
 			auto p_it		= pathes.find(root);
 
@@ -746,7 +745,7 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
                 //Old good fsltx
                 //replace root with predefined path
                 //xr_strcpy(root, fsRoot.generic_string().c_str());
-                FS_Path* P = new FS_Path(xr_strdup(fsRoot.generic_string().c_str()), 0, 0, 0, 0);
+                FS_Path* P = new FS_Path(xr_strdup(fsRoot.generic_string().c_str()), nullptr, nullptr, nullptr, 0);
                 pathes.insert(std::make_pair(xr_strdup("$fs_root$"), P));
                 p_it = pathes.find(root);
             }
@@ -792,7 +791,7 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 	rec_files.clear	();
 	//-----------------------------------------------------------
 
-	CreateLog		(0!=strstr(Core.Params,"-nolog"));
+	CreateLog		(nullptr!=strstr(Core.Params,"-nolog"));
 
 }
 
@@ -800,9 +799,9 @@ void CLocatorAPI::_destroy		()
 {
 	CloseLog		();
 
-	for				(files_it I=m_files.begin(); I!=m_files.end(); I++)
+	for				(const auto & file : m_files)
 	{
-		char* str	= const_cast<char*>(I->name);
+		char* str	= const_cast<char*>(file.name);
 		xr_free		(str);
 	}
 	m_files.clear		();
@@ -824,7 +823,7 @@ void CLocatorAPI::_destroy		()
 const CLocatorAPI::file* CLocatorAPI::exist			(const char* fn)
 {
 	files_it it		= file_find_it(fn);
-	return (it!=m_files.end())?&(*it):0;
+	return (it!=m_files.end())?&(*it):nullptr;
 }
 
 const CLocatorAPI::file* CLocatorAPI::exist			(const char* path, const char* name)
@@ -873,7 +872,7 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 	file			desc;
 	desc.name		= N;
 	files_it	I 	= m_files.find(desc);
-	if (I==m_files.end())	return 0;
+	if (I==m_files.end())	return nullptr;
 	
 	xr_vector<char*>*	dest	= new xr_vector<char*> ();
 
@@ -891,7 +890,7 @@ xr_vector<char*>* CLocatorAPI::file_list_open			(const char* _path, u32 flags)
 			if ((flags&FS_RootOnly)&&strstr(entry_begin,"\\"))	continue;	// folder in folder
 			dest->push_back			(xr_strdup(entry_begin));
             char* fname 			= dest->back();
-            if (flags&FS_ClampExt)	if (0!=strext(fname)) *strext(fname)=0;
+            if (flags&FS_ClampExt)	if (nullptr!=strext(fname)) *strext(fname)=0;
 		} else {
 			// folder
 			if ((flags&FS_ListFolders) == 0)continue;
@@ -909,8 +908,8 @@ void	CLocatorAPI::file_list_close	(xr_vector<char*>* &lst)
 {
 	if (lst) 
 	{
-		for (xr_vector<char*>::iterator I=lst->begin(); I!=lst->end(); I++)
-			xr_free	(*I);
+		for (char* I : *lst)
+			xr_free	(I);
 		xr_delete	(lst);
 	}
 }
@@ -1170,7 +1169,7 @@ void CLocatorAPI::copy_file_to_build	(T *&r, const char* source_name)
     if (!ext)
 		return;
 
-    IReader* R		= 0;
+    IReader* R		= nullptr;
     if (0==xr_strcmp(ext,".dds")){
         P			= get_path("$game_textures$");               
         update_path	(e_cpy_name,"$textures$",source_name+xr_strlen(P->m_Path));
@@ -1237,7 +1236,7 @@ T *CLocatorAPI::r_open_impl	(const char* path, const char* _fname)
 {
 	T						*R = 0;
 	string_path				fname;
-	const file				*desc = 0;
+	const file				*desc = nullptr;
 	const char*					source_name = &fname[0];
 
 	if (!check_for_file(path,_fname,fname,desc))

@@ -318,6 +318,7 @@ start GitParser\GitParser.exe</Command>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="ThreadManager.cpp" />
     <ClCompile Include="threadpool\ttapi_oxygen.cpp" />
     <ClCompile Include="XMLCore\Expression.cpp" />
     <ClCompile Include="xrAPI.cpp" />
