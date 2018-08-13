@@ -21,6 +21,7 @@ namespace xrPostprocessEditor
     public class EditorEngine : IDisposable
     {
         private BasicPostProcessAnimator _animator;
+        private const int DefaultValueIdx = 0;
 
         public delegate void ErrorHandler(string message);
 
@@ -101,15 +102,34 @@ namespace xrPostprocessEditor
             }
         }
 
-        public void UpdateAddColor(int keyIndex, Color color)
+        public void UpdateColorValue(int keyIndex, PostProcessParamType type, Color color)
         {
-            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.AddColor))
+            float time;
+
+            using (PostProcessParamBase param = _animator.GetParam(type))
             {
-                float time = param.GetKeyTime(keyIndex);
+                time = param.GetKeyTime(keyIndex);
 
                 param.UpdateValue(time, color.R, 0);
                 param.UpdateValue(time, color.G, 1);
                 param.UpdateValue(time, color.B, 2);
+            }
+
+            if (type != PostProcessParamType.GrayColor) return;
+
+            using (PostProcessParamBase param = _animator.GetParam(PostProcessParamType.GrayValue))
+            {
+                param.UpdateValue(time, color.A, 0);
+            }
+        }
+
+        public void UpdateValue(int keyIndex, PostProcessParamType type, decimal value)
+        {
+            using (PostProcessParamBase param = _animator.GetParam(type))
+            {
+                float time = param.GetKeyTime(keyIndex);
+
+                param.UpdateValue(time, (float) value, DefaultValueIdx);
             }
         }
 
@@ -240,7 +260,6 @@ namespace xrPostprocessEditor
         public float EffectDuration => _animator.Length;
 
         //#Collector: Really bad idea, just temporary mock.
-
         [HandleProcessCorruptedStateExceptions]
         private void SafetyGetValue(PostProcessParamBase param, float time, ref float value, int index)
         {

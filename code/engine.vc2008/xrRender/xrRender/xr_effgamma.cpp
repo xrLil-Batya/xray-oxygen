@@ -19,22 +19,18 @@ void CGammaControl::Update()
 {
 	if (HW.pDevice) 
 	{
-		DXGI_GAMMA_CONTROL_CAPABILITIES GC;
-		DXGI_GAMMA_CONTROL				G;
-		IDXGIOutput *pOutput;
-
 		CHK_DX (HW.m_pSwapChain->GetContainingOutput(&pOutput));
 		HRESULT hr = pOutput->GetGammaControlCapabilities(&GC);
 		if (SUCCEEDED(hr))
 		{
-			GenLUT( GC, G );
+			GenLUT();
 			pOutput->SetGammaControl(&G);
 		}
 		_RELEASE(pOutput);
 	}
 }
 
-void CGammaControl::GenLUT( const DXGI_GAMMA_CONTROL_CAPABILITIES &GC, DXGI_GAMMA_CONTROL &G)
+void CGammaControl::GenLUT()
 {
 	DXGI_RGB Offset = {0,0,0};
 	DXGI_RGB Scale = {1,1,1};
@@ -79,12 +75,11 @@ void CGammaControl::Update()
 {
 	if (HW.pDevice) 
 	{
-		D3DGAMMARAMP G;
-		GenLUT(G);
-		HW.pDevice->SetGammaRamp(0,D3DSGR_NO_CALIBRATION,&G);
+		GenLUT();
+		HW.pDevice->SetGammaRamp(0, D3DSGR_CALIBRATE, &G);
 	}
 }
-void CGammaControl::GenLUT(D3DGAMMARAMP &G)
+void CGammaControl::GenLUT()
 {
 	float og = 1.f / (fGamma + EPS);
 	float B = fBrightness / 2.f;

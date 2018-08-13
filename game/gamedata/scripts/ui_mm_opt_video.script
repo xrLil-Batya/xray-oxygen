@@ -15,17 +15,14 @@ function opt_video:InitControls(x, y, xml, handler)
 
 --	self.bk = xml:InitFrame			("frame", self)
 
-	local strWindowType = get_console():get_token("vid_windowtype")
-	if strWindowType == "fullscreen" then
-		xml:InitStatic					("tab_video:cap_brightness",		self)
-		xml:InitTrackBar				("tab_video:track_brightness",		self)
+	xml:InitStatic					("tab_video:cap_brightness",		self)
+	xml:InitTrackBar				("tab_video:track_brightness",		self)
 
-		xml:InitStatic					("tab_video:cap_contrast",			self)
-		xml:InitTrackBar				("tab_video:track_contrast",		self)
+	xml:InitStatic					("tab_video:cap_contrast",			self)
+	xml:InitTrackBar				("tab_video:track_contrast",		self)
 
-		xml:InitStatic					("tab_video:cap_gamma",				self)
-		xml:InitTrackBar				("tab_video:track_gamma",			self)
-	end
+	xml:InitStatic					("tab_video:cap_gamma",				self)
+	xml:InitTrackBar				("tab_video:track_gamma",			self)
 
 	xml:InitStatic					("tab_video:cap_resolution",		self)
 	xml:InitComboBox				("tab_video:list_resolution",		self)

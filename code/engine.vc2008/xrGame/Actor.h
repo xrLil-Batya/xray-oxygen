@@ -78,10 +78,12 @@ class	CActor:
 private:
 	typedef CEntityAlive inherited;
 public:
+	HANDLE								MtSecondUpdaterEventStart;
+	HANDLE								MtSecondUpdaterEventEnd;
+public:
 										CActor				();
 	virtual								~CActor				();
 
-public:
 	virtual BOOL						AlwaysTheCrow				()						{ return TRUE; }
 
 	virtual CAttachmentOwner*			cast_attachment_owner		()						{return this;}
@@ -233,7 +235,7 @@ public:
 	s32						GetZoomRndSeed			()	{ return m_ZoomRndSeed;	};
 	void					SetShotRndSeed			(s32 Seed = 0);
 	s32						GetShotRndSeed			()	{ return m_ShotRndSeed;	};
-
+	bool					IsFeelTouchCharacters	()  { return m_feel_touch_characters > 0; }
 public:
 	void					detach_Vehicle			();
 	void					steer_Vehicle			(float angle);

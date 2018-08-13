@@ -13,6 +13,18 @@ void dxRenderDeviceRender::Copy(IRenderDeviceRender &_in)
 	*this = *(dxRenderDeviceRender*)&_in;
 }
 
+#if defined(USE_DX10) || defined(USE_DX11)
+DXGI_GAMMA_CONTROL dxRenderDeviceRender::GetGammaLUT() const
+{
+	return m_Gamma.GetLUT();
+}
+#else
+D3DGAMMARAMP dxRenderDeviceRender::GetGammaLUT() const
+{
+	return m_Gamma.GetLUT();
+}
+#endif
+
 float dxRenderDeviceRender::GetGamma() const
 {
 	return m_Gamma.GetGamma();
@@ -60,7 +72,9 @@ void dxRenderDeviceRender::SetBalance(Fvector &C)
 
 void dxRenderDeviceRender::UpdateGamma()
 {
+	extern bool bNeedUpdateGammaLUT;
 	m_Gamma.Update();
+	bNeedUpdateGammaLUT = true;
 }
 
 void dxRenderDeviceRender::OnDeviceDestroy( BOOL bKeepTextures)
@@ -339,10 +353,24 @@ void dxRenderDeviceRender::Clear()
 }
 
 void DoAsyncScreenshot();
+bool bNeedUpdateGammaLUT = true;
 
 void dxRenderDeviceRender::End()
 {
 	VERIFY	(HW.pDevice);
+
+	if (!psDeviceFlags.is(rsFullscreen))
+	{
+		// Generate gamma LUT if needed
+		if (bNeedUpdateGammaLUT)
+		{
+			PIX_EVENT(GAMMA_GENERATE_LUT);
+			RImplementation.Target->PhaseGammaGenerateLUT();
+			bNeedUpdateGammaLUT = false;
+		}
+		PIX_EVENT(GAMMA_APPLY);
+		RImplementation.Target->PhaseGammaApply();
+	}
 
 #if !defined(USE_DX10) && !defined(USE_DX11)
 	if (HW.Caps.SceneMode)	

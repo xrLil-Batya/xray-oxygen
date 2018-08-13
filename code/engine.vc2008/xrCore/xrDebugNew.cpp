@@ -22,6 +22,8 @@
 
 XRCORE_API	xrDebug		Debug;
 
+XRCORE_API HWND gGameWindow = NULL;
+
 string_path DumpFilePath = { 0 };
 
 static bool error_after_dialog = false;
@@ -141,26 +143,23 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	if (handler)
 		handler();
 
-	HWND wnd = GetActiveWindow();
-	if (!wnd) wnd = GetForegroundWindow();
-
     // Sometimes if we crashed not in main thread, we can stuck at ShowWindow
     if (GetCurrentThreadId() == m_mainThreadId)
     {
-	    ShowWindow(wnd, SW_HIDE);
+	    ShowWindow(gGameWindow, SW_HIDE);
     }
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(wnd, assertion_info);
+	do_exit(gGameWindow, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-    do_exit2(wnd, assertion_info, ignore_always);
+    do_exit2(gGameWindow, assertion_info, ignore_always);
     
     // And we should show window again, damn pause manager
     if (GetCurrentThreadId() == m_mainThreadId)
     {
-        ShowWindow(wnd, SW_SHOW);
+        ShowWindow(gGameWindow, SW_SHOW);
     }
 #endif
 }
@@ -175,7 +174,7 @@ const char* xrDebug::error2string(long code)
 
 void xrDebug::do_exit2(HWND hwnd, const std::string& message, bool& ignore_always)
 {
-    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR); // месседж бокс не вываливается
 
     switch (MsgRet)
     {

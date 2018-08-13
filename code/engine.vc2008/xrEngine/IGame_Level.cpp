@@ -104,6 +104,8 @@ BOOL IGame_Level::Load			(u32 dwNum)
 		g_hud					= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
 
 	// Render-level Load
+
+	Render->level_Unload		();
 	Render->level_Load			(LL_Stream);
 
 	// Objects

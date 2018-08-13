@@ -1,7 +1,7 @@
 #include "stdafx.h"
 
 extern ENGINE_API BOOL g_bRendering;
-bool windowActive = true;
+static bool bResize = false;
 
 bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT &result)
 {
@@ -28,23 +28,44 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 			result			= 1;
 			return			(true);
 		}
-							/*case WM_SIZING:
-							{
-								if (result = TRUE)
-									bool windowActive = false;
-								else
-									bool windowActive = true;
-							}*/
-		//case WM_SIZE : 
-		//{
-		//	if (windowActive)
-		//	{
-		//		WORD height = HIWORD(lParam);
-		//		WORD width = LOWORD(lParam);
+		case WM_ENTERSIZEMOVE:
+		{
+			//SetTimer(hWnd, TRUE, USER_TIMER_MINIMUM, NULL);
+			bResize = true;
+			break;
+		}
+		case WM_EXITSIZEMOVE:
+		{
+			//KillTimer(hWnd, TRUE);
+			bResize = false;
+			RECT ClientRect;
 
-		//		//Device.ResizeProc(height, width);
-		//	}
-		//}
+			GetClientRect(hWnd, &ClientRect);
+			LONG width = ClientRect.right - ClientRect.left;
+			LONG height = ClientRect.bottom - ClientRect.top;
+
+			if (height >= NULL && width >= NULL)
+			{
+				Device.ResizeProc(height, width);
+			}
+
+			break;
+		}
+		case WM_TIMER:
+		{
+			//RedrawWindow(hWnd, NULL, NULL, RDW_INVALIDATE | RDW_INTERNALPAINT);
+			//return 0;
+		}
+		case WM_SIZE:
+		{
+			WORD height = HIWORD(lParam);
+			WORD width = LOWORD(lParam);
+
+			/*if (height >= NULL && width >= NULL)
+			{
+				Device.ResizeProc(height, width);
+			}*/
+		}
 		case WM_SYSCOMMAND : {
 #ifdef INGAME_EDITOR
 			if (editor())

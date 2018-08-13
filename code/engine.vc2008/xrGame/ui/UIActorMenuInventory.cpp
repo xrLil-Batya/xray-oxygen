@@ -1071,9 +1071,12 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 	switch ( m_UIPropertiesBox->GetClickedItem()->GetTAG() )
 	{
 	case INVENTORY_TO_SLOT_ACTION:	ToSlot( cell_item, true, item->BaseSlot() );		break;
+	case INVENTORY_RELOAD_MAGAZINE: if (weapon) weapon->Action(kWPN_RELOAD, CMD_START); break;
 	case INVENTORY_TO_BELT_ACTION:	ToBelt( cell_item, false );		break;
 	case INVENTORY_TO_BAG_ACTION:	ToBag ( cell_item, false );		break;
-	case INVENTORY_EAT_ACTION:		TryUseFoodItem( cell_item ); 		break;
+	case INVENTORY_EAT_ACTION:		TryUseFoodItem( cell_item ); 	break;
+	case INVENTORY_REPAIR:			TryRepairItem(this, 0); return;
+
 	case INVENTORY_DROP_ACTION:
 		{
 			if (!item->m_pInventory)
@@ -1153,12 +1156,6 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			}
 		}
 		break;
-	case INVENTORY_RELOAD_MAGAZINE:
-		if ( weapon )
-		{
-			weapon->Action( kWPN_RELOAD, CMD_START );
-		}
-		break;
 	case INVENTORY_UNLOAD_MAGAZINE:
 		{
 			CWeaponMagazined* weap_mag = smart_cast<CWeaponMagazined*>( (CWeapon*)cell_item->m_pData );
@@ -1178,18 +1175,11 @@ void CUIActorMenu::ProcessPropertiesBoxClicked( CUIWindow* w, void* d )
 			}
 			break;
 		}
-	case INVENTORY_REPAIR:
-		{
-			TryRepairItem(this,0);
-			return;
-			break;
-		}
 	case INVENTORY_PLAY_ACTION:
 		{
 			CPda* pPda = smart_cast<CPda*>(item);
-			if(!pPda)
-				break;
-			pPda->PlayScriptFunction();
+			if(pPda)
+				pPda->PlayScriptFunction();
 			break;
 		}
 	}//switch

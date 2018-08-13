@@ -57,6 +57,8 @@
 #define		r2_sunmask			"shaders\\sunmask"
 #define     r2_RT_secondVP      "$user$viewport2"
 
+#define		r2_RT_gamma_lut		"$user$gamma_lut"	
+
 #define		JITTER(a) r2_jitter #a
 
 const		float				SMAP_near_plane		= .1f	;

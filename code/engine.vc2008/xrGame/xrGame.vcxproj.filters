@@ -7304,9 +7304,6 @@
     <ClCompile Include="Level_Bullet_Manager.cpp">
       <Filter>Core\Client\Level\Bullet Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Level_bullet_manager_firetrace.cpp">
-      <Filter>Core\Client\Level\Bullet Manager</Filter>
-    </ClCompile>
     <ClCompile Include="Tracer.cpp">
       <Filter>Core\Client\Level\Bullet Manager</Filter>
     </ClCompile>
