@@ -174,7 +174,7 @@ const char* xrDebug::error2string(long code)
 
 void xrDebug::do_exit2(HWND hwnd, const std::string& message, bool& ignore_always)
 {
-    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR); // месседж бокс не вываливается
 
     switch (MsgRet)
     {
