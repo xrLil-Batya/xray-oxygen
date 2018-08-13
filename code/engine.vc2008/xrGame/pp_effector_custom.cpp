@@ -16,6 +16,8 @@ CPPEffectorCustom::CPPEffectorCustom(const SPPInfo &ppi, bool one_instance, bool
 }
 #pragma warning(pop)
 
+#define SET_VALUE(def, target, factor) (def + (target-def) * factor)
+
 BOOL CPPEffectorCustom::Process(SPPInfo& pp)
 {
 	if (!inherited::Process(pp)) 

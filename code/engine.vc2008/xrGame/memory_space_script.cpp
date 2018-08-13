@@ -111,7 +111,8 @@ void CMemoryInfo::script_register(lua_State *L)
 			.def_readonly("amount",			&MemorySpace::CHitObject::m_amount),
 		
 		class_<MemorySpace::CVisibleObject,MemorySpace::CMemoryObject<CGameObject> >("visible_memory_object")
-			.def("visible",					&MemorySpace::CVisibleObject::m_visible),
+//			.def("visible",					&MemorySpace_CVisibleObject_visible)
+			,
 
 		class_<MemorySpace::CMemoryInfo,MemorySpace::CVisibleObject>("memory_info")
 			.def_readonly("visual_info",	&MemorySpace::CMemoryInfo::m_visual_info)
