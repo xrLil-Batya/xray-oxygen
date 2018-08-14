@@ -1,9 +1,11 @@
 #include	"stdafx.h"
 #pragma		hdrstop
 
-#include	"xrRender_console.h"
-#include	"dxRenderDeviceRender.h"
-
+#include "xrRender_console.h"
+#include "dxRenderDeviceRender.h"
+#include "../../xrEngine/XR_IOConsole.h"
+#include "../../xrEngine/xr_ioc_cmd.h"
+#include "../../xrEngine/xr_ioc_cmd_ex.h"
 // Common
 u32	ps_r_smapsize = 2048;
 xr_token q_smapsize_token[] =
@@ -27,7 +29,7 @@ xr_token sunshafts_mode_token[] =
     { 0,				0 }
 };
 
-
+u32 ps_GlowsPerFrame = 16;
 
 u32 ps_Preset =	2;
 xr_token qpreset_token[] =
@@ -235,6 +237,7 @@ Flags32	ps_r_flags =
 	| R_FLAG_TONEMAP
 	| R_FLAG_MBLUR
 	| R_FLAG_VOLUMETRIC_LIGHTS
+	| R_FLAG_GLOW_USE
 };	// r2-only
 
 Flags32	ps_r_ssao_flags = 
@@ -817,6 +820,7 @@ void xrRender_initconsole()
 	CMD3(CCC_Token,		"r_sun_quality",		&ps_r_sun_quality,			qsun_quality_token);
 	CMD3(CCC_Mask,		"r_sun_focus",			&ps_r_flags,				R_FLAG_SUN_FOCUS);
 	CMD3(CCC_Mask,		"r_sun_shadow_cascede_old", &ps_r_flags,			R_FLAG_SUN_OLD);
+	CMD3(CCC_Mask,		"r_glows_use",			&ps_r_flags,				R_FLAG_GLOW_USE);
 	CMD3(CCC_Mask,		"r_sun_tsm",			&ps_r_flags,				R_FLAG_SUN_TSM	);
 	CMD4(CCC_Float,		"r_sun_tsm_proj",		&ps_r_sun_tsm_projection,	0.001f,	0.8f	);
 	CMD4(CCC_Float,		"r_sun_tsm_bias",		&ps_r_sun_tsm_bias,			-0.5f,	0.5f	);
@@ -911,9 +915,7 @@ void xrRender_initconsole()
 	// R4-specific /////////////////////////////////////////////////////
 	CMD3(CCC_Mask,		"r4_enable_tessellation",		&ps_r4_flags,		R4_FLAG_ENABLE_TESSELLATION); // Need restart
 	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r4_flags,		R4_FLAG_WIREFRAME); // Need restart
-
-
-
+	CMD4(CCC_U32,		"r__glows_per_frame",			&ps_GlowsPerFrame,	2, 32);
 
 	// Allow real-time fog config reload
 #if	(RENDER == R_R3) || (RENDER == R_R4)

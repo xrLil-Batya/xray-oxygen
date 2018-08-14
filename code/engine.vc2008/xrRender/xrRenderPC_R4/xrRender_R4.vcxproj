@@ -218,6 +218,7 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
+    <ClInclude Include="..\xrRender\dxGlowManager.h" />
     <ClInclude Include="blender_gamma.h" />
     <ClInclude Include="blender_rain_drops.h" />
     <ClInclude Include="blender_ssss_mrmnwar.h" />
@@ -407,6 +408,7 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
     <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseAA.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp" />

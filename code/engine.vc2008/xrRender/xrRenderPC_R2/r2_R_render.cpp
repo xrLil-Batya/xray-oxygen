@@ -13,14 +13,12 @@ IC	bool	pred_sp_sort	(ISpatial*	_1, ISpatial* _2)
 
 void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 {
-//	Msg						("---begin");
 	marker					++;
 
 	// Calculate sector(s) and their objects
-	if (pLastSector)		{
-		//!!!
+	if (pLastSector)		
+	{
 		//!!! BECAUSE OF PARALLEL HOM RENDERING TRY TO DELAY ACCESS TO HOM AS MUCH AS POSSIBLE
-		//!!!
 		{
 			// Traverse object database
 			g_SpatialSpace->q_frustum
@@ -109,25 +107,43 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 				if (spatial->spatial.type & STYPE_RENDERABLE)
 				{
 					// renderable
-					IRenderable*	renderable		= spatial->dcast_Renderable	();
-					VERIFY							(renderable);
+					IRenderable* renderable = spatial->dcast_Renderable	();
+					bool bSphere = view.testSphere_dirty(spatial->spatial.sphere.P, spatial->spatial.sphere.R);
 
-					// Occlusion
-					//	casting is faster then using getVis method
-					vis_data&		v_orig			= ((dxRender_Visual*)renderable->renderable.visual)->vis;
-					vis_data		v_copy			= v_orig;
-					v_copy.box.xform				(renderable->renderable.xform);
-					BOOL			bVisible		= HOM.visible(v_copy);
-					v_orig.marker					= v_copy.marker;
-					v_orig.accept_frame				= v_copy.accept_frame;
-					v_orig.hom_frame				= v_copy.hom_frame;
-					v_orig.hom_tested				= v_copy.hom_tested;
-					if (!bVisible)					break;	// exit loop on frustums
+					if (!renderable)
+					{
+						CGlow* pGlow = dynamic_cast<CGlow*>(spatial);
+						VERIFY2(pGlow, "Glow don't created!");
 
-					// Rendering
-					set_Object						(renderable);
-					renderable->renderable_Render	();
-					set_Object						(0);
+						if (bSphere)
+							Glows->add(pGlow);
+						else
+							pGlow->hide_glow();
+					}
+					else if (bSphere)
+					{
+						// Occlusion
+						//	casting is faster then using getVis method
+						vis_data& v_orig	= ((dxRender_Visual*)renderable->renderable.visual)->vis;
+						vis_data v_copy		= v_orig;
+
+						v_copy.box.xform(renderable->renderable.xform);
+
+						bool bVisible		= HOM.visible(v_copy);
+						v_orig.marker		= v_copy.marker;
+						v_orig.accept_frame = v_copy.accept_frame;
+						v_orig.hom_frame	= v_copy.hom_frame;
+						v_orig.hom_tested	= v_copy.hom_tested;
+
+						// exit loop on frustums
+						if (!bVisible)
+							break;	
+
+						// Rendering
+						set_Object(renderable);
+						renderable->renderable_Render();
+						set_Object(0);
+					}
 				}
 				break;	// exit loop on frustums
 			}
@@ -441,7 +457,11 @@ void CRender::render_forward				()
 		r_dsgraph_render_graph					(1)	;					// normal level, secondary priority
 		PortalTraverser.fade_render				()	;					// faded-portals
 		r_dsgraph_render_sorted					()	;					// strict-sorted geoms
-		g_pGamePersistent->Environment().RenderLast()	;					// rain/thunder-bolts
+
+		if (Glows && ps_r_flags.is(R_FLAG_GLOW_USE))
+			Glows->Render();											// glows render
+
+		g_pGamePersistent->Environment().RenderLast();					// rain/thunder-bolts
 	}
 
 	RImplementation.o.distortion				= FALSE;				// disable distorion

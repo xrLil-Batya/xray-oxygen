@@ -21,6 +21,7 @@
 
 #include "../../xrEngine/irenderable.h"
 #include "../../xrEngine/fmesh.h"
+#include "../xrRender/dxGlowManager.h"
 
 class dxRender_Visual;
 
@@ -132,14 +133,15 @@ public:
 	xr_vector<ref_shader>										Shaders;
 	typedef svector<D3DVERTEXELEMENT9,MAXD3DDECLLENGTH+1>		VertexDeclarator;
 	xr_vector<VertexDeclarator>									nDC,xDC;
-	xr_vector<ID3DVertexBuffer*>							nVB,xVB;
-	xr_vector<ID3DIndexBuffer*>							nIB,xIB;
+	xr_vector<ID3DVertexBuffer*>								nVB,xVB;
+	xr_vector<ID3DIndexBuffer*>									nIB,xIB;
 	xr_vector<dxRender_Visual*>									Visuals;
 	CPSLibrary													PSLibrary;
 
 	CDetailManager*												Details;
 	CModelPool*													Models;
 	CWallmarksEngine*											Wallmarks;
+	CGlowManager*												Glows;
 
 	CRenderTarget*												Target;			// Render-target
 
@@ -150,7 +152,7 @@ public:
 	light_Package												LP_normal;
 	light_Package												LP_pending;
 
-	xr_vector<Fbox3,xalloc<Fbox3> >						main_coarse_structure;
+	xr_vector<Fbox3,xalloc<Fbox3> >								main_coarse_structure;
 
 	shared_str													c_sbase			;
 	shared_str													c_lmaterial		;

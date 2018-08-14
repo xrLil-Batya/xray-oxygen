@@ -17,32 +17,15 @@
 
 ENGINE_API BOOL isGraphicDebugging;
 
-CRender										RImplementation;
+CRender RImplementation;
 
 template<UINT TNameLength>
-inline void SetDebugObjectName(_In_ ID3D10DeviceChild* resource,
-    _In_z_ const char(&name)[TNameLength])
+inline void SetDebugObjectName(_In_ ID3D10DeviceChild* resource, _In_z_ const char(&name)[TNameLength])
 {
     resource->SetPrivateData(WKPDID_D3DDebugObjectName, TNameLength - 1, name);
 }
 
 //////////////////////////////////////////////////////////////////////////
-class CGlow				: public IRender_Glow
-{
-public:
-	bool				bActive;
-public:
-	CGlow() : bActive(false)		{ }
-	virtual void					set_active			(bool b)					{ bActive=b;		}
-	virtual bool					get_active			()							{ return bActive;	}
-	virtual void					set_position		(const Fvector& P)			{ }
-	virtual void					set_direction		(const Fvector& D)			{ }
-	virtual void					set_radius			(float R)					{ }
-	virtual void					set_texture			(LPCSTR name)				{ }
-	virtual void					set_color			(const Fcolor& C)			{ }
-	virtual void					set_color			(float r, float g, float b)	{ }
-};
-
 float		r_dtex_range		= 50.f;
 //////////////////////////////////////////////////////////////////////////
 ShaderElement*			CRender::rimp_select_sh_dynamic	(dxRender_Visual	*pVisual, float cdist_sq)

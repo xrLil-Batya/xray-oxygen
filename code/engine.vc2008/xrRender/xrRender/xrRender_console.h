@@ -107,6 +107,7 @@ extern ECORE_API float			ps_r_sun_lumscale_amb;		// 1.0f
 
 extern ECORE_API float			ps_r_zfill;					// 0.1f
 
+extern ECORE_API u32			ps_GlowsPerFrame;
 extern ECORE_API float			ps_r_dhemi_sky_scale;		// 1.5f
 extern ECORE_API float			ps_r_dhemi_light_scale;		// 1.0f
 extern ECORE_API float			ps_r_dhemi_light_flow;		// 0.1f
@@ -167,6 +168,7 @@ enum
 	R_FLAG_HOM_DEPTH_DRAW		= (1<<23),
 	R_FLAG_SUN_ZCULLING			= (1<<24),
 	R_FLAG_SUN_OLD				= (1<<25),
+	R_FLAG_GLOW_USE				= (1<<25),
 
 	R_FLAG_RAIN_DROPS			= (1<<26),
 };

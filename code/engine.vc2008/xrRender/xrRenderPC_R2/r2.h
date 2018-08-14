@@ -21,7 +21,7 @@
 
 #include "../../xrEngine/irenderable.h"
 #include "../../xrEngine/fmesh.h"
-
+#include "../xrRender/dxGlowManager.h"
 
 class dxRender_Visual;
 
@@ -109,6 +109,7 @@ public:
 	CDetailManager*												Details;
 	CModelPool*													Models;
 	CWallmarksEngine*											Wallmarks;
+	CGlowManager*												Glows;
 
 	CRenderTarget*												Target;			// Render-target
 
@@ -119,7 +120,7 @@ public:
 	light_Package												LP_normal;
 	light_Package												LP_pending;
 
-	xr_vector<Fbox3,xalloc<Fbox3> >						main_coarse_structure;
+	xr_vector<Fbox3,xalloc<Fbox3> >								main_coarse_structure;
 
 	shared_str													c_sbase			;
 	shared_str													c_lmaterial		;
