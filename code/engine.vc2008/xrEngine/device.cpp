@@ -50,7 +50,7 @@ ENGINE_API BOOL g_bRendering = FALSE;
 /////////////////////////////////////
 BOOL		g_bLoaded		= FALSE;
 bool		g_bL			= FALSE;
-ref_light	precache_light	= NULL;
+ref_light	precache_light	= nullptr;
 /////////////////////////////////////
 
 
@@ -94,7 +94,7 @@ void CRenderDevice::Clear()
 extern void CheckPrivilegySlowdown();
 
 
-void CRenderDevice::End		(void)
+void CRenderDevice::End		()
 {
 #ifdef INGAME_EDITOR
 	bool load_finished = false;
@@ -165,8 +165,8 @@ void 			mt_Thread	(void *ptr)
 		// we has granted permission to execute
 		mt_Thread_marker			= Device.dwFrame;
  
-		for (u32 pit=0; pit<Device.seqParallel.size(); pit++)
-			Device.seqParallel[pit]();
+		for (auto & pit : Device.seqParallel)
+			pit();
 		Device.seqParallel.clear();
 		Device.seqFrameMT.Process(rp_Frame);
 
@@ -216,7 +216,7 @@ void CRenderDevice::on_idle		()
 	else									
 		g_bEnableStatGather	= FALSE;
 
-	if (g_loading_events.size())
+	if (!g_loading_events.empty())
 	{
         if (LOADING_EVENT& loadEvent = g_loading_events.front())
         {
@@ -246,7 +246,7 @@ void CRenderDevice::on_idle		()
 	// Matrices
 	mFullTransform.mul			(mProject,mView);
 	m_pRender->SetCacheXform(mView, mProject);
-	D3DXMatrixInverse			((D3DXMATRIX*)&mInvFullTransform, 0, (D3DXMATRIX*)&mFullTransform);
+	D3DXMatrixInverse			((D3DXMATRIX*)&mInvFullTransform, nullptr, (D3DXMATRIX*)&mFullTransform);
 
 	vCameraPosition_saved	= vCameraPosition;
 	mFullTransform_saved	= mFullTransform;
@@ -271,7 +271,7 @@ void CRenderDevice::on_idle		()
 				|| psDeviceFlags.test(rsStatistic)
 				|| psDeviceFlags.test(rsDrawFPS)
 				|| psDeviceFlags.test(rsHWInfo)
-				|| Statistic->errors.size())
+				|| !Statistic->errors.empty())
 			{
 					Statistic->Show();
 			}
@@ -293,8 +293,8 @@ void CRenderDevice::on_idle		()
 	// Ensure, that second thread gets chance to execute anyway
 	if (dwFrame!=mt_Thread_marker)			
 	{
-		for (u32 pit=0; pit<Device.seqParallel.size(); pit++)
-			Device.seqParallel[pit]();
+		for (auto & pit : Device.seqParallel)
+			pit();
 		Device.seqParallel.clear	();
 		seqFrameMT.Process					(rp_Frame);
 	}
@@ -331,10 +331,10 @@ void CRenderDevice::message_loop()
 #endif
 
 	MSG		msg;
-    PeekMessage				(&msg, NULL, 0U, 0U, PM_NOREMOVE );
+    PeekMessage				(&msg, nullptr, 0U, 0U, PM_NOREMOVE );
 	while (msg.message != WM_QUIT) 
 	{
-		if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE)) 
+		if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) 
 		{
 			TranslateMessage(&msg);
 			DispatchMessage	(&msg);
@@ -351,7 +351,7 @@ int GetNumOfDisplays()
 	DISPLAY_DEVICE dc;
 	dc.cb				= sizeof(dc);
 	//////////////////////////////////////////
-	for ( int i = 0; EnumDisplayDevicesA(NULL, i, &dc, 0); ++i )
+	for ( int i = 0; EnumDisplayDevicesA(nullptr, i, &dc, 0); ++i )
 	{
 		if (dc.StateFlags & DISPLAY_DEVICE_ACTIVE)
 			sValue++;
@@ -383,7 +383,7 @@ void CRenderDevice::Run			()
 	// Start all threads
 	mt_csEnter.lock				();
 	mt_bMustExit				= FALSE;
-	thread_spawn				(mt_Thread, "X-RAY Secondary thread", 0, 0);
+	thread_spawn				(mt_Thread, "X-RAY Secondary thread", 0, nullptr);
 
 	// Message cycle
 	seqAppStart.Process			(rp_AppStart);
@@ -607,7 +607,7 @@ BOOL CRenderDevice::Paused()
 void CRenderDevice::ProcessSingleMessage()
 {
 	MSG		msg;
-	if (PeekMessage(&msg, NULL, 0U, 0U, PM_REMOVE))
+	if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
 	{
 		TranslateMessage(&msg);
 		DispatchMessage(&msg);
@@ -692,7 +692,7 @@ void CLoadScreenRenderer::OnRender()
 void CRenderDevice::CSecondVPParams::SetSVPActive(bool bState) //--#SM+#-- +SecondVP+
 {
 	m_bIsActive = bState;
-	if (g_pGamePersistent != NULL)
+	if (g_pGamePersistent != nullptr)
 		 g_pGamePersistent->m_pGShaderConstants.m_blender_mode.z = (m_bIsActive ? 1.0f : 0.0f);
 }
 

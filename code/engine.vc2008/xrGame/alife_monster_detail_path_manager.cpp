@@ -113,7 +113,7 @@ void CALifeMonsterDetailPathManager::actualize				()
 {
 	m_path.clear					();
 
-	typedef GraphEngineSpace::CGameVertexParams	CGameVertexParams;
+	using CGameVertexParams = GraphEngineSpace::CGameVertexParams;
 	CGameVertexParams				temp = CGameVertexParams(object().m_tpaTerrain);
 	bool							failed = 
 		!ai().graph_engine().search	(

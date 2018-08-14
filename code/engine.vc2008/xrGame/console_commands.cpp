@@ -305,7 +305,7 @@ public:
 
 		TStatus str;
 		xr_sprintf(str, sizeof(str), "%3.5f  (current)  [0.0,1000.0]", v);
-		tips.push_back(str);
+		tips.emplace_back(str);
 		IConsole_Command::fill_tips(tips, mode);
 	}
 };
@@ -396,6 +396,10 @@ public:
 		if (g_pGameLevel)
 		{
 			Console->Hide();
+
+			// Ñlose main menu if it is open
+			if (MainMenu()->IsActive())
+				MainMenu()->Activate(false);
 
 			LPSTR			fn_;
 			STRCONCAT(fn_, args, ".xrdemo");
@@ -494,7 +498,7 @@ void get_files_list( xr_vector<shared_str>& files, LPCSTR dir, LPCSTR file_ext )
 		VERIFY( xr_strlen(fn_ext) > len_str_ext );
 		string_path fn;
 		strncpy_s( fn, sizeof(fn), fn_ext, xr_strlen(fn_ext)-len_str_ext );
-		files.push_back( fn );
+		files.emplace_back( fn );
 	}
 	FS.m_Flags.set( CLocatorAPI::flNeedCheck, FALSE );
 }
@@ -1172,7 +1176,7 @@ public:
 	{
 		TStatus  str;
 		xr_sprintf( str, sizeof(str), "%3.3f  (current)  [0.001 - 1000.0]", Device.time_factor() );
-		tips.push_back( str );
+		tips.emplace_back( str );
 		IConsole_Command::fill_tips( tips, mode );
 	}
 };
@@ -1342,7 +1346,7 @@ public:
 
 		if (CAttachableItem::m_dbgItem)
 		{
-			CAttachableItem::m_dbgItem = NULL;	
+			CAttachableItem::m_dbgItem = nullptr;	
 			Msg("CCC_TuneAttachableItem switched to off");
 			return;
 		};

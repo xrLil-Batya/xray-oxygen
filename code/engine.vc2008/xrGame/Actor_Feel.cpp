@@ -125,6 +125,7 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
+	MtFeelTochMutex.lock(); // Syns MtActorUpdate and UpdateCL
     for (CObject* obj : feel_touch)
     {
         Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
@@ -149,10 +150,13 @@ void CActor::PickupModeUpdate()
 			{
 				m_CapmfireWeLookingAt = camp;
 				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
+
+				MtFeelTochMutex.unlock();
 				return;
 			}
 		}
 	}
+	MtFeelTochMutex.unlock();
 }
 
 #include "../xrEngine/CameraBase.h"
@@ -353,7 +357,7 @@ void CActor::Feel_Grenade_Update( float rad )
 	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, nullptr);
 
 	// select only grenade
-	for (auto it: q_nearest)
+	for (CObject* it: q_nearest)
 	{
 		if (it->getDestroy())
 			continue;					// Don't touch candidates for destroy

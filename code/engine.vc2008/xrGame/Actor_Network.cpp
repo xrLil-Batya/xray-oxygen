@@ -90,10 +90,10 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	Fvector				p = Position();
 	P.w_vec3			(p);
 
-	P.w_float /*w_angle8*/			(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
+	P.w_float			(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
+	P.w_float			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
+	P.w_float			(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
+	P.w_float			(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
 	P.w_u8				(u8(g_Team()));
 	P.w_u8				(u8(g_Squad()));
 	P.w_u8				(u8(g_Group()));
@@ -116,7 +116,7 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	{
 		SPHNetState	State;
 
-		CPHSynchronize* pSyncObj = NULL;
+		CPHSynchronize* pSyncObj = nullptr;
 		pSyncObj = PHGetSyncItem(0);
 		pSyncObj->get_State(State);
 
@@ -251,7 +251,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	m_holder_id = ALife::_OBJECT_ID(-1);
 	m_feel_touch_characters = 0;
 	m_snd_noise = 0.0f;
-	m_sndShockEffector = NULL;
+	m_sndShockEffector = nullptr;
 
 	if (m_pPhysicsShell)
 	{
@@ -273,8 +273,8 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 
 	// motions
 	m_bAnimTorsoPlayed = false;
-	m_current_legs_blend = 0;
-	m_current_jump_blend = 0;
+	m_current_legs_blend = nullptr;
+	m_current_jump_blend = nullptr;
 	m_current_legs.invalidate();
 	m_current_torso.invalidate();
 	m_current_head.invalidate();
@@ -359,18 +359,15 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 		IKinematicsAnimated* K = smart_cast<IKinematicsAnimated*>(Visual());
 		K->PlayCycle("death_init");
 
-
-		//   
 		m_HeavyBreathSnd.stop();
 	}
 
-	typedef CClientSpawnManager::CALLBACK_TYPE	CALLBACK_TYPE;
+	using CALLBACK_TYPE = CClientSpawnManager::CALLBACK_TYPE;
 	CALLBACK_TYPE	callback;
 	callback.bind(this, &CActor::on_requested_spawn);
 	m_holder_id = E->m_holderID;
 	if (E->m_holderID != ALife::_OBJECT_ID(-1))
 		Level().client_spawn_manager().add(E->m_holderID, ID(), callback);
-	//F
 	//-------------------------------------------------------------
 	m_iLastHitterID = u16(-1);
 	m_iLastHittingWeaponID = u16(-1);
@@ -390,34 +387,34 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	return TRUE;
 }
 
-void CActor::net_Destroy	()
+void CActor::net_Destroy()
 {
-	inherited::net_Destroy	();
+	inherited::net_Destroy();
 
 	if (m_holder_id != ALife::_OBJECT_ID(-1))
-		Level().client_spawn_manager().remove	(m_holder_id,ID());
+		Level().client_spawn_manager().remove(m_holder_id, ID());
 
-	delete_data				(m_statistic_manager);
-	
-	Level().MapManager		().OnObjectDestroyNotify(ID());
+	delete_data(m_statistic_manager);
+
+	Level().MapManager().OnObjectDestroyNotify(ID());
 
 	CInventoryOwner::net_Destroy();
-	cam_UnsetLadder();	
+	cam_UnsetLadder();
 	character_physics_support()->movement()->DestroyCharacter();
 
-	if(m_pPhysicsShell)			
+	if (m_pPhysicsShell)
 	{
 		m_pPhysicsShell->Deactivate();
 		xr_delete<IPhysicsShellEx>(m_pPhysicsShell);
 	}
 
-	m_pPhysics_support->in_NetDestroy	();
+	m_pPhysics_support->in_NetDestroy();
 
-	xr_delete		(m_sndShockEffector);
-	xr_delete		(pStatGraph);
-	xr_delete		(m_pActorEffector);
-	pCamBobbing		= NULL;
-	
+	xr_delete(m_sndShockEffector);
+	xr_delete(pStatGraph);
+	xr_delete(m_pActorEffector);
+	pCamBobbing = nullptr;
+
 #ifdef DEBUG	
 	LastPosS.clear();
 	LastPosH.clear();
@@ -425,22 +422,17 @@ void CActor::net_Destroy	()
 #endif
 
 	processing_deactivate();
-	m_holder=NULL;
-	m_holderID=u16(-1);
-	
-	SetDefaultVisualOutfit(NULL);
+	m_holder = nullptr;
+	m_holderID = u16(-1);
 
+	SetDefaultVisualOutfit(nullptr);
 
-	if(g_actor == this) g_actor= NULL;
+	if (g_actor == this) g_actor = nullptr;
 
-	Engine.Sheduler.Unregister	(this);
+	Engine.Sheduler.Unregister(this);
 
-	if(	actor_camera_shell && 
-		actor_camera_shell->get_ElementByStoreOrder( 0 )->PhysicsRefObject() 
-			== 
-		this
-		) 
-		destroy_physics_shell( actor_camera_shell );
+	if (actor_camera_shell && actor_camera_shell->get_ElementByStoreOrder(0)->PhysicsRefObject() == this)
+		destroy_physics_shell(actor_camera_shell);
 }
 
 void CActor::net_Relcase	(CObject* O)
@@ -448,16 +440,16 @@ void CActor::net_Relcase	(CObject* O)
  	VERIFY(O);
 	CGameObject* GO = smart_cast<CGameObject*>(O);
 	if(GO&&m_pObjectWeLookingAt==GO){
-		m_pObjectWeLookingAt=NULL;
+		m_pObjectWeLookingAt=nullptr;
 	}
 	CHolderCustom* HC=smart_cast<CHolderCustom*>(GO);
 	if(HC&&HC==m_pVehicleWeLookingAt){
-		m_pVehicleWeLookingAt=NULL;
+		m_pVehicleWeLookingAt=nullptr;
 	}
 	if(HC&&HC==m_holder)
 	{
 		m_holder->detach_Actor();
-		m_holder=NULL;
+		m_holder=nullptr;
 	}
 	inherited::net_Relcase	(O);
 
@@ -504,10 +496,10 @@ void	CActor::OnChangeVisual()
 {
 	{
 		IPhysicsShellEx* tmp_shell=PPhysicsShell();
-		PPhysicsShell()=NULL;
+		PPhysicsShell()=nullptr;
 		inherited::OnChangeVisual();
 		PPhysicsShell()=tmp_shell;
-		tmp_shell=NULL;
+		tmp_shell=nullptr;
 	}
 	
 	IKinematicsAnimated* V	= smart_cast<IKinematicsAnimated*>(Visual());
@@ -541,9 +533,9 @@ void	CActor::OnChangeVisual()
 		m_current_head.invalidate	();
 		m_current_legs.invalidate	();
 		m_current_torso.invalidate	();
-		m_current_legs_blend		= NULL;
-		m_current_torso_blend		= NULL;
-		m_current_jump_blend		= NULL;
+		m_current_legs_blend		= nullptr;
+		m_current_torso_blend		= nullptr;
+		m_current_jump_blend		= nullptr;
 	}
 };
 
@@ -950,8 +942,8 @@ BOOL CActor::net_SaveRelevant()
 
 void CActor::SetHitInfo(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)
 {
-	m_iLastHitterID = (who!= NULL) ? who->ID() : u16(-1);
-	m_iLastHittingWeaponID = (weapon != NULL) ? weapon->ID() : u16(-1);
+	m_iLastHitterID = (who!= nullptr) ? who->ID() : u16(-1);
+	m_iLastHittingWeaponID = (weapon != nullptr) ? weapon->ID() : u16(-1);
 	m_s16LastHittedElement = element;
 	m_fLastHealth = GetfHealth();
 	m_bWasHitted = true;

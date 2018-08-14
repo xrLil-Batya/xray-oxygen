@@ -77,9 +77,11 @@ class	CActor:
 	friend class CActorCondition;
 private:
 	typedef CEntityAlive inherited;
+	static void							MtSecondActorUpdate(void* pActorPointer);
 public:
 	HANDLE								MtSecondUpdaterEventStart;
 	HANDLE								MtSecondUpdaterEventEnd;
+	std::recursive_mutex				MtFeelTochMutex;
 public:
 										CActor				();
 	virtual								~CActor				();

@@ -12,7 +12,7 @@ public:
 	virtual	void	Hit				(SHit* pHDS);
 	virtual void	Load			(LPCSTR section);
 			void	OnEvent			(NET_Packet& P, u16 type);
-			void	BreakToPieces	();
+			void	BreakToPieces	() noexcept;
 protected:
 	//партиклы разбивания бутылки
 	shared_str m_sBreakParticles;
