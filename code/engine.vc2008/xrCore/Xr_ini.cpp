@@ -98,7 +98,8 @@ CInifile::~CInifile()
 		if (!save_as())
 			Log("!Can't save inifile:", fName);
 	}
-	xr_free(fName);
+	if(fName && fName[0])
+		xr_free(fName);
 	for (auto &I : DATA) xr_delete(I.second);
 }
 
