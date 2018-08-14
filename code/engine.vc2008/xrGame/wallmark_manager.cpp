@@ -49,7 +49,7 @@ void CWalmarkManager::PlaceWallmarks( const Fvector& start_pos)
 	m_pos = start_pos;
 	Load("explosion_marks");
 
-	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CWalmarkManager::StartWorkflow));
+	Device.seqParallel.emplace_back(this,&CWalmarkManager::StartWorkflow);
 }
 
 float Distance (const Fvector& rkPoint, const Fvector rkTri[3], float& pfSParam, float& pfTParam, Fvector& closest, Fvector& dir);
@@ -98,7 +98,7 @@ void CWalmarkManager::StartWorkflow()
 		
 		if(test>0.f)
 		{
-			if(Level().ObjectSpace.RayTest(m_pos, pdir, test, collide::rqtStatic, NULL, m_owner))
+			if(Level().ObjectSpace.RayTest(m_pos, pdir, test, collide::rqtStatic, nullptr, m_owner))
 			{
 				++_ray_test;
 				continue;

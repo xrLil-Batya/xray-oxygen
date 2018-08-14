@@ -29,10 +29,10 @@ void resptrcode_texture::create(LPCSTR _name)
 //////////////////////////////////////////////////////////////////////
 CTexture::CTexture		()
 {
-	pSurface			= NULL;
-	pAVI				= NULL;
-	pTheora				= NULL;
-	desc_cache			= 0;
+	pSurface			= nullptr;
+	pAVI				= nullptr;
+	pTheora				= nullptr;
+	desc_cache			= nullptr;
 	seqMSPF				= 0;
 	flags.MemoryUsage	= 0;
 	flags.bLoaded		= false;
@@ -111,7 +111,7 @@ void CTexture::apply_avi	(u32 dwStage)
 
 		// AVI
 		D3DLOCKED_RECT R;
-		R_CHK	(T2D->LockRect(0,&R,NULL,0));
+		R_CHK	(T2D->LockRect(0,&R,nullptr,0));
 		R_ASSERT(R.Pitch == int(pAVI->m_dwWidth*4));
 		//		R_ASSERT(pAVI->DecompressFrame((u32*)(R.pBits)));
 		BYTE* ptr; pAVI->GetFrame(&ptr);
@@ -152,13 +152,13 @@ void CTexture::Preload	()
 void CTexture::Load		()
 {
 	flags.bLoaded					= true;
-	desc_cache						= 0;
+	desc_cache						= nullptr;
 	if (pSurface)					return;
 
 	flags.bUser						= false;
 	flags.MemoryUsage				= 0;
 	if (0==stricmp(*cName,"$null"))	return;
-	if (0!=strstr(*cName,"$user$"))	
+	if (nullptr!=strstr(*cName,"$user$"))	
 	{
 		flags.bUser	= true;
 		return;
@@ -180,16 +180,16 @@ void CTexture::Load		()
 		else 
 		{
 			flags.MemoryUsage	= pTheora->Width(true)*pTheora->Height(true)*4;
-			BOOL bstop_at_end	= (0!=strstr(cName.c_str(), "intro\\")) || (0!=strstr(cName.c_str(), "outro\\"));
+			BOOL bstop_at_end	= (nullptr!=strstr(cName.c_str(), "intro\\")) || (nullptr!=strstr(cName.c_str(), "outro\\"));
 			pTheora->Play		(!bstop_at_end, RDEVICE.dwTimeContinual);
 
 			// Now create texture
-			ID3DTexture2D*	pTexture = 0;
+			ID3DTexture2D*	pTexture = nullptr;
 			u32 _w = pTheora->Width(false);
 			u32 _h = pTheora->Height(false);
 
 			HRESULT hrr = HW.pDevice->CreateTexture(
-				_w, _h, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &pTexture, NULL );
+				_w, _h, 1, 0, D3DFMT_A8R8G8B8, D3DPOOL_MANAGED, &pTexture, nullptr );
 
 			pSurface = pTexture;
 			if (FAILED(hrr))
@@ -197,7 +197,7 @@ void CTexture::Load		()
 				FATAL		("Invalid video stream");
 				R_CHK		(hrr);
 				xr_delete	(pTheora);
-				pSurface	= 0;
+				pSurface	= nullptr;
 			}
 
 		}
@@ -217,10 +217,10 @@ void CTexture::Load		()
 			flags.MemoryUsage	= pAVI->m_dwWidth*pAVI->m_dwHeight*4;
 
 			// Now create texture
-			ID3DTexture2D*	pTexture = 0;
+			ID3DTexture2D*	pTexture = nullptr;
 			HRESULT hrr = HW.pDevice->CreateTexture(
 				pAVI->m_dwWidth,pAVI->m_dwHeight,1,0,D3DFMT_A8R8G8B8,D3DPOOL_MANAGED,
-				&pTexture,NULL
+				&pTexture,nullptr
 				);
 			pSurface	= pTexture;
 			if (FAILED(hrr))
@@ -228,7 +228,7 @@ void CTexture::Load		()
 				FATAL		("Invalid video stream");
 				R_CHK		(hrr);
 				xr_delete	(pAVI);
-				pSurface = 0;
+				pSurface = nullptr;
 			}
 
 		}
@@ -266,7 +266,7 @@ void CTexture::Load		()
 				}
 			}
 		}
-		pSurface	= 0;
+		pSurface	= nullptr;
 		FS.r_close	(_fs);
 	} 
 	else
@@ -291,12 +291,12 @@ void CTexture::Unload	()
 	
 	flags.bLoaded			= FALSE;
 	if (!seqDATA.empty())	{
-		for (u32 I=0; I<seqDATA.size(); I++)
+		for (ID3DBaseTexture* pPointer: seqDATA)
 		{
-			_RELEASE	(seqDATA[I]);
+			_RELEASE	(pPointer);
 		}
 		seqDATA.clear();
-		pSurface	= 0;
+		pSurface	= nullptr;
 	}
 	flags.MemoryUsage = 0;
 

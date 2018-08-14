@@ -45,14 +45,14 @@
 
 using MySuper = IGame_Persistent;
 
-CGamePersistent::CGamePersistent(void)
+CGamePersistent::CGamePersistent()
 {
-    m_developerMode             = (0 != strstr(Core.Params, "-developer"));
+    m_developerMode             = (nullptr != strstr(Core.Params, "-developer"));
 	m_bPickableDOF				= false;
 	m_game_params.m_e_game_type	= eGameIDNoGame;
 	ambient_effect_next_time	= 0;
 	ambient_effect_stop_time	= 0;
-	ambient_particles			= 0;
+	ambient_particles			= nullptr;
 
 	ambient_effect_wind_start	= 0.f;
 	ambient_effect_wind_in_time	= 0.f;
@@ -243,7 +243,7 @@ void CGamePersistent::WeathersUpdate()
 					pos.z				= _sin(angle);
 					pos.normalize		().mul(ch.get_rnd_sound_dist()).add(Device.vCameraPosition);
 					pos.y				+= 10.f;
-					snd.play_at_pos		(0,pos);
+					snd.play_at_pos		(nullptr,pos);
 
 					VERIFY							(snd._handle());
 					u32 _length_ms					= iFloor(snd.get_length_sec()*1000.0f);
@@ -252,7 +252,7 @@ void CGamePersistent::WeathersUpdate()
 			}
 
 			// start effect
-			if ((!bIndoor) && (0==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
+			if ((!bIndoor) && (nullptr==ambient_particles) && Device.dwTimeGlobal>ambient_effect_next_time){
 				CEnvAmbient::SEffect* eff			= env_amb->get_rnd_effect(); 
 				if (eff){
 					Environment().wind_gust_factor	= eff->wind_gust_factor;
@@ -267,7 +267,7 @@ void CGamePersistent::WeathersUpdate()
 					ambient_particles				= CParticlesObject::Create(eff->particles.c_str(),FALSE,false);
 					Fvector pos; pos.add			(Device.vCameraPosition,eff->offset); 
 					ambient_particles->play_at_pos	(pos);
-					if (eff->sound._handle())		eff->sound.play_at_pos(0,pos);
+					if (eff->sound._handle())		eff->sound.play_at_pos(nullptr,pos);
 
 
 					Environment().wind_blast_strength_start_value=Environment().wind_strength_factor;
@@ -363,14 +363,14 @@ void CGamePersistent::update_logo_intro()
 {
 	if(m_intro && (!m_intro->IsActive()))
 	{
-		m_intro_event			= 0;
+		m_intro_event			= nullptr;
 		xr_delete				(m_intro);
 		Msg("intro_delete ::update_logo_intro");
 		Console->Execute		("main_menu on");
 	}
 	else if(!m_intro)
 	{
-		m_intro_event			= 0;
+		m_intro_event			= nullptr;
 	}
 }
 bool CGamePersistent::OnRenderPPUI_query()
@@ -394,13 +394,13 @@ void CGamePersistent::game_loaded()
 			(allow_intro() && g_keypress_on_start)	&&
 			load_screen_renderer.b_need_user_input  )
 		{
-			VERIFY				(NULL==m_intro);
+			VERIFY				(nullptr==m_intro);
 			m_intro				= xr_new<CUISequencer>();
 			m_intro->Start		("game_loaded");
 			Msg					("intro_start game_loaded");
 			m_intro->m_on_destroy_event.bind(this, &CGamePersistent::update_game_loaded);
 		}
-		m_intro_event			= 0;
+		m_intro_event			= nullptr;
 	}
 }
 
@@ -415,7 +415,7 @@ void CGamePersistent::start_game_intro		()
 {
 	if(!allow_intro())
 	{
-		m_intro_event			= 0;
+		m_intro_event			= nullptr;
 		return;
 	}
 
@@ -424,7 +424,7 @@ void CGamePersistent::start_game_intro		()
 		m_intro_event.bind		(this, &CGamePersistent::update_game_intro);
 		if (0==stricmp(m_game_params.m_new_or_load, "new"))
 		{
-			VERIFY				(NULL==m_intro);
+			VERIFY				(nullptr==m_intro);
 			m_intro				= xr_new<CUISequencer>();
 			m_intro->Start		("intro_game");
 			Msg("intro_start intro_game");
@@ -438,12 +438,12 @@ void CGamePersistent::update_game_intro()
 	{
 		xr_delete				(m_intro);
 		Msg("intro_delete ::update_game_intro");
-		m_intro_event			= 0;
+		m_intro_event			= nullptr;
 	}
 	else
 	if(!m_intro)
 	{
-		m_intro_event			= 0;
+		m_intro_event			= nullptr;
 	}
 }
 

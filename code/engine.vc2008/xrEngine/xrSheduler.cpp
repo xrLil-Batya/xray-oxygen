@@ -12,7 +12,7 @@ BOOL			g_bSheduleInProgress	= FALSE	;
 //-------------------------------------------------------------------------------------
 void CSheduler::Initialize		()
 {
-	m_current_step_obj	= NULL;
+	m_current_step_obj	= nullptr;
 	m_processing_now	= false;
 }
 
@@ -83,18 +83,18 @@ void	CSheduler::internal_Registration()
 	Registration.clear	();
 }
 
-void CSheduler::internal_Register	(ISheduled* O, BOOL RT)
+void CSheduler::internal_Register	(ISheduled* Ish, BOOL RT)
 {
-	VERIFY	(!O->shedule.b_locked)	;
+	VERIFY	(!Ish->shedule.b_locked)	;
 	if (RT)
 	{
 		// Fill item structure
 		Item						TNext;
 		TNext.dwTimeForExecute		= Device.dwTimeGlobal;
 		TNext.dwTimeOfLastExecute	= Device.dwTimeGlobal;
-		TNext.Object				= O;
-		TNext.scheduled_name		= O->shedule_Name();
-		O->shedule.b_RT				= TRUE;
+		TNext.Object				= Ish;
+		TNext.scheduled_name		= Ish->shedule_Name();
+		Ish->shedule.b_RT				= TRUE;
 
 		ItemsRT.push_back			(TNext);
 	} else {
@@ -102,9 +102,9 @@ void CSheduler::internal_Register	(ISheduled* O, BOOL RT)
 		Item						TNext;
 		TNext.dwTimeForExecute		= Device.dwTimeGlobal;
 		TNext.dwTimeOfLastExecute	= Device.dwTimeGlobal;
-		TNext.Object				= O;
-		TNext.scheduled_name		= O->shedule_Name();
-		O->shedule.b_RT				= FALSE;
+		TNext.Object				= Ish;
+		TNext.scheduled_name		= Ish->shedule_Name();
+		Ish->shedule.b_RT				= FALSE;
 
 		// Insert into priority Queue
 		Push						(TNext);
@@ -119,7 +119,7 @@ bool CSheduler::internal_Unregister	(ISheduled* O, BOOL RT, bool warn_on_not_fou
 	{
 		for (u32 i=0; i<ItemsRT.size(); i++)
 		{
-			if (ItemsRT[i].Object==O) {
+			if (!ItemsRT[i].Object) {
 #ifdef DEBUG_SCHEDULER
 				Msg					("SCHEDULER: internal unregister [%s][%x][%s]","unknown",O,"true");
 #endif // DEBUG_SCHEDULER
@@ -130,11 +130,11 @@ bool CSheduler::internal_Unregister	(ISheduled* O, BOOL RT, bool warn_on_not_fou
 	} else {
 		for (u32 i=0; i<Items.size(); i++)
 		{
-			if (Items[i].Object==O) {
+			if (!Items[i].Object) {
 #ifdef DEBUG_SCHEDULER
 				Msg					("SCHEDULER: internal unregister [%s][%x][%s]",*Items[i].scheduled_name,O,"false");
 #endif // DEBUG_SCHEDULER
-				Items[i].Object	= NULL;
+				Items[i].Object	= nullptr;
 				return				(true);
 			}
 		}
@@ -145,7 +145,7 @@ bool CSheduler::internal_Unregister	(ISheduled* O, BOOL RT, bool warn_on_not_fou
 		Msg					("SCHEDULER: internal unregister (self unregistering) [%x][%s]",O,"false");
 #endif // DEBUG_SCHEDULER
 
-		m_current_step_obj = NULL;
+		m_current_step_obj = nullptr;
 		return true;
 	}
 
@@ -160,7 +160,7 @@ bool CSheduler::internal_Unregister	(ISheduled* O, BOOL RT, bool warn_on_not_fou
 bool CSheduler::Registered		(ISheduled *object) const
 {
 	u32							count = 0;
-	typedef xr_vector<Item>		ITEMS;
+	using ITEMS =  xr_vector<Item>;
 
 	{
 		ITEMS::const_iterator	I = ItemsRT.begin();
@@ -305,7 +305,7 @@ void CSheduler::ProcessStep			()
 		u32		Elapsed				= dwTime-T.dwTimeOfLastExecute;
 		bool	condition;
 		
-		condition					= (NULL==T.Object || !T.Object->shedule_Needed());
+		condition					= (T.Object || !T.Object->shedule_Needed());
 		if (condition) {
 			// Erase element
 #ifdef DEBUG_SCHEDULER
@@ -355,7 +355,7 @@ void CSheduler::ProcessStep			()
 //				throw	;
 #endif // DEBUG
 //			}
-		m_current_step_obj = NULL;
+		m_current_step_obj = nullptr;
 
 #ifdef DEBUG
 //		u32	execTime				= eTimer.GetElapsed_ms		();

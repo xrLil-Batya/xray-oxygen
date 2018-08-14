@@ -33,11 +33,11 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 			std::sort			(lstRenderables.begin(),lstRenderables.end(),pred_sp_sort);
 
 			// Determine visibility for dynamic part of scene
-			set_Object							(0);
+			set_Object							(nullptr);
 			u32 uID_LTRACK						= 0xffffffff;
 			if (phase==PHASE_NORMAL)			{
 				uLastLTRACK	++;
-				if (lstRenderables.size())		uID_LTRACK	= uLastLTRACK%lstRenderables.size();
+				if (!lstRenderables.empty())		uID_LTRACK	= uLastLTRACK%lstRenderables.size();
 
 				// update light-vis for current entity / actor
 				CObject*	O					= g_pGameLevel->CurrentViewEntity();
@@ -48,7 +48,7 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 
 				// update light-vis for selected entity
 				// track lighting environment
-				if (lstRenderables.size())		{
+				if (!lstRenderables.empty())		{
 					IRenderable*	renderable		= lstRenderables[uID_LTRACK]->dcast_Renderable	();
 					if (renderable)	{
 						CROS_impl*		T = (CROS_impl*)renderable->renderable_ROS	();
@@ -70,22 +70,22 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 			);
 
 		// Determine visibility for static geometry hierrarhy
-		for (u32 s_it=0; s_it<PortalTraverser.r_sectors.size(); s_it++)
+		for (auto & r_sector : PortalTraverser.r_sectors)
 		{
-			CSector*	sector		= (CSector*)PortalTraverser.r_sectors[s_it];
+			CSector*	sector		= (CSector*)r_sector;
 			dxRender_Visual*	root	= sector->root();
-			for (u32 v_it=0; v_it<sector->r_frustums.size(); v_it++)	{
-				set_Frustum			(&(sector->r_frustums[v_it]));
+			for (auto & r_frustum : sector->r_frustums)	{
+				set_Frustum			(&r_frustum);
 				add_Geometry		(root);
 			}
 		}
 
 		// Traverse frustums
-		for (u32 o_it=0; o_it<lstRenderables.size(); o_it++)
+		for (ISpatial*	spatial : lstRenderables)
 		{
-			ISpatial*	spatial		= lstRenderables[o_it];		spatial->spatial_updatesector	();
+			spatial->spatial_updatesector	();
 			CSector*	sector		= (CSector*)spatial->spatial.sector;
-			if	(0==sector)										continue;	// disassociated from S/P structure
+			if	(nullptr==sector)										continue;	// disassociated from S/P structure
 
 			if (spatial->spatial.type & STYPE_LIGHTSOURCE)		{
 				// lightsource
@@ -100,18 +100,18 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 			}
 
 			if	(PortalTraverser.i_marker != sector->r_marker)	continue;	// inactive (untouched) sector
-			for (u32 v_it=0; v_it<sector->r_frustums.size(); v_it++)	{
-				CFrustum&	view	= sector->r_frustums[v_it];
+			for (CFrustum&	view : sector->r_frustums)	{
 				if (!view.testSphere_dirty(spatial->spatial.sphere.P,spatial->spatial.sphere.R))	continue;
 
 				if (spatial->spatial.type & STYPE_RENDERABLE)
 				{
 					// renderable
-					IRenderable* renderable = spatial->dcast_Renderable	();
+					IRenderable*	renderable	 = spatial->dcast_Renderable	();
 					bool bSphere = view.testSphere_dirty(spatial->spatial.sphere.P, spatial->spatial.sphere.R);
 
 					if (!renderable)
 					{
+						if (ps_r_flags.is(R_FLAG_GLOW_USE)) continue;
 						CGlow* pGlow = dynamic_cast<CGlow*>(spatial);
 						VERIFY2(pGlow, "Glow don't created!");
 
@@ -142,7 +142,7 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 						// Rendering
 						set_Object(renderable);
 						renderable->renderable_Render();
-						set_Object(0);
+						set_Object(nullptr);
 					}
 				}
 				break;	// exit loop on frustums
@@ -152,7 +152,7 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 	}
 	else
 	{
-		set_Object									(0);
+		set_Object									(nullptr);
 		if (g_pGameLevel && (phase==PHASE_NORMAL))	g_hud->Render_Last();		// HUD
 	}
 }
@@ -166,18 +166,18 @@ void CRender::render_menu	()
 
 	// Main Render
 	{
-		Target->u_setrt						(Target->rt_Generic_0,0,0,HW.pBaseZB);		// LDR RT
+		Target->u_setrt						(Target->rt_Generic_0,nullptr,nullptr,HW.pBaseZB);		// LDR RT
 		g_pGamePersistent->OnRenderPPUI_main()	;	// PP-UI
 	}
 	// Distort
 	{
-		Target->u_setrt						(Target->rt_Generic_1,0,0,HW.pBaseZB);		// Now RT is a distortion mask
-		CHK_DX(HW.pDevice->Clear			( 0L, NULL, D3DCLEAR_TARGET, color_rgba(127,127,0,127), 1.0f, 0L));
+		Target->u_setrt						(Target->rt_Generic_1,nullptr,nullptr,HW.pBaseZB);		// Now RT is a distortion mask
+		CHK_DX(HW.pDevice->Clear			( 0L, nullptr, D3DCLEAR_TARGET, color_rgba(127,127,0,127), 1.0f, 0L));
 		g_pGamePersistent->OnRenderPPUI_PP	()	;	// PP-UI
 	}
 
 	// Actual Display
-	Target->u_setrt					( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
+	Target->u_setrt					( Device.dwWidth,Device.dwHeight,HW.pBaseRT,nullptr,nullptr,HW.pBaseZB);
 	RCache.set_Shader				( Target->s_menu	);
 	RCache.set_Geometry				( Target->g_menu	);
 
@@ -214,7 +214,7 @@ void CRender::Render		()
 		return					;
 	};
 
-	IMainMenu*	pMainMenu = g_pGamePersistent?g_pGamePersistent->m_pMainMenu:0;
+	IMainMenu*	pMainMenu = g_pGamePersistent?g_pGamePersistent->m_pMainMenu:nullptr;
 	bool	bMenu = pMainMenu?pMainMenu->CanSkipSceneRendering():false;
 
 	if( !(g_pGameLevel && g_hud) || bMenu)	return;
@@ -233,7 +233,7 @@ void CRender::Render		()
 
 	// HOM
 	ViewBase.CreateFromMatrix					(Device.mFullTransform, FRUSTUM_P_LRTB + FRUSTUM_P_FAR);
-	View										= 0;
+	View										= nullptr;
 
 	//******* Z-prefill calc - DEFERRER RENDERER
 	if (ps_r_flags.test(R_FLAG_ZFILL))		{
@@ -246,7 +246,7 @@ void CRender::Render		()
 			z_distance * g_pGamePersistent->Environment().CurrentEnv->far_plane);
 		m_zfill.mul	(m_project,Device.mView);
 		r_pmask										(true,false);	// enable priority "0"
-		set_Recorder								(NULL)		;
+		set_Recorder								(nullptr)		;
 		phase										= PHASE_SMAP;
 		render_main									(m_zfill,false)	;
 		r_pmask										(true,false);	// disable priority "1"
@@ -264,19 +264,18 @@ void CRender::Render		()
 	//*******
 	// Sync point
 	Device.Statistic->RenderDUMP_Wait_S.Begin	();
-	if (1)
-	{
-		CTimer	T;							T.Start	();
-		BOOL	result						= FALSE;
-		HRESULT	hr							= S_FALSE;
-		while	((hr=q_sync_point[q_sync_count]->GetData	(&result,sizeof(result),D3DGETDATA_FLUSH))==S_FALSE) {
-			if (!SwitchToThread())			Sleep(ps_r_wait_sleep);
-			if (T.GetElapsed_ms() > 500)	{
-				result	= FALSE;
-				break;
-			}
+
+	CTimer	T;							T.Start();
+	BOOL	result = FALSE;
+	HRESULT	hr = S_FALSE;
+	while ((hr = q_sync_point[q_sync_count]->GetData(&result, sizeof(result), D3DGETDATA_FLUSH)) == S_FALSE) {
+		if (!SwitchToThread())			Sleep(ps_r_wait_sleep);
+		if (T.GetElapsed_ms() > 500) {
+			result = FALSE;
+			break;
 		}
 	}
+
 	Device.Statistic->RenderDUMP_Wait_S.End		();
 	q_sync_count								= (q_sync_count+1)%HW.Caps.iGPUNum;
 	CHK_DX										(q_sync_point[q_sync_count]->Issue(D3DISSUE_END));
@@ -286,10 +285,10 @@ void CRender::Render		()
 	Device.Statistic->RenderCALC.Begin			();
 	r_pmask										(true,false,true);	// enable priority "0",+ capture wmarks
 	if (bSUN)									set_Recorder	(&main_coarse_structure);
-	else										set_Recorder	(NULL);
+	else										set_Recorder	(nullptr);
 	phase										= PHASE_NORMAL;
 	render_main									(Device.mFullTransform,true);
-	set_Recorder								(NULL);
+	set_Recorder								(nullptr);
 	r_pmask										(true,false);	// disable priority "1"
 	Device.Statistic->RenderCALC.End			();
 
@@ -437,12 +436,12 @@ void CRender::Render		()
 
 	// Postprocess
 	Target->phase_combine					();
-	VERIFY	(0==mapDistort.size());
+	VERIFY	(mapDistort.empty());
 }
 
 void CRender::render_forward				()
 {
-	VERIFY	(0==mapDistort.size());
+	VERIFY	(mapDistort.empty());
 	RImplementation.o.distortion				= RImplementation.o.distortion_enabled;	// enable distorion
 
 	//******* Main render - second order geometry (the one, that doesn't support deffering)
@@ -476,9 +475,9 @@ void CRender::AfterWorldRender()
 	if (Device.m_SecondViewport.IsSVPFrame())
 	{
 		// Делает копию бэкбуфера (текущего экрана) в рендер-таргет второго вьюпорта
-		IDirect3DSurface9 * pBackBuffer = NULL;
+		IDirect3DSurface9 * pBackBuffer = nullptr;
 		HW.pDevice->GetBackBuffer(0, 0, D3DBACKBUFFER_TYPE_MONO, &pBackBuffer);
-		D3DXLoadSurfaceFromSurface(Target->rt_secondVP->pRT, 0, 0, pBackBuffer, 0, 0, D3DX_DEFAULT, 0);
+		D3DXLoadSurfaceFromSurface(Target->rt_secondVP->pRT, nullptr, nullptr, pBackBuffer, nullptr, nullptr, D3DX_DEFAULT, 0);
 		pBackBuffer->Release(); // Корректно очищаем ссылку на бэкбуфер (иначе игра зависнет в опциях)
 	}
 }

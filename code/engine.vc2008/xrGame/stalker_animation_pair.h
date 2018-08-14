@@ -25,12 +25,12 @@ public:
 #endif // USE_HEAD_BONE_PART_FAKE
 
 public:
-	typedef xr_vector<float>						ANIMATION_WEIGHTS;
-	typedef std::pair<LPCSTR,LPCSTR>				BLEND_ID;
+	using ANIMATION_WEIGHTS = xr_vector<float>;
+	using BLEND_ID = std::pair<LPCSTR,LPCSTR>;
 
 public:
-	typedef fastdelegate::FastDelegate0<>			CALLBACK_ID;
-	typedef xr_vector<CALLBACK_ID>					CALLBACKS;
+	using CALLBACK_ID = fastdelegate::FastDelegate0<>;
+	using CALLBACKS = xr_vector<CALLBACK_ID>;
 
 private:
 	MotionID				m_animation;
@@ -67,7 +67,7 @@ public:
 	IC						CStalkerAnimationPair	(CAI_Stalker* object);
 			void			reset					();
 			void			synchronize				(IKinematicsAnimated *skeleton_animated, const CStalkerAnimationPair &stalker_animation_pair) const;
-			MotionID		select					(const ANIM_VECTOR &array, const ANIMATION_WEIGHTS *weights = 0);
+			MotionID		select					(const ANIM_VECTOR &array, const ANIMATION_WEIGHTS *weights = nullptr);
 	IC		bool			actual					() const;
 	IC		bool			animation				(const MotionID &animation);
 	IC		const MotionID	&animation				() const;

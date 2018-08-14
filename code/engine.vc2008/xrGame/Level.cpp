@@ -126,9 +126,9 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 {
 	g_bDebugEvents				= strstr(Core.Params,"-debug_ge")?TRUE:FALSE;
 
-	Server						= NULL;
+	Server						= nullptr;
 
-	game						= NULL;
+	game						= nullptr;
 	game_events					= xr_new<NET_Queue_Event>();
 
 	spawn_events				= xr_new<NET_Queue_Event>();
@@ -172,8 +172,8 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	
 	hud_zones_list = nullptr;
 
-	m_mtScriptUpdaterEventStart = CreateEvent(NULL, FALSE, FALSE, NULL);
-	m_mtScriptUpdaterEventEnd = CreateEvent(NULL, TRUE, FALSE, NULL);
+	m_mtScriptUpdaterEventStart = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	m_mtScriptUpdaterEventEnd = CreateEvent(nullptr, TRUE, FALSE, nullptr);
 
 	thread_spawn(mtLevelScriptUpdater, "X-Ray: Level Script Update", 0, this);
 }
@@ -186,7 +186,7 @@ CLevel::~CLevel()
 	SetEvent(m_mtScriptUpdaterEventStart);
 	xr_delete(g_player_hud);
 	delete_data(hud_zones_list);
-	hud_zones_list = NULL;
+	hud_zones_list = nullptr;
 
 	Msg("- Destroying level");
 
@@ -210,9 +210,9 @@ CLevel::~CLevel()
 	sound_registry.clear();
 
 	// unload static sounds
-	for (u32 i = 0; i < static_Sounds.size(); ++i) {
-		static_Sounds[i]->destroy();
-		xr_delete(static_Sounds[i]);
+	for (ref_sound* static_Sound : static_Sounds) {
+		static_Sound->destroy();
+		xr_delete(static_Sound);
 	}
 	static_Sounds.clear();
 
@@ -308,7 +308,7 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 		bool			ok = true;
 
 		CObject			*D	= Objects.net_Find	(id);
-		if (0==D)		{
+		if (nullptr==D)		{
 			ok			= false;
 		}
 
@@ -398,8 +398,8 @@ void CLevel::MakeReconnect()
 	if (!Engine.Event.Peek("KERNEL:disconnect"))
 	{
 		Engine.Event.Defer	("KERNEL:disconnect");
-		char const * server_options = NULL;
-		char const * client_options = NULL;
+		char const * server_options = nullptr;
+		char const * client_options = nullptr;
         shared_str serverOption = GamePersistent().GetServerOption();
         shared_str clientOption = GamePersistent().GetClientOption();
 		if (serverOption.c_str())
@@ -436,7 +436,7 @@ void CLevel::OnFrame()
 	DBG_RenderUpdate();
 #endif // #ifdef DEBUG
 
-	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
+	Device.seqParallel.emplace_back(m_map_manager, &CMapManager::Update);
 
 	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
 		GameTaskManager().UpdateTasks();
@@ -461,9 +461,9 @@ void CLevel::OnFrame()
 	BulletManager().CommitRenderSet();
 
 	// update static sounds
-	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
+	Device.seqParallel.emplace_back(m_level_sound_manager, &CLevelSoundManager::Update);
 	// deffer LUA-GC-STEP
-	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
+	Device.seqParallel.emplace_back(this, &CLevel::script_gc);
 	//-----------------------------------------------------
 	if (pStatGraphR)
 	{

@@ -77,16 +77,7 @@ public:
 };
 
 //-----------------------------------------------------------------------
-class CCC_MotionsStat : public IConsole_Command
-{
-public:
-	CCC_MotionsStat(LPCSTR N) : IConsole_Command(N)  { bEmptyArgsHandled = TRUE; };
-	virtual void Execute(LPCSTR args) {
-		//g_pMotionsContainer->dump();
-		//	TODO: move this console commant into renderer
-		VERIFY(0);
-	}
-};
+
 //-----------------------------------------------------------------------
 class CCC_E_Dump : public IConsole_Command
 {
@@ -602,9 +593,6 @@ void CCC_Register()
 	CMD1(CCC_Disconnect,"disconnect"			);
 	CMD1(CCC_SaveCFG,	"cfg_save"				);
 	CMD1(CCC_LoadCFG,	"cfg_load"				);
-
-
-	CMD1(CCC_MotionsStat,	"stat_motions"		);
 
 #ifdef DEBUG
 	CMD1(CCC_DbgStrCheck,	"dbg_str_check"		);

@@ -173,7 +173,7 @@ inline OutputClass horrible_cast(const InputClass input){
 	// Cause a compile-time error if in, out and u are not the same size.
 	// If the compile fails here, it means the compiler has peculiar
 	// unions which would prevent the cast from working.
-	typedef int ERROR_CantUseHorrible_cast[sizeof(InputClass)==sizeof(u) 
+	using ERROR_CantUseHorrible_cast = int[sizeof(InputClass)==sizeof(u) 
 		&& sizeof(InputClass)==sizeof(OutputClass) ? 1 : -1];
 	u.in = input;
 	return u.out;
@@ -215,7 +215,7 @@ inline OutputClass horrible_cast(const InputClass input){
 typedef const void * DefaultVoid;
 #else
 // On any other compiler, just use a normal void.
-typedef void DefaultVoid;
+using DefaultVoid = void;
 #endif
 
 // Translate from 'DefaultVoid' to 'void'.

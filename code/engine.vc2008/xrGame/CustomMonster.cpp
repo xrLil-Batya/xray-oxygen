@@ -222,7 +222,7 @@ void CCustomMonster::shedule_Update	( u32 DT )
 	// *** general stuff
 	if (g_Alive())
 	{
-		Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CCustomMonster::Exec_Visibility));
+		Device.seqParallel.emplace_back(this, &CCustomMonster::Exec_Visibility);
 		memory().update(dt);
 	}
 	inherited::shedule_Update	(DT);
@@ -333,7 +333,7 @@ void CCustomMonster::UpdateCL	()
 	}
 	*/
 
-	Device.seqParallel.push_back	(fastdelegate::FastDelegate0<>(this,&CCustomMonster::update_sound_player));
+	Device.seqParallel.emplace_back	(this,&CCustomMonster::update_sound_player);
 
 
 	START_PROFILE("CustomMonster/client_update/network extrapolation")
