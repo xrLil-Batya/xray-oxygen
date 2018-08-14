@@ -92,7 +92,7 @@ void	CObjectList::o_activate		( CObject*		Obj		)
 }
 void	CObjectList::o_sleep		( CObject*		Obj		)
 {
-	VERIFY	(O && !O->processing_enabled());
+	VERIFY	(Obj && !Obj->processing_enabled());
 	o_remove					(objects_active,Obj);
 	objects_sleeping.push_back  (Obj);
 	Obj->MakeMeCrow				();
@@ -300,7 +300,7 @@ void CObjectList::Unload	( )
 		
 #ifdef DEBUG
 		if( debug_destroy )
-			Msg				("Destroying object [%d][%s]",O->ID(),*O->cName());
+			Msg				("Destroying object [%d][%s]",Obj->ID(),*Obj->cName());
 #endif
 		Obj->net_Destroy	(   );
 		Destroy			( Obj );
@@ -313,7 +313,7 @@ void CObjectList::Unload	( )
 
 #ifdef DEBUG
 		if( debug_destroy )
-			Msg				("Destroying object [%d][%s]",O->ID(),*O->cName());
+			Msg				("Destroying object [%d][%s]",Obj->ID(),*Obj->cName());
 #endif
 		Obj->net_Destroy	(   );
 		Destroy			( Obj );
@@ -370,7 +370,7 @@ void		CObjectList::Destroy			( CObject*	Obj		)
 			std::find(
 				objects_sleeping.begin(),
 				objects_sleeping.end(),
-				O
+				Obj
 			) == objects_sleeping.end()
 		);
 	}
@@ -378,7 +378,7 @@ void		CObjectList::Destroy			( CObject*	Obj		)
 		Objects::iterator _ii	= std::find(objects_sleeping.begin(),objects_sleeping.end(),Obj);
 		if	(_ii!=objects_sleeping.end()) {
 			objects_sleeping.erase			(_ii);
-			VERIFY							( std::find(objects_sleeping.begin(),objects_sleeping.end(),O) == objects_sleeping.end() );
+			VERIFY							( std::find(objects_sleeping.begin(),objects_sleeping.end(),Obj) == objects_sleeping.end() );
 		}
 		else
 			FATAL							("! Unregistered object being destroyed");
