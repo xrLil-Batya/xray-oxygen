@@ -436,10 +436,6 @@ CStalkerPropertyEvaluatorShouldThrowGrenade::CStalkerPropertyEvaluatorShouldThro
 
 _value_type CStalkerPropertyEvaluatorShouldThrowGrenade::evaluate	()
 {
-#if 0
-	return						(false);
-#else // #if 1
-
 	if (m_storage->property(eWorldPropertyStartedToThrowGrenade))
 		return					(true);
 
@@ -459,7 +455,7 @@ _value_type CStalkerPropertyEvaluatorShouldThrowGrenade::evaluate	()
 	if (!enemy)
 		return					(false);
 
-	if (!enemy->human_being())
+	if (!g_extraFeatures.is(GAME_EXTRA_NPC_GRENADE_ATTAK_ALL) && !enemy->human_being())
 		return					(false);
 
 	if (object().memory().visual().visible_now(enemy))
@@ -491,8 +487,7 @@ _value_type CStalkerPropertyEvaluatorShouldThrowGrenade::evaluate	()
 		return					(false);
 
 	// do throw grenade
-	return						(true);
-#endif // #if 1
+	return (true);
 }
 
 //////////////////////////////////////////////////////////////////////////

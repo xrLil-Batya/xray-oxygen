@@ -1830,7 +1830,6 @@
     <ClCompile Include="agent_manager_planner.cpp" />
     <ClCompile Include="agent_manager_actions.cpp" />
     <ClCompile Include="agent_manager_properties.cpp" />
-    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="alife_simulator_base.cpp" />
     <ClCompile Include="alife_simulator_base2.cpp" />
@@ -1866,6 +1865,7 @@
     <ClCompile Include="alife_creature_abstract.cpp" />
     <ClCompile Include="alife_dynamic_object.cpp" />
     <ClCompile Include="alife_human_abstract.cpp" />
+    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_human_brain.cpp" />
     <ClCompile Include="alife_human_object_handler.cpp" />
     <ClCompile Include="alife_group_abstract.cpp" />
