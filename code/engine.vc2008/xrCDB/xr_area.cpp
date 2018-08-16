@@ -69,7 +69,8 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 
 	// Cache for cform
 	u32 crc = crc32(F->pointer(), F->length());
-	const char* LevelName= std::string((FS.get_path("$level$")->m_Add) + std::string("cform.cache")).c_str();
+	string_path LevelName;
+	strconcat(sizeof(LevelName), LevelName, FS.get_path("$level$")->m_Add, "cform.cache");
 
 	IReader* pReaderCache = FS.r_open("$level_cache$", LevelName);
 
@@ -87,9 +88,9 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 	}
 	else
 	{
-		IWriter* pWriterChace = FS.w_open("$level_cache$", LevelName);
-		pWriterChace->w_u32(crc);
-		Create(verts, tris, realCform, build_callback, pWriterChace);
+		IWriter* pWriterCache = FS.w_open("$level_cache$", LevelName);
+		pWriterCache->w_u32(crc);
+		Create(verts, tris, realCform, build_callback, pWriterCache);
 	}
 
 	FS.r_close(F);
