@@ -17,7 +17,7 @@
 #include "phdebug.h"
 #endif
 
-extern CUIGame* GameUI() { return HUD().GetGameUI(); }
+extern CUIGame* GameUI() { return g_hud ? HUD().GetGameUI() : nullptr; }
 
 CFontManager::CFontManager()
 {

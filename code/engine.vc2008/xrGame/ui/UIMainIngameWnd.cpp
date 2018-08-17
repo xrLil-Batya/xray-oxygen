@@ -529,7 +529,10 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 
 void CUIMainIngameWnd::OnConnected()
 {
-	if ( m_ui_hud_states )
+	// Init UIMap
+	UIZoneMap->SetupCurrentMap();
+
+	if (m_ui_hud_states)
 	{
 		m_ui_hud_states->on_connected();
 	}
@@ -739,8 +742,6 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		m_ind_overweight->Show(true);
 		if(cur_weight>max_weight)
 			m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_red");
-		//else if(cur_weight>max_weight-10.0f)
-		//	m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_yellow");
 		else
 			m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_yellow");
 	}
@@ -820,7 +821,6 @@ void CUIMainIngameWnd::UpdateQuickSlots()
 			{
 				wnd->Show(false);
 				m_quick_slots_icons[i]->SetTextureColor(color_rgba(255,255,255,0));
-//				m_quick_slots_icons[i]->Show(false);
 			}
 		}
 	}

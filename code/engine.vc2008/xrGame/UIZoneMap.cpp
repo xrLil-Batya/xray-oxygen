@@ -143,7 +143,7 @@ void CUIZoneMap::Render			()
 
 void CUIZoneMap::Update()
 {
-	SetupCurrentMap();
+//	SetupCurrentMap();
     if (!visible) return; //Don't update, if we hided
 	CActor* pActor = smart_cast<CActor*>( Level().CurrentViewEntity() );
 	if ( !pActor ) return;
