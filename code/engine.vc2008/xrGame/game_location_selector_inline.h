@@ -85,12 +85,12 @@ IC	void CGameLocationSelector::select_random_location(const _vertex_id_type star
 	m_graph->begin				(start_vertex_id,i,e);
 	for ( ; i != e; ++i) 
 	{
-		// * íå ñîîòâåòñòâóåò ïðåäûäåùåé âåðøèíå
+		// * Ã­Ã¥ Ã±Ã®Ã®Ã²Ã¢Ã¥Ã²Ã±Ã²Ã¢Ã³Ã¥Ã² Ã¯Ã°Ã¥Ã¤Ã»Ã¤Ã¥Ã¹Ã¥Ã© Ã¢Ã¥Ã°Ã¸Ã¨Ã­Ã¥
 		if ((*i).vertex_id() == m_previous_vertex_id)
 			continue;
 
-		u16 GraphVertexId = m_graph->vertex((*i).vertex_id());
-		// * âåðøèíà íà òåêóùåì óðîâíå?
+		auto GraphVertexId = m_graph->vertex((*i).vertex_id());
+		// * Ã¢Ã¥Ã°Ã¸Ã¨Ã­Ã  Ã­Ã  Ã²Ã¥ÃªÃ³Ã¹Ã¥Ã¬ Ã³Ã°Ã®Ã¢Ã­Ã¥?
 		if (GraphVertexId->level_id() != ai().level_graph().level_id())
 			continue;
 
@@ -100,7 +100,7 @@ IC	void CGameLocationSelector::select_random_location(const _vertex_id_type star
 
 		const u8 *curr_types = GraphVertexId->vertex_type();
 
-		// * ïîäõîäèò ïî ìàñêå
+		// * Ã¯Ã®Ã¤ÃµÃ®Ã¤Ã¨Ã² Ã¯Ã® Ã¬Ã Ã±ÃªÃ¥
 		for (I = B; I != E; ++I)
 			if (m_graph->mask((*I).tMask,curr_types))
 				++branch_factor;
@@ -118,11 +118,11 @@ IC	void CGameLocationSelector::select_random_location(const _vertex_id_type star
 		bool					found = false;
 		m_graph->begin			(start_vertex_id,i,e);
 		for ( ; i != e; ++i) {
-			// * íå ñîîòâåòñòâóåò ïðåäûäåùåé âåðøèíå
+			// * Ã­Ã¥ Ã±Ã®Ã®Ã²Ã¢Ã¥Ã²Ã±Ã²Ã¢Ã³Ã¥Ã² Ã¯Ã°Ã¥Ã¤Ã»Ã¤Ã¥Ã¹Ã¥Ã© Ã¢Ã¥Ã°Ã¸Ã¨Ã­Ã¥
 			if ((*i).vertex_id() == m_previous_vertex_id)
 				continue;
 
-			// * âåðøèíà íà òåêóùåì óðîâíå?
+			// * Ã¢Ã¥Ã°Ã¸Ã¨Ã­Ã  Ã­Ã  Ã²Ã¥ÃªÃ³Ã¹Ã¥Ã¬ Ã³Ã°Ã®Ã¢Ã­Ã¥?
 			if ((m_graph->vertex((*i).vertex_id())->level_id() != ai().level_graph().level_id()))
 				continue;
 
@@ -132,7 +132,7 @@ IC	void CGameLocationSelector::select_random_location(const _vertex_id_type star
 
 			const u8			*curr_types = m_graph->vertex((*i).vertex_id())->vertex_type();
 
-			// * ïîäõîäèò ïî ìàñêå
+			// * Ã¯Ã®Ã¤ÃµÃ®Ã¤Ã¨Ã² Ã¯Ã® Ã¬Ã Ã±ÃªÃ¥
 			for (I = B; I != E; ++I)
 				if (m_graph->mask((*I).tMask,curr_types)) {
 					if (choice != branch_factor) {
