@@ -33,7 +33,7 @@ CPhysicItem::~CPhysicItem	()
 
 void CPhysicItem::init		()
 {
-	m_pPhysicsShell			= 0;
+	m_pPhysicsShell			= nullptr;
 }
 
 void CPhysicItem::reinit	()

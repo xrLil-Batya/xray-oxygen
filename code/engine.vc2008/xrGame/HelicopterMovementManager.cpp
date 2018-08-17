@@ -87,7 +87,7 @@ void SHeliMovementState::Update()
 void SHeliMovementState::reinit()
 {
 	type						= eMovNone;
-	currPatrolPath				= NULL;
+	currPatrolPath				= nullptr;
 	currPatrolVertex			= NULL;
 	patrol_begin_idx			= 0;
 	patrol_path_name			= "";
@@ -177,7 +177,7 @@ void SHeliMovementState::getPathAltitude (Fvector& point, float base_altitude)
 	point.y = boundingVolume.max.y+EPS_L;
 	VERIFY( _valid(point) );
 
-	Level().ObjectSpace.RayPick(point, down_dir, boundSize.y+1.0f, collide::rqtStatic, cR, NULL);
+	Level().ObjectSpace.RayPick(point, down_dir, boundSize.y+1.0f, collide::rqtStatic, cR, nullptr);
 	
 	point.y = point.y-cR.range;
 
@@ -325,7 +325,7 @@ void SHeliMovementState::CreateRoundPoints(Fvector center, float radius, float s
 		dir.setHP(dir_h,0.0f);
 		new_pt.mad(center,dir,radius);
 		new_pt.y = height;
-		round_points.push_back( STmpPt(new_pt,dir_h) );
+		round_points.emplace_back( new_pt,dir_h );
 		dir_h	+= td;
 	}
 
@@ -410,9 +410,9 @@ void SHeliMovementState::SetPointFlags(u32 idx, u32 new_flags)
 	CPatrolPath				*p = const_cast<CPatrolPath*>(currPatrolPath);
 	CPatrolPoint* pt_curr	= &p->vertex(idx)->data();
 	CPatrolPoint* pt_new	= xr_new<CPatrolPoint>(	
-		(CLevelGraph*)0,
-		(CGameLevelCrossTable*)0,
-		(CGameGraph*)0,
+		(CLevelGraph*)nullptr,
+		(CGameLevelCrossTable*)nullptr,
+		(CGameGraph*)nullptr,
 		currPatrolPath,
 		pt_curr->position(),
 		u32(-1),

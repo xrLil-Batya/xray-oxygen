@@ -59,7 +59,7 @@ void CPHSkeleton::Init()
 {
 	m_remove_time = u32(-1);
 	b_removing=false;
-	m_startup_anim=NULL;
+	m_startup_anim=nullptr;
 }
 
 bool CPHSkeleton::Spawn(CSE_Abstract *D)
@@ -72,7 +72,7 @@ bool CPHSkeleton::Spawn(CSE_Abstract *D)
 	CSE_Visual				*visual = smart_cast<CSE_Visual*>(D);
 	VERIFY					(visual);
 	m_startup_anim			= visual->startup_animation;
-	CPHSkeleton* source		= 0;
+	CPHSkeleton* source		= nullptr;
 	if(po->_flags.test(CSE_PHSkeleton::flSpawnCopy))
 	{
 		source=smart_cast<CPHSkeleton*>(Level().Objects.net_Find(po->source_id));
@@ -83,15 +83,15 @@ bool CPHSkeleton::Spawn(CSE_Abstract *D)
 		
 		R_ASSERT2(source,"no source");
 		source->UnsplitSingle(this);
-		m_flags.set				(CSE_PHSkeleton::flSpawnCopy,FALSE);
-		po->_flags.set				(CSE_PHSkeleton::flSpawnCopy,FALSE);
+		m_flags.set				(CSE_PHSkeleton::flSpawnCopy,false);
+		po->_flags.set				(CSE_PHSkeleton::flSpawnCopy,false);
 		po->source_id				=BI_NONE;
 		return true;
 	}
 	else 
 	{
 		CPhysicsShellHolder	*obj	=	PPhysicsShellHolder();
-		IKinematics			*K		=	NULL;
+		IKinematics			*K		=	nullptr;
 		if (obj->Visual())
 		{
 			K= smart_cast<IKinematics*>(obj->Visual());
@@ -263,8 +263,8 @@ void CPHSkeleton::RestoreNetState(CSE_PHSkeleton* po)
 	}
 	
 	saved_bones.clear();
-	po->_flags.set(CSE_PHSkeleton::flSavedData,FALSE);
-	m_flags.set(CSE_PHSkeleton::flSavedData,FALSE);
+	po->_flags.set(CSE_PHSkeleton::flSavedData,false);
+	m_flags.set(CSE_PHSkeleton::flSavedData,false);
 }
 
 void CPHSkeleton::ClearUnsplited()
@@ -286,7 +286,7 @@ void CPHSkeleton::SpawnCopy()
 		/////////////////////////////////////////////////////////////////////////////////////////////
 		CSE_ALifePHSkeletonObject	*l_tpALifePhysicObject = smart_cast<CSE_ALifePHSkeletonObject*>(D);
 		R_ASSERT					(l_tpALifePhysicObject);
-		l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,1);
+		l_tpALifePhysicObject->_flags.set	(CSE_PHSkeleton::flSpawnCopy,true);
 		//SetNotNeedSave()
 		/////////////////////////////////////////////////////////////////////////////////////////////
 		InitServerObject			(D);
@@ -318,7 +318,7 @@ void CPHSkeleton::PHSplit()
 void CPHSkeleton::UnsplitSingle(CPHSkeleton* SO)
 {
 	//Msg("%o,received has %d,",this,m_unsplited_shels.size());
-	if (0==m_unsplited_shels.size())	return;	//. hack
+	if (m_unsplited_shels.empty())	return;	//. hack
 	CPhysicsShellHolder* obj = PPhysicsShellHolder();
 	CPhysicsShellHolder* O =SO->PPhysicsShellHolder();
 	VERIFY2(m_unsplited_shels.size(),"NO_SHELLS !!");
@@ -453,5 +453,5 @@ void CPHSkeleton::InitServerObject(CSE_Abstract * D)
 
 void	CPHSkeleton::SetNotNeedSave		()
 {
-	m_flags.set(CSE_PHSkeleton::flNotSave,TRUE);
+	m_flags.set(CSE_PHSkeleton::flNotSave,true);
 }

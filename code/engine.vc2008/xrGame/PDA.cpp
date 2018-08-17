@@ -14,10 +14,10 @@
 #include "ai/monsters/basemonster/base_monster.h"
 
 
-CPda::CPda(void)						
+CPda::CPda()						
 {										
 	m_idOriginalOwner		= u16(-1);
-	m_SpecificChracterOwner = NULL;
+	m_SpecificChracterOwner = nullptr;
 	TurnOff					();
 }
 

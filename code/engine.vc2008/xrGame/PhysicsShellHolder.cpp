@@ -43,7 +43,7 @@ const IPhysicsShell	*CPhysicsShellHolder::physics_shell() const
 		return m_pPhysicsShell;
 	const CCharacterPhysicsSupport	*char_support = character_physics_support();
 	if( !char_support || !char_support->animation_collision() )
-				return 0;
+				return nullptr;
 	return  char_support->animation_collision()->shell(); 
 }
 
@@ -55,7 +55,7 @@ const IPhysicsElement* CPhysicsShellHolder::physics_character()  const
 {
 	const CCharacterPhysicsSupport	*char_support = character_physics_support();
 	if( !char_support )
-				return 0;
+				return nullptr;
 	const CPHMovementControl		*mov		  = character_physics_support()->movement();
 	VERIFY( mov );
 	return mov->IElement();
@@ -137,7 +137,7 @@ void CPhysicsShellHolder::create_physic_shell	()
 
 void CPhysicsShellHolder::init			()
 {
-	m_pPhysicsShell				=	NULL		;
+	m_pPhysicsShell				=	nullptr		;
 	b_sheduled					=	false		;
 }
 bool	 CPhysicsShellHolder::has_shell_collision_place( const CPhysicsShellHolder* obj ) const
@@ -316,7 +316,7 @@ u16	CPhysicsShellHolder::PHGetSyncItemsNumber()
 CPHSynchronize*	CPhysicsShellHolder::PHGetSyncItem	(u16 item)
 {
 	if(m_pPhysicsShell) return m_pPhysicsShell->get_ElementSync(item);
-	else				return 0;
+	else				return nullptr;
 }
 void	CPhysicsShellHolder::PHUnFreeze	()
 {
@@ -333,7 +333,7 @@ void CPhysicsShellHolder::OnChangeVisual()
 {
 	inherited::OnChangeVisual();
 
-	if (0==renderable.visual) 
+	if (nullptr==renderable.visual) 
 	{
 		CCharacterPhysicsSupport	*char_support = character_physics_support();
 		if( char_support )
@@ -342,7 +342,7 @@ void CPhysicsShellHolder::OnChangeVisual()
 		VERIFY( !character_physics_support() || !character_physics_support()->interactive_motion());
 		if(m_pPhysicsShell)m_pPhysicsShell->Deactivate();
 		xr_delete(m_pPhysicsShell);
-		VERIFY(0==m_pPhysicsShell);
+		VERIFY(nullptr==m_pPhysicsShell);
 	}
 }
 
@@ -547,10 +547,10 @@ IPHCapture*	CPhysicsShellHolder::PHCapture()
 {
 	CCharacterPhysicsSupport* ph_sup = character_physics_support();
 	if( !ph_sup )
-		return 0;
+		return nullptr;
 	CPHMovementControl	*mov = ph_sup->movement();
 	if( !mov )
-		return 0;
+		return nullptr;
 	return mov->PHCapture();
 }
 bool CPhysicsShellHolder::IsInventoryItem()

@@ -14,7 +14,7 @@ class moving_bones_snd_player;
 
 class CSE_ALifeObjectPhysic;
 struct SPHNetState;
-typedef CSE_ALifeObjectPhysic::mask_num_items	mask_num_items;
+using mask_num_items = CSE_ALifeObjectPhysic::mask_num_items;
 
 struct net_update_PItem
 {
@@ -35,7 +35,7 @@ class CPhysicObject :
 	public CPhysicsShellHolder,
 	public CPHSkeleton
 {
-	typedef CPhysicsShellHolder inherited;
+	using inherited = CPhysicsShellHolder;
 	EPOType					m_type					;
 	float					m_mass					;
 	ICollisionHitCallback	*m_collision_hit_callback;
@@ -61,8 +61,8 @@ private:
 public:
 			bool						get_door_vectors				( Fvector& closed, Fvector& open ) const;
 public:
-			CPhysicObject(void);
-	virtual ~CPhysicObject(void);
+			CPhysicObject();
+	virtual ~CPhysicObject();
 	virtual	void						Interpolate();
 			float						interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current);
 

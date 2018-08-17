@@ -373,7 +373,7 @@ void CCar::SDoor::ClosingToClosed()
 	IKinematics* pKinematics=smart_cast<IKinematics*>(pcar->Visual());
 //	CBoneData& bone_data= pKinematics->LL_GetData(u16(bone_id));
 	CBoneInstance& bone_instance=pKinematics->LL_GetBoneInstance(u16(bone_id));
-	bone_instance.set_callback(bctPhysics,0,joint->PFirst_element(),FALSE);
+	bone_instance.set_callback(bctPhysics,nullptr,joint->PFirst_element(),FALSE);
 	//bone_instance.set_callback( bone_instance.callback_type(),bone_instance.callback(),bone_instance.callback_param(),FALSE);
 	//bone_instance.Callback_overwrite=FALSE;
 	joint->PSecond_element()->Deactivate();
@@ -693,7 +693,7 @@ void CCar::SDoor::ApplyDamage(u16 level)
 }
 CCar::SDoor::SDoorway::SDoorway()
 {
-	door=NULL;
+	door=nullptr;
 	door_plane_ext.set(0.f,0.f);
 	door_plane_axes.set(0,0);
 }

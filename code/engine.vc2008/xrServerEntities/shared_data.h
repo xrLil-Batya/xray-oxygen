@@ -45,7 +45,7 @@ template <class T> bool CSingleton<T>::_on_self_delete	= true;
 template<class SHARED_TYPE, class KEY_TYPE> class CSharedObj : public CSingleton<CSharedObj<SHARED_TYPE, KEY_TYPE> >
 {
 	xr_map<KEY_TYPE, SHARED_TYPE*> _shared_tab;	
-	typedef typename xr_map<KEY_TYPE, SHARED_TYPE*>::iterator SHARED_DATA_MAP_IT;
+	using SHARED_DATA_MAP_IT = typename xr_map<KEY_TYPE, SHARED_TYPE*>::iterator;
 
 public:
 				CSharedObj	() {};

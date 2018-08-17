@@ -131,7 +131,7 @@ ICF BOOL test_point( const Fvector	&pt, xrXRC& xrc,  const Fmatrix33& mat, const
 		CDB::RESULT&	O	= *it;
 		if ( GMLib.GetMaterialByIdx(O.material)->Flags.is(SGameMtl::flPassable) )
 			continue;
-		if ( CDB::TestBBoxTri(mat,pt,ext,O.verts,FALSE) )
+		if ( CDB::TestBBoxTri(mat,pt,ext,O.verts,false) )
 			return		TRUE;
 	}
 	return FALSE;

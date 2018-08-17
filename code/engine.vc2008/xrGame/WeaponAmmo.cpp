@@ -44,18 +44,18 @@ void CCartridge::Load(LPCSTR section, u8 LocalAmmoType)
 	param_s.impair				= pSettings->r_float(section, "impair");
 	param_s.fWallmarkSize		= pSettings->r_float(section, "wm_size");
 	
-	m_flags.set					(cfCanBeUnlimited | cfRicochet, TRUE);
-	m_flags.set					(cfMagneticBeam, FALSE);
+	m_flags.set					(cfCanBeUnlimited | cfRicochet, true);
+	m_flags.set					(cfMagneticBeam, false);
 
 	if (pSettings->line_exist(section, "allow_ricochet"))
 	{
 		if (!pSettings->r_bool(section, "allow_ricochet"))
-			m_flags.set(cfRicochet, FALSE);
+			m_flags.set(cfRicochet, false);
 	}
 	if (pSettings->line_exist(section, "magnetic_beam_shot"))
 	{
 		if (pSettings->r_bool(section, "magnetic_beam_shot"))
-			m_flags.set(cfMagneticBeam, TRUE);
+			m_flags.set(cfMagneticBeam, true);
 	}
 
 	if(pSettings->line_exist(section,"can_be_unlimited"))
@@ -71,11 +71,11 @@ void CCartridge::Load(LPCSTR section, u8 LocalAmmoType)
 			( pSettings->r_string(section, "inv_name_short"));
 }
 
-CWeaponAmmo::CWeaponAmmo(void) 
+CWeaponAmmo::CWeaponAmmo() 
 {
 }
 
-CWeaponAmmo::~CWeaponAmmo(void)
+CWeaponAmmo::~CWeaponAmmo()
 {
 }
 
@@ -208,7 +208,7 @@ CInventoryItem *CWeaponAmmo::can_make_killing	(const CInventory *inventory) cons
 			return			(weapon);
 	}
 
-	return					(0);
+	return					(nullptr);
 }
 
 float CWeaponAmmo::Weight() const

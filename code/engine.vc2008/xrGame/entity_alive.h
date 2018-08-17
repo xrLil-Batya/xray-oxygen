@@ -13,7 +13,7 @@ class CVisualMemoryManager;
 class CBlend;
 class CEntityAlive : public CEntity {
 protected:
-	typedef	CEntity			inherited;	
+	using inherited =	CEntity;	
 private:
 	u32						m_used_time;
 public:
@@ -187,7 +187,7 @@ private:
 			void				fill_hit_bone_surface_areas	( ) const;
 
 private:
-	typedef xr_vector< std::pair<u16,float> >	hit_bone_surface_areas_type;
+	using hit_bone_surface_areas_type = xr_vector< std::pair<u16,float> >;
 
 private:
 	mutable hit_bone_surface_areas_type	m_hit_bone_surface_areas;

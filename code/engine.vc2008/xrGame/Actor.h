@@ -76,7 +76,7 @@ class	CActor:
 {
 	friend class CActorCondition;
 private:
-	typedef CEntityAlive inherited;
+	using inherited = CEntityAlive;
 	static void							MtSecondActorUpdate(void* pActorPointer);
 public:
 	HANDLE								MtSecondUpdaterEventStart;
@@ -575,7 +575,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 			void			set_input_external_handler			(CActorInputHandler *handler);
-			bool			input_external_handler_installed	() const {return (m_input_external_handler != 0);}
+			bool			input_external_handler_installed	() const {return (m_input_external_handler != nullptr);}
 			
 	IC		void			lock_accel_for						(u32 time){m_time_lock_accel = Device.dwTimeGlobal + time;}
 

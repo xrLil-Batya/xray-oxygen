@@ -679,10 +679,10 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 	t.Start();
 	Log				("Initializing File System...");
 
-	m_Flags.set		(flags,TRUE);
+	m_Flags.set		(flags,true);
 
 	// scan root directory
-	bNoRecurse		= TRUE;
+	bNoRecurse		= true;
 	string4096		buf;
 
 	// append application path
@@ -768,7 +768,7 @@ void CLocatorAPI::_initialize	(u32 flags, const char* target_folder, const char*
 //	u32	M2			= Memory.mem_usage();
 //	Msg				("FS: %d files cached %d archives, %dKb memory used.",m_files.size(),m_archives.size(), (M2-M1)/1024);
 
-	m_Flags.set		(flReady,TRUE);
+	m_Flags.set		(flReady,true);
 
 	Msg("Init FileSystem %f sec",t.GetElapsed_sec());
 	//-----------------------------------------------------------
@@ -1552,13 +1552,13 @@ void CLocatorAPI::rescan_path(const char* full_path, BOOL bRecurse)
 
 void  CLocatorAPI::rescan_pathes()
 {
-	m_Flags.set(flNeedRescan,FALSE);
+	m_Flags.set(flNeedRescan,false);
     for (const auto& it : pathes)
     {
     	FS_Path* P	= it.second;
         if (P->m_Flags.is(FS_Path::flNeedRescan)){
 			rescan_path(P->m_Path,P->m_Flags.is(FS_Path::flRecurse));
-			P->m_Flags.set(FS_Path::flNeedRescan,FALSE);
+			P->m_Flags.set(FS_Path::flNeedRescan,false);
         }
     }
 }

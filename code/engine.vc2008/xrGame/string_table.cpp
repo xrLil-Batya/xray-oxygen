@@ -18,14 +18,14 @@ void CStringTable::Destroy	()
 
 void CStringTable::rescan()
 {
-	if(NULL != pData)	return;
+	if(nullptr != pData)	return;
 	Destroy				();
 	Init				();
 }
 
 void CStringTable::Init		()
 {
-	if(NULL != pData) return;
+	if(nullptr != pData) return;
     
 	pData = xr_new<STRING_TABLE_DATA>();
 	
@@ -41,7 +41,7 @@ void CStringTable::Init		()
 	for (FS_File File : fset)
 	{
 		string_path fn, ext;
-		_splitpath(File.name.c_str(), 0, 0, fn, ext);
+		_splitpath(File.name.c_str(), nullptr, nullptr, fn, ext);
 		xr_strcat(fn, ext);
 
 		Load(fn);
@@ -82,7 +82,7 @@ void CStringTable::ReInit(EGameLanguage lang)
 	for (FS_File File: fset)
 	{
 		string_path fn, ext;
-		_splitpath(File.name.c_str(), 0, 0, fn, ext);
+		_splitpath(File.name.c_str(), nullptr, nullptr, fn, ext);
 		xr_strcat(fn, ext);
 
 		Load(fn);
@@ -104,11 +104,11 @@ void CStringTable::Load	(LPCSTR xml_file_full)
 
 	for(int i=0; i<string_num; ++i)
 	{
-		LPCSTR string_name = uiXml.ReadAttrib(uiXml.GetRoot(), "string", i, "id", NULL);
+		LPCSTR string_name = uiXml.ReadAttrib(uiXml.GetRoot(), "string", i, "id", nullptr);
 
 		VERIFY4(pData->m_StringTable.find(string_name) == pData->m_StringTable.end(), "duplicate string table id", string_name, uiXml.m_xml_file_name);
 
-		LPCSTR string_text		= uiXml.Read(uiXml.GetRoot(), "string:text", i,  NULL);
+		LPCSTR string_text		= uiXml.Read(uiXml.GetRoot(), "string:text", i,  nullptr);
 		shared_str str_val		= ParseLine(string_text, string_name, true);
 		pData->m_StringTable[string_name] = str_val;
 	}
@@ -148,7 +148,7 @@ shared_str CStringTable::ParseLine(LPCSTR str, LPCSTR skey, bool bFirst)
 	string256				srcbuff;
 	bool	b_hit			= false;
 
-	while( (b = strstr( str+k,ACTION_STR)) !=0 )
+	while( (b = strstr( str+k,ACTION_STR)) !=nullptr )
 	{
 		buff[0]				= 0;
 		srcbuff[0]			= 0;

@@ -4,7 +4,7 @@
 class CNoGravityZone :
 	public CCustomZone
 {
-typedef CCustomZone inherited;
+using inherited = CCustomZone;
 public:
 protected:
 	virtual		void	enter_Zone						(SZoneObjectInfo& io)				;

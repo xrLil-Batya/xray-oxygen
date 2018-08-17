@@ -30,7 +30,7 @@ void CDestroyablePhysicsObject::OnChangeVisual()
 	if (m_pPhysicsShell){
 		m_pPhysicsShell->Deactivate();
 		xr_delete		(m_pPhysicsShell);
-		VERIFY			(0==Visual());
+		VERIFY			(nullptr==Visual());
 	}
 	inherited::OnChangeVisual();
 }

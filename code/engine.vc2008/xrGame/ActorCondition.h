@@ -13,7 +13,7 @@ class CActorDeathEffector;
 
 class CActorCondition: public CEntityCondition {
 private:
-	typedef CEntityCondition inherited;
+	using inherited = CEntityCondition;
 	enum {	eCriticalPowerReached			=(1<<0),
 			eCriticalMaxPowerReached		=(1<<1),
 			eCriticalBleedingSpeed			=(1<<2),

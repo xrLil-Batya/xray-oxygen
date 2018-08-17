@@ -10,7 +10,7 @@
 class CMercuryBall : public CArtefact 
 {
 private:
-	typedef CArtefact inherited;
+	using inherited = CArtefact;
 public:
 	CMercuryBall(void);
 	virtual ~CMercuryBall(void);

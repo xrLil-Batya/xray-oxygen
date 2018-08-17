@@ -26,7 +26,7 @@ void CDosimeter::UpdateAf()
 
 void CDosimeter::CreateUI()
 {
-    R_ASSERT(NULL == m_ui);
+    R_ASSERT(nullptr == m_ui);
     m_ui = xr_new<CUIDosimeter>();
     ui().construct(this);
 }

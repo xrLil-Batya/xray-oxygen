@@ -104,7 +104,7 @@ void moving_bones_snd_player::stop()
 moving_bones_snd_player* create_moving_bones_snd_player(CInifile* ini, IKinematics& K, const Fmatrix &obj)
 {
 	if (!ini || !ini->section_exist("moving_bones_snd_player"))
-		return 0;
+		return nullptr;
 	return xr_new<moving_bones_snd_player>(&K, ini, "moving_bones_snd_player", obj);
 }
 

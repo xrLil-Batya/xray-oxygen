@@ -225,13 +225,7 @@ bool EFS_Utils::GetSaveName(const char* initial, string_path& buffer, const char
 	string1024 			flt;
 
 	const char* def_ext = P.m_DefExt;
-	if (false)//&& dwWindowsMajorVersion == 6 )
-	{
-		if (strstr(P.m_DefExt, "*."))
-			def_ext = strstr(P.m_DefExt, "*.") + 2;
-	}
-
-
+	
 	MakeFilter(flt, P.m_FilterCaption ? P.m_FilterCaption : "", def_ext);
 	OPENFILENAME ofn;
 	std::memset(&ofn, 0, sizeof(ofn));

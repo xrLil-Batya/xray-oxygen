@@ -26,7 +26,7 @@ static Fvector TORCH_OFFSET	= {-0.2f,+0.1f,-0.3f};
 static const Fvector OMNI_OFFSET = {-0.2f,+0.1f,-0.1f};
 static const float OPTIMIZATION_DISTANCE = 100.f;
 
-CTorch::CTorch(void)
+CTorch::CTorch()
 {
 	light_render = ::Render->light_create();
 	light_render->set_type(IRender_Light::SPOT);
@@ -37,7 +37,7 @@ CTorch::CTorch(void)
 
 	m_switched_on = false;
 	glow_render = ::Render->glow_create();
-	lanim = 0;
+	lanim = nullptr;
 	fBrightness = 1.f;
 
 	m_prev_hp.set(0, 0);
@@ -540,19 +540,19 @@ void CNightVisionEffector::PlaySounds(EPlaySounds which)
 	{
 	case eStartSound:
 		{
-			m_sounds.PlaySound("NightVisionOnSnd", m_pActor->Position(), NULL, bPlaySoundFirstPerson);
+			m_sounds.PlaySound("NightVisionOnSnd", m_pActor->Position(), nullptr, bPlaySoundFirstPerson);
 		}break;
 	case eStopSound:
 		{
-			m_sounds.PlaySound("NightVisionOffSnd", m_pActor->Position(), NULL, bPlaySoundFirstPerson);
+			m_sounds.PlaySound("NightVisionOffSnd", m_pActor->Position(), nullptr, bPlaySoundFirstPerson);
 		}break;
 	case eIdleSound:
 		{
-			m_sounds.PlaySound("NightVisionIdleSnd", m_pActor->Position(), NULL, bPlaySoundFirstPerson, true);
+			m_sounds.PlaySound("NightVisionIdleSnd", m_pActor->Position(), nullptr, bPlaySoundFirstPerson, true);
 		}break;
 	case eBrokeSound:
 		{
-			m_sounds.PlaySound("NightVisionBrokenSnd", m_pActor->Position(), NULL, bPlaySoundFirstPerson);
+			m_sounds.PlaySound("NightVisionBrokenSnd", m_pActor->Position(), nullptr, bPlaySoundFirstPerson);
 		}break;
 	default: NODEFAULT;
 	}

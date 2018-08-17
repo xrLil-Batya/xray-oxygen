@@ -17,7 +17,7 @@ struct SZoneMapEntityData {
 
 class game_cl_GameState : public game_GameState, public ISheduled
 {
-	typedef game_GameState	inherited;
+	using inherited = game_GameState;
 	shared_str						m_game_type_name;
 	u16								cl_flags;
 
@@ -96,7 +96,7 @@ extern EGameLanguage g_Language;
 xr_token		difficulty_type_token[];
 xr_token		language_type_token[];
 
-typedef enum_exporter<ESingleGameDifficulty> CScriptGameDifficulty;
+using CScriptGameDifficulty = enum_exporter<ESingleGameDifficulty>;
 add_to_type_list(CScriptGameDifficulty)
 #undef script_type_list
 #define script_type_list save_type_list(CScriptGameDifficulty)

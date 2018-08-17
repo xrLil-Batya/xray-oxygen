@@ -32,7 +32,7 @@ void CLevel::cl_Process_Spawn(NET_Packet& P)
 	}
 //-------------------------------------------------
 	//force object to be local for server client
-	E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);
+	E->s_flags.set(M_SPAWN_OBJECT_LOCAL, true);
 	g_sv_Spawn					(E);
 	F_entity_Destroy			(E);
 };
@@ -140,7 +140,7 @@ CSE_Abstract *CLevel::spawn_item(LPCSTR section, const Fvector &position, u32 le
 		abstract->Spawn_Write	(P,TRUE);
 		Send					(P);
 		F_entity_Destroy		(abstract);
-		return					(0);
+		return					(nullptr);
 	}
 	else
 		return (abstract);

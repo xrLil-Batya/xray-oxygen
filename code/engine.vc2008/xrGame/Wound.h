@@ -13,7 +13,7 @@ class CWound
 {
 public:
 	CWound				(u16 bone_num);
-	virtual ~CWound		(void);
+	virtual ~CWound		();
 
 	//serialization
 	virtual void save	(NET_Packet &output_packet);

@@ -167,7 +167,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 		
 	if (!g_Alive()) 
 	{
-		GameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
+		GameUI()->UIMainIngameWnd->SetPickUpItem(nullptr);
 		return;
 	}
 	
@@ -179,15 +179,14 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
 	act_and_cam_pos.y    += CameraHeight();
 	float maxlen					= 1000.0f;
-	CInventoryItem* pNearestItem	= NULL;
+	CInventoryItem* pNearestItem	= nullptr;
 
-	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
+	for (ISpatial*	spatial : ISpatialResult)
 	{
-		ISpatial*		spatial	= ISpatialResult[o_it];
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
 
-		if (0 == pIItem)											continue;
-		if (pIItem->object().H_Parent() != NULL)					continue;
+		if (nullptr == pIItem)											continue;
+		if (pIItem->object().H_Parent() != nullptr)					continue;
 		if (!pIItem->CanTake())										continue;
 		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
 
@@ -269,7 +268,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 
 void CActor::PickupInfoDraw(CObject* object)
 {
-	LPCSTR draw_str = NULL;
+	LPCSTR draw_str = nullptr;
 	
 	CArtefact* artefact = smart_cast<CArtefact*>(object);
 	CEatableItem* boost = smart_cast<CEatableItem*>(object);

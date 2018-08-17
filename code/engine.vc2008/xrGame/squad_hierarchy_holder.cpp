@@ -29,7 +29,7 @@ CGroupHierarchyHolder &CSquadHierarchyHolder::group	(u32 group_id) const
 #ifdef SQUAD_HIERARCHY_HOLDER_USE_LEADER
 void CSquadHierarchyHolder::update_leader			()
 {
-	m_leader				= 0;
+	m_leader				= nullptr;
 	GROUP_REGISTRY::const_iterator	I = m_groups.begin();
 	GROUP_REGISTRY::const_iterator	E = m_groups.end();
 	for ( ; I != E; ++I)

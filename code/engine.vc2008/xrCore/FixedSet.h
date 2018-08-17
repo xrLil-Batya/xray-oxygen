@@ -14,7 +14,7 @@ public:
 		K		key;
 		TNode	*left,*right;
 	};
-	typedef void __fastcall callback(TNode*);
+	using callback = void __fastcall(TNode*);
 private:
 	TNode*		nodes;
 	u32			pool;

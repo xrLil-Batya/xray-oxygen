@@ -60,7 +60,7 @@ void CDialogHolder::StartMenu(CUIDialogWnd* pDialog, bool bDoHideIndicators)
 
 		if (bDoHideIndicators)
 		{
-			psHUD_Flags.set(HUD_CROSSHAIR_RT, FALSE);
+			psHUD_Flags.set(HUD_CROSSHAIR_RT, false);
 			GameUI()->ShowGameIndicators(false);
 		}
 	}
@@ -208,7 +208,7 @@ void CDialogHolder::SetMainInputReceiver(CUIDialogWnd* ir, bool _find_remove)
 	}
 	else
 	{
-		m_input_receivers.push_back(recvItem(ir));
+		m_input_receivers.emplace_back(ir);
 	}
 };
 

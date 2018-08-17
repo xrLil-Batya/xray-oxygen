@@ -24,7 +24,7 @@ bool CHelicopter::isObjectVisible			(CObject* O)
 	dir_to_object.sub		(to_point,from_point).normalize_safe();
 	float ray_length		= from_point.distance_to(to_point);
 
-	BOOL res = Level().ObjectSpace.RayTest(from_point, dir_to_object, ray_length, collide::rqtStatic, NULL, NULL);
+	BOOL res = Level().ObjectSpace.RayTest(from_point, dir_to_object, ray_length, collide::rqtStatic, nullptr, nullptr);
 		
 	return !res;
 }

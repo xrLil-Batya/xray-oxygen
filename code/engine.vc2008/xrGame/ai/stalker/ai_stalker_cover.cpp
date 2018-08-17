@@ -206,9 +206,6 @@ void CAI_Stalker::update_best_cover_actuality		(const Fvector &position_to_cover
 //		return;
 //	}
 
-	if (false)//!m_best_cover_can_try_advance)
-		return;
-
 	if (m_best_cover_advance_cover == m_best_cover)
 		return;
 

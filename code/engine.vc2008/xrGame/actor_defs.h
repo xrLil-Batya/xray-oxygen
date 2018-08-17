@@ -58,7 +58,7 @@ enum EActorAction
 	eaaSearchCorpse,
 };
 
-typedef const char*		EActorSleep;
+using EActorSleep = const char*;
 extern EActorSleep		easCanSleepResult;
 extern 	string32		g_quick_use_slots[4];
 

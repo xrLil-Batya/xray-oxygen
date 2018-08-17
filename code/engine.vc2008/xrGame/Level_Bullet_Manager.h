@@ -144,7 +144,7 @@ protected:
 #ifdef DEBUG
 	u32						m_thread_id;
 
-	typedef xr_vector<Fvector>	BulletPoints;
+	using BulletPoints = xr_vector<Fvector>;
 	BulletPoints			m_bullet_points;
 #endif // #ifdef DEBUG
 

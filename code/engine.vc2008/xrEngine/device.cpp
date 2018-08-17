@@ -49,7 +49,7 @@ ENGINE_API bool IsSecondaryThread()
 ENGINE_API BOOL g_bRendering = FALSE; 
 /////////////////////////////////////
 BOOL		g_bLoaded		= FALSE;
-bool		g_bL			= FALSE;
+bool		g_bL			= false;
 ref_light	precache_light	= nullptr;
 /////////////////////////////////////
 
@@ -80,7 +80,7 @@ BOOL CRenderDevice::Begin	()
 
 	FPU::m24r();
 	g_bRendering = TRUE;
-	g_bL = TRUE;
+	g_bL = true;
 
 	return TRUE;
 }
@@ -564,7 +564,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 
 		if( bTimer && (!g_pGamePersistent || g_pGamePersistent->CanBePaused()) )
 		{
-			g_pauseMngr.Pause				(TRUE);
+			g_pauseMngr.Pause				(true);
 #ifdef DEBUG
 			if(!xr_strcmp(reason, "li_pause_key_no_clip"))
 				TimerGlobal.Pause				(FALSE);
@@ -579,7 +579,7 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 		if( bTimer && g_pauseMngr.Paused() )
 		{
 			fTimeDelta						= EPS_S + EPS_S;
-			g_pauseMngr.Pause				(FALSE);
+			g_pauseMngr.Pause				(false);
 		}
 		
 		if(bSound)

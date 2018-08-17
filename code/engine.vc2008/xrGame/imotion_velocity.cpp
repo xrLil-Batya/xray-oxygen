@@ -30,7 +30,7 @@ void imotion_velocity::move_update( )
 {
 		VERIFY( shell );
 		if( !shell->AnimToVelocityState( Device.fTimeDelta, 2 * default_l_limit, 10.f * default_w_limit ) )
-			flags.set( fl_switch_dm_toragdoll, TRUE );
+			flags.set( fl_switch_dm_toragdoll, true );
 		Fmatrix sv; sv.set( shell->mXFORM );
 		shell->InterpolateGlobalTransform( &shell->mXFORM );
 		shell->mXFORM.set( sv );

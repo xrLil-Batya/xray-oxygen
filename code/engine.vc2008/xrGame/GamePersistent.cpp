@@ -76,7 +76,7 @@ CGamePersistent::CGamePersistent()
 	SetBaseDof				(*DofValue);
 }
 
-CGamePersistent::~CGamePersistent(void)
+CGamePersistent::~CGamePersistent()
 {	
 	Device.seqFrame.Remove		(this);
 	Engine.Event.Handler_Detach	(eQuickLoad,this);

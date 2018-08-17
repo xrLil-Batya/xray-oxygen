@@ -14,7 +14,7 @@ class CGameObject;
 class ai_obstacle 
 {
 public:
-	typedef moving_objects::AREA			AREA;
+	using AREA = moving_objects::AREA;
 
 private:
 	enum: u32
@@ -23,7 +23,7 @@ private:
 	};
 
 private:
-	typedef Fplane			CPlanesArray[PLANE_COUNT];
+	using CPlanesArray = Fplane[PLANE_COUNT];
 
 private:
 	struct CPlanes 

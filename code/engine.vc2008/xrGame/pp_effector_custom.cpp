@@ -64,7 +64,7 @@ void CPPEffectorController::deactivate()
 	VERIFY(m_effector);
 
 	Actor()->Cameras().RemovePPEffector(m_effector->get_type());
-	m_effector = 0;
+	m_effector = nullptr;
 }
 
 void CPPEffectorController::frame_update()

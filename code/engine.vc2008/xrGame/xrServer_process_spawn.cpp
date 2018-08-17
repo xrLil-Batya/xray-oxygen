@@ -27,7 +27,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 	else VERIFY(pAbstractE->m_bALifeControl);
 	
 
-	CSE_Abstract *e_parent = 0;
+	CSE_Abstract *e_parent = nullptr;
 	if (pAbstractE->ID_Parent != 0xffff)
 	{
 		e_parent = game->get_entity_from_eid(pAbstractE->ID_Parent);
@@ -53,7 +53,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 		Phantom->owner			=	nullptr;
 		entities.insert			(std::make_pair(Phantom->ID,Phantom));
 
-		Phantom->s_flags.set	(M_SPAWN_OBJECT_PHANTOM,TRUE);
+		Phantom->s_flags.set	(M_SPAWN_OBJECT_PHANTOM,true);
 
 		// Spawn entity
 		pAbstractE->ID					=	PerformIDgen(pAbstractE->ID);
@@ -66,7 +66,7 @@ CSE_Abstract* xrServer::Process_spawn(NET_Packet& P, ClientID sender, BOOL bSpaw
 			// Clone from Phantom
 			pAbstractE->ID					=	PerformIDgen(0xffff);
 			pAbstractE->owner				=	CL;//		= SelectBestClientToMigrateTo	(E);
-			pAbstractE->s_flags.set			(M_SPAWN_OBJECT_PHANTOM,FALSE);
+			pAbstractE->s_flags.set			(M_SPAWN_OBJECT_PHANTOM,false);
 			entities.insert			(std::make_pair(pAbstractE->ID, pAbstractE));
 		} else {
 			// Simple spawn
