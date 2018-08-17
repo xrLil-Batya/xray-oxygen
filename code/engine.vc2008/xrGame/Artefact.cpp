@@ -155,10 +155,6 @@ void CArtefact::UpdateCL()
 		UpdateWorkload(Device.dwTimeDelta);
 }
 
-void CArtefact::Interpolate()
-{
-}
-
 void CArtefact::UpdateWorkload(u32 dt) 
 {
 	VERIFY(!physics_world()->Processing());

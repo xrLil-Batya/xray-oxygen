@@ -87,7 +87,6 @@ public:
 	enum EAFHudStates {
 		eActivating = eLastBaseState+1,
 	};
-	virtual void					Interpolate			();
 
 	virtual	void					PlayAnimIdle		();
 	virtual void					MoveTo				(Fvector const & position);

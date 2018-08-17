@@ -332,7 +332,8 @@ void CInventoryItem::load(IReader &packet)
 	if (!tmp)
 		return;
 	
-	if (!object().PPhysicsShell()) {
+	if (!object().PPhysicsShell()) 
+	{
 		object().setup_physic_shell	();
 		object().PPhysicsShell()->Disable();
 	}
@@ -340,35 +341,6 @@ void CInventoryItem::load(IReader &packet)
 	object().PHLoadState(packet);
 	object().PPhysicsShell()->Disable();
 }
-
-void CInventoryItem::Interpolate()
-{
-}
-
-float CInventoryItem::interpolate_states(net_update_IItem const & first, net_update_IItem const & last, SPHNetState & current)
-{
-	float ret_val = 0.f;
-	u32 CurTime = Device.dwTimeGlobal;
-	
-	if (CurTime == last.dwTimeStamp)
-		return 0.f;
-
-	float factor = float(CurTime - last.dwTimeStamp) / float(last.dwTimeStamp - first.dwTimeStamp);
-	
-	ret_val = factor;
-	if 		(factor > 1.f)	factor = 1.f;
-	else if (factor < 0.f) 	factor = 0.f;
-	
-	current.position.x = first.State.position.x + (factor * (last.State.position.x - first.State.position.x));
-	current.position.y = first.State.position.y + (factor * (last.State.position.y - first.State.position.y));
-	current.position.z = first.State.position.z + (factor * (last.State.position.z - first.State.position.z));
-	current.previous_position = current.position;
-
-	current.quaternion.slerp(first.State.quaternion, last.State.quaternion, factor);
-	current.previous_quaternion = current.quaternion;
-	return ret_val;
-}
-
 
 void CInventoryItem::reload		(LPCSTR section)
 {

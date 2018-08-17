@@ -207,8 +207,6 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_hit_probability		= 1.f;
 	m_feel_touch_characters = 0;
 	//-----------------------------------------------------------------------------------
-	m_dwILastUpdateTime		= 0;
-
 	m_location_manager		= xr_new<CLocationManager>(this);
 	m_block_sprint_counter	= 0;
 
@@ -415,7 +413,6 @@ void CActor::Load	(LPCSTR section )
 	m_sCampfireIgniteAction			= "campfire_ignite";
 	m_sCampfireExtinguishAction		= "campfire_extinguish";
 	//---------------------------------------------------------------------
-	m_sHeadShotParticle	= READ_IF_EXISTS(pSettings,r_string,section,"HeadShotParticle",0);
 	
 	// Alex ADD: for smooth crouch fix
 	CurrentHeight = CameraHeight();	
@@ -457,10 +454,6 @@ void	CActor::Hit(SHit* pHDS)
 	}
 #endif // DEBUG
 
-	/*if (HDS.hit_type == ALife::eHitTypeFireWound)
-	{
-		Msg("[ACTOR] Bullet dist: [%f] bullet speed: [%f] ", HDS.BulletFlightDist, HDS.BulletFlightSpeed);
-	}*/
 	bool bPlaySound = true;
 	if (!g_Alive()) bPlaySound = false;
 
@@ -596,10 +589,7 @@ void CActor::Die(CObject* who)
 {
 	inherited::Die(who);
 
-	u16 I = inventory().FirstSlot();
-	u16 E = inventory().LastSlot();
-
-	for (; I <= E; ++I)
+	for (u16 I = inventory().FirstSlot(); I <= inventory().LastSlot(); ++I)
 	{
 		PIItem item_in_slot = inventory().ItemFromSlot(I);
 		if (I == inventory().GetActiveSlot())
@@ -665,6 +655,7 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 	{
 		if (mstate_real&mcClimb && !cameras[eacFirstEye]->bClampYaw)
 			accel.set(0.f, 0.f, 0.f);
+
 		character_physics_support()->movement()->Calculate(accel, cameras[cam_active]->vDirection, 0, jump, dt, false);
 		bool new_border_state = character_physics_support()->movement()->isOutBorder();
 		if (m_bOutBorder != new_border_state && Level().CurrentControlEntity() == this)
@@ -796,9 +787,8 @@ void CActor::UpdateCL()
 			{
 				float full_fire_disp = pWeapon->GetFireDispersion(true);
 
-				CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
-				if (S)
-					S->SetParams(full_fire_disp);
+				CEffectorZoomInertion* pZoomInertion = smart_cast<CEffectorZoomInertion*>(Cameras().GetCamEffector(eCEZoom));
+				if (pZoomInertion) pZoomInertion->SetParams(full_fire_disp);
 
 				SetZoomAimingMode(true);
 
@@ -807,14 +797,10 @@ void CActor::UpdateCL()
 					Actor()->IR_OnKeyboardPress(kCAM_1);
 					bLook_cam_fp_zoom = true;
 				}
-				else
+				else if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
 				{
-
-					if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
-					{
-						Actor()->IR_OnKeyboardPress(kCAM_2);
-						bLook_cam_fp_zoom = false;
-					}
+					Actor()->IR_OnKeyboardPress(kCAM_2);
+					bLook_cam_fp_zoom = false;
 				}
 			}
 		}
@@ -1025,10 +1011,9 @@ void CActor::shedule_Update	(u32 DT)
 			float v = bs+0.25f;
 
 			m_BloodSnd.set_volume	(v);
-		}else{
-			if(m_BloodSnd._feedback())
-				m_BloodSnd.stop();
 		}
+		else if(m_BloodSnd._feedback())
+				m_BloodSnd.stop();
 
 		if(!g_Alive()&&m_BloodSnd._feedback())
 				m_BloodSnd.stop();
@@ -1044,7 +1029,6 @@ void CActor::shedule_Update	(u32 DT)
 				m_DangerSnd.set_position(snd_pos);
 
 			float v = bs+0.25f;
-//			Msg( "bs            = %.2f", bs );
 
 			m_DangerSnd.set_volume	(v);
 		}
@@ -1127,7 +1111,6 @@ void CActor::shedule_Update	(u32 DT)
 #include "debug_renderer.h"
 void CActor::renderable_Render()
 {
-	//VERIFY(_valid(XFORM()));
 	inherited::renderable_Render();
 	bool isHolder = (m_holder && m_holder->allowWeapon() && m_holder->HUDView());
 	bool isCam = cam_active == eacFirstEye;
@@ -1175,8 +1158,8 @@ float CActor::missile_throw_force()
 #ifdef DEBUG
 extern	BOOL	g_ShowAnimationInfo		;
 #endif // DEBUG
-// HUD
 
+// HUD
 void CActor::OnHUDDraw(CCustomHUD*)
 {
 	R_ASSERT(IsFocused());
@@ -1243,15 +1226,16 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	Device.mFullTransform.transform(v0r,v0);
 	Device.mFullTransform.transform(v1r,v1);
 	float size = v1r.distance_to(v0r);
+
 	CGameFont* pFont = UI().Font().pFontArial14;
 	if (!pFont) return;
-//	float OldFontSize = pFont->GetHeight	();	
+
 	float delta_up = 0.0f;
 	if (size < mid_size) delta_up = upsize;
 	else delta_up = upsize*(mid_size/size);
+
 	dpos.y += delta_up;
 	if (size > mid_size) size = mid_size;
-//	float NewFontSize = size/mid_size * fontsize;
 	//------------------------------------------------
 	M.c.y += dpos.y;
 
@@ -1266,19 +1250,17 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 
 	pFont->SetAligment	(CGameFont::alCenter);
 	pFont->SetColor		(color);
-//	pFont->SetHeight	(NewFontSize);
 	pFont->Out			(x,y,Text);
 	//-------------------------------------------------
-//	pFont->SetHeight(OldFontSize);
 	*pdup = delta_up;
 };
 
 void CActor::SetPhPosition(const Fmatrix &transform)
 {
-	if(!m_pPhysicsShell){ 
+	if(!m_pPhysicsShell)
+	{ 
 		character_physics_support()->movement()->SetPosition(transform.c);
 	}
-	//else m_phSkeleton->S
 }
 
 void CActor::ForceTransform(const Fmatrix& m)

@@ -280,8 +280,6 @@ public:
 #endif // DEBUG
 
 	IC Upgrades_type const& upgardes	() const;
-	virtual void	Interpolate			();
-	float	interpolate_states			(net_update_IItem const & first, net_update_IItem const & last, SPHNetState & current);
 
 protected:
 	virtual	void	net_Spawn_install_upgrades	( Upgrades_type saved_upgrades );

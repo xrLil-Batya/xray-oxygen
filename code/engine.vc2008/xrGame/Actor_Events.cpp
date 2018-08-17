@@ -256,11 +256,9 @@ void CActor::MoveActor(Fvector NewPos, Fvector NewDir)
 	r_torso.pitch			= -NewDir.x;
 	unaffected_r_torso.yaw	= r_torso.yaw;
 	unaffected_r_torso.pitch= r_torso.pitch;
-	unaffected_r_torso.roll	= 0;//r_torso.roll;
+	unaffected_r_torso.roll	= 0;
 
 	r_torso_tgt_roll		= 0;
 	cam_Active()->Set		(-unaffected_r_torso.yaw,unaffected_r_torso.pitch,unaffected_r_torso.roll);
 	ForceTransform(M);
-
-	m_bInInterpolation = false;	
 }

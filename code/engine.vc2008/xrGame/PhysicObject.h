@@ -63,7 +63,6 @@ public:
 public:
 			CPhysicObject();
 	virtual ~CPhysicObject();
-	virtual	void						Interpolate();
 			float						interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current);
 
 	virtual BOOL						net_Spawn						( CSE_Abstract* DC)																	;

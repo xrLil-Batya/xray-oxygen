@@ -50,8 +50,6 @@
 #	include "../xrPhysics/phvalide.h"
 #endif
 
-int			g_cl_InterpolationType		= 0;
-u32			g_cl_InterpolationMaxPoints = 0;
 int			g_dwInputUpdateDelta		= 20;
 BOOL		net_cl_inputguaranteed		= FALSE;
 CActor*		g_actor						= nullptr;
@@ -59,8 +57,7 @@ CActor*		g_actor						= nullptr;
 CActor* Actor()	
 {
 	return (g_actor); 
-};
-
+}
 //--------------------------------------------------------------------
 void	CActor::ConvState(u32 mstate_rl, string128 *buf)
 {
@@ -329,10 +326,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	//----------------------------------
 	m_bAllowDeathRemove = false;
 
-	//	m_bHasUpdate = false;
-	m_bInInterpolation = false;
-	m_bInterpolate = false;
-
 	processing_activate();
 
 #ifdef DEBUG
@@ -347,10 +340,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 
 	//--------------------------------------------------------------
 	inventory().SetPrevActiveSlot(NO_ACTIVE_SLOT);
-
-
-	//-------------------------------------
-	m_States.clear(); // empty() does not clear the array and checks whether it is empty.
 	//-------------------------------------
 	if (!g_Alive())
 	{
@@ -373,7 +362,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	m_iLastHittingWeaponID = u16(-1);
 	m_s16LastHittedElement = -1;
 	m_bWasHitted = false;
-	m_dwILastUpdateTime = 0;
 
 	Level().MapManager().AddMapLocation("actor_location", ID());
 	Level().MapManager().AddMapLocation("actor_location_p", ID());

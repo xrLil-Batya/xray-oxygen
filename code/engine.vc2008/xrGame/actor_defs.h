@@ -1,8 +1,6 @@
+#pragma once
 #include "PHSynchronize.h"
 #include "xrserver_space.h"
-
-#pragma once
-
 
 #define ACTOR_HEIGHT			1.75f
 #define ACTOR_LOOKOUT_SPEED		2.f
@@ -61,16 +59,5 @@ enum EActorAction
 using EActorSleep = const char*;
 extern EActorSleep		easCanSleepResult;
 extern 	string32		g_quick_use_slots[4];
-
-///////////////////////////////////////////////////////
-// данные дл€ интерпол€ции
-struct					InterpData
-{
-	Fvector				Pos;
-	Fvector				Vel;
-	float				o_model;				// model yaw
-	SRotation			o_torso;				// torso in world coords
-};
-
 }; // namespace ACTOR_DEFS 
 

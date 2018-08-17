@@ -169,7 +169,6 @@ const animation_movement_controller* animation_movement		( ) const	{ return	m_an
 	bool					object_removed		() const { return m_bObjectRemoved; };
 
 public:
-	virtual void			make_Interpolation	() {}; // interpolation from last visible to corrected position/rotation
 #ifdef DEBUG
 	virtual void			PH_Ch_CrPr			() {}; // 
 	virtual	void			dbg_DrawSkeleton	();

@@ -387,7 +387,6 @@
     <ClInclude Include="ik_limb_state.h" />
     <ClInclude Include="ik_limb_state_predict.h" />
     <ClInclude Include="imotion_position.h" />
-    <ClInclude Include="imotion_velocity.h" />
     <ClInclude Include="interactive_motion.h" />
     <ClInclude Include="MercuryBall.h" />
     <ClInclude Include="moving_bones_snd_player.h" />
@@ -1690,7 +1689,6 @@
     <ClCompile Include="ik_foot_collider.cpp" />
     <ClCompile Include="ik_limb_state.cpp" />
     <ClCompile Include="imotion_position.cpp" />
-    <ClCompile Include="imotion_velocity.cpp" />
     <ClCompile Include="interactive_motion.cpp" />
     <ClCompile Include="MercuryBall.cpp" />
     <ClCompile Include="moving_bones_snd_player.cpp" />

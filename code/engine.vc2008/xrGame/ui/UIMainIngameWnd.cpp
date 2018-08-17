@@ -69,8 +69,7 @@ const u32	g_clWhite					= 0xffffffff;
 
 #define				MAININGAME_XML				"ui_HUD.xml"
 
-CUIMainIngameWnd::CUIMainIngameWnd()
-:m_pPickUpItem(NULL),m_pMPChatWnd(NULL),UIArtefactIcon(NULL),m_pMPLogWnd(NULL)
+CUIMainIngameWnd::CUIMainIngameWnd() : m_pPickUpItem(nullptr), UIArtefactIcon(nullptr)
 {
 	UIZoneMap					= xr_new<CUIZoneMap>();
 }
@@ -273,22 +272,10 @@ void CUIMainIngameWnd::Draw()
 	RenderQuickInfos();		
 }
 
-
-void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){
-	m_pMPChatWnd = pChat;
-	m_pMPLogWnd  = pLog;
-}
-
 void CUIMainIngameWnd::Update()
 {
 	CUIWindow::Update();
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
-
-	if (m_pMPChatWnd)
-		m_pMPChatWnd->Update();
-
-	if (m_pMPLogWnd)
-		m_pMPLogWnd->Update();
 
 	if (!pActor)
 		return;
@@ -308,8 +295,7 @@ void CUIMainIngameWnd::Update()
 	UpdateMainIndicators();
 	return;
 
-} //update
-
+}
 
 void CUIMainIngameWnd::RenderQuickInfos()
 {

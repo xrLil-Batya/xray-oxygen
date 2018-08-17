@@ -465,10 +465,6 @@ void CPhysicObject::net_Import(NET_Packet& P)
 }
 
 //-----------
-void CPhysicObject::Interpolate()
-{
-}
-
 float CPhysicObject::interpolate_states(net_update_PItem const & first, net_update_PItem const & last, SPHNetState & current)
 {
 	float ret_val = 0.f;

@@ -73,7 +73,6 @@ public:
 	CUITextWnd*			m_QuickSlotText4;
 
 protected:
-	///#TODO: [FX] Check this code
 	// 3 статиков для отображения иконок:
 	// - сломанного оружия(only mp)
 	// - радиации
@@ -86,8 +85,6 @@ protected:
 	CUIStatic*			UIArtefactIcon;
 
 	CUIScrollView*		m_UIIcons;
-	CUIWindow*			m_pMPChatWnd;
-	CUIWindow*			m_pMPLogWnd;
 
 public:
 	
@@ -99,8 +96,6 @@ public:
 		ewiInvincible,
 		ewiArtefact,
 	};
-
-	void				SetMPChatLog					(CUIWindow* pChat, CUIWindow* pLog);
 
 	// Задаем цвет соответствующей иконке
 	void				SetWarningIconColor				(EWarningIcons icon, const u32 cl);
