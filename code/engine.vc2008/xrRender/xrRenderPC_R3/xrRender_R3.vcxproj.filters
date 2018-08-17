@@ -735,6 +735,7 @@
     <ClInclude Include="blender_gamma.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrRender\dxGlowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1334,10 +1335,10 @@
     <ClCompile Include="blender_gamma.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
-    <None Include="VTune\xrRender_R3.vpj" />
   </ItemGroup>
   <ItemGroup>
     <Natvis Include="..\..\xrCore.natvis" />

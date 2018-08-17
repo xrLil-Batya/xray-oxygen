@@ -101,7 +101,7 @@ BOOL CLevel::Load_GameSpecific_After()
 		Sounds_Random.reserve(S.Data.size());
 		for (CInifile::Item I : S.Data)
 		{
-			Sounds_Random.push_back(ref_sound());
+			Sounds_Random.emplace_back();
 			Sound->create(Sounds_Random.back(), I.first.c_str(), st_Effect, sg_SourceType);
 		}
 		Sounds_Random_dwNextTime = Device.TimerAsync() + 50000;
@@ -181,11 +181,11 @@ struct translation_pair
 
 void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 {
-	typedef xr_vector<translation_pair>	ID_INDEX_PAIRS;
+	using ID_INDEX_PAIRS = xr_vector<translation_pair>;
 	ID_INDEX_PAIRS						translator;
 	translator.reserve					(GMLib.CountMaterial());
 	u16									default_id = (u16)GMLib.GetMaterialIdx("default");
-	translator.push_back				(translation_pair(u32(-1),default_id));
+	translator.emplace_back				(u32(-1),default_id);
 
 	u16									index = 0, static_mtl_count = 1;
 	int max_ID							= 0;
@@ -193,7 +193,7 @@ void CLevel::Load_GameSpecific_CFORM	( CDB::TRI* tris, u32 count )
 	for (GameMtlIt I=GMLib.FirstMaterial(); GMLib.LastMaterial()!=I; ++I, ++index) {
 		if (!(*I)->Flags.test(SGameMtl::flDynamic)) {
 			++static_mtl_count;
-			translator.push_back		(translation_pair((*I)->GetID(),index));
+			translator.emplace_back		((*I)->GetID(),index);
 			if ((*I)->GetID()>max_static_ID)	max_static_ID	= (*I)->GetID(); 
 		}
 		if ((*I)->GetID()>max_ID)				max_ID			= (*I)->GetID(); 

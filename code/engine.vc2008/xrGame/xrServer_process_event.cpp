@@ -57,7 +57,7 @@ void xrServer::Process_event	(NET_Packet& P)
 	case GE_TRADE_SELL:
 	case GE_OWNERSHIP_REJECT:
 	case GE_LAUNCH_ROCKET: 				Process_event_reject(P,sender,timestamp,destination,P.r_u16()); break;
-	case GE_DESTROY: 					Process_event_destroy(P,sender,timestamp,destination, NULL); break;
+	case GE_DESTROY: 					Process_event_destroy(P,sender,timestamp,destination, nullptr); break;
 	case GE_TRANSFER_AMMO:
 		{
 			u16					id_entity;

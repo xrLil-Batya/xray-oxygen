@@ -18,6 +18,9 @@
 	<string id="Low">
 		<text>low</text>
 	</string>
+	<string id="ui_mm_glows">
+		<text>Statics Glows</text>
+	</string>
 	<string id="Minimum">
 		<text>minimal</text>
 	</string>

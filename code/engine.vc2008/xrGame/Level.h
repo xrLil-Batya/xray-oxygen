@@ -41,7 +41,7 @@ private:
 	bool						m_bEnvPaused;
 #endif
 protected:
-	typedef IGame_Level			inherited;
+	using inherited = IGame_Level;
 	
 	CLevelSoundManager			*m_level_sound_manager;
 	NET_Queue_Event*			spawn_events = nullptr;
@@ -82,7 +82,7 @@ private:
 	xrServer::EConnect			m_connect_server_err;
 public:
 
-	CObject*					CurrentControlEntity	( void ) const		{ return pCurrentControlEntity; }
+	CObject*					CurrentControlEntity	(  ) const		{ return pCurrentControlEntity; }
 	void						SetControlEntity		( CObject* O  )		{ pCurrentControlEntity=O; }
 
 public:
@@ -148,7 +148,7 @@ public:
 
 	// Events
 	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
-	virtual void	_BCL		OnFrame					( void );
+	virtual void	_BCL		OnFrame					(  );
 	virtual void				OnRender				( );
 	
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
@@ -166,7 +166,7 @@ public:
 	virtual void				IR_OnMouseMove			( int, int);
 	virtual void				IR_OnMouseStop			( int, int);
 	virtual void				IR_OnMouseWheel			( int direction);
-	virtual void				IR_OnActivate			(void);
+	virtual void				IR_OnActivate			();
 
 	// Game
 	void						InitializeClientGame	(NET_Packet& P);

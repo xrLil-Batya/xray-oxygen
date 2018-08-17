@@ -47,7 +47,7 @@ CActorCondition::CActorCondition(CActor *object) :
 	VERIFY						(object);
 	m_object					= object;
 	m_condition_flags.zero		();
-	m_death_effector			= NULL;
+	m_death_effector			= nullptr;
 
 	m_zone_max_power[ALife::infl_rad]	= 1.0f;
 	m_zone_max_power[ALife::infl_fire]	= 1.0f;
@@ -341,7 +341,7 @@ void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 
 	if ( pda )
 	{
-		typedef xr_vector<CObject*>				monsters;
+		using monsters = xr_vector<CObject*>;
 
 		for ( monsters::const_iterator	it	=	pda->feel_touch.begin();
 										it	!=	pda->feel_touch.end();
@@ -371,17 +371,17 @@ void CActorCondition::AffectDamage_InjuriousMaterialAndMonstersInfluence()
 	{
 		m_f_time_affected			+=	one;
 
-		for ( int i=0; i<sizeof(hits)/sizeof(hits[0]); ++i )
+		for (auto & hit : hits)
 		{
-			float			damage	=	hits[i].value;
-			ALife::EHitType	type	=	hits[i].type;
+			float			damage	=	hit.value;
+			ALife::EHitType	type	=	hit.type;
 
 			if ( damage > EPS )
 			{
 				SHit HDS = SHit(damage, 
 //.								0.0f, 
 								Fvector().set(0,1,0), 
-								NULL, 
+								nullptr, 
 								BI_NONE, 
 								Fvector().set(0,0,0), 
 								0.0f, 
@@ -469,7 +469,7 @@ void CActorCondition::UpdateThirst()
 
 CWound* CActorCondition::ConditionHit(SHit* pHDS)
 {
-	if (GodMode()) return NULL;
+	if (GodMode()) return nullptr;
 	return inherited::ConditionHit(pHDS);
 }
 
@@ -519,11 +519,11 @@ bool CActorCondition::IsCantWalkWeight()
 
 		if( object().inventory().TotalWeight() > max_w )
 		{
-			m_condition_flags.set			(eCantWalkWeight, TRUE);
+			m_condition_flags.set			(eCantWalkWeight, true);
 			return true;
 		}
 	}
-	m_condition_flags.set					(eCantWalkWeight, FALSE);
+	m_condition_flags.set					(eCantWalkWeight, false);
 	return false;
 }
 
@@ -787,32 +787,32 @@ void CActorCondition::UpdateTutorialThresholds()
 
 	bool b = true;
 	if(b && !m_condition_flags.test(eCriticalPowerReached) && GetPower()<_cPowerThr){
-		m_condition_flags.set			(eCriticalPowerReached, TRUE);
+		m_condition_flags.set			(eCriticalPowerReached, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_critical_power");
 	}
 
 	if(b && !m_condition_flags.test(eCriticalMaxPowerReached) && GetMaxPower()<_cPowerMaxThr){
-		m_condition_flags.set			(eCriticalMaxPowerReached, TRUE);
+		m_condition_flags.set			(eCriticalMaxPowerReached, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_critical_max_power");
 	}
 
 	if(b && !m_condition_flags.test(eCriticalBleedingSpeed) && BleedingSpeed()>_cBleeding){
-		m_condition_flags.set			(eCriticalBleedingSpeed, TRUE);
+		m_condition_flags.set			(eCriticalBleedingSpeed, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_bleeding");
 	}
 
 	if(b && !m_condition_flags.test(eCriticalSatietyReached) && GetSatiety()<_cSatiety){
-		m_condition_flags.set			(eCriticalSatietyReached, TRUE);
+		m_condition_flags.set			(eCriticalSatietyReached, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_satiety");
 	}
 	if(g_extraFeatures.is(GAME_EXTRA_THIRST))
 	{
 		if (b && !m_condition_flags.test(eCriticalThirstReached) && GetThirst()<_cThirst) {
-			m_condition_flags.set(eCriticalThirstReached, TRUE);
+			m_condition_flags.set(eCriticalThirstReached, true);
 			b = false;
 			xr_strcpy(cb_name, "_G.on_actor_thirst");
 		}
@@ -821,19 +821,19 @@ void CActorCondition::UpdateTutorialThresholds()
 	
 
 	if(b && !m_condition_flags.test(eCriticalRadiationReached) && GetRadiation()>_cRadiation){
-		m_condition_flags.set			(eCriticalRadiationReached, TRUE);
+		m_condition_flags.set			(eCriticalRadiationReached, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_radiation");
 	}
 
 	if(b && !m_condition_flags.test(ePhyHealthMinReached) && GetPsyHealth()<_cPsyHealthThr){
-		m_condition_flags.set			(ePhyHealthMinReached, TRUE);
+		m_condition_flags.set			(ePhyHealthMinReached, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_psy");
 	}
 
 	if(b && m_condition_flags.test(eCantWalkWeight) && !m_condition_flags.test(eCantWalkWeightReached)){
-		m_condition_flags.set			(eCantWalkWeightReached, TRUE);
+		m_condition_flags.set			(eCantWalkWeightReached, true);
 		b=false;
 		xr_strcpy(cb_name,"_G.on_actor_cant_walk_weight");
 	}
@@ -842,7 +842,7 @@ void CActorCondition::UpdateTutorialThresholds()
 		PIItem item							= m_object->inventory().ItemFromSlot(m_object->inventory().GetActiveSlot());
 		CWeapon* pWeapon					= smart_cast<CWeapon*>(item); 
 		if(pWeapon&&pWeapon->GetCondition()<_cWpnCondition){
-			m_condition_flags.set			(eWeaponJammedReached, TRUE);b=false;
+			m_condition_flags.set			(eWeaponJammedReached, true);b=false;
 			xr_strcpy(cb_name,"_G.on_actor_weapon_jammed");
 		}
 	}
@@ -918,7 +918,7 @@ bool CActorCondition::ApplyInfluence(const SMedicineInfluenceValues& V, const sh
 
 			shared_str snd_name			= pSettings->r_string(sect, "use_sound");
 			m_use_sound.create			(snd_name.c_str(), st_Effect, sg_SourceType);
-			m_use_sound.play			(NULL, sm_2D);
+			m_use_sound.play			(nullptr, sm_2D);
 		}
 	}
 
@@ -942,7 +942,7 @@ bool CActorCondition::ApplyBooster(const SBooster& B, const shared_str& sect)
 
 				shared_str snd_name			= pSettings->r_string(sect, "use_sound");
 				m_use_sound.create			(snd_name.c_str(), st_Effect, sg_SourceType);
-				m_use_sound.play			(NULL, sm_2D);
+				m_use_sound.play			(nullptr, sm_2D);
 			}
 		}
 
@@ -971,7 +971,7 @@ CActorDeathEffector::CActorDeathEffector	(CActorCondition* parent, LPCSTR sect)	
 	disable_input			();
 	LPCSTR snd				= pSettings->r_string(sect, "snd");
 	m_death_sound.create	(snd,st_Effect,0);
-	m_death_sound.play_at_pos(0,Fvector().set(0,0,0),sm_2D);
+	m_death_sound.play_at_pos(nullptr,Fvector().set(0,0,0),sm_2D);
 
 
 	SBaseEffector* pe		= Actor()->Cameras().GetPPEffector((EEffectorPPType)effActorDeath);

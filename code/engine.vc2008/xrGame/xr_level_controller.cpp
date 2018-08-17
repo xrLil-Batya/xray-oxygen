@@ -310,9 +310,9 @@ int get_action_dik(EGameActions _action_id, int idx)
 
 EGameActions get_binded_action(int _dik)
 {
-	for (int idx = 0; idx < bindings_count; ++idx)
+	for (_binding & g_key_binding : g_key_bindings)
 	{
-		_binding* binding = &g_key_bindings[idx];
+		_binding* binding = &g_key_binding;
 
 		if (binding->m_keyboard[0] && binding->m_keyboard[0]->dik == _dik)
 			return binding->m_action->id;
@@ -399,9 +399,9 @@ public:
 		curr_pbinding->m_keyboard[m_work_idx] = pkeyboard;
 
 		{
-			for (int idx = 0; idx < bindings_count; ++idx)
+			for (_binding & g_key_binding : g_key_bindings)
 			{
-				_binding*	binding = &g_key_bindings[idx];
+				_binding*	binding = &g_key_binding;
 				if (binding == curr_pbinding)
 					continue;
 
@@ -421,9 +421,9 @@ public:
 		if (m_work_idx == 0)
 			F->w_printf("default_controls\r\n");
 
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			if (pbinding->m_keyboard[m_work_idx])
 			{
 				F->w_printf("%s %s %s\r\n",
@@ -465,9 +465,9 @@ public:
 
 	virtual void Execute(LPCSTR args) {
 		Log("- --- Action list start ---");
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			Log("-", pbinding->m_action->action_name);
 		}
 
@@ -485,9 +485,9 @@ public:
 
 	virtual void Execute(LPCSTR args)
 	{
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			pbinding->m_keyboard[0] = nullptr;
 			pbinding->m_keyboard[1] = nullptr;
 		}
@@ -524,9 +524,9 @@ public:
 		Log("- --- Bind list start ---");
 		string512 buff;
 
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			xr_sprintf(buff, "[%s] primary is[%s] secondary is[%s]",
 				pbinding->m_action->action_name,
 				(pbinding->m_keyboard[0]) ? pbinding->m_keyboard[0]->key_local_name.c_str() : "NULL",

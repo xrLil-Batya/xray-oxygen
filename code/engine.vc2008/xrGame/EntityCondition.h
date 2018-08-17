@@ -161,7 +161,7 @@ public:
 
 	IC float				GetBoostRadiationImmunity() const {return m_fBoostRadiationImmunity;};
 
-	typedef					xr_map<EBoostParams, SBooster> BOOSTER_MAP;
+	using BOOSTER_MAP =					xr_map<EBoostParams, SBooster>;
 protected:
 	void					UpdateHealth			();
 	void					UpdatePower				();

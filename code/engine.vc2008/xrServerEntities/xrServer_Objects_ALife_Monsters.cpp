@@ -120,7 +120,7 @@ CSE_ALifeTraderAbstract::CSE_ALifeTraderAbstract(LPCSTR caSection)
 	m_fMaxItemMass				= pSettings->r_float(caSection, "max_item_mass");
 
 	m_sCharacterProfile			= READ_IF_EXISTS(pSettings,r_string,caSection,"character_profile","default");
-	m_SpecificCharacter			= NULL;
+	m_SpecificCharacter			= nullptr;
 
 #ifdef XRGAME_EXPORTS
 	m_community_index			= NO_COMMUNITY_INDEX;
@@ -131,7 +131,7 @@ CSE_ALifeTraderAbstract::CSE_ALifeTraderAbstract(LPCSTR caSection)
 	m_deadbody_closed			= false;
 
 	m_trader_flags.zero			();
-	m_trader_flags.set			(eTraderFlagInfiniteAmmo,FALSE);
+	m_trader_flags.set			(eTraderFlagInfiniteAmmo,false);
 }
 
 CSE_Abstract *CSE_ALifeTraderAbstract::init	()
@@ -198,7 +198,7 @@ void CSE_ALifeTraderAbstract::STATE_Read	(NET_Packet &tNetPacket, u16 size)
 			if(tmp!=-1)
 				m_SpecificCharacter = CSpecificCharacter::IndexToId(tmp);
 			else
-				m_SpecificCharacter = NULL;
+				m_SpecificCharacter = nullptr;
 
 #else
 			m_SpecificCharacter = NULL;
@@ -250,7 +250,7 @@ void CSE_ALifeTraderAbstract::STATE_Read	(NET_Packet &tNetPacket, u16 size)
 
 void CSE_ALifeTraderAbstract::OnChangeProfile(PropValue* sender)
 {
-	m_SpecificCharacter = NULL;
+	m_SpecificCharacter = nullptr;
 #ifndef AI_COMPILER
 	specific_character();
 #endif
@@ -298,9 +298,9 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 			if(spec_char.data()->m_bNoRandom) continue;
 
 			bool class_found = false;
-			for(std::size_t j=0; j<spec_char.data()->m_Classes.size(); j++)
+			for(const auto & Classe : spec_char.data()->m_Classes)
 			{
-				if(char_info.data()->m_Class == spec_char.data()->m_Classes[j])
+				if(char_info.data()->m_Class == Classe)
 				{
 					class_found = true;
 					break;
@@ -317,11 +317,11 @@ shared_str CSE_ALifeTraderAbstract::specific_character()
 					if(char_info.data()->m_Reputation == NO_REPUTATION || _abs(spec_char.Reputation() - char_info.data()->m_Reputation)<REPUTATION_DELTA)
 					{
 #ifdef XRGAME_EXPORTS
-						int* count = NULL;
+						int* count = nullptr;
 						if(ai().get_alife())
 							count = ai().alife().registry(specific_characters).object(id, true);
 						//если индекс еще не был использован
-						if(NULL == count)
+						if(nullptr == count)
 #endif
 							m_CheckedCharacters.push_back(id);
 					}
@@ -685,7 +685,7 @@ CSE_ALifeAnomalousZone::CSE_ALifeAnomalousZone(LPCSTR caSection) : CSE_ALifeCust
 {
 	m_offline_interactive_radius	= 30.f;
 	m_artefact_spawn_count			= 32;
-	m_spawn_flags.set				(flSpawnDestroyOnSpawn,TRUE);
+	m_spawn_flags.set				(flSpawnDestroyOnSpawn,true);
 }
 
 CSE_Abstract *CSE_ALifeAnomalousZone::init			()
@@ -1144,7 +1144,7 @@ CSE_ALifeMonsterAbstract::CSE_ALifeMonsterAbstract(LPCSTR caSection)	: CSE_ALife
 
 	m_tpBestDetector			= this;
 
-	m_brain						= 0;
+	m_brain						= nullptr;
 	m_smart_terrain_id			= 0xffff;
 	m_task_reached				= false;
 
@@ -1498,8 +1498,8 @@ CSE_ALifeCreatureCrow::CSE_ALifeCreatureCrow(LPCSTR caSection) : CSE_ALifeCreatu
 {
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
 		set_visual				(pSettings->r_string(caSection,"visual"));
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeCreatureCrow::~CSE_ALifeCreatureCrow()
@@ -1550,8 +1550,8 @@ CSE_ALifeCreaturePhantom::CSE_ALifeCreaturePhantom(LPCSTR caSection) : CSE_ALife
 {
 	if (pSettings->section_exist(caSection) && pSettings->line_exist(caSection,"visual"))
 		set_visual				(pSettings->r_string(caSection,"visual"));
-	m_flags.set					(flUseSwitches,FALSE);
-	m_flags.set					(flSwitchOffline,FALSE);
+	m_flags.set					(flUseSwitches,false);
+	m_flags.set					(flSwitchOffline,false);
 }
 
 CSE_ALifeCreaturePhantom::~CSE_ALifeCreaturePhantom()
@@ -2028,7 +2028,7 @@ void CSE_ALifeHumanAbstract::FillProps		(LPCSTR pref, PropItemVec& items)
 //////////////////////////////////////////////////////////////////////////
 CSE_ALifeHumanStalker::CSE_ALifeHumanStalker(LPCSTR caSection) : CSE_ALifeHumanAbstract(caSection),CSE_PHSkeleton(caSection)
 {
-	m_trader_flags.set			(eTraderFlagInfiniteAmmo,TRUE);
+	m_trader_flags.set			(eTraderFlagInfiniteAmmo,true);
 	m_start_dialog				= "";
 }
 
@@ -2109,7 +2109,7 @@ CSE_Abstract *CSE_ALifeOnlineOfflineGroup::init				()
 #endif
 
 	VERIFY						(m_members.empty());
-	m_flags.set					(flUsedAI_Locations,FALSE);
+	m_flags.set					(flUsedAI_Locations,false);
 
 	return						(this);
 }
@@ -2127,7 +2127,7 @@ CALifeSmartTerrainTask* CSE_ALifeOnlineOfflineGroup::get_current_task	()
 {
 	NODEFAULT;
 #ifdef DEBUG
-	return 0;
+	return nullptr;
 #endif // #ifdef DEBUG
 }
 #endif // #ifdef XRGAME_EXPORTS

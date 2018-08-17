@@ -9,12 +9,12 @@
 #include "inventoryowner.h"
 #include "xrserver_objects_alife_items.h"
 
-CInfoDocument::CInfoDocument(void) 
+CInfoDocument::CInfoDocument() 
 {
-	m_Info = NULL;
+	m_Info = nullptr;
 }
 
-CInfoDocument::~CInfoDocument(void) 
+CInfoDocument::~CInfoDocument() 
 {
 }
 

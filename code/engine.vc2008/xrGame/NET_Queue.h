@@ -52,7 +52,7 @@ public:
 		P.w_u32			(timestamp	);
 		P.w_u16			(type		);
 		P.w_u16			(destination);
-		if (data.size())	P.w(&*data.begin(),(u32)data.size());
+		if (!data.empty())	P.w(&*data.begin(),(u32)data.size());
 	}
 	void				implication	(NET_Packet& P) const
 	{

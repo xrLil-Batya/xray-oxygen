@@ -2,10 +2,10 @@
 #include "weaponvintorez.h"
 #include "WeaponMagazinedWGrenade.h"
 
-CWeaponVintorez::CWeaponVintorez(void) : CWeaponMagazined(SOUND_TYPE_WEAPON_SNIPERRIFLE)
+CWeaponVintorez::CWeaponVintorez() : CWeaponMagazined(SOUND_TYPE_WEAPON_SNIPERRIFLE)
 {}
 
-CWeaponVintorez::~CWeaponVintorez(void)
+CWeaponVintorez::~CWeaponVintorez()
 {}
 
 using namespace luabind;

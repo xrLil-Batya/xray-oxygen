@@ -57,7 +57,7 @@ CWeaponMagazined::CWeaponMagazined(ESoundTypes eSoundType) : CWeapon()
 	m_sounds_enabled			= true;
 	
 	m_sSndShotCurrent			= "";
-	m_sSilencerFlameParticles	= m_sSilencerSmokeParticles = NULL;
+	m_sSilencerFlameParticles	= m_sSilencerSmokeParticles = nullptr;
 
 	m_bFireSingleShot			= false;
 	m_iShotNum					= 0;
@@ -245,9 +245,9 @@ bool CWeaponMagazined::IsAmmoAvailable()
 	if (smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[m_ammoType].c_str())))
 		return true;
 
-	else for (u32 i = 0; i < m_ammoTypes.size(); ++i)
+	else for (auto & ammoType : m_ammoTypes)
 	{
-		if (smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(m_ammoTypes[i].c_str())))
+		if (smart_cast<CWeaponAmmo*>(m_pInventory->GetAny(ammoType.c_str())))
 			return true;
 
 	}
@@ -324,7 +324,7 @@ void CWeaponMagazined::ReloadMagazine()
 
 	if (!m_bLockType)
 	{
-		m_pCurrentAmmo = NULL;
+		m_pCurrentAmmo = nullptr;
 	}
 
 	if (!m_pInventory) return;
@@ -505,7 +505,7 @@ void CWeaponMagazined::state_Fire(float dt)
 			return;
 
 		CInventoryOwner* io = smart_cast<CInventoryOwner*>(H_Parent());
-		if (NULL == io->inventory().ActiveItem())
+		if (nullptr == io->inventory().ActiveItem())
 		{
 			Log("current_state", GetState());
 			Log("next_state", GetNextState());
@@ -1093,7 +1093,7 @@ void CWeaponMagazined::PlayAnimReload()
 
 void CWeaponMagazined::PlayAnimAim()
 {
-	PlayHUDMotion("anm_idle_aim", TRUE, NULL, GetState());
+	PlayHUDMotion("anm_idle_aim", TRUE, nullptr, GetState());
 }
 
 void CWeaponMagazined::PlayAnimIdle()
@@ -1303,7 +1303,7 @@ bool CWeaponMagazined::GetBriefInfo(II_BriefInfo& info)
 			info.ap_ammo = "";
 	}
 
-	LPCSTR ammo_type = (ae != 0 && m_magazine.size() != 0) ? m_ammoTypes[m_magazine.back().m_LocalAmmoType].c_str() : m_ammoTypes[m_ammoType].c_str();
+	LPCSTR ammo_type = (ae != 0 && !m_magazine.empty()) ? m_ammoTypes[m_magazine.back().m_LocalAmmoType].c_str() : m_ammoTypes[m_ammoType].c_str();
 	info.name = CStringTable().translate(pSettings->r_string(ammo_type, "inv_name_short"));
 	info.icon = ammo_type;
 	return true;

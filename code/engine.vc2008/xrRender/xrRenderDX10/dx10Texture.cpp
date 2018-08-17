@@ -111,8 +111,10 @@ ID3DBaseTexture*	CRender::texture_load(LPCSTR fRName, u32& ret_msize, bool bStag
 	u32						mip_cnt=u32(-1);
 
 	// validation
-	R_ASSERT				(fRName);
-	R_ASSERT				(fRName[0]);
+	if (!fRName && !fRName[0])
+	{
+		return pTexture2D;
+	}
 
 	// make file name
 	string_path				fname;
@@ -252,5 +254,5 @@ _BUMP_from_base:
 		//////////////////
 	}
 
-	return 0;
+	return pTexture2D;
 }

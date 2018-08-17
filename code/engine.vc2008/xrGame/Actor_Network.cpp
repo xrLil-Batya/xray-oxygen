@@ -50,8 +50,6 @@
 #	include "../xrPhysics/phvalide.h"
 #endif
 
-int			g_cl_InterpolationType		= 0;
-u32			g_cl_InterpolationMaxPoints = 0;
 int			g_dwInputUpdateDelta		= 20;
 BOOL		net_cl_inputguaranteed		= FALSE;
 CActor*		g_actor						= nullptr;
@@ -59,8 +57,7 @@ CActor*		g_actor						= nullptr;
 CActor* Actor()	
 {
 	return (g_actor); 
-};
-
+}
 //--------------------------------------------------------------------
 void	CActor::ConvState(u32 mstate_rl, string128 *buf)
 {
@@ -90,10 +87,10 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	Fvector				p = Position();
 	P.w_vec3			(p);
 
-	P.w_float /*w_angle8*/			(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
-	P.w_float /*w_angle8*/			(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
+	P.w_float			(angle_normalize(r_model_yaw)); //Device.vCameraDirection.getH());//
+	P.w_float			(angle_normalize(unaffected_r_torso.yaw));//(r_torso.yaw);
+	P.w_float			(angle_normalize(unaffected_r_torso.pitch));//(r_torso.pitch);
+	P.w_float			(angle_normalize(unaffected_r_torso.roll));//(r_torso.roll);
 	P.w_u8				(u8(g_Team()));
 	P.w_u8				(u8(g_Squad()));
 	P.w_u8				(u8(g_Group()));
@@ -116,7 +113,7 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	{
 		SPHNetState	State;
 
-		CPHSynchronize* pSyncObj = NULL;
+		CPHSynchronize* pSyncObj = nullptr;
 		pSyncObj = PHGetSyncItem(0);
 		pSyncObj->get_State(State);
 
@@ -251,7 +248,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	m_holder_id = ALife::_OBJECT_ID(-1);
 	m_feel_touch_characters = 0;
 	m_snd_noise = 0.0f;
-	m_sndShockEffector = NULL;
+	m_sndShockEffector = nullptr;
 
 	if (m_pPhysicsShell)
 	{
@@ -262,7 +259,7 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	//force actor to be local on server client
 	CSE_Abstract			*e = (CSE_Abstract*)(DC);
 	CSE_ALifeCreatureActor	*E = smart_cast<CSE_ALifeCreatureActor*>(e);
-	E->s_flags.set(M_SPAWN_OBJECT_LOCAL, TRUE);	
+	E->s_flags.set(M_SPAWN_OBJECT_LOCAL, true);	
 
 	if (E->s_flags.is(M_SPAWN_OBJECT_ASPLAYER))
 		g_actor = this;
@@ -273,8 +270,8 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 
 	// motions
 	m_bAnimTorsoPlayed = false;
-	m_current_legs_blend = 0;
-	m_current_jump_blend = 0;
+	m_current_legs_blend = nullptr;
+	m_current_jump_blend = nullptr;
 	m_current_legs.invalidate();
 	m_current_torso.invalidate();
 	m_current_head.invalidate();
@@ -329,10 +326,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	//----------------------------------
 	m_bAllowDeathRemove = false;
 
-	//	m_bHasUpdate = false;
-	m_bInInterpolation = false;
-	m_bInterpolate = false;
-
 	processing_activate();
 
 #ifdef DEBUG
@@ -347,10 +340,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 
 	//--------------------------------------------------------------
 	inventory().SetPrevActiveSlot(NO_ACTIVE_SLOT);
-
-
-	//-------------------------------------
-	m_States.clear(); // empty() does not clear the array and checks whether it is empty.
 	//-------------------------------------
 	if (!g_Alive())
 	{
@@ -359,24 +348,20 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 		IKinematicsAnimated* K = smart_cast<IKinematicsAnimated*>(Visual());
 		K->PlayCycle("death_init");
 
-
-		//   
 		m_HeavyBreathSnd.stop();
 	}
 
-	typedef CClientSpawnManager::CALLBACK_TYPE	CALLBACK_TYPE;
+	using CALLBACK_TYPE = CClientSpawnManager::CALLBACK_TYPE;
 	CALLBACK_TYPE	callback;
 	callback.bind(this, &CActor::on_requested_spawn);
 	m_holder_id = E->m_holderID;
 	if (E->m_holderID != ALife::_OBJECT_ID(-1))
 		Level().client_spawn_manager().add(E->m_holderID, ID(), callback);
-	//F
 	//-------------------------------------------------------------
 	m_iLastHitterID = u16(-1);
 	m_iLastHittingWeaponID = u16(-1);
 	m_s16LastHittedElement = -1;
 	m_bWasHitted = false;
-	m_dwILastUpdateTime = 0;
 
 	Level().MapManager().AddMapLocation("actor_location", ID());
 	Level().MapManager().AddMapLocation("actor_location_p", ID());
@@ -384,40 +369,40 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	m_statistic_manager = xr_new<CActorStatisticMgr>();
 
 	spatial.type |= STYPE_REACTTOSOUND;
-	psHUD_Flags.set(HUD_WEAPON_RT, TRUE);
-	psHUD_Flags.set(HUD_WEAPON_RT2, TRUE);
+	psHUD_Flags.set(HUD_WEAPON_RT, true);
+	psHUD_Flags.set(HUD_WEAPON_RT2, true);
 	
 	return TRUE;
 }
 
-void CActor::net_Destroy	()
+void CActor::net_Destroy()
 {
-	inherited::net_Destroy	();
+	inherited::net_Destroy();
 
 	if (m_holder_id != ALife::_OBJECT_ID(-1))
-		Level().client_spawn_manager().remove	(m_holder_id,ID());
+		Level().client_spawn_manager().remove(m_holder_id, ID());
 
-	delete_data				(m_statistic_manager);
-	
-	Level().MapManager		().OnObjectDestroyNotify(ID());
+	delete_data(m_statistic_manager);
+
+	Level().MapManager().OnObjectDestroyNotify(ID());
 
 	CInventoryOwner::net_Destroy();
-	cam_UnsetLadder();	
+	cam_UnsetLadder();
 	character_physics_support()->movement()->DestroyCharacter();
 
-	if(m_pPhysicsShell)			
+	if (m_pPhysicsShell)
 	{
 		m_pPhysicsShell->Deactivate();
 		xr_delete<IPhysicsShellEx>(m_pPhysicsShell);
 	}
 
-	m_pPhysics_support->in_NetDestroy	();
+	m_pPhysics_support->in_NetDestroy();
 
-	xr_delete		(m_sndShockEffector);
-	xr_delete		(pStatGraph);
-	xr_delete		(m_pActorEffector);
-	pCamBobbing		= NULL;
-	
+	xr_delete(m_sndShockEffector);
+	xr_delete(pStatGraph);
+	xr_delete(m_pActorEffector);
+	pCamBobbing = nullptr;
+
 #ifdef DEBUG	
 	LastPosS.clear();
 	LastPosH.clear();
@@ -425,22 +410,17 @@ void CActor::net_Destroy	()
 #endif
 
 	processing_deactivate();
-	m_holder=NULL;
-	m_holderID=u16(-1);
-	
-	SetDefaultVisualOutfit(NULL);
+	m_holder = nullptr;
+	m_holderID = u16(-1);
 
+	SetDefaultVisualOutfit(nullptr);
 
-	if(g_actor == this) g_actor= NULL;
+	if (g_actor == this) g_actor = nullptr;
 
-	Engine.Sheduler.Unregister	(this);
+	Engine.Sheduler.Unregister(this);
 
-	if(	actor_camera_shell && 
-		actor_camera_shell->get_ElementByStoreOrder( 0 )->PhysicsRefObject() 
-			== 
-		this
-		) 
-		destroy_physics_shell( actor_camera_shell );
+	if (actor_camera_shell && actor_camera_shell->get_ElementByStoreOrder(0)->PhysicsRefObject() == this)
+		destroy_physics_shell(actor_camera_shell);
 }
 
 void CActor::net_Relcase	(CObject* O)
@@ -448,16 +428,16 @@ void CActor::net_Relcase	(CObject* O)
  	VERIFY(O);
 	CGameObject* GO = smart_cast<CGameObject*>(O);
 	if(GO&&m_pObjectWeLookingAt==GO){
-		m_pObjectWeLookingAt=NULL;
+		m_pObjectWeLookingAt=nullptr;
 	}
 	CHolderCustom* HC=smart_cast<CHolderCustom*>(GO);
 	if(HC&&HC==m_pVehicleWeLookingAt){
-		m_pVehicleWeLookingAt=NULL;
+		m_pVehicleWeLookingAt=nullptr;
 	}
 	if(HC&&HC==m_holder)
 	{
 		m_holder->detach_Actor();
-		m_holder=NULL;
+		m_holder=nullptr;
 	}
 	inherited::net_Relcase	(O);
 
@@ -504,10 +484,10 @@ void	CActor::OnChangeVisual()
 {
 	{
 		IPhysicsShellEx* tmp_shell=PPhysicsShell();
-		PPhysicsShell()=NULL;
+		PPhysicsShell()=nullptr;
 		inherited::OnChangeVisual();
 		PPhysicsShell()=tmp_shell;
-		tmp_shell=NULL;
+		tmp_shell=nullptr;
 	}
 	
 	IKinematicsAnimated* V	= smart_cast<IKinematicsAnimated*>(Visual());
@@ -541,9 +521,9 @@ void	CActor::OnChangeVisual()
 		m_current_head.invalidate	();
 		m_current_legs.invalidate	();
 		m_current_torso.invalidate	();
-		m_current_legs_blend		= NULL;
-		m_current_torso_blend		= NULL;
-		m_current_jump_blend		= NULL;
+		m_current_legs_blend		= nullptr;
+		m_current_torso_blend		= nullptr;
+		m_current_jump_blend		= nullptr;
 	}
 };
 
@@ -672,28 +652,28 @@ void	CActor::OnRender_Network()
 					Skeleton->_dbg_refresh();
 
 					const CCF_Skeleton::ElementVec& Elements = Skeleton->_GetElements();
-					for (CCF_Skeleton::ElementVec::const_iterator I=Elements.begin(); I!=Elements.end(); I++){
-						if (!I->valid())		continue;
-						switch (I->type){
+					for (const auto & Element : Elements){
+						if (!Element.valid())		continue;
+						switch (Element.type){
 							case SBoneShape::stBox:{
 								Fmatrix M;
-								M.invert			(I->b_IM);
-								Fvector h_size		= I->b_hsize;
+								M.invert			(Element.b_IM);
+								Fvector h_size		= Element.b_hsize;
 								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 255, 0, 255));
 							}break;
 							case SBoneShape::stCylinder:{
 								Fmatrix M;
-								M.c.set				(I->c_cylinder.m_center);
-								M.k.set				(I->c_cylinder.m_direction);
+								M.c.set				(Element.c_cylinder.m_center);
+								M.k.set				(Element.c_cylinder.m_direction);
 								Fvector				h_size;
-								h_size.set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
+								h_size.set			(Element.c_cylinder.m_radius,Element.c_cylinder.m_radius,Element.c_cylinder.m_height*0.5f);
 								Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
 								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
 							}break;
 							case SBoneShape::stSphere:{
 								Fmatrix				l_ball;
-								l_ball.scale		(I->s_sphere.R, I->s_sphere.R, I->s_sphere.R);
-								l_ball.translate_add(I->s_sphere.P);
+								l_ball.scale		(Element.s_sphere.R, Element.s_sphere.R, Element.s_sphere.R);
+								l_ball.translate_add(Element.s_sphere.P);
 								Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
 							}break;
 						};
@@ -709,7 +689,7 @@ void	CActor::OnRender_Network()
 		dbg_draw_piramid(IRec.Pos, IRec.Vel, size, -IRec.o_model, color_rgba(0, 0, 255, 255));
 		dbg_draw_piramid(IEnd.Pos, IEnd.Vel, size, -IEnd.o_model, color_rgba(0, 255, 0, 255));
 		
-		Fmatrix MS, MH, ML, *pM = NULL;
+		Fmatrix MS, MH, ML, *pM = nullptr;
 		ML.translate(0, 0.2f, 0);
 		MS.translate(0, 0.2f, 0);
 		MH.translate(0, 0.2f, 0);
@@ -717,7 +697,7 @@ void	CActor::OnRender_Network()
 		Fvector point0S, point1S, point0H, point1H, point0L, point1L, *ppoint0 = nullptr, *ppoint1 = nullptr;
 		Fvector tS, tH;
 		u32	cColor = 0, sColor = 0;
-		VIS_POSITION*	pLastPos = NULL;
+		VIS_POSITION*	pLastPos = nullptr;
 
 		switch (g_cl_InterpolationType)
 		{
@@ -950,8 +930,8 @@ BOOL CActor::net_SaveRelevant()
 
 void CActor::SetHitInfo(CObject* who, CObject* weapon, s16 element, Fvector Pos, Fvector Dir)
 {
-	m_iLastHitterID = (who!= NULL) ? who->ID() : u16(-1);
-	m_iLastHittingWeaponID = (weapon != NULL) ? weapon->ID() : u16(-1);
+	m_iLastHitterID = (who!= nullptr) ? who->ID() : u16(-1);
+	m_iLastHittingWeaponID = (weapon != nullptr) ? weapon->ID() : u16(-1);
 	m_s16LastHittedElement = element;
 	m_fLastHealth = GetfHealth();
 	m_bWasHitted = true;

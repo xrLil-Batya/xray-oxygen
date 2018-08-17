@@ -69,8 +69,7 @@ const u32	g_clWhite					= 0xffffffff;
 
 #define				MAININGAME_XML				"ui_HUD.xml"
 
-CUIMainIngameWnd::CUIMainIngameWnd()
-:m_pPickUpItem(NULL),m_pMPChatWnd(NULL),UIArtefactIcon(NULL),m_pMPLogWnd(NULL)
+CUIMainIngameWnd::CUIMainIngameWnd() : m_pPickUpItem(nullptr), UIArtefactIcon(nullptr)
 {
 	UIZoneMap					= xr_new<CUIZoneMap>();
 }
@@ -273,22 +272,10 @@ void CUIMainIngameWnd::Draw()
 	RenderQuickInfos();		
 }
 
-
-void CUIMainIngameWnd::SetMPChatLog(CUIWindow* pChat, CUIWindow* pLog){
-	m_pMPChatWnd = pChat;
-	m_pMPLogWnd  = pLog;
-}
-
 void CUIMainIngameWnd::Update()
 {
 	CUIWindow::Update();
 	CActor* pActor = smart_cast<CActor*>(Level().CurrentViewEntity());
-
-	if (m_pMPChatWnd)
-		m_pMPChatWnd->Update();
-
-	if (m_pMPLogWnd)
-		m_pMPLogWnd->Update();
 
 	if (!pActor)
 		return;
@@ -308,8 +295,7 @@ void CUIMainIngameWnd::Update()
 	UpdateMainIndicators();
 	return;
 
-} //update
-
+}
 
 void CUIMainIngameWnd::RenderQuickInfos()
 {
@@ -529,7 +515,10 @@ void CUIMainIngameWnd::UpdatePickUpItem	()
 
 void CUIMainIngameWnd::OnConnected()
 {
-	if ( m_ui_hud_states )
+	// Init UIMap
+	UIZoneMap->SetupCurrentMap();
+
+	if (m_ui_hud_states)
 	{
 		m_ui_hud_states->on_connected();
 	}
@@ -739,8 +728,6 @@ void CUIMainIngameWnd::UpdateMainIndicators()
 		m_ind_overweight->Show(true);
 		if(cur_weight>max_weight)
 			m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_red");
-		//else if(cur_weight>max_weight-10.0f)
-		//	m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_yellow");
 		else
 			m_ind_overweight->InitTexture("ui_inGame2_circle_Overweight_yellow");
 	}
@@ -820,7 +807,6 @@ void CUIMainIngameWnd::UpdateQuickSlots()
 			{
 				wnd->Show(false);
 				m_quick_slots_icons[i]->SetTextureColor(color_rgba(255,255,255,0));
-//				m_quick_slots_icons[i]->Show(false);
 			}
 		}
 	}

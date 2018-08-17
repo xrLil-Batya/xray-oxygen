@@ -15,8 +15,8 @@ bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true е
 IWriter *LogWriter;
 size_t cached_log = 0;
 
-xr_vector<shared_str>*		LogFile			= NULL;
-static LogCallback			LogCB			= 0;
+xr_vector<shared_str>*		LogFile			= nullptr;
+static LogCallback			LogCB			= nullptr;
 
 inline const size_t FlushTreshold = 32768;
 
@@ -30,9 +30,9 @@ void FlushLog()
 			IWriter *f = FS.w_open(log_file_name);
 			if (f)
 			{
-				for (u32 it = 0; it < LogFile->size(); it++) 
+				for (auto & it : *LogFile) 
 				{
-					const char* s = *((*LogFile)[it]);
+					const char* s = *it;
 					f->w_string(s ? s : "");
 				}
 				FS.w_close(f);
@@ -216,7 +216,7 @@ const char* log_name			()
 
 void InitLog()
 {
-	R_ASSERT			(LogFile==NULL);
+	R_ASSERT			(LogFile==nullptr);
 	LogFile				= new xr_vector<shared_str>();
 	LogFile->reserve	(1000);
 }
@@ -245,13 +245,13 @@ void CreateLog(BOOL nl)
     }
 }
 
-void CloseLog(void)
+void CloseLog()
 {
 	FlushLog		();
  	LogFile->clear	();
 	xr_delete		(LogFile);
 }
-typedef void (WINAPI *OFFSET_UPDATER)(const char* key, u32 ofs);
+using OFFSET_UPDATER = void (WINAPI *)(const char* key, u32 ofs);
 //LuaICP_API only
 #pragma warning(disable: 4311 4302)
 void LogXrayOffset(const char* key, LPVOID base, LPVOID pval)

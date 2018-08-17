@@ -14,7 +14,7 @@
 class CScriptZone : public CSpaceRestrictor, public Feel::Touch 
 {
 public:
-	typedef	CSpaceRestrictor inherited;
+	using inherited =	CSpaceRestrictor;
 
 					CScriptZone			();
 	virtual			~CScriptZone		();

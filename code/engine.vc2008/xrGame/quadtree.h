@@ -82,8 +82,8 @@ public:
 		}
 	};
 
-	typedef CFixedStorage<CQuadNode> CQuadNodeStorage;
-	typedef CFixedStorage<CListItem> CListItemStorage;
+	using CQuadNodeStorage = CFixedStorage<CQuadNode>;
+	using CListItemStorage = CFixedStorage<CListItem>;
 
 protected:
 	Fvector						m_center;

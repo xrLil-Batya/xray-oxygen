@@ -56,7 +56,7 @@ void character_shell_control::set_fatal_impulse(SHit &H) const
 void  OnCharacterContactInDeath(bool& do_colide, bool bo1, dContact& c, SGameMtl * /*material_1*/, SGameMtl * /*material_2*/)
 {
 	dSurfaceParameters		&surface = c.surface;
-	character_shell_control* l_character_physic_support = 0;
+	character_shell_control* l_character_physic_support = nullptr;
 	if (bo1)
 	{
 		l_character_physic_support = (character_shell_control*)PHRetrieveGeomUserData(c.geom.g1)->callback_data;

@@ -43,8 +43,8 @@ class CPhraseDialog	:
 	public intrusive_base
 {
 private:
-	typedef CSharedClass<SPhraseDialogData, shared_str, false>				inherited_shared;
-	typedef CXML_IdToIndex<CPhraseDialog>									id_to_index;
+	using inherited_shared = CSharedClass<SPhraseDialogData, shared_str, false>;
+	using id_to_index = CXML_IdToIndex<CPhraseDialog>;
 
 	friend id_to_index;
 public:
@@ -59,7 +59,7 @@ public:
 	//связь диалога между двумя DialogManager
 	virtual void			Init				(CPhraseDialogManager* speaker_first, CPhraseDialogManager* speaker_second);
 
-	IC		bool			IsInited			() const {return ((FirstSpeaker()!=NULL)&& (SecondSpeaker()!=NULL));}
+	IC		bool			IsInited			() const {return ((FirstSpeaker()!=nullptr)&& (SecondSpeaker()!=nullptr));}
 
 	//реинициализация диалога
 	virtual void			Reset				();

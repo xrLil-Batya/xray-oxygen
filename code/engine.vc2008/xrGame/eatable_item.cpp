@@ -18,7 +18,7 @@
 CEatableItem::CEatableItem()
 {
 	m_iPortionsNum = -1;
-	m_physic_item	= 0;
+	m_physic_item	= nullptr;
 }
 
 CEatableItem::~CEatableItem()

@@ -63,7 +63,7 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeSchedulable,IPureSchedulableObject)
 	virtual const CSE_Abstract		*base					() const = 0;
 	virtual CSE_Abstract			*init					();
 	virtual CSE_ALifeSchedulable	*cast_schedulable		() {return this;};
-	virtual CSE_Abstract			*cast_abstract			() {return 0;};
+	virtual CSE_Abstract			*cast_abstract			() {return nullptr;};
 	// end of the virtual inheritance dependant code
 	virtual bool					need_update				(CSE_ALifeDynamicObject *object);
 	virtual u32						ef_creature_type		() const;
@@ -121,7 +121,7 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeObject,CSE_Abstract,CRandom)
 	};
 
 public:
-	typedef CSE_Abstract inherited;
+	using inherited = CSE_Abstract;
 	GameGraph::_GRAPH_ID			m_tGraphID;
 	float							m_fDistance;
 	bool							m_bOnline;
@@ -178,7 +178,7 @@ SERVER_ENTITY_DECLARE_BEGIN0(CSE_ALifeGroupAbstract)
 	virtual CSE_Abstract			*base					() = 0;
 	virtual const CSE_Abstract		*base					() const = 0;
 	virtual CSE_ALifeGroupAbstract	*cast_group_abstract	() {return this;};
-	virtual CSE_Abstract			*cast_abstract			() {return 0;};
+	virtual CSE_Abstract			*cast_abstract			() {return nullptr;};
 #ifdef XRGAME_EXPORTS
 	virtual	bool					synchronize_location	();
 	virtual	void					try_switch_online		();
@@ -192,8 +192,8 @@ add_to_type_list(CSE_ALifeGroupAbstract)
 #define script_type_list save_type_list(CSE_ALifeGroupAbstract)
 
 template<class __A> class CSE_ALifeGroupTemplate : public __A, public CSE_ALifeGroupAbstract {
-	typedef __A					inherited1;
-	typedef CSE_ALifeGroupAbstract inherited2;
+	using inherited1 = __A;
+	using inherited2 = CSE_ALifeGroupAbstract;
 public:
 									CSE_ALifeGroupTemplate(LPCSTR caSection) : __A(pSettings->line_exist(caSection,"monster_section") ? pSettings->r_string(caSection,"monster_section") : caSection), CSE_ALifeGroupAbstract(caSection)
 	{
@@ -394,7 +394,7 @@ SERVER_ENTITY_DECLARE_BEGIN2(CSE_ALifeSmartZone,CSE_ALifeSpaceRestrictor,CSE_ALi
 	virtual float					suitable					(CSE_ALifeMonsterAbstract *object) const {return 0.f;};
 	virtual void					register_npc				(CSE_ALifeMonsterAbstract *object) {};
 	virtual void					unregister_npc				(CSE_ALifeMonsterAbstract *object) {};
-	virtual	CALifeSmartTerrainTask	*task						(CSE_ALifeMonsterAbstract *object) {return 0;};
+	virtual	CALifeSmartTerrainTask	*task						(CSE_ALifeMonsterAbstract *object) {return nullptr;};
 #endif
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeSmartZone)

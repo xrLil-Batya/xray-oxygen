@@ -13,14 +13,14 @@ void InitHudSoundSettings()
 void HUD_SOUND_ITEM::LoadSound(	LPCSTR section, LPCSTR line, 
 							HUD_SOUND_ITEM& hud_snd, int type)
 {
-	hud_snd.m_activeSnd		= NULL;
+	hud_snd.m_activeSnd		= nullptr;
 	hud_snd.sounds.clear	();
 
 	string256	sound_line;
 	xr_strcpy		(sound_line,line);
 	int k=0;
 	while( pSettings->line_exist(section, sound_line) ){
-		hud_snd.sounds.push_back( SSnd() );
+		hud_snd.sounds.emplace_back(  );
 		SSnd& s = hud_snd.sounds.back();
 
 		LoadSound	(section, sound_line, s.snd, type, &s.volume, &s.delay);
@@ -74,7 +74,7 @@ void HUD_SOUND_ITEM::DestroySound(HUD_SOUND_ITEM& hud_snd)
 		it.snd.destroy();
 		
 	hud_snd.sounds.clear	();
-	hud_snd.m_activeSnd		= NULL;
+	hud_snd.m_activeSnd		= nullptr;
 }
 
 void HUD_SOUND_ITEM::PlaySound(HUD_SOUND_ITEM& hud_snd, const Fvector& position, const CObject* parent, bool b_hud_mode, bool looped, u8 index)
@@ -128,7 +128,7 @@ HUD_SOUND_ITEM* HUD_SOUND_COLLECTION::FindSoundItem(LPCSTR alias, bool b_assert)
 		return &*it;
 	else{
 		R_ASSERT3(!b_assert," sound item not found in collection ", alias);
-		return NULL;
+		return nullptr;
 	}
 }
 

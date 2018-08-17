@@ -314,7 +314,7 @@ void	CRenderTarget::phase_combine	()
 	else			
 		dbg_planes		= saved_dbg_planes;
 
-	if (1) for (u32 it=0; it<dbg_planes.size(); it++)
+	for (u32 it=0; it<dbg_planes.size(); it++)
 	{
 		Fplane&		P	=	dbg_planes[it];
 		Fvector		zero	;
@@ -344,7 +344,7 @@ void	CRenderTarget::phase_combine	()
 	HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	HW.pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	if (1) for (u32 it=0; it<dbg_lines.size(); it++)
+	for (u32 it=0; it<dbg_lines.size(); it++)
 	{
 		RCache.dbg_DrawLINE		(Fidentity,dbg_lines[it].P0,dbg_lines[it].P1,dbg_lines[it].color);
 	}

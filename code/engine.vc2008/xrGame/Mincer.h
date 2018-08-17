@@ -19,7 +19,7 @@ class CMincer :
 	public CPHDestroyableNotificator
 {
 private:
-	typedef CBaseGraviZone inherited;
+	using inherited = CBaseGraviZone;
 	CTeleWhirlwind m_telekinetics;
 	shared_str	   m_torn_particles;
 	ref_sound	   m_tearing_sound;

@@ -94,7 +94,7 @@ CScriptGameObject *tpfGetActor()
 	if (l_tpActor)
 		return	(smart_cast<CGameObject*>(l_tpActor)->lua_game_object());
 	else
-		return	(0);
+		return	(nullptr);
 }
 #endif
 
@@ -104,14 +104,14 @@ CScriptGameObject *get_object_by_name(LPCSTR caObjectName)
 	if (l_tpGameObject)
 		return		(l_tpGameObject->lua_game_object());
 	else
-		return		(0);
+		return		(nullptr);
 }
 
 CScriptGameObject *get_object_by_id(u16 id)
 {
 	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().Objects.net_Find(id));
 	if(!pGameObject)
-		return NULL;
+		return nullptr;
 
 	return pGameObject->lua_game_object();
 }
@@ -252,7 +252,7 @@ u32	vertex_in_direction(u32 level_vertex_id, Fvector direction, float max_distan
 	Fvector			start_position = ai().level_graph().vertex_position(level_vertex_id);
 	Fvector			finish_position = Fvector(start_position).add(direction);
 	u32				result = u32(-1);
-	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,0);
+	ai().level_graph().farthest_vertex_in_direction(level_vertex_id,start_position,finish_position,result,nullptr);
 	return			(ai().level_graph().valid_vertex_id(result) ? result : level_vertex_id);
 }
 
@@ -687,7 +687,7 @@ LPCSTR translate_string(LPCSTR str)
 
 bool has_active_tutotial()
 {
-	return (g_tutorial!=NULL);
+	return (g_tutorial!=nullptr);
 }
 
 void g_send(NET_Packet& P)
@@ -731,7 +731,7 @@ CScriptGameObject* g_get_target_obj()
 		if (game_object)
 			return game_object->lua_game_object();
 	}
-	return (0);
+	return (nullptr);
 }
 
 float g_get_target_dist()
@@ -772,7 +772,7 @@ CScriptGameObject* get_view_entity_script()
 {
 	CGameObject* pGameObject = smart_cast<CGameObject*>(Level().CurrentViewEntity());
 	if (!pGameObject)
-		return (0);
+		return (nullptr);
 
 	return pGameObject->lua_game_object();
 }

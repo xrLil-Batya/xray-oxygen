@@ -62,27 +62,27 @@ bool CInifile::Sect::line_exist(const char* L, const char** val)
 	const auto A = Data.find(s);
 	if (A != Data.end()) {
 		if (val) *val = *A->second;
-		return TRUE;
+		return true;
 	}
-	return FALSE;
+	return false;
 }
 
 CInifile::CInifile(IReader* F, const char* path) 
 {
-	fName = 0;
+	fName = nullptr;
 	bReadOnly = true;
-	bSaveAtEnd = FALSE;
+	bSaveAtEnd = false;
 	Load(F, path);
 }
 
 CInifile::CInifile(const char* szFileName, bool ReadOnly, bool bLoad, bool SaveAtEnd) 
 {
-	fName = szFileName ? xr_strdup(szFileName) : 0;
+	fName = szFileName ? xr_strdup(szFileName) : nullptr;
 	bReadOnly = !!ReadOnly;
 	bSaveAtEnd = SaveAtEnd;
 	if (bLoad) {
 		string_path path, folder;
-		_splitpath(fName, path, folder, 0, 0);
+		_splitpath(fName, path, folder, nullptr, nullptr);
 		strcat(path, folder);
 		IReader* R = FS.r_open(szFileName);
 		if (R) {
@@ -98,7 +98,8 @@ CInifile::~CInifile()
 		if (!save_as())
 			Log("!Can't save inifile:", fName);
 	}
-	xr_free(fName);
+	if(fName && fName[0])
+		xr_free(fName);
 	for (auto &I : DATA) xr_delete(I.second);
 }
 
@@ -148,7 +149,7 @@ void CInifile::Load(IReader* F, const char* path)
 			if (_GetItem(str, 1, inc_name, '"')) {
 				string_path fn, inc_path, folder;
 				strconcat(sizeof(fn), fn, path, inc_name);
-				_splitpath(fn, inc_path, folder, 0, 0);
+				_splitpath(fn, inc_path, folder, nullptr, nullptr);
 				strcat(inc_path, folder);
 				IReader* I = FS.r_open(fn);
 				R_ASSERT3(I, "Can't find include file:", inc_name);
@@ -165,11 +166,11 @@ void CInifile::Load(IReader* F, const char* path)
 				DATA.insert({ Current->Name, Current });
 			}
 			Current = xr_new<Sect>();
-			Current->Name = 0;
+			Current->Name = nullptr;
 			// start new section
 			R_ASSERT3(strchr(str, ']'), "Bad ini section found: ", str);
 			const char* inherited_names = strstr(str, "]:");
-			if (0 != inherited_names) {
+			if (nullptr != inherited_names) {
 				VERIFY2(bReadOnly, "Allow for readonly mode only.");
 				inherited_names += 2;
 				int cnt = _GetItemCount(inherited_names);
@@ -203,7 +204,7 @@ void CInifile::Load(IReader* F, const char* path)
 				if (name[0]) {
 					Item I;
 					I.first = name;
-					I.second = str2[0] ? str2 : 0;
+					I.second = str2[0] ? str2 : nullptr;
 					if (bReadOnly) {
 						if (*I.first)
 							insert_item(Current, I);
@@ -279,7 +280,7 @@ bool CInifile::section_exist(const char* S)
 
 bool CInifile::line_exist(const char* S, const char* L)
 {
-	if (!section_exist(S)) return FALSE;
+	if (!section_exist(S)) return false;
 	Sect&   I = r_section(S);
 	shared_str k(L);
 	const auto A = I.Data.find(k);
@@ -338,13 +339,13 @@ const char* CInifile::r_string(const char* S, const char* L) const
 		return A->second.c_str();
 	else
 		Debug.fatal(DEBUG_INFO, "Can't find variable %s in [%s]", L, S);
-	return 0;
+	return nullptr;
 }
 
 shared_str CInifile::r_string_wb(const char* S, const char* L) const
 {
 	const char* _base = r_string(S, L);
-	if (0 == _base) return  shared_str(0);
+	if (nullptr == _base) return  shared_str(nullptr);
 	string512 _original;
 	strcpy_s(_original, _base);
 	u32 _len = xr_strlen(_original);
@@ -493,11 +494,11 @@ int CInifile::r_token(const char* S, const char* L, const xr_token *token_list)
 bool CInifile::r_line(const char* S, int L, const char** N, const char** V) 
 {
 	Sect& SS = r_section(S);
-	if (L >= (int)SS.Unordered.size() || L < 0) return FALSE;
+	if (L >= (int)SS.Unordered.size() || L < 0) return false;
 	const auto &I = SS.Unordered.at(L);
 	*N = I.first.c_str();
 	*V = I.second.c_str();
-	return TRUE;
+	return true;
 }
 
 bool CInifile::r_line(const shared_str& S, int L, const char** N, const char** V) 
@@ -531,7 +532,7 @@ void CInifile::w_string(const char* S, const char* L, const char* V)
 	// duplicate & insert
 	Item I;
 	I.first = line;
-	I.second = value[0] ? value : 0;
+	I.second = value[0] ? value : nullptr;
 	Sect* data = &r_section(sect);
 	insert_item(data, I);
 }

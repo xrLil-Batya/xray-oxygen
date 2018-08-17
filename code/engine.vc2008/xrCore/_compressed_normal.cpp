@@ -16,7 +16,7 @@
 // static lookup table for unit vector3 decompression
 float pvUVAdjustment[0x2000];
 
-void pvInitializeStatics(void)
+void pvInitializeStatics()
 {
 	for (int idx = 0; idx < 0x2000; ++idx)
 	{

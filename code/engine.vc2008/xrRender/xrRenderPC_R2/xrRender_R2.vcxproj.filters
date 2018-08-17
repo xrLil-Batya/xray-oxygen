@@ -657,6 +657,7 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
       <Filter>Interfase implementations\Debug</Filter>
     </ClInclude>
+    <ClInclude Include="..\xrRender\dxGlowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -1178,6 +1179,7 @@
     <ClCompile Include="blender_gamma.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

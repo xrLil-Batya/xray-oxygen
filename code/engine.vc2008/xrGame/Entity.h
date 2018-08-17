@@ -20,7 +20,7 @@ class CEntity :
 {
 	friend class CEntityCondition;
 private:
-	typedef	CPhysicsShellHolder		inherited;			
+	using inherited =	CPhysicsShellHolder;			
 	CEntityConditionSimple*			m_entity_condition;
 
 protected:

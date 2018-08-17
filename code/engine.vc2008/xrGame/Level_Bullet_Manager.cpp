@@ -74,7 +74,7 @@ void SBullet::Init(const Fvector& position, const Fvector& direction, float star
 	init_frame_num			= Device.dwFrame;
 
 	targetID				= 0;	
-	density_mode			= 0;
+	density_mode			= false;
 }
 
 
@@ -119,14 +119,14 @@ void CBulletManager::Load		()
 	xr_string tmp;
 	for (u32 k=0; k<cnt; ++k)
 	{
-		m_WhineSounds.push_back	(ref_sound());
+		m_WhineSounds.emplace_back	();
 		m_WhineSounds.back().create(_GetItem(whine_sounds,k,tmp),st_Effect,sg_SourceType);
 	}
 
 	LPCSTR explode_particles= pSettings->r_string(bullet_manager_sect, "explode_particles");
 	cnt						= _GetItemCount(explode_particles);
 	for (u32 k=0; k<cnt; ++k)
-		m_ExplodeParticles.push_back	(_GetItem(explode_particles,k,tmp));
+		m_ExplodeParticles.emplace_back	(_GetItem(explode_particles,k,tmp));
 }
 
 void CBulletManager::PlayExplodePS( const Fmatrix& xf )
@@ -143,7 +143,7 @@ void CBulletManager::PlayExplodePS( const Fmatrix& xf )
 void CBulletManager::PlayWhineSound(SBullet* bullet, CObject* object, const Fvector& pos)
 {
 	if (m_WhineSounds.empty())						return;
-	if (bullet->m_whine_snd._feedback() != NULL)	return;
+	if (bullet->m_whine_snd._feedback() != nullptr)	return;
 	if(bullet->hit_type!=ALife::eHitTypeFireWound ) return;
 
 	bullet->m_whine_snd								= m_WhineSounds[Random.randI(0, (u32)m_WhineSounds.size())];
@@ -163,7 +163,7 @@ void CBulletManager::AddBullet(const Fvector& position, const Fvector& direction
 	VERIFY						(u16(-1)!=cartridge.bullet_material_idx);
 //	u32 CurID					= Level().CurrentControlEntity()->ID();
 //	u32 OwnerID					= sender_id;
-	m_Bullets.push_back			(SBullet());
+	m_Bullets.emplace_back			();
 	SBullet& bullet				= m_Bullets.back();
 	bullet.Init					(position, direction, starting_speed, power, /*power_critical,*/ impulse, sender_id, sendersweapon_id, e_hit_type, maximum_distance, cartridge, air_resistance_factor, SendHit);
 //	bullet.frame_num			= Device.dwFrame;
@@ -707,7 +707,7 @@ bool CBulletManager::trajectory_check_error	(
 	bullet.dir				= start_to_target;
 
 	collide::ray_defs RD	(start, start_to_target, distance, CDB::OPT_FULL_TEST, collide::rqtBoth);
-	bool const result		= Level().ObjectSpace.RayQuery(storage, RD, (collide::rq_callback*)CBulletManager::firetrace_callback, &data, (collide::test_callback*)CBulletManager::test_callback, 0);
+	bool const result		= Level().ObjectSpace.RayQuery(storage, RD, (collide::rq_callback*)CBulletManager::firetrace_callback, &data, (collide::test_callback*)CBulletManager::test_callback, nullptr);
 	if ( !result || (data.collide_time == 0.f) ) {
 		add_bullet_point	(bullet.start_position, previous_position, bullet.start_velocity, gravity, air_resistance, high);
 		return				(true);
@@ -890,8 +890,8 @@ void CBulletManager::Render	()
 
 	UIRender->StartPrimitive((u32)bullet_num*12, IUIRender::ptTriList, IUIRender::pttLIT);
 
-	for(auto it = m_BulletsRendered.begin(); it!=m_BulletsRendered.end(); it++){
-		SBullet* bullet					= &(*it);
+	for(SBullet & it : m_BulletsRendered){
+		SBullet* bullet = &it;
 		if(!bullet->flags.allow_tracer)	
 			continue;
 
@@ -944,15 +944,14 @@ void CBulletManager::Render	()
 void CBulletManager::CommitRenderSet		()	// @ the end of frame
 {
 	m_BulletsRendered	= m_Bullets;
-	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this,&CBulletManager::UpdateWorkload));
+	Device.seqParallel.emplace_back(this,&CBulletManager::UpdateWorkload);
 }
 void CBulletManager::CommitEvents			()	// @ the start of frame
 {
 	if (m_Events.size() > 1000)
 		Msg			("! too many bullets during single frame: %d", m_Events.size());
 
-	for (u32 _it=0; _it<m_Events.size(); _it++)	{
-		_event&		E	= m_Events[_it];
+	for (_event& E : m_Events)	{
 		switch (E.Type)
 		{
 		case EVENT_HIT:
@@ -972,7 +971,7 @@ void CBulletManager::CommitEvents			()	// @ the start of frame
 
 void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bullet, const Fvector& end_point, collide::rq_result& R, u16 tgt_material)
 {
-	m_Events.push_back	(_event())		;
+	m_Events.emplace_back	()		;
 	_event&	E		= m_Events.back()	;
 	E.Type			= Type				;
 	E.bullet		= *bullet			;
@@ -1039,7 +1038,7 @@ BOOL CBulletManager::test_callback(const collide::ray_defs& rd, CObject* object,
 		if (entity&&entity->g_Alive() && (entity->ID() != bullet->parent_id))
 		{
 			ICollisionForm*	cform = entity->collidable.model;
-			if ((NULL != cform) && (cftObject == cform->Type()))
+			if ((nullptr != cform) && (cftObject == cform->Type()))
 			{
 				CActor* actor = smart_cast<CActor*>(entity);
 				CAI_Stalker* stalker = smart_cast<CAI_Stalker*>(entity);
@@ -1168,7 +1167,7 @@ void CBulletManager::FireShotmark(SBullet* bullet, const Fvector& vDir, const Fv
 	}
 
 	ref_sound* pSound = (!mtl_pair || mtl_pair->CollideSounds.empty()) ?
-		NULL : &mtl_pair->CollideSounds[::Random.randI(0, (u32)mtl_pair->CollideSounds.size())];
+		nullptr : &mtl_pair->CollideSounds[::Random.randI(0, (u32)mtl_pair->CollideSounds.size())];
 
 	//проиграть звук
 	if (pSound && ShowMark)
@@ -1178,7 +1177,7 @@ void CBulletManager::FireShotmark(SBullet* bullet, const Fvector& vDir, const Fv
 		bullet->m_mtl_snd.play_at_pos(O, vEnd, 0);
 	}
 
-	LPCSTR ps_name = (!mtl_pair || mtl_pair->CollideParticles.empty()) ? NULL :
+	LPCSTR ps_name = (!mtl_pair || mtl_pair->CollideParticles.empty()) ? nullptr :
 		*mtl_pair->CollideParticles[::Random.randI(0, (u32)mtl_pair->CollideParticles.size())];
 
 	SGameMtl*	tgt_mtl = GMLib.GetMaterialByIdx(target_material);
@@ -1273,7 +1272,7 @@ void CBulletManager::DynamicObjectHit(CBulletManager::_event& E)
 	//отправить хит пораженному объекту
 	if (E.bullet.flags.allow_sendhit && !E.Repeated)
 	{
-		SHit Hit = SHit(hit_param.power, original_dir, 0, u16(E.R.element), position_in_bone_space, hit_param.impulse, E.bullet.hit_type, E.bullet.armor_piercing, E.bullet.flags.aim_bullet);
+		SHit Hit = SHit(hit_param.power, original_dir, nullptr, u16(E.R.element), position_in_bone_space, hit_param.impulse, E.bullet.hit_type, E.bullet.armor_piercing, E.bullet.flags.aim_bullet);
 
 		Hit.GenHeader(GE_HIT & 0xffff, E.R.O->ID());
 		Hit.whoID = E.bullet.parent_id;

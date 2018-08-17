@@ -76,8 +76,8 @@ public:
 	}
 	
 	LZfs() {
-		in_start	= in_end	= in_iterator = 0;
-		out_start	= out_end	= out_iterator = 0;
+		in_start	= in_end	= in_iterator = nullptr;
+		out_start	= out_end	= out_iterator = nullptr;
 	}
 	
 	IC void		Init_Input(u8* _start, u8* _end) {
@@ -106,11 +106,11 @@ public:
 	}
 	IC void		OutRelease	() {
 		xr_free		(out_start);
-		out_start	= 0; 
-		out_end		= 0; 
-		out_iterator= 0;
+		out_start	= nullptr; 
+		out_end		= nullptr; 
+		out_iterator= nullptr;
 	}
-	IC int		GetBit(void)    /* get one bit */
+	IC int		GetBit()    /* get one bit */
 	{
 		unsigned i;
 		
@@ -125,7 +125,7 @@ public:
 		return (int)((i & 0x8000) >> 15);
 	}
 	
-	IC int		GetByte(void)   /* get one byte */
+	IC int		GetByte()   /* get one byte */
 	{
 		unsigned i;
 		
@@ -166,7 +166,7 @@ public:
 };
 static LZfs fs;
 //************************** Internal FS
-IC void InitTree(void)  /* initialize trees */
+IC void InitTree()  /* initialize trees */
 {
     int  i;
 	
@@ -369,7 +369,7 @@ u8 d_len[256] = {
 
 /* initialization of tree */
 
-void StartHuff(void)
+void StartHuff()
 {
     int i, j;
 	
@@ -391,7 +391,7 @@ void StartHuff(void)
 
 
 /* reconstruction of tree */
-void reconst(void)
+void reconst()
 {
     int			i, j, k;
     unsigned	f, l;
@@ -501,7 +501,7 @@ void EncodePosition(unsigned c)
     fs.PutCode(6, (c & 0x3f) << 10);
 }
 
-int DecodeChar(void)
+int DecodeChar()
 {
     unsigned c;
 	
@@ -519,7 +519,7 @@ int DecodeChar(void)
     return (int)c;
 }
 
-int DecodePosition(void)
+int DecodePosition()
 {
     unsigned i, j, c;
 	
@@ -537,7 +537,7 @@ int DecodePosition(void)
 }
 
 /* compression */
-void Encode(void)  /* compression */
+void Encode()  /* compression */
 {
     int  i, c, length, r, s, last_match_length;
 	
@@ -596,7 +596,7 @@ void Encode(void)  /* compression */
 	tim_size = textsize;
 }
 
-void Decode(void)  /* recover */
+void Decode()  /* recover */
 {
     int  i, j, k, r, c;
     unsigned int  count;

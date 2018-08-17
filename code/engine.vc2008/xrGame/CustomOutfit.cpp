@@ -16,7 +16,7 @@
 
 CCustomOutfit::CCustomOutfit()
 {
-	m_flags.set(FUsingCondition, TRUE);
+	m_flags.set(FUsingCondition, true);
 
 	m_HitTypeProtection.resize(ALife::eHitTypeMax);
 	for(int i=0; i<ALife::eHitTypeMax; i++)
@@ -24,7 +24,7 @@ CCustomOutfit::CCustomOutfit()
 
 	m_boneProtection = xr_new<SBoneProtections>();
 	m_artefact_count = 0;
-	m_BonesProtectionSect = NULL;
+	m_BonesProtectionSect = nullptr;
 }
 
 CCustomOutfit::~CCustomOutfit() 
@@ -77,7 +77,7 @@ void CCustomOutfit::Load(LPCSTR section)
 	if (pSettings->line_exist(section, "actor_visual"))
 		m_ActorVisual = pSettings->r_string(section, "actor_visual");
 	else
-		m_ActorVisual = NULL;
+		m_ActorVisual = nullptr;
 
 	
 	m_PlayerHudSection		= pSettings->r_string(section, "player_hud_section");
@@ -274,8 +274,8 @@ bool CCustomOutfit::install_upgrade_impl( LPCSTR section, bool test )
 	result |= result2;
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
-	PIItem pOutfit = NULL;
-	PIItem iitem = NULL;
+	PIItem pOutfit = nullptr;
+	PIItem iitem = nullptr;
 	if (pActor)
 	{
 		pOutfit = pActor->inventory().ItemFromSlot(OUTFIT_SLOT);

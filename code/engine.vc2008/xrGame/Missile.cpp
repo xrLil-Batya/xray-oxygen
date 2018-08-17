@@ -26,7 +26,7 @@
 #include "ui/UIXmlInit.h"
 #include "physicsshellholder.h"
 
-CUIProgressShape* g_MissileForceShape = NULL;
+CUIProgressShape* g_MissileForceShape = nullptr;
 
 void create_force_progress()
 {
@@ -40,12 +40,12 @@ void create_force_progress()
 	xml_init.InitProgressShape		(uiXml, "progress", 0, g_MissileForceShape);
 }
 
-CMissile::CMissile(void) 
+CMissile::CMissile() 
 {
 	m_dwStateTime		= 0;
 }
 
-CMissile::~CMissile(void) 
+CMissile::~CMissile() 
 {
 }
 
@@ -57,7 +57,7 @@ void CMissile::reinit		()
 	m_fThrowForce		= 0;
 	m_dwDestroyTime		= 0xffffffff;
 	SetPending			(FALSE);
-	m_fake_missile		= NULL;
+	m_fake_missile		= nullptr;
 	SetState			( eHidden );
 }
 
@@ -93,7 +93,7 @@ BOOL CMissile::net_Spawn(CSE_Abstract* DC)
 void CMissile::net_Destroy() 
 {
 	inherited::net_Destroy();
-	m_fake_missile = 0;
+	m_fake_missile = nullptr;
 	m_dwStateTime		= 0;
 }
 
@@ -132,7 +132,7 @@ void CMissile::spawn_fake_missile()
 
 		CSE_ALifeObject				*alife_object = smart_cast<CSE_ALifeObject*>(object);
 		VERIFY						(alife_object);
-		alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,FALSE);
+		alife_object->m_flags.set	(CSE_ALifeObject::flCanSave,false);
 
 		NET_Packet			P;
 		object->Spawn_Write	(P,TRUE);
@@ -250,10 +250,9 @@ void CMissile::State(u32 state)
 	case eHidden:
 		{
 			
-			if (1 /*GetHUD()*/) 
-			{
-				StopCurrentAnimWithoutCallback	();
-			};
+		
+			StopCurrentAnimWithoutCallback	();
+			
 			
 			if (H_Parent())
 			{				
@@ -341,7 +340,7 @@ void CMissile::UpdateXForm	()
 	{
 		dwXF_Frame			= Device.dwFrame;
 
-		if (0==H_Parent())	return;
+		if (nullptr==H_Parent())	return;
 
 		// Get access to entity and its visual
 		CEntityAlive*		E		= smart_cast<CEntityAlive*>(H_Parent());
@@ -464,7 +463,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			bool IsFakeMissile = false;
 			if (m_fake_missile && (id == m_fake_missile->ID()))
 			{
-				m_fake_missile	= NULL;
+				m_fake_missile	= nullptr;
 				IsFakeMissile = true;
 			}
 
@@ -473,7 +472,7 @@ void CMissile::OnEvent(NET_Packet& P, u16 type)
 			{
 				break;
 			}
-			missile->H_SetParent(0,!P.r_eof() && P.r_u8());
+			missile->H_SetParent(nullptr,!P.r_eof() && P.r_u8());
 			break;
 		}
 	}
@@ -607,7 +606,7 @@ void	CMissile::net_Relcase(CObject* O)
 		if(O==smart_cast<CObject*>((CPhysicsShellHolder*)PPhysicsShell()->get_CallbackData()))
 		{
 			PPhysicsShell()->remove_ObjectContactCallback(ExitContactCallback);
-			PPhysicsShell()->set_CallbackData(NULL);
+			PPhysicsShell()->set_CallbackData(nullptr);
 		}
 	}
 

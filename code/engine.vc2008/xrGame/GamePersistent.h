@@ -21,6 +21,7 @@ enum OxygenExtraFeatures : size_t
     GAME_EXTRA_SOC_WND                          = (1 << 7),
     GAME_EXTRA_VERTICAL_BELTS                   = (1 << 8),
 	GAME_EXTRA_THIRST							= (1 << 9),
+	GAME_EXTRA_NPC_GRENADE_ATTAK_ALL			= (1 << 10),
 };
 extern Flags32 g_extraFeatures;
 

@@ -32,7 +32,7 @@ LPCSTR CPhrase::GetScriptText()	const
 bool	CPhrase::IsDummy()		const
 {
 	//	if( (xr_strlen(GetText()) == 0) && (xr_strlen( GetScriptText() ) == 0) )
-	if( (m_text.size() == 0) && (m_script_text_val.size() == 0) && (m_script_text_id.size() == 0) )
+	if( (m_text.empty()) && (m_script_text_val.empty()) && (m_script_text_id.empty()) )
 	{
 		return true;
 	}

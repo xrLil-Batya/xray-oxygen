@@ -125,6 +125,7 @@ void CActor::PickupModeUpdate()
 	CFrustum frustum;
 	frustum.CreateFromMatrix(Device.mFullTransform, FRUSTUM_P_LRTB|FRUSTUM_P_FAR);
 
+	MtFeelTochMutex.lock(); // Syns MtActorUpdate and UpdateCL
     for (CObject* obj : feel_touch)
     {
         Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
@@ -149,10 +150,13 @@ void CActor::PickupModeUpdate()
 			{
 				m_CapmfireWeLookingAt = camp;
 				m_sDefaultObjAction = m_CapmfireWeLookingAt->is_on() ? m_sCampfireExtinguishAction : m_sCampfireIgniteAction;
+
+				MtFeelTochMutex.unlock();
 				return;
 			}
 		}
 	}
+	MtFeelTochMutex.unlock();
 }
 
 #include "../xrEngine/CameraBase.h"
@@ -163,7 +167,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 		
 	if (!g_Alive()) 
 	{
-		GameUI()->UIMainIngameWnd->SetPickUpItem(NULL);
+		GameUI()->UIMainIngameWnd->SetPickUpItem(nullptr);
 		return;
 	}
 	
@@ -175,15 +179,14 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 	Fvector act_and_cam_pos = Level().CurrentControlEntity()->Position();
 	act_and_cam_pos.y    += CameraHeight();
 	float maxlen					= 1000.0f;
-	CInventoryItem* pNearestItem	= NULL;
+	CInventoryItem* pNearestItem	= nullptr;
 
-	for (u32 o_it=0; o_it<ISpatialResult.size(); o_it++)
+	for (ISpatial*	spatial : ISpatialResult)
 	{
-		ISpatial*		spatial	= ISpatialResult[o_it];
 		CInventoryItem*	pIItem	= smart_cast<CInventoryItem*> (spatial->dcast_CObject        ());
 
-		if (0 == pIItem)											continue;
-		if (pIItem->object().H_Parent() != NULL)					continue;
+		if (nullptr == pIItem)											continue;
+		if (pIItem->object().H_Parent() != nullptr)					continue;
 		if (!pIItem->CanTake())										continue;
 		if ( smart_cast<CExplosiveRocket*>( &pIItem->object() ) )	continue;
 
@@ -265,7 +268,7 @@ void CActor::PickupModeUpdate_COD(bool bDoPickup)
 
 void CActor::PickupInfoDraw(CObject* object)
 {
-	LPCSTR draw_str = NULL;
+	LPCSTR draw_str = nullptr;
 	
 	CArtefact* artefact = smart_cast<CArtefact*>(object);
 	CEatableItem* boost = smart_cast<CEatableItem*>(object);
@@ -353,7 +356,7 @@ void CActor::Feel_Grenade_Update( float rad )
 	g_pGameLevel->ObjectSpace.GetNearest( q_nearest, pos_actor, rad, nullptr);
 
 	// select only grenade
-	for (auto it: q_nearest)
+	for (CObject* it: q_nearest)
 	{
 		if (it->getDestroy())
 			continue;					// Don't touch candidates for destroy
