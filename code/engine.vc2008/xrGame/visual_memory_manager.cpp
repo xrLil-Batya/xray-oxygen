@@ -491,7 +491,7 @@ void CVisualMemoryManager::add_visible_object	(const CObject *object, float time
 //	STOP_PROFILE
 }
 
-void CVisualMemoryManager::add_visible_object	(const CVisibleObject visible_object)
+void CVisualMemoryManager::add_visible_object	(const CVisibleObject &visible_object)
 {
 	if ( should_ignore_object(visible_object.m_object) )
 	{

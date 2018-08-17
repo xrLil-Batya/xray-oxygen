@@ -470,7 +470,7 @@ void CCharacterPhysicsSupport::in_Hit(SHit &H, bool is_killing)
 	if (m_EntityAlife.g_Alive() && is_killing && H.type() == ALife::eHitTypeExplosion && H.damage() > 70.f)
 		CPHDestroyable::Destroy();
 
-	if ((!m_EntityAlife.g_Alive() || is_killing))
+	if (!m_EntityAlife.g_Alive() || is_killing)
 		m_character_shell_control.set_kill_hit(H);
 
 	if (!m_pPhysicsShell && is_killing)
@@ -891,7 +891,7 @@ void	CCharacterPhysicsSupport::CreateShell(CObject* who, Fvector& dp, Fvector & 
 	if (m_eType != etBitting)
 		K->LL_SetBoneRoot(anim_root);
 
-	for (u16 I = K->LL_BoneCount() - 1; I != u16(-1); --I)
+	for (u16 I = K->LL_BoneCount() - 1; I != u16(-1); --I) //-V621
 		K->LL_GetBoneInstance(I).reset_callback();
 	//
 	if (anim_mov_ctrl)	//we do not whant to move by long animation in root 

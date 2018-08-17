@@ -1701,7 +1701,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="PHDestroyable.cpp" />
-    <ClCompile Include="PHDestroyableNotificate.cpp" />
     <ClCompile Include="PHMovementControl.cpp" />
     <ClCompile Include="PHMovementDynamicActivate.cpp" />
     <ClCompile Include="PHScriptCall.cpp" />

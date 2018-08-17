@@ -21,7 +21,8 @@ using smart_cover::detail::parse_fvector;
 smart_cover::action::action(luabind::object const &description)
 {
 	luabind::object movement = description["movement"];
-	if (movement.type() != LUA_TNIL && movement.type() == LUA_TBOOLEAN) {
+	if (movement.type() == LUA_TBOOLEAN) 
+	{
 		m_movement				= luabind::object_cast<bool>(movement);
 
 		luabind::object position = description["position"];

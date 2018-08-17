@@ -8354,9 +8354,6 @@
     <ClCompile Include="PhysicsShellHolder.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>
-    <ClCompile Include="PHDestroyableNotificate.cpp">
-      <Filter>GamePhysics</Filter>
-    </ClCompile>
     <ClCompile Include="PhysicsSkeletonObject.cpp">
       <Filter>GamePhysics</Filter>
     </ClCompile>

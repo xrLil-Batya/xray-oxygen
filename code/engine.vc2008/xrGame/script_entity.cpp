@@ -97,19 +97,9 @@ void CScriptEntity::reinit()
 
 void CScriptEntity::SetScriptControl(const bool bScriptControl, shared_str caSciptName)
 {
-	if (!(
-		(
-			(m_bScriptControl && !bScriptControl) || 
-			(!m_bScriptControl && bScriptControl)
-		) &&
-			(
-				bScriptControl || 
-				(
-					xr_strlen(*m_caScriptName) && 
-					!xr_strcmp(caSciptName,m_caScriptName)
-				)
-			)
-		)) {
+	if (!((bool(m_bScriptControl) != bool(bScriptControl)) &&
+			(bScriptControl || (xr_strlen(*m_caScriptName) && !xr_strcmp(caSciptName,m_caScriptName))))) 
+	{
 		ai().script_engine().script_log(eLuaMessageTypeError,"Invalid sequence of taking an entity under script control");
 		return;
 	}
@@ -124,14 +114,7 @@ void CScriptEntity::SetScriptControl(const bool bScriptControl, shared_str caSci
 
 	m_bScriptControl	= bScriptControl;
 	m_caScriptName		= caSciptName;
-/* 
-#ifdef DEBUG
-	if (bScriptControl)
-		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeInfo,"Script %s set object %s under its control",*caSciptName,*object().cName());
-	else
-		ai().script_engine().script_log			(ScriptStorage::eLuaMessageTypeInfo,"Script %s freed object %s from its control",*caSciptName,*object().cName());
-#endif
-*/
+
 	if (!bScriptControl)
 		ResetScriptData(this);
 }

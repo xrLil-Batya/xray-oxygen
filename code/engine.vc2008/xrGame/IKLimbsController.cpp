@@ -11,7 +11,7 @@
 
 #include "../xrEngine/motion.h"
 
-CIKLimbsController::CIKLimbsController() : m_object(0), m_legs_blend(0)
+CIKLimbsController::CIKLimbsController() : m_object(nullptr), m_legs_blend(nullptr)
 {
 
 }
@@ -19,7 +19,7 @@ CIKLimbsController::CIKLimbsController() : m_object(0), m_legs_blend(0)
 void CIKLimbsController::Create(CGameObject* O)
 {
 	VERIFY(O);
-	m_legs_blend = 0;
+	m_legs_blend = nullptr;
 
 	IKinematics* K = smart_cast<IKinematics*>(O->Visual());
 	m_object = O;
@@ -33,17 +33,18 @@ void CIKLimbsController::Create(CGameObject* O)
 	for (u16 i = 0; sz > i; ++i)
 		LimbSetup();
 
-	bool already_has_callbacks = !O->visual_callbacks().empty();
 	O->add_visual_callback(IKVisualCallback);
-	if (already_has_callbacks)
+
+	if (!O->visual_callbacks().empty())
 		std::swap(*(O->visual_callbacks().begin()), *(O->visual_callbacks().end() - 1));
+
 	_pose_extrapolation.init(O->XFORM());
 }
 
 
 void	CIKLimbsController::LimbSetup()
 {
-	_bone_chains.push_back(CIKLimb());
+	_bone_chains.emplace_back();
 
 	IKinematicsAnimated *skeleton_animated = m_object->Visual()->dcast_PKinematicsAnimated();
 
@@ -66,7 +67,7 @@ void	CIKLimbsController::LimbUpdate(CIKLimb &L)
 IC void	update_blend(CBlend* &b)
 {
 	if (b && CBlend::eFREE_SLOT == b->blend_state())
-		b = 0;
+		b = nullptr;
 }
 
 IC float lerp(float t, float  a, float b)
@@ -243,7 +244,7 @@ void CIKLimbsController::Calculate()
 	BOOL sv_root_cb_ovwr = root_bi.callback_overwrite();
 	CBoneInstance::BoneCallback sv_root_cb = root_bi.callback();
 
-	root_bi.set_callback(root_bi.callback_type(), 0, root_bi.callback_param(), TRUE);
+	root_bi.set_callback(root_bi.callback_type(), nullptr, root_bi.callback_param(), TRUE);
 
 
 	if (ik_shift_object)

@@ -111,7 +111,7 @@ void CActor::RunTalkDialog(CInventoryOwner* talk_partner, bool disable_break)
 	}
 }
 
-void CActor::StartTalk(CInventoryOwner* talk_partner)
+void CActor::StartTalk(CInventoryOwner* talk_partner, bool bStartTrade)
 {
 	PIItem det_active = inventory().ItemFromSlot(DETECTOR_SLOT);
 	if (det_active)
@@ -123,7 +123,7 @@ void CActor::StartTalk(CInventoryOwner* talk_partner)
 	CGameObject* GO = smart_cast<CGameObject*>(talk_partner); 
 	VERIFY(GO);
 
-	CInventoryOwner::StartTalk(talk_partner);
+	CInventoryOwner::StartTalk(talk_partner, bStartTrade);
 }
 
 void CActor::NewPdaContact(CInventoryOwner* pInvOwner)
