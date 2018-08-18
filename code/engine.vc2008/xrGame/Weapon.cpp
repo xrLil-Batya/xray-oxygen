@@ -109,7 +109,7 @@ void CWeapon::UpdateSecondVP()
 {
 	// + CActor::UpdateCL();
 	bool b_is_active_item = (m_pInventory != nullptr) && (m_pInventory->ActiveItem() == this);
-	R_ASSERT(ParentIsActor() && b_is_active_item); // Эта функция должна вызываться только для оружия в руках нашего игрока
+	if(!ParentIsActor() || !b_is_active_item) return; // Эта функция должна вызываться только для оружия в руках нашего игрока
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
 
