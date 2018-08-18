@@ -50,30 +50,29 @@ CWeapon::CWeapon()
 	m_Offset.identity		();
 	m_StrapOffset.identity	();
 
-	m_iAmmoCurrentTotal		= 0;
+	
 	m_BriefInfo_CalcFrame	= 0;
 
-	iAmmoElapsed			= -1;
-	iMagazineSize			= -1;
-	m_ammoType				= 0;
+	
+	
 
 	eHandDependence			= hdNone;
 
 	m_zoom_params.m_fCurrentZoomFactor			= g_fov;
 	m_zoom_params.m_fZoomRotationFactor			= 0.f;
-	m_zoom_params.m_pVision						= NULL;
-	m_zoom_params.m_pNight_vision				= NULL;
+	m_zoom_params.m_pVision						= nullptr;
+	m_zoom_params.m_pNight_vision				= nullptr;
 
-	m_pCurrentAmmo			= NULL;
+	m_pCurrentAmmo			= nullptr;
 
-	m_pFlameParticles2		= NULL;
+	m_pFlameParticles2		= nullptr;
 	m_sFlameParticles2		= "";
 
 
 	m_fCurrentCartirdgeDisp = 1.f;
 
-	m_strap_bone0			= 0;
-	m_strap_bone1			= 0;
+	m_strap_bone0			= nullptr;
+	m_strap_bone1			= nullptr;
 	m_StrapOffset.identity	();
 	m_strapped_mode			= false;
 	m_strapped_mode_rifle		= false;
@@ -81,7 +80,7 @@ CWeapon::CWeapon()
 	m_can_be_strapped		= false;
 	m_ef_main_weapon_type	= u32(-1);
 	m_ef_weapon_type		= u32(-1);
-	m_UIScope				= NULL;
+	m_UIScope				= nullptr;
 	m_set_next_ammoType_on_reload = undefined_ammo_type;
 	m_crosshair_inertion	= 0.f;
 	m_activation_speed_is_overriden	=	false;
@@ -109,7 +108,7 @@ void CWeapon::Hit(SHit* pHDS)
 void CWeapon::UpdateSecondVP()
 {
 	// + CActor::UpdateCL();
-	bool b_is_active_item = (m_pInventory != NULL) && (m_pInventory->ActiveItem() == this);
+	bool b_is_active_item = (m_pInventory != nullptr) && (m_pInventory->ActiveItem() == this);
 	R_ASSERT(ParentIsActor() && b_is_active_item); // Эта функция должна вызываться только для оружия в руках нашего игрока
 
 	CActor* pActor = smart_cast<CActor*>(H_Parent());
@@ -281,7 +280,7 @@ void CWeapon::Load(LPCSTR section)
 		for (int it = 0; it < count; ++it)
 		{
 			_GetItem(S, it, _ammoItem);
-			m_ammoTypes.push_back(_ammoItem);
+			m_ammoTypes.emplace_back(_ammoItem);
 		}
 	}
 
@@ -452,11 +451,11 @@ void CWeapon::Load(LPCSTR section)
 			{
 				string128 scope_section;
 				_GetItem(str, i, scope_section);
-				m_scopes.push_back(scope_section);
+				m_scopes.emplace_back(scope_section);
 			}
 		}
 		else
-			m_scopes.push_back(section);
+			m_scopes.emplace_back(section);
 	}
 	else if (m_eScopeStatus == ALife::eAddonPermanent)
 	{
@@ -790,7 +789,7 @@ void CWeapon::UpdateCL()
 		if (pActor && !pActor->AnyMove() && this == pActor->inventory().ActiveItem())
 		{
 			if (hud_adj_mode == 0 && GetState() == eIdle && (Device.dwTimeGlobal - m_dw_curr_substate_time > iTimeForSwitchState) && !IsZoomed() &&
-				g_player_hud->attached_item(1) == NULL)
+				g_player_hud->attached_item(1) == nullptr)
 			{
 				if (AllowBore())
 					SwitchState(eBore);
@@ -881,7 +880,7 @@ void CWeapon::SetDefaults()
 {
 	SetPending(FALSE);
 
-	m_flags.set(FUsingCondition, TRUE);
+	m_flags.set(FUsingCondition, true);
 	bMisfire = false;
 	m_flagsAddOnState = 0;
 	m_zoom_params.m_bIsZoomModeNow = false;
@@ -931,56 +930,50 @@ bool CWeapon::Action(u16 cmd, u32 flags)
 		case kWPN_ZOOM:
 			if (IsZoomEnabled())
 			{
-				if (b_toggle_weapon_aim)
-				{
-					if (flags&CMD_START)
-					{
-						if (!IsZoomed())
-						{
-							if (!IsPending())
-							{
-								if(GetState() != eIdle)
-									SwitchState(eIdle);
+                switch (flags)
+                {
+                case CMD_START:
+                    if (!IsZoomed())
+                    {
+                        if (!IsPending())
+                        {
+                            if (GetState() != eIdle)
+                                SwitchState(eIdle);
+                            OnZoomIn();
+                        }
+                    }
+                    else if (!b_toggle_weapon_aim)
+                    {
+                        OnZoomOut();
+                    }
+                    break;
+                case CMD_IN:
+                    if (!IsZoomEnabled() || !IsZoomed())
+                    {
+                        return false;
+                    }
 
-								OnZoomIn();
-							}
-						}
-						else
-							OnZoomOut();
-					}
-				}
-				else
-				{
-					if(flags&CMD_START)
-					{
-						if (!IsZoomed() && !IsPending())
-						{
-							if (GetState() != eIdle)
-								SwitchState(eIdle);
-							OnZoomIn();
-						}
-					}
-					else 
-						if (IsZoomed())
-							OnZoomOut();
-				}
+                    ZoomInc();
+                    break;
+                case CMD_OUT:
+                    if (!IsZoomEnabled() || !IsZoomed())
+                    {
+                        return false;
+                    }
+
+                    ZoomDec();
+                    break;
+                default:
+                    if (!b_toggle_weapon_aim)
+                    {
+                        if (IsZoomed())
+                            OnZoomOut();
+                    }
+                    break;
+                }
 				return true;
 			}
 			else 
-				return false;
-
-		case kWPN_ZOOM_INC:
-		case kWPN_ZOOM_DEC:
-			if (IsZoomEnabled() && IsZoomed())
-			{
-				if (cmd == kWPN_ZOOM_INC)  
-					ZoomInc();
-				else
-					ZoomDec();
-
-				return true;
-			}
-			else
 				return false;
 	}
 	return false;
@@ -1011,7 +1004,7 @@ bool CWeapon::SwitchAmmoType(u32 flags)
 
 void CWeapon::SpawnAmmo(u32 boxCurr, LPCSTR ammoSect, u32 ParentID) 
 {
-	if (!m_ammoTypes.size())			
+	if (m_ammoTypes.empty())			
 		return;
 
 	m_bAmmoWasSpawned = true;
@@ -1343,7 +1336,7 @@ void GetZoomData(const float scope_factor, float& delta, float& min_zoom_factor)
 void CWeapon::OnZoomIn()
 {
 	m_zoom_params.m_bIsZoomModeNow = true;
-	psActorFlags.set(AF_ZOOM_NEW_FD, TRUE);
+	psActorFlags.set(AF_ZOOM_NEW_FD, true);
 	if (m_zoom_params.m_bUseDynamicZoom)
 	{
 		if (!m_fRTZoomFactor)
@@ -1362,14 +1355,14 @@ void CWeapon::OnZoomIn()
 	if (GetHUDmode())
 		GamePersistent().SetPickableEffectorDOF(true);
 
-	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && m_zoom_params.m_pVision == NULL) 
+	if (m_zoom_params.m_sUseBinocularVision.size() && IsScopeAttached() && m_zoom_params.m_pVision == nullptr) 
 		m_zoom_params.m_pVision	= xr_new<CBinocularsVision>(m_zoom_params.m_sUseBinocularVision.c_str());
 	
 	// Включаем ПНВ
     if (m_zoom_params.m_sUseZoomPostprocess.size() && IsScopeAttached())
     {
 		CActor *pA = smart_cast<CActor *>(H_Parent());
-        if (pA && NULL == m_zoom_params.m_pNight_vision)
+        if (pA && nullptr == m_zoom_params.m_pNight_vision)
             m_zoom_params.m_pNight_vision = xr_new<CNightVisionEffector>(m_zoom_params.m_sUseZoomPostprocess.c_str());
     }	
 }
@@ -1379,7 +1372,7 @@ void CWeapon::OnZoomOut()
 	m_zoom_params.m_bIsZoomModeNow = false;
 	m_fRTZoomFactor = GetZoomFactor(); //store current
 	m_zoom_params.m_fCurrentZoomFactor = g_fov;
-	psActorFlags.set(AF_ZOOM_NEW_FD, FALSE);
+	psActorFlags.set(AF_ZOOM_NEW_FD, false);
 
  	GamePersistent().RestoreEffectorDOF();
 
@@ -1400,7 +1393,7 @@ void CWeapon::OnZoomOut()
 
 CUIWindow* CWeapon::ZoomTexture()
 {
-	return UseScopeTexture() ? m_UIScope : NULL;
+	return UseScopeTexture() ? m_UIScope : nullptr;
 }
 
 void CWeapon::SwitchState(u32 S)
@@ -1469,16 +1462,13 @@ void CWeapon::reload(LPCSTR section)
 		m_addon_holder_fov_modifier = m_holder_fov_modifier;
 	}
 
+	Fvector pos, ypr;
+	pos	= pSettings->r_fvector3(section, "position");
+	ypr	= pSettings->r_fvector3(section, "orientation");
+	ypr.mul(PI / 180.f);
 
-	{
-		Fvector pos, ypr;
-		pos	= pSettings->r_fvector3(section, "position");
-		ypr	= pSettings->r_fvector3(section, "orientation");
-		ypr.mul(PI / 180.f);
-
-		m_Offset.setHPB(ypr.x, ypr.y, ypr.z);
-		m_Offset.translate_over(pos);
-	}
+	m_Offset.setHPB(ypr.x, ypr.y, ypr.z);
+	m_Offset.translate_over(pos);
 
 	m_StrapOffset = m_Offset;
 	if (pSettings->line_exist(section, "strap_position") && pSettings->line_exist(section, "strap_orientation")) 
@@ -1576,7 +1566,7 @@ CInventoryItem *CWeapon::can_kill(CInventory *inventory) const
 			return			(inventory_item);
 	}
 
-	return(0);
+	return(nullptr);
 }
 
 const CInventoryItem *CWeapon::can_kill(const xr_vector<const CGameObject*> &items) const
@@ -1597,7 +1587,7 @@ const CInventoryItem *CWeapon::can_kill(const xr_vector<const CGameObject*> &ite
 			return(inventory_item);
 	}
 
-	return (0);
+	return (nullptr);
 }
 
 bool CWeapon::ready_to_kill() const
@@ -1731,13 +1721,13 @@ float CWeapon::Weight() const
 {
 	float res = CInventoryItemObject::Weight();
 
-	if (IsGrenadeLauncherAttached() && GetGrenadeLauncherName().size())
+	if (IsGrenadeLauncherAttached() && !GetGrenadeLauncherName().empty())
 		res += pSettings->r_float(GetGrenadeLauncherName().c_str(), "inv_weight");
 
-	if (IsScopeAttached() && m_scopes.size())
+	if (IsScopeAttached() && !m_scopes.empty())
 		res += pSettings->r_float(GetScopeName().c_str(), "inv_weight");
 
-	if (IsSilencerAttached() && GetSilencerName().size())
+	if (IsSilencerAttached() && !GetSilencerName().empty())
 		res += pSettings->r_float(GetSilencerName().c_str(), "inv_weight");
 
 	res += GetMagazineWeight(m_magazine);
@@ -1764,7 +1754,7 @@ BOOL CWeapon::ParentMayHaveAimBullet()
 {
 	CObject* O = H_Parent();
 	CEntityAlive* EA = smart_cast<CEntityAlive*>(O);
-	return EA->cast_actor() != 0;
+	return EA->cast_actor() != nullptr;
 }
 
 BOOL CWeapon::ParentIsActor()
@@ -1775,7 +1765,7 @@ BOOL CWeapon::ParentIsActor()
 	if (!O || !EA)
 		return FALSE;
 
-	return EA->cast_actor()!=0;
+	return EA->cast_actor()!=nullptr;
 }
 
 extern u32 hud_adj_mode;
@@ -1888,7 +1878,7 @@ bool CWeapon::MovingAnimAllowedNow()
 
 bool CWeapon::IsHudModeNow()
 {
-	return (HudItemData() != NULL);
+	return (HudItemData() != nullptr);
 }
 
 void CWeapon::ZoomInc()
@@ -1921,13 +1911,13 @@ u32 CWeapon::Cost() const
 {
 	u32 res = CInventoryItem::Cost();
 
-	if (IsGrenadeLauncherAttached() && GetGrenadeLauncherName().size())
+	if (IsGrenadeLauncherAttached() && !GetGrenadeLauncherName().empty())
 		res += pSettings->r_u32(GetGrenadeLauncherName().c_str(), "cost");
 
-	if (IsScopeAttached() && m_scopes.size())
+	if (IsScopeAttached() && !m_scopes.empty())
 		res += pSettings->r_u32(GetScopeName().c_str(), "cost");
 
-	if (IsSilencerAttached() && GetSilencerName().size())
+	if (IsSilencerAttached() && !GetSilencerName().empty())
 		res += pSettings->r_u32(GetSilencerName().c_str(), "cost");
 
 	if (iAmmoElapsed)
@@ -1941,20 +1931,3 @@ u32 CWeapon::Cost() const
 	return res;
 }
 
-float CWeapon::GetMagazineWeight(const decltype(CWeapon::m_magazine)& mag) const
-{
-    float res = 0;
-    const char* last_type = nullptr;
-    float last_ammo_weight = 0;
-    for (auto& c : mag)
-    {
-        // Usually ammos in mag have same type, use this fact to improve performance
-        if (last_type != c.m_ammoSect.c_str())
-        {
-            last_type = c.m_ammoSect.c_str();
-            last_ammo_weight = c.Weight();
-        }
-        res += last_ammo_weight;
-    }
-    return res;
-}

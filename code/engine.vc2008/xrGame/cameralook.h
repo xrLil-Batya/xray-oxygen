@@ -4,7 +4,7 @@
 
 class CCameraLook	: public CCameraBase
 {
-	typedef CCameraBase inherited;
+	using inherited = CCameraBase;
 
 	Fvector2		lim_zoom;
 protected:
@@ -34,7 +34,7 @@ protected:
 	Fvector2		m_autoaim_inertion_pitch;
 	void			UpdateAutoAim	();
 public:
-					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy=NULL;};
+					CCameraLook2	( CObject* p, u32 flags=0):CCameraLook(p, flags){m_locked_enemy=nullptr;};
 	virtual			~CCameraLook2	(){}
 	virtual	void	OnActivate		( CCameraBase* old_cam );
 	virtual void	Update			( Fvector& point, Fvector& noise_dangle );

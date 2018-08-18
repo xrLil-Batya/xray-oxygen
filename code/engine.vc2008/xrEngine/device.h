@@ -160,6 +160,9 @@ private:
 public:
 	LRESULT									MsgProc		(HWND,UINT,WPARAM,LPARAM);
 
+	// Get single WinAPI message and process it
+	void									ProcessSingleMessage();
+
 	u32										dwPrecacheTotal;
 
 	float									fWidth_2, fHeight_2;
@@ -322,7 +325,7 @@ extern		ENGINE_API		CRenderDevice		Device;
 
 extern		ENGINE_API		bool				g_bBenchmark;
 
-typedef fastdelegate::FastDelegate0<bool>		LOADING_EVENT;
+using LOADING_EVENT = fastdelegate::FastDelegate0<bool>;
 extern	ENGINE_API xr_list<LOADING_EVENT>		g_loading_events;
 
 class ENGINE_API CLoadScreenRenderer :public pureRender

@@ -7,13 +7,9 @@ inline bool	p_sort(IBlender* A, IBlender* B)
 	return stricmp(A->getComment(), B->getComment()) < 0;
 }
 
-#ifdef __BORLANDC__
-#define TYPES_EQUAL(A,B) (typeid(A) == typeid(B))
-#else
 #define TYPES_EQUAL(A,B) (typeid(A).raw_name() == typeid(B).raw_name())
-#endif
 
-void		IBlender::CreatePalette(xr_vector<IBlender*> &palette)
+void IBlender::CreatePalette(xr_vector<IBlender*> &palette)
 {
 	// Create palette itself
 	R_ASSERT(palette.empty());

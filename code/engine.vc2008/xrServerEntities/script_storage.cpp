@@ -94,7 +94,6 @@ void CScriptStorage::reinit()
 	Debug.set_crashhandler(xrScriptCrashHandler);
 }
 
-
 void CScriptStorage::dump_state()
 {
 	static bool reentrantGuard = false;
@@ -234,8 +233,14 @@ void CScriptStorage::ClearDumpedObjects()
 int __cdecl CScriptStorage::script_log(ScriptStorage::ELuaMessageType tLuaMessageType, const char* caFormat, ...)
 {
 	va_list marker;
+    string2048 buf;
 	va_start(marker, caFormat);
-	Msg(caFormat, marker);
+    int sz = _vsnprintf(buf, sizeof(buf) - 1, caFormat, marker);
+    buf[sz] = '\0';
+    if (sz > 0)
+    {
+        Log(buf);
+    }
 	va_end(marker);
 
 	return 0;
@@ -375,13 +380,13 @@ bool CScriptStorage::load_file_into_namespace(const char* caScriptName, const ch
 
 bool CScriptStorage::namespace_loaded(const char* N, bool remove_from_stack)
 {
-	int						start = lua_gettop(lua());
+	int start = lua_gettop(lua());
 	lua_pushstring(lua(), "_G");
 	lua_rawget(lua(), LUA_GLOBALSINDEX);
 
-	string256				S2;
- 	xr_strcpy				(S2,N);
- 	char*					S = S2;
+	string256 S2;
+ 	xr_strcpy (S2,N);
+ 	char* S = S2;
 	for (;;) {
 		if (!xr_strlen(S))
 		{

@@ -140,7 +140,7 @@ class CHelicopter : 	public CEntity,
 					#endif
 
 {
-	typedef CEntity inherited;
+	using inherited = CEntity;
 public:
 	enum EHeliState {
 		eAlive							= u32(0),
@@ -244,7 +244,7 @@ protected:
 	EHeliState						m_curState;
 
 	xr_map<s16,float>				m_hitBones;
-	typedef xr_map<s16,float>::iterator bonesIt;
+	using bonesIt = xr_map<s16,float>::iterator;
 	float							m_stepRemains;
 
 	void	UpdateState					();

@@ -51,7 +51,7 @@ enum EMenuMode{
 		mmInventory,
 		mmTrade,
 		mmUpgrade,
-		mmDeadBodySearch,
+		mmDeadBodyOrContainerSearch,
 };
 
 class CUIActorMenu: public CUIDialogWnd, public CUIWndCallback
@@ -272,7 +272,7 @@ protected:
 	bool						ToSlot						(CUICellItem* itm, bool force_place, u16 slot_id);
 	bool						ToBag						(CUICellItem* itm, bool b_use_cursor_pos);
 	bool						ToBelt						(CUICellItem* itm, bool b_use_cursor_pos);
-	bool						TryUseItem					(CUICellItem* cell_itm);
+	bool						TryUseFoodItem				(CUICellItem* cell_itm);
 	bool						ToQuickSlot					(CUICellItem* itm);
 
 	void						UpdateActorMP				();

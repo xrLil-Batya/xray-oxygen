@@ -75,7 +75,7 @@ CEntityCondition::CEntityCondition(CEntityAlive *object)
 	m_fDeltaPsyHealth		= 0;
 
 	m_fHealthLost			= 0.f;
-	m_pWho					= NULL;
+	m_pWho					= nullptr;
 	m_iWhoID				= 0;
 
 	m_WoundVector.clear		();
@@ -92,7 +92,7 @@ CEntityCondition::CEntityCondition(CEntityAlive *object)
 	m_bCanBeHarmed			= true;
 }
 
-CEntityCondition::~CEntityCondition(void)
+CEntityCondition::~CEntityCondition()
 {
 	ClearWounds				();
 }
@@ -157,7 +157,7 @@ void CEntityCondition::reinit	()
 	m_fDeltaPsyHealth		= 0;
 
 	m_fHealthLost			= 0.f;
-	m_pWho					= NULL;
+	m_pWho					= nullptr;
 	m_iWhoID				= NULL;
 
 	ClearWounds				();
@@ -372,7 +372,7 @@ CWound* CEntityCondition::AddWound(float hit_power, ALife::EHitType hit_type, u1
 			break;
 	}
 	
-	CWound* pWound = NULL;
+	CWound* pWound = nullptr;
 
 	//новая рана
 	if (it == m_WoundVector.end())
@@ -396,7 +396,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 {
 	//кто нанес последний хит
 	m_pWho = pHDS->who;
-	m_iWhoID = (NULL != pHDS->who) ? pHDS->who->ID() : 0;
+	m_iWhoID = (nullptr != pHDS->who) ? pHDS->who->ID() : 0;
 
 	bool const is_special_hit_2_self		=	(pHDS->who == m_object) && (pHDS->boneID == BI_NONE);
 
@@ -452,7 +452,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 		hit_power			*= GetHitImmunity(pHDS->hit_type)-m_fBoostRadiationImmunity;
 		m_fDeltaRadiation	+= hit_power;
 		bAddWound			=  false;
-		return NULL;
+		return nullptr;
 		break;
 	case ALife::eHitTypeExplosion:
 		hit_power *= GetHitImmunity(pHDS->hit_type)-m_fBoostExplImmunity;
@@ -593,11 +593,11 @@ void CEntityCondition::load	(IReader &input_packet)
 		ClearWounds();
 		m_WoundVector.resize(input_packet.r_u8());
 		if(!m_WoundVector.empty())
-			for(u32 i=0; i<m_WoundVector.size(); i++)
+			for(auto & i : m_WoundVector)
 			{
 				CWound* pWound = xr_new<CWound>(BI_NONE);
 				pWound->load(input_packet);
-				m_WoundVector[i] = pWound;
+				i = pWound;
 			}
 	}
 }
@@ -655,7 +655,7 @@ void SMedicineInfluenceValues::Load(const shared_str& sect)
 	fHealth			= pSettings->r_float(sect.c_str(), "eat_health");
 	fPower			= pSettings->r_float(sect.c_str(), "eat_power");
 	fSatiety		= pSettings->r_float(sect.c_str(), "eat_satiety");
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    fThirst			= pSettings->r_float(sect.c_str(), "eat_thirst");
     }

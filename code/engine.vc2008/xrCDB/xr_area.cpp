@@ -39,7 +39,7 @@ int CObjectSpace::GetNearest(xr_vector<ISpatial*>& q_spatial, xr_vector<CObject*
 	// Iterate
 	for (ISpatial* it: q_spatial) {
 		CObject* O = it->dcast_CObject();
-		if (0 == O)				continue;
+		if (nullptr == O)				continue;
 		if (O == ignore_object)	continue;
 		Fsphere mS = { O->spatial.sphere.P, O->spatial.sphere.R };
 		if (Q.intersect(mS))	q_nearest.push_back(O);
@@ -69,7 +69,8 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 
 	// Cache for cform
 	u32 crc = crc32(F->pointer(), F->length());
-	const char* LevelName= std::string((FS.get_path("$level$")->m_Add) + std::string("cform.cache")).c_str();
+	string_path LevelName;
+	strconcat(sizeof(LevelName), LevelName, FS.get_path("$level$")->m_Add, "cform.cache");
 
 	IReader* pReaderCache = FS.r_open("$level_cache$", LevelName);
 
@@ -84,16 +85,12 @@ void CObjectSpace::Load(CDB::build_callback build_callback)
 	if (pReaderCache && pReaderCache->length() > 4 && pReaderCache->r_u32() == crc)
 	{
 		Create(verts, tris, realCform, build_callback, pReaderCache);
-		FS.r_close(pReaderCache);
 	}
 	else
 	{
-		if (pReaderCache) FS.r_close(pReaderCache);
-		IWriter* pWriterChace = FS.w_open("$level_cache$", LevelName);
-		R_ASSERT(pWriterChace);
-		pWriterChace->w_u32(crc);
-		Create(verts, tris, realCform, build_callback, pWriterChace);
-		FS.w_close(pWriterChace);
+		IWriter* pWriterCache = FS.w_open("$level_cache$", LevelName);
+		pWriterCache->w_u32(crc);
+		Create(verts, tris, realCform, build_callback, pWriterCache);
 	}
 
 	FS.r_close(F);

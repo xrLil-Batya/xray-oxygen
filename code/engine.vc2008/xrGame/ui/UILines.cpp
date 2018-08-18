@@ -133,12 +133,12 @@ void CUILines::ParseText(bool force)
 	BOOL bNewLines = FALSE;
 
 	if (uFlags.test(flRecognizeNewLine))
-		if ( m_pFont->IsMultibyte() ) 
+		if (m_pFont->IsMultibyte())
 		{
 			CUILine *ptmp_line = xr_new<CUILine>();
-			int vsz = line->m_subLines.size();
-			VERIFY( vsz );
-			for ( int i = 0 ; i < vsz ; i++ ) 
+			size_t vsz = line->m_subLines.size();
+			VERIFY(vsz);
+			for (size_t i = 0; i < vsz; i++)
 			{
 				char *pszTemp = NULL;
 				const u32 tcolor = line->m_subLines[i].m_color;
@@ -159,7 +159,8 @@ void CUILines::ParseText(bool force)
 			line->Clear();
 			xr_free( line );
 			line=ptmp_line;
-		} else
+		} 
+		else
 		{
 			line->ProcessNewLines();
 		}
@@ -173,19 +174,25 @@ void CUILines::ParseText(bool force)
 		UI().ClientToScreenScaledWidth( fTargetWidth );
 		VERIFY( ( m_wndSize.x > 0 ) && ( fTargetWidth > 0 ) );
 		fTargetWidth = m_wndSize.x / fTargetWidth;
-		int vsz = line->m_subLines.size();
+		int vsz = (u32)line->m_subLines.size();
 		VERIFY( vsz );
-		if ( ( vsz > 1 ) && ( ! bNewLines ) ) { // only colored line, pizdets
-			for ( int i = 0 ; i < vsz ; i++ ) {
+		if ((vsz > 1) && (!bNewLines))
+		{
+			// only colored line, pizdets
+			for (int i = 0; i < vsz; i++)
+			{
 				const char *pszText = line->m_subLines[i].m_text.c_str();
 				const u32 tcolor = line->m_subLines[i].m_color;
-				VERIFY( pszText );
-				tmp_line.AddSubLine( pszText , tcolor );
+				VERIFY(pszText);
+				tmp_line.AddSubLine(pszText, tcolor);
 			}
-			m_lines.push_back( tmp_line );
+			m_lines.push_back(tmp_line);
 			tmp_line.Clear();
-		} else {
-			for ( int i = 0 ; i < vsz ; i++ ) {
+		}
+		else 
+		{
+			for ( int i = 0 ; i < vsz ; i++ )
+			{
 				const char *pszText = line->m_subLines[i].m_text.c_str();
 				const u32 tcolor = line->m_subLines[i].m_color;
 				u16 uFrom = 0 , uPartLen = 0;

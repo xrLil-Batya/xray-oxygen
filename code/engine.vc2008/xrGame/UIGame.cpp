@@ -464,7 +464,7 @@ void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryOwner* pOthe
 		m_ActorMenu->SetActor(pActorInv);
 		m_ActorMenu->SetPartner(pOtherOwner);
 
-		m_ActorMenu->SetMenuMode(mmDeadBodySearch);
+		m_ActorMenu->SetMenuMode(mmDeadBodyOrContainerSearch);
 		m_ActorMenu->ShowDialog(true);
 	}
 }
@@ -478,7 +478,7 @@ void CUIGame::StartSearchBody(CInventoryOwner* pActorInv, CInventoryBox* pBox) /
 	m_ActorMenu->SetInvBox(pBox);
 	VERIFY(pBox);
 
-	m_ActorMenu->SetMenuMode(mmDeadBodySearch);
+	m_ActorMenu->SetMenuMode(mmDeadBodyOrContainerSearch);
 	m_ActorMenu->ShowDialog(true);
 }
 

@@ -12,6 +12,8 @@ class ENGINE_API CMotionDef;
 #define WEAPON_ININITE_QUEUE -1
 
 
+//#define NEW_ANIMS_WPN
+
 class CWeaponMagazined: public CWeapon
 {
 private:
@@ -19,6 +21,8 @@ private:
 protected:
 	//звук текущего выстрела
 	std::string		m_sSndShotCurrent;
+
+	bool bBulletInBarrel;
 
 	//дополнительная информация о глушителе
 	LPCSTR			m_sSilencerFlameParticles;
@@ -32,6 +36,8 @@ protected:
 	
 	#ifdef NEW_ANIMS_WPN
 	ESoundTypes		m_eSoundReloadEmpty;
+	ESoundTypes		m_eSoundReloadFast;
+	ESoundTypes		m_eSoundReloadBoltOnly;
 	#endif
 
 	bool			m_sounds_enabled;

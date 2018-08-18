@@ -6,7 +6,7 @@
 class CMosquitoBald : public CCustomZone
 {
 private:
-	typedef	CCustomZone	inherited;
+	using inherited =	CCustomZone;
 public:
 					CMosquitoBald				();
 	virtual			~CMosquitoBald				();

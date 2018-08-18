@@ -10,11 +10,11 @@ class CPhysicsSkeletonObject :
 	public CPHSkeleton
 
 {
-typedef CPhysicsShellHolder inherited;
+using inherited = CPhysicsShellHolder;
 
 public:
-	CPhysicsSkeletonObject(void);
-	virtual ~CPhysicsSkeletonObject(void);
+	CPhysicsSkeletonObject();
+	virtual ~CPhysicsSkeletonObject();
 
 
 	virtual BOOL					net_Spawn			( CSE_Abstract* DC)																	;

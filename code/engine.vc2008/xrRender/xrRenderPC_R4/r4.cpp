@@ -13,12 +13,13 @@
 
 #include "../xrRenderDX10/3DFluid/dx103DFluidManager.h"
 #include "../xrRender/ShaderResourceTraits.h"
+#include "../xrRender/dxGlowManager.h"
 
 #include "D3DX10Core.h"
 
 ENGINE_API BOOL isGraphicDebugging;
 
-CRender										RImplementation;
+CRender RImplementation;
 
 template<UINT TNameLength>
 IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameLength])
@@ -27,22 +28,6 @@ IC void SetDebugObjectName(ID3D11DeviceChild* resource, const char(&name)[TNameL
 }
 
 //////////////////////////////////////////////////////////////////////////
-class CGlow				: public IRender_Glow
-{
-public:
-	bool				bActive;
-public:
-	CGlow() : bActive(false)								{ }
-	virtual void set_active		(bool b)					{ bActive = b; }
-	virtual bool get_active		()							{ return bActive; }
-	virtual void set_position	(const Fvector& P)			{ }
-	virtual void set_direction	(const Fvector& D)			{ }
-	virtual void set_radius		(float R)					{ }
-	virtual void set_texture	(LPCSTR name)				{ }
-	virtual void set_color		(const Fcolor& C)			{ }
-	virtual void set_color		(float r, float g, float b) { }
-};
-
 float		r_dtex_range		= 50.f;
 //////////////////////////////////////////////////////////////////////////
 ShaderElement* CRender::rimp_select_sh_dynamic	(dxRender_Visual *pVisual,
@@ -232,7 +217,7 @@ void					CRender::create()
 	o.dx10_msaa_samples		= (1 << ps_r3_msaa);
 	/////////////////////////////////////////////
 	// sunshafts options
-	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
+//	o.sunshaft_screenspace	= ps_r_sunshafts_mode == SS_SCREEN_SPACE;
 	/////////////////////////////////////////////
 	o.dx10_msaa_opt			= ps_r3_flags.test(R3_FLAG_MSAA_OPT);
 	o.dx10_msaa_opt			= o.dx10_msaa_opt && o.dx10_msaa && (HW.FeatureLevel >= D3D_FEATURE_LEVEL_10_1)
@@ -457,7 +442,7 @@ void CRender::model_Delete(IRenderVisual* &V, BOOL bDiscard)
 { 
 	dxRender_Visual* pVisual = (dxRender_Visual*)V;
 	Models->Delete(pVisual, bDiscard);
-	V = 0;
+	V = nullptr;
 }
 
 IRender_DetailModel* CRender::model_CreateDM(IReader*	F)
@@ -474,7 +459,7 @@ void CRender::model_Delete(IRender_DetailModel* & F)
 		CDetail*	D	= (CDetail*)F;
 		D->Unload		();
 		xr_delete		(D);
-		F				= NULL;
+		F				= nullptr;
 	}
 }
 IRenderVisual*			CRender::model_CreatePE			(LPCSTR name)	
@@ -664,7 +649,7 @@ static HRESULT create_shader	(LPCSTR name,
 {
 	result->sh			= ShaderTypeTraits<T>::CreateHWShader(buffer, buffer_size);
 
-	ID3DShaderReflection *pReflection = 0;
+	ID3DShaderReflection *pReflection = nullptr;
 
 	HRESULT const _hr	= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
 	if (SUCCEEDED(_hr) && pReflection)
@@ -686,7 +671,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	if (pTarget[0] == 'p') {
 		SPS* sps_result = (SPS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, 0, &sps_result->ps);
+		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, nullptr, &sps_result->ps);
 #else // #ifdef USE_DX11
 		_result			= HW.pDevice->CreatePixelShader(buffer, buffer_size, &sps_result->ps);
 #endif // #ifdef USE_DX11
@@ -701,7 +686,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(PsDebugName, "%s", name);
         SetDebugObjectName(sps_result->ps, PsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
@@ -727,7 +712,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	else if (pTarget[0] == 'v') {
 		SVS* svs_result = (SVS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, 0, &svs_result->vs);
+		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, nullptr, &svs_result->vs);
 #else // #ifdef USE_DX11
 		_result			= HW.pDevice->CreateVertexShader(buffer, buffer_size, &svs_result->vs);
 #endif // #ifdef USE_DX11
@@ -742,7 +727,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(VsDebugName, "%s", name);
         SetDebugObjectName(svs_result->vs, VsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
 #else
@@ -778,7 +763,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 	else if (pTarget[0] == 'g') {
 		SGS* sgs_result = (SGS*)result;
 #ifdef USE_DX11
-		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, 0, &sgs_result->gs);
+		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, nullptr, &sgs_result->gs);
 #else // USE_DX10
 		_result			= HW.pDevice->CreateGeometryShader(buffer, buffer_size, &sgs_result->gs);
 #endif
@@ -794,7 +779,7 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
         xr_sprintf(GsDebugName, "%s", name);
         SetDebugObjectName(sgs_result->gs, GsDebugName);
 
-		ID3DShaderReflection *pReflection = 0;
+		ID3DShaderReflection *pReflection = nullptr;
 
 #ifdef USE_DX11
 		_result			= D3DReflect( buffer, buffer_size, IID_ID3DShaderReflection, (void**)&pReflection);
@@ -828,8 +813,8 @@ static HRESULT create_shader(LPCSTR name, const char* const pTarget, DWORD const
 
 	if ( disasm )
 	{
-		ID3DBlob*		disasm	= 0;
-		D3DDisassemble	(buffer, buffer_size, FALSE, 0, &disasm );
+		ID3DBlob*		disasm	= nullptr;
+		D3DDisassemble	(buffer, buffer_size, FALSE, nullptr, &disasm );
 		//D3DXDisassembleShader		(LPDWORD(code->GetBufferPointer()), FALSE, 0, &disasm );
 		string_path		dname;
 		strconcat		(sizeof(dname),dname,"disasm\\",file_name,('v'==pTarget[0])?".vs":('p'==pTarget[0])?".ps":".gs" );
@@ -851,10 +836,10 @@ public:
 		string_path				pname;
 		strconcat				(sizeof(pname),pname,::Render->getShaderPath(),pFileName);
 		IReader*		R		= FS.r_open	("$game_shaders$",pname);
-		if (0==R)				{
+		if (nullptr==R)				{
 			// possibly in shared directory or somewhere else - open directly
 			R					= FS.r_open	("$game_shaders$",pFileName);
-			if (0==R)			return			E_FAIL;
+			if (nullptr==R)			return			E_FAIL;
 		}
 
 		// duplicate and zero-terminate
@@ -889,8 +874,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 
 	char	sh_name[MAX_PATH] = "";
 
-	for (u32 i = 0; i<m_ShaderOptions.size(); ++i)
-		defines[def_it++] = m_ShaderOptions[i];
+	for (auto ShaderOption : m_ShaderOptions)
+		defines[def_it++] = ShaderOption;
 
 	u32		len = xr_strlen(sh_name);
 	// options
@@ -1273,8 +1258,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
     sh_name[len] = 0;
 
 	// finish
-	defines[def_it].Name			=	0;
-	defines[def_it].Definition		=	0;
+	defines[def_it].Name			=	nullptr;
+	defines[def_it].Definition		=	nullptr;
 	def_it							++; 
 
 	// 
@@ -1345,8 +1330,8 @@ HRESULT	CRender::shader_compile(const char*	name, DWORD const* pSrcData, u32 Src
 	if (FAILED(_result))
 	{
 		includer					Includer;
-		LPD3DBLOB					pShaderBuf	= NULL;
-		LPD3DBLOB					pErrorBuf	= NULL;
+		LPD3DBLOB					pShaderBuf	= nullptr;
+		LPD3DBLOB					pErrorBuf	= nullptr;
 		_result						= 
 			D3DCompile( 
 				pSrcData, 

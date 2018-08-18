@@ -3,11 +3,11 @@
 #include "../xrphysics/PhysicsShell.h"
 
 
-C_Arterfact::C_Arterfact(void)
+C_Arterfact::C_Arterfact()
 {
 }
 
-C_Arterfact::~C_Arterfact(void)
+C_Arterfact::~C_Arterfact()
 {
 }
 

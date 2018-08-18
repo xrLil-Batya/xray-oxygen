@@ -30,7 +30,7 @@ BONE_P_MAP CCar::bone_map = BONE_P_MAP();
 
 CCar::CCar()
 {
-	m_memory = NULL;
+	m_memory = nullptr;
 	m_driver_anim_type = 0;
 	m_bone_steer = BI_NONE;
 
@@ -60,7 +60,7 @@ CCar::CCar()
 	m_breaks_to_back_rate = 1.f;
 
 	b_exploded = false;
-	m_car_weapon = NULL;
+	m_car_weapon = nullptr;
 	m_power_neutral_factor = 0.25f;
 	m_steer_angle = 0.f;
 #ifdef DEBUG
@@ -68,7 +68,7 @@ CCar::CCar()
 #endif
 }
 
-CCar::~CCar(void)
+CCar::~CCar()
 {
 	xr_delete(camera[0]);
 	xr_delete(camera[1]);
@@ -702,7 +702,7 @@ void CCar::ParseDefinitions()
 	fill_doors_map(ini->r_string("car_definition", "doors"), m_doors);
      
 	///////////////////////////car properties///////////////////////////////
-	active_camera = 0;
+	active_camera = nullptr;
 	camera[ectFirst] = xr_new<CCameraFirstEye>(this, CCameraBase::flRelativeLink | CCameraBase::flPositionRigid);
 	camera[ectFirst]->tag = ectFirst;
 	camera[ectFirst]->Load(ini->r_string("car_definition", "car_first_eye_cam"));
@@ -1762,7 +1762,7 @@ IC void CCar::fill_exhaust_vector(LPCSTR S, xr_vector<SExhaust>& exhausts)
 
 		u16 bone_id = pKinematics->LL_BoneID(S1);
 
-		exhausts.push_back(SExhaust(this));
+		exhausts.emplace_back(this);
 		SExhaust& exhaust = exhausts.back();
 		exhaust.bone_id = bone_id;
 
@@ -1852,7 +1852,7 @@ void CCar::ASCUpdate()
 
 void CCar::ASCUpdate(EAsyncCalls c)
 {
-	async_calls.set(u16(c), FALSE);
+	async_calls.set(u16(c), false);
 	switch (c) {
 	case ascSndTransmission:m_car_sound->TransmissionSwitch(); break;
 	case ascSndStall:m_car_sound->Stop(); break;
@@ -1863,7 +1863,7 @@ void CCar::ASCUpdate(EAsyncCalls c)
 
 void CCar::AscCall(EAsyncCalls c)
 {
-	async_calls.set(u16(c), TRUE);
+	async_calls.set(u16(c), true);
 }
 
 bool CCar::CanRemoveObject()

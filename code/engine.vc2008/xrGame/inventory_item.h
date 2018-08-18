@@ -158,7 +158,7 @@ public:
 	IC		float				GetCondition		() const					{return m_fCondition;}
 	virtual	float				GetConditionToShow	() const					{return GetCondition();}
 	IC		void				SetCondition		(float val)					{m_fCondition = val;}
-			void				ChangeCondition		(float fDeltaCondition);
+	virtual		void				ChangeCondition		(float fDeltaCondition);
 
 			u16					BaseSlot			()  const					{return m_ItemCurrPlace.base_slot_id;}
 			u16					CurrSlot			()  const					{return m_ItemCurrPlace.slot_id;}
@@ -280,8 +280,6 @@ public:
 #endif // DEBUG
 
 	IC Upgrades_type const& upgardes	() const;
-	virtual void	Interpolate			();
-	float	interpolate_states			(net_update_IItem const & first, net_update_IItem const & last, SPHNetState & current);
 
 protected:
 	virtual	void	net_Spawn_install_upgrades	( Upgrades_type saved_upgrades );

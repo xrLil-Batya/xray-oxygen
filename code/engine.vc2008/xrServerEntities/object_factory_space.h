@@ -20,14 +20,14 @@ class CSE_Abstract;
 namespace ObjectFactory {
 
 #ifndef NO_XR_GAME
-	typedef DLL_Pure			CLIENT_BASE_CLASS;
+	using CLIENT_BASE_CLASS = DLL_Pure;
 #endif
-	typedef CSE_Abstract		SERVER_BASE_CLASS;
+	using SERVER_BASE_CLASS = CSE_Abstract;
 
 #ifndef NO_XR_GAME
-	typedef DLL_Pure			CLIENT_SCRIPT_BASE_CLASS;
+	using CLIENT_SCRIPT_BASE_CLASS = DLL_Pure;
 #endif
-	typedef CSE_Abstract		SERVER_SCRIPT_BASE_CLASS;
+	using SERVER_SCRIPT_BASE_CLASS = CSE_Abstract;
 };
 
 #endif

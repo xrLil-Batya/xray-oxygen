@@ -23,7 +23,7 @@ CWound::CWound(u16 bone_num)
 }
 
 
-CWound::~CWound(void)
+CWound::~CWound()
 {
 }
 

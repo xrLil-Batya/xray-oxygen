@@ -20,7 +20,7 @@ CEliteDetector::~CEliteDetector()
 
 void CEliteDetector::CreateUI()
 {
-	R_ASSERT(NULL==m_ui);
+	R_ASSERT(nullptr==m_ui);
 	m_ui				= xr_new<CUIArtefactDetectorElite>();
 	ui().construct		(this);
 }
@@ -33,7 +33,7 @@ CUIArtefactDetectorElite&  CEliteDetector::ui()
 void CEliteDetector::UpdateAf()
 {
 	ui().Clear							();
-	if(m_artefacts.m_ItemInfos.size()==0)	return;
+	if(m_artefacts.m_ItemInfos.empty())	return;
 
 	CAfList::ItemsMapIt it_b	= m_artefacts.m_ItemInfos.begin();
 	CAfList::ItemsMapIt it_e	= m_artefacts.m_ItemInfos.end();
@@ -190,11 +190,10 @@ void CUIArtefactDetectorElite::Draw()
 		Fvector2				pos;
 		pos.set					(pt3d.x, -pt3d.z);
 		pos.sub					(rp);
-		if(1 /* r.in(pos)*/ )
-		{
-			(*it).pStatic->SetWndPos	(pos);
-			(*it).pStatic->Draw			();
-		}
+		
+		(*it).pStatic->SetWndPos	(pos);
+		(*it).pStatic->Draw			();
+		
 	}
 
 	UI().m_currentPointType		= bk;

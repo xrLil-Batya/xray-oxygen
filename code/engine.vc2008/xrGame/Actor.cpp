@@ -90,7 +90,45 @@ static Fvector	vFootExt;
 Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
 int				psActorSleepTime = 1;
 
+void CActor::MtSecondActorUpdate(void* pActorPointer)
+{
+	CActor* pActor = reinterpret_cast<CActor*>(pActorPointer);
+	while (true)
+	{
+		WaitForSingleObject(pActor->MtSecondUpdaterEventStart, INFINITE);
 
+		if (pActor != g_actor) return;
+
+		// Update hardcode mode
+		if (psActorFlags.test(AF_HARDCORE))
+			pActor->cam_Set(eacFirstEye);
+
+		// Update inventory
+		pActor->UpdateInventoryOwner(Device.dwTimeDelta);
+
+		// Update holder
+		if (pActor->Holder())
+			pActor->Holder()->UpdateEx(pActor->currentFOV());
+
+		pActor->m_snd_noise -= 0.3f*Device.fTimeDelta;
+		pActor->inherited::UpdateCL();
+
+		// Pickup update
+		if (pActor->g_Alive() && pActor->m_bPickupMode)
+			pActor->PickupModeUpdate();
+
+		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
+		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
+
+		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
+		{
+			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
+			psHUD_Flags.set(HUD_DRAW_RT, true);
+		}
+
+		SetEvent(pActor->MtSecondUpdaterEventEnd);
+	}
+}
 
 CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 {
@@ -110,7 +148,7 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	vPrevCamDir.set(0.f,0.f,1.f);
 	fCurAVelocity = 0.0f;
 	// Раскачка
-	pCamBobbing = 0;
+	pCamBobbing = nullptr;
 
 	r_torso.yaw				= 0;
 	r_torso.pitch			= 0;
@@ -131,12 +169,12 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_fFallTime				=	s_fFallTime;
 	m_bAnimTorsoPlayed		=	false;
 
-	m_pPhysicsShell			=	NULL;
+	m_pPhysicsShell			=	nullptr;
 
 	m_fFeelGrenadeRadius	=	10.0f;
 	m_fFeelGrenadeTime      =	1.0f;
 	
-	m_holder				=	NULL;
+	m_holder				=	nullptr;
 	m_holderID				=	u16(-1);
 
 	m_CapmfireWeLookingAt	= nullptr;
@@ -147,16 +185,16 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	//разрешить использование пояса в inventory
 	inventory().SetBeltUseful(true);
 
-	m_pPersonWeLookingAt	= 0;
-	m_pVehicleWeLookingAt	= 0;
-	m_pObjectWeLookingAt	= 0;
-	pStatGraph				= 0;
-	m_pActorEffector		= 0;
+	m_pPersonWeLookingAt	= nullptr;
+	m_pVehicleWeLookingAt	= nullptr;
+	m_pObjectWeLookingAt	= nullptr;
+	pStatGraph				= nullptr;
+	m_pActorEffector		= nullptr;
 	m_vehicle_anims	        = xr_new<SActorVehicleAnims>();
-	m_entity_condition		= 0;
-	m_statistic_manager		= 0;
-	m_sDefaultObjAction		= 0;
-	m_pUsableObject			= 0;
+	m_entity_condition		= nullptr;
+	m_statistic_manager		= nullptr;
+	m_sDefaultObjAction		= nullptr;
+	m_pUsableObject			= nullptr;
 	SetZoomAimingMode		(false);
 	m_fSprintFactor			= 4.f;
 	m_anims					= xr_new<SActorMotions>();
@@ -169,8 +207,6 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_hit_probability		= 1.f;
 	m_feel_touch_characters = 0;
 	//-----------------------------------------------------------------------------------
-	m_dwILastUpdateTime		= 0;
-
 	m_location_manager		= xr_new<CLocationManager>(this);
 	m_block_sprint_counter	= 0;
 
@@ -179,28 +215,38 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	
 	// Alex ADD: for smooth crouch fix
 	CurrentHeight = 0.f;
+
+	MtSecondUpdaterEventStart = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	MtSecondUpdaterEventEnd = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+
+	thread_spawn(MtSecondActorUpdate, "X-Ray: Second Actor Update", 0, this);
 }
 
 
 CActor::~CActor()
 {
-	xr_delete				(m_location_manager);
-	xr_delete				(m_memory);
-	xr_delete				(game_news_registry);
+	SetEvent(MtSecondUpdaterEventStart);
+
+	xr_delete(m_location_manager);
+	xr_delete(m_memory);
+	xr_delete(game_news_registry);
 #ifdef DEBUG
 	Device.seqRender.Remove(this);
 #endif
 	//xr_delete(Weapons);
-	for (int i=0; i<eacMaxCam; ++i) xr_delete(cameras[i]);
+	for (CCameraBase* camera : cameras) xr_delete(camera);
 
 	m_HeavyBreathSnd.destroy();
-	m_BloodSnd.destroy		();
-	m_DangerSnd.destroy		();
+	m_BloodSnd.destroy();
+	m_DangerSnd.destroy();
 
-	xr_delete				(m_pActorEffector);
-	xr_delete				(m_pPhysics_support);
-	xr_delete				(m_anims);
-	xr_delete               (m_vehicle_anims);
+	xr_delete(m_pActorEffector);
+	xr_delete(m_pPhysics_support);
+	xr_delete(m_anims);
+	xr_delete(m_vehicle_anims);
+
+	CloseHandle(MtSecondUpdaterEventStart);
+	CloseHandle(MtSecondUpdaterEventEnd);
 }
 
 void CActor::reinit	()
@@ -213,10 +259,10 @@ void CActor::reinit	()
 	character_physics_support()->in_Init		();
 	material().reinit							();
 
-	m_pUsableObject								= NULL;
+	m_pUsableObject								= nullptr;
 	memory().reinit							();
 	
-	set_input_external_handler					(0);
+	set_input_external_handler					(nullptr);
 	m_time_lock_accel							= 0;
 }
 
@@ -310,11 +356,11 @@ void CActor::Load	(LPCSTR section )
 		LPCSTR hit_snds = READ_IF_EXISTS(pSettings, r_string, hit_snd_sect, hit_name, "");
 		int cnt = _GetItemCount(hit_snds);
 		string128		tmp;
-		VERIFY			(cnt!=0);
-		for(int i=0; i<cnt;++i)
+		VERIFY(cnt != 0);
+		for (int i = 0; i < cnt; ++i)
 		{
-			sndHit[hit_type].push_back		(ref_sound());
-			sndHit[hit_type].back().create	(_GetItem(hit_snds,i,tmp),st_Effect,sg_SourceType);
+			sndHit[hit_type].emplace_back();
+			sndHit[hit_type].back().create(_GetItem(hit_snds, i, tmp), st_Effect, sg_SourceType);
 		}
 		char buf[256];
 
@@ -332,7 +378,7 @@ void CActor::Load	(LPCSTR section )
 	else
 		cam_Set					(eacFirstEye);
 
-	// sheduler
+	// scheduler
 	shedule.t_min				= shedule.t_max = 1;
 
 	// настройки дисперсии стрельбы
@@ -367,7 +413,6 @@ void CActor::Load	(LPCSTR section )
 	m_sCampfireIgniteAction			= "campfire_ignite";
 	m_sCampfireExtinguishAction		= "campfire_extinguish";
 	//---------------------------------------------------------------------
-	m_sHeadShotParticle	= READ_IF_EXISTS(pSettings,r_string,section,"HeadShotParticle",0);
 	
 	// Alex ADD: for smooth crouch fix
 	CurrentHeight = CameraHeight();	
@@ -382,7 +427,7 @@ struct playing_pred
 {
 	IC	bool	operator()			(ref_sound &s)
 	{
-		return	(NULL != s._feedback() );
+		return	(nullptr != s._feedback() );
 	}
 };
 
@@ -544,10 +589,7 @@ void CActor::Die(CObject* who)
 {
 	inherited::Die(who);
 
-	u16 I = inventory().FirstSlot();
-	u16 E = inventory().LastSlot();
-
-	for (; I <= E; ++I)
+	for (u16 I = inventory().FirstSlot(); I <= inventory().LastSlot(); ++I)
 	{
 		PIItem item_in_slot = inventory().ItemFromSlot(I);
 		if (I == inventory().GetActiveSlot())
@@ -603,60 +645,52 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 {
 	// Correct accel
 	Fvector		accel;
-	accel.set					(_accel);
-	m_hit_slowmo				-=	dt;
-	if(m_hit_slowmo<0)			m_hit_slowmo = 0.f;
+	accel.set(_accel);
+	m_hit_slowmo -= dt;
+	if (m_hit_slowmo < 0)			m_hit_slowmo = 0.f;
 
-	accel.mul					(1.f-m_hit_slowmo);
+	accel.mul(1.f - m_hit_slowmo);
 
-	if(g_Alive())
+	if (g_Alive())
 	{
-		if(mstate_real&mcClimb&&!cameras[eacFirstEye]->bClampYaw)
-				accel.set(0.f,0.f,0.f);
-		character_physics_support()->movement()->Calculate			(accel,cameras[cam_active]->vDirection,0,jump,dt,false);
-		bool new_border_state=character_physics_support()->movement()->isOutBorder();
-		if(m_bOutBorder!=new_border_state && Level().CurrentControlEntity() == this)
+		if (mstate_real&mcClimb && !cameras[eacFirstEye]->bClampYaw)
+			accel.set(0.f, 0.f, 0.f);
+
+		character_physics_support()->movement()->Calculate(accel, cameras[cam_active]->vDirection, 0, jump, dt, false);
+		bool new_border_state = character_physics_support()->movement()->isOutBorder();
+		if (m_bOutBorder != new_border_state && Level().CurrentControlEntity() == this)
 		{
 			SwitchOutBorder(new_border_state);
 		}
 
-		if(!psActorFlags.test(AF_NO_CLIP))
-			character_physics_support()->movement()->GetPosition		(Position());
+		if (!psActorFlags.test(AF_NO_CLIP))
+			character_physics_support()->movement()->GetPosition(Position());
 		else
-		character_physics_support()->movement()->GetPosition		(Position());
+			character_physics_support()->movement()->GetPosition(Position());
 
-		character_physics_support()->movement()->bSleep				=false;
+		character_physics_support()->movement()->bSleep = false;
 	}
 
-	if (Local() && g_Alive()) 
+	if (Local() && g_Alive())
 	{
-		if(character_physics_support()->movement()->gcontact_Was)
-			Cameras().AddCamEffector		(xr_new<CEffectorFall> (character_physics_support()->movement()->gcontact_Power));
+		if (character_physics_support()->movement()->gcontact_Was)
+			Cameras().AddCamEffector(xr_new<CEffectorFall>(character_physics_support()->movement()->gcontact_Power));
 
-		if (!fis_zero(character_physics_support()->movement()->gcontact_HealthLost))	
+		if (!fis_zero(character_physics_support()->movement()->gcontact_HealthLost))
 		{
-			VERIFY( character_physics_support() );
-			VERIFY( character_physics_support()->movement() );
-			ICollisionDamageInfo* di=character_physics_support()->movement()->CollisionDamageInfo();
-			VERIFY( di );
-			bool b_hit_initiated =  di->GetAndResetInitiated();
-			Fvector hdir;di->HitDir(hdir);
-			SetHitInfo(this, NULL, 0, Fvector().set(0, 0, 0), hdir);
-			//				Hit	(m_PhysicMovementControl->gcontact_HealthLost,hdir,di->DamageInitiator(),m_PhysicMovementControl->ContactBone(),di->HitPos(),0.f,ALife::eHitTypeStrike);//s16(6 + 2*::Random.randI(0,2))
+			VERIFY(character_physics_support());
+			VERIFY(character_physics_support()->movement());
+			ICollisionDamageInfo* di = character_physics_support()->movement()->CollisionDamageInfo();
+			VERIFY(di);
+			bool b_hit_initiated = di->GetAndResetInitiated();
+			Fvector hdir; di->HitDir(hdir);
+			SetHitInfo(this, nullptr, 0, Fvector().set(0, 0, 0), hdir);
+
 			if (Level().CurrentControlEntity() == this)
 			{
-				
-				SHit HDS = SHit(character_physics_support()->movement()->gcontact_HealthLost,
-//.								0.0f,
-								hdir,
-								di->DamageInitiator(),
-								character_physics_support()->movement()->ContactBone(),
-								di->HitPos(),
-								0.f,
-								di->HitType(),
-								0.0f, 
-								b_hit_initiated);
-//				Hit(&HDS);
+
+				SHit HDS = SHit(character_physics_support()->movement()->gcontact_HealthLost, hdir, di->DamageInitiator(),
+					character_physics_support()->movement()->ContactBone(), di->HitPos(), 0.f, di->HitType(), 0.0f, b_hit_initiated);
 
 				NET_Packet	l_P;
 				HDS.GenHeader(GE_HIT, ID());
@@ -664,7 +698,7 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 				HDS.weaponID = di->DamageInitiator()->ID();
 				HDS.Write_Packet(l_P);
 
-				u_EventSend	(l_P);
+				u_EventSend(l_P);
 			}
 		}
 	}
@@ -690,49 +724,34 @@ float CActor::currentFOV()
 
 static bool bLook_cam_fp_zoom = false;
 
-void CActor::UpdateCL	()
+void CActor::UpdateCL()
 {
-	if (psActorFlags.test(AF_HARDCORE))
-		cam_Set(eacFirstEye);
-	UpdateInventoryOwner			(Device.dwTimeDelta);
+	ResetEvent(MtSecondUpdaterEventEnd);
+	SetEvent(MtSecondUpdaterEventStart);
 
-	if (m_feel_touch_characters > 0)
+	// Update Collision
+	MtFeelTochMutex.lock();
+	if (IsFeelTouchCharacters())
 	{
-		for(xr_vector<CObject*>::iterator it = feel_touch.begin(); it != feel_touch.end(); it++)
+		for (CObject* pObject : feel_touch)
 		{
-			CPhysicsShellHolder	*sh = smart_cast<CPhysicsShellHolder*>(*it);
-			if(sh&&sh->character_physics_support())
+			CPhysicsShellHolder	*sh = smart_cast<CPhysicsShellHolder*>(pObject);
+			if (sh && sh->character_physics_support())
 			{
 				sh->character_physics_support()->movement()->UpdateObjectBox(character_physics_support()->movement()->PHCharacter());
 			}
 		}
 	}
+	MtFeelTochMutex.unlock();
 
-	if(m_holder)
-		m_holder->UpdateEx( currentFOV() );
+	m_pPhysics_support->in_UpdateCL();
 
-	m_snd_noise -= 0.3f*Device.fTimeDelta;
+	SetZoomAimingMode(false);
+	CWeapon* pWeapon = smart_cast<CWeapon*>(inventory().ActiveItem());
 
-	inherited::UpdateCL				();
-	m_pPhysics_support->in_UpdateCL	();
+	cam_Update(float(Device.dwTimeDelta) / 1000.0f, currentFOV());
 
-	if (g_Alive() && m_bPickupMode)
-		PickupModeUpdate	();	
-
-    // If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
-	PickupModeUpdate_COD(m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
-
-	SetZoomAimingMode		(false);
-	CWeapon* pWeapon		= smart_cast<CWeapon*>(inventory().ActiveItem());	
-
-	cam_Update(float(Device.dwTimeDelta)/1000.0f, currentFOV());
-
-	if(Level().CurrentEntity() && this->ID()==Level().CurrentEntity()->ID() )
-	{
-		psHUD_Flags.set( HUD_CROSSHAIR_RT2, true );
-		psHUD_Flags.set( HUD_DRAW_RT, true );
-	}
-	if(pWeapon )
+	if (pWeapon)
 	{
 		if (!psActorFlags.test(AF_FP2ZOOM_FORCED))
 		{
@@ -768,9 +787,8 @@ void CActor::UpdateCL	()
 			{
 				float full_fire_disp = pWeapon->GetFireDispersion(true);
 
-				CEffectorZoomInertion* S = smart_cast<CEffectorZoomInertion*>	(Cameras().GetCamEffector(eCEZoom));
-				if (S)
-					S->SetParams(full_fire_disp);
+				CEffectorZoomInertion* pZoomInertion = smart_cast<CEffectorZoomInertion*>(Cameras().GetCamEffector(eCEZoom));
+				if (pZoomInertion) pZoomInertion->SetParams(full_fire_disp);
 
 				SetZoomAimingMode(true);
 
@@ -779,17 +797,14 @@ void CActor::UpdateCL	()
 					Actor()->IR_OnKeyboardPress(kCAM_1);
 					bLook_cam_fp_zoom = true;
 				}
-				else
+				else if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
 				{
-
-					if (bLook_cam_fp_zoom && cam_active == eacFirstEye && g_Alive() && Level().CurrentViewEntity() == this)
-					{
-						Actor()->IR_OnKeyboardPress(kCAM_2);
-						bLook_cam_fp_zoom = false;
-					}
+					Actor()->IR_OnKeyboardPress(kCAM_2);
+					bLook_cam_fp_zoom = false;
 				}
 			}
 		}
+
 		if (Level().CurrentEntity() && this->ID() == Level().CurrentEntity()->ID())
 		{
 			float fire_disp_full = pWeapon->GetFireDispersion(true, true);
@@ -798,7 +813,7 @@ void CActor::UpdateCL	()
 			fire_disp_full = m_fdisp_controller.GetCurrentDispertion();
 
 			//+SecondVP+ Чтобы перекрестие не скакало из за смены FOV (Sin!) [fix for crosshair shaking while SecondVP]
-			if (!Device.m_SecondViewport.IsSVPFrame()) 
+			if (!Device.m_SecondViewport.IsSVPFrame())
 				HUD().SetCrosshairDisp(fire_disp_full, 0.02f);
 
 			HUD().ShowCrosshair(pWeapon->use_crosshair());
@@ -831,6 +846,16 @@ void CActor::UpdateCL	()
 		Device.m_SecondViewport.SetSVPActive(false);
 	}
 
+	DWORD WaitResult = WAIT_TIMEOUT;
+	do
+	{
+		WaitResult = WaitForSingleObject(MtSecondUpdaterEventEnd, 66); // update message box with 15 fps
+		if (WaitResult == WAIT_TIMEOUT)
+		{
+			Device.ProcessSingleMessage();
+		}
+	} while (WaitResult == WAIT_TIMEOUT);
+
 	float cs_min = pSettings->r_float(cNameSect(), "ph_crash_speed_min");
 	float cs_max = pSettings->r_float(cNameSect(), "ph_crash_speed_max");
 
@@ -838,21 +863,21 @@ void CActor::UpdateCL	()
 		character_physics_support()->movement()->SetCrashSpeeds(8000, 9000);
 	else
 		character_physics_support()->movement()->SetCrashSpeeds(cs_min, cs_max);
-	
+
 	UpdateDefferedMessages();
 
-	if (g_Alive()) 
-		CStepManager::update(this==Level().CurrentViewEntity());
+	if (g_Alive())
+		CStepManager::update(this == Level().CurrentViewEntity());
 
-	spatial.type |=STYPE_REACTTOSOUND;
+	spatial.type |= STYPE_REACTTOSOUND;
 
-	if(m_sndShockEffector)
+	if (m_sndShockEffector)
 	{
 		if (this == Level().CurrentViewEntity())
 		{
 			m_sndShockEffector->Update();
 
-			if(!m_sndShockEffector->InWork() || !g_Alive())
+			if (!m_sndShockEffector->InWork() || !g_Alive())
 				xr_delete(m_sndShockEffector);
 		}
 		else
@@ -860,10 +885,10 @@ void CActor::UpdateCL	()
 	}
 	Fmatrix							trans;
 
-	Cameras().hud_camera_Matrix			(trans);
-	
-	if(IsFocused())
-		g_player_hud->update			(trans);
+	Cameras().hud_camera_Matrix(trans);
+
+	if (IsFocused())
+		g_player_hud->update(trans);
 }
 
 float	NET_Jump = 0;
@@ -879,58 +904,48 @@ void CActor::set_state_box(u32	mstate)
 	else 
 		character_physics_support()->movement()->ActivateBox(0, true);
 }
+
 void CActor::shedule_Update	(u32 DT)
 {
 	setSVU							(true);
 
-	if(IsFocused())
+	if (IsFocused())
 	{
-		if(HUDview())
+		if (HUDview())
 		{
-			CInventoryItem* pInvItem	= inventory().ActiveItem();	
-			if( pInvItem )
+			CInventoryItem* pInvItem = inventory().ActiveItem();
+			if (pInvItem)
 			{
-				CHudItem* pHudItem		= smart_cast<CHudItem*>(pInvItem);	
-				if(pHudItem)
+				CHudItem* pHudItem = smart_cast<CHudItem*>(pInvItem);
+				if (pHudItem)
 				{
-					if( pHudItem->IsHidden() )
+					if (pHudItem->IsHidden())
 					{
-						g_player_hud->detach_item	(pHudItem);
+						g_player_hud->detach_item(pHudItem);
 					}
 					else
 					{
-						g_player_hud->attach_item	(pHudItem);
+						g_player_hud->attach_item(pHudItem);
 					}
 				}
-			}else
-			{
-					g_player_hud->detach_item_idx	( 0 );
-					//Msg("---No active item in inventory(), item 0 detached.");
 			}
+			else g_player_hud->detach_item_idx(0);
 		}
-		else
-		{
-			g_player_hud->detach_all_items();
-			//Msg("---No hud view found, all items detached.");
-		}
-			
+		else g_player_hud->detach_all_items();
 	}
 
 	if(m_holder || !getEnabled() || !Ready())
 	{
-		m_sDefaultObjAction				= NULL;
-		inherited::shedule_Update		(DT);
+		m_sDefaultObjAction = nullptr;
+		inherited::shedule_Update(DT);
 		return;
 	}
 
-	clamp(DT,0u,100u);
-	float dt =  float(DT)/1000.f;
+	clamp(DT, 0u, 100u);
+	float dt = float(DT) / 1000.f;
 
-	// Check controls, create accel, prelimitary setup "mstate_real"
-	
 	//----------- for E3 -----------------------------
 	if (Level().CurrentControlEntity() == this)
-	//------------------------------------------------
 	{
 		g_cl_CheckControls		(mstate_wishful,NET_SavedAccel,NET_Jump,dt);
 		g_cl_Orientate			(mstate_real,dt);
@@ -996,10 +1011,9 @@ void CActor::shedule_Update	(u32 DT)
 			float v = bs+0.25f;
 
 			m_BloodSnd.set_volume	(v);
-		}else{
-			if(m_BloodSnd._feedback())
-				m_BloodSnd.stop();
 		}
+		else if(m_BloodSnd._feedback())
+				m_BloodSnd.stop();
 
 		if(!g_Alive()&&m_BloodSnd._feedback())
 				m_BloodSnd.stop();
@@ -1015,7 +1029,6 @@ void CActor::shedule_Update	(u32 DT)
 				m_DangerSnd.set_position(snd_pos);
 
 			float v = bs+0.25f;
-//			Msg( "bs            = %.2f", bs );
 
 			m_DangerSnd.set_volume	(v);
 		}
@@ -1078,7 +1091,7 @@ void CActor::shedule_Update	(u32 DT)
 			else if (m_pObjectWeLookingAt && m_pObjectWeLookingAt->cast_inventory_item() && m_pObjectWeLookingAt->cast_inventory_item()->CanTake())
 				m_sDefaultObjAction = m_sInventoryItemUseAction;
 			else
-				m_sDefaultObjAction = NULL;
+				m_sDefaultObjAction = nullptr;
 		}
 	}
 	else 
@@ -1098,7 +1111,6 @@ void CActor::shedule_Update	(u32 DT)
 #include "debug_renderer.h"
 void CActor::renderable_Render()
 {
-	//VERIFY(_valid(XFORM()));
 	inherited::renderable_Render();
 	bool isHolder = (m_holder && m_holder->allowWeapon() && m_holder->HUDView());
 	bool isCam = cam_active == eacFirstEye;
@@ -1120,7 +1132,7 @@ void CActor::g_PerformDrop()
 	b_DropActivated = FALSE;
 
 	PIItem pItem = inventory().ActiveItem();
-	if (0 == pItem)			return;
+	if (nullptr == pItem)			return;
 
 	if (pItem->IsQuestItem()) return;
 
@@ -1146,8 +1158,8 @@ float CActor::missile_throw_force()
 #ifdef DEBUG
 extern	BOOL	g_ShowAnimationInfo		;
 #endif // DEBUG
-// HUD
 
+// HUD
 void CActor::OnHUDDraw(CCustomHUD*)
 {
 	R_ASSERT(IsFocused());
@@ -1214,15 +1226,16 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 	Device.mFullTransform.transform(v0r,v0);
 	Device.mFullTransform.transform(v1r,v1);
 	float size = v1r.distance_to(v0r);
+
 	CGameFont* pFont = UI().Font().pFontArial14;
 	if (!pFont) return;
-//	float OldFontSize = pFont->GetHeight	();	
+
 	float delta_up = 0.0f;
 	if (size < mid_size) delta_up = upsize;
 	else delta_up = upsize*(mid_size/size);
+
 	dpos.y += delta_up;
 	if (size > mid_size) size = mid_size;
-//	float NewFontSize = size/mid_size * fontsize;
 	//------------------------------------------------
 	M.c.y += dpos.y;
 
@@ -1237,19 +1250,17 @@ void CActor::RenderText				(LPCSTR Text, Fvector dpos, float* pdup, u32 color)
 
 	pFont->SetAligment	(CGameFont::alCenter);
 	pFont->SetColor		(color);
-//	pFont->SetHeight	(NewFontSize);
 	pFont->Out			(x,y,Text);
 	//-------------------------------------------------
-//	pFont->SetHeight(OldFontSize);
 	*pdup = delta_up;
 };
 
 void CActor::SetPhPosition(const Fmatrix &transform)
 {
-	if(!m_pPhysicsShell){ 
+	if(!m_pPhysicsShell)
+	{ 
 		character_physics_support()->movement()->SetPosition(transform.c);
 	}
-	//else m_phSkeleton->S
 }
 
 void CActor::ForceTransform(const Fmatrix& m)

@@ -36,7 +36,7 @@ public:
 CObject					*ParentObject		(){ return pObject; }
 IElevatorState			*ElevatorState		();
 void 					in_shedule_Update	( u32 DT );
-void					PHCaptureObject 	( CPhysicsShellHolder* object, CPHCaptureBoneCallback* cb =0 );
+void					PHCaptureObject 	( CPhysicsShellHolder* object, CPHCaptureBoneCallback* cb =nullptr );
 void					PHCaptureObject 	( CPhysicsShellHolder* object, u16 element );
 IPHCapture*				PHCapture			( );
 CPHCharacter*			PHCharacter			( ){ return m_character; }
@@ -274,7 +274,7 @@ public:
 	void				update_last_material	()				;
 	u16					injurious_material_idx	()				;
 	CPHMovementControl(CObject* parent);
-	~CPHMovementControl(void);
+	~CPHMovementControl();
 
 	CPHCharacter		*character				()	{		return m_character; };
 	void				NetRelcase				( CObject* O );

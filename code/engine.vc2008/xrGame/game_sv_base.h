@@ -10,7 +10,7 @@ class xrServer;
 
 class	game_sv_GameState	: public game_GameState
 {
-	typedef game_GameState inherited;
+	using inherited = game_GameState;
 
 public:
 	BOOL							sv_force_sync;

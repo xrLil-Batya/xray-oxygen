@@ -76,12 +76,16 @@ class	CActor:
 {
 	friend class CActorCondition;
 private:
-	typedef CEntityAlive inherited;
+	using inherited = CEntityAlive;
+	static void							MtSecondActorUpdate(void* pActorPointer);
+public:
+	HANDLE								MtSecondUpdaterEventStart;
+	HANDLE								MtSecondUpdaterEventEnd;
+	std::recursive_mutex				MtFeelTochMutex;
 public:
 										CActor				();
 	virtual								~CActor				();
 
-public:
 	virtual BOOL						AlwaysTheCrow				()						{ return TRUE; }
 
 	virtual CAttachmentOwner*			cast_attachment_owner		()						{return this;}
@@ -233,7 +237,7 @@ public:
 	s32						GetZoomRndSeed			()	{ return m_ZoomRndSeed;	};
 	void					SetShotRndSeed			(s32 Seed = 0);
 	s32						GetShotRndSeed			()	{ return m_ShotRndSeed;	};
-
+	bool					IsFeelTouchCharacters	()  { return m_feel_touch_characters > 0; }
 public:
 	void					detach_Vehicle			();
 	void					steer_Vehicle			(float angle);
@@ -248,7 +252,6 @@ protected:
 	bool					use_Vehicle				(CHolderCustom* object);
 	bool					use_MountedWeapon		(CHolderCustom* object);
 	void					ActorUse				();
-	void					Actor_kick              ();	
 
 protected:
 	BOOL					m_bAnimTorsoPlayed;
@@ -488,9 +491,10 @@ public:
 	virtual BOOL						net_Spawn			( CSE_Abstract* DC);
 	virtual void						net_Export			( NET_Packet& P);				// export to server
 	virtual void						net_Destroy			();
-	virtual BOOL						net_Relevant		();//	{ return getSVU() | getLocal(); };		// relevant for export to server
+	virtual BOOL						net_Relevant		(); // relevant for export to server
 	virtual	void						net_Relcase			( CObject* O );					//
 	virtual void xr_stdcall				on_requested_spawn  (CObject *object);
+
 	//object serialization
 	virtual void						save				(NET_Packet &output_packet);
 	virtual void						load				(IReader &input_packet);
@@ -502,13 +506,6 @@ protected:
 	////////////////////////////////////////////////////////////////////////////
 	virtual	bool			can_validate_position_on_spawn	(){return false;}
 	///////////////////////////////////////////////////////
-	
-	//---------------------------------------------
-	/// spline coeff /////////////////////
-	float			SCoeff[3][4];			//коэффициэнты для сплайна Бизье
-	float			HCoeff[3][4];			//коэффициэнты для сплайна Эрмита
-	Fvector			IPosS, IPosH, IPosL;	//положение актера после интерполяции Бизье, Эрмита, линейной
-
 #ifdef DEBUG
     using VIS_POSITION = xr_deque<Fvector>;
 
@@ -516,25 +513,7 @@ protected:
 	VIS_POSITION	LastPosH;
 	VIS_POSITION	LastPosL;
 #endif
-
-	
-	SPHNetState				LastState;
-	SPHNetState				RecalculatedState;
-	SPHNetState				PredictedState;
-	
-	InterpData				IStart;
-	InterpData				IRec;
-	InterpData				IEnd;
-	
-	bool					m_bInInterpolation;
-	bool					m_bInterpolate;
-	u32						m_dwIStartTime;
-	u32						m_dwIEndTime;
-	u32						m_dwILastUpdateTime;
-
 	//---------------------------------------------
-	using PH_STATES = xr_deque<SPHNetState>;
-	PH_STATES				m_States;
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
 	//---------------------------------------------
@@ -572,7 +551,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 			void			set_input_external_handler			(CActorInputHandler *handler);
-			bool			input_external_handler_installed	() const {return (m_input_external_handler != 0);}
+			bool			input_external_handler_installed	() const {return (m_input_external_handler != nullptr);}
 			
 	IC		void			lock_accel_for						(u32 time){m_time_lock_accel = Device.dwTimeGlobal + time;}
 
@@ -589,8 +568,6 @@ protected:
 
 		LPCSTR					invincibility_fire_shield_3rd;
 		LPCSTR					invincibility_fire_shield_1st;
-		shared_str				m_sHeadShotParticle;
-		u32						last_hit_frame;
 #ifdef DEBUG
 		friend class CLevelGraph;
 #endif

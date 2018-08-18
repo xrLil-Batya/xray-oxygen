@@ -31,7 +31,7 @@ CGroupHierarchyHolder::~CGroupHierarchyHolder			()
 #ifdef SQUAD_HIERARCHY_HOLDER_USE_LEADER
 void CGroupHierarchyHolder::update_leader				()
 {
-	m_leader					= 0;
+	m_leader					= nullptr;
 	MEMBER_REGISTRY::iterator	I = m_members.begin();
 	MEMBER_REGISTRY::iterator	E = m_members.end();
 	for ( ; I != E; ++I)
@@ -136,9 +136,9 @@ void CGroupHierarchyHolder::unregister_in_group_senses	(CEntity *member)
 {
 	CCustomMonster			*monster = smart_cast<CCustomMonster*>(member);
 	if (monster) {
-		monster->memory().visual().set_squad_objects(0);
-		monster->memory().sound().set_squad_objects	(0);
-		monster->memory().hit().set_squad_objects	(0);
+		monster->memory().visual().set_squad_objects(nullptr);
+		monster->memory().sound().set_squad_objects	(nullptr);
+		monster->memory().hit().set_squad_objects	(nullptr);
 	}
 }
 

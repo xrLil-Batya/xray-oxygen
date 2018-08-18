@@ -82,12 +82,13 @@ u16	GetSpawnInfo(NET_Packet &P, u16 &parent_id)
 
 bool CLevel::PostponedSpawn(u16 id)
 {
-	for (auto it = spawn_events->queue.begin(); it != spawn_events->queue.end(); ++it)
+	for (NET_Event& pEvent: spawn_events->queue)
 	{
-		const NET_Event& E = *it;
 		NET_Packet P;
-		if (M_SPAWN != E.ID) continue;
-		E.implication(P);
+		if (M_SPAWN != pEvent.ID) 
+			continue;
+
+		pEvent.implication(P);
 		u16 parent_id;
 		if (id == GetSpawnInfo(P, parent_id))
 			return true;
@@ -99,13 +100,35 @@ bool CLevel::PostponedSpawn(u16 id)
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
 
+void mtLevelScriptUpdater(void* pCLevel)
+{
+	CLevel* pLevel = reinterpret_cast<CLevel*>(pCLevel);
+	while (true)
+	{
+		WaitForSingleObject(pLevel->m_mtScriptUpdaterEventStart, INFINITE);
+		if (g_pGameLevel != pLevel) return;
+
+		// Disable objects
+		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
+
+		Fvector temp_vector;
+		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
+
+		// Call level script
+		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
+		if (levelScript) levelScript->update();
+
+		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
+	}
+}
+
 CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 {
 	g_bDebugEvents				= strstr(Core.Params,"-debug_ge")?TRUE:FALSE;
 
-	Server						= NULL;
+	Server						= nullptr;
 
-	game						= NULL;
+	game						= nullptr;
 	game_events					= xr_new<NET_Queue_Event>();
 
 	spawn_events				= xr_new<NET_Queue_Event>();
@@ -132,15 +155,12 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 #ifdef DEBUG
     m_level_debug = xr_new<CLevelDebug>();
     m_bEnvPaused = false;
+	m_bSynchronization = false;
 #endif
 	
-	m_ph_commander						= xr_new<CPHCommander>();
-	m_ph_commander_scripts				= xr_new<CPHCommander>();
-	//m_ph_commander_physics_worldstep	= xr_new<CPHCommander>();
-		
-#ifdef DEBUG
-	m_bSynchronization			= false;
-#endif	
+	m_ph_commander = xr_new<CPHCommander>();
+	m_ph_commander_scripts = xr_new<CPHCommander>();
+
 	//---------------------------------------------------------
 	pStatGraphR = nullptr;
 	//---------------------------------------------------------
@@ -151,20 +171,27 @@ CLevel::CLevel():IPureClient	(Device.GetTimerGlobal())
 	g_player_hud->load_default();
 	
 	hud_zones_list = nullptr;
+
+	m_mtScriptUpdaterEventStart = CreateEvent(nullptr, FALSE, FALSE, nullptr);
+	m_mtScriptUpdaterEventEnd = CreateEvent(nullptr, TRUE, FALSE, nullptr);
+
+	thread_spawn(mtLevelScriptUpdater, "X-Ray: Level Script Update", 0, this);
 }
 
 extern CAI_Space *g_ai_space;
 
 CLevel::~CLevel()
 {
-	xr_delete					(g_player_hud);
-	delete_data					(hud_zones_list);
-	hud_zones_list				= NULL;
+	g_pGameLevel = nullptr;
+	SetEvent(m_mtScriptUpdaterEventStart);
+	xr_delete(g_player_hud);
+	delete_data(hud_zones_list);
+	hud_zones_list = nullptr;
 
-	Msg							("- Destroying level");
-	
-	Engine.Event.Handler_Detach	(eEntitySpawn,	this);
-	Engine.Event.Handler_Detach	(eEnvironment,	this);
+	Msg("- Destroying level");
+
+	Engine.Event.Handler_Detach(eEntitySpawn, this);
+	Engine.Event.Handler_Detach(eEnvironment, this);
 
 	if (physics_world())
 	{
@@ -173,64 +200,66 @@ CLevel::~CLevel()
 	}
 
 	// destroy PSs
-	for (CParticlesObject* &p_it: m_StaticParticles)
+	for (CParticlesObject* &p_it : m_StaticParticles)
 		CParticlesObject::Destroy(p_it);
 
-	m_StaticParticles.clear		();
+	m_StaticParticles.clear();
 
 	// Unload sounds
 	// unload prefetched sounds
-	sound_registry.clear		();
+	sound_registry.clear();
 
 	// unload static sounds
-	for (u32 i=0; i<static_Sounds.size(); ++i){
-		static_Sounds[i]->destroy();
-		xr_delete				(static_Sounds[i]);
+	for (ref_sound* static_Sound : static_Sounds) {
+		static_Sound->destroy();
+		xr_delete(static_Sound);
 	}
-	static_Sounds.clear			();
+	static_Sounds.clear();
 
-	xr_delete					(m_level_sound_manager);
-	xr_delete					(m_space_restriction_manager);
-	xr_delete					(m_seniority_hierarchy_holder);
-	xr_delete					(m_client_spawn_manager);
-	xr_delete					(m_autosave_manager);
-	xr_delete					(m_debug_renderer);
+	xr_delete(m_level_sound_manager);
+	xr_delete(m_space_restriction_manager);
+	xr_delete(m_seniority_hierarchy_holder);
+	xr_delete(m_client_spawn_manager);
+	xr_delete(m_autosave_manager);
+	xr_delete(m_debug_renderer);
 
-    ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
+	ai().script_engine().remove_script_process(ScriptEngine::eScriptProcessorLevel);
 
-	xr_delete					(game);
-	xr_delete					(game_events);
+	xr_delete(game);
+	xr_delete(game_events);
 
 
 	//by Dandy
 	//destroy bullet manager
-	xr_delete					(m_pBulletManager);
+	xr_delete(m_pBulletManager);
 	//-----------------------------------------------------------
-	xr_delete					(pStatGraphR);
+	xr_delete(pStatGraphR);
 	//-----------------------------------------------------------
-	xr_delete					(m_ph_commander);
-	xr_delete					(m_ph_commander_scripts);
+	xr_delete(m_ph_commander);
+	xr_delete(m_ph_commander_scripts);
 	//-----------------------------------------------------------
-	ai().unload					();
+	ai().unload();
 	//-----------------------------------------------------------	
 #ifdef DEBUG	
-	xr_delete					(m_level_debug);
+	xr_delete(m_level_debug);
 #endif
 	//-----------------------------------------------------------
-	xr_delete					(m_map_manager);
-	delete_data					(m_game_task_manager);
-//	xr_delete					(m_pFogOfWarMngr);
-	
+	xr_delete(m_map_manager);
+	delete_data(m_game_task_manager);
+
 	// here we clean default trade params
 	// because they should be new for each saved/loaded game
 	// and I didn't find better place to put this code in
-	CTradeParameters::clean		();
+	CTradeParameters::clean();
 
-	if(g_tutorial && g_tutorial->m_pStoredInputReceiver==this)
+	if (g_tutorial && g_tutorial->m_pStoredInputReceiver == this)
 		g_tutorial->m_pStoredInputReceiver = nullptr;
 
-	if(g_tutorial2 && g_tutorial2->m_pStoredInputReceiver==this)
+	if (g_tutorial2 && g_tutorial2->m_pStoredInputReceiver == this)
 		g_tutorial2->m_pStoredInputReceiver = nullptr;
+
+	CloseHandle(m_mtScriptUpdaterEventStart);
+	CloseHandle(m_mtScriptUpdaterEventEnd);
 }
 
 shared_str CLevel::name() const
@@ -257,8 +286,7 @@ BOOL g_bDebugEvents = FALSE;
 
 void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 {
-	//			Msg				("--- event[%d] for [%d]",type,dest);
-	CObject*	 O	= Objects.net_Find	(dest);
+	CObject* O = Objects.net_Find(dest);
 	if (!O)	return;
 	
 	CGameObject* GO = smart_cast<CGameObject*>(O);
@@ -280,7 +308,7 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 		bool			ok = true;
 
 		CObject			*D	= Objects.net_Find	(id);
-		if (0==D)		{
+		if (nullptr==D)		{
 			ok			= false;
 		}
 
@@ -297,72 +325,70 @@ void CLevel::cl_Process_Event				(u16 dest, u16 type, NET_Packet& P)
 	}
 };
 
+static std::recursive_mutex MutexGameEventsLock;
+
 void CLevel::ProcessGameEvents()
 {
+	// Threadsafe for ProcessGameEvents
+	std::lock_guard<std::recursive_mutex> guard(MutexGameEventsLock);
+
 	// Game events
+	NET_Packet			P;
+	u32 svT = timeServer() - NET_Latency;
+	if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
 	{
-		NET_Packet			P;
-		u32 svT				= timeServer()-NET_Latency;
-        if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
-        {
-            while (spawn_events->available(svT))
-            {
-                u16 ID, dest, type;
-                spawn_events->get(ID, dest, type, P);
-                game_events->insert(P);
-            }
-        }
-        u32 avail_time = 5;
-        u32 elps = Device.frame_elapsed();
-        if (elps < 30)
-            avail_time = 33 - elps;
+		while (spawn_events->available(svT))
+		{
+			u16 ID, dest, type;
+			spawn_events->get(ID, dest, type, P);
+			game_events->insert(P);
+		}
+	}
+	u32 avail_time = 5;
+	u32 elps = Device.frame_elapsed();
+	if (elps < 30)
+		avail_time = 33 - elps;
 
-        u32 work_limit = elps + avail_time;
-		
-        while (game_events->available(svT))
-        {
-            u16 ID, dest, type;
-            game_events->get(ID, dest, type, P);
+	u32 work_limit = elps + avail_time;
 
-            if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
-            {
-                if (g_appLoaded && M_EVENT == ID && PostponedSpawn(dest))
-                {
-                    spawn_events->insert(P);
-                    continue;
-                }
-                if (g_appLoaded && M_SPAWN == ID && Device.frame_elapsed() > work_limit)
-                {
-                    u16 parent_id;
-                    GetSpawnInfo(P, parent_id);
-                    if (parent_id < 0xffff)
-                    {
-                        if (!spawn_events->available(svT))
-                            Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());
+	while (game_events->available(svT))
+	{
+		u16 ID, dest, type;
+		game_events->get(ID, dest, type, P);
 
-                        spawn_events->insert(P);
-                        continue;
-                    }
-                }
-            }
-
-			switch (ID)
+		if (g_extraFeatures.is(GAME_EXTRA_SPAWN_ANTIFREEZE))
+		{
+			if (g_appLoaded && M_EVENT == ID && PostponedSpawn(dest))
 			{
-			case M_SPAWN:
+				spawn_events->insert(P);
+				continue;
+			}
+			if (g_appLoaded && M_SPAWN == ID && Device.frame_elapsed() > work_limit)
+			{
+				u16 parent_id;
+				GetSpawnInfo(P, parent_id);
+				if (parent_id < 0xffff)
 				{
-					u16 dummy16;
-					P.r_begin(dummy16);
-					cl_Process_Spawn(P);
-				}break;
-			case M_EVENT:
-				{
-					cl_Process_Event(dest, type, P);
-				}break;
-			default:
-				{
-					VERIFY(0);
-				}break;
-			}			
+					if (!spawn_events->available(svT))
+						Msg("* ProcessGameEvents, spawn event postponed. Events rest = %d", game_events->queue.size());
+
+					spawn_events->insert(P);
+					continue;
+				}
+			}
+		}
+
+		switch (ID)
+		{
+		case M_SPAWN:
+		{
+			u16 dummy16;
+			P.r_begin(dummy16);
+			cl_Process_Spawn(P);
+		}break;
+
+		case M_EVENT:	cl_Process_Event(dest, type, P); break;
+		default:		R_ASSERT(0); break;
 		}
 	}
 }
@@ -372,8 +398,8 @@ void CLevel::MakeReconnect()
 	if (!Engine.Event.Peek("KERNEL:disconnect"))
 	{
 		Engine.Event.Defer	("KERNEL:disconnect");
-		char const * server_options = NULL;
-		char const * client_options = NULL;
+		char const * server_options = nullptr;
+		char const * client_options = nullptr;
         shared_str serverOption = GamePersistent().GetServerOption();
         shared_str clientOption = GamePersistent().GetClientOption();
 		if (serverOption.c_str())
@@ -394,35 +420,29 @@ void CLevel::MakeReconnect()
 	}
 }
 
+#include "Inventory.h"
 void CLevel::OnFrame()
 {
-#ifdef DEBUG
-	 DBG_RenderUpdate( );
-#endif // #ifdef DEBUG
-
-	Fvector	temp_vector;
-	m_feel_deny.feel_touch_update		(temp_vector, 0.f);
-
-	psDeviceFlags.set(rsDisableObjectsAsCrows,false);
+	ResetEvent(m_mtScriptUpdaterEventEnd);
+	SetEvent(m_mtScriptUpdaterEventStart);
 
 	// commit events from bullet manager from prev-frame
-	Device.Statistic->TEST0.Begin		();
-	BulletManager().CommitEvents		();
-	Device.Statistic->TEST0.End			();
+	BulletManager().CommitEvents();
+	ClientReceive();
 
-    Device.Statistic->netClient1.Begin();
-    ClientReceive					();
-    Device.Statistic->netClient1.End	();
+	// Update game events
+	ProcessGameEvents();
+#ifdef DEBUG
+	DBG_RenderUpdate();
+#endif // #ifdef DEBUG
 
-	ProcessGameEvents	();
+	Device.seqParallel.emplace_back(m_map_manager, &CMapManager::Update);
 
-	Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_map_manager, &CMapManager::Update));
-
-    if (Device.dwPrecacheFrame == 0)
-        GameTaskManager().UpdateTasks();
+	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
+		GameTaskManager().UpdateTasks();
 
 	// Inherited update
-	inherited::OnFrame		();
+	inherited::OnFrame();
 
 #ifdef DEBUG
 	// Draw client/server stats
@@ -431,34 +451,40 @@ void CLevel::OnFrame()
 		if (pStatGraphR)
 			xr_delete(pStatGraphR);
 	}
-	g_pGamePersistent->Environment().m_paused		= m_bEnvPaused;
+	g_pGamePersistent->Environment().m_paused = m_bEnvPaused;
 #endif
-	g_pGamePersistent->Environment().SetGameTime	(GetEnvironmentGameDayTimeSec(),game->GetEnvironmentGameTimeFactor());
+	g_pGamePersistent->Environment().SetGameTime(GetEnvironmentGameDayTimeSec(), game->GetEnvironmentGameTimeFactor());
 
-	CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
-	if (levelScript) levelScript->update();
 
-	m_ph_commander->update				();
-	m_ph_commander_scripts->update		();
-
-	//  
-	Device.Statistic->TEST0.Begin		();
-	BulletManager().CommitRenderSet		();
-	Device.Statistic->TEST0.End			();
+	m_ph_commander->update();
+	m_ph_commander_scripts->update();
+	BulletManager().CommitRenderSet();
 
 	// update static sounds
-    Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(m_level_sound_manager, &CLevelSoundManager::Update));
+	Device.seqParallel.emplace_back(m_level_sound_manager, &CLevelSoundManager::Update);
 	// deffer LUA-GC-STEP
-    Device.seqParallel.push_back(fastdelegate::FastDelegate0<>(this, &CLevel::script_gc));
+	Device.seqParallel.emplace_back(this, &CLevel::script_gc);
 	//-----------------------------------------------------
 	if (pStatGraphR)
-	{	
+	{
 		static	float fRPC_Mult = 10.0f;
 		static	float fRPS_Mult = 1.0f;
 
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
-	};
+	}
+
+	// Level Script Updater thread can issue a exception. But it require to process one message from HWND message queue, otherwise, Level script can't show error message
+	DWORD WaitResult = WAIT_TIMEOUT;
+
+ 	do
+ 	{
+ 		WaitResult = WaitForSingleObject(m_mtScriptUpdaterEventEnd, 66); // update message box with 15 fps
+ 		if (WaitResult == WAIT_TIMEOUT)
+ 		{
+ 			Device.ProcessSingleMessage();
+ 		}
+ 	} while (WaitResult == WAIT_TIMEOUT);
 }
 
 int		psLUA_GCSTEP					= 10			;
@@ -485,10 +511,10 @@ void CLevel::OnRender()
 	if (!game)
 		return;
 
+	HUD().RenderUI();
 	Game().OnRender();
 	BulletManager().Render();
 	::Render->AfterWorldRender();
-	HUD().RenderUI();
 
 #ifdef DEBUG
 	draw_wnds_rects();
@@ -505,8 +531,10 @@ void CLevel::OnRender()
 	if (stalker)
 		stalker->OnRender	();
 
-	if (bDebug)	{
-		for (u32 I=0; I < Level().Objects.o_count(); I++) {
+	if (bDebug)	
+	{
+		for (u32 I=0; I < Level().Objects.o_count(); I++) 
+		{
 			CObject*	_O		= Level().Objects.o_get_by_iterator(I);
 
 			CAI_Stalker*		stalker = smart_cast<CAI_Stalker*>(_O);
@@ -553,11 +581,8 @@ void CLevel::OnRender()
 		UI().Font().pFontStat->OutNext			("Server Objects:      [%d]", Objects.o_count());
 
 		UI().Font().pFontStat->SetHeight	(8.0f);
-		//---------------------------------------------------------------------
-	}
 
-	if (bDebug) 
-	{
+		//---------------------------------------------------------------------
 		DBG().draw_object_info				();
 		DBG().draw_text						();
 		DBG().draw_level_info				();
@@ -670,13 +695,7 @@ void CLevel::SetEnvironmentGameTimeFactor(u64 const& GameTime, float const& fTim
 	game->SetEnvironmentGameTimeFactor(GameTime, fTimeFactor);
 }
 
-void CLevel::OnAlifeSimulatorUnLoaded()
-{
-	MapManager().ResetStorage();
-	GameTaskManager().ResetStorage();
-}
-
-void CLevel::OnAlifeSimulatorLoaded()
+void CLevel::ResetLevel()
 {
 	MapManager().ResetStorage();
 	GameTaskManager().ResetStorage();
@@ -687,6 +706,7 @@ u32	GameID()
 	return Game().Type();
 }
 
+// -------------------------------------------------------------------------------------------------
 CZoneList* CLevel::create_hud_zones_list()
 {
 	hud_zones_list = xr_new<CZoneList>();
@@ -694,15 +714,13 @@ CZoneList* CLevel::create_hud_zones_list()
 	return hud_zones_list;
 }
 
-// -------------------------------------------------------------------------------------------------
-
-BOOL CZoneList::feel_touch_contact( CObject* O )
+BOOL CZoneList::feel_touch_contact(CObject* O)
 {
-	TypesMapIt it	= m_TypesMap.find(O->cNameSect());
-	bool res		= ( it != m_TypesMap.end() );
+	TypesMapIt it = m_TypesMap.find(O->cNameSect());
+	bool res = (it != m_TypesMap.end());
 
 	CCustomZone *pZone = smart_cast<CCustomZone*>(O);
-	if ( pZone && !pZone->IsEnabled() )
+	if (pZone && !pZone->IsEnabled())
 	{
 		res = false;
 	}

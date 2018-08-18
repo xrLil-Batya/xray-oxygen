@@ -9,7 +9,7 @@
 #include "../xrphysics/PhysicsShell.h"
 
 
-CMercuryBall::CMercuryBall(void) 
+CMercuryBall::CMercuryBall() 
 {
 	m_timeLastUpdate = 0;
 	m_timeToUpdate = 1000;
@@ -18,7 +18,7 @@ CMercuryBall::CMercuryBall(void)
 	m_fImpulseMax = 90.f;
 }
 
-CMercuryBall::~CMercuryBall(void) 
+CMercuryBall::~CMercuryBall() 
 {
 }
 

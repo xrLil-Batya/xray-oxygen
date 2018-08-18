@@ -6,13 +6,13 @@
 #include "physicsshellholder.h"
 #include "../xrengine/xr_collide_form.h"
 
-CMosquitoBald::CMosquitoBald(void)
+CMosquitoBald::CMosquitoBald()
 {
 	m_fHitImpulseScale = 1.f;
 	m_bLastBlowoutUpdate = false;
 }
 
-CMosquitoBald::~CMosquitoBald(void) {}
+CMosquitoBald::~CMosquitoBald() {}
 
 void CMosquitoBald::Load(LPCSTR section) 
 {

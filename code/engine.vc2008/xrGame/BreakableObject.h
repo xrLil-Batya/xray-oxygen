@@ -11,7 +11,7 @@ class CBreakableObject:
 	public CPhysicsShellHolder,
 	public ICollisionDamageReceiver
 {
-	typedef	CPhysicsShellHolder		inherited;
+	using inherited =	CPhysicsShellHolder;
 private:
 		bool				b_resived_damage;
 		float				m_max_frame_damage;

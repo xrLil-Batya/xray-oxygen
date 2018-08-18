@@ -28,10 +28,6 @@ volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
 
-#ifdef MASTER_GOLD
-#	define NO_MULTI_INSTANCES
-#endif // #ifdef MASTER_GOLD
-
 //---------------------------------------------------------------------
 // 2446363
 // umbt@ukr.net
@@ -382,31 +378,8 @@ struct damn_keys_filter
 
 ENGINE_API int RunApplication(LPCSTR commandLine)
 {
-	if (!IsDebuggerPresent())
-	{
-		size_t HeapFragValue = 2;
-		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
-	}
-
 	gMainThreadId = GetCurrentThreadId();
 	Debug.set_mainThreadId(gMainThreadId);
-	// Check for another instance
-#ifdef NO_MULTI_INSTANCES
-#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
-
-	HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
-	if (hCheckPresenceMutex == NULL)
-	{
-		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
-		if (hCheckPresenceMutex == NULL)
-			return 2;
-	}
-	else
-	{
-		CloseHandle(hCheckPresenceMutex);		// Already running
-		return 1;
-	}
-#endif
 
 	//////////////////////////////////////////
 	// Title window
@@ -462,10 +435,6 @@ ENGINE_API int RunApplication(LPCSTR commandLine)
 
 		Startup();
 		Core._destroy();
-#ifdef NO_MULTI_INSTANCES		
-		// Delete application presence mutex
-		CloseHandle(hCheckPresenceMutex);
-#endif
 	}
 	return 0;
 }
@@ -779,17 +748,11 @@ void gen_logo_name(string_path& dest, LPCSTR level_name, int num)
 	xr_strcat(dest, sizeof(dest), "_");
 	xr_strcat(dest, sizeof(dest), itoa(num+1, buff, 10));
 }
-
+ 
 void CApplication::Level_Set(u32 L)
 {
-	if (L >= Levels.size())	return;
-	char* lvl_fld = FS.get_season_folder(Levels[L].folder);
-
-    if (lvl_fld != nullptr)
-    {
-        Msg("level load from %s", lvl_fld);
-        FS.get_path("$level$")->_set(lvl_fld);
-    }
+    if (L >= Levels.size())	return;
+    FS.get_path("$level$")->_set(Levels[L].folder);
 
 	static string_path			path;
 

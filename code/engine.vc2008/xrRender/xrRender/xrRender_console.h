@@ -23,6 +23,9 @@ extern ECORE_API xr_token		qsun_quality_token[];
 extern ECORE_API u32			ps_r_bokeh_quality;
 extern ECORE_API xr_token		qbokeh_quality_token[];
 
+extern ECORE_API u32			ps_r_pp_aa_mode;
+extern ECORE_API xr_token		qpp_aa_mode_token[];
+
 extern ECORE_API int			ps_r_Supersample;
 extern ECORE_API int			ps_r_LightSleepFrames;
 extern ECORE_API int			ps_r_SkeletonUpdate;
@@ -58,7 +61,6 @@ extern ECORE_API float			ps_r_tf_Mipbias;
 extern ECORE_API float			ps_r_dtex_range;
 extern ECORE_API float			ps_r_pps_u;
 extern ECORE_API float			ps_r_pps_v;
-extern ECORE_API int	        ps_r_fxaa;
 
 extern ECORE_API float			ps_r_df_parallax_h;
 extern ECORE_API float			ps_r_df_parallax_range;
@@ -105,6 +107,7 @@ extern ECORE_API float			ps_r_sun_lumscale_amb;		// 1.0f
 
 extern ECORE_API float			ps_r_zfill;					// 0.1f
 
+extern ECORE_API u32			ps_GlowsPerFrame;
 extern ECORE_API float			ps_r_dhemi_sky_scale;		// 1.5f
 extern ECORE_API float			ps_r_dhemi_light_scale;		// 1.0f
 extern ECORE_API float			ps_r_dhemi_light_flow;		// 0.1f
@@ -165,6 +168,9 @@ enum
 	R_FLAG_HOM_DEPTH_DRAW		= (1<<23),
 	R_FLAG_SUN_ZCULLING			= (1<<24),
 	R_FLAG_SUN_OLD				= (1<<25),
+	R_FLAG_GLOW_USE				= (1<<25),
+
+	R_FLAG_RAIN_DROPS			= (1<<26),
 };
 
 extern ECORE_API Flags32 ps_r_ssao_flags;
@@ -180,10 +186,16 @@ enum
 enum
 {
     SS_VOLUMETRIC,
-    SS_SCREEN_SPACE,
-    SS_MANOWAR_SS,
+    SS_SS_OGSE,
+    SS_SS_MANOWAR,
 };
 
+// Postprocess anti-aliasing types
+enum
+{
+	FXAA = 1,
+	SMAA
+};
 
 // R3-specific /////////////////////////////////////////////////
 extern ECORE_API u32			ps_r3_msaa;			//=	0;

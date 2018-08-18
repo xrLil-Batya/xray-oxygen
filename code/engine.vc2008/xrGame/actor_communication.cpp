@@ -85,8 +85,8 @@ void CActor::UpdateAvailableDialogs(CPhraseDialogManager* partner)
 	CInventoryOwner* pInvOwnerPartner = smart_cast<CInventoryOwner*>(partner); 
 	VERIFY(pInvOwnerPartner);
 
-	for (u32 i = 0; i < pInvOwnerPartner->CharacterInfo().ActorDialogs().size(); i++)
-		AddAvailableDialog(pInvOwnerPartner->CharacterInfo().ActorDialogs()[i], partner);
+	for (const auto & i : pInvOwnerPartner->CharacterInfo().ActorDialogs())
+		AddAvailableDialog(i, partner);
 
 	CPhraseDialogManager::UpdateAvailableDialogs(partner);
 }
@@ -152,7 +152,7 @@ void CActor::LostPdaContact(CInventoryOwner* pInvOwner)
 void CActor::AddGameNews_deffered(GAME_NEWS_DATA& news_data, u32 delay)
 {
 	GAME_NEWS_DATA * d = xr_new<GAME_NEWS_DATA>(news_data);
-	m_defferedMessages.push_back(SDefNewsMsg());
+	m_defferedMessages.emplace_back();
 	m_defferedMessages.back().news_data = d;
 	m_defferedMessages.back().time = Device.dwTimeGlobal + delay;
 	std::sort(m_defferedMessages.begin(), m_defferedMessages.end());
@@ -160,7 +160,7 @@ void CActor::AddGameNews_deffered(GAME_NEWS_DATA& news_data, u32 delay)
 
 void CActor::UpdateDefferedMessages()
 {
-	while (m_defferedMessages.size())
+	while (!m_defferedMessages.empty())
 	{
 		SDefNewsMsg& M = m_defferedMessages.back();
 		if (M.time <= Device.dwTimeGlobal)

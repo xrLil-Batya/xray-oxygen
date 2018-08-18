@@ -57,7 +57,12 @@
     <ClCompile Include="xrXRC.cpp">
       <Filter>Engine</Filter>
     </ClCompile>
-    <ClCompile Include="CDB_Model.cpp" />
+    <ClCompile Include="xrCDB_Model.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
+    <ClCompile Include="xrCDB_Tree.cpp">
+      <Filter>Kernel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Frustum.h">
@@ -84,6 +89,11 @@
     <ClInclude Include="cl_intersect.h">
       <Filter>Kernel</Filter>
     </ClInclude>
-    <ClInclude Include="CDB_Model.h" />
+    <ClInclude Include="xrCDB_Tree.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
+    <ClInclude Include="xrCDB_Model.h">
+      <Filter>Kernel</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

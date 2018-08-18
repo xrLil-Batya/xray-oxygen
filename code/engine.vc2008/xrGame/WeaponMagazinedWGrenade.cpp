@@ -59,7 +59,7 @@ void CWeaponMagazinedWGrenade::Load	(LPCSTR section)
 		for (int it=0; it<count; ++it)	
 		{
 			_GetItem				(S,it,_ammoItem);
-			m_ammoTypes2.push_back	(_ammoItem);
+			m_ammoTypes2.emplace_back	(_ammoItem);
 		}
 	}
 
@@ -89,12 +89,12 @@ BOOL CWeaponMagazinedWGrenade::net_Spawn(CSE_Abstract* DC)
 	m_DefaultCartridge2.Load(m_ammoTypes2[m_ammoType2].c_str(), m_ammoType2);
 
 	{
-		xr_vector<CCartridge>* pM = NULL;
+		xr_vector<CCartridge>* pM = nullptr;
 		bool b_if_grenade_mode	= (m_bGrenadeMode && iAmmoElapsed && !getRocketCount());
 		if(b_if_grenade_mode)
 			pM = &m_magazine;
 			
-		bool b_if_simple_mode	= (!m_bGrenadeMode && m_magazine2.size() && !getRocketCount());
+		bool b_if_simple_mode	= (!m_bGrenadeMode && !m_magazine2.empty() && !getRocketCount());
 		if(b_if_simple_mode)
 			pM = &m_magazine2;
 
@@ -258,7 +258,7 @@ void  CWeaponMagazinedWGrenade::LaunchGrenade()
 
 		if (E){
 			CInventoryOwner* io		= smart_cast<CInventoryOwner*>(H_Parent());
-			if(NULL == io->inventory().ActiveItem())
+			if(nullptr == io->inventory().ActiveItem())
 			{
 				Log("current_state", GetState() );
 				Log("next_state", GetNextState());
@@ -537,13 +537,14 @@ void CWeaponMagazinedWGrenade::PlayAnimReload()
 	{
 #ifdef NEW_ANIMS_WPN
    	    if(iAmmoElapsed == 0)
-	    {
-		    PlayHUDMotion("anm_reload_empty_w_gl", TRUE, this, GetState());
-	    }
+		{
+			PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
+		}	    
 	    else
-	    {
- 		    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
-	    }
+		{
+			PlayHUDMotion("anm_reload_empty_w_gl", TRUE, this, GetState());
+		}
+	    
 #else
 	    PlayHUDMotion("anm_reload_w_gl", TRUE, this, GetState());
 #endif
@@ -559,9 +560,9 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 		if(IsZoomed())
 		{
 			if(m_bGrenadeMode)
-				PlayHUDMotion("anm_idle_g_aim", FALSE, NULL, GetState());
+				PlayHUDMotion("anm_idle_g_aim", FALSE, nullptr, GetState());
 			else
-				PlayHUDMotion("anm_idle_w_gl_aim", TRUE, NULL, GetState());
+				PlayHUDMotion("anm_idle_w_gl_aim", TRUE, nullptr, GetState());
 		}else
 		{
 			int act_state = 0;
@@ -588,27 +589,24 @@ void CWeaponMagazinedWGrenade::PlayAnimIdle()
 
 			if(m_bGrenadeMode)
 			{
-				if(act_state == 0)
-					PlayHUDMotion("anm_idle_g", FALSE, NULL, GetState());
-				else if (act_state ==1 )
-					PlayHUDMotion("anm_idle_sprint_g", TRUE, NULL,GetState());
-				else if (act_state == 2)
-					PlayHUDMotion("anm_idle_moving_g", TRUE, NULL,GetState());
+				switch (act_state)
+				{
+				case 0: PlayHUDMotion("anm_idle_g", FALSE, nullptr, GetState()); break;
+				case 1: PlayHUDMotion("anm_idle_sprint_g", TRUE, nullptr, GetState()); break;
+				case 2: PlayHUDMotion("anm_idle_moving_g", TRUE, nullptr, GetState());	break;
 #ifdef NEW_ANIMS_WPN
-				else if (act_state == 3)
-					PlayHUDMotion("anm_idle_moving_crouch_g", TRUE, NULL,GetState());
+				case 3: PlayHUDMotion("anm_idle_moving_crouch_g", TRUE, NULL, GetState()); break;
 #endif
-
-			}else
+				}
+			}
+			else
 			{
-				if(act_state==0)
-					PlayHUDMotion("anm_idle_w_gl", FALSE, NULL, GetState());
-				else
-				if(act_state==1)
-					PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, NULL,GetState());
-				else
-				if(act_state==2)
-					PlayHUDMotion("anm_idle_moving_w_gl", TRUE, NULL,GetState());
+				switch (act_state)
+				{
+				case 0: PlayHUDMotion("anm_idle_w_gl", FALSE, nullptr, GetState()); break;
+				case 1: PlayHUDMotion("anm_idle_sprint_w_gl", TRUE, nullptr, GetState()); break;
+				case 2: PlayHUDMotion("anm_idle_moving_w_gl", TRUE, nullptr, GetState());	break;
+				}
 			}
 		
 		}
@@ -739,7 +737,7 @@ bool CWeaponMagazinedWGrenade::install_upgrade_ammo_class	( LPCSTR section, bool
 		{
 			string128						ammo_item;
 			_GetItem						( str, i, ammo_item );
-			ammo_types.push_back			( ammo_item );
+			ammo_types.emplace_back			( ammo_item );
 		}
 
 		m_ammoType  = 0;
@@ -765,7 +763,7 @@ bool CWeaponMagazinedWGrenade::install_upgrade_impl( LPCSTR section, bool test )
 		{
 			string128						ammo_item;
 			_GetItem						( str, i, ammo_item );
-			ammo_types.push_back			( ammo_item );
+			ammo_types.emplace_back			( ammo_item );
 		}
 
 		m_ammoType  = 0;
@@ -851,7 +849,7 @@ bool CWeaponMagazinedWGrenade::GetBriefInfo( II_BriefInfo& info )
 			info.ap_ammo._set("");
 	}
 
-	if(ae != 0 && m_magazine.size() != 0)
+	if(ae != 0 && !m_magazine.empty())
 	{
 		LPCSTR ammo_type = m_ammoTypes[m_magazine.back().m_LocalAmmoType].c_str();
 		info.name._set(CStringTable().translate(pSettings->r_string(ammo_type, "inv_name_short")));

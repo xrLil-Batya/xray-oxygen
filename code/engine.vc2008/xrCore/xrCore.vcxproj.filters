@@ -237,6 +237,9 @@
     <ClCompile Include="xrMemoryDebug.cpp">
       <Filter>Memory manager</Filter>
     </ClCompile>
+    <ClCompile Include="ThreadManager.cpp">
+      <Filter>OS</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="FTimer.h">

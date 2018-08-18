@@ -118,7 +118,7 @@ void SArtefactActivation::PhDataUpdate(float step)
 	
 	if (m_cur_activation_state==eFlying) {
 		Fvector dir	= {0, -1.f, 0};
-		if(Level().ObjectSpace.RayTest(m_af->Position(), dir, 1.0f, collide::rqtBoth,NULL,m_af) ){
+		if(Level().ObjectSpace.RayTest(m_af->Position(), dir, 1.0f, collide::rqtBoth,nullptr,m_af) ){
 			dir.y = physics_world()->Gravity()*1.1f; 
 			m_af->m_pPhysicsShell->applyGravityAccel(dir);
 		}
@@ -208,7 +208,7 @@ shared_str clear_brackets(LPCSTR src)
 {
 	if (!src)
 	{
-		return shared_str(0);
+		return shared_str(nullptr);
 	}
 	if (!strchr(src, '"'))
 	{

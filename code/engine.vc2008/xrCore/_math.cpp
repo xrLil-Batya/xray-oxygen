@@ -317,11 +317,7 @@ float processor_info::MTCPULoad()
 		m_dwTickCount[dwCpu] = 0;
 	}
 
-	float fltCpuUsage;
-	//for (DWORD dwCpu = 0; dwCpu < m_dwNumberOfProcessors; dwCpu++)
-	//{
 	return CalcMPCPULoad(1);
-	//}
 }
 
 //#TODO: Return max value of float
@@ -364,65 +360,6 @@ float processor_info::CalcMPCPULoad(DWORD dwCPU)
 		}
 
 	return m_fltCpuUsage[dwCPU];
-}
-
-
-// threading API
-#pragma pack(push,8)
-struct THREAD_NAME
-{
-	DWORD dwType;
-	const char* szName;
-	DWORD dwThreadID;
-	DWORD dwFlags;
-};
-
-void thread_name(const char* name)
-{
-	THREAD_NAME tn;
-	tn.dwType = 0x1000;
-	tn.szName = name;
-	tn.dwThreadID = DWORD(-1);
-	tn.dwFlags = 0;
-	__try
-	{
-		RaiseException(0x406D1388, 0, sizeof(tn) / sizeof(size_t), (size_t*)&tn);
-	}
-	__except (EXCEPTION_CONTINUE_EXECUTION)
-	{
-	}
-}
-#pragma pack(pop)
-
-struct	THREAD_STARTUP
-{
-	thread_t* entry;
-	char* name;
-	void* args;
-};
-
-void __cdecl thread_entry(void*	_params)
-{
-	// initialize
-	THREAD_STARTUP* startup = (THREAD_STARTUP*)_params;
-	thread_name(startup->name);
-	thread_t* entry = startup->entry;
-	void* arglist = startup->args;
-	xr_delete(startup);
-	_initialize_cpu_thread();
-
-	// call
-	entry(arglist);
-}
-
-HANDLE thread_spawn(thread_t* entry, const char* name, unsigned stack, void* arglist)
-{
-    THREAD_STARTUP* startup = new THREAD_STARTUP();
-	startup->entry = entry;
-	startup->name = (char*)name;
-	startup->args = arglist;
-    uintptr_t hThread = _beginthread(thread_entry, stack, startup);
-	return reinterpret_cast<HANDLE> (hThread);
 }
 
 void spline1(float t, Fvector *p, Fvector *ret)

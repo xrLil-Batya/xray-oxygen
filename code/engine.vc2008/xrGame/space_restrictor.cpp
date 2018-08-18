@@ -46,8 +46,7 @@ BOOL CSpaceRestrictor::net_Spawn	(CSE_Abstract* data)
 	CCF_Shape						*shape = xr_new<CCF_Shape>(this);
 	collidable.model				= shape;
 
-	for (u32 i=0; i < se_shape->shapes.size(); ++i) {
-		CShapeData::shape_def		&S = se_shape->shapes[i];
+	for (CShapeData::shape_def		&S : se_shape->shapes) {
 		switch (S.type) {
 			case 0 : {
 				shape->add_sphere	(S.data.sphere);
@@ -125,7 +124,7 @@ void CSpaceRestrictor::prepare			() const
 
 	const CCF_Shape					*shape = (const CCF_Shape*)collidable.model;
 
-	typedef xr_vector<CCF_Shape::shape_def> SHAPES;
+	using SHAPES = xr_vector<CCF_Shape::shape_def>;
 
 	SHAPES::const_iterator			I = shape->shapes.begin();
 	SHAPES::const_iterator			E = shape->shapes.end();
@@ -190,8 +189,8 @@ bool CSpaceRestrictor::prepared_inside	(const Fsphere &sphere) const
 		BOXES::const_iterator		I = m_boxes.begin();
 		BOXES::const_iterator		E = m_boxes.end();
 		for ( ; I != E; ++I) {
-			for (u32 i=0; i<PLANE_COUNT; ++i)
-				if ((*I).m_planes[i].classify(sphere.P) > sphere.R)
+			for (Fplane plane : (*I).m_planes)
+				if (plane.classify(sphere.P) > sphere.R)
 					goto continue_loop;
 			return					(true);
 continue_loop:

@@ -216,20 +216,19 @@ void	CRenderTarget::phase_combine	()
 	}
 	else
 	{
-		// FXAA
-		if (ps_r_fxaa)
-		{
-			phase_fxaa();
-		}
+		// Posprocess anti-aliasing
+		if (ps_r_pp_aa_mode > 0)
+			PhaseAA();
 
-        if (RImplementation.o.sunshaft_screenspace && ps_r_sun_shafts > 0)
-            phase_ogse_sunshafts();
-        else if (RImplementation.o.sunshaft_mrmnwar && ps_r_sun_shafts > 0)
-            phase_SunShafts();
+		// Screen space sunshafts
+		if (need_to_render_sunshafts())
+			PhaseSSSS();
 
-		phase_rain_drops();
+		// Rain drops on screen
+		if (ps_r_flags.test(R_FLAG_RAIN_DROPS))
+			PhaseRainDrops();
 
-		if(Puddles->m_bLoaded)
+		if (Puddles->m_bLoaded)
 			phase_puddles();
 	}
 
@@ -315,7 +314,7 @@ void	CRenderTarget::phase_combine	()
 	else			
 		dbg_planes		= saved_dbg_planes;
 
-	if (1) for (u32 it=0; it<dbg_planes.size(); it++)
+	for (u32 it=0; it<dbg_planes.size(); it++)
 	{
 		Fplane&		P	=	dbg_planes[it];
 		Fvector		zero	;
@@ -345,7 +344,7 @@ void	CRenderTarget::phase_combine	()
 	HW.pDevice->SetRenderState(D3DRS_ZENABLE, TRUE);
 	HW.pDevice->SetRenderState(D3DRS_ZFUNC, D3DCMP_LESSEQUAL);
 	HW.pDevice->SetRenderState(D3DRS_ZWRITEENABLE, FALSE);
-	if (1) for (u32 it=0; it<dbg_lines.size(); it++)
+	for (u32 it=0; it<dbg_lines.size(); it++)
 	{
 		RCache.dbg_DrawLINE		(Fidentity,dbg_lines[it].P0,dbg_lines[it].P1,dbg_lines[it].color);
 	}

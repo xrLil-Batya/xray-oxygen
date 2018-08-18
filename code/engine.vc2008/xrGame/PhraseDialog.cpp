@@ -20,9 +20,9 @@ CPhraseDialog::CPhraseDialog()
 {
 	m_SaidPhraseID		= "";
 	m_bFinished			= false;
-	m_pSpeakerFirst		= 0;
-	m_pSpeakerSecond	= 0;
-	m_DialogId			= 0;
+	m_pSpeakerFirst		= nullptr;
+	m_pSpeakerSecond	= nullptr;
+	m_DialogId			= nullptr;
 }
 
 CPhraseDialog::~CPhraseDialog()
@@ -160,7 +160,7 @@ const char* CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool curr
 
 	CGameObject*	pSpeakerGO1 = (current_speaking) ? smart_cast<CGameObject*>(FirstSpeaker()) : 0;
 	CGameObject*	pSpeakerGO2 = (current_speaking) ? smart_cast<CGameObject*>(SecondSpeaker()) : 0;
-	CGameObject*	pSpeakerGO  = 0;
+	CGameObject*	pSpeakerGO  = nullptr;
 	
 	if( smart_cast<CActor*>(pSpeakerGO1) )
 	{
@@ -174,7 +174,7 @@ const char* CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool curr
 		bool functor_exists = ai().script_engine().functor(ph->m_script_text_id.c_str(), lua_function);
 		THROW3(functor_exists, "Cannot find function", ph->m_script_text_id.c_str());
 
-		ph->m_script_text_val = lua_function((pSpeakerGO) ? pSpeakerGO->lua_game_object() : 0, m_DialogId.c_str(), phrase_id.c_str());
+		ph->m_script_text_val = lua_function((pSpeakerGO) ? pSpeakerGO->lua_game_object() : nullptr, m_DialogId.c_str(), phrase_id.c_str());
 		return ph->m_script_text_val.c_str();
 	}
 	else
@@ -218,7 +218,7 @@ void CPhraseDialog::load_shared	(const char*)
 	SetPriority(pXML->ReadAttribInt(dialog_node, "priority", 0));
 
 	//заголовок 
-	SetCaption(pXML->Read(dialog_node, "caption", 0, 0));
+	SetCaption(pXML->Read(dialog_node, "caption", 0, nullptr));
 	//проверка релоада диалога			(Winsor)
 	DialogForceReload(pXML->ReadAttribInt(dialog_node, "force_reload", 0) == 1 ? true : false);
 	//предикаты начала диалога
@@ -267,7 +267,7 @@ void CPhraseDialog::SetPriority	(int val)
 
 CPhrase* CPhraseDialog::AddPhrase	(const char* text, const shared_str& phrase_id, const shared_str& prev_phrase_id, int goodwil_level)
 {
-	CPhrase* phrase					= 0;
+	CPhrase* phrase					= nullptr;
 	CPhraseGraph::CVertex* _vertex	= data()->m_PhraseGraph.vertex(phrase_id);
 	if(!_vertex) 
 	{
@@ -340,28 +340,28 @@ using namespace luabind;
 
 void CDialogScriptHelper::AddPrecondition(LPCSTR str)
 {
-	m_Preconditions.push_back(str);
+	m_Preconditions.emplace_back(str);
 }
 void CDialogScriptHelper::AddAction(LPCSTR str)
 {
-	m_ScriptActions.push_back(str);
+	m_ScriptActions.emplace_back(str);
 }
 void CDialogScriptHelper::AddHasInfo(LPCSTR str)
 {
-	m_HasInfo.push_back(str);
+	m_HasInfo.emplace_back(str);
 }
 void CDialogScriptHelper::AddDontHasInfo(LPCSTR str)
 {
-	m_DontHasInfo.push_back(str);
+	m_DontHasInfo.emplace_back(str);
 }
 void CDialogScriptHelper::AddGiveInfo(LPCSTR str)
 {
-	m_GiveInfo.push_back(str);
+	m_GiveInfo.emplace_back(str);
 }
 
 void CDialogScriptHelper::AddDisableInfo(LPCSTR str)
 {
-	m_DisableInfo.push_back(str);
+	m_DisableInfo.emplace_back(str);
 }
 
 #pragma optimize("s",on)

@@ -92,11 +92,9 @@ void CScriptGameObject::script_register(lua_State *L)
 				value("task_state",					int(GameObject::eTaskStateChange)),
 				value("take_item_from_box",			int(GameObject::eInvBoxItemTake)),
 				value("weapon_no_ammo",				int(GameObject::eWeaponNoAmmoAvailable)),
-				// Key Actions
-				value("on_key_press",				int(GameObject::eOnKeyPress)),
-				value("on_key_release",				int(GameObject::eOnKeyRelease)),
-				value("on_key_hold",				int(GameObject::eOnKeyHold)),
-				// End
+				value("on_action_press",			int(GameObject::eOnActionPress)),
+				value("on_action_release",			int(GameObject::eOnActionRelease)),
+				value("on_action_hold",				int(GameObject::eOnActionHold)),
 				value("map_location_added",			int(GameObject::eMapLocationAdded))
 			],
 

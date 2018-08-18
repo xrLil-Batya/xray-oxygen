@@ -15,7 +15,7 @@ class CEntity;
 class CTeamHierarchyHolder;
 
 namespace SquadHierarchyHolder {
-	typedef xr_vector<CGroupHierarchyHolder*>		GROUP_REGISTRY;
+	using GROUP_REGISTRY = xr_vector<CGroupHierarchyHolder*>;
 }
 
 class CSquadHierarchyHolder {
@@ -23,7 +23,7 @@ private:
 	enum {max_group_count = 32};
 
 private:
-	typedef SquadHierarchyHolder::GROUP_REGISTRY	GROUP_REGISTRY;
+	using GROUP_REGISTRY = SquadHierarchyHolder::GROUP_REGISTRY;
 
 private:
 	CTeamHierarchyHolder			*m_team;

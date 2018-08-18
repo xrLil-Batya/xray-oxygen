@@ -49,8 +49,9 @@ void CRender::level_Load(IReader* fs)
 	}
 
 	// Components
-	Wallmarks					= xr_new<CWallmarksEngine>	();
-	Details						= xr_new<CDetailManager>	();
+	Glows		= xr_new <CGlowManager>();
+	Wallmarks	= xr_new<CWallmarksEngine>();
+	Details		= xr_new<CDetailManager>();
 
 	// VB,IB,SWI
 	g_pGamePersistent->SetLoadStageTitle("st_loading_geometry");
@@ -140,8 +141,8 @@ void CRender::level_Unload()
 	Portals.clear			();
 
 	//*** Lights
-	// Glows.Unload			();
-	Lights.Unload			();
+	Glows->Unload();
+	Lights.Unload();
 
 	//*** Visuals
 	for (I=0; I<Visuals.size(); I++)
@@ -165,8 +166,9 @@ void CRender::level_Unload()
 	nDC.clear(); xDC.clear();
 
 	//*** Components
-	xr_delete					(Details);
-	xr_delete					(Wallmarks);
+	xr_delete(Details);
+	xr_delete(Wallmarks);
+	xr_delete(Glows);
 
 	//*** Shaders
 	Shaders.clear		();
@@ -264,6 +266,12 @@ void CRender::LoadLights(IReader *fs)
 	// lights
 	Lights.Load	(fs);
 	Lights.LoadHemi();
+
+	// glows
+	IReader *chunk = fs->open_chunk(fsL_GLOWS);
+	R_ASSERT(chunk && "Can't find glows");
+	Glows->Load(chunk);
+	chunk->close();
 }
 
 struct b_portal

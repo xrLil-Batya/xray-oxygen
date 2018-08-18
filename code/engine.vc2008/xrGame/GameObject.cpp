@@ -44,7 +44,7 @@ extern MagicBox3 MagicMinBox(int iQuantity, const Fvector* akPoint);
 
 CGameObject::CGameObject		()
 {
-	m_ai_obstacle				= 0;
+	m_ai_obstacle				= nullptr;
 
 	init						();
 	//-----------------------------------------
@@ -53,7 +53,7 @@ CGameObject::CGameObject		()
 	m_server_flags.one			();
 
 	m_callbacks					= xr_new<CALLBACK_MAP>();
-	m_anim_mov_ctrl				= 0;
+	m_anim_mov_ctrl				= nullptr;
 	
 #ifdef LUACP_API
 	static bool _saved = true;
@@ -82,9 +82,9 @@ CGameObject::~CGameObject		()
 
 void CGameObject::init			()
 {
-	m_lua_game_object			= 0;
+	m_lua_game_object			= nullptr;
 	m_script_clsid				= -1;
-	m_ini_file					= 0;
+	m_ini_file					= nullptr;
 	m_spawned					= false;
 }
 
@@ -104,7 +104,7 @@ void CGameObject::reinit	()
     ai_location().reinit	();
 
 	// clear callbacks	
-	for (auto it = m_callbacks->begin(); it != m_callbacks->end(); ++it) it->second.clear();
+	for (auto & callback : *m_callbacks) callback.second.clear();
 }
 
 void CGameObject::reload	(LPCSTR section)
@@ -122,7 +122,7 @@ void CGameObject::net_Destroy	()
 
 	m_script_clsid			= -1;
 	if (Visual() && smart_cast<IKinematics*>(Visual()))
-		smart_cast<IKinematics*>(Visual())->Callback	(0,0);
+		smart_cast<IKinematics*>(Visual())->Callback	(nullptr,nullptr);
 
 	inherited::net_Destroy						();
 	setReady									(FALSE);
@@ -131,8 +131,8 @@ void CGameObject::net_Destroy	()
 	
 	if (this == Level().CurrentEntity())
 	{
-		Level().SetControlEntity(0);
-		Level().SetEntity(0);	// do not switch !!!
+		Level().SetControlEntity(nullptr);
+		Level().SetEntity(nullptr);	// do not switch !!!
 	}
 
 	CScriptBinder::net_Destroy				();
@@ -208,7 +208,7 @@ BOOL CGameObject::net_Spawn		(CSE_Abstract*	DC)
 	if (E->name_replace()[0])
 		cName_set					(E->name_replace());
 
-	else R_ASSERT(Level().Objects.net_Find(E->ID) == NULL);
+	else R_ASSERT(Level().Objects.net_Find(E->ID) == nullptr);
 	
 	setID							(E->ID);
 	// XForm
@@ -412,15 +412,15 @@ void CGameObject::spawn_supplies()
 			if (n > 0)
 				j			= atoi(_GetItem(V,0,temp)); //count
 			
-			if(NULL!=strstr(V,"prob="))
+			if(nullptr!=strstr(V,"prob="))
 				p			=(float)atof(strstr(V,"prob=")+5);
 			if (fis_zero(p))p = 1.f;
 			if (!j)	j		= 1;
-			if(NULL!=strstr(V,"cond="))
+			if(nullptr!=strstr(V,"cond="))
 				f_cond		= (float)atof(strstr(V,"cond=")+5);
-			bScope			=	(NULL!=strstr(V,"scope"));
-			bSilencer		=	(NULL!=strstr(V,"silencer"));
-			bLauncher		=	(NULL!=strstr(V,"launcher"));
+			bScope			=	(nullptr!=strstr(V,"scope"));
+			bSilencer		=	(nullptr!=strstr(V,"silencer"));
+			bLauncher		=	(nullptr!=strstr(V,"launcher"));
 
 		}
 		for (u32 i=0; i<j; ++i)
@@ -545,28 +545,28 @@ void			CGameObject::dbg_DrawSkeleton	()
 	Skeleton->_dbg_refresh();
 
 	const CCF_Skeleton::ElementVec& Elements = Skeleton->_GetElements();
-	for (CCF_Skeleton::ElementVec::const_iterator I=Elements.begin(); I!=Elements.end(); I++){
-		if (!I->valid())		continue;
-		switch (I->type){
+	for (const auto & Element : Elements){
+		if (!Element.valid())		continue;
+		switch (Element.type){
 			case SBoneShape::stBox:{
 				Fmatrix M;
-				M.invert			(I->b_IM);
-				Fvector h_size		= I->b_hsize;
+				M.invert			(Element.b_IM);
+				Fvector h_size		= Element.b_hsize;
 				Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 255, 0, 255));
 								   }break;
 			case SBoneShape::stCylinder:{
 				Fmatrix M;
-				M.c.set				(I->c_cylinder.m_center);
-				M.k.set				(I->c_cylinder.m_direction);
+				M.c.set				(Element.c_cylinder.m_center);
+				M.k.set				(Element.c_cylinder.m_direction);
 				Fvector				h_size;
-				h_size.set			(I->c_cylinder.m_radius,I->c_cylinder.m_radius,I->c_cylinder.m_height*0.5f);
+				h_size.set			(Element.c_cylinder.m_radius,Element.c_cylinder.m_radius,Element.c_cylinder.m_height*0.5f);
 				Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
 				Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
 										}break;
 			case SBoneShape::stSphere:{
 				Fmatrix				l_ball;
-				l_ball.scale		(I->s_sphere.R, I->s_sphere.R, I->s_sphere.R);
-				l_ball.translate_add(I->s_sphere.P);
+				l_ball.scale		(Element.s_sphere.R, Element.s_sphere.R, Element.s_sphere.R);
+				l_ball.translate_add(Element.s_sphere.P);
 				Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
 									  }break;
 		};
@@ -657,7 +657,7 @@ void CGameObject::SetKinematicsCallback		(bool set)
 	if (set)
 		smart_cast<IKinematics*>(Visual())->Callback(VisualCallback,this);
 	else
-		smart_cast<IKinematics*>(Visual())->Callback(0,0);
+		smart_cast<IKinematics*>(Visual())->Callback(nullptr,nullptr);
 };
 
 void VisualCallback	(IKinematics *tpKinematics)
@@ -1007,18 +1007,6 @@ void CGameObject::OnRender			()
 
 		render_box					(Visual(),XFORM(),Fvector().set(0.f,0.f,0.f),true,color_rgba(0,0,255,255));
 		render_box					(Visual(),XFORM(),additional,false,color_rgba(0,255,0,255));
-	}
-
-	if (0) {
-		Fvector						bc,bd; 
-		Visual()->getVisData().box.get_CD	(bc,bd);
-		Fmatrix						M = Fidentity;
-		float						half_cell_size = ai().level_graph().header().cell_size()*.5f;
-		bd.add						(Fvector().set(half_cell_size,half_cell_size,half_cell_size));
-		M.scale						(bd);
-		Fmatrix						T = XFORM();
-		T.c.add						(bc);
-		renderer.draw_obb			(T,bd,color_rgba(255,255,255,255));
-	}
+	}	
 }
 #endif // DEBUG

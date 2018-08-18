@@ -79,8 +79,6 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup>
     <_ProjectFileVersion>10.0.40219.1</_ProjectFileVersion>
-    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
-    <ExtensionsToDeleteOnClean Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">*.idb%3b*.obj%3b*.ilk%3b*.pdb%3b*.tlb%3b*.tli%3b*.tlh%3b*.tmp%3b*.rsp%3b*.bat%3b$(TargetPath)</ExtensionsToDeleteOnClean>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</IgnoreImportLibrary>
     <IgnoreImportLibrary Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">true</IgnoreImportLibrary>
     <LinkIncremental Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</LinkIncremental>
@@ -91,8 +89,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
-    <OutDir>$(xrBinOut)..\Release\</OutDir>
     <TargetName>$(ProjectName)_debug</TargetName>
+    <OutDir>$(SolutionDir)..\binaries\$(Platform)\Release\</OutDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <Midl>
@@ -152,6 +150,8 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>
+      </AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Mixed|x64'">
@@ -212,6 +212,7 @@
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -282,6 +283,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">
@@ -353,9 +355,11 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <ShowProgress>NotSet</ShowProgress>
+      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CMagazine.h" />
     <ClInclude Include="ui\UILoadingScreen.h" />
     <ClInclude Include="ui\UIPdaSpot.h" />
     <ClInclude Include="ActivatingCharCollisionDelay.h" />
@@ -383,7 +387,6 @@
     <ClInclude Include="ik_limb_state.h" />
     <ClInclude Include="ik_limb_state_predict.h" />
     <ClInclude Include="imotion_position.h" />
-    <ClInclude Include="imotion_velocity.h" />
     <ClInclude Include="interactive_motion.h" />
     <ClInclude Include="MercuryBall.h" />
     <ClInclude Include="moving_bones_snd_player.h" />
@@ -1272,7 +1275,6 @@
     <ClInclude Include="script_callback_ex_nonvoid.h" />
     <ClInclude Include="script_callback_ex_void.h" />
     <ClInclude Include="script_lanim.h" />
-    <ClInclude Include="..\xrServerEntities\script_fcolor.h" />
     <ClInclude Include="script_particles.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
@@ -1660,6 +1662,7 @@
     <ClInclude Include="ui\UIGameTutorial.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CMagazine.cpp" />
     <ClCompile Include="ui\UILoadingScreen.cpp" />
     <ClCompile Include="ui\UIPdaSpot.cpp" />
     <ClCompile Include="ActivatingCharCollisionDelay.cpp" />
@@ -1686,7 +1689,6 @@
     <ClCompile Include="ik_foot_collider.cpp" />
     <ClCompile Include="ik_limb_state.cpp" />
     <ClCompile Include="imotion_position.cpp" />
-    <ClCompile Include="imotion_velocity.cpp" />
     <ClCompile Include="interactive_motion.cpp" />
     <ClCompile Include="MercuryBall.cpp" />
     <ClCompile Include="moving_bones_snd_player.cpp" />
@@ -1826,7 +1828,6 @@
     <ClCompile Include="agent_manager_planner.cpp" />
     <ClCompile Include="agent_manager_actions.cpp" />
     <ClCompile Include="agent_manager_properties.cpp" />
-    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_space.cpp" />
     <ClCompile Include="alife_simulator_base.cpp" />
     <ClCompile Include="alife_simulator_base2.cpp" />
@@ -1862,6 +1863,7 @@
     <ClCompile Include="alife_creature_abstract.cpp" />
     <ClCompile Include="alife_dynamic_object.cpp" />
     <ClCompile Include="alife_human_abstract.cpp" />
+    <ClCompile Include="alife_simulator.cpp" />
     <ClCompile Include="..\xrServerEntities\alife_human_brain.cpp" />
     <ClCompile Include="alife_human_object_handler.cpp" />
     <ClCompile Include="alife_group_abstract.cpp" />
@@ -2051,9 +2053,11 @@
     <ClCompile Include="stalker_animation_head.cpp" />
     <ClCompile Include="stalker_animation_legs.cpp" />
     <ClCompile Include="stalker_animation_manager.cpp" />
-    <ClCompile Include="stalker_animation_manager_debug.cpp" />
+    <ClCompile Include="stalker_animation_manager_debug.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="stalker_animation_manager_update.cpp" />
-    <ClCompile Include="stalker_animation_script.cpp" />
     <ClCompile Include="stalker_animation_torso.cpp" />
     <ClCompile Include="stalker_animation_data_storage.cpp" />
     <ClCompile Include="stalker_animation_data.cpp" />
@@ -2181,7 +2185,6 @@
     <ClCompile Include="script_lanim.cpp" />
     <ClCompile Include="script_particles.cpp" />
     <ClCompile Include="script_sound.cpp" />
-    <ClCompile Include="script_sound_script.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_script.cpp" />
@@ -2228,7 +2231,6 @@
     </ClCompile>
     <ClCompile Include="Level_start.cpp" />
     <ClCompile Include="Level_Bullet_Manager.cpp" />
-    <ClCompile Include="Level_bullet_manager_firetrace.cpp" />
     <ClCompile Include="Tracer.cpp" />
     <ClCompile Include="seniority_hierarchy_holder.cpp" />
     <ClCompile Include="team_hierarchy_holder.cpp" />

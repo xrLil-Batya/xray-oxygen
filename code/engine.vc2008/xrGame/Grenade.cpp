@@ -13,14 +13,13 @@
 #include "xrserver_objects_alife.h"
 
 const float default_grenade_detonation_threshold_hit=100;
-CGrenade::CGrenade(void) 
-{
-
+CGrenade::CGrenade() 
+{	
 	m_destroy_callback.clear();
 	m_eSoundCheckout = ESoundTypes(SOUND_TYPE_WEAPON_RECHARGING);
 }
 
-CGrenade::~CGrenade(void) 
+CGrenade::~CGrenade() 
 {
 }
 
@@ -68,7 +67,7 @@ void CGrenade::net_Destroy()
 	if(m_destroy_callback)
 	{
 		m_destroy_callback				(this);
-		m_destroy_callback				= destroy_callback(NULL);
+		m_destroy_callback				= destroy_callback(nullptr);
 	}
 
 	inherited::net_Destroy				();
@@ -195,7 +194,7 @@ void CGrenade::Destroy()
 	if(m_destroy_callback)
 	{
 		m_destroy_callback		(this);
-		m_destroy_callback	=	destroy_callback(NULL);
+		m_destroy_callback	=	destroy_callback(nullptr);
 	}
 
 	FindNormal					(normal);

@@ -5,7 +5,7 @@ class CPhysicsShellHolder;
 
 class CPHCollisionDamageReceiver : public ICollisionDamageReceiver
 {
-	typedef std::pair<u16, float> SControledBone;
+	using SControledBone = std::pair<u16, float>;
 	using DAMAGE_CONTROLED_BONES_V = xr_vector<SControledBone>;
 	using DAMAGE_BONES_I = DAMAGE_CONTROLED_BONES_V::iterator;
 	struct SFind { u16 id; SFind(u16 _id) { id = _id; }; bool operator () (const SControledBone& cb) { return cb.first == id; } };

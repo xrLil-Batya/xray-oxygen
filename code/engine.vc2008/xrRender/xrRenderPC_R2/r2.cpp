@@ -10,28 +10,13 @@
 #include "../xrRender/dxRenderDeviceRender.h"
 #include "../xrRender/dxWallMarkArray.h"
 #include "../xrRender/dxUIShader.h"
+#include "../xrRender/dxGlowManager.h"
 
-CRender										RImplementation;
+CRender RImplementation;
 
 ENGINE_API BOOL isGraphicDebugging;
 
 //////////////////////////////////////////////////////////////////////////
-class CGlow				: public IRender_Glow
-{
-public:
-	bool				bActive;
-public:
-	CGlow() : bActive(false)		{ }
-	virtual void					set_active			(bool b)					{ bActive=b;		}
-	virtual bool					get_active			()							{ return bActive;	}
-	virtual void					set_position		(const Fvector& P)			{ }
-	virtual void					set_direction		(const Fvector& D)			{ }
-	virtual void					set_radius			(float R)					{ }
-	virtual void					set_texture			(LPCSTR name)				{ }
-	virtual void					set_color			(const Fcolor& C)			{ }
-	virtual void					set_color			(float r, float g, float b)	{ }
-};
-
 float		r_dtex_range		= 50.f;
 //////////////////////////////////////////////////////////////////////////
 ShaderElement*			CRender::rimp_select_sh_dynamic	(dxRender_Visual	*pVisual, float cdist_sq)
@@ -118,7 +103,7 @@ void					CRender::create					()
 
 	// Check for NULL render target support
 	D3DFORMAT	nullrt	= (D3DFORMAT)MAKEFOURCC('N','U','L','L');
-	o.nullrt			= HW.support	(nullrt,			D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
+	o.nullrt			= HW.IsFormatSupported(nullrt, D3DRTYPE_SURFACE, D3DUSAGE_RENDERTARGET);
 
 	if (o.nullrt)		{
 		Msg				("* NULLRT supported and used");
@@ -127,23 +112,19 @@ void					CRender::create					()
 
 	// SMAP / DST
 	o.HW_smap_FETCH4	= FALSE;
-	o.HW_smap			= HW.support	(D3DFMT_D24X8,			D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
+	o.HW_smap			= HW.IsFormatSupported(D3DFMT_D24X8, D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 	o.HW_smap_PCF		= o.HW_smap		;
 	if (o.HW_smap)		{
 		o.HW_smap_FORMAT	= D3DFMT_D24X8;
 		Msg				("* HWDST/PCF supported and used");
 	}
 
-    // sunshafts options
-	o.sunshaft_mrmnwar = ps_r_sunshafts_mode == SS_MANOWAR_SS;
-    o.sunshaft_screenspace  = ps_r_sunshafts_mode == SS_SCREEN_SPACE;
-
-	o.fp16_filter		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_FILTER);
-	o.fp16_blend		= HW.support	(D3DFMT_A16B16G16R16F,	D3DRTYPE_TEXTURE,D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
+	o.fp16_filter		= HW.IsFormatSupported(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_FILTER);
+	o.fp16_blend		= HW.IsFormatSupported(D3DFMT_A16B16G16R16F, D3DRTYPE_TEXTURE, D3DUSAGE_QUERY_POSTPIXELSHADER_BLENDING);
 
 	// search for ATI formats
 	if (!o.HW_smap && (0==strstr(Core.Params,"-nodf24")) )		{
-		o.HW_smap		= HW.support	((D3DFORMAT)(MAKEFOURCC('D','F','2','4')),	D3DRTYPE_TEXTURE,D3DUSAGE_DEPTHSTENCIL);
+		o.HW_smap		= HW.IsFormatSupported((D3DFORMAT)(MAKEFOURCC('D','F','2','4')), D3DRTYPE_TEXTURE, D3DUSAGE_DEPTHSTENCIL);
 		if (o.HW_smap)	{
 			o.HW_smap_FORMAT= MAKEFOURCC	('D','F','2','4');
 			o.HW_smap_PCF	= FALSE			;
@@ -179,7 +160,7 @@ void					CRender::create					()
 	if (strstr(Core.Params,"-nonvs"))		o.nvstencil	= FALSE;
 
 	// nv-dbt
-	o.nvdbt				= HW.support	((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
+	o.nvdbt				= HW.IsFormatSupported((D3DFORMAT)MAKEFOURCC('N','V','D','B'), D3DRTYPE_SURFACE, 0);
 	if (o.nvdbt)		Msg	("* NV-DBT supported and used");
 
 	// gloss
@@ -262,14 +243,17 @@ void CRender::reset_begin()
 	// Update incremental shadowmap-visibility solver
 	// BUG-ID: 10646
 	{
-		u32 it=0;
-		for (it=0; it<Lights_LastFrame.size(); it++)	{
-			if (0==Lights_LastFrame[it])	continue	;
-			try {
-				Lights_LastFrame[it]->svis.resetoccq ()	;
-			} catch (...)
+		u32 it = 0;
+		for (it = 0; it < Lights_LastFrame.size(); it++) 
+		{
+			if (!Lights_LastFrame[it])	continue;
+			try 
 			{
-				Msg	("! Failed to flush-OCCq on light [%d] %X",it,*(u32*)(&Lights_LastFrame[it]));
+				Lights_LastFrame[it]->svis.resetoccq();
+			}
+			catch (...)
+			{
+				Msg("! Failed to flush-OCCq on light [%d] %X", it, *(u32*)(&Lights_LastFrame[it]));
 			}
 		}
 		Lights_LastFrame.clear	();

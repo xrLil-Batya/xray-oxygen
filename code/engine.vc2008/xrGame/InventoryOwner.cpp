@@ -30,8 +30,8 @@
 
 CInventoryOwner::CInventoryOwner			()
 {
-	m_pTrade					= NULL;
-	m_trade_parameters			= 0;
+	m_pTrade					= nullptr;
+	m_trade_parameters			= nullptr;
 
 	m_inventory					= xr_new<CInventory>();
 	m_pCharacterInfo			= xr_new<CCharacterInfo>();
@@ -91,7 +91,7 @@ void CInventoryOwner::reload				(LPCSTR section)
 	m_money						= 0;
 	m_bTrading					= false;
 	m_bTalking					= false;
-	m_pTalkPartner				= NULL;
+	m_pTalkPartner				= nullptr;
 
 	CAttachmentOwner::reload	(section);
 }
@@ -120,7 +120,7 @@ BOOL CInventoryOwner::net_Spawn(CSE_Abstract* DC)
 	if (!pThis) return FALSE;
 	CSE_Abstract* E = (CSE_Abstract*)(DC);
 
-	CSE_ALifeTraderAbstract* pTrader = NULL;
+	CSE_ALifeTraderAbstract* pTrader = nullptr;
 	if (E) pTrader = smart_cast<CSE_ALifeTraderAbstract*>(E);
 	if (!pTrader) return FALSE;
 
@@ -203,9 +203,9 @@ void CInventoryOwner::UpdateInventoryOwner(u32 deltaT)
 
 	if (IsTalking())
 	{
-		//если наш собеседник перестал говорить с нами,
+		//если наш собеседник перестал говорить с нами или умер,
 		//то и нам нечего ждать.
-		if (!m_pTalkPartner->IsTalking())
+		if (!m_pTalkPartner->IsTalking() || !m_pTalkPartner->is_alive())
 		{
 			StopTalk();
 		}
@@ -393,7 +393,8 @@ void CInventoryOwner::LostPdaContact	(CInventoryOwner* pInvOwner)
 //для работы с relation system
 u16 CInventoryOwner::object_id	()  const
 {
-	return smart_cast<const CGameObject*>(this)->ID();
+	const CGameObject* pObject = smart_cast<const CGameObject*>(this);
+	return pObject ? pObject->ID() : u16(-1);
 }
 
 
@@ -561,7 +562,7 @@ bool CInventoryOwner::AllowItemToTrade 			(CInventoryItem const * item, const SI
 {
 	return						(
 		trade_parameters().enabled(
-			CTradeParameters::action_sell(0),
+			CTradeParameters::action_sell(nullptr),
 			item->object().cNameSect()
 		)
 	);

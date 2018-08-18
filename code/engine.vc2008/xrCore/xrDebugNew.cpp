@@ -22,8 +22,14 @@
 
 XRCORE_API	xrDebug		Debug;
 
+XRCORE_API HWND gGameWindow = nullptr;
+
+string_path DumpFilePath = { 0 };
+
 static bool error_after_dialog = false;
 static bool bException = false;
+
+LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo);
 
 void xrDebug::gather_info(const char *expression, const char *description, const char *argument0, const char *argument1, const char *file, int line, const char *function, char* assertion_info, u32 const assertion_info_size)
 {
@@ -92,7 +98,7 @@ void xrDebug::do_exit(HWND hWnd, const std::string &message)
 {
 	FlushLog();
 
-	if (MessageBoxA(hWnd, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
+	if (MessageBoxA(nullptr, (message + "\n Do you want to interrupt the game?").c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
         ExitProcess(1);
@@ -116,7 +122,7 @@ void xrDebug::do_exit(const std::string &message, const std::string &message2)
 						"\n"			+
 						"\n Do you want to interrupt the game?";
 
-	if (MessageBoxA(NULL, szMsg.c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
+	if (MessageBoxA(nullptr, szMsg.c_str(), "X-Ray Error", MB_YESNO | MB_TOPMOST) == IDYES)
 	{
 		DEBUG_INVOKE;
         ExitProcess(1);
@@ -137,26 +143,23 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	if (handler)
 		handler();
 
-	HWND wnd = GetActiveWindow();
-	if (!wnd) wnd = GetForegroundWindow();
-
     // Sometimes if we crashed not in main thread, we can stuck at ShowWindow
     if (GetCurrentThreadId() == m_mainThreadId)
     {
-	    ShowWindow(wnd, SW_HIDE);
+	    ShowWindow(gGameWindow, SW_HIDE);
     }
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
-	do_exit(wnd, assertion_info);
+	do_exit(gGameWindow, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-    do_exit2(assertion_info, ignore_always);
+    do_exit2(gGameWindow, assertion_info, ignore_always);
     
     // And we should show window again, damn pause manager
     if (GetCurrentThreadId() == m_mainThreadId)
     {
-        ShowWindow(wnd, SW_SHOW);
+        ShowWindow(gGameWindow, SW_SHOW);
     }
 #endif
 }
@@ -164,14 +167,14 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 const char* xrDebug::error2string(long code)
 {
     static	string1024	desc_storage;
-    FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, 0, code, 0, desc_storage, sizeof(desc_storage) - 1, 0);
+    FormatMessageA(FORMAT_MESSAGE_FROM_SYSTEM, nullptr, code, 0, desc_storage, sizeof(desc_storage) - 1, nullptr);
     return desc_storage;
 }
 
 
-void xrDebug::do_exit2(const std::string& message, bool& ignore_always)
+void xrDebug::do_exit2(HWND hwnd, const std::string& message, bool& ignore_always)
 {
-    int MsgRet = MessageBox(NULL, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
+    int MsgRet = MessageBox(hwnd, message.c_str(), "Error", MB_ABORTRETRYIGNORE | MB_ICONERROR);
 
     switch (MsgRet)
     {
@@ -191,32 +194,32 @@ void xrDebug::do_exit2(const std::string& message, bool& ignore_always)
 
 void xrDebug::error(long hr, const char* expr, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend(error2string(hr), expr, 0, 0, file, line, function, ignore_always);
+	backend(error2string(hr), expr, nullptr, nullptr, file, line, function, ignore_always);
 }
 
 void xrDebug::error(long hr, const char* expr, const char* e2, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend(error2string(hr), expr, e2, 0, file, line, function, ignore_always);
+	backend(error2string(hr), expr, e2, nullptr, file, line, function, ignore_always);
 }
 
 void xrDebug::fail(const char *e1, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend("assertion failed", e1, 0, 0, file, line, function, ignore_always);
+	backend("assertion failed", e1, nullptr, nullptr, file, line, function, ignore_always);
 }
 
 void xrDebug::fail(const char *e1, const std::string &e2, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend(e1, e2.c_str(), 0, 0, file, line, function, ignore_always);
+	backend(e1, e2.c_str(), nullptr, nullptr, file, line, function, ignore_always);
 }
 
 void xrDebug::fail(const char *e1, const char *e2, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend(e1, e2, 0, 0, file, line, function, ignore_always);
+	backend(e1, e2, nullptr, nullptr, file, line, function, ignore_always);
 }
 
 void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *file, int line, const char *function, bool &ignore_always)
 {
-	backend(e1, e2, e3, 0, file, line, function, ignore_always);
+	backend(e1, e2, e3, nullptr, file, line, function, ignore_always);
 }
 
 void xrDebug::fail(const char *e1, const char *e2, const char *e3, const char *e4, const char *file, int line, const char *function, bool &ignore_always)
@@ -235,11 +238,11 @@ void __cdecl xrDebug::fatal(const char *file, int line, const char *function, co
 
 	bool		ignore_always = true;
 
-	backend("Fatal error", "<no expression>", buffer, 0, file, line, function, ignore_always);
+	backend("Fatal error", "<no expression>", buffer, nullptr, file, line, function, ignore_always);
 }
 
-typedef void(*full_memory_stats_callback_type) ();
-XRCORE_API full_memory_stats_callback_type g_full_memory_stats_callback = 0;
+using full_memory_stats_callback_type = void(*) ();
+XRCORE_API full_memory_stats_callback_type g_full_memory_stats_callback = nullptr;
 
 int out_of_memory_handler(size_t size)
 {
@@ -264,9 +267,9 @@ extern const char* log_name();
 
 XRCORE_API string_path g_bug_report_file;
 
-typedef LONG WINAPI UnhandledExceptionFilterType(struct _EXCEPTION_POINTERS *pExceptionInfo);
+using UnhandledExceptionFilterType = LONG WINAPI(struct _EXCEPTION_POINTERS *pExceptionInfo);
 
-static UnhandledExceptionFilterType	*previous_filter = 0;
+static UnhandledExceptionFilterType	*previous_filter = nullptr;
 
 void format_message(char* buffer, const u32 &buffer_size)
 {
@@ -279,19 +282,27 @@ void format_message(char* buffer, const u32 &buffer_size)
 		return;
 	}
 
-	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, 0, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 0, 0);
+	FormatMessage(FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM, nullptr, error_code, MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT), message, 0, nullptr);
 
 	xr_sprintf(buffer, buffer_size, "[error][%8d]    : %s", error_code, message);
 	LocalFree(message);
 }
 
 //////////////////////////////////////////////////////////////////////
-typedef int(__cdecl * _PNH)(size_t);
+using _PNH = int(__cdecl *)(size_t);
 
 IC void handler_base(const char* reason_string)
 {
+    if (crashhandler* handlerFuncPtr = Debug.get_crashhandler())
+    {
+        handlerFuncPtr();
+    }
 	bool alw_ignored = false;
-	Debug.backend("Error handler is invoked!", reason_string, 0, 0, DEBUG_INFO, alw_ignored);
+    if (!IsDebuggerPresent())
+    {
+        WriteMinidump(nullptr);
+    }
+	Debug.backend("Error handler is invoked!", reason_string, nullptr, nullptr, DEBUG_INFO, alw_ignored);
 }
 
 static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *function, const wchar_t *file, unsigned int line, uintptr_t reserved)
@@ -322,7 +333,7 @@ static void invalid_parameter_handler(const wchar_t *expression, const wchar_t *
 		xr_strcpy(file_, __FILE__);
 	}
 
-	Debug.backend("Error handler is invoked!", expression_, 0, 0, file_, line, function_, ignore_always);
+	Debug.backend("Error handler is invoked!", expression_, nullptr, nullptr, file_, line, function_, ignore_always);
 }
 
 IC void pure_call_handler()
@@ -347,14 +358,8 @@ IC void floating_point_handler(int signal)
 	handler_base("Floating point error");
 }
 
-IC void segment_violation(int signal)
-{
-	handler_base("Segment violation error");
-}
-
 IC void illegal_instruction_handler(int signal)
 {
-	//#VERTVER: We're using xrCore CPUID cuz it's more faster then another
 	if (!CPU::Info.hasFeature(CPUFeature::SSE41))
 	{
 		handler_base("SSE4.1 and AVX instructions isn't legal on your CPU");
@@ -376,14 +381,9 @@ IC void termination_handler(int signal)
 
 void debug_on_thread_spawn()
 {
-	_set_abort_behavior(0, _WRITE_ABORT_MSG | _CALL_REPORTFAULT);
-	signal(SIGABRT, abort_handler);
-	signal(SIGABRT_COMPAT, abort_handler);
+ 	signal(SIGABRT, abort_handler);
 	signal(SIGFPE, floating_point_handler);
 	signal(SIGILL, illegal_instruction_handler);
-	signal(SIGSEGV, segment_violation);
-	signal(SIGINT, NULL);
-	signal(SIGTERM, termination_handler);
 
 	_set_invalid_parameter_handler(&invalid_parameter_handler);
 
@@ -401,17 +401,211 @@ void xrDebug::_initialize(const bool &dedicated)
 	previous_filter = ::SetUnhandledExceptionFilter(UnhandledFilter);	// exception handler to all "unhandled" exceptions
 }
 
+
+void xrDebug::_initializeAfterFS()
+{
+    FS.update_path(DumpFilePath, "$dump$", "");
+    if (!FS.path_exist(DumpFilePath))
+    {
+        createPath(DumpFilePath);
+    }
+}
+
+
 // based on dbghelp.h
-typedef BOOL(WINAPI* MINIDUMPWRITEDUMP)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, MINIDUMP_TYPE DumpType,
+using MINIDUMPWRITEDUMP = BOOL(WINAPI*)(HANDLE hProcess, DWORD dwPid, HANDLE hFile, MINIDUMP_TYPE DumpType,
 	CONST PMINIDUMP_EXCEPTION_INFORMATION ExceptionParam,
 	CONST PMINIDUMP_USER_STREAM_INFORMATION UserStreamParam,
 	CONST PMINIDUMP_CALLBACK_INFORMATION CallbackParam
 	);
 
-LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
+LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
+{
+    // Flush, after crashhandler. We include log file in a minidump
+    FlushLog();
+
+    long retval = EXCEPTION_CONTINUE_SEARCH;
+    bException = true;
+
+    // firstly see if dbghelp.dll is around and has the function we need
+    // look next to the EXE first, as the one in System32 might be old
+    // (e.g. Windows 2000)
+    HMODULE hDll = nullptr;
+    string_path szDbgHelpPath;
+
+    if (GetModuleFileName(nullptr, szDbgHelpPath, _MAX_PATH))
+    {
+        char* pSlash = strchr(szDbgHelpPath, '\\');
+        if (pSlash)
+        {
+            const char dbgHelpStr[] = "DBGHELP.DLL";
+            xr_strcpy(pSlash + 1, sizeof(dbgHelpStr), dbgHelpStr);
+            hDll = LoadLibraryA(szDbgHelpPath);
+        }
+    }
+
+    if (!hDll)
+    {
+        // load any version we can
+        hDll = LoadLibraryA("DBGHELP.DLL");
+    }
+
+    LPCTSTR szResult = nullptr;
+
+    if (hDll)
+    {
+        MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
+        if (pDump)
+        {
+            string_path szDumpPath = { 0 };
+            string_path szFilename = { 0 };
+            string_path szScratch = { 0 };
+            string64 t_stemp = { 0 };
+
+            // work out a good place for the dump file
+            timestamp(t_stemp);
+            xr_strcat(szDumpPath, DumpFilePath); // can be empty, if we crash before FS was initialized
+
+            xr_strcat(szFilename, Core.ApplicationName);
+            xr_strcat(szFilename, "_");
+            xr_strcat(szFilename, Core.UserName);
+            xr_strcat(szFilename, "_");
+            xr_strcat(szFilename, t_stemp);
+            xr_strcat(szFilename, ".mdmp");
+
+            xr_strcat(szDumpPath, szFilename);
+
+            // create the file
+            HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+            if (INVALID_HANDLE_VALUE == hFile)
+            {
+                // try to place into current directory
+                ZeroMemory(szDumpPath, sizeof(szDumpPath));
+                xr_strcat(szDumpPath, szFilename);
+                hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, nullptr, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, nullptr);
+            }
+            if (hFile != INVALID_HANDLE_VALUE)
+            {
+                _MINIDUMP_EXCEPTION_INFORMATION ExInfo;
+
+                ExInfo.ThreadId = GetCurrentThreadId();
+                ExInfo.ExceptionPointers = pExceptionInfo;
+                ExInfo.ClientPointers = NULL;
+
+                // write the dump
+                MINIDUMP_TYPE dump_flags = MINIDUMP_TYPE(MiniDumpNormal | MiniDumpFilterMemory | MiniDumpScanMemory);
+
+                //try include LogFile
+                char* logFileContent = nullptr;
+                DWORD logFileContentSize = 0;
+
+                __try
+                {
+                    do
+                    {
+                        const char* logFileName = log_name();
+
+                        if (logFileName == nullptr)
+                            break;
+
+                        // Don't use X-Ray FS - it can be corrupted at this point
+                        HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
+                        if (hLogFile == INVALID_HANDLE_VALUE) break;
+
+                        LARGE_INTEGER FileSize;
+                        bool bResult = (bool)GetFileSizeEx(hLogFile, &FileSize);
+                        if (!bResult)
+                        {
+                            CloseHandle(hLogFile);
+                            break;
+                        }
+
+                        logFileContent = (char*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.LowPart);
+                        if (logFileContent == nullptr)
+                        {
+                            CloseHandle(hLogFile);
+                            break;
+                        }
+
+                        logFileContentSize = FileSize.LowPart;
+
+                        DWORD TotalBytesReaded = 0;
+
+                        do
+                        {
+                            DWORD BytesReaded = 0;
+                            bResult = (bool)ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, nullptr);
+                            if (!bResult)
+                            {
+                                CloseHandle(hLogFile);
+                                break;
+                            }
+                            TotalBytesReaded += BytesReaded;
+                        } while (TotalBytesReaded < FileSize.LowPart);
+
+                        CloseHandle(hLogFile);
+                    } while (false);
+                }
+                __except (EXCEPTION_EXECUTE_HANDLER)
+                {
+                    // better luck next time
+                }
+
+                MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
+                MINIDUMP_USER_STREAM LogFileUserStream;
+
+                memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
+                memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
+
+                if (logFileContent != nullptr)
+                {
+                    UserStreamsInfo.UserStreamCount = 1;
+                    LogFileUserStream.Buffer = logFileContent;
+                    LogFileUserStream.BufferSize = logFileContentSize;
+                    LogFileUserStream.Type = MINIDUMP_STREAM_TYPE::CommentStreamA;
+                    UserStreamsInfo.UserStreamArray = &LogFileUserStream;
+                }
+
+                BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, dump_flags, &ExInfo, &UserStreamsInfo, nullptr);
+                if (bOK)
+                {
+                    xr_sprintf(szScratch, "Saved dump file to '%s'", szDumpPath);
+                    szResult = szScratch;
+                    retval = EXCEPTION_EXECUTE_HANDLER;
+                }
+                else
+                {
+                    xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d)", szDumpPath, GetLastError());
+                    szResult = szScratch;
+                }
+                CloseHandle(hFile);
+            }
+            else
+            {
+                xr_sprintf(szScratch, "Failed to create dump file '%s' (error %d)", szDumpPath, GetLastError());
+                szResult = szScratch;
+            }
+        }
+        else
+        {
+            szResult = "DBGHELP.DLL too old";
+        }
+    }
+    else
+    {
+        szResult = "DBGHELP.DLL not found";
+    }
+
+    Log(szResult);
+    FlushLog();
+
+    return retval;
+}
+
+LONG WINAPI UnhandledFilter(struct _EXCEPTION_POINTERS* pExceptionInfo)
 {
 	Log("[FAIL] Type: UNHANDLED EXCEPTION");
-	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.2.01f");
+	Log("[FAIL] DBG Ver: X-Ray Oxygen crash handler ver. 1.3f");
 	Log("[FAIL] Report: To https://discord.gg/NAp6ZtX");
 
 	crashhandler* pCrashHandler = Debug.get_crashhandler();
@@ -420,184 +614,5 @@ LONG WINAPI UnhandledFilter (struct _EXCEPTION_POINTERS* pExceptionInfo)
 		pCrashHandler();
 	}
 
-	// Flush, after crashhandler. We include log file in a minidump
-	FlushLog();
-
-	long retval = EXCEPTION_CONTINUE_SEARCH;
-	bException = true;
-
-	// firstly see if dbghelp.dll is around and has the function we need
-	// look next to the EXE first, as the one in System32 might be old
-	// (e.g. Windows 2000)
-	HMODULE hDll = NULL;
-	string_path szDbgHelpPath;
-
-	if (GetModuleFileName(NULL, szDbgHelpPath, _MAX_PATH))
-	{
-		char* pSlash = strchr(szDbgHelpPath, '\\');
-		if (pSlash)
-		{
-			const char dbgHelpStr[] = "DBGHELP.DLL";
-			xr_strcpy(pSlash + 1, sizeof(dbgHelpStr), dbgHelpStr);
-			hDll = LoadLibraryA(szDbgHelpPath);
-		}
-	}
-
-	if (!hDll)
-	{
-		// load any version we can
-		hDll = LoadLibraryA("DBGHELP.DLL");
-	}
-
-	LPCTSTR szResult = NULL;
-
-	if (hDll)
-	{
-		MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
-		if (pDump)
-		{
-			string_path szDumpPath;
-			string_path szScratch;
-			string64 t_stemp;
-
-			// work out a good place for the dump file
-			timestamp(t_stemp);
-
-			FS.update_path(szDumpPath, "$dump$", "");
-			if(!FS.path_exist(szDumpPath))
-			{
-				createPath(szDumpPath);
-			}
-
-			xr_strcat(szDumpPath, Core.ApplicationName);
-			xr_strcat(szDumpPath, "_");
-			xr_strcat(szDumpPath, Core.UserName);
-			xr_strcat(szDumpPath, "_");
-			xr_strcat(szDumpPath, t_stemp);
-			xr_strcat(szDumpPath, ".mdmp");
-
-			// create the file
-			HANDLE hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-			if (INVALID_HANDLE_VALUE == hFile)
-			{
-				// try to place into current directory
-				MoveMemory(szDumpPath, szDumpPath + 5, strlen(szDumpPath));
-				hFile = CreateFileA(szDumpPath, GENERIC_WRITE, FILE_SHARE_WRITE, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-			}
-			if (hFile != INVALID_HANDLE_VALUE)
-			{
-				_MINIDUMP_EXCEPTION_INFORMATION ExInfo;
-
-				ExInfo.ThreadId = GetCurrentThreadId();
-				ExInfo.ExceptionPointers = pExceptionInfo;
-				ExInfo.ClientPointers = NULL;
-
-				// write the dump
-				MINIDUMP_TYPE dump_flags = MINIDUMP_TYPE(MiniDumpNormal | MiniDumpFilterMemory | MiniDumpScanMemory);
-
-				//try include LogFile
-				char* logFileContent = nullptr;
-				DWORD logFileContentSize = 0;
-
-				__try
-				{
-					do
-					{
-						const char* logFileName = log_name();
-
-						if (logFileName == nullptr) 
-							break;
-
-						// Don't use X-Ray FS - it can be corrupted at this point
-						HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-						if (hLogFile == INVALID_HANDLE_VALUE) break;
-
-						LARGE_INTEGER FileSize;
-						bool bResult = (bool)GetFileSizeEx(hLogFile, &FileSize);
-						if (!bResult)
-						{
-							CloseHandle(hLogFile);
-							break;
-						}
-
-						logFileContent = (char*)HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, FileSize.LowPart);
-						if (logFileContent == nullptr) 
-						{
-							CloseHandle(hLogFile);
-							break;
-						}
-
-						logFileContentSize = FileSize.LowPart;
-
-						DWORD TotalBytesReaded = 0;
-
-						do 
-						{
-							DWORD BytesReaded = 0;
-							bResult = (bool)ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, NULL);
-							if (!bResult)
-							{
-								CloseHandle(hLogFile);
-								break;
-							}
-							TotalBytesReaded += BytesReaded;
-						} while (TotalBytesReaded < FileSize.LowPart);
-
-						CloseHandle(hLogFile);
-					} while (false);
-				}
-				__except (EXCEPTION_EXECUTE_HANDLER)
-				{
-					// better luck next time
-				}
-
-				MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
-				MINIDUMP_USER_STREAM LogFileUserStream;
-
-				memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
-				memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
-
-				if (logFileContent != nullptr)
-				{
-					UserStreamsInfo.UserStreamCount = 1;
-					LogFileUserStream.Buffer = logFileContent;
-					LogFileUserStream.BufferSize = logFileContentSize;
-					LogFileUserStream.Type = MINIDUMP_STREAM_TYPE::CommentStreamA;
-					UserStreamsInfo.UserStreamArray = &LogFileUserStream;
-				}
-
-				BOOL bOK = pDump(GetCurrentProcess(), GetCurrentProcessId(), hFile, dump_flags, &ExInfo, &UserStreamsInfo, NULL);
-				if (bOK)
-				{
-					xr_sprintf(szScratch, "Saved dump file to '%s'", szDumpPath);
-					szResult = szScratch;
-					retval = EXCEPTION_EXECUTE_HANDLER;
-				}
-				else
-				{
-					xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d)", szDumpPath, GetLastError());
-					szResult = szScratch;
-				}
-				CloseHandle(hFile);
-			}
-			else
-			{
-				xr_sprintf(szScratch, "Failed to create dump file '%s' (error %d)", szDumpPath, GetLastError());
-				szResult = szScratch;
-			}
-		}
-		else
-		{
-			szResult = "DBGHELP.DLL too old";
-		}
-	}
-	else
-	{
-		szResult = "DBGHELP.DLL not found";
-	}
-
-	Log(szResult);
-	FlushLog();
-
-	return retval;
+    return WriteMinidump(pExceptionInfo);
 }

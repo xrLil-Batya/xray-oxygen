@@ -29,30 +29,23 @@ _action  actions[] = {
 	{ "cam_1",				kCAM_1				},
 	{ "cam_2",				kCAM_2				},
 	{ "cam_3",				kCAM_3				},
-	{ "cam_zoom_in",		kCAM_ZOOM_IN		},
-	{ "cam_zoom_out",		kCAM_ZOOM_OUT		},
 
 	{ "torch",				kTORCH				},
-	{ "torch_mode",			kTORCH_MODE			},
 	{ "night_vision",		kNIGHT_VISION		},
 	{ "show_detector",		kDETECTOR			},
 
 	{ "turn_engine",		kTURN_ENGINE		},
 	{ "switch_horn",		kSWITCH_HORN		},
 
-	{ "kick",               kKICK				},
 	{ "wpn_1",				kWPN_1				},
 	{ "wpn_2",				kWPN_2				},
 	{ "wpn_3",				kWPN_3				},
 	{ "wpn_4",				kWPN_4				},
 	{ "wpn_5",				kWPN_5				},
 	{ "wpn_6",				kWPN_6				},
-	{ "artefact",			kARTEFACT			},
 	{ "wpn_next",			kWPN_NEXT			},
 	{ "wpn_fire",			kWPN_FIRE			},
 	{ "wpn_zoom",			kWPN_ZOOM			},
-	{ "wpn_zoom_inc",		kWPN_ZOOM_INC		},
-	{ "wpn_zoom_dec",		kWPN_ZOOM_DEC		},
 	{ "wpn_reload",			kWPN_RELOAD			},
 	{ "wpn_func",			kWPN_FUNC			},
 	{ "wpn_firemode_prev",	kWPN_FIREMODE_PREV	},
@@ -75,9 +68,14 @@ _action  actions[] = {
 	{ "quick_use_3",		kQUICK_USE_3		},
 	{ "quick_use_4",		kQUICK_USE_4		},
 
-	#pragma todo("Petrurbator: rework this!")
 	{ "quick_save",			kQUICK_SAVE			},
 	{ "quick_load",			kQUICK_LOAD			},
+
+	{ "dev_noclip",			kDEV_NOCLIP			},
+	{ "dev_action1",		kDEV_ACTION1		},
+	{ "dev_action2",		kDEV_ACTION2		},
+	{ "dev_action3",		kDEV_ACTION3		},
+	{ "dev_action4",		kDEV_ACTION4		},
 
 	{ nullptr, 				kLASTACTION			}
 };
@@ -312,9 +310,9 @@ int get_action_dik(EGameActions _action_id, int idx)
 
 EGameActions get_binded_action(int _dik)
 {
-	for (int idx = 0; idx < bindings_count; ++idx)
+	for (_binding & g_key_binding : g_key_bindings)
 	{
-		_binding* binding = &g_key_bindings[idx];
+		_binding* binding = &g_key_binding;
 
 		if (binding->m_keyboard[0] && binding->m_keyboard[0]->dik == _dik)
 			return binding->m_action->id;
@@ -401,9 +399,9 @@ public:
 		curr_pbinding->m_keyboard[m_work_idx] = pkeyboard;
 
 		{
-			for (int idx = 0; idx < bindings_count; ++idx)
+			for (_binding & g_key_binding : g_key_bindings)
 			{
-				_binding*	binding = &g_key_bindings[idx];
+				_binding*	binding = &g_key_binding;
 				if (binding == curr_pbinding)
 					continue;
 
@@ -423,9 +421,9 @@ public:
 		if (m_work_idx == 0)
 			F->w_printf("default_controls\r\n");
 
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			if (pbinding->m_keyboard[m_work_idx])
 			{
 				F->w_printf("%s %s %s\r\n",
@@ -467,9 +465,9 @@ public:
 
 	virtual void Execute(LPCSTR args) {
 		Log("- --- Action list start ---");
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			Log("-", pbinding->m_action->action_name);
 		}
 
@@ -487,9 +485,9 @@ public:
 
 	virtual void Execute(LPCSTR args)
 	{
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			pbinding->m_keyboard[0] = nullptr;
 			pbinding->m_keyboard[1] = nullptr;
 		}
@@ -526,9 +524,9 @@ public:
 		Log("- --- Bind list start ---");
 		string512 buff;
 
-		for (int idx = 0; idx < bindings_count; ++idx)
+		for (_binding & g_key_binding : g_key_bindings)
 		{
-			_binding* pbinding = &g_key_bindings[idx];
+			_binding* pbinding = &g_key_binding;
 			xr_sprintf(buff, "[%s] primary is[%s] secondary is[%s]",
 				pbinding->m_action->action_name,
 				(pbinding->m_keyboard[0]) ? pbinding->m_keyboard[0]->key_local_name.c_str() : "NULL",

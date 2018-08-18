@@ -7,19 +7,23 @@
 #else
 	#include "../../Include/xrAPI/xrAPI.h"
 #endif
+#include <ppl.h>
 
 void	CResourceManager::reset_begin			()
 {
 	// destroy everything, renderer may use
 	::Render->reset_begin		();
+	size_t it = 0;
 
-	// destroy state-blocks
-	for (u32 _it=0; _it<v_states.size(); _it++)
-		_RELEASE(v_states[_it]->state);
+	concurrency::parallel_for_each(v_states.begin(), v_states.end(), [](SState* pState)
+	{
+		_RELEASE(pState->state);
+	});
 
 	// destroy RTs
-	for (auto rt_it=m_rtargets.begin(); rt_it!=m_rtargets.end(); rt_it++)
-		rt_it->second->reset_begin();
+	for (auto &rt_it:m_rtargets)
+		rt_it.second->reset_begin();
+
 //	DX10 cut 	for (map_RTCIt rtc_it=m_rtargets_c.begin(); rtc_it!=m_rtargets_c.end(); rtc_it++)
 //	DX10 cut 		rtc_it->second->reset_begin();
 

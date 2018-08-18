@@ -13,10 +13,10 @@
 #include "gameobject.h"
 #include "script_game_object.h"
 
-CPhraseDialogManager::CPhraseDialogManager	(void)
+CPhraseDialogManager::CPhraseDialogManager	()
 {
 }
-CPhraseDialogManager::~CPhraseDialogManager	(void)
+CPhraseDialogManager::~CPhraseDialogManager	()
 {
 }
 

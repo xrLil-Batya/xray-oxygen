@@ -13,12 +13,12 @@
 #include "gameobject.h"
 #include "relation_registry.h"
 
-CAI_PhraseDialogManager::CAI_PhraseDialogManager(void)
+CAI_PhraseDialogManager::CAI_PhraseDialogManager()
 {
 	m_sStartDialog = m_sDefaultStartDialog = nullptr;
 }
 
-CAI_PhraseDialogManager::~CAI_PhraseDialogManager(void) {}
+CAI_PhraseDialogManager::~CAI_PhraseDialogManager() {}
 
 //PhraseDialogManager
 void CAI_PhraseDialogManager::ReceivePhrase (DIALOG_SHARED_PTR& phrase_dialog)

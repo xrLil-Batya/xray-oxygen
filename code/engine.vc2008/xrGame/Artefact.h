@@ -41,7 +41,7 @@ public:
 
 protected:
 	virtual void					UpdateCLChild					()		{};
-	virtual void					CreateArtefactActivation			();
+	virtual void					CreateArtefactActivation		();
 
 	SArtefactActivation*			m_activationObj;
 	SArtefactDetectorsSupport*		m_detectorObj;
@@ -49,11 +49,14 @@ protected:
 	u16								m_CarringBoneID;
 	shared_str						m_sParticlesName;
 
+	bool							m_bLightsEnabled;
 	ref_light						m_pTrailLight;
+	bool							m_bTrailLightShadow;
+	bool							m_bTrailLightVolumetric;
 	Fcolor							m_TrailLightColor;
 	float							m_fTrailLightRange;
+	float							m_fTrailLightVirtualSize;
 	u8								m_af_rank;
-	bool							m_bLightsEnabled;
 	float							m_additional_weight;
 
 	virtual void					UpdateLights					();
@@ -84,10 +87,9 @@ public:
 	enum EAFHudStates {
 		eActivating = eLastBaseState+1,
 	};
-	virtual void					Interpolate			();
 
 	virtual	void					PlayAnimIdle		();
-	virtual void					MoveTo(Fvector const & position);
+	virtual void					MoveTo				(Fvector const & position);
 	virtual void					StopActivation		();
 
 	virtual void					ForceTransform		(const Fmatrix& m);
@@ -139,4 +141,3 @@ struct SArtefactDetectorsSupport
 add_to_type_list(CArtefact)
 #undef script_type_list
 #define script_type_list save_type_list(CArtefact)
-

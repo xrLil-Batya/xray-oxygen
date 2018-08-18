@@ -47,11 +47,11 @@ void CFoodItem::OnEvent(NET_Packet& P, u16 type)
 	}
 }
 
-void CFoodItem::BreakToPieces()
+void CFoodItem::BreakToPieces() noexcept
 {
 	//играем звук
 	if(bHasBreakSnd)
-		sndBreaking.play_at_pos(0, Position(), false);
+		sndBreaking.play_at_pos(nullptr, Position());
 
 	if (bIsBottele)
 	{
@@ -60,7 +60,7 @@ void CFoodItem::BreakToPieces()
 		{
 			//показываем эффекты
 			CParticlesObject* pStaticPG;
-			pStaticPG = CParticlesObject::Create(m_sBreakParticles.c_str(), TRUE);
+			pStaticPG = CParticlesObject::Create(m_sBreakParticles.c_str());
 			pStaticPG->play_at_pos(Position());
 		}
 
@@ -78,13 +78,13 @@ void CFoodItem::Hit(SHit* pHDS)
 
 	if (bIsBottele && (pHDS->damage() > fBreakPower))
 	{
-		//Generate Expode event
+		//Generate Explode event
 		if (Local())
 		{
 			NET_Packet P;
 			u_EventGen(P, GE_GRENADE_EXPLODE, ID());
 			u_EventSend(P);
-		};
+		}
 	}
 }
 

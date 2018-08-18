@@ -10,7 +10,7 @@
 #include "profiler.h"
 #include "../xrEngine/gamefont.h"
 
-CProfiler	*g_profiler			= 0;
+CProfiler	*g_profiler			= nullptr;
 LPCSTR		indent				= "  ";
 char		white_character		= '.';
 
@@ -34,7 +34,7 @@ IC	u32 compute_string_length		(LPCSTR str)
 {
 	LPCSTR						i, j = str;
 	u32							count = 0;
-	while ((i = strchr(j,'/')) != 0) {
+	while ((i = strchr(j,'/')) != nullptr) {
 		j = i					= i + 1;
 		++count;
 	}
@@ -46,7 +46,7 @@ IC	void CProfiler::convert_string	(LPCSTR str, shared_str &out, u32 max_string_s
 	string256					m_temp;
 	LPCSTR						i, j = str;
 	u32							count = 0;
-	while ((i = strchr(j,'/')) != 0) {
+	while ((i = strchr(j,'/')) != nullptr) {
 		j = i					= i + 1;
 		++count;
 	}
@@ -69,7 +69,7 @@ void CProfiler::setup_timer			(LPCSTR timer_id, const u64 &timer_time, const u32
 	if (i == m_timers.end()) {
 		xr_strcpy					(m_temp,timer_id);
 		LPSTR					j,k = m_temp;
-		while ((j = strchr(k,'/')) != 0) {
+		while ((j = strchr(k,'/')) != nullptr) {
 			*j					= 0;
 			auto	m = m_timers.find(m_temp);
 			if (m == m_timers.end())
