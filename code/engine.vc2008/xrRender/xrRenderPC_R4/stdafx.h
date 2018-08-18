@@ -59,4 +59,4 @@ inline void jitter(CBlender_Compile& C)
 }
 
 extern D3D11_USAGE CurrUsageVer;
-extern int CurrBindFlag;
+extern UINT CurrBindFlag;

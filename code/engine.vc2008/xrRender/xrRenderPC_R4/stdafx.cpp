@@ -11,4 +11,4 @@
 // and not in this file
 
 D3D11_USAGE CurrUsageVer = D3D11_USAGE_DEFAULT;
-int CurrBindFlag = D3D11_BIND_SHADER_RESOURCE;
+UINT CurrBindFlag = D3D11_BIND_SHADER_RESOURCE;

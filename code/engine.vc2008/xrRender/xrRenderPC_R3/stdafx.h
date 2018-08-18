@@ -58,5 +58,5 @@ inline void jitter(CBlender_Compile& C)
 	C.r_dx10Sampler	("smp_jitter");
 }
 
-extern int CurrUsageVer;
-extern int CurrBindFlag;
+extern D3D10_USAGE CurrUsageVer;
+extern UINT CurrBindFlag;

@@ -8,5 +8,5 @@
 // and not in this file
 
 
-int CurrUsageVer = D3D_USAGE_DEFAULT;
-int CurrBindFlag = D3D_BIND_SHADER_RESOURCE;
+D3D10_USAGE CurrUsageVer = D3D_USAGE_DEFAULT;
+UINT CurrBindFlag = D3D_BIND_SHADER_RESOURCE;
