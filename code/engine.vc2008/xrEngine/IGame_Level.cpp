@@ -216,7 +216,7 @@ void	IGame_Level::SoundEvent_Register	( ref_sound_data_ptr S, float range )
 			continue;
 
 		// Energy and signal
-		VERIFY(_valid((*it)->spatial.sphere.P));
+		VERIFY(_valid(pSpatial->spatial.sphere.P));
 		float dist = snd_position.distance_to(pSpatial->spatial.sphere.P);
 		if (dist > p->max_ai_distance) continue;
 
