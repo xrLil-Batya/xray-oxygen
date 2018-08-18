@@ -9,3 +9,6 @@
 
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
+
+D3D11_USAGE CurrUsageVer = D3D11_USAGE_DEFAULT;
+int CurrBindFlag = D3D11_BIND_SHADER_RESOURCE;

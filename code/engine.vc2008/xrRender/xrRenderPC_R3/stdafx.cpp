@@ -6,3 +6,7 @@
 
 // TODO: reference any additional headers you need in STDAFX.H
 // and not in this file
+
+
+int CurrUsageVer = D3D_USAGE_DEFAULT;
+int CurrBindFlag = D3D_BIND_SHADER_RESOURCE;

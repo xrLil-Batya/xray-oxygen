@@ -193,9 +193,10 @@ void CCharacterPhysicsSupport::in_NetSpawn(CSE_Abstract* e)
 
 	}
 	else if (!m_EntityAlife.animation_movement_controlled())
-		ka->PlayCycle("death_init");///íåïîíÿòíî çà÷åì ýòî âîîáùå íàäî çàïóñêàòü
-									///ýòîò õàê íóæåí, ïîòîìó ÷òî íåêîòîðûì ìîíñòðàì 
-									///àíèìàöèÿ ïîñëå ñïîíà, ìîæåò áûòü âîîáùå íå íàçíà÷åíà
+		ka->PlayCycle("death_init");///непонятно зачем это вообще надо запускать
+									///этот хак нужен, потому что некоторым монстрам
+									///анимация после спона, может быть вообще не назначена
+
 	pK->CalculateBones_Invalidate();
 	pK->CalculateBones(TRUE);
 

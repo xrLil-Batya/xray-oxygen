@@ -78,9 +78,9 @@ public:
 	IC void					GetAbsolutePos		(Fvector2& p) 	{Frect abs; GetAbsoluteRect(abs); p.set(abs.x1,abs.y1);}
 
 
-			void			SetWndRect_script	(Frect rect)										{CUISimpleWindow::SetWndRect(rect);}
-			void			SetWndPos_script	(Fvector2 pos)										{CUISimpleWindow::SetWndPos(pos);}
-			void			SetWndSize_script	(Fvector2 size)										{CUISimpleWindow::SetWndSize(size);}
+			void			SetWndRect_script	(const Frect &rect)		noexcept				{CUISimpleWindow::SetWndRect(rect);}
+			void			SetWndPos_script	(const Fvector2 &pos)	noexcept				{CUISimpleWindow::SetWndPos(pos);}
+			void			SetWndSize_script	(const Fvector2 &size)	noexcept				{CUISimpleWindow::SetWndSize(size);}
 
 	//прорисовка окна
 	virtual void			Draw				();

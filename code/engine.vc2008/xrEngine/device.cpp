@@ -402,8 +402,8 @@ void CRenderDevice::Run			()
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
     DWORD	dwWindowStyle		= 0;
-    DWORD	dwWidth				= psCurrentVidMode[0];
-    DWORD	dwHeight			= psCurrentVidMode[1];
+    DWORD	dwWidthCurr				= psCurrentVidMode[0];
+    DWORD	dwHeightCurr			= psCurrentVidMode[1];
     bool	bFullscreen			= psDeviceFlags.is(rsFullscreen);
 
     RECT	WindowBounds;
@@ -417,10 +417,10 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
 
         SetRect	(&WindowBounds,
-				(DesktopRect.right - dwWidth) / 2,
-				(DesktopRect.bottom - dwHeight) / 2,
-				(DesktopRect.right + dwWidth) / 2,
-				(DesktopRect.bottom + dwHeight) / 2);
+				(DesktopRect.right - dwWidthCurr) / 2,
+				(DesktopRect.bottom - dwHeightCurr) / 2,
+				(DesktopRect.right + dwWidthCurr) / 2,
+				(DesktopRect.bottom + dwHeightCurr) / 2);
     }
         break;
     case WPS_WindowedBorderless:
@@ -429,10 +429,10 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         dwWindowStyle = WS_VISIBLE;
 
         SetRect	(&WindowBounds,
-				(DesktopRect.right - dwWidth) / 2,
-				(DesktopRect.bottom - dwHeight) / 2, 
-				(DesktopRect.right + dwWidth) / 2,
-				(DesktopRect.bottom + dwHeight) / 2);
+				(DesktopRect.right - dwWidthCurr) / 2,
+				(DesktopRect.bottom - dwHeightCurr) / 2, 
+				(DesktopRect.right + dwWidthCurr) / 2,
+				(DesktopRect.bottom + dwHeightCurr) / 2);
     }
         break;
     case WPS_FullscreenBorderless:

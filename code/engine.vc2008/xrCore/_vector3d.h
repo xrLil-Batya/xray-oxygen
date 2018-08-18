@@ -106,7 +106,7 @@ public:
 	}
 
 	// Clamp vector3
-	IC	SelfRef	clamp	(SelfCRef min, const Self max)
+	IC	SelfRef	clamp	(SelfCRef min, const Self &max)
 	{
 		::clamp(x,min.x,max.x);
 		::clamp(y,min.y,max.y);
