@@ -205,29 +205,36 @@ void	IGame_Level::SoundEvent_Register	( ref_sound_data_ptr S, float range )
 	g_SpatialSpace->q_box	(snd_ER,0,STYPE_REACTTOSOUND,snd_position,bb_size);
 
 	// Iterate
-	xr_vector<ISpatial*>::iterator	it	= snd_ER.begin	();
-	xr_vector<ISpatial*>::iterator	end	= snd_ER.end	();
-	for (; it!=end; it++)	{
-		Feel::Sound* L		= (*it)->dcast_FeelSound	();
-		if (0==L)			continue;
-		CObject* CO = (*it)->dcast_CObject();	VERIFY(CO);
-		if (CO->getDestroy()) continue;
+	for (ISpatial* pSpatial : snd_ER)
+	{
+		Feel::Sound* L = pSpatial->dcast_FeelSound();
+		if (0 == L)		
+			continue;
+
+		CObject* CO = pSpatial->dcast_CObject();	VERIFY(CO);
+		if (CO->getDestroy()) 
+			continue;
 
 		// Energy and signal
-		VERIFY				(_valid((*it)->spatial.sphere.P));
-		float dist			= snd_position.distance_to((*it)->spatial.sphere.P);
-		if (dist>p->max_ai_distance) continue;
-		VERIFY				(_valid(dist));
-		VERIFY2				(!fis_zero(p->max_ai_distance), S->handle->file_name());
-		float Power			= (1.f-dist/p->max_ai_distance)*p->volume;
-		VERIFY				(_valid(Power));
-		if (Power>EPS_S)	{
-			float occ		= Sound->get_occlusion_to((*it)->spatial.sphere.P,snd_position);
-			VERIFY			(_valid(occ))	;
-			Power			*= occ;
-			if (Power>EPS_S)	{
-				_esound_delegate	D	=	{ L, S, Power };
-				snd_Events.push_back	(D)	;
+		VERIFY(_valid((*it)->spatial.sphere.P));
+		float dist = snd_position.distance_to(pSpatial->spatial.sphere.P);
+		if (dist > p->max_ai_distance) continue;
+
+		VERIFY(_valid(dist));
+		VERIFY2(!fis_zero(p->max_ai_distance), S->handle->file_name());
+
+		float Power = (1.f - dist / p->max_ai_distance)*p->volume;
+		VERIFY(_valid(Power));
+		if (Power > EPS_S) 
+		{
+			float occ = Sound->get_occlusion_to(pSpatial->spatial.sphere.P, snd_position);
+			VERIFY(_valid(occ));
+			Power *= occ;
+
+			if (Power > EPS_S)
+			{
+				_esound_delegate	D = { L, S, Power };
+				snd_Events.push_back(D);
 			}
 		}
 	}

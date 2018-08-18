@@ -373,11 +373,13 @@ void CRenderDevice::Run			()
 	dwTimeGlobal				= 0;
 	Timer_MM_Delta				= 0;
 	{
-		u32 time_mm			= timeGetTime	();
-		while (timeGetTime()==time_mm);			// wait for next tick
-			u32 time_system		= timeGetTime	();
-		u32 time_local		= TimerAsync	();
-		Timer_MM_Delta		= time_system-time_local;
+		u32 time_mm = timeGetTime	();
+		// wait for next tick
+		while (timeGetTime()==time_mm);	 //-V529
+
+		u32 time_system = timeGetTime	();
+		u32 time_local  = TimerAsync	();
+		Timer_MM_Delta  = time_system-time_local;
 	}
 
 	// Start all threads
@@ -457,7 +459,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     }
 
 	if(!strstr(Core.Params, "-editor"))
-		SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle);
+		SetWindowLongPtr(m_hWnd, GWL_STYLE, dwWindowStyle);
 
     bool bNewFullscreen = psDeviceFlags.is(rsFullscreen);
 

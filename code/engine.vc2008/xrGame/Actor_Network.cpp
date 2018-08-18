@@ -639,56 +639,53 @@ void	CActor::OnRender_Network()
 			Fvector bc; bc.add(Position(), m_AutoPickUp_AABB_Offset);
 			Fvector bd = m_AutoPickUp_AABB;
 
-			Level().debug_renderer().draw_aabb			(bc, bd.x, bd.y, bd.z, color_rgba(0, 255, 0, 255));
+			Level().debug_renderer().draw_aabb(bc, bd.x, bd.y, bd.z, color_rgba(0, 255, 0, 255));
 		};
-		
-		IKinematics* V		= smart_cast<IKinematics*>(Visual());
+
+		IKinematics* V = smart_cast<IKinematics*>(Visual());
 		if (dbg_net_Draw_Flags.test(dbg_draw_actor_alive) && V)
 		{
 			if (this != Level().CurrentViewEntity() || cam_active != eacFirstEye)
 			{
 				CCF_Skeleton* Skeleton = smart_cast<CCF_Skeleton*>(collidable.model);
-				if (Skeleton){
+				if (Skeleton) {
 					Skeleton->_dbg_refresh();
 
 					const CCF_Skeleton::ElementVec& Elements = Skeleton->_GetElements();
-					for (const auto & Element : Elements){
+					for (const auto & Element : Elements) {
 						if (!Element.valid())		continue;
-						switch (Element.type){
-							case SBoneShape::stBox:{
-								Fmatrix M;
-								M.invert			(Element.b_IM);
-								Fvector h_size		= Element.b_hsize;
-								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 255, 0, 255));
-							}break;
-							case SBoneShape::stCylinder:{
-								Fmatrix M;
-								M.c.set				(Element.c_cylinder.m_center);
-								M.k.set				(Element.c_cylinder.m_direction);
-								Fvector				h_size;
-								h_size.set			(Element.c_cylinder.m_radius,Element.c_cylinder.m_radius,Element.c_cylinder.m_height*0.5f);
-								Fvector::generate_orthonormal_basis(M.k,M.j,M.i);
-								Level().debug_renderer().draw_obb	(M, h_size, color_rgba(0, 127, 255, 255));
-							}break;
-							case SBoneShape::stSphere:{
-								Fmatrix				l_ball;
-								l_ball.scale		(Element.s_sphere.R, Element.s_sphere.R, Element.s_sphere.R);
-								l_ball.translate_add(Element.s_sphere.P);
-								Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
-							}break;
+						switch (Element.type) {
+						case SBoneShape::stBox: {
+							Fmatrix M;
+							M.invert(Element.b_IM);
+							Fvector h_size = Element.b_hsize;
+							Level().debug_renderer().draw_obb(M, h_size, color_rgba(0, 255, 0, 255));
+						}break;
+						case SBoneShape::stCylinder: {
+							Fmatrix M;
+							M.c.set(Element.c_cylinder.m_center);
+							M.k.set(Element.c_cylinder.m_direction);
+							Fvector				h_size;
+							h_size.set(Element.c_cylinder.m_radius, Element.c_cylinder.m_radius, Element.c_cylinder.m_height*0.5f);
+							Fvector::generate_orthonormal_basis(M.k, M.j, M.i);
+							Level().debug_renderer().draw_obb(M, h_size, color_rgba(0, 127, 255, 255));
+						}break;
+						case SBoneShape::stSphere: {
+							Fmatrix				l_ball;
+							l_ball.scale(Element.s_sphere.R, Element.s_sphere.R, Element.s_sphere.R);
+							l_ball.translate_add(Element.s_sphere.P);
+							Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
+						}break;
 						};
-					};					
+					};
 				}
 			};
 		};
 
 		if (!(dbg_net_Draw_Flags.is_any(dbg_draw_actor_dead))) return;
-		
+
 		dbg_draw_piramid(Position(), character_physics_support()->movement()->GetVelocity(), size, -r_model_yaw, color_rgba(128, 255, 128, 255));
-		dbg_draw_piramid(IStart.Pos, IStart.Vel, size, -IStart.o_model, color_rgba(255, 0, 0, 255));
-		dbg_draw_piramid(IRec.Pos, IRec.Vel, size, -IRec.o_model, color_rgba(0, 0, 255, 255));
-		dbg_draw_piramid(IEnd.Pos, IEnd.Vel, size, -IEnd.o_model, color_rgba(0, 255, 0, 255));
-		
+
 		Fmatrix MS, MH, ML, *pM = nullptr;
 		ML.translate(0, 0.2f, 0);
 		MS.translate(0, 0.2f, 0);
@@ -699,206 +696,42 @@ void	CActor::OnRender_Network()
 		u32	cColor = 0, sColor = 0;
 		VIS_POSITION*	pLastPos = nullptr;
 
-		switch (g_cl_InterpolationType)
-		{
-		case 0: ppoint0 = &point0L; ppoint1 = &point1L; cColor = color_rgba(0, 255, 0, 255); sColor = color_rgba(128, 255, 128, 255); pM = &ML; pLastPos = &LastPosL; break;
-		case 1: ppoint0 = &point0S; ppoint1 = &point1S; cColor = color_rgba(0, 0, 255, 255); sColor = color_rgba(128, 128, 255, 255); pM = &MS; pLastPos = &LastPosS; break;
-		case 2: ppoint0 = &point0H; ppoint1 = &point1H; cColor = color_rgba(255, 0, 0, 255); sColor = color_rgba(255, 128, 128, 255); pM = &MH; pLastPos = &LastPosH; break;
-		}
-
-		//drawing path trajectory
-		float c = 0;
-		for (int i = 0; i<11; i++)
-		{
-			c = float(i) * 0.1f;
-			for (u32 k=0; k<3; k++)
-			{
-				point1S[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
-				point1H[k] = c*(c*(c*HCoeff[k][0]+HCoeff[k][1])+HCoeff[k][2])+HCoeff[k][3];
-				point1L[k] = IStart.Pos[k] + c*(IEnd.Pos[k]-IStart.Pos[k]);
-			};
-			if (i!=0)
-				Level().debug_renderer().draw_line(*pM, *ppoint0, *ppoint1, cColor);
-
-			point0S.set(point1S);
-			point0H.set(point1H);
-			point0L.set(point1L);
-		};
-
-		//drawing speed vectors
-		for (int i=0; i<2; i++)
-		{
-			c = float(i);
-			for (u32 k=0; k<3; k++)
-			{
-				point1S[k] = c*(c*(c*SCoeff[k][0]+SCoeff[k][1])+SCoeff[k][2])+SCoeff[k][3];
-				point1H[k] = c*(c*(c*HCoeff[k][0]+HCoeff[k][1])+HCoeff[k][2])+HCoeff[k][3];
-
-				tS[k] = (c*c*SCoeff[k][0]*3+c*SCoeff[k][1]*2+SCoeff[k][2])/3; //     3       !!!!
-				tH[k] = (c*c*HCoeff[k][0]*3+c*HCoeff[k][1]*2+HCoeff[k][2]); 
-			};
-
-			point0S.add(tS, point1S);
-			point0H.add(tH, point1H);
-
-			if (g_cl_InterpolationType > 0)
-			{
-				Level().debug_renderer().draw_line(*pM, *ppoint0, *ppoint1, sColor);
-			}
-		}
-
 		//draw interpolation history curve
 		if (!pLastPos->empty())
 		{
 			Fvector Pos1, Pos2;
-            auto It = pLastPos->begin();
+			auto It = pLastPos->begin();
 			Pos1 = *It;
 			for (; It != pLastPos->end(); It++)
 			{
 				Pos2 = *It;
 
-				Level().debug_renderer().draw_line	(*pM, Pos1, Pos2, cColor);
-				Level().debug_renderer().draw_aabb	(Pos2, size/5, size/5, size/5, sColor);
+				Level().debug_renderer().draw_line(*pM, Pos1, Pos2, cColor);
+				Level().debug_renderer().draw_aabb(Pos2, size / 5, size / 5, size / 5, sColor);
 				Pos1 = *It;
 			};
 		};
-
-		Fvector PH, PS;
-		PH.set(IPosH); PH.y += 1;
-		PS.set(IPosS); PS.y += 1;
 		/////////////////////////////////////////////////////////////////////////////////
 	}
 	else
 	{
 		if (!(dbg_net_Draw_Flags.is_any(dbg_draw_actor_dead))) return;
 
-		IKinematics* V		= smart_cast<IKinematics*>(Visual());
+		IKinematics* V = smart_cast<IKinematics*>(Visual());
 		if (dbg_net_Draw_Flags.test(dbg_draw_actor_alive) && V)
 		{
 			u16 BoneCount = V->LL_BoneCount();
-			for (u16 i=0; i<BoneCount; i++)
+			for (u16 i = 0; i < BoneCount; i++)
 			{
 				Fobb BoneOBB = V->LL_GetBox(i);
 				Fmatrix BoneMatrix; BoneOBB.xform_get(BoneMatrix);
 				Fmatrix BoneMatrixRes; BoneMatrixRes.mul(V->LL_GetTransform(i), BoneMatrix);
 				BoneMatrix.mul(XFORM(), BoneMatrixRes);
 				Level().debug_renderer().draw_obb(BoneMatrix, BoneOBB.m_halfsize, color_rgba(0, 255, 0, 255));
-			};
-		};
-
-		if (!m_States.empty())
-		{
-			u32 NumBones = m_States.size();
-			for (u32 i=0; i<NumBones; i++)
-			{
-				SPHNetState state = m_States[i];			
-
-				Fvector half_dim;
-				half_dim.x = 0.2f;
-				half_dim.y = 0.1f;
-				half_dim.z = 0.1f;
-
-				u32 Color = color_rgba(255, 0, 0, 255);
-
-				Fmatrix M;
-				
-				M = Fidentity;
-				M.rotation(state.quaternion);
-				M.translate_add(state.position);
-				Level().debug_renderer().draw_obb				(M, half_dim, Color);
-
-				if (!PHGetSyncItem(u16(i))) continue;
-				PHGetSyncItem(u16(i))->get_State(state);
-
-				Color = color_rgba(0, 255, 0, 255);
-				M = Fidentity;
-				M.rotation(state.quaternion);
-				M.translate_add(state.position);
-				Level().debug_renderer().draw_obb				(M, half_dim, Color);
-			};
-		}
-		else
-		{
-			if (!g_Alive() && PHGetSyncItemsNumber() > 2)
-			{
-				u16 NumBones = PHGetSyncItemsNumber();
-				for (u16 i=0; i<NumBones; i++)
-				{
-					SPHNetState state;// = m_States[i];
-					PHGetSyncItem(i)->get_State(state);
-
-					Fmatrix M;
-					M = Fidentity;
-					M.rotation(state.quaternion);
-					M.translate_add(state.position);
-
-					Fvector half_dim;
-					half_dim.x = 0.2f;
-					half_dim.y = 0.1f;
-					half_dim.z = 0.1f;
-
-					u32 Color = color_rgba(0, 255, 0, 255);
-					Level().debug_renderer().draw_obb				(M, half_dim, Color);
-				};
-				//-----------------------------------------------------------------
-				Fvector min,max;
-
-				min.set(F_MAX,F_MAX,F_MAX);
-				max.set(-F_MAX,-F_MAX,-F_MAX);
-				/////////////////////////////////////
-				for(u16 i=0;i<NumBones;i++)
-				{
-					SPHNetState state;
-					PHGetSyncItem(i)->get_State(state);
-
-					Fvector& p=state.position;
-					UpdateLimits (p, min, max);
-
-					Fvector px =state.linear_vel;
-					px.div(10.0f);
-					px.add(state.position);
-					UpdateLimits (px, min, max);
-				};
-
-				NET_Packet PX;
-				for(u16 i=0;i<NumBones;i++)
-				{
-					SPHNetState state;
-					PHGetSyncItem(i)->get_State(state);
-
-					PX.B.count = 0;
-					w_vec_q8(PX,state.position,min,max);
-					w_qt_q8(PX,state.quaternion);
-//					w_vec_q8(PX,state.linear_vel,min,max);
-
-					PX.r_pos = 0;
-					r_vec_q8(PX,state.position,min,max);
-					r_qt_q8(PX,state.quaternion);
-//					r_vec_q8(PX,state.linear_vel,min,max);
-					//===============================================
-					Fmatrix M;
-					M = Fidentity;
-					M.rotation(state.quaternion);
-					M.translate_add(state.position);
-
-					Fvector half_dim;
-					half_dim.x = 0.2f;
-					half_dim.y = 0.1f;
-					half_dim.z = 0.1f;
-
-					u32 Color = color_rgba(255, 0, 0, 255);
-					Level().debug_renderer().draw_obb				(M, half_dim, Color);
-				};	
-				Fvector LC, LS;
-				LC.add(min, max); LC.div(2.0f);
-				LS.sub(max, min); LS.div(2.0f);
-
-				Level().debug_renderer().draw_aabb			(LC, LS.x, LS.y, LS.z, color_rgba(255, 128, 128, 255));
-				//-----------------------------------------------------------------
-			};
+			}
 		}
 	}
-};
+}
 
 #endif
 
