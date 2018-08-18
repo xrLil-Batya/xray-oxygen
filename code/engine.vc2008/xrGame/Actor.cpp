@@ -907,7 +907,8 @@ void CActor::set_state_box(u32	mstate)
 
 void CActor::shedule_Update	(u32 DT)
 {
-	setSVU							(true);
+	thread_name("X-Ray: Actor Sheduler");
+	setSVU(true);
 
 	if (IsFocused())
 	{

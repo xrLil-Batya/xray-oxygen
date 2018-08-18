@@ -792,7 +792,7 @@ void remove_spaces(PSTR str) // in & out
 	{
 		strncpy_s(str, str_size, new_str, i);
 	}
-	delete new_str;
+	delete[] new_str;
 }
 
 void split_cmd( PSTR first, PSTR second, LPCSTR str )

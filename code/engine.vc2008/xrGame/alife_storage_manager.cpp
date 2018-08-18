@@ -138,10 +138,10 @@ bool CALifeStorageManager::load(LPCSTR save_name_no_check)
 	string_path save;
 	xr_strcpy(save, m_save_name);
 
-	if (!xr_strlen(m_save_name))
+	if (!xr_strlen(save_name))
 	{
-		Msg("There is no file name specified!", m_save_name);
-		return					(false);
+		Msg("There is no file name specified! %s", m_save_name);
+		return (false);
 	}
 	else
 	{
