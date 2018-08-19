@@ -295,6 +295,7 @@ void CSheduler::ProcessStep()
 		TNext.Object = T.Object;
 		TNext.scheduled_name = T.Object->shedule_Name();
 		ItemsProcessed.push_back(TNext);
+		asyncUpdate.wait();
 
 	}
 
@@ -341,7 +342,7 @@ void CSheduler::Update()
 		}
 
 		u32	Elapsed = dwTime - item.dwTimeOfLastExecute;
-		auto asyncUpdate = std::async(std::launch::async, &ISheduled::shedule_Update, item.Object, Elapsed);
+		item.Object->shedule_Update(Elapsed);
 		item.dwTimeOfLastExecute = dwTime;
 	}
 
@@ -356,5 +357,6 @@ void CSheduler::Update()
 	// Finalize
 	g_bSheduleInProgress = FALSE;
 	internal_Registration();
+	asyncUpdate.wait();
 	Device.Statistic->Sheduler.End();
 }

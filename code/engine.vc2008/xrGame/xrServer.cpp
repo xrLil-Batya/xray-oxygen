@@ -70,12 +70,12 @@ INT g_sv_SendUpdate = 0;
 void xrServer::Update	()
 {
 
-    if (Level().game)
-	{
-        CScriptProcess* script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
-        if (script_process)
-            script_process->update();
-    }
+//    if (Level().game)
+//	{
+//        CScriptProcess* script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
+//        if (script_process)
+//            script_process->update();
+//    }
 
 	if (game->sv_force_sync)
         Perform_game_export();
