@@ -5,16 +5,15 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script particle action class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "script_abstract_action.h"
+#include "../xrScripts/export/script_abstract_action.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrParticles/particle_params.h"
 
 class CParticlesObject;
 
-class CScriptParticleAction : public CScriptAbstractAction {
+class PARTICLES_API CScriptParticleAction : public CScriptAbstractAction 
+{
 public:
 	enum EGoalType {
 		eGoalTypeParticleAttached = u32(0),

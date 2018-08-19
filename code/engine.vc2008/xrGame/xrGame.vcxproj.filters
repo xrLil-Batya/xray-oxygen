@@ -1786,9 +1786,6 @@
     <Filter Include="ScriptEngine\ScriptClasses\ScriptActions">
       <UniqueIdentifier>{c45d5cf8-1f6a-4f81-96ba-53991c53b142}</UniqueIdentifier>
     </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action">
-      <UniqueIdentifier>{1f3702ef-9676-4a78-8742-bf9a794ecc38}</UniqueIdentifier>
-    </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_movement_action">
       <UniqueIdentifier>{7ae683e8-aef1-4a99-9c5a-5542dc98dcd2}</UniqueIdentifier>
     </Filter>
@@ -1803,9 +1800,6 @@
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_sound_action">
       <UniqueIdentifier>{f6fc3bb9-1a28-45ff-98ee-ccc475182c2b}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_particle_action">
-      <UniqueIdentifier>{7c9cb8fe-913e-46e8-b1ca-55b19589ea7d}</UniqueIdentifier>
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\ScriptActions\script_object_action">
       <UniqueIdentifier>{f5eeabdc-5c0b-4721-af35-59a604284097}</UniqueIdentifier>
@@ -2025,9 +2019,6 @@
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\ScriptLAnim">
       <UniqueIdentifier>{af2c7057-c6ae-492f-b49d-6e414c09ec9e}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="ScriptEngine\ScriptClasses\ScriptParticles">
-      <UniqueIdentifier>{36e72721-560a-45b7-88bb-0f3d349c1097}</UniqueIdentifier>
     </Filter>
     <Filter Include="ScriptEngine\ScriptClasses\ScriptSound">
       <UniqueIdentifier>{3654ab94-4b14-4ba7-be65-738bc84072d5}</UniqueIdentifier>
@@ -4491,12 +4482,6 @@
     <ClInclude Include="script_bind_macroses.h">
       <Filter>ScriptEngine\ScriptClasses</Filter>
     </ClInclude>
-    <ClInclude Include="script_abstract_action.h">
-      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action</Filter>
-    </ClInclude>
-    <ClInclude Include="script_abstract_action_inline.h">
-      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action</Filter>
-    </ClInclude>
     <ClInclude Include="script_movement_action.h">
       <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action</Filter>
     </ClInclude>
@@ -4523,12 +4508,6 @@
     </ClInclude>
     <ClInclude Include="script_sound_action_inline.h">
       <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_sound_action</Filter>
-    </ClInclude>
-    <ClInclude Include="script_particle_action.h">
-      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_particle_action</Filter>
-    </ClInclude>
-    <ClInclude Include="script_particle_action_inline.h">
-      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClInclude>
     <ClInclude Include="script_object_action.h">
       <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_object_action</Filter>
@@ -4634,9 +4613,6 @@
     </ClInclude>
     <ClInclude Include="script_lanim.h">
       <Filter>ScriptEngine\ScriptClasses\ScriptLAnim</Filter>
-    </ClInclude>
-    <ClInclude Include="script_particles.h">
-      <Filter>ScriptEngine\ScriptClasses\ScriptParticles</Filter>
     </ClInclude>
     <ClInclude Include="script_sound.h">
       <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>
@@ -7064,9 +7040,6 @@
     <ClCompile Include="patrol_point.cpp">
       <Filter>AI\ANavigation\PatrolPaths\PatrolPoint</Filter>
     </ClCompile>
-    <ClCompile Include="script_abstract_action.cpp">
-      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_abstract_action</Filter>
-    </ClCompile>
     <ClCompile Include="script_movement_action.cpp">
       <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_movement_action</Filter>
     </ClCompile>
@@ -7084,9 +7057,6 @@
     </ClCompile>
     <ClCompile Include="script_sound_action.cpp">
       <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_sound_action</Filter>
-    </ClCompile>
-    <ClCompile Include="script_particle_action.cpp">
-      <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_particle_action</Filter>
     </ClCompile>
     <ClCompile Include="script_object_action.cpp">
       <Filter>ScriptEngine\ScriptClasses\ScriptActions\script_object_action</Filter>
@@ -7192,9 +7162,6 @@
     </ClCompile>
     <ClCompile Include="script_lanim.cpp">
       <Filter>ScriptEngine\ScriptClasses\ScriptLAnim</Filter>
-    </ClCompile>
-    <ClCompile Include="script_particles.cpp">
-      <Filter>ScriptEngine\ScriptClasses\ScriptParticles</Filter>
     </ClCompile>
     <ClCompile Include="script_sound.cpp">
       <Filter>ScriptEngine\ScriptClasses\ScriptSound</Filter>

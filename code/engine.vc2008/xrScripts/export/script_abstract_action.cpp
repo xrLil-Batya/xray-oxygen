@@ -1,21 +1,17 @@
 ////////////////////////////////////////////////////////////////////////////
-//	Module 		: script_abstract_action.h
+//	Module 		: script_abstract_action.cpp
 //	Created 	: 30.09.2003
 //  Modified 	: 29.06.2004
 //	Author		: Dmitriy Iassenev
 //	Description : Script abstract action
 ////////////////////////////////////////////////////////////////////////////
+#include "script_abstract_action.h"
 
-#pragma once
+CScriptAbstractAction::CScriptAbstractAction() : m_bCompleted(true)
+{
+}
 
-class CScriptAbstractAction {
-public:
-	bool			m_bCompleted;
-
-public:
-	IC				CScriptAbstractAction	();
-	virtual			~CScriptAbstractAction	();
-	virtual	bool	completed				();
-};
-
-#include "script_abstract_action_inline.h"
+bool CScriptAbstractAction::completed()
+{
+	return				(m_bCompleted);
+}

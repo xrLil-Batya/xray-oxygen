@@ -53,7 +53,7 @@ protected:
 	mutable bool						m_actual;
 
 protected:
-			void						register_classes				();
+			void						register_classes				() noexcept;
 	IC		void						add								(CObjectItemAbstract *item);
 	IC		const OBJECT_ITEM_STORAGE	&clsids							() const;
 	IC		void						actualize						() const;

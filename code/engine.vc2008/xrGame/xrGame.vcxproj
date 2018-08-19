@@ -1226,8 +1226,6 @@
     <ClInclude Include="..\xrServerEntities\script_export_space.h" />
     <ClInclude Include="..\xrServerEntities\script_space_forward.h" />
     <ClInclude Include="script_bind_macroses.h" />
-    <ClInclude Include="script_abstract_action.h" />
-    <ClInclude Include="script_abstract_action_inline.h" />
     <ClInclude Include="script_movement_action.h" />
     <ClInclude Include="script_movement_action_inline.h" />
     <ClInclude Include="patrol_path_params.h" />
@@ -1237,8 +1235,6 @@
     <ClInclude Include="script_animation_action_inline.h" />
     <ClInclude Include="script_sound_action.h" />
     <ClInclude Include="script_sound_action_inline.h" />
-    <ClInclude Include="script_particle_action.h" />
-    <ClInclude Include="script_particle_action_inline.h" />
     <ClInclude Include="script_object_action.h" />
     <ClInclude Include="script_object_action_inline.h" />
     <ClInclude Include="script_action_condition.h" />
@@ -1275,7 +1271,6 @@
     <ClInclude Include="script_callback_ex_nonvoid.h" />
     <ClInclude Include="script_callback_ex_void.h" />
     <ClInclude Include="script_lanim.h" />
-    <ClInclude Include="script_particles.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_engine.h" />
@@ -2139,14 +2134,12 @@
     <ClCompile Include="patrol_path.cpp" />
     <ClCompile Include="patrol_path_storage.cpp" />
     <ClCompile Include="patrol_point.cpp" />
-    <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
     <ClCompile Include="patrol_path_params.cpp" />
     <ClCompile Include="script_watch_action.cpp" />
     <ClCompile Include="script_animation_action.cpp" />
     <ClCompile Include="script_animation_action_script.cpp" />
     <ClCompile Include="script_sound_action.cpp" />
-    <ClCompile Include="script_particle_action.cpp" />
     <ClCompile Include="script_object_action.cpp" />
     <ClCompile Include="script_object_action_script.cpp" />
     <ClCompile Include="script_action_condition.cpp" />
@@ -2182,7 +2175,6 @@
     <ClCompile Include="console_registrator_script.cpp" />
     <ClCompile Include="base_client_classes_script.cpp" />
     <ClCompile Include="script_lanim.cpp" />
-    <ClCompile Include="script_particles.cpp" />
     <ClCompile Include="script_sound.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp" />

@@ -203,6 +203,7 @@
     </PreBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="export\script_abstract_action.cpp" />
     <ClCompile Include="Export\script_fcolor_script.cpp" />
     <ClCompile Include="Export\script_flags_script.cpp" />
     <ClCompile Include="Export\script_fmatrix_script.cpp" />
@@ -391,6 +392,7 @@
     <ClInclude Include="..\..\SDK\include\imdexlib\typelist.hpp" />
     <ClInclude Include="..\..\SDK\include\imdexlib\utility.hpp" />
     <ClInclude Include="Export\ai_sounds.h" />
+    <ClInclude Include="export\script_abstract_action.h" />
     <ClInclude Include="Export\script_export_space.h" />
     <ClInclude Include="Export\script_fcolor.h" />
     <ClInclude Include="Export\script_flags.h" />

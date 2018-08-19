@@ -5,10 +5,10 @@
 //	Author		: Dmitriy Iassenev
 //	Description : XRay Script sound class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "script_particles.h"
 #include "../xrEngine/objectanimator.h"
+#include <luabind\luabind.hpp>
 
 CScriptParticlesCustom::CScriptParticlesCustom(CScriptParticles* owner, LPCSTR caParticlesName):CParticlesObject(caParticlesName,FALSE,true)
 {
