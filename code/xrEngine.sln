@@ -86,6 +86,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Renders", "Renders", "{7A76B1EB-9731-4FA0-8B13-5B5046FF7FC6}"
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
 		Mixed|x64 = Mixed|x64

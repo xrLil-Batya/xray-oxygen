@@ -139,7 +139,6 @@ void	IGame_Level::OnFrame		( )
 	// Update all objects
 	VERIFY						(bReady);
 	Objects.Update				(false);
-	g_hud->OnFrame				();
 
 	// Ambience
 	if (Sounds_Random.size() && (Device.dwTimeGlobal > Sounds_Random_dwNextTime))

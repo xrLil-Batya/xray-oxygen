@@ -99,7 +99,7 @@ bool CLevel::PostponedSpawn(u16 id)
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
-
+static bool ClientSysncDone = false;
 void mtLevelScriptUpdater(void* pCLevel)
 {
 	CLevel* pLevel = reinterpret_cast<CLevel*>(pCLevel);
@@ -114,9 +114,22 @@ void mtLevelScriptUpdater(void* pCLevel)
 		Fvector temp_vector;
 		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
 
+		// commit events from bullet manager from prev-frame
+		pLevel->BulletManager().CommitEvents();
+
 		// Call level script
 		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
 		if (levelScript) levelScript->update();
+
+		// Waiting ClientReceive
+		while (!ClientSysncDone)
+			Sleep(1);
+
+
+		pLevel->MapManager().Update();
+		g_hud->OnFrame(); // [FX] Send джихад g_hud'у
+
+		ClientSysncDone = false;
 
 		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
 	}
@@ -426,20 +439,17 @@ void CLevel::OnFrame()
 	ResetEvent(m_mtScriptUpdaterEventEnd);
 	SetEvent(m_mtScriptUpdaterEventStart);
 
-	// commit events from bullet manager from prev-frame
-	BulletManager().CommitEvents();
 	ClientReceive();
 
 	// Update game events
 	ProcessGameEvents();
+
+	// Send for task updated
+	ClientSysncDone = true;
+
 #ifdef DEBUG
 	DBG_RenderUpdate();
 #endif // #ifdef DEBUG
-
-	Device.seqParallel.emplace_back(m_map_manager, &CMapManager::Update);
-
-	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
-		GameTaskManager().UpdateTasks();
 
 	// Inherited update
 	inherited::OnFrame();
@@ -484,7 +494,9 @@ void CLevel::OnFrame()
  		{
  			Device.ProcessSingleMessage();
  		}
- 	} while (WaitResult == WAIT_TIMEOUT);
+	} while (WaitResult == WAIT_TIMEOUT);
+	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
+		GameTaskManager().UpdateTasks();
 }
 
 int		psLUA_GCSTEP					= 10			;
