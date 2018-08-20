@@ -184,9 +184,9 @@ void CUIRankingWnd::add_achievement(CUIXml& xml, shared_str const& achiev_id)
 
 void CUIRankingWnd::update_info()
 {
-    auto b = m_achieves_vec.begin(), e = m_achieves_vec.end();
-	for(; b!=e; b++)
-		(*b)->Update();
+	for (CUIAchievements* pAchivment: m_achieves_vec)
+		pAchivment->Update();
+
 	get_statistic();
 	get_best_monster();
 	get_favorite_weapon();

@@ -116,6 +116,7 @@ protected:
 	BOOL						net_start_result_total;
 	BOOL						deny_m_spawn;		//only for debug...
 		
+	static void					mtLevelScriptUpdater	(void* pCLevel);
 	void						MakeReconnect();
 	
 	LevelMapSyncData			map_data;
