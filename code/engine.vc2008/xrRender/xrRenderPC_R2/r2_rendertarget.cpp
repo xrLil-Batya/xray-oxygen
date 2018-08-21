@@ -451,9 +451,6 @@ CRenderTarget::CRenderTarget		()
 		g_combine_2UV.create				(FVF::F_TL2uv,	RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_cuboid.create				(FVF::F_L,	RCache.Vertex.Buffer(), RCache.Index.Buffer());
 
-		u32 fvf_aa_blur				= D3DFVF_XYZRHW|D3DFVF_TEX4|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3);
-		g_aa_blur.create			(fvf_aa_blur,	RCache.Vertex.Buffer(), RCache.QuadIB);
-
 		u32 fvf_aa_AA				= D3DFVF_XYZRHW|D3DFVF_TEX7|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3)|D3DFVF_TEXCOORDSIZE2(4)|D3DFVF_TEXCOORDSIZE4(5)|D3DFVF_TEXCOORDSIZE4(6);
 		g_aa_AA.create				(fvf_aa_AA,		RCache.Vertex.Buffer(), RCache.QuadIB);
 
@@ -482,53 +479,54 @@ CRenderTarget::CRenderTarget		()
 			R_CHK						(t_material_surf->LockBox	(0,&R,0,0));
 			for (u32 slice=0; slice<4; slice++)
 			{
-				for (u32 y=0; y<TEX_material_LdotH; y++)
+				for (u32 y = 0; y < TEX_material_LdotH; ++y)
 				{
-					for (u32 x=0; x<TEX_material_LdotN; x++)
+					for (u32 x = 0; x < TEX_material_LdotN; ++x)
 					{
-						u16*	p	=	(u16*)		(LPBYTE (R.pBits) + slice*R.SlicePitch + y*R.RowPitch + x*2);
-						float	ld	=	float(x)	/ float	(TEX_material_LdotN-1);
-						float	ls	=	float(y)	/ float	(TEX_material_LdotH-1) + EPS_S;
-						ls			*=	powf(ld,1/32.f);
-						float	fd;
-						float fs = 1;
+						u16* p = (u16*)(LPBYTE(R.pBits) + slice * R.SlicePitch + y * R.RowPitch + x * 2);
+						float ld = float(x) / float(TEX_material_LdotN - 1);
+						float ls = float(y) / float(TEX_material_LdotH - 1) + EPS_S;
+						ls *= powf(ld, 1.0f / 32.0f);
+						float fd;
+						float fs = 1.0;
 
-						switch	(slice)
+						switch(slice)
 						{
-						case 0:	{ // looks like OrenNayar
-							fd	= powf(ld,0.75f);		// 0.75
-							fs	= powf(ls,16.f)*.5f;
-								}	break;
-						case 1:	{// looks like Blinn
-							fd	= powf(ld,0.90f);		// 0.90
-							fs	= powf(ls,24.f);
-								}	break;
-						case 2:	
-						{ // looks like Phong
+						case 0: // looks like OrenNayar	
+						{ 
+							fd = powf(ld, 0.75f);		// 0.75
+							fs = powf(ls, 16.f) * 0.5f;
+						} break;
+						case 1: // looks like Blinn
+						{
+							fd	= powf(ld, 0.90f);		// 0.90
+							fs	= powf(ls, 24.0f);
+						} break;
+						case 2:	// looks like Phong
+						{ 
 							fd = ld;					// 1.0
-							//#TODO: COMPILER BUG, can't set 128.f as original, set to 125
-							//fs	= powf(ls*1.01f,128.f)
-							// [FX] This is unlimited powf for 15.3.2
-							for (unsigned it = 0; it < 128; it++)
-							{
-								fs *= ls * 1.01f;
-							}
-						}	break;
-						case 3:	{ // looks like Metal
-							float	s0	=	_abs	(1-_abs	(0.05f*_sin(33.f*ld)+ld-ls));
-							float	s1	=	_abs	(1-_abs	(0.05f*_cos(33.f*ld*ls)+ld-ls));
-							float	s2	=	_abs	(1-_abs	(ld-ls));
-							fd		=	ld;				// 1.0
-							fs		=	powf	(std::max(std::max(s0,s1),s2), 24.f);
-							fs		*=	powf	(ld,1/7.f);
-								}	break;
+							fs = powf(ls * 1.01f, 128.f);
+						} break;
+						case 3: // looks like Metal
+						{ 
+							float s0 = _abs(1 - _abs(0.05f*_sin(33.f*ld) + ld - ls));
+							float s1 = _abs(1 - _abs(0.05f*_cos(33.f*ld*ls) + ld - ls));
+							float s2 = _abs(1 - _abs(ld - ls));
+							fd = ld;					// 1.0
+							fs = powf(std::max(std::max(s0, s1), s2), 24.f);
+							fs *= powf(ld, 1.0f / 7.0f);
+						} break;
 						default:
-							fd	= fs = 0;
+							fd	= fs = 0.0f;
 						}
-						s32		_d	=	clampr	(iFloor	(fd*255.5f),	0,255);
-						s32		_s	=	clampr	(iFloor	(fs*255.5f),	0,255);
-						if ((y==(TEX_material_LdotH-1)) && (x==(TEX_material_LdotN-1)))	{ _d = 255; _s=255;	}
-						*p			=	u16		(_s*256 + _d);
+						s32 _d = clampr(iFloor(fd*255.5f), 0, 255);
+						s32 _s = clampr(iFloor(fs*255.5f), 0, 255);
+						if ((y == (TEX_material_LdotH - 1)) && (x == (TEX_material_LdotN - 1)))
+						{ 
+							_d = 255;
+							_s = 255;	
+						}
+						*p = u16(_s * 256 + _d);
 					}
 				}
 			}
@@ -614,20 +612,12 @@ CRenderTarget::CRenderTarget		()
 	s_menu.create						("distort");
 	g_menu.create						(FVF::F_TL,RCache.Vertex.Buffer(),RCache.QuadIB);
 
-	//	Igor: TMP
-	//	Create an RT for online screenshot makining
-	D3DSURFACE_DESC	desc;
-	HW.pBaseRT->GetDesc(&desc);
-	HW.pDevice->CreateOffscreenPlainSurface(Device.dwWidth,Device.dwHeight,desc.Format,D3DPOOL_SYSTEMMEM,&pFB,NULL);
-
 	dwWidth		= Device.dwWidth;
 	dwHeight	= Device.dwHeight;
 }
 
 CRenderTarget::~CRenderTarget	()
 {
-	_RELEASE(pFB);
-
 	// Textures
 	t_material->surface_set		(NULL);
 

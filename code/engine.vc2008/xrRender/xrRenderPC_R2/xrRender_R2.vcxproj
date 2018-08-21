@@ -228,6 +228,7 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
+    <ClInclude Include="..\xrRender\ScreenshotManager.h" />
     <ClInclude Include="blender_gamma.h" />
     <ClInclude Include="blender_rain_drops.h" />
     <ClInclude Include="blender_smaa.h" />
@@ -398,6 +399,7 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
+    <ClCompile Include="..\xrRender\ScreenshotManager.cpp" />
     <ClCompile Include="blender_gamma.cpp" />
     <ClCompile Include="blender_rain_drops.cpp" />
     <ClCompile Include="blender_smaa.cpp" />
@@ -405,6 +407,7 @@
     <ClCompile Include="blender_ssss_ogse.cpp" />
     <ClCompile Include="r2_puddles.cpp" />
     <ClCompile Include="r2_rendertarget_phase_puddles.cpp" />
+    <ClCompile Include="ScreenshotManagerDX9.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
@@ -427,7 +430,6 @@
     <ClCompile Include="..\xrRender\r__dsgraph_render_lods.cpp" />
     <ClCompile Include="..\xrRender\r__occlusion.cpp" />
     <ClCompile Include="..\xrRender\r__pixel_calculator.cpp" />
-    <ClCompile Include="..\xrRender\r__screenshot.cpp" />
     <ClCompile Include="..\xrRender\Texture.cpp" />
     <ClCompile Include="..\xrRender\tga.cpp" />
     <ClCompile Include="..\xrRender\DetailManager.cpp" />

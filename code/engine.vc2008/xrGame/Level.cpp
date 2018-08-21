@@ -1,57 +1,37 @@
 #include "stdafx.h"
-#include "../xrEngine/fdemorecord.h"
-#include "../xrEngine/fdemoplay.h"
-#include "../xrEngine/environment.h"
 #include "../xrEngine/igame_persistent.h"
 #include "../xrParticles/psystem.h"
-#include "../xrParticles/ParticlesObject.h"
 #include "Level.h"
 #include "hudmanager.h"
-#include "xrServer.h"
 #include "net_queue.h"
 #include "game_cl_base.h"
-#include "entity_alive.h"
-#include "ai_space.h"
-#include "ShootingObject.h"
 #include "GameTaskManager.h"
 #include "Level_Bullet_Manager.h"
 #include "script_process.h"
-#include "script_engine.h"
-#include "script_engine_space.h"
-#include "infoportion.h"
-#include "patrol_path_storage.h"
 #include "../xrEngine/date_time.h"
-#include "space_restriction_manager.h"
 #include "seniority_hierarchy_holder.h"
-#include "space_restrictor.h"
+#include "space_restriction_manager.h"
 #include "client_spawn_manager.h"
 #include "autosave_manager.h"
 #include "ClimableObject.h"
 #include "level_graph.h"
 #include "phcommander.h"
 #include "map_manager.h"
-#include "../xrEngine/CameraManager.h"
 #include "level_sounds.h"
-#include "car.h"
 #include "trade_parameters.h"
 #include "MainMenu.h"
-#include "../xrEngine/XR_IOConsole.h"
-#include "actor.h"
 #include "player_hud.h"
 #include "UI/UIGameTutorial.h"
 #include "CustomDetector.h"
-#include "GamePersistent.h"
 
-#include "../xrphysics/iphworld.h"
-#include "../xrphysics/console_vars.h"
 #include "ai/stalker/ai_stalker.h"
 #include "debug_renderer.h"
 #include "physicobject.h"
+#include "string_table.h"
 
 #ifdef DEBUG
 #	include "ai_debug.h"
 #	include "phdebug.h"
-#	include "debug_text_tree.h"
 #	include "level_debug.h"
 #endif
 
@@ -268,6 +248,11 @@ CLevel::~CLevel()
 shared_str CLevel::name() const
 {
 	return (map_data.m_name);
+}
+
+shared_str CLevel::name_translated() const
+{
+	return CStringTable().translate(map_data.m_name);
 }
 
 void CLevel::PrefetchSound(LPCSTR name)

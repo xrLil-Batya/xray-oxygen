@@ -106,9 +106,6 @@ public:
 	ref_rt						rt_SunShaftsMaskSmoothed;
 	ref_rt						rt_SunShaftsPass0;
 
-	//	Igor: for async screenshots
-	ID3DTexture2D*			t_ss_async;				//32bit		(r,g,b,a) is situated in the system memory
-
 	// Textures
 	ID3DTexture3D*			t_material_surf;
 	ref_texture					t_material;
@@ -204,7 +201,6 @@ private:
 	ref_geom				g_combine_VP;		// xy=p,zw=tc
 	ref_geom				g_combine_2UV;
 	ref_geom				g_combine_cuboid;
-	ref_geom				g_aa_blur;
 	ref_geom				g_aa_AA;
 	ref_shader				s_combine_dbg_0;
 	ref_shader				s_combine_dbg_1;
@@ -347,8 +343,6 @@ public:
 	//	Don't clear when render for the first time
 	void						reset_light_marker( bool bResetStencil = false);
 	void						increment_light_marker();
-
-	void						DoAsyncScreenshot		();
 
 #ifdef DEBUG
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{

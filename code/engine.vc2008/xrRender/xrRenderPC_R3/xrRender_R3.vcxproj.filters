@@ -175,6 +175,9 @@
     <Filter Include="Editor">
       <UniqueIdentifier>{76756d5c-532e-43b0-9e63-cd0bee1ef42f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Core\ScreenshotManager">
+      <UniqueIdentifier>{8a531acb-fb81-4ef0-832a-bbd292db8036}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="cl_intersect.h">
@@ -736,6 +739,9 @@
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
+    <ClInclude Include="..\xrRender\ScreenshotManager.h">
+      <Filter>Core\ScreenshotManager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -793,9 +799,6 @@
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\r__pixel_calculator.cpp">
-      <Filter>Core</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrRender\r__screenshot.cpp">
       <Filter>Core</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\tga.cpp">
@@ -1336,6 +1339,12 @@
       <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
+    <ClCompile Include="..\xrRender\ScreenshotManager.cpp">
+      <Filter>Core\ScreenshotManager</Filter>
+    </ClCompile>
+    <ClCompile Include="ScreenshotManagerDX10.cpp">
+      <Filter>Core\ScreenshotManager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

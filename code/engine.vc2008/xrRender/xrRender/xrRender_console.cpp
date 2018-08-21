@@ -418,13 +418,12 @@ public:
 class CCC_Screenshot : public IConsole_Command
 {
 public:
-	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) {};
+	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; }
 	virtual void Execute(LPCSTR args)
 	{
 		string_path	name; name[0] = 0;
-		sscanf		(args,"%s",	name);
-		LPCSTR		image = xr_strlen(name)?name:0;
-		::Render->Screenshot(IRender_interface::SM_NORMAL,image);
+		sscanf(args,"%s", name);
+		::Render->Screenshot(IRender_interface::SM_NORMAL, xr_strlen(name) ? name : nullptr);
 	}
 };
 
@@ -725,6 +724,7 @@ void xrRender_initconsole()
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);
+	CMD3(CCC_Mask, "screenshot_use_gamma_correction", &ps_r_flags, R_FLAG_SS_GAMMA_CORRECTION);
 
 	// Igor: just to test bug with rain/particles corruption
 	CMD1(CCC_RestoreQuadIBData,	"r_restore_quad_ib_data");

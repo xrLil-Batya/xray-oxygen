@@ -352,7 +352,6 @@ void dxRenderDeviceRender::Clear()
 #endif	//	USE_DX10
 }
 
-void DoAsyncScreenshot();
 bool bNeedUpdateGammaLUT = true;
 
 void dxRenderDeviceRender::End()
@@ -378,8 +377,6 @@ void dxRenderDeviceRender::End()
 #endif
 
 	RCache.OnFrameEnd	();
-
-	DoAsyncScreenshot();
 
 #if defined(USE_DX10) || defined(USE_DX11)
 	if (!Device.m_SecondViewport.IsSVPFrame() && !Device.m_SecondViewport.m_bCamReady) //+SecondVP+ Не выводим кадр из второго вьюпорта на экран (на практике у нас экранная картинка обновляется минимум в два раза реже) [don't flush image into display for SecondVP-frame]
