@@ -15,6 +15,7 @@
 #include "ef_base.h"
 #include "xrServer_Objects_ALife.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 CEF_Storage *ef_storage()

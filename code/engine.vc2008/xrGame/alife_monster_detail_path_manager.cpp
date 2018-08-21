@@ -291,7 +291,7 @@ Fvector CALifeMonsterDetailPathManager::draw_level_position	() const
 }
 
 #include "alife_smart_terrain_task.h"
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

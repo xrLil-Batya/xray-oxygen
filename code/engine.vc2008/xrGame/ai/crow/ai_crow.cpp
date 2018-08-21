@@ -434,3 +434,16 @@ void CAI_Crow::create_physic_shell()
 {
 	// do not delete!!!
 }
+
+#include <luabind/luabind.hpp>
+using namespace luabind;
+
+#pragma optimize("s",on)
+void CAI_Crow::script_register(lua_State *L)
+{
+	module(L)
+		[
+			class_<CAI_Crow, CGameObject>("CAI_Crow")
+			.def(constructor<>())
+		];
+}

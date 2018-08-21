@@ -94,7 +94,7 @@ void CSE_ALifeHumanAbstract::add_offline							(const xr_vector<ALife::_OBJECT_I
 }
 
 #include "alife_human_brain.h"
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

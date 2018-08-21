@@ -9,7 +9,7 @@
 #include "ai_debug.h"
 #include "ui/xrUIXmlParser.h"
 #include "actor.h"
-
+#include <luabind/luabind.hpp>
 
 //загрузка из XML файла
 void CDialogScriptHelper::Load		(CUIXml* uiXml, XML_NODE* phrase_node)

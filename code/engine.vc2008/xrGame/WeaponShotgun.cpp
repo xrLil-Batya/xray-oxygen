@@ -249,6 +249,8 @@ void	CWeaponShotgun::net_Export	(NET_Packet& P)
 	}
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 #include "WeaponAutomaticShotgun.h"
 

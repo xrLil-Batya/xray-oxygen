@@ -11,6 +11,7 @@
 #include "ai_space.h"
 #include "level_graph.h"
 #include "../xrServerEntities/object_broker.h"
+#include <luabind/luabind.hpp>
 
 using smart_cover::detail::parse_string;
 using smart_cover::detail::parse_int;

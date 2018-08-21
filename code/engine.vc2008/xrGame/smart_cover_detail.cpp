@@ -7,6 +7,7 @@
 
 #include "stdafx.h"
 #include "smart_cover_detail.h"
+#include <luabind/luabind.hpp>
 
 float smart_cover::detail::parse_float	(
 		luabind::object const &table,

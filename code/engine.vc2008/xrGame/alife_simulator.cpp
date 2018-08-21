@@ -22,6 +22,7 @@
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG
+#include <luabind/luabind.hpp>
 
 const char* alife_section = "alife";
 extern void destroy_lua_wpn_params();
@@ -468,6 +469,8 @@ xr_vector<u16>& get_children(const CALifeSimulator *self, CSE_Abstract *object)
 	VERIFY(self);
 	return object->children;
 }
+
+#include "../../SDK/include/luabind/iterator_policy.hpp"
 
 #pragma optimize("s",on)
 void CALifeSimulator::script_register(lua_State *L)

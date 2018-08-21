@@ -19,6 +19,11 @@
 #include "map_location_defs.h"
 
 #include "actor_statistic_defs.h"
+extern "C"
+{
+#include "lua/lauxlib.h"
+}
+#include "luabind/luabind.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4005)
@@ -27,26 +32,26 @@ template <typename _index_type, typename _data_type>
 class CALifeAbstractRegistry;
 
 //для всех персонажей, те порции информации, которые они помнят
-typedef CALifeAbstractRegistry<u16, KNOWN_INFO_VECTOR > CInfoPortionRegistry;
+using CInfoPortionRegistry = CALifeAbstractRegistry<u16, KNOWN_INFO_VECTOR >;
 add_to_registry_type_list(CInfoPortionRegistry)
 #define info_portions define_constant(CInfoPortionRegistry) 
 #define registry_type_list save_registry_type_list(CInfoPortionRegistry)
 
 //для всех персонажей, отношения с другими персонажами
-typedef CALifeAbstractRegistry<u16, RELATION_DATA > CRelationRegistry;
+using CRelationRegistry = CALifeAbstractRegistry<u16, RELATION_DATA >;
 add_to_registry_type_list(CRelationRegistry)
 #define character_relations define_constant(CRelationRegistry) 
 #define registry_type_list save_registry_type_list(CRelationRegistry)
 
 //список новостей полученных актером, состоит из новостей симуляции и сюжетных (скриптованых) новостей 
-typedef CALifeAbstractRegistry<u16, GAME_NEWS_VECTOR > CGameNewsRegistry;
+using CGameNewsRegistry = CALifeAbstractRegistry<u16, GAME_NEWS_VECTOR >;
 add_to_registry_type_list(CGameNewsRegistry)
 #define game_news define_constant(CGameNewsRegistry) 
 #define registry_type_list save_registry_type_list(CGameNewsRegistry)
 
 
 //список описаний персонажей, которые уже задействованы в игре
-typedef CALifeAbstractRegistry<shared_str, int > CSpecificCharacterRegistry;
+using CSpecificCharacterRegistry = CALifeAbstractRegistry<shared_str, int >;
 add_to_registry_type_list(CSpecificCharacterRegistry)
 #define specific_characters define_constant(CSpecificCharacterRegistry) 
 #define registry_type_list save_registry_type_list(CSpecificCharacterRegistry)

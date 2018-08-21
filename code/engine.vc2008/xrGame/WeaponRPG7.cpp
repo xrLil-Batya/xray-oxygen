@@ -177,6 +177,8 @@ void CWeaponRPG7::OnEvent(NET_Packet& P, u16 type)
 	}
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

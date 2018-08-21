@@ -7,9 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
-extern "C" {
-	#include "lua/lua.h"
-};
+#include <luabind/lua_include.hpp>
 #include "script_engine.h"
 #include "script_thread.h"
 #include "ai_space.h"

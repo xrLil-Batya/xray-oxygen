@@ -12,6 +12,13 @@
 #include "game_object_space.h"
 #include "script_callback_ex.h"
 
+extern "C" {
+#include <lua/lua.h>
+#include <lua/lualib.h>
+#include <lua/lauxlib.h>
+};
+//#include "../../SDK/include/luabind/adopt_policy.hpp"
+
 struct FindLocationBySpotID{
 	shared_str	spot_id;
 	u16			object_id;

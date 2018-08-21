@@ -61,6 +61,7 @@ void CScriptSound::PlayNoFeedback	(CScriptGameObject *object,	u32 flags/*!< Loop
 	m_sound.play_no_feedback((object) ? &object->object() : NULL, flags,delay,&pos,&vol);
 }
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 #pragma optimize("s",on)

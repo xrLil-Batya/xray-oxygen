@@ -2,6 +2,7 @@
 #include "console_registrator.h"
 #include "../xrEngine/xr_ioconsole.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 CConsole*	console()

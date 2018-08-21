@@ -28,6 +28,9 @@
 #include "UICharacterInfo.h"
 #include "ui_base.h"
 
+
+#include <luabind/luabind.hpp>
+
 #define  PDA_RANKING_XML		"pda_ranking.xml"
 
 CUIRankingWnd::CUIRankingWnd()

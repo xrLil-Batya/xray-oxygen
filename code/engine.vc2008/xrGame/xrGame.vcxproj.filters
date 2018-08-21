@@ -2088,9 +2088,6 @@
     <ClInclude Include="script_action_planner_wrapper.h">
       <Filter>AI\AComponents\DecisionManagement\ActionManagement\ActionPlanner\ScriptActionPlannerWrapper</Filter>
     </ClInclude>
-    <ClInclude Include="script_action_planner_wrapper_inline.h">
-      <Filter>AI\AComponents\DecisionManagement\ActionManagement\ActionPlanner\ScriptActionPlannerWrapper</Filter>
-    </ClInclude>
     <ClInclude Include="action_planner_script.h">
       <Filter>AI\AComponents\DecisionManagement\ActionManagement\ActionPlanner\ActionPlannerScript</Filter>
     </ClInclude>
@@ -4186,9 +4183,6 @@
       <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\loophole_actions</Filter>
     </ClInclude>
     <ClInclude Include="smart_cover_planner_target_selector.h">
-      <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\target_selector</Filter>
-    </ClInclude>
-    <ClInclude Include="smart_cover_planner_target_selector_inline.h">
       <Filter>AI\AMonsters\humans\stalker\MovementManager\smart_covers\animation_selector\animation_planner\target_selector</Filter>
     </ClInclude>
     <ClInclude Include="smart_cover_planner_target_provider.h">
@@ -6569,9 +6563,6 @@
     <ClCompile Include="AI\Crow\ai_crow.cpp">
       <Filter>AI\AMonsters\monsters\Crow</Filter>
     </ClCompile>
-    <ClCompile Include="ai_crow_script.cpp">
-      <Filter>AI\AMonsters\monsters\Crow</Filter>
-    </ClCompile>
     <ClCompile Include="ai\Monsters\Burer\burer.cpp">
       <Filter>AI\AMonsters\monsters\Burer</Filter>
     </ClCompile>
@@ -6777,9 +6768,6 @@
       <Filter>AI\AMonsters\monsters\DogPsy</Filter>
     </ClCompile>
     <ClCompile Include="Ai\Trader\ai_trader.cpp">
-      <Filter>AI\AMonsters\humans\trader</Filter>
-    </ClCompile>
-    <ClCompile Include="ai\trader\ai_trader_script.cpp">
       <Filter>AI\AMonsters\humans\trader</Filter>
     </ClCompile>
     <ClCompile Include="ai\trader\trader_animation.cpp">
@@ -7763,9 +7751,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_script.cpp">
       <Filter>Core\Server\ServerEntities\objects</Filter>
     </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script2.cpp">
-      <Filter>Core\Server\ServerEntities\objects</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife.cpp">
       <Filter>Core\Server\ServerEntities\objects_alife</Filter>
     </ClCompile>
@@ -7785,9 +7770,6 @@
       <Filter>Core\Server\ServerEntities\objects_alife_items</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp">
-      <Filter>Core\Server\ServerEntities\objects_alife_items</Filter>
-    </ClCompile>
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp">
       <Filter>Core\Server\ServerEntities\objects_alife_items</Filter>
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp">

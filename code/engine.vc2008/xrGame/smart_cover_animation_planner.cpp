@@ -384,6 +384,7 @@ void animation_planner::add_actions		()
 	add_operator			(eWorldOperatorSmartCoverFireNoLookout2Idle, action);
 }
 
+#include "script_callback_ex.h"
 bool animation_planner::hit_callback	(SHit const *hit)
 {
 	m_time_object_hit		= Device.dwTimeGlobal;

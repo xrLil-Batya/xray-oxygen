@@ -12,6 +12,7 @@
 #include "ai_space.h"
 #include "script_engine.h"
 #include "../xrServerEntities/object_broker.h"
+#include <luabind/luabind.hpp>
 
 using smart_cover::detail::parse_table;
 using smart_cover::detail::parse_string;

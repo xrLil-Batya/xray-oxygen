@@ -546,6 +546,8 @@ void SDrawStaticStruct::Update()
 		m_static->Update();
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

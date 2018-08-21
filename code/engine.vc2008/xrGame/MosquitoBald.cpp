@@ -115,7 +115,10 @@ void CMosquitoBald::UpdateSecondaryHit()
 #include "ZoneCampfire.h"
 #include "TorridZone.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
+
 
 #pragma optimize("s",on)
 void CMosquitoBald::script_register	(lua_State *L)

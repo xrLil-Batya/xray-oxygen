@@ -170,6 +170,8 @@ bool CWeaponBinoculars::can_kill	() const
 	return			(false);
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 void CWeaponBinoculars::script_register(lua_State *L)

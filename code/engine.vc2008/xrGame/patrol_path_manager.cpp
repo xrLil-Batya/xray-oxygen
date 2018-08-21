@@ -20,6 +20,8 @@
 #include "level_graph.h"
 #include "space_restriction_manager.h"
 
+
+
 static void show_restrictions	(LPCSTR restrictions)
 {
 	string256			temp;
@@ -46,6 +48,7 @@ bool show_restrictions			(CRestrictedObject *object)
 
 CPatrolPathManager::~CPatrolPathManager			()
 {
+	xr_delete(m_extrapolate_callback);
 }
 
 bool CPatrolPathManager::extrapolate_path		()
@@ -53,17 +56,17 @@ bool CPatrolPathManager::extrapolate_path		()
 	VERIFY					(m_path && m_path->vertex(m_curr_point_index));
 	if (!m_extrapolate_callback)
 		return				(true);
-	
-	return					(m_extrapolate_callback(m_curr_point_index));
+
+	return					((*m_extrapolate_callback)(m_curr_point_index));
 }
 
 void CPatrolPathManager::reinit					()
 {
-	m_path					= 0;
+	m_path					= nullptr;
 	m_actuality				= true;
 	m_failed				= false;
 	m_completed				= true;
-	m_extrapolate_callback.clear();
+	m_extrapolate_callback->clear();
 
 	reset					();
 }
@@ -374,4 +377,22 @@ void CPatrolPathManager::reset()
 	
 	m_start_type			= ePatrolStartTypeDummy;
 	m_route_type			= ePatrolRouteTypeDummy;
+}
+
+CPatrolPathManager::CExtrapolateCallback &CPatrolPathManager::extrapolate_callback()
+{
+	return (*m_extrapolate_callback);
+}
+
+void CPatrolPathManager::set_path(shared_str path_name)
+{
+	set_path(ai().patrol_paths().path(path_name), path_name);
+}
+
+void CPatrolPathManager::set_path(shared_str path_name, const EPatrolStartType patrol_start_type, const EPatrolRouteType patrol_route_type, bool random)
+{
+	set_path(ai().patrol_paths().path(path_name), path_name);
+	set_start_type(patrol_start_type);
+	set_route_type(patrol_route_type);
+	set_random(random);
 }

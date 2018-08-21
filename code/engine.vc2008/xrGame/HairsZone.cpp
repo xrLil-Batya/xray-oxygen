@@ -72,6 +72,7 @@ void CHairsZone::Affect(SZoneObjectInfo* O)
 	}
 }
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

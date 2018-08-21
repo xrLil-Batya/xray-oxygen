@@ -8,6 +8,7 @@
 #include "stdafx.h"
 #pragma warning(push)
 #pragma warning(disable: 4275)
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
 #include "script_entity_action.h"
 #include "ai_space.h"
@@ -434,6 +435,7 @@ bool CScriptGameObject::inside					(const Fvector &position) const
 	return				(inside(position,EPS_L));
 }
 
+#include "script_callback_ex.h"
 void CScriptGameObject::set_patrol_extrapolate_callback(const luabind::functor<bool> &functor)
 {
 	CCustomMonster			*monster = smart_cast<CCustomMonster*>(&object());

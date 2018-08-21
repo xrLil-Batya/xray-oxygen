@@ -3,6 +3,7 @@
 #include "key_binding_registrator.h"
 #include "xr_level_controller.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 int dik_to_bind(int dik){

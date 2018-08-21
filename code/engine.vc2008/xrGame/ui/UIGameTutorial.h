@@ -7,6 +7,13 @@ class CUISequenceItem;
 class CUIXml;
 class IUISequenceVideoItem;
 
+// Luabind Forward
+namespace luabind
+{
+	template<typename Ret>
+	class functor;
+};
+
 class CUISequencer : public pureFrame, public pureRender, public IInputReceiver
 {
 protected:
@@ -80,7 +87,7 @@ protected:
 	};
 	xr_vector<shared_str> m_start_lua_functions;
 	xr_vector<shared_str> m_stop_lua_functions;
-	luabind::functor<void> m_onframe_functor;
+	luabind::functor<void> *m_onframe_functor;
 
 	Flags32 m_flags;
 	CUISequencer *m_owner;
@@ -89,7 +96,7 @@ protected:
 
 public:
 	CUISequenceItem(CUISequencer* owner) :m_owner(owner) { m_flags.zero(); }
-	virtual ~CUISequenceItem() {}
+	virtual ~CUISequenceItem();
 	virtual void Load(CUIXml* xml, int idx) = 0;
 
 	virtual void Start();
@@ -111,7 +118,7 @@ public:
 
 class CUISequenceSimpleItem : public CUISequenceItem
 {
-	typedef CUISequenceItem	inherited;
+	using inherited = CUISequenceItem;
 	struct SSubItem
 	{
 		CUIStatic *m_wnd;
@@ -165,7 +172,7 @@ protected:
 
 class CUISequenceVideoItem : public CUISequenceItem
 {
-	typedef CUISequenceItem	inherited;
+	using inherited = CUISequenceItem;
 	ref_sound m_sound;
 	FactoryPtr<IUISequenceVideoItem> m_texture;
 

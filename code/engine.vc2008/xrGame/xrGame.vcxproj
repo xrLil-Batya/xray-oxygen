@@ -198,7 +198,6 @@
       <Culture>0x0419</Culture>
     </ResourceCompile>
     <Link>
-      <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(xrLib)../Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -210,8 +209,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions> /EDITANDCONTINUE %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions> /EDITANDCONTINUE /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -423,7 +422,6 @@
     <ClInclude Include="action_planner.h" />
     <ClInclude Include="action_planner_inline.h" />
     <ClInclude Include="script_action_planner_wrapper.h" />
-    <ClInclude Include="script_action_planner_wrapper_inline.h" />
     <ClInclude Include="action_planner_script.h" />
     <ClInclude Include="action_planner_script_inline.h" />
     <ClInclude Include="action_planner_action.h" />
@@ -1125,7 +1123,6 @@
     <ClInclude Include="smart_cover_planner_actions_inline.h" />
     <ClInclude Include="smart_cover_loophole_planner_actions.h" />
     <ClInclude Include="smart_cover_planner_target_selector.h" />
-    <ClInclude Include="smart_cover_planner_target_selector_inline.h" />
     <ClInclude Include="smart_cover_planner_target_provider.h" />
     <ClInclude Include="smart_cover_default_behaviour_planner.hpp" />
     <ClInclude Include="smart_cover_default_behaviour_planner_inline.hpp" />
@@ -1959,7 +1956,6 @@
     <ClCompile Include="ai\Monsters\Boar\boar_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Boar\boar_script.cpp" />
     <ClCompile Include="AI\Crow\ai_crow.cpp" />
-    <ClCompile Include="ai_crow_script.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_script.cpp" />
@@ -2034,7 +2030,6 @@
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_aura.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_state_manager.cpp" />
     <ClCompile Include="Ai\Trader\ai_trader.cpp" />
-    <ClCompile Include="ai\trader\ai_trader_script.cpp" />
     <ClCompile Include="ai\trader\trader_animation.cpp" />
     <ClCompile Include="Ai\Stalker\ai_stalker.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ShowIncludes>
@@ -2415,7 +2410,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Object_Base.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_script.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script2.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script2.cpp" />
@@ -2423,7 +2417,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp" />

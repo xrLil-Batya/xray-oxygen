@@ -368,6 +368,9 @@ void CGrenade::DeactivateItem()
 	inherited::DeactivateItem();
 }
 
+
+#include "luabind/luabind.hpp"
+
 bool CGrenade::GetBriefInfo( II_BriefInfo& info )
 {
 	VERIFY( m_pInventory );

@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "script_entity_action.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

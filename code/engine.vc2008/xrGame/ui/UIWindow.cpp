@@ -90,10 +90,10 @@ void CUIWindow::ResetPPMode()
 }
 
 CUIWindow::CUIWindow()
-:m_pParentWnd(NULL),
-m_pMouseCapturer(NULL),
-m_pMessageTarget(NULL),
-m_pKeyboardCapturer(NULL),
+:m_pParentWnd(nullptr),
+m_pMouseCapturer(nullptr),
+m_pMessageTarget(nullptr),
+m_pKeyboardCapturer(nullptr),
 m_bAutoDelete(false),
 m_bCursorOverWindow(false),
 m_bPP(false),
@@ -208,7 +208,7 @@ void CUIWindow::AttachChild(CUIWindow* pChild)
 void CUIWindow::DetachChild(CUIWindow* pChild)
 {
 	R_ASSERT(pChild);
-	if(NULL==pChild)
+	if(nullptr==pChild)
 		return;
 	
 	if(m_pMouseCapturer == pChild)
@@ -369,7 +369,7 @@ void CUIWindow::OnFocusReceive()
 	m_bCursorOverWindow		= true;	
 
 	if (GetMessageTarget())
-        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_RECEIVED, NULL);
+        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_RECEIVED, nullptr);
 }
 
 void CUIWindow::OnFocusLost()
@@ -378,7 +378,7 @@ void CUIWindow::OnFocusLost()
 	m_bCursorOverWindow		= false;	
 
 	if (GetMessageTarget())
-        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_LOST, NULL);
+        GetMessageTarget()->SendMessage(this, WINDOW_FOCUS_LOST, nullptr);
 }
 
 
@@ -396,7 +396,7 @@ void CUIWindow::SetCapture(CUIWindow *pChildWindow, bool capture_status)
 	if(capture_status)
 	{
 		//оповестить дочернее окно о потере фокуса мыши
-		if(NULL!=m_pMouseCapturer)
+		if(nullptr!=m_pMouseCapturer)
 			m_pMouseCapturer->SendMessage(this, WINDOW_MOUSE_CAPTURE_LOST);
 
 		m_pMouseCapturer = pChildWindow;
@@ -415,7 +415,7 @@ bool CUIWindow::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 
 	//если есть дочернее окно,захватившее клавиатуру, то
 	//сообщение направляем ему сразу
-	if(NULL!=m_pKeyboardCapturer)
+	if(nullptr!=m_pKeyboardCapturer)
 	{
 		result = m_pKeyboardCapturer->OnKeyboardAction(dik, keyboard_action);
 		
@@ -440,7 +440,7 @@ bool CUIWindow::OnKeyboardHold(int dik)
 {
 	bool result;
 
-	if(NULL!=m_pKeyboardCapturer)
+	if(nullptr!=m_pKeyboardCapturer)
 	{
 		result = m_pKeyboardCapturer->OnKeyboardHold(dik);
 		
@@ -524,7 +524,7 @@ CUIWindow* CUIWindow::GetChildMouseHandler(){
 //для перевода окна и потомков в исходное состояние
 void CUIWindow::Reset()
 {
-	m_pMouseCapturer = NULL;
+	m_pMouseCapturer = nullptr;
 }
 
 void CUIWindow::ResetAll()
@@ -556,10 +556,10 @@ CUIWindow*	CUIWindow::FindChild(const shared_str name)
 	WINDOW_LIST::const_iterator it_e = m_ChildWndList.end();
 	for(;it!=it_e;++it){
 		CUIWindow* pRes = (*it)->FindChild(name);
-		if(pRes != NULL)
+		if(pRes != nullptr)
 			return pRes;
 	}
-	return NULL;
+	return nullptr;
 }
 
 void CUIWindow::SetParent(CUIWindow* pNewParent) 
@@ -695,6 +695,9 @@ const Fvector2* get_wnd_pos(CUIWindow* w)
 #include "UIFrameLineWnd.h"
 #include "UIDialogWnd.h"
 
+#include "../../SDK/include/luabind/adopt_policy.hpp"
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 #pragma optimize("s",on)
 void CUIWindow::script_register(lua_State *L)

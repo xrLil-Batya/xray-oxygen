@@ -11,6 +11,9 @@
 #include "script_game_object.h"
 #include "ai_debug.h"
 
+
+#include "luabind/luabind.hpp"
+
 void CScriptActionPlannerWrapper::setup			(CScriptGameObject *object)
 {
 #ifdef LOG_ACTION

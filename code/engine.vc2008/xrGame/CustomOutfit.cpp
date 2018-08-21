@@ -374,6 +374,8 @@ void CCustomOutfit::AddBonesProtection(LPCSTR bones_section)
 		m_boneProtection->add(bones_section, smart_cast<IKinematics*>( parent->Visual() ) );
 }
 #include "ActorRuck.h"
+#include "luabind/luabind.hpp"
+
 using namespace luabind;
 
 #pragma optimize("s",on)

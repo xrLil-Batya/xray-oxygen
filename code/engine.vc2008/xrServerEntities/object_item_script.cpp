@@ -10,6 +10,8 @@
 #include "object_item_script.h"
 #include "object_factory.h"
 
+#include <luabind/luabind.hpp>
+#include <luabind/adopt_policy.hpp>
 #ifndef NO_XR_GAME
 #include "attachable_item.h"
 

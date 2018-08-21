@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "property_storage.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

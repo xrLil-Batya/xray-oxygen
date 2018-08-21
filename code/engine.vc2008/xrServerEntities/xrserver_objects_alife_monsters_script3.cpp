@@ -10,6 +10,8 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "xrServer_script_macroses.h"
 
+#include <luabind/luabind.hpp>
+#include <luabind/iterator_policy.hpp>
 using namespace luabind;
 
 #pragma optimize("s",on)

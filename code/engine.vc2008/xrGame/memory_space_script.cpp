@@ -13,6 +13,7 @@
 #include "entity_alive.h"
 #include "danger_object.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 CScriptGameObject *not_yet_visible_object(const MemorySpace::CNotYetVisibleObject &object)
@@ -52,6 +53,10 @@ Fvector CDangerObject__position	(const CDangerObject *self)
 	THROW				(self);
 	return				(self->position());
 }
+
+#include "../../SDK/include/luabind/detail/enum_maker.hpp"
+#include "../../SDK/include/luabind/operator.hpp"
+
 
 #pragma optimize("s",on)
 void CMemoryInfo::script_register(lua_State *L)

@@ -173,6 +173,7 @@ void CALifeMonsterBrain::on_switch_offline	()
 
 
 #include "alife_monster_movement_manager.h"
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 CALifeMonsterMovementManager *get_movement(const CALifeMonsterBrain *brain)

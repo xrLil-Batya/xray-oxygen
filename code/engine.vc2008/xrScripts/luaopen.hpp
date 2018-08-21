@@ -2,6 +2,7 @@
 #include "xrScripts.h"
 #include "../xrServerEntities/opt.lua.h"
 #include "../xrServerEntities/opt_inline.lua.h"
+#include "../xrScripts/luajit/lua.hpp"
 
 /* JIT engine control command: try jit library first or load add-on module */
 SCRIPT_API int dojitcmd(lua_State *L, const char *cmd);

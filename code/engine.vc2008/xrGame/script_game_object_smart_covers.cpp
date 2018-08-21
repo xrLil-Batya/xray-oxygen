@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
 
 #include "ai/stalker/ai_stalker.h"

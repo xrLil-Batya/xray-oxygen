@@ -9,8 +9,10 @@
 #include "stdafx.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "xrServer_script_macroses.h"
-
+#include <luabind/luabind.hpp>
 using namespace luabind;
+
+
 
 #pragma optimize("s",on)
 void CSE_ALifeObjectProjector::script_register(lua_State *L)
