@@ -11,16 +11,21 @@
 #include "xrFaceDefs.h"
 #include "base_color.h"
 
-struct xrHardwareLightBatchTask
-{
-
-};
 
 class XRLC_LIGHT_API xrHardwareLight
 {
 public:
 
-	static BOOL IsHardwareAccelerationSupported();
+	enum class Mode
+	{
+		CPU,
+		OpenCL,
+		CUDA
+	};
+
+public:
+
+	static BOOL IsHardwareAccelerationSupported(xrHardwareLight::Mode mode);
 
 	static xrHardwareLight& Get();
 
@@ -47,25 +52,39 @@ public:
 
 private:
 
+	Mode mode;
 	void GetLevelIndices(vecVertex& InLevelVertices, vecFace& InLevelFaces, xr_vector <PolyIndexes>& OutLevelIndices, xr_vector<HardwareVector>& OutLevelVertexes);
-
 
 	__forceinline void CheckCudaError(cudaError_t ErrorCode);
 
+	size_t GetDeviceFreeMem();
+
+	size_t GetMemoryRequiredForLoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightings, xr_vector<b_BuildTexture>& Textures);
+
+	size_t GetMemoryRequiredForRaycastPhase1(xr_vector<RayRequest>& InRays, int flag, u64& OutMaxPotentialRays);
+
+	void PerformRaycast_ver2(xr_vector<RayRequest>& InRays, int flag, xr_vector<base_color_c>& OutHits);
+
+	const char* ToString_Mode(Mode mode);
+
 	//Master struct
-	Buffer<xrHardwareLCGlobalData>* GlobalData;
+	DeviceBuffer<xrHardwareLCGlobalData>* GlobalData;
 
 	//Light data
-	Buffer<LightSizeInfo>*  LightSizeBuffer;
-	Buffer<R_Light>*		LightBuffer;
+	DeviceBuffer<LightSizeInfo>*  LightSizeBuffer;
+	DeviceBuffer<R_Light>*		LightBuffer;
 
 	//Level geometry data
-	Buffer<PolyIndexes>*	 TrisBuffer;
-	Buffer<Fvector>*		 VertBuffer;
-	Buffer<HardwareVector>*	 VertNormalBuffer;
+	DeviceBuffer<PolyIndexes>*	 TrisBuffer;
+	DeviceBuffer<Fvector>*		 VertBuffer;
+	DeviceBuffer<HardwareVector>*	 VertNormalBuffer;
 
 	//Textures
-	Buffer<xrHardwareTexture>* TextureBuffer;
+	DeviceBuffer<xrHardwareTexture>* TextureBuffer;
+	xr_vector< DeviceBuffer < char >* > TexturesData;
+
+	// Memory Statistics
+	size_t DeviceMemoryForLevel;
 
 	static bool _IsEnabled;
 

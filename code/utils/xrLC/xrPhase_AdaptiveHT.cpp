@@ -164,8 +164,6 @@ void CBuild::xrPhase_AdaptiveHT()
 			}
 			PLYExporter::ExportAsPly("CPUHitTestResult.ply", PCHitData, TestMeshIndexesCPU);
 			PLYExporter::ExportAsPly("GPUHitTestResult.ply", GPUHitData, TestMeshIndexesGPU);
-#endif
-#if 0
 			vecVertex ExportModelVertexes = lc_global_data()->g_vertices();
 			vecFace ExportModelFaces = lc_global_data()->g_faces();
 

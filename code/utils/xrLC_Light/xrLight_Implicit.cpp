@@ -103,9 +103,8 @@ void	ImplicitExecute::Execute(net_task_callback *net_callback)
 
                     // World space
                     Fvector wP, wN, B;
-                    for (vecFaceIt it = space.begin(); it != space.end(); it++)
+                    for (Face* F : space)
                     {
-                        Face	*F = *it;
                         _TCF&	tc = F->tc[0];
                         if (tc.isInside(P, B))
                         {
@@ -118,7 +117,7 @@ void	ImplicitExecute::Execute(net_task_callback *net_callback)
                             wN.normalize();
                             if (xrHardwareLight::IsEnabled())
                             {
-                                defl.lmap.SurfaceLightRequests.push_back(LightpointRequest(U, V, wP, wN, F));
+                                defl.lmap.SurfaceLightRequests.emplace_back(U, V, wP, wN, F);
                                 defl.Marker(U, V) = 255;
                             }
                             else
@@ -155,7 +154,7 @@ void	ImplicitExecute::Execute(net_task_callback *net_callback)
     if (xrHardwareLight::IsEnabled())
     {
         //cast and finalize
-        if (defl.lmap.SurfaceLightRequests.size() == 0)
+        if (defl.lmap.SurfaceLightRequests.empty())
         {
             return;
         }
@@ -269,9 +268,9 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
 
 
     // Lighing
-    for (auto imp = calculator.begin(); imp != calculator.end(); imp++)
+    for (auto& imp : calculator)
     {
-        ImplicitDeflector& defl = imp->second;
+        ImplicitDeflector& defl = imp.second;
         Logger.Status("Lighting implicit map '%s'...", defl.texture->name);
         Logger.Progress(0);
         defl.Allocate();
@@ -334,7 +333,7 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
             fmt.flags.set(STextureParams::flDitherColor, FALSE);
             fmt.flags.set(STextureParams::flGenerateMipMaps, FALSE);
             fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
-            DXTCompress(out_name, raw_data, 0, w, h, pitch, &fmt, 4);
+            DXTCompress(out_name, raw_data, nullptr, w, h, pitch, &fmt, 4);
         }
 
         // lmap
@@ -356,7 +355,7 @@ void ImplicitLightingExec(BOOL b_net, u32 thCount)
             fmt.flags.set(STextureParams::flDitherColor, FALSE);
             fmt.flags.set(STextureParams::flGenerateMipMaps, FALSE);
             fmt.flags.set(STextureParams::flBinaryAlpha, FALSE);
-            DXTCompress(out_name, raw_data, 0, w, h, pitch, &fmt, 4);
+            DXTCompress(out_name, raw_data, nullptr, w, h, pitch, &fmt, 4);
         }
     }
     not_clear.clear();
@@ -381,6 +380,6 @@ void ImplicitLighting(BOOL b_net, u32 thCount)
             ImplicitLightingExec(FALSE, thCount);
             return;
         }
-        thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, 0);
+        thread_spawn(ImplicitLightingTreadNetExec, "worker-thread", 1024 * 1024, nullptr);
     }
 }

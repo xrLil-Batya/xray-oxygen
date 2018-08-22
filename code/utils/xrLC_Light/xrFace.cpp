@@ -135,7 +135,7 @@ template<>
 Tface<DataVertex>::Tface()
 {
 	
-	pDeflector				= 0;
+	pDeflector				= nullptr;
 	flags.bSplitted			= false;
 	VERIFY( inlc_global_data() );
 	if( !do_not_add_to_vector_in_global_data )
@@ -144,7 +144,7 @@ Tface<DataVertex>::Tface()
 		inlc_global_data()->g_faces().push_back		(this);
 	}
 	sm_group				= u32(-1);
-	lmap_layer				= NULL;
+	lmap_layer				= nullptr;
 }
 
 template<>
@@ -163,10 +163,10 @@ Tface<DataVertex>::~Tface()
 		else Logger.clMsg("* ERROR: Unregistered FACE destroyed");
 	}
 	// Remove 'this' from adjacency info in vertices
-	for (int i=0; i<3; ++i)
-		v[i]->prep_remove(this);
+	for (Face::type_vertex& i : v)
+		i.prep_remove(this);
 
-	lmap_layer				= NULL;
+	lmap_layer				= nullptr;
 }
 
 //#define VPUSH(a) ((a).x), ((a).y), ((a).z)
@@ -250,7 +250,7 @@ void	DataFace::AddChannel	(Fvector2 &p1, Fvector2 &p2, Fvector2 &p3)
 
 BOOL	DataFace::hasImplicitLighting()
 {
-	if (0==this)								return FALSE;
+	if (nullptr==this)								return FALSE;
 	if (!Shader().flags.bRendering)				return FALSE;
 	VERIFY( inlc_global_data() );
 	b_material& M		= inlc_global_data()->materials()		[dwMaterial];
@@ -341,8 +341,8 @@ void	DataFace::	read	(INetReader	&r )
 	base_Face::read( r );	
 
 	r.r_fvector3( N );			
-	r_vector ( r, tc ) ;			
-	pDeflector =0 ;
+	r_vector ( r, tc );			
+	pDeflector = nullptr;
 	VERIFY( read_lightmaps );
 	read_lightmaps->read( r, lmap_layer );
 	sm_group = r.r_u32();
@@ -420,15 +420,14 @@ void	Vertex::isolate_pool_clear_read		( INetReader	&r )
 {
 	DataVertex::read( r );
 	r_pod_vector( r, m_adjacents );
-	for(u32 i= 0; i< m_adjacents.size();++i )
+	for(Face* adjacent : m_adjacents)
 	{
-		Face &f = *m_adjacents[i];
 		int v_i = -1;
 		r_pod( r, v_i );
 		R_ASSERT( v_i>=0 );
 		R_ASSERT( v_i<3 );
-		R_ASSERT( f.vertex( v_i ) == 0 );
-		f.raw_set_vertex( v_i, this );
+		R_ASSERT(adjacent->vertex( v_i ) == nullptr );
+		adjacent->raw_set_vertex( v_i, this );
 	}
 }
 void	Vertex::isolate_pool_clear_write	( IWriter	&w )const
@@ -442,7 +441,7 @@ void	Vertex::isolate_pool_clear_write	( IWriter	&w )const
 		R_ASSERT( v_i>=0 );
 		R_ASSERT( v_i<3 );
 		w_pod( w, v_i );
-		f.raw_set_vertex( v_i, 0 );
+		f.raw_set_vertex( v_i, nullptr);
 	}
 }
 

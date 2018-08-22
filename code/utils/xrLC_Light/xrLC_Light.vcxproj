@@ -65,7 +65,7 @@
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\;../../sdk/include/RadeonRays/;../../sdk/include/RadeonRays/Calc/;../../sdk/include/RadeonRays/CWL/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>FORCE_NO_EXCEPTIONS;_USE_MATH_DEFINES;WIN32;DEBUG;_WINDOWS;_USRDLL;XRLC_LIGHT_EXPORTS;_SECURE_SCL=0;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <ExceptionHandling>
@@ -88,7 +88,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;Calc.lib;CLW.lib;RadeonRays.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>$(IntermediateOutputPath)LightPoint.cu.obj %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <CudaCompile>
@@ -106,7 +106,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\;../../sdk/include/RadeonRays/;../../sdk/include/RadeonRays/Calc/;../../sdk/include/RadeonRays/CWL/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRLC_LIGHT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -131,7 +131,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;Calc.lib;CLW.lib;RadeonRays.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>$(IntermediateOutputPath)LightPoint.cu.obj %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <CudaCompile>
@@ -149,7 +149,7 @@
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <OmitFramePointers>true</OmitFramePointers>
       <EnableFiberSafeOptimizations>true</EnableFiberSafeOptimizations>
-      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\engine.vc2008\xrCore\XMLCore;../../sdk/include/dx/;../../sdk/include/;..\..\engine.vc2008\xrQSlim\src;../../sdk/include/optix/;../../sdk/include/cuda/;..\..\engine.vc2008\;../../sdk/include/RadeonRays/;../../sdk/include/RadeonRays/Calc/;../../sdk/include/RadeonRays/CWL/</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>WIN32;NDEBUG;_WINDOWS;_USRDLL;XRLC_LIGHT_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ExceptionHandling>
       </ExceptionHandling>
@@ -173,7 +173,7 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;Calc.lib;CLW.lib;RadeonRays.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>$(IntermediateOutputPath)LightPoint.cu.obj %(AdditionalOptions)</AdditionalOptions>
     </Link>
     <CudaCompile>
@@ -185,6 +185,8 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="..\common\le_engine_communicate.hpp" />
+    <ClInclude Include="DeviceBuffer.h" />
+    <ClInclude Include="RadeonRaysGlobalObjects.h" />
     <ClInclude Include="xrHardwareLight.h" />
     <ClInclude Include="xrRayDefinition.h" />
     <ClInclude Include="_d3d_extensions.h" />
@@ -386,6 +388,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="LightPoint.cl" />
     <None Include="LightPoint.cu">
       <FileType>Document</FileType>
     </None>

@@ -6,32 +6,29 @@
 #include "../shader_xrlc.h"
 void xrMU_Model::export_cform_rcast	(CDB::CollectorPacked& CL, Fmatrix& xform)
 {
-	for		(u32 fit=0; fit<m_faces.size(); fit++)	m_faces[fit]->flags.bProcessed = false;
+	for		(_face* face : m_faces)	face->flags.bProcessed = false;
 
-	v_faces			adjacent;	adjacent.reserve(6*2*3);
+	v_faces adjacent;	adjacent.reserve(6*2*3);
 
-	for (v_faces_it it = m_faces.begin(); it!=m_faces.end(); it++)
+	for (_face*	F : m_faces)
 	{
-		_face*	F				= (*it);
 		const Shader_xrLC&	SH		= F->Shader();
 		if (!SH.flags.bLIGHT_CastShadow)		continue;
 
 		// Collect
 		adjacent.clear	();
-		for (int vit=0; vit<3; vit++)
+		for (_vertex* V : F->v)
 		{
-			_vertex* V	= F->v[vit];
-			for (u32 adj=0; adj<V->m_adjacents.size(); adj++)
-				adjacent.push_back(V->m_adjacents[adj]);
+			for (_face* adj : V->m_adjacents)
+				adjacent.push_back(adj);
 		}
 
 		// Unique
 		std::sort		(adjacent.begin(),adjacent.end());
 		adjacent.erase	(std::unique(adjacent.begin(),adjacent.end()),adjacent.end());
 		bool bAlready = false;
-		for (u32 ait=0; ait<adjacent.size(); ait++)
+		for (_face*	Test : adjacent)
 		{
-			_face*	Test				= adjacent[ait];
 			if (Test==F)				continue;
 			if (!Test->flags.bProcessed)continue;
 			if (F->isEqual(*Test))

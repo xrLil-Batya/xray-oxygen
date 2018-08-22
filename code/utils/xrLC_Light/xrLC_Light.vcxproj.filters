@@ -327,6 +327,12 @@
     <ClInclude Include="xrRayDefinition.h">
       <Filter>Light\Lights</Filter>
     </ClInclude>
+    <ClInclude Include="DeviceBuffer.h">
+      <Filter>Light\Lights</Filter>
+    </ClInclude>
+    <ClInclude Include="RadeonRaysGlobalObjects.h">
+      <Filter>Light\Lights</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -587,6 +593,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="LightPoint.cu">
+      <Filter>Light\Lights\HardwareCode</Filter>
+    </None>
+    <None Include="LightPoint.cl">
       <Filter>Light\Lights\HardwareCode</Filter>
     </None>
   </ItemGroup>

@@ -14,7 +14,7 @@ public:
 	{
 
 	}
-	virtual void		Execute();
+	void Execute() override;
 };
 
 void	ImplicitThread::Execute()
@@ -22,7 +22,7 @@ void	ImplicitThread::Execute()
     // Priority
     SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
     Sleep(0);
-    execute.Execute(0);
+    execute.Execute(nullptr);
 }
 
 

@@ -7,8 +7,13 @@
 #include "../../xrcore/xrPool.h"
 
 xrMU_Model::xrMU_Model(): 
-m_lod_ID(u16(-1)),read_faces(0),read_vertices(0),write_faces(0), write_vertices(0)
+m_lod_ID(u16(-1)),
+read_faces(nullptr),
+read_vertices(nullptr),
+write_faces(nullptr), 
+write_vertices(nullptr)
 {}
+
 xrMU_Model::~xrMU_Model()
 {
 	reading_close();
