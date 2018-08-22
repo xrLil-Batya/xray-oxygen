@@ -334,7 +334,7 @@ void CTexture::Load		()
 {
 	flags.bLoaded					= true;
 	desc_cache						= 0;
-	if (pSurface)					return;
+	if (pSurface || !cName)			return;
 
 	flags.bUser						= false;
 	flags.MemoryUsage				= 0;

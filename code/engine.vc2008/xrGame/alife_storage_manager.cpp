@@ -46,7 +46,7 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 	string_path					save;
 	xr_strcpy					(save,m_save_name);
 
-	if (!xr_strlen(m_save_name))
+	if (xr_strlen(save_name))
 	{
 		strconcat				(sizeof(m_save_name), m_save_name, save_name, SAVE_EXTENSION);
 	}
