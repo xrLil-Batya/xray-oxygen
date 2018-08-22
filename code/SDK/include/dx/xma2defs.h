@@ -12,7 +12,7 @@
 
 #include <sal.h>        // Markers for documenting API semantics
 #include <winerror.h>   // For S_OK, E_FAIL
-#include <audiodefs.h>  // Basic data types and constants for audio work
+#include "audiodefs.h"  // Basic data types and constants for audio work
 
 
 /***************************************************************************

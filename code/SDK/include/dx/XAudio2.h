@@ -17,7 +17,7 @@
  *
  **************************************************************************/
 
-#include <comdecl.h>        // For DEFINE_CLSID and DEFINE_IID
+#include "comdecl.h"        // For DEFINE_CLSID and DEFINE_IID
 
 // XAudio 2.0 (March 2008 SDK)
 //DEFINE_CLSID(XAudio2, fac23f48, 31f5, 45a8, b4, 9b, 52, 25, d6, 14, 01, aa);
@@ -59,8 +59,8 @@ DEFINE_IID(IXAudio2, 8bcf1f58, 9fe7, 4583, 8a, c6, e2, ad, c4, 65, c8, bb);
 #endif
 
 #include <sal.h>            // Markers for documenting API semantics
-#include <audiodefs.h>      // Basic audio data types and constants
-#include <xma2defs.h>       // Data types and constants for XMA2 audio
+#include "audiodefs.h"      // Basic audio data types and constants
+#include "xma2defs.h"		// Data types and constants for XMA2 audio
 
 // All structures defined in this file use tight field packing
 #pragma pack(push, 1)
