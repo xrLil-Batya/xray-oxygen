@@ -481,6 +481,7 @@ void CCC_RegisterCommands()
     CMD3(CCC_MaskNoSave, "game_extra_spawn_antifreeze", &g_extraFeatures, GAME_EXTRA_SPAWN_ANTIFREEZE);
     CMD3(CCC_MaskNoSave, "game_extra_hold_to_pickup",	&g_extraFeatures, GAME_EXTRA_HOLD_TO_PICKUP);
     CMD3(CCC_MaskNoSave, "game_extra_soc_talk_wnd",		&g_extraFeatures, GAME_EXTRA_SOC_WND);
+	CMD3(CCC_MaskNoSave, "game_extra_soc_minimap", &g_extraFeatures, GAME_EXTRA_OLD_SCHOOL_MINIMAP);
     CMD3(CCC_MaskNoSave, "game_extra_vertical_belts",	&g_extraFeatures, GAME_EXTRA_VERTICAL_BELTS);
     CMD3(CCC_MaskNoSave, "game_extra_thirst",			&g_extraFeatures, GAME_EXTRA_THIRST);
     CMD3(CCC_MaskNoSave, "game_extra_npc_grenade_up",	&g_extraFeatures, GAME_EXTRA_NPC_GRENADE_ATTAK_ALL);

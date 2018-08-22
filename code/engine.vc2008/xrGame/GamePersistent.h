@@ -22,6 +22,7 @@ enum OxygenExtraFeatures : size_t
     GAME_EXTRA_VERTICAL_BELTS                   = (1 << 8),
 	GAME_EXTRA_THIRST							= (1 << 9),
 	GAME_EXTRA_NPC_GRENADE_ATTAK_ALL			= (1 << 10),
+	GAME_EXTRA_OLD_SCHOOL_MINIMAP				= (1 << 11),
 };
 extern Flags32 g_extraFeatures;
 
