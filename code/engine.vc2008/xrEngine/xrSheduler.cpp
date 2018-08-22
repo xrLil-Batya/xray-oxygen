@@ -18,7 +18,7 @@ BOOL			g_bSheduleInProgress = FALSE;
 //-------------------------------------------------------------------------------------
 void CSheduler::Initialize()
 {
-	m_current_step_obj = NULL;
+	m_current_step_obj = nullptr;
 	m_processing_now = false;
 }
 
@@ -110,17 +110,17 @@ bool CSheduler::internal_Unregister(ISheduled* O, BOOL RT, bool warn_on_not_foun
 		}
 	}
 	else {
-		for (u32 i = 0; i<Items.size(); i++)
+		for (auto& ItemIter : Items)
 		{
-			if (Items[i].Object == O) {
-				Items[i].Object = NULL;
+			if (ItemIter.Object == O) {
+				ItemIter.Object = nullptr;
 				return				(true);
 			}
 		}
 	}
 	if (m_current_step_obj == O)
 	{
-		m_current_step_obj = NULL;
+		m_current_step_obj = nullptr;
 		return true;
 	}
 
@@ -130,21 +130,21 @@ bool CSheduler::internal_Unregister(ISheduled* O, BOOL RT, bool warn_on_not_foun
 bool CSheduler::Registered(ISheduled *object) const
 {
 	u32							count = 0;
-	typedef xr_vector<Item>		ITEMS;
-	typedef xr_vector<ItemReg>	ITEMS_REG;
+	using ITEMS = xr_vector<Item>;
+	using ITEMS_REG = xr_vector<ItemReg>;
 
-	for (auto& item : ItemsRT)
+	for (auto& ItemIter : ItemsRT)
 	{
-		if (item.Object == object)
+		if (ItemIter.Object == object)
 		{
 			count = 1;
 			break;
 		}
 	}
 
-	for (auto& item : Items)
+	for (auto& ItemIter : Items)
 	{
-		if (item.Object == object)
+		if (ItemIter.Object == object)
 		{
 			VERIFY(!count);
 			count = 1;
@@ -152,9 +152,9 @@ bool CSheduler::Registered(ISheduled *object) const
 		}
 	}
 
-	for (auto& item : ItemsProcessed)
+	for (auto& ItemIter : ItemsProcessed)
 	{
-		if (item.Object == object)
+		if (ItemIter.Object == object)
 		{
 			VERIFY(!count);
 			count = 1;
@@ -162,11 +162,11 @@ bool CSheduler::Registered(ISheduled *object) const
 		}
 	}
 
-	for (auto& item : Registration)
+	for (auto& ItemIter : Registration)
 	{
-		if (item.Object == object)
+		if (ItemIter.Object == object)
 		{
-			if (item.OP)
+			if (ItemIter.OP)
 			{
 				VERIFY(!count);
 				++count;
@@ -271,6 +271,11 @@ void CSheduler::ProcessStep()
 			continue;
 		}
 
+#ifdef DEBUG
+		VERIFY(T.Object->dbg_startframe != Device.dwFrame);
+		T.Object->dbg_startframe = Device.dwFrame;
+#endif
+
 		// Calc next update interval
 		u32		dwMin = std::max(u32(30), T.Object->shedule.t_min);
 		u32		dwMax = (1000 + T.Object->shedule.t_max) / 2;
@@ -284,7 +289,7 @@ void CSheduler::ProcessStep()
 		if (!m_current_step_obj && m_current_step_obj->shedule_Needed()) continue;
 
 		u32 dt = clampr(Elapsed, u32(1), u32(std::max(u32(T.Object->shedule.t_max), u32(1000))));
-		auto asyncUpdate = std::async(std::launch::async, &ISheduled::shedule_Update, T.Object, dt);
+		T.Object->shedule_Update(dt);
 
 		m_current_step_obj = nullptr;
 
@@ -295,12 +300,10 @@ void CSheduler::ProcessStep()
 		TNext.Object = T.Object;
 		TNext.scheduled_name = T.Object->shedule_Name();
 		ItemsProcessed.push_back(TNext);
-		asyncUpdate.wait();
-
 	}
 
 	// Push "processed" back
-	while (ItemsProcessed.size()) {
+	while (!ItemsProcessed.empty()) {
 		Push(ItemsProcessed.back());
 		ItemsProcessed.pop_back();
 	}
@@ -335,6 +338,11 @@ void CSheduler::Update()
 	{
 		R_ASSERT(item.Object);
 
+#ifdef DEBUG
+		VERIFY(item.Object->dbg_startframe != Device.dwFrame);
+		item.Object->dbg_startframe = Device.dwFrame;
+#endif
+
 		if (!item.Object->shedule_Needed()) 
 		{
 			item.dwTimeOfLastExecute = dwTime;
@@ -342,12 +350,13 @@ void CSheduler::Update()
 		}
 
 		u32	Elapsed = dwTime - item.dwTimeOfLastExecute;
+
 		item.Object->shedule_Update(Elapsed);
 		item.dwTimeOfLastExecute = dwTime;
 	}
 
 	// Normal (sheduled)
-	auto asyncUpdate = std::async(std::launch::async, &CSheduler::ProcessStep, this);
+	ProcessStep();
 	m_processing_now = false;
 
 	clamp(psShedulerTarget, 3.f, 66.f);
@@ -357,6 +366,5 @@ void CSheduler::Update()
 	// Finalize
 	g_bSheduleInProgress = FALSE;
 	internal_Registration();
-	asyncUpdate.wait();
 	Device.Statistic->Sheduler.End();
 }

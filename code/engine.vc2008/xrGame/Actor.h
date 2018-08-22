@@ -517,10 +517,6 @@ protected:
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
 	//---------------------------------------------
-#ifdef DEBUG
-	virtual void			OnRender_Network();
-#endif
-	//---------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////
 	// Actor physics

@@ -12,7 +12,6 @@
 #include "../UIGame.h"
 #include "UIActorMenu.h"
 #include "UIPdaWnd.h"
-#include "luabind/luabind.hpp"
 
 extern ENGINE_API BOOL bShowPauseString;
 
@@ -72,15 +71,10 @@ bool CUISequenceItem::AllowKey(int dik)
 		return false;
 }
 
-CUISequenceItem::~CUISequenceItem()
-{
-	xr_delete(m_onframe_functor);
-}
-
 void CUISequenceItem::Update()
 {
-	if (m_onframe_functor->is_valid())
-		(*m_onframe_functor)(current_factor());
+	if (m_onframe_functor.is_valid())
+		m_onframe_functor(current_factor());
 }
 
 void CUISequenceItem::Start()
@@ -88,7 +82,7 @@ void CUISequenceItem::Start()
 	CallFunctions(m_start_lua_functions);
 	if (m_onframe_lua_function.size())
 	{
-		bool functor_exists = ai().script_engine().functor(m_onframe_lua_function.c_str(), *m_onframe_functor);
+		bool functor_exists = ai().script_engine().functor(m_onframe_lua_function.c_str(), m_onframe_functor);
 		THROW3(functor_exists, "Cannot find script function described in tutorial item ", m_onframe_lua_function.c_str());
 	}
 }
@@ -172,7 +166,7 @@ void CUISequencer::Start(LPCSTR tutor_name)
 	m_pStoredInputReceiver = pInput->CurrentIR();
 	IR_Capture();
 
-	m_flags.set(etsActive, true);
+	m_flags.set(etsActive, TRUE);
 	m_flags.set(etsStoredPauseState, Device.Paused());
 
 	if (m_flags.test(etsNeedPauseOn) && !m_flags.test(etsStoredPauseState))
@@ -238,7 +232,7 @@ void CUISequencer::Destroy()
 	delete_data(m_sequencer_items);
 	delete_data(m_UIWindow);
 	IR_Release();
-	m_flags.set(etsActive, false);
+	m_flags.set(etsActive, FALSE);
 	m_pStoredInputReceiver = nullptr;
 
 	if (!m_on_destroy_event.empty())

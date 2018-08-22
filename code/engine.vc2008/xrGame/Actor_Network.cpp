@@ -423,29 +423,33 @@ void CActor::net_Destroy()
 		destroy_physics_shell(actor_camera_shell);
 }
 
-void CActor::net_Relcase	(CObject* O)
+void CActor::net_Relcase (CObject* Object)
 {
- 	VERIFY(O);
-	CGameObject* GO = smart_cast<CGameObject*>(O);
-	if(GO&&m_pObjectWeLookingAt==GO){
-		m_pObjectWeLookingAt=nullptr;
-	}
-	CHolderCustom* HC=smart_cast<CHolderCustom*>(GO);
-	if(HC&&HC==m_pVehicleWeLookingAt){
-		m_pVehicleWeLookingAt=nullptr;
-	}
-	if(HC&&HC==m_holder)
+ 	VERIFY(Object);
+
+	if (Object != nullptr)
 	{
-		m_holder->detach_Actor();
-		m_holder=nullptr;
+		if (m_pObjectWeLookingAt == Object)
+		{
+			m_pObjectWeLookingAt = nullptr;
+		}
+
+		if ((void*)m_pVehicleWeLookingAt == Object)
+		{
+			m_pVehicleWeLookingAt = nullptr;
+		}
+
+		if ((void*)m_holder == Object)
+		{
+			m_holder->detach_Actor();
+			m_holder = nullptr;
+		}
 	}
-	inherited::net_Relcase	(O);
 
-	memory().remove_links(O);
-
-	m_pPhysics_support->in_NetRelcase(O);
-
-	HUD().net_Relcase	(O);
+	inherited::net_Relcase	(Object);
+	memory().remove_links(Object);
+	m_pPhysics_support->in_NetRelcase(Object);
+	HUD().net_Relcase	(Object);
 }
 
 BOOL CActor::net_Relevant()				// relevant for export to server
@@ -480,18 +484,18 @@ void	CActor::ResetCallbacks()
 	V->LL_GetBoneInstance(u16(head_bone)).reset_callback	();
 }
 
-void	CActor::OnChangeVisual()
+void CActor::OnChangeVisual()
 {
 	{
-		IPhysicsShellEx* tmp_shell=PPhysicsShell();
-		PPhysicsShell()=nullptr;
+		IPhysicsShellEx* tmp_shell = PPhysicsShell();
+		PPhysicsShell() = nullptr;
 		inherited::OnChangeVisual();
-		PPhysicsShell()=tmp_shell;
-		tmp_shell=nullptr;
+		PPhysicsShell() = tmp_shell;
+		tmp_shell = nullptr;
 	}
 	
-	IKinematicsAnimated* V	= smart_cast<IKinematicsAnimated*>(Visual());
-	if (V){
+	if (IKinematicsAnimated* V = smart_cast<IKinematicsAnimated*>(Visual()))
+	{
 		CStepManager::reload(cNameSect().c_str());
 		SetCallbacks		();
 		m_anims->Create		(V);
@@ -527,7 +531,7 @@ void	CActor::OnChangeVisual()
 	}
 };
 
-void	CActor::ChangeVisual			( shared_str NewVisual )
+void CActor::ChangeVisual ( shared_str NewVisual )
 {
 	if (!NewVisual.size()) return;
 	if (cNameVisual().size() )
@@ -577,183 +581,11 @@ void CActor::load(IReader &input_packet)
 	input_packet.r_stringZ(g_quick_use_slots[3], sizeof(g_quick_use_slots[3]));
 }
 
-#ifdef DEBUG
-
-extern	Flags32	dbg_net_Draw_Flags;
-void dbg_draw_piramid (Fvector pos, Fvector dir, float size, float xdir, u32 color)
-{
-	
-	Fvector p0, p1, p2, p3, p4;
-	p0.set(size, size, 0.0f);
-	p1.set(-size, size, 0.0f);
-	p2.set(-size, -size, 0.0f);
-	p3.set(size, -size, 0.0f);
-	p4.set(0, 0, size*4);
-	
-	bool Double = false;
-	Fmatrix t; t.identity();
-	if (_valid(dir) && dir.square_magnitude()>0.01f)
-	{		
-		t.k.normalize	(dir);
-		Fvector::generate_orthonormal_basis(t.k, t.j, t.i);		
-	}
-	else
-	{
-		t.rotateY(xdir);		
-		Double = true;
-	}
-	t.c.set(pos);
-
-	if (!Double)
-	{
-		DRender->dbg_DrawTRI(t, p0, p1, p4, color);
-		DRender->dbg_DrawTRI(t, p1, p2, p4, color);
-		DRender->dbg_DrawTRI(t, p2, p3, p4, color);
-		DRender->dbg_DrawTRI(t, p3, p0, p4, color);
-	}
-	else
-	{
-		Level().debug_renderer().draw_line(t, p0, p1, color);
-		Level().debug_renderer().draw_line(t, p1, p2, color);
-		Level().debug_renderer().draw_line(t, p2, p3, color);
-		Level().debug_renderer().draw_line(t, p3, p0, color);
-
-		Level().debug_renderer().draw_line(t, p0, p4, color);
-		Level().debug_renderer().draw_line(t, p1, p4, color);
-		Level().debug_renderer().draw_line(t, p2, p4, color);
-		Level().debug_renderer().draw_line(t, p3, p4, color);
-	};	
-};
-
-void	CActor::OnRender_Network()
-{
-	DRender->OnFrameEnd();
-
-	//-----------------------------------------------------------------------------------------------------
-	float size = 0.2f;
-	//-----------------------------------------------------------------------------------------------------
-	if (g_Alive())
-	{
-		if (dbg_net_Draw_Flags.test(dbg_draw_autopickupbox))
-		{
-			Fvector bc; bc.add(Position(), m_AutoPickUp_AABB_Offset);
-			Fvector bd = m_AutoPickUp_AABB;
-
-			Level().debug_renderer().draw_aabb(bc, bd.x, bd.y, bd.z, color_rgba(0, 255, 0, 255));
-		};
-
-		IKinematics* V = smart_cast<IKinematics*>(Visual());
-		if (dbg_net_Draw_Flags.test(dbg_draw_actor_alive) && V)
-		{
-			if (this != Level().CurrentViewEntity() || cam_active != eacFirstEye)
-			{
-				CCF_Skeleton* Skeleton = smart_cast<CCF_Skeleton*>(collidable.model);
-				if (Skeleton) {
-					Skeleton->_dbg_refresh();
-
-					const CCF_Skeleton::ElementVec& Elements = Skeleton->_GetElements();
-					for (const auto & Element : Elements) {
-						if (!Element.valid())		continue;
-						switch (Element.type) {
-						case SBoneShape::stBox: {
-							Fmatrix M;
-							M.invert(Element.b_IM);
-							Fvector h_size = Element.b_hsize;
-							Level().debug_renderer().draw_obb(M, h_size, color_rgba(0, 255, 0, 255));
-						}break;
-						case SBoneShape::stCylinder: {
-							Fmatrix M;
-							M.c.set(Element.c_cylinder.m_center);
-							M.k.set(Element.c_cylinder.m_direction);
-							Fvector				h_size;
-							h_size.set(Element.c_cylinder.m_radius, Element.c_cylinder.m_radius, Element.c_cylinder.m_height*0.5f);
-							Fvector::generate_orthonormal_basis(M.k, M.j, M.i);
-							Level().debug_renderer().draw_obb(M, h_size, color_rgba(0, 127, 255, 255));
-						}break;
-						case SBoneShape::stSphere: {
-							Fmatrix				l_ball;
-							l_ball.scale(Element.s_sphere.R, Element.s_sphere.R, Element.s_sphere.R);
-							l_ball.translate_add(Element.s_sphere.P);
-							Level().debug_renderer().draw_ellipse(l_ball, color_rgba(0, 255, 0, 255));
-						}break;
-						};
-					};
-				}
-			};
-		};
-
-		if (!(dbg_net_Draw_Flags.is_any(dbg_draw_actor_dead))) return;
-
-		dbg_draw_piramid(Position(), character_physics_support()->movement()->GetVelocity(), size, -r_model_yaw, color_rgba(128, 255, 128, 255));
-
-		Fmatrix MS, MH, ML, *pM = nullptr;
-		ML.translate(0, 0.2f, 0);
-		MS.translate(0, 0.2f, 0);
-		MH.translate(0, 0.2f, 0);
-
-		Fvector point0S, point1S, point0H, point1H, point0L, point1L, *ppoint0 = nullptr, *ppoint1 = nullptr;
-		Fvector tS, tH;
-		u32	cColor = 0, sColor = 0;
-		VIS_POSITION*	pLastPos = nullptr;
-
-		//draw interpolation history curve
-		if (!pLastPos->empty())
-		{
-			Fvector Pos1, Pos2;
-			auto It = pLastPos->begin();
-			Pos1 = *It;
-			for (; It != pLastPos->end(); It++)
-			{
-				Pos2 = *It;
-
-				Level().debug_renderer().draw_line(*pM, Pos1, Pos2, cColor);
-				Level().debug_renderer().draw_aabb(Pos2, size / 5, size / 5, size / 5, sColor);
-				Pos1 = *It;
-			};
-		};
-		/////////////////////////////////////////////////////////////////////////////////
-	}
-	else
-	{
-		if (!(dbg_net_Draw_Flags.is_any(dbg_draw_actor_dead))) return;
-
-		IKinematics* V = smart_cast<IKinematics*>(Visual());
-		if (dbg_net_Draw_Flags.test(dbg_draw_actor_alive) && V)
-		{
-			u16 BoneCount = V->LL_BoneCount();
-			for (u16 i = 0; i < BoneCount; i++)
-			{
-				Fobb BoneOBB = V->LL_GetBox(i);
-				Fmatrix BoneMatrix; BoneOBB.xform_get(BoneMatrix);
-				Fmatrix BoneMatrixRes; BoneMatrixRes.mul(V->LL_GetTransform(i), BoneMatrix);
-				BoneMatrix.mul(XFORM(), BoneMatrixRes);
-				Level().debug_renderer().draw_obb(BoneMatrix, BoneOBB.m_halfsize, color_rgba(0, 255, 0, 255));
-			}
-		}
-	}
-}
-
-#endif
-
 void CActor::net_Save(NET_Packet& P)
 {
-#ifdef DEBUG
-	u32					pos;
-	Msg					("Actor net_Save");
-	
-	pos					= P.w_tell();
-	inherited::net_Save	(P);
-	Msg					("inherited::net_Save() : %d",P.w_tell() - pos);
-
-	pos					= P.w_tell();
-	m_pPhysics_support->in_NetSave(P);
-	P.w_u16(m_holderID);
-	Msg					("m_pPhysics_support->in_NetSave() : %d",P.w_tell() - pos);
-#else
 	inherited::net_Save	(P);
 	m_pPhysics_support->in_NetSave(P);
 	P.w_u16(m_holderID);
-#endif
 }
 
 BOOL CActor::net_SaveRelevant()
