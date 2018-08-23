@@ -74,7 +74,7 @@ XSTATUS XCore::InitXAudioDevice()
 	return XAUDIO_OK;
 }
 
-XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& deviceList)
+XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refDeviceList)
 {
 	DWORD32 DeviceCount = 0;
 	HRESULT hr = pXAudio->GetDeviceCount(&DeviceCount);
@@ -82,7 +82,7 @@ XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& devi
 	// if our device is NULL or device count is NULL - return BAD_DEVICE
 	if (SUCCEEDED(hr) || DeviceCount)
 	{ 
-		deviceList.reserve(DeviceCount);
+		refDeviceList.reserve(DeviceCount);
 
 		for (DWORD32 j = 0; j < DeviceCount; ++j)
 		{
@@ -94,7 +94,7 @@ XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& devi
 				XAUDIO_DEVICE device = {};
 				device.deviceId = GetUnicodeStringFromAnsi(details.DeviceID);
 				device.deviceDescription = GetUnicodeStringFromAnsi(details.DisplayName);
-				deviceList.emplace_back(device);
+				refDeviceList.emplace_back(device);
 				Msg("Device ID: %s\nDevice name: %s", device.deviceId.c_str(), device.deviceDescription.c_str());
 			}
 		}
