@@ -360,7 +360,7 @@ _DDS:
 			HRESULT const result =
 				D3DXCreateTextureFromFileInMemoryEx(
 					HW.pDevice, S->pointer(), S->length(),
-					D3DX_DEFAULT, D3DX_DEFAULT,
+					D3DX_DEFAULT_NONPOW2, D3DX_DEFAULT_NONPOW2,
 					IMG.MipLevels, 0,
 					IMG.Format,
 					D3DPOOL_SYSTEMMEM,

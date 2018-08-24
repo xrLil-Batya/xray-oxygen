@@ -31,6 +31,9 @@
     <Filter Include="Core\XAudio2">
       <UniqueIdentifier>{81f6c9ed-41c4-4f8b-abe2-79a0c818829e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Target\XAudio2">
+      <UniqueIdentifier>{9ca61a2a-3158-4b7f-a974-850ae9efe063}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Sound.h">
@@ -71,6 +74,9 @@
     </ClInclude>
     <ClInclude Include="XAudioCore.h">
       <Filter>Core\XAudio2</Filter>
+    </ClInclude>
+    <ClInclude Include="XAudioTarget.h">
+      <Filter>Target\XAudio2</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -131,6 +137,9 @@
     <ClCompile Include="guids.cpp" />
     <ClCompile Include="XAudioCore.cpp">
       <Filter>Core\XAudio2</Filter>
+    </ClCompile>
+    <ClCompile Include="XAudioTarget.cpp">
+      <Filter>Target\XAudio2</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

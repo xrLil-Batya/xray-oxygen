@@ -9,11 +9,14 @@
 * Main methods for XAudio implementation
 *********************************************************/
 #pragma once
+#pragma comment(lib,"x3daudio.lib")
 
 #include "../xrCore/xrCore.h"
+#include "SoundRender_Core.h"
 #include "SoundRender_Source.h"
+#include "SoundRender_TargetA.h"
 #include "SoundRender_Emitter.h"
-
+#include "XAudioTarget.h"
 #include <windows.h>
 #include <Unknwnbase.h>
 #include <stdint.h>
@@ -26,6 +29,7 @@
 #include "dx/X3DAudio.h"
 #include <dx/comdecl.h>
 #include <ppltasks.h>
+#include <DirectXMath.h>
 
 enum XSTATUS
 {
@@ -40,8 +44,8 @@ enum XSTATUS
 #define SUCCEEDEDX(x) (x == XAUDIO_OK)
 #define _RELEASE(x)			{ if(x) { (x)->Release(); (x)=NULL; } }
 
-#define INPUTCHANNELS 1  // number of source channels
-#define OUTPUTCHANNELS 8 // maximum number of destination channels supported in this sample
+#define INPUTCHANNELS 1				// number of source channels
+#define OUTPUTCHANNELS 8			// maximum number of destination channels supported in this sample
 
 #define NUM_PRESETS 30
 
@@ -61,16 +65,34 @@ XAUDIO2FX_REVERB_I3DL2_PARAMETERS g_PRESET_PARAMS[NUM_PRESETS] =
 
 using XAUDIO_DATA = struct
 {
+	IUnknown*					pReverb;
 	IXAudio2*					pXAudio;
 	IXAudio2MasteringVoice*		pMasteringVoice;
 	IXAudio2SourceVoice*		pSourceVoice;
 	IXAudio2SubmixVoice*		pSubmixVoice;
 	IXAudio2VoiceCallback*		pCallback;
 
+	X3DAUDIO_HANDLE				x3DInstance;
 	XAUDIO2_VOICE_STATE			voiceState;
 	XAUDIO2_VOICE_SENDS			voiceSends;
 	std::unique_ptr<uint8_t[]>	waveData;
 
+};
+
+using XAUDIO_STATE = struct
+{
+	DirectX::XMFLOAT3 vListenerPos;
+	DirectX::XMFLOAT3 vEmitterPos;
+
+	X3DAUDIO_DSP_SETTINGS dspSettings;
+	X3DAUDIO_LISTENER listener;
+	X3DAUDIO_EMITTER emitter;
+	X3DAUDIO_CONE emitterCone;
+
+	float fListenerAngle;
+	bool  fUseListenerCone;
+	bool  fUseInnerRadius;
+	bool  fUseRedirectToLFE;
 };
 
 using XAUDIO_DEVICE = struct
@@ -91,20 +113,67 @@ public:
 	~XCore();
 
 	XSTATUS InitXAudioDevice();
-	XSTATUS GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& deviceList);
+	XSTATUS GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refDeviceList);
+	XSTATUS GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* DeviceDetails);
 
 	XSTATUS SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_Source* soundSource);
 	XSTATUS SetMasterVolume(float Volume);
 
 	std::vector<XAUDIO_DEVICE> deviceList;
+	XAUDIO_DATA xData;
+	XAUDIO_STATE xState;
 private:
 	XSTATUS		lastStatus;
 	HMODULE		XAudioDLL;
 	GAIN_LEVEL	soundGain;
-	XAUDIO_DATA xData;
-
 };
+
 class XRSOUND_API XSurround
 {
 
+};
+
+class AudioCallback : IXAudio2VoiceCallback
+{
+public:
+	AudioCallback() {}
+	virtual ~AudioCallback() {}
+
+private:
+	void OnVoiceProcessingPassStart(UINT32 BytesRequired) override {}
+	void OnVoiceProcessingPassEnd()  override {}
+	void OnStreamEnd()  override {}
+	void OnBufferStart(void* BufferContext) override {}
+	void OnLoopEnd(void* BufferContext)  override {}
+	void OnVoiceError(void* BufferContext, HRESULT Error)  override {}
+
+	void OnBufferEnd(void* BufferContext)  override;
+};
+
+class CSoundRender_CoreB : public CSoundRender_Core
+{
+	using inherited = CSoundRender_Core;
+	IXAudio2* pDevice;
+
+	struct SListener
+	{
+		Fvector position;
+		Fvector orientation[2];
+	};
+	SListener Listener;
+
+protected:
+	void update_listener(const Fvector& P, const Fvector& D, const Fvector& N, float dt) override;
+
+public:
+	CSoundRender_CoreB() {};
+	virtual ~CSoundRender_CoreB() {};
+
+	void _initialize(int stage) override;
+	void _clear() override;
+	void _restart() override;
+
+	void set_master_volume(float f) override;
+
+	const Fvector&	listener_position() override { return Listener.position; }
 };
