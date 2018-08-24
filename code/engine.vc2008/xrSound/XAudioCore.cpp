@@ -106,7 +106,6 @@ XSTATUS XCore::InitXAudioDevice()
 	//const float SpeedOfSound = X3DAUDIO_SPEED_OF_SOUND;		// const value for sound
 	//X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
 
-
 	//xState.vListenerPos.x =
 	//xState.vListenerPos.y =
 	//xState.vListenerPos.z =
