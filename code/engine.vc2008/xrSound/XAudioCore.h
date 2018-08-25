@@ -18,6 +18,7 @@
 #include "SoundRender_Emitter.h"
 #include "XAudioTarget.h"
 #include <windows.h>
+#include <VersionHelpers.h>
 #include <Unknwnbase.h>
 #include <stdint.h>
 #include <objbase.h>
@@ -76,23 +77,22 @@ using XAUDIO_DATA = struct
 	XAUDIO2_VOICE_STATE			voiceState;
 	XAUDIO2_VOICE_SENDS			voiceSends;
 	std::unique_ptr<uint8_t[]>	waveData;
-
 };
 
 using XAUDIO_STATE = struct
 {
-	DirectX::XMFLOAT3 vListenerPos;
-	DirectX::XMFLOAT3 vEmitterPos;
+	DirectX::XMFLOAT3			vListenerPos;
+	DirectX::XMFLOAT3			vEmitterPos;
 
-	X3DAUDIO_DSP_SETTINGS dspSettings;
-	X3DAUDIO_LISTENER listener;
-	X3DAUDIO_EMITTER emitter;
-	X3DAUDIO_CONE emitterCone;
+	X3DAUDIO_DSP_SETTINGS		dspSettings;
+	X3DAUDIO_LISTENER			listener;
+	X3DAUDIO_EMITTER			emitter;
+	X3DAUDIO_CONE				emitterCone;
 
-	float fListenerAngle;
-	bool  fUseListenerCone;
-	bool  fUseInnerRadius;
-	bool  fUseRedirectToLFE;
+	float		fListenerAngle;
+	bool		fUseListenerCone;
+	bool		fUseInnerRadius;
+	bool		fUseRedirectToLFE;
 };
 
 using XAUDIO_DEVICE = struct
@@ -103,7 +103,7 @@ using XAUDIO_DEVICE = struct
 
 struct GAIN_LEVEL
 {
-	float AudioGain;
+	float		AudioGain;
 };
 
 class XRSOUND_API XCore
@@ -119,9 +119,9 @@ public:
 	XSTATUS SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_Source* soundSource);
 	XSTATUS SetMasterVolume(float Volume);
 
-	std::vector<XAUDIO_DEVICE> deviceList;
-	XAUDIO_DATA xData;
-	XAUDIO_STATE xState;
+	std::vector<XAUDIO_DEVICE>	deviceList;
+	XAUDIO_DATA		xData;
+	XAUDIO_STATE	xState;
 private:
 	XSTATUS		lastStatus;
 	HMODULE		XAudioDLL;

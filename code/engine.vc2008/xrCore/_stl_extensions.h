@@ -140,6 +140,7 @@ public:
     typedef std::basic_string<char, std::char_traits<char>, xalloc<char>> Super;
 
     xr_string(LPCSTR Str);
+	xr_string(LPCWSTR Str);
     xr_string(LPCSTR Str, int Size);
     xr_string(const xr_string& other);
     xr_string(const xr_string&& other);
@@ -161,6 +162,7 @@ public:
     xr_vector<xr_string> Split(char splitCh);
     xr_vector<xr_string> Split(u32 NumberOfSplits, ...);
 
+	LPCWSTR ConvertToUnicode(LPCSTR mbyteString);
     bool StartWith(const xr_string& Other) const;
     bool StartWith(LPCSTR Str) const;
     bool StartWith(LPCSTR Str, size_t Size) const;

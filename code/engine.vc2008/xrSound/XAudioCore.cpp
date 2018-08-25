@@ -19,7 +19,25 @@
 
 XCore xcore;
 
-XCore::XCore() { }
+XCore::XCore()
+{
+	// load any version of XAudio2
+	if (!IsWindows10OrGreater())
+	{
+		XAudioDLL = LoadLibraryExA("XAudio2_9.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
+	else if (!IsWindows8OrGreater())
+	{
+		XAudioDLL = LoadLibraryExA("XAudio2_8.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
+	else
+	{
+		XAudioDLL = LoadLibraryExA("XAudio2_7.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
+	R_ASSERT(XAudioDLL);
+}
+
+//#NOTE: don't release XCore before closing application
 XCore::~XCore()
 {
 	if (xData.pSourceVoice)
@@ -42,15 +60,12 @@ XCore::~XCore()
 		xData.pXAudio->StopEngine();
 	}
 	_RELEASE(xData.pXAudio);
+	if (XAudioDLL)
+	{
+		FreeLibrary(XAudioDLL);
+	}
 
 	xData.waveData.reset();
-}
-
-LPCSTR GetUnicodeStringFromAnsi(LPCWSTR wString)
-{
-	std::wstring tempWstring(wString);
-	std::string tempString(tempWstring.begin(), tempWstring.end());
-	return tempString.c_str();
 }
 
 XSTATUS XCore::InitXAudioDevice()
@@ -98,20 +113,14 @@ XSTATUS XCore::InitXAudioDevice()
 		return XAUDIO_BAD_DEVICE;
 	}
 
-	//XAUDIO2FX_REVERB_PARAMETERS params;
-	//ReverbConvertI3DL2ToNative(&g_PRESET_PARAMS[0], &params);
-	//R_CHK(xData.pSubmixVoice->SetEffectParameters(NULL, &params, sizeof(XAUDIO2FX_REVERB_PARAMETERS)));
+	// set default sound level meters
+	XAUDIO2FX_VOLUMEMETER_LEVELS volumeMeter = { NULL };
+	volumeMeter.ChannelCount = deviceDetails.OutputFormat.Format.nChannels;
+	R_CHK(xData.pSubmixVoice->SetEffectParameters(NULL, &volumeMeter, sizeof(XAUDIO2FX_VOLUMEMETER_LEVELS)));
 
-	//// create X3DAudio interface
-	//const float SpeedOfSound = X3DAUDIO_SPEED_OF_SOUND;		// const value for sound
-	//X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
-
-	//xState.vListenerPos.x =
-	//xState.vListenerPos.y =
-	//xState.vListenerPos.z =
-	//xState.vEmitterPos.x =
-	//xState.vEmitterPos.y = 0.f;
-	//xState.vEmitterPos.z = float(10);
+	// create X3DAudio interface
+	const float SpeedOfSound = X3DAUDIO_SPEED_OF_SOUND;		// const value for sound
+	X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
 
 	return XAUDIO_OK;
 }
@@ -137,8 +146,8 @@ XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refD
 			if (SUCCEEDED(hr))
 			{
 				XAUDIO_DEVICE device = {};
-				device.deviceId = GetUnicodeStringFromAnsi(details.DeviceID);
-				device.deviceDescription = GetUnicodeStringFromAnsi(details.DisplayName);
+				device.deviceId = xr_string(details.DeviceID);
+				device.deviceDescription = xr_string(details.DisplayName);
 				refDeviceList.emplace_back(device);
 				Msg("Device ID: %s\nDevice name: %s", device.deviceId.c_str(), device.deviceDescription.c_str());
 			}
@@ -155,8 +164,8 @@ XSTATUS XCore::GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* D
 		return XAUDIO_BAD_DEVICE;
 	}
 
-	Msg("Device ID: %s ", GetUnicodeStringFromAnsi(DeviceDetails->DeviceID));
-	Msg("Device Name: %s ", GetUnicodeStringFromAnsi(DeviceDetails->DisplayName));
+	Msg("Device ID: %s ", xr_string(DeviceDetails->DeviceID).c_str());
+	Msg("Device Name: %s ", xr_string(DeviceDetails->DisplayName).c_str());
 	Msg("Device Format: %i ", DeviceDetails->OutputFormat.Format.wFormatTag);		// if 1 - wave 
 	Msg("Device Channels: %i ", DeviceDetails->OutputFormat.Format.nChannels);
 	Msg("Device Rate: %i ", DeviceDetails->OutputFormat.Format.nSamplesPerSec);
@@ -193,6 +202,11 @@ XSTATUS XCore::GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* D
 // for test (don't use)
 XSTATUS XCore::SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_Source* soundSource)
 {
+	LPVOID lpFileData = NULL;
+	HANDLE fileHandle = NULL;
+
+	//fileHandle = CreateFileA()
+
 	// copy wave data from WAVEFORMATEX;
 	VERIFY(soundSource->m_wformat.nChannels);
 	WAVEFORMATEX waveFormat = soundSource->m_wformat;
@@ -256,6 +270,7 @@ void CSoundRender_CoreB::_initialize(int stage)
 
 	inherited::_initialize(stage);
 
+	
 	//if (stage == 1)//first initialize
 	//{
 	//	// Pre-create targets

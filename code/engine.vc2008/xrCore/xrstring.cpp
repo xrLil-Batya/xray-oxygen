@@ -278,6 +278,17 @@ xr_string::xr_string(LPCSTR Str)
 {
 }
 
+xr_string::xr_string(LPCWSTR Str)
+{
+	size_t outputSize = wcslen(Str) + 1;
+	LPSTR newString = new char[outputSize];
+	size_t charsConverted = 0;
+	wcstombs_s(&charsConverted, newString, outputSize, Str, strlen(newString));
+	R_ASSERT(charsConverted == outputSize);
+
+	Super::operator=(newString);
+}
+
 xr_string& xr_string::operator=(LPCSTR Str)
 {
     Super::operator=(Str);
@@ -339,6 +350,17 @@ xr_vector<xr_string> xr_string::Split(u32 NumberOfSplits, ...)
     return Result;
 }
 
+LPCWSTR xr_string::ConvertToUnicode(LPCSTR mbyteString)
+{
+	size_t uSize = strlen(mbyteString);
+	LPWSTR retString = new WCHAR[256];
+	wchar_t buf[256];	// we don't needy more
+
+	mbstowcs_s(&uSize, buf, mbyteString, uSize);
+	wcscpy_s(retString, 256, buf);
+
+	return retString;
+}
 
 xr_string xr_string::RemoveWhitespaces() const
 {
