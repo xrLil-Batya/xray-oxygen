@@ -140,7 +140,7 @@ public:
     typedef std::basic_string<char, std::char_traits<char>, xalloc<char>> Super;
 
     xr_string(LPCSTR Str);
-	xr_string(LPCWSTR Str);
+	xr_string(LPCWSTR Str, LPSTR newString);
     xr_string(LPCSTR Str, int Size);
     xr_string(const xr_string& other);
     xr_string(const xr_string&& other);

@@ -278,10 +278,9 @@ xr_string::xr_string(LPCSTR Str)
 {
 }
 
-xr_string::xr_string(LPCWSTR Str)
+xr_string::xr_string(LPCWSTR Str, LPSTR newString)
 {
 	size_t outputSize = wcslen(Str) + 1;
-	LPSTR newString = new char[outputSize];
 	size_t charsConverted = 0;
 	wcstombs_s(&charsConverted, newString, outputSize, Str, strlen(newString));
 	R_ASSERT(charsConverted == outputSize);
