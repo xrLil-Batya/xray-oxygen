@@ -25,4 +25,3 @@ void CSoundRender_TargetB::fill_parameters()
 	// 3D params
 	VERIFY2(m_pEmitter, SE->source()->file_name());
 }
-
