@@ -132,7 +132,7 @@ Fvector   cr_vectorHP (float h, float p)
 }
 
 inline
-float   angle_between_vectors (Fvector const v1, Fvector const v2)
+float   angle_between_vectors (Fvector const &v1, Fvector const &v2)
 {
 	float const mag1	=	v1.magnitude();
 	float const mag2	=	v2.magnitude();

@@ -543,6 +543,7 @@ void InventoryUtilities::SendInfoToActor(LPCSTR info_id)
 		actor->TransferInfo(info_id, true);
 }
 
+#include <luabind/luabind.hpp>
 void InventoryUtilities::SendInfoToLuaScripts(shared_str info)
 {
 	if ( info == shared_str("ui_talk_show") )

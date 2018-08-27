@@ -20,6 +20,7 @@ extern Flags32 psAI_Flags;
 #	endif
 #endif
 
+#include <luabind/luabind.hpp>
 #include "../xrScripts/luaopen.hpp"
 
 int CScriptEngine::lua_panic(lua_State* L) {

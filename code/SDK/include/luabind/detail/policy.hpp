@@ -586,8 +586,11 @@ namespace luabind { namespace detail
 			char target[sizeof(T)];
 			T* ptr = reinterpret_cast<T*>(crep->convert_to(LUABIND_TYPEID(T), obj, target));
 
-			destruct_guard<T> guard(ptr);
-			if ((void*)ptr != (void*)target) guard.dismiss = true;
+			if ((void*)ptr != (void*)target)
+			{
+				destruct_guard<T> guard(ptr);
+				guard.dismiss = true;
+			}
 
 			return *ptr;
 		}

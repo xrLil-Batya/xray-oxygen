@@ -299,6 +299,7 @@ void CSpaceRestrictor::OnRender	()
 }
 #endif
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 #pragma optimize("s",on)

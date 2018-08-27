@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "holder_custom.h"
 #include "actor.h"
+#include <luabind/luabind.hpp>
 
 bool CHolderCustom::attach_Actor(CGameObject* actor)
 {

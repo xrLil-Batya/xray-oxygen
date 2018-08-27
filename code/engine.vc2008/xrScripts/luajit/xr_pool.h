@@ -9,7 +9,7 @@
 //Как вариант делаю при страте игры кучу на 256МБ и выделаю память luajit`у из нее.
 
 
-void XR_INIT();
+BOOL XR_INIT();
 void XR_DESTROYPOOL();
 void* XR_MMAP(size_t size);
 void XR_DESTROY(void* p, size_t size);

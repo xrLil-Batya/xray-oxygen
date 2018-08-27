@@ -5,9 +5,7 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script space forward declarations
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 namespace luabind {
 	class object;
 	template<class T> class functor;

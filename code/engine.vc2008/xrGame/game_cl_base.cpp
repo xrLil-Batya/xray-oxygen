@@ -10,6 +10,7 @@
 #include "UI/UIMessagesWindow.h"
 #include "UI/UIDialogWnd.h"
 #include "string_table.h"
+#include <luabind/luabind.hpp>
 
 EGameLanguage g_Language = EGameLanguage::eglRussian;
 

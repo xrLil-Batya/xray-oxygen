@@ -139,7 +139,7 @@
 #	define ADD(a,b,c,d)			add<b>(c,d)
 #endif
 
-void CObjectFactory::register_classes	()
+void CObjectFactory::register_classes	() noexcept
 {
 #ifndef NO_XR_GAME
 	// client entities

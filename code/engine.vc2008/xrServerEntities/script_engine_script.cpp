@@ -11,6 +11,9 @@
 #include "ai_space.h"
 #include "../xrScripts/import_ses.hpp"
 
+#include <luabind/luabind.hpp>
+#include <luabind/operator.hpp>
+
 using namespace luabind;
 
 void ErrorLog(LPCSTR caMessage)

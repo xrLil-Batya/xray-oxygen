@@ -84,6 +84,6 @@ void CRenderDevice::Initialize			()
     }
 
     // Save window properties
-    m_dwWindowStyle = GetWindowLong( m_hWnd, GWL_STYLE );
+    m_dwWindowStyle = GetWindowLongPtr( m_hWnd, GWL_STYLE );
 }
 

@@ -907,7 +907,7 @@ void CActor::set_state_box(u32	mstate)
 
 void CActor::shedule_Update	(u32 DT)
 {
-	setSVU							(true);
+	setSVU(true);
 
 	if (IsFocused())
 	{

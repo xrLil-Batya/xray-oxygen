@@ -2,6 +2,7 @@
 #include "UIStatic.h"
 #include "UIAnimatedStatic.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

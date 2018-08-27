@@ -6,7 +6,7 @@
 
 CUIListBox::CUIListBox()
 {
-	m_pFont = NULL;
+	m_pFont = nullptr;
 	m_flags.set(eItemsSelectabe, TRUE);
 
 	m_def_item_height = 20;
@@ -115,7 +115,7 @@ CUIListBoxItem* CUIListBox::GetSelectedItem()
 	if (w)
 		return smart_cast<CUIListBoxItem*>(w);
 	else
-		return NULL;
+		return nullptr;
 }
 
 LPCSTR CUIListBox::GetSelectedText()
@@ -128,7 +128,7 @@ LPCSTR CUIListBox::GetSelectedText()
 		return item->GetText();
 	}
 	else
-		return NULL;
+		return nullptr;
 }
 
 u32 CUIListBox::GetSelectedIDX()
@@ -152,7 +152,7 @@ u32 CUIListBox::GetSelectedIDX()
 
 LPCSTR CUIListBox::GetText(int idx)
 {
-	if (idx==-1) return NULL;
+	if (idx==-1) return nullptr;
 
 	CUIListBoxItem* item = smart_cast<CUIListBoxItem*>(GetItem(idx));
 	return item->GetText();
@@ -255,7 +255,7 @@ CUIListBoxItem* CUIListBox::GetItemByTAG(u32 tag_val)
 		}
 		
 	}
-	return NULL;
+	return nullptr;
 }
 
 CUIListBoxItem* CUIListBox::GetItemByIDX(int idx)
@@ -347,6 +347,7 @@ void CUIListBox::SetImmediateSelection(bool f)
 #include "UISpinText.h"
 #include "UIComboBox.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 struct CUIListBoxItemWrapper : public CUIListBoxItem, public luabind::wrap_base
@@ -359,7 +360,7 @@ struct CUIListBoxItemMsgChainWrapper : public CUIListBoxItemMsgChain, public lua
 	CUIListBoxItemMsgChainWrapper(float h) : CUIListBoxItemMsgChain(h) {}
 };
 
-
+#include "../../SDK/include/luabind/adopt_policy.hpp"
 #pragma optimize("s",on)
 void CUIListBox::script_register(lua_State *L)
 {

@@ -166,7 +166,7 @@ void moving_objects::resolve_collision			(boxes &current, moving_object *object0
 	}
 
 	if (object1->action() == moving_object::action_wait) {
-		resolve_collision_previous	(current, object1, object0, action);
+		resolve_collision_previous	(current, object1, object0, action); //-V764
 		action					= possible_actions(action ^ (possible_action_1_can_wait_2 | possible_action_2_can_wait_1));
 		return;
 	}

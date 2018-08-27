@@ -137,7 +137,7 @@ public:
 protected:
 	CActorStatisticMgr*				m_statistic_manager;
 public:
-	virtual void StartTalk			(CInventoryOwner* talk_partner);
+	virtual void StartTalk			(CInventoryOwner* talk_partner, bool bStartTrade = false);
 			void RunTalkDialog		(CInventoryOwner* talk_partner, bool disable_break);
 	CActorStatisticMgr&				StatisticMgr()	{return *m_statistic_manager;}
 	CGameNewsRegistryWrapper		*game_news_registry;
@@ -516,10 +516,6 @@ protected:
 	//---------------------------------------------
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
-	//---------------------------------------------
-#ifdef DEBUG
-	virtual void			OnRender_Network();
-#endif
 	//---------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////

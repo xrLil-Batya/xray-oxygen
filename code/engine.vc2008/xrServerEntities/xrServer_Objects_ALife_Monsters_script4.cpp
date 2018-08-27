@@ -14,6 +14,7 @@
 #include "relation_registry.h"
 #endif // #ifdef XRGAME_EXPORTS
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 CALifeMonsterBrain *monster_brain	(CSE_ALifeMonsterAbstract *monster)

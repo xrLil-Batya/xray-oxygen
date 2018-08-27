@@ -9,8 +9,11 @@
 #pragma once
 
 #include "alife_space.h"
-#include "../xrScripts/export/script_export_space.h"
 #include "script_callback_ex.h"
+#include "../xrScripts/export/script_export_space.h"
+
+template <typename _return_type>
+class CScriptCallbackEx;
 
 class CGameObject;
 

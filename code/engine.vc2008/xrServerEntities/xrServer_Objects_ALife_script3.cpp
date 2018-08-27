@@ -9,10 +9,10 @@
 #include "stdafx.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "xrServer_script_macroses.h"
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 #pragma optimize("s",on)
-
 
 void set_yaw (CSE_ALifeObjectPhysic *obj, const float yaw)
 {

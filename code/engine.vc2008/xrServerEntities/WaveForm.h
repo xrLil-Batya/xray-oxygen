@@ -18,7 +18,7 @@ struct WaveForm
 	IC float signf		(float t) { return t/_abs(t); }
 	IC float Func		(float t)
 	{
-		switch (F)
+		switch (F) //-V719
 		{
 			case fCONSTANT:		return 0;
 			case fSIN:			return _sin(t*PI_MUL_2);

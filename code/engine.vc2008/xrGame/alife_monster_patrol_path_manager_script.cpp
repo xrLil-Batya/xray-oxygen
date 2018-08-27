@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "alife_monster_patrol_path_manager.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 Fvector CALifeMonsterPatrolPathManager__target_position	(CALifeMonsterPatrolPathManager *self)

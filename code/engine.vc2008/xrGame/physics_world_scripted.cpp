@@ -3,6 +3,8 @@
 #include "level.h"
 #include "PHCommander.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 

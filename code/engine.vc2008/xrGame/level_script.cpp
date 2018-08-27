@@ -808,6 +808,9 @@ u32 get_vertex_count(CLevelGraph *graph)
 	return graph->header().vertex_count(); 
 }
 
+#include "../../SDK/include/luabind/operator.hpp"
+#include "../../SDK/include/luabind/out_value_policy.hpp"
+
 #pragma optimize("s",on)
 void CLevel::script_register(lua_State *L)
 {

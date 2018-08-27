@@ -14,8 +14,8 @@ CUIPropertiesBox::CUIPropertiesBox(CUIPropertiesBox* sub_property_box)
 	m_UIListWnd.SetImmediateSelection	(true);
 	
 	m_sub_property_box			= sub_property_box;
-	m_parent_sub_menu			= NULL;
-	m_item_sub_menu_initiator	= NULL;
+	m_parent_sub_menu			= nullptr;
+	m_item_sub_menu_initiator	= nullptr;
 	if (m_sub_property_box)
 		m_sub_property_box->SetParentSubMenu(this);
 }
@@ -167,7 +167,7 @@ void CUIPropertiesBox::Hide()
 	CUIWindow::Show(false);
 	CUIWindow::Enable(false);
 
-	m_pMouseCapturer = NULL;
+	m_pMouseCapturer = nullptr;
 	
 	if(GetParent()->GetMouseCapturer() == this)
 		GetParent()->SetCapture(this, false);
@@ -230,6 +230,7 @@ bool CUIPropertiesBox::OnKeyboardAction(int dik, EUIMessages keyboard_action)
 	return true;
 }
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

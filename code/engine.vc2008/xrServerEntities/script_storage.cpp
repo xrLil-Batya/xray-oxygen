@@ -11,6 +11,7 @@
 #include <stdarg.h>
 #include "../FrayBuildConfig.hpp"
 #include "../xrScripts/luaopen.hpp"
+#include <luabind/luabind.hpp>
 
 #ifdef XRSE_FACTORY_EXPORTS
 #include "ai_space.h"

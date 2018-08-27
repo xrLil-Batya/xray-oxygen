@@ -19,6 +19,11 @@
 #include "map_location_defs.h"
 
 #include "actor_statistic_defs.h"
+extern "C"
+{
+#include "lua/lauxlib.h"
+}
+#include "luabind/luabind.hpp"
 
 #pragma warning(push)
 #pragma warning(disable:4005)
@@ -26,27 +31,27 @@
 template <typename _index_type, typename _data_type>
 class CALifeAbstractRegistry;
 
-//РґР»СЏ РІСЃРµС… РїРµСЂСЃРѕРЅР°Р¶РµР№, С‚Рµ РїРѕСЂС†РёРё РёРЅС„РѕСЂРјР°С†РёРё, РєРѕС‚РѕСЂС‹Рµ РѕРЅРё РїРѕРјРЅСЏС‚
-typedef CALifeAbstractRegistry<u16, KNOWN_INFO_VECTOR > CInfoPortionRegistry;
+//для всех персонажей, те порции информации, которые они помнят
+using CInfoPortionRegistry = CALifeAbstractRegistry<u16, KNOWN_INFO_VECTOR >;
 add_to_registry_type_list(CInfoPortionRegistry)
 #define info_portions define_constant(CInfoPortionRegistry) 
 #define registry_type_list save_registry_type_list(CInfoPortionRegistry)
 
-//РґР»СЏ РІСЃРµС… РїРµСЂСЃРѕРЅР°Р¶РµР№, РѕС‚РЅРѕС€РµРЅРёСЏ СЃ РґСЂСѓРіРёРјРё РїРµСЂСЃРѕРЅР°Р¶Р°РјРё
-typedef CALifeAbstractRegistry<u16, RELATION_DATA > CRelationRegistry;
+//для всех персонажей, отношения с другими персонажами
+using CRelationRegistry = CALifeAbstractRegistry<u16, RELATION_DATA >;
 add_to_registry_type_list(CRelationRegistry)
 #define character_relations define_constant(CRelationRegistry) 
 #define registry_type_list save_registry_type_list(CRelationRegistry)
 
-//СЃРїРёСЃРѕРє РЅРѕРІРѕСЃС‚РµР№ РїРѕР»СѓС‡РµРЅРЅС‹С… Р°РєС‚РµСЂРѕРј, СЃРѕСЃС‚РѕРёС‚ РёР· РЅРѕРІРѕСЃС‚РµР№ СЃРёРјСѓР»СЏС†РёРё Рё СЃСЋР¶РµС‚РЅС‹С… (СЃРєСЂРёРїС‚РѕРІР°РЅС‹С…) РЅРѕРІРѕСЃС‚РµР№ 
-typedef CALifeAbstractRegistry<u16, GAME_NEWS_VECTOR > CGameNewsRegistry;
+//список новостей полученных актером, состоит из новостей симуляции и сюжетных (скриптованых) новостей 
+using CGameNewsRegistry = CALifeAbstractRegistry<u16, GAME_NEWS_VECTOR >;
 add_to_registry_type_list(CGameNewsRegistry)
 #define game_news define_constant(CGameNewsRegistry) 
 #define registry_type_list save_registry_type_list(CGameNewsRegistry)
 
 
-//СЃРїРёСЃРѕРє РѕРїРёСЃР°РЅРёР№ РїРµСЂСЃРѕРЅР°Р¶РµР№, РєРѕС‚РѕСЂС‹Рµ СѓР¶Рµ Р·Р°РґРµР№СЃС‚РІРѕРІР°РЅС‹ РІ РёРіСЂРµ
-typedef CALifeAbstractRegistry<shared_str, int > CSpecificCharacterRegistry;
+//список описаний персонажей, которые уже задействованы в игре
+using CSpecificCharacterRegistry = CALifeAbstractRegistry<shared_str, int >;
 add_to_registry_type_list(CSpecificCharacterRegistry)
 #define specific_characters define_constant(CSpecificCharacterRegistry) 
 #define registry_type_list save_registry_type_list(CSpecificCharacterRegistry)

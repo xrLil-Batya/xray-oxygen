@@ -49,20 +49,6 @@ void CAI_Stalker::unsubscribe_on_best_cover_changed	(const on_best_cover_changed
 
 void CAI_Stalker::on_best_cover_changed				(const CCoverPoint *new_cover, const CCoverPoint *old_cover)
 {
-#if 0
-	if (new_cover) {
-		if (!new_cover->m_is_smart_cover)
-			Msg							("[%6d][%s], now it is cover", Device.dwTimeGlobal, cName().c_str());
-		else
-			Msg							(
-				"[%6d][%s], now it is smart cover %s",
-				Device.dwTimeGlobal,
-				cName().c_str(),
-				static_cast<smart_cover::cover const *>(new_cover)->object().cName().c_str()
-			);
-	}
-#endif
-
 	cover_delegates::const_iterator		I = m_cover_delegates.begin();
 	cover_delegates::const_iterator		E = m_cover_delegates.end();
 	for ( ; I != E; ++I)
@@ -107,9 +93,6 @@ void CAI_Stalker::compute_enemy_distances			(float &minimum_enemy_distance, floa
 
 const CCoverPoint *CAI_Stalker::find_best_cover		(const Fvector &position_to_cover_from)
 {
-#ifdef _DEBUG
-//	Msg									("* [%6d][%s] search for new cover performed",Device.dwTimeGlobal,*cName());
-#endif
 #ifdef _DEBUG
 	++g_near_cover_search_count;
 #endif
@@ -178,33 +161,23 @@ void CAI_Stalker::update_best_cover_actuality		(const Fvector &position_to_cover
 		smart_cover::loophole			*loophole = cover->best_loophole(position_to_cover_from, value, false, movement().current_params().cover() == m_best_cover );
 		if (!loophole) {
 			m_ce_best->invalidate		();
-			m_best_cover_actual			= false;
+			m_best_cover_actual = false;
 			return;
 		}
 	}
 
-	if (m_best_cover->position().distance_to_sqr(position_to_cover_from) < _sqr(MIN_SUITABLE_ENEMY_DISTANCE)) {
-		m_best_cover_actual				= false;
-#if 0//def _DEBUG
-		Msg								("* [%6d][%s] enemy too close",Device.dwTimeGlobal,*cName());
-#endif
+	if (m_best_cover->position().distance_to_sqr(position_to_cover_from) < _sqr(MIN_SUITABLE_ENEMY_DISTANCE)) 
+	{
+		m_best_cover_actual = false;
 		return;
 	}
 
 	float								cover_value = best_cover_value(position_to_cover_from);
-	if (cover_value >= m_best_cover_value + 1.f) {
-		m_best_cover_actual				= false;
-#if 0//def _DEBUG
-		Msg								("* [%6d][%s] cover became too bad",Device.dwTimeGlobal,*cName());
-#endif
+	if (cover_value >= m_best_cover_value + 1.f) 
+	{
+		m_best_cover_actual = false;
 		return;
 	}
-
-//	if (cover_value >= 1.5f*m_best_cover_value) {
-//		m_best_cover_actual				= false;
-//		Msg								("* [%6d][%s] cover became too bad2",Device.dwTimeGlobal,*cName());
-//		return;
-//	}
 
 	if (m_best_cover_advance_cover == m_best_cover)
 		return;
@@ -212,9 +185,6 @@ void CAI_Stalker::update_best_cover_actuality		(const Fvector &position_to_cover
 	m_best_cover_advance_cover			= m_best_cover;
 	m_best_cover_can_try_advance		= false;
 
-#ifdef _DEBUG
-//	Msg									("* [%6d][%s] advance search performed",Device.dwTimeGlobal,*cName());
-#endif
 #ifdef _DEBUG
 	++g_advance_search_count;
 #endif
@@ -224,10 +194,6 @@ void CAI_Stalker::update_best_cover_actuality		(const Fvector &position_to_cover
 
 const CCoverPoint *CAI_Stalker::best_cover			(const Fvector &position_to_cover_from)
 {
-//	shared_str const					&cover_id = movement().current_params().cover_id();
-//	if (cover_id != "")
-//		return							(ai().cover_manager().smart_cover(cover_id));
-
 	update_best_cover_actuality			(position_to_cover_from);
 
 	if (m_best_cover_actual) {

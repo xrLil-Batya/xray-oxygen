@@ -19,6 +19,7 @@ CUIAchievements::~CUIAchievements()
 	xr_delete(m_hint);
 }
 
+#include <luabind/luabind.hpp>
 void CUIAchievements::init_from_xml(CUIXml& xml)
 {
 	CUIXmlInit::InitWindow(xml, "achievements_itm", 0, this);

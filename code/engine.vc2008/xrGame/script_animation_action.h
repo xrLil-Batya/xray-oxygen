@@ -5,16 +5,16 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script animation action class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "script_abstract_action.h"
+#include "../xrScripts/export/script_abstract_action.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "ai_monster_space.h"
 
-class CScriptAnimationAction : public CScriptAbstractAction {
+class CScriptAnimationAction : public CScriptAbstractAction 
+{
 public:
-	enum EGoalType {
+	enum EGoalType 
+	{
 		eGoalTypeAnimation = u32(0),
 		eGoalTypeMental,
 		eGoalTypeDummy = u32(-1),

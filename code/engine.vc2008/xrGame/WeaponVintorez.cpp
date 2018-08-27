@@ -8,6 +8,8 @@ CWeaponVintorez::CWeaponVintorez() : CWeaponMagazined(SOUND_TYPE_WEAPON_SNIPERRI
 CWeaponVintorez::~CWeaponVintorez()
 {}
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 #pragma optimize("s",on)
 void CWeaponVintorez::script_register	(lua_State *L)

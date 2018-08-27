@@ -125,11 +125,9 @@ class CPHWallMarksCall :
 	Fvector pos;
 	CDB::TRI* T;
 public:
-	CPHWallMarksCall(const Fvector &p,CDB::TRI* Tri,const wm_shader &s)
+	CPHWallMarksCall(const Fvector &p,CDB::TRI* Tri,const wm_shader &s) : pWallmarkShader(s), T(Tri)
 	{
-		pWallmarkShader=s;
 		pos.set(p);
-		T=Tri;
 	}
 	virtual void run()
 	{

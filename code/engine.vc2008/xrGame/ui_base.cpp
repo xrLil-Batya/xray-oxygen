@@ -309,7 +309,7 @@ shared_str	ui_core::get_xml_name(LPCSTR fn)
 #include "UI/UIComboBox.h"
 #include "ui/UIOptionsManagerScript.h"
 #include "ScriptXmlInit.h"
-
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 CMainMenu* MainMenu();

@@ -59,7 +59,7 @@ void ik_anim_state::update(IKinematicsAnimated *K, const CBlend *b, u16 i)
 	is_blending = false;
 	if (!b)
 	{
-		current_blend = 0;
+		current_blend = nullptr;
 		return;
 	}
 	CMotionDef	&m_def_new = *K->LL_GetMotionDef(b->motionID);

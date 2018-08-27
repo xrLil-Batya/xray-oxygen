@@ -70,7 +70,7 @@ Fvector CALifeSmartTerrainTask::position () const
 	
 	
 }
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

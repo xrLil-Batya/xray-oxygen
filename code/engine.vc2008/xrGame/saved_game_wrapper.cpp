@@ -168,6 +168,7 @@ CSavedGameWrapper::CSavedGameWrapper			(LPCSTR saved_game_name)
 }
 
 #include "xr_time.h"
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 xrTime CSavedGameWrapper__game_time(const CSavedGameWrapper *self)

@@ -30,6 +30,7 @@ void CScriptWatchAction::SetWatchObject	(CScriptGameObject *tpObjectToWatch)
 	m_tGoalType			= eGoalTypeObject;
 	m_bCompleted		= false;
 }
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 

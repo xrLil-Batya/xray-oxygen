@@ -198,7 +198,7 @@ bool CBaseMonster::bfAssignMovement (CScriptEntityAction *tpEntityAction)
 												smart_cast<CCustomMonster*>( Level().Objects.net_Find(leader_id) ) : 
 												NULL;
 
-			if ( !should_follow_leader || !leader || (leader && !leader->GetScriptControl()) )
+			if ( !should_follow_leader || !leader || !leader->GetScriptControl())
 			{
 				if ( AssignGamePathIfNeeded(l_tMovementAction.m_tDestinationPosition, invalid_vertex_id) )
 					break;

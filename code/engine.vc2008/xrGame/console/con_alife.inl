@@ -77,13 +77,16 @@ public:
 
 		if (!xr_strlen(GameSaveName)) 
 		{
-            xr_sprintf(GameSaveName, "%s - quicksave", Core.UserName);
+			static u32 last_quick = 0;
+            xr_sprintf(GameSaveName, "%s - quicksave %d", Core.UserName, last_quick);
 			NET_Packet net_packet;
 			net_packet.w_stringZ(GameSaveName);
 			net_packet.w_u8(0);
+
             if (ai().get_alife())
                 Level().Server->game->alife().save(net_packet);
-			//Level().Send(net_packet);
+			if(last_quick < 5) last_quick++;
+			else last_quick = 0;
 		}
 		else 
 		{
@@ -245,13 +248,12 @@ public:
 			float id1 = 0.0f;
 			sscanf(args, "%f", &id1);
 			if (id1 < 2.0f)
+			{
 				Msg("Invalid online distance! (%.4f)", id1);
+			}
 			else
 			{
-				NET_Packet		P;
-				P.w_begin(M_SWITCH_DISTANCE);
-				P.w_float(id1);
-				Level().Send(P);
+				Level().Server->game->alife().set_switch_distance(id1);
 			}
 		}
 	}

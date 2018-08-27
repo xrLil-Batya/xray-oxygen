@@ -25,6 +25,7 @@
 #include "inventoryOwner.h"
 #include "Entity_alive.h"
 
+
 #define	FASTMODE_DISTANCE (50.f)	//distance to camera from sphere, when zone switches to fast update sequence
 
 CArtefact::CArtefact() 
@@ -596,6 +597,8 @@ void CArtefact::OnHiddenItem()
 	SetNextState(eHidden);
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

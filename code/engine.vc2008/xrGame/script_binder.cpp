@@ -15,6 +15,7 @@
 #include "script_game_object.h"
 #include "gameobject.h"
 #include "level.h"
+#include <luabind/luabind.hpp>
 
 CScriptBinder::CScriptBinder		()
 {

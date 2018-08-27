@@ -887,6 +887,7 @@ void CUIActorMenu::UpdateConditionProgressBars()
 }
 #include "../ai_space.h"
 #include "../../xrServerEntities/script_engine.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 

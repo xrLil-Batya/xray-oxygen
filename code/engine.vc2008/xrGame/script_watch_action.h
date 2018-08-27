@@ -5,18 +5,18 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script watch action class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "script_abstract_action.h"
+#include "../xrScripts/export/script_abstract_action.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "sight_manager_space.h"
 
 class CScriptGameObject;
 
-class CScriptWatchAction : public CScriptAbstractAction {
+class CScriptWatchAction : public CScriptAbstractAction 
+{
 public:
-	enum EGoalType {
+	enum EGoalType 
+	{
 		eGoalTypeObject = u32(0),
 		eGoalTypeWatchType,
 		eGoalTypeDirection,
@@ -29,7 +29,7 @@ public:
 	SightManager::ESightType	m_tWatchType;
 	EGoalType					m_tGoalType;
 	Fvector						m_tWatchVector;
-	shared_str						m_bone_to_watch;
+	shared_str					m_bone_to_watch;
 
 	// Searchlight 
 	Fvector						m_tTargetPoint;

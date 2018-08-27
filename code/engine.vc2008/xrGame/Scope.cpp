@@ -2,6 +2,7 @@
 #include "Scope.h"
 #include "Silencer.h"
 #include "GrenadeLauncher.h"
+#include <luabind/luabind.hpp>
 
 CScope::CScope	()
 {

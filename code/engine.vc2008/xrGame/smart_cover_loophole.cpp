@@ -9,6 +9,7 @@
 #include "smart_cover_loophole.h"
 #include "object_broker.h"
 #include "smart_cover_object.h"
+#include <luabind/luabind.hpp>
 
 using smart_cover::loophole;
 using smart_cover::action;

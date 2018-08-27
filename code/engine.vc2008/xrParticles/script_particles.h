@@ -5,9 +5,7 @@
 //	Author		: Alexander Maximchuk
 //	Description : XRay Script particles class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
 #include "../xrScripts/export/script_export_space.h"
 #include "../xrParticles/psystem.h"
 #include "../xrParticles/ParticlesObject.h"
@@ -16,7 +14,7 @@
 class CObjectAnimator;
 class CScriptParticles;
 
-class CScriptParticlesCustom: public CParticlesObject
+class PARTICLES_API CScriptParticlesCustom: public CParticlesObject
 {
 	CObjectAnimator*			m_animator;
 	virtual						~CScriptParticlesCustom();
@@ -34,7 +32,7 @@ public:
 			void				remove_owner		();
 };
 
-class CScriptParticles
+class PARTICLES_API CScriptParticles
 {
  private:
  	Fmatrix						m_transform;

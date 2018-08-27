@@ -52,7 +52,7 @@ XRPHYSICS_API xr_token motion_dirs[] = {
 		{ "back",	type_motion::back 	},
 		{ "left",	type_motion::left 	},
 		{ "right",	type_motion::right	},
-		{ 0,						0	}
+		{ nullptr,						0	}
 };
 
 void type_motion::set_motion(IKinematicsAnimated* k, u16 id_motion, const char* dir_anim)
@@ -202,7 +202,7 @@ inline bool is_bone_head(IKinematics &K, u16 bone)
 //1.	Инерционное движение вперед от попадания в голову 
 class	type_motion0 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle)	const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle)	const override
 	{
 		m = MotionID();
 		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
@@ -247,7 +247,7 @@ class	type_motion0 : public type_motion
 //2.	Изрешетить пулями
 class	type_motion1 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		m = MotionID();
 
@@ -258,7 +258,7 @@ class	type_motion1 : public type_motion
 //3.	Шотган 
 class	type_motion2 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		m = MotionID();
 		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
@@ -284,7 +284,7 @@ class	type_motion2 : public type_motion
 //4.	Хедшот (по вероятности), кроме 5 (4) 
 class	type_motion3 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		m = MotionID();
 		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
@@ -318,7 +318,7 @@ bool is_snipper(u16 weaponID)
 //5.	Снайперка в голову. 
 class	type_motion4 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
 			return false;
@@ -342,7 +342,7 @@ class	type_motion4 : public type_motion
 //6.	Снайперка в тело. 
 class	type_motion5 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
 			return false;
@@ -365,7 +365,7 @@ class	type_motion5 : public type_motion
 //7.	Гранта 
 class	type_motion6 : public type_motion
 {
-	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const
+	bool predicate(CObject& pEntity, const SHit& H, MotionID &m, float &angle) const override
 	{
 
 		if (H.initiator() != g_pGameLevel->CurrentControlEntity())
@@ -385,7 +385,7 @@ class	type_motion6 : public type_motion
 			return false;
 		}
 
-		if (dynamic_cast<IExplosive*>(O) != 0)
+		if (dynamic_cast<IExplosive*>(O) != nullptr)
 		{
 			edirection dr = dir(pEntity, H, angle);
 			m = motion(dr);

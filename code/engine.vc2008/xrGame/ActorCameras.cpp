@@ -225,58 +225,58 @@ IC void get_cam_oob(  Fvector &bd, Fmatrix	&mat, const Fmatrix &xform, const SRo
 }
 void	CActor::cam_Lookout	( const Fmatrix &xform, float camera_height )
 {
-		if (!fis_zero(r_torso_tgt_roll))
-		{
+	if (!fis_zero(r_torso_tgt_roll))
+	{
 		
-			float w,h;
-			float c				= viewport_near(w,h); w/=2.f;h/=2.f;
-			float alpha			= r_torso_tgt_roll/2.f;
-			float radius		= camera_height*0.5f;
-			// init valid angle
-			float valid_angle	= alpha;
-			Fvector				bc,bd;
-			Fmatrix33			mat;
-			get_cam_oob( bc, bd, mat, xform, r_torso, alpha, radius, c );
+		float w,h;
+		float c				= viewport_near(w,h); w/=2.f;h/=2.f;
+		float alpha			= r_torso_tgt_roll/2.f;
+		float radius		= camera_height*0.5f;
+		// init valid angle
+		float valid_angle	= alpha;
+		Fvector				bc,bd;
+		Fmatrix33			mat;
+		get_cam_oob( bc, bd, mat, xform, r_torso, alpha, radius, c );
 
-			/*
-			xrXRC				xrc			;
-			xrc.box_options		(0)			;
-			xrc.box_query		(Level().ObjectSpace.GetStaticModel(), bc, bd)		;
-			u32 tri_count		= xrc.r_count();
+		/*
+		xrXRC				xrc			;
+		xrc.box_options		(0)			;
+		xrc.box_query		(Level().ObjectSpace.GetStaticModel(), bc, bd)		;
+		u32 tri_count		= xrc.r_count();
 
-			*/
-			//if (tri_count)		
+		*/
+		//if (tri_count)		
+		{
+			float da		= 0.f;
+			BOOL bIntersect	= FALSE;
+			Fvector	ext		= {w,h,VIEWPORT_NEAR/2};
+			Fvector				pt;
+			calc_gl_point	( pt, xform, radius, alpha );
+			if ( test_point( pt, mat, ext, this  ) )
 			{
-				float da		= 0.f;
-				BOOL bIntersect	= FALSE;
-				Fvector	ext		= {w,h,VIEWPORT_NEAR/2};
-				Fvector				pt;
-				calc_gl_point	( pt, xform, radius, alpha );
-				if ( test_point( pt, mat, ext, this  ) )
-				{
-					da			= PI/1000.f;
-					if (!fis_zero(r_torso.roll))
-						da		*= r_torso.roll/_abs(r_torso.roll);
+				da			= PI/1000.f;
+				if (!fis_zero(r_torso.roll))
+					da		*= r_torso.roll/_abs(r_torso.roll);
 
-                    float angle = 0.f;
-					for (; _abs(angle)<_abs(alpha); angle+=da)
-					{
-						Fvector				pt;
-						calc_gl_point( pt, xform, radius, angle );
-						if (test_point( pt, mat,ext, this )) 
-							{ bIntersect=TRUE; break; } 
-					}
-					valid_angle	= bIntersect?angle:alpha;
-				} 
-			}
-			r_torso.roll		= valid_angle*2.f;
-			r_torso_tgt_roll	= r_torso.roll;
+                float angle = 0.f;
+				for (; _abs(angle)<_abs(alpha); angle+=da)
+				{
+					Fvector				pt;
+					calc_gl_point( pt, xform, radius, angle );
+					if (test_point( pt, mat,ext, this )) 
+						{ bIntersect=TRUE; break; } 
+				}
+				valid_angle	= bIntersect?angle:alpha;
+			} 
 		}
-		else
-		{	
-			r_torso_tgt_roll = 0.f;
-			r_torso.roll = 0.f;
-		}
+		r_torso.roll		= valid_angle*2.f;
+		r_torso_tgt_roll	= r_torso.roll;
+	}
+	else
+	{	
+		r_torso_tgt_roll = 0.f;
+		r_torso.roll = 0.f;
+	}
 }
 #ifdef	DEBUG
 BOOL ik_cam_shift = true;
@@ -422,18 +422,13 @@ extern	BOOL g_bDrawBulletHit;
 
 void CActor::OnRender	()
 {
-#ifdef DEBUG
 	if (inventory().ActiveItem())
 		inventory().ActiveItem()->OnRender();
-#endif
+
 	if (!bDebug)				return;
 
 	if ((dbg_net_Draw_Flags.is_any(dbg_draw_actor_phys)))
 		character_physics_support()->movement()->dbg_Draw	();
-
-	
-
-	OnRender_Network();
 
 	inherited::OnRender();
 }

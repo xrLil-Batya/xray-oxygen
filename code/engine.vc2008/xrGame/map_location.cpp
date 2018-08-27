@@ -363,7 +363,7 @@ bool CMapLocation::Update()
 
 	CObject* pObject					= Level().Objects.net_Find(m_objectID);
 	
-	if (m_owner_se_object || (false && pObject))
+	if (m_owner_se_object)
 	{
 		m_cached.m_Actuality = true;
 		CalcLevelName();

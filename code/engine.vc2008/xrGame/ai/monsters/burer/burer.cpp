@@ -269,7 +269,7 @@ void CBurer::UpdateGraviObject()
 		return;
 	}
 	
-	if ( !m_gravi_object.enemy || (m_gravi_object.enemy && m_gravi_object.enemy->getDestroy()) ) 
+	if ( !m_gravi_object.enemy || m_gravi_object.enemy->getDestroy())
 	{
 		m_gravi_object.deactivate();
 		return;

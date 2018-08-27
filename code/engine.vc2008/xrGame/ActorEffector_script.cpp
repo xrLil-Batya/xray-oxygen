@@ -3,6 +3,7 @@
 #include "script_engine.h"
 #include "ActorEffector.h"
 #include "../xrEngine/ObjectAnimator.h"
+#include "luabind/luabind.hpp"
 
 void CAnimatorCamEffectorScriptCB::ProcessIfInvalid(SCamEffectorInfo& info)
 {

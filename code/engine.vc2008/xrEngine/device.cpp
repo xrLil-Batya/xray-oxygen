@@ -373,11 +373,13 @@ void CRenderDevice::Run			()
 	dwTimeGlobal				= 0;
 	Timer_MM_Delta				= 0;
 	{
-		u32 time_mm			= timeGetTime	();
-		while (timeGetTime()==time_mm);			// wait for next tick
-			u32 time_system		= timeGetTime	();
-		u32 time_local		= TimerAsync	();
-		Timer_MM_Delta		= time_system-time_local;
+		u32 time_mm = timeGetTime	();
+		// wait for next tick
+		while (timeGetTime()==time_mm);	 //-V529
+
+		u32 time_system = timeGetTime	();
+		u32 time_local  = TimerAsync	();
+		Timer_MM_Delta  = time_system-time_local;
 	}
 
 	// Start all threads
@@ -402,8 +404,8 @@ void CRenderDevice::Run			()
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
     DWORD	dwWindowStyle		= 0;
-    DWORD	dwWidth				= psCurrentVidMode[0];
-    DWORD	dwHeight			= psCurrentVidMode[1];
+    DWORD	dwWidthCurr				= psCurrentVidMode[0];
+    DWORD	dwHeightCurr			= psCurrentVidMode[1];
     bool	bFullscreen			= psDeviceFlags.is(rsFullscreen);
 
     RECT	WindowBounds;
@@ -417,10 +419,10 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
 
         SetRect	(&WindowBounds,
-				(DesktopRect.right - dwWidth) / 2,
-				(DesktopRect.bottom - dwHeight) / 2,
-				(DesktopRect.right + dwWidth) / 2,
-				(DesktopRect.bottom + dwHeight) / 2);
+				(DesktopRect.right - dwWidthCurr) / 2,
+				(DesktopRect.bottom - dwHeightCurr) / 2,
+				(DesktopRect.right + dwWidthCurr) / 2,
+				(DesktopRect.bottom + dwHeightCurr) / 2);
     }
         break;
     case WPS_WindowedBorderless:
@@ -429,10 +431,10 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         dwWindowStyle = WS_VISIBLE;
 
         SetRect	(&WindowBounds,
-				(DesktopRect.right - dwWidth) / 2,
-				(DesktopRect.bottom - dwHeight) / 2, 
-				(DesktopRect.right + dwWidth) / 2,
-				(DesktopRect.bottom + dwHeight) / 2);
+				(DesktopRect.right - dwWidthCurr) / 2,
+				(DesktopRect.bottom - dwHeightCurr) / 2, 
+				(DesktopRect.right + dwWidthCurr) / 2,
+				(DesktopRect.bottom + dwHeightCurr) / 2);
     }
         break;
     case WPS_FullscreenBorderless:
@@ -457,7 +459,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     }
 
 	if(!strstr(Core.Params, "-editor"))
-		SetWindowLong(m_hWnd, GWL_STYLE, dwWindowStyle);
+		SetWindowLongPtr(m_hWnd, GWL_STYLE, dwWindowStyle);
 
     bool bNewFullscreen = psDeviceFlags.is(rsFullscreen);
 

@@ -28,6 +28,8 @@ void CWeaponSVD::OnAnimationEnd(u32 state)
 	inherited::OnAnimationEnd(state);
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

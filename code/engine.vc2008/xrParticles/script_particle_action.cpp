@@ -5,17 +5,17 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script particle action class
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "script_particle_action.h"
-#include "../xrParticles/psystem.h"
-#include "../xrParticles/particlesobject.h"
+#include "psystem.h"
+#include "particlesobject.h"
+#include <luabind\luabind.hpp>
 
 CScriptParticleAction::~CScriptParticleAction()
 {
 }
 
-void CScriptParticleAction::SetParticle			(LPCSTR caParticleToRun, bool bAutoRemove)
+void CScriptParticleAction::SetParticle			(const char* caParticleToRun, bool bAutoRemove)
 {
 	m_caParticleToRun	= caParticleToRun;
 	m_tGoalType			= eGoalTypeParticleAttached;
@@ -33,11 +33,11 @@ void CScriptParticleAction::script_register(lua_State *L)
 	[
 		class_<CScriptParticleAction>("particle")
 			.def(					constructor<>())
-			.def(					constructor<LPCSTR,LPCSTR>())
-			.def(					constructor<LPCSTR,LPCSTR,const CParticleParams &>())
-			.def(					constructor<LPCSTR,LPCSTR,const CParticleParams &, bool>())
-			.def(					constructor<LPCSTR,const CParticleParams &>())
-			.def(					constructor<LPCSTR,const CParticleParams &, bool>())
+			.def(					constructor<const char*,const char*>())
+			.def(					constructor<const char*,const char*,const CParticleParams &>())
+			.def(					constructor<const char*,const char*,const CParticleParams &, bool>())
+			.def(					constructor<const char*,const CParticleParams &>())
+			.def(					constructor<const char*,const CParticleParams &, bool>())
 			.def("set_particle",	&CScriptParticleAction::SetParticle)
 			.def("set_bone",		&CScriptParticleAction::SetBone)
 			.def("set_position",	&CScriptParticleAction::SetPosition)

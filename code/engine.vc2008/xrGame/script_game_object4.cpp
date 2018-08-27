@@ -3,8 +3,8 @@
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include "luabind/luabind.hpp"
 #include "script_game_object.h"
-
 
 #include "script_zone.h"
 #include "ai/trader/ai_trader.h"

@@ -279,7 +279,7 @@ protected	:
 	Fvector			min,max;
 public		
 :
-	CCC_Vector3(LPCSTR N, Fvector* V, const Fvector _min, const Fvector _max) :
+	CCC_Vector3(LPCSTR N, Fvector* V, const Fvector &_min, const Fvector &_max) :
 	  IConsole_Command(N),
 	  value(V)
 	{

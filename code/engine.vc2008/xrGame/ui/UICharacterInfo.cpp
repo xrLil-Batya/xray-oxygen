@@ -338,6 +338,7 @@ bool CUICharacterInfo::ignore_community(shared_str const& check_community)
 	}
 	return false;
 }
+#include <luabind/luabind.hpp>
 
 #include "ai_space.h"
 #include "script_engine.h"

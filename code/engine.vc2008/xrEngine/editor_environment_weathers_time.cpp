@@ -147,16 +147,16 @@ LPCSTR time::id_getter		() const
 	return						(m_identifier.c_str());
 }
 
-void time::id_setter		(LPCSTR value_)
+void time::id_setter(LPCSTR value_)
 {
-	shared_str					value = value_;
+	shared_str value = value_;
 	if (m_identifier._get() == value._get())
 		return;
 
 	if (m_weather)
-		m_identifier			= m_weather->unique_id(m_identifier, value);
+		m_identifier = m_weather->unique_id(m_identifier, value);
 	else
-		m_identifier			= value;
+		m_identifier = std::move(value);
 }
 
 LPCSTR const* time::ambients_collection		()

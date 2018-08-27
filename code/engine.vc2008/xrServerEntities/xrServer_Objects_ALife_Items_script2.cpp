@@ -10,7 +10,21 @@
 #include "xrServer_Objects_ALife_Items.h"
 #include "xrServer_script_macroses.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
+
+
+#pragma optimize("s",on)
+void CSE_ALifeItemWeaponMagazinedWGL::script_register(lua_State *L)
+{
+	module(L)[
+		luabind_class_item1(
+			CSE_ALifeItemWeaponMagazinedWGL,
+			"cse_alife_item_weapon_magazined_w_gl",
+			CSE_ALifeItemWeaponMagazined
+		)
+	];
+}
 
 #pragma optimize("s",on)
 void CSE_ALifeItemPDA::script_register(lua_State *L)
