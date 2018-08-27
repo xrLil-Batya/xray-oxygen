@@ -29,10 +29,10 @@ void CWalmarkManager::AddWallmark(const Fvector& dir, const Fvector& start_pos,
 
 	if(pMaterial->Flags.is(SGameMtl::flBloodmark))
 	{
-		//вычислить нормаль к пораженной поверхности
+		//РІС‹С‡РёСЃР»РёС‚СЊ РЅРѕСЂРјР°Р»СЊ Рє РїРѕСЂР°Р¶РµРЅРЅРѕР№ РїРѕРІРµСЂС…РЅРѕСЃС‚Рё
 		Fvector*	pVerts	= Level().ObjectSpace.GetStaticVerts();
 
-		//вычислить точку попадания
+		//РІС‹С‡РёСЃР»РёС‚СЊ С‚РѕС‡РєСѓ РїРѕРїР°РґР°РЅРёСЏ
 		Fvector end_point;
 		end_point.set(0,0,0);
 		end_point.mad(start_pos, dir, range);
@@ -123,7 +123,7 @@ void CWalmarkManager::StartWorkflow()
 
 void CWalmarkManager::Load (LPCSTR section)
 {
-	//кровавые отметки на стенах
+	//РєСЂРѕРІР°РІС‹Рµ РѕС‚РјРµС‚РєРё РЅР° СЃС‚РµРЅР°С…
 	LPCSTR wallmarks_name = pSettings->r_string(section, "wallmarks"); 
 	m_wallmarks->AppendMark(wallmarks_name);
 }

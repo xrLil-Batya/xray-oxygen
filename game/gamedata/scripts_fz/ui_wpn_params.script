@@ -37,19 +37,19 @@ function read_float(wpn_section, upgr_sections, param)
 	return res
 end
 
--- Получить скорострельность
+-- РџРѕР»СѓС‡РёС‚СЊ СЃРєРѕСЂРѕСЃС‚СЂРµР»СЊРЅРѕСЃС‚СЊ
 function GetRPM(wpn_section, upgr_sections)
 	local rpm = read_float(wpn_section, upgr_sections, "rpm")
 	return normalize(rpm, 0, 1150)
 end
 
--- Получить повреждение
+-- РџРѕР»СѓС‡РёС‚СЊ РїРѕРІСЂРµР¶РґРµРЅРёРµ
 function GetDamage(wpn_section, upgr_sections)
 	local hit_power = read_float(wpn_section, upgr_sections, "hit_power")
 	return normalize(hit_power, 0, 0.9)
 end
 
--- Получить удобность
+-- РџРѕР»СѓС‡РёС‚СЊ СѓРґРѕР±РЅРѕСЃС‚СЊ
 function GetHandling(wpn_section, upgr_sections)
 	local ltx = system_ini()
 	local crosshair_inertion = 1
@@ -62,7 +62,7 @@ function GetHandling(wpn_section, upgr_sections)
 	return normalize(crosshair_inertion, 0, 10.5)
 end
 
--- Получить точность
+-- РџРѕР»СѓС‡РёС‚СЊ С‚РѕС‡РЅРѕСЃС‚СЊ
 function GetAccuracy(wpn_section, upgr_sections)
 	local fire_dispersion_base = read_float(wpn_section, upgr_sections, "fire_dispersion_base")
 	fire_dispersion_base = 0.85 - fire_dispersion_base

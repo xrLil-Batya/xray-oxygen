@@ -6,7 +6,7 @@
 struct	vis_data
 {
 private:
-	vis_object_data obj_data_self; //--#SM+#-- —вои собственные объектные данные [personal shaders data of this model]
+	vis_object_data obj_data_self; //--#SM+#-- вЂ”РІРѕРё СЃРѕР±СЃС‚РІРµРЅРЅС‹Рµ РѕР±СЉРµРєС‚РЅС‹Рµ РґР°РЅРЅС‹Рµ [personal shaders data of this model]
 
 public:
 	Fsphere		sphere;				//
@@ -16,7 +16,7 @@ public:
 	u32			hom_frame;			// when to perform test - shedule
 	u32			hom_tested;			// when it was last time tested
 
-	vis_object_data * obj_data; //--#SM+#-- ќбъектные данные, используемые при рендере этой модели [shaders data which
+	vis_object_data * obj_data; //--#SM+#-- СњР±СЉРµРєС‚РЅС‹Рµ РґР°РЅРЅС‹Рµ, РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РїСЂРё СЂРµРЅРґРµСЂРµ СЌС‚РѕР№ РјРѕРґРµР»Рё [shaders data which
 								//will be used at render for this model]
 
 	vis_data::vis_data() //--#SM+#--

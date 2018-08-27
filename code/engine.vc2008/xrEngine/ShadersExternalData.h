@@ -1,12 +1,12 @@
 #pragma once
-// Хранилище внешних шейдерных параметров, которые читаются в Blender_Recorder_StandartBinding.cpp
+// РҐСЂР°РЅРёР»РёС‰Рµ РІРЅРµС€РЅРёС… С€РµР№РґРµСЂРЅС‹С… РїР°СЂР°РјРµС‚СЂРѕРІ, РєРѕС‚РѕСЂС‹Рµ С‡РёС‚Р°СЋС‚СЃСЏ РІ Blender_Recorder_StandartBinding.cpp
 class	ShadersExternalData	//--#SM+#--
 {
 public:
-	Fmatrix		m_script_params;	// Матрица, значения которой доступны из Lua
-	Fvector4	hud_params;			// [zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL] - Параметры худа оружия
-	Fvector4	m_blender_mode;		// x\y = [0 - default, 1 - night vision, 2 - thermo vision, ... см. common.h] - Режимы рендеринга
-									// x - основной вьюпорт, y - второй впьюпорт, z = ?, w = [0 - идёт рендер обычного объекта, 1 - идёт рендер детальных объектов (трава, мусор)]
+	Fmatrix		m_script_params;	// РњР°С‚СЂРёС†Р°, Р·РЅР°С‡РµРЅРёСЏ РєРѕС‚РѕСЂРѕР№ РґРѕСЃС‚СѓРїРЅС‹ РёР· Lua
+	Fvector4	hud_params;			// [zoom_rotate_factor, secondVP_zoom_factor, NULL, NULL] - РџР°СЂР°РјРµС‚СЂС‹ С…СѓРґР° РѕСЂСѓР¶РёСЏ
+	Fvector4	m_blender_mode;		// x\y = [0 - default, 1 - night vision, 2 - thermo vision, ... СЃРј. common.h] - Р РµР¶РёРјС‹ СЂРµРЅРґРµСЂРёРЅРіР°
+									// x - РѕСЃРЅРѕРІРЅРѕР№ РІСЊСЋРїРѕСЂС‚, y - РІС‚РѕСЂРѕР№ РІРїСЊСЋРїРѕСЂС‚, z = ?, w = [0 - РёРґС‘С‚ СЂРµРЅРґРµСЂ РѕР±С‹С‡РЅРѕРіРѕ РѕР±СЉРµРєС‚Р°, 1 - РёРґС‘С‚ СЂРµРЅРґРµСЂ РґРµС‚Р°Р»СЊРЅС‹С… РѕР±СЉРµРєС‚РѕРІ (С‚СЂР°РІР°, РјСѓСЃРѕСЂ)]
 
 	ShadersExternalData()
 	{

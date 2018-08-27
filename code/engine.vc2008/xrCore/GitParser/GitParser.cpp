@@ -1,4 +1,4 @@
-﻿////////////////////////////////////////////////////
+п»ї////////////////////////////////////////////////////
 // Author: ForserX
 // Task  : Parsing current branch and commit hash
 ////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ int main()
 	std::ifstream *Reader = nullptr;
 	std::string PathFile = "../../../.git/";
 
-	// Получаем ветку
+	// РџРѕР»СѓС‡Р°РµРј РІРµС‚РєСѓ
 	std::vector<std::string> Directories;
 	std::string BranchName;
 	Reader = new std::ifstream(PathFile + "HEAD");
@@ -50,18 +50,18 @@ int main()
 	Directories = Split(BranchName, BranchName.size(), '/');
 	BranchName = Directories[Directories.size() - 1];
 
-	// Получаем файл
+	// РџРѕР»СѓС‡Р°РµРј С„Р°Р№Р»
 	PathFile += "refs/heads/" + BranchName;
 	Reader->close();
 	Reader = new std::ifstream(PathFile);
 
-	// Получаем хеш коммита
+	// РџРѕР»СѓС‡Р°РµРј С…РµС€ РєРѕРјРјРёС‚Р°
 	std::string hash;
 	std::getline(*Reader, hash);
 	Reader->close();
 	delete Reader;
 #endif
-	// Создаём буффер
+	// РЎРѕР·РґР°С‘Рј Р±СѓС„С„РµСЂ
 	std::stringstream HeaderString;
 	HeaderString << "#pragma once" << std::endl;
 	

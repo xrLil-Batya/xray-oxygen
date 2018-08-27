@@ -104,7 +104,7 @@ void xrDebug::do_exit(HWND hWnd, const std::string &message)
         ExitProcess(1);
 	}
 #ifdef AWDA
-	// Пусть тут хранится
+	// РџСѓСЃС‚СЊ С‚СѓС‚ С…СЂР°РЅРёС‚СЃСЏ
 	MessageBoxA(NULL, "awda", "awda", MB_OK | MB_ICONASTERISK);
 #endif
 }

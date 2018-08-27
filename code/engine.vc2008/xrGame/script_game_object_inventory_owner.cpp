@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////
-// script_game_object_inventory_owner.ñpp :	ôóíêöèè äëÿ inventory owner
+// script_game_object_inventory_owner.Ñpp :	Ñ„ÑƒÐ½ÐºÑ†Ð¸Ð¸ Ð´Ð»Ñ inventory owner
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -342,7 +342,7 @@ void CScriptGameObject::MakeItemActive(CScriptGameObject* pItem)
 
 }
 
-//ïåðåäà÷å âåùè èç ñâîåãî èíâåíòàðÿ â èíâåíòàðü ïàðòíåðà
+//Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ðµ Ð²ÐµÑ‰Ð¸ Ð¸Ð· ÑÐ²Ð¾ÐµÐ³Ð¾ Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€Ñ Ð² Ð¸Ð½Ð²ÐµÐ½Ñ‚Ð°Ñ€ÑŒ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ð°
 void CScriptGameObject::TransferItem(CScriptGameObject* pItem, CScriptGameObject* pForWho)
 {
 	if (!pItem || !pForWho) {
@@ -357,13 +357,13 @@ void CScriptGameObject::TransferItem(CScriptGameObject* pItem, CScriptGameObject
 		return ;
 	}
 
-	// âûáðîñèòü ó ñåáÿ 
+	// Ð²Ñ‹Ð±Ñ€Ð¾ÑÐ¸Ñ‚ÑŒ Ñƒ ÑÐµÐ±Ñ 
 	NET_Packet						P;
 	CGameObject::u_EventGen			(P,GE_TRADE_SELL, object().ID());
 	P.w_u16							(pIItem->object().ID());
 	CGameObject::u_EventSend		(P);
 
-	// îòäàòü ïàðòíåðó
+	// Ð¾Ñ‚Ð´Ð°Ñ‚ÑŒ Ð¿Ð°Ñ€Ñ‚Ð½ÐµÑ€Ñƒ
 	CGameObject::u_EventGen			(P,GE_TRADE_BUY, pForWho->object().ID());
 	P.w_u16							(pIItem->object().ID());
 	CGameObject::u_EventSend		(P);

@@ -10,8 +10,8 @@ static string_path			log_file_name;
 static bool 				no_log			= true;
 static std::recursive_mutex	logCS;
 
-bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true если лог все-же записывается плохо при вылете. 
-//RvP													// Слишком частая запись лога вредит SSD и снижает производительность.
+bool __declspec(dllexport) force_flush_log = false;	// alpet: РІС‹СЃС‚Р°РІРёС‚СЊ РІ true РµСЃР»Рё Р»РѕРі РІСЃРµ-Р¶Рµ Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РїР»РѕС…Рѕ РїСЂРё РІС‹Р»РµС‚Рµ. 
+//RvP													// РЎР»РёС€РєРѕРј С‡Р°СЃС‚Р°СЏ Р·Р°РїРёСЃСЊ Р»РѕРіР° РІСЂРµРґРёС‚ SSD Рё СЃРЅРёР¶Р°РµС‚ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ.
 IWriter *LogWriter;
 size_t cached_log = 0;
 
@@ -64,7 +64,7 @@ void AddOne(const char *split)
 		case 0x21:
 		case 0x23:
 		case 0x25:
-			split++; // пропустить первый символ, т.к. это вероятно цветовой тег
+			split++; // РїСЂРѕРїСѓСЃС‚РёС‚СЊ РїРµСЂРІС‹Р№ СЃРёРјРІРѕР», С‚.Рє. СЌС‚Рѕ РІРµСЂРѕСЏС‚РЅРѕ С†РІРµС‚РѕРІРѕР№ С‚РµРі
 			break;
 		}
 

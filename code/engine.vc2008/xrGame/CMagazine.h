@@ -18,17 +18,17 @@ public:
 	u8						m_u8TracerColorID;
 	bool					m_bHasTracers;
 
-	// Получаем вес обоймы
+	// РџРѕР»СѓС‡Р°РµРј РІРµСЃ РѕР±РѕР№РјС‹
 	float					GetMagazineWeight(const decltype(m_magazine)& mag) const;
 
 protected:
 
 	mutable int				m_iAmmoCurrentTotal;
 
-	// Текущее количество патронов в магазине оружия
+	// РўРµРєСѓС‰РµРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РїР°С‚СЂРѕРЅРѕРІ РІ РјР°РіР°Р·РёРЅРµ РѕСЂСѓР¶РёСЏ
 	int iAmmoElapsed;
 
-	// Вместительность патронов в магазине
+	// Р’РјРµСЃС‚РёС‚РµР»СЊРЅРѕСЃС‚СЊ РїР°С‚СЂРѕРЅРѕРІ РІ РјР°РіР°Р·РёРЅРµ
 	int	iMagazineSize;
 
 

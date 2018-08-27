@@ -39,13 +39,13 @@ public:
 
 	bool				mechanic_mode; // for inventory upgrades
 	
-	//номер выбранного вопроса
+	//РЅРѕРјРµСЂ РІС‹Р±СЂР°РЅРЅРѕРіРѕ РІРѕРїСЂРѕСЃР°
 	shared_str			m_ClickedQuestionID;
 
-	//список вопросов, которые мы можем задавать персонажу
+	//СЃРїРёСЃРѕРє РІРѕРїСЂРѕСЃРѕРІ, РєРѕС‚РѕСЂС‹Рµ РјС‹ РјРѕР¶РµРј Р·Р°РґР°РІР°С‚СЊ РїРµСЂСЃРѕРЅР°Р¶Сѓ
 	CUI3tButton			UIToTradeButton;
 
-	//информация о персонажах 
+	//РёРЅС„РѕСЂРјР°С†РёСЏ Рѕ РїРµСЂСЃРѕРЅР°Р¶Р°С… 
 	CUIStatic			UIOurIcon;
 	CUIStatic			UIOthersIcon;
 	CUICharacterInfo	UICharacterInfoLeft;
@@ -66,10 +66,10 @@ private:
 	CUIScrollView*			UIAnswersList;
 
 
-	// шрифт и цвет текста с именем персонажа
+	// С€СЂРёС„С‚ Рё С†РІРµС‚ С‚РµРєСЃС‚Р° СЃ РёРјРµРЅРµРј РїРµСЂСЃРѕРЅР°Р¶Р°
 	CGameFont			*m_pNameTextFont;
 	u32					m_iNameTextColor;
-	// цвет тeкста и шрифт наших реплик
+	// С†РІРµС‚ С‚eРєСЃС‚Р° Рё С€СЂРёС„С‚ РЅР°С€РёС… СЂРµРїР»РёРє
 	u32					m_uOurReplicsColor;
 
 	void __stdcall		OnTradeClicked			(CUIWindow* w, void*);
