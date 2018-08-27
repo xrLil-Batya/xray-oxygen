@@ -106,7 +106,7 @@ add_to_type_list(CSE_ALifeItem)
 #define script_type_list save_type_list(CSE_ALifeItem)
 
 SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemTorch,CSE_ALifeItem)
-//флаги
+//С„Р»Р°РіРё
 	enum EStats{
 		eTorchActive				= (1<<0),
 		eNightVisionActive			= (1<<1),
@@ -140,7 +140,7 @@ SERVER_ENTITY_DECLARE_BEGIN(CSE_ALifeItemWeapon,CSE_ALifeItem)
 
 	using EWeaponAddonStatus =	ALife::EWeaponAddonStatus;
 	
-	//текущее состояние аддонов
+	//С‚РµРєСѓС‰РµРµ СЃРѕСЃС‚РѕСЏРЅРёРµ Р°РґРґРѕРЅРѕРІ
 	enum EWeaponAddonState 
 	{
 		eWeaponAddonScope = 0x01,

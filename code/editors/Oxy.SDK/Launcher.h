@@ -16,7 +16,7 @@ namespace OxySDK
 	using namespace System::Drawing;
 
 	/// <summary>
-	/// —‚Ó‰Í‡ ‰Îˇ Launcher
+	/// –°–≤–æ–¥–∫–∞ –¥–ª—è Launcher
 	/// </summary>
 	public ref class Launcher : public System::Windows::Forms::Form
 	{
@@ -65,7 +65,7 @@ namespace OxySDK
 			this->label1->Name = L"label1";
 			this->label1->Size = System::Drawing::Size(127, 13);
 			this->label1->TabIndex = 0;
-			this->label1->Text = L"œŒ ¿ ◊“Œ œ–Œ“Œ“»œ";
+			this->label1->Text = L"–ü–û–ö–ê –ß–¢–û –ü–†–û–¢–û–¢–ò–ü";
 			// 
 			// button1
 			// 

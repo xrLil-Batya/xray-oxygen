@@ -13,7 +13,7 @@
   modified:	
 
 
-© 2003 Autodesk
+Â© 2003 Autodesk
 ==============================================================================*/
 #include "mrShaderFilter.h"
 #include "../../maxapi.h"

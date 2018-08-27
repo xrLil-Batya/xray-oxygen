@@ -1,4 +1,4 @@
-// HUDCrosshair.cpp:  крестик прицела, отображающий текущую дисперсию
+// HUDCrosshair.cpp:  РєСЂРµСЃС‚РёРє РїСЂРёС†РµР»Р°, РѕС‚РѕР±СЂР°Р¶Р°СЋС‰РёР№ С‚РµРєСѓС‰СѓСЋ РґРёСЃРїРµСЂСЃРёСЋ
 // 
 //////////////////////////////////////////////////////////////////////
 
@@ -21,8 +21,8 @@ CHUDCrosshair::~CHUDCrosshair	()
 
 void CHUDCrosshair::Load		()
 {
-	//все размеры в процентах от длины экрана
-	//длина крестика 
+	//РІСЃРµ СЂР°Р·РјРµСЂС‹ РІ РїСЂРѕС†РµРЅС‚Р°С… РѕС‚ РґР»РёРЅС‹ СЌРєСЂР°РЅР°
+	//РґР»РёРЅР° РєСЂРµСЃС‚РёРєР° 
 	cross_length_perc = pSettings->r_float (HUD_CURSOR_SECTION, "cross_length");
 	min_radius_perc = pSettings->r_float (HUD_CURSOR_SECTION, "min_radius");
 	max_radius_perc = pSettings->r_float (HUD_CURSOR_SECTION, "max_radius");
@@ -30,7 +30,7 @@ void CHUDCrosshair::Load		()
 	is_enabled = READ_IF_EXISTS(pSettings, r_bool, HUD_CURSOR_SECTION, "cross_enabled", true);
 }
 
-//выставляет radius от min_radius до max_radius
+//РІС‹СЃС‚Р°РІР»СЏРµС‚ radius РѕС‚ min_radius РґРѕ max_radius
 void CHUDCrosshair::SetDispersion	(float disp)
 { 
 	Fvector4 r;

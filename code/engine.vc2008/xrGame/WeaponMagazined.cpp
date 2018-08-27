@@ -90,7 +90,7 @@ void CWeaponMagazined::Load	(LPCSTR section)
 	
 	m_sSndShotCurrent = "sndShot";
 		
-	// Загрузка звуков и партиклов глушителя, если таковой имеется
+	// Р—Р°РіСЂСѓР·РєР° Р·РІСѓРєРѕРІ Рё РїР°СЂС‚РёРєР»РѕРІ РіР»СѓС€РёС‚РµР»СЏ, РµСЃР»Рё С‚Р°РєРѕРІРѕР№ РёРјРµРµС‚СЃСЏ
 	if (m_eSilencerStatus == ALife::eAddonAttachable || m_eSilencerStatus == ALife::eAddonPermanent)
 	{
 		if (pSettings->line_exist(section, "silencer_flame_particles"))
@@ -102,7 +102,7 @@ void CWeaponMagazined::Load	(LPCSTR section)
 		m_sounds.LoadSound(section, "snd_silncer_shot", "sndSilencerShot", false, m_eSoundShot);
 	}
 
-	// Загрузка дисперсии
+	// Р—Р°РіСЂСѓР·РєР° РґРёСЃРїРµСЂСЃРёРё
 	m_iBaseDispersionedBulletsCount = READ_IF_EXISTS(pSettings, r_u8, section, "base_dispersioned_bullets_count", 0);
 	m_fBaseDispersionedBulletsSpeed = READ_IF_EXISTS(pSettings, r_float, section, "base_dispersioned_bullets_speed", m_fStartBulletSpeed);
 
@@ -126,21 +126,21 @@ void CWeaponMagazined::Load	(LPCSTR section)
 	else
 		m_bHasDifferentFireModes = false;
 
-	// Загрузка коэф. глушителя
+	// Р—Р°РіСЂСѓР·РєР° РєРѕСЌС„. РіР»СѓС€РёС‚РµР»СЏ
 	LoadSilencerKoeffs();
 }
 
-// Начало стрельбы
+// РќР°С‡Р°Р»Рѕ СЃС‚СЂРµР»СЊР±С‹
 void CWeaponMagazined::FireStart()
 {
-	// Если нет осечки
+	// Р•СЃР»Рё РЅРµС‚ РѕСЃРµС‡РєРё
 	if (!IsMisfire())
 	{
 		if (IsValid()) 
 		{
 			if(!IsWorking() || AllowFireWhileWorking())
 			{
-				// Если оружие не готово - то не начинаем
+				// Р•СЃР»Рё РѕСЂСѓР¶РёРµ РЅРµ РіРѕС‚РѕРІРѕ - С‚Рѕ РЅРµ РЅР°С‡РёРЅР°РµРј
 				if (GetState() == eReload || GetState() == eShowing || GetState() == eHiding || GetState() == eMisfire) 
 					return;
 
@@ -163,11 +163,11 @@ void CWeaponMagazined::FireStart()
 	}
 	else
 	{
-		// Выводим актору статик с иконкой сломанного оружия
+		// Р’С‹РІРѕРґРёРј Р°РєС‚РѕСЂСѓ СЃС‚Р°С‚РёРє СЃ РёРєРѕРЅРєРѕР№ СЃР»РѕРјР°РЅРЅРѕРіРѕ РѕСЂСѓР¶РёСЏ
 		if (smart_cast<CActor*>(this->H_Parent()) && (Level().CurrentViewEntity() == H_Parent()) )
 			GameUI()->AddCustomStatic("gun_jammed",true);
 
-		// Щелкаем 
+		// Р©РµР»РєР°РµРј 
 		OnEmptyClick();
 	}
 }
@@ -233,7 +233,7 @@ bool CWeaponMagazined::TryReload()
 		}
 	}
 	
-	// Меняем состояние оружия на "дефолтное"
+	// РњРµРЅСЏРµРј СЃРѕСЃС‚РѕСЏРЅРёРµ РѕСЂСѓР¶РёСЏ РЅР° "РґРµС„РѕР»С‚РЅРѕРµ"
 	if (GetState() != eIdle)
 		SwitchState(eIdle);
 
@@ -255,7 +255,7 @@ bool CWeaponMagazined::IsAmmoAvailable()
 	return false;
 }
 
-// Если магазин пустой
+// Р•СЃР»Рё РјР°РіР°Р·РёРЅ РїСѓСЃС‚РѕР№
 void CWeaponMagazined::OnMagazineEmpty()
 {
 	if (GetState() == eIdle)
@@ -270,7 +270,7 @@ void CWeaponMagazined::OnMagazineEmpty()
 	inherited::OnMagazineEmpty();
 }
 
-// Разряжаем оружие
+// Р Р°Р·СЂСЏР¶Р°РµРј РѕСЂСѓР¶РёРµ
 void CWeaponMagazined::UnloadMagazine(bool spawn_ammo)
 {
 	xr_map<LPCSTR, u16> l_ammo;
@@ -442,7 +442,7 @@ void CWeaponMagazined::UpdateCL()
 	inherited::UpdateCL();
 	float dt = Device.fTimeDelta;
 
-	// Когда происходит апдейт состояния оружия - ничего другого не делать
+	// РљРѕРіРґР° РїСЂРѕРёСЃС…РѕРґРёС‚ Р°РїРґРµР№С‚ СЃРѕСЃС‚РѕСЏРЅРёСЏ РѕСЂСѓР¶РёСЏ - РЅРёС‡РµРіРѕ РґСЂСѓРіРѕРіРѕ РЅРµ РґРµР»Р°С‚СЊ
 	if (GetNextState() == GetState())
 	{
 		switch (GetState())
@@ -588,24 +588,24 @@ void CWeaponMagazined::SetDefaults()
 
 void CWeaponMagazined::OnShot()
 {
-	// Проигрываем звук
+	// РџСЂРѕРёРіСЂС‹РІР°РµРј Р·РІСѓРє
 	PlaySound(m_sSndShotCurrent.c_str(), get_LastFP());
 
-	// .anm-эффект
+	// .anm-СЌС„С„РµРєС‚
 	AddShotEffector();
 
-	// анимацию выстрела
+	// Р°РЅРёРјР°С†РёСЋ РІС‹СЃС‚СЂРµР»Р°
 	PlayAnimShoot();
 	
-	// "выбрасываем" партикл гильз
+	// "РІС‹Р±СЂР°СЃС‹РІР°РµРј" РїР°СЂС‚РёРєР» РіРёР»СЊР·
 	Fvector vel; 
 	PHGetLinearVell(vel);
 	OnShellDrop(get_LastSP(), vel);
 	
-	// огонь из ствола
+	// РѕРіРѕРЅСЊ РёР· СЃС‚РІРѕР»Р°
 	StartFlameParticles();
 
-	// дым из ствола
+	// РґС‹Рј РёР· СЃС‚РІРѕР»Р°
 	ForceUpdateFireParticles();
 	StartSmokeParticles(get_LastFP(), vel);
 }
@@ -755,7 +755,7 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 	if (inherited::Action(cmd, flags)) 
 		return true;
 	
-	// Если оружие чем-то занято или мы не "начинали", то ничего не делать
+	// Р•СЃР»Рё РѕСЂСѓР¶РёРµ С‡РµРј-С‚Рѕ Р·Р°РЅСЏС‚Рѕ РёР»Рё РјС‹ РЅРµ "РЅР°С‡РёРЅР°Р»Рё", С‚Рѕ РЅРёС‡РµРіРѕ РЅРµ РґРµР»Р°С‚СЊ
 	if (IsPending() || !(flags&CMD_START))
 		return false;
 
@@ -767,7 +767,7 @@ bool CWeaponMagazined::Action(u16 cmd, u32 flags)
 			{
 				CCustomOutfit* pOutfit = pActor->GetOutfit();
 
-				// Если у актора нет необходимой команды или ему запрещает костюм - не перезаряжаемся
+				// Р•СЃР»Рё Сѓ Р°РєС‚РѕСЂР° РЅРµС‚ РЅРµРѕР±С…РѕРґРёРјРѕР№ РєРѕРјР°РЅРґС‹ РёР»Рё РµРјСѓ Р·Р°РїСЂРµС‰Р°РµС‚ РєРѕСЃС‚СЋРј - РЅРµ РїРµСЂРµР·Р°СЂСЏР¶Р°РµРјСЃСЏ
 				if (pActor->mstate_real & (mcSprint) && (!psActorFlags.test(AF_RELOADONSPRINT) || (pOutfit && !pOutfit->m_reload_on_sprint)))
 					break;
 			}
@@ -800,7 +800,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 	CSilencer* pSilencer = smart_cast<CSilencer*>(pIItem);
 	CGrenadeLauncher* pGrenadeLauncher = smart_cast<CGrenadeLauncher*>(pIItem);
 
-	// Прицел
+	// РџСЂРёС†РµР»
 	if (pScope && m_eScopeStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope) == 0)
 	{
 		for (xr_string it : m_scopes)
@@ -811,10 +811,10 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 		}
 		return false;
 	}
-    // Глушитель
+    // Р“Р»СѓС€РёС‚РµР»СЊ
 	else if (pSilencer && m_eSilencerStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonSilencer) == 0 && (m_sSilencerName == pIItem->object().cNameSect().c_str()))
 			return true;
-	// Подствольный гранатомет
+	// РџРѕРґСЃС‚РІРѕР»СЊРЅС‹Р№ РіСЂР°РЅР°С‚РѕРјРµС‚
 	else if (pGrenadeLauncher && m_eGrenadeLauncherStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
 		(m_sGrenadeLauncherName == std::string(pIItem->object().cNameSect().c_str())))
 			return true;
@@ -824,7 +824,7 @@ bool CWeaponMagazined::CanAttach(PIItem pIItem)
 
 bool CWeaponMagazined::CanDetach(const char* item_section_name)
 {
-	// Прицел
+	// РџСЂРёС†РµР»
 	if (m_eScopeStatus == ALife::eAddonAttachable && 0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope))
 	{
 		for (xr_string it : m_scopes)
@@ -835,10 +835,10 @@ bool CWeaponMagazined::CanDetach(const char* item_section_name)
 		}
 		return false;
 	}
-	// Глушитель
+	// Р“Р»СѓС€РёС‚РµР»СЊ
 	else if (m_eSilencerStatus == ALife::eAddonAttachable && 0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonSilencer) && (m_sSilencerName == item_section_name))
         return true;
-	// Подствольный гранатомет
+	// РџРѕРґСЃС‚РІРѕР»СЊРЅС‹Р№ РіСЂР°РЅР°С‚РѕРјРµС‚
 	else if(m_eGrenadeLauncherStatus == ALife::eAddonAttachable && 0 != (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) &&
 	    (m_sGrenadeLauncherName._Equal(item_section_name)))
 			return true;
@@ -854,7 +854,7 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 	CSilencer* pSilencer = smart_cast<CSilencer*>(pIItem);
 	CGrenadeLauncher* pGrenadeLauncher = smart_cast<CGrenadeLauncher*>(pIItem);
 	
-	// Прицел
+	// РџСЂРёС†РµР»
 	if (pScope && m_eScopeStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonScope) == 0)
 	{
 		
@@ -867,14 +867,14 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonScope;
 		result = true;
 	}
-	// Глушитель
+	// Р“Р»СѓС€РёС‚РµР»СЊ
 	else if (pSilencer && m_eSilencerStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonSilencer) == 0 &&
 		(m_sSilencerName == pIItem->object().cNameSect().c_str()))
 	{
 		m_flagsAddOnState |= CSE_ALifeItemWeapon::eWeaponAddonSilencer;
 		result = true;
 	}
-	// Подствольный гранатомет
+	// РџРѕРґСЃС‚РІРѕР»СЊРЅС‹Р№ РіСЂР°РЅР°С‚РѕРјРµС‚
 	else if (pGrenadeLauncher && m_eGrenadeLauncherStatus == ALife::eAddonAttachable && (m_flagsAddOnState&CSE_ALifeItemWeapon::eWeaponAddonGrenadeLauncher) == 0 &&
 		(m_sGrenadeLauncherName == pIItem->object().cNameSect().c_str()))
 	{
@@ -886,7 +886,7 @@ bool CWeaponMagazined::Attach(PIItem pIItem, bool b_send_event)
 	{
 		if (b_send_event)
 		{
-			// Уничтожить подсоединенную вещь из инвентаря
+			// РЈРЅРёС‡С‚РѕР¶РёС‚СЊ РїРѕРґСЃРѕРµРґРёРЅРµРЅРЅСѓСЋ РІРµС‰СЊ РёР· РёРЅРІРµРЅС‚Р°СЂСЏ
 			pIItem->object().DestroyObject	();
 		};
 
@@ -1014,7 +1014,7 @@ void CWeaponMagazined::InitAddons()
 		m_sSmokeParticlesCurrent = m_sSilencerSmokeParticles;
 		m_sSndShotCurrent = "sndSilencerShot";
 
-		// Подсветка от выстрела
+		// РџРѕРґСЃРІРµС‚РєР° РѕС‚ РІС‹СЃС‚СЂРµР»Р°
 		LoadLights(*cNameSect(), "silencer_");
 		ApplySilencerKoeffs();
 	}
@@ -1024,7 +1024,7 @@ void CWeaponMagazined::InitAddons()
 		m_sSmokeParticlesCurrent = m_sSmokeParticles;
 		m_sSndShotCurrent = "sndShot";
 
-		// Подсветка от выстрела
+		// РџРѕРґСЃРІРµС‚РєР° РѕС‚ РІС‹СЃС‚СЂРµР»Р°
 		LoadLights(*cNameSect(), "");
 		ResetSilencerKoeffs();
 	}
@@ -1156,7 +1156,7 @@ void CWeaponMagazined::RemoveZoomInertionEffector()
 		pActor->Cameras().RemoveCamEffector(eCEZoom);
 }
 
-//переключение режимов стрельбы одиночными и очередями
+//РїРµСЂРµРєР»СЋС‡РµРЅРёРµ СЂРµР¶РёРјРѕРІ СЃС‚СЂРµР»СЊР±С‹ РѕРґРёРЅРѕС‡РЅС‹РјРё Рё РѕС‡РµСЂРµРґСЏРјРё
 bool CWeaponMagazined::SwitchMode()
 {
 	if (eIdle != GetState() || IsPending()) 
@@ -1197,7 +1197,7 @@ void CWeaponMagazined::OnH_A_Chield()
 	{
 		if (smart_cast<CActor*>(H_Parent()))
 			SetQueueSize(GetCurrentFireMode()); 
-		else // НПС всегда переключает на автоматический режим, если он есть, или на максимальную очередь.
+		else // РќРџРЎ РІСЃРµРіРґР° РїРµСЂРµРєР»СЋС‡Р°РµС‚ РЅР° Р°РІС‚РѕРјР°С‚РёС‡РµСЃРєРёР№ СЂРµР¶РёРј, РµСЃР»Рё РѕРЅ РµСЃС‚СЊ, РёР»Рё РЅР° РјР°РєСЃРёРјР°Р»СЊРЅСѓСЋ РѕС‡РµСЂРµРґСЊ.
 			SetQueueSize(smart_cast<CWeaponBM16*>(this) ? 1 : WEAPON_ININITE_QUEUE);
 	};
 
@@ -1275,8 +1275,8 @@ bool CWeaponMagazined::GetBriefInfo(II_BriefInfo& info)
 
 	size_t at_size = m_ammoTypes.size();
 
-	// Если патроны бесконечны или их количество == 0,
-	// то в счетчике ставим прочерк
+	// Р•СЃР»Рё РїР°С‚СЂРѕРЅС‹ Р±РµСЃРєРѕРЅРµС‡РЅС‹ РёР»Рё РёС… РєРѕР»РёС‡РµСЃС‚РІРѕ == 0,
+	// С‚Рѕ РІ СЃС‡РµС‚С‡РёРєРµ СЃС‚Р°РІРёРј РїСЂРѕС‡РµСЂРє
 	if (unlimited_ammo() || at_size == 0)
 	{
 		info.fmj_ammo._set("--");

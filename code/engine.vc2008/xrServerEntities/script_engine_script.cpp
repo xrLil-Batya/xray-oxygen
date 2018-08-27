@@ -180,7 +180,7 @@ void CScriptEngine::script_register(lua_State *L)
 	function	(L,	"device",							get_device);
 	function	(L,	"is_enough_address_space_available",is_enough_address_space_available_impl);
 
-	//FX: подгрузка любых модулей
+	//FX: РїРѕРґРіСЂСѓР·РєР° Р»СЋР±С‹С… РјРѕРґСѓР»РµР№
 #pragma todo("FX to FX: update load modules code...")
 /*	{
 		luabind::functor<LPCSTR> module_init;

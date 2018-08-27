@@ -73,12 +73,12 @@ public:
 	CUITextWnd*			m_QuickSlotText4;
 
 protected:
-	// 3 статиков для отображения иконок:
-	// - сломанного оружия(only mp)
-	// - радиации
-	// - ранения
-	// - голода
-	// - усталости
+	// 3 СЃС‚Р°С‚РёРєРѕРІ РґР»СЏ РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ РёРєРѕРЅРѕРє:
+	// - СЃР»РѕРјР°РЅРЅРѕРіРѕ РѕСЂСѓР¶РёСЏ(only mp)
+	// - СЂР°РґРёР°С†РёРё
+	// - СЂР°РЅРµРЅРёСЏ
+	// - РіРѕР»РѕРґР°
+	// - СѓСЃС‚Р°Р»РѕСЃС‚Рё
 	CUIStatic*			UIWeaponJammedIcon;
 	
 	CUIStatic*			UIInvincibleIcon;
@@ -88,7 +88,7 @@ protected:
 
 public:
 	
-	// Енумы соответсвующие предупреждающим иконкам 
+	// Р•РЅСѓРјС‹ СЃРѕРѕС‚РІРµС‚СЃРІСѓСЋС‰РёРµ РїСЂРµРґСѓРїСЂРµР¶РґР°СЋС‰РёРј РёРєРѕРЅРєР°Рј 
 	enum EWarningIcons
 	{
 		ewiAll				= 0,
@@ -97,16 +97,16 @@ public:
 		ewiArtefact,
 	};
 
-	// Задаем цвет соответствующей иконке
+	// Р—Р°РґР°РµРј С†РІРµС‚ СЃРѕРѕС‚РІРµС‚СЃС‚РІСѓСЋС‰РµР№ РёРєРѕРЅРєРµ
 	void				SetWarningIconColor				(EWarningIcons icon, const u32 cl);
 	void				TurnOffWarningIcon				(EWarningIcons icon);
 
-	// Пороги изменения цвета индикаторов, загружаемые из system.ltx
+	// РџРѕСЂРѕРіРё РёР·РјРµРЅРµРЅРёСЏ С†РІРµС‚Р° РёРЅРґРёРєР°С‚РѕСЂРѕРІ, Р·Р°РіСЂСѓР¶Р°РµРјС‹Рµ РёР· system.ltx
 	using Thresholds = xr_map<EWarningIcons, xr_vector<float>>;
 	using Thresholds_it = Thresholds::iterator;
 	Thresholds			m_Thresholds;
 
-	// Енум перечисления возможных мигающих иконок
+	// Р•РЅСѓРј РїРµСЂРµС‡РёСЃР»РµРЅРёСЏ РІРѕР·РјРѕР¶РЅС‹С… РјРёРіР°СЋС‰РёС… РёРєРѕРЅРѕРє
 	enum EFlashingIcons
 	{
 		efiPdaTask	= 0,
@@ -129,11 +129,11 @@ protected:
 	void				DestroyFlashingIcons			();
 	void				UpdateFlashingIcons				();
 	
-	// first - иконка, second - анимация
+	// first - РёРєРѕРЅРєР°, second - Р°РЅРёРјР°С†РёСЏ
 	using FlashingIcons = xr_map<EFlashingIcons, CUIStatic*>;
 	FlashingIcons		m_FlashingIcons;
 
-	// Отображение подсказок при наведении прицела на объект
+	// РћС‚РѕР±СЂР°Р¶РµРЅРёРµ РїРѕРґСЃРєР°Р·РѕРє РїСЂРё РЅР°РІРµРґРµРЅРёРё РїСЂРёС†РµР»Р° РЅР° РѕР±СЉРµРєС‚
 	void				RenderQuickInfos();
 
 public:

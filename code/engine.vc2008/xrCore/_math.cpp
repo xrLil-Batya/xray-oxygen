@@ -33,7 +33,7 @@ typedef struct SYSTEM_PROCESSOR_PERFORMANCE_INFORMATION
 
 namespace FPU
 {
-	// Когда-нибудь можно будет задавать точность для float в х64...
+	// РљРѕРіРґР°-РЅРёР±СѓРґСЊ РјРѕР¶РЅРѕ Р±СѓРґРµС‚ Р·Р°РґР°РІР°С‚СЊ С‚РѕС‡РЅРѕСЃС‚СЊ РґР»СЏ float РІ С…64...
 	XRCORE_API void m24(void)
 	{
 		_controlfp(_RC_CHOP, MCW_RC);

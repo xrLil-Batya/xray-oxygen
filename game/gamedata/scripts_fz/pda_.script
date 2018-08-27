@@ -1,11 +1,11 @@
 --[[ ----------------------------------------------------------------------------------------------- 
  File       : pda.script
- Description: Некторые функции для ПДА
- Copyright  : 2004 © GSC Game World
+ Description: РќРµРєС‚РѕСЂС‹Рµ С„СѓРЅРєС†РёРё РґР»СЏ РџР”Рђ
+ Copyright  : 2004 В© GSC Game World
  Author     : GSC Game World
  Last edit  : 02.11.2014
 --]] -----------------------------------------------------------------------------------------------
--- вызывается  1 раз в 3 секунды
+-- РІС‹Р·С‹РІР°РµС‚СЃСЏ  1 СЂР°Р· РІ 3 СЃРµРєСѓРЅРґС‹
 function fill_faction_state(state)
 	local board = sim_board.get_sim_board()
 
@@ -36,7 +36,7 @@ function fill_faction_state(state)
 end
 
 --[[
---	int		get_max_member_count();   -- 1 раз в 3 секунды
+--	int		get_max_member_count();   -- 1 СЂР°Р· РІ 3 СЃРµРєСѓРЅРґС‹
 --	float	get_max_resource();
 --	float	get_max_power();
 --]]
@@ -54,7 +54,7 @@ end
 
 --[[
 --	get_stat(index)
---	@param	int	index индекс
+--	@param	int	index РёРЅРґРµРєСЃ
 -- 	@return	string
 --]]
 function get_stat(index)

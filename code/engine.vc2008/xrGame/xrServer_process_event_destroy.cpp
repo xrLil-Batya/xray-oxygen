@@ -12,7 +12,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 	// Parse message
 	u16 id_dest = ID;
 
-	CSE_Abstract* e_dest = game->get_entity_from_eid(id_dest);	// кто должен быть уничтожен
+	CSE_Abstract* e_dest = game->get_entity_from_eid(id_dest);	// РєС‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅ
 	if (!e_dest)
 	{
 		return;

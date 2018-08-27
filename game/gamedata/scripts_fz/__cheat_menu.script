@@ -1,9 +1,9 @@
 --[[ ------------------------------------------------------------------------------------------------
  File       : __cheat_menu.script
- Description: Переработанное меню повелителя зоны
- Copyright  : 2012-2014 © FrostyTech
- Author     : Viнt@rь   
- Last edit  : 03.06.2018 (Viнt@rь)
+ Description: РџРµСЂРµСЂР°Р±РѕС‚Р°РЅРЅРѕРµ РјРµРЅСЋ РїРѕРІРµР»РёС‚РµР»СЏ Р·РѕРЅС‹
+ Copyright  : 2012-2014 В© FrostyTech
+ Author     : ViРЅt@rСЊ   
+ Last edit  : 03.06.2018 (ViРЅt@rСЊ)
 --]] ------------------------------------------------------------------------------------------------
 --/										  Local Functions
 --]] ------------------------------------------------------------------------------------------------
@@ -455,7 +455,7 @@ function CUITeleportDialog:OnSaveButtonClick()
 			self:FillCoordinatesList(self.coordinates)
 		else
 			self.message_box:InitMessageBox("message_box_yes_no")
-			self.message_box:SetText("Позиция с таким названием уже существует, Вы уверены, что хотите перезаписать ее?")
+			self.message_box:SetText("РџРѕР·РёС†РёСЏ СЃ С‚Р°РєРёРј РЅР°Р·РІР°РЅРёРµРј СѓР¶Рµ СЃСѓС‰РµСЃС‚РІСѓРµС‚, Р’С‹ СѓРІРµСЂРµРЅС‹, С‡С‚Рѕ С…РѕС‚РёС‚Рµ РїРµСЂРµР·Р°РїРёСЃР°С‚СЊ РµРµ?")
 			self.message_box:ShowDialog(true)
 		end
 	end
@@ -671,9 +671,9 @@ function GetCheatDialog()
 	return cheat_dialog
 end
 
--- Спавн аномалии
--- time1 - время работы  в сек
--- time2 - время неработы в сек
+-- РЎРїР°РІРЅ Р°РЅРѕРјР°Р»РёРё
+-- time1 - РІСЂРµРјСЏ СЂР°Р±РѕС‚С‹  РІ СЃРµРє
+-- time2 - РІСЂРµРјСЏ РЅРµСЂР°Р±РѕС‚С‹ РІ СЃРµРє
 function CreateAnomaly(anomaly, rad_anom, mode, time1, time2)
 	local packet = net_packet()
 	packet:w_begin(0)

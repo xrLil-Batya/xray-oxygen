@@ -113,7 +113,7 @@ void engine_impl::weather(LPCSTR value)
 
 	if (g_pGameLevel)
 	{
-		// FX: Позволим редактору погоды выставить редактируемую погоду, даже если он не на уровне
+		// FX: РџРѕР·РІРѕР»РёРј СЂРµРґР°РєС‚РѕСЂСѓ РїРѕРіРѕРґС‹ РІС‹СЃС‚Р°РІРёС‚СЊ СЂРµРґР°РєС‚РёСЂСѓРµРјСѓСЋ РїРѕРіРѕРґСѓ, РґР°Р¶Рµ РµСЃР»Рё РѕРЅ РЅРµ РЅР° СѓСЂРѕРІРЅРµ
 		g_pGameLevel->SetEnvironmentGameTimeFactor(iFloor(game_time), environment.fTimeFactor);
 	}
 

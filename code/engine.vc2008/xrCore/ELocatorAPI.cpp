@@ -535,7 +535,7 @@ void CLocatorAPI::file_from_cache(T *&R, char* fname, const u32 &fname_size, con
 
 bool CLocatorAPI::check_for_file(const char* path, const char* _fname, string_path& fname, const file *&desc)
 {
-	// проверить нужно ли пересканировать пути
+	// РїСЂРѕРІРµСЂРёС‚СЊ РЅСѓР¶РЅРѕ Р»Рё РїРµСЂРµСЃРєР°РЅРёСЂРѕРІР°С‚СЊ РїСѓС‚Рё
 	check_pathes();
 
 	// correct path
@@ -1021,7 +1021,7 @@ void CLocatorAPI::LoadArchive(archive& A, const char* entrypoint)
 
 CLocatorAPI::files_it CLocatorAPI::file_find_it(const char* fname)
 {
-	// проверить нужно ли пересканировать пути
+	// РїСЂРѕРІРµСЂРёС‚СЊ РЅСѓР¶РЅРѕ Р»Рё РїРµСЂРµСЃРєР°РЅРёСЂРѕРІР°С‚СЊ РїСѓС‚Рё
 	check_pathes();
 
 	file			desc_f;
