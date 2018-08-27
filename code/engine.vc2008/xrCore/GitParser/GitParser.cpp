@@ -1,4 +1,4 @@
-п»ї////////////////////////////////////////////////////
+﻿////////////////////////////////////////////////////
 // Author: ForserX
 // Task  : Parsing current branch and commit hash
 ////////////////////////////////////////////////////
@@ -42,7 +42,7 @@ int main()
 	std::ifstream *Reader = nullptr;
 	std::string PathFile = "../../../.git/";
 
-	// РџРѕР»СѓС‡Р°РµРј РІРµС‚РєСѓ
+	// Get repo data 
 	std::vector<std::string> Directories;
 	std::string BranchName;
 	Reader = new std::ifstream(PathFile + "HEAD");
@@ -61,7 +61,7 @@ int main()
 	Reader->close();
 	delete Reader;
 #endif
-	// РЎРѕР·РґР°С‘Рј Р±СѓС„С„РµСЂ
+	// Запишем полученные данные в oxy_version
 	std::stringstream HeaderString;
 	HeaderString << "#pragma once" << std::endl;
 	

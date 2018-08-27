@@ -145,17 +145,16 @@ void CPsyDog::Think()
 			}
 		}
 	}
-	else 
+	else if (!EnemyMan.get_enemy() && !m_storage.empty()) 
 	{
-		if (!EnemyMan.get_enemy() && !m_storage.empty()) {
-			delete_all_phantoms();
-		}
+		delete_all_phantoms();
 	}
 }
 
 
 void CPsyDog::net_Destroy()
 {
+	m_aura->on_death();
 	delete_all_phantoms	();
 	inherited::net_Destroy();
 }
@@ -276,8 +275,7 @@ void CPsyDogPhantom::Think()
 	Actor()->Cameras().AddPPEffector(xr_new<CMonsterEffector>(m_appear_effector.ppi, m_appear_effector.time, m_appear_effector.time_attack, m_appear_effector.time_release));
 }
 
-//void CPsyDogPhantom::Hit(float P,Fvector &dir,CObject*who,s16 element,Fvector p_in_object_space,float impulse, ALife::EHitType hit_type)
-void	CPsyDogPhantom::Hit					(SHit* pHDS)
+void CPsyDogPhantom::Hit(SHit* pHDS)
 {
 	if (is_wait_to_destroy_object()) return;
 	if ((pHDS->who == EnemyMan.get_enemy())  && (pHDS->who != 0)) destroy_me();
