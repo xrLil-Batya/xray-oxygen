@@ -24,4 +24,8 @@ void CSoundRender_TargetB::fill_parameters()
 
 	// 3D params
 	VERIFY2(m_pEmitter, SE->source()->file_name());
+
+	//XAUDIO2FX_REVERB_PARAMETERS params;
+	//ReverbConvertI3DL2ToNative(&g_PRESET_PARAMS[0], &params);
+	//R_CHK(xData.pSubmixVoice->SetEffectParameters(NULL, &params, sizeof(XAUDIO2FX_REVERB_PARAMETERS)));
 }

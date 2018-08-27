@@ -21,6 +21,7 @@
 #include <Unknwnbase.h>
 #include <stdint.h>
 #include <objbase.h>
+#include <VersionHelpers.h>
 #include <memory>
 #include <mmreg.h>
 #include <stdio.h>

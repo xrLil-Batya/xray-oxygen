@@ -19,7 +19,24 @@
 
 XCore xcore;
 
-XCore::XCore() { }
+XCore::XCore() 
+{ 
+	// load any version of XAudio2
+	if (!IsWindows10OrGreater())
+	{
+		XAudioDLL = LoadLibraryExA("XAudio2_9.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
+	else if (!IsWindows8OrGreater())
+	{
+		XAudioDLL = LoadLibraryExA("XAudio2_8.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
+	else
+	{
+		XAudioDLL = LoadLibraryExA("XAudio2_7.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	}
+	R_ASSERT(XAudioDLL);
+}
+
 XCore::~XCore()
 {
 	if (xData.pSourceVoice)
@@ -37,20 +54,23 @@ XCore::~XCore()
 		xData.pSubmixVoice->DestroyVoice();
 		xData.pSubmixVoice = nullptr;
 	}
-	if (xData.pXAudio)
-	{
-		xData.pXAudio->StopEngine();
-	}
+	if (xData.pXAudio) { xData.pXAudio->StopEngine();}
 	_RELEASE(xData.pXAudio);
+	if (XAudioDLL) { FreeLibrary(XAudioDLL); }
 
 	xData.waveData.reset();
 }
 
 LPCSTR GetUnicodeStringFromAnsi(LPCWSTR wString)
 {
-	std::wstring tempWstring(wString);
-	std::string tempString(tempWstring.begin(), tempWstring.end());
-	return tempString.c_str();
+	size_t outputSize = wcslen(wString) + 1;
+	LPSTR newString = (LPSTR)malloc(outputSize);
+	size_t charsConverted = 0;
+
+	wcstombs_s(&charsConverted, newString, outputSize, wString, strlen(newString));
+	R_ASSERT(charsConverted == outputSize);
+
+	return newString;
 }
 
 XSTATUS XCore::InitXAudioDevice()
@@ -98,20 +118,9 @@ XSTATUS XCore::InitXAudioDevice()
 		return XAUDIO_BAD_DEVICE;
 	}
 
-	//XAUDIO2FX_REVERB_PARAMETERS params;
-	//ReverbConvertI3DL2ToNative(&g_PRESET_PARAMS[0], &params);
-	//R_CHK(xData.pSubmixVoice->SetEffectParameters(NULL, &params, sizeof(XAUDIO2FX_REVERB_PARAMETERS)));
-
-	//// create X3DAudio interface
-	//const float SpeedOfSound = X3DAUDIO_SPEED_OF_SOUND;		// const value for sound
-	//X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
-
-	//xState.vListenerPos.x =
-	//xState.vListenerPos.y =
-	//xState.vListenerPos.z =
-	//xState.vEmitterPos.x =
-	//xState.vEmitterPos.y = 0.f;
-	//xState.vEmitterPos.z = float(10);
+	// create X3DAudio interface
+	const float SpeedOfSound = 343.33;		// 20 degreeses with cloudy weather
+	X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
 
 	return XAUDIO_OK;
 }
@@ -193,6 +202,17 @@ XSTATUS XCore::GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* D
 // for test (don't use)
 XSTATUS XCore::SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_Source* soundSource)
 {
+	HANDLE hFile = NULL;
+	LPVOID lpData = nullptr;
+	DWORD dwFileSize = NULL;
+	DWORD dwSizeWritten = NULL;
+
+	hFile = CreateFileA("I:\glint_preview.wav", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	R_ASSERT(hFile);
+	dwFileSize = GetFileSize(hFile, NULL);
+	lpData =  malloc(dwFileSize);
+	R_ASSERT(ReadFile(hFile, lpData, dwFileSize, &dwSizeWritten, NULL));
+
 	// copy wave data from WAVEFORMATEX;
 	VERIFY(soundSource->m_wformat.nChannels);
 	WAVEFORMATEX waveFormat = soundSource->m_wformat;
@@ -201,7 +221,10 @@ XSTATUS XCore::SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_
 	if (FAILED(xData.pXAudio->CreateSourceVoice(&xData.pSourceVoice, &waveFormat))) { return XAUDIO_BAD_SAMPLE; }
 
 	// create empty buffer
-	XAUDIO2_BUFFER buffer = { NULL };	//#TODO: MUST BE POINTER HERE
+	XAUDIO2_BUFFER buffer = { NULL };	
+	buffer.AudioBytes = dwSizeWritten;
+	buffer.pAudioData = (BYTE*)lpData;
+	buffer.Flags = XAUDIO2_END_OF_STREAM;
 
 	// submit this and play
 	if (FAILED(xData.pSourceVoice->SubmitSourceBuffer(&buffer))) { return XAUDIO_BUFFER_CURREPTED; }
