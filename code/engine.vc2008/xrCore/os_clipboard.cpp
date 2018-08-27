@@ -45,7 +45,7 @@ void os_clipboard::paste_from_clipboard(char* buffer, u32 const& buffer_size)
 			for (size_t i = 0; i < strlen(buffer); ++i)
 			{
 				char c = buffer[i];
-				if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "ÿ" = -1
+				if (((isprint(c) == 0) && (c != char(-1))) || c == '\t' || c == '\n')// "Ñ" = -1
 				{
 					buffer[i] = ' ';
 				}

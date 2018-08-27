@@ -344,7 +344,7 @@ void CMapLocation::CalcLevelName()
 //returns actual
 bool CMapLocation::Update() 
 {
-	// FX: Затычка одного редкого вылета, проявляющегося только под отладчиком в релизе (Лично у меня)
+	// FX: Р—Р°С‚С‹С‡РєР° РѕРґРЅРѕРіРѕ СЂРµРґРєРѕРіРѕ РІС‹Р»РµС‚Р°, РїСЂРѕСЏРІР»СЏСЋС‰РµРіРѕСЃСЏ С‚РѕР»СЊРєРѕ РїРѕРґ РѕС‚Р»Р°РґС‡РёРєРѕРј РІ СЂРµР»РёР·Рµ (Р›РёС‡РЅРѕ Сѓ РјРµРЅСЏ)
 	if (m_cached.m_updatedFrame == Device.dwFrame)
 	{
 		Log("[PANIC] Your PC is very slow...");

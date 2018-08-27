@@ -1,5 +1,5 @@
-// EffectorZoomInertion.cpp: инерция(покачивания) оружия в режиме
-//							 приближения
+// EffectorZoomInertion.cpp: РёРЅРµСЂС†РёСЏ(РїРѕРєР°С‡РёРІР°РЅРёСЏ) РѕСЂСѓР¶РёСЏ РІ СЂРµР¶РёРјРµ
+//							 РїСЂРёР±Р»РёР¶РµРЅРёСЏ
 //////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -139,7 +139,7 @@ static float SmoothStep(float from, float to, float t)
 	return to * t + from * (1.f - t);
 }
 
-//определяем двигал ли прицелом актер
+//РѕРїСЂРµРґРµР»СЏРµРј РґРІРёРіР°Р» Р»Рё РїСЂРёС†РµР»РѕРј Р°РєС‚РµСЂ
 bool CEffectorZoomInertion::UpdateCameraMoved(const Fvector& camDir, bool& justStopped)
 {
 	justStopped = false;

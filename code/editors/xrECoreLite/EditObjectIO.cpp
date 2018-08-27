@@ -51,7 +51,7 @@ bool CEditableObject::LoadObject(const char* fname)
 	{
 		DWORD FileAttrib;
 		FileAttrib = GetFileAttributes(fname);
-		if (FileAttrib != DWORD(-1))//если найден
+		if (FileAttrib != DWORD(-1))//РµСЃР»Рё РЅР°Р№РґРµРЅ
 		{
 			IReader* F = new CFileReader(fname);
 			//int age = fl->get_file_age(fname);		VERIFY3(age>0, "Invalid file age:", fname);

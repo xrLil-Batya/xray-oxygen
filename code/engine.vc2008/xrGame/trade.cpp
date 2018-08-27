@@ -25,12 +25,12 @@ CTrade::CTrade(CInventoryOwner *p_io)
 
 	m_bNeedToUpdateArtefactTasks = false;
 
-	// Заполнить pThis
+	// Р—Р°РїРѕР»РЅРёС‚СЊ pThis
 	CAI_Trader *pTrader;
 	CActor *pActor;
 	CAI_Stalker *pStalker;
 
-	// Определяем потомка этого экземпляра класса
+	// РћРїСЂРµРґРµР»СЏРµРј РїРѕС‚РѕРјРєР° СЌС‚РѕРіРѕ СЌРєР·РµРјРїР»СЏСЂР° РєР»Р°СЃСЃР°
 	pTrader = smart_cast<CAI_Trader *>(p_io);
 	if (pTrader) 
 		pThis.Set(TT_TRADER, pTrader, p_io);
@@ -135,7 +135,7 @@ bool CTrade::CanTrade()
 	{
 		for (auto & i : m_nearest)
 		{
-			// Может ли объект торговать
+			// РњРѕР¶РµС‚ Р»Рё РѕР±СЉРµРєС‚ С‚РѕСЂРіРѕРІР°С‚СЊ
 			pEntity = smart_cast<CEntity *>(i);
 			if (pEntity && !pEntity->g_Alive()) return false;
 			if (SetPartner(pEntity)) break;
@@ -144,7 +144,7 @@ bool CTrade::CanTrade()
 
 	if (!pPartner.base) return false;
 
-	// Объект рядом
+	// РћР±СЉРµРєС‚ СЂСЏРґРѕРј
 	float dist = pPartner.base->Position().distance_to(pThis.base->Position());
 	if (dist < 0.5f || dist > 4.5f)
 	{
@@ -152,7 +152,7 @@ bool CTrade::CanTrade()
 		return false;
 	}
 
-	// Объект смотрит на меня
+	// РћР±СЉРµРєС‚ СЃРјРѕС‚СЂРёС‚ РЅР° РјРµРЅСЏ
 	float yaw, pitch;
 	float yaw2, pitch2;
 
@@ -174,8 +174,8 @@ bool CTrade::CanTrade()
 
 void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 {
-	// сумма сделки учитывая ценовой коэффициент
-	// актер цену не говорит никогда, все делают за него
+	// СЃСѓРјРјР° СЃРґРµР»РєРё СѓС‡РёС‚С‹РІР°СЏ С†РµРЅРѕРІРѕР№ РєРѕСЌС„С„РёС†РёРµРЅС‚
+	// Р°РєС‚РµСЂ С†РµРЅСѓ РЅРµ РіРѕРІРѕСЂРёС‚ РЅРёРєРѕРіРґР°, РІСЃРµ РґРµР»Р°СЋС‚ Р·Р° РЅРµРіРѕ
 	u32 dwTransferMoney = GetItemPrice(pItem, bBuying);
 
 	if (bBuying)
@@ -205,7 +205,7 @@ void CTrade::TransferItem(CInventoryItem* pItem, bool bBuying)
 	else
 		pThis.inv_owner->set_money(pThis.inv_owner->get_money() + dwTransferMoney, false);
 
-	// взять у партнера
+	// РІР·СЏС‚СЊ Сѓ РїР°СЂС‚РЅРµСЂР°
 	O2->u_EventGen(P, GE_TRADE_BUY, O2->ID());
 	P.w_u16(pItem->object().ID());
 	O2->u_EventSend(P);

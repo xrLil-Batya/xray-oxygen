@@ -147,7 +147,7 @@ namespace CDB
 
 		{
 			
-			edge *E_ = edges + edge_count, *J; // Вот это я вроде не правил
+			edge *E_ = edges + edge_count, *J; // Р’РѕС‚ СЌС‚Рѕ СЏ РІСЂРѕРґРµ РЅРµ РїСЂР°РІРёР»
 			for (edge *edge_iterator = edges; edge_iterator != E_; ++edge_iterator) {
 				if (edge_iterator + 1 == E_)
 					continue;

@@ -57,7 +57,7 @@ struct str_container_impl
                     xr_free(value);
                 }
                 else current = &value->next;
-#pragma todo("ForserX to Giperion: Результат применения унарного оператора '&' может быть невыровненным")
+#pragma todo("ForserX to Giperion: Р РµР·СѓР»СЊС‚Р°С‚ РїСЂРёРјРµРЅРµРЅРёСЏ СѓРЅР°СЂРЅРѕРіРѕ РѕРїРµСЂР°С‚РѕСЂР° '&' РјРѕР¶РµС‚ Р±С‹С‚СЊ РЅРµРІС‹СЂРѕРІРЅРµРЅРЅС‹Рј")
             }
         }
     }

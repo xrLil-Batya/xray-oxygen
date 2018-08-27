@@ -14,7 +14,7 @@ public:
 			void	OnEvent			(NET_Packet& P, u16 type);
 			void	BreakToPieces	() noexcept;
 protected:
-	//партиклы разбивания бутылки
+	//РїР°СЂС‚РёРєР»С‹ СЂР°Р·Р±РёРІР°РЅРёСЏ Р±СѓС‚С‹Р»РєРё
 	shared_str m_sBreakParticles;
 	ref_sound sndBreaking;
 

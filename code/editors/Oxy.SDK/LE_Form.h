@@ -29,15 +29,15 @@ namespace OxySDK
 
 
 			d = gcnew DockForms::FormContent();
-			d->TabText = "Âêëàäêà 1";
+			d->TabText = "Ð’ÐºÐ»Ð°Ð´ÐºÐ° 1";
 			d->Show(dockMain, DockState::DockRight);
 
 			f = gcnew DockForms::FormContent();
-			f->TabText = "Ðåíäåð Ôîðìà";
+			f->TabText = "Ð ÐµÐ½Ð´ÐµÑ€ Ð¤Ð¾Ñ€Ð¼Ð°";
 			f->Show(dockMain, DockState::Document);
 
 			a = gcnew DockForms::FormContent();
-			a->TabText = "Âêëàäêà 2";
+			a->TabText = "Ð’ÐºÐ»Ð°Ð´ÐºÐ° 2";
 			a->Show(dockMain, DockState::DockRight);
 		}
 	

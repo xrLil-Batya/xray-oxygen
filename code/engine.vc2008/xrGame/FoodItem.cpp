@@ -49,22 +49,22 @@ void CFoodItem::OnEvent(NET_Packet& P, u16 type)
 
 void CFoodItem::BreakToPieces() noexcept
 {
-	//играем звук
+	//РёРіСЂР°РµРј Р·РІСѓРє
 	if(bHasBreakSnd)
 		sndBreaking.play_at_pos(nullptr, Position());
 
 	if (bIsBottele)
 	{
-		//отыграть партиклы разбивания
+		//РѕС‚С‹РіСЂР°С‚СЊ РїР°СЂС‚РёРєР»С‹ СЂР°Р·Р±РёРІР°РЅРёСЏ
 		if (m_sBreakParticles.size())
 		{
-			//показываем эффекты
+			//РїРѕРєР°Р·С‹РІР°РµРј СЌС„С„РµРєС‚С‹
 			CParticlesObject* pStaticPG;
 			pStaticPG = CParticlesObject::Create(m_sBreakParticles.c_str());
 			pStaticPG->play_at_pos(Position());
 		}
 
-		//ликвидировать сам объект 
+		//Р»РёРєРІРёРґРёСЂРѕРІР°С‚СЊ СЃР°Рј РѕР±СЉРµРєС‚ 
 		if (Local())
 		{
 			DestroyObject();

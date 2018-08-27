@@ -8,7 +8,7 @@
  *  see def_abstract_functions.h for more info.
  *
  *	
- *	Copyright © John Wainwright 1996
+ *	Copyright Â© John Wainwright 1996
  *
  */
 

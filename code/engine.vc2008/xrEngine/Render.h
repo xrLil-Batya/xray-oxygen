@@ -247,8 +247,8 @@ public:
 	// Main
 	virtual void					Calculate				()											= 0;
 	virtual void					Render					()											= 0;
-	virtual void                    BeforeWorldRender       ()                                          = 0; // Перед рендерингом мира
-	virtual void                    AfterWorldRender        ()                                         = 0; // После рендеринга мира (до UI)
+	virtual void                    BeforeWorldRender       ()                                          = 0; // РџРµСЂРµРґ СЂРµРЅРґРµСЂРёРЅРіРѕРј РјРёСЂР°
+	virtual void                    AfterWorldRender        ()                                         = 0; // РџРѕСЃР»Рµ СЂРµРЅРґРµСЂРёРЅРіР° РјРёСЂР° (РґРѕ UI)
 	
 	virtual void					Screenshot				(ScreenshotMode mode=SM_NORMAL, LPCSTR name = 0) = 0;
 	virtual	void					Screenshot				(ScreenshotMode mode, CMemoryWriter& memory_writer) = 0;

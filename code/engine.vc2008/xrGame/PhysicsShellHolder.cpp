@@ -65,7 +65,7 @@ void CPhysicsShellHolder::net_Destroy()
 	//remove calls
 	CPHSriptReqGObjComparer cmpr(this);
 	Level().ph_commander_scripts().remove_calls(&cmpr);
-	//удалить партиклы из ParticlePlayer
+	//СѓРґР°Р»РёС‚СЊ РїР°СЂС‚РёРєР»С‹ РёР· ParticlePlayer
 	CParticlesPlayer::net_DestroyParticles		();
 	CCharacterPhysicsSupport	*char_support = character_physics_support();
 	if( char_support )
@@ -349,7 +349,7 @@ void CPhysicsShellHolder::OnChangeVisual()
 void CPhysicsShellHolder::UpdateCL	()
 {
 	inherited::UpdateCL	();
-	//обновить присоединенные партиклы
+	//РѕР±РЅРѕРІРёС‚СЊ РїСЂРёСЃРѕРµРґРёРЅРµРЅРЅС‹Рµ РїР°СЂС‚РёРєР»С‹
 	UpdateParticles		();
 }
 float CPhysicsShellHolder::EffectiveGravity()

@@ -142,10 +142,10 @@ struct ECORE_API STextureParams{
 
     IC bool HasAlpha()
     { 
-    	// исходная текстура содержит альфа канал
+    	// РёСЃС…РѕРґРЅР°СЏ С‚РµРєСЃС‚СѓСЂР° СЃРѕРґРµСЂР¶РёС‚ Р°Р»СЊС„Р° РєР°РЅР°Р»
     	return flags.is(flHasAlpha);
     }
-	IC bool HasAlphaChannel() // игровая текстура содержит альфа канал
+	IC bool HasAlphaChannel() // РёРіСЂРѕРІР°СЏ С‚РµРєСЃС‚СѓСЂР° СЃРѕРґРµСЂР¶РёС‚ Р°Р»СЊС„Р° РєР°РЅР°Р»
 	{
 		switch (fmt)
 		{
