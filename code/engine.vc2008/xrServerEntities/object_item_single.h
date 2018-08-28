@@ -17,8 +17,8 @@
 template <typename _unknown_type, bool _client_type>
 class CObjectItemSingle : public CObjectItemAbstract {
 protected:
-	typedef CObjectItemAbstract	inherited;
-	typedef _unknown_type		SERVER_TYPE;
+	using inherited = CObjectItemAbstract;
+	using SERVER_TYPE = _unknown_type;
 
 public:
 	IC											CObjectItemSingle	(const CLASS_ID &clsid, LPCSTR script_clsid);
@@ -32,8 +32,8 @@ public:
 template <typename _unknown_type>
 class CObjectItemSingle<_unknown_type,true> : public CObjectItemAbstract {
 protected:
-	typedef CObjectItemAbstract	inherited;
-	typedef _unknown_type		CLIENT_TYPE;
+	using inherited = CObjectItemAbstract;
+	using CLIENT_TYPE = _unknown_type;
 
 public:
 	IC											CObjectItemSingle	(const CLASS_ID &clsid, LPCSTR script_clsid);

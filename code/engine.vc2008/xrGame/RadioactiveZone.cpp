@@ -8,10 +8,10 @@
 #include "Hit.h"
 #include "../xrengine/xr_collide_form.h"
 
-CRadioactiveZone::CRadioactiveZone(void) 
+CRadioactiveZone::CRadioactiveZone() 
 {}
 
-CRadioactiveZone::~CRadioactiveZone(void) 
+CRadioactiveZone::~CRadioactiveZone() 
 {}
 
 void CRadioactiveZone::Load(LPCSTR section) 

@@ -217,6 +217,8 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\mender_input_output.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\NVMeshMender.h" />
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
+    <ClInclude Include="..\xrRender\dxGlowManager.h" />
+    <ClInclude Include="blender_gamma.h" />
     <ClInclude Include="blender_rain_drops.h" />
     <ClInclude Include="blender_ssss_mrmnwar.h" />
     <ClInclude Include="blender_ssss_ogse.h" />
@@ -400,9 +402,13 @@
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
+    <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseAA.cpp" />
+    <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
+    <ClCompile Include="blender_gamma.cpp" />
     <ClCompile Include="blender_rain_drops.cpp" />
     <ClCompile Include="blender_ssss_mrmnwar.cpp" />
     <ClCompile Include="blender_ssss_ogse.cpp" />
@@ -448,7 +454,6 @@
     <ClCompile Include="..\xrRender\Light_DB.cpp" />
     <ClCompile Include="light_GI.cpp" />
     <ClCompile Include="..\xrRender\Light_Package.cpp" />
-    <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp" />
     <ClCompile Include="light_smapvis.cpp" />
     <ClCompile Include="light_vis.cpp" />
     <ClCompile Include="..\xrRender\LightTrack.cpp" />
@@ -611,7 +616,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />
-    <None Include="VTune\xrRender_R3.vpj" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\xrEngine\xrEngine.vcxproj">

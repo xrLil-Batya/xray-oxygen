@@ -15,14 +15,14 @@
 CScriptStackTracker::CScriptStackTracker	()
 {
 	m_current_stack_level	= 0;
-	for (int i=0; i<max_stack_size; ++i)
-		m_stack[i]			= xr_new<lua_Debug>();
+	for (lua_Debug* & i : m_stack)
+		i = xr_new<lua_Debug>();
 }
 
 CScriptStackTracker::~CScriptStackTracker	()
 {
-	for (int i=0; i<max_stack_size; ++i)
-		xr_delete			(m_stack[i]);
+	for (lua_Debug* & i : m_stack)
+		xr_delete			(i);
 }
 
 void CScriptStackTracker::script_hook	(lua_State *L, lua_Debug *dbg)

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////
-// relation_registry.cpp:	реестр для хранения данных об отношении персонажа к 
-//							другим персонажам
+// relation_registry.cpp:	СЂРµРµСЃС‚СЂ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РґР°РЅРЅС‹С… РѕР± РѕС‚РЅРѕС€РµРЅРёРё РїРµСЂСЃРѕРЅР°Р¶Р° Рє 
+//							РґСЂСѓРіРёРј РїРµСЂСЃРѕРЅР°Р¶Р°Рј
 //////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
@@ -59,9 +59,9 @@ RELATION_REGISTRY::RELATION_MAP_SPOTS::RELATION_MAP_SPOTS()
 }
 //////////////////////////////////////////////////////////////////////////
 
-CRelationRegistryWrapper*					RELATION_REGISTRY::m_relation_registry	= NULL;
-RELATION_REGISTRY::FIGHT_VECTOR*			RELATION_REGISTRY::m_fight_registry		= NULL;
-RELATION_REGISTRY::RELATION_MAP_SPOTS*		RELATION_REGISTRY::m_spot_names			= NULL;
+CRelationRegistryWrapper*					RELATION_REGISTRY::m_relation_registry	= nullptr;
+RELATION_REGISTRY::FIGHT_VECTOR*			RELATION_REGISTRY::m_fight_registry		= nullptr;
+RELATION_REGISTRY::RELATION_MAP_SPOTS*		RELATION_REGISTRY::m_spot_names			= nullptr;
 
 
 //////////////////////////////////////////////////////////////////////////
@@ -138,7 +138,7 @@ CHARACTER_GOODWILL	 RELATION_REGISTRY::GetGoodwill			(u16 from, u16 to) const
 			return relation.Goodwill();
 		}
 	}
-	//если отношение еще не задано, то возвращаем нейтральное
+	//РµСЃР»Рё РѕС‚РЅРѕС€РµРЅРёРµ РµС‰Рµ РЅРµ Р·Р°РґР°РЅРѕ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРј РЅРµР№С‚СЂР°Р»СЊРЅРѕРµ
 	return NEUTRAL_GOODWILL;
 }
 
@@ -190,7 +190,7 @@ CHARACTER_GOODWILL	 RELATION_REGISTRY::GetCommunityGoodwill (CHARACTER_COMMUNITY
 			return relation.Goodwill();
 		}
 	}
-	//если отношение еще не задано, то возвращаем нейтральное
+	//РµСЃР»Рё РѕС‚РЅРѕС€РµРЅРёРµ РµС‰Рµ РЅРµ Р·Р°РґР°РЅРѕ, С‚Рѕ РІРѕР·РІСЂР°С‰Р°РµРј РЅРµР№С‚СЂР°Р»СЊРЅРѕРµ
 	return NEUTRAL_GOODWILL;
 }
 

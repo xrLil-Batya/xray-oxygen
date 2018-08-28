@@ -233,9 +233,7 @@ bool CUIActorMenu::ToPartnerTrade(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToPartnerTrade(itm, b_use_cursor_pos);
-#endif
 	UpdatePrices();
 	return true;
 }
@@ -259,9 +257,7 @@ bool CUIActorMenu::ToPartnerTradeBag(CUICellItem* itm, bool b_use_cursor_pos)
 	else
 		new_owner->SetItem				(i);
 
-#ifdef MULTITRANSFER
 	if ((i != itm) && !!pInput->iGetAsyncKeyState(DIK_LCONTROL)) return ToPartnerTradeBag(itm, b_use_cursor_pos);
-#endif
 	return true;
 }
 
@@ -331,7 +327,8 @@ bool CUIActorMenu::CanMoveToPartner(PIItem pItem)
 void CUIActorMenu::UpdateActor()
 {
 	string64 buf;
-	xr_sprintf(buf, "%d RU", m_pActorInvOwner->get_money());
+	LPCSTR currency_str = CStringTable().translate("st_currency").c_str();
+	xr_sprintf(buf, "%d %s", m_pActorInvOwner->get_money(), currency_str);
 	m_ActorMoney->SetText(buf);
 
 	CActor* actor = smart_cast<CActor*>(m_pActorInvOwner);
@@ -359,6 +356,7 @@ void CUIActorMenu::UpdateActor()
 void CUIActorMenu::UpdatePartnerBag()
 {
 	string64 buf;
+	LPCSTR currency_str = CStringTable().translate("st_currency").c_str();
 
 	CBaseMonster* monster = smart_cast<CBaseMonster*>( m_pPartnerInvOwner );
 	if ( monster || m_pPartnerInvOwner->use_simplified_visual() ) 
@@ -367,11 +365,12 @@ void CUIActorMenu::UpdatePartnerBag()
 	}
 	else if ( m_pPartnerInvOwner->InfinitiveMoney() ) 
 	{
-		m_PartnerMoney->SetText( "--- RU" );
+		xr_sprintf(buf, "--- %s", currency_str );
+		m_PartnerMoney->SetText(buf);
 	}
 	else
 	{
-		xr_sprintf( buf, "%d RU", m_pPartnerInvOwner->get_money() );
+		xr_sprintf( buf, "%d %s", m_pPartnerInvOwner->get_money(), currency_str );
 		m_PartnerMoney->SetText( buf );
 	}	
 
@@ -391,6 +390,7 @@ void CUIActorMenu::UpdatePartnerBag()
 void CUIActorMenu::UpdatePrices()
 {
 	LPCSTR kg_str = CStringTable().translate( "st_kg" ).c_str();
+	LPCSTR currency_str = CStringTable().translate("st_currency").c_str();
 
 	UpdateActor();
 	UpdatePartnerBag();
@@ -398,8 +398,8 @@ void CUIActorMenu::UpdatePrices()
 	u32 partner_price = CalcItemsPrice( m_pTradePartnerList, m_partner_trade, false );
 
 	string64 buf;
-	xr_sprintf( buf, "%d RU", actor_price );		m_ActorTradePrice->SetText( buf );	m_ActorTradePrice->AdjustWidthToText();
-	xr_sprintf( buf, "%d RU", partner_price );	m_PartnerTradePrice->SetText( buf );	m_PartnerTradePrice->AdjustWidthToText();
+	xr_sprintf( buf, "%d %s", actor_price, currency_str );		m_ActorTradePrice->SetText( buf );	m_ActorTradePrice->AdjustWidthToText();
+	xr_sprintf( buf, "%d %s", partner_price, currency_str );	m_PartnerTradePrice->SetText( buf );	m_PartnerTradePrice->AdjustWidthToText();
 
 	float actor_weight   = CalcItemsWeight( m_pTradeActorList );
 	float partner_weight = CalcItemsWeight( m_pTradePartnerList );
@@ -498,20 +498,6 @@ void CUIActorMenu::TransferItems( CUIDragDropListEx* pSellList, CUIDragDropListE
 		CUICellItem* cell_item = pSellList->RemoveItem( pSellList->GetItemIdx(0), false );
 		PIItem item = (PIItem)cell_item->m_pData;
 		pTrade->TransferItem( item, bBuying );
-		
-		if ( bBuying )
-		{
-			SInvItemPlace	pl;
-			pl.type		= eItemPlaceRuck;
-			if ( pTrade->pThis.inv_owner->CInventoryOwner::AllowItemToTrade( item, pl ) )
-			{
-				pBuyList->SetItem( cell_item );
-			}
-		}
-		else
-		{
-			pBuyList->SetItem( cell_item );
-		}
 	}
 	pTrade->pThis.inv_owner->set_money(    pTrade->pThis.inv_owner->get_money(),    true );
 	pTrade->pPartner.inv_owner->set_money( pTrade->pPartner.inv_owner->get_money(), true );

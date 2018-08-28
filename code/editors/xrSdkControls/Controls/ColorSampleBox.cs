@@ -1,5 +1,4 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Windows.Forms;
 
@@ -7,7 +6,7 @@ namespace XRay.SdkControls
 {
     public class ColorSampleBox : UserControl
     {
-        private Color color;
+        private Color _color;
 
         public ColorSampleBox()
         {
@@ -17,12 +16,12 @@ namespace XRay.SdkControls
 
         public Color ColorSample
         {
-            get { return color; }
+            get => _color;
             set
             {
-                if (color == value)
+                if (_color == value)
                     return;
-                color = value;
+                _color = value;
                 Invalidate();
             }
         }
@@ -51,7 +50,7 @@ namespace XRay.SdkControls
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            using (var backBrush = new SolidBrush(color))
+            using (var backBrush = new SolidBrush(_color))
             {
                 e.Graphics.CompositingMode = CompositingMode.SourceOver;
                 e.Graphics.FillRectangle(backBrush, ClientRectangle);

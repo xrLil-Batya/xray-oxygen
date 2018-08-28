@@ -12,7 +12,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 	// Parse message
 	u16 id_dest = ID;
 
-	CSE_Abstract* e_dest = game->get_entity_from_eid(id_dest);	// кто должен быть уничтожен
+	CSE_Abstract* e_dest = game->get_entity_from_eid(id_dest);	// РєС‚Рѕ РґРѕР»Р¶РµРЅ Р±С‹С‚СЊ СѓРЅРёС‡С‚РѕР¶РµРЅ
 	if (!e_dest)
 	{
 		return;
@@ -31,7 +31,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 			Process_event_destroy(P, sender, time, *e_dest->children.begin(), pEventPack);
 	};
 
-	if (0xffff == parent_id && NULL == pEventPack)
+	if (0xffff == parent_id && nullptr == pEventPack)
 	{
 		SendBroadcast(BroadcastCID, P);
 	}
@@ -56,7 +56,7 @@ void xrServer::Process_event_destroy(NET_Packet& P, ClientID sender, u32 time, u
 		pEventPack->w(&tmpP.B.data, tmpP.B.count);
 	};
 
-	if (NULL == pEPack && NULL != pEventPack)
+	if (nullptr == pEPack && nullptr != pEventPack)
 	{
 		SendBroadcast(BroadcastCID, *pEventPack);
 	}

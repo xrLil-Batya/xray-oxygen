@@ -53,14 +53,14 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
         AttachChild(&UIOthersIcon);
     }
 
-	//Ответы
+	//РћС‚РІРµС‚С‹
 	UIAnswersList				= xr_new<CUIScrollView>();
 	UIAnswersList->SetAutoDelete(true);
 	AttachChild(UIAnswersList);
 	CUIXmlInit::InitScrollView	(*m_uiXml, "answers_list", 0, UIAnswersList);
 	UIAnswersList->SetWindowName("---UIAnswersList");
 
-	//Вопросы
+	//Р’РѕРїСЂРѕСЃС‹
 	UIQuestionsList				= xr_new<CUIScrollView>();
 	UIQuestionsList->SetAutoDelete(true);
 	AttachChild(UIQuestionsList);
@@ -68,11 +68,11 @@ void CUITalkDialogWnd::InitTalkDialogWnd()
 	UIQuestionsList->SetWindowName("---UIQuestionsList");
 
 
-	//кнопка перехода в режим торговли
+	//РєРЅРѕРїРєР° РїРµСЂРµС…РѕРґР° РІ СЂРµР¶РёРј С‚РѕСЂРіРѕРІР»Рё
 	AttachChild					(&UIToTradeButton);
 	CUIXmlInit::Init3tButton	(*m_uiXml, "button", 0, &UIToTradeButton);
 
-	// шрифт для индикации имени персонажа в окне разговора
+	// С€СЂРёС„С‚ РґР»СЏ РёРЅРґРёРєР°С†РёРё РёРјРµРЅРё РїРµСЂСЃРѕРЅР°Р¶Р° РІ РѕРєРЅРµ СЂР°Р·РіРѕРІРѕСЂР°
 	CUIXmlInit::InitFont		(*m_uiXml, "font", 0, m_iNameTextColor, m_pNameTextFont);
 
 	CGameFont * pFont			= NULL;
@@ -139,8 +139,8 @@ void CUITalkDialogWnd::SetTradeMode()
 	OnTradeClicked( &UIToTradeButton, 0 );
 }
 
-//пересылаем сообщение родительскому окну для обработки
-//и фильтруем если оно пришло от нашего дочернего окна
+//РїРµСЂРµСЃС‹Р»Р°РµРј СЃРѕРѕР±С‰РµРЅРёРµ СЂРѕРґРёС‚РµР»СЊСЃРєРѕРјСѓ РѕРєРЅСѓ РґР»СЏ РѕР±СЂР°Р±РѕС‚РєРё
+//Рё С„РёР»СЊС‚СЂСѓРµРј РµСЃР»Рё РѕРЅРѕ РїСЂРёС€Р»Рѕ РѕС‚ РЅР°С€РµРіРѕ РґРѕС‡РµСЂРЅРµРіРѕ РѕРєРЅР°
 void CUITalkDialogWnd::SendMessage(CUIWindow* pWnd, s16 msg, void* pData)
 {
 	CUIWndCallback::OnEvent(pWnd, msg, pData);

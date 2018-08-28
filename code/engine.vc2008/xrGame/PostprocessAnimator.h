@@ -13,13 +13,14 @@ public:
 	virtual BOOL Process(SPPInfo& PPInfo);
 };
 
+#include <functional>
 class CPostprocessAnimatorLerp : public CPostprocessAnimator
 {
 protected:
-	fastdelegate::FastDelegate0<float> m_get_factor_func;
+	std::function<float()> m_get_factor_func;
 
 public:
-	void SetFactorFunc(fastdelegate::FastDelegate0<float> f) { m_get_factor_func = f; }
+	void SetFactorFunc(std::function<float()> f) { m_get_factor_func = f; }
 	virtual BOOL Process(SPPInfo& PPInfo);
 };
 

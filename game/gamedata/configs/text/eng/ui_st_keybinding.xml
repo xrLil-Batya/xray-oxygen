@@ -210,4 +210,16 @@
 	<string id="kb_dev_noclip">
 		<text>Noclip mode</text>
 	</string>
+	<string id="kb_dev_action1">
+		<text>Developer action 1</text>
+	</string>
+	<string id="kb_dev_action2">
+		<text>Developer action 2</text>
+	</string>
+	<string id="kb_dev_action3">
+		<text>Developer action 3</text>
+	</string>
+	<string id="kb_dev_action4">
+		<text>Developer action 4</text>
+	</string>
 </string_table>

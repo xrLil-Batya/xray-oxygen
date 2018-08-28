@@ -48,7 +48,7 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 #endif
 
 	m_material			=0;
-	m_capture			=NULL;
+	m_capture			=nullptr;
 	b_exect_position	=true;
 	m_start_index		=0;
 	eOldEnvironment =	peInAir;
@@ -76,7 +76,7 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 
 	fContactSpeed		=	0.f;
 	fAirControlParam	=	0.f;
-	m_character			=	NULL;
+	m_character			=	nullptr;
 	m_dwCurBox			=	0xffffffff;
 	fCollisionDamageFactor=1.f;
 	in_dead_area_count	=0;
@@ -86,7 +86,7 @@ CPHMovementControl::CPHMovementControl(CObject* parent)
 
 
 
-CPHMovementControl::~CPHMovementControl(void)
+CPHMovementControl::~CPHMovementControl()
 {
 	if(m_character)
 		m_character->Destroy();
@@ -576,7 +576,6 @@ void CPHMovementControl::PathNearestPoint(const xr_vector<DetailPathManager::STr
 		Msg("CPHMovementControl::Calculate out %s (CPHMovementControl::vPosition) %f,%f,%f",PH_DBG_ObjectTrackName(),vPosition.x,vPosition.y,vPosition.z);
 	}
 #endif
-	return;
 }
 
 
@@ -666,7 +665,6 @@ void CPHMovementControl::PathNearestPointFindUp(const xr_vector<DetailPathManage
 	}
 	
 
-	return;
 }
 
 
@@ -756,7 +754,6 @@ void CPHMovementControl::PathNearestPointFindDown(const xr_vector<DetailPathMana
 	}
 
 
-	return;
 }
 
 void		CPHMovementControl::CorrectPathDir			(const Fvector &real_path_dir,const xr_vector<DetailPathManager::STravelPathPoint> & path,int index,Fvector &corrected_path_dir)
@@ -899,7 +896,7 @@ void CPHMovementControl::Load					(LPCSTR section){
 		{ "medium_monster",	rtMonsterMedium},
 		{ "stalker",		rtStalker	},
 		{ "none",			rtNone	},
-		{ 0,							0}
+		{ nullptr,							0}
 	};
 
 	if(pSettings->line_exist(section,"actor_restrictor"))
@@ -1062,7 +1059,7 @@ void	CPHMovementControl::PHCaptureObject(CPhysicsShellHolder* object,u16 element
 
 Fvector CPHMovementControl::PHCaptureGetNearestElemPos(const CPhysicsShellHolder* object)
 {
-	R_ASSERT3((object->m_pPhysicsShell != NULL), "NO Phisics Shell for object ", *object->cName());
+	R_ASSERT3((object->m_pPhysicsShell != nullptr), "NO Phisics Shell for object ", *object->cName());
 
 	IPhysicsElementEx *ph_elem =  object->m_pPhysicsShell->NearestToPoint(vPosition);
 
@@ -1199,7 +1196,7 @@ void CPHMovementControl::CreateCharacter()
 CPHSynchronize*	CPHMovementControl::GetSyncItem()
 {
 	if(m_character)	return smart_cast<CPHSynchronize*>(m_character);
-	else			return 0;
+	else			return nullptr;
 }
 void CPHMovementControl::Freeze()
 {
@@ -1282,7 +1279,7 @@ void CPHMovementControl::MulFrictionFactor(float f)
 
 IElevatorState	*CPHMovementControl::ElevatorState()
 {
-	if(!m_character || !m_character->b_exist)return NULL;
+	if(!m_character || !m_character->b_exist)return nullptr;
 	return m_character->ElevatorState();
 }
 
@@ -1304,7 +1301,7 @@ BOOL CPHMovementControl::BorderTraceCallback(collide::rq_result& result, LPVOID 
 {
 	STraceBorderQParams& p	= *(STraceBorderQParams*)params;
 	u16 mtl_idx			=	GAMEMTL_NONE_IDX;
-	CDB::TRI* T			=	NULL;
+	CDB::TRI* T			=	nullptr;
 	if(result.O){
 		return true;
 	}else{
@@ -1362,7 +1359,7 @@ void	CPHMovementControl::				UpdateObjectBox(CPHCharacter *ach)
 	Fvector2 plane_k;plane_k.set(pObject->XFORM().k.x,pObject->XFORM().k.z);
 	float R=_abs(poses_dir.dotproduct(plane_i)*cbox.x)+_abs(poses_dir.dotproduct(plane_k)*cbox.z);
 	R*=poses_dir.dotproduct(plane_cam); //(poses_dir.x*plane_cam.x+poses_dir.y*plane_cam.z);
-	Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,0);
+	Calculate(Fvector().set(0,0,0),Fvector().set(1,0,0),0,0,0,false);
 	m_character->SetObjectRadius(R);
 	ach->ChooseRestrictionType(rtStalker,1.f,m_character);
 	m_character->UpdateRestrictionType(ach);
@@ -1383,7 +1380,7 @@ void CPHMovementControl::SetPathDir( const Fvector& v)
 const IPhysicsElement*	CPHMovementControl::IElement( )const
 {
 	if(!CharacterExist()) 
-		return 0;
+		return nullptr;
 	return m_character;
 }
 
@@ -1418,7 +1415,7 @@ void CPHMovementControl::VirtualMoveTo( const Fvector	&in_pos, Fvector &out_pos 
 			character_->SetObjectContactCallback(saved_callback_);
 			character_->SwitchInInitContact();
 			character_->SetApplyGravity( TRUE );
-			character_->SetObjectContactCallbackData( 0 );
+			character_->SetObjectContactCallbackData( nullptr );
 			character_->set_State( sv_state );
 		}
 
@@ -1575,7 +1572,7 @@ void		CPHMovementControl::		GetCharacterVelocity		(Fvector& velocity )
 	{
 		if(m_character)
 			return m_character->ObjectContactCallBack();
-		else return NULL; 
+		else return nullptr; 
 	}
 	u16	CPHMovementControl::ContactBone				()				
 	{

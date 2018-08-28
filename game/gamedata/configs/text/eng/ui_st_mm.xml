@@ -18,6 +18,9 @@
 	<string id="Low">
 		<text>low</text>
 	</string>
+	<string id="ui_mm_glows">
+		<text>Statics Glows</text>
+	</string>
 	<string id="Minimum">
 		<text>minimal</text>
 	</string>
@@ -701,6 +704,9 @@
 	</string>
 	<string id="ui_mm_vsync">
 		<text>Vertical sync</text>
+	</string>
+	<string id="ui_mm_triple_buffering">
+		<text>Triple buffering</text>
 	</string>
 	<string id="ui_mp_gamespy_changing_unique_nick">
 		<text>Change unique name</text>

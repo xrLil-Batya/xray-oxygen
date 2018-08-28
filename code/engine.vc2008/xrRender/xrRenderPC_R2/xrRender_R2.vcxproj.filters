@@ -651,6 +651,13 @@
     <ClInclude Include="blender_smaa.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
+    <ClInclude Include="blender_gamma.h">
+      <Filter>Shading templates</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
+      <Filter>Interfase implementations\Debug</Filter>
+    </ClInclude>
+    <ClInclude Include="..\xrRender\dxGlowManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -756,9 +763,6 @@
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\Light_Package.cpp">
-      <Filter>Lights</Filter>
-    </ClCompile>
-    <ClCompile Include="Light_Render_Direct_ComputeXFS.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="light_smapvis.cpp">
@@ -1166,6 +1170,16 @@
     <ClCompile Include="blender_smaa.cpp">
       <Filter>Shading templates</Filter>
     </ClCompile>
+    <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp">
+      <Filter>Lights</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp">
+      <Filter>Core_Target</Filter>
+    </ClCompile>
+    <ClCompile Include="blender_gamma.cpp">
+      <Filter>Shading templates</Filter>
+    </ClCompile>
+    <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="todo.txt" />

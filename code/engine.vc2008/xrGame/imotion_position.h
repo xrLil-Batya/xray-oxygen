@@ -10,7 +10,7 @@ class imotion_position: public interactive_motion
 private:
 struct tracks_update: public IUpdateTracksCallback
 	{
-		tracks_update( ): motion( 0 ), update( false ) {}
+		tracks_update( ): motion( nullptr ), update( false ) {}
 		virtual	bool	operator () ( float dt, IKinematicsAnimated& k );
 		imotion_position *motion;
 		bool update;
@@ -22,7 +22,7 @@ struct tracks_update: public IUpdateTracksCallback
 public:
 	imotion_position();
 private:
-	typedef			interactive_motion inherited;
+	using inherited =			interactive_motion;
 	virtual	void	move_update	(  );
 			float	motion_collide		( float dt, IKinematicsAnimated& k );
 			void	collide_not_move	( IKinematicsAnimated& KA );

@@ -69,6 +69,7 @@
     <indicator_overweight x="980" y="510" width="33" height="35"/>
     <indicator_radiation x="980" y="550" width="33" height="35"/>
     <indicator_bleeding x="980" y="590" width="33" height="35"/>
+	<indicator_thirst x="980" y="310" width="33" height="35"/>
 
     <indicator_booster_psy x="20" y="660" width="31" height="41">
 		<texture>ui_inGame2_shield_Psy</texture>

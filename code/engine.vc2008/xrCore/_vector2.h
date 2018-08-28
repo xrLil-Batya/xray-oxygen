@@ -131,9 +131,9 @@ public:
 	}
 };
 
-typedef _vector2<float>		Fvector2;
-typedef _vector2<double>	Dvector2;
-typedef _vector2<int>		Ivector2;
+using Fvector2 = _vector2<float>;
+using Dvector2 = _vector2<double>;
+using Ivector2 = _vector2<int>;
 
 template <class T>
 BOOL	_valid			(const _vector2<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y);	}

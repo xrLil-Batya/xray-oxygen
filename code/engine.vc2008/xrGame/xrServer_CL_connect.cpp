@@ -26,7 +26,7 @@ void xrServer::Perform_connect_spawn(CSE_Abstract* E, CClient* CL, NET_Packet& P
 	// Process
 	Flags16 save = E->s_flags;
 	//-------------------------------------------------
-	E->s_flags.set(M_SPAWN_UPDATE, TRUE);
+	E->s_flags.set(M_SPAWN_UPDATE, true);
 	if (!E->owner)
 	{
 		// PROCESS NAME; Name this entity

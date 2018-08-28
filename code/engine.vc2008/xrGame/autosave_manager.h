@@ -10,7 +10,7 @@
 
 class CAutosaveManager : public ISheduled {
 private:
-	typedef ISheduled	inherited;
+	using inherited = ISheduled;
 
 private:
 	u32		m_autosave_interval;

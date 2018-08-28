@@ -32,6 +32,7 @@ public:
 	IBlender*					b_rain_drops;
 	IBlender*					b_ssss_mrmnwar;
     IBlender*					b_ssss_ogse;
+	IBlender*					b_gamma;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -95,6 +96,10 @@ public:
 	ref_texture					t_noise			[TEX_jitter_count];
 
 private:
+	// For gamma correction in windowed mode
+	ref_rt						rt_GammaLUT;		// 24bit, 256x1 (r,g,b)
+	ref_shader					s_gamma;
+
 	// OCCq
 	ref_shader					s_occq;
 
@@ -251,6 +256,9 @@ public:
 	void						PhaseAA					();
 	void						ProcessFXAA				();
 	void						ProcessSMAA				();
+	void						PhaseGammaGenerateLUT	();
+	void						PhaseGammaApply			();
+	void						SaveGammaLUT			();
 
 	void						shadow_direct			(light* L, u32 dls_phase);
 
@@ -354,7 +362,7 @@ public:
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{}
 	IC void						dbg_addplane			(Fplane& P0,  u32 c)								{}
 #endif
-	private:
-		void					render_screen_quad		(u32 w, u32 h, u32 &Offset, ref_rt &rt, ref_selement &sh, bool bCopyRT = false, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
-		void					render_screen_quad		(u32 w, u32 h, u32 &Offset,				ref_selement &sh, bool bCopyRT = false, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
+private:
+	void						RenderScreenQuad		(u32 w, u32 h, ID3DRenderTargetView* rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
+	void						RenderScreenQuad		(u32 w, u32 h, ref_rt &rt,				 ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts = nullptr);
 };

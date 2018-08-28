@@ -230,7 +230,8 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 	}
 	if (UICost && item_price != u32(-1))
 	{
-		xr_sprintf(str, "%d RU", item_price);// will be overwritten in multiplayer
+		LPCSTR currency_str = CStringTable().translate("st_currency").c_str();
+		xr_sprintf(str, "%d %s", item_price, currency_str );// will be overwritten in multiplayer
 		UICost->SetText(str);
 		pos.x = UICost->GetWndPos().x;
 		if (m_complex_desc)
@@ -311,7 +312,7 @@ void CUIItemInfo::InitItem(CUICellItem* pCellItem, CInventoryItem* pCompareItem,
 	}
 	if (UIItemImage)
 	{
-		// Çàãðóæàåì êàðòèíêó
+		// Ð—Ð°Ð³Ñ€ÑƒÐ¶Ð°ÐµÐ¼ ÐºÐ°Ñ€Ñ‚Ð¸Ð½ÐºÑƒ
 		UIItemImage->SetShader(InventoryUtilities::GetEquipmentIconsShader());
 
 		Irect item_grid_rect = pInvItem->GetInvGridRect();

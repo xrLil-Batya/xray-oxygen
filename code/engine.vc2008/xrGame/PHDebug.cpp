@@ -18,10 +18,10 @@
 
 Flags32		ph_dbg_draw_mask;
 Flags32		ph_dbg_draw_mask1;
-bool		draw_frame = 0;
+bool		draw_frame = false;
 
 string64 s_dbg_trace_obj_name = "none";
-CObject	 *trace_object = NULL;
+CObject	 *trace_object = nullptr;
 u32 dbg_bodies_num = 0;
 u32 dbg_joints_num = 0;
 u32 dbg_islands_num = 0;
@@ -596,7 +596,7 @@ void DBG_DrawStatAfterFrameStep()
 
 CFunctionGraph::CFunctionGraph()
 {
-	m_stat_graph = NULL;
+	m_stat_graph = nullptr;
 	m_function.clear();
 }
 CFunctionGraph::~CFunctionGraph()
@@ -665,7 +665,7 @@ void CFunctionGraph::Clear()
 
 bool CFunctionGraph::IsActive()
 {
-	VERIFY((m_stat_graph == 0) == m_function.empty());
+	VERIFY((m_stat_graph == nullptr) == m_function.empty());
 	return !!m_stat_graph;
 }
 
@@ -765,7 +765,7 @@ void DBG_AnimState(IKinematicsAnimated &ka)
 	if (dbg_track_obj_flags.test(dbg_track_obj_blends_dump))
 	{
 		ka.LL_DumpBlends_dbg();
-		dbg_track_obj_flags.set(dbg_track_obj_blends_dump, FALSE);
+		dbg_track_obj_flags.set(dbg_track_obj_blends_dump, false);
 	}
 	for (u16 i = 0; i<MAX_PARTS; ++i)
 		DBG_AnimPartState(ka, i);
@@ -776,7 +776,7 @@ static void DBG_DrawTarckObj()
 {
 	if (!ph_dbg_draw_mask1.test(ph_m1_DbgTrackObject))
 	{
-		trace_object = 0;
+		trace_object = nullptr;
 		return;
 	}
 	DBG_TextOutSet(450, 150);
@@ -920,7 +920,7 @@ public:
 void DBG_PH_NetRelcase(CObject* obj)
 {
 	if (trace_object == obj)
-		trace_object = NULL;
+		trace_object = nullptr;
 }
 
 bool is_trace_obj(CPHObject *obj)

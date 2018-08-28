@@ -171,13 +171,13 @@ public:
 	}
 };
 
-typedef _vector4<float>		Fvector4;
-typedef _vector4<double>	Dvector4;
-typedef _vector4<s32>		Ivector4;
+using Fvector4 = _vector4<float>;
+using Dvector4 = _vector4<double>;
+using Ivector4 = _vector4<s32>;
 #ifndef __BORLANDC__
-	typedef __declspec(align(16))	_vector4<float>		Fvector4a;
-	typedef __declspec(align(16))	_vector4<double>	Dvector4a;
-	typedef __declspec(align(16))	_vector4<s32>		Ivector4a;
+	using Fvector4a = __declspec(align(16))	_vector4<float>;
+	using Dvector4a = __declspec(align(16))	_vector4<double>;
+	using Ivector4a = __declspec(align(16))	_vector4<s32>;
 #endif
 
 template <class T>

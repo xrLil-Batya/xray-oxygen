@@ -40,9 +40,8 @@ void CClient::Clear()
 	net_Accepted = FALSE;
 };
 
-xrServer::xrServer()
+xrServer::xrServer() : SV_Client(nullptr)
 {
-    SV_Client = nullptr;
 }
 
 xrServer::~xrServer()
@@ -63,16 +62,6 @@ CSE_Abstract* xrServer::ID_to_entity(u16 ID)
 	return nullptr;
 }
 
-CClient* xrServer::ID_to_client(ClientID ID, bool ScanAll)
-{
-    if (ID.value())
-    {
-        if (SV_Client->ID == ID)
-            return SV_Client;
-    }
-    return nullptr;
-}
-
 //--------------------------------------------------------------------
 #ifdef DEBUG
 INT g_sv_SendUpdate = 0;
@@ -80,9 +69,9 @@ INT g_sv_SendUpdate = 0;
 
 void xrServer::Update	()
 {
-	VERIFY(verify_entities());
 
-    if (Level().game) {
+    if (Level().game)
+	{
         CScriptProcess* script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
         if (script_process)
             script_process->update();
@@ -90,9 +79,8 @@ void xrServer::Update	()
 
 	if (game->sv_force_sync)
         Perform_game_export();
-#ifdef DEBUG
-    verify_entities();
-#endif
+
+	VERIFY(verify_entities());
 }
 
 u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "flags" as returned

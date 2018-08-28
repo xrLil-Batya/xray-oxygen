@@ -112,7 +112,7 @@ void CGameTask::RemoveMapLocations(bool notify)
 	if (m_linked_map_location && !notify)
 		Level().MapManager().RemoveMapLocation(m_linked_map_location);
 
-	m_map_location = 0;
+	m_map_location = nullptr;
 	m_linked_map_location = nullptr;
 	m_map_object_id = u16(-1);
 }
@@ -253,39 +253,39 @@ void CGameTask::CommitScriptHelperContents()
 
 void CGameTask::AddCompleteInfo_script(LPCSTR _str)
 {
-	m_completeInfos.push_back(_str);
+	m_completeInfos.emplace_back(_str);
 }
 
 void CGameTask::AddFailInfo_script(LPCSTR _str)
 {
-	m_failInfos.push_back(_str);
+	m_failInfos.emplace_back(_str);
 }
 
 void CGameTask::AddOnCompleteInfo_script(LPCSTR _str)
 {
-	m_infos_on_complete.push_back(_str);
+	m_infos_on_complete.emplace_back(_str);
 }
 
 void CGameTask::AddOnFailInfo_script(LPCSTR _str)
 {
-	m_infos_on_fail.push_back(_str);
+	m_infos_on_fail.emplace_back(_str);
 }
 
 void CGameTask::AddCompleteFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_complete_lua_functions.push_back(_str);
+	m_pScriptHelper.m_s_complete_lua_functions.emplace_back(_str);
 }
 void CGameTask::AddFailFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_fail_lua_functions.push_back(_str);
+	m_pScriptHelper.m_s_fail_lua_functions.emplace_back(_str);
 }
 void CGameTask::AddOnCompleteFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_lua_functions_on_complete.push_back(_str);
+	m_pScriptHelper.m_s_lua_functions_on_complete.emplace_back(_str);
 }
 void CGameTask::AddOnFailFunc_script(LPCSTR _str)
 {
-	m_pScriptHelper.m_s_lua_functions_on_fail.push_back(_str);
+	m_pScriptHelper.m_s_lua_functions_on_fail.emplace_back(_str);
 }
 
 void SScriptTaskHelper::init_functors(xr_vector<shared_str>& v_src, task_state_functors& v_dest)

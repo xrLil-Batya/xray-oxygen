@@ -31,7 +31,7 @@ public:
 	void								Preload			();
 	void								Load			();
 	void								PostLoad		();
-	void								Unload			(void);
+	void								Unload			();
 //	void								Apply			(u32 dwStage);
 
 	void								surface_set		(ID3DBaseTexture* surf );
@@ -107,9 +107,8 @@ private:
 struct 		resptrcode_texture	: public resptr_base<CTexture>
 {
 	void				create			(LPCSTR	_name);
-	void				destroy			()					{ _set(NULL);					}
+	void				destroy			()					{ _set(nullptr);					}
 	shared_str			bump_get		()					{ return _get()->m_bumpmap;		}
 	bool				bump_exist		()					{ return 0!=bump_get().size();	}
 };
-typedef	resptr_core<CTexture,resptrcode_texture >	
-	ref_texture;
+using ref_texture =	resptr_core<CTexture,resptrcode_texture >;

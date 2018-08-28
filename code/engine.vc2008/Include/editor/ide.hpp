@@ -23,7 +23,7 @@ public:
 	virtual	void				pause					() = 0;
 
 public:
-	virtual	property_holder*	create_property_holder	(LPCSTR display_name, property_holder_collection* collection = 0, property_holder_holder* holder = 0) = 0;
+	virtual	property_holder*	create_property_holder	(LPCSTR display_name, property_holder_collection* collection = nullptr, property_holder_holder* holder = nullptr) = 0;
 	virtual	void				destroy					(property_holder *&property_holder) = 0;
 	virtual	void				environment_levels		(property_holder *property_holder) = 0;
 	virtual	void				environment_weathers	(property_holder *property_holder) = 0;

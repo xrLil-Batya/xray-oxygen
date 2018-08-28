@@ -6,7 +6,7 @@
 // CMonsterEffector
 //////////////////////////////////////////////////////////////////////////
 class CMonsterEffector : public CEffectorPP {
-	typedef CEffectorPP inherited;	
+	using inherited = CEffectorPP;	
 	
 	SPPInfo state;			// current state
 	float	m_total;		// total PP time

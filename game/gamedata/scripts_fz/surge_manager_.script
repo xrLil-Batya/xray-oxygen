@@ -1,7 +1,7 @@
 --[[ ----------------------------------------------------------------------------------------------- 
  File       : surge_manager.script
  Description: Surge manager
- Copyright  : 2004 © GSC Game World
+ Copyright  : 2004 В© GSC Game World
  Author     : Peacemaker (05.03.07)
  Last edit  : 07.05.2012
 --]] -----------------------------------------------------------------------------------------------
@@ -67,13 +67,13 @@ function CSurgeManager:initialize()
 	self.ui_disabled 			= false
 	self.blowout_sound 			= false
 	
-	self.mSteps = {} --/массив шагов выполнения выброса
+	self.mSteps = {} --/РјР°СЃСЃРёРІ С€Р°РіРѕРІ РІС‹РїРѕР»РЅРµРЅРёСЏ РІС‹Р±СЂРѕСЃР°
 	self.hitFactor=0
 
 	self.surge_time = 220
 	self.inited_time = game.CTime()
 	self.last_surge_time = game.get_game_time()
-	self._delta = math.random(START_MIN_SURGE_TIME, START_MAX_SURGE_TIME) -- global minutes, время между выбросами
+	self._delta = math.random(START_MIN_SURGE_TIME, START_MAX_SURGE_TIME) -- global minutes, РІСЂРµРјСЏ РјРµР¶РґСѓ РІС‹Р±СЂРѕСЃР°РјРё
 
 	self.count = 0
 	self.covers = {}
@@ -214,8 +214,8 @@ function CSurgeManager:update()
 			if (self.loaded) then
 				self.loaded = false
 			end
--- старт выброса ----------------------------------------------------------------------------
-			if (diff_sec>=0) and (self.mSteps['wBegin']==nil) then -- выброс только начался
+-- СЃС‚Р°СЂС‚ РІС‹Р±СЂРѕСЃР° ----------------------------------------------------------------------------
+			if (diff_sec>=0) and (self.mSteps['wBegin']==nil) then -- РІС‹Р±СЂРѕСЃ С‚РѕР»СЊРєРѕ РЅР°С‡Р°Р»СЃСЏ
 				if (level.get_time_hours() >= 5 and level.get_time_hours() <= 22) then
 					level.set_weather_fx("fx_blowout_day")
 				else
@@ -228,12 +228,12 @@ function CSurgeManager:update()
 				end
 				self.mSteps['wBegin']=true
 			end
-		-- blowout предупреждение -------------------------------------------------------------------------
-			if (diff_sec>=30) and (Warning==true) and (self.mSteps['wSiren']==nil) then -- сирена
+		-- blowout РїСЂРµРґСѓРїСЂРµР¶РґРµРЅРёРµ -------------------------------------------------------------------------
+			if (diff_sec>=30) and (Warning==true) and (self.mSteps['wSiren']==nil) then -- СЃРёСЂРµРЅР°
 				self:play_siren_sound()
 				self.mSteps['wSiren']=true
 			end
-			if (diff_sec>=34) and not(self.task_given) then -- сообщение по каналу
+			if (diff_sec>=34) and not(self.task_given) then -- СЃРѕРѕР±С‰РµРЅРёРµ РїРѕ РєР°РЅР°Р»Сѓ
 				if(level) and (Warning==true) then
 					if(level.name()=="level_escape") then
 						xr_sound.set_sound_play(db.actor:id(), "zat_a2_stalker_barmen_surge_phase_1")
@@ -245,8 +245,8 @@ function CSurgeManager:update()
 				self:give_surge_hide_task()
 				self.task_given = true
 			end
-		-- звук начала выброса -------------------------------------------------------------------------
-			if (diff_sec>=41) and (self.mSteps['wImpact']==nil) then -- толчек
+		-- Р·РІСѓРє РЅР°С‡Р°Р»Р° РІС‹Р±СЂРѕСЃР° -------------------------------------------------------------------------
+			if (diff_sec>=41) and (self.mSteps['wImpact']==nil) then -- С‚РѕР»С‡РµРє
 				if (rnd_sound % 2) ~= 0 then
 					self:play_blowout_sound("impact01")
 				else
@@ -254,24 +254,24 @@ function CSurgeManager:update()
 				end
 				self.mSteps['wImpact']=true
 			end
-		-- старт грохота-------------------------------------------------------------------------------
+		-- СЃС‚Р°СЂС‚ РіСЂРѕС…РѕС‚Р°-------------------------------------------------------------------------------
 			if (diff_sec>=48)and (self.mSteps['wRumble']==nil) and not(self.blowout_sound) then
 				xr_sound.play_sound_looped(db.actor:id(), "blowout_rumble")
 				xr_sound.set_volume_sound_looped(db.actor:id(), "blowout_rumble", 0.25)
 				self.blowout_sound = true
 				self.mSteps['wRumble']=true
 			end
-			-- плавное изменение силы грохота -------
+			-- РїР»Р°РІРЅРѕРµ РёР·РјРµРЅРµРЅРёРµ СЃРёР»С‹ РіСЂРѕС…РѕС‚Р° -------
 			if (diff_sec>=48) and (diff_sec<=73) and (self.mSteps['wRumble']~=nil) and (self.blowout_sound) then
 				xr_sound.set_volume_sound_looped(db.actor:id(), "blowout_rumble", fade(diff_game_sec,48*5,73*5,0.25,1))
 			end
-		-- предваритеольное - первое землетрясение -------------------------------------------------------------------------
+		-- РїСЂРµРґРІР°СЂРёС‚РµРѕР»СЊРЅРѕРµ - РїРµСЂРІРѕРµ Р·РµРјР»РµС‚СЂСЏСЃРµРЅРёРµ -------------------------------------------------------------------------
 			if (diff_sec>=78) and (self.mSteps['wQuake20']==nil) then
 				xr_sound.set_sound_play(db.actor:id(), "blowout_begin")
 				level.add_cam_effector("camera_effects\\earthquake_20.anm", earthquake_cam_eff, true, "")
 				self.mSteps['wQuake20']=true
 			end
-		-- сообщение "скоро выброс" ---------------------------------------------------------------------------------------
+		-- СЃРѕРѕР±С‰РµРЅРёРµ "СЃРєРѕСЂРѕ РІС‹Р±СЂРѕСЃ" ---------------------------------------------------------------------------------------
 			if(diff_sec>=84) and not(self.second_message_given) then
 				if (level) and (Warning==true) then
 					if(level.name()=="level_escape") then
@@ -282,7 +282,7 @@ function CSurgeManager:update()
 				end
 				self.second_message_given = true
 			end
-		-- озвучка первой волны ------------------------------------------------------------------------------
+		-- РѕР·РІСѓС‡РєР° РїРµСЂРІРѕР№ РІРѕР»РЅС‹ ------------------------------------------------------------------------------
 			if(diff_sec>=100) and (self.mSteps['wFWave']==nil) then
 				if rnd_sound==1 then
 					self:play_blowout_sound("wave01")
@@ -295,11 +295,11 @@ function CSurgeManager:update()
 				end
 				self.mSteps['wFWave']=true
 			end
-		-- первая волна выброса --------------------------------------------------------------------------------------------
+		-- РїРµСЂРІР°СЏ РІРѕР»РЅР° РІС‹Р±СЂРѕСЃР° --------------------------------------------------------------------------------------------
 			if(diff_sec>=100) and (diff_sec<=150) then
 				self:StartWave("fWave",diff_sec,diff_game_sec)
 			end
-		-- озвучка второй волны ------------------------------------------------------------------------------
+		-- РѕР·РІСѓС‡РєР° РІС‚РѕСЂРѕР№ РІРѕР»РЅС‹ ------------------------------------------------------------------------------
 			if(diff_sec>=160) and (self.mSteps['wSWave']==nil) then
 				if rnd_sound==1 then
 					self:play_blowout_sound("wave01")
@@ -312,22 +312,22 @@ function CSurgeManager:update()
 				end
 				self.mSteps['wSWave']=true
 			end
-		-- вторая волна выброса --------------------------------------------------------------------------------------------
+		-- РІС‚РѕСЂР°СЏ РІРѕР»РЅР° РІС‹Р±СЂРѕСЃР° --------------------------------------------------------------------------------------------
 			if(diff_sec>=160) and (diff_sec<=216) then
 				self:StartWave("sWave",diff_sec,diff_game_sec)
 			end
-		-- звуки землетрясения и громыхания на выходе ----------------------------------------------------------------------
+		-- Р·РІСѓРєРё Р·РµРјР»РµС‚СЂСЏСЃРµРЅРёСЏ Рё РіСЂРѕРјС‹С…Р°РЅРёСЏ РЅР° РІС‹С…РѕРґРµ ----------------------------------------------------------------------
 			if (diff_sec>=200) and (diff_sec<=215) and (self.mSteps['wRumble']~=nil) and (self.blowout_sound) then
 				xr_sound.set_volume_sound_looped(db.actor:id(), "blowout_rumble", fade(diff_game_sec,200*5,215*5,1,0))
 				xr_sound.set_volume_sound_looped(db.actor:id(), "surge_earthquake_sound_looped", fade(diff_game_sec,200*5,215*5,1,0))
 			end
-			-- стоп звуков --------------------------------------------------------------------------------------------------
+			-- СЃС‚РѕРї Р·РІСѓРєРѕРІ --------------------------------------------------------------------------------------------------
 			if (diff_sec>=215) and (self.mSteps['wRumble']==true) and (self.blowout_sound) then
 				xr_sound.stop_sound_looped(db.actor:id(), "blowout_rumble")
 				xr_sound.stop_sound_looped(db.actor:id(), "surge_earthquake_sound_looped")
 				self.mSteps['wRumble']=false
 			end
-		-- "выброс закончился" ----------------------------------------------------------------------------------------------
+		-- "РІС‹Р±СЂРѕСЃ Р·Р°РєРѕРЅС‡РёР»СЃСЏ" ----------------------------------------------------------------------------------------------
 			if (diff_sec>=217) and (self.mSteps['wAfterSurge']==nil) then
 				if (level) and (Warning==true) then
 					if(level.name()=="level_escape") then
@@ -339,8 +339,8 @@ function CSurgeManager:update()
 				xr_sound.set_sound_play(db.actor:id(), "blowout_hit_3")
 				self.mSteps['wAfterSurge']=true
 			end
-		-- конец выброса перенести на волну----------------------------------------------------------------------------------------------------
-			if(diff_sec>=216) and not(self.ui_disabled) then -- конец выброса
+		-- РєРѕРЅРµС† РІС‹Р±СЂРѕСЃР° РїРµСЂРµРЅРµСЃС‚Рё РЅР° РІРѕР»РЅСѓ----------------------------------------------------------------------------------------------------
+			if(diff_sec>=216) and not(self.ui_disabled) then -- РєРѕРЅРµС† РІС‹Р±СЂРѕСЃР°
 				self.ui_disabled = true
 			end
 		end
@@ -369,7 +369,7 @@ function CSurgeManager:start(manual)
 	else
 		self.started = true
 		self.finished = false
-		self.mSteps = {} --/массив шагов выполнения выброса
+		self.mSteps = {} --/РјР°СЃСЃРёРІ С€Р°РіРѕРІ РІС‹РїРѕР»РЅРµРЅРёСЏ РІС‹Р±СЂРѕСЃР°
 		self.hitFactor=0
 		-- autosave
 		if not has_alife_info("actor_in_sleep") then
@@ -811,7 +811,7 @@ function CSurgeManager:StartWave(wName, dSec, dGameSec)
 	if (dSec==215) then
 		self.effector_set=false
 	end
-	-- последовательная смена интенсивности землетрясений 1->2->3->4 --------------------------------------------------
+	-- РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅР°СЏ СЃРјРµРЅР° РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚Рё Р·РµРјР»РµС‚СЂСЏСЃРµРЅРёР№ 1->2->3->4 --------------------------------------------------
 	if (dSec==wTime) then
 		xr_sound.play_sound_looped(db.actor:id(), "surge_earthquake_sound_looped")
 		level.remove_cam_effector(earthquake_cam_eff)
@@ -829,7 +829,7 @@ function CSurgeManager:StartWave(wName, dSec, dGameSec)
 		level.remove_cam_effector(earthquake_cam_eff)
 		level.add_cam_effector("camera_effects\\earthquake.anm", earthquake_cam_eff, true, "")
 	end
-	-- процес хиттинга -----------------------------------------------------------------------------------
+	-- РїСЂРѕС†РµСЃ С…РёС‚С‚РёРЅРіР° -----------------------------------------------------------------------------------
 	if (dSec>=104) and (dSec<=210) and not(self.effector_set) then
 		level.add_pp_effector("psychic.ppe", surge_shock_pp_eff, true)
 		level.set_pp_effector_factor(surge_shock_pp_eff, 0.001)
@@ -847,7 +847,7 @@ function CSurgeManager:StartWave(wName, dSec, dGameSec)
 	local cover = self:get_nearest_cover()
 	if (cover==nil or not(db.storage[cover].object:inside(db.actor:position()))) then
 		PPEfactor = self.hitFactor
-		hitPower = self.hitFactor/7	--TODO а не маловато ли?
+		hitPower = self.hitFactor/7	--TODO Р° РЅРµ РјР°Р»РѕРІР°С‚Рѕ Р»Рё?
 		self:SpawnPhantoms()
 		if PPEfactor < 0.001 then PPEfactor = 0.001 end
 	else
@@ -863,7 +863,7 @@ function CSurgeManager:StartWave(wName, dSec, dGameSec)
 			h.impulse = 0.0
 			h.direction = vector():set(0,0,1)
 			h.draftsman = db.actor
-			h:bone("bip01_spine") -- чтобы учитывалась броня TODO под сомнением!
+			h:bone("bip01_spine") -- С‡С‚РѕР±С‹ СѓС‡РёС‚С‹РІР°Р»Р°СЃСЊ Р±СЂРѕРЅСЏ TODO РїРѕРґ СЃРѕРјРЅРµРЅРёРµРј!
 			h.type = hit.telepatic
 			db.actor:hit(h)
 			h.type = hit.radiation
@@ -873,7 +873,7 @@ function CSurgeManager:StartWave(wName, dSec, dGameSec)
 	if wName=="sWave"  and (dSec==wTime+20) then
 		self:kill_all_unhided()
 	end
-	-- последовательная смена интенсивности землетрясений 4->3->2->1->0---------------------------------------------------------------------
+	-- РїРѕСЃР»РµРґРѕРІР°С‚РµР»СЊРЅР°СЏ СЃРјРµРЅР° РёРЅС‚РµРЅСЃРёРІРЅРѕСЃС‚Рё Р·РµРјР»РµС‚СЂСЏСЃРµРЅРёР№ 4->3->2->1->0---------------------------------------------------------------------
 	if (dSec==wTime+30) then
 		level.remove_cam_effector(earthquake_cam_eff)
 		level.add_cam_effector("camera_effects\\earthquake_80.anm", earthquake_cam_eff, true, "")

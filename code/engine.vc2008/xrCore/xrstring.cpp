@@ -1,6 +1,6 @@
 #include "stdafx.h"
 #pragma hdrstop
-
+#pragma warning(disable: 4366)
 #include "xrstring.h"
 
 XRCORE_API str_container	g_pStringContainer;
@@ -44,9 +44,9 @@ struct str_container_impl
 
     void			 clean()
     {
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (auto & i : buffer)
         {
-            str_value** current = &buffer[i];
+            str_value** current = &i;
 
             while (*current != nullptr)
             {
@@ -56,8 +56,8 @@ struct str_container_impl
                     *current = value->next;
                     xr_free(value);
                 }
-                else
-                    current = &value->next;
+                else current = &value->next;
+#pragma todo("ForserX to Giperion: Результат применения унарного оператора '&' может быть невыровненным")
             }
         }
     }
@@ -65,9 +65,8 @@ struct str_container_impl
     void			 verify()
     {
         Msg("strings verify started");
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             while (value)
             {
                 u32			crc = crc32(value->value, value->dwLength);
@@ -82,9 +81,8 @@ struct str_container_impl
 
     void			dump(FILE* f) const
     {
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             while (value)
             {
                 fprintf(f, "ref[%4u]-len[%3u]-crc[%8X] : %s\n", value->dwReference, value->dwLength, value->dwCRC, value->value);
@@ -95,9 +93,8 @@ struct str_container_impl
 
     void			dump(IWriter* f) const
     {
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             string4096		temp;
             while (value)
             {
@@ -111,9 +108,8 @@ struct str_container_impl
     int				stat_economy()
     {
         int				counter = 0;
-        for (u32 i = 0; i < buffer_size; ++i)
+        for (str_value* value : buffer)
         {
-            str_value* value = buffer[i];
             while (value)
             {
                 counter -= sizeof(str_value);
@@ -133,11 +129,11 @@ str_container::str_container()
 
 str_value*	str_container::dock(str_c value)
 {
-    if (!value) return 0;
+    if (!value) return nullptr;
 
     std::lock_guard<decltype(cs)> lock(cs);
 
-    str_value*	result = 0;
+    str_value*	result = nullptr;
 
     // calc len
     u32		s_len = xr_strlen(value);
@@ -159,7 +155,7 @@ str_value*	str_container::dock(str_c value)
 #endif //DEBUG
 
     // it may be the case, string is not found or has "non-exact" match
-    if (0 == result
+    if (nullptr == result
 #ifdef DEBUG
         || is_leaked_string
 #endif //DEBUG
@@ -244,7 +240,7 @@ xr_vector<xr_string> xr_string::Split(LPCSTR Str, size_t StrSize, char splitCh)
             //Don't create empty string
             if ((StrCursor - 1 - SubStrBeginCursor) > 0)
             {
-                Result.push_back(xr_string(&Str[SubStrBeginCursor], (int)StrCursor - 1));
+                Result.emplace_back(&Str[SubStrBeginCursor], (int)StrCursor - 1);
             }
         }
     }

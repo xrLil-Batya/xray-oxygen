@@ -6,7 +6,6 @@ void CRenderTarget::PhaseRainDrops()
 {
 #pragma todo("RZ: check if actor is _really_ under rain")
 
-	u32 Offset = 0;
 	float _w = float(Device.dwWidth);
 	float _h = float(Device.dwHeight);
 
@@ -17,5 +16,10 @@ void CRenderTarget::PhaseRainDrops()
 	consts.insert(std::make_pair("rain_drops_params0", &params));
 
 	// Pass 0
-	render_screen_quad(_w, _h, Offset, s_rain_drops->E[0], true, &consts);
+#if defined(USE_DX10) || defined(USE_DX11)
+	RenderScreenQuad(_w, _h, rt_Generic, s_rain_drops->E[0], &consts);
+	HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
+#else
+	RenderScreenQuad(_w, _h, rt_Generic_0, s_rain_drops->E[0], &consts);
+#endif
 }

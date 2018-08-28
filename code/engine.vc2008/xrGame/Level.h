@@ -41,7 +41,7 @@ private:
 	bool						m_bEnvPaused;
 #endif
 protected:
-	typedef IGame_Level			inherited;
+	using inherited = IGame_Level;
 	
 	CLevelSoundManager			*m_level_sound_manager;
 	NET_Queue_Event*			spawn_events = nullptr;
@@ -82,7 +82,7 @@ private:
 	xrServer::EConnect			m_connect_server_err;
 public:
 
-	CObject*					CurrentControlEntity	( void ) const		{ return pCurrentControlEntity; }
+	CObject*					CurrentControlEntity	(  ) const		{ return pCurrentControlEntity; }
 	void						SetControlEntity		( CObject* O  )		{ pCurrentControlEntity=O; }
 
 public:
@@ -100,6 +100,9 @@ public:
 	
 	CZoneList*					hud_zones_list;
 	CZoneList*					create_hud_zones_list();
+
+	HANDLE						m_mtScriptUpdaterEventStart;
+	HANDLE						m_mtScriptUpdaterEventEnd;
 
 private:
 	// preload sounds registry
@@ -124,7 +127,6 @@ protected:
 	bool	xr_stdcall			net_start6				();
 
 	bool	xr_stdcall			net_start_client1				();
-	bool	xr_stdcall			net_start_client2				();
 	bool	xr_stdcall			net_start_client3				();
 	bool	xr_stdcall			net_start_client4				();
 	bool	xr_stdcall			net_start_client5				();
@@ -146,7 +148,7 @@ public:
 
 	// Events
 	virtual void				OnEvent					( EVENT E, u64 P1, u64 P2 );
-	virtual void	_BCL		OnFrame					( void );
+	virtual void	_BCL		OnFrame					(  );
 	virtual void				OnRender				( );
 	
 	void						cl_Process_Event		(u16 dest, u16 type, NET_Packet& P);
@@ -164,7 +166,7 @@ public:
 	virtual void				IR_OnMouseMove			( int, int);
 	virtual void				IR_OnMouseStop			( int, int);
 	virtual void				IR_OnMouseWheel			( int direction);
-	virtual void				IR_OnActivate			(void);
+	virtual void				IR_OnActivate			();
 
 	// Game
 	void						InitializeClientGame	(NET_Packet& P);
@@ -192,16 +194,16 @@ public:
 	CLevel();
 	virtual ~CLevel();
 
-	//названияе текущего уровня
+	//РЅР°Р·РІР°РЅРёСЏРµ С‚РµРєСѓС‰РµРіРѕ СѓСЂРѕРІРЅСЏ
 	virtual shared_str			name					() const;
 			shared_str			version					() const { return map_data.m_map_version; } //this method can be used ONLY from CCC_ChangeGameType
 	
-	//возвращает время в милисекундах относительно начала игры
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјСЏ РІ РјРёР»РёСЃРµРєСѓРЅРґР°С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° РёРіСЂС‹
 	ALife::_TIME_ID		GetStartGameTime		();
 	ALife::_TIME_ID		GetGameTime				();
-	//возвращает время для энвайронмента в милисекундах относительно начала игры
+	//РІРѕР·РІСЂР°С‰Р°РµС‚ РІСЂРµРјСЏ РґР»СЏ СЌРЅРІР°Р№СЂРѕРЅРјРµРЅС‚Р° РІ РјРёР»РёСЃРµРєСѓРЅРґР°С… РѕС‚РЅРѕСЃРёС‚РµР»СЊРЅРѕ РЅР°С‡Р°Р»Р° РёРіСЂС‹
 	ALife::_TIME_ID		GetEnvironmentGameTime	();
-	//игровое время в отформатированном виде
+	//РёРіСЂРѕРІРѕРµ РІСЂРµРјСЏ РІ РѕС‚С„РѕСЂРјР°С‚РёСЂРѕРІР°РЅРЅРѕРј РІРёРґРµ
 	void				GetGameDateTime			(u32& year, u32& month, u32& day, u32& hours, u32& mins, u32& secs, u32& milisecs);
 
 	float				GetGameTimeFactor		();
@@ -222,10 +224,10 @@ protected:
 public:
 	CMapManager&			MapManager					() const 	{return *m_map_manager;}
 	CGameTaskManager&		GameTaskManager				() const	{return *m_game_task_manager;}
-	void					OnAlifeSimulatorLoaded		();
-	void					OnAlifeSimulatorUnLoaded	();
-	//работа с пулями
+	void					ResetLevel					();
+	
 protected:	
+	//СЂР°Р±РѕС‚Р° СЃ РїСѓР»СЏРјРё
 	CBulletManager*		m_pBulletManager;
 public:
 	IC CBulletManager&	BulletManager() {return	*m_pBulletManager;}

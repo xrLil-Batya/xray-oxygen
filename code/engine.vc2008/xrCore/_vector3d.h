@@ -484,12 +484,12 @@ public:
 		}
 	}
 };
-typedef _vector3<float>		Fvector;
-typedef _vector3<float>		Fvector3;
-typedef _vector3<double>	Dvector;
-typedef _vector3<double>	Dvector3;
-typedef _vector3<s32>		Ivector;
-typedef _vector3<s32>		Ivector3;
+using Fvector = _vector3<float>;
+using Fvector3 = _vector3<float>;
+using Dvector = _vector3<double>;
+using Dvector3 = _vector3<double>;
+using Ivector = _vector3<s32>;
+using Ivector3 = _vector3<s32>;
 
 template <class T>
 BOOL	_valid			(const _vector3<T>& v)	{ return _valid((T)v.x) && _valid((T)v.y) && _valid((T)v.z);	}

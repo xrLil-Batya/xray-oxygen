@@ -11,20 +11,13 @@ enum {
 	M_SV_CONFIG_GAME,
 
 	M_EVENT,					// Game Event
-	//----------- for E3 -----------------------------
-	M_UPDATE_OBJECTS,
-	//-------------------------------------------------
+
 	M_CHANGE_LEVEL,				// changing level
 	M_LOAD_GAME,
 	M_SAVE_PACKET,
 
 	M_SWITCH_DISTANCE,
 	M_EVENT_PACK,					// Pack of M_EVENT
-	//-----------------------------------------------------
-	M_CLIENT_CONNECT_RESULT,
-	M_CLIENT_REQUEST_CONNECTION_DATA,
-	//-----------------------------------------------------
-	M_SV_MAP_NAME,				//request and responce
 
 	MSG_FORCEDWORD				= u32(-1)
 };

@@ -208,7 +208,7 @@ void CUIActorMenu::Update()
 	m_hint_wnd->Update();
 }
 
-bool CUIActorMenu::StopAnyMove()  // true = актёр не идёт при открытом меню
+bool CUIActorMenu::StopAnyMove()  // true = Р°РєС‚С‘СЂ РЅРµ РёРґС‘С‚ РїСЂРё РѕС‚РєСЂС‹С‚РѕРј РјРµРЅСЋ
 {
 	return (m_currMenuMode != mmInventory);
 }
@@ -475,6 +475,9 @@ void CUIActorMenu::highlight_item_slot(CUICellItem* cell_item)
 		return;
 	}
 
+	if (!item->m_pInventory)
+		return;
+
 	CObject* pObj = item->cast_game_object();
 	shared_str section_name = pObj->cNameSect();
 
@@ -522,7 +525,7 @@ void CUIActorMenu::set_highlight_item( CUICellItem* cell_item )
 
 	highlight_item_slot(cell_item);
 
-	// не подсвечивать патроны для ножа
+	// РЅРµ РїРѕРґСЃРІРµС‡РёРІР°С‚СЊ РїР°С‚СЂРѕРЅС‹ РґР»СЏ РЅРѕР¶Р°
 	if (smart_cast<CWeaponKnife*>(item))
 	{
 		return;

@@ -1,5 +1,5 @@
 ------------------------------------------------------------------------------
---                      Служебные функции и переменные                      --
+--                      РЎР»СѓР¶РµР±РЅС‹Рµ С„СѓРЅРєС†РёРё Рё РїРµСЂРµРјРµРЅРЅС‹Рµ                      --
 ------------------------------------------------------------------------------
 bool_is_editor_show=false
 bool_allspawn_auto_print=false
@@ -69,7 +69,7 @@ function info_give_on_boolean(value,info,inversion)
    end
 end
 ------------------------------------------------------------------------------
---                         Редактор точек путей                             --
+--                         Р РµРґР°РєС‚РѕСЂ С‚РѕС‡РµРє РїСѓС‚РµР№                             --
 ------------------------------------------------------------------------------
 waypoint_name="default_walk"
 waypoint_points_counter=-1
@@ -177,7 +177,7 @@ function waypoint_editor:btn_print_waypoint()
    end
    waypoint_assembly=game.translate_string("\n").."["..tostring(waypoint_name).."]"..game.translate_string("\n")..waypoint_line_main..waypoint_data..waypoint_line_6
    debug_to_file("waypoints.txt",waypoint_assembly)
-   give_quick_news("Путь "..waypoint_name.." успешно создан.")
+   give_quick_news("РџСѓС‚СЊ "..waypoint_name.." СѓСЃРїРµС€РЅРѕ СЃРѕР·РґР°РЅ.")
    waypoint_line_main=""
    waypoint_points_counter=-1
    waypoint_assembly,waypoint_data="",""
@@ -191,10 +191,10 @@ function waypoint_editor:btn_close()
    bool_is_editor_show=false
 end
 ------------------------------------------------------------------------------
---                          Редактор all.spawn отладки                      --
+--                          Р РµРґР°РєС‚РѕСЂ all.spawn РѕС‚Р»Р°РґРєРё                      --
 ------------------------------------------------------------------------------
 local allspawn_cfg_radius=1
-local allspawn_cfg_counting=0 --/ Начальный отсчет секции
+local allspawn_cfg_counting=0 --/ РќР°С‡Р°Р»СЊРЅС‹Р№ РѕС‚СЃС‡РµС‚ СЃРµРєС†РёРё
 local allspawn_cfg_magazine=30
 local allspawn_cfg_prefix="nil"
 local allspawn_cfg_suffix="nil"
@@ -205,7 +205,7 @@ local allspawn_last_name="nil"
 local allspawn_last_type="nil"
 local allspawn_last_id="nil"
 local allspawn_auto_print_mode=false
-local allspawn_auto_print_delay=4000 --/ Частота авто-отладки
+local allspawn_auto_print_delay=4000 --/ Р§Р°СЃС‚РѕС‚Р° Р°РІС‚Рѕ-РѕС‚Р»Р°РґРєРё
 local allspawn_sections_panel_1 = {
 {name="space_restrictor",type="space_restrictor",id=1},
 {name="smart_terrain",type="smart_terrain",id=2}
@@ -739,7 +739,7 @@ function allspawn_editor_update()
    end
 end
 ------------------------------------------------------------------------------
---                       Загрузчик информационных блоков                    --
+--                       Р—Р°РіСЂСѓР·С‡РёРє РёРЅС„РѕСЂРјР°С†РёРѕРЅРЅС‹С… Р±Р»РѕРєРѕРІ                    --
 ------------------------------------------------------------------------------
 local information_control = nil
 class "information_block" (CUIScriptWnd)

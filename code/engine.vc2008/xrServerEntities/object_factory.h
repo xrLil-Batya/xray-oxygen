@@ -14,14 +14,14 @@
 class CObjectFactory {
 public:
 #ifndef NO_XR_GAME
-	typedef ObjectFactory::CLIENT_BASE_CLASS			CLIENT_BASE_CLASS;
+	using CLIENT_BASE_CLASS = ObjectFactory::CLIENT_BASE_CLASS;
 #endif
-	typedef ObjectFactory::SERVER_BASE_CLASS			SERVER_BASE_CLASS;
+	using SERVER_BASE_CLASS = ObjectFactory::SERVER_BASE_CLASS;
 
 #ifndef NO_XR_GAME
-	typedef ObjectFactory::CLIENT_SCRIPT_BASE_CLASS	CLIENT_SCRIPT_BASE_CLASS;
+	using CLIENT_SCRIPT_BASE_CLASS = ObjectFactory::CLIENT_SCRIPT_BASE_CLASS;
 #endif
-	typedef ObjectFactory::SERVER_SCRIPT_BASE_CLASS	SERVER_SCRIPT_BASE_CLASS;
+	using SERVER_SCRIPT_BASE_CLASS = ObjectFactory::SERVER_SCRIPT_BASE_CLASS;
 
 protected:
 	struct CObjectItemPredicate {
@@ -44,9 +44,9 @@ protected:
 	};
 
 public:
-	typedef xr_vector<CObjectItemAbstract*>		OBJECT_ITEM_STORAGE;
-	typedef OBJECT_ITEM_STORAGE::iterator		iterator;
-	typedef OBJECT_ITEM_STORAGE::const_iterator	const_iterator;
+	using OBJECT_ITEM_STORAGE = xr_vector<CObjectItemAbstract*>;
+	using iterator = OBJECT_ITEM_STORAGE::iterator;
+	using const_iterator = OBJECT_ITEM_STORAGE::const_iterator;
 
 protected:
 	mutable OBJECT_ITEM_STORAGE			m_clsids;

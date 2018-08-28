@@ -47,24 +47,24 @@ void CFoodItem::OnEvent(NET_Packet& P, u16 type)
 	}
 }
 
-void CFoodItem::BreakToPieces()
+void CFoodItem::BreakToPieces() noexcept
 {
-	//èãðàåì çâóê
+	//Ð¸Ð³Ñ€Ð°ÐµÐ¼ Ð·Ð²ÑƒÐº
 	if(bHasBreakSnd)
-		sndBreaking.play_at_pos(0, Position(), false);
+		sndBreaking.play_at_pos(nullptr, Position());
 
 	if (bIsBottele)
 	{
-		//îòûãðàòü ïàðòèêëû ðàçáèâàíèÿ
+		//Ð¾Ñ‚Ñ‹Ð³Ñ€Ð°Ñ‚ÑŒ Ð¿Ð°Ñ€Ñ‚Ð¸ÐºÐ»Ñ‹ Ñ€Ð°Ð·Ð±Ð¸Ð²Ð°Ð½Ð¸Ñ
 		if (m_sBreakParticles.size())
 		{
-			//ïîêàçûâàåì ýôôåêòû
+			//Ð¿Ð¾ÐºÐ°Ð·Ñ‹Ð²Ð°ÐµÐ¼ ÑÑ„Ñ„ÐµÐºÑ‚Ñ‹
 			CParticlesObject* pStaticPG;
-			pStaticPG = CParticlesObject::Create(m_sBreakParticles.c_str(), TRUE);
+			pStaticPG = CParticlesObject::Create(m_sBreakParticles.c_str());
 			pStaticPG->play_at_pos(Position());
 		}
 
-		//ëèêâèäèðîâàòü ñàì îáúåêò 
+		//Ð»Ð¸ÐºÐ²Ð¸Ð´Ð¸Ñ€Ð¾Ð²Ð°Ñ‚ÑŒ ÑÐ°Ð¼ Ð¾Ð±ÑŠÐµÐºÑ‚ 
 		if (Local())
 		{
 			DestroyObject();
@@ -78,13 +78,13 @@ void CFoodItem::Hit(SHit* pHDS)
 
 	if (bIsBottele && (pHDS->damage() > fBreakPower))
 	{
-		//Generate Expode event
+		//Generate Explode event
 		if (Local())
 		{
 			NET_Packet P;
 			u_EventGen(P, GE_GRENADE_EXPLODE, ID());
 			u_EventSend(P);
-		};
+		}
 	}
 }
 

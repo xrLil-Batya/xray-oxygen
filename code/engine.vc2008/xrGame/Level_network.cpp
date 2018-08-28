@@ -41,7 +41,7 @@ void CLevel::remove_objects()
 			// ugly hack for checks that update is twice on frame
 			// we need it since we do updates for checking network messages
 			++(Device.dwFrame);
-			psDeviceFlags.set(rsDisableObjectsAsCrows, TRUE);
+			psDeviceFlags.set(rsDisableObjectsAsCrows, true);
 			ClientReceive();
 			ProcessGameEvents();
 			Objects.Update(false);
@@ -136,7 +136,7 @@ void CLevel::ClientSend(bool bForce)
 {
     NET_Packet P;
     u32 start = 0;
-    while (1)
+    while (true)
     {
         P.w_begin(M_UPDATE);
         start = Objects.net_Export(&P, start, max_objects_size);

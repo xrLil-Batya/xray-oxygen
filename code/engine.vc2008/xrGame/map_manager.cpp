@@ -103,7 +103,7 @@ CMapManager::CMapManager()
 {
 	m_locations_wrapper = xr_new<CMapLocationWrapper>();
 	m_locations_wrapper->registry().init(1);
-	m_locations = NULL;
+	m_locations = nullptr;
 }
 
 CMapManager::~CMapManager()
@@ -115,7 +115,7 @@ CMapManager::~CMapManager()
 CMapLocation* CMapManager::AddMapLocation(const shared_str& spot_type, u16 id)
 {
 	CMapLocation* l = xr_new<CMapLocation>(spot_type.c_str(), id);
-	Locations().push_back( SLocationKey(spot_type, id) );
+	Locations().emplace_back( spot_type, id );
 	Locations().back().location = l;
 	if (g_actor)
 		Actor()->callback(GameObject::eMapLocationAdded)(spot_type.c_str(), id);
@@ -128,14 +128,14 @@ CMapLocation* CMapManager::AddUserLocation(const shared_str& spot_type, const sh
 	u16 _id = Level().Server->PerformIDgen(0xffff);
 	CMapLocation * l = xr_new<CMapLocation>(spot_type.c_str(), _id, true);
 	l->InitUserSpot(level_name, position);
-	Locations().push_back(SLocationKey(spot_type, _id));
+	Locations().emplace_back(spot_type, _id);
 	Locations().back().location = l;
 	return l;
 }
 
 CMapLocation* CMapManager::AddRelationLocation(CInventoryOwner* pInvOwner)
 {
-	if(!Level().CurrentViewEntity())return NULL;
+	if(!Level().CurrentViewEntity())return nullptr;
 
 	ALife::ERelationType relation = ALife::eRelationTypeFriend;
 	CInventoryOwner* pActor = smart_cast<CInventoryOwner*>(Level().CurrentViewEntity());
@@ -148,7 +148,7 @@ CMapLocation* CMapManager::AddRelationLocation(CInventoryOwner* pInvOwner)
 
 	R_ASSERT(!HasMapLocation(sname, pInvOwner->object_id()));
 	CMapLocation* l = xr_new<CRelationMapLocation>(sname, pInvOwner->object_id(), pActor->object_id());
-	Locations().push_back( SLocationKey(sname, pInvOwner->object_id()) );
+	Locations().emplace_back( sname, pInvOwner->object_id() );
 	Locations().back().location = l;
 	return l;
 }
@@ -210,14 +210,14 @@ bool CMapManager::GetMapLocationsForObject(u16 id, xr_vector<CMapLocation*>& res
 		if((*it).actual && (*it).object_id==id)
 			res.push_back((*it).location);
 	}
-	return (res.size()!=0);
+	return (!res.empty());
 }
 
 bool CMapManager::HasMapLocation(const shared_str& spot_type, u16 id)
 {
 	CMapLocation* l = GetMapLocation(spot_type, id);
 	
-	return (l!=NULL);
+	return (l!=nullptr);
 }
 
 CMapLocation* CMapManager::GetMapLocation(const shared_str& spot_type, u16 id)
@@ -227,7 +227,7 @@ CMapLocation* CMapManager::GetMapLocation(const shared_str& spot_type, u16 id)
 	if( it!=Locations().end() )
 		return (*it).location;
 	
-	return 0;
+	return nullptr;
 }
 
 void CMapManager::GetMapLocations(const shared_str& spot_type, u16 id, xr_vector<CMapLocation*>& res)

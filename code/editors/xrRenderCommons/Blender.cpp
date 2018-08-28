@@ -68,10 +68,10 @@ void IBlender::Load(IReader& fs, u16)
 	xrPREAD_PROP(fs, xrPID_MATRIX, oT_xform);
 }
 
-void IBlender::Compile(CBlender_Compile*)
+void IBlender::Compile(CBlenderCompiler*)
 {
 	//#TODO: FUCK!
 	R_ASSERT(0);
-	// 	if (C.bEditor)	C.SetParams	(oPriority.value,oStrictSorting.value?true:false);
+ 	//if (C.bEditor)	C.SetParams	(oPriority.value,oStrictSorting.value?true:false);
 	// 	else			C.SetParams	(oPriority.value,oStrictSorting.value?true:false);
 }

@@ -150,8 +150,8 @@ extern "C" {
 /* Integral types with 32 bits or more */
 #if !defined(LZO_UINT32_MAX)
 #  if (UINT_MAX >= LZO_0xffffffffL)
-     typedef unsigned int       lzo_uint32;
-     typedef int                lzo_int32;
+     using lzo_uint32 = unsigned int;
+     using lzo_int32 = int;
 #    define LZO_UINT32_MAX      UINT_MAX
 #    define LZO_INT32_MAX       INT_MAX
 #    define LZO_INT32_MIN       INT_MIN
@@ -169,8 +169,8 @@ extern "C" {
 /* lzo_uint is used like size_t */
 #if !defined(LZO_UINT_MAX)
 #  if (UINT_MAX >= LZO_0xffffffffL)
-     typedef unsigned int       lzo_uint;
-     typedef int                lzo_int;
+     using lzo_uint = unsigned int;
+     using lzo_int = int;
 #    define LZO_UINT_MAX        UINT_MAX
 #    define LZO_INT_MAX         INT_MAX
 #    define LZO_INT_MIN         INT_MIN
@@ -185,7 +185,7 @@ extern "C" {
 #  endif
 #endif
 
-typedef int lzo_bool;
+using lzo_bool = int;
 
 
 /***********************************************************************
@@ -285,48 +285,48 @@ typedef int lzo_bool;
 #endif
 
 
-typedef int
-(__LZO_ENTRY *lzo_compress_t)   ( const lzo_byte *src, lzo_uint  src_len,
+using lzo_compress_t = int
+(__LZO_ENTRY *)   ( const lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem );
 
-typedef int
-(__LZO_ENTRY *lzo_decompress_t) ( const lzo_byte *src, lzo_uint  src_len,
+using lzo_decompress_t = int
+(__LZO_ENTRY *) ( const lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem );
 
-typedef int
-(__LZO_ENTRY *lzo_optimize_t)   (       lzo_byte *src, lzo_uint  src_len,
+using lzo_optimize_t = int
+(__LZO_ENTRY *)   (       lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem );
 
-typedef int
-(__LZO_ENTRY *lzo_compress_dict_t)(const lzo_byte *src, lzo_uint  src_len,
+using lzo_compress_dict_t = int
+(__LZO_ENTRY *)(const lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem,
                                   const lzo_byte *dict, lzo_uint dict_len );
 
-typedef int
-(__LZO_ENTRY *lzo_decompress_dict_t)(const lzo_byte *src, lzo_uint  src_len,
+using lzo_decompress_dict_t = int
+(__LZO_ENTRY *)(const lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem,
                                   const lzo_byte *dict, lzo_uint dict_len );
 
 
 /* assembler versions always use __cdecl */
-typedef int
-(__LZO_CDECL *lzo_compress_asm_t)( const lzo_byte *src, lzo_uint  src_len,
+using lzo_compress_asm_t = int
+(__LZO_CDECL *)( const lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem );
 
-typedef int
-(__LZO_CDECL *lzo_decompress_asm_t)( const lzo_byte *src, lzo_uint  src_len,
+using lzo_decompress_asm_t = int
+(__LZO_CDECL *)( const lzo_byte *src, lzo_uint  src_len,
                                         lzo_byte *dst, lzo_uintp dst_len,
                                         lzo_voidp wrkmem );
 
 
 /* a progress indicator callback function */
-typedef void (__LZO_ENTRY *lzo_progress_callback_t) (lzo_uint, lzo_uint);
+using lzo_progress_callback_t = void (__LZO_ENTRY *) (lzo_uint, lzo_uint);
 
 
 /***********************************************************************

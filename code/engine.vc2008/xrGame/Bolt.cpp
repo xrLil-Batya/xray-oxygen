@@ -5,12 +5,12 @@
 #include "../xrphysics/PhysicsShell.h"
 #include "xr_level_controller.h"
 
-CBolt::CBolt(void) 
+CBolt::CBolt() 
 {
 	m_thrower_id = u16(-1);
 }
 
-CBolt::~CBolt(void) 
+CBolt::~CBolt() 
 {
 }
 

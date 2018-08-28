@@ -35,6 +35,7 @@
 #include "Weapon.h"
 #include "ZoneCampfire.h"
 #include "../xrEngine/XR_IOConsole.h"
+#include "script_callback_ex.h"
 
 extern u32 hud_adj_mode;
 
@@ -76,6 +77,19 @@ void CActor::IR_OnKeyboardPress(int cmd)
 	{
 		NoClipFly(cmd);
 		return;
+	}
+
+	// Dev actions should work only if we on developer mode (-developer)
+	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+	{
+		if (GamePersistent().IsDeveloperMode())
+		{
+			callback(GameObject::eOnActionPress)(cmd);
+		}
+	}
+	else
+	{
+		callback(GameObject::eOnActionPress)(cmd);
 	}
 
 	switch(cmd)
@@ -120,7 +134,7 @@ void CActor::IR_OnKeyboardPress(int cmd)
 			if(det_active)
 			{
 				CCustomDetector* det			= smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector				(g_player_hud->attached_item(0)!=NULL);
+				det->ToggleDetector				(g_player_hud->attached_item(0)!=nullptr);
 				return;
 			}
 		}break;
@@ -197,6 +211,19 @@ void CActor::IR_OnKeyboardRelease(int cmd)
 
 	if (g_Alive())	
 	{
+		// Dev actions should work only if we on developer mode (-developer)
+		if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+		{
+			if (GamePersistent().IsDeveloperMode())
+			{
+				callback(GameObject::eOnActionRelease)(cmd);
+			}
+		}
+		else
+		{
+			callback(GameObject::eOnActionRelease)(cmd);
+		}
+
 		if(m_holder)
 		{
 			m_holder->OnKeyboardRelease(cmd);
@@ -235,6 +262,18 @@ void CActor::IR_OnKeyboardHold(int cmd)
 	if (Remote() || !g_Alive())					return;
 	if (m_input_external_handler && !m_input_external_handler->authorized(cmd))	return;
 	if (IsTalking())							return;
+
+	if (cmd >= kDEV_ACTION1 && cmd < (kDEV_ACTION1 + 4))
+	{
+		if (GamePersistent().IsDeveloperMode())
+		{
+			callback(GameObject::eOnActionHold)(cmd);
+		}
+	}
+	else
+	{
+		callback(GameObject::eOnActionHold)(cmd);
+	}
 
 	if(m_holder)
 	{
@@ -319,10 +358,10 @@ bool CActor::use_Holder				(CHolderCustom* holder)
 		CGameObject* holderGO			= smart_cast<CGameObject*>(m_holder);
 		
 		if(smart_cast<CCar*>(holderGO))
-			b = use_Vehicle(0);
+			b = use_Vehicle(nullptr);
 		else
 			if (holderGO->CLS_ID==CLSID_OBJECT_W_STATMGUN)
-				b = use_MountedWeapon(0);
+				b = use_MountedWeapon(nullptr);
 
 		if(inventory().ActiveItem()){
 			CHudItem* hi = smart_cast<CHudItem*>(inventory().ActiveItem());
@@ -547,8 +586,8 @@ void CActor::set_input_external_handler(CActorInputHandler *handler)
 #include "ActorHelmet.h"
 void CActor::SwitchNightVision()
 {
-	CWeapon* wpn1 = NULL;
-	CWeapon* wpn2 = NULL;
+	CWeapon* wpn1 = nullptr;
+	CWeapon* wpn2 = nullptr;
 	if(inventory().ItemFromSlot(INV_SLOT_2))
 		wpn1 = smart_cast<CWeapon*>(inventory().ItemFromSlot(INV_SLOT_2));
 
@@ -666,7 +705,7 @@ void CActor::NoClipFly(int cmd)
 			if(det_active)
 			{
 				CCustomDetector* det = smart_cast<CCustomDetector*>(det_active);
-				det->ToggleDetector(g_player_hud->attached_item(0)!=NULL);
+				det->ToggleDetector(g_player_hud->attached_item(0)!=nullptr);
 				return;
 			}
 		}

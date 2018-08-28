@@ -15,15 +15,15 @@ template <
 >
 class associative_vector_compare_predicate : public _compare_predicate_type {
 private:
-	typedef _compare_predicate_type									inherited;
+	using inherited = _compare_predicate_type;
 
 public:
-	typedef _key_type												_key_type;
-	typedef _data_type												_data_type;
-	typedef _compare_predicate_type									_compare_predicate_type;
+	typedef _key_type  _key_type;
+	typedef _data_type _data_type;
+	typedef _compare_predicate_type _compare_predicate_type;
 
 public:
-    typedef std::pair<_key_type, _data_type>						value_type;
+    using value_type = std::pair<_key_type, _data_type>;
 
 public:
 	IC						associative_vector_compare_predicate	();

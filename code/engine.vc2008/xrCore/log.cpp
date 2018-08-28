@@ -10,13 +10,13 @@ static string_path			log_file_name;
 static bool 				no_log			= true;
 static std::recursive_mutex	logCS;
 
-bool __declspec(dllexport) force_flush_log = false;	// alpet: выставить в true если лог все-же записывается плохо при вылете. 
-//RvP													// Слишком частая запись лога вредит SSD и снижает производительность.
+bool __declspec(dllexport) force_flush_log = false;	// alpet: РІС‹СЃС‚Р°РІРёС‚СЊ РІ true РµСЃР»Рё Р»РѕРі РІСЃРµ-Р¶Рµ Р·Р°РїРёСЃС‹РІР°РµС‚СЃСЏ РїР»РѕС…Рѕ РїСЂРё РІС‹Р»РµС‚Рµ. 
+//RvP													// РЎР»РёС€РєРѕРј С‡Р°СЃС‚Р°СЏ Р·Р°РїРёСЃСЊ Р»РѕРіР° РІСЂРµРґРёС‚ SSD Рё СЃРЅРёР¶Р°РµС‚ РїСЂРѕРёР·РІРѕРґРёС‚РµР»СЊРЅРѕСЃС‚СЊ.
 IWriter *LogWriter;
 size_t cached_log = 0;
 
-xr_vector<shared_str>*		LogFile			= NULL;
-static LogCallback			LogCB			= 0;
+xr_vector<shared_str>*		LogFile			= nullptr;
+static LogCallback			LogCB			= nullptr;
 
 inline const size_t FlushTreshold = 32768;
 
@@ -30,9 +30,9 @@ void FlushLog()
 			IWriter *f = FS.w_open(log_file_name);
 			if (f)
 			{
-				for (u32 it = 0; it < LogFile->size(); it++) 
+				for (auto & it : *LogFile) 
 				{
-					const char* s = *((*LogFile)[it]);
+					const char* s = *it;
 					f->w_string(s ? s : "");
 				}
 				FS.w_close(f);
@@ -64,7 +64,7 @@ void AddOne(const char *split)
 		case 0x21:
 		case 0x23:
 		case 0x25:
-			split++; // пропустить первый символ, т.к. это вероятно цветовой тег
+			split++; // РїСЂРѕРїСѓСЃС‚РёС‚СЊ РїРµСЂРІС‹Р№ СЃРёРјРІРѕР», С‚.Рє. СЌС‚Рѕ РІРµСЂРѕСЏС‚РЅРѕ С†РІРµС‚РѕРІРѕР№ С‚РµРі
 			break;
 		}
 
@@ -216,7 +216,7 @@ const char* log_name			()
 
 void InitLog()
 {
-	R_ASSERT			(LogFile==NULL);
+	R_ASSERT			(LogFile==nullptr);
 	LogFile				= new xr_vector<shared_str>();
 	LogFile->reserve	(1000);
 }
@@ -245,13 +245,13 @@ void CreateLog(BOOL nl)
     }
 }
 
-void CloseLog(void)
+void CloseLog()
 {
 	FlushLog		();
  	LogFile->clear	();
 	xr_delete		(LogFile);
 }
-typedef void (WINAPI *OFFSET_UPDATER)(const char* key, u32 ofs);
+using OFFSET_UPDATER = void (WINAPI *)(const char* key, u32 ofs);
 //LuaICP_API only
 #pragma warning(disable: 4311 4302)
 void LogXrayOffset(const char* key, LPVOID base, LPVOID pval)

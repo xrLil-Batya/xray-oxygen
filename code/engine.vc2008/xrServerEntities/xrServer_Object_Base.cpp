@@ -30,7 +30,7 @@
 	{
 		NODEFAULT;
 #	ifdef DEBUG
-		return(*(IPropHelper*)0);
+		return(*(IPropHelper*)nullptr);
 #	endif
 	}
 
@@ -72,13 +72,13 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	ID							= 0xffff;
 	ID_Parent					= 0xffff;
 	ID_Phantom					= 0xffff;
-	owner						= 0;
+	owner						= nullptr;
 	m_gameType.SetDefaults		();
 //.	s_gameid					= 0;
 	s_RP						= 0xFE;			// Use supplied coords
 	s_flags.assign				(0);
 	s_name						= caSection;
-	s_name_replace				= 0;			//xr_strdup("");
+	s_name_replace				= nullptr;			//xr_strdup("");
 	o_Angle.set					(0.f,0.f,0.f);
 	o_Position.set				(0.f,0.f,0.f);
 	m_bALifeControl				= false;
@@ -87,12 +87,12 @@ CSE_Abstract::CSE_Abstract					(LPCSTR caSection)
 	m_tClassID					= TEXT2CLSID(pSettings->r_string(caSection,"class"));
 
 	m_spawn_flags.zero			();
-	m_spawn_flags.set			(flSpawnEnabled			,TRUE);
-	m_spawn_flags.set			(flSpawnOnSurgeOnly		,TRUE);
-	m_spawn_flags.set			(flSpawnSingleItemOnly	,TRUE);
-	m_spawn_flags.set			(flSpawnIfDestroyedOnly	,TRUE);
-	m_spawn_flags.set			(flSpawnInfiniteCount	,TRUE);
-	m_ini_file					= 0;
+	m_spawn_flags.set			(flSpawnEnabled			,true);
+	m_spawn_flags.set			(flSpawnOnSurgeOnly		,true);
+	m_spawn_flags.set			(flSpawnSingleItemOnly	,true);
+	m_spawn_flags.set			(flSpawnIfDestroyedOnly	,true);
+	m_spawn_flags.set			(flSpawnInfiniteCount	,true);
+	m_ini_file					= nullptr;
 	
 #if defined(LUACP_API) && defined(XRGAME_EXPORTS)
 static bool _saved = false;
@@ -109,7 +109,7 @@ static bool _saved = false;
 
 	if (pSettings->line_exist(caSection,"custom_data")) {
 		pcstr const raw_file_name	= pSettings->r_string(caSection,"custom_data");
-		IReader const* config	= 0;
+		IReader const* config	= nullptr;
 		
 #ifdef XRGAME_EXPORTS
 		if ( ai().get_alife() )
@@ -156,17 +156,17 @@ CSE_Abstract::~CSE_Abstract					()
 
 CSE_Visual* CSE_Abstract::visual			()
 {
-	return						(0);
+	return						(nullptr);
 }
 
 ISE_Shape*  CSE_Abstract::shape				()
 {
-	return						(0);
+	return						(nullptr);
 }
 
 CSE_Motion* CSE_Abstract::motion			()
 {
-	return						(0);
+	return						(nullptr);
 }
 
 CInifile &CSE_Abstract::spawn_ini			()
@@ -200,7 +200,7 @@ void CSE_Abstract::Spawn_Write				(NET_Packet	&tNetPacket, BOOL bLocal)
 	tNetPacket.w_u16			(ID_Parent		);
 	tNetPacket.w_u16			(ID_Phantom		);
 
-	s_flags.set					(M_SPAWN_VERSION,TRUE);
+	s_flags.set					(M_SPAWN_VERSION,true);
 	if (bLocal)
 		tNetPacket.w_u16		(u16(s_flags.flags|M_SPAWN_OBJECT_LOCAL) );
 	else
@@ -397,7 +397,7 @@ Flags16&	CSE_Abstract::flags			()
 xr_token game_types[]={
 	{ "any_game",				eGameIDNoGame				},
 	{ "single",					eGameIDSingle				},
-	{ 0,				0				}
+	{ nullptr,				0				}
 };
 
 #ifndef XRGAME_EXPORTS

@@ -20,27 +20,27 @@
 #include "../Include/xrRender/Kinematics.h"
 /*
 [impulse_transition_to_parts]
-random_min              =1       ; õ ìàññó îáúåêòà = âåëè÷èíà ñëó÷àéíî íàïðàâëåííîãî èìïóëüñà 
-; ñ ñëó÷àéí				î âûáðàííîé òî÷êîé ïðèëîæåíèÿ â ïðåäåëàõ íîâîãî îáåêòà
-random_hit_imp         =0.1     ; õ âåëè÷åíà õèò - èìïóëüñà =............
+random_min              =1       ; Ñ… Ð¼Ð°ÑÑÑƒ Ð¾Ð±ÑŠÐµÐºÑ‚Ð° = Ð²ÐµÐ»Ð¸Ñ‡Ð¸Ð½Ð° ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½Ð¾ Ð½Ð°Ð¿Ñ€Ð°Ð²Ð»ÐµÐ½Ð½Ð¾Ð³Ð¾ Ð¸Ð¼Ð¿ÑƒÐ»ÑŒÑÐ° 
+; Ñ ÑÐ»ÑƒÑ‡Ð°Ð¹Ð½				Ð¾ Ð²Ñ‹Ð±Ñ€Ð°Ð½Ð½Ð¾Ð¹ Ñ‚Ð¾Ñ‡ÐºÐ¾Ð¹ Ð¿Ñ€Ð¸Ð»Ð¾Ð¶ÐµÐ½Ð¸Ñ Ð² Ð¿Ñ€ÐµÐ´ÐµÐ»Ð°Ñ… Ð½Ð¾Ð²Ð¾Ð³Ð¾ Ð¾Ð±ÐµÐºÑ‚Ð°
+random_hit_imp         =0.1     ; Ñ… Ð²ÐµÐ»Ð¸Ñ‡ÐµÐ½Ð° Ñ…Ð¸Ñ‚ - Ð¸Ð¼Ð¿ÑƒÐ»ÑŒÑÐ° =............
 
-;ref_bone                       ; êîñòü èç ïî êîòîðîé îïðåäåëÿåòñÿ ñêîðîñòü äëÿ ÷àñòåé ó êîòîðûé ñâÿçü íå çàäàíà ïî óìîë÷àíèþ ðóò
-imp_transition_factor  =0.1     ; ôàêòîð ñ êîòîðûì ïðèêëàäûâàåòñÿ õèò ïî èñõîäíîìó îáúåêòó êî âñåì ÷àñòÿì 
-lv_transition_factor   =1       ; êîýôôèöèåíò ïåðåäà÷è ëèíåéíîé ñêîðîñòè
-av_transition_factor   =1       ; êîýôôèöèåíò ïåðåäà÷è óãëîâîé ñêîðîñòè
+;ref_bone                       ; ÐºÐ¾ÑÑ‚ÑŒ Ð¸Ð· Ð¿Ð¾ ÐºÐ¾Ñ‚Ð¾Ñ€Ð¾Ð¹ Ð¾Ð¿Ñ€ÐµÐ´ÐµÐ»ÑÐµÑ‚ÑÑ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚ÑŒ Ð´Ð»Ñ Ñ‡Ð°ÑÑ‚ÐµÐ¹ Ñƒ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¹ ÑÐ²ÑÐ·ÑŒ Ð½Ðµ Ð·Ð°Ð´Ð°Ð½Ð° Ð¿Ð¾ ÑƒÐ¼Ð¾Ð»Ñ‡Ð°Ð½Ð¸ÑŽ Ñ€ÑƒÑ‚
+imp_transition_factor  =0.1     ; Ñ„Ð°ÐºÑ‚Ð¾Ñ€ Ñ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ð¼ Ð¿Ñ€Ð¸ÐºÐ»Ð°Ð´Ñ‹Ð²Ð°ÐµÑ‚ÑÑ Ñ…Ð¸Ñ‚ Ð¿Ð¾ Ð¸ÑÑ…Ð¾Ð´Ð½Ð¾Ð¼Ñƒ Ð¾Ð±ÑŠÐµÐºÑ‚Ñƒ ÐºÐ¾ Ð²ÑÐµÐ¼ Ñ‡Ð°ÑÑ‚ÑÐ¼ 
+lv_transition_factor   =1       ; ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ð¸ Ð»Ð¸Ð½ÐµÐ¹Ð½Ð¾Ð¹ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸
+av_transition_factor   =1       ; ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ð¸ ÑƒÐ³Ð»Ð¾Ð²Ð¾Ð¹ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸
 
 
 [impulse_transition_from_source_bone]
 source_bone            =0       ; ref_bone
-imp_transition_factor  =1       ; êîýôôèöèåíò ïåðåäà÷è èìïóëüñà     
-lv_transition_factor   =1       ; êîýôôèöèåíò ïåðåäà÷è ëèíåéíîé ñêîðîñòè 
-av_transition_factor   =1       ; êîýôôèöèåíò ïåðåäà÷è óãëîâîé ñêîðîñòè
+imp_transition_factor  =1       ; ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ð¸ Ð¸Ð¼Ð¿ÑƒÐ»ÑŒÑÐ°     
+lv_transition_factor   =1       ; ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ð¸ Ð»Ð¸Ð½ÐµÐ¹Ð½Ð¾Ð¹ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸ 
+av_transition_factor   =1       ; ÐºÐ¾ÑÑ„Ñ„Ð¸Ñ†Ð¸ÐµÐ½Ñ‚ Ð¿ÐµÑ€ÐµÐ´Ð°Ñ‡Ð¸ ÑƒÐ³Ð»Ð¾Ð²Ð¾Ð¹ ÑÐºÐ¾Ñ€Ð¾ÑÑ‚Ð¸
 
 */
 CPHDestroyable::CPHDestroyable()
 {
 	m_flags.flags=0;
-	m_flags.set(fl_released,TRUE);
+	m_flags.set(fl_released,true);
 	m_depended_objects=0;
 }
 /////////spawn object representing destroyed item//////////////////////////////////////////////////////////////////////////////////
@@ -141,37 +141,36 @@ void CPHDestroyable::Destroy(u16 source_id/*=u16(-1)*/,LPCSTR section/*="ph_skel
 	obj->processing_activate();
 	if(source_id==obj->ID())
 	{
-		m_flags.set(fl_released,FALSE);
+		m_flags.set(fl_released,false);
 	}
 	xr_vector<shared_str>::iterator i=m_destroyed_obj_visual_names.begin(),e=m_destroyed_obj_visual_names.end();
 
 		for(;e!=i;i++)
 			GenSpawnReplace(source_id,section,*i);
 ///////////////////////////////////////////////////////////////////////////
-	m_flags.set(fl_destroyed,TRUE);
-	return;
+	m_flags.set(fl_destroyed,true);
 }
 
 void CPHDestroyable::Load(CInifile* ini,LPCSTR section)
 {
-	m_flags.set(fl_destroyable,FALSE);
+	m_flags.set(fl_destroyable,false);
 	if(ini->line_exist(section,"destroyed_vis_name")){
-		m_flags.set(fl_destroyable,TRUE);
-		m_destroyed_obj_visual_names.push_back(ini->r_string(section,"destroyed_vis_name"));
+		m_flags.set(fl_destroyable,true);
+		m_destroyed_obj_visual_names.emplace_back(ini->r_string(section,"destroyed_vis_name"));
 	}else{
 		CInifile::Sect& data		= ini->r_section(section);
-		if(data.Data.size()>0) m_flags.set(fl_destroyable,TRUE);
+		if(!data.Data.empty()) m_flags.set(fl_destroyable,true);
 		for (CInifile::Item I: data.Data)
 			if(I.first.size())		m_destroyed_obj_visual_names.push_back(I.first);
 	}
 }
 void CPHDestroyable::Load(LPCSTR section)
 {
-	m_flags.set(fl_destroyable,FALSE);
+	m_flags.set(fl_destroyable,false);
 
 	if(pSettings->line_exist(section,"destroyed_vis_name")){
-		m_flags.set								(fl_destroyable,TRUE);
-		m_destroyed_obj_visual_names.push_back	(pSettings->r_string(section,"destroyed_vis_name"));
+		m_flags.set								(fl_destroyable,true);
+		m_destroyed_obj_visual_names.emplace_back	(pSettings->r_string(section,"destroyed_vis_name"));
 	}
 }
 
@@ -182,8 +181,8 @@ void CPHDestroyable::Init()
 
 void CPHDestroyable::RespawnInit()
 {
-	m_flags.set(fl_destroyed,FALSE);
-	m_flags.set(fl_released,TRUE);
+	m_flags.set(fl_destroyed,false);
+	m_flags.set(fl_released,true);
 	m_destroyed_obj_visual_names.clear();
 	m_notificate_objects.clear();
 	m_depended_objects=0;
@@ -340,7 +339,7 @@ void CPHDestroyable::NotificateDestroy(CPHDestroyableNotificate *dn)
 		for(;i<e;i++)NotificatePart(*i);
 		PhysicallyRemoveSelf();
 		m_notificate_objects.clear();
-		m_flags.set(fl_released,TRUE);
+		m_flags.set(fl_released,true);
 	}
 
 }

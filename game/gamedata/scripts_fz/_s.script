@@ -1,13 +1,13 @@
 --[[ ------------------------------------------------------------------------------------------------
  File       : _s_sandbox.script
- Description: Система, позволяющая организовывать event-driven модель с делегированием событий
- Copyright  : 2012-2014 © FrostyTech
- Author     : Viнt@rь (по материалам xStream - xs_sandbox)
- Last edit  : 31.05.2018 (Viнt@rь)
+ Description: РЎРёСЃС‚РµРјР°, РїРѕР·РІРѕР»СЏСЋС‰Р°СЏ РѕСЂРіР°РЅРёР·РѕРІС‹РІР°С‚СЊ event-driven РјРѕРґРµР»СЊ СЃ РґРµР»РµРіРёСЂРѕРІР°РЅРёРµРј СЃРѕР±С‹С‚РёР№
+ Copyright  : 2012-2014 В© FrostyTech
+ Author     : ViРЅt@rСЊ (РїРѕ РјР°С‚РµСЂРёР°Р»Р°Рј xStream - xs_sandbox)
+ Last edit  : 31.05.2018 (ViРЅt@rСЊ)
 --]] ------------------------------------------------------------------------------------------------
--- prefetch("_s_utils") -- подключение модулЯ
+-- prefetch("_s_utils") -- РїРѕРґРєР»СЋС‡РµРЅРёРµ РјРѕРґСѓР»РЇ
 -- local log function for implementing enabling/disabling logging for script
--- TODO в релиз не совать!!!!!!!!!!
+-- TODO РІ СЂРµР»РёР· РЅРµ СЃРѕРІР°С‚СЊ!!!!!!!!!!
 local _log = function(msg, ...)
 	if debug_values["debug_init"] then
 		if ReadVar(script_name(), true) then
@@ -79,7 +79,7 @@ local function Trigger(event)
 		events_process[#events_process + 1] = event -- for hang debug (set for note)
 		
 		local index = 1
-		while callbacks[index] and not event.__break do -- цикл обработки события
+		while callbacks[index] and not event.__break do -- С†РёРєР» РѕР±СЂР°Р±РѕС‚РєРё СЃРѕР±С‹С‚РёСЏ
 			if callbacks[index].bind then
 				callbacks[index].func(callbacks[index].bind, event)
 			else
@@ -88,7 +88,7 @@ local function Trigger(event)
 			
 			if event.__remove then
 				event.__remove = nil
-				table.remove(callbacks, index) -- remove collected callbacks from stack (отписка)
+				table.remove(callbacks, index) -- remove collected callbacks from stack (РѕС‚РїРёСЃРєР°)
 			else
 				index = index + 1
 			end
@@ -102,7 +102,7 @@ local function Trigger(event)
 	end
 end
 
-local function HangingCallbacks() -- проверка: имеетсЯ незавершенное событие?
+local function HangingCallbacks() -- РїСЂРѕРІРµСЂРєР°: РёРјРµРµС‚СЃРЇ РЅРµР·Р°РІРµСЂС€РµРЅРЅРѕРµ СЃРѕР±С‹С‚РёРµ?
 	local _precondition = function()
 		return next(events_process)
 	end
@@ -117,11 +117,11 @@ local function HangingCallbacks() -- проверка: имеетсЯ незавершенное событие?
 			hud:AddCustomStatic("sh_err", true)
 			hud_static = hud:GetCustomStatic("sh_err"):wnd()
 		end
-		hud_static:TextControl():SetText("ВНИМАНИЕ! ПРОИЗОШЛО ЗАВИСАНИЕ ЛОГИКИ!!!")--]]
+		hud_static:TextControl():SetText("Р’РќРРњРђРќРР•! РџР РћРР—РћРЁР›Рћ Р—РђР’РРЎРђРќРР• Р›РћР“РРљР!!!")--]]
 		
 		--_abort("EvntHangedCB:Lost_Callback(%s)~>FATAL_ERROR!", #events_process)
 	end
-	--/ устанавливаем сторожевой коллбэк (проверка 'зависших' вызовов)
+	--/ СѓСЃС‚Р°РЅР°РІР»РёРІР°РµРј СЃС‚РѕСЂРѕР¶РµРІРѕР№ РєРѕР»Р»Р±СЌРє (РїСЂРѕРІРµСЂРєР° 'Р·Р°РІРёСЃС€РёС…' РІС‹Р·РѕРІРѕРІ)
 	level.add_call(_precondition, _action)
 end
 
@@ -221,12 +221,12 @@ end
 --/											Callback`s
 --]] ------------------------------------------------------------------------------------------------
 --[[
---	Callback на смерть актора
+--	Callback РЅР° СЃРјРµСЂС‚СЊ Р°РєС‚РѕСЂР°
 --]]
 function OnActorDeath()
 	_log("* OnActorDeath")
 	local camera_direction = device().cam_dir
-	db.actor:set_actor_direction(camera_direction.x, camera_direction.y, 0)	-- выравниваем направление взглЯда, чтобы было падение более реалистичным
+	db.actor:set_actor_direction(camera_direction.x, camera_direction.y, 0)	-- РІС‹СЂР°РІРЅРёРІР°РµРј РЅР°РїСЂР°РІР»РµРЅРёРµ РІР·РіР»РЇРґР°, С‡С‚РѕР±С‹ Р±С‹Р»Рѕ РїР°РґРµРЅРёРµ Р±РѕР»РµРµ СЂРµР°Р»РёСЃС‚РёС‡РЅС‹Рј
  	level.add_cam_effector("camera_effects\\surge_02.anm", 2532, false, "")
 	CreateGameTimer("level.add_pp_effector('surge_fade.ppe', 2011, false)", 2):Start(true)
 	CreateGameTimer("level.add_pp_effector('black.ppe', 4467, false)", 22):Once(false):Start(true)

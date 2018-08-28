@@ -133,7 +133,7 @@ public:
 	}
 	virtual void run()
 	{
-		//äîáàâèòü îòìåòêó íà ìàòåðèàëå
+		//Ð´Ð¾Ð±Ð°Ð²Ð¸Ñ‚ÑŒ Ð¾Ñ‚Ð¼ÐµÑ‚ÐºÑƒ Ð½Ð° Ð¼Ð°Ñ‚ÐµÑ€Ð¸Ð°Ð»Ðµ
 		::Render->add_StaticWallmark(pWallmarkShader,pos, 
 			0.09f, T,
 			Level().ObjectSpace.GetStaticVerts());
@@ -188,7 +188,7 @@ void play_particles(float vel_cret, dxGeomUserData* data,  const dContactGeom* c
 template<class Pars>
 void TContactShotMark(CDB::TRI* T,dContactGeom* c)
 {
-	dxGeomUserData* data	=0;
+	dxGeomUserData* data	=nullptr;
 	float vel_cret			=0;
 	bool b_invert_normal	=false;
 	if(!ContactShotMarkGetEffectPars( c, data, vel_cret, b_invert_normal ))
@@ -220,7 +220,7 @@ void TContactShotMark(CDB::TRI* T,dContactGeom* c)
 						if(!mtl_pair->CollideSounds.empty())
 						{
 							float volume=collide_volume_min+vel_cret*(collide_volume_max-collide_volume_min)/(_sqrt(mass_limit)*default_l_limit-Pars::vel_cret_sound);
-							GET_RANDOM(mtl_pair->CollideSounds).play_no_feedback(0,0,0,((Fvector*)c->pos),&volume);
+							GET_RANDOM(mtl_pair->CollideSounds).play_no_feedback(nullptr,0,0,((Fvector*)c->pos),&volume);
 						}
 					}
 				}

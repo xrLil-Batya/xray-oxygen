@@ -17,9 +17,9 @@ float STEP=0.02f;
 
 CHelicopter::CHelicopter()
 {
-	m_pParticle		= NULL;
-	m_light_render	= NULL;
-	m_lanim			= NULL;
+	m_pParticle		= nullptr;
+	m_light_render	= nullptr;
+	m_lanim			= nullptr;
 
 	ISpatial*		self				=	smart_cast<ISpatial*> (this);
 	if (self)		self->spatial.type  |=  STYPE_VISIBLEFORAI;
@@ -47,10 +47,10 @@ void CHelicopter::init()
 	m_tgt_rot.set				(0.0f,0.0f);
 	m_bind_rot.set				(0.0f,0.0f);
 
-	m_allow_fire				= FALSE;
-	m_use_rocket_on_attack		= TRUE;
-	m_use_mgun_on_attack		= TRUE;	
-	m_syncronize_rocket			= TRUE;
+	m_allow_fire				= false;
+	m_use_rocket_on_attack		= true;
+	m_use_mgun_on_attack		= true;	
+	m_syncronize_rocket			= true;
 	m_min_rocket_dist			= 20.0f;
 	m_max_rocket_dist			= 200.0f;
 	m_time_between_rocket_attack = 0;

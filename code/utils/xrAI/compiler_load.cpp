@@ -114,7 +114,7 @@ void xrLoad(LPCSTR name, bool draft_mode)
 		{
 			strconcat(sizeof(N),N,name,"build.prj");
 			IReader* fs = FS.r_open (N);
-			R_ASSERT2(fs, "There is no file 'build.prj'!"); // Вот этот вылет никогда раньше не мог появится, хоть и был всё время
+			R_ASSERT2(fs, "There is no file 'build.prj'!"); // Р’РѕС‚ СЌС‚РѕС‚ РІС‹Р»РµС‚ РЅРёРєРѕРіРґР° СЂР°РЅСЊС€Рµ РЅРµ РјРѕРі РїРѕСЏРІРёС‚СЃСЏ, С…РѕС‚СЊ Рё Р±С‹Р» РІСЃС‘ РІСЂРµРјСЏ
 
 			// Version
 			u32 version;

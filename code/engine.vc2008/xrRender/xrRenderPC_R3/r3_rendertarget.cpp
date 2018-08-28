@@ -17,6 +17,7 @@
 #include "blender_rain_drops.h"
 #include "blender_ssss_mrmnwar.h"
 #include "blender_ssss_ogse.h"
+#include "blender_gamma.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -269,9 +270,10 @@ CRenderTarget::CRenderTarget		()
 	b_combine						= xr_new<CBlender_combine>				();
 	b_ssao							= xr_new<CBlender_SSAO_noMSAA>			();
 	b_fxaa							= xr_new<CBlender_FXAA>					();
-	b_rain_drops					 = xr_new<CBlender_rain_drops>			();
+	b_rain_drops					= xr_new<CBlender_rain_drops>			();
 	b_ssss_mrmnwar					= xr_new<CBlender_ssss_mrmnwar>			();
 	b_ssss_ogse						= xr_new<CBlender_ssss_ogse>			();
+	b_gamma							= xr_new<CBlender_gamma>				();
 
 	if( RImplementation.o.dx10_msaa )
 	{
@@ -633,6 +635,13 @@ CRenderTarget::CRenderTarget		()
 		t_envmap_1.create			(r2_T_envs1);
 	}
 
+	// Gamma correction 
+	{
+		// RT, used as look up table
+		rt_GammaLUT.create			(r2_RT_gamma_lut, 256, 1, D3DFMT_A8R8G8B8);
+		s_gamma.create				(b_gamma);
+	}
+
 	// Build textures
 	{
 		// Testure for async sreenshots
@@ -742,130 +751,128 @@ CRenderTarget::CRenderTarget		()
 			t_material->surface_set		(t_material_surf);
 		}
 
-		// Build noise table
-		if (1)
+		// Build noise table		
+		static const int sampleSize = 4;
+		u32	tempData[TEX_jitter_count][TEX_jitter*TEX_jitter];
+
+		D3D10_TEXTURE2D_DESC	desc;
+		desc.Width = TEX_jitter;
+		desc.Height = TEX_jitter;
+		desc.MipLevels = 1;
+		desc.ArraySize = 1;
+		desc.SampleDesc.Count = 1;
+		desc.SampleDesc.Quality = 0;
+		desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
+		desc.Usage = D3D10_USAGE_DEFAULT;
+		desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+		desc.CPUAccessFlags = 0;
+		desc.MiscFlags = 0;
+
+		D3D10_SUBRESOURCE_DATA	subData[TEX_jitter_count];
+		
+		for (int it=0; it<TEX_jitter_count-1; it++)
 		{
-			static const int sampleSize = 4;
-			u32	tempData[TEX_jitter_count][TEX_jitter*TEX_jitter];
+			subData[it].pSysMem = tempData[it];
+			subData[it].SysMemPitch = desc.Width*sampleSize;
+		}
 
-			D3D10_TEXTURE2D_DESC	desc;
-			desc.Width = TEX_jitter;
-			desc.Height = TEX_jitter;
-			desc.MipLevels = 1;
-			desc.ArraySize = 1;
-			desc.SampleDesc.Count = 1;
-			desc.SampleDesc.Quality = 0;
-			desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
-			desc.Usage = D3D10_USAGE_DEFAULT;
-			desc.BindFlags = D3D10_BIND_SHADER_RESOURCE;
-			desc.CPUAccessFlags = 0;
-			desc.MiscFlags = 0;
-
-			D3D10_SUBRESOURCE_DATA	subData[TEX_jitter_count];
-			
-			for (int it=0; it<TEX_jitter_count-1; it++)
+		// Fill it,
+		for (u32 y=0; y<TEX_jitter; y++)
+		{
+			for (u32 x=0; x<TEX_jitter; x++)
 			{
-				subData[it].pSysMem = tempData[it];
-				subData[it].SysMemPitch = desc.Width*sampleSize;
-			}
-
-			// Fill it,
-			for (u32 y=0; y<TEX_jitter; y++)
-			{
-				for (u32 x=0; x<TEX_jitter; x++)
+				DWORD	data	[TEX_jitter_count-1];
+				generate_jitter	(data,TEX_jitter_count-1);
+				for (u32 it=0; it<TEX_jitter_count-1; it++)
 				{
-					DWORD	data	[TEX_jitter_count-1];
-					generate_jitter	(data,TEX_jitter_count-1);
-					for (u32 it=0; it<TEX_jitter_count-1; it++)
-					{
-						u32*	p	=	(u32*)	
-							(LPBYTE (subData[it].pSysMem) 
-							+ y*subData[it].SysMemPitch 
-							+ x*4);
-
-						*p	=	data	[it];
-					}
-				}
-			}
-
-			for (int it=0; it<TEX_jitter_count-1; it++)
-			{
-				string_path					name;
-				xr_sprintf						(name,"%s%d",r2_jitter,it);
-				R_CHK( HW.pDevice->CreateTexture2D(&desc, &subData[it], &t_noise_surf[it]) );
-				t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
-				t_noise[it]->surface_set	(t_noise_surf[it]);
-			}
-
-			float tempDataHBAO[TEX_jitter*TEX_jitter*4];
-
-			// generate HBAO jitter texture (last)
-			D3D10_TEXTURE2D_DESC	descHBAO;
-			descHBAO.Width = TEX_jitter;
-			descHBAO.Height = TEX_jitter;
-			descHBAO.MipLevels = 1;
-			descHBAO.ArraySize = 1;
-			descHBAO.SampleDesc.Count = 1;
-			descHBAO.SampleDesc.Quality = 0;
-			descHBAO.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			descHBAO.Usage = D3D10_USAGE_DEFAULT;
-			descHBAO.BindFlags = D3D10_BIND_SHADER_RESOURCE;
-			descHBAO.CPUAccessFlags = 0;
-			descHBAO.MiscFlags = 0;
-			
-			const auto it = TEX_jitter_count-1;
-			subData[it].pSysMem = tempDataHBAO;
-			subData[it].SysMemPitch = descHBAO.Width*sampleSize * sizeof(float);
-			
-			// Fill it,
-			for (u32 y=0; y<TEX_jitter; y++)
-			{
-				for (u32 x=0; x<TEX_jitter; x++)
-				{
-					float numDir = 1.0f;
-					switch (ps_r_ssao)
-					{
-					case 1: numDir = 4.0f; break;
-					case 2: numDir = 6.0f; break;
-					case 3: numDir = 8.0f; break;
-					case 4: numDir = 8.0f; break;
-					}
-					float angle = 2 * PI * ::Random.randF(0.0f, 1.0f) / numDir;
-					float dist = ::Random.randF(0.0f, 1.0f);
-
-					float *p	=	(float*)	
+					u32*	p	=	(u32*)	
 						(LPBYTE (subData[it].pSysMem) 
 						+ y*subData[it].SysMemPitch 
-						+ x*4*sizeof(float));
-					*p = (float)(_cos(angle));
-					*(p+1) = (float)(_sin(angle));
-					*(p+2) = (float)(dist);
-					*(p+3) = 0;
+						+ x*4);
+
+					*p	=	data	[it];
 				}
-			}			
-			
-			string_path					name;
-			xr_sprintf						(name,"%s%d",r2_jitter,it);
-			R_CHK( HW.pDevice->CreateTexture2D(&descHBAO, &subData[it], &t_noise_surf[it]) );
-			t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
-			t_noise[it]->surface_set	(t_noise_surf[it]);
-
-
-			//	Create noise mipped
-			{
-				//	Autogen mipmaps
-				desc.MipLevels = 0;
-				R_CHK( HW.pDevice->CreateTexture2D(&desc, 0, &t_noise_surf_mipped) );
-				t_noise_mipped = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_mipped);
-				t_noise_mipped->surface_set(t_noise_surf_mipped);
-
-				//	Update texture. Generate mips.
-
-				HW.pDevice->CopySubresourceRegion( t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, 0 );
-	
-				D3DX10FilterTexture(t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
 			}
 		}
+
+		for (int it=0; it<TEX_jitter_count-1; it++)
+		{
+			string_path					name;
+			xr_sprintf						(name,"%s%d",r2_jitter,it);
+			R_CHK( HW.pDevice->CreateTexture2D(&desc, &subData[it], &t_noise_surf[it]) );
+			t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
+			t_noise[it]->surface_set	(t_noise_surf[it]);
+		}
+
+		float tempDataHBAO[TEX_jitter*TEX_jitter*4];
+
+		// generate HBAO jitter texture (last)
+		D3D10_TEXTURE2D_DESC	descHBAO;
+		descHBAO.Width = TEX_jitter;
+		descHBAO.Height = TEX_jitter;
+		descHBAO.MipLevels = 1;
+		descHBAO.ArraySize = 1;
+		descHBAO.SampleDesc.Count = 1;
+		descHBAO.SampleDesc.Quality = 0;
+		descHBAO.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		descHBAO.Usage = D3D10_USAGE_DEFAULT;
+		descHBAO.BindFlags = D3D10_BIND_SHADER_RESOURCE;
+		descHBAO.CPUAccessFlags = 0;
+		descHBAO.MiscFlags = 0;
+		
+		const auto it = TEX_jitter_count-1;
+		subData[it].pSysMem = tempDataHBAO;
+		subData[it].SysMemPitch = descHBAO.Width*sampleSize * sizeof(float);
+		
+		// Fill it,
+		for (u32 y=0; y<TEX_jitter; y++)
+		{
+			for (u32 x=0; x<TEX_jitter; x++)
+			{
+				float numDir = 1.0f;
+				switch (ps_r_ssao)
+				{
+				case 1: numDir = 4.0f; break;
+				case 2: numDir = 6.0f; break;
+				case 3: numDir = 8.0f; break;
+				case 4: numDir = 8.0f; break;
+				}
+				float angle = 2 * PI * ::Random.randF(0.0f, 1.0f) / numDir;
+				float dist = ::Random.randF(0.0f, 1.0f);
+
+				float *p	=	(float*)	
+					(LPBYTE (subData[it].pSysMem) 
+					+ y*subData[it].SysMemPitch 
+					+ x*4*sizeof(float));
+				*p = (float)(_cos(angle));
+				*(p+1) = (float)(_sin(angle));
+				*(p+2) = (float)(dist);
+				*(p+3) = 0;
+			}
+		}			
+		
+		string_path					name;
+		xr_sprintf						(name,"%s%d",r2_jitter,it);
+		R_CHK( HW.pDevice->CreateTexture2D(&descHBAO, &subData[it], &t_noise_surf[it]) );
+		t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
+		t_noise[it]->surface_set	(t_noise_surf[it]);
+
+
+		//	Create noise mipped
+		{
+			//	Autogen mipmaps
+			desc.MipLevels = 0;
+			R_CHK( HW.pDevice->CreateTexture2D(&desc, 0, &t_noise_surf_mipped) );
+			t_noise_mipped = dxRenderDeviceRender::Instance().Resources->_CreateTexture(r2_jitter_mipped);
+			t_noise_mipped->surface_set(t_noise_surf_mipped);
+
+			//	Update texture. Generate mips.
+
+			HW.pDevice->CopySubresourceRegion( t_noise_surf_mipped, 0, 0, 0, 0, t_noise_surf[0], 0, 0 );
+	
+			D3DX10FilterTexture(t_noise_surf_mipped, 0, D3DX10_FILTER_POINT);
+		}
+		
 	}
 
 	// PP
@@ -969,6 +976,7 @@ CRenderTarget::~CRenderTarget	()
    }
 	xr_delete					(b_accum_mask			);
 	xr_delete					(b_occq					);
+	xr_delete					(b_gamma				);
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)
@@ -1046,13 +1054,14 @@ bool CRenderTarget::use_minmax_sm_this_frame()
 
 }
 
-void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
+	u32 Offset	= 0;
 	float d_Z	= EPS_S;
 	float d_W	= 1.0f;
-	u32	C		= color_rgba(255, 255, 255, 255);
+	u32	C		= color_rgba(0, 0, 0, 255);
 
-    u_setrt				(rt, nullptr, nullptr, HW.pBaseZB);
+    u_setrt				(w, h, rt, nullptr, nullptr, HW.pBaseZB);
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(FALSE);
  
@@ -1071,12 +1080,9 @@ void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, re
 	}
     RCache.set_Geometry	(g_combine);
     RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
-
-	if (bCopyRT && rt == rt_Generic)
-		HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
 }
 
-void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ref_rt &rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
-	render_screen_quad(w, h, Offset, rt_Generic, sh, bCopyRT, consts);
+	RenderScreenQuad(w, h, rt->pRT, sh, consts);
 }

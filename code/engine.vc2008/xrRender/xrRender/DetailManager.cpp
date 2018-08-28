@@ -49,11 +49,11 @@ void bwdithermap	(int levels, int magic[16][16])
 	*/
 
     float	magicfact = (N - 1) / 16;
-    for ( int i = 0; i < 4; i++ )
-		for ( int j = 0; j < 4; j++ )
-			for ( int k = 0; k < 4; k++ )
-				for ( int l = 0; l < 4; l++ )
-					magic[4*k+i][4*l+j] =
+	for (int i = 0; i < 4; i++)
+		for (int j = 0; j < 4; j++)
+			for (int k = 0; k < 4; k++)
+				for (int l = 0; l < 4; l++)
+					magic[4 * k + i][4 * l + j] =
 					(int)(0.5 + magic4x4[i][j] * magicfact +
 					(magic4x4[k][l] / 16.) * magicfact);
 }
@@ -110,12 +110,17 @@ CDetailManager::CDetailManager	()
 
 	cache_pool = (Slot *)Memory.mem_alloc(dm_cache_size * sizeof(Slot));
 	for (u32 i = 0; i < dm_cache_size; ++i)
-		new (&(cache_pool[i])) Slot();	
+		new (&(cache_pool[i])) Slot();
 	
 }
 
 CDetailManager::~CDetailManager	()
 {
+	if (dtFS)
+	{
+		FS.r_close(dtFS);
+	}
+
 	for (u32 i = 0; i < dm_cache_size; ++i)
 		cache_pool[i].~Slot();
 	Memory.mem_free(cache_pool);
@@ -131,6 +136,7 @@ CDetailManager::~CDetailManager	()
 		Memory.mem_free(cache_level1[i]);
 	}
 	Memory.mem_free(cache_level1);
+	dtFS = nullptr;
 }
 
 #ifndef _EDITOR
@@ -139,7 +145,7 @@ void CDetailManager::Load		()
 	// Open file stream
 	if (!FS.exist("$level$","level.details"))
 	{
-		dtFS	= NULL;
+		dtFS = nullptr;
 		return;
 	}
 
@@ -195,20 +201,21 @@ void CDetailManager::Load		()
 	swing_desc[1].speed	= pSettings->r_float("details","swing_fast_speed");
 }
 #endif
-void CDetailManager::Unload		()
+void CDetailManager::Unload()
 {
-	if (UseVS())	hw_Unload	();
-	else			soft_Unload	();
+	if (UseVS())	hw_Unload();
+	else			soft_Unload();
 
-	for (DetailIt it=objects.begin(); it!=objects.end(); it++){
+	for (DetailIt it = objects.begin(); it != objects.end(); it++) {
 		(*it)->Unload();
-		xr_delete		(*it);
-    }
-	objects.clear		();
-	m_visibles[0].clear	();
-	m_visibles[1].clear	();
-	m_visibles[2].clear	();
-	FS.r_close			(dtFS);
+		xr_delete(*it);
+	}
+	objects.clear();
+	m_visibles[0].clear();
+	m_visibles[1].clear();
+	m_visibles[2].clear();
+	FS.r_close(dtFS);
+	dtFS = nullptr;
 }
 
 extern ECORE_API float r_ssaDISCARD;

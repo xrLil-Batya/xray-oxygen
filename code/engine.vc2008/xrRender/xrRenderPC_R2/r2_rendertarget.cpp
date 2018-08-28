@@ -16,6 +16,7 @@
 #include "blender_smaa.h"
 #include "blender_ssss_mrmnwar.h"
 #include "blender_ssss_ogse.h"
+#include "blender_gamma.h"
 
 #include "../xrRender/dxRenderDeviceRender.h"
 
@@ -218,6 +219,7 @@ CRenderTarget::CRenderTarget		()
 	b_smaa                          = xr_new<CBlender_SMAA>                 ();
 	b_ssss_mrmnwar					= xr_new<CBlender_ssss_mrmnwar>			();
 	b_ssss_ogse						= xr_new<CBlender_ssss_ogse>			();
+	b_gamma							= xr_new<CBlender_gamma>				();
 
 	//	NORMAL
 	{
@@ -459,6 +461,13 @@ CRenderTarget::CRenderTarget		()
 		t_envmap_1.create			(r2_T_envs1);
 	}
 
+	// Gamma correction 
+	{
+		// RT, used as look up table
+		rt_GammaLUT.create			(r2_RT_gamma_lut, 256, 1, D3DFMT_A8R8G8B8);
+		s_gamma.create				(b_gamma);
+	}
+
 	// Build textures
 	{
 		// Build material(s)
@@ -527,75 +536,74 @@ CRenderTarget::CRenderTarget		()
 		}
 
 		// Build noise table
-		if (1)
+		
+		// Surfaces
+		D3DLOCKED_RECT				R[TEX_jitter_count];
+		for (int it1=0; it1<TEX_jitter_count-1; it1++)
 		{
-			// Surfaces
-			D3DLOCKED_RECT				R[TEX_jitter_count];
-			for (int it1=0; it1<TEX_jitter_count-1; it1++)
-			{
-				string_path					name;
-				xr_sprintf						(name,"%s%d",r2_jitter,it1);
-				R_CHK	(D3DXCreateTexture	(HW.pDevice,TEX_jitter,TEX_jitter,1,0,D3DFMT_Q8W8V8U8,D3DPOOL_MANAGED,&t_noise_surf[it1]));
-				t_noise[it1]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
-				t_noise[it1]->surface_set	(t_noise_surf[it1]);
-				R_CHK						(t_noise_surf[it1]->LockRect	(0,&R[it1],0,0));
-			}	
+			string_path					name;
+			xr_sprintf						(name,"%s%d",r2_jitter,it1);
+			R_CHK	(D3DXCreateTexture	(HW.pDevice,TEX_jitter,TEX_jitter,1,0,D3DFMT_Q8W8V8U8,D3DPOOL_MANAGED,&t_noise_surf[it1]));
+			t_noise[it1]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
+			t_noise[it1]->surface_set	(t_noise_surf[it1]);
+			R_CHK						(t_noise_surf[it1]->LockRect	(0,&R[it1],0,0));
+		}	
 
-			// Fill it,
-			for (u32 y=0; y<TEX_jitter; y++)
+		// Fill it,
+		for (u32 y=0; y<TEX_jitter; y++)
+		{
+			for (u32 x=0; x<TEX_jitter; x++)
 			{
-				for (u32 x=0; x<TEX_jitter; x++)
+				DWORD	data	[TEX_jitter_count-1];
+				generate_jitter	(data,TEX_jitter_count-1);
+				for (u32 it2=0; it2<TEX_jitter_count-1; it2++)
 				{
-					DWORD	data	[TEX_jitter_count-1];
-					generate_jitter	(data,TEX_jitter_count-1);
-					for (u32 it2=0; it2<TEX_jitter_count-1; it2++)
-					{
-						u32*	p	=	(u32*)	(LPBYTE (R[it2].pBits) + y*R[it2].Pitch + x*4);
-								*p	=	data	[it2];
-					}
+					u32*	p	=	(u32*)	(LPBYTE (R[it2].pBits) + y*R[it2].Pitch + x*4);
+							*p	=	data	[it2];
 				}
 			}
-			
-			for (int it3=0; it3<TEX_jitter_count-1; it3++)	{
-				R_CHK						(t_noise_surf[it3]->UnlockRect(0));
-			}		
-
-			// generate HBAO jitter texture (last)
-			int it = TEX_jitter_count - 1;
-			string_path					name;
-			xr_sprintf						(name,"%s%d",r2_jitter,it);
-			R_CHK	(D3DXCreateTexture	(HW.pDevice,TEX_jitter,TEX_jitter,1,0,D3DFMT_A32B32G32R32F,D3DPOOL_MANAGED,&t_noise_surf[it]));
-			t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
-			t_noise[it]->surface_set	(t_noise_surf[it]);
-			R_CHK						(t_noise_surf[it]->LockRect	(0,&R[it],0,0));
-			
-			// Fill it,
-			for (u32 y=0; y<TEX_jitter; y++)
-			{
-				for (u32 x=0; x<TEX_jitter; x++)
-				{
-					float numDir = 1.0f;
-					switch (ps_r_ssao)
-					{
-						case 1: numDir = 4.0f; break;
-						case 2: numDir = 6.0f; break;
-						case 3: numDir = 8.0f; break;
-					}
-					float angle = 2 * PI * ::Random.randF(0.0f, 1.0f) / numDir;
-					float dist = ::Random.randF(0.0f, 1.0f);
-					//float dest[4];
-					
-					float*	p	=	(float*)	(LPBYTE (R[it].pBits) + y*R[it].Pitch + x*4*sizeof(float));
-					*p = (float)(_cos(angle));
-					*(p+1) = (float)(_sin(angle));
-					*(p+2) = (float)(dist);
-					*(p+3) = 0;
-					
-					//generate_hbao_jitter	(data,TEX_jitter*TEX_jitter);
-				}
-			}			
-			R_CHK						(t_noise_surf[it]->UnlockRect(0));
 		}
+		
+		for (int it3=0; it3<TEX_jitter_count-1; it3++)	{
+			R_CHK						(t_noise_surf[it3]->UnlockRect(0));
+		}		
+
+		// generate HBAO jitter texture (last)
+		int it = TEX_jitter_count - 1;
+		string_path					name;
+		xr_sprintf						(name,"%s%d",r2_jitter,it);
+		R_CHK	(D3DXCreateTexture	(HW.pDevice,TEX_jitter,TEX_jitter,1,0,D3DFMT_A32B32G32R32F,D3DPOOL_MANAGED,&t_noise_surf[it]));
+		t_noise[it]					= dxRenderDeviceRender::Instance().Resources->_CreateTexture	(name);
+		t_noise[it]->surface_set	(t_noise_surf[it]);
+		R_CHK						(t_noise_surf[it]->LockRect	(0,&R[it],0,0));
+		
+		// Fill it,
+		for (u32 y=0; y<TEX_jitter; y++)
+		{
+			for (u32 x=0; x<TEX_jitter; x++)
+			{
+				float numDir = 1.0f;
+				switch (ps_r_ssao)
+				{
+					case 1: numDir = 4.0f; break;
+					case 2: numDir = 6.0f; break;
+					case 3: numDir = 8.0f; break;
+				}
+				float angle = 2 * PI * ::Random.randF(0.0f, 1.0f) / numDir;
+				float dist = ::Random.randF(0.0f, 1.0f);
+				//float dest[4];
+				
+				float*	p	=	(float*)	(LPBYTE (R[it].pBits) + y*R[it].Pitch + x*4*sizeof(float));
+				*p = (float)(_cos(angle));
+				*(p+1) = (float)(_sin(angle));
+				*(p+2) = (float)(dist);
+				*(p+3) = 0;
+				
+				//generate_hbao_jitter	(data,TEX_jitter*TEX_jitter);
+			}
+		}			
+		R_CHK						(t_noise_surf[it]->UnlockRect(0));
+		
 	}
 
 	// PP
@@ -682,6 +690,7 @@ CRenderTarget::~CRenderTarget	()
 	xr_delete                   (b_rain_drops           );
 	xr_delete					(b_ssss_mrmnwar			);
     xr_delete                   (b_ssss_ogse			);
+	xr_delete					(b_gamma				);
 }
 
 void CRenderTarget::reset_light_marker( bool bResetStencil)
@@ -733,16 +742,17 @@ bool CRenderTarget::need_to_render_sunshafts()
 	return true;
 }
 
-void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ID3DRenderTargetView* rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
+	u32 Offset	= 0;
 	float d_Z	= EPS_S;
 	float d_W	= 1.0f;
-	u32	C		= color_rgba(255, 255, 255, 255);
+	u32	C		= color_rgba(0, 0, 0, 255);
 	Fvector2 p0, p1;
 	p0.set(0.5f/w, 0.5f/h);
 	p1.set((w+0.5f)/w, (h+0.5f)/h);
 
-    u_setrt				(rt, nullptr, nullptr, HW.pBaseZB);
+    u_setrt				(w, h, rt, nullptr, nullptr, HW.pBaseZB);
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(FALSE);
  
@@ -763,7 +773,7 @@ void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_rt &rt, re
     RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 }
 
-void CRenderTarget::render_screen_quad(u32 w, u32 h, u32 &Offset, ref_selement &sh, bool bCopyRT, xr_unordered_map<LPCSTR, Fvector4*>* consts)
+void CRenderTarget::RenderScreenQuad(u32 w, u32 h, ref_rt &rt, ref_selement &sh, xr_unordered_map<LPCSTR, Fvector4*>* consts)
 {
-	render_screen_quad(w, h, Offset, rt_Generic_0, sh, bCopyRT, consts);
+	RenderScreenQuad(w, h, rt->pRT, sh, consts);
 }

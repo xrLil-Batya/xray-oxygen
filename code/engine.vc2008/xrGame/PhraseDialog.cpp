@@ -20,9 +20,9 @@ CPhraseDialog::CPhraseDialog()
 {
 	m_SaidPhraseID		= "";
 	m_bFinished			= false;
-	m_pSpeakerFirst		= 0;
-	m_pSpeakerSecond	= 0;
-	m_DialogId			= 0;
+	m_pSpeakerFirst		= nullptr;
+	m_pSpeakerSecond	= nullptr;
+	m_DialogId			= nullptr;
 }
 
 CPhraseDialog::~CPhraseDialog()
@@ -53,7 +53,7 @@ bool CPhraseDialog::DialogForceReload(bool reload_flag)
 	return data()->b_bForceReload;
 }
 
-//îáíóëÿåì âñå ñâÿçè
+//Ð¾Ð±Ð½ÑƒÐ»ÑÐµÐ¼ Ð²ÑÐµ ÑÐ²ÑÐ·Ð¸
 void CPhraseDialog::Reset ()
 {
 }
@@ -75,7 +75,7 @@ CPhraseDialogManager* CPhraseDialog::OtherSpeaker	()	const
 	return (!FirstIsSpeaking())?m_pSpeakerFirst:m_pSpeakerSecond;
 }
 
-//ïðåäèêàò äëÿ ñîðòèðîâêè âåêòîðà ôðàç
+//Ð¿Ñ€ÐµÐ´Ð¸ÐºÐ°Ñ‚ Ð´Ð»Ñ ÑÐ¾Ñ€Ñ‚Ð¸Ñ€Ð¾Ð²ÐºÐ¸ Ð²ÐµÐºÑ‚Ð¾Ñ€Ð° Ñ„Ñ€Ð°Ð·
 static bool PhraseGoodwillPred(const CPhrase* phrase1, const CPhrase* phrase2)
 {
 	return phrase1->GoodwillLevel()>phrase2->GoodwillLevel();
@@ -99,12 +99,12 @@ bool CPhraseDialog::SayPhrase(DIALOG_SHARED_PTR& phrase_dialog, const shared_str
 
 	CPhrase* last_phrase = phrase_vertex->data();
 
-	//âûçâàòü ñêðèïòîâóþ ïðèñîåäèíåííóþ ôóíêöèþ 
-	//àêòèâèðóåòñÿ ïîñëå ñêàçàííîé ôðàçû
-	//ïåðâûé ïàðàìåòð - òîò êòî ãîâîðèò ôðàçó, âòîðîé - òîò êòî ñëóøàåò
+	//Ð²Ñ‹Ð·Ð²Ð°Ñ‚ÑŒ ÑÐºÑ€Ð¸Ð¿Ñ‚Ð¾Ð²ÑƒÑŽ Ð¿Ñ€Ð¸ÑÐ¾ÐµÐ´Ð¸Ð½ÐµÐ½Ð½ÑƒÑŽ Ñ„ÑƒÐ½ÐºÑ†Ð¸ÑŽ 
+	//Ð°ÐºÑ‚Ð¸Ð²Ð¸Ñ€ÑƒÐµÑ‚ÑÑ Ð¿Ð¾ÑÐ»Ðµ ÑÐºÐ°Ð·Ð°Ð½Ð½Ð¾Ð¹ Ñ„Ñ€Ð°Ð·Ñ‹
+	//Ð¿ÐµÑ€Ð²Ñ‹Ð¹ Ð¿Ð°Ñ€Ð°Ð¼ÐµÑ‚Ñ€ - Ñ‚Ð¾Ñ‚ ÐºÑ‚Ð¾ Ð³Ð¾Ð²Ð¾Ñ€Ð¸Ñ‚ Ñ„Ñ€Ð°Ð·Ñƒ, Ð²Ñ‚Ð¾Ñ€Ð¾Ð¹ - Ñ‚Ð¾Ñ‚ ÐºÑ‚Ð¾ ÑÐ»ÑƒÑˆÐ°ÐµÑ‚
 	last_phrase->GetScriptHelper()->Action(pSpeakerGO1, pSpeakerGO2, *phrase_dialog->m_DialogId, phrase_id.c_str());
 
-	//áîëüøå íåò ôðàç, ÷òîá ãîâîðèòü
+	//Ð±Ð¾Ð»ÑŒÑˆÐµ Ð½ÐµÑ‚ Ñ„Ñ€Ð°Ð·, Ñ‡Ñ‚Ð¾Ð± Ð³Ð¾Ð²Ð¾Ñ€Ð¸Ñ‚ÑŒ
 	phrase_dialog->m_PhraseVector.clear();
 	if (phrase_vertex->edges().empty())
 	{
@@ -112,7 +112,7 @@ bool CPhraseDialog::SayPhrase(DIALOG_SHARED_PTR& phrase_dialog, const shared_str
 	}
 	else
 	{
-		//îáíîâèòü ñïèñîê ôðàç, êîòîðûå ñåé÷àñ ñìîæåò ãîâîðèòü ñîáåñåäíèê
+		//Ð¾Ð±Ð½Ð¾Ð²Ð¸Ñ‚ÑŒ ÑÐ¿Ð¸ÑÐ¾Ðº Ñ„Ñ€Ð°Ð·, ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ ÑÐµÐ¹Ñ‡Ð°Ñ ÑÐ¼Ð¾Ð¶ÐµÑ‚ Ð³Ð¾Ð²Ð¾Ñ€Ð¸Ñ‚ÑŒ ÑÐ¾Ð±ÐµÑÐµÐ´Ð½Ð¸Ðº
 		for (auto it : phrase_vertex->edges())
 		{
 			const CPhraseGraph::CEdge& edge = it;
@@ -135,11 +135,11 @@ bool CPhraseDialog::SayPhrase(DIALOG_SHARED_PTR& phrase_dialog, const shared_str
 		}
 		R_ASSERT2(!phrase_dialog->m_PhraseVector.empty(), make_string("No available phrase to say, dialog[%s]", *phrase_dialog->m_DialogId));
 
-		//óïîðÿäî÷èòü ñïèñêî ïî óáûâàíèþ áëàãîñêëîííîñòè
+		//ÑƒÐ¿Ð¾Ñ€ÑÐ´Ð¾Ñ‡Ð¸Ñ‚ÑŒ ÑÐ¿Ð¸ÑÐºÐ¾ Ð¿Ð¾ ÑƒÐ±Ñ‹Ð²Ð°Ð½Ð¸ÑŽ Ð±Ð»Ð°Ð³Ð¾ÑÐºÐ»Ð¾Ð½Ð½Ð¾ÑÑ‚Ð¸
 		std::sort(phrase_dialog->m_PhraseVector.begin(), phrase_dialog->m_PhraseVector.end(), PhraseGoodwillPred);
 	}
-	//ñîîáùèòü CDialogManager, ÷òî ñêàçàíà ôðàçà
-	//è îæèäàåòñÿ îòâåò
+	//ÑÐ¾Ð¾Ð±Ñ‰Ð¸Ñ‚ÑŒ CDialogManager, Ñ‡Ñ‚Ð¾ ÑÐºÐ°Ð·Ð°Ð½Ð° Ñ„Ñ€Ð°Ð·Ð°
+	//Ð¸ Ð¾Ð¶Ð¸Ð´Ð°ÐµÑ‚ÑÑ Ð¾Ñ‚Ð²ÐµÑ‚
 	if (first_is_speaking)	phrase_dialog->SecondSpeaker()->ReceivePhrase(phrase_dialog);
 	else					phrase_dialog->FirstSpeaker()->ReceivePhrase(phrase_dialog);
 
@@ -160,7 +160,7 @@ const char* CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool curr
 
 	CGameObject*	pSpeakerGO1 = (current_speaking) ? smart_cast<CGameObject*>(FirstSpeaker()) : 0;
 	CGameObject*	pSpeakerGO2 = (current_speaking) ? smart_cast<CGameObject*>(SecondSpeaker()) : 0;
-	CGameObject*	pSpeakerGO  = 0;
+	CGameObject*	pSpeakerGO  = nullptr;
 	
 	if( smart_cast<CActor*>(pSpeakerGO1) )
 	{
@@ -174,7 +174,7 @@ const char* CPhraseDialog::GetPhraseText	(const shared_str& phrase_id, bool curr
 		bool functor_exists = ai().script_engine().functor(ph->m_script_text_id.c_str(), lua_function);
 		THROW3(functor_exists, "Cannot find function", ph->m_script_text_id.c_str());
 
-		ph->m_script_text_val = lua_function((pSpeakerGO) ? pSpeakerGO->lua_game_object() : 0, m_DialogId.c_str(), phrase_id.c_str());
+		ph->m_script_text_val = lua_function((pSpeakerGO) ? pSpeakerGO->lua_game_object() : nullptr, m_DialogId.c_str(), phrase_id.c_str());
 		return ph->m_script_text_val.c_str();
 	}
 	else
@@ -217,14 +217,14 @@ void CPhraseDialog::load_shared	(const char*)
 	pXML->SetLocalRoot(dialog_node);
 	SetPriority(pXML->ReadAttribInt(dialog_node, "priority", 0));
 
-	//çàãîëîâîê 
-	SetCaption(pXML->Read(dialog_node, "caption", 0, 0));
-	//ïðîâåðêà ðåëîàäà äèàëîãà			(Winsor)
+	//Ð·Ð°Ð³Ð¾Ð»Ð¾Ð²Ð¾Ðº 
+	SetCaption(pXML->Read(dialog_node, "caption", 0, nullptr));
+	//Ð¿Ñ€Ð¾Ð²ÐµÑ€ÐºÐ° Ñ€ÐµÐ»Ð¾Ð°Ð´Ð° Ð´Ð¸Ð°Ð»Ð¾Ð³Ð°			(Winsor)
 	DialogForceReload(pXML->ReadAttribInt(dialog_node, "force_reload", 0) == 1 ? true : false);
-	//ïðåäèêàòû íà÷àëà äèàëîãà
+	//Ð¿Ñ€ÐµÐ´Ð¸ÐºÐ°Ñ‚Ñ‹ Ð½Ð°Ñ‡Ð°Ð»Ð° Ð´Ð¸Ð°Ð»Ð¾Ð³Ð°
 	data()->m_ScriptDialogHelper.Load(pXML, dialog_node);
 
-	//çàïîëíèòü ãðàô äèàëîãà ôðàçàìè
+	//Ð·Ð°Ð¿Ð¾Ð»Ð½Ð¸Ñ‚ÑŒ Ð³Ñ€Ð°Ñ„ Ð´Ð¸Ð°Ð»Ð¾Ð³Ð° Ñ„Ñ€Ð°Ð·Ð°Ð¼Ð¸
 	data()->m_PhraseGraph.clear();
 
 	XML_NODE* phrase_list_node = pXML->NavigateToNode(dialog_node, "phrase_list", 0);
@@ -249,7 +249,7 @@ void CPhraseDialog::load_shared	(const char*)
 	THROW3(wrong_phrase_id.empty(), *item_data.id, wrong_phrase_id.c_str());
 #endif	
 
-	//èùåì ñòàðòîâóþ ôðàçó
+	//Ð¸Ñ‰ÐµÐ¼ ÑÑ‚Ð°Ñ€Ñ‚Ð¾Ð²ÑƒÑŽ Ñ„Ñ€Ð°Ð·Ñƒ
 	XML_NODE* phrase_node	= pXML->NavigateToNodeWithAttribute("phrase", "id", "0");
 	THROW					(phrase_node);
 	AddPhrase				(pXML, phrase_node, "0", "");
@@ -267,7 +267,7 @@ void CPhraseDialog::SetPriority	(int val)
 
 CPhrase* CPhraseDialog::AddPhrase	(const char* text, const shared_str& phrase_id, const shared_str& prev_phrase_id, int goodwil_level)
 {
-	CPhrase* phrase					= 0;
+	CPhrase* phrase					= nullptr;
 	CPhraseGraph::CVertex* _vertex	= data()->m_PhraseGraph.vertex(phrase_id);
 	if(!_vertex) 
 	{
@@ -300,7 +300,7 @@ void CPhraseDialog::AddPhrase	(CUIXml* pXml, XML_NODE* phrase_node, const shared
 	
 	ph->GetScriptHelper()->Load				(pXml, phrase_node);
 
-	//ôðàçû êîòîðûå ñîáåñåäíèê ìîæåò ãîâîðèòü ïîñëå ýòîé
+	//Ñ„Ñ€Ð°Ð·Ñ‹ ÐºÐ¾Ñ‚Ð¾Ñ€Ñ‹Ðµ ÑÐ¾Ð±ÐµÑÐµÐ´Ð½Ð¸Ðº Ð¼Ð¾Ð¶ÐµÑ‚ Ð³Ð¾Ð²Ð¾Ñ€Ð¸Ñ‚ÑŒ Ð¿Ð¾ÑÐ»Ðµ ÑÑ‚Ð¾Ð¹
 	int next_num = pXml->GetNodesNum(phrase_node, "next");
 	for(int i=0; i<next_num; ++i)
 	{
@@ -340,28 +340,28 @@ using namespace luabind;
 
 void CDialogScriptHelper::AddPrecondition(LPCSTR str)
 {
-	m_Preconditions.push_back(str);
+	m_Preconditions.emplace_back(str);
 }
 void CDialogScriptHelper::AddAction(LPCSTR str)
 {
-	m_ScriptActions.push_back(str);
+	m_ScriptActions.emplace_back(str);
 }
 void CDialogScriptHelper::AddHasInfo(LPCSTR str)
 {
-	m_HasInfo.push_back(str);
+	m_HasInfo.emplace_back(str);
 }
 void CDialogScriptHelper::AddDontHasInfo(LPCSTR str)
 {
-	m_DontHasInfo.push_back(str);
+	m_DontHasInfo.emplace_back(str);
 }
 void CDialogScriptHelper::AddGiveInfo(LPCSTR str)
 {
-	m_GiveInfo.push_back(str);
+	m_GiveInfo.emplace_back(str);
 }
 
 void CDialogScriptHelper::AddDisableInfo(LPCSTR str)
 {
-	m_DisableInfo.push_back(str);
+	m_DisableInfo.emplace_back(str);
 }
 
 #pragma optimize("s",on)

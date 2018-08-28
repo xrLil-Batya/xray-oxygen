@@ -133,10 +133,10 @@ void CWeaponKnife::KnifeStrike(const Fvector& pos, const Fvector& dir)
 				m_dbg_data.m_targets_vectors));
 #endif
 		float tmp_k_hit = 1.0f;
-		for (shot_targets_t::const_iterator i = dest_hits.begin(), ie = dest_hits.end(); i != ie; ++i)
+		for (Fvector dest_hit : dest_hits)
 		{
 			Fvector shot_dir;
-			shot_dir.set(*i).sub(pos).normalize();
+			shot_dir.set(dest_hit).sub(pos).normalize();
 			MakeShot(pos, shot_dir, tmp_k_hit);
 			tmp_k_hit *= m_NextHitDivideFactor;
 		}
@@ -155,8 +155,8 @@ void CWeaponKnife::MakeShot(Fvector const & pos, Fvector const & dir, float cons
 	cartridge.param_s.kHit			= k_hit;
 	cartridge.param_s.kImpulse		= 1.0f;
 	cartridge.param_s.kAP			= EPS_L;
-	cartridge.m_flags.set			(CCartridge::cfTracer, FALSE);
-	cartridge.m_flags.set			(CCartridge::cfRicochet, FALSE);
+	cartridge.m_flags.set			(CCartridge::cfTracer, false);
+	cartridge.m_flags.set			(CCartridge::cfRicochet, false);
 	cartridge.param_s.fWallmarkSize	= fWallmarkSize;
 	cartridge.bullet_material_idx	= knife_material_idx;
 
@@ -465,17 +465,17 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const &
 	camendpos2.set(camera_endpos).mul(basis_vector);
 
 	CCF_Skeleton::ElementVec const & elems_vec = tmp_skeleton->_GetElements();
-	for (CCF_Skeleton::ElementVec::const_iterator i = elems_vec.begin(), ie = elems_vec.end(); i != ie; ++i)
+	for (const auto & i : elems_vec)
 	{
 		Fvector		tmp_pos;
-		i->center(tmp_pos);
+		i.center(tmp_pos);
 		tmp_pos.mul(basis_vector);
 		//float basis_proj = tmp_pos.dotproduct(basis_vector);
 		float bone_dist = tmp_pos.distance_to_sqr(camendpos2);
 		if (bone_dist < max_dist)
 		{
 			victim_bone_data	tmp_bone_data;
-			tmp_bone_data.m_bone_element	= &(*i);
+			tmp_bone_data.m_bone_element	= &i;
 			tmp_bone_data.m_victim_id		= entity->ID();
 			tmp_bone_data.m_shots_count		= 0;
 			dest_shapes.push_back(std::make_pair(tmp_bone_data, bone_dist));
@@ -486,7 +486,7 @@ void CWeaponKnife::fill_shapes_list(CEntityAlive const * entity, Fvector const &
 void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres, Fsphere const & query, shot_targets_t & dest_shots)
 {
 	m_victims_hits_count.clear();
-	for (victims_shapes_list_t::iterator i = victims_shapres.begin(), ie = victims_shapres.end(); i != ie; ++i)
+	for (auto & victims_shapre : victims_shapres)
 	{
 		if (dest_shots.capacity() <= dest_shots.size())
 			return;
@@ -496,7 +496,7 @@ void CWeaponKnife::fill_shots_list(victims_shapes_list_t & victims_shapres, Fsph
 #ifdef DEBUG
 		m_dbg_data.m_target_boxes.clear();
 #endif
-		victim_bone_data & curr_bone = i->first;
+		victim_bone_data & curr_bone = victims_shapre.first;
 		switch (curr_bone.m_bone_element->type)
 		{
 		case SBoneShape::stBox:
@@ -600,8 +600,8 @@ u32 CWeaponKnife::SelectHitsToShot(shot_targets_t & dst_dirs, Fvector const & f_
 	create_victims_list(m_spartial_query_res, tmp_victims_list);
 
 	u32 summ_shapes_count = 0;
-	for (victims_list_t::const_iterator i = tmp_victims_list.begin(), ie = tmp_victims_list.end(); i != ie; ++i)
-		summ_shapes_count += get_entity_bones_count(*i);
+	for (CEntityAlive*& i : tmp_victims_list)
+		summ_shapes_count += get_entity_bones_count(i);
 	
 	victims_shapes_list_t	tmp_shapes_list(
 		_alloca(summ_shapes_count * sizeof(victims_shapes_list_t::value_type)),
@@ -614,8 +614,8 @@ u32 CWeaponKnife::SelectHitsToShot(shot_targets_t & dst_dirs, Fvector const & f_
 	parent_xform.transform_dir(basis_vector);
 	basis_vector.normalize();
 	
-	for (victims_list_t::const_iterator i = tmp_victims_list.begin(), ie = tmp_victims_list.end(); i != ie; ++i)
-		fill_shapes_list(*i, fendpos, tmp_shapes_list);
+	for (CEntityAlive*& i : tmp_victims_list)
+		fill_shapes_list(i, fendpos, tmp_shapes_list);
 	
 	std::sort(tmp_shapes_list.begin(), tmp_shapes_list.end(), shapes_compare_predicate);
 	fill_shots_list(tmp_shapes_list, query_sphere, dst_dirs);
@@ -638,7 +638,7 @@ bool CWeaponKnife::SelectBestHitVictim(Fvector const & f_pos, Fmatrix & parent_x
 	query_sphere.set(fendpos_dest, m_splash_radius);
 
 #ifdef DEBUG
-	m_dbg_data.m_spheres.push_back(std::make_pair(fendpos_dest, m_splash_radius));
+	m_dbg_data.m_spheres.emplace_back(fendpos_dest, m_splash_radius);
 #endif
 
 	m_spartial_query_res.clear();
@@ -646,7 +646,7 @@ bool CWeaponKnife::SelectBestHitVictim(Fvector const & f_pos, Fmatrix & parent_x
 	
 	if ((m_eHitType == m_eHitType_2) && (!m_spartial_query_res.empty()))
 	{
-		spartial_base_t::value_type		tmp_best_victim = NULL;
+		spartial_base_t::value_type		tmp_best_victim = nullptr;
 		best_victim_selector			tmp_selector(tmp_parent->ID(),
 			fendpos_dest, spartial_prefetch_radius, tmp_best_victim);
 		std::for_each(m_spartial_query_res.begin(), m_spartial_query_res.end(), tmp_selector);
@@ -729,7 +729,7 @@ bool CWeaponKnife::victim_filter::operator()(spartial_base_t::value_type const &
 CWeaponKnife::best_victim_selector::best_victim_selector(u16 except_id, Fvector const & pos, float const query_distance, spartial_base_t::value_type & dest_result) 
 	: m_except_id(except_id), m_start_pos(pos), m_query_distance(query_distance), m_dest_result(dest_result)
 {
-	m_dest_result = NULL;
+	m_dest_result = nullptr;
 }
 
 CWeaponKnife::best_victim_selector::best_victim_selector(best_victim_selector const & copy) :

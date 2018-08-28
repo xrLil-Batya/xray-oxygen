@@ -194,7 +194,7 @@ void CRender::ScreenshotImpl	(ScreenshotMode mode, LPCSTR name, CMemoryWriter* m
 										g_pGameLevel->name().c_str()
 										: "mainmenu");
 					ID3DBlob* saved		= 0;
-//#VERTVER: TGA - формат без сжатия, который идентичен по алгоритмам отображения
+//#VERTVER: TGA - С„РѕСЂРјР°С‚ Р±РµР· СЃР¶Р°С‚РёСЏ, РєРѕС‚РѕСЂС‹Р№ РёРґРµРЅС‚РёС‡РµРЅ РїРѕ Р°Р»РіРѕСЂРёС‚РјР°Рј РѕС‚РѕР±СЂР°Р¶РµРЅРёСЏ
 #ifdef USE_DX11
 					CHK_DX				(D3DX11SaveTextureToMemory(HW.pContext,
 										pSrcTexture,

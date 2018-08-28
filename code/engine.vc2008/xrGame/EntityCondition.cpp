@@ -75,7 +75,7 @@ CEntityCondition::CEntityCondition(CEntityAlive *object)
 	m_fDeltaPsyHealth		= 0;
 
 	m_fHealthLost			= 0.f;
-	m_pWho					= NULL;
+	m_pWho					= nullptr;
 	m_iWhoID				= 0;
 
 	m_WoundVector.clear		();
@@ -92,7 +92,7 @@ CEntityCondition::CEntityCondition(CEntityAlive *object)
 	m_bCanBeHarmed			= true;
 }
 
-CEntityCondition::~CEntityCondition(void)
+CEntityCondition::~CEntityCondition()
 {
 	ClearWounds				();
 }
@@ -157,7 +157,7 @@ void CEntityCondition::reinit	()
 	m_fDeltaPsyHealth		= 0;
 
 	m_fHealthLost			= 0.f;
-	m_pWho					= NULL;
+	m_pWho					= nullptr;
 	m_iWhoID				= NULL;
 
 	ClearWounds				();
@@ -197,7 +197,7 @@ void CEntityCondition::ChangeEntityMorale(const float value)
 
 void CEntityCondition::ChangeBleeding(const float percent)
 {
-	//затянуть раны
+	//Р·Р°С‚СЏРЅСѓС‚СЊ СЂР°РЅС‹
 	for(auto it = m_WoundVector.begin(); m_WoundVector.end() != it; ++it)
 	{
 		(*it)->Incarnation			(percent, m_fMinWoundSize);
@@ -218,7 +218,7 @@ bool RemoveWoundPred(CWound* pWound)
 
 void  CEntityCondition::UpdateWounds		()
 {
-	//убрать все зашившие раны из списка
+	//СѓР±СЂР°С‚СЊ РІСЃРµ Р·Р°С€РёРІС€РёРµ СЂР°РЅС‹ РёР· СЃРїРёСЃРєР°
 	m_WoundVector.erase(
 		std::remove_if(
 			m_WoundVector.begin(),
@@ -257,7 +257,7 @@ void CEntityCondition::UpdateConditionTime()
 	m_iLastTimeCalled			= _cur_time;
 }
 
-//вычисление параметров с ходом игрового времени
+//РІС‹С‡РёСЃР»РµРЅРёРµ РїР°СЂР°РјРµС‚СЂРѕРІ СЃ С…РѕРґРѕРј РёРіСЂРѕРІРѕРіРѕ РІСЂРµРјРµРЅРё
 void CEntityCondition::UpdateCondition()
 {
 	if(GetHealth()<=0)			return;
@@ -361,10 +361,10 @@ float CEntityCondition::HitPowerEffect(float power_loss)
 
 CWound* CEntityCondition::AddWound(float hit_power, ALife::EHitType hit_type, u16 element)
 {
-	//максимальное число косточек 64
+	//РјР°РєСЃРёРјР°Р»СЊРЅРѕРµ С‡РёСЃР»Рѕ РєРѕСЃС‚РѕС‡РµРє 64
 	VERIFY(element  < 64 || BI_NONE == element);
 
-	//запомнить кость по которой ударили и силу удара
+	//Р·Р°РїРѕРјРЅРёС‚СЊ РєРѕСЃС‚СЊ РїРѕ РєРѕС‚РѕСЂРѕР№ СѓРґР°СЂРёР»Рё Рё СЃРёР»Сѓ СѓРґР°СЂР°
     auto it = m_WoundVector.begin();
 	for(;it != m_WoundVector.end(); it++)
 	{
@@ -372,16 +372,16 @@ CWound* CEntityCondition::AddWound(float hit_power, ALife::EHitType hit_type, u1
 			break;
 	}
 	
-	CWound* pWound = NULL;
+	CWound* pWound = nullptr;
 
-	//новая рана
+	//РЅРѕРІР°СЏ СЂР°РЅР°
 	if (it == m_WoundVector.end())
 	{
 		pWound = xr_new<CWound>(element);
 		pWound->AddHit(hit_power*::Random.randF(0.5f,1.5f), hit_type);
 		m_WoundVector.push_back(pWound);
 	}
-	//старая 
+	//СЃС‚Р°СЂР°СЏ 
 	else
 	{
 		pWound = *it;
@@ -394,9 +394,9 @@ CWound* CEntityCondition::AddWound(float hit_power, ALife::EHitType hit_type, u1
 
 CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 {
-	//кто нанес последний хит
+	//РєС‚Рѕ РЅР°РЅРµСЃ РїРѕСЃР»РµРґРЅРёР№ С…РёС‚
 	m_pWho = pHDS->who;
-	m_iWhoID = (NULL != pHDS->who) ? pHDS->who->ID() : 0;
+	m_iWhoID = (nullptr != pHDS->who) ? pHDS->who->ID() : 0;
 
 	bool const is_special_hit_2_self		=	(pHDS->who == m_object) && (pHDS->boneID == BI_NONE);
 
@@ -452,7 +452,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 		hit_power			*= GetHitImmunity(pHDS->hit_type)-m_fBoostRadiationImmunity;
 		m_fDeltaRadiation	+= hit_power;
 		bAddWound			=  false;
-		return NULL;
+		return nullptr;
 		break;
 	case ALife::eHitTypeExplosion:
 		hit_power *= GetHitImmunity(pHDS->hit_type)-m_fBoostExplImmunity;
@@ -491,7 +491,7 @@ CWound* CEntityCondition::ConditionHit(SHit* pHDS)
 		Msg("%s hitted in %s with %f[%f]", m_object->Name(), 
 			smart_cast<IKinematics*>(m_object->Visual())->LL_BoneName_dbg(pHDS->boneID), m_fHealthLost*100.0f, hit_power_org);
 	}
-	//раны добавляются только живому
+	//СЂР°РЅС‹ РґРѕР±Р°РІР»СЏСЋС‚СЃСЏ С‚РѕР»СЊРєРѕ Р¶РёРІРѕРјСѓ
 	if( bAddWound && GetHealth()>0 )
 	{
 		return AddWound(hit_power*m_fWoundBoneScale, pHDS->hit_type, pHDS->boneID);
@@ -593,11 +593,11 @@ void CEntityCondition::load	(IReader &input_packet)
 		ClearWounds();
 		m_WoundVector.resize(input_packet.r_u8());
 		if(!m_WoundVector.empty())
-			for(u32 i=0; i<m_WoundVector.size(); i++)
+			for(auto & i : m_WoundVector)
 			{
 				CWound* pWound = xr_new<CWound>(BI_NONE);
 				pWound->load(input_packet);
-				m_WoundVector[i] = pWound;
+				i = pWound;
 			}
 	}
 }
@@ -655,7 +655,7 @@ void SMedicineInfluenceValues::Load(const shared_str& sect)
 	fHealth			= pSettings->r_float(sect.c_str(), "eat_health");
 	fPower			= pSettings->r_float(sect.c_str(), "eat_power");
 	fSatiety		= pSettings->r_float(sect.c_str(), "eat_satiety");
-    if (GamePersistent().m_useThirst)
+    if (g_extraFeatures.is(GAME_EXTRA_THIRST))
     {
 	    fThirst			= pSettings->r_float(sect.c_str(), "eat_thirst");
     }

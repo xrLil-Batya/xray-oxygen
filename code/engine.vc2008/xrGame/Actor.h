@@ -76,12 +76,16 @@ class	CActor:
 {
 	friend class CActorCondition;
 private:
-	typedef CEntityAlive inherited;
+	using inherited = CEntityAlive;
+	static void							MtSecondActorUpdate(void* pActorPointer);
+public:
+	HANDLE								MtSecondUpdaterEventStart;
+	HANDLE								MtSecondUpdaterEventEnd;
+	std::recursive_mutex				MtFeelTochMutex;
 public:
 										CActor				();
 	virtual								~CActor				();
 
-public:
 	virtual BOOL						AlwaysTheCrow				()						{ return TRUE; }
 
 	virtual CAttachmentOwner*			cast_attachment_owner		()						{return this;}
@@ -184,13 +188,13 @@ public:
 
 public:
 
-	//свойства артефактов
+	//СЃРІРѕР№СЃС‚РІР° Р°СЂС‚РµС„Р°РєС‚РѕРІ
 	virtual void						UpdateArtefactsOnBeltAndOutfit();
 			float						HitArtefactsOnBelt		(float hit_power, ALife::EHitType hit_type);
 			float						GetProtection_ArtefactsOnBelt(ALife::EHitType hit_type);
 
 protected:
-	//звук тяжелого дыхания
+	//Р·РІСѓРє С‚СЏР¶РµР»РѕРіРѕ РґС‹С…Р°РЅРёСЏ
 	ref_sound				m_HeavyBreathSnd;
 	ref_sound				m_BloodSnd;
 	ref_sound				m_DangerSnd;
@@ -216,13 +220,13 @@ protected:
 	BOOL					b_DropActivated;
 	float					f_DropPower;
 
-	//random seed для Zoom mode
+	//random seed РґР»СЏ Zoom mode
 	s32						m_ZoomRndSeed;
-	//random seed для Weapon Effector Shot
+	//random seed РґР»СЏ Weapon Effector Shot
 	s32						m_ShotRndSeed;
 
 	bool					m_bOutBorder;
-	//сохраняет счетчик объектов в feel_touch, для которых необходимо обновлять размер колижена с актером 
+	//СЃРѕС…СЂР°РЅСЏРµС‚ СЃС‡РµС‚С‡РёРє РѕР±СЉРµРєС‚РѕРІ РІ feel_touch, РґР»СЏ РєРѕС‚РѕСЂС‹С… РЅРµРѕР±С…РѕРґРёРјРѕ РѕР±РЅРѕРІР»СЏС‚СЊ СЂР°Р·РјРµСЂ РєРѕР»РёР¶РµРЅР° СЃ Р°РєС‚РµСЂРѕРј 
 	u32						m_feel_touch_characters;
 private:
 	void					SwitchOutBorder(bool new_border_state);
@@ -233,7 +237,7 @@ public:
 	s32						GetZoomRndSeed			()	{ return m_ZoomRndSeed;	};
 	void					SetShotRndSeed			(s32 Seed = 0);
 	s32						GetShotRndSeed			()	{ return m_ShotRndSeed;	};
-
+	bool					IsFeelTouchCharacters	()  { return m_feel_touch_characters > 0; }
 public:
 	void					detach_Vehicle			();
 	void					steer_Vehicle			(float angle);
@@ -256,10 +260,10 @@ protected:
 	// Rotation
 	SRotation				r_torso;
 	float					r_torso_tgt_roll;
-	//положение торса без воздействия эффекта отдачи оружия
+	//РїРѕР»РѕР¶РµРЅРёРµ С‚РѕСЂСЃР° Р±РµР· РІРѕР·РґРµР№СЃС‚РІРёСЏ СЌС„С„РµРєС‚Р° РѕС‚РґР°С‡Рё РѕСЂСѓР¶РёСЏ
 	SRotation				unaffected_r_torso;
 
-	//ориентация модели
+	//РѕСЂРёРµРЅС‚Р°С†РёСЏ РјРѕРґРµР»Рё
 	float					r_model_yaw_dest;
 	float					r_model_yaw;			// orientation of model
 	float					r_model_yaw_delta;		// effect on multiple "strafe"+"something"
@@ -276,10 +280,10 @@ public:
 	MotionID				m_current_torso;
 	MotionID				m_current_head;
 
-    //режим подбирания предметов
+    //СЂРµР¶РёРј РїРѕРґР±РёСЂР°РЅРёСЏ РїСЂРµРґРјРµС‚РѕРІ
     bool					m_bPickupMode;
 
-	// callback на анимации модели актера
+	// callback РЅР° Р°РЅРёРјР°С†РёРё РјРѕРґРµР»Рё Р°РєС‚РµСЂР°
 	void					SetCallbacks		();
 	void					ResetCallbacks		();
 	static void		_BCL	Spin0Callback		(CBoneInstance*);
@@ -326,7 +330,7 @@ protected:
 	CEffectorBobbing*		pCamBobbing;
 
 
-	//менеджер эффекторов, есть у каждого актрера
+	//РјРµРЅРµРґР¶РµСЂ СЌС„С„РµРєС‚РѕСЂРѕРІ, РµСЃС‚СЊ Сѓ РєР°Р¶РґРѕРіРѕ Р°РєС‚СЂРµСЂР°
 	CActorCameraManager*	m_pActorEffector;
 	static float			f_Ladder_cam_limit;
 public:
@@ -361,10 +365,10 @@ protected:
 	shared_str				m_sCampfireIgniteAction;	// qweasdd
 	shared_str				m_sCampfireExtinguishAction; 
 
-	//расстояние (в метрах) на котором актер чувствует гранату (любую)
+	//СЂР°СЃСЃС‚РѕСЏРЅРёРµ (РІ РјРµС‚СЂР°С…) РЅР° РєРѕС‚РѕСЂРѕРј Р°РєС‚РµСЂ С‡СѓРІСЃС‚РІСѓРµС‚ РіСЂР°РЅР°С‚Сѓ (Р»СЋР±СѓСЋ)
 	float					m_fFeelGrenadeRadius;
-	float					m_fFeelGrenadeTime; 	//время гранаты (сек) после которого актер чувствует гранату
-	//расстояние подсветки предметов
+	float					m_fFeelGrenadeTime; 	//РІСЂРµРјСЏ РіСЂР°РЅР°С‚С‹ (СЃРµРє) РїРѕСЃР»Рµ РєРѕС‚РѕСЂРѕРіРѕ Р°РєС‚РµСЂ С‡СѓРІСЃС‚РІСѓРµС‚ РіСЂР°РЅР°С‚Сѓ
+	//СЂР°СЃСЃС‚РѕСЏРЅРёРµ РїРѕРґСЃРІРµС‚РєРё РїСЂРµРґРјРµС‚РѕРІ
 	float					m_fPickupInfoRadius;
 
 	void					PickupModeUpdate	();
@@ -372,7 +376,7 @@ protected:
 	void PickupModeUpdate_COD (bool bDoPickup);
 
 	//////////////////////////////////////////////////////////////////////////
-	// Motions (передвижения актрера)
+	// Motions (РїРµСЂРµРґРІРёР¶РµРЅРёСЏ Р°РєС‚СЂРµСЂР°)
 	//////////////////////////////////////////////////////////////////////////
 public:
 	void					g_cl_CheckControls		(u32 mstate_wf, Fvector &vControlAccel, float &Jump, float dt);
@@ -445,26 +449,26 @@ public:
 
 protected:
 	CFireDispertionController			m_fdisp_controller;
-	//если актер целится в прицел
+	//РµСЃР»Рё Р°РєС‚РµСЂ С†РµР»РёС‚СЃСЏ РІ РїСЂРёС†РµР»
 	void								SetZoomAimingMode	(bool val)	{m_bZoomAimingMode = val;}
 	bool								m_bZoomAimingMode;
 
-	//настройки аккуратности стрельбы
-	//базовая дисперсия (когда игрок стоит на месте)
+	//РЅР°СЃС‚СЂРѕР№РєРё Р°РєРєСѓСЂР°С‚РЅРѕСЃС‚Рё СЃС‚СЂРµР»СЊР±С‹
+	//Р±Р°Р·РѕРІР°СЏ РґРёСЃРїРµСЂСЃРёСЏ (РєРѕРіРґР° РёРіСЂРѕРє СЃС‚РѕРёС‚ РЅР° РјРµСЃС‚Рµ)
 	float								m_fDispBase;
 	float								m_fDispAim;
-	//коэффициенты на сколько процентов увеличится базовая дисперсия
-	//учитывает скорость актера 
+	//РєРѕСЌС„С„РёС†РёРµРЅС‚С‹ РЅР° СЃРєРѕР»СЊРєРѕ РїСЂРѕС†РµРЅС‚РѕРІ СѓРІРµР»РёС‡РёС‚СЃСЏ Р±Р°Р·РѕРІР°СЏ РґРёСЃРїРµСЂСЃРёСЏ
+	//СѓС‡РёС‚С‹РІР°РµС‚ СЃРєРѕСЂРѕСЃС‚СЊ Р°РєС‚РµСЂР° 
 	float								m_fDispVelFactor;
-	//если актер бежит
+	//РµСЃР»Рё Р°РєС‚РµСЂ Р±РµР¶РёС‚
 	float								m_fDispAccelFactor;
-	//если актер сидит
+	//РµСЃР»Рё Р°РєС‚РµСЂ СЃРёРґРёС‚
 	float								m_fDispCrouchFactor;
 	//crouch+no acceleration
 	float								m_fDispCrouchNoAccelFactor;
 
 protected:
-	//косточки используемые при стрельбе
+	//РєРѕСЃС‚РѕС‡РєРё РёСЃРїРѕР»СЊР·СѓРµРјС‹Рµ РїСЂРё СЃС‚СЂРµР»СЊР±Рµ
 	int									m_r_hand;
 	int									m_l_finger1;
     int									m_r_finger2;
@@ -487,9 +491,10 @@ public:
 	virtual BOOL						net_Spawn			( CSE_Abstract* DC);
 	virtual void						net_Export			( NET_Packet& P);				// export to server
 	virtual void						net_Destroy			();
-	virtual BOOL						net_Relevant		();//	{ return getSVU() | getLocal(); };		// relevant for export to server
+	virtual BOOL						net_Relevant		(); // relevant for export to server
 	virtual	void						net_Relcase			( CObject* O );					//
 	virtual void xr_stdcall				on_requested_spawn  (CObject *object);
+
 	//object serialization
 	virtual void						save				(NET_Packet &output_packet);
 	virtual void						load				(IReader &input_packet);
@@ -501,13 +506,6 @@ protected:
 	////////////////////////////////////////////////////////////////////////////
 	virtual	bool			can_validate_position_on_spawn	(){return false;}
 	///////////////////////////////////////////////////////
-	
-	//---------------------------------------------
-	/// spline coeff /////////////////////
-	float			SCoeff[3][4];			//коэффициэнты для сплайна Бизье
-	float			HCoeff[3][4];			//коэффициэнты для сплайна Эрмита
-	Fvector			IPosS, IPosH, IPosL;	//положение актера после интерполяции Бизье, Эрмита, линейной
-
 #ifdef DEBUG
     using VIS_POSITION = xr_deque<Fvector>;
 
@@ -515,25 +513,7 @@ protected:
 	VIS_POSITION	LastPosH;
 	VIS_POSITION	LastPosL;
 #endif
-
-	
-	SPHNetState				LastState;
-	SPHNetState				RecalculatedState;
-	SPHNetState				PredictedState;
-	
-	InterpData				IStart;
-	InterpData				IRec;
-	InterpData				IEnd;
-	
-	bool					m_bInInterpolation;
-	bool					m_bInterpolate;
-	u32						m_dwIStartTime;
-	u32						m_dwIEndTime;
-	u32						m_dwILastUpdateTime;
-
 	//---------------------------------------------
-	using PH_STATES = xr_deque<SPHNetState>;
-	PH_STATES				m_States;
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
 	//---------------------------------------------
@@ -571,7 +551,7 @@ public:
 	//////////////////////////////////////////////////////////////////////////
 
 			void			set_input_external_handler			(CActorInputHandler *handler);
-			bool			input_external_handler_installed	() const {return (m_input_external_handler != 0);}
+			bool			input_external_handler_installed	() const {return (m_input_external_handler != nullptr);}
 			
 	IC		void			lock_accel_for						(u32 time){m_time_lock_accel = Device.dwTimeGlobal + time;}
 
@@ -588,8 +568,6 @@ protected:
 
 		LPCSTR					invincibility_fire_shield_3rd;
 		LPCSTR					invincibility_fire_shield_1st;
-		shared_str				m_sHeadShotParticle;
-		u32						last_hit_frame;
 #ifdef DEBUG
 		friend class CLevelGraph;
 #endif

@@ -49,7 +49,7 @@ bool CWeapon::install_upgrade_ammo_class( LPCSTR section, bool test )
 		for ( int i = 0; i < count; ++i )
 		{
 			_GetItem( str, i, ammoItem );
-			m_ammoTypes.push_back( ammoItem );
+			m_ammoTypes.emplace_back( ammoItem );
 		}
 		m_ammoType = 0;
 	}
@@ -210,17 +210,17 @@ bool CWeapon::install_upgrade_addon( LPCSTR section, bool test )
 					{
 						string128						scope_section;
 						_GetItem						(str, i, scope_section);
-						m_scopes.push_back				(scope_section);
+						m_scopes.emplace_back				(scope_section);
 					}
 				}
 				else
 				{
-					m_scopes.push_back(section);
+					m_scopes.emplace_back(section);
 				}
 			}
 			else
 			{
-				m_scopes.push_back(section);
+				m_scopes.emplace_back(section);
 				if(m_eScopeStatus==ALife::eAddonPermanent)
 					InitAddons();
 			}

@@ -51,13 +51,13 @@ CMapLocation::CMapLocation(LPCSTR type, u16 object_id, bool is_user_loc)
 
 	if (is_user_loc)
 	{
-		m_flags.set(eUserDefined, TRUE);
+		m_flags.set(eUserDefined, true);
 	}
 
 	m_objectID				= object_id;
 	m_actual_time			= 0;
-	m_owner_se_object		= (ai().get_alife() && !IsUserDefined()) ? ai().alife().objects().object(m_objectID,true) : NULL;
-	m_flags.set				(eHintEnabled, TRUE);
+	m_owner_se_object		= (ai().get_alife() && !IsUserDefined()) ? ai().alife().objects().object(m_objectID,true) : nullptr;
+	m_flags.set				(eHintEnabled, true);
 	LoadSpot				(type, false);
 	
 	DisablePointer			();
@@ -90,7 +90,7 @@ void CMapLocation::destroy()
 	delete_data(m_complex_spot_border_na);
 }
 
-CUIXml*	g_uiSpotXml=NULL;
+CUIXml*	g_uiSpotXml=nullptr;
 void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 {
 	if ( !g_uiSpotXml )
@@ -99,36 +99,36 @@ void CMapLocation::LoadSpot(LPCSTR type, bool bReload)
 		g_uiSpotXml->Load		(CONFIG_PATH, UI_PATH, "map_spots.xml");
 	}
 
-	XML_NODE* node = NULL;
+	XML_NODE* node = nullptr;
 	string512 path_base, path;
 	xr_strcpy		(path_base,type);
 	R_ASSERT3		(g_uiSpotXml->NavigateToNode(path_base,0), "XML node not found in file map_spots.xml", path_base);
 	LPCSTR s		= g_uiSpotXml->ReadAttrib(path_base, 0, "hint", "no hint");
 	SetHint			(s);
 	
-	s = g_uiSpotXml->ReadAttrib(path_base, 0, "store", NULL);
+	s = g_uiSpotXml->ReadAttrib(path_base, 0, "store", nullptr);
 	if ( s )
 	{
-		m_flags.set( eSerailizable, TRUE);
+		m_flags.set( eSerailizable, true);
 	}
 
-	s = g_uiSpotXml->ReadAttrib(path_base, 0, "no_offline", NULL);
+	s = g_uiSpotXml->ReadAttrib(path_base, 0, "no_offline", nullptr);
 	if ( s )
 	{
-		m_flags.set( eHideInOffline, TRUE);
+		m_flags.set( eHideInOffline, true);
 	}
 
 	m_ttl = g_uiSpotXml->ReadAttribInt(path_base, 0, "ttl", 0);
 	if ( m_ttl > 0 )
 	{
-		m_flags.set( eTTL, TRUE);
+		m_flags.set( eTTL, true);
 		m_actual_time = Device.dwTimeGlobal+m_ttl*1000;
 	}
 
-	s = g_uiSpotXml->ReadAttrib(path_base, 0, "pos_to_actor", NULL);
+	s = g_uiSpotXml->ReadAttrib(path_base, 0, "pos_to_actor", nullptr);
 	if ( s )
 	{
-		m_flags.set( ePosToActor, TRUE);
+		m_flags.set( ePosToActor, true);
 	}
 	
 	strconcat(sizeof(path),path,path_base,":level_map");
@@ -344,7 +344,7 @@ void CMapLocation::CalcLevelName()
 //returns actual
 bool CMapLocation::Update() 
 {
-	// FX: Затычка одного редкого вылета, проявляющегося только под отладчиком в релизе (Лично у меня)
+	// FX: Р—Р°С‚С‹С‡РєР° РѕРґРЅРѕРіРѕ СЂРµРґРєРѕРіРѕ РІС‹Р»РµС‚Р°, РїСЂРѕСЏРІР»СЏСЋС‰РµРіРѕСЃСЏ С‚РѕР»СЊРєРѕ РїРѕРґ РѕС‚Р»Р°РґС‡РёРєРѕРј РІ СЂРµР»РёР·Рµ (Р›РёС‡РЅРѕ Сѓ РјРµРЅСЏ)
 	if (m_cached.m_updatedFrame == Device.dwFrame)
 	{
 		Log("[PANIC] Your PC is very slow...");
@@ -649,7 +649,7 @@ void CMapLocation::SetHint(const shared_str& hint)
 {
 	if ( hint == "disable_hint" )
 	{
-		m_flags.set(eHintEnabled, FALSE);
+		m_flags.set(eHintEnabled, false);
 		m_hint		= "" ;
 		return;
 	}
@@ -660,7 +660,7 @@ LPCSTR CMapLocation::GetHint()
 {
 	if ( !HintEnabled() ) 
 	{
-		return NULL;
+		return nullptr;
 	}
 	return CStringTable().translate(m_hint).c_str();
 };
@@ -669,7 +669,7 @@ CMapSpotPointer* CMapLocation::GetSpotPointer(CMapSpot* sp)
 {
 	R_ASSERT(sp);
 	if (!PointerEnabled())
-		return NULL;
+		return nullptr;
 
 	if (sp == m_level_spot)
 		return m_level_spot_pointer;
@@ -678,7 +678,7 @@ CMapSpotPointer* CMapLocation::GetSpotPointer(CMapSpot* sp)
 	else if (sp == m_complex_spot)
 		return m_complex_spot_pointer;
 
-	return NULL;
+	return nullptr;
 }
 
 Fvector2 CMapLocation::SpotSize() const 
@@ -693,7 +693,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 	{
 		if (sp == m_level_spot)
 		{
-			if (NULL == m_level_map_spot_border)
+			if (nullptr == m_level_map_spot_border)
 			{
 				m_level_map_spot_border = xr_new<CMapSpot>(this);
 				m_level_map_spot_border->Load(g_uiSpotXml, m_spot_border_names[0].c_str());
@@ -702,7 +702,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 		}
 		else if (sp == m_minimap_spot)
 		{
-			if (NULL == m_mini_map_spot_border)
+			if (nullptr == m_mini_map_spot_border)
 			{
 				m_mini_map_spot_border = xr_new<CMapSpot>(this);
 				m_mini_map_spot_border->Load(g_uiSpotXml, m_spot_border_names[2].c_str());
@@ -711,7 +711,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 		}
 		else if (sp == m_complex_spot)
 		{
-			if (NULL == m_complex_spot_border)
+			if (nullptr == m_complex_spot_border)
 			{
 				m_complex_spot_border = xr_new<CMapSpot>(this);
 				m_complex_spot_border->Load(g_uiSpotXml, m_spot_border_names[4].c_str());
@@ -723,7 +723,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 	{// inactive state
 		if (sp == m_level_spot)
 		{
-			if (NULL == m_level_map_spot_border_na && m_spot_border_names[1].size())
+			if (nullptr == m_level_map_spot_border_na && m_spot_border_names[1].size())
 			{
 				m_level_map_spot_border_na = xr_new<CMapSpot>(this);
 				m_level_map_spot_border_na->Load(g_uiSpotXml, m_spot_border_names[1].c_str());
@@ -732,7 +732,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 		}
 		else if (sp == m_minimap_spot)
 		{
-			if (NULL == m_mini_map_spot_border_na && m_spot_border_names[3].size())
+			if (nullptr == m_mini_map_spot_border_na && m_spot_border_names[3].size())
 			{
 				m_mini_map_spot_border_na = xr_new<CMapSpot>(this);
 				m_mini_map_spot_border_na->Load(g_uiSpotXml, m_spot_border_names[3].c_str());
@@ -741,7 +741,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 		}
 		else if (sp == m_complex_spot)
 		{
-			if (NULL == m_complex_spot_border_na && m_spot_border_names[5].size())
+			if (nullptr == m_complex_spot_border_na && m_spot_border_names[5].size())
 			{
 				m_complex_spot_border_na = xr_new<CMapSpot>(this);
 				m_complex_spot_border_na->Load(g_uiSpotXml, m_spot_border_names[5].c_str());
@@ -750,7 +750,7 @@ CMapSpot* CMapLocation::GetSpotBorder(CMapSpot* sp)
 		}
 	}
 
-	return NULL;
+	return nullptr;
 }
 
 
@@ -779,8 +779,8 @@ bool CRelationMapLocation::Update()
 
 	if(m_owner_se_object)
 	{
-		CSE_ALifeTraderAbstract*	pEnt = NULL;
-		CSE_ALifeTraderAbstract*	pAct = NULL;
+		CSE_ALifeTraderAbstract*	pEnt = nullptr;
+		CSE_ALifeTraderAbstract*	pAct = nullptr;
 		pEnt = smart_cast<CSE_ALifeTraderAbstract*>(m_owner_se_object);
 		pAct = smart_cast<CSE_ALifeTraderAbstract*>(ai().alife().objects().object(m_pInvOwnerActorID,true));
 		if(!pEnt || !pAct)	
@@ -792,8 +792,8 @@ bool CRelationMapLocation::Update()
 			bAlive = pCreature->g_Alive		();
 	}else
 	{
-		CInventoryOwner*			pEnt = NULL;
-		CInventoryOwner*			pAct = NULL;
+		CInventoryOwner*			pEnt = nullptr;
+		CInventoryOwner*			pAct = nullptr;
 
 		pEnt = smart_cast<CInventoryOwner*>(Level().Objects.net_Find(m_objectID));
 		pAct = smart_cast<CInventoryOwner*>(Level().Objects.net_Find(m_pInvOwnerActorID));
@@ -882,8 +882,8 @@ bool CRelationMapLocation::Update()
 				if(ml==this)
 					continue;
 
-				m_b_minimap_visible	= m_b_minimap_visible && (ml->MiniMapSpot()==NULL);
-				m_b_levelmap_visible= m_b_levelmap_visible && (ml->LevelMapSpot()==NULL);
+				m_b_minimap_visible	= m_b_minimap_visible && (ml->MiniMapSpot()==nullptr);
+				m_b_levelmap_visible= m_b_levelmap_visible && (ml->LevelMapSpot()==nullptr);
 			}
 			
 		}

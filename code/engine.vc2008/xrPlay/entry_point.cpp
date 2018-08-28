@@ -28,7 +28,6 @@ int RunXRLauncher()
 	return xrPlay::ret_values.type_ptr;
 }
 
-
 /// <summary>
 /// Return the list of parameters
 /// </summary>
@@ -36,7 +35,6 @@ const char* GetParams()
 {
 	return xrPlay::ret_values.params_list;
 }
-
 
 /// <summary>
 /// Dll import
@@ -79,20 +77,14 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		// Checking for SSE3
 		else if (!CPU::Info.hasFeature(CPUFeature::SSE3))
 		{
-			MessageBoxA(NULL,
-				"It's can affect on the stability of the game.",
-				"SSE3 isn't supported on your CPU",
-				MB_OK | MB_ICONASTERISK);
+			MessageBox(NULL, "It's can affect on the stability of the game.", "SSE3 isn't supported on your CPU", MB_OK | MB_ICONASTERISK);
 			//#VERTVER: some part of vectors use SSE3 instructions
 		}
 		// Checking for AVX
 #ifndef RELEASE_IA32
 		else if (!CPU::Info.hasFeature(CPUFeature::AVX))
 		{
-			MessageBoxA(NULL,
-				"It's can affect on the stability of the game.",
-				"AVX isn't supported on your CPU!",
-				MB_OK | MB_ICONWARNING);
+			MessageBox(NULL, "It's can affect on the stability of the game.", "AVX isn't supported on your CPU!", MB_OK | MB_ICONWARNING);
 		}
 #endif
 	}
@@ -110,6 +102,33 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 		params = GetParams();
 	}
 
+	if (!IsDebuggerPresent())
+	{
+		size_t HeapFragValue = 2;
+		HeapSetInformation(GetProcessHeap(), HeapCompatibilityInformation, &HeapFragValue, sizeof(HeapFragValue));
+	}
+	// Check for another instance
+#ifdef NO_MULTI_INSTANCES
+#define STALKER_PRESENCE_MUTEX "Local\\STALKER-COP"
+
+	HANDLE hCheckPresenceMutex = OpenMutex(READ_CONTROL, FALSE, STALKER_PRESENCE_MUTEX);
+	if (hCheckPresenceMutex == NULL)
+	{
+		hCheckPresenceMutex = CreateMutex(NULL, FALSE, STALKER_PRESENCE_MUTEX);	// New mutex
+		if (hCheckPresenceMutex == NULL)
+			return 2;
+	}
+	else
+	{
+		CloseHandle(hCheckPresenceMutex);		// Already running
+		return 1;
+	}
+#endif
 	CreateRendererList();
-	return RunApplication(params);
+	RunApplication(params);
+#ifdef NO_MULTI_INSTANCES		
+	// Delete application presence mutex
+	CloseHandle(hCheckPresenceMutex);
+#endif
+	return 0;
 }
