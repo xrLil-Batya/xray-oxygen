@@ -333,16 +333,21 @@ void		CObjectList::Destroy			( CObject*	Obj		)
 	if (nullptr==Obj)								return;
 	net_Unregister							(Obj);
 
-	if ( !Device.Paused() ) {
-		if ( !m_crows[1].empty() ) {
-			Msg								( "assertion !m_crows[1].empty() failed: %d", m_crows[1].size() );
-
-			Objects::const_iterator i		= m_crows[1].begin( );
-			Objects::const_iterator	const e	= m_crows[1].end( );
-			for (u32 j=0; i != e; ++i, ++j )
-				Msg							( "%d %s", j, (*i)->cName().c_str() );
-			VERIFY							( Device.Paused() || m_crows[1].empty() );
-			m_crows[1].clear		();
+	if (!Device.Paused())
+	{
+		if (!m_crows[1].empty())
+		{
+			Objects::const_iterator i = m_crows[1].begin();
+			Objects::const_iterator	const e = m_crows[1].end();
+#ifdef DEBUG
+			u32 iter = 0;
+			for (CObject* pCrow : m_crows[1])
+			{
+				Msg("m_crows[1] object: %d %s", iter, pCrow->cName().c_str());
+				iter++;
+			}
+#endif
+			m_crows[1].clear();
 		}
 	}
 	else {
