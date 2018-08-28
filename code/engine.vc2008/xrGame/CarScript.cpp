@@ -3,6 +3,7 @@
 #include "Car.h"
 #include "CarWeapon.h"
 #include "script_game_object.h"
+#include "luabind/luabind.hpp"
 
 using namespace luabind;
 

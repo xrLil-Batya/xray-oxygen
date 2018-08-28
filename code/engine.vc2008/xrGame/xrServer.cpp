@@ -70,12 +70,12 @@ INT g_sv_SendUpdate = 0;
 void xrServer::Update	()
 {
 
-    if (Level().game)
-	{
-        CScriptProcess* script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
-        if (script_process)
-            script_process->update();
-    }
+//    if (Level().game)
+//	{
+//        CScriptProcess* script_process = ai().script_engine().script_process(ScriptEngine::eScriptProcessorGame);
+//        if (script_process)
+//            script_process->update();
+//    }
 
 	if (game->sv_force_sync)
         Perform_game_export();
@@ -92,50 +92,46 @@ u32 xrServer::OnMessage(NET_Packet& P)			// Non-Zero means broadcasting with "fl
 
 	switch (type)
 	{
-	case M_UPDATE:	
-		{
-			Process_update			(P);						// No broadcast
-		}break;
-	case M_SPAWN:	
-		{
-			Process_spawn			(P,sender);
-		}break;
-	case M_EVENT:	
-		{
-			Process_event			(P);
-		}break;
+	case M_UPDATE:
+	{
+		Process_update(P);						// No broadcast
+	}break;
+	case M_SPAWN:
+	{
+		Process_spawn(P, sender);
+	}break;
+	case M_EVENT:
+	{
+		Process_event(P);
+	}break;
 	case M_EVENT_PACK:
+	{
+		NET_Packet	tmpP;
+		while (!P.r_eof())
 		{
-			NET_Packet	tmpP;
-			while (!P.r_eof())
-			{
-				tmpP.B.count		= P.r_u8();
-				P.r					(&tmpP.B.data, tmpP.B.count);
+			tmpP.B.count = P.r_u8();
+			P.r(&tmpP.B.data, tmpP.B.count);
 
-				OnMessage			(tmpP);
-			};			
-		}break;
+			OnMessage(tmpP);
+		};
+	}break;
 	//-------------------------------------------------------------------
-	case M_SWITCH_DISTANCE:
-		{
-			game->switch_distance	(P);
-		}break;
 	case M_CHANGE_LEVEL:
+	{
+		if (game->change_level(P))
 		{
-			if (game->change_level(P,sender))
-			{
-				SendBroadcast		(BroadcastCID,P);
-			}
-		}break;
+			SendBroadcast(BroadcastCID, P);
+		}
+	}break;
 	case M_LOAD_GAME:
-		{
-			game->load_game			(P,sender);
-			SendBroadcast			(BroadcastCID,P);
-		}break;
+	{
+		game->load_game(P);
+		SendBroadcast(BroadcastCID, P);
+	}break;
 	case M_SAVE_PACKET:
-		{
-			Process_save(P);
-		}break;
+	{
+		Process_save(P);
+	}break;
 	}
 	VERIFY (verify_entities());
 

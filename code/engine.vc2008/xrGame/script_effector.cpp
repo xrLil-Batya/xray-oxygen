@@ -55,6 +55,8 @@ void remove_effector(CScriptEffector *self)
 	self->Remove	();
 }
 
+#include "../../SDK/include/luabind/adopt_policy.hpp"
+
 #pragma optimize("s",on)
 void CScriptEffector::script_register(lua_State *L)
 {

@@ -22,6 +22,7 @@
 #include "../../xrEngine/irenderable.h"
 #include "../../xrEngine/fmesh.h"
 #include "../xrRender/dxGlowManager.h"
+#include "../xrRender/ScreenshotManager.h"
 
 class dxRender_Visual;
 
@@ -165,6 +166,7 @@ public:
 	bool														m_bMakeAsyncSS;
 	bool														m_bFirstFrameAfterReset;	// Determines weather the frame is the first after resetting device.
 	xr_vector<sun::cascade>										m_sun_cascades;
+	CScreenshotManager											ScreenshotManager;
 
 private:
 	// Loading / Unloading
@@ -334,10 +336,7 @@ public:
 	// Main
 	virtual void					Calculate					();
 	virtual void					Render						();
-	virtual void					Screenshot					(ScreenshotMode mode=SM_NORMAL, LPCSTR name = 0);
-	virtual void					Screenshot					(ScreenshotMode mode, CMemoryWriter& memory_writer);
-	virtual void					ScreenshotAsyncBegin		();
-	virtual void					ScreenshotAsyncEnd			(CMemoryWriter& memory_writer);
+	virtual void					Screenshot					(ScreenshotMode mode = SM_NORMAL, LPCSTR name = nullptr);
 	virtual void		_BCL		OnFrame						();
 	virtual void                    BeforeWorldRender           (); // +SecondVP+ Вызывается перед началом рендера мира и пост-эффектов
 	virtual void                    AfterWorldRender            ();  // +SecondVP+ Вызывается после рендера мира и перед UI
@@ -357,12 +356,7 @@ public:
 	void clearAllShaderOptions() {m_ShaderOptions.clear();}
 
 private:
-	xr_vector<D3D_SHADER_MACRO>									m_ShaderOptions;
-
-protected:
-	virtual	void					ScreenshotImpl				(ScreenshotMode mode, LPCSTR name, CMemoryWriter* memory_writer);
-
-private:
+	xr_vector<D3D_SHADER_MACRO>		m_ShaderOptions;
 	FS_FileSet						m_file_set;
 };
 

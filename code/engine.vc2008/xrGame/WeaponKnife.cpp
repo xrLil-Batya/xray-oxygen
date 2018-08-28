@@ -769,6 +769,8 @@ void CWeaponKnife::best_victim_selector::operator()(spartial_base_t::value_type 
 	}
 }
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

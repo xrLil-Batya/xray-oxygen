@@ -53,11 +53,10 @@ bool CPHScriptAction::obsolete()const
 }
 
 /////////////////////////////////////////////////////////////////////////////////////////////
-CPHScriptObjectAction::CPHScriptObjectAction(const luabind::object &lua_object, LPCSTR method)
+CPHScriptObjectAction::CPHScriptObjectAction(const luabind::object &lua_object, const char* method): m_method_name(method)
 {
 	b_obsolete		= false;
 	m_lua_object	= xr_new<luabind::object>(lua_object);
-	m_method_name	= method;
 }
 
 CPHScriptObjectAction::CPHScriptObjectAction(const CPHScriptObjectAction &object)

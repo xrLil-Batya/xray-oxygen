@@ -95,7 +95,7 @@ static std::string collide_diag()
 	else
 		return make_string("collide static");
 #else
-	return std::string("");
+	return std::string();
 #endif
 }
 

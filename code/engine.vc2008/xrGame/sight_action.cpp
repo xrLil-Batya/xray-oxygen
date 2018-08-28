@@ -192,7 +192,6 @@ void CSightAction::execute_cover				()
 
 void CSightAction::execute_search				()
 {
-	m_torso_look					= false;
 	if (m_torso_look)
 		object().sight().SetLessCoverLook(m_object->ai_location().level_vertex(),PI,m_path);
 	else
@@ -201,6 +200,7 @@ void CSightAction::execute_search				()
 #ifdef SIGHT_TEST
 	Msg					("%6d %s",Device.dwTimeGlobal,m_torso_look ? "eSightTypeFireSearch" : "eSightTypeSearch");
 #endif
+	m_torso_look = false;
 }
 
 void CSightAction::initialize_cover_look_over	()

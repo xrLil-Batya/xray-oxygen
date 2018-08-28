@@ -48,13 +48,8 @@ public:
 	}
 };
 
-//class CKnownContactsRegistryWrapper :	public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CKnownContactsRegistry> > {};
-//class CEncyclopediaRegistryWrapper :	public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CEncyclopediaRegistry> > {};
 class CGameNewsRegistryWrapper :		public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CGameNewsRegistry> > {};
 class CInfoPortionWrapper :				public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CInfoPortionRegistry> > {};
 class CRelationRegistryWrapper :		public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CRelationRegistry> > {};
 class CMapLocationWrapper :				public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CMapLocationRegistry> > {};
 class CGameTaskWrapper :				public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CGameTaskRegistry> > {};
-
-//. class CFogOfWarWrapper :				public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CFogOfWarRegistry> > {};
-class CActorStatisticsWrapper :			public CALifeRegistryWrapperObject<CALifeRegistryWrapper<CActorStatisticRegistry> > {};

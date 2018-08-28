@@ -5,10 +5,8 @@
 //	Author		: Dmitriy Iassenev
 //	Description : Script sound action class
 ////////////////////////////////////////////////////////////////////////////
-
 #pragma once
-
-#include "script_abstract_action.h"
+#include "../xrScripts/export/script_abstract_action.h"
 #include "../xrScripts/export/script_export_space.h"
 #include "ai_sounds.h"
 #include "ai_monster_space.h"
@@ -24,8 +22,8 @@ public:
 	};
 
 public:
-	shared_str								m_caSoundToPlay;
-	shared_str								m_caBoneName;
+	shared_str							m_caSoundToPlay;
+	shared_str							m_caBoneName;
 	EGoalType							m_tGoalType;
 	bool								m_bLooped;
 	bool								m_bStartedToPlay;

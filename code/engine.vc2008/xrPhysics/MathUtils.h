@@ -375,7 +375,7 @@ private:
 };
 
 inline float DET(const Fmatrix &a) {
-	return ((a._11 * (a._22 * a._33 - a._23 * a._32) - a._12 * (a._21 * a._33 - a._23 * a._31) + a._13 * (a._21 * a._32 - a._22 * a._31)));
+	return (a._11 * (a._22 * a._33 - a._23 * a._32) - a._12 * (a._21 * a._33 - a._23 * a._31) + a._13 * (a._21 * a._32 - a._22 * a._31));
 }
 
 inline bool valid_pos(const Fvector &P, const Fbox &B) {

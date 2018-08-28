@@ -10,7 +10,7 @@
 #include "script_lanim.h"
 #include "../xrEngine/LightAnimLibrary.h"
 
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 struct lanim_wrapper

@@ -75,7 +75,7 @@ void CALifeMonsterMovementManager::on_switch_offline	()
 	detail().on_switch_offline	();
 }
 
-
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 CALifeMonsterDetailPathManager *get_detail(const CALifeMonsterMovementManager *self)

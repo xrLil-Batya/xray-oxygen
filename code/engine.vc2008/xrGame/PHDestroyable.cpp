@@ -348,3 +348,20 @@ void CPHDestroyable::SetFatalHit(const SHit& hit)
 {
 	m_fatal_hit=hit;
 }
+
+#include "PHDestroyableNotificate.h"
+void CPHDestroyableNotificate::spawn_notificate(CSE_Abstract* so)
+{
+	CPHDestroyableNotificator* pNotificator = nullptr;
+	CSE_PHSkeleton* pObject = smart_cast<CSE_PHSkeleton*>(so);
+	u16 id = pObject->get_source_id();
+
+	if (id != u16(-1))
+	{
+		pNotificator = smart_cast<CPHDestroyableNotificator*>(Level().Objects.net_Find(id));
+
+		if (pNotificator)
+			pNotificator->NotificateDestroy(this);
+	}
+	pObject->source_id = BI_NONE;
+}

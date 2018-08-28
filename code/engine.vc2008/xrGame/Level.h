@@ -116,6 +116,7 @@ protected:
 	BOOL						net_start_result_total;
 	BOOL						deny_m_spawn;		//only for debug...
 		
+	static void					mtLevelScriptUpdater	(void* pCLevel);
 	void						MakeReconnect();
 	
 	LevelMapSyncData			map_data;
@@ -194,8 +195,9 @@ public:
 	CLevel();
 	virtual ~CLevel();
 
-	//названияе текущего уровня
+	//название текущего уровня
 	virtual shared_str			name					() const;
+	virtual shared_str			name_translated			() const;
 			shared_str			version					() const { return map_data.m_map_version; } //this method can be used ONLY from CCC_ChangeGameType
 	
 	//возвращает время в милисекундах относительно начала игры

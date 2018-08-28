@@ -338,6 +338,7 @@ void CUIComboBox::ClearList()
 	m_disabled.clear();
 }
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

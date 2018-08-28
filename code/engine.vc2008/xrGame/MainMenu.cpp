@@ -245,7 +245,7 @@ void CMainMenu::IR_OnKeyboardPress(int dik)
 			Console->Show();
 			return;
 		}
-		if (DIK_F12 == dik)
+		if (is_binded(kSCREENSHOT, dik))
 		{
 			Render->Screenshot();
 			return;

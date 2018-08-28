@@ -192,7 +192,6 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_pActorEffector		= nullptr;
 	m_vehicle_anims	        = xr_new<SActorVehicleAnims>();
 	m_entity_condition		= nullptr;
-	m_statistic_manager		= nullptr;
 	m_sDefaultObjAction		= nullptr;
 	m_pUsableObject			= nullptr;
 	SetZoomAimingMode		(false);
@@ -907,7 +906,7 @@ void CActor::set_state_box(u32	mstate)
 
 void CActor::shedule_Update	(u32 DT)
 {
-	setSVU							(true);
+	setSVU(true);
 
 	if (IsFocused())
 	{

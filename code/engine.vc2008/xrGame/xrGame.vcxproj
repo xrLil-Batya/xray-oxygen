@@ -174,7 +174,6 @@
       <SmallerTypeCheck>false</SmallerTypeCheck>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <BufferSecurityCheck>true</BufferSecurityCheck>
-      <FunctionLevelLinking>false</FunctionLevelLinking>
       <FloatingPointModel>Fast</FloatingPointModel>
       <ForceConformanceInForLoopScope>true</ForceConformanceInForLoopScope>
       <RuntimeTypeInfo>true</RuntimeTypeInfo>
@@ -188,7 +187,7 @@
       </BrowseInformation>
       <WarningLevel>TurnOffAllWarnings</WarningLevel>
       <SuppressStartupBanner>true</SuppressStartupBanner>
-      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
       <DisableSpecificWarnings>4237;%(DisableSpecificWarnings)</DisableSpecificWarnings>
       <MultiProcessorCompilation>true</MultiProcessorCompilation>
       <AdditionalOptions>/bigobj</AdditionalOptions>
@@ -199,7 +198,6 @@
       <Culture>0x0419</Culture>
     </ResourceCompile>
     <Link>
-      <ShowProgress>NotSet</ShowProgress>
       <SuppressStartupBanner>true</SuppressStartupBanner>
       <AdditionalLibraryDirectories>..\..\..\sdk\libraries\$(Platform);$(xrLib)../Release/;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -211,8 +209,8 @@
       <DataExecutionPrevention>
       </DataExecutionPrevention>
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
-      <AdditionalDependencies>xrQIK.lib;min_obb.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalOptions>/LTCG %(AdditionalOptions)</AdditionalOptions>
+      <AdditionalDependencies>xrQIK.lib;min_obb.lib;xrScripts.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalOptions> /EDITANDCONTINUE /LTCG %(AdditionalOptions)</AdditionalOptions>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -424,7 +422,6 @@
     <ClInclude Include="action_planner.h" />
     <ClInclude Include="action_planner_inline.h" />
     <ClInclude Include="script_action_planner_wrapper.h" />
-    <ClInclude Include="script_action_planner_wrapper_inline.h" />
     <ClInclude Include="action_planner_script.h" />
     <ClInclude Include="action_planner_script_inline.h" />
     <ClInclude Include="action_planner_action.h" />
@@ -1126,7 +1123,6 @@
     <ClInclude Include="smart_cover_planner_actions_inline.h" />
     <ClInclude Include="smart_cover_loophole_planner_actions.h" />
     <ClInclude Include="smart_cover_planner_target_selector.h" />
-    <ClInclude Include="smart_cover_planner_target_selector_inline.h" />
     <ClInclude Include="smart_cover_planner_target_provider.h" />
     <ClInclude Include="smart_cover_default_behaviour_planner.hpp" />
     <ClInclude Include="smart_cover_default_behaviour_planner_inline.hpp" />
@@ -1226,8 +1222,6 @@
     <ClInclude Include="..\xrServerEntities\script_export_space.h" />
     <ClInclude Include="..\xrServerEntities\script_space_forward.h" />
     <ClInclude Include="script_bind_macroses.h" />
-    <ClInclude Include="script_abstract_action.h" />
-    <ClInclude Include="script_abstract_action_inline.h" />
     <ClInclude Include="script_movement_action.h" />
     <ClInclude Include="script_movement_action_inline.h" />
     <ClInclude Include="patrol_path_params.h" />
@@ -1237,8 +1231,6 @@
     <ClInclude Include="script_animation_action_inline.h" />
     <ClInclude Include="script_sound_action.h" />
     <ClInclude Include="script_sound_action_inline.h" />
-    <ClInclude Include="script_particle_action.h" />
-    <ClInclude Include="script_particle_action_inline.h" />
     <ClInclude Include="script_object_action.h" />
     <ClInclude Include="script_object_action_inline.h" />
     <ClInclude Include="script_action_condition.h" />
@@ -1275,7 +1267,6 @@
     <ClInclude Include="script_callback_ex_nonvoid.h" />
     <ClInclude Include="script_callback_ex_void.h" />
     <ClInclude Include="script_lanim.h" />
-    <ClInclude Include="script_particles.h" />
     <ClInclude Include="script_sound.h" />
     <ClInclude Include="script_sound_inline.h" />
     <ClInclude Include="..\xrServerEntities\script_engine.h" />
@@ -1365,8 +1356,6 @@
     <ClInclude Include="PhraseDialogManager.h" />
     <ClInclude Include="PhraseScript.h" />
     <ClInclude Include="game_news.h" />
-    <ClInclude Include="actor_statistic_defs.h" />
-    <ClInclude Include="actor_statistic_mgr.h" />
     <ClInclude Include="map_location.h" />
     <ClInclude Include="map_location_defs.h" />
     <ClInclude Include="map_manager.h" />
@@ -1701,7 +1690,6 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="PHDestroyable.cpp" />
-    <ClCompile Include="PHDestroyableNotificate.cpp" />
     <ClCompile Include="PHMovementControl.cpp" />
     <ClCompile Include="PHMovementDynamicActivate.cpp" />
     <ClCompile Include="PHScriptCall.cpp" />
@@ -1925,7 +1913,10 @@
     <ClCompile Include="ai\Monsters\psy_aura.cpp" />
     <ClCompile Include="ai\Monsters\energy_holder.cpp" />
     <ClCompile Include="ai\Monsters\monster_event_manager.cpp" />
-    <ClCompile Include="ai\Monsters\melee_checker.cpp" />
+    <ClCompile Include="ai\Monsters\melee_checker.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ai\Monsters\monster_morale.cpp" />
     <ClCompile Include="ai\Monsters\controlled_actor.cpp" />
     <ClCompile Include="ai\Monsters\control_manager.cpp" />
@@ -1966,7 +1957,6 @@
     <ClCompile Include="ai\Monsters\Boar\boar_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Boar\boar_script.cpp" />
     <ClCompile Include="AI\Crow\ai_crow.cpp" />
-    <ClCompile Include="ai_crow_script.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_state_manager.cpp" />
     <ClCompile Include="ai\Monsters\Burer\burer_script.cpp" />
@@ -2041,7 +2031,6 @@
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_aura.cpp" />
     <ClCompile Include="ai\Monsters\Pseudodog\psy_dog_state_manager.cpp" />
     <ClCompile Include="Ai\Trader\ai_trader.cpp" />
-    <ClCompile Include="ai\trader\ai_trader_script.cpp" />
     <ClCompile Include="ai\trader\trader_animation.cpp" />
     <ClCompile Include="Ai\Stalker\ai_stalker.cpp">
       <ShowIncludes Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ShowIncludes>
@@ -2140,14 +2129,12 @@
     <ClCompile Include="patrol_path.cpp" />
     <ClCompile Include="patrol_path_storage.cpp" />
     <ClCompile Include="patrol_point.cpp" />
-    <ClCompile Include="script_abstract_action.cpp" />
     <ClCompile Include="script_movement_action.cpp" />
     <ClCompile Include="patrol_path_params.cpp" />
     <ClCompile Include="script_watch_action.cpp" />
     <ClCompile Include="script_animation_action.cpp" />
     <ClCompile Include="script_animation_action_script.cpp" />
     <ClCompile Include="script_sound_action.cpp" />
-    <ClCompile Include="script_particle_action.cpp" />
     <ClCompile Include="script_object_action.cpp" />
     <ClCompile Include="script_object_action_script.cpp" />
     <ClCompile Include="script_action_condition.cpp" />
@@ -2183,7 +2170,6 @@
     <ClCompile Include="console_registrator_script.cpp" />
     <ClCompile Include="base_client_classes_script.cpp" />
     <ClCompile Include="script_lanim.cpp" />
-    <ClCompile Include="script_particles.cpp" />
     <ClCompile Include="script_sound.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine.cpp" />
     <ClCompile Include="..\xrServerEntities\script_engine_export.cpp" />
@@ -2283,7 +2269,6 @@
     <ClCompile Include="PhraseDialogManager.cpp" />
     <ClCompile Include="PhraseScript.cpp" />
     <ClCompile Include="game_news.cpp" />
-    <ClCompile Include="actor_statistic_mgr.cpp" />
     <ClCompile Include="map_location.cpp" />
     <ClCompile Include="map_manager.cpp" />
     <ClCompile Include="Inventory.cpp" />
@@ -2425,7 +2410,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Object_Base.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_script.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_script2.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_script2.cpp" />
@@ -2433,7 +2417,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script2.cpp" />
-    <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Items_script3.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script.cpp" />
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_ALife_Monsters_script2.cpp" />

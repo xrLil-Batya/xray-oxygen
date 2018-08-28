@@ -929,7 +929,13 @@ struct ssaved_callback
 static void	_BCL get_matrix(CBoneInstance* P)
 {
 	VERIFY(_valid(P->mTransform));
-	*((Fmatrix*)P->callback_param()) = P->mTransform;
+
+	// Waiting mainthred
+	void* pCurrParams = P->callback_param();
+	if (!pCurrParams) 
+			return;
+
+	*(reinterpret_cast<Fmatrix*>(pCurrParams)) = P->mTransform;
 
 }
 u16	CIKLimb::foot_matrix_predict(Fmatrix& foot, Fmatrix& toe, float time, IKinematicsAnimated *K) const

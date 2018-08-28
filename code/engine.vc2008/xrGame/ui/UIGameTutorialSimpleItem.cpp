@@ -309,6 +309,7 @@ bool CUISequenceSimpleItem::Stop(bool bForce)
 	return true;
 }
 
+#include <luabind/luabind.hpp>
 void CUISequenceSimpleItem::OnKeyboardPress(int dik)
 {
 	if (!m_flags.test(etiCanBeStopped))

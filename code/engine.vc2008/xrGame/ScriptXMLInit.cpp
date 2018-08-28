@@ -16,6 +16,9 @@
 #include "ui\UIScrollView.h"
 #include "ui\UIProgressBar.h"
 
+
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 void _attach_child(CUIWindow* _child, CUIWindow* _parent)
@@ -226,6 +229,8 @@ bool CScriptXmlInit::NodeExists(LPCSTR path, int index)
 	// Refactoring: FX
 	return m_xml.NavigateToNode(path, index);
 }
+
+
 
 #pragma optimize("s",on)
 void CScriptXmlInit::script_register(lua_State *L)

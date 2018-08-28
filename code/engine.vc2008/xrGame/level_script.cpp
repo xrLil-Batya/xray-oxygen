@@ -534,21 +534,6 @@ void set_snd_volume(float v)
 	psSoundVFactor = v;
 	clamp(psSoundVFactor,0.0f,1.0f);
 }
-#include "actor_statistic_mgr.h"
-void add_actor_points(LPCSTR sect, LPCSTR detail_key, int cnt, int pts)
-{
-	return Actor()->StatisticMgr().AddPoints(sect, detail_key, cnt, pts);
-}
-
-void add_actor_points_str(LPCSTR sect, LPCSTR detail_key, LPCSTR str_value)
-{
-	return Actor()->StatisticMgr().AddPoints(sect, detail_key, str_value);
-}
-
-int get_actor_points(LPCSTR sect)
-{
-	return Actor()->StatisticMgr().GetSectionPoints(sect);
-}
 
 #include "ActorEffector.h"
 void add_complex_effector(LPCSTR section, int id)
@@ -808,6 +793,9 @@ u32 get_vertex_count(CLevelGraph *graph)
 	return graph->header().vertex_count(); 
 }
 
+#include "../../SDK/include/luabind/operator.hpp"
+#include "../../SDK/include/luabind/out_value_policy.hpp"
+
 #pragma optimize("s",on)
 void CLevel::script_register(lua_State *L)
 {
@@ -927,13 +915,6 @@ void CLevel::script_register(lua_State *L)
 		def("vertex_id",						&vertex_id),
 		def("game_id",							&GameID)
 	],
-	
-	module(L,"actor_stats")
-	[
-		def("add_points",						&add_actor_points),
-		def("add_points_str",					&add_actor_points_str),
-		def("get_points",						&get_actor_points)
-	];
 	
 	module(L)
 	[

@@ -118,23 +118,12 @@ float CEnemyManager::evaluate				(const CEntityAlive *object) const
 	if (m_object->memory().visual().visible_now(object))
 		penalty				-= 1000.f;
 
-	// if object is actor and he/she sees us
-//	if (actor) {
-//		if (smart_cast<const CActor*>(object)->memory().visual().visible_now(m_object))
-//			penalty			-= 900.f;
-//	}
-//	else {
-//		// if object is npc and it sees us
-//		const CCustomMonster	*monster = smart_cast<const CCustomMonster*>(object);
-//		if (monster && monster->memory().visual().visible_now(m_object))
-//			penalty			-= 300.f;
-//	}
-
 #ifdef USE_EVALUATOR
-	ai().ef_storage().non_alife().member_item()	= 0;
-	ai().ef_storage().non_alife().enemy_item()	= 0;
-	ai().ef_storage().non_alife().member()		= m_object;
-	ai().ef_storage().non_alife().enemy()		= object;
+	CNonALifeParams &lNonAife = ai().ef_storage().non_alife();
+	lNonAife.member_item()	= 0;
+	lNonAife.enemy_item()	= 0;
+	lNonAife.member()		= m_object;
+	lNonAife.enemy()		= object;
 
 	float					distance = m_object->Position().distance_to_sqr(object->Position());
 	return					(

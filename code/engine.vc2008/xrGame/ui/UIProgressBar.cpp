@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "uiprogressbar.h"
 
-CUIProgressBar::CUIProgressBar(void)
+CUIProgressBar::CUIProgressBar()
 {
 	m_MinPos				= 1.0f;
 	m_MaxPos				= 1.0f+EPS;
@@ -20,7 +20,7 @@ CUIProgressBar::CUIProgressBar(void)
 	m_orient_mode			= om_horz;
 }
 
-CUIProgressBar::~CUIProgressBar(void)
+CUIProgressBar::~CUIProgressBar()
 {
 }
 
@@ -144,6 +144,7 @@ void CUIProgressBar::Draw()
 	m_last_render_frame	= Device.dwFrame;
 }
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

@@ -62,7 +62,7 @@ void CUIMessageBox::InitMessageBox(LPCSTR box_template)
 	xr_strcpy		(str,box_template);
 	xml_init.InitStatic						(uiXml, str, 0, this);
 
-	LPCSTR _type							= uiXml.ReadAttrib(str,0,"type",NULL);
+	LPCSTR _type							= uiXml.ReadAttrib(str,0,"type",nullptr);
 	R_ASSERT								(_type);
 	
 	m_eMessageBoxStyle	= MESSAGEBOX_OK;
@@ -252,6 +252,7 @@ LPCSTR CUIMessageBox::GetText()
 }
 
 #include "UIMessageBoxEx.h"
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

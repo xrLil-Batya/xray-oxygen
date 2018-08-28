@@ -1,5 +1,5 @@
 #pragma	once
-struct	XRPHYSICS_API SHit;
+struct	SHit;
 class	IPhysicsShellEx;
 class	character_shell_control
 {

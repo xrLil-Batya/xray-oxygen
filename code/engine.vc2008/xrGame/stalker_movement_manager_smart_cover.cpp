@@ -523,19 +523,10 @@ void stalker_movement_manager_smart_cover::target_fire_no_lookout			()
 
 void stalker_movement_manager_smart_cover::target_default					(bool const& value)
 {
-//	if (!current_params().cover()) {
-//		Msg								("! Cannot set target fire_no_lookout. Bad or absent smart_cover.");
-//		return;
-//	}
-
-//	if (!current_params().cover_loophole()->is_action_available("fire_no_lookout")) {
-//		Msg								("! Cannot set target fire_no_lookout. Loophole has no such action.");
-//		return;
-//	}
-
 	m_default_behaviour					= value;
 }
 
+#include "script_callback_ex.h"
 bool stalker_movement_manager_smart_cover::default_behaviour	() const
 {
 	VERIFY							(m_current.cover());

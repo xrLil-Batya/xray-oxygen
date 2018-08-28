@@ -227,6 +227,7 @@ bool CUIButton::IsAccelerator(int iAccel) const
 #include "UISpinText.h"
 #include "UITrackBar.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

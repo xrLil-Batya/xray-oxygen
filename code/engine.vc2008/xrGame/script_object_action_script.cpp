@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "script_object_action.h"
 #include "script_game_object.h"
+#include <luabind/luabind.hpp>
 
 using namespace luabind;
 

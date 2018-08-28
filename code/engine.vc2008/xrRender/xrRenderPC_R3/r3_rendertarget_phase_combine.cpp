@@ -6,23 +6,6 @@
 
 #define STENCIL_CULL 0
 
-void CRenderTarget::DoAsyncScreenshot()
-{
-	//	Igor: screenshot will not have postprocess applied.
-	//	TODO: fox that later
-	if (RImplementation.m_bMakeAsyncSS)
-	{
-		HRESULT hr;
-
-		ID3D10Texture2D*	pBuffer;
-		hr = HW.m_pSwapChain->GetBuffer( 0, __uuidof( ID3D10Texture2D ), (LPVOID*)&pBuffer );
-		HW.pDevice->CopyResource( t_ss_async, pBuffer );
-		
-
-		RImplementation.m_bMakeAsyncSS = false;
-	}
-}
-
 float	hclip(float v, float dim)		{ return 2.f*v/dim - 1.f; }
 void	CRenderTarget::phase_combine	()
 {

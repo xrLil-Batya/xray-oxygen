@@ -352,7 +352,6 @@ void CAI_Rat::net_Export(NET_Packet& P)
 	if (ai().game_graph().valid_vertex_id(l_game_vertex_id)) {
 		f1					= Position().distance_to	(ai().game_graph().vertex(l_game_vertex_id)->level_point());
 		P.w					(&f1,						sizeof(f1));
-		f1					= Position().distance_to	(ai().game_graph().vertex(l_game_vertex_id)->level_point());
 		P.w					(&f1,						sizeof(f1));
 	}
 	else {

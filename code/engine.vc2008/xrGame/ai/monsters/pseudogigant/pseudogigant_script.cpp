@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "pseudo_gigant.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

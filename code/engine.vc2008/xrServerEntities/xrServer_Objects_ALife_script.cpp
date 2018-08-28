@@ -10,7 +10,9 @@
 #include "xrServer_Objects_ALife.h"
 #include "xrServer_script_macroses.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
+
 
 #pragma optimize("s",on)
 void CSE_ALifeSchedulable::script_register(lua_State *L)

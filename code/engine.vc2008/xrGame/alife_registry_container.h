@@ -12,6 +12,10 @@
 #include "alife_registry_container_composition.h"
 #include "alife_abstract_registry.h"
 
+
+#include "luabind/luabind.hpp"
+#include "script_callback_ex.h"
+
 template <typename T>
 struct CLinearRegistryType;
 

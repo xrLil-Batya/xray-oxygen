@@ -20,6 +20,8 @@ xr_token q_smapsize_token[] =
 	{ 0,				0	}
 };
 
+BOOL SkyGodEdition = false;
+
 u32 ps_r_sunshafts_mode = 0;
 xr_token sunshafts_mode_token[] = 
 {
@@ -418,13 +420,12 @@ public:
 class CCC_Screenshot : public IConsole_Command
 {
 public:
-	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) {};
+	CCC_Screenshot(LPCSTR N) : IConsole_Command(N) { bEmptyArgsHandled = TRUE; }
 	virtual void Execute(LPCSTR args)
 	{
 		string_path	name; name[0] = 0;
-		sscanf		(args,"%s",	name);
-		LPCSTR		image = xr_strlen(name)?name:0;
-		::Render->Screenshot(IRender_interface::SM_NORMAL,image);
+		sscanf(args,"%s", name);
+		::Render->Screenshot(IRender_interface::SM_NORMAL, xr_strlen(name) ? name : nullptr);
 	}
 };
 
@@ -725,6 +726,7 @@ void xrRender_initconsole()
 
 	// Common
 	CMD1(CCC_Screenshot,"screenshot"			);
+	CMD3(CCC_Mask, "screenshot_use_gamma_correction", &ps_r_flags, R_FLAG_SS_GAMMA_CORRECTION);
 
 	// Igor: just to test bug with rain/particles corruption
 	CMD1(CCC_RestoreQuadIBData,	"r_restore_quad_ib_data");
@@ -917,6 +919,7 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r4_flags,		R4_FLAG_WIREFRAME); // Need restart
 	CMD4(CCC_U32,		"r__glows_per_frame",			&ps_GlowsPerFrame,	2, 32);
 
+	CMD4(CCC_Integer,	"game_extra_skygod_edition",	&SkyGodEdition		, 0, 1);
 	// Allow real-time fog config reload
 #if	(RENDER == R_R3) || (RENDER == R_R4)
 #ifdef	DEBUG

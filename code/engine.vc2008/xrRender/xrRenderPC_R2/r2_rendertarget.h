@@ -72,9 +72,6 @@ public:
 	//  Second viewport
 	ref_rt                      rt_secondVP;        // 32bit (r,g,b,a) +SecondVP+
 
-	//	Igor: for async screenshots
-	IDirect3DSurface9*			pFB;				//32bit		(r,g,b,a) is situated in the system memory
-
 	ref_rt						rt_LUM_pool	[CHWCaps::MAX_GPUS*2]	;	// 1xfp32,1x1,		exp-result -> scaler
 	ref_texture					t_LUM_src		;	// source
 	ref_texture					t_LUM_dest		;	// destination & usage for current frame
@@ -173,7 +170,6 @@ private:
 	ref_geom					g_combine_VP;		// xy=p,zw=tc
 	ref_geom					g_combine_2UV;
 	ref_geom					g_combine_cuboid;
-	ref_geom					g_aa_blur;
 	ref_geom					g_aa_AA;
 	ref_shader					s_combine_dbg_0;
 	ref_shader					s_combine_dbg_1;
@@ -309,8 +305,6 @@ public:
 	//	Don't clear when render for the first time
 	void						reset_light_marker( bool bResetStencil = false);
 	void						increment_light_marker();
-
-	void						DoAsyncScreenshot		();
 
 #ifdef DEBUG
 	IC void						dbg_addline				(Fvector& P0, Fvector& P1, u32 c)					{

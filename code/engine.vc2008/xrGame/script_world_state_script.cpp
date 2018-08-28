@@ -10,6 +10,9 @@
 #include "script_world_state.h"
 #include "condition_state.h"
 
+#include "../../SDK/include/luabind/operator.hpp"
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)
@@ -33,7 +36,6 @@ void CScriptWorldStateWrapper::script_register(lua_State *L)
 #include "script_world_property.h"
 #include "operator_abstract.h"
 
-using namespace luabind;
 
 #pragma optimize("s",on)
 void CScriptWorldPropertyWrapper::script_register(lua_State *L)

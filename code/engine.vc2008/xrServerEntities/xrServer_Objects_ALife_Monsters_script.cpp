@@ -9,6 +9,7 @@
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "xrServer_script_macroses.h"
 
+#include <luabind/luabind.hpp>
 using namespace luabind;
 
 void set_character_name_script(CSE_ALifeTraderAbstract* ta, const char* name) 

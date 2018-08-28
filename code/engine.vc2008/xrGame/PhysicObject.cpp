@@ -578,6 +578,7 @@ bool	CPhysicObject::get_door_vectors(Fvector& closed, Fvector& open) const
 #include "PHCollisionDamageReceiver.h"
 #include "DestroyablePhysicsObject.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

@@ -9,6 +9,7 @@
 #include "stdafx.h"
 #include "cover_point.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 bool CCoverPoint__is_smart_cover	(CCoverPoint const* cover)

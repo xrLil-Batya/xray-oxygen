@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 #pragma once
 #include "../xrScripts.h"
+#include <imdexlib/typelist.hpp>
 struct lua_State;
 
 #ifdef SCRIPT_REGISTRATOR

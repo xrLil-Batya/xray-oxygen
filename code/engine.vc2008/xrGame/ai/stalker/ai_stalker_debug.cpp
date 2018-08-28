@@ -1240,21 +1240,17 @@ static void fill_bones				(CAI_Stalker& self, Fmatrix const& transform, IKinemat
 	void* callback_params				= root_bone.callback_param();
 	root_bone.set_callback				( bctCustom, 0, 0 );
 
-	for (u16 i=0; i<MAX_PARTS; ++i) {
-#if 0
-		CBlend* const blend				= kinematics_animated->LL_PlayCycle(i, animation, 0, 0, 0, 1);
-		if (blend)
-			blend->timeCurrent			= 0.f;//blend->timeTotal - (SAMPLE_SPF + EPS);
-#else // #if 0
+	for (u16 i=0; i<MAX_PARTS; ++i)
+	{
 		u32 const blend_count			= kinematics_animated->LL_PartBlendsCount(i);
-		for (u32 j=0; j<blend_count; ++j) {
+		for (u32 j=0; j<blend_count; ++j) 
+		{
 			CBlend* const blend			= kinematics_animated->LL_PartBlend(i, j);
 			CBlend* const new_blend		= kinematics_animated->LL_PlayCycle( i, blend->motionID, TRUE, 0, 0, 1 );
 			VERIFY						(new_blend);
 			*new_blend					= *blend;
 			new_blend->channel			= 1;
 		}
-#endif // #if 0
 	}
 
 	animation_movement_controller const*controller = self.animation_movement();

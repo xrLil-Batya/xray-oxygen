@@ -1,5 +1,4 @@
 #pragma once
-
 #include "../xrEngine/feel_touch.h"
 #include "../xrEngine/feel_sound.h"
 #include "../xrEngine/iinputreceiver.h"
@@ -17,8 +16,6 @@
 
 #include "step_manager.h"
 #include "../xrScripts/export/script_export_space.h"
-
-#include "string"
 
 using namespace ACTOR_DEFS;
 
@@ -58,7 +55,6 @@ class CCameraShotEffector;
 class CActorInputHandler;
 
 class CActorMemory;
-class CActorStatisticMgr;
 
 class CLocationManager;
 
@@ -134,12 +130,9 @@ public:
 public:	
 	void			AddGameNews_deffered	 (GAME_NEWS_DATA& news_data, u32 delay);
 	virtual void	AddGameNews				 (GAME_NEWS_DATA& news_data);
-protected:
-	CActorStatisticMgr*				m_statistic_manager;
-public:
-	virtual void StartTalk			(CInventoryOwner* talk_partner);
-			void RunTalkDialog		(CInventoryOwner* talk_partner, bool disable_break);
-	CActorStatisticMgr&				StatisticMgr()	{return *m_statistic_manager;}
+	virtual void	StartTalk				 (CInventoryOwner* talk_partner, bool bStartTrade = false);
+			void	RunTalkDialog			 (CInventoryOwner* talk_partner, bool disable_break);
+
 	CGameNewsRegistryWrapper		*game_news_registry;
 	CCharacterPhysicsSupport		*m_pPhysics_support;
 
@@ -516,10 +509,6 @@ protected:
 	//---------------------------------------------
 	u16						m_u16NumBones;
 	void					net_ExportDeadBody		(NET_Packet &P);
-	//---------------------------------------------
-#ifdef DEBUG
-	virtual void			OnRender_Network();
-#endif
 	//---------------------------------------------
 
 	//////////////////////////////////////////////////////////////////////////

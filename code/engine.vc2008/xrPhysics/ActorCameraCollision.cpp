@@ -12,7 +12,7 @@
 #	include	"debug_output.h"
 #endif
 
-IPhysicsShellEx*	actor_camera_shell = NULL;
+IPhysicsShellEx*	actor_camera_shell = nullptr;
 BOOL dbg_draw_camera_collision = FALSE;
 static bool cam_collided = false;
 static bool cam_step = false;
@@ -44,7 +44,7 @@ static void	cammera_shell_collide_callback_common(bool& do_collide, bool bo1, dC
 		return;
 	c.surface.mu = 0;
 
-	dJointID contact_joint = dJointCreateContactSpecial(0, ContactGroup, &c);//dJointCreateContact(0, ContactGroup, &c);//
+	dJointID contact_joint = dJointCreateContactSpecial(nullptr, ContactGroup, &c);//dJointCreateContact(0, ContactGroup, &c);//
 	CPHObject* obj = (CPHObject*)my_data->callback_data;
 	VERIFY(obj);
 #ifdef	DEBUG
@@ -54,9 +54,9 @@ static void	cammera_shell_collide_callback_common(bool& do_collide, bool bo1, dC
 	obj->Island().DActiveIsland()->ConnectJoint(contact_joint);
 
 	if (bo1)
-		dJointAttach(contact_joint, dGeomGetBody(c.geom.g1), 0);
+		dJointAttach(contact_joint, dGeomGetBody(c.geom.g1), nullptr);
 	else
-		dJointAttach(contact_joint, 0, dGeomGetBody(c.geom.g2));
+		dJointAttach(contact_joint, nullptr, dGeomGetBody(c.geom.g2));
 }
 static const float soft_cfm_for_geometry = 0.01f;
 static const float soft_cfm_for_controllers = 0.05f;
@@ -141,7 +141,7 @@ IPhysicsShellEx	* create_camera_shell(IPhysicsShellHolder *actor)
 
 	character_test_geom->set_obj_contact_cb(cammera_shell_character_collide_callback);
 
-	shell->set_ContactCallback(0);
+	shell->set_ContactCallback(nullptr);
 	shell->set_CallbackData(smart_cast<CPHObject*>(shell));
 
 	dMass m;

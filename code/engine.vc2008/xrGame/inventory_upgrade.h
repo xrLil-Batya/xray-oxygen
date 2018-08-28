@@ -10,6 +10,7 @@
 #define INVENTORY_UPGRADE_H_INCLUDED
 
 #include "inventory_upgrade_base.h"
+#include "luabind/luabind.hpp"
 
 namespace inventory
 {
@@ -22,7 +23,7 @@ namespace detail
 template <typename return_type>
 struct functor_base
 {
-	typedef luabind::functor<return_type>	functor_type;
+	using functor_type = luabind::functor<return_type>;
 
 	functor_type	functr;
 	LPCSTR			parameter;
@@ -98,7 +99,7 @@ enum EMaxProps
 class Upgrade : public UpgradeBase
 {
 private:
-	typedef		UpgradeBase	inherited;
+	using inherited =		UpgradeBase;
 public:
 							Upgrade();
 	virtual					~Upgrade();
@@ -132,14 +133,14 @@ public:
 	virtual		void		highlight_down();
 
 protected:
-	typedef detail::functor<bool>			BoolFunctor;
-	typedef detail::functor2<bool>			BoolFunctor2;
-	typedef detail::functor<void>			VoidFunctor;
-	typedef detail::functor2<void>			VoidFunctor2;
-	typedef detail::functor3<void>			VoidFunctor3;
+	using BoolFunctor = detail::functor<bool>;
+	using BoolFunctor2 = detail::functor2<bool>;
+	using VoidFunctor = detail::functor<void>;
+	using VoidFunctor2 = detail::functor2<void>;
+	using VoidFunctor3 = detail::functor3<void>;
 
-	typedef detail::functor2<LPCSTR>		StrFunctor;
-	typedef detail::functor2<int>			IntFunctor;
+	using StrFunctor = detail::functor2<LPCSTR>;
+	using IntFunctor = detail::functor2<int>;
 
 protected:
 	Group*					m_parent_group;

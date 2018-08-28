@@ -22,6 +22,7 @@
 #ifdef DEBUG
 #	include "moving_objects.h"
 #endif // DEBUG
+#include <luabind/luabind.hpp>
 
 const char* alife_section = "alife";
 extern void destroy_lua_wpn_params();
@@ -57,14 +58,14 @@ CALifeSimulator::CALifeSimulator(xrServer *server, shared_str *command_line) :
 	luabind::functor<void> functor;
 	R_ASSERT2(ai().script_engine().functor(start_game_callback,functor),"Failed to get start game callback");
 
-// 	try
-// 	{
+ 	try
+ 	{
 		functor();
-// 	}
-// 	catch (luabind::error err)
-// 	{
-// 		R_ASSERT3(false, "Failed call start game callback. %s", err.what());
-// 	}
+ 	}
+ 	catch (/* luabind::error err */...)
+ 	{
+ 		R_ASSERT3(false, "Failed call start game callback. %s", /* err.what() */ "");
+ 	}
 
 	load(p.m_game_or_spawn,!xr_strcmp(p.m_new_or_load,"load") ? false : true, !xr_strcmp(p.m_new_or_load,"new"));
 }
@@ -468,6 +469,8 @@ xr_vector<u16>& get_children(const CALifeSimulator *self, CSE_Abstract *object)
 	VERIFY(self);
 	return object->children;
 }
+
+#include "../../SDK/include/luabind/iterator_policy.hpp"
 
 #pragma optimize("s",on)
 void CALifeSimulator::script_register(lua_State *L)

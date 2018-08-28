@@ -563,6 +563,8 @@ void CNightVisionEffector::PlaySounds(EPlaySounds which)
 #include "EliteDetector.h"
 #include "AdvancedDetector.h"
 
+
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 #pragma optimize("s",on)

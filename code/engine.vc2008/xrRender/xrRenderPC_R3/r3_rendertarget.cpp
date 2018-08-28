@@ -625,9 +625,6 @@ CRenderTarget::CRenderTarget		()
 		g_combine_2UV.create				(FVF::F_TL2uv,	RCache.Vertex.Buffer(), RCache.QuadIB);
 		g_combine_cuboid.create				(dwDecl,	RCache.Vertex.Buffer(), RCache.Index.Buffer());
 
-		u32 fvf_aa_blur				= D3DFVF_XYZRHW|D3DFVF_TEX4|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3);
-		g_aa_blur.create			(fvf_aa_blur,	RCache.Vertex.Buffer(), RCache.QuadIB);
-
 		u32 fvf_aa_AA				= D3DFVF_XYZRHW|D3DFVF_TEX7|D3DFVF_TEXCOORDSIZE2(0)|D3DFVF_TEXCOORDSIZE2(1)|D3DFVF_TEXCOORDSIZE2(2)|D3DFVF_TEXCOORDSIZE2(3)|D3DFVF_TEXCOORDSIZE2(4)|D3DFVF_TEXCOORDSIZE4(5)|D3DFVF_TEXCOORDSIZE4(6);
 		g_aa_AA.create				(fvf_aa_AA,		RCache.Vertex.Buffer(), RCache.QuadIB);
 
@@ -644,23 +641,6 @@ CRenderTarget::CRenderTarget		()
 
 	// Build textures
 	{
-		// Testure for async sreenshots
-		{
-			D3D10_TEXTURE2D_DESC	desc;
-			desc.Width = Device.dwWidth;
-			desc.Height = Device.dwHeight;
-			desc.MipLevels = 1;
-			desc.ArraySize = 1;
-			desc.SampleDesc.Count = 1;
-			desc.SampleDesc.Quality = 0;
-			desc.Format = DXGI_FORMAT_R8G8B8A8_SNORM;
-			desc.Usage = D3D10_USAGE_STAGING;
-			desc.BindFlags = 0;
-			desc.CPUAccessFlags = D3D10_CPU_ACCESS_READ;
-			desc.MiscFlags = 0;
-
-			R_CHK( HW.pDevice->CreateTexture2D(&desc, 0, &t_ss_async) );
-		}
 		// Build material(s)
 		{
 			//	Create immutable texture. 
@@ -719,13 +699,7 @@ CRenderTarget::CRenderTarget		()
 						case 2: 
 						{	// looks like Phong
 							fd = ld;					// 1.0
-							//#TODO: COMPILER BUG, can't set 128.f as original, set to 125
-							//fs	= powf(ls*1.01f,128.f)
-							// [FX] This is unlimited powf for 15.3.2
-							for (unsigned it = 0; it < 128; it++)
-							{
-								fs *= ls * 1.01f;
-							}
+							fs = powf(ls*1.01f, 128.f);
 						}	break;
 						case 3:	{ // looks like Metal
 							float	s0	=	_abs	(1-_abs	(0.05f*_sin(33.f*ld)+ld-ls));
@@ -890,8 +864,6 @@ CRenderTarget::CRenderTarget		()
 
 CRenderTarget::~CRenderTarget	()
 {
-	_RELEASE					(t_ss_async);
-
 	// Textures
 	t_material->surface_set		(NULL);
 

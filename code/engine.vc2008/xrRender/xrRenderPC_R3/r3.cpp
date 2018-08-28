@@ -269,8 +269,6 @@ void					CRender::create					()
 	c_lmaterial					= "L_material";
 	c_sbase						= "s_base";
 
-	m_bMakeAsyncSS				= false;
-
 	Target						= xr_new<CRenderTarget>		();	// Main target
 
 	Models						= xr_new<CModelPool>		();
@@ -295,7 +293,6 @@ void					CRender::create					()
 
 void					CRender::destroy				()
 {
-	m_bMakeAsyncSS				= false;
 	FluidManager.Destroy();
 	::PortalTraverser.destroy	();
 
@@ -1374,4 +1371,9 @@ static inline bool match_shader_id	( LPCSTR const debug_shader_id, LPCSTR const 
 
 	return						false;
 #endif // #ifdef DEBUG
+}
+
+void CRender::Screenshot(ScreenshotMode mode, LPCSTR name)
+{
+	ScreenshotManager.MakeScreenshot(mode, name);
 }

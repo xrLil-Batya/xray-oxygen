@@ -7,6 +7,7 @@
 ////////////////////////////////////////////////////////////////////////////
 
 #include "stdafx.h"
+#include <luabind/luabind.hpp>
 #include "script_property_evaluator_wrapper.h"
 #include "script_game_object.h"
 #include "ai_space.h"

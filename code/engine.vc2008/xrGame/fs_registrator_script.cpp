@@ -2,6 +2,7 @@
 #include "fs_registrator.h"
 #include "../xrcore/LocatorApi.h"
 
+#include "luabind/luabind.hpp"
 using namespace luabind;
 
 LPCSTR get_file_age_str(CLocatorAPI* fs, LPCSTR nm);
