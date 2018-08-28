@@ -1396,17 +1396,11 @@
     <Filter Include="Core\Client\Objects\tasks_info_dialogs\game tasks">
       <UniqueIdentifier>{87eb87c8-c1f5-44aa-a038-1d75ba2bc604}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Objects\tasks_info_dialogs\encyclopedia">
-      <UniqueIdentifier>{785f008d-f875-47ff-a106-81b80b046db6}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\tasks_info_dialogs\dialogs">
       <UniqueIdentifier>{6863bf20-f7f9-4ed9-b5d5-60c5d65c424e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Client\Objects\tasks_info_dialogs\news">
       <UniqueIdentifier>{123c29b8-87a5-49d0-811d-5ad77e1ff558}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Client\Objects\tasks_info_dialogs\statistics">
-      <UniqueIdentifier>{400aa414-fcce-4e23-84d8-28cf95bf4c3e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Client\Objects\tasks_info_dialogs\map">
       <UniqueIdentifier>{fb4147cb-d939-416f-b7b1-f0094154b5be}</UniqueIdentifier>
@@ -4848,12 +4842,6 @@
     <ClInclude Include="game_news.h">
       <Filter>Core\Client\Objects\tasks_info_dialogs\news</Filter>
     </ClInclude>
-    <ClInclude Include="actor_statistic_defs.h">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\statistics</Filter>
-    </ClInclude>
-    <ClInclude Include="actor_statistic_mgr.h">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\statistics</Filter>
-    </ClInclude>
     <ClInclude Include="map_location.h">
       <Filter>Core\Client\Objects\tasks_info_dialogs\map</Filter>
     </ClInclude>
@@ -7351,9 +7339,6 @@
     </ClCompile>
     <ClCompile Include="game_news.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\news</Filter>
-    </ClCompile>
-    <ClCompile Include="actor_statistic_mgr.cpp">
-      <Filter>Core\Client\Objects\tasks_info_dialogs\statistics</Filter>
     </ClCompile>
     <ClCompile Include="map_location.cpp">
       <Filter>Core\Client\Objects\tasks_info_dialogs\map</Filter>

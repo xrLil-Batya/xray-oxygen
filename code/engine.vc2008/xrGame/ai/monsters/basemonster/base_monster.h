@@ -227,12 +227,6 @@ public:
 			bool			GetCoverFromEnemy				(const Fvector &enemy_pos, Fvector &position, u32 &vertex_id);
 			bool			GetCoverFromPoint				(const Fvector &pos, Fvector &position, u32 &vertex_id, float min_dist, float max_dist, float radius);
 			bool			GetCoverCloseToPoint			(const Fvector &dest_pos, float min_dist, float max_dist, float deviation, float radius ,Fvector &position, u32 &vertex_id);
-
-
-
-
-
-	// Movement Manager
 protected:
 	CControlPathBuilder			*m_movement_manager;
 protected:
@@ -287,18 +281,12 @@ public:
 	// -----------------------------------------------------------------------------
 	CMonsterEventManager	EventMan;
 	// -----------------------------------------------------------------------------
-
 	CMeleeChecker			MeleeChecker;
 	CMonsterMorale			Morale;
-
 	// -----------------------------------------------------------------------------
-
 	CMonsterCoverManager	*CoverMan;
-
 	// -----------------------------------------------------------------------------
-
 	CControlledEntityBase	*m_controlled;	
-
 	// -----------------------------------------------------------------------------
 	enum EMonsterType {
 		eMonsterTypeUniversal	= u32(0),
@@ -325,9 +313,9 @@ public:
 //	//-----------------------------------------------------------------
 //	// Spawn Inventory Item
 //	//-----------------------------------------------------------------
-//private:
-//	LPCSTR					m_item_section;
-//	float					m_spawn_probability;
+private:
+	LPCSTR					m_item_section;
+	float					m_spawn_probability;
 
 	//--------------------------------------------------------------------
 	// Berserk

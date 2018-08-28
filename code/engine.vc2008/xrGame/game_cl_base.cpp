@@ -16,7 +16,7 @@ EGameLanguage g_Language = EGameLanguage::eglRussian;
 
 xr_token language_type_token[] = 
 {
-	{ "Р СѓСЃСЃРєРёР№", 0 },
+	{ "Русский", 0 },
 	{ "English", 1 }
 };
 

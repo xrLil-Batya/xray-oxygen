@@ -42,7 +42,6 @@
 #include "GameTaskManager.h"
 #include "holder_custom.h"
 #include "actor_memory.h"
-#include "actor_statistic_mgr.h"
 #include "characterphysicssupport.h"
 #include "../xrengine/xr_collide_form.h"
 #ifdef DEBUG
@@ -75,7 +74,7 @@ void	CActor::ConvState(u32 mstate_rl, string128 *buf)
 	if (mstate_rl&mcLLookout)	xr_strcat(*buf,"LLookout ");
 	if (mstate_rl&mcRLookout)	xr_strcat(*buf,"RLookout ");
 	if (m_bJumpKeyPressed)		xr_strcat(*buf,"+Jumping ");
-};
+}
 //--------------------------------------------------------------------
 void CActor::net_Export	(NET_Packet& P)					// export to server
 {
@@ -135,8 +134,8 @@ void CActor::net_Export	(NET_Packet& P)					// export to server
 	else
 	{
 		net_ExportDeadBody(P);
-	};
-};
+	}
+}
 
 static void w_vec_q8(NET_Packet& P,const Fvector& vec,const Fvector& min,const Fvector& max)
 {
@@ -144,16 +143,7 @@ static void w_vec_q8(NET_Packet& P,const Fvector& vec,const Fvector& min,const F
 	P.w_float_q8(vec.y,min.y,max.y);
 	P.w_float_q8(vec.z,min.z,max.z);
 }
-static void r_vec_q8(NET_Packet& P,Fvector& vec,const Fvector& min,const Fvector& max)
-{
-	P.r_float_q8(vec.x,min.x,max.x);
-	P.r_float_q8(vec.y,min.y,max.y);
-	P.r_float_q8(vec.z,min.z,max.z);
 
-	clamp(vec.x,min.x,max.x);
-	clamp(vec.y,min.y,max.y);
-	clamp(vec.z,min.z,max.z);
-}
 static void w_qt_q8(NET_Packet& P,const Fquaternion& q)
 {
 	///////////////////////////////////////////////////
@@ -162,20 +152,6 @@ static void w_qt_q8(NET_Packet& P,const Fquaternion& q)
 	P.w_float_q8(q.z,-1.f,1.f);
 	P.w_float_q8(q.w,-1.f,1.f);
 	///////////////////////////////////////////
-}
-static void r_qt_q8(NET_Packet& P,Fquaternion& q)
-{
-	/////////////////////////////////////////////////////
-	P.r_float_q8(q.x,-1.f,1.f);
-	P.r_float_q8(q.y,-1.f,1.f);
-	P.r_float_q8(q.z,-1.f,1.f);
-	P.r_float_q8(q.w,-1.f,1.f);
-
-	clamp(q.x,-1.f,1.f);
-	clamp(q.y,-1.f,1.f);
-	clamp(q.z,-1.f,1.f);
-	clamp(q.w,-1.f,1.f);
-	///////////////////////////////////////////////////
 }
 
 #define F_MAX         3.402823466e+38F
@@ -366,8 +342,6 @@ BOOL CActor::net_Spawn(CSE_Abstract* DC)
 	Level().MapManager().AddMapLocation("actor_location", ID());
 	Level().MapManager().AddMapLocation("actor_location_p", ID());
 
-	m_statistic_manager = xr_new<CActorStatisticMgr>();
-
 	spatial.type |= STYPE_REACTTOSOUND;
 	psHUD_Flags.set(HUD_WEAPON_RT, true);
 	psHUD_Flags.set(HUD_WEAPON_RT2, true);
@@ -381,8 +355,6 @@ void CActor::net_Destroy()
 
 	if (m_holder_id != ALife::_OBJECT_ID(-1))
 		Level().client_spawn_manager().remove(m_holder_id, ID());
-
-	delete_data(m_statistic_manager);
 
 	Level().MapManager().OnObjectDestroyNotify(ID());
 

@@ -1356,8 +1356,6 @@
     <ClInclude Include="PhraseDialogManager.h" />
     <ClInclude Include="PhraseScript.h" />
     <ClInclude Include="game_news.h" />
-    <ClInclude Include="actor_statistic_defs.h" />
-    <ClInclude Include="actor_statistic_mgr.h" />
     <ClInclude Include="map_location.h" />
     <ClInclude Include="map_location_defs.h" />
     <ClInclude Include="map_manager.h" />
@@ -1915,7 +1913,10 @@
     <ClCompile Include="ai\Monsters\psy_aura.cpp" />
     <ClCompile Include="ai\Monsters\energy_holder.cpp" />
     <ClCompile Include="ai\Monsters\monster_event_manager.cpp" />
-    <ClCompile Include="ai\Monsters\melee_checker.cpp" />
+    <ClCompile Include="ai\Monsters\melee_checker.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">false</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="ai\Monsters\monster_morale.cpp" />
     <ClCompile Include="ai\Monsters\controlled_actor.cpp" />
     <ClCompile Include="ai\Monsters\control_manager.cpp" />
@@ -2268,7 +2269,6 @@
     <ClCompile Include="PhraseDialogManager.cpp" />
     <ClCompile Include="PhraseScript.cpp" />
     <ClCompile Include="game_news.cpp" />
-    <ClCompile Include="actor_statistic_mgr.cpp" />
     <ClCompile Include="map_location.cpp" />
     <ClCompile Include="map_manager.cpp" />
     <ClCompile Include="Inventory.cpp" />

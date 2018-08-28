@@ -192,7 +192,6 @@ CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 	m_pActorEffector		= nullptr;
 	m_vehicle_anims	        = xr_new<SActorVehicleAnims>();
 	m_entity_condition		= nullptr;
-	m_statistic_manager		= nullptr;
 	m_sDefaultObjAction		= nullptr;
 	m_pUsableObject			= nullptr;
 	SetZoomAimingMode		(false);

@@ -18,7 +18,6 @@
 #include "game_news.h"
 #include "map_location_defs.h"
 
-#include "actor_statistic_defs.h"
 extern "C"
 {
 #include "lua/lauxlib.h"
@@ -65,10 +64,5 @@ add_to_registry_type_list(CMapLocationRegistry)
 add_to_registry_type_list(CGameTaskRegistry)
 #define map_locations define_constant(CGameTaskRegistry) 
 #define registry_type_list save_registry_type_list(CGameTaskRegistry)
-
-//ActorStatistics
-add_to_registry_type_list(CActorStatisticRegistry)
-#define map_locations define_constant(CActorStatisticRegistry) 
-#define registry_type_list save_registry_type_list(CActorStatisticRegistry)
 
 #pragma warning(pop)
