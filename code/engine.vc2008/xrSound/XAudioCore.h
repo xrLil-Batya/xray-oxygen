@@ -43,7 +43,8 @@ enum XSTATUS
 
 #define FAILEDX(x) (!(x == XAUDIO_OK))
 #define SUCCEEDEDX(x) (x == XAUDIO_OK)
-#define _RELEASE(x)			{ if(x) { (x)->Release(); (x)=NULL; } }
+#define _RELEASE(x)			{ if(x) { (x)->Release();		(x)=NULL; } }
+#define _DESTROY(x)			{ if(x) { (x)->DestroyVoice;	(x)=NULL; } }
 
 #define INPUTCHANNELS 1				// number of source channels
 #define OUTPUTCHANNELS 8			// maximum number of destination channels supported in this sample
@@ -76,8 +77,8 @@ using XAUDIO_DATA = struct
 	X3DAUDIO_HANDLE				x3DInstance;
 	XAUDIO2_VOICE_STATE			voiceState;
 	XAUDIO2_VOICE_SENDS			voiceSends;
+	XAUDIO2_DEVICE_DETAILS		deviceDetail;
 	std::unique_ptr<uint8_t[]>	waveData;
-
 };
 
 using XAUDIO_STATE = struct
@@ -154,7 +155,8 @@ private:
 class CSoundRender_CoreB : public CSoundRender_Core
 {
 	using inherited = CSoundRender_Core;
-	IXAudio2* pDevice;
+
+	XAUDIO_STATE audioState;
 
 	struct SListener
 	{
