@@ -27,7 +27,6 @@ using smart_cover::default_behaviour_planner;
 
 target_selector::~target_selector()
 {
-	xr_delete(m_script_callback);
 }
 
 void target_selector::setup				(animation_planner *object, CPropertyStorage *storage)
@@ -43,9 +42,9 @@ void target_selector::setup				(animation_planner *object, CPropertyStorage *sto
 	set_target_state		(target);
 }
 
-void target_selector::callback			(callback_type const &callback)
+void target_selector::callback(callback_type const &callback)
 {
-	*m_script_callback		= callback;
+	m_script_callback = callback;
 }
 
 void target_selector::update			()
@@ -55,7 +54,7 @@ void target_selector::update			()
 	//. when script callback is setup
 	inherited::update		();
 
-	(*m_script_callback)(object().object().lua_game_object());
+	m_script_callback(object().object().lua_game_object());
 }
 
 void target_selector::add_evaluators	()

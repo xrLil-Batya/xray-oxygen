@@ -9,7 +9,6 @@
 * Main methods for XAudio implementation
 *********************************************************/
 #pragma once
-#pragma comment(lib,"x3daudio.lib")
 
 #include "../xrCore/xrCore.h"
 #include "SoundRender_Core.h"

@@ -1162,8 +1162,7 @@ extern	BOOL	g_ShowAnimationInfo		;
 void CActor::OnHUDDraw(CCustomHUD*)
 {
 	R_ASSERT(IsFocused());
-	if (!((mstate_real & mcLookout) && false))
-		g_player_hud->render_hud();
+	g_player_hud->render_hud();
 }
 
 void CActor::RenderIndicator			(Fvector dpos, float r1, float r2, const ui_shader &IndShader)

@@ -7,9 +7,7 @@
 #pragma once
 #include "smart_cover_detail.h"
 #include "action_planner_action.h"
-
-template <typename _return_type>
-class CScriptCallbackEx;
+#include "script_callback_ex.h"
 
 namespace smart_cover 
 {
@@ -24,7 +22,7 @@ class animation_planner;
 		using callback_type = CScriptCallbackEx<void>;
 	
 	private:
-		callback_type*	m_script_callback;
+		callback_type	m_script_callback;
 		CRandom			m_random;
 	
 	private:
@@ -41,6 +39,6 @@ class animation_planner;
 		virtual void	update			();
 		virtual LPCSTR	object_name		() const;
 				void	callback		(callback_type const &callback);
-		IC callback_type const& callback() const { return	*(m_script_callback); }
+		IC callback_type const& callback() const { return	(m_script_callback); }
 	};
 }
