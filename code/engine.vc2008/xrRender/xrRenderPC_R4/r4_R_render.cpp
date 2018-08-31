@@ -124,7 +124,7 @@ void CRender::render_main	(Fmatrix&	m_ViewProjection, bool _fportals)
 
 						if (bSphere)
 							Glows->add(pGlow);
-						else
+						else if(pGlow)
 							pGlow->hide_glow();
 					}
 					else if (bSphere)

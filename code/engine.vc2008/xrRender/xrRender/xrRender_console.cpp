@@ -636,7 +636,7 @@ public:
 class CCC_Dof : public CCC_Vector3
 {
 public:
-	CCC_Dof(LPCSTR N, Fvector* V, const Fvector _min, const Fvector _max) : CCC_Vector3(N, V, _min, _max) {};
+	CCC_Dof(LPCSTR N, Fvector* V, const Fvector &_min, const Fvector &_max) : CCC_Vector3(N, V, _min, _max) {};
 
 	virtual void Execute(LPCSTR args)
 	{
