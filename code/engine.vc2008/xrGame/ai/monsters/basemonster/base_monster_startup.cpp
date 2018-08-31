@@ -352,10 +352,6 @@ BOOL CBaseMonster::net_Spawn (CSE_Abstract* DC)
 	// spawn inventory item
 	if (ai().get_alife() && m_spawn_probability != 0.f)
 	{
-
-		CSE_ALifeMonsterBase *se_monster = smart_cast<CSE_ALifeMonsterBase*>(ai().alife().objects().object(ID()));
-		VERIFY(se_monster);
-
 		float prob = Random.randF();
 		if ((prob < m_spawn_probability) || fsimilar(m_spawn_probability, 1.f))
 		{

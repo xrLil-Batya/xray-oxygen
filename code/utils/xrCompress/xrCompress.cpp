@@ -361,17 +361,16 @@ void xrCompressor::OpenPack(LPCSTR tgt_folder, int num)
 	{
 		CMemoryWriter			W;
 		CInifile::Sect&	S = config_ltx->r_section("header");
-		CInifile::SectCIt it = S.Data.begin();
-		CInifile::SectCIt it_e = S.Data.end();
 		string4096				buff;
-		xr_sprintf(buff, "[%s]", S.Name.c_str());
+		sprintf(buff, "[%s]", S.Name.c_str());
 		W.w_string(buff);
-		for (; it != it_e; ++it)
+
+		for (auto &it: S.Data)
 		{
-			const CInifile::Item& I = *it;
-			xr_sprintf(buff, "%s = %s", I.first.c_str(), I.second.c_str());
+			sprintf(buff, "%s = %s", it.first.c_str(), it.second.c_str());
 			W.w_string(buff);
 		}
+
 		W.seek(0);
 		IReader	R(W.pointer(), (u32)W.size());
 		
@@ -507,17 +506,17 @@ bool xrCompressor::IsFolderAccepted(CInifile& ltx, LPCSTR path, BOOL& recurse)
 	if (ltx.section_exist("exclude_folders"))
 	{
 		CInifile::Sect& ef_sect = ltx.r_section("exclude_folders");
-		for (CInifile::SectCIt ef_it = ef_sect.Data.begin(); ef_it != ef_sect.Data.end(); ef_it++)
+		for (auto &ef_it : ef_sect.Data)
 		{
-			recurse = CInifile::IsBOOL(ef_it->second.c_str());
+			recurse = CInifile::IsBOOL(ef_it.second.c_str());
 			if (recurse)
 			{
-				if (path == strstr(path, ef_it->first.c_str()))
+				if (path == strstr(path, ef_it.first.c_str()))
 					return false;
 			}
 			else
 			{
-				if (0 == xr_strcmp(path, ef_it->first.c_str()))
+				if (0 == xr_strcmp(path, ef_it.first.c_str()))
 					return false;
 			}
 		}
@@ -539,13 +538,13 @@ void xrCompressor::ProcessLTX(CInifile& ltx)
 	{
 		CInifile::Sect& if_sect = ltx.r_section("include_folders");
 
-		for (CInifile::SectCIt if_it = if_sect.Data.begin(); if_it != if_sect.Data.end(); ++if_it)
+		for (auto &if_it : if_sect.Data)
 		{
-			BOOL ifRecurse = CInifile::IsBOOL(if_it->second.c_str());
+			BOOL ifRecurse = CInifile::IsBOOL(if_it.second.c_str());
 			u32 folder_mask = FS_ListFolders | (ifRecurse ? 0 : FS_RootOnly);
 
 			string_path path;
-			LPCSTR _path = 0 == xr_strcmp(if_it->first.c_str(), ".\\") ? "" : if_it->first.c_str();
+			LPCSTR _path = 0 == xr_strcmp(if_it.first.c_str(), ".\\") ? "" : if_it.first.c_str();
 			xr_strcpy(path, _path);
 			u32 path_len = xr_strlen(path);
 			if ((0 != path_len) && (path[path_len - 1] != '\\')) xr_strcat(path, "\\");
@@ -592,14 +591,14 @@ void xrCompressor::ProcessLTX(CInifile& ltx)
 				Msg("-F: %s", path);
 			}
 		}
-	}//if(ltx.section_exist("include_folders"))
+	}
 
 	if (ltx.section_exist("include_files"))
 	{
 		CInifile::Sect& if_sect = ltx.r_section("include_files");
-		for (CInifile::SectCIt if_it = if_sect.Data.begin(); if_it != if_sect.Data.end(); ++if_it)
+		for (auto &if_it : if_sect.Data)
 		{
-			files_list->push_back(xr_strdup(if_it->first.c_str()));
+			files_list->push_back(xr_strdup(if_it.first.c_str()));
 		}
 	}
 
