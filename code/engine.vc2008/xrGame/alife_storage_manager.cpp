@@ -69,9 +69,9 @@ void CALifeStorageManager::save	(LPCSTR save_name_no_check, bool update_name)
 
 		source_count			= (u32)stream.tell();
 		void					*source_data = stream.pointer();
-		dest_count				= rtc_csize(source_count);
+		dest_count				= XRay::Compress::RT::RtcSize(source_count);
 		dest_data				= xr_malloc(dest_count);
-		dest_count				= (u32)rtc_compress(dest_data,dest_count,source_data,source_count);
+		dest_count				= (u32)XRay::Compress::RT::RtcCompress(dest_data,dest_count,source_data,source_count);
 	}
 
 	string_path					temp;
@@ -167,7 +167,6 @@ bool CALifeStorageManager::load(LPCSTR save_name_no_check)
 	strconcat(sizeof(temp), temp, CStringTable().translate("st_loading_saved_game").c_str(), " \"", save_name, SAVE_EXTENSION, "\"");
 
 	pApp->SetLoadStageTitle(temp);
-	//pApp->LoadStage();
 	g_pGamePersistent->LoadTitle();
 
 	unload();
@@ -175,7 +174,7 @@ bool CALifeStorageManager::load(LPCSTR save_name_no_check)
 
 	u32 source_count = stream->r_u32();
 	void *source_data = xr_malloc(source_count);
-	rtc_decompress(source_data, source_count, stream->pointer(), stream->length() - 3 * sizeof(u32));
+	XRay::Compress::RT::RtcDecompress(source_data, source_count, stream->pointer(), stream->length() - 3 * sizeof(u32));
 	FS.r_close(stream);
 	load(source_data, source_count, file_name);
 	xr_free(source_data);
@@ -184,7 +183,7 @@ bool CALifeStorageManager::load(LPCSTR save_name_no_check)
 
 	VERIFY(graph().actor());
 
-	return						(true);
+	return (true);
 }
 
 void CALifeStorageManager::save	(NET_Packet &net_packet)
