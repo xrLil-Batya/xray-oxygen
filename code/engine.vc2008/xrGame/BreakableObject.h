@@ -60,4 +60,11 @@ private:
 private:
 	virtual ICollisionDamageReceiver	*PHCollisionDamageReceiver	()								{return (this);}
 	virtual		void					CollisionHit				( u16 source_id, u16 bone_id, float power, const Fvector &dir, Fvector &pos );
+
+public:
+	DECLARE_SCRIPT_REGISTER_FUNCTION
 };
+
+add_to_type_list(CBreakableObject)
+#undef script_type_list
+#define script_type_list save_type_list(CBreakableObject)
