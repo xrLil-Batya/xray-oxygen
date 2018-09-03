@@ -247,6 +247,7 @@ void CCC_RegisterCommands()
     CMD3(CCC_Mask, "rs_wip", &psActorFlags, AF_WORKINPROGRESS);
     CMD3(CCC_Mask, "rs_clearskyinterface", &psActorFlags, AF_CLEARSKYINTERFACE);
     CMD3(CCC_Mask, "rs_showdate", &psActorFlags, AF_SHOWDATE);
+	CMD3(CCC_Mask, "rs_psp", &psActorFlags, AF_PSP);
 	CMD1(CCC_TimeFactor, "time_factor");
 	CMD1(CCC_Spawn, "g_spawn");
 	CMD1(CCC_Spawn_to_inventory, "g_spawn_to_inventory");
