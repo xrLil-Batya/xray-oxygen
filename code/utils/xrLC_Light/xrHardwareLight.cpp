@@ -98,7 +98,7 @@ BOOL xrHardwareLight::IsHardwareAccelerationSupported(xrHardwareLight::Mode mode
 		return TRUE;
 	case xrHardwareLight::Mode::OpenCL:
 	{
-		gCalc = CreateCalc(Calc::kOpenCL, 0);
+		//gCalc = CreateCalc(Calc::kOpenCL, 0);
 		uint32_t DeviceCount = gCalc->GetDeviceCount();
 
 		if (DeviceCount == 0) return FALSE; // No devices
@@ -129,7 +129,7 @@ BOOL xrHardwareLight::IsHardwareAccelerationSupported(xrHardwareLight::Mode mode
 			}
 		}
 
-		DeleteCalc(gCalc);
+		//DeleteCalc(gCalc);
 		gCalc = nullptr;
 
 		return TRUE;
@@ -176,8 +176,10 @@ VertNormalBuffer(nullptr)
 	mode = Mode::CUDA;
 
 	BOOL bIsCUDASupported = IsHardwareAccelerationSupported(Mode::CUDA);
-	BOOL bIsOpenCLSupported = IsHardwareAccelerationSupported(Mode::OpenCL);
-	BOOL bIsCPUAccelerationSupported = IsHardwareAccelerationSupported(Mode::CPU);
+	//BOOL bIsOpenCLSupported = IsHardwareAccelerationSupported(Mode::OpenCL);
+	BOOL bIsOpenCLSupported = FALSE;
+	//BOOL bIsCPUAccelerationSupported = IsHardwareAccelerationSupported(Mode::CPU);
+	BOOL bIsCPUAccelerationSupported = FALSE;
 
 	// We preffer CUDA, then OpenCL, CPU
 	if (bIsCUDASupported)
@@ -200,7 +202,7 @@ VertNormalBuffer(nullptr)
 		break;
 	case xrHardwareLight::Mode::OpenCL:
 		R_ASSERT(gpuidx != -1);
-		gCalc = CreateCalc(Calc::kOpenCL, 0);
+		//gCalc = CreateCalc(Calc::kOpenCL, 0);
 		RadeonRays::IntersectionApi::SetPlatform(RadeonRays::DeviceInfo::kOpenCL);
 		gRadeon = RadeonRays::IntersectionApi::Create(gpuidx);
 		gCalcDevice = gCalc->CreateDevice(gpuidx);
@@ -390,7 +392,14 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 			TexDesc.Width = Tex.dwWidth;
 			TexDesc.Height = Tex.dwHeight;
 			TexDesc.IsHaveAlpha = !!Tex.bHasAlpha;
-			TexDesc.Pixels = (xrHardwarePixel*)TexturesData[TextureID]->ptr();
+			if (Tex.pSurface != nullptr)
+			{
+				TexDesc.Pixels = (xrHardwarePixel*)TexturesData[TextureID]->ptr();
+			}
+			else
+			{
+				TexDesc.Pixels = nullptr;
+			}
 
 			TextureDescription.push_back(TexDesc);
 
@@ -414,20 +423,17 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 	LightBuffer = new DeviceBuffer<R_Light>(RGBSize + SunSize + HemiSize, GetBufferTypeByMode(mode));
 	R_Light* LightDevicePtr = LightBuffer->ptr();
 	size_t LightPtrOffset = 0;
-	__int64 RGBLightDataSize  = sizeof(R_Light)  * RGBSize;
-	__int64 SunLightDataSize  = sizeof(R_Light)  * SunSize;
-	__int64 HemiLightDataSize = sizeof(R_Light)  * HemiSize;
 
 	//	RGB
-	LightBuffer->copyToBuffer(Lightings.rgb.data(), RGBLightDataSize, LightPtrOffset);
-	LightPtrOffset += RGBLightDataSize;
+	LightBuffer->copyToBuffer(Lightings.rgb.data(), RGBSize, LightPtrOffset);
+	LightPtrOffset += RGBSize;
 	
 	//	Sun
-	LightBuffer->copyToBuffer(Lightings.sun.data(), SunLightDataSize, LightPtrOffset);
-	LightPtrOffset += SunLightDataSize;
+	LightBuffer->copyToBuffer(Lightings.sun.data(), SunSize, LightPtrOffset);
+	LightPtrOffset += SunSize;
 
 	//	Hemi
-	LightBuffer->copyToBuffer(Lightings.hemi.data(), HemiLightDataSize, LightPtrOffset);
+	LightBuffer->copyToBuffer(Lightings.hemi.data(), HemiSize, LightPtrOffset);
 
 	//finally create a single master ptr, to access all data in one place
 	GlobalData = new DeviceBuffer<xrHardwareLCGlobalData>(1, GetBufferTypeByMode(mode));
@@ -490,11 +496,11 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 
 	u64 MaxPotentialRays = MaxRaysPerPoint * InRays.size();
 
-	DeviceBuffer < RayRequest > RayBuffer(InRays.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer < RayRequest > RayBuffer(InRays.size(), GetBufferTypeByMode(mode));
 	DebugErr = cudaMemcpy(RayBuffer.ptr(), InRays.data(), InRays.size() * sizeof(RayRequest), cudaMemcpyHostToDevice);
 	CheckCudaErr(DebugErr);
 
-	DeviceBuffer<char> RayEnableStatusBuffer(MaxPotentialRays, RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer<char> RayEnableStatusBuffer(MaxPotentialRays, GetBufferTypeByMode(mode));
 	DebugErr = cudaMemset(RayEnableStatusBuffer.ptr(), 0, MaxPotentialRays);
 	CheckCudaErr(DebugErr);
 
@@ -548,27 +554,27 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 	}
 
 	//create rays buffer and fill them through cuda
-	DeviceBuffer <u32> DeviceAliveRaysIndexes(AliveRaysIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <u32> DeviceAliveRaysIndexes(AliveRaysIndexes.size(), GetBufferTypeByMode(mode));
 	DebugErr = cudaMemcpy(DeviceAliveRaysIndexes.ptr(), AliveRaysIndexes.data(), AliveRaysIndexes.size() * sizeof(u32), cudaMemcpyHostToDevice);
 	CheckCudaErr(DebugErr);
 
-	DeviceBuffer <int> DeviceSurfacePoint2StartLoc(InRays.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <int> DeviceSurfacePoint2StartLoc(InRays.size(), GetBufferTypeByMode(mode));
 	DebugErr = cudaMemcpy(DeviceSurfacePoint2StartLoc.ptr(), SurfacePoint2StartLoc.data(), SurfacePoint2StartLoc.size() * sizeof(int), cudaMemcpyHostToDevice);
 	CheckCudaErr(DebugErr);
 
-	DeviceBuffer<Ray> OptimizedRaysVec(AliveRaysIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer<Ray> OptimizedRaysVec(AliveRaysIndexes.size(), GetBufferTypeByMode(mode));
 
 	DebugErr = RunGenerateRaysForTask(GlobalData->ptr(), RayBuffer.ptr(), OptimizedRaysVec.ptr(), DeviceAliveRaysIndexes.ptr(), AliveRaysIndexes.size(), flag);
 	CheckCudaErr(DebugErr);
 
-	DeviceBuffer <Hit> OptimizedHitsVec(AliveRaysIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <Hit> OptimizedHitsVec(AliveRaysIndexes.size(), GetBufferTypeByMode(mode));
 	DebugErr = cudaMemset(OptimizedHitsVec.ptr(), 0, OptimizedHitsVec.count() * sizeof(Hit));
 	CheckCudaErr(DebugErr);
 
-	optix::prime::BufferDesc OptmizedHitDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Hit::format, OptimizedHitsVec.type(), OptimizedHitsVec.ptr());
+	optix::prime::BufferDesc OptmizedHitDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Hit::format, RTPbuffertype::RTP_BUFFER_TYPE_CUDA_LINEAR, OptimizedHitsVec.ptr());
 	OptmizedHitDescBuffer->setRange(0, OptimizedHitsVec.count());
 
-	optix::prime::BufferDesc OptimizedRaysDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Ray::format, OptimizedRaysVec.type(), OptimizedRaysVec.ptr());
+	optix::prime::BufferDesc OptimizedRaysDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Ray::format, RTPbuffertype::RTP_BUFFER_TYPE_CUDA_LINEAR, OptimizedRaysVec.ptr());
 	OptimizedRaysDescBuffer->setRange(0, OptimizedRaysVec.count());
 
 	optix::prime::Query LevelQuery = LevelModel->createQuery(RTP_QUERY_TYPE_CLOSEST);
@@ -580,12 +586,12 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 
 	u64* FacesToSkip = nullptr;
 	bool SkipFaceMode = !!(flag & LP_UseFaceDisable);
-	DeviceBuffer <u64> FaceToSkip(InRays.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <u64> FaceToSkip(InRays.size(), GetBufferTypeByMode(mode));
 
 	//go go round system!
 
 	u32 AliveRays = AliveRaysIndexes.size();
-	DeviceBuffer<float> RayEnergy(AliveRaysIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer<float> RayEnergy(AliveRaysIndexes.size(), GetBufferTypeByMode(mode));
 	bool IsFirstCall = true;
 	int Rounds = 0;
 
@@ -646,7 +652,7 @@ void xrHardwareLight::PerformRaycast(xr_vector<RayRequest>& InRays, int flag, xr
 	
 	ZeroOutput(InRays.size(), OutHits);
 
-	DeviceBuffer <base_color_c> FinalColorBuffer(InRays.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <base_color_c> FinalColorBuffer(InRays.size(), GetBufferTypeByMode(mode));
 	DebugErr = cudaMemcpy(FinalColorBuffer.ptr(), OutHits.data(), OutHits.size() * sizeof(base_color_c), cudaMemcpyHostToDevice);
 	CheckCudaErr(DebugErr);
 
@@ -704,26 +710,26 @@ void xrHardwareLight::PerformAdaptiveHT()
 
 float xrHardwareLight::GetEnergyFromSelectedLight(xr_vector<int>& RGBLightIndexes, xr_vector<int>& SunLightIndexes, xr_vector<int>& HemiLightIndexes)
 {
-	DeviceBuffer <int> DeviceRGBLightIndexes(RGBLightIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <int> DeviceRGBLightIndexes(RGBLightIndexes.size(), GetBufferTypeByMode(mode));
 	cudaMemcpy(DeviceRGBLightIndexes.ptr(), RGBLightIndexes.data(), sizeof(int) * RGBLightIndexes.size(), cudaMemcpyHostToDevice);
 
-	DeviceBuffer <int> DeviceSunLightIndexes(SunLightIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <int> DeviceSunLightIndexes(SunLightIndexes.size(), GetBufferTypeByMode(mode));
 	cudaMemcpy(DeviceSunLightIndexes.ptr(), SunLightIndexes.data(), sizeof(int) * SunLightIndexes.size(), cudaMemcpyHostToDevice);
 
-	DeviceBuffer <int> DeviceHemiLightIndexes(HemiLightIndexes.size(), RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer <int> DeviceHemiLightIndexes(HemiLightIndexes.size(), GetBufferTypeByMode(mode));
 	cudaMemcpy(DeviceHemiLightIndexes.ptr(), HemiLightIndexes.data(), sizeof(int) * HemiLightIndexes.size(), cudaMemcpyHostToDevice);
 	//count overall needed rays
 	int OverallRaysCount = RGBLightIndexes.size() + SunLightIndexes.size() + HemiLightIndexes.size();
 
 	//and this is the most vulnurable part of all cycle
-	DeviceBuffer<Hit> HitsVec(OverallRaysCount, RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
-	optix::prime::BufferDesc HitDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Hit::format, HitsVec.type(), HitsVec.ptr());
+	DeviceBuffer<Hit> HitsVec(OverallRaysCount, GetBufferTypeByMode(mode));
+	optix::prime::BufferDesc HitDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Hit::format, RTPbuffertype::RTP_BUFFER_TYPE_CUDA_LINEAR, HitsVec.ptr());
 	HitDescBuffer->setRange(0, OverallRaysCount);
 
-	DeviceBuffer<Ray> RaysVec(OverallRaysCount, RTP_BUFFER_TYPE_CUDA_LINEAR, LOCKED);
+	DeviceBuffer<Ray> RaysVec(OverallRaysCount, GetBufferTypeByMode(mode));
 	//and now, i summon my most handfull friend - CUDA, i choose YOU!
 
-	optix::prime::BufferDesc RaysDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Ray::format, RaysVec.type(), RaysVec.ptr());
+	optix::prime::BufferDesc RaysDescBuffer = PrimeContext->createBufferDesc((RTPbufferformat)Ray::format, RTPbuffertype::RTP_BUFFER_TYPE_CUDA_LINEAR, RaysVec.ptr());
 	RaysDescBuffer->setRange(0, OverallRaysCount);
 
 

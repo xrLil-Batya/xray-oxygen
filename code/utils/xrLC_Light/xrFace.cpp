@@ -163,8 +163,8 @@ Tface<DataVertex>::~Tface()
 		else Logger.clMsg("* ERROR: Unregistered FACE destroyed");
 	}
 	// Remove 'this' from adjacency info in vertices
-	for (Face::type_vertex& i : v)
-		i.prep_remove(this);
+	for (Face::type_vertex* i : v)
+		i->prep_remove(this);
 
 	lmap_layer				= nullptr;
 }

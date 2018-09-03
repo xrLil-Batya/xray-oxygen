@@ -11,6 +11,8 @@
 #include "xrFaceDefs.h"
 #include "base_color.h"
 
+#include "DeviceBuffer.h"
+
 
 class XRLC_LIGHT_API xrHardwareLight
 {

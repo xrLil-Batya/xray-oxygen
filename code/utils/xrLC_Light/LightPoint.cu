@@ -271,7 +271,7 @@ __device__ void GetEnergyFromHit(xrHardwareLCGlobalData* GlobalData, Hit* InHit,
 	{
 		if (SurfaceTex.Pixels == nullptr)
 		{
-			//according to GSC source, if the surface has not alpha - we return 0.0f, as all hit passed. But... i dunno
+			//according to GSC source, if the surface has no alpha - we return 0.0f, as all hit passed. But... i dunno
 			TargetColor = 0.0f;
 			return;
 		}

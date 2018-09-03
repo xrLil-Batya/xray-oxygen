@@ -57,7 +57,7 @@ public:
 			else if (m_type == DeviceBufferType::OpenCL)
 			{
 				R_ASSERT(gCalcDevice);
-				clBuffer = gCalcDevice->CreateBuffer(sizeInBytes(), 0);
+				//clBuffer = gCalcDevice->CreateBuffer(sizeInBytes(), 0);
 			}
 			else
 			{
@@ -84,7 +84,7 @@ public:
 		{
 			if (clBuffer)
 			{
-				gCalcDevice->DeleteBuffer(clBuffer);
+				//gCalcDevice->DeleteBuffer(clBuffer);
 			}
 		}
 		else
@@ -116,7 +116,7 @@ public:
 	{ 
 		if (m_type == DeviceBufferType::OpenCL)
 		{
-			return reinterpret_cast<T*> (clBuffer.GetPtr());
+			return reinterpret_cast<T*> (clBuffer->GetPtr());
 		}
 
 		return m_ptr;
@@ -138,7 +138,7 @@ public:
 		else if (m_type == DeviceBufferType::OpenCL)
 		{
 			m_tempHost.resize(m_count);
-			gCalcDevice->ReadBuffer(clBuffer, 0, 0, sizeInBytes(), m_tempHost.data(), nullptr);
+			//gCalcDevice->ReadBuffer(clBuffer, 0, 0, sizeInBytes(), m_tempHost.data(), nullptr);
 			return &m_tempHost[0];
 		}
 		else
@@ -159,11 +159,12 @@ public:
 		else if (m_type == DeviceBufferType::CUDA)
 		{
 			cudaError_t ErrCode = cudaMemcpy(m_ptr + offset, InData, count * sizeof(T), cudaMemcpyHostToDevice);
-			R_ASSERT(ErrCode != cudaSuccess);
+			R_ASSERT(ErrCode == cudaSuccess);
 		}
 		else if (m_type == DeviceBufferType::OpenCL)
 		{
-			gCalcDevice->WriteBuffer(clBuffer, 0, offset, count * sizeof(T), InData, nullptr);
+			//#TODO: !
+			//gCalcDevice->WriteBuffer(clBuffer, 0, offset, count * sizeof(T), InData, nullptr);
 		}
 		else
 		{

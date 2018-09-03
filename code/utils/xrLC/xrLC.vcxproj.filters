@@ -31,6 +31,9 @@
     <Filter Include="%2a%2a%2a COMPILER %2a%2a%2a\net">
       <UniqueIdentifier>{6cbd5326-f9f2-467f-bfc4-95c7dfe9e93e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="PLY_exporter">
+      <UniqueIdentifier>{455aa784-a57a-42e5-813f-fa8eb00e145b}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="defines.h">
@@ -132,6 +135,9 @@
     </ClInclude>
     <ClInclude Include="..\common\NvMender2003\NVMeshMender.h">
       <Filter>External\NV_Mender2003</Filter>
+    </ClInclude>
+    <ClInclude Include="PLY_Exporter.h">
+      <Filter>PLY_exporter</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -258,6 +264,9 @@
     </ClCompile>
     <ClCompile Include="xrT_Junction.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a</Filter>
+    </ClCompile>
+    <ClCompile Include="PLY_Exporter.cpp">
+      <Filter>PLY_exporter</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

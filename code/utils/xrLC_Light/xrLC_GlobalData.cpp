@@ -94,6 +94,7 @@ void	xrLC_GlobalData	::create_rcmodel	(CDB::CollectorPacked& CL)
 	VERIFY(!_cl_globs._RCAST_Model);
 	_cl_globs._RCAST_Model				= xr_new<CDB::MODEL> ();
 	_cl_globs._RCAST_Model->build		(CL.getV(),(int)CL.getVS(),CL.getT(),(int)CL.getTS(), nullptr, nullptr, false);
+	//_cl_globs._RCAST_Model->syncronize();
 }
 
 void		xrLC_GlobalData	::				initialize		()

@@ -90,6 +90,7 @@
       <ImportLibrary>$(xrLib)$(TargetName).lib</ImportLibrary>
       <AdditionalDependencies>cuda.lib;cudart_static.lib;optix_prime.1.lib;Calc.lib;CLW.lib;RadeonRays.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalOptions>$(IntermediateOutputPath)LightPoint.cu.obj %(AdditionalOptions)</AdditionalOptions>
+      <ShowProgress>NotSet</ShowProgress>
     </Link>
     <CudaCompile>
       <TargetMachinePlatform>64</TargetMachinePlatform>

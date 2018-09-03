@@ -64,12 +64,8 @@ namespace Calc
 }
 
 // Create corresponding calc
-#ifdef __cplusplus
 extern "C"
 {
-#endif
     CALC_API Calc::Calc* CreateCalc(Calc::Platform inPlatform, int reserved);
     CALC_API void DeleteCalc(Calc::Calc* calc);
-#ifdef __cplusplus
 }
-#endif

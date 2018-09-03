@@ -164,10 +164,6 @@ void CBuild::xrPhase_AdaptiveHT()
 			}
 			PLYExporter::ExportAsPly("CPUHitTestResult.ply", PCHitData, TestMeshIndexesCPU);
 			PLYExporter::ExportAsPly("GPUHitTestResult.ply", GPUHitData, TestMeshIndexesGPU);
-			vecVertex ExportModelVertexes = lc_global_data()->g_vertices();
-			vecFace ExportModelFaces = lc_global_data()->g_faces();
-
-			PLYExporter::ExportAsPly("LevelPostAdaptiveHT.ply", ExportModelVertexes, ExportModelFaces);
 #endif
 		}
 		else
@@ -188,6 +184,14 @@ void CBuild::xrPhase_AdaptiveHT()
 	//////////////////////////////////////////////////////////////////////////
 	Logger.Status("Gathering lighting information...");
 	u_SmoothVertColors(5);
+
+	if (1)
+	{
+		vecVertex ExportModelVertexes = lc_global_data()->g_vertices();
+		vecFace ExportModelFaces = lc_global_data()->g_faces();
+
+		PLYExporter::ExportAsPly("LevelPostAdaptiveHT.ply", ExportModelVertexes, ExportModelFaces);
+	}
 
 	//visualize a light sources
 	//WARNING: For debug only, not allowed in production
