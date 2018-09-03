@@ -1,14 +1,12 @@
 // DummyObject.h: interface for the CHangingLamp class.
 //
 //////////////////////////////////////////////////////////////////////
-
-#ifndef HangingLampH
-#define HangingLampH
 #pragma once
 
 #include "gameobject.h"
 #include "physicsshellholder.h"
 #include "PHSkeleton.h"
+#include "hit_immunity.h"
 #include "../xrScripts/export/script_export_space.h"
 // refs
 class CLAItem;
@@ -16,7 +14,7 @@ class IPhysicsElementEx;
 class CSE_ALifeObjectHangingLamp;
 class CPHElement;
 
-class CHangingLamp: public CPhysicsShellHolder, public CPHSkeleton
+class CHangingLamp: public CPhysicsShellHolder, public CPHSkeleton, public CHitImmunity
 {
 	using inherited =	CPhysicsShellHolder;
 private:
@@ -73,5 +71,3 @@ public:
 add_to_type_list(CHangingLamp)
 #undef script_type_list
 #define script_type_list save_type_list(CHangingLamp)
-
-#endif //HangingLampH
