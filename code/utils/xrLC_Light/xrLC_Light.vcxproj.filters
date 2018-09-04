@@ -213,6 +213,7 @@
     <ClInclude Include="RadeonRaysGlobalObjects.h">
       <Filter>Light\Lights</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="stdafx.cpp">
@@ -370,5 +371,8 @@
     <None Include="LightPoint.cl">
       <Filter>Light\Lights\HardwareCode</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xrLC_Light.rc" />
   </ItemGroup>
 </Project>

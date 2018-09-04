@@ -14,6 +14,7 @@
 #include "Calc/device.h"
 #include "radeon_rays.h"
 #include "DeviceBuffer.h"
+#include "resource.h"
 
 optix::prime::Context PrimeContext;
 
@@ -98,7 +99,7 @@ BOOL xrHardwareLight::IsHardwareAccelerationSupported(xrHardwareLight::Mode mode
 		return TRUE;
 	case xrHardwareLight::Mode::OpenCL:
 	{
-		//gCalc = CreateCalc(Calc::kOpenCL, 0);
+		gCalc = CreateCalc(Calc::kOpenCL, 0);
 		uint32_t DeviceCount = gCalc->GetDeviceCount();
 
 		if (DeviceCount == 0) return FALSE; // No devices
@@ -129,7 +130,7 @@ BOOL xrHardwareLight::IsHardwareAccelerationSupported(xrHardwareLight::Mode mode
 			}
 		}
 
-		//DeleteCalc(gCalc);
+		DeleteCalc(gCalc);
 		gCalc = nullptr;
 
 		return TRUE;
@@ -176,10 +177,8 @@ VertNormalBuffer(nullptr)
 	mode = Mode::CUDA;
 
 	BOOL bIsCUDASupported = IsHardwareAccelerationSupported(Mode::CUDA);
-	//BOOL bIsOpenCLSupported = IsHardwareAccelerationSupported(Mode::OpenCL);
-	BOOL bIsOpenCLSupported = FALSE;
-	//BOOL bIsCPUAccelerationSupported = IsHardwareAccelerationSupported(Mode::CPU);
-	BOOL bIsCPUAccelerationSupported = FALSE;
+	BOOL bIsOpenCLSupported = IsHardwareAccelerationSupported(Mode::OpenCL);
+	BOOL bIsCPUAccelerationSupported = IsHardwareAccelerationSupported(Mode::CPU);
 
 	// We preffer CUDA, then OpenCL, CPU
 	if (bIsCUDASupported)
@@ -202,7 +201,7 @@ VertNormalBuffer(nullptr)
 		break;
 	case xrHardwareLight::Mode::OpenCL:
 		R_ASSERT(gpuidx != -1);
-		//gCalc = CreateCalc(Calc::kOpenCL, 0);
+		gCalc = CreateCalc(Calc::kOpenCL, 0);
 		RadeonRays::IntersectionApi::SetPlatform(RadeonRays::DeviceInfo::kOpenCL);
 		gRadeon = RadeonRays::IntersectionApi::Create(gpuidx);
 		gCalcDevice = gCalc->CreateDevice(gpuidx);
@@ -244,7 +243,6 @@ void xrHardwareLight::LoadLevel(CDB::MODEL* RaycastModel, base_lighting& Lightin
 {
 	Logger.Progress(0.0f);
 	_IsEnabled = true;
-	cudaError_t DebugErr = cudaError_t::cudaSuccess;
 	vecFace& Polygons = inlc_global_data()->g_faces();
 
 	// Check if we have enough video RAM to proceed loading
@@ -891,9 +889,18 @@ void xrHardwareLight::PerformRaycast_ver2(xr_vector<RayRequest>& InRays, int fla
 	size_t MemoryForPhaseOne = GetMemoryRequiredForRaycastPhase1(InRays, flag, MaxPotentialRays);
 	size_t FreeMem = GetDeviceFreeMem();
 
+	// Compile OpenCL code if we in OpenCL mode
+	if (mode == Mode::OpenCL)
+	{
+		HMODULE LCModule = GetModuleHandle(NULL);
+		HRSRC hCLCode = FindResource(LCModule, MAKEINTRESOURCE(IDR_OPENCL_CODE), MAKEINTRESOURCE(IDR_OPENCL_CODE));
+		R_ASSERT(hCLCode);
+		HGLOBAL hCLCodePtr = LoadResource(LCModule, hCLCode);
+
+	}
+
 	if (MemoryForPhaseOne > FreeMem)
 	{
-
 	}
 }
 

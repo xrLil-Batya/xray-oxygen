@@ -8,6 +8,7 @@
 #include <vector>
 #include "radeon_rays.h"
 #include "RadeonRaysGlobalObjects.h"
+#include "calc/buffer.h"
 
 enum class DeviceBufferType
 {
@@ -57,7 +58,7 @@ public:
 			else if (m_type == DeviceBufferType::OpenCL)
 			{
 				R_ASSERT(gCalcDevice);
-				//clBuffer = gCalcDevice->CreateBuffer(sizeInBytes(), 0);
+				clBuffer = gCalcDevice->CreateBuffer(sizeInBytes(), 0);
 			}
 			else
 			{
@@ -84,7 +85,7 @@ public:
 		{
 			if (clBuffer)
 			{
-				//gCalcDevice->DeleteBuffer(clBuffer);
+				gCalcDevice->DeleteBuffer(clBuffer);
 			}
 		}
 		else
@@ -138,7 +139,7 @@ public:
 		else if (m_type == DeviceBufferType::OpenCL)
 		{
 			m_tempHost.resize(m_count);
-			//gCalcDevice->ReadBuffer(clBuffer, 0, 0, sizeInBytes(), m_tempHost.data(), nullptr);
+			gCalcDevice->ReadBuffer(clBuffer, 0, 0, sizeInBytes(), m_tempHost.data(), nullptr);
 			return &m_tempHost[0];
 		}
 		else
@@ -163,8 +164,7 @@ public:
 		}
 		else if (m_type == DeviceBufferType::OpenCL)
 		{
-			//#TODO: !
-			//gCalcDevice->WriteBuffer(clBuffer, 0, offset, count * sizeof(T), InData, nullptr);
+			gCalcDevice->WriteBuffer(clBuffer, 0, offset, count * sizeof(T), InData, nullptr);
 		}
 		else
 		{
@@ -178,7 +178,7 @@ protected:
 	int m_device;
 	size_t m_count;
 	std::vector<T> m_tempHost;
-	mutable RadeonRays::Buffer* clBuffer;
+	mutable Calc::Buffer* clBuffer;
 
 private:
 	DeviceBuffer<T>(const DeviceBuffer<T>&);            // forbidden

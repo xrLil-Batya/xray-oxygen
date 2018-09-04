@@ -188,6 +188,7 @@
     <ClInclude Include="..\common\le_engine_communicate.hpp" />
     <ClInclude Include="DeviceBuffer.h" />
     <ClInclude Include="RadeonRaysGlobalObjects.h" />
+    <ClInclude Include="resource.h" />
     <ClInclude Include="xrHardwareLight.h" />
     <ClInclude Include="xrRayDefinition.h" />
     <ClInclude Include="_d3d_extensions.h" />
@@ -303,10 +304,16 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="LightPoint.cl" />
+    <Text Include="LightPoint.cl">
+      <FileType>Document</FileType>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+    </Text>
     <None Include="LightPoint.cu">
       <FileType>Document</FileType>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="xrLC_Light.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
