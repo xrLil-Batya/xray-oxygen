@@ -24,10 +24,10 @@ BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
 MODIFICATIONS.
 */
-#include "../xrCore/xrCore.h"
+#include <cmath>
+#include <Windows.h>
 #include "dof7control.h"
 #include "mathTrig.h"
-
 //
 // Constructor stores the T and S matrices and the
 // lengths of the upper and lower links
@@ -173,9 +173,9 @@ float get_circle_equation(const float ee[3],
 		return 0;
 
 	// center of circle (origin is location of first S joint)
-	vecscalarmult(c, n, _cos(alpha) * upper_len);
+	vecscalarmult(c, n, std::cos(alpha) * upper_len);
 
-	radius = _sin(alpha) * upper_len;
+	radius = std::sin(alpha) * upper_len;
 
 	float temp[3];
 
@@ -212,9 +212,9 @@ int scale_goal(const float l1[3],
 	const float l2[3],
 	float g[3])
 {
-	float g_len = _sqrt(DOT(g, g));
-	float L1 = _sqrt(DOT(l1, l1));
-	float L2 = _sqrt(DOT(l2, l2));
+	float g_len = std::sqrt(DOT(g, g));
+	float L1 = std::sqrt(DOT(l1, l1));
+	float L2 = std::sqrt(DOT(l2, l2));
 	float max_len = (L1 + L2) * 0.9999f;
 	//    float min_len = fabs(L1 - L2);
 
@@ -223,13 +223,6 @@ int scale_goal(const float l1[3],
 		vecscalarmult(g, g, max_len / (g_len/**1.01f*/));
 		return 1;
 	}
-	/*
-	if (g_len < min_len)
-	{
-	vecscalarmult(g,g,(1.01 * min_len)/g_len);
-	return 1;
-	}
-	*/
 
 	return 0;
 }
@@ -356,9 +349,9 @@ inline void evalcircle(const float c[3],
 	float temp[3];
 
 	cpvector(p, c);
-	vecscalarmult(temp, (float*)u, radius*_cos(angle));
+	vecscalarmult(temp, (float*)u, radius*std::cos(angle));
 	vecadd(p, p, temp);
-	vecscalarmult(temp, (float*)v, radius*_sin(angle));
+	vecscalarmult(temp, (float*)v, radius*std::sin(angle));
 	vecadd(p, p, temp);
 }
 
@@ -624,7 +617,7 @@ int SRS::R1R2Psi(Matrix C, Matrix s, Matrix o, Matrix c2, Matrix s2, Matrix o2)
 //
 // Rewrite all this stuff
 //
-
+#include "aint.h"
 static void get_aim_circle_equation(const float g[3], const float a[3], const float ta[3], const float tb[3], const float proj_axis[3], float theta4,
 	float center[3],
 	float u[3],
@@ -644,11 +637,11 @@ static void get_aim_circle_equation(const float g[3], const float a[3], const fl
 
 	vecmult(t1, (float *)tb, Ry);
 	vecmult(t2, (float *)ta, Ryt);
-	float L3 = _sqrt(L1 + L2 + DOT(ta, t1) + DOT(tb, t2));
+	float L3 = std::sqrt(L1 + L2 + DOT(ta, t1) + DOT(tb, t2));
 
 	// Lengths of upper and lower arms
-	L1 = _sqrt(L1);
-	L2 = _sqrt(L2);
+	L1 = std::sqrt(L1);
+	L2 = std::sqrt(L2);
 
 	// Compute angle between a and shoulder-to-hand vector
 	// This is done assuming R1 = I since the angle does
@@ -666,21 +659,21 @@ static void get_aim_circle_equation(const float g[3], const float a[3], const fl
 	//
 	// Compute the angles of the triangle s,h,g
 	//
-	float L4 = _sqrt(DOT(g, g));
+	float L4 = std::sqrt(DOT(g, g));
 	float beta = M_PI - alpha;
 
-	float delta = asin(_sin(beta)*L3 / L4);
+	float delta = asin(std::sin(beta)*L3 / L4);
 	if (delta < 0)
 		delta = -delta;
 	float gamma = M_PI - delta - beta;
 
-	float c_gamma = _cos(gamma);
+	float c_gamma = std::cos(gamma);
 	float n[3];
 	cpvector(n, g);
 	unitize(n);
 	vecscalarmult(center, n, c_gamma*L3);
 
-	radius = _sqrt(1 - c_gamma * c_gamma)*L3;
+	radius = std::sqrt(1 - c_gamma * c_gamma)*L3;
 
 	project_plane(u, (float *)proj_axis, n);
 	unitize(u);

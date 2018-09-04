@@ -24,9 +24,17 @@ BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
 MODIFICATIONS.
 */
-#include "../xrCore/xrCore.h"
+#include <algorithm>
 #include "mathTrig.h"
+#define M_PI 3.14159265358979323846f
 
+static double fangle_normalize(double x)
+{
+	while (x > M_PI)  x -= 2 * M_PI;
+	while (x < -M_PI) x += 2 * M_PI;
+
+	return x;
+}
 //
 // Solve a*cos(theta) + b*sin(theta) = c
 // Either one or two solutions. Return the answer in radians
@@ -40,7 +48,7 @@ int solve_trig1(float a, float b, float c, float theta[2])
 	{
 		// temp is practically zero
 
-		if (_abs(temp / (_abs(a*a) + _abs(b*b) + _abs(c*c))) < 1e-6)
+		if (fabs(temp / (fabs(a*a) + fabs(b*b) + fabs(c*c))) < 1e-6)
 		{
 			// printf("Special case\n");
 			theta[0] = (float)(2 * atan(-b / (-a - c)));
@@ -50,7 +58,7 @@ int solve_trig1(float a, float b, float c, float theta[2])
 			return 0;
 	}
 
-	temp = (float)atan2((float)_sqrt(temp), (float)c);//.(float) c
+	temp = (float)atan2(sqrt(temp), (float)c);//.(float) c
 	int num = (!iszero(temp)) ? 2 : 1;
 
 	// Calculate answer in radians
@@ -60,8 +68,8 @@ int solve_trig1(float a, float b, float c, float theta[2])
 		theta[1] = theta[0] - temp;
 		theta[0] += temp;
 
-		//theta[0] = angle_normalize_signed(theta[0]);
-		//theta[1] = angle_normalize_signed(theta[1]);
+		//theta[0] = fangle_normalize_signed(theta[0]);
+		//theta[1] = fangle_normalize_signed(theta[1]);
 	}
 	return num;
 }
@@ -83,10 +91,10 @@ float solve_trig2(float a, float b, float c, float d)
 //
 int myacos(float x, float solns[2])
 {
-	if (_abs(x) > 1)
+	if (fabs(x) > 1)
 		return 0;
 
-	solns[0] = angle_normalize_signed(acos(x));
+	solns[0] = (float)fangle_normalize(acosf(x));
 
 	if (iszero(solns[0]))
 		return 1;
@@ -101,10 +109,10 @@ int myacos(float x, float solns[2])
 //
 int myasin(float x, float solns[2])
 {
-	if (_abs(x) > 1)
+	if (fabs(x) > 1)
 		return 0;
 
-	solns[0] = (float)angle_normalize_signed(asin(x));
+	solns[0] = (float)fangle_normalize(asin(x));
 
 	if (iszero(solns[0]))
 		return 1;

@@ -1008,7 +1008,7 @@ void CBulletManager::RegisterEvent			(EventType Type, BOOL _dynamic, SBullet* bu
 #include "../xrCDB/xr_collide_defs.h"
 #include "../xrengine/xr_collide_form.h"
 #include "weapon.h"
-#include "../xrQIK/math3d.h"
+#include "../../3rd-party/IKAN/math3d.h"
 #include "actor.h"
 #include "ai/monsters/basemonster/base_monster.h"
 

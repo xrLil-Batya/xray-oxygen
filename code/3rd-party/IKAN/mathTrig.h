@@ -39,14 +39,14 @@
 
 inline float iszero(float x)
 {
-	return x * x < 1e-6;
+	return x * x < 1e-6f;
 }
 
 #if 0
 //
 // Normalize an angle to to range -Pi..Pi
 //
-//double angle_normalize(double x);
+//double fangle_normalize(double x);
 
 //
 // Returns angle between angles x and y
@@ -76,7 +76,7 @@ inline int law_of_cosines(float a, float b, float c, float &angle)
 {
 	float temp = (a*a + b * b - c * c) / (2 * a*b);
 
-	if (_abs(temp) > 1.0)
+	if (fabs(temp) > 1.0)
 		return 0;
 	else
 		angle = (float)acos(temp);

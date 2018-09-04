@@ -24,7 +24,8 @@ BASIS, AND THE UNIVERSITY OF PENNSYLVANIA HAS NO OBLIGATION
 TO PROVIDE MAINTENANCE, SUPPORT, UPDATES, ENHANCEMENTS, OR
 MODIFICATIONS.
 */
-#include "../xrCore/xrCore.h"
+#include <algorithm>
+#include <cmath>
 #include "eqn.h"
 
 /*
@@ -38,8 +39,8 @@ static int solve_trig1_aux(float c, float a2b2, float atan2ba, float theta[2])
 	if (temp < 0.0f)
 		return 0;
 
-	temp = atan2(_sqrt(temp), c);
-	int num = (_abs(temp) > 1e-6f) ? 2 : 1;
+	temp = atan2(std::sqrt(temp), c);
+	int num = (fabs(temp) > 1e-6f) ? 2 : 1;
 
 	theta[0] = atan2ba;
 	if (num == 2)
@@ -48,7 +49,7 @@ static int solve_trig1_aux(float c, float a2b2, float atan2ba, float theta[2])
 		theta[0] += temp;
 		if (theta[0] > theta[1])
 		{
-			swap(theta[0], theta[1]);
+			std::swap(theta[0], theta[1]);
 		}
 	}
 	return num;
@@ -76,7 +77,7 @@ int PsiEquation::crit_points(float *t) const
 	if (!(*status_ptr & GOT_CRITS))
 	{
 		// CANNOT use solve_trig1_aux here
-		*num_crits_ptr = (u8)solve_trig1(beta, -alpha, 0, (float *)crit_pts);
+		*num_crits_ptr = (unsigned char)solve_trig1(beta, -alpha, 0, (float *)crit_pts);
 		*status_ptr |= GOT_CRITS;
 	}
 
@@ -102,7 +103,7 @@ int PsiEquation::roots(float *t) const
 {
 	if (!(*status_ptr & GOT_ROOTS))
 	{
-		*num_roots_ptr = (u8)solve_trig1_aux(-xi, a2b2, atan2ba, (float *)root_pts);
+		*num_roots_ptr = (unsigned char)solve_trig1_aux(-xi, (float)a2b2, (float)atan2ba, (float *)root_pts);
 		*status_ptr |= GOT_ROOTS;
 	}
 
@@ -125,5 +126,5 @@ int PsiEquation::solve(float v, float *t) const
 {
 	// consistency_check(alpha,beta,-xi+v,a2b2,atan2ba);
 	// return solve_trig1(alpha, beta, -xi+v, t);
-	return solve_trig1_aux(-xi + v, a2b2, atan2ba, t);
+	return solve_trig1_aux(-xi + v, (float)a2b2, (float)atan2ba, t);
 }
