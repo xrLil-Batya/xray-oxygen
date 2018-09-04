@@ -4,7 +4,7 @@
 #ifndef VECTORWORKAROUND_DEFINE
 #define VECTORWORKAROUND_DEFINE
 
-#ifdef __CUDACC__
+#if defined(__CUDACC__) || defined(THIS_IS_OPENCL)
 typedef HardwareVector VectorType;
 #else
 typedef Fvector VectorType;
@@ -12,7 +12,7 @@ typedef Fvector VectorType;
 
 #endif //end VECTORWORKAROUND_DEFINE
 
-#ifdef __CUDACC__
+#if defined(__CUDACC__) || defined(THIS_IS_OPENCL)
 #define XRLC_LIGHT_API
 #endif
 
@@ -24,7 +24,7 @@ public:
     float					sun;		// - sun
     float					_tmp_;		// - shit that used to hold transparent value from texture in some phases (to deliver one phase result to another, for further computing)
 
-#ifndef __CUDACC__
+#if !defined(__CUDACC__) && !defined(THIS_IS_OPENCL)
     base_color_c() { rgb.set(0, 0, 0); hemi = 0; sun = 0; _tmp_ = 0; }
 
     void					mul(float s) { rgb.mul(s);	hemi *= s; sun *= s; };
@@ -36,7 +36,7 @@ public:
 #endif
 };
 
-#ifndef __CUDACC__
+#if !defined(__CUDACC__) && !defined(THIS_IS_OPENCL)
 template<u32 range>
 struct fixed16
 {

@@ -182,7 +182,6 @@ __global__ void GenerateRaysForTask(xrHardwareLCGlobalData* GlobalData, RayReque
 			TargetRay.tmax = Distance;
 		}
 		break;
-
 	}
 }
 

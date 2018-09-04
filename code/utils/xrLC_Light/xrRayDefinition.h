@@ -19,8 +19,9 @@ enum HardwareModelType
 	HM_STANDART,
 	HM_OPTIMIZED
 };
-
-#ifndef __CUDACC__
+#ifdef THIS_IS_OPENCL
+#define __device__ __global
+#elif !defined(__CUDACC__)
 #define __device__
 #endif
 
@@ -44,7 +45,7 @@ struct HardwareVector
 		z = InZ;
 	}
 
-#ifdef __CUDACC__
+#if defined(__CUDACC__) || defined(THIS_IS_OPENCL)
 
 #define EPS_S  0.0000001f
 
@@ -245,9 +246,9 @@ struct HardwareModel
 struct xrHardwareLCGlobalData
 {
 	LightSizeInfo*     LightSize;
-	R_Light*  LightData;
+	R_Light*		   LightData;
 	xrHardwareTexture* Textures;
 
 	//NEW DATA!
-	HardwareModel RaycastModel;
+	HardwareModel	   RaycastModel;
 };
