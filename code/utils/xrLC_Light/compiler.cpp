@@ -3,7 +3,6 @@
 
 #include "global_calculation_data.h"
 #include "lightthread.h"
-#include "xrLightDoNet.h"
 
 void xrLight()
 {
@@ -29,7 +28,7 @@ void xrLight()
 }
 
 #include "xrLC_GlobalData.h"
-void xrCompileDO(bool net, bool rgb, bool sun)
+void xrCompileDO(bool rgb, bool sun)
 {
 	Logger.Phase("Loading level...");
 	gl_data.xrLoad();
@@ -41,10 +40,7 @@ void xrCompileDO(bool net, bool rgb, bool sun)
 		lc_global_data()->b_nosun_set(sun);
 		lc_global_data()->b_skiplmap_set(rgb);
 
-		if (net)
-			lc_net::xrNetDOLight();
-		else
-			xrLight();
+		xrLight();
 	}
 	destroy_global_data();
 	gl_data.slots_data.Free();

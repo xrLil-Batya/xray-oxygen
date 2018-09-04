@@ -1,6 +1,9 @@
-//Giperion September - October 2016
-//xrLC Redux project
-//Hardware light support class
+////////////////////////////////////
+// Author: Giperion
+// Date:   September - October 2016
+// Proj:   xrLC Redux project
+// Desc:   Hardware light support class
+// Modifer: ForserX
 
 #ifdef __INTELLISENSE__
 #define __global__
@@ -107,7 +110,7 @@ __global__ void GenerateRaysForTask(xrHardwareLCGlobalData* GlobalData, RayReque
 {
 	int idx = threadIdx.x + blockIdx.x * blockDim.x;
 
-	//early exit condition
+	// early exit condition
 	if (idx >= AliveRaysCount) return;
 
 	//check what current vertex id....
@@ -237,6 +240,7 @@ __global__ void CheckRayOptimizeOut(xrHardwareLCGlobalData* GlobalData, RayReque
 	if (CheckRGB)  RaysPerVertex += GlobalData->LightSize->RGBLightCount;
 	if (CheckSun)  RaysPerVertex += GlobalData->LightSize->SunLightCount;
 	if (CheckHemi) RaysPerVertex += GlobalData->LightSize->HemiLightCount;
+	else		   return;
 
 	//мы знаем, что функцию вызвали столько же раз, сколько может быть лучей вообще. Мы знаем кол-во лучей на каждый вертекс, и знаем текущий луч. Время вычислить id'шник текущего вертекса
 	u32 CurrentSurfaceID = idx / RaysPerVertex;
@@ -381,7 +385,9 @@ __global__ void ProcessHits(xrHardwareLCGlobalData* GlobalData, Ray* RayBuffer, 
 	int LinearLightIndex = 0;
 	GetLightTypeAndIndex(GlobalData, CurrentRayForSurface, CheckRGB, CheckSun, CheckHemi, LightType, LinearLightIndex);
 
-	R_Light& pLightSource = GlobalData->LightData[LinearLightIndex];
+	// ForserX to Giperion: Unused!
+	//R_Light& pLightSource = GlobalData->LightData[LinearLightIndex];
+
 	//get energy from current hit
 
 	GetEnergyFromHit(GlobalData, OurHit, OurColor);
@@ -560,8 +566,8 @@ __global__ void FinalizeRays(xrHardwareLCGlobalData* GlobalData, float* EnergyBu
 
 extern "C" cudaError_t RunCheckRayOptimizeOut(xrHardwareLCGlobalData* GlobalData, RayRequest* RequestedRays, char* StatusBuffer, u64 MaxPossibleRays, int flag)
 {
-	int BlockSize = 1024;
-	int GridSize = (MaxPossibleRays / BlockSize) + 1;
+	const int BlockSize = 1024;
+	int GridSize = ((unsigned int)MaxPossibleRays / BlockSize) + 1;
 
 	//cudaOccupancyMaxPotentialBlockSize(&BlockSize, &GridSize, (void*)CheckRayOptimizeOut, 0, MaxPossibleRays);
 

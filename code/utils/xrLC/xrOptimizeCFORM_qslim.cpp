@@ -117,16 +117,16 @@ void SimplifyCFORM		(CDB::CollectorPacked& CL)
 				const u32 J = f_rm[edge_idx].y;
 				const MxFaceList& N0 = mdl->neighbors(base_f[I]);
 				const MxFaceList& N1 = mdl->neighbors(base_f[J]);
-				for (u32 K = 0; K < N1.length(); K++) mdl->face_mark(N1[K], 0);
-				for (u32 K = 0; K < N0.length(); K++) mdl->face_mark(N0[K], 1);
-				for (u32 K = 0; K < N1.length(); K++) mdl->face_mark(N1[K], mdl->face_mark(N1[K]) + 1);
+				for (u32 K = 0; K < (u32)N1.length(); K++) mdl->face_mark(N1[K], 0);
+				for (u32 K = 0; K < (u32)N0.length(); K++) mdl->face_mark(N0[K], 1);
+				for (u32 K = 0; K < (u32)N1.length(); K++) mdl->face_mark(N1[K], mdl->face_mark(N1[K]) + 1);
 				const MxFaceList& N = (N0.size() < N1.size()) ? N0 : N1;
 				face_props& base_t = FPs[f_idx];
 				if (N.size()) 
 				{
 					u32 cnt_pos = 0, cnt_neg = 0;
 					bool need_constraint = false;
-					for (u32 K = 0; K < N.length(); K++) 
+					for (u32 K = 0; K < (u32)N.length(); K++)
 					{
 						const u32 fff = N[K];
 						MxFace& cur_f = mdl->face(fff);

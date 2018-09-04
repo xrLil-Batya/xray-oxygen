@@ -63,32 +63,11 @@ void OGF::Stripify		()
 
 	// fast verts
 	if (fast_path_data.vertices.size() && fast_path_data.faces.size())
-		/*
-	try {
-		xr_vector<u16>	indices,permute;
-
-		// Stripify
-		u16* F			= (u16*)&*x_faces.begin(); 
-		indices.assign	(F,F+(x_faces.size()*3)	);
-		permute.resize	(x_vertices.size()		);
-		xrStripify		(indices,permute,c_vCacheSize,0);
-
-		// Copy faces
-		CopyMemory		(&*x_faces.begin(),&*indices.begin(),(u32)indices.size()*sizeof(u16));
-
-		// Permute vertices
-		vec_XV temp_list = x_vertices;
-		for(u32 i=0; i<temp_list.size(); i++)
-			x_vertices[i]=temp_list[permute[i]];
-	} catch (...)	{
-		Logger.clMsg		("ERROR: [fast-vert] Stripifying failed. Dump below.");
-		DumpFaces	();
-		*/
 	{
 		// alternative stripification - faces
 		{
 			DWORD*		remap	= xr_alloc<DWORD>		(fast_path_data.faces.size());
-			HRESULT		rhr		= D3DXOptimizeFaces		(&fast_path_data.faces.front(),fast_path_data.faces.size(),fast_path_data.vertices.size(),FALSE,remap);
+			HRESULT		rhr		= D3DXOptimizeFaces		(&fast_path_data.faces.front(), (u32)fast_path_data.faces.size(), (u32)fast_path_data.vertices.size(),FALSE,remap);
 			R_CHK		(rhr);
 			vecOGF_F	_source	= fast_path_data.faces;
 			for (u32 it=0; it<_source.size(); it++)		fast_path_data.faces[it]					= _source[remap[it]];
@@ -98,7 +77,7 @@ void OGF::Stripify		()
 		// alternative stripification - vertices
 		{
 			DWORD*		remap	= xr_alloc<DWORD>		(fast_path_data.vertices.size());
-			HRESULT		rhr		= D3DXOptimizeVertices	(&fast_path_data.faces.front(),fast_path_data.faces.size(),fast_path_data.vertices.size(),FALSE,remap);
+			HRESULT		rhr		= D3DXOptimizeVertices	(&fast_path_data.faces.front(), (u32)fast_path_data.faces.size(), (u32)fast_path_data.vertices.size(),FALSE,remap);
 			R_CHK		(rhr);
 			vec_XV		_source = fast_path_data.vertices;
 			for(u32 it=0; it<_source.size(); it++)		fast_path_data.vertices[remap[it]]		= _source[it];

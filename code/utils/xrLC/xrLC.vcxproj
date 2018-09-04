@@ -288,16 +288,10 @@
     <ClInclude Include="OGF_Face.h" />
     <ClInclude Include="PropSlimTools.h" />
     <ClInclude Include="vbm.h" />
-    <ClInclude Include="net.h" />
     <ClInclude Include="xrGameMaterials.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\xrLoadSurface.cpp" />
-    <ClCompile Include="..\..\SDK\include\hxgrid\Interface\hxGridInterface.cpp">
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">NotUsing</PrecompiledHeader>
-      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release_AI32|x64'">NotUsing</PrecompiledHeader>
-    </ClCompile>
     <ClCompile Include="..\common\NvMender2003\NVMeshMender4.cpp" />
     <ClCompile Include="PLY_Exporter.cpp" />
     <ClCompile Include="StdAfx.cpp">
@@ -344,7 +338,6 @@
     <ClCompile Include="xrMU_Model_Calc_ogf.cpp" />
     <ClCompile Include="xrMU_Model_export_geometry.cpp" />
     <ClCompile Include="xrMU_Model_export_OGF.cpp" />
-    <ClCompile Include="net.cpp" />
     <ClCompile Include="xrT_Junction.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -366,10 +359,6 @@
     </ProjectReference>
     <ProjectReference Include="..\xrDXT\DXT.vcxproj">
       <Project>{ebf9b543-0830-4866-9b48-dc0740e87e8a}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-    <ProjectReference Include="..\xrLC_LightStab\xrLC_LightStab.vcxproj">
-      <Project>{ec924b9b-4991-4931-8623-e1db9ae005ca}</Project>
       <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
     </ProjectReference>
   </ItemGroup>

@@ -102,7 +102,7 @@ void CBuild::BuildCForm	()
 	p_cost  = 1.f/(cfFaces->size());
 
 	// Collect faces
-	CDB::CollectorPacked CL	(BB,cfVertices->size(),cfFaces->size());
+	CDB::CollectorPacked CL	(BB, (u32)cfVertices->size(), (u32)cfFaces->size());
 	for (vecFaceIt F = cfFaces->begin(); F!=cfFaces->end(); F++)
 	{
 		Face*	T = *F;
@@ -146,8 +146,8 @@ void CBuild::BuildCForm	()
 	// Header
 	hdrCFORM hdr;
 	hdr.version		= CFORM_CURRENT_VERSION;
-	hdr.vertcount	= CL.getVS();
-	hdr.facecount	= CL.getTS();
+	hdr.vertcount	= (u32)CL.getVS();
+	hdr.facecount	= (u32)CL.getTS();
 	hdr.aabb		= BB;
 	MFS->w			(&hdr, sizeof(hdr));
 

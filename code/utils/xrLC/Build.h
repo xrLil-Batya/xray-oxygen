@@ -27,7 +27,6 @@ typedef void	tesscb_face			(Face*		F);	// new face
 typedef void	tesscb_vertex		(Vertex*	V);	// new vertex
 
 class  base_lighting;
-class  INetReader;
 //////////////////////////////////////////////////////////////////////////
 class CBuild  
 {
@@ -107,7 +106,7 @@ public:
 	bool	IsOGFContainersEmpty	();
 	void	CheckBeforeSave			( u32 stage );
 	void	TempSave				( u32 stage );
-	void	read					( INetReader &r );
+	void	read					( IReader &r );
 	void	write					( IWriter	&w ) const ;
 
 	CBuild	();

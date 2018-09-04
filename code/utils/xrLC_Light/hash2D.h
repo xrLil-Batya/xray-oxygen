@@ -65,7 +65,7 @@ public:
 
     typedef	 typename get_type<T>::type		type;
 
-    void	read(INetReader	&r, vector_serialize< t_read<type, get_id_self_index<type> > > &rd)
+    void	read(IReader	&r, vector_serialize< t_read<type, get_id_self_index<type> > > &rd)
     {
         r_pod(r, bounds);
 

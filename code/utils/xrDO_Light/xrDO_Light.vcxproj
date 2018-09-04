@@ -251,12 +251,6 @@
     </ClCompile>
     <ClCompile Include="xrDO_Light.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\xrLC_LightStab\xrLC_LightStab.vcxproj">
-      <Project>{ec924b9b-4991-4931-8623-e1db9ae005ca}</Project>
-      <ReferenceOutputAssembly>false</ReferenceOutputAssembly>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

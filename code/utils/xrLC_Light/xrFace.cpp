@@ -336,7 +336,7 @@ aa2_largest:	// aa2 is largest
 */
 
 
-void	DataFace::	read	(INetReader	&r )
+void	DataFace::	read	(IReader	&r )
 {
 	base_Face::read( r );	
 
@@ -357,7 +357,7 @@ void	DataFace::	write	(IWriter	&w )const
 	write_lightmaps->write( w, lmap_layer );
 	w.w_u32( sm_group );
 }
-void	DataVertex::	read	(INetReader	&r )
+void	DataVertex::	read	(IReader	&r )
 {
 	base_Vertex::read( r );
 
@@ -367,7 +367,7 @@ void	DataVertex::	write	(IWriter	&w )const
 	base_Vertex::write( w );
 }
 
-void Face::	read_vertices		( INetReader	&r )
+void Face::	read_vertices		( IReader	&r )
 {
 	VERIFY( ::read_vertices );
 	::read_vertices->read( r, v[0] );
@@ -382,7 +382,7 @@ void Face::write_vertices		( IWriter	&w )const
 	::write_vertices->write( w, v[2] );
 }
 
-void	Face::	read	( INetReader	&r )
+void	Face::	read	( IReader	&r )
 {
 	DataFace::read( r );
 	
@@ -404,7 +404,7 @@ void	Face::	write	( IWriter	&w )const
 
 
 
-void	Vertex::read		( INetReader	&r )
+void	Vertex::read		( IReader	&r )
 {
 	//	v_faces							m_adjacents; !
 	DataVertex::read( r );
@@ -416,7 +416,7 @@ void	Vertex::write		( IWriter	&w )const
 }
 
 //////////////////////////////////////////////////////////////
-void	Vertex::isolate_pool_clear_read		( INetReader	&r )
+void	Vertex::isolate_pool_clear_read		( IReader	&r )
 {
 	DataVertex::read( r );
 	r_pod_vector( r, m_adjacents );
@@ -445,7 +445,7 @@ void	Vertex::isolate_pool_clear_write	( IWriter	&w )const
 	}
 }
 
-void	Vertex::read_adjacents		( INetReader	&r )
+void	Vertex::read_adjacents		( IReader	&r )
 {
 	//VERIFY()
 }

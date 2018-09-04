@@ -106,7 +106,7 @@ void xrMU_Reference::export_cform_rcast(CDB::CollectorPacked& CL)
 
 	//base_color_c			c_scale;
 	//base_color_c			c_bias;
-void		xrMU_Reference::			read				( INetReader	&r )
+void		xrMU_Reference::			read				( IReader	&r )
 {
 	
 	R_ASSERT( read_models );
@@ -133,7 +133,7 @@ void		xrMU_Reference::		write				( IWriter	&w ) const
 
 }
 
-void xrMU_Reference::receive_result( INetReader	&r )
+void xrMU_Reference::receive_result( IReader	&r )
 {
 	r_pod_vector( r, color );
 	r_pod( r, c_scale );

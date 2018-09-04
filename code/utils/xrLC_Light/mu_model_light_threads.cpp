@@ -5,7 +5,6 @@
 #include "xrMU_Model_Reference.h"
 #include "xrlc_globaldata.h"
 #include "mu_model_light.h"
-#include "mu_light_net.h"
 
 CThreadManager mu_base(ProxyStatus, ProxyProgress);
 CThreadManager mu_secondary(ProxyStatus, ProxyProgress);
@@ -68,23 +67,11 @@ public:
 	}
 	virtual void Execute()
 	{
-
-
 		// Priority
 		SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_BELOW_NORMAL);
 		Sleep(0);
 
 		// Light models
-
-
-		if (mu_light_net)
-		{
-			lc_net::RunBaseModelsNet();
-			lc_net::RunRefModelsNet();
-			return;
-			//lc_net::WaitRefModelsNet();
-		}
-
 		for (u32 m = 0; m<inlc_global_data()->mu_models().size(); m++)
 		{
 			inlc_global_data()->mu_models()[m]->calc_materials();
@@ -106,8 +93,7 @@ public:
 	}
 };
 
-
-void run_mu_base(bool net)
+void run_mu_base()
 {
 	mu_base.start(xr_new<CMUThread>(0));
 }

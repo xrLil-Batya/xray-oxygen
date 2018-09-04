@@ -1,20 +1,14 @@
 #include "stdafx.h"
-
 #include "xrdeflector.h"
-//#include "build.h"
 #include "cl_intersect.h"
 #include "xrlc_globaldata.h"
-//#include "std_classes.h"
 #include "xrImage_Resampler.h"
 #include "light_point.h"
 #include "xrface.h"
-#include "net_task.h"
 #include "xrRayDefinition.h"
 #include "cuda_runtime.h"
 #include "putil\Buffer.h"
 #include "xrHardwareLight.h"
-//const	u32	rms_discard			= 8;
-//extern	BOOL		gl_linear	;
 
 void Jitter_Select(Fvector2* &Jitter, u32& Jcount)
 {
@@ -1167,14 +1161,11 @@ void CDeflector::Light(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH& H
         Logger.clMsg("* ERROR: CDeflector::Light - sphere calc");
     }
 
-
     //#INFO: we must use this information, because too many rays. And we count every ray count on batchering mode
     LightsSelected->select(inlc_global_data()->L_static(), Sphere.P, Sphere.R);
 
     // Calculate and fill borders
     L_Calculate(DB, LightsSelected, H);
-    if (_net_session && !_net_session->test_connection())
-        return;
     for (u32 ref = 254; ref>0; ref--) if (!ApplyBorders(layer, ref)) break;
 
     // Compression
@@ -1186,8 +1177,6 @@ void CDeflector::Light(CDB::COLLIDER* DB, base_lighting* LightsSelected, HASH& H
             // Reacalculate lightmap at lower resolution
             layer.create(w, h);
             L_Calculate(DB, LightsSelected, H);
-            if (_net_session && !_net_session->test_connection())
-                return;
         }
     }
     catch (...)

@@ -250,7 +250,7 @@ void FindBestMergeCandidate(u32* selected, float* selected_volume, u32 split, u3
 			continue;
 		if (!NeedMerge(TEST, bb))
 			continue;
-		if (!ValidateMerge(subdiv->size(), *bb_base, *bb_base_orig, (u32)TEST.size(), bb, volume))
+		if (!ValidateMerge((u32)subdiv->size(), *bb_base, *bb_base_orig, (u32)TEST.size(), bb, volume))
 			continue;
 
 		if (volume < *selected_volume) 
@@ -288,10 +288,10 @@ void CBuild::xrPhase_MergeGeometry	()
 
 			if ( ( g_XSplit.size() - split ) < 200 ) { // may need adjustment
 				// single thread
-				FindBestMergeCandidate( &selected  , &selected_volume , split + 1 , g_XSplit.size() , &subdiv , &bb_base_orig , &bb_base );
+				FindBestMergeCandidate( &selected  , &selected_volume , split + 1 , (u32)g_XSplit.size() , &subdiv , &bb_base_orig , &bb_base );
 			} else {
 				// multi thread
-				FindBestMergeCandidate_threads( &selected  , &selected_volume , split + 1 , g_XSplit.size() , &subdiv , &bb_base_orig , &bb_base );
+				FindBestMergeCandidate_threads( &selected  , &selected_volume , split + 1 , (u32)g_XSplit.size() , &subdiv , &bb_base_orig , &bb_base );
 			}
 
 			if (selected == split)	break;	// No candidates for merge
@@ -303,7 +303,7 @@ void CBuild::xrPhase_MergeGeometry	()
 		}
 		Logger.Progress(_sqrt(_sqrt(float(split)/float(g_XSplit.size()))));
 	}
-	Logger.clMsg("%d subdivisions.",g_XSplit.size());
+	Logger.clMsg("%d subdivisions.", (u32)g_XSplit.size());
 	validate_splits			();
 
 	// Destroy helper threads

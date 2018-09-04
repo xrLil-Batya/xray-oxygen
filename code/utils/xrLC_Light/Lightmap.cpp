@@ -127,7 +127,7 @@ void CLightmap::Save(LPCSTR path)
 	}
 }
 
-void CLightmap::read(INetReader	&r)
+void CLightmap::read(IReader	&r)
 {
 	lm.read(r);
 	::read(r, lm_texture);

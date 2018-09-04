@@ -995,9 +995,9 @@ void MeshMender::UpdateTheIndicesWithFinalIndices(xr_vector< unsigned int >& the
 
 	for (size_t i = 0; i < m_Triangles.size(); ++i)
 	{
-		theIndices[oIndex + 0] = m_Triangles[i].indices[0];
-		theIndices[oIndex + 1] = m_Triangles[i].indices[1];
-		theIndices[oIndex + 2] = m_Triangles[i].indices[2];
+		theIndices[oIndex + 0] = (u32)m_Triangles[i].indices[0];
+		theIndices[oIndex + 1] = (u32)m_Triangles[i].indices[1];
+		theIndices[oIndex + 2] = (u32)m_Triangles[i].indices[2];
 		oIndex += 3;
 	}
 }
@@ -1052,7 +1052,7 @@ void MeshMender::FixCylindricalWrapping(xr_vector< Vertex >& theVerts,
 						Vertex theDupe = theVerts[oldIndex];
 						alreadyDuped.insert(theOneToDupe);
 						theDupe.s += 1.0f;
-						theIndices[index + theOneToDupe] = theVerts.size();
+						theIndices[index + theOneToDupe] = (u32)theVerts.size();
 						theVerts.push_back(theDupe);
 						AppendToMapping(oldIndex, m_originalNumVerts, mappingNewToOldVert);
 					}
@@ -1084,7 +1084,7 @@ void MeshMender::FixCylindricalWrapping(xr_vector< Vertex >& theVerts,
 						Vertex theDupe = theVerts[oldIndex];
 						alreadyDuped.insert(theOneToDupe);
 						theDupe.t += 1.0f;
-						theIndices[index + theOneToDupe] = theVerts.size();
+						theIndices[index + theOneToDupe] = (u32)theVerts.size();
 						theVerts.push_back(theDupe);
 						AppendToMapping(oldIndex, m_originalNumVerts, mappingNewToOldVert);
 					}
@@ -1118,6 +1118,6 @@ void MeshMender::AppendToMapping(const size_t oldIndex, const size_t originalNum
 	else
 	{
 		//this is mapping to an original vertex
-		mappingNewToOldVert.push_back(oldIndex);
+		mappingNewToOldVert.push_back((u32)oldIndex);
 	}
 }

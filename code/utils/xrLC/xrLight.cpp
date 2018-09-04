@@ -4,10 +4,6 @@
 #include "../xrlc_light/xrdeflector.h"
 #include "../xrLC_Light/xrLC_GlobalData.h"
 #include "../xrLC_Light/xrLightVertex.h"
-
-#include "net.h"
-//#include "../xrLC_Light/net_task_manager.h"
-#include "../xrLC_Light/lcnet_task_manager.h"
 #include "../xrLC_Light/mu_model_light.h"
 std::recursive_mutex	task_CS;
 
@@ -90,36 +86,15 @@ void CBuild::LMapsRedux()
 
     for (u32 dit = 0; dit < lc_global_data()->g_deflectors().size(); dit++)
         task_pool.push_back(dit);
-
-    //pick deflectors, until reaching ray quota
-
-
 }
 
-void	CBuild::LMaps()
+void CBuild::LMaps()
 {
-    //****************************************** Lmaps
-    Logger.Phase("LIGHT: LMaps...");
-    //DeflectorsStats ();
-#ifndef NET_CMP
-    if (g_build_options.b_net_light)
-
-        //net_light ();
-        lc_net::net_lightmaps();
-    else {
-        LMapsLocal();
-    }
-#else
-    create_net_task_manager();
-    get_net_task_manager()->create_global_data_write(pBuild->path);
-    LMapsLocal();
-    get_net_task_manager()->run();
-    destroy_net_task_manager();
-    //net_light ();
-#endif
-
+	//****************************************** Lmaps
+	Logger.Phase("LIGHT: LMaps...");
+	LMapsLocal();
 }
-void XRLC_LIGHT_API ImplicitNetWait();
+
 void CBuild::Light()
 {
     //****************************************** Implicit
@@ -137,16 +112,6 @@ void CBuild::Light()
     mem_Compact();
 
     LightVertex();
-
-    //
-
-
-    ImplicitNetWait();
-    WaitMuModelsLocalCalcLightening();
-    lc_net::get_task_manager().wait_all();
-    //	get_task_manager().wait_all();
-    lc_net::get_task_manager().release();
-    //
     //****************************************** Merge LMAPS
     {
         Logger.Phase("LIGHT: Merging lightmaps...");
@@ -158,5 +123,5 @@ void CBuild::Light()
 
 void CBuild::LightVertex()
 {
-    ::LightVertex(!!g_build_options.b_net_light);
+    ::LightVertex();
 }

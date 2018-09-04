@@ -85,19 +85,19 @@ public:
 //	void					calc_ogf			();
 //	void					export_geometry		();
 	void					export_cform_rcast	( CDB::CollectorPacked& CL, Fmatrix& xform );
-	void					read				( INetReader	&r );
+	void					read				( IReader	&r );
 	void					write				( IWriter	&w ) const ;
 
-	void					read_color			( INetReader	&r );
+	void					read_color			( IReader	&r );
 	void					write_color			( IWriter	&w ) const ;
-	void					read_subdivs		( INetReader	&r );
+	void					read_subdivs		( IReader	&r );
 	void					write_subdivs		( IWriter	&w ) const ;
 
 	u32						find				( const _vertex *v )const;
 	u32						find				( const _face *v )const;
 
-	void					read				( INetReader	&r, _vertex* &v )const;
-	void					read				( INetReader	&r, _face*	&v )const;
+	void					read				( IReader	&r, _vertex* &v )const;
+	void					read				( IReader	&r, _face*	&v )const;
 
 
 	void					write				( IWriter	&r, u32 id, const _vertex* v )const;
@@ -125,15 +125,15 @@ mutable	twrite_faces			*write_faces;
 mutable	twrite_vertices			*write_vertices;
 
 private:
-			void				read_adjacents		( INetReader	&r );
+			void				read_adjacents		( IReader	&r );
 			void				write_adjacents		( IWriter	&w ) const;
-	static	void				read_adjacents		( INetReader	&r, xrMU_Model::tread_faces &read_faces, _vertex &v );
+	static	void				read_adjacents		( IReader	&r, xrMU_Model::tread_faces &read_faces, _vertex &v );
 	static	void				write_adjacents		( IWriter	&w, xrMU_Model::twrite_faces &write_faces, const _vertex &v );
 
 
-			void				read_face_verts		( INetReader	&r );
+			void				read_face_verts		( IReader	&r );
 			void				write_face_verts	( IWriter	&w ) const;
-	static	void				read_face_verts		( INetReader	&r, xrMU_Model::tread_vertices &read_verts, _face &v );
+	static	void				read_face_verts		( IReader	&r, xrMU_Model::tread_vertices &read_verts, _face &v );
 	static	void				write_face_verts	( IWriter	&w, xrMU_Model::twrite_vertices &write_verts, const _face &v );
 
 };

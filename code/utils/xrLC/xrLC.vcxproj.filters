@@ -120,9 +120,6 @@
     <ClInclude Include="vbm.h">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Internal</Filter>
     </ClInclude>
-    <ClInclude Include="net.h">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
-    </ClInclude>
     <ClInclude Include="xrGameMaterials.h" />
     <ClInclude Include="..\common\NvMender2003\remove_isolated_verts.h">
       <Filter>External\NV_Mender2003</Filter>
@@ -252,13 +249,7 @@
     <ClCompile Include="xrMU_Model_export_OGF.cpp">
       <Filter>%2a%2a%2a COMPILER %2a%2a%2a\Model</Filter>
     </ClCompile>
-    <ClCompile Include="net.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\engine.vc2008\xrEngine\xrLoadSurface.cpp" />
-    <ClCompile Include="..\..\SDK\include\hxgrid\Interface\hxGridInterface.cpp">
-      <Filter>%2a%2a%2a COMPILER %2a%2a%2a\net</Filter>
-    </ClCompile>
     <ClCompile Include="..\common\NvMender2003\NVMeshMender4.cpp">
       <Filter>External\NV_Mender2003</Filter>
     </ClCompile>

@@ -6,7 +6,7 @@
 
 class xrMU_Model;
 namespace CDB { class CollectorPacked; }
-class INetReader;
+class IReader;
 class IWriter;
 class XRLC_LIGHT_API xrMU_Reference
 {
@@ -29,9 +29,9 @@ public:
 	void					export_cform_game	(CDB::CollectorPacked& CL);
 	void					export_cform_rcast	(CDB::CollectorPacked& CL);
 
-	void					read				( INetReader	&r );
+	void					read				( IReader	&r );
 	void					write				( IWriter	&w ) const ;
-	void					receive_result		( INetReader	&r );
+	void					receive_result		( IReader	&r );
 	void					send_result			( IWriter	&w ) const;
 	static	xrMU_Reference* read_create()		{ return xr_new<xrMU_Reference>(); };
 

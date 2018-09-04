@@ -31,7 +31,7 @@ u16		RegisterShader		(LPCSTR T)
 	for (u32 it=0; it<pBuild->g_Shaders.size(); it++)
 		if (0==stricmp(T,pBuild->g_Shaders[it]))	return it;
 	pBuild->g_Shaders.push_back		(xr_strdup(T));
-	return pBuild->g_Shaders.size	()-1;
+	return (u16)pBuild->g_Shaders.size	()-1;
 }
 
 void	geom_batch_average	(u32 verts, u32 faces)
@@ -127,7 +127,7 @@ void CBuild::SaveTREE	(IWriter &fs)
 
 	Logger.Status				("Shader table...");
 	fs.open_chunk		(fsL_SHADERS);
-	fs.w_u32			(g_Shaders.size());
+	fs.w_u32			((u32)g_Shaders.size());
 	for (xr_vector<LPCSTR>::iterator T=g_Shaders.begin(); T!=g_Shaders.end(); T++)
 		fs.w_stringZ	(*T);
 	fs.close_chunk		();

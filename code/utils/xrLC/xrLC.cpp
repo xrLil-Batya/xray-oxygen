@@ -94,7 +94,6 @@ void Startup(char* lpCmdLine)
 	bool bModifyOptions = (strstr(cmd, "-o"));
 	g_build_options.b_radiosity = (strstr(cmd, "-gi"));
 	g_build_options.b_noise = (strstr(cmd, "-noise"));
-	g_build_options.b_net_light = (strstr(cmd, "-net"));
 	g_build_options.b_skipinvalid = (strstr(cmd, "-skip"));
 	g_build_options.b_notessellation = (strstr(cmd, "-notessellation"));
 	g_build_options.b_mxthread = (strstr(cmd, "-mxthread"));

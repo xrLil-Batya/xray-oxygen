@@ -214,11 +214,10 @@ void global_claculation_data::xrLoad()
 	}
 }
 
-void read(INetReader &r, CDB::MODEL &m);
+void read(IReader &r, CDB::MODEL &m);
 
-void global_claculation_data::read(INetReader &r)
+void global_claculation_data::read(IReader &r)
 {
-
 	g_lights.read(r);
 	R_ASSERT(!g_shaders_xrlc);
 	g_shaders_xrlc = xr_new<Shader_xrLC_LIB>();

@@ -97,16 +97,13 @@ void blit_r	(lm_layer& dst, u32 ds_x, u32 ds_y, lm_layer& src, u32 ss_x, u32 ss_
 }
 
 //-------------------------------------
-
-//CDeflector*				Deflector = 0;
-
 IC BOOL UVpointInside(Fvector2 &P, UVtri &T)
 {
 	Fvector B;
 	return T.isInside(P,B);
 }
 
-CDeflector::CDeflector(): _net_session(0)
+CDeflector::CDeflector()
 {
 	//Deflector		= this;
 	normal.set		(0,1,0);
@@ -115,6 +112,7 @@ CDeflector::CDeflector(): _net_session(0)
 	bMerged			= FALSE;
 	UVpolys.reserve	(32);
 }
+
 CDeflector::~CDeflector()
 {
 }
@@ -342,7 +340,7 @@ u16	CDeflector:: GetBaseMaterial		()
 	BOOL						bMerged;
 	*/
 
-void	CDeflector::receive_result		( INetReader	&r )
+void	CDeflector::receive_result		( IReader	&r )
 {
 	read( r );
 	layer.read( r );
@@ -359,7 +357,7 @@ void	CDeflector::send_result			( IWriter	&w ) const
 #endif
 }
 
-void	CDeflector::read				( INetReader	&r )
+void	CDeflector::read				( IReader	&r )
 {
 	u32 sz_polys = r.r_u32();
 	UVpolys.resize( sz_polys );

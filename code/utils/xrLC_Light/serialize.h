@@ -1,9 +1,7 @@
 #pragma once
 
-#include "net_stream.h"
-
 template<typename T>
-void r_pod_vector( INetReader	&r, xr_vector<T> & v )
+void r_pod_vector( IReader	&r, xr_vector<T> & v )
 {
 	u32 cnt	= r.r_u32();
 	v.resize(cnt);
@@ -19,7 +17,7 @@ void w_pod_vector( IWriter	&w, const xr_vector<T> & v )
 }
 
 template <typename T>
-void r_pod( INetReader	&r, T& v  )
+void r_pod( IReader	&r, T& v  )
 {
 	r.r(&v, sizeof( T ) );
 }
@@ -31,7 +29,7 @@ void w_pod( IWriter	&w, const T& v  )
 }
 
 template<typename T>
-void r_vector( INetReader	&r, xr_vector<T> & v )
+void r_vector( IReader	&r, xr_vector<T> & v )
 {
 	u32 cnt	= r.r_u32();
 	v.resize(cnt);
@@ -51,7 +49,7 @@ void w_vector( IWriter	&w, const xr_vector<T> & v )
 		i->write(w);
 }
 template<typename T>
-void r_pointer( INetReader &r, T* &p, xr_vector<T> &storage )
+void r_pointer( IReader &r, T* &p, xr_vector<T> &storage )
 {
 	u32 id = r.r_u32();
 	R_ASSERT( id < storage.size() );
@@ -72,14 +70,13 @@ void w_pointer( IWriter	&w,const T* p, const xr_vector<T> &storage )
 }
 
 template< typename T, const int dim >
-void r_vector( INetReader	&r, svector< T, dim > & v )
+void r_vector(IReader	&r, svector< T, dim > & v )
 {
 	u32 cnt	= r.r_u32();
 	v.resize(cnt);
 	svector<T,dim>::iterator i= v.begin(), e = v.end();
-	for(;i!=e;++i)
+	for (; i != e; ++i)
 		i->read(r);
-
 }
 
 template< typename T, const int dim >
@@ -98,7 +95,7 @@ static void w_sphere( IWriter	&w, const Fsphere &v )
 {
 	w.w(&v,sizeof(Fsphere));
 }
-static void r_sphere(INetReader &r, Fsphere &v )
+static void r_sphere(IReader &r, Fsphere &v )
 {
 	r.r( &v,sizeof(Fsphere) );
 }
@@ -204,7 +201,7 @@ private:
 	friend class t_serialize;
 	xr_vector<T*>& vec;		
 		
-	void read(INetReader &r) 
+	void read(IReader &r) 
 	{
 		vec.resize( r.r_u32(), 0 );
 		//xr_vector<T*>::iterator i = vec.begin(), e =  vec.end();
@@ -214,7 +211,7 @@ private:
 			vec[i] ->read(r);
 		}
 	}
-	void	read	( INetReader &r, T* &f ) const
+	void	read	( IReader &r, T* &f ) const
 	{
 		VERIFY( !f );
 		u32 id = r.r_u32();
@@ -223,7 +220,7 @@ private:
 		f = vec[ id ];
 	}
 
-	void	read_ref(  INetReader &r, xr_vector<T*>& ref_vec ) const
+	void	read_ref(  IReader &r, xr_vector<T*>& ref_vec ) const
 	{
 		ref_vec.resize( r.r_u32(), 0 );
 		//xr_vector<T*>::iterator i = ref_vec.begin(), e =  ref_vec.end();
@@ -268,7 +265,7 @@ static	u32		get_id			(  const type* f, const xr_vector<type*>& vec )
 		//return u32( F - vec.begin() );
 	}
 
-	void read(INetReader &r)
+	void read(IReader &r)
 	{
 		serialize.read( r );
 		id_type::preset(serialize.vec);
@@ -278,7 +275,7 @@ static	u32		get_id			(  const type* f, const xr_vector<type*>& vec )
 		id_type::preset(serialize.vec);
 		serialize.write( w );
 	}
-	void read( INetReader &r, type* &f ) const
+	void read( IReader &r, type* &f ) const
 	{
 		serialize.read( r, f );
 	}
@@ -287,7 +284,7 @@ static	u32		get_id			(  const type* f, const xr_vector<type*>& vec )
 		serialize.write( w, f );
 	}
 
-	void read_ref(  INetReader &r, xr_vector<type*>& ref_vec ) const
+	void read_ref(  IReader &r, xr_vector<type*>& ref_vec ) const
 	{
 		serialize.read_ref( r, ref_vec );
 	}
@@ -299,46 +296,4 @@ static	u32		get_id			(  const type* f, const xr_vector<type*>& vec )
 };
 
 void write(IWriter	&w, const b_texture &b);
-void read(INetReader &r, b_texture &b);
-
-IC void write_task_id( IGenericStream* stream, u32 id )
-{
-	stream->Write( &id, sizeof(id) );
-}
-IC void read_task_id( IGenericStream* stream, u32 &id )
-{
-	stream->Read( &id, sizeof(u32) );
-}
-IC void write_task_type(IGenericStream* stream, u32 type)
-{
-	stream->Write( &type, sizeof(u32) );
-}
-IC void read_task_type( IGenericStream* stream, u32 &type )
-{
-	stream->Read( &type, sizeof(u32) );
-}
-IC void read_task_pool( IGenericStream* stream, u8 &pool_id )
-{
-	stream->Read( &pool_id, sizeof(u8) );
-}
-IC void write_task_pool( IGenericStream* stream, u8 pool_id )
-{
-	stream->Write( &pool_id, sizeof(pool_id) );
-}
-IC void write_task_caption( IGenericStream* stream, u32 id, u32 type )
-{
-	
-	write_task_id	( stream, id );
-	write_task_type ( stream, type );
-}
-IC void read_task_caption( IGenericStream* stream, u32 &id, u32 &type )
-{
-	
-	read_task_id	( stream, id );
-	read_task_type ( stream, type );
-}
-
-
-
-
-
+void read(IReader &r, b_texture &b);

@@ -111,7 +111,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 		}
 
 		//add in the list
-		numIndices += tempFaces.size() * 3;
+		numIndices += (u32)tempFaces.size() * 3;
 
 		primGroups[0].type       = PT_LIST;
 		primGroups[0].numIndices = numIndices;
@@ -235,7 +235,7 @@ void GenerateStrips(const u16* in_indices, const s32 in_numIndices, xr_vector<Pr
 //
 void RemapIndices(const xr_vector<PrimitiveGroup> &in_primGroups, const u16 numVerts, xr_vector<PrimitiveGroup> &remappedGroups)
 {
-	int numGroups			= in_primGroups.size();
+	size_t numGroups = in_primGroups.size();
 	remappedGroups.resize	(numGroups);
 
 	//caches oldIndex --> newIndex conversion
@@ -245,7 +245,7 @@ void RemapIndices(const xr_vector<PrimitiveGroup> &in_primGroups, const u16 numV
 	
 	//loop over primitive groups
 	unsigned int indexCtr = 0;
-	for(int i = 0; i < numGroups; i++)
+	for(size_t i = 0; i < numGroups; i++)
 	{
 		unsigned int numIndices = in_primGroups[i].numIndices;
 

@@ -48,7 +48,7 @@ void xrMU_Model::clear_mesh			()
 }
 
 
-void	xrMU_Model::read_color( INetReader	&r )
+void	xrMU_Model::read_color( IReader	&r )
 {
 	r_pod_vector( r, color );
 }
@@ -57,7 +57,7 @@ void	xrMU_Model::write_color( IWriter	&w ) const
 	w_pod_vector( w ,color );
 }
 
-void	xrMU_Model::read_subdivs( INetReader	&r )
+void	xrMU_Model::read_subdivs( IReader	&r )
 {
 	r_pod_vector( r, m_subdivs );
 }
@@ -67,7 +67,7 @@ void	xrMU_Model::write_subdivs( IWriter	&w ) const
 	w_pod_vector( w ,m_subdivs );
 }
 
-void xrMU_Model::read( INetReader	&r )
+void xrMU_Model::read( IReader	&r )
 {
 	reading_open();
 	r.r_stringZ( m_name );
@@ -152,12 +152,12 @@ void		xrMU_Model::			writting_close		()const
 }
 
 
-void		xrMU_Model::read	( INetReader	&r, _vertex* &v )const
+void		xrMU_Model::read	( IReader	&r, _vertex* &v )const
 {
 	VERIFY( read_vertices );
 	read_vertices->read( r, v );
 }
-void		xrMU_Model::read	( INetReader	&r, _face*	&v )const
+void		xrMU_Model::read	( IReader	&r, _face*	&v )const
 {
 	VERIFY( read_faces );
 	read_faces->read( r, v );
@@ -179,7 +179,7 @@ void		xrMU_Model::write	( IWriter	&w, u32 id, const _face* v )const
 	write_faces->write( w, v );
 }
 
-void xrMU_Model::read_adjacents( INetReader	&r, xrMU_Model::tread_faces &read_faces, _vertex &v )
+void xrMU_Model::read_adjacents( IReader	&r, xrMU_Model::tread_faces &read_faces, _vertex &v )
 {
 	read_faces.read_ref( r, v.m_adjacents );
 }
@@ -189,7 +189,7 @@ void xrMU_Model::write_adjacents( IWriter	&w, xrMU_Model::twrite_faces &write_fa
 	write_faces.write_ref( w, v.m_adjacents );
 }
 
-void		xrMU_Model::		read_adjacents		( INetReader	&r )
+void		xrMU_Model::		read_adjacents		( IReader	&r )
 {
 	R_ASSERT( read_faces );
 	v_vertices_it i = m_vertices.begin(), e = m_vertices.end();
@@ -204,7 +204,7 @@ void		xrMU_Model::		write_adjacents		( IWriter	&w ) const
 			write_adjacents( w, *write_faces, *(*i) );
 }
 
-void	xrMU_Model::read_face_verts		( INetReader	&r )
+void	xrMU_Model::read_face_verts		( IReader	&r )
 {
 	R_ASSERT( read_vertices );
 	v_faces_it i = m_faces.begin(), e = m_faces.end();
@@ -220,7 +220,7 @@ void	xrMU_Model::write_face_verts	( IWriter	&w ) const
 			write_face_verts( w, *write_vertices, *(*i) );
 }
 
-void	xrMU_Model::read_face_verts		( INetReader	&r, xrMU_Model::tread_vertices &read_verts, _face &v )
+void	xrMU_Model::read_face_verts		( IReader	&r, xrMU_Model::tread_vertices &read_verts, _face &v )
 {
 	//read_verts
 	read_verts.read( r, v.v[0] );

@@ -85,7 +85,6 @@ void Startup(LPSTR lpCmdLine)
 		return;
 	}
 
-	bool bNet = (strstr(cmd, "-net"));
 	bool noRgb = (strstr(cmd, "-norgb"));
 	bool noSun = (strstr(cmd, "-nosun"));
 
@@ -103,7 +102,7 @@ void Startup(LPSTR lpCmdLine)
 	CTimer dwStartupTime;
 	dwStartupTime.Start();
 
-	xrCompileDO(bNet, noRgb, noSun);
+	xrCompileDO(noRgb, noSun);
 
 	// Show statistic
 	char stats[256];

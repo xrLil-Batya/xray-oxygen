@@ -3,7 +3,6 @@
 #include "xrlc_globaldata.h"
 #include "light_point.h"
 #include "xrface.h"
-#include "net_task.h"
 #include "xrHardwareLight.h"
 
 extern void Jitter_Select(Fvector2* &Jitter, u32& Jcount);

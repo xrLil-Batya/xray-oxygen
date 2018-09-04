@@ -91,7 +91,7 @@ void xrLC_GlobalData::vertices_isolate_and_pool_reload()
 		Memory.mem_compact();
 		Logger.clLog("mem usage after clear pool: %u", Memory.mem_usage());
 
-		INetReaderFile r_verts(path_name);
+		IReader r_verts = *FS.r_open(path_name);
 		for (u32 i = 0; i < not_empty_verts; ++i)
 		{
 			Vertex* &v = _g_vertices[i];

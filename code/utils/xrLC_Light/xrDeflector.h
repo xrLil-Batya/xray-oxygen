@@ -16,7 +16,6 @@ class execute_statistics;
 class XRLC_LIGHT_API CDeflector
 {
 public:
-    net_task_callback * _net_session;
     xr_vector<UVtri>			UVpolys;
     Fvector						normal;
     lm_layer					layer;
@@ -64,13 +63,13 @@ public:
     }
     void	RemapUV(xr_vector<UVtri>& dest, u32 base_u, u32 base_v, u32 size_u, u32 size_v, u32 lm_u, u32 lm_v, BOOL bRotate);
     void	RemapUV(u32 base_u, u32 base_v, u32 size_u, u32 size_v, u32 lm_u, u32 lm_v, BOOL bRotate);
-    void	read(INetReader	&r);
+    void	read(IReader	&r);
     void	write(IWriter	&w) const;
 
 
 
 
-    void	receive_result(INetReader	&r);
+    void	receive_result(IReader	&r);
     void	send_result(IWriter	&w) const;
 
     bool	similar(const CDeflector &D, float eps = EPS) const;
