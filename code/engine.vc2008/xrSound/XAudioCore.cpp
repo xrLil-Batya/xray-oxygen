@@ -125,7 +125,7 @@ XSTATUS XCore::InitXAudioDevice()
 	}
 
 	// create X3DAudio interface
-	const float SpeedOfSound = 343.33;		// (343 1/3) 20 degreeses with cloudy weather
+	const float SpeedOfSound = 343.33;		// (343 1/3 m/s) 20 degreeses with cloudy weather
 	X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
 
 	return XAUDIO_OK;
@@ -165,6 +165,7 @@ XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refD
 
 XSTATUS XCore::GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* DeviceDetails)
 {
+	VERIFY(xData.pXAudio);
 	if (FAILED(xData.pXAudio->GetDeviceDetails(std::stoi(DeviceInfo.deviceId.c_str()), DeviceDetails)))
 	{
 		return XAUDIO_BAD_DEVICE;
@@ -243,11 +244,10 @@ XSTATUS XCore::SetMasterVolume(float Volume)
 {
 	VERIFY(xData.pSourceVoice);
 
-	VERIFY(Volume);
 	soundGain.AudioGain = Volume;
 
 	// set default sound effect 
-	if (FAILED(xData.pSourceVoice->SetEffectParameters(1, &soundGain, sizeof(GAIN_LEVEL))))
+	if (FAILED(xData.pMasteringVoice->SetEffectParameters(1, &soundGain, sizeof(GAIN_LEVEL))))
 	{
 		return XAUDIO_BAD_SURROUND;
 	}
@@ -340,14 +340,17 @@ void CSoundRender_CoreB::_clear()
 
 void CSoundRender_CoreB::set_master_volume(float f)
 {
-	float	_volume = f;									
-	clamp(_volume, EPS_S, 1.f);
-	s32 hw_volume = iFloor(7000.f * logf(_volume) / 5.f);
-	clamp(hw_volume, -10000, 0);
-	coreAudio.SetMasterVolume(float(hw_volume));
+	float audioVolume = f;									
+	clamp(audioVolume, EPS_S, 1.f);
+
+	// convert to decibels
+	float HWVolume = fFloorSSE2(7000.f * logf(audioVolume) / 5.f);
+	clamp(HWVolume, -10000.f, 0.f);
+
+	coreAudio.SetMasterVolume(XAudio2DecibelsToAmplitudeRatio(HWVolume));
 }
 
 void AudioCallback::OnBufferEnd(void* BufferContext)
 {
-	VERIFY(BufferContext);
+	VERIFY(BufferContext); 
 }

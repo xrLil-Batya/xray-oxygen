@@ -50,9 +50,9 @@ class engine_impl;
 class IRenderDevice
 {
 public:
-	virtual		CStatsPhysics*	_BCL		StatPhysics		()							= 0;								
-	virtual				void	_BCL		AddSeqFrame		( pureFrame* f, bool mt )	= 0;
-	virtual				void	_BCL		RemoveSeqFrame	( pureFrame* f )			= 0;
+	virtual		CStatsPhysics*	WINAPI		StatPhysics		()							= 0;								
+	virtual				void	WINAPI		AddSeqFrame		( pureFrame* f, bool mt )	= 0;
+	virtual				void	WINAPI		RemoveSeqFrame	( pureFrame* f )			= 0;
 };
 
 class ENGINE_API CRenderDeviceData
