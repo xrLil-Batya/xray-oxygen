@@ -40,7 +40,7 @@
 #include "level.h"
 #include "GamePersistent.h"
 #include "xrmessages.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "usablescriptobject.h"
 #include "alife_registry_wrappers.h"
 #include "../Include/xrRender/Kinematics.h"

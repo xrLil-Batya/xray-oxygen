@@ -2,7 +2,7 @@
 #include "level.h"
 #include "../xrCore/stream_reader.h"
 #include "MainMenu.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "../xrEngine/xr_ioconsole.h"
 
 bool CLevel::synchronize_client()

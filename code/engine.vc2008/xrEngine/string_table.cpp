@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "string_table.h"
 
-#include "ui/xrUIXmlParser.h"
+#include "../xrCore/XMLCore/xrXMLParser.h"
 #include "xr_level_controller.h"
 
 STRING_TABLE_DATA* CStringTable::pData = nullptr;
@@ -58,7 +58,7 @@ void CStringTable::ReInit(EGameLanguage lang)
 		pData = xr_new<STRING_TABLE_DATA>();
 	}
 
-	LPCSTR languageStr;
+	LPCSTR languageStr = nullptr;
 
 	switch (lang)
 	{
@@ -93,7 +93,7 @@ void CStringTable::ReInit(EGameLanguage lang)
 
 void CStringTable::Load	(LPCSTR xml_file_full)
 {
-	CUIXml uiXml;
+	CXml uiXml;
 	string_path _s;
 	strconcat (sizeof(_s),_s, "text\\", pData->m_sLanguage.c_str() );
 

@@ -22,7 +22,7 @@
 #include "xrServer_Objects.h"
 #include "ui/UIMainIngameWnd.h"
 #include "../xrphysics/iphworld.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "autosave_manager.h"
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"

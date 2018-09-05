@@ -1,7 +1,7 @@
 #include "stdafx.h"
 #include "UIXmlInit.h"
 #include "../level.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "UIFrameWindow.h"
 #include "UICheckButton.h"
 #include "UICustomSpin.h"
@@ -21,8 +21,6 @@
 #include "UIDragDropListEx.h"
 #include "UIDragDropReferenceList.h"
 #include "UILines.h"
-
-extern int keyname_to_dik(LPCSTR);
 
 #define DI_FONT_NAME			"di"
 
@@ -381,7 +379,6 @@ bool CUIXmlInit::InitText(CUIXml& xml_doc, LPCSTR path, int index, CUILines* pLi
 	return true;
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
-extern int keyname_to_dik(LPCSTR);
 
 bool CUIXmlInit::Init3tButton(CUIXml& xml_doc, LPCSTR path, int index, CUI3tButton* pWnd)
 {

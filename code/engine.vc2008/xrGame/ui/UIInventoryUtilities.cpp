@@ -6,7 +6,7 @@
 #include "../eatable_item.h"
 #include "../Level.h"
 #include "../xrEngine/date_time.h"
-#include "../string_table.h"
+#include "../xrEngine/string_table.h"
 #include "../Inventory.h"
 #include "../InventoryOwner.h"
 

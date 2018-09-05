@@ -14,14 +14,11 @@ using STRING_TABLE_MAP = xr_map<shared_str, shared_str>;
 struct STRING_TABLE_DATA
 {
 	shared_str				m_sLanguage;
-	
 	STRING_TABLE_MAP		m_StringTable;
-	
 	STRING_TABLE_MAP		m_string_key_binding;
 };
 
-
-class CStringTable 
+class ENGINE_API CStringTable
 {
 public:
 								CStringTable			();

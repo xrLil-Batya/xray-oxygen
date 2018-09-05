@@ -87,14 +87,14 @@ struct _action
 	EGameActions	id;
 };
 
-LPCSTR			dik_to_keyname			(int _dik);
-int				keyname_to_dik			(LPCSTR _name);
-_keyboard*		keyname_to_ptr			(LPCSTR _name);
-_keyboard*		dik_to_ptr				(int _dik, bool bSafe);
+ENGINE_API const char*	dik_to_keyname			(int _dik);
+ENGINE_API int			keyname_to_dik			(LPCSTR _name);
+ENGINE_API _keyboard*	keyname_to_ptr			(LPCSTR _name);
+ENGINE_API _keyboard*	dik_to_ptr				(int _dik, bool bSafe);
 
-LPCSTR			id_to_action_name		(EGameActions _id);
-EGameActions	action_name_to_id		(LPCSTR _name);
-_action*		action_name_to_ptr		(LPCSTR _name);
+ENGINE_API const char*	id_to_action_name		(EGameActions _id);
+ENGINE_API EGameActions	action_name_to_id		(LPCSTR _name);
+ENGINE_API _action*		action_name_to_ptr		(LPCSTR _name);
 
 extern _action		actions		[];
 
@@ -105,19 +105,20 @@ struct _binding
 	_keyboard*		m_keyboard[2];
 };
 
-extern _binding g_key_bindings[];
+extern ENGINE_API _binding g_key_bindings[];
 
-bool				is_binded			(EGameActions action_id, int dik);
-int					get_action_dik		(EGameActions action_id, int idx=-1);
-EGameActions		get_binded_action	(int dik);
+ENGINE_API bool			is_binded			(EGameActions action_id, int dik);
+ENGINE_API int			get_action_dik		(EGameActions action_id, int idx=-1);
+ENGINE_API EGameActions	get_binded_action	(int dik);
+ENGINE_API void			CCC_RegisterInput();
 
-extern void		CCC_RegisterInput();
-
-struct _conCmd	{
+struct _conCmd	
+{
 	shared_str	cmd;
 };
 
-class ConsoleBindCmds{
+class ENGINE_API ConsoleBindCmds
+{
 public:
 	xr_map<int,_conCmd>		m_bindConsoleCmds;
 
@@ -128,9 +129,9 @@ public:
 	void 	save			(IWriter* F);
 };
 
-void GetActionAllBinding	(LPCSTR action, char* dst_buff, int dst_buff_sz);
+ENGINE_API void GetActionAllBinding	(LPCSTR action, char* dst_buff, int dst_buff_sz);
 
-extern ConsoleBindCmds		bindConsoleCmds;
+extern ENGINE_API ConsoleBindCmds bindConsoleCmds;
 
 // 0xED - max vavue in DIK* enum
 #define MOUSE_1		(0xED + 100)

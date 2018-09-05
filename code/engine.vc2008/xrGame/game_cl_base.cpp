@@ -4,12 +4,12 @@
 #include "GamePersistent.h"
 #include "UIGame.h"
 #include "script_engine.h"
-#include "xr_Level_controller.h"
+#include "../xrEngine/xr_Level_controller.h"
 #include "ui/UIMainIngameWnd.h"
 #include "UI/UIGameTutorial.h"
 #include "UI/UIMessagesWindow.h"
 #include "UI/UIDialogWnd.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include <luabind/luabind.hpp>
 
 EGameLanguage g_Language = EGameLanguage::eglRussian;

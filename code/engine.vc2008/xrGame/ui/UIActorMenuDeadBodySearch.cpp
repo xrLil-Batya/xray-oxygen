@@ -15,7 +15,7 @@
 #include "../Inventory.h"
 #include "../Inventory_item.h"
 #include "../InventoryBox.h"
-#include "../string_table.h"
+#include "../../xrEngine/string_table.h"
 #include "../ai/monsters/BaseMonster/base_monster.h"
 #include "../../FrayBuildConfig.hpp"
 #include "../xrEngine/xr_input.h"

@@ -11,10 +11,10 @@
 #include "xrserver_objects_alife_items.h"
 #include "ActorEffector.h"
 #include "EffectorZoomInertion.h"
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "UIGame.h"
 #include "object_broker.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "ui/UIXmlInit.h"
 #include "ui/UIStatic.h"
 #include "game_object_space.h"
@@ -1244,7 +1244,7 @@ void CWeaponMagazined::net_Export(NET_Packet& P)
 	P.w_u8(u8(m_iCurFireMode & 0x00ff));
 }
 
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 bool CWeaponMagazined::GetBriefInfo(II_BriefInfo& info)
 {
 	VERIFY(m_pInventory);

@@ -12,7 +12,7 @@
 #include "ai_space.h"
 #include "../xrEngine/XR_IOConsole.h"
 #include "../xrEngine/xr_ioc_cmd.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "gamepersistent.h"
 #include "debug_renderer.h"
 #include "object_broker.h"

@@ -14,6 +14,7 @@ CMagazine::CMagazine()
 
 CMagazine::~CMagazine()
 {
+	xr_delete(m_pCurrentAmmo);
 }
 
 float CMagazine::GetMagazineWeight(const decltype(CMagazine::m_magazine)& mag) const

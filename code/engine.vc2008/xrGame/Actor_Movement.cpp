@@ -8,7 +8,7 @@
 
 #include "level.h"
 #include "UIGame.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "actorcondition.h"
 #include "game_cl_base.h"
 #include "WeaponMagazined.h"

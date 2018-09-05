@@ -1318,7 +1318,6 @@
     <ClInclude Include="debug_renderer_inline.h" />
     <ClInclude Include="GlobalFeelTouch.hpp" />
     <ClInclude Include="Level_network_map_sync.h" />
-    <ClInclude Include="xr_level_controller.h" />
     <ClInclude Include="level_debug.h" />
     <ClInclude Include="Actor.h" />
     <ClInclude Include="actor_anim_defs.h" />
@@ -1509,7 +1508,6 @@
     <ClInclude Include="random32.h" />
     <ClInclude Include="..\xrServerEntities\shared_data.h" />
     <ClInclude Include="..\xrServerEntities\smart_cast.h" />
-    <ClInclude Include="string_table.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_inline.h" />
     <ClInclude Include="..\xrServerEntities\associative_vector_compare_predicate.h" />
@@ -2228,7 +2226,6 @@
     <ClCompile Include="debug_renderer.cpp" />
     <ClCompile Include="GlobalFeelTouch.cpp" />
     <ClCompile Include="Level_network_map_sync.cpp" />
-    <ClCompile Include="xr_level_controller.cpp" />
     <ClCompile Include="level_debug.cpp">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release_IA32|x64'">true</ExcludedFromBuild>
@@ -2398,7 +2395,6 @@
     </ClCompile>
     <ClCompile Include="ai\weighted_random.cpp" />
     <ClCompile Include="random32.cpp" />
-    <ClCompile Include="string_table.cpp" />
     <ClCompile Include="xrGame.cpp" />
     <ClCompile Include="xrServer.cpp" />
     <ClCompile Include="game_base.cpp" />

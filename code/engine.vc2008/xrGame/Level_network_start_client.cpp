@@ -14,7 +14,7 @@
 #include "physics_game.h"
 #include "GamePersistent.h"
 #include "xrServer.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 extern	pureFrame* g_pNetProcessor;
 
