@@ -99,8 +99,8 @@ using XAUDIO_STATE = struct
 
 using XAUDIO_DEVICE = struct
 {
-	xr_string	deviceId;
-	xr_string	deviceDescription;
+	shared_str	deviceId;
+	shared_str	deviceDescription;
 };
 
 struct GAIN_LEVEL
@@ -124,6 +124,7 @@ public:
 	std::vector<XAUDIO_DEVICE> deviceList;
 	XAUDIO_DATA xData;
 	XAUDIO_STATE xState;
+
 private:
 	XSTATUS		lastStatus;
 	HMODULE		XAudioDLL;
