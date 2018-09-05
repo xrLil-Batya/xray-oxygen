@@ -3,6 +3,7 @@
 
 #include "stdafx.h"
 #pragma hdrstop
+#include "lzhuf.h"
 
 #include <io.h>
 #include <fcntl.h>
@@ -10,10 +11,7 @@
 
 #define MODULE
 
-//typedef unsigned char BYTE;
-
 unsigned	textsize = 0, codesize = 0;
-
 char		wterr[] = "Can't write.";
 
 /********** LZSS compression **********/
@@ -44,8 +42,8 @@ int prnt[T + N_CHAR+1];	/* pointers to parent nodes, except for the				*/
 int son[T];				/* pointers to child nodes (son[], son[] + 1)			*/
 
 //************************** Internal FS
-//typedef xr_vector<BYTE>	vecB;
-class LZfs {
+class LZfs 
+{
 private:
 	unsigned	getbuf;
 	unsigned	getlen;
@@ -635,7 +633,7 @@ void Decode()  /* recover */
 	tim_size = count;
 }
 
-unsigned _writeLZ	(int hf, void* d, unsigned size)
+unsigned XRay::Compress::LZ::WriteLZ(int hf, void* d, unsigned size)
 {
 	u8*	start = (u8*) d;
 	fs.Init_Input(start,start+size);
@@ -649,7 +647,7 @@ unsigned _writeLZ	(int hf, void* d, unsigned size)
 	return size_out;
 }
 
-void _compressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
+void XRay::Compress::LZ::CompressLZ(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 {
 	u8*	start = (u8*) src;
 	fs.Init_Input(start,start+src_sz);
@@ -658,7 +656,7 @@ void _compressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 	*dest_sz	= fs.OutSize();
 }
 
-void _decompressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
+void XRay::Compress::LZ::DecompressLZ(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 {
 	u8*	start = (u8*) src;
 	fs.Init_Input(start,start+src_sz);
@@ -667,7 +665,7 @@ void _decompressLZ	(u8** dest, unsigned* dest_sz, void* src, unsigned src_sz)
 	*dest_sz	= fs.OutSize();
 }
 
-unsigned _readLZ	(int hf, void* &d, unsigned size)
+unsigned XRay::Compress::LZ::ReadLZ(int hf, void* &d, unsigned size)
 {
 	// Read file in memory
 	u8*	data	= (u8*)xr_malloc(size);

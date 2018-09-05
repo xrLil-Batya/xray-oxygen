@@ -113,7 +113,7 @@ void FileCompress(const char* fn, const char* sign, void* data, const size_t siz
     const auto H = _open(fn, O_BINARY | O_CREAT | O_WRONLY | O_TRUNC, S_IREAD | S_IWRITE);
     R_ASSERT2(H > 0, fn);
     _write(H, &M, 8);
-    _writeLZ(H, data, (u32)size);
+	XRay::Compress::LZ::WriteLZ(H, data, (u32)size);
     _close(H);
 }
 
@@ -131,7 +131,7 @@ void* FileDecompress(const char* fn, const char* sign, size_t* size) {
     R_ASSERT(strncmp(M.data(), F.data(), 8) == 0);
 
     void* ptr = nullptr;
-    const size_t SZ = _readLZ(H, ptr, _filelength(H) - 8);
+    const size_t SZ = XRay::Compress::LZ::ReadLZ(H, ptr, _filelength(H) - 8);
     _close(H);
     if (size)
         *size = SZ;
@@ -200,7 +200,7 @@ size_t IWriter::chunk_size() {
 void IWriter::w_compressed(void* ptr, const size_t count) {
     u8* dest = nullptr;
     unsigned dest_sz = 0;
-    _compressLZ(&dest, &dest_sz, ptr, count);
+	XRay::Compress::LZ::CompressLZ(&dest, &dest_sz, ptr, count);
 
     if (dest && dest_sz)
         w(dest, dest_sz);
@@ -231,7 +231,8 @@ void IWriter::w_sdir(const Fvector& D) {
 
 //---------------------------------------------------
 // base stream
-IReader* IReader::open_chunk(const u32 ID) {
+IReader* IReader::open_chunk(const u32 ID) 
+{
     bool bCompressed;
 
     const size_t dwSize = find_chunk(ID, &bCompressed);
@@ -239,7 +240,7 @@ IReader* IReader::open_chunk(const u32 ID) {
         if (bCompressed) {
             u8* dest;
             unsigned dest_sz;
-            _decompressLZ(&dest, &dest_sz, pointer(), dwSize);
+			XRay::Compress::LZ::DecompressLZ(&dest, &dest_sz, pointer(), dwSize);
             return new CTempReader(dest, dest_sz, tell() + dwSize);
         } else {
             return new IReader(pointer(), dwSize, tell() + dwSize);
@@ -271,7 +272,7 @@ IReader* IReader::open_chunk_iterator(u32& ID, IReader* _prev) {
         // compressed
         u8* dest;
         unsigned dest_sz;
-        _decompressLZ(&dest, &dest_sz, pointer(), _size);
+		XRay::Compress::LZ::DecompressLZ(&dest, &dest_sz, pointer(), _size);
         return new CTempReader(dest, dest_sz, tell() + _size);
     } else {
         // normal

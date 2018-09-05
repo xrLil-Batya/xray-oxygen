@@ -1,12 +1,14 @@
 #pragma once
-
-extern XRCORE_API void		rtc_initialize	();
-extern XRCORE_API size_t	rtc_compress	(void *dst, u32 dst_len, const void* src, u32 src_len);
-extern XRCORE_API size_t	rtc_decompress	(void *dst, u32 dst_len, const void* src, u32 src_len);
-extern XRCORE_API u32		rtc_csize		(u32 in);
-
-extern XRCORE_API void      rtc9_initialize	();
-extern XRCORE_API void      rtc9_uninitialize	();
-extern XRCORE_API u32       rtc9_compress   (void *dst, u32 dst_len, const void* src, u32 src_len);
-extern XRCORE_API u32       rtc9_decompress	(void *dst, u32 dst_len, const void* src, u32 src_len);
-extern XRCORE_API u32       rtc9_csize		(u32 in);
+namespace XRay
+{
+	namespace Compress
+	{
+		namespace RT
+		{
+			XRCORE_API void		RtcInitialize();
+			XRCORE_API size_t	RtcCompress(void *dst, u32 dst_len, const void* src, u32 src_len);
+			XRCORE_API u32		RtcSize(u32 in);
+			XRCORE_API size_t	RtcDecompress(void *dst, u32 dst_len, const void* src, u32 src_len);
+		}
+	}
+}

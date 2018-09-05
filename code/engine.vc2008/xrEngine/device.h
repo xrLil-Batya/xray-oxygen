@@ -150,7 +150,7 @@ public:
 
 private:
     // Main objects used for creating and rendering the 3D scene
-    u32										m_dwWindowStyle;
+    u64										m_dwWindowStyle;
 
 	CTimer									TimerMM;
 

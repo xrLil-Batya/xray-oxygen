@@ -884,6 +884,7 @@ void CIKLimb::Update(CGameObject *O, const CBlend *b, const extrapolation::point
 	step_predict(O, b, state_predict, object_pose_extrapolation);
 }
 
+#include "../../3rd-party/IKAN/Dof7control.h"
 float	CIKLimb::ObjShiftDown(float current_shift, const SCalculateData& cd)  const
 {
 	Fvector hip;
@@ -891,7 +892,8 @@ float	CIKLimb::ObjShiftDown(float current_shift, const SCalculateData& cd)  cons
 	hip.y -= current_shift;
 	Fmatrix m;
 	Fvector g; g.sub(m_foot.ref_bone_to_foot(m, cd.state.goal.get()).c, hip);
-	float l = m_limb.Length();
+	
+	float l = m_limb.get_Solver().Length();
 	return -g.y - _sqrt(l*l - g.x*g.x - g.z*g.z);
 }
 

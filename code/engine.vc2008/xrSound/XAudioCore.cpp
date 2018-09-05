@@ -8,8 +8,8 @@
 * XAudioCore.cpp
 * Main methods for XAudio implementation
 *********************************************************/
-
 #include "stdafx.h"
+#pragma comment(lib,"x3daudio.lib")
 
 XRSOUND_API XCore coreAudio;
 

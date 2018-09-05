@@ -149,11 +149,12 @@ void CWeaponBinoculars::load(IReader &input_packet)
 	load_data		(m_fRTZoomFactor,input_packet);
 }
 
-bool CWeaponBinoculars::GetBriefInfo( II_BriefInfo& info )
+bool CWeaponBinoculars::GetBriefInfo(II_BriefInfo& info)
 {
 	info.clear();
-	info.name._set( m_nameShort );
-	info.icon._set( cNameSect() );
+	info.name._set(m_nameShort);
+	info.icon._set(cNameSect());
+
 	return true;
 }
 

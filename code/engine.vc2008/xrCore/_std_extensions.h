@@ -145,21 +145,21 @@ inline errno_t xr_strcat		( char* destination, size_t const buffer_size, const c
 {
 	return						strcat_s( destination, buffer_size, source );
 }
-
-inline int __cdecl xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
+#ifndef __CLR_VER 
+inline int xr_sprintf	( char* destination, size_t const buffer_size, const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
 	return						vsprintf_s( destination, buffer_size, format_string, args );
 }
-
 template <int count>
-inline int __cdecl xr_sprintf	( char (&destination)[count], const char* format_string, ... )
+inline int xr_sprintf	( char (&destination)[count], const char* format_string, ... )
 {
 	va_list args;
 	va_start					( args, format_string);
 	return						vsprintf_s( destination, count, format_string, args );
 }
+#endif
 #else // #ifndef MASTER_GOLD
 
 inline errno_t xr_strcpy	( char* destination, size_t const destination_size, const char* source )

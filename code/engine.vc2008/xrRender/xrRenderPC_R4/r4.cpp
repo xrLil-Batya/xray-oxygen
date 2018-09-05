@@ -157,12 +157,7 @@ void					CRender::create()
 
 	VERIFY2(o.mrt && (HW.Caps.raster.dwInstructions >= 256), "Hardware doesn't meet minimum feature-level");
 	/////////////////////////////////////////////
-	if (o.mrtmixdepth)		
-		o.albedo_wo = FALSE;
-	else if (o.fp16_blend)	
-		o.albedo_wo = FALSE;
-	else					
-		o.albedo_wo = TRUE;
+	o.albedo_wo = FALSE;
 	/////////////////////////////////////////////
 	// gloss
 	char* g					= strstr(Core.Params, "-gloss ");
@@ -194,10 +189,10 @@ void					CRender::create()
 	o.disasm				= (strstr(Core.Params, "-disasm")) ? TRUE : FALSE;
 	o.forceskinw			= (strstr(Core.Params, "-skinw")) ? TRUE : FALSE;
 	/////////////////////////////////////////////
-	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR) && (ps_r_ssao != 0);
-	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA) && (ps_r_ssao != 0);
-	o.ssao_half_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data && (ps_r_ssao != 0);
-	o.ssao_hbao				= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO) && (ps_r_ssao != 0);
+	o.ssao_blur_on			= ps_r_ssao_flags.test(R_FLAG_SSAO_BLUR);
+	o.ssao_opt_data			= ps_r_ssao_flags.test(R_FLAG_SSAO_OPT_DATA);
+	o.ssao_half_data		= ps_r_ssao_flags.test(R_FLAG_SSAO_HALF_DATA) && o.ssao_opt_data;
+	o.ssao_hbao				= ps_r_ssao_flags.test(R_FLAG_SSAO_HBAO);
 	/////////////////////////////////////////////
 	//	TODO: fix hbao shader to allow to perform per-subsample effect!
 	o.hbao_vectorized = false;

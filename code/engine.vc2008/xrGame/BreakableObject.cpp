@@ -260,3 +260,16 @@ void CBreakableObject::Init()
 	m_max_frame_damage = 0.f;
 	b_resived_damage = false;
 }
+
+#include <luabind\luabind.hpp>
+using namespace luabind;
+#pragma optimize("s",on)
+
+void CBreakableObject::script_register(lua_State *L)
+{
+	module(L)
+	[
+		class_<CBreakableObject, CGameObject>("CBreakableObject")
+		.def(constructor<>())
+	];
+}

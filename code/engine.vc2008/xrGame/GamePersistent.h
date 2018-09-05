@@ -23,6 +23,7 @@ enum OxygenExtraFeatures : size_t
 	GAME_EXTRA_THIRST							= (1 << 9),
 	GAME_EXTRA_NPC_GRENADE_ATTAK_ALL			= (1 << 10),
 	GAME_EXTRA_OLD_SCHOOL_MINIMAP				= (1 << 11),
+	GAME_EXTRA_LAMP_IMMUNITY_SUPPORT			= (1 << 12),
 };
 extern Flags32 g_extraFeatures;
 
