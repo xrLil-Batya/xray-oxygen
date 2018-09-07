@@ -1,7 +1,7 @@
 #pragma once
 
 
-#include "../xrQIK/limb.h"
+#include "../../3rd-party/IKAN/limb.h"
 
 #include "ikfoot.h"
 #include "ik_calculate_data.h"

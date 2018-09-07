@@ -1351,9 +1351,6 @@
     <Filter Include="Core\Client\Level\LevelMapSync">
       <UniqueIdentifier>{c89035a2-847f-4cb3-b855-8de19ffa3a56}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Client\Level Controller">
-      <UniqueIdentifier>{fb49383d-30b4-45de-950a-0e751b97ac98}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Level Debug">
       <UniqueIdentifier>{8ca581bf-ed00-4b8c-bde5-e21c422421ea}</UniqueIdentifier>
     </Filter>
@@ -1692,9 +1689,6 @@
     </Filter>
     <Filter Include="Core\Common\SmartCast">
       <UniqueIdentifier>{06e160cc-3d51-4d70-8e64-2b169e16277d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Common\StringTable">
-      <UniqueIdentifier>{a7c58690-d8c4-4782-97ec-a75a9b20a5a8}</UniqueIdentifier>
     </Filter>
     <Filter Include="Core\Common\associative_vector">
       <UniqueIdentifier>{ee323289-9eee-49b4-beb5-6f712a2b4dd3}</UniqueIdentifier>
@@ -4752,9 +4746,6 @@
     <ClInclude Include="Level_network_map_sync.h">
       <Filter>Core\Client\Level\LevelMapSync</Filter>
     </ClInclude>
-    <ClInclude Include="xr_level_controller.h">
-      <Filter>Core\Client\Level Controller</Filter>
-    </ClInclude>
     <ClInclude Include="level_debug.h">
       <Filter>Core\Client\Level Debug</Filter>
     </ClInclude>
@@ -5288,9 +5279,6 @@
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\smart_cast.h">
       <Filter>Core\Common\SmartCast</Filter>
-    </ClInclude>
-    <ClInclude Include="string_table.h">
-      <Filter>Core\Common\StringTable</Filter>
     </ClInclude>
     <ClInclude Include="..\xrServerEntities\associative_vector.h">
       <Filter>Core\Common\associative_vector\vector</Filter>
@@ -7274,9 +7262,6 @@
     <ClCompile Include="Level_network_map_sync.cpp">
       <Filter>Core\Client\Level\LevelMapSync</Filter>
     </ClCompile>
-    <ClCompile Include="xr_level_controller.cpp">
-      <Filter>Core\Client\Level Controller</Filter>
-    </ClCompile>
     <ClCompile Include="level_debug.cpp">
       <Filter>Core\Client\Level Debug</Filter>
     </ClCompile>
@@ -7708,9 +7693,6 @@
     </ClCompile>
     <ClCompile Include="random32.cpp">
       <Filter>Core\Common\Random\32bit</Filter>
-    </ClCompile>
-    <ClCompile Include="string_table.cpp">
-      <Filter>Core\Common\StringTable</Filter>
     </ClCompile>
     <ClCompile Include="xrGame.cpp">
       <Filter>Core\Server</Filter>

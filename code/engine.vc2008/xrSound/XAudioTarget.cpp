@@ -11,6 +11,26 @@
 
 #include "stdafx.h"
 
+extern XRSOUND_API XCore coreAudio;
+
+CSoundRender_TargetB::CSoundRender_TargetB() : CSoundRender_Target()
+{
+
+}
+
+
+CSoundRender_TargetB::~CSoundRender_TargetB()
+{
+
+}
+
+bool CSoundRender_TargetB::_initialize()
+{
+	inherited::_initialize();
+
+	return false;
+}
+
 void CSoundRender_TargetB::fill_block(u32 BufferID)
 {
 

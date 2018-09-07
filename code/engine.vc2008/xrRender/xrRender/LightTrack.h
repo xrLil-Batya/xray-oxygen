@@ -71,10 +71,10 @@ private:
 	s32						sky_rays_uptodate;
 
 public:
-	virtual	void			force_mode			(u32 mode)		{ MODE = mode;															};
+	virtual	void			force_mode			(u32 mode)		{ MODE = mode; };
 	virtual float			get_luminocity		()				{ float presult = std::max(approximate.x, std::max(approximate.y, approximate.z)); clamp(presult, 0.f, 1.f); return (presult); };
 	virtual float			get_luminocity_hemi	()				{ return get_hemi();}
-	virtual float*			get_luminocity_hemi_cube		()				{ return hemi_cube_smooth;}
+	virtual float*			get_luminocity_hemi_cube()			{ return hemi_cube_smooth;}
 
 	void					add					(light*			L);
 	void					update				(IRenderable*	O);
@@ -99,11 +99,9 @@ public:
 	}
 
 	CROS_impl				();
-	virtual ~CROS_impl	()	{};
+	virtual ~CROS_impl		() = default; // do no nothing
 
 private:
-	//static inline CubeFaces get_cube_face(Fvector3& dir);
-	
 	//Accumulates light from direction for corresponding faces
 	static inline void accum_hemi(float* hemi_cube, Fvector3& dir, float scale);
 

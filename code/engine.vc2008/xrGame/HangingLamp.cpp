@@ -322,7 +322,14 @@ void CHangingLamp::Hit(SHit* pHDS)
 	callback(GameObject::eHit)(lua_game_object(), HDS.power, HDS.dir, smart_cast<const CGameObject*>(HDS.who)->lua_game_object(), HDS.bone());
 	bool bWasAlive = Alive();
 
-	if (m_pPhysicsShell) m_pPhysicsShell->applyHit(pHDS->p_in_bone_space, pHDS->dir, pHDS->impulse, pHDS->boneID, pHDS->hit_type);
+	if (g_extraFeatures.is(GAME_EXTRA_LAMP_IMMUNITY_SUPPORT))
+	{
+		HDS.power = CHitImmunity::AffectHit(HDS.power, HDS.hit_type);
+		inherited::Hit(pHDS);
+	}
+
+	if (m_pPhysicsShell) 
+		m_pPhysicsShell->applyHit(pHDS->p_in_bone_space, pHDS->dir, pHDS->impulse, pHDS->boneID, pHDS->hit_type);
 
 	if (pHDS->boneID == light_bone)
 		fHealth = 0.f;
@@ -344,7 +351,8 @@ void CHangingLamp::CreateBody(CSE_ALifeObjectHangingLamp	*lamp)
 
 	bone_map.clear();
 	LPCSTR	fixed_bones = *lamp->fixed_bones;
-	if (fixed_bones) {
+	if (fixed_bones) 
+	{
 		int count = _GetItemCount(fixed_bones);
 		for (int i = 0; i < count; ++i) {
 			string64					fixed_bone;

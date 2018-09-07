@@ -1,5 +1,5 @@
 #pragma once
-#include "../xr_level_controller.h"
+#include "../xrEngine/xr_level_controller.h"
 #include "UIMessages.h"
 #include "../../xrScripts/export/script_export_space.h"
 #include "uiabstract.h"

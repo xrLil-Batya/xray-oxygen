@@ -10,9 +10,8 @@ void	CBlender_accum_direct::Compile(CBlender_Compile& C)
 {
 	IBlender::Compile		(C);
 
-	BOOL		blend		= FALSE;	//RImplementation.o.fp16_blend;
-	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
-	if (RImplementation.o.sunfilter)	{ blend = FALSE; dest = D3DBLEND_ZERO; }
+	BOOL		blend		= FALSE;
+	D3DBLEND	dest		= D3DBLEND_ZERO;
 
 	switch (C.iElement)
 	{
@@ -119,9 +118,8 @@ void	CBlender_accum_direct_msaa::Compile(CBlender_Compile& C)
    else
       ::Render->m_MSAASample = -1;
 
-	BOOL		blend		= FALSE;	//RImplementation.o.fp16_blend;
-	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
-	if (RImplementation.o.sunfilter)	{ blend = FALSE; dest = D3DBLEND_ZERO; }
+	BOOL		blend		= FALSE;
+	D3DBLEND	dest		= D3DBLEND_ZERO;
 
 	switch (C.iElement)
 	{
@@ -228,9 +226,8 @@ void	CBlender_accum_direct_volumetric_msaa::Compile(CBlender_Compile& C)
    else
       ::Render->m_MSAASample = -1;
 
-	BOOL		blend		= FALSE;	//RImplementation.o.fp16_blend;
-	D3DBLEND	dest		= blend?D3DBLEND_ONE:D3DBLEND_ZERO;
-	if (RImplementation.o.sunfilter)	{ blend = FALSE; dest = D3DBLEND_ZERO; }
+	BOOL		blend		= FALSE;
+	D3DBLEND	dest		= D3DBLEND_ZERO;
 
 	switch (C.iElement)
 		{

@@ -9,7 +9,7 @@
 #include "xrServer_Objects_ALife_Items.h"
 #include "xrServer_Objects_ALife_Monsters.h"
 #include "Level.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 void xrServer::Process_event	(NET_Packet& P)
 {

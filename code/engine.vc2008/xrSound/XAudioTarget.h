@@ -16,7 +16,7 @@ class CSoundRender_TargetB : public CSoundRender_Target
 {
 	typedef CSoundRender_Target	inherited;
 
-	// OpenAL
+	// XAudio2
 	LPVOID pSource;
 	LPVOID pBuffers[sdef_target_count];
 	float GainCache;
@@ -30,17 +30,17 @@ public:
 	CSoundRender_TargetB();
 	virtual ~CSoundRender_TargetB();
 
-	void source_changed();
+	//void source_changed();
 
 	virtual bool _initialize();
-	virtual void _destroy();
-	virtual void _restart();
+	//virtual void _destroy();
+	//virtual void _restart();
 
-	virtual void start(CSoundRender_Emitter* E);
-	virtual void render();
-	virtual void rewind();
-	virtual void stop();
-	virtual void update();
+	//virtual void start(CSoundRender_Emitter* E);
+	//virtual void render();
+	//virtual void rewind();
+	//virtual void stop();
+	//virtual void update();
 	virtual void fill_parameters();
-	virtual	void alAuxInit(ALuint slot);
+	//virtual	void alAuxInit(ALuint slot);
 };

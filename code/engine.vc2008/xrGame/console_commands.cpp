@@ -22,7 +22,7 @@
 #include "xrServer_Objects.h"
 #include "ui/UIMainIngameWnd.h"
 #include "../xrphysics/iphworld.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "autosave_manager.h"
 #include "ai_space.h"
 #include "ai/monsters/BaseMonster/base_monster.h"
@@ -485,6 +485,7 @@ void CCC_RegisterCommands()
     CMD3(CCC_MaskNoSave, "game_extra_vertical_belts",	&g_extraFeatures, GAME_EXTRA_VERTICAL_BELTS);
     CMD3(CCC_MaskNoSave, "game_extra_thirst",			&g_extraFeatures, GAME_EXTRA_THIRST);
     CMD3(CCC_MaskNoSave, "game_extra_npc_grenade_up",	&g_extraFeatures, GAME_EXTRA_NPC_GRENADE_ATTAK_ALL);
+    CMD3(CCC_MaskNoSave, "game_extra_lamps_immunity",	&g_extraFeatures, GAME_EXTRA_LAMP_IMMUNITY_SUPPORT);
     CMD3(CCC_MaskNoSave, "game_extra_polter_show_particles_on_dead", &g_extraFeatures, GAME_EXTRA_POLTER_SHOW_PARTICLES_ON_DEAD);
 
 	CMD1(CCC_UIMapUpdate,"rs_minimap_zoom_factor");

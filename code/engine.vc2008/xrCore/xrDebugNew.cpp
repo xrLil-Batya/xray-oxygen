@@ -450,13 +450,17 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
         hDll = LoadLibraryA("DBGHELP.DLL");
     }
 
-    LPCTSTR szResult = nullptr;
+    LPCSTR szResult = nullptr;
 
     if (hDll)
     {
         MINIDUMPWRITEDUMP pDump = (MINIDUMPWRITEDUMP)::GetProcAddress(hDll, "MiniDumpWriteDump");
         if (pDump)
         {
+			LPSTR ErrorString = nullptr;
+			DWORD ErrorSysCode = NULL;
+			DWORD ErrorStringSize = NULL;
+
             string_path szDumpPath = { 0 };
             string_path szFilename = { 0 };
             string_path szScratch = { 0 };
@@ -505,15 +509,14 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                     {
                         const char* logFileName = log_name();
 
-                        if (logFileName == nullptr)
-                            break;
+						if (logFileName == nullptr) { break; }
 
                         // Don't use X-Ray FS - it can be corrupted at this point
                         HANDLE hLogFile = CreateFileA(logFileName, GENERIC_READ, FILE_SHARE_READ, nullptr, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, nullptr);
                         if (hLogFile == INVALID_HANDLE_VALUE) break;
 
                         LARGE_INTEGER FileSize;
-                        bool bResult = (bool)GetFileSizeEx(hLogFile, &FileSize);
+                        BOOL bResult = GetFileSizeEx(hLogFile, &FileSize);
                         if (!bResult)
                         {
                             CloseHandle(hLogFile);
@@ -534,7 +537,7 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                         do
                         {
                             DWORD BytesReaded = 0;
-                            bResult = (bool)ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, nullptr);
+                            bResult = ReadFile(hLogFile, logFileContent, FileSize.LowPart, &BytesReaded, nullptr);
                             if (!bResult)
                             {
                                 CloseHandle(hLogFile);
@@ -551,11 +554,8 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                     // better luck next time
                 }
 
-                MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo;
-                MINIDUMP_USER_STREAM LogFileUserStream;
-
-                memset(&UserStreamsInfo, 0, sizeof(UserStreamsInfo));
-                memset(&LogFileUserStream, 0, sizeof(LogFileUserStream));
+				MINIDUMP_USER_STREAM_INFORMATION UserStreamsInfo = { NULL };
+                MINIDUMP_USER_STREAM LogFileUserStream = { NULL };
 
                 if (logFileContent != nullptr)
                 {
@@ -575,15 +575,54 @@ LONG WriteMinidump(struct _EXCEPTION_POINTERS* pExceptionInfo)
                 }
                 else
                 {
-                    xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d)", szDumpPath, GetLastError());
+					ErrorSysCode = GetLastError();
+
+					ErrorStringSize = FormatMessageA(
+						FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+						NULL,
+						ErrorSysCode,
+						MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),	// default lang
+						ErrorString,
+						NULL,
+						NULL
+					);
+
+					if (!!ErrorString && ErrorSysCode && ErrorStringSize)
+					{
+						xr_sprintf(szScratch, "Failed to save dump file to '%s' (error %d '%s')", szDumpPath, ErrorSysCode, ErrorString);
+					}
+					else
+					{
+						xr_sprintf(szScratch, "Failed to save dump file to '%s' (No system error)", szDumpPath);
+					}
                     szResult = szScratch;
+
                 }
                 CloseHandle(hFile);
             }
             else
-            {
-                xr_sprintf(szScratch, "Failed to create dump file '%s' (error %d)", szDumpPath, GetLastError());
-                szResult = szScratch;
+			{
+				ErrorSysCode = GetLastError();
+
+				ErrorStringSize = FormatMessageA(
+					FORMAT_MESSAGE_ALLOCATE_BUFFER | FORMAT_MESSAGE_FROM_SYSTEM,
+					NULL,
+					ErrorSysCode,
+					MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),	// default lang
+					ErrorString,
+					NULL,
+					NULL
+				);
+
+				if (!!ErrorString && ErrorSysCode && ErrorStringSize)
+				{
+					xr_sprintf(szScratch, "Failed to create dump file '%s' (error %d '%s')", szDumpPath, ErrorSysCode, ErrorString);
+				}
+				else
+				{
+					xr_sprintf(szScratch, "Failed to create dump file '%s' (No system error)", szDumpPath);
+				}
+				szResult = szScratch;
             }
         }
         else

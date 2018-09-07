@@ -236,6 +236,7 @@ CSE_ALifeItemWeaponMagazinedWGL(LPCSTR caSection);
 virtual							~CSE_ALifeItemWeaponMagazinedWGL();
 
 virtual CSE_ALifeItemWeapon		*cast_item_weapon	() {return this;}
+bool get_grenade_mode() { return m_bGrenadeMode; }
 SERVER_ENTITY_DECLARE_END
 add_to_type_list(CSE_ALifeItemWeaponMagazinedWGL)
 #define script_type_list save_type_list(CSE_ALifeItemWeaponMagazinedWGL)

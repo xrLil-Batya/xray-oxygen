@@ -63,7 +63,7 @@ void CRenderDevice::Initialize			()
         // Set the window's initial width
         RECT rc;
         SetRect			( &rc, 0, 0, 640, 480 );
-        AdjustWindowRect( &rc, m_dwWindowStyle, FALSE );
+        AdjustWindowRect( &rc, (DWORD)m_dwWindowStyle, FALSE );
 
         DWORD wndStyle = WS_EX_TOPMOST;
 
@@ -73,8 +73,8 @@ void CRenderDevice::Initialize			()
         }
 
         // Create the render window
-		m_hWnd = CreateWindowExA(wndStyle,
-								wndclass, "X-Ray Oxygen", m_dwWindowStyle,
+		m_hWnd = CreateWindowEx(wndStyle,
+								wndclass, "X-Ray Oxygen", (DWORD)m_dwWindowStyle,
                                /*rc.left, rc.top, */CW_USEDEFAULT, CW_USEDEFAULT,
                                (rc.right-rc.left), (rc.bottom-rc.top), 0L,
                                0, hInstance, 0L );

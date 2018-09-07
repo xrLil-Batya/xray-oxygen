@@ -289,22 +289,18 @@ void	CRenderTarget::phase_combine	()
 	}
 
 	// Combine everything + perform AA
-   if( RImplementation.o.dx10_msaa )
-   {
-	   if		(PP_Complex)	u_setrt		( rt_Generic,0,0,HW.pBaseZB );			// LDR RT
-	   else					   u_setrt		( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
-   }
-   else
-   {
-      if		(PP_Complex)	u_setrt		( rt_Color,0,0,HW.pBaseZB );			// LDR RT
-      else					   u_setrt		( Device.dwWidth,Device.dwHeight,HW.pBaseRT,NULL,NULL,HW.pBaseZB);
-   }
+	if (RImplementation.o.dx10_msaa)
+	{
+		u_setrt(rt_Generic, 0, 0, HW.pBaseZB);			// LDR RT
+	}
+	else
+	{
+		u_setrt(rt_Color, 0, 0, HW.pBaseZB);			// LDR RT
+	}
 
 	RCache.set_CullMode		( CULL_NONE )	;
 	RCache.set_Stencil		( FALSE		)	;
 
-
-	
 	PIX_EVENT(combine_2);
 	// 
 	struct v_aa {

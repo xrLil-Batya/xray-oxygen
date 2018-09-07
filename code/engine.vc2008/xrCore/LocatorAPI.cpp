@@ -275,7 +275,7 @@ IReader* open_chunk(void* ptr, u32 ID)
 			if (dwType&CFS_CompressMark) {
 				BYTE*			dest;
 				unsigned		dest_sz;
-				_decompressLZ	(&dest,&dest_sz,src_data,dwSize);
+				XRay::Compress::LZ::DecompressLZ(&dest,&dest_sz,src_data,dwSize);
 				xr_free			(src_data);
 				return new CTempReader(dest,dest_sz,0);
 			} else 
@@ -1102,10 +1102,10 @@ void CLocatorAPI::file_from_archive	(IReader *&R, const char* fname, const file 
 	}
 
 	// Compressed
-	u8*							dest = xr_alloc<u8>(desc.size_real);
-	rtc_decompress				(dest,desc.size_real,ptr+ptr_offs,desc.size_compressed);
-	R							= new CTempReader(dest,desc.size_real,0);
-	UnmapViewOfFile				(ptr);
+	u8* dest = xr_alloc<u8>(desc.size_real);
+	XRay::Compress::RT::RtcDecompress(dest,desc.size_real,ptr+ptr_offs,desc.size_compressed);
+	R = new CTempReader(dest,desc.size_real,0);
+	UnmapViewOfFile(ptr);
 
 #ifdef FS_DEBUG
 	unregister_file_mapping		(ptr,sz);

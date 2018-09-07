@@ -232,6 +232,9 @@
     <Filter Include="Game API\RenderRef\Execution &amp; 3D\Visuals\Skeleton">
       <UniqueIdentifier>{51dac9fb-ca56-44cc-b86b-4bcbe28922da}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Game API\Level">
+      <UniqueIdentifier>{f95a2f74-5e20-47a4-9614-4353cd722baf}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -284,9 +287,6 @@
     </ClInclude>
     <ClInclude Include="IPhysicsShell.h">
       <Filter>Interfaces\Physics</Filter>
-    </ClInclude>
-    <ClInclude Include="IGame_Level.h">
-      <Filter>Game API</Filter>
     </ClInclude>
     <ClInclude Include="xrLevel.h">
       <Filter>Game API</Filter>
@@ -588,6 +588,15 @@
     <ClInclude Include="xr_ioc_cmd_ex.h">
       <Filter>Game API</Filter>
     </ClInclude>
+    <ClInclude Include="string_table.h">
+      <Filter>Game API</Filter>
+    </ClInclude>
+    <ClInclude Include="IGame_Level.h">
+      <Filter>Game API\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="xr_level_controller.h">
+      <Filter>Game API\Level</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -622,15 +631,6 @@
     </ClCompile>
     <ClCompile Include="phdebug.cpp">
       <Filter>Interfaces\Physics</Filter>
-    </ClCompile>
-    <ClCompile Include="IGame_Level.cpp">
-      <Filter>Game API</Filter>
-    </ClCompile>
-    <ClCompile Include="IGame_Level_check_textures.cpp">
-      <Filter>Game API</Filter>
-    </ClCompile>
-    <ClCompile Include="IGame_Persistent.cpp">
-      <Filter>Game API</Filter>
     </ClCompile>
     <ClCompile Include="IGame_ObjectPool.cpp">
       <Filter>Game API\Objects</Filter>
@@ -919,6 +919,21 @@
     </ClCompile>
     <ClCompile Include="date_time.cpp">
       <Filter>Game API\GameTime</Filter>
+    </ClCompile>
+    <ClCompile Include="string_table.cpp">
+      <Filter>Game API</Filter>
+    </ClCompile>
+    <ClCompile Include="IGame_Level.cpp">
+      <Filter>Game API\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="IGame_Level_check_textures.cpp">
+      <Filter>Game API\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="IGame_Persistent.cpp">
+      <Filter>Game API\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="xr_level_controller.cpp">
+      <Filter>Game API\Level</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

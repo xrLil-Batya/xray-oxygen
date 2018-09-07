@@ -14,7 +14,7 @@
 #include "client_spawn_manager.h"
 #include "seniority_hierarchy_holder.h"
 #include "UIGame.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "UI/UIGameTutorial.h"
 #include "ui/UIPdaWnd.h"
 #include "GamePersistent.h"

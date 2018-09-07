@@ -4,7 +4,7 @@
 #include "ui/UIXmlInit.h"
 #include "ui/UIStatic.h"
 #include "object_broker.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 #include "InventoryOwner.h"
 #include "ui/UIActorMenu.h"
@@ -23,7 +23,7 @@
 
 #include "level_changer.h"
 
-#include "xr_level_controller.h"
+#include "..\xrEngine\xr_level_controller.h"
 #include "../xrEngine/xr_input.h"
 #include "../xrEngine/xr_ioconsole.h"
 #include "../xrEngine/x_ray.h"

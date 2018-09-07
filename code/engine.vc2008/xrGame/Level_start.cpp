@@ -9,7 +9,7 @@
 #include "../xrEngine/IGame_Persistent.h"
 #include "../xrEngine/xr_ioconsole.h"
 #include "MainMenu.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 #include "UIGame.h"
 #include "GamePersistent.h"
 

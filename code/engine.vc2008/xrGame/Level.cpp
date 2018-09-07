@@ -27,7 +27,7 @@
 #include "ai/stalker/ai_stalker.h"
 #include "debug_renderer.h"
 #include "physicobject.h"
-#include "string_table.h"
+#include "..\xrEngine\string_table.h"
 
 #ifdef DEBUG
 #	include "ai_debug.h"

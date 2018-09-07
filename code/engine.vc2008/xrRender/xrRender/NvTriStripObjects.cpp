@@ -213,49 +213,46 @@ int NvStripifier::FindStartPoint(NvFaceInfoVec &faceInfos, NvEdgeInfoVec &edgeIn
 // we know that when we've made the longest strips its because
 // we're stripifying in the same general orientation.
 //
-NvFaceInfo* NvStripifier::FindGoodResetPoint(NvFaceInfoVec &faceInfos, NvEdgeInfoVec &edgeInfos){
+NvFaceInfo* NvStripifier::FindGoodResetPoint(NvFaceInfoVec &faceInfos, NvEdgeInfoVec &edgeInfos) {
 	// we hop into different areas of the mesh to try to get
 	// other large open spans done.  Areas of small strips can
 	// just be left to triangle lists added at the end.
-	NvFaceInfo *result = NULL;
-	
-	if(result == NULL)
+	NvFaceInfo *result = nullptr;
+
+	int numFaces = faceInfos.size();
+	int startPoint;
+	if (bFirstTimeResetPoint)
 	{
-		int numFaces   = faceInfos.size();
-		int startPoint;
-		if(bFirstTimeResetPoint)
-		{
-			//first time, find a face with few neighbors (look for an edge of the mesh)
-			startPoint = FindStartPoint(faceInfos, edgeInfos);
-			bFirstTimeResetPoint = false;
-		}
-		else
-			startPoint = (int)(((float) numFaces - 1) * meshJump);
-		
-		if(startPoint == -1)
-			startPoint = (int)(((float) numFaces - 1) * meshJump);
-		
-		int i = startPoint;
-		do {
-			
-			// if this guy isn't visited, try him
-			if (faceInfos[i]->m_stripId < 0){
-				result = faceInfos[i];
-				break;
-			}
-			
-			// update the index and clamp to 0-(numFaces-1)
-			if (++i >= numFaces)
-				i = 0;
-			
-		} while (i != startPoint);
-		
-		// update the meshJump
-		meshJump += 0.1f;
-		if (meshJump > 1.0f)
-			meshJump = .05f;
+		//first time, find a face with few neighbors (look for an edge of the mesh)
+		startPoint = FindStartPoint(faceInfos, edgeInfos);
+		bFirstTimeResetPoint = false;
 	}
-	
+	else
+		startPoint = (int)(((float)numFaces - 1) * meshJump);
+
+	if (startPoint == -1)
+		startPoint = (int)(((float)numFaces - 1) * meshJump);
+
+	int i = startPoint;
+	do
+	{
+		// if this guy isn't visited, try him
+		if (faceInfos[i]->m_stripId < 0) {
+			result = faceInfos[i];
+			break;
+		}
+
+		// update the index and clamp to 0-(numFaces-1)
+		if (++i >= numFaces)
+			i = 0;
+
+	} while (i != startPoint);
+
+	// update the meshJump
+	meshJump += 0.1f;
+	if (meshJump > 1.0f)
+		meshJump = .05f;
+
 	// return the best face we found
 	return result;
 }

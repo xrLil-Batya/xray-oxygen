@@ -66,7 +66,7 @@ void xrCore::_initialize(const char* _ApplicationName, LogCallback cb, BOOL init
 
 		InitLog();
 		_initialize_cpu();
-		rtc_initialize();
+		XRay::Compress::RT::RtcInitialize();
 
 		xr_FS = new CLocatorAPI();
 		xr_EFS = new EFS_Utils();

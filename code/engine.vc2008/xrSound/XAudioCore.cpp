@@ -8,37 +8,34 @@
 * XAudioCore.cpp
 * Main methods for XAudio implementation
 *********************************************************/
-
-/*************************************************
-* THIS CODE IS NOT A FINISHED.
-* VERTVER: This code is does not deprecated in
-* X-Ray Oxygen. Please, don't delete it.
-*************************************************/
-
 #include "stdafx.h"
+#pragma comment(lib,"x3daudio.lib")
 
-XCore xcore;
+XRSOUND_API XCore coreAudio;
 
 XCore::XCore() 
 { 
+	// init COM-pointers if not editor 
+	// because xrEditor written on C# + C++/CLI and use COM-pointers
+	if (!strstr(Core.Params, "-editor")) { CoInitializeEx(NULL, COINIT_MULTITHREADED); }
+
 	// load any version of XAudio2
-	if (!IsWindows10OrGreater())
+	XAudioDLL = ::LoadLibraryExA("XAudio2_9.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+	if (!XAudioDLL)
 	{
-		XAudioDLL = LoadLibraryExA("XAudio2_9.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+		XAudioDLL = ::LoadLibraryExA("XAudio2_8.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+		if (!XAudioDLL)
+		{
+			XAudioDLL = ::LoadLibraryExA("XAudio2_7.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
+		}
 	}
-	else if (!IsWindows8OrGreater())
-	{
-		XAudioDLL = LoadLibraryExA("XAudio2_8.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-	}
-	else
-	{
-		XAudioDLL = LoadLibraryExA("XAudio2_7.DLL", nullptr, LOAD_LIBRARY_SEARCH_SYSTEM32);
-	}
+
 	R_ASSERT(XAudioDLL);
 }
 
 XCore::~XCore()
 {
+	// destroy all stuff
 	if (xData.pSourceVoice)
 	{
 		xData.pSourceVoice->DestroyVoice();
@@ -54,14 +51,21 @@ XCore::~XCore()
 		xData.pSubmixVoice->DestroyVoice();
 		xData.pSubmixVoice = nullptr;
 	}
+
+	// we must stop engine before release 
+	// can include buffered samples in mem
 	if (xData.pXAudio) { xData.pXAudio->StopEngine();}
 	_RELEASE(xData.pXAudio);
-	if (XAudioDLL) { FreeLibrary(XAudioDLL); }
 
+	// free library and unitialize COM-pointers
+	if (XAudioDLL) { FreeLibrary(XAudioDLL); }
+	if (!strstr(Core.Params, "-editor")) { CoUninitialize(); }
+
+	// reset XAudio2 data pointer
 	xData.waveData.reset();
 }
 
-LPCSTR GetUnicodeStringFromAnsi(LPCWSTR wString)
+LPCSTR GetAnsiStringFromUnicodeString(LPCWSTR wString)
 {
 	size_t outputSize = wcslen(wString) + 1;
 	LPSTR newString = (LPSTR)malloc(outputSize);
@@ -84,14 +88,11 @@ XSTATUS XCore::InitXAudioDevice()
 
 	// search for default device
 	DWORD32 devCount = 0;
-	UINT32 devIndex = -1;
+	INT32 devIndex = -1;
 	for (auto it = deviceList.cbegin(); it != deviceList.cend(); ++it, ++devCount)
 	{
 		// simple selection criteria of just picking the first one
-		if (devIndex == -1)
-		{
-			devIndex = devCount;
-		}
+		if (devIndex == -1) { devIndex = devCount; }
 	}
 
 	// create master voice (needy for init)
@@ -99,27 +100,32 @@ XSTATUS XCore::InitXAudioDevice()
 
 	// get device info for create submix voice
 	DWORD ChannelMask = NULL;
-	XAUDIO2_DEVICE_DETAILS deviceDetails = {};
-	lastStatus = GetDeviceInfo(deviceList[devIndex], &deviceDetails);
+	xData.deviceDetail = { NULL };
+	
+	// get device info to struct
+	lastStatus = GetDeviceInfo(deviceList[devIndex], &xData.deviceDetail);
 	if (FAILEDX(lastStatus)) { return lastStatus; }
-	ChannelMask = deviceDetails.OutputFormat.dwChannelMask;
+	ChannelMask = xData.deviceDetail.OutputFormat.dwChannelMask;
 
 	// create reverb effect
 	if (FAILED(XAudio2CreateReverb(&xData.pReverb))) { return XAUDIO_BAD_SURROUND; }
+
+	// get reverb effect descriptors 
+	// and chain to manipulate with it
 	XAUDIO2_EFFECT_DESCRIPTOR effects[] = { { xData.pReverb, TRUE, 1 } };
 	XAUDIO2_EFFECT_CHAIN effectChain = { 1, effects };
 
 	// create submix voice with reverb
 	if (FAILED(xData.pXAudio->CreateSubmixVoice(
 		&xData.pSubmixVoice, 1,
-		deviceDetails.OutputFormat.Format.nSamplesPerSec,
+		xData.deviceDetail.OutputFormat.Format.nSamplesPerSec,
 		0, 0, nullptr, &effectChain)))
 	{
 		return XAUDIO_BAD_DEVICE;
 	}
 
 	// create X3DAudio interface
-	const float SpeedOfSound = 343.33;		// 20 degreeses with cloudy weather
+	const float SpeedOfSound = 343.33;		// (343 1/3 m/s) 20 degreeses with cloudy weather
 	X3DAudioInitialize(ChannelMask, SpeedOfSound, xData.x3DInstance);
 
 	return XAUDIO_OK;
@@ -141,13 +147,13 @@ XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refD
 		for (DWORD32 j = 0; j < DeviceCount; ++j)
 		{
 			// get to device details struct
-			XAUDIO2_DEVICE_DETAILS details;
+			XAUDIO2_DEVICE_DETAILS details = { NULL };
 			hr = pXAudio->GetDeviceDetails(j, &details);
 			if (SUCCEEDED(hr))
 			{
 				XAUDIO_DEVICE device = {};
-				device.deviceId = GetUnicodeStringFromAnsi(details.DeviceID);
-				device.deviceDescription = GetUnicodeStringFromAnsi(details.DisplayName);
+				device.deviceId = GetAnsiStringFromUnicodeString(details.DeviceID);
+				device.deviceDescription = GetAnsiStringFromUnicodeString(details.DisplayName);
 				refDeviceList.emplace_back(device);
 				Msg("Device ID: %s\nDevice name: %s", device.deviceId.c_str(), device.deviceDescription.c_str());
 			}
@@ -159,13 +165,14 @@ XSTATUS XCore::GetDeviceList(IXAudio2* pXAudio, std::vector<XAUDIO_DEVICE>& refD
 
 XSTATUS XCore::GetDeviceInfo(XAUDIO_DEVICE DeviceInfo, XAUDIO2_DEVICE_DETAILS* DeviceDetails)
 {
+	VERIFY(xData.pXAudio);
 	if (FAILED(xData.pXAudio->GetDeviceDetails(std::stoi(DeviceInfo.deviceId.c_str()), DeviceDetails)))
 	{
 		return XAUDIO_BAD_DEVICE;
 	}
 
-	Msg("Device ID: %s ", GetUnicodeStringFromAnsi(DeviceDetails->DeviceID));
-	Msg("Device Name: %s ", GetUnicodeStringFromAnsi(DeviceDetails->DisplayName));
+	Msg("Device ID: %s ", GetAnsiStringFromUnicodeString(DeviceDetails->DeviceID));
+	Msg("Device Name: %s ", GetAnsiStringFromUnicodeString(DeviceDetails->DisplayName));
 	Msg("Device Format: %i ", DeviceDetails->OutputFormat.Format.wFormatTag);		// if 1 - wave 
 	Msg("Device Channels: %i ", DeviceDetails->OutputFormat.Format.nChannels);
 	Msg("Device Rate: %i ", DeviceDetails->OutputFormat.Format.nSamplesPerSec);
@@ -207,7 +214,7 @@ XSTATUS XCore::SimpleAudioPlay(CSoundRender_Emitter* soundEmitter, CSoundRender_
 	DWORD dwFileSize = NULL;
 	DWORD dwSizeWritten = NULL;
 
-	hFile = CreateFileA("I:\glint_preview.wav", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	hFile = CreateFileA("I:\\glint_preview.wav", GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
 	R_ASSERT(hFile);
 	dwFileSize = GetFileSize(hFile, NULL);
 	lpData =  malloc(dwFileSize);
@@ -237,11 +244,10 @@ XSTATUS XCore::SetMasterVolume(float Volume)
 {
 	VERIFY(xData.pSourceVoice);
 
-	VERIFY(Volume);
 	soundGain.AudioGain = Volume;
 
 	// set default sound effect 
-	if (FAILED(xData.pSourceVoice->SetEffectParameters(1, &soundGain, sizeof(GAIN_LEVEL))))
+	if (FAILED(xData.pMasteringVoice->SetEffectParameters(1, &soundGain, sizeof(GAIN_LEVEL))))
 	{
 		return XAUDIO_BAD_SURROUND;
 	}
@@ -255,6 +261,10 @@ void CSoundRender_CoreB::_restart()
 
 void CSoundRender_CoreB::update_listener(const Fvector& P, const Fvector& D, const Fvector& N, float dt)
 {
+	// D Vector - first listener orientation vector
+	// N Vector - second listener orientation vector
+	// P Vector - listener position vector
+	// dt - must be 0.0f
 	inherited::update_listener(P, D, N, dt);
 
 	if (!Listener.position.similar(P))
@@ -264,68 +274,83 @@ void CSoundRender_CoreB::update_listener(const Fvector& P, const Fvector& D, con
 	}
 	Listener.orientation[0].set(D.x, D.y, -D.z);
 	Listener.orientation[1].set(N.x, N.y, -N.z);
-
-	//A_CHK(alListener3f(AL_POSITION, Listener.position.x, Listener.position.y, -Listener.position.z));
-	//A_CHK(alListener3f(AL_VELOCITY, 0.f, 0.f, 0.f));
-	//A_CHK(alListenerfv(AL_ORIENTATION, &Listener.orientation[0].x));
 }
 
 void CSoundRender_CoreB::_initialize(int stage)
 {
-	if (FAILEDX(xcore.InitXAudioDevice()))
+	// init XAudio2 pointers
+	if (FAILEDX(coreAudio.InitXAudioDevice()))
 	{
 		__debugbreak();
 	}
 
+	{
+		//#TODO: Source voice wave format
+		WAVEFORMATEX waveFormat = { NULL };
+		waveFormat.wFormatTag = WAVE_FORMAT_PCM;
+		waveFormat.nChannels = 2;
+		waveFormat.wBitsPerSample = 16;
+		waveFormat.nBlockAlign = waveFormat.wBitsPerSample / 8 * waveFormat.nChannels;
+		waveFormat.nAvgBytesPerSec = waveFormat.nSamplesPerSec * waveFormat.nBlockAlign;
+	}
+
+	// get data to listener 
+	audioState.listener.OrientFront.x = 0.0f;
+	audioState.listener.OrientFront.y = 0.0f;
+	audioState.listener.OrientFront.z = 1.0f;
+	audioState.listener.OrientTop.x = 0.0f;
+	audioState.listener.OrientTop.y = 1.0f;
+	audioState.listener.OrientTop.z = 0.0f;
+	audioState.listener.pCone = nullptr;
+	audioState.listener.Position.x = 0.0f;
+	audioState.listener.Position.y = 0.0f;
+	audioState.listener.Position.z = 0.0f;
+	audioState.listener.Velocity.x = 0.0f;
+	audioState.listener.Velocity.y = 0.0f;
+	audioState.listener.Velocity.z = 0.0f;
+
 	inherited::_initialize(stage);
 
-	//if (stage == 1)//first initialize
-	//{
-	//	// Pre-create targets
-	//	CSoundRender_Target* T = 0;
-	//	for (u32 tit = 0; tit < u32(psSoundTargets); ++tit)
-	//	{
-	//		T = new CSoundRender_TargetB();
-	//		if (T->_initialize())
-	//		{
-	//			if (bEFX)T->alAuxInit(slot);
-	//			s_targets.push_back(T);
-	//		}
-	//		else
-	//		{
-	//			Log("[OpenAL] ! SOUND: XAudio2: Max targets - ", tit);
-	//			T->_destroy();
-	//			xr_delete(T);
-	//			break;
-	//		}
-	//	}
-	//}
+	//CSoundRender_Target* T = nullptr;
+
+	// init all targets
+	for (DWORD tit = 0; tit < DWORD(psSoundTargets); tit++)
+	{
+		//T = xr_new<CSoundRender_TargetB>();
+		//T->_initialize();
+		//s_targets.push_back(T);
+	}
+	
+	Msg("XAudio2 was initialized on device: %s", GetAnsiStringFromUnicodeString(coreAudio.xData.deviceDetail.DisplayName));
 }
 
 void CSoundRender_CoreB::_clear()
 {
 	inherited::_clear();
-	// remove targets
-	//CSoundRender_Target*	T = 0;
-	//for (u32 tit = 0; tit < s_targets.size(); tit++)
-	//{
-	//	T = s_targets[tit];
-	//	T->_destroy();
-	//	xr_delete(T);
-	//}
-	//// Reset the current context to nullptr.
-	//alcMakeContextCurrent(nullptr);
-	//// Release the context and the device.
-	//alcDestroyContext(pContext);		pContext = 0;
-	//alcCloseDevice(pDevice);		pDevice = 0;
+	
+	// remove all targets
+	CSoundRender_Target*	T = 0;
+	for (u32 tit = 0; tit < s_targets.size(); tit++)
+	{
+		T = s_targets[tit];
+		T->_destroy();
+		xr_delete(T);
+	}
 }
 
 void CSoundRender_CoreB::set_master_volume(float f)
 {
-	xcore.SetMasterVolume(f);
+	float audioVolume = f;									
+	clamp(audioVolume, EPS_S, 1.f);
+
+	// convert to decibels
+	float HWVolume = fFloorSSE2(7000.f * logf(audioVolume) / 5.f);
+	clamp(HWVolume, -10000.f, 0.f);
+
+	coreAudio.SetMasterVolume(XAudio2DecibelsToAmplitudeRatio(HWVolume));
 }
 
 void AudioCallback::OnBufferEnd(void* BufferContext)
 {
-	VERIFY(BufferContext);
+	VERIFY(BufferContext); 
 }
