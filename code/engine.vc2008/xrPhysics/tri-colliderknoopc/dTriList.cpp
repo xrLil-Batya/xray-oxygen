@@ -46,8 +46,6 @@ int dCollideCTL(dxGeom* TriList, dxGeom* Cyl, int Flags, dContactGeom* Contact, 
 
 dColliderFn* dTriListColliderFn(int num)
 {
-	//	Log("in dTriListColliderFn ");
-	//	Msg("num=%d",num);
 	if (num == dBoxClass)
 		return 	(dColliderFn*)&dCollideBTL;
 
