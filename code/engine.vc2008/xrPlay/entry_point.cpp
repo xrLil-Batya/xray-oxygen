@@ -10,9 +10,6 @@
 #include "xrLauncherWnd.h"
 #include "../xrCore/xrCore.h"
 ////////////////////////////////////
-#pragma comment(lib, "xrEngine.lib")
-#define DLL_API __declspec(dllimport)
-////////////////////////////////////
 
 void CreateRendererList();					// In RenderList.cpp
 
@@ -36,14 +33,33 @@ const char* GetParams()
 	return xrPlay::ret_values.params_list;
 }
 
-/// <summary>
-/// Dll import
-/// </summary>
-DLL_API int RunApplication(LPCSTR commandLine);
+/// <summary> Dll import </summary>
+using IsRunFunc = void(__cdecl*)(const char*);
 
-/// <summary>
-/// Main method for initialize xrEngine
-/// </summary>
+/// <summary> Start engine or install OpenAL </summary>
+void CheckOpenAL(const char* params)
+{
+	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
+	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
+	{
+		system("start external\\oalinst.exe");
+		MessageBox(0, "Error", "ENG: Click just after installing OpenAL. /n"
+							   "RUS: Нажмите после установки OpenAL.", MB_OK);
+	}
+
+	HMODULE hLib = LoadLibrary("xrEngine.dll");
+	IsRunFunc RunFunc = (IsRunFunc)GetProcAddress(hLib, "RunApplication");
+	if (RunFunc)
+	{
+		RunFunc(params);
+	}
+	else
+	{
+		DebugBreak();
+	}
+}
+
+/// <summary> Main method for initialize xrEngine </summary>
 int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
 	////////////////////////////////////////////////////
@@ -125,7 +141,8 @@ int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine
 	}
 #endif
 	CreateRendererList();
-	RunApplication(params);
+	CheckOpenAL(params);
+
 #ifdef NO_MULTI_INSTANCES		
 	// Delete application presence mutex
 	CloseHandle(hCheckPresenceMutex);

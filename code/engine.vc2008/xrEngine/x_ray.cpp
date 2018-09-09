@@ -375,8 +375,9 @@ struct damn_keys_filter
 #undef dwToggleKeysStructSize
 
 #include "xr_ioc_cmd.h"
-
-ENGINE_API int RunApplication(LPCSTR commandLine)
+extern "C"
+{
+void ENGINE_API RunApplication(LPCSTR commandLine)
 {
 	gMainThreadId = GetCurrentThreadId();
 	Debug.set_mainThreadId(gMainThreadId);
@@ -398,9 +399,9 @@ ENGINE_API int RunApplication(LPCSTR commandLine)
 		//////////////////////////////////////////
 		GetWindowRect(logoPicture, &logoRect);
 		SetWindowPos(logoWindow, logoInsertPos, 0,
-					 0, logoRect.right - logoRect.left,
-					 logoRect.bottom - logoRect.top,
-					 SWP_NOMOVE | SWP_SHOWWINDOW);
+			0, logoRect.right - logoRect.left,
+			logoRect.bottom - logoRect.top,
+			SWP_NOMOVE | SWP_SHOWWINDOW);
 		UpdateWindow(logoWindow);
 	}
 	//////////////////////////////////////////
@@ -419,26 +420,23 @@ ENGINE_API int RunApplication(LPCSTR commandLine)
 	}
 
 	// Adjust player & computer name for Asian
-	if (pSettings->line_exist("string_table", "no_native_input")) 
+	if (pSettings->line_exist("string_table", "no_native_input"))
 	{
 		xr_strcpy(Core.UserName, sizeof(Core.UserName), "Player");
 		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
 
-	{
-		FPU::m24r();
-		InitEngine();
-		InitInput();
-		InitConsole();
+	FPU::m24r();
+	InitEngine();
+	InitInput();
+	InitConsole();
 
-		Engine.External.Initialize();
+	Engine.External.Initialize();
 
-		Startup();
-		Core._destroy();
-	}
-	return 0;
+	Startup();
+	Core._destroy();
 }
-
+}
 LPCSTR _GetFontTexName (LPCSTR section)
 {
 	static char* tex_names[] = { "texture800","texture","texture1600" };

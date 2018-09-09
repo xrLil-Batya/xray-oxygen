@@ -4,7 +4,7 @@
 #include "XR_IOConsole.h"
 #include "xr_ioc_cmd.h"
 
-extern xr_vector<xr_token> vid_quality_token;
+extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
 constexpr const char* r2_name = "xrRender_R2";
 constexpr const char* r3_name = "xrRender_R3";

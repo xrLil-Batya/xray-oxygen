@@ -12,13 +12,13 @@
 #	include	<malloc.h>
 #endif // DEBUG
 
-XRCORE_API		xrCore	Core;
-XRCORE_API		u32		build_id;
-XRCORE_API		const char*	build_date;
+XRCORE_API xrCore Core;
+XRCORE_API u32 build_id;
+XRCORE_API const char*	build_date;
 
 //indicate that we reach WinMain, and all static variables are initialized
-XRCORE_API		bool	gModulesLoaded = false;
-
+XRCORE_API bool	gModulesLoaded = false;
+XRCORE_API xr_vector<xr_token> vid_quality_token;
 
 static u32	init_counter = 0;
 void compute_build_id();

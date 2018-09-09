@@ -10,7 +10,7 @@
 #include <regex>
 #include "../Include/xrRender/RenderDeviceRender.h"
 
-ENGINE_API xr_vector<xr_token> vid_quality_token;
+extern XRCORE_API xr_vector<xr_token> vid_quality_token;
 
 xr_token vid_bpp_token[ ]=
 {
