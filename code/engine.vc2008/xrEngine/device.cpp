@@ -90,10 +90,6 @@ void CRenderDevice::Clear()
 	m_pRender->Clear();
 }
 
-
-extern void CheckPrivilegySlowdown();
-
-
 void CRenderDevice::End		()
 {
 #ifdef INGAME_EDITOR
@@ -119,11 +115,7 @@ void CRenderDevice::End		()
 
 			m_pRender->ResourcesDestroyNecessaryTextures();
 			Memory.mem_compact();
-			Msg("* MEMORY USAGE: %d MByte",Memory.mem_usage());
-			Msg("* End of synchronization A[%d] R[%d]",b_is_Active, b_is_Ready);
 
-			CheckPrivilegySlowdown();
-			
 			//#HACK:
 			if(g_pGamePersistent->GameType()==1)
 			{
@@ -165,8 +157,10 @@ void 			mt_Thread	(void *ptr)
 		// we has granted permission to execute
 		mt_Thread_marker			= Device.dwFrame;
  
-		for (auto & pit : Device.seqParallel)
+		for (fastdelegate::FastDelegate0<> & pit : Device.seqParallel)
+		{
 			pit();
+		}
 		Device.seqParallel.clear();
 		Device.seqFrameMT.Process(rp_Frame);
 

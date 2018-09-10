@@ -145,33 +145,6 @@ void execUserScript()
 	Console->ExecuteScript(Console->ConfigFile);
 }
 
-void slowdownthread	( void* )
-{
-	for (;;)
-	{
-		if (Device.Statistic->fFPS < 30)	Sleep(1);
-		if (Device.mt_bMustExit)			return;
-		if (!pSettings)						return;
-		if (!Console)						return;
-		if (!pInput)						return;
-		if (!pApp)							return;
-	}
-}
-void CheckPrivilegySlowdown		( )
-{
-#ifdef DEBUG
-	if (strstr(Core.Params, "-slowdown"))
-	{
-		thread_spawn(slowdownthread, "slowdown", 0, 0);
-	}
-	if (strstr(Core.Params, "-slowdown2x"))
-	{
-		thread_spawn(slowdownthread, "slowdown", 0, 0);
-		thread_spawn(slowdownthread, "slowdown", 0, 0);
-}
-#endif // DEBUG
-}
-
 void Startup()
 {
 	InitSound1		();
@@ -192,7 +165,7 @@ void Startup()
 
 	if (strstr(Core.Params, "-$"))
 	{
-		string256                buf, cmd, param;
+		string256 buf, cmd, param;
 		sscanf(strstr(Core.Params, "-$")
 			+ 2,
 			"%[^ ] %[^ ] ",
