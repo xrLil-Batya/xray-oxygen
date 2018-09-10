@@ -13,9 +13,7 @@
 
 void CreateRendererList();					// In RenderList.cpp
 
-/// <summary>
-/// Method for init launcher
-/// </summary>
+/// <summary> Method for init launcher </summary>
 int RunXRLauncher()
 {
 	// Get initialize launcher
@@ -25,9 +23,7 @@ int RunXRLauncher()
 	return xrPlay::ret_values.type_ptr;
 }
 
-/// <summary>
-/// Return the list of parameters
-/// </summary>
+/// <summary> Return the list of parameters </summary>
 const char* GetParams()
 {
 	return xrPlay::ret_values.params_list;
@@ -42,9 +38,13 @@ void CheckOpenAL(const char* params)
 	DWORD dwOpenALInstalled = GetFileAttributes("C:\\Windows\\System32\\OpenAL32.dll");
 	if (dwOpenALInstalled == INVALID_FILE_ATTRIBUTES)
 	{
-		system("start external\\oalinst.exe");
-		MessageBox(0, "Error", "ENG: Click just after installing OpenAL. /n"
-							   "RUS: Нажмите после установки OpenAL.", MB_OK);
+		std::string StrCmd = "/select, " + std::string(FS.get_path("$fs_root$")->m_Path) + "external\\oalinst.exe";
+		StrCmd[11] = '\\';
+		//WinExec(StrCmd.c_str(), 1);
+		ShellExecute(NULL, NULL, "explorer.exe", StrCmd.c_str(), NULL, SW_SHOWNORMAL);
+		system(StrCmd.c_str());
+		MessageBox(0, "ENG: Click just after installing OpenAL. \n"
+					  "RUS: Нажмите после установки OpenAL.", "OpenAL Not Found!", MB_OK);
 	}
 
 	HMODULE hLib = LoadLibrary("xrEngine.dll");
@@ -52,10 +52,6 @@ void CheckOpenAL(const char* params)
 	if (RunFunc)
 	{
 		RunFunc(params);
-	}
-	else
-	{
-		DebugBreak();
 	}
 }
 
