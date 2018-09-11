@@ -143,7 +143,9 @@ void CSightManager::Exec_Look		(float time_delta)
 	}
 
 	if (object().animation_movement_controlled())
+	{
 		return;
+	}
 
 	Fmatrix&			m = m_object->XFORM();
 	float				h = -body.current.yaw;
@@ -172,11 +174,12 @@ void CSightManager::update			()
 	START_PROFILE("Sight Manager")
 
 	if (!enabled())
-		return;
+		return; 
 
-	if (!fis_zero(object().movement().speed())) {
-		m_turning_in_place	= false;
-		inherited::update	();
+	if (!fis_zero(object().movement().speed()))
+	{
+		m_turning_in_place = false;
+		inherited::update();
 		return;
 	}
 
@@ -188,7 +191,7 @@ void CSightManager::update			()
 		else
 			object().movement().m_body.target.yaw	= object().movement().m_body.current.yaw;
 
-		inherited::update	();
+		inherited::update();
 		return;
 	}
 
@@ -200,7 +203,7 @@ void CSightManager::update			()
 		object().movement().m_body.target.yaw	= object().movement().m_body.current.yaw;
 	}
 
-	inherited::update		();
+	inherited::update();
 
 	STOP_PROFILE
 }
