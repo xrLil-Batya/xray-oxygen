@@ -1,7 +1,8 @@
 # X-Ray Oxygen 1.7
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/024d7b2b5c6745eba5d00301bc250f2c)](https://app.codacy.com/app/sv3nk/xray-oxygen?utm_source=github.com&utm_medium=referral&utm_content=xrOxygen/xray-oxygen&utm_campaign=Badge_Grade_Settings) [![Build status](https://ci.appveyor.com/api/projects/status/dt2q9gjuxi2q9i6v/branch/master?svg=true)](https://ci.appveyor.com/project/xrOxygen/xray-oxygen/branch/master)
 ![Logo](https://pp.userapi.com/c830608/v830608826/fd611/DtQWCVM4BgU.jpg)
-[![Build status](https://ci.appveyor.com/api/projects/status/dt2q9gjuxi2q9i6v/branch/master?svg=true)](https://ci.appveyor.com/project/xrOxygen/xray-oxygen/branch/master) X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
+->  X-Ray 1.7f project [an offshoot of the Im-Dex](https://github.com/Im-dex/xray-162).
 ```lua
 xrOxygen is an project that uses experimental C++ features, has no special restrictions on changing the engine and tries to bring something new to the usual modding.
 ```
