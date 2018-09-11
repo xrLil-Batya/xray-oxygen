@@ -95,6 +95,8 @@ private:
     int try_closeby_singularity(int solve, float &swivel_angle, float x[]);
 
 public:
+	AngleInt* get_jt_limits();
+
     void get_R1R2psi(AngleIntList psi[]);
     void get_R1psi(AngleIntList psi[]);
 	

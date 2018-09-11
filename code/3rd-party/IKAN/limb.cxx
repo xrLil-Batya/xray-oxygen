@@ -274,6 +274,11 @@ int Limb::set_goal_pos(const float g[3], const Matrix  E)
     return 1;
 }
 
+AngleInt* Limb::get_jt_limits()
+{
+	return jt_limits;
+}
+
 //
 // Calculates the two families of valid psi for the 
 // first three joints for a specified position problem.
