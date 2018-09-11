@@ -23,7 +23,9 @@ class cl_xform_##xf	: public R_constant_setup {	virtual void setup (R_constant* 
 BIND_DECLARE(w);
 BIND_DECLARE(invw);
 BIND_DECLARE(v);
+BIND_DECLARE(invv);
 BIND_DECLARE(p);
+BIND_DECLARE(invp);
 BIND_DECLARE(wv);
 BIND_DECLARE(vp);
 BIND_DECLARE(wvp);
@@ -173,7 +175,7 @@ class cl_fog_params	: public R_constant_setup {
 			float	n		= g_pGamePersistent->Environment().CurrentEnv->fog_near	;
 			float	f		= g_pGamePersistent->Environment().CurrentEnv->fog_far		;
 			float	r		= 1/(f-n);
-			result.set		(-n*r, r, r, r);
+			result.set		(-n*r, n, f, r);
 		}
 		RCache.set_c	(C,result);
 	}
@@ -186,11 +188,26 @@ class cl_fog_color	: public R_constant_setup {
 	virtual void setup	(R_constant* C)	{
 		if (marker!=Device.dwFrame)	{
 			CEnvDescriptor&	desc	= *g_pGamePersistent->Environment().CurrentEnv;
-			result.set				(desc.fog_color.x,	desc.fog_color.y, desc.fog_color.z,	0);
+			result.set				(desc.fog_color.x,	desc.fog_color.y, desc.fog_color.z,	desc.fog_density);
 		}
 		RCache.set_c	(C,result);
 	}
 };	static cl_fog_color		binder_fog_color;
+
+static class cl_wind_params : public R_constant_setup
+{
+	u32 marker;
+	Fvector4 result;
+	virtual void setup(R_constant* C)
+	{
+		if (marker != Device.dwFrame)
+		{
+			CEnvDescriptor&	E = *g_pGamePersistent->Environment().CurrentEnv;
+			result.set(E.wind_direction, E.wind_velocity, 0.0f, 0.0f);
+		}
+		RCache.set_c(C, result);
+	}
+} binder_wind_params;
 #endif
 
 // times
@@ -340,7 +357,9 @@ void	CBlender_Compile::SetMapping	()
 	r_Constant				("m_W",				&binder_w);
 	r_Constant				("m_invW",			&binder_invw);
 	r_Constant				("m_V",				&binder_v);
+	r_Constant				("m_invV",			&binder_invv);
 	r_Constant				("m_P",				&binder_p);
+	r_Constant				("m_invP",			&binder_invp);
 	r_Constant				("m_WV",			&binder_wv);
 	r_Constant				("m_VP",			&binder_vp);
 	r_Constant				("m_WVP",			&binder_wvp);
@@ -368,6 +387,8 @@ void	CBlender_Compile::SetMapping	()
 	r_Constant				("fog_plane",		&binder_fog_plane);
 	r_Constant				("fog_params",		&binder_fog_params);
 	r_Constant				("fog_color",		&binder_fog_color);
+
+	r_Constant				("wind_params",		&binder_wind_params);
 #endif
 	// time
 	r_Constant				("timers",			&binder_times);

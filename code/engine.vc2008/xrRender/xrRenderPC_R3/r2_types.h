@@ -21,12 +21,14 @@
 #define		r2_RT_ssao_temp		"$user$ssao_temp"		//temporary rt for ssao calculation
 #define		r2_RT_half_depth	"$user$half_depth"		//temporary rt for ssao calculation
 
-#define		r2_RT_generic0		"$user$generic0"		// ---
-#define		r2_RT_generic0_r	"$user$generic0_r"	// ---
-#define		r2_RT_generic1		"$user$generic1"		// ---
-#define		r2_RT_generic1_r	"$user$generic1_r"	// ---
-#define		r2_RT_generic2		"$user$generic2"		// ---	//	Igor: for volumetric lights
-#define		r2_RT_generic		"$user$generic"		// ---
+#define		r2_RT_generic0		"$user$generic0"
+#define		r2_RT_generic0_r	"$user$generic0_r"
+#define		r2_RT_generic1		"$user$generic1"
+#define		r2_RT_generic1_r	"$user$generic1_r"
+#define		r2_RT_generic2		"$user$generic2"
+#define		r2_RT_generic		"$user$generic"
+
+#define		r2_RT_volumetric	"$user$volumetric"		// --- for volumetric lights
 
 #define		r2_RT_sunshafts0	"$user$sun_shafts0"		// first rt
 #define		r2_RT_sunshafts1	"$user$sun_shafts1"		// second rt

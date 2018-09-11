@@ -7,6 +7,8 @@
 #include "../../xrEngine/xr_ioc_cmd.h"
 #include "../../xrEngine/xr_ioc_cmd_ex.h"
 // Common
+BOOL SkyGodEdition = false;
+
 u32	ps_r_smapsize = 2048;
 xr_token q_smapsize_token[] =
 {
@@ -19,8 +21,6 @@ xr_token q_smapsize_token[] =
 	{ "smap_16",    16384	},
 	{ 0,				0	}
 };
-
-BOOL SkyGodEdition = false;
 
 u32 ps_r_sunshafts_mode = 0;
 xr_token sunshafts_mode_token[] = 
@@ -100,7 +100,7 @@ xr_token qbokeh_quality_token[] =
     { 0,				0	}
 };
 
-u32 ps_r_pp_aa_mode;
+u32 ps_r_pp_aa_mode = 0;
 xr_token qpp_aa_mode_token[] =
 {
 	{ "st_opt_off",		0		},
@@ -919,7 +919,7 @@ void xrRender_initconsole()
 	CMD3(CCC_Mask,		"r4_wireframe",					&ps_r4_flags,		R4_FLAG_WIREFRAME); // Need restart
 	CMD4(CCC_U32,		"r__glows_per_frame",			&ps_GlowsPerFrame,	2, 32);
 
-	CMD4(CCC_Integer,	"game_extra_skygod_edition",	&SkyGodEdition		, 0, 1);
+	CMD4(CCC_Integer,	"game_extra_skygod_edition",	&SkyGodEdition,		0, 1);
 	// Allow real-time fog config reload
 #if	(RENDER == R_R3) || (RENDER == R_R4)
 #ifdef	DEBUG

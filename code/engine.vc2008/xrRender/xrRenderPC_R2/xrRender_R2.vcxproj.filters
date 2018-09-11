@@ -636,12 +636,6 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="blender_fxaa.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_rain_drops.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
     <ClInclude Include="r2_puddles.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -649,12 +643,6 @@
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="blender_ssss_mrmnwar.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_smaa.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_gamma.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\Debug\dxPixEventWrapper.h">
@@ -1143,12 +1131,6 @@
     <ClCompile Include="..\xrRender\dxUISequenceVideoItem.cpp">
       <Filter>Interfase implementations\UI\UISequenceVideoItem</Filter>
     </ClCompile>
-    <ClCompile Include="blender_fxaa.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_rain_drops.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="r2_rendertarget_phase_puddles.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
@@ -1170,17 +1152,11 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp">
       <Filter>Core_Target</Filter>
     </ClCompile>
-    <ClCompile Include="blender_smaa.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="..\xrRender\Light_Render_Direct_ComputeXFS.cpp">
       <Filter>Lights</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp">
       <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_gamma.cpp">
-      <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
     <ClCompile Include="..\xrRender\ScreenshotManager.cpp">

@@ -795,91 +795,92 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	sh_name[len]='0'+char(4==m_skinning); ++len;
 	
 	//	Igor: need restart options
-	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_SOFT_WATER))
+	if (RImplementation.o.advancedpp)
 	{
-		defines[def_it].Name		=	"USE_SOFT_WATER";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-		sh_name[len]='1'; ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
-	}
+		if (ps_r_flags.test(R_FLAG_SOFT_WATER))
+		{
+			defines[def_it].Name = "USE_SOFT_WATER";
+			defines[def_it].Definition = "1";
+			def_it++;
+			sh_name[len] = '1'; ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_SOFT_PARTICLES))
-	{
-		defines[def_it].Name		=	"USE_SOFT_PARTICLES";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-		sh_name[len]='1'; ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
-	}
+		if (ps_r_flags.test(R_FLAG_SOFT_PARTICLES))
+		{
+			defines[def_it].Name = "USE_SOFT_PARTICLES";
+			defines[def_it].Definition = "1";
+			def_it++;
+			sh_name[len] = '1'; ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r_bokeh_quality > 0)
-	{
-		defines[def_it].Name		=	"USE_DOF";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-		sh_name[len]='1'; ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
-	}
+		if (ps_r_bokeh_quality > 0)
+		{
+			defines[def_it].Name = "USE_DOF";
+			defines[def_it].Definition = "1";
+			def_it++;
+			sh_name[len] = '1'; ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r_sun_shafts)
-	{
-		xr_sprintf					(c_sun_shafts,"%d",ps_r_sun_shafts);
-		defines[def_it].Name		=	"SUN_SHAFTS_QUALITY";
-		defines[def_it].Definition	=	c_sun_shafts;
-		def_it						++;
-		sh_name[len]='0'+char(ps_r_sun_shafts); ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
-	}
+		if (ps_r_sun_shafts > 0)
+		{
+			xr_sprintf(c_sun_shafts, "%d", ps_r_sun_shafts);
+			defines[def_it].Name = "SUN_SHAFTS_QUALITY";
+			defines[def_it].Definition = c_sun_shafts;
+			def_it++;
+			sh_name[len] = '0' + char(ps_r_sun_shafts); ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r_ssao)
-	{
-		xr_sprintf					(c_ssao,"%d",ps_r_ssao);
-		defines[def_it].Name		=	"SSAO_QUALITY";
-		defines[def_it].Definition	=	c_ssao;
-		def_it						++;
-		sh_name[len]='0'+char(ps_r_ssao); ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
-	}
+		if (ps_r_ssao > 0)
+		{
+			xr_sprintf(c_ssao, "%d", ps_r_ssao);
+			defines[def_it].Name = "SSAO_QUALITY";
+			defines[def_it].Definition = c_ssao;
+			def_it++;
+			sh_name[len] = '0' + char(ps_r_ssao); ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r_sun_quality)
-	{
-		xr_sprintf					(c_sun_quality,"%d",ps_r_sun_quality);
-		defines[def_it].Name		=	"SUN_QUALITY";
-		defines[def_it].Definition	=	c_sun_quality;
-		def_it						++;
-		sh_name[len]='0'+char(ps_r_sun_quality); ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
-	}
+		if (ps_r_sun_quality)
+		{
+			xr_sprintf(c_sun_quality, "%d", ps_r_sun_quality);
+			defines[def_it].Name = "SUN_QUALITY";
+			defines[def_it].Definition = c_sun_quality;
+			def_it++;
+			sh_name[len] = '0' + char(ps_r_sun_quality); ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
 
-	if (RImplementation.o.advancedpp && ps_r_flags.test(R_FLAG_STEEP_PARALLAX))
-	{
-		defines[def_it].Name		=	"ALLOW_STEEPPARALLAX";
-		defines[def_it].Definition	=	"1";
-		def_it						++;
-		sh_name[len]='1'; ++len;
-	}
-	else
-	{
-		sh_name[len]='0'; ++len;
+		if (ps_r_flags.test(R_FLAG_STEEP_PARALLAX))
+		{
+			defines[def_it].Name = "ALLOW_STEEPPARALLAX";
+			defines[def_it].Definition = "1";
+			def_it++;
+			sh_name[len] = '1'; ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
+
+		if (ps_r_bokeh_quality > 0)
+		{
+			xr_sprintf(c_bokeh_quality, "%d", ps_r_bokeh_quality);
+			defines[def_it].Name = "BOKEH_QUALITY";
+			defines[def_it].Definition = c_bokeh_quality;
+			def_it++;
+			sh_name[len] = '0' + char(ps_r_bokeh_quality); ++len;
+		}
+		else
+			sh_name[len] = '0'; ++len;
+
 	}
 
 	// Puddles
@@ -887,18 +888,6 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 	defines[def_it].Definition = "1";
 	def_it++;
 
-    if (RImplementation.o.advancedpp && ps_r_bokeh_quality > 0)
-    {
-        xr_sprintf(c_bokeh_quality, "%d", ps_r_bokeh_quality);
-        defines[def_it].Name = "BOKEH_QUALITY";
-        defines[def_it].Definition = c_bokeh_quality;
-        def_it++;
-        sh_name[len] = '0' + char(ps_r_bokeh_quality); ++len;
-    }
-    else
-    {
-        sh_name[len] = '0'; ++len;
-    }
 	sh_name[len] = 0; // intorr: String must be null-terminated.
 
 	// finish
@@ -984,7 +973,7 @@ HRESULT	CRender::shader_compile(LPCSTR name, DWORD const* pSrcData, UINT SrcData
 		LPD3DXCONSTANTTABLE			pConstants	= NULL;
 		LPD3DXINCLUDE               pInclude	= (LPD3DXINCLUDE)&Includer;
 		
-		_result						= D3DXCompileShader((LPCSTR)pSrcData,SrcDataLen,defines,pInclude,pFunctionName,pTarget,Flags|D3DXSHADER_USE_LEGACY_D3DX9_31_DLL,&pShaderBuf,&pErrorBuf,&pConstants);
+		_result						= D3DXCompileShader((LPCSTR)pSrcData,SrcDataLen,defines,pInclude,pFunctionName,pTarget,Flags,&pShaderBuf,&pErrorBuf,&pConstants);
 		if (SUCCEEDED(_result)) {
 			IWriter* file = FS.w_open(file_name);
 

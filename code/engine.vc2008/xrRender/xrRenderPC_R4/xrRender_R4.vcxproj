@@ -220,8 +220,6 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h" />
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
     <ClInclude Include="..\xrRender\ScreenshotManager.h" />
-    <ClInclude Include="blender_gamma.h" />
-    <ClInclude Include="blender_rain_drops.h" />
     <ClInclude Include="blender_ssss_mrmnwar.h" />
     <ClInclude Include="blender_ssss_ogse.h" />
     <ClInclude Include="cl_intersect.h" />
@@ -262,7 +260,6 @@
     <ClInclude Include="blender_deffer_aref.h" />
     <ClInclude Include="blender_deffer_flat.h" />
     <ClInclude Include="blender_deffer_model.h" />
-    <ClInclude Include="blender_fxaa.h" />
     <ClInclude Include="..\xrRender\Blender_Editor_Selection.h" />
     <ClInclude Include="..\xrRender\Blender_Editor_Wire.h" />
     <ClInclude Include="blender_light_direct.h" />
@@ -416,8 +413,6 @@
     <ClCompile Include="..\xrRender\RenderTargetPhaseRainDrops.cpp" />
     <ClCompile Include="..\xrRender\RenderTargetPhaseSSSS.cpp" />
     <ClCompile Include="..\xrRender\ScreenshotManager.cpp" />
-    <ClCompile Include="blender_gamma.cpp" />
-    <ClCompile Include="blender_rain_drops.cpp" />
     <ClCompile Include="blender_ssss_mrmnwar.cpp" />
     <ClCompile Include="blender_ssss_ogse.cpp" />
     <ClCompile Include="r3_puddles.cpp" />
@@ -472,7 +467,6 @@
     <ClCompile Include="blender_deffer_aref.cpp" />
     <ClCompile Include="blender_deffer_flat.cpp" />
     <ClCompile Include="blender_deffer_model.cpp" />
-    <ClCompile Include="blender_fxaa.cpp" />
     <ClCompile Include="..\xrRender\Blender_Editor_Selection.cpp" />
     <ClCompile Include="..\xrRender\Blender_Editor_Wire.cpp" />
     <ClCompile Include="blender_light_direct.cpp" />

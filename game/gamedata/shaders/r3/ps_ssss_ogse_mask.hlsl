@@ -6,13 +6,13 @@ float4 main(p_screen I) : SV_Target
 {
 	float4 depth;
 #ifndef USE_MSAA	
-	depth.x = s_position.Sample(smp_nofilter, I.tc0.xy + float2(0, 1.0) * screen_res.zw).z;
-	depth.y = s_position.Sample(smp_nofilter, I.tc0.xy + float2(1, 0.65) * screen_res.zw).z;
-	depth.z = s_position.Sample(smp_nofilter, I.tc0.xy + float2(-1, 0.65) * screen_res.zw).z;
+	depth.x = s_position.Sample(smp_nofilter, I.tc0.xy + float2(0, 1.0f) * screen_res.zw).z;
+	depth.y = s_position.Sample(smp_nofilter, I.tc0.xy + float2(1, 0.65f) * screen_res.zw).z;
+	depth.z = s_position.Sample(smp_nofilter, I.tc0.xy + float2(-1, 0.65f) * screen_res.zw).z;
 #else
-	depth.x = s_position.Load(int3((I.tc0.xy + float2(0, 1.0) * screen_res.zw) * pos_decompression_params2.xy ,0),0).z;
-	depth.y = s_position.Load(int3((I.tc0.xy + float2(1, 0.65) * screen_res.zw) * pos_decompression_params2.xy ,0),0).z;
-	depth.z = s_position.Load(int3((I.tc0.xy + float2(-1, 0.65) * screen_res.zw) * pos_decompression_params2.xy ,0),0).z;
+	depth.x = s_position.Load(int3((I.tc0.xy + float2(0, 1.0f) * screen_res.zw) * screen_res.xy, 0), 0).z;
+	depth.y = s_position.Load(int3((I.tc0.xy + float2(1, 0.65f) * screen_res.zw) * screen_res.xy, 0), 0).z;
+	depth.z = s_position.Load(int3((I.tc0.xy + float2(-1, 0.65f) * screen_res.zw) * screen_res.xy, 0), 0).z;
 #endif
 
 	float4 sceneDepth;
@@ -20,7 +20,7 @@ float4 main(p_screen I) : SV_Target
 	sceneDepth.y = normalize_depth(depth.y)*is_not_sky(depth.y);
 	sceneDepth.z = normalize_depth(depth.z)*is_not_sky(depth.z);
 
-	sceneDepth.w = (sceneDepth.x + sceneDepth.y + sceneDepth.z) * 0.333;
+	sceneDepth.w = (sceneDepth.x + sceneDepth.y + sceneDepth.z) * 0.333f;
 	
 	depth.w = saturate(1 - sceneDepth.w*1000);
 	

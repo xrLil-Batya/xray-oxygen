@@ -27,12 +27,8 @@ public:
 	IBlender*					b_ssao;
 	IBlender*					b_luminance;
 	IBlender*					b_combine;
-	IBlender*					b_fxaa;
-	IBlender*					b_smaa;
-	IBlender*					b_rain_drops;
 	IBlender*					b_ssss_mrmnwar;
     IBlender*					b_ssss_ogse;
-	IBlender*					b_gamma;
 #ifdef DEBUG
 	struct		dbg_line_t		{
 		Fvector	P0,P1;
@@ -60,16 +56,17 @@ public:
 	//ref_rt						rt_SunShaftsPass2;
 	//ref_rt						rt_SunShaftsPass1;
 	
-	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
-	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
-	//	Igor: for volumetric lights
-	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermidiate results, etc.
+	ref_rt						rt_Generic_0;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
+	ref_rt						rt_Generic_1;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
+	ref_rt						rt_Generic_2;		// 32bit		(r,g,b,a)				// post-process, intermediate results, etc.
+
+	ref_rt						rt_Volumetric;		// 64bit		(r,g,b,a)				// for volumetric lights
+
 	ref_rt						rt_Bloom_1;			// 32bit, dim/4	(r,g,b,?)
 	ref_rt						rt_Bloom_2;			// 32bit, dim/4	(r,g,b,?)
 	ref_rt						rt_LUM_64;			// 64bit, 64x64,	log-average in all components
 	ref_rt						rt_LUM_8;			// 64bit, 8x8,		log-average in all components
 
-	//  Second viewport
 	ref_rt                      rt_secondVP;        // 32bit (r,g,b,a) +SecondVP+
 
 	ref_rt						rt_LUM_pool	[CHWCaps::MAX_GPUS*2]	;	// 1xfp32,1x1,		exp-result -> scaler
@@ -108,14 +105,12 @@ private:
 	ref_shader					s_rain_drops;
 
 	// Postrprocess anti-aliasing
-	// FXAA
-    ref_shader                  s_fxaa;
-	// SMAA
+    ref_shader                  s_pp_antialiasing;
 	ref_rt						rt_smaa_edgetex;
 	ref_rt						rt_smaa_blendtex;
 	ref_rt						rt_prev_frame0;
 	ref_geom					g_smaa;
-	ref_shader                  s_smaa;
+
 
 	// Water
 	ref_shader					s_water;

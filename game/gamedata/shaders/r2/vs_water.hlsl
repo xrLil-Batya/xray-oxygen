@@ -2,68 +2,74 @@
 #include "shared\waterconfig.h"
 #include "shared\watermove.h"
 
-struct        v_vert
+struct vert
 {
-        float4         P        : POSITION;        // (float,float,float,1)
-        float4        N        : NORMAL;        // (nx,ny,nz,hemi occlusion)
-        float4         T        : TANGENT;
-        float4         B        : BINORMAL;
-        float4        color        : COLOR0;        // (r,g,b,dir-occlusion)
-        float2         uv        : TEXCOORD0;        // (u0,v0)
+	float4	P		: POSITION;        // (float,float,float,1)
+	float4	N		: NORMAL;        // (nx,ny,nz,hemi occlusion)
+	float4	T		: TANGENT;
+	float4	B		: BINORMAL;
+	float4	color	: COLOR0;        // (r,g,b,dir-occlusion)
+	float2	uv		: TEXCOORD0;        // (u0,v0)
 };
-struct   vf
+struct v2p
 {
-        float4      hpos        :         POSITION        ;
-        float2  	tbase        :           TEXCOORD0        ;  // base
-        float2      tnorm0        :        TEXCOORD1        ;  // nm0
-        float2      tnorm1        :        TEXCOORD2        ;  // nm1
-        half3       M1        :        TEXCOORD3        ;
-        half3       M2        :        TEXCOORD4        ;
-        half3       M3        	:        TEXCOORD5        ;
-        half3       v2point     :        TEXCOORD6        ;
-#ifdef	USE_SOFT_WATER
-#ifdef	NEED_SOFT_WATER
-	float4      tctexgen    :         TEXCOORD7        ;
-#endif	//	USE_SOFT_WATER
-#endif	//	NEED_SOFT_WATER	
-        half4        c0        :          COLOR0                ;
-        float          fog        :         FOG                ;
+	float4	hpos		: POSITION;
+	float2	tbase		: TEXCOORD0;  // base
+	float4	tnorm		: TEXCOORD1;  // xy=nm0, zw=nm1
+	float3	M1			: TEXCOORD2;
+	float3	M2			: TEXCOORD3;
+	float3	M3			: TEXCOORD4;
+	float3	v2point		: TEXCOORD5;
+	float4 	position	: TEXCOORD6;
+#ifdef NEED_SOFT_WATER
+	float4	tctexgen	: TEXCOORD7; // position in screen space of current pixel
+#endif
+	float4	c0			: COLOR0;	// xyz=lighting, w=fog
 };
 
 uniform float4 ogse_c_rain; // x - rmap dist, y - flood level, z - wet level, w - rain intensity
 uniform float4 c_depth;
-vf main(v_vert v)
-{
-	vf o;
 
-	float4 P = v.P;                // world
+
+v2p main(vert v)
+{
+	v2p o;
+
+	float4 P = v.P; // world
 	
-#if defined(USE_PUDDLES) && defined(NEED_PUDDLES)
+#ifdef NEED_PUDDLES
 	P.xyz = mul(m_W, P);
 	float speed = PUDDLES_GROW_SPEED;
 	P.y += saturate(ogse_c_rain.x*ogse_c_rain.w*speed)*c_depth.x;
-	P.w = 1.f;
+	P.w = 1.0f;
 #endif
 
-	float3 NN = unpack_normal(v.N);
-    P = watermove(P)        ;
+#ifndef WATER_NO_MOVE
+	P = watermove(v.P);
+#endif
 
-    o.v2point = P - eye_position;
-	
-#if defined(USE_PUDDLES) && defined(NEED_PUDDLES)
+	float3 P_v		= mul(m_V, P);
+	o.position		= float4(P_v.xyz, v.N.w);
+    o.v2point 		= P.xyz - eye_position;
+
+#if defined(NEED_PUDDLES) || defined(WATER_NO_MOVE)
 	o.tbase = v.uv;
-	float3 N = v.N.xyz; 
+	float3 N = v.N.xyz;
 	float3 T = v.T.xyz;
-	float3 B = v.B.xyz;        
-#else 
+	float3 B = v.B.xyz;
+#else
     o.tbase = unpack_tc_base(v.uv,v.T.w,v.B.w); // copy tc
 	float3 N = unpack_bx2(v.N.xyz); // just scale (assume normal in the -.5f, .5f)
 	float3 T = unpack_bx2(v.T.xyz); //
 	float3 B = unpack_bx2(v.B.xyz); //
 #endif
-	
-    o.tnorm0 = watermove_tc(o.tbase*W_DISTORT_BASE_TILE_0, P.xz, W_DISTORT_AMP_0);
-    o.tnorm1 = watermove_tc(o.tbase*W_DISTORT_BASE_TILE_1, P.xz, W_DISTORT_AMP_1);
+
+#ifndef WATER_NO_MOVE
+    o.tnorm.xy = watermove_tc(o.tbase*W_DISTORT_BASE_TILE_0, P.xz, W_DISTORT_AMP_0);
+    o.tnorm.zw = watermove_tc(o.tbase*W_DISTORT_BASE_TILE_1, P.xz, W_DISTORT_AMP_1);
+#else
+	o.tnorm = o.tbase.xyxy;
+#endif
 
 	// Calculate the 3x3 transform from tangent space to eye-space
 	// TangentToEyeSpace = object2eye * tangent2object
@@ -87,23 +93,20 @@ vf main(v_vert v)
 	o.M2 = xform[1];
 	o.M3 = xform[2];
 
-	float3 L_rgb 	= v.color.xyz;                                                // precalculated RGB lighting
-	float3 L_hemi 	= v_hemi(N) * v.N.w;                                        // hemisphere
-	float3 L_sun 	= v_sun(N) * v.color.w;                                        // sun
-	float3 L_final 	= L_rgb + L_hemi + L_sun + L_ambient;
+	float3 L_rgb	= v.color.xyz;							// precalculated RGB lighting
+	float3 L_hemi 	= v_hemi(N) * v.N.w;					// hemisphere
+	float3 L_sun 	= v_sun(N) * v.color.w;					// sun
+	float3 L_final 	= L_rgb + L_hemi + L_sun + L_ambient.xyz;
 
-	o.hpos                 = mul                        (m_VP, P);                        // xform, input in world coords
-	o.fog = saturate(calc_fogging  (v.P));
+	o.hpos = mul(m_VP, P);                        // xform, input in world coords
+	float fog = saturate(calc_fogging(P));
 
-	o.c0 = float4		(L_final,o.fog);
+	o.c0 = float4(L_final, fog);
 
 //	Igor: for additional depth dest
-#ifdef	USE_SOFT_WATER
-#ifdef	NEED_SOFT_WATER
-	o.tctexgen = mul( m_texgen, P);
-	float3	Pe	= mul		(m_V,  P);
-	o.tctexgen.z = Pe.z;
-#endif	//	USE_SOFT_WATER
-#endif	//	NEED_SOFT_WATER
-        return o;
+#ifdef NEED_SOFT_WATER
+	o.tctexgen = mul(m_texgen, P);
+	o.tctexgen.z = P_v.z;
+#endif
+	return o;
 }

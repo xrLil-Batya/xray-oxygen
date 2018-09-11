@@ -6,14 +6,16 @@ void CRenderTarget::ProcessFXAA()
 	float _h = float(Device.dwHeight);
 
 	// Luminance pass
-	RenderScreenQuad(_w, _h, rt_Generic_0, s_fxaa->E[0]);
+	RenderScreenQuad(_w, _h, rt_Generic_0, s_pp_antialiasing->E[0]);
 
 	// Main pass
 #if defined(USE_DX10) || defined(USE_DX11)
-	RenderScreenQuad(_w, _h, rt_Generic, s_fxaa->E[1]);
-	HW.pContext->CopyResource(rt_Generic_0->pTexture->surface_get(), rt_Generic->pTexture->surface_get());
+	ref_rt outRT = RImplementation.o.dx10_msaa ? rt_Generic : rt_Color;
+
+	RenderScreenQuad(_w, _h, rt_Generic_2, s_pp_antialiasing->E[1]);
+	HW.pContext->CopyResource(outRT->pTexture->surface_get(), rt_Generic_2->pTexture->surface_get());
 #else
-	RenderScreenQuad(_w, _h, rt_Generic_0, s_fxaa->E[1]);
+	RenderScreenQuad(_w, _h, rt_Color, s_pp_antialiasing->E[1]);
 #endif
 }
 
@@ -44,7 +46,7 @@ void CRenderTarget::ProcessSMAA()
 	u_setrt				(rt_smaa_edgetex, nullptr, nullptr, HW.pBaseZB);
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(TRUE, D3DCMP_ALWAYS, 1, 0, 0, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-	CHK_DX				(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0L));
+	RCache.Clear		(0L, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0L);
 
 	// Fill vertex buffer
 	v_simple* pv = (v_simple*)RCache.Vertex.Lock(4, g_smaa->vb_stride, Offset);
@@ -55,7 +57,7 @@ void CRenderTarget::ProcessSMAA()
 	RCache.Vertex.Unlock(4, g_smaa->vb_stride);
 
 	// Draw COLOR
-	RCache.set_Element	(s_smaa->E[0]);
+	RCache.set_Element	(s_pp_antialiasing->E[2]);
 	RCache.set_Geometry	(g_smaa);
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
@@ -63,7 +65,7 @@ void CRenderTarget::ProcessSMAA()
 	u_setrt				(rt_smaa_blendtex, nullptr, nullptr, HW.pBaseZB);
 	RCache.set_CullMode	(CULL_NONE);
 	RCache.set_Stencil	(TRUE, D3DCMP_EQUAL, 1, 0, 0, D3DSTENCILOP_KEEP, D3DSTENCILOP_REPLACE, D3DSTENCILOP_KEEP);
-	CHK_DX				(HW.pDevice->Clear(0L, NULL, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0L));
+	RCache.Clear		(0L, nullptr, D3DCLEAR_TARGET, D3DCOLOR_ARGB(0, 0, 0, 0), 1.0f, 0L);
 
 	// Fill vertex buffer
 	pv = (v_simple*)RCache.Vertex.Lock(4, g_smaa->vb_stride, Offset);
@@ -74,7 +76,7 @@ void CRenderTarget::ProcessSMAA()
 	RCache.Vertex.Unlock(4, g_smaa->vb_stride);
 
 	// Draw COLOR
-	RCache.set_Element	(s_smaa->E[1]);
+	RCache.set_Element	(s_pp_antialiasing->E[3]);
 	RCache.set_Geometry	(g_smaa);
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 
@@ -92,7 +94,7 @@ void CRenderTarget::ProcessSMAA()
 	RCache.Vertex.Unlock(4, g_smaa->vb_stride);
 
 	// Draw COLOR
-	RCache.set_Element	(s_smaa->E[2]);
+	RCache.set_Element	(s_pp_antialiasing->E[4]);
 	RCache.set_Geometry	(g_smaa);
 	RCache.Render		(D3DPT_TRIANGLELIST, Offset, 0, 4, 0, 2);
 #endif

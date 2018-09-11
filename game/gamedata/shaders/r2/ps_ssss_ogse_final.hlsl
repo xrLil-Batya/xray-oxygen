@@ -1,7 +1,6 @@
 #include "common.h"
 #include "ogse_config.h"
 #include "ogse_functions.h"
-#include "ogse_gbuffer.h"
 
 uniform float4 ssss_params;		// x - exposure, y - density
 uniform sampler2D jitter0;
@@ -56,6 +55,8 @@ float4 main(p_screen I) : COLOR0
 	float len = length(dust);
 	dust *= SS_DUST_INTENSITY;
 	float dep = get_depth(I.tc0.xy);//tex2D(s_position, I.tc0.xy).z;
+	if (dep < 0.00001f)
+		dep = SKY_DEPTH;
 	dust = lerp(0, dust, (1 - saturate(dep * 0.2)) * (1 - saturate(is_sky(dep))));
 	dust += 1.0;
 	

@@ -1,7 +1,6 @@
 #include "common.h"
 
 #define SMAA_HLSL_3 1
-#define SMAA_HLSL_3_LEGACY // with legacy shader compiler we can't use some SM 3.0 features
 #define SMAA_RT_METRICS screen_res.zwxy
 /*
 #if !defined(AA_QUALITY)

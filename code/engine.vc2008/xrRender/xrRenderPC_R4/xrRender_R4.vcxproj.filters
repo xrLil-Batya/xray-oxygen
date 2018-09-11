@@ -735,12 +735,6 @@
     <ClInclude Include="..\..\utils\common\NvMender2003\remove_isolated_verts.h">
       <Filter>Editor</Filter>
     </ClInclude>
-    <ClInclude Include="blender_fxaa.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_rain_drops.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
     <ClInclude Include="r2_puddles.h">
       <Filter>Core</Filter>
     </ClInclude>
@@ -748,9 +742,6 @@
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="blender_ssss_mrmnwar.h">
-      <Filter>Shading templates</Filter>
-    </ClInclude>
-    <ClInclude Include="blender_gamma.h">
       <Filter>Shading templates</Filter>
     </ClInclude>
     <ClInclude Include="..\xrRender\dxGlowManager.h" />
@@ -1326,12 +1317,6 @@
     <ClCompile Include="..\xrRenderDX10\3DFluid\dx103DFluidRenderer.cpp">
       <Filter>Shading templates\3dFluid</Filter>
     </ClCompile>
-    <ClCompile Include="blender_fxaa.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_rain_drops.cpp">
-      <Filter>Shading templates</Filter>
-    </ClCompile>
     <ClCompile Include="r3_puddles.cpp">
       <Filter>Core</Filter>
     </ClCompile>
@@ -1358,9 +1343,6 @@
     </ClCompile>
     <ClCompile Include="..\xrRender\RenderTargetPhaseGamma.cpp">
       <Filter>Core_Target</Filter>
-    </ClCompile>
-    <ClCompile Include="blender_gamma.cpp">
-      <Filter>Shading templates</Filter>
     </ClCompile>
     <ClCompile Include="..\xrRender\dxGlowManager.cpp" />
     <ClCompile Include="..\xrRender\ScreenshotManager.cpp">

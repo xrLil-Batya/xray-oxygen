@@ -246,7 +246,7 @@ void dxRenderDeviceRender::overdrawEnd()
 	CHK_DX	(HW.pDevice->SetRenderState( D3DRS_STENCILMASK,		0xff				));
 
 	// Set the background to black
-	CHK_DX	(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_XRGB(255,0,0),0,0));
+	RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(255, 0, 0), 1.0f, 0);
 
 	// Draw a rectangle wherever the count equal I
 	RCache.OnFrameEnd	();
@@ -343,12 +343,11 @@ void dxRenderDeviceRender::Clear()
 		HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 	}
 #else	//	USE_DX10
-	CHK_DX(HW.pDevice->Clear(0,0,
-		D3DCLEAR_ZBUFFER|
-		(psDeviceFlags.test(rsClearBB)?D3DCLEAR_TARGET:0)|
-		(HW.Caps.bStencil?D3DCLEAR_STENCIL:0),
-		D3DCOLOR_XRGB(0,0,0),1,0
-		));
+	u32 flags = D3DCLEAR_ZBUFFER;
+	if (psDeviceFlags.is(rsClearBB))	flags |= D3DCLEAR_TARGET;
+	if (HW.Caps.bStencil)				flags |= D3DCLEAR_STENCIL;
+
+	RCache.Clear(0, nullptr, flags, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 #endif	//	USE_DX10
 }
 
@@ -399,7 +398,7 @@ void dxRenderDeviceRender::ClearTarget()
 	FLOAT ColorRGBA[4] = {0.0f,0.0f,0.0f,0.0f};
 	HW.pContext->ClearRenderTargetView(RCache.get_RT(), ColorRGBA);
 #else	//	USE_DX10
-	CHK_DX(HW.pDevice->Clear(0,0,D3DCLEAR_TARGET,D3DCOLOR_XRGB(0,0,0),1,0));
+	RCache.Clear(0, nullptr, D3DCLEAR_TARGET, D3DCOLOR_XRGB(0, 0, 0), 1.0f, 0);
 #endif	//	USE_DX10
 }
 

@@ -38,6 +38,6 @@ void dxConsoleRender::OnRender(bool bGame)
 
 	RCache.Render				(D3DPT_TRIANGLELIST, vOffset, 0, 4, 0, 2);
 #else	//	USE_DX10
-	CHK_DX	(HW.pDevice->Clear(1,&R,D3DCLEAR_TARGET,D3DCOLOR_XRGB(32,32,32),1,0));
+	RCache.Clear(1, &R, D3DCLEAR_TARGET, D3DCOLOR_XRGB(32, 32, 32), 1.0f, 0L);
 #endif	//	USE_DX10
 }

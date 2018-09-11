@@ -3,9 +3,9 @@
 
 #define MASK_BLUR_SAMPLES int(6)
 
-half4 main (p_screen I) : COLOR
+float4 main (p_screen I) : COLOR
 {
-	half4 outColor = half4(0,0,0,0);
+	float4 outColor = float4(0,0,0,0);
 	
 	for (int i = 1; i < MASK_BLUR_SAMPLES; ++i)
 	{

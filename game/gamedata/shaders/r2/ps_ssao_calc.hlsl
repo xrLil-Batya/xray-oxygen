@@ -1,6 +1,5 @@
 #include "common.h"
 
-uniform half3x4                        m_v2w                ;
 uniform	sampler2D	s_half_depth;
 
 #include "ps_ssao_blur.hlsl"
