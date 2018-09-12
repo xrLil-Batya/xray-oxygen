@@ -772,10 +772,10 @@ void CAI_Stalker::UpdateCL()
 			m_sight_manager->update();
 		}
 
+		sight().Exec_Look(client_update_fdelta());
+
 		if (weapon_shot_effector().IsActive())
 			weapon_shot_effector().Update();
-
-		sight().Exec_Look(client_update_fdelta());
 
 		CStepManager::update(false);
 	}
