@@ -235,6 +235,9 @@
     <Filter Include="Game API\Level">
       <UniqueIdentifier>{f95a2f74-5e20-47a4-9614-4353cd722baf}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Device\Stats">
+      <UniqueIdentifier>{2c2e368f-497f-4dce-a130-d87a6e85b061}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="_d3d_extensions.h">
@@ -459,12 +462,6 @@
     <ClInclude Include="device.h">
       <Filter>Device</Filter>
     </ClInclude>
-    <ClInclude Include="StatGraph.h">
-      <Filter>Device</Filter>
-    </ClInclude>
-    <ClInclude Include="Stats.h">
-      <Filter>Device</Filter>
-    </ClInclude>
     <ClInclude Include="Fmesh.h">
       <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals</Filter>
     </ClInclude>
@@ -596,6 +593,15 @@
     </ClInclude>
     <ClInclude Include="xr_level_controller.h">
       <Filter>Game API\Level</Filter>
+    </ClInclude>
+    <ClInclude Include="StatGraph.h">
+      <Filter>Device\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="Stats.h">
+      <Filter>Device\Stats</Filter>
+    </ClInclude>
+    <ClInclude Include="DynamicSplash.h">
+      <Filter>Device\Stats</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -803,12 +809,6 @@
     <ClCompile Include="Device_wndproc.cpp">
       <Filter>Device</Filter>
     </ClCompile>
-    <ClCompile Include="StatGraph.cpp">
-      <Filter>Device</Filter>
-    </ClCompile>
-    <ClCompile Include="Stats.cpp">
-      <Filter>Device</Filter>
-    </ClCompile>
     <ClCompile Include="fmesh.cpp">
       <Filter>Game API\RenderRef\Execution &amp; 3D\Visuals</Filter>
     </ClCompile>
@@ -934,6 +934,15 @@
     </ClCompile>
     <ClCompile Include="xr_level_controller.cpp">
       <Filter>Game API\Level</Filter>
+    </ClCompile>
+    <ClCompile Include="DynamicSplash.cpp">
+      <Filter>Device\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="StatGraph.cpp">
+      <Filter>Device\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="Stats.cpp">
+      <Filter>Device\Stats</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
