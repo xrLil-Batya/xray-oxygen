@@ -5,7 +5,6 @@
 //	Author		: Dmitriy Iassenev
 //	Description : AI Behaviour for monster "Stalker"
 ////////////////////////////////////////////////////////////////////////////
-
 #include "stdafx.h"
 #include "ai_stalker.h"
 #include "../ai_monsters_misc.h"
@@ -72,23 +71,16 @@ using namespace StalkerSpace;
 
 extern int g_AI_inactive_time;
 
-CAI_Stalker::CAI_Stalker() :
-	m_sniper_update_rate(false),
-	m_sniper_fire_mode(false),
-	m_take_items_enabled(true),
-	m_death_sound_enabled(true)
+CAI_Stalker::CAI_Stalker() : m_sniper_update_rate(false), m_sniper_fire_mode(false), m_take_items_enabled(true), m_death_sound_enabled(true),
+m_group_behaviour(true), m_wounded(false), m_registered_in_combat_on_migration(false), m_power_fx_factor(flt_max)
 {
 	m_sound_user_data_visitor = nullptr;
 	m_movement_manager = nullptr;
-	m_group_behaviour = true;
 	m_boneHitProtection = nullptr;
-	m_power_fx_factor = flt_max;
-	m_wounded = false;
 #ifdef DEBUG
 	m_debug_planner = nullptr;
 	m_dbg_hud_draw = false;
 #endif // DEBUG
-	m_registered_in_combat_on_migration = false;
 }
 
 CAI_Stalker::~CAI_Stalker()
@@ -107,7 +99,6 @@ void CAI_Stalker::reinit()
 	sight().reinit();
 	CCustomMonster::reinit();
 	animation().reinit();
-	//	movement().reinit				();
 
 	//загрузка спецевической звуковой схемы для сталкера согласно m_SpecificCharacter
 	sound().sound_prefix(SpecificCharacter().sound_voice_prefix());
@@ -220,7 +211,6 @@ void CAI_Stalker::reload(LPCSTR section)
 	if (!already_dead())
 		CStepManager::reload(section);
 
-	//	if (!already_dead())
 	CObjectHandler::reload(section);
 
 	if (!already_dead())
@@ -322,20 +312,14 @@ void CAI_Stalker::reload(LPCSTR section)
 		m_auto_min_queue_interval_close = READ_IF_EXISTS(pSettings, r_u32, queue_sect, "auto_min_queue_interval_close", 300);
 		m_auto_max_queue_interval_close = READ_IF_EXISTS(pSettings, r_u32, queue_sect, "auto_max_queue_interval_close", 500);
 
-
-		//		m_pstl_queue_fire_dist_close		= READ_IF_EXISTS(pSettings,r_float,queue_sect,"pstl_queue_fire_dist_close", 15.0f);
 		m_pstl_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, queue_sect, "pstl_queue_fire_dist_med", 15.0f);
 		m_pstl_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, queue_sect, "pstl_queue_fire_dist_far", 30.0f);
-		//		m_shtg_queue_fire_dist_close		= READ_IF_EXISTS(pSettings,r_float,queue_sect,"shtg_queue_fire_dist_close", 15.0f);
 		m_shtg_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, queue_sect, "shtg_queue_fire_dist_med", 15.0f);
 		m_shtg_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, queue_sect, "shtg_queue_fire_dist_far", 30.0f);
-		//		m_snp_queue_fire_dist_close			= READ_IF_EXISTS(pSettings,r_float,queue_sect,"snp_queue_fire_dist_close", 15.0f);
 		m_snp_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, queue_sect, "snp_queue_fire_dist_med", 15.0f);
 		m_snp_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, queue_sect, "snp_queue_fire_dist_far", 30.0f);
-		//		m_mchg_queue_fire_dist_close			= READ_IF_EXISTS(pSettings,r_float,queue_sect,"mchg_queue_fire_dist_close", 15.0f);
 		m_mchg_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, queue_sect, "mchg_queue_fire_dist_med", 15.0f);
 		m_mchg_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, queue_sect, "mchg_queue_fire_dist_far", 30.0f);
-		//		m_auto_queue_fire_dist_close		= READ_IF_EXISTS(pSettings,r_float,queue_sect,"auto_queue_fire_dist_close", 15.0f);
 		m_auto_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, queue_sect, "auto_queue_fire_dist_med", 15.0f);
 		m_auto_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, queue_sect, "auto_queue_fire_dist_far", 30.0f);
 	}
@@ -418,19 +402,15 @@ void CAI_Stalker::reload(LPCSTR section)
 		m_auto_min_queue_interval_close = READ_IF_EXISTS(pSettings, r_u32, *cNameSect(), "auto_min_queue_interval_close", 300);
 		m_auto_max_queue_interval_close = READ_IF_EXISTS(pSettings, r_u32, *cNameSect(), "auto_max_queue_interval_close", 500);
 
-		//		m_pstl_queue_fire_dist_close		= READ_IF_EXISTS(pSettings,r_float,*cNameSect(),"pstl_queue_fire_dist_close", 15.0f);
 		m_pstl_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "pstl_queue_fire_dist_med", 15.0f);
 		m_pstl_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "pstl_queue_fire_dist_far", 30.0f);
-		//		m_shtg_queue_fire_dist_close		= READ_IF_EXISTS(pSettings,r_float,*cNameSect(),"shtg_queue_fire_dist_close", 15.0f);
 		m_shtg_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "shtg_queue_fire_dist_med", 15.0f);
 		m_shtg_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "shtg_queue_fire_dist_far", 30.0f);
-		//		m_snp_queue_fire_dist_close			= READ_IF_EXISTS(pSettings,r_float,*cNameSect(),"snp_queue_fire_dist_close", 15.0f);
+
 		m_snp_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "snp_queue_fire_dist_med", 15.0f);
 		m_snp_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "snp_queue_fire_dist_far", 30.0f);
-		//		m_mchg_queue_fire_dist_close			= READ_IF_EXISTS(pSettings,r_float,*cNameSect(),"mchg_queue_fire_dist_close", 15.0f);
 		m_mchg_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "mchg_queue_fire_dist_med", 15.0f);
 		m_mchg_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "mchg_queue_fire_dist_far", 30.0f);
-		//		m_auto_queue_fire_dist_close		= READ_IF_EXISTS(pSettings,r_float,**cNameSect(),"auto_queue_fire_dist_close", 15.0f);
 		m_auto_queue_fire_dist_med = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "auto_queue_fire_dist_med", 15.0f);
 		m_auto_queue_fire_dist_far = READ_IF_EXISTS(pSettings, r_float, *cNameSect(), "auto_queue_fire_dist_far", 30.0f);
 	}
@@ -440,14 +420,11 @@ void CAI_Stalker::reload(LPCSTR section)
 void CAI_Stalker::Die(CObject* who)
 {
 	movement().on_death();
-
 	notify_on_wounded_or_killed(who);
-
 	SelectAnimation(XFORM().k, movement().detail().direction(), movement().speed());
 
 	if (m_death_sound_enabled)
 	{
-		//sound().set_sound_mask		((u32)eStalkerSoundMaskDie);
 		if (is_special_killer(who))
 			sound().play(eStalkerSoundDieInAnomaly);
 		else
@@ -500,14 +477,14 @@ void CAI_Stalker::Load(LPCSTR section)
 
 BOOL CAI_Stalker::net_Spawn(CSE_Abstract* DC)
 {
-	CSE_Abstract					*e = (CSE_Abstract*)(DC);
-	CSE_ALifeHumanStalker			*tpHuman = smart_cast<CSE_ALifeHumanStalker*>(e);
+	CSE_Abstract *e = (CSE_Abstract*)(DC);
+	CSE_ALifeHumanStalker *tpHuman = smart_cast<CSE_ALifeHumanStalker*>(e);
 	R_ASSERT(tpHuman);
 
 	m_group_behaviour = !!tpHuman->m_flags.test(CSE_ALifeObject::flGroupBehaviour);
 
 	if (!CObjectHandler::net_Spawn(DC) || !inherited::net_Spawn(DC))
-		return						(FALSE);
+		return (FALSE);
 
 	set_money(tpHuman->m_dwMoney, false);
 	animation().reload();
@@ -521,13 +498,8 @@ BOOL CAI_Stalker::net_Spawn(CSE_Abstract* DC)
 	if (ai().game_graph().valid_vertex_id(tpHuman->m_tNextGraphID) && movement().restrictions().accessible(ai().game_graph().vertex(tpHuman->m_tNextGraphID)->level_point()))
 		movement().set_game_dest_vertex(tpHuman->m_tNextGraphID);
 
-	R_ASSERT2(
-		ai().get_game_graph() &&
-		ai().get_level_graph() &&
-		ai().get_cross_table() &&
-		(ai().level_graph().level_id() != u32(-1)),
-		"There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!"
-	);
+	R_ASSERT2(ai().get_game_graph() && ai().get_level_graph() && ai().get_cross_table() &&
+		(ai().level_graph().level_id() != u32(-1)), "There is no AI-Map, level graph, cross table, or graph is not compiled into the game graph!");
 
 	setEnabled(TRUE);
 
@@ -596,11 +568,11 @@ BOOL CAI_Stalker::net_Spawn(CSE_Abstract* DC)
 	}
 
 	sight().update();
-	Exec_Look(.001f);
+	Exec_Look(0.001f);
 
 	m_pPhysics_support->in_NetSpawn(e);
 
-	return							(TRUE);
+	return (TRUE);
 }
 
 void CAI_Stalker::net_Destroy()
@@ -609,12 +581,7 @@ void CAI_Stalker::net_Destroy()
 	CInventoryOwner::net_Destroy();
 	m_pPhysics_support->in_NetDestroy();
 
-	Device.remove_from_seq_parallel(
-		fastdelegate::FastDelegate0<>(
-			this,
-			&CAI_Stalker::update_object_handler
-			)
-	);
+	Device.remove_from_seq_parallel(fastdelegate::FastDelegate0<>(this, &CAI_Stalker::update_object_handler));
 
 #ifdef DEBUG
 	fastdelegate::FastDelegate0<>	f = fastdelegate::FastDelegate0<>(this, &CAI_Stalker::update_object_handler);
@@ -645,35 +612,37 @@ BOOL CAI_Stalker::net_SaveRelevant()
 
 void CAI_Stalker::net_Export(NET_Packet& P)
 {
-	R_ASSERT(Local());
 	// export last known packet
-	R_ASSERT(!NET.empty());
+	R_ASSERT2(!NET.empty(), "Wrong Net packets!");
 	net_update& N = NET.back();
 
 	P.w_float(GetfHealth());
 	P.w_u32(N.dwTimeStamp);
 	P.w_u8(0);
 	P.w_vec3(N.p_pos);
-	P.w_float /*w_angle8*/(N.o_model);
-	P.w_float /*w_angle8*/(N.o_torso.yaw);
-	P.w_float /*w_angle8*/(N.o_torso.pitch);
-	P.w_float /*w_angle8*/(N.o_torso.roll);
+	P.w_float(N.o_model);
+	P.w_float(N.o_torso.yaw);
+	P.w_float(N.o_torso.pitch);
+	P.w_float(N.o_torso.roll);
 	P.w_u8(u8(g_Team()));
 	P.w_u8(u8(g_Squad()));
 	P.w_u8(u8(g_Group()));
 
+	float f1 = 0.f;
+	GameGraph::_GRAPH_ID l_game_vertex_id = ai_location().game_vertex_id();
 
-	float					f1 = 0;
-	GameGraph::_GRAPH_ID		l_game_vertex_id = ai_location().game_vertex_id();
 	P.w(&l_game_vertex_id, sizeof(l_game_vertex_id));
 	P.w(&l_game_vertex_id, sizeof(l_game_vertex_id));
-	if (ai().game_graph().valid_vertex_id(l_game_vertex_id)) {
+
+	if (ai().game_graph().valid_vertex_id(l_game_vertex_id))
+	{
 		f1 = Position().distance_to(ai().game_graph().vertex(l_game_vertex_id)->level_point());
 		P.w(&f1, sizeof(f1));
 		f1 = Position().distance_to(ai().game_graph().vertex(l_game_vertex_id)->level_point());
 		P.w(&f1, sizeof(f1));
 	}
-	else {
+	else
+	{
 		P.w(&f1, sizeof(f1));
 		P.w(&f1, sizeof(f1));
 	}
@@ -686,8 +655,10 @@ void CAI_Stalker::update_object_handler()
 	if (!g_Alive())
 		return;
 
-	try {
-		try {
+	try
+	{
+		try
+		{
 			CObjectHandler::update();
 		}
 		// #ifdef DEBUG
@@ -696,7 +667,8 @@ void CAI_Stalker::update_object_handler()
 		// 			throw;
 		// 		}
 		// #endif
-		catch (std::exception &message) {
+		catch (std::exception &message)
+		{
 			Msg("! Expression \"%s\"", message.what());
 			throw;
 		}
@@ -704,7 +676,8 @@ void CAI_Stalker::update_object_handler()
 			throw;
 		}
 	}
-	catch (...) {
+	catch (...)
+	{
 		CObjectHandler::set_goal(eObjectActionIdle);
 		CObjectHandler::update();
 	}
@@ -719,10 +692,7 @@ void CAI_Stalker::destroy_anim_mov_ctrl()
 {
 	inherited::destroy_anim_mov_ctrl();
 
-	if (!g_Alive())
-		return;
-
-	if (getDestroy())
+	if (!g_Alive() || getDestroy())
 		return;
 
 	movement().m_head.current.yaw = movement().m_body.current.yaw;
@@ -731,7 +701,7 @@ void CAI_Stalker::destroy_anim_mov_ctrl()
 	movement().m_head.target.pitch = movement().m_body.current.pitch;
 
 	movement().cleanup_after_animation_selector();
-	movement().update(0);
+	movement().update(0u);
 }
 
 void CAI_Stalker::UpdateCL()
@@ -746,38 +716,34 @@ void CAI_Stalker::UpdateCL()
 		}
 
 		if ((movement().speed(character_physics_support()->movement()) > EPS_L)
-			&& (eMovementTypeStand != movement().movement_type()) && (eMentalStateDanger == movement().mental_state()))
+			&& (eMovementTypeStand != movement().movement_type()) && (eMentalStateDanger == movement().mental_state())
+			&& (eBodyStateStand == movement().body_state()) && (eMovementTypeRun == movement().movement_type()))
 		{
-			if ((eBodyStateStand == movement().body_state()) && (eMovementTypeRun == movement().movement_type()))
-			{
-				sound().play(eStalkerSoundRunningInDanger);
-			}
+			sound().play(eStalkerSoundRunningInDanger);
 		}
 	}
 
 	inherited::UpdateCL();
-
 	m_pPhysics_support->in_UpdateCL();
 
 	if (g_Alive())
 	{
 		VERIFY(!m_pPhysicsShell);
-		try {
-			m_sight_manager->update();
-			//sight().update();
+		try
+		{
+			sight().update();
 		}
 		catch (...)
 		{
 			sight().setup(CSightAction(SightManager::eSightTypeCurrentDirection));
-			m_sight_manager->update();
+			sight().update();
 		}
 
-		sight().Exec_Look(client_update_fdelta());
+		Exec_Look(client_update_fdelta());
+		CStepManager::update(false);
 
 		if (weapon_shot_effector().IsActive())
 			weapon_shot_effector().Update();
-
-		CStepManager::update(false);
 	}
 #ifdef DEBUG
 	debug_text();
@@ -789,7 +755,7 @@ void CAI_Stalker::PHHit(SHit &H)
 	m_pPhysics_support->in_Hit(H, false);
 }
 
-CPHDestroyable*		CAI_Stalker::ph_destroyable()
+CPHDestroyable* CAI_Stalker::ph_destroyable()
 {
 	return smart_cast<CPHDestroyable*>(character_physics_support());
 }
@@ -798,17 +764,11 @@ CPHDestroyable*		CAI_Stalker::ph_destroyable()
 
 void CAI_Stalker::shedule_Update(u32 DT)
 {
-	// Optimization update
-	if (Device.dwFrame % 2) return;
+	VERIFY2(getEnabled() || PPhysicsShell(), *cName());
 
-	START_PROFILE("stalker")
-		START_PROFILE("stalker/schedule_update")
-		VERIFY2(getEnabled() || PPhysicsShell(), *cName());
-
-	if (!CObjectHandler::planner().initialized()) {
-		START_PROFILE("stalker/client_update/object_handler")
-			update_object_handler();
-		STOP_PROFILE
+	if (!CObjectHandler::planner().initialized())
+	{
+		update_object_handler();
 	}
 
 	// Queue shrink
@@ -817,7 +777,7 @@ void CAI_Stalker::shedule_Update(u32 DT)
 	VERIFY(!NET.empty());
 	while ((NET.size()>2) && (NET[1].dwTimeStamp<dwTimeCL)) NET.pop_front();
 
-	Fvector vNewPosition = Position();
+	Fvector				vNewPosition = Position();
 	VERIFY(_valid(Position()));
 	// *** general stuff
 	float dt = float(DT) / 1000.f;
@@ -828,68 +788,52 @@ void CAI_Stalker::shedule_Update(u32 DT)
 
 #ifndef USE_SCHEDULER_IN_AGENT_MANAGER
 		agent_manager().update();
-#endif // USE_SCHEDULER_IN_AGENT_MANAGER
+#endif
 
 		Device.seqParallel.emplace_back(this, &CCustomMonster::Exec_Visibility);
-		Device.seqParallel.emplace_back(this, &CAI_Stalker::process_enemies);
 
-		//process_enemies();
+		process_enemies();
 		memory().update(dt);
 	}
 
-	START_PROFILE("stalker/schedule_update/inherited")
-		inherited::inherited::shedule_Update(DT);
-	STOP_PROFILE
+	inherited::inherited::shedule_Update(DT);
 
-		if (Remote()) {
-		}
-		else {
-			// here is monster AI call
-			VERIFY(_valid(Position()));
-			m_fTimeUpdateDelta = dt;
-			if (GetScriptControl())
-				ProcessScripts();
+	if (!Remote())
+	{
+		// here is monster AI call
+		VERIFY(_valid(Position()));
+		m_fTimeUpdateDelta = dt;
 
+		if (GetScriptControl())
+			ProcessScripts();
+		else
 			Think();
-			m_dwLastUpdateTime = Device.dwTimeGlobal;
-			VERIFY(_valid(Position()));
 
-			// Look and action streams
-			float temp = conditions().health();
-			if (temp > 0)
-			{
-				Fvector C; float R;
-				Center(C);
-				R = Radius();
-				feel_touch_update(C, R);
-				net_update				uNext;
-				uNext.dwTimeStamp = Level().timeServer();
-				uNext.o_model = movement().m_body.current.yaw;
-				uNext.o_torso = movement().m_head.current;
-				uNext.p_pos = vNewPosition;
-				uNext.fHealth = GetfHealth();
-				NET.push_back(uNext);
-			}
-			else
-			{
-				net_update			uNext;
-				uNext.dwTimeStamp = Level().timeServer();
-				uNext.o_model = movement().m_body.current.yaw;
-				uNext.o_torso = movement().m_head.current;
-				uNext.p_pos = vNewPosition;
-				uNext.fHealth = GetfHealth();
-				NET.push_back(uNext);
-			}
+		m_dwLastUpdateTime = Device.dwTimeGlobal;
+		VERIFY(_valid(Position()));
+
+		// Look and action streams
+		if (conditions().health())
+		{
+			Fvector C;
+			Center(C);
+			feel_touch_update(C, Radius());
 		}
-		VERIFY(_valid(Position()));
 
-		UpdateInventoryOwner(DT);
+		// Push next update
+		net_update uNext;
+		uNext.dwTimeStamp = Level().timeServer();
+		uNext.o_model = movement().m_body.current.yaw;
+		uNext.o_torso = movement().m_head.current;
+		uNext.p_pos = vNewPosition;
+		uNext.fHealth = GetfHealth();
+		NET.push_back(uNext);
+	}
 
-		VERIFY(_valid(Position()));
-		m_pPhysics_support->in_shedule_Update(DT);
-		VERIFY(_valid(Position()));
-		STOP_PROFILE
-			STOP_PROFILE
+	VERIFY(_valid(Position()));
+	UpdateInventoryOwner(DT);
+	m_pPhysics_support->in_shedule_Update(DT);
+	VERIFY(_valid(Position()));
 }
 
 float CAI_Stalker::Radius() const
@@ -908,12 +852,11 @@ void CAI_Stalker::spawn_supplies()
 
 void CAI_Stalker::Think()
 {
-	u32 update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
+	const u32 update_delta = Device.dwTimeGlobal - m_dwLastUpdateTime;
 
 	brain().update(update_delta);
-
-	if (!g_Alive()) return;
-	movement().update(update_delta);
+	if (g_Alive())
+		movement().update(update_delta);
 }
 
 void CAI_Stalker::SelectAnimation(const Fvector &view, const Fvector &move, float speed)
@@ -924,12 +867,12 @@ void CAI_Stalker::SelectAnimation(const Fvector &view, const Fvector &move, floa
 
 const SRotation CAI_Stalker::Orientation() const
 {
-	return		(movement().m_head.current);
+	return (movement().m_head.current);
 }
 
 const MonsterSpace::SBoneRotation &CAI_Stalker::head_orientation() const
 {
-	return		(movement().head_orientation());
+	return (movement().head_orientation());
 }
 
 void CAI_Stalker::net_Relcase(CObject*	 O)
@@ -939,11 +882,11 @@ void CAI_Stalker::net_Relcase(CObject*	 O)
 	sight().remove_links(O);
 	movement().remove_links(O);
 
-	if (!g_Alive())
-		return;
-
-	agent_manager().remove_links(O);
-	m_pPhysics_support->in_NetRelcase(O);
+	if (g_Alive())
+	{
+		agent_manager().remove_links(O);
+		m_pPhysics_support->in_NetRelcase(O);
+	}
 }
 
 CMovementManager *CAI_Stalker::create_movement_manager()
@@ -953,12 +896,12 @@ CMovementManager *CAI_Stalker::create_movement_manager()
 
 CSound_UserDataVisitor *CAI_Stalker::create_sound_visitor()
 {
-	return	(m_sound_user_data_visitor = xr_new<CStalkerSoundDataVisitor>(this));
+	return (m_sound_user_data_visitor = xr_new<CStalkerSoundDataVisitor>(this));
 }
 
 CMemoryManager *CAI_Stalker::create_memory_manager()
 {
-	return	(xr_new<CMemoryManager>(this, create_sound_visitor()));
+	return (xr_new<CMemoryManager>(this, create_sound_visitor()));
 }
 
 DLL_Pure *CAI_Stalker::_construct()
@@ -968,19 +911,18 @@ DLL_Pure *CAI_Stalker::_construct()
 	CObjectHandler::_construct();
 	CStepManager::_construct();
 
-
 	m_actor_relation_flags.zero();
 	m_animation_manager = xr_new<CStalkerAnimationManager>(this);
 	m_brain = xr_new<CStalkerPlanner>();
 	m_sight_manager = xr_new<CSightManager>(this);
 	m_weapon_shot_effector = xr_new<CWeaponShotEffector>();
 
-	return								(this);
+	return (this);
 }
 
 bool CAI_Stalker::use_center_to_aim() const
 {
-	return								(!wounded() && (movement().body_state() != eBodyStateCrouch));
+	return (!wounded() && (movement().body_state() != eBodyStateCrouch));
 }
 
 void CAI_Stalker::UpdateCamera()
@@ -997,9 +939,9 @@ void CAI_Stalker::UpdateCamera()
 bool CAI_Stalker::can_attach(const CInventoryItem *inventory_item) const
 {
 	if (already_dead())
-		return							(false);
+		return (false);
 
-	return								(CObjectHandler::can_attach(inventory_item));
+	return (CObjectHandler::can_attach(inventory_item));
 }
 
 void CAI_Stalker::save(NET_Packet &packet)
@@ -1076,14 +1018,14 @@ shared_str const &CAI_Stalker::aim_bone_id() const
 
 void aim_target(shared_str const& aim_bone_id, Fvector &result, const CGameObject *object)
 {
-	IKinematics				*kinematics = smart_cast<IKinematics*>(object->Visual());
+	IKinematics *kinematics = smart_cast<IKinematics*>(object->Visual());
 	VERIFY(kinematics);
 
-	u16						bone_id = kinematics->LL_BoneID(aim_bone_id);
+	u16 bone_id = kinematics->LL_BoneID(aim_bone_id);
 	VERIFY2(bone_id != BI_NONE, make_string("Cannot find bone %s", bone_id));
 
-	Fmatrix const			&bone_matrix = kinematics->LL_GetTransform(bone_id);
-	Fmatrix					final;
+	Fmatrix const &bone_matrix = kinematics->LL_GetTransform(bone_id);
+	Fmatrix final;
 	final.mul_43(object->XFORM(), bone_matrix);
 	result = final.c;
 }
@@ -1098,7 +1040,7 @@ void CAI_Stalker::aim_target(Fvector &result, const CGameObject *object)
 BOOL CAI_Stalker::AlwaysTheCrow()
 {
 	VERIFY(character_physics_support());
-	return					(character_physics_support()->interactive_motion());
+	return (character_physics_support()->interactive_motion());
 }
 
 smart_cover::cover const* CAI_Stalker::get_current_smart_cover()

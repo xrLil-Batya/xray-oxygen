@@ -1,8 +1,7 @@
 #include "stdafx.h"
 #include "CMagazine.h"
 
-
-CMagazine::CMagazine()
+CMagazine::CMagazine() : m_pCurrentAmmo(nullptr)
 {
 	m_iAmmoCurrentTotal = 0;
 
@@ -10,7 +9,6 @@ CMagazine::CMagazine()
 	iMagazineSize = -1;
 	m_ammoType = 0;
 }
-
 
 CMagazine::~CMagazine()
 {
