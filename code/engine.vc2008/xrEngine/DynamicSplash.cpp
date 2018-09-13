@@ -68,7 +68,7 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	FS_Path* filePath = FS.get_path("$textures$");
 	std::string szPath = std::string(filePath->m_Path);
 	std::wstring szWPath = std::wstring(szPath.begin(), szPath.end());
-	szWPath += L"\\ui\\Splash.bmp";
+	szWPath += L"ui\\Splash.bmp";
 	//////////////////////////////////////
 
 	Gdiplus::Image* pImage = Gdiplus::Image::FromFile(szWPath.c_str());
@@ -132,12 +132,7 @@ VOID DSplashScreen::HideSplash()
 {
 	if (hThread)
 	{
-		// destroy splash thread
-		PostThreadMessageA(threadId, WM_QUIT, NULL, NULL);
-		if (WaitForSingleObject(hThread, 9000) == WAIT_TIMEOUT)
-		{
-			TerminateThread(hThread, (DWORD)WAIT_TIMEOUT);
-		}
+		TerminateThread(hThread, (DWORD)WAIT_TIMEOUT);
 		CloseHandle(hThread);
 		CloseHandle(hEvent);
 	}
