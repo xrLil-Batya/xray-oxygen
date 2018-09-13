@@ -740,10 +740,11 @@ void CAI_Stalker::UpdateCL()
 		}
 
 		Exec_Look(client_update_fdelta());
-		CStepManager::update(false);
 
 		if (weapon_shot_effector().IsActive())
 			weapon_shot_effector().Update();
+
+		CStepManager::update(false);
 	}
 #ifdef DEBUG
 	debug_text();
