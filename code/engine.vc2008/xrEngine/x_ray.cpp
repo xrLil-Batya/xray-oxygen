@@ -20,6 +20,8 @@
 #include "Text_Console.h"
 #include <process.h>
 #include <locale.h>
+#include "DynamicSplash.h"
+
 
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
@@ -27,6 +29,7 @@ ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
+extern ENGINE_API DSplashScreen splashScreen;
 
 //---------------------------------------------------------------------
 // 2446363
@@ -147,8 +150,11 @@ void execUserScript()
 
 void Startup()
 {
+	splashScreen.SetProgressPosition(60, "Init sound");
 	InitSound1		();
+	splashScreen.SetProgressPosition(65, "Init user scripts");
 	execUserScript	();
+	splashScreen.SetProgressPosition(70, "Init sound (2-part)");
 	InitSound2		();
 
 	// ...command line for auto start
@@ -170,7 +176,9 @@ void Startup()
 	// Initialize APP
 	ShowWindow(Device.m_hWnd, SW_SHOWNORMAL);
 	
+	splashScreen.SetProgressPosition(80, "Creating device");
 	Device.Create();
+	splashScreen.SetProgressPosition(90, "Creating animation library");
 	LALib.OnCreate();
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
@@ -178,14 +186,19 @@ void Startup()
 	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
 	
 	// Destroy LOGO
-	if (!strstr(Core.Params, "-nologo"))
+	if (strstr(Core.Params, "-oldlogo"))
 	{
 		DestroyWindow(logoWindow);
 		logoWindow = NULL;
 	}
 	
 	// Main cycle
+	splashScreen.SetProgressPosition(100, "Engine loaded.");
 	Memory.mem_usage();
+	if (!strstr(Core.Params, "-oldlogo"))
+	{
+		splashScreen.HideSplash();
+	}
 	Device.Run();
 	
 	// Destroy APP
@@ -340,7 +353,7 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	HWND logoInsertPos = HWND_TOPMOST;
 	if (IsDebuggerPresent()) { logoInsertPos = HWND_NOTOPMOST; }
 
-	if (!strstr(Core.Params, "-nologo"))
+	if (strstr(Core.Params, "-oldlogo"))
 	{
 		logoWindow = CreateDialogParamA(GetModuleHandle(NULL), MAKEINTRESOURCEA(IDD_STARTUP), 0, logDlgProc, 0L);
 		HWND logoPicture = GetDlgItem(logoWindow, IDC_STATIC_LOGO);
@@ -350,6 +363,10 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 		SetWindowPos(logoWindow, logoInsertPos, 0, 0, logoRect.right - logoRect.left, logoRect.bottom - logoRect.top, SWP_NOMOVE | SWP_SHOWWINDOW);
 		UpdateWindow(logoWindow);
 	}
+	else
+	{
+		InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
+	}
 
 	// AVI
 	g_bIntroFinished = true;
@@ -357,8 +374,9 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	g_sLaunchOnExit_app[0] = 0;
 	g_sLaunchOnExit_params[0] = 0;
 
-
+	splashScreen.SetProgressPosition(15, "Init settings");
 	InitSettings();
+	
 
 	if (strstr(Core.Params, "-renderdebug"))
 	{
@@ -372,11 +390,16 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
 
+	splashScreen.SetProgressPosition(20, "FPU m24r");
 	FPU::m24r();
+	splashScreen.SetProgressPosition(35, "Init engine");
 	InitEngine();
+	splashScreen.SetProgressPosition(40, "Init input");
 	InitInput();
+	splashScreen.SetProgressPosition(45, "Init console");
 	InitConsole();
 
+	splashScreen.SetProgressPosition(50, "Init render");
 	Engine.External.Initialize();
 
 	Startup();

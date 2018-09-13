@@ -9,15 +9,21 @@
 * Methods for dynamic splash implementation
 *********************************************************/
 #pragma once
-#include <GdiPlus.h>
+
+ATOM CreateSplashClass(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc);
 
 class DSplashScreen
 {
+
 public:
+	DSplashScreen();
 	DSplashScreen(HWND hwnd);
+	DSplashScreen(const DSplashScreen&) {};
+	DSplashScreen& operator=(const DSplashScreen&) {};
+	~DSplashScreen() {};
 
 	ICF HWND GetSplashWindow() { return hwndSplash; }
-	VOID SetBackgroundImage(Gdiplus::Image* pImage);
+	VOID SetBackgroundImage(LPVOID pImage);
 	VOID ShowSplash();
 	VOID HideSplash();
 
@@ -32,7 +38,7 @@ protected:
 	DWORD threadId;
 	HANDLE hEvent;
 
-	Gdiplus::Image*	pMainImage;			
+	LPVOID pMainImage;			
 	xr_string splashWindowName;
 	HWND hwndSplash;
 	HWND hwndProgress;	
@@ -43,7 +49,6 @@ protected:
 	static LRESULT CALLBACK SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
 	static DWORD WINAPI SplashThreadProc(LPVOID pData);
 
-private:
-	~DSplashScreen(); 
-	
 };
+
+VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc);

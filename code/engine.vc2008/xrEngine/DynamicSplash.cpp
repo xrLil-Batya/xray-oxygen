@@ -11,6 +11,13 @@
 #include "stdafx.h"
 #pragma hdrstop
 
+#include "DynamicSplash.h"
+#include <process.h>
+#include <CommCtrl.h>
+#include <WinUser.h>
+#include "../xrPlay/resource.h"
+#include "../xrCore/LocatorAPI.h"
+
 #ifndef max
 #define max(a,b)            (((a) > (b)) ? (a) : (b))
 #endif
@@ -18,12 +25,62 @@
 #ifndef min
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
+#include <gdiplus.h>
+#include <gdiplusinit.h>
 
-#include "DynamicSplash.h"
-#include <process.h>
-#include <CommCtrl.h>
-#include <WinUser.h>
-#include "../xrPlay/resource.h"
+ENGINE_API DSplashScreen splashScreen;
+
+ATOM CreateSplashClass(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
+{
+	WNDCLASSEX wcex;
+
+	wcex.cbSize = sizeof(WNDCLASSEX);
+
+	wcex.style = CS_HREDRAW | CS_VREDRAW;
+	wcex.lpfnWndProc = wndProc;
+	wcex.cbClsExtra = 0;
+	wcex.cbWndExtra = 0;
+	wcex.hInstance = hInstance;
+	wcex.hIcon = LoadIcon(NULL, IDC_APPSTARTING);
+	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
+	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.lpszMenuName = MAKEINTRESOURCE(IDB_BITMAP1);
+	wcex.lpszClassName = lpClass;
+	wcex.hIconSm = LoadIcon(NULL, IDC_APPSTARTING);
+
+	return RegisterClassEx(&wcex);
+}
+
+VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
+{
+	CreateSplashClass(hInstance, lpClass, wndProc);
+
+	Gdiplus::GdiplusStartupInput gdiSI;
+	Gdiplus::GdiplusStartupOutput gdiSO;
+	ULONG_PTR gdiToken;
+	ULONG_PTR gdiHookToken;
+	gdiSI.SuppressBackgroundThread = TRUE;
+	Gdiplus::GdiplusStartup(&gdiToken, &gdiSI, &gdiSO);
+	gdiSO.NotificationHook(&gdiHookToken);
+
+	//#VERTVER: PLS REWORK IT
+	//////////////////////////////////////
+	FS_Path* filePath = FS.get_path("$textures$");
+	std::string szPath = std::string(filePath->m_Path);
+	std::wstring szWPath = std::wstring(szPath.begin(), szPath.end());
+	szWPath += L"\\ui\\Splash.bmp";
+	//////////////////////////////////////
+
+	Gdiplus::Image* pImage = Gdiplus::Image::FromFile(szWPath.c_str());
+	R_ASSERT(pImage);
+
+	splashScreen.SetBackgroundImage(pImage);
+	splashScreen.SetSplashWindowName("Oxy splash");
+	delete pImage;
+
+	splashScreen.ShowSplash();
+	splashScreen.SetProgressPosition(0, "Engine entry-point");
+}
 
 DSplashScreen::DSplashScreen(HWND hwnd)
 {
@@ -36,11 +93,23 @@ DSplashScreen::DSplashScreen(HWND hwnd)
 	hwndParent = hwnd;
 }
 
-VOID DSplashScreen::SetBackgroundImage(Gdiplus::Image* pImage)
+DSplashScreen::DSplashScreen()
 {
-	if (pImage && !pMainImage)
+	hThread = nullptr;
+	pMainImage = nullptr;
+	hwndSplash = NULL;
+	threadId = NULL;
+	hwndProgress = NULL;
+	hEvent = nullptr;
+	hwndParent = NULL;
+}
+
+VOID DSplashScreen::SetBackgroundImage(LPVOID pImage)
+{
+	if (pImage)
 	{
-		pMainImage = pImage->Clone();
+		Gdiplus::Image* pCustomImage = reinterpret_cast<Gdiplus::Image*>(pImage);
+		pMainImage = pCustomImage->Clone();
 	}
 }
 
@@ -82,8 +151,11 @@ VOID DSplashScreen::SetSplashWindowName(xr_string windowName)
 
 VOID DSplashScreen::SetProgressPosition(DWORD percent, xr_string messageString)
 {
-	xr_string* tempMsg = new xr_string(messageString);
-	PostThreadMessageA(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
+	if (hThread)
+	{
+		xr_string* tempMsg = new xr_string(messageString);
+		PostThreadMessageA(threadId, PBM_SETPOS, percent, reinterpret_cast<LPARAM>(tempMsg));
+	}
 }
 
 VOID DSplashScreen::SetProgressPosition(DWORD percent, DWORD resourceId, HMODULE hModule)
@@ -105,6 +177,8 @@ DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	DSplashScreen* pSplash = static_cast<DSplashScreen*>(pData);
 	if (!pSplash) { return 0; }
 
+	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pSplash->pMainImage);
+
 	// create splash window class
 	WNDCLASSA windowsClass = { NULL };
 	windowsClass.style = CS_HREDRAW | CS_VREDRAW;
@@ -117,8 +191,8 @@ DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 
 	R_ASSERT(RegisterClassA(&windowsClass));
 
-	// try to find motitor where mouse was last time
-	tagPOINT point;
+	// try to find monitor where mouse was last time
+	tagPOINT point = { NULL };
 	tagMONITORINFO monitorInfo = { NULL };
 	monitorInfo.cbSize = sizeof(MONITORINFOEXA);
 	HMONITOR hMonitor = NULL;
@@ -130,14 +204,14 @@ DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 	// get window info to rect
 	if (GetMonitorInfoA(hMonitor, &monitorInfo))
 	{
-		areaRect.left = (monitorInfo.rcMonitor.right + monitorInfo.rcMonitor.left - static_cast<LONG>(pSplash->pMainImage->GetWidth())) / 2;
-		areaRect.top = (monitorInfo.rcMonitor.top + monitorInfo.rcMonitor.bottom - static_cast<LONG>(pSplash->pMainImage->GetHeight())) / 2;
+		areaRect.left = (monitorInfo.rcMonitor.right + monitorInfo.rcMonitor.left - static_cast<LONG>(pSplashImage->GetWidth())) / 2;
+		areaRect.top = (monitorInfo.rcMonitor.top + monitorInfo.rcMonitor.bottom - static_cast<LONG>(pSplashImage->GetHeight())) / 2;
 	}
 	else
 	{
 		SystemParametersInfoA(SPI_GETWORKAREA, NULL, &areaRect, NULL);
-		areaRect.left = (areaRect.right + areaRect.left - pSplash->pMainImage->GetWidth()) / 2;
-		areaRect.top = (areaRect.top + areaRect.bottom - pSplash->pMainImage->GetHeight()) / 2;
+		areaRect.left = (areaRect.right + areaRect.left - pSplashImage->GetWidth()) / 2;
+		areaRect.top = (areaRect.top + areaRect.bottom - pSplashImage->GetHeight()) / 2;
 	}
 
 	// create splash window
@@ -148,15 +222,15 @@ DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 		WS_CLIPCHILDREN | WS_POPUP,
 		areaRect.left,
 		areaRect.top,
-		pSplash->pMainImage->GetWidth(),
-		pSplash->pMainImage->GetHeight(),
+		pSplashImage->GetWidth(),
+		pSplashImage->GetHeight(),
 		pSplash->hwndParent,
 		NULL,
 		windowsClass.hInstance,
 		NULL
 	);
 
-	R_ASSERT(!pSplash->hwndSplash);
+	R_ASSERT(pSplash->hwndSplash);
 
 	// get long pointer
 	SetWindowLongPtrA(pSplash->hwndSplash, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pSplash));
@@ -226,18 +300,21 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 	if (!pInstance) { return DefWindowProcA(hwnd, uMsg, wParam, lParam); }
 	
+	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pInstance->pMainImage);
+
 	switch (uMsg)
 	{
 	case WM_PAINT:
 		if (pInstance->pMainImage)
 		{
 			Gdiplus::Graphics gdip(hwnd);
-			gdip.DrawImage(pInstance->pMainImage, 0, 0, pInstance->pMainImage->GetWidth(), pInstance->pMainImage->GetHeight());
+			gdip.DrawImage(pSplashImage, 0, 0, pSplashImage->GetWidth(), pSplashImage->GetHeight());
 
 			if (pInstance->progressMsg.size() > 0)
 			{
-				Gdiplus::Font msgFont(L"Arial", 8, Gdiplus::UnitPixel);
-				Gdiplus::SolidBrush msgBrush(static_cast<DWORD>(Gdiplus::Color::Black));
+				Gdiplus::Font msgFont(L"Arial", 16, 0, Gdiplus::UnitPixel);
+
+				Gdiplus::SolidBrush msgBrush(static_cast<DWORD>(Gdiplus::Color::White));
 
 				//#VERTVER: PLS REWORK IT
 				//////////////////////////////////////
@@ -245,14 +322,13 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 				std::wstring progressName(prgress.begin(), prgress.end());
 				//////////////////////////////////////
 
-				gdip.DrawString(progressName.c_str(), -1, &msgFont, Gdiplus::PointF(2.0f, pInstance->pMainImage->GetHeight() - 34.0f), &msgBrush);
+				gdip.DrawString(progressName.c_str(), -1, &msgFont, Gdiplus::PointF(2.0f, pSplashImage->GetHeight() - 43.0f), &msgBrush);
 			}
 			ValidateRect(hwnd, NULL);
 			return 0;
 		}
 		break;
 	case PBM_SETPOS:
-
 		// if window is not be created - create it 
 		if (!IsWindow(pInstance->hwndProgress))
 		{
