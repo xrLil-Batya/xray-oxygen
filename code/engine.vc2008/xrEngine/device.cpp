@@ -26,6 +26,7 @@
 /////////////////////////////////////
 #pragma comment(lib, "d3dx9.lib")
 /////////////////////////////////////
+extern bool bEngineloaded;
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
 /////////////////////////////////////
@@ -392,6 +393,9 @@ void CRenderDevice::Run			()
 
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
+	// Don't drawing wnd when slash is active
+	if (!bEngineloaded) return;
+
     DWORD	dwWindowStyle		= 0;
     DWORD	dwWidthCurr				= psCurrentVidMode[0];
     DWORD	dwHeightCurr			= psCurrentVidMode[1];
@@ -455,14 +459,11 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     if (!bNewFullscreen)
     {
         AdjustWindowRect(&WindowBounds, dwWindowStyle, FALSE);
-
-        SetWindowPos	(m_hWnd,
-						HWND_NOTOPMOST,
-                        WindowBounds.left,
-                        WindowBounds.top,
-						(WindowBounds.right - WindowBounds.left),
-						(WindowBounds.bottom - WindowBounds.top),
-						SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
+		SetWindowPos(m_hWnd, HWND_NOTOPMOST,
+					 WindowBounds.left, WindowBounds.top,
+					 (WindowBounds.right - WindowBounds.left),
+					 (WindowBounds.bottom - WindowBounds.top),
+					 SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
     }
 
     if (Device.b_is_Ready && bFullscreen != bNewFullscreen)
@@ -472,7 +473,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
     else
     {
         ShowCursor(FALSE);
-        SetForegroundWindow(m_hWnd);
+		SetForegroundWindow(m_hWnd);
     }
 }
 

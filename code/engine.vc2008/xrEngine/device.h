@@ -246,7 +246,7 @@ public:
 	void Initialize							(void);
 	void ShutDown							(void);
 
-    void UpdateWindowPropStyle              (WindowPropStyle PropStyle);
+    void UpdateWindowPropStyle              (WindowPropStyle PropStyle = (WindowPropStyle)ps_vid_windowtype);
 
 public:
 	void time_factor						(const float &time_factor)
