@@ -354,7 +354,14 @@ u32 CParticleManager::LoadActions(int alist_id, IReader& R)
 		{
 			ParticleAction* act = CreateAction((PActionEnum)R.r_u32());
 			act->Load(R);
-			pa->append(act);
+			try
+			{
+				pa->append(act);
+			}
+			catch (...)
+			{
+			//	Msg("[ERROR] Error particle append!");
+			}
 		}
 	}
 	return pa->size();
