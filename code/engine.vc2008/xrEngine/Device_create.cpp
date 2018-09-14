@@ -12,12 +12,30 @@ void	SetupGPU(IRenderDeviceRender *pRender)
 	BOOL bForceGPU_NonPure;
 	BOOL bForceGPU_REF;
 
-	if (strstr(Core.Params,"-gpu_sw")!=NULL)		bForceGPU_SW		= TRUE;
-	else										bForceGPU_SW		= FALSE;
-	if (strstr(Core.Params,"-gpu_nopure")!=NULL)	bForceGPU_NonPure	= TRUE;
-	else										bForceGPU_NonPure	= FALSE;
-	if (strstr(Core.Params,"-gpu_ref")!=NULL)		bForceGPU_REF		= TRUE;
-	else										bForceGPU_REF		= FALSE;
+	if (strstr(Core.Params, "-gpu_sw") != NULL) 
+	{
+		bForceGPU_SW = TRUE; 
+	}
+	else
+	{
+		bForceGPU_SW = FALSE;
+	}
+	if (strstr(Core.Params, "-gpu_nopure") != NULL) 
+	{
+		bForceGPU_NonPure = TRUE; 
+	}
+	else
+	{
+		bForceGPU_NonPure = FALSE;
+	}
+	if (strstr(Core.Params, "-gpu_ref") != NULL) 
+	{ 
+		bForceGPU_REF = TRUE; 
+	}
+	else 
+	{
+		bForceGPU_REF = FALSE;
+	}
 
 	pRender->SetupGPU(bForceGPU_SW, bForceGPU_NonPure, bForceGPU_REF);
 }
@@ -38,39 +56,37 @@ void CRenderDevice::_SetupStates	()
 
 void CRenderDevice::_Create	(LPCSTR shName)
 {
-	Memory.mem_compact			();
+	Memory.mem_compact();
 
 	// after creation
-	b_is_Ready					= TRUE;
-	_SetupStates				();
+	b_is_Ready = TRUE;
+	_SetupStates();
 
 	m_pRender->OnDeviceCreate(shName);
 
-	dwFrame						= 0;
+	dwFrame = 0;
 }
 
 void CRenderDevice::ConnectToRender()
 {
-	if (!m_pRender)
-		m_pRender			= RenderFactory->CreateRenderDeviceRender();
+	if (!m_pRender) { m_pRender = RenderFactory->CreateRenderDeviceRender(); }
 }
 
-void CRenderDevice::Create	() 
+void CRenderDevice::Create()
 {
-	if (b_is_Ready)		return;		// prevent double call
-	Statistic			= xr_new<CStats>();
+	if (b_is_Ready) { return; }		// prevent double call
+	Statistic = xr_new<CStats>();
 
 #ifdef	DEBUG
-cdb_clRAY		= &Statistic->clRAY;				// total: ray-testing
-cdb_clBOX		= &Statistic->clBOX;				// total: box query
-cdb_clFRUSTUM	= &Statistic->clFRUSTUM;			// total: frustum query
-cdb_bDebug		= &bDebug;
+	cdb_clRAY = &Statistic->clRAY;				// total: ray-testing
+	cdb_clBOX = &Statistic->clBOX;				// total: box query
+	cdb_clFRUSTUM = &Statistic->clFRUSTUM;		// total: frustum query
+	cdb_bDebug = &bDebug;
 #endif
 
-	if (!m_pRender)
-		m_pRender			= RenderFactory->CreateRenderDeviceRender();
+	if (!m_pRender) { m_pRender = RenderFactory->CreateRenderDeviceRender(); }
 	SetupGPU(m_pRender);
-	Log					("Starting RENDER device...");
+	Log("Starting RENDER device...");
 
 #ifdef _EDITOR
 	psCurrentVidMode[0]	= dwWidth;
@@ -80,7 +96,7 @@ cdb_bDebug		= &bDebug;
 	fFOV				= 90.f;
 	fASPECT				= 1.f;
 
-	m_pRender->Create	(
+	m_pRender->Create(
 		m_hWnd,
 		dwWidth,
 		dwHeight,

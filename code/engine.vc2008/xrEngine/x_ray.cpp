@@ -20,6 +20,8 @@
 #include "Text_Console.h"
 #include <process.h>
 #include <locale.h>
+#include "DynamicSplash.h"
+
 
 #include "../FrayBuildConfig.hpp"
 //---------------------------------------------------------------------
@@ -27,7 +29,8 @@ ENGINE_API CInifile* pGameIni = nullptr;
 volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
-
+extern ENGINE_API DSplashScreen splashScreen;
+bool bEngineloaded = false;
 //---------------------------------------------------------------------
 // 2446363
 // umbt@ukr.net
@@ -45,7 +48,6 @@ struct _SoundProcessor : public pureFrame
 //////////////////////////////////////////////////////////////////////////
 // global variables
 ENGINE_API	CApplication*	pApp			= NULL;
-static		HWND			logoWindow		= NULL;
 
 			void			doBenchmark		(LPCSTR name);
 ENGINE_API	bool			g_bBenchmark	= false;
@@ -147,78 +149,64 @@ void execUserScript()
 
 void Startup()
 {
+	splashScreen.SetProgressPosition(60, "Init sound");
 	InitSound1		();
+	splashScreen.SetProgressPosition(65, "Init user scripts");
 	execUserScript	();
+	splashScreen.SetProgressPosition(70, "Init sound (2-part)");
 	InitSound2		();
 
 	// ...command line for auto start
 	{
-		LPCSTR	pStartup = strstr(Core.Params, "-start ");
-		if (pStartup)				
-			Console->Execute(pStartup + 1);
-	}
-	{
-		LPCSTR	pStartup = strstr(Core.Params, "-load ");
-		if (pStartup)				
-			Console->Execute(pStartup + 1);
+		LPCSTR	pStart = strstr(Core.Params, "-start ");
+		LPCSTR	pLoad = strstr(Core.Params, "-load ");
+		if (pStart) { Console->Execute(pStart + 1); }
+		if (pLoad) { Console->Execute(pLoad + 1); }
 	}
 
 	if (strstr(Core.Params, "-$"))
 	{
 		string256 buf, cmd, param;
-		sscanf(strstr(Core.Params, "-$")
-			+ 2,
-			"%[^ ] %[^ ] ",
-			cmd,
-			param);
-		strconcat(sizeof(buf),
-			buf,
-			cmd,
-			" ",
-			param);
+		sscanf(strstr(Core.Params, "-$") + 2, "%[^ ] %[^ ] ", cmd, param);
+		strconcat(sizeof(buf), buf, cmd, " ", param);
 		Console->Execute(buf);
 	}
-	/////////////////////////////////////////////
+	
 	// Initialize APP
 	ShowWindow(Device.m_hWnd, SW_SHOWNORMAL);
-	/////////////////////////////////////////////
-	Device.Create();
+	
+	splashScreen.SetProgressPosition(90, "Creating animation library");
 	LALib.OnCreate();
+	
+	// Main cycle
+	splashScreen.SetProgressPosition(100, "Engine loaded.");
+	bEngineloaded = true;
+	Device.UpdateWindowPropStyle();
+	splashScreen.HideSplash();
+	Device.Create();
+
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
 	g_SpatialSpace = xr_new<ISpatial_DB>();
 	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	/////////////////////////////////////////////
-	// Destroy LOGO
-	if (!strstr(Core.Params, "-nologo"))
-	{
-		DestroyWindow(logoWindow);
-		logoWindow = NULL;
-	}
-	/////////////////////////////////////////////
-	// Main cycle
+
 	Memory.mem_usage();
 	Device.Run();
-	/////////////////////////////////////////////
+	
 	// Destroy APP
 	xr_delete(g_SpatialSpacePhysic);
 	xr_delete(g_SpatialSpace);
 	DEL_INSTANCE(g_pGamePersistent);
 	xr_delete(pApp);
 	Engine.Event.Dump();
-	/////////////////////////////////////////////
+
 	// Destroying
 	destroyInput();
-	if (!g_bBenchmark)
-	{
-		destroySettings();
-	}
+	if (!g_bBenchmark) { destroySettings(); }		//#DELETE:
 	LALib.OnDestroy();
-	if (!g_bBenchmark)
-		destroyConsole();
-	else
-		Console->Destroy();
-	/////////////////////////////////////////////
+	if (!g_bBenchmark) { destroyConsole(); }		//#DELETE:
+	else { Console->Destroy(); }
+	
 	destroySound();
 	destroyEngine();
 }
@@ -254,11 +242,13 @@ struct damn_keys_filter
 
 	// Sticky & Filter & Toggle keys
 
-	STICKYKEYS StickyKeysStruct;
-	FILTERKEYS FilterKeysStruct;
-	TOGGLEKEYS ToggleKeysStruct;
+	STICKYKEYS StickyKeysStruct = { NULL };
+	FILTERKEYS FilterKeysStruct = { NULL };
+	TOGGLEKEYS ToggleKeysStruct = { NULL };
 
-	DWORD dwStickyKeysFlags, dwFilterKeysFlags, dwToggleKeysFlags;
+	DWORD dwStickyKeysFlags; 
+	DWORD dwFilterKeysFlags;
+	DWORD dwToggleKeysFlags;
 
 	damn_keys_filter()
 	{
@@ -274,10 +264,6 @@ struct damn_keys_filter
 		dwStickyKeysFlags = 0;
 		dwFilterKeysFlags = 0;
 		dwToggleKeysFlags = 0;
-
-		ZeroMemory(&StickyKeysStruct, dwStickyKeysStructSize);
-		ZeroMemory(&FilterKeysStruct, dwFilterKeysStructSize);
-		ZeroMemory(&ToggleKeysStruct, dwToggleKeysStructSize);
 
 		StickyKeysStruct.cbSize = dwStickyKeysStructSize;
 		FilterKeysStruct.cbSize = dwFilterKeysStructSize;
@@ -355,37 +341,21 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	gMainThreadId = GetCurrentThreadId();
 	Debug.set_mainThreadId(gMainThreadId);
 
-	//////////////////////////////////////////
 	// Title window
-	//////////////////////////////////////////
 	HWND logoInsertPos = HWND_TOPMOST;
-	if (IsDebuggerPresent())
-	{
-		logoInsertPos = HWND_NOTOPMOST;
-	}
-	//////////////////////////////////////////
-	if (!strstr(Core.Params, "-nologo"))
-	{
-		logoWindow = CreateDialog(GetModuleHandle(NULL), MAKEINTRESOURCE(IDD_STARTUP), 0, logDlgProc);
-		HWND logoPicture = GetDlgItem(logoWindow, IDC_STATIC_LOGO);
-		RECT logoRect;
-		//////////////////////////////////////////
-		GetWindowRect(logoPicture, &logoRect);
-		SetWindowPos(logoWindow, logoInsertPos, 0,
-			0, logoRect.right - logoRect.left,
-			logoRect.bottom - logoRect.top,
-			SWP_NOMOVE | SWP_SHOWWINDOW);
-		UpdateWindow(logoWindow);
-	}
-	//////////////////////////////////////////
+	if (IsDebuggerPresent()) { logoInsertPos = HWND_NOTOPMOST; }
+
+	InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
+
 	// AVI
 	g_bIntroFinished = true;
 
 	g_sLaunchOnExit_app[0] = 0;
 	g_sLaunchOnExit_params[0] = 0;
 
-
+	splashScreen.SetProgressPosition(15, "Init settings");
 	InitSettings();
+	
 
 	if (strstr(Core.Params, "-renderdebug"))
 	{
@@ -399,11 +369,16 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 		xr_strcpy(Core.CompName, sizeof(Core.CompName), "Computer");
 	}
 
+	splashScreen.SetProgressPosition(20, "FPU m24r");
 	FPU::m24r();
+	splashScreen.SetProgressPosition(35, "Init engine");
 	InitEngine();
+	splashScreen.SetProgressPosition(40, "Init input");
 	InitInput();
+	splashScreen.SetProgressPosition(45, "Init console");
 	InitConsole();
 
+	splashScreen.SetProgressPosition(50, "Init render");
 	Engine.External.Initialize();
 
 	Startup();

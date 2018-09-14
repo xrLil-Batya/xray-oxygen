@@ -143,25 +143,25 @@ void xrDebug::backend(const char* expression, const char* description, const cha
 	if (handler)
 		handler();
 
-    // Sometimes if we crashed not in main thread, we can stuck at ShowWindow
-    if (GetCurrentThreadId() == m_mainThreadId)
-    {
-	    ShowWindow(gGameWindow, SW_HIDE);
-    }
+	// Sometimes if we crashed not in main thread, we can stuck at ShowWindow
+	if (GetCurrentThreadId() == m_mainThreadId)
+	{
+		ShowWindow(gGameWindow, SW_HIDE);
+	}
 	while (ShowCursor(TRUE) < 0);
 
 #if !defined(DEBUG) && !defined(MIXED_NEW)
 	do_exit(gGameWindow, assertion_info);
 #else
 	//#GIPERION: Don't crash on DEBUG, we have some VERIFY that sometimes failed, but it's not so critical
-    do_exit2(gGameWindow, assertion_info, ignore_always);
-    
-    // And we should show window again, damn pause manager
-    if (GetCurrentThreadId() == m_mainThreadId)
-    {
-        ShowWindow(gGameWindow, SW_SHOW);
-    }
+	do_exit2(gGameWindow, assertion_info, ignore_always);
 #endif
+
+	// And we should show window again, damn pause manager
+	if (GetCurrentThreadId() == m_mainThreadId)
+	{
+		ShowWindow(gGameWindow, SW_SHOW);
+	}
 }
 
 const char* xrDebug::error2string(long code)

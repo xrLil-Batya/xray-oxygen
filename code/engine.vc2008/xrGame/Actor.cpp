@@ -48,7 +48,6 @@
 #include "CharacterPhysicsSupport.h"
 #include "material_manager.h"
 #include "../xrphysics/IColisiondamageInfo.h"
-#include "ui/UIMainIngameWnd.h"
 #include "map_manager.h"
 #include "GameTaskManager.h"
 #include "actor_memory.h"
@@ -662,11 +661,7 @@ void CActor::g_Physics(Fvector& _accel, float jump, float dt)
 			SwitchOutBorder(new_border_state);
 		}
 
-		if (!psActorFlags.test(AF_NO_CLIP))
-			character_physics_support()->movement()->GetPosition(Position());
-		else
-			character_physics_support()->movement()->GetPosition(Position());
-
+		character_physics_support()->movement()->GetPosition(Position());
 		character_physics_support()->movement()->bSleep = false;
 	}
 

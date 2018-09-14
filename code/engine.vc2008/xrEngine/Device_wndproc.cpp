@@ -54,10 +54,7 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		LONG width = ClientRect.right - ClientRect.left;
 		LONG height = ClientRect.bottom - ClientRect.top;
 
-		if (height >= NULL && width >= NULL)
-		{
-			Device.ResizeProc(height, width);
-		}
+		if (height >= NULL && width >= NULL) { Device.ResizeProc(height, width); }
 
 		break;
 	}
@@ -65,6 +62,8 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 	{
 		if (editor())
 			break;
+
+		bool bRet = false;
 
 		// Prevent moving/sizing and power loss in fullscreen mode
 		switch (wParam)
@@ -74,9 +73,12 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 		case SC_MAXIMIZE:
 		case SC_MONITORPOWER:
 			result = 1;
-			return	(true);
+			bRet = true;
+			break;
+		default:
+			bRet = false;
 		}
-		return			(false);
+		return bRet;
 	}
 	}
 
@@ -88,9 +90,8 @@ bool CRenderDevice::on_message	(HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lPar
 //-----------------------------------------------------------------------------
 LRESULT CALLBACK WndProc( HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam )
 {
-	LRESULT		result;
-	if (Device.on_message(hWnd, uMsg, wParam, lParam, result))
-		return	(result);
+	LRESULT	result = 0;
+	if (Device.on_message(hWnd, uMsg, wParam, lParam, result)) { return	(result); }
 
-	return		(DefWindowProc(hWnd, uMsg, wParam, lParam));
+	return DefWindowProc(hWnd, uMsg, wParam, lParam);
 }

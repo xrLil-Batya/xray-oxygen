@@ -91,11 +91,11 @@ void CLevel::mtLevelScriptUpdater(void* pCLevel)
 		// Disable objects
 		psDeviceFlags.set(rsDisableObjectsAsCrows, false);
 
-		// commit events from bullet manager from prev-frame
-		pLevel->BulletManager().CommitEvents();
-
 		Fvector temp_vector;
 		pLevel->m_feel_deny.feel_touch_update(temp_vector, 0.f);
+
+		// commit events from bullet manager from prev-frame
+		pLevel->BulletManager().CommitEvents();
 
 		// Call level script
 		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
