@@ -25,8 +25,11 @@
 #ifndef min
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
+#pragma warning(push)
+#pragma warning(disable: 4458)
 #include <gdiplus.h>
 #include <gdiplusinit.h>
+#pragma warning(pop)
 
 ENGINE_API DSplashScreen splashScreen;
 

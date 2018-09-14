@@ -110,20 +110,22 @@ void CSoundRender_Source::LoadWave(const char* pName)
 		u32 vers = F.r_u32();
 		m_fMinDist = F.r_float();
 		m_fMaxDist = F.r_float();
-		m_uGameType = F.r_u32();
 
 		switch (vers)
 		{
 		case 0x0001:
 			m_fBaseVolume = 1.f;
+			m_uGameType = F.r_u32();
 			m_fMaxAIDist = m_fMaxDist;
 			break;
 		case 0x0002:
 			m_fBaseVolume = F.r_float();
+			m_uGameType = F.r_u32();
 			m_fMaxAIDist = m_fMaxDist;
 			break;
 		case OGG_COMMENT_VERSION:
 			m_fBaseVolume = F.r_float();
+			m_uGameType = F.r_u32();
 			m_fMaxAIDist = F.r_float();
 			break;
 		default:

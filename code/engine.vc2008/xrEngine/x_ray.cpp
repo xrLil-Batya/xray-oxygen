@@ -30,7 +30,7 @@ volatile bool g_bIntroFinished = false;
 ENGINE_API BOOL isGraphicDebugging = FALSE; //#GIPERION: Graphic debugging
 ENGINE_API BOOL g_appLoaded = FALSE;
 extern ENGINE_API DSplashScreen splashScreen;
-
+bool bEngineloaded = false;
 //---------------------------------------------------------------------
 // 2446363
 // umbt@ukr.net
@@ -48,7 +48,6 @@ struct _SoundProcessor : public pureFrame
 //////////////////////////////////////////////////////////////////////////
 // global variables
 ENGINE_API	CApplication*	pApp			= NULL;
-static		HWND			logoWindow		= NULL;
 
 			void			doBenchmark		(LPCSTR name);
 ENGINE_API	bool			g_bBenchmark	= false;
@@ -176,29 +175,22 @@ void Startup()
 	// Initialize APP
 	ShowWindow(Device.m_hWnd, SW_SHOWNORMAL);
 	
-	splashScreen.SetProgressPosition(80, "Creating device");
-	Device.Create();
 	splashScreen.SetProgressPosition(90, "Creating animation library");
 	LALib.OnCreate();
+	
+	// Main cycle
+	splashScreen.SetProgressPosition(100, "Engine loaded.");
+	bEngineloaded = true;
+	Device.UpdateWindowPropStyle();
+	splashScreen.HideSplash();
+	Device.Create();
+
 	pApp = xr_new<CApplication>();
 	g_pGamePersistent = (IGame_Persistent*)NEW_INSTANCE(CLSID_GAME_PERSISTANT);
 	g_SpatialSpace = xr_new<ISpatial_DB>();
 	g_SpatialSpacePhysic = xr_new<ISpatial_DB>();
-	
-	// Destroy LOGO
-	if (strstr(Core.Params, "-oldlogo"))
-	{
-		DestroyWindow(logoWindow);
-		logoWindow = NULL;
-	}
-	
-	// Main cycle
-	splashScreen.SetProgressPosition(100, "Engine loaded.");
+
 	Memory.mem_usage();
-	if (!strstr(Core.Params, "-oldlogo"))
-	{
-		splashScreen.HideSplash();
-	}
 	Device.Run();
 	
 	// Destroy APP
@@ -353,20 +345,7 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	HWND logoInsertPos = HWND_TOPMOST;
 	if (IsDebuggerPresent()) { logoInsertPos = HWND_NOTOPMOST; }
 
-	if (strstr(Core.Params, "-oldlogo"))
-	{
-		logoWindow = CreateDialogParamA(GetModuleHandle(NULL), MAKEINTRESOURCEA(IDD_STARTUP), 0, logDlgProc, 0L);
-		HWND logoPicture = GetDlgItem(logoWindow, IDC_STATIC_LOGO);
-		RECT logoRect;
-
-		GetWindowRect(logoPicture, &logoRect);
-		SetWindowPos(logoWindow, logoInsertPos, 0, 0, logoRect.right - logoRect.left, logoRect.bottom - logoRect.top, SWP_NOMOVE | SWP_SHOWWINDOW);
-		UpdateWindow(logoWindow);
-	}
-	else
-	{
-		InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
-	}
+	InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
 
 	// AVI
 	g_bIntroFinished = true;
