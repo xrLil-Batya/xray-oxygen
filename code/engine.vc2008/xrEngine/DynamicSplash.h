@@ -47,7 +47,7 @@ protected:
 	UINT_PTR timerID;    
 
 	static LRESULT CALLBACK SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam);
-	static DWORD WINAPI SplashThreadProc(LPVOID pData);
+	static UINT WINAPI SplashThreadProc(LPVOID pData);
 
 };
 

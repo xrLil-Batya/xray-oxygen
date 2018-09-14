@@ -1,37 +1,36 @@
 #include "stdafx.h"
 #include "../xrCDB/frustum.h"
 #include "xr_input.h"
-/////////////////////////////////////
+
 #define MMNOSOUND
 #define MMNOMIDI
 #define MMNOAUX
 #define MMNOMIXER
 #define MMNOJOY
-/////////////////////////////////////
+
 #include <mmsystem.h>
 #include <d3dx9.h>
-/////////////////////////////////////
+
 #pragma warning(default:4995)
-/////////////////////////////////////
+
 #include "x_ray.h"
 #include "render.h"
 #include "XR_IOConsole.h"
-/////////////////////////////////////
+
 #ifdef INGAME_EDITOR
 #include "../include/editor/ide.hpp"
 #include "engine_impl.hpp"
 #endif
-/////////////////////////////////////
+
 #include "igame_persistent.h"
-/////////////////////////////////////
+
 #pragma comment(lib, "d3dx9.lib")
-/////////////////////////////////////
+
 ENGINE_API CRenderDevice Device;
 ENGINE_API CLoadScreenRenderer load_screen_renderer;
-/////////////////////////////////////
+
 DWORD gMainThreadId = 0xFFFFFFFF;
 DWORD gSecondaryThreadId = 0xFFFFFFFF;
-/////////////////////////////////////
 
 
 ENGINE_API bool IsMainThread()
@@ -44,15 +43,11 @@ ENGINE_API bool IsSecondaryThread()
     return GetCurrentThreadId() == gSecondaryThreadId;
 }
 
-
-/////////////////////////////////////
 ENGINE_API BOOL g_bRendering = FALSE; 
-/////////////////////////////////////
+
 BOOL		g_bLoaded		= FALSE;
 bool		g_bL			= false;
 ref_light	precache_light	= nullptr;
-/////////////////////////////////////
-
 
 BOOL CRenderDevice::Begin	()
 {
@@ -149,7 +144,8 @@ void 			mt_Thread	(void *ptr)
 		// waiting for Device permission to execute
 		Device.mt_csEnter.lock	();
 
-		if (Device.mt_bMustExit) {
+		if (Device.mt_bMustExit) 
+		{
 			Device.mt_bMustExit = FALSE;				// Important!!!
 			Device.mt_csEnter.unlock();					// Important!!!
 			return;
@@ -174,10 +170,9 @@ void 			mt_Thread	(void *ptr)
 }
 
 #include "igame_level.h"
-void CRenderDevice::PreCache	(u32 amount, bool b_draw_loadscreen, bool b_wait_user_input)
+void CRenderDevice::PreCache(u32 amount, bool b_draw_loadscreen, bool b_wait_user_input)
 {
-	if (m_pRender->GetForceGPU_REF()) 
-		amount = NULL; 
+	if (m_pRender->GetForceGPU_REF()) { amount = NULL; }
 
 	dwPrecacheFrame	= dwPrecacheTotal = amount;
 	if (amount && !precache_light && g_pGameLevel && g_loading_events.empty()) {
@@ -189,9 +184,9 @@ void CRenderDevice::PreCache	(u32 amount, bool b_draw_loadscreen, bool b_wait_us
 		precache_light->set_active		(true);
 	}
 
-	if(amount && b_draw_loadscreen && load_screen_renderer.b_registered==false)
+	if (amount && b_draw_loadscreen && load_screen_renderer.b_registered == false)
 	{
-		load_screen_renderer.start	(b_wait_user_input);
+		load_screen_renderer.start(b_wait_user_input);
 	}
 }
 
@@ -319,19 +314,19 @@ void CRenderDevice::message_loop()
 	}
 #endif
 
-	MSG		msg;
-    PeekMessage				(&msg, nullptr, 0U, 0U, PM_NOREMOVE );
-	while (msg.message != WM_QUIT) 
+	MSG	msg;
+	PeekMessage(&msg, nullptr, 0U, 0U, PM_NOREMOVE);
+	while (msg.message != WM_QUIT)
 	{
-		if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE)) 
+		if (PeekMessage(&msg, nullptr, 0U, 0U, PM_REMOVE))
 		{
 			TranslateMessage(&msg);
-			DispatchMessage	(&msg);
+			DispatchMessage(&msg);
 			continue;
 		}
 
-		on_idle				();
-    }
+		on_idle();
+	}
 }
 
 int GetNumOfDisplays()
@@ -339,13 +334,13 @@ int GetNumOfDisplays()
 	int sValue			= 0;
 	DISPLAY_DEVICE dc;
 	dc.cb				= sizeof(dc);
-	//////////////////////////////////////////
+
 	for ( int i = 0; EnumDisplayDevicesA(nullptr, i, &dc, 0); ++i )
 	{
 		if (dc.StateFlags & DISPLAY_DEVICE_ACTIVE)
 			sValue++;
 	}
-	//////////////////////////////////////////
+
 	return sValue;
 }
 
@@ -392,14 +387,14 @@ void CRenderDevice::Run			()
 
 void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 {
-    DWORD	dwWindowStyle		= 0;
-    DWORD	dwWidthCurr				= psCurrentVidMode[0];
-    DWORD	dwHeightCurr			= psCurrentVidMode[1];
-    bool	bFullscreen			= psDeviceFlags.is(rsFullscreen);
+	DWORD	dwWindowStyle = 0;
+	DWORD	dwWidthCurr = psCurrentVidMode[0];
+	DWORD	dwHeightCurr = psCurrentVidMode[1];
+	bool	bFullscreen = psDeviceFlags.is(rsFullscreen);
 
-    RECT	WindowBounds;
-    RECT	DesktopRect;
-    GetClientRect				(GetDesktopWindow(), &DesktopRect);
+	RECT	WindowBounds;
+	RECT	DesktopRect;
+	GetClientRect(GetDesktopWindow(), &DesktopRect);
     switch (PropStyle)
     {
     case WPS_Windowed:
@@ -407,11 +402,12 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         psDeviceFlags.set(rsFullscreen, false);
         dwWindowStyle = WS_VISIBLE | WS_BORDER | WS_DLGFRAME | WS_SYSMENU | WS_MINIMIZEBOX | WS_SIZEBOX ;
 
-        SetRect	(&WindowBounds,
-				(DesktopRect.right - dwWidthCurr) / 2,
-				(DesktopRect.bottom - dwHeightCurr) / 2,
-				(DesktopRect.right + dwWidthCurr) / 2,
-				(DesktopRect.bottom + dwHeightCurr) / 2);
+		SetRect(
+			&WindowBounds,
+			(DesktopRect.right - dwWidthCurr) / 2,
+			(DesktopRect.bottom - dwHeightCurr) / 2,
+			(DesktopRect.right + dwWidthCurr) / 2,
+			(DesktopRect.bottom + dwHeightCurr) / 2);
     }
         break;
     case WPS_WindowedBorderless:
@@ -419,11 +415,12 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         psDeviceFlags.set(rsFullscreen, false);
         dwWindowStyle = WS_VISIBLE;
 
-        SetRect	(&WindowBounds,
-				(DesktopRect.right - dwWidthCurr) / 2,
-				(DesktopRect.bottom - dwHeightCurr) / 2, 
-				(DesktopRect.right + dwWidthCurr) / 2,
-				(DesktopRect.bottom + dwHeightCurr) / 2);
+		SetRect(
+			&WindowBounds,
+			(DesktopRect.right - dwWidthCurr) / 2,
+			(DesktopRect.bottom - dwHeightCurr) / 2,
+			(DesktopRect.right + dwWidthCurr) / 2,
+			(DesktopRect.bottom + dwHeightCurr) / 2);
     }
         break;
     case WPS_FullscreenBorderless:
@@ -431,7 +428,7 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
         psDeviceFlags.set(rsFullscreen, false);
 
         dwWindowStyle = WS_VISIBLE;
-		///////////////////////////////////////
+
         WindowBounds = DesktopRect;
     }
         break;
@@ -452,18 +449,20 @@ void CRenderDevice::UpdateWindowPropStyle(WindowPropStyle PropStyle)
 
     bool bNewFullscreen = psDeviceFlags.is(rsFullscreen);
 
-    if (!bNewFullscreen)
-    {
-        AdjustWindowRect(&WindowBounds, dwWindowStyle, FALSE);
+	if (!bNewFullscreen)
+	{
+		AdjustWindowRect(&WindowBounds, dwWindowStyle, FALSE);
 
-        SetWindowPos	(m_hWnd,
-						HWND_NOTOPMOST,
-                        WindowBounds.left,
-                        WindowBounds.top,
-						(WindowBounds.right - WindowBounds.left),
-						(WindowBounds.bottom - WindowBounds.top),
-						SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME);
-    }
+		SetWindowPos(
+			m_hWnd,
+			HWND_NOTOPMOST,
+			WindowBounds.left,
+			WindowBounds.top,
+			(WindowBounds.right - WindowBounds.left),
+			(WindowBounds.bottom - WindowBounds.top),
+			SWP_SHOWWINDOW | SWP_NOCOPYBITS | SWP_DRAWFRAME
+		);
+	}
 
     if (Device.b_is_Ready && bFullscreen != bNewFullscreen)
     {
@@ -539,52 +538,53 @@ void CRenderDevice::Pause(BOOL bOn, BOOL bTimer, BOOL bSound, LPCSTR reason)
 #endif
 	static int snd_emitters_ = -1;
 
-	if (g_bBenchmark)	return;
+	if (g_bBenchmark) { return; }
 
-	if(bOn)
+	if (bOn)
 	{
-		if(!Paused())						
-			bShowPauseString				= 
+		if (!Paused())
+			bShowPauseString =
 #ifdef INGAME_EDITOR
-				editor() ? FALSE : 
+			editor() ? FALSE :
 #endif 
 #ifdef DEBUG
-				!xr_strcmp(reason, "li_pause_key_no_clip")?	FALSE:
+			!xr_strcmp(reason, "li_pause_key_no_clip") ? FALSE :
 #endif
-				TRUE;
+			TRUE;
 
-		if( bTimer && (!g_pGamePersistent || g_pGamePersistent->CanBePaused()) )
+		if (bTimer && (!g_pGamePersistent || g_pGamePersistent->CanBePaused()))
 		{
-			g_pauseMngr.Pause				(true);
+			g_pauseMngr.Pause(true);
 #ifdef DEBUG
-			if(!xr_strcmp(reason, "li_pause_key_no_clip"))
-				TimerGlobal.Pause				(FALSE);
+			if (!xr_strcmp(reason, "li_pause_key_no_clip"))
+				TimerGlobal.Pause(FALSE);
 #endif 
 		}
-	
-		if (bSound && ::Sound) {
-			snd_emitters_ =					::Sound->pause_emitters(true);
-		}
-	}else
-	{
-		if( bTimer && g_pauseMngr.Paused() )
+
+		if (bSound && ::Sound) 
 		{
-			fTimeDelta						= EPS_S + EPS_S;
-			g_pauseMngr.Pause				(false);
+			snd_emitters_ = ::Sound->pause_emitters(true);
+		}
+	}
+	else
+	{
+		if (bTimer && g_pauseMngr.Paused())
+		{
+			fTimeDelta = EPS_S + EPS_S;
+			g_pauseMngr.Pause(false);
 		}
 		
-		if(bSound)
+		if (bSound)
 		{
-			if(snd_emitters_>0) // avoid crash
+			if (snd_emitters_ > 0) // avoid crash
 			{
-				snd_emitters_ =				::Sound->pause_emitters(false);
-#ifdef DEBUG
-//				Log("snd_emitters_[false]",snd_emitters_);
-#endif // DEBUG
-			}else {
+				snd_emitters_ = ::Sound->pause_emitters(false);
+			}
+			else 
+			{
 #ifdef DEBUG
 				Log("Sound->pause_emitters underflow");
-#endif // DEBUG
+#endif 
 			}
 		}
 	}

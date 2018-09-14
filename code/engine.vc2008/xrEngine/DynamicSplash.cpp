@@ -118,8 +118,10 @@ VOID DSplashScreen::ShowSplash()
 	if (!hThread)
 	{
 		// create splash thread
+		UINT threadID = 0;
 		hEvent = CreateEventA(NULL, FALSE, FALSE, FALSE);	// splash event
-		hThread = CreateThread(NULL, NULL, (LPTHREAD_START_ROUTINE)SplashThreadProc, static_cast<LPVOID>(this), NULL, &threadId);
+		hThread = (HANDLE)_beginthreadex(NULL, 0, SplashThreadProc, static_cast<LPVOID>(this), 0, &threadID);
+		threadId = threadID;
 		R_ASSERT(WaitForSingleObject(hEvent, 5000) != WAIT_TIMEOUT);
 	}
 	else
@@ -167,8 +169,10 @@ VOID DSplashScreen::SetProgressColor(COLORREF refColor)
 	PostThreadMessageA(threadId, PBM_SETBARCOLOR, NULL, refColor);
 }
 
-DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
+UINT WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 {
+	thread_name("X-RAY Splashscreen thread");
+
 	DSplashScreen* pSplash = static_cast<DSplashScreen*>(pData);
 	if (!pSplash) { return 0; }
 
@@ -227,7 +231,7 @@ DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 
 	R_ASSERT(pSplash->hwndSplash);
 
-	// get long pointer
+	// set long pointer
 	SetWindowLongPtrA(pSplash->hwndSplash, GWLP_USERDATA, reinterpret_cast<LONG_PTR>(pSplash));
 	ShowWindow(pSplash->hwndSplash, SW_SHOWNOACTIVATE);
 
@@ -292,7 +296,6 @@ DWORD WINAPI DSplashScreen::SplashThreadProc(LPVOID pData)
 LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
 	DSplashScreen* pInstance = reinterpret_cast<DSplashScreen*>(GetWindowLongPtr(hwnd, (-21)));
-
 	if (!pInstance) { return DefWindowProcA(hwnd, uMsg, wParam, lParam); }
 	
 	Gdiplus::Image* pSplashImage = reinterpret_cast<Gdiplus::Image*>(pInstance->pMainImage);
@@ -351,7 +354,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 		xr_string msgThread = *reinterpret_cast<xr_string*>(lParam);
 
 		// if our message is not a previos 
-		if (msgThread.size() && pInstance->progressMsg != msgThread)
+		if (!msgThread.empty() && pInstance->progressMsg != msgThread)
 		{
 			pInstance->progressMsg = msgThread;
 			SendMessage(pInstance->hwndSplash, WM_PAINT, 0, 0);
