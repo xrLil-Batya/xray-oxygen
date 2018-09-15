@@ -8,5 +8,5 @@
 
 void import_ses::LuaLog(const char* caMessage)
 {
-	Msg("Script mess: %s", caMessage);
+//	Msg("Script mess: %s", caMessage);
 }

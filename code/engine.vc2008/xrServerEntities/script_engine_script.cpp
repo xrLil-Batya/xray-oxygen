@@ -165,8 +165,8 @@ void CScriptEngine::script_register(lua_State *L)
 			.def("time",&profile_timer_script::time)
 	];
 	
-    function    (L, "to_log",							(void(*)(const char*)) &Log);
-    function    (L, "log",								(void(*)(const char*)) &Log);
+    function    (L, "to_log",							(void(*)(const char*)) &import_ses::LuaLog);
+    function    (L, "log",								(void(*)(const char*)) &import_ses::LuaLog);
 	function	(L,	"error_log",						ErrorLog);
 	function	(L,	"flush",							FlushLogs);
 	function	(L,	"prefetch",							prefetch_module);
