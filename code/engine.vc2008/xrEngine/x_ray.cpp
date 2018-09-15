@@ -346,6 +346,7 @@ void ENGINE_API RunApplication(LPCSTR commandLine)
 	if (IsDebuggerPresent()) { logoInsertPos = HWND_NOTOPMOST; }
 
 	InitSplash(GetModuleHandle(NULL), "OXYGEN_SPLASH", logDlgProc);
+	splashScreen.SetProgressColor(RGB(0x5B, 0xA5, 0xC1));
 
 	// AVI
 	g_bIntroFinished = true;

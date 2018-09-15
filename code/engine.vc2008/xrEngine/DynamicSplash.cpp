@@ -25,6 +25,7 @@
 #ifndef min
 #define min(a,b)            (((a) < (b)) ? (a) : (b))
 #endif
+
 #pragma warning(push)
 #pragma warning(disable: 4458)
 #include <gdiplus.h>
@@ -46,7 +47,7 @@ ATOM CreateSplashClass(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	wcex.hInstance = hInstance;
 	wcex.hIcon = LoadIcon(NULL, IDC_APPSTARTING);
 	wcex.hCursor = LoadCursor(NULL, IDC_ARROW);
-	wcex.hbrBackground = (HBRUSH)(COLOR_WINDOW + 1);
+	wcex.hbrBackground = (HBRUSH)BLACK_BRUSH;
 	wcex.lpszMenuName = MAKEINTRESOURCE(IDB_BITMAP1);
 	wcex.lpszClassName = lpClass;
 	wcex.hIconSm = LoadIcon(NULL, IDC_APPSTARTING);
@@ -80,6 +81,8 @@ VOID WINAPI InitSplash(HINSTANCE hInstance, LPCSTR lpClass, WNDPROC wndProc)
 	splashScreen.SetBackgroundImage(pImage);
 	splashScreen.SetSplashWindowName("Oxy splash");
 	delete pImage;
+
+	COLORREF clrRef = 0;
 
 	splashScreen.ShowSplash();
 	splashScreen.SetProgressPosition(0, "Engine entry-point");
@@ -313,7 +316,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 
 			if (pInstance->progressMsg.size() > 0)
 			{
-				Gdiplus::Font msgFont(L"Arial", 16, 0, Gdiplus::UnitPixel);
+				Gdiplus::Font msgFont(L"Segoe UI Emoji", 16, 0, Gdiplus::UnitPixel);
 
 				Gdiplus::SolidBrush msgBrush(static_cast<DWORD>(Gdiplus::Color::White));
 
@@ -328,7 +331,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			ValidateRect(hwnd, NULL);
 			return 0;
 		}
-		break;
+		break;  
 	case PBM_SETPOS:
 		// if window is not be created - create it 
 		if (!IsWindow(pInstance->hwndProgress))
@@ -339,7 +342,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			pInstance->hwndProgress = CreateWindowA(
 				PROGRESS_CLASS,
 				NULL,
-				WS_CHILD | WS_VISIBLE,
+				WS_CHILD | WS_VISIBLE | PBS_SMOOTH,
 				4,
 				clientRect.bottom - 20,
 				clientRect.right - 8,
@@ -351,6 +354,7 @@ LRESULT CALLBACK DSplashScreen::SplashWndProc(HWND hwnd, UINT uMsg, WPARAM wPara
 			);
 
 			SendMessage(pInstance->hwndProgress, PBM_SETRANGE, 0, MAKELPARAM(0, 100));
+			SendMessage(pInstance->hwndProgress, PBM_SETBKCOLOR, 0, RGB(0x21, 0x1D, 0x1E));
 		}
 		SendMessage(pInstance->hwndProgress, PBM_SETPOS, wParam, NULL);
 
