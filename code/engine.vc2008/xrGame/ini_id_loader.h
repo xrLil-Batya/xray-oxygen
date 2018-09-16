@@ -16,7 +16,7 @@
 //T_INIT		-	класс где определена статическая InitIdToIndex
 //					функция инициализации section_name и line_name
 
-#define TEMPLATE_SPECIALIZATION		template<u32 ITEM_REC_NUM, typename ITEM_DATA, typename T_ID, typename T_INDEX, typename T_INIT>
+#define TEMPLATE_SPECIALIZATION		template<bool ITEM_REC_NUM, typename ITEM_DATA, typename T_ID, typename T_INDEX, typename T_INIT>
 #define CSINI_IdToIndex CIni_IdToIndex	<ITEM_REC_NUM, ITEM_DATA, T_ID, T_INDEX, T_INIT>
 
 TEMPLATE_SPECIALIZATION
@@ -30,40 +30,30 @@ protected:
 	typedef xr_vector<ITEM_DATA>	T_VECTOR;
 	static	T_VECTOR*				m_pItemDataVector;
 	
-	template <u32 NUM>
-	static void						LoadItemData	(u32, LPCSTR)
+	template <bool isNum>
+	static void LoadItemData(u32 count, LPCSTR cfgRecord)
 	{
-        static_assert(std::is_same_v<decltype(NUM), bool>, "Specialization for LoadItemData in CIni IdToIndex not found");
-		NODEFAULT;
-	}
-
-	template <>
-		static  void				LoadItemData<0>  (u32 count, LPCSTR cfgRecord)
-	{
-		for (u32 k = 0; k < count; k+= 1)
+		for (u32 k = 0; k < count; k++)
 		{
 			string64 buf;
-			LPCSTR id_str  = _GetItem(cfgRecord, k, buf);
-			char* id_str_lwr = xr_strdup(id_str);
-			xr_strlwr(id_str_lwr);
-			ITEM_DATA item_data(T_INDEX(m_pItemDataVector->size()), T_ID(id_str));
-			m_pItemDataVector->push_back(item_data);
-			xr_free(id_str_lwr);
-		}
-	}
+			LPCSTR id_str = _GetItem(cfgRecord, k, buf);
 
-	template <>
-		static  void				LoadItemData<1>  (u32 count, LPCSTR cfgRecord)
-	{
-		for (u32 k = 0; k < count; k+= 2)
-		{
-			string64 buf, buf1;
-			LPCSTR id_str  = _GetItem(cfgRecord, k, buf);
 			char* id_str_lwr = xr_strdup(id_str);
 			xr_strlwr(id_str_lwr);
-			LPCSTR rec1	   = _GetItem(cfgRecord, k + 1, buf1);
-			ITEM_DATA item_data(T_INDEX(m_pItemDataVector->size()), T_ID(id_str), rec1);
-			m_pItemDataVector->push_back(item_data);
+
+			if constexpr (!isNum)
+			{
+				ITEM_DATA item_data(T_INDEX(m_pItemDataVector->size()), T_ID(id_str));
+				m_pItemDataVector->push_back(item_data);
+			}
+			else 
+			{
+				string64 buf1;
+				LPCSTR rec1 = _GetItem(cfgRecord, k + 1, buf1);
+				ITEM_DATA item_data(T_INDEX(m_pItemDataVector->size()), T_ID(id_str), rec1);
+				m_pItemDataVector->push_back(item_data);
+				k++; // Skip next iteration so as the value only for rect1
+			}
 			xr_free(id_str_lwr);
 		}
 	}
@@ -170,6 +160,7 @@ typename void	CSINI_IdToIndex::InitInternal ()
 
 		LPCSTR	cfgRecord	= pSettings->r_string(section_name, line_name); VERIFY(cfgRecord);
 		u32		count		= _GetItemCount(cfgRecord);
+
 		LoadItemData<ITEM_REC_NUM>(count, cfgRecord);
 
 	}

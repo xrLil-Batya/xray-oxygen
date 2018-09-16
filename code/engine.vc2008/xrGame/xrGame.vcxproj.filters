@@ -1738,15 +1738,6 @@
     <Filter Include="Core\Server\ServerEntities\objects_alife_smartcover">
       <UniqueIdentifier>{6ffdf47f-9322-4b83-9f2a-aedae1752a41}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Core\Server\ServerPerform">
-      <UniqueIdentifier>{0e623d75-44bf-46ca-8e29-411415c8f579}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\ServerProcess">
-      <UniqueIdentifier>{7ce64bec-06f0-40fb-9a14-95fa02f0c108}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Core\Server\ServerConnect">
-      <UniqueIdentifier>{da77a547-a6e5-4fd7-8b22-22b7827af41f}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Core\Client\Objects\actor\memory">
       <UniqueIdentifier>{6abdee0d-6c56-49e2-b5e8-a42c04c6ec7d}</UniqueIdentifier>
     </Filter>
@@ -7747,42 +7738,6 @@
     </ClCompile>
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_GameExport.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_perform_transfer.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_sls_clear.cpp">
-      <Filter>Core\Server\ServerPerform</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_activate.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_destroy.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_ownership.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_event_reject.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_spawn.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_process_update.cpp">
-      <Filter>Core\Server\ServerProcess</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_CL_connect.cpp">
-      <Filter>Core\Server\ServerConnect</Filter>
-    </ClCompile>
-    <ClCompile Include="xrServer_Connect.cpp">
-      <Filter>Core\Server\ServerConnect</Filter>
     </ClCompile>
     <ClCompile Include="ui_base.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI</Filter>
