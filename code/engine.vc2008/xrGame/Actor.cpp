@@ -92,7 +92,7 @@ int				psActorSleepTime = 1;
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
-	Flags32 lastPlayerFlagsState = psActorFlags;
+	Flags32 lastActorFlagsState = psActorFlags;
 
 	CActor* pActor = reinterpret_cast<CActor*>(pActorPointer);
 	while (true)
@@ -101,10 +101,10 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (pActor != g_actor) return;
 
-		// on player flags changed
-		if (!lastPlayerFlagsState.equal(psActorFlags)) {
+		// if player flags changed
+		if (!lastActorFlagsState.equal(psActorFlags)) {
 
-			// Switsh to third person view and vice versa
+			// Switch to third person view and vice versa
 			if (psActorFlags.test(AF_PSP)) {
 				pActor->cam_Set(eacLookAt);
 			} else {
@@ -115,7 +115,7 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 			if (psActorFlags.test(AF_HARDCORE))
 				pActor->cam_Set(eacFirstEye);
 
-			lastPlayerFlagsState.assign(psActorFlags);
+			lastActorFlagsState.assign(psActorFlags);
 		}
 
 		// Update inventory
