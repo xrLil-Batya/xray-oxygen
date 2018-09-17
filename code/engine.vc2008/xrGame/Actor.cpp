@@ -87,11 +87,13 @@ static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
 
-Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
+Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_PSP|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
 int				psActorSleepTime = 1;
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
 {
+	Flags32 lastPlayerFlagsState = psActorFlags;
+
 	CActor* pActor = reinterpret_cast<CActor*>(pActorPointer);
 	while (true)
 	{
@@ -99,9 +101,22 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 		if (pActor != g_actor) return;
 
-		// Update hardcode mode
-		if (psActorFlags.test(AF_HARDCORE))
-			pActor->cam_Set(eacFirstEye);
+		// on player flags changed
+		if (!lastPlayerFlagsState.equal(psActorFlags)) {
+
+			// Switsh to third person view and vice versa
+			if (psActorFlags.test(AF_PSP)) {
+				pActor->cam_Set(eacLookAt);
+			} else {
+				pActor->cam_Set(eacFirstEye);
+			}
+
+			// Update hardcode mode
+			if (psActorFlags.test(AF_HARDCORE))
+				pActor->cam_Set(eacFirstEye);
+
+			lastPlayerFlagsState.assign(psActorFlags);
+		}
 
 		// Update inventory
 		pActor->UpdateInventoryOwner(Device.dwTimeDelta);
