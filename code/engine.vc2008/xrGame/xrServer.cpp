@@ -319,7 +319,7 @@ void xrServer::Process_save(NET_Packet& P)
 	{
 		// find entity
 		u16 ID = P.r_u16();
-		u8 size = P.r_u8();
+		u16 size = P.r_u16();
 
 		u32 _pos_start = P.r_tell();
 		CSE_Abstract *pSEAbstract = game->get_entity_from_eid(ID);

@@ -799,7 +799,7 @@ void CWeapon::UpdateCL()
 		}
 	}
 
-	if (m_zoom_params.m_pNight_vision && !need_renderable())
+	if (m_zoom_params.m_pNight_vision && !IsZoomed() && ZoomTexture() && !IsRotatingToZoom())
 	{
 		if (!m_zoom_params.m_pNight_vision->IsActive())
 		{
@@ -846,24 +846,16 @@ void CWeapon::EnableActorNVisnAfterZoom()
 
 bool CWeapon::need_renderable()
 {
-	return !(IsZoomed() && ZoomTexture() && !IsRotatingToZoom());
+	return true;
 }
 
 void CWeapon::renderable_Render()
 {
+	// обновить xForm
 	UpdateXForm();
 
 	// нарисовать подсветку
 	RenderLight();
-
-	// если мы в режиме снайперки, то сам HUD рисовать не надо
-	if (IsZoomed() && !IsRotatingToZoom() && ZoomTexture())
-	{
-
-		RenderHud(FALSE);
-	}
-	else
-		RenderHud(TRUE);
 
 	inherited::renderable_Render();
 }

@@ -85,8 +85,8 @@ static Fbox		bbStandBox;
 static Fbox		bbCrouchBox;
 static Fvector	vFootCenter;
 static Fvector	vFootExt;
-
 Flags32			psActorFlags={AF_AUTOPICKUP|AF_RUN_BACKWARD|AF_IMPORTANT_SAVE|AF_SHOWDATE|AF_PSP|AF_GET_OBJECT_PARAMS|AF_SHOW_BOSS_HEALTH};
+static bool		HudUpdated;
 int				psActorSleepTime = 1;
 
 void CActor::MtSecondActorUpdate(void* pActorPointer)
@@ -134,11 +134,13 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 		// If we hold kUSE, we suck inside all items that we see, otherwise just display available pickable item to HUD
 		pActor->PickupModeUpdate_COD(pActor->m_bPickupMode && g_extraFeatures.is(GAME_EXTRA_HOLD_TO_PICKUP));
 
+		HudUpdated = false;
 		if (Level().CurrentEntity() && pActor->ID() == Level().CurrentEntity()->ID())
 		{
 			psHUD_Flags.set(HUD_CROSSHAIR_RT2, true);
 			psHUD_Flags.set(HUD_DRAW_RT, true);
 		}
+		HudUpdated = true;
 
 		SetEvent(pActor->MtSecondUpdaterEventEnd);
 	}
@@ -830,12 +832,19 @@ void CActor::UpdateCL()
 			HUD().SetFirstBulletCrosshairDisp(pWeapon->GetFirstBulletDisp());
 #endif
 			BOOL B = !((mstate_real & mcLookout) && false);
-
+			if (!HudUpdated)
+			{
+				while (!HudUpdated)
+				{
+					_mm_pause();
+				}
+			}
 			psHUD_Flags.set(HUD_WEAPON_RT, B);
 			B = B && pWeapon->show_crosshair();
 			psHUD_Flags.set(HUD_CROSSHAIR_RT2, B);
 
 			psHUD_Flags.set(HUD_DRAW_RT, pWeapon->show_indicators());
+			HudUpdated = false;
 			pWeapon->UpdateSecondVP();
 		}
 

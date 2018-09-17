@@ -101,6 +101,8 @@ void CLevel::mtLevelScriptUpdater(void* pCLevel)
 		CScriptProcess * levelScript = ai().script_engine().script_process(ScriptEngine::eScriptProcessorLevel);
 		if (levelScript) levelScript->update();
 
+		pLevel->BulletManager().CommitRenderSet();
+
 		SetEvent(pLevel->m_mtScriptUpdaterEventEnd);
 	}
 }
@@ -424,7 +426,7 @@ void CLevel::OnFrame()
 	DBG_RenderUpdate();
 #endif // #ifdef DEBUG
 
-	Device.seqParallel.emplace_back(m_map_manager, &CMapManager::Update);
+	m_map_manager->Update();
 
 	if (Device.dwPrecacheFrame == 0 && Device.dwFrame % 2)
 		GameTaskManager().UpdateTasks();
@@ -446,13 +448,13 @@ void CLevel::OnFrame()
 
 	m_ph_commander->update();
 	m_ph_commander_scripts->update();
-	BulletManager().CommitRenderSet();
 
 	// update static sounds
 	Device.seqParallel.emplace_back(m_level_sound_manager, &CLevelSoundManager::Update);
 	// deffer LUA-GC-STEP
 	Device.seqParallel.emplace_back(this, &CLevel::script_gc);
 	//-----------------------------------------------------
+#ifdef DEBUG
 	if (pStatGraphR)
 	{
 		static	float fRPC_Mult = 10.0f;
@@ -461,6 +463,7 @@ void CLevel::OnFrame()
 		pStatGraphR->AppendItem(float(m_dwRPC)*fRPC_Mult, 0xffff0000, 1);
 		pStatGraphR->AppendItem(float(m_dwRPS)*fRPS_Mult, 0xff00ff00, 0);
 	}
+#endif
 
 	// Level Script Updater thread can issue a exception. But it require to process one message from HWND message queue, otherwise, Level script can't show error message
 	DWORD WaitResult = WAIT_TIMEOUT;
