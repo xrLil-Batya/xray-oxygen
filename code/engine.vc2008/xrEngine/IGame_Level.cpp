@@ -98,14 +98,20 @@ BOOL IGame_Level::Load			(u32 dwNum)
 
 	pApp->LoadSwitch			();
 
-
 	// HUD + Environment
 	if(!g_hud)
-		g_hud					= (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
+		g_hud = (CCustomHUD*)NEW_INSTANCE	(CLSID_HUDMANAGER);
 
 	// Render-level Load
-
-	Render->level_Unload		();
+	try
+	{
+		// Попробуем выгрузить старые данные, если получится. 
+		Render->level_Unload();
+	}
+	catch (...) 
+	{
+		Msg("Level data empty: %s", temp);
+	}
 	Render->level_Load			(LL_Stream);
 
 	// Objects

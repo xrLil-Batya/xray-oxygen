@@ -63,22 +63,21 @@ void CHudItem::renderable_Render()
 			on_renderable_Render();
 			debug_draw_firedeps();
 		}
-		else
-			if (object().H_Parent())
+		else if (object().H_Parent())
+		{
+			CInventoryOwner	*owner = smart_cast<CInventoryOwner*>(object().H_Parent());
+			VERIFY(owner);
+			CInventoryItem	*self = smart_cast<CInventoryItem*>(this);
+			if (item().BaseSlot() != INV_SLOT_3)
 			{
-				CInventoryOwner	*owner = smart_cast<CInventoryOwner*>(object().H_Parent());
-				VERIFY(owner);
-				CInventoryItem	*self = smart_cast<CInventoryItem*>(this);
-				if (item().BaseSlot() != INV_SLOT_3)
-				{
-					if (owner->attached(self))
-						on_renderable_Render();
-				}
-				else
-				{
+				if (owner->attached(self))
 					on_renderable_Render();
-				}
 			}
+			else
+			{
+				on_renderable_Render();
+			}
+		}
 	}
 }
 
@@ -98,28 +97,21 @@ void CHudItem::SwitchState(u32 S)
 
 void CHudItem::OnEvent(NET_Packet& P, u16 type)
 {
-	switch (type)
+	if (type == GE_WPN_STATE_CHANGE)
 	{
-	case GE_WPN_STATE_CHANGE:
-	{
-		u8				S;
-		P.r_u8(S);
-		OnStateSwitch(u32(S));
-	}
-	break;
+		OnStateSwitch(P.r_u8());
 	}
 }
 
-void CHudItem::OnStateSwitch(u32 S)
+void CHudItem::OnStateSwitch(u32 uState)
 {
-	SetState(S);
+	SetState(uState);
 
 	if (object().Remote())
-		SetNextState(S);
+		SetNextState(uState);
 
-	switch (S)
+	if (uState == eBore)
 	{
-	case eBore:
 		SetPending(FALSE);
 
 		PlayAnimBore();
@@ -128,19 +120,14 @@ void CHudItem::OnStateSwitch(u32 S)
 			Fvector P = HudItemData()->m_item_transform.c;
 			m_sounds.PlaySound("sndBore", P, object().H_Root(), !!GetHUDmode(), false, m_started_rnd_anim_idx);
 		}
-
-		break;
 	}
 }
 
-void CHudItem::OnAnimationEnd(u32 state)
+void CHudItem::OnAnimationEnd(u32 uState)
 {
-	switch (state)
-	{
-	case eBore:
+	if (uState == eBore)
 	{
 		SwitchState(eIdle);
-	} break;
 	}
 }
 
@@ -152,13 +139,14 @@ void CHudItem::PlayAnimBore()
 bool CHudItem::ActivateItem()
 {
 	OnActiveItem();
-	return			true;
+	return true;
 }
 
 void CHudItem::DeactivateItem()
 {
 	OnHiddenItem();
 }
+
 void CHudItem::OnMoveToRuck(const SInvItemPlace& prev)
 {
 	SwitchState(eHidden);
@@ -168,6 +156,7 @@ void CHudItem::SendDeactivateItem()
 {
 	SendHiddenItem();
 }
+
 void CHudItem::SendHiddenItem()
 {
 	if (!object().getDestroy())
