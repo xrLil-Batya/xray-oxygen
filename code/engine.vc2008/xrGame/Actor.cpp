@@ -148,6 +148,8 @@ void CActor::MtSecondActorUpdate(void* pActorPointer)
 
 CActor::CActor() : CEntityAlive(),current_ik_cam_shift(0)
 {
+	g_actor = this;
+
 	game_news_registry = xr_new< CGameNewsRegistryWrapper >();
 	// Cameras
 	cameras[eacFirstEye] = xr_new<CCameraFirstEye>(this, CCameraBase::flKeepPitch);

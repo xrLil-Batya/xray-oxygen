@@ -5325,15 +5325,6 @@
     <ClInclude Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers.h">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClInclude>
-    <ClInclude Include="ui_base.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="ui_defs.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="UIDialogHolder.h">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UIInventoryUpgradeWnd.h">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClInclude>
@@ -5475,15 +5466,6 @@
     <ClInclude Include="callback_info.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
     </ClInclude>
-    <ClInclude Include="ui\uiabstract.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIMessages.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIWndCallback.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClInclude>
     <ClInclude Include="ui\UITextureMaster.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClInclude>
@@ -5503,15 +5485,6 @@
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\PropertiesBox</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIAnimatedStatic.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UILanimController.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="ui\UIStatic.h">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClInclude>
-    <ClInclude Include="UIStaticItem.h">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClInclude>
     <ClInclude Include="ui\UIEditBox.h">
@@ -7739,12 +7712,6 @@
     <ClCompile Include="..\xrServerEntities\xrServer_Objects_Alife_Smartcovers_script.cpp">
       <Filter>Core\Server\ServerEntities\objects_alife_smartcover</Filter>
     </ClCompile>
-    <ClCompile Include="ui_base.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="UIDialogHolder.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIInventoryUpgradeWnd.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\InventoryWnd\InventoryUpgrade</Filter>
     </ClCompile>
@@ -7901,9 +7868,6 @@
     <ClCompile Include="ui\UIDebugFonts.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\Common\_Debug Fonts</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UIWndCallback.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UITextureMaster.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\XML</Filter>
     </ClCompile>
@@ -7925,16 +7889,7 @@
     <ClCompile Include="ui\UIAnimatedStatic.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
-    <ClCompile Include="ui\UILanimController.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="ui\UIStatic.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
     <ClCompile Include="ui\UIStatic_script.cpp">
-      <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
-    </ClCompile>
-    <ClCompile Include="UIStaticItem.cpp">
       <Filter>ScriptEngine\ScriptClasses\UI\UIWindows\Static</Filter>
     </ClCompile>
     <ClCompile Include="ui\UIEditBox.cpp">

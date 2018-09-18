@@ -1,4 +1,5 @@
 #pragma once
+#include "../xrEngine/IGame_Actor.h"
 #include "../xrEngine/feel_touch.h"
 #include "../xrEngine/feel_sound.h"
 #include "../xrEngine/iinputreceiver.h"
@@ -12,7 +13,7 @@
 #include "InventoryOwner.h"
 #include "../xrEngine/StatGraph.h"
 #include "PhraseDialogManager.h"
-#include "ui_defs.h"
+#include "../xrUICore/ui_defs.h"
 
 #include "step_manager.h"
 #include "../xrScripts/export/script_export_space.h"
@@ -58,7 +59,8 @@ class CActorMemory;
 
 class CLocationManager;
 
-class	CActor: 
+class CActor: 
+	public CIActor,
 	public CEntityAlive, 
 	public IInputReceiver,
 	public Feel::Touch,
@@ -273,9 +275,6 @@ public:
 	MotionID				m_current_torso;
 	MotionID				m_current_head;
 
-    //режим подбирания предметов
-    bool					m_bPickupMode;
-
 	// callback на анимации модели актера
 	void					SetCallbacks		();
 	void					ResetCallbacks		();
@@ -393,11 +392,6 @@ public:
 
 	bool					is_jump					();
 	u32						MovingState				() const {return mstate_real;}
-
-public:
-	u32						mstate_wishful;
-	u32						mstate_old;
-	u32						mstate_real;
 	
 protected:
 	BOOL					m_bJumpKeyPressed;
@@ -681,6 +675,5 @@ extern bool		isActorAccelerated			(u32 mstate, bool ZoomMode);
 
 IC	CActorCondition	&CActor::conditions	() const{ VERIFY(m_entity_condition); return(*m_entity_condition);}
 
-extern CActor*		g_actor;
 CActor*				Actor		();
 extern const float	s_fFallTime;

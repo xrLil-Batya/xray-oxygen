@@ -291,6 +291,7 @@
     <ClInclude Include="ClS\NET_Client.h" />
     <ClInclude Include="date_time.h" />
     <ClInclude Include="DynamicSplash.h" />
+    <ClInclude Include="IGame_Actor.h" />
     <ClInclude Include="ILoadingScreen.h" />
     <ClInclude Include="string_table.h" />
     <ClInclude Include="xr_ioc_cmd_ex.h" />
@@ -419,6 +420,7 @@
     <ClCompile Include="date_time.cpp" />
     <ClCompile Include="defines.cpp" />
     <ClCompile Include="DynamicSplash.cpp" />
+    <ClCompile Include="IGame_Actor.cpp" />
     <ClCompile Include="stdafx.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>

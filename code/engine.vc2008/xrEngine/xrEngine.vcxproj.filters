@@ -603,6 +603,9 @@
     <ClInclude Include="DynamicSplash.h">
       <Filter>Device\Stats</Filter>
     </ClInclude>
+    <ClInclude Include="IGame_Actor.h">
+      <Filter>Game API</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="defines.cpp">
@@ -943,6 +946,9 @@
     </ClCompile>
     <ClCompile Include="Stats.cpp">
       <Filter>Device\Stats</Filter>
+    </ClCompile>
+    <ClCompile Include="IGame_Actor.cpp">
+      <Filter>Game API</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
